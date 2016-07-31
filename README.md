@@ -1,2 +1,2 @@
 # Orion
-Android app for stock analysis
+Android app for China stock market analysis, the data comes from sina finance.

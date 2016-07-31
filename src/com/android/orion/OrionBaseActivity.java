@@ -43,9 +43,9 @@ public class OrionBaseActivity extends Activity {
 	StockData mStockData = null;
 
 	ArrayList<Stock> mStockList = null;
-	
+
 	ArrayMap<String, Stock> mStockDealArrayMap = null;
-	
+
 	SharedPreferences mSharedPreferences = null;
 	StockDatabaseManager mStockDatabaseManager = null;
 	SettingDatabaseManager mSettingDatabaseManager = null;
@@ -285,7 +285,7 @@ public class OrionBaseActivity extends Activity {
 		loadStockDealArrayMap("1) GROUP BY (" + DatabaseContract.COLUMN_NAME,
 				null, null, mStockDealArrayMap);
 	}
-	
+
 	void loadStockDealArrayMap(String selection, String[] selectionArgs,
 			String sortOrder, ArrayMap<String, Stock> stockArrayMap) {
 		Cursor cursor = null;

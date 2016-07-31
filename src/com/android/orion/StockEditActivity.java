@@ -8,7 +8,6 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.BaseColumns;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -108,7 +107,7 @@ public abstract class StockEditActivity extends DatabaseActivity implements
 	public void onLoaderReset(Loader<Cursor> loader) {
 		mAdapter.swapCursor(null);
 	}
-	
+
 	@Override
 	void doInBackgroundLoad(Object... params) {
 		super.doInBackgroundLoad(params);
@@ -132,7 +131,7 @@ public abstract class StockEditActivity extends DatabaseActivity implements
 		public void bindView(View view, Context context, Cursor cursor) {
 			ViewHolder holder = (ViewHolder) view.getTag();
 			Stock stock = Stock.obtain();
-			
+
 			stock.set(cursor);
 
 			setViewText(holder.nameTextView, stock.getName());
@@ -201,9 +200,11 @@ public abstract class StockEditActivity extends DatabaseActivity implements
 						startService(Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE,
 								Constants.EXECUTE_IMMEDIATE);
 					} else {
-						if (!mStockDealArrayMap.containsKey(stock.getSE()+stock.getCode())) {
+						if (!mStockDealArrayMap.containsKey(stock.getSE()
+								+ stock.getCode())) {
 							updateStockMark(stockId, Constants.STOCK_FLAG_NONE);
-							startService(Constants.SERVICE_REMOVE_STOCK_FAVORITE,
+							startService(
+									Constants.SERVICE_REMOVE_STOCK_FAVORITE,
 									Constants.EXECUTE_IMMEDIATE);
 						}
 					}
