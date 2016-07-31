@@ -1,0 +1,109 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".StockSimulationActivity" >
+
+    <TextView
+        android:id="@+id/textViewSimulation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="22dp"
+        android:text="@string/action_simulation" />
+
+    <Switch
+        android:id="@+id/switchSimulation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textViewSimulation"
+        android:layout_alignBottom="@+id/textViewSimulation"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="20dp" />
+    
+    <TextView
+        android:id="@+id/textViewFrom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textViewSimulation"
+        android:layout_below="@+id/switchSimulation"
+        android:layout_marginTop="42dp"
+        android:text="@string/action_from" />
+    
+    <EditText
+        android:id="@+id/editTextFromDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textViewFrom"
+        android:layout_below="@+id/textViewFrom"
+        android:layout_marginTop="26dp"
+        android:layout_toLeftOf="@+id/editTextFromTime"
+        android:ems="10"
+        android:inputType="date" >
+    </EditText>
+
+    <EditText
+        android:id="@+id/editTextFromTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editTextFromDate"
+        android:layout_alignBottom="@+id/editTextFromDate"
+        android:layout_alignLeft="@+id/switchSimulation"
+        android:ems="10"
+        android:inputType="time" />
+    
+    <TextView
+        android:id="@+id/textViewTo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/editTextFromDate"
+        android:layout_below="@+id/editTextFromDate"
+        android:layout_marginTop="26dp"
+        android:text="@string/action_to" />
+
+    <EditText
+        android:id="@+id/editTextToDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textViewTo"
+        android:layout_alignRight="@+id/editTextFromDate"
+        android:layout_below="@+id/textViewTo"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:inputType="date" />
+
+    <EditText
+        android:id="@+id/editTextToTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editTextToDate"
+        android:layout_alignBottom="@+id/editTextToDate"
+        android:layout_alignLeft="@+id/editTextFromTime"
+        android:ems="10"
+        android:inputType="time" />
+
+    <TextView
+        android:id="@+id/textViewInterval"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/editTextToDate"
+        android:layout_below="@+id/editTextToDate"
+        android:layout_marginTop="40dp"
+        android:text="@string/action_interval" />
+
+    <EditText
+        android:id="@+id/editTextInterval"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textViewInterval"
+        android:layout_alignRight="@+id/editTextToDate"
+        android:layout_below="@+id/textViewInterval"
+        android:layout_marginTop="18dp"
+        android:ems="10"
+        android:inputType="number" />
+
+</RelativeLayout>

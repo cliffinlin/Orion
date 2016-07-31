@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<preference-headers xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <header
+        android:icon="@drawable/ic_service"
+        android:title="@string/service" >
+        <intent
+            android:targetClass="com.android.orion.ServiceSettingActivity"
+            android:targetPackage="com.android.orion" />
+    </header>
+    <header
+        android:icon="@drawable/ic_list"
+        android:title="@string/favorite" >
+        <intent
+            android:targetClass="com.android.orion.StockFavoriteListActivity"
+            android:targetPackage="com.android.orion" />
+    </header>
+    <header
+        android:icon="@drawable/ic_list"
+        android:title="@string/deal" >
+        <intent
+            android:targetClass="com.android.orion.DealListActivity"
+            android:targetPackage="com.android.orion" />
+    </header>    
+    <header
+        android:icon="@drawable/ic_about"
+        android:title="@string/about" >
+        <intent
+            android:targetClass="com.android.orion.about.AboutActivity"
+            android:targetPackage="com.android.orion" />
+    </header>
+
+</preference-headers>

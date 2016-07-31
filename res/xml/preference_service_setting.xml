@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="@string/alarm_service" >
+        <com.android.orion.CustomSwitchPreference
+            android:key="alarm"
+            android:title="@string/alarm" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/download_service" >
+        <com.android.orion.CustomSwitchPreference
+            android:key="5min"
+            android:title="@string/period_5min" />
+        <com.android.orion.CustomSwitchPreference
+            android:key="15min"
+            android:title="@string/period_15min" />
+        <com.android.orion.CustomSwitchPreference
+            android:key="30min"
+            android:title="@string/period_30min" />
+        <com.android.orion.CustomSwitchPreference
+            android:key="60min"
+            android:title="@string/period_60min" />
+        <com.android.orion.CustomSwitchPreference
+            android:key="day"
+            android:title="@string/period_day" />
+        <com.android.orion.CustomSwitchPreference
+            android:key="week"
+            android:title="@string/period_week" />
+        <com.android.orion.CustomSwitchPreference
+            android:key="month"
+            android:title="@string/period_month" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/operation_service" >
+        <com.android.orion.CustomSwitchPreference
+            android:key="operation_5min"
+            android:title="@string/period_5min" />
+        <com.android.orion.CustomSwitchPreference
+            android:key="operation_15min"
+            android:title="@string/period_15min" />
+        <com.android.orion.CustomSwitchPreference
+            android:key="operation_30min"
+            android:title="@string/period_30min" />
+        <com.android.orion.CustomSwitchPreference
+            android:key="operation_60min"
+            android:title="@string/period_60min" />
+        <com.android.orion.CustomSwitchPreference
+            android:key="operation_day"
+            android:title="@string/period_day" />
+        <com.android.orion.CustomSwitchPreference
+            android:key="operation_week"
+            android:title="@string/period_week" />
+        <com.android.orion.CustomSwitchPreference
+            android:key="operation_month"
+            android:title="@string/period_month" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/notification_service" >
+        <com.android.orion.CustomSwitchPreference
+            android:key="notification_lights"
+            android:title="@string/notification_lights" />
+        <com.android.orion.CustomSwitchPreference
+            android:key="notification_vibrate"
+            android:title="@string/notification_vibrate" />
+        <com.android.orion.CustomSwitchPreference
+            android:key="notification_sound"
+            android:title="@string/notification_sound" />        
+    </PreferenceCategory>
+
+</PreferenceScreen>

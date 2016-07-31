@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal" >
+
+    <TextView
+        android:id="@+id/price"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/price"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/price_net"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/price_net"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/stock_action_5min"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/stock_action_5min"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/stock_action_15min"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/stock_action_15min"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/stock_action_30min"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/stock_action_30min"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/stock_action_60min"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/stock_action_60min"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/stock_action_day"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/stock_action_day"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/stock_action_week"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/stock_action_week"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/stock_action_month"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/stock_action_month"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/overlap"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/overlap"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/velocity"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/velocity"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/acceleration"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/acceleration"
+        android:textSize="18sp" />
+
+</LinearLayout>
