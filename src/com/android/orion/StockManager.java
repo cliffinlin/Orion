@@ -15,6 +15,7 @@ import android.util.ArrayMap;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
+import com.android.orion.database.StockDatabaseManager;
 import com.android.orion.pinyin.Pinyin;
 import com.android.orion.utility.Utility;
 
@@ -23,7 +24,6 @@ public class StockManager {
 
 	ContentResolver mContentResolver = null;
 	LocalBroadcastManager mLocalBroadcastManager = null;
-	SettingDatabaseManager mSettingDatabaseManager = null;
 	StockSimulationAlarmManager mStockSimulationAlarmManager = null;
 	StockDatabaseManager mStockDatabaseManager = null;
 	ArrayMap<String, Stock> mStockArrayMapFavorite = null;
@@ -39,11 +39,6 @@ public class StockManager {
 
 		if (mLocalBroadcastManager == null) {
 			mLocalBroadcastManager = LocalBroadcastManager
-					.getInstance(mContext);
-		}
-
-		if (mSettingDatabaseManager == null) {
-			mSettingDatabaseManager = SettingDatabaseManager
 					.getInstance(mContext);
 		}
 

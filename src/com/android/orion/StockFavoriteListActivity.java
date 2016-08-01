@@ -27,7 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.orion.database.DatabaseContract;
-import com.android.orion.database.SettingDatabase;
+import com.android.orion.database.Setting;
 import com.android.orion.database.Stock;
 import com.android.orion.utility.Utility;
 import com.avos.avoscloud.AVUser;
@@ -99,7 +99,7 @@ public class StockFavoriteListActivity extends StorageActivity implements
 
 		setContentView(R.layout.activity_stock_list);
 
-		mSortOrder = getSetting(SettingDatabase.KEY_SORT_ORDER_STOCK_LIST,
+		mSortOrder = getSetting(Setting.KEY_SORT_ORDER_STOCK_LIST,
 				mSortOrderDefault);
 
 		initHeader();
@@ -389,7 +389,7 @@ public class StockFavoriteListActivity extends StorageActivity implements
 
 		mSortOrder = mSortOrderColumn + mSortOrderDirection;
 
-		saveSetting(SettingDatabase.KEY_SORT_ORDER_STOCK_LIST, mSortOrder);
+		saveSetting(Setting.KEY_SORT_ORDER_STOCK_LIST, mSortOrder);
 
 		restartLoader();
 	}
@@ -681,8 +681,7 @@ public class StockFavoriteListActivity extends StorageActivity implements
 			}
 		} else {
 			Intent intent = new Intent(this, StockChartListActivity.class);
-			intent.putExtra(SettingDatabase.KEY_SORT_ORDER_STOCK_LIST,
-					mSortOrder);
+			intent.putExtra(Setting.KEY_SORT_ORDER_STOCK_LIST, mSortOrder);
 			intent.putExtra(DatabaseContract.COLUMN_STOCK_ID, id);
 			startActivity(intent);
 		}
@@ -692,7 +691,7 @@ public class StockFavoriteListActivity extends StorageActivity implements
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
 			int position, long id) {
 		Intent intent = new Intent(this, StockFavoriteEditActivity.class);
-		intent.putExtra(SettingDatabase.KEY_SORT_ORDER_STOCK_LIST, mSortOrder);
+		intent.putExtra(Setting.KEY_SORT_ORDER_STOCK_LIST, mSortOrder);
 		startActivity(intent);
 		return true;
 	}

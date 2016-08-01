@@ -1,17 +1,16 @@
-package com.android.orion;
+package com.android.orion.database;
 
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.android.orion.database.DatabaseOpenHelper;
 
 public class DatabaseManager {
 	Context mContext;
-	ContentResolver mContentResolver = null;
-	SQLiteDatabase mDatabase = null;
-	DatabaseOpenHelper mDatabaseHelper = null;
+	public ContentResolver mContentResolver = null;
+	public SQLiteDatabase mDatabase = null;
+	public DatabaseOpenHelper mDatabaseHelper = null;
 
 	public DatabaseManager() {
 	}

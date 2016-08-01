@@ -29,7 +29,7 @@ import android.widget.ListView;
 
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Deal;
-import com.android.orion.database.SettingDatabase;
+import com.android.orion.database.Setting;
 import com.android.orion.database.Stock;
 import com.android.orion.utility.Utility;
 import com.github.mikephil.charting.charts.CombinedChart;
@@ -111,7 +111,7 @@ public class StockChartListActivity extends OrionBaseActivity implements
 		mStock.setId(getIntent().getLongExtra(EXTRA_STOCK_ID, 0));
 
 		mSortOrder = getIntent().getStringExtra(
-				SettingDatabase.KEY_SORT_ORDER_STOCK_LIST);
+				Setting.KEY_SORT_ORDER_STOCK_LIST);
 
 		LocalBroadcastManager.getInstance(this).registerReceiver(
 				mBroadcastReceiver,

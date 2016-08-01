@@ -22,7 +22,7 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import com.android.orion.database.DatabaseContract;
-import com.android.orion.database.SettingDatabase;
+import com.android.orion.database.Setting;
 import com.android.orion.database.Stock;
 
 public abstract class StockEditActivity extends DatabaseActivity implements
@@ -49,7 +49,7 @@ public abstract class StockEditActivity extends DatabaseActivity implements
 		setContentView(R.layout.activity_stock_edit);
 
 		mSortOrder = getIntent().getStringExtra(
-				SettingDatabase.KEY_SORT_ORDER_STOCK_LIST);
+				Setting.KEY_SORT_ORDER_STOCK_LIST);
 
 		mListView = (ListView) findViewById(R.id.stock_listview);
 

@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.android.orion.database.DatabaseContract;
+import com.android.orion.database.Setting;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.utility.Utility;
@@ -107,7 +108,6 @@ public abstract class StockDataProvider extends StockAnalyzer {
 	}
 
 	void downloadStockHSA() {
-		String key = Constants.SETTING_KEY_STOCK_HSA_UPDATED;
 		String urlString = "";
 
 		if (!Utility.isNetworkConnected(mContext)) {
@@ -116,7 +116,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		}
 
 		if (Utility.getCurrentDateString().equals(
-				mSettingDatabaseManager.load(key))) {
+				mStockDatabaseManager
+						.getSettingString(Setting.KEY_STOCK_HSA_UPDATED))) {
 			return;
 		}
 
@@ -125,7 +126,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			Utility.Log("getStockHSAURLString:" + urlString);
 			StockHSADownloader downloader = new StockHSADownloader(urlString);
 			mRequestQueue.add(downloader.mStringRequest);
-			mSettingDatabaseManager.save(key, Utility.getCurrentDateString());
+			mStockDatabaseManager.saveSetting(Setting.KEY_STOCK_HSA_UPDATED,
+					Utility.getCurrentDateString());
 		}
 	}
 

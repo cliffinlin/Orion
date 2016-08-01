@@ -33,7 +33,7 @@ import android.widget.Toast;
 
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Deal;
-import com.android.orion.database.SettingDatabase;
+import com.android.orion.database.Setting;
 import com.android.orion.database.Stock;
 import com.android.orion.utility.Utility;
 import com.avos.avoscloud.AVUser;
@@ -161,7 +161,7 @@ public class DealListActivity extends StorageActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_deal_list);
 
-		mSortOrder = getSetting(SettingDatabase.KEY_SORT_ORDER_DEAL_LIST,
+		mSortOrder = getSetting(Setting.KEY_SORT_ORDER_DEAL_LIST,
 				mSortOrderDefault);
 
 		initHeader();
@@ -284,7 +284,7 @@ public class DealListActivity extends StorageActivity implements
 
 		mSortOrder = mSortOrderColumn + mSortOrderDirection;
 
-		saveSetting(SettingDatabase.KEY_SORT_ORDER_DEAL_LIST, mSortOrder);
+		saveSetting(Setting.KEY_SORT_ORDER_DEAL_LIST, mSortOrder);
 
 		restartLoader();
 	}
@@ -560,8 +560,7 @@ public class DealListActivity extends StorageActivity implements
 			mStockDatabaseManager.getStock(mStock);
 
 			Intent intent = new Intent(this, StockChartListActivity.class);
-			intent.putExtra(SettingDatabase.KEY_SORT_ORDER_DEAL_LIST,
-					mSortOrder);
+			intent.putExtra(Setting.KEY_SORT_ORDER_DEAL_LIST, mSortOrder);
 			intent.putExtra(StockChartListActivity.EXTRA_STOCK_ID,
 					mStock.getId());
 			startActivity(intent);

@@ -91,7 +91,6 @@ public class Constants {
 	public static final String SETTING_KEY_SIMULATION_TO_DATE = "simulation_to_data";
 	public static final String SETTING_KEY_SIMULATION_TO_TIME = "simulation_to_time";
 	public static final String SETTING_KEY_SIMULATION_INTERVAL = "simulation_interval";
-	public static final String SETTING_KEY_STOCK_HSA_UPDATED = "stock_hsa_updated";
 	public static final String SETTING_KEY_USER_NAME = "user_name";
 
 	public static final String STOCK_ACTION_NONE = "";

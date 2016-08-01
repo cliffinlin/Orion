@@ -4,22 +4,23 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 
-public class SettingDatabase extends DatabaseTable {
+public class Setting extends DatabaseTable {
+	public static final String KEY_STOCK_HSA_UPDATED = "stock_hsa_updated";
 	public static final String KEY_SORT_ORDER_STOCK_LIST = "sort_order_stock_list";
 	public static final String KEY_SORT_ORDER_DEAL_LIST = "sort_order_deal_list";
 
 	private String mKey;
 	private String mValue;
 
-	public SettingDatabase() {
+	public Setting() {
 		init();
 	}
 
-	public SettingDatabase(SettingDatabase setting) {
+	public Setting(Setting setting) {
 		set(setting);
 	}
 
-	public SettingDatabase(Cursor cursor) {
+	public Setting(Cursor cursor) {
 		set(cursor);
 	}
 
@@ -35,6 +36,12 @@ public class SettingDatabase extends DatabaseTable {
 	public ContentValues getContentValues() {
 		ContentValues contentValues = new ContentValues();
 
+		getContentValues(contentValues);
+
+		return contentValues;
+	}
+
+	public ContentValues getContentValues(ContentValues contentValues) {
 		super.getContentValues(contentValues);
 
 		contentValues.put(DatabaseContract.Setting.COLUMN_KEY, mKey);
@@ -43,7 +50,7 @@ public class SettingDatabase extends DatabaseTable {
 		return contentValues;
 	}
 
-	void set(SettingDatabase setting) {
+	void set(Setting setting) {
 		if (setting == null) {
 			return;
 		}
@@ -56,9 +63,7 @@ public class SettingDatabase extends DatabaseTable {
 		setValue(setting.getValue());
 	}
 
-	@Override
-	public
-	void set(Cursor cursor) {
+	public void set(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}

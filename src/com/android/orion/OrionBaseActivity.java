@@ -26,6 +26,7 @@ import com.android.orion.OrionService.OrionServiceBinder;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
+import com.android.orion.database.StockDatabaseManager;
 
 public class OrionBaseActivity extends Activity {
 	boolean mBound = false;
@@ -48,7 +49,6 @@ public class OrionBaseActivity extends Activity {
 
 	SharedPreferences mSharedPreferences = null;
 	StockDatabaseManager mStockDatabaseManager = null;
-	SettingDatabaseManager mSettingDatabaseManager = null;
 
 	OrionService mOrionService = null;
 
@@ -113,10 +113,6 @@ public class OrionBaseActivity extends Activity {
 
 		if (mStockDatabaseManager == null) {
 			mStockDatabaseManager = StockDatabaseManager.getInstance(this);
-		}
-
-		if (mSettingDatabaseManager == null) {
-			mSettingDatabaseManager = SettingDatabaseManager.getInstance(this);
 		}
 
 		bindService();
