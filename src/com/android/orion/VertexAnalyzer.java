@@ -194,17 +194,6 @@ public class VertexAnalyzer {
 					if (directionType == Constants.STOCK_DIRECTION_UP) {
 						if (dataList.get(i).getLow() < dataList.get(i - 1)
 								.getLow()) {
-							if (vertexTypeTop == Constants.STOCK_VERTEX_TOP_SEGMENT) {
-								for (int j = dataList.get(i).getIndexStart(); j <= dataList
-										.get(i).getIndexEnd(); j++) {
-									if (stockDataList.get(j).getLow() < dataList
-											.get(i - 1).getLow()) {
-										stockDataList.get(j).setAction(
-												Constants.STOCK_ACTION_GX);
-										break;
-									}
-								}
-							}
 							vertexType = vertexTypeTop;
 							stockData.setVertex(stockData.getVertex()
 									| vertexType);
@@ -213,17 +202,6 @@ public class VertexAnalyzer {
 					} else if (directionType == Constants.STOCK_DIRECTION_DOWN) {
 						if (dataList.get(i).getHigh() > dataList.get(i - 1)
 								.getHigh()) {
-							if (vertexTypeBottom == Constants.STOCK_VERTEX_BOTTOM_SEGMENT) {
-								for (int j = dataList.get(i).getIndexStart(); j <= dataList
-										.get(i).getIndexEnd(); j++) {
-									if (stockDataList.get(j).getHigh() > dataList
-											.get(i - 1).getHigh()) {
-										stockDataList.get(j).setAction(
-												Constants.STOCK_ACTION_DX);
-										break;
-									}
-								}
-							}
 							vertexType = vertexTypeBottom;
 							stockData.setVertex(stockData.getVertex()
 									| vertexType);
