@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.android.orion"
-    android:versionCode="386"
+    android:versionCode="387"
     android:versionName="1.1.19" >
 
     <uses-sdk
@@ -47,11 +47,11 @@
         <activity android:name="com.android.orion.OrionBaseActivity" >
         </activity>
         <activity
-            android:name="com.android.orion.LeanCloudLoginActivity"
+            android:name="com.android.orion.leancloud.LeanCloudLoginActivity"
             android:label="@string/title_activity_login" >
         </activity>
         <activity
-            android:name="com.android.orion.LeanCloudSignUpActivity"
+            android:name="com.android.orion.leancloud.LeanCloudSignUpActivity"
             android:label="@string/title_activity_sign_up" >
         </activity>
         <activity android:name="com.android.orion.StockActivity" >

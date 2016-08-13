@@ -1,10 +1,12 @@
-package com.android.orion;
+package com.android.orion.leancloud;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
 
+import com.android.orion.Constants;
+import com.android.orion.StockManager;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.utility.Utility;
@@ -26,7 +28,7 @@ public class LeanCloudManager extends StockManager {
 		}
 	}
 
-	void fetchStockFavorite() {
+	public void fetchStockFavorite() {
 		String now = Utility.getCurrentDateTimeString();
 		Stock stock = Stock.obtain();
 
@@ -60,7 +62,7 @@ public class LeanCloudManager extends StockManager {
 		AVUser.logOut();
 	}
 
-	boolean saveStockFavorite() {
+	public boolean saveStockFavorite() {
 		boolean result = false;
 		int i = 0;
 		List<Stock> stockList = null;

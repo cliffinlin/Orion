@@ -144,11 +144,8 @@ public class StockAnalyzer extends StockManager {
 			stockDataList.get(i).setAcceleration(acceleration);
 		}
 
-		if (Utility.getSettingBoolean(mContext, Constants.SETTING_KEY_OPERATION
-				+ period)) {
-			stock.setVelocity(velocity);
-			stock.setAcceleration(acceleration);
-		}
+		stock.setVelocity(velocity);
+		stock.setAcceleration(acceleration);
 	}
 
 	private void analyzeStockData(Stock stock, String period,
@@ -198,11 +195,7 @@ public class StockAnalyzer extends StockManager {
 			return;
 		}
 
-		if (Utility.getSettingBoolean(mContext, Constants.SETTING_KEY_OPERATION
-				+ period)) {
-			stock.setOverlap(overlapList.get(overlapList.size() - 1)
-					.getOverlap());
-		}
+		stock.setOverlap(overlapList.get(overlapList.size() - 1).getOverlap());
 	}
 
 	private void setAction(Stock stock, String period,
@@ -349,11 +342,6 @@ public class StockAnalyzer extends StockManager {
 			return;
 		}
 
-		if (!Utility.getSettingBoolean(mContext,
-				Constants.SETTING_KEY_OPERATION + period)) {
-			return;
-		}
-
 		if (stock.getAction(period).contains(Constants.STOCK_ACTION_BUY)) {
 			nCallLogType = CallLog.Calls.MISSED_TYPE;
 		} else if (stock.getAction(period)
@@ -486,8 +474,7 @@ public class StockAnalyzer extends StockManager {
 		boolean result = false;
 
 		for (String period : Constants.PERIODS) {
-			if (Utility.getSettingBoolean(mContext,
-					Constants.SETTING_KEY_OPERATION + period)) {
+			if (Utility.getSettingBoolean(mContext, period)) {
 				if (stock.getAction(period)
 						.contains(Constants.STOCK_ACTION_BUY)
 						|| stock.getAction(period).contains(

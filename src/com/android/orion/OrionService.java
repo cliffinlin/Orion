@@ -15,6 +15,7 @@ import android.os.Message;
 import android.widget.Toast;
 
 import com.android.orion.database.DatabaseContract;
+import com.android.orion.leancloud.LeanCloudManager;
 
 public class OrionService extends Service {
 	private volatile Looper mServiceLooper;

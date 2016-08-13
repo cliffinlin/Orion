@@ -25,7 +25,7 @@ public class StockManager {
 	ContentResolver mContentResolver = null;
 	LocalBroadcastManager mLocalBroadcastManager = null;
 	StockSimulationAlarmManager mStockSimulationAlarmManager = null;
-	StockDatabaseManager mStockDatabaseManager = null;
+	protected StockDatabaseManager mStockDatabaseManager = null;
 	ArrayMap<String, Stock> mStockArrayMapFavorite = null;
 
 	// ConnectivityManager mConnectivityManager = null;
@@ -198,8 +198,8 @@ public class StockManager {
 		}
 	}
 
-	List<Stock> loadStockList(String selection, String[] selectionArgs,
-			String sortOrder) {
+	protected List<Stock> loadStockList(String selection,
+			String[] selectionArgs, String sortOrder) {
 		Cursor cursor = null;
 		List<Stock> stockList = null;
 
@@ -404,7 +404,7 @@ public class StockManager {
 		return stockDataList;
 	}
 
-	String selectStock(String mark) {
+	protected String selectStock(String mark) {
 		return DatabaseContract.Stock.COLUMN_MARK + " = '" + mark + "'";
 	}
 

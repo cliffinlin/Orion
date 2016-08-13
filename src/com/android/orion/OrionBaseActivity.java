@@ -184,7 +184,7 @@ public class OrionBaseActivity extends Activity {
 		startService(intent);
 	}
 
-	String getSetting(String key, String defaultValue) {
+	public String getSetting(String key, String defaultValue) {
 		String value = "";
 
 		if (mSharedPreferences != null) {
@@ -193,7 +193,7 @@ public class OrionBaseActivity extends Activity {
 		return value;
 	}
 
-	void saveSetting(String key, String value) {
+	public void saveSetting(String key, String value) {
 		if (mSharedPreferences != null) {
 			Editor editor = mSharedPreferences.edit();
 			editor.putString(key, value);

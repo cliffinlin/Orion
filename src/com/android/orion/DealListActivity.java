@@ -35,6 +35,7 @@ import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Deal;
 import com.android.orion.database.Setting;
 import com.android.orion.database.Stock;
+import com.android.orion.leancloud.LeanCloudLoginActivity;
 import com.android.orion.utility.Utility;
 import com.avos.avoscloud.AVUser;
 

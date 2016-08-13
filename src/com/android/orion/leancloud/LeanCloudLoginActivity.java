@@ -1,4 +1,4 @@
-package com.android.orion;
+package com.android.orion.leancloud;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
@@ -11,6 +11,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.android.orion.Constants;
+import com.android.orion.OrionBaseActivity;
+import com.android.orion.R;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogInCallback;

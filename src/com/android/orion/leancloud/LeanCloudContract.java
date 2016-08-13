@@ -1,4 +1,4 @@
-package com.android.orion;
+package com.android.orion.leancloud;
 
 /*
  * server: https://leancloud.cn/
