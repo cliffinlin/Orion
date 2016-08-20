@@ -541,34 +541,34 @@ public class StockChartListActivity extends OrionBaseActivity implements
 
 					if (mStockData.vertexOf(Constants.STOCK_VERTEX_TOP)) {
 						Entry drawEntry = new Entry(
-								(float) mStockData.getHigh(), index);
+								(float) mStockData.getVertexHigh(), index);
 						stockChartData.mDrawEntryList.add(drawEntry);
 					} else if (mStockData
 							.vertexOf(Constants.STOCK_VERTEX_BOTTOM)) {
 						Entry drawEntry = new Entry(
-								(float) mStockData.getLow(), index);
+								(float) mStockData.getVertexLow(), index);
 						stockChartData.mDrawEntryList.add(drawEntry);
 					}
 
 					if (mStockData.vertexOf(Constants.STOCK_VERTEX_TOP_STROKE)) {
 						Entry strokeEntry = new Entry(
-								(float) mStockData.getHigh(), index);
+								(float) mStockData.getVertexHigh(), index);
 						stockChartData.mStrokeEntryList.add(strokeEntry);
 					} else if (mStockData
 							.vertexOf(Constants.STOCK_VERTEX_BOTTOM_STROKE)) {
 						Entry strokeEntry = new Entry(
-								(float) mStockData.getLow(), index);
+								(float) mStockData.getVertexLow(), index);
 						stockChartData.mStrokeEntryList.add(strokeEntry);
 					}
 
 					if (mStockData.vertexOf(Constants.STOCK_VERTEX_TOP_SEGMENT)) {
 						Entry segmentEntry = new Entry(
-								(float) mStockData.getHigh(), index);
+								(float) mStockData.getVertexHigh(), index);
 						stockChartData.mSegmentEntryList.add(segmentEntry);
 					} else if (mStockData
 							.vertexOf(Constants.STOCK_VERTEX_BOTTOM_SEGMENT)) {
 						Entry segmentEntry = new Entry(
-								(float) mStockData.getLow(), index);
+								(float) mStockData.getVertexLow(), index);
 						stockChartData.mSegmentEntryList.add(segmentEntry);
 					}
 

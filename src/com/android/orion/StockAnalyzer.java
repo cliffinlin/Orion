@@ -160,19 +160,20 @@ public class StockAnalyzer extends StockManager {
 		ArrayList<StockData> segmentDataList = new ArrayList<StockData>();
 		ArrayList<StockData> overlapList = new ArrayList<StockData>();
 
-		vertexAnalyzer.analyzeVertex(stockDataList, drawVertexList, false);
+		vertexAnalyzer.analyzeVertex(stockDataList, drawVertexList);
 		vertexAnalyzer.vertexListToDataList(stockDataList, drawVertexList,
 				drawDataList, false);
-
+		// __TEST_CASE__
 		// vertexAnalyzer.testShow(stockDataList, drawDataList);
-
+		// __TEST_CASE__
 		vertexAnalyzer.analyzeLine(stockDataList, drawDataList,
 				strokeVertexList, Constants.STOCK_VERTEX_TOP_STROKE,
 				Constants.STOCK_VERTEX_BOTTOM_STROKE);
 		vertexAnalyzer.vertexListToDataList(stockDataList, strokeVertexList,
 				strokeDataList, false);
-
+		// __TEST_CASE__
 		// vertexAnalyzer.testShow(stockDataList, strokeDataList);
+		// __TEST_CASE__
 		vertexAnalyzer.analyzeLine(stockDataList, strokeDataList,
 				segmentVertexList, Constants.STOCK_VERTEX_TOP_SEGMENT,
 				Constants.STOCK_VERTEX_BOTTOM_SEGMENT);

@@ -18,6 +18,8 @@ public class StockData extends StockDatabaseTable {
 	private double mClose;
 	private int mDirection;
 	private int mVertex;
+	private double mVertexLow;
+	private double mVertexHigh;
 	private int mPosition;
 	private double mOverlapLow;
 	private double mOverlapHigh;
@@ -100,6 +102,8 @@ public class StockData extends StockDatabaseTable {
 		mClose = 0;
 		mDirection = Constants.STOCK_DIRECTION_NONE;
 		mVertex = Constants.STOCK_VERTEX_NONE;
+		mVertexLow = 0;
+		mVertexHigh = 0;
 		mPosition = Constants.STOCK_POSITION_NONE;
 		mOverlapLow = 0;
 		mOverlapHigh = 0;
@@ -141,6 +145,8 @@ public class StockData extends StockDatabaseTable {
 		contentValues.put(DatabaseContract.StockData.COLUMN_DIRECTION,
 				mDirection);
 		contentValues.put(DatabaseContract.StockData.COLUMN_VERTEX, mVertex);
+		contentValues.put(DatabaseContract.StockData.COLUMN_VERTEX_LOW, mVertexLow);
+		contentValues.put(DatabaseContract.StockData.COLUMN_VERTEX_HIGH, mVertexHigh);
 		contentValues
 				.put(DatabaseContract.StockData.COLUMN_POSITION, mPosition);
 		contentValues.put(DatabaseContract.COLUMN_OVERLAP, mOverlap);
@@ -190,6 +196,8 @@ public class StockData extends StockDatabaseTable {
 		setClose(stockData.mClose);
 		setDirection(stockData.mDirection);
 		setVertex(stockData.mVertex);
+		setVertexLow(stockData.mVertexLow);
+		setVertexHigh(stockData.mVertexHigh);
 		setPosition(stockData.mPosition);
 		setOverlapLow(stockData.mOverlapLow);
 		setOverlapHigh(stockData.mOverlapHigh);
@@ -233,6 +241,8 @@ public class StockData extends StockDatabaseTable {
 		setClose(cursor);
 		setDirection(cursor);
 		setVertex(cursor);
+		setVertexLow(cursor);
+		setVertexHigh(cursor);
 		setPosition(cursor);
 		setOverlapLow(cursor);
 		setOverlapHigh(cursor);
@@ -435,6 +445,41 @@ public class StockData extends StockDatabaseTable {
 
 		setVertex(cursor.getInt(cursor
 				.getColumnIndex(DatabaseContract.StockData.COLUMN_VERTEX)));
+	}
+
+	public double getVertexLow() {
+		return mVertexLow;
+	}
+
+	public void setVertexLow(double vertexLow) {
+		mVertexLow = vertexLow;
+	}
+
+	void setVertexLow(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setVertexLow(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.StockData.COLUMN_VERTEX_LOW)));
+	}
+
+	public double getVertexHigh() {
+		return mVertexHigh;
+	}
+
+	public void setVertexHigh(double vertexHigh) {
+		mVertexHigh = vertexHigh;
+	}
+
+	void setVertexHigh(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setVertexHigh(cursor
+				.getDouble(cursor
+						.getColumnIndex(DatabaseContract.StockData.COLUMN_VERTEX_HIGH)));
 	}
 
 	int getPosition() {
@@ -707,8 +752,8 @@ public class StockData extends StockDatabaseTable {
 	public boolean include(StockData stockData) {
 		boolean result = false;
 
-		if ((getHigh() >= stockData.getHigh())
-				&& (getLow() <= stockData.getLow())) {
+		if ((getVertexHigh() >= stockData.getVertexHigh())
+				&& (getVertexLow() <= stockData.getVertexLow())) {
 			result = true;
 		}
 
@@ -718,8 +763,8 @@ public class StockData extends StockDatabaseTable {
 	public boolean includedBy(StockData stockData) {
 		boolean result = false;
 
-		if ((getHigh() <= stockData.getHigh())
-				&& (getLow() >= stockData.getLow())) {
+		if ((getVertexHigh() <= stockData.getVertexHigh())
+				&& (getVertexLow() >= stockData.getVertexLow())) {
 			result = true;
 		}
 
@@ -729,11 +774,11 @@ public class StockData extends StockDatabaseTable {
 	public int directionTo(StockData stockData) {
 		int result = Constants.STOCK_DIRECTION_NONE;
 
-		if ((getHigh() >= stockData.getHigh())
-				&& (getLow() > stockData.getLow())) {
+		if ((getVertexHigh() >= stockData.getVertexHigh())
+				&& (getVertexLow() > stockData.getVertexLow())) {
 			result = Constants.STOCK_DIRECTION_UP;
-		} else if ((getHigh() < stockData.getHigh())
-				&& (getLow() <= stockData.getLow())) {
+		} else if ((getVertexHigh() < stockData.getVertexHigh())
+				&& (getVertexLow() <= stockData.getVertexLow())) {
 			result = Constants.STOCK_DIRECTION_DOWN;
 		} else {
 			result = Constants.STOCK_DIRECTION_NONE;
@@ -745,9 +790,9 @@ public class StockData extends StockDatabaseTable {
 	public int positionTo(StockData stockData) {
 		int position = 0;
 
-		if (getLow() > stockData.getHigh()) {
+		if (getVertexLow() > stockData.getVertexHigh()) {
 			position = Constants.STOCK_POSITION_ABOVE;
-		} else if (getHigh() < stockData.getLow()) {
+		} else if (getVertexHigh() < stockData.getVertexLow()) {
 			position = Constants.STOCK_POSITION_BELOW;
 		} else {
 			position = Constants.STOCK_POSITION_NONE;
@@ -758,14 +803,14 @@ public class StockData extends StockDatabaseTable {
 
 	public void merge(int directionType, StockData stockData) {
 		if (directionType == Constants.STOCK_DIRECTION_UP) {
-			setHigh(Math.max(getHigh(), stockData.getHigh()));
-			setLow(Math.max(getLow(), stockData.getLow()));
+			setVertexHigh(Math.max(getVertexHigh(), stockData.getVertexHigh()));
+			setVertexLow(Math.max(getVertexLow(), stockData.getVertexLow()));
 		} else if (directionType == Constants.STOCK_DIRECTION_DOWN) {
-			setHigh(Math.min(getHigh(), stockData.getHigh()));
-			setLow(Math.min(getLow(), stockData.getLow()));
+			setVertexHigh(Math.min(getVertexHigh(), stockData.getVertexHigh()));
+			setVertexLow(Math.min(getVertexLow(), stockData.getVertexLow()));
 		} else {
-			setHigh(Math.max(getHigh(), stockData.getHigh()));
-			setLow(Math.min(getLow(), stockData.getLow()));
+			setVertexHigh(Math.max(getVertexHigh(), stockData.getVertexHigh()));
+			setVertexLow(Math.min(getVertexLow(), stockData.getVertexLow()));
 		}
 	}
 
@@ -777,20 +822,19 @@ public class StockData extends StockDatabaseTable {
 		setStockId(prev.getStockId());
 		setIndex(prev.getIndex());
 		setIndexStart(prev.getIndexStart());
-		setOpen(prev.getOpen());
-		setLow(Math.min(prev.getLow(), current.getLow()));
-		setHigh(Math.max(prev.getHigh(), current.getHigh()));
+		setVertexLow(Math.min(prev.getVertexLow(), current.getVertexLow()));
+		setVertexHigh(Math.max(prev.getVertexHigh(), current.getVertexHigh()));
 	}
 
 	public int divergenceValue(int direction, StockData stockData) {
 		int result = Constants.STOCK_DIVERGENCE_NONE;
 
 		if (direction == Constants.STOCK_DIRECTION_UP) {
-			if (getHigh() > stockData.getHigh()) {
+			if (getVertexHigh() > stockData.getVertexHigh()) {
 				result = divergenceValue(stockData);
 			}
 		} else if (direction == Constants.STOCK_DIRECTION_DOWN) {
-			if (getLow() < stockData.getLow()) {
+			if (getVertexLow() < stockData.getVertexLow()) {
 				result = divergenceValue(stockData);
 			}
 		} else {

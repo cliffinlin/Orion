@@ -18,20 +18,20 @@ public class VertexAnalyzer {
 		directionType = Constants.STOCK_DIRECTION_NONE;
 		vertexType = Constants.STOCK_VERTEX_NONE;
 
-		if ((current.getHigh() > prev.getHigh())
-				&& (current.getLow() > prev.getLow())) {
+		if ((current.getVertexHigh() > prev.getVertexHigh())
+				&& (current.getVertexLow() > prev.getVertexLow())) {
 			directionType = Constants.STOCK_DIRECTION_UP;
 
-			if ((current.getHigh() > next.getHigh())
-					&& (current.getLow() > next.getLow())) {
+			if ((current.getVertexHigh() > next.getVertexHigh())
+					&& (current.getVertexLow() > next.getVertexLow())) {
 				vertexType = Constants.STOCK_VERTEX_TOP;
 			}
-		} else if ((current.getHigh() < prev.getHigh())
-				&& (current.getLow() < prev.getLow())) {
+		} else if ((current.getVertexHigh() < prev.getVertexHigh())
+				&& (current.getVertexLow() < prev.getVertexLow())) {
 			directionType = Constants.STOCK_DIRECTION_DOWN;
 
-			if ((current.getHigh() < next.getHigh())
-					&& (current.getLow() < next.getLow())) {
+			if ((current.getVertexHigh() < next.getVertexHigh())
+					&& (current.getVertexLow() < next.getVertexLow())) {
 				vertexType = Constants.STOCK_VERTEX_BOTTOM;
 			}
 		} else {
@@ -44,7 +44,7 @@ public class VertexAnalyzer {
 	}
 
 	void analyzeVertex(ArrayList<StockData> dataList,
-			ArrayList<StockData> vertexList, boolean normalize) {
+			ArrayList<StockData> vertexList) {
 		int i = 0;
 		int size = 0;
 		int directionType = Constants.STOCK_DIRECTION_NONE;
@@ -54,7 +54,7 @@ public class VertexAnalyzer {
 		StockData current = null;
 		StockData next = null;
 
-		if (dataList == null) {
+		if ((dataList == null) || (vertexList == null)) {
 			return;
 		}
 
@@ -63,9 +63,7 @@ public class VertexAnalyzer {
 			return;
 		}
 
-		if (vertexList != null) {
-			vertexList.clear();
-		}
+		vertexList.clear();
 
 		prev = StockData.obtain();
 		current = StockData.obtain();
@@ -93,13 +91,11 @@ public class VertexAnalyzer {
 			}
 
 			if (current.include(prev) || current.includedBy(prev)) {
-				prev.merge(directionType, current);// merge?
+				prev.merge(directionType, current);
 				current.merge(directionType, prev);
 
-				if (normalize) {
-					dataList.get(i - 1).set(prev);
-					dataList.get(i).set(current);
-				}
+				dataList.get(i - 1).set(prev);
+				dataList.get(i).set(current);
 
 				prev.set(current);
 
@@ -114,18 +110,14 @@ public class VertexAnalyzer {
 				vertexType = dataList.get(i).getVertex();
 				if ((vertexType == Constants.STOCK_VERTEX_TOP)
 						|| (vertexType == Constants.STOCK_VERTEX_BOTTOM)) {
-					if (vertexList != null) {
-						vertexList.add(dataList.get(i));
-					}
+					vertexList.add(dataList.get(i));
 				}
 
-				current.merge(directionType, next);// merge?
+				current.merge(directionType, next);
 				next.merge(directionType, current);
 
-				if (normalize) {
-					dataList.get(i).set(current);
-					dataList.get(i + 1).set(next);
-				}
+				dataList.get(i).set(current);
+				dataList.get(i + 1).set(next);
 
 				current.set(next);
 
@@ -138,9 +130,7 @@ public class VertexAnalyzer {
 			vertexType = dataList.get(i).getVertex();
 			if ((vertexType == Constants.STOCK_VERTEX_TOP)
 					|| (vertexType == Constants.STOCK_VERTEX_BOTTOM)) {
-				if (vertexList != null) {
-					vertexList.add(dataList.get(i));
-				}
+				vertexList.add(dataList.get(i));
 			}
 
 			prev.set(current);
@@ -192,16 +182,16 @@ public class VertexAnalyzer {
 					stockData = stockDataList.get(dataList.get(i - 1)
 							.getIndexEnd());
 					if (directionType == Constants.STOCK_DIRECTION_UP) {
-						if (dataList.get(i).getLow() < dataList.get(i - 1)
-								.getLow()) {
+						if (dataList.get(i).getVertexLow() < dataList
+								.get(i - 1).getVertexLow()) {
 							vertexType = vertexTypeTop;
 							stockData.setVertex(stockData.getVertex()
 									| vertexType);
 							vertexList.add(stockData);
 						}
 					} else if (directionType == Constants.STOCK_DIRECTION_DOWN) {
-						if (dataList.get(i).getHigh() > dataList.get(i - 1)
-								.getHigh()) {
+						if (dataList.get(i).getVertexHigh() > dataList.get(
+								i - 1).getVertexHigh()) {
 							vertexType = vertexTypeBottom;
 							stockData.setVertex(stockData.getVertex()
 									| vertexType);
@@ -399,18 +389,19 @@ public class VertexAnalyzer {
 				overlap.setIndex(i - 2);
 				overlap.setIndexStart(i - 2);
 				overlap.setIndexEnd(i);
-				Zg = Math.min(prev.getHigh(), current.getHigh());
-				Zd = Math.max(prev.getLow(), current.getLow());
+				Zg = Math.min(prev.getVertexHigh(), current.getVertexHigh());
+				Zd = Math.max(prev.getVertexLow(), current.getVertexLow());
 				overlap.setHigh(Zg);
 				overlap.setLow(Zd);
-				if (overlap.getLow() > 0) {
-					overlapValue = 100 * (overlap.getHigh() - overlap.getLow())
-							/ overlap.getLow();
+				if (overlap.getVertexLow() > 0) {
+					overlapValue = 100
+							* (overlap.getVertexHigh() - overlap.getVertexLow())
+							/ overlap.getVertexLow();
 					overlapValue = Utility.Round(overlapValue,
 							Constants.DOUBLE_FIXED_DECIMAL);
 				}
-				overlap.setOverlapHigh(overlap.getHigh());
-				overlap.setOverlapLow(overlap.getLow());
+				overlap.setOverlapHigh(overlap.getVertexHigh());
+				overlap.setOverlapLow(overlap.getVertexLow());
 				overlap.setOverlap(overlapValue);
 				overlapList.add(overlap);
 				continue;
@@ -430,8 +421,8 @@ public class VertexAnalyzer {
 				for (int k = segmentData.getIndexStart(); k <= segmentData
 						.getIndexEnd(); k++) {
 					stockData = stockDataList.get(k);
-					stockData.setOverlapHigh(overlap.getHigh());
-					stockData.setOverlapLow(overlap.getLow());
+					stockData.setOverlapHigh(overlap.getVertexHigh());
+					stockData.setOverlapLow(overlap.getVertexLow());
 					stockData.setOverlap(overlap.getOverlap());
 				}
 			}
@@ -464,9 +455,9 @@ public class VertexAnalyzer {
 				segmentData = segmentDataList.get(i);
 				endStockData = stockDataList.get(segmentData.getIndexEnd());
 				action = endStockData.getAction();
-				if (overlap.getLow() > prevOverlap.getHigh()) {
+				if (overlap.getVertexLow() > prevOverlap.getVertexHigh()) {
 					action += Constants.STOCK_ACTION_BUY3;
-				} else if (overlap.getHigh() < prevOverlap.getLow()) {
+				} else if (overlap.getVertexHigh() < prevOverlap.getVertexLow()) {
 					action += Constants.STOCK_ACTION_SELL3;
 				}
 				endStockData.setAction(action);
@@ -556,14 +547,15 @@ public class VertexAnalyzer {
 			}
 
 			if (data.getDirection() == Constants.STOCK_DIRECTION_UP) {
-				stockData.setOpen(data.getLow());
-				stockData.setClose(data.getHigh());
+				stockData.setOpen(data.getVertexLow());
+				stockData.setClose(data.getVertexHigh());
 			} else if (data.getDirection() == Constants.STOCK_DIRECTION_DOWN) {
-				stockData.setOpen(data.getHigh());
-				stockData.setClose(data.getLow());
+				stockData.setOpen(data.getVertexHigh());
+				stockData.setClose(data.getVertexLow());
 			}
-			stockData.setHigh(data.getHigh());
-			stockData.setLow(data.getLow());
+
+			stockData.setHigh(data.getVertexHigh());
+			stockData.setLow(data.getVertexLow());
 			stockData.setAction(String.valueOf(i));
 		}
 	}
