@@ -109,9 +109,12 @@ public abstract class StockEditActivity extends DatabaseActivity implements
 	}
 
 	@Override
-	void doInBackgroundLoad(Object... params) {
+	Long doInBackgroundLoad(Object... params) {
 		super.doInBackgroundLoad(params);
+
 		loadStockDealArrayMap();
+
+		return RESULT_SUCCESS;
 	}
 
 	@Override

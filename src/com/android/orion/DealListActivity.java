@@ -548,7 +548,7 @@ public class DealListActivity extends StorageActivity implements
 		}
 	}
 
-	void doInBackgroundLoad(Object... params) {
+	Long doInBackgroundLoad(Object... params) {
 		super.doInBackgroundSave(params);
 		int execute = (Integer) params[0];
 
@@ -574,6 +574,8 @@ public class DealListActivity extends StorageActivity implements
 		default:
 			break;
 		}
+
+		return RESULT_SUCCESS;
 	}
 
 	void onPostExecuteLoad(Long result) {
@@ -581,7 +583,7 @@ public class DealListActivity extends StorageActivity implements
 	}
 
 	@Override
-	void doInBackgroundSave(Object... params) {
+	Long doInBackgroundSave(Object... params) {
 		super.doInBackgroundSave(params);
 		int execute = (Integer) params[0];
 
@@ -597,6 +599,8 @@ public class DealListActivity extends StorageActivity implements
 		default:
 			break;
 		}
+
+		return RESULT_SUCCESS;
 	}
 
 	@Override

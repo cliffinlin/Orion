@@ -20,8 +20,10 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 
 	public static final String EXTRA_STOCK_ID = "stock_id";
 
-	static final int EXECUTE_STOCK_LOAD = 1;
-	static final int EXECUTE_STOCK_SAVE = 2;
+	public static final int EXECUTE_STOCK_LOAD = 1;
+	public static final int EXECUTE_STOCK_SAVE = 2;
+
+	public static final long RESULT_STOCK_EXIST = -2;
 
 	EditText mEditTextStockSE, mEditTextStockName, mEditTextStockCode;
 	Button mButtonOk, mButtonCancel;
@@ -140,7 +142,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 	}
 
 	@Override
-	void doInBackgroundLoad(Object... params) {
+	Long doInBackgroundLoad(Object... params) {
 		super.doInBackgroundLoad(params);
 		int execute = (Integer) params[0];
 
@@ -152,6 +154,8 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		default:
 			break;
 		}
+
+		return RESULT_SUCCESS;
 	}
 
 	@Override
@@ -161,14 +165,18 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 	}
 
 	@Override
-	void doInBackgroundSave(Object... params) {
+	Long doInBackgroundSave(Object... params) {
 		super.doInBackgroundSave(params);
 		int execute = (Integer) params[0];
 
 		switch (execute) {
 		case EXECUTE_STOCK_SAVE:
 			if (ACTION_STOCK_INSERT.equals(mAction)) {
-				mStockDatabaseManager.insertStock(mStock);
+				if (!mStockDatabaseManager.isStockExist(mStock)) {
+					mStockDatabaseManager.insertStock(mStock);
+				} else {
+					return RESULT_STOCK_EXIST;
+				}
 			} else if (ACTION_STOCK_EDIT.equals(mAction)) {
 				mStockDatabaseManager.updateStock(mStock,
 						mStock.getContentValues());
@@ -178,10 +186,17 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		default:
 			break;
 		}
+
+		return RESULT_SUCCESS;
 	}
 
 	@Override
 	void onPostExecuteSave(Long result) {
 		super.onPostExecuteSave(result);
+
+		if (result == RESULT_STOCK_EXIST) {
+			Toast.makeText(mContext, R.string.stock_exist, Toast.LENGTH_LONG)
+					.show();
+		}
 	}
 }

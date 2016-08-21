@@ -5,6 +5,9 @@ import android.os.Bundle;
 
 public class DatabaseActivity extends OrionBaseActivity {
 
+	public static final long RESULT_FAILURE = -1;
+	public static final long RESULT_SUCCESS = 0;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -35,13 +38,15 @@ public class DatabaseActivity extends OrionBaseActivity {
 		task.execute(params);
 	}
 
-	void doInBackgroundLoad(Object... params) {
+	Long doInBackgroundLoad(Object... params) {
+		return RESULT_SUCCESS;
 	}
 
 	void onPostExecuteLoad(Long result) {
 	}
 
-	void doInBackgroundSave(Object... params) {
+	Long doInBackgroundSave(Object... params) {
+		return RESULT_SUCCESS;
 	}
 
 	void onPostExecuteSave(Long result) {
@@ -51,8 +56,7 @@ public class DatabaseActivity extends OrionBaseActivity {
 
 		@Override
 		protected Long doInBackground(Object... params) {
-			doInBackgroundLoad(params);
-			return null;
+			return doInBackgroundLoad(params);
 		}
 
 		@Override
@@ -66,8 +70,7 @@ public class DatabaseActivity extends OrionBaseActivity {
 
 		@Override
 		protected Long doInBackground(Object... params) {
-			doInBackgroundSave(params);
-			return null;
+			return doInBackgroundSave(params);
 		}
 
 		@Override

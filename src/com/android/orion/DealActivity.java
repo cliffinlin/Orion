@@ -173,7 +173,7 @@ public class DealActivity extends DatabaseActivity implements OnClickListener {
 	}
 
 	@Override
-	void doInBackgroundLoad(Object... params) {
+	Long doInBackgroundLoad(Object... params) {
 		super.doInBackgroundLoad(params);
 		int execute = (Integer) params[0];
 
@@ -195,6 +195,8 @@ public class DealActivity extends DatabaseActivity implements OnClickListener {
 		default:
 			break;
 		}
+
+		return RESULT_SUCCESS;
 	}
 
 	@Override
@@ -204,7 +206,7 @@ public class DealActivity extends DatabaseActivity implements OnClickListener {
 	}
 
 	@Override
-	void doInBackgroundSave(Object... params) {
+	Long doInBackgroundSave(Object... params) {
 		super.doInBackgroundSave(params);
 		int execute = (Integer) params[0];
 
@@ -222,6 +224,8 @@ public class DealActivity extends DatabaseActivity implements OnClickListener {
 		default:
 			break;
 		}
+
+		return RESULT_SUCCESS;
 	}
 
 	@Override
