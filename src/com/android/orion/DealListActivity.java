@@ -69,8 +69,8 @@ public class DealListActivity extends StorageActivity implements
 
 	TextView mTextViewStockNameCode = null;
 	TextView mTextViewPrice = null;
-	TextView mTextViewDeal = null;
 	TextView mTextViewNet = null;
+	TextView mTextViewDeal = null;
 	TextView mTextViewVolume = null;
 	TextView mTextViewProfit = null;
 	TextView mTextViewCreated = null;
@@ -254,11 +254,11 @@ public class DealListActivity extends StorageActivity implements
 		case R.id.price:
 			mSortOrderColumn = DatabaseContract.COLUMN_PRICE;
 			break;
-		case R.id.deal:
-			mSortOrderColumn = DatabaseContract.COLUMN_DEAL;
-			break;
 		case R.id.net:
 			mSortOrderColumn = DatabaseContract.COLUMN_NET;
+			break;
+		case R.id.deal:
+			mSortOrderColumn = DatabaseContract.COLUMN_DEAL;
 			break;
 		case R.id.volume:
 			mSortOrderColumn = DatabaseContract.COLUMN_VOLUME;
@@ -304,8 +304,8 @@ public class DealListActivity extends StorageActivity implements
 	void resetHeaderTextColor() {
 		setHeaderTextColor(mTextViewStockNameCode, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewPrice, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewDeal, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewNet, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewDeal, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewVolume, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewProfit, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewCreated, mHeaderTextDefaultColor);
@@ -337,11 +337,11 @@ public class DealListActivity extends StorageActivity implements
 		mTextViewPrice = (TextView) findViewById(R.id.price);
 		mTextViewPrice.setOnClickListener(this);
 
-		mTextViewDeal = (TextView) findViewById(R.id.deal);
-		mTextViewDeal.setOnClickListener(this);
-
 		mTextViewNet = (TextView) findViewById(R.id.net);
 		mTextViewNet.setOnClickListener(this);
+
+		mTextViewDeal = (TextView) findViewById(R.id.deal);
+		mTextViewDeal.setOnClickListener(this);
 
 		mTextViewVolume = (TextView) findViewById(R.id.volume);
 		mTextViewVolume.setOnClickListener(this);
@@ -360,10 +360,10 @@ public class DealListActivity extends StorageActivity implements
 					mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PRICE)) {
 			setHeaderTextColor(mTextViewPrice, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_DEAL)) {
-			setHeaderTextColor(mTextViewDeal, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_NET)) {
 			setHeaderTextColor(mTextViewNet, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_DEAL)) {
+			setHeaderTextColor(mTextViewDeal, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_VOLUME)) {
 			setHeaderTextColor(mTextViewVolume, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PROFIT)) {
@@ -382,11 +382,11 @@ public class DealListActivity extends StorageActivity implements
 		int[] mLeftTo = new int[] { R.id.name, R.id.code };
 
 		String[] mRightFrom = new String[] { DatabaseContract.COLUMN_PRICE,
-				DatabaseContract.COLUMN_DEAL, DatabaseContract.COLUMN_NET,
+				DatabaseContract.COLUMN_NET, DatabaseContract.COLUMN_DEAL,
 				DatabaseContract.COLUMN_VOLUME, DatabaseContract.COLUMN_PROFIT,
 				DatabaseContract.COLUMN_CREATED,
 				DatabaseContract.COLUMN_MODIFIED };
-		int[] mRightTo = new int[] { R.id.price, R.id.deal, R.id.net,
+		int[] mRightTo = new int[] { R.id.price, R.id.net, R.id.deal,
 				R.id.volume, R.id.profile, R.id.created, R.id.modified };
 
 		mLeftListView = (ListView) findViewById(R.id.left_listview);
@@ -632,10 +632,10 @@ public class DealListActivity extends StorageActivity implements
 						deal.setName(parser.nextText());
 					} else if (DatabaseContract.COLUMN_PRICE.equals(tagName)) {
 						deal.setPrice(Double.valueOf(parser.nextText()));
-					} else if (DatabaseContract.COLUMN_DEAL.equals(tagName)) {
-						deal.setDeal(Double.valueOf(parser.nextText()));
 					} else if (DatabaseContract.COLUMN_NET.equals(tagName)) {
 						deal.setNet(Double.valueOf(parser.nextText()));
+					} else if (DatabaseContract.COLUMN_DEAL.equals(tagName)) {
+						deal.setDeal(Double.valueOf(parser.nextText()));
 					} else if (DatabaseContract.COLUMN_VOLUME.equals(tagName)) {
 						deal.setVolume(Long.valueOf(parser.nextText()));
 					} else if (DatabaseContract.COLUMN_PROFIT.equals(tagName)) {
@@ -695,10 +695,10 @@ public class DealListActivity extends StorageActivity implements
 						deal.getName());
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_PRICE,
 						String.valueOf(deal.getPrice()));
-				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_DEAL,
-						String.valueOf(deal.getDeal()));
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_NET,
 						String.valueOf(deal.getNet()));
+				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_DEAL,
+						String.valueOf(deal.getDeal()));
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_VOLUME,
 						String.valueOf(deal.getVolume()));
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_PROFIT,

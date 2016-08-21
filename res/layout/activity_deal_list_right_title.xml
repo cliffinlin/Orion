@@ -14,21 +14,21 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/deal"
-        android:layout_width="80dp"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/deal"
-        android:textSize="18sp" />
-    
-    <TextView
         android:id="@+id/net"
         android:layout_width="80dp"
         android:layout_height="40dp"
         android:layout_weight="1"
         android:gravity="center"
         android:text="@string/net"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/deal"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/deal"
         android:textSize="18sp" />
 
     <TextView
@@ -57,7 +57,7 @@
         android:gravity="center"
         android:text="@string/created"
         android:textSize="18sp" />
-    
+
     <TextView
         android:id="@+id/modified"
         android:layout_width="100dp"
@@ -66,4 +66,5 @@
         android:gravity="center"
         android:text="@string/modified"
         android:textSize="18sp" />
+
 </LinearLayout>
