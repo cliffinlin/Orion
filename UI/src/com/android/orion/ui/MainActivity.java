@@ -1,4 +1,4 @@
-package com.android.orion;
+package com.android.orion.ui;
 
 import android.os.Bundle;
 import android.app.Activity;
