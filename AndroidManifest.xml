@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.android.orion"
-    android:versionCode="390"
-    android:versionName="1.1.19" >
+    android:versionCode="1"
+    android:versionName="1.0.0" >
 
     <uses-sdk
         android:minSdkVersion="19"
@@ -86,11 +86,6 @@
         </activity>
 
         <provider
-            android:name="com.android.orion.OrionContentProvider"
-            android:authorities="com.android.orion"
-            android:exported="false" >
-        </provider>
-        <provider
             android:name="com.android.orion.OrionSearchRecentSuggestionsProvider"
             android:authorities="com.android.orion.OrionSearchRecentSuggestionsProvider"
             android:exported="false" >
@@ -114,10 +109,6 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-
-        <service
-            android:name="com.android.orion.OrionService"
-            android:exported="false" />
 
         <activity
             android:name="com.android.orion.ServiceSettingActivity"

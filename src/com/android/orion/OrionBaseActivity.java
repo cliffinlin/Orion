@@ -22,7 +22,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.ArrayMap;
 
-import com.android.orion.OrionService.OrionServiceBinder;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
@@ -50,24 +49,25 @@ public class OrionBaseActivity extends Activity {
 	SharedPreferences mSharedPreferences = null;
 	StockDatabaseManager mStockDatabaseManager = null;
 
-	OrionService mOrionService = null;
+	// OrionService mOrionService = null;
 
 	ServiceConnection mServiceConnection = new ServiceConnection() {
 
 		@Override
 		public void onServiceConnected(ComponentName componentName,
 				IBinder iBinder) {
-			OrionServiceBinder orionServiceBinder = (OrionServiceBinder) iBinder;
-			if (orionServiceBinder != null) {
-				mOrionService = orionServiceBinder.getService();
-				mBound = true;
-			}
+			// OrionServiceBinder orionServiceBinder = (OrionServiceBinder)
+			// iBinder;
+			// if (orionServiceBinder != null) {
+			// mOrionService = orionServiceBinder.getService();
+			// mBound = true;
+			// }
 		}
 
 		@Override
 		public void onServiceDisconnected(ComponentName componentName) {
 			mBound = false;
-			mOrionService = null;
+			// mOrionService = null;
 		}
 	};
 
@@ -138,15 +138,15 @@ public class OrionBaseActivity extends Activity {
 	}
 
 	void bindService() {
-		Intent intent = new Intent(this, OrionService.class);
-		bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+		// Intent intent = new Intent(this, OrionService.class);
+		// bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
 	}
 
 	void unbindService() {
 		if (mBound) {
 			unbindService(mServiceConnection);
 			mBound = false;
-			mOrionService = null;
+			// mOrionService = null;
 		}
 	}
 
@@ -179,9 +179,9 @@ public class OrionBaseActivity extends Activity {
 	}
 
 	void startService(Bundle bundle) {
-		Intent intent = new Intent(this, OrionService.class);
-		intent.putExtras(bundle);
-		startService(intent);
+		// Intent intent = new Intent(this, OrionService.class);
+		// intent.putExtras(bundle);
+		// startService(intent);
 	}
 
 	public String getSetting(String key, String defaultValue) {

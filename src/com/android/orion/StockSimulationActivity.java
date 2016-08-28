@@ -46,7 +46,7 @@ public class StockSimulationActivity extends OrionBaseActivity implements
 	EditText mToTime = null;
 	EditText mInterval = null;
 
-	StockSimulationAlarmManager mStockSimulationAlarmManager = null;
+	// StockSimulationAlarmManager mStockSimulationAlarmManager = null;
 
 	public StockSimulationActivity() {
 	}
@@ -81,10 +81,10 @@ public class StockSimulationActivity extends OrionBaseActivity implements
 			mInterval = (EditText) findViewById(R.id.editTextInterval);
 		}
 
-		if (mStockSimulationAlarmManager == null) {
-			mStockSimulationAlarmManager = StockSimulationAlarmManager
-					.getInstance(this);
-		}
+		// if (mStockSimulationAlarmManager == null) {
+		// mStockSimulationAlarmManager = StockSimulationAlarmManager
+		// .getInstance(this);
+		// }
 
 		mStock.setId(getIntent().getLongExtra(Constants.EXTRA_KEY_STOCK_ID, 0));
 		mStock.setSE(getIntent().getStringExtra(Constants.EXTRA_KEY_STOCK_SE));
@@ -138,7 +138,7 @@ public class StockSimulationActivity extends OrionBaseActivity implements
 					Utility.setSettingString(context,
 							Constants.SETTING_KEY_SIMULATION_INTERVAL,
 							mInterval.getText().toString());
-					mStockSimulationAlarmManager.startAlarm();
+					// mStockSimulationAlarmManager.startAlarm();
 				} else {
 					Utility.setSettingString(context,
 							Constants.SETTING_KEY_SIMULATION_STOCK_ID, "");
@@ -160,7 +160,7 @@ public class StockSimulationActivity extends OrionBaseActivity implements
 							Constants.SETTING_KEY_SIMULATION_TO_DATE, "");
 					Utility.setSettingString(context,
 							Constants.SETTING_KEY_SIMULATION_TO_TIME, "");
-					mStockSimulationAlarmManager.stopAlarm();
+					// mStockSimulationAlarmManager.stopAlarm();
 				}
 			}
 		});

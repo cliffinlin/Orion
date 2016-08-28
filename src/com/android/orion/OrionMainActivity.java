@@ -7,30 +7,29 @@ import android.preference.PreferenceActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.android.orion.utility.Utility;
 import com.avos.avoscloud.AVUser;
 
 public class OrionMainActivity extends PreferenceActivity {
-	StockDownloadAlarmManager mStockDownloadAlarmManager = null;
+	// StockDownloadAlarmManager mStockDownloadAlarmManager = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		if (mStockDownloadAlarmManager == null) {
-			mStockDownloadAlarmManager = StockDownloadAlarmManager
-					.getInstance(this);
-			boolean bChecked = Utility.getSettingBoolean(this,
-					Constants.SETTING_KEY_ALARM);
-
-			if (mStockDownloadAlarmManager != null) {
-				if (bChecked) {
-					mStockDownloadAlarmManager.startAlarm();
-				} else {
-					mStockDownloadAlarmManager.stopAlarm();
-				}
-			}
-		}
+		// if (mStockDownloadAlarmManager == null) {
+		// mStockDownloadAlarmManager = StockDownloadAlarmManager
+		// .getInstance(this);
+		// boolean bChecked = Utility.getSettingBoolean(this,
+		// Constants.SETTING_KEY_ALARM);
+		//
+		// if (mStockDownloadAlarmManager != null) {
+		// if (bChecked) {
+		// mStockDownloadAlarmManager.startAlarm();
+		// } else {
+		// mStockDownloadAlarmManager.stopAlarm();
+		// }
+		// }
+		// }
 	}
 
 	@Override
