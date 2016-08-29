@@ -1,42 +1,59 @@
 package com.android.orion;
 
+import java.lang.ref.WeakReference;
+
+import android.app.AlarmManager;
+import android.app.NotificationManager;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.ContentObserver;
-import android.os.Binder;
+import android.media.AudioManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
+import android.os.Vibrator;
+import android.telephony.TelephonyManager;
+
 import com.android.orion.database.DatabaseContract;
+import com.android.orion.database.StockDatabaseManager;
 
 //import com.android.orion.leancloud.LeanCloudManager;
 
 public class OrionService extends Service {
-	private volatile Looper mServiceLooper;
-	private volatile ServiceHandler mServiceHandler;
-
-	ContentResolver mContentResolver = null;
-	private DatabaseContentOberserver mDatabaseContentOberserver = null;
+	private static final String TAG = "OrionService";
+	private static final boolean DEBUG = true;
 
 	private String mName = "OrionService";
 	private boolean mRedelivery = true;
 
-	private final IBinder mBinder = new OrionServiceBinder();
+	private volatile Looper mServiceLooper;
+	private volatile ServiceHandler mServiceHandler;
 
-	SinaFinance mSinaFinance = null;
+	private Context mContext;
+	private AlarmManager mAlarmManager;
+	private AudioManager mAudioManager;
+	private NotificationManager mNotificationManager;
+	private TelephonyManager mTelephonyManager;
+	private Vibrator mVibrator;
+
+	private ContentResolver mContentResolver;
+	private OrionBroadcastReceiver mOrionBroadcastReceiver;
+	private OrionContentOberserver mOrionContentOberserver;
+
+	private final IBinder mBinder = new OrionServiceStub(this);
+
+	SinaFinance mSinaFinance;
+	StockDatabaseManager mStockDatabaseManager;
 
 	// LeanCloudManager mLeanCloudManager = null;
-
-	public class OrionServiceBinder extends Binder {
-
-		OrionService getService() {
-			return OrionService.this;
-		}
-	}
 
 	private final class ServiceHandler extends Handler {
 		public ServiceHandler(Looper looper) {
@@ -46,7 +63,6 @@ public class OrionService extends Service {
 		@Override
 		public void handleMessage(Message msg) {
 			onHandleIntent((Intent) msg.obj);
-			// stopSelf(msg.arg1);
 		}
 	}
 
@@ -55,43 +71,50 @@ public class OrionService extends Service {
 
 	public OrionService(String name) {
 		super();
-		mName = name;
-	}
 
-	public void setIntentRedelivery(boolean enabled) {
-		mRedelivery = enabled;
+		mName = name;
 	}
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
 
+		mContext = getApplicationContext();
+
 		HandlerThread handlerThread = new HandlerThread(mName);
 		handlerThread.start();
 		mServiceLooper = handlerThread.getLooper();
 		mServiceHandler = new ServiceHandler(mServiceLooper);
 
-		if (mDatabaseContentOberserver == null) {
-			mDatabaseContentOberserver = new DatabaseContentOberserver(null);
-		}
+		mAlarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+		mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+		mTelephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+		mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
-		if (mDatabaseContentOberserver != null) {
-			if (mContentResolver == null) {
-				mContentResolver = getContentResolver();
-			}
+		mStockDatabaseManager = StockDatabaseManager.getInstance(mContext);
 
-			mContentResolver.registerContentObserver(
-					DatabaseContract.Stock.CONTENT_URI, true,
-					mDatabaseContentOberserver);
-		}
+		mOrionBroadcastReceiver = new OrionBroadcastReceiver();
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction(Constants.ACTION_SERVICE_FINISHED);
+		registerReceiver(mOrionBroadcastReceiver, intentFilter);
 
-		if (mSinaFinance == null) {
-			mSinaFinance = new SinaFinance(this);
-		}
+		mOrionContentOberserver = new OrionContentOberserver(mServiceHandler);
+		mContentResolver = getContentResolver();
+		mContentResolver.registerContentObserver(
+				DatabaseContract.Stock.CONTENT_URI, false,
+				mOrionContentOberserver);
+		mContentResolver.registerContentObserver(
+				DatabaseContract.StockData.CONTENT_URI, false,
+				mOrionContentOberserver);
 
-		// if (mLeanCloudManager == null) {
+		mSinaFinance = new SinaFinance(this);
 		// mLeanCloudManager = new LeanCloudManager(this);
-		// }
+	}
+
+	@Override
+	public IBinder onBind(Intent intent) {
+		return mBinder;
 	}
 
 	@Override
@@ -108,19 +131,25 @@ public class OrionService extends Service {
 		return mRedelivery ? START_REDELIVER_INTENT : START_NOT_STICKY;
 	}
 
-	@Override
-	public void onDestroy() {
-		mServiceLooper.quit();
-
-		if (mDatabaseContentOberserver != null) {
-			mContentResolver
-					.unregisterContentObserver(mDatabaseContentOberserver);
-		}
+	void restartService() {
+		Intent intent = new Intent();
+		intent.setClass(mContext, OrionService.class);
+		mContext.startService(intent);
 	}
 
 	@Override
-	public IBinder onBind(Intent intent) {
-		return mBinder;
+	public void onDestroy() {
+		super.onDestroy();
+
+		mServiceLooper.quit();
+
+		try {
+			mContentResolver.unregisterContentObserver(mOrionContentOberserver);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		restartService();
 	}
 
 	void onHandleIntent(Intent intent) {
@@ -195,20 +224,52 @@ public class OrionService extends Service {
 	// }
 	// }
 
-	class DatabaseContentOberserver extends ContentObserver {
+	class OrionBroadcastReceiver extends BroadcastReceiver {
 
 		@Override
-		public void onChange(boolean selfChange) {
-			super.onChange(selfChange);
+		public void onReceive(Context context, Intent intent) {
+			String action = intent.getAction();
 
-			if (mSinaFinance != null) {
-				// __TEST_CASE__
-				// mSinaFinance.writeMessage();
+			if (Constants.ACTION_SERVICE_FINISHED.equals(action)) {
+
+			} else {
+
 			}
 		}
+	}
 
-		public DatabaseContentOberserver(Handler handler) {
+	class OrionContentOberserver extends ContentObserver {
+
+		public OrionContentOberserver(Handler handler) {
 			super(handler);
+		}
+
+		@Override
+		public void onChange(boolean selfChange, Uri uri) {
+			super.onChange(selfChange, uri);
+
+			if (uri.equals(DatabaseContract.Setting.CONTENT_URI)) {
+
+			} else if (uri.equals(DatabaseContract.Stock.CONTENT_URI)) {
+
+			} else if (uri.equals(DatabaseContract.StockData.CONTENT_URI)) {
+
+			} else {
+
+			}
+		}
+	}
+
+	/*
+	 * By making this a static class with a WeakReference to the Service, we
+	 * ensure that the Service can be GCd even when the system process still has
+	 * a remote reference to the stub.
+	 */
+	static class OrionServiceStub extends IOrionService.Stub {
+		WeakReference<OrionService> mOrionService;
+
+		OrionServiceStub(OrionService orionService) {
+			mOrionService = new WeakReference<OrionService>(orionService);
 		}
 	}
 }
