@@ -20,7 +20,6 @@ import com.android.orion.database.Deal;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.indicator.MACD;
-import com.android.orion.service.R;
 import com.android.orion.utility.StopWatch;
 import com.android.orion.utility.Utility;
 

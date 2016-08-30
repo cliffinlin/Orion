@@ -20,13 +20,13 @@ import com.android.orion.pinyin.Pinyin;
 import com.android.orion.utility.Utility;
 
 public class StockManager {
-	protected Context mContext;
+	Context mContext;
 
-	protected ContentResolver mContentResolver = null;
-	protected LocalBroadcastManager mLocalBroadcastManager = null;
-//	StockSimulationAlarmManager mStockSimulationAlarmManager = null;
+	ContentResolver mContentResolver = null;
+	LocalBroadcastManager mLocalBroadcastManager = null;
+	StockSimulationAlarmManager mStockSimulationAlarmManager = null;
 	protected StockDatabaseManager mStockDatabaseManager = null;
-	protected ArrayMap<String, Stock> mStockArrayMapFavorite = null;
+	ArrayMap<String, Stock> mStockArrayMapFavorite = null;
 
 	// ConnectivityManager mConnectivityManager = null;
 
@@ -42,10 +42,10 @@ public class StockManager {
 					.getInstance(mContext);
 		}
 
-//		if (mStockSimulationAlarmManager == null) {
-//			mStockSimulationAlarmManager = StockSimulationAlarmManager
-//					.getInstance(mContext);
-//		}
+		if (mStockSimulationAlarmManager == null) {
+			mStockSimulationAlarmManager = StockSimulationAlarmManager
+					.getInstance(mContext);
+		}
 
 		if (mStockDatabaseManager == null) {
 			mStockDatabaseManager = StockDatabaseManager.getInstance(mContext);
@@ -122,7 +122,7 @@ public class StockManager {
 	 * return networkInfo == null ? false : networkInfo.isConnected(); }
 	 */
 
-	protected void initStockIndexes() {
+	void initStockIndexes() {
 		if (mStockDatabaseManager == null) {
 			return;
 		}
@@ -164,7 +164,7 @@ public class StockManager {
 		}
 	}
 
-	public void fixPinyin() {
+	void fixPinyin() {
 		String name = "";
 		String selection = null;
 		List<Stock> stockList = null;
@@ -229,7 +229,7 @@ public class StockManager {
 		return stockList;
 	}
 
-	protected void loadStockArrayMap(String selection, String[] selectionArgs,
+	void loadStockArrayMap(String selection, String[] selectionArgs,
 			String sortOrder, ArrayMap<String, Stock> stockArrayMap) {
 		Cursor cursor = null;
 
@@ -255,7 +255,7 @@ public class StockManager {
 		}
 	}
 
-	protected void loadStockDataList(int executeType, Stock stock, String period,
+	void loadStockDataList(int executeType, Stock stock, String period,
 			ArrayList<StockData> stockDataList) {
 		int index = 0;
 		int cursorCount = 0;
@@ -287,7 +287,7 @@ public class StockManager {
 					Constants.SETTING_KEY_SIMULATION_TIME);
 
 			if (TextUtils.isEmpty(simulationDate)) {
-//				mStockSimulationAlarmManager.stopAlarm();
+				mStockSimulationAlarmManager.stopAlarm();
 				Utility.setSettingBoolean(mContext,
 						Constants.SETTING_KEY_SIMULATION, false);
 				return;
@@ -359,7 +359,7 @@ public class StockManager {
 			if (period.equals(Utility.getSettingString(mContext,
 					Constants.SETTING_KEY_SIMULATION_PERIOD))) {
 				if (cursorCount == stockDataList.size()) {
-//					mStockSimulationAlarmManager.stopAlarm();
+					mStockSimulationAlarmManager.stopAlarm();
 					Utility.setSettingBoolean(mContext,
 							Constants.SETTING_KEY_SIMULATION, false);
 					simulationDate = "";
@@ -377,7 +377,7 @@ public class StockManager {
 		}
 	}
 
-	protected ArrayList<StockData> getStockDataList(Stock stock, String period) {
+	ArrayList<StockData> getStockDataList(Stock stock, String period) {
 		ArrayList<StockData> stockDataList = null;
 
 		if (period.equals(Constants.PERIOD_1MIN)) {
@@ -413,7 +413,7 @@ public class StockManager {
 				+ Constants.STOCK_FLAG_CLASS_HSA + "'";
 	}
 
-	protected boolean isStockHSAEmpty() {
+	boolean isStockHSAEmpty() {
 		boolean result = false;
 
 		String selection = selectStockHSA();
@@ -429,7 +429,7 @@ public class StockManager {
 		return result;
 	}
 
-	protected int getPeriodMinutes(String period) {
+	int getPeriodMinutes(String period) {
 		int minutes = 0;
 
 		if (period.equals(Constants.PERIOD_1MIN)) {
@@ -458,7 +458,7 @@ public class StockManager {
 		return minutes;
 	}
 
-	protected int getPeriodCoefficient(String period) {
+	int getPeriodCoefficient(String period) {
 		int result = 1;
 
 		if (period.equals(Constants.PERIOD_1MIN)) {

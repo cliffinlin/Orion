@@ -1,5 +1,6 @@
 package com.android.orion;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
@@ -11,7 +12,7 @@ import com.android.orion.utility.Utility;
 public class ServiceSettingFragment extends PreferenceFragment implements
 		OnSharedPreferenceChangeListener {
 
-	// StockDownloadAlarmManager mStockDownloadAlarmManager = null;
+	StockDownloadAlarmManager mStockDownloadAlarmManager = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -19,8 +20,8 @@ public class ServiceSettingFragment extends PreferenceFragment implements
 
 		getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
 
-		// mStockDownloadAlarmManager = StockDownloadAlarmManager
-		// .getInstance(getActivity());
+		mStockDownloadAlarmManager = StockDownloadAlarmManager
+				.getInstance(getActivity());
 
 		addPreferencesFromResource(R.xml.preference_service_setting);
 	}
@@ -51,17 +52,17 @@ public class ServiceSettingFragment extends PreferenceFragment implements
 
 		bChecked = sharedPreferences.getBoolean(key, true);
 		if (key.equals(Constants.SETTING_KEY_ALARM)) {
-			// if (bChecked) {
-			// remindNetworkConnection();
-			//
-			// if (mStockDownloadAlarmManager != null) {
-			// mStockDownloadAlarmManager.startAlarm();
-			// }
-			// } else {
-			// if (mStockDownloadAlarmManager != null) {
-			// mStockDownloadAlarmManager.stopAlarm();
-			// }
-			// }
+			if (bChecked) {
+				remindNetworkConnection();
+
+				if (mStockDownloadAlarmManager != null) {
+					mStockDownloadAlarmManager.startAlarm();
+				}
+			} else {
+				if (mStockDownloadAlarmManager != null) {
+					mStockDownloadAlarmManager.stopAlarm();
+				}
+			}
 		} else if (key.equals(Constants.PERIOD_1MIN)
 				|| key.equals(Constants.PERIOD_5MIN)
 				|| key.equals(Constants.PERIOD_15MIN)
@@ -73,13 +74,12 @@ public class ServiceSettingFragment extends PreferenceFragment implements
 				|| key.equals(Constants.PERIOD_QUARTER)
 				|| key.equals(Constants.PERIOD_YEAR)) {
 			if (bChecked) {
-				// Intent intent = new Intent(getActivity(),
-				// OrionService.class);
-				// intent.putExtra(Constants.EXTRA_KEY_SERVICE_TYPE,
-				// Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE);
-				// intent.putExtra(Constants.EXTRA_KEY_EXECUTE_TYPE,
-				// Constants.EXECUTE_IMMEDIATE);
-				// getActivity().startService(intent);
+				Intent intent = new Intent(getActivity(), OrionService.class);
+				intent.putExtra(Constants.EXTRA_KEY_SERVICE_TYPE,
+						Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE);
+				intent.putExtra(Constants.EXTRA_KEY_EXECUTE_TYPE,
+						Constants.EXECUTE_IMMEDIATE);
+				getActivity().startService(intent);
 			}
 		}
 	}
