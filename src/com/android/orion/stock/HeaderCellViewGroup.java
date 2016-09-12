@@ -1,15 +1,16 @@
 package com.android.orion.stock;
 
+import java.util.List;
+
 import android.content.Context;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 
 import com.android.orion.R;
-import com.android.orion.database.Stock;
 import com.miguelbcr.tablefixheaders.TableFixHeaderAdapter;
 
 public class HeaderCellViewGroup extends CellViewGroup implements
-		TableFixHeaderAdapter.HeaderBinder<Stock> {
+		TableFixHeaderAdapter.HeaderBinder<List<String>> {
 
 	public HeaderCellViewGroup(Context context) {
 		super(context);
@@ -26,8 +27,8 @@ public class HeaderCellViewGroup extends CellViewGroup implements
 	}
 
 	@Override
-	public void bindHeader(Stock stock, int column) {
-		mTextView.setText(stock.getName());
+	public void bindHeader(List<String> list, int column) {
+		mTextView.setText(list.get(column));
 		mTextView.setTypeface(null, Typeface.BOLD);
 		mView.setBackgroundResource(R.drawable.cell_lightgray_border_bottom_right_gray);
 	}

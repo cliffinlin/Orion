@@ -11,7 +11,7 @@ import android.content.Context;
 
 public class SortableTableAdapter
 		extends
-		TableFixHeaderAdapter<Stock, FirstHeaderCellViewGroup, Stock, HeaderCellViewGroup, List<Stock>, FirstBodyCellViewGroup, BodyCellViewGroup, SectionCellViewGroup> {
+		TableFixHeaderAdapter<String, FirstHeaderCellViewGroup, List<String>, HeaderCellViewGroup, List<Stock>, FirstBodyCellViewGroup, BodyCellViewGroup, SectionCellViewGroup> {
 
 	private Context mContext;
 

@@ -19,17 +19,17 @@ public class SortableTable {
 		mContext = context;
 	}
 
-	// public BaseTableAdapter getInstance() {
-	public SortableTableAdapter getInstance() {
+	 public BaseTableAdapter getInstance() {
 		SortableTableAdapter adapter = new SortableTableAdapter(mContext);
 
+		List<String> header = getHeader();
 		List<Stock> body = getBody();
 
-		// adapter.setFirstHeader("FH");
-		// adapter.setHeader(getHeader());
-		// adapter.setFirstBody(body);
-		// adapter.setBody(body);
-		// adapter.setSection(body);
+		 adapter.setFirstHeader(getHeader().get(0));
+//		 adapter.setHeader(header);
+//		 adapter.setFirstBody(body);
+//		 adapter.setBody(body);
+//		 adapter.setSection(body);
 		//
 		// setListeners(adapter);
 

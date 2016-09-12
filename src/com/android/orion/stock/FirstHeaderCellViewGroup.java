@@ -5,11 +5,10 @@ import android.graphics.Typeface;
 import android.util.AttributeSet;
 
 import com.android.orion.R;
-import com.android.orion.database.Stock;
 import com.miguelbcr.tablefixheaders.TableFixHeaderAdapter;
 
 public class FirstHeaderCellViewGroup extends CellViewGroup implements
-		TableFixHeaderAdapter.FirstHeaderBinder<Stock> {
+		TableFixHeaderAdapter.FirstHeaderBinder<String> {
 
 	public FirstHeaderCellViewGroup(Context context) {
 		super(context);
@@ -26,8 +25,8 @@ public class FirstHeaderCellViewGroup extends CellViewGroup implements
 	}
 
 	@Override
-	public void bindFirstHeader(Stock stock) {
-		mTextView.setText(stock.getName());
+	public void bindFirstHeader(String item) {
+		mTextView.setText(item);
 		mTextView.setTypeface(null, Typeface.BOLD);
 		mView.setBackgroundResource(R.drawable.cell_lightgray_border_bottom_right_gray);
 	}
