@@ -1,4 +1,4 @@
-package com.android.orion.stock;
+package com.android.orion.stocklist;
 
 public class Nexus {
     public final String type;

@@ -1,4 +1,4 @@
-package com.android.orion.stock;
+package com.android.orion.stocklist;
 
 import android.content.Context;
 import android.util.AttributeSet;

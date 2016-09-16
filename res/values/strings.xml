@@ -103,6 +103,7 @@
     <string name="stock_insert">Stock Insert</string>
     <string name="stock_exist">Stock Exist!</string>
     <string name="stock_edit">Stock Edit</string>
+    <string name="stock_list">Stock List</string>
     <string name="stock_se">Stock SE</string>
     <string name="stock_se_hint">sh or sz</string>
     <string name="stock_se_not_found">Stock SE not Found!</string>

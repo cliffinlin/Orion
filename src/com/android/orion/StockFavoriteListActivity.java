@@ -98,7 +98,7 @@ public class StockFavoriteListActivity extends StorageActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_stock_list);
+		setContentView(R.layout.activity_stock_favorite_list);
 
 		mSortOrder = getSetting(Setting.KEY_SORT_ORDER_STOCK_LIST,
 				mSortOrderDefault);

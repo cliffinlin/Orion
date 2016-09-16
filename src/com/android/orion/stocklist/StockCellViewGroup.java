@@ -1,4 +1,4 @@
-package com.android.orion.stock;
+package com.android.orion.stocklist;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -33,7 +33,7 @@ public class StockCellViewGroup extends CellViewGroup implements
 
 	@Override
 	public void bindFirstHeader(String headerName) {
-		mTextView.setText(headerName.toUpperCase());
+		mTextView.setText(headerName);
 		mTextView.setTypeface(null, Typeface.BOLD);
 		mTextView.setGravity(Gravity.CENTER);
 
@@ -42,7 +42,7 @@ public class StockCellViewGroup extends CellViewGroup implements
 
 	@Override
 	public void bindHeader(String headerName, int column) {
-		mTextView.setText(headerName.toUpperCase());
+		mTextView.setText(headerName);
 		mTextView.setTypeface(null, Typeface.BOLD);
 		mTextView.setGravity(Gravity.CENTER);
 

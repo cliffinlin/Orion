@@ -1,4 +1,4 @@
-package com.android.orion.stock;
+package com.android.orion.stocklist;
 
 import java.util.Arrays;
 import java.util.List;

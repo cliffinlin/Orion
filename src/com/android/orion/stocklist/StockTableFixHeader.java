@@ -1,4 +1,4 @@
-package com.android.orion.stock;
+package com.android.orion.stocklist;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,15 +10,15 @@ import com.miguelbcr.tablefixheaders.TableFixHeaderAdapter;
 import android.content.Context;
 
 public class StockTableFixHeader {
-	private Context context;
+	private Context mContext;
 
 	public StockTableFixHeader(Context context) {
-		this.context = context;
+		mContext = context;
 	}
 
-	public BaseTableAdapter getInstance() {
+	public BaseTableAdapter getAdapter() {
 		StockTableFixHeaderAdapter adapter = new StockTableFixHeaderAdapter(
-				context);
+				mContext);
 		List<Nexus> body = getBody();
 
 		adapter.setFirstHeader("Name");
