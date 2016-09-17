@@ -10,7 +10,7 @@
     </header>
     <header
         android:icon="@drawable/ic_list"
-        android:title="@string/stock_list" >
+        android:title="@string/stock" >
         <intent
             android:targetClass="com.android.orion.StockListActivity"
             android:targetPackage="com.android.orion" />

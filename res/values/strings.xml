@@ -80,13 +80,6 @@
     <string name="price_change">Change</string>
     <string name="price_net">Net</string>
     <string name="profile">Profile</string>
-    <string name="stock_action_5min">5M</string>
-    <string name="stock_action_15min">15M</string>
-    <string name="stock_action_30min">30M</string>
-    <string name="stock_action_60min">60M</string>
-    <string name="stock_action_day">Day</string>
-    <string name="stock_action_week">W</string>
-    <string name="stock_action_month">M</string>
     <string name="search">Search</string>
     <string name="service">Service</string>
     <string name="sign_up_button_label">Sign Up</string>
@@ -95,6 +88,14 @@
     <string name="sign_up_text">Sign Up!</string>
     <string name="start_service">Start</string>
     <string name="stop_service">Stop</string>
+    <string name="stock">Stock</string>
+    <string name="stock_action_5min">5M</string>
+    <string name="stock_action_15min">15M</string>
+    <string name="stock_action_30min">30M</string>
+    <string name="stock_action_60min">60M</string>
+    <string name="stock_action_day">Day</string>
+    <string name="stock_action_week">W</string>
+    <string name="stock_action_month">M</string>
     <string name="stock_chart">Chart</string>
     <string name="stock_name_code">Name</string>
     <string name="stock_code">Stock Code</string>
@@ -103,7 +104,6 @@
     <string name="stock_insert">Stock Insert</string>
     <string name="stock_exist">Stock Exist!</string>
     <string name="stock_edit">Stock Edit</string>
-    <string name="stock_list">Stock List</string>
     <string name="stock_se">Stock SE</string>
     <string name="stock_se_hint">sh or sz</string>
     <string name="stock_se_not_found">Stock SE not Found!</string>

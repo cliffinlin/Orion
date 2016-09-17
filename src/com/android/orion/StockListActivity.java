@@ -5,15 +5,11 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.android.orion.R;
 import com.android.orion.stocklist.StockTableFixHeader;
 import com.inqbarna.tablefixheaders.TableFixHeaders;
-import com.inqbarna.tablefixheaders.adapters.BaseTableAdapter;
 
 public class StockListActivity extends Activity {
-	StockTableFixHeader mStockTableFixHeader = null;
-	
-	private TableFixHeaders tableFixHeaders;
+	private TableFixHeaders mTableFixHeaders;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -21,11 +17,8 @@ public class StockListActivity extends Activity {
 
 		setContentView(R.layout.activity_stock_list);
 
-		tableFixHeaders = (TableFixHeaders) findViewById(R.id.tablefixheaders);
-		mStockTableFixHeader = new StockTableFixHeader(this);
-		BaseTableAdapter baseTableAdapter = mStockTableFixHeader.getAdapter();
-		
-		tableFixHeaders.setAdapter(baseTableAdapter);
+		mTableFixHeaders = (TableFixHeaders) findViewById(R.id.tablefixheaders);
+		mTableFixHeaders.setAdapter(new StockTableFixHeader(this).getAdapter());
 	}
 
 	@Override
