@@ -3,10 +3,13 @@ package com.android.orion;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.android.orion.database.DatabaseContract;
+import com.android.orion.database.Setting;
 import com.android.orion.database.Stock;
 import com.android.orion.stocklist.StockCellViewGroup;
 import com.android.orion.stocklist.StockTableFixHeaderAdapter;
@@ -17,6 +20,13 @@ import com.miguelbcr.tablefixheaders.TableFixHeaderAdapter;
 public class StockListActivity extends StorageActivity {
 	public static final int EXECUTE_STOCK_LIST_LOAD = 1;
 
+	String mSortOrderColumn = DatabaseContract.COLUMN_CODE;
+	String mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_ASC;
+	String mSortOrderDefault = mSortOrderColumn + mSortOrderDirection;
+	String mSortOrder = mSortOrderDefault;
+
+	List<Stock> mStockList = new ArrayList<Stock>();
+
 	TableFixHeaders mTableFixHeaders;
 
 	@Override
@@ -24,6 +34,9 @@ public class StockListActivity extends StorageActivity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_stock_list);
+
+		mSortOrder = getSetting(Setting.KEY_SORT_ORDER_STOCK_LIST,
+				mSortOrderDefault);
 
 		mTableFixHeaders = (TableFixHeaders) findViewById(R.id.tablefixheaders);
 		mTableFixHeaders.setAdapter(getAdapter());
@@ -56,7 +69,25 @@ public class StockListActivity extends StorageActivity {
 
 		switch (execute) {
 		case EXECUTE_STOCK_LIST_LOAD:
-			// mStockDatabaseManager.getStockById(mStock);
+			Cursor cursor = null;
+
+			try {
+				mStockList = new ArrayList<Stock>();
+				cursor = mStockDatabaseManager.queryStock(null, null,
+						mSortOrder);
+				if ((cursor != null) && (cursor.getCount() > 0)) {
+					while (cursor.moveToNext()) {
+						Stock stock = Stock.obtain();
+						stock.set(cursor);
+						mStockList.add(stock);
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				mStockDatabaseManager.closeCursor(cursor);
+			}
+
 			break;
 
 		default:
@@ -66,18 +97,23 @@ public class StockListActivity extends StorageActivity {
 		return RESULT_SUCCESS;
 	}
 
+	@Override
+	void onPostExecuteLoad(Long result) {
+		super.onPostExecuteLoad(result);
+
+		mTableFixHeaders.setAdapter(getAdapter());
+	}
+
 	public BaseTableAdapter getAdapter() {
 		StockTableFixHeaderAdapter adapter = new StockTableFixHeaderAdapter(
 				mContext);
 
-		List<Stock> body = getBody();
-
 		adapter.setFirstHeader(mContext.getResources().getString(
 				R.string.stock_name_code));
 		adapter.setHeader(getHeader());
-		adapter.setFirstBody(body);
-		adapter.setBody(body);
-		adapter.setSection(body);
+		adapter.setFirstBody(mStockList);
+		adapter.setBody(mStockList);
+		adapter.setSection(mStockList);
 
 		setListeners(adapter);
 
@@ -146,58 +182,5 @@ public class StockListActivity extends StorageActivity {
 		// R.string.stock_action_month));
 
 		return headerStrings;
-	}
-
-	private List<Stock> getBody() {
-		List<Stock> items = new ArrayList<Stock>();
-		// items.add(new Nexus("Nexus One", "HTC", "Gingerbread", "10",
-		// "512 MB",
-		// "3.7\"", "512 MB"));
-		// items.add(new Nexus("Nexus S", "Samsung", "Gingerbread", "10",
-		// "16 GB",
-		// "4\"", "512 MB"));
-		// items.add(new Nexus("Galaxy Nexus (16 GB)", "Samsung",
-		// "Ice cream Sandwich", "15", "16 GB", "4.65\"", "1 GB"));
-		// items.add(new Nexus("Galaxy Nexus (32 GB)", "Samsung",
-		// "Ice cream Sandwich", "15", "32 GB", "4.65\"", "1 GB"));
-		// items.add(new Nexus("Nexus 4 (8 GB)", "LG", "Jelly Bean", "17",
-		// "8 GB",
-		// "4.7\"", "2 GB"));
-		// items.add(new Nexus("Nexus 4 (16 GB)", "LG", "Jelly Bean", "17",
-		// "16 GB", "4.7\"", "2 GB"));
-		// items.add(new Nexus("Nexus 7 (16 GB)", "Asus", "Jelly Bean", "16",
-		// "16 GB", "7\"", "1 GB"));
-		// items.add(new Nexus("Nexus 7 (32 GB)", "Asus", "Jelly Bean", "16",
-		// "32 GB", "7\"", "1 GB"));
-		// items.add(new Nexus("Nexus 10 (16 GB)", "Samsung", "Jelly Bean",
-		// "17",
-		// "16 GB", "10\"", "2 GB"));
-		// items.add(new Nexus("Nexus 10 (32 GB)", "Samsung", "Jelly Bean",
-		// "17",
-		// "32 GB", "10\"", "2 GB"));
-		// items.add(new Nexus("Nexus Q", "--", "Honeycomb", "13", "--", "--",
-		// "--"));
-		// items.add(new Nexus("Galaxy Nexus (16 GB)", "Samsung",
-		// "Ice cream Sandwich", "15", "16 GB", "4.65\"", "1 GB"));
-		// items.add(new Nexus("Galaxy Nexus (32 GB)", "Samsung",
-		// "Ice cream Sandwich", "15", "32 GB", "4.65\"", "1 GB"));
-		// items.add(new Nexus("Nexus 4 (8 GB)", "LG", "Jelly Bean", "17",
-		// "8 GB",
-		// "4.7\"", "2 GB"));
-		// items.add(new Nexus("Nexus 4 (16 GB)", "LG", "Jelly Bean", "17",
-		// "16 GB", "4.7\"", "2 GB"));
-		// items.add(new Nexus("Nexus 7 (16 GB)", "Asus", "Jelly Bean", "16",
-		// "16 GB", "7\"", "1 GB"));
-		// items.add(new Nexus("Nexus 7 (32 GB)", "Asus", "Jelly Bean", "16",
-		// "32 GB", "7\"", "1 GB"));
-		// items.add(new Nexus("Nexus 10 (16 GB)", "Samsung", "Jelly Bean",
-		// "17",
-		// "16 GB", "10\"", "2 GB"));
-		// items.add(new Nexus("Nexus 10 (32 GB)", "Samsung", "Jelly Bean",
-		// "17",
-		// "32 GB", "10\"", "2 GB"));
-		// items.add(new Nexus("Nexus Q", "--", "Honeycomb", "13", "--", "--",
-		// "--"));
-		return items;
 	}
 }
