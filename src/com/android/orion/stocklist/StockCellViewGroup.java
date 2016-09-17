@@ -53,7 +53,7 @@ public class StockCellViewGroup extends CellViewGroup implements
 
 	@Override
 	public void bindFirstBody(Stock stock, int row) {
-		mTextView.setText(stock.getName());
+		mTextView.setText(stock.getName() + "\n" + stock.getCode());
 		mTextView.setTypeface(null, Typeface.NORMAL);
 
 		mView.setBackgroundResource(row % 2 == 0 ? R.drawable.cell_lightgray_border_bottom_right_gray
