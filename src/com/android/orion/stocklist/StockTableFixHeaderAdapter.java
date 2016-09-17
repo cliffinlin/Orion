@@ -6,11 +6,12 @@ import java.util.List;
 import android.content.Context;
 
 import com.android.orion.R;
+import com.android.orion.database.Stock;
 import com.miguelbcr.tablefixheaders.TableFixHeaderAdapter;
 
 public class StockTableFixHeaderAdapter
 		extends
-		TableFixHeaderAdapter<String, StockCellViewGroup, String, StockCellViewGroup, Nexus, StockCellViewGroup, StockCellViewGroup, StockCellViewGroup> {
+		TableFixHeaderAdapter<String, StockCellViewGroup, String, StockCellViewGroup, Stock, StockCellViewGroup, StockCellViewGroup, StockCellViewGroup> {
 	Context mContext;
 
 	public StockTableFixHeaderAdapter(Context context) {
@@ -74,7 +75,7 @@ public class StockTableFixHeaderAdapter
 	}
 
 	@Override
-	protected boolean isSection(List<Nexus> items, int row) {
-		return items.get(row).isSection();
+	protected boolean isSection(List<Stock> items, int row) {
+		return false;
 	}
 }
