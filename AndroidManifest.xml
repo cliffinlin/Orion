@@ -65,12 +65,8 @@
             android:label="@string/favorite_list" >
         </activity>
         <activity
-            android:name="com.android.orion.FamilyTable"
-            android:label="@string/favorite_list" >
-        </activity>
-        <activity
             android:name="com.android.orion.StockListActivity"
-            android:label="@string/favorite_list" >
+            android:label="@string/stock_list" >
         </activity>
         <activity
             android:name="com.android.orion.StockEditActivity"
