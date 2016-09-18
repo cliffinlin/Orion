@@ -3,17 +3,108 @@ package com.android.orion;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.inqbarna.tablefixheaders.TableFixHeaders;
-import com.inqbarna.tablefixheaders.adapters.BaseTableAdapter;
-
-import android.app.Activity;
 import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class FamilyTable extends Activity {
+import com.android.orion.database.DatabaseContract;
+import com.android.orion.database.Setting;
+import com.android.orion.database.Stock;
+import com.inqbarna.tablefixheaders.TableFixHeaders;
+import com.inqbarna.tablefixheaders.adapters.BaseTableAdapter;
+
+public class FamilyTable extends StorageActivity {
+	public static final int EXECUTE_STOCK_LIST_LOAD = 1;
+
+	String mSortOrderColumn = DatabaseContract.COLUMN_CODE;
+	String mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_ASC;
+	String mSortOrderDefault = mSortOrderColumn + mSortOrderDirection;
+	String mSortOrder = mSortOrderDefault;
+
+	List<Stock> mStockList = new ArrayList<Stock>();
+
+	TableFixHeaders mTableFixHeaders;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		setContentView(R.layout.table);
+
+		mSortOrder = getSetting(Setting.KEY_SORT_ORDER_STOCK_LIST,
+				mSortOrderDefault);
+
+		mTableFixHeaders = (TableFixHeaders) findViewById(R.id.table);
+
+		mTableFixHeaders.setAdapter(new FamilyNexusAdapter(this));
+
+		startLoadTask(EXECUTE_STOCK_LIST_LOAD);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.stock_list, menu);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			return true;
+		}
+
+		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	void onPostExecuteLoad(Long result) {
+		super.onPostExecuteLoad(result);
+
+		mTableFixHeaders.setAdapter(new FamilyNexusAdapter(this));
+	}
+
+	@Override
+	Long doInBackgroundLoad(Object... params) {
+		super.doInBackgroundLoad(params);
+		int execute = (Integer) params[0];
+
+		switch (execute) {
+		case EXECUTE_STOCK_LIST_LOAD:
+			Cursor cursor = null;
+
+			try {
+				mStockList = new ArrayList<Stock>();
+				cursor = mStockDatabaseManager.queryStock(null, null,
+						mSortOrder);
+				if ((cursor != null) && (cursor.getCount() > 0)) {
+					while (cursor.moveToNext()) {
+						Stock stock = Stock.obtain();
+						stock.set(cursor);
+						mStockList.add(stock);
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				mStockDatabaseManager.closeCursor(cursor);
+			}
+
+			break;
+
+		default:
+			break;
+		}
+
+		return RESULT_SUCCESS;
+	}
 
 	private class NexusTypes {
 		private final String name;
@@ -36,72 +127,50 @@ public class FamilyTable extends Activity {
 	private class Nexus {
 		private final String[] data;
 
-		private Nexus(String name, String company, String version, String api, String storage, String inches, String ram) {
-			data = new String[] {
-					name,
-					company,
-					version,
-					api,
-					storage,
-					inches,
+		private Nexus(String name, String company, String version, String api,
+				String storage, String inches, String ram) {
+			data = new String[] { name, company, version, api, storage, inches,
 					ram };
 		}
-	}
-
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.table);
-
-		TableFixHeaders tableFixHeaders = (TableFixHeaders) findViewById(R.id.table);
-		BaseTableAdapter baseTableAdapter = new FamilyNexusAdapter(this);
-		tableFixHeaders.setAdapter(baseTableAdapter);
 	}
 
 	public class FamilyNexusAdapter extends BaseTableAdapter {
 
 		private final NexusTypes familys[];
-		private final String headers[] = {
-				"Name",
-				"Company",
-				"Version",
-				"API",
-				"Storage",
-				"Size",
-				"RAM",
-		};
+		private final String headers[] = { "Name", "Company", "Version", "API",
+				"Storage", "Size", "RAM", };
 
-		private final int[] widths = {
-				120,
-				100,
-				140,
-				60,
-				70,
-				60,
-				60,
-		};
+		private final int[] widths = { 120, 100, 140, 60, 70, 60, 60, };
 		private final float density;
 
 		public FamilyNexusAdapter(Context context) {
-			familys = new NexusTypes[] {
-					new NexusTypes("Mobiles"),
-					new NexusTypes("Tablets"),
-					new NexusTypes("Others"),
-			};
+			familys = new NexusTypes[] { new NexusTypes("Mobiles"),
+					new NexusTypes("Tablets"), new NexusTypes("Others"), };
 
 			density = context.getResources().getDisplayMetrics().density;
 
-			familys[0].list.add(new Nexus("Nexus One", "HTC", "Gingerbread", "10", "512 MB", "3.7\"", "512 MB"));
-			familys[0].list.add(new Nexus("Nexus S", "Samsung", "Gingerbread", "10", "16 GB", "4\"", "512 MB"));
-			familys[0].list.add(new Nexus("Galaxy Nexus (16 GB)", "Samsung", "Ice cream Sandwich", "15", "16 GB", "4.65\"", "1 GB"));
-			familys[0].list.add(new Nexus("Galaxy Nexus (32 GB)", "Samsung", "Ice cream Sandwich", "15", "32 GB", "4.65\"", "1 GB"));
-			familys[0].list.add(new Nexus("Nexus 4 (8 GB)", "LG", "Jelly Bean", "17", "8 GB", "4.7\"", "2 GB"));
-			familys[0].list.add(new Nexus("Nexus 4 (16 GB)", "LG", "Jelly Bean", "17", "16 GB", "4.7\"", "2 GB"));
-			familys[1].list.add(new Nexus("Nexus 7 (16 GB)", "Asus", "Jelly Bean", "16", "16 GB", "7\"", "1 GB"));
-			familys[1].list.add(new Nexus("Nexus 7 (32 GB)", "Asus", "Jelly Bean", "16", "32 GB", "7\"", "1 GB"));
-			familys[1].list.add(new Nexus("Nexus 10 (16 GB)", "Samsung", "Jelly Bean", "17", "16 GB", "10\"", "2 GB"));
-			familys[1].list.add(new Nexus("Nexus 10 (32 GB)", "Samsung", "Jelly Bean", "17", "32 GB", "10\"", "2 GB"));
-			familys[2].list.add(new Nexus("Nexus Q", "--", "Honeycomb", "13", "--", "--", "--"));
+			familys[0].list.add(new Nexus("Nexus One", "HTC", "Gingerbread",
+					"10", "512 MB", "3.7\"", "512 MB"));
+			familys[0].list.add(new Nexus("Nexus S", "Samsung", "Gingerbread",
+					"10", "16 GB", "4\"", "512 MB"));
+			familys[0].list.add(new Nexus("Galaxy Nexus (16 GB)", "Samsung",
+					"Ice cream Sandwich", "15", "16 GB", "4.65\"", "1 GB"));
+			familys[0].list.add(new Nexus("Galaxy Nexus (32 GB)", "Samsung",
+					"Ice cream Sandwich", "15", "32 GB", "4.65\"", "1 GB"));
+			familys[0].list.add(new Nexus("Nexus 4 (8 GB)", "LG", "Jelly Bean",
+					"17", "8 GB", "4.7\"", "2 GB"));
+			familys[0].list.add(new Nexus("Nexus 4 (16 GB)", "LG",
+					"Jelly Bean", "17", "16 GB", "4.7\"", "2 GB"));
+			familys[1].list.add(new Nexus("Nexus 7 (16 GB)", "Asus",
+					"Jelly Bean", "16", "16 GB", "7\"", "1 GB"));
+			familys[1].list.add(new Nexus("Nexus 7 (32 GB)", "Asus",
+					"Jelly Bean", "16", "32 GB", "7\"", "1 GB"));
+			familys[1].list.add(new Nexus("Nexus 10 (16 GB)", "Samsung",
+					"Jelly Bean", "17", "16 GB", "10\"", "2 GB"));
+			familys[1].list.add(new Nexus("Nexus 10 (32 GB)", "Samsung",
+					"Jelly Bean", "17", "32 GB", "10\"", "2 GB"));
+			familys[2].list.add(new Nexus("Nexus Q", "--", "Honeycomb", "13",
+					"--", "--", "--"));
 		}
 
 		@Override
@@ -115,67 +184,86 @@ public class FamilyTable extends Activity {
 		}
 
 		@Override
-		public View getView(int row, int column, View convertView, ViewGroup parent) {
+		public View getView(int row, int column, View convertView,
+				ViewGroup parent) {
 			final View view;
 			switch (getItemViewType(row, column)) {
-				case 0:
-					view = getFirstHeader(row, column, convertView, parent);
+			case 0:
+				view = getFirstHeader(row, column, convertView, parent);
 				break;
-				case 1:
-					view = getHeader(row, column, convertView, parent);
+			case 1:
+				view = getHeader(row, column, convertView, parent);
 				break;
-				case 2:
-					view = getFirstBody(row, column, convertView, parent);
+			case 2:
+				view = getFirstBody(row, column, convertView, parent);
 				break;
-				case 3:
-					view = getBody(row, column, convertView, parent);
+			case 3:
+				view = getBody(row, column, convertView, parent);
 				break;
-				case 4:
-					view = getFamilyView(row, column, convertView, parent);
+			case 4:
+				view = getFamilyView(row, column, convertView, parent);
 				break;
-				default:
-					throw new RuntimeException("wtf?");
+			default:
+				throw new RuntimeException("wtf?");
 			}
 			return view;
 		}
 
-		private View getFirstHeader(int row, int column, View convertView, ViewGroup parent) {
+		private View getFirstHeader(int row, int column, View convertView,
+				ViewGroup parent) {
 			if (convertView == null) {
-				convertView = getLayoutInflater().inflate(R.layout.item_table_header_first, parent, false);
+				convertView = getLayoutInflater().inflate(
+						R.layout.item_table_header_first, parent, false);
 			}
-			((TextView) convertView.findViewById(android.R.id.text1)).setText(headers[0]);
+			((TextView) convertView.findViewById(android.R.id.text1))
+					.setText(headers[0]);
 			return convertView;
 		}
 
-		private View getHeader(int row, int column, View convertView, ViewGroup parent) {
+		private View getHeader(int row, int column, View convertView,
+				ViewGroup parent) {
 			if (convertView == null) {
-				convertView = getLayoutInflater().inflate(R.layout.item_table_header, parent, false);
+				convertView = getLayoutInflater().inflate(
+						R.layout.item_table_header, parent, false);
 			}
-			((TextView) convertView.findViewById(android.R.id.text1)).setText(headers[column + 1]);
+			((TextView) convertView.findViewById(android.R.id.text1))
+					.setText(headers[column + 1]);
 			return convertView;
 		}
 
-		private View getFirstBody(int row, int column, View convertView, ViewGroup parent) {
+		private View getFirstBody(int row, int column, View convertView,
+				ViewGroup parent) {
 			if (convertView == null) {
-				convertView = getLayoutInflater().inflate(R.layout.item_table_first, parent, false);
+				convertView = getLayoutInflater().inflate(
+						R.layout.item_table_first, parent, false);
 			}
-			convertView.setBackgroundResource(row % 2 == 0 ? R.drawable.bg_table_color1 : R.drawable.bg_table_color2);
-			((TextView) convertView.findViewById(android.R.id.text1)).setText(getDevice(row).data[column + 1]);
+			convertView
+					.setBackgroundResource(row % 2 == 0 ? R.drawable.bg_table_color1
+							: R.drawable.bg_table_color2);
+			((TextView) convertView.findViewById(android.R.id.text1))
+					.setText(getDevice(row).data[column + 1]);
 			return convertView;
 		}
 
-		private View getBody(int row, int column, View convertView, ViewGroup parent) {
+		private View getBody(int row, int column, View convertView,
+				ViewGroup parent) {
 			if (convertView == null) {
-				convertView = getLayoutInflater().inflate(R.layout.item_table, parent, false);
+				convertView = getLayoutInflater().inflate(R.layout.item_table,
+						parent, false);
 			}
-			convertView.setBackgroundResource(row % 2 == 0 ? R.drawable.bg_table_color1 : R.drawable.bg_table_color2);
-			((TextView) convertView.findViewById(android.R.id.text1)).setText(getDevice(row).data[column + 1]);
+			convertView
+					.setBackgroundResource(row % 2 == 0 ? R.drawable.bg_table_color1
+							: R.drawable.bg_table_color2);
+			((TextView) convertView.findViewById(android.R.id.text1))
+					.setText(getDevice(row).data[column + 1]);
 			return convertView;
 		}
 
-		private View getFamilyView(int row, int column, View convertView, ViewGroup parent) {
+		private View getFamilyView(int row, int column, View convertView,
+				ViewGroup parent) {
 			if (convertView == null) {
-				convertView = getLayoutInflater().inflate(R.layout.item_table_family, parent, false);
+				convertView = getLayoutInflater().inflate(
+						R.layout.item_table_family, parent, false);
 			}
 			final String string;
 			if (column == -1) {
@@ -183,7 +271,8 @@ public class FamilyTable extends Activity {
 			} else {
 				string = "";
 			}
-			((TextView) convertView.findViewById(android.R.id.text1)).setText(string);
+			((TextView) convertView.findViewById(android.R.id.text1))
+					.setText(string);
 			return convertView;
 		}
 
