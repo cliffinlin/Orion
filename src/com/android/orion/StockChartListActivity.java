@@ -722,16 +722,17 @@ public class StockChartListActivity extends OrionBaseActivity implements
 			XAxis xAxis = null;
 			YAxis leftAxis = null;
 			YAxis rightAxis = null;
-
-			if (view == null) {
+//TODO
+			//if (view == null) {
 				view = LayoutInflater.from(context).inflate(mResource, null);
 				viewHolder = new ViewHolder();
 				viewHolder.chart = (CombinedChart) view
 						.findViewById(R.id.chart);
 				view.setTag(viewHolder);
-			} else {
-				viewHolder = (ViewHolder) view.getTag();
-			}
+//TODO				
+//			} else {
+//				viewHolder = (ViewHolder) view.getTag();
+//			}
 
 			viewHolder.chart.setBackgroundColor(Color.LTGRAY);
 			viewHolder.chart.setGridBackgroundColor(Color.LTGRAY);
