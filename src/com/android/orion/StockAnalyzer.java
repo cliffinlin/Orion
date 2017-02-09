@@ -89,7 +89,8 @@ public class StockAnalyzer extends StockManager {
 		macd.mPriceList.clear();
 
 		for (int i = 0; i < size; i++) {
-			macd.mPriceList.add(stockDataList.get(i).getClose());
+			macd.mPriceList.add((stockDataList.get(i).getLow() + stockDataList
+					.get(i).getHigh()) / 2.0);
 		}
 
 		macd.calculate();
@@ -198,38 +199,40 @@ public class StockAnalyzer extends StockManager {
 
 		stock.setOverlap(overlapList.get(overlapList.size() - 1).getOverlap());
 	}
-	
+
 	private String getActionByMA5(ArrayList<StockData> stockDataList) {
 		int size = 0;
 		String action = "";
-		
+
 		StockData prev = null;
 		StockData current = null;
 		StockData next = null;
-		
+
 		if (stockDataList == null) {
 			return action;
 		}
-		
+
 		size = stockDataList.size();
 		if (size < Constants.STOCK_VERTEX_TYPING_SIZE) {
 			return action;
 		}
 
-		prev = stockDataList.get(size-3);
-		current = stockDataList.get(size-2);
-		next = stockDataList.get(size-1);
-		
-		if ((prev.getAverage5() > current.getAverage5()) && (next.getAverage5() > current.getAverage5())) {
+		prev = stockDataList.get(size - 3);
+		current = stockDataList.get(size - 2);
+		next = stockDataList.get(size - 1);
+
+		if ((prev.getAverage5() > current.getAverage5())
+				&& (next.getAverage5() > current.getAverage5())) {
 			action = Constants.STOCK_ACTION_BUY;
 		} else if (next.getAverage5() > current.getAverage5()) {
 			action += Constants.STOCK_ACTION_ADD;
-		} else if ((prev.getAverage5() < current.getAverage5()) && (next.getAverage5() < current.getAverage5())) {
+		} else if ((prev.getAverage5() < current.getAverage5())
+				&& (next.getAverage5() < current.getAverage5())) {
 			action = Constants.STOCK_ACTION_SELL;
 		} else if (next.getAverage5() < current.getAverage5()) {
 			action += Constants.STOCK_ACTION_MINUS;
 		}
-		
+
 		return action;
 	}
 
@@ -262,12 +265,12 @@ public class StockAnalyzer extends StockManager {
 			direction += Constants.STOCK_ACTION_DOWN;
 		}
 
-		action = direction + action;
-		
+		action = action + direction;
+
 		if (period.equals(Constants.PERIOD_DAY)) {
 			action = getActionByMA5(stockDataList);
 		}
-		
+
 		stock.setAction(period, action);
 	}
 
