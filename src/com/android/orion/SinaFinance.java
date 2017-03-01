@@ -404,13 +404,8 @@ public class SinaFinance extends StockDataProvider {
 					stockData.setHigh(jsonObject.getDouble("high"));
 					stockData.setLow(jsonObject.getDouble("low"));
 
-					//__TEST_CASE__
-//					stockData.setVertexHigh(stockData.getHigh());
-//					stockData.setVertexLow(stockData.getLow());
-
-					stockData.setVertexHigh(Math.max(stockData.getOpen(), stockData.getClose()));
-					stockData.setVertexLow(Math.min(stockData.getOpen(), stockData.getClose()));	
-					//__TEST_CASE__
+					stockData.setVertexHigh(stockData.getHigh());
+					stockData.setVertexLow(stockData.getLow());
 
 					if (bulkInsert) {
 						stockData

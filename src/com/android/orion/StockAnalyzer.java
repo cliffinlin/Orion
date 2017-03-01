@@ -89,8 +89,7 @@ public class StockAnalyzer extends StockManager {
 		macd.mPriceList.clear();
 
 		for (int i = 0; i < size; i++) {
-			macd.mPriceList.add((stockDataList.get(i).getLow() + stockDataList
-					.get(i).getHigh()) / 2.0);
+			macd.mPriceList.add(stockDataList.get(i).getOpen());
 		}
 
 		macd.calculate();
