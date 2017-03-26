@@ -53,6 +53,8 @@
     <string name="login_button_label">Login</string>
     <string name="logout_label">Logout</string>
     <string name="modified">Modified</string>
+    <string name="match">Match</string>
+    <string name="match_list">Match List</string>
     <string name="next">next</string>
     <string name="net">Net</string>
     <string name="network_unavailable">Network not Available</string>

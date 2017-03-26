@@ -65,6 +65,10 @@
             android:label="@string/favorite_list" >
         </activity>
         <activity
+            android:name="com.android.orion.StockMatchListActivity"
+            android:label="@string/match_list" >
+        </activity>        
+        <activity
             android:name="com.android.orion.StockListActivity"
             android:label="@string/stock_list" >
         </activity>
