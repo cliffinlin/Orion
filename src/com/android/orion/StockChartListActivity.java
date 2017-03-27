@@ -28,7 +28,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.android.orion.database.DatabaseContract;
-import com.android.orion.database.Deal;
+import com.android.orion.database.StockDeal;
 import com.android.orion.database.Setting;
 import com.android.orion.database.Stock;
 import com.android.orion.utility.Utility;
@@ -71,7 +71,7 @@ public class StockChartListActivity extends OrionBaseActivity implements
 	ArrayList<StockChartItemSub> mStockChartItemSubList = null;
 	ArrayList<StockChartData> mStockChartDataList = null;
 
-	ArrayList<Deal> mDealList = null;
+	ArrayList<StockDeal> mStockDealList = null;
 
 	private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
 		@Override
@@ -141,7 +141,7 @@ public class StockChartListActivity extends OrionBaseActivity implements
 			Bundle bundle = new Bundle();
 			bundle.putString(Constants.EXTRA_KEY_STOCK_SE, mStock.getSE());
 			bundle.putString(Constants.EXTRA_KEY_STOCK_CODE, mStock.getCode());
-			Intent intent = new Intent(this, DealListActivity.class);
+			Intent intent = new Intent(this, StockDealListActivity.class);
 			intent.putExtras(bundle);
 			startActivity(intent);
 			return true;
@@ -322,8 +322,8 @@ public class StockChartListActivity extends OrionBaseActivity implements
 	void initListView() {
 		mListView = (ListView) findViewById(R.id.listView);
 
-		if (mDealList == null) {
-			mDealList = new ArrayList<Deal>();
+		if (mStockDealList == null) {
+			mStockDealList = new ArrayList<StockDeal>();
 		}
 
 		if (mStockChartDataList == null) {
@@ -407,28 +407,28 @@ public class StockChartListActivity extends OrionBaseActivity implements
 		return loader;
 	}
 
-	void loadDealList() {
+	void loadStockDealList() {
 		Cursor cursor = null;
 		String selection = "";
 
-		if ((mStock == null) || (mDealList == null)) {
+		if ((mStock == null) || (mStockDealList == null)) {
 			return;
 		}
 
-		mDealList.clear();
+		mStockDealList.clear();
 
 		selection = DatabaseContract.COLUMN_SE + " = " + "\'" + mStock.getSE()
 				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
 				+ mStock.getCode() + "\'";
 
 		try {
-			cursor = mStockDatabaseManager.queryDeal(selection, null, null);
+			cursor = mStockDatabaseManager.queryStockDeal(selection, null, null);
 
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				while (cursor.moveToNext()) {
-					Deal deal = new Deal();
-					deal.set(cursor);
-					mDealList.add(deal);
+					StockDeal stockDeal = new StockDeal();
+					stockDeal.set(cursor);
+					mStockDealList.add(stockDeal);
 				}
 			}
 		} catch (Exception e) {
@@ -641,10 +641,10 @@ public class StockChartListActivity extends OrionBaseActivity implements
 
 		updateTitle();
 
-		mStockDatabaseManager.getDealList(mStock, mDealList);
+		mStockDatabaseManager.getStockDealList(mStock, mStockDealList);
 
 		stockChartData.updateDescription(mStock);
-		stockChartData.updateLimitLine(mDealList);
+		stockChartData.updateLimitLine(mStockDealList);
 		stockChartData.setMainChartData();
 		stockChartData.setSubChartData();
 

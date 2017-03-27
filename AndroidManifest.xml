@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.android.orion"
-    android:versionCode="411"
+    android:versionCode="412"
     android:versionName="1.1.20" >
 
     <uses-sdk
@@ -136,11 +136,11 @@
             android:label="@string/title_activity_simulation" >
         </activity>
         <activity
-            android:name="com.android.orion.DealListActivity"
+            android:name="com.android.orion.StockDealListActivity"
             android:label="@string/title_activity_deal_list" >
         </activity>
         <activity
-            android:name="com.android.orion.DealActivity"
+            android:name="com.android.orion.StockDealActivity"
             android:label="@string/title_activity_deal" >
         </activity>
     </application>

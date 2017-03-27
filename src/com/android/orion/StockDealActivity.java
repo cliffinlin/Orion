@@ -11,11 +11,11 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.android.orion.database.Deal;
+import com.android.orion.database.StockDeal;
 import com.android.orion.database.Stock;
 import com.android.orion.utility.Utility;
 
-public class DealActivity extends DatabaseActivity implements OnClickListener {
+public class StockDealActivity extends DatabaseActivity implements OnClickListener {
 
 	public static final String ACTION_DEAL_INSERT = "orion.intent.action.ACTION_DEAL_INSERT";
 	public static final String ACTION_DEAL_EDIT = "orion.intent.action.ACTION_DEAL_EDIT";
@@ -33,7 +33,7 @@ public class DealActivity extends DatabaseActivity implements OnClickListener {
 
 	Button mButtonOk, mButtonCancel;
 
-	Deal mDeal = null;
+	StockDeal mDeal = null;
 	Stock mStock = null;
 
 	@Override
@@ -42,7 +42,7 @@ public class DealActivity extends DatabaseActivity implements OnClickListener {
 		setContentView(R.layout.activity_deal);
 
 		if (mDeal == null) {
-			mDeal = Deal.obtain();
+			mDeal = StockDeal.obtain();
 		}
 
 		if (mStock == null) {
@@ -189,7 +189,7 @@ public class DealActivity extends DatabaseActivity implements OnClickListener {
 			break;
 
 		case EXECUTE_DEAL_LOAD:
-			mStockDatabaseManager.getDealById(mDeal);
+			mStockDatabaseManager.getStockDealById(mDeal);
 			break;
 
 		default:
@@ -214,10 +214,10 @@ public class DealActivity extends DatabaseActivity implements OnClickListener {
 		case EXECUTE_DEAL_SAVE:
 			if (ACTION_DEAL_INSERT.equals(mAction)) {
 				mDeal.setCreated(Utility.getCurrentDateTimeString());
-				mStockDatabaseManager.insertDeal(mDeal);
+				mStockDatabaseManager.insertStockDeal(mDeal);
 			} else if (ACTION_DEAL_EDIT.equals(mAction)) {
 				mDeal.setModified(Utility.getCurrentDateTimeString());
-				mStockDatabaseManager.updateDealByID(mDeal);
+				mStockDatabaseManager.updateStockDealByID(mDeal);
 			}
 			break;
 

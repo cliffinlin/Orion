@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-import com.android.orion.database.Deal;
+import com.android.orion.database.StockDeal;
 import com.android.orion.database.Stock;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.LimitLine.LimitLabelPosition;
@@ -298,36 +298,36 @@ public class StockChartData {
 		mDescription += stock.getNet();
 	}
 
-	void updateLimitLine(ArrayList<Deal> dealList) {
-		double dealPrice = 0;
-		long dealVolume = 0;
+	void updateLimitLine(ArrayList<StockDeal> stockDealList) {
+		double stockDealPrice = 0;
+		long stockDealVolume = 0;
 
-		if ((dealList == null) || (mLimitLineList == null)) {
+		if ((stockDealList == null) || (mLimitLineList == null)) {
 			return;
 		}
 
 		mLimitLineList.clear();
 
-		for (Deal deal : dealList) {
+		for (StockDeal stockDeal : stockDealList) {
 			LimitLine limitLine = new LimitLine(0);
 			limitLine.enableDashedLine(10f, 10f, 0f);
 			limitLine.setLineWidth(3);
 			limitLine.setTextSize(10f);
 			limitLine.setLabelPosition(LimitLabelPosition.LEFT_TOP);
 
-			dealPrice = deal.getDeal();
-			dealVolume = deal.getVolume();
+			stockDealPrice = stockDeal.getDeal();
+			stockDealVolume = stockDeal.getVolume();
 
-			limitLine.setLimit((float) dealPrice);
+			limitLine.setLimit((float) stockDealPrice);
 
-			if (dealVolume > 0) {
+			if (stockDealVolume > 0) {
 				limitLine.setLineColor(Color.RED);
 			} else {
 				limitLine.setLineColor(Color.GREEN);
 			}
 
-			limitLine.setLabel(dealPrice + " " + dealVolume + " "
-					+ deal.getNet() + " " + deal.getProfit());
+			limitLine.setLabel(stockDealPrice + " " + stockDealVolume + " "
+					+ stockDeal.getNet() + " " + stockDeal.getProfit());
 
 			mLimitLineList.add(limitLine);
 		}

@@ -7,7 +7,7 @@ import android.database.Cursor;
 public class Setting extends DatabaseTable {
 	public static final String KEY_STOCK_HSA_UPDATED = "stock_hsa_updated";
 	public static final String KEY_SORT_ORDER_STOCK_LIST = "sort_order_stock_list";
-	public static final String KEY_SORT_ORDER_DEAL_LIST = "sort_order_deal_list";
+	public static final String KEY_SORT_ORDER_STOCK_DEAL_LIST = "sort_order_stock_deal_list";
 
 	private String mKey;
 	private String mValue;

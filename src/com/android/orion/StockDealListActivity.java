@@ -32,14 +32,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.orion.database.DatabaseContract;
-import com.android.orion.database.Deal;
+import com.android.orion.database.StockDeal;
 import com.android.orion.database.Setting;
 import com.android.orion.database.Stock;
 import com.android.orion.leancloud.LeanCloudLoginActivity;
 import com.android.orion.utility.Utility;
 import com.avos.avoscloud.AVUser;
 
-public class DealListActivity extends StorageActivity implements
+public class StockDealListActivity extends StorageActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
 		OnItemLongClickListener, OnClickListener {
 
@@ -83,8 +83,8 @@ public class DealListActivity extends StorageActivity implements
 	SimpleCursorAdapter mRightAdapter = null;
 
 	ActionMode mCurrentActionMode = null;
-	Deal mDeal = new Deal();
-	List<Deal> mDealList = new ArrayList<Deal>();
+	StockDeal mDeal = new StockDeal();
+	List<StockDeal> mStockDealList = new ArrayList<StockDeal>();
 	Stock mStock = new Stock();
 
 	ContentObserver mContentObserver = new ContentObserver(new Handler()) {
@@ -118,15 +118,15 @@ public class DealListActivity extends StorageActivity implements
 		public boolean onActionItemClicked(final ActionMode mode, MenuItem item) {
 			switch (item.getItemId()) {
 			case R.id.menu_edit:
-				Intent intent = new Intent(DealListActivity.this,
-						DealActivity.class);
-				intent.setAction(DealActivity.ACTION_DEAL_EDIT);
-				intent.putExtra(DealActivity.EXTRA_DEAL_ID, mDeal.getId());
+				Intent intent = new Intent(StockDealListActivity.this,
+						StockDealActivity.class);
+				intent.setAction(StockDealActivity.ACTION_DEAL_EDIT);
+				intent.putExtra(StockDealActivity.EXTRA_DEAL_ID, mDeal.getId());
 				startActivity(intent);
 				mode.finish();
 				return true;
 			case R.id.menu_delete:
-				new AlertDialog.Builder(DealListActivity.this)
+				new AlertDialog.Builder(StockDealListActivity.this)
 						.setTitle(R.string.delete)
 						.setMessage(R.string.delete_confirm)
 						.setPositiveButton(R.string.ok,
@@ -162,7 +162,7 @@ public class DealListActivity extends StorageActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_deal_list);
 
-		mSortOrder = getSetting(Setting.KEY_SORT_ORDER_DEAL_LIST,
+		mSortOrder = getSetting(Setting.KEY_SORT_ORDER_STOCK_DEAL_LIST,
 				mSortOrderDefault);
 
 		initHeader();
@@ -178,7 +178,7 @@ public class DealListActivity extends StorageActivity implements
 		}
 
 		getContentResolver().registerContentObserver(
-				DatabaseContract.Deal.CONTENT_URI, true, mContentObserver);
+				DatabaseContract.StockDeal.CONTENT_URI, true, mContentObserver);
 
 	}
 
@@ -197,8 +197,8 @@ public class DealListActivity extends StorageActivity implements
 			return true;
 
 		case R.id.action_new:
-			mIntent = new Intent(this, DealActivity.class);
-			mIntent.setAction(DealActivity.ACTION_DEAL_INSERT);
+			mIntent = new Intent(this, StockDealActivity.class);
+			mIntent.setAction(StockDealActivity.ACTION_DEAL_INSERT);
 			startActivity(mIntent);
 			return true;
 
@@ -285,7 +285,7 @@ public class DealListActivity extends StorageActivity implements
 
 		mSortOrder = mSortOrderColumn + mSortOrderDirection;
 
-		saveSetting(Setting.KEY_SORT_ORDER_DEAL_LIST, mSortOrder);
+		saveSetting(Setting.KEY_SORT_ORDER_STOCK_DEAL_LIST, mSortOrder);
 
 		restartLoader();
 	}
@@ -441,8 +441,8 @@ public class DealListActivity extends StorageActivity implements
 
 		switch (id) {
 		case LOADER_ID_DEAL_LIST:
-			loader = new CursorLoader(this, DatabaseContract.Deal.CONTENT_URI,
-					DatabaseContract.Deal.PROJECTION_ALL, selection, null,
+			loader = new CursorLoader(this, DatabaseContract.StockDeal.CONTENT_URI,
+					DatabaseContract.StockDeal.PROJECTION_ALL, selection, null,
 					mSortOrder);
 			break;
 
@@ -461,7 +461,7 @@ public class DealListActivity extends StorageActivity implements
 
 		switch (loader.getId()) {
 		case LOADER_ID_DEAL_LIST:
-			setDealList(cursor);
+			setStockDealList(cursor);
 
 			mLeftAdapter.swapCursor(cursor);
 			mRightAdapter.swapCursor(cursor);
@@ -481,15 +481,15 @@ public class DealListActivity extends StorageActivity implements
 		mRightAdapter.swapCursor(null);
 	}
 
-	void setDealList(Cursor cursor) {
-		mDealList.clear();
+	void setStockDealList(Cursor cursor) {
+		mStockDealList.clear();
 
 		try {
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				while (cursor.moveToNext()) {
-					Deal deal = new Deal();
-					deal.set(cursor);
-					mDealList.add(deal);
+					StockDeal stockDeal = new StockDeal();
+					stockDeal.set(cursor);
+					mStockDealList.add(stockDeal);
 				}
 				cursor.moveToFirst();
 			}
@@ -554,14 +554,14 @@ public class DealListActivity extends StorageActivity implements
 
 		switch (execute) {
 		case EXECUTE_DEAL_LIST_ON_ITEM_CLICK:
-			mStockDatabaseManager.getDealById(mDeal);
+			mStockDatabaseManager.getStockDealById(mDeal);
 
 			mStock.setSE(mDeal.getSE());
 			mStock.setCode(mDeal.getCode());
 			mStockDatabaseManager.getStock(mStock);
 
 			Intent intent = new Intent(this, StockChartListActivity.class);
-			intent.putExtra(Setting.KEY_SORT_ORDER_DEAL_LIST, mSortOrder);
+			intent.putExtra(Setting.KEY_SORT_ORDER_STOCK_DEAL_LIST, mSortOrder);
 			intent.putExtra(StockChartListActivity.EXTRA_STOCK_ID,
 					mStock.getId());
 			startActivity(intent);
@@ -589,7 +589,7 @@ public class DealListActivity extends StorageActivity implements
 
 		switch (execute) {
 		case EXECUTE_DEAL_DELETE:
-			mStockDatabaseManager.deleteDealById(mDeal);
+			mStockDatabaseManager.deleteStockDealById(mDeal);
 			break;
 
 		case EXECUTE_DEAL_LIST_SAVE_TO_SD_CARD:
@@ -614,7 +614,7 @@ public class DealListActivity extends StorageActivity implements
 
 		int eventType;
 		String tagName = "";
-		Deal deal = null;
+		StockDeal stockDeal = null;
 
 		try {
 			eventType = parser.getEventType();
@@ -623,49 +623,49 @@ public class DealListActivity extends StorageActivity implements
 				case XmlPullParser.START_TAG:
 					tagName = parser.getName();
 					if (XML_TAG_ITEM.equals(tagName)) {
-						deal = new Deal();
+						stockDeal = new StockDeal();
 					} else if (DatabaseContract.COLUMN_SE.equals(tagName)) {
-						deal.setSE(parser.nextText());
+						stockDeal.setSE(parser.nextText());
 					} else if (DatabaseContract.COLUMN_CODE.equals(tagName)) {
-						deal.setCode(parser.nextText());
+						stockDeal.setCode(parser.nextText());
 					} else if (DatabaseContract.COLUMN_NAME.equals(tagName)) {
-						deal.setName(parser.nextText());
+						stockDeal.setName(parser.nextText());
 					} else if (DatabaseContract.COLUMN_PRICE.equals(tagName)) {
-						deal.setPrice(Double.valueOf(parser.nextText()));
+						stockDeal.setPrice(Double.valueOf(parser.nextText()));
 					} else if (DatabaseContract.COLUMN_NET.equals(tagName)) {
-						deal.setNet(Double.valueOf(parser.nextText()));
+						stockDeal.setNet(Double.valueOf(parser.nextText()));
 					} else if (DatabaseContract.COLUMN_DEAL.equals(tagName)) {
-						deal.setDeal(Double.valueOf(parser.nextText()));
+						stockDeal.setDeal(Double.valueOf(parser.nextText()));
 					} else if (DatabaseContract.COLUMN_VOLUME.equals(tagName)) {
-						deal.setVolume(Long.valueOf(parser.nextText()));
+						stockDeal.setVolume(Long.valueOf(parser.nextText()));
 					} else if (DatabaseContract.COLUMN_PROFIT.equals(tagName)) {
-						deal.setProfit(Double.valueOf(parser.nextText()));
+						stockDeal.setProfit(Double.valueOf(parser.nextText()));
 					} else if (DatabaseContract.COLUMN_CREATED.equals(tagName)) {
-						deal.setCreated(parser.nextText());
+						stockDeal.setCreated(parser.nextText());
 					} else if (DatabaseContract.COLUMN_MODIFIED.equals(tagName)) {
-						deal.setModified(parser.nextText());
+						stockDeal.setModified(parser.nextText());
 					} else {
 					}
 					break;
 				case XmlPullParser.END_TAG:
 					tagName = parser.getName();
 					if (XML_TAG_ITEM.equals(tagName)) {
-						if (deal != null) {
-							mStock.setSE(deal.getSE());
-							mStock.setCode(deal.getCode());
+						if (stockDeal != null) {
+							mStock.setSE(stockDeal.getSE());
+							mStock.setCode(stockDeal.getCode());
 							mStockDatabaseManager.getStock(mStock);
 
-							if (!mStock.getName().equals(deal.getName())) {
-								deal.setName(mStock.getName());
+							if (!mStock.getName().equals(stockDeal.getName())) {
+								stockDeal.setName(mStock.getName());
 							}
 
-							if (mStock.getPrice() != deal.getPrice()) {
-								deal.setPrice(mStock.getPrice());
-								deal.setupDeal();
+							if (mStock.getPrice() != stockDeal.getPrice()) {
+								stockDeal.setPrice(mStock.getPrice());
+								stockDeal.setupDeal();
 							}
 
-							if (!mStockDatabaseManager.isDealExist(deal)) {
-								mStockDatabaseManager.insertDeal(deal);
+							if (!mStockDatabaseManager.isStockDealExist(stockDeal)) {
+								mStockDatabaseManager.insertStockDeal(stockDeal);
 							}
 						}
 					}
@@ -685,28 +685,28 @@ public class DealListActivity extends StorageActivity implements
 		super.xmlSerialize(xmlSerializer);
 
 		try {
-			for (Deal deal : mDealList) {
+			for (StockDeal stockDeal : mStockDealList) {
 				xmlSerializer.startTag(null, XML_TAG_ITEM);
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_SE,
-						deal.getSE());
+						stockDeal.getSE());
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_CODE,
-						deal.getCode());
+						stockDeal.getCode());
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_NAME,
-						deal.getName());
+						stockDeal.getName());
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_PRICE,
-						String.valueOf(deal.getPrice()));
+						String.valueOf(stockDeal.getPrice()));
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_NET,
-						String.valueOf(deal.getNet()));
+						String.valueOf(stockDeal.getNet()));
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_DEAL,
-						String.valueOf(deal.getDeal()));
+						String.valueOf(stockDeal.getDeal()));
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_VOLUME,
-						String.valueOf(deal.getVolume()));
+						String.valueOf(stockDeal.getVolume()));
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_PROFIT,
-						String.valueOf(deal.getProfit()));
+						String.valueOf(stockDeal.getProfit()));
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_CREATED,
-						deal.getCreated());
+						stockDeal.getCreated());
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_MODIFIED,
-						deal.getModified());
+						stockDeal.getModified());
 				xmlSerializer.endTag(null, XML_TAG_ITEM);
 			}
 		} catch (Exception e) {

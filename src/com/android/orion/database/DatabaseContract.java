@@ -222,8 +222,8 @@ public final class DatabaseContract {
 				+ TABLE_NAME;
 	}
 
-	public static abstract class Deal implements BaseColumns {
-		public static final String TABLE_NAME = "deal";
+	public static abstract class StockDeal implements BaseColumns {
+		public static final String TABLE_NAME = "stock_deal";
 
 		public static final Uri CONTENT_URI = Uri.withAppendedPath(
 				DatabaseContract.CONTENT_URI, TABLE_NAME);
@@ -247,6 +247,53 @@ public final class DatabaseContract {
 				+ COMMA_SEP + COLUMN_PROFIT + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_CREATED + TEXT_TYPE + COMMA_SEP + COLUMN_MODIFIED
 				+ TEXT_TYPE + " )";
+
+		public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
+				+ CREATE_TABLE_CONTENT;
+
+		public static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
+				+ TABLE_NAME;
+	}
+
+	public static abstract class StockMatch implements BaseColumns {
+		public static final String TABLE_NAME = "stock_match";
+
+		public static final String COLUMN_SE_X = COLUMN_SE + "_" + "x";
+		public static final String COLUMN_CODE_X = COLUMN_CODE + "_" + "x";
+		public static final String COLUMN_NAME_X = COLUMN_NAME + "_" + "x";
+
+		public static final String COLUMN_SE_Y = COLUMN_SE + "_" + "y";
+		public static final String COLUMN_CODE_Y = COLUMN_CODE + "_" + "y";
+		public static final String COLUMN_NAME_Y = COLUMN_NAME + "_" + "y";
+
+		public static final String COLUMN_SLOPE = "slope";
+		public static final String COLUMN_INTERCEPT = "intercept";
+		public static final String COLUMN_SIGMA = "sigma";
+		public static final String COLUMN_DELTA = "delta";
+
+		public static final Uri CONTENT_URI = Uri.withAppendedPath(
+				DatabaseContract.CONTENT_URI, TABLE_NAME);
+		public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
+				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
+		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
+				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
+		public static final String SORT_ORDER_DEFAULT = COLUMN_CODE + " ASC";
+
+		public static final String[] PROJECTION_ALL = { _ID, COLUMN_SE_X,
+				COLUMN_CODE_X, COLUMN_NAME_X, COLUMN_SE_Y, COLUMN_CODE_Y,
+				COLUMN_NAME_Y, COLUMN_SLOPE, COLUMN_INTERCEPT, COLUMN_SIGMA,
+				COLUMN_DELTA, COLUMN_CREATED, COLUMN_MODIFIED };
+
+		private static final String CREATE_TABLE_CONTENT = " (" + _ID
+				+ " INTEGER PRIMARY KEY," + COLUMN_SE_X + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_CODE_X + TEXT_TYPE + COMMA_SEP + COLUMN_NAME_X
+				+ TEXT_TYPE + COMMA_SEP + COLUMN_SE_Y + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_CODE_Y + TEXT_TYPE + COMMA_SEP + COLUMN_NAME_Y
+				+ TEXT_TYPE + COMMA_SEP + COLUMN_SLOPE + DOUBLE_TYPE
+				+ COMMA_SEP + COLUMN_INTERCEPT + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_SIGMA + DOUBLE_TYPE + COMMA_SEP + COLUMN_DELTA
+				+ DOUBLE_TYPE + COMMA_SEP + COLUMN_CREATED + TEXT_TYPE
+				+ COMMA_SEP + COLUMN_MODIFIED + TEXT_TYPE + " )";
 
 		public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
 				+ CREATE_TABLE_CONTENT;

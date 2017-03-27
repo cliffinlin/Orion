@@ -7,7 +7,7 @@ import android.text.TextUtils;
 import com.android.orion.Constants;
 import com.android.orion.utility.Utility;
 
-public class Deal extends DatabaseTable {
+public class StockDeal extends DatabaseTable {
 	private String mSE;
 	private String mCode;
 	private String mName;
@@ -17,31 +17,31 @@ public class Deal extends DatabaseTable {
 	private long mVolume;
 	private double mProfit;
 
-	private Deal next;
+	private StockDeal next;
 	private static final Object sPoolSync = new Object();
-	private static Deal sPool;
+	private static StockDeal sPool;
 
-	public static Deal obtain() {
+	public static StockDeal obtain() {
 		synchronized (sPoolSync) {
 			if (sPool != null) {
-				Deal m = sPool;
+				StockDeal m = sPool;
 				sPool = m.next;
 				m.next = null;
 				return m;
 			}
 		}
-		return new Deal();
+		return new StockDeal();
 	}
 
-	public Deal() {
+	public StockDeal() {
 		init();
 	}
 
-	public Deal(Deal deal) {
-		set(deal);
+	public StockDeal(StockDeal stockDeal) {
+		set(stockDeal);
 	}
 
-	public Deal(Cursor cursor) {
+	public StockDeal(Cursor cursor) {
 		set(cursor);
 	}
 
@@ -59,7 +59,7 @@ public class Deal extends DatabaseTable {
 	void init() {
 		super.init();
 
-		setTableName(DatabaseContract.Deal.TABLE_NAME);
+		setTableName(DatabaseContract.StockDeal.TABLE_NAME);
 
 		mSE = "";
 		mCode = "";
@@ -91,23 +91,23 @@ public class Deal extends DatabaseTable {
 		return contentValues;
 	}
 
-	void set(Deal deal) {
-		if (deal == null) {
+	void set(StockDeal stockDeal) {
+		if (stockDeal == null) {
 			return;
 		}
 
 		init();
 
-		super.set(deal);
+		super.set(stockDeal);
 
-		setSE(deal.mSE);
-		setCode(deal.mCode);
-		setName(deal.mName);
-		setPrice(deal.mPrice);
-		setDeal(deal.mDeal);
-		setNet(deal.mNet);
-		setVolume(deal.mVolume);
-		setProfit(deal.mProfit);
+		setSE(stockDeal.mSE);
+		setCode(stockDeal.mCode);
+		setName(stockDeal.mName);
+		setPrice(stockDeal.mPrice);
+		setDeal(stockDeal.mDeal);
+		setNet(stockDeal.mNet);
+		setVolume(stockDeal.mVolume);
+		setProfit(stockDeal.mProfit);
 	}
 
 	@Override

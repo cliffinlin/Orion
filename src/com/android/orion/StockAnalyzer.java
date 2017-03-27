@@ -16,7 +16,7 @@ import android.support.v4.app.NotificationCompat;
 
 import com.android.orion.curve.BezierCurve;
 import com.android.orion.database.DatabaseContract;
-import com.android.orion.database.Deal;
+import com.android.orion.database.StockDeal;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.indicator.MACD;
@@ -483,7 +483,7 @@ public class StockAnalyzer extends StockManager {
 
 	String getBodyString(Stock stock) {
 		String result = "";
-		ArrayList<Deal> dealList = new ArrayList<Deal>();
+		ArrayList<StockDeal> stockDealList = new ArrayList<StockDeal>();
 
 		result += stock.getName();
 		result += String.valueOf(stock.getPrice()) + " ";
@@ -497,14 +497,14 @@ public class StockAnalyzer extends StockManager {
 
 		result += "\n";
 
-		mStockDatabaseManager.getDealList(stock, dealList);
+		mStockDatabaseManager.getStockDealList(stock, stockDealList);
 
-		for (Deal deal : dealList) {
-			if ((deal.getDeal() > 0) && Math.abs(deal.getVolume()) > 0) {
-				result += deal.getDeal() + " ";
-				result += deal.getNet() + " ";
-				result += deal.getVolume() + " ";
-				result += deal.getProfit() + " ";
+		for (StockDeal stockDeal : stockDealList) {
+			if ((stockDeal.getDeal() > 0) && Math.abs(stockDeal.getVolume()) > 0) {
+				result += stockDeal.getDeal() + " ";
+				result += stockDeal.getNet() + " ";
+				result += stockDeal.getVolume() + " ";
+				result += stockDeal.getProfit() + " ";
 				result += "\n";
 			}
 		}

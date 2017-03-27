@@ -1,19 +1,24 @@
 package com.android.orion;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlSerializer;
 
+import android.app.AlertDialog;
 import android.app.LoaderManager;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.Loader;
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
+import android.os.Handler;
+import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,6 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.orion.database.DatabaseContract;
+import com.android.orion.database.StockDeal;
 import com.android.orion.database.Setting;
 import com.android.orion.database.Stock;
 import com.android.orion.leancloud.LeanCloudLoginActivity;
@@ -37,18 +43,19 @@ public class StockMatchListActivity extends StorageActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
 		OnItemLongClickListener, OnClickListener {
 
-	public static final String ACTION_STOCK_ID = "orion.intent.action.ACTION_STOCK_ID";
-	public static final String EXTRA_STOCK_ID = "stock_id";
+	static final String DEAL_LIST_XML_FILE_NAME = "deal.xml";
 
-	static final int LOADER_ID_STOCK_FAVORITE_LIST = 0;
+	static final int EXECUTE_DEAL_DELETE = 0;
 
-	static final int LOAD_FAVORITE_LIST_FROM_SD = 11;
-	static final int SAVE_FAVORITE_LIST_TO_SD = 12;
+	static final int EXECUTE_DEAL_LIST_ON_ITEM_CLICK = 1;
+
+	static final int EXECUTE_DEAL_LIST_LOAD_FROM_SD_CARD = 11;
+	static final int EXECUTE_DEAL_LIST_SAVE_TO_SD_CARD = 12;
+
+	static final int LOADER_ID_DEAL_LIST = 2;
 
 	static final int mHeaderTextDefaultColor = Color.BLACK;
 	static final int mHeaderTextHighlightColor = Color.RED;
-
-	static final String FAVORITE_LIST_XML_FILE_NAME = "favorite.xml";
 
 	String mSortOrderColumn = DatabaseContract.COLUMN_CODE;
 	String mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_ASC;
@@ -60,19 +67,14 @@ public class StockMatchListActivity extends StorageActivity implements
 	SyncHorizontalScrollView mTitleSHSV = null;
 	SyncHorizontalScrollView mContentSHSV = null;
 
-	TextView mStockNameCode = null;
-	TextView mPrice = null;
-	TextView mPriceNet = null;
-	TextView mPriceType5M = null;
-	TextView mPriceType15M = null;
-	TextView mPriceType30M = null;
-	TextView mPriceType60M = null;
-	TextView mPriceTypeDay = null;
-	TextView mPriceTypeWeek = null;
-	TextView mPriceTypeMonth = null;
-	TextView mOverlap = null;
-	TextView mVelocity = null;
-	TextView mAcceleration = null;
+	TextView mTextViewStockNameCode = null;
+	TextView mTextViewPrice = null;
+	TextView mTextViewNet = null;
+	TextView mTextViewDeal = null;
+	TextView mTextViewVolume = null;
+	TextView mTextViewProfit = null;
+	TextView mTextViewCreated = null;
+	TextView mTextViewModified = null;
 
 	ListView mLeftListView = null;
 	ListView mRightListView = null;
@@ -80,49 +82,109 @@ public class StockMatchListActivity extends StorageActivity implements
 	SimpleCursorAdapter mLeftAdapter = null;
 	SimpleCursorAdapter mRightAdapter = null;
 
-	private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+	ActionMode mCurrentActionMode = null;
+	StockDeal mDeal = new StockDeal();
+	List<StockDeal> mStockDealList = new ArrayList<StockDeal>();
+	Stock mStock = new Stock();
+
+	ContentObserver mContentObserver = new ContentObserver(new Handler()) {
 		@Override
-		public void onReceive(Context context, Intent intent) {
-			if (mResumed) {
-				if (intent.getIntExtra(Constants.EXTRA_KEY_SERVICE_TYPE,
-						Constants.SERVICE_TYPE_NONE) == Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE_REALTIME
-						|| intent.getIntExtra(Constants.EXTRA_KEY_SERVICE_TYPE,
-								Constants.SERVICE_TYPE_NONE) == Constants.SERVICE_SIMULATE_STOCK_FAVORITE_DATA_HISTORY) {
-					restartLoader();
-				}
+		public void onChange(boolean selfChange, Uri uri) {
+			super.onChange(selfChange, uri);
+			restartLoader();
+		}
+
+		@Override
+		public void onChange(boolean selfChange) {
+			super.onChange(selfChange);
+			restartLoader();
+		}
+	};
+
+	private ActionMode.Callback mModeCallBack = new ActionMode.Callback() {
+		@Override
+		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+			mode.setTitle("Actions");
+			mode.getMenuInflater().inflate(R.menu.deal_list_action, menu);
+			return true;
+		}
+
+		@Override
+		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+			return false;
+		}
+
+		@Override
+		public boolean onActionItemClicked(final ActionMode mode, MenuItem item) {
+			switch (item.getItemId()) {
+			case R.id.menu_edit:
+				Intent intent = new Intent(StockMatchListActivity.this,
+						StockDealActivity.class);
+				intent.setAction(StockDealActivity.ACTION_DEAL_EDIT);
+				intent.putExtra(StockDealActivity.EXTRA_DEAL_ID, mDeal.getId());
+				startActivity(intent);
+				mode.finish();
+				return true;
+			case R.id.menu_delete:
+				new AlertDialog.Builder(StockMatchListActivity.this)
+						.setTitle(R.string.delete)
+						.setMessage(R.string.delete_confirm)
+						.setPositiveButton(R.string.ok,
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog,
+											int which) {
+										startSaveTask(EXECUTE_DEAL_DELETE);
+										mode.finish();
+									}
+								})
+						.setNegativeButton(R.string.cancel,
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog,
+											int which) {
+										mode.finish();
+									}
+								}).setIcon(android.R.drawable.ic_dialog_alert)
+						.show();
+				return true;
+			default:
+				return false;
 			}
+		}
+
+		@Override
+		public void onDestroyActionMode(ActionMode mode) {
+			mCurrentActionMode = null;
 		}
 	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_deal_list);
 
-		setContentView(R.layout.activity_stock_favorite_list);
-
-		mSortOrder = getSetting(Setting.KEY_SORT_ORDER_STOCK_LIST,
+		mSortOrder = getSetting(Setting.KEY_SORT_ORDER_STOCK_DEAL_LIST,
 				mSortOrderDefault);
 
 		initHeader();
 
 		initListView();
 
-		LocalBroadcastManager.getInstance(this).registerReceiver(
-				mBroadcastReceiver,
-				new IntentFilter(Constants.ACTION_SERVICE_FINISHED));
-
-		mLoaderManager.initLoader(LOADER_ID_STOCK_FAVORITE_LIST, null, this);
+		mLoaderManager.initLoader(LOADER_ID_DEAL_LIST, null, this);
 
 		if (!Utility.isNetworkConnected(this)) {
 			Toast.makeText(this,
 					getResources().getString(R.string.network_unavailable),
 					Toast.LENGTH_SHORT).show();
 		}
+
+		getContentResolver().registerContentObserver(
+				DatabaseContract.StockDeal.CONTENT_URI, true, mContentObserver);
+
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.stock_list, menu);
+		getMenuInflater().inflate(R.menu.deal_list, menu);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		return true;
 	}
@@ -135,21 +197,9 @@ public class StockMatchListActivity extends StorageActivity implements
 			return true;
 
 		case R.id.action_new:
-			mIntent = new Intent(this, StockActivity.class);
-			mIntent.setAction(StockActivity.ACTION_STOCK_INSERT);
+			mIntent = new Intent(this, StockDealActivity.class);
+			mIntent.setAction(StockDealActivity.ACTION_DEAL_INSERT);
 			startActivity(mIntent);
-			return true;
-
-		case R.id.action_search:
-			startActivity(new Intent(this, StockSearchActivity.class));
-			return true;
-
-		case R.id.action_download:
-			onActionSync(Constants.SERVICE_CLOUD_DOWNLOAD_STOCK_FAVORITE);
-			return true;
-
-		case R.id.action_upload:
-			onActionSync(Constants.SERVICE_CLOUD_UPLOAD_STOCK_FAVORITE);
 			return true;
 
 		case R.id.action_save_sd:
@@ -157,17 +207,7 @@ public class StockMatchListActivity extends StorageActivity implements
 			return true;
 
 		case R.id.action_load_sd:
-			startLoadTask(LOAD_FAVORITE_LIST_FROM_SD);
-			return true;
-
-		case R.id.action_clean_data:
-			deleteStockData(0);
-			startService(Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE,
-					Constants.EXECUTE_IMMEDIATE);
-			return true;
-		case R.id.action_simulation:
-			Intent intent = new Intent(this, StockSimulationActivity.class);
-			startActivity(intent);
+			startLoadTask(EXECUTE_DEAL_LIST_LOAD_FROM_SD_CARD);
 			return true;
 
 		default:
@@ -178,7 +218,7 @@ public class StockMatchListActivity extends StorageActivity implements
 	@Override
 	void onSaveSD() {
 		super.onSaveSD();
-		startSaveTask(SAVE_FAVORITE_LIST_TO_SD);
+		startSaveTask(EXECUTE_DEAL_LIST_SAVE_TO_SD_CARD);
 	}
 
 	void onActionSync(int serviceType) {
@@ -190,140 +230,6 @@ public class StockMatchListActivity extends StorageActivity implements
 			startActivityForResult(intent, serviceType);
 		} else {
 			startService(serviceType, Constants.EXECUTE_IMMEDIATE);
-		}
-	}
-
-	Long doInBackgroundLoad(Object... params) {
-		super.doInBackgroundSave(params);
-		int execute = (Integer) params[0];
-
-		switch (execute) {
-		case LOAD_FAVORITE_LIST_FROM_SD:
-			loadListFromSD(FAVORITE_LIST_XML_FILE_NAME);
-			break;
-
-		default:
-			break;
-		}
-
-		return RESULT_SUCCESS;
-	}
-
-	void onPostExecuteLoad(Long result) {
-		super.onPostExecuteLoad(result);
-		startService(Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE,
-				Constants.EXECUTE_IMMEDIATE);
-	}
-
-	@Override
-	Long doInBackgroundSave(Object... params) {
-		super.doInBackgroundSave(params);
-		int execute = (Integer) params[0];
-
-		switch (execute) {
-		case SAVE_FAVORITE_LIST_TO_SD:
-			SaveListToSD(FAVORITE_LIST_XML_FILE_NAME);
-			break;
-
-		default:
-			break;
-		}
-
-		return RESULT_SUCCESS;
-	}
-
-	@Override
-	void onPostExecuteSave(Long result) {
-		super.onPostExecuteSave(result);
-	}
-
-	@Override
-	void xmlParse(XmlPullParser parser) {
-		super.xmlParse(parser);
-
-		int eventType;
-		String now = Utility.getCurrentDateTimeString();
-		String tagName = "";
-		Stock stock = Stock.obtain();
-
-		if (mStockDatabaseManager == null) {
-			return;
-		}
-
-		try {
-			eventType = parser.getEventType();
-			while (eventType != XmlPullParser.END_DOCUMENT) {
-				switch (eventType) {
-				case XmlPullParser.START_TAG:
-					tagName = parser.getName();
-					if (XML_TAG_ITEM.equals(tagName)) {
-						stock.init();
-					} else if (DatabaseContract.COLUMN_SE.equals(tagName)) {
-						stock.setSE(parser.nextText());
-					} else if (DatabaseContract.COLUMN_CODE.equals(tagName)) {
-						stock.setCode(parser.nextText());
-					} else if (DatabaseContract.COLUMN_NAME.equals(tagName)) {
-						stock.setName(parser.nextText());
-					} else {
-					}
-					break;
-				case XmlPullParser.END_TAG:
-					tagName = parser.getName();
-					if (XML_TAG_ITEM.equals(tagName)) {
-						mStockDatabaseManager.getStock(stock);
-						stock.setMark(Constants.STOCK_FLAG_MARK_FAVORITE);
-						if (!mStockDatabaseManager.isStockExist(stock)) {
-							stock.setCreated(now);
-							stock.setModified(now);
-							mStockDatabaseManager.insertStock(stock);
-						} else {
-							mStockDatabaseManager.updateStock(stock,
-									stock.getContentValues());
-						}
-					}
-					break;
-				default:
-					break;
-				}
-				eventType = parser.next();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	void xmlSerialize(XmlSerializer xmlSerializer) {
-		super.xmlSerialize(xmlSerializer);
-
-		Cursor cursor = null;
-		String selection = DatabaseContract.Stock.COLUMN_MARK + " = '"
-				+ Constants.STOCK_FLAG_MARK_FAVORITE + "'";
-		Stock stock = Stock.obtain();
-
-		if (mStockDatabaseManager == null) {
-			return;
-		}
-
-		try {
-			cursor = mStockDatabaseManager.queryStock(selection, null, null);
-			if ((cursor != null) && (cursor.getCount() > 0)) {
-				while (cursor.moveToNext()) {
-					stock.set(cursor);
-					xmlSerializer.startTag(null, XML_TAG_ITEM);
-					xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_SE,
-							stock.getSE());
-					xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_CODE,
-							stock.getCode());
-					xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_NAME,
-							stock.getName());
-					xmlSerializer.endTag(null, XML_TAG_ITEM);
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			mStockDatabaseManager.closeCursor(cursor);
 		}
 	}
 
@@ -348,38 +254,23 @@ public class StockMatchListActivity extends StorageActivity implements
 		case R.id.price:
 			mSortOrderColumn = DatabaseContract.COLUMN_PRICE;
 			break;
-		case R.id.price_net:
+		case R.id.net:
 			mSortOrderColumn = DatabaseContract.COLUMN_NET;
 			break;
-		case R.id.stock_action_5min:
-			mSortOrderColumn = DatabaseContract.Stock.COLUMN_ACTION_5MIN;
+		case R.id.deal:
+			mSortOrderColumn = DatabaseContract.COLUMN_DEAL;
 			break;
-		case R.id.stock_action_15min:
-			mSortOrderColumn = DatabaseContract.Stock.COLUMN_ACTION_15MIN;
+		case R.id.volume:
+			mSortOrderColumn = DatabaseContract.COLUMN_VOLUME;
 			break;
-		case R.id.stock_action_30min:
-			mSortOrderColumn = DatabaseContract.Stock.COLUMN_ACTION_30MIN;
+		case R.id.profile:
+			mSortOrderColumn = DatabaseContract.COLUMN_PROFIT;
 			break;
-		case R.id.stock_action_60min:
-			mSortOrderColumn = DatabaseContract.Stock.COLUMN_ACTION_60MIN;
+		case R.id.created:
+			mSortOrderColumn = DatabaseContract.COLUMN_CREATED;
 			break;
-		case R.id.stock_action_day:
-			mSortOrderColumn = DatabaseContract.Stock.COLUMN_ACTION_DAY;
-			break;
-		case R.id.stock_action_week:
-			mSortOrderColumn = DatabaseContract.Stock.COLUMN_ACTION_WEEK;
-			break;
-		case R.id.stock_action_month:
-			mSortOrderColumn = DatabaseContract.Stock.COLUMN_ACTION_MONTH;
-			break;
-		case R.id.overlap:
-			mSortOrderColumn = DatabaseContract.COLUMN_OVERLAP;
-			break;
-		case R.id.velocity:
-			mSortOrderColumn = DatabaseContract.COLUMN_VELOCITY;
-			break;
-		case R.id.acceleration:
-			mSortOrderColumn = DatabaseContract.COLUMN_ACCELERATION;
+		case R.id.modified:
+			mSortOrderColumn = DatabaseContract.COLUMN_MODIFIED;
 			break;
 		default:
 			mSortOrderColumn = DatabaseContract.COLUMN_CODE;
@@ -394,7 +285,7 @@ public class StockMatchListActivity extends StorageActivity implements
 
 		mSortOrder = mSortOrderColumn + mSortOrderDirection;
 
-		saveSetting(Setting.KEY_SORT_ORDER_STOCK_LIST, mSortOrder);
+		saveSetting(Setting.KEY_SORT_ORDER_STOCK_DEAL_LIST, mSortOrder);
 
 		restartLoader();
 	}
@@ -411,19 +302,14 @@ public class StockMatchListActivity extends StorageActivity implements
 	}
 
 	void resetHeaderTextColor() {
-		setHeaderTextColor(mStockNameCode, mHeaderTextDefaultColor);
-		setHeaderTextColor(mPrice, mHeaderTextDefaultColor);
-		setHeaderTextColor(mPriceNet, mHeaderTextDefaultColor);
-		setHeaderTextColor(mPriceType5M, mHeaderTextDefaultColor);
-		setHeaderTextColor(mPriceType15M, mHeaderTextDefaultColor);
-		setHeaderTextColor(mPriceType30M, mHeaderTextDefaultColor);
-		setHeaderTextColor(mPriceType60M, mHeaderTextDefaultColor);
-		setHeaderTextColor(mPriceTypeDay, mHeaderTextDefaultColor);
-		setHeaderTextColor(mPriceTypeWeek, mHeaderTextDefaultColor);
-		setHeaderTextColor(mPriceTypeMonth, mHeaderTextDefaultColor);
-		setHeaderTextColor(mOverlap, mHeaderTextDefaultColor);
-		setHeaderTextColor(mVelocity, mHeaderTextDefaultColor);
-		setHeaderTextColor(mAcceleration, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewStockNameCode, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewPrice, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewNet, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewDeal, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewVolume, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewProfit, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewCreated, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewModified, mHeaderTextDefaultColor);
 	}
 
 	void setVisibility(String key, TextView textView) {
@@ -445,111 +331,47 @@ public class StockMatchListActivity extends StorageActivity implements
 			mContentSHSV.setScrollView(mTitleSHSV);
 		}
 
-		mStockNameCode = (TextView) findViewById(R.id.stock_name_code);
-		if (mStockNameCode != null) {
-			mStockNameCode.setOnClickListener(this);
-		}
+		mTextViewStockNameCode = (TextView) findViewById(R.id.stock_name_code);
+		mTextViewStockNameCode.setOnClickListener(this);
 
-		mPrice = (TextView) findViewById(R.id.price);
-		if (mPrice != null) {
-			mPrice.setOnClickListener(this);
-		}
+		mTextViewPrice = (TextView) findViewById(R.id.price);
+		mTextViewPrice.setOnClickListener(this);
 
-		mPriceNet = (TextView) findViewById(R.id.price_net);
-		if (mPriceNet != null) {
-			mPriceNet.setOnClickListener(this);
-		}
+		mTextViewNet = (TextView) findViewById(R.id.net);
+		mTextViewNet.setOnClickListener(this);
 
-		mPriceType5M = (TextView) findViewById(R.id.stock_action_5min);
-		if (mPriceType5M != null) {
-			mPriceType5M.setOnClickListener(this);
-			setVisibility(Constants.PERIOD_5MIN, mPriceType5M);
-		}
+		mTextViewDeal = (TextView) findViewById(R.id.deal);
+		mTextViewDeal.setOnClickListener(this);
 
-		mPriceType15M = (TextView) findViewById(R.id.stock_action_15min);
-		if (mPriceType15M != null) {
-			mPriceType15M.setOnClickListener(this);
-			setVisibility(Constants.PERIOD_15MIN, mPriceType15M);
-		}
+		mTextViewVolume = (TextView) findViewById(R.id.volume);
+		mTextViewVolume.setOnClickListener(this);
 
-		mPriceType30M = (TextView) findViewById(R.id.stock_action_30min);
-		if (mPriceType30M != null) {
-			mPriceType30M.setOnClickListener(this);
-			setVisibility(Constants.PERIOD_30MIN, mPriceType30M);
-		}
+		mTextViewProfit = (TextView) findViewById(R.id.profile);
+		mTextViewProfit.setOnClickListener(this);
 
-		mPriceType60M = (TextView) findViewById(R.id.stock_action_60min);
-		if (mPriceType60M != null) {
-			mPriceType60M.setOnClickListener(this);
-			setVisibility(Constants.PERIOD_60MIN, mPriceType60M);
-		}
+		mTextViewCreated = (TextView) findViewById(R.id.created);
+		mTextViewCreated.setOnClickListener(this);
 
-		mPriceTypeDay = (TextView) findViewById(R.id.stock_action_day);
-		if (mPriceTypeDay != null) {
-			mPriceTypeDay.setOnClickListener(this);
-			setVisibility(Constants.PERIOD_DAY, mPriceTypeDay);
-		}
-
-		mPriceTypeWeek = (TextView) findViewById(R.id.stock_action_week);
-		if (mPriceTypeWeek != null) {
-			mPriceTypeWeek.setOnClickListener(this);
-			setVisibility(Constants.PERIOD_WEEK, mPriceTypeWeek);
-		}
-
-		mPriceTypeMonth = (TextView) findViewById(R.id.stock_action_month);
-		if (mPriceTypeMonth != null) {
-			mPriceTypeMonth.setOnClickListener(this);
-			setVisibility(Constants.PERIOD_MONTH, mPriceTypeMonth);
-		}
-
-		mOverlap = (TextView) findViewById(R.id.overlap);
-		if (mOverlap != null) {
-			mOverlap.setOnClickListener(this);
-		}
-
-		mVelocity = (TextView) findViewById(R.id.velocity);
-		if (mVelocity != null) {
-			mVelocity.setOnClickListener(this);
-		}
-
-		mAcceleration = (TextView) findViewById(R.id.acceleration);
-		if (mAcceleration != null) {
-			mAcceleration.setOnClickListener(this);
-		}
+		mTextViewModified = (TextView) findViewById(R.id.modified);
+		mTextViewModified.setOnClickListener(this);
 
 		if (mSortOrder.contains(DatabaseContract.COLUMN_CODE)) {
-			setHeaderTextColor(mStockNameCode, mHeaderTextHighlightColor);
+			setHeaderTextColor(mTextViewStockNameCode,
+					mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PRICE)) {
-			setHeaderTextColor(mPrice, mHeaderTextHighlightColor);
+			setHeaderTextColor(mTextViewPrice, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_NET)) {
-			setHeaderTextColor(mPriceNet, mHeaderTextHighlightColor);
-		} else if (mSortOrder
-				.contains(DatabaseContract.Stock.COLUMN_ACTION_5MIN)) {
-			setHeaderTextColor(mPriceType15M, mHeaderTextHighlightColor);
-		} else if (mSortOrder
-				.contains(DatabaseContract.Stock.COLUMN_ACTION_15MIN)) {
-			setHeaderTextColor(mPriceType15M, mHeaderTextHighlightColor);
-		} else if (mSortOrder
-				.contains(DatabaseContract.Stock.COLUMN_ACTION_30MIN)) {
-			setHeaderTextColor(mPriceType30M, mHeaderTextHighlightColor);
-		} else if (mSortOrder
-				.contains(DatabaseContract.Stock.COLUMN_ACTION_60MIN)) {
-			setHeaderTextColor(mPriceType60M, mHeaderTextHighlightColor);
-		} else if (mSortOrder
-				.contains(DatabaseContract.Stock.COLUMN_ACTION_DAY)) {
-			setHeaderTextColor(mPriceTypeDay, mHeaderTextHighlightColor);
-		} else if (mSortOrder
-				.contains(DatabaseContract.Stock.COLUMN_ACTION_WEEK)) {
-			setHeaderTextColor(mPriceTypeWeek, mHeaderTextHighlightColor);
-		} else if (mSortOrder
-				.contains(DatabaseContract.Stock.COLUMN_ACTION_MONTH)) {
-			setHeaderTextColor(mPriceTypeMonth, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_OVERLAP)) {
-			setHeaderTextColor(mOverlap, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_VELOCITY)) {
-			setHeaderTextColor(mVelocity, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_ACCELERATION)) {
-			setHeaderTextColor(mAcceleration, mHeaderTextHighlightColor);
+			setHeaderTextColor(mTextViewNet, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_DEAL)) {
+			setHeaderTextColor(mTextViewDeal, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_VOLUME)) {
+			setHeaderTextColor(mTextViewVolume, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PROFIT)) {
+			setHeaderTextColor(mTextViewProfit, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_CREATED)) {
+			setHeaderTextColor(mTextViewCreated, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MODIFIED)) {
+			setHeaderTextColor(mTextViewModified, mHeaderTextHighlightColor);
 		} else {
 		}
 	}
@@ -560,21 +382,12 @@ public class StockMatchListActivity extends StorageActivity implements
 		int[] mLeftTo = new int[] { R.id.name, R.id.code };
 
 		String[] mRightFrom = new String[] { DatabaseContract.COLUMN_PRICE,
-				DatabaseContract.COLUMN_NET,
-				DatabaseContract.Stock.COLUMN_ACTION_5MIN,
-				DatabaseContract.Stock.COLUMN_ACTION_15MIN,
-				DatabaseContract.Stock.COLUMN_ACTION_30MIN,
-				DatabaseContract.Stock.COLUMN_ACTION_60MIN,
-				DatabaseContract.Stock.COLUMN_ACTION_DAY,
-				DatabaseContract.Stock.COLUMN_ACTION_WEEK,
-				DatabaseContract.Stock.COLUMN_ACTION_MONTH,
-				DatabaseContract.COLUMN_OVERLAP,
-				DatabaseContract.COLUMN_VELOCITY,
-				DatabaseContract.COLUMN_ACCELERATION };
-		int[] mRightTo = new int[] { R.id.price, R.id.net, R.id.type_5min,
-				R.id.type_15min, R.id.type_30min, R.id.type_60min,
-				R.id.type_day, R.id.type_week, R.id.type_month, R.id.overlap,
-				R.id.velocity, R.id.acceleration };
+				DatabaseContract.COLUMN_NET, DatabaseContract.COLUMN_DEAL,
+				DatabaseContract.COLUMN_VOLUME, DatabaseContract.COLUMN_PROFIT,
+				DatabaseContract.COLUMN_CREATED,
+				DatabaseContract.COLUMN_MODIFIED };
+		int[] mRightTo = new int[] { R.id.price, R.id.net, R.id.deal,
+				R.id.volume, R.id.profile, R.id.created, R.id.modified };
 
 		mLeftListView = (ListView) findViewById(R.id.left_listview);
 		mLeftAdapter = new SimpleCursorAdapter(this,
@@ -588,7 +401,7 @@ public class StockMatchListActivity extends StorageActivity implements
 
 		mRightListView = (ListView) findViewById(R.id.right_listview);
 		mRightAdapter = new SimpleCursorAdapter(this,
-				R.layout.activity_stock_list_right_item, null, mRightFrom,
+				R.layout.activity_deal_list_right_item, null, mRightFrom,
 				mRightTo, 0);
 		if ((mRightListView != null) && (mRightAdapter != null)) {
 			mRightAdapter.setViewBinder(new CustomViewBinder());
@@ -599,7 +412,7 @@ public class StockMatchListActivity extends StorageActivity implements
 	}
 
 	void restartLoader() {
-		mLoaderManager.restartLoader(LOADER_ID_STOCK_FAVORITE_LIST, null, this);
+		mLoaderManager.restartLoader(LOADER_ID_DEAL_LIST, null, this);
 	}
 
 	@Override
@@ -618,22 +431,18 @@ public class StockMatchListActivity extends StorageActivity implements
 	protected void onDestroy() {
 		super.onDestroy();
 
-		LocalBroadcastManager.getInstance(this).unregisterReceiver(
-				mBroadcastReceiver);
+		getContentResolver().unregisterContentObserver(mContentObserver);
 	}
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle arg1) {
-		String selection = "";
+		String selection = null;
 		CursorLoader loader = null;
 
 		switch (id) {
-		case LOADER_ID_STOCK_FAVORITE_LIST:
-			selection = DatabaseContract.Stock.COLUMN_MARK + " = '"
-					+ Constants.STOCK_FLAG_MARK_FAVORITE + "'";
-
-			loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
-					DatabaseContract.Stock.PROJECTION_ALL, selection, null,
+		case LOADER_ID_DEAL_LIST:
+			loader = new CursorLoader(this, DatabaseContract.StockDeal.CONTENT_URI,
+					DatabaseContract.StockDeal.PROJECTION_ALL, selection, null,
 					mSortOrder);
 			break;
 
@@ -651,7 +460,9 @@ public class StockMatchListActivity extends StorageActivity implements
 		}
 
 		switch (loader.getId()) {
-		case LOADER_ID_STOCK_FAVORITE_LIST:
+		case LOADER_ID_DEAL_LIST:
+			setStockDealList(cursor);
+
 			mLeftAdapter.swapCursor(cursor);
 			mRightAdapter.swapCursor(cursor);
 			break;
@@ -670,34 +481,44 @@ public class StockMatchListActivity extends StorageActivity implements
 		mRightAdapter.swapCursor(null);
 	}
 
+	void setStockDealList(Cursor cursor) {
+		mStockDealList.clear();
+
+		try {
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				while (cursor.moveToNext()) {
+					StockDeal stockDeal = new StockDeal();
+					stockDeal.set(cursor);
+					mStockDealList.add(stockDeal);
+				}
+				cursor.moveToFirst();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 
-		if (id <= Constants.STOCK_ID_INVALID) {
-			return;
-		}
-
-		if (ACTION_STOCK_ID.equals(mAction)) {
-			if (mIntent != null) {
-				mIntent.putExtra(EXTRA_STOCK_ID, id);
-				setResult(RESULT_OK, mIntent);
-				finish();
-			}
-		} else {
-			Intent intent = new Intent(this, StockChartListActivity.class);
-			intent.putExtra(Setting.KEY_SORT_ORDER_STOCK_LIST, mSortOrder);
-			intent.putExtra(DatabaseContract.COLUMN_STOCK_ID, id);
-			startActivity(intent);
+		if (mCurrentActionMode == null) {
+			mDeal.setId(id);
+			startLoadTask(EXECUTE_DEAL_LIST_ON_ITEM_CLICK);
 		}
 	}
 
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
 			int position, long id) {
-		Intent intent = new Intent(this, StockFavoriteEditActivity.class);
-		intent.putExtra(Setting.KEY_SORT_ORDER_STOCK_LIST, mSortOrder);
-		startActivity(intent);
+
+		if (mCurrentActionMode != null) {
+			return false;
+		}
+
+		mDeal.setId(id);
+		mCurrentActionMode = startActionMode(mModeCallBack);
+		view.setSelected(true);
 		return true;
 	}
 
@@ -723,30 +544,173 @@ public class StockMatchListActivity extends StorageActivity implements
 				return false;
 			}
 
-			if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.Stock.COLUMN_ACTION_5MIN)) {
-				return setTextViewValue(Constants.PERIOD_5MIN, view);
-			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.Stock.COLUMN_ACTION_15MIN)) {
-				return setTextViewValue(Constants.PERIOD_15MIN, view);
-			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.Stock.COLUMN_ACTION_30MIN)) {
-				return setTextViewValue(Constants.PERIOD_30MIN, view);
-			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.Stock.COLUMN_ACTION_60MIN)) {
-				return setTextViewValue(Constants.PERIOD_60MIN, view);
-			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.Stock.COLUMN_ACTION_DAY)) {
-				return setTextViewValue(Constants.PERIOD_DAY, view);
-			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.Stock.COLUMN_ACTION_WEEK)) {
-				return setTextViewValue(Constants.PERIOD_WEEK, view);
-			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.Stock.COLUMN_ACTION_MONTH)) {
-				return setTextViewValue(Constants.PERIOD_MONTH, view);
-			}
-
 			return false;
+		}
+	}
+
+	Long doInBackgroundLoad(Object... params) {
+		super.doInBackgroundSave(params);
+		int execute = (Integer) params[0];
+
+		switch (execute) {
+		case EXECUTE_DEAL_LIST_ON_ITEM_CLICK:
+			mStockDatabaseManager.getStockDealById(mDeal);
+
+			mStock.setSE(mDeal.getSE());
+			mStock.setCode(mDeal.getCode());
+			mStockDatabaseManager.getStock(mStock);
+
+			Intent intent = new Intent(this, StockChartListActivity.class);
+			intent.putExtra(Setting.KEY_SORT_ORDER_STOCK_DEAL_LIST, mSortOrder);
+			intent.putExtra(StockChartListActivity.EXTRA_STOCK_ID,
+					mStock.getId());
+			startActivity(intent);
+			break;
+
+		case EXECUTE_DEAL_LIST_LOAD_FROM_SD_CARD:
+			loadListFromSD(DEAL_LIST_XML_FILE_NAME);
+			break;
+
+		default:
+			break;
+		}
+
+		return RESULT_SUCCESS;
+	}
+
+	void onPostExecuteLoad(Long result) {
+		super.onPostExecuteLoad(result);
+	}
+
+	@Override
+	Long doInBackgroundSave(Object... params) {
+		super.doInBackgroundSave(params);
+		int execute = (Integer) params[0];
+
+		switch (execute) {
+		case EXECUTE_DEAL_DELETE:
+			mStockDatabaseManager.deleteStockDealById(mDeal);
+			break;
+
+		case EXECUTE_DEAL_LIST_SAVE_TO_SD_CARD:
+			SaveListToSD(DEAL_LIST_XML_FILE_NAME);
+			break;
+
+		default:
+			break;
+		}
+
+		return RESULT_SUCCESS;
+	}
+
+	@Override
+	void onPostExecuteSave(Long result) {
+		super.onPostExecuteSave(result);
+	}
+
+	@Override
+	void xmlParse(XmlPullParser parser) {
+		super.xmlParse(parser);
+
+		int eventType;
+		String tagName = "";
+		StockDeal stockDeal = null;
+
+		try {
+			eventType = parser.getEventType();
+			while (eventType != XmlPullParser.END_DOCUMENT) {
+				switch (eventType) {
+				case XmlPullParser.START_TAG:
+					tagName = parser.getName();
+					if (XML_TAG_ITEM.equals(tagName)) {
+						stockDeal = new StockDeal();
+					} else if (DatabaseContract.COLUMN_SE.equals(tagName)) {
+						stockDeal.setSE(parser.nextText());
+					} else if (DatabaseContract.COLUMN_CODE.equals(tagName)) {
+						stockDeal.setCode(parser.nextText());
+					} else if (DatabaseContract.COLUMN_NAME.equals(tagName)) {
+						stockDeal.setName(parser.nextText());
+					} else if (DatabaseContract.COLUMN_PRICE.equals(tagName)) {
+						stockDeal.setPrice(Double.valueOf(parser.nextText()));
+					} else if (DatabaseContract.COLUMN_NET.equals(tagName)) {
+						stockDeal.setNet(Double.valueOf(parser.nextText()));
+					} else if (DatabaseContract.COLUMN_DEAL.equals(tagName)) {
+						stockDeal.setDeal(Double.valueOf(parser.nextText()));
+					} else if (DatabaseContract.COLUMN_VOLUME.equals(tagName)) {
+						stockDeal.setVolume(Long.valueOf(parser.nextText()));
+					} else if (DatabaseContract.COLUMN_PROFIT.equals(tagName)) {
+						stockDeal.setProfit(Double.valueOf(parser.nextText()));
+					} else if (DatabaseContract.COLUMN_CREATED.equals(tagName)) {
+						stockDeal.setCreated(parser.nextText());
+					} else if (DatabaseContract.COLUMN_MODIFIED.equals(tagName)) {
+						stockDeal.setModified(parser.nextText());
+					} else {
+					}
+					break;
+				case XmlPullParser.END_TAG:
+					tagName = parser.getName();
+					if (XML_TAG_ITEM.equals(tagName)) {
+						if (stockDeal != null) {
+							mStock.setSE(stockDeal.getSE());
+							mStock.setCode(stockDeal.getCode());
+							mStockDatabaseManager.getStock(mStock);
+
+							if (!mStock.getName().equals(stockDeal.getName())) {
+								stockDeal.setName(mStock.getName());
+							}
+
+							if (mStock.getPrice() != stockDeal.getPrice()) {
+								stockDeal.setPrice(mStock.getPrice());
+								stockDeal.setupDeal();
+							}
+
+							if (!mStockDatabaseManager.isStockDealExist(stockDeal)) {
+								mStockDatabaseManager.insertStockDeal(stockDeal);
+							}
+						}
+					}
+					break;
+				default:
+					break;
+				}
+				eventType = parser.next();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	void xmlSerialize(XmlSerializer xmlSerializer) {
+		super.xmlSerialize(xmlSerializer);
+
+		try {
+			for (StockDeal stockDeal : mStockDealList) {
+				xmlSerializer.startTag(null, XML_TAG_ITEM);
+				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_SE,
+						stockDeal.getSE());
+				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_CODE,
+						stockDeal.getCode());
+				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_NAME,
+						stockDeal.getName());
+				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_PRICE,
+						String.valueOf(stockDeal.getPrice()));
+				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_NET,
+						String.valueOf(stockDeal.getNet()));
+				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_DEAL,
+						String.valueOf(stockDeal.getDeal()));
+				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_VOLUME,
+						String.valueOf(stockDeal.getVolume()));
+				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_PROFIT,
+						String.valueOf(stockDeal.getProfit()));
+				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_CREATED,
+						stockDeal.getCreated());
+				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_MODIFIED,
+						stockDeal.getModified());
+				xmlSerializer.endTag(null, XML_TAG_ITEM);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 }

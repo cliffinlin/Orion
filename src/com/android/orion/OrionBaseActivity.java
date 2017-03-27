@@ -167,14 +167,14 @@ public class OrionBaseActivity extends Activity {
 	}
 
 	void startService(int serviceType, int executeType, String se, String code,
-			double dealPrice, long dealVolume) {
+			double stockDealPrice, long stockDealVolume) {
 		Bundle bundle = new Bundle();
 		bundle.putInt(Constants.EXTRA_KEY_SERVICE_TYPE, serviceType);
 		bundle.putInt(Constants.EXTRA_KEY_EXECUTE_TYPE, executeType);
 		bundle.putString(Constants.EXTRA_KEY_STOCK_SE, se);
 		bundle.putString(Constants.EXTRA_KEY_STOCK_CODE, code);
-		bundle.putDouble(Constants.EXTRA_KEY_STOCK_DEAL_PRICE, dealPrice);
-		bundle.putLong(Constants.EXTRA_KEY_STOCK_DEAL_VOLUME, dealVolume);
+		bundle.putDouble(Constants.EXTRA_KEY_STOCK_DEAL_PRICE, stockDealPrice);
+		bundle.putLong(Constants.EXTRA_KEY_STOCK_DEAL_VOLUME, stockDealVolume);
 		startService(bundle);
 	}
 
@@ -292,7 +292,7 @@ public class OrionBaseActivity extends Activity {
 
 		try {
 			stockArrayMap.clear();
-			cursor = mStockDatabaseManager.queryDeal(selection, selectionArgs,
+			cursor = mStockDatabaseManager.queryStockDeal(selection, selectionArgs,
 					sortOrder);
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				while (cursor.moveToNext()) {
