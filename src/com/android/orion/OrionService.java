@@ -52,13 +52,15 @@ public class OrionService extends Service {
 	SinaFinance mSinaFinance;
 	LeanCloudManager mLeanCloudManager;
 
-	BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+	OrionBroadcastReceiver mBroadcastReceiver;
+	
+	public class OrionBroadcastReceiver extends BroadcastReceiver {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
 		}
-	};
+	}
 
 	public class OrionServiceBinder extends Binder {
 
@@ -107,7 +109,7 @@ public class OrionService extends Service {
 		mTelephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
 		mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
-		mContentResolver = mContext.getContentResolver();
+		mContentResolver = getContentResolver();
 
 		mHandlerThread = new HandlerThread(mName,
 				Process.THREAD_PRIORITY_BACKGROUND);
@@ -122,7 +124,8 @@ public class OrionService extends Service {
 
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(Intent.ACTION_HEADSET_PLUG);
-		mContext.registerReceiver(mBroadcastReceiver, filter);
+		mBroadcastReceiver = new OrionBroadcastReceiver();
+		registerReceiver(mBroadcastReceiver, filter);
 
 		mSinaFinance = new SinaFinance(this);
 		mLeanCloudManager = new LeanCloudManager(this);
@@ -144,6 +147,8 @@ public class OrionService extends Service {
 
 	@Override
 	public void onDestroy() {
+		super.onDestroy();
+		
 		mLooper.quit();
 
 		try {
