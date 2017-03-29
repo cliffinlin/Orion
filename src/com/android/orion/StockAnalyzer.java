@@ -16,9 +16,9 @@ import android.support.v4.app.NotificationCompat;
 
 import com.android.orion.curve.BezierCurve;
 import com.android.orion.database.DatabaseContract;
-import com.android.orion.database.StockDeal;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
+import com.android.orion.database.StockDeal;
 import com.android.orion.indicator.MACD;
 import com.android.orion.utility.StopWatch;
 import com.android.orion.utility.Utility;
@@ -500,7 +500,8 @@ public class StockAnalyzer extends StockManager {
 		mStockDatabaseManager.getStockDealList(stock, stockDealList);
 
 		for (StockDeal stockDeal : stockDealList) {
-			if ((stockDeal.getDeal() > 0) && Math.abs(stockDeal.getVolume()) > 0) {
+			if ((stockDeal.getDeal() > 0)
+					&& Math.abs(stockDeal.getVolume()) > 0) {
 				result += stockDeal.getDeal() + " ";
 				result += stockDeal.getNet() + " ";
 				result += stockDeal.getVolume() + " ";

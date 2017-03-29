@@ -11,11 +11,12 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.android.orion.database.StockDeal;
 import com.android.orion.database.Stock;
+import com.android.orion.database.StockDeal;
 import com.android.orion.utility.Utility;
 
-public class StockDealActivity extends DatabaseActivity implements OnClickListener {
+public class StockDealActivity extends DatabaseActivity implements
+		OnClickListener {
 
 	public static final String ACTION_DEAL_INSERT = "orion.intent.action.ACTION_DEAL_INSERT";
 	public static final String ACTION_DEAL_EDIT = "orion.intent.action.ACTION_DEAL_EDIT";

@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-import com.android.orion.database.StockDeal;
 import com.android.orion.database.Stock;
+import com.android.orion.database.StockDeal;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.LimitLine.LimitLabelPosition;
 import com.github.mikephil.charting.components.YAxis;

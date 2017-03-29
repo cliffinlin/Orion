@@ -292,8 +292,8 @@ public class OrionBaseActivity extends Activity {
 
 		try {
 			stockArrayMap.clear();
-			cursor = mStockDatabaseManager.queryStockDeal(selection, selectionArgs,
-					sortOrder);
+			cursor = mStockDatabaseManager.queryStockDeal(selection,
+					selectionArgs, sortOrder);
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				while (cursor.moveToNext()) {
 					Stock stock = Stock.obtain();

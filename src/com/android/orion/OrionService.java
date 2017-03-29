@@ -53,7 +53,7 @@ public class OrionService extends Service {
 	LeanCloudManager mLeanCloudManager;
 
 	OrionBroadcastReceiver mBroadcastReceiver;
-	
+
 	public class OrionBroadcastReceiver extends BroadcastReceiver {
 
 		@Override
@@ -148,7 +148,7 @@ public class OrionService extends Service {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		
+
 		mLooper.quit();
 
 		try {

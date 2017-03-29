@@ -111,8 +111,7 @@ public class StockDeal extends DatabaseTable {
 	}
 
 	@Override
-	public
-	void set(Cursor cursor) {
+	public void set(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}

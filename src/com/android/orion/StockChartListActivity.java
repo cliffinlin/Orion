@@ -28,9 +28,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.android.orion.database.DatabaseContract;
-import com.android.orion.database.StockDeal;
 import com.android.orion.database.Setting;
 import com.android.orion.database.Stock;
+import com.android.orion.database.StockDeal;
 import com.android.orion.utility.Utility;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -422,7 +422,8 @@ public class StockChartListActivity extends OrionBaseActivity implements
 				+ mStock.getCode() + "\'";
 
 		try {
-			cursor = mStockDatabaseManager.queryStockDeal(selection, null, null);
+			cursor = mStockDatabaseManager
+					.queryStockDeal(selection, null, null);
 
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				while (cursor.moveToNext()) {

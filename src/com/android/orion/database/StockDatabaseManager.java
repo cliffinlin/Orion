@@ -261,207 +261,6 @@ public class StockDatabaseManager extends DatabaseManager {
 		return result;
 	}
 
-	public Uri insertStockDeal(StockDeal stockDeal) {
-		Uri uri = null;
-
-		if ((stockDeal == null) || (mContentResolver == null)) {
-			return uri;
-		}
-
-		uri = mContentResolver.insert(DatabaseContract.StockDeal.CONTENT_URI,
-				stockDeal.getContentValues());
-
-		return uri;
-	}
-
-	public int updateStockDealByID(StockDeal stockDeal) {
-		int result = 0;
-
-		if ((stockDeal == null) || (mContentResolver == null)) {
-			return result;
-		}
-
-		String where = DatabaseContract.COLUMN_ID + "=" + stockDeal.getId();
-
-		result = mContentResolver.update(DatabaseContract.StockDeal.CONTENT_URI,
-				stockDeal.getContentValues(), where, null);
-
-		return result;
-	}
-
-	public int updateStockDeal(Stock stock) {
-		int result = 0;
-		Cursor cursor = null;
-		StockDeal stockDeal = null;
-
-		if ((stock == null) || (mContentResolver == null)) {
-			return result;
-		}
-
-		stockDeal = new StockDeal();
-
-		String selection = DatabaseContract.COLUMN_SE + " = " + "\'"
-				+ stock.getSE() + "\'" + " AND " + DatabaseContract.COLUMN_CODE
-				+ " = " + "\'" + stock.getCode() + "\'";
-
-		try {
-			cursor = queryStockDeal(selection, null, null);
-			if ((cursor != null) && (cursor.getCount() > 0)) {
-				while (cursor.moveToNext()) {
-					stockDeal.set(cursor);
-					stockDeal.setPrice(stock.getPrice());
-					stockDeal.setupDeal();
-					result += updateStockDealByID(stockDeal);
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			closeCursor(cursor);
-		}
-
-		return result;
-	}
-
-	public void deleteStockDealById(StockDeal stockDeal) {
-		if ((stockDeal == null) || (mContentResolver == null)) {
-			return;
-		}
-
-		String where = DatabaseContract.COLUMN_ID + "=" + stockDeal.getId();
-
-		try {
-			mContentResolver.delete(DatabaseContract.StockDeal.CONTENT_URI, where,
-					null);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public Cursor queryStockDeal(StockDeal stockDeal) {
-		Cursor cursor = null;
-
-		if (stockDeal == null) {
-			return cursor;
-		}
-
-		String selection = DatabaseContract.COLUMN_SE + " = " + "\'"
-				+ stockDeal.getSE() + "\'" + " AND " + DatabaseContract.COLUMN_CODE
-				+ " = " + "\'" + stockDeal.getCode() + "\'" + " AND "
-				+ DatabaseContract.COLUMN_DEAL + " = " + stockDeal.getDeal()
-				+ " AND " + DatabaseContract.COLUMN_VOLUME + " = "
-				+ stockDeal.getVolume();
-
-		cursor = queryStockDeal(selection, null, null);
-
-		return cursor;
-	}
-
-	public Cursor queryStockDeal(String selection, String[] selectionArgs,
-			String sortOrder) {
-		Cursor cursor = null;
-
-		if (mContentResolver == null) {
-			return cursor;
-		}
-
-		cursor = mContentResolver.query(DatabaseContract.StockDeal.CONTENT_URI,
-				DatabaseContract.StockDeal.PROJECTION_ALL, selection, selectionArgs,
-				sortOrder);
-
-		return cursor;
-	}
-
-	public Cursor queryStockDealById(StockDeal stockDeal) {
-		Cursor cursor = null;
-
-		if (stockDeal == null) {
-			return cursor;
-		}
-
-		String selection = DatabaseContract.COLUMN_ID + "=" + stockDeal.getId();
-
-		cursor = queryStockDeal(selection, null, null);
-
-		return cursor;
-	}
-
-	public void getStockDealById(StockDeal stockDeal) {
-		Cursor cursor = null;
-
-		if (stockDeal == null) {
-			return;
-		}
-
-		try {
-			cursor = queryStockDealById(stockDeal);
-
-			if ((cursor != null) && (cursor.getCount() > 0)) {
-				cursor.moveToNext();
-				stockDeal.set(cursor);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			closeCursor(cursor);
-		}
-	}
-
-	public void getStockDealList(Stock stock, ArrayList<StockDeal> stockDealList) {
-		Cursor cursor = null;
-		String selection = "";
-
-		if ((stock == null) || (stockDealList == null)) {
-			return;
-		}
-
-		stockDealList.clear();
-
-		selection = DatabaseContract.COLUMN_SE + " = " + "\'" + stock.getSE()
-				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
-				+ stock.getCode() + "\'";
-
-		try {
-			cursor = queryStockDeal(selection, null, null);
-
-			if ((cursor != null) && (cursor.getCount() > 0)) {
-				while (cursor.moveToNext()) {
-					StockDeal stockDeal = new StockDeal();
-					stockDeal.set(cursor);
-					stockDealList.add(stockDeal);
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			closeCursor(cursor);
-		}
-	}
-
-	public boolean isStockDealExist(StockDeal stockDeal) {
-		boolean result = false;
-		Cursor cursor = null;
-
-		if (stockDeal == null) {
-			return result;
-		}
-
-		try {
-			cursor = queryStockDeal(stockDeal);
-
-			if ((cursor != null) && (cursor.getCount() > 0)) {
-				cursor.moveToNext();
-				stockDeal.setCreated(cursor);
-				result = true;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			closeCursor(cursor);
-		}
-
-		return result;
-	}
 
 	public Uri insertStock(Stock stock) {
 		Uri uri = null;
@@ -834,5 +633,414 @@ public class StockDatabaseManager extends DatabaseManager {
 	public String getStockDataOrder() {
 		return DatabaseContract.StockData.COLUMN_DATE + " ASC " + ","
 				+ DatabaseContract.StockData.COLUMN_TIME + " ASC ";
+	}
+	
+
+	public Uri insertStockDeal(StockDeal stockDeal) {
+		Uri uri = null;
+
+		if ((stockDeal == null) || (mContentResolver == null)) {
+			return uri;
+		}
+
+		uri = mContentResolver.insert(DatabaseContract.StockDeal.CONTENT_URI,
+				stockDeal.getContentValues());
+
+		return uri;
+	}
+
+	public int updateStockDealByID(StockDeal stockDeal) {
+		int result = 0;
+
+		if ((stockDeal == null) || (mContentResolver == null)) {
+			return result;
+		}
+
+		String where = DatabaseContract.COLUMN_ID + "=" + stockDeal.getId();
+
+		result = mContentResolver.update(DatabaseContract.StockDeal.CONTENT_URI,
+				stockDeal.getContentValues(), where, null);
+
+		return result;
+	}
+
+	public int updateStockDeal(Stock stock) {
+		int result = 0;
+		Cursor cursor = null;
+		StockDeal stockDeal = null;
+
+		if ((stock == null) || (mContentResolver == null)) {
+			return result;
+		}
+
+		stockDeal = new StockDeal();
+
+		String selection = DatabaseContract.COLUMN_SE + " = " + "\'"
+				+ stock.getSE() + "\'" + " AND " + DatabaseContract.COLUMN_CODE
+				+ " = " + "\'" + stock.getCode() + "\'";
+
+		try {
+			cursor = queryStockDeal(selection, null, null);
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				while (cursor.moveToNext()) {
+					stockDeal.set(cursor);
+					stockDeal.setPrice(stock.getPrice());
+					stockDeal.setupDeal();
+					result += updateStockDealByID(stockDeal);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+
+		return result;
+	}
+
+	public void deleteStockDealById(StockDeal stockDeal) {
+		if ((stockDeal == null) || (mContentResolver == null)) {
+			return;
+		}
+
+		String where = DatabaseContract.COLUMN_ID + "=" + stockDeal.getId();
+
+		try {
+			mContentResolver.delete(DatabaseContract.StockDeal.CONTENT_URI, where,
+					null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public Cursor queryStockDeal(StockDeal stockDeal) {
+		Cursor cursor = null;
+
+		if (stockDeal == null) {
+			return cursor;
+		}
+
+		String selection = DatabaseContract.COLUMN_SE + " = " + "\'"
+				+ stockDeal.getSE() + "\'" + " AND " + DatabaseContract.COLUMN_CODE
+				+ " = " + "\'" + stockDeal.getCode() + "\'" + " AND "
+				+ DatabaseContract.COLUMN_DEAL + " = " + stockDeal.getDeal()
+				+ " AND " + DatabaseContract.COLUMN_VOLUME + " = "
+				+ stockDeal.getVolume();
+
+		cursor = queryStockDeal(selection, null, null);
+
+		return cursor;
+	}
+
+	public Cursor queryStockDeal(String selection, String[] selectionArgs,
+			String sortOrder) {
+		Cursor cursor = null;
+
+		if (mContentResolver == null) {
+			return cursor;
+		}
+
+		cursor = mContentResolver.query(DatabaseContract.StockDeal.CONTENT_URI,
+				DatabaseContract.StockDeal.PROJECTION_ALL, selection, selectionArgs,
+				sortOrder);
+
+		return cursor;
+	}
+
+	public Cursor queryStockDealById(StockDeal stockDeal) {
+		Cursor cursor = null;
+
+		if (stockDeal == null) {
+			return cursor;
+		}
+
+		String selection = DatabaseContract.COLUMN_ID + "=" + stockDeal.getId();
+
+		cursor = queryStockDeal(selection, null, null);
+
+		return cursor;
+	}
+
+	public void getStockDealById(StockDeal stockDeal) {
+		Cursor cursor = null;
+
+		if (stockDeal == null) {
+			return;
+		}
+
+		try {
+			cursor = queryStockDealById(stockDeal);
+
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				cursor.moveToNext();
+				stockDeal.set(cursor);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
+	public void getStockDealList(Stock stock, ArrayList<StockDeal> stockDealList) {
+		Cursor cursor = null;
+		String selection = "";
+
+		if ((stock == null) || (stockDealList == null)) {
+			return;
+		}
+
+		stockDealList.clear();
+
+		selection = DatabaseContract.COLUMN_SE + " = " + "\'" + stock.getSE()
+				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
+				+ stock.getCode() + "\'";
+
+		try {
+			cursor = queryStockDeal(selection, null, null);
+
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				while (cursor.moveToNext()) {
+					StockDeal stockDeal = new StockDeal();
+					stockDeal.set(cursor);
+					stockDealList.add(stockDeal);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
+	public boolean isStockDealExist(StockDeal stockDeal) {
+		boolean result = false;
+		Cursor cursor = null;
+
+		if (stockDeal == null) {
+			return result;
+		}
+
+		try {
+			cursor = queryStockDeal(stockDeal);
+
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				cursor.moveToNext();
+				stockDeal.setCreated(cursor);
+				result = true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+
+		return result;
+	}
+
+	public Uri insertStockMatch(StockMatch stockMatch) {
+		Uri uri = null;
+
+		if ((stockMatch == null) || (mContentResolver == null)) {
+			return uri;
+		}
+
+		uri = mContentResolver.insert(DatabaseContract.StockMatch.CONTENT_URI,
+				stockMatch.getContentValues());
+
+		return uri;
+	}
+
+	public int updateStockMatchByID(StockMatch stockMatch) {
+		int result = 0;
+
+		if ((stockMatch == null) || (mContentResolver == null)) {
+			return result;
+		}
+
+		String where = DatabaseContract.COLUMN_ID + "=" + stockMatch.getId();
+
+		result = mContentResolver.update(DatabaseContract.StockMatch.CONTENT_URI,
+				stockMatch.getContentValues(), where, null);
+
+		return result;
+	}
+
+	public int updateStockMatch(Stock stock) {
+		int result = 0;
+		Cursor cursor = null;
+		StockMatch stockMatch = null;
+
+		if ((stock == null) || (mContentResolver == null)) {
+			return result;
+		}
+
+		stockMatch = new StockMatch();
+
+		String selection = DatabaseContract.COLUMN_SE + " = " + "\'"
+				+ stock.getSE() + "\'" + " AND " + DatabaseContract.COLUMN_CODE
+				+ " = " + "\'" + stock.getCode() + "\'";
+
+		try {
+			cursor = queryStockMatch(selection, null, null);
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				while (cursor.moveToNext()) {
+					stockMatch.set(cursor);
+//TODO					
+//					stockMatch.setPrice(stock.getPrice());
+//					stockMatch.setupDeal();
+//TODO	
+					result += updateStockMatchByID(stockMatch);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+
+		return result;
+	}
+
+	public void deleteStockMatchById(StockMatch stockMatch) {
+		if ((stockMatch == null) || (mContentResolver == null)) {
+			return;
+		}
+
+		String where = DatabaseContract.COLUMN_ID + "=" + stockMatch.getId();
+
+		try {
+			mContentResolver.delete(DatabaseContract.StockMatch.CONTENT_URI, where,
+					null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public Cursor queryStockMatch(StockMatch stockMatch) {
+		Cursor cursor = null;
+
+		if (stockMatch == null) {
+			return cursor;
+		}
+
+		String selection = null;
+//TODO		
+//		String selection = DatabaseContract.COLUMN_SE + " = " + "\'"
+//				+ stockMatch.getSE() + "\'" + " AND " + DatabaseContract.COLUMN_CODE
+//				+ " = " + "\'" + stockMatch.getCode() + "\'" + " AND "
+//				+ DatabaseContract.COLUMN_DEAL + " = " + stockMatch.getDeal()
+//				+ " AND " + DatabaseContract.COLUMN_VOLUME + " = "
+//				+ stockMatch.getVolume();
+//TODO		
+		cursor = queryStockMatch(selection, null, null);
+
+		return cursor;
+	}
+
+	public Cursor queryStockMatch(String selection, String[] selectionArgs,
+			String sortOrder) {
+		Cursor cursor = null;
+
+		if (mContentResolver == null) {
+			return cursor;
+		}
+
+		cursor = mContentResolver.query(DatabaseContract.StockMatch.CONTENT_URI,
+				DatabaseContract.StockMatch.PROJECTION_ALL, selection, selectionArgs,
+				sortOrder);
+
+		return cursor;
+	}
+
+	public Cursor queryStockMatchById(StockMatch stockMatch) {
+		Cursor cursor = null;
+
+		if (stockMatch == null) {
+			return cursor;
+		}
+
+		String selection = DatabaseContract.COLUMN_ID + "=" + stockMatch.getId();
+
+		cursor = queryStockMatch(selection, null, null);
+
+		return cursor;
+	}
+
+	public void getStockMatchById(StockMatch stockMatch) {
+		Cursor cursor = null;
+
+		if (stockMatch == null) {
+			return;
+		}
+
+		try {
+			cursor = queryStockMatchById(stockMatch);
+
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				cursor.moveToNext();
+				stockMatch.set(cursor);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
+	public void getStockMatchList(Stock stock, ArrayList<StockMatch> stockMatchList) {
+		Cursor cursor = null;
+		String selection = "";
+
+		if ((stock == null) || (stockMatchList == null)) {
+			return;
+		}
+
+		stockMatchList.clear();
+
+		selection = DatabaseContract.COLUMN_SE + " = " + "\'" + stock.getSE()
+				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
+				+ stock.getCode() + "\'";
+
+		try {
+			cursor = queryStockMatch(selection, null, null);
+
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				while (cursor.moveToNext()) {
+					StockMatch stockMatch = new StockMatch();
+					stockMatch.set(cursor);
+					stockMatchList.add(stockMatch);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
+	public boolean isStockMatchExist(StockMatch stockMatch) {
+		boolean result = false;
+		Cursor cursor = null;
+
+		if (stockMatch == null) {
+			return result;
+		}
+
+		try {
+			cursor = queryStockMatch(stockMatch);
+
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				cursor.moveToNext();
+				stockMatch.setCreated(cursor);
+				result = true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+
+		return result;
 	}
 }

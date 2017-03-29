@@ -32,9 +32,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.orion.database.DatabaseContract;
-import com.android.orion.database.StockDeal;
 import com.android.orion.database.Setting;
 import com.android.orion.database.Stock;
+import com.android.orion.database.StockDeal;
 import com.android.orion.leancloud.LeanCloudLoginActivity;
 import com.android.orion.utility.Utility;
 import com.avos.avoscloud.AVUser;
@@ -43,7 +43,7 @@ public class StockMatchListActivity extends StorageActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
 		OnItemLongClickListener, OnClickListener {
 
-	static final String DEAL_LIST_XML_FILE_NAME = "deal.xml";
+	static final String DEAL_LIST_XML_FILE_NAME = "match.xml";
 
 	static final int EXECUTE_DEAL_DELETE = 0;
 
@@ -177,8 +177,10 @@ public class StockMatchListActivity extends StorageActivity implements
 					Toast.LENGTH_SHORT).show();
 		}
 
-		getContentResolver().registerContentObserver(
-				DatabaseContract.StockDeal.CONTENT_URI, true, mContentObserver);
+		getContentResolver()
+				.registerContentObserver(
+						DatabaseContract.StockMatch.CONTENT_URI, true,
+						mContentObserver);
 
 	}
 
@@ -441,9 +443,10 @@ public class StockMatchListActivity extends StorageActivity implements
 
 		switch (id) {
 		case LOADER_ID_DEAL_LIST:
-			loader = new CursorLoader(this, DatabaseContract.StockDeal.CONTENT_URI,
-					DatabaseContract.StockDeal.PROJECTION_ALL, selection, null,
-					mSortOrder);
+			loader = new CursorLoader(this,
+					DatabaseContract.StockMatch.CONTENT_URI,
+					DatabaseContract.StockMatch.PROJECTION_ALL, selection,
+					null, mSortOrder);
 			break;
 
 		default:
@@ -664,8 +667,10 @@ public class StockMatchListActivity extends StorageActivity implements
 								stockDeal.setupDeal();
 							}
 
-							if (!mStockDatabaseManager.isStockDealExist(stockDeal)) {
-								mStockDatabaseManager.insertStockDeal(stockDeal);
+							if (!mStockDatabaseManager
+									.isStockDealExist(stockDeal)) {
+								mStockDatabaseManager
+										.insertStockDeal(stockDeal);
 							}
 						}
 					}

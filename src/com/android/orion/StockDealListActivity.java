@@ -32,9 +32,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.orion.database.DatabaseContract;
-import com.android.orion.database.StockDeal;
 import com.android.orion.database.Setting;
 import com.android.orion.database.Stock;
+import com.android.orion.database.StockDeal;
 import com.android.orion.leancloud.LeanCloudLoginActivity;
 import com.android.orion.utility.Utility;
 import com.avos.avoscloud.AVUser;
@@ -441,7 +441,8 @@ public class StockDealListActivity extends StorageActivity implements
 
 		switch (id) {
 		case LOADER_ID_DEAL_LIST:
-			loader = new CursorLoader(this, DatabaseContract.StockDeal.CONTENT_URI,
+			loader = new CursorLoader(this,
+					DatabaseContract.StockDeal.CONTENT_URI,
 					DatabaseContract.StockDeal.PROJECTION_ALL, selection, null,
 					mSortOrder);
 			break;
@@ -664,8 +665,10 @@ public class StockDealListActivity extends StorageActivity implements
 								stockDeal.setupDeal();
 							}
 
-							if (!mStockDatabaseManager.isStockDealExist(stockDeal)) {
-								mStockDatabaseManager.insertStockDeal(stockDeal);
+							if (!mStockDatabaseManager
+									.isStockDealExist(stockDeal)) {
+								mStockDatabaseManager
+										.insertStockDeal(stockDeal);
 							}
 						}
 					}
