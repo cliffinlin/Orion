@@ -34,7 +34,7 @@ import android.widget.Toast;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Setting;
 import com.android.orion.database.Stock;
-import com.android.orion.database.StockDeal;
+import com.android.orion.database.StockMatch;
 import com.android.orion.leancloud.LeanCloudLoginActivity;
 import com.android.orion.utility.Utility;
 import com.avos.avoscloud.AVUser;
@@ -43,16 +43,16 @@ public class StockMatchListActivity extends StorageActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
 		OnItemLongClickListener, OnClickListener {
 
-	static final String DEAL_LIST_XML_FILE_NAME = "match.xml";
+	static final String MATCH_LIST_XML_FILE_NAME = "match.xml";
 
-	static final int EXECUTE_DEAL_DELETE = 0;
+	static final int EXECUTE_MATCH_DELETE = 0;
 
-	static final int EXECUTE_DEAL_LIST_ON_ITEM_CLICK = 1;
+	static final int EXECUTE_MATCH_LIST_ON_ITEM_CLICK = 1;
 
-	static final int EXECUTE_DEAL_LIST_LOAD_FROM_SD_CARD = 11;
-	static final int EXECUTE_DEAL_LIST_SAVE_TO_SD_CARD = 12;
+	static final int EXECUTE_MATCH_LIST_LOAD_FROM_SD_CARD = 11;
+	static final int EXECUTE_MATCH_LIST_SAVE_TO_SD_CARD = 12;
 
-	static final int LOADER_ID_DEAL_LIST = 2;
+	static final int LOADER_ID_MATCH_LIST = 2;
 
 	static final int mHeaderTextDefaultColor = Color.BLACK;
 	static final int mHeaderTextHighlightColor = Color.RED;
@@ -68,11 +68,10 @@ public class StockMatchListActivity extends StorageActivity implements
 	SyncHorizontalScrollView mContentSHSV = null;
 
 	TextView mTextViewStockNameCode = null;
-	TextView mTextViewPrice = null;
-	TextView mTextViewNet = null;
-	TextView mTextViewDeal = null;
-	TextView mTextViewVolume = null;
-	TextView mTextViewProfit = null;
+	TextView mTextViewSlope = null;
+	TextView mTextViewIntercept = null;
+	TextView mTextViewSigma = null;
+	TextView mTextViewDelta = null;
 	TextView mTextViewCreated = null;
 	TextView mTextViewModified = null;
 
@@ -83,9 +82,10 @@ public class StockMatchListActivity extends StorageActivity implements
 	SimpleCursorAdapter mRightAdapter = null;
 
 	ActionMode mCurrentActionMode = null;
-	StockDeal mDeal = new StockDeal();
-	List<StockDeal> mStockDealList = new ArrayList<StockDeal>();
-	Stock mStock = new Stock();
+	StockMatch mMatch = new StockMatch();
+	List<StockMatch> mStockMatchList = new ArrayList<StockMatch>();
+	Stock mStock_X = new Stock();
+	Stock mStock_Y = new Stock();
 
 	ContentObserver mContentObserver = new ContentObserver(new Handler()) {
 		@Override
@@ -105,7 +105,8 @@ public class StockMatchListActivity extends StorageActivity implements
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 			mode.setTitle("Actions");
-			mode.getMenuInflater().inflate(R.menu.deal_list_action, menu);
+			mode.getMenuInflater()
+					.inflate(R.menu.stock_match_list_action, menu);
 			return true;
 		}
 
@@ -119,9 +120,10 @@ public class StockMatchListActivity extends StorageActivity implements
 			switch (item.getItemId()) {
 			case R.id.menu_edit:
 				Intent intent = new Intent(StockMatchListActivity.this,
-						StockDealActivity.class);
-				intent.setAction(StockDealActivity.ACTION_DEAL_EDIT);
-				intent.putExtra(StockDealActivity.EXTRA_DEAL_ID, mDeal.getId());
+						StockMatchActivity.class);
+				intent.setAction(StockMatchActivity.ACTION_MATCH_EDIT);
+				intent.putExtra(StockMatchActivity.EXTRA_MATCH_ID,
+						mMatch.getId());
 				startActivity(intent);
 				mode.finish();
 				return true;
@@ -133,7 +135,7 @@ public class StockMatchListActivity extends StorageActivity implements
 								new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog,
 											int which) {
-										startSaveTask(EXECUTE_DEAL_DELETE);
+										startSaveTask(EXECUTE_MATCH_DELETE);
 										mode.finish();
 									}
 								})
@@ -160,16 +162,16 @@ public class StockMatchListActivity extends StorageActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_deal_list);
+		setContentView(R.layout.activity_stock_match_list);
 
-		mSortOrder = getSetting(Setting.KEY_SORT_ORDER_STOCK_DEAL_LIST,
+		mSortOrder = getSetting(Setting.KEY_SORT_ORDER_STOCK_MATCH_LIST,
 				mSortOrderDefault);
 
 		initHeader();
 
 		initListView();
 
-		mLoaderManager.initLoader(LOADER_ID_DEAL_LIST, null, this);
+		mLoaderManager.initLoader(LOADER_ID_MATCH_LIST, null, this);
 
 		if (!Utility.isNetworkConnected(this)) {
 			Toast.makeText(this,
@@ -186,7 +188,7 @@ public class StockMatchListActivity extends StorageActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.deal_list, menu);
+		getMenuInflater().inflate(R.menu.stock_match_list, menu);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		return true;
 	}
@@ -199,8 +201,8 @@ public class StockMatchListActivity extends StorageActivity implements
 			return true;
 
 		case R.id.action_new:
-			mIntent = new Intent(this, StockDealActivity.class);
-			mIntent.setAction(StockDealActivity.ACTION_DEAL_INSERT);
+			mIntent = new Intent(this, StockMatchActivity.class);
+			mIntent.setAction(StockMatchActivity.ACTION_MATCH_INSERT);
 			startActivity(mIntent);
 			return true;
 
@@ -209,7 +211,7 @@ public class StockMatchListActivity extends StorageActivity implements
 			return true;
 
 		case R.id.action_load_sd:
-			startLoadTask(EXECUTE_DEAL_LIST_LOAD_FROM_SD_CARD);
+			startLoadTask(EXECUTE_MATCH_LIST_LOAD_FROM_SD_CARD);
 			return true;
 
 		default:
@@ -220,7 +222,7 @@ public class StockMatchListActivity extends StorageActivity implements
 	@Override
 	void onSaveSD() {
 		super.onSaveSD();
-		startSaveTask(EXECUTE_DEAL_LIST_SAVE_TO_SD_CARD);
+		startSaveTask(EXECUTE_MATCH_LIST_SAVE_TO_SD_CARD);
 	}
 
 	void onActionSync(int serviceType) {
@@ -253,20 +255,17 @@ public class StockMatchListActivity extends StorageActivity implements
 		case R.id.stock_name_code:
 			mSortOrderColumn = DatabaseContract.COLUMN_CODE;
 			break;
-		case R.id.price:
-			mSortOrderColumn = DatabaseContract.COLUMN_PRICE;
+		case R.id.slope:
+			mSortOrderColumn = DatabaseContract.StockMatch.COLUMN_SLOPE;
 			break;
-		case R.id.net:
-			mSortOrderColumn = DatabaseContract.COLUMN_NET;
+		case R.id.intercept:
+			mSortOrderColumn = DatabaseContract.StockMatch.COLUMN_INTERCEPT;
 			break;
-		case R.id.deal:
-			mSortOrderColumn = DatabaseContract.COLUMN_DEAL;
+		case R.id.sigma:
+			mSortOrderColumn = DatabaseContract.StockMatch.COLUMN_SIGMA;
 			break;
-		case R.id.volume:
-			mSortOrderColumn = DatabaseContract.COLUMN_VOLUME;
-			break;
-		case R.id.profile:
-			mSortOrderColumn = DatabaseContract.COLUMN_PROFIT;
+		case R.id.delta:
+			mSortOrderColumn = DatabaseContract.StockMatch.COLUMN_DELTA;
 			break;
 		case R.id.created:
 			mSortOrderColumn = DatabaseContract.COLUMN_CREATED;
@@ -287,7 +286,7 @@ public class StockMatchListActivity extends StorageActivity implements
 
 		mSortOrder = mSortOrderColumn + mSortOrderDirection;
 
-		saveSetting(Setting.KEY_SORT_ORDER_STOCK_DEAL_LIST, mSortOrder);
+		saveSetting(Setting.KEY_SORT_ORDER_STOCK_MATCH_LIST, mSortOrder);
 
 		restartLoader();
 	}
@@ -305,11 +304,10 @@ public class StockMatchListActivity extends StorageActivity implements
 
 	void resetHeaderTextColor() {
 		setHeaderTextColor(mTextViewStockNameCode, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewPrice, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewNet, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewDeal, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewVolume, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewProfit, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewSlope, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewIntercept, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewSigma, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewDelta, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewCreated, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewModified, mHeaderTextDefaultColor);
 	}
@@ -336,20 +334,17 @@ public class StockMatchListActivity extends StorageActivity implements
 		mTextViewStockNameCode = (TextView) findViewById(R.id.stock_name_code);
 		mTextViewStockNameCode.setOnClickListener(this);
 
-		mTextViewPrice = (TextView) findViewById(R.id.price);
-		mTextViewPrice.setOnClickListener(this);
+		mTextViewSlope = (TextView) findViewById(R.id.slope);
+		mTextViewSlope.setOnClickListener(this);
 
-		mTextViewNet = (TextView) findViewById(R.id.net);
-		mTextViewNet.setOnClickListener(this);
+		mTextViewIntercept = (TextView) findViewById(R.id.intercept);
+		mTextViewIntercept.setOnClickListener(this);
 
-		mTextViewDeal = (TextView) findViewById(R.id.deal);
-		mTextViewDeal.setOnClickListener(this);
+		mTextViewSigma = (TextView) findViewById(R.id.sigma);
+		mTextViewSigma.setOnClickListener(this);
 
-		mTextViewVolume = (TextView) findViewById(R.id.volume);
-		mTextViewVolume.setOnClickListener(this);
-
-		mTextViewProfit = (TextView) findViewById(R.id.profile);
-		mTextViewProfit.setOnClickListener(this);
+		mTextViewDelta = (TextView) findViewById(R.id.delta);
+		mTextViewDelta.setOnClickListener(this);
 
 		mTextViewCreated = (TextView) findViewById(R.id.created);
 		mTextViewCreated.setOnClickListener(this);
@@ -360,16 +355,18 @@ public class StockMatchListActivity extends StorageActivity implements
 		if (mSortOrder.contains(DatabaseContract.COLUMN_CODE)) {
 			setHeaderTextColor(mTextViewStockNameCode,
 					mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PRICE)) {
-			setHeaderTextColor(mTextViewPrice, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_NET)) {
-			setHeaderTextColor(mTextViewNet, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_DEAL)) {
-			setHeaderTextColor(mTextViewDeal, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_VOLUME)) {
-			setHeaderTextColor(mTextViewVolume, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PROFIT)) {
-			setHeaderTextColor(mTextViewProfit, mHeaderTextHighlightColor);
+		} else if (mSortOrder
+				.contains(DatabaseContract.StockMatch.COLUMN_SLOPE)) {
+			setHeaderTextColor(mTextViewSlope, mHeaderTextHighlightColor);
+		} else if (mSortOrder
+				.contains(DatabaseContract.StockMatch.COLUMN_INTERCEPT)) {
+			setHeaderTextColor(mTextViewIntercept, mHeaderTextHighlightColor);
+		} else if (mSortOrder
+				.contains(DatabaseContract.StockMatch.COLUMN_SIGMA)) {
+			setHeaderTextColor(mTextViewSigma, mHeaderTextHighlightColor);
+		} else if (mSortOrder
+				.contains(DatabaseContract.StockMatch.COLUMN_DELTA)) {
+			setHeaderTextColor(mTextViewDelta, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_CREATED)) {
 			setHeaderTextColor(mTextViewCreated, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MODIFIED)) {
@@ -379,17 +376,20 @@ public class StockMatchListActivity extends StorageActivity implements
 	}
 
 	void initListView() {
-		String[] mLeftFrom = new String[] { DatabaseContract.COLUMN_NAME,
-				DatabaseContract.COLUMN_CODE };
+		String[] mLeftFrom = new String[] {
+				DatabaseContract.StockMatch.COLUMN_NAME_X,
+				DatabaseContract.StockMatch.COLUMN_NAME_Y };
 		int[] mLeftTo = new int[] { R.id.name, R.id.code };
 
-		String[] mRightFrom = new String[] { DatabaseContract.COLUMN_PRICE,
-				DatabaseContract.COLUMN_NET, DatabaseContract.COLUMN_DEAL,
-				DatabaseContract.COLUMN_VOLUME, DatabaseContract.COLUMN_PROFIT,
+		String[] mRightFrom = new String[] {
+				DatabaseContract.StockMatch.COLUMN_SLOPE,
+				DatabaseContract.StockMatch.COLUMN_INTERCEPT,
+				DatabaseContract.StockMatch.COLUMN_SIGMA,
+				DatabaseContract.StockMatch.COLUMN_DELTA,
 				DatabaseContract.COLUMN_CREATED,
 				DatabaseContract.COLUMN_MODIFIED };
-		int[] mRightTo = new int[] { R.id.price, R.id.net, R.id.deal,
-				R.id.volume, R.id.profile, R.id.created, R.id.modified };
+		int[] mRightTo = new int[] { R.id.slope, R.id.intercept, R.id.sigma,
+				R.id.delta, R.id.created, R.id.modified };
 
 		mLeftListView = (ListView) findViewById(R.id.left_listview);
 		mLeftAdapter = new SimpleCursorAdapter(this,
@@ -403,8 +403,8 @@ public class StockMatchListActivity extends StorageActivity implements
 
 		mRightListView = (ListView) findViewById(R.id.right_listview);
 		mRightAdapter = new SimpleCursorAdapter(this,
-				R.layout.activity_deal_list_right_item, null, mRightFrom,
-				mRightTo, 0);
+				R.layout.activity_stock_match_list_right_item, null,
+				mRightFrom, mRightTo, 0);
 		if ((mRightListView != null) && (mRightAdapter != null)) {
 			mRightAdapter.setViewBinder(new CustomViewBinder());
 			mRightListView.setAdapter(mRightAdapter);
@@ -414,7 +414,7 @@ public class StockMatchListActivity extends StorageActivity implements
 	}
 
 	void restartLoader() {
-		mLoaderManager.restartLoader(LOADER_ID_DEAL_LIST, null, this);
+		mLoaderManager.restartLoader(LOADER_ID_MATCH_LIST, null, this);
 	}
 
 	@Override
@@ -442,7 +442,7 @@ public class StockMatchListActivity extends StorageActivity implements
 		CursorLoader loader = null;
 
 		switch (id) {
-		case LOADER_ID_DEAL_LIST:
+		case LOADER_ID_MATCH_LIST:
 			loader = new CursorLoader(this,
 					DatabaseContract.StockMatch.CONTENT_URI,
 					DatabaseContract.StockMatch.PROJECTION_ALL, selection,
@@ -463,8 +463,8 @@ public class StockMatchListActivity extends StorageActivity implements
 		}
 
 		switch (loader.getId()) {
-		case LOADER_ID_DEAL_LIST:
-			setStockDealList(cursor);
+		case LOADER_ID_MATCH_LIST:
+			setStockMatchList(cursor);
 
 			mLeftAdapter.swapCursor(cursor);
 			mRightAdapter.swapCursor(cursor);
@@ -484,15 +484,15 @@ public class StockMatchListActivity extends StorageActivity implements
 		mRightAdapter.swapCursor(null);
 	}
 
-	void setStockDealList(Cursor cursor) {
-		mStockDealList.clear();
+	void setStockMatchList(Cursor cursor) {
+		mStockMatchList.clear();
 
 		try {
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				while (cursor.moveToNext()) {
-					StockDeal stockDeal = new StockDeal();
-					stockDeal.set(cursor);
-					mStockDealList.add(stockDeal);
+					StockMatch stockMatch = new StockMatch();
+					stockMatch.set(cursor);
+					mStockMatchList.add(stockMatch);
 				}
 				cursor.moveToFirst();
 			}
@@ -506,8 +506,8 @@ public class StockMatchListActivity extends StorageActivity implements
 			long id) {
 
 		if (mCurrentActionMode == null) {
-			mDeal.setId(id);
-			startLoadTask(EXECUTE_DEAL_LIST_ON_ITEM_CLICK);
+			mMatch.setId(id);
+			startLoadTask(EXECUTE_MATCH_LIST_ON_ITEM_CLICK);
 		}
 	}
 
@@ -519,7 +519,7 @@ public class StockMatchListActivity extends StorageActivity implements
 			return false;
 		}
 
-		mDeal.setId(id);
+		mMatch.setId(id);
 		mCurrentActionMode = startActionMode(mModeCallBack);
 		view.setSelected(true);
 		return true;
@@ -556,22 +556,26 @@ public class StockMatchListActivity extends StorageActivity implements
 		int execute = (Integer) params[0];
 
 		switch (execute) {
-		case EXECUTE_DEAL_LIST_ON_ITEM_CLICK:
-			mStockDatabaseManager.getStockDealById(mDeal);
+		case EXECUTE_MATCH_LIST_ON_ITEM_CLICK:
+			mStockDatabaseManager.getStockMatchById(mMatch);
 
-			mStock.setSE(mDeal.getSE());
-			mStock.setCode(mDeal.getCode());
-			mStockDatabaseManager.getStock(mStock);
+			mStock_X.setSE(mMatch.getSE_X());
+			mStock_X.setCode(mMatch.getCode_X());
+			mStockDatabaseManager.getStock(mStock_X);
+
+			mStock_Y.setSE(mMatch.getSE_Y());
+			mStock_Y.setCode(mMatch.getCode_Y());
+			mStockDatabaseManager.getStock(mStock_Y);
 
 			Intent intent = new Intent(this, StockChartListActivity.class);
-			intent.putExtra(Setting.KEY_SORT_ORDER_STOCK_DEAL_LIST, mSortOrder);
+			intent.putExtra(Setting.KEY_SORT_ORDER_STOCK_MATCH_LIST, mSortOrder);
 			intent.putExtra(StockChartListActivity.EXTRA_STOCK_ID,
-					mStock.getId());
+					mStock_X.getId());
 			startActivity(intent);
 			break;
 
-		case EXECUTE_DEAL_LIST_LOAD_FROM_SD_CARD:
-			loadListFromSD(DEAL_LIST_XML_FILE_NAME);
+		case EXECUTE_MATCH_LIST_LOAD_FROM_SD_CARD:
+			loadListFromSD(MATCH_LIST_XML_FILE_NAME);
 			break;
 
 		default:
@@ -591,12 +595,12 @@ public class StockMatchListActivity extends StorageActivity implements
 		int execute = (Integer) params[0];
 
 		switch (execute) {
-		case EXECUTE_DEAL_DELETE:
-			mStockDatabaseManager.deleteStockDealById(mDeal);
+		case EXECUTE_MATCH_DELETE:
+			mStockDatabaseManager.deleteStockMatchById(mMatch);
 			break;
 
-		case EXECUTE_DEAL_LIST_SAVE_TO_SD_CARD:
-			SaveListToSD(DEAL_LIST_XML_FILE_NAME);
+		case EXECUTE_MATCH_LIST_SAVE_TO_SD_CARD:
+			SaveListToSD(MATCH_LIST_XML_FILE_NAME);
 			break;
 
 		default:
@@ -617,7 +621,7 @@ public class StockMatchListActivity extends StorageActivity implements
 
 		int eventType;
 		String tagName = "";
-		StockDeal stockDeal = null;
+		StockMatch stockMatch = null;
 
 		try {
 			eventType = parser.getEventType();
@@ -626,51 +630,77 @@ public class StockMatchListActivity extends StorageActivity implements
 				case XmlPullParser.START_TAG:
 					tagName = parser.getName();
 					if (XML_TAG_ITEM.equals(tagName)) {
-						stockDeal = new StockDeal();
-					} else if (DatabaseContract.COLUMN_SE.equals(tagName)) {
-						stockDeal.setSE(parser.nextText());
-					} else if (DatabaseContract.COLUMN_CODE.equals(tagName)) {
-						stockDeal.setCode(parser.nextText());
-					} else if (DatabaseContract.COLUMN_NAME.equals(tagName)) {
-						stockDeal.setName(parser.nextText());
-					} else if (DatabaseContract.COLUMN_PRICE.equals(tagName)) {
-						stockDeal.setPrice(Double.valueOf(parser.nextText()));
-					} else if (DatabaseContract.COLUMN_NET.equals(tagName)) {
-						stockDeal.setNet(Double.valueOf(parser.nextText()));
-					} else if (DatabaseContract.COLUMN_DEAL.equals(tagName)) {
-						stockDeal.setDeal(Double.valueOf(parser.nextText()));
-					} else if (DatabaseContract.COLUMN_VOLUME.equals(tagName)) {
-						stockDeal.setVolume(Long.valueOf(parser.nextText()));
-					} else if (DatabaseContract.COLUMN_PROFIT.equals(tagName)) {
-						stockDeal.setProfit(Double.valueOf(parser.nextText()));
+						stockMatch = new StockMatch();
+					} else if (DatabaseContract.StockMatch.COLUMN_SE_X
+							.equals(tagName)) {
+						stockMatch.setSE_X(parser.nextText());
+					} else if (DatabaseContract.StockMatch.COLUMN_CODE_X
+							.equals(tagName)) {
+						stockMatch.setCode_X(parser.nextText());
+					} else if (DatabaseContract.StockMatch.COLUMN_NAME_X
+							.equals(tagName)) {
+						stockMatch.setName_X(parser.nextText());
+					} else if (DatabaseContract.StockMatch.COLUMN_SE_Y
+							.equals(tagName)) {
+						stockMatch.setSE_Y(parser.nextText());
+					} else if (DatabaseContract.StockMatch.COLUMN_CODE_Y
+							.equals(tagName)) {
+						stockMatch.setCode_Y(parser.nextText());
+					} else if (DatabaseContract.StockMatch.COLUMN_NAME_Y
+							.equals(tagName)) {
+						stockMatch.setName_Y(parser.nextText());
+					} else if (DatabaseContract.StockMatch.COLUMN_SLOPE
+							.equals(tagName)) {
+						stockMatch.setSlope(Double.valueOf(parser.nextText()));
+					} else if (DatabaseContract.StockMatch.COLUMN_INTERCEPT
+							.equals(tagName)) {
+						stockMatch.setIntercept(Double.valueOf(parser
+								.nextText()));
+					} else if (DatabaseContract.StockMatch.COLUMN_SIGMA
+							.equals(tagName)) {
+						stockMatch.setSigma(Double.valueOf(parser.nextText()));
+					} else if (DatabaseContract.StockMatch.COLUMN_DELTA
+							.equals(tagName)) {
+						stockMatch.setDelta(Double.valueOf(parser.nextText()));
 					} else if (DatabaseContract.COLUMN_CREATED.equals(tagName)) {
-						stockDeal.setCreated(parser.nextText());
+						stockMatch.setCreated(parser.nextText());
 					} else if (DatabaseContract.COLUMN_MODIFIED.equals(tagName)) {
-						stockDeal.setModified(parser.nextText());
+						stockMatch.setModified(parser.nextText());
 					} else {
 					}
 					break;
 				case XmlPullParser.END_TAG:
 					tagName = parser.getName();
 					if (XML_TAG_ITEM.equals(tagName)) {
-						if (stockDeal != null) {
-							mStock.setSE(stockDeal.getSE());
-							mStock.setCode(stockDeal.getCode());
-							mStockDatabaseManager.getStock(mStock);
+						if (stockMatch != null) {
+							mStock_X.setSE(stockMatch.getSE_X());
+							mStock_X.setCode(stockMatch.getCode_X());
+							mStockDatabaseManager.getStock(mStock_X);
 
-							if (!mStock.getName().equals(stockDeal.getName())) {
-								stockDeal.setName(mStock.getName());
+							mStock_Y.setSE(stockMatch.getSE_Y());
+							mStock_Y.setCode(stockMatch.getCode_Y());
+							mStockDatabaseManager.getStock(mStock_Y);
+
+							if (!mStock_X.getName().equals(
+									stockMatch.getName_X())) {
+								stockMatch.setName_X(mStock_X.getName());
 							}
 
-							if (mStock.getPrice() != stockDeal.getPrice()) {
-								stockDeal.setPrice(mStock.getPrice());
-								stockDeal.setupDeal();
+							if (!mStock_Y.getName().equals(
+									stockMatch.getName_Y())) {
+								stockMatch.setName_Y(mStock_Y.getName());
 							}
+
+							/*
+							 * if (mStock.getPrice() != stockMatch.getPrice()) {
+							 * stockMatch.setPrice(mStock.getPrice());
+							 * stockMatch.setupMatch(); }
+							 */
 
 							if (!mStockDatabaseManager
-									.isStockDealExist(stockDeal)) {
+									.isStockMatchExist(stockMatch)) {
 								mStockDatabaseManager
-										.insertStockDeal(stockDeal);
+										.insertStockMatch(stockMatch);
 							}
 						}
 					}
@@ -690,28 +720,42 @@ public class StockMatchListActivity extends StorageActivity implements
 		super.xmlSerialize(xmlSerializer);
 
 		try {
-			for (StockDeal stockDeal : mStockDealList) {
+			for (StockMatch stockMatch : mStockMatchList) {
 				xmlSerializer.startTag(null, XML_TAG_ITEM);
-				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_SE,
-						stockDeal.getSE());
-				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_CODE,
-						stockDeal.getCode());
-				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_NAME,
-						stockDeal.getName());
-				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_PRICE,
-						String.valueOf(stockDeal.getPrice()));
-				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_NET,
-						String.valueOf(stockDeal.getNet()));
-				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_DEAL,
-						String.valueOf(stockDeal.getDeal()));
-				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_VOLUME,
-						String.valueOf(stockDeal.getVolume()));
-				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_PROFIT,
-						String.valueOf(stockDeal.getProfit()));
+				xmlSerialize(xmlSerializer,
+						DatabaseContract.StockMatch.COLUMN_SE_X,
+						stockMatch.getSE_X());
+				xmlSerialize(xmlSerializer,
+						DatabaseContract.StockMatch.COLUMN_CODE_X,
+						stockMatch.getCode_X());
+				xmlSerialize(xmlSerializer,
+						DatabaseContract.StockMatch.COLUMN_NAME_X,
+						stockMatch.getName_X());
+				xmlSerialize(xmlSerializer,
+						DatabaseContract.StockMatch.COLUMN_SE_Y,
+						stockMatch.getSE_Y());
+				xmlSerialize(xmlSerializer,
+						DatabaseContract.StockMatch.COLUMN_CODE_Y,
+						stockMatch.getCode_Y());
+				xmlSerialize(xmlSerializer,
+						DatabaseContract.StockMatch.COLUMN_NAME_Y,
+						stockMatch.getName_Y());
+				xmlSerialize(xmlSerializer,
+						DatabaseContract.StockMatch.COLUMN_SLOPE,
+						String.valueOf(stockMatch.getSlope()));
+				xmlSerialize(xmlSerializer,
+						DatabaseContract.StockMatch.COLUMN_INTERCEPT,
+						String.valueOf(stockMatch.getIntercept()));
+				xmlSerialize(xmlSerializer,
+						DatabaseContract.StockMatch.COLUMN_SIGMA,
+						String.valueOf(stockMatch.getSigma()));
+				xmlSerialize(xmlSerializer,
+						DatabaseContract.StockMatch.COLUMN_DELTA,
+						String.valueOf(stockMatch.getDelta()));
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_CREATED,
-						stockDeal.getCreated());
+						stockMatch.getCreated());
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_MODIFIED,
-						stockDeal.getModified());
+						stockMatch.getModified());
 				xmlSerializer.endTag(null, XML_TAG_ITEM);
 			}
 		} catch (Exception e) {

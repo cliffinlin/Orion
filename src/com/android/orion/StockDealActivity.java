@@ -23,11 +23,11 @@ public class StockDealActivity extends DatabaseActivity implements
 
 	public static final String EXTRA_DEAL_ID = "deal_id";
 
-	static final int EXECUTE_STOCK_LOAD = 1;
-	static final int EXECUTE_DEAL_LOAD = 2;
-	static final int EXECUTE_DEAL_SAVE = 3;
+	static final int EXECUTE_DEAL_LOAD = 1;
+	static final int EXECUTE_DEAL_SAVE = 2;
+	static final int EXECUTE_STOCK_LOAD = 3;
 
-	static final int REQUESTCODE_STOCK_ID = 0;
+	static final int REQUEST_CODE_STOCK_ID = 0;
 
 	EditText mEditTextStockName, mEditTextStockCode;
 	EditText mEditTextDealPrice, mEditTextDealVolume;
@@ -40,7 +40,8 @@ public class StockDealActivity extends DatabaseActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_deal);
+
+		setContentView(R.layout.activity_stock_deal);
 
 		if (mDeal == null) {
 			mDeal = StockDeal.obtain();
@@ -94,7 +95,7 @@ public class StockDealActivity extends DatabaseActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.deal_edit, menu);
+		getMenuInflater().inflate(R.menu.stock_deal_edit, menu);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		return true;
 	}
@@ -121,7 +122,7 @@ public class StockDealActivity extends DatabaseActivity implements
 				Intent intent = new Intent(this,
 						StockFavoriteListActivity.class);
 				intent.setAction(StockFavoriteListActivity.ACTION_STOCK_ID);
-				startActivityForResult(intent, REQUESTCODE_STOCK_ID);
+				startActivityForResult(intent, REQUEST_CODE_STOCK_ID);
 			}
 			break;
 		case R.id.button_ok:
@@ -159,7 +160,7 @@ public class StockDealActivity extends DatabaseActivity implements
 
 		if (resultCode == RESULT_OK) {
 			switch (requestCode) {
-			case REQUESTCODE_STOCK_ID:
+			case REQUEST_CODE_STOCK_ID:
 				if (mStock != null) {
 					mStock.setId(data.getLongExtra(
 							StockFavoriteListActivity.EXTRA_STOCK_ID, 0));
@@ -209,6 +210,7 @@ public class StockDealActivity extends DatabaseActivity implements
 	@Override
 	Long doInBackgroundSave(Object... params) {
 		super.doInBackgroundSave(params);
+
 		int execute = (Integer) params[0];
 
 		switch (execute) {

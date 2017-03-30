@@ -58,7 +58,7 @@ public class OrionService extends Service {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			String action = intent.getAction();
+			// String action = intent.getAction();
 		}
 	}
 
@@ -231,7 +231,7 @@ public class OrionService extends Service {
 		public void onChange(boolean selfChange, Uri uri) {
 			super.onChange(selfChange, uri);
 
-			String urlString = uri.toString();
+			// String urlString = uri.toString();
 		}
 	}
 

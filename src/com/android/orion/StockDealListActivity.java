@@ -105,7 +105,7 @@ public class StockDealListActivity extends StorageActivity implements
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 			mode.setTitle("Actions");
-			mode.getMenuInflater().inflate(R.menu.deal_list_action, menu);
+			mode.getMenuInflater().inflate(R.menu.stock_deal_list_action, menu);
 			return true;
 		}
 
@@ -160,7 +160,7 @@ public class StockDealListActivity extends StorageActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_deal_list);
+		setContentView(R.layout.activity_stock_deal_list);
 
 		mSortOrder = getSetting(Setting.KEY_SORT_ORDER_STOCK_DEAL_LIST,
 				mSortOrderDefault);
@@ -184,7 +184,7 @@ public class StockDealListActivity extends StorageActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.deal_list, menu);
+		getMenuInflater().inflate(R.menu.stock_deal_list, menu);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		return true;
 	}
@@ -401,7 +401,7 @@ public class StockDealListActivity extends StorageActivity implements
 
 		mRightListView = (ListView) findViewById(R.id.right_listview);
 		mRightAdapter = new SimpleCursorAdapter(this,
-				R.layout.activity_deal_list_right_item, null, mRightFrom,
+				R.layout.activity_stock_deal_list_right_item, null, mRightFrom,
 				mRightTo, 0);
 		if ((mRightListView != null) && (mRightAdapter != null)) {
 			mRightAdapter.setViewBinder(new CustomViewBinder());
