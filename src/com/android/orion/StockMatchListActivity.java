@@ -57,7 +57,7 @@ public class StockMatchListActivity extends StorageActivity implements
 	static final int mHeaderTextDefaultColor = Color.BLACK;
 	static final int mHeaderTextHighlightColor = Color.RED;
 
-	String mSortOrderColumn = DatabaseContract.COLUMN_CODE;
+	String mSortOrderColumn = DatabaseContract.StockMatch.COLUMN_NAME_X;
 	String mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_ASC;
 	String mSortOrderDefault = mSortOrderColumn + mSortOrderDirection;
 	String mSortOrder = mSortOrderDefault;
@@ -84,8 +84,8 @@ public class StockMatchListActivity extends StorageActivity implements
 	ActionMode mCurrentActionMode = null;
 	StockMatch mMatch = new StockMatch();
 	List<StockMatch> mStockMatchList = new ArrayList<StockMatch>();
-	Stock mStock_X = new Stock();
 	Stock mStock_Y = new Stock();
+	Stock mStock_X = new Stock();
 
 	ContentObserver mContentObserver = new ContentObserver(new Handler()) {
 		@Override
@@ -253,7 +253,7 @@ public class StockMatchListActivity extends StorageActivity implements
 
 		switch (id) {
 		case R.id.stock_name_code:
-			mSortOrderColumn = DatabaseContract.COLUMN_CODE;
+			mSortOrderColumn = DatabaseContract.StockMatch.COLUMN_NAME_X;
 			break;
 		case R.id.slope:
 			mSortOrderColumn = DatabaseContract.StockMatch.COLUMN_SLOPE;
@@ -274,7 +274,7 @@ public class StockMatchListActivity extends StorageActivity implements
 			mSortOrderColumn = DatabaseContract.COLUMN_MODIFIED;
 			break;
 		default:
-			mSortOrderColumn = DatabaseContract.COLUMN_CODE;
+			mSortOrderColumn = DatabaseContract.StockMatch.COLUMN_NAME_X;
 			break;
 		}
 
@@ -352,7 +352,7 @@ public class StockMatchListActivity extends StorageActivity implements
 		mTextViewModified = (TextView) findViewById(R.id.modified);
 		mTextViewModified.setOnClickListener(this);
 
-		if (mSortOrder.contains(DatabaseContract.COLUMN_CODE)) {
+		if (mSortOrder.contains(DatabaseContract.StockMatch.COLUMN_NAME_X)) {
 			setHeaderTextColor(mTextViewStockNameCode,
 					mHeaderTextHighlightColor);
 		} else if (mSortOrder

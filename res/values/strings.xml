@@ -108,8 +108,12 @@
     <string name="stock_chart">Chart</string>
     <string name="stock_name_code">Name</string>
     <string name="stock_code">Stock Code</string>
+    <string name="stock_code_x">Stock Code X</string>
+    <string name="stock_code_y">Stock Code Y</string>
     <string name="stock_code_empty">Stock Code Empty!</string>
     <string name="stock_name">Stock Name</string>
+    <string name="stock_name_x">Stock Name X</string>
+    <string name="stock_name_y">Stock Name Y</string>
     <string name="stock_insert">Stock Insert</string>
     <string name="stock_exist">Stock Exist!</string>
     <string name="stock_edit">Stock Edit</string>
@@ -118,7 +122,11 @@
     <string name="stock_se_hint">sh or sz</string>
     <string name="stock_se_not_found">Stock SE not Found!</string>
     <string name="title_activity_about">About</string>
+    <string name="title_activity_deal_list">Deal List</string>
+    <string name="title_activity_deal">Deal</string>
     <string name="title_activity_login">Login</string>
+    <string name="title_activity_match_list">Match List</string>
+    <string name="title_activity_match">Match</string>
     <string name="title_activity_service_setting">Service</string>
     <string name="title_activity_simulation">Simulation</string>
     <string name="title_activity_sign_up">Sign Up</string>
@@ -127,7 +135,5 @@
     <string name="velocity">Vel</string>
     <string name="version">Version</string>
     <string name="volume">Vol</string>
-    <string name="title_activity_deal_list">Deal List</string>
-    <string name="title_activity_deal">Deal</string>
 
 </resources>

@@ -65,10 +65,6 @@
             android:label="@string/favorite_list" >
         </activity>
         <activity
-            android:name="com.android.orion.StockMatchListActivity"
-            android:label="@string/match_list" >
-        </activity>        
-        <activity
             android:name="com.android.orion.StockListActivity"
             android:label="@string/stock_list" >
         </activity>
@@ -91,6 +87,30 @@
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
+        </activity>
+        <activity
+            android:name="com.android.orion.ServiceSettingActivity"
+            android:label="@string/title_activity_service_setting" >
+        </activity>
+        <activity
+            android:name="com.android.orion.StockSimulationActivity"
+            android:label="@string/title_activity_simulation" >
+        </activity>
+        <activity
+            android:name="com.android.orion.StockDealListActivity"
+            android:label="@string/title_activity_deal_list" >
+        </activity>
+        <activity
+            android:name="com.android.orion.StockDealActivity"
+            android:label="@string/title_activity_deal" >
+        </activity>
+        <activity
+            android:name="com.android.orion.StockMatchListActivity"
+            android:label="@string/title_activity_match_list" >
+        </activity>
+        <activity
+            android:name="com.android.orion.StockMatchActivity"
+            android:label="@string/title_activity_match" >
         </activity>
 
         <provider
@@ -126,23 +146,6 @@
         <service
             android:name="com.android.orion.OrionService"
             android:exported="false" />
-
-        <activity
-            android:name="com.android.orion.ServiceSettingActivity"
-            android:label="@string/title_activity_service_setting" >
-        </activity>
-        <activity
-            android:name="com.android.orion.StockSimulationActivity"
-            android:label="@string/title_activity_simulation" >
-        </activity>
-        <activity
-            android:name="com.android.orion.StockDealListActivity"
-            android:label="@string/title_activity_deal_list" >
-        </activity>
-        <activity
-            android:name="com.android.orion.StockDealActivity"
-            android:label="@string/title_activity_deal" >
-        </activity>
     </application>
 
 </manifest>
