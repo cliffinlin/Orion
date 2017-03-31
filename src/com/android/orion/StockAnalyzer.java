@@ -3,6 +3,8 @@ package com.android.orion;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.math.stat.regression.SimpleRegression;
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -158,6 +160,8 @@ public class StockAnalyzer extends StockManager {
 		ArrayList<StockMatch> stockMatchList;
 		ArrayList<StockData> stockDataList_X = null;
 		ArrayList<StockData> stockDataList_Y = null;
+		
+		SimpleRegression regression = new SimpleRegression();
 
 		if ((stock == null) || (stockDataList == null)) {
 			return;
@@ -208,6 +212,15 @@ public class StockAnalyzer extends StockManager {
 					|| (stockDataList_X.size() != stockDataList_Y.size())) {
 				return;
 			}
+			
+			regression.clear();
+			for (int i = 0; i < stockDataList_X.size(); i++) {
+				regression.addData(stockDataList_X.get(i).getClose(), stockDataList_Y.get(i).getClose());
+			}
+			
+			stockMatch.setSlope(regression.getSlope());
+			stockMatch.setIntercept(regression.getIntercept());
+			mStockDatabaseManager.updateStockMatch(stockMatch);
 		}
 	}
 
