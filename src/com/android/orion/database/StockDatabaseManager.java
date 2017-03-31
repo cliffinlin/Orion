@@ -261,7 +261,6 @@ public class StockDatabaseManager extends DatabaseManager {
 		return result;
 	}
 
-
 	public Uri insertStock(Stock stock) {
 		Uri uri = null;
 
@@ -623,7 +622,8 @@ public class StockDatabaseManager extends DatabaseManager {
 				+ "'";
 	}
 
-	public String getStockDataSelection(long stockId, String period, String simulation) {
+	public String getStockDataSelection(long stockId, String period,
+			String simulation) {
 		return DatabaseContract.COLUMN_STOCK_ID + " = " + stockId + " AND "
 				+ DatabaseContract.StockData.COLUMN_PERIOD + " = '" + period
 				+ "'" + " AND " + DatabaseContract.StockData.COLUMN_SIMULATION
@@ -634,7 +634,6 @@ public class StockDatabaseManager extends DatabaseManager {
 		return DatabaseContract.StockData.COLUMN_DATE + " ASC " + ","
 				+ DatabaseContract.StockData.COLUMN_TIME + " ASC ";
 	}
-	
 
 	public Uri insertStockDeal(StockDeal stockDeal) {
 		Uri uri = null;
@@ -658,7 +657,8 @@ public class StockDatabaseManager extends DatabaseManager {
 
 		String where = DatabaseContract.COLUMN_ID + "=" + stockDeal.getId();
 
-		result = mContentResolver.update(DatabaseContract.StockDeal.CONTENT_URI,
+		result = mContentResolver.update(
+				DatabaseContract.StockDeal.CONTENT_URI,
 				stockDeal.getContentValues(), where, null);
 
 		return result;
@@ -706,8 +706,8 @@ public class StockDatabaseManager extends DatabaseManager {
 		String where = DatabaseContract.COLUMN_ID + "=" + stockDeal.getId();
 
 		try {
-			mContentResolver.delete(DatabaseContract.StockDeal.CONTENT_URI, where,
-					null);
+			mContentResolver.delete(DatabaseContract.StockDeal.CONTENT_URI,
+					where, null);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -721,8 +721,9 @@ public class StockDatabaseManager extends DatabaseManager {
 		}
 
 		String selection = DatabaseContract.COLUMN_SE + " = " + "\'"
-				+ stockDeal.getSE() + "\'" + " AND " + DatabaseContract.COLUMN_CODE
-				+ " = " + "\'" + stockDeal.getCode() + "\'" + " AND "
+				+ stockDeal.getSE() + "\'" + " AND "
+				+ DatabaseContract.COLUMN_CODE + " = " + "\'"
+				+ stockDeal.getCode() + "\'" + " AND "
 				+ DatabaseContract.COLUMN_DEAL + " = " + stockDeal.getDeal()
 				+ " AND " + DatabaseContract.COLUMN_VOLUME + " = "
 				+ stockDeal.getVolume();
@@ -741,8 +742,8 @@ public class StockDatabaseManager extends DatabaseManager {
 		}
 
 		cursor = mContentResolver.query(DatabaseContract.StockDeal.CONTENT_URI,
-				DatabaseContract.StockDeal.PROJECTION_ALL, selection, selectionArgs,
-				sortOrder);
+				DatabaseContract.StockDeal.PROJECTION_ALL, selection,
+				selectionArgs, sortOrder);
 
 		return cursor;
 	}
@@ -851,7 +852,7 @@ public class StockDatabaseManager extends DatabaseManager {
 		return uri;
 	}
 
-	public int updateStockMatchByID(StockMatch stockMatch) {
+	public int updateStockMatch(StockMatch stockMatch) {
 		int result = 0;
 
 		if ((stockMatch == null) || (mContentResolver == null)) {
@@ -860,44 +861,9 @@ public class StockDatabaseManager extends DatabaseManager {
 
 		String where = DatabaseContract.COLUMN_ID + "=" + stockMatch.getId();
 
-		result = mContentResolver.update(DatabaseContract.StockMatch.CONTENT_URI,
+		result = mContentResolver.update(
+				DatabaseContract.StockMatch.CONTENT_URI,
 				stockMatch.getContentValues(), where, null);
-
-		return result;
-	}
-
-	public int updateStockMatch(Stock stock) {
-		int result = 0;
-		Cursor cursor = null;
-		StockMatch stockMatch = null;
-
-		if ((stock == null) || (mContentResolver == null)) {
-			return result;
-		}
-
-		stockMatch = new StockMatch();
-
-		String selection = DatabaseContract.COLUMN_SE + " = " + "\'"
-				+ stock.getSE() + "\'" + " AND " + DatabaseContract.COLUMN_CODE
-				+ " = " + "\'" + stock.getCode() + "\'";
-
-		try {
-			cursor = queryStockMatch(selection, null, null);
-			if ((cursor != null) && (cursor.getCount() > 0)) {
-				while (cursor.moveToNext()) {
-					stockMatch.set(cursor);
-//TODO					
-//					stockMatch.setPrice(stock.getPrice());
-//					stockMatch.setupDeal();
-//TODO	
-					result += updateStockMatchByID(stockMatch);
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			closeCursor(cursor);
-		}
 
 		return result;
 	}
@@ -910,8 +876,8 @@ public class StockDatabaseManager extends DatabaseManager {
 		String where = DatabaseContract.COLUMN_ID + "=" + stockMatch.getId();
 
 		try {
-			mContentResolver.delete(DatabaseContract.StockMatch.CONTENT_URI, where,
-					null);
+			mContentResolver.delete(DatabaseContract.StockMatch.CONTENT_URI,
+					where, null);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -924,15 +890,15 @@ public class StockDatabaseManager extends DatabaseManager {
 			return cursor;
 		}
 
-		String selection = null;
-//TODO		
-//		String selection = DatabaseContract.COLUMN_SE + " = " + "\'"
-//				+ stockMatch.getSE() + "\'" + " AND " + DatabaseContract.COLUMN_CODE
-//				+ " = " + "\'" + stockMatch.getCode() + "\'" + " AND "
-//				+ DatabaseContract.COLUMN_DEAL + " = " + stockMatch.getDeal()
-//				+ " AND " + DatabaseContract.COLUMN_VOLUME + " = "
-//				+ stockMatch.getVolume();
-//TODO		
+		String selection = DatabaseContract.StockMatch.COLUMN_SE_X + " = "
+				+ "\'" + stockMatch.getSE_X() + "\'" + " AND "
+				+ DatabaseContract.StockMatch.COLUMN_CODE_X + " = " + "\'"
+				+ stockMatch.getCode_X() + "\'" + " AND "
+				+ DatabaseContract.StockMatch.COLUMN_SE_Y + " = " + "\'"
+				+ stockMatch.getSE_Y() + "\'" + " AND "
+				+ DatabaseContract.StockMatch.COLUMN_CODE_Y + " = " + "\'"
+				+ stockMatch.getCode_Y() + "\'";
+
 		cursor = queryStockMatch(selection, null, null);
 
 		return cursor;
@@ -946,9 +912,10 @@ public class StockDatabaseManager extends DatabaseManager {
 			return cursor;
 		}
 
-		cursor = mContentResolver.query(DatabaseContract.StockMatch.CONTENT_URI,
-				DatabaseContract.StockMatch.PROJECTION_ALL, selection, selectionArgs,
-				sortOrder);
+		cursor = mContentResolver.query(
+				DatabaseContract.StockMatch.CONTENT_URI,
+				DatabaseContract.StockMatch.PROJECTION_ALL, selection,
+				selectionArgs, sortOrder);
 
 		return cursor;
 	}
@@ -960,7 +927,8 @@ public class StockDatabaseManager extends DatabaseManager {
 			return cursor;
 		}
 
-		String selection = DatabaseContract.COLUMN_ID + "=" + stockMatch.getId();
+		String selection = DatabaseContract.COLUMN_ID + "="
+				+ stockMatch.getId();
 
 		cursor = queryStockMatch(selection, null, null);
 
@@ -988,7 +956,8 @@ public class StockDatabaseManager extends DatabaseManager {
 		}
 	}
 
-	public void getStockMatchList(Stock stock, ArrayList<StockMatch> stockMatchList) {
+	public void getStockMatchList(Stock stock,
+			ArrayList<StockMatch> stockMatchList) {
 		Cursor cursor = null;
 		String selection = "";
 
@@ -998,9 +967,14 @@ public class StockDatabaseManager extends DatabaseManager {
 
 		stockMatchList.clear();
 
-		selection = DatabaseContract.COLUMN_SE + " = " + "\'" + stock.getSE()
-				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
-				+ stock.getCode() + "\'";
+		selection = "(" + DatabaseContract.StockMatch.COLUMN_SE_X + " = "
+				+ "\'" + stock.getSE() + "\'" + " AND "
+				+ DatabaseContract.StockMatch.COLUMN_CODE_X + " = " + "\'"
+				+ stock.getCode() + "\'" + ") OR ("
+				+ DatabaseContract.StockMatch.COLUMN_SE_Y + " = " + "\'"
+				+ stock.getSE() + "\'" + " AND "
+				+ DatabaseContract.StockMatch.COLUMN_CODE_Y + " = " + "\'"
+				+ stock.getCode() + "\'" + ")";
 
 		try {
 			cursor = queryStockMatch(selection, null, null);

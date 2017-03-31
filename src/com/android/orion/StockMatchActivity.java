@@ -145,16 +145,16 @@ public class StockMatchActivity extends DatabaseActivity implements
 				startActivityForResult(intent, REQUEST_CODE_STOCK_X_ID);
 			}
 			break;
-			
+
 		case R.id.button_ok:
 			startSaveTask(EXECUTE_MATCH_SAVE);
 			finish();
 			break;
-			
+
 		case R.id.button_cancel:
 			finish();
 			break;
-			
+
 		default:
 			break;
 		}
@@ -181,7 +181,7 @@ public class StockMatchActivity extends DatabaseActivity implements
 					startLoadTask(EXECUTE_STOCK_X_LOAD);
 				}
 				break;
-			
+
 			default:
 				break;
 			}
@@ -240,7 +240,7 @@ public class StockMatchActivity extends DatabaseActivity implements
 				mStockDatabaseManager.insertStockMatch(mMatch);
 			} else if (ACTION_MATCH_EDIT.equals(mAction)) {
 				mMatch.setModified(Utility.getCurrentDateTimeString());
-				mStockDatabaseManager.updateStockMatchByID(mMatch);
+				mStockDatabaseManager.updateStockMatch(mMatch);
 			}
 			break;
 

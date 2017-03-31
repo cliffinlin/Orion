@@ -19,6 +19,7 @@ import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockDeal;
+import com.android.orion.database.StockMatch;
 import com.android.orion.indicator.MACD;
 import com.android.orion.utility.StopWatch;
 import com.android.orion.utility.Utility;
@@ -43,6 +44,8 @@ public class StockAnalyzer extends StockManager {
 			if (stockDataList.size() < Constants.STOCK_VERTEX_TYPING_SIZE) {
 				return;
 			}
+
+			analyzeStockMatch(executeType, stock, period, stockDataList);
 
 			setMACD(stock, period, stockDataList);
 			analyzeStockData(stock, period, stockDataList);
@@ -146,6 +149,66 @@ public class StockAnalyzer extends StockManager {
 
 		stock.setVelocity(velocity);
 		stock.setAcceleration(acceleration);
+	}
+
+	private void analyzeStockMatch(int executeType, Stock stock, String period,
+			ArrayList<StockData> stockDataList) {
+		Stock stock_X;
+		Stock stock_Y;
+		ArrayList<StockMatch> stockMatchList;
+		ArrayList<StockData> stockDataList_X = null;
+		ArrayList<StockData> stockDataList_Y = null;
+
+		if ((stock == null) || (stockDataList == null)) {
+			return;
+		}
+
+		// TODO
+		if (!period.equals(Constants.PERIOD_DAY)) {
+			return;
+		}
+
+		stockMatchList = new ArrayList<StockMatch>();
+		mStockDatabaseManager.getStockMatchList(stock, stockMatchList);
+		if (stockMatchList.size() == 0) {
+			return;
+		}
+
+		stock_X = Stock.obtain();
+		stock_Y = Stock.obtain();
+
+		for (StockMatch stockMatch : stockMatchList) {
+			if (stockMatch == null) {
+				continue;
+			}
+
+			if (stock.getSE().equals(stockMatch.getSE_X())
+					&& stock.getCode().equals(stockMatch.getCode_X())) {
+				stock_X.set(stock);
+				stockDataList_X = stockDataList;
+
+				stock_Y.setSE(stockMatch.getSE_Y());
+				stock_Y.setCode(stockMatch.getCode_Y());
+				mStockDatabaseManager.getStock(stock_Y);
+				stockDataList_Y = new ArrayList<StockData>();
+				loadStockDataList(executeType, stock_Y, period, stockDataList_Y);
+			} else if (stock.getSE().equals(stockMatch.getSE_Y())
+					&& stock.getCode().equals(stockMatch.getCode_Y())) {
+				stock_X.setSE(stockMatch.getSE_X());
+				stock_X.setCode(stockMatch.getCode_X());
+				mStockDatabaseManager.getStock(stock_X);
+				stockDataList_X = new ArrayList<StockData>();
+				loadStockDataList(executeType, stock_X, period, stockDataList_X);
+
+				stock_Y.set(stock);
+				stockDataList_Y = stockDataList;
+			}
+
+			if ((stockDataList_X == null) || (stockDataList_Y == null)
+					|| (stockDataList_X.size() != stockDataList_Y.size())) {
+				return;
+			}
+		}
 	}
 
 	private void analyzeStockData(Stock stock, String period,
