@@ -377,8 +377,8 @@ public class StockMatchListActivity extends StorageActivity implements
 
 	void initListView() {
 		String[] mLeftFrom = new String[] {
-				DatabaseContract.StockMatch.COLUMN_NAME_X,
-				DatabaseContract.StockMatch.COLUMN_NAME_Y };
+				DatabaseContract.StockMatch.COLUMN_NAME_Y,
+				DatabaseContract.StockMatch.COLUMN_NAME_X };
 		int[] mLeftTo = new int[] { R.id.name, R.id.code };
 
 		String[] mRightFrom = new String[] {
