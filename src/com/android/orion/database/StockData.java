@@ -11,7 +11,6 @@ public class StockData extends StockDatabaseTable {
 	private String mDate;
 	private String mTime;
 	private String mPeriod;
-	private String mSimulation;
 	private double mOpen;
 	private double mHigh;
 	private double mLow;
@@ -95,7 +94,6 @@ public class StockData extends StockDatabaseTable {
 		mDate = "";
 		mTime = "";
 		mPeriod = "";
-		mSimulation = "";
 		mOpen = 0;
 		mHigh = 0;
 		mLow = 0;
@@ -136,8 +134,6 @@ public class StockData extends StockDatabaseTable {
 		contentValues.put(DatabaseContract.StockData.COLUMN_DATE, mDate);
 		contentValues.put(DatabaseContract.StockData.COLUMN_TIME, mTime);
 		contentValues.put(DatabaseContract.StockData.COLUMN_PERIOD, mPeriod);
-		contentValues.put(DatabaseContract.StockData.COLUMN_SIMULATION,
-				mSimulation);
 		contentValues.put(DatabaseContract.StockData.COLUMN_OPEN, mOpen);
 		contentValues.put(DatabaseContract.StockData.COLUMN_HIGH, mHigh);
 		contentValues.put(DatabaseContract.StockData.COLUMN_LOW, mLow);
@@ -189,7 +185,6 @@ public class StockData extends StockDatabaseTable {
 		setDate(stockData.mDate);
 		setTime(stockData.mTime);
 		setPeriod(stockData.mPeriod);
-		setSimulation(stockData.mSimulation);
 		setOpen(stockData.mOpen);
 		setHigh(stockData.mHigh);
 		setLow(stockData.mLow);
@@ -234,7 +229,6 @@ public class StockData extends StockDatabaseTable {
 		setDate(cursor);
 		setTime(cursor);
 		setPeriod(cursor);
-		setSimulation(cursor);
 		setOpen(cursor);
 		setHigh(cursor);
 		setLow(cursor);
@@ -326,23 +320,6 @@ public class StockData extends StockDatabaseTable {
 
 		setPeriod(cursor.getString(cursor
 				.getColumnIndex(DatabaseContract.StockData.COLUMN_PERIOD)));
-	}
-
-	public String getSimulation() {
-		return mSimulation;
-	}
-
-	public void setSimulation(String simulation) {
-		mSimulation = simulation;
-	}
-
-	void setSimulation(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setSimulation(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.StockData.COLUMN_SIMULATION)));
 	}
 
 	public double getOpen() {

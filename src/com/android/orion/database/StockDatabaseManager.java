@@ -570,21 +570,6 @@ public class StockDatabaseManager extends DatabaseManager {
 		return result;
 	}
 
-	public int deleteStockData(long stockId, String period, String simulation) {
-		int result = 0;
-
-		if (mContentResolver == null) {
-			return result;
-		}
-
-		String where = getStockDataSelection(stockId, period, simulation);
-
-		result = mContentResolver.delete(
-				DatabaseContract.StockData.CONTENT_URI, where, null);
-
-		return result;
-	}
-
 	public String getStockDataSelection(StockData stockData) {
 		String where = "";
 		String period = "";
@@ -595,8 +580,6 @@ public class StockDatabaseManager extends DatabaseManager {
 
 		where = DatabaseContract.COLUMN_STOCK_ID + " = "
 				+ stockData.getStockId() + " AND "
-				+ DatabaseContract.StockData.COLUMN_SIMULATION + " = " + "\'"
-				+ stockData.getSimulation() + "\'" + " AND "
 				+ DatabaseContract.StockData.COLUMN_PERIOD + " = " + "\'"
 				+ stockData.getPeriod() + "\'" + " AND "
 				+ DatabaseContract.StockData.COLUMN_DATE + " = " + "\'"
@@ -616,18 +599,10 @@ public class StockDatabaseManager extends DatabaseManager {
 		return where;
 	}
 
-	String getStockDataSelection(long stockId, String period) {
+	public String getStockDataSelection(long stockId, String period) {
 		return DatabaseContract.COLUMN_STOCK_ID + " = " + stockId + " AND "
 				+ DatabaseContract.StockData.COLUMN_PERIOD + " = '" + period
 				+ "'";
-	}
-
-	public String getStockDataSelection(long stockId, String period,
-			String simulation) {
-		return DatabaseContract.COLUMN_STOCK_ID + " = " + stockId + " AND "
-				+ DatabaseContract.StockData.COLUMN_PERIOD + " = '" + period
-				+ "'" + " AND " + DatabaseContract.StockData.COLUMN_SIMULATION
-				+ " = '" + simulation + "'";
 	}
 
 	public String getStockDataOrder() {

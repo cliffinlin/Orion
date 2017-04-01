@@ -1,7 +1,6 @@
 package com.android.orion;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -24,7 +23,6 @@ public class StockManager {
 
 	ContentResolver mContentResolver = null;
 	LocalBroadcastManager mLocalBroadcastManager = null;
-	StockSimulationAlarmManager mStockSimulationAlarmManager = null;
 	protected StockDatabaseManager mStockDatabaseManager = null;
 	ArrayMap<String, Stock> mStockArrayMapFavorite = null;
 
@@ -39,11 +37,6 @@ public class StockManager {
 
 		if (mLocalBroadcastManager == null) {
 			mLocalBroadcastManager = LocalBroadcastManager
-					.getInstance(mContext);
-		}
-
-		if (mStockSimulationAlarmManager == null) {
-			mStockSimulationAlarmManager = StockSimulationAlarmManager
 					.getInstance(mContext);
 		}
 
@@ -255,17 +248,9 @@ public class StockManager {
 		}
 	}
 
-	void loadStockDataList(int executeType, Stock stock, String period,
+	void loadStockDataList(Stock stock, String period,
 			ArrayList<StockData> stockDataList) {
 		int index = 0;
-		int cursorCount = 0;
-		Calendar simulationCalendar = null;
-		String simulationDate = "";
-		String simulationTime = "";
-
-		Calendar stockDataCalendar = null;
-		String stockDataDate = "";
-		String stockDataTime = "";
 
 		Cursor cursor = null;
 		String selection = null;
@@ -280,39 +265,15 @@ public class StockManager {
 			return;
 		}
 
-		if (executeType == Constants.EXECUTE_SCHEDULE_SIMULATION) {
-			simulationDate = Utility.getSettingString(mContext,
-					Constants.SETTING_KEY_SIMULATION_DATE);
-			simulationTime = Utility.getSettingString(mContext,
-					Constants.SETTING_KEY_SIMULATION_TIME);
-
-			if (TextUtils.isEmpty(simulationDate)) {
-				mStockSimulationAlarmManager.stopAlarm();
-				Utility.setSettingBoolean(mContext,
-						Constants.SETTING_KEY_SIMULATION, false);
-				return;
-			}
-
-			if (!TextUtils.isEmpty(simulationTime)) {
-				simulationCalendar = Utility.stringToCalendar(simulationDate
-						+ " " + simulationTime,
-						Constants.CALENDAR_DATE_TIME_FORMAT);
-			} else {
-				simulationCalendar = Utility.stringToCalendar(simulationDate,
-						Constants.CALENDAR_DATE_FORMAT);
-			}
-		}
-
 		try {
 			stockDataList.clear();
 
 			selection = mStockDatabaseManager.getStockDataSelection(
-					stock.getId(), period, Constants.STOCK_DATA_FLAG_NONE);
+					stock.getId(), period);
 			sortOrder = mStockDatabaseManager.getStockDataOrder();
 			cursor = mStockDatabaseManager.queryStockData(selection, null,
 					sortOrder);
 			if ((cursor != null) && (cursor.getCount() > 0)) {
-				cursorCount = cursor.getCount();
 				while (cursor.moveToNext()) {
 					StockData stockData = StockData.obtain(period);
 					stockData.set(cursor);
@@ -325,55 +286,13 @@ public class StockManager {
 					// stockData.setAction(String.valueOf(stockData.getIndex()));
 					// __TEST_CASE__
 
-					if (executeType == Constants.EXECUTE_SCHEDULE_SIMULATION) {
-						stockData
-								.setSimulation(Constants.STOCK_DATA_FLAG_SIMULATION);
-						stockDataDate = stockData.getDate();
-						stockDataTime = stockData.getTime();
-						if (!TextUtils.isEmpty(stockDataTime)) {
-							stockDataCalendar = Utility.stringToCalendar(
-									stockDataDate + " " + stockDataTime,
-									Constants.CALENDAR_DATE_TIME_FORMAT);
-						} else {
-							stockDataCalendar = Utility.stringToCalendar(
-									stockDataDate,
-									Constants.CALENDAR_DATE_FORMAT);
-						}
-						if (stockDataCalendar.after(simulationCalendar)) {
-							break;
-						} else {
-							stockDataList.add(stockData);
-						}
-					} else {
-						stockDataList.add(stockData);
-					}
+					stockDataList.add(stockData);
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			mStockDatabaseManager.closeCursor(cursor);
-		}
-
-		if (executeType == Constants.EXECUTE_SCHEDULE_SIMULATION) {
-			if (period.equals(Utility.getSettingString(mContext,
-					Constants.SETTING_KEY_SIMULATION_PERIOD))) {
-				if (cursorCount == stockDataList.size()) {
-					mStockSimulationAlarmManager.stopAlarm();
-					Utility.setSettingBoolean(mContext,
-							Constants.SETTING_KEY_SIMULATION, false);
-					simulationDate = "";
-					simulationTime = "";
-				} else {
-					simulationDate = stockDataDate;
-					simulationTime = stockDataTime;
-				}
-
-				Utility.setSettingString(mContext,
-						Constants.SETTING_KEY_SIMULATION_DATE, simulationDate);
-				Utility.setSettingString(mContext,
-						Constants.SETTING_KEY_SIMULATION_TIME, simulationTime);
-			}
 		}
 	}
 

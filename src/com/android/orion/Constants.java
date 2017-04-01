@@ -6,7 +6,6 @@ public class Constants {
 	public static final String ACTION_SERVICE_FINISHED = "orion.intent.action.SERVICE_FINISHED";
 
 	public static final long STOCK_DOWNLOAD_ALARM_INTERVAL_DEFAULT = 60000;
-	public static final long STOCK_SIMULATION_ALARM_INTERVAL_DEFAULT = 1000;
 
 	public static final int BENZIER_CURVE_GRADE_MAX = 50;
 
@@ -29,7 +28,6 @@ public class Constants {
 	public static final int EXECUTE_SCHEDULE_15MIN = EXECUTE_SCHEDULE << 2;
 	public static final int EXECUTE_SCHEDULE_30MIN = EXECUTE_SCHEDULE << 3;
 	public static final int EXECUTE_SCHEDULE_60MIN = EXECUTE_SCHEDULE << 4;
-	public static final int EXECUTE_SCHEDULE_SIMULATION = EXECUTE_SCHEDULE << 5;
 
 	public static final String EXTRA_KEY_EXECUTE_TYPE = "execute_type";
 	public static final String EXTRA_KEY_SERVICE_TYPE = "service_type";
@@ -64,12 +62,10 @@ public class Constants {
 	public static final int SERVICE_DOWNLOAD_STOCK_FAVORITE_REALTIME = 1;
 	public static final int SERVICE_DOWNLOAD_STOCK_FAVORITE_DATA_HISTORY = 2;
 	public static final int SERVICE_DOWNLOAD_STOCK_FAVORITE_DATA_REALTIME = 3;
-	public static final int SERVICE_SIMULATE_STOCK_FAVORITE_DATA_HISTORY = 4;
 	public static final int SERVICE_ADD_STOCK_FAVORITE = 10;
 	public static final int SERVICE_REMOVE_STOCK_FAVORITE = 11;
 	public static final int SERVICE_CLOUD_DOWNLOAD_STOCK_FAVORITE = 20;
 	public static final int SERVICE_CLOUD_UPLOAD_STOCK_FAVORITE = 21;
-	public static final int SERVICE_SIMULATE_STOCK_FAVORITE = 30;
 
 	public static final String SETTING_SHARED_PREFERENCE = "setting";
 	public static final String SETTING_KEY_ALARM = "alarm";
@@ -78,18 +74,6 @@ public class Constants {
 	public static final String SETTING_KEY_NOTIFICATION_LIGHTS = "notification_lights";
 	public static final String SETTING_KEY_NOTIFICATION_VIBRATE = "notification_vibrate";
 	public static final String SETTING_KEY_NOTIFICATION_SOUND = "notification_sound";
-	public static final String SETTING_KEY_SIMULATION = "simulation";
-	public static final String SETTING_KEY_SIMULATION_STOCK_ID = "simulation_stock_id";
-	public static final String SETTING_KEY_SIMULATION_STOCK_SE = "simulation_stock_se";
-	public static final String SETTING_KEY_SIMULATION_STOCK_CODE = "simulation_stock_code";
-	public static final String SETTING_KEY_SIMULATION_PERIOD = "simulation_period";
-	public static final String SETTING_KEY_SIMULATION_FROM_DATE = "simulation_from_data";
-	public static final String SETTING_KEY_SIMULATION_FROM_TIME = "simulation_from_time";
-	public static final String SETTING_KEY_SIMULATION_DATE = "simulation_data";
-	public static final String SETTING_KEY_SIMULATION_TIME = "simulation_time";
-	public static final String SETTING_KEY_SIMULATION_TO_DATE = "simulation_to_data";
-	public static final String SETTING_KEY_SIMULATION_TO_TIME = "simulation_to_time";
-	public static final String SETTING_KEY_SIMULATION_INTERVAL = "simulation_interval";
 	public static final String SETTING_KEY_USER_NAME = "user_name";
 
 	public static final String STOCK_ACTION_NONE = "";
@@ -128,8 +112,6 @@ public class Constants {
 	public static final String STOCK_FLAG_MARK_RECENT = "recent";
 	public static final String STOCK_FLAG_MARK_FAVORITE = "favorite";
 	public static final String STOCK_FLAG_PINYIN_FIXED = "1";
-	public static final String STOCK_DATA_FLAG_NONE = "";
-	public static final String STOCK_DATA_FLAG_SIMULATION = "1";
 
 	public static final int STOCK_ID_INVALID = 0;
 

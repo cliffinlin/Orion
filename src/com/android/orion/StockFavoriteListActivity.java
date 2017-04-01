@@ -85,9 +85,7 @@ public class StockFavoriteListActivity extends StorageActivity implements
 		public void onReceive(Context context, Intent intent) {
 			if (mResumed) {
 				if (intent.getIntExtra(Constants.EXTRA_KEY_SERVICE_TYPE,
-						Constants.SERVICE_TYPE_NONE) == Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE_REALTIME
-						|| intent.getIntExtra(Constants.EXTRA_KEY_SERVICE_TYPE,
-								Constants.SERVICE_TYPE_NONE) == Constants.SERVICE_SIMULATE_STOCK_FAVORITE_DATA_HISTORY) {
+						Constants.SERVICE_TYPE_NONE) == Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE_REALTIME) {
 					restartLoader();
 				}
 			}
@@ -164,10 +162,6 @@ public class StockFavoriteListActivity extends StorageActivity implements
 			deleteStockData(0);
 			startService(Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE,
 					Constants.EXECUTE_IMMEDIATE);
-			return true;
-		case R.id.action_simulation:
-			Intent intent = new Intent(this, StockSimulationActivity.class);
-			startActivity(intent);
 			return true;
 
 		default:

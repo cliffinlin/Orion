@@ -42,10 +42,5 @@
         android:orderInCategory="100"
         android:showAsAction="never"
         android:title="@string/action_clean_data"/>
-    <item
-        android:id="@+id/action_simulation"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_simulation"/>
 
 </menu>

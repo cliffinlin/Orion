@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.android.orion"
-    android:versionCode="412"
+    android:versionCode="413"
     android:versionName="1.1.20" >
 
     <uses-sdk
@@ -93,10 +93,6 @@
             android:label="@string/title_activity_service_setting" >
         </activity>
         <activity
-            android:name="com.android.orion.StockSimulationActivity"
-            android:label="@string/title_activity_simulation" >
-        </activity>
-        <activity
             android:name="com.android.orion.StockDealListActivity"
             android:label="@string/title_activity_deal_list" >
         </activity>
@@ -125,8 +121,6 @@
         </provider>
 
         <receiver android:name="com.android.orion.StockDownloadBroadcastReceiver" >
-        </receiver>
-        <receiver android:name="com.android.orion.StockSimulationBroadcastReceiver" >
         </receiver>
         <receiver android:name="com.android.orion.OrionBroadcastReceiver" >
             <intent-filter>

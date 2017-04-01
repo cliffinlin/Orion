@@ -82,7 +82,6 @@ public class StockChartListActivity extends OrionBaseActivity implements
 						Constants.SERVICE_TYPE_NONE);
 				if ((mServiceType == Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE_REALTIME)
 						|| (mServiceType == Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE_DATA_HISTORY)
-						|| (mServiceType == Constants.SERVICE_SIMULATE_STOCK_FAVORITE_DATA_HISTORY)
 						|| (mServiceType == Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE_DATA_REALTIME)) {
 					if (intent.getLongExtra(Constants.EXTRA_KEY_STOCK_ID, 0) == mStock
 							.getId()) {
@@ -160,16 +159,6 @@ public class StockChartListActivity extends OrionBaseActivity implements
 					Constants.EXECUTE_IMMEDIATE, mStock.getSE(),
 					mStock.getCode());
 			restartLoader();
-			return true;
-		}
-		case R.id.action_simulation: {
-			Bundle bundle = new Bundle();
-			bundle.putLong(EXTRA_STOCK_ID, mStock.getId());
-			bundle.putString(Constants.EXTRA_KEY_STOCK_SE, mStock.getSE());
-			bundle.putString(Constants.EXTRA_KEY_STOCK_CODE, mStock.getCode());
-			Intent intent = new Intent(this, StockSimulationActivity.class);
-			intent.putExtras(bundle);
-			startActivity(intent);
 			return true;
 		}
 		case R.id.action_remove_favorite: {
@@ -389,14 +378,8 @@ public class StockChartListActivity extends OrionBaseActivity implements
 		String sortOrder = "";
 		CursorLoader loader = null;
 
-		if (mServiceType == Constants.SERVICE_SIMULATE_STOCK_FAVORITE_DATA_HISTORY) {
-			selection = mStockDatabaseManager.getStockDataSelection(
-					mStock.getId(), period,
-					Constants.STOCK_DATA_FLAG_SIMULATION);
-		} else {
-			selection = mStockDatabaseManager.getStockDataSelection(
-					mStock.getId(), period, Constants.STOCK_DATA_FLAG_NONE);
-		}
+		selection = mStockDatabaseManager.getStockDataSelection(mStock.getId(),
+				period);
 
 		sortOrder = mStockDatabaseManager.getStockDataOrder();
 

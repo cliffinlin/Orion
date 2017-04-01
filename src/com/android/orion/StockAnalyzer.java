@@ -32,8 +32,7 @@ public class StockAnalyzer extends StockManager {
 		super(context);
 	}
 
-	void analyze(int executeType, Stock stock, String period,
-			ArrayList<StockData> stockDataList) {
+	void analyze(Stock stock, String period, ArrayList<StockData> stockDataList) {
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 
@@ -42,16 +41,16 @@ public class StockAnalyzer extends StockManager {
 		}
 
 		try {
-			loadStockDataList(executeType, stock, period, stockDataList);
+			loadStockDataList(stock, period, stockDataList);
 			if (stockDataList.size() < Constants.STOCK_VERTEX_TYPING_SIZE) {
 				return;
 			}
 
-			analyzeStockMatch(executeType, stock, period, stockDataList);
+			analyzeStockMatch(stock, period, stockDataList);
 
 			setMACD(stock, period, stockDataList);
 			analyzeStockData(stock, period, stockDataList);
-			updateDatabase(executeType, stock, period, stockDataList);
+			updateDatabase(stock, period, stockDataList);
 			writeCallLog(stock, period,
 					stockDataList.get(stockDataList.size() - 1));
 			writeMessage();
@@ -153,14 +152,14 @@ public class StockAnalyzer extends StockManager {
 		stock.setAcceleration(acceleration);
 	}
 
-	private void analyzeStockMatch(int executeType, Stock stock, String period,
+	private void analyzeStockMatch(Stock stock, String period,
 			ArrayList<StockData> stockDataList) {
 		Stock stock_X;
 		Stock stock_Y;
 		ArrayList<StockMatch> stockMatchList;
 		ArrayList<StockData> stockDataList_X = null;
 		ArrayList<StockData> stockDataList_Y = null;
-		
+
 		SimpleRegression regression = new SimpleRegression();
 
 		if ((stock == null) || (stockDataList == null)) {
@@ -195,14 +194,14 @@ public class StockAnalyzer extends StockManager {
 				stock_Y.setCode(stockMatch.getCode_Y());
 				mStockDatabaseManager.getStock(stock_Y);
 				stockDataList_Y = new ArrayList<StockData>();
-				loadStockDataList(executeType, stock_Y, period, stockDataList_Y);
+				loadStockDataList(stock_Y, period, stockDataList_Y);
 			} else if (stock.getSE().equals(stockMatch.getSE_Y())
 					&& stock.getCode().equals(stockMatch.getCode_Y())) {
 				stock_X.setSE(stockMatch.getSE_X());
 				stock_X.setCode(stockMatch.getCode_X());
 				mStockDatabaseManager.getStock(stock_X);
 				stockDataList_X = new ArrayList<StockData>();
-				loadStockDataList(executeType, stock_X, period, stockDataList_X);
+				loadStockDataList(stock_X, period, stockDataList_X);
 
 				stock_Y.set(stock);
 				stockDataList_Y = stockDataList;
@@ -212,12 +211,13 @@ public class StockAnalyzer extends StockManager {
 					|| (stockDataList_X.size() != stockDataList_Y.size())) {
 				return;
 			}
-			
+
 			regression.clear();
 			for (int i = 0; i < stockDataList_X.size(); i++) {
-				regression.addData(stockDataList_X.get(i).getClose(), stockDataList_Y.get(i).getClose());
+				regression.addData(stockDataList_X.get(i).getClose(),
+						stockDataList_Y.get(i).getClose());
 			}
-			
+
 			stockMatch.setSlope(regression.getSlope());
 			stockMatch.setIntercept(regression.getIntercept());
 			mStockDatabaseManager.updateStockMatch(stockMatch);
@@ -349,7 +349,7 @@ public class StockAnalyzer extends StockManager {
 		stock.setAction(period, action);
 	}
 
-	private void updateDatabase(int executeType, Stock stock, String period,
+	private void updateDatabase(Stock stock, String period,
 			ArrayList<StockData> stockDataList) {
 		ContentValues contentValues[] = new ContentValues[stockDataList.size()];
 
@@ -358,13 +358,7 @@ public class StockAnalyzer extends StockManager {
 		}
 
 		try {
-			if (executeType == Constants.EXECUTE_SCHEDULE_SIMULATION) {
-				mStockDatabaseManager.deleteStockData(stock.getId(), period,
-						Constants.STOCK_DATA_FLAG_SIMULATION);
-			} else {
-				mStockDatabaseManager.deleteStockData(stock.getId(), period,
-						Constants.STOCK_DATA_FLAG_NONE);
-			}
+			mStockDatabaseManager.deleteStockData(stock.getId(), period);
 
 			for (int i = 0; i < stockDataList.size(); i++) {
 				StockData stockData = stockDataList.get(i);

@@ -377,7 +377,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 		try {
 			selection = mStockDatabaseManager.getStockDataSelection(stockId,
-					period, Constants.STOCK_DATA_FLAG_NONE);
+					period);
 			sortOrder = mStockDatabaseManager.getStockDataOrder();
 			cursor = mStockDatabaseManager.queryStockData(selection, null,
 					sortOrder);
@@ -474,69 +474,6 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		return stock;
 	}
 
-	void simulateStock(Bundle bundle) {
-		int executeType = Constants.EXECUTE_TYPE_NONE;
-		Stock stock = null;
-
-		executeType = bundle.getInt(Constants.EXTRA_KEY_EXECUTE_TYPE,
-				Constants.EXECUTE_TYPE_NONE);
-
-		String se = Utility.getSettingString(mContext,
-				Constants.SETTING_KEY_SIMULATION_STOCK_SE);
-		String code = Utility.getSettingString(mContext,
-				Constants.SETTING_KEY_SIMULATION_STOCK_CODE);
-
-		stock = mStockArrayMapFavorite.get(se + code);
-
-		if (stock != null) {
-			simulateStockDataHistory(executeType, stock);
-		} else {
-			simulateStockDataHistory(executeType);
-		}
-	}
-
-	void simulateStockDataHistory(int executeType) {
-		for (Stock stock : mStockArrayMapFavorite.values()) {
-			downloadStockDataHistory(executeType, stock);
-		}
-	}
-
-	void simulateStockDataHistory(int executeType, Stock stock) {
-		if (stock == null) {
-			return;
-		}
-
-		for (int i = Constants.PERIODS.length - 1; i >= 0; i--) {
-			String period = Constants.PERIODS[i];
-			if (Utility.getSettingBoolean(mContext, period)) {
-				simulateStockDataHistory(executeType, stock, period);
-			}
-		}
-	}
-
-	void simulateStockDataHistory(int executeType, Stock stock, String period) {
-		String simulationDate = "";
-		String simulationTime = "";
-
-		if (stock == null) {
-			return;
-		}
-
-		simulationDate = Utility.getSettingString(mContext,
-				Constants.SETTING_KEY_SIMULATION_DATE);
-		simulationTime = Utility.getSettingString(mContext,
-				Constants.SETTING_KEY_SIMULATION_TIME);
-
-		Utility.Log("simulateStockDataHistory:" + period + " " + simulationDate
-				+ " " + simulationTime);
-		analyze(executeType, stock, period, getStockDataList(stock, period));
-		Bundle bundle = new Bundle();
-		bundle.putInt(Constants.EXTRA_KEY_SERVICE_TYPE,
-				Constants.SERVICE_SIMULATE_STOCK_FAVORITE_DATA_HISTORY);
-		bundle.putLong(Constants.EXTRA_KEY_STOCK_ID, stock.getId());
-		sendBroadcast(Constants.ACTION_SERVICE_FINISHED, bundle);
-	}
-
 	public class StockHSADownloader extends VolleyStringDownloader {
 
 		public StockHSADownloader() {
@@ -621,7 +558,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		public void handleResponse(String response) {
 			removeFromCurrrentRequests(mStringRequest.getUrl());
 			handleResponseStockDataHistory(mStock, mStockData, response);
-			analyze(mExecuteType, mStock, mStockData.getPeriod(),
+			analyze(mStock, mStockData.getPeriod(),
 					getStockDataList(mStock, mStockData.getPeriod()));
 			Bundle bundle = new Bundle();
 			bundle.putInt(Constants.EXTRA_KEY_SERVICE_TYPE,
@@ -666,7 +603,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		public void handleResponse(String response) {
 			removeFromCurrrentRequests(mStringRequest.getUrl());
 			handleResponseStockDataRealTime(mStock, mStockData, response);
-			analyze(mExecuteType, mStock, mStockData.getPeriod(),
+			analyze(mStock, mStockData.getPeriod(),
 					getStockDataList(mStock, mStockData.getPeriod()));
 			Bundle bundle = new Bundle();
 			bundle.putInt(Constants.EXTRA_KEY_SERVICE_TYPE,

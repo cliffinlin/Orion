@@ -144,7 +144,6 @@ public final class DatabaseContract {
 		public static final String COLUMN_DATE = "date";
 		public static final String COLUMN_TIME = "time";
 		public static final String COLUMN_PERIOD = "period";
-		public static final String COLUMN_SIMULATION = "simulation";
 		public static final String COLUMN_OPEN = "open";
 		public static final String COLUMN_HIGH = "high";
 		public static final String COLUMN_LOW = "low";
@@ -177,7 +176,7 @@ public final class DatabaseContract {
 				+ " ASC";
 
 		public static final String[] PROJECTION_ALL = { _ID, COLUMN_STOCK_ID,
-				COLUMN_DATE, COLUMN_TIME, COLUMN_PERIOD, COLUMN_SIMULATION,
+				COLUMN_DATE, COLUMN_TIME, COLUMN_PERIOD, 
 				COLUMN_OPEN, COLUMN_HIGH, COLUMN_LOW, COLUMN_CLOSE,
 				COLUMN_DIRECTION, COLUMN_VERTEX, COLUMN_VERTEX_LOW,
 				COLUMN_VERTEX_HIGH, COLUMN_POSITION, COLUMN_OVERLAP,
@@ -191,9 +190,10 @@ public final class DatabaseContract {
 		private static final String CREATE_TABLE_CONTENT = " (" + _ID
 				+ " INTEGER PRIMARY KEY," + COLUMN_STOCK_ID + TEXT_TYPE
 				+ COMMA_SEP + COLUMN_DATE + TEXT_TYPE + COMMA_SEP + COLUMN_TIME
-				+ TEXT_TYPE + COMMA_SEP + COLUMN_PERIOD + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_SIMULATION + TEXT_TYPE + COMMA_SEP + COLUMN_OPEN
-				+ DOUBLE_TYPE + COMMA_SEP + COLUMN_HIGH + DOUBLE_TYPE
+				+ TEXT_TYPE + COMMA_SEP
+				+ COLUMN_PERIOD + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_OPEN + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_HIGH + DOUBLE_TYPE
 				+ COMMA_SEP + COLUMN_LOW + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_CLOSE + DOUBLE_TYPE + COMMA_SEP + COLUMN_DIRECTION
 				+ INTEGER_TYPE + COMMA_SEP + COLUMN_VERTEX + INTEGER_TYPE

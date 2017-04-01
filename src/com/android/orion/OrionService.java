@@ -212,10 +212,6 @@ public class OrionService extends Service {
 			}
 			break;
 
-		case Constants.SERVICE_SIMULATE_STOCK_FAVORITE:
-			mSinaFinance.simulateStock(bundle);
-			break;
-
 		default:
 			break;
 		}
