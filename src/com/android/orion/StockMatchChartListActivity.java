@@ -76,7 +76,7 @@ public class StockMatchChartListActivity extends OrionBaseActivity implements
 	ArrayList<StockMatchChartItem> mStockMatchChartItemList = null;
 	ArrayList<StockMatchChartItemMain> mStockMatchChartItemMainList = null;
 	ArrayList<StockMatchChartItemSub> mStockMatchChartItemSubList = null;
-	ArrayList<StockChartData> mStockChartDataList = null;
+	ArrayList<StockMatchChartData> mStockMatchChartDataList = null;
 
 	ArrayList<StockDeal> mStockDealList = null;
 
@@ -253,7 +253,7 @@ public class StockMatchChartListActivity extends OrionBaseActivity implements
 		if (id == LOADER_ID_STOCK_MATCH_LIST) {
 			swapStockMatchCursor(cursor);
 		} else {
-			swapStockDataCursor(mStockChartDataList.get(id), cursor);
+			swapStockMatchDataCursor(mStockMatchChartDataList.get(id), cursor);
 		}
 	}
 
@@ -270,7 +270,7 @@ public class StockMatchChartListActivity extends OrionBaseActivity implements
 		if (id == LOADER_ID_STOCK_MATCH_LIST) {
 			swapStockMatchCursor(null);
 		} else {
-			swapStockDataCursor(mStockChartDataList.get(id), null);
+			swapStockMatchDataCursor(mStockMatchChartDataList.get(id), null);
 		}
 	}
 
@@ -343,8 +343,8 @@ public class StockMatchChartListActivity extends OrionBaseActivity implements
 			mStockDealList = new ArrayList<StockDeal>();
 		}
 
-		if (mStockChartDataList == null) {
-			mStockChartDataList = new ArrayList<StockChartData>();
+		if (mStockMatchChartDataList == null) {
+			mStockMatchChartDataList = new ArrayList<StockMatchChartData>();
 		}
 
 		if (mStockMatchChartItemList == null) {
@@ -360,11 +360,11 @@ public class StockMatchChartListActivity extends OrionBaseActivity implements
 		}
 
 		for (int i = 0; i < STOCK_PERIOD_ARRAY_SIZE; i++) {
-			mStockChartDataList.add(new StockChartData(mPeriodArray.get(i)));
+			mStockMatchChartDataList.add(new StockMatchChartData(mPeriodArray.get(i)));
 			mStockMatchChartItemMainList.add(new StockMatchChartItemMain(
-					mStockChartDataList.get(i)));
+					mStockMatchChartDataList.get(i)));
 			mStockMatchChartItemSubList.add(new StockMatchChartItemSub(
-					mStockChartDataList.get(i)));
+					mStockMatchChartDataList.get(i)));
 			mStockMatchChartItemList.add(mStockMatchChartItemMainList.get(i));
 			mStockMatchChartItemList.add(mStockMatchChartItemSubList.get(i));
 		}
@@ -524,22 +524,22 @@ public class StockMatchChartListActivity extends OrionBaseActivity implements
 		}
 	}
 
-	public void swapStockDataCursor(StockChartData stockChartData, Cursor cursor) {
+	public void swapStockMatchDataCursor(StockMatchChartData stockMatchChartData, Cursor cursor) {
 		int index = 0;
 
 		if (mStockData == null) {
 			return;
 		}
 
-		stockChartData.clear();
+		stockMatchChartData.clear();
 
 		try {
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				while (cursor.moveToNext()) {
-					index = stockChartData.mXValues.size();
+					index = stockMatchChartData.mXValues.size();
 					mStockData.set(cursor);
 
-					stockChartData.mXValues.add(mStockData.getDate());
+					stockMatchChartData.mXValues.add(mStockData.getDate());
 
 					CandleEntry candleEntry = new CandleEntry(index,
 							(float) mStockData.getHigh(),
@@ -547,73 +547,73 @@ public class StockMatchChartListActivity extends OrionBaseActivity implements
 							(float) mStockData.getOpen(),
 							(float) mStockData.getClose(),
 							mStockData.getAction());
-					stockChartData.mCandleEntryList.add(candleEntry);
+					stockMatchChartData.mCandleEntryList.add(candleEntry);
 
 					if (mStockData.vertexOf(Constants.STOCK_VERTEX_TOP)) {
 						Entry drawEntry = new Entry(
 								(float) mStockData.getVertexHigh(), index);
-						stockChartData.mDrawEntryList.add(drawEntry);
+						stockMatchChartData.mDrawEntryList.add(drawEntry);
 					} else if (mStockData
 							.vertexOf(Constants.STOCK_VERTEX_BOTTOM)) {
 						Entry drawEntry = new Entry(
 								(float) mStockData.getVertexLow(), index);
-						stockChartData.mDrawEntryList.add(drawEntry);
+						stockMatchChartData.mDrawEntryList.add(drawEntry);
 					}
 
 					if (mStockData.vertexOf(Constants.STOCK_VERTEX_TOP_STROKE)) {
 						Entry strokeEntry = new Entry(
 								(float) mStockData.getVertexHigh(), index);
-						stockChartData.mStrokeEntryList.add(strokeEntry);
+						stockMatchChartData.mStrokeEntryList.add(strokeEntry);
 					} else if (mStockData
 							.vertexOf(Constants.STOCK_VERTEX_BOTTOM_STROKE)) {
 						Entry strokeEntry = new Entry(
 								(float) mStockData.getVertexLow(), index);
-						stockChartData.mStrokeEntryList.add(strokeEntry);
+						stockMatchChartData.mStrokeEntryList.add(strokeEntry);
 					}
 
 					if (mStockData.vertexOf(Constants.STOCK_VERTEX_TOP_SEGMENT)) {
 						Entry segmentEntry = new Entry(
 								(float) mStockData.getVertexHigh(), index);
-						stockChartData.mSegmentEntryList.add(segmentEntry);
+						stockMatchChartData.mSegmentEntryList.add(segmentEntry);
 					} else if (mStockData
 							.vertexOf(Constants.STOCK_VERTEX_BOTTOM_SEGMENT)) {
 						Entry segmentEntry = new Entry(
 								(float) mStockData.getVertexLow(), index);
-						stockChartData.mSegmentEntryList.add(segmentEntry);
+						stockMatchChartData.mSegmentEntryList.add(segmentEntry);
 					}
 
 					if ((mStockData.getOverlapHigh() > 0)
 							&& (mStockData.getOverlapLow() > 0)) {
 						Entry overlayHighEntry = new Entry(
 								(float) mStockData.getOverlapHigh(), index);
-						stockChartData.mOverlapHighEntryList
+						stockMatchChartData.mOverlapHighEntryList
 								.add(overlayHighEntry);
 
 						Entry overlapLowEntry = new Entry(
 								(float) mStockData.getOverlapLow(), index);
-						stockChartData.mOverlapLowEntryList
+						stockMatchChartData.mOverlapLowEntryList
 								.add(overlapLowEntry);
 					}
 
 					Entry average5Entry = new Entry(
 							(float) mStockData.getAverage5(), index);
-					stockChartData.mAverage5EntryList.add(average5Entry);
+					stockMatchChartData.mAverage5EntryList.add(average5Entry);
 
 					Entry average10Entry = new Entry(
 							(float) mStockData.getAverage10(), index);
-					stockChartData.mAverage10EntryList.add(average10Entry);
+					stockMatchChartData.mAverage10EntryList.add(average10Entry);
 
 					Entry difEntry = new Entry((float) mStockData.getDIF(),
 							index);
-					stockChartData.mDIFEntryList.add(difEntry);
+					stockMatchChartData.mDIFEntryList.add(difEntry);
 
 					Entry deaEntry = new Entry((float) mStockData.getDEA(),
 							index);
-					stockChartData.mDEAEntryList.add(deaEntry);
+					stockMatchChartData.mDEAEntryList.add(deaEntry);
 
 					BarEntry histogramBarEntry = new BarEntry(
 							(float) mStockData.getHistogram(), index);
-					stockChartData.mHistogramEntryList.add(histogramBarEntry);
+					stockMatchChartData.mHistogramEntryList.add(histogramBarEntry);
 					//
 					// Entry sigmaHistogramEntry = new Entry(
 					// (float) mStockData.getSigmaHistogram(), index);
@@ -627,15 +627,15 @@ public class StockMatchChartListActivity extends OrionBaseActivity implements
 
 					Entry averageEntry = new Entry(
 							(float) mStockData.getAverage(), index);
-					stockChartData.mAverageEntryList.add(averageEntry);
+					stockMatchChartData.mAverageEntryList.add(averageEntry);
 
 					Entry velocityEntry = new Entry(
 							(float) mStockData.getVelocity(), index);
-					stockChartData.mVelocityEntryList.add(velocityEntry);
+					stockMatchChartData.mVelocityEntryList.add(velocityEntry);
 
 					Entry acclerateEntry = new Entry(
 							(float) mStockData.getAcceleration(), index);
-					stockChartData.mAccelerateEntryList.add(acclerateEntry);
+					stockMatchChartData.mAccelerateEntryList.add(acclerateEntry);
 
 				}
 			}
@@ -653,10 +653,10 @@ public class StockMatchChartListActivity extends OrionBaseActivity implements
 
 		mStockDatabaseManager.getStockDealList(mStock, mStockDealList);
 
-		stockChartData.updateDescription(mStock);
-		stockChartData.updateLimitLine(mStockDealList);
-		stockChartData.setMainChartData();
-		stockChartData.setSubChartData();
+		stockMatchChartData.updateDescription(mStock);
+		stockMatchChartData.updateLimitLine(mStockDealList);
+		stockMatchChartData.setMainChartData();
+		stockMatchChartData.setSubChartData();
 
 		mStockMatchChartArrayAdapter.notifyDataSetChanged();
 	}
@@ -711,16 +711,16 @@ public class StockMatchChartListActivity extends OrionBaseActivity implements
 	class StockMatchChartItem {
 		int mItemViewType;
 		int mResource;
-		StockChartData mStockChartData;
-
+		StockMatchChartData mStockMatchChartData;
+		
 		public StockMatchChartItem() {
 		}
 
 		public StockMatchChartItem(int itemViewType, int resource,
-				StockChartData stockChartData) {
+				StockMatchChartData stockMatchChartData) {
 			mItemViewType = itemViewType;
 			mResource = resource;
-			mStockChartData = stockChartData;
+			mStockMatchChartData = stockMatchChartData;
 		}
 
 		public int getItemViewType() {
@@ -760,8 +760,8 @@ public class StockMatchChartListActivity extends OrionBaseActivity implements
 				leftAxis.setValueFormatter(new DefaultYAxisValueFormatter(2));
 				leftAxis.removeAllLimitLines();
 				if (mItemViewType == ITEM_VIEW_TYPE_MAIN) {
-					for (int i = 0; i < mStockChartData.mLimitLineList.size(); i++) {
-						leftAxis.addLimitLine(mStockChartData.mLimitLineList
+					for (int i = 0; i < mStockMatchChartData.mLimitLineList.size(); i++) {
+						leftAxis.addLimitLine(mStockMatchChartData.mLimitLineList
 								.get(i));
 					}
 				}
@@ -772,12 +772,12 @@ public class StockMatchChartListActivity extends OrionBaseActivity implements
 				rightAxis.setEnabled(false);
 			}
 
-			viewHolder.chart.setDescription(mStockChartData.mDescription);
+			viewHolder.chart.setDescription(mStockMatchChartData.mDescription);
 
 			if (mItemViewType == ITEM_VIEW_TYPE_MAIN) {
-				viewHolder.chart.setData(mStockChartData.mCombinedDataMain);
+				viewHolder.chart.setData(mStockMatchChartData.mCombinedDataMain);
 			} else {
-				viewHolder.chart.setData(mStockChartData.mCombinedDataSub);
+				viewHolder.chart.setData(mStockMatchChartData.mCombinedDataSub);
 			}
 
 			return view;
@@ -789,17 +789,17 @@ public class StockMatchChartListActivity extends OrionBaseActivity implements
 	}
 
 	class StockMatchChartItemMain extends StockMatchChartItem {
-		public StockMatchChartItemMain(StockChartData stockChartData) {
+		public StockMatchChartItemMain(StockMatchChartData stockMatchChartData) {
 			super(ITEM_VIEW_TYPE_MAIN,
 					R.layout.activity_stock_chart_list_item_main,
-					stockChartData);
+					stockMatchChartData);
 		}
 	}
 
 	class StockMatchChartItemSub extends StockMatchChartItem {
-		public StockMatchChartItemSub(StockChartData stockChartData) {
+		public StockMatchChartItemSub(StockMatchChartData stockMatchChartData) {
 			super(ITEM_VIEW_TYPE_SUB,
-					R.layout.activity_stock_chart_list_item_sub, stockChartData);
+					R.layout.activity_stock_chart_list_item_sub, stockMatchChartData);
 		}
 	}
 
