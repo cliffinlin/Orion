@@ -101,12 +101,16 @@
             android:label="@string/title_activity_deal" >
         </activity>
         <activity
-            android:name="com.android.orion.StockMatchListActivity"
-            android:label="@string/title_activity_match_list" >
-        </activity>
-        <activity
             android:name="com.android.orion.StockMatchActivity"
             android:label="@string/title_activity_match" >
+        </activity>
+        <activity
+            android:name="com.android.orion.StockMatchChartListActivity"
+            android:label="@string/stock_chart" >
+        </activity>
+        <activity
+            android:name="com.android.orion.StockMatchListActivity"
+            android:label="@string/title_activity_match_list" >
         </activity>
 
         <provider

@@ -130,7 +130,7 @@ public class StockMatchChartListActivity extends OrionBaseActivity implements
 		if (mStock_Y == null) {
 			mStock_Y = Stock.obtain();
 		}
-		
+
 		if (mStockMatchList == null) {
 			mStockMatchList = new ArrayList<StockMatch>();
 		}
@@ -211,8 +211,10 @@ public class StockMatchChartListActivity extends OrionBaseActivity implements
 
 		for (int i = 0; i < STOCK_PERIOD_ARRAY_SIZE; i++) {
 			if (Utility.getSettingBoolean(this, mPeriodArray.get(i))) {
-				mStockMatchChartItemList.add(mStockMatchChartItemMainList.get(i));
-				mStockMatchChartItemList.add(mStockMatchChartItemSubList.get(i));
+				mStockMatchChartItemList.add(mStockMatchChartItemMainList
+						.get(i));
+				mStockMatchChartItemList
+						.add(mStockMatchChartItemSubList.get(i));
 			}
 		}
 
@@ -360,7 +362,8 @@ public class StockMatchChartListActivity extends OrionBaseActivity implements
 		}
 
 		for (int i = 0; i < STOCK_PERIOD_ARRAY_SIZE; i++) {
-			mStockMatchChartDataList.add(new StockMatchChartData(mPeriodArray.get(i)));
+			mStockMatchChartDataList.add(new StockMatchChartData(mPeriodArray
+					.get(i)));
 			mStockMatchChartItemMainList.add(new StockMatchChartItemMain(
 					mStockMatchChartDataList.get(i)));
 			mStockMatchChartItemSubList.add(new StockMatchChartItemSub(
@@ -392,7 +395,8 @@ public class StockMatchChartListActivity extends OrionBaseActivity implements
 		String selection = "";
 		CursorLoader loader = null;
 
-		loader = new CursorLoader(this, DatabaseContract.StockMatch.CONTENT_URI,
+		loader = new CursorLoader(this,
+				DatabaseContract.StockMatch.CONTENT_URI,
 				DatabaseContract.StockMatch.PROJECTION_ALL, selection, null,
 				mSortOrder);
 
@@ -524,7 +528,8 @@ public class StockMatchChartListActivity extends OrionBaseActivity implements
 		}
 	}
 
-	public void swapStockMatchDataCursor(StockMatchChartData stockMatchChartData, Cursor cursor) {
+	public void swapStockMatchDataCursor(
+			StockMatchChartData stockMatchChartData, Cursor cursor) {
 		int index = 0;
 
 		if (mStockData == null) {
@@ -613,17 +618,8 @@ public class StockMatchChartListActivity extends OrionBaseActivity implements
 
 					BarEntry histogramBarEntry = new BarEntry(
 							(float) mStockData.getHistogram(), index);
-					stockMatchChartData.mHistogramEntryList.add(histogramBarEntry);
-					//
-					// Entry sigmaHistogramEntry = new Entry(
-					// (float) mStockData.getSigmaHistogram(), index);
-					// stockChartData.mSigmaHistogramEntryList
-					// .add(sigmaHistogramEntry);
-					//
-					// Entry trendsEffortsEntry = new Entry(
-					// (float) mStockData.getTrendsEfforts(), index);
-					// stockChartData.mTrendEffortsEntryList
-					// .add(trendsEffortsEntry);
+					stockMatchChartData.mHistogramEntryList
+							.add(histogramBarEntry);
 
 					Entry averageEntry = new Entry(
 							(float) mStockData.getAverage(), index);
@@ -635,7 +631,8 @@ public class StockMatchChartListActivity extends OrionBaseActivity implements
 
 					Entry acclerateEntry = new Entry(
 							(float) mStockData.getAcceleration(), index);
-					stockMatchChartData.mAccelerateEntryList.add(acclerateEntry);
+					stockMatchChartData.mAccelerateEntryList
+							.add(acclerateEntry);
 
 				}
 			}
@@ -712,7 +709,7 @@ public class StockMatchChartListActivity extends OrionBaseActivity implements
 		int mItemViewType;
 		int mResource;
 		StockMatchChartData mStockMatchChartData;
-		
+
 		public StockMatchChartItem() {
 		}
 
@@ -760,7 +757,8 @@ public class StockMatchChartListActivity extends OrionBaseActivity implements
 				leftAxis.setValueFormatter(new DefaultYAxisValueFormatter(2));
 				leftAxis.removeAllLimitLines();
 				if (mItemViewType == ITEM_VIEW_TYPE_MAIN) {
-					for (int i = 0; i < mStockMatchChartData.mLimitLineList.size(); i++) {
+					for (int i = 0; i < mStockMatchChartData.mLimitLineList
+							.size(); i++) {
 						leftAxis.addLimitLine(mStockMatchChartData.mLimitLineList
 								.get(i));
 					}
@@ -775,7 +773,8 @@ public class StockMatchChartListActivity extends OrionBaseActivity implements
 			viewHolder.chart.setDescription(mStockMatchChartData.mDescription);
 
 			if (mItemViewType == ITEM_VIEW_TYPE_MAIN) {
-				viewHolder.chart.setData(mStockMatchChartData.mCombinedDataMain);
+				viewHolder.chart
+						.setData(mStockMatchChartData.mCombinedDataMain);
 			} else {
 				viewHolder.chart.setData(mStockMatchChartData.mCombinedDataSub);
 			}
@@ -799,7 +798,8 @@ public class StockMatchChartListActivity extends OrionBaseActivity implements
 	class StockMatchChartItemSub extends StockMatchChartItem {
 		public StockMatchChartItemSub(StockMatchChartData stockMatchChartData) {
 			super(ITEM_VIEW_TYPE_SUB,
-					R.layout.activity_stock_chart_list_item_sub, stockMatchChartData);
+					R.layout.activity_stock_chart_list_item_sub,
+					stockMatchChartData);
 		}
 	}
 

@@ -567,10 +567,10 @@ public class StockMatchListActivity extends StorageActivity implements
 			mStock_Y.setCode(mMatch.getCode_Y());
 			mStockDatabaseManager.getStock(mStock_Y);
 
-			Intent intent = new Intent(this, StockChartListActivity.class);
+			Intent intent = new Intent(this, StockMatchChartListActivity.class);
 			intent.putExtra(Setting.KEY_SORT_ORDER_STOCK_MATCH_LIST, mSortOrder);
-			intent.putExtra(StockChartListActivity.EXTRA_STOCK_ID,
-					mStock_X.getId());
+			intent.putExtra(StockMatchChartListActivity.EXTRA_STOCK_MATCH_ID,
+					mMatch.getId());
 			startActivity(intent);
 			break;
 

@@ -40,8 +40,6 @@ public class StockMatchChartData {
 	ArrayList<Entry> mDIFEntryList = null;
 	ArrayList<Entry> mDEAEntryList = null;
 	ArrayList<BarEntry> mHistogramEntryList = null;
-	// ArrayList<Entry> mSigmaHistogramEntryList = null;
-	// ArrayList<Entry> mTrendsEffortsEntryList = null;
 	ArrayList<Entry> mAverageEntryList = null;
 	ArrayList<Entry> mVelocityEntryList = null;
 	ArrayList<Entry> mAccelerateEntryList = null;
@@ -99,14 +97,6 @@ public class StockMatchChartData {
 			mDEAEntryList = new ArrayList<Entry>();
 		}
 
-		// if (mSigmaHistogramEntryList == null) {
-		// mSigmaHistogramEntryList = new ArrayList<Entry>();
-		// }
-		//
-		// if (mTrendsEffortsEntryList == null) {
-		// mTrendsEffortsEntryList = new ArrayList<Entry>();
-		// }
-
 		if (mHistogramEntryList == null) {
 			mHistogramEntryList = new ArrayList<BarEntry>();
 		}
@@ -160,7 +150,6 @@ public class StockMatchChartData {
 
 		LineDataSet average5DataSet = new LineDataSet(mAverage5EntryList, "MA5");
 		average5DataSet.setColor(Color.WHITE);
-		// average5DataSet.setCircleColor(Color.YELLOW);
 		average5DataSet.setDrawCircles(false);
 		average5DataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(average5DataSet);
@@ -168,7 +157,6 @@ public class StockMatchChartData {
 		LineDataSet average10DataSet = new LineDataSet(mAverage10EntryList,
 				"MA10");
 		average10DataSet.setColor(Color.CYAN);
-		// average10DataSet.setCircleColor(Color.RED);
 		average10DataSet.setDrawCircles(false);
 		average10DataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(average10DataSet);
@@ -238,29 +226,6 @@ public class StockMatchChartData {
 		deaDataSet.setDrawCircles(false);
 		deaDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(deaDataSet);
-
-		// LineDataSet sigmaHistogramDataSet = new LineDataSet(
-		// mSigmaHistogramEntryList, "Sigma");
-		// sigmaHistogramDataSet.setColor(Color.CYAN);
-		// sigmaHistogramDataSet.setCircleColor(Color.CYAN);
-		// sigmaHistogramDataSet.setDrawCircles(false);
-		// sigmaHistogramDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		// lineData.addDataSet(sigmaHistogramDataSet);
-
-		// LineDataSet trendEffortsDataSet = new LineDataSet(
-		// mTrendEffortsEntryList, "Trend");
-		// trendEffortsDataSet.setColor(Color.BLUE);
-		// trendEffortsDataSet.setCircleColor(Color.BLUE);
-		// trendEffortsDataSet.setDrawCircles(false);
-		// trendEffortsDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		// lineData.addDataSet(trendEffortsDataSet);
-
-		// LineDataSet averageDataSet = new LineDataSet(mAverageEntryList,
-		// "Average");
-		// averageDataSet.setColor(Color.GRAY);
-		// averageDataSet.setDrawCircles(false);
-		// averageDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		// lineData.addDataSet(averageDataSet);
 
 		LineDataSet velocityDataSet = new LineDataSet(mVelocityEntryList,
 				"velocity");
@@ -347,8 +312,6 @@ public class StockMatchChartData {
 		mDIFEntryList.clear();
 		mDEAEntryList.clear();
 		mHistogramEntryList.clear();
-		// mSigmaHistogramEntryList.clear();
-		// mTrendsEffortsEntryList.clear();
 		mVelocityEntryList.clear();
 		mAccelerateEntryList.clear();
 	}
