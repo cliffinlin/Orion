@@ -10,9 +10,6 @@ import com.github.mikephil.charting.charts.ScatterChart.ScatterShape;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.LimitLine.LimitLabelPosition;
 import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.CombinedData;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -27,15 +24,10 @@ public class StockMatchChartData {
 	ArrayList<String> mXValuesMain = null;
 	ArrayList<String> mXValuesSub = null;
 
-	ArrayList<Entry> mDrawEntryList = null;
+	ArrayList<Entry> mScatterEntryList = null;
 	ArrayList<Entry> mFitEntryList = null;
 
 	ArrayList<Entry> mDIFEntryList = null;
-	ArrayList<Entry> mDEAEntryList = null;
-	ArrayList<BarEntry> mHistogramEntryList = null;
-	ArrayList<Entry> mAverageEntryList = null;
-	ArrayList<Entry> mVelocityEntryList = null;
-	ArrayList<Entry> mAccelerateEntryList = null;
 
 	ArrayList<LimitLine> mLimitLineList = null;
 
@@ -49,13 +41,13 @@ public class StockMatchChartData {
 		if (mXValuesMain == null) {
 			mXValuesMain = new ArrayList<String>();
 		}
-		
+
 		if (mXValuesSub == null) {
 			mXValuesSub = new ArrayList<String>();
 		}
-		
-		if (mDrawEntryList == null) {
-			mDrawEntryList = new ArrayList<Entry>();
+
+		if (mScatterEntryList == null) {
+			mScatterEntryList = new ArrayList<Entry>();
 		}
 
 		if (mFitEntryList == null) {
@@ -64,26 +56,6 @@ public class StockMatchChartData {
 
 		if (mDIFEntryList == null) {
 			mDIFEntryList = new ArrayList<Entry>();
-		}
-
-		if (mDEAEntryList == null) {
-			mDEAEntryList = new ArrayList<Entry>();
-		}
-
-		if (mHistogramEntryList == null) {
-			mHistogramEntryList = new ArrayList<BarEntry>();
-		}
-
-		if (mAverageEntryList == null) {
-			mAverageEntryList = new ArrayList<Entry>();
-		}
-
-		if (mVelocityEntryList == null) {
-			mVelocityEntryList = new ArrayList<Entry>();
-		}
-
-		if (mAccelerateEntryList == null) {
-			mAccelerateEntryList = new ArrayList<Entry>();
 		}
 
 		if (mCombinedDataMain == null) {
@@ -108,7 +80,7 @@ public class StockMatchChartData {
 	void setMainChartData() {
 		ScatterData scatterData = new ScatterData();
 
-		ScatterDataSet scatterDataSet = new ScatterDataSet(mDrawEntryList,
+		ScatterDataSet scatterDataSet = new ScatterDataSet(mScatterEntryList,
 				"Scatter");
 		scatterDataSet.setScatterShape(ScatterShape.CIRCLE);
 		scatterDataSet.setColor(Color.BLUE);
@@ -129,46 +101,15 @@ public class StockMatchChartData {
 	}
 
 	void setSubChartData() {
-		BarData barData = new BarData(mXValuesSub);
-		BarDataSet histogramDataSet = new BarDataSet(mHistogramEntryList,
-				"Histogram");
-		histogramDataSet.setBarSpacePercent(40f);
-		histogramDataSet.setIncreasingColor(Color.rgb(255, 50, 50));
-		histogramDataSet.setDecreasingColor(Color.rgb(50, 128, 50));
-		histogramDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		barData.addDataSet(histogramDataSet);
-
 		LineData lineData = new LineData(mXValuesSub);
 
 		LineDataSet difDataSet = new LineDataSet(mDIFEntryList, "DIF");
-		difDataSet.setColor(Color.YELLOW);
-		difDataSet.setCircleColor(Color.YELLOW);
+		difDataSet.setColor(Color.RED);
+		difDataSet.setCircleColor(Color.RED);
 		difDataSet.setDrawCircles(false);
 		difDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(difDataSet);
 
-		LineDataSet deaDataSet = new LineDataSet(mDEAEntryList, "DEA");
-		deaDataSet.setColor(Color.WHITE);
-		deaDataSet.setCircleColor(Color.WHITE);
-		deaDataSet.setDrawCircles(false);
-		deaDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		lineData.addDataSet(deaDataSet);
-
-		LineDataSet velocityDataSet = new LineDataSet(mVelocityEntryList,
-				"velocity");
-		velocityDataSet.setColor(Color.BLUE);
-		velocityDataSet.setDrawCircles(false);
-		velocityDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		lineData.addDataSet(velocityDataSet);
-
-		LineDataSet acclerateDataSet = new LineDataSet(mAccelerateEntryList,
-				"accelerate");
-		acclerateDataSet.setColor(Color.MAGENTA);
-		acclerateDataSet.setDrawCircles(false);
-		acclerateDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		lineData.addDataSet(acclerateDataSet);
-
-		mCombinedDataSub.setData(barData);
 		mCombinedDataSub.setData(lineData);
 	}
 
@@ -228,13 +169,8 @@ public class StockMatchChartData {
 	void clear() {
 		mXValuesMain.clear();
 		mXValuesSub.clear();
-		mDrawEntryList.clear();
+		mScatterEntryList.clear();
 		mFitEntryList.clear();
-		mAverageEntryList.clear();
 		mDIFEntryList.clear();
-		mDEAEntryList.clear();
-		mHistogramEntryList.clear();
-		mVelocityEntryList.clear();
-		mAccelerateEntryList.clear();
 	}
 }

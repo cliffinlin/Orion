@@ -4,15 +4,13 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
 import org.apache.commons.math.stat.regression.SimpleRegression;
 
-import android.app.LoaderManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -29,7 +27,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Setting;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
@@ -40,8 +37,6 @@ import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.XAxis.XAxisPosition;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.components.YAxis.YAxisLabelPosition;
-import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.CandleEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.DefaultYAxisValueFormatter;
 import com.github.mikephil.charting.listener.ChartTouchListener.ChartGesture;
@@ -49,14 +44,13 @@ import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.utils.Utils;
 
 public class StockMatchChartListActivity extends StorageActivity implements
-		LoaderManager.LoaderCallbacks<Cursor>, OnChartGestureListener {
+		OnChartGestureListener {
 
 	public static final String EXTRA_STOCK_MATCH_ID = "stock_match_id";
 
 	static final int ITEM_VIEW_TYPE_MAIN = 0;
 	static final int ITEM_VIEW_TYPE_SUB = 1;
 	static final int STOCK_PERIOD_ARRAY_SIZE = 7;
-	static final int LOADER_ID_STOCK_MATCH_LIST = STOCK_PERIOD_ARRAY_SIZE + 1;
 	static final int FLING_DISTANCE = 50;
 	static final int FLING_VELOCITY = 100;
 
@@ -300,7 +294,7 @@ public class StockMatchChartListActivity extends StorageActivity implements
 
 				getStockDataList(mStock_X.getId(), mPeriodArray.get(i),
 						mStockDataList_X);
-				
+
 				getStockDataList(mStock_Y.getId(), mPeriodArray.get(i),
 						mStockDataList_Y);
 
@@ -368,13 +362,18 @@ public class StockMatchChartListActivity extends StorageActivity implements
 		double y = 0;
 		double minX = 0;
 		double maxX = 0;
-		double slop = 0;
+		double slope = 0;
 		double intercept = 0;
 		double fitValue = 0;
+		double diffValue = 0;
+		double mean = 0;
+		double standardDeviation = 0;
 
 		SimpleRegression simpleRegression = new SimpleRegression();
+		DescriptiveStatistics descriptiveStatistics = new DescriptiveStatistics();
 
 		simpleRegression.clear();
+		descriptiveStatistics.clear();
 
 		minX = mStockDataList_X.get(0).getClose();
 		maxX = mStockDataList_X.get(0).getClose();
@@ -387,7 +386,7 @@ public class StockMatchChartListActivity extends StorageActivity implements
 			simpleRegression.addData(x, y);
 		}
 
-		slop = simpleRegression.getSlope();
+		slope = simpleRegression.getSlope();
 		intercept = simpleRegression.getIntercept();
 
 		stockMatchChartData.clear();
@@ -397,69 +396,43 @@ public class StockMatchChartListActivity extends StorageActivity implements
 			StockData stockData_Y = mStockDataList_Y.get(i);
 
 			index = stockMatchChartData.mXValuesMain.size();
-
 			stockMatchChartData.mXValuesMain.add(Double.toString(stockData_X
 					.getClose()));
 
-			Entry drawEntry = new Entry((float) stockData_Y.getClose(), index);
-			stockMatchChartData.mDrawEntryList.add(drawEntry);
+			Entry scatterEntry = new Entry((float) stockData_Y.getClose(),
+					index);
+			stockMatchChartData.mScatterEntryList.add(scatterEntry);
 
 			x = minX + i * (maxX - minX) / (mStockDataList_X.size() - 1);
-			fitValue = x * slop + intercept;
+			fitValue = x * slope + intercept;
 			Entry fitEntry = new Entry((float) fitValue, index);
 			stockMatchChartData.mFitEntryList.add(fitEntry);
+
+			diffValue = slope * stockData_X.getClose() - stockData_Y.getClose();
+			descriptiveStatistics.addValue(diffValue);
+		}
+
+		mean = descriptiveStatistics.getMean();
+		standardDeviation = descriptiveStatistics.getStandardDeviation();
+
+		for (int i = 0; i < mStockDataList_X.size(); i++) {
+			StockData stockData_X = mStockDataList_X.get(i);
+			StockData stockData_Y = mStockDataList_Y.get(i);
+
+			index = stockMatchChartData.mXValuesSub.size();
+			stockMatchChartData.mXValuesSub.add(stockData_X.getDate());
+
+			diffValue = slope * stockData_X.getClose() - stockData_Y.getClose();
+			if (standardDeviation != 0) {
+				diffValue = (diffValue - mean) / standardDeviation;
+			}
+			Entry difEntry = new Entry((float) diffValue, index);
+			stockMatchChartData.mDIFEntryList.add(difEntry);
 		}
 
 		stockMatchChartData.updateDescription(mStock);
 		stockMatchChartData.setMainChartData();
 		stockMatchChartData.setSubChartData();
-	}
-
-	@Override
-	public Loader<Cursor> onCreateLoader(int id, Bundle arg1) {
-		CursorLoader loader = null;
-
-		if (id == LOADER_ID_STOCK_MATCH_LIST) {
-			loader = getStockMatchCursorLoader();
-		} else {
-			loader = getStockMatchDataCursorLoader(mPeriodArray.get(id));
-		}
-
-		return loader;
-	}
-
-	@Override
-	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-		int id = 0;
-
-		if (loader == null) {
-			return;
-		}
-
-		id = loader.getId();
-
-		if (id == LOADER_ID_STOCK_MATCH_LIST) {
-			swapStockMatchCursor(cursor);
-		} else {
-			swapStockMatchDataCursor(mStockMatchChartDataList.get(id), cursor);
-		}
-	}
-
-	@Override
-	public void onLoaderReset(Loader<Cursor> loader) {
-		int id = 0;
-
-		if (loader == null) {
-			return;
-		}
-
-		id = loader.getId();
-
-		if (id == LOADER_ID_STOCK_MATCH_LIST) {
-			swapStockMatchCursor(null);
-		} else {
-			swapStockMatchDataCursor(mStockMatchChartDataList.get(id), null);
-		}
 	}
 
 	@Override
@@ -559,49 +532,6 @@ public class StockMatchChartListActivity extends StorageActivity implements
 		mListView.setAdapter(mStockMatchChartArrayAdapter);
 	}
 
-	void initLoader() {
-		mLoaderManager.initLoader(LOADER_ID_STOCK_MATCH_LIST, null, this);
-		for (int i = 0; i < STOCK_PERIOD_ARRAY_SIZE; i++) {
-			mLoaderManager.initLoader(i, null, this);
-		}
-	}
-
-	void restartLoader() {
-		mLoaderManager.restartLoader(LOADER_ID_STOCK_MATCH_LIST, null, this);
-		for (int i = 0; i < STOCK_PERIOD_ARRAY_SIZE; i++) {
-			mLoaderManager.restartLoader(i, null, this);
-		}
-	}
-
-	CursorLoader getStockMatchCursorLoader() {
-		String selection = "";
-		CursorLoader loader = null;
-
-		loader = new CursorLoader(this,
-				DatabaseContract.StockMatch.CONTENT_URI,
-				DatabaseContract.StockMatch.PROJECTION_ALL, selection, null,
-				mSortOrder);
-
-		return loader;
-	}
-
-	CursorLoader getStockMatchDataCursorLoader(String period) {
-		String selection = "";
-		String sortOrder = "";
-		CursorLoader loader = null;
-
-		selection = mStockDatabaseManager.getStockDataSelection(mStock.getId(),
-				period);
-
-		sortOrder = mStockDatabaseManager.getStockDataOrder();
-
-		loader = new CursorLoader(this, DatabaseContract.StockData.CONTENT_URI,
-				DatabaseContract.StockData.PROJECTION_ALL, selection, null,
-				sortOrder);
-
-		return loader;
-	}
-
 	void updateMenuAction() {
 		int size = 0;
 		if (mMenu == null) {
@@ -636,48 +566,6 @@ public class StockMatchChartListActivity extends StorageActivity implements
 		}
 	}
 
-	public void swapStockMatchCursor(Cursor cursor) {
-		if (mStockMatchList == null) {
-			return;
-		}
-
-		mStockMatchList.clear();
-
-		try {
-			if ((cursor != null) && (cursor.getCount() > 0)) {
-				while (cursor.moveToNext()) {
-					StockMatch stockMatch = StockMatch.obtain();
-					stockMatch.set(cursor);
-
-					if (stockMatch != null) {
-						if (mStockMatch.getId() == stockMatch.getId()) {
-							mStockMatch.set(cursor);
-
-							mStockMatchListIndex = mStockMatchList.size();
-
-							if (mMainHandler != null) {
-								mMainHandler.sendEmptyMessage(0);
-							}
-						}
-						mStockMatchList.add(stockMatch);
-					}
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (cursor != null) {
-				if (!cursor.isClosed()) {
-					cursor.close();
-				}
-			}
-		}
-
-		if (mMainHandler != null) {
-			mMainHandler.sendEmptyMessage(0);
-		}
-	}
-
 	public void swapStockMatchDataCursor(
 			StockMatchChartData stockMatchChartData, Cursor cursor) {
 		int index = 0;
@@ -699,40 +587,13 @@ public class StockMatchChartListActivity extends StorageActivity implements
 					if (mStockData.vertexOf(Constants.STOCK_VERTEX_TOP)) {
 						Entry drawEntry = new Entry(
 								(float) mStockData.getVertexHigh(), index);
-						stockMatchChartData.mDrawEntryList.add(drawEntry);
+						stockMatchChartData.mScatterEntryList.add(drawEntry);
 					} else if (mStockData
 							.vertexOf(Constants.STOCK_VERTEX_BOTTOM)) {
 						Entry drawEntry = new Entry(
 								(float) mStockData.getVertexLow(), index);
-						stockMatchChartData.mDrawEntryList.add(drawEntry);
+						stockMatchChartData.mScatterEntryList.add(drawEntry);
 					}
-
-					Entry difEntry = new Entry((float) mStockData.getDIF(),
-							index);
-					stockMatchChartData.mDIFEntryList.add(difEntry);
-
-					Entry deaEntry = new Entry((float) mStockData.getDEA(),
-							index);
-					stockMatchChartData.mDEAEntryList.add(deaEntry);
-
-					BarEntry histogramBarEntry = new BarEntry(
-							(float) mStockData.getHistogram(), index);
-					stockMatchChartData.mHistogramEntryList
-							.add(histogramBarEntry);
-
-					Entry averageEntry = new Entry(
-							(float) mStockData.getAverage(), index);
-					stockMatchChartData.mAverageEntryList.add(averageEntry);
-
-					Entry velocityEntry = new Entry(
-							(float) mStockData.getVelocity(), index);
-					stockMatchChartData.mVelocityEntryList.add(velocityEntry);
-
-					Entry acclerateEntry = new Entry(
-							(float) mStockData.getAcceleration(), index);
-					stockMatchChartData.mAccelerateEntryList
-							.add(acclerateEntry);
-
 				}
 			}
 		} catch (Exception e) {
