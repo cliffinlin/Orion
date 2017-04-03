@@ -104,7 +104,7 @@ public class StockMatchChartListActivity extends StorageActivity implements
 			}
 		}
 	};
-
+ 
 	MainHandler mMainHandler = new MainHandler(this);
 
 	@Override
