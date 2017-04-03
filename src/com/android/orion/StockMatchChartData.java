@@ -3,7 +3,6 @@ package com.android.orion;
 import java.util.ArrayList;
 
 import android.graphics.Color;
-import android.graphics.Paint;
 
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;
@@ -11,12 +10,9 @@ import com.github.mikephil.charting.charts.ScatterChart.ScatterShape;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.LimitLine.LimitLabelPosition;
 import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.components.YAxis.AxisDependency;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.CandleData;
-import com.github.mikephil.charting.data.CandleDataSet;
 import com.github.mikephil.charting.data.CandleEntry;
 import com.github.mikephil.charting.data.CombinedData;
 import com.github.mikephil.charting.data.Entry;
@@ -24,7 +20,6 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.ScatterData;
 import com.github.mikephil.charting.data.ScatterDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
 
 public class StockMatchChartData {
 	String mPeriod;
@@ -36,6 +31,7 @@ public class StockMatchChartData {
 	ArrayList<Entry> mAverage5EntryList = null;
 	ArrayList<Entry> mAverage10EntryList = null;
 	ArrayList<Entry> mDrawEntryList = null;
+	ArrayList<Entry> mFitEntryList = null;
 	ArrayList<Entry> mStrokeEntryList = null;
 	ArrayList<Entry> mSegmentEntryList = null;
 	ArrayList<Entry> mOverlapHighEntryList = null;
@@ -69,6 +65,10 @@ public class StockMatchChartData {
 			mDrawEntryList = new ArrayList<Entry>();
 		}
 
+		if (mFitEntryList == null) {
+			mFitEntryList = new ArrayList<Entry>();
+		}
+		
 		if (mStrokeEntryList == null) {
 			mStrokeEntryList = new ArrayList<Entry>();
 		}
@@ -138,25 +138,25 @@ public class StockMatchChartData {
 
 	void setMainChartData() {
 		ScatterData scatterData = new ScatterData();
-		
-		ScatterDataSet scatterDataSet = new ScatterDataSet(mDrawEntryList, "Scatter");
+
+		ScatterDataSet scatterDataSet = new ScatterDataSet(mDrawEntryList,
+				"Scatter");
 		scatterDataSet.setScatterShape(ScatterShape.CIRCLE);
 		scatterDataSet.setColor(Color.BLUE);
 		scatterDataSet.setScatterShapeSize(8f);
 		scatterDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		scatterData.addDataSet(scatterDataSet);
-//		
-//		LineData lineData = new LineData();
-//
-//		LineDataSet drawDataSet = new LineDataSet(mDrawEntryList, "Draw");
-//		drawDataSet.setColor(Color.GRAY);
-//		drawDataSet.setCircleColor(Color.GRAY);
-//		drawDataSet.setCircleSize(3f);
-//		drawDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-//		lineData.addDataSet(drawDataSet);
+
+		LineData lineData = new LineData();
+
+		LineDataSet drawDataSet = new LineDataSet(mFitEntryList, "Fit");
+		drawDataSet.setColor(Color.RED);
+		drawDataSet.setDrawCircles(false);
+		drawDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+		lineData.addDataSet(drawDataSet);
 
 		mCombinedDataMain.setData(scatterData);
-//		mCombinedDataMain.setData(lineData);
+		mCombinedDataMain.setData(lineData);
 	}
 
 	void setSubChartData() {
@@ -259,6 +259,7 @@ public class StockMatchChartData {
 	void clear() {
 		mXValues.clear();
 		mDrawEntryList.clear();
+		mFitEntryList.clear();
 		mStrokeEntryList.clear();
 		mSegmentEntryList.clear();
 		mCandleEntryList.clear();

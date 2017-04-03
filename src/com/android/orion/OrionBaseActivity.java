@@ -101,7 +101,7 @@ public class OrionBaseActivity extends Activity {
 		if (mStockList == null) {
 			mStockList = new ArrayList<Stock>();
 		}
-		
+
 		if (mStockDataList == null) {
 			mStockDataList = new ArrayList<StockData>();
 		}

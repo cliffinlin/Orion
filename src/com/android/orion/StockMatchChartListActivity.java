@@ -104,7 +104,7 @@ public class StockMatchChartListActivity extends StorageActivity implements
 							|| intent.getLongExtra(
 									Constants.EXTRA_KEY_STOCK_ID, 0) == mStock_Y
 									.getId()) {
-//						restartLoader();
+						// restartLoader();
 					}
 				}
 			}
@@ -201,7 +201,7 @@ public class StockMatchChartListActivity extends StorageActivity implements
 			startService(Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE,
 					Constants.EXECUTE_IMMEDIATE, mStock.getSE(),
 					mStock.getCode());
-//			restartLoader();
+			// restartLoader();
 			return true;
 		}
 		case R.id.action_remove_favorite: {
@@ -233,7 +233,7 @@ public class StockMatchChartListActivity extends StorageActivity implements
 			}
 		}
 
-//		restartLoader();
+		// restartLoader();
 		startLoadTask(EXECUTE_LOAD_STOCK_MATCH_LIST);
 	}
 
@@ -309,8 +309,10 @@ public class StockMatchChartListActivity extends StorageActivity implements
 					continue;
 				}
 
-				SimpleRegression simpleRegression = calcSimpleRegression();
-				
+				if (mStockDataList_X.size() < Constants.STOCK_VERTEX_TYPING_SIZE) {
+					continue;
+				}
+
 				setupStockMatchChat(mStockMatchChartDataList.get(i));
 			}
 		}
@@ -360,20 +362,34 @@ public class StockMatchChartListActivity extends StorageActivity implements
 		}
 	}
 
-	SimpleRegression calcSimpleRegression() {
+	void setupStockMatchChat(StockMatchChartData stockMatchChartData) {
+		int index = 0;
+
+		double x = 0;
+		double y = 0;
+		double minX = 0;
+		double maxX = 0;
+		double slop = 0;
+		double intercept = 0;
+		double fitValue = 0;
+
 		SimpleRegression simpleRegression = new SimpleRegression();
 
 		simpleRegression.clear();
+
+		minX = mStockDataList_X.get(0).getClose();
+		maxX = mStockDataList_X.get(0).getClose();
 		for (int i = 0; i < mStockDataList_X.size(); i++) {
-			simpleRegression.addData(mStockDataList_X.get(i).getClose(),
-					mStockDataList_Y.get(i).getClose());
+			x = mStockDataList_X.get(i).getClose();
+			y = mStockDataList_Y.get(i).getClose();
+			minX = Math.min(minX, x);
+			maxX = Math.max(maxX, x);
+
+			simpleRegression.addData(x, y);
 		}
 
-		return simpleRegression;
-	}
-
-	void setupStockMatchChat(StockMatchChartData stockMatchChartData) {
-		int index = 0;
+		slop = simpleRegression.getSlope();
+		intercept = simpleRegression.getIntercept();
 
 		stockMatchChartData.clear();
 
@@ -386,9 +402,13 @@ public class StockMatchChartListActivity extends StorageActivity implements
 			stockMatchChartData.mXValues.add(Double.toString(stockData_X
 					.getClose()));
 
-			Entry drawEntry = new Entry((float) stockData_Y.getClose(),
-					index);
+			Entry drawEntry = new Entry((float) stockData_Y.getClose(), index);
 			stockMatchChartData.mDrawEntryList.add(drawEntry);
+
+			x = minX + i * (maxX - minX) / (mStockDataList_X.size() - 1);
+			fitValue = x * slop + intercept;
+			Entry fitEntry = new Entry((float) fitValue, index);
+			stockMatchChartData.mFitEntryList.add(fitEntry);
 		}
 
 		stockMatchChartData.updateDescription(mStock);
@@ -813,7 +833,7 @@ public class StockMatchChartListActivity extends StorageActivity implements
 
 		mStockMatch = mStockMatchList.get(mStockMatchListIndex);
 
-//		restartLoader();
+		// restartLoader();
 	}
 
 	static class MainHandler extends Handler {
