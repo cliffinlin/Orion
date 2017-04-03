@@ -5,11 +5,10 @@ import java.util.ArrayList;
 import android.graphics.Color;
 
 import com.android.orion.database.Stock;
-import com.android.orion.database.StockDeal;
 import com.github.mikephil.charting.charts.ScatterChart.ScatterShape;
 import com.github.mikephil.charting.components.LimitLine;
-import com.github.mikephil.charting.components.LimitLine.LimitLabelPosition;
 import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.components.LimitLine.LimitLabelPosition;
 import com.github.mikephil.charting.data.CombinedData;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -101,8 +100,6 @@ public class StockMatchChartData {
 	}
 
 	void setSubChartData() {
-		setLimitLine();
-		
 		LineData lineData = new LineData(mXValuesSub);
 
 		LineDataSet difDataSet = new LineDataSet(mDIFEntryList, "DIF");
@@ -120,7 +117,11 @@ public class StockMatchChartData {
 		if (stock == null) {
 			return;
 		}
+		
 		mDescription += mPeriod;
+		mDescription += " ";
+		
+		mDescription += stock.getName();
 		mDescription += " ";
 
 		mDescription += stock.getPrice() + "  ";
@@ -129,11 +130,12 @@ public class StockMatchChartData {
 		} else if (stock.getNet() < 0) {
 			mDescription += "-";
 		}
+		
 		mDescription += stock.getNet();
 	}
 
-	void setLimitLine() {
-		if (mLimitLineList == null) {
+	void updateLimitLine(Stock stock_X, Stock stock_Y) {
+		if ((stock_X == null) || (stock_Y == null) || (mLimitLineList == null)) {
 			return;
 		}
 
@@ -141,17 +143,26 @@ public class StockMatchChartData {
 
 		for (int i = 0; i < 3; i++) {
 			LimitLine limitLine = new LimitLine(0);
+
 			limitLine.setLineWidth(1);
+			limitLine.setTextSize(10f);
+			
 
 			if (i == 0) {
 				limitLine.setLimit(-1);
 				limitLine.setLineColor(Color.RED);
+				limitLine.setTextColor(Color.RED);
+				limitLine.setLabel("          " + stock_X.getName());
+				limitLine.setLabelPosition(LimitLabelPosition.LEFT_BOTTOM);
 			} else if (i == 1) {
 				limitLine.setLimit(0);
-				limitLine.setLineColor(Color.GREEN);	
+				limitLine.setLineColor(Color.GREEN);
 			} else {
 				limitLine.setLimit(1);
 				limitLine.setLineColor(Color.RED);
+				limitLine.setTextColor(Color.RED);
+				limitLine.setLabel("          " + stock_Y.getName());
+				limitLine.setLabelPosition(LimitLabelPosition.LEFT_TOP);
 			}
 
 			mLimitLineList.add(limitLine);

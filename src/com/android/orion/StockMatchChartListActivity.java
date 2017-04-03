@@ -423,18 +423,20 @@ public class StockMatchChartListActivity extends StorageActivity implements
 			stockMatchChartData.mXValuesSub.add(stockData_X.getDate());
 
 			diffValue = stockData_Y.getClose() - slope * stockData_X.getClose();
-			
+
 			if (standardDeviation == 0) {
 				diffValue = 0;
 			} else {
 				diffValue = (diffValue - mean) / standardDeviation;
 			}
-			
+
 			Entry difEntry = new Entry((float) diffValue, index);
 			stockMatchChartData.mDIFEntryList.add(difEntry);
 		}
 
-		stockMatchChartData.updateDescription(mStock);
+		stockMatchChartData.updateDescription(mStock_X);
+		stockMatchChartData.updateLimitLine(mStock_X, mStock_Y);
+
 		stockMatchChartData.setMainChartData();
 		stockMatchChartData.setSubChartData();
 	}
