@@ -1,41 +1,26 @@
 package com.android.orion;
 
+import android.database.ContentObserver;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 
 public class DatabaseActivity extends OrionBaseActivity {
 
 	public static final long RESULT_FAILURE = -1;
 	public static final long RESULT_SUCCESS = 0;
 
+	protected DatabaseContentObserver mDatabaseContentObserver = null;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-	}
 
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-	}
-
-	void startLoadTask(Object... params) {
-		LoadTask task = new LoadTask();
-		task.execute(params);
-	}
-
-	void startSaveTask(Object... params) {
-		SaveTask task = new SaveTask();
-		task.execute(params);
+		if (mDatabaseContentObserver == null) {
+			mDatabaseContentObserver = new DatabaseContentObserver(
+					new Handler());
+		}
 	}
 
 	Long doInBackgroundLoad(Object... params) {
@@ -52,7 +37,17 @@ public class DatabaseActivity extends OrionBaseActivity {
 	void onPostExecuteSave(Long result) {
 	}
 
-	public class LoadTask extends AsyncTask<Object, Integer, Long> {
+	void startLoadTask(Object... params) {
+		LoadAsyncTask loadAsyncTask = new LoadAsyncTask();
+		loadAsyncTask.execute(params);
+	}
+
+	void startSaveTask(Object... params) {
+		SaveAsyncTask saveAsyncTask = new SaveAsyncTask();
+		saveAsyncTask.execute(params);
+	}
+
+	class LoadAsyncTask extends AsyncTask<Object, Integer, Long> {
 
 		@Override
 		protected Long doInBackground(Object... params) {
@@ -62,11 +57,12 @@ public class DatabaseActivity extends OrionBaseActivity {
 		@Override
 		protected void onPostExecute(Long result) {
 			super.onPostExecute(result);
+
 			onPostExecuteLoad(result);
 		}
 	}
 
-	public class SaveTask extends AsyncTask<Object, Integer, Long> {
+	class SaveAsyncTask extends AsyncTask<Object, Integer, Long> {
 
 		@Override
 		protected Long doInBackground(Object... params) {
@@ -76,7 +72,25 @@ public class DatabaseActivity extends OrionBaseActivity {
 		@Override
 		protected void onPostExecute(Long result) {
 			super.onPostExecute(result);
+
 			onPostExecuteSave(result);
+		}
+	}
+
+	void onDatabaseChanged(boolean selfChange, Uri uri) {
+	}
+
+	class DatabaseContentObserver extends ContentObserver {
+
+		public DatabaseContentObserver(Handler handler) {
+			super(handler);
+		}
+
+		@Override
+		public void onChange(boolean selfChange, Uri uri) {
+			super.onChange(selfChange, uri);
+
+			onDatabaseChanged(selfChange, uri);
 		}
 	}
 }

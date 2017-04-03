@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.LoaderManager;
+import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -36,6 +37,8 @@ public class OrionBaseActivity extends Activity {
 
 	String mAction = null;
 	Intent mIntent = null;
+
+	ProgressDialog mProgressDialog = null;
 
 	ContentResolver mContentResolver = null;
 	LoaderManager mLoaderManager = null;
@@ -115,6 +118,11 @@ public class OrionBaseActivity extends Activity {
 			mStockDatabaseManager = StockDatabaseManager.getInstance(this);
 		}
 
+		if (mProgressDialog == null) {
+			mProgressDialog = new ProgressDialog(mContext,
+					ProgressDialog.THEME_HOLO_LIGHT);
+		}
+
 		bindService();
 	}
 
@@ -135,6 +143,20 @@ public class OrionBaseActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 		mResumed = true;
+	}
+
+	public void showProgressDialog(String content) {
+		if (mProgressDialog != null) {
+			mProgressDialog.setMessage(content);
+			mProgressDialog.setCancelable(false);
+			mProgressDialog.show();
+		}
+	}
+
+	public void hideProgressDialog() {
+		if (mProgressDialog != null) {
+			mProgressDialog.dismiss();
+		}
 	}
 
 	void bindService() {

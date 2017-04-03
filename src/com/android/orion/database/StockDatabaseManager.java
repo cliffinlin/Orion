@@ -930,7 +930,7 @@ public class StockDatabaseManager extends DatabaseManager {
 			closeCursor(cursor);
 		}
 	}
-
+	
 	public void getStockMatchList(Stock stock,
 			ArrayList<StockMatch> stockMatchList) {
 		Cursor cursor = null;

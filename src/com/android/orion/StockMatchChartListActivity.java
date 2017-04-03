@@ -30,7 +30,6 @@ import android.widget.ListView;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Setting;
 import com.android.orion.database.Stock;
-import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockMatch;
 import com.android.orion.utility.Utility;
 import com.github.mikephil.charting.charts.CombinedChart;
@@ -46,7 +45,7 @@ import com.github.mikephil.charting.listener.ChartTouchListener.ChartGesture;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.utils.Utils;
 
-public class StockMatchChartListActivity extends OrionBaseActivity implements
+public class StockMatchChartListActivity extends StorageActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnChartGestureListener {
 
 	public static final String EXTRA_STOCK_MATCH_ID = "stock_match_id";
@@ -57,6 +56,11 @@ public class StockMatchChartListActivity extends OrionBaseActivity implements
 	static final int LOADER_ID_STOCK_MATCH_LIST = STOCK_PERIOD_ARRAY_SIZE + 1;
 	static final int FLING_DISTANCE = 50;
 	static final int FLING_VELOCITY = 100;
+
+	static final int EXECUTE_LOAD_STOCK_MATCH_LIST = 0;
+	static final int EXECUTE_LOAD_STOCK_DATA = 1;
+
+	static final long RESULT_LOAD_STOCK_MATCH_LIST_SUCCESS = RESULT_SUCCESS + 1;
 
 	int mStockMatchListIndex = 0;
 
@@ -77,8 +81,6 @@ public class StockMatchChartListActivity extends OrionBaseActivity implements
 	ArrayList<StockMatchChartItemMain> mStockMatchChartItemMainList = null;
 	ArrayList<StockMatchChartItemSub> mStockMatchChartItemSubList = null;
 	ArrayList<StockMatchChartData> mStockMatchChartDataList = null;
-
-	ArrayList<StockDeal> mStockDealList = null;
 
 	private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
 		@Override
@@ -144,7 +146,7 @@ public class StockMatchChartListActivity extends OrionBaseActivity implements
 				mBroadcastReceiver,
 				new IntentFilter(Constants.ACTION_SERVICE_FINISHED));
 
-		initLoader();
+		startLoadTask(EXECUTE_LOAD_STOCK_MATCH_LIST);
 
 		updateTitle();
 	}
@@ -227,6 +229,67 @@ public class StockMatchChartListActivity extends OrionBaseActivity implements
 
 		LocalBroadcastManager.getInstance(this).unregisterReceiver(
 				mBroadcastReceiver);
+	}
+
+	Long doInBackgroundLoad(Object... params) {
+		super.doInBackgroundSave(params);
+
+		int execute = (Integer) params[0];
+
+		Cursor cursor = null;
+		String selection = null;
+
+		if (execute == EXECUTE_LOAD_STOCK_MATCH_LIST) {
+
+			if (mStockMatchList == null) {
+				return RESULT_FAILURE;
+			}
+
+			mStockMatchList.clear();
+
+			try {
+				cursor = mStockDatabaseManager.queryStockMatch(selection, null,
+						null);
+
+				if ((cursor != null) && (cursor.getCount() > 0)) {
+					while (cursor.moveToNext()) {
+						StockMatch stockMatch = StockMatch.obtain();
+						stockMatch.set(cursor);
+
+						if (mStockMatch.getId() == stockMatch.getId()) {
+							mStockMatch.set(cursor);
+
+							mStockMatchListIndex = mStockMatchList.size();
+
+							if (mMainHandler != null) {
+								mMainHandler.sendEmptyMessage(0);
+							}
+						}
+
+						mStockMatchList.add(stockMatch);
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				mStockDatabaseManager.closeCursor(cursor);
+			}
+
+			return RESULT_LOAD_STOCK_MATCH_LIST_SUCCESS;
+		} else {
+			for (int i = 0; i < STOCK_PERIOD_ARRAY_SIZE; i++) {
+			}
+		}
+
+		return RESULT_SUCCESS;
+	}
+
+	void onPostExecuteLoad(Long result) {
+		super.onPostExecuteLoad(result);
+
+		if (result == RESULT_LOAD_STOCK_MATCH_LIST_SUCCESS) {
+			startLoadTask(EXECUTE_LOAD_STOCK_DATA);
+		}
 	}
 
 	@Override
@@ -341,10 +404,6 @@ public class StockMatchChartListActivity extends OrionBaseActivity implements
 	void initListView() {
 		mListView = (ListView) findViewById(R.id.listView);
 
-		if (mStockDealList == null) {
-			mStockDealList = new ArrayList<StockDeal>();
-		}
-
 		if (mStockMatchChartDataList == null) {
 			mStockMatchChartDataList = new ArrayList<StockMatchChartData>();
 		}
@@ -420,38 +479,6 @@ public class StockMatchChartListActivity extends OrionBaseActivity implements
 		return loader;
 	}
 
-	void loadStockDealList() {
-		Cursor cursor = null;
-		String selection = "";
-
-		if ((mStock == null) || (mStockDealList == null)) {
-			return;
-		}
-
-		mStockDealList.clear();
-
-		selection = DatabaseContract.COLUMN_SE + " = " + "\'" + mStock.getSE()
-				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
-				+ mStock.getCode() + "\'";
-
-		try {
-			cursor = mStockDatabaseManager
-					.queryStockDeal(selection, null, null);
-
-			if ((cursor != null) && (cursor.getCount() > 0)) {
-				while (cursor.moveToNext()) {
-					StockDeal stockDeal = new StockDeal();
-					stockDeal.set(cursor);
-					mStockDealList.add(stockDeal);
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			mStockDatabaseManager.closeCursor(cursor);
-		}
-	}
-
 	void updateMenuAction() {
 		int size = 0;
 		if (mMenu == null) {
@@ -461,7 +488,7 @@ public class StockMatchChartListActivity extends OrionBaseActivity implements
 		MenuItem actionPrev = mMenu.findItem(R.id.action_prev);
 		MenuItem actionNext = mMenu.findItem(R.id.action_next);
 
-		size = mStockList.size();
+		size = mStockMatchList.size();
 
 		if (actionPrev != null) {
 			if (size > 1) {
@@ -648,10 +675,7 @@ public class StockMatchChartListActivity extends OrionBaseActivity implements
 
 		updateTitle();
 
-		mStockDatabaseManager.getStockDealList(mStock, mStockDealList);
-
 		stockMatchChartData.updateDescription(mStock);
-		stockMatchChartData.updateLimitLine(mStockDealList);
 		stockMatchChartData.setMainChartData();
 		stockMatchChartData.setSubChartData();
 
@@ -661,7 +685,7 @@ public class StockMatchChartListActivity extends OrionBaseActivity implements
 	void navigateStockMatch(int direction) {
 		boolean loop = true;
 
-		if ((mStockList == null) || (mStockList.size() == 0)) {
+		if ((mStockMatchList == null) || (mStockMatchList.size() == 0)) {
 			return;
 		}
 
