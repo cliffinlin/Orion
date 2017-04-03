@@ -47,6 +47,7 @@ public class OrionBaseActivity extends Activity {
 	StockData mStockData = null;
 
 	ArrayList<Stock> mStockList = null;
+	ArrayList<StockData> mStockDataList = null;
 
 	ArrayMap<String, Stock> mStockDealArrayMap = null;
 
@@ -99,6 +100,10 @@ public class OrionBaseActivity extends Activity {
 
 		if (mStockList == null) {
 			mStockList = new ArrayList<Stock>();
+		}
+		
+		if (mStockDataList == null) {
+			mStockDataList = new ArrayList<StockData>();
 		}
 
 		if (mStockDealArrayMap == null) {

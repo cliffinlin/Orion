@@ -7,6 +7,7 @@ import android.graphics.Paint;
 
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;
+import com.github.mikephil.charting.charts.ScatterChart.ScatterShape;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.LimitLine.LimitLabelPosition;
 import com.github.mikephil.charting.components.YAxis;
@@ -21,6 +22,9 @@ import com.github.mikephil.charting.data.CombinedData;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.data.ScatterData;
+import com.github.mikephil.charting.data.ScatterDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
 public class StockMatchChartData {
 	String mPeriod;
@@ -133,72 +137,26 @@ public class StockMatchChartData {
 	}
 
 	void setMainChartData() {
-		CandleData candleData = new CandleData();
-		CandleDataSet candleDataSet = new CandleDataSet(mCandleEntryList, "K");
-		candleDataSet.setDecreasingColor(Color.rgb(50, 128, 50));
-		candleDataSet.setDecreasingPaintStyle(Paint.Style.FILL);
-		candleDataSet.setIncreasingColor(Color.rgb(255, 50, 50));
-		candleDataSet.setIncreasingPaintStyle(Paint.Style.FILL);
-		candleDataSet.setShadowColorSameAsCandle(true);
-		candleDataSet.setAxisDependency(AxisDependency.LEFT);
-		candleDataSet.setColor(Color.RED);
-		candleDataSet.setHighLightColor(Color.TRANSPARENT);
-		candleDataSet.setDrawTags(true);
-		candleData.addDataSet(candleDataSet);
+		ScatterData scatterData = new ScatterData();
+		
+		ScatterDataSet scatterDataSet = new ScatterDataSet(mDrawEntryList, "Scatter");
+		scatterDataSet.setScatterShape(ScatterShape.CIRCLE);
+		scatterDataSet.setColor(Color.BLUE);
+		scatterDataSet.setScatterShapeSize(8f);
+		scatterDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+		scatterData.addDataSet(scatterDataSet);
+//		
+//		LineData lineData = new LineData();
+//
+//		LineDataSet drawDataSet = new LineDataSet(mDrawEntryList, "Draw");
+//		drawDataSet.setColor(Color.GRAY);
+//		drawDataSet.setCircleColor(Color.GRAY);
+//		drawDataSet.setCircleSize(3f);
+//		drawDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+//		lineData.addDataSet(drawDataSet);
 
-		LineData lineData = new LineData();
-
-		LineDataSet average5DataSet = new LineDataSet(mAverage5EntryList, "MA5");
-		average5DataSet.setColor(Color.WHITE);
-		average5DataSet.setDrawCircles(false);
-		average5DataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		lineData.addDataSet(average5DataSet);
-
-		LineDataSet average10DataSet = new LineDataSet(mAverage10EntryList,
-				"MA10");
-		average10DataSet.setColor(Color.CYAN);
-		average10DataSet.setDrawCircles(false);
-		average10DataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		lineData.addDataSet(average10DataSet);
-
-		LineDataSet drawDataSet = new LineDataSet(mDrawEntryList, "Draw");
-		drawDataSet.setColor(Color.GRAY);
-		drawDataSet.setCircleColor(Color.GRAY);
-		drawDataSet.setCircleSize(3f);
-		drawDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		lineData.addDataSet(drawDataSet);
-
-		LineDataSet strokeDataSet = new LineDataSet(mStrokeEntryList, "Stroke");
-		strokeDataSet.setColor(Color.YELLOW);
-		strokeDataSet.setCircleColor(Color.YELLOW);
-		strokeDataSet.setCircleSize(3f);
-		strokeDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		lineData.addDataSet(strokeDataSet);
-
-		LineDataSet segmentDataSet = new LineDataSet(mSegmentEntryList,
-				"Segment");
-		segmentDataSet.setColor(Color.BLACK);
-		segmentDataSet.setCircleColor(Color.BLACK);
-		segmentDataSet.setCircleSize(3f);
-		segmentDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		lineData.addDataSet(segmentDataSet);
-
-		LineDataSet overlapHighDataSet = new LineDataSet(mOverlapHighEntryList,
-				"overHigh");
-		overlapHighDataSet.setColor(Color.MAGENTA);
-		overlapHighDataSet.setDrawCircles(false);
-		overlapHighDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		lineData.addDataSet(overlapHighDataSet);
-
-		LineDataSet overlapLowDataSet = new LineDataSet(mOverlapLowEntryList,
-				"overLow");
-		overlapLowDataSet.setColor(Color.BLUE);
-		overlapLowDataSet.setDrawCircles(false);
-		overlapLowDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		lineData.addDataSet(overlapLowDataSet);
-
-		mCombinedDataMain.setData(candleData);
-		mCombinedDataMain.setData(lineData);
+		mCombinedDataMain.setData(scatterData);
+//		mCombinedDataMain.setData(lineData);
 	}
 
 	void setSubChartData() {
