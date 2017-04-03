@@ -249,11 +249,9 @@ public class StockMatchChartListActivity extends StorageActivity implements
 		super.doInBackgroundSave(params);
 
 		int execute = (Integer) params[0];
-		int index = 0;
 
 		Cursor cursor = null;
 		String selection = null;
-		String sortOrder = null;
 
 		if ((mStockMatchList == null) || (mStockData == null)) {
 			return RESULT_FAILURE;
@@ -302,6 +300,7 @@ public class StockMatchChartListActivity extends StorageActivity implements
 
 				getStockDataList(mStock_X.getId(), mPeriodArray.get(i),
 						mStockDataList_X);
+				
 				getStockDataList(mStock_Y.getId(), mPeriodArray.get(i),
 						mStockDataList_Y);
 
@@ -397,9 +396,9 @@ public class StockMatchChartListActivity extends StorageActivity implements
 			StockData stockData_X = mStockDataList_X.get(i);
 			StockData stockData_Y = mStockDataList_Y.get(i);
 
-			index = stockMatchChartData.mXValues.size();
+			index = stockMatchChartData.mXValuesMain.size();
 
-			stockMatchChartData.mXValues.add(Double.toString(stockData_X
+			stockMatchChartData.mXValuesMain.add(Double.toString(stockData_X
 					.getClose()));
 
 			Entry drawEntry = new Entry((float) stockData_Y.getClose(), index);
@@ -692,18 +691,10 @@ public class StockMatchChartListActivity extends StorageActivity implements
 		try {
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				while (cursor.moveToNext()) {
-					index = stockMatchChartData.mXValues.size();
+					index = stockMatchChartData.mXValuesMain.size();
 					mStockData.set(cursor);
 
-					stockMatchChartData.mXValues.add(mStockData.getDate());
-
-					CandleEntry candleEntry = new CandleEntry(index,
-							(float) mStockData.getHigh(),
-							(float) mStockData.getLow(),
-							(float) mStockData.getOpen(),
-							(float) mStockData.getClose(),
-							mStockData.getAction());
-					stockMatchChartData.mCandleEntryList.add(candleEntry);
+					stockMatchChartData.mXValuesMain.add(mStockData.getDate());
 
 					if (mStockData.vertexOf(Constants.STOCK_VERTEX_TOP)) {
 						Entry drawEntry = new Entry(
@@ -715,49 +706,6 @@ public class StockMatchChartListActivity extends StorageActivity implements
 								(float) mStockData.getVertexLow(), index);
 						stockMatchChartData.mDrawEntryList.add(drawEntry);
 					}
-
-					if (mStockData.vertexOf(Constants.STOCK_VERTEX_TOP_STROKE)) {
-						Entry strokeEntry = new Entry(
-								(float) mStockData.getVertexHigh(), index);
-						stockMatchChartData.mStrokeEntryList.add(strokeEntry);
-					} else if (mStockData
-							.vertexOf(Constants.STOCK_VERTEX_BOTTOM_STROKE)) {
-						Entry strokeEntry = new Entry(
-								(float) mStockData.getVertexLow(), index);
-						stockMatchChartData.mStrokeEntryList.add(strokeEntry);
-					}
-
-					if (mStockData.vertexOf(Constants.STOCK_VERTEX_TOP_SEGMENT)) {
-						Entry segmentEntry = new Entry(
-								(float) mStockData.getVertexHigh(), index);
-						stockMatchChartData.mSegmentEntryList.add(segmentEntry);
-					} else if (mStockData
-							.vertexOf(Constants.STOCK_VERTEX_BOTTOM_SEGMENT)) {
-						Entry segmentEntry = new Entry(
-								(float) mStockData.getVertexLow(), index);
-						stockMatchChartData.mSegmentEntryList.add(segmentEntry);
-					}
-
-					if ((mStockData.getOverlapHigh() > 0)
-							&& (mStockData.getOverlapLow() > 0)) {
-						Entry overlayHighEntry = new Entry(
-								(float) mStockData.getOverlapHigh(), index);
-						stockMatchChartData.mOverlapHighEntryList
-								.add(overlayHighEntry);
-
-						Entry overlapLowEntry = new Entry(
-								(float) mStockData.getOverlapLow(), index);
-						stockMatchChartData.mOverlapLowEntryList
-								.add(overlapLowEntry);
-					}
-
-					Entry average5Entry = new Entry(
-							(float) mStockData.getAverage5(), index);
-					stockMatchChartData.mAverage5EntryList.add(average5Entry);
-
-					Entry average10Entry = new Entry(
-							(float) mStockData.getAverage10(), index);
-					stockMatchChartData.mAverage10EntryList.add(average10Entry);
 
 					Entry difEntry = new Entry((float) mStockData.getDIF(),
 							index);

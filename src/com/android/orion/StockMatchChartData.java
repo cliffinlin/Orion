@@ -13,7 +13,6 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.CandleEntry;
 import com.github.mikephil.charting.data.CombinedData;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -25,17 +24,11 @@ public class StockMatchChartData {
 	String mPeriod;
 	String mDescription;
 
-	ArrayList<String> mXValues = null;
+	ArrayList<String> mXValuesMain = null;
+	ArrayList<String> mXValuesSub = null;
 
-	ArrayList<CandleEntry> mCandleEntryList = null;
-	ArrayList<Entry> mAverage5EntryList = null;
-	ArrayList<Entry> mAverage10EntryList = null;
 	ArrayList<Entry> mDrawEntryList = null;
 	ArrayList<Entry> mFitEntryList = null;
-	ArrayList<Entry> mStrokeEntryList = null;
-	ArrayList<Entry> mSegmentEntryList = null;
-	ArrayList<Entry> mOverlapHighEntryList = null;
-	ArrayList<Entry> mOverlapLowEntryList = null;
 
 	ArrayList<Entry> mDIFEntryList = null;
 	ArrayList<Entry> mDEAEntryList = null;
@@ -53,44 +46,20 @@ public class StockMatchChartData {
 	}
 
 	public StockMatchChartData(String period) {
-		if (mXValues == null) {
-			mXValues = new ArrayList<String>();
+		if (mXValuesMain == null) {
+			mXValuesMain = new ArrayList<String>();
 		}
-
-		if (mCandleEntryList == null) {
-			mCandleEntryList = new ArrayList<CandleEntry>();
+		
+		if (mXValuesSub == null) {
+			mXValuesSub = new ArrayList<String>();
 		}
-
+		
 		if (mDrawEntryList == null) {
 			mDrawEntryList = new ArrayList<Entry>();
 		}
 
 		if (mFitEntryList == null) {
 			mFitEntryList = new ArrayList<Entry>();
-		}
-		
-		if (mStrokeEntryList == null) {
-			mStrokeEntryList = new ArrayList<Entry>();
-		}
-
-		if (mSegmentEntryList == null) {
-			mSegmentEntryList = new ArrayList<Entry>();
-		}
-
-		if (mOverlapHighEntryList == null) {
-			mOverlapHighEntryList = new ArrayList<Entry>();
-		}
-
-		if (mOverlapLowEntryList == null) {
-			mOverlapLowEntryList = new ArrayList<Entry>();
-		}
-
-		if (mAverage5EntryList == null) {
-			mAverage5EntryList = new ArrayList<Entry>();
-		}
-
-		if (mAverage10EntryList == null) {
-			mAverage10EntryList = new ArrayList<Entry>();
 		}
 
 		if (mDIFEntryList == null) {
@@ -118,11 +87,11 @@ public class StockMatchChartData {
 		}
 
 		if (mCombinedDataMain == null) {
-			mCombinedDataMain = new CombinedData(mXValues);
+			mCombinedDataMain = new CombinedData(mXValuesMain);
 		}
 
 		if (mCombinedDataSub == null) {
-			mCombinedDataSub = new CombinedData(mXValues);
+			mCombinedDataSub = new CombinedData(mXValuesSub);
 		}
 
 		if (mLimitLineList == null) {
@@ -147,7 +116,7 @@ public class StockMatchChartData {
 		scatterDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		scatterData.addDataSet(scatterDataSet);
 
-		LineData lineData = new LineData();
+		LineData lineData = new LineData(mXValuesMain);
 
 		LineDataSet drawDataSet = new LineDataSet(mFitEntryList, "Fit");
 		drawDataSet.setColor(Color.RED);
@@ -160,7 +129,7 @@ public class StockMatchChartData {
 	}
 
 	void setSubChartData() {
-		BarData barData = new BarData(mXValues);
+		BarData barData = new BarData(mXValuesSub);
 		BarDataSet histogramDataSet = new BarDataSet(mHistogramEntryList,
 				"Histogram");
 		histogramDataSet.setBarSpacePercent(40f);
@@ -169,7 +138,7 @@ public class StockMatchChartData {
 		histogramDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		barData.addDataSet(histogramDataSet);
 
-		LineData lineData = new LineData(mXValues);
+		LineData lineData = new LineData(mXValuesSub);
 
 		LineDataSet difDataSet = new LineDataSet(mDIFEntryList, "DIF");
 		difDataSet.setColor(Color.YELLOW);
@@ -257,17 +226,11 @@ public class StockMatchChartData {
 	}
 
 	void clear() {
-		mXValues.clear();
+		mXValuesMain.clear();
+		mXValuesSub.clear();
 		mDrawEntryList.clear();
 		mFitEntryList.clear();
-		mStrokeEntryList.clear();
-		mSegmentEntryList.clear();
-		mCandleEntryList.clear();
-		mOverlapHighEntryList.clear();
-		mOverlapLowEntryList.clear();
 		mAverageEntryList.clear();
-		mAverage5EntryList.clear();
-		mAverage10EntryList.clear();
 		mDIFEntryList.clear();
 		mDEAEntryList.clear();
 		mHistogramEntryList.clear();
