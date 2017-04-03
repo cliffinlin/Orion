@@ -101,11 +101,12 @@ public class StockMatchChartData {
 	}
 
 	void setSubChartData() {
+		setLimitLine();
+		
 		LineData lineData = new LineData(mXValuesSub);
 
 		LineDataSet difDataSet = new LineDataSet(mDIFEntryList, "DIF");
-		difDataSet.setColor(Color.RED);
-		difDataSet.setCircleColor(Color.RED);
+		difDataSet.setColor(Color.BLUE);
 		difDataSet.setDrawCircles(false);
 		difDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(difDataSet);
@@ -131,36 +132,27 @@ public class StockMatchChartData {
 		mDescription += stock.getNet();
 	}
 
-	void updateLimitLine(ArrayList<StockDeal> stockDealList) {
-		double stockDealPrice = 0;
-		long stockDealVolume = 0;
-
-		if ((stockDealList == null) || (mLimitLineList == null)) {
+	void setLimitLine() {
+		if (mLimitLineList == null) {
 			return;
 		}
 
 		mLimitLineList.clear();
 
-		for (StockDeal stockDeal : stockDealList) {
+		for (int i = 0; i < 3; i++) {
 			LimitLine limitLine = new LimitLine(0);
-			limitLine.enableDashedLine(10f, 10f, 0f);
-			limitLine.setLineWidth(3);
-			limitLine.setTextSize(10f);
-			limitLine.setLabelPosition(LimitLabelPosition.LEFT_TOP);
+			limitLine.setLineWidth(1);
 
-			stockDealPrice = stockDeal.getDeal();
-			stockDealVolume = stockDeal.getVolume();
-
-			limitLine.setLimit((float) stockDealPrice);
-
-			if (stockDealVolume > 0) {
+			if (i == 0) {
+				limitLine.setLimit(-1);
 				limitLine.setLineColor(Color.RED);
+			} else if (i == 1) {
+				limitLine.setLimit(0);
+				limitLine.setLineColor(Color.GREEN);	
 			} else {
-				limitLine.setLineColor(Color.GREEN);
+				limitLine.setLimit(1);
+				limitLine.setLineColor(Color.RED);
 			}
-
-			limitLine.setLabel(stockDealPrice + " " + stockDealVolume + " "
-					+ stockDeal.getNet() + " " + stockDeal.getProfit());
 
 			mLimitLineList.add(limitLine);
 		}

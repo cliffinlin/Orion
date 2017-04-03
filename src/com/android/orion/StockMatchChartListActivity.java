@@ -408,7 +408,7 @@ public class StockMatchChartListActivity extends StorageActivity implements
 			Entry fitEntry = new Entry((float) fitValue, index);
 			stockMatchChartData.mFitEntryList.add(fitEntry);
 
-			diffValue = slope * stockData_X.getClose() - stockData_Y.getClose();
+			diffValue = stockData_Y.getClose() - slope * stockData_X.getClose();
 			descriptiveStatistics.addValue(diffValue);
 		}
 
@@ -422,10 +422,14 @@ public class StockMatchChartListActivity extends StorageActivity implements
 			index = stockMatchChartData.mXValuesSub.size();
 			stockMatchChartData.mXValuesSub.add(stockData_X.getDate());
 
-			diffValue = slope * stockData_X.getClose() - stockData_Y.getClose();
-			if (standardDeviation != 0) {
+			diffValue = stockData_Y.getClose() - slope * stockData_X.getClose();
+			
+			if (standardDeviation == 0) {
+				diffValue = 0;
+			} else {
 				diffValue = (diffValue - mean) / standardDeviation;
 			}
+			
 			Entry difEntry = new Entry((float) diffValue, index);
 			stockMatchChartData.mDIFEntryList.add(difEntry);
 		}
@@ -566,55 +570,6 @@ public class StockMatchChartListActivity extends StorageActivity implements
 		}
 	}
 
-	public void swapStockMatchDataCursor(
-			StockMatchChartData stockMatchChartData, Cursor cursor) {
-		int index = 0;
-
-		if (mStockData == null) {
-			return;
-		}
-
-		stockMatchChartData.clear();
-
-		try {
-			if ((cursor != null) && (cursor.getCount() > 0)) {
-				while (cursor.moveToNext()) {
-					index = stockMatchChartData.mXValuesMain.size();
-					mStockData.set(cursor);
-
-					stockMatchChartData.mXValuesMain.add(mStockData.getDate());
-
-					if (mStockData.vertexOf(Constants.STOCK_VERTEX_TOP)) {
-						Entry drawEntry = new Entry(
-								(float) mStockData.getVertexHigh(), index);
-						stockMatchChartData.mScatterEntryList.add(drawEntry);
-					} else if (mStockData
-							.vertexOf(Constants.STOCK_VERTEX_BOTTOM)) {
-						Entry drawEntry = new Entry(
-								(float) mStockData.getVertexLow(), index);
-						stockMatchChartData.mScatterEntryList.add(drawEntry);
-					}
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (cursor != null) {
-				if (!cursor.isClosed()) {
-					cursor.close();
-				}
-			}
-		}
-
-		updateTitle();
-
-		stockMatchChartData.updateDescription(mStock);
-		stockMatchChartData.setMainChartData();
-		stockMatchChartData.setSubChartData();
-
-		mStockMatchChartArrayAdapter.notifyDataSetChanged();
-	}
-
 	void navigateStockMatch(int direction) {
 		boolean loop = true;
 
@@ -713,7 +668,7 @@ public class StockMatchChartListActivity extends StorageActivity implements
 				leftAxis.setStartAtZero(false);
 				leftAxis.setValueFormatter(new DefaultYAxisValueFormatter(2));
 				leftAxis.removeAllLimitLines();
-				if (mItemViewType == ITEM_VIEW_TYPE_MAIN) {
+				if (mItemViewType == ITEM_VIEW_TYPE_SUB) {
 					for (int i = 0; i < mStockMatchChartData.mLimitLineList
 							.size(); i++) {
 						leftAxis.addLimitLine(mStockMatchChartData.mLimitLineList
