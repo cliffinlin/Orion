@@ -98,7 +98,7 @@ public class StockMatchChartListActivity extends StorageActivity implements
 							|| intent.getLongExtra(
 									Constants.EXTRA_KEY_STOCK_ID, 0) == mStock_Y
 									.getId()) {
-						// restartLoader();
+						startLoadTask(EXECUTE_LOAD_STOCK_MATCH_LIST);
 					}
 				}
 			}
@@ -195,7 +195,7 @@ public class StockMatchChartListActivity extends StorageActivity implements
 			startService(Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE,
 					Constants.EXECUTE_IMMEDIATE, mStock.getSE(),
 					mStock.getCode());
-			// restartLoader();
+			startLoadTask(EXECUTE_LOAD_STOCK_MATCH_LIST);
 			return true;
 		}
 		case R.id.action_remove_favorite: {
@@ -227,7 +227,6 @@ public class StockMatchChartListActivity extends StorageActivity implements
 			}
 		}
 
-		// restartLoader();
 		startLoadTask(EXECUTE_LOAD_STOCK_MATCH_LIST);
 	}
 
@@ -599,7 +598,7 @@ public class StockMatchChartListActivity extends StorageActivity implements
 
 		mStockMatch = mStockMatchList.get(mStockMatchListIndex);
 
-		// restartLoader();
+		startLoadTask(EXECUTE_LOAD_STOCK_MATCH_LIST);
 	}
 
 	static class MainHandler extends Handler {

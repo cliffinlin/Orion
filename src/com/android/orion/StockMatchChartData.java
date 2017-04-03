@@ -7,8 +7,8 @@ import android.graphics.Color;
 import com.android.orion.database.Stock;
 import com.github.mikephil.charting.charts.ScatterChart.ScatterShape;
 import com.github.mikephil.charting.components.LimitLine;
-import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.components.LimitLine.LimitLabelPosition;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.CombinedData;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -117,10 +117,10 @@ public class StockMatchChartData {
 		if (stock == null) {
 			return;
 		}
-		
+
 		mDescription += mPeriod;
 		mDescription += " ";
-		
+
 		mDescription += stock.getName();
 		mDescription += " ";
 
@@ -130,7 +130,7 @@ public class StockMatchChartData {
 		} else if (stock.getNet() < 0) {
 			mDescription += "-";
 		}
-		
+
 		mDescription += stock.getNet();
 	}
 
@@ -146,7 +146,6 @@ public class StockMatchChartData {
 
 			limitLine.setLineWidth(1);
 			limitLine.setTextSize(10f);
-			
 
 			if (i == 0) {
 				limitLine.setLimit(-1);

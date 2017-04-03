@@ -24,19 +24,19 @@ public class StockMatchActivity extends DatabaseActivity implements
 
 	static final int EXECUTE_MATCH_LOAD = 1;
 	static final int EXECUTE_MATCH_SAVE = 2;
-	static final int EXECUTE_STOCK_Y_LOAD = 3;
-	static final int EXECUTE_STOCK_X_LOAD = 4;
+	static final int EXECUTE_STOCK_X_LOAD = 3;
+	static final int EXECUTE_STOCK_Y_LOAD = 4;
 
-	static final int REQUEST_CODE_STOCK_Y_ID = 0;
-	static final int REQUEST_CODE_STOCK_X_ID = 1;
+	static final int REQUEST_CODE_STOCK_X_ID = 0;
+	static final int REQUEST_CODE_STOCK_Y_ID = 1;
 
-	EditText mEditTextStockName_Y, mEditTextStockCode_Y;
 	EditText mEditTextStockName_X, mEditTextStockCode_X;
+	EditText mEditTextStockName_Y, mEditTextStockCode_Y;
 
 	Button mButtonOk, mButtonCancel;
 
-	Stock mStock_Y = null;
 	Stock mStock_X = null;
+	Stock mStock_Y = null;
 	StockMatch mMatch = null;
 
 	@Override
@@ -45,12 +45,12 @@ public class StockMatchActivity extends DatabaseActivity implements
 
 		setContentView(R.layout.activity_stock_match);
 
-		if (mStock_Y == null) {
-			mStock_Y = Stock.obtain();
-		}
-
 		if (mStock_X == null) {
 			mStock_X = Stock.obtain();
+		}
+
+		if (mStock_Y == null) {
+			mStock_Y = Stock.obtain();
 		}
 
 		if (mMatch == null) {
@@ -66,28 +66,28 @@ public class StockMatchActivity extends DatabaseActivity implements
 	}
 
 	void initView() {
-		mEditTextStockName_Y = (EditText) findViewById(R.id.edittext_stock_name_y);
-		mEditTextStockCode_Y = (EditText) findViewById(R.id.edittext_stock_code_y);
 		mEditTextStockName_X = (EditText) findViewById(R.id.edittext_stock_name_x);
 		mEditTextStockCode_X = (EditText) findViewById(R.id.edittext_stock_code_x);
+		mEditTextStockName_Y = (EditText) findViewById(R.id.edittext_stock_name_y);
+		mEditTextStockCode_Y = (EditText) findViewById(R.id.edittext_stock_code_y);
 		mButtonOk = (Button) findViewById(R.id.button_ok);
 		mButtonCancel = (Button) findViewById(R.id.button_cancel);
 
-		mEditTextStockName_Y.setOnClickListener(this);
-		mEditTextStockCode_Y.setOnClickListener(this);
 		mEditTextStockName_X.setOnClickListener(this);
 		mEditTextStockCode_X.setOnClickListener(this);
+		mEditTextStockName_Y.setOnClickListener(this);
+		mEditTextStockCode_Y.setOnClickListener(this);
 		mButtonOk.setOnClickListener(this);
 		mButtonCancel.setOnClickListener(this);
 
-		mEditTextStockName_Y.setInputType(InputType.TYPE_NULL);
-		mEditTextStockName_Y.setFocusable(false);
-		mEditTextStockCode_Y.setInputType(InputType.TYPE_NULL);
-		mEditTextStockCode_Y.setFocusable(false);
 		mEditTextStockName_X.setInputType(InputType.TYPE_NULL);
 		mEditTextStockName_X.setFocusable(false);
 		mEditTextStockCode_X.setInputType(InputType.TYPE_NULL);
 		mEditTextStockCode_X.setFocusable(false);
+		mEditTextStockName_Y.setInputType(InputType.TYPE_NULL);
+		mEditTextStockName_Y.setFocusable(false);
+		mEditTextStockCode_Y.setInputType(InputType.TYPE_NULL);
+		mEditTextStockCode_Y.setFocusable(false);
 
 		if (ACTION_MATCH_INSERT.equals(mAction)) {
 			setTitle(R.string.match_insert);
@@ -97,10 +97,10 @@ public class StockMatchActivity extends DatabaseActivity implements
 	}
 
 	void updateView() {
-		mEditTextStockName_Y.setText(mMatch.getName_Y());
-		mEditTextStockCode_Y.setText(mMatch.getCode_Y());
 		mEditTextStockName_X.setText(mMatch.getName_X());
 		mEditTextStockCode_X.setText(mMatch.getCode_X());
+		mEditTextStockName_Y.setText(mMatch.getName_Y());
+		mEditTextStockCode_Y.setText(mMatch.getCode_Y());
 	}
 
 	@Override
@@ -126,16 +126,6 @@ public class StockMatchActivity extends DatabaseActivity implements
 		int id = view.getId();
 
 		switch (id) {
-		case R.id.edittext_stock_name_y:
-		case R.id.edittext_stock_code_y:
-			if (ACTION_MATCH_INSERT.equals(mAction)) {
-				Intent intent = new Intent(this,
-						StockFavoriteListActivity.class);
-				intent.setAction(StockFavoriteListActivity.ACTION_STOCK_ID);
-				startActivityForResult(intent, REQUEST_CODE_STOCK_Y_ID);
-			}
-			break;
-
 		case R.id.edittext_stock_name_x:
 		case R.id.edittext_stock_code_x:
 			if (ACTION_MATCH_INSERT.equals(mAction)) {
@@ -143,6 +133,16 @@ public class StockMatchActivity extends DatabaseActivity implements
 						StockFavoriteListActivity.class);
 				intent.setAction(StockFavoriteListActivity.ACTION_STOCK_ID);
 				startActivityForResult(intent, REQUEST_CODE_STOCK_X_ID);
+			}
+			break;
+
+		case R.id.edittext_stock_name_y:
+		case R.id.edittext_stock_code_y:
+			if (ACTION_MATCH_INSERT.equals(mAction)) {
+				Intent intent = new Intent(this,
+						StockFavoriteListActivity.class);
+				intent.setAction(StockFavoriteListActivity.ACTION_STOCK_ID);
+				startActivityForResult(intent, REQUEST_CODE_STOCK_Y_ID);
 			}
 			break;
 
@@ -166,19 +166,19 @@ public class StockMatchActivity extends DatabaseActivity implements
 
 		if (resultCode == RESULT_OK) {
 			switch (requestCode) {
-			case REQUEST_CODE_STOCK_Y_ID:
-				if (mStock_Y != null) {
-					mStock_Y.setId(data.getLongExtra(
-							StockFavoriteListActivity.EXTRA_STOCK_ID, 0));
-					startLoadTask(EXECUTE_STOCK_Y_LOAD);
-				}
-				break;
-
 			case REQUEST_CODE_STOCK_X_ID:
 				if (mStock_X != null) {
 					mStock_X.setId(data.getLongExtra(
 							StockFavoriteListActivity.EXTRA_STOCK_ID, 0));
 					startLoadTask(EXECUTE_STOCK_X_LOAD);
+				}
+				break;
+
+			case REQUEST_CODE_STOCK_Y_ID:
+				if (mStock_Y != null) {
+					mStock_Y.setId(data.getLongExtra(
+							StockFavoriteListActivity.EXTRA_STOCK_ID, 0));
+					startLoadTask(EXECUTE_STOCK_Y_LOAD);
 				}
 				break;
 
@@ -194,20 +194,20 @@ public class StockMatchActivity extends DatabaseActivity implements
 		int execute = (Integer) params[0];
 
 		switch (execute) {
-		case EXECUTE_STOCK_Y_LOAD:
-			mStockDatabaseManager.getStockById(mStock_Y);
-
-			mMatch.setSE_Y(mStock_Y.getSE());
-			mMatch.setCode_Y(mStock_Y.getCode());
-			mMatch.setName_Y(mStock_Y.getName());
-			break;
-
 		case EXECUTE_STOCK_X_LOAD:
 			mStockDatabaseManager.getStockById(mStock_X);
 
 			mMatch.setSE_X(mStock_X.getSE());
 			mMatch.setCode_X(mStock_X.getCode());
 			mMatch.setName_X(mStock_X.getName());
+			break;
+
+		case EXECUTE_STOCK_Y_LOAD:
+			mStockDatabaseManager.getStockById(mStock_Y);
+
+			mMatch.setSE_Y(mStock_Y.getSE());
+			mMatch.setCode_Y(mStock_Y.getCode());
+			mMatch.setName_Y(mStock_Y.getName());
 			break;
 
 		case EXECUTE_MATCH_LOAD:

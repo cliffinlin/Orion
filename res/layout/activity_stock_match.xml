@@ -9,52 +9,6 @@
         android:layout_height="wrap_content" >
 
         <TextView
-            android:id="@+id/textview_stock_name_y"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="14dp"
-            android:layout_marginRight="14dp"
-            android:labelFor="@+id/edittext_stock_name_y"
-            android:text="@string/stock_name_y" />
-
-        <EditText
-            android:id="@+id/edittext_stock_name_y"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="14dp"
-            android:layout_marginLeft="18dp"
-            android:layout_marginRight="14dp"
-            android:inputType="numberDecimal" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <TextView
-            android:id="@+id/textview_stock_code_y"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="14dp"
-            android:layout_marginRight="14dp"
-            android:labelFor="@+id/edittext_stock_code_y"
-            android:text="@string/stock_code_y" />
-
-        <EditText
-            android:id="@+id/edittext_stock_code_y"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="14dp"
-            android:layout_marginLeft="18dp"
-            android:layout_marginRight="14dp"
-            android:inputType="numberDecimal" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <TextView
             android:id="@+id/textview_stock_name_x"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -88,6 +42,52 @@
 
         <EditText
             android:id="@+id/edittext_stock_code_x"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="14dp"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="14dp"
+            android:inputType="numberDecimal" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/textview_stock_name_y"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="14dp"
+            android:layout_marginRight="14dp"
+            android:labelFor="@+id/edittext_stock_name_y"
+            android:text="@string/stock_name_y" />
+
+        <EditText
+            android:id="@+id/edittext_stock_name_y"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="14dp"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="14dp"
+            android:inputType="numberDecimal" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/textview_stock_code_y"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="14dp"
+            android:layout_marginRight="14dp"
+            android:labelFor="@+id/edittext_stock_code_y"
+            android:text="@string/stock_code_y" />
+
+        <EditText
+            android:id="@+id/edittext_stock_code_y"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="14dp"
