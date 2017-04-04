@@ -2,8 +2,9 @@ package com.android.orion;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-
+import java.util.Collections;
 import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
 import org.apache.commons.math.stat.regression.SimpleRegression;
 
@@ -41,6 +42,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.DefaultYAxisValueFormatter;
 import com.github.mikephil.charting.listener.ChartTouchListener.ChartGesture;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
+import com.github.mikephil.charting.utils.PointD;
 import com.github.mikephil.charting.utils.Utils;
 
 public class StockMatchChartListActivity extends StorageActivity implements
@@ -68,6 +70,8 @@ public class StockMatchChartListActivity extends StorageActivity implements
 	ArrayList<StockData> mStockDataList_X = null;
 	ArrayList<StockData> mStockDataList_Y = null;
 	ArrayList<StockMatch> mStockMatchList = null;
+
+	ArrayList<PointD> mPointList = new ArrayList<PointD>();
 
 	Menu mMenu = null;
 	SparseArray<String> mPeriodArray = null;
@@ -104,7 +108,7 @@ public class StockMatchChartListActivity extends StorageActivity implements
 			}
 		}
 	};
- 
+
 	MainHandler mMainHandler = new MainHandler(this);
 
 	@Override
@@ -142,6 +146,10 @@ public class StockMatchChartListActivity extends StorageActivity implements
 
 		if (mStockMatchList == null) {
 			mStockMatchList = new ArrayList<StockMatch>();
+		}
+
+		if (mPointList == null) {
+			mPointList = new ArrayList<PointD>();
 		}
 
 		mStockMatch.setId(getIntent().getLongExtra(EXTRA_STOCK_MATCH_ID, 0));
@@ -374,16 +382,24 @@ public class StockMatchChartListActivity extends StorageActivity implements
 		simpleRegression.clear();
 		descriptiveStatistics.clear();
 
+		mPointList.clear();
+
 		minX = mStockDataList_X.get(0).getClose();
 		maxX = mStockDataList_X.get(0).getClose();
 		for (int i = 0; i < mStockDataList_X.size(); i++) {
 			x = mStockDataList_X.get(i).getClose();
 			y = mStockDataList_Y.get(i).getClose();
+
+			PointD point = new PointD(x, y);
+			mPointList.add(point);
+
 			minX = Math.min(minX, x);
 			maxX = Math.max(maxX, x);
 
 			simpleRegression.addData(x, y);
 		}
+
+		Collections.sort(mPointList, new SortByX());
 
 		slope = simpleRegression.getSlope();
 		intercept = simpleRegression.getIntercept();
@@ -393,13 +409,12 @@ public class StockMatchChartListActivity extends StorageActivity implements
 		for (int i = 0; i < mStockDataList_X.size(); i++) {
 			StockData stockData_X = mStockDataList_X.get(i);
 			StockData stockData_Y = mStockDataList_Y.get(i);
+			PointD point = mPointList.get(i);
 
 			index = stockMatchChartData.mXValuesMain.size();
-			stockMatchChartData.mXValuesMain.add(Double.toString(stockData_X
-					.getClose()));
+			stockMatchChartData.mXValuesMain.add(Double.toString(point.x));
 
-			Entry scatterEntry = new Entry((float) stockData_Y.getClose(),
-					index);
+			Entry scatterEntry = new Entry((float) point.y, index);
 			stockMatchChartData.mScatterEntryList.add(scatterEntry);
 
 			x = minX + i * (maxX - minX) / (mStockDataList_X.size() - 1);
@@ -737,6 +752,20 @@ public class StockMatchChartListActivity extends StorageActivity implements
 		@Override
 		public int getViewTypeCount() {
 			return mStockMatchChartItemList.size();
+		}
+	}
+
+	class SortByX implements Comparator<PointD> {
+
+		@Override
+		public int compare(PointD point0, PointD point1) {
+			if (point0.x < point1.x) {
+				return -1;
+			} else if (point0.x == point1.x) {
+				return 0;
+			} else {
+				return 1;
+			}
 		}
 	}
 }
