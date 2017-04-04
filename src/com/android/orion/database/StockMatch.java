@@ -13,7 +13,8 @@ public class StockMatch extends DatabaseTable {
 	private String mName_Y;
 	private double mSlope;
 	private double mIntercept;
-	private double mSigma;
+	private double mMean;
+	private double mSTD;
 	private double mDelta;
 
 	private StockMatch next;
@@ -69,7 +70,8 @@ public class StockMatch extends DatabaseTable {
 		mName_Y = "";
 		mSlope = 0;
 		mIntercept = 0;
-		mSigma = 0;
+		mMean = 0;
+		mSTD = 0;
 		mDelta = 0;
 	}
 
@@ -90,7 +92,8 @@ public class StockMatch extends DatabaseTable {
 		contentValues.put(DatabaseContract.StockMatch.COLUMN_SLOPE, mSlope);
 		contentValues.put(DatabaseContract.StockMatch.COLUMN_INTERCEPT,
 				mIntercept);
-		contentValues.put(DatabaseContract.StockMatch.COLUMN_SIGMA, mSigma);
+		contentValues.put(DatabaseContract.StockMatch.COLUMN_MEAN, mMean);
+		contentValues.put(DatabaseContract.StockMatch.COLUMN_STD, mSTD);
 		contentValues.put(DatabaseContract.StockMatch.COLUMN_DELTA, mDelta);
 
 		return contentValues;
@@ -113,7 +116,8 @@ public class StockMatch extends DatabaseTable {
 		setName_Y(stockMatch.mName_Y);
 		setSlope(stockMatch.mSlope);
 		setIntercept(stockMatch.mIntercept);
-		setSigma(stockMatch.mSigma);
+		setMean(stockMatch.mMean);
+		setSTD(stockMatch.mSTD);
 		setDelta(stockMatch.mDelta);
 	}
 
@@ -135,7 +139,8 @@ public class StockMatch extends DatabaseTable {
 		setName_Y(cursor);
 		setSlope(cursor);
 		setIntercept(cursor);
-		setSigma(cursor);
+		setMean(cursor);
+		setSTD(cursor);
 		setDelta(cursor);
 	}
 
@@ -275,21 +280,38 @@ public class StockMatch extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.StockMatch.COLUMN_INTERCEPT)));
 	}
 
-	public double getSigma() {
-		return mSigma;
+	public double getMean() {
+		return mMean;
 	}
 
-	public void setSigma(double sigma) {
-		mSigma = sigma;
+	public void setMean(double mean) {
+		mMean = mean;
 	}
 
-	void setSigma(Cursor cursor) {
+	void setMean(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}
 
-		setSigma(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.StockMatch.COLUMN_SIGMA)));
+		setMean(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.StockMatch.COLUMN_MEAN)));
+	}
+	
+	public double getSTD() {
+		return mSTD;
+	}
+
+	public void setSTD(double std) {
+		mSTD = std;
+	}
+
+	void setSTD(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setSTD(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.StockMatch.COLUMN_STD)));
 	}
 
 	public double getDelta() {

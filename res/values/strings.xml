@@ -92,7 +92,8 @@
     <string name="sign_up_text">Sign Up!</string>
     <string name="slope">Slope</string>
     <string name="intercept">Intercept</string>
-    <string name="sigma">Sigma</string>
+    <string name="mean">Mean</string>
+    <string name="std">STD</string>
     <string name="delta">Delta</string>
     <string name="start_service">Start</string>
     <string name="stop_service">Stop</string>

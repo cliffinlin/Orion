@@ -58,7 +58,7 @@ public class StockMatchChartListActivity extends StorageActivity implements
 	static final int FLING_VELOCITY = 100;
 
 	static final int EXECUTE_LOAD_STOCK_MATCH_LIST = 0;
-	static final int EXECUTE_LOAD_STOCK_DATA = 1;
+	static final int EXECUTE_LOAD_STOCK_DATA_LIST = 1;
 
 	static final long RESULT_LOAD_STOCK_MATCH_LIST_SUCCESS = RESULT_SUCCESS + 1;
 
@@ -247,58 +247,24 @@ public class StockMatchChartListActivity extends StorageActivity implements
 				mBroadcastReceiver);
 	}
 
+	@Override
 	Long doInBackgroundLoad(Object... params) {
 		super.doInBackgroundSave(params);
 
 		int execute = (Integer) params[0];
 
-		Cursor cursor = null;
-		String selection = null;
-
-		if ((mStockMatchList == null) || (mStockData == null)) {
-			return RESULT_FAILURE;
-		}
-
 		if (execute == EXECUTE_LOAD_STOCK_MATCH_LIST) {
-			mStockMatchList.clear();
+			loadStockMatchList();
 
-			try {
-				cursor = mStockDatabaseManager.queryStockMatch(selection, null,
-						null);
-
-				if ((cursor != null) && (cursor.getCount() > 0)) {
-					while (cursor.moveToNext()) {
-						StockMatch stockMatch = StockMatch.obtain();
-						stockMatch.set(cursor);
-
-						if (mStockMatch.getId() == stockMatch.getId()) {
-							mStockMatch.set(cursor);
-							mStockMatchListIndex = mStockMatchList.size();
-						}
-
-						mStockMatchList.add(stockMatch);
-					}
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				mStockDatabaseManager.closeCursor(cursor);
-			}
-
-			mStock_X.setSE(mStockMatch.getSE_X());
-			mStock_X.setCode(mStockMatch.getCode_X());
-			mStockDatabaseManager.getStock(mStock_X);
-
-			mStock_Y.setSE(mStockMatch.getSE_Y());
-			mStock_Y.setCode(mStockMatch.getCode_Y());
-			mStockDatabaseManager.getStock(mStock_Y);
+			loadStock_X();
+			loadStock_Y();
 
 			return RESULT_LOAD_STOCK_MATCH_LIST_SUCCESS;
-		} else {
+		} else if (execute == EXECUTE_LOAD_STOCK_DATA_LIST) {
 			for (int i = 0; i < STOCK_PERIOD_ARRAY_SIZE; i++) {
-				getStockDataList(mStock_X.getId(), mPeriodArray.get(i),
+				loadStockDataList(mStock_X.getId(), mPeriodArray.get(i),
 						mStockDataList_X);
-				getStockDataList(mStock_Y.getId(), mPeriodArray.get(i),
+				loadStockDataList(mStock_Y.getId(), mPeriodArray.get(i),
 						mStockDataList_Y);
 
 				if (mStockDataList_X.size() != mStockDataList_Y.size()) {
@@ -316,18 +282,59 @@ public class StockMatchChartListActivity extends StorageActivity implements
 		return RESULT_SUCCESS;
 	}
 
+	@Override
 	void onPostExecuteLoad(Long result) {
 		super.onPostExecuteLoad(result);
 
 		if (result == RESULT_LOAD_STOCK_MATCH_LIST_SUCCESS) {
-			startLoadTask(EXECUTE_LOAD_STOCK_DATA);
+			startLoadTask(EXECUTE_LOAD_STOCK_DATA_LIST);
 		} else {
 			updateTitle();
 			mStockMatchChartArrayAdapter.notifyDataSetChanged();
 		}
 	}
 
-	void getStockDataList(long stockId, String period,
+	void loadStockMatchList() {
+		Cursor cursor = null;
+
+		mStockMatchList.clear();
+
+		try {
+			cursor = mStockDatabaseManager.queryStockMatch(null, null, null);
+
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				while (cursor.moveToNext()) {
+					StockMatch stockMatch = StockMatch.obtain();
+					stockMatch.set(cursor);
+
+					if (mStockMatch.getId() == stockMatch.getId()) {
+						mStockMatch.set(cursor);
+						mStockMatchListIndex = mStockMatchList.size();
+					}
+
+					mStockMatchList.add(stockMatch);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			mStockDatabaseManager.closeCursor(cursor);
+		}
+	}
+
+	void loadStock_X() {
+		mStock_X.setSE(mStockMatch.getSE_X());
+		mStock_X.setCode(mStockMatch.getCode_X());
+		mStockDatabaseManager.getStock(mStock_X);
+	}
+
+	void loadStock_Y() {
+		mStock_Y.setSE(mStockMatch.getSE_Y());
+		mStock_Y.setCode(mStockMatch.getCode_Y());
+		mStockDatabaseManager.getStock(mStock_Y);
+	}
+
+	void loadStockDataList(long stockId, String period,
 			ArrayList<StockData> stockDataList) {
 		Cursor cursor = null;
 		String selection = mStockDatabaseManager.getStockDataSelection(stockId,
@@ -368,9 +375,9 @@ public class StockMatchChartListActivity extends StorageActivity implements
 		double slope = 0;
 		double intercept = 0;
 		double fitValue = 0;
-		double diffValue = 0;
 		double mean = 0;
-		double standardDeviation = 0;
+		double std = 0;
+		double delta = 0;
 
 		SimpleRegression simpleRegression = new SimpleRegression();
 		DescriptiveStatistics descriptiveStatistics = new DescriptiveStatistics();
@@ -418,12 +425,12 @@ public class StockMatchChartListActivity extends StorageActivity implements
 			Entry fitEntry = new Entry((float) fitValue, index);
 			stockMatchChartData.mFitEntryList.add(fitEntry);
 
-			diffValue = stockData_Y.getClose() - slope * stockData_X.getClose();
-			descriptiveStatistics.addValue(diffValue);
+			delta = stockData_Y.getClose() - slope * stockData_X.getClose();
+			descriptiveStatistics.addValue(delta);
 		}
 
 		mean = descriptiveStatistics.getMean();
-		standardDeviation = descriptiveStatistics.getStandardDeviation();
+		std = descriptiveStatistics.getStandardDeviation();
 
 		for (int i = 0; i < mStockDataList_X.size(); i++) {
 			StockData stockData_X = mStockDataList_X.get(i);
@@ -432,16 +439,16 @@ public class StockMatchChartListActivity extends StorageActivity implements
 			index = stockMatchChartData.mXValuesSub.size();
 			stockMatchChartData.mXValuesSub.add(stockData_X.getDate());
 
-			diffValue = stockData_Y.getClose() - slope * stockData_X.getClose();
+			delta = stockData_Y.getClose() - slope * stockData_X.getClose();
 
-			if (standardDeviation == 0) {
-				diffValue = 0;
+			if (std == 0) {
+				delta = 0;
 			} else {
-				diffValue = (diffValue - mean) / standardDeviation;
+				delta = (delta - mean) / std;
 			}
 
-			Entry difEntry = new Entry((float) diffValue, index);
-			stockMatchChartData.mDIFEntryList.add(difEntry);
+			Entry difEntry = new Entry((float) delta, index);
+			stockMatchChartData.mDeltaEntryList.add(difEntry);
 		}
 
 		stockMatchChartData.updateDescription(mStock_X);

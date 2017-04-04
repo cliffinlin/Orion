@@ -70,7 +70,8 @@ public class StockMatchListActivity extends StorageActivity implements
 	TextView mTextViewStockNameCode = null;
 	TextView mTextViewSlope = null;
 	TextView mTextViewIntercept = null;
-	TextView mTextViewSigma = null;
+	TextView mTextViewMean = null;
+	TextView mTextViewSTD = null;
 	TextView mTextViewDelta = null;
 	TextView mTextViewCreated = null;
 	TextView mTextViewModified = null;
@@ -261,8 +262,11 @@ public class StockMatchListActivity extends StorageActivity implements
 		case R.id.intercept:
 			mSortOrderColumn = DatabaseContract.StockMatch.COLUMN_INTERCEPT;
 			break;
-		case R.id.sigma:
-			mSortOrderColumn = DatabaseContract.StockMatch.COLUMN_SIGMA;
+		case R.id.mean:
+			mSortOrderColumn = DatabaseContract.StockMatch.COLUMN_MEAN;
+			break;
+		case R.id.std:
+			mSortOrderColumn = DatabaseContract.StockMatch.COLUMN_STD;
 			break;
 		case R.id.delta:
 			mSortOrderColumn = DatabaseContract.StockMatch.COLUMN_DELTA;
@@ -306,7 +310,8 @@ public class StockMatchListActivity extends StorageActivity implements
 		setHeaderTextColor(mTextViewStockNameCode, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewSlope, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewIntercept, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewSigma, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewMean, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewSTD, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewDelta, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewCreated, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewModified, mHeaderTextDefaultColor);
@@ -340,8 +345,11 @@ public class StockMatchListActivity extends StorageActivity implements
 		mTextViewIntercept = (TextView) findViewById(R.id.intercept);
 		mTextViewIntercept.setOnClickListener(this);
 
-		mTextViewSigma = (TextView) findViewById(R.id.sigma);
-		mTextViewSigma.setOnClickListener(this);
+		mTextViewMean = (TextView) findViewById(R.id.mean);
+		mTextViewMean.setOnClickListener(this);
+
+		mTextViewSTD = (TextView) findViewById(R.id.std);
+		mTextViewSTD.setOnClickListener(this);
 
 		mTextViewDelta = (TextView) findViewById(R.id.delta);
 		mTextViewDelta.setOnClickListener(this);
@@ -361,9 +369,10 @@ public class StockMatchListActivity extends StorageActivity implements
 		} else if (mSortOrder
 				.contains(DatabaseContract.StockMatch.COLUMN_INTERCEPT)) {
 			setHeaderTextColor(mTextViewIntercept, mHeaderTextHighlightColor);
-		} else if (mSortOrder
-				.contains(DatabaseContract.StockMatch.COLUMN_SIGMA)) {
-			setHeaderTextColor(mTextViewSigma, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.StockMatch.COLUMN_MEAN)) {
+			setHeaderTextColor(mTextViewMean, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.StockMatch.COLUMN_STD)) {
+			setHeaderTextColor(mTextViewSTD, mHeaderTextHighlightColor);
 		} else if (mSortOrder
 				.contains(DatabaseContract.StockMatch.COLUMN_DELTA)) {
 			setHeaderTextColor(mTextViewDelta, mHeaderTextHighlightColor);
@@ -384,12 +393,13 @@ public class StockMatchListActivity extends StorageActivity implements
 		String[] mRightFrom = new String[] {
 				DatabaseContract.StockMatch.COLUMN_SLOPE,
 				DatabaseContract.StockMatch.COLUMN_INTERCEPT,
-				DatabaseContract.StockMatch.COLUMN_SIGMA,
+				DatabaseContract.StockMatch.COLUMN_MEAN,
+				DatabaseContract.StockMatch.COLUMN_STD,
 				DatabaseContract.StockMatch.COLUMN_DELTA,
 				DatabaseContract.COLUMN_CREATED,
 				DatabaseContract.COLUMN_MODIFIED };
-		int[] mRightTo = new int[] { R.id.slope, R.id.intercept, R.id.sigma,
-				R.id.delta, R.id.created, R.id.modified };
+		int[] mRightTo = new int[] { R.id.slope, R.id.intercept, R.id.mean,
+				R.id.std, R.id.delta, R.id.created, R.id.modified };
 
 		mLeftListView = (ListView) findViewById(R.id.left_listview);
 		mLeftAdapter = new SimpleCursorAdapter(this,
@@ -656,9 +666,12 @@ public class StockMatchListActivity extends StorageActivity implements
 							.equals(tagName)) {
 						stockMatch.setIntercept(Double.valueOf(parser
 								.nextText()));
-					} else if (DatabaseContract.StockMatch.COLUMN_SIGMA
+					} else if (DatabaseContract.StockMatch.COLUMN_MEAN
 							.equals(tagName)) {
-						stockMatch.setSigma(Double.valueOf(parser.nextText()));
+						stockMatch.setMean(Double.valueOf(parser.nextText()));
+					} else if (DatabaseContract.StockMatch.COLUMN_STD
+							.equals(tagName)) {
+						stockMatch.setSTD(Double.valueOf(parser.nextText()));
 					} else if (DatabaseContract.StockMatch.COLUMN_DELTA
 							.equals(tagName)) {
 						stockMatch.setDelta(Double.valueOf(parser.nextText()));
@@ -747,8 +760,11 @@ public class StockMatchListActivity extends StorageActivity implements
 						DatabaseContract.StockMatch.COLUMN_INTERCEPT,
 						String.valueOf(stockMatch.getIntercept()));
 				xmlSerialize(xmlSerializer,
-						DatabaseContract.StockMatch.COLUMN_SIGMA,
-						String.valueOf(stockMatch.getSigma()));
+						DatabaseContract.StockMatch.COLUMN_MEAN,
+						String.valueOf(stockMatch.getMean()));
+				xmlSerialize(xmlSerializer,
+						DatabaseContract.StockMatch.COLUMN_STD,
+						String.valueOf(stockMatch.getSTD()));
 				xmlSerialize(xmlSerializer,
 						DatabaseContract.StockMatch.COLUMN_DELTA,
 						String.valueOf(stockMatch.getDelta()));

@@ -26,7 +26,7 @@ public class StockMatchChartData {
 	ArrayList<Entry> mScatterEntryList = null;
 	ArrayList<Entry> mFitEntryList = null;
 
-	ArrayList<Entry> mDIFEntryList = null;
+	ArrayList<Entry> mDeltaEntryList = null;
 
 	ArrayList<LimitLine> mLimitLineList = null;
 
@@ -53,8 +53,8 @@ public class StockMatchChartData {
 			mFitEntryList = new ArrayList<Entry>();
 		}
 
-		if (mDIFEntryList == null) {
-			mDIFEntryList = new ArrayList<Entry>();
+		if (mDeltaEntryList == null) {
+			mDeltaEntryList = new ArrayList<Entry>();
 		}
 
 		if (mCombinedDataMain == null) {
@@ -102,7 +102,7 @@ public class StockMatchChartData {
 	void setSubChartData() {
 		LineData lineData = new LineData(mXValuesSub);
 
-		LineDataSet difDataSet = new LineDataSet(mDIFEntryList, "DIF");
+		LineDataSet difDataSet = new LineDataSet(mDeltaEntryList, "DIF");
 		difDataSet.setColor(Color.BLUE);
 		difDataSet.setDrawCircles(false);
 		difDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
@@ -173,6 +173,6 @@ public class StockMatchChartData {
 		mXValuesSub.clear();
 		mScatterEntryList.clear();
 		mFitEntryList.clear();
-		mDIFEntryList.clear();
+		mDeltaEntryList.clear();
 	}
 }

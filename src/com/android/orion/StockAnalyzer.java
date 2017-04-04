@@ -3,6 +3,7 @@ package com.android.orion;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
 import org.apache.commons.math.stat.regression.SimpleRegression;
 
 import android.app.Notification;
@@ -160,7 +161,19 @@ public class StockAnalyzer extends StockManager {
 		ArrayList<StockData> stockDataList_X = null;
 		ArrayList<StockData> stockDataList_Y = null;
 
-		SimpleRegression regression = new SimpleRegression();
+		double x = 0;
+		double y = 0;
+		double slope = 0;
+		double intercept = 0;
+		double mean = 0;
+		double std = 0;
+		double delta = 0;
+
+		SimpleRegression simpleRegression = new SimpleRegression();
+		DescriptiveStatistics descriptiveStatistics = new DescriptiveStatistics();
+
+		simpleRegression.clear();
+		descriptiveStatistics.clear();
 
 		if ((stock == null) || (stockDataList == null)) {
 			return;
@@ -207,14 +220,54 @@ public class StockAnalyzer extends StockManager {
 				return;
 			}
 
-			regression.clear();
-			for (int i = 0; i < stockDataList_X.size(); i++) {
-				regression.addData(stockDataList_X.get(i).getClose(),
-						stockDataList_Y.get(i).getClose());
+			if (stockDataList_X.size() < Constants.STOCK_VERTEX_TYPING_SIZE) {
+				return;
 			}
 
-			stockMatch.setSlope(regression.getSlope());
-			stockMatch.setIntercept(regression.getIntercept());
+			simpleRegression.clear();
+
+			for (int i = 0; i < stockDataList_X.size(); i++) {
+				x = stockDataList_X.get(i).getClose();
+				y = stockDataList_Y.get(i).getClose();
+
+				simpleRegression.addData(x, y);
+			}
+
+			slope = simpleRegression.getSlope();
+			intercept = simpleRegression.getIntercept();
+
+			descriptiveStatistics.clear();
+
+			for (int i = 0; i < stockDataList_X.size(); i++) {
+				x = stockDataList_X.get(i).getClose();
+				y = stockDataList_Y.get(i).getClose();
+
+				delta = y - slope * x;
+
+				descriptiveStatistics.addValue(delta);
+			}
+
+			mean = descriptiveStatistics.getMean();
+			std = descriptiveStatistics.getStandardDeviation();
+
+			int i = stockDataList_X.size() - 1;
+			x = stockDataList_X.get(i).getClose();
+			y = stockDataList_Y.get(i).getClose();
+
+			delta = y - slope * x;
+
+			if (std == 0) {
+				delta = 0;
+			} else {
+				delta = (delta - mean) / std;
+			}
+
+			stockMatch.setSlope(slope);
+			stockMatch.setIntercept(intercept);
+			stockMatch.setMean(mean);
+			stockMatch.setSTD(std);
+			stockMatch.setDelta(delta);
+
 			mStockDatabaseManager.updateStockMatch(stockMatch);
 		}
 	}
