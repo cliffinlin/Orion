@@ -128,24 +128,24 @@ public class Stock extends StockDatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_NET, mNet);
 		contentValues.put(DatabaseContract.COLUMN_VOLUME, mVolume);
 		contentValues.put(DatabaseContract.COLUMN_VALUE, mValue);
-		contentValues.put(DatabaseContract.Stock.COLUMN_ACTION_1MIN,
+		contentValues.put(DatabaseContract.COLUMN_ACTION_1MIN,
 				mAction1Min);
-		contentValues.put(DatabaseContract.Stock.COLUMN_ACTION_5MIN,
+		contentValues.put(DatabaseContract.COLUMN_ACTION_5MIN,
 				mAction5Min);
-		contentValues.put(DatabaseContract.Stock.COLUMN_ACTION_15MIN,
+		contentValues.put(DatabaseContract.COLUMN_ACTION_15MIN,
 				mAction15Min);
-		contentValues.put(DatabaseContract.Stock.COLUMN_ACTION_30MIN,
+		contentValues.put(DatabaseContract.COLUMN_ACTION_30MIN,
 				mAction30Min);
-		contentValues.put(DatabaseContract.Stock.COLUMN_ACTION_60MIN,
+		contentValues.put(DatabaseContract.COLUMN_ACTION_60MIN,
 				mAction60Min);
-		contentValues.put(DatabaseContract.Stock.COLUMN_ACTION_DAY, mActionDay);
-		contentValues.put(DatabaseContract.Stock.COLUMN_ACTION_WEEK,
+		contentValues.put(DatabaseContract.COLUMN_ACTION_DAY, mActionDay);
+		contentValues.put(DatabaseContract.COLUMN_ACTION_WEEK,
 				mActionWeek);
-		contentValues.put(DatabaseContract.Stock.COLUMN_ACTION_MONTH,
+		contentValues.put(DatabaseContract.COLUMN_ACTION_MONTH,
 				mActionMonth);
-		contentValues.put(DatabaseContract.Stock.COLUMN_ACTION_QUARTER,
+		contentValues.put(DatabaseContract.COLUMN_ACTION_QUARTER,
 				mActionQuarter);
-		contentValues.put(DatabaseContract.Stock.COLUMN_ACTION_YEAR,
+		contentValues.put(DatabaseContract.COLUMN_ACTION_YEAR,
 				mActionYear);
 
 		return contentValues;
@@ -157,34 +157,34 @@ public class Stock extends StockDatabaseTable {
 		super.getContentValues(contentValues);
 
 		if (period.equals(Constants.PERIOD_1MIN)) {
-			contentValues.put(DatabaseContract.Stock.COLUMN_ACTION_1MIN,
+			contentValues.put(DatabaseContract.COLUMN_ACTION_1MIN,
 					mAction1Min);
 		} else if (period.equals(Constants.PERIOD_5MIN)) {
-			contentValues.put(DatabaseContract.Stock.COLUMN_ACTION_5MIN,
+			contentValues.put(DatabaseContract.COLUMN_ACTION_5MIN,
 					mAction5Min);
 		} else if (period.equals(Constants.PERIOD_15MIN)) {
-			contentValues.put(DatabaseContract.Stock.COLUMN_ACTION_15MIN,
+			contentValues.put(DatabaseContract.COLUMN_ACTION_15MIN,
 					mAction15Min);
 		} else if (period.equals(Constants.PERIOD_30MIN)) {
-			contentValues.put(DatabaseContract.Stock.COLUMN_ACTION_30MIN,
+			contentValues.put(DatabaseContract.COLUMN_ACTION_30MIN,
 					mAction30Min);
 		} else if (period.equals(Constants.PERIOD_60MIN)) {
-			contentValues.put(DatabaseContract.Stock.COLUMN_ACTION_60MIN,
+			contentValues.put(DatabaseContract.COLUMN_ACTION_60MIN,
 					mAction60Min);
 		} else if (period.equals(Constants.PERIOD_DAY)) {
-			contentValues.put(DatabaseContract.Stock.COLUMN_ACTION_DAY,
+			contentValues.put(DatabaseContract.COLUMN_ACTION_DAY,
 					mActionDay);
 		} else if (period.equals(Constants.PERIOD_WEEK)) {
-			contentValues.put(DatabaseContract.Stock.COLUMN_ACTION_WEEK,
+			contentValues.put(DatabaseContract.COLUMN_ACTION_WEEK,
 					mActionWeek);
 		} else if (period.equals(Constants.PERIOD_MONTH)) {
-			contentValues.put(DatabaseContract.Stock.COLUMN_ACTION_MONTH,
+			contentValues.put(DatabaseContract.COLUMN_ACTION_MONTH,
 					mActionMonth);
 		} else if (period.equals(Constants.PERIOD_QUARTER)) {
-			contentValues.put(DatabaseContract.Stock.COLUMN_ACTION_QUARTER,
+			contentValues.put(DatabaseContract.COLUMN_ACTION_QUARTER,
 					mActionQuarter);
 		} else if (period.equals(Constants.PERIOD_YEAR)) {
-			contentValues.put(DatabaseContract.Stock.COLUMN_ACTION_YEAR,
+			contentValues.put(DatabaseContract.COLUMN_ACTION_YEAR,
 					mActionYear);
 		}
 
@@ -476,7 +476,7 @@ public class Stock extends StockDatabaseTable {
 		}
 
 		setAction1Min(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.Stock.COLUMN_ACTION_1MIN)));
+				.getColumnIndex(DatabaseContract.COLUMN_ACTION_1MIN)));
 	}
 
 	String getAction5Min() {
@@ -493,7 +493,7 @@ public class Stock extends StockDatabaseTable {
 		}
 
 		setAction5Min(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.Stock.COLUMN_ACTION_5MIN)));
+				.getColumnIndex(DatabaseContract.COLUMN_ACTION_5MIN)));
 	}
 
 	String getAction15Min() {
@@ -510,7 +510,7 @@ public class Stock extends StockDatabaseTable {
 		}
 
 		setAction15Min(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.Stock.COLUMN_ACTION_15MIN)));
+				.getColumnIndex(DatabaseContract.COLUMN_ACTION_15MIN)));
 	}
 
 	String getAction30Min() {
@@ -527,7 +527,7 @@ public class Stock extends StockDatabaseTable {
 		}
 
 		setAction30Min(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.Stock.COLUMN_ACTION_30MIN)));
+				.getColumnIndex(DatabaseContract.COLUMN_ACTION_30MIN)));
 	}
 
 	String getAction60Min() {
@@ -544,7 +544,7 @@ public class Stock extends StockDatabaseTable {
 		}
 
 		setAction60Min(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.Stock.COLUMN_ACTION_60MIN)));
+				.getColumnIndex(DatabaseContract.COLUMN_ACTION_60MIN)));
 	}
 
 	String getActionDay() {
@@ -561,7 +561,7 @@ public class Stock extends StockDatabaseTable {
 		}
 
 		setActionDay(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.Stock.COLUMN_ACTION_DAY)));
+				.getColumnIndex(DatabaseContract.COLUMN_ACTION_DAY)));
 	}
 
 	String getActionWeek() {
@@ -578,7 +578,7 @@ public class Stock extends StockDatabaseTable {
 		}
 
 		setActionWeek(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.Stock.COLUMN_ACTION_WEEK)));
+				.getColumnIndex(DatabaseContract.COLUMN_ACTION_WEEK)));
 	}
 
 	String getActionMonth() {
@@ -595,7 +595,7 @@ public class Stock extends StockDatabaseTable {
 		}
 
 		setActionMonth(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.Stock.COLUMN_ACTION_MONTH)));
+				.getColumnIndex(DatabaseContract.COLUMN_ACTION_MONTH)));
 	}
 
 	String getActionQuarter() {
@@ -612,7 +612,7 @@ public class Stock extends StockDatabaseTable {
 		}
 
 		setActionQuarter(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.Stock.COLUMN_ACTION_QUARTER)));
+				.getColumnIndex(DatabaseContract.COLUMN_ACTION_QUARTER)));
 	}
 
 	String getActionYear() {
@@ -629,7 +629,7 @@ public class Stock extends StockDatabaseTable {
 		}
 
 		setActionYear(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.Stock.COLUMN_ACTION_YEAR)));
+				.getColumnIndex(DatabaseContract.COLUMN_ACTION_YEAR)));
 	}
 
 	public String getAction(String period) {

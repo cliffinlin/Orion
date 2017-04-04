@@ -125,19 +125,19 @@ public class StockListActivity extends StorageActivity {
 				.add(mContext.getResources().getString(R.string.price_net));
 
 		headerStrings.add(mContext.getResources().getString(
-				R.string.stock_action_5min));
+				R.string.action_5min));
 		headerStrings.add(mContext.getResources().getString(
-				R.string.stock_action_15min));
+				R.string.action_15min));
 		headerStrings.add(mContext.getResources().getString(
-				R.string.stock_action_30min));
+				R.string.action_30min));
 		headerStrings.add(mContext.getResources().getString(
-				R.string.stock_action_60min));
+				R.string.action_60min));
+		headerStrings.add(mContext.getResources()
+				.getString(R.string.action_day));
 		headerStrings.add(mContext.getResources().getString(
-				R.string.stock_action_day));
+				R.string.action_week));
 		headerStrings.add(mContext.getResources().getString(
-				R.string.stock_action_week));
-		headerStrings.add(mContext.getResources().getString(
-				R.string.stock_action_month));
+				R.string.action_month));
 
 		return headerStrings;
 	}

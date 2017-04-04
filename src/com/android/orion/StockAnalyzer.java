@@ -155,19 +155,18 @@ public class StockAnalyzer extends StockManager {
 
 	private void analyzeStockMatch(Stock stock, String period,
 			ArrayList<StockData> stockDataList) {
+		double x = 0;
+		double y = 0;
+		double slope = 0;
+		double mean = 0;
+		double std = 0;
+		double delta = 0;
+
 		Stock stock_X;
 		Stock stock_Y;
 		ArrayList<StockMatch> stockMatchList;
 		ArrayList<StockData> stockDataList_X = null;
 		ArrayList<StockData> stockDataList_Y = null;
-
-		double x = 0;
-		double y = 0;
-		double slope = 0;
-		double intercept = 0;
-		double mean = 0;
-		double std = 0;
-		double delta = 0;
 
 		SimpleRegression simpleRegression = new SimpleRegression();
 		DescriptiveStatistics descriptiveStatistics = new DescriptiveStatistics();
@@ -234,7 +233,6 @@ public class StockAnalyzer extends StockManager {
 			}
 
 			slope = simpleRegression.getSlope();
-			intercept = simpleRegression.getIntercept();
 
 			descriptiveStatistics.clear();
 
@@ -261,12 +259,10 @@ public class StockAnalyzer extends StockManager {
 			} else {
 				delta = (delta - mean) / std;
 			}
+			
+			delta = Utility.Round(delta, Constants.DOUBLE_FIXED_DECIMAL - 1);
 
-			stockMatch.setSlope(slope);
-			stockMatch.setIntercept(intercept);
-			stockMatch.setMean(mean);
-			stockMatch.setSTD(std);
-			stockMatch.setDelta(delta);
+			stockMatch.setAction(period, Double.toString(delta));
 
 			mStockDatabaseManager.updateStockMatch(stockMatch);
 		}
