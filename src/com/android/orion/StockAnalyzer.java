@@ -166,11 +166,6 @@ public class StockAnalyzer extends StockManager {
 			return;
 		}
 
-		// TODO
-		if (!period.equals(Constants.PERIOD_DAY)) {
-			return;
-		}
-
 		stockMatchList = new ArrayList<StockMatch>();
 		mStockDatabaseManager.getStockMatchList(stock, stockMatchList);
 		if (stockMatchList.size() == 0) {

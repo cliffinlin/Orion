@@ -2,9 +2,10 @@ package com.android.orion;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Collections;
+
 import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
 import org.apache.commons.math.stat.regression.SimpleRegression;
 
@@ -295,13 +296,8 @@ public class StockMatchChartListActivity extends StorageActivity implements
 			return RESULT_LOAD_STOCK_MATCH_LIST_SUCCESS;
 		} else {
 			for (int i = 0; i < STOCK_PERIOD_ARRAY_SIZE; i++) {
-				if (!mPeriodArray.get(i).equals(Constants.PERIOD_DAY)) {
-					continue;
-				}
-
 				getStockDataList(mStock_X.getId(), mPeriodArray.get(i),
 						mStockDataList_X);
-
 				getStockDataList(mStock_Y.getId(), mPeriodArray.get(i),
 						mStockDataList_Y);
 
