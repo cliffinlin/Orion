@@ -12,6 +12,7 @@ public class StockDownloadAlarmManager extends OrionAlarmManager {
 		if (mInstance == null) {
 			mInstance = new StockDownloadAlarmManager(context);
 		}
+
 		return mInstance;
 	}
 

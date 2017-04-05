@@ -487,11 +487,7 @@ public class StockChartListActivity extends OrionBaseActivity implements
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if (cursor != null) {
-				if (!cursor.isClosed()) {
-					cursor.close();
-				}
-			}
+			mStockDatabaseManager.closeCursor(cursor);
 		}
 
 		if (mMainHandler != null) {
@@ -617,11 +613,7 @@ public class StockChartListActivity extends OrionBaseActivity implements
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if (cursor != null) {
-				if (!cursor.isClosed()) {
-					cursor.close();
-				}
-			}
+			mStockDatabaseManager.closeCursor(cursor);
 		}
 
 		updateTitle();

@@ -259,7 +259,7 @@ public class StockAnalyzer extends StockManager {
 			} else {
 				delta = (delta - mean) / std;
 			}
-			
+
 			delta = Utility.Round(delta, Constants.DOUBLE_FIXED_DECIMAL - 1);
 
 			stockMatch.setAction(period, Double.toString(delta));
@@ -364,6 +364,8 @@ public class StockAnalyzer extends StockManager {
 		StockData endStockData = null;
 
 		if ((stockDataList == null) || (segmentDataList == null)) {
+			Utility.Log("setAction return" + " stockDataList = "
+					+ stockDataList + " segmentDataList" + segmentDataList);
 			return;
 		}
 
@@ -398,6 +400,8 @@ public class StockAnalyzer extends StockManager {
 		ContentValues contentValues[] = new ContentValues[stockDataList.size()];
 
 		if (mStockDatabaseManager == null) {
+			Utility.Log("updateDatabase return " + " mStockDatabaseManager = "
+					+ mStockDatabaseManager);
 			return;
 		}
 
@@ -474,11 +478,7 @@ public class StockAnalyzer extends StockManager {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if (cursor != null) {
-				if (!cursor.isClosed()) {
-					cursor.close();
-				}
-			}
+			mStockDatabaseManager.closeCursor(cursor);
 		}
 	}
 
@@ -495,6 +495,7 @@ public class StockAnalyzer extends StockManager {
 		Uri uri = CallLog.Calls.CONTENT_URI;
 
 		if (stockData == null) {
+			Utility.Log("writeCallLog return stockData = " + stockData);
 			return;
 		}
 
@@ -544,28 +545,19 @@ public class StockAnalyzer extends StockManager {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if (cursor != null) {
-				if (!cursor.isClosed()) {
-					cursor.close();
-				}
-			}
+			mStockDatabaseManager.closeCursor(cursor);
 		}
 	}
 
 	private void updateNotification(Stock stock) {
 		int id = 0;
+		int defaults = 0;
 
 		NotificationManager notificationManager = (NotificationManager) mContext
 				.getSystemService(Context.NOTIFICATION_SERVICE);
 
 		id = (int) stock.getId();
 
-		if (!needNotify(stock)) {
-			notificationManager.cancel(id);
-			return;
-		}
-
-		int defaults = 0;
 		Intent intent = new Intent(Intent.ACTION_MAIN);
 		intent.setType("vnd.android-dir/mms-sms");
 		PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0,
@@ -621,23 +613,6 @@ public class StockAnalyzer extends StockManager {
 				result += stockDeal.getVolume() + " ";
 				result += stockDeal.getProfit() + " ";
 				result += "\n";
-			}
-		}
-
-		return result;
-	}
-
-	boolean needNotify(Stock stock) {
-		boolean result = false;
-
-		for (String period : Constants.PERIODS) {
-			if (Utility.getSettingBoolean(mContext, period)) {
-				if (stock.getAction(period)
-						.contains(Constants.STOCK_ACTION_BUY)
-						|| stock.getAction(period).contains(
-								Constants.STOCK_ACTION_SELL)) {
-					return true;
-				}
 			}
 		}
 

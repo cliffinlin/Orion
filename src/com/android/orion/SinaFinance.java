@@ -159,6 +159,8 @@ public class SinaFinance extends StockDataProvider {
 		String stockInfo[] = null;
 
 		if ((stock == null) || TextUtils.isEmpty(response)) {
+			Utility.Log("handleResponseStockRealTime return " + " stock = "
+					+ stock + " response = " + response);
 			return;
 		}
 
@@ -166,21 +168,28 @@ public class SinaFinance extends StockDataProvider {
 			keyValue = response.trim().split("=");
 
 			if (keyValue[0] == null) {
+				Utility.Log("handleResponseStockRealTime return keyValue[0] = "
+						+ keyValue[0]);
 				return;
 			}
 
 			codeInfo = keyValue[0].trim().split("_");
 
 			if (codeInfo[3] == null) {
+				Utility.Log("handleResponseStockRealTime return codeInfo[3] = "
+						+ codeInfo[3]);
 				return;
 			}
 
 			if (!stock.getSE().equals(codeInfo[3].substring(0, 2))
 					|| !stock.getCode().equals(codeInfo[3].substring(2, 8))) {
+				Utility.Log("handleResponseStockRealTime return");
 				return;
 			}
 
 			if (keyValue[1] == null) {
+				Utility.Log("handleResponseStockRealTime return keyValue[1] = "
+						+ keyValue[1]);
 				return;
 			}
 
@@ -188,6 +197,8 @@ public class SinaFinance extends StockDataProvider {
 					.split(",");
 
 			if (stockInfo == null) {
+				Utility.Log("handleResponseStockRealTime return stockInfo = "
+						+ stockInfo);
 				return;
 			}
 
@@ -251,16 +262,20 @@ public class SinaFinance extends StockDataProvider {
 		JSONArray jsonArray = null;
 
 		if (TextUtils.isEmpty(response)) {
+			Utility.Log("handleResponseStockHSA return response = " + response);
 			return;
 		}
 
 		if (isStockHSAEmpty()) {
 			bulkInsert = true;
+			Utility.Log("handleResponseStockHSA bulkInsert = " + bulkInsert);
 		}
 
 		try {
 			jsonArray = JSON.parseArray(response);
 			if (jsonArray == null || jsonArray.size() == 0) {
+				Utility.Log("handleResponseStockHSA return jsonArray = "
+						+ jsonArray + " jsonArray.size() = " + jsonArray.size());
 				return;
 			}
 
@@ -272,6 +287,7 @@ public class SinaFinance extends StockDataProvider {
 
 			stock = Stock.obtain();
 			if (stock == null) {
+				Utility.Log("handleResponseStockHSA return stock = " + stock);
 				return;
 			}
 			stock.init();
@@ -351,16 +367,23 @@ public class SinaFinance extends StockDataProvider {
 
 		if ((stock == null) || (stockData == null)
 				|| TextUtils.isEmpty(response)) {
+			Utility.Log("handleResponseStockDataHistory return " + " stock = "
+					+ stock + " stockData = " + stockData + " response = "
+					+ response);
 			return;
 		}
 
 		if (TextUtils.isEmpty(stockData.getCreated())) {
 			bulkInsert = true;
+			Utility.Log("handleResponseStockDataHistory bulkInsert = "
+					+ bulkInsert);
 		}
 
 		try {
 			jsonArray = JSON.parseArray(response);
 			if ((jsonArray == null) || (jsonArray.size() == 0)) {
+				Utility.Log("handleResponseStockDataHistory return jsonArray = "
+						+ jsonArray + " jsonArray.size() = " + jsonArray.size());
 				return;
 			}
 
@@ -370,6 +393,8 @@ public class SinaFinance extends StockDataProvider {
 				mStockDatabaseManager.deleteStockData(stockData.getStockId(),
 						stockData.getPeriod());
 				bulkInsert = true;
+				Utility.Log("handleResponseStockDataHistory bulkInsert = "
+						+ bulkInsert);
 			}
 
 			if (bulkInsert) {
@@ -450,6 +475,9 @@ public class SinaFinance extends StockDataProvider {
 
 		if ((stock == null) || (stockData == null)
 				|| TextUtils.isEmpty(response)) {
+			Utility.Log("handleResponseStockDataRealTime return " + " stock = "
+					+ stock + " stockData = " + stockData + " response = "
+					+ response);
 			return;
 		}
 
@@ -457,27 +485,38 @@ public class SinaFinance extends StockDataProvider {
 			keyValue = response.trim().split("=");
 
 			if (keyValue[0] == null) {
+				Utility.Log("handleResponseStockDataRealTime return "
+						+ " keyValue[0] = " + keyValue[0]);
 				return;
 			}
 
 			codeInfo = keyValue[0].trim().split("_");
 
 			if (codeInfo[2] == null) {
+				Utility.Log("handleResponseStockDataRealTime return "
+						+ " codeInfo[2] = " + codeInfo[2]);
 				return;
 			}
 
 			if (keyValue[1] == null) {
+				Utility.Log("handleResponseStockDataRealTime return "
+						+ " keyValue[1] = " + keyValue[1]);
 				return;
 			}
 
 			stockInfo = keyValue[1].trim().split(",");
 
 			if (stockInfo == null) {
+				Utility.Log("handleResponseStockDataRealTime return "
+						+ " stockInfo = " + stockInfo);
 				return;
 			}
 
 			for (int i = 1; i < 6; i++) {
 				if (Float.valueOf(stockInfo[i]) <= 0) {
+					Utility.Log("handleResponseStockDataRealTime return "
+							+ " Float.valueOf(stockInfo[i]) = "
+							+ Float.valueOf(stockInfo[i]));
 					return;
 				}
 			}

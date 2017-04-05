@@ -4,6 +4,8 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 
+import com.android.orion.utility.Utility;
+
 public class OrionAlarmManager {
 	Context mContext = null;
 
@@ -29,6 +31,9 @@ public class OrionAlarmManager {
 		} else {
 			mIntervalMillis = intervalMillis;
 		}
+
+		Utility.Log("setIntervalMillis: " + "mIntervalMillis = "
+				+ mIntervalMillis);
 	}
 
 	void setPendingIntent(PendingIntent operation) {
@@ -40,6 +45,9 @@ public class OrionAlarmManager {
 
 		if ((mAlarmManager == null) || (mPendingIntent == null)
 				|| (mIntervalMillis <= 0)) {
+			Utility.Log("startAlarm return " + "mAlarmManager = "
+					+ mAlarmManager + " mPendingIntent = " + mPendingIntent
+					+ " mIntervalMillis = " + mIntervalMillis);
 			return;
 		}
 
@@ -49,6 +57,8 @@ public class OrionAlarmManager {
 
 	void stopAlarm() {
 		if ((mAlarmManager == null) || (mPendingIntent == null)) {
+			Utility.Log("stopAlarm return " + "mAlarmManager = "
+					+ mAlarmManager + " mPendingIntent = " + mPendingIntent);
 			return;
 		}
 
