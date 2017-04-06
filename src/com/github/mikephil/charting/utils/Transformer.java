@@ -100,7 +100,10 @@ public class Transformer {
             Entry e = entries.get(j / 2);
 
             if (e != null) {
-                valuePoints[j] = e.getXIndex();
+            	//Modify for stock
+//              valuePoints[j] = e.getXIndex();
+                valuePoints[j] = e.getXVal();
+              //Modify for stock
                 valuePoints[j + 1] = e.getVal() * phaseY;
             }
         }

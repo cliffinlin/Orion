@@ -24,7 +24,10 @@ public class ScatterBuffer extends AbstractBuffer<Entry> {
         for (int i = 0; i < size; i++) {
 
             Entry e = entries.get(i);
-            addForm(e.getXIndex(), e.getVal() * phaseY);
+          //Modify for stock
+//          addForm(e.getXIndex(), e.getVal() * phaseY);
+            addForm(e.getXVal(), e.getVal() * phaseY);
+          //Modify for stock
         }
         
         reset();

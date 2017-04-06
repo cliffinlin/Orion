@@ -13,6 +13,10 @@ import android.os.Parcelable;
  */
 public class Entry implements Parcelable {
 
+	//Modify for stock
+    private float mXVal = 0f;
+	//Modify for stock
+	
     /** the actual value */
     private float mVal = 0f;
 
@@ -67,7 +71,7 @@ public class Entry implements Parcelable {
     public void setXIndex(int x) {
         this.mXIndex = x;
     }
-
+   
     /**
      * Returns the total value the entry represents.
      * 
@@ -85,6 +89,16 @@ public class Entry implements Parcelable {
     public void setVal(float val) {
         this.mVal = val;
     }
+
+	//Modify for stock
+    public float getXVal() {
+        return mXVal;
+    }
+    
+    public void setXVal(float val) {
+        this.mXVal = val;
+    }
+	//Modify for stock
 
     /**
      * Returns the data, additional information that this Entry represents, or
