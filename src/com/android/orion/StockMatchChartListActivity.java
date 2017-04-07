@@ -2,8 +2,6 @@ package com.android.orion;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
@@ -406,8 +404,6 @@ public class StockMatchChartListActivity extends StorageActivity implements
 			return;
 		}
 
-		Collections.sort(mPointList, new SortByX());
-
 		slope = simpleRegression.getSlope();
 		intercept = simpleRegression.getIntercept();
 
@@ -420,8 +416,9 @@ public class StockMatchChartListActivity extends StorageActivity implements
 
 			index = stockMatchChartData.mXValuesMain.size();
 			Entry scatterEntry = new Entry((float) point.y, index);
-			scatterEntry.setXVal((float) ((point.x - xMin)
-					* (mStockDataList_X.size() - 1) / (xMax - xMin)));
+			scatterEntry.setXVal((float) Utility.Round((point.x - xMin)
+					* (mStockDataList_X.size() - 1) / (xMax - xMin),
+					Constants.DOUBLE_FIXED_DECIMAL - 1));
 			stockMatchChartData.mScatterEntryList.add(scatterEntry);
 
 			x = xMin + i * (xMax - xMin) / (mStockDataList_X.size() - 1);
@@ -761,20 +758,6 @@ public class StockMatchChartListActivity extends StorageActivity implements
 		@Override
 		public int getViewTypeCount() {
 			return mStockMatchChartItemList.size();
-		}
-	}
-
-	class SortByX implements Comparator<PointD> {
-
-		@Override
-		public int compare(PointD point0, PointD point1) {
-			if (point0.x < point1.x) {
-				return -1;
-			} else if (point0.x == point1.x) {
-				return 0;
-			} else {
-				return 1;
-			}
 		}
 	}
 }

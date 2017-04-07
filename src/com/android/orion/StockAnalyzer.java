@@ -260,7 +260,7 @@ public class StockAnalyzer extends StockManager {
 				delta = (delta - mean) / std;
 			}
 
-			delta = Utility.Round(delta, Constants.DOUBLE_FIXED_DECIMAL);
+			delta = Utility.Round(delta, Constants.DOUBLE_FIXED_DECIMAL - 1);
 
 			stockMatch.setAction(period, Double.toString(delta));
 
