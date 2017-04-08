@@ -13,16 +13,16 @@ public class StockMatch extends DatabaseTable {
 	private String mSE_Y;
 	private String mCode_Y;
 	private String mName_Y;
-	private String mAction1Min;
-	private String mAction5Min;
-	private String mAction15Min;
-	private String mAction30Min;
-	private String mAction60Min;
-	private String mActionDay;
-	private String mActionWeek;
-	private String mActionMonth;
-	private String mActionQuarter;
-	private String mActionYear;
+	private double mValue1Min;
+	private double mValue5Min;
+	private double mValue15Min;
+	private double mValue30Min;
+	private double mValue60Min;
+	private double mValueDay;
+	private double mValueWeek;
+	private double mValueMonth;
+	private double mValueQuarter;
+	private double mValueYear;
 
 	private StockMatch next;
 	private static final Object sPoolSync = new Object();
@@ -75,16 +75,16 @@ public class StockMatch extends DatabaseTable {
 		mSE_Y = "";
 		mCode_Y = "";
 		mName_Y = "";
-		mAction1Min = "";
-		mAction5Min = "";
-		mAction15Min = "";
-		mAction30Min = "";
-		mAction60Min = "";
-		mActionDay = "";
-		mActionWeek = "";
-		mActionMonth = "";
-		mActionQuarter = "";
-		mActionYear = "";
+		mValue1Min = 0;
+		mValue5Min = 0;
+		mValue15Min = 0;
+		mValue30Min = 0;
+		mValue60Min = 0;
+		mValueDay = 0;
+		mValueWeek = 0;
+		mValueMonth = 0;
+		mValueQuarter = 0;
+		mValueYear = 0;
 	}
 
 	public ContentValues getContentValues() {
@@ -101,25 +101,25 @@ public class StockMatch extends DatabaseTable {
 		contentValues.put(DatabaseContract.StockMatch.COLUMN_SE_Y, mSE_Y);
 		contentValues.put(DatabaseContract.StockMatch.COLUMN_CODE_Y, mCode_Y);
 		contentValues.put(DatabaseContract.StockMatch.COLUMN_NAME_Y, mName_Y);
-		contentValues.put(DatabaseContract.COLUMN_ACTION_1MIN,
-				mAction1Min);
-		contentValues.put(DatabaseContract.COLUMN_ACTION_5MIN,
-				mAction5Min);
-		contentValues.put(DatabaseContract.COLUMN_ACTION_15MIN,
-				mAction15Min);
-		contentValues.put(DatabaseContract.COLUMN_ACTION_30MIN,
-				mAction30Min);
-		contentValues.put(DatabaseContract.COLUMN_ACTION_60MIN,
-				mAction60Min);
-		contentValues.put(DatabaseContract.COLUMN_ACTION_DAY, mActionDay);
-		contentValues.put(DatabaseContract.COLUMN_ACTION_WEEK,
-				mActionWeek);
-		contentValues.put(DatabaseContract.COLUMN_ACTION_MONTH,
-				mActionMonth);
-		contentValues.put(DatabaseContract.COLUMN_ACTION_QUARTER,
-				mActionQuarter);
-		contentValues.put(DatabaseContract.COLUMN_ACTION_YEAR,
-				mActionYear);
+		contentValues.put(DatabaseContract.StockMatch.COLUMN_VALUE_1MIN,
+				mValue1Min);
+		contentValues.put(DatabaseContract.StockMatch.COLUMN_VALUE_5MIN,
+				mValue5Min);
+		contentValues.put(DatabaseContract.StockMatch.COLUMN_VALUE_15MIN,
+				mValue15Min);
+		contentValues.put(DatabaseContract.StockMatch.COLUMN_VALUE_30MIN,
+				mValue30Min);
+		contentValues.put(DatabaseContract.StockMatch.COLUMN_VALUE_60MIN,
+				mValue60Min);
+		contentValues.put(DatabaseContract.StockMatch.COLUMN_VALUE_DAY, mValueDay);
+		contentValues.put(DatabaseContract.StockMatch.COLUMN_VALUE_WEEK,
+				mValueWeek);
+		contentValues.put(DatabaseContract.StockMatch.COLUMN_VALUE_MONTH,
+				mValueMonth);
+		contentValues.put(DatabaseContract.StockMatch.COLUMN_VALUE_QUARTER,
+				mValueQuarter);
+		contentValues.put(DatabaseContract.StockMatch.COLUMN_VALUE_YEAR,
+				mValueYear);
 
 		return contentValues;
 	}
@@ -139,16 +139,16 @@ public class StockMatch extends DatabaseTable {
 		setSE_Y(stockMatch.mSE_Y);
 		setCode_Y(stockMatch.mCode_Y);
 		setName_Y(stockMatch.mName_Y);
-		setAction1Min(stockMatch.mAction1Min);
-		setAction5Min(stockMatch.mAction5Min);
-		setAction15Min(stockMatch.mAction15Min);
-		setAction30Min(stockMatch.mAction30Min);
-		setAction60Min(stockMatch.mAction60Min);
-		setActionDay(stockMatch.mActionDay);
-		setActionWeek(stockMatch.mActionWeek);
-		setActionMonth(stockMatch.mActionMonth);
-		setActionQuarter(stockMatch.mActionQuarter);
-		setActionYear(stockMatch.mActionYear);
+		setValue1Min(stockMatch.mValue1Min);
+		setValue5Min(stockMatch.mValue5Min);
+		setValue15Min(stockMatch.mValue15Min);
+		setValue30Min(stockMatch.mValue30Min);
+		setValue60Min(stockMatch.mValue60Min);
+		setValueDay(stockMatch.mValueDay);
+		setValueWeek(stockMatch.mValueWeek);
+		setValueMonth(stockMatch.mValueMonth);
+		setValueQuarter(stockMatch.mValueQuarter);
+		setValueYear(stockMatch.mValueYear);
 	}
 
 	@Override
@@ -167,16 +167,16 @@ public class StockMatch extends DatabaseTable {
 		setSE_Y(cursor);
 		setCode_Y(cursor);
 		setName_Y(cursor);
-		setAction1Min(cursor);
-		setAction5Min(cursor);
-		setAction15Min(cursor);
-		setAction30Min(cursor);
-		setAction60Min(cursor);
-		setActionDay(cursor);
-		setActionWeek(cursor);
-		setActionMonth(cursor);
-		setActionQuarter(cursor);
-		setActionYear(cursor);
+		setValue1Min(cursor);
+		setValue5Min(cursor);
+		setValue15Min(cursor);
+		setValue30Min(cursor);
+		setValue60Min(cursor);
+		setValueDay(cursor);
+		setValueWeek(cursor);
+		setValueMonth(cursor);
+		setValueQuarter(cursor);
+		setValueYear(cursor);
 	}
 	
 	public void set(Stock stock_X, Stock stock_Y) {
@@ -291,225 +291,225 @@ public class StockMatch extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.StockMatch.COLUMN_NAME_Y)));
 	}
 
-	String getAction1Min() {
-		return mAction1Min;
+	double getValue1Min() {
+		return mValue1Min;
 	}
 
-	void setAction1Min(String action) {
-		mAction1Min = action;
+	void setValue1Min(double value) {
+		mValue1Min = value;
 	}
 
-	void setAction1Min(Cursor cursor) {
+	void setValue1Min(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}
 
-		setAction1Min(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_ACTION_1MIN)));
+		setValue1Min(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.StockMatch.COLUMN_VALUE_1MIN)));
 	}
 
-	String getAction5Min() {
-		return mAction5Min;
+	double getValue5Min() {
+		return mValue5Min;
 	}
 
-	void setAction5Min(String action) {
-		mAction5Min = action;
+	void setValue5Min(double value) {
+		mValue5Min = value;
 	}
 
-	void setAction5Min(Cursor cursor) {
+	void setValue5Min(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}
 
-		setAction5Min(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_ACTION_5MIN)));
+		setValue5Min(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.StockMatch.COLUMN_VALUE_5MIN)));
 	}
 
-	String getAction15Min() {
-		return mAction15Min;
+	double getValue15Min() {
+		return mValue15Min;
 	}
 
-	void setAction15Min(String action) {
-		mAction15Min = action;
+	void setValue15Min(double value) {
+		mValue15Min = value;
 	}
 
-	void setAction15Min(Cursor cursor) {
+	void setValue15Min(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}
 
-		setAction15Min(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_ACTION_15MIN)));
+		setValue15Min(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.StockMatch.COLUMN_VALUE_15MIN)));
 	}
 
-	String getAction30Min() {
-		return mAction30Min;
+	double getValue30Min() {
+		return mValue30Min;
 	}
 
-	void setAction30Min(String action) {
-		mAction30Min = action;
+	void setValue30Min(double value) {
+		mValue30Min = value;
 	}
 
-	void setAction30Min(Cursor cursor) {
+	void setValue30Min(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}
 
-		setAction30Min(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_ACTION_30MIN)));
+		setValue30Min(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.StockMatch.COLUMN_VALUE_30MIN)));
 	}
 
-	String getAction60Min() {
-		return mAction60Min;
+	double getValue60Min() {
+		return mValue60Min;
 	}
 
-	void setAction60Min(String action) {
-		mAction60Min = action;
+	void setValue60Min(double value) {
+		mValue60Min = value;
 	}
 
-	void setAction60Min(Cursor cursor) {
+	void setValue60Min(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}
 
-		setAction60Min(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_ACTION_60MIN)));
+		setValue60Min(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.StockMatch.COLUMN_VALUE_60MIN)));
 	}
 
-	String getActionDay() {
-		return mActionDay;
+	double getValueDay() {
+		return mValueDay;
 	}
 
-	void setActionDay(String action) {
-		mActionDay = action;
+	void setValueDay(double value) {
+		mValueDay = value;
 	}
 
-	void setActionDay(Cursor cursor) {
+	void setValueDay(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}
 
-		setActionDay(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_ACTION_DAY)));
+		setValueDay(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.StockMatch.COLUMN_VALUE_DAY)));
 	}
 
-	String getActionWeek() {
-		return mActionWeek;
+	double getValueWeek() {
+		return mValueWeek;
 	}
 
-	void setActionWeek(String action) {
-		mActionWeek = action;
+	void setValueWeek(double value) {
+		mValueWeek = value;
 	}
 
-	void setActionWeek(Cursor cursor) {
+	void setValueWeek(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}
 
-		setActionWeek(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_ACTION_WEEK)));
+		setValueWeek(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.StockMatch.COLUMN_VALUE_WEEK)));
 	}
 
-	String getActionMonth() {
-		return mActionMonth;
+	double getValueMonth() {
+		return mValueMonth;
 	}
 
-	void setActionMonth(String action) {
-		mActionMonth = action;
+	void setValueMonth(double value) {
+		mValueMonth = value;
 	}
 
-	void setActionMonth(Cursor cursor) {
+	void setValueMonth(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}
 
-		setActionMonth(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_ACTION_MONTH)));
+		setValueMonth(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.StockMatch.COLUMN_VALUE_MONTH)));
 	}
 
-	String getActionQuarter() {
-		return mActionQuarter;
+	double getValueQuarter() {
+		return mValueQuarter;
 	}
 
-	void setActionQuarter(String action) {
-		mActionQuarter = action;
+	void setValueQuarter(double value) {
+		mValueQuarter = value;
 	}
 
-	void setActionQuarter(Cursor cursor) {
+	void setValueQuarter(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}
 
-		setActionQuarter(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_ACTION_QUARTER)));
+		setValueQuarter(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.StockMatch.COLUMN_VALUE_QUARTER)));
 	}
 
-	String getActionYear() {
-		return mActionYear;
+	double getValueYear() {
+		return mValueYear;
 	}
 
-	void setActionYear(String action) {
-		mActionYear = action;
+	void setValueYear(double value) {
+		mValueYear = value;
 	}
 
-	void setActionYear(Cursor cursor) {
+	void setValueYear(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}
 
-		setActionYear(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_ACTION_YEAR)));
+		setValueYear(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.StockMatch.COLUMN_VALUE_YEAR)));
 	}
 
-	public String getAction(String period) {
-		String action = "";
+	public double getValue(String period) {
+		double value = 0;
 
 		if (period.equals(Constants.PERIOD_1MIN)) {
-			action = getAction1Min();
+			value = getValue1Min();
 		} else if (period.equals(Constants.PERIOD_5MIN)) {
-			action = getAction5Min();
+			value = getValue5Min();
 		} else if (period.equals(Constants.PERIOD_15MIN)) {
-			action = getAction15Min();
+			value = getValue15Min();
 		} else if (period.equals(Constants.PERIOD_30MIN)) {
-			action = getAction30Min();
+			value = getValue30Min();
 		} else if (period.equals(Constants.PERIOD_60MIN)) {
-			action = getAction60Min();
+			value = getValue60Min();
 		} else if (period.equals(Constants.PERIOD_DAY)) {
-			action = getActionDay();
+			value = getValueDay();
 		} else if (period.equals(Constants.PERIOD_WEEK)) {
-			action = getActionWeek();
+			value = getValueWeek();
 		} else if (period.equals(Constants.PERIOD_MONTH)) {
-			action = getActionMonth();
+			value = getValueMonth();
 		} else if (period.equals(Constants.PERIOD_QUARTER)) {
-			action = getActionQuarter();
+			value = getValueQuarter();
 		} else if (period.equals(Constants.PERIOD_YEAR)) {
-			action = getActionYear();
+			value = getValueYear();
 		}
 
-		return action;
+		return value;
 	}
 
-	public void setAction(String period, String action) {
+	public void setValue(String period, double value) {
 		if (period.equals(Constants.PERIOD_1MIN)) {
-			setAction1Min(action);
+			setValue1Min(value);
 		} else if (period.equals(Constants.PERIOD_5MIN)) {
-			setAction5Min(action);
+			setValue5Min(value);
 		} else if (period.equals(Constants.PERIOD_15MIN)) {
-			setAction15Min(action);
+			setValue15Min(value);
 		} else if (period.equals(Constants.PERIOD_30MIN)) {
-			setAction30Min(action);
+			setValue30Min(value);
 		} else if (period.equals(Constants.PERIOD_60MIN)) {
-			setAction60Min(action);
+			setValue60Min(value);
 		} else if (period.equals(Constants.PERIOD_DAY)) {
-			setActionDay(action);
+			setValueDay(value);
 		} else if (period.equals(Constants.PERIOD_WEEK)) {
-			setActionWeek(action);
+			setValueWeek(value);
 		} else if (period.equals(Constants.PERIOD_MONTH)) {
-			setActionMonth(action);
+			setValueMonth(value);
 		} else if (period.equals(Constants.PERIOD_QUARTER)) {
-			setActionQuarter(action);
+			setValueQuarter(value);
 		} else if (period.equals(Constants.PERIOD_YEAR)) {
-			setActionYear(action);
+			setValueYear(value);
 		}
 	}
 }

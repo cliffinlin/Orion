@@ -343,25 +343,25 @@ public class StockFavoriteListActivity extends StorageActivity implements
 			mSortOrderColumn = DatabaseContract.COLUMN_NET;
 			break;
 		case R.id.action_5min:
-			mSortOrderColumn = DatabaseContract.COLUMN_ACTION_5MIN;
+			mSortOrderColumn = DatabaseContract.Stock.COLUMN_ACTION_5MIN;
 			break;
 		case R.id.action_15min:
-			mSortOrderColumn = DatabaseContract.COLUMN_ACTION_15MIN;
+			mSortOrderColumn = DatabaseContract.Stock.COLUMN_ACTION_15MIN;
 			break;
 		case R.id.action_30min:
-			mSortOrderColumn = DatabaseContract.COLUMN_ACTION_30MIN;
+			mSortOrderColumn = DatabaseContract.Stock.COLUMN_ACTION_30MIN;
 			break;
 		case R.id.action_60min:
-			mSortOrderColumn = DatabaseContract.COLUMN_ACTION_60MIN;
+			mSortOrderColumn = DatabaseContract.Stock.COLUMN_ACTION_60MIN;
 			break;
 		case R.id.action_day:
-			mSortOrderColumn = DatabaseContract.COLUMN_ACTION_DAY;
+			mSortOrderColumn = DatabaseContract.Stock.COLUMN_ACTION_DAY;
 			break;
 		case R.id.action_week:
-			mSortOrderColumn = DatabaseContract.COLUMN_ACTION_WEEK;
+			mSortOrderColumn = DatabaseContract.Stock.COLUMN_ACTION_WEEK;
 			break;
 		case R.id.action_month:
-			mSortOrderColumn = DatabaseContract.COLUMN_ACTION_MONTH;
+			mSortOrderColumn = DatabaseContract.Stock.COLUMN_ACTION_MONTH;
 			break;
 		default:
 			mSortOrderColumn = DatabaseContract.COLUMN_CODE;
@@ -487,19 +487,26 @@ public class StockFavoriteListActivity extends StorageActivity implements
 			setHeaderTextColor(mTextViewPrice, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_NET)) {
 			setHeaderTextColor(mTextViewNet, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_ACTION_5MIN)) {
+		} else if (mSortOrder
+				.contains(DatabaseContract.Stock.COLUMN_ACTION_5MIN)) {
 			setHeaderTextColor(mTextView15M, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_ACTION_15MIN)) {
+		} else if (mSortOrder
+				.contains(DatabaseContract.Stock.COLUMN_ACTION_15MIN)) {
 			setHeaderTextColor(mTextView15M, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_ACTION_30MIN)) {
+		} else if (mSortOrder
+				.contains(DatabaseContract.Stock.COLUMN_ACTION_30MIN)) {
 			setHeaderTextColor(mTextView30M, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_ACTION_60MIN)) {
+		} else if (mSortOrder
+				.contains(DatabaseContract.Stock.COLUMN_ACTION_60MIN)) {
 			setHeaderTextColor(mTextView60M, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_ACTION_DAY)) {
+		} else if (mSortOrder
+				.contains(DatabaseContract.Stock.COLUMN_ACTION_DAY)) {
 			setHeaderTextColor(mTextViewDay, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_ACTION_WEEK)) {
+		} else if (mSortOrder
+				.contains(DatabaseContract.Stock.COLUMN_ACTION_WEEK)) {
 			setHeaderTextColor(mTextViewWeek, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_ACTION_MONTH)) {
+		} else if (mSortOrder
+				.contains(DatabaseContract.Stock.COLUMN_ACTION_MONTH)) {
 			setHeaderTextColor(mTextViewMonth, mHeaderTextHighlightColor);
 		} else {
 		}
@@ -512,13 +519,13 @@ public class StockFavoriteListActivity extends StorageActivity implements
 
 		String[] mRightFrom = new String[] { DatabaseContract.COLUMN_PRICE,
 				DatabaseContract.COLUMN_NET,
-				DatabaseContract.COLUMN_ACTION_5MIN,
-				DatabaseContract.COLUMN_ACTION_15MIN,
-				DatabaseContract.COLUMN_ACTION_30MIN,
-				DatabaseContract.COLUMN_ACTION_60MIN,
-				DatabaseContract.COLUMN_ACTION_DAY,
-				DatabaseContract.COLUMN_ACTION_WEEK,
-				DatabaseContract.COLUMN_ACTION_MONTH };
+				DatabaseContract.Stock.COLUMN_ACTION_5MIN,
+				DatabaseContract.Stock.COLUMN_ACTION_15MIN,
+				DatabaseContract.Stock.COLUMN_ACTION_30MIN,
+				DatabaseContract.Stock.COLUMN_ACTION_60MIN,
+				DatabaseContract.Stock.COLUMN_ACTION_DAY,
+				DatabaseContract.Stock.COLUMN_ACTION_WEEK,
+				DatabaseContract.Stock.COLUMN_ACTION_MONTH };
 		int[] mRightTo = new int[] { R.id.price, R.id.net, R.id.type_5min,
 				R.id.type_15min, R.id.type_30min, R.id.type_60min,
 				R.id.type_day, R.id.type_week, R.id.type_month };
@@ -671,25 +678,25 @@ public class StockFavoriteListActivity extends StorageActivity implements
 			}
 
 			if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_ACTION_5MIN)) {
+					.getColumnIndex(DatabaseContract.Stock.COLUMN_ACTION_5MIN)) {
 				return setTextViewValue(Constants.PERIOD_5MIN, view);
 			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_ACTION_15MIN)) {
+					.getColumnIndex(DatabaseContract.Stock.COLUMN_ACTION_15MIN)) {
 				return setTextViewValue(Constants.PERIOD_15MIN, view);
 			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_ACTION_30MIN)) {
+					.getColumnIndex(DatabaseContract.Stock.COLUMN_ACTION_30MIN)) {
 				return setTextViewValue(Constants.PERIOD_30MIN, view);
 			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_ACTION_60MIN)) {
+					.getColumnIndex(DatabaseContract.Stock.COLUMN_ACTION_60MIN)) {
 				return setTextViewValue(Constants.PERIOD_60MIN, view);
 			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_ACTION_DAY)) {
+					.getColumnIndex(DatabaseContract.Stock.COLUMN_ACTION_DAY)) {
 				return setTextViewValue(Constants.PERIOD_DAY, view);
 			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_ACTION_WEEK)) {
+					.getColumnIndex(DatabaseContract.Stock.COLUMN_ACTION_WEEK)) {
 				return setTextViewValue(Constants.PERIOD_WEEK, view);
 			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_ACTION_MONTH)) {
+					.getColumnIndex(DatabaseContract.Stock.COLUMN_ACTION_MONTH)) {
 				return setTextViewValue(Constants.PERIOD_MONTH, view);
 			}
 

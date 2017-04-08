@@ -258,7 +258,7 @@ public class StockAnalyzer extends StockManager {
 
 			delta = Utility.Round(delta, Constants.DOUBLE_FIXED_DECIMAL - 1);
 
-			stockMatch.setAction(period, Double.toString(delta));
+			stockMatch.setValue(period, delta);
 
 			mStockDatabaseManager.updateStockMatch(stockMatch);
 		}

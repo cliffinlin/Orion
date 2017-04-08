@@ -300,7 +300,7 @@ public class OrionBaseActivity extends Activity {
 					}
 				}).create().show();
 	}
-	
+
 	void showSaveSDAlertDialog() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 		builder.setTitle(R.string.title_save_to_sd_card)
@@ -316,10 +316,10 @@ public class OrionBaseActivity extends Activity {
 					}
 				}).create().show();
 	}
-	
+
 	void onDeleteAll() {
 	}
-	
+
 	void onSaveSD() {
 	}
 

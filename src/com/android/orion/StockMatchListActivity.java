@@ -1,7 +1,6 @@
 package com.android.orion;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlSerializer;
@@ -18,6 +17,8 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
+import android.util.SparseArray;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -44,15 +45,14 @@ public class StockMatchListActivity extends StorageActivity implements
 		OnItemLongClickListener, OnClickListener {
 
 	static final int EXECUTE_MATCH_DELETE = 0;
-
 	static final int EXECUTE_MATCH_LIST_ON_ITEM_CLICK = 1;
-
 	static final int EXECUTE_MATCH_LIST_DELETE_ALL = 2;
+	static final int EXECUTE_MATCH_LIST_LOAD_FROM_SD_CARD = 3;
+	static final int EXECUTE_MATCH_LIST_SAVE_TO_SD_CARD = 4;
 
-	static final int EXECUTE_MATCH_LIST_LOAD_FROM_SD_CARD = 11;
-	static final int EXECUTE_MATCH_LIST_SAVE_TO_SD_CARD = 12;
+	static final int LOADER_ID_MATCH_LIST = 0;
 
-	static final int LOADER_ID_MATCH_LIST = 2;
+	static final int STOCK_PERIOD_ARRAY_SIZE = 7;
 
 	static final int mHeaderTextDefaultColor = Color.BLACK;
 	static final int mHeaderTextHighlightColor = Color.RED;
@@ -86,9 +86,11 @@ public class StockMatchListActivity extends StorageActivity implements
 
 	ActionMode mCurrentActionMode = null;
 	StockMatch mMatch = new StockMatch();
-	List<StockMatch> mStockMatchList = new ArrayList<StockMatch>();
+	ArrayList<StockMatch> mStockMatchList = new ArrayList<StockMatch>();
 	Stock mStock_Y = new Stock();
 	Stock mStock_X = new Stock();
+
+	SparseArray<String> mPeriodArray = null;
 
 	ContentObserver mContentObserver = new ContentObserver(new Handler()) {
 		@Override
@@ -167,6 +169,8 @@ public class StockMatchListActivity extends StorageActivity implements
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_stock_match_list);
+
+		fillPeriodArray();
 
 		mSortOrder = getSetting(Setting.KEY_SORT_ORDER_STOCK_MATCH_LIST,
 				mSortOrderDefault);
@@ -454,25 +458,25 @@ public class StockMatchListActivity extends StorageActivity implements
 			mSortOrderColumn = DatabaseContract.StockMatch.COLUMN_CODE_X;
 			break;
 		case R.id.action_5min:
-			mSortOrderColumn = DatabaseContract.COLUMN_ACTION_5MIN;
+			mSortOrderColumn = DatabaseContract.StockMatch.COLUMN_VALUE_5MIN;
 			break;
 		case R.id.action_15min:
-			mSortOrderColumn = DatabaseContract.COLUMN_ACTION_15MIN;
+			mSortOrderColumn = DatabaseContract.StockMatch.COLUMN_VALUE_15MIN;
 			break;
 		case R.id.action_30min:
-			mSortOrderColumn = DatabaseContract.COLUMN_ACTION_30MIN;
+			mSortOrderColumn = DatabaseContract.StockMatch.COLUMN_VALUE_30MIN;
 			break;
 		case R.id.action_60min:
-			mSortOrderColumn = DatabaseContract.COLUMN_ACTION_60MIN;
+			mSortOrderColumn = DatabaseContract.StockMatch.COLUMN_VALUE_60MIN;
 			break;
 		case R.id.action_day:
-			mSortOrderColumn = DatabaseContract.COLUMN_ACTION_DAY;
+			mSortOrderColumn = DatabaseContract.StockMatch.COLUMN_VALUE_DAY;
 			break;
 		case R.id.action_week:
-			mSortOrderColumn = DatabaseContract.COLUMN_ACTION_WEEK;
+			mSortOrderColumn = DatabaseContract.StockMatch.COLUMN_VALUE_WEEK;
 			break;
 		case R.id.action_month:
-			mSortOrderColumn = DatabaseContract.COLUMN_ACTION_MONTH;
+			mSortOrderColumn = DatabaseContract.StockMatch.COLUMN_VALUE_MONTH;
 			break;
 		case R.id.created:
 			mSortOrderColumn = DatabaseContract.COLUMN_CREATED;
@@ -496,6 +500,20 @@ public class StockMatchListActivity extends StorageActivity implements
 		saveSetting(Setting.KEY_SORT_ORDER_STOCK_MATCH_LIST, mSortOrder);
 
 		restartLoader();
+	}
+
+	void fillPeriodArray() {
+		if (mPeriodArray == null) {
+			mPeriodArray = new SparseArray<String>();
+
+			mPeriodArray.put(mPeriodArray.size(), Constants.PERIOD_MONTH);
+			mPeriodArray.put(mPeriodArray.size(), Constants.PERIOD_WEEK);
+			mPeriodArray.put(mPeriodArray.size(), Constants.PERIOD_DAY);
+			mPeriodArray.put(mPeriodArray.size(), Constants.PERIOD_60MIN);
+			mPeriodArray.put(mPeriodArray.size(), Constants.PERIOD_30MIN);
+			mPeriodArray.put(mPeriodArray.size(), Constants.PERIOD_15MIN);
+			mPeriodArray.put(mPeriodArray.size(), Constants.PERIOD_5MIN);
+		}
 	}
 
 	void setHeaderTextColor(int id, int color) {
@@ -588,19 +606,26 @@ public class StockMatchListActivity extends StorageActivity implements
 
 		if (mSortOrder.contains(DatabaseContract.StockMatch.COLUMN_CODE_X)) {
 			setHeaderTextColor(mTextViewNameCode, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_ACTION_5MIN)) {
+		} else if (mSortOrder
+				.contains(DatabaseContract.StockMatch.COLUMN_VALUE_5MIN)) {
 			setHeaderTextColor(mTextView15M, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_ACTION_15MIN)) {
+		} else if (mSortOrder
+				.contains(DatabaseContract.StockMatch.COLUMN_VALUE_15MIN)) {
 			setHeaderTextColor(mTextView15M, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_ACTION_30MIN)) {
+		} else if (mSortOrder
+				.contains(DatabaseContract.StockMatch.COLUMN_VALUE_30MIN)) {
 			setHeaderTextColor(mTextView30M, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_ACTION_60MIN)) {
+		} else if (mSortOrder
+				.contains(DatabaseContract.StockMatch.COLUMN_VALUE_60MIN)) {
 			setHeaderTextColor(mTextView60M, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_ACTION_DAY)) {
+		} else if (mSortOrder
+				.contains(DatabaseContract.StockMatch.COLUMN_VALUE_DAY)) {
 			setHeaderTextColor(mTextViewDay, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_ACTION_WEEK)) {
+		} else if (mSortOrder
+				.contains(DatabaseContract.StockMatch.COLUMN_VALUE_WEEK)) {
 			setHeaderTextColor(mTextViewWeek, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_ACTION_MONTH)) {
+		} else if (mSortOrder
+				.contains(DatabaseContract.StockMatch.COLUMN_VALUE_MONTH)) {
 			setHeaderTextColor(mTextViewMonth, mHeaderTextHighlightColor);
 		} else {
 		}
@@ -613,13 +638,13 @@ public class StockMatchListActivity extends StorageActivity implements
 		int[] mLeftTo = new int[] { R.id.name, R.id.code };
 
 		String[] mRightFrom = new String[] {
-				DatabaseContract.COLUMN_ACTION_5MIN,
-				DatabaseContract.COLUMN_ACTION_15MIN,
-				DatabaseContract.COLUMN_ACTION_30MIN,
-				DatabaseContract.COLUMN_ACTION_60MIN,
-				DatabaseContract.COLUMN_ACTION_DAY,
-				DatabaseContract.COLUMN_ACTION_WEEK,
-				DatabaseContract.COLUMN_ACTION_MONTH, };
+				DatabaseContract.StockMatch.COLUMN_VALUE_5MIN,
+				DatabaseContract.StockMatch.COLUMN_VALUE_15MIN,
+				DatabaseContract.StockMatch.COLUMN_VALUE_30MIN,
+				DatabaseContract.StockMatch.COLUMN_VALUE_60MIN,
+				DatabaseContract.StockMatch.COLUMN_VALUE_DAY,
+				DatabaseContract.StockMatch.COLUMN_VALUE_WEEK,
+				DatabaseContract.StockMatch.COLUMN_VALUE_MONTH, };
 		int[] mRightTo = new int[] { R.id.type_5min, R.id.type_15min,
 				R.id.type_30min, R.id.type_60min, R.id.type_day,
 				R.id.type_week, R.id.type_month };
@@ -672,7 +697,27 @@ public class StockMatchListActivity extends StorageActivity implements
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle arg1) {
 		String selection = null;
+		String condition1 = "";
+		String condition2 = "";
 		CursorLoader loader = null;
+
+		for (int i = 0; i < STOCK_PERIOD_ARRAY_SIZE; i++) {
+			if (Utility.getSettingBoolean(this, mPeriodArray.get(i))) {
+				if (!TextUtils.isEmpty(condition1)) {
+					condition1 += " AND ";
+				}
+
+				condition1 += "value_" + mPeriodArray.get(i) + " > 1";
+
+				if (!TextUtils.isEmpty(condition2)) {
+					condition2 += " AND ";
+				}
+
+				condition2 += "value_" + mPeriodArray.get(i) + " < -1";
+			}
+		}
+
+		selection = "(" + condition1 + ")" + " OR " + "(" + condition2 + ")";
 
 		switch (id) {
 		case LOADER_ID_MATCH_LIST:
@@ -781,25 +826,25 @@ public class StockMatchListActivity extends StorageActivity implements
 			}
 
 			if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_ACTION_5MIN)) {
+					.getColumnIndex(DatabaseContract.StockMatch.COLUMN_VALUE_5MIN)) {
 				return setTextViewValue(Constants.PERIOD_5MIN, view);
 			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_ACTION_15MIN)) {
+					.getColumnIndex(DatabaseContract.StockMatch.COLUMN_VALUE_15MIN)) {
 				return setTextViewValue(Constants.PERIOD_15MIN, view);
 			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_ACTION_30MIN)) {
+					.getColumnIndex(DatabaseContract.StockMatch.COLUMN_VALUE_30MIN)) {
 				return setTextViewValue(Constants.PERIOD_30MIN, view);
 			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_ACTION_60MIN)) {
+					.getColumnIndex(DatabaseContract.StockMatch.COLUMN_VALUE_60MIN)) {
 				return setTextViewValue(Constants.PERIOD_60MIN, view);
 			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_ACTION_DAY)) {
+					.getColumnIndex(DatabaseContract.StockMatch.COLUMN_VALUE_DAY)) {
 				return setTextViewValue(Constants.PERIOD_DAY, view);
 			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_ACTION_WEEK)) {
+					.getColumnIndex(DatabaseContract.StockMatch.COLUMN_VALUE_WEEK)) {
 				return setTextViewValue(Constants.PERIOD_WEEK, view);
 			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_ACTION_MONTH)) {
+					.getColumnIndex(DatabaseContract.StockMatch.COLUMN_VALUE_MONTH)) {
 				return setTextViewValue(Constants.PERIOD_MONTH, view);
 			}
 
