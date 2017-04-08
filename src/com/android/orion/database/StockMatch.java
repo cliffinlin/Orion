@@ -178,7 +178,17 @@ public class StockMatch extends DatabaseTable {
 		setActionQuarter(cursor);
 		setActionYear(cursor);
 	}
-
+	
+	public void set(Stock stock_X, Stock stock_Y) {
+		setSE_X(stock_X.getSE());
+		setCode_X(stock_X.getCode());
+		setName_X(stock_X.getName());
+		
+		setSE_Y(stock_Y.getSE());
+		setCode_Y(stock_Y.getCode());
+		setName_Y(stock_Y.getName());
+	}
+	
 	public String getSE_X() {
 		return mSE_X;
 	}

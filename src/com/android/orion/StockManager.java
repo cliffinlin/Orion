@@ -15,6 +15,7 @@ import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockDatabaseManager;
+import com.android.orion.database.StockMatch;
 import com.android.orion.pinyin.Pinyin;
 import com.android.orion.utility.Utility;
 
@@ -245,6 +246,30 @@ public class StockManager {
 			e.printStackTrace();
 		} finally {
 			mStockDatabaseManager.closeCursor(cursor);
+		}
+	}
+
+	void insertStockMatchFromFavoriteMap() {
+		StockMatch stockMatch1 = new StockMatch();
+		StockMatch stockMatch2 = new StockMatch();
+
+		for (Stock stock_X : mStockArrayMapFavorite.values()) {
+			for (Stock stock_Y : mStockArrayMapFavorite.values()) {
+				if (stock_X.getSE().equals(stock_Y.getSE())
+						&& stock_X.getCode().equals(stock_Y.getCode())) {
+					continue;
+				}
+
+				stockMatch1.set(stock_X, stock_Y);
+				stockMatch2.set(stock_Y, stock_X);
+
+				if (mStockDatabaseManager.isStockMatchExist(stockMatch1)
+						|| mStockDatabaseManager.isStockMatchExist(stockMatch2)) {
+					continue;
+				}
+
+				mStockDatabaseManager.insertStockMatch(stockMatch1);
+			}
 		}
 	}
 

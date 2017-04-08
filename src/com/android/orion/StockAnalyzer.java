@@ -188,10 +188,6 @@ public class StockAnalyzer extends StockManager {
 		stock_Y = Stock.obtain();
 
 		for (StockMatch stockMatch : stockMatchList) {
-			if (stockMatch == null) {
-				continue;
-			}
-
 			if (stock.getSE().equals(stockMatch.getSE_X())
 					&& stock.getCode().equals(stockMatch.getCode_X())) {
 				stock_X.set(stock);

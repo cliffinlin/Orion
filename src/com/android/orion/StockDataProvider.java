@@ -73,6 +73,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
 	void loadStockArrayMapFavorite() {
 		loadStockArrayMap(selectStock(Constants.STOCK_FLAG_MARK_FAVORITE),
 				null, null, mStockArrayMapFavorite);
+
+		insertStockMatchFromFavoriteMap();
 	}
 
 	void downloadStockIndexes() {
