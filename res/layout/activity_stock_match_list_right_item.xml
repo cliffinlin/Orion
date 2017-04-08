@@ -61,20 +61,4 @@
         android:gravity="center"
         android:textSize="18sp" />
 
-    <TextView
-        android:id="@+id/created"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/modified"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:textSize="18sp" />
-
 </LinearLayout>

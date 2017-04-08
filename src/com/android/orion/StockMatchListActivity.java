@@ -47,6 +47,8 @@ public class StockMatchListActivity extends StorageActivity implements
 
 	static final int EXECUTE_MATCH_LIST_ON_ITEM_CLICK = 1;
 
+	static final int EXECUTE_MATCH_LIST_DELETE_ALL = 2;
+
 	static final int EXECUTE_MATCH_LIST_LOAD_FROM_SD_CARD = 11;
 	static final int EXECUTE_MATCH_LIST_SAVE_TO_SD_CARD = 12;
 
@@ -75,8 +77,6 @@ public class StockMatchListActivity extends StorageActivity implements
 	TextView mTextViewDay = null;
 	TextView mTextViewWeek = null;
 	TextView mTextViewMonth = null;
-	TextView mTextViewCreated = null;
-	TextView mTextViewModified = null;
 
 	ListView mLeftListView = null;
 	ListView mRightListView = null;
@@ -209,6 +209,10 @@ public class StockMatchListActivity extends StorageActivity implements
 			startActivity(mIntent);
 			return true;
 
+		case R.id.action_delete_all:
+			showDeleteAllAlertDialog();
+			return true;
+
 		case R.id.action_save_sd:
 			showSaveSDAlertDialog();
 			return true;
@@ -220,6 +224,12 @@ public class StockMatchListActivity extends StorageActivity implements
 		default:
 			return super.onMenuItemSelected(featureId, item);
 		}
+	}
+
+	@Override
+	void onDeleteAll() {
+		super.onDeleteAll();
+		startSaveTask(EXECUTE_MATCH_LIST_DELETE_ALL);
 	}
 
 	@Override
@@ -286,6 +296,10 @@ public class StockMatchListActivity extends StorageActivity implements
 		switch (execute) {
 		case EXECUTE_MATCH_DELETE:
 			mStockDatabaseManager.deleteStockMatchById(mMatch);
+			break;
+
+		case EXECUTE_MATCH_LIST_DELETE_ALL:
+			mStockDatabaseManager.deleteStockMatch();
 			break;
 
 		case EXECUTE_MATCH_LIST_SAVE_TO_SD_CARD:
@@ -504,8 +518,6 @@ public class StockMatchListActivity extends StorageActivity implements
 		setHeaderTextColor(mTextViewDay, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewWeek, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewMonth, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewCreated, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewModified, mHeaderTextDefaultColor);
 	}
 
 	void setVisibility(String key, TextView textView) {
@@ -574,16 +586,6 @@ public class StockMatchListActivity extends StorageActivity implements
 			setVisibility(Constants.PERIOD_MONTH, mTextViewMonth);
 		}
 
-		mTextViewCreated = (TextView) findViewById(R.id.created);
-		if (mTextViewCreated != null) {
-			mTextViewCreated.setOnClickListener(this);
-		}
-
-		mTextViewModified = (TextView) findViewById(R.id.modified);
-		if (mTextViewModified != null) {
-			mTextViewModified.setOnClickListener(this);
-		}
-
 		if (mSortOrder.contains(DatabaseContract.StockMatch.COLUMN_CODE_X)) {
 			setHeaderTextColor(mTextViewNameCode, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_ACTION_5MIN)) {
@@ -600,10 +602,6 @@ public class StockMatchListActivity extends StorageActivity implements
 			setHeaderTextColor(mTextViewWeek, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_ACTION_MONTH)) {
 			setHeaderTextColor(mTextViewMonth, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_CREATED)) {
-			setHeaderTextColor(mTextViewCreated, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MODIFIED)) {
-			setHeaderTextColor(mTextViewModified, mHeaderTextHighlightColor);
 		} else {
 		}
 	}
@@ -621,12 +619,10 @@ public class StockMatchListActivity extends StorageActivity implements
 				DatabaseContract.COLUMN_ACTION_60MIN,
 				DatabaseContract.COLUMN_ACTION_DAY,
 				DatabaseContract.COLUMN_ACTION_WEEK,
-				DatabaseContract.COLUMN_ACTION_MONTH,
-				DatabaseContract.COLUMN_CREATED,
-				DatabaseContract.COLUMN_MODIFIED };
+				DatabaseContract.COLUMN_ACTION_MONTH, };
 		int[] mRightTo = new int[] { R.id.type_5min, R.id.type_15min,
 				R.id.type_30min, R.id.type_60min, R.id.type_day,
-				R.id.type_week, R.id.type_month, R.id.created, R.id.modified };
+				R.id.type_week, R.id.type_month };
 
 		mLeftListView = (ListView) findViewById(R.id.left_listview);
 		mLeftAdapter = new SimpleCursorAdapter(this,

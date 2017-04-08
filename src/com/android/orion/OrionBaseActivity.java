@@ -285,6 +285,22 @@ public class OrionBaseActivity extends Activity {
 		}
 	}
 
+	void showDeleteAllAlertDialog() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+		builder.setTitle(R.string.title_delete_all)
+				.setIcon(android.R.drawable.ic_dialog_alert)
+				.setPositiveButton(R.string.ok, new OnClickListener() {
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
+						onDeleteAll();
+					}
+				}).setNegativeButton(R.string.cancel, new OnClickListener() {
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
+					}
+				}).create().show();
+	}
+	
 	void showSaveSDAlertDialog() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 		builder.setTitle(R.string.title_save_to_sd_card)
@@ -300,7 +316,10 @@ public class OrionBaseActivity extends Activity {
 					}
 				}).create().show();
 	}
-
+	
+	void onDeleteAll() {
+	}
+	
 	void onSaveSD() {
 	}
 

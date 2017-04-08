@@ -843,6 +843,19 @@ public class StockDatabaseManager extends DatabaseManager {
 		return result;
 	}
 
+	public void deleteStockMatch() {
+		if (mContentResolver == null) {
+			return;
+		}
+
+		try {
+			mContentResolver.delete(DatabaseContract.StockMatch.CONTENT_URI,
+					null, null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void deleteStockMatchById(StockMatch stockMatch) {
 		if ((stockMatch == null) || (mContentResolver == null)) {
 			return;

@@ -16,6 +16,7 @@
     <string name="action_save_sd">Save SD</string>
     <string name="action_settings">Settings</string>
     <string name="action_download">Download</string>
+    <string name="action_delete_all">Delete All</string>
     <string name="action_upload">Upload</string>
     <string name="action_upload_ok">Upload OK!</string>
     <string name="action_upload_failed">Upload Failed!</string>
@@ -130,6 +131,7 @@
     <string name="title_activity_service_setting">Service</string>
     <string name="title_activity_sign_up">Sign Up</string>
     <string name="title_save_to_sd_card">Save to SD Card</string>
+    <string name="title_delete_all">Delete All</string>
     <string name="username_hint">Username</string>
     <string name="velocity">Vel</string>
     <string name="version">Version</string>
