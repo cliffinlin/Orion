@@ -41,7 +41,6 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.DefaultYAxisValueFormatter;
 import com.github.mikephil.charting.listener.ChartTouchListener.ChartGesture;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
-import com.github.mikephil.charting.utils.PointD;
 import com.github.mikephil.charting.utils.Utils;
 
 public class StockMatchChartListActivity extends StorageActivity implements
@@ -69,8 +68,6 @@ public class StockMatchChartListActivity extends StorageActivity implements
 	ArrayList<StockData> mStockDataList_X = null;
 	ArrayList<StockData> mStockDataList_Y = null;
 	ArrayList<StockMatch> mStockMatchList = null;
-
-	ArrayList<PointD> mPointList = new ArrayList<PointD>();
 
 	Menu mMenu = null;
 	SparseArray<String> mPeriodArray = null;
@@ -145,10 +142,6 @@ public class StockMatchChartListActivity extends StorageActivity implements
 
 		if (mStockMatchList == null) {
 			mStockMatchList = new ArrayList<StockMatch>();
-		}
-
-		if (mPointList == null) {
-			mPointList = new ArrayList<PointD>();
 		}
 
 		mStockMatch.setId(getIntent().getLongExtra(EXTRA_STOCK_MATCH_ID, 0));
@@ -368,10 +361,11 @@ public class StockMatchChartListActivity extends StorageActivity implements
 
 		double x = 0;
 		double y = 0;
-		double xMin = 0;
-		double xMax = 0;
+		double minX = 0;
+		double maxX = 0;
 		double slope = 0;
 		double intercept = 0;
+		double XVal = 0;
 		double fitValue = 0;
 		double mean = 0;
 		double std = 0;
@@ -383,24 +377,19 @@ public class StockMatchChartListActivity extends StorageActivity implements
 		simpleRegression.clear();
 		descriptiveStatistics.clear();
 
-		mPointList.clear();
-
-		xMin = mStockDataList_X.get(0).getClose();
-		xMax = mStockDataList_X.get(0).getClose();
+		minX = mStockDataList_X.get(0).getClose();
+		maxX = mStockDataList_X.get(0).getClose();
 		for (int i = 0; i < mStockDataList_X.size(); i++) {
 			x = mStockDataList_X.get(i).getClose();
 			y = mStockDataList_Y.get(i).getClose();
 
-			PointD point = new PointD(x, y);
-			mPointList.add(point);
-
-			xMin = Math.min(xMin, x);
-			xMax = Math.max(xMax, x);
+			minX = Math.min(minX, x);
+			maxX = Math.max(maxX, x);
 
 			simpleRegression.addData(x, y);
 		}
 
-		if (xMin == xMax) {
+		if (minX == maxX) {
 			return;
 		}
 
@@ -410,25 +399,24 @@ public class StockMatchChartListActivity extends StorageActivity implements
 		stockMatchChartData.clear();
 
 		for (int i = 0; i < mStockDataList_X.size(); i++) {
-			StockData stockData_X = mStockDataList_X.get(i);
-			StockData stockData_Y = mStockDataList_Y.get(i);
-			PointD point = mPointList.get(i);
+			x = mStockDataList_X.get(i).getClose();
+			y = mStockDataList_Y.get(i).getClose();
 
 			index = stockMatchChartData.mXValuesMain.size();
-			Entry scatterEntry = new Entry((float) point.y, index);
-			scatterEntry.setXVal((float) Utility.Round((point.x - xMin)
-					* (mStockDataList_X.size() - 1) / (xMax - xMin),
+			Entry scatterEntry = new Entry((float) y, index);
+			scatterEntry.setXVal((float) Utility.Round((x - minX)
+					* (mStockDataList_X.size() - 1) / (maxX - minX),
 					Constants.DOUBLE_FIXED_DECIMAL - 1));
 			stockMatchChartData.mScatterEntryList.add(scatterEntry);
 
-			x = xMin + i * (xMax - xMin) / (mStockDataList_X.size() - 1);
+			XVal = minX + i * (maxX - minX) / (mStockDataList_X.size() - 1);
 			stockMatchChartData.mXValuesMain.add(Double.toString(Utility.Round(
-					x, Constants.DOUBLE_FIXED_DECIMAL)));
-			fitValue = x * slope + intercept;
+					XVal, Constants.DOUBLE_FIXED_DECIMAL)));
+			fitValue = XVal * slope + intercept;
 			Entry fitEntry = new Entry((float) fitValue, index);
 			stockMatchChartData.mFitEntryList.add(fitEntry);
 
-			delta = stockData_Y.getClose() - slope * stockData_X.getClose();
+			delta = y - slope * x;
 			descriptiveStatistics.addValue(delta);
 		}
 
@@ -437,12 +425,13 @@ public class StockMatchChartListActivity extends StorageActivity implements
 
 		for (int i = 0; i < mStockDataList_X.size(); i++) {
 			StockData stockData_X = mStockDataList_X.get(i);
-			StockData stockData_Y = mStockDataList_Y.get(i);
+			x = mStockDataList_X.get(i).getClose();
+			y = mStockDataList_Y.get(i).getClose();
 
 			index = stockMatchChartData.mXValuesSub.size();
 			stockMatchChartData.mXValuesSub.add(stockData_X.getDate());
 
-			delta = stockData_Y.getClose() - slope * stockData_X.getClose();
+			delta = y - slope * x;
 
 			if (std == 0) {
 				delta = 0;
@@ -450,8 +439,8 @@ public class StockMatchChartListActivity extends StorageActivity implements
 				delta = (delta - mean) / std;
 			}
 
-			Entry difEntry = new Entry((float) delta, index);
-			stockMatchChartData.mDeltaEntryList.add(difEntry);
+			Entry deltaEntry = new Entry((float) delta, index);
+			stockMatchChartData.mDeltaEntryList.add(deltaEntry);
 		}
 
 		stockMatchChartData.updateDescription(mStock_X);
