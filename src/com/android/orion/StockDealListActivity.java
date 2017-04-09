@@ -117,11 +117,11 @@ public class StockDealListActivity extends StorageActivity implements
 		public boolean onActionItemClicked(final ActionMode mode, MenuItem item) {
 			switch (item.getItemId()) {
 			case R.id.menu_edit:
-				Intent intent = new Intent(StockDealListActivity.this,
+				mIntent = new Intent(StockDealListActivity.this,
 						StockDealActivity.class);
-				intent.setAction(StockDealActivity.ACTION_DEAL_EDIT);
-				intent.putExtra(StockDealActivity.EXTRA_DEAL_ID, mDeal.getId());
-				startActivity(intent);
+				mIntent.setAction(StockDealActivity.ACTION_DEAL_EDIT);
+				mIntent.putExtra(StockDealActivity.EXTRA_DEAL_ID, mDeal.getId());
+				startActivity(mIntent);
 				mode.finish();
 				return true;
 			case R.id.menu_delete:
@@ -221,12 +221,11 @@ public class StockDealListActivity extends StorageActivity implements
 	}
 
 	void onActionSync(int serviceType) {
-		Intent intent = null;
 		mCurrentUser = AVUser.getCurrentUser();
 
 		if (mCurrentUser == null) {
-			intent = new Intent(this, LeanCloudLoginActivity.class);
-			startActivityForResult(intent, serviceType);
+			mIntent = new Intent(this, LeanCloudLoginActivity.class);
+			startActivityForResult(mIntent, serviceType);
 		} else {
 			startService(serviceType, Constants.EXECUTE_IMMEDIATE);
 		}
@@ -557,7 +556,6 @@ public class StockDealListActivity extends StorageActivity implements
 		super.doInBackgroundSave(params);
 
 		int execute = (Integer) params[0];
-		Intent intent = null;
 
 		switch (execute) {
 		case EXECUTE_DEAL_LEFT_LISTVIEW_ON_ITEM_CLICK:
@@ -567,10 +565,11 @@ public class StockDealListActivity extends StorageActivity implements
 			mStock.setCode(mDeal.getCode());
 			mStockDatabaseManager.getStock(mStock);
 
-			intent = new Intent(this, StockMatchListActivity.class);
-			intent.putExtra(Constants.EXTRA_STOCK_SE, mStock.getSE());
-			intent.putExtra(Constants.EXTRA_STOCK_CODE, mStock.getCode());
-			startActivity(intent);
+			mIntent = new Intent(this, StockMatchListActivity.class);
+			mIntent.setAction(StockMatchListActivity.ACTION_MATCH_LIST);
+			mIntent.putExtra(Constants.EXTRA_STOCK_SE, mStock.getSE());
+			mIntent.putExtra(Constants.EXTRA_STOCK_CODE, mStock.getCode());
+			startActivity(mIntent);
 			break;
 
 		case EXECUTE_DEAL_RIGHT_LISTVIEW_ON_ITEM_CLICK:
@@ -580,10 +579,10 @@ public class StockDealListActivity extends StorageActivity implements
 			mStock.setCode(mDeal.getCode());
 			mStockDatabaseManager.getStock(mStock);
 
-			intent = new Intent(this, StockChartListActivity.class);
-			intent.putExtra(Setting.KEY_SORT_ORDER_STOCK_DEAL_LIST, mSortOrder);
-			intent.putExtra(Constants.EXTRA_STOCK_ID, mStock.getId());
-			startActivity(intent);
+			mIntent = new Intent(this, StockChartListActivity.class);
+			mIntent.putExtra(Setting.KEY_SORT_ORDER_STOCK_DEAL_LIST, mSortOrder);
+			mIntent.putExtra(Constants.EXTRA_STOCK_ID, mStock.getId());
+			startActivity(mIntent);
 			break;
 
 		case EXECUTE_DEAL_LIST_LOAD_FROM_SD_CARD:

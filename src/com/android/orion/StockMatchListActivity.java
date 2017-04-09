@@ -43,6 +43,8 @@ public class StockMatchListActivity extends StorageActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
 		OnItemLongClickListener, OnClickListener {
 
+	public static final String ACTION_MATCH_LIST = "orion.intent.action.ACTION_MATCH_LIST";
+
 	static final int EXECUTE_MATCH_DELETE = 0;
 	static final int EXECUTE_MATCH_LIST_DELETE_ALL = 1;
 	static final int EXECUTE_MATCH_LEFT_LISTVIEW_ON_ITEM_CLICK = 2;
@@ -165,9 +167,6 @@ public class StockMatchListActivity extends StorageActivity implements
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_stock_match_list);
-
-		mStock.setSE(mIntent.getStringExtra(DatabaseContract.COLUMN_SE));
-		mStock.setCode(mIntent.getStringExtra(DatabaseContract.COLUMN_CODE));
 
 		mSortOrder = getSetting(Setting.KEY_SORT_ORDER_STOCK_MATCH_LIST,
 				mSortOrderDefault);
@@ -703,27 +702,6 @@ public class StockMatchListActivity extends StorageActivity implements
 		getContentResolver().unregisterContentObserver(mContentObserver);
 	}
 
-	String getSelectionDeal() {
-		String selection = null;
-
-		String condition1 = "";
-		String condition2 = "";
-
-		condition1 = DatabaseContract.StockMatch.COLUMN_SE_X + "="
-				+ mStock.getSE() + " AND "
-				+ DatabaseContract.StockMatch.COLUMN_CODE_X + "="
-				+ mStock.getCode();
-
-		condition2 = DatabaseContract.StockMatch.COLUMN_SE_Y + "="
-				+ mStock.getSE() + " AND "
-				+ DatabaseContract.StockMatch.COLUMN_CODE_Y + "="
-				+ mStock.getCode();
-
-		selection = "(" + condition1 + ")" + " OR " + "(" + condition2 + ")";
-
-		return selection;
-	}
-
 	String getSelection() {
 		String selection = null;
 
@@ -751,14 +729,36 @@ public class StockMatchListActivity extends StorageActivity implements
 		return selection;
 	}
 
+	String getSelection(String se, String code) {
+		String selection = null;
+
+		String condition1 = "";
+		String condition2 = "";
+
+		condition1 = DatabaseContract.StockMatch.COLUMN_SE_X + " = " + "\'"
+				+ se + "\'" + " AND "
+				+ DatabaseContract.StockMatch.COLUMN_CODE_X + "=" + "\'" + code
+				+ "\'";
+
+		condition2 = DatabaseContract.StockMatch.COLUMN_SE_Y + " = " + "\'"
+				+ se + "\'" + " AND "
+				+ DatabaseContract.StockMatch.COLUMN_CODE_Y + "=" + "\'" + code
+				+ "\'";
+
+		selection = "(" + condition1 + ")" + " OR " + "(" + condition2 + ")";
+
+		return selection;
+	}
+
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle arg1) {
 		String selection = null;
 		CursorLoader loader = null;
 
-		if (TextUtils.isEmpty(mStock.getSE())
-				&& TextUtils.isEmpty(mStock.getCode())) {
-			selection = getSelectionDeal();
+		if (ACTION_MATCH_LIST.equals(mAction)) {
+			selection = getSelection(
+					mIntent.getStringExtra(Constants.EXTRA_STOCK_SE),
+					mIntent.getStringExtra(Constants.EXTRA_STOCK_CODE));
 		} else {
 			selection = getSelection();
 		}
