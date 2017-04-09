@@ -47,15 +47,14 @@ public class StockAnalyzer extends StockManager {
 				return;
 			}
 
-			analyzeStockMatch(stock, period, stockDataList);
-
 			setMACD(stock, period, stockDataList);
+			analyzeStockMatch(stock, period, stockDataList);
 			analyzeStockData(stock, period, stockDataList);
 			updateDatabase(stock, period, stockDataList);
-			writeCallLog(stock, period,
-					stockDataList.get(stockDataList.size() - 1));
-			writeMessage();
+			// writeCallLog(stock, period,
+			// stockDataList.get(stockDataList.size() - 1));
 			updateNotification(stock);
+			writeMessage();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -437,7 +436,7 @@ public class StockAnalyzer extends StockManager {
 			mStockDatabaseManager.closeCursor(cursor);
 		}
 	}
-
+/*
 	private void writeCallLog(Stock stock, String period, StockData stockData) {
 		boolean bFound = false;
 		int nCallLogType;
@@ -504,7 +503,7 @@ public class StockAnalyzer extends StockManager {
 			mStockDatabaseManager.closeCursor(cursor);
 		}
 	}
-
+*/
 	private void updateNotification(Stock stock) {
 		int id = 0;
 		int defaults = 0;
