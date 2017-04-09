@@ -17,7 +17,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -50,7 +49,6 @@ public class StockMatchChartListActivity extends StorageActivity implements
 
 	static final int ITEM_VIEW_TYPE_MAIN = 0;
 	static final int ITEM_VIEW_TYPE_SUB = 1;
-	static final int STOCK_PERIOD_ARRAY_SIZE = 7;
 	static final int FLING_DISTANCE = 50;
 	static final int FLING_VELOCITY = 100;
 
@@ -70,7 +68,6 @@ public class StockMatchChartListActivity extends StorageActivity implements
 	ArrayList<StockMatch> mStockMatchList = null;
 
 	Menu mMenu = null;
-	SparseArray<String> mPeriodArray = null;
 
 	String mSortOrder = null;
 
@@ -114,8 +111,6 @@ public class StockMatchChartListActivity extends StorageActivity implements
 		// For chart init only
 
 		setContentView(R.layout.activity_stock_match_chart_list);
-
-		fillPeriodArray();
 
 		initListView();
 
@@ -217,8 +212,8 @@ public class StockMatchChartListActivity extends StorageActivity implements
 
 		mStockMatchChartItemList.clear();
 
-		for (int i = 0; i < STOCK_PERIOD_ARRAY_SIZE; i++) {
-			if (Utility.getSettingBoolean(this, mPeriodArray.get(i))) {
+		for (int i = 0; i < Constants.PERIODS.length; i++) {
+			if (Utility.getSettingBoolean(this, Constants.PERIODS[i])) {
 				mStockMatchChartItemList.add(mStockMatchChartItemMainList
 						.get(i));
 				mStockMatchChartItemList
@@ -251,10 +246,10 @@ public class StockMatchChartListActivity extends StorageActivity implements
 
 			return RESULT_LOAD_STOCK_MATCH_LIST_SUCCESS;
 		} else if (execute == EXECUTE_LOAD_STOCK_DATA_LIST) {
-			for (int i = 0; i < STOCK_PERIOD_ARRAY_SIZE; i++) {
-				loadStockDataList(mStock_X.getId(), mPeriodArray.get(i),
+			for (int i = 0; i < Constants.PERIODS.length; i++) {
+				loadStockDataList(mStock_X.getId(), Constants.PERIODS[i],
 						mStockDataList_X);
-				loadStockDataList(mStock_Y.getId(), mPeriodArray.get(i),
+				loadStockDataList(mStock_Y.getId(), Constants.PERIODS[i],
 						mStockDataList_Y);
 
 				if (mStockDataList_X.size() != mStockDataList_Y.size()) {
@@ -497,20 +492,6 @@ public class StockMatchChartListActivity extends StorageActivity implements
 			ChartGesture lastPerformedGesture) {
 	}
 
-	void fillPeriodArray() {
-		if (mPeriodArray == null) {
-			mPeriodArray = new SparseArray<String>();
-
-			mPeriodArray.put(mPeriodArray.size(), Constants.PERIOD_MONTH);
-			mPeriodArray.put(mPeriodArray.size(), Constants.PERIOD_WEEK);
-			mPeriodArray.put(mPeriodArray.size(), Constants.PERIOD_DAY);
-			mPeriodArray.put(mPeriodArray.size(), Constants.PERIOD_60MIN);
-			mPeriodArray.put(mPeriodArray.size(), Constants.PERIOD_30MIN);
-			mPeriodArray.put(mPeriodArray.size(), Constants.PERIOD_15MIN);
-			mPeriodArray.put(mPeriodArray.size(), Constants.PERIOD_5MIN);
-		}
-	}
-
 	void initListView() {
 		mListView = (ListView) findViewById(R.id.listView);
 
@@ -530,9 +511,9 @@ public class StockMatchChartListActivity extends StorageActivity implements
 			mStockMatchChartItemSubList = new ArrayList<StockMatchChartItemSub>();
 		}
 
-		for (int i = 0; i < STOCK_PERIOD_ARRAY_SIZE; i++) {
-			mStockMatchChartDataList.add(new StockMatchChartData(mPeriodArray
-					.get(i)));
+		for (int i = 0; i < Constants.PERIODS.length; i++) {
+			mStockMatchChartDataList.add(new StockMatchChartData(
+					Constants.PERIODS[i]));
 			mStockMatchChartItemMainList.add(new StockMatchChartItemMain(
 					mStockMatchChartDataList.get(i)));
 			mStockMatchChartItemSubList.add(new StockMatchChartItemSub(

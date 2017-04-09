@@ -47,9 +47,9 @@ public class Constants {
 	public static final String PERIOD_MONTH = "month";
 	public static final String PERIOD_QUARTER = "quarter";
 	public static final String PERIOD_YEAR = "year";
-	public static final String PERIODS[] = { PERIOD_1MIN, PERIOD_5MIN,
-			PERIOD_15MIN, PERIOD_30MIN, PERIOD_60MIN, PERIOD_DAY, PERIOD_WEEK,
-			PERIOD_MONTH, PERIOD_QUARTER, PERIOD_YEAR };
+	public static final String PERIODS[] = { PERIOD_YEAR, PERIOD_QUARTER,
+			PERIOD_MONTH, PERIOD_WEEK, PERIOD_DAY, PERIOD_60MIN, PERIOD_30MIN,
+			PERIOD_15MIN, PERIOD_5MIN, PERIOD_1MIN };
 
 	public static final int SCHEDULE_INTERVAL_1MIN = 1;
 	public static final int SCHEDULE_INTERVAL_5MIN = 5;

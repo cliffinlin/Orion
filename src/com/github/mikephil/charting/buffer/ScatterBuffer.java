@@ -12,6 +12,11 @@ public class ScatterBuffer extends AbstractBuffer<Entry> {
     }
 
     protected void addForm(float x, float y) {
+        //Modify for stock
+    	if ((buffer == null) || (buffer.length == 0) || (index > buffer.length - 1)) {
+    		return;
+    	}
+        //Modify for stock
         buffer[index++] = x;
         buffer[index++] = y;
     }

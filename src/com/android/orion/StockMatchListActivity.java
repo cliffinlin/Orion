@@ -18,7 +18,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.util.SparseArray;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -52,8 +51,6 @@ public class StockMatchListActivity extends StorageActivity implements
 	static final int EXECUTE_MATCH_LIST_SAVE_TO_SD_CARD = 5;
 
 	static final int LOADER_ID_MATCH_LIST = 0;
-
-	static final int STOCK_PERIOD_ARRAY_SIZE = 7;
 
 	static final int mHeaderTextDefaultColor = Color.BLACK;
 	static final int mHeaderTextHighlightColor = Color.RED;
@@ -90,8 +87,6 @@ public class StockMatchListActivity extends StorageActivity implements
 	ArrayList<StockMatch> mStockMatchList = new ArrayList<StockMatch>();
 	Stock mStock_Y = new Stock();
 	Stock mStock_X = new Stock();
-
-	SparseArray<String> mPeriodArray = null;
 
 	ContentObserver mContentObserver = new ContentObserver(new Handler()) {
 		@Override
@@ -170,8 +165,6 @@ public class StockMatchListActivity extends StorageActivity implements
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_stock_match_list);
-
-		fillPeriodArray();
 
 		mSortOrder = getSetting(Setting.KEY_SORT_ORDER_STOCK_MATCH_LIST,
 				mSortOrderDefault);
@@ -529,20 +522,6 @@ public class StockMatchListActivity extends StorageActivity implements
 		restartLoader();
 	}
 
-	void fillPeriodArray() {
-		if (mPeriodArray == null) {
-			mPeriodArray = new SparseArray<String>();
-
-			mPeriodArray.put(mPeriodArray.size(), Constants.PERIOD_MONTH);
-			mPeriodArray.put(mPeriodArray.size(), Constants.PERIOD_WEEK);
-			mPeriodArray.put(mPeriodArray.size(), Constants.PERIOD_DAY);
-			mPeriodArray.put(mPeriodArray.size(), Constants.PERIOD_60MIN);
-			mPeriodArray.put(mPeriodArray.size(), Constants.PERIOD_30MIN);
-			mPeriodArray.put(mPeriodArray.size(), Constants.PERIOD_15MIN);
-			mPeriodArray.put(mPeriodArray.size(), Constants.PERIOD_5MIN);
-		}
-	}
-
 	void setHeaderTextColor(int id, int color) {
 		TextView textView = (TextView) findViewById(id);
 		setHeaderTextColor(textView, color);
@@ -728,19 +707,19 @@ public class StockMatchListActivity extends StorageActivity implements
 		String condition2 = "";
 		CursorLoader loader = null;
 
-		for (int i = 0; i < STOCK_PERIOD_ARRAY_SIZE; i++) {
-			if (Utility.getSettingBoolean(this, mPeriodArray.get(i))) {
+		for (int i = 0; i < Constants.PERIODS.length; i++) {
+			if (Utility.getSettingBoolean(this, Constants.PERIODS[i])) {
 				if (!TextUtils.isEmpty(condition1)) {
 					condition1 += " AND ";
 				}
 
-				condition1 += "value_" + mPeriodArray.get(i) + " > 1";
+				condition1 += "value_" + Constants.PERIODS[i] + " > 1";
 
 				if (!TextUtils.isEmpty(condition2)) {
 					condition2 += " AND ";
 				}
 
-				condition2 += "value_" + mPeriodArray.get(i) + " < -1";
+				condition2 += "value_" + Constants.PERIODS[i] + " < -1";
 			}
 		}
 

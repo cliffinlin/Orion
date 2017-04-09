@@ -17,7 +17,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -50,14 +49,12 @@ public class StockChartListActivity extends OrionBaseActivity implements
 
 	static final int ITEM_VIEW_TYPE_MAIN = 0;
 	static final int ITEM_VIEW_TYPE_SUB = 1;
-	static final int STOCK_PERIOD_ARRAY_SIZE = 7;
-	static final int LOADER_ID_STOCK_LIST = STOCK_PERIOD_ARRAY_SIZE + 1;
+	static final int LOADER_ID_STOCK_LIST = Constants.PERIODS.length + 1;
 	static final int FLING_DISTANCE = 50;
 	static final int FLING_VELOCITY = 100;
 
 	int mStockListIndex = 0;
 	Menu mMenu = null;
-	SparseArray<String> mPeriodArray = null;
 
 	String mSortOrder = null;
 
@@ -101,8 +98,6 @@ public class StockChartListActivity extends OrionBaseActivity implements
 		// For chart init only
 
 		setContentView(R.layout.activity_stock_chart_list);
-
-		fillPeriodArray();
 
 		initListView();
 
@@ -180,8 +175,8 @@ public class StockChartListActivity extends OrionBaseActivity implements
 
 		mStockChartItemList.clear();
 
-		for (int i = 0; i < STOCK_PERIOD_ARRAY_SIZE; i++) {
-			if (Utility.getSettingBoolean(this, mPeriodArray.get(i))) {
+		for (int i = 0; i < Constants.PERIODS.length; i++) {
+			if (Utility.getSettingBoolean(this, Constants.PERIODS[i])) {
 				mStockChartItemList.add(mStockChartItemMainList.get(i));
 				mStockChartItemList.add(mStockChartItemSubList.get(i));
 			}
@@ -205,7 +200,7 @@ public class StockChartListActivity extends OrionBaseActivity implements
 		if (id == LOADER_ID_STOCK_LIST) {
 			loader = getStockCursorLoader();
 		} else {
-			loader = getStockDataCursorLoader(mPeriodArray.get(id));
+			loader = getStockDataCursorLoader(Constants.PERIODS[id]);
 		}
 
 		return loader;
@@ -293,20 +288,6 @@ public class StockChartListActivity extends OrionBaseActivity implements
 			ChartGesture lastPerformedGesture) {
 	}
 
-	void fillPeriodArray() {
-		if (mPeriodArray == null) {
-			mPeriodArray = new SparseArray<String>();
-
-			mPeriodArray.put(mPeriodArray.size(), Constants.PERIOD_MONTH);
-			mPeriodArray.put(mPeriodArray.size(), Constants.PERIOD_WEEK);
-			mPeriodArray.put(mPeriodArray.size(), Constants.PERIOD_DAY);
-			mPeriodArray.put(mPeriodArray.size(), Constants.PERIOD_60MIN);
-			mPeriodArray.put(mPeriodArray.size(), Constants.PERIOD_30MIN);
-			mPeriodArray.put(mPeriodArray.size(), Constants.PERIOD_15MIN);
-			mPeriodArray.put(mPeriodArray.size(), Constants.PERIOD_5MIN);
-		}
-	}
-
 	void initListView() {
 		mListView = (ListView) findViewById(R.id.listView);
 
@@ -330,8 +311,8 @@ public class StockChartListActivity extends OrionBaseActivity implements
 			mStockChartItemSubList = new ArrayList<StockChartItemSub>();
 		}
 
-		for (int i = 0; i < STOCK_PERIOD_ARRAY_SIZE; i++) {
-			mStockChartDataList.add(new StockChartData(mPeriodArray.get(i)));
+		for (int i = 0; i < Constants.PERIODS.length; i++) {
+			mStockChartDataList.add(new StockChartData(Constants.PERIODS[i]));
 			mStockChartItemMainList.add(new StockChartItemMain(
 					mStockChartDataList.get(i)));
 			mStockChartItemSubList.add(new StockChartItemSub(
@@ -347,14 +328,14 @@ public class StockChartListActivity extends OrionBaseActivity implements
 
 	void initLoader() {
 		mLoaderManager.initLoader(LOADER_ID_STOCK_LIST, null, this);
-		for (int i = 0; i < STOCK_PERIOD_ARRAY_SIZE; i++) {
+		for (int i = 0; i < Constants.PERIODS.length; i++) {
 			mLoaderManager.initLoader(i, null, this);
 		}
 	}
 
 	void restartLoader() {
 		mLoaderManager.restartLoader(LOADER_ID_STOCK_LIST, null, this);
-		for (int i = 0; i < STOCK_PERIOD_ARRAY_SIZE; i++) {
+		for (int i = 0; i < Constants.PERIODS.length; i++) {
 			mLoaderManager.restartLoader(i, null, this);
 		}
 	}
