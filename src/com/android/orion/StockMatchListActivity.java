@@ -166,6 +166,9 @@ public class StockMatchListActivity extends StorageActivity implements
 
 		setContentView(R.layout.activity_stock_match_list);
 
+		mStock.setSE(mIntent.getStringExtra(DatabaseContract.COLUMN_SE));
+		mStock.setCode(mIntent.getStringExtra(DatabaseContract.COLUMN_CODE));
+
 		mSortOrder = getSetting(Setting.KEY_SORT_ORDER_STOCK_MATCH_LIST,
 				mSortOrderDefault);
 
@@ -700,12 +703,32 @@ public class StockMatchListActivity extends StorageActivity implements
 		getContentResolver().unregisterContentObserver(mContentObserver);
 	}
 
-	@Override
-	public Loader<Cursor> onCreateLoader(int id, Bundle arg1) {
+	String getSelectionDeal() {
 		String selection = null;
+
 		String condition1 = "";
 		String condition2 = "";
-		CursorLoader loader = null;
+
+		condition1 = DatabaseContract.StockMatch.COLUMN_SE_X + "="
+				+ mStock.getSE() + " AND "
+				+ DatabaseContract.StockMatch.COLUMN_CODE_X + "="
+				+ mStock.getCode();
+
+		condition2 = DatabaseContract.StockMatch.COLUMN_SE_Y + "="
+				+ mStock.getSE() + " AND "
+				+ DatabaseContract.StockMatch.COLUMN_CODE_Y + "="
+				+ mStock.getCode();
+
+		selection = "(" + condition1 + ")" + " OR " + "(" + condition2 + ")";
+
+		return selection;
+	}
+
+	String getSelection() {
+		String selection = null;
+
+		String condition1 = "";
+		String condition2 = "";
 
 		for (int i = 0; i < Constants.PERIODS.length; i++) {
 			if (Utility.getSettingBoolean(this, Constants.PERIODS[i])) {
@@ -724,6 +747,21 @@ public class StockMatchListActivity extends StorageActivity implements
 		}
 
 		selection = "(" + condition1 + ")" + " OR " + "(" + condition2 + ")";
+
+		return selection;
+	}
+
+	@Override
+	public Loader<Cursor> onCreateLoader(int id, Bundle arg1) {
+		String selection = null;
+		CursorLoader loader = null;
+
+		if (TextUtils.isEmpty(mStock.getSE())
+				&& TextUtils.isEmpty(mStock.getCode())) {
+			selection = getSelectionDeal();
+		} else {
+			selection = getSelection();
+		}
 
 		switch (id) {
 		case LOADER_ID_MATCH_LIST:

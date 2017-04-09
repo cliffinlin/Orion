@@ -14,7 +14,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.provider.CallLog;
 import android.support.v4.app.NotificationCompat;
 
 import com.android.orion.curve.BezierCurve;
@@ -436,74 +435,50 @@ public class StockAnalyzer extends StockManager {
 			mStockDatabaseManager.closeCursor(cursor);
 		}
 	}
-/*
-	private void writeCallLog(Stock stock, String period, StockData stockData) {
-		boolean bFound = false;
-		int nCallLogType;
-		long nMilliSeconds = 0;
 
-		String idString = "";
-		String numberString = "10086" + stock.getCode();
-
-		Cursor cursor = null;
-		ContentValues contentValues = null;
-		Uri uri = CallLog.Calls.CONTENT_URI;
-
-		if (stockData == null) {
-			Utility.Log("writeCallLog return stockData = " + stockData);
-			return;
-		}
-
-		if (stock.getAction(period).contains(Constants.STOCK_ACTION_BUY)) {
-			nCallLogType = CallLog.Calls.MISSED_TYPE;
-		} else if (stock.getAction(period)
-				.contains(Constants.STOCK_ACTION_SELL)) {
-			nCallLogType = CallLog.Calls.INCOMING_TYPE;
-		} else {
-			return;
-		}
-
-		numberString += getPeriodMinutes(stockData.getPeriod());
-		nMilliSeconds = Utility.getMilliSeconds(stockData.getDate(),
-				stockData.getTime());
-
-		contentValues = new ContentValues();
-		contentValues.put(CallLog.Calls.NUMBER, numberString);
-		contentValues.put(CallLog.Calls.DATE, nMilliSeconds);
-		contentValues.put(CallLog.Calls.DURATION, 0);
-		contentValues.put(CallLog.Calls.TYPE, nCallLogType);
-		contentValues.put(CallLog.Calls.NEW, 0);
-		contentValues.put(CallLog.Calls.CACHED_NAME, "");
-		contentValues.put(CallLog.Calls.CACHED_NUMBER_TYPE, 0);
-		contentValues.put(CallLog.Calls.CACHED_NUMBER_LABEL, "");
-
-		try {
-			cursor = mContentResolver.query(uri, null, null, null, null);
-			if (cursor == null) {
-				mContentResolver.insert(uri, contentValues);
-			} else {
-				while (cursor.moveToNext()) {
-					if ((cursor.getString(cursor.getColumnIndex("number"))
-							.equals(numberString))) {
-						idString = "_id="
-								+ cursor.getString(cursor.getColumnIndex("_id"));
-						bFound = true;
-					}
-				}
-
-				if (bFound) {
-					mContentResolver.update(uri, contentValues, idString, null);
-				} else {
-					mContentResolver.insert(uri, contentValues);
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			mStockDatabaseManager.closeCursor(cursor);
-		}
-	}
-*/
+	/*
+	 * private void writeCallLog(Stock stock, String period, StockData
+	 * stockData) { boolean bFound = false; int nCallLogType; long nMilliSeconds
+	 * = 0;
+	 * 
+	 * String idString = ""; String numberString = "10086" + stock.getCode();
+	 * 
+	 * Cursor cursor = null; ContentValues contentValues = null; Uri uri =
+	 * CallLog.Calls.CONTENT_URI;
+	 * 
+	 * if (stockData == null) { Utility.Log("writeCallLog return stockData = " +
+	 * stockData); return; }
+	 * 
+	 * if (stock.getAction(period).contains(Constants.STOCK_ACTION_BUY)) {
+	 * nCallLogType = CallLog.Calls.MISSED_TYPE; } else if
+	 * (stock.getAction(period) .contains(Constants.STOCK_ACTION_SELL)) {
+	 * nCallLogType = CallLog.Calls.INCOMING_TYPE; } else { return; }
+	 * 
+	 * numberString += getPeriodMinutes(stockData.getPeriod()); nMilliSeconds =
+	 * Utility.getMilliSeconds(stockData.getDate(), stockData.getTime());
+	 * 
+	 * contentValues = new ContentValues();
+	 * contentValues.put(CallLog.Calls.NUMBER, numberString);
+	 * contentValues.put(CallLog.Calls.DATE, nMilliSeconds);
+	 * contentValues.put(CallLog.Calls.DURATION, 0);
+	 * contentValues.put(CallLog.Calls.TYPE, nCallLogType);
+	 * contentValues.put(CallLog.Calls.NEW, 0);
+	 * contentValues.put(CallLog.Calls.CACHED_NAME, "");
+	 * contentValues.put(CallLog.Calls.CACHED_NUMBER_TYPE, 0);
+	 * contentValues.put(CallLog.Calls.CACHED_NUMBER_LABEL, "");
+	 * 
+	 * try { cursor = mContentResolver.query(uri, null, null, null, null); if
+	 * (cursor == null) { mContentResolver.insert(uri, contentValues); } else {
+	 * while (cursor.moveToNext()) { if
+	 * ((cursor.getString(cursor.getColumnIndex("number"))
+	 * .equals(numberString))) { idString = "_id=" +
+	 * cursor.getString(cursor.getColumnIndex("_id")); bFound = true; } }
+	 * 
+	 * if (bFound) { mContentResolver.update(uri, contentValues, idString,
+	 * null); } else { mContentResolver.insert(uri, contentValues); } } } catch
+	 * (Exception e) { e.printStackTrace(); } finally {
+	 * mStockDatabaseManager.closeCursor(cursor); } }
+	 */
 	private void updateNotification(Stock stock) {
 		int id = 0;
 		int defaults = 0;

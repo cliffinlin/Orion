@@ -46,11 +46,10 @@ public class StockDealListActivity extends StorageActivity implements
 	static final String DEAL_LIST_XML_FILE_NAME = "deal.xml";
 
 	static final int EXECUTE_DEAL_DELETE = 0;
-
-	static final int EXECUTE_DEAL_LIST_ON_ITEM_CLICK = 1;
-
-	static final int EXECUTE_DEAL_LIST_LOAD_FROM_SD_CARD = 11;
-	static final int EXECUTE_DEAL_LIST_SAVE_TO_SD_CARD = 12;
+	static final int EXECUTE_DEAL_LEFT_LISTVIEW_ON_ITEM_CLICK = 1;
+	static final int EXECUTE_DEAL_RIGHT_LISTVIEW_ON_ITEM_CLICK = 2;
+	static final int EXECUTE_DEAL_LIST_LOAD_FROM_SD_CARD = 4;
+	static final int EXECUTE_DEAL_LIST_SAVE_TO_SD_CARD = 5;
 
 	static final int LOADER_ID_DEAL_LIST = 2;
 
@@ -503,9 +502,14 @@ public class StockDealListActivity extends StorageActivity implements
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 
-		if (mCurrentActionMode == null) {
+		if (parent.getId() == R.id.left_listview) {
 			mDeal.setId(id);
-			startLoadTask(EXECUTE_DEAL_LIST_ON_ITEM_CLICK);
+			startLoadTask(EXECUTE_DEAL_LEFT_LISTVIEW_ON_ITEM_CLICK);
+		} else {
+			if (mCurrentActionMode == null) {
+				mDeal.setId(id);
+				startLoadTask(EXECUTE_DEAL_RIGHT_LISTVIEW_ON_ITEM_CLICK);
+			}
 		}
 	}
 
@@ -551,17 +555,32 @@ public class StockDealListActivity extends StorageActivity implements
 
 	Long doInBackgroundLoad(Object... params) {
 		super.doInBackgroundSave(params);
+
 		int execute = (Integer) params[0];
+		Intent intent = null;
 
 		switch (execute) {
-		case EXECUTE_DEAL_LIST_ON_ITEM_CLICK:
+		case EXECUTE_DEAL_LEFT_LISTVIEW_ON_ITEM_CLICK:
 			mStockDatabaseManager.getStockDealById(mDeal);
 
 			mStock.setSE(mDeal.getSE());
 			mStock.setCode(mDeal.getCode());
 			mStockDatabaseManager.getStock(mStock);
 
-			Intent intent = new Intent(this, StockChartListActivity.class);
+			intent = new Intent(this, StockMatchListActivity.class);
+			intent.putExtra(Constants.EXTRA_STOCK_SE, mStock.getSE());
+			intent.putExtra(Constants.EXTRA_STOCK_CODE, mStock.getCode());
+			startActivity(intent);
+			break;
+
+		case EXECUTE_DEAL_RIGHT_LISTVIEW_ON_ITEM_CLICK:
+			mStockDatabaseManager.getStockDealById(mDeal);
+
+			mStock.setSE(mDeal.getSE());
+			mStock.setCode(mDeal.getCode());
+			mStockDatabaseManager.getStock(mStock);
+
+			intent = new Intent(this, StockChartListActivity.class);
 			intent.putExtra(Setting.KEY_SORT_ORDER_STOCK_DEAL_LIST, mSortOrder);
 			intent.putExtra(Constants.EXTRA_STOCK_ID, mStock.getId());
 			startActivity(intent);
