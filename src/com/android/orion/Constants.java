@@ -29,13 +29,13 @@ public class Constants {
 	public static final int EXECUTE_SCHEDULE_30MIN = EXECUTE_SCHEDULE << 3;
 	public static final int EXECUTE_SCHEDULE_60MIN = EXECUTE_SCHEDULE << 4;
 
-	public static final String EXTRA_KEY_EXECUTE_TYPE = "execute_type";
-	public static final String EXTRA_KEY_SERVICE_TYPE = "service_type";
-	public static final String EXTRA_KEY_STOCK_ID = "stock_id";
-	public static final String EXTRA_KEY_STOCK_SE = "stock_se";
-	public static final String EXTRA_KEY_STOCK_CODE = "stock_code";
-	public static final String EXTRA_KEY_STOCK_DEAL_PRICE = "stock_deal_price";
-	public static final String EXTRA_KEY_STOCK_DEAL_VOLUME = "stock_dral_volume";
+	public static final String EXTRA_EXECUTE_TYPE = "execute_type";
+	public static final String EXTRA_SERVICE_TYPE = "service_type";
+	public static final String EXTRA_STOCK_ID = "stock_id";
+	public static final String EXTRA_STOCK_SE = "stock_se";
+	public static final String EXTRA_STOCK_CODE = "stock_code";
+	public static final String EXTRA_STOCK_DEAL_PRICE = "stock_deal_price";
+	public static final String EXTRA_STOCK_DEAL_VOLUME = "stock_dral_volume";
 
 	public static final String PERIOD_1MIN = "1min";
 	public static final String PERIOD_5MIN = "5min";

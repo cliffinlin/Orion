@@ -177,7 +177,7 @@ public class OrionService extends Service {
 		}
 
 		bundle = intent.getExtras();
-		serviceType = bundle.getInt(Constants.EXTRA_KEY_SERVICE_TYPE,
+		serviceType = bundle.getInt(Constants.EXTRA_SERVICE_TYPE,
 				Constants.SERVICE_TYPE_NONE);
 
 		mSinaFinance.downloadStockIndexes();

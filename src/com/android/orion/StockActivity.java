@@ -18,8 +18,6 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 	public static final String ACTION_STOCK_INSERT = "orion.intent.action.ACTION_STOCKINSERT";
 	public static final String ACTION_STOCK_EDIT = "orion.intent.action.ACTION_STOCK_EDIT";
 
-	public static final String EXTRA_STOCK_ID = "stock_id";
-
 	public static final int EXECUTE_STOCK_LOAD = 1;
 	public static final int EXECUTE_STOCK_SAVE = 2;
 
@@ -42,7 +40,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		initView();
 
 		if (ACTION_STOCK_EDIT.equals(mAction)) {
-			mStock.setId(mIntent.getLongExtra(EXTRA_STOCK_ID, 0));
+			mStock.setId(mIntent.getLongExtra(Constants.EXTRA_STOCK_ID, 0));
 			startLoadTask(EXECUTE_STOCK_LOAD);
 		}
 	}

@@ -38,7 +38,6 @@ public class StockFavoriteListActivity extends StorageActivity implements
 		OnItemLongClickListener, OnClickListener {
 
 	public static final String ACTION_STOCK_ID = "orion.intent.action.ACTION_STOCK_ID";
-	public static final String EXTRA_STOCK_ID = "stock_id";
 
 	static final int LOADER_ID_STOCK_FAVORITE_LIST = 0;
 
@@ -81,7 +80,7 @@ public class StockFavoriteListActivity extends StorageActivity implements
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			if (mResumed) {
-				if (intent.getIntExtra(Constants.EXTRA_KEY_SERVICE_TYPE,
+				if (intent.getIntExtra(Constants.EXTRA_SERVICE_TYPE,
 						Constants.SERVICE_TYPE_NONE) == Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE_REALTIME) {
 					restartLoader();
 				}
@@ -634,14 +633,14 @@ public class StockFavoriteListActivity extends StorageActivity implements
 
 		if (ACTION_STOCK_ID.equals(mAction)) {
 			if (mIntent != null) {
-				mIntent.putExtra(EXTRA_STOCK_ID, id);
+				mIntent.putExtra(Constants.EXTRA_STOCK_ID, id);
 				setResult(RESULT_OK, mIntent);
 				finish();
 			}
 		} else {
 			Intent intent = new Intent(this, StockChartListActivity.class);
 			intent.putExtra(Setting.KEY_SORT_ORDER_STOCK_LIST, mSortOrder);
-			intent.putExtra(DatabaseContract.COLUMN_STOCK_ID, id);
+			intent.putExtra(Constants.EXTRA_STOCK_ID, id);
 			startActivity(intent);
 		}
 	}

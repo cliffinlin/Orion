@@ -48,8 +48,6 @@ import com.github.mikephil.charting.utils.Utils;
 public class StockChartListActivity extends OrionBaseActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnChartGestureListener {
 
-	public static final String EXTRA_STOCK_ID = "stock_id";
-
 	static final int ITEM_VIEW_TYPE_MAIN = 0;
 	static final int ITEM_VIEW_TYPE_SUB = 1;
 	static final int STOCK_PERIOD_ARRAY_SIZE = 7;
@@ -78,13 +76,13 @@ public class StockChartListActivity extends OrionBaseActivity implements
 			if (mResumed) {
 
 				int serviceType = intent.getIntExtra(
-						Constants.EXTRA_KEY_SERVICE_TYPE,
+						Constants.EXTRA_SERVICE_TYPE,
 						Constants.SERVICE_TYPE_NONE);
 
 				if ((serviceType == Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE_REALTIME)
 						|| (serviceType == Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE_DATA_HISTORY)
 						|| (serviceType == Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE_DATA_REALTIME)) {
-					if (intent.getLongExtra(Constants.EXTRA_KEY_STOCK_ID, 0) == mStock
+					if (intent.getLongExtra(Constants.EXTRA_STOCK_ID, 0) == mStock
 							.getId()) {
 						restartLoader();
 					}
@@ -108,7 +106,7 @@ public class StockChartListActivity extends OrionBaseActivity implements
 
 		initListView();
 
-		mStock.setId(getIntent().getLongExtra(EXTRA_STOCK_ID, 0));
+		mStock.setId(getIntent().getLongExtra(Constants.EXTRA_STOCK_ID, 0));
 
 		mSortOrder = getIntent().getStringExtra(
 				Setting.KEY_SORT_ORDER_STOCK_LIST);
@@ -139,8 +137,8 @@ public class StockChartListActivity extends OrionBaseActivity implements
 		}
 		case R.id.action_deal: {
 			Bundle bundle = new Bundle();
-			bundle.putString(Constants.EXTRA_KEY_STOCK_SE, mStock.getSE());
-			bundle.putString(Constants.EXTRA_KEY_STOCK_CODE, mStock.getCode());
+			bundle.putString(Constants.EXTRA_STOCK_SE, mStock.getSE());
+			bundle.putString(Constants.EXTRA_STOCK_CODE, mStock.getCode());
 			Intent intent = new Intent(this, StockDealListActivity.class);
 			intent.putExtras(bundle);
 			startActivity(intent);

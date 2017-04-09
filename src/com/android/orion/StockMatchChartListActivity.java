@@ -87,16 +87,15 @@ public class StockMatchChartListActivity extends StorageActivity implements
 			if (mResumed) {
 
 				int serviceType = intent.getIntExtra(
-						Constants.EXTRA_KEY_SERVICE_TYPE,
+						Constants.EXTRA_SERVICE_TYPE,
 						Constants.SERVICE_TYPE_NONE);
 
 				if ((serviceType == Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE_REALTIME)
 						|| (serviceType == Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE_DATA_HISTORY)
 						|| (serviceType == Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE_DATA_REALTIME)) {
-					if (intent.getLongExtra(Constants.EXTRA_KEY_STOCK_ID, 0) == mStock_X
+					if (intent.getLongExtra(Constants.EXTRA_STOCK_ID, 0) == mStock_X
 							.getId()
-							|| intent.getLongExtra(
-									Constants.EXTRA_KEY_STOCK_ID, 0) == mStock_Y
+							|| intent.getLongExtra(Constants.EXTRA_STOCK_ID, 0) == mStock_Y
 									.getId()) {
 						startLoadTask(EXECUTE_LOAD_STOCK_MATCH_LIST);
 					}
@@ -175,8 +174,8 @@ public class StockMatchChartListActivity extends StorageActivity implements
 		}
 		case R.id.action_deal: {
 			Bundle bundle = new Bundle();
-			bundle.putString(Constants.EXTRA_KEY_STOCK_SE, mStock.getSE());
-			bundle.putString(Constants.EXTRA_KEY_STOCK_CODE, mStock.getCode());
+			bundle.putString(Constants.EXTRA_STOCK_SE, mStock.getSE());
+			bundle.putString(Constants.EXTRA_STOCK_CODE, mStock.getCode());
 			Intent intent = new Intent(this, StockDealListActivity.class);
 			intent.putExtras(bundle);
 			startActivity(intent);

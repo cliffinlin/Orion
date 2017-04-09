@@ -179,29 +179,29 @@ public class OrionBaseActivity extends Activity {
 
 	void startService(int serviceType, int executeType) {
 		Bundle bundle = new Bundle();
-		bundle.putInt(Constants.EXTRA_KEY_SERVICE_TYPE, serviceType);
-		bundle.putInt(Constants.EXTRA_KEY_EXECUTE_TYPE, executeType);
+		bundle.putInt(Constants.EXTRA_SERVICE_TYPE, serviceType);
+		bundle.putInt(Constants.EXTRA_EXECUTE_TYPE, executeType);
 		startService(bundle);
 	}
 
 	void startService(int serviceType, int executeType, String se, String code) {
 		Bundle bundle = new Bundle();
-		bundle.putInt(Constants.EXTRA_KEY_SERVICE_TYPE, serviceType);
-		bundle.putInt(Constants.EXTRA_KEY_EXECUTE_TYPE, executeType);
-		bundle.putString(Constants.EXTRA_KEY_STOCK_SE, se);
-		bundle.putString(Constants.EXTRA_KEY_STOCK_CODE, code);
+		bundle.putInt(Constants.EXTRA_SERVICE_TYPE, serviceType);
+		bundle.putInt(Constants.EXTRA_EXECUTE_TYPE, executeType);
+		bundle.putString(Constants.EXTRA_STOCK_SE, se);
+		bundle.putString(Constants.EXTRA_STOCK_CODE, code);
 		startService(bundle);
 	}
 
 	void startService(int serviceType, int executeType, String se, String code,
 			double stockDealPrice, long stockDealVolume) {
 		Bundle bundle = new Bundle();
-		bundle.putInt(Constants.EXTRA_KEY_SERVICE_TYPE, serviceType);
-		bundle.putInt(Constants.EXTRA_KEY_EXECUTE_TYPE, executeType);
-		bundle.putString(Constants.EXTRA_KEY_STOCK_SE, se);
-		bundle.putString(Constants.EXTRA_KEY_STOCK_CODE, code);
-		bundle.putDouble(Constants.EXTRA_KEY_STOCK_DEAL_PRICE, stockDealPrice);
-		bundle.putLong(Constants.EXTRA_KEY_STOCK_DEAL_VOLUME, stockDealVolume);
+		bundle.putInt(Constants.EXTRA_SERVICE_TYPE, serviceType);
+		bundle.putInt(Constants.EXTRA_EXECUTE_TYPE, executeType);
+		bundle.putString(Constants.EXTRA_STOCK_SE, se);
+		bundle.putString(Constants.EXTRA_STOCK_CODE, code);
+		bundle.putDouble(Constants.EXTRA_STOCK_DEAL_PRICE, stockDealPrice);
+		bundle.putLong(Constants.EXTRA_STOCK_DEAL_VOLUME, stockDealVolume);
 		startService(bundle);
 	}
 

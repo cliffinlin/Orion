@@ -75,9 +75,9 @@ public class ServiceSettingFragment extends PreferenceFragment implements
 				|| key.equals(Constants.PERIOD_YEAR)) {
 			if (bChecked) {
 				Intent intent = new Intent(getActivity(), OrionService.class);
-				intent.putExtra(Constants.EXTRA_KEY_SERVICE_TYPE,
+				intent.putExtra(Constants.EXTRA_SERVICE_TYPE,
 						Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE);
-				intent.putExtra(Constants.EXTRA_KEY_EXECUTE_TYPE,
+				intent.putExtra(Constants.EXTRA_EXECUTE_TYPE,
 						Constants.EXECUTE_IMMEDIATE);
 				getActivity().startService(intent);
 			}

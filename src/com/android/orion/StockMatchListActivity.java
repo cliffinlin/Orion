@@ -45,10 +45,11 @@ public class StockMatchListActivity extends StorageActivity implements
 		OnItemLongClickListener, OnClickListener {
 
 	static final int EXECUTE_MATCH_DELETE = 0;
-	static final int EXECUTE_MATCH_LIST_ON_ITEM_CLICK = 1;
-	static final int EXECUTE_MATCH_LIST_DELETE_ALL = 2;
-	static final int EXECUTE_MATCH_LIST_LOAD_FROM_SD_CARD = 3;
-	static final int EXECUTE_MATCH_LIST_SAVE_TO_SD_CARD = 4;
+	static final int EXECUTE_MATCH_LIST_DELETE_ALL = 1;
+	static final int EXECUTE_MATCH_LEFT_LISTVIEW_ON_ITEM_CLICK = 2;
+	static final int EXECUTE_MATCH_RIGHT_LISTVIEW_ON_ITEM_CLICK = 3;
+	static final int EXECUTE_MATCH_LIST_LOAD_FROM_SD_CARD = 4;
+	static final int EXECUTE_MATCH_LIST_SAVE_TO_SD_CARD = 5;
 
 	static final int LOADER_ID_MATCH_LIST = 0;
 
@@ -256,10 +257,13 @@ public class StockMatchListActivity extends StorageActivity implements
 
 	Long doInBackgroundLoad(Object... params) {
 		super.doInBackgroundSave(params);
+
 		int execute = (Integer) params[0];
+		Intent intent = null;
 
 		switch (execute) {
-		case EXECUTE_MATCH_LIST_ON_ITEM_CLICK:
+		case EXECUTE_MATCH_LEFT_LISTVIEW_ON_ITEM_CLICK:
+			Stock stock = null;
 			mStockDatabaseManager.getStockMatchById(mMatch);
 
 			mStock_X.setSE(mMatch.getSE_X());
@@ -270,7 +274,30 @@ public class StockMatchListActivity extends StorageActivity implements
 			mStock_Y.setCode(mMatch.getCode_Y());
 			mStockDatabaseManager.getStock(mStock_Y);
 
-			Intent intent = new Intent(this, StockMatchChartListActivity.class);
+			if (mSortOrderColumn
+					.equals(DatabaseContract.StockMatch.COLUMN_CODE_X)) {
+				stock = mStock_X;
+			} else {
+				stock = mStock_Y;
+			}
+
+			intent = new Intent(this, StockChartListActivity.class);
+			intent.putExtra(Constants.EXTRA_STOCK_ID, stock.getId());
+			startActivity(intent);
+			break;
+
+		case EXECUTE_MATCH_RIGHT_LISTVIEW_ON_ITEM_CLICK:
+			mStockDatabaseManager.getStockMatchById(mMatch);
+
+			mStock_X.setSE(mMatch.getSE_X());
+			mStock_X.setCode(mMatch.getCode_X());
+			mStockDatabaseManager.getStock(mStock_X);
+
+			mStock_Y.setSE(mMatch.getSE_Y());
+			mStock_Y.setCode(mMatch.getCode_Y());
+			mStockDatabaseManager.getStock(mStock_Y);
+
+			intent = new Intent(this, StockMatchChartListActivity.class);
 			intent.putExtra(Setting.KEY_SORT_ORDER_STOCK_MATCH_LIST, mSortOrder);
 			intent.putExtra(StockMatchChartListActivity.EXTRA_STOCK_MATCH_ID,
 					mMatch.getId());
@@ -783,9 +810,14 @@ public class StockMatchListActivity extends StorageActivity implements
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 
-		if (mCurrentActionMode == null) {
+		if (parent.getId() == R.id.left_listview) {
 			mMatch.setId(id);
-			startLoadTask(EXECUTE_MATCH_LIST_ON_ITEM_CLICK);
+			startLoadTask(EXECUTE_MATCH_LEFT_LISTVIEW_ON_ITEM_CLICK);
+		} else {
+			if (mCurrentActionMode == null) {
+				mMatch.setId(id);
+				startLoadTask(EXECUTE_MATCH_RIGHT_LISTVIEW_ON_ITEM_CLICK);
+			}
 		}
 	}
 

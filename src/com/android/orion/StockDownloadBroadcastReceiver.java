@@ -31,10 +31,9 @@ public class StockDownloadBroadcastReceiver extends BroadcastReceiver {
 			}
 
 			Intent serviceIntent = new Intent(context, OrionService.class);
-			serviceIntent.putExtra(Constants.EXTRA_KEY_SERVICE_TYPE,
+			serviceIntent.putExtra(Constants.EXTRA_SERVICE_TYPE,
 					Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE);
-			serviceIntent.putExtra(Constants.EXTRA_KEY_EXECUTE_TYPE,
-					executeType);
+			serviceIntent.putExtra(Constants.EXTRA_EXECUTE_TYPE, executeType);
 			context.startService(serviceIntent);
 		}
 	}

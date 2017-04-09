@@ -142,7 +142,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			return;
 		}
 
-		executeType = bundle.getInt(Constants.EXTRA_KEY_EXECUTE_TYPE,
+		executeType = bundle.getInt(Constants.EXTRA_EXECUTE_TYPE,
 				Constants.EXECUTE_TYPE_NONE);
 
 		stock = getStock(bundle);
@@ -467,8 +467,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
 	}
 
 	Stock getStock(Bundle bundle) {
-		String se = bundle.getString(Constants.EXTRA_KEY_STOCK_SE);
-		String code = bundle.getString(Constants.EXTRA_KEY_STOCK_CODE);
+		String se = bundle.getString(Constants.EXTRA_STOCK_SE);
+		String code = bundle.getString(Constants.EXTRA_STOCK_CODE);
 		Stock stock = null;
 
 		stock = mStockArrayMapFavorite.get(se + code);
@@ -518,9 +518,9 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			handleResponseStockRealTime(mStock, response);
 			mStockDatabaseManager.updateStockDeal(mStock);
 			Bundle bundle = new Bundle();
-			bundle.putInt(Constants.EXTRA_KEY_SERVICE_TYPE,
+			bundle.putInt(Constants.EXTRA_SERVICE_TYPE,
 					Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE_REALTIME);
-			bundle.putLong(Constants.EXTRA_KEY_STOCK_ID, mStock.getId());
+			bundle.putLong(Constants.EXTRA_STOCK_ID, mStock.getId());
 			sendBroadcast(Constants.ACTION_SERVICE_FINISHED, bundle);
 		}
 	}
@@ -563,9 +563,9 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			analyze(mStock, mStockData.getPeriod(),
 					getStockDataList(mStock, mStockData.getPeriod()));
 			Bundle bundle = new Bundle();
-			bundle.putInt(Constants.EXTRA_KEY_SERVICE_TYPE,
+			bundle.putInt(Constants.EXTRA_SERVICE_TYPE,
 					Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE_DATA_HISTORY);
-			bundle.putLong(Constants.EXTRA_KEY_STOCK_ID, mStock.getId());
+			bundle.putLong(Constants.EXTRA_STOCK_ID, mStock.getId());
 			sendBroadcast(Constants.ACTION_SERVICE_FINISHED, bundle);
 		}
 	}
@@ -608,9 +608,9 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			analyze(mStock, mStockData.getPeriod(),
 					getStockDataList(mStock, mStockData.getPeriod()));
 			Bundle bundle = new Bundle();
-			bundle.putInt(Constants.EXTRA_KEY_SERVICE_TYPE,
+			bundle.putInt(Constants.EXTRA_SERVICE_TYPE,
 					Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE_DATA_REALTIME);
-			bundle.putLong(Constants.EXTRA_KEY_STOCK_ID, mStock.getId());
+			bundle.putLong(Constants.EXTRA_STOCK_ID, mStock.getId());
 			sendBroadcast(Constants.ACTION_SERVICE_FINISHED, bundle);
 		}
 	}

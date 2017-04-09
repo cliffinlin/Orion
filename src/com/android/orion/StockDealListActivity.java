@@ -563,8 +563,7 @@ public class StockDealListActivity extends StorageActivity implements
 
 			Intent intent = new Intent(this, StockChartListActivity.class);
 			intent.putExtra(Setting.KEY_SORT_ORDER_STOCK_DEAL_LIST, mSortOrder);
-			intent.putExtra(StockChartListActivity.EXTRA_STOCK_ID,
-					mStock.getId());
+			intent.putExtra(Constants.EXTRA_STOCK_ID, mStock.getId());
 			startActivity(intent);
 			break;
 

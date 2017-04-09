@@ -315,42 +315,6 @@ public class StockAnalyzer extends StockManager {
 		stock.setOverlap(overlapList.get(overlapList.size() - 1).getOverlap());
 	}
 
-	private String getActionByMA5(ArrayList<StockData> stockDataList) {
-		int size = 0;
-		String action = "";
-
-		StockData prev = null;
-		StockData current = null;
-		StockData next = null;
-
-		if (stockDataList == null) {
-			return action;
-		}
-
-		size = stockDataList.size();
-		if (size < Constants.STOCK_VERTEX_TYPING_SIZE) {
-			return action;
-		}
-
-		prev = stockDataList.get(size - 3);
-		current = stockDataList.get(size - 2);
-		next = stockDataList.get(size - 1);
-
-		if ((prev.getAverage5() > current.getAverage5())
-				&& (next.getAverage5() > current.getAverage5())) {
-			action = Constants.STOCK_ACTION_BUY;
-		} else if (next.getAverage5() > current.getAverage5()) {
-			action += Constants.STOCK_ACTION_ADD;
-		} else if ((prev.getAverage5() < current.getAverage5())
-				&& (next.getAverage5() < current.getAverage5())) {
-			action = Constants.STOCK_ACTION_SELL;
-		} else if (next.getAverage5() < current.getAverage5()) {
-			action += Constants.STOCK_ACTION_MINUS;
-		}
-
-		return action;
-	}
-
 	private void setAction(Stock stock, String period,
 			ArrayList<StockData> stockDataList,
 			ArrayList<StockData> segmentDataList) {
@@ -383,10 +347,6 @@ public class StockAnalyzer extends StockManager {
 		}
 
 		action = action + direction;
-
-		if (period.equals(Constants.PERIOD_DAY)) {
-			action = getActionByMA5(stockDataList);
-		}
 
 		stock.setAction(period, action);
 	}

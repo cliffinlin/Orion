@@ -168,16 +168,16 @@ public class StockMatchActivity extends DatabaseActivity implements
 			switch (requestCode) {
 			case REQUEST_CODE_STOCK_X_ID:
 				if (mStock_X != null) {
-					mStock_X.setId(data.getLongExtra(
-							StockFavoriteListActivity.EXTRA_STOCK_ID, 0));
+					mStock_X.setId(data.getLongExtra(Constants.EXTRA_STOCK_ID,
+							0));
 					startLoadTask(EXECUTE_STOCK_X_LOAD);
 				}
 				break;
 
 			case REQUEST_CODE_STOCK_Y_ID:
 				if (mStock_Y != null) {
-					mStock_Y.setId(data.getLongExtra(
-							StockFavoriteListActivity.EXTRA_STOCK_ID, 0));
+					mStock_Y.setId(data.getLongExtra(Constants.EXTRA_STOCK_ID,
+							0));
 					startLoadTask(EXECUTE_STOCK_Y_LOAD);
 				}
 				break;
