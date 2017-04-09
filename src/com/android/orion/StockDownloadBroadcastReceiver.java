@@ -13,21 +13,21 @@ public class StockDownloadBroadcastReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		int scheduleMinutes = 0;
-		int executeType = Constants.EXECUTE_SCHEDULE_1MIN;
+		int executeType = Constants.EXECUTE_SCHEDULE_MIN1;
 
 		if (Utility.isTradingHours(Calendar.getInstance())) {
 			Utility.Log("System.currentTimeMillis():"
 					+ System.currentTimeMillis());
 
 			scheduleMinutes = Utility.getScheduleMinutes();
-			if ((scheduleMinutes % Constants.SCHEDULE_INTERVAL_60MIN) == 0) {
-				executeType |= Constants.EXECUTE_SCHEDULE_60MIN;
-			} else if ((scheduleMinutes % Constants.SCHEDULE_INTERVAL_30MIN) == 0) {
-				executeType |= Constants.EXECUTE_SCHEDULE_30MIN;
-			} else if ((scheduleMinutes % Constants.SCHEDULE_INTERVAL_15MIN) == 0) {
-				executeType |= Constants.EXECUTE_SCHEDULE_15MIN;
-			} else if ((scheduleMinutes % Constants.SCHEDULE_INTERVAL_5MIN) == 0) {
-				executeType |= Constants.EXECUTE_SCHEDULE_5MIN;
+			if ((scheduleMinutes % Constants.SCHEDULE_INTERVAL_MIN60) == 0) {
+				executeType |= Constants.EXECUTE_SCHEDULE_MIN60;
+			} else if ((scheduleMinutes % Constants.SCHEDULE_INTERVAL_MIN30) == 0) {
+				executeType |= Constants.EXECUTE_SCHEDULE_MIN30;
+			} else if ((scheduleMinutes % Constants.SCHEDULE_INTERVAL_MIN15) == 0) {
+				executeType |= Constants.EXECUTE_SCHEDULE_MIN15;
+			} else if ((scheduleMinutes % Constants.SCHEDULE_INTERVAL_MIN5) == 0) {
+				executeType |= Constants.EXECUTE_SCHEDULE_MIN5;
 			}
 
 			Intent serviceIntent = new Intent(context, OrionService.class);

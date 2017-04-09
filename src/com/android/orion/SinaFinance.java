@@ -19,10 +19,10 @@ public class SinaFinance extends StockDataProvider {
 	private static final String SINA_FINANCE_URL_HQ_JS_LIST = "http://hq.sinajs.cn/list=";
 	private static final String SINA_FINANCE_URL_HQ_JS_LIST_SIMPLE = "http://hq.sinajs.cn/list=s_";
 
-	private static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_5MIN = 242;
-	private static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_15MIN = 192;
-	private static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_30MIN = 192;
-	private static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_60MIN = 192;
+	private static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN5 = 242;
+	private static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN15 = 192;
+	private static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN30 = 192;
+	private static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN60 = 192;
 
 	public SinaFinance(Context context) {
 		super(context);
@@ -67,16 +67,16 @@ public class SinaFinance extends StockDataProvider {
 
 	@Override
 	int getAvailableHistoryLength(String period) {
-		if (period.equals(Constants.PERIOD_1MIN)) {
+		if (period.equals(Constants.PERIOD_MIN1)) {
 			return Constants.DOWNLOAD_HISTORY_LENGTH_NONE;
-		} else if (period.equals(Constants.PERIOD_5MIN)) {
-			return DOWNLOAD_HISTORY_LENGTH_PERIOD_5MIN;
-		} else if (period.equals(Constants.PERIOD_15MIN)) {
-			return DOWNLOAD_HISTORY_LENGTH_PERIOD_15MIN;
-		} else if (period.equals(Constants.PERIOD_30MIN)) {
-			return DOWNLOAD_HISTORY_LENGTH_PERIOD_30MIN;
-		} else if (period.equals(Constants.PERIOD_60MIN)) {
-			return DOWNLOAD_HISTORY_LENGTH_PERIOD_60MIN;
+		} else if (period.equals(Constants.PERIOD_MIN5)) {
+			return DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN5;
+		} else if (period.equals(Constants.PERIOD_MIN15)) {
+			return DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN15;
+		} else if (period.equals(Constants.PERIOD_MIN30)) {
+			return DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN30;
+		} else if (period.equals(Constants.PERIOD_MIN60)) {
+			return DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN60;
 		} else if (period.equals(Constants.PERIOD_DAY)) {
 			return Constants.DOWNLOAD_HISTORY_LENGTH_UNLIMITED;
 		} else if (period.equals(Constants.PERIOD_WEEK)) {

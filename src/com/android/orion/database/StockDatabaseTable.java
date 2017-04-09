@@ -3,7 +3,6 @@ package com.android.orion.database;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-
 public class StockDatabaseTable extends DatabaseTable {
 	double mOverlap;
 	double mVelocity;
@@ -23,7 +22,7 @@ public class StockDatabaseTable extends DatabaseTable {
 
 	ContentValues getContentValues(ContentValues contentValues) {
 		super.getContentValues(contentValues);
-		
+
 		contentValues.put(DatabaseContract.COLUMN_OVERLAP, mOverlap);
 		contentValues.put(DatabaseContract.COLUMN_VELOCITY, mVelocity);
 		contentValues.put(DatabaseContract.COLUMN_ACCELERATION, mAcceleration);

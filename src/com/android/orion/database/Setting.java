@@ -3,7 +3,6 @@ package com.android.orion.database;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-
 public class Setting extends DatabaseTable {
 	public static final String KEY_STOCK_HSA_UPDATED = "stock_hsa_updated";
 	public static final String KEY_SORT_ORDER_STOCK_LIST = "sort_order_stock_list";

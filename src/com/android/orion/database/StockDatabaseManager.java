@@ -587,11 +587,11 @@ public class StockDatabaseManager extends DatabaseManager {
 
 		period = stockData.getPeriod();
 
-		if (period.equals(Constants.PERIOD_1MIN)
-				|| period.equals(Constants.PERIOD_5MIN)
-				|| period.equals(Constants.PERIOD_15MIN)
-				|| period.equals(Constants.PERIOD_30MIN)
-				|| period.equals(Constants.PERIOD_60MIN)) {
+		if (period.equals(Constants.PERIOD_MIN1)
+				|| period.equals(Constants.PERIOD_MIN5)
+				|| period.equals(Constants.PERIOD_MIN15)
+				|| period.equals(Constants.PERIOD_MIN30)
+				|| period.equals(Constants.PERIOD_MIN60)) {
 			where += " AND " + DatabaseContract.StockData.COLUMN_TIME + " = "
 					+ "\'" + stockData.getTime() + "\'";
 		}
@@ -855,7 +855,7 @@ public class StockDatabaseManager extends DatabaseManager {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void deleteStockMatchById(StockMatch stockMatch) {
 		if ((stockMatch == null) || (mContentResolver == null)) {
 			return;
@@ -943,7 +943,7 @@ public class StockDatabaseManager extends DatabaseManager {
 			closeCursor(cursor);
 		}
 	}
-	
+
 	public void getStockMatchList(Stock stock,
 			ArrayList<StockMatch> stockMatchList) {
 		Cursor cursor = null;

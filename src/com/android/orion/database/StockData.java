@@ -121,8 +121,7 @@ public class StockData extends StockDatabaseTable {
 		mIndexEnd = 0;
 	}
 
-	public
-	ContentValues getContentValues() {
+	public ContentValues getContentValues() {
 		ContentValues contentValues = new ContentValues();
 		super.getContentValues(contentValues);
 		contentValues = getContentValues(contentValues);
@@ -141,8 +140,10 @@ public class StockData extends StockDatabaseTable {
 		contentValues.put(DatabaseContract.StockData.COLUMN_DIRECTION,
 				mDirection);
 		contentValues.put(DatabaseContract.StockData.COLUMN_VERTEX, mVertex);
-		contentValues.put(DatabaseContract.StockData.COLUMN_VERTEX_LOW, mVertexLow);
-		contentValues.put(DatabaseContract.StockData.COLUMN_VERTEX_HIGH, mVertexHigh);
+		contentValues.put(DatabaseContract.StockData.COLUMN_VERTEX_LOW,
+				mVertexLow);
+		contentValues.put(DatabaseContract.StockData.COLUMN_VERTEX_HIGH,
+				mVertexHigh);
 		contentValues
 				.put(DatabaseContract.StockData.COLUMN_POSITION, mPosition);
 		contentValues.put(DatabaseContract.COLUMN_OVERLAP, mOverlap);
@@ -215,8 +216,7 @@ public class StockData extends StockDatabaseTable {
 	}
 
 	@Override
-	public
-	void set(Cursor cursor) {
+	public void set(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}
@@ -454,9 +454,8 @@ public class StockData extends StockDatabaseTable {
 			return;
 		}
 
-		setVertexHigh(cursor
-				.getDouble(cursor
-						.getColumnIndex(DatabaseContract.StockData.COLUMN_VERTEX_HIGH)));
+		setVertexHigh(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.StockData.COLUMN_VERTEX_HIGH)));
 	}
 
 	int getPosition() {

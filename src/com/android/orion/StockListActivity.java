@@ -270,19 +270,19 @@ public class StockListActivity extends StorageActivity {
 					break;
 				case 2:
 					textString = mStockList.get(row).getAction(
-							Constants.PERIOD_5MIN);
+							Constants.PERIOD_MIN5);
 					break;
 				case 3:
 					textString = mStockList.get(row).getAction(
-							Constants.PERIOD_15MIN);
+							Constants.PERIOD_MIN15);
 					break;
 				case 4:
 					textString = mStockList.get(row).getAction(
-							Constants.PERIOD_30MIN);
+							Constants.PERIOD_MIN30);
 					break;
 				case 5:
 					textString = mStockList.get(row).getAction(
-							Constants.PERIOD_60MIN);
+							Constants.PERIOD_MIN60);
 					break;
 				case 6:
 					textString = mStockList.get(row).getAction(

@@ -178,7 +178,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		}
 
 		if (executeType == Constants.EXECUTE_IMMEDIATE
-				|| executeTypeOf(executeType, Constants.EXECUTE_SCHEDULE_1MIN)
+				|| executeTypeOf(executeType, Constants.EXECUTE_SCHEDULE_MIN1)
 				|| Utility.isOutOfDate(modified)) {
 			urlString = getStockRealTimeURLString(stock);
 			if (addToCurrentRequests(urlString)) {
@@ -315,43 +315,43 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		}
 	}
 
-	int getScheduleMaxLengthAt60Min(int scheduleMinutes, String period) {
+	int getScheduleMaxLengthAtMin60(int scheduleMinutes, String period) {
 		int result = 0;
 
-		if (period.equals(Constants.PERIOD_5MIN)) {
-			result = scheduleMinutes / Constants.SCHEDULE_INTERVAL_5MIN;
-		} else if (period.equals(Constants.PERIOD_15MIN)) {
-			result = scheduleMinutes / Constants.SCHEDULE_INTERVAL_15MIN;
-		} else if (period.equals(Constants.PERIOD_30MIN)) {
-			result = scheduleMinutes / Constants.SCHEDULE_INTERVAL_30MIN;
-		} else if (period.equals(Constants.PERIOD_60MIN)) {
-			result = scheduleMinutes / Constants.SCHEDULE_INTERVAL_60MIN;
+		if (period.equals(Constants.PERIOD_MIN5)) {
+			result = scheduleMinutes / Constants.SCHEDULE_INTERVAL_MIN5;
+		} else if (period.equals(Constants.PERIOD_MIN15)) {
+			result = scheduleMinutes / Constants.SCHEDULE_INTERVAL_MIN15;
+		} else if (period.equals(Constants.PERIOD_MIN30)) {
+			result = scheduleMinutes / Constants.SCHEDULE_INTERVAL_MIN30;
+		} else if (period.equals(Constants.PERIOD_MIN60)) {
+			result = scheduleMinutes / Constants.SCHEDULE_INTERVAL_MIN60;
 		}
 
 		return result;
 	}
 
-	int getScheduleMaxLengthAt30Min(int scheduleMinutes, String period) {
+	int getScheduleMaxLengthAtMin30(int scheduleMinutes, String period) {
 		int result = 0;
 
-		if (period.equals(Constants.PERIOD_5MIN)) {
-			result = scheduleMinutes / Constants.SCHEDULE_INTERVAL_5MIN;
-		} else if (period.equals(Constants.PERIOD_15MIN)) {
-			result = scheduleMinutes / Constants.SCHEDULE_INTERVAL_15MIN;
-		} else if (period.equals(Constants.PERIOD_30MIN)) {
-			result = scheduleMinutes / Constants.SCHEDULE_INTERVAL_30MIN;
+		if (period.equals(Constants.PERIOD_MIN5)) {
+			result = scheduleMinutes / Constants.SCHEDULE_INTERVAL_MIN5;
+		} else if (period.equals(Constants.PERIOD_MIN15)) {
+			result = scheduleMinutes / Constants.SCHEDULE_INTERVAL_MIN15;
+		} else if (period.equals(Constants.PERIOD_MIN30)) {
+			result = scheduleMinutes / Constants.SCHEDULE_INTERVAL_MIN30;
 		}
 
 		return result;
 	}
 
-	int getScheduleMaxLengthAt15Min(int scheduleMinutes, String period) {
+	int getScheduleMaxLengthAtMin15(int scheduleMinutes, String period) {
 		int result = 0;
 
-		if (period.equals(Constants.PERIOD_5MIN)) {
-			result = scheduleMinutes / Constants.SCHEDULE_INTERVAL_5MIN;
-		} else if (period.equals(Constants.PERIOD_15MIN)) {
-			result = scheduleMinutes / Constants.SCHEDULE_INTERVAL_15MIN;
+		if (period.equals(Constants.PERIOD_MIN5)) {
+			result = scheduleMinutes / Constants.SCHEDULE_INTERVAL_MIN5;
+		} else if (period.equals(Constants.PERIOD_MIN15)) {
+			result = scheduleMinutes / Constants.SCHEDULE_INTERVAL_MIN15;
 		}
 
 		return result;
@@ -402,21 +402,21 @@ public abstract class StockDataProvider extends StockAnalyzer {
 					removeStockDataRedundant(cursor, defaultValue);
 					result = defaultValue;
 				} else if (Utility.isOutOfDateFirstHalf(modified)) {
-					result = getScheduleMaxLengthAt60Min(scheduleMinutes,
+					result = getScheduleMaxLengthAtMin60(scheduleMinutes,
 							period);
 				} else if (Utility.isOutOfDateSecendHalf(modified)) {
-					result = getScheduleMaxLengthAt60Min(scheduleMinutes,
+					result = getScheduleMaxLengthAtMin60(scheduleMinutes,
 							period);
-				} else if ((executeType & Constants.EXECUTE_SCHEDULE_60MIN) == Constants.EXECUTE_SCHEDULE_60MIN) {
-					result = getScheduleMaxLengthAt60Min(scheduleMinutes,
+				} else if ((executeType & Constants.EXECUTE_SCHEDULE_MIN60) == Constants.EXECUTE_SCHEDULE_MIN60) {
+					result = getScheduleMaxLengthAtMin60(scheduleMinutes,
 							period);
-				} else if ((executeType & Constants.EXECUTE_SCHEDULE_30MIN) == Constants.EXECUTE_SCHEDULE_30MIN) {
-					result = getScheduleMaxLengthAt30Min(scheduleMinutes,
+				} else if ((executeType & Constants.EXECUTE_SCHEDULE_MIN30) == Constants.EXECUTE_SCHEDULE_MIN30) {
+					result = getScheduleMaxLengthAtMin30(scheduleMinutes,
 							period);
-				} else if ((executeType & Constants.EXECUTE_SCHEDULE_15MIN) == Constants.EXECUTE_SCHEDULE_15MIN) {
-					result = getScheduleMaxLengthAt15Min(scheduleMinutes,
+				} else if ((executeType & Constants.EXECUTE_SCHEDULE_MIN15) == Constants.EXECUTE_SCHEDULE_MIN15) {
+					result = getScheduleMaxLengthAtMin15(scheduleMinutes,
 							period);
-				} else if ((executeType & Constants.EXECUTE_SCHEDULE_5MIN) == Constants.EXECUTE_SCHEDULE_5MIN) {
+				} else if ((executeType & Constants.EXECUTE_SCHEDULE_MIN5) == Constants.EXECUTE_SCHEDULE_MIN5) {
 					result = 1;
 				}
 			}

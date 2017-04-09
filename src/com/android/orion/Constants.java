@@ -23,11 +23,11 @@ public class Constants {
 	public static final int EXECUTE_TYPE_NONE = 0;
 	public static final int EXECUTE_IMMEDIATE = 1;
 	public static final int EXECUTE_SCHEDULE = 2;
-	public static final int EXECUTE_SCHEDULE_1MIN = EXECUTE_SCHEDULE << 0;
-	public static final int EXECUTE_SCHEDULE_5MIN = EXECUTE_SCHEDULE << 1;
-	public static final int EXECUTE_SCHEDULE_15MIN = EXECUTE_SCHEDULE << 2;
-	public static final int EXECUTE_SCHEDULE_30MIN = EXECUTE_SCHEDULE << 3;
-	public static final int EXECUTE_SCHEDULE_60MIN = EXECUTE_SCHEDULE << 4;
+	public static final int EXECUTE_SCHEDULE_MIN1 = EXECUTE_SCHEDULE << 0;
+	public static final int EXECUTE_SCHEDULE_MIN5 = EXECUTE_SCHEDULE << 1;
+	public static final int EXECUTE_SCHEDULE_MIN15 = EXECUTE_SCHEDULE << 2;
+	public static final int EXECUTE_SCHEDULE_MIN30 = EXECUTE_SCHEDULE << 3;
+	public static final int EXECUTE_SCHEDULE_MIN60 = EXECUTE_SCHEDULE << 4;
 
 	public static final String EXTRA_EXECUTE_TYPE = "execute_type";
 	public static final String EXTRA_SERVICE_TYPE = "service_type";
@@ -37,25 +37,25 @@ public class Constants {
 	public static final String EXTRA_STOCK_DEAL_PRICE = "stock_deal_price";
 	public static final String EXTRA_STOCK_DEAL_VOLUME = "stock_dral_volume";
 
-	public static final String PERIOD_1MIN = "1min";
-	public static final String PERIOD_5MIN = "5min";
-	public static final String PERIOD_15MIN = "15min";
-	public static final String PERIOD_30MIN = "30min";
-	public static final String PERIOD_60MIN = "60min";
+	public static final String PERIOD_MIN1 = "min1";
+	public static final String PERIOD_MIN5 = "min5";
+	public static final String PERIOD_MIN15 = "min15";
+	public static final String PERIOD_MIN30 = "min30";
+	public static final String PERIOD_MIN60 = "min60";
 	public static final String PERIOD_DAY = "day";
 	public static final String PERIOD_WEEK = "week";
 	public static final String PERIOD_MONTH = "month";
 	public static final String PERIOD_QUARTER = "quarter";
 	public static final String PERIOD_YEAR = "year";
 	public static final String PERIODS[] = { PERIOD_YEAR, PERIOD_QUARTER,
-			PERIOD_MONTH, PERIOD_WEEK, PERIOD_DAY, PERIOD_60MIN, PERIOD_30MIN,
-			PERIOD_15MIN, PERIOD_5MIN, PERIOD_1MIN };
+			PERIOD_MONTH, PERIOD_WEEK, PERIOD_DAY, PERIOD_MIN60, PERIOD_MIN30,
+			PERIOD_MIN15, PERIOD_MIN5, PERIOD_MIN1 };
 
-	public static final int SCHEDULE_INTERVAL_1MIN = 1;
-	public static final int SCHEDULE_INTERVAL_5MIN = 5;
-	public static final int SCHEDULE_INTERVAL_15MIN = 15;
-	public static final int SCHEDULE_INTERVAL_30MIN = 30;
-	public static final int SCHEDULE_INTERVAL_60MIN = 60;
+	public static final int SCHEDULE_INTERVAL_MIN1 = 1;
+	public static final int SCHEDULE_INTERVAL_MIN5 = 5;
+	public static final int SCHEDULE_INTERVAL_MIN15 = 15;
+	public static final int SCHEDULE_INTERVAL_MIN30 = 30;
+	public static final int SCHEDULE_INTERVAL_MIN60 = 60;
 
 	public static final int SERVICE_TYPE_NONE = -1;
 	public static final int SERVICE_DOWNLOAD_STOCK_FAVORITE = 0;

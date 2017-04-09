@@ -70,10 +70,10 @@ public class StockMatchListActivity extends StorageActivity implements
 	SyncHorizontalScrollView mContentSHSV = null;
 
 	TextView mTextViewNameCode = null;
-	TextView mTextView5M = null;
-	TextView mTextView15M = null;
-	TextView mTextView30M = null;
-	TextView mTextView60M = null;
+	TextView mTextViewMim5 = null;
+	TextView mTextViewMin15 = null;
+	TextView mTextViewMin30 = null;
+	TextView mTextViewMin60 = null;
 	TextView mTextViewDay = null;
 	TextView mTextViewWeek = null;
 	TextView mTextViewMonth = null;
@@ -480,25 +480,25 @@ public class StockMatchListActivity extends StorageActivity implements
 			mSortOrderColumn = DatabaseContract.StockMatch.COLUMN_CODE_X;
 			break;
 		case R.id.action_5min:
-			mSortOrderColumn = DatabaseContract.StockMatch.COLUMN_VALUE_5MIN;
+			mSortOrderColumn = DatabaseContract.COLUMN_MIN5;
 			break;
 		case R.id.action_15min:
-			mSortOrderColumn = DatabaseContract.StockMatch.COLUMN_VALUE_15MIN;
+			mSortOrderColumn = DatabaseContract.COLUMN_MIN15;
 			break;
 		case R.id.action_30min:
-			mSortOrderColumn = DatabaseContract.StockMatch.COLUMN_VALUE_30MIN;
+			mSortOrderColumn = DatabaseContract.COLUMN_MIN30;
 			break;
 		case R.id.action_60min:
-			mSortOrderColumn = DatabaseContract.StockMatch.COLUMN_VALUE_60MIN;
+			mSortOrderColumn = DatabaseContract.COLUMN_MIN60;
 			break;
 		case R.id.action_day:
-			mSortOrderColumn = DatabaseContract.StockMatch.COLUMN_VALUE_DAY;
+			mSortOrderColumn = DatabaseContract.COLUMN_DAY;
 			break;
 		case R.id.action_week:
-			mSortOrderColumn = DatabaseContract.StockMatch.COLUMN_VALUE_WEEK;
+			mSortOrderColumn = DatabaseContract.COLUMN_WEEK;
 			break;
 		case R.id.action_month:
-			mSortOrderColumn = DatabaseContract.StockMatch.COLUMN_VALUE_MONTH;
+			mSortOrderColumn = DatabaseContract.COLUMN_MONTH;
 			break;
 		case R.id.created:
 			mSortOrderColumn = DatabaseContract.COLUMN_CREATED;
@@ -537,10 +537,10 @@ public class StockMatchListActivity extends StorageActivity implements
 
 	void resetHeaderTextColor() {
 		setHeaderTextColor(mTextViewNameCode, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextView5M, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextView15M, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextView30M, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextView60M, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewMim5, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewMin15, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewMin30, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewMin60, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewDay, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewWeek, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewMonth, mHeaderTextDefaultColor);
@@ -570,28 +570,28 @@ public class StockMatchListActivity extends StorageActivity implements
 			mTextViewNameCode.setOnClickListener(this);
 		}
 
-		mTextView5M = (TextView) findViewById(R.id.action_5min);
-		if (mTextView5M != null) {
-			mTextView5M.setOnClickListener(this);
-			setVisibility(Constants.PERIOD_5MIN, mTextView5M);
+		mTextViewMim5 = (TextView) findViewById(R.id.action_5min);
+		if (mTextViewMim5 != null) {
+			mTextViewMim5.setOnClickListener(this);
+			setVisibility(Constants.PERIOD_MIN5, mTextViewMim5);
 		}
 
-		mTextView15M = (TextView) findViewById(R.id.action_15min);
-		if (mTextView15M != null) {
-			mTextView15M.setOnClickListener(this);
-			setVisibility(Constants.PERIOD_15MIN, mTextView15M);
+		mTextViewMin15 = (TextView) findViewById(R.id.action_15min);
+		if (mTextViewMin15 != null) {
+			mTextViewMin15.setOnClickListener(this);
+			setVisibility(Constants.PERIOD_MIN15, mTextViewMin15);
 		}
 
-		mTextView30M = (TextView) findViewById(R.id.action_30min);
-		if (mTextView30M != null) {
-			mTextView30M.setOnClickListener(this);
-			setVisibility(Constants.PERIOD_30MIN, mTextView30M);
+		mTextViewMin30 = (TextView) findViewById(R.id.action_30min);
+		if (mTextViewMin30 != null) {
+			mTextViewMin30.setOnClickListener(this);
+			setVisibility(Constants.PERIOD_MIN30, mTextViewMin30);
 		}
 
-		mTextView60M = (TextView) findViewById(R.id.action_60min);
-		if (mTextView60M != null) {
-			mTextView60M.setOnClickListener(this);
-			setVisibility(Constants.PERIOD_60MIN, mTextView60M);
+		mTextViewMin60 = (TextView) findViewById(R.id.action_60min);
+		if (mTextViewMin60 != null) {
+			mTextViewMin60.setOnClickListener(this);
+			setVisibility(Constants.PERIOD_MIN60, mTextViewMin60);
 		}
 
 		mTextViewDay = (TextView) findViewById(R.id.action_day);
@@ -614,26 +614,19 @@ public class StockMatchListActivity extends StorageActivity implements
 
 		if (mSortOrder.contains(DatabaseContract.StockMatch.COLUMN_CODE_X)) {
 			setHeaderTextColor(mTextViewNameCode, mHeaderTextHighlightColor);
-		} else if (mSortOrder
-				.contains(DatabaseContract.StockMatch.COLUMN_VALUE_5MIN)) {
-			setHeaderTextColor(mTextView15M, mHeaderTextHighlightColor);
-		} else if (mSortOrder
-				.contains(DatabaseContract.StockMatch.COLUMN_VALUE_15MIN)) {
-			setHeaderTextColor(mTextView15M, mHeaderTextHighlightColor);
-		} else if (mSortOrder
-				.contains(DatabaseContract.StockMatch.COLUMN_VALUE_30MIN)) {
-			setHeaderTextColor(mTextView30M, mHeaderTextHighlightColor);
-		} else if (mSortOrder
-				.contains(DatabaseContract.StockMatch.COLUMN_VALUE_60MIN)) {
-			setHeaderTextColor(mTextView60M, mHeaderTextHighlightColor);
-		} else if (mSortOrder
-				.contains(DatabaseContract.StockMatch.COLUMN_VALUE_DAY)) {
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MIN5)) {
+			setHeaderTextColor(mTextViewMin15, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MIN15)) {
+			setHeaderTextColor(mTextViewMin15, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MIN30)) {
+			setHeaderTextColor(mTextViewMin30, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MIN60)) {
+			setHeaderTextColor(mTextViewMin60, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_DAY)) {
 			setHeaderTextColor(mTextViewDay, mHeaderTextHighlightColor);
-		} else if (mSortOrder
-				.contains(DatabaseContract.StockMatch.COLUMN_VALUE_WEEK)) {
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_WEEK)) {
 			setHeaderTextColor(mTextViewWeek, mHeaderTextHighlightColor);
-		} else if (mSortOrder
-				.contains(DatabaseContract.StockMatch.COLUMN_VALUE_MONTH)) {
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MONTH)) {
 			setHeaderTextColor(mTextViewMonth, mHeaderTextHighlightColor);
 		} else {
 		}
@@ -645,14 +638,10 @@ public class StockMatchListActivity extends StorageActivity implements
 				DatabaseContract.StockMatch.COLUMN_NAME_X };
 		int[] mLeftTo = new int[] { R.id.name, R.id.code };
 
-		String[] mRightFrom = new String[] {
-				DatabaseContract.StockMatch.COLUMN_VALUE_5MIN,
-				DatabaseContract.StockMatch.COLUMN_VALUE_15MIN,
-				DatabaseContract.StockMatch.COLUMN_VALUE_30MIN,
-				DatabaseContract.StockMatch.COLUMN_VALUE_60MIN,
-				DatabaseContract.StockMatch.COLUMN_VALUE_DAY,
-				DatabaseContract.StockMatch.COLUMN_VALUE_WEEK,
-				DatabaseContract.StockMatch.COLUMN_VALUE_MONTH, };
+		String[] mRightFrom = new String[] { DatabaseContract.COLUMN_MIN5,
+				DatabaseContract.COLUMN_MIN15, DatabaseContract.COLUMN_MIN30,
+				DatabaseContract.COLUMN_MIN60, DatabaseContract.COLUMN_DAY,
+				DatabaseContract.COLUMN_WEEK, DatabaseContract.COLUMN_MONTH, };
 		int[] mRightTo = new int[] { R.id.type_5min, R.id.type_15min,
 				R.id.type_30min, R.id.type_60min, R.id.type_day,
 				R.id.type_week, R.id.type_month };
@@ -714,13 +703,13 @@ public class StockMatchListActivity extends StorageActivity implements
 					condition1 += " AND ";
 				}
 
-				condition1 += "value_" + Constants.PERIODS[i] + " > 1";
+				condition1 += Constants.PERIODS[i] + " > 1";
 
 				if (!TextUtils.isEmpty(condition2)) {
 					condition2 += " AND ";
 				}
 
-				condition2 += "value_" + Constants.PERIODS[i] + " < -1";
+				condition2 += Constants.PERIODS[i] + " < -1";
 			}
 		}
 
@@ -875,25 +864,25 @@ public class StockMatchListActivity extends StorageActivity implements
 			}
 
 			if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.StockMatch.COLUMN_VALUE_5MIN)) {
-				return setTextViewValue(Constants.PERIOD_5MIN, view);
+					.getColumnIndex(DatabaseContract.COLUMN_MIN5)) {
+				return setTextViewValue(Constants.PERIOD_MIN5, view);
 			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.StockMatch.COLUMN_VALUE_15MIN)) {
-				return setTextViewValue(Constants.PERIOD_15MIN, view);
+					.getColumnIndex(DatabaseContract.COLUMN_MIN15)) {
+				return setTextViewValue(Constants.PERIOD_MIN15, view);
 			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.StockMatch.COLUMN_VALUE_30MIN)) {
-				return setTextViewValue(Constants.PERIOD_30MIN, view);
+					.getColumnIndex(DatabaseContract.COLUMN_MIN30)) {
+				return setTextViewValue(Constants.PERIOD_MIN30, view);
 			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.StockMatch.COLUMN_VALUE_60MIN)) {
-				return setTextViewValue(Constants.PERIOD_60MIN, view);
+					.getColumnIndex(DatabaseContract.COLUMN_MIN60)) {
+				return setTextViewValue(Constants.PERIOD_MIN60, view);
 			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.StockMatch.COLUMN_VALUE_DAY)) {
+					.getColumnIndex(DatabaseContract.COLUMN_DAY)) {
 				return setTextViewValue(Constants.PERIOD_DAY, view);
 			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.StockMatch.COLUMN_VALUE_WEEK)) {
+					.getColumnIndex(DatabaseContract.COLUMN_WEEK)) {
 				return setTextViewValue(Constants.PERIOD_WEEK, view);
 			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.StockMatch.COLUMN_VALUE_MONTH)) {
+					.getColumnIndex(DatabaseContract.COLUMN_MONTH)) {
 				return setTextViewValue(Constants.PERIOD_MONTH, view);
 			}
 

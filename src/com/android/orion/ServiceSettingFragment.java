@@ -63,11 +63,11 @@ public class ServiceSettingFragment extends PreferenceFragment implements
 					mStockDownloadAlarmManager.stopAlarm();
 				}
 			}
-		} else if (key.equals(Constants.PERIOD_1MIN)
-				|| key.equals(Constants.PERIOD_5MIN)
-				|| key.equals(Constants.PERIOD_15MIN)
-				|| key.equals(Constants.PERIOD_30MIN)
-				|| key.equals(Constants.PERIOD_60MIN)
+		} else if (key.equals(Constants.PERIOD_MIN1)
+				|| key.equals(Constants.PERIOD_MIN5)
+				|| key.equals(Constants.PERIOD_MIN15)
+				|| key.equals(Constants.PERIOD_MIN30)
+				|| key.equals(Constants.PERIOD_MIN60)
 				|| key.equals(Constants.PERIOD_DAY)
 				|| key.equals(Constants.PERIOD_WEEK)
 				|| key.equals(Constants.PERIOD_MONTH)

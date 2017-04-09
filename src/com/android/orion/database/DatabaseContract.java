@@ -34,6 +34,16 @@ public final class DatabaseContract {
 	public static final String COLUMN_OVERLAP = "overlap";
 	public static final String COLUMN_VELOCITY = "velocity";
 	public static final String COLUMN_ACCELERATION = "acceleration";
+	public static final String COLUMN_MIN1 = "min1";
+	public static final String COLUMN_MIN5 = "min5";
+	public static final String COLUMN_MIN15 = "min15";
+	public static final String COLUMN_MIN30 = "min30";
+	public static final String COLUMN_MIN60 = "min60";
+	public static final String COLUMN_DAY = "day";
+	public static final String COLUMN_WEEK = "week";
+	public static final String COLUMN_MONTH = "month";
+	public static final String COLUMN_QUARTER = "quarter";
+	public static final String COLUMN_YEAR = "year";
 	public static final String COLUMN_CREATED = "created";
 	public static final String COLUMN_MODIFIED = "modified";
 
@@ -82,17 +92,6 @@ public final class DatabaseContract {
 		public static final String COLUMN_PINYIN_FIXED = "pinyin_fixed";
 		public static final String COLUMN_MARK = "mark";
 
-		public static final String COLUMN_ACTION_1MIN = "action_1min";
-		public static final String COLUMN_ACTION_5MIN = "action_5min";
-		public static final String COLUMN_ACTION_15MIN = "action_15min";
-		public static final String COLUMN_ACTION_30MIN = "action_30min";
-		public static final String COLUMN_ACTION_60MIN = "action_60min";
-		public static final String COLUMN_ACTION_DAY = "action_day";
-		public static final String COLUMN_ACTION_WEEK = "action_week";
-		public static final String COLUMN_ACTION_MONTH = "action_month";
-		public static final String COLUMN_ACTION_QUARTER = "action_quarter";
-		public static final String COLUMN_ACTION_YEAR = "action_year";
-
 		public static final Uri CONTENT_URI = Uri.withAppendedPath(
 				DatabaseContract.CONTENT_URI, TABLE_NAME);
 		public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
@@ -103,12 +102,11 @@ public final class DatabaseContract {
 		public static final String[] PROJECTION_ALL = { _ID, COLUMN_CLASSES,
 				COLUMN_SE, COLUMN_CODE, COLUMN_NAME, COLUMN_PINYIN,
 				COLUMN_PINYIN_FIXED, COLUMN_MARK, COLUMN_PRICE, COLUMN_CHANGE,
-				COLUMN_NET, COLUMN_VOLUME, COLUMN_VALUE, COLUMN_ACTION_1MIN,
-				COLUMN_ACTION_5MIN, COLUMN_ACTION_15MIN, COLUMN_ACTION_30MIN,
-				COLUMN_ACTION_60MIN, COLUMN_ACTION_DAY, COLUMN_ACTION_WEEK,
-				COLUMN_ACTION_MONTH, COLUMN_ACTION_QUARTER, COLUMN_ACTION_YEAR,
-				COLUMN_OVERLAP, COLUMN_VELOCITY, COLUMN_ACCELERATION,
-				COLUMN_CREATED, COLUMN_MODIFIED };
+				COLUMN_NET, COLUMN_VOLUME, COLUMN_VALUE, COLUMN_MIN1,
+				COLUMN_MIN5, COLUMN_MIN15, COLUMN_MIN30, COLUMN_MIN60,
+				COLUMN_DAY, COLUMN_WEEK, COLUMN_MONTH, COLUMN_QUARTER,
+				COLUMN_YEAR, COLUMN_OVERLAP, COLUMN_VELOCITY,
+				COLUMN_ACCELERATION, COLUMN_CREATED, COLUMN_MODIFIED };
 
 		public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
 				+ " (" + _ID + " INTEGER PRIMARY KEY," + COLUMN_CLASSES
@@ -120,20 +118,17 @@ public final class DatabaseContract {
 				+ COMMA_SEP + COLUMN_CHANGE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_NET + DOUBLE_TYPE + COMMA_SEP + COLUMN_VOLUME
 				+ TEXT_TYPE + COMMA_SEP + COLUMN_VALUE + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_ACTION_1MIN + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_ACTION_5MIN + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_ACTION_15MIN + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_ACTION_30MIN + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_ACTION_60MIN + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_ACTION_DAY + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_ACTION_WEEK + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_ACTION_MONTH + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_ACTION_QUARTER + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_ACTION_YEAR + TEXT_TYPE + COMMA_SEP + COLUMN_OVERLAP
-				+ DOUBLE_TYPE + COMMA_SEP + COLUMN_VELOCITY + DOUBLE_TYPE
-				+ COMMA_SEP + COLUMN_ACCELERATION + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_CREATED + TEXT_TYPE + COMMA_SEP + COLUMN_MODIFIED
-				+ TEXT_TYPE + " )";
+				+ COLUMN_MIN1 + TEXT_TYPE + COMMA_SEP + COLUMN_MIN5 + TEXT_TYPE
+				+ COMMA_SEP + COLUMN_MIN15 + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_MIN30 + TEXT_TYPE + COMMA_SEP + COLUMN_MIN60
+				+ TEXT_TYPE + COMMA_SEP + COLUMN_DAY + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_WEEK + TEXT_TYPE + COMMA_SEP + COLUMN_MONTH
+				+ TEXT_TYPE + COMMA_SEP + COLUMN_QUARTER + TEXT_TYPE
+				+ COMMA_SEP + COLUMN_YEAR + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_OVERLAP + DOUBLE_TYPE + COMMA_SEP + COLUMN_VELOCITY
+				+ DOUBLE_TYPE + COMMA_SEP + COLUMN_ACCELERATION + DOUBLE_TYPE
+				+ COMMA_SEP + COLUMN_CREATED + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_MODIFIED + TEXT_TYPE + " )";
 
 		public static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
 				+ TABLE_NAME;
@@ -265,17 +260,6 @@ public final class DatabaseContract {
 		public static final String COLUMN_CODE_Y = COLUMN_CODE + "_" + "y";
 		public static final String COLUMN_NAME_Y = COLUMN_NAME + "_" + "y";
 
-		public static final String COLUMN_VALUE_1MIN = "value_1min";
-		public static final String COLUMN_VALUE_5MIN = "value_5min";
-		public static final String COLUMN_VALUE_15MIN = "value_15min";
-		public static final String COLUMN_VALUE_30MIN = "value_30min";
-		public static final String COLUMN_VALUE_60MIN = "value_60min";
-		public static final String COLUMN_VALUE_DAY = "value_day";
-		public static final String COLUMN_VALUE_WEEK = "value_week";
-		public static final String COLUMN_VALUE_MONTH = "value_month";
-		public static final String COLUMN_VALUE_QUARTER = "value_quarter";
-		public static final String COLUMN_VALUE_YEAR = "value_year";
-
 		public static final Uri CONTENT_URI = Uri.withAppendedPath(
 				DatabaseContract.CONTENT_URI, TABLE_NAME);
 		public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
@@ -286,10 +270,9 @@ public final class DatabaseContract {
 
 		public static final String[] PROJECTION_ALL = { _ID, COLUMN_SE_X,
 				COLUMN_CODE_X, COLUMN_NAME_X, COLUMN_SE_Y, COLUMN_CODE_Y,
-				COLUMN_NAME_Y, COLUMN_VALUE_1MIN, COLUMN_VALUE_5MIN,
-				COLUMN_VALUE_15MIN, COLUMN_VALUE_30MIN, COLUMN_VALUE_60MIN,
-				COLUMN_VALUE_DAY, COLUMN_VALUE_WEEK, COLUMN_VALUE_MONTH,
-				COLUMN_VALUE_QUARTER, COLUMN_VALUE_YEAR, COLUMN_CREATED,
+				COLUMN_NAME_Y, COLUMN_MIN1, COLUMN_MIN5, COLUMN_MIN15,
+				COLUMN_MIN30, COLUMN_MIN60, COLUMN_DAY, COLUMN_WEEK,
+				COLUMN_MONTH, COLUMN_QUARTER, COLUMN_YEAR, COLUMN_CREATED,
 				COLUMN_MODIFIED };
 
 		private static final String CREATE_TABLE_CONTENT = " (" + _ID
@@ -297,16 +280,14 @@ public final class DatabaseContract {
 				+ COLUMN_CODE_X + TEXT_TYPE + COMMA_SEP + COLUMN_NAME_X
 				+ TEXT_TYPE + COMMA_SEP + COLUMN_SE_Y + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_CODE_Y + TEXT_TYPE + COMMA_SEP + COLUMN_NAME_Y
-				+ TEXT_TYPE + COMMA_SEP + COLUMN_VALUE_1MIN + DOUBLE_TYPE
-				+ COMMA_SEP + COLUMN_VALUE_5MIN + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_VALUE_15MIN + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_VALUE_30MIN + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_VALUE_60MIN + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_VALUE_DAY + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_VALUE_WEEK + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_VALUE_MONTH + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_VALUE_QUARTER + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_VALUE_YEAR + DOUBLE_TYPE + COMMA_SEP + COLUMN_CREATED
+				+ TEXT_TYPE + COMMA_SEP + COLUMN_MIN1 + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_MIN5 + DOUBLE_TYPE + COMMA_SEP + COLUMN_MIN15
+				+ DOUBLE_TYPE + COMMA_SEP + COLUMN_MIN30 + DOUBLE_TYPE
+				+ COMMA_SEP + COLUMN_MIN60 + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_DAY + DOUBLE_TYPE + COMMA_SEP + COLUMN_WEEK
+				+ DOUBLE_TYPE + COMMA_SEP + COLUMN_MONTH + DOUBLE_TYPE
+				+ COMMA_SEP + COLUMN_QUARTER + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_YEAR + DOUBLE_TYPE + COMMA_SEP + COLUMN_CREATED
 				+ TEXT_TYPE + COMMA_SEP + COLUMN_MODIFIED + TEXT_TYPE + " )";
 
 		public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME

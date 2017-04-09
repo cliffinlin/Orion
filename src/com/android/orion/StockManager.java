@@ -324,16 +324,16 @@ public class StockManager {
 	ArrayList<StockData> getStockDataList(Stock stock, String period) {
 		ArrayList<StockData> stockDataList = null;
 
-		if (period.equals(Constants.PERIOD_1MIN)) {
-			stockDataList = stock.mStockDataList1Min;
-		} else if (period.equals(Constants.PERIOD_5MIN)) {
-			stockDataList = stock.mStockDataList5Min;
-		} else if (period.equals(Constants.PERIOD_15MIN)) {
-			stockDataList = stock.mStockDataList15Min;
-		} else if (period.equals(Constants.PERIOD_30MIN)) {
-			stockDataList = stock.mStockDataList30Min;
-		} else if (period.equals(Constants.PERIOD_60MIN)) {
-			stockDataList = stock.mStockDataList60Min;
+		if (period.equals(Constants.PERIOD_MIN1)) {
+			stockDataList = stock.mStockDataListMin1;
+		} else if (period.equals(Constants.PERIOD_MIN5)) {
+			stockDataList = stock.mStockDataListMin5;
+		} else if (period.equals(Constants.PERIOD_MIN15)) {
+			stockDataList = stock.mStockDataListMin15;
+		} else if (period.equals(Constants.PERIOD_MIN30)) {
+			stockDataList = stock.mStockDataListMin30;
+		} else if (period.equals(Constants.PERIOD_MIN60)) {
+			stockDataList = stock.mStockDataListMin60;
 		} else if (period.equals(Constants.PERIOD_DAY)) {
 			stockDataList = stock.mStockDataListDay;
 		} else if (period.equals(Constants.PERIOD_WEEK)) {
@@ -376,15 +376,15 @@ public class StockManager {
 	int getPeriodMinutes(String period) {
 		int minutes = 0;
 
-		if (period.equals(Constants.PERIOD_1MIN)) {
+		if (period.equals(Constants.PERIOD_MIN1)) {
 			minutes = 1;
-		} else if (period.equals(Constants.PERIOD_5MIN)) {
+		} else if (period.equals(Constants.PERIOD_MIN5)) {
 			minutes = 5;
-		} else if (period.equals(Constants.PERIOD_15MIN)) {
+		} else if (period.equals(Constants.PERIOD_MIN15)) {
 			minutes = 15;
-		} else if (period.equals(Constants.PERIOD_30MIN)) {
+		} else if (period.equals(Constants.PERIOD_MIN30)) {
 			minutes = 30;
-		} else if (period.equals(Constants.PERIOD_60MIN)) {
+		} else if (period.equals(Constants.PERIOD_MIN60)) {
 			minutes = 60;
 		} else if (period.equals(Constants.PERIOD_DAY)) {
 			minutes = 240;
@@ -405,15 +405,15 @@ public class StockManager {
 	int getPeriodCoefficient(String period) {
 		int result = 1;
 
-		if (period.equals(Constants.PERIOD_1MIN)) {
+		if (period.equals(Constants.PERIOD_MIN1)) {
 			result = 240;
-		} else if (period.equals(Constants.PERIOD_5MIN)) {
+		} else if (period.equals(Constants.PERIOD_MIN5)) {
 			result = 48;
-		} else if (period.equals(Constants.PERIOD_15MIN)) {
+		} else if (period.equals(Constants.PERIOD_MIN15)) {
 			result = 16;
-		} else if (period.equals(Constants.PERIOD_30MIN)) {
+		} else if (period.equals(Constants.PERIOD_MIN30)) {
 			result = 8;
-		} else if (period.equals(Constants.PERIOD_60MIN)) {
+		} else if (period.equals(Constants.PERIOD_MIN60)) {
 			result = 4;
 		} else if (period.equals(Constants.PERIOD_DAY)) {
 			result = 1;

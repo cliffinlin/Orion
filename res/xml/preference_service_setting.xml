@@ -8,16 +8,16 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/download_service" >
         <com.android.orion.CustomSwitchPreference
-            android:key="5min"
+            android:key="min5"
             android:title="@string/period_5min" />
         <com.android.orion.CustomSwitchPreference
-            android:key="15min"
+            android:key="min15"
             android:title="@string/period_15min" />
         <com.android.orion.CustomSwitchPreference
-            android:key="30min"
+            android:key="min30"
             android:title="@string/period_30min" />
         <com.android.orion.CustomSwitchPreference
-            android:key="60min"
+            android:key="min60"
             android:title="@string/period_60min" />
         <com.android.orion.CustomSwitchPreference
             android:key="day"
