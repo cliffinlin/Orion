@@ -6,15 +6,10 @@ import java.util.List;
 import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
 import org.apache.commons.math.stat.regression.SimpleRegression;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.support.v4.app.NotificationCompat;
 
 import com.android.orion.curve.BezierCurve;
 import com.android.orion.database.DatabaseContract;
@@ -52,7 +47,7 @@ public class StockAnalyzer extends StockManager {
 			updateDatabase(stock, period, stockDataList);
 			// writeCallLog(stock, period,
 			// stockDataList.get(stockDataList.size() - 1));
-			updateNotification(stock);
+			// updateNotification(stock);
 			writeMessage();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -436,86 +431,115 @@ public class StockAnalyzer extends StockManager {
 		}
 	}
 
-	/*
-	 * private void writeCallLog(Stock stock, String period, StockData
-	 * stockData) { boolean bFound = false; int nCallLogType; long nMilliSeconds
-	 * = 0;
-	 * 
-	 * String idString = ""; String numberString = "10086" + stock.getCode();
-	 * 
-	 * Cursor cursor = null; ContentValues contentValues = null; Uri uri =
-	 * CallLog.Calls.CONTENT_URI;
-	 * 
-	 * if (stockData == null) { Utility.Log("writeCallLog return stockData = " +
-	 * stockData); return; }
-	 * 
-	 * if (stock.getAction(period).contains(Constants.STOCK_ACTION_BUY)) {
-	 * nCallLogType = CallLog.Calls.MISSED_TYPE; } else if
-	 * (stock.getAction(period) .contains(Constants.STOCK_ACTION_SELL)) {
-	 * nCallLogType = CallLog.Calls.INCOMING_TYPE; } else { return; }
-	 * 
-	 * numberString += getPeriodMinutes(stockData.getPeriod()); nMilliSeconds =
-	 * Utility.getMilliSeconds(stockData.getDate(), stockData.getTime());
-	 * 
-	 * contentValues = new ContentValues();
-	 * contentValues.put(CallLog.Calls.NUMBER, numberString);
-	 * contentValues.put(CallLog.Calls.DATE, nMilliSeconds);
-	 * contentValues.put(CallLog.Calls.DURATION, 0);
-	 * contentValues.put(CallLog.Calls.TYPE, nCallLogType);
-	 * contentValues.put(CallLog.Calls.NEW, 0);
-	 * contentValues.put(CallLog.Calls.CACHED_NAME, "");
-	 * contentValues.put(CallLog.Calls.CACHED_NUMBER_TYPE, 0);
-	 * contentValues.put(CallLog.Calls.CACHED_NUMBER_LABEL, "");
-	 * 
-	 * try { cursor = mContentResolver.query(uri, null, null, null, null); if
-	 * (cursor == null) { mContentResolver.insert(uri, contentValues); } else {
-	 * while (cursor.moveToNext()) { if
-	 * ((cursor.getString(cursor.getColumnIndex("number"))
-	 * .equals(numberString))) { idString = "_id=" +
-	 * cursor.getString(cursor.getColumnIndex("_id")); bFound = true; } }
-	 * 
-	 * if (bFound) { mContentResolver.update(uri, contentValues, idString,
-	 * null); } else { mContentResolver.insert(uri, contentValues); } } } catch
-	 * (Exception e) { e.printStackTrace(); } finally {
-	 * mStockDatabaseManager.closeCursor(cursor); } }
-	 */
-	private void updateNotification(Stock stock) {
-		int id = 0;
-		int defaults = 0;
+	//
+	// private void writeCallLog(Stock stock, String period, StockData
+	// stockData) {
+	// boolean bFound = false;
+	// int nCallLogType;
+	// long nMilliSeconds = 0;
+	//
+	// String idString = "";
+	// String numberString = "10086" + stock.getCode();
+	//
+	// Cursor cursor = null;
+	// ContentValues contentValues = null;
+	// Uri uri = CallLog.Calls.CONTENT_URI;
+	//
+	// if (stockData == null) {
+	// return;
+	// }
+	//
+	// if (stock.getAction(period).contains(Constants.STOCK_ACTION_BUY)) {
+	// nCallLogType = CallLog.Calls.MISSED_TYPE;
+	// } else if (stock.getAction(period)
+	// .contains(Constants.STOCK_ACTION_SELL)) {
+	// nCallLogType = CallLog.Calls.INCOMING_TYPE;
+	// } else {
+	// return;
+	// }
+	//
+	// numberString += getPeriodMinutes(stockData.getPeriod());
+	// nMilliSeconds = Utility.getMilliSeconds(stockData.getDate(),
+	// stockData.getTime());
+	//
+	// contentValues = new ContentValues();
+	// contentValues.put(CallLog.Calls.NUMBER, numberString);
+	// contentValues.put(CallLog.Calls.DATE, nMilliSeconds);
+	// contentValues.put(CallLog.Calls.DURATION, 0);
+	// contentValues.put(CallLog.Calls.TYPE, nCallLogType);
+	// contentValues.put(CallLog.Calls.NEW, 0);
+	// contentValues.put(CallLog.Calls.CACHED_NAME, "");
+	// contentValues.put(CallLog.Calls.CACHED_NUMBER_TYPE, 0);
+	// contentValues.put(CallLog.Calls.CACHED_NUMBER_LABEL, "");
+	//
+	// try {
+	// cursor = mContentResolver.query(uri, null, null, null, null);
+	// if (cursor == null) {
+	// mContentResolver.insert(uri, contentValues);
+	// } else {
+	// while (cursor.moveToNext()) {
+	// if ((cursor.getString(cursor.getColumnIndex("number"))
+	// .equals(numberString))) {
+	// idString = "_id="
+	// + cursor.getString(cursor.getColumnIndex("_id"));
+	// bFound = true;
+	// }
+	// }
+	//
+	// if (bFound) {
+	// mContentResolver.update(uri, contentValues, idString, null);
+	// } else {
+	// mContentResolver.insert(uri, contentValues);
+	// }
+	// }
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// } finally {
+	// if (cursor != null) {
+	// if (!cursor.isClosed()) {
+	// cursor.close();
+	// }
+	// }
+	// }
+	// }
 
-		NotificationManager notificationManager = (NotificationManager) mContext
-				.getSystemService(Context.NOTIFICATION_SERVICE);
-
-		id = (int) stock.getId();
-
-		Intent intent = new Intent(Intent.ACTION_MAIN);
-		intent.setType("vnd.android-dir/mms-sms");
-		PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0,
-				intent, 0);
-
-		NotificationCompat.Builder notification = new NotificationCompat.Builder(
-				mContext).setContentTitle("10086")
-				.setContentText(getBodyString(stock))
-				.setSmallIcon(R.drawable.ic_dialog_email).setAutoCancel(true)
-				.setLights(0xFF0000FF, 100, 300)
-				.setContentIntent(pendingIntent);
-
-		if (Utility.getSettingBoolean(mContext,
-				Constants.SETTING_KEY_NOTIFICATION_LIGHTS)) {
-			defaults = defaults | Notification.DEFAULT_LIGHTS;
-		}
-		if (Utility.getSettingBoolean(mContext,
-				Constants.SETTING_KEY_NOTIFICATION_VIBRATE)) {
-			defaults = defaults | Notification.DEFAULT_VIBRATE;
-		}
-		if (Utility.getSettingBoolean(mContext,
-				Constants.SETTING_KEY_NOTIFICATION_SOUND)) {
-			defaults = defaults | Notification.DEFAULT_SOUND;
-		}
-		notification.setDefaults(defaults);
-
-		notificationManager.notify(id, notification.build());
-	}
+	// private void updateNotification(Stock stock) {
+	// int id = 0;
+	// int defaults = 0;
+	//
+	// NotificationManager notificationManager = (NotificationManager) mContext
+	// .getSystemService(Context.NOTIFICATION_SERVICE);
+	//
+	// id = (int) stock.getId();
+	//
+	// Intent intent = new Intent(Intent.ACTION_MAIN);
+	// intent.setType("vnd.android-dir/mms-sms");
+	// PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0,
+	// intent, 0);
+	//
+	// NotificationCompat.Builder notification = new NotificationCompat.Builder(
+	// mContext).setContentTitle("10086")
+	// .setContentText(getBodyString(stock))
+	// .setSmallIcon(R.drawable.ic_dialog_email).setAutoCancel(true)
+	// .setLights(0xFF0000FF, 100, 300)
+	// .setContentIntent(pendingIntent);
+	//
+	// if (Utility.getSettingBoolean(mContext,
+	// Constants.SETTING_KEY_NOTIFICATION_LIGHTS)) {
+	// defaults = defaults | Notification.DEFAULT_LIGHTS;
+	// }
+	// if (Utility.getSettingBoolean(mContext,
+	// Constants.SETTING_KEY_NOTIFICATION_VIBRATE)) {
+	// defaults = defaults | Notification.DEFAULT_VIBRATE;
+	// }
+	// if (Utility.getSettingBoolean(mContext,
+	// Constants.SETTING_KEY_NOTIFICATION_SOUND)) {
+	// defaults = defaults | Notification.DEFAULT_SOUND;
+	// }
+	// notification.setDefaults(defaults);
+	//
+	// notificationManager.notify(id, notification.build());
+	// }
 
 	String getBodyString(Stock stock) {
 		String result = "";
