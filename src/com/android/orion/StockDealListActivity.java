@@ -18,6 +18,8 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -45,13 +47,14 @@ public class StockDealListActivity extends StorageActivity implements
 
 	static final String DEAL_LIST_XML_FILE_NAME = "deal.xml";
 
-	static final int EXECUTE_DEAL_DELETE = 0;
-	static final int EXECUTE_DEAL_LEFT_LISTVIEW_ON_ITEM_CLICK = 1;
-	static final int EXECUTE_DEAL_RIGHT_LISTVIEW_ON_ITEM_CLICK = 2;
-	static final int EXECUTE_DEAL_LIST_LOAD_FROM_SD_CARD = 4;
-	static final int EXECUTE_DEAL_LIST_SAVE_TO_SD_CARD = 5;
+	static final int LOADER_ID_DEAL_LIST = 0;
 
-	static final int LOADER_ID_DEAL_LIST = 2;
+	static final int MESSAGE_DELETE_DEAL = 0;
+	static final int MESSAGE_DELETE_DEAL_LIST = 1;
+	static final int MESSAGE_LOAD_FROM_SD_CARD = 2;
+	static final int MESSAGE_SAVE_TO_SD_CARD = 3;
+	static final int MESSAGE_VIEW_STOCK_CHAT = 4;
+	static final int MESSAGE_VIEW_STOCK_MATCH = 5;
 
 	static final int mHeaderTextDefaultColor = Color.BLACK;
 	static final int mHeaderTextHighlightColor = Color.RED;
@@ -85,6 +88,67 @@ public class StockDealListActivity extends StorageActivity implements
 	StockDeal mDeal = new StockDeal();
 	List<StockDeal> mStockDealList = new ArrayList<StockDeal>();
 	Stock mStock = new Stock();
+
+	Handler mHandler = new Handler(Looper.getMainLooper()) {
+
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+
+			Intent intent = null;
+
+			switch (msg.what) {
+			case MESSAGE_DELETE_DEAL:
+				mStockDatabaseManager.deleteStockDealById(mDeal);
+				break;
+
+			case MESSAGE_DELETE_DEAL_LIST:
+				break;
+
+			case MESSAGE_LOAD_FROM_SD_CARD:
+				loadListFromSD(DEAL_LIST_XML_FILE_NAME);
+				break;
+
+			case MESSAGE_SAVE_TO_SD_CARD:
+				SaveListToSD(DEAL_LIST_XML_FILE_NAME);
+				break;
+
+			case MESSAGE_VIEW_STOCK_CHAT:
+				mStockDatabaseManager.getStockDealById(mDeal);
+
+				mStock.setSE(mDeal.getSE());
+				mStock.setCode(mDeal.getCode());
+				mStockDatabaseManager.getStock(mStock);
+
+				intent = new Intent(StockDealListActivity.this,
+						StockChartListActivity.class);
+				intent.putExtra(Setting.KEY_SORT_ORDER_STOCK_DEAL_LIST,
+						mSortOrder);
+				intent.putExtra(Constants.EXTRA_STOCK_ID, mStock.getId());
+				startActivity(intent);
+				break;
+
+			case MESSAGE_VIEW_STOCK_MATCH:
+				mStockDatabaseManager.getStockDealById(mDeal);
+
+				mStock.setSE(mDeal.getSE());
+				mStock.setCode(mDeal.getCode());
+				mStockDatabaseManager.getStock(mStock);
+
+				intent = new Intent(StockDealListActivity.this,
+						StockMatchListActivity.class);
+				intent.setAction(StockMatchListActivity.ACTION_MATCH_LIST);
+				intent.putExtra(Constants.EXTRA_STOCK_SE, mStock.getSE());
+				intent.putExtra(Constants.EXTRA_STOCK_CODE, mStock.getCode());
+				startActivity(intent);
+				break;
+
+			default:
+				break;
+			}
+		}
+
+	};
 
 	ContentObserver mContentObserver = new ContentObserver(new Handler()) {
 		@Override
@@ -132,7 +196,7 @@ public class StockDealListActivity extends StorageActivity implements
 								new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog,
 											int which) {
-										startSaveTask(EXECUTE_DEAL_DELETE);
+										mHandler.sendEmptyMessage(MESSAGE_DELETE_DEAL);
 										mode.finish();
 									}
 								})
@@ -206,7 +270,7 @@ public class StockDealListActivity extends StorageActivity implements
 			return true;
 
 		case R.id.action_load_sd:
-			startLoadTask(EXECUTE_DEAL_LIST_LOAD_FROM_SD_CARD);
+			mHandler.sendEmptyMessage(MESSAGE_LOAD_FROM_SD_CARD);
 			return true;
 
 		default:
@@ -217,7 +281,7 @@ public class StockDealListActivity extends StorageActivity implements
 	@Override
 	void onSaveSD() {
 		super.onSaveSD();
-		startSaveTask(EXECUTE_DEAL_LIST_SAVE_TO_SD_CARD);
+		mHandler.sendEmptyMessage(MESSAGE_SAVE_TO_SD_CARD);
 	}
 
 	void onActionSync(int serviceType) {
@@ -503,11 +567,11 @@ public class StockDealListActivity extends StorageActivity implements
 
 		if (parent.getId() == R.id.left_listview) {
 			mDeal.setId(id);
-			startLoadTask(EXECUTE_DEAL_LEFT_LISTVIEW_ON_ITEM_CLICK);
+			mHandler.sendEmptyMessage(MESSAGE_VIEW_STOCK_MATCH);
 		} else {
 			if (mCurrentActionMode == null) {
 				mDeal.setId(id);
-				startLoadTask(EXECUTE_DEAL_RIGHT_LISTVIEW_ON_ITEM_CLICK);
+				mHandler.sendEmptyMessage(MESSAGE_VIEW_STOCK_CHAT);
 			}
 		}
 	}
@@ -550,80 +614,6 @@ public class StockDealListActivity extends StorageActivity implements
 
 			return false;
 		}
-	}
-
-	Long doInBackgroundLoad(Object... params) {
-		super.doInBackgroundSave(params);
-
-		int execute = (Integer) params[0];
-
-		switch (execute) {
-		case EXECUTE_DEAL_LEFT_LISTVIEW_ON_ITEM_CLICK:
-			mStockDatabaseManager.getStockDealById(mDeal);
-
-			mStock.setSE(mDeal.getSE());
-			mStock.setCode(mDeal.getCode());
-			mStockDatabaseManager.getStock(mStock);
-
-			mIntent = new Intent(this, StockMatchListActivity.class);
-			mIntent.setAction(StockMatchListActivity.ACTION_MATCH_LIST);
-			mIntent.putExtra(Constants.EXTRA_STOCK_SE, mStock.getSE());
-			mIntent.putExtra(Constants.EXTRA_STOCK_CODE, mStock.getCode());
-			startActivity(mIntent);
-			break;
-
-		case EXECUTE_DEAL_RIGHT_LISTVIEW_ON_ITEM_CLICK:
-			mStockDatabaseManager.getStockDealById(mDeal);
-
-			mStock.setSE(mDeal.getSE());
-			mStock.setCode(mDeal.getCode());
-			mStockDatabaseManager.getStock(mStock);
-
-			mIntent = new Intent(this, StockChartListActivity.class);
-			mIntent.putExtra(Setting.KEY_SORT_ORDER_STOCK_DEAL_LIST, mSortOrder);
-			mIntent.putExtra(Constants.EXTRA_STOCK_ID, mStock.getId());
-			startActivity(mIntent);
-			break;
-
-		case EXECUTE_DEAL_LIST_LOAD_FROM_SD_CARD:
-			loadListFromSD(DEAL_LIST_XML_FILE_NAME);
-			break;
-
-		default:
-			break;
-		}
-
-		return RESULT_SUCCESS;
-	}
-
-	void onPostExecuteLoad(Long result) {
-		super.onPostExecuteLoad(result);
-	}
-
-	@Override
-	Long doInBackgroundSave(Object... params) {
-		super.doInBackgroundSave(params);
-		int execute = (Integer) params[0];
-
-		switch (execute) {
-		case EXECUTE_DEAL_DELETE:
-			mStockDatabaseManager.deleteStockDealById(mDeal);
-			break;
-
-		case EXECUTE_DEAL_LIST_SAVE_TO_SD_CARD:
-			SaveListToSD(DEAL_LIST_XML_FILE_NAME);
-			break;
-
-		default:
-			break;
-		}
-
-		return RESULT_SUCCESS;
-	}
-
-	@Override
-	void onPostExecuteSave(Long result) {
-		super.onPostExecuteSave(result);
 	}
 
 	@Override

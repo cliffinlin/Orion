@@ -15,6 +15,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
@@ -52,10 +53,7 @@ public class StockMatchChartListActivity extends StorageActivity implements
 	static final int FLING_DISTANCE = 50;
 	static final int FLING_VELOCITY = 100;
 
-	static final int EXECUTE_LOAD_STOCK_MATCH_LIST = 0;
-	static final int EXECUTE_LOAD_STOCK_DATA_LIST = 1;
-
-	static final long RESULT_LOAD_STOCK_MATCH_LIST_SUCCESS = RESULT_SUCCESS + 1;
+	static final int MESSAGE_LOAD_MATCH_LIST = 0;
 
 	int mStockMatchListIndex = 0;
 
@@ -78,6 +76,46 @@ public class StockMatchChartListActivity extends StorageActivity implements
 	ArrayList<StockMatchChartItemSub> mStockMatchChartItemSubList = null;
 	ArrayList<StockMatchChartData> mStockMatchChartDataList = null;
 
+	Handler mHandler = new Handler(Looper.getMainLooper()) {
+
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+
+			switch (msg.what) {
+			case MESSAGE_LOAD_MATCH_LIST:
+				loadStockMatchList();
+
+				loadStock_X();
+				loadStock_Y();
+
+				for (int i = 0; i < Constants.PERIODS.length; i++) {
+					loadStockDataList(mStock_X.getId(), Constants.PERIODS[i],
+							mStockDataList_X);
+					loadStockDataList(mStock_Y.getId(), Constants.PERIODS[i],
+							mStockDataList_Y);
+
+					if (mStockDataList_X.size() != mStockDataList_Y.size()) {
+						continue;
+					}
+
+					if (mStockDataList_X.size() < Constants.STOCK_VERTEX_TYPING_SIZE) {
+						continue;
+					}
+
+					setupStockMatchChat(mStockMatchChartDataList.get(i));
+				}
+
+				updateTitle();
+				mStockMatchChartArrayAdapter.notifyDataSetChanged();
+				break;
+
+			default:
+				break;
+			}
+		}
+	};
+
 	private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -94,7 +132,7 @@ public class StockMatchChartListActivity extends StorageActivity implements
 							.getId()
 							|| intent.getLongExtra(Constants.EXTRA_STOCK_ID, 0) == mStock_Y
 									.getId()) {
-						startLoadTask(EXECUTE_LOAD_STOCK_MATCH_LIST);
+						mHandler.sendEmptyMessage(MESSAGE_LOAD_MATCH_LIST);
 					}
 				}
 			}
@@ -147,7 +185,7 @@ public class StockMatchChartListActivity extends StorageActivity implements
 				mBroadcastReceiver,
 				new IntentFilter(Constants.ACTION_SERVICE_FINISHED));
 
-		startLoadTask(EXECUTE_LOAD_STOCK_MATCH_LIST);
+		mHandler.sendEmptyMessage(MESSAGE_LOAD_MATCH_LIST);
 
 		updateTitle();
 	}
@@ -189,7 +227,7 @@ public class StockMatchChartListActivity extends StorageActivity implements
 			startService(Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE,
 					Constants.EXECUTE_IMMEDIATE, mStock.getSE(),
 					mStock.getCode());
-			startLoadTask(EXECUTE_LOAD_STOCK_MATCH_LIST);
+			mHandler.sendEmptyMessage(MESSAGE_LOAD_MATCH_LIST);
 			return true;
 		}
 		case R.id.action_remove_favorite: {
@@ -221,7 +259,7 @@ public class StockMatchChartListActivity extends StorageActivity implements
 			}
 		}
 
-		startLoadTask(EXECUTE_LOAD_STOCK_MATCH_LIST);
+		mHandler.sendEmptyMessage(MESSAGE_LOAD_MATCH_LIST);
 	}
 
 	@Override
@@ -230,53 +268,6 @@ public class StockMatchChartListActivity extends StorageActivity implements
 
 		LocalBroadcastManager.getInstance(this).unregisterReceiver(
 				mBroadcastReceiver);
-	}
-
-	@Override
-	Long doInBackgroundLoad(Object... params) {
-		super.doInBackgroundSave(params);
-
-		int execute = (Integer) params[0];
-
-		if (execute == EXECUTE_LOAD_STOCK_MATCH_LIST) {
-			loadStockMatchList();
-
-			loadStock_X();
-			loadStock_Y();
-
-			return RESULT_LOAD_STOCK_MATCH_LIST_SUCCESS;
-		} else if (execute == EXECUTE_LOAD_STOCK_DATA_LIST) {
-			for (int i = 0; i < Constants.PERIODS.length; i++) {
-				loadStockDataList(mStock_X.getId(), Constants.PERIODS[i],
-						mStockDataList_X);
-				loadStockDataList(mStock_Y.getId(), Constants.PERIODS[i],
-						mStockDataList_Y);
-
-				if (mStockDataList_X.size() != mStockDataList_Y.size()) {
-					continue;
-				}
-
-				if (mStockDataList_X.size() < Constants.STOCK_VERTEX_TYPING_SIZE) {
-					continue;
-				}
-
-				setupStockMatchChat(mStockMatchChartDataList.get(i));
-			}
-		}
-
-		return RESULT_SUCCESS;
-	}
-
-	@Override
-	void onPostExecuteLoad(Long result) {
-		super.onPostExecuteLoad(result);
-
-		if (result == RESULT_LOAD_STOCK_MATCH_LIST_SUCCESS) {
-			startLoadTask(EXECUTE_LOAD_STOCK_DATA_LIST);
-		} else {
-			updateTitle();
-			mStockMatchChartArrayAdapter.notifyDataSetChanged();
-		}
 	}
 
 	void loadStockMatchList() {
@@ -588,7 +579,7 @@ public class StockMatchChartListActivity extends StorageActivity implements
 
 		mStockMatch = mStockMatchList.get(mStockMatchListIndex);
 
-		startLoadTask(EXECUTE_LOAD_STOCK_MATCH_LIST);
+		mHandler.sendEmptyMessage(MESSAGE_LOAD_MATCH_LIST);
 	}
 
 	static class MainHandler extends Handler {

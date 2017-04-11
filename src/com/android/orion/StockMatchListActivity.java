@@ -49,12 +49,12 @@ public class StockMatchListActivity extends StorageActivity implements
 
 	static final int LOADER_ID_MATCH_LIST = 0;
 
-	static final int MESSAGE_ID_DELETE_MATCH = 0;
-	static final int MESSAGE_ID_DELETE_MATCH_LIST = 1;
-	static final int MESSAGE_ID_LOAD_FROM_SD_CARD = 2;
-	static final int MESSAGE_ID_SAVE_TO_SD_CARD = 3;
-	static final int MESSAGE_ID_VIEW_STOCK_CHAT = 4;
-	static final int MESSAGE_ID_VIEW_STOCK_MATCH = 5;
+	static final int MESSAGE_DELETE_MATCH = 0;
+	static final int MESSAGE_DELETE_MATCH_LIST = 1;
+	static final int MESSAGE_LOAD_FROM_SD_CARD = 2;
+	static final int MESSAGE_SAVE_TO_SD_CARD = 3;
+	static final int MESSAGE_VIEW_STOCK_CHAT = 4;
+	static final int MESSAGE_VIEW_STOCK_MATCH = 5;
 
 	static final int mHeaderTextDefaultColor = Color.BLACK;
 	static final int mHeaderTextHighlightColor = Color.RED;
@@ -101,23 +101,23 @@ public class StockMatchListActivity extends StorageActivity implements
 			Intent intent = null;
 
 			switch (msg.what) {
-			case MESSAGE_ID_DELETE_MATCH:
+			case MESSAGE_DELETE_MATCH:
 				mStockDatabaseManager.deleteStockMatchById(mMatch);
 				break;
 
-			case MESSAGE_ID_DELETE_MATCH_LIST:
+			case MESSAGE_DELETE_MATCH_LIST:
 				mStockDatabaseManager.deleteStockMatch();
 				break;
 
-			case MESSAGE_ID_LOAD_FROM_SD_CARD:
+			case MESSAGE_LOAD_FROM_SD_CARD:
 				loadListFromSD(MATCH_LIST_XML_FILE_NAME);
 				break;
 
-			case MESSAGE_ID_SAVE_TO_SD_CARD:
+			case MESSAGE_SAVE_TO_SD_CARD:
 				SaveListToSD(MATCH_LIST_XML_FILE_NAME);
 				break;
 
-			case MESSAGE_ID_VIEW_STOCK_CHAT:
+			case MESSAGE_VIEW_STOCK_CHAT:
 				Stock stock = null;
 				mStockDatabaseManager.getStockMatchById(mMatch);
 
@@ -142,7 +142,7 @@ public class StockMatchListActivity extends StorageActivity implements
 				startActivity(intent);
 				break;
 
-			case MESSAGE_ID_VIEW_STOCK_MATCH:
+			case MESSAGE_VIEW_STOCK_MATCH:
 				mStockDatabaseManager.getStockMatchById(mMatch);
 
 				mStock_X.setSE(mMatch.getSE_X());
@@ -218,7 +218,7 @@ public class StockMatchListActivity extends StorageActivity implements
 								new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog,
 											int which) {
-										mHandler.sendEmptyMessage(MESSAGE_ID_DELETE_MATCH);
+										mHandler.sendEmptyMessage(MESSAGE_DELETE_MATCH);
 										mode.finish();
 									}
 								})
@@ -298,7 +298,7 @@ public class StockMatchListActivity extends StorageActivity implements
 			return true;
 
 		case R.id.action_load_sd:
-			mHandler.sendEmptyMessage(MESSAGE_ID_LOAD_FROM_SD_CARD);
+			mHandler.sendEmptyMessage(MESSAGE_LOAD_FROM_SD_CARD);
 			return true;
 
 		default:
@@ -309,13 +309,13 @@ public class StockMatchListActivity extends StorageActivity implements
 	@Override
 	void onDeleteAll() {
 		super.onDeleteAll();
-		mHandler.sendEmptyMessage(MESSAGE_ID_DELETE_MATCH_LIST);
+		mHandler.sendEmptyMessage(MESSAGE_DELETE_MATCH_LIST);
 	}
 
 	@Override
 	void onSaveSD() {
 		super.onSaveSD();
-		mHandler.sendEmptyMessage(MESSAGE_ID_SAVE_TO_SD_CARD);
+		mHandler.sendEmptyMessage(MESSAGE_SAVE_TO_SD_CARD);
 	}
 
 	void onActionSync(int serviceType) {
@@ -804,11 +804,11 @@ public class StockMatchListActivity extends StorageActivity implements
 
 		if (parent.getId() == R.id.left_listview) {
 			mMatch.setId(id);
-			mHandler.sendEmptyMessage(MESSAGE_ID_VIEW_STOCK_CHAT);
+			mHandler.sendEmptyMessage(MESSAGE_VIEW_STOCK_CHAT);
 		} else {
 			if (mCurrentActionMode == null) {
 				mMatch.setId(id);
-				mHandler.sendEmptyMessage(MESSAGE_ID_VIEW_STOCK_MATCH);
+				mHandler.sendEmptyMessage(MESSAGE_VIEW_STOCK_MATCH);
 			}
 		}
 	}

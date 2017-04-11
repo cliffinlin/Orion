@@ -2,6 +2,9 @@ package com.android.orion;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -23,9 +26,9 @@ public class StockDealActivity extends DatabaseActivity implements
 
 	public static final String EXTRA_DEAL_ID = "deal_id";
 
-	static final int EXECUTE_DEAL_LOAD = 1;
-	static final int EXECUTE_DEAL_SAVE = 2;
-	static final int EXECUTE_STOCK_LOAD = 3;
+	static final int MESSAGE_LOAD_DEAL = 0;
+	static final int MESSAGE_SAVE_DEAL = 1;
+	static final int MESSAGE_LOAD_STOCK = 2;
 
 	static final int REQUEST_CODE_STOCK_ID = 0;
 
@@ -36,6 +39,43 @@ public class StockDealActivity extends DatabaseActivity implements
 
 	StockDeal mDeal = null;
 	Stock mStock = null;
+
+	Handler mHandler = new Handler(Looper.getMainLooper()) {
+
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+
+			switch (msg.what) {
+			case MESSAGE_LOAD_DEAL:
+				mStockDatabaseManager.getStockDealById(mDeal);
+				break;
+
+			case MESSAGE_SAVE_DEAL:
+				if (ACTION_DEAL_INSERT.equals(mAction)) {
+					mDeal.setCreated(Utility.getCurrentDateTimeString());
+					mStockDatabaseManager.insertStockDeal(mDeal);
+				} else if (ACTION_DEAL_EDIT.equals(mAction)) {
+					mDeal.setModified(Utility.getCurrentDateTimeString());
+					mStockDatabaseManager.updateStockDealByID(mDeal);
+				}
+				break;
+
+			case MESSAGE_LOAD_STOCK:
+				mStockDatabaseManager.getStockById(mStock);
+				mDeal.setSE(mStock.getSE());
+				mDeal.setCode(mStock.getCode());
+				mDeal.setName(mStock.getName());
+				mDeal.setPrice(mStock.getPrice());
+				mDeal.setDeal(mStock.getPrice());
+				break;
+
+			default:
+				break;
+			}
+		}
+
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +95,7 @@ public class StockDealActivity extends DatabaseActivity implements
 
 		if (ACTION_DEAL_EDIT.equals(mAction)) {
 			mDeal.setId(mIntent.getLongExtra(EXTRA_DEAL_ID, 0));
-			startLoadTask(EXECUTE_DEAL_LOAD);
+			mHandler.sendEmptyMessage(MESSAGE_LOAD_DEAL);
 		}
 	}
 
@@ -143,7 +183,7 @@ public class StockDealActivity extends DatabaseActivity implements
 				mDeal.setVolume(0);
 			}
 			mDeal.setupDeal();
-			startSaveTask(EXECUTE_DEAL_SAVE);
+			mHandler.sendEmptyMessage(MESSAGE_SAVE_DEAL);
 			finish();
 			break;
 		case R.id.button_cancel:
@@ -163,7 +203,7 @@ public class StockDealActivity extends DatabaseActivity implements
 			case REQUEST_CODE_STOCK_ID:
 				if (mStock != null) {
 					mStock.setId(data.getLongExtra(Constants.EXTRA_STOCK_ID, 0));
-					startLoadTask(EXECUTE_STOCK_LOAD);
+					mHandler.sendEmptyMessage(MESSAGE_LOAD_STOCK);
 				}
 				break;
 
@@ -171,67 +211,5 @@ public class StockDealActivity extends DatabaseActivity implements
 				break;
 			}
 		}
-	}
-
-	@Override
-	Long doInBackgroundLoad(Object... params) {
-		super.doInBackgroundLoad(params);
-		int execute = (Integer) params[0];
-
-		switch (execute) {
-		case EXECUTE_STOCK_LOAD:
-			mStockDatabaseManager.getStockById(mStock);
-
-			mDeal.setSE(mStock.getSE());
-			mDeal.setCode(mStock.getCode());
-			mDeal.setName(mStock.getName());
-			mDeal.setPrice(mStock.getPrice());
-			mDeal.setDeal(mStock.getPrice());
-			break;
-
-		case EXECUTE_DEAL_LOAD:
-			mStockDatabaseManager.getStockDealById(mDeal);
-			break;
-
-		default:
-			break;
-		}
-
-		return RESULT_SUCCESS;
-	}
-
-	@Override
-	void onPostExecuteLoad(Long result) {
-		super.onPostExecuteLoad(result);
-		updateView();
-	}
-
-	@Override
-	Long doInBackgroundSave(Object... params) {
-		super.doInBackgroundSave(params);
-
-		int execute = (Integer) params[0];
-
-		switch (execute) {
-		case EXECUTE_DEAL_SAVE:
-			if (ACTION_DEAL_INSERT.equals(mAction)) {
-				mDeal.setCreated(Utility.getCurrentDateTimeString());
-				mStockDatabaseManager.insertStockDeal(mDeal);
-			} else if (ACTION_DEAL_EDIT.equals(mAction)) {
-				mDeal.setModified(Utility.getCurrentDateTimeString());
-				mStockDatabaseManager.updateStockDealByID(mDeal);
-			}
-			break;
-
-		default:
-			break;
-		}
-
-		return RESULT_SUCCESS;
-	}
-
-	@Override
-	void onPostExecuteSave(Long result) {
-		super.onPostExecuteSave(result);
 	}
 }
