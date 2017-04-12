@@ -144,7 +144,13 @@ public class XAxisRenderer extends AxisRenderer {
         float[] position = new float[] {
                 0f, 0f
         };
-
+        
+//Modify for stock
+        if (mXAxis.getValues().size() == 0) {
+			return;
+		}
+//Modify for stock 
+        
         for (int i = mMinX; i <= mMaxX; i += mXAxis.mAxisLabelModulus) {
 
             position[0] = i;

@@ -143,7 +143,7 @@ public class StockChartData {
 	}
 
 	void setMainChartData() {
-		CandleData candleData = new CandleData();
+		CandleData candleData = new CandleData(mXValues);
 		CandleDataSet candleDataSet = new CandleDataSet(mCandleEntryList, "K");
 		candleDataSet.setDecreasingColor(Color.rgb(50, 128, 50));
 		candleDataSet.setDecreasingPaintStyle(Paint.Style.FILL);
@@ -156,7 +156,7 @@ public class StockChartData {
 		candleDataSet.setDrawTags(true);
 		candleData.addDataSet(candleDataSet);
 
-		LineData lineData = new LineData();
+		LineData lineData = new LineData(mXValues);
 
 		LineDataSet average5DataSet = new LineDataSet(mAverage5EntryList, "MA5");
 		average5DataSet.setColor(Color.WHITE);

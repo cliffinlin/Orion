@@ -49,6 +49,7 @@ public class StockDealActivity extends DatabaseActivity implements
 			switch (msg.what) {
 			case MESSAGE_LOAD_DEAL:
 				mStockDatabaseManager.getStockDealById(mDeal);
+				updateView();
 				break;
 
 			case MESSAGE_SAVE_DEAL:
@@ -68,6 +69,7 @@ public class StockDealActivity extends DatabaseActivity implements
 				mDeal.setName(mStock.getName());
 				mDeal.setPrice(mStock.getPrice());
 				mDeal.setDeal(mStock.getPrice());
+				updateView();
 				break;
 
 			default:

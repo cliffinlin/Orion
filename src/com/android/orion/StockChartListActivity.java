@@ -586,25 +586,24 @@ public class StockChartListActivity extends OrionBaseActivity implements
 					Entry acclerateEntry = new Entry(
 							(float) mStockData.getAcceleration(), index);
 					stockChartData.mAccelerateEntryList.add(acclerateEntry);
-
 				}
+
+				updateTitle();
+
+				mStockDatabaseManager.getStockDealList(mStock, mStockDealList);
+
+				stockChartData.updateDescription(mStock);
+				stockChartData.updateLimitLine(mStockDealList);
+				stockChartData.setMainChartData();
+				stockChartData.setSubChartData();
+
+				mStockChartArrayAdapter.notifyDataSetChanged();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			mStockDatabaseManager.closeCursor(cursor);
 		}
-
-		updateTitle();
-
-		mStockDatabaseManager.getStockDealList(mStock, mStockDealList);
-
-		stockChartData.updateDescription(mStock);
-		stockChartData.updateLimitLine(mStockDealList);
-		stockChartData.setMainChartData();
-		stockChartData.setSubChartData();
-
-		mStockChartArrayAdapter.notifyDataSetChanged();
 	}
 
 	void navigateStock(int direction) {
