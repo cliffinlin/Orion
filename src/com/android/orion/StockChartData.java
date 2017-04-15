@@ -40,8 +40,6 @@ public class StockChartData {
 	ArrayList<Entry> mDIFEntryList = null;
 	ArrayList<Entry> mDEAEntryList = null;
 	ArrayList<BarEntry> mHistogramEntryList = null;
-	// ArrayList<Entry> mSigmaHistogramEntryList = null;
-	// ArrayList<Entry> mTrendsEffortsEntryList = null;
 	ArrayList<Entry> mAverageEntryList = null;
 	ArrayList<Entry> mVelocityEntryList = null;
 	ArrayList<Entry> mAccelerateEntryList = null;
@@ -98,14 +96,6 @@ public class StockChartData {
 		if (mDEAEntryList == null) {
 			mDEAEntryList = new ArrayList<Entry>();
 		}
-
-		// if (mSigmaHistogramEntryList == null) {
-		// mSigmaHistogramEntryList = new ArrayList<Entry>();
-		// }
-		//
-		// if (mTrendsEffortsEntryList == null) {
-		// mTrendsEffortsEntryList = new ArrayList<Entry>();
-		// }
 
 		if (mHistogramEntryList == null) {
 			mHistogramEntryList = new ArrayList<BarEntry>();
@@ -239,29 +229,6 @@ public class StockChartData {
 		deaDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(deaDataSet);
 
-		// LineDataSet sigmaHistogramDataSet = new LineDataSet(
-		// mSigmaHistogramEntryList, "Sigma");
-		// sigmaHistogramDataSet.setColor(Color.CYAN);
-		// sigmaHistogramDataSet.setCircleColor(Color.CYAN);
-		// sigmaHistogramDataSet.setDrawCircles(false);
-		// sigmaHistogramDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		// lineData.addDataSet(sigmaHistogramDataSet);
-
-		// LineDataSet trendEffortsDataSet = new LineDataSet(
-		// mTrendEffortsEntryList, "Trend");
-		// trendEffortsDataSet.setColor(Color.BLUE);
-		// trendEffortsDataSet.setCircleColor(Color.BLUE);
-		// trendEffortsDataSet.setDrawCircles(false);
-		// trendEffortsDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		// lineData.addDataSet(trendEffortsDataSet);
-
-		// LineDataSet averageDataSet = new LineDataSet(mAverageEntryList,
-		// "Average");
-		// averageDataSet.setColor(Color.GRAY);
-		// averageDataSet.setDrawCircles(false);
-		// averageDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		// lineData.addDataSet(averageDataSet);
-
 		LineDataSet velocityDataSet = new LineDataSet(mVelocityEntryList,
 				"velocity");
 		velocityDataSet.setColor(Color.BLUE);
@@ -347,8 +314,6 @@ public class StockChartData {
 		mDIFEntryList.clear();
 		mDEAEntryList.clear();
 		mHistogramEntryList.clear();
-		// mSigmaHistogramEntryList.clear();
-		// mTrendsEffortsEntryList.clear();
 		mVelocityEntryList.clear();
 		mAccelerateEntryList.clear();
 	}
