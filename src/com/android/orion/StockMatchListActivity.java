@@ -357,10 +357,6 @@ public class StockMatchListActivity extends StorageActivity implements
 						stockMatch.setCode_Y(parser.nextText());
 					} else if (DatabaseContract.COLUMN_NAME_Y.equals(tagName)) {
 						stockMatch.setName_Y(parser.nextText());
-					} else if (DatabaseContract.COLUMN_CREATED.equals(tagName)) {
-						stockMatch.setCreated(parser.nextText());
-					} else if (DatabaseContract.COLUMN_MODIFIED.equals(tagName)) {
-						stockMatch.setModified(parser.nextText());
 					} else {
 					}
 					break;
@@ -423,10 +419,6 @@ public class StockMatchListActivity extends StorageActivity implements
 						stockMatch.getCode_Y());
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_NAME_Y,
 						stockMatch.getName_Y());
-				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_CREATED,
-						stockMatch.getCreated());
-				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_MODIFIED,
-						stockMatch.getModified());
 				xmlSerializer.endTag(null, XML_TAG_ITEM);
 			}
 		} catch (Exception e) {
@@ -472,12 +464,6 @@ public class StockMatchListActivity extends StorageActivity implements
 			break;
 		case R.id.action_month:
 			mSortOrderColumn = DatabaseContract.COLUMN_MONTH;
-			break;
-		case R.id.created:
-			mSortOrderColumn = DatabaseContract.COLUMN_CREATED;
-			break;
-		case R.id.modified:
-			mSortOrderColumn = DatabaseContract.COLUMN_MODIFIED;
 			break;
 		default:
 			mSortOrderColumn = DatabaseContract.COLUMN_CODE_X;
