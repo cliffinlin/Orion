@@ -673,6 +673,47 @@ public class StockDatabaseManager extends DatabaseManager {
 		return result;
 	}
 
+	public int updateStockDealHold(Stock stock) {
+		int result = 0;
+		long hold = 0;
+		Cursor cursor = null;
+		StockDeal stockDeal = null;
+
+		if ((stock == null) || (mContentResolver == null)) {
+			return result;
+		}
+
+		stockDeal = new StockDeal();
+
+		String selection = DatabaseContract.COLUMN_SE + " = " + "\'"
+				+ stock.getSE() + "\'" + " AND " + DatabaseContract.COLUMN_CODE
+				+ " = " + "\'" + stock.getCode() + "\'";
+
+		try {
+			cursor = queryStockDeal(selection, null, null);
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				while (cursor.moveToNext()) {
+					stockDeal.set(cursor);
+					hold += stockDeal.getVolume();
+				}
+				
+				cursor.moveToPosition(-1);
+				
+				while (cursor.moveToNext()) {
+					stockDeal.set(cursor);
+					stockDeal.setHold(hold);
+					result += updateStockDealByID(stockDeal);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+
+		return result;
+	}
+	
 	public void deleteStockDealById(StockDeal stockDeal) {
 		if ((stockDeal == null) || (mContentResolver == null)) {
 			return;

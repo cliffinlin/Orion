@@ -100,7 +100,9 @@ public class StockDealListActivity extends StorageActivity implements
 
 			switch (msg.what) {
 			case MESSAGE_DELETE_DEAL:
+				getStock();
 				mStockDatabaseManager.deleteStockDealById(mDeal);
+				mStockDatabaseManager.updateStockDealHold(mStock);
 				break;
 
 			case MESSAGE_DELETE_DEAL_LIST:
@@ -115,11 +117,7 @@ public class StockDealListActivity extends StorageActivity implements
 				break;
 
 			case MESSAGE_VIEW_STOCK_CHAT:
-				mStockDatabaseManager.getStockDealById(mDeal);
-
-				mStock.setSE(mDeal.getSE());
-				mStock.setCode(mDeal.getCode());
-				mStockDatabaseManager.getStock(mStock);
+				getStock();
 
 				intent = new Intent(StockDealListActivity.this,
 						StockChartListActivity.class);
@@ -130,11 +128,7 @@ public class StockDealListActivity extends StorageActivity implements
 				break;
 
 			case MESSAGE_VIEW_STOCK_MATCH:
-				mStockDatabaseManager.getStockDealById(mDeal);
-
-				mStock.setSE(mDeal.getSE());
-				mStock.setCode(mDeal.getCode());
-				mStockDatabaseManager.getStock(mStock);
+				getStock();
 
 				intent = new Intent(StockDealListActivity.this,
 						StockMatchListActivity.class);
@@ -614,6 +608,15 @@ public class StockDealListActivity extends StorageActivity implements
 		}
 
 		return false;
+	}
+
+	void getStock() {
+		mStockDatabaseManager.getStockDealById(mDeal);
+
+		mStock.setSE(mDeal.getSE());
+		mStock.setCode(mDeal.getCode());
+
+		mStockDatabaseManager.getStock(mStock);
 	}
 
 	private class CustomViewBinder implements SimpleCursorAdapter.ViewBinder {

@@ -49,6 +49,9 @@ public class StockDealActivity extends DatabaseActivity implements
 			switch (msg.what) {
 			case MESSAGE_LOAD_DEAL:
 				mStockDatabaseManager.getStockDealById(mDeal);
+				mStock.setSE(mDeal.getSE());
+				mStock.setCode(mDeal.getCode());
+				mStockDatabaseManager.getStock(mStock);
 				updateView();
 				break;
 
@@ -60,6 +63,8 @@ public class StockDealActivity extends DatabaseActivity implements
 					mDeal.setModified(Utility.getCurrentDateTimeString());
 					mStockDatabaseManager.updateStockDealByID(mDeal);
 				}
+
+				mStockDatabaseManager.updateStockDealHold(mStock);
 				break;
 
 			case MESSAGE_LOAD_STOCK:
