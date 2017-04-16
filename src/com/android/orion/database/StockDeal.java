@@ -11,6 +11,7 @@ public class StockDeal extends DatabaseTable {
 	private String mSE;
 	private String mCode;
 	private String mName;
+	private long mHold;
 	private double mPrice;
 	private double mDeal;
 	private double mNet;
@@ -64,6 +65,7 @@ public class StockDeal extends DatabaseTable {
 		mSE = "";
 		mCode = "";
 		mName = "";
+		mHold = 0;
 		mPrice = 0;
 		mDeal = 0;
 		mNet = 0;
@@ -82,6 +84,7 @@ public class StockDeal extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_SE, mSE);
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
+		contentValues.put(DatabaseContract.COLUMN_HOLD, mHold);
 		contentValues.put(DatabaseContract.COLUMN_PRICE, mPrice);
 		contentValues.put(DatabaseContract.COLUMN_DEAL, mDeal);
 		contentValues.put(DatabaseContract.COLUMN_NET, mNet);
@@ -103,6 +106,7 @@ public class StockDeal extends DatabaseTable {
 		setSE(stockDeal.mSE);
 		setCode(stockDeal.mCode);
 		setName(stockDeal.mName);
+		setHold(stockDeal.mHold);
 		setPrice(stockDeal.mPrice);
 		setDeal(stockDeal.mDeal);
 		setNet(stockDeal.mNet);
@@ -123,6 +127,7 @@ public class StockDeal extends DatabaseTable {
 		setSE(cursor);
 		setCode(cursor);
 		setName(cursor);
+		setHold(cursor);
 		setPrice(cursor);
 		setDeal(cursor);
 		setNet(cursor);
@@ -180,7 +185,24 @@ public class StockDeal extends DatabaseTable {
 		setName(cursor.getString(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_NAME)));
 	}
+	
+	public long getHold() {
+		return mHold;
+	}
 
+	public void setHold(long hold) {
+		mHold = hold;
+	}
+
+	void setHold(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setHold(cursor.getLong(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_HOLD)));
+	}
+	
 	public double getPrice() {
 		return mPrice;
 	}

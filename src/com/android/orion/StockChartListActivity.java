@@ -600,7 +600,7 @@ public class StockChartListActivity extends OrionBaseActivity implements
 				mStockChartArrayAdapter = new StockChartArrayAdapter(this,
 						mStockChartItemList);
 				mListView.setAdapter(mStockChartArrayAdapter);
-//				mStockChartArrayAdapter.notifyDataSetChanged();
+				// mStockChartArrayAdapter.notifyDataSetChanged();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

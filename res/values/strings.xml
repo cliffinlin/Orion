@@ -47,6 +47,7 @@
     <string name="email_hint">Email</string>
     <string name="favorite">Favorite</string>
     <string name="favorite_list">Favorite List</string>
+    <string name="hold">Hold</string>    
     <string name="list">List</string>
     <string name="login_error_message">Please Make Sure You Enter a Username and Password!</string>
     <string name="login_error_title">Error!</string>

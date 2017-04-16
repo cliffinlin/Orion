@@ -129,8 +129,7 @@ public class StockMatchListActivity extends StorageActivity implements
 				mStock_Y.setCode(mMatch.getCode_Y());
 				mStockDatabaseManager.getStock(mStock_Y);
 
-				if (mSortOrderColumn
-						.equals(DatabaseContract.COLUMN_CODE_X)) {
+				if (mSortOrderColumn.equals(DatabaseContract.COLUMN_CODE_X)) {
 					stock = mStock_X;
 				} else {
 					stock = mStock_Y;
@@ -346,23 +345,17 @@ public class StockMatchListActivity extends StorageActivity implements
 					tagName = parser.getName();
 					if (XML_TAG_ITEM.equals(tagName)) {
 						stockMatch = new StockMatch();
-					} else if (DatabaseContract.COLUMN_SE_X
-							.equals(tagName)) {
+					} else if (DatabaseContract.COLUMN_SE_X.equals(tagName)) {
 						stockMatch.setSE_X(parser.nextText());
-					} else if (DatabaseContract.COLUMN_CODE_X
-							.equals(tagName)) {
+					} else if (DatabaseContract.COLUMN_CODE_X.equals(tagName)) {
 						stockMatch.setCode_X(parser.nextText());
-					} else if (DatabaseContract.COLUMN_NAME_X
-							.equals(tagName)) {
+					} else if (DatabaseContract.COLUMN_NAME_X.equals(tagName)) {
 						stockMatch.setName_X(parser.nextText());
-					} else if (DatabaseContract.COLUMN_SE_Y
-							.equals(tagName)) {
+					} else if (DatabaseContract.COLUMN_SE_Y.equals(tagName)) {
 						stockMatch.setSE_Y(parser.nextText());
-					} else if (DatabaseContract.COLUMN_CODE_Y
-							.equals(tagName)) {
+					} else if (DatabaseContract.COLUMN_CODE_Y.equals(tagName)) {
 						stockMatch.setCode_Y(parser.nextText());
-					} else if (DatabaseContract.COLUMN_NAME_Y
-							.equals(tagName)) {
+					} else if (DatabaseContract.COLUMN_NAME_Y.equals(tagName)) {
 						stockMatch.setName_Y(parser.nextText());
 					} else if (DatabaseContract.COLUMN_CREATED.equals(tagName)) {
 						stockMatch.setCreated(parser.nextText());
@@ -418,23 +411,17 @@ public class StockMatchListActivity extends StorageActivity implements
 		try {
 			for (StockMatch stockMatch : mStockMatchList) {
 				xmlSerializer.startTag(null, XML_TAG_ITEM);
-				xmlSerialize(xmlSerializer,
-						DatabaseContract.COLUMN_SE_X,
+				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_SE_X,
 						stockMatch.getSE_X());
-				xmlSerialize(xmlSerializer,
-						DatabaseContract.COLUMN_CODE_X,
+				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_CODE_X,
 						stockMatch.getCode_X());
-				xmlSerialize(xmlSerializer,
-						DatabaseContract.COLUMN_NAME_X,
+				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_NAME_X,
 						stockMatch.getName_X());
-				xmlSerialize(xmlSerializer,
-						DatabaseContract.COLUMN_SE_Y,
+				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_SE_Y,
 						stockMatch.getSE_Y());
-				xmlSerialize(xmlSerializer,
-						DatabaseContract.COLUMN_CODE_Y,
+				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_CODE_Y,
 						stockMatch.getCode_Y());
-				xmlSerialize(xmlSerializer,
-						DatabaseContract.COLUMN_NAME_Y,
+				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_NAME_Y,
 						stockMatch.getName_Y());
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_CREATED,
 						stockMatch.getCreated());
@@ -619,8 +606,7 @@ public class StockMatchListActivity extends StorageActivity implements
 	}
 
 	void initListView() {
-		String[] mLeftFrom = new String[] {
-				DatabaseContract.COLUMN_NAME_Y,
+		String[] mLeftFrom = new String[] { DatabaseContract.COLUMN_NAME_Y,
 				DatabaseContract.COLUMN_NAME_X };
 		int[] mLeftTo = new int[] { R.id.name, R.id.code };
 
@@ -710,14 +696,12 @@ public class StockMatchListActivity extends StorageActivity implements
 		String condition1 = "";
 		String condition2 = "";
 
-		condition1 = DatabaseContract.COLUMN_SE_X + " = " + "\'"
-				+ se + "\'" + " AND "
-				+ DatabaseContract.COLUMN_CODE_X + "=" + "\'" + code
+		condition1 = DatabaseContract.COLUMN_SE_X + " = " + "\'" + se + "\'"
+				+ " AND " + DatabaseContract.COLUMN_CODE_X + "=" + "\'" + code
 				+ "\'";
 
-		condition2 = DatabaseContract.COLUMN_SE_Y + " = " + "\'"
-				+ se + "\'" + " AND "
-				+ DatabaseContract.COLUMN_CODE_Y + "=" + "\'" + code
+		condition2 = DatabaseContract.COLUMN_SE_Y + " = " + "\'" + se + "\'"
+				+ " AND " + DatabaseContract.COLUMN_CODE_Y + "=" + "\'" + code
 				+ "\'";
 
 		selection = "(" + condition1 + ")" + " OR " + "(" + condition2 + ")";
