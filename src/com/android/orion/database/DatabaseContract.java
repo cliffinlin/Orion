@@ -47,6 +47,39 @@ public final class DatabaseContract {
 	public static final String COLUMN_CREATED = "created";
 	public static final String COLUMN_MODIFIED = "modified";
 
+	public static final String COLUMN_DATE = "date";
+	public static final String COLUMN_TIME = "time";
+	public static final String COLUMN_PERIOD = "period";
+	public static final String COLUMN_OPEN = "open";
+	public static final String COLUMN_HIGH = "high";
+	public static final String COLUMN_LOW = "low";
+	public static final String COLUMN_CLOSE = "close";
+	public static final String COLUMN_DIRECTION = "direction";
+	public static final String COLUMN_VERTEX = "vertex";
+	public static final String COLUMN_VERTEX_LOW = "vertex_low";
+	public static final String COLUMN_VERTEX_HIGH = "vertex_high";
+	public static final String COLUMN_POSITION = "position";
+	public static final String COLUMN_OVERLAP_LOW = "overlap_low";
+	public static final String COLUMN_OVERLAP_HIGH = "overlap_high";
+	public static final String COLUMN_AVERAGE5 = "average5";
+	public static final String COLUMN_AVERAGE10 = "average10";
+	public static final String COLUMN_DIF = "dif";
+	public static final String COLUMN_DEA = "dea";
+	public static final String COLUMN_HISTOGRAM = "histogram";
+	public static final String COLUMN_SIGMA_HISTOGRAM = "sigma_histogram";
+	public static final String COLUMN_DIVERGENCE = "divergence";
+	public static final String COLUMN_TRENDS_EFFORTS = "trends_efforts";
+	public static final String COLUMN_AVERAGE = "average";
+	public static final String COLUMN_ACTION = "action";
+
+	public static final String COLUMN_SE_X = COLUMN_SE + "_" + "x";
+	public static final String COLUMN_CODE_X = COLUMN_CODE + "_" + "x";
+	public static final String COLUMN_NAME_X = COLUMN_NAME + "_" + "x";
+
+	public static final String COLUMN_SE_Y = COLUMN_SE + "_" + "y";
+	public static final String COLUMN_CODE_Y = COLUMN_CODE + "_" + "y";
+	public static final String COLUMN_NAME_Y = COLUMN_NAME + "_" + "y";
+
 	private static final String DROP_TABLE_IF_EXISTS = "DROP TABLE IF EXISTS ";
 
 	public static final String ORDER_BY = " ORDER BY ";
@@ -137,31 +170,6 @@ public final class DatabaseContract {
 	public static abstract class StockData implements BaseColumns {
 		public static final String TABLE_NAME = "stock_data";
 
-		public static final String COLUMN_DATE = "date";
-		public static final String COLUMN_TIME = "time";
-		public static final String COLUMN_PERIOD = "period";
-		public static final String COLUMN_OPEN = "open";
-		public static final String COLUMN_HIGH = "high";
-		public static final String COLUMN_LOW = "low";
-		public static final String COLUMN_CLOSE = "close";
-		public static final String COLUMN_DIRECTION = "direction";
-		public static final String COLUMN_VERTEX = "vertex";
-		public static final String COLUMN_VERTEX_LOW = "vertex_low";
-		public static final String COLUMN_VERTEX_HIGH = "vertex_high";
-		public static final String COLUMN_POSITION = "position";
-		public static final String COLUMN_OVERLAP_LOW = "overlap_low";
-		public static final String COLUMN_OVERLAP_HIGH = "overlap_high";
-		public static final String COLUMN_AVERAGE5 = "average5";
-		public static final String COLUMN_AVERAGE10 = "average10";
-		public static final String COLUMN_DIF = "dif";
-		public static final String COLUMN_DEA = "dea";
-		public static final String COLUMN_HISTOGRAM = "histogram";
-		public static final String COLUMN_SIGMA_HISTOGRAM = "sigma_histogram";
-		public static final String COLUMN_DIVERGENCE = "divergence";
-		public static final String COLUMN_TRENDS_EFFORTS = "trends_efforts";
-		public static final String COLUMN_AVERAGE = "average";
-		public static final String COLUMN_ACTION = "action";
-
 		public static final Uri CONTENT_URI = Uri.withAppendedPath(
 				DatabaseContract.CONTENT_URI, TABLE_NAME);
 		public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
@@ -251,14 +259,6 @@ public final class DatabaseContract {
 
 	public static abstract class StockMatch implements BaseColumns {
 		public static final String TABLE_NAME = "stock_match";
-
-		public static final String COLUMN_SE_X = COLUMN_SE + "_" + "x";
-		public static final String COLUMN_CODE_X = COLUMN_CODE + "_" + "x";
-		public static final String COLUMN_NAME_X = COLUMN_NAME + "_" + "x";
-
-		public static final String COLUMN_SE_Y = COLUMN_SE + "_" + "y";
-		public static final String COLUMN_CODE_Y = COLUMN_CODE + "_" + "y";
-		public static final String COLUMN_NAME_Y = COLUMN_NAME + "_" + "y";
 
 		public static final Uri CONTENT_URI = Uri.withAppendedPath(
 				DatabaseContract.CONTENT_URI, TABLE_NAME);

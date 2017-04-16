@@ -580,9 +580,9 @@ public class StockDatabaseManager extends DatabaseManager {
 
 		where = DatabaseContract.COLUMN_STOCK_ID + " = "
 				+ stockData.getStockId() + " AND "
-				+ DatabaseContract.StockData.COLUMN_PERIOD + " = " + "\'"
+				+ DatabaseContract.COLUMN_PERIOD + " = " + "\'"
 				+ stockData.getPeriod() + "\'" + " AND "
-				+ DatabaseContract.StockData.COLUMN_DATE + " = " + "\'"
+				+ DatabaseContract.COLUMN_DATE + " = " + "\'"
 				+ stockData.getDate() + "\'";
 
 		period = stockData.getPeriod();
@@ -592,7 +592,7 @@ public class StockDatabaseManager extends DatabaseManager {
 				|| period.equals(Constants.PERIOD_MIN15)
 				|| period.equals(Constants.PERIOD_MIN30)
 				|| period.equals(Constants.PERIOD_MIN60)) {
-			where += " AND " + DatabaseContract.StockData.COLUMN_TIME + " = "
+			where += " AND " + DatabaseContract.COLUMN_TIME + " = "
 					+ "\'" + stockData.getTime() + "\'";
 		}
 
@@ -601,13 +601,13 @@ public class StockDatabaseManager extends DatabaseManager {
 
 	public String getStockDataSelection(long stockId, String period) {
 		return DatabaseContract.COLUMN_STOCK_ID + " = " + stockId + " AND "
-				+ DatabaseContract.StockData.COLUMN_PERIOD + " = '" + period
+				+ DatabaseContract.COLUMN_PERIOD + " = '" + period
 				+ "'";
 	}
 
 	public String getStockDataOrder() {
-		return DatabaseContract.StockData.COLUMN_DATE + " ASC " + ","
-				+ DatabaseContract.StockData.COLUMN_TIME + " ASC ";
+		return DatabaseContract.COLUMN_DATE + " ASC " + ","
+				+ DatabaseContract.COLUMN_TIME + " ASC ";
 	}
 
 	public Uri insertStockDeal(StockDeal stockDeal) {
@@ -878,13 +878,13 @@ public class StockDatabaseManager extends DatabaseManager {
 			return cursor;
 		}
 
-		String selection = DatabaseContract.StockMatch.COLUMN_SE_X + " = "
+		String selection = DatabaseContract.COLUMN_SE_X + " = "
 				+ "\'" + stockMatch.getSE_X() + "\'" + " AND "
-				+ DatabaseContract.StockMatch.COLUMN_CODE_X + " = " + "\'"
+				+ DatabaseContract.COLUMN_CODE_X + " = " + "\'"
 				+ stockMatch.getCode_X() + "\'" + " AND "
-				+ DatabaseContract.StockMatch.COLUMN_SE_Y + " = " + "\'"
+				+ DatabaseContract.COLUMN_SE_Y + " = " + "\'"
 				+ stockMatch.getSE_Y() + "\'" + " AND "
-				+ DatabaseContract.StockMatch.COLUMN_CODE_Y + " = " + "\'"
+				+ DatabaseContract.COLUMN_CODE_Y + " = " + "\'"
 				+ stockMatch.getCode_Y() + "\'";
 
 		cursor = queryStockMatch(selection, null, null);
@@ -955,13 +955,13 @@ public class StockDatabaseManager extends DatabaseManager {
 
 		stockMatchList.clear();
 
-		selection = "(" + DatabaseContract.StockMatch.COLUMN_SE_X + " = "
+		selection = "(" + DatabaseContract.COLUMN_SE_X + " = "
 				+ "\'" + stock.getSE() + "\'" + " AND "
-				+ DatabaseContract.StockMatch.COLUMN_CODE_X + " = " + "\'"
+				+ DatabaseContract.COLUMN_CODE_X + " = " + "\'"
 				+ stock.getCode() + "\'" + ") OR ("
-				+ DatabaseContract.StockMatch.COLUMN_SE_Y + " = " + "\'"
+				+ DatabaseContract.COLUMN_SE_Y + " = " + "\'"
 				+ stock.getSE() + "\'" + " AND "
-				+ DatabaseContract.StockMatch.COLUMN_CODE_Y + " = " + "\'"
+				+ DatabaseContract.COLUMN_CODE_Y + " = " + "\'"
 				+ stock.getCode() + "\'" + ")";
 
 		try {

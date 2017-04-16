@@ -130,45 +130,45 @@ public class StockData extends StockDatabaseTable {
 
 	ContentValues getContentValues(ContentValues contentValues) {
 		contentValues.put(DatabaseContract.COLUMN_STOCK_ID, mStockId);
-		contentValues.put(DatabaseContract.StockData.COLUMN_DATE, mDate);
-		contentValues.put(DatabaseContract.StockData.COLUMN_TIME, mTime);
-		contentValues.put(DatabaseContract.StockData.COLUMN_PERIOD, mPeriod);
-		contentValues.put(DatabaseContract.StockData.COLUMN_OPEN, mOpen);
-		contentValues.put(DatabaseContract.StockData.COLUMN_HIGH, mHigh);
-		contentValues.put(DatabaseContract.StockData.COLUMN_LOW, mLow);
-		contentValues.put(DatabaseContract.StockData.COLUMN_CLOSE, mClose);
-		contentValues.put(DatabaseContract.StockData.COLUMN_DIRECTION,
+		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);
+		contentValues.put(DatabaseContract.COLUMN_TIME, mTime);
+		contentValues.put(DatabaseContract.COLUMN_PERIOD, mPeriod);
+		contentValues.put(DatabaseContract.COLUMN_OPEN, mOpen);
+		contentValues.put(DatabaseContract.COLUMN_HIGH, mHigh);
+		contentValues.put(DatabaseContract.COLUMN_LOW, mLow);
+		contentValues.put(DatabaseContract.COLUMN_CLOSE, mClose);
+		contentValues.put(DatabaseContract.COLUMN_DIRECTION,
 				mDirection);
-		contentValues.put(DatabaseContract.StockData.COLUMN_VERTEX, mVertex);
-		contentValues.put(DatabaseContract.StockData.COLUMN_VERTEX_LOW,
+		contentValues.put(DatabaseContract.COLUMN_VERTEX, mVertex);
+		contentValues.put(DatabaseContract.COLUMN_VERTEX_LOW,
 				mVertexLow);
-		contentValues.put(DatabaseContract.StockData.COLUMN_VERTEX_HIGH,
+		contentValues.put(DatabaseContract.COLUMN_VERTEX_HIGH,
 				mVertexHigh);
 		contentValues
-				.put(DatabaseContract.StockData.COLUMN_POSITION, mPosition);
+				.put(DatabaseContract.COLUMN_POSITION, mPosition);
 		contentValues.put(DatabaseContract.COLUMN_OVERLAP, mOverlap);
-		contentValues.put(DatabaseContract.StockData.COLUMN_OVERLAP_LOW,
+		contentValues.put(DatabaseContract.COLUMN_OVERLAP_LOW,
 				mOverlapLow);
-		contentValues.put(DatabaseContract.StockData.COLUMN_OVERLAP_HIGH,
+		contentValues.put(DatabaseContract.COLUMN_OVERLAP_HIGH,
 				mOverlapHigh);
 		contentValues
-				.put(DatabaseContract.StockData.COLUMN_AVERAGE5, mAverage5);
-		contentValues.put(DatabaseContract.StockData.COLUMN_AVERAGE10,
+				.put(DatabaseContract.COLUMN_AVERAGE5, mAverage5);
+		contentValues.put(DatabaseContract.COLUMN_AVERAGE10,
 				mAverage10);
-		contentValues.put(DatabaseContract.StockData.COLUMN_DIF, mDIF);
-		contentValues.put(DatabaseContract.StockData.COLUMN_DEA, mDEA);
-		contentValues.put(DatabaseContract.StockData.COLUMN_HISTOGRAM,
+		contentValues.put(DatabaseContract.COLUMN_DIF, mDIF);
+		contentValues.put(DatabaseContract.COLUMN_DEA, mDEA);
+		contentValues.put(DatabaseContract.COLUMN_HISTOGRAM,
 				mHistogram);
-		contentValues.put(DatabaseContract.StockData.COLUMN_SIGMA_HISTOGRAM,
+		contentValues.put(DatabaseContract.COLUMN_SIGMA_HISTOGRAM,
 				mSigmaHistogram);
-		contentValues.put(DatabaseContract.StockData.COLUMN_DIVERGENCE,
+		contentValues.put(DatabaseContract.COLUMN_DIVERGENCE,
 				mDivergence);
-		contentValues.put(DatabaseContract.StockData.COLUMN_TRENDS_EFFORTS,
+		contentValues.put(DatabaseContract.COLUMN_TRENDS_EFFORTS,
 				mTrendsEfforts);
-		contentValues.put(DatabaseContract.StockData.COLUMN_AVERAGE, mAverage);
+		contentValues.put(DatabaseContract.COLUMN_AVERAGE, mAverage);
 		contentValues.put(DatabaseContract.COLUMN_VELOCITY, mVelocity);
 		contentValues.put(DatabaseContract.COLUMN_ACCELERATION, mAcceleration);
-		contentValues.put(DatabaseContract.StockData.COLUMN_ACTION, mAction);
+		contentValues.put(DatabaseContract.COLUMN_ACTION, mAction);
 
 		return contentValues;
 	}
@@ -285,7 +285,7 @@ public class StockData extends StockDatabaseTable {
 		}
 
 		setDate(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.StockData.COLUMN_DATE)));
+				.getColumnIndex(DatabaseContract.COLUMN_DATE)));
 	}
 
 	public String getTime() {
@@ -302,7 +302,7 @@ public class StockData extends StockDatabaseTable {
 		}
 
 		setTime(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.StockData.COLUMN_TIME)));
+				.getColumnIndex(DatabaseContract.COLUMN_TIME)));
 	}
 
 	public String getPeriod() {
@@ -319,7 +319,7 @@ public class StockData extends StockDatabaseTable {
 		}
 
 		setPeriod(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.StockData.COLUMN_PERIOD)));
+				.getColumnIndex(DatabaseContract.COLUMN_PERIOD)));
 	}
 
 	public double getOpen() {
@@ -336,7 +336,7 @@ public class StockData extends StockDatabaseTable {
 		}
 
 		setOpen(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.StockData.COLUMN_OPEN)));
+				.getColumnIndex(DatabaseContract.COLUMN_OPEN)));
 	}
 
 	public double getHigh() {
@@ -353,7 +353,7 @@ public class StockData extends StockDatabaseTable {
 		}
 
 		setHigh(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.StockData.COLUMN_HIGH)));
+				.getColumnIndex(DatabaseContract.COLUMN_HIGH)));
 	}
 
 	public double getLow() {
@@ -370,7 +370,7 @@ public class StockData extends StockDatabaseTable {
 		}
 
 		setLow(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.StockData.COLUMN_LOW)));
+				.getColumnIndex(DatabaseContract.COLUMN_LOW)));
 	}
 
 	public double getClose() {
@@ -387,7 +387,7 @@ public class StockData extends StockDatabaseTable {
 		}
 
 		setClose(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.StockData.COLUMN_CLOSE)));
+				.getColumnIndex(DatabaseContract.COLUMN_CLOSE)));
 	}
 
 	public int getDirection() {
@@ -404,7 +404,7 @@ public class StockData extends StockDatabaseTable {
 		}
 
 		setDirection(cursor.getInt(cursor
-				.getColumnIndex(DatabaseContract.StockData.COLUMN_DIRECTION)));
+				.getColumnIndex(DatabaseContract.COLUMN_DIRECTION)));
 	}
 
 	public int getVertex() {
@@ -421,7 +421,7 @@ public class StockData extends StockDatabaseTable {
 		}
 
 		setVertex(cursor.getInt(cursor
-				.getColumnIndex(DatabaseContract.StockData.COLUMN_VERTEX)));
+				.getColumnIndex(DatabaseContract.COLUMN_VERTEX)));
 	}
 
 	public double getVertexLow() {
@@ -438,7 +438,7 @@ public class StockData extends StockDatabaseTable {
 		}
 
 		setVertexLow(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.StockData.COLUMN_VERTEX_LOW)));
+				.getColumnIndex(DatabaseContract.COLUMN_VERTEX_LOW)));
 	}
 
 	public double getVertexHigh() {
@@ -455,7 +455,7 @@ public class StockData extends StockDatabaseTable {
 		}
 
 		setVertexHigh(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.StockData.COLUMN_VERTEX_HIGH)));
+				.getColumnIndex(DatabaseContract.COLUMN_VERTEX_HIGH)));
 	}
 
 	int getPosition() {
@@ -472,7 +472,7 @@ public class StockData extends StockDatabaseTable {
 		}
 
 		setPosition(cursor.getInt(cursor
-				.getColumnIndex(DatabaseContract.StockData.COLUMN_POSITION)));
+				.getColumnIndex(DatabaseContract.COLUMN_POSITION)));
 	}
 
 	public double getOverlapLow() {
@@ -489,7 +489,7 @@ public class StockData extends StockDatabaseTable {
 		}
 
 		setOverlapLow(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.StockData.COLUMN_OVERLAP_LOW)));
+				.getColumnIndex(DatabaseContract.COLUMN_OVERLAP_LOW)));
 	}
 
 	public double getOverlapHigh() {
@@ -507,7 +507,7 @@ public class StockData extends StockDatabaseTable {
 
 		setOverlapHigh(cursor
 				.getDouble(cursor
-						.getColumnIndex(DatabaseContract.StockData.COLUMN_OVERLAP_HIGH)));
+						.getColumnIndex(DatabaseContract.COLUMN_OVERLAP_HIGH)));
 	}
 
 	public double getAverage5() {
@@ -524,7 +524,7 @@ public class StockData extends StockDatabaseTable {
 		}
 
 		setAverage5(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.StockData.COLUMN_AVERAGE5)));
+				.getColumnIndex(DatabaseContract.COLUMN_AVERAGE5)));
 	}
 
 	public double getAverage10() {
@@ -541,7 +541,7 @@ public class StockData extends StockDatabaseTable {
 		}
 
 		setAverage10(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.StockData.COLUMN_AVERAGE10)));
+				.getColumnIndex(DatabaseContract.COLUMN_AVERAGE10)));
 	}
 
 	public double getDIF() {
@@ -558,7 +558,7 @@ public class StockData extends StockDatabaseTable {
 		}
 
 		setDIF(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.StockData.COLUMN_DIF)));
+				.getColumnIndex(DatabaseContract.COLUMN_DIF)));
 	}
 
 	public double getDEA() {
@@ -575,7 +575,7 @@ public class StockData extends StockDatabaseTable {
 		}
 
 		setDEA(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.StockData.COLUMN_DEA)));
+				.getColumnIndex(DatabaseContract.COLUMN_DEA)));
 	}
 
 	public double getHistogram() {
@@ -592,7 +592,7 @@ public class StockData extends StockDatabaseTable {
 		}
 
 		setHistogram(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.StockData.COLUMN_HISTOGRAM)));
+				.getColumnIndex(DatabaseContract.COLUMN_HISTOGRAM)));
 	}
 
 	double getSigmaHistogram() {
@@ -610,7 +610,7 @@ public class StockData extends StockDatabaseTable {
 
 		setSigmaHistogram(cursor
 				.getDouble(cursor
-						.getColumnIndex(DatabaseContract.StockData.COLUMN_SIGMA_HISTOGRAM)));
+						.getColumnIndex(DatabaseContract.COLUMN_SIGMA_HISTOGRAM)));
 	}
 
 	int getDivergence() {
@@ -627,7 +627,7 @@ public class StockData extends StockDatabaseTable {
 		}
 
 		setDivergence(cursor.getInt(cursor
-				.getColumnIndex(DatabaseContract.StockData.COLUMN_DIVERGENCE)));
+				.getColumnIndex(DatabaseContract.COLUMN_DIVERGENCE)));
 	}
 
 	double getTrendsEfforts() {
@@ -645,7 +645,7 @@ public class StockData extends StockDatabaseTable {
 
 		setTrendsEfforts(cursor
 				.getDouble(cursor
-						.getColumnIndex(DatabaseContract.StockData.COLUMN_TRENDS_EFFORTS)));
+						.getColumnIndex(DatabaseContract.COLUMN_TRENDS_EFFORTS)));
 	}
 
 	public double getAverage() {
@@ -662,7 +662,7 @@ public class StockData extends StockDatabaseTable {
 		}
 
 		setAverage(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.StockData.COLUMN_AVERAGE)));
+				.getColumnIndex(DatabaseContract.COLUMN_AVERAGE)));
 	}
 
 	public String getAction() {
@@ -679,7 +679,7 @@ public class StockData extends StockDatabaseTable {
 		}
 
 		setAction(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.StockData.COLUMN_ACTION)));
+				.getColumnIndex(DatabaseContract.COLUMN_ACTION)));
 	}
 
 	public boolean vertexOf(int vertexType) {

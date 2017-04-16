@@ -95,12 +95,12 @@ public class StockMatch extends DatabaseTable {
 	}
 
 	ContentValues getContentValues(ContentValues contentValues) {
-		contentValues.put(DatabaseContract.StockMatch.COLUMN_SE_X, mSE_X);
-		contentValues.put(DatabaseContract.StockMatch.COLUMN_CODE_X, mCode_X);
-		contentValues.put(DatabaseContract.StockMatch.COLUMN_NAME_X, mName_X);
-		contentValues.put(DatabaseContract.StockMatch.COLUMN_SE_Y, mSE_Y);
-		contentValues.put(DatabaseContract.StockMatch.COLUMN_CODE_Y, mCode_Y);
-		contentValues.put(DatabaseContract.StockMatch.COLUMN_NAME_Y, mName_Y);
+		contentValues.put(DatabaseContract.COLUMN_SE_X, mSE_X);
+		contentValues.put(DatabaseContract.COLUMN_CODE_X, mCode_X);
+		contentValues.put(DatabaseContract.COLUMN_NAME_X, mName_X);
+		contentValues.put(DatabaseContract.COLUMN_SE_Y, mSE_Y);
+		contentValues.put(DatabaseContract.COLUMN_CODE_Y, mCode_Y);
+		contentValues.put(DatabaseContract.COLUMN_NAME_Y, mName_Y);
 		contentValues.put(DatabaseContract.COLUMN_MIN1, mMin1);
 		contentValues.put(DatabaseContract.COLUMN_MIN5, mMin5);
 		contentValues.put(DatabaseContract.COLUMN_MIN15, mMin15);
@@ -194,7 +194,7 @@ public class StockMatch extends DatabaseTable {
 		}
 
 		setSE_X(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.StockMatch.COLUMN_SE_X)));
+				.getColumnIndex(DatabaseContract.COLUMN_SE_X)));
 	}
 
 	public String getCode_X() {
@@ -211,7 +211,7 @@ public class StockMatch extends DatabaseTable {
 		}
 
 		setCode_X(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.StockMatch.COLUMN_CODE_X)));
+				.getColumnIndex(DatabaseContract.COLUMN_CODE_X)));
 	}
 
 	public String getName_X() {
@@ -228,7 +228,7 @@ public class StockMatch extends DatabaseTable {
 		}
 
 		setName_X(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.StockMatch.COLUMN_NAME_X)));
+				.getColumnIndex(DatabaseContract.COLUMN_NAME_X)));
 	}
 
 	public String getSE_Y() {
@@ -245,7 +245,7 @@ public class StockMatch extends DatabaseTable {
 		}
 
 		setSE_Y(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.StockMatch.COLUMN_SE_Y)));
+				.getColumnIndex(DatabaseContract.COLUMN_SE_Y)));
 	}
 
 	public String getCode_Y() {
@@ -262,7 +262,7 @@ public class StockMatch extends DatabaseTable {
 		}
 
 		setCode_Y(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.StockMatch.COLUMN_CODE_Y)));
+				.getColumnIndex(DatabaseContract.COLUMN_CODE_Y)));
 	}
 
 	public String getName_Y() {
@@ -279,7 +279,7 @@ public class StockMatch extends DatabaseTable {
 		}
 
 		setName_Y(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.StockMatch.COLUMN_NAME_Y)));
+				.getColumnIndex(DatabaseContract.COLUMN_NAME_Y)));
 	}
 
 	double getMin1() {

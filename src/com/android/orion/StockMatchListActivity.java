@@ -61,7 +61,7 @@ public class StockMatchListActivity extends StorageActivity implements
 
 	static final String MATCH_LIST_XML_FILE_NAME = "match.xml";
 
-	String mSortOrderColumn = DatabaseContract.StockMatch.COLUMN_NAME_X;
+	String mSortOrderColumn = DatabaseContract.COLUMN_NAME_X;
 	String mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_ASC;
 	String mSortOrderDefault = mSortOrderColumn + mSortOrderDirection;
 	String mSortOrder = mSortOrderDefault;
@@ -130,7 +130,7 @@ public class StockMatchListActivity extends StorageActivity implements
 				mStockDatabaseManager.getStock(mStock_Y);
 
 				if (mSortOrderColumn
-						.equals(DatabaseContract.StockMatch.COLUMN_CODE_X)) {
+						.equals(DatabaseContract.COLUMN_CODE_X)) {
 					stock = mStock_X;
 				} else {
 					stock = mStock_Y;
@@ -346,22 +346,22 @@ public class StockMatchListActivity extends StorageActivity implements
 					tagName = parser.getName();
 					if (XML_TAG_ITEM.equals(tagName)) {
 						stockMatch = new StockMatch();
-					} else if (DatabaseContract.StockMatch.COLUMN_SE_X
+					} else if (DatabaseContract.COLUMN_SE_X
 							.equals(tagName)) {
 						stockMatch.setSE_X(parser.nextText());
-					} else if (DatabaseContract.StockMatch.COLUMN_CODE_X
+					} else if (DatabaseContract.COLUMN_CODE_X
 							.equals(tagName)) {
 						stockMatch.setCode_X(parser.nextText());
-					} else if (DatabaseContract.StockMatch.COLUMN_NAME_X
+					} else if (DatabaseContract.COLUMN_NAME_X
 							.equals(tagName)) {
 						stockMatch.setName_X(parser.nextText());
-					} else if (DatabaseContract.StockMatch.COLUMN_SE_Y
+					} else if (DatabaseContract.COLUMN_SE_Y
 							.equals(tagName)) {
 						stockMatch.setSE_Y(parser.nextText());
-					} else if (DatabaseContract.StockMatch.COLUMN_CODE_Y
+					} else if (DatabaseContract.COLUMN_CODE_Y
 							.equals(tagName)) {
 						stockMatch.setCode_Y(parser.nextText());
-					} else if (DatabaseContract.StockMatch.COLUMN_NAME_Y
+					} else if (DatabaseContract.COLUMN_NAME_Y
 							.equals(tagName)) {
 						stockMatch.setName_Y(parser.nextText());
 					} else if (DatabaseContract.COLUMN_CREATED.equals(tagName)) {
@@ -419,22 +419,22 @@ public class StockMatchListActivity extends StorageActivity implements
 			for (StockMatch stockMatch : mStockMatchList) {
 				xmlSerializer.startTag(null, XML_TAG_ITEM);
 				xmlSerialize(xmlSerializer,
-						DatabaseContract.StockMatch.COLUMN_SE_X,
+						DatabaseContract.COLUMN_SE_X,
 						stockMatch.getSE_X());
 				xmlSerialize(xmlSerializer,
-						DatabaseContract.StockMatch.COLUMN_CODE_X,
+						DatabaseContract.COLUMN_CODE_X,
 						stockMatch.getCode_X());
 				xmlSerialize(xmlSerializer,
-						DatabaseContract.StockMatch.COLUMN_NAME_X,
+						DatabaseContract.COLUMN_NAME_X,
 						stockMatch.getName_X());
 				xmlSerialize(xmlSerializer,
-						DatabaseContract.StockMatch.COLUMN_SE_Y,
+						DatabaseContract.COLUMN_SE_Y,
 						stockMatch.getSE_Y());
 				xmlSerialize(xmlSerializer,
-						DatabaseContract.StockMatch.COLUMN_CODE_Y,
+						DatabaseContract.COLUMN_CODE_Y,
 						stockMatch.getCode_Y());
 				xmlSerialize(xmlSerializer,
-						DatabaseContract.StockMatch.COLUMN_NAME_Y,
+						DatabaseContract.COLUMN_NAME_Y,
 						stockMatch.getName_Y());
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_CREATED,
 						stockMatch.getCreated());
@@ -463,7 +463,7 @@ public class StockMatchListActivity extends StorageActivity implements
 
 		switch (id) {
 		case R.id.stock_name_code:
-			mSortOrderColumn = DatabaseContract.StockMatch.COLUMN_CODE_X;
+			mSortOrderColumn = DatabaseContract.COLUMN_CODE_X;
 			break;
 		case R.id.action_5min:
 			mSortOrderColumn = DatabaseContract.COLUMN_MIN5;
@@ -493,7 +493,7 @@ public class StockMatchListActivity extends StorageActivity implements
 			mSortOrderColumn = DatabaseContract.COLUMN_MODIFIED;
 			break;
 		default:
-			mSortOrderColumn = DatabaseContract.StockMatch.COLUMN_CODE_X;
+			mSortOrderColumn = DatabaseContract.COLUMN_CODE_X;
 			break;
 		}
 
@@ -598,7 +598,7 @@ public class StockMatchListActivity extends StorageActivity implements
 			setVisibility(Constants.PERIOD_MONTH, mTextViewMonth);
 		}
 
-		if (mSortOrder.contains(DatabaseContract.StockMatch.COLUMN_CODE_X)) {
+		if (mSortOrder.contains(DatabaseContract.COLUMN_CODE_X)) {
 			setHeaderTextColor(mTextViewNameCode, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MIN5)) {
 			setHeaderTextColor(mTextViewMin15, mHeaderTextHighlightColor);
@@ -620,8 +620,8 @@ public class StockMatchListActivity extends StorageActivity implements
 
 	void initListView() {
 		String[] mLeftFrom = new String[] {
-				DatabaseContract.StockMatch.COLUMN_NAME_Y,
-				DatabaseContract.StockMatch.COLUMN_NAME_X };
+				DatabaseContract.COLUMN_NAME_Y,
+				DatabaseContract.COLUMN_NAME_X };
 		int[] mLeftTo = new int[] { R.id.name, R.id.code };
 
 		String[] mRightFrom = new String[] { DatabaseContract.COLUMN_MIN5,
@@ -710,14 +710,14 @@ public class StockMatchListActivity extends StorageActivity implements
 		String condition1 = "";
 		String condition2 = "";
 
-		condition1 = DatabaseContract.StockMatch.COLUMN_SE_X + " = " + "\'"
+		condition1 = DatabaseContract.COLUMN_SE_X + " = " + "\'"
 				+ se + "\'" + " AND "
-				+ DatabaseContract.StockMatch.COLUMN_CODE_X + "=" + "\'" + code
+				+ DatabaseContract.COLUMN_CODE_X + "=" + "\'" + code
 				+ "\'";
 
-		condition2 = DatabaseContract.StockMatch.COLUMN_SE_Y + " = " + "\'"
+		condition2 = DatabaseContract.COLUMN_SE_Y + " = " + "\'"
 				+ se + "\'" + " AND "
-				+ DatabaseContract.StockMatch.COLUMN_CODE_Y + "=" + "\'" + code
+				+ DatabaseContract.COLUMN_CODE_Y + "=" + "\'" + code
 				+ "\'";
 
 		selection = "(" + condition1 + ")" + " OR " + "(" + condition2 + ")";
