@@ -294,7 +294,8 @@ public class StockChartData {
 			}
 
 			limitLine.setLabel(stockDealPrice + " " + stockDealVolume + " "
-					+ stockDeal.getNet() + " " + stockDeal.getProfit());
+					+ stockDeal.getNet() + " " + stockDeal.getProfit() + " "
+					+ "hold:" + stockDeal.getHold());
 
 			mLimitLineList.add(limitLine);
 		}
