@@ -327,19 +327,29 @@ public class StockAnalyzer extends StockManager {
 
 		action = endStockData.getAction();
 
-		if (endStockData.getVelocity() > 0) {
-			direction += Constants.STOCK_ACTION_UP;
-		} else if (endStockData.getVelocity() <= 0) {
-			direction += Constants.STOCK_ACTION_DOWN;
-		}
-
 		if (endStockData.getAcceleration() > 0) {
-			direction += Constants.STOCK_ACTION_UP;
+			direction += Constants.STOCK_ACTION_ADD;
 		} else if (endStockData.getAcceleration() <= 0) {
-			direction += Constants.STOCK_ACTION_DOWN;
+			direction += Constants.STOCK_ACTION_MINUS;
 		}
 
-		action = action + direction;
+		direction += " ";
+
+		if (endStockData.getVelocity() > 0) {
+			direction += Constants.STOCK_ACTION_ADD;
+		} else if (endStockData.getVelocity() <= 0) {
+			direction += Constants.STOCK_ACTION_MINUS;
+		}
+
+		direction += " ";
+
+		if (endStockData.getAverage() > 0) {
+			direction += Constants.STOCK_ACTION_ADD;
+		} else if (endStockData.getAverage() <= 0) {
+			direction += Constants.STOCK_ACTION_MINUS;
+		}
+
+		action = direction;// + action;
 
 		stock.setAction(period, action);
 	}

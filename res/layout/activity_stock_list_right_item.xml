@@ -23,7 +23,7 @@
 
     <TextView
         android:id="@+id/type_5min"
-        android:layout_width="40dp"
+        android:layout_width="@dimen/action_layout_width"
         android:layout_height="50dp"
         android:layout_weight="1"
         android:gravity="center"
@@ -31,7 +31,7 @@
 
     <TextView
         android:id="@+id/type_15min"
-        android:layout_width="40dp"
+        android:layout_width="@dimen/action_layout_width"
         android:layout_height="50dp"
         android:layout_weight="1"
         android:gravity="center"
@@ -39,7 +39,7 @@
 
     <TextView
         android:id="@+id/type_30min"
-        android:layout_width="40dp"
+        android:layout_width="@dimen/action_layout_width"
         android:layout_height="50dp"
         android:layout_weight="1"
         android:gravity="center"
@@ -47,7 +47,7 @@
 
     <TextView
         android:id="@+id/type_60min"
-        android:layout_width="40dp"
+        android:layout_width="@dimen/action_layout_width"
         android:layout_height="50dp"
         android:layout_weight="1"
         android:gravity="center"
@@ -55,7 +55,7 @@
 
     <TextView
         android:id="@+id/type_day"
-        android:layout_width="40dp"
+        android:layout_width="@dimen/action_layout_width"
         android:layout_height="50dp"
         android:layout_weight="1"
         android:gravity="center"
@@ -63,7 +63,7 @@
 
     <TextView
         android:id="@+id/type_week"
-        android:layout_width="40dp"
+        android:layout_width="@dimen/action_layout_width"
         android:layout_height="50dp"
         android:layout_weight="1"
         android:gravity="center"
@@ -71,7 +71,7 @@
 
     <TextView
         android:id="@+id/type_month"
-        android:layout_width="40dp"
+        android:layout_width="@dimen/action_layout_width"
         android:layout_height="50dp"
         android:layout_weight="1"
         android:gravity="center"
