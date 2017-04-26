@@ -564,16 +564,6 @@ public class StockChartListActivity extends OrionBaseActivity implements
 					BarEntry histogramBarEntry = new BarEntry(
 							(float) mStockData.getHistogram(), index);
 					stockChartData.mHistogramEntryList.add(histogramBarEntry);
-					//
-					// Entry sigmaHistogramEntry = new Entry(
-					// (float) mStockData.getSigmaHistogram(), index);
-					// stockChartData.mSigmaHistogramEntryList
-					// .add(sigmaHistogramEntry);
-					//
-					// Entry trendsEffortsEntry = new Entry(
-					// (float) mStockData.getTrendsEfforts(), index);
-					// stockChartData.mTrendEffortsEntryList
-					// .add(trendsEffortsEntry);
 
 					Entry averageEntry = new Entry(
 							(float) mStockData.getAverage(), index);

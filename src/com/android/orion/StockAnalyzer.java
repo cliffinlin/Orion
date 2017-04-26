@@ -141,9 +141,6 @@ public class StockAnalyzer extends StockManager {
 			stockDataList.get(i).setVelocity(velocity);
 			stockDataList.get(i).setAcceleration(acceleration);
 		}
-
-		stock.setVelocity(velocity);
-		stock.setAcceleration(acceleration);
 	}
 
 	private void analyzeStockMatch(Stock stock, String period,
@@ -295,17 +292,7 @@ public class StockAnalyzer extends StockManager {
 		vertexAnalyzer.analyzeAction(stockDataList, segmentDataList,
 				overlapList);
 
-		setOverlap(stock, period, overlapList);
 		setAction(stock, period, stockDataList, segmentDataList);
-	}
-
-	private void setOverlap(Stock stock, String period,
-			ArrayList<StockData> overlapList) {
-		if ((overlapList == null) || (overlapList.size() == 0)) {
-			return;
-		}
-
-		stock.setOverlap(overlapList.get(overlapList.size() - 1).getOverlap());
 	}
 
 	private void setAction(Stock stock, String period,

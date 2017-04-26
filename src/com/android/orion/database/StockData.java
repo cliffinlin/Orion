@@ -137,32 +137,22 @@ public class StockData extends StockDatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_HIGH, mHigh);
 		contentValues.put(DatabaseContract.COLUMN_LOW, mLow);
 		contentValues.put(DatabaseContract.COLUMN_CLOSE, mClose);
-		contentValues.put(DatabaseContract.COLUMN_DIRECTION,
-				mDirection);
+		contentValues.put(DatabaseContract.COLUMN_DIRECTION, mDirection);
 		contentValues.put(DatabaseContract.COLUMN_VERTEX, mVertex);
-		contentValues.put(DatabaseContract.COLUMN_VERTEX_LOW,
-				mVertexLow);
-		contentValues.put(DatabaseContract.COLUMN_VERTEX_HIGH,
-				mVertexHigh);
-		contentValues
-				.put(DatabaseContract.COLUMN_POSITION, mPosition);
+		contentValues.put(DatabaseContract.COLUMN_VERTEX_LOW, mVertexLow);
+		contentValues.put(DatabaseContract.COLUMN_VERTEX_HIGH, mVertexHigh);
+		contentValues.put(DatabaseContract.COLUMN_POSITION, mPosition);
 		contentValues.put(DatabaseContract.COLUMN_OVERLAP, mOverlap);
-		contentValues.put(DatabaseContract.COLUMN_OVERLAP_LOW,
-				mOverlapLow);
-		contentValues.put(DatabaseContract.COLUMN_OVERLAP_HIGH,
-				mOverlapHigh);
-		contentValues
-				.put(DatabaseContract.COLUMN_AVERAGE5, mAverage5);
-		contentValues.put(DatabaseContract.COLUMN_AVERAGE10,
-				mAverage10);
+		contentValues.put(DatabaseContract.COLUMN_OVERLAP_LOW, mOverlapLow);
+		contentValues.put(DatabaseContract.COLUMN_OVERLAP_HIGH, mOverlapHigh);
+		contentValues.put(DatabaseContract.COLUMN_AVERAGE5, mAverage5);
+		contentValues.put(DatabaseContract.COLUMN_AVERAGE10, mAverage10);
 		contentValues.put(DatabaseContract.COLUMN_DIF, mDIF);
 		contentValues.put(DatabaseContract.COLUMN_DEA, mDEA);
-		contentValues.put(DatabaseContract.COLUMN_HISTOGRAM,
-				mHistogram);
+		contentValues.put(DatabaseContract.COLUMN_HISTOGRAM, mHistogram);
 		contentValues.put(DatabaseContract.COLUMN_SIGMA_HISTOGRAM,
 				mSigmaHistogram);
-		contentValues.put(DatabaseContract.COLUMN_DIVERGENCE,
-				mDivergence);
+		contentValues.put(DatabaseContract.COLUMN_DIVERGENCE, mDivergence);
 		contentValues.put(DatabaseContract.COLUMN_TRENDS_EFFORTS,
 				mTrendsEfforts);
 		contentValues.put(DatabaseContract.COLUMN_AVERAGE, mAverage);
@@ -505,9 +495,8 @@ public class StockData extends StockDatabaseTable {
 			return;
 		}
 
-		setOverlapHigh(cursor
-				.getDouble(cursor
-						.getColumnIndex(DatabaseContract.COLUMN_OVERLAP_HIGH)));
+		setOverlapHigh(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_OVERLAP_HIGH)));
 	}
 
 	public double getAverage5() {
@@ -608,9 +597,8 @@ public class StockData extends StockDatabaseTable {
 			return;
 		}
 
-		setSigmaHistogram(cursor
-				.getDouble(cursor
-						.getColumnIndex(DatabaseContract.COLUMN_SIGMA_HISTOGRAM)));
+		setSigmaHistogram(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_SIGMA_HISTOGRAM)));
 	}
 
 	int getDivergence() {
@@ -643,9 +631,8 @@ public class StockData extends StockDatabaseTable {
 			return;
 		}
 
-		setTrendsEfforts(cursor
-				.getDouble(cursor
-						.getColumnIndex(DatabaseContract.COLUMN_TRENDS_EFFORTS)));
+		setTrendsEfforts(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_TRENDS_EFFORTS)));
 	}
 
 	public double getAverage() {

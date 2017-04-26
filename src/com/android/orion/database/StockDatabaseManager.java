@@ -697,6 +697,8 @@ public class StockDatabaseManager extends DatabaseManager {
 					hold += stockDeal.getVolume();
 				}
 				
+				stock.setHold(hold);
+				
 				cursor.moveToPosition(-1);
 				
 				while (cursor.moveToNext()) {

@@ -65,6 +65,8 @@ public class StockDealActivity extends DatabaseActivity implements
 				}
 
 				mStockDatabaseManager.updateStockDealHold(mStock);
+				mStockDatabaseManager.updateStock(mStock,
+						mStock.getContentValues());
 				break;
 
 			case MESSAGE_LOAD_STOCK:

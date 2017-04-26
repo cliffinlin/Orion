@@ -101,6 +101,8 @@ public class StockDealListActivity extends StorageActivity implements
 				getStock();
 				mStockDatabaseManager.deleteStockDealById(mDeal);
 				mStockDatabaseManager.updateStockDealHold(mStock);
+				mStockDatabaseManager.updateStock(mStock,
+						mStock.getContentValues());
 				break;
 
 			case MESSAGE_DELETE_DEAL_LIST:

@@ -257,12 +257,16 @@ public class StockChartData {
 		mDescription += " ";
 
 		mDescription += stock.getPrice() + "  ";
+		
 		if (stock.getNet() > 0) {
 			mDescription += "+";
 		} else if (stock.getNet() < 0) {
 			mDescription += "-";
 		}
+		
 		mDescription += stock.getNet();
+
+		mDescription += " " + "hold:" + stock.getHold();
 	}
 
 	void updateLimitLine(ArrayList<StockDeal> stockDealList) {
@@ -294,8 +298,7 @@ public class StockChartData {
 			}
 
 			limitLine.setLabel(stockDealPrice + " " + stockDealVolume + " "
-					+ stockDeal.getNet() + " " + stockDeal.getProfit() + " "
-					+ "hold:" + stockDeal.getHold());
+					+ stockDeal.getNet() + " " + stockDeal.getProfit());
 
 			mLimitLineList.add(limitLine);
 		}

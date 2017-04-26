@@ -8,7 +8,7 @@ import android.text.TextUtils;
 
 import com.android.orion.Constants;
 
-public class Stock extends StockDatabaseTable {
+public class Stock extends DatabaseTable {
 	private String mClasses;
 	private String mSE;
 	private String mCode;
@@ -31,6 +31,7 @@ public class Stock extends StockDatabaseTable {
 	private String mActionMonth;
 	private String mActionQuarter;
 	private String mActionYear;
+	private long mHold;
 
 	public ArrayList<StockData> mStockDataListMin1 = new ArrayList<StockData>();
 	public ArrayList<StockData> mStockDataListMin5 = new ArrayList<StockData>();
@@ -109,6 +110,7 @@ public class Stock extends StockDatabaseTable {
 		mActionMonth = "";
 		mActionQuarter = "";
 		mActionYear = "";
+		mHold = 0;
 	}
 
 	@Override
@@ -138,6 +140,7 @@ public class Stock extends StockDatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_MONTH, mActionMonth);
 		contentValues.put(DatabaseContract.COLUMN_QUARTER, mActionQuarter);
 		contentValues.put(DatabaseContract.COLUMN_YEAR, mActionYear);
+		contentValues.put(DatabaseContract.COLUMN_HOLD, mHold);
 
 		return contentValues;
 	}
@@ -203,6 +206,7 @@ public class Stock extends StockDatabaseTable {
 		setActionMonth(stock.mActionMonth);
 		setActionQuarter(stock.mActionQuarter);
 		setActionYear(stock.mActionYear);
+		setHold(stock.mHold);
 	}
 
 	@Override
@@ -237,6 +241,7 @@ public class Stock extends StockDatabaseTable {
 		setActionMonth(cursor);
 		setActionQuarter(cursor);
 		setActionYear(cursor);
+		setHold(cursor);
 	}
 
 	String getClases() {
@@ -611,6 +616,23 @@ public class Stock extends StockDatabaseTable {
 
 		setActionYear(cursor.getString(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_YEAR)));
+	}
+
+	public long getHold() {
+		return mHold;
+	}
+
+	public void setHold(long hold) {
+		mHold = hold;
+	}
+
+	void setHold(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setHold(cursor.getLong(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_HOLD)));
 	}
 
 	public String getAction(String period) {
