@@ -255,6 +255,23 @@ public class OrionBaseActivity extends Activity {
 	// }
 	// }
 
+	void updateStockAction(long stockId, String action) {
+		Uri uri = null;
+
+		uri = ContentUris.withAppendedId(DatabaseContract.Stock.CONTENT_URI,
+				stockId);
+
+		try {
+			ContentValues contentValues = new ContentValues();
+			for (String period : Constants.PERIODS) {
+				contentValues.put(period, action);
+			}
+			mContentResolver.update(uri, contentValues, null, null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	void updateStockMark(long stockId, String mark) {
 		Uri uri = null;
 

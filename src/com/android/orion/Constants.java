@@ -74,6 +74,7 @@ public class Constants {
 	public static final String SETTING_KEY_NOTIFICATION_LIGHTS = "notification_lights";
 	public static final String SETTING_KEY_NOTIFICATION_VIBRATE = "notification_vibrate";
 	public static final String SETTING_KEY_NOTIFICATION_SOUND = "notification_sound";
+	public static final String SETTING_KEY_MATCH = "match";
 	public static final String SETTING_KEY_USER_NAME = "user_name";
 
 	public static final String STOCK_ACTION_NONE = "";

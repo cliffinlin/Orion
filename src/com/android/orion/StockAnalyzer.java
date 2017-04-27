@@ -42,12 +42,12 @@ public class StockAnalyzer extends StockManager {
 			}
 
 			setMACD(stock, period, stockDataList);
-			analyzeStockMatch(stock, period, stockDataList);
+			if (Utility
+					.getSettingBoolean(mContext, Constants.SETTING_KEY_MATCH)) {
+				analyzeStockMatch(stock, period, stockDataList);
+			}
 			analyzeStockData(stock, period, stockDataList);
 			updateDatabase(stock, period, stockDataList);
-			// writeCallLog(stock, period,
-			// stockDataList.get(stockDataList.size() - 1));
-			// updateNotification(stock);
 			writeMessage();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -546,7 +546,8 @@ public class StockAnalyzer extends StockManager {
 		result += String.valueOf(stock.getPrice()) + " ";
 		result += String.valueOf(stock.getNet()) + " ";
 
-		for (String period : Constants.PERIODS) {
+		for (int i = Constants.PERIODS.length - 1; i >= 0; i--) {
+			String period = Constants.PERIODS[i];
 			if (Utility.getSettingBoolean(mContext, period)) {
 				result += stock.getAction(period) + " ";
 			}

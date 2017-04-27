@@ -156,7 +156,12 @@ public class StockFavoriteListActivity extends StorageActivity implements
 			return true;
 
 		case R.id.action_clean_data:
+			for (Stock stock : mStockList) {
+				updateStockAction(stock.getId(), "");
+			}
+
 			deleteStockData(0);
+
 			startService(Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE,
 					Constants.EXECUTE_IMMEDIATE);
 			return true;
@@ -590,6 +595,8 @@ public class StockFavoriteListActivity extends StorageActivity implements
 			loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
 					DatabaseContract.Stock.PROJECTION_ALL, selection, null,
 					mSortOrder);
+
+			mStockList.clear();
 			break;
 
 		default:
@@ -609,6 +616,15 @@ public class StockFavoriteListActivity extends StorageActivity implements
 		case LOADER_ID_STOCK_FAVORITE_LIST:
 			mLeftAdapter.swapCursor(cursor);
 			mRightAdapter.swapCursor(cursor);
+
+			if ((cursor != null) && cursor.getCount() > 0) {
+				cursor.moveToPosition(-1);
+				while (cursor.moveToNext()) {
+					Stock stock = Stock.obtain();
+					stock.set(cursor);
+					mStockList.add(stock);
+				}
+			}
 			break;
 
 		default:
@@ -623,6 +639,8 @@ public class StockFavoriteListActivity extends StorageActivity implements
 	public void onLoaderReset(Loader<Cursor> loader) {
 		mLeftAdapter.swapCursor(null);
 		mRightAdapter.swapCursor(null);
+
+		mStockList.clear();
 	}
 
 	@Override

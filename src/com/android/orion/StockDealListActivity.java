@@ -669,6 +669,10 @@ public class StockDealListActivity extends StorageActivity implements
 								mStockDatabaseManager
 										.insertStockDeal(stockDeal);
 							}
+
+							mStockDatabaseManager.updateStockDealHold(mStock);
+							mStockDatabaseManager.updateStock(mStock,
+									mStock.getContentValues());
 						}
 					}
 					break;

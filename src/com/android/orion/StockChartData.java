@@ -257,13 +257,13 @@ public class StockChartData {
 		mDescription += " ";
 
 		mDescription += stock.getPrice() + "  ";
-		
+
 		if (stock.getNet() > 0) {
 			mDescription += "+";
 		} else if (stock.getNet() < 0) {
 			mDescription += "-";
 		}
-		
+
 		mDescription += stock.getNet();
 
 		mDescription += " " + "hold:" + stock.getHold();
