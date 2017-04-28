@@ -375,8 +375,6 @@ public class SinaFinance extends StockDataProvider {
 
 		if (TextUtils.isEmpty(stockData.getCreated())) {
 			bulkInsert = true;
-			Utility.Log("handleResponseStockDataHistory bulkInsert = "
-					+ bulkInsert);
 		}
 
 		try {
@@ -393,8 +391,6 @@ public class SinaFinance extends StockDataProvider {
 				mStockDatabaseManager.deleteStockData(stockData.getStockId(),
 						stockData.getPeriod());
 				bulkInsert = true;
-				Utility.Log("handleResponseStockDataHistory bulkInsert = "
-						+ bulkInsert);
 			}
 
 			if (bulkInsert) {

@@ -56,6 +56,9 @@ public class StockDealListActivity extends StorageActivity implements
 	static final int MESSAGE_VIEW_STOCK_CHAT = 4;
 	static final int MESSAGE_VIEW_STOCK_MATCH = 5;
 
+	static final int REQUEST_CODE_DEAL_INSERT = 0;
+	static final int REQUEST_CODE_DEAL_EDIT = 1;
+
 	static final int mHeaderTextDefaultColor = Color.BLACK;
 	static final int mHeaderTextHighlightColor = Color.RED;
 
@@ -88,6 +91,8 @@ public class StockDealListActivity extends StorageActivity implements
 	List<StockDeal> mStockDealList = new ArrayList<StockDeal>();
 	Stock mStock = new Stock();
 
+	boolean mDirty = false;
+
 	Handler mHandler = new Handler(Looper.getMainLooper()) {
 
 		@Override
@@ -103,6 +108,7 @@ public class StockDealListActivity extends StorageActivity implements
 				mStockDatabaseManager.updateStockDealHold(mStock);
 				mStockDatabaseManager.updateStock(mStock,
 						mStock.getContentValues());
+				mDirty = true;
 				break;
 
 			case MESSAGE_DELETE_DEAL_LIST:
@@ -180,7 +186,7 @@ public class StockDealListActivity extends StorageActivity implements
 						StockDealActivity.class);
 				mIntent.setAction(StockDealActivity.ACTION_DEAL_EDIT);
 				mIntent.putExtra(StockDealActivity.EXTRA_DEAL_ID, mDeal.getId());
-				startActivity(mIntent);
+				startActivityForResult(mIntent, REQUEST_CODE_DEAL_EDIT);
 				mode.finish();
 				return true;
 			case R.id.menu_delete:
@@ -257,7 +263,7 @@ public class StockDealListActivity extends StorageActivity implements
 		case R.id.action_new:
 			mIntent = new Intent(this, StockDealActivity.class);
 			mIntent.setAction(StockDealActivity.ACTION_DEAL_INSERT);
-			startActivity(mIntent);
+			startActivityForResult(mIntent, REQUEST_CODE_DEAL_INSERT);
 			return true;
 
 		case R.id.action_save_sd:
@@ -292,8 +298,18 @@ public class StockDealListActivity extends StorageActivity implements
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
 		if (resultCode == RESULT_OK) {
-			startService(requestCode, Constants.EXECUTE_IMMEDIATE);
+			switch (requestCode) {
+			case REQUEST_CODE_DEAL_INSERT:
+			case REQUEST_CODE_DEAL_EDIT:
+				mDirty = true;
+				break;
+
+			default:
+				break;
+			}
 		}
 	}
 
@@ -510,6 +526,11 @@ public class StockDealListActivity extends StorageActivity implements
 		switch (loader.getId()) {
 		case LOADER_ID_DEAL_LIST:
 			setStockDealList(cursor);
+
+			if (mDirty) {
+				mDirty = false;
+				SaveListToSD(DEAL_LIST_XML_FILE_NAME);
+			}
 
 			mLeftAdapter.swapCursor(cursor);
 			mRightAdapter.swapCursor(cursor);

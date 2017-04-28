@@ -193,6 +193,7 @@ public class StockDealActivity extends DatabaseActivity implements
 			}
 			mDeal.setupDeal();
 			mHandler.sendEmptyMessage(MESSAGE_SAVE_DEAL);
+			setResult(RESULT_OK);
 			finish();
 			break;
 		case R.id.button_cancel:
