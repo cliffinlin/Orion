@@ -1,5 +1,7 @@
 package com.android.orion;
 
+import java.lang.ref.WeakReference;
+
 import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.Service;
@@ -11,7 +13,6 @@ import android.content.IntentFilter;
 import android.database.ContentObserver;
 import android.media.AudioManager;
 import android.net.Uri;
-import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -42,10 +43,10 @@ public class OrionService extends Service {
 
 	HandlerThread mHandlerThread;
 
+	IBinder mBinder;
+
 	volatile Looper mLooper;
 	volatile ServiceHandler mHandler;
-
-	IBinder mBinder = new OrionServiceBinder();
 
 	SettingObserver mSettingObserver;
 
@@ -59,13 +60,6 @@ public class OrionService extends Service {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			// String action = intent.getAction();
-		}
-	}
-
-	public class OrionServiceBinder extends Binder {
-
-		OrionService getService() {
-			return OrionService.this;
 		}
 	}
 
@@ -102,6 +96,8 @@ public class OrionService extends Service {
 		super.onCreate();
 
 		mContext = getApplicationContext();
+
+		mBinder = (IBinder) new IOrionServiceStub(this);
 
 		mAlarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
@@ -214,6 +210,14 @@ public class OrionService extends Service {
 
 		default:
 			break;
+		}
+	}
+
+	static class IOrionServiceStub extends IOrionService.Stub {
+		WeakReference<OrionService> mService;
+
+		IOrionServiceStub(OrionService service) {
+			mService = new WeakReference<OrionService>(service);
 		}
 	}
 

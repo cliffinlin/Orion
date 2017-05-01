@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.app.ProgressDialog;
-import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -14,16 +13,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.util.ArrayMap;
 
-import com.android.orion.OrionService.OrionServiceBinder;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
@@ -53,27 +49,6 @@ public class OrionBaseActivity extends Activity {
 
 	SharedPreferences mSharedPreferences = null;
 	StockDatabaseManager mStockDatabaseManager = null;
-
-	OrionService mOrionService = null;
-
-	ServiceConnection mServiceConnection = new ServiceConnection() {
-
-		@Override
-		public void onServiceConnected(ComponentName componentName,
-				IBinder iBinder) {
-			OrionServiceBinder orionServiceBinder = (OrionServiceBinder) iBinder;
-			if (orionServiceBinder != null) {
-				mOrionService = orionServiceBinder.getService();
-				mBound = true;
-			}
-		}
-
-		@Override
-		public void onServiceDisconnected(ComponentName componentName) {
-			mBound = false;
-			mOrionService = null;
-		}
-	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -127,15 +102,11 @@ public class OrionBaseActivity extends Activity {
 			mProgressDialog = new ProgressDialog(mContext,
 					ProgressDialog.THEME_HOLO_LIGHT);
 		}
-
-		bindService();
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-
-		unbindService();
 	}
 
 	@Override
@@ -161,19 +132,6 @@ public class OrionBaseActivity extends Activity {
 	public void hideProgressDialog() {
 		if (mProgressDialog != null) {
 			mProgressDialog.dismiss();
-		}
-	}
-
-	void bindService() {
-		Intent intent = new Intent(this, OrionService.class);
-		bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
-	}
-
-	void unbindService() {
-		if (mBound) {
-			unbindService(mServiceConnection);
-			mBound = false;
-			mOrionService = null;
 		}
 	}
 
