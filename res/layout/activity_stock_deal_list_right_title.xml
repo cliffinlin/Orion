@@ -5,15 +5,6 @@
     android:orientation="horizontal" >
 
     <TextView
-        android:id="@+id/hold"
-        android:layout_width="80dp"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/hold"
-        android:textSize="18sp" />
-    
-    <TextView
         android:id="@+id/price"
         android:layout_width="80dp"
         android:layout_height="40dp"
@@ -56,6 +47,33 @@
         android:layout_weight="1"
         android:gravity="center"
         android:text="@string/profile"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/hold"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/hold"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/created"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/created"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/modified"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/modified"
         android:textSize="18sp" />
 
 </LinearLayout>
