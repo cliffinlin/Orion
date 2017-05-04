@@ -11,12 +11,14 @@ public class StockDeal extends DatabaseTable {
 	private String mSE;
 	private String mCode;
 	private String mName;
-	private long mHold;
 	private double mPrice;
 	private double mDeal;
 	private double mNet;
 	private long mVolume;
 	private double mProfit;
+	private double mPercent;
+	private long mHold;
+	private long mQuota;
 
 	private StockDeal next;
 	private static final Object sPoolSync = new Object();
@@ -65,12 +67,14 @@ public class StockDeal extends DatabaseTable {
 		mSE = "";
 		mCode = "";
 		mName = "";
-		mHold = 0;
 		mPrice = 0;
 		mDeal = 0;
 		mNet = 0;
 		mVolume = 0;
 		mProfit = 0;
+		mPercent = 0;
+		mHold = 0;
+		mQuota = 0;
 	}
 
 	public ContentValues getContentValues() {
@@ -84,12 +88,14 @@ public class StockDeal extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_SE, mSE);
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
-		contentValues.put(DatabaseContract.COLUMN_HOLD, mHold);
 		contentValues.put(DatabaseContract.COLUMN_PRICE, mPrice);
 		contentValues.put(DatabaseContract.COLUMN_DEAL, mDeal);
 		contentValues.put(DatabaseContract.COLUMN_NET, mNet);
 		contentValues.put(DatabaseContract.COLUMN_VOLUME, mVolume);
 		contentValues.put(DatabaseContract.COLUMN_PROFIT, mProfit);
+		contentValues.put(DatabaseContract.COLUMN_PERCENT, mPercent);
+		contentValues.put(DatabaseContract.COLUMN_HOLD, mHold);
+		contentValues.put(DatabaseContract.COLUMN_QUOTA, mQuota);
 
 		return contentValues;
 	}
@@ -106,12 +112,14 @@ public class StockDeal extends DatabaseTable {
 		setSE(stockDeal.mSE);
 		setCode(stockDeal.mCode);
 		setName(stockDeal.mName);
-		setHold(stockDeal.mHold);
 		setPrice(stockDeal.mPrice);
 		setDeal(stockDeal.mDeal);
 		setNet(stockDeal.mNet);
 		setVolume(stockDeal.mVolume);
 		setProfit(stockDeal.mProfit);
+		setPercent(stockDeal.mPercent);
+		setHold(stockDeal.mHold);
+		setQuota(stockDeal.mQuota);
 	}
 
 	@Override
@@ -127,12 +135,14 @@ public class StockDeal extends DatabaseTable {
 		setSE(cursor);
 		setCode(cursor);
 		setName(cursor);
-		setHold(cursor);
 		setPrice(cursor);
 		setDeal(cursor);
 		setNet(cursor);
 		setVolume(cursor);
 		setProfit(cursor);
+		setPercent(cursor);
+		setHold(cursor);
+		setQuota(cursor);
 	}
 
 	public String getSE() {
@@ -185,24 +195,7 @@ public class StockDeal extends DatabaseTable {
 		setName(cursor.getString(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_NAME)));
 	}
-	
-	public long getHold() {
-		return mHold;
-	}
 
-	public void setHold(long hold) {
-		mHold = hold;
-	}
-
-	void setHold(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setHold(cursor.getLong(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_HOLD)));
-	}
-	
 	public double getPrice() {
 		return mPrice;
 	}
@@ -286,6 +279,57 @@ public class StockDeal extends DatabaseTable {
 
 		setProfit(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_PROFIT)));
+	}
+
+	public double getPercent() {
+		return mPercent;
+	}
+
+	public void setPercent(double percent) {
+		mPercent = percent;
+	}
+
+	void setPercent(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setPercent(cursor.getLong(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_PERCENT)));
+	}
+
+	public long getHold() {
+		return mHold;
+	}
+
+	public void setHold(long hold) {
+		mHold = hold;
+	}
+
+	void setHold(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setHold(cursor.getLong(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_HOLD)));
+	}
+
+	public long getQuota() {
+		return mQuota;
+	}
+
+	public void setQuota(long quota) {
+		mQuota = quota;
+	}
+
+	void setQuota(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setQuota(cursor.getLong(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_QUOTA)));
 	}
 
 	public void setupDeal() {

@@ -31,7 +31,9 @@ public class Stock extends DatabaseTable {
 	private String mActionMonth;
 	private String mActionQuarter;
 	private String mActionYear;
+	private double mPercent;
 	private long mHold;
+	private long mQuota;
 
 	public ArrayList<StockData> mStockDataListMin1 = new ArrayList<StockData>();
 	public ArrayList<StockData> mStockDataListMin5 = new ArrayList<StockData>();
@@ -110,7 +112,9 @@ public class Stock extends DatabaseTable {
 		mActionMonth = "";
 		mActionQuarter = "";
 		mActionYear = "";
+		mPercent = 0;
 		mHold = 0;
+		mQuota = 0;
 	}
 
 	@Override
@@ -140,7 +144,9 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_MONTH, mActionMonth);
 		contentValues.put(DatabaseContract.COLUMN_QUARTER, mActionQuarter);
 		contentValues.put(DatabaseContract.COLUMN_YEAR, mActionYear);
+		contentValues.put(DatabaseContract.COLUMN_PERCENT, mPercent);
 		contentValues.put(DatabaseContract.COLUMN_HOLD, mHold);
+		contentValues.put(DatabaseContract.COLUMN_QUOTA, mQuota);
 
 		return contentValues;
 	}
@@ -206,7 +212,9 @@ public class Stock extends DatabaseTable {
 		setActionMonth(stock.mActionMonth);
 		setActionQuarter(stock.mActionQuarter);
 		setActionYear(stock.mActionYear);
+		setPercent(stock.mPercent);
 		setHold(stock.mHold);
+		setQuota(stock.mQuota);
 	}
 
 	@Override
@@ -241,7 +249,9 @@ public class Stock extends DatabaseTable {
 		setActionMonth(cursor);
 		setActionQuarter(cursor);
 		setActionYear(cursor);
+		setPercent(cursor);
 		setHold(cursor);
+		setQuota(cursor);
 	}
 
 	String getClases() {
@@ -618,6 +628,23 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_YEAR)));
 	}
 
+	public double getPercent() {
+		return mPercent;
+	}
+
+	public void setPercent(double percent) {
+		mPercent = percent;
+	}
+
+	void setPercent(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setPercent(cursor.getLong(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_PERCENT)));
+	}
+
 	public long getHold() {
 		return mHold;
 	}
@@ -633,6 +660,23 @@ public class Stock extends DatabaseTable {
 
 		setHold(cursor.getLong(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_HOLD)));
+	}
+
+	public long getQuota() {
+		return mQuota;
+	}
+
+	public void setQuota(long quota) {
+		mQuota = quota;
+	}
+
+	void setQuota(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setQuota(cursor.getLong(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_QUOTA)));
 	}
 
 	public String getAction(String period) {

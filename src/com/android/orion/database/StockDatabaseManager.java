@@ -592,8 +592,8 @@ public class StockDatabaseManager extends DatabaseManager {
 				|| period.equals(Constants.PERIOD_MIN15)
 				|| period.equals(Constants.PERIOD_MIN30)
 				|| period.equals(Constants.PERIOD_MIN60)) {
-			where += " AND " + DatabaseContract.COLUMN_TIME + " = "
-					+ "\'" + stockData.getTime() + "\'";
+			where += " AND " + DatabaseContract.COLUMN_TIME + " = " + "\'"
+					+ stockData.getTime() + "\'";
 		}
 
 		return where;
@@ -601,8 +601,7 @@ public class StockDatabaseManager extends DatabaseManager {
 
 	public String getStockDataSelection(long stockId, String period) {
 		return DatabaseContract.COLUMN_STOCK_ID + " = " + stockId + " AND "
-				+ DatabaseContract.COLUMN_PERIOD + " = '" + period
-				+ "'";
+				+ DatabaseContract.COLUMN_PERIOD + " = '" + period + "'";
 	}
 
 	public String getStockDataOrder() {
@@ -675,7 +674,9 @@ public class StockDatabaseManager extends DatabaseManager {
 
 	public int updateStockDealHold(Stock stock) {
 		int result = 0;
+		double percent = 0;
 		long hold = 0;
+		long quota = 0;
 		Cursor cursor = null;
 		StockDeal stockDeal = null;
 
@@ -695,15 +696,26 @@ public class StockDatabaseManager extends DatabaseManager {
 				while (cursor.moveToNext()) {
 					stockDeal.set(cursor);
 					hold += stockDeal.getVolume();
+					if (stockDeal.getQuota() > quota) {
+						quota = stockDeal.getQuota();
+					}
 				}
-				
+
 				stock.setHold(hold);
-				
+				stock.setQuota(quota);
+
+				if (quota > 0) {
+					percent = 100 * (double) hold / (double) quota;
+					stock.setPercent(percent);
+				}
+
 				cursor.moveToPosition(-1);
-				
+
 				while (cursor.moveToNext()) {
 					stockDeal.set(cursor);
+					stockDeal.setPercent(percent);
 					stockDeal.setHold(hold);
+					stockDeal.setQuota(quota);
 					result += updateStockDealByID(stockDeal);
 				}
 			}
@@ -715,7 +727,7 @@ public class StockDatabaseManager extends DatabaseManager {
 
 		return result;
 	}
-	
+
 	public void deleteStockDealById(StockDeal stockDeal) {
 		if ((stockDeal == null) || (mContentResolver == null)) {
 			return;
@@ -921,8 +933,8 @@ public class StockDatabaseManager extends DatabaseManager {
 			return cursor;
 		}
 
-		String selection = DatabaseContract.COLUMN_SE_X + " = "
-				+ "\'" + stockMatch.getSE_X() + "\'" + " AND "
+		String selection = DatabaseContract.COLUMN_SE_X + " = " + "\'"
+				+ stockMatch.getSE_X() + "\'" + " AND "
 				+ DatabaseContract.COLUMN_CODE_X + " = " + "\'"
 				+ stockMatch.getCode_X() + "\'" + " AND "
 				+ DatabaseContract.COLUMN_SE_Y + " = " + "\'"
@@ -998,14 +1010,13 @@ public class StockDatabaseManager extends DatabaseManager {
 
 		stockMatchList.clear();
 
-		selection = "(" + DatabaseContract.COLUMN_SE_X + " = "
-				+ "\'" + stock.getSE() + "\'" + " AND "
+		selection = "(" + DatabaseContract.COLUMN_SE_X + " = " + "\'"
+				+ stock.getSE() + "\'" + " AND "
 				+ DatabaseContract.COLUMN_CODE_X + " = " + "\'"
 				+ stock.getCode() + "\'" + ") OR ("
-				+ DatabaseContract.COLUMN_SE_Y + " = " + "\'"
-				+ stock.getSE() + "\'" + " AND "
-				+ DatabaseContract.COLUMN_CODE_Y + " = " + "\'"
-				+ stock.getCode() + "\'" + ")";
+				+ DatabaseContract.COLUMN_SE_Y + " = " + "\'" + stock.getSE()
+				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE_Y + " = "
+				+ "\'" + stock.getCode() + "\'" + ")";
 
 		try {
 			cursor = queryStockMatch(selection, null, null);

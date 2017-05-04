@@ -69,7 +69,9 @@ public class StockFavoriteListActivity extends StorageActivity implements
 	TextView mTextViewDay = null;
 	TextView mTextViewWeek = null;
 	TextView mTextViewMonth = null;
+	TextView mTextViewPercent = null;
 	TextView mTextViewHold = null;
+	TextView mTextViewQuota = null;
 
 	ListView mLeftListView = null;
 	ListView mRightListView = null;
@@ -368,8 +370,14 @@ public class StockFavoriteListActivity extends StorageActivity implements
 		case R.id.action_month:
 			mSortOrderColumn = DatabaseContract.COLUMN_MONTH;
 			break;
+		case R.id.percent:
+			mSortOrderColumn = DatabaseContract.COLUMN_PERCENT;
+			break;
 		case R.id.hold:
 			mSortOrderColumn = DatabaseContract.COLUMN_HOLD;
+			break;
+		case R.id.quota:
+			mSortOrderColumn = DatabaseContract.COLUMN_QUOTA;
 			break;
 		default:
 			mSortOrderColumn = DatabaseContract.COLUMN_CODE;
@@ -411,7 +419,9 @@ public class StockFavoriteListActivity extends StorageActivity implements
 		setHeaderTextColor(mTextViewDay, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewWeek, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewMonth, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewPercent, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewHold, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewQuota, mHeaderTextDefaultColor);
 	}
 
 	void setVisibility(String key, TextView textView) {
@@ -490,9 +500,19 @@ public class StockFavoriteListActivity extends StorageActivity implements
 			setVisibility(Constants.PERIOD_MONTH, mTextViewMonth);
 		}
 
+		mTextViewPercent = (TextView) findViewById(R.id.percent);
+		if (mTextViewPercent != null) {
+			mTextViewPercent.setOnClickListener(this);
+		}
+
 		mTextViewHold = (TextView) findViewById(R.id.hold);
 		if (mTextViewHold != null) {
 			mTextViewHold.setOnClickListener(this);
+		}
+
+		mTextViewQuota = (TextView) findViewById(R.id.quota);
+		if (mTextViewQuota != null) {
+			mTextViewQuota.setOnClickListener(this);
 		}
 
 		if (mSortOrder.contains(DatabaseContract.COLUMN_CODE)) {
@@ -515,8 +535,12 @@ public class StockFavoriteListActivity extends StorageActivity implements
 			setHeaderTextColor(mTextViewWeek, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MONTH)) {
 			setHeaderTextColor(mTextViewMonth, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PERCENT)) {
+			setHeaderTextColor(mTextViewPercent, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_HOLD)) {
 			setHeaderTextColor(mTextViewHold, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_QUOTA)) {
+			setHeaderTextColor(mTextViewQuota, mHeaderTextHighlightColor);
 		} else {
 		}
 	}
@@ -531,10 +555,12 @@ public class StockFavoriteListActivity extends StorageActivity implements
 				DatabaseContract.COLUMN_MIN15, DatabaseContract.COLUMN_MIN30,
 				DatabaseContract.COLUMN_MIN60, DatabaseContract.COLUMN_DAY,
 				DatabaseContract.COLUMN_WEEK, DatabaseContract.COLUMN_MONTH,
-				DatabaseContract.COLUMN_HOLD };
+				DatabaseContract.COLUMN_PERCENT, DatabaseContract.COLUMN_HOLD,
+				DatabaseContract.COLUMN_QUOTA };
 		int[] mRightTo = new int[] { R.id.price, R.id.net, R.id.type_5min,
 				R.id.type_15min, R.id.type_30min, R.id.type_60min,
-				R.id.type_day, R.id.type_week, R.id.type_month, R.id.hold };
+				R.id.type_day, R.id.type_week, R.id.type_month, R.id.percent,
+				R.id.hold, R.id.quota };
 
 		mLeftListView = (ListView) findViewById(R.id.left_listview);
 		mLeftAdapter = new SimpleCursorAdapter(this,

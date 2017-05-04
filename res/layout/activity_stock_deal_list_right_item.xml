@@ -46,13 +46,29 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/hold"
+        android:id="@+id/percent"
         android:layout_width="80dp"
         android:layout_height="50dp"
         android:layout_weight="1"
         android:gravity="center"
         android:textSize="18sp" />
 
+    <TextView
+        android:id="@+id/hold"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="18sp" />
+    
+    <TextView
+        android:id="@+id/quota"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="18sp" />
+    
     <TextView
         android:id="@+id/created"
         android:layout_width="100dp"

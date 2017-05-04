@@ -24,7 +24,6 @@ public final class DatabaseContract {
 	public static final String COLUMN_SE = "se";
 	public static final String COLUMN_CODE = "code";
 	public static final String COLUMN_NAME = "name";
-	public static final String COLUMN_HOLD = "hold";
 	public static final String COLUMN_PRICE = "price";
 	public static final String COLUMN_DEAL = "deal";
 	public static final String COLUMN_CHANGE = "change";
@@ -45,6 +44,9 @@ public final class DatabaseContract {
 	public static final String COLUMN_MONTH = "month";
 	public static final String COLUMN_QUARTER = "quarter";
 	public static final String COLUMN_YEAR = "year";
+	public static final String COLUMN_PERCENT = "percent";
+	public static final String COLUMN_HOLD = "hold";
+	public static final String COLUMN_QUOTA = "quota";
 	public static final String COLUMN_CREATED = "created";
 	public static final String COLUMN_MODIFIED = "modified";
 
@@ -139,7 +141,8 @@ public final class DatabaseContract {
 				COLUMN_NET, COLUMN_VOLUME, COLUMN_VALUE, COLUMN_MIN1,
 				COLUMN_MIN5, COLUMN_MIN15, COLUMN_MIN30, COLUMN_MIN60,
 				COLUMN_DAY, COLUMN_WEEK, COLUMN_MONTH, COLUMN_QUARTER,
-				COLUMN_YEAR, COLUMN_HOLD, COLUMN_CREATED, COLUMN_MODIFIED };
+				COLUMN_YEAR, COLUMN_PERCENT, COLUMN_HOLD, COLUMN_QUOTA,
+				COLUMN_CREATED, COLUMN_MODIFIED };
 
 		public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
 				+ " (" + _ID + " INTEGER PRIMARY KEY," + COLUMN_CLASSES
@@ -157,9 +160,11 @@ public final class DatabaseContract {
 				+ TEXT_TYPE + COMMA_SEP + COLUMN_DAY + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_WEEK + TEXT_TYPE + COMMA_SEP + COLUMN_MONTH
 				+ TEXT_TYPE + COMMA_SEP + COLUMN_QUARTER + TEXT_TYPE
-				+ COMMA_SEP + COLUMN_YEAR + TEXT_TYPE + COMMA_SEP + COLUMN_HOLD
-				+ INTEGER_TYPE + COMMA_SEP + COLUMN_CREATED + TEXT_TYPE
-				+ COMMA_SEP + COLUMN_MODIFIED + TEXT_TYPE + " )";
+				+ COMMA_SEP + COLUMN_YEAR + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_PERCENT + DOUBLE_TYPE + COMMA_SEP + COLUMN_HOLD
+				+ INTEGER_TYPE + COMMA_SEP + COLUMN_QUOTA + INTEGER_TYPE
+				+ COMMA_SEP + COLUMN_CREATED + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_MODIFIED + TEXT_TYPE + " )";
 
 		public static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
 				+ TABLE_NAME;
@@ -234,19 +239,21 @@ public final class DatabaseContract {
 		public static final String SORT_ORDER_DEFAULT = COLUMN_CODE + " ASC";
 
 		public static final String[] PROJECTION_ALL = { _ID, COLUMN_SE,
-				COLUMN_CODE, COLUMN_NAME, COLUMN_HOLD, COLUMN_PRICE,
-				COLUMN_DEAL, COLUMN_NET, COLUMN_VOLUME, COLUMN_PROFIT,
-				COLUMN_CREATED, COLUMN_MODIFIED };
+				COLUMN_CODE, COLUMN_NAME, COLUMN_PRICE, COLUMN_DEAL,
+				COLUMN_NET, COLUMN_VOLUME, COLUMN_PROFIT, COLUMN_PERCENT,
+				COLUMN_HOLD, COLUMN_QUOTA, COLUMN_CREATED, COLUMN_MODIFIED };
 
 		private static final String CREATE_TABLE_CONTENT = " (" + _ID
 				+ " INTEGER PRIMARY KEY," + COLUMN_SE + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_CODE + TEXT_TYPE + COMMA_SEP + COLUMN_NAME + TEXT_TYPE
-				+ COMMA_SEP + COLUMN_HOLD + INTEGER_TYPE + COMMA_SEP
-				+ COLUMN_PRICE + DOUBLE_TYPE + COMMA_SEP + COLUMN_DEAL
-				+ DOUBLE_TYPE + COMMA_SEP + COLUMN_NET + DOUBLE_TYPE
-				+ COMMA_SEP + COLUMN_VOLUME + INTEGER_TYPE + COMMA_SEP
-				+ COLUMN_PROFIT + DOUBLE_TYPE + COMMA_SEP + COLUMN_CREATED
-				+ TEXT_TYPE + COMMA_SEP + COLUMN_MODIFIED + TEXT_TYPE + " )";
+				+ COMMA_SEP + COLUMN_PRICE + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_DEAL + DOUBLE_TYPE + COMMA_SEP + COLUMN_NET
+				+ DOUBLE_TYPE + COMMA_SEP + COLUMN_VOLUME + INTEGER_TYPE
+				+ COMMA_SEP + COLUMN_PROFIT + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_PERCENT + DOUBLE_TYPE + COMMA_SEP + COLUMN_HOLD
+				+ INTEGER_TYPE + COMMA_SEP + COLUMN_QUOTA + INTEGER_TYPE
+				+ COMMA_SEP + COLUMN_CREATED + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_MODIFIED + TEXT_TYPE + " )";
 
 		public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
 				+ CREATE_TABLE_CONTENT;

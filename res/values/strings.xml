@@ -47,7 +47,7 @@
     <string name="email_hint">Email</string>
     <string name="favorite">Favorite</string>
     <string name="favorite_list">Favorite List</string>
-    <string name="hold">Hold</string>    
+    <string name="hold">Hold</string>
     <string name="list">List</string>
     <string name="login_error_message">Please Make Sure You Enter a Username and Password!</string>
     <string name="login_error_title">Error!</string>
@@ -71,6 +71,7 @@
     <string name="ok">OK</string>
     <string name="overlap">Overlap</string>
     <string name="password_hint">Password</string>
+    <string name="percent">Percent</string>
     <string name="period_1min">1min</string>
     <string name="period_5min">5min</string>
     <string name="period_15min">15min</string>
@@ -86,6 +87,7 @@
     <string name="price_change">Change</string>
     <string name="price_net">Net</string>
     <string name="profile">Profile</string>
+    <string name="quota">Quota</string>
     <string name="search">Search</string>
     <string name="service">Service</string>
     <string name="sign_up_button_label">Sign Up</string>
@@ -120,6 +122,7 @@
     <string name="stock_exist">Stock Exist!</string>
     <string name="stock_edit">Stock Edit</string>
     <string name="stock_list">Stock List</string>
+    <string name="stock_quota">Stock Quota</string>    
     <string name="stock_se">Stock SE</string>
     <string name="stock_se_hint">sh or sz</string>
     <string name="stock_se_not_found">Stock SE not Found!</string>
