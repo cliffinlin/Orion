@@ -348,10 +348,13 @@ public class StockDealListActivity extends StorageActivity implements
 			break;
 		case R.id.position:
 			mSortOrderColumn = DatabaseContract.COLUMN_POSITION;
+			break;
 		case R.id.hold:
 			mSortOrderColumn = DatabaseContract.COLUMN_HOLD;
+			break;
 		case R.id.quota:
 			mSortOrderColumn = DatabaseContract.COLUMN_QUOTA;
+			break;
 		case R.id.modified:
 			mSortOrderColumn = DatabaseContract.COLUMN_MODIFIED;
 			break;
