@@ -674,7 +674,7 @@ public class StockDatabaseManager extends DatabaseManager {
 
 	public int updateStockDealHold(Stock stock) {
 		int result = 0;
-		double percent = 0;
+		double position = 0;
 		long hold = 0;
 		long quota = 0;
 		Cursor cursor = null;
@@ -690,30 +690,28 @@ public class StockDatabaseManager extends DatabaseManager {
 				+ stock.getSE() + "\'" + " AND " + DatabaseContract.COLUMN_CODE
 				+ " = " + "\'" + stock.getCode() + "\'";
 
+		quota = stock.getQuota();
+
 		try {
 			cursor = queryStockDeal(selection, null, null);
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				while (cursor.moveToNext()) {
 					stockDeal.set(cursor);
 					hold += stockDeal.getVolume();
-					if (stockDeal.getQuota() > quota) {
-						quota = stockDeal.getQuota();
-					}
 				}
 
 				stock.setHold(hold);
-				stock.setQuota(quota);
 
 				if (quota > 0) {
-					percent = 100 * (double) hold / (double) quota;
-					stock.setPercent(percent);
+					position = Utility.Round((double) hold / (double) quota, Constants.DOUBLE_FIXED_DECIMAL - 1);
+					stock.setPosition(position);
 				}
 
 				cursor.moveToPosition(-1);
 
 				while (cursor.moveToNext()) {
 					stockDeal.set(cursor);
-					stockDeal.setPercent(percent);
+					stockDeal.setPosition(position);
 					stockDeal.setHold(hold);
 					stockDeal.setQuota(quota);
 					result += updateStockDealByID(stockDeal);

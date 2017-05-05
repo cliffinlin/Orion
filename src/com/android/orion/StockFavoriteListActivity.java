@@ -69,7 +69,7 @@ public class StockFavoriteListActivity extends StorageActivity implements
 	TextView mTextViewDay = null;
 	TextView mTextViewWeek = null;
 	TextView mTextViewMonth = null;
-	TextView mTextViewPercent = null;
+	TextView mTextViewPosition = null;
 	TextView mTextViewHold = null;
 	TextView mTextViewQuota = null;
 
@@ -370,8 +370,8 @@ public class StockFavoriteListActivity extends StorageActivity implements
 		case R.id.action_month:
 			mSortOrderColumn = DatabaseContract.COLUMN_MONTH;
 			break;
-		case R.id.percent:
-			mSortOrderColumn = DatabaseContract.COLUMN_PERCENT;
+		case R.id.position:
+			mSortOrderColumn = DatabaseContract.COLUMN_POSITION;
 			break;
 		case R.id.hold:
 			mSortOrderColumn = DatabaseContract.COLUMN_HOLD;
@@ -419,7 +419,7 @@ public class StockFavoriteListActivity extends StorageActivity implements
 		setHeaderTextColor(mTextViewDay, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewWeek, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewMonth, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewPercent, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewPosition, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewHold, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewQuota, mHeaderTextDefaultColor);
 	}
@@ -500,9 +500,9 @@ public class StockFavoriteListActivity extends StorageActivity implements
 			setVisibility(Constants.PERIOD_MONTH, mTextViewMonth);
 		}
 
-		mTextViewPercent = (TextView) findViewById(R.id.percent);
-		if (mTextViewPercent != null) {
-			mTextViewPercent.setOnClickListener(this);
+		mTextViewPosition = (TextView) findViewById(R.id.position);
+		if (mTextViewPosition != null) {
+			mTextViewPosition.setOnClickListener(this);
 		}
 
 		mTextViewHold = (TextView) findViewById(R.id.hold);
@@ -535,8 +535,8 @@ public class StockFavoriteListActivity extends StorageActivity implements
 			setHeaderTextColor(mTextViewWeek, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MONTH)) {
 			setHeaderTextColor(mTextViewMonth, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PERCENT)) {
-			setHeaderTextColor(mTextViewPercent, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_POSITION)) {
+			setHeaderTextColor(mTextViewPosition, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_HOLD)) {
 			setHeaderTextColor(mTextViewHold, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_QUOTA)) {
@@ -555,11 +555,11 @@ public class StockFavoriteListActivity extends StorageActivity implements
 				DatabaseContract.COLUMN_MIN15, DatabaseContract.COLUMN_MIN30,
 				DatabaseContract.COLUMN_MIN60, DatabaseContract.COLUMN_DAY,
 				DatabaseContract.COLUMN_WEEK, DatabaseContract.COLUMN_MONTH,
-				DatabaseContract.COLUMN_PERCENT, DatabaseContract.COLUMN_HOLD,
+				DatabaseContract.COLUMN_POSITION, DatabaseContract.COLUMN_HOLD,
 				DatabaseContract.COLUMN_QUOTA };
 		int[] mRightTo = new int[] { R.id.price, R.id.net, R.id.type_5min,
 				R.id.type_15min, R.id.type_30min, R.id.type_60min,
-				R.id.type_day, R.id.type_week, R.id.type_month, R.id.percent,
+				R.id.type_day, R.id.type_week, R.id.type_month, R.id.position,
 				R.id.hold, R.id.quota };
 
 		mLeftListView = (ListView) findViewById(R.id.left_listview);

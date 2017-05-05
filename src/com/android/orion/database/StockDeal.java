@@ -16,7 +16,7 @@ public class StockDeal extends DatabaseTable {
 	private double mNet;
 	private long mVolume;
 	private double mProfit;
-	private double mPercent;
+	private double mPosition;
 	private long mHold;
 	private long mQuota;
 
@@ -72,7 +72,7 @@ public class StockDeal extends DatabaseTable {
 		mNet = 0;
 		mVolume = 0;
 		mProfit = 0;
-		mPercent = 0;
+		mPosition = 0;
 		mHold = 0;
 		mQuota = 0;
 	}
@@ -93,7 +93,7 @@ public class StockDeal extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_NET, mNet);
 		contentValues.put(DatabaseContract.COLUMN_VOLUME, mVolume);
 		contentValues.put(DatabaseContract.COLUMN_PROFIT, mProfit);
-		contentValues.put(DatabaseContract.COLUMN_PERCENT, mPercent);
+		contentValues.put(DatabaseContract.COLUMN_POSITION, mPosition);
 		contentValues.put(DatabaseContract.COLUMN_HOLD, mHold);
 		contentValues.put(DatabaseContract.COLUMN_QUOTA, mQuota);
 
@@ -117,7 +117,7 @@ public class StockDeal extends DatabaseTable {
 		setNet(stockDeal.mNet);
 		setVolume(stockDeal.mVolume);
 		setProfit(stockDeal.mProfit);
-		setPercent(stockDeal.mPercent);
+		setPosition(stockDeal.mPosition);
 		setHold(stockDeal.mHold);
 		setQuota(stockDeal.mQuota);
 	}
@@ -140,7 +140,7 @@ public class StockDeal extends DatabaseTable {
 		setNet(cursor);
 		setVolume(cursor);
 		setProfit(cursor);
-		setPercent(cursor);
+		setPosition(cursor);
 		setHold(cursor);
 		setQuota(cursor);
 	}
@@ -281,21 +281,21 @@ public class StockDeal extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_PROFIT)));
 	}
 
-	public double getPercent() {
-		return mPercent;
+	public double getPosition() {
+		return mPosition;
 	}
 
-	public void setPercent(double percent) {
-		mPercent = percent;
+	public void setPosition(double position) {
+		mPosition = position;
 	}
 
-	void setPercent(Cursor cursor) {
+	void setPosition(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}
 
-		setPercent(cursor.getLong(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_PERCENT)));
+		setPosition(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_POSITION)));
 	}
 
 	public long getHold() {

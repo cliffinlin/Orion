@@ -82,6 +82,7 @@
     <string name="period_month">month</string>
     <string name="period_quarter">quarter</string>
     <string name="period_year">year</string>
+    <string name="position">Position</string>
     <string name="prev">prev</string>
     <string name="price">Price</string>
     <string name="price_change">Change</string>

@@ -19,7 +19,6 @@ public class StockData extends StockDatabaseTable {
 	private int mVertex;
 	private double mVertexLow;
 	private double mVertexHigh;
-	private int mPosition;
 	private double mOverlapLow;
 	private double mOverlapHigh;
 	private double mAverage5;
@@ -102,7 +101,6 @@ public class StockData extends StockDatabaseTable {
 		mVertex = Constants.STOCK_VERTEX_NONE;
 		mVertexLow = 0;
 		mVertexHigh = 0;
-		mPosition = Constants.STOCK_POSITION_NONE;
 		mOverlapLow = 0;
 		mOverlapHigh = 0;
 		mAverage5 = 0;
@@ -141,7 +139,6 @@ public class StockData extends StockDatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_VERTEX, mVertex);
 		contentValues.put(DatabaseContract.COLUMN_VERTEX_LOW, mVertexLow);
 		contentValues.put(DatabaseContract.COLUMN_VERTEX_HIGH, mVertexHigh);
-		contentValues.put(DatabaseContract.COLUMN_POSITION, mPosition);
 		contentValues.put(DatabaseContract.COLUMN_OVERLAP, mOverlap);
 		contentValues.put(DatabaseContract.COLUMN_OVERLAP_LOW, mOverlapLow);
 		contentValues.put(DatabaseContract.COLUMN_OVERLAP_HIGH, mOverlapHigh);
@@ -184,7 +181,6 @@ public class StockData extends StockDatabaseTable {
 		setVertex(stockData.mVertex);
 		setVertexLow(stockData.mVertexLow);
 		setVertexHigh(stockData.mVertexHigh);
-		setPosition(stockData.mPosition);
 		setOverlapLow(stockData.mOverlapLow);
 		setOverlapHigh(stockData.mOverlapHigh);
 		setAverage5(stockData.mAverage5);
@@ -227,7 +223,6 @@ public class StockData extends StockDatabaseTable {
 		setVertex(cursor);
 		setVertexLow(cursor);
 		setVertexHigh(cursor);
-		setPosition(cursor);
 		setOverlapLow(cursor);
 		setOverlapHigh(cursor);
 		setAverage5(cursor);
@@ -446,23 +441,6 @@ public class StockData extends StockDatabaseTable {
 
 		setVertexHigh(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_VERTEX_HIGH)));
-	}
-
-	int getPosition() {
-		return mPosition;
-	}
-
-	void setPosition(int position) {
-		mPosition = position;
-	}
-
-	void setPosition(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setPosition(cursor.getInt(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_POSITION)));
 	}
 
 	public double getOverlapLow() {

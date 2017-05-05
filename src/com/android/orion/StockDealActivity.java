@@ -64,6 +64,7 @@ public class StockDealActivity extends DatabaseActivity implements
 					mStockDatabaseManager.updateStockDealByID(mDeal);
 				}
 
+				mStock.setQuota(mDeal.getQuota());
 				mStockDatabaseManager.updateStockDealHold(mStock);
 				mStockDatabaseManager.updateStock(mStock,
 						mStock.getContentValues());

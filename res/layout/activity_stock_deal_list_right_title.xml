@@ -50,12 +50,12 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/percent"
+        android:id="@+id/position"
         android:layout_width="80dp"
         android:layout_height="40dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="@string/percent"
+        android:text="@string/position"
         android:textSize="18sp" />
 
     <TextView

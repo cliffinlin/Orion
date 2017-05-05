@@ -31,7 +31,7 @@ public class Stock extends DatabaseTable {
 	private String mActionMonth;
 	private String mActionQuarter;
 	private String mActionYear;
-	private double mPercent;
+	private double mPosition;
 	private long mHold;
 	private long mQuota;
 
@@ -112,7 +112,7 @@ public class Stock extends DatabaseTable {
 		mActionMonth = "";
 		mActionQuarter = "";
 		mActionYear = "";
-		mPercent = 0;
+		mPosition = 0;
 		mHold = 0;
 		mQuota = 0;
 	}
@@ -144,7 +144,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_MONTH, mActionMonth);
 		contentValues.put(DatabaseContract.COLUMN_QUARTER, mActionQuarter);
 		contentValues.put(DatabaseContract.COLUMN_YEAR, mActionYear);
-		contentValues.put(DatabaseContract.COLUMN_PERCENT, mPercent);
+		contentValues.put(DatabaseContract.COLUMN_POSITION, mPosition);
 		contentValues.put(DatabaseContract.COLUMN_HOLD, mHold);
 		contentValues.put(DatabaseContract.COLUMN_QUOTA, mQuota);
 
@@ -212,7 +212,7 @@ public class Stock extends DatabaseTable {
 		setActionMonth(stock.mActionMonth);
 		setActionQuarter(stock.mActionQuarter);
 		setActionYear(stock.mActionYear);
-		setPercent(stock.mPercent);
+		setPosition(stock.mPosition);
 		setHold(stock.mHold);
 		setQuota(stock.mQuota);
 	}
@@ -249,7 +249,7 @@ public class Stock extends DatabaseTable {
 		setActionMonth(cursor);
 		setActionQuarter(cursor);
 		setActionYear(cursor);
-		setPercent(cursor);
+		setPosition(cursor);
 		setHold(cursor);
 		setQuota(cursor);
 	}
@@ -628,21 +628,21 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_YEAR)));
 	}
 
-	public double getPercent() {
-		return mPercent;
+	public double getPosition() {
+		return mPosition;
 	}
 
-	public void setPercent(double percent) {
-		mPercent = percent;
+	public void setPosition(double position) {
+		mPosition = position;
 	}
 
-	void setPercent(Cursor cursor) {
+	void setPosition(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}
 
-		setPercent(cursor.getLong(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_PERCENT)));
+		setPosition(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_POSITION)));
 	}
 
 	public long getHold() {
