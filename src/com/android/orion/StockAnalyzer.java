@@ -68,6 +68,7 @@ public class StockAnalyzer extends StockManager {
 		double average = 0;
 		double velocity = 0;
 		double acceleration = 0;
+		double accelerationVelocity = 0;
 
 		double average5 = 0;
 		double average10 = 0;
@@ -129,17 +130,24 @@ public class StockAnalyzer extends StockManager {
 			velocity = 10 * (average - stockDataList.get(i - 1).getAverage());
 			acceleration = 2 * (velocity - stockDataList.get(i - 1)
 					.getVelocity());
+			accelerationVelocity = 2 * (acceleration - stockDataList.get(i - 1)
+					.getAcceleration());
 
 			if (i == beginIndex) {
 				velocity = 0;
 				acceleration = 0;
+				accelerationVelocity = 0;
 			} else if (i == beginIndex + 1) {
 				acceleration = 0;
+				accelerationVelocity = 0;
+			} else if (i == beginIndex + 2) {
+				accelerationVelocity = 0;
 			}
 
 			stockDataList.get(i).setAverage(average);
 			stockDataList.get(i).setVelocity(velocity);
 			stockDataList.get(i).setAcceleration(acceleration);
+			stockDataList.get(i).setAccelerationVelocity(accelerationVelocity);
 		}
 	}
 
@@ -313,7 +321,14 @@ public class StockAnalyzer extends StockManager {
 		endStockData = stockDataList.get(segmentData.getIndexEnd());
 
 		action = endStockData.getAction();
+		
+		if (endStockData.getAccelerationVelocity() > 0) {
+			direction += Constants.STOCK_ACTION_ADD;
+		} else if (endStockData.getAccelerationVelocity() <= 0) {
+			direction += Constants.STOCK_ACTION_MINUS;
+		}
 
+		direction += " ";
 		if (endStockData.getAcceleration() > 0) {
 			direction += Constants.STOCK_ACTION_ADD;
 		} else if (endStockData.getAcceleration() <= 0) {

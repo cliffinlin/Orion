@@ -43,6 +43,7 @@ public class StockChartData {
 	ArrayList<Entry> mAverageEntryList = null;
 	ArrayList<Entry> mVelocityEntryList = null;
 	ArrayList<Entry> mAccelerateEntryList = null;
+	ArrayList<Entry> mAccelerateVelocityEntryList = null;
 
 	ArrayList<LimitLine> mLimitLineList = null;
 
@@ -112,6 +113,10 @@ public class StockChartData {
 		if (mAccelerateEntryList == null) {
 			mAccelerateEntryList = new ArrayList<Entry>();
 		}
+
+		if (mAccelerateVelocityEntryList == null) {
+			mAccelerateVelocityEntryList = new ArrayList<Entry>();
+		}	
 
 		if (mCombinedDataMain == null) {
 			mCombinedDataMain = new CombinedData(mXValues);
@@ -243,6 +248,13 @@ public class StockChartData {
 		acclerateDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(acclerateDataSet);
 
+		LineDataSet acclerateVelocityDataSet = new LineDataSet(mAccelerateVelocityEntryList,
+				"accelerateVelocity");
+		acclerateVelocityDataSet.setColor(Color.CYAN);
+		acclerateVelocityDataSet.setDrawCircles(false);
+		acclerateVelocityDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+		lineData.addDataSet(acclerateVelocityDataSet);
+
 		mCombinedDataSub.setData(barData);
 		mCombinedDataSub.setData(lineData);
 	}
@@ -320,5 +332,6 @@ public class StockChartData {
 		mHistogramEntryList.clear();
 		mVelocityEntryList.clear();
 		mAccelerateEntryList.clear();
+		mAccelerateVelocityEntryList.clear();
 	}
 }
