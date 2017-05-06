@@ -1,9 +1,9 @@
 package com.android.orion;
 
+import android.app.Application;
+
 import com.android.orion.leancloud.LeanCloudContract;
 import com.avos.avoscloud.AVOSCloud;
-
-import android.app.Application;
 
 public class OrionApplication extends Application {
 

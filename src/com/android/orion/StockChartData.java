@@ -116,7 +116,7 @@ public class StockChartData {
 
 		if (mAccelerateVelocityEntryList == null) {
 			mAccelerateVelocityEntryList = new ArrayList<Entry>();
-		}	
+		}
 
 		if (mCombinedDataMain == null) {
 			mCombinedDataMain = new CombinedData(mXValues);
@@ -248,8 +248,8 @@ public class StockChartData {
 		acclerateDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(acclerateDataSet);
 
-		LineDataSet acclerateVelocityDataSet = new LineDataSet(mAccelerateVelocityEntryList,
-				"accelerateVelocity");
+		LineDataSet acclerateVelocityDataSet = new LineDataSet(
+				mAccelerateVelocityEntryList, "accelerateVelocity");
 		acclerateVelocityDataSet.setColor(Color.CYAN);
 		acclerateVelocityDataSet.setDrawCircles(false);
 		acclerateVelocityDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
@@ -278,7 +278,8 @@ public class StockChartData {
 
 		mDescription += stock.getNet();
 
-		mDescription += "   " + stock.getHold() + "/" + stock.getQuota() + "   " + stock.getPosition();
+		mDescription += "   " + stock.getHold() + "/" + stock.getQuota()
+				+ "   " + stock.getPosition();
 	}
 
 	void updateLimitLine(ArrayList<StockDeal> stockDealList) {

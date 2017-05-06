@@ -492,8 +492,8 @@ public class StockDealListActivity extends StorageActivity implements
 				DatabaseContract.COLUMN_QUOTA, DatabaseContract.COLUMN_CREATED,
 				DatabaseContract.COLUMN_MODIFIED };
 		int[] mRightTo = new int[] { R.id.price, R.id.net, R.id.deal,
-				R.id.volume, R.id.profile, R.id.position, R.id.hold, R.id.quota,
-				R.id.created, R.id.modified };
+				R.id.volume, R.id.profile, R.id.position, R.id.hold,
+				R.id.quota, R.id.created, R.id.modified };
 
 		mLeftListView = (ListView) findViewById(R.id.left_listview);
 		mLeftAdapter = new SimpleCursorAdapter(this,

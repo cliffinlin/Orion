@@ -580,7 +580,8 @@ public class StockChartListActivity extends OrionBaseActivity implements
 
 					Entry acclerateVelocityEntry = new Entry(
 							(float) mStockData.getAccelerationVelocity(), index);
-					stockChartData.mAccelerateVelocityEntryList.add(acclerateVelocityEntry);
+					stockChartData.mAccelerateVelocityEntryList
+							.add(acclerateVelocityEntry);
 				}
 
 				updateTitle();

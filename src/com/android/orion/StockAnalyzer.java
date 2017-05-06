@@ -41,11 +41,11 @@ public class StockAnalyzer extends StockManager {
 				return;
 			}
 
-			setMACD(stock, period, stockDataList);
 			if (Utility
 					.getSettingBoolean(mContext, Constants.SETTING_KEY_MATCH)) {
 				analyzeStockMatch(stock, period, stockDataList);
 			}
+
 			analyzeStockData(stock, period, stockDataList);
 			updateDatabase(stock, period, stockDataList);
 			writeMessage();
@@ -88,7 +88,10 @@ public class StockAnalyzer extends StockManager {
 		macd.mPriceList.clear();
 
 		for (int i = 0; i < size; i++) {
-			macd.mPriceList.add(stockDataList.get(i).getClose());
+			// macd.mPriceList.add(stockDataList.get(i).getClose());
+			macd.mPriceList
+					.add((stockDataList.get(i).getVertexHigh() + stockDataList
+							.get(i).getVertexLow()) / 2.0);
 		}
 
 		macd.calculate();
@@ -277,6 +280,9 @@ public class StockAnalyzer extends StockManager {
 		vertexAnalyzer.analyzeVertex(stockDataList, drawVertexList);
 		vertexAnalyzer.vertexListToDataList(stockDataList, drawVertexList,
 				drawDataList, false);
+
+		setMACD(stock, period, stockDataList);
+
 		// __TEST_CASE__
 		// vertexAnalyzer.testShow(stockDataList, drawDataList);
 		// __TEST_CASE__
@@ -321,7 +327,7 @@ public class StockAnalyzer extends StockManager {
 		endStockData = stockDataList.get(segmentData.getIndexEnd());
 
 		action = endStockData.getAction();
-		
+
 		if (endStockData.getAccelerationVelocity() > 0) {
 			direction += Constants.STOCK_ACTION_ADD;
 		} else if (endStockData.getAccelerationVelocity() <= 0) {
