@@ -155,7 +155,6 @@ public class StockData extends StockDatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_AVERAGE, mAverage);
 		contentValues.put(DatabaseContract.COLUMN_VELOCITY, mVelocity);
 		contentValues.put(DatabaseContract.COLUMN_ACCELERATION, mAcceleration);
-		contentValues.put(DatabaseContract.COLUMN_ACCELERATION_VELOCITY, mAccelerationVelocity);
 		contentValues.put(DatabaseContract.COLUMN_ACTION, mAction);
 
 		return contentValues;
@@ -195,7 +194,6 @@ public class StockData extends StockDatabaseTable {
 		setAverage(stockData.mAverage);
 		setVelocity(stockData.mVelocity);
 		setAcceleration(stockData.mAcceleration);
-		setAccelerationVelocity(stockData.mAccelerationVelocity);
 		setAction(stockData.mAction);
 
 		setIndex(stockData.mIndex);
@@ -237,7 +235,6 @@ public class StockData extends StockDatabaseTable {
 		setAverage(cursor);
 		setVelocity(cursor);
 		setAcceleration(cursor);
-		setAccelerationVelocity(cursor);
 		setAction(cursor);
 		setTrendsEfforts(cursor);
 	}

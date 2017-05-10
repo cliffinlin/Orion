@@ -34,7 +34,6 @@ public final class DatabaseContract {
 	public static final String COLUMN_OVERLAP = "overlap";
 	public static final String COLUMN_VELOCITY = "velocity";
 	public static final String COLUMN_ACCELERATION = "acceleration";
-	public static final String COLUMN_ACCELERATION_VELOCITY = "acceleration_velocity";
 	public static final String COLUMN_MIN1 = "min1";
 	public static final String COLUMN_MIN5 = "min5";
 	public static final String COLUMN_MIN15 = "min15";
@@ -190,8 +189,8 @@ public final class DatabaseContract {
 				COLUMN_AVERAGE5, COLUMN_AVERAGE10, COLUMN_DIF, COLUMN_DEA,
 				COLUMN_HISTOGRAM, COLUMN_SIGMA_HISTOGRAM, COLUMN_DIVERGENCE,
 				COLUMN_TRENDS_EFFORTS, COLUMN_AVERAGE, COLUMN_VELOCITY,
-				COLUMN_ACCELERATION, COLUMN_ACCELERATION_VELOCITY,
-				COLUMN_ACTION, COLUMN_CREATED, COLUMN_MODIFIED };
+				COLUMN_ACCELERATION, COLUMN_ACTION, COLUMN_CREATED,
+				COLUMN_MODIFIED };
 
 		private static final String CREATE_TABLE_CONTENT = " (" + _ID
 				+ " INTEGER PRIMARY KEY," + COLUMN_STOCK_ID + TEXT_TYPE
@@ -214,7 +213,6 @@ public final class DatabaseContract {
 				+ COLUMN_TRENDS_EFFORTS + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_AVERAGE + DOUBLE_TYPE + COMMA_SEP + COLUMN_VELOCITY
 				+ DOUBLE_TYPE + COMMA_SEP + COLUMN_ACCELERATION + DOUBLE_TYPE
-				+ COMMA_SEP + COLUMN_ACCELERATION_VELOCITY + DOUBLE_TYPE
 				+ COMMA_SEP + COLUMN_ACTION + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_CREATED + TEXT_TYPE + COMMA_SEP + COLUMN_MODIFIED
 				+ TEXT_TYPE + " )";

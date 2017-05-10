@@ -7,7 +7,6 @@ public class StockDatabaseTable extends DatabaseTable {
 	double mOverlap;
 	double mVelocity;
 	double mAcceleration;
-	double mAccelerationVelocity;
 
 	public StockDatabaseTable() {
 		init();
@@ -19,7 +18,6 @@ public class StockDatabaseTable extends DatabaseTable {
 		mOverlap = 0;
 		mVelocity = 0;
 		mAcceleration = 0;
-		mAccelerationVelocity = 0;
 	}
 
 	ContentValues getContentValues(ContentValues contentValues) {
@@ -28,7 +26,6 @@ public class StockDatabaseTable extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_OVERLAP, mOverlap);
 		contentValues.put(DatabaseContract.COLUMN_VELOCITY, mVelocity);
 		contentValues.put(DatabaseContract.COLUMN_ACCELERATION, mAcceleration);
-		contentValues.put(DatabaseContract.COLUMN_ACCELERATION_VELOCITY, mAccelerationVelocity);
 
 		return contentValues;
 	}
@@ -45,7 +42,6 @@ public class StockDatabaseTable extends DatabaseTable {
 		setOverlap(stockDatabaseTable.mOverlap);
 		setVelocity(stockDatabaseTable.mVelocity);
 		setAcceleration(stockDatabaseTable.mAcceleration);
-		setAccelerationVelocity(stockDatabaseTable.mAccelerationVelocity);
 	}
 
 	void set(Cursor cursor) {
@@ -60,7 +56,6 @@ public class StockDatabaseTable extends DatabaseTable {
 		setOverlap(cursor);
 		setVelocity(cursor);
 		setAcceleration(cursor);
-		setAccelerationVelocity(cursor);
 	}
 
 	public double getOverlap() {
@@ -112,22 +107,5 @@ public class StockDatabaseTable extends DatabaseTable {
 
 		setAcceleration(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_ACCELERATION)));
-	}
-
-	public double getAccelerationVelocity() {
-		return mAccelerationVelocity;
-	}
-
-	public void setAccelerationVelocity(double accelerationVelocity) {
-		mAccelerationVelocity = accelerationVelocity;
-	}
-
-	void setAccelerationVelocity(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setAccelerationVelocity(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_ACCELERATION_VELOCITY)));
 	}
 }
