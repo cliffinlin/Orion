@@ -31,6 +31,7 @@ public class OrionBaseActivity extends Activity {
 
 	Context mContext = null;
 
+	Bundle mBundle = null;
 	String mAction = null;
 	Intent mIntent = null;
 
@@ -59,6 +60,7 @@ public class OrionBaseActivity extends Activity {
 		mIntent = getIntent();
 		if (mIntent != null) {
 			mAction = mIntent.getAction();
+			mBundle = mIntent.getExtras();
 		}
 
 		if (mContentResolver == null) {

@@ -547,6 +547,15 @@ public class StockDealListActivity extends StorageActivity implements
 
 		switch (id) {
 		case LOADER_ID_DEAL_LIST:
+			if (mBundle != null) {
+				String se = mBundle.getString(Constants.EXTRA_STOCK_SE);
+				String code = mBundle.getString(Constants.EXTRA_STOCK_CODE);
+
+				selection = DatabaseContract.COLUMN_SE + " = " + "\'" + se
+						+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = "
+						+ "\'" + code + "\'";
+			}
+
 			loader = new CursorLoader(this,
 					DatabaseContract.StockDeal.CONTENT_URI,
 					DatabaseContract.StockDeal.PROJECTION_ALL, selection, null,

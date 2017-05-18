@@ -141,6 +141,11 @@ public class StockFavoriteListActivity extends StorageActivity implements
 			startActivity(new Intent(this, StockSearchActivity.class));
 			return true;
 
+		case R.id.action_deal:
+			Intent intent = new Intent(this, StockDealListActivity.class);
+			startActivity(intent);
+			return true;
+
 		case R.id.action_download:
 			onActionSync(Constants.SERVICE_CLOUD_DOWNLOAD_STOCK_FAVORITE);
 			return true;
