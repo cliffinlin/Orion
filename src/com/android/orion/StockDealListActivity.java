@@ -267,6 +267,9 @@ public class StockDealListActivity extends StorageActivity implements
 		case R.id.action_new:
 			mIntent = new Intent(this, StockDealActivity.class);
 			mIntent.setAction(StockDealActivity.ACTION_DEAL_INSERT);
+			if (mBundle != null) {
+				mIntent.putExtras(mBundle);
+			}
 			startActivityForResult(mIntent, REQUEST_CODE_DEAL_INSERT);
 			return true;
 

@@ -28,7 +28,8 @@ public class StockDealActivity extends DatabaseActivity implements
 
 	static final int MESSAGE_LOAD_DEAL = 0;
 	static final int MESSAGE_SAVE_DEAL = 1;
-	static final int MESSAGE_LOAD_STOCK = 2;
+	static final int MESSAGE_LOAD_STOCK_BY_ID = 2;
+	static final int MESSAGE_LOAD_STOCK_BY_SE_CODE = 3;
 
 	static final int REQUEST_CODE_STOCK_ID = 0;
 
@@ -70,8 +71,19 @@ public class StockDealActivity extends DatabaseActivity implements
 						mStock.getContentValues());
 				break;
 
-			case MESSAGE_LOAD_STOCK:
+			case MESSAGE_LOAD_STOCK_BY_ID:
 				mStockDatabaseManager.getStockById(mStock);
+				mDeal.setSE(mStock.getSE());
+				mDeal.setCode(mStock.getCode());
+				mDeal.setName(mStock.getName());
+				mDeal.setPrice(mStock.getPrice());
+				mDeal.setDeal(mStock.getPrice());
+				mDeal.setQuota(mStock.getQuota());
+				updateView();
+				break;
+
+			case MESSAGE_LOAD_STOCK_BY_SE_CODE:
+				mStockDatabaseManager.getStock(mStock);
 				mDeal.setSE(mStock.getSE());
 				mDeal.setCode(mStock.getCode());
 				mDeal.setName(mStock.getName());
@@ -104,7 +116,13 @@ public class StockDealActivity extends DatabaseActivity implements
 
 		initView();
 
-		if (ACTION_DEAL_EDIT.equals(mAction)) {
+		if (ACTION_DEAL_INSERT.equals(mAction)) {
+			if (mBundle != null) {
+				mStock.setSE(mBundle.getString(Constants.EXTRA_STOCK_SE));
+				mStock.setCode(mBundle.getString(Constants.EXTRA_STOCK_CODE));
+				mHandler.sendEmptyMessage(MESSAGE_LOAD_STOCK_BY_SE_CODE);
+			}
+		} else if (ACTION_DEAL_EDIT.equals(mAction)) {
 			mDeal.setId(mIntent.getLongExtra(EXTRA_DEAL_ID, 0));
 			mHandler.sendEmptyMessage(MESSAGE_LOAD_DEAL);
 		}
@@ -226,7 +244,7 @@ public class StockDealActivity extends DatabaseActivity implements
 			case REQUEST_CODE_STOCK_ID:
 				if (mStock != null) {
 					mStock.setId(data.getLongExtra(Constants.EXTRA_STOCK_ID, 0));
-					mHandler.sendEmptyMessage(MESSAGE_LOAD_STOCK);
+					mHandler.sendEmptyMessage(MESSAGE_LOAD_STOCK_BY_ID);
 				}
 				break;
 
