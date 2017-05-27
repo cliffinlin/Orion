@@ -683,10 +683,10 @@ public class StockDatabaseManager extends DatabaseManager {
 		if ((stock == null) || (mContentResolver == null)) {
 			return result;
 		}
-		
+
 		stock.setHold(hold);
 		stock.setPosition(position);
-		
+
 		stockDeal = new StockDeal();
 
 		String selection = DatabaseContract.COLUMN_SE + " = " + "\'"
@@ -706,7 +706,8 @@ public class StockDatabaseManager extends DatabaseManager {
 				stock.setHold(hold);
 
 				if (quota > 0) {
-					position = Utility.Round((double) hold / (double) quota, Constants.DOUBLE_FIXED_DECIMAL - 1);
+					position = Utility.Round((double) hold / (double) quota,
+							Constants.DOUBLE_FIXED_DECIMAL - 1);
 					stock.setPosition(position);
 				}
 

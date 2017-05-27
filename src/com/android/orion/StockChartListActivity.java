@@ -46,6 +46,8 @@ import com.github.mikephil.charting.utils.Utils;
 
 public class StockChartListActivity extends OrionBaseActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnChartGestureListener {
+	static final String TAG = Constants.TAG + " "
+			+ StockChartListActivity.class.getSimpleName();
 
 	static final int ITEM_VIEW_TYPE_MAIN = 0;
 	static final int ITEM_VIEW_TYPE_SUB = 1;
@@ -678,6 +680,11 @@ public class StockChartListActivity extends OrionBaseActivity implements
 			} else {
 				viewHolder = (ViewHolder) view.getTag();
 			}
+
+			// For android 5 temp solution:
+			// view = LayoutInflater.from(context).inflate(mResource, null);
+			// viewHolder = new ViewHolder();
+			// viewHolder.chart = (CombinedChart) view.findViewById(R.id.chart);
 
 			viewHolder.chart.setBackgroundColor(Color.LTGRAY);
 			viewHolder.chart.setGridBackgroundColor(Color.LTGRAY);
