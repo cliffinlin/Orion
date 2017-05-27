@@ -19,7 +19,6 @@ import android.widget.ListView;
 import com.android.orion.Constants;
 
 public class Utility {
-	static boolean mLogable = true;
 
 	private Utility() {
 	}
@@ -476,19 +475,9 @@ public class Utility {
 		return result;
 	}
 
-	public static void Log(String msg) {
-		if (mLogable) {
-			android.util.Log.d(Constants.TAG, msg);
-		}
-	}
-
 	public static double Round(double v, double n) {
 		double p = Math.pow(10, n);
 		return (Math.round(v * p)) / p;
-	}
-
-	public static void setLogable(boolean logable) {
-		mLogable = logable;
 	}
 
 	public static void setListViewHeightBasedOnChildren(ListView listView) {

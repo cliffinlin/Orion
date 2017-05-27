@@ -2,12 +2,16 @@ package com.android.orion;
 
 import java.util.ArrayList;
 
+import android.util.Log;
+
 import com.android.orion.database.StockData;
 import com.android.orion.utility.Utility;
 
 public class VertexAnalyzer {
-	public VertexAnalyzer() {
+	static final String TAG = Constants.TAG + " "
+			+ VertexAnalyzer.class.getSimpleName();
 
+	public VertexAnalyzer() {
 	}
 
 	private void setDirectionVertex(ArrayList<StockData> dataList, int index,
@@ -207,7 +211,7 @@ public class VertexAnalyzer {
 				} else if (directionType == Constants.STOCK_DIRECTION_DOWN) {
 					vertexType = vertexTypeBottom;
 				} else {
-					Utility.Log("analyzeLine: directionType = " + directionType);
+					Log.d(TAG, "analyzeLine: directionType = " + directionType);
 				}
 				stockData.setVertex(stockData.getVertex() | vertexType);
 				vertexList.add(stockData);

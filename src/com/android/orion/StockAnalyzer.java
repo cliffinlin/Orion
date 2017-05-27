@@ -10,6 +10,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Log;
 
 import com.android.orion.curve.BezierCurve;
 import com.android.orion.database.DatabaseContract;
@@ -22,6 +23,8 @@ import com.android.orion.utility.StopWatch;
 import com.android.orion.utility.Utility;
 
 public class StockAnalyzer extends StockManager {
+	static final String TAG = Constants.TAG + " "
+			+ StockAnalyzer.class.getSimpleName();
 
 	public StockAnalyzer(Context context) {
 		super(context);
@@ -54,7 +57,7 @@ public class StockAnalyzer extends StockManager {
 		}
 
 		stopWatch.stop();
-		Utility.Log("analyze:" + stock.getName() + " " + period + " "
+		Log.d(TAG, "analyze:" + stock.getName() + " " + period + " "
 				+ stopWatch.getInterval() + "s");
 	}
 
@@ -310,8 +313,8 @@ public class StockAnalyzer extends StockManager {
 		StockData endStockData = null;
 
 		if ((stockDataList == null) || (segmentDataList == null)) {
-			Utility.Log("setAction return" + " stockDataList = "
-					+ stockDataList + " segmentDataList" + segmentDataList);
+			Log.d(TAG, "setAction return" + " stockDataList = " + stockDataList
+					+ " segmentDataList" + segmentDataList);
 			return;
 		}
 
@@ -352,7 +355,7 @@ public class StockAnalyzer extends StockManager {
 		ContentValues contentValues[] = new ContentValues[stockDataList.size()];
 
 		if (mStockDatabaseManager == null) {
-			Utility.Log("updateDatabase return " + " mStockDatabaseManager = "
+			Log.d(TAG, "updateDatabase return " + " mStockDatabaseManager = "
 					+ mStockDatabaseManager);
 			return;
 		}

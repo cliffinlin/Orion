@@ -2,6 +2,7 @@ package com.android.orion;
 
 public class Constants {
 	public static final String APP_NAME = "Orion";
+	public static final String TAG = APP_NAME;
 
 	public static final String ACTION_SERVICE_FINISHED = "orion.intent.action.SERVICE_FINISHED";
 
@@ -152,6 +153,4 @@ public class Constants {
 	public static final int STOCK_VERTEX_BOTTOM_STROKE = 1 << 3;
 	public static final int STOCK_VERTEX_TOP_SEGMENT = 1 << 4;
 	public static final int STOCK_VERTEX_BOTTOM_SEGMENT = 1 << 5;
-
-	public static final String TAG = "Orion";
 }

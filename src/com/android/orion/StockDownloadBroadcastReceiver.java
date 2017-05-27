@@ -5,10 +5,13 @@ import java.util.Calendar;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.android.orion.utility.Utility;
 
 public class StockDownloadBroadcastReceiver extends BroadcastReceiver {
+	static final String TAG = Constants.TAG + " "
+			+ StockDownloadBroadcastReceiver.class.getSimpleName();
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
@@ -16,8 +19,8 @@ public class StockDownloadBroadcastReceiver extends BroadcastReceiver {
 		int executeType = Constants.EXECUTE_SCHEDULE_MIN1;
 
 		if (Utility.isTradingHours(Calendar.getInstance())) {
-			Utility.Log("System.currentTimeMillis():"
-					+ System.currentTimeMillis());
+			Log.d(TAG,
+					"System.currentTimeMillis():" + System.currentTimeMillis());
 
 			scheduleMinutes = Utility.getScheduleMinutes();
 			if ((scheduleMinutes % Constants.SCHEDULE_INTERVAL_MIN60) == 0) {

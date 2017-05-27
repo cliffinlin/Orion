@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Setting;
@@ -19,6 +20,9 @@ import com.android.orion.utility.Utility;
 import com.android.volley.RequestQueue;
 
 public abstract class StockDataProvider extends StockAnalyzer {
+	static final String TAG = Constants.TAG + " "
+			+ StockDataProvider.class.getSimpleName();
+
 	// WifiLockManager mWifiLockManager = null;
 	RequestQueue mRequestQueue;
 	Set<String> mCurrentRequests = new HashSet<String>();
@@ -100,7 +104,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		for (Stock stock : stockList) {
 			urlString = getStockRealTimeURLString(stock);
 			if (addToCurrentRequests(urlString)) {
-				Utility.Log("getStockRealTimeURLString:" + urlString);
+				Log.d(TAG, "getStockRealTimeURLString:" + urlString);
 				StockRealTimeDownloader downloader = new StockRealTimeDownloader(
 						urlString);
 				downloader.setStock(stock);
@@ -125,7 +129,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 		urlString = getStockHSAURLString();
 		if (addToCurrentRequests(urlString)) {
-			Utility.Log("getStockHSAURLString:" + urlString);
+			Log.d(TAG, "getStockHSAURLString:" + urlString);
 			StockHSADownloader downloader = new StockHSADownloader(urlString);
 			mRequestQueue.add(downloader.mStringRequest);
 			mStockDatabaseManager.saveSetting(Setting.KEY_STOCK_HSA_UPDATED,
@@ -182,7 +186,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				|| Utility.isOutOfDate(modified)) {
 			urlString = getStockRealTimeURLString(stock);
 			if (addToCurrentRequests(urlString)) {
-				Utility.Log("getStockRealTimeURLString:" + urlString);
+				Log.d(TAG, "getStockRealTimeURLString:" + urlString);
 				StockRealTimeDownloader downloader = new StockRealTimeDownloader(
 						urlString);
 				downloader.setStock(stock);
@@ -224,7 +228,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		if (len > 0) {
 			urlString = getStockDataHistoryURLString(stock, stockData, len);
 			if (addToCurrentRequests(urlString)) {
-				Utility.Log("getStockDataHistoryURLString:" + urlString);
+				Log.d(TAG, "getStockDataHistoryURLString:" + urlString);
 				StockDataHistoryDownloader downloader = new StockDataHistoryDownloader(
 						urlString);
 				downloader.setStock(stock);
@@ -256,7 +260,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				|| Utility.isOpeningHours(Calendar.getInstance())) {
 			urlString = getStockDataRealTimeURLString(stock);
 			if (addToCurrentRequests(urlString)) {
-				Utility.Log("getStockDataRealTimeURLString:" + urlString);
+				Log.d(TAG, "getStockDataRealTimeURLString:" + urlString);
 				StockDataRealTimeDownloader downloader = new StockDataRealTimeDownloader(
 						urlString);
 				downloader.setStock(stock);
