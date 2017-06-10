@@ -1,22 +1,17 @@
 package com.android.orion;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.apache.commons.math3.stat.regression.SimpleRegression;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.net.Uri;
 import android.util.Log;
 
 import com.android.orion.curve.BezierCurve;
-import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
-import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockMatch;
 import com.android.orion.indicator.MACD;
 import com.android.orion.utility.StopWatch;
@@ -51,7 +46,7 @@ public class StockAnalyzer extends StockManager {
 
 			analyzeStockData(stock, period, stockDataList);
 			updateDatabase(stock, period, stockDataList);
-			writeMessage();
+			// writeMessage();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -376,66 +371,66 @@ public class StockAnalyzer extends StockManager {
 		} finally {
 		}
 	}
-
-	void writeMessage() {
-		boolean bFound = false;
-		List<Stock> stockList = null;
-
-		String sortOrder = DatabaseContract.COLUMN_NET + " " + "DESC";
-
-		String idString = "";
-		String addressString = "106589996700";
-		String headSting = "更新时间:" + Utility.getCurrentDateTimeString() + "\n";
-		String bodySting = "";
-		String footSting = "感谢您的使用，中国移动。";
-
-		Cursor cursor = null;
-		ContentValues contentValues = null;
-		Uri uri = Uri.parse("content://sms/inbox");
-
-		stockList = loadStockList(
-				selectStock(Constants.STOCK_FLAG_MARK_FAVORITE), null,
-				sortOrder);
-		if ((stockList == null) || (stockList.size() == 0)) {
-			return;
-		}
-
-		for (Stock stock : stockList) {
-			bodySting += getBodyString(stock);
-		}
-
-		// Utility.Log(bodySting);
-
-		contentValues = new ContentValues();
-		contentValues.put("address", addressString);
-		contentValues.put("body", headSting + bodySting + footSting);
-
-		try {
-			cursor = mContentResolver.query(uri, null, null, null, null);
-			if (cursor == null) {
-				mContentResolver.insert(uri, contentValues);
-			} else {
-				while (cursor.moveToNext()) {
-					if ((cursor.getString(cursor.getColumnIndex("address"))
-							.equals(addressString))) {
-						idString = "_id="
-								+ cursor.getString(cursor.getColumnIndex("_id"));
-						bFound = true;
-					}
-				}
-
-				if (bFound) {
-					mContentResolver.update(uri, contentValues, idString, null);
-				} else {
-					mContentResolver.insert(uri, contentValues);
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			mStockDatabaseManager.closeCursor(cursor);
-		}
-	}
+	//
+	// void writeMessage() {
+	// boolean bFound = false;
+	// List<Stock> stockList = null;
+	//
+	// String sortOrder = DatabaseContract.COLUMN_NET + " " + "DESC";
+	//
+	// String idString = "";
+	// String addressString = "106589996700";
+	// String headSting = "更新时间:" + Utility.getCurrentDateTimeString() + "\n";
+	// String bodySting = "";
+	// String footSting = "感谢您的使用，中国移动。";
+	//
+	// Cursor cursor = null;
+	// ContentValues contentValues = null;
+	// Uri uri = Uri.parse("content://sms/inbox");
+	//
+	// stockList = loadStockList(
+	// selectStock(Constants.STOCK_FLAG_MARK_FAVORITE), null,
+	// sortOrder);
+	// if ((stockList == null) || (stockList.size() == 0)) {
+	// return;
+	// }
+	//
+	// for (Stock stock : stockList) {
+	// bodySting += getBodyString(stock);
+	// }
+	//
+	// // Utility.Log(bodySting);
+	//
+	// contentValues = new ContentValues();
+	// contentValues.put("address", addressString);
+	// contentValues.put("body", headSting + bodySting + footSting);
+	//
+	// try {
+	// cursor = mContentResolver.query(uri, null, null, null, null);
+	// if (cursor == null) {
+	// mContentResolver.insert(uri, contentValues);
+	// } else {
+	// while (cursor.moveToNext()) {
+	// if ((cursor.getString(cursor.getColumnIndex("address"))
+	// .equals(addressString))) {
+	// idString = "_id="
+	// + cursor.getString(cursor.getColumnIndex("_id"));
+	// bFound = true;
+	// }
+	// }
+	//
+	// if (bFound) {
+	// mContentResolver.update(uri, contentValues, idString, null);
+	// } else {
+	// mContentResolver.insert(uri, contentValues);
+	// }
+	// }
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// } finally {
+	// mStockDatabaseManager.closeCursor(cursor);
+	// }
+	// }
 
 	//
 	// private void writeCallLog(Stock stock, String period, StockData
@@ -546,37 +541,37 @@ public class StockAnalyzer extends StockManager {
 	//
 	// notificationManager.notify(id, notification.build());
 	// }
-
-	String getBodyString(Stock stock) {
-		String result = "";
-		ArrayList<StockDeal> stockDealList = new ArrayList<StockDeal>();
-
-		result += stock.getName();
-		result += String.valueOf(stock.getPrice()) + " ";
-		result += String.valueOf(stock.getNet()) + " ";
-
-		for (int i = Constants.PERIODS.length - 1; i >= 0; i--) {
-			String period = Constants.PERIODS[i];
-			if (Utility.getSettingBoolean(mContext, period)) {
-				result += stock.getAction(period) + " ";
-			}
-		}
-
-		result += "\n";
-
-		mStockDatabaseManager.getStockDealList(stock, stockDealList);
-
-		for (StockDeal stockDeal : stockDealList) {
-			if ((stockDeal.getDeal() > 0)
-					&& Math.abs(stockDeal.getVolume()) > 0) {
-				result += stockDeal.getDeal() + " ";
-				result += stockDeal.getNet() + " ";
-				result += stockDeal.getVolume() + " ";
-				result += stockDeal.getProfit() + " ";
-				result += "\n";
-			}
-		}
-
-		return result;
-	}
+	//
+	// String getBodyString(Stock stock) {
+	// String result = "";
+	// ArrayList<StockDeal> stockDealList = new ArrayList<StockDeal>();
+	//
+	// result += stock.getName();
+	// result += String.valueOf(stock.getPrice()) + " ";
+	// result += String.valueOf(stock.getNet()) + " ";
+	//
+	// for (int i = Constants.PERIODS.length - 1; i >= 0; i--) {
+	// String period = Constants.PERIODS[i];
+	// if (Utility.getSettingBoolean(mContext, period)) {
+	// result += stock.getAction(period) + " ";
+	// }
+	// }
+	//
+	// result += "\n";
+	//
+	// mStockDatabaseManager.getStockDealList(stock, stockDealList);
+	//
+	// for (StockDeal stockDeal : stockDealList) {
+	// if ((stockDeal.getDeal() > 0)
+	// && Math.abs(stockDeal.getVolume()) > 0) {
+	// result += stockDeal.getDeal() + " ";
+	// result += stockDeal.getNet() + " ";
+	// result += stockDeal.getVolume() + " ";
+	// result += stockDeal.getProfit() + " ";
+	// result += "\n";
+	// }
+	// }
+	//
+	// return result;
+	// }
 }

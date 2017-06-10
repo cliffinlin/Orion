@@ -298,8 +298,9 @@ public class StockChartData {
 				limitLine.setLineColor(Color.GREEN);
 			}
 
-			limitLine.setLabel(stockDealPrice + " " + stockDealVolume + " "
-					+ stockDeal.getNet() + " " + stockDeal.getProfit());
+			limitLine.setLabel("        " + stockDealPrice + " "
+					+ stockDealVolume + " " + stockDeal.getNet() + " "
+					+ (int) stockDeal.getProfit());
 
 			mLimitLineList.add(limitLine);
 		}
