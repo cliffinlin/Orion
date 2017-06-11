@@ -243,54 +243,6 @@ public class StockChartListActivity extends OrionBaseActivity implements
 		}
 	}
 
-	@Override
-	public void onChartLongPressed(MotionEvent me) {
-	}
-
-	@Override
-	public void onChartDoubleTapped(MotionEvent me) {
-	}
-
-	@Override
-	public void onChartSingleTapped(MotionEvent me) {
-	}
-
-	@Override
-	public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX,
-			float velocityY) {
-		int distance = FLING_DISTANCE;
-		// int velocitx = FLING_VELOCITY;
-		int velocity = FLING_VELOCITY;
-
-		if (me1.getX() - me2.getX() > distance
-				&& Math.abs(velocityX) > velocity) {
-			navigateStock(-1);
-		}
-
-		if (me2.getX() - me1.getX() > distance
-				&& Math.abs(velocityX) > velocity) {
-			navigateStock(1);
-		}
-	}
-
-	@Override
-	public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
-	}
-
-	@Override
-	public void onChartTranslate(MotionEvent me, float dX, float dY) {
-	}
-
-	@Override
-	public void onChartGestureStart(MotionEvent me,
-			ChartGesture lastPerformedGesture) {
-	}
-
-	@Override
-	public void onChartGestureEnd(MotionEvent me,
-			ChartGesture lastPerformedGesture) {
-	}
-
 	void initListView() {
 		mListView = (ListView) findViewById(R.id.listView);
 
@@ -768,5 +720,52 @@ public class StockChartListActivity extends OrionBaseActivity implements
 		public int getViewTypeCount() {
 			return mStockChartItemList.size();
 		}
+	}
+
+	@Override
+	public void onChartLongPressed(MotionEvent me) {
+	}
+
+	@Override
+	public void onChartDoubleTapped(MotionEvent me) {
+	}
+
+	@Override
+	public void onChartSingleTapped(MotionEvent me) {
+	}
+
+	@Override
+	public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX,
+			float velocityY) {
+		int distance = FLING_DISTANCE;
+		int velocity = FLING_VELOCITY;
+
+		if (me1.getX() - me2.getX() > distance
+				&& Math.abs(velocityX) > velocity) {
+			navigateStock(-1);
+		}
+
+		if (me2.getX() - me1.getX() > distance
+				&& Math.abs(velocityX) > velocity) {
+			navigateStock(1);
+		}
+	}
+
+	@Override
+	public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
+	}
+
+	@Override
+	public void onChartTranslate(MotionEvent me, float dX, float dY) {
+	}
+
+	@Override
+	public void onChartGestureStart(MotionEvent me,
+			ChartGesture lastPerformedGesture) {
+	}
+
+	@Override
+	public void onChartGestureEnd(MotionEvent me,
+			ChartGesture lastPerformedGesture) {
 	}
 }
