@@ -447,12 +447,10 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		boolean result = false;
 
 		synchronized (mCurrentRequests) {
-			if (mCurrentRequests.contains(urlString)) {
-				removeFromCurrrentRequests(urlString);
+			if (!mCurrentRequests.contains(urlString)) {
+				mCurrentRequests.add(urlString);
+				result = true;
 			}
-
-			mCurrentRequests.add(urlString);
-			result = true;
 		}
 
 		return result;
