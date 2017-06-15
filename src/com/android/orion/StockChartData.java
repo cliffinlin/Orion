@@ -235,7 +235,7 @@ public class StockChartData {
 		averageDataSet.setDrawCircles(false);
 		averageDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(averageDataSet);
-		
+
 		LineDataSet velocityDataSet = new LineDataSet(mVelocityEntryList,
 				"velocity");
 		velocityDataSet.setColor(Color.BLUE);

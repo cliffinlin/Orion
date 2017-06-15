@@ -23,13 +23,24 @@ public class StockDownloadBroadcastReceiver extends BroadcastReceiver {
 					"System.currentTimeMillis():" + System.currentTimeMillis());
 
 			scheduleMinutes = Utility.getScheduleMinutes();
-			if ((scheduleMinutes % Constants.SCHEDULE_INTERVAL_MIN60) == 0) {
+
+			// if ((scheduleMinutes % Constants.SCHEDULE_INTERVAL_MIN60) == 0) {
+			// executeType |= Constants.EXECUTE_SCHEDULE_MIN60;
+			// } else if ((scheduleMinutes % Constants.SCHEDULE_INTERVAL_MIN30)
+			// == 0) {
+			// executeType |= Constants.EXECUTE_SCHEDULE_MIN30;
+			// } else if ((scheduleMinutes % Constants.SCHEDULE_INTERVAL_MIN15)
+			// == 0) {
+			// executeType |= Constants.EXECUTE_SCHEDULE_MIN15;
+			// } else if ((scheduleMinutes % Constants.SCHEDULE_INTERVAL_MIN5)
+			// == 0) {
+			// executeType |= Constants.EXECUTE_SCHEDULE_MIN5;
+			// }
+
+			if ((scheduleMinutes % Constants.SCHEDULE_INTERVAL_MIN5) == 0) {
 				executeType |= Constants.EXECUTE_SCHEDULE_MIN60;
-			} else if ((scheduleMinutes % Constants.SCHEDULE_INTERVAL_MIN30) == 0) {
 				executeType |= Constants.EXECUTE_SCHEDULE_MIN30;
-			} else if ((scheduleMinutes % Constants.SCHEDULE_INTERVAL_MIN15) == 0) {
 				executeType |= Constants.EXECUTE_SCHEDULE_MIN15;
-			} else if ((scheduleMinutes % Constants.SCHEDULE_INTERVAL_MIN5) == 0) {
 				executeType |= Constants.EXECUTE_SCHEDULE_MIN5;
 			}
 

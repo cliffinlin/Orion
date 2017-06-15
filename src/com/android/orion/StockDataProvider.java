@@ -53,7 +53,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 		mRequestQueue = VolleySingleton.getInstance(
 				mContext.getApplicationContext()).getRequestQueue();
-		mCurrentRequests.clear();
+		removeAllCurrrentRequests();
 		/*
 		 * if (mWifiLockManager == null) { mWifiLockManager = new
 		 * WifiLockManager(mContext); }
@@ -447,10 +447,12 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		boolean result = false;
 
 		synchronized (mCurrentRequests) {
-			if (!mCurrentRequests.contains(urlString)) {
-				mCurrentRequests.add(urlString);
-				result = true;
+			if (mCurrentRequests.contains(urlString)) {
+				removeFromCurrrentRequests(urlString);
 			}
+
+			mCurrentRequests.add(urlString);
+			result = true;
 		}
 
 		return result;
@@ -492,9 +494,9 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 		@Override
 		void handleResponse(String response) {
+			removeFromCurrrentRequests(mStringRequest.getUrl());
 			handleResponseStockHSA(response);
 			fixPinyin();
-			removeFromCurrrentRequests(mStringRequest.getUrl());
 		}
 	}
 
