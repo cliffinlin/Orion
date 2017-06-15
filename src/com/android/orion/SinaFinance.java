@@ -518,7 +518,7 @@ public class SinaFinance extends StockDataProvider {
 				if (Float.valueOf(stockInfo[i]) <= 0) {
 					Log.d(TAG,
 							"handleResponseStockDataRealTime return "
-									+ " Float.valueOf(stockInfo[i]) = "
+									+ " Float.valueOf(stockInfo[" + i + "]) = "
 									+ Float.valueOf(stockInfo[i]));
 					return;
 				}
