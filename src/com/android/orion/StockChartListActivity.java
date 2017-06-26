@@ -153,7 +153,7 @@ public class StockChartListActivity extends OrionBaseActivity implements
 			Bundle bundle = new Bundle();
 			bundle.putString(Constants.EXTRA_STOCK_SE, mStock.getSE());
 			bundle.putString(Constants.EXTRA_STOCK_CODE, mStock.getCode());
-			Intent intent = new Intent(this, StockDealListActivity.class);
+			Intent intent = new Intent(this, StockOperationActivity.class);
 			intent.putExtras(bundle);
 			startActivity(intent);
 			return true;

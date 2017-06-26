@@ -112,7 +112,11 @@
             android:name="com.android.orion.StockMatchListActivity"
             android:label="@string/title_activity_match_list" >
         </activity>
-
+        <activity
+            android:name="com.android.orion.StockOperationActivity"
+            android:label="@string/title_activity_operation" >
+        </activity>
+        
         <provider
             android:name="com.android.orion.OrionContentProvider"
             android:authorities="com.android.orion"

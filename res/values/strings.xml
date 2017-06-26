@@ -135,6 +135,7 @@
     <string name="title_activity_login">Login</string>
     <string name="title_activity_match_list">Match List</string>
     <string name="title_activity_match">Match</string>
+    <string name="title_activity_operation">Operation</string>
     <string name="title_activity_service_setting">Service</string>
     <string name="title_activity_sign_up">Sign Up</string>
     <string name="title_save_to_sd_card">Save to SD Card</string>

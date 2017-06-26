@@ -18,7 +18,7 @@ import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;
 import com.android.orion.utility.Utility;
 
-public class StockDealActivity extends DatabaseActivity implements
+public class StockOperationActivity extends DatabaseActivity implements
 		OnClickListener {
 
 	public static final String ACTION_DEAL_INSERT = "orion.intent.action.ACTION_DEAL_INSERT";
@@ -103,7 +103,7 @@ public class StockDealActivity extends DatabaseActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_stock_deal);
+		setContentView(R.layout.activity_stock_operation);
 
 		if (mDeal == null) {
 			mDeal = StockDeal.obtain();
@@ -115,15 +115,10 @@ public class StockDealActivity extends DatabaseActivity implements
 
 		initView();
 
-		if (ACTION_DEAL_INSERT.equals(mAction)) {
-			if (mBundle != null) {
-				mStock.setSE(mBundle.getString(Constants.EXTRA_STOCK_SE));
-				mStock.setCode(mBundle.getString(Constants.EXTRA_STOCK_CODE));
-				mHandler.sendEmptyMessage(MESSAGE_LOAD_STOCK_BY_SE_CODE);
-			}
-		} else if (ACTION_DEAL_EDIT.equals(mAction)) {
-			mDeal.setId(mIntent.getLongExtra(EXTRA_DEAL_ID, 0));
-			mHandler.sendEmptyMessage(MESSAGE_LOAD_DEAL);
+		if (mBundle != null) {
+			mStock.setSE(mBundle.getString(Constants.EXTRA_STOCK_SE));
+			mStock.setCode(mBundle.getString(Constants.EXTRA_STOCK_CODE));
+			mHandler.sendEmptyMessage(MESSAGE_LOAD_STOCK_BY_SE_CODE);
 		}
 	}
 
@@ -189,12 +184,6 @@ public class StockDealActivity extends DatabaseActivity implements
 		switch (id) {
 		case R.id.edittext_stock_name:
 		case R.id.edittext_stock_code:
-			if (ACTION_DEAL_INSERT.equals(mAction)) {
-				Intent intent = new Intent(this,
-						StockFavoriteListActivity.class);
-				intent.setAction(StockFavoriteListActivity.ACTION_STOCK_ID);
-				startActivityForResult(intent, REQUEST_CODE_STOCK_ID);
-			}
 			break;
 		case R.id.button_ok:
 			String quotaString = "";
