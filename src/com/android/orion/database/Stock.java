@@ -8,7 +8,7 @@ import android.text.TextUtils;
 
 import com.android.orion.Constants;
 
-public class Stock extends DatabaseTable {
+public class Stock extends StockDatabaseTable {
 	private String mClasses;
 	private String mSE;
 	private String mCode;
@@ -31,6 +31,7 @@ public class Stock extends DatabaseTable {
 	private String mActionMonth;
 	private String mActionQuarter;
 	private String mActionYear;
+	private String mOperation;
 	private double mPosition;
 	private long mHold;
 	private long mQuota;
@@ -112,6 +113,7 @@ public class Stock extends DatabaseTable {
 		mActionMonth = "";
 		mActionQuarter = "";
 		mActionYear = "";
+		mOperation = "";
 		mPosition = 0;
 		mHold = 0;
 		mQuota = 0;
@@ -144,6 +146,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_MONTH, mActionMonth);
 		contentValues.put(DatabaseContract.COLUMN_QUARTER, mActionQuarter);
 		contentValues.put(DatabaseContract.COLUMN_YEAR, mActionYear);
+		contentValues.put(DatabaseContract.COLUMN_OPERATION, mOperation);
 		contentValues.put(DatabaseContract.COLUMN_POSITION, mPosition);
 		contentValues.put(DatabaseContract.COLUMN_HOLD, mHold);
 		contentValues.put(DatabaseContract.COLUMN_QUOTA, mQuota);
@@ -212,6 +215,7 @@ public class Stock extends DatabaseTable {
 		setActionMonth(stock.mActionMonth);
 		setActionQuarter(stock.mActionQuarter);
 		setActionYear(stock.mActionYear);
+		setOperation(stock.mOperation);
 		setPosition(stock.mPosition);
 		setHold(stock.mHold);
 		setQuota(stock.mQuota);
@@ -249,6 +253,7 @@ public class Stock extends DatabaseTable {
 		setActionMonth(cursor);
 		setActionQuarter(cursor);
 		setActionYear(cursor);
+		setOperation(cursor);
 		setPosition(cursor);
 		setHold(cursor);
 		setQuota(cursor);
@@ -626,6 +631,23 @@ public class Stock extends DatabaseTable {
 
 		setActionYear(cursor.getString(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_YEAR)));
+	}
+
+	String getActionOperation() {
+		return mOperation;
+	}
+
+	void setOperation(String operation) {
+		mOperation = operation;
+	}
+
+	void setOperation(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setOperation(cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_OPERATION)));
 	}
 
 	public double getPosition() {

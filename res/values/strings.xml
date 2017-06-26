@@ -47,12 +47,14 @@
     <string name="email_hint">Email</string>
     <string name="favorite">Favorite</string>
     <string name="favorite_list">Favorite List</string>
+    <string name="high">High</string>
     <string name="hold">Hold</string>
     <string name="list">List</string>
     <string name="login_error_message">Please Make Sure You Enter a Username and Password!</string>
     <string name="login_error_title">Error!</string>
     <string name="login_button_label">Login</string>
     <string name="logout_label">Logout</string>
+    <string name="low">Low</string>
     <string name="modified">Modified</string>
     <string name="match">Match</string>
     <string name="match_delete">Match Delete</string>
@@ -123,7 +125,7 @@
     <string name="stock_exist">Stock Exist!</string>
     <string name="stock_edit">Stock Edit</string>
     <string name="stock_list">Stock List</string>
-    <string name="stock_quota">Stock Quota</string>    
+    <string name="stock_quota">Stock Quota</string>
     <string name="stock_se">Stock SE</string>
     <string name="stock_se_hint">sh or sz</string>
     <string name="stock_se_not_found">Stock SE not Found!</string>

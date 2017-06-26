@@ -19,8 +19,6 @@ public class StockData extends StockDatabaseTable {
 	private int mVertex;
 	private double mVertexLow;
 	private double mVertexHigh;
-	private double mOverlapLow;
-	private double mOverlapHigh;
 	private double mAverage5;
 	private double mAverage10;
 	private double mDIF;
@@ -30,6 +28,8 @@ public class StockData extends StockDatabaseTable {
 	private int mDivergence;
 	private double mTrendsEfforts;
 	private double mAverage;
+	private double mVelocity;
+	private double mAcceleration;
 	private String mAction;
 
 	private int mIndex;
@@ -101,8 +101,6 @@ public class StockData extends StockDatabaseTable {
 		mVertex = Constants.STOCK_VERTEX_NONE;
 		mVertexLow = 0;
 		mVertexHigh = 0;
-		mOverlapLow = 0;
-		mOverlapHigh = 0;
 		mAverage5 = 0;
 		mAverage10 = 0;
 		mDIF = 0;
@@ -112,6 +110,8 @@ public class StockData extends StockDatabaseTable {
 		mDivergence = Constants.STOCK_DIVERGENCE_NONE;
 		mTrendsEfforts = 0;
 		mAverage = 0;
+		mVelocity = 0;
+		mAcceleration = 0;
 		mAction = "";
 
 		mIndex = 0;
@@ -140,8 +140,6 @@ public class StockData extends StockDatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_VERTEX_LOW, mVertexLow);
 		contentValues.put(DatabaseContract.COLUMN_VERTEX_HIGH, mVertexHigh);
 		contentValues.put(DatabaseContract.COLUMN_OVERLAP, mOverlap);
-		contentValues.put(DatabaseContract.COLUMN_OVERLAP_LOW, mOverlapLow);
-		contentValues.put(DatabaseContract.COLUMN_OVERLAP_HIGH, mOverlapHigh);
 		contentValues.put(DatabaseContract.COLUMN_AVERAGE5, mAverage5);
 		contentValues.put(DatabaseContract.COLUMN_AVERAGE10, mAverage10);
 		contentValues.put(DatabaseContract.COLUMN_DIF, mDIF);
@@ -181,8 +179,6 @@ public class StockData extends StockDatabaseTable {
 		setVertex(stockData.mVertex);
 		setVertexLow(stockData.mVertexLow);
 		setVertexHigh(stockData.mVertexHigh);
-		setOverlapLow(stockData.mOverlapLow);
-		setOverlapHigh(stockData.mOverlapHigh);
 		setAverage5(stockData.mAverage5);
 		setAverage10(stockData.mAverage10);
 		setDIF(stockData.mDIF);
@@ -223,8 +219,6 @@ public class StockData extends StockDatabaseTable {
 		setVertex(cursor);
 		setVertexLow(cursor);
 		setVertexHigh(cursor);
-		setOverlapLow(cursor);
-		setOverlapHigh(cursor);
 		setAverage5(cursor);
 		setAverage10(cursor);
 		setDIF(cursor);
@@ -443,40 +437,6 @@ public class StockData extends StockDatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_VERTEX_HIGH)));
 	}
 
-	public double getOverlapLow() {
-		return mOverlapLow;
-	}
-
-	public void setOverlapLow(double overlapLow) {
-		mOverlapLow = overlapLow;
-	}
-
-	void setOverlapLow(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setOverlapLow(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_OVERLAP_LOW)));
-	}
-
-	public double getOverlapHigh() {
-		return mOverlapHigh;
-	}
-
-	public void setOverlapHigh(double overlapHigh) {
-		mOverlapHigh = overlapHigh;
-	}
-
-	void setOverlapHigh(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setOverlapHigh(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_OVERLAP_HIGH)));
-	}
-
 	public double getAverage5() {
 		return mAverage5;
 	}
@@ -628,6 +588,40 @@ public class StockData extends StockDatabaseTable {
 
 		setAverage(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_AVERAGE)));
+	}
+
+	public double getVelocity() {
+		return mVelocity;
+	}
+
+	public void setVelocity(double velocity) {
+		mVelocity = velocity;
+	}
+
+	void setVelocity(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setVelocity(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_VELOCITY)));
+	}
+
+	public double getAcceleration() {
+		return mAcceleration;
+	}
+
+	public void setAcceleration(double acceleration) {
+		mAcceleration = acceleration;
+	}
+
+	void setAcceleration(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setAcceleration(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_ACCELERATION)));
 	}
 
 	public String getAction() {

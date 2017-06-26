@@ -5,8 +5,8 @@ import android.database.Cursor;
 
 public class StockDatabaseTable extends DatabaseTable {
 	double mOverlap;
-	double mVelocity;
-	double mAcceleration;
+	double mOverlapLow;
+	double mOverlapHigh;
 
 	public StockDatabaseTable() {
 		init();
@@ -16,16 +16,16 @@ public class StockDatabaseTable extends DatabaseTable {
 		super.init();
 
 		mOverlap = 0;
-		mVelocity = 0;
-		mAcceleration = 0;
+		mOverlapLow = 0;
+		mOverlapHigh = 0;
 	}
 
 	ContentValues getContentValues(ContentValues contentValues) {
 		super.getContentValues(contentValues);
 
 		contentValues.put(DatabaseContract.COLUMN_OVERLAP, mOverlap);
-		contentValues.put(DatabaseContract.COLUMN_VELOCITY, mVelocity);
-		contentValues.put(DatabaseContract.COLUMN_ACCELERATION, mAcceleration);
+		contentValues.put(DatabaseContract.COLUMN_OVERLAP_LOW, mOverlapLow);
+		contentValues.put(DatabaseContract.COLUMN_OVERLAP_HIGH, mOverlapHigh);
 
 		return contentValues;
 	}
@@ -40,8 +40,8 @@ public class StockDatabaseTable extends DatabaseTable {
 		super.set(stockDatabaseTable);
 
 		setOverlap(stockDatabaseTable.mOverlap);
-		setVelocity(stockDatabaseTable.mVelocity);
-		setAcceleration(stockDatabaseTable.mAcceleration);
+		setOverlapLow(stockDatabaseTable.mOverlapLow);
+		setOverlapHigh(stockDatabaseTable.mOverlapHigh);
 	}
 
 	void set(Cursor cursor) {
@@ -54,8 +54,8 @@ public class StockDatabaseTable extends DatabaseTable {
 		super.set(cursor);
 
 		setOverlap(cursor);
-		setVelocity(cursor);
-		setAcceleration(cursor);
+		setOverlapLow(cursor);
+		setOverlapHigh(cursor);
 	}
 
 	public double getOverlap() {
@@ -75,37 +75,38 @@ public class StockDatabaseTable extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_OVERLAP)));
 	}
 
-	public double getVelocity() {
-		return mVelocity;
+	public double getOverlapLow() {
+		return mOverlapLow;
 	}
 
-	public void setVelocity(double velocity) {
-		mVelocity = velocity;
+	public void setOverlapLow(double overlapLow) {
+		mOverlapLow = overlapLow;
 	}
 
-	void setVelocity(Cursor cursor) {
+	void setOverlapLow(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}
 
-		setVelocity(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_VELOCITY)));
+		setOverlapLow(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_OVERLAP_LOW)));
 	}
 
-	public double getAcceleration() {
-		return mAcceleration;
+	public double getOverlapHigh() {
+		return mOverlapHigh;
 	}
 
-	public void setAcceleration(double acceleration) {
-		mAcceleration = acceleration;
+	public void setOverlapHigh(double overlapHigh) {
+		mOverlapHigh = overlapHigh;
 	}
 
-	void setAcceleration(Cursor cursor) {
+	void setOverlapHigh(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}
 
-		setAcceleration(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_ACCELERATION)));
+		setOverlapHigh(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_OVERLAP_HIGH)));
 	}
+
 }

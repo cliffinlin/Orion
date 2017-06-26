@@ -132,30 +132,12 @@ public class StockChartListActivity extends OrionBaseActivity implements
 			finish();
 			return true;
 		}
-		case R.id.action_deal: {
-			Bundle bundle = new Bundle();
-			bundle.putString(Constants.EXTRA_STOCK_SE, mStock.getSE());
-			bundle.putString(Constants.EXTRA_STOCK_CODE, mStock.getCode());
-			Intent intent = new Intent(this, StockDealListActivity.class);
-			intent.putExtras(bundle);
-			startActivity(intent);
-			return true;
-		}
 		case R.id.action_prev: {
 			navigateStock(-1);
 			return true;
 		}
 		case R.id.action_next: {
 			navigateStock(1);
-			return true;
-		}
-		case R.id.action_clean_data: {
-			updateStockAction(mStock.getId(), "");
-			deleteStockData(mStock.getId());
-			startService(Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE,
-					Constants.EXECUTE_IMMEDIATE, mStock.getSE(),
-					mStock.getCode());
-			restartLoader();
 			return true;
 		}
 		case R.id.action_remove_favorite: {
@@ -167,6 +149,34 @@ public class StockChartListActivity extends OrionBaseActivity implements
 					Constants.EXECUTE_IMMEDIATE);
 			return true;
 		}
+		case R.id.action_settings: {
+			Bundle bundle = new Bundle();
+			bundle.putString(Constants.EXTRA_STOCK_SE, mStock.getSE());
+			bundle.putString(Constants.EXTRA_STOCK_CODE, mStock.getCode());
+			Intent intent = new Intent(this, StockDealListActivity.class);
+			intent.putExtras(bundle);
+			startActivity(intent);
+			return true;
+		}
+		case R.id.action_deal: {
+			Bundle bundle = new Bundle();
+			bundle.putString(Constants.EXTRA_STOCK_SE, mStock.getSE());
+			bundle.putString(Constants.EXTRA_STOCK_CODE, mStock.getCode());
+			Intent intent = new Intent(this, StockDealListActivity.class);
+			intent.putExtras(bundle);
+			startActivity(intent);
+			return true;
+		}
+		case R.id.action_clean_data: {
+			updateStockAction(mStock.getId(), "");
+			deleteStockData(mStock.getId());
+			startService(Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE,
+					Constants.EXECUTE_IMMEDIATE, mStock.getSE(),
+					mStock.getCode());
+			restartLoader();
+			return true;
+		}
+		
 		default:
 			return super.onOptionsItemSelected(item);
 		}

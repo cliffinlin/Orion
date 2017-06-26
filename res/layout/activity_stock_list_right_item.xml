@@ -78,6 +78,30 @@
         android:textSize="18sp" />
 
     <TextView
+        android:id="@+id/overlap"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="18sp" />
+    
+    <TextView
+        android:id="@+id/overlap_low"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="18sp" />
+    
+    <TextView
+        android:id="@+id/overlap_high"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="18sp" />
+    
+    <TextView
         android:id="@+id/position"
         android:layout_width="80dp"
         android:layout_height="50dp"
