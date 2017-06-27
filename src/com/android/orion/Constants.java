@@ -153,4 +153,8 @@ public class Constants {
 	public static final int STOCK_VERTEX_BOTTOM_STROKE = 1 << 3;
 	public static final int STOCK_VERTEX_TOP_SEGMENT = 1 << 4;
 	public static final int STOCK_VERTEX_BOTTOM_SEGMENT = 1 << 5;
+
+	public static final long STOCK_DEAL_VOLUME_MIN = 100;
+	public static final double STOCK_PROFIT_MIN = 5.0 + 5.0 + 5.0;
+	public static final double STOCK_PROFIT_RATE_MIN = (5.0 + 5.0 + 5.0) / 10000;
 }

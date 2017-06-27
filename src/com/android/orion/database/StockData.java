@@ -288,7 +288,7 @@ public class StockData extends StockDatabaseTable {
 		return mPeriod;
 	}
 
-	void setPeriod(String period) {
+	public void setPeriod(String period) {
 		mPeriod = period;
 	}
 

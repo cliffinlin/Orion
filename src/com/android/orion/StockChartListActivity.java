@@ -176,7 +176,7 @@ public class StockChartListActivity extends OrionBaseActivity implements
 			restartLoader();
 			return true;
 		}
-		
+
 		default:
 			return super.onOptionsItemSelected(item);
 		}

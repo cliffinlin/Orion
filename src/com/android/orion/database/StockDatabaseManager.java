@@ -484,6 +484,37 @@ public class StockDatabaseManager extends DatabaseManager {
 		return cursor;
 	}
 
+	public void getStockData(StockData stockData) {
+		Cursor cursor = null;
+
+		if ((stockData == null) || (mContentResolver == null)) {
+			return;
+		}
+
+		try {
+			String selection = DatabaseContract.COLUMN_STOCK_ID + " = "
+					+ stockData.getStockId() + " AND "
+					+ DatabaseContract.COLUMN_PERIOD + " = " + "\'"
+					+ stockData.getPeriod() + "\'";
+			String sortOrder = DatabaseContract.COLUMN_DATE + " DESC " + ","
+					+ DatabaseContract.COLUMN_TIME + " DESC ";
+
+			cursor = mContentResolver.query(
+					DatabaseContract.StockData.CONTENT_URI,
+					DatabaseContract.StockData.PROJECTION_ALL, selection, null,
+					sortOrder);
+
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				cursor.moveToNext();
+				stockData.set(cursor);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
 	public boolean isStockDataExist(StockData stockData) {
 		boolean result = false;
 		Cursor cursor = null;

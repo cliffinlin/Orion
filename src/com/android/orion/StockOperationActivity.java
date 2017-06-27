@@ -1,6 +1,5 @@
 package com.android.orion;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -11,35 +10,36 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 
-import com.android.orion.database.Stock;
-import com.android.orion.database.StockDeal;
 import com.android.orion.utility.Utility;
 
 public class StockOperationActivity extends DatabaseActivity implements
-		OnClickListener {
+		OnClickListener, OnItemSelectedListener {
 
 	public static final String ACTION_DEAL_INSERT = "orion.intent.action.ACTION_DEAL_INSERT";
 	public static final String ACTION_DEAL_EDIT = "orion.intent.action.ACTION_DEAL_EDIT";
 
 	public static final String EXTRA_DEAL_ID = "deal_id";
 
-	static final int MESSAGE_LOAD_DEAL = 0;
-	static final int MESSAGE_SAVE_DEAL = 1;
-	static final int MESSAGE_LOAD_STOCK_BY_ID = 2;
-	static final int MESSAGE_LOAD_STOCK_BY_SE_CODE = 3;
+	static final int MESSAGE_LOAD_STOCK = 0;
+	static final int MESSAGE_LOAD_OVERLAP = 1;
+	static final int MESSAGE_SAVE = 2;
 
 	static final int REQUEST_CODE_STOCK_ID = 0;
 
 	EditText mEditTextStockName, mEditTextStockCode, mEditTextStockQuota;
-	EditText mEditTextDealPrice, mEditTextDealVolume;
+	EditText mEditTextStockOverlap, mEditTextDealVolume;
+
+	Spinner mSpinnerStockOperation;
 
 	Button mButtonOk, mButtonCancel;
 
-	StockDeal mDeal = null;
-	Stock mStock = null;
+	String[] mStockOperationList = null;
 
 	Handler mHandler = new Handler(Looper.getMainLooper()) {
 
@@ -48,49 +48,29 @@ public class StockOperationActivity extends DatabaseActivity implements
 			super.handleMessage(msg);
 
 			switch (msg.what) {
-			case MESSAGE_LOAD_DEAL:
-				mStockDatabaseManager.getStockDealById(mDeal);
-				mStock.setSE(mDeal.getSE());
-				mStock.setCode(mDeal.getCode());
+			case MESSAGE_LOAD_STOCK:
 				mStockDatabaseManager.getStock(mStock);
+				mStockData.setStockId(mStock.getId());
 				updateView();
 				break;
 
-			case MESSAGE_SAVE_DEAL:
-				if (ACTION_DEAL_INSERT.equals(mAction)) {
-					mDeal.setCreated(Utility.getCurrentDateTimeString());
-					mStockDatabaseManager.insertStockDeal(mDeal);
-				} else if (ACTION_DEAL_EDIT.equals(mAction)) {
-					mDeal.setModified(Utility.getCurrentDateTimeString());
-					mStockDatabaseManager.updateStockDealByID(mDeal);
-				}
+			case MESSAGE_LOAD_OVERLAP:
+				mStockData.setOverlap(0);
+				mStockData.setOverlapLow(0);
+				mStockData.setOverlapHigh(0);
+				mStockDatabaseManager.getStockData(mStockData);
+				mStock.setOverlap(mStockData.getOverlap());
+				mStock.setOverlapLow(mStockData.getOverlapLow());
+				mStock.setOverlapHigh(mStockData.getOverlapHigh());
+				mStock.setDealVolume(Utility.getDealVolumeMin(
+						mStock.getPrice(), mStock.getOverlapLow(),
+						mStock.getOverlapHigh(), mStock.getQuota()));
+				updateView();
+				break;
 
-				mStock.setQuota(mDeal.getQuota());
-				mStockDatabaseManager.updateStockDealHold(mStock);
+			case MESSAGE_SAVE:
 				mStockDatabaseManager.updateStock(mStock,
 						mStock.getContentValues());
-				break;
-
-			case MESSAGE_LOAD_STOCK_BY_ID:
-				mStockDatabaseManager.getStockById(mStock);
-				mDeal.setSE(mStock.getSE());
-				mDeal.setCode(mStock.getCode());
-				mDeal.setName(mStock.getName());
-				mDeal.setPrice(mStock.getPrice());
-				mDeal.setDeal(mStock.getPrice());
-				mDeal.setQuota(mStock.getQuota());
-				updateView();
-				break;
-
-			case MESSAGE_LOAD_STOCK_BY_SE_CODE:
-				mStockDatabaseManager.getStock(mStock);
-				mDeal.setSE(mStock.getSE());
-				mDeal.setCode(mStock.getCode());
-				mDeal.setName(mStock.getName());
-				mDeal.setPrice(mStock.getPrice());
-				mDeal.setDeal(mStock.getPrice());
-				mDeal.setQuota(mStock.getQuota());
-				updateView();
 				break;
 
 			default:
@@ -105,28 +85,24 @@ public class StockOperationActivity extends DatabaseActivity implements
 
 		setContentView(R.layout.activity_stock_operation);
 
-		if (mDeal == null) {
-			mDeal = StockDeal.obtain();
-		}
-
-		if (mStock == null) {
-			mStock = Stock.obtain();
-		}
-
 		initView();
 
 		if (mBundle != null) {
 			mStock.setSE(mBundle.getString(Constants.EXTRA_STOCK_SE));
 			mStock.setCode(mBundle.getString(Constants.EXTRA_STOCK_CODE));
-			mHandler.sendEmptyMessage(MESSAGE_LOAD_STOCK_BY_SE_CODE);
+			mHandler.sendEmptyMessage(MESSAGE_LOAD_STOCK);
 		}
 	}
 
 	void initView() {
+		mStockOperationList = getResources().getStringArray(
+				R.array.stock_operation);
+
 		mEditTextStockName = (EditText) findViewById(R.id.edittext_stock_name);
 		mEditTextStockCode = (EditText) findViewById(R.id.edittext_stock_code);
 		mEditTextStockQuota = (EditText) findViewById(R.id.edittext_stock_quota);
-		mEditTextDealPrice = (EditText) findViewById(R.id.edittext_deal_price);
+		mSpinnerStockOperation = (Spinner) findViewById(R.id.spinner_stock_operation);
+		mEditTextStockOverlap = (EditText) findViewById(R.id.edittext_stock_overlap);
 		mEditTextDealVolume = (EditText) findViewById(R.id.edittext_deal_volume);
 		mButtonOk = (Button) findViewById(R.id.button_ok);
 		mButtonCancel = (Button) findViewById(R.id.button_cancel);
@@ -134,7 +110,8 @@ public class StockOperationActivity extends DatabaseActivity implements
 		mEditTextStockName.setOnClickListener(this);
 		mEditTextStockCode.setOnClickListener(this);
 		mEditTextStockQuota.setOnClickListener(this);
-		mEditTextDealPrice.setOnClickListener(this);
+		mSpinnerStockOperation.setOnItemSelectedListener(this);
+		mEditTextStockOverlap.setOnClickListener(this);
 		mEditTextDealVolume.setOnClickListener(this);
 		mButtonOk.setOnClickListener(this);
 		mButtonCancel.setOnClickListener(this);
@@ -143,20 +120,50 @@ public class StockOperationActivity extends DatabaseActivity implements
 		mEditTextStockName.setFocusable(false);
 		mEditTextStockCode.setInputType(InputType.TYPE_NULL);
 		mEditTextStockCode.setFocusable(false);
-
-		if (ACTION_DEAL_INSERT.equals(mAction)) {
-			setTitle(R.string.deal_insert);
-		} else if (ACTION_DEAL_EDIT.equals(mAction)) {
-			setTitle(R.string.deal_edit);
-		}
+		mEditTextStockOverlap.setInputType(InputType.TYPE_NULL);
+		mEditTextStockOverlap.setFocusable(false);
 	}
 
 	void updateView() {
-		mEditTextStockName.setText(mDeal.getName());
-		mEditTextStockCode.setText(mDeal.getCode());
-		mEditTextStockQuota.setText(String.valueOf(mDeal.getQuota()));
-		mEditTextDealPrice.setText(String.valueOf(mDeal.getDeal()));
-		mEditTextDealVolume.setText(String.valueOf(mDeal.getVolume()));
+		mEditTextStockName.setText(mStock.getName());
+		mEditTextStockCode.setText(mStock.getCode());
+		mEditTextStockQuota.setText(String.valueOf(mStock.getQuota()));
+		mSpinnerStockOperation.setSelection(stockOperationToPosition());
+		mEditTextStockOverlap.setText(String.valueOf(mStock.getOverlap()));
+		mEditTextDealVolume.setText(String.valueOf(mStock.getDealVolume()));
+	}
+
+	int stockOperationToPosition() {
+		int result = 0;
+		String operation = mStock.getOperation();
+
+		if (TextUtils.isEmpty(operation)) {
+			return result;
+		}
+
+		if (mStockOperationList != null) {
+			for (int i = 0; i < mStockOperationList.length; i++) {
+				if (operation.equals(mStockOperationList[i])) {
+					result = i;
+					break;
+				}
+			}
+		}
+
+		return result;
+	}
+
+	@Override
+	public void onItemSelected(AdapterView<?> parent, View view, int pos,
+			long id) {
+		mStock.setOperation(mStockOperationList[mSpinnerStockOperation
+				.getSelectedItemPosition()]);
+		mStockData.setPeriod(mStock.getOperation());
+		mHandler.sendEmptyMessage(MESSAGE_LOAD_OVERLAP);
+	}
+
+	@Override
+	public void onNothingSelected(AdapterView<?> arg0) {
 	}
 
 	@Override
@@ -187,32 +194,41 @@ public class StockOperationActivity extends DatabaseActivity implements
 			break;
 		case R.id.button_ok:
 			String quotaString = "";
-			String dealString = "";
+			String operationString = "";
+			String overlapString = "";
 			String volumeString = "";
 
 			quotaString = mEditTextStockQuota.getText().toString();
 			if (!TextUtils.isEmpty(quotaString)) {
-				mDeal.setQuota(Long.valueOf(quotaString));
+				mStock.setQuota(Long.valueOf(quotaString));
 			} else {
-				mDeal.setQuota(0);
+				mStock.setQuota(0);
 			}
 
-			dealString = mEditTextDealPrice.getText().toString();
-			if (!TextUtils.isEmpty(dealString)) {
-				mDeal.setDeal(Double.valueOf(dealString));
+			operationString = mStockOperationList[mSpinnerStockOperation
+					.getSelectedItemPosition()];
+			if (!TextUtils.isEmpty(operationString)) {
+				mStock.setOperation(operationString);
 			} else {
-				mDeal.setDeal(0);
+				mStock.setOperation("");
+			}
+
+			overlapString = mEditTextStockOverlap.getText().toString();
+			if (!TextUtils.isEmpty(overlapString)) {
+				mStock.setOverlap(Double.valueOf(overlapString));
+				mStock.setOverlapHigh(mStockData.getOverlapHigh());
+				mStock.setOverlapLow(mStockData.getOverlapLow());
+			} else {
+				mStock.setOverlap(0);
 			}
 
 			volumeString = mEditTextDealVolume.getText().toString();
 			if (!TextUtils.isEmpty(volumeString)) {
-				mDeal.setVolume(Long.valueOf(volumeString));
+				mStock.setDealVolume(Long.valueOf(volumeString));
 			} else {
-				mDeal.setVolume(0);
+				mStock.setDealVolume(0);
 			}
-			mDeal.setupDeal();
-			mHandler.sendEmptyMessage(MESSAGE_SAVE_DEAL);
-			setResult(RESULT_OK);
+			mHandler.sendEmptyMessage(MESSAGE_SAVE);
 			finish();
 			break;
 		case R.id.button_cancel:
@@ -220,25 +236,6 @@ public class StockOperationActivity extends DatabaseActivity implements
 			break;
 		default:
 			break;
-		}
-	}
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-
-		if (resultCode == RESULT_OK) {
-			switch (requestCode) {
-			case REQUEST_CODE_STOCK_ID:
-				if (mStock != null) {
-					mStock.setId(data.getLongExtra(Constants.EXTRA_STOCK_ID, 0));
-					mHandler.sendEmptyMessage(MESSAGE_LOAD_STOCK_BY_ID);
-				}
-				break;
-
-			default:
-				break;
-			}
 		}
 	}
 }

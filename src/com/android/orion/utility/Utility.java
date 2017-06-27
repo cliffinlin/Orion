@@ -57,24 +57,6 @@ public class Utility {
 		editor.commit();
 	}
 
-	public static String getNumberString(String textString) {
-		String result = "";
-
-		textString = textString.replace("+", "");
-
-		if (TextUtils.isEmpty(textString)) {
-			return result;
-		}
-
-		if ((textString.length() == 1) && (textString.charAt(0) == '-')) {
-			return result;
-		}
-
-		result = textString;
-
-		return result;
-	}
-
 	public static boolean isNetworkConnected(Context context) {
 		boolean result = false;
 		ConnectivityManager connectivityManager = null;
@@ -100,6 +82,35 @@ public class Utility {
 
 			if (networkInfo != null && networkInfo.isConnected()) {
 				return true;
+			}
+		}
+
+		return result;
+	}
+
+	public static long getDealVolumeMin(double price, double overlapLow,
+			double overlapHigh, long quota) {
+		long result = 0;
+		long volume = 0;
+
+		if (quota < Constants.STOCK_DEAL_VOLUME_MIN) {
+			return result;
+		}
+
+		if (price > overlapHigh) {
+
+		} else if (price < overlapLow) {
+
+		} else {
+			volume = Constants.STOCK_DEAL_VOLUME_MIN;
+
+			while (volume < quota) {
+				if ((price - overlapLow) * volume > Constants.STOCK_PROFIT_MIN) {
+					result = volume;
+					break;
+				}
+
+				volume += Constants.STOCK_DEAL_VOLUME_MIN;
 			}
 		}
 

@@ -109,10 +109,6 @@ public class StockDealActivity extends DatabaseActivity implements
 			mDeal = StockDeal.obtain();
 		}
 
-		if (mStock == null) {
-			mStock = Stock.obtain();
-		}
-
 		initView();
 
 		if (ACTION_DEAL_INSERT.equals(mAction)) {
