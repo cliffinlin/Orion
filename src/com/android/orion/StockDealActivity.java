@@ -39,7 +39,6 @@ public class StockDealActivity extends DatabaseActivity implements
 	Button mButtonOk, mButtonCancel;
 
 	StockDeal mDeal = null;
-	Stock mStock = null;
 
 	Handler mHandler = new Handler(Looper.getMainLooper()) {
 
@@ -109,6 +108,10 @@ public class StockDealActivity extends DatabaseActivity implements
 			mDeal = StockDeal.obtain();
 		}
 
+		if (mStock == null) {
+			mStock = Stock.obtain();
+		}
+		
 		initView();
 
 		if (ACTION_DEAL_INSERT.equals(mAction)) {

@@ -26,8 +26,6 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 	EditText mEditTextStockSE, mEditTextStockName, mEditTextStockCode;
 	Button mButtonOk, mButtonCancel;
 
-	Stock mStock = null;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
