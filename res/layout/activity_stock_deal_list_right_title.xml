@@ -41,12 +41,12 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/profile"
+        android:id="@+id/profit"
         android:layout_width="80dp"
         android:layout_height="40dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="@string/profile"
+        android:text="@string/profit"
         android:textSize="18sp" />
 
     <TextView

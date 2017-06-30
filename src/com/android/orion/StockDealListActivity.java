@@ -336,7 +336,7 @@ public class StockDealListActivity extends StorageActivity implements
 		case R.id.volume:
 			mSortOrderColumn = DatabaseContract.COLUMN_VOLUME;
 			break;
-		case R.id.profile:
+		case R.id.profit:
 			mSortOrderColumn = DatabaseContract.COLUMN_PROFIT;
 			break;
 		case R.id.created:
@@ -419,7 +419,7 @@ public class StockDealListActivity extends StorageActivity implements
 		mTextViewVolume = (TextView) findViewById(R.id.volume);
 		mTextViewVolume.setOnClickListener(this);
 
-		mTextViewProfit = (TextView) findViewById(R.id.profile);
+		mTextViewProfit = (TextView) findViewById(R.id.profit);
 		mTextViewProfit.setOnClickListener(this);
 
 		mTextViewCreated = (TextView) findViewById(R.id.created);
@@ -460,7 +460,7 @@ public class StockDealListActivity extends StorageActivity implements
 				DatabaseContract.COLUMN_CREATED,
 				DatabaseContract.COLUMN_MODIFIED };
 		int[] mRightTo = new int[] { R.id.price, R.id.net, R.id.deal,
-				R.id.volume, R.id.profile, R.id.created, R.id.modified };
+				R.id.volume, R.id.profit, R.id.created, R.id.modified };
 
 		mLeftListView = (ListView) findViewById(R.id.left_listview);
 		mLeftAdapter = new SimpleCursorAdapter(this,
@@ -707,7 +707,8 @@ public class StockDealListActivity extends StorageActivity implements
 										.insertStockDeal(stockDeal);
 							}
 
-							mStockDatabaseManager.updateStockHoldPosition(mStock);
+							mStockDatabaseManager
+									.updateStockHoldPosition(mStock);
 							mStockDatabaseManager.updateStock(mStock,
 									mStock.getContentValues());
 						}

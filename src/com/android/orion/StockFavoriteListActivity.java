@@ -69,6 +69,7 @@ public class StockFavoriteListActivity extends StorageActivity implements
 	TextView mTextViewDay = null;
 	TextView mTextViewWeek = null;
 	TextView mTextViewMonth = null;
+	TextView mTextViewProfit = null;
 	TextView mTextViewOverlap = null;
 	TextView mTextViewOverlapLow = null;
 	TextView mTextViewOverlapHigh = null;
@@ -378,6 +379,9 @@ public class StockFavoriteListActivity extends StorageActivity implements
 		case R.id.action_month:
 			mSortOrderColumn = DatabaseContract.COLUMN_MONTH;
 			break;
+		case R.id.profit:
+			mSortOrderColumn = DatabaseContract.COLUMN_PROFIT;
+			break;
 		case R.id.overlap:
 			mSortOrderColumn = DatabaseContract.COLUMN_OVERLAP;
 			break;
@@ -436,6 +440,7 @@ public class StockFavoriteListActivity extends StorageActivity implements
 		setHeaderTextColor(mTextViewDay, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewWeek, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewMonth, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewProfit, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewOverlap, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewOverlapLow, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewOverlapHigh, mHeaderTextDefaultColor);
@@ -520,6 +525,11 @@ public class StockFavoriteListActivity extends StorageActivity implements
 			setVisibility(Constants.PERIOD_MONTH, mTextViewMonth);
 		}
 
+		mTextViewProfit = (TextView) findViewById(R.id.profit);
+		if (mTextViewProfit != null) {
+			mTextViewProfit.setOnClickListener(this);
+		}
+
 		mTextViewOverlap = (TextView) findViewById(R.id.overlap);
 		if (mTextViewOverlap != null) {
 			mTextViewOverlap.setOnClickListener(this);
@@ -570,6 +580,8 @@ public class StockFavoriteListActivity extends StorageActivity implements
 			setHeaderTextColor(mTextViewWeek, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MONTH)) {
 			setHeaderTextColor(mTextViewMonth, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PROFIT)) {
+			setHeaderTextColor(mTextViewProfit, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_OVERLAP)) {
 			setHeaderTextColor(mTextViewOverlap, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_OVERLAP_LOW)) {
@@ -596,6 +608,7 @@ public class StockFavoriteListActivity extends StorageActivity implements
 				DatabaseContract.COLUMN_MIN15, DatabaseContract.COLUMN_MIN30,
 				DatabaseContract.COLUMN_MIN60, DatabaseContract.COLUMN_DAY,
 				DatabaseContract.COLUMN_WEEK, DatabaseContract.COLUMN_MONTH,
+				DatabaseContract.COLUMN_PROFIT,
 				DatabaseContract.COLUMN_OVERLAP,
 				DatabaseContract.COLUMN_OVERLAP_LOW,
 				DatabaseContract.COLUMN_OVERLAP_HIGH,
@@ -603,9 +616,9 @@ public class StockFavoriteListActivity extends StorageActivity implements
 				DatabaseContract.COLUMN_QUOTA };
 		int[] mRightTo = new int[] { R.id.price, R.id.net, R.id.type_5min,
 				R.id.type_15min, R.id.type_30min, R.id.type_60min,
-				R.id.type_day, R.id.type_week, R.id.type_month, R.id.overlap,
-				R.id.overlap_low, R.id.overlap_high, R.id.position, R.id.hold,
-				R.id.quota };
+				R.id.type_day, R.id.type_week, R.id.type_month, R.id.profit,
+				R.id.overlap, R.id.overlap_low, R.id.overlap_high,
+				R.id.position, R.id.hold, R.id.quota };
 
 		mLeftListView = (ListView) findViewById(R.id.left_listview);
 		mLeftAdapter = new SimpleCursorAdapter(this,

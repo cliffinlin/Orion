@@ -38,7 +38,7 @@
     <string name="deal_net">Net</string>
     <string name="deal_volume">Deal Volume</string>
     <string name="deal_volume_prompt">Volume:</string>
-    <string name="deal_profile">Profile</string>
+    <string name="deal_profit">Profit</string>
     <string name="delete">Delete</string>
     <string name="delete_confirm">Do You Qant to Delete?</string>
     <string name="download">Download</string>
@@ -89,7 +89,7 @@
     <string name="price">Price</string>
     <string name="price_change">Change</string>
     <string name="price_net">Net</string>
-    <string name="profile">Profile</string>
+    <string name="profit">Profit</string>
     <string name="quota">Quota</string>
     <string name="search">Search</string>
     <string name="service">Service</string>

@@ -32,8 +32,9 @@ public class Stock extends StockDatabaseTable {
 	private String mActionQuarter;
 	private String mActionYear;
 	private String mOperation;
-	private double mPosition;
 	private long mDealVolume;
+	private double mProfit;
+	private double mPosition;
 	private long mHold;
 	private long mQuota;
 
@@ -115,8 +116,9 @@ public class Stock extends StockDatabaseTable {
 		mActionQuarter = "";
 		mActionYear = "";
 		mOperation = "";
-		mPosition = 0;
 		mDealVolume = 0;
+		mProfit  = 0;
+		mPosition = 0;
 		mHold = 0;
 		mQuota = 0;
 	}
@@ -149,8 +151,9 @@ public class Stock extends StockDatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_QUARTER, mActionQuarter);
 		contentValues.put(DatabaseContract.COLUMN_YEAR, mActionYear);
 		contentValues.put(DatabaseContract.COLUMN_OPERATION, mOperation);
-		contentValues.put(DatabaseContract.COLUMN_POSITION, mPosition);
 		contentValues.put(DatabaseContract.COLUMN_DEAL_VOLUME, mDealVolume);
+		contentValues.put(DatabaseContract.COLUMN_PROFIT, mProfit);
+		contentValues.put(DatabaseContract.COLUMN_POSITION, mPosition);
 		contentValues.put(DatabaseContract.COLUMN_HOLD, mHold);
 		contentValues.put(DatabaseContract.COLUMN_QUOTA, mQuota);
 
@@ -219,8 +222,9 @@ public class Stock extends StockDatabaseTable {
 		setActionQuarter(stock.mActionQuarter);
 		setActionYear(stock.mActionYear);
 		setOperation(stock.mOperation);
-		setPosition(stock.mPosition);
 		setDealVolume(stock.mDealVolume);
+		setProfit(stock.mProfit);
+		setPosition(stock.mPosition);
 		setHold(stock.mHold);
 		setQuota(stock.mQuota);
 	}
@@ -258,8 +262,9 @@ public class Stock extends StockDatabaseTable {
 		setActionQuarter(cursor);
 		setActionYear(cursor);
 		setOperation(cursor);
-		setPosition(cursor);
 		setDealVolume(cursor);
+		setProfit(cursor);
+		setPosition(cursor);
 		setHold(cursor);
 		setQuota(cursor);
 	}
@@ -655,23 +660,6 @@ public class Stock extends StockDatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_OPERATION)));
 	}
 
-	public double getPosition() {
-		return mPosition;
-	}
-
-	public void setPosition(double position) {
-		mPosition = position;
-	}
-
-	void setPosition(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setPosition(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_POSITION)));
-	}
-	
 	public long getDealVolume() {
 		return mDealVolume;
 	}
@@ -688,7 +676,41 @@ public class Stock extends StockDatabaseTable {
 		setDealVolume(cursor.getLong(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_DEAL_VOLUME)));
 	}
-	
+
+	public double getProfit() {
+		return mProfit;
+	}
+
+	public void setProfit(double profit) {
+		mProfit = profit;
+	}
+
+	void setProfit(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setProfit(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_PROFIT)));
+	}
+
+	public double getPosition() {
+		return mPosition;
+	}
+
+	public void setPosition(double position) {
+		mPosition = position;
+	}
+
+	void setPosition(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setPosition(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_POSITION)));
+	}
+
 	public long getHold() {
 		return mHold;
 	}
