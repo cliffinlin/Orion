@@ -33,7 +33,7 @@ public class StockDealActivity extends DatabaseActivity implements
 
 	static final int REQUEST_CODE_STOCK_ID = 0;
 
-	EditText mEditTextStockName, mEditTextStockCode, mEditTextStockQuota;
+	EditText mEditTextStockName, mEditTextStockCode;
 	EditText mEditTextDealPrice, mEditTextDealVolume;
 
 	Button mButtonOk, mButtonCancel;
@@ -64,8 +64,7 @@ public class StockDealActivity extends DatabaseActivity implements
 					mStockDatabaseManager.updateStockDealByID(mDeal);
 				}
 
-				mStock.setQuota(mDeal.getQuota());
-				mStockDatabaseManager.updateStockDealHold(mStock);
+				mStockDatabaseManager.updateStockHoldPosition(mStock);
 				mStockDatabaseManager.updateStock(mStock,
 						mStock.getContentValues());
 				break;
@@ -77,7 +76,6 @@ public class StockDealActivity extends DatabaseActivity implements
 				mDeal.setName(mStock.getName());
 				mDeal.setPrice(mStock.getPrice());
 				mDeal.setDeal(mStock.getPrice());
-				mDeal.setQuota(mStock.getQuota());
 				updateView();
 				break;
 
@@ -88,7 +86,6 @@ public class StockDealActivity extends DatabaseActivity implements
 				mDeal.setName(mStock.getName());
 				mDeal.setPrice(mStock.getPrice());
 				mDeal.setDeal(mStock.getPrice());
-				mDeal.setQuota(mStock.getQuota());
 				updateView();
 				break;
 
@@ -111,7 +108,7 @@ public class StockDealActivity extends DatabaseActivity implements
 		if (mStock == null) {
 			mStock = Stock.obtain();
 		}
-		
+
 		initView();
 
 		if (ACTION_DEAL_INSERT.equals(mAction)) {
@@ -129,7 +126,6 @@ public class StockDealActivity extends DatabaseActivity implements
 	void initView() {
 		mEditTextStockName = (EditText) findViewById(R.id.edittext_stock_name);
 		mEditTextStockCode = (EditText) findViewById(R.id.edittext_stock_code);
-		mEditTextStockQuota = (EditText) findViewById(R.id.edittext_stock_quota);
 		mEditTextDealPrice = (EditText) findViewById(R.id.edittext_deal_price);
 		mEditTextDealVolume = (EditText) findViewById(R.id.edittext_deal_volume);
 		mButtonOk = (Button) findViewById(R.id.button_ok);
@@ -137,7 +133,6 @@ public class StockDealActivity extends DatabaseActivity implements
 
 		mEditTextStockName.setOnClickListener(this);
 		mEditTextStockCode.setOnClickListener(this);
-		mEditTextStockQuota.setOnClickListener(this);
 		mEditTextDealPrice.setOnClickListener(this);
 		mEditTextDealVolume.setOnClickListener(this);
 		mButtonOk.setOnClickListener(this);
@@ -158,7 +153,6 @@ public class StockDealActivity extends DatabaseActivity implements
 	void updateView() {
 		mEditTextStockName.setText(mDeal.getName());
 		mEditTextStockCode.setText(mDeal.getCode());
-		mEditTextStockQuota.setText(String.valueOf(mDeal.getQuota()));
 		mEditTextDealPrice.setText(String.valueOf(mDeal.getDeal()));
 		mEditTextDealVolume.setText(String.valueOf(mDeal.getVolume()));
 	}
@@ -196,16 +190,8 @@ public class StockDealActivity extends DatabaseActivity implements
 			}
 			break;
 		case R.id.button_ok:
-			String quotaString = "";
 			String dealString = "";
 			String volumeString = "";
-
-			quotaString = mEditTextStockQuota.getText().toString();
-			if (!TextUtils.isEmpty(quotaString)) {
-				mDeal.setQuota(Long.valueOf(quotaString));
-			} else {
-				mDeal.setQuota(0);
-			}
 
 			dealString = mEditTextDealPrice.getText().toString();
 			if (!TextUtils.isEmpty(dealString)) {

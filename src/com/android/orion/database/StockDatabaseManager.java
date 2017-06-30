@@ -703,9 +703,10 @@ public class StockDatabaseManager extends DatabaseManager {
 		return result;
 	}
 
-	public int updateStockDealHold(Stock stock) {
+	public int updateStockHoldPosition(Stock stock) {
 		int result = 0;
 		double position = 0;
+		long dealVolume = 0;
 		long hold = 0;
 		long quota = 0;
 		Cursor cursor = null;
@@ -715,41 +716,34 @@ public class StockDatabaseManager extends DatabaseManager {
 			return result;
 		}
 
-		stock.setHold(hold);
-		stock.setPosition(position);
+		stock.setHold(0);
+		stock.setPosition(0);
 
 		stockDeal = new StockDeal();
 
 		String selection = DatabaseContract.COLUMN_SE + " = " + "\'"
 				+ stock.getSE() + "\'" + " AND " + DatabaseContract.COLUMN_CODE
 				+ " = " + "\'" + stock.getCode() + "\'";
+		String sortOrder = DatabaseContract.COLUMN_DEAL + " ASC ";
 
 		quota = stock.getQuota();
 
 		try {
-			cursor = queryStockDeal(selection, null, null);
+			cursor = queryStockDeal(selection, null, sortOrder);
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				while (cursor.moveToNext()) {
 					stockDeal.set(cursor);
-					hold += stockDeal.getVolume();
+					dealVolume = stockDeal.getVolume();
+					hold += dealVolume;
 				}
 
+				stock.setDealVolume(dealVolume);
 				stock.setHold(hold);
 
 				if (quota > 0) {
 					position = Utility.Round((double) hold / (double) quota,
 							Constants.DOUBLE_FIXED_DECIMAL - 1);
 					stock.setPosition(position);
-				}
-
-				cursor.moveToPosition(-1);
-
-				while (cursor.moveToNext()) {
-					stockDeal.set(cursor);
-					stockDeal.setPosition(position);
-					stockDeal.setHold(hold);
-					stockDeal.setQuota(quota);
-					result += updateStockDealByID(stockDeal);
 				}
 			}
 		} catch (Exception e) {

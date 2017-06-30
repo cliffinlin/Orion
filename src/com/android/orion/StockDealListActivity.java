@@ -78,9 +78,6 @@ public class StockDealListActivity extends StorageActivity implements
 	TextView mTextViewDeal = null;
 	TextView mTextViewVolume = null;
 	TextView mTextViewProfit = null;
-	TextView mTextViewPosition = null;
-	TextView mTextViewHold = null;
-	TextView mTextViewQuota = null;
 	TextView mTextViewCreated = null;
 	TextView mTextViewModified = null;
 
@@ -107,7 +104,7 @@ public class StockDealListActivity extends StorageActivity implements
 			case MESSAGE_DELETE_DEAL:
 				getStock();
 				mStockDatabaseManager.deleteStockDealById(mDeal);
-				mStockDatabaseManager.updateStockDealHold(mStock);
+				mStockDatabaseManager.updateStockHoldPosition(mStock);
 				mStockDatabaseManager.updateStock(mStock,
 						mStock.getContentValues());
 				break;
@@ -345,15 +342,6 @@ public class StockDealListActivity extends StorageActivity implements
 		case R.id.created:
 			mSortOrderColumn = DatabaseContract.COLUMN_CREATED;
 			break;
-		case R.id.position:
-			mSortOrderColumn = DatabaseContract.COLUMN_POSITION;
-			break;
-		case R.id.hold:
-			mSortOrderColumn = DatabaseContract.COLUMN_HOLD;
-			break;
-		case R.id.quota:
-			mSortOrderColumn = DatabaseContract.COLUMN_QUOTA;
-			break;
 		case R.id.modified:
 			mSortOrderColumn = DatabaseContract.COLUMN_MODIFIED;
 			break;
@@ -393,9 +381,6 @@ public class StockDealListActivity extends StorageActivity implements
 		setHeaderTextColor(mTextViewDeal, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewVolume, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewProfit, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewPosition, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewHold, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewQuota, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewCreated, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewModified, mHeaderTextDefaultColor);
 	}
@@ -437,15 +422,6 @@ public class StockDealListActivity extends StorageActivity implements
 		mTextViewProfit = (TextView) findViewById(R.id.profile);
 		mTextViewProfit.setOnClickListener(this);
 
-		mTextViewPosition = (TextView) findViewById(R.id.position);
-		mTextViewPosition.setOnClickListener(this);
-
-		mTextViewHold = (TextView) findViewById(R.id.hold);
-		mTextViewHold.setOnClickListener(this);
-
-		mTextViewQuota = (TextView) findViewById(R.id.quota);
-		mTextViewQuota.setOnClickListener(this);
-
 		mTextViewCreated = (TextView) findViewById(R.id.created);
 		mTextViewCreated.setOnClickListener(this);
 
@@ -465,12 +441,6 @@ public class StockDealListActivity extends StorageActivity implements
 			setHeaderTextColor(mTextViewVolume, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PROFIT)) {
 			setHeaderTextColor(mTextViewProfit, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_POSITION)) {
-			setHeaderTextColor(mTextViewPosition, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_HOLD)) {
-			setHeaderTextColor(mTextViewHold, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_QUOTA)) {
-			setHeaderTextColor(mTextViewQuota, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_CREATED)) {
 			setHeaderTextColor(mTextViewCreated, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MODIFIED)) {
@@ -487,12 +457,10 @@ public class StockDealListActivity extends StorageActivity implements
 		String[] mRightFrom = new String[] { DatabaseContract.COLUMN_PRICE,
 				DatabaseContract.COLUMN_NET, DatabaseContract.COLUMN_DEAL,
 				DatabaseContract.COLUMN_VOLUME, DatabaseContract.COLUMN_PROFIT,
-				DatabaseContract.COLUMN_POSITION, DatabaseContract.COLUMN_HOLD,
-				DatabaseContract.COLUMN_QUOTA, DatabaseContract.COLUMN_CREATED,
+				DatabaseContract.COLUMN_CREATED,
 				DatabaseContract.COLUMN_MODIFIED };
 		int[] mRightTo = new int[] { R.id.price, R.id.net, R.id.deal,
-				R.id.volume, R.id.profile, R.id.position, R.id.hold,
-				R.id.quota, R.id.created, R.id.modified };
+				R.id.volume, R.id.profile, R.id.created, R.id.modified };
 
 		mLeftListView = (ListView) findViewById(R.id.left_listview);
 		mLeftAdapter = new SimpleCursorAdapter(this,
@@ -709,13 +677,6 @@ public class StockDealListActivity extends StorageActivity implements
 						stockDeal.setVolume(Long.valueOf(parser.nextText()));
 					} else if (DatabaseContract.COLUMN_PROFIT.equals(tagName)) {
 						stockDeal.setProfit(Double.valueOf(parser.nextText()));
-					} else if (DatabaseContract.COLUMN_POSITION.equals(tagName)) {
-						stockDeal
-								.setPosition(Double.valueOf(parser.nextText()));
-					} else if (DatabaseContract.COLUMN_HOLD.equals(tagName)) {
-						stockDeal.setHold(Long.valueOf(parser.nextText()));
-					} else if (DatabaseContract.COLUMN_QUOTA.equals(tagName)) {
-						stockDeal.setQuota(Long.valueOf(parser.nextText()));
 					} else if (DatabaseContract.COLUMN_CREATED.equals(tagName)) {
 						stockDeal.setCreated(parser.nextText());
 					} else if (DatabaseContract.COLUMN_MODIFIED.equals(tagName)) {
@@ -746,8 +707,7 @@ public class StockDealListActivity extends StorageActivity implements
 										.insertStockDeal(stockDeal);
 							}
 
-							mStock.setQuota(stockDeal.getQuota());
-							mStockDatabaseManager.updateStockDealHold(mStock);
+							mStockDatabaseManager.updateStockHoldPosition(mStock);
 							mStockDatabaseManager.updateStock(mStock,
 									mStock.getContentValues());
 						}
@@ -786,12 +746,6 @@ public class StockDealListActivity extends StorageActivity implements
 						String.valueOf(stockDeal.getVolume()));
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_PROFIT,
 						String.valueOf(stockDeal.getProfit()));
-				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_POSITION,
-						String.valueOf(stockDeal.getPosition()));
-				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_HOLD,
-						String.valueOf(stockDeal.getHold()));
-				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_QUOTA,
-						String.valueOf(stockDeal.getQuota()));
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_CREATED,
 						stockDeal.getCreated());
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_MODIFIED,
