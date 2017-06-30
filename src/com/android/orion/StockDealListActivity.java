@@ -95,8 +95,6 @@ public class StockDealListActivity extends StorageActivity implements
 	List<StockDeal> mStockDealList = new ArrayList<StockDeal>();
 	Stock mStock = new Stock();
 
-	boolean mDirty = false;
-
 	Handler mHandler = new Handler(Looper.getMainLooper()) {
 
 		@Override
@@ -112,7 +110,6 @@ public class StockDealListActivity extends StorageActivity implements
 				mStockDatabaseManager.updateStockDealHold(mStock);
 				mStockDatabaseManager.updateStock(mStock,
 						mStock.getContentValues());
-				mDirty = true;
 				break;
 
 			case MESSAGE_DELETE_DEAL_LIST:
@@ -311,7 +308,6 @@ public class StockDealListActivity extends StorageActivity implements
 			switch (requestCode) {
 			case REQUEST_CODE_DEAL_INSERT:
 			case REQUEST_CODE_DEAL_EDIT:
-				mDirty = true;
 				break;
 
 			default:
@@ -581,11 +577,6 @@ public class StockDealListActivity extends StorageActivity implements
 		switch (loader.getId()) {
 		case LOADER_ID_DEAL_LIST:
 			setStockDealList(cursor);
-
-			if (mDirty) {
-				mDirty = false;
-				SaveListToSD(DEAL_LIST_XML_FILE_NAME);
-			}
 
 			mLeftAdapter.swapCursor(cursor);
 			mRightAdapter.swapCursor(cursor);
