@@ -4,8 +4,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -122,6 +124,23 @@ public class StockOperationActivity extends DatabaseActivity implements
 		mEditTextStockCode.setFocusable(false);
 		mEditTextStockOverlap.setInputType(InputType.TYPE_NULL);
 		mEditTextStockOverlap.setFocusable(false);
+
+		mEditTextStockQuota.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				mStock.setQuota(Long.valueOf(s.toString()));
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence arg0, int arg1,
+					int arg2, int arg3) {
+			}
+
+			@Override
+			public void afterTextChanged(Editable arg0) {
+			}
+		});
 	}
 
 	void updateView() {
