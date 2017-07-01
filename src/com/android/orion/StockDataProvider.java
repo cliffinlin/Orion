@@ -521,6 +521,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			removeFromCurrrentRequests(mStringRequest.getUrl());
 			handleResponseStockRealTime(mStock, response);
 			mStockDatabaseManager.updateStockDeal(mStock);
+			mStockDatabaseManager
+					.updateStock(mStock, mStock.getContentValues());
 			Bundle bundle = new Bundle();
 			bundle.putInt(Constants.EXTRA_SERVICE_TYPE,
 					Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE_REALTIME);
