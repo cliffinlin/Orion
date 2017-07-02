@@ -304,6 +304,7 @@ public class StockAnalyzer extends StockManager {
 			ArrayList<StockData> segmentDataList) {
 		String action = Constants.STOCK_ACTION_NONE;
 		String direction = "";
+		String operation = "";
 		StockData segmentData = null;
 		StockData endStockData = null;
 
@@ -340,7 +341,13 @@ public class StockAnalyzer extends StockManager {
 			direction += Constants.STOCK_ACTION_MINUS;
 		}
 
-		action = direction;// + action;
+		if (period.equals(stock.getOperation())) {
+			operation = Constants.STOCK_ACTION_STAR + action;
+		} else {
+			operation = "";
+		}
+
+		action = direction + operation;
 
 		stock.setAction(period, action);
 	}
