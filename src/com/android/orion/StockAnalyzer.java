@@ -302,8 +302,9 @@ public class StockAnalyzer extends StockManager {
 	private void setAction(Stock stock, String period,
 			ArrayList<StockData> stockDataList,
 			ArrayList<StockData> segmentDataList) {
+		double delt = 0;
 		String action = Constants.STOCK_ACTION_NONE;
-		String direction = "";
+		String avv = "";
 		String operation = "";
 		StockData segmentData = null;
 		StockData endStockData = null;
@@ -320,34 +321,39 @@ public class StockAnalyzer extends StockManager {
 		action = endStockData.getAction();
 
 		if (endStockData.getAcceleration() > 0) {
-			direction += Constants.STOCK_ACTION_ADD;
+			avv += Constants.STOCK_ACTION_ADD;
 		} else if (endStockData.getAcceleration() <= 0) {
-			direction += Constants.STOCK_ACTION_MINUS;
+			avv += Constants.STOCK_ACTION_MINUS;
 		}
 
-		direction += " ";
+		avv += " ";
 
 		if (endStockData.getVelocity() > 0) {
-			direction += Constants.STOCK_ACTION_ADD;
+			avv += Constants.STOCK_ACTION_ADD;
 		} else if (endStockData.getVelocity() <= 0) {
-			direction += Constants.STOCK_ACTION_MINUS;
+			avv += Constants.STOCK_ACTION_MINUS;
 		}
 
-		direction += " ";
+		avv += " ";
 
 		if (endStockData.getAverage() > 0) {
-			direction += Constants.STOCK_ACTION_ADD;
+			avv += Constants.STOCK_ACTION_ADD;
 		} else if (endStockData.getAverage() <= 0) {
-			direction += Constants.STOCK_ACTION_MINUS;
+			avv += Constants.STOCK_ACTION_MINUS;
 		}
 
-		if (period.equals(stock.getOperation())) {
-			operation = Constants.STOCK_ACTION_STAR + action;
+		if (period.equals(Constants.PERIOD_DAY)) {
+			delt = endStockData.getDIF() - endStockData.getDEA();
+			if (delt > 0) {
+				operation = " " + Constants.STOCK_ACTION_UP;
+			} else {
+				operation = " " + Constants.STOCK_ACTION_DOWN;
+			}
 		} else {
 			operation = "";
 		}
 
-		action = direction + operation;
+		action = operation + avv + action;
 
 		stock.setAction(period, action);
 	}
