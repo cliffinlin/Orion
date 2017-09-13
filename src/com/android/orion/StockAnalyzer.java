@@ -72,6 +72,10 @@ public class StockAnalyzer extends StockManager {
 		double dif = 0;
 		double dea = 0;
 		double histogram = 0;
+		double histogram_1 = 0;
+		double histogram_2 = 0;
+
+		String action = Constants.STOCK_ACTION_NONE;
 
 		MACD macd = new MACD();
 		BezierCurve bezierCurve = new BezierCurve();
@@ -142,6 +146,20 @@ public class StockAnalyzer extends StockManager {
 			stockDataList.get(i).setVelocity(velocity);
 			stockDataList.get(i).setAcceleration(acceleration);
 		}
+
+		histogram = macd.mHistogramList.get(size - 1);
+		histogram_1 = macd.mHistogramList.get(size - 2);
+		histogram_2 = macd.mHistogramList.get(size - 3);
+
+		if ((histogram_1 < histogram_2) && (histogram_1 < histogram)) {
+			action = Constants.STOCK_ACTION_DX;
+		}
+
+		if ((histogram_1 > histogram_2) && (histogram_1 > histogram)) {
+			action = Constants.STOCK_ACTION_GX;
+		}
+
+		stock.setAction(period, action);
 	}
 
 	private void analyzeStockMatch(Stock stock, String period,
@@ -302,10 +320,8 @@ public class StockAnalyzer extends StockManager {
 	private void setAction(Stock stock, String period,
 			ArrayList<StockData> stockDataList,
 			ArrayList<StockData> segmentDataList) {
-		double delt = 0;
 		String action = Constants.STOCK_ACTION_NONE;
 		String avv = "";
-		String operation = "";
 		StockData segmentData = null;
 		StockData endStockData = null;
 
@@ -342,18 +358,13 @@ public class StockAnalyzer extends StockManager {
 			avv += Constants.STOCK_ACTION_MINUS;
 		}
 
-		if (period.equals(Constants.PERIOD_DAY)) {
-			delt = endStockData.getDIF() - endStockData.getDEA();
-			if (delt > 0) {
-				operation = " " + Constants.STOCK_ACTION_UP;
-			} else {
-				operation = " " + Constants.STOCK_ACTION_DOWN;
-			}
-		} else {
-			operation = "";
+		if (period.equals(Constants.PERIOD_DAY)
+				|| period.equals(Constants.PERIOD_WEEK)
+				|| period.equals(Constants.PERIOD_MONTH)) {
+			action = stock.getAction(period);
 		}
 
-		action = operation + avv + action;
+		action = avv + action;
 
 		stock.setAction(period, action);
 	}
