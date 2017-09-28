@@ -273,8 +273,8 @@ public class StockChartData {
 
 		mDescription += stock.getNet();
 
-		mDescription += "   " + stock.getHold() + "/" + stock.getQuota()
-				+ "   " + stock.getPosition();
+		mDescription += "   " + stock.getHold() + "/" + stock.getCost() + "   "
+				+ stock.getProfit();
 	}
 
 	void updateLimitLine(ArrayList<StockDeal> stockDealList) {

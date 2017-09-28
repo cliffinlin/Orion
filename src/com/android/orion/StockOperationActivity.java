@@ -18,8 +18,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import com.android.orion.utility.Utility;
-
 public class StockOperationActivity extends DatabaseActivity implements
 		OnClickListener, OnItemSelectedListener {
 
@@ -61,12 +59,12 @@ public class StockOperationActivity extends DatabaseActivity implements
 				mStockData.setOverlapLow(0);
 				mStockData.setOverlapHigh(0);
 				mStockDatabaseManager.getStockData(mStockData);
-				mStock.setOverlap(mStockData.getOverlap());
-				mStock.setOverlapLow(mStockData.getOverlapLow());
-				mStock.setOverlapHigh(mStockData.getOverlapHigh());
-				mStock.setDealVolume(Utility.getDealVolumeMin(
-						mStock.getPrice(), mStock.getOverlapLow(),
-						mStock.getOverlapHigh(), mStock.getQuota()));
+				// mStock.setOverlap(mStockData.getOverlap());
+				// mStock.setOverlapLow(mStockData.getOverlapLow());
+				// mStock.setOverlapHigh(mStockData.getOverlapHigh());
+				// mStock.setDealVolume(Utility.getDealVolumeMin(
+				// mStock.getPrice(), mStock.getOverlapLow(),
+				// mStock.getOverlapHigh(), mStock.getQuota()));
 				updateView();
 				break;
 
@@ -129,7 +127,7 @@ public class StockOperationActivity extends DatabaseActivity implements
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
-				mStock.setQuota(Long.valueOf(s.toString()));
+				// mStock.setQuota(Long.valueOf(s.toString()));
 			}
 
 			@Override
@@ -146,10 +144,10 @@ public class StockOperationActivity extends DatabaseActivity implements
 	void updateView() {
 		mEditTextStockName.setText(mStock.getName());
 		mEditTextStockCode.setText(mStock.getCode());
-		mEditTextStockQuota.setText(String.valueOf(mStock.getQuota()));
+		// mEditTextStockQuota.setText(String.valueOf(mStock.getQuota()));
 		mSpinnerStockOperation.setSelection(stockOperationToPosition());
-		mEditTextStockOverlap.setText(String.valueOf(mStock.getOverlap()));
-		mEditTextDealVolume.setText(String.valueOf(mStock.getDealVolume()));
+		// mEditTextStockOverlap.setText(String.valueOf(mStock.getOverlap()));
+		// mEditTextDealVolume.setText(String.valueOf(mStock.getDealVolume()));
 	}
 
 	int stockOperationToPosition() {
@@ -219,9 +217,9 @@ public class StockOperationActivity extends DatabaseActivity implements
 
 			quotaString = mEditTextStockQuota.getText().toString();
 			if (!TextUtils.isEmpty(quotaString)) {
-				mStock.setQuota(Long.valueOf(quotaString));
+				// mStock.setQuota(Long.valueOf(quotaString));
 			} else {
-				mStock.setQuota(0);
+				// mStock.setQuota(0);
 			}
 
 			operationString = mStockOperationList[mSpinnerStockOperation
@@ -234,18 +232,18 @@ public class StockOperationActivity extends DatabaseActivity implements
 
 			overlapString = mEditTextStockOverlap.getText().toString();
 			if (!TextUtils.isEmpty(overlapString)) {
-				mStock.setOverlap(Double.valueOf(overlapString));
-				mStock.setOverlapHigh(mStockData.getOverlapHigh());
-				mStock.setOverlapLow(mStockData.getOverlapLow());
+				// mStock.setOverlap(Double.valueOf(overlapString));
+				// mStock.setOverlapHigh(mStockData.getOverlapHigh());
+				// mStock.setOverlapLow(mStockData.getOverlapLow());
 			} else {
-				mStock.setOverlap(0);
+				// mStock.setOverlap(0);
 			}
 
 			volumeString = mEditTextDealVolume.getText().toString();
 			if (!TextUtils.isEmpty(volumeString)) {
-				mStock.setDealVolume(Long.valueOf(volumeString));
+				// mStock.setDealVolume(Long.valueOf(volumeString));
 			} else {
-				mStock.setDealVolume(0);
+				// mStock.setDealVolume(0);
 			}
 			mHandler.sendEmptyMessage(MESSAGE_SAVE);
 			finish();

@@ -30,7 +30,6 @@ public final class DatabaseContract {
 	public static final String COLUMN_NET = "net";
 	public static final String COLUMN_VOLUME = "volume";
 	public static final String COLUMN_VALUE = "value";
-	public static final String COLUMN_PROFIT = "profit";
 	public static final String COLUMN_OVERLAP = "overlap";
 	public static final String COLUMN_VELOCITY = "velocity";
 	public static final String COLUMN_ACCELERATION = "acceleration";
@@ -45,10 +44,11 @@ public final class DatabaseContract {
 	public static final String COLUMN_QUARTER = "quarter";
 	public static final String COLUMN_YEAR = "year";
 	public static final String COLUMN_OPERATION = "operation";
-	public static final String COLUMN_POSITION = "position";
-	public static final String COLUMN_DEAL_VOLUME = "deal_volume";
 	public static final String COLUMN_HOLD = "hold";
-	public static final String COLUMN_QUOTA = "quota";
+	public static final String COLUMN_COST = "cost";
+	public static final String COLUMN_PROFIT = "profit";
+	public static final String COLUMN_DEAL_BUY = "deal_buy";
+	public static final String COLUMN_DEAL_SELL = "deal_sell";
 	public static final String COLUMN_CREATED = "created";
 	public static final String COLUMN_MODIFIED = "modified";
 
@@ -142,10 +142,9 @@ public final class DatabaseContract {
 				COLUMN_NET, COLUMN_VOLUME, COLUMN_VALUE, COLUMN_MIN1,
 				COLUMN_MIN5, COLUMN_MIN15, COLUMN_MIN30, COLUMN_MIN60,
 				COLUMN_DAY, COLUMN_WEEK, COLUMN_MONTH, COLUMN_QUARTER,
-				COLUMN_YEAR, COLUMN_OPERATION, COLUMN_PROFIT, COLUMN_OVERLAP,
-				COLUMN_OVERLAP_LOW, COLUMN_OVERLAP_HIGH, COLUMN_DEAL_VOLUME,
-				COLUMN_POSITION, COLUMN_HOLD, COLUMN_QUOTA, COLUMN_CREATED,
-				COLUMN_MODIFIED };
+				COLUMN_YEAR, COLUMN_OPERATION, COLUMN_HOLD, COLUMN_COST,
+				COLUMN_PROFIT, COLUMN_DEAL_BUY, COLUMN_DEAL_SELL,
+				COLUMN_CREATED, COLUMN_MODIFIED };
 
 		public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
 				+ " (" + _ID + " INTEGER PRIMARY KEY," + COLUMN_CLASSES
@@ -164,15 +163,12 @@ public final class DatabaseContract {
 				+ COLUMN_WEEK + TEXT_TYPE + COMMA_SEP + COLUMN_MONTH
 				+ TEXT_TYPE + COMMA_SEP + COLUMN_QUARTER + TEXT_TYPE
 				+ COMMA_SEP + COLUMN_YEAR + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_OPERATION + TEXT_TYPE + COMMA_SEP + COLUMN_PROFIT
-				+ DOUBLE_TYPE + COMMA_SEP + COLUMN_OVERLAP + DOUBLE_TYPE
-				+ COMMA_SEP + COLUMN_OVERLAP_LOW + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_OVERLAP_HIGH + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_DEAL_VOLUME + INTEGER_TYPE + COMMA_SEP
-				+ COLUMN_POSITION + DOUBLE_TYPE + COMMA_SEP + COLUMN_HOLD
-				+ INTEGER_TYPE + COMMA_SEP + COLUMN_QUOTA + INTEGER_TYPE
-				+ COMMA_SEP + COLUMN_CREATED + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_MODIFIED + TEXT_TYPE + " )";
+				+ COLUMN_OPERATION + TEXT_TYPE + COMMA_SEP + COLUMN_HOLD
+				+ INTEGER_TYPE + COMMA_SEP + COLUMN_COST + DOUBLE_TYPE
+				+ COMMA_SEP + COLUMN_PROFIT + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_DEAL_BUY + DOUBLE_TYPE + COMMA_SEP + COLUMN_DEAL_SELL
+				+ DOUBLE_TYPE + COMMA_SEP + COLUMN_CREATED + TEXT_TYPE
+				+ COMMA_SEP + COLUMN_MODIFIED + TEXT_TYPE + " )";
 
 		public static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
 				+ TABLE_NAME;

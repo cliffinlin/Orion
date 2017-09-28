@@ -693,7 +693,7 @@ public class StockDatabaseManager extends DatabaseManager {
 					stockDeal.setPrice(stock.getPrice());
 					stockDeal.setupDeal();
 					result += updateStockDealByID(stockDeal);
-					
+
 					stock.setProfit(stockDeal.getProfit());
 				}
 			}
@@ -706,21 +706,51 @@ public class StockDatabaseManager extends DatabaseManager {
 		return result;
 	}
 
+	public double getCostNet(long hold, long deal, double value, double price) {
+		double result = 0;
+
+		double cost = 0;
+		double newCost = 0;
+		long volume = 0;
+
+		if ((hold == 0) || (deal == 0) || (value == 0) || (price == 0)) {
+			return result;
+		}
+
+		volume = hold + deal;
+		if (volume != 0) {
+			newCost = (value + price * deal) / volume;
+		}
+
+		cost = value / hold;
+		if (cost != 0) {
+			result = 100.0 * (newCost - cost) / cost;
+		}
+
+		return result;
+	}
+
 	public int updateStockHoldPosition(Stock stock) {
 		int result = 0;
-		double position = 0;
-		long dealVolume = 0;
 		long hold = 0;
-		long quota = 0;
+		long volume = 0;
+		double cost = 0;
+		double deal = 0;
+		double dealBuy = 0;
+		double dealSell = 0;
+		double price = 0;
+		double profit = 0;
+		double value = 0;
 		Cursor cursor = null;
 		StockDeal stockDeal = null;
 
 		if ((stock == null) || (mContentResolver == null)) {
 			return result;
 		}
+		
+		price = stock.getPrice();
 
 		stock.setHold(0);
-		stock.setPosition(0);
 
 		stockDeal = new StockDeal();
 
@@ -734,20 +764,28 @@ public class StockDatabaseManager extends DatabaseManager {
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				while (cursor.moveToNext()) {
 					stockDeal.set(cursor);
-					dealVolume = stockDeal.getVolume();
-					hold += dealVolume;
+					deal = stockDeal.getDeal();
+					volume = stockDeal.getVolume();
+					value += deal * volume;
+					hold += volume;
 				}
 
-				stock.setDealVolume(dealVolume);
+				if (hold != 0) {
+					cost = value / hold;
+				}
+
+				if (cost != 0) {
+					profit = 100.0 * (price - cost) / cost;
+				}
+				
+				dealBuy = getCostNet(hold, 100, value, price);
+				dealSell = getCostNet(hold, -100, value, price);
+				
 				stock.setHold(hold);
-
-				quota = stock.getQuota();
-
-				if (quota > 0) {
-					position = Utility.Round((double) hold / (double) quota,
-							Constants.DOUBLE_FIXED_DECIMAL - 1);
-					stock.setPosition(position);
-				}
+				stock.setCost(cost);
+				stock.setProfit(profit);
+				stock.setDealBuy(dealBuy);
+				stock.setDealSell(dealSell);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

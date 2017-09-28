@@ -27,6 +27,7 @@
     <string name="app_name">Orion</string>
     <string name="begin_date">Begin Date</string>
     <string name="cancel">Cancel</string>
+    <string name="cost">Cost</string>
     <string name="created">Created</string>
     <string name="deal">Deal</string>
     <string name="deal_insert">Deal Insert</string>
@@ -39,6 +40,8 @@
     <string name="deal_volume">Deal Volume</string>
     <string name="deal_volume_prompt">Volume:</string>
     <string name="deal_profit">Profit</string>
+    <string name="deal_buy">Deal Buy</string>
+    <string name="deal_sell">Deal Sell</string>
     <string name="delete">Delete</string>
     <string name="delete_confirm">Do You Qant to Delete?</string>
     <string name="download">Download</string>

@@ -8,7 +8,7 @@ import android.text.TextUtils;
 
 import com.android.orion.Constants;
 
-public class Stock extends StockDatabaseTable {
+public class Stock extends DatabaseTable {
 	private String mClasses;
 	private String mSE;
 	private String mCode;
@@ -32,11 +32,11 @@ public class Stock extends StockDatabaseTable {
 	private String mActionQuarter;
 	private String mActionYear;
 	private String mOperation;
-	private long mDealVolume;
-	private double mProfit;
-	private double mPosition;
 	private long mHold;
-	private long mQuota;
+	private double mCost;
+	private double mProfit;
+	private double mDealBuy;
+	private double mDealSell;
 
 	public ArrayList<StockData> mStockDataListMin1 = new ArrayList<StockData>();
 	public ArrayList<StockData> mStockDataListMin5 = new ArrayList<StockData>();
@@ -116,11 +116,11 @@ public class Stock extends StockDatabaseTable {
 		mActionQuarter = "";
 		mActionYear = "";
 		mOperation = "";
-		mDealVolume = 0;
-		mProfit  = 0;
-		mPosition = 0;
 		mHold = 0;
-		mQuota = 0;
+		mCost = 0;
+		mProfit = 0;
+		mDealBuy = 0;
+		mDealSell = 0;
 	}
 
 	@Override
@@ -151,11 +151,11 @@ public class Stock extends StockDatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_QUARTER, mActionQuarter);
 		contentValues.put(DatabaseContract.COLUMN_YEAR, mActionYear);
 		contentValues.put(DatabaseContract.COLUMN_OPERATION, mOperation);
-		contentValues.put(DatabaseContract.COLUMN_DEAL_VOLUME, mDealVolume);
-		contentValues.put(DatabaseContract.COLUMN_PROFIT, mProfit);
-		contentValues.put(DatabaseContract.COLUMN_POSITION, mPosition);
 		contentValues.put(DatabaseContract.COLUMN_HOLD, mHold);
-		contentValues.put(DatabaseContract.COLUMN_QUOTA, mQuota);
+		contentValues.put(DatabaseContract.COLUMN_COST, mCost);
+		contentValues.put(DatabaseContract.COLUMN_PROFIT, mProfit);
+		contentValues.put(DatabaseContract.COLUMN_DEAL_BUY, mDealBuy);
+		contentValues.put(DatabaseContract.COLUMN_DEAL_SELL, mDealSell);
 
 		return contentValues;
 	}
@@ -222,11 +222,11 @@ public class Stock extends StockDatabaseTable {
 		setActionQuarter(stock.mActionQuarter);
 		setActionYear(stock.mActionYear);
 		setOperation(stock.mOperation);
-		setDealVolume(stock.mDealVolume);
-		setProfit(stock.mProfit);
-		setPosition(stock.mPosition);
 		setHold(stock.mHold);
-		setQuota(stock.mQuota);
+		setCost(stock.mCost);
+		setProfit(stock.mProfit);
+		setDealBuy(stock.mDealBuy);
+		setDealSell(stock.mDealSell);
 	}
 
 	@Override
@@ -262,11 +262,11 @@ public class Stock extends StockDatabaseTable {
 		setActionQuarter(cursor);
 		setActionYear(cursor);
 		setOperation(cursor);
-		setDealVolume(cursor);
-		setProfit(cursor);
-		setPosition(cursor);
 		setHold(cursor);
-		setQuota(cursor);
+		setCost(cursor);
+		setProfit(cursor);
+		setDealBuy(cursor);
+		setDealSell(cursor);
 	}
 
 	String getClases() {
@@ -660,21 +660,38 @@ public class Stock extends StockDatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_OPERATION)));
 	}
 
-	public long getDealVolume() {
-		return mDealVolume;
+	public long getHold() {
+		return mHold;
 	}
 
-	public void setDealVolume(long dealVolume) {
-		mDealVolume = dealVolume;
+	public void setHold(long hold) {
+		mHold = hold;
 	}
 
-	void setDealVolume(Cursor cursor) {
+	void setHold(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}
 
-		setDealVolume(cursor.getLong(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_DEAL_VOLUME)));
+		setHold(cursor.getLong(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_HOLD)));
+	}
+
+	public double getCost() {
+		return mCost;
+	}
+
+	public void setCost(double cost) {
+		mCost = cost;
+	}
+
+	void setCost(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setCost(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_COST)));
 	}
 
 	public double getProfit() {
@@ -694,55 +711,38 @@ public class Stock extends StockDatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_PROFIT)));
 	}
 
-	public double getPosition() {
-		return mPosition;
+	public double getDealBuy() {
+		return mDealBuy;
 	}
 
-	public void setPosition(double position) {
-		mPosition = position;
+	public void setDealBuy(double dealBuy) {
+		mDealBuy = dealBuy;
 	}
 
-	void setPosition(Cursor cursor) {
+	void setDealBuy(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}
 
-		setPosition(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_POSITION)));
+		setDealBuy(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_DEAL_BUY)));
 	}
 
-	public long getHold() {
-		return mHold;
+	public double getDealSell() {
+		return mDealSell;
 	}
 
-	public void setHold(long hold) {
-		mHold = hold;
+	public void setDealSell(double dealSell) {
+		mDealSell = dealSell;
 	}
 
-	void setHold(Cursor cursor) {
+	void setDealSell(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}
 
-		setHold(cursor.getLong(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_HOLD)));
-	}
-
-	public long getQuota() {
-		return mQuota;
-	}
-
-	public void setQuota(long quota) {
-		mQuota = quota;
-	}
-
-	void setQuota(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setQuota(cursor.getLong(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_QUOTA)));
+		setDealSell(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_DEAL_SELL)));
 	}
 
 	public String getAction(String period) {
