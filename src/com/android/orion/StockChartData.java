@@ -277,9 +277,24 @@ public class StockChartData {
 				+ stock.getProfit();
 	}
 
-	void updateLimitLine(ArrayList<StockDeal> stockDealList) {
-		double stockDealPrice = 0;
-		long stockDealVolume = 0;
+	LimitLine createLimitLine(double limit, int color, String label) {
+		LimitLine limitLine = new LimitLine(0);
+
+		limitLine.enableDashedLine(10f, 10f, 0f);
+		limitLine.setLineWidth(3);
+		limitLine.setTextSize(10f);
+		limitLine.setLabelPosition(LimitLabelPosition.LEFT_TOP);
+		limitLine.setLimit((float) limit);
+		limitLine.setLineColor(color);
+		limitLine.setLabel(label);
+
+		return limitLine;
+	}
+
+	void updateLimitLine(Stock stock, ArrayList<StockDeal> stockDealList) {
+		int color = Color.WHITE;
+		String label = "";
+		LimitLine limitLine;
 
 		if ((stockDealList == null) || (mLimitLineList == null)) {
 			return;
@@ -287,27 +302,24 @@ public class StockChartData {
 
 		mLimitLineList.clear();
 
+		color = Color.YELLOW;
+		label = "        " + stock.getCost() + " " + stock.getHold() + " "
+				+ stock.getProfit();
+		limitLine = createLimitLine(stock.getCost(), color, label);
+
+		mLimitLineList.add(limitLine);
+
 		for (StockDeal stockDeal : stockDealList) {
-			LimitLine limitLine = new LimitLine(0);
-			limitLine.enableDashedLine(10f, 10f, 0f);
-			limitLine.setLineWidth(3);
-			limitLine.setTextSize(10f);
-			limitLine.setLabelPosition(LimitLabelPosition.LEFT_TOP);
-
-			stockDealPrice = stockDeal.getDeal();
-			stockDealVolume = stockDeal.getVolume();
-
-			limitLine.setLimit((float) stockDealPrice);
-
-			if (stockDealVolume > 0) {
-				limitLine.setLineColor(Color.RED);
+			if (stockDeal.getVolume() > 0) {
+				color = Color.RED;
 			} else {
-				limitLine.setLineColor(Color.GREEN);
+				color = Color.GREEN;
 			}
 
-			limitLine.setLabel("        " + stockDealPrice + " "
-					+ stockDealVolume + " " + stockDeal.getNet() + " "
-					+ (int) stockDeal.getProfit());
+			label = "        " + stockDeal.getDeal() + " "
+					+ stockDeal.getVolume() + " " + stockDeal.getNet() + " "
+					+ (int) stockDeal.getProfit();
+			limitLine = createLimitLine(stockDeal.getDeal(), color, label);
 
 			mLimitLineList.add(limitLine);
 		}

@@ -693,8 +693,6 @@ public class StockDatabaseManager extends DatabaseManager {
 					stockDeal.setPrice(stock.getPrice());
 					stockDeal.setupDeal();
 					result += updateStockDealByID(stockDeal);
-
-					stock.setProfit(stockDeal.getProfit());
 				}
 			}
 		} catch (Exception e) {
@@ -724,7 +722,8 @@ public class StockDatabaseManager extends DatabaseManager {
 
 		cost = value / hold;
 		if (cost != 0) {
-			result = 100.0 * (newCost - cost) / cost;
+			result = Utility.Round(100.0 * (newCost - cost) / cost,
+					Constants.DOUBLE_FIXED_DECIMAL - 1);
 		}
 
 		return result;
@@ -747,7 +746,7 @@ public class StockDatabaseManager extends DatabaseManager {
 		if ((stock == null) || (mContentResolver == null)) {
 			return result;
 		}
-		
+
 		price = stock.getPrice();
 
 		stock.setHold(0);
@@ -771,16 +770,18 @@ public class StockDatabaseManager extends DatabaseManager {
 				}
 
 				if (hold != 0) {
-					cost = value / hold;
+					cost = Utility.Round(value / hold,
+							Constants.DOUBLE_FIXED_DECIMAL - 1);
 				}
 
 				if (cost != 0) {
-					profit = 100.0 * (price - cost) / cost;
+					profit = Utility.Round(100.0 * (price - cost) / cost,
+							Constants.DOUBLE_FIXED_DECIMAL - 1);
 				}
-				
+
 				dealBuy = getCostNet(hold, 100, value, price);
 				dealSell = getCostNet(hold, -100, value, price);
-				
+
 				stock.setHold(hold);
 				stock.setCost(cost);
 				stock.setProfit(profit);
