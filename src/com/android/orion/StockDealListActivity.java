@@ -54,7 +54,7 @@ public class StockDealListActivity extends StorageActivity implements
 	static final int MESSAGE_LOAD_FROM_SD_CARD = 2;
 	static final int MESSAGE_SAVE_TO_SD_CARD = 3;
 	static final int MESSAGE_VIEW_STOCK_CHAT = 4;
-	static final int MESSAGE_VIEW_STOCK_MATCH = 5;
+	static final int MESSAGE_VIEW_STOCK_DEAL = 5;
 
 	static final int REQUEST_CODE_DEAL_INSERT = 0;
 	static final int REQUEST_CODE_DEAL_EDIT = 1;
@@ -131,14 +131,14 @@ public class StockDealListActivity extends StorageActivity implements
 				startActivity(intent);
 				break;
 
-			case MESSAGE_VIEW_STOCK_MATCH:
+			case MESSAGE_VIEW_STOCK_DEAL:
 				getStock();
 
-				intent = new Intent(StockDealListActivity.this,
-						StockMatchListActivity.class);
-				intent.setAction(StockMatchListActivity.ACTION_MATCH_LIST);
-				intent.putExtra(Constants.EXTRA_STOCK_SE, mStock.getSE());
-				intent.putExtra(Constants.EXTRA_STOCK_CODE, mStock.getCode());
+				intent = new Intent(StockDealListActivity.this, StockDealListActivity.class);
+				Bundle bundle = new Bundle();
+				bundle.putString(Constants.EXTRA_STOCK_SE, mStock.getSE());
+				bundle.putString(Constants.EXTRA_STOCK_CODE, mStock.getCode());
+				intent.putExtras(bundle);
 				startActivity(intent);
 				break;
 
@@ -587,7 +587,7 @@ public class StockDealListActivity extends StorageActivity implements
 
 		if (parent.getId() == R.id.left_listview) {
 			mDeal.setId(id);
-			mHandler.sendEmptyMessage(MESSAGE_VIEW_STOCK_MATCH);
+			mHandler.sendEmptyMessage(MESSAGE_VIEW_STOCK_DEAL);
 		} else {
 			if (mCurrentActionMode == null) {
 				mDeal.setId(id);
