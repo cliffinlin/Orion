@@ -131,15 +131,17 @@ public class StockAnalyzer extends StockManager {
 		for (int i = beginIndex; i < size; i++) {
 			t = 1.0 * (i - beginIndex) / (size - 1 - beginIndex);
 			average = bezierCurve.calculate(t);
-			velocity = 10 * (average - stockDataList.get(i - 1).getAverage());
-			acceleration = 2 * (velocity - stockDataList.get(i - 1)
-					.getVelocity());
 
 			if (i == beginIndex) {
 				velocity = 0;
 				acceleration = 0;
 			} else if (i == beginIndex + 1) {
 				acceleration = 0;
+			} else {
+				velocity = 10 * (average - stockDataList.get(i - 1)
+						.getAverage());
+				acceleration = 2 * (velocity - stockDataList.get(i - 1)
+						.getVelocity());
 			}
 
 			stockDataList.get(i).setAverage(average);
@@ -325,7 +327,8 @@ public class StockAnalyzer extends StockManager {
 		StockData segmentData = null;
 		StockData endStockData = null;
 
-		if ((stockDataList == null) || (segmentDataList == null)) {
+		if ((stockDataList == null) || (segmentDataList == null)
+				|| (segmentDataList.size() == 0)) {
 			Log.d(TAG, "setAction return" + " stockDataList = " + stockDataList
 					+ " segmentDataList" + segmentDataList);
 			return;

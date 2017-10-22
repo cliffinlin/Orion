@@ -271,10 +271,10 @@ public class StockChartData {
 			mDescription += "-";
 		}
 
-		mDescription += stock.getNet();
+		mDescription += stock.getNet() + "%" + "  ";
 
-		mDescription += "   " + stock.getHold() + "/" + stock.getCost() + "   "
-				+ stock.getProfit();
+		mDescription += "cost " + stock.getCost() + "  " + stock.getProfit()
+				+ "%" + "   " + "hold " + stock.getHold();
 	}
 
 	LimitLine createLimitLine(double limit, int color, String label) {
@@ -303,8 +303,13 @@ public class StockChartData {
 		mLimitLineList.clear();
 
 		color = Color.YELLOW;
-		label = "        " + stock.getCost() + " " + stock.getHold() + " "
-				+ stock.getProfit();
+		label = "                                                                      "
+				+ stock.getCost()
+				+ " "
+				+ stock.getProfit()
+				+ "%"
+				+ "   "
+				+ "hold " + stock.getHold();
 		limitLine = createLimitLine(stock.getCost(), color, label);
 
 		mLimitLineList.add(limitLine);
@@ -316,8 +321,8 @@ public class StockChartData {
 				color = Color.GREEN;
 			}
 
-			label = "        " + stockDeal.getDeal() + " "
-					+ stockDeal.getVolume() + " " + stockDeal.getNet() + " "
+			label = "        " + stockDeal.getDeal() + " " + stockDeal.getNet()
+					+ "%" + " " + stockDeal.getVolume() + " "
 					+ (int) stockDeal.getProfit();
 			limitLine = createLimitLine(stockDeal.getDeal(), color, label);
 
