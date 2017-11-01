@@ -5,13 +5,20 @@ import java.util.ArrayList;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.apache.commons.math3.stat.regression.SimpleRegression;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
+import android.support.v4.app.NotificationCompat;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.android.orion.curve.BezierCurve;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
+import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockMatch;
 import com.android.orion.indicator.MACD;
 import com.android.orion.utility.StopWatch;
@@ -46,7 +53,7 @@ public class StockAnalyzer extends StockManager {
 
 			analyzeStockData(stock, period, stockDataList);
 			updateDatabase(stock, period, stockDataList);
-			// writeMessage();
+			updateNotification(stock);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -398,6 +405,7 @@ public class StockAnalyzer extends StockManager {
 		} finally {
 		}
 	}
+
 	//
 	// void writeMessage() {
 	// boolean bFound = false;
@@ -531,74 +539,89 @@ public class StockAnalyzer extends StockManager {
 	// }
 	// }
 
-	// private void updateNotification(Stock stock) {
-	// int id = 0;
-	// int defaults = 0;
-	//
-	// NotificationManager notificationManager = (NotificationManager) mContext
-	// .getSystemService(Context.NOTIFICATION_SERVICE);
-	//
-	// id = (int) stock.getId();
-	//
-	// Intent intent = new Intent(Intent.ACTION_MAIN);
-	// intent.setType("vnd.android-dir/mms-sms");
-	// PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0,
-	// intent, 0);
-	//
-	// NotificationCompat.Builder notification = new NotificationCompat.Builder(
-	// mContext).setContentTitle("10086")
-	// .setContentText(getBodyString(stock))
-	// .setSmallIcon(R.drawable.ic_dialog_email).setAutoCancel(true)
-	// .setLights(0xFF0000FF, 100, 300)
-	// .setContentIntent(pendingIntent);
-	//
-	// if (Utility.getSettingBoolean(mContext,
-	// Constants.SETTING_KEY_NOTIFICATION_LIGHTS)) {
-	// defaults = defaults | Notification.DEFAULT_LIGHTS;
-	// }
-	// if (Utility.getSettingBoolean(mContext,
-	// Constants.SETTING_KEY_NOTIFICATION_VIBRATE)) {
-	// defaults = defaults | Notification.DEFAULT_VIBRATE;
-	// }
-	// if (Utility.getSettingBoolean(mContext,
-	// Constants.SETTING_KEY_NOTIFICATION_SOUND)) {
-	// defaults = defaults | Notification.DEFAULT_SOUND;
-	// }
-	// notification.setDefaults(defaults);
-	//
-	// notificationManager.notify(id, notification.build());
-	// }
-	//
-	// String getBodyString(Stock stock) {
-	// String result = "";
-	// ArrayList<StockDeal> stockDealList = new ArrayList<StockDeal>();
-	//
-	// result += stock.getName();
-	// result += String.valueOf(stock.getPrice()) + " ";
-	// result += String.valueOf(stock.getNet()) + " ";
-	//
-	// for (int i = Constants.PERIODS.length - 1; i >= 0; i--) {
-	// String period = Constants.PERIODS[i];
-	// if (Utility.getSettingBoolean(mContext, period)) {
-	// result += stock.getAction(period) + " ";
-	// }
-	// }
-	//
-	// result += "\n";
-	//
-	// mStockDatabaseManager.getStockDealList(stock, stockDealList);
-	//
-	// for (StockDeal stockDeal : stockDealList) {
-	// if ((stockDeal.getDeal() > 0)
-	// && Math.abs(stockDeal.getVolume()) > 0) {
-	// result += stockDeal.getDeal() + " ";
-	// result += stockDeal.getNet() + " ";
-	// result += stockDeal.getVolume() + " ";
-	// result += stockDeal.getProfit() + " ";
-	// result += "\n";
-	// }
-	// }
-	//
-	// return result;
-	// }
+	private void updateNotification(Stock stock) {
+		int id = 0;
+		int defaults = 0;
+		String bodyString = "";
+		String titleString = "";
+
+		titleString = stock.getName() + " " + stock.getNet();
+
+		bodyString = getBodyString(stock);
+
+		if (TextUtils.isEmpty(bodyString)) {
+			return;
+		}
+
+		NotificationManager notificationManager = (NotificationManager) mContext
+				.getSystemService(Context.NOTIFICATION_SERVICE);
+
+		id = (int) stock.getId();
+
+		Intent intent = new Intent(Intent.ACTION_MAIN);
+		intent.setType("vnd.android-dir/mms-sms");
+		PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0,
+				intent, 0);
+
+		NotificationCompat.Builder notification = new NotificationCompat.Builder(
+				mContext).setContentTitle(titleString)
+				.setContentText(getBodyString(stock))
+				.setSmallIcon(R.drawable.ic_dialog_email).setAutoCancel(true)
+				.setLights(0xFF0000FF, 100, 300)
+				.setContentIntent(pendingIntent);
+
+		if (Utility.getSettingBoolean(mContext,
+				Constants.SETTING_KEY_NOTIFICATION_LIGHTS)) {
+			defaults = defaults | Notification.DEFAULT_LIGHTS;
+		}
+		if (Utility.getSettingBoolean(mContext,
+				Constants.SETTING_KEY_NOTIFICATION_VIBRATE)) {
+			defaults = defaults | Notification.DEFAULT_VIBRATE;
+		}
+		if (Utility.getSettingBoolean(mContext,
+				Constants.SETTING_KEY_NOTIFICATION_SOUND)) {
+			defaults = defaults | Notification.DEFAULT_SOUND;
+		}
+		notification.setDefaults(defaults);
+
+		notificationManager.notify(id, notification.build());
+	}
+
+	String getBodyString(Stock stock) {
+		String action = "";
+		String result = "";
+		// ArrayList<StockDeal> stockDealList = new ArrayList<StockDeal>();
+
+		// result += stock.getName();
+		// result += stock.getPrice() + " ";
+		// result += String.valueOf(stock.getNet()) + " ";
+
+		for (int i = Constants.PERIODS.length - 1; i >= 0; i--) {
+			String period = Constants.PERIODS[i];
+			if (Utility.getSettingBoolean(mContext, period)) {
+				action = stock.getAction(period);
+
+				if (action.contains("B7") || action.contains("S7")) {
+					result += period + " " + action + " ";
+				}
+			}
+		}
+
+		// result += "\n";
+
+		// mStockDatabaseManager.getStockDealList(stock, stockDealList);
+		//
+		// for (StockDeal stockDeal : stockDealList) {
+		// if ((stockDeal.getDeal() > 0)
+		// && Math.abs(stockDeal.getVolume()) > 0) {
+		// result += stockDeal.getDeal() + " ";
+		// result += stockDeal.getNet() + " ";
+		// result += stockDeal.getVolume() + " ";
+		// result += stockDeal.getProfit() + " ";
+		// result += "\n";
+		// }
+		// }
+
+		return result;
+	}
 }
