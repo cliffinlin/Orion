@@ -35,8 +35,6 @@ public class Stock extends DatabaseTable {
 	private long mHold;
 	private double mCost;
 	private double mProfit;
-	private double mDealBuy;
-	private double mDealSell;
 
 	public ArrayList<StockData> mStockDataListMin1 = new ArrayList<StockData>();
 	public ArrayList<StockData> mStockDataListMin5 = new ArrayList<StockData>();
@@ -119,8 +117,6 @@ public class Stock extends DatabaseTable {
 		mHold = 0;
 		mCost = 0;
 		mProfit = 0;
-		mDealBuy = 0;
-		mDealSell = 0;
 	}
 
 	@Override
@@ -154,8 +150,6 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_HOLD, mHold);
 		contentValues.put(DatabaseContract.COLUMN_COST, mCost);
 		contentValues.put(DatabaseContract.COLUMN_PROFIT, mProfit);
-		contentValues.put(DatabaseContract.COLUMN_DEAL_BUY, mDealBuy);
-		contentValues.put(DatabaseContract.COLUMN_DEAL_SELL, mDealSell);
 
 		return contentValues;
 	}
@@ -225,8 +219,6 @@ public class Stock extends DatabaseTable {
 		setHold(stock.mHold);
 		setCost(stock.mCost);
 		setProfit(stock.mProfit);
-		setDealBuy(stock.mDealBuy);
-		setDealSell(stock.mDealSell);
 	}
 
 	@Override
@@ -265,8 +257,6 @@ public class Stock extends DatabaseTable {
 		setHold(cursor);
 		setCost(cursor);
 		setProfit(cursor);
-		setDealBuy(cursor);
-		setDealSell(cursor);
 	}
 
 	String getClases() {
@@ -709,40 +699,6 @@ public class Stock extends DatabaseTable {
 
 		setProfit(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_PROFIT)));
-	}
-
-	public double getDealBuy() {
-		return mDealBuy;
-	}
-
-	public void setDealBuy(double dealBuy) {
-		mDealBuy = dealBuy;
-	}
-
-	void setDealBuy(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setDealBuy(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_DEAL_BUY)));
-	}
-
-	public double getDealSell() {
-		return mDealSell;
-	}
-
-	public void setDealSell(double dealSell) {
-		mDealSell = dealSell;
-	}
-
-	void setDealSell(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setDealSell(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_DEAL_SELL)));
 	}
 
 	public String getAction(String period) {

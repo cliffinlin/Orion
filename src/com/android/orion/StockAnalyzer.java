@@ -18,7 +18,6 @@ import android.util.Log;
 import com.android.orion.curve.BezierCurve;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
-import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockMatch;
 import com.android.orion.indicator.MACD;
 import com.android.orion.utility.StopWatch;

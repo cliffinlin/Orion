@@ -104,7 +104,7 @@ public class StockDealListActivity extends StorageActivity implements
 			case MESSAGE_DELETE_DEAL:
 				getStock();
 				mStockDatabaseManager.deleteStockDealById(mDeal);
-				mStockDatabaseManager.updateStockHoldPosition(mStock);
+				mStockDatabaseManager.updateStockDeal(mStock);
 				mStockDatabaseManager.updateStock(mStock,
 						mStock.getContentValues());
 				break;
@@ -134,7 +134,8 @@ public class StockDealListActivity extends StorageActivity implements
 			case MESSAGE_VIEW_STOCK_DEAL:
 				getStock();
 
-				intent = new Intent(StockDealListActivity.this, StockDealListActivity.class);
+				intent = new Intent(StockDealListActivity.this,
+						StockDealListActivity.class);
 				Bundle bundle = new Bundle();
 				bundle.putString(Constants.EXTRA_STOCK_SE, mStock.getSE());
 				bundle.putString(Constants.EXTRA_STOCK_CODE, mStock.getCode());
@@ -707,8 +708,7 @@ public class StockDealListActivity extends StorageActivity implements
 										.insertStockDeal(stockDeal);
 							}
 
-							mStockDatabaseManager
-									.updateStockHoldPosition(mStock);
+							mStockDatabaseManager.updateStockDeal(mStock);
 							mStockDatabaseManager.updateStock(mStock,
 									mStock.getContentValues());
 						}

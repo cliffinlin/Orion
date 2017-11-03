@@ -72,8 +72,6 @@ public class StockFavoriteListActivity extends StorageActivity implements
 	TextView mTextViewHold = null;
 	TextView mTextViewCost = null;
 	TextView mTextViewProfit = null;
-	TextView mTextViewDealBuy = null;
-	TextView mTextViewDealSell = null;
 
 	ListView mLeftListView = null;
 	ListView mRightListView = null;
@@ -386,12 +384,6 @@ public class StockFavoriteListActivity extends StorageActivity implements
 		case R.id.profit:
 			mSortOrderColumn = DatabaseContract.COLUMN_PROFIT;
 			break;
-		case R.id.deal_buy:
-			mSortOrderColumn = DatabaseContract.COLUMN_DEAL_BUY;
-			break;
-		case R.id.deal_sell:
-			mSortOrderColumn = DatabaseContract.COLUMN_DEAL_SELL;
-			break;
 		default:
 			mSortOrderColumn = DatabaseContract.COLUMN_CODE;
 			break;
@@ -435,8 +427,6 @@ public class StockFavoriteListActivity extends StorageActivity implements
 		setHeaderTextColor(mTextViewHold, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewCost, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewProfit, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewDealBuy, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewDealSell, mHeaderTextDefaultColor);
 	}
 
 	void setVisibility(String key, TextView textView) {
@@ -530,16 +520,6 @@ public class StockFavoriteListActivity extends StorageActivity implements
 			mTextViewProfit.setOnClickListener(this);
 		}
 
-		mTextViewDealBuy = (TextView) findViewById(R.id.deal_buy);
-		if (mTextViewDealBuy != null) {
-			mTextViewDealBuy.setOnClickListener(this);
-		}
-
-		mTextViewDealSell = (TextView) findViewById(R.id.deal_sell);
-		if (mTextViewDealSell != null) {
-			mTextViewDealSell.setOnClickListener(this);
-		}
-
 		if (mSortOrder.contains(DatabaseContract.COLUMN_CODE)) {
 			setHeaderTextColor(mTextViewNameCode, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PRICE)) {
@@ -566,10 +546,6 @@ public class StockFavoriteListActivity extends StorageActivity implements
 			setHeaderTextColor(mTextViewCost, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PROFIT)) {
 			setHeaderTextColor(mTextViewProfit, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_DEAL_BUY)) {
-			setHeaderTextColor(mTextViewDealBuy, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_DEAL_SELL)) {
-			setHeaderTextColor(mTextViewDealSell, mHeaderTextHighlightColor);
 		} else {
 		}
 	}
@@ -585,13 +561,11 @@ public class StockFavoriteListActivity extends StorageActivity implements
 				DatabaseContract.COLUMN_MIN60, DatabaseContract.COLUMN_DAY,
 				DatabaseContract.COLUMN_WEEK, DatabaseContract.COLUMN_MONTH,
 				DatabaseContract.COLUMN_HOLD, DatabaseContract.COLUMN_COST,
-				DatabaseContract.COLUMN_PROFIT,
-				DatabaseContract.COLUMN_DEAL_BUY,
-				DatabaseContract.COLUMN_DEAL_SELL };
+				DatabaseContract.COLUMN_PROFIT };
 		int[] mRightTo = new int[] { R.id.price, R.id.net, R.id.type_5min,
 				R.id.type_15min, R.id.type_30min, R.id.type_60min,
 				R.id.type_day, R.id.type_week, R.id.type_month, R.id.hold,
-				R.id.cost, R.id.profit, R.id.deal_buy, R.id.deal_sell };
+				R.id.cost, R.id.profit };
 
 		mLeftListView = (ListView) findViewById(R.id.left_listview);
 		mLeftAdapter = new SimpleCursorAdapter(this,
