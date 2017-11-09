@@ -367,11 +367,15 @@ public class StockAnalyzer extends StockManager {
 			avv += Constants.STOCK_ACTION_MINUS;
 		}
 
-		if (period.equals(Constants.PERIOD_DAY)
-				|| period.equals(Constants.PERIOD_WEEK)
-				|| period.equals(Constants.PERIOD_MONTH)) {
-			action = stock.getAction(period);
+		if (action.contains("B") || action.contains("S")) {
+			if (stock.getPrice() > endStockData.getOverlapHigh()) {
+				action += Constants.STOCK_ACTION_UP;
+			} else if (stock.getPrice() < endStockData.getOverlapLow()) {
+				action += Constants.STOCK_ACTION_DOWN;
+			}
 		}
+
+		// action += stock.getAction(period);
 
 		action = avv + action;
 
