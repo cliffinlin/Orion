@@ -315,7 +315,7 @@ public class StockChartData {
 		mLimitLineList.add(limitLine);
 
 		for (StockDeal stockDeal : stockDealList) {
-			if (stockDeal.getVolume() > 0) {
+			if (stockDeal.getProfit() > 0) {
 				color = Color.RED;
 			} else {
 				color = Color.GREEN;
