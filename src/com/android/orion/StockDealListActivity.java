@@ -37,9 +37,7 @@ import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Setting;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;
-import com.android.orion.leancloud.LeanCloudLoginActivity;
 import com.android.orion.utility.Utility;
-import com.avos.avoscloud.AVUser;
 
 public class StockDealListActivity extends StorageActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
@@ -66,8 +64,6 @@ public class StockDealListActivity extends StorageActivity implements
 	String mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_ASC;
 	String mSortOrderDefault = mSortOrderColumn + mSortOrderDirection;
 	String mSortOrder = mSortOrderDefault;
-
-	AVUser mCurrentUser = null;
 
 	SyncHorizontalScrollView mTitleSHSV = null;
 	SyncHorizontalScrollView mContentSHSV = null;
@@ -288,14 +284,7 @@ public class StockDealListActivity extends StorageActivity implements
 	}
 
 	void onActionSync(int serviceType) {
-		mCurrentUser = AVUser.getCurrentUser();
-
-		if (mCurrentUser == null) {
-			mIntent = new Intent(this, LeanCloudLoginActivity.class);
-			startActivityForResult(mIntent, serviceType);
-		} else {
-			startService(serviceType, Constants.EXECUTE_IMMEDIATE);
-		}
+		startService(serviceType, Constants.EXECUTE_IMMEDIATE);
 	}
 
 	@Override

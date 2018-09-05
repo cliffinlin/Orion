@@ -8,7 +8,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.android.orion.utility.Utility;
-import com.avos.avoscloud.AVUser;
 
 public class OrionMainActivity extends PreferenceActivity {
 	StockDownloadAlarmManager mStockDownloadAlarmManager = null;
@@ -55,10 +54,6 @@ public class OrionMainActivity extends PreferenceActivity {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
-			return true;
-
-		case R.id.action_logout:
-			AVUser.logOut();
 			return true;
 		}
 

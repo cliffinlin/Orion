@@ -29,9 +29,7 @@ import android.widget.Toast;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Setting;
 import com.android.orion.database.Stock;
-import com.android.orion.leancloud.LeanCloudLoginActivity;
 import com.android.orion.utility.Utility;
-import com.avos.avoscloud.AVUser;
 
 public class StockFavoriteListActivity extends StorageActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
@@ -53,8 +51,6 @@ public class StockFavoriteListActivity extends StorageActivity implements
 	String mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_ASC;
 	String mSortOrderDefault = mSortOrderColumn + mSortOrderDirection;
 	String mSortOrder = mSortOrderDefault;
-
-	AVUser mCurrentUser = null;
 
 	SyncHorizontalScrollView mTitleSHSV = null;
 	SyncHorizontalScrollView mContentSHSV = null;
@@ -146,14 +142,6 @@ public class StockFavoriteListActivity extends StorageActivity implements
 			startActivity(intent);
 			return true;
 
-		case R.id.action_download:
-			onActionSync(Constants.SERVICE_CLOUD_DOWNLOAD_STOCK_FAVORITE);
-			return true;
-
-		case R.id.action_upload:
-			onActionSync(Constants.SERVICE_CLOUD_UPLOAD_STOCK_FAVORITE);
-			return true;
-
 		case R.id.action_save_sd:
 			showSaveSDAlertDialog();
 			return true;
@@ -185,15 +173,7 @@ public class StockFavoriteListActivity extends StorageActivity implements
 	}
 
 	void onActionSync(int serviceType) {
-		Intent intent = null;
-		mCurrentUser = AVUser.getCurrentUser();
-
-		if (mCurrentUser == null) {
-			intent = new Intent(this, LeanCloudLoginActivity.class);
-			startActivityForResult(intent, serviceType);
-		} else {
-			startService(serviceType, Constants.EXECUTE_IMMEDIATE);
-		}
+		startService(serviceType, Constants.EXECUTE_IMMEDIATE);
 	}
 
 	Long doInBackgroundLoad(Object... params) {

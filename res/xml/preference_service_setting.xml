@@ -40,10 +40,5 @@
             android:key="notification_sound"
             android:title="@string/notification_sound" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/match" >
-        <com.android.orion.CustomSwitchPreference
-            android:key="match"
-            android:title="@string/match" />
-    </PreferenceCategory>
 
 </PreferenceScreen>

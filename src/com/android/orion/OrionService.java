@@ -25,7 +25,6 @@ import android.telephony.TelephonyManager;
 import android.widget.Toast;
 
 import com.android.orion.database.DatabaseContract;
-import com.android.orion.leancloud.LeanCloudManager;
 
 public class OrionService extends Service {
 	boolean mRedelivery = true;
@@ -51,7 +50,6 @@ public class OrionService extends Service {
 	SettingObserver mSettingObserver;
 
 	SinaFinance mSinaFinance;
-	LeanCloudManager mLeanCloudManager;
 
 	OrionBroadcastReceiver mBroadcastReceiver;
 
@@ -124,7 +122,6 @@ public class OrionService extends Service {
 		registerReceiver(mBroadcastReceiver, filter);
 
 		mSinaFinance = new SinaFinance(this);
-		mLeanCloudManager = new LeanCloudManager(this);
 	}
 
 	@Override
@@ -168,10 +165,6 @@ public class OrionService extends Service {
 			return;
 		}
 
-		if (mLeanCloudManager == null) {
-			return;
-		}
-
 		bundle = intent.getExtras();
 		serviceType = bundle.getInt(Constants.EXTRA_SERVICE_TYPE,
 				Constants.SERVICE_TYPE_NONE);
@@ -190,22 +183,6 @@ public class OrionService extends Service {
 			break;
 
 		case Constants.SERVICE_REMOVE_STOCK_FAVORITE:
-			break;
-
-		case Constants.SERVICE_CLOUD_DOWNLOAD_STOCK_FAVORITE:
-			mLeanCloudManager.fetchStockFavorite();
-			mSinaFinance.loadStockArrayMapFavorite();
-			mSinaFinance.fixPinyin();
-			break;
-
-		case Constants.SERVICE_CLOUD_UPLOAD_STOCK_FAVORITE:
-			if (mLeanCloudManager.saveStockFavorite()) {
-				mHandler.post(new DisplayToast(
-						getString(R.string.action_upload_ok)));
-			} else {
-				mHandler.post(new DisplayToast(
-						getString(R.string.action_upload_failed)));
-			}
 			break;
 
 		default:

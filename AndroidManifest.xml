@@ -46,14 +46,6 @@
         </activity>
         <activity android:name="com.android.orion.OrionBaseActivity" >
         </activity>
-        <activity
-            android:name="com.android.orion.leancloud.LeanCloudLoginActivity"
-            android:label="@string/title_activity_login" >
-        </activity>
-        <activity
-            android:name="com.android.orion.leancloud.LeanCloudSignUpActivity"
-            android:label="@string/title_activity_sign_up" >
-        </activity>
         <activity android:name="com.android.orion.StockActivity" >
         </activity>
         <activity
@@ -99,18 +91,6 @@
         <activity
             android:name="com.android.orion.StockDealActivity"
             android:label="@string/title_activity_deal" >
-        </activity>
-        <activity
-            android:name="com.android.orion.StockMatchActivity"
-            android:label="@string/title_activity_match" >
-        </activity>
-        <activity
-            android:name="com.android.orion.StockMatchChartListActivity"
-            android:label="@string/stock_chart" >
-        </activity>
-        <activity
-            android:name="com.android.orion.StockMatchListActivity"
-            android:label="@string/title_activity_match_list" >
         </activity>
         <activity
             android:name="com.android.orion.StockOperationActivity"

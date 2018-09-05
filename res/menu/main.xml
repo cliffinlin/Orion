@@ -12,11 +12,6 @@
         android:showAsAction="always|withText"
         android:title="@string/action_new"
         android:icon="@drawable/ic_action_new"/>
-    
-    <item
-        android:id="@+id/action_logout"
-        android:title="@string/logout_label">
-    </item>
 
     <item
         android:id="@+id/action_settings"

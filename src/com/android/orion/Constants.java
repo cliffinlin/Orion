@@ -65,8 +65,6 @@ public class Constants {
 	public static final int SERVICE_DOWNLOAD_STOCK_FAVORITE_DATA_REALTIME = 3;
 	public static final int SERVICE_ADD_STOCK_FAVORITE = 10;
 	public static final int SERVICE_REMOVE_STOCK_FAVORITE = 11;
-	public static final int SERVICE_CLOUD_DOWNLOAD_STOCK_FAVORITE = 20;
-	public static final int SERVICE_CLOUD_UPLOAD_STOCK_FAVORITE = 21;
 
 	public static final String SETTING_SHARED_PREFERENCE = "setting";
 	public static final String SETTING_KEY_ALARM = "alarm";
