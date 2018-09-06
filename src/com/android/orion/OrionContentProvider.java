@@ -32,9 +32,6 @@ public class OrionContentProvider extends ContentProvider {
 	private static final int STOCK_DEAL = 400;
 	private static final int STOCK_DEAL_ID = 401;
 
-	private static final int STOCK_MATCH = 500;
-	private static final int STOCK_MATCH_ID = 501;
-
 	private static final UriMatcher mUriMatcher = new UriMatcher(
 			UriMatcher.NO_MATCH);
 
@@ -55,10 +52,6 @@ public class OrionContentProvider extends ContentProvider {
 				DatabaseContract.StockDeal.TABLE_NAME, STOCK_DEAL);
 		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
 				DatabaseContract.StockDeal.TABLE_NAME + "/#", STOCK_DEAL_ID);
-		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
-				DatabaseContract.StockMatch.TABLE_NAME, STOCK_MATCH);
-		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
-				DatabaseContract.StockMatch.TABLE_NAME + "/#", STOCK_MATCH_ID);
 	}
 
 	ContentResolver mContentResolver = null;
@@ -109,12 +102,6 @@ public class OrionContentProvider extends ContentProvider {
 			break;
 		case STOCK_DEAL_ID:
 			type = DatabaseContract.StockDeal.CONTENT_ITEM_TYPE;
-			break;
-		case STOCK_MATCH:
-			type = DatabaseContract.StockMatch.CONTENT_TYPE;
-			break;
-		case STOCK_MATCH_ID:
-			type = DatabaseContract.StockMatch.CONTENT_ITEM_TYPE;
 			break;
 		default:
 			break;
@@ -175,14 +162,6 @@ public class OrionContentProvider extends ContentProvider {
 					+ uri.getLastPathSegment());
 			break;
 
-		case STOCK_MATCH:
-			builder.setTables(DatabaseContract.StockMatch.TABLE_NAME);
-			break;
-		case STOCK_MATCH_ID:
-			builder.setTables(DatabaseContract.StockMatch.TABLE_NAME);
-			builder.appendWhere(BaseColumns._ID + " = "
-					+ uri.getLastPathSegment());
-			break;
 		default:
 			break;
 		}
@@ -230,11 +209,6 @@ public class OrionContentProvider extends ContentProvider {
 					DatabaseContract.StockDeal.TABLE_NAME, null, contentValues);
 			break;
 
-		case STOCK_MATCH:
-			id = mDatabaseManager.mDatabase
-					.insert(DatabaseContract.StockMatch.TABLE_NAME, null,
-							contentValues);
-			break;
 		default:
 			break;
 		}
@@ -365,20 +339,6 @@ public class OrionContentProvider extends ContentProvider {
 					selectionArgs);
 			break;
 
-		case STOCK_MATCH:
-			result = mDatabaseManager.mDatabase.update(
-					DatabaseContract.StockMatch.TABLE_NAME, values, selection,
-					selectionArgs);
-			break;
-		case STOCK_MATCH_ID:
-			whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
-			if (!TextUtils.isEmpty(selection)) {
-				whereClause += " AND " + whereClause;
-			}
-			result = mDatabaseManager.mDatabase.update(
-					DatabaseContract.StockMatch.TABLE_NAME, values,
-					whereClause, selectionArgs);
-			break;
 		default:
 			break;
 		}
@@ -468,21 +428,6 @@ public class OrionContentProvider extends ContentProvider {
 					selectionArgs);
 			break;
 
-		case STOCK_MATCH:
-			result = mDatabaseManager.mDatabase.delete(
-					DatabaseContract.StockMatch.TABLE_NAME, selection,
-					selectionArgs);
-			break;
-
-		case STOCK_MATCH_ID:
-			whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
-			if (!TextUtils.isEmpty(selection)) {
-				whereClause += " AND " + whereClause;
-			}
-			result = mDatabaseManager.mDatabase.delete(
-					DatabaseContract.StockMatch.TABLE_NAME, whereClause,
-					selectionArgs);
-			break;
 		default:
 			break;
 		}

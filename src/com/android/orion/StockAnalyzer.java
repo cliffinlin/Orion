@@ -2,9 +2,6 @@ package com.android.orion;
 
 import java.util.ArrayList;
 
-import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
-import org.apache.commons.math3.stat.regression.SimpleRegression;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -18,7 +15,6 @@ import android.util.Log;
 import com.android.orion.curve.BezierCurve;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
-import com.android.orion.database.StockMatch;
 import com.android.orion.indicator.MACD;
 import com.android.orion.utility.StopWatch;
 import com.android.orion.utility.Utility;
@@ -43,11 +39,6 @@ public class StockAnalyzer extends StockManager {
 			loadStockDataList(stock, period, stockDataList);
 			if (stockDataList.size() < Constants.STOCK_VERTEX_TYPING_SIZE) {
 				return;
-			}
-
-			if (Utility
-					.getSettingBoolean(mContext, Constants.SETTING_KEY_MATCH)) {
-				analyzeStockMatch(stock, period, stockDataList);
 			}
 
 			analyzeStockData(stock, period, stockDataList);
@@ -168,117 +159,6 @@ public class StockAnalyzer extends StockManager {
 		}
 
 		stock.setAction(period, action);
-	}
-
-	private void analyzeStockMatch(Stock stock, String period,
-			ArrayList<StockData> stockDataList) {
-		double x = 0;
-		double y = 0;
-		double slope = 0;
-		double mean = 0;
-		double std = 0;
-		double delta = 0;
-
-		Stock stock_X;
-		Stock stock_Y;
-		ArrayList<StockMatch> stockMatchList;
-		ArrayList<StockData> stockDataList_X = null;
-		ArrayList<StockData> stockDataList_Y = null;
-
-		SimpleRegression simpleRegression = new SimpleRegression();
-		DescriptiveStatistics descriptiveStatistics = new DescriptiveStatistics();
-
-		simpleRegression.clear();
-		descriptiveStatistics.clear();
-
-		if ((stock == null) || (stockDataList == null)) {
-			return;
-		}
-
-		stockMatchList = new ArrayList<StockMatch>();
-		mStockDatabaseManager.getStockMatchList(stock, stockMatchList);
-		if (stockMatchList.size() == 0) {
-			return;
-		}
-
-		stock_X = Stock.obtain();
-		stock_Y = Stock.obtain();
-
-		for (StockMatch stockMatch : stockMatchList) {
-			if (stock.getSE().equals(stockMatch.getSE_X())
-					&& stock.getCode().equals(stockMatch.getCode_X())) {
-				stock_X.set(stock);
-				stockDataList_X = stockDataList;
-
-				stock_Y.setSE(stockMatch.getSE_Y());
-				stock_Y.setCode(stockMatch.getCode_Y());
-				mStockDatabaseManager.getStock(stock_Y);
-				stockDataList_Y = new ArrayList<StockData>();
-				loadStockDataList(stock_Y, period, stockDataList_Y);
-			} else if (stock.getSE().equals(stockMatch.getSE_Y())
-					&& stock.getCode().equals(stockMatch.getCode_Y())) {
-				stock_X.setSE(stockMatch.getSE_X());
-				stock_X.setCode(stockMatch.getCode_X());
-				mStockDatabaseManager.getStock(stock_X);
-				stockDataList_X = new ArrayList<StockData>();
-				loadStockDataList(stock_X, period, stockDataList_X);
-
-				stock_Y.set(stock);
-				stockDataList_Y = stockDataList;
-			}
-
-			if ((stockDataList_X == null) || (stockDataList_Y == null)
-					|| (stockDataList_X.size() != stockDataList_Y.size())) {
-				return;
-			}
-
-			if (stockDataList_X.size() < Constants.STOCK_VERTEX_TYPING_SIZE) {
-				return;
-			}
-
-			simpleRegression.clear();
-
-			for (int i = 0; i < stockDataList_X.size(); i++) {
-				x = stockDataList_X.get(i).getClose();
-				y = stockDataList_Y.get(i).getClose();
-
-				simpleRegression.addData(x, y);
-			}
-
-			slope = simpleRegression.getSlope();
-
-			descriptiveStatistics.clear();
-
-			for (int i = 0; i < stockDataList_X.size(); i++) {
-				x = stockDataList_X.get(i).getClose();
-				y = stockDataList_Y.get(i).getClose();
-
-				delta = y - slope * x;
-
-				descriptiveStatistics.addValue(delta);
-			}
-
-			mean = descriptiveStatistics.getMean();
-			std = descriptiveStatistics.getStandardDeviation();
-
-			int i = stockDataList_X.size() - 1;
-			x = stockDataList_X.get(i).getClose();
-			y = stockDataList_Y.get(i).getClose();
-
-			delta = y - slope * x;
-
-			if (std == 0) {
-				delta = 0;
-			} else {
-				delta = (delta - mean) / std;
-			}
-
-			delta = Utility.Round(delta, Constants.DOUBLE_FIXED_DECIMAL - 1);
-
-			stockMatch.setValue(period, delta);
-
-			mStockDatabaseManager.updateStockMatch(stockMatch);
-		}
 	}
 
 	private void analyzeStockData(Stock stock, String period,
@@ -548,7 +428,7 @@ public class StockAnalyzer extends StockManager {
 		String bodyString = "";
 		String titleString = "";
 
-		titleString = stock.getName() + " " + stock.getNet();
+		titleString = stock.getName() + " " + stock.getPrice() + " " + stock.getNet();
 
 		bodyString = getBodyString(stock);
 

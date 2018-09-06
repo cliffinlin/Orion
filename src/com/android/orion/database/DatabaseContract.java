@@ -257,44 +257,4 @@ public final class DatabaseContract {
 		public static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
 				+ TABLE_NAME;
 	}
-
-	public static abstract class StockMatch implements BaseColumns {
-		public static final String TABLE_NAME = "stock_match";
-
-		public static final Uri CONTENT_URI = Uri.withAppendedPath(
-				DatabaseContract.CONTENT_URI, TABLE_NAME);
-		public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
-				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
-		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
-				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
-		public static final String SORT_ORDER_DEFAULT = COLUMN_CODE + " ASC";
-
-		public static final String[] PROJECTION_ALL = { _ID, COLUMN_SE_X,
-				COLUMN_CODE_X, COLUMN_NAME_X, COLUMN_SE_Y, COLUMN_CODE_Y,
-				COLUMN_NAME_Y, COLUMN_MIN1, COLUMN_MIN5, COLUMN_MIN15,
-				COLUMN_MIN30, COLUMN_MIN60, COLUMN_DAY, COLUMN_WEEK,
-				COLUMN_MONTH, COLUMN_QUARTER, COLUMN_YEAR, COLUMN_CREATED,
-				COLUMN_MODIFIED };
-
-		private static final String CREATE_TABLE_CONTENT = " (" + _ID
-				+ " INTEGER PRIMARY KEY," + COLUMN_SE_X + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_CODE_X + TEXT_TYPE + COMMA_SEP + COLUMN_NAME_X
-				+ TEXT_TYPE + COMMA_SEP + COLUMN_SE_Y + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_CODE_Y + TEXT_TYPE + COMMA_SEP + COLUMN_NAME_Y
-				+ TEXT_TYPE + COMMA_SEP + COLUMN_MIN1 + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_MIN5 + DOUBLE_TYPE + COMMA_SEP + COLUMN_MIN15
-				+ DOUBLE_TYPE + COMMA_SEP + COLUMN_MIN30 + DOUBLE_TYPE
-				+ COMMA_SEP + COLUMN_MIN60 + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_DAY + DOUBLE_TYPE + COMMA_SEP + COLUMN_WEEK
-				+ DOUBLE_TYPE + COMMA_SEP + COLUMN_MONTH + DOUBLE_TYPE
-				+ COMMA_SEP + COLUMN_QUARTER + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_YEAR + DOUBLE_TYPE + COMMA_SEP + COLUMN_CREATED
-				+ TEXT_TYPE + COMMA_SEP + COLUMN_MODIFIED + TEXT_TYPE + " )";
-
-		public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
-				+ CREATE_TABLE_CONTENT;
-
-		public static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
-				+ TABLE_NAME;
-	}
 }

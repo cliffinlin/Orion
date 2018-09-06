@@ -150,12 +150,6 @@ public class StockChartListActivity extends OrionBaseActivity implements
 			return true;
 		}
 		case R.id.action_settings: {
-			Bundle bundle = new Bundle();
-			bundle.putString(Constants.EXTRA_STOCK_SE, mStock.getSE());
-			bundle.putString(Constants.EXTRA_STOCK_CODE, mStock.getCode());
-			Intent intent = new Intent(this, StockOperationActivity.class);
-			intent.putExtras(bundle);
-			startActivity(intent);
 			return true;
 		}
 		case R.id.action_deal: {
@@ -633,12 +627,12 @@ public class StockChartListActivity extends OrionBaseActivity implements
 			YAxis leftAxis = null;
 			YAxis rightAxis = null;
 
-			// For android 5 solution:
+			// For android 5 and above solution:
 //			if (view == null) {
 				view = LayoutInflater.from(context).inflate(mResource, null);
 				viewHolder = new ViewHolder();
 				viewHolder.chart = (CombinedChart) view.findViewById(R.id.chart);
-//				view.setTag(viewHolder);
+				view.setTag(viewHolder);
 //			} else {
 //				viewHolder = (ViewHolder) view.getTag();
 //			}
