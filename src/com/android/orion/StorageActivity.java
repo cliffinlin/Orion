@@ -105,6 +105,7 @@ public class StorageActivity extends DatabaseActivity {
 	}
 
 	void SaveListToSD(String xmlFileName) {
+		int count = 0;
 		File file = null;
 		File folder = null;
 		String folderName = "";
@@ -135,18 +136,23 @@ public class StorageActivity extends DatabaseActivity {
 				}
 
 				fileOutputStream = new FileOutputStream(file, false);
-				listToXml(fileOutputStream);
+				count = listToXml(fileOutputStream);
 				fileOutputStream.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			
+			Toast.makeText(this, count + " items saved in " + fileName, Toast.LENGTH_LONG)
+			.show();
 		} else {
 			Toast.makeText(this, R.string.no_sd_card_found, Toast.LENGTH_LONG)
 					.show();
 		}
 	}
 
-	void listToXml(FileOutputStream fileOutputStream) {
+	int listToXml(FileOutputStream fileOutputStream) {
+		int count = 0;
+		
 		XmlSerializer xmlSerializer = Xml.newSerializer();
 
 		try {
@@ -160,16 +166,19 @@ public class StorageActivity extends DatabaseActivity {
 			xmlSerializer.attribute("", XML_ATTRIBUTE_DATE,
 					Utility.getCurrentDateTimeString());
 
-			xmlSerialize(xmlSerializer);
+			count = xmlSerialize(xmlSerializer);
 
 			xmlSerializer.endTag("", XML_TAG_ROOT);
 			xmlSerializer.endDocument();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		return count;
 	}
 
-	void xmlSerialize(XmlSerializer xmlSerializer) {
+	int xmlSerialize(XmlSerializer xmlSerializer) {
+		return 0;
 	}
 
 	void xmlSerialize(XmlSerializer xmlSerializer, String tag, String text) {

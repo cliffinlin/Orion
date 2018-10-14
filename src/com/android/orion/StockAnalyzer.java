@@ -15,6 +15,7 @@ import android.util.Log;
 import com.android.orion.curve.BezierCurve;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
+import com.android.orion.database.StockDeal;
 import com.android.orion.indicator.MACD;
 import com.android.orion.utility.StopWatch;
 import com.android.orion.utility.Utility;
@@ -473,6 +474,8 @@ public class StockAnalyzer extends StockManager {
 	String getBodyString(Stock stock) {
 		String action = "";
 		String result = "";
+		
+		StockDeal stockDeal = new StockDeal();
 		// ArrayList<StockDeal> stockDealList = new ArrayList<StockDeal>();
 
 		// result += stock.getName();
@@ -490,6 +493,11 @@ public class StockAnalyzer extends StockManager {
 			}
 		}
 
+		mStockDatabaseManager.getStockDeal(stock, stockDeal);
+		
+		if (stock.getPrice() <= stockDeal.getDeal()) {
+			result += "! ";
+		}
 		// result += "\n";
 
 		// mStockDatabaseManager.getStockDealList(stock, stockDealList);

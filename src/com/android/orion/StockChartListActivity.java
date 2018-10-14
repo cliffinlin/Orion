@@ -329,38 +329,6 @@ public class StockChartListActivity extends OrionBaseActivity implements
 		return loader;
 	}
 
-	void loadStockDealList() {
-		Cursor cursor = null;
-		String selection = "";
-
-		if ((mStock == null) || (mStockDealList == null)) {
-			return;
-		}
-
-		mStockDealList.clear();
-
-		selection = DatabaseContract.COLUMN_SE + " = " + "\'" + mStock.getSE()
-				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
-				+ mStock.getCode() + "\'";
-
-		try {
-			cursor = mStockDatabaseManager
-					.queryStockDeal(selection, null, null);
-
-			if ((cursor != null) && (cursor.getCount() > 0)) {
-				while (cursor.moveToNext()) {
-					StockDeal stockDeal = new StockDeal();
-					stockDeal.set(cursor);
-					mStockDealList.add(stockDeal);
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			mStockDatabaseManager.closeCursor(cursor);
-		}
-	}
-
 	void updateMenuAction() {
 		int size = 0;
 		if (mMenu == null) {

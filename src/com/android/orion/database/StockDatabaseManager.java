@@ -851,6 +851,34 @@ public class StockDatabaseManager extends DatabaseManager {
 		}
 	}
 
+	public void getStockDeal(Stock stock, StockDeal stockDeal) {
+		Cursor cursor = null;
+		String selection = "";
+
+		if ((stock == null) || (stockDeal == null)) {
+			return;
+		}
+
+		selection = DatabaseContract.COLUMN_SE + " = " + "\'" + stock.getSE()
+				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
+				+ stock.getCode() + "\'" + " AND "
+				+ DatabaseContract.COLUMN_VOLUME + " = " + 0;
+
+		try {
+			cursor = queryStockDeal(selection, null, null);
+
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				while (cursor.moveToNext()) {
+					stockDeal.set(cursor);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
 	public boolean isStockDealExist(StockDeal stockDeal) {
 		boolean result = false;
 		Cursor cursor = null;

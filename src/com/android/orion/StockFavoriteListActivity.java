@@ -13,6 +13,9 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,7 +43,7 @@ public class StockFavoriteListActivity extends StorageActivity implements
 	static final int LOADER_ID_STOCK_FAVORITE_LIST = 0;
 
 	static final int LOAD_FAVORITE_LIST_FROM_SD = 11;
-	static final int SAVE_FAVORITE_LIST_TO_SD = 12;
+	static final int MESSAGE_SAVE_TO_SD = 12;
 
 	static final int mHeaderTextDefaultColor = Color.BLACK;
 	static final int mHeaderTextHighlightColor = Color.RED;
@@ -74,6 +77,23 @@ public class StockFavoriteListActivity extends StorageActivity implements
 
 	SimpleCursorAdapter mLeftAdapter = null;
 	SimpleCursorAdapter mRightAdapter = null;
+	
+	Handler mHandler = new Handler(Looper.getMainLooper()) {
+
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+
+			switch (msg.what) {
+			case MESSAGE_SAVE_TO_SD:
+				SaveListToSD(FAVORITE_LIST_XML_FILE_NAME);
+				break;
+				
+			default:
+				break;
+			}
+		}
+	};
 
 	private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
 		@Override
@@ -169,7 +189,7 @@ public class StockFavoriteListActivity extends StorageActivity implements
 	@Override
 	void onSaveSD() {
 		super.onSaveSD();
-		startSaveTask(SAVE_FAVORITE_LIST_TO_SD);
+		mHandler.sendEmptyMessage(MESSAGE_SAVE_TO_SD);
 	}
 
 	void onActionSync(int serviceType) {
@@ -177,7 +197,7 @@ public class StockFavoriteListActivity extends StorageActivity implements
 	}
 
 	Long doInBackgroundLoad(Object... params) {
-		super.doInBackgroundSave(params);
+		super.doInBackgroundLoad(params);
 		int execute = (Integer) params[0];
 
 		switch (execute) {
@@ -196,28 +216,6 @@ public class StockFavoriteListActivity extends StorageActivity implements
 		super.onPostExecuteLoad(result);
 		startService(Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE,
 				Constants.EXECUTE_IMMEDIATE);
-	}
-
-	@Override
-	Long doInBackgroundSave(Object... params) {
-		super.doInBackgroundSave(params);
-		int execute = (Integer) params[0];
-
-		switch (execute) {
-		case SAVE_FAVORITE_LIST_TO_SD:
-			SaveListToSD(FAVORITE_LIST_XML_FILE_NAME);
-			break;
-
-		default:
-			break;
-		}
-
-		return RESULT_SUCCESS;
-	}
-
-	@Override
-	void onPostExecuteSave(Long result) {
-		super.onPostExecuteSave(result);
 	}
 
 	@Override
@@ -276,7 +274,9 @@ public class StockFavoriteListActivity extends StorageActivity implements
 	}
 
 	@Override
-	void xmlSerialize(XmlSerializer xmlSerializer) {
+	int xmlSerialize(XmlSerializer xmlSerializer) {
+		int count = 0;
+		
 		super.xmlSerialize(xmlSerializer);
 
 		Cursor cursor = null;
@@ -285,7 +285,7 @@ public class StockFavoriteListActivity extends StorageActivity implements
 		Stock stock = Stock.obtain();
 
 		if (mStockDatabaseManager == null) {
-			return;
+			return count;
 		}
 
 		try {
@@ -301,6 +301,8 @@ public class StockFavoriteListActivity extends StorageActivity implements
 					xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_NAME,
 							stock.getName());
 					xmlSerializer.endTag(null, XML_TAG_ITEM);
+					
+					count++;
 				}
 			}
 		} catch (Exception e) {
@@ -308,6 +310,8 @@ public class StockFavoriteListActivity extends StorageActivity implements
 		} finally {
 			mStockDatabaseManager.closeCursor(cursor);
 		}
+		
+		return count;
 	}
 
 	@Override
