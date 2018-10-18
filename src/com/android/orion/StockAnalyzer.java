@@ -428,14 +428,21 @@ public class StockAnalyzer extends StockManager {
 		int defaults = 0;
 		String bodyString = "";
 		String titleString = "";
+		StockDeal stockDeal = new StockDeal();
 
-		titleString = stock.getName() + " " + stock.getPrice() + " " + stock.getNet();
+		mStockDatabaseManager.getStockDeal(stock, stockDeal);
+		
+		if (stock.getPrice() <= stockDeal.getDeal()) {
+			titleString = "@ ";
+		}
 
 		bodyString = getBodyString(stock);
 
-		if (TextUtils.isEmpty(bodyString)) {
+		if (TextUtils.isEmpty(bodyString) && TextUtils.isEmpty(titleString)) {
 			return;
 		}
+		
+		titleString += stock.getName() + " " + stock.getPrice() + " " + stock.getNet();
 
 		NotificationManager notificationManager = (NotificationManager) mContext
 				.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -449,7 +456,7 @@ public class StockAnalyzer extends StockManager {
 
 		NotificationCompat.Builder notification = new NotificationCompat.Builder(
 				mContext).setContentTitle(titleString)
-				.setContentText(getBodyString(stock))
+				.setContentText(bodyString)
 				.setSmallIcon(R.drawable.ic_dialog_email).setAutoCancel(true)
 				.setLights(0xFF0000FF, 100, 300)
 				.setContentIntent(pendingIntent);
@@ -474,8 +481,7 @@ public class StockAnalyzer extends StockManager {
 	String getBodyString(Stock stock) {
 		String action = "";
 		String result = "";
-		
-		StockDeal stockDeal = new StockDeal();
+
 		// ArrayList<StockDeal> stockDealList = new ArrayList<StockDeal>();
 
 		// result += stock.getName();
@@ -493,11 +499,6 @@ public class StockAnalyzer extends StockManager {
 			}
 		}
 
-		mStockDatabaseManager.getStockDeal(stock, stockDeal);
-		
-		if (stock.getPrice() <= stockDeal.getDeal()) {
-			result += "! ";
-		}
 		// result += "\n";
 
 		// mStockDatabaseManager.getStockDealList(stock, stockDealList);
