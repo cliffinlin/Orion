@@ -169,8 +169,8 @@ public class OrionService extends Service {
 		serviceType = bundle.getInt(Constants.EXTRA_SERVICE_TYPE,
 				Constants.SERVICE_TYPE_NONE);
 
-		mSinaFinance.downloadStockIndexes();
-		mSinaFinance.downloadStockHSA();
+/*		mSinaFinance.downloadStockIndexes();
+		mSinaFinance.downloadStockHSA();*/
 		mSinaFinance.loadStockArrayMapFavorite();
 
 		switch (serviceType) {

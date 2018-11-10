@@ -150,13 +150,13 @@ public class StockDealListActivity extends StorageActivity implements
 		@Override
 		public void onChange(boolean selfChange, Uri uri) {
 			super.onChange(selfChange, uri);
-			restartLoader();
+//			restartLoader();
 		}
 
 		@Override
 		public void onChange(boolean selfChange) {
 			super.onChange(selfChange);
-			restartLoader();
+//			restartLoader();
 		}
 	};
 
