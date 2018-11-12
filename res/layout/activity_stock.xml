@@ -40,15 +40,24 @@
             android:labelFor="@+id/edittext_stock_se"
             android:text="@string/stock_se" />
 
-        <EditText
-            android:id="@+id/edittext_stock_se"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="14dp"
-            android:layout_marginLeft="18dp"
-            android:layout_marginRight="14dp"
-            android:hint="@string/stock_se_hint"
-            android:inputType="text" />
+        <RadioGroup
+            android:id="@+id/radioGroupSE"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <RadioButton
+                android:id="@+id/radio_sh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/stock_se_sh" />
+
+            <RadioButton
+                android:id="@+id/radio_sz"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/stock_se_sz" />
+        </RadioGroup>
     </LinearLayout>
 
     <LinearLayout

@@ -122,6 +122,8 @@
     <string name="stock_operation">Operation</string>
     <string name="stock_quota">Stock Quota</string>
     <string name="stock_se">Stock SE</string>
+    <string name="stock_se_sh">SH</string>
+    <string name="stock_se_sz">SZ</string>        
     <string name="stock_se_hint">sh or sz</string>
     <string name="stock_se_not_found">Stock SE not Found!</string>
     <string name="title_activity_about">About</string>

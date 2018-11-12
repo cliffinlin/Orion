@@ -1,13 +1,16 @@
 package com.android.orion;
 
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.android.orion.database.Stock;
@@ -23,7 +26,10 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 
 	public static final long RESULT_STOCK_EXIST = -2;
 
-	EditText mEditTextStockSE, mEditTextStockName, mEditTextStockCode;
+	String mSE = "";
+
+	RadioGroup mRadioGroup;
+	EditText mEditTextStockName, mEditTextStockCode;
 	Button mButtonOk, mButtonCancel;
 
 	@Override
@@ -44,17 +50,43 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 	}
 
 	void initView() {
-		mEditTextStockSE = (EditText) findViewById(R.id.edittext_stock_se);
+		mRadioGroup = (RadioGroup) findViewById(R.id.radioGroupSE);
 		mEditTextStockName = (EditText) findViewById(R.id.edittext_stock_name);
 		mEditTextStockCode = (EditText) findViewById(R.id.edittext_stock_code);
 		mButtonOk = (Button) findViewById(R.id.button_ok);
 		mButtonCancel = (Button) findViewById(R.id.button_cancel);
 
-		mEditTextStockSE.setOnClickListener(this);
+		mRadioGroup.setOnClickListener(this);
 		mEditTextStockName.setOnClickListener(this);
 		mEditTextStockCode.setOnClickListener(this);
 		mButtonOk.setOnClickListener(this);
 		mButtonCancel.setOnClickListener(this);
+
+		mEditTextStockCode.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void afterTextChanged(Editable arg0) {
+
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence arg0, int arg1,
+					int arg2, int arg3) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence arg0, int arg1, int arg2,
+					int arg3) {
+				if ((arg0 != null) && (arg0.length() > 0)) {
+					if (arg0.charAt(0) == '6') {
+						mRadioGroup.check(R.id.radio_sh);
+					} else {
+						mRadioGroup.check(R.id.radio_sz);
+					}
+				}
+			}
+		});
 
 		if (ACTION_STOCK_INSERT.equals(mAction)) {
 			setTitle(R.string.stock_insert);
@@ -63,9 +95,21 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		}
 	}
 
+	String getSE() {
+		String result = "";
+
+		int id = mRadioGroup.getCheckedRadioButtonId();
+
+		if (id == R.id.radio_sh) {
+			result = "sh";
+		} else {
+			result = "sz";
+		}
+
+		return result;
+	}
+
 	void updateView() {
-		mEditTextStockSE.setText(mStock.getSE());
-		mEditTextStockSE.setText(mStock.getSE());
 		mEditTextStockName.setText(mStock.getName());
 		mEditTextStockCode.setText(mStock.getCode());
 	}
@@ -94,15 +138,15 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 
 		switch (id) {
 		case R.id.button_ok:
-			String se = mEditTextStockSE.getText().toString();
+			mSE = getSE();
 			String name = mEditTextStockName.getText().toString();
 			String code = mEditTextStockCode.getText().toString();
 
 			mStock.setClasses(Constants.STOCK_FLAG_CLASS_HSA);
 
-			if (Constants.STOCK_SE_SH.equals(se)
-					|| Constants.STOCK_SE_SZ.equals(se)) {
-				mStock.setSE(se);
+			if (Constants.STOCK_SE_SH.equals(mSE)
+					|| Constants.STOCK_SE_SZ.equals(mSE)) {
+				mStock.setSE(mSE);
 			} else {
 				Toast.makeText(mContext, R.string.stock_se_not_found,
 						Toast.LENGTH_LONG).show();
