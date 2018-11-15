@@ -302,7 +302,7 @@ public class StockChartData {
 
 		mLimitLineList.clear();
 
-		color = Color.YELLOW;
+		color = Color.BLUE;
 		label = "                                                                      "
 				+ stock.getCost()
 				+ " "
@@ -319,6 +319,10 @@ public class StockChartData {
 				color = Color.RED;
 			} else {
 				color = Color.GREEN;
+			}
+			
+			if (stockDeal.getVolume() == 0) {
+				color = Color.YELLOW;
 			}
 
 			label = "        " + stockDeal.getDeal() + " " + stockDeal.getNet()
