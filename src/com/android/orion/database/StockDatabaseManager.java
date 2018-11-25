@@ -854,7 +854,7 @@ public class StockDatabaseManager extends DatabaseManager {
 				+ DatabaseContract.COLUMN_VOLUME + " > " + 0;
 
 		try {
-			cursor = queryStockDeal(selection, null, null);
+			cursor = queryStockDeal(selection, null, sortOrder);
 
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				while (cursor.moveToNext()) {
