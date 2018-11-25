@@ -672,6 +672,7 @@ public class StockDatabaseManager extends DatabaseManager {
 	public int updateStockDeal(Stock stock) {
 		int result = 0;
 		long hold = 0;
+		double profit = 0;
 		double value = 0;
 
 		Cursor cursor = null;
@@ -702,17 +703,18 @@ public class StockDatabaseManager extends DatabaseManager {
 					stockDeal.setupNet();
 					stockDeal.setupProfit();
 
-					result += updateStockDealByID(stockDeal);
-
-					value += stockDeal.getDeal() * stockDeal.getVolume();
 					hold += stockDeal.getVolume();
+					profit += stockDeal.getProfit();
+					value += stockDeal.getDeal() * stockDeal.getVolume();
+
+					result += updateStockDealByID(stockDeal);
 				}
 			}
 
 			stock.setupDividendYield();
 			stock.setHold(hold);
+			stock.setProfit(profit);
 			stock.setupCost(value);
-			stock.setupProfit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

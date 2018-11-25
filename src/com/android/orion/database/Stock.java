@@ -774,9 +774,4 @@ public class Stock extends StockBase {
 		mDividendYield = Utility.Round(mDividendYield,
 				Constants.DOUBLE_FIXED_DECIMAL);
 	}
-
-	public void setupProfit() {
-		mProfit = (mPrice - mCost) * mHold;
-		mProfit = Utility.Round(mProfit, Constants.DOUBLE_FIXED_DECIMAL);
-	}
 }

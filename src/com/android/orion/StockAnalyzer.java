@@ -441,7 +441,7 @@ public class StockAnalyzer extends StockManager {
 
 		if ((stockDealMax.getVolume() > 0) && (stockDealMin.getVolume() > 0)) {
 			if (stock.getPrice() <= (stockDealMin.getDeal() - stockDealMax
-					.getDeal() * 0.05)) {
+					.getDeal() * Constants.STOCK_DEAL_DISTRIBUTION_RATE)) {
 				titleString += "@ ";
 			}
 		}
