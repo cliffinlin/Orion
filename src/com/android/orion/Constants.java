@@ -15,7 +15,7 @@ public class Constants {
 	public static final String CALENDAR_DATE_TIME_FORMAT = CALENDAR_DATE_FORMAT
 			+ " " + CALENDAR_TIME_FORMAT;
 
-	public static final int DOUBLE_FIXED_DECIMAL = 3;
+	public static final int DOUBLE_FIXED_DECIMAL = 2;
 
 	public static final int DOWNLOAD_HISTORY_LENGTH_DEFAULT = 120;
 	public static final int DOWNLOAD_HISTORY_LENGTH_NONE = 0;

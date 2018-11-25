@@ -320,7 +320,7 @@ public class StockChartData {
 			} else {
 				color = Color.GREEN;
 			}
-			
+
 			if (stockDeal.getVolume() == 0) {
 				color = Color.YELLOW;
 			}

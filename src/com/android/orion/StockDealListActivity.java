@@ -150,13 +150,13 @@ public class StockDealListActivity extends StorageActivity implements
 		@Override
 		public void onChange(boolean selfChange, Uri uri) {
 			super.onChange(selfChange, uri);
-//			restartLoader();
+			// restartLoader();
 		}
 
 		@Override
 		public void onChange(boolean selfChange) {
 			super.onChange(selfChange);
-//			restartLoader();
+			// restartLoader();
 		}
 	};
 
@@ -716,7 +716,7 @@ public class StockDealListActivity extends StorageActivity implements
 	@Override
 	int xmlSerialize(XmlSerializer xmlSerializer) {
 		int count = 0;
-		
+
 		super.xmlSerialize(xmlSerializer);
 
 		try {
@@ -743,13 +743,13 @@ public class StockDealListActivity extends StorageActivity implements
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_MODIFIED,
 						stockDeal.getModified());
 				xmlSerializer.endTag(null, XML_TAG_ITEM);
-				
+
 				count++;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return count;
 	}
 }

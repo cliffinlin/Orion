@@ -149,7 +149,11 @@ public class StockChartListActivity extends OrionBaseActivity implements
 					Constants.EXECUTE_IMMEDIATE);
 			return true;
 		}
-		case R.id.action_settings: {
+		case R.id.action_edit: {
+			mIntent = new Intent(this, StockActivity.class);
+			mIntent.setAction(StockActivity.ACTION_STOCK_EDIT);
+			mIntent.putExtra(Constants.EXTRA_STOCK_ID, mStock.getId());
+			startActivity(mIntent);
 			return true;
 		}
 		case R.id.action_deal: {
@@ -596,14 +600,14 @@ public class StockChartListActivity extends OrionBaseActivity implements
 			YAxis rightAxis = null;
 
 			// For android 5 and above solution:
-//			if (view == null) {
-				view = LayoutInflater.from(context).inflate(mResource, null);
-				viewHolder = new ViewHolder();
-				viewHolder.chart = (CombinedChart) view.findViewById(R.id.chart);
-				view.setTag(viewHolder);
-//			} else {
-//				viewHolder = (ViewHolder) view.getTag();
-//			}
+			// if (view == null) {
+			view = LayoutInflater.from(context).inflate(mResource, null);
+			viewHolder = new ViewHolder();
+			viewHolder.chart = (CombinedChart) view.findViewById(R.id.chart);
+			view.setTag(viewHolder);
+			// } else {
+			// viewHolder = (ViewHolder) view.getTag();
+			// }
 
 			viewHolder.chart.setBackgroundColor(Color.LTGRAY);
 			viewHolder.chart.setGridBackgroundColor(Color.LTGRAY);

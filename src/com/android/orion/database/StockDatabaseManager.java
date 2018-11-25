@@ -713,12 +713,12 @@ public class StockDatabaseManager extends DatabaseManager {
 
 					if (hold != 0) {
 						cost = Utility.Round(value / hold,
-								Constants.DOUBLE_FIXED_DECIMAL - 1);
+								Constants.DOUBLE_FIXED_DECIMAL);
 					}
 
 					if (cost != 0) {
 						profit = Utility.Round(100.0 * (price - cost) / cost,
-								Constants.DOUBLE_FIXED_DECIMAL - 1);
+								Constants.DOUBLE_FIXED_DECIMAL);
 					}
 
 					stock.setHold(hold);

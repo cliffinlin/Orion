@@ -29,7 +29,9 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 	String mSE = "";
 
 	RadioGroup mRadioGroup;
-	EditText mEditTextStockName, mEditTextStockCode;
+	EditText mEditTextStockName;
+	EditText mEditTextStockCode;
+	EditText mEditTextStockDividend;
 	Button mButtonOk, mButtonCancel;
 
 	@Override
@@ -53,12 +55,14 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mRadioGroup = (RadioGroup) findViewById(R.id.radioGroupSE);
 		mEditTextStockName = (EditText) findViewById(R.id.edittext_stock_name);
 		mEditTextStockCode = (EditText) findViewById(R.id.edittext_stock_code);
+		mEditTextStockDividend = (EditText) findViewById(R.id.edittext_stock_dividend);
 		mButtonOk = (Button) findViewById(R.id.button_ok);
 		mButtonCancel = (Button) findViewById(R.id.button_cancel);
 
 		mRadioGroup.setOnClickListener(this);
 		mEditTextStockName.setOnClickListener(this);
 		mEditTextStockCode.setOnClickListener(this);
+		mEditTextStockDividend.setOnClickListener(this);
 		mButtonOk.setOnClickListener(this);
 		mButtonCancel.setOnClickListener(this);
 
@@ -112,6 +116,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 	void updateView() {
 		mEditTextStockName.setText(mStock.getName());
 		mEditTextStockCode.setText(mStock.getCode());
+		// mEditTextStockDividend.setText(String.valueOf(mStock.getDividend()));
 	}
 
 	@Override
@@ -141,6 +146,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 			mSE = getSE();
 			String name = mEditTextStockName.getText().toString();
 			String code = mEditTextStockCode.getText().toString();
+			String dividend = mEditTextStockDividend.getText().toString();
 
 			mStock.setClasses(Constants.STOCK_FLAG_CLASS_HSA);
 
@@ -162,7 +168,15 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 				Toast.makeText(mContext, R.string.stock_code_empty,
 						Toast.LENGTH_LONG).show();
 			}
+
+			if (!TextUtils.isEmpty(dividend)) {
+				// mStock.setDividend(Double.valueOf(dividend));
+			} else {
+				// mStock.setDividend(0);
+			}
+
 			mStock.setMark(Constants.STOCK_FLAG_MARK_FAVORITE);
+
 			if (ACTION_STOCK_INSERT.equals(mAction)) {
 				mStock.setCreated(Utility.getCurrentDateTimeString());
 			} else if (ACTION_STOCK_EDIT.equals(mAction)) {

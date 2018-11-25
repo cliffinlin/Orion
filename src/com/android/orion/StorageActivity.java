@@ -141,9 +141,9 @@ public class StorageActivity extends DatabaseActivity {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
-			Toast.makeText(this, count + " items saved in " + fileName, Toast.LENGTH_LONG)
-			.show();
+
+			Toast.makeText(this, count + " items saved in " + fileName,
+					Toast.LENGTH_LONG).show();
 		} else {
 			Toast.makeText(this, R.string.no_sd_card_found, Toast.LENGTH_LONG)
 					.show();
@@ -152,7 +152,7 @@ public class StorageActivity extends DatabaseActivity {
 
 	int listToXml(FileOutputStream fileOutputStream) {
 		int count = 0;
-		
+
 		XmlSerializer xmlSerializer = Xml.newSerializer();
 
 		try {
@@ -173,7 +173,7 @@ public class StorageActivity extends DatabaseActivity {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return count;
 	}
 

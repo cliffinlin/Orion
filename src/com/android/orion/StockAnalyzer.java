@@ -431,7 +431,7 @@ public class StockAnalyzer extends StockManager {
 		StockDeal stockDeal = new StockDeal();
 
 		mStockDatabaseManager.getStockDeal(stock, stockDeal);
-		
+
 		if (stock.getPrice() <= stockDeal.getDeal()) {
 			titleString = "@ ";
 		}
@@ -441,8 +441,9 @@ public class StockAnalyzer extends StockManager {
 		if (TextUtils.isEmpty(bodyString) && TextUtils.isEmpty(titleString)) {
 			return;
 		}
-		
-		titleString += stock.getName() + " " + stock.getPrice() + " " + stock.getNet();
+
+		titleString += stock.getName() + " " + stock.getPrice() + " "
+				+ stock.getNet();
 
 		NotificationManager notificationManager = (NotificationManager) mContext
 				.getSystemService(Context.NOTIFICATION_SERVICE);

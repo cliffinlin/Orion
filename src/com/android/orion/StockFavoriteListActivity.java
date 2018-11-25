@@ -77,7 +77,7 @@ public class StockFavoriteListActivity extends StorageActivity implements
 
 	SimpleCursorAdapter mLeftAdapter = null;
 	SimpleCursorAdapter mRightAdapter = null;
-	
+
 	Handler mHandler = new Handler(Looper.getMainLooper()) {
 
 		@Override
@@ -88,7 +88,7 @@ public class StockFavoriteListActivity extends StorageActivity implements
 			case MESSAGE_SAVE_TO_SD:
 				SaveListToSD(FAVORITE_LIST_XML_FILE_NAME);
 				break;
-				
+
 			default:
 				break;
 			}
@@ -276,7 +276,7 @@ public class StockFavoriteListActivity extends StorageActivity implements
 	@Override
 	int xmlSerialize(XmlSerializer xmlSerializer) {
 		int count = 0;
-		
+
 		super.xmlSerialize(xmlSerializer);
 
 		Cursor cursor = null;
@@ -301,7 +301,7 @@ public class StockFavoriteListActivity extends StorageActivity implements
 					xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_NAME,
 							stock.getName());
 					xmlSerializer.endTag(null, XML_TAG_ITEM);
-					
+
 					count++;
 				}
 			}
@@ -310,7 +310,7 @@ public class StockFavoriteListActivity extends StorageActivity implements
 		} finally {
 			mStockDatabaseManager.closeCursor(cursor);
 		}
-		
+
 		return count;
 	}
 
