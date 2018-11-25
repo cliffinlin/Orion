@@ -74,6 +74,7 @@ public class StockDealListActivity extends StorageActivity implements
 	TextView mTextViewDeal = null;
 	TextView mTextViewVolume = null;
 	TextView mTextViewProfit = null;
+	TextView mTextViewDividendYield = null;
 	TextView mTextViewCreated = null;
 	TextView mTextViewModified = null;
 
@@ -329,6 +330,9 @@ public class StockDealListActivity extends StorageActivity implements
 		case R.id.profit:
 			mSortOrderColumn = DatabaseContract.COLUMN_PROFIT;
 			break;
+		case R.id.dividend_yield:
+			mSortOrderColumn = DatabaseContract.COLUMN_DIVIDEND_YIELD;
+			break;
 		case R.id.created:
 			mSortOrderColumn = DatabaseContract.COLUMN_CREATED;
 			break;
@@ -371,6 +375,7 @@ public class StockDealListActivity extends StorageActivity implements
 		setHeaderTextColor(mTextViewDeal, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewVolume, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewProfit, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewDividendYield, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewCreated, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewModified, mHeaderTextDefaultColor);
 	}
@@ -412,6 +417,9 @@ public class StockDealListActivity extends StorageActivity implements
 		mTextViewProfit = (TextView) findViewById(R.id.profit);
 		mTextViewProfit.setOnClickListener(this);
 
+		mTextViewDividendYield = (TextView) findViewById(R.id.dividend_yield);
+		mTextViewDividendYield.setOnClickListener(this);
+
 		mTextViewCreated = (TextView) findViewById(R.id.created);
 		mTextViewCreated.setOnClickListener(this);
 
@@ -431,6 +439,9 @@ public class StockDealListActivity extends StorageActivity implements
 			setHeaderTextColor(mTextViewVolume, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PROFIT)) {
 			setHeaderTextColor(mTextViewProfit, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_DIVIDEND_YIELD)) {
+			setHeaderTextColor(mTextViewDividendYield,
+					mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_CREATED)) {
 			setHeaderTextColor(mTextViewCreated, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MODIFIED)) {
@@ -447,10 +458,12 @@ public class StockDealListActivity extends StorageActivity implements
 		String[] mRightFrom = new String[] { DatabaseContract.COLUMN_PRICE,
 				DatabaseContract.COLUMN_NET, DatabaseContract.COLUMN_DEAL,
 				DatabaseContract.COLUMN_VOLUME, DatabaseContract.COLUMN_PROFIT,
+				DatabaseContract.COLUMN_DIVIDEND_YIELD,
 				DatabaseContract.COLUMN_CREATED,
 				DatabaseContract.COLUMN_MODIFIED };
 		int[] mRightTo = new int[] { R.id.price, R.id.net, R.id.deal,
-				R.id.volume, R.id.profit, R.id.created, R.id.modified };
+				R.id.volume, R.id.profit, R.id.dividend_yield, R.id.created,
+				R.id.modified };
 
 		mLeftListView = (ListView) findViewById(R.id.left_listview);
 		mLeftAdapter = new SimpleCursorAdapter(this,
@@ -667,6 +680,10 @@ public class StockDealListActivity extends StorageActivity implements
 						stockDeal.setVolume(Long.valueOf(parser.nextText()));
 					} else if (DatabaseContract.COLUMN_PROFIT.equals(tagName)) {
 						stockDeal.setProfit(Double.valueOf(parser.nextText()));
+					} else if (DatabaseContract.COLUMN_DIVIDEND_YIELD
+							.equals(tagName)) {
+						stockDeal.setDividendYield(Double.valueOf(parser
+								.nextText()));
 					} else if (DatabaseContract.COLUMN_CREATED.equals(tagName)) {
 						stockDeal.setCreated(parser.nextText());
 					} else if (DatabaseContract.COLUMN_MODIFIED.equals(tagName)) {
@@ -688,7 +705,9 @@ public class StockDealListActivity extends StorageActivity implements
 
 							if (mStock.getPrice() != stockDeal.getPrice()) {
 								stockDeal.setPrice(mStock.getPrice());
-								stockDeal.setupDeal();
+								stockDeal.setupDividendYield();
+								stockDeal.setupNet();
+								stockDeal.setupProfit();
 							}
 
 							if (!mStockDatabaseManager
@@ -738,6 +757,9 @@ public class StockDealListActivity extends StorageActivity implements
 						String.valueOf(stockDeal.getVolume()));
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_PROFIT,
 						String.valueOf(stockDeal.getProfit()));
+				xmlSerialize(xmlSerializer,
+						DatabaseContract.COLUMN_DIVIDEND_YIELD,
+						String.valueOf(stockDeal.getDividendYield()));
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_CREATED,
 						stockDeal.getCreated());
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_MODIFIED,

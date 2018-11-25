@@ -116,7 +116,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 	void updateView() {
 		mEditTextStockName.setText(mStock.getName());
 		mEditTextStockCode.setText(mStock.getCode());
-		// mEditTextStockDividend.setText(String.valueOf(mStock.getDividend()));
+		mEditTextStockDividend.setText(String.valueOf(mStock.getDividend()));
 	}
 
 	@Override
@@ -170,9 +170,9 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 			}
 
 			if (!TextUtils.isEmpty(dividend)) {
-				// mStock.setDividend(Double.valueOf(dividend));
+				mStock.setDividend(Double.valueOf(dividend));
 			} else {
-				// mStock.setDividend(0);
+				mStock.setDividend(0);
 			}
 
 			mStock.setMark(Constants.STOCK_FLAG_MARK_FAVORITE);

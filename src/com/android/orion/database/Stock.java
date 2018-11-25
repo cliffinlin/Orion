@@ -7,8 +7,9 @@ import android.database.Cursor;
 import android.text.TextUtils;
 
 import com.android.orion.Constants;
+import com.android.orion.utility.Utility;
 
-public class Stock extends DatabaseTable {
+public class Stock extends StockBase {
 	private String mClasses;
 	private String mSE;
 	private String mCode;
@@ -751,5 +752,26 @@ public class Stock extends DatabaseTable {
 		} else if (period.equals(Constants.PERIOD_YEAR)) {
 			setActionYear(action);
 		}
+	}
+
+	public void setupCost(double value) {
+		if (mHold == 0) {
+			mCost = 0;
+			return;
+		}
+
+		mCost = value / mHold;
+		mCost = Utility.Round(mCost, Constants.DOUBLE_FIXED_DECIMAL);
+	}
+
+	public void setupDividendYield() {
+		if (mPrice == 0) {
+			mDividendYield = 0;
+			return;
+		}
+
+		mDividendYield = 100.0 * mDividend / mPrice;
+		mDividendYield = Utility.Round(mDividendYield,
+				Constants.DOUBLE_FIXED_DECIMAL);
 	}
 }

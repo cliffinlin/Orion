@@ -7,7 +7,7 @@ import android.text.TextUtils;
 import com.android.orion.Constants;
 import com.android.orion.utility.Utility;
 
-public class StockDeal extends DatabaseTable {
+public class StockDeal extends StockBase {
 	private String mSE;
 	private String mCode;
 	private String mName;
@@ -280,5 +280,31 @@ public class StockDeal extends DatabaseTable {
 
 		mNet = Utility.Round(mNet, Constants.DOUBLE_FIXED_DECIMAL);
 		mProfit = Utility.Round(mProfit, Constants.DOUBLE_FIXED_DECIMAL);
+	}
+
+	public void setupProfit() {
+		mProfit = (mPrice - mDeal) * mVolume;
+		mProfit = Utility.Round(mProfit, Constants.DOUBLE_FIXED_DECIMAL);
+	}
+	
+	public void setupDividendYield() {
+		if (mDeal == 0) {
+			mDividendYield = 0;
+			return;
+		}
+
+		mDividendYield = 100.0 * mDividend / mDeal;
+		mDividendYield = Utility.Round(mDividendYield,
+				Constants.DOUBLE_FIXED_DECIMAL);
+	}
+
+	public void setupNet() {
+		if ((mDeal == 0) || (mVolume == 0)) {
+			mNet = 0;
+			return;
+		}
+
+		mNet = 100 * (mPrice - mDeal) / mDeal;
+		mNet = Utility.Round(mNet, Constants.DOUBLE_FIXED_DECIMAL);
 	}
 }
