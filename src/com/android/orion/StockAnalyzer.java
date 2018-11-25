@@ -430,12 +430,24 @@ public class StockAnalyzer extends StockManager {
 		int defaults = 0;
 		String bodyString = "";
 		String titleString = "";
-		StockDeal stockDeal = new StockDeal();
 
-		mStockDatabaseManager.getStockDeal(stock, stockDeal);
+		StockDeal stockDealMax = new StockDeal();
+		StockDeal stockDealMin = new StockDeal();
+		StockDeal stockDealTarget = new StockDeal();
 
-		if (stock.getPrice() <= stockDeal.getDeal()) {
-			titleString = "@ ";
+		mStockDatabaseManager.getStockDealMax(stock, stockDealMax);
+		mStockDatabaseManager.getStockDealMin(stock, stockDealMin);
+		mStockDatabaseManager.getStockDealTarget(stock, stockDealTarget);
+
+		if ((stockDealMax.getVolume() > 0) && (stockDealMin.getVolume() > 0)) {
+			if (stock.getPrice() <= (stockDealMin.getDeal() - stockDealMax
+					.getDeal() * 0.05)) {
+				titleString += "@ ";
+			}
+		}
+
+		if (stock.getPrice() <= stockDealTarget.getDeal()) {
+			titleString += "@ ";
 		}
 
 		bodyString = getBodyString(stock);
