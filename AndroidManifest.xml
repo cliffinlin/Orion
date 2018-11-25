@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.android.orion"
     android:versionCode="424"
-    android:versionName="1.1.25" >
+    android:versionName="ver 1.1.25 2018-11-25" >
 
     <uses-sdk
         android:minSdkVersion="19"

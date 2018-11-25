@@ -154,6 +154,6 @@ public class Constants {
 	public static final long STOCK_DEAL_VOLUME_MIN = 100;
 	public static final double STOCK_PROFIT_MIN = 5.0 + 5.0 + 5.0;
 	public static final double STOCK_PROFIT_RATE_MIN = (5.0 + 5.0 + 5.0) / 10000;
-	
+
 	public static final double STOCK_DEAL_DISTRIBUTION_RATE = 5.0 / 100.0;
 }
