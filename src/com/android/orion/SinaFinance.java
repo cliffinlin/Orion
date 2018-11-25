@@ -279,9 +279,16 @@ public class SinaFinance extends StockDataProvider {
 
 		try {
 			jsonArray = JSON.parseArray(response);
-			if (jsonArray == null || jsonArray.size() == 0) {
+
+			if (jsonArray == null) {
 				Log.d(TAG, "handleResponseStockHSA return jsonArray = "
-						+ jsonArray + " jsonArray.size() = " + jsonArray.size());
+						+ jsonArray);
+				return;
+			}
+
+			if (jsonArray.size() == 0) {
+				Log.d(TAG, "handleResponseStockHSA return jsonArray.size() = "
+						+ jsonArray.size());
 				return;
 			}
 
@@ -385,9 +392,17 @@ public class SinaFinance extends StockDataProvider {
 
 		try {
 			jsonArray = JSON.parseArray(response);
-			if ((jsonArray == null) || (jsonArray.size() == 0)) {
+
+			if (jsonArray == null) {
 				Log.d(TAG, "handleResponseStockDataHistory return jsonArray = "
-						+ jsonArray + " jsonArray.size() = " + jsonArray.size());
+						+ jsonArray);
+				return;
+			}
+
+			if (jsonArray.size() == 0) {
+				Log.d(TAG,
+						"handleResponseStockDataHistory return jsonArray.size() = "
+								+ jsonArray.size());
 				return;
 			}
 
@@ -486,6 +501,18 @@ public class SinaFinance extends StockDataProvider {
 		try {
 			keyValue = response.trim().split("=");
 
+			if (keyValue == null) {
+				Log.d(TAG, "handleResponseStockDataRealTime return "
+						+ " keyValue = " + keyValue);
+				return;
+			}
+
+			if (keyValue.length < 2) {
+				Log.d(TAG, "handleResponseStockDataRealTime return "
+						+ " keyValue.length = " + keyValue.length);
+				return;
+			}
+
 			if (keyValue[0] == null) {
 				Log.d(TAG, "handleResponseStockDataRealTime return "
 						+ " keyValue[0] = " + keyValue[0]);
@@ -493,6 +520,18 @@ public class SinaFinance extends StockDataProvider {
 			}
 
 			codeInfo = keyValue[0].trim().split("_");
+
+			if (codeInfo == null) {
+				Log.d(TAG, "handleResponseStockDataRealTime return "
+						+ " codeInfo = " + codeInfo);
+				return;
+			}
+
+			if (codeInfo.length < 3) {
+				Log.d(TAG, "handleResponseStockDataRealTime return "
+						+ " codeInfo.length = " + codeInfo.length);
+				return;
+			}
 
 			if (codeInfo[2] == null) {
 				Log.d(TAG, "handleResponseStockDataRealTime return "
@@ -511,6 +550,12 @@ public class SinaFinance extends StockDataProvider {
 			if (stockInfo == null) {
 				Log.d(TAG, "handleResponseStockDataRealTime return "
 						+ " stockInfo = " + stockInfo);
+				return;
+			}
+
+			if (stockInfo.length < 32) {
+				Log.d(TAG, "handleResponseStockDataRealTime return "
+						+ " stockInfo.length = " + stockInfo.length);
 				return;
 			}
 
