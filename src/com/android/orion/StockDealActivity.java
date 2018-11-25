@@ -76,6 +76,7 @@ public class StockDealActivity extends DatabaseActivity implements
 				mDeal.setName(mStock.getName());
 				mDeal.setPrice(mStock.getPrice());
 				mDeal.setDeal(mStock.getPrice());
+				mDeal.setDividend(mStock.getDividend());
 				updateView();
 				break;
 
@@ -86,6 +87,7 @@ public class StockDealActivity extends DatabaseActivity implements
 				mDeal.setName(mStock.getName());
 				mDeal.setPrice(mStock.getPrice());
 				mDeal.setDeal(mStock.getPrice());
+				mDeal.setDividend(mStock.getDividend());
 				updateView();
 				break;
 

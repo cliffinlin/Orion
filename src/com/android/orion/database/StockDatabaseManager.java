@@ -672,11 +672,6 @@ public class StockDatabaseManager extends DatabaseManager {
 	public int updateStockDeal(Stock stock) {
 		int result = 0;
 		long hold = 0;
-		long volume = 0;
-		double cost = 0;
-		double deal = 0;
-		double price = 0;
-		double profit = 0;
 		double value = 0;
 
 		Cursor cursor = null;
@@ -685,8 +680,6 @@ public class StockDatabaseManager extends DatabaseManager {
 		if ((stock == null) || (mContentResolver == null)) {
 			return result;
 		}
-
-		price = stock.getPrice();
 
 		stock.setHold(0);
 
@@ -702,30 +695,24 @@ public class StockDatabaseManager extends DatabaseManager {
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				while (cursor.moveToNext()) {
 					stockDeal.set(cursor);
+					
 					stockDeal.setPrice(stock.getPrice());
-					stockDeal.setupDeal();
+					stockDeal.setDividend(stock.getDividend());
+					stockDeal.setupDividendYield();
+					stockDeal.setupNet();
+					stockDeal.setupProfit();
+
 					result += updateStockDealByID(stockDeal);
 
-					deal = stockDeal.getDeal();
-					volume = stockDeal.getVolume();
-					value += deal * volume;
-					hold += volume;
-
-					if (hold != 0) {
-						cost = Utility.Round(value / hold,
-								Constants.DOUBLE_FIXED_DECIMAL);
-					}
-
-					if (cost != 0) {
-						profit = Utility.Round(100.0 * (price - cost) / cost,
-								Constants.DOUBLE_FIXED_DECIMAL);
-					}
-
-					stock.setHold(hold);
-					stock.setCost(cost);
-					stock.setProfit(profit);
+					value += stockDeal.getDeal() * stockDeal.getVolume();
+					hold += stockDeal.getVolume();
 				}
 			}
+
+			stock.setupDividendYield();
+			stock.setHold(hold);
+			stock.setupCost(value);
+			stock.setupProfit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

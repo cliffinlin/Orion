@@ -232,6 +232,8 @@ public class SinaFinance extends StockDataProvider {
 				if (!TextUtils.isEmpty(stockInfo[5])) {
 					stock.setValue(stockInfo[5]);
 				}
+
+				stock.setupDividendYield();
 			}
 
 			if (!mStockDatabaseManager.isStockExist(stock)) {

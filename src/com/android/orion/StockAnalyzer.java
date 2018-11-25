@@ -261,6 +261,8 @@ public class StockAnalyzer extends StockManager {
 		action = avv + action;
 
 		stock.setAction(period, action);
+
+		stock.setupDividendYield();
 	}
 
 	private void updateDatabase(Stock stock, String period,
