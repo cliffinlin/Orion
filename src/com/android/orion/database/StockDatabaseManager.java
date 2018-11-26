@@ -696,7 +696,7 @@ public class StockDatabaseManager extends DatabaseManager {
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				while (cursor.moveToNext()) {
 					stockDeal.set(cursor);
-					
+
 					stockDeal.setPrice(stock.getPrice());
 					stockDeal.setDividend(stock.getDividend());
 					stockDeal.setupDividendYield();
@@ -881,6 +881,23 @@ public class StockDatabaseManager extends DatabaseManager {
 		getStockDeal(stock, stockDeal, sortOrder);
 	}
 
+	public double getStockDealTargetPrice(Stock stock, int order) {
+		double result = 0;
+
+		StockDeal stockDealMax = new StockDeal();
+		StockDeal stockDealMin = new StockDeal();
+
+		getStockDealMax(stock, stockDealMax);
+		getStockDealMin(stock, stockDealMin);
+
+		if ((stockDealMax.getVolume() > 0) && (stockDealMin.getVolume() > 0)) {
+			result = (stockDealMin.getDeal() - stockDealMax.getDeal() * order
+					* Constants.STOCK_DEAL_DISTRIBUTION_RATE);
+		}
+
+		return result;
+	}
+
 	public void getStockDealTarget(Stock stock, StockDeal stockDeal) {
 		Cursor cursor = null;
 		String selection = "";
@@ -893,9 +910,9 @@ public class StockDatabaseManager extends DatabaseManager {
 				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
 				+ stock.getCode() + "\'" + " AND "
 				+ DatabaseContract.COLUMN_VOLUME + " = " + 0;
-		
+
 		String sortOrder = DatabaseContract.COLUMN_DEAL + " DESC ";
-		
+
 		try {
 			cursor = queryStockDeal(selection, null, sortOrder);
 

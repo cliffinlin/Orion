@@ -431,23 +431,19 @@ public class StockAnalyzer extends StockManager {
 		String bodyString = "";
 		String titleString = "";
 
-		StockDeal stockDealMax = new StockDeal();
-		StockDeal stockDealMin = new StockDeal();
 		StockDeal stockDealTarget = new StockDeal();
 
-		mStockDatabaseManager.getStockDealMax(stock, stockDealMax);
-		mStockDatabaseManager.getStockDealMin(stock, stockDealMin);
 		mStockDatabaseManager.getStockDealTarget(stock, stockDealTarget);
 
-		if ((stockDealMax.getVolume() > 0) && (stockDealMin.getVolume() > 0)) {
-			if (stock.getPrice() <= (stockDealMin.getDeal() - stockDealMax
-					.getDeal() * Constants.STOCK_DEAL_DISTRIBUTION_RATE)) {
+		if (stock.getPrice() > 0) {
+			if (stock.getPrice() <= mStockDatabaseManager
+					.getStockDealTargetPrice(stock, 1)) {
 				titleString += "@ ";
 			}
-		}
 
-		if (stock.getPrice() <= stockDealTarget.getDeal()) {
-			titleString += "@ ";
+			if (stock.getPrice() <= stockDealTarget.getDeal()) {
+				titleString += "@ ";
+			}
 		}
 
 		bodyString = getBodyString(stock);
@@ -508,7 +504,7 @@ public class StockAnalyzer extends StockManager {
 			if (Utility.getSettingBoolean(mContext, period)) {
 				action = stock.getAction(period);
 
-				if (action.contains("B7") || action.contains("S7")) {
+				if (action.contains("B7B7") || action.contains("S7S7")) {
 					result += period + " " + action + " ";
 				}
 			}

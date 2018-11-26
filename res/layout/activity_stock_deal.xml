@@ -63,14 +63,33 @@
             android:labelFor="@+id/edittext_deal_price"
             android:text="@string/deal_price" />
 
+        <Button
+            android:id="@+id/button_add"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/symbol_add" />
+
         <EditText
             android:id="@+id/edittext_deal_price"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="14dp"
             android:layout_marginLeft="18dp"
             android:layout_marginRight="14dp"
-            android:inputType="numberDecimal" />
+            android:layout_weight="0.08"
+            android:ems="10"
+            android:inputType="numberDecimal" >
+
+            <requestFocus />
+        </EditText>
+
+        <Button
+            android:id="@+id/button_subtract"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/symbol_subtract" />
     </LinearLayout>
 
     <LinearLayout

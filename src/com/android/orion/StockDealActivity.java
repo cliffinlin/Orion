@@ -36,9 +36,12 @@ public class StockDealActivity extends DatabaseActivity implements
 	EditText mEditTextStockName, mEditTextStockCode;
 	EditText mEditTextDealPrice, mEditTextDealVolume;
 
+	Button mButtonAdd, mButtonSubtract;
 	Button mButtonOk, mButtonCancel;
 
 	StockDeal mDeal = null;
+
+	int mOrder = 0;
 
 	Handler mHandler = new Handler(Looper.getMainLooper()) {
 
@@ -130,6 +133,8 @@ public class StockDealActivity extends DatabaseActivity implements
 		mEditTextStockCode = (EditText) findViewById(R.id.edittext_stock_code);
 		mEditTextDealPrice = (EditText) findViewById(R.id.edittext_deal_price);
 		mEditTextDealVolume = (EditText) findViewById(R.id.edittext_deal_volume);
+		mButtonAdd = (Button) findViewById(R.id.button_add);
+		mButtonSubtract = (Button) findViewById(R.id.button_subtract);
 		mButtonOk = (Button) findViewById(R.id.button_ok);
 		mButtonCancel = (Button) findViewById(R.id.button_cancel);
 
@@ -137,6 +142,8 @@ public class StockDealActivity extends DatabaseActivity implements
 		mEditTextStockCode.setOnClickListener(this);
 		mEditTextDealPrice.setOnClickListener(this);
 		mEditTextDealVolume.setOnClickListener(this);
+		mButtonAdd.setOnClickListener(this);
+		mButtonSubtract.setOnClickListener(this);
 		mButtonOk.setOnClickListener(this);
 		mButtonCancel.setOnClickListener(this);
 
@@ -157,6 +164,15 @@ public class StockDealActivity extends DatabaseActivity implements
 		mEditTextStockCode.setText(mDeal.getCode());
 		mEditTextDealPrice.setText(String.valueOf(mDeal.getDeal()));
 		mEditTextDealVolume.setText(String.valueOf(mDeal.getVolume()));
+	}
+
+	void setupDealPrice() {
+		double price = 0;
+		price = mStockDatabaseManager.getStockDealTargetPrice(mStock, mOrder);
+		price = Utility.Round(price, Constants.DOUBLE_FIXED_DECIMAL + 1);
+		if (price > 0) {
+			mEditTextDealPrice.setText(String.valueOf(price));
+		}
 	}
 
 	@Override
@@ -190,6 +206,14 @@ public class StockDealActivity extends DatabaseActivity implements
 				intent.setAction(StockFavoriteListActivity.ACTION_STOCK_ID);
 				startActivityForResult(intent, REQUEST_CODE_STOCK_ID);
 			}
+			break;
+		case R.id.button_add:
+			mOrder--;
+			setupDealPrice();
+			break;
+		case R.id.button_subtract:
+			mOrder++;
+			setupDealPrice();
 			break;
 		case R.id.button_ok:
 			String dealString = "";

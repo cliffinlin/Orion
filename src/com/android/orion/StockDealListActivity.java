@@ -104,6 +104,7 @@ public class StockDealListActivity extends StorageActivity implements
 				mStockDatabaseManager.updateStockDeal(mStock);
 				mStockDatabaseManager.updateStock(mStock,
 						mStock.getContentValues());
+				mHandler.sendEmptyMessage(MESSAGE_SAVE_TO_SD_CARD);
 				break;
 
 			case MESSAGE_DELETE_DEAL_LIST:
@@ -296,6 +297,7 @@ public class StockDealListActivity extends StorageActivity implements
 			switch (requestCode) {
 			case REQUEST_CODE_DEAL_INSERT:
 			case REQUEST_CODE_DEAL_EDIT:
+				mHandler.sendEmptyMessage(MESSAGE_SAVE_TO_SD_CARD);
 				break;
 
 			default:
