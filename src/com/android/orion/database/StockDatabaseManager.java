@@ -1,6 +1,7 @@
 package com.android.orion.database;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -825,6 +826,32 @@ public class StockDatabaseManager extends DatabaseManager {
 
 		try {
 			cursor = queryStockDeal(selection, null, null);
+
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				while (cursor.moveToNext()) {
+					StockDeal stockDeal = new StockDeal();
+					stockDeal.set(cursor);
+					stockDealList.add(stockDeal);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+	
+	public void getStockDealList(List<StockDeal> stockDealList) {
+		Cursor cursor = null;
+
+		if (stockDealList == null) {
+			return;
+		}
+
+		stockDealList.clear();
+		
+		try {
+			cursor = queryStockDeal(null, null, null);
 
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				while (cursor.moveToNext()) {
