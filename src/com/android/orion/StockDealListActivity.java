@@ -549,7 +549,7 @@ public class StockDealListActivity extends StorageActivity implements
 
 		switch (loader.getId()) {
 		case LOADER_ID_DEAL_LIST:
-//			setStockDealList(cursor);
+			// setStockDealList(cursor);
 
 			mLeftAdapter.swapCursor(cursor);
 			mRightAdapter.swapCursor(cursor);
@@ -739,7 +739,7 @@ public class StockDealListActivity extends StorageActivity implements
 		int count = 0;
 
 		super.xmlSerialize(xmlSerializer);
-		
+
 		mStockDatabaseManager.getStockDealList(mStockDealList);
 
 		try {

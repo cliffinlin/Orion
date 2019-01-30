@@ -86,15 +86,7 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/cost"
-        android:layout_width="80dp"
-        android:layout_height="50dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/profit"
+        android:id="@+id/dividend"
         android:layout_width="80dp"
         android:layout_height="50dp"
         android:layout_weight="1"

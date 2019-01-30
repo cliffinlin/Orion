@@ -770,7 +770,7 @@ public class Stock extends StockBase {
 			return;
 		}
 
-		mDividendYield = 100.0 * mDividend / mPrice;
+		mDividendYield = 100.0 * mDividend / 10.0 / mPrice;
 		mDividendYield = Utility.Round(mDividendYield,
 				Constants.DOUBLE_FIXED_DECIMAL);
 	}

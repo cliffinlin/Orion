@@ -40,6 +40,7 @@
     <string name="deal_profit">Profit</string>
     <string name="delete">Delete</string>
     <string name="delete_confirm">Do You Qant to Delete?</string>
+    <string name="dividend">Dividend</string>    
     <string name="dividend_yield">Yield</string>
     <string name="download">Download</string>
     <string name="download_service">Download Service</string>
