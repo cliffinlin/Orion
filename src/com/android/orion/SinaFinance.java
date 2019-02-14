@@ -479,8 +479,7 @@ public class SinaFinance extends StockDataProvider {
 
 		stopWatch.stop();
 		Log.d(TAG, "handleResponseStockDataHistory:" + stock.getName() + " "
-				+ stockData.getPeriod() + " " + "size:" + jsonArray.size()
-				+ " " + stopWatch.getInterval() + "s");
+				+ stockData.getPeriod() + " " + stopWatch.getInterval() + "s");
 	}
 
 	@Override
