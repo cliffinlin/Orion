@@ -34,9 +34,9 @@
         android:title="@string/action_save_sd">
     </item>
     <item
-        android:id="@+id/action_clean_data"
+        android:id="@+id/action_refresh"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="@string/action_clean_data"/>
+        android:title="@string/action_refresh"/>
 
 </menu>

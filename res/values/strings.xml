@@ -5,9 +5,9 @@
     <string name="about_information">About Information</string>
     <string name="acceleration">Acc</string>
     <string name="action">Action</string>
-    <string name="action_clean_data">Clean Data</string>
     <string name="action_deal">Deal</string>
     <string name="action_edit">Edit</string>
+    <string name="action_exit">Exit</string>
     <string name="action_from">From</string>
     <string name="action_new">New Note</string>
     <string name="action_interval">Interval</string>
