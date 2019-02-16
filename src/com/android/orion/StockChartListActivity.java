@@ -165,7 +165,7 @@ public class StockChartListActivity extends OrionBaseActivity implements
 			startActivity(intent);
 			return true;
 		}
-		case R.id.action_clean_data: {
+		case R.id.action_refresh: {
 			updateStockAction(mStock.getId(), "");
 			deleteStockData(mStock.getId());
 			startService(Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE,

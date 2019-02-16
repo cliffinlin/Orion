@@ -170,7 +170,7 @@ public class StockFavoriteListActivity extends StorageActivity implements
 			startLoadTask(LOAD_FAVORITE_LIST_FROM_SD);
 			return true;
 
-		case R.id.action_clean_data:
+		case R.id.action_refresh:
 			for (Stock stock : mStockList) {
 				updateStockAction(stock.getId(), "");
 			}
