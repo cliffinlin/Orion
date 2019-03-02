@@ -44,6 +44,7 @@ public class StockFavoriteListActivity extends StorageActivity implements
 
 	static final int LOAD_FAVORITE_LIST_FROM_SD = 11;
 	static final int MESSAGE_SAVE_TO_SD = 12;
+	static final int MESSAGE_REFRESH = 13;
 
 	static final int mHeaderTextDefaultColor = Color.BLACK;
 	static final int mHeaderTextHighlightColor = Color.RED;
@@ -87,6 +88,17 @@ public class StockFavoriteListActivity extends StorageActivity implements
 			switch (msg.what) {
 			case MESSAGE_SAVE_TO_SD:
 				SaveListToSD(FAVORITE_LIST_XML_FILE_NAME);
+				break;
+
+			case MESSAGE_REFRESH:
+				// for (Stock stock : mStockList) {
+				// updateStockAction(stock.getId(), "");
+				// }
+				//
+				// deleteStockData(0);
+
+				startService(Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE,
+						Constants.EXECUTE_IMMEDIATE);
 				break;
 
 			default:
@@ -171,14 +183,7 @@ public class StockFavoriteListActivity extends StorageActivity implements
 			return true;
 
 		case R.id.action_refresh:
-			for (Stock stock : mStockList) {
-				updateStockAction(stock.getId(), "");
-			}
-
-			deleteStockData(0);
-
-			startService(Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE,
-					Constants.EXECUTE_IMMEDIATE);
+			mHandler.sendEmptyMessage(MESSAGE_REFRESH);
 			return true;
 
 		default:

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.android.orion"
-    android:versionCode="430"
-    android:versionName="1.1.26_20190216" >
+    android:versionCode="431"
+    android:versionName="1.1.27_20190302" >
 
     <uses-sdk
         android:minSdkVersion="19"

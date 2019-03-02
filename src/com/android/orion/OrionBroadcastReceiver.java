@@ -13,10 +13,10 @@ public class OrionBroadcastReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		Log.d(TAG, "OrionBroadcastReceiver onReceive");
 
-//		Intent i = new Intent(Intent.ACTION_MAIN);
-//		i.setClass(context, StockFavoriteListActivity.class);
-//		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//
-//		context.startActivity(i);
+		// Intent i = new Intent(Intent.ACTION_MAIN);
+		// i.setClass(context, StockFavoriteListActivity.class);
+		// i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		//
+		// context.startActivity(i);
 	}
 }

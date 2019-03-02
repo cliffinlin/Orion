@@ -15,6 +15,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
@@ -55,6 +56,8 @@ public class StockChartListActivity extends OrionBaseActivity implements
 	static final int FLING_DISTANCE = 50;
 	static final int FLING_VELOCITY = 100;
 
+	static final int MESSAGE_REFRESH = 0;
+
 	int mStockListIndex = 0;
 	Menu mMenu = null;
 
@@ -68,6 +71,28 @@ public class StockChartListActivity extends OrionBaseActivity implements
 	ArrayList<StockChartData> mStockChartDataList = null;
 
 	ArrayList<StockDeal> mStockDealList = null;
+
+	Handler mHandler = new Handler(Looper.getMainLooper()) {
+
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+
+			switch (msg.what) {
+			case MESSAGE_REFRESH:
+				// updateStockAction(mStock.getId(), "");
+				// deleteStockData(mStock.getId());
+				startService(Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE,
+						Constants.EXECUTE_IMMEDIATE, mStock.getSE(),
+						mStock.getCode());
+				restartLoader();
+				break;
+
+			default:
+				break;
+			}
+		}
+	};
 
 	private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
 		@Override
@@ -166,12 +191,7 @@ public class StockChartListActivity extends OrionBaseActivity implements
 			return true;
 		}
 		case R.id.action_refresh: {
-			updateStockAction(mStock.getId(), "");
-			deleteStockData(mStock.getId());
-			startService(Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE,
-					Constants.EXECUTE_IMMEDIATE, mStock.getSE(),
-					mStock.getCode());
-			restartLoader();
+			mHandler.sendEmptyMessage(MESSAGE_REFRESH);
 			return true;
 		}
 
