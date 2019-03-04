@@ -505,11 +505,11 @@ public class VertexAnalyzer {
 		endStockData.setDivergence(divergence);
 
 		if (direction == Constants.STOCK_DIRECTION_UP) {
-			if (divergence != maxDivergence) {
+			if (divergence == maxDivergence) {
 				action = Constants.STOCK_ACTION_SELL + divergence;
 			}
 		} else if (direction == Constants.STOCK_DIRECTION_DOWN) {
-			if (divergence != maxDivergence) {
+			if (divergence == maxDivergence) {
 				action = Constants.STOCK_ACTION_BUY + divergence;
 			}
 		}
