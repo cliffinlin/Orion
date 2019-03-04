@@ -2,8 +2,10 @@ package com.android.orion;
 
 import java.util.List;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,6 +20,8 @@ public class OrionMainActivity extends PreferenceActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		initSharepreference();
 
 		if (mStockDownloadAlarmManager == null) {
 			mStockDownloadAlarmManager = StockDownloadAlarmManager
@@ -98,5 +102,19 @@ public class OrionMainActivity extends PreferenceActivity {
 		}
 
 		finish();
+	}
+
+	void initSharepreference() {
+		SharedPreferences settings = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		SharedPreferences.Editor editor = settings.edit();
+
+		if (!settings.contains(Constants.SETTING_KEY_ALARM)) {
+			editor.putBoolean(Constants.SETTING_KEY_ALARM, true);
+			editor.putBoolean(Constants.PERIOD_MONTH, true);
+			editor.putBoolean(Constants.PERIOD_WEEK, true);
+			editor.putBoolean(Constants.PERIOD_DAY, true);
+			editor.commit();
+		}
 	}
 }

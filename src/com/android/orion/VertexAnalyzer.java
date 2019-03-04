@@ -485,6 +485,9 @@ public class VertexAnalyzer {
 			StockData endStockData) {
 		int direction = Constants.STOCK_DIRECTION_NONE;
 		int divergence = Constants.STOCK_DIVERGENCE_NONE;
+		int maxDivergence = Constants.STOCK_DIVERGENCE_HISTOGRAM
+				+ Constants.STOCK_DIVERGENCE_DIF
+				+ Constants.STOCK_DIVERGENCE_SIGMA_HISTOGRAM;
 		String action = Constants.STOCK_ACTION_NONE;
 
 		if ((baseSegmentData == null) || (segmentData == null)
@@ -502,11 +505,11 @@ public class VertexAnalyzer {
 		endStockData.setDivergence(divergence);
 
 		if (direction == Constants.STOCK_DIRECTION_UP) {
-			if (divergence != Constants.STOCK_DIVERGENCE_NONE) {
+			if (divergence != maxDivergence) {
 				action = Constants.STOCK_ACTION_SELL + divergence;
 			}
 		} else if (direction == Constants.STOCK_DIRECTION_DOWN) {
-			if (divergence != Constants.STOCK_DIVERGENCE_NONE) {
+			if (divergence != maxDivergence) {
 				action = Constants.STOCK_ACTION_BUY + divergence;
 			}
 		}
