@@ -17,6 +17,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 		db.execSQL(DatabaseContract.Stock.CREATE_TABLE);
 		db.execSQL(DatabaseContract.StockData.CREATE_TABLE);
 		db.execSQL(DatabaseContract.StockDeal.CREATE_TABLE);
+		db.execSQL(DatabaseContract.FinancialData.CREATE_TABLE);
 	}
 
 	@Override
@@ -25,6 +26,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 		db.execSQL(DatabaseContract.Stock.DELETE_TABLE);
 		db.execSQL(DatabaseContract.StockData.DELETE_TABLE);
 		db.execSQL(DatabaseContract.StockDeal.DELETE_TABLE);
+		db.execSQL(DatabaseContract.FinancialData.DELETE_TABLE);
 		onCreate(db);
 	}
 

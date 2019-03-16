@@ -32,6 +32,9 @@ public class OrionContentProvider extends ContentProvider {
 	private static final int STOCK_DEAL = 400;
 	private static final int STOCK_DEAL_ID = 401;
 
+	private static final int FINANCIAL_DATA = 500;
+	private static final int FINANCIAL_DATA_ID = 501;
+
 	private static final UriMatcher mUriMatcher = new UriMatcher(
 			UriMatcher.NO_MATCH);
 
@@ -52,6 +55,11 @@ public class OrionContentProvider extends ContentProvider {
 				DatabaseContract.StockDeal.TABLE_NAME, STOCK_DEAL);
 		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
 				DatabaseContract.StockDeal.TABLE_NAME + "/#", STOCK_DEAL_ID);
+		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
+				DatabaseContract.FinancialData.TABLE_NAME, FINANCIAL_DATA);
+		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
+				DatabaseContract.FinancialData.TABLE_NAME + "/#",
+				FINANCIAL_DATA_ID);
 	}
 
 	ContentResolver mContentResolver = null;
@@ -103,6 +111,13 @@ public class OrionContentProvider extends ContentProvider {
 		case STOCK_DEAL_ID:
 			type = DatabaseContract.StockDeal.CONTENT_ITEM_TYPE;
 			break;
+		case FINANCIAL_DATA:
+			type = DatabaseContract.FinancialData.CONTENT_TYPE;
+			break;
+		case FINANCIAL_DATA_ID:
+			type = DatabaseContract.FinancialData.CONTENT_ITEM_TYPE;
+			break;
+
 		default:
 			break;
 		}
@@ -162,6 +177,15 @@ public class OrionContentProvider extends ContentProvider {
 					+ uri.getLastPathSegment());
 			break;
 
+		case FINANCIAL_DATA:
+			builder.setTables(DatabaseContract.FinancialData.TABLE_NAME);
+			break;
+		case FINANCIAL_DATA_ID:
+			builder.setTables(DatabaseContract.FinancialData.TABLE_NAME);
+			builder.appendWhere(BaseColumns._ID + " = "
+					+ uri.getLastPathSegment());
+			break;
+
 		default:
 			break;
 		}
@@ -207,6 +231,12 @@ public class OrionContentProvider extends ContentProvider {
 		case STOCK_DEAL:
 			id = mDatabaseManager.mDatabase.insert(
 					DatabaseContract.StockDeal.TABLE_NAME, null, contentValues);
+			break;
+
+		case FINANCIAL_DATA:
+			id = mDatabaseManager.mDatabase.insert(
+					DatabaseContract.FinancialData.TABLE_NAME, null,
+					contentValues);
 			break;
 
 		default:
@@ -339,6 +369,21 @@ public class OrionContentProvider extends ContentProvider {
 					selectionArgs);
 			break;
 
+		case FINANCIAL_DATA:
+			result = mDatabaseManager.mDatabase.update(
+					DatabaseContract.FinancialData.TABLE_NAME, values,
+					selection, selectionArgs);
+			break;
+		case FINANCIAL_DATA_ID:
+			whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
+			if (!TextUtils.isEmpty(selection)) {
+				whereClause += " AND " + whereClause;
+			}
+			result = mDatabaseManager.mDatabase.update(
+					DatabaseContract.FinancialData.TABLE_NAME, values,
+					whereClause, selectionArgs);
+			break;
+
 		default:
 			break;
 		}
@@ -425,6 +470,22 @@ public class OrionContentProvider extends ContentProvider {
 			}
 			result = mDatabaseManager.mDatabase.delete(
 					DatabaseContract.StockDeal.TABLE_NAME, whereClause,
+					selectionArgs);
+			break;
+
+		case FINANCIAL_DATA:
+			result = mDatabaseManager.mDatabase.delete(
+					DatabaseContract.FinancialData.TABLE_NAME, selection,
+					selectionArgs);
+			break;
+
+		case FINANCIAL_DATA_ID:
+			whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
+			if (!TextUtils.isEmpty(selection)) {
+				whereClause += " AND " + whereClause;
+			}
+			result = mDatabaseManager.mDatabase.delete(
+					DatabaseContract.FinancialData.TABLE_NAME, whereClause,
 					selectionArgs);
 			break;
 

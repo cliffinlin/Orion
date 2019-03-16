@@ -840,7 +840,7 @@ public class StockDatabaseManager extends DatabaseManager {
 			closeCursor(cursor);
 		}
 	}
-	
+
 	public void getStockDealList(List<StockDeal> stockDealList) {
 		Cursor cursor = null;
 
@@ -849,7 +849,7 @@ public class StockDatabaseManager extends DatabaseManager {
 		}
 
 		stockDealList.clear();
-		
+
 		try {
 			cursor = queryStockDeal(null, null, null);
 
@@ -978,5 +978,203 @@ public class StockDatabaseManager extends DatabaseManager {
 		}
 
 		return result;
+	}
+
+	public Uri insertFinancialData(FinancialData financialData) {
+		Uri uri = null;
+
+		if ((financialData == null) || (mContentResolver == null)) {
+			return uri;
+		}
+
+		uri = mContentResolver.insert(
+				DatabaseContract.FinancialData.CONTENT_URI,
+				financialData.getContentValues());
+
+		return uri;
+	}
+
+	public int bulkInsertFinancialData(ContentValues[] contentValuesArray) {
+		int result = 0;
+
+		if ((contentValuesArray.length == 0) || (mContentResolver == null)) {
+			return result;
+		}
+
+		result = mContentResolver.bulkInsert(
+				DatabaseContract.FinancialData.CONTENT_URI, contentValuesArray);
+
+		return result;
+	}
+
+	public Cursor queryFinancialData(String selection, String[] selectionArgs,
+			String sortOrder) {
+		Cursor cursor = null;
+
+		if (mContentResolver == null) {
+			return cursor;
+		}
+
+		cursor = mContentResolver.query(
+				DatabaseContract.FinancialData.CONTENT_URI,
+				DatabaseContract.FinancialData.PROJECTION_ALL, selection,
+				selectionArgs, sortOrder);
+
+		return cursor;
+	}
+
+	public Cursor queryFinancialData(FinancialData financialData) {
+		Cursor cursor = null;
+
+		if ((financialData == null) || (mContentResolver == null)) {
+			return cursor;
+		}
+
+		String selection = getFinancialDataSelection(financialData);
+		String sortOrder = getFinancialDataOrder();
+
+		cursor = mContentResolver.query(
+				DatabaseContract.FinancialData.CONTENT_URI,
+				DatabaseContract.FinancialData.PROJECTION_ALL, selection, null,
+				sortOrder);
+
+		return cursor;
+	}
+
+	public void getFinancialData(FinancialData financialData) {
+		Cursor cursor = null;
+
+		if ((financialData == null) || (mContentResolver == null)) {
+			return;
+		}
+
+		try {
+			String selection = getFinancialDataSelection(financialData);
+			String sortOrder = getFinancialDataOrder();
+
+			cursor = mContentResolver.query(
+					DatabaseContract.FinancialData.CONTENT_URI,
+					DatabaseContract.FinancialData.PROJECTION_ALL, selection,
+					null, sortOrder);
+
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				cursor.moveToNext();
+				financialData.set(cursor);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
+	public boolean isFinancialDataExist(FinancialData financialData) {
+		boolean result = false;
+		Cursor cursor = null;
+
+		if (financialData == null) {
+			return result;
+		}
+
+		try {
+			cursor = queryFinancialData(financialData);
+
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				cursor.moveToNext();
+				financialData.setCreated(cursor);
+				result = true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+
+		return result;
+	}
+
+	public int updateFinancialData(FinancialData financialData,
+			ContentValues contentValues) {
+		int result = 0;
+
+		if ((financialData == null) || (mContentResolver == null)) {
+			return result;
+		}
+
+		String where = getFinancialDataSelection(financialData);
+
+		result = mContentResolver.update(
+				DatabaseContract.FinancialData.CONTENT_URI, contentValues,
+				where, null);
+
+		return result;
+	}
+
+	public int deleteFinancialData(FinancialData financialData) {
+		int result = 0;
+
+		if ((financialData == null) || (mContentResolver == null)) {
+			return result;
+		}
+
+		String where = getFinancialDataSelection(financialData);
+
+		result = mContentResolver.delete(
+				DatabaseContract.FinancialData.CONTENT_URI, where, null);
+
+		return result;
+	}
+
+	public void deleteFinancialData(String stockID) {
+		Uri uri = DatabaseContract.FinancialData.CONTENT_URI;
+		String where = null;
+
+		if (!TextUtils.isEmpty(stockID)) {
+			where = DatabaseContract.COLUMN_STOCK_ID + "=" + stockID;
+		}
+
+		try {
+			mContentResolver.delete(uri, where, null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public int deleteFinancialData(long stockId, String period) {
+		int result = 0;
+
+		if (mContentResolver == null) {
+			return result;
+		}
+
+		String where = getFinancialDataSelection(stockId, period);
+
+		result = mContentResolver.delete(
+				DatabaseContract.FinancialData.CONTENT_URI, where, null);
+
+		return result;
+	}
+
+	public String getFinancialDataSelection(FinancialData financialData) {
+		String where = "";
+
+		if ((financialData == null) || (mContentResolver == null)) {
+			return where;
+		}
+
+		where = getFinancialDataSelection(financialData.getStockId(),
+				financialData.getDate());
+
+		return where;
+	}
+
+	public String getFinancialDataSelection(long stockId, String date) {
+		return DatabaseContract.COLUMN_STOCK_ID + " = " + stockId + " AND "
+				+ DatabaseContract.COLUMN_DATE + " = '" + date + "'";
+	}
+
+	public String getFinancialDataOrder() {
+		return DatabaseContract.COLUMN_DATE + " ASC " + ","
+				+ DatabaseContract.COLUMN_TIME + " ASC ";
 	}
 }

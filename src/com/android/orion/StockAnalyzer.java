@@ -248,13 +248,13 @@ public class StockAnalyzer extends StockManager {
 			avv += Constants.STOCK_ACTION_MINUS;
 		}
 
-//		if (action.contains("B") || action.contains("S")) {
-//			if (stock.getPrice() > endStockData.getOverlapHigh()) {
-//				action += Constants.STOCK_ACTION_UP;
-//			} else if (stock.getPrice() < endStockData.getOverlapLow()) {
-//				action += Constants.STOCK_ACTION_DOWN;
-//			}
-//		}
+		// if (action.contains("B") || action.contains("S")) {
+		// if (stock.getPrice() > endStockData.getOverlapHigh()) {
+		// action += Constants.STOCK_ACTION_UP;
+		// } else if (stock.getPrice() < endStockData.getOverlapLow()) {
+		// action += Constants.STOCK_ACTION_DOWN;
+		// }
+		// }
 
 		// action += stock.getAction(period);
 

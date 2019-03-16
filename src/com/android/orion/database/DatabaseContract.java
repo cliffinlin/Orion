@@ -76,6 +76,17 @@ public final class DatabaseContract {
 	public static final String COLUMN_AVERAGE = "average";
 	public static final String COLUMN_ACTION = "action";
 
+	// http://money.finance.sina.com.cn/corp/go.php/vFD_FinanceSummary/stockid/600028.phtml
+	public static final String COLUMN_MGJZC = "mgjzc";// 每股净资产
+	public static final String COLUMN_MGSY = "mgsy";// 每股收益
+	public static final String COLUMN_MGXJHL = "mgxjhl";// 每股现金含量
+	public static final String COLUMN_LDZCHJ = "ldzchj";// 流动资产合计
+	public static final String COLUMN_ZCZJ = "zczj";// 资产总计
+	public static final String COLUMN_CQFZHJ = "cqfzhj";// 长期负债合计
+	public static final String COLUMN_ZYYWSR = "zyywsr";// 主营业务收入
+	public static final String COLUMN_CWFY = "cwfy";// 财务费用
+	public static final String COLUMN_JLR = "jlr";// 净利润
+
 	public static final String COLUMN_SE_X = COLUMN_SE + "_" + "x";
 	public static final String COLUMN_CODE_X = COLUMN_CODE + "_" + "x";
 	public static final String COLUMN_NAME_X = COLUMN_NAME + "_" + "x";
@@ -258,6 +269,44 @@ public final class DatabaseContract {
 				+ COLUMN_DIVIDEND_YIELD + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_CREATED + TEXT_TYPE + COMMA_SEP + COLUMN_MODIFIED
 				+ TEXT_TYPE + " )";
+
+		public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
+				+ CREATE_TABLE_CONTENT;
+
+		public static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
+				+ TABLE_NAME;
+	}
+
+	public static abstract class FinancialData implements BaseColumns {
+		public static final String TABLE_NAME = "financial_data";
+
+		public static final Uri CONTENT_URI = Uri.withAppendedPath(
+				DatabaseContract.CONTENT_URI, TABLE_NAME);
+		public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
+				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
+		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
+				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
+		public static final String SORT_ORDER_DEFAULT = COLUMN_STOCK_ID
+				+ " ASC";
+
+		public static final String[] PROJECTION_ALL = { _ID, COLUMN_STOCK_ID,
+				COLUMN_DATE, COLUMN_TIME, COLUMN_MGJZC, COLUMN_MGSY,
+				COLUMN_MGXJHL, COLUMN_LDZCHJ, COLUMN_ZCZJ, COLUMN_CQFZHJ,
+				COLUMN_ZYYWSR, COLUMN_CWFY, COLUMN_JLR, COLUMN_CREATED,
+				COLUMN_MODIFIED };
+
+		private static final String CREATE_TABLE_CONTENT = " (" + _ID
+				+ " INTEGER PRIMARY KEY," + COLUMN_STOCK_ID + TEXT_TYPE
+				+ COMMA_SEP + COLUMN_DATE + TEXT_TYPE + COMMA_SEP + COLUMN_TIME
+				+ TEXT_TYPE + COMMA_SEP + COLUMN_MGJZC + DOUBLE_TYPE
+				+ COMMA_SEP + COLUMN_MGSY + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_MGXJHL + DOUBLE_TYPE + COMMA_SEP + COLUMN_LDZCHJ
+				+ DOUBLE_TYPE + COMMA_SEP + COLUMN_ZCZJ + DOUBLE_TYPE
+				+ COMMA_SEP + COLUMN_CQFZHJ + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_ZYYWSR + DOUBLE_TYPE + COMMA_SEP + COLUMN_CWFY
+				+ DOUBLE_TYPE + COMMA_SEP + COLUMN_JLR + DOUBLE_TYPE
+				+ COMMA_SEP + COLUMN_CREATED + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_MODIFIED + TEXT_TYPE + " )";
 
 		public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
 				+ CREATE_TABLE_CONTENT;
