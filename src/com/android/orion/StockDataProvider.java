@@ -183,7 +183,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		}
 
 		financialData.setStockId(stock.getId());
-		
+
 		mStockDatabaseManager.getFinancialData(stock.getId(), financialData);
 		if (financialData.getCreated().contains(Utility.getCurrentDateString())) {
 			return;

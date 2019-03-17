@@ -36,6 +36,7 @@ public class StockChartData {
 	ArrayList<Entry> mSegmentEntryList = null;
 	ArrayList<Entry> mOverlapHighEntryList = null;
 	ArrayList<Entry> mOverlapLowEntryList = null;
+	ArrayList<Entry> mFinancialDataEntryList = null;
 
 	ArrayList<Entry> mDIFEntryList = null;
 	ArrayList<Entry> mDEAEntryList = null;
@@ -79,6 +80,10 @@ public class StockChartData {
 
 		if (mOverlapLowEntryList == null) {
 			mOverlapLowEntryList = new ArrayList<Entry>();
+		}
+
+		if (mFinancialDataEntryList == null) {
+			mFinancialDataEntryList = new ArrayList<Entry>();
 		}
 
 		if (mAverage5EntryList == null) {
@@ -198,6 +203,13 @@ public class StockChartData {
 		overlapLowDataSet.setDrawCircles(false);
 		overlapLowDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(overlapLowDataSet);
+
+		LineDataSet financialDataSet = new LineDataSet(mFinancialDataEntryList,
+				"financial");
+		financialDataSet.setColor(Color.BLUE);
+		financialDataSet.setDrawCircles(false);
+		financialDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+		lineData.addDataSet(financialDataSet);
 
 		mCombinedDataMain.setData(candleData);
 		mCombinedDataMain.setData(lineData);
@@ -342,6 +354,7 @@ public class StockChartData {
 		mCandleEntryList.clear();
 		mOverlapHighEntryList.clear();
 		mOverlapLowEntryList.clear();
+		mFinancialDataEntryList.clear();
 		mAverageEntryList.clear();
 		mAverage5EntryList.clear();
 		mAverage10EntryList.clear();

@@ -1080,7 +1080,36 @@ public class StockDatabaseManager extends DatabaseManager {
 			closeCursor(cursor);
 		}
 	}
+	
+	public void getFinancialDataList(Stock stock, ArrayList<FinancialData> financialDataList) {
+		Cursor cursor = null;
 
+		if ((stock == null) || (financialDataList == null)) {
+			return;
+		}
+
+		financialDataList.clear();
+
+		String selection = getFinancialDataSelection(stock.getId());
+		String sortOrder = getFinancialDataOrder();
+
+		try {
+			cursor = queryFinancialData(selection, null, sortOrder);
+
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				while (cursor.moveToNext()) {
+					FinancialData financialData = new FinancialData();
+					financialData.set(cursor);
+					financialDataList.add(financialData);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+	
 	public boolean isFinancialDataExist(FinancialData financialData) {
 		boolean result = false;
 		Cursor cursor = null;

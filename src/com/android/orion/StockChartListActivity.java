@@ -2,6 +2,8 @@ package com.android.orion;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Comparator;
 import java.util.List;
 
 import android.app.LoaderManager;
@@ -18,6 +20,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,6 +31,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.android.orion.database.DatabaseContract;
+import com.android.orion.database.FinancialData;
 import com.android.orion.database.Setting;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;
@@ -71,6 +75,7 @@ public class StockChartListActivity extends OrionBaseActivity implements
 	ArrayList<StockChartData> mStockChartDataList = null;
 
 	ArrayList<StockDeal> mStockDealList = null;
+	ArrayList<FinancialData> mFinancialDataList = null;
 
 	Handler mHandler = new Handler(Looper.getMainLooper()) {
 
@@ -278,6 +283,10 @@ public class StockChartListActivity extends OrionBaseActivity implements
 			mStockDealList = new ArrayList<StockDeal>();
 		}
 
+		if (mFinancialDataList == null) {
+			mFinancialDataList = new ArrayList<FinancialData>();
+		}
+
 		if (mStockChartDataList == null) {
 			mStockChartDataList = new ArrayList<StockChartData>();
 		}
@@ -432,15 +441,20 @@ public class StockChartListActivity extends OrionBaseActivity implements
 			return;
 		}
 
+		mStockDatabaseManager.getFinancialDataList(mStock, mFinancialDataList);
+
 		stockChartData.clear();
 
 		try {
 			if ((cursor != null) && (cursor.getCount() > 0)) {
+				String dateString = "";
+
 				while (cursor.moveToNext()) {
 					index = stockChartData.mXValues.size();
 					mStockData.set(cursor);
 
-					stockChartData.mXValues.add(mStockData.getDate());
+					dateString = mStockData.getDate();
+					stockChartData.mXValues.add(dateString);
 
 					CandleEntry candleEntry = new CandleEntry(index,
 							(float) mStockData.getHigh(),
@@ -496,6 +510,18 @@ public class StockChartListActivity extends OrionBaseActivity implements
 								.add(overlapLowEntry);
 					}
 
+					if (mFinancialDataList.size() > 0) {
+						FinancialData financialData = getFinancialDataByDate(dateString);
+						if (financialData != null) {
+							Entry financialDataEntry = new Entry(
+									(float) financialData
+											.getBookValuePerShare(),
+									index);
+							stockChartData.mFinancialDataEntryList
+									.add(financialDataEntry);
+						}
+					}
+
 					Entry average5Entry = new Entry(
 							(float) mStockData.getAverage5(), index);
 					stockChartData.mAverage5EntryList.add(average5Entry);
@@ -545,6 +571,120 @@ public class StockChartListActivity extends OrionBaseActivity implements
 		stockChartData.setSubChartData();
 
 		mStockChartArrayAdapter.notifyDataSetChanged();
+	}
+
+	Comparator<FinancialData> comparator = new Comparator<FinancialData>() {
+
+		@Override
+		public int compare(FinancialData arg0, FinancialData arg1) {
+			Calendar calendar0;
+			Calendar calendar1;
+
+			calendar0 = Utility.stringToCalendar(arg0.getDate(),
+					Constants.CALENDAR_DATE_TIME_FORMAT);
+			calendar1 = Utility.stringToCalendar(arg1.getDate(),
+					Constants.CALENDAR_DATE_TIME_FORMAT);
+			if (calendar1.before(calendar0)) {
+				return -1;
+			} else if (calendar1.after(calendar0)) {
+				return 1;
+			} else {
+				return 0;
+			}
+		}
+	};
+
+	int binarySearch(int arr[], int l, int r, int x) {
+		if (r >= l) {
+			int mid = l + (r - l) / 2;
+
+			// If the element is present at the
+			// middle itself
+			if (arr[mid] == x)
+				return mid;
+
+			// If element is smaller than mid, then
+			// it can only be present in left subarray
+			if (arr[mid] > x)
+				return binarySearch(arr, l, mid - 1, x);
+
+			// Else the element can only be present
+			// in right subarray
+			return binarySearch(arr, mid + 1, r, x);
+		}
+
+		// We reach here when element is not present
+		// in array
+		return -1;
+	}
+
+	int binarySearch(int l, int r, Calendar calendar) {
+		if (r >= l) {
+			int mid = l + (r - l) / 2;
+
+			Calendar calendarMid = Utility.stringToCalendar(mFinancialDataList
+					.get(mid).getDate(), Constants.CALENDAR_DATE_FORMAT);
+
+			// If the element is present at the
+			// middle itself
+			if (calendarMid.equals(calendar))
+				return mid;
+
+			// If element is smaller than mid, then
+			// it can only be present in left subarray
+			if (calendar.before(calendarMid))
+				return binarySearch(l, mid - 1, calendar);
+
+			Calendar calendarMid1 = Utility.stringToCalendar(mFinancialDataList
+					.get(mid + 1).getDate(), Constants.CALENDAR_DATE_FORMAT);
+			if (calendar.after(calendarMid) && (calendar.before(calendarMid1)))
+				return mid;
+
+			// Else the element can only be present
+			// in right subarray
+			return binarySearch(mid + 1, r, calendar);
+		}
+
+		// We reach here when element is not present
+		// in array
+		return -1;
+	}
+
+	FinancialData getFinancialDataByDate(String dateString) {
+		int index = 0;
+		FinancialData financialData = null;
+
+		if (mFinancialDataList.size() < 1) {
+			return financialData;
+		}
+
+		if (TextUtils.isEmpty(dateString)) {
+			return financialData;
+		}
+
+		Calendar calendar = Utility.stringToCalendar(dateString,
+				Constants.CALENDAR_DATE_FORMAT);
+		Calendar calendarMin = Utility.stringToCalendar(
+				mFinancialDataList.get(0).getDate(),
+				Constants.CALENDAR_DATE_FORMAT);
+		Calendar calendarMax = Utility
+				.stringToCalendar(
+						mFinancialDataList.get(mFinancialDataList.size() - 1)
+								.getDate(), Constants.CALENDAR_DATE_FORMAT);
+
+		if (calendar.before(calendarMin)) {
+			return financialData;
+		} else if (calendar.after(calendarMax)) {
+			return mFinancialDataList.get(mFinancialDataList.size() - 1);
+		} else {
+			index = binarySearch(0, mFinancialDataList.size() - 1, calendar);
+
+			if ((index > 0) && (index < mFinancialDataList.size())) {
+				financialData = mFinancialDataList.get(index);
+			}
+		}
+
+		return financialData;
 	}
 
 	void navigateStock(int direction) {
