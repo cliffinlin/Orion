@@ -1,5 +1,13 @@
 package com.android.orion;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.text.TextUtils;
@@ -8,6 +16,7 @@ import android.util.Log;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.android.orion.database.FinancialData;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.pinyin.Pinyin;
@@ -22,6 +31,7 @@ public class SinaFinance extends StockDataProvider {
 	private static final String SINA_FINANCE_URL_HQ_KLINE_DATA = "http://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData?";
 	private static final String SINA_FINANCE_URL_HQ_JS_LIST = "http://hq.sinajs.cn/list=";
 	private static final String SINA_FINANCE_URL_HQ_JS_LIST_SIMPLE = "http://hq.sinajs.cn/list=s_";
+	private static final String SINA_FINANCE_URL_VFD_FINANCESUMMARY = "http://money.finance.sina.com.cn/corp/go.php/vFD_FinanceSummary/stockid/";// stock_id.phtml
 
 	private static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN5 = 242;
 	private static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN15 = 192;
@@ -67,6 +77,18 @@ public class SinaFinance extends StockDataProvider {
 		public String ask_price_5;// 29
 		public String date;// 30
 		public String time;// 31
+		public String status;// 32
+		// 状态码 状态
+		// 00 正常
+		// 01 停牌一小时
+		// 02 停牌一天
+		// 03 连续停牌
+		// 04 盘中停牌
+		// 05 停牌半天
+		// 07 暂停
+		// -1 无该记录
+		// -2 未上市
+		// -3 退市
 	}
 
 	@Override
@@ -151,6 +173,17 @@ public class SinaFinance extends StockDataProvider {
 		}
 		urlString = SINA_FINANCE_URL_HQ_JS_LIST + stock.getSE()
 				+ stock.getCode();
+		return urlString;
+	}
+
+	@Override
+	String getFinancialDataURLString(Stock stock) {
+		String urlString = "";
+		if (stock == null) {
+			return urlString;
+		}
+		urlString = SINA_FINANCE_URL_VFD_FINANCESUMMARY + stock.getCode()
+				+ ".phtml";
 		return urlString;
 	}
 
@@ -263,7 +296,7 @@ public class SinaFinance extends StockDataProvider {
 		stopWatch.start();
 		boolean nameChanged = false;
 		boolean bulkInsert = false;
-		ContentValues[] contentValues = null;
+		ContentValues[] contentValuesArray = null;
 		String symbol = "";
 		String se = "";
 		Stock stock = null;
@@ -295,8 +328,8 @@ public class SinaFinance extends StockDataProvider {
 			}
 
 			if (bulkInsert) {
-				if (contentValues == null) {
-					contentValues = new ContentValues[jsonArray.size()];
+				if (contentValuesArray == null) {
+					contentValuesArray = new ContentValues[jsonArray.size()];
 				}
 			}
 
@@ -339,7 +372,7 @@ public class SinaFinance extends StockDataProvider {
 
 					if (bulkInsert) {
 						stock.setCreated(Utility.getCurrentDateTimeString());
-						contentValues[i] = stock.getContentValues();
+						contentValuesArray[i] = stock.getContentValues();
 					} else {
 						if (!mStockDatabaseManager.isStockExist(stock)) {
 							stock.setCreated(Utility.getCurrentDateTimeString());
@@ -357,7 +390,7 @@ public class SinaFinance extends StockDataProvider {
 			}
 
 			if (bulkInsert) {
-				mStockDatabaseManager.bulkInsertStock(contentValues);
+				mStockDatabaseManager.bulkInsertStock(contentValuesArray);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -375,7 +408,7 @@ public class SinaFinance extends StockDataProvider {
 		stopWatch.start();
 		boolean bulkInsert = false;
 		int defaultValue = 0;
-		ContentValues[] contentValues = null;
+		ContentValues[] contentValuesArray = null;
 		String dateTimeString = "";
 		String dateTime[] = null;
 		JSONArray jsonArray = null;
@@ -417,8 +450,8 @@ public class SinaFinance extends StockDataProvider {
 			}
 
 			if (bulkInsert) {
-				if (contentValues == null) {
-					contentValues = new ContentValues[jsonArray.size()];
+				if (contentValuesArray == null) {
+					contentValuesArray = new ContentValues[jsonArray.size()];
 				}
 			}
 
@@ -454,7 +487,7 @@ public class SinaFinance extends StockDataProvider {
 					if (bulkInsert) {
 						stockData
 								.setCreated(Utility.getCurrentDateTimeString());
-						contentValues[i] = stockData.getContentValues();
+						contentValuesArray[i] = stockData.getContentValues();
 					} else {
 						if (!mStockDatabaseManager.isStockDataExist(stockData)) {
 							stockData.setCreated(Utility
@@ -471,7 +504,7 @@ public class SinaFinance extends StockDataProvider {
 			}
 
 			if (bulkInsert) {
-				mStockDatabaseManager.bulkInsertStockData(contentValues);
+				mStockDatabaseManager.bulkInsertStockData(contentValuesArray);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -598,6 +631,175 @@ public class SinaFinance extends StockDataProvider {
 				+ stockData.getDate() + " " + stockData.getTime() + " "
 				+ stockData.getOpen() + " " + stockData.getClose() + " "
 				+ stockData.getHigh() + " " + stockData.getLow() + " "
+				+ stopWatch.getInterval() + "s");
+	}
+
+	@Override
+	void handleResponseFinancialDataHistory(Stock stock,
+			FinancialData financialData, String response) {
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start();
+
+		boolean bulkInsert = false;
+		String keyString = "";
+		String valueString = "";
+		List<ContentValues> contentValuesList = new ArrayList<ContentValues>();
+
+		if ((stock == null) || TextUtils.isEmpty(response)) {
+			Log.d(TAG, "handleResponseFinancialData return " + " stock = "
+					+ stock + " response = " + response);
+			return;
+		}
+
+		if (TextUtils.isEmpty(financialData.getCreated())) {
+			mStockDatabaseManager.deleteFinancialData(financialData
+					.getStockId());
+			bulkInsert = true;
+		}
+
+		try {
+			String responseString = new String(response.getBytes("ISO-8859-1"),
+					"GB2312");
+
+			Document doc = Jsoup.parse(responseString);
+			if (doc == null) {
+				Log.d(TAG, "handleResponseFinancialData return " + " doc = "
+						+ doc);
+				return;
+			}
+
+			Elements tableElements = doc.select("table#FundHoldSharesTable");
+			if (tableElements == null) {
+				Log.d(TAG, "handleResponseFinancialData return "
+						+ " tableElements = " + tableElements);
+				return;
+			}
+
+			Elements tbodyElements = tableElements.select("tbody");
+			if (tbodyElements == null) {
+				Log.d(TAG, "handleResponseFinancialData return "
+						+ " tbodyElements = " + tbodyElements);
+				return;
+			}
+
+			for (Element tbodyElement : tbodyElements) {
+				if (tbodyElement == null) {
+					Log.d(TAG, "handleResponseFinancialData return "
+							+ " tbodyElement = " + tbodyElement);
+					return;
+				}
+
+				Elements trElements = tbodyElement.select("tr");
+				if (trElements == null) {
+					Log.d(TAG, "handleResponseFinancialData return "
+							+ " trElements = " + trElements);
+					return;
+				}
+
+				for (Element trElement : trElements) {
+					if (trElement == null) {
+						Log.d(TAG, "handleResponseFinancialData continue "
+								+ " trElement = " + trElement);
+						continue;
+					}
+
+					Elements tdElements = trElement.select("td");
+					if (tdElements == null) {
+						Log.d(TAG, "handleResponseFinancialData continue "
+								+ " tdElements = " + tdElements);
+						continue;
+					}
+
+					if (tdElements.size() < 2) {
+						Log.d(TAG, "handleResponseFinancialData continue "
+								+ " tdElements.size() = " + tdElements.size());
+						continue;
+					}
+
+					keyString = tdElements.get(0).text();
+					if (!TextUtils.isEmpty(keyString)) {
+						valueString = tdElements.get(1).text();
+
+						if (!TextUtils.isEmpty(valueString)) {
+							valueString = valueString.substring(0,
+									valueString.length() - 1);
+							valueString = valueString.replace(",", "");
+
+							if (keyString.equals("截止日期")) {
+								financialData.setDate(valueString);
+							} else if (keyString.equals("每股净资产-摊薄/期末股数")) {
+								financialData.setBookValuePerShare(Double
+										.valueOf(valueString));
+							} else if (keyString.equals("每股收益-摊薄/期末股数")) {
+								financialData.setEarningsPerShare(Double
+										.valueOf(valueString));
+							} else if (keyString.equals("每股现金含量")) {
+								financialData.setCashFlowPerShare(Double
+										.valueOf(valueString));
+							} else if (keyString.equals("流动资产合计")) {
+								financialData.setTotalCurrentAssets(Double
+										.valueOf(valueString));
+							} else if (keyString.equals("资产总计")) {
+								financialData.setTotalAssets(Double
+										.valueOf(valueString));
+							} else if (keyString.equals("长期负债合计")) {
+								financialData
+										.setTotalLongTermLiabilities(Double
+												.valueOf(valueString));
+							} else if (keyString.equals("主营业务收入")) {
+								financialData.setMainBusinessIncome(Double
+										.valueOf(valueString));
+							} else if (keyString.equals("财务费用")) {
+								financialData.setFinancialExpenses(Double
+										.valueOf(valueString));
+							} else if (keyString.equals("净利润")) {
+								financialData.setNetProfit(Double
+										.valueOf(valueString));
+
+								if (bulkInsert) {
+									financialData.setCreated(Utility
+											.getCurrentDateTimeString());
+									contentValuesList.add(financialData
+											.getContentValues());
+								} else {
+									if (!mStockDatabaseManager
+											.isFinancialDataExist(financialData)) {
+										financialData.setCreated(Utility
+												.getCurrentDateTimeString());
+										mStockDatabaseManager
+												.insertFinancialData(financialData);
+									} else {
+										financialData.setModified(Utility
+												.getCurrentDateTimeString());
+										mStockDatabaseManager
+												.updateFinancialData(
+														financialData,
+														financialData
+																.getContentValues());
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			if (bulkInsert) {
+				if (contentValuesList.size() > 0) {
+					ContentValues[] contentValuesArray = new ContentValues[contentValuesList
+							.size()];
+					contentValuesArray = (ContentValues[]) contentValuesList
+							.toArray(contentValuesArray);
+					mStockDatabaseManager
+							.bulkInsertFinancialData(contentValuesArray);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		stopWatch.stop();
+		Log.d(TAG, "handleResponseFinancialData:" + stock.getName() + " "
 				+ stopWatch.getInterval() + "s");
 	}
 }

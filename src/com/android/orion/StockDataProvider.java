@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.android.orion.database.DatabaseContract;
+import com.android.orion.database.FinancialData;
 import com.android.orion.database.Setting;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
@@ -47,6 +48,11 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 	abstract void handleResponseStockDataRealTime(Stock stock,
 			StockData stockData, String response);
+
+	abstract String getFinancialDataURLString(Stock stock);
+
+	abstract void handleResponseFinancialDataHistory(Stock stock,
+			FinancialData financialData, String response);
 
 	public StockDataProvider(Context context) {
 		super(context);
@@ -153,10 +159,46 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			downloadStockRealTime(executeType, stock);
 			downloadStockDataHistory(executeType, stock);
 			downloadStockDataRealTime(executeType, stock);
+			downloadFinancialDataHistory(executeType, stock);
 		} else {
 			downloadStockRealTime(executeType);
 			downloadStockDataHistory(executeType);
 			downloadStockDataRealTime(executeType);
+			downloadFinancialDataHistory(executeType);
+		}
+	}
+
+	void downloadFinancialDataHistory(int executeType) {
+		for (Stock stock : mStockArrayMapFavorite.values()) {
+			downloadFinancialDataHistory(executeType, stock);
+		}
+	}
+
+	void downloadFinancialDataHistory(int executeType, Stock stock) {
+		String urlString;
+		FinancialData financialData = FinancialData.obtain();
+
+		if (stock == null) {
+			return;
+		}
+
+		financialData.setStockId(stock.getId());
+		
+		mStockDatabaseManager.getFinancialData(stock.getId(), financialData);
+		if (financialData.getCreated().contains(Utility.getCurrentDateString())) {
+			return;
+		}
+
+		if (executeType == Constants.EXECUTE_IMMEDIATE) {
+			urlString = getFinancialDataURLString(stock);
+			if (addToCurrentRequests(urlString)) {
+				Log.d(TAG, "downloadFinancialDataHistory:" + urlString);
+				FinancialDataHistoryDownloader downloader = new FinancialDataHistoryDownloader(
+						urlString);
+				downloader.setStock(stock);
+				downloader.setFinancialData(financialData);
+				mRequestQueue.add(downloader.mStringRequest);
+			}
 		}
 	}
 
@@ -611,6 +653,49 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			handleResponseStockDataRealTime(mStock, mStockData, response);
 			analyze(mStock, mStockData.getPeriod(),
 					getStockDataList(mStock, mStockData.getPeriod()));
+			Bundle bundle = new Bundle();
+			bundle.putInt(Constants.EXTRA_SERVICE_TYPE,
+					Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE_DATA_REALTIME);
+			bundle.putLong(Constants.EXTRA_STOCK_ID, mStock.getId());
+			sendBroadcast(Constants.ACTION_SERVICE_FINISHED, bundle);
+		}
+	}
+
+	public class FinancialDataHistoryDownloader extends VolleyStringDownloader {
+		public Stock mStock = null;
+		public FinancialData mFinancialData = null;
+		public int mExecuteType = 0;
+
+		public FinancialDataHistoryDownloader() {
+			super();
+		}
+
+		public FinancialDataHistoryDownloader(String urlString) {
+			super(urlString);
+		}
+
+		public void setStock(Stock stock) {
+			if (mStock == null) {
+				mStock = Stock.obtain();
+			}
+			mStock.set(stock);
+		}
+
+		public void setFinancialData(FinancialData financialData) {
+			if (mFinancialData == null) {
+				mFinancialData = FinancialData.obtain();
+			}
+			mFinancialData.set(financialData);
+		}
+
+		public void setExecuteType(int executeType) {
+			mExecuteType = executeType;
+		}
+
+		@Override
+		public void handleResponse(String response) {
+			removeFromCurrrentRequests(mStringRequest.getUrl());
+			handleResponseFinancialDataHistory(mStock, mFinancialData, response);
 			Bundle bundle = new Bundle();
 			bundle.putInt(Constants.EXTRA_SERVICE_TYPE,
 					Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE_DATA_REALTIME);

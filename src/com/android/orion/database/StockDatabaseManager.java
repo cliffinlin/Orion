@@ -572,21 +572,6 @@ public class StockDatabaseManager extends DatabaseManager {
 		return result;
 	}
 
-	public void deleteStockData(String stockID) {
-		Uri uri = DatabaseContract.StockData.CONTENT_URI;
-		String where = null;
-
-		if (!TextUtils.isEmpty(stockID)) {
-			where = DatabaseContract.COLUMN_STOCK_ID + "=" + stockID;
-		}
-
-		try {
-			mContentResolver.delete(uri, where, null);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	public int deleteStockData(long stockId, String period) {
 		int result = 0;
 
@@ -1068,6 +1053,34 @@ public class StockDatabaseManager extends DatabaseManager {
 		}
 	}
 
+	public void getFinancialData(long stockId, FinancialData financialData) {
+		Cursor cursor = null;
+
+		if ((financialData == null) || (mContentResolver == null)) {
+			return;
+		}
+
+		try {
+			String selection = getFinancialDataSelection(stockId);
+			String sortOrder = DatabaseContract.COLUMN_DATE + " DESC " + ","
+					+ DatabaseContract.COLUMN_TIME + " DESC ";
+
+			cursor = mContentResolver.query(
+					DatabaseContract.FinancialData.CONTENT_URI,
+					DatabaseContract.FinancialData.PROJECTION_ALL, selection,
+					null, sortOrder);
+
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				cursor.moveToNext();
+				financialData.set(cursor);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
 	public boolean isFinancialDataExist(FinancialData financialData) {
 		boolean result = false;
 		Cursor cursor = null;
@@ -1125,13 +1138,10 @@ public class StockDatabaseManager extends DatabaseManager {
 		return result;
 	}
 
-	public void deleteFinancialData(String stockID) {
+	public void deleteFinancialData(long stockId) {
 		Uri uri = DatabaseContract.FinancialData.CONTENT_URI;
-		String where = null;
 
-		if (!TextUtils.isEmpty(stockID)) {
-			where = DatabaseContract.COLUMN_STOCK_ID + "=" + stockID;
-		}
+		String where = getFinancialDataSelection(stockId);
 
 		try {
 			mContentResolver.delete(uri, where, null);
@@ -1140,14 +1150,14 @@ public class StockDatabaseManager extends DatabaseManager {
 		}
 	}
 
-	public int deleteFinancialData(long stockId, String period) {
+	public int deleteFinancialData(long stockId, String date) {
 		int result = 0;
 
 		if (mContentResolver == null) {
 			return result;
 		}
 
-		String where = getFinancialDataSelection(stockId, period);
+		String where = getFinancialDataSelection(stockId, date);
 
 		result = mContentResolver.delete(
 				DatabaseContract.FinancialData.CONTENT_URI, where, null);
@@ -1166,6 +1176,10 @@ public class StockDatabaseManager extends DatabaseManager {
 				financialData.getDate());
 
 		return where;
+	}
+
+	public String getFinancialDataSelection(long stockId) {
+		return DatabaseContract.COLUMN_STOCK_ID + " = " + stockId;
 	}
 
 	public String getFinancialDataSelection(long stockId, String date) {

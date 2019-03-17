@@ -77,15 +77,15 @@ public final class DatabaseContract {
 	public static final String COLUMN_ACTION = "action";
 
 	// http://money.finance.sina.com.cn/corp/go.php/vFD_FinanceSummary/stockid/600028.phtml
-	public static final String COLUMN_MGJZC = "mgjzc";// 每股净资产
-	public static final String COLUMN_MGSY = "mgsy";// 每股收益
-	public static final String COLUMN_MGXJHL = "mgxjhl";// 每股现金含量
-	public static final String COLUMN_LDZCHJ = "ldzchj";// 流动资产合计
-	public static final String COLUMN_ZCZJ = "zczj";// 资产总计
-	public static final String COLUMN_CQFZHJ = "cqfzhj";// 长期负债合计
-	public static final String COLUMN_ZYYWSR = "zyywsr";// 主营业务收入
-	public static final String COLUMN_CWFY = "cwfy";// 财务费用
-	public static final String COLUMN_JLR = "jlr";// 净利润
+	public static final String COLUMN_BOOK_VALUE_PER_SHARE = "book_value_per_share";// 每股净资产-摊薄/期末股数
+	public static final String COLUMN_EARNINGS_PER_SHARE = "earnings_per_share";// 每股收益-摊薄/期末股数
+	public static final String COLUMN_CASH_FLOW_PER_SHARE = "cash_flow_per_share";// 每股现金含量
+	public static final String COLUMN_CURRENT_ASSETS = "current_assets";// 流动资产合计
+	public static final String COLUMN_TOTALASSETS = "total_assets";// 资产总计
+	public static final String COLUMN_TOTAL_LONG_TERM_LIABILITIES = "total_long_term_liabilities";// 长期负债合计
+	public static final String COLUMN_MAIN_BUSINESS_INCOME = "main_business_income";// 主营业务收入
+	public static final String COLUMN_FINANCIAL_EXPENSES = "financial_expenses";// 财务费用
+	public static final String COLUMN_NET_PROFIT = "net_profit";// 净利润
 
 	public static final String COLUMN_SE_X = COLUMN_SE + "_" + "x";
 	public static final String COLUMN_CODE_X = COLUMN_CODE + "_" + "x";
@@ -290,21 +290,21 @@ public final class DatabaseContract {
 				+ " ASC";
 
 		public static final String[] PROJECTION_ALL = { _ID, COLUMN_STOCK_ID,
-				COLUMN_DATE, COLUMN_TIME, COLUMN_MGJZC, COLUMN_MGSY,
-				COLUMN_MGXJHL, COLUMN_LDZCHJ, COLUMN_ZCZJ, COLUMN_CQFZHJ,
-				COLUMN_ZYYWSR, COLUMN_CWFY, COLUMN_JLR, COLUMN_CREATED,
+				COLUMN_DATE, COLUMN_TIME, COLUMN_BOOK_VALUE_PER_SHARE, COLUMN_EARNINGS_PER_SHARE,
+				COLUMN_CASH_FLOW_PER_SHARE, COLUMN_CURRENT_ASSETS, COLUMN_TOTALASSETS, COLUMN_TOTAL_LONG_TERM_LIABILITIES,
+				COLUMN_MAIN_BUSINESS_INCOME, COLUMN_FINANCIAL_EXPENSES, COLUMN_NET_PROFIT, COLUMN_CREATED,
 				COLUMN_MODIFIED };
 
 		private static final String CREATE_TABLE_CONTENT = " (" + _ID
 				+ " INTEGER PRIMARY KEY," + COLUMN_STOCK_ID + TEXT_TYPE
 				+ COMMA_SEP + COLUMN_DATE + TEXT_TYPE + COMMA_SEP + COLUMN_TIME
-				+ TEXT_TYPE + COMMA_SEP + COLUMN_MGJZC + DOUBLE_TYPE
-				+ COMMA_SEP + COLUMN_MGSY + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_MGXJHL + DOUBLE_TYPE + COMMA_SEP + COLUMN_LDZCHJ
-				+ DOUBLE_TYPE + COMMA_SEP + COLUMN_ZCZJ + DOUBLE_TYPE
-				+ COMMA_SEP + COLUMN_CQFZHJ + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_ZYYWSR + DOUBLE_TYPE + COMMA_SEP + COLUMN_CWFY
-				+ DOUBLE_TYPE + COMMA_SEP + COLUMN_JLR + DOUBLE_TYPE
+				+ TEXT_TYPE + COMMA_SEP + COLUMN_BOOK_VALUE_PER_SHARE + DOUBLE_TYPE
+				+ COMMA_SEP + COLUMN_EARNINGS_PER_SHARE + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_CASH_FLOW_PER_SHARE + DOUBLE_TYPE + COMMA_SEP + COLUMN_CURRENT_ASSETS
+				+ DOUBLE_TYPE + COMMA_SEP + COLUMN_TOTALASSETS + DOUBLE_TYPE
+				+ COMMA_SEP + COLUMN_TOTAL_LONG_TERM_LIABILITIES + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_MAIN_BUSINESS_INCOME + DOUBLE_TYPE + COMMA_SEP + COLUMN_FINANCIAL_EXPENSES
+				+ DOUBLE_TYPE + COMMA_SEP + COLUMN_NET_PROFIT + DOUBLE_TYPE
 				+ COMMA_SEP + COLUMN_CREATED + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_MODIFIED + TEXT_TYPE + " )";
 

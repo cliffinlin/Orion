@@ -7,14 +7,14 @@ public class FinancialData extends DatabaseTable {
 	private long mStockId;
 	private String mDate;
 	private String mTime;
-	private double mBookValuePerShare;// BVPS// 每股净资产
-	private double mEarningsPerShare;// EPS// 每股收益
-	private double mMGXJHL;// 每股现金含量
+	private double mBookValuePerShare;// BVPS// 每股净资产-摊薄/期末股数
+	private double mEarningsPerShare;// EPS// 每股收益-摊薄/期末股数
+	private double mCashFlowPerShare;// 每股现金含量
 	private double mTotalCurrentAssets;// 流动资产合计
 	private double mTotalAssets;// 资产总计
 	private double mTotalLongTermLiabilities;// 长期负债合计
 	private double mMainBusinessIncome;// 主营业务收入
-	private double mCWFY;// 财务费用
+	private double mFinancialExpenses;// 财务费用
 	private double mNetProfit;// 净利润
 
 	private FinancialData next;
@@ -55,12 +55,12 @@ public class FinancialData extends DatabaseTable {
 		mTime = "";
 		mBookValuePerShare = 0;
 		mEarningsPerShare = 0;
-		mMGXJHL = 0;
+		mCashFlowPerShare = 0;
 		mTotalCurrentAssets = 0;
 		mTotalAssets = 0;
 		mTotalLongTermLiabilities = 0;
 		mMainBusinessIncome = 0;
-		mCWFY = 0;
+		mFinancialExpenses = 0;
 		mNetProfit = 0;
 	}
 
@@ -75,21 +75,21 @@ public class FinancialData extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_STOCK_ID, mStockId);
 		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);
 		contentValues.put(DatabaseContract.COLUMN_TIME, mTime);
-		contentValues.put(DatabaseContract.COLUMN_MGJZC, mBookValuePerShare);
-		contentValues.put(DatabaseContract.COLUMN_MGSY, mEarningsPerShare);
-		contentValues.put(DatabaseContract.COLUMN_MGXJHL, mMGXJHL);
-		contentValues.put(DatabaseContract.COLUMN_LDZCHJ, mTotalCurrentAssets);
-		contentValues.put(DatabaseContract.COLUMN_ZCZJ, mTotalAssets);
-		contentValues.put(DatabaseContract.COLUMN_CQFZHJ,
+		contentValues.put(DatabaseContract.COLUMN_BOOK_VALUE_PER_SHARE, mBookValuePerShare);
+		contentValues.put(DatabaseContract.COLUMN_EARNINGS_PER_SHARE, mEarningsPerShare);
+		contentValues.put(DatabaseContract.COLUMN_CASH_FLOW_PER_SHARE, mCashFlowPerShare);
+		contentValues.put(DatabaseContract.COLUMN_CURRENT_ASSETS, mTotalCurrentAssets);
+		contentValues.put(DatabaseContract.COLUMN_TOTALASSETS, mTotalAssets);
+		contentValues.put(DatabaseContract.COLUMN_TOTAL_LONG_TERM_LIABILITIES,
 				mTotalLongTermLiabilities);
-		contentValues.put(DatabaseContract.COLUMN_ZYYWSR, mMainBusinessIncome);
-		contentValues.put(DatabaseContract.COLUMN_CWFY, mCWFY);
-		contentValues.put(DatabaseContract.COLUMN_JLR, mNetProfit);
+		contentValues.put(DatabaseContract.COLUMN_MAIN_BUSINESS_INCOME, mMainBusinessIncome);
+		contentValues.put(DatabaseContract.COLUMN_FINANCIAL_EXPENSES, mFinancialExpenses);
+		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT, mNetProfit);
 
 		return contentValues;
 	}
 
-	void set(FinancialData financialData) {
+	public void set(FinancialData financialData) {
 		if (financialData == null) {
 			return;
 		}
@@ -103,12 +103,12 @@ public class FinancialData extends DatabaseTable {
 		setTime(financialData.mTime);
 		setBookValuePerShare(financialData.mBookValuePerShare);
 		setEarningsPerShare(financialData.mEarningsPerShare);
-		setMGXJHL(financialData.mMGXJHL);
+		setCashFlowPerShare(financialData.mCashFlowPerShare);
 		setTotalCurrentAssets(financialData.mTotalCurrentAssets);
 		setTotalAssets(financialData.mTotalAssets);
 		setTotalLongTermLiabilities(financialData.mTotalLongTermLiabilities);
 		setMainBusinessIncome(financialData.mMainBusinessIncome);
-		setCWFY(financialData.mCWFY);
+		setFinancialExpenses(financialData.mFinancialExpenses);
 		setNetProfit(financialData.mNetProfit);
 	}
 
@@ -127,13 +127,13 @@ public class FinancialData extends DatabaseTable {
 		setTime(cursor);
 		setBookValuePerShare(cursor);
 		setEarningsPerShare(cursor);
-		setMGXJHL(cursor);
+		setCashFlowPerShare(cursor);
 		setCurrentAssets(cursor);
 		setTotalAssets(cursor);
 		setTotalLongTermLiabilities(cursor);
 		setMainBusinessIncome(cursor);
-		setCWFY(cursor);
-		setJLR(cursor);
+		setFinancialExpenses(cursor);
+		setNetProfit(cursor);
 	}
 
 	public long getStockId() {
@@ -201,7 +201,7 @@ public class FinancialData extends DatabaseTable {
 		}
 
 		setBookValuePerShare(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_MGJZC)));
+				.getColumnIndex(DatabaseContract.COLUMN_BOOK_VALUE_PER_SHARE)));
 	}
 
 	public double getEarningsPerShare() {
@@ -218,24 +218,24 @@ public class FinancialData extends DatabaseTable {
 		}
 
 		setEarningsPerShare(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_MGSY)));
+				.getColumnIndex(DatabaseContract.COLUMN_EARNINGS_PER_SHARE)));
 	}
 
-	public double getMGXJHL() {
-		return mMGXJHL;
+	public double getCashFlowPerShare() {
+		return mCashFlowPerShare;
 	}
 
-	public void setMGXJHL(double MGXJHL) {
-		mMGXJHL = MGXJHL;
+	public void setCashFlowPerShare(double cashFlowPerShare) {
+		mCashFlowPerShare = cashFlowPerShare;
 	}
 
-	void setMGXJHL(Cursor cursor) {
+	void setCashFlowPerShare(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}
 
-		setMGXJHL(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_MGXJHL)));
+		setCashFlowPerShare(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_CASH_FLOW_PER_SHARE)));
 	}
 
 	public double getTotalCurrentAssets() {
@@ -252,7 +252,7 @@ public class FinancialData extends DatabaseTable {
 		}
 
 		setTotalCurrentAssets(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_LDZCHJ)));
+				.getColumnIndex(DatabaseContract.COLUMN_CURRENT_ASSETS)));
 	}
 
 	public double getTotalAssets() {
@@ -269,7 +269,7 @@ public class FinancialData extends DatabaseTable {
 		}
 
 		setTotalAssets(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_ZCZJ)));
+				.getColumnIndex(DatabaseContract.COLUMN_TOTALASSETS)));
 	}
 
 	public double getTotalLongTermLiabilities() {
@@ -286,7 +286,7 @@ public class FinancialData extends DatabaseTable {
 		}
 
 		setTotalLongTermLiabilities(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_CQFZHJ)));
+				.getColumnIndex(DatabaseContract.COLUMN_TOTAL_LONG_TERM_LIABILITIES)));
 	}
 
 	public double getMainBusinessIncome() {
@@ -303,24 +303,24 @@ public class FinancialData extends DatabaseTable {
 		}
 
 		setMainBusinessIncome(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_ZYYWSR)));
+				.getColumnIndex(DatabaseContract.COLUMN_MAIN_BUSINESS_INCOME)));
 	}
 
-	public double getCWFY() {
-		return mCWFY;
+	public double getFinancialExpenses() {
+		return mFinancialExpenses;
 	}
 
-	public void setCWFY(double CWFY) {
-		mCWFY = CWFY;
+	public void setFinancialExpenses(double financialExpenses) {
+		mFinancialExpenses = financialExpenses;
 	}
 
-	void setCWFY(Cursor cursor) {
+	void setFinancialExpenses(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}
 
-		setCWFY(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_CWFY)));
+		setFinancialExpenses(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_FINANCIAL_EXPENSES)));
 	}
 
 	public double getNetProfit() {
@@ -331,12 +331,12 @@ public class FinancialData extends DatabaseTable {
 		mNetProfit = netProfit;
 	}
 
-	void setJLR(Cursor cursor) {
+	void setNetProfit(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}
 
 		setNetProfit(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_JLR)));
+				.getColumnIndex(DatabaseContract.COLUMN_NET_PROFIT)));
 	}
 }
