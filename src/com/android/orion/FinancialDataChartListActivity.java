@@ -34,29 +34,27 @@ import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.FinancialData;
 import com.android.orion.database.Setting;
 import com.android.orion.database.Stock;
-import com.android.orion.database.StockDeal;
 import com.android.orion.utility.Utility;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.XAxis.XAxisPosition;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.components.YAxis.YAxisLabelPosition;
-import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.CandleEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.DefaultYAxisValueFormatter;
 import com.github.mikephil.charting.listener.ChartTouchListener.ChartGesture;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.utils.Utils;
 
-public class StockChartListActivity extends OrionBaseActivity implements
+public class FinancialDataChartListActivity extends OrionBaseActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnChartGestureListener {
 	static final String TAG = Constants.TAG + " "
-			+ StockChartListActivity.class.getSimpleName();
+			+ FinancialDataChartListActivity.class.getSimpleName();
 
 	static final int ITEM_VIEW_TYPE_MAIN = 0;
 	static final int ITEM_VIEW_TYPE_SUB = 1;
-	static final int LOADER_ID_STOCK_LIST = Constants.PERIODS.length + 1;
+	static final int LOADER_ID_STOCK_LIST = 0;
+	static final int LOADER_ID_FINANCIAL_DATA_LIST = 1;
 	static final int FLING_DISTANCE = 50;
 	static final int FLING_VELOCITY = 100;
 
@@ -68,14 +66,11 @@ public class StockChartListActivity extends OrionBaseActivity implements
 	String mSortOrder = null;
 
 	ListView mListView = null;
-	StockChartArrayAdapter mStockChartArrayAdapter = null;
-	ArrayList<StockChartItem> mStockChartItemList = null;
-	ArrayList<StockChartItemMain> mStockChartItemMainList = null;
-	ArrayList<StockChartItemSub> mStockChartItemSubList = null;
-	ArrayList<StockChartData> mStockChartDataList = null;
-
-	ArrayList<StockDeal> mStockDealList = null;
-	ArrayList<FinancialData> mFinancialDataList = null;
+	FinancialDataChartArrayAdapter mFinancialDataChartArrayAdapter = null;
+	ArrayList<FinancialDataChartItem> mFinancialDataChartItemList = null;
+	ArrayList<FinancialDataChartItemMain> mFinancialDataChartItemMainList = null;
+	ArrayList<FinancialDataChartItemSub> mFinancialDataChartItemSubList = null;
+	ArrayList<FinancialDataChart> mFinancialDataChartList = null;
 
 	Handler mHandler = new Handler(Looper.getMainLooper()) {
 
@@ -85,8 +80,6 @@ public class StockChartListActivity extends OrionBaseActivity implements
 
 			switch (msg.what) {
 			case MESSAGE_REFRESH:
-				// updateStockAction(mStock.getId(), "");
-				// deleteStockData(mStock.getId());
 				startService(Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE,
 						Constants.EXECUTE_IMMEDIATE, mStock.getSE(),
 						mStock.getCode());
@@ -129,7 +122,7 @@ public class StockChartListActivity extends OrionBaseActivity implements
 		Utils.init(this);
 		// For chart init only
 
-		setContentView(R.layout.activity_stock_chart_list);
+		setContentView(R.layout.activity_financial_data_chart_list);
 
 		initListView();
 
@@ -150,7 +143,7 @@ public class StockChartListActivity extends OrionBaseActivity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		mMenu = menu;
-		getMenuInflater().inflate(R.menu.stock_chart, menu);
+		getMenuInflater().inflate(R.menu.stock_data_chart, menu);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		return true;
 	}
@@ -209,14 +202,11 @@ public class StockChartListActivity extends OrionBaseActivity implements
 	protected void onResume() {
 		super.onResume();
 
-		mStockChartItemList.clear();
+		mFinancialDataChartItemList.clear();
 
-		for (int i = 0; i < Constants.PERIODS.length; i++) {
-			if (Utility.getSettingBoolean(this, Constants.PERIODS[i])) {
-				mStockChartItemList.add(mStockChartItemMainList.get(i));
-				mStockChartItemList.add(mStockChartItemSubList.get(i));
-			}
-		}
+		int i = 0;
+		mFinancialDataChartItemList.add(mFinancialDataChartItemMainList.get(i));
+		mFinancialDataChartItemList.add(mFinancialDataChartItemSubList.get(i));
 
 		restartLoader();
 	}
@@ -235,8 +225,9 @@ public class StockChartListActivity extends OrionBaseActivity implements
 
 		if (id == LOADER_ID_STOCK_LIST) {
 			loader = getStockCursorLoader();
+		} else if (id == LOADER_ID_FINANCIAL_DATA_LIST) {
+			loader = getFinancialDataCursorLoader();
 		} else {
-			loader = getStockDataCursorLoader(Constants.PERIODS[id]);
 		}
 
 		return loader;
@@ -254,8 +245,9 @@ public class StockChartListActivity extends OrionBaseActivity implements
 
 		if (id == LOADER_ID_STOCK_LIST) {
 			swapStockCursor(cursor);
+		} else if (id == LOADER_ID_FINANCIAL_DATA_LIST) {
+			swapFinancialDataCursor(mFinancialDataChartList.get(0), cursor);
 		} else {
-			swapStockDataCursor(mStockChartDataList.get(id), cursor);
 		}
 	}
 
@@ -271,65 +263,54 @@ public class StockChartListActivity extends OrionBaseActivity implements
 
 		if (id == LOADER_ID_STOCK_LIST) {
 			swapStockCursor(null);
+		} else if (id == LOADER_ID_FINANCIAL_DATA_LIST) {
+			swapFinancialDataCursor(mFinancialDataChartList.get(0), null);
 		} else {
-			swapStockDataCursor(mStockChartDataList.get(id), null);
 		}
 	}
 
 	void initListView() {
 		mListView = (ListView) findViewById(R.id.listView);
 
-		if (mStockDealList == null) {
-			mStockDealList = new ArrayList<StockDeal>();
+		if (mFinancialDataChartList == null) {
+			mFinancialDataChartList = new ArrayList<FinancialDataChart>();
 		}
 
-		if (mFinancialDataList == null) {
-			mFinancialDataList = new ArrayList<FinancialData>();
+		if (mFinancialDataChartItemList == null) {
+			mFinancialDataChartItemList = new ArrayList<FinancialDataChartItem>();
 		}
 
-		if (mStockChartDataList == null) {
-			mStockChartDataList = new ArrayList<StockChartData>();
+		if (mFinancialDataChartItemMainList == null) {
+			mFinancialDataChartItemMainList = new ArrayList<FinancialDataChartItemMain>();
 		}
 
-		if (mStockChartItemList == null) {
-			mStockChartItemList = new ArrayList<StockChartItem>();
+		if (mFinancialDataChartItemSubList == null) {
+			mFinancialDataChartItemSubList = new ArrayList<FinancialDataChartItemSub>();
 		}
 
-		if (mStockChartItemMainList == null) {
-			mStockChartItemMainList = new ArrayList<StockChartItemMain>();
-		}
+		int i = 0;
+		mFinancialDataChartList
+				.add(new FinancialDataChart(Constants.PERIODS[i]));
+		mFinancialDataChartItemMainList.add(new FinancialDataChartItemMain(
+				mFinancialDataChartList.get(i)));
+		mFinancialDataChartItemSubList.add(new FinancialDataChartItemSub(
+				mFinancialDataChartList.get(i)));
+		mFinancialDataChartItemList.add(mFinancialDataChartItemMainList.get(i));
+		mFinancialDataChartItemList.add(mFinancialDataChartItemSubList.get(i));
 
-		if (mStockChartItemSubList == null) {
-			mStockChartItemSubList = new ArrayList<StockChartItemSub>();
-		}
-
-		for (int i = 0; i < Constants.PERIODS.length; i++) {
-			mStockChartDataList.add(new StockChartData(Constants.PERIODS[i]));
-			mStockChartItemMainList.add(new StockChartItemMain(
-					mStockChartDataList.get(i)));
-			mStockChartItemSubList.add(new StockChartItemSub(
-					mStockChartDataList.get(i)));
-			mStockChartItemList.add(mStockChartItemMainList.get(i));
-			mStockChartItemList.add(mStockChartItemSubList.get(i));
-		}
-
-		mStockChartArrayAdapter = new StockChartArrayAdapter(this,
-				mStockChartItemList);
-		mListView.setAdapter(mStockChartArrayAdapter);
+		mFinancialDataChartArrayAdapter = new FinancialDataChartArrayAdapter(
+				this, mFinancialDataChartItemList);
+		mListView.setAdapter(mFinancialDataChartArrayAdapter);
 	}
 
 	void initLoader() {
 		mLoaderManager.initLoader(LOADER_ID_STOCK_LIST, null, this);
-		for (int i = 0; i < Constants.PERIODS.length; i++) {
-			mLoaderManager.initLoader(i, null, this);
-		}
+		mLoaderManager.initLoader(LOADER_ID_FINANCIAL_DATA_LIST, null, this);
 	}
 
 	void restartLoader() {
 		mLoaderManager.restartLoader(LOADER_ID_STOCK_LIST, null, this);
-		for (int i = 0; i < Constants.PERIODS.length; i++) {
-			mLoaderManager.restartLoader(i, null, this);
-		}
+		mLoaderManager.restartLoader(LOADER_ID_FINANCIAL_DATA_LIST, null, this);
 	}
 
 	CursorLoader getStockCursorLoader() {
@@ -345,18 +326,19 @@ public class StockChartListActivity extends OrionBaseActivity implements
 		return loader;
 	}
 
-	CursorLoader getStockDataCursorLoader(String period) {
+	CursorLoader getFinancialDataCursorLoader() {
 		String selection = "";
 		String sortOrder = "";
 		CursorLoader loader = null;
 
-		selection = mStockDatabaseManager.getStockDataSelection(mStock.getId(),
-				period);
+		selection = mStockDatabaseManager.getFinancialDataSelection(mStock
+				.getId());
 
-		sortOrder = mStockDatabaseManager.getStockDataOrder();
+		sortOrder = mStockDatabaseManager.getFinancialDataOrder();
 
-		loader = new CursorLoader(this, DatabaseContract.StockData.CONTENT_URI,
-				DatabaseContract.StockData.PROJECTION_ALL, selection, null,
+		loader = new CursorLoader(this,
+				DatabaseContract.FinancialData.CONTENT_URI,
+				DatabaseContract.FinancialData.PROJECTION_ALL, selection, null,
 				sortOrder);
 
 		return loader;
@@ -434,125 +416,88 @@ public class StockChartListActivity extends OrionBaseActivity implements
 		}
 	}
 
-	public void swapStockDataCursor(StockChartData stockChartData, Cursor cursor) {
+	public void swapFinancialDataCursor(FinancialDataChart financialDataChart,
+			Cursor cursor) {
 		int index = 0;
+		double unit = 100000000.0;
 
-		if (mStockData == null) {
+		if (mFinancialData == null) {
 			return;
 		}
 
-		mStockDatabaseManager.getFinancialDataList(mStock, mFinancialDataList);
+		// mStockDatabaseManager.getFinancialDataList(mStock,
+		// mFinancialDataList);
 
-		stockChartData.clear();
+		financialDataChart.clear();
 
 		try {
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				String dateString = "";
 
 				while (cursor.moveToNext()) {
-					index = stockChartData.mXValues.size();
-					mStockData.set(cursor);
+					index = financialDataChart.mXValues.size();
+					mFinancialData.set(cursor);
 
-					dateString = mStockData.getDate();
-					stockChartData.mXValues.add(dateString);
+					dateString = mFinancialData.getDate();
+					financialDataChart.mXValues.add(dateString);
 
-					CandleEntry candleEntry = new CandleEntry(index,
-							(float) mStockData.getHigh(),
-							(float) mStockData.getLow(),
-							(float) mStockData.getOpen(),
-							(float) mStockData.getClose(),
-							mStockData.getAction());
-					stockChartData.mCandleEntryList.add(candleEntry);
-
-					if (mStockData.vertexOf(Constants.STOCK_VERTEX_TOP)) {
-						Entry drawEntry = new Entry(
-								(float) mStockData.getVertexHigh(), index);
-						stockChartData.mDrawEntryList.add(drawEntry);
-					} else if (mStockData
-							.vertexOf(Constants.STOCK_VERTEX_BOTTOM)) {
-						Entry drawEntry = new Entry(
-								(float) mStockData.getVertexLow(), index);
-						stockChartData.mDrawEntryList.add(drawEntry);
-					}
-
-					if (mStockData.vertexOf(Constants.STOCK_VERTEX_TOP_STROKE)) {
-						Entry strokeEntry = new Entry(
-								(float) mStockData.getVertexHigh(), index);
-						stockChartData.mStrokeEntryList.add(strokeEntry);
-					} else if (mStockData
-							.vertexOf(Constants.STOCK_VERTEX_BOTTOM_STROKE)) {
-						Entry strokeEntry = new Entry(
-								(float) mStockData.getVertexLow(), index);
-						stockChartData.mStrokeEntryList.add(strokeEntry);
-					}
-
-					if (mStockData.vertexOf(Constants.STOCK_VERTEX_TOP_SEGMENT)) {
-						Entry segmentEntry = new Entry(
-								(float) mStockData.getVertexHigh(), index);
-						stockChartData.mSegmentEntryList.add(segmentEntry);
-					} else if (mStockData
-							.vertexOf(Constants.STOCK_VERTEX_BOTTOM_SEGMENT)) {
-						Entry segmentEntry = new Entry(
-								(float) mStockData.getVertexLow(), index);
-						stockChartData.mSegmentEntryList.add(segmentEntry);
-					}
-
-					if ((mStockData.getOverlapHigh() > 0)
-							&& (mStockData.getOverlapLow() > 0)) {
-						Entry overlayHighEntry = new Entry(
-								(float) mStockData.getOverlapHigh(), index);
-						stockChartData.mOverlapHighEntryList
-								.add(overlayHighEntry);
-
-						Entry overlapLowEntry = new Entry(
-								(float) mStockData.getOverlapLow(), index);
-						stockChartData.mOverlapLowEntryList
-								.add(overlapLowEntry);
-					}
-
-					if (mFinancialDataList.size() > 0) {
-						FinancialData financialData = getFinancialDataByDate(dateString);
-						if (financialData != null) {
-							Entry financialDataEntry = new Entry(
-									(float) financialData
-											.getBookValuePerShare(),
-									index);
-							stockChartData.mFinancialDataEntryList
-									.add(financialDataEntry);
-						}
-					}
-
-					Entry average5Entry = new Entry(
-							(float) mStockData.getAverage5(), index);
-					stockChartData.mAverage5EntryList.add(average5Entry);
-
-					Entry average10Entry = new Entry(
-							(float) mStockData.getAverage10(), index);
-					stockChartData.mAverage10EntryList.add(average10Entry);
-
-					Entry difEntry = new Entry((float) mStockData.getDIF(),
+					Entry totalCurrentAssetsEntry = new Entry(
+							(float) mFinancialData.getTotalCurrentAssets()/(float)unit,
 							index);
-					stockChartData.mDIFEntryList.add(difEntry);
+					financialDataChart.mTotalCurrentAssetsEntryList
+							.add(totalCurrentAssetsEntry);
 
-					Entry deaEntry = new Entry((float) mStockData.getDEA(),
+					Entry totalAssetsEntry = new Entry(
+							(float) mFinancialData.getTotalAssets()/(float)unit, index);
+					financialDataChart.mTotalAssetsEntryList
+							.add(totalAssetsEntry);
+
+					Entry totalLongTermLiabilitiesEntry = new Entry(
+							(float) mFinancialData
+									.getTotalLongTermLiabilities()/(float)unit,
 							index);
-					stockChartData.mDEAEntryList.add(deaEntry);
+					financialDataChart.mTotalLongTermLiabilitiesEntryList
+							.add(totalLongTermLiabilitiesEntry);
 
-					BarEntry histogramBarEntry = new BarEntry(
-							(float) mStockData.getHistogram(), index);
-					stockChartData.mHistogramEntryList.add(histogramBarEntry);
+					Entry mainBusinessIncomeEntry = new Entry(
+							(float) mFinancialData.getMainBusinessIncome()/(float)unit,
+							index);
+					financialDataChart.mMainBusinessIncomeEntryList
+							.add(mainBusinessIncomeEntry);
 
-					Entry averageEntry = new Entry(
-							(float) mStockData.getAverage(), index);
-					stockChartData.mAverageEntryList.add(averageEntry);
+					Entry financialExpensesEntry = new Entry(
+							(float) mFinancialData.getFinancialExpenses()/(float)unit,
+							index);
+					financialDataChart.mFinancialExpensesEntryList
+							.add(financialExpensesEntry);
 
-					Entry velocityEntry = new Entry(
-							(float) mStockData.getVelocity(), index);
-					stockChartData.mVelocityEntryList.add(velocityEntry);
+					Entry netProfittEntry = new Entry(
+							(float) mFinancialData.getNetProfit()/(float)unit, index);
+					financialDataChart.mNetProfitEntryList.add(netProfittEntry);
 
-					Entry acclerateEntry = new Entry(
-							(float) mStockData.getAcceleration(), index);
-					stockChartData.mAccelerateEntryList.add(acclerateEntry);
+					Entry bookValuePerShareEntry = new Entry(
+							(float) mFinancialData.getBookValuePerShare(),
+							index);
+					financialDataChart.mBookValuePerShareEntryList
+							.add(bookValuePerShareEntry);
+
+					Entry earningsPerShareEntry = new Entry(
+							(float) mFinancialData.getEarningsPerShare(), index);
+					financialDataChart.mEarningsPerShareEntryList
+							.add(earningsPerShareEntry);
+
+					Entry financialDataEntry = new Entry(
+							(float) mFinancialData.getEarningsPerShare(), index);
+					financialDataChart.mEarningsPerShareEntryList
+							.add(financialDataEntry);
+
+					double roe = 0;
+					if (Math.abs(mFinancialData.getBookValuePerShare()) > 0) {
+						roe = mFinancialData.getEarningsPerShare()
+								/ mFinancialData.getBookValuePerShare();
+					}
+					Entry roeEntry = new Entry((float) roe, index);
+					financialDataChart.mROEEntryList.add(roeEntry);
 				}
 			}
 		} catch (Exception e) {
@@ -565,12 +510,12 @@ public class StockChartListActivity extends OrionBaseActivity implements
 
 		mStockDatabaseManager.getStockDealList(mStock, mStockDealList);
 
-		stockChartData.updateDescription(mStock);
-		stockChartData.updateLimitLine(mStock, mStockDealList);
-		stockChartData.setMainChartData();
-		stockChartData.setSubChartData();
+		financialDataChart.updateDescription(mStock);
+		financialDataChart.updateLimitLine(mStock, mStockDealList);
+		financialDataChart.setMainChartData();
+//		financialDataChart.setSubChartData();
 
-		mStockChartArrayAdapter.notifyDataSetChanged();
+		mFinancialDataChartArrayAdapter.notifyDataSetChanged();
 	}
 
 	Comparator<FinancialData> comparator = new Comparator<FinancialData>() {
@@ -718,35 +663,36 @@ public class StockChartListActivity extends OrionBaseActivity implements
 	}
 
 	static class MainHandler extends Handler {
-		private final WeakReference<StockChartListActivity> mActivity;
+		private final WeakReference<FinancialDataChartListActivity> mActivity;
 
-		MainHandler(StockChartListActivity activity) {
-			mActivity = new WeakReference<StockChartListActivity>(activity);
+		MainHandler(FinancialDataChartListActivity activity) {
+			mActivity = new WeakReference<FinancialDataChartListActivity>(
+					activity);
 		}
 
 		@Override
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
 
-			StockChartListActivity activity = mActivity.get();
+			FinancialDataChartListActivity activity = mActivity.get();
 			activity.updateTitle();
 			activity.updateMenuAction();
 		}
 	}
 
-	class StockChartItem {
+	class FinancialDataChartItem {
 		int mItemViewType;
 		int mResource;
-		StockChartData mStockChartData;
+		FinancialDataChart mFinancialDataChart;
 
-		public StockChartItem() {
+		public FinancialDataChartItem() {
 		}
 
-		public StockChartItem(int itemViewType, int resource,
-				StockChartData stockChartData) {
+		public FinancialDataChartItem(int itemViewType, int resource,
+				FinancialDataChart financialDataChart) {
 			mItemViewType = itemViewType;
 			mResource = resource;
-			mStockChartData = stockChartData;
+			mFinancialDataChart = financialDataChart;
 		}
 
 		public int getItemViewType() {
@@ -786,8 +732,9 @@ public class StockChartListActivity extends OrionBaseActivity implements
 				leftAxis.setValueFormatter(new DefaultYAxisValueFormatter(2));
 				leftAxis.removeAllLimitLines();
 				if (mItemViewType == ITEM_VIEW_TYPE_MAIN) {
-					for (int i = 0; i < mStockChartData.mLimitLineList.size(); i++) {
-						leftAxis.addLimitLine(mStockChartData.mLimitLineList
+					for (int i = 0; i < mFinancialDataChart.mLimitLineList
+							.size(); i++) {
+						leftAxis.addLimitLine(mFinancialDataChart.mLimitLineList
 								.get(i));
 					}
 				}
@@ -798,12 +745,12 @@ public class StockChartListActivity extends OrionBaseActivity implements
 				rightAxis.setEnabled(false);
 			}
 
-			viewHolder.chart.setDescription(mStockChartData.mDescription);
+			viewHolder.chart.setDescription(mFinancialDataChart.mDescription);
 
 			if (mItemViewType == ITEM_VIEW_TYPE_MAIN) {
-				viewHolder.chart.setData(mStockChartData.mCombinedDataMain);
+				viewHolder.chart.setData(mFinancialDataChart.mCombinedDataMain);
 			} else {
-				viewHolder.chart.setData(mStockChartData.mCombinedDataSub);
+				viewHolder.chart.setData(mFinancialDataChart.mCombinedDataSub);
 			}
 
 			return view;
@@ -814,25 +761,27 @@ public class StockChartListActivity extends OrionBaseActivity implements
 		}
 	}
 
-	class StockChartItemMain extends StockChartItem {
-		public StockChartItemMain(StockChartData stockChartData) {
+	class FinancialDataChartItemMain extends FinancialDataChartItem {
+		public FinancialDataChartItemMain(FinancialDataChart financialDataChart) {
 			super(ITEM_VIEW_TYPE_MAIN,
-					R.layout.activity_stock_chart_list_item_main,
-					stockChartData);
+					R.layout.activity_financial_data_chart_list_item_main,
+					financialDataChart);
 		}
 	}
 
-	class StockChartItemSub extends StockChartItem {
-		public StockChartItemSub(StockChartData stockChartData) {
+	class FinancialDataChartItemSub extends FinancialDataChartItem {
+		public FinancialDataChartItemSub(FinancialDataChart financialDataChart) {
 			super(ITEM_VIEW_TYPE_SUB,
-					R.layout.activity_stock_chart_list_item_sub, stockChartData);
+					R.layout.activity_financial_data_chart_list_item_sub,
+					financialDataChart);
 		}
 	}
 
-	class StockChartArrayAdapter extends ArrayAdapter<StockChartItem> {
+	class FinancialDataChartArrayAdapter extends
+			ArrayAdapter<FinancialDataChartItem> {
 
-		public StockChartArrayAdapter(Context context,
-				List<StockChartItem> objects) {
+		public FinancialDataChartArrayAdapter(Context context,
+				List<FinancialDataChartItem> objects) {
 			super(context, 0, objects);
 		}
 
@@ -849,7 +798,7 @@ public class StockChartListActivity extends OrionBaseActivity implements
 
 		@Override
 		public int getViewTypeCount() {
-			return mStockChartItemList.size();
+			return mFinancialDataChartItemList.size();
 		}
 	}
 

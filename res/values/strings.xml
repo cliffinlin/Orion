@@ -40,7 +40,7 @@
     <string name="deal_profit">Profit</string>
     <string name="delete">Delete</string>
     <string name="delete_confirm">Do You Qant to Delete?</string>
-    <string name="dividend">Dividend</string>    
+    <string name="dividend">Dividend</string>
     <string name="dividend_yield">Yield</string>
     <string name="download">Download</string>
     <string name="download_service">Download Service</string>
@@ -48,6 +48,7 @@
     <string name="email_hint">Email</string>
     <string name="favorite">Favorite</string>
     <string name="favorite_list">Favorite List</string>
+    <string name="financial_data_chart">Financial Data Chart</string>    
     <string name="high">High</string>
     <string name="hold">Hold</string>
     <string name="list">List</string>
@@ -109,7 +110,7 @@
     <string name="action_day">Day</string>
     <string name="action_week">W</string>
     <string name="action_month">M</string>
-    <string name="stock_chart">Chart</string>
+    <string name="stock_data_chart">Stock Data Chart</string>
     <string name="stock_name_code">Name</string>
     <string name="stock_code">Stock Code</string>
     <string name="stock_code_x">Stock Code X</string>

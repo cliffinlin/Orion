@@ -22,7 +22,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
-public class StockChartData {
+public class StockDataChart {
 	String mPeriod;
 	String mDescription;
 
@@ -50,10 +50,10 @@ public class StockChartData {
 	CombinedData mCombinedDataMain = null;
 	CombinedData mCombinedDataSub = null;
 
-	public StockChartData() {
+	public StockDataChart() {
 	}
 
-	public StockChartData(String period) {
+	public StockDataChart(String period) {
 		if (mXValues == null) {
 			mXValues = new ArrayList<String>();
 		}

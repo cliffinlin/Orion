@@ -684,10 +684,19 @@ public class StockFavoriteListActivity extends StorageActivity implements
 				finish();
 			}
 		} else {
-			Intent intent = new Intent(this, StockChartListActivity.class);
-			intent.putExtra(Setting.KEY_SORT_ORDER_STOCK_LIST, mSortOrder);
-			intent.putExtra(Constants.EXTRA_STOCK_ID, id);
-			startActivity(intent);
+			if (parent.getId() == R.id.left_listview) {
+				Intent intent = new Intent(this,
+						FinancialDataChartListActivity.class);
+				intent.putExtra(Setting.KEY_SORT_ORDER_STOCK_LIST, mSortOrder);
+				intent.putExtra(Constants.EXTRA_STOCK_ID, id);
+				startActivity(intent);
+			} else {
+				Intent intent = new Intent(this,
+						StockDataChartListActivity.class);
+				intent.putExtra(Setting.KEY_SORT_ORDER_STOCK_LIST, mSortOrder);
+				intent.putExtra(Constants.EXTRA_STOCK_ID, id);
+				startActivity(intent);
+			}
 		}
 	}
 

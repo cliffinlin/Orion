@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.android.orion"
-    android:versionCode="433"
-    android:versionName="1.1.29_20190317" >
+    android:versionCode="435"
+    android:versionName="1.1.31_20190319" >
 
     <uses-sdk
         android:minSdkVersion="19"
@@ -49,8 +49,12 @@
         <activity android:name="com.android.orion.StockActivity" >
         </activity>
         <activity
-            android:name="com.android.orion.StockChartListActivity"
-            android:label="@string/stock_chart" >
+            android:name="com.android.orion.StockDataChartListActivity"
+            android:label="@string/stock_data_chart" >
+        </activity>
+        <activity
+            android:name="com.android.orion.FinancialDataChartListActivity"
+            android:label="@string/financial_data_chart" >
         </activity>
         <activity
             android:name="com.android.orion.StockFavoriteListActivity"
@@ -92,7 +96,7 @@
             android:name="com.android.orion.StockDealActivity"
             android:label="@string/title_activity_deal" >
         </activity>
-        
+
         <provider
             android:name="com.android.orion.OrionContentProvider"
             android:authorities="com.android.orion"

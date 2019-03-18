@@ -21,9 +21,11 @@ import android.os.Bundle;
 import android.util.ArrayMap;
 
 import com.android.orion.database.DatabaseContract;
+import com.android.orion.database.FinancialData;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockDatabaseManager;
+import com.android.orion.database.StockDeal;
 
 public class OrionBaseActivity extends Activity {
 	boolean mBound = false;
@@ -42,9 +44,13 @@ public class OrionBaseActivity extends Activity {
 
 	Stock mStock = null;
 	StockData mStockData = null;
+	StockDeal mStockDeal = null;
+	FinancialData mFinancialData = null;
 
 	ArrayList<Stock> mStockList = null;
 	ArrayList<StockData> mStockDataList = null;
+	ArrayList<StockDeal> mStockDealList = null;
+	ArrayList<FinancialData> mFinancialDataList = null;
 
 	ArrayMap<String, Stock> mStockDealArrayMap = null;
 
@@ -75,6 +81,18 @@ public class OrionBaseActivity extends Activity {
 			mStock = Stock.obtain();
 		}
 
+		if (mStockData == null) {
+			mStockData = StockData.obtain();
+		}
+
+		if (mStockDeal == null) {
+			mStockDeal = StockDeal.obtain();
+		}
+
+		if (mFinancialData == null) {
+			mFinancialData = FinancialData.obtain();
+		}
+
 		if (mStockList == null) {
 			mStockList = new ArrayList<Stock>();
 		}
@@ -83,12 +101,16 @@ public class OrionBaseActivity extends Activity {
 			mStockDataList = new ArrayList<StockData>();
 		}
 
-		if (mStockDealArrayMap == null) {
-			mStockDealArrayMap = new ArrayMap<String, Stock>();
+		if (mStockDealList == null) {
+			mStockDealList = new ArrayList<StockDeal>();
 		}
 
-		if (mStockData == null) {
-			mStockData = StockData.obtain();
+		if (mFinancialDataList == null) {
+			mFinancialDataList = new ArrayList<FinancialData>();
+		}
+
+		if (mStockDealArrayMap == null) {
+			mStockDealArrayMap = new ArrayMap<String, Stock>();
 		}
 
 		if (mSharedPreferences == null) {
