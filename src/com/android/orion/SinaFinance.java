@@ -721,8 +721,7 @@ public class SinaFinance extends StockDataProvider {
 						valueString = tdElements.get(1).text();
 
 						if (!TextUtils.isEmpty(valueString)) {
-							valueString = valueString.substring(0,
-									valueString.length() - 1);
+							valueString = valueString.replace("Ôª", "");
 							valueString = valueString.replace(",", "");
 
 							if (keyString.equals("½ØÖ¹ÈÕÆÚ")) {

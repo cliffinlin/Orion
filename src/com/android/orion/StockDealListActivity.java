@@ -46,6 +46,8 @@ public class StockDealListActivity extends StorageActivity implements
 	static final String DEAL_LIST_XML_FILE_NAME = "deal.xml";
 
 	static final int LOADER_ID_DEAL_LIST = 0;
+	
+	static final int LOAD_DEAL_LIST_FROM_SD = 0;
 
 	static final int MESSAGE_DELETE_DEAL = 0;
 	static final int MESSAGE_DELETE_DEAL_LIST = 1;
@@ -241,6 +243,7 @@ public class StockDealListActivity extends StorageActivity implements
 		getContentResolver().registerContentObserver(
 				DatabaseContract.StockDeal.CONTENT_URI, true, mContentObserver);
 
+		startLoadTask(LOAD_DEAL_LIST_FROM_SD);
 	}
 
 	@Override
@@ -289,6 +292,28 @@ public class StockDealListActivity extends StorageActivity implements
 		startService(serviceType, Constants.EXECUTE_IMMEDIATE);
 	}
 
+	Long doInBackgroundLoad(Object... params) {
+		super.doInBackgroundLoad(params);
+		int execute = (Integer) params[0];
+
+		switch (execute) {
+		case LOAD_DEAL_LIST_FROM_SD:
+			loadListFromSD(DEAL_LIST_XML_FILE_NAME);
+			break;
+
+		default:
+			break;
+		}
+
+		return RESULT_SUCCESS;
+	}
+
+	void onPostExecuteLoad(Long result) {
+		super.onPostExecuteLoad(result);
+		startService(Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE,
+				Constants.EXECUTE_IMMEDIATE);
+	}
+	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);

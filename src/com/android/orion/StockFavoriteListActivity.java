@@ -41,10 +41,11 @@ public class StockFavoriteListActivity extends StorageActivity implements
 	public static final String ACTION_STOCK_ID = "orion.intent.action.ACTION_STOCK_ID";
 
 	static final int LOADER_ID_STOCK_FAVORITE_LIST = 0;
-
-	static final int LOAD_FAVORITE_LIST_FROM_SD = 11;
-	static final int MESSAGE_SAVE_TO_SD = 12;
-	static final int MESSAGE_REFRESH = 13;
+	
+	static final int LOAD_FAVORITE_LIST_FROM_SD = 0;
+	
+	static final int MESSAGE_SAVE_TO_SD = 0;
+	static final int MESSAGE_REFRESH = 1;
 
 	static final int mHeaderTextDefaultColor = Color.BLACK;
 	static final int mHeaderTextHighlightColor = Color.RED;
@@ -143,6 +144,8 @@ public class StockFavoriteListActivity extends StorageActivity implements
 					getResources().getString(R.string.network_unavailable),
 					Toast.LENGTH_SHORT).show();
 		}
+		
+		startLoadTask(LOAD_FAVORITE_LIST_FROM_SD);
 	}
 
 	@Override
