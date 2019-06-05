@@ -1,6 +1,7 @@
 package com.android.orion;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.jsoup.Jsoup;
@@ -10,6 +11,7 @@ import org.jsoup.select.Elements;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.provider.ContactsContract.Contacts.Data;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -32,6 +34,7 @@ public class SinaFinance extends StockDataProvider {
 	private static final String SINA_FINANCE_URL_HQ_JS_LIST = "http://hq.sinajs.cn/list=";
 	private static final String SINA_FINANCE_URL_HQ_JS_LIST_SIMPLE = "http://hq.sinajs.cn/list=s_";
 	private static final String SINA_FINANCE_URL_VFD_FINANCESUMMARY = "http://money.finance.sina.com.cn/corp/go.php/vFD_FinanceSummary/stockid/";// stock_id.phtml
+	private static final String SINA_FINANCE_URL_ISSUE_SHAREBONUS = "http://vip.stock.finance.sina.com.cn/corp/go.php/vISSUE_ShareBonus/stockid/";//stock_id.phtml
 
 	private static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN5 = 242;
 	private static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN15 = 192;
@@ -183,6 +186,17 @@ public class SinaFinance extends StockDataProvider {
 			return urlString;
 		}
 		urlString = SINA_FINANCE_URL_VFD_FINANCESUMMARY + stock.getCode()
+				+ ".phtml";
+		return urlString;
+	}
+
+	@Override
+	String getShareBonusURLString(Stock stock) {
+		String urlString = "";
+		if (stock == null) {
+			return urlString;
+		}
+		urlString = SINA_FINANCE_URL_ISSUE_SHAREBONUS + stock.getCode()
 				+ ".phtml";
 		return urlString;
 	}
@@ -799,6 +813,126 @@ public class SinaFinance extends StockDataProvider {
 
 		stopWatch.stop();
 		Log.d(TAG, "handleResponseFinancialData:" + stock.getName() + " "
+				+ stopWatch.getInterval() + "s");
+	}
+	
+	@Override
+	void handleResponseShareBonus(Stock stock, String response) {
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start();
+
+		double shareBonus = 0;
+		String announcementDateString = "";
+		String valueString = "";
+		String dividendDateString = "";
+		String yearString = "";
+		String prevYearString = "";
+
+		if ((stock == null) || TextUtils.isEmpty(response)) {
+			Log.d(TAG, "handleResponseShareBonus return " + " stock = "
+					+ stock + " response = " + response);
+			return;
+		}
+
+		try {
+			String responseString = new String(response.getBytes("ISO-8859-1"),
+					"GB2312");
+
+			Document doc = Jsoup.parse(responseString);
+			if (doc == null) {
+				Log.d(TAG, "handleResponseShareBonus return " + " doc = "
+						+ doc);
+				return;
+			}
+
+			Elements tableElements = doc.select("table#sharebonus_1");
+			if (tableElements == null) {
+				Log.d(TAG, "handleResponseShareBonus return "
+						+ " tableElements = " + tableElements);
+				return;
+			}
+
+			Elements tbodyElements = tableElements.select("tbody");
+			if (tbodyElements == null) {
+				Log.d(TAG, "handleResponseShareBonus return "
+						+ " tbodyElements = " + tbodyElements);
+				return;
+			}
+
+			for (Element tbodyElement : tbodyElements) {
+				if (tbodyElement == null) {
+					Log.d(TAG, "handleResponseShareBonus return "
+							+ " tbodyElement = " + tbodyElement);
+					return;
+				}
+
+				Elements trElements = tbodyElement.select("tr");
+				if (trElements == null) {
+					Log.d(TAG, "handleResponseShareBonus return "
+							+ " trElements = " + trElements);
+					return;
+				}
+
+				for (Element trElement : trElements) {
+					if (trElement == null) {
+						Log.d(TAG, "handleResponseShareBonus continue "
+								+ " trElement = " + trElement);
+						continue;
+					}
+
+					Elements tdElements = trElement.select("td");
+					if (tdElements == null) {
+						Log.d(TAG, "handleResponseShareBonus continue "
+								+ " tdElements = " + tdElements);
+						continue;
+					}
+
+					if (tdElements.size() < 9) {
+						Log.d(TAG, "handleResponseShareBonus continue "
+								+ " tdElements.size() = " + tdElements.size());
+						continue;
+					}
+
+					announcementDateString = tdElements.get(0).text();
+					if (!TextUtils.isEmpty(announcementDateString)) {
+						dividendDateString = tdElements.get(5).text();
+						if (!TextUtils.isEmpty(dividendDateString)) {
+							if ("--".equals(dividendDateString)) {
+								yearString = Utility.getCurrentDateString().split("-")[0];
+							} else {
+								String[] strings = dividendDateString.split("-");
+								if (strings != null && strings.length > 0) {
+									yearString = strings[0];
+								}
+							}
+							
+							if (!TextUtils.isEmpty(prevYearString)) {
+								if (!prevYearString.equals(yearString)) {
+									break;
+								}
+							}
+						}
+						
+						valueString = tdElements.get(3).text();
+						if (!TextUtils.isEmpty(valueString)) {
+							shareBonus += Double.valueOf(valueString);
+							stock.setDividend(shareBonus);
+							stock.setupDividendYield();
+							prevYearString = yearString;
+						}
+					}
+				}
+			}
+			
+			stock.setModified(Utility.getCurrentDateTimeString());
+			stock.setupDividendYield();
+			mStockDatabaseManager.updateStock(stock, stock.getContentValues());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		stopWatch.stop();
+		Log.d(TAG, "handleResponseShareBonus:" + stock.getName() + " "
 				+ stopWatch.getInterval() + "s");
 	}
 }
