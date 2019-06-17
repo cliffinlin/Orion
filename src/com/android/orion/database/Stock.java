@@ -36,6 +36,8 @@ public class Stock extends StockBase {
 	private long mHold;
 	private double mCost;
 	private double mProfit;
+	private double mPE;
+	private double mPB;
 
 	public ArrayList<StockData> mStockDataListMin1 = new ArrayList<StockData>();
 	public ArrayList<StockData> mStockDataListMin5 = new ArrayList<StockData>();
@@ -118,6 +120,8 @@ public class Stock extends StockBase {
 		mHold = 0;
 		mCost = 0;
 		mProfit = 0;
+		mPE = 0;
+		mPB = 0;
 	}
 
 	@Override
@@ -151,6 +155,8 @@ public class Stock extends StockBase {
 		contentValues.put(DatabaseContract.COLUMN_HOLD, mHold);
 		contentValues.put(DatabaseContract.COLUMN_COST, mCost);
 		contentValues.put(DatabaseContract.COLUMN_PROFIT, mProfit);
+		contentValues.put(DatabaseContract.COLUMN_PE, mPE);
+		contentValues.put(DatabaseContract.COLUMN_PB, mPB);
 
 		return contentValues;
 	}
@@ -181,6 +187,9 @@ public class Stock extends StockBase {
 		} else if (period.equals(Constants.PERIOD_YEAR)) {
 			contentValues.put(DatabaseContract.COLUMN_YEAR, mActionYear);
 		}
+		
+		contentValues.put(DatabaseContract.COLUMN_PB, mPB);
+		contentValues.put(DatabaseContract.COLUMN_PE, mPE);
 
 		return contentValues;
 	}
@@ -220,6 +229,8 @@ public class Stock extends StockBase {
 		setHold(stock.mHold);
 		setCost(stock.mCost);
 		setProfit(stock.mProfit);
+		setPE(stock.mPE);
+		setPB(stock.mPB);
 	}
 
 	@Override
@@ -258,6 +269,8 @@ public class Stock extends StockBase {
 		setHold(cursor);
 		setCost(cursor);
 		setProfit(cursor);
+		setPE(cursor);
+		setPB(cursor);
 	}
 
 	String getClases() {
@@ -702,6 +715,40 @@ public class Stock extends StockBase {
 				.getColumnIndex(DatabaseContract.COLUMN_PROFIT)));
 	}
 
+	public double getPE() {
+		return mPE;
+	}
+
+	public void setPE(double pe) {
+		mPE = pe;
+	}
+
+	void setPE(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setPE(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_PE)));
+	}
+
+	public double getPB() {
+		return mPB;
+	}
+
+	public void setPB(double pb) {
+		mPB = pb;
+	}
+
+	void setPB(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setPB(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_PB)));
+	}
+
 	public String getAction(String period) {
 		String action = "";
 
@@ -754,9 +801,26 @@ public class Stock extends StockBase {
 		}
 	}
 
+	public void setupPE(double value) {
+		if ((value == 0) || (value < 0)) {
+			return;
+		}
+
+		mPE = 100.0 * value / mPrice;
+		mPE = Utility.Round(mPE, Constants.DOUBLE_FIXED_DECIMAL);
+	}
+	
+	public void setupPB(double value) {
+		if (value == 0) {
+			return;
+		}
+
+		mPB = mPrice / value;
+		mPB = Utility.Round(mPB, Constants.DOUBLE_FIXED_DECIMAL);
+	}
+	
 	public void setupCost(double value) {
 		if (mHold == 0) {
-			mCost = 0;
 			return;
 		}
 
@@ -766,7 +830,6 @@ public class Stock extends StockBase {
 
 	public void setupDividendYield() {
 		if (mPrice == 0) {
-			mDividendYield = 0;
 			return;
 		}
 

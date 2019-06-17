@@ -442,37 +442,38 @@ public class FinancialDataChartListActivity extends OrionBaseActivity implements
 					financialDataChart.mXValues.add(dateString);
 
 					Entry totalCurrentAssetsEntry = new Entry(
-							(float) mFinancialData.getTotalCurrentAssets()/(float)unit,
-							index);
+							(float) mFinancialData.getTotalCurrentAssets()
+									/ (float) unit, index);
 					financialDataChart.mTotalCurrentAssetsEntryList
 							.add(totalCurrentAssetsEntry);
 
 					Entry totalAssetsEntry = new Entry(
-							(float) mFinancialData.getTotalAssets()/(float)unit, index);
+							(float) mFinancialData.getTotalAssets()
+									/ (float) unit, index);
 					financialDataChart.mTotalAssetsEntryList
 							.add(totalAssetsEntry);
 
 					Entry totalLongTermLiabilitiesEntry = new Entry(
-							(float) mFinancialData
-									.getTotalLongTermLiabilities()/(float)unit,
-							index);
+							(float) mFinancialData.getTotalLongTermLiabilities()
+									/ (float) unit, index);
 					financialDataChart.mTotalLongTermLiabilitiesEntryList
 							.add(totalLongTermLiabilitiesEntry);
 
 					Entry mainBusinessIncomeEntry = new Entry(
-							(float) mFinancialData.getMainBusinessIncome()/(float)unit,
-							index);
+							(float) mFinancialData.getMainBusinessIncome()
+									/ (float) unit, index);
 					financialDataChart.mMainBusinessIncomeEntryList
 							.add(mainBusinessIncomeEntry);
 
 					Entry financialExpensesEntry = new Entry(
-							(float) mFinancialData.getFinancialExpenses()/(float)unit,
-							index);
+							(float) mFinancialData.getFinancialExpenses()
+									/ (float) unit, index);
 					financialDataChart.mFinancialExpensesEntryList
 							.add(financialExpensesEntry);
 
 					Entry netProfittEntry = new Entry(
-							(float) mFinancialData.getNetProfit()/(float)unit, index);
+							(float) mFinancialData.getNetProfit()
+									/ (float) unit, index);
 					financialDataChart.mNetProfitEntryList.add(netProfittEntry);
 
 					Entry bookValuePerShareEntry = new Entry(
@@ -513,7 +514,7 @@ public class FinancialDataChartListActivity extends OrionBaseActivity implements
 		financialDataChart.updateDescription(mStock);
 		financialDataChart.updateLimitLine(mStock, mStockDealList);
 		financialDataChart.setMainChartData();
-//		financialDataChart.setSubChartData();
+		// financialDataChart.setSubChartData();
 
 		mFinancialDataChartArrayAdapter.notifyDataSetChanged();
 	}

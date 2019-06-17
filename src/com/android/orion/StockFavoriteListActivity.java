@@ -41,9 +41,9 @@ public class StockFavoriteListActivity extends StorageActivity implements
 	public static final String ACTION_STOCK_ID = "orion.intent.action.ACTION_STOCK_ID";
 
 	static final int LOADER_ID_STOCK_FAVORITE_LIST = 0;
-	
+
 	static final int LOAD_FAVORITE_LIST_FROM_SD = 0;
-	
+
 	static final int MESSAGE_SAVE_TO_SD = 0;
 	static final int MESSAGE_REFRESH = 1;
 
@@ -71,6 +71,8 @@ public class StockFavoriteListActivity extends StorageActivity implements
 	TextView mTextViewWeek = null;
 	TextView mTextViewMonth = null;
 	TextView mTextViewHold = null;
+	TextView mTextViewPE = null;
+	TextView mTextViewPB = null;
 	TextView mTextViewDividend = null;
 	TextView mTextViewDividendYield = null;
 
@@ -144,7 +146,7 @@ public class StockFavoriteListActivity extends StorageActivity implements
 					getResources().getString(R.string.network_unavailable),
 					Toast.LENGTH_SHORT).show();
 		}
-		
+
 		startLoadTask(LOAD_FAVORITE_LIST_FROM_SD);
 	}
 
@@ -253,8 +255,6 @@ public class StockFavoriteListActivity extends StorageActivity implements
 						stock.setCode(parser.nextText());
 					} else if (DatabaseContract.COLUMN_NAME.equals(tagName)) {
 						stock.setName(parser.nextText());
-					} else if (DatabaseContract.COLUMN_DIVIDEND.equals(tagName)) {
-						stock.setDividend(Double.valueOf(parser.nextText()));
 					} else {
 					}
 					break;
@@ -310,9 +310,6 @@ public class StockFavoriteListActivity extends StorageActivity implements
 							stock.getCode());
 					xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_NAME,
 							stock.getName());
-					xmlSerialize(xmlSerializer,
-							DatabaseContract.COLUMN_DIVIDEND,
-							String.valueOf(stock.getDividend()));
 					xmlSerializer.endTag(null, XML_TAG_ITEM);
 
 					count++;
@@ -375,6 +372,12 @@ public class StockFavoriteListActivity extends StorageActivity implements
 		case R.id.hold:
 			mSortOrderColumn = DatabaseContract.COLUMN_HOLD;
 			break;
+		case R.id.pe:
+			mSortOrderColumn = DatabaseContract.COLUMN_PE;
+			break;
+		case R.id.pb:
+			mSortOrderColumn = DatabaseContract.COLUMN_PB;
+			break;
 		case R.id.dividend:
 			mSortOrderColumn = DatabaseContract.COLUMN_DIVIDEND;
 			break;
@@ -422,6 +425,8 @@ public class StockFavoriteListActivity extends StorageActivity implements
 		setHeaderTextColor(mTextViewWeek, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewMonth, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewHold, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewPE, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewPB, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewDividend, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewDividendYield, mHeaderTextDefaultColor);
 	}
@@ -507,6 +512,16 @@ public class StockFavoriteListActivity extends StorageActivity implements
 			mTextViewHold.setOnClickListener(this);
 		}
 
+		mTextViewPE = (TextView) findViewById(R.id.pe);
+		if (mTextViewPE != null) {
+			mTextViewPE.setOnClickListener(this);
+		}
+
+		mTextViewPB = (TextView) findViewById(R.id.pb);
+		if (mTextViewPB != null) {
+			mTextViewPB.setOnClickListener(this);
+		}
+
 		mTextViewDividend = (TextView) findViewById(R.id.dividend);
 		if (mTextViewDividend != null) {
 			mTextViewDividend.setOnClickListener(this);
@@ -539,6 +554,10 @@ public class StockFavoriteListActivity extends StorageActivity implements
 			setHeaderTextColor(mTextViewMonth, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_HOLD)) {
 			setHeaderTextColor(mTextViewHold, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PE)) {
+			setHeaderTextColor(mTextViewPE, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PB)) {
+			setHeaderTextColor(mTextViewPB, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_DIVIDEND)) {
 			setHeaderTextColor(mTextViewDividend, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_DIVIDEND_YIELD)) {
@@ -558,12 +577,13 @@ public class StockFavoriteListActivity extends StorageActivity implements
 				DatabaseContract.COLUMN_MIN15, DatabaseContract.COLUMN_MIN30,
 				DatabaseContract.COLUMN_MIN60, DatabaseContract.COLUMN_DAY,
 				DatabaseContract.COLUMN_WEEK, DatabaseContract.COLUMN_MONTH,
-				DatabaseContract.COLUMN_HOLD, DatabaseContract.COLUMN_DIVIDEND,
+				DatabaseContract.COLUMN_HOLD, DatabaseContract.COLUMN_PE,
+				DatabaseContract.COLUMN_PB, DatabaseContract.COLUMN_DIVIDEND,
 				DatabaseContract.COLUMN_DIVIDEND_YIELD };
 		int[] mRightTo = new int[] { R.id.price, R.id.net, R.id.type_5min,
 				R.id.type_15min, R.id.type_30min, R.id.type_60min,
 				R.id.type_day, R.id.type_week, R.id.type_month, R.id.hold,
-				R.id.dividend, R.id.dividend_yield };
+				R.id.pe, R.id.pb, R.id.dividend, R.id.dividend_yield };
 
 		mLeftListView = (ListView) findViewById(R.id.left_listview);
 		mLeftAdapter = new SimpleCursorAdapter(this,

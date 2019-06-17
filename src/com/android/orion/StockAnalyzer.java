@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.android.orion.curve.BezierCurve;
+import com.android.orion.database.FinancialData;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockDeal;
@@ -37,6 +38,13 @@ public class StockAnalyzer extends StockManager {
 		}
 
 		try {
+			FinancialData financialData = FinancialData.obtain();
+			financialData.setStockId(stock.getId());
+			mStockDatabaseManager
+					.getFinancialData(stock.getId(), financialData);
+			stock.setupPE(financialData.getEarningsPerShare());
+			stock.setupPB(financialData.getBookValuePerShare());
+
 			loadStockDataList(stock, period, stockDataList);
 			if (stockDataList.size() < Constants.STOCK_VERTEX_TYPING_SIZE) {
 				return;

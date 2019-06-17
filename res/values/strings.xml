@@ -48,7 +48,7 @@
     <string name="email_hint">Email</string>
     <string name="favorite">Favorite</string>
     <string name="favorite_list">Favorite List</string>
-    <string name="financial_data_chart">Financial Data Chart</string>    
+    <string name="financial_data_chart">Financial Data Chart</string>
     <string name="high">High</string>
     <string name="hold">Hold</string>
     <string name="list">List</string>
@@ -71,6 +71,8 @@
     <string name="ok">OK</string>
     <string name="overlap">Overlap</string>
     <string name="password_hint">Password</string>
+    <string name="pb">PB</string>
+    <string name="pe">PE</string>
     <string name="percent">Percent</string>
     <string name="period_1min">1min</string>
     <string name="period_5min">5min</string>

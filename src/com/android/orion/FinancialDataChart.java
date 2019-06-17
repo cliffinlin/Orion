@@ -101,7 +101,7 @@ public class FinancialDataChart {
 		mDescription = mPeriod;
 
 		setMainChartData();
-//		setSubChartData();
+		// setSubChartData();
 	}
 
 	void setMainChartData() {

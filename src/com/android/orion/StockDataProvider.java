@@ -53,9 +53,9 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 	abstract void handleResponseFinancialDataHistory(Stock stock,
 			FinancialData financialData, String response);
-	
+
 	abstract String getShareBonusURLString(Stock stock);
-	
+
 	abstract void handleResponseShareBonus(Stock stock, String response);
 
 	public StockDataProvider(Context context) {
@@ -164,13 +164,13 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			downloadStockDataHistory(executeType, stock);
 			downloadStockDataRealTime(executeType, stock);
 			downloadFinancialDataHistory(executeType, stock);
-			downloadShareBonus(executeType, stock);
+			// downloadShareBonus(executeType, stock);
 		} else {
 			downloadStockRealTime(executeType);
 			downloadStockDataHistory(executeType);
 			downloadStockDataRealTime(executeType);
 			downloadFinancialDataHistory(executeType);
-			downloadShareBonus(executeType);
+			// downloadShareBonus(executeType);
 		}
 	}
 
@@ -232,7 +232,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			}
 		}
 	}
-	
+
 	void downloadStockRealTime(int executeType) {
 		for (Stock stock : mStockArrayMapFavorite.values()) {
 			downloadStockRealTime(executeType, stock);

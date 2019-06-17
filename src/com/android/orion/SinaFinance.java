@@ -1,7 +1,6 @@
 package com.android.orion;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import org.jsoup.Jsoup;
@@ -11,7 +10,6 @@ import org.jsoup.select.Elements;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.provider.ContactsContract.Contacts.Data;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -34,7 +32,7 @@ public class SinaFinance extends StockDataProvider {
 	private static final String SINA_FINANCE_URL_HQ_JS_LIST = "http://hq.sinajs.cn/list=";
 	private static final String SINA_FINANCE_URL_HQ_JS_LIST_SIMPLE = "http://hq.sinajs.cn/list=s_";
 	private static final String SINA_FINANCE_URL_VFD_FINANCESUMMARY = "http://money.finance.sina.com.cn/corp/go.php/vFD_FinanceSummary/stockid/";// stock_id.phtml
-	private static final String SINA_FINANCE_URL_ISSUE_SHAREBONUS = "http://vip.stock.finance.sina.com.cn/corp/go.php/vISSUE_ShareBonus/stockid/";//stock_id.phtml
+	private static final String SINA_FINANCE_URL_ISSUE_SHAREBONUS = "http://vip.stock.finance.sina.com.cn/corp/go.php/vISSUE_ShareBonus/stockid/";// stock_id.phtml
 
 	private static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN5 = 242;
 	private static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN15 = 192;
@@ -815,7 +813,7 @@ public class SinaFinance extends StockDataProvider {
 		Log.d(TAG, "handleResponseFinancialData:" + stock.getName() + " "
 				+ stopWatch.getInterval() + "s");
 	}
-	
+
 	@Override
 	void handleResponseShareBonus(Stock stock, String response) {
 		StopWatch stopWatch = new StopWatch();
@@ -829,8 +827,8 @@ public class SinaFinance extends StockDataProvider {
 		String prevYearString = "";
 
 		if ((stock == null) || TextUtils.isEmpty(response)) {
-			Log.d(TAG, "handleResponseShareBonus return " + " stock = "
-					+ stock + " response = " + response);
+			Log.d(TAG, "handleResponseShareBonus return " + " stock = " + stock
+					+ " response = " + response);
 			return;
 		}
 
@@ -840,8 +838,7 @@ public class SinaFinance extends StockDataProvider {
 
 			Document doc = Jsoup.parse(responseString);
 			if (doc == null) {
-				Log.d(TAG, "handleResponseShareBonus return " + " doc = "
-						+ doc);
+				Log.d(TAG, "handleResponseShareBonus return " + " doc = " + doc);
 				return;
 			}
 
@@ -898,21 +895,23 @@ public class SinaFinance extends StockDataProvider {
 						dividendDateString = tdElements.get(5).text();
 						if (!TextUtils.isEmpty(dividendDateString)) {
 							if ("--".equals(dividendDateString)) {
-								yearString = Utility.getCurrentDateString().split("-")[0];
+								yearString = Utility.getCurrentDateString()
+										.split("-")[0];
 							} else {
-								String[] strings = dividendDateString.split("-");
+								String[] strings = dividendDateString
+										.split("-");
 								if (strings != null && strings.length > 0) {
 									yearString = strings[0];
 								}
 							}
-							
+
 							if (!TextUtils.isEmpty(prevYearString)) {
 								if (!prevYearString.equals(yearString)) {
 									break;
 								}
 							}
 						}
-						
+
 						valueString = tdElements.get(3).text();
 						if (!TextUtils.isEmpty(valueString)) {
 							shareBonus += Double.valueOf(valueString);
@@ -923,7 +922,7 @@ public class SinaFinance extends StockDataProvider {
 					}
 				}
 			}
-			
+
 			stock.setModified(Utility.getCurrentDateTimeString());
 			stock.setupDividendYield();
 			mStockDatabaseManager.updateStock(stock, stock.getContentValues());
