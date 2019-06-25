@@ -925,7 +925,7 @@ public class SinaFinance extends StockDataProvider {
 
 			stock.setModified(Utility.getCurrentDateTimeString());
 			stock.setupDividendYield();
-			mStockDatabaseManager.updateStock(stock, stock.getContentValues());
+			mStockDatabaseManager.updateStock(stock, stock.getContentValuesDividendYield());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

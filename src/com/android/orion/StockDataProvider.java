@@ -164,13 +164,13 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			downloadStockDataHistory(executeType, stock);
 			downloadStockDataRealTime(executeType, stock);
 			downloadFinancialDataHistory(executeType, stock);
-			// downloadShareBonus(executeType, stock);
+			downloadShareBonus(executeType, stock);
 		} else {
 			downloadStockRealTime(executeType);
 			downloadStockDataHistory(executeType);
 			downloadStockDataRealTime(executeType);
 			downloadFinancialDataHistory(executeType);
-			// downloadShareBonus(executeType);
+			downloadShareBonus(executeType);
 		}
 	}
 

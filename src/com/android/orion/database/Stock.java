@@ -194,6 +194,15 @@ public class Stock extends StockBase {
 		return contentValues;
 	}
 
+	public ContentValues getContentValuesDividendYield() {
+		ContentValues contentValues = new ContentValues();
+
+		super.getContentValues(contentValues);
+
+
+		return contentValues;
+	}
+
 	public void set(Stock stock) {
 		if (stock == null) {
 			return;
