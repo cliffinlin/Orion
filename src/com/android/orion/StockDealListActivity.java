@@ -697,20 +697,10 @@ public class StockDealListActivity extends StorageActivity implements
 						stockDeal.setCode(parser.nextText());
 					} else if (DatabaseContract.COLUMN_NAME.equals(tagName)) {
 						stockDeal.setName(parser.nextText());
-					} else if (DatabaseContract.COLUMN_PRICE.equals(tagName)) {
-						stockDeal.setPrice(Double.valueOf(parser.nextText()));
-					} else if (DatabaseContract.COLUMN_NET.equals(tagName)) {
-						stockDeal.setNet(Double.valueOf(parser.nextText()));
 					} else if (DatabaseContract.COLUMN_DEAL.equals(tagName)) {
 						stockDeal.setDeal(Double.valueOf(parser.nextText()));
 					} else if (DatabaseContract.COLUMN_VOLUME.equals(tagName)) {
 						stockDeal.setVolume(Long.valueOf(parser.nextText()));
-					} else if (DatabaseContract.COLUMN_PROFIT.equals(tagName)) {
-						stockDeal.setProfit(Double.valueOf(parser.nextText()));
-					} else if (DatabaseContract.COLUMN_DIVIDEND_YIELD
-							.equals(tagName)) {
-						stockDeal.setDividendYield(Double.valueOf(parser
-								.nextText()));
 					} else if (DatabaseContract.COLUMN_CREATED.equals(tagName)) {
 						stockDeal.setCreated(parser.nextText());
 					} else if (DatabaseContract.COLUMN_MODIFIED.equals(tagName)) {
@@ -726,16 +716,12 @@ public class StockDealListActivity extends StorageActivity implements
 							mStock.setCode(stockDeal.getCode());
 							mStockDatabaseManager.getStock(mStock);
 
-							if (!mStock.getName().equals(stockDeal.getName())) {
-								stockDeal.setName(mStock.getName());
-							}
+							stockDeal.setName(mStock.getName());
 
-							if (mStock.getPrice() != stockDeal.getPrice()) {
-								stockDeal.setPrice(mStock.getPrice());
-								stockDeal.setupDividendYield();
-								stockDeal.setupNet();
-								stockDeal.setupProfit();
-							}
+							stockDeal.setPrice(mStock.getPrice());
+							stockDeal.setupDividendYield();
+							stockDeal.setupNet();
+							stockDeal.setupProfit();
 
 							if (!mStockDatabaseManager
 									.isStockDealExist(stockDeal)) {
@@ -776,19 +762,10 @@ public class StockDealListActivity extends StorageActivity implements
 						stockDeal.getCode());
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_NAME,
 						stockDeal.getName());
-				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_PRICE,
-						String.valueOf(stockDeal.getPrice()));
-				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_NET,
-						String.valueOf(stockDeal.getNet()));
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_DEAL,
 						String.valueOf(stockDeal.getDeal()));
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_VOLUME,
 						String.valueOf(stockDeal.getVolume()));
-				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_PROFIT,
-						String.valueOf(stockDeal.getProfit()));
-				xmlSerialize(xmlSerializer,
-						DatabaseContract.COLUMN_DIVIDEND_YIELD,
-						String.valueOf(stockDeal.getDividendYield()));
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_CREATED,
 						stockDeal.getCreated());
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_MODIFIED,
