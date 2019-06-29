@@ -7,7 +7,8 @@ public class Constants {
 	public static final int FAIL = -1;
 	public static final int SUCCESS = 0;
 
-	public static final String SEPARATOR = "/";
+	public static final String FAVORITE = "favorite";
+	public static final String XML_FILE_EXT = ".xml";
 
 	public static final String ACTION_SERVICE_FINISHED = "orion.intent.action.SERVICE_FINISHED";
 

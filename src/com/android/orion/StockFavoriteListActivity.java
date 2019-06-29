@@ -1,8 +1,5 @@
 package com.android.orion;
 
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlSerializer;
-
 import android.app.LoaderManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -147,8 +144,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 					getResources().getString(R.string.network_unavailable),
 					Toast.LENGTH_SHORT).show();
 		}
-
-		startLoadTask(LOAD_FAVORITE_LIST_FROM_SD);
 	}
 
 	@Override
@@ -181,11 +176,11 @@ public class StockFavoriteListActivity extends ListActivity implements
 			return true;
 
 		case R.id.action_save_sd:
-			showSaveSDAlertDialog();
+			performSaveToFile();
 			return true;
 
 		case R.id.action_load_sd:
-			startLoadTask(LOAD_FAVORITE_LIST_FROM_SD);
+			performLoadFromFile();
 			return true;
 
 		case R.id.action_refresh:
@@ -227,109 +222,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 		super.onPostExecuteLoad(result);
 		startService(Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE,
 				Constants.EXECUTE_IMMEDIATE);
-	}
-
-	@Override
-	void xmlParse(XmlPullParser parser) {
-		super.xmlParse(parser);
-
-		int eventType;
-		String now = Utility.getCurrentDateTimeString();
-		String tagName = "";
-		Stock stock = Stock.obtain();
-
-		if (mStockDatabaseManager == null) {
-			return;
-		}
-
-		try {
-			eventType = parser.getEventType();
-			while (eventType != XmlPullParser.END_DOCUMENT) {
-				switch (eventType) {
-				case XmlPullParser.START_TAG:
-					tagName = parser.getName();
-					if (XML_TAG_ITEM.equals(tagName)) {
-						stock.init();
-					} else if (DatabaseContract.COLUMN_SE.equals(tagName)) {
-						stock.setSE(parser.nextText());
-					} else if (DatabaseContract.COLUMN_CODE.equals(tagName)) {
-						stock.setCode(parser.nextText());
-					} else if (DatabaseContract.COLUMN_NAME.equals(tagName)) {
-						stock.setName(parser.nextText());
-					} else {
-					}
-					break;
-				case XmlPullParser.END_TAG:
-					tagName = parser.getName();
-					if (XML_TAG_ITEM.equals(tagName)) {
-						mStockDatabaseManager.getStock(stock);
-						stock.setMark(Constants.STOCK_FLAG_MARK_FAVORITE);
-						if (!mStockDatabaseManager.isStockExist(stock)) {
-							stock.setCreated(now);
-							stock.setModified(now);
-							mStockDatabaseManager.insertStock(stock);
-						} else {
-							mStockDatabaseManager.updateStock(stock,
-									stock.getContentValues());
-						}
-					}
-					break;
-				default:
-					break;
-				}
-				eventType = parser.next();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	int xmlSerialize(XmlSerializer xmlSerializer) {
-		int count = 0;
-
-		super.xmlSerialize(xmlSerializer);
-
-		Cursor cursor = null;
-		String selection = DatabaseContract.Stock.COLUMN_MARK + " = '"
-				+ Constants.STOCK_FLAG_MARK_FAVORITE + "'";
-		Stock stock = Stock.obtain();
-
-		if (mStockDatabaseManager == null) {
-			return count;
-		}
-
-		try {
-			cursor = mStockDatabaseManager.queryStock(selection, null, null);
-			if ((cursor != null) && (cursor.getCount() > 0)) {
-				while (cursor.moveToNext()) {
-					stock.set(cursor);
-					xmlSerializer.startTag(null, XML_TAG_ITEM);
-					xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_SE,
-							stock.getSE());
-					xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_CODE,
-							stock.getCode());
-					xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_NAME,
-							stock.getName());
-					xmlSerializer.endTag(null, XML_TAG_ITEM);
-
-					count++;
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			mStockDatabaseManager.closeCursor(cursor);
-		}
-
-		return count;
-	}
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (resultCode == RESULT_OK) {
-			startService(requestCode, Constants.EXECUTE_IMMEDIATE);
-		}
 	}
 
 	@Override

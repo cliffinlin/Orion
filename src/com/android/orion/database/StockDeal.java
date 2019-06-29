@@ -56,7 +56,7 @@ public class StockDeal extends StockBase {
 		return result;
 	}
 
-	void init() {
+	public void init() {
 		super.init();
 
 		setTableName(DatabaseContract.StockDeal.TABLE_NAME);

@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.android.orion"
     android:versionCode="442"
-    android:versionName="1.1.31_20190629" >
+    android:versionName="1.1.31_20190630" >
 
     <uses-sdk
         android:minSdkVersion="19"

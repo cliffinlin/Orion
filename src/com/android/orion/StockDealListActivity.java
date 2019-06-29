@@ -114,11 +114,11 @@ public class StockDealListActivity extends ListActivity implements
 				break;
 
 			case MESSAGE_LOAD_FROM_SD_CARD:
-				loadListFromSD(DEAL_LIST_XML_FILE_NAME);
+				// loadListFromSD(DEAL_LIST_XML_FILE_NAME);
 				break;
 
 			case MESSAGE_SAVE_TO_SD_CARD:
-				SaveListToSD(DEAL_LIST_XML_FILE_NAME);
+				// SaveListToSD(DEAL_LIST_XML_FILE_NAME);
 				break;
 
 			case MESSAGE_VIEW_STOCK_CHAT:
@@ -271,11 +271,11 @@ public class StockDealListActivity extends ListActivity implements
 			return true;
 
 		case R.id.action_save_sd:
-			showSaveSDAlertDialog();
+			// showSaveSDAlertDialog();
 			return true;
 
 		case R.id.action_load_sd:
-			mHandler.sendEmptyMessage(MESSAGE_LOAD_FROM_SD_CARD);
+			// mHandler.sendEmptyMessage(MESSAGE_LOAD_FROM_SD_CARD);
 			return true;
 
 		default:
@@ -286,7 +286,7 @@ public class StockDealListActivity extends ListActivity implements
 	@Override
 	void onSaveSD() {
 		super.onSaveSD();
-		mHandler.sendEmptyMessage(MESSAGE_SAVE_TO_SD_CARD);
+//		mHandler.sendEmptyMessage(MESSAGE_SAVE_TO_SD_CARD);
 	}
 
 	void onActionSync(int serviceType) {
@@ -299,7 +299,7 @@ public class StockDealListActivity extends ListActivity implements
 
 		switch (execute) {
 		case LOAD_DEAL_LIST_FROM_SD:
-			loadListFromSD(DEAL_LIST_XML_FILE_NAME);
+//			loadListFromSD(DEAL_LIST_XML_FILE_NAME);
 			break;
 
 		default:
