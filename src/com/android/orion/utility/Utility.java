@@ -1,14 +1,32 @@
 package com.android.orion.utility;
 
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Random;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.android.orion.Constants;
 
@@ -73,19 +91,6 @@ public class Utility {
 		result = simpleDateFormat.format(calendar.getTime());
 
 		return result;
-	}
-
-	public static String getDateString(String modified) {
-		String dataString = null;
-
-		if (modified != null) {
-			String[] stringArray = modified.split(" ");
-			if (stringArray != null) {
-				dataString = stringArray[0];
-			}
-		}
-
-		return dataString;
 	}
 
 	public static String getCalendarDateString(Calendar calendar) {
@@ -178,244 +183,49 @@ public class Utility {
 		return result;
 	}
 
-	public static int getCalendarDayMinutes(Calendar calendar) {
-		return calendar.get(Calendar.HOUR_OF_DAY) * 60
-				+ calendar.get(Calendar.MINUTE);
-	}
+	public static double getJsonObjectDouble(JSONObject jsonObject, String key) {
+		double result = 0;
 
-	public static boolean isTimeUp(int begin, int interval) {
-		boolean result = false;
-		int minutes = 0;
-		int remainder = 0;
-
-		if (interval == 0) {
-			return true;
-		}
-
-		minutes = Utility.getCalendarDayMinutes(Calendar.getInstance()) - begin;
-		remainder = minutes % interval;
-
-		if (remainder == 0) {
-			result = true;
+		try {
+			if (jsonObject != null) {
+				if (jsonObject.has(key)) {
+					result = jsonObject.getDouble(key);
+				}
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
 		}
 
 		return result;
 	}
 
-	public static int getScheduleMinutes() {
+	public static int getJsonObjectInt(JSONObject jsonObject, String key) {
 		int result = 0;
-		int start = 0;
 
-		Calendar currentCalendar;
-
-		currentCalendar = Calendar.getInstance();
-		if (!isWeekday(currentCalendar)) {
-			return result;
-		}
-
-		start = Constants.STOCK_MARKET_OPEN_MINUTES;
-
-		if (inFirstHalf(currentCalendar)) {
-			result = Utility.getCalendarDayMinutes(currentCalendar) - start;
-		} else if (inSecondHalf(currentCalendar)) {
-			result = Utility.getCalendarDayMinutes(currentCalendar) - start
-					- Constants.STOCK_MARKET_LUNCH_MINUTES;
-		} else {
-			result = 0;
+		try {
+			if (jsonObject != null) {
+				if (jsonObject.has(key)) {
+					result = jsonObject.getInt(key);
+				}
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
 		}
 
 		return result;
 	}
 
-	public static boolean isWeekday(Calendar calendar) {
-		int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-		boolean result = false;
+	public static String getJsonObjectString(JSONObject jsonObject, String key) {
+		String result = "";
 
-		if (dayOfWeek > Calendar.SUNDAY && dayOfWeek < Calendar.SATURDAY) {
-			result = true;
-		}
-
-		return result;
-	}
-
-	public static boolean isOpeningHours(Calendar calendar) {
-		boolean result = false;
-		Calendar currentCalendar;
-		Calendar stockMarketOpenCalendar;
-		Calendar stockMarketCloseCalendar;
-
-		if (!isWeekday(calendar)) {
-			return result;
-		}
-
-		currentCalendar = Calendar.getInstance();
-		stockMarketOpenCalendar = getStockMarketOpenCalendar(currentCalendar);
-		stockMarketCloseCalendar = getStockMarketCloseCalendar(currentCalendar);
-
-		if (currentCalendar.after(stockMarketOpenCalendar)
-				&& currentCalendar.before(stockMarketCloseCalendar)) {
-			result = true;
-		}
-
-		return result;
-	}
-
-	public static boolean isTradingHours(Calendar calendar) {
-		return inFirstHalf(calendar) || inSecondHalf(calendar);
-	}
-
-	public static boolean inFirstHalf(Calendar calendar) {
-		boolean result = false;
-		Calendar currentCalendar;
-		Calendar stockMarketOpenCalendar;
-		Calendar stockMarketLunchBeginCalendar;
-
-		if (!isWeekday(calendar)) {
-			return result;
-		}
-
-		currentCalendar = Calendar.getInstance();
-		stockMarketOpenCalendar = getStockMarketOpenCalendar(currentCalendar);
-		stockMarketLunchBeginCalendar = getStockMarketLunchBeginCalendar(currentCalendar);
-
-		if (currentCalendar.after(stockMarketOpenCalendar)
-				&& currentCalendar.before(stockMarketLunchBeginCalendar)) {
-			result = true;
-		}
-
-		return result;
-	}
-
-	public static boolean inSecondHalf(Calendar calendar) {
-		boolean result = false;
-		Calendar currentCalendar;
-		Calendar stockMarketLunchEndCalendar;
-		Calendar stockMarketCloseCalendar;
-
-		if (!isWeekday(calendar)) {
-			return result;
-		}
-
-		currentCalendar = Calendar.getInstance();
-		stockMarketLunchEndCalendar = getStockMarketLunchEndCalendar(currentCalendar);
-		stockMarketCloseCalendar = getStockMarketCloseCalendar(currentCalendar);
-
-		if (currentCalendar.after(stockMarketLunchEndCalendar)
-				&& currentCalendar.before(stockMarketCloseCalendar)) {
-			result = true;
-		}
-
-		return result;
-	}
-
-	public static Calendar getStockMarketCalendar(Calendar calendar,
-			String timeString) {
-		Calendar result = Calendar.getInstance();
-		String dateTimeString = Utility.getCalendarDateString(calendar) + " "
-				+ timeString;
-		result = Utility.stringToCalendar(dateTimeString,
-				CALENDAR_DATE_TIME_FORMAT);
-		return result;
-	}
-
-	public static Calendar getStockMarketOpenCalendar(Calendar calendar) {
-		return getStockMarketCalendar(calendar,
-				Constants.STOCK_MARKET_OPEN_TIME);
-	}
-
-	public static Calendar getStockMarketLunchBeginCalendar(Calendar calendar) {
-		return getStockMarketCalendar(calendar,
-				Constants.STOCK_MARKET_LUNCH_BEGIN_TIME);
-	}
-
-	public static Calendar getStockMarketLunchEndCalendar(Calendar calendar) {
-		return getStockMarketCalendar(calendar,
-				Constants.STOCK_MARKET_LUNCH_END_TIME);
-	}
-
-	public static Calendar getStockMarketCloseCalendar(Calendar calendar) {
-		return getStockMarketCalendar(calendar,
-				Constants.STOCK_MARKET_CLOSE_TIME);
-	}
-
-	public static boolean isOutOfDate(String modified) {
-		boolean result = false;
-
-		if (TextUtils.isEmpty(modified) || isOutOfDateNotToday(modified)
-				|| isOutOfDateFirstHalf(modified)
-				|| isOutOfDateSecendHalf(modified)) {
-			return true;
-		}
-
-		return result;
-	}
-
-	public static boolean isOutOfDateNotToday(String modified) {
-		boolean result = false;
-
-		if (TextUtils.isEmpty(modified)) {
-			return true;
-		}
-
-		if (!getCalendarDateString(Calendar.getInstance()).equals(
-				getDateString(modified))) {
-			return true;
-		}
-
-		return result;
-	}
-
-	public static boolean isOutOfDateFirstHalf(String modified) {
-		boolean result = false;
-
-		Calendar currentCalendar;
-		Calendar modifiedCalendar;
-		Calendar stockMarketLunchBeginCalendar;
-
-		if (TextUtils.isEmpty(modified)) {
-			return true;
-		}
-
-		currentCalendar = Calendar.getInstance();
-		if (!Utility.isWeekday(currentCalendar)) {
-			return result;
-		}
-		modifiedCalendar = Utility.stringToCalendar(modified,
-				CALENDAR_DATE_TIME_FORMAT);
-
-		stockMarketLunchBeginCalendar = Utility
-				.getStockMarketLunchBeginCalendar(currentCalendar);
-		if (modifiedCalendar.before(stockMarketLunchBeginCalendar)
-				&& currentCalendar.after(stockMarketLunchBeginCalendar)) {
-			result = true;
-		}
-
-		return result;
-	}
-
-	public static boolean isOutOfDateSecendHalf(String modified) {
-		boolean result = false;
-
-		Calendar currentCalendar;
-		Calendar modifiedCalendar;
-		Calendar stockMarketCloseCalendar;
-
-		if (TextUtils.isEmpty(modified)) {
-			return true;
-		}
-
-		currentCalendar = Calendar.getInstance();
-		if (!Utility.isWeekday(currentCalendar)) {
-			return result;
-		}
-		modifiedCalendar = Utility.stringToCalendar(modified,
-				CALENDAR_DATE_TIME_FORMAT);
-
-		stockMarketCloseCalendar = Utility
-				.getStockMarketCloseCalendar(currentCalendar);
-		if (modifiedCalendar.before(stockMarketCloseCalendar)
-				&& currentCalendar.after(stockMarketCloseCalendar)) {
-			result = true;
+		try {
+			if (jsonObject != null) {
+				if (jsonObject.has(key)) {
+					result = jsonObject.getString(key);
+				}
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
 		}
 
 		return result;
@@ -424,5 +234,600 @@ public class Utility {
 	public static double Round(double v, double n) {
 		double p = Math.pow(10, n);
 		return (Math.round(v * p)) / p;
+	}
+
+	public static boolean isFileExists(String path, boolean isDirectory) {
+		boolean result = false;
+
+		if (TextUtils.isEmpty(path)) {
+			return result;
+		}
+
+		File file = new File(path);
+
+		if (file != null) {
+			if (isDirectory) {
+				result = file.exists() && file.isDirectory();
+			} else {
+				result = file.exists();
+			}
+		}
+
+		return result;
+	}
+
+	public static String getFileExtension(String path) {
+		int index = 0;
+		String result = "";
+
+		if (TextUtils.isEmpty(path)) {
+			return result;
+		}
+
+		index = path.lastIndexOf(".");
+		if (index == -1) {
+			return result;
+		}
+
+		result = path.substring(index + 1);
+
+		return result;
+	}
+
+	public static long getFileLength(String fileName) {
+		long length = 0;
+		RandomAccessFile randomAccessFile = null;
+
+		if (TextUtils.isEmpty(fileName)) {
+			return length;
+		}
+
+		try {
+			randomAccessFile = new RandomAccessFile(fileName, "r");
+			if (randomAccessFile != null) {
+				length = randomAccessFile.length();
+			}
+		} catch (FileNotFoundException e) {
+			Log.d(Constants.TAG, fileName + " not found.");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (randomAccessFile != null) {
+				try {
+					randomAccessFile.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return length;
+	}
+
+	public static boolean createFile(String path, boolean isDirectory) {
+		boolean result = false;
+
+		if (TextUtils.isEmpty(path)) {
+			return result;
+		}
+
+		File file = new File(path);
+
+		try {
+			if (file != null) {
+				if (isDirectory) {
+					result = file.mkdirs();
+				} else {
+					result = file.createNewFile();
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+
+	public static boolean deleteFile(String path, boolean isDirectory) {
+		boolean result = false;
+
+		if (TextUtils.isEmpty(path)) {
+			return result;
+		}
+
+		File file = new File(path);
+
+		try {
+			if (file != null) {
+				if (isDirectory) {
+					// result = file.mkdirs();
+				} else {
+					result = file.delete();
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+
+	public static void writeFile(String path, byte[] bytes, boolean append) {
+		FileOutputStream fileOutputStream = null;
+		BufferedOutputStream bufferedOutputStream = null;
+
+		if (TextUtils.isEmpty(path) || (bytes == null)) {
+			return;
+		}
+
+		File file = new File(path);
+		if (!file.exists()) {
+			try {
+				file.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		try {
+			fileOutputStream = new FileOutputStream(path, append);
+			if (fileOutputStream != null) {
+				bufferedOutputStream = new BufferedOutputStream(
+						fileOutputStream);
+
+				if (bufferedOutputStream != null) {
+					bufferedOutputStream.write(bytes);
+					bufferedOutputStream.flush();
+				}
+			}
+		} catch (FileNotFoundException e) {
+			Log.d(Constants.TAG, path + " not found.");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (bufferedOutputStream != null) {
+				try {
+					bufferedOutputStream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (fileOutputStream != null) {
+				try {
+					fileOutputStream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	public static void writeFile(String fileName, String value) {
+		writeFile(fileName, value, false);
+	}
+
+	public static void writeFile(String fileName, String value, boolean append) {
+		FileWriter fileWriter = null;
+		BufferedWriter bufferedWriter = null;
+
+		if (TextUtils.isEmpty(fileName) || (value == null)) {
+			return;
+		}
+
+		try {
+			fileWriter = new FileWriter(fileName, append);
+
+			if (fileWriter != null) {
+				bufferedWriter = new BufferedWriter(fileWriter);
+
+				if (bufferedWriter != null) {
+					bufferedWriter.write(value);
+					bufferedWriter.flush();
+				}
+			}
+		} catch (FileNotFoundException e) {
+			Log.d(Constants.TAG, fileName + " not found.");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (bufferedWriter != null) {
+				try {
+					bufferedWriter.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (fileWriter != null) {
+				try {
+					fileWriter.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	public static void writeFile(String fileName, boolean value) {
+		String string;
+
+		if (value) {
+			string = "1";
+		} else {
+			string = "0";
+		}
+
+		writeFile(fileName, string);
+	}
+
+	public static byte[] readFileByte(String fileName) {
+		byte[] bytes = null;
+		int length = 0;
+		RandomAccessFile randomAccessFile = null;
+
+		if (TextUtils.isEmpty(fileName)) {
+			return bytes;
+		}
+
+		try {
+			randomAccessFile = new RandomAccessFile(fileName, "r");
+			if (randomAccessFile != null) {
+				length = (int) randomAccessFile.length();
+				if (length > 0) {
+					bytes = new byte[length];
+					randomAccessFile.readFully(bytes);
+				}
+			}
+		} catch (FileNotFoundException e) {
+			Log.d(Constants.TAG, fileName + " not found.");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (randomAccessFile != null) {
+				try {
+					randomAccessFile.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return bytes;
+	}
+
+	public static void readFile(String fileName, ArrayList<String> lineArray) {
+		FileReader fileReader = null;
+		BufferedReader bufferedReader = null;
+
+		String strLine;
+
+		lineArray.clear();
+
+		if (TextUtils.isEmpty(fileName) || (lineArray == null)) {
+			return;
+		}
+
+		try {
+			fileReader = new FileReader(fileName);
+
+			if (fileReader != null) {
+				bufferedReader = new BufferedReader(fileReader);
+
+				if (bufferedReader != null) {
+					while ((strLine = bufferedReader.readLine()) != null) {
+						lineArray.add(strLine);
+					}
+				}
+			}
+		} catch (FileNotFoundException e) {
+			Log.d(Constants.TAG, fileName + " not found.");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (bufferedReader != null) {
+				try {
+					bufferedReader.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (fileReader != null) {
+				try {
+					fileReader.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	public static String readFile(String path) {
+		ArrayList<String> result = new ArrayList<String>();
+		readFile(path, result);
+		if (result.size() > 0) {
+			String value = result.get(0);
+			return value;
+		}
+		return "";
+	}
+
+	public static ArrayList<String> stringToArrayList(String string) {
+		if (TextUtils.isEmpty(string)) {
+			return null;
+		}
+
+		ArrayList<String> result = new ArrayList<String>(Arrays.asList(string
+				.split(",")));
+
+		return result;
+	}
+
+	public static String bytestoAsciiString(byte[] bytes, int offset,
+			int datalen) {
+
+		if ((bytes == null) || (bytes.length == 0) || (offset < 0)
+				|| (datalen <= 0)) {
+			return null;
+		}
+		if ((offset >= bytes.length) || (bytes.length - offset < datalen)) {
+			return null;
+		}
+		String asciiStr = "";
+		byte[] data = new byte[datalen];
+		System.arraycopy(bytes, offset, data, 0, datalen);
+		try {
+			asciiStr = new String(data, "ISO8859-1");
+		} catch (Exception e) {
+
+		}
+		return asciiStr;
+	}
+
+	public static byte[] stringToByteArray(String string) {
+		byte[] result = null;
+
+		if (TextUtils.isEmpty(string)) {
+			return result;
+		}
+
+		String[] strings = string.split(" ");
+
+		result = new byte[strings.length];
+
+		for (int i = 0; i < strings.length; i++) {
+			result[i] = (byte) Integer.parseInt(strings[i], 16);
+		}
+
+		return result;
+	}
+
+	public static String charArrayToString(char[] charArray, int offset) {
+		String result = "";
+
+		if (charArray == null) {
+			return result;
+		}
+
+		if (charArray.length < 2) {
+			return result;
+		}
+
+		for (int i = offset; i < charArray.length - 1; i += 2) {
+			result += (char) (((charArray[i] << 8) & 0xff00) + charArray[i + 1]);
+		}
+
+		return result;
+	}
+
+	public static byte[] charArrayToByteArray(char[] charArray, int offset) {
+		byte[] result = null;
+
+		if (charArray == null) {
+			return result;
+		}
+
+		if (offset > charArray.length - 1) {
+			return result;
+		}
+
+		result = new byte[charArray.length - offset];
+
+		for (int i = offset; i < charArray.length; i++) {
+			result[i - offset] = (byte) charArray[i];
+		}
+
+		return result;
+	}
+
+	public static double randomDouble(double min, double max) {
+		double result = 0;
+		Random random = new Random(System.nanoTime());
+
+		result = random.nextDouble() * (max - min) + min;
+
+		return result;
+	}
+
+	public static boolean isNumber(String str) {
+		if (TextUtils.isEmpty(str)) {
+			return false;
+		}
+		char[] chars = str.toCharArray();
+		int sz = chars.length;
+		boolean hasExp = false;
+		boolean hasDecPoint = false;
+		boolean allowSigns = false;
+		boolean foundDigit = false;
+		// deal with any possible sign up front
+		int start = (chars[0] == '-') ? 1 : 0;
+		if (sz > start + 1) {
+			if (chars[start] == '0' && chars[start + 1] == 'x') {
+				int i = start + 2;
+				if (i == sz) {
+					return false; // str == "0x"
+				}
+				// checking hex (it can't be anything else)
+				for (; i < chars.length; i++) {
+					if ((chars[i] < '0' || chars[i] > '9')
+							&& (chars[i] < 'a' || chars[i] > 'f')
+							&& (chars[i] < 'A' || chars[i] > 'F')) {
+						return false;
+					}
+				}
+				return true;
+			}
+		}
+		sz--; // don't want to loop to the last char, check it afterwords
+				// for type qualifiers
+		int i = start;
+		// loop to the next to last char or to the last char if we need another
+		// digit to
+		// make a valid number (e.g. chars[0..5] = "1234E")
+		while (i < sz || (i < sz + 1 && allowSigns && !foundDigit)) {
+			if (chars[i] >= '0' && chars[i] <= '9') {
+				foundDigit = true;
+				allowSigns = false;
+
+			} else if (chars[i] == '.') {
+				if (hasDecPoint || hasExp) {
+					// two decimal points or dec in exponent
+					return false;
+				}
+				hasDecPoint = true;
+			} else if (chars[i] == 'e' || chars[i] == 'E') {
+				// we've already taken care of hex.
+				if (hasExp) {
+					// two E's
+					return false;
+				}
+				if (!foundDigit) {
+					return false;
+				}
+				hasExp = true;
+				allowSigns = true;
+			} else if (chars[i] == '+' || chars[i] == '-') {
+				if (!allowSigns) {
+					return false;
+				}
+				allowSigns = false;
+				foundDigit = false; // we need a digit after the E
+			} else {
+				return false;
+			}
+			i++;
+		}
+		if (i < chars.length) {
+			if (chars[i] >= '0' && chars[i] <= '9') {
+				// no type qualifier, OK
+				return true;
+			}
+			if (chars[i] == 'e' || chars[i] == 'E') {
+				// can't have an E at the last byte
+				return false;
+			}
+			if (!allowSigns
+					&& (chars[i] == 'd' || chars[i] == 'D' || chars[i] == 'f' || chars[i] == 'F')) {
+				return foundDigit;
+			}
+			if (chars[i] == 'l' || chars[i] == 'L') {
+				// not allowing L with an exponent
+				return foundDigit && !hasExp;
+			}
+			// last character is illegal
+			return false;
+		}
+		// allowSigns is true iff the val ends in 'E'
+		// found digit it to make sure weird stuff like '.' and '1E-' doesn't
+		// pass
+		return !allowSigns && foundDigit;
+	}
+
+	/**
+	 * int类型转换为byte[],4个字节
+	 */
+	public static byte[] toByteArray(int iSource) {
+		byte[] bLocalArr = new byte[4];
+		for (int i = 0, a = 3; i < 4; i++, a--) {
+			bLocalArr[a] = (byte) (iSource >> 8 * i & 0xFF);
+		}
+		return bLocalArr;
+	}
+
+	/*
+	 * 将两个byte数组拼接成一个byte数组
+	 */
+	public static byte[] byteMerger(byte[] a, byte[] b) {
+		byte[] data = new byte[a.length + b.length];
+		System.arraycopy(a, 0, data, 0, a.length);
+		System.arraycopy(b, 0, data, a.length, b.length);
+		// bianLiByte(data3);
+		return data;
+	}
+
+	/*
+	 * 将三个byte数组拼接成一个byte数组
+	 */
+	public static byte[] byteMerger(byte[] a, byte[] b, byte[] c) {
+		byte[] data = new byte[a.length + b.length + c.length];
+		System.arraycopy(a, 0, data, 0, a.length);
+		System.arraycopy(b, 0, data, a.length, b.length);
+		System.arraycopy(c, 0, data, a.length + b.length, c.length);
+		return data;
+	}
+
+	/**
+	 * byte数组转16进制字符串
+	 * 
+	 */
+	public static String byteArrayToHexString(byte[] src) {
+		return byteArrayToHexString(src, " ");
+	}
+
+	public static String byteArrayToHexString(byte[] src, String seperater) {
+		StringBuilder stringBuilder = new StringBuilder("");
+
+		if (src == null || src.length <= 0) {
+			return null;
+		}
+
+		for (int i = 0; i < src.length; i++) {
+			int value = src[i] & 0xFF;
+
+			String hexValue = Integer.toHexString(value);
+
+			hexValue = hexValue.toUpperCase(Locale.getDefault());
+
+			if (hexValue.length() < 2) {
+				stringBuilder.append(0);
+			}
+
+			stringBuilder.append(hexValue + seperater);
+		}
+
+		return stringBuilder.toString();
+	}
+
+	public static String getByteWhitUnit(long bytes, boolean si) {
+		int unit = si ? 1000 : 1024;
+		if (bytes < unit)
+			return bytes + " B";
+		int exp = (int) (Math.log(bytes) / Math.log(unit));
+		String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp - 1)
+				+ (si ? "" : "i");
+		return String.format(Locale.getDefault(), "%.1f %sB", bytes / Math.pow(unit, exp), pre);
+	}
+
+	public static String getByteWhitUnit(long bytes) {
+		if (bytes <= 0)
+			return "0";
+
+		final String[] units = new String[] { "B", "KB", "MB", "GB", "TB" };
+		int digitGroups = (int) (Math.log10(bytes) / Math.log10(1024));
+
+		return new DecimalFormat("#,##0.##").format(bytes
+				/ Math.pow(1024, digitGroups))
+				+ " " + units[digitGroups];
 	}
 }

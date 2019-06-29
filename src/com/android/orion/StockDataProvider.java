@@ -17,6 +17,7 @@ import com.android.orion.database.FinancialData;
 import com.android.orion.database.Setting;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
+import com.android.orion.utility.Market;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Utility;
 import com.android.volley.RequestQueue;
@@ -255,7 +256,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 		if (executeType == Constants.EXECUTE_IMMEDIATE
 				|| executeTypeOf(executeType, Constants.EXECUTE_SCHEDULE_MIN1)
-				|| Utility.isOutOfDate(modified)) {
+				|| Market.isOutOfDate(modified)) {
 			urlString = getStockRealTimeURLString(stock);
 			if (addToCurrentRequests(urlString)) {
 				Log.d(TAG, "getStockRealTimeURLString:" + urlString);
@@ -330,7 +331,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		stockData.setStockId(stock.getId());
 
 		if (executeType == Constants.EXECUTE_IMMEDIATE
-				|| Utility.isOpeningHours(Calendar.getInstance())) {
+				|| Market.isOpeningHours(Calendar.getInstance())) {
 			urlString = getStockDataRealTimeURLString(stock);
 			if (addToCurrentRequests(urlString)) {
 				Log.d(TAG, "getStockDataRealTimeURLString:" + urlString);
@@ -474,14 +475,14 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				if (TextUtils.isEmpty(modified)) {
 					modified = stockData.getCreated();
 				}
-				scheduleMinutes = Utility.getScheduleMinutes();
-				if (Utility.isOutOfDateNotToday(modified)) {
+				scheduleMinutes = Market.getScheduleMinutes();
+				if (Market.isOutOfDateNotToday(modified)) {
 					removeStockDataRedundant(cursor, defaultValue);
 					result = defaultValue;
-				} else if (Utility.isOutOfDateFirstHalf(modified)) {
+				} else if (Market.isOutOfDateFirstHalf(modified)) {
 					result = getScheduleMaxLengthAtMin60(scheduleMinutes,
 							period);
-				} else if (Utility.isOutOfDateSecendHalf(modified)) {
+				} else if (Market.isOutOfDateSecendHalf(modified)) {
 					result = getScheduleMaxLengthAtMin60(scheduleMinutes,
 							period);
 				} else if ((executeType & Constants.EXECUTE_SCHEDULE_MIN60) == Constants.EXECUTE_SCHEDULE_MIN60) {

@@ -7,7 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.android.orion.utility.Utility;
+import com.android.orion.utility.Market;
 
 public class StockDownloadBroadcastReceiver extends BroadcastReceiver {
 	static final String TAG = Constants.TAG + " "
@@ -18,11 +18,11 @@ public class StockDownloadBroadcastReceiver extends BroadcastReceiver {
 		int scheduleMinutes = 0;
 		int executeType = Constants.EXECUTE_SCHEDULE_MIN1;
 
-		if (Utility.isTradingHours(Calendar.getInstance())) {
+		if (Market.isTradingHours(Calendar.getInstance())) {
 			Log.d(TAG,
 					"System.currentTimeMillis():" + System.currentTimeMillis());
 
-			scheduleMinutes = Utility.getScheduleMinutes();
+			scheduleMinutes = Market.getScheduleMinutes();
 			if ((scheduleMinutes % Constants.SCHEDULE_INTERVAL_MIN60) == 0) {
 				executeType |= Constants.EXECUTE_SCHEDULE_MIN60;
 			} else if ((scheduleMinutes % Constants.SCHEDULE_INTERVAL_MIN30) == 0) {
