@@ -11,7 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.android.orion.utility.Utility;
+import com.android.orion.utility.Preferences;
 
 public class OrionMainActivity extends PreferenceActivity {
 	StockDownloadAlarmManager mStockDownloadAlarmManager = null;
@@ -29,8 +29,8 @@ public class OrionMainActivity extends PreferenceActivity {
 		}
 
 		if (mStockDownloadAlarmManager != null) {
-			boolean bChecked = Utility.getSettingBoolean(this,
-					Constants.SETTING_KEY_ALARM);
+			boolean bChecked = Preferences.readBoolean(this,
+					Constants.SETTING_KEY_ALARM, false);
 
 			if (bChecked) {
 				mStockDownloadAlarmManager.startAlarm();

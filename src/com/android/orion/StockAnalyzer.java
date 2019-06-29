@@ -18,8 +18,8 @@ import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockDeal;
 import com.android.orion.indicator.MACD;
+import com.android.orion.utility.Preferences;
 import com.android.orion.utility.StopWatch;
-import com.android.orion.utility.Utility;
 
 public class StockAnalyzer extends StockManager {
 	static final String TAG = Constants.TAG + " "
@@ -480,16 +480,16 @@ public class StockAnalyzer extends StockManager {
 				.setLights(0xFF0000FF, 100, 300)
 				.setContentIntent(pendingIntent);
 
-		if (Utility.getSettingBoolean(mContext,
-				Constants.SETTING_KEY_NOTIFICATION_LIGHTS)) {
+		if (Preferences.readBoolean(mContext,
+				Constants.SETTING_KEY_NOTIFICATION_LIGHTS, false)) {
 			defaults = defaults | Notification.DEFAULT_LIGHTS;
 		}
-		if (Utility.getSettingBoolean(mContext,
-				Constants.SETTING_KEY_NOTIFICATION_VIBRATE)) {
+		if (Preferences.readBoolean(mContext,
+				Constants.SETTING_KEY_NOTIFICATION_VIBRATE, false)) {
 			defaults = defaults | Notification.DEFAULT_VIBRATE;
 		}
-		if (Utility.getSettingBoolean(mContext,
-				Constants.SETTING_KEY_NOTIFICATION_SOUND)) {
+		if (Preferences.readBoolean(mContext,
+				Constants.SETTING_KEY_NOTIFICATION_SOUND, false)) {
 			defaults = defaults | Notification.DEFAULT_SOUND;
 		}
 		notification.setDefaults(defaults);
@@ -509,7 +509,7 @@ public class StockAnalyzer extends StockManager {
 
 		for (int i = Constants.PERIODS.length - 1; i >= 0; i--) {
 			String period = Constants.PERIODS[i];
-			if (Utility.getSettingBoolean(mContext, period)) {
+			if (Preferences.readBoolean(mContext, period, false)) {
 				action = stock.getAction(period);
 
 				if (action.contains("B7B7") || action.contains("S7S7")) {

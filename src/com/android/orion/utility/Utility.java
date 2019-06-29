@@ -6,55 +6,31 @@ import java.util.Date;
 import java.util.Locale;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 
 import com.android.orion.Constants;
 
 public class Utility {
+	public static final String CALENDAR_DATE_FORMAT = "yyyy-MM-dd";
+	public static final String CALENDAR_TIME_FORMAT = "HH:mm:ss";
+	public static final String CALENDAR_DATE_TIME_FORMAT = CALENDAR_DATE_FORMAT
+			+ " " + CALENDAR_TIME_FORMAT;
+
+	static boolean mLogable = true;
 
 	private Utility() {
 	}
 
-	public static boolean getSettingBoolean(Context context, String key) {
-		boolean result = false;
-
-		result = PreferenceManager.getDefaultSharedPreferences(context)
-				.getBoolean(key, false);
-
-		return result;
+	public static void setLogable(boolean logable) {
+		mLogable = logable;
 	}
 
-	public static void setSettingBoolean(Context context, String key,
-			boolean value) {
-		SharedPreferences.Editor editor = PreferenceManager
-				.getDefaultSharedPreferences(context).edit();
-		editor.putBoolean(key, value);
-		editor.commit();
-	}
-
-	public static String getSettingString(Context context, String key) {
-		String result = "";
-
-		result = PreferenceManager.getDefaultSharedPreferences(context)
-				.getString(key, result);
-
-		return result;
-	}
-
-	public static void setSettingString(Context context, String key,
-			String value) {
-		SharedPreferences.Editor editor = PreferenceManager
-				.getDefaultSharedPreferences(context).edit();
-		editor.putString(key, value);
-		editor.commit();
+	public static void Log(String msg) {
+		if (mLogable) {
+			android.util.Log.d(Constants.TAG, msg);
+		}
 	}
 
 	public static boolean isNetworkConnected(Context context) {
@@ -88,35 +64,6 @@ public class Utility {
 		return result;
 	}
 
-	public static long getDealVolumeMin(double price, double overlapLow,
-			double overlapHigh, long quota) {
-		long result = 0;
-		long volume = 0;
-
-		if (quota < Constants.STOCK_DEAL_VOLUME_MIN) {
-			return result;
-		}
-
-		if (price > overlapHigh) {
-
-		} else if (price < overlapLow) {
-
-		} else {
-			volume = Constants.STOCK_DEAL_VOLUME_MIN;
-
-			while (volume < quota) {
-				if ((price - overlapLow) * volume > Constants.STOCK_PROFIT_MIN) {
-					result = volume;
-					break;
-				}
-
-				volume += Constants.STOCK_DEAL_VOLUME_MIN;
-			}
-		}
-
-		return result;
-	}
-
 	public static String getCalendarString(Calendar calendar, String format) {
 		String result = "";
 
@@ -128,41 +75,42 @@ public class Utility {
 		return result;
 	}
 
-	public static String getDateString(int dateOffset) {
-		Calendar calendar = Calendar.getInstance();
+	public static String getDateString(String modified) {
+		String dataString = null;
 
-		if (dateOffset != 0) {
-			calendar.add(Calendar.DATE, dateOffset);
+		if (modified != null) {
+			String[] stringArray = modified.split(" ");
+			if (stringArray != null) {
+				dataString = stringArray[0];
+			}
 		}
 
-		return getCalendarString(calendar, Constants.CALENDAR_DATE_FORMAT);
+		return dataString;
 	}
 
 	public static String getCalendarDateString(Calendar calendar) {
-		return getCalendarString(calendar, Constants.CALENDAR_DATE_FORMAT);
+		return getCalendarString(calendar, CALENDAR_DATE_FORMAT);
 	}
 
 	public static String getCalendarTimeString(Calendar calendar) {
-		return getCalendarString(calendar, Constants.CALENDAR_TIME_FORMAT);
+		return getCalendarString(calendar, CALENDAR_TIME_FORMAT);
 	}
 
 	public static String getCalendarDateTimeString(Calendar calendar) {
-		return getCalendarString(calendar, Constants.CALENDAR_DATE_TIME_FORMAT);
+		return getCalendarString(calendar, CALENDAR_DATE_TIME_FORMAT);
 	}
 
 	public static String getCurrentDateString() {
-		return getCalendarString(Calendar.getInstance(),
-				Constants.CALENDAR_DATE_FORMAT);
+		return getCalendarString(Calendar.getInstance(), CALENDAR_DATE_FORMAT);
 	}
 
 	public static String getCurrentTimeString() {
-		return getCalendarString(Calendar.getInstance(),
-				Constants.CALENDAR_TIME_FORMAT);
+		return getCalendarString(Calendar.getInstance(), CALENDAR_TIME_FORMAT);
 	}
 
 	public static String getCurrentDateTimeString() {
 		return getCalendarString(Calendar.getInstance(),
-				Constants.CALENDAR_DATE_TIME_FORMAT);
+				CALENDAR_DATE_TIME_FORMAT);
 	}
 
 	public static Calendar stringToCalendar(String string, String format) {
@@ -195,7 +143,7 @@ public class Utility {
 		Date date = null;
 
 		SimpleDateFormat formatter = new SimpleDateFormat(
-				Constants.CALENDAR_DATE_TIME_FORMAT, Locale.getDefault());
+				CALENDAR_DATE_TIME_FORMAT, Locale.getDefault());
 
 		try {
 			date = formatter.parse(dateTime);
@@ -366,7 +314,7 @@ public class Utility {
 		String dateTimeString = Utility.getCalendarDateString(calendar) + " "
 				+ timeString;
 		result = Utility.stringToCalendar(dateTimeString,
-				Constants.CALENDAR_DATE_TIME_FORMAT);
+				CALENDAR_DATE_TIME_FORMAT);
 		return result;
 	}
 
@@ -390,19 +338,6 @@ public class Utility {
 				Constants.STOCK_MARKET_CLOSE_TIME);
 	}
 
-	public static String getDataString(String modified) {
-		String dataString = null;
-
-		if (modified != null) {
-			String[] stringArray = modified.split(" ");
-			if (stringArray != null) {
-				dataString = stringArray[0];
-			}
-		}
-
-		return dataString;
-	}
-
 	public static boolean isOutOfDate(String modified) {
 		boolean result = false;
 
@@ -423,7 +358,7 @@ public class Utility {
 		}
 
 		if (!getCalendarDateString(Calendar.getInstance()).equals(
-				getDataString(modified))) {
+				getDateString(modified))) {
 			return true;
 		}
 
@@ -446,7 +381,7 @@ public class Utility {
 			return result;
 		}
 		modifiedCalendar = Utility.stringToCalendar(modified,
-				Constants.CALENDAR_DATE_TIME_FORMAT);
+				CALENDAR_DATE_TIME_FORMAT);
 
 		stockMarketLunchBeginCalendar = Utility
 				.getStockMarketLunchBeginCalendar(currentCalendar);
@@ -474,7 +409,7 @@ public class Utility {
 			return result;
 		}
 		modifiedCalendar = Utility.stringToCalendar(modified,
-				Constants.CALENDAR_DATE_TIME_FORMAT);
+				CALENDAR_DATE_TIME_FORMAT);
 
 		stockMarketCloseCalendar = Utility
 				.getStockMarketCloseCalendar(currentCalendar);
@@ -489,23 +424,5 @@ public class Utility {
 	public static double Round(double v, double n) {
 		double p = Math.pow(10, n);
 		return (Math.round(v * p)) / p;
-	}
-
-	public static void setListViewHeightBasedOnChildren(ListView listView) {
-		ListAdapter listAdapter = listView.getAdapter();
-		if (listAdapter == null) {
-			return;
-		}
-		int totalHeight = 0;
-		for (int i = 0, len = listAdapter.getCount(); i < len; i++) {
-			View listItem = listAdapter.getView(i, null, listView);
-			listItem.measure(0, 0);
-			totalHeight += listItem.getMeasuredHeight();
-		}
-
-		ViewGroup.LayoutParams params = listView.getLayoutParams();
-		params.height = totalHeight
-				+ (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-		listView.setLayoutParams(params);
 	}
 }

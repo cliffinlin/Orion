@@ -17,6 +17,7 @@ import com.android.orion.database.FinancialData;
 import com.android.orion.database.Setting;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
+import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Utility;
 import com.android.volley.RequestQueue;
 
@@ -278,7 +279,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		}
 
 		for (String period : Constants.PERIODS) {
-			if (Utility.getSettingBoolean(mContext, period)) {
+			if (Preferences.readBoolean(mContext, period, false)) {
 				downloadStockDataHistory(executeType, stock, period);
 			}
 		}
@@ -321,7 +322,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		String urlString;
 		StockData stockData = StockData.obtain(period);
 
-		if ((stock == null) || !Utility.getSettingBoolean(mContext, period)) {
+		if ((stock == null)
+				|| !Preferences.readBoolean(mContext, period, false)) {
 			return;
 		}
 

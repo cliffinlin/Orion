@@ -32,9 +32,10 @@ import android.widget.Toast;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Setting;
 import com.android.orion.database.Stock;
+import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Utility;
 
-public class StockFavoriteListActivity extends StorageActivity implements
+public class StockFavoriteListActivity extends ListActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
 		OnItemLongClickListener, OnClickListener {
 
@@ -433,7 +434,7 @@ public class StockFavoriteListActivity extends StorageActivity implements
 
 	void setVisibility(String key, TextView textView) {
 		if (textView != null) {
-			if (Utility.getSettingBoolean(this, key)) {
+			if (Preferences.readBoolean(this, key, false)) {
 				textView.setVisibility(View.VISIBLE);
 			} else {
 				textView.setVisibility(View.GONE);
@@ -680,8 +681,8 @@ public class StockFavoriteListActivity extends StorageActivity implements
 			break;
 		}
 
-		Utility.setListViewHeightBasedOnChildren(mLeftListView);
-		Utility.setListViewHeightBasedOnChildren(mRightListView);
+		setListViewHeightBasedOnChildren(mLeftListView);
+		setListViewHeightBasedOnChildren(mRightListView);
 	}
 
 	@Override
@@ -734,7 +735,7 @@ public class StockFavoriteListActivity extends StorageActivity implements
 
 	boolean setTextViewValue(String key, View textView) {
 		if (textView != null) {
-			if (Utility.getSettingBoolean(this, key)) {
+			if (Preferences.readBoolean(this, key, false)) {
 				textView.setVisibility(View.VISIBLE);
 				return false;
 			} else {

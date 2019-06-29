@@ -31,6 +31,9 @@ public class OrionBaseActivity extends Activity {
 	boolean mBound = false;
 	boolean mResumed = false;
 
+	String mPathName = null;
+	String mFileName = null;
+
 	Context mContext = null;
 
 	Bundle mBundle = null;
@@ -354,4 +357,21 @@ public class OrionBaseActivity extends Activity {
 			mStockDatabaseManager.closeCursor(cursor);
 		}
 	}
+	//
+	// void setPathName(String pathName) {
+	// if (TextUtils.isEmpty(pathName)) {
+	// return;
+	// }
+	//
+	// String mountPath = Utility.getExternalMountPath(this);
+	// if (TextUtils.isEmpty(mountPath)) {
+	// mountPath = Environment.getExternalStorageDirectory().getPath();
+	// }
+	//
+	// mPathName = mountPath + Constants.SEPARATOR + pathName
+	// + Constants.SEPARATOR;
+	// if (!Utility.isFileExists(mPathName, true)) {
+	// Utility.createFile(mPathName, true);
+	// }
+	// }
 }

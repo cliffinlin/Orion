@@ -4,16 +4,16 @@ public class Constants {
 	public static final String APP_NAME = "Orion";
 	public static final String TAG = APP_NAME;
 
+	public static final int FAIL = -1;
+	public static final int SUCCESS = 0;
+
+	public static final String SEPARATOR = "/";
+
 	public static final String ACTION_SERVICE_FINISHED = "orion.intent.action.SERVICE_FINISHED";
 
 	public static final long STOCK_DOWNLOAD_ALARM_INTERVAL_DEFAULT = 60000;
 
 	public static final int BENZIER_CURVE_GRADE_MAX = 50;
-
-	public static final String CALENDAR_DATE_FORMAT = "yyyy-MM-dd";
-	public static final String CALENDAR_TIME_FORMAT = "HH:mm:ss";
-	public static final String CALENDAR_DATE_TIME_FORMAT = CALENDAR_DATE_FORMAT
-			+ " " + CALENDAR_TIME_FORMAT;
 
 	public static final int DOUBLE_FIXED_DECIMAL = 2;
 
@@ -150,10 +150,6 @@ public class Constants {
 	public static final int STOCK_VERTEX_BOTTOM_STROKE = 1 << 3;
 	public static final int STOCK_VERTEX_TOP_SEGMENT = 1 << 4;
 	public static final int STOCK_VERTEX_BOTTOM_SEGMENT = 1 << 5;
-
-	public static final long STOCK_DEAL_VOLUME_MIN = 100;
-	public static final double STOCK_PROFIT_MIN = 5.0 + 5.0 + 5.0;
-	public static final double STOCK_PROFIT_RATE_MIN = (5.0 + 5.0 + 5.0) / 10000;
 
 	public static final double STOCK_DEAL_DISTRIBUTION_RATE = 5.0 / 100.0;
 }

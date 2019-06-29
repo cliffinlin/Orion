@@ -1,9 +1,9 @@
 package com.android.orion.utility;
 
 public class StopWatch {
-	long mStart = 0;
-	long mStop = 0;
-	double mInterval = 0;
+	private long mStart = 0;
+	private long mStop = 0;
+	private double mInterval = 0;
 
 	public StopWatch() {
 	}
@@ -14,10 +14,10 @@ public class StopWatch {
 
 	public void stop() {
 		mStop = System.currentTimeMillis();
+		mInterval = (mStop - mStart) / 1000.0;
 	}
 
 	public double getInterval() {
-		mInterval = (mStop - mStart) / 1000.0;
 		return mInterval;
 	}
 }

@@ -527,9 +527,9 @@ public class FinancialDataChartListActivity extends OrionBaseActivity implements
 			Calendar calendar1;
 
 			calendar0 = Utility.stringToCalendar(arg0.getDate(),
-					Constants.CALENDAR_DATE_TIME_FORMAT);
+					Utility.CALENDAR_DATE_TIME_FORMAT);
 			calendar1 = Utility.stringToCalendar(arg1.getDate(),
-					Constants.CALENDAR_DATE_TIME_FORMAT);
+					Utility.CALENDAR_DATE_TIME_FORMAT);
 			if (calendar1.before(calendar0)) {
 				return -1;
 			} else if (calendar1.after(calendar0)) {
@@ -569,7 +569,7 @@ public class FinancialDataChartListActivity extends OrionBaseActivity implements
 			int mid = l + (r - l) / 2;
 
 			Calendar calendarMid = Utility.stringToCalendar(mFinancialDataList
-					.get(mid).getDate(), Constants.CALENDAR_DATE_FORMAT);
+					.get(mid).getDate(), Utility.CALENDAR_DATE_FORMAT);
 
 			// If the element is present at the
 			// middle itself
@@ -582,7 +582,7 @@ public class FinancialDataChartListActivity extends OrionBaseActivity implements
 				return binarySearch(l, mid - 1, calendar);
 
 			Calendar calendarMid1 = Utility.stringToCalendar(mFinancialDataList
-					.get(mid + 1).getDate(), Constants.CALENDAR_DATE_FORMAT);
+					.get(mid + 1).getDate(), Utility.CALENDAR_DATE_FORMAT);
 			if (calendar.after(calendarMid) && (calendar.before(calendarMid1)))
 				return mid;
 
@@ -609,14 +609,14 @@ public class FinancialDataChartListActivity extends OrionBaseActivity implements
 		}
 
 		Calendar calendar = Utility.stringToCalendar(dateString,
-				Constants.CALENDAR_DATE_FORMAT);
+				Utility.CALENDAR_DATE_FORMAT);
 		Calendar calendarMin = Utility.stringToCalendar(
 				mFinancialDataList.get(0).getDate(),
-				Constants.CALENDAR_DATE_FORMAT);
+				Utility.CALENDAR_DATE_FORMAT);
 		Calendar calendarMax = Utility
 				.stringToCalendar(
 						mFinancialDataList.get(mFinancialDataList.size() - 1)
-								.getDate(), Constants.CALENDAR_DATE_FORMAT);
+								.getDate(), Utility.CALENDAR_DATE_FORMAT);
 
 		if (calendar.before(calendarMin)) {
 			return financialData;
