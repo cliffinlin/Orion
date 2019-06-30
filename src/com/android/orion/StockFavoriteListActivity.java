@@ -430,8 +430,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_DIVIDEND)) {
 			setHeaderTextColor(mTextViewDividend, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_YIELD)) {
-			setHeaderTextColor(mTextViewYield,
-					mHeaderTextHighlightColor);
+			setHeaderTextColor(mTextViewYield, mHeaderTextHighlightColor);
 		} else {
 		}
 	}

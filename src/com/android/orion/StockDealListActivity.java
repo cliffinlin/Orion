@@ -3,9 +3,6 @@ package com.android.orion;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlSerializer;
-
 import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
@@ -434,8 +431,7 @@ public class StockDealListActivity extends ListActivity implements
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PROFIT)) {
 			setHeaderTextColor(mTextViewProfit, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_YIELD)) {
-			setHeaderTextColor(mTextViewYield,
-					mHeaderTextHighlightColor);
+			setHeaderTextColor(mTextViewYield, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_CREATED)) {
 			setHeaderTextColor(mTextViewCreated, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MODIFIED)) {
@@ -452,8 +448,7 @@ public class StockDealListActivity extends ListActivity implements
 		String[] mRightFrom = new String[] { DatabaseContract.COLUMN_PRICE,
 				DatabaseContract.COLUMN_NET, DatabaseContract.COLUMN_DEAL,
 				DatabaseContract.COLUMN_VOLUME, DatabaseContract.COLUMN_PROFIT,
-				DatabaseContract.COLUMN_YIELD,
-				DatabaseContract.COLUMN_CREATED,
+				DatabaseContract.COLUMN_YIELD, DatabaseContract.COLUMN_CREATED,
 				DatabaseContract.COLUMN_MODIFIED };
 		int[] mRightTo = new int[] { R.id.price, R.id.net, R.id.deal,
 				R.id.volume, R.id.profit, R.id.yield, R.id.created,
@@ -640,111 +635,5 @@ public class StockDealListActivity extends ListActivity implements
 
 			return false;
 		}
-	}
-
-	@Override
-	void xmlParse(XmlPullParser parser) {
-		super.xmlParse(parser);
-
-		int eventType;
-		String tagName = "";
-		StockDeal stockDeal = null;
-
-		try {
-			eventType = parser.getEventType();
-			while (eventType != XmlPullParser.END_DOCUMENT) {
-				switch (eventType) {
-				case XmlPullParser.START_TAG:
-					tagName = parser.getName();
-					if (XML_TAG_ITEM.equals(tagName)) {
-						stockDeal = new StockDeal();
-					} else if (DatabaseContract.COLUMN_SE.equals(tagName)) {
-						stockDeal.setSE(parser.nextText());
-					} else if (DatabaseContract.COLUMN_CODE.equals(tagName)) {
-						stockDeal.setCode(parser.nextText());
-					} else if (DatabaseContract.COLUMN_NAME.equals(tagName)) {
-						stockDeal.setName(parser.nextText());
-					} else if (DatabaseContract.COLUMN_DEAL.equals(tagName)) {
-						stockDeal.setDeal(Double.valueOf(parser.nextText()));
-					} else if (DatabaseContract.COLUMN_VOLUME.equals(tagName)) {
-						stockDeal.setVolume(Long.valueOf(parser.nextText()));
-					} else if (DatabaseContract.COLUMN_CREATED.equals(tagName)) {
-						stockDeal.setCreated(parser.nextText());
-					} else if (DatabaseContract.COLUMN_MODIFIED.equals(tagName)) {
-						stockDeal.setModified(parser.nextText());
-					} else {
-					}
-					break;
-				case XmlPullParser.END_TAG:
-					tagName = parser.getName();
-					if (XML_TAG_ITEM.equals(tagName)) {
-						if (stockDeal != null) {
-							mStock.setSE(stockDeal.getSE());
-							mStock.setCode(stockDeal.getCode());
-							mStockDatabaseManager.getStock(mStock);
-
-							stockDeal.setName(mStock.getName());
-
-							stockDeal.setPrice(mStock.getPrice());
-							stockDeal.setupDividendYield();
-							stockDeal.setupNet();
-							stockDeal.setupProfit();
-
-							if (!mStockDatabaseManager
-									.isStockDealExist(stockDeal)) {
-								mStockDatabaseManager
-										.insertStockDeal(stockDeal);
-							}
-
-							mStockDatabaseManager.updateStockDeal(mStock);
-							mStockDatabaseManager.updateStock(mStock,
-									mStock.getContentValues());
-						}
-					}
-					break;
-				default:
-					break;
-				}
-				eventType = parser.next();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	int xmlSerialize(XmlSerializer xmlSerializer) {
-		int count = 0;
-
-		super.xmlSerialize(xmlSerializer);
-
-		mStockDatabaseManager.getStockDealList(mStockDealList);
-
-		try {
-			for (StockDeal stockDeal : mStockDealList) {
-				xmlSerializer.startTag(null, XML_TAG_ITEM);
-				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_SE,
-						stockDeal.getSE());
-				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_CODE,
-						stockDeal.getCode());
-				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_NAME,
-						stockDeal.getName());
-				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_DEAL,
-						String.valueOf(stockDeal.getDeal()));
-				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_VOLUME,
-						String.valueOf(stockDeal.getVolume()));
-				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_CREATED,
-						stockDeal.getCreated());
-				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_MODIFIED,
-						stockDeal.getModified());
-				xmlSerializer.endTag(null, XML_TAG_ITEM);
-
-				count++;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return count;
 	}
 }

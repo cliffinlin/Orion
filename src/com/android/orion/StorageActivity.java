@@ -1,9 +1,5 @@
 package com.android.orion;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -17,11 +13,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.text.TextUtils;
 import android.util.Xml;
 import android.widget.Toast;
 
@@ -162,7 +156,7 @@ public class StorageActivity extends DatabaseActivity {
 		InputStream is = null;
 		try {
 			is = cr.openInputStream(mUri);
-			loadFromXml(is);
+			count = loadFromXml(is);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -173,74 +167,23 @@ public class StorageActivity extends DatabaseActivity {
 				Toast.LENGTH_LONG).show();
 	}
 
-	void loadListFromSD(String xmlFileName) {
-		File file = null;
-		File folder = null;
-		String folderName = "";
-		String fileName = "";
+	int loadFromXml(InputStream inputStream) {
+		int count = 0;
 
-		InputStream inputStream = null;
-
-		if (Environment.MEDIA_MOUNTED.equals(Environment
-				.getExternalStorageState())) {
-			try {
-				folderName = Environment.getExternalStorageDirectory()
-						.getPath() + "/" + XML_DIR_NAME;
-				folder = new File(folderName);
-
-				if (!folder.exists()) {
-					return;
-				}
-
-				if (TextUtils.isEmpty(xmlFileName)) {
-					return;
-				}
-
-				fileName = folderName + "/" + xmlFileName;
-				file = new File(fileName);
-
-				if (!file.exists()) {
-					Toast.makeText(this, R.string.no_file_found,
-							Toast.LENGTH_LONG).show();
-					return;
-				} else {
-					inputStream = new BufferedInputStream(new FileInputStream(
-							file));
-					xmlToList(inputStream);
-					inputStream.close();
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} else {
-			Toast.makeText(this, R.string.no_sd_card_found, Toast.LENGTH_LONG)
-					.show();
-		}
-	}
-
-	void loadFromXml(InputStream inputStream) {
 		try {
 			XmlPullParser parser = XmlPullParserFactory.newInstance()
 					.newPullParser();
 			parser.setInput(inputStream, null);
-			xmlParse(parser);
+			count = xmlParse(parser);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		return count;
 	}
 
-	void xmlToList(InputStream inputStream) {
-		try {
-			XmlPullParser parser = XmlPullParserFactory.newInstance()
-					.newPullParser();
-			parser.setInput(inputStream, null);
-			xmlParse(parser);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	void xmlParse(XmlPullParser parser) {
+	int xmlParse(XmlPullParser parser) {
+		int count = 0;
 		int eventType;
 		String now = Utility.getCurrentDateTimeString();
 		String tagName = "";
@@ -248,7 +191,7 @@ public class StorageActivity extends DatabaseActivity {
 		StockDeal stockDeal = StockDeal.obtain();
 
 		if (mStockDatabaseManager == null) {
-			return;
+			return count;
 		}
 
 		try {
@@ -295,6 +238,7 @@ public class StorageActivity extends DatabaseActivity {
 							mStockDatabaseManager.insertStockDeal(stockDeal);
 						}
 					}
+					count++;
 					break;
 				default:
 					break;
@@ -304,52 +248,8 @@ public class StorageActivity extends DatabaseActivity {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
 
-	void SaveListToSD(String xmlFileName) {
-		int count = 0;
-		File file = null;
-		File folder = null;
-		String folderName = "";
-		String fileName = "";
-
-		FileOutputStream fileOutputStream = null;
-
-		if (Environment.MEDIA_MOUNTED.equals(Environment
-				.getExternalStorageState())) {
-			try {
-				folderName = Environment.getExternalStorageDirectory()
-						.getPath() + "/" + XML_DIR_NAME;
-				folder = new File(folderName);
-
-				if (!folder.exists()) {
-					folder.mkdir();
-				}
-
-				if (TextUtils.isEmpty(xmlFileName)) {
-					return;
-				}
-
-				fileName = folderName + "/" + xmlFileName;
-				file = new File(fileName);
-
-				if (!file.exists()) {
-					file.createNewFile();
-				}
-
-				fileOutputStream = new FileOutputStream(file, false);
-				count = listToXml(fileOutputStream);
-				fileOutputStream.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-			Toast.makeText(this, count + " items saved in " + fileName,
-					Toast.LENGTH_LONG).show();
-		} else {
-			Toast.makeText(this, R.string.no_sd_card_found, Toast.LENGTH_LONG)
-					.show();
-		}
+		return count;
 	}
 
 	int saveToXml(OutputStream outputStream) {
@@ -359,33 +259,6 @@ public class StorageActivity extends DatabaseActivity {
 
 		try {
 			xmlSerializer.setOutput(outputStream, "UTF-8");
-			xmlSerializer.setFeature(
-					"http://xmlpull.org/v1/doc/features.html#indent-output",
-					true);
-			xmlSerializer.startDocument(null, true);
-
-			xmlSerializer.startTag("", XML_TAG_ROOT);
-			xmlSerializer.attribute("", XML_ATTRIBUTE_DATE,
-					Utility.getCurrentDateTimeString());
-
-			count = xmlSerialize(xmlSerializer);
-
-			xmlSerializer.endTag("", XML_TAG_ROOT);
-			xmlSerializer.endDocument();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return count;
-	}
-
-	int listToXml(FileOutputStream fileOutputStream) {
-		int count = 0;
-
-		XmlSerializer xmlSerializer = Xml.newSerializer();
-
-		try {
-			xmlSerializer.setOutput(fileOutputStream, "UTF-8");
 			xmlSerializer.setFeature(
 					"http://xmlpull.org/v1/doc/features.html#indent-output",
 					true);

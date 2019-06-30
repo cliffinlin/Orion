@@ -3,15 +3,12 @@ package com.android.orion;
 import java.util.ArrayList;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -213,33 +210,6 @@ public class OrionBaseActivity extends Activity {
 		}
 	}
 
-	//
-	// String getSettingFromDatabase(String key, String defaultValue) {
-	// String value = "";
-	//
-	// if (mSettingDatabaseManager != null) {
-	// try {
-	// value = mSettingDatabaseManager.query(key, defaultValue);
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// } finally {
-	// }
-	// }
-	//
-	// return value;
-	// }
-	//
-	// void saveSettingToDatabase(String key, String value) {
-	// if (mSettingDatabaseManager != null) {
-	// try {
-	// mSettingDatabaseManager.save(key, value);
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// } finally {
-	// }
-	// }
-	// }
-
 	void updateStockAction(long stockId, String action) {
 		Uri uri = null;
 
@@ -285,44 +255,6 @@ public class OrionBaseActivity extends Activity {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	void showDeleteAllAlertDialog() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-		builder.setTitle(R.string.title_delete_all)
-				.setIcon(android.R.drawable.ic_dialog_alert)
-				.setPositiveButton(R.string.ok, new OnClickListener() {
-					@Override
-					public void onClick(DialogInterface arg0, int arg1) {
-						onDeleteAll();
-					}
-				}).setNegativeButton(R.string.cancel, new OnClickListener() {
-					@Override
-					public void onClick(DialogInterface arg0, int arg1) {
-					}
-				}).create().show();
-	}
-
-	void showSaveSDAlertDialog() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-		builder.setTitle(R.string.title_save_to_sd_card)
-				.setIcon(android.R.drawable.ic_dialog_alert)
-				.setPositiveButton(R.string.ok, new OnClickListener() {
-					@Override
-					public void onClick(DialogInterface arg0, int arg1) {
-						onSaveSD();
-					}
-				}).setNegativeButton(R.string.cancel, new OnClickListener() {
-					@Override
-					public void onClick(DialogInterface arg0, int arg1) {
-					}
-				}).create().show();
-	}
-
-	void onDeleteAll() {
-	}
-
-	void onSaveSD() {
 	}
 
 	void loadStockDealArrayMap() {
