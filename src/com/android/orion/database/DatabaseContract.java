@@ -50,7 +50,7 @@ public final class DatabaseContract {
 	public static final String COLUMN_PE = "pe";
 	public static final String COLUMN_PB = "pb";
 	public static final String COLUMN_DIVIDEND = "dividend";
-	public static final String COLUMN_DIVIDEND_YIELD = "dividend_yield";
+	public static final String COLUMN_YIELD = "yield";
 	public static final String COLUMN_CREATED = "created";
 	public static final String COLUMN_MODIFIED = "modified";
 
@@ -157,7 +157,7 @@ public final class DatabaseContract {
 				COLUMN_DAY, COLUMN_WEEK, COLUMN_MONTH, COLUMN_QUARTER,
 				COLUMN_YEAR, COLUMN_OPERATION, COLUMN_HOLD, COLUMN_COST,
 				COLUMN_PROFIT, COLUMN_PE, COLUMN_PB, COLUMN_DIVIDEND,
-				COLUMN_DIVIDEND_YIELD, COLUMN_CREATED, COLUMN_MODIFIED };
+				COLUMN_YIELD, COLUMN_CREATED, COLUMN_MODIFIED };
 
 		public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
 				+ " (" + _ID + " INTEGER PRIMARY KEY," + COLUMN_CLASSES
@@ -181,7 +181,7 @@ public final class DatabaseContract {
 				+ COMMA_SEP + COLUMN_PROFIT + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_PE + DOUBLE_TYPE + COMMA_SEP + COLUMN_PB + DOUBLE_TYPE
 				+ COMMA_SEP + COLUMN_DIVIDEND + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_DIVIDEND_YIELD + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_YIELD + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_CREATED + TEXT_TYPE + COMMA_SEP + COLUMN_MODIFIED
 				+ TEXT_TYPE + " )";
 
@@ -258,7 +258,7 @@ public final class DatabaseContract {
 		public static final String[] PROJECTION_ALL = { _ID, COLUMN_SE,
 				COLUMN_CODE, COLUMN_NAME, COLUMN_PRICE, COLUMN_DEAL,
 				COLUMN_NET, COLUMN_VOLUME, COLUMN_PROFIT, COLUMN_PROFIT,
-				COLUMN_DIVIDEND, COLUMN_DIVIDEND_YIELD, COLUMN_CREATED,
+				COLUMN_DIVIDEND, COLUMN_YIELD, COLUMN_CREATED,
 				COLUMN_MODIFIED };
 
 		private static final String CREATE_TABLE_CONTENT = " (" + _ID
@@ -269,7 +269,7 @@ public final class DatabaseContract {
 				+ DOUBLE_TYPE + COMMA_SEP + COLUMN_VOLUME + INTEGER_TYPE
 				+ COMMA_SEP + COLUMN_PROFIT + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_DIVIDEND + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_DIVIDEND_YIELD + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_YIELD + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_CREATED + TEXT_TYPE + COMMA_SEP + COLUMN_MODIFIED
 				+ TEXT_TYPE + " )";
 

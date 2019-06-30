@@ -5,7 +5,7 @@ import android.database.Cursor;
 
 public class StockBase extends DatabaseTable {
 	double mDividend;
-	double mDividendYield;
+	double mYield;
 
 	public StockBase() {
 		init();
@@ -23,7 +23,7 @@ public class StockBase extends DatabaseTable {
 		super.init();
 
 		mDividend = 0;
-		mDividendYield = 0;
+		mYield = 0;
 	}
 
 	@Override
@@ -31,8 +31,8 @@ public class StockBase extends DatabaseTable {
 		super.getContentValues(contentValues);
 
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND, mDividend);
-		contentValues.put(DatabaseContract.COLUMN_DIVIDEND_YIELD,
-				mDividendYield);
+		contentValues.put(DatabaseContract.COLUMN_YIELD,
+				mYield);
 
 		return contentValues;
 	}
@@ -47,7 +47,7 @@ public class StockBase extends DatabaseTable {
 		super.set(stock);
 
 		setDividend(stock.mDividend);
-		setDividendYield(stock.mDividendYield);
+		setYield(stock.mYield);
 	}
 
 	@Override
@@ -61,7 +61,7 @@ public class StockBase extends DatabaseTable {
 		super.set(cursor);
 
 		setDividend(cursor);
-		setDividendYield(cursor);
+		setYield(cursor);
 	}
 
 	public double getDividend() {
@@ -81,20 +81,20 @@ public class StockBase extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_DIVIDEND)));
 	}
 
-	public double getDividendYield() {
-		return mDividendYield;
+	public double getYield() {
+		return mYield;
 	}
 
-	public void setDividendYield(double dividendYield) {
-		mDividendYield = dividendYield;
+	public void setYield(double yield) {
+		mYield = yield;
 	}
 
-	void setDividendYield(Cursor cursor) {
+	void setYield(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}
 
-		setDividendYield(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_DIVIDEND_YIELD)));
+		setYield(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_YIELD)));
 	}
 }

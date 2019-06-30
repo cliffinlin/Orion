@@ -40,15 +40,10 @@ public class StockFavoriteListActivity extends ListActivity implements
 
 	static final int LOADER_ID_STOCK_FAVORITE_LIST = 0;
 
-	static final int LOAD_FAVORITE_LIST_FROM_SD = 0;
-
-	static final int MESSAGE_SAVE_TO_SD = 0;
 	static final int MESSAGE_REFRESH = 1;
 
 	static final int mHeaderTextDefaultColor = Color.BLACK;
 	static final int mHeaderTextHighlightColor = Color.RED;
-
-	static final String FAVORITE_LIST_XML_FILE_NAME = "favorite.xml";
 
 	String mSortOrderColumn = DatabaseContract.COLUMN_CODE;
 	String mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_ASC;
@@ -72,7 +67,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 	TextView mTextViewPE = null;
 	TextView mTextViewPB = null;
 	TextView mTextViewDividend = null;
-	TextView mTextViewDividendYield = null;
+	TextView mTextViewYield = null;
 
 	ListView mLeftListView = null;
 	ListView mRightListView = null;
@@ -87,17 +82,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 			super.handleMessage(msg);
 
 			switch (msg.what) {
-			case MESSAGE_SAVE_TO_SD:
-				SaveListToSD(FAVORITE_LIST_XML_FILE_NAME);
-				break;
-
 			case MESSAGE_REFRESH:
-				// for (Stock stock : mStockList) {
-				// updateStockAction(stock.getId(), "");
-				// }
-				//
-				// deleteStockData(0);
-
 				startService(Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE,
 						Constants.EXECUTE_IMMEDIATE);
 				break;
@@ -175,11 +160,11 @@ public class StockFavoriteListActivity extends ListActivity implements
 			startActivity(intent);
 			return true;
 
-		case R.id.action_save_sd:
+		case R.id.action_save_to_file:
 			performSaveToFile();
 			return true;
 
-		case R.id.action_load_sd:
+		case R.id.action_load_from_file:
 			performLoadFromFile();
 			return true;
 
@@ -192,12 +177,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 		}
 	}
 
-	@Override
-	void onSaveSD() {
-		super.onSaveSD();
-		mHandler.sendEmptyMessage(MESSAGE_SAVE_TO_SD);
-	}
-
 	void onActionSync(int serviceType) {
 		startService(serviceType, Constants.EXECUTE_IMMEDIATE);
 	}
@@ -207,9 +186,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 		int execute = (Integer) params[0];
 
 		switch (execute) {
-		case LOAD_FAVORITE_LIST_FROM_SD:
-			loadListFromSD(FAVORITE_LIST_XML_FILE_NAME);
-			break;
 
 		default:
 			break;
@@ -274,8 +250,8 @@ public class StockFavoriteListActivity extends ListActivity implements
 		case R.id.dividend:
 			mSortOrderColumn = DatabaseContract.COLUMN_DIVIDEND;
 			break;
-		case R.id.dividend_yield:
-			mSortOrderColumn = DatabaseContract.COLUMN_DIVIDEND_YIELD;
+		case R.id.yield:
+			mSortOrderColumn = DatabaseContract.COLUMN_YIELD;
 			break;
 		default:
 			mSortOrderColumn = DatabaseContract.COLUMN_CODE;
@@ -321,7 +297,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewPE, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewPB, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewDividend, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewDividendYield, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewYield, mHeaderTextDefaultColor);
 	}
 
 	void setVisibility(String key, TextView textView) {
@@ -420,9 +396,9 @@ public class StockFavoriteListActivity extends ListActivity implements
 			mTextViewDividend.setOnClickListener(this);
 		}
 
-		mTextViewDividendYield = (TextView) findViewById(R.id.dividend_yield);
-		if (mTextViewDividendYield != null) {
-			mTextViewDividendYield.setOnClickListener(this);
+		mTextViewYield = (TextView) findViewById(R.id.yield);
+		if (mTextViewYield != null) {
+			mTextViewYield.setOnClickListener(this);
 		}
 
 		if (mSortOrder.contains(DatabaseContract.COLUMN_CODE)) {
@@ -453,8 +429,8 @@ public class StockFavoriteListActivity extends ListActivity implements
 			setHeaderTextColor(mTextViewPB, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_DIVIDEND)) {
 			setHeaderTextColor(mTextViewDividend, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_DIVIDEND_YIELD)) {
-			setHeaderTextColor(mTextViewDividendYield,
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_YIELD)) {
+			setHeaderTextColor(mTextViewYield,
 					mHeaderTextHighlightColor);
 		} else {
 		}
@@ -472,11 +448,11 @@ public class StockFavoriteListActivity extends ListActivity implements
 				DatabaseContract.COLUMN_WEEK, DatabaseContract.COLUMN_MONTH,
 				DatabaseContract.COLUMN_HOLD, DatabaseContract.COLUMN_PE,
 				DatabaseContract.COLUMN_PB, DatabaseContract.COLUMN_DIVIDEND,
-				DatabaseContract.COLUMN_DIVIDEND_YIELD };
+				DatabaseContract.COLUMN_YIELD };
 		int[] mRightTo = new int[] { R.id.price, R.id.net, R.id.type_5min,
 				R.id.type_15min, R.id.type_30min, R.id.type_60min,
 				R.id.type_day, R.id.type_week, R.id.type_month, R.id.hold,
-				R.id.pe, R.id.pb, R.id.dividend, R.id.dividend_yield };
+				R.id.pe, R.id.pb, R.id.dividend, R.id.yield };
 
 		mLeftListView = (ListView) findViewById(R.id.left_listview);
 		mLeftAdapter = new SimpleCursorAdapter(this,

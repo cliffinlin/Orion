@@ -289,12 +289,12 @@ public class StockDeal extends StockBase {
 	
 	public void setupDividendYield() {
 		if (mDeal == 0) {
-			mDividendYield = 0;
+			mYield = 0;
 			return;
 		}
 
-		mDividendYield = 100.0 * mDividend / 10.0 / mDeal;
-		mDividendYield = Utility.Round(mDividendYield,
+		mYield = 100.0 * mDividend / 10.0 / mDeal;
+		mYield = Utility.Round(mYield,
 				Constants.DOUBLE_FIXED_DECIMAL);
 	}
 

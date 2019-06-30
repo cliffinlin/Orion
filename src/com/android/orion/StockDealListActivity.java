@@ -48,12 +48,8 @@ public class StockDealListActivity extends ListActivity implements
 
 	static final int LOADER_ID_DEAL_LIST = 0;
 
-	static final int LOAD_DEAL_LIST_FROM_SD = 0;
-
 	static final int MESSAGE_DELETE_DEAL = 0;
 	static final int MESSAGE_DELETE_DEAL_LIST = 1;
-	static final int MESSAGE_LOAD_FROM_SD_CARD = 2;
-	static final int MESSAGE_SAVE_TO_SD_CARD = 3;
 	static final int MESSAGE_VIEW_STOCK_CHAT = 4;
 	static final int MESSAGE_VIEW_STOCK_DEAL = 5;
 
@@ -77,7 +73,7 @@ public class StockDealListActivity extends ListActivity implements
 	TextView mTextViewDeal = null;
 	TextView mTextViewVolume = null;
 	TextView mTextViewProfit = null;
-	TextView mTextViewDividendYield = null;
+	TextView mTextViewYield = null;
 	TextView mTextViewCreated = null;
 	TextView mTextViewModified = null;
 
@@ -107,18 +103,9 @@ public class StockDealListActivity extends ListActivity implements
 				mStockDatabaseManager.updateStockDeal(mStock);
 				mStockDatabaseManager.updateStock(mStock,
 						mStock.getContentValues());
-				mHandler.sendEmptyMessage(MESSAGE_SAVE_TO_SD_CARD);
 				break;
 
 			case MESSAGE_DELETE_DEAL_LIST:
-				break;
-
-			case MESSAGE_LOAD_FROM_SD_CARD:
-				// loadListFromSD(DEAL_LIST_XML_FILE_NAME);
-				break;
-
-			case MESSAGE_SAVE_TO_SD_CARD:
-				// SaveListToSD(DEAL_LIST_XML_FILE_NAME);
 				break;
 
 			case MESSAGE_VIEW_STOCK_CHAT:
@@ -148,7 +135,6 @@ public class StockDealListActivity extends ListActivity implements
 				break;
 			}
 		}
-
 	};
 
 	ContentObserver mContentObserver = new ContentObserver(new Handler()) {
@@ -243,8 +229,6 @@ public class StockDealListActivity extends ListActivity implements
 
 		getContentResolver().registerContentObserver(
 				DatabaseContract.StockDeal.CONTENT_URI, true, mContentObserver);
-
-		startLoadTask(LOAD_DEAL_LIST_FROM_SD);
 	}
 
 	@Override
@@ -270,23 +254,9 @@ public class StockDealListActivity extends ListActivity implements
 			startActivityForResult(mIntent, REQUEST_CODE_DEAL_INSERT);
 			return true;
 
-		case R.id.action_save_sd:
-			// showSaveSDAlertDialog();
-			return true;
-
-		case R.id.action_load_sd:
-			// mHandler.sendEmptyMessage(MESSAGE_LOAD_FROM_SD_CARD);
-			return true;
-
 		default:
 			return super.onMenuItemSelected(featureId, item);
 		}
-	}
-
-	@Override
-	void onSaveSD() {
-		super.onSaveSD();
-//		mHandler.sendEmptyMessage(MESSAGE_SAVE_TO_SD_CARD);
 	}
 
 	void onActionSync(int serviceType) {
@@ -298,9 +268,6 @@ public class StockDealListActivity extends ListActivity implements
 		int execute = (Integer) params[0];
 
 		switch (execute) {
-		case LOAD_DEAL_LIST_FROM_SD:
-//			loadListFromSD(DEAL_LIST_XML_FILE_NAME);
-			break;
 
 		default:
 			break;
@@ -323,7 +290,6 @@ public class StockDealListActivity extends ListActivity implements
 			switch (requestCode) {
 			case REQUEST_CODE_DEAL_INSERT:
 			case REQUEST_CODE_DEAL_EDIT:
-				mHandler.sendEmptyMessage(MESSAGE_SAVE_TO_SD_CARD);
 				break;
 
 			default:
@@ -358,8 +324,8 @@ public class StockDealListActivity extends ListActivity implements
 		case R.id.profit:
 			mSortOrderColumn = DatabaseContract.COLUMN_PROFIT;
 			break;
-		case R.id.dividend_yield:
-			mSortOrderColumn = DatabaseContract.COLUMN_DIVIDEND_YIELD;
+		case R.id.yield:
+			mSortOrderColumn = DatabaseContract.COLUMN_YIELD;
 			break;
 		case R.id.created:
 			mSortOrderColumn = DatabaseContract.COLUMN_CREATED;
@@ -403,7 +369,7 @@ public class StockDealListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewDeal, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewVolume, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewProfit, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewDividendYield, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewYield, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewCreated, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewModified, mHeaderTextDefaultColor);
 	}
@@ -445,8 +411,8 @@ public class StockDealListActivity extends ListActivity implements
 		mTextViewProfit = (TextView) findViewById(R.id.profit);
 		mTextViewProfit.setOnClickListener(this);
 
-		mTextViewDividendYield = (TextView) findViewById(R.id.dividend_yield);
-		mTextViewDividendYield.setOnClickListener(this);
+		mTextViewYield = (TextView) findViewById(R.id.yield);
+		mTextViewYield.setOnClickListener(this);
 
 		mTextViewCreated = (TextView) findViewById(R.id.created);
 		mTextViewCreated.setOnClickListener(this);
@@ -467,8 +433,8 @@ public class StockDealListActivity extends ListActivity implements
 			setHeaderTextColor(mTextViewVolume, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PROFIT)) {
 			setHeaderTextColor(mTextViewProfit, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_DIVIDEND_YIELD)) {
-			setHeaderTextColor(mTextViewDividendYield,
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_YIELD)) {
+			setHeaderTextColor(mTextViewYield,
 					mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_CREATED)) {
 			setHeaderTextColor(mTextViewCreated, mHeaderTextHighlightColor);
@@ -486,11 +452,11 @@ public class StockDealListActivity extends ListActivity implements
 		String[] mRightFrom = new String[] { DatabaseContract.COLUMN_PRICE,
 				DatabaseContract.COLUMN_NET, DatabaseContract.COLUMN_DEAL,
 				DatabaseContract.COLUMN_VOLUME, DatabaseContract.COLUMN_PROFIT,
-				DatabaseContract.COLUMN_DIVIDEND_YIELD,
+				DatabaseContract.COLUMN_YIELD,
 				DatabaseContract.COLUMN_CREATED,
 				DatabaseContract.COLUMN_MODIFIED };
 		int[] mRightTo = new int[] { R.id.price, R.id.net, R.id.deal,
-				R.id.volume, R.id.profit, R.id.dividend_yield, R.id.created,
+				R.id.volume, R.id.profit, R.id.yield, R.id.created,
 				R.id.modified };
 
 		mLeftListView = (ListView) findViewById(R.id.left_listview);
