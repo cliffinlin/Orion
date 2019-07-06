@@ -10,9 +10,6 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,8 +36,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 	public static final String ACTION_STOCK_ID = "orion.intent.action.ACTION_STOCK_ID";
 
 	static final int LOADER_ID_STOCK_FAVORITE_LIST = 0;
-
-	static final int MESSAGE_REFRESH = 1;
 
 	static final int mHeaderTextDefaultColor = Color.BLACK;
 	static final int mHeaderTextHighlightColor = Color.RED;
@@ -74,24 +69,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 
 	SimpleCursorAdapter mLeftAdapter = null;
 	SimpleCursorAdapter mRightAdapter = null;
-
-	Handler mHandler = new Handler(Looper.getMainLooper()) {
-
-		@Override
-		public void handleMessage(Message msg) {
-			super.handleMessage(msg);
-
-			switch (msg.what) {
-			case MESSAGE_REFRESH:
-				startService(Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE,
-						Constants.EXECUTE_IMMEDIATE);
-				break;
-
-			default:
-				break;
-			}
-		}
-	};
 
 	private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
 		@Override
@@ -175,10 +152,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 		default:
 			return super.onMenuItemSelected(featureId, item);
 		}
-	}
-
-	void onActionSync(int serviceType) {
-		startService(serviceType, Constants.EXECUTE_IMMEDIATE);
 	}
 
 	Long doInBackgroundLoad(Object... params) {

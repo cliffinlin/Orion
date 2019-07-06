@@ -15,6 +15,8 @@ import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
 import android.util.ArrayMap;
 
 import com.android.orion.database.DatabaseContract;
@@ -36,6 +38,9 @@ public class OrionBaseActivity extends Activity {
 	Bundle mBundle = null;
 	String mAction = null;
 	Intent mIntent = null;
+
+	PowerManager mPowerManager;
+	WakeLock mWakeLock;
 
 	ProgressDialog mProgressDialog = null;
 
@@ -62,6 +67,10 @@ public class OrionBaseActivity extends Activity {
 		super.onCreate(savedInstanceState);
 
 		mContext = this;
+
+		mPowerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+		mWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+				Constants.TAG);
 
 		mIntent = getIntent();
 		if (mIntent != null) {
@@ -155,7 +164,9 @@ public class OrionBaseActivity extends Activity {
 
 	public void hideProgressDialog() {
 		if (mProgressDialog != null) {
-			mProgressDialog.dismiss();
+			if (mProgressDialog.isShowing()) {
+				mProgressDialog.dismiss();
+			}
 		}
 	}
 

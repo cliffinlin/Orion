@@ -17,7 +17,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Xml;
-import android.widget.Toast;
 
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
@@ -32,8 +31,9 @@ public class StorageActivity extends DatabaseActivity {
 	static final String XML_TAG_ITEM = "item";
 	static final String XML_ATTRIBUTE_DATE = "date";
 
-	static final int MESSAGE_SAVE_TO_FILE = 0;
-	static final int MESSAGE_LOAD_FROM_FILE = 1;
+	static final int MESSAGE_REFRESH = 0;
+	static final int MESSAGE_SAVE_TO_FILE = 1;
+	static final int MESSAGE_LOAD_FROM_FILE = 2;
 
 	static final int REQUEST_CODE_READ = 42;
 	static final int REQUEST_CODE_WRITE = 43;
@@ -47,12 +47,27 @@ public class StorageActivity extends DatabaseActivity {
 			super.handleMessage(msg);
 
 			switch (msg.what) {
+			case MESSAGE_REFRESH:
+				startService(Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE,
+						Constants.EXECUTE_IMMEDIATE);
+				break;
+
 			case MESSAGE_SAVE_TO_FILE:
-				saveToFile();
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						saveToFile();
+					}
+				}).start();
 				break;
 
 			case MESSAGE_LOAD_FROM_FILE:
-				loadFromFile();
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						loadFromFile();
+					}
+				}).start();
 				break;
 
 			default:
@@ -132,39 +147,35 @@ public class StorageActivity extends DatabaseActivity {
 	}
 
 	void saveToFile() {
-		int count = 0;
 		final ContentResolver cr = getContentResolver();
 
 		OutputStream os = null;
 		try {
 			os = cr.openOutputStream(mUri);
-			count = saveToXml(os);
+			saveToXml(os);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			closeQuietly(os);
 		}
 
-		Toast.makeText(this, count + " items saved in " + mUri.getPath(),
-				Toast.LENGTH_LONG).show();
+		mHandler.sendEmptyMessage(MESSAGE_REFRESH);
 	}
 
 	void loadFromFile() {
-		int count = 0;
 		final ContentResolver cr = getContentResolver();
 
 		InputStream is = null;
 		try {
 			is = cr.openInputStream(mUri);
-			count = loadFromXml(is);
+			loadFromXml(is);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			closeQuietly(is);
 		}
 
-		Toast.makeText(this, count + " items load in " + mUri.getPath(),
-				Toast.LENGTH_LONG).show();
+		mHandler.sendEmptyMessage(MESSAGE_REFRESH);
 	}
 
 	int loadFromXml(InputStream inputStream) {
