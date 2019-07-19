@@ -35,7 +35,9 @@ public class StockFavoriteListActivity extends ListActivity implements
 
 	public static final String ACTION_STOCK_ID = "orion.intent.action.ACTION_STOCK_ID";
 
-	static final int LOADER_ID_STOCK_FAVORITE_LIST = 0;
+	public static final int LOADER_ID_STOCK_FAVORITE_LIST = 0;
+
+	public static final int REQUEST_CODE_STOCK_INSERT = 0;
 
 	static final int mHeaderTextDefaultColor = Color.BLACK;
 	static final int mHeaderTextHighlightColor = Color.RED;
@@ -125,7 +127,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 		case R.id.action_new:
 			mIntent = new Intent(this, StockActivity.class);
 			mIntent.setAction(StockActivity.ACTION_STOCK_INSERT);
-			startActivity(mIntent);
+			startActivityForResult(mIntent, REQUEST_CODE_STOCK_INSERT);
 			return true;
 
 		case R.id.action_search:
@@ -151,6 +153,22 @@ public class StockFavoriteListActivity extends ListActivity implements
 
 		default:
 			return super.onMenuItemSelected(featureId, item);
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		if (resultCode == RESULT_OK) {
+			switch (requestCode) {
+			case REQUEST_CODE_STOCK_INSERT:
+				mHandler.sendEmptyMessage(MESSAGE_REFRESH);
+				break;
+
+			default:
+				break;
+			}
 		}
 	}
 

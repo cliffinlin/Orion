@@ -191,6 +191,10 @@ public class Stock extends StockBase {
 		contentValues.put(DatabaseContract.COLUMN_PB, mPB);
 		contentValues.put(DatabaseContract.COLUMN_PE, mPE);
 
+		contentValues.put(DatabaseContract.COLUMN_DIVIDEND, mDividend);
+		contentValues.put(DatabaseContract.COLUMN_YIELD,
+				mYield);
+
 		return contentValues;
 	}
 
@@ -199,6 +203,9 @@ public class Stock extends StockBase {
 
 		super.getContentValues(contentValues);
 
+		contentValues.put(DatabaseContract.COLUMN_DIVIDEND, mDividend);
+		contentValues.put(DatabaseContract.COLUMN_YIELD,
+				mYield);
 
 		return contentValues;
 	}
@@ -812,6 +819,10 @@ public class Stock extends StockBase {
 
 	public void setupPE(double value) {
 		if ((value == 0) || (value < 0)) {
+			return;
+		}
+		
+		if (mPrice == 0) {
 			return;
 		}
 

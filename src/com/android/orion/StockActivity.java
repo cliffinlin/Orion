@@ -183,6 +183,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 				mStock.setModified(Utility.getCurrentDateTimeString());
 			}
 			startSaveTask(EXECUTE_STOCK_SAVE);
+			setResult(RESULT_OK, getIntent());
 			finish();
 			break;
 

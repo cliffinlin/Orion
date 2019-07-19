@@ -162,17 +162,18 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		stock = getStock(bundle);
 
 		if (stock != null) {
+			downloadFinancialDataHistory(executeType, stock);
+			downloadShareBonus(executeType, stock);
 			downloadStockRealTime(executeType, stock);
 			downloadStockDataHistory(executeType, stock);
 			downloadStockDataRealTime(executeType, stock);
-			downloadFinancialDataHistory(executeType, stock);
-			downloadShareBonus(executeType, stock);
+
 		} else {
+			downloadFinancialDataHistory(executeType);
+			downloadShareBonus(executeType);
 			downloadStockRealTime(executeType);
 			downloadStockDataHistory(executeType);
 			downloadStockDataRealTime(executeType);
-			downloadFinancialDataHistory(executeType);
-			downloadShareBonus(executeType);
 		}
 	}
 
@@ -639,6 +640,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		@Override
 		public void handleResponse(String response) {
 			removeFromCurrrentRequests(mStringRequest.getUrl());
+			mStockDatabaseManager.getStock(mStock);
 			handleResponseStockDataHistory(mStock, mStockData, response);
 			analyze(mStock, mStockData.getPeriod(),
 					getStockDataList(mStock, mStockData.getPeriod()));
@@ -684,6 +686,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		@Override
 		public void handleResponse(String response) {
 			removeFromCurrrentRequests(mStringRequest.getUrl());
+			mStockDatabaseManager.getStock(mStock);
 			handleResponseStockDataRealTime(mStock, mStockData, response);
 			analyze(mStock, mStockData.getPeriod(),
 					getStockDataList(mStock, mStockData.getPeriod()));
