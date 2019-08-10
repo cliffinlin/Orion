@@ -35,6 +35,9 @@ public class OrionContentProvider extends ContentProvider {
 	private static final int FINANCIAL_DATA = 500;
 	private static final int FINANCIAL_DATA_ID = 501;
 
+	private static final int SHARE_BONUS = 600;
+	private static final int SHARE_BONUS_ID = 601;
+
 	private static final UriMatcher mUriMatcher = new UriMatcher(
 			UriMatcher.NO_MATCH);
 
@@ -60,6 +63,10 @@ public class OrionContentProvider extends ContentProvider {
 		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
 				DatabaseContract.FinancialData.TABLE_NAME + "/#",
 				FINANCIAL_DATA_ID);
+		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
+				DatabaseContract.ShareBonus.TABLE_NAME, SHARE_BONUS);
+		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
+				DatabaseContract.ShareBonus.TABLE_NAME + "/#", SHARE_BONUS_ID);
 	}
 
 	ContentResolver mContentResolver = null;
@@ -117,7 +124,12 @@ public class OrionContentProvider extends ContentProvider {
 		case FINANCIAL_DATA_ID:
 			type = DatabaseContract.FinancialData.CONTENT_ITEM_TYPE;
 			break;
-
+		case SHARE_BONUS:
+			type = DatabaseContract.ShareBonus.CONTENT_TYPE;
+			break;
+		case SHARE_BONUS_ID:
+			type = DatabaseContract.ShareBonus.CONTENT_ITEM_TYPE;
+			break;
 		default:
 			break;
 		}
@@ -186,6 +198,14 @@ public class OrionContentProvider extends ContentProvider {
 					+ uri.getLastPathSegment());
 			break;
 
+		case SHARE_BONUS:
+			builder.setTables(DatabaseContract.ShareBonus.TABLE_NAME);
+			break;
+		case SHARE_BONUS_ID:
+			builder.setTables(DatabaseContract.ShareBonus.TABLE_NAME);
+			builder.appendWhere(BaseColumns._ID + " = "
+					+ uri.getLastPathSegment());
+			break;
 		default:
 			break;
 		}
@@ -237,6 +257,12 @@ public class OrionContentProvider extends ContentProvider {
 			id = mDatabaseManager.mDatabase.insert(
 					DatabaseContract.FinancialData.TABLE_NAME, null,
 					contentValues);
+			break;
+
+		case SHARE_BONUS:
+			id = mDatabaseManager.mDatabase
+					.insert(DatabaseContract.ShareBonus.TABLE_NAME, null,
+							contentValues);
 			break;
 
 		default:
@@ -384,6 +410,21 @@ public class OrionContentProvider extends ContentProvider {
 					whereClause, selectionArgs);
 			break;
 
+		case SHARE_BONUS:
+			result = mDatabaseManager.mDatabase.update(
+					DatabaseContract.ShareBonus.TABLE_NAME, values, selection,
+					selectionArgs);
+			break;
+		case SHARE_BONUS_ID:
+			whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
+			if (!TextUtils.isEmpty(selection)) {
+				whereClause += " AND " + whereClause;
+			}
+			result = mDatabaseManager.mDatabase.update(
+					DatabaseContract.ShareBonus.TABLE_NAME, values,
+					whereClause, selectionArgs);
+			break;
+
 		default:
 			break;
 		}
@@ -486,6 +527,22 @@ public class OrionContentProvider extends ContentProvider {
 			}
 			result = mDatabaseManager.mDatabase.delete(
 					DatabaseContract.FinancialData.TABLE_NAME, whereClause,
+					selectionArgs);
+			break;
+
+		case SHARE_BONUS:
+			result = mDatabaseManager.mDatabase.delete(
+					DatabaseContract.ShareBonus.TABLE_NAME, selection,
+					selectionArgs);
+			break;
+
+		case SHARE_BONUS_ID:
+			whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
+			if (!TextUtils.isEmpty(selection)) {
+				whereClause += " AND " + whereClause;
+			}
+			result = mDatabaseManager.mDatabase.delete(
+					DatabaseContract.ShareBonus.TABLE_NAME, whereClause,
 					selectionArgs);
 			break;
 

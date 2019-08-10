@@ -1062,8 +1062,7 @@ public class StockDatabaseManager extends DatabaseManager {
 
 		try {
 			String selection = getFinancialDataSelection(stockId);
-			String sortOrder = DatabaseContract.COLUMN_DATE + " DESC " + ","
-					+ DatabaseContract.COLUMN_TIME + " DESC ";
+			String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
 
 			cursor = mContentResolver.query(
 					DatabaseContract.FinancialData.CONTENT_URI,
@@ -1081,7 +1080,7 @@ public class StockDatabaseManager extends DatabaseManager {
 		}
 	}
 	
-	public void getFinancialDataList(Stock stock, ArrayList<FinancialData> financialDataList) {
+	public void getFinancialDataList(Stock stock, ArrayList<FinancialData> financialDataList, String sortOrder) {
 		Cursor cursor = null;
 
 		if ((stock == null) || (financialDataList == null)) {
@@ -1091,7 +1090,6 @@ public class StockDatabaseManager extends DatabaseManager {
 		financialDataList.clear();
 
 		String selection = getFinancialDataSelection(stock.getId());
-		String sortOrder = getFinancialDataOrder();
 
 		try {
 			cursor = queryFinancialData(selection, null, sortOrder);
@@ -1217,7 +1215,259 @@ public class StockDatabaseManager extends DatabaseManager {
 	}
 
 	public String getFinancialDataOrder() {
-		return DatabaseContract.COLUMN_DATE + " ASC " + ","
-				+ DatabaseContract.COLUMN_TIME + " ASC ";
+		return DatabaseContract.COLUMN_DATE + " ASC ";
+	}
+
+	public Uri insertShareBonus(ShareBonus shareBonus) {
+		Uri uri = null;
+
+		if ((shareBonus == null) || (mContentResolver == null)) {
+			return uri;
+		}
+
+		uri = mContentResolver.insert(
+				DatabaseContract.ShareBonus.CONTENT_URI,
+				shareBonus.getContentValues());
+
+		return uri;
+	}
+
+	public int bulkInsertShareBonus(ContentValues[] contentValuesArray) {
+		int result = 0;
+
+		if ((contentValuesArray.length == 0) || (mContentResolver == null)) {
+			return result;
+		}
+
+		result = mContentResolver.bulkInsert(
+				DatabaseContract.ShareBonus.CONTENT_URI, contentValuesArray);
+
+		return result;
+	}
+
+	public Cursor queryShareBonus(String selection, String[] selectionArgs,
+			String sortOrder) {
+		Cursor cursor = null;
+
+		if (mContentResolver == null) {
+			return cursor;
+		}
+
+		cursor = mContentResolver.query(
+				DatabaseContract.ShareBonus.CONTENT_URI,
+				DatabaseContract.ShareBonus.PROJECTION_ALL, selection,
+				selectionArgs, sortOrder);
+
+		return cursor;
+	}
+
+	public Cursor queryShareBonus(ShareBonus shareBonus) {
+		Cursor cursor = null;
+
+		if ((shareBonus == null) || (mContentResolver == null)) {
+			return cursor;
+		}
+
+		String selection = getShareBonusSelection(shareBonus);
+		String sortOrder = getShareBonusOrder();
+
+		cursor = mContentResolver.query(
+				DatabaseContract.ShareBonus.CONTENT_URI,
+				DatabaseContract.ShareBonus.PROJECTION_ALL, selection, null,
+				sortOrder);
+
+		return cursor;
+	}
+
+	public void getShareBonus(ShareBonus shareBonus) {
+		Cursor cursor = null;
+
+		if ((shareBonus == null) || (mContentResolver == null)) {
+			return;
+		}
+
+		try {
+			String selection = getShareBonusSelection(shareBonus);
+			String sortOrder = getShareBonusOrder();
+
+			cursor = mContentResolver.query(
+					DatabaseContract.ShareBonus.CONTENT_URI,
+					DatabaseContract.ShareBonus.PROJECTION_ALL, selection,
+					null, sortOrder);
+
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				cursor.moveToNext();
+				shareBonus.set(cursor);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
+	public void getShareBonus(long stockId, ShareBonus shareBonus) {
+		Cursor cursor = null;
+
+		if ((shareBonus == null) || (mContentResolver == null)) {
+			return;
+		}
+
+		try {
+			String selection = getShareBonusSelection(stockId);
+			String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
+
+			cursor = mContentResolver.query(
+					DatabaseContract.ShareBonus.CONTENT_URI,
+					DatabaseContract.ShareBonus.PROJECTION_ALL, selection,
+					null, sortOrder);
+
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				cursor.moveToNext();
+				shareBonus.set(cursor);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+	
+	public void getShareBonusList(Stock stock, ArrayList<ShareBonus> shareBonusList, String sortOrder) {
+		Cursor cursor = null;
+
+		if ((stock == null) || (shareBonusList == null)) {
+			return;
+		}
+
+		shareBonusList.clear();
+
+		String selection = getShareBonusSelection(stock.getId());
+
+		try {
+			cursor = queryShareBonus(selection, null, sortOrder);
+
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				while (cursor.moveToNext()) {
+					ShareBonus shareBonus = new ShareBonus();
+					shareBonus.set(cursor);
+					shareBonusList.add(shareBonus);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+	
+	public boolean isShareBonusExist(ShareBonus shareBonus) {
+		boolean result = false;
+		Cursor cursor = null;
+
+		if (shareBonus == null) {
+			return result;
+		}
+
+		try {
+			cursor = queryShareBonus(shareBonus);
+
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				cursor.moveToNext();
+				shareBonus.setCreated(cursor);
+				result = true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+
+		return result;
+	}
+
+	public int updateShareBonus(ShareBonus shareBonus,
+			ContentValues contentValues) {
+		int result = 0;
+
+		if ((shareBonus == null) || (mContentResolver == null)) {
+			return result;
+		}
+
+		String where = getShareBonusSelection(shareBonus);
+
+		result = mContentResolver.update(
+				DatabaseContract.ShareBonus.CONTENT_URI, contentValues,
+				where, null);
+
+		return result;
+	}
+
+	public int deleteShareBonus(ShareBonus shareBonus) {
+		int result = 0;
+
+		if ((shareBonus == null) || (mContentResolver == null)) {
+			return result;
+		}
+
+		String where = getShareBonusSelection(shareBonus);
+
+		result = mContentResolver.delete(
+				DatabaseContract.ShareBonus.CONTENT_URI, where, null);
+
+		return result;
+	}
+
+	public void deleteShareBonus(long stockId) {
+		Uri uri = DatabaseContract.ShareBonus.CONTENT_URI;
+
+		String where = getShareBonusSelection(stockId);
+
+		try {
+			mContentResolver.delete(uri, where, null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public int deleteShareBonus(long stockId, String date) {
+		int result = 0;
+
+		if (mContentResolver == null) {
+			return result;
+		}
+
+		String where = getShareBonusSelection(stockId, date);
+
+		result = mContentResolver.delete(
+				DatabaseContract.ShareBonus.CONTENT_URI, where, null);
+
+		return result;
+	}
+
+	public String getShareBonusSelection(ShareBonus shareBonus) {
+		String where = "";
+
+		if ((shareBonus == null) || (mContentResolver == null)) {
+			return where;
+		}
+
+		where = getShareBonusSelection(shareBonus.getStockId(),
+				shareBonus.getDate());
+
+		return where;
+	}
+
+	public String getShareBonusSelection(long stockId) {
+		return DatabaseContract.COLUMN_STOCK_ID + " = " + stockId;
+	}
+
+	public String getShareBonusSelection(long stockId, String date) {
+		return DatabaseContract.COLUMN_STOCK_ID + " = " + stockId + " AND "
+				+ DatabaseContract.COLUMN_DATE + " = '" + date + "'";
+	}
+
+	public String getShareBonusOrder() {
+		return DatabaseContract.COLUMN_DATE + " ASC ";
 	}
 }

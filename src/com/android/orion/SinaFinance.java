@@ -17,6 +17,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.android.orion.database.FinancialData;
+import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.pinyin.Pinyin;
@@ -647,8 +648,8 @@ public class SinaFinance extends StockDataProvider {
 	}
 
 	@Override
-	void handleResponseFinancialDataHistory(Stock stock,
-			FinancialData financialData, String response) {
+	void handleResponseFinancialData(Stock stock, FinancialData financialData,
+			String response) {
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 
@@ -815,21 +816,26 @@ public class SinaFinance extends StockDataProvider {
 	}
 
 	@Override
-	void handleResponseShareBonus(Stock stock, String response) {
+	void handleResponseShareBonus(Stock stock, ShareBonus shareBonus,
+			String response) {
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 
-		double shareBonus = 0;
-		String announcementDateString = "";
-		String valueString = "";
+		boolean bulkInsert = false;
+		String dateString = "";
+		String dividendString = "";
 		String dividendDateString = "";
-		String yearString = "";
-		String prevYearString = "";
+		List<ContentValues> contentValuesList = new ArrayList<ContentValues>();
 
 		if ((stock == null) || TextUtils.isEmpty(response)) {
 			Log.d(TAG, "handleResponseShareBonus return " + " stock = " + stock
 					+ " response = " + response);
 			return;
+		}
+
+		if (TextUtils.isEmpty(shareBonus.getCreated())) {
+			mStockDatabaseManager.deleteShareBonus(shareBonus.getStockId());
+			bulkInsert = true;
 		}
 
 		try {
@@ -890,43 +896,52 @@ public class SinaFinance extends StockDataProvider {
 						continue;
 					}
 
-					announcementDateString = tdElements.get(0).text();
-					if (!TextUtils.isEmpty(announcementDateString)) {
+					dateString = tdElements.get(0).text();
+					if (!TextUtils.isEmpty(dateString)) {
 						dividendDateString = tdElements.get(5).text();
-						if (!TextUtils.isEmpty(dividendDateString)) {
-							if ("--".equals(dividendDateString)) {
-								yearString = Utility.getCurrentDateString()
-										.split("-")[0];
+						dividendString = tdElements.get(3).text();
+
+						if (!TextUtils.isEmpty(dividendString)) {
+							shareBonus.setDate(dateString);
+							shareBonus.setDividend(Double
+									.valueOf(dividendString));
+							shareBonus.setDividendDate(dividendDateString);
+
+							if (bulkInsert) {
+								shareBonus.setCreated(Utility
+										.getCurrentDateTimeString());
+								contentValuesList.add(shareBonus
+										.getContentValues());
 							} else {
-								String[] strings = dividendDateString
-										.split("-");
-								if (strings != null && strings.length > 0) {
-									yearString = strings[0];
+								if (!mStockDatabaseManager
+										.isShareBonusExist(shareBonus)) {
+									shareBonus.setCreated(Utility
+											.getCurrentDateTimeString());
+									mStockDatabaseManager
+											.insertShareBonus(shareBonus);
+								} else {
+									shareBonus.setModified(Utility
+											.getCurrentDateTimeString());
+									mStockDatabaseManager.updateShareBonus(
+											shareBonus,
+											shareBonus.getContentValues());
 								}
 							}
-
-							if (!TextUtils.isEmpty(prevYearString)) {
-								if (!prevYearString.equals(yearString)) {
-									break;
-								}
-							}
-						}
-
-						valueString = tdElements.get(3).text();
-						if (!TextUtils.isEmpty(valueString)) {
-							shareBonus += Double.valueOf(valueString);
-							stock.setDividend(shareBonus);
-							stock.setupDividendYield();
-							prevYearString = yearString;
 						}
 					}
 				}
 			}
 
-			stock.setModified(Utility.getCurrentDateTimeString());
-			stock.setupDividendYield();
-			mStockDatabaseManager.updateStock(stock,
-					stock.getContentValuesDividendYield());
+			if (bulkInsert) {
+				if (contentValuesList.size() > 0) {
+					ContentValues[] contentValuesArray = new ContentValues[contentValuesList
+							.size()];
+					contentValuesArray = (ContentValues[]) contentValuesList
+							.toArray(contentValuesArray);
+					mStockDatabaseManager
+							.bulkInsertShareBonus(contentValuesArray);
+				}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -935,4 +950,126 @@ public class SinaFinance extends StockDataProvider {
 		Log.d(TAG, "handleResponseShareBonus:" + stock.getName() + " "
 				+ stopWatch.getInterval() + "s");
 	}
+	//
+	// @Override
+	// void handleResponseShareBonus(Stock stock, String response) {
+	// StopWatch stopWatch = new StopWatch();
+	// stopWatch.start();
+	//
+	// double shareBonus = 0;
+	// String announcementDateString = "";
+	// String valueString = "";
+	// String dividendDateString = "";
+	// String yearString = "";
+	// String prevYearString = "";
+	//
+	// if ((stock == null) || TextUtils.isEmpty(response)) {
+	// Log.d(TAG, "handleResponseShareBonus return " + " stock = " + stock
+	// + " response = " + response);
+	// return;
+	// }
+	//
+	// try {
+	// String responseString = new String(response.getBytes("ISO-8859-1"),
+	// "GB2312");
+	//
+	// Document doc = Jsoup.parse(responseString);
+	// if (doc == null) {
+	// Log.d(TAG, "handleResponseShareBonus return " + " doc = " + doc);
+	// return;
+	// }
+	//
+	// Elements tableElements = doc.select("table#sharebonus_1");
+	// if (tableElements == null) {
+	// Log.d(TAG, "handleResponseShareBonus return "
+	// + " tableElements = " + tableElements);
+	// return;
+	// }
+	//
+	// Elements tbodyElements = tableElements.select("tbody");
+	// if (tbodyElements == null) {
+	// Log.d(TAG, "handleResponseShareBonus return "
+	// + " tbodyElements = " + tbodyElements);
+	// return;
+	// }
+	//
+	// for (Element tbodyElement : tbodyElements) {
+	// if (tbodyElement == null) {
+	// Log.d(TAG, "handleResponseShareBonus return "
+	// + " tbodyElement = " + tbodyElement);
+	// return;
+	// }
+	//
+	// Elements trElements = tbodyElement.select("tr");
+	// if (trElements == null) {
+	// Log.d(TAG, "handleResponseShareBonus return "
+	// + " trElements = " + trElements);
+	// return;
+	// }
+	//
+	// for (Element trElement : trElements) {
+	// if (trElement == null) {
+	// Log.d(TAG, "handleResponseShareBonus continue "
+	// + " trElement = " + trElement);
+	// continue;
+	// }
+	//
+	// Elements tdElements = trElement.select("td");
+	// if (tdElements == null) {
+	// Log.d(TAG, "handleResponseShareBonus continue "
+	// + " tdElements = " + tdElements);
+	// continue;
+	// }
+	//
+	// if (tdElements.size() < 9) {
+	// Log.d(TAG, "handleResponseShareBonus continue "
+	// + " tdElements.size() = " + tdElements.size());
+	// continue;
+	// }
+	//
+	// announcementDateString = tdElements.get(0).text();
+	// if (!TextUtils.isEmpty(announcementDateString)) {
+	// dividendDateString = tdElements.get(5).text();
+	// if (!TextUtils.isEmpty(dividendDateString)) {
+	// if ("--".equals(dividendDateString)) {
+	// yearString = Utility.getCurrentDateString()
+	// .split("-")[0];
+	// } else {
+	// String[] strings = dividendDateString
+	// .split("-");
+	// if (strings != null && strings.length > 0) {
+	// yearString = strings[0];
+	// }
+	// }
+	//
+	// if (!TextUtils.isEmpty(prevYearString)) {
+	// if (!prevYearString.equals(yearString)) {
+	// break;
+	// }
+	// }
+	// }
+	//
+	// valueString = tdElements.get(3).text();
+	// if (!TextUtils.isEmpty(valueString)) {
+	// shareBonus += Double.valueOf(valueString);
+	// stock.setDividend(shareBonus);
+	// stock.setupDividendYield();
+	// prevYearString = yearString;
+	// }
+	// }
+	// }
+	// }
+	//
+	// stock.setModified(Utility.getCurrentDateTimeString());
+	// stock.setupDividendYield();
+	// mStockDatabaseManager.updateStock(stock,
+	// stock.getContentValuesDividendYield());
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	//
+	// stopWatch.stop();
+	// Log.d(TAG, "handleResponseShareBonus:" + stock.getName() + " "
+	// + stopWatch.getInterval() + "s");
+	// }
 }

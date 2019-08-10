@@ -6,7 +6,6 @@ import android.database.Cursor;
 public class FinancialData extends DatabaseTable {
 	private long mStockId;
 	private String mDate;
-	private String mTime;
 	private double mBookValuePerShare;// BVPS// 每股净资产-摊薄/期末股数
 	private double mEarningsPerShare;// EPS// 每股收益-摊薄/期末股数
 	private double mCashFlowPerShare;// 每股现金含量
@@ -52,7 +51,6 @@ public class FinancialData extends DatabaseTable {
 
 		mStockId = 0;
 		mDate = "";
-		mTime = "";
 		mBookValuePerShare = 0;
 		mEarningsPerShare = 0;
 		mCashFlowPerShare = 0;
@@ -74,7 +72,6 @@ public class FinancialData extends DatabaseTable {
 	ContentValues getContentValues(ContentValues contentValues) {
 		contentValues.put(DatabaseContract.COLUMN_STOCK_ID, mStockId);
 		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);
-		contentValues.put(DatabaseContract.COLUMN_TIME, mTime);
 		contentValues.put(DatabaseContract.COLUMN_BOOK_VALUE_PER_SHARE, mBookValuePerShare);
 		contentValues.put(DatabaseContract.COLUMN_EARNINGS_PER_SHARE, mEarningsPerShare);
 		contentValues.put(DatabaseContract.COLUMN_CASH_FLOW_PER_SHARE, mCashFlowPerShare);
@@ -100,7 +97,6 @@ public class FinancialData extends DatabaseTable {
 
 		setStockId(financialData.mStockId);
 		setDate(financialData.mDate);
-		setTime(financialData.mTime);
 		setBookValuePerShare(financialData.mBookValuePerShare);
 		setEarningsPerShare(financialData.mEarningsPerShare);
 		setCashFlowPerShare(financialData.mCashFlowPerShare);
@@ -124,7 +120,6 @@ public class FinancialData extends DatabaseTable {
 
 		setStockID(cursor);
 		setDate(cursor);
-		setTime(cursor);
 		setBookValuePerShare(cursor);
 		setEarningsPerShare(cursor);
 		setCashFlowPerShare(cursor);
@@ -168,23 +163,6 @@ public class FinancialData extends DatabaseTable {
 
 		setDate(cursor.getString(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_DATE)));
-	}
-
-	public String getTime() {
-		return mTime;
-	}
-
-	public void setTime(String time) {
-		mTime = time;
-	}
-
-	void setTime(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setTime(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_TIME)));
 	}
 
 	public double getBookValuePerShare() {

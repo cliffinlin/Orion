@@ -21,6 +21,7 @@ import android.util.ArrayMap;
 
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.FinancialData;
+import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockDatabaseManager;
@@ -51,11 +52,13 @@ public class OrionBaseActivity extends Activity {
 	StockData mStockData = null;
 	StockDeal mStockDeal = null;
 	FinancialData mFinancialData = null;
+	ShareBonus mShareBonus = null;
 
 	ArrayList<Stock> mStockList = null;
 	ArrayList<StockData> mStockDataList = null;
 	ArrayList<StockDeal> mStockDealList = null;
 	ArrayList<FinancialData> mFinancialDataList = null;
+	ArrayList<ShareBonus> mShareBonusList = null;
 
 	ArrayMap<String, Stock> mStockDealArrayMap = null;
 
@@ -102,6 +105,10 @@ public class OrionBaseActivity extends Activity {
 			mFinancialData = FinancialData.obtain();
 		}
 
+		if (mShareBonus == null) {
+			mShareBonus = ShareBonus.obtain();
+		}
+
 		if (mStockList == null) {
 			mStockList = new ArrayList<Stock>();
 		}
@@ -116,6 +123,10 @@ public class OrionBaseActivity extends Activity {
 
 		if (mFinancialDataList == null) {
 			mFinancialDataList = new ArrayList<FinancialData>();
+		}
+
+		if (mShareBonusList == null) {
+			mShareBonusList = new ArrayList<ShareBonus>();
 		}
 
 		if (mStockDealArrayMap == null) {

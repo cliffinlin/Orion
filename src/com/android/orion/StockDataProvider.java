@@ -15,6 +15,7 @@ import android.util.Log;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.FinancialData;
 import com.android.orion.database.Setting;
+import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.utility.Market;
@@ -53,12 +54,13 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 	abstract String getFinancialDataURLString(Stock stock);
 
-	abstract void handleResponseFinancialDataHistory(Stock stock,
+	abstract void handleResponseFinancialData(Stock stock,
 			FinancialData financialData, String response);
 
 	abstract String getShareBonusURLString(Stock stock);
 
-	abstract void handleResponseShareBonus(Stock stock, String response);
+	abstract void handleResponseShareBonus(Stock stock, ShareBonus shareBonus,
+			String response);
 
 	public StockDataProvider(Context context) {
 		super(context);
@@ -162,14 +164,14 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		stock = getStock(bundle);
 
 		if (stock != null) {
-			downloadFinancialDataHistory(executeType, stock);
+			downloadFinancialData(executeType, stock);
 			downloadShareBonus(executeType, stock);
 			downloadStockRealTime(executeType, stock);
 			downloadStockDataHistory(executeType, stock);
 			downloadStockDataRealTime(executeType, stock);
 
 		} else {
-			downloadFinancialDataHistory(executeType);
+			downloadFinancialData(executeType);
 			downloadShareBonus(executeType);
 			downloadStockRealTime(executeType);
 			downloadStockDataHistory(executeType);
@@ -177,13 +179,13 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		}
 	}
 
-	void downloadFinancialDataHistory(int executeType) {
+	void downloadFinancialData(int executeType) {
 		for (Stock stock : mStockArrayMapFavorite.values()) {
-			downloadFinancialDataHistory(executeType, stock);
+			downloadFinancialData(executeType, stock);
 		}
 	}
 
-	void downloadFinancialDataHistory(int executeType, Stock stock) {
+	void downloadFinancialData(int executeType, Stock stock) {
 		String urlString;
 		FinancialData financialData = FinancialData.obtain();
 
@@ -201,8 +203,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		if (executeType == Constants.EXECUTE_IMMEDIATE) {
 			urlString = getFinancialDataURLString(stock);
 			if (addToCurrentRequests(urlString)) {
-				Log.d(TAG, "downloadFinancialDataHistory:" + urlString);
-				FinancialDataHistoryDownloader downloader = new FinancialDataHistoryDownloader(
+				Log.d(TAG, "downloadFinancial:" + urlString);
+				FinancialDataDownloader downloader = new FinancialDataDownloader(
 						urlString);
 				downloader.setStock(stock);
 				downloader.setFinancialData(financialData);
@@ -219,8 +221,16 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 	void downloadShareBonus(int executeType, Stock stock) {
 		String urlString;
+		ShareBonus shareBonus = ShareBonus.obtain();
 
 		if (stock == null) {
+			return;
+		}
+
+		shareBonus.setStockId(stock.getId());
+
+		mStockDatabaseManager.getShareBonus(stock.getId(), shareBonus);
+		if (shareBonus.getCreated().contains(Utility.getCurrentDateString())) {
 			return;
 		}
 
@@ -231,6 +241,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				ShareBonusDownloader downloader = new ShareBonusDownloader(
 						urlString);
 				downloader.setStock(stock);
+				downloader.setShareBonus(shareBonus);
 				mRequestQueue.add(downloader.mStringRequest);
 			}
 		}
@@ -698,16 +709,16 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		}
 	}
 
-	public class FinancialDataHistoryDownloader extends VolleyStringDownloader {
+	public class FinancialDataDownloader extends VolleyStringDownloader {
 		public Stock mStock = null;
 		public FinancialData mFinancialData = null;
 		public int mExecuteType = 0;
 
-		public FinancialDataHistoryDownloader() {
+		public FinancialDataDownloader() {
 			super();
 		}
 
-		public FinancialDataHistoryDownloader(String urlString) {
+		public FinancialDataDownloader(String urlString) {
 			super(urlString);
 		}
 
@@ -732,7 +743,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		@Override
 		public void handleResponse(String response) {
 			removeFromCurrrentRequests(mStringRequest.getUrl());
-			handleResponseFinancialDataHistory(mStock, mFinancialData, response);
+			handleResponseFinancialData(mStock, mFinancialData, response);
 			Bundle bundle = new Bundle();
 			bundle.putInt(Constants.EXTRA_SERVICE_TYPE,
 					Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE_DATA_REALTIME);
@@ -743,6 +754,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 	public class ShareBonusDownloader extends VolleyStringDownloader {
 		public Stock mStock = null;
+		public ShareBonus mShareBonus = null;
 		public int mExecuteType = 0;
 
 		public ShareBonusDownloader() {
@@ -760,6 +772,13 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			mStock.set(stock);
 		}
 
+		public void setShareBonus(ShareBonus shareBonus) {
+			if (mShareBonus == null) {
+				mShareBonus = ShareBonus.obtain();
+			}
+			mShareBonus.set(shareBonus);
+		}
+
 		public void setExecuteType(int executeType) {
 			mExecuteType = executeType;
 		}
@@ -767,7 +786,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		@Override
 		public void handleResponse(String response) {
 			removeFromCurrrentRequests(mStringRequest.getUrl());
-			handleResponseShareBonus(mStock, response);
+			handleResponseShareBonus(mStock, mShareBonus, response);
 			Bundle bundle = new Bundle();
 			bundle.putInt(Constants.EXTRA_SERVICE_TYPE,
 					Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE_DATA_REALTIME);

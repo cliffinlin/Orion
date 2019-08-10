@@ -13,13 +13,16 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.android.orion.curve.BezierCurve;
+import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.FinancialData;
+import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockDeal;
 import com.android.orion.indicator.MACD;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.StopWatch;
+import com.android.orion.utility.Utility;
 
 public class StockAnalyzer extends StockManager {
 	static final String TAG = Constants.TAG + " "
@@ -38,12 +41,8 @@ public class StockAnalyzer extends StockManager {
 		}
 
 		try {
-			FinancialData financialData = FinancialData.obtain();
-			financialData.setStockId(stock.getId());
-			mStockDatabaseManager
-					.getFinancialData(stock.getId(), financialData);
-			stock.setupPE(financialData.getEarningsPerShare());
-			stock.setupPB(financialData.getBookValuePerShare());
+			setupStockFinancialData(stock);
+			setupStockShareBonus(stock);
 
 			loadStockDataList(stock, period, stockDataList);
 			if (stockDataList.size() < Constants.STOCK_VERTEX_TYPING_SIZE) {
@@ -60,6 +59,81 @@ public class StockAnalyzer extends StockManager {
 		stopWatch.stop();
 		Log.d(TAG, "analyze:" + stock.getName() + " " + period + " "
 				+ stopWatch.getInterval() + "s");
+	}
+
+	void setupStockFinancialData(Stock stock) {
+		double totalEarningsPerShare = 0;
+		double totalBookValuePerShare = 0;
+
+		String yearString = "";
+		String prevYearString = "";
+		String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
+
+		ArrayList<FinancialData> financialDataList = new ArrayList<FinancialData>();
+
+		mStockDatabaseManager.getFinancialDataList(stock, financialDataList,
+				sortOrder);
+
+		for (FinancialData financialData : financialDataList) {
+			String dateString = financialData.getDate();
+			String[] strings = dateString.split("-");
+			if (strings != null && strings.length > 0) {
+				yearString = strings[0];
+			}
+
+			if (!TextUtils.isEmpty(prevYearString)) {
+				if (!prevYearString.equals(yearString)) {
+					break;
+				}
+			}
+
+			totalEarningsPerShare += financialData.getEarningsPerShare();
+			totalBookValuePerShare += financialData.getBookValuePerShare();
+
+			stock.setupPE(totalEarningsPerShare);
+			stock.setupPB(totalBookValuePerShare);
+
+			prevYearString = yearString;
+		}
+	}
+
+	void setupStockShareBonus(Stock stock) {
+		double totalDivident = 0;
+
+		String yearString = "";
+		String prevYearString = "";
+		String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
+
+		ArrayList<ShareBonus> shareBonusList = new ArrayList<ShareBonus>();
+
+		mStockDatabaseManager.getShareBonusList(stock, shareBonusList,
+				sortOrder);
+
+		for (ShareBonus shareBonus : shareBonusList) {
+			String dividendDateString = shareBonus.getDividendDate();
+			if (!TextUtils.isEmpty(dividendDateString)) {
+				if ("--".equals(dividendDateString)) {
+					yearString = Utility.getCurrentDateString().split("-")[0];
+				} else {
+					String[] strings = dividendDateString.split("-");
+					if (strings != null && strings.length > 0) {
+						yearString = strings[0];
+					}
+				}
+
+				if (!TextUtils.isEmpty(prevYearString)) {
+					if (!prevYearString.equals(yearString)) {
+						break;
+					}
+				}
+			}
+
+			totalDivident += shareBonus.getDividend();
+			stock.setDividend(totalDivident);
+			stock.setupDividendYield();
+
+			prevYearString = yearString;
+		}
 	}
 
 	private void setMACD(Stock stock, String period,

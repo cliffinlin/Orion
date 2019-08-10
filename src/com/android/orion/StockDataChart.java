@@ -37,6 +37,7 @@ public class StockDataChart {
 	ArrayList<Entry> mOverlapHighEntryList = null;
 	ArrayList<Entry> mOverlapLowEntryList = null;
 	ArrayList<Entry> mFinancialDataEntryList = null;
+	ArrayList<BarEntry> mShareBonusEntryList = null;
 
 	ArrayList<Entry> mDIFEntryList = null;
 	ArrayList<Entry> mDEAEntryList = null;
@@ -84,6 +85,10 @@ public class StockDataChart {
 
 		if (mFinancialDataEntryList == null) {
 			mFinancialDataEntryList = new ArrayList<Entry>();
+		}
+
+		if (mShareBonusEntryList == null) {
+			mShareBonusEntryList = new ArrayList<BarEntry>();
 		}
 
 		if (mAverage5EntryList == null) {
@@ -211,8 +216,18 @@ public class StockDataChart {
 		financialDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(financialDataSet);
 
+		BarData barData = new BarData(mXValues);
+		BarDataSet shareBonusDataSet = new BarDataSet(mShareBonusEntryList,
+				"dsivident");
+		shareBonusDataSet.setBarSpacePercent(40f);
+		shareBonusDataSet.setIncreasingColor(Color.rgb(255, 50, 50));
+		shareBonusDataSet.setDecreasingColor(Color.rgb(50, 128, 50));
+		shareBonusDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+		barData.addDataSet(shareBonusDataSet);
+
 		mCombinedDataMain.setData(candleData);
 		mCombinedDataMain.setData(lineData);
+		mCombinedDataMain.setData(barData);
 	}
 
 	void setSubChartData() {
@@ -355,6 +370,7 @@ public class StockDataChart {
 		mOverlapHighEntryList.clear();
 		mOverlapLowEntryList.clear();
 		mFinancialDataEntryList.clear();
+		mShareBonusEntryList.clear();
 		mAverageEntryList.clear();
 		mAverage5EntryList.clear();
 		mAverage10EntryList.clear();
