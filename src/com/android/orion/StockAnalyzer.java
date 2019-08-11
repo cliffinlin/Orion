@@ -62,39 +62,11 @@ public class StockAnalyzer extends StockManager {
 	}
 
 	void setupStockFinancialData(Stock stock) {
-		double totalEarningsPerShare = 0;
-		double totalBookValuePerShare = 0;
-
-		String yearString = "";
-		String prevYearString = "";
-		String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
-
-		ArrayList<FinancialData> financialDataList = new ArrayList<FinancialData>();
-
-		mStockDatabaseManager.getFinancialDataList(stock, financialDataList,
-				sortOrder);
-
-		for (FinancialData financialData : financialDataList) {
-			String dateString = financialData.getDate();
-			String[] strings = dateString.split("-");
-			if (strings != null && strings.length > 0) {
-				yearString = strings[0];
-			}
-
-			if (!TextUtils.isEmpty(prevYearString)) {
-				if (!prevYearString.equals(yearString)) {
-					break;
-				}
-			}
-
-			totalEarningsPerShare += financialData.getEarningsPerShare();
-			totalBookValuePerShare += financialData.getBookValuePerShare();
-
-			stock.setupPE(totalEarningsPerShare);
-			stock.setupPB(totalBookValuePerShare);
-
-			prevYearString = yearString;
-		}
+		FinancialData financialData = FinancialData.obtain();
+		financialData.setStockId(stock.getId());
+		mStockDatabaseManager.getFinancialData(stock.getId(), financialData);
+		stock.setupPE(financialData.getEarningsPerShare());
+		stock.setupPB(financialData.getBookValuePerShare());
 	}
 
 	void setupStockShareBonus(Stock stock) {

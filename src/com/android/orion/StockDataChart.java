@@ -36,8 +36,9 @@ public class StockDataChart {
 	ArrayList<Entry> mSegmentEntryList = null;
 	ArrayList<Entry> mOverlapHighEntryList = null;
 	ArrayList<Entry> mOverlapLowEntryList = null;
-	ArrayList<Entry> mFinancialDataEntryList = null;
-	ArrayList<BarEntry> mShareBonusEntryList = null;
+	ArrayList<Entry> mBookValuePerShareList = null;
+	ArrayList<Entry> mEarningsPerShareList = null;
+	ArrayList<BarEntry> mDividendEntryList = null;
 
 	ArrayList<Entry> mDIFEntryList = null;
 	ArrayList<Entry> mDEAEntryList = null;
@@ -83,12 +84,16 @@ public class StockDataChart {
 			mOverlapLowEntryList = new ArrayList<Entry>();
 		}
 
-		if (mFinancialDataEntryList == null) {
-			mFinancialDataEntryList = new ArrayList<Entry>();
+		if (mBookValuePerShareList == null) {
+			mBookValuePerShareList = new ArrayList<Entry>();
 		}
 
-		if (mShareBonusEntryList == null) {
-			mShareBonusEntryList = new ArrayList<BarEntry>();
+		if (mEarningsPerShareList == null) {
+			mEarningsPerShareList = new ArrayList<Entry>();
+		}
+
+		if (mDividendEntryList == null) {
+			mDividendEntryList = new ArrayList<BarEntry>();
 		}
 
 		if (mAverage5EntryList == null) {
@@ -209,15 +214,22 @@ public class StockDataChart {
 		overlapLowDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(overlapLowDataSet);
 
-		LineDataSet financialDataSet = new LineDataSet(mFinancialDataEntryList,
-				"financial");
-		financialDataSet.setColor(Color.BLUE);
-		financialDataSet.setDrawCircles(false);
-		financialDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		lineData.addDataSet(financialDataSet);
+		LineDataSet bookValuePerShareDataSet = new LineDataSet(
+				mBookValuePerShareList, "bookValue");
+		bookValuePerShareDataSet.setColor(Color.BLUE);
+		bookValuePerShareDataSet.setDrawCircles(false);
+		bookValuePerShareDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+		lineData.addDataSet(bookValuePerShareDataSet);
+
+		LineDataSet earningsPerShareDataSet = new LineDataSet(
+				mEarningsPerShareList, "earnings");
+		earningsPerShareDataSet.setColor(Color.YELLOW);
+		earningsPerShareDataSet.setDrawCircles(false);
+		earningsPerShareDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+		lineData.addDataSet(earningsPerShareDataSet);
 
 		BarData barData = new BarData(mXValues);
-		BarDataSet shareBonusDataSet = new BarDataSet(mShareBonusEntryList,
+		BarDataSet shareBonusDataSet = new BarDataSet(mDividendEntryList,
 				"dsivident");
 		shareBonusDataSet.setBarSpacePercent(40f);
 		shareBonusDataSet.setIncreasingColor(Color.rgb(255, 50, 50));
@@ -369,8 +381,9 @@ public class StockDataChart {
 		mCandleEntryList.clear();
 		mOverlapHighEntryList.clear();
 		mOverlapLowEntryList.clear();
-		mFinancialDataEntryList.clear();
-		mShareBonusEntryList.clear();
+		mBookValuePerShareList.clear();
+		mEarningsPerShareList.clear();
+		mDividendEntryList.clear();
 		mAverageEntryList.clear();
 		mAverage5EntryList.clear();
 		mAverage10EntryList.clear();

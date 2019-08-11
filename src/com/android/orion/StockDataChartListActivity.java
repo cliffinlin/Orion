@@ -424,7 +424,12 @@ public class StockDataChartListActivity extends OrionBaseActivity implements
 
 	public void swapStockDataCursor(StockDataChart stockDataChart, Cursor cursor) {
 		int index = 0;
+		float bookValuePerShare = 0;
+		float earningsPerShare = 0;
+		float dividend = 0;
 		String sortOrder = DatabaseContract.COLUMN_DATE + " ASC ";
+		FinancialData financialData = null;
+		ShareBonus shareBonus = null;
 
 		if (mStockData == null) {
 			return;
@@ -503,29 +508,40 @@ public class StockDataChartListActivity extends OrionBaseActivity implements
 					}
 
 					if (mFinancialDataList.size() > 0) {
-						FinancialData financialData = getFinancialDataByDate(
-								dateString, mFinancialDataList);
+						financialData = getFinancialDataByDate(dateString,
+								mFinancialDataList);
 						if (financialData != null) {
-							Entry financialDataEntry = new Entry(
-									(float) financialData
-											.getBookValuePerShare(),
-									index);
-							stockDataChart.mFinancialDataEntryList
-									.add(financialDataEntry);
+							bookValuePerShare = (float) financialData
+									.getBookValuePerShare();
+							earningsPerShare = (float) (financialData
+									.getEarningsPerShare() * 10.0);
+						} else {
+							bookValuePerShare = 0;
+							earningsPerShare = 0;
 						}
+
+						Entry bookValuePerShareEntry = new Entry(
+								bookValuePerShare, index);
+						stockDataChart.mBookValuePerShareList
+								.add(bookValuePerShareEntry);
+
+						Entry earningsPerShareEntry = new Entry(
+								earningsPerShare, index);
+						stockDataChart.mEarningsPerShareList
+								.add(earningsPerShareEntry);
 					}
 
 					if (mShareBonusList.size() > 0) {
-						float dividend = 0;
-						ShareBonus shareBonus = getShareBonusByDate(dateString,
+						shareBonus = getShareBonusByDate(dateString,
 								mShareBonusList);
 						if (shareBonus != null) {
-							dividend = (float) shareBonus.getDividend();
+							dividend = (float) (shareBonus.getDividend());
+						} else {
+							dividend = 0;
 						}
 
 						BarEntry shareBonusEntry = new BarEntry(dividend, index);
-						stockDataChart.mShareBonusEntryList
-								.add(shareBonusEntry);
+						stockDataChart.mDividendEntryList.add(shareBonusEntry);
 					}
 
 					Entry average5Entry = new Entry(
