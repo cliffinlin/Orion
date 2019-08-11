@@ -826,8 +826,7 @@ public class Stock extends StockBase {
 			return;
 		}
 
-		mPE = 100.0 * value / mPrice;
-		mPE = Utility.Round(mPE, Constants.DOUBLE_FIXED_DECIMAL);
+		mPE = Utility.Round(100.0 * value / mPrice, Constants.DOUBLE_FIXED_DECIMAL);
 	}
 	
 	public void setupPB(double value) {
@@ -835,8 +834,7 @@ public class Stock extends StockBase {
 			return;
 		}
 
-		mPB = mPrice / value;
-		mPB = Utility.Round(mPB, Constants.DOUBLE_FIXED_DECIMAL);
+		mPB = Utility.Round(mPrice / value, Constants.DOUBLE_FIXED_DECIMAL);
 	}
 	
 	public void setupCost(double value) {
@@ -844,8 +842,7 @@ public class Stock extends StockBase {
 			return;
 		}
 
-		mCost = value / mHold;
-		mCost = Utility.Round(mCost, Constants.DOUBLE_FIXED_DECIMAL);
+		mCost = Utility.Round(value / mHold, Constants.DOUBLE_FIXED_DECIMAL);
 	}
 
 	public void setupDividendYield() {
@@ -853,8 +850,7 @@ public class Stock extends StockBase {
 			return;
 		}
 
-		mYield = 100.0 * mDividend / 10.0 / mPrice;
-		mYield = Utility.Round(mYield,
+		mYield = Utility.Round(100.0 * mDividend / 10.0 / mPrice,
 				Constants.DOUBLE_FIXED_DECIMAL);
 	}
 }

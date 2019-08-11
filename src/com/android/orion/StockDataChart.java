@@ -7,6 +7,7 @@ import android.graphics.Paint;
 
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;
+import com.android.orion.utility.Utility;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.LimitLine.LimitLabelPosition;
 import com.github.mikephil.charting.components.YAxis;
@@ -332,6 +333,7 @@ public class StockDataChart {
 
 	void updateLimitLine(Stock stock, ArrayList<StockDeal> stockDealList) {
 		int color = Color.WHITE;
+		double net = 0;
 		String label = "";
 		LimitLine limitLine;
 
@@ -341,14 +343,18 @@ public class StockDataChart {
 
 		mLimitLineList.clear();
 
+		if (stock.getCost() > 0) {
+			net = Utility.Round(100 * (stock.getPrice() - stock.getCost())
+					/ stock.getCost(), Constants.DOUBLE_FIXED_DECIMAL);
+		}
 		color = Color.BLUE;
 		label = "                                                                      "
+				+ " "
 				+ stock.getCost()
 				+ " "
-				+ stock.getProfit()
-				+ "%"
-				+ "   "
-				+ "hold " + stock.getHold();
+				+ stock.getHold()
+				+ " "
+				+ (int) stock.getProfit() + " " + net + "%";
 		limitLine = createLimitLine(stock.getCost(), color, label);
 
 		mLimitLineList.add(limitLine);
@@ -364,9 +370,9 @@ public class StockDataChart {
 				color = Color.YELLOW;
 			}
 
-			label = "        " + stockDeal.getDeal() + " " + stockDeal.getNet()
-					+ "%" + " " + stockDeal.getVolume() + " "
-					+ (int) stockDeal.getProfit();
+			label = "     " + " " + stockDeal.getDeal() + " "
+					+ stockDeal.getVolume() + " " + (int) stockDeal.getProfit()
+					+ " " + stockDeal.getNet() + "%";
 			limitLine = createLimitLine(stockDeal.getDeal(), color, label);
 
 			mLimitLineList.add(limitLine);

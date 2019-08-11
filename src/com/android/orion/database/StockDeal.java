@@ -283,18 +283,17 @@ public class StockDeal extends StockBase {
 	}
 
 	public void setupProfit() {
-		mProfit = (mPrice - mDeal) * mVolume;
-		mProfit = Utility.Round(mProfit, Constants.DOUBLE_FIXED_DECIMAL);
+		mProfit = Utility.Round((mPrice - mDeal) * mVolume,
+				Constants.DOUBLE_FIXED_DECIMAL);
 	}
-	
+
 	public void setupDividendYield() {
 		if (mDeal == 0) {
 			mYield = 0;
 			return;
 		}
 
-		mYield = 100.0 * mDividend / 10.0 / mDeal;
-		mYield = Utility.Round(mYield,
+		mYield = Utility.Round(100.0 * mDividend / 10.0 / mDeal,
 				Constants.DOUBLE_FIXED_DECIMAL);
 	}
 
@@ -304,7 +303,7 @@ public class StockDeal extends StockBase {
 			return;
 		}
 
-		mNet = 100 * (mPrice - mDeal) / mDeal;
-		mNet = Utility.Round(mNet, Constants.DOUBLE_FIXED_DECIMAL);
+		mNet = Utility.Round(100 * (mPrice - mDeal) / mDeal,
+				Constants.DOUBLE_FIXED_DECIMAL);
 	}
 }
