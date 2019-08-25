@@ -22,7 +22,6 @@ import com.android.orion.database.StockDeal;
 import com.android.orion.indicator.MACD;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.StopWatch;
-import com.android.orion.utility.Utility;
 
 public class StockAnalyzer extends StockManager {
 	static final String TAG = Constants.TAG + " "
@@ -84,13 +83,9 @@ public class StockAnalyzer extends StockManager {
 		for (ShareBonus shareBonus : shareBonusList) {
 			String dividendDateString = shareBonus.getDividendDate();
 			if (!TextUtils.isEmpty(dividendDateString)) {
-				if ("--".equals(dividendDateString)) {
-					yearString = Utility.getCurrentDateString().split("-")[0];
-				} else {
-					String[] strings = dividendDateString.split("-");
-					if (strings != null && strings.length > 0) {
-						yearString = strings[0];
-					}
+				String[] strings = dividendDateString.split("-");
+				if (strings != null && strings.length > 0) {
+					yearString = strings[0];
 				}
 
 				if (!TextUtils.isEmpty(prevYearString)) {
