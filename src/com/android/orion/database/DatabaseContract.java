@@ -92,6 +92,8 @@ public final class DatabaseContract {
 	// http://vip.stock.finance.sina.com.cn/corp/go.php/vISSUE_ShareBonus/stockid/600028.phtml
 	public static final String COLUMN_DIVIDEND_DATE = "dividend_date";
 
+	public static final String COLUMN_TIME_TO_MARKET = "time_to_market";
+
 	public static final String COLUMN_SE_X = COLUMN_SE + "_" + "x";
 	public static final String COLUMN_CODE_X = COLUMN_CODE + "_" + "x";
 	public static final String COLUMN_NAME_X = COLUMN_NAME + "_" + "x";
@@ -343,6 +345,38 @@ public final class DatabaseContract {
 				+ COLUMN_DIVIDEND + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_DIVIDEND_DATE + TEXT_TYPE + COMMA_SEP + COLUMN_CREATED
 				+ TEXT_TYPE + COMMA_SEP + COLUMN_MODIFIED + TEXT_TYPE + " )";
+
+		public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
+				+ CREATE_TABLE_CONTENT;
+
+		public static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
+				+ TABLE_NAME;
+	}
+
+	public static abstract class IPO implements BaseColumns {
+		public static final String TABLE_NAME = "ipo";
+
+		public static final Uri CONTENT_URI = Uri.withAppendedPath(
+				DatabaseContract.CONTENT_URI, TABLE_NAME);
+		public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
+				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
+		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
+				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
+		public static final String SORT_ORDER_DEFAULT = COLUMN_DATE + " ASC";
+
+		public static final String[] PROJECTION_ALL = { _ID, COLUMN_STOCK_ID,
+				COLUMN_CODE, COLUMN_NAME, COLUMN_PRICE, COLUMN_DATE,
+				COLUMN_TIME_TO_MARKET, COLUMN_PE, COLUMN_CREATED,
+				COLUMN_MODIFIED };
+
+		private static final String CREATE_TABLE_CONTENT = " (" + _ID
+				+ " INTEGER PRIMARY KEY," + COLUMN_STOCK_ID + TEXT_TYPE
+				+ COMMA_SEP + COLUMN_CODE + TEXT_TYPE + COMMA_SEP + COLUMN_NAME
+				+ TEXT_TYPE + COMMA_SEP + COLUMN_PRICE + DOUBLE_TYPE
+				+ COMMA_SEP + COLUMN_DATE + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_TIME_TO_MARKET + TEXT_TYPE + COMMA_SEP + COLUMN_PE
+				+ DOUBLE_TYPE + COMMA_SEP + COLUMN_CREATED + TEXT_TYPE
+				+ COMMA_SEP + COLUMN_MODIFIED + TEXT_TYPE + " )";
 
 		public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
 				+ CREATE_TABLE_CONTENT;

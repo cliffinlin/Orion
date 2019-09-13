@@ -41,8 +41,6 @@ public class StockDealListActivity extends ListActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
 		OnItemLongClickListener, OnClickListener {
 
-	static final String DEAL_LIST_XML_FILE_NAME = "deal.xml";
-
 	static final int LOADER_ID_DEAL_LIST = 0;
 
 	static final int MESSAGE_DELETE_DEAL = 0;

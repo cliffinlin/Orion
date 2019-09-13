@@ -1,6 +1,7 @@
 package com.android.orion;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.jsoup.Jsoup;
@@ -17,6 +18,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.android.orion.database.FinancialData;
+import com.android.orion.database.IPO;
 import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
@@ -34,6 +36,7 @@ public class SinaFinance extends StockDataProvider {
 	private static final String SINA_FINANCE_URL_HQ_JS_LIST_SIMPLE = "http://hq.sinajs.cn/list=s_";
 	private static final String SINA_FINANCE_URL_VFD_FINANCESUMMARY = "http://money.finance.sina.com.cn/corp/go.php/vFD_FinanceSummary/stockid/";// stock_id.phtml
 	private static final String SINA_FINANCE_URL_ISSUE_SHAREBONUS = "http://vip.stock.finance.sina.com.cn/corp/go.php/vISSUE_ShareBonus/stockid/";// stock_id.phtml
+	private static final String SINA_FINANCE_URL_NEWSTOCK_ISSUE = "https://vip.stock.finance.sina.com.cn/corp/go.php/vRPD_NewStockIssue/page/1.phtml";
 
 	private static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN5 = 242;
 	private static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN15 = 192;
@@ -197,6 +200,15 @@ public class SinaFinance extends StockDataProvider {
 		}
 		urlString = SINA_FINANCE_URL_ISSUE_SHAREBONUS + stock.getCode()
 				+ ".phtml";
+		return urlString;
+	}
+
+	@Override
+	String getIPOURLString() {
+		String urlString = "";
+
+		urlString = SINA_FINANCE_URL_NEWSTOCK_ISSUE;
+
 		return urlString;
 	}
 
@@ -954,6 +966,179 @@ public class SinaFinance extends StockDataProvider {
 
 		stopWatch.stop();
 		Log.d(TAG, "handleResponseShareBonus:" + stock.getName() + " "
+				+ stopWatch.getInterval() + "s");
+	}
+
+	@Override
+	void handleResponseIPO(IPO ipo, String response) {
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start();
+
+		boolean bulkInsert = false;
+
+		Calendar today = Calendar.getInstance();
+
+		String codeString = "";
+		String nameString = "";
+		String dateString = "";
+		String timeToMarketString = "";
+		String priceString = "";
+		String peString = "";
+
+		List<ContentValues> contentValuesList = new ArrayList<ContentValues>();
+
+		if (TextUtils.isEmpty(response)) {
+			Log.d(TAG, "handleResponseIPO return " + " response = " + response);
+			return;
+		}
+
+		if (TextUtils.isEmpty(ipo.getCreated())) {
+			mStockDatabaseManager.deleteIPO();
+			bulkInsert = true;
+		}
+
+		try {
+			String responseString = new String(response.getBytes("ISO-8859-1"),
+					"GB2312");
+
+			Document doc = Jsoup.parse(responseString);
+			if (doc == null) {
+				Log.d(TAG, "handleResponseIPO return " + " doc = " + doc);
+				return;
+			}
+
+			Elements tableElements = doc.select("table#NewStockTable");
+			if (tableElements == null) {
+				Log.d(TAG, "handleResponseIPO return " + " tableElements = "
+						+ tableElements);
+				return;
+			}
+
+			Elements tbodyElements = tableElements.select("tbody");
+			if (tbodyElements == null) {
+				Log.d(TAG, "handleResponseIPO return " + " tbodyElements = "
+						+ tbodyElements);
+				return;
+			}
+
+			for (Element tbodyElement : tbodyElements) {
+				if (tbodyElement == null) {
+					Log.d(TAG, "handleResponseIPO return " + " tbodyElement = "
+							+ tbodyElement);
+					return;
+				}
+
+				Elements trElements = tbodyElement.select("tr");
+				if (trElements == null) {
+					Log.d(TAG, "handleResponseIPO return " + " trElements = "
+							+ trElements);
+					return;
+				}
+
+				for (Element trElement : trElements) {
+					if (trElement == null) {
+						Log.d(TAG, "handleResponseIPO continue "
+								+ " trElement = " + trElement);
+						continue;
+					}
+
+					Elements tdElements = trElement.select("td");
+					if (tdElements == null) {
+						Log.d(TAG, "handleResponseIPO continue "
+								+ " tdElements = " + tdElements);
+						continue;
+					}
+
+					if (tdElements.size() < 9) {
+						Log.d(TAG, "handleResponseIPO continue "
+								+ " tdElements.size() = " + tdElements.size());
+						continue;
+					}
+
+					codeString = tdElements.get(1).text();
+					if (TextUtils.isEmpty(codeString)
+							|| codeString.contains("Ö¤È¯´úÂë")) {
+						continue;
+					}
+
+					nameString = tdElements.get(2).text();
+					if (TextUtils.isEmpty(nameString)
+							|| nameString.contains("Ö¤È¯¼ò³Æ")) {
+						continue;
+					}
+
+					dateString = tdElements.get(3).text();
+					if (TextUtils.isEmpty(dateString)
+							|| dateString.contains("--")) {
+						continue;
+					}
+
+					if (!TextUtils.isEmpty(dateString)) {
+						Calendar calendar = Utility.stringToCalendar(
+								dateString, Utility.CALENDAR_DATE_FORMAT);
+						if (!calendar.before(today)) {
+							nameString = nameString + "*";
+						}
+					}
+
+					timeToMarketString = tdElements.get(4).text();
+					if (!TextUtils.isEmpty(timeToMarketString)) {
+						Calendar calendar = Utility.stringToCalendar(
+								timeToMarketString,
+								Utility.CALENDAR_DATE_FORMAT);
+						if (calendar.before(today)) {
+							break;
+						}
+					}
+
+					priceString = tdElements.get(7).text();
+					if (TextUtils.isEmpty(priceString)) {
+						priceString = "0";
+					}
+
+					peString = tdElements.get(8).text();
+					if (TextUtils.isEmpty(peString)) {
+						peString = "0";
+					}
+
+					ipo.setCode(codeString);
+					ipo.setName(nameString);
+					ipo.setDate(dateString);
+					ipo.setTimeToMarket(timeToMarketString);
+					ipo.setPrice(Double.valueOf(priceString));
+					ipo.setPE(Double.valueOf(peString));
+
+					if (bulkInsert) {
+						ipo.setCreated(Utility.getCurrentDateTimeString());
+						contentValuesList.add(ipo.getContentValues());
+					} else {
+						if (!mStockDatabaseManager.isIPOExist(ipo)) {
+							ipo.setCreated(Utility.getCurrentDateTimeString());
+							mStockDatabaseManager.insertIPO(ipo);
+						} else {
+							ipo.setModified(Utility.getCurrentDateTimeString());
+							mStockDatabaseManager.updateIPO(ipo,
+									ipo.getContentValues());
+						}
+					}
+				}
+			}
+
+			if (bulkInsert) {
+				if (contentValuesList.size() > 0) {
+					ContentValues[] contentValuesArray = new ContentValues[contentValuesList
+							.size()];
+					contentValuesArray = (ContentValues[]) contentValuesList
+							.toArray(contentValuesArray);
+					mStockDatabaseManager.bulkInsertIPO(contentValuesArray);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		stopWatch.stop();
+		Log.d(TAG, "handleResponseIPO:" + contentValuesList.size() + " "
 				+ stopWatch.getInterval() + "s");
 	}
 }

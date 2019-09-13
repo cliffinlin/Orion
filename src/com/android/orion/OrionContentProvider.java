@@ -38,6 +38,9 @@ public class OrionContentProvider extends ContentProvider {
 	private static final int SHARE_BONUS = 600;
 	private static final int SHARE_BONUS_ID = 601;
 
+	private static final int IPO = 700;
+	private static final int IPO_ID = 701;
+
 	private static final UriMatcher mUriMatcher = new UriMatcher(
 			UriMatcher.NO_MATCH);
 
@@ -46,27 +49,37 @@ public class OrionContentProvider extends ContentProvider {
 				DatabaseContract.Setting.TABLE_NAME, SETTING);
 		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
 				DatabaseContract.Setting.TABLE_NAME + "/#", SETTING_ID);
+
 		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
 				DatabaseContract.Stock.TABLE_NAME, STOCK);
 		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
 				DatabaseContract.Stock.TABLE_NAME + "/#", STOCK_ID);
+
 		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
 				DatabaseContract.StockData.TABLE_NAME, STOCK_DATA);
 		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
 				DatabaseContract.StockData.TABLE_NAME + "/#", STOCK_DATA_ID);
+
 		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
 				DatabaseContract.StockDeal.TABLE_NAME, STOCK_DEAL);
 		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
 				DatabaseContract.StockDeal.TABLE_NAME + "/#", STOCK_DEAL_ID);
+
 		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
 				DatabaseContract.FinancialData.TABLE_NAME, FINANCIAL_DATA);
 		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
 				DatabaseContract.FinancialData.TABLE_NAME + "/#",
 				FINANCIAL_DATA_ID);
+
 		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
 				DatabaseContract.ShareBonus.TABLE_NAME, SHARE_BONUS);
 		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
 				DatabaseContract.ShareBonus.TABLE_NAME + "/#", SHARE_BONUS_ID);
+
+		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
+				DatabaseContract.IPO.TABLE_NAME, IPO);
+		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
+				DatabaseContract.IPO.TABLE_NAME + "/#", IPO_ID);
 	}
 
 	ContentResolver mContentResolver = null;
@@ -100,35 +113,47 @@ public class OrionContentProvider extends ContentProvider {
 		case SETTING_ID:
 			type = DatabaseContract.Setting.CONTENT_ITEM_TYPE;
 			break;
+
 		case STOCK:
 			type = DatabaseContract.Stock.CONTENT_TYPE;
 			break;
 		case STOCK_ID:
 			type = DatabaseContract.Stock.CONTENT_ITEM_TYPE;
 			break;
+
 		case STOCK_DATA:
 			type = DatabaseContract.StockData.CONTENT_TYPE;
 			break;
 		case STOCK_DATA_ID:
 			type = DatabaseContract.StockData.CONTENT_ITEM_TYPE;
 			break;
+
 		case STOCK_DEAL:
 			type = DatabaseContract.StockDeal.CONTENT_TYPE;
 			break;
 		case STOCK_DEAL_ID:
 			type = DatabaseContract.StockDeal.CONTENT_ITEM_TYPE;
 			break;
+
 		case FINANCIAL_DATA:
 			type = DatabaseContract.FinancialData.CONTENT_TYPE;
 			break;
 		case FINANCIAL_DATA_ID:
 			type = DatabaseContract.FinancialData.CONTENT_ITEM_TYPE;
 			break;
+
 		case SHARE_BONUS:
 			type = DatabaseContract.ShareBonus.CONTENT_TYPE;
 			break;
 		case SHARE_BONUS_ID:
 			type = DatabaseContract.ShareBonus.CONTENT_ITEM_TYPE;
+			break;
+
+		case IPO:
+			type = DatabaseContract.IPO.CONTENT_TYPE;
+			break;
+		case IPO_ID:
+			type = DatabaseContract.IPO.CONTENT_ITEM_TYPE;
 			break;
 		default:
 			break;
@@ -206,6 +231,15 @@ public class OrionContentProvider extends ContentProvider {
 			builder.appendWhere(BaseColumns._ID + " = "
 					+ uri.getLastPathSegment());
 			break;
+
+		case IPO:
+			builder.setTables(DatabaseContract.IPO.TABLE_NAME);
+			break;
+		case IPO_ID:
+			builder.setTables(DatabaseContract.IPO.TABLE_NAME);
+			builder.appendWhere(BaseColumns._ID + " = "
+					+ uri.getLastPathSegment());
+			break;
 		default:
 			break;
 		}
@@ -265,6 +299,10 @@ public class OrionContentProvider extends ContentProvider {
 							contentValues);
 			break;
 
+		case IPO:
+			id = mDatabaseManager.mDatabase.insert(
+					DatabaseContract.IPO.TABLE_NAME, null, contentValues);
+			break;
 		default:
 			break;
 		}
@@ -425,6 +463,20 @@ public class OrionContentProvider extends ContentProvider {
 					whereClause, selectionArgs);
 			break;
 
+		case IPO:
+			result = mDatabaseManager.mDatabase.update(
+					DatabaseContract.IPO.TABLE_NAME, values, selection,
+					selectionArgs);
+			break;
+		case IPO_ID:
+			whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
+			if (!TextUtils.isEmpty(selection)) {
+				whereClause += " AND " + whereClause;
+			}
+			result = mDatabaseManager.mDatabase.update(
+					DatabaseContract.IPO.TABLE_NAME, values, whereClause,
+					selectionArgs);
+			break;
 		default:
 			break;
 		}
@@ -546,6 +598,20 @@ public class OrionContentProvider extends ContentProvider {
 					selectionArgs);
 			break;
 
+		case IPO:
+			result = mDatabaseManager.mDatabase.delete(
+					DatabaseContract.IPO.TABLE_NAME, selection, selectionArgs);
+			break;
+
+		case IPO_ID:
+			whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
+			if (!TextUtils.isEmpty(selection)) {
+				whereClause += " AND " + whereClause;
+			}
+			result = mDatabaseManager.mDatabase
+					.delete(DatabaseContract.IPO.TABLE_NAME, whereClause,
+							selectionArgs);
+			break;
 		default:
 			break;
 		}

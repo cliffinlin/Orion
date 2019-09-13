@@ -14,6 +14,7 @@ import android.util.Log;
 
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.FinancialData;
+import com.android.orion.database.IPO;
 import com.android.orion.database.Setting;
 import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
@@ -61,6 +62,10 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 	abstract void handleResponseShareBonus(Stock stock, ShareBonus shareBonus,
 			String response);
+
+	abstract String getIPOURLString();
+
+	abstract void handleResponseIPO(IPO ipo, String response);
 
 	public StockDataProvider(Context context) {
 		super(context);
@@ -161,6 +166,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		executeType = bundle.getInt(Constants.EXTRA_EXECUTE_TYPE,
 				Constants.EXECUTE_TYPE_NONE);
 
+		downloadIPO(executeType);
+
 		stock = getStock(bundle);
 
 		if (stock != null) {
@@ -242,6 +249,26 @@ public abstract class StockDataProvider extends StockAnalyzer {
 						urlString);
 				downloader.setStock(stock);
 				downloader.setShareBonus(shareBonus);
+				mRequestQueue.add(downloader.mStringRequest);
+			}
+		}
+	}
+
+	void downloadIPO(int executeType) {
+		String urlString;
+		IPO ipo = IPO.obtain();
+
+		mStockDatabaseManager.getIPO(ipo);
+		if (ipo.getCreated().contains(Utility.getCurrentDateString())) {
+			return;
+		}
+
+		if (executeType == Constants.EXECUTE_IMMEDIATE) {
+			urlString = getIPOURLString();
+			if (addToCurrentRequests(urlString)) {
+				Log.d(TAG, "downloadIPO:" + urlString);
+				IPODownloader downloader = new IPODownloader(urlString);
+				downloader.setIPO(ipo);
 				mRequestQueue.add(downloader.mStringRequest);
 			}
 		}
@@ -791,6 +818,41 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			bundle.putInt(Constants.EXTRA_SERVICE_TYPE,
 					Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE_DATA_REALTIME);
 			bundle.putLong(Constants.EXTRA_STOCK_ID, mStock.getId());
+			sendBroadcast(Constants.ACTION_SERVICE_FINISHED, bundle);
+		}
+	}
+
+	public class IPODownloader extends VolleyStringDownloader {
+		public IPO mIPO = null;
+		public int mExecuteType = 0;
+
+		public IPODownloader() {
+			super();
+		}
+
+		public IPODownloader(String urlString) {
+			super(urlString);
+		}
+
+		public void setIPO(IPO ipo) {
+			if (mIPO == null) {
+				mIPO = IPO.obtain();
+			}
+
+			mIPO.set(ipo);
+		}
+
+		public void setExecuteType(int executeType) {
+			mExecuteType = executeType;
+		}
+
+		@Override
+		public void handleResponse(String response) {
+			removeFromCurrrentRequests(mStringRequest.getUrl());
+			handleResponseIPO(mIPO, response);
+			Bundle bundle = new Bundle();
+			bundle.putInt(Constants.EXTRA_SERVICE_TYPE,
+					Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE_DATA_REALTIME);
 			sendBroadcast(Constants.ACTION_SERVICE_FINISHED, bundle);
 		}
 	}
