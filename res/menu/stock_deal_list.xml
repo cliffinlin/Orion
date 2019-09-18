@@ -13,10 +13,21 @@
         android:title="@string/action_new">
     </item>
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_all"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="@string/action_settings">
+        android:title="@string/action_all">
     </item>
-
+    <item
+        android:id="@+id/action_buy1"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_buy1">
+    </item>
+    <item
+        android:id="@+id/action_to_buy"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_to_buy">
+    </item>
 </menu>

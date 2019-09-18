@@ -298,7 +298,7 @@ public class StockDeal extends StockBase {
 	}
 
 	public void setupNet() {
-		if ((mDeal == 0) || (mVolume == 0)) {
+		if (mDeal == 0) {
 			mNet = 0;
 			return;
 		}

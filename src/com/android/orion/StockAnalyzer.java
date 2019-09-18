@@ -22,6 +22,7 @@ import com.android.orion.database.StockDeal;
 import com.android.orion.indicator.MACD;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.StopWatch;
+import com.android.orion.utility.Utility;
 
 public class StockAnalyzer extends StockManager {
 	static final String TAG = Constants.TAG + " "
@@ -96,7 +97,7 @@ public class StockAnalyzer extends StockManager {
 			}
 
 			totalDivident += shareBonus.getDividend();
-			stock.setDividend(totalDivident);
+			stock.setDividend(Utility.Round(totalDivident,Constants.DOUBLE_FIXED_DECIMAL));
 			stock.setupDividendYield();
 
 			prevYearString = yearString;

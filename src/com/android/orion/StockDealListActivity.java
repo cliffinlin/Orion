@@ -43,6 +43,10 @@ public class StockDealListActivity extends ListActivity implements
 
 	static final int LOADER_ID_DEAL_LIST = 0;
 
+	static final int FILTER_TYPE_NONE = 0;
+	static final int FILTER_TYPE_BUY1 = 1;
+	static final int FILTER_TYPE_TO_BUY = 2;
+
 	static final int MESSAGE_DELETE_DEAL = 0;
 	static final int MESSAGE_DELETE_DEAL_LIST = 1;
 	static final int MESSAGE_VIEW_STOCK_CHAT = 4;
@@ -82,6 +86,8 @@ public class StockDealListActivity extends ListActivity implements
 	StockDeal mDeal = new StockDeal();
 	List<StockDeal> mStockDealList = new ArrayList<StockDeal>();
 	Stock mStock = new Stock();
+
+	int mFilterType = FILTER_TYPE_NONE;
 
 	Handler mHandler = new Handler(Looper.getMainLooper()) {
 
@@ -247,6 +253,21 @@ public class StockDealListActivity extends ListActivity implements
 				mIntent.putExtras(mBundle);
 			}
 			startActivityForResult(mIntent, REQUEST_CODE_DEAL_INSERT);
+			return true;
+
+		case R.id.action_all:
+			mFilterType = FILTER_TYPE_NONE;
+			restartLoader();
+			return true;
+
+		case R.id.action_buy1:
+			mFilterType = FILTER_TYPE_BUY1;
+			restartLoader();
+			return true;
+
+		case R.id.action_to_buy:
+			mFilterType = FILTER_TYPE_TO_BUY;
+			restartLoader();
 			return true;
 
 		default:
@@ -511,6 +532,19 @@ public class StockDealListActivity extends ListActivity implements
 				selection = DatabaseContract.COLUMN_SE + " = " + "\'" + se
 						+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = "
 						+ "\'" + code + "\'";
+			} else {
+				switch (mFilterType) {
+				case FILTER_TYPE_BUY1:
+					break;
+
+				case FILTER_TYPE_TO_BUY:
+					selection = DatabaseContract.COLUMN_VOLUME + " = " + 0;
+					break;
+
+				default:
+					selection = null;
+					break;
+				}
 			}
 
 			loader = new CursorLoader(this,
