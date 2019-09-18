@@ -77,7 +77,7 @@ public class IPOListActivity extends ListActivity implements
 
 		setContentView(R.layout.activity_ipo_list);
 
-		mSortOrder = getSetting(Setting.KEY_SORT_ORDER_STOCK_LIST,
+		mSortOrder = getSetting(Setting.KEY_SORT_ORDER_IPO_LIST,
 				mSortOrderDefault);
 
 		initHeader();
@@ -189,7 +189,7 @@ public class IPOListActivity extends ListActivity implements
 
 		mSortOrder = mSortOrderColumn + mSortOrderDirection;
 
-		saveSetting(Setting.KEY_SORT_ORDER_STOCK_LIST, mSortOrder);
+		saveSetting(Setting.KEY_SORT_ORDER_IPO_LIST, mSortOrder);
 
 		restartLoader();
 	}

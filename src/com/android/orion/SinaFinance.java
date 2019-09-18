@@ -976,7 +976,8 @@ public class SinaFinance extends StockDataProvider {
 
 		boolean bulkInsert = false;
 
-		Calendar today = Calendar.getInstance();
+		Calendar today = Utility.stringToCalendar(
+				Utility.getCurrentDateString(), Utility.CALENDAR_DATE_FORMAT);
 
 		String codeString = "";
 		String nameString = "";
