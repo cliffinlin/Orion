@@ -65,6 +65,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 	TextView mTextViewPB = null;
 	TextView mTextViewDividend = null;
 	TextView mTextViewYield = null;
+	TextView mTextViewDelta = null;
 
 	ListView mLeftListView = null;
 	ListView mRightListView = null;
@@ -244,6 +245,9 @@ public class StockFavoriteListActivity extends ListActivity implements
 		case R.id.yield:
 			mSortOrderColumn = DatabaseContract.COLUMN_YIELD;
 			break;
+		case R.id.delta:
+			mSortOrderColumn = DatabaseContract.COLUMN_DELTA;
+			break;
 		default:
 			mSortOrderColumn = DatabaseContract.COLUMN_CODE;
 			break;
@@ -289,6 +293,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewPB, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewDividend, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewYield, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewDelta, mHeaderTextDefaultColor);
 	}
 
 	void setVisibility(String key, TextView textView) {
@@ -392,6 +397,11 @@ public class StockFavoriteListActivity extends ListActivity implements
 			mTextViewYield.setOnClickListener(this);
 		}
 
+		mTextViewDelta = (TextView) findViewById(R.id.delta);
+		if (mTextViewDelta != null) {
+			mTextViewDelta.setOnClickListener(this);
+		}
+
 		if (mSortOrder.contains(DatabaseContract.COLUMN_CODE)) {
 			setHeaderTextColor(mTextViewNameCode, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PRICE)) {
@@ -422,6 +432,8 @@ public class StockFavoriteListActivity extends ListActivity implements
 			setHeaderTextColor(mTextViewDividend, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_YIELD)) {
 			setHeaderTextColor(mTextViewYield, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_DELTA)) {
+			setHeaderTextColor(mTextViewDelta, mHeaderTextHighlightColor);
 		} else {
 		}
 	}
@@ -438,11 +450,11 @@ public class StockFavoriteListActivity extends ListActivity implements
 				DatabaseContract.COLUMN_WEEK, DatabaseContract.COLUMN_MONTH,
 				DatabaseContract.COLUMN_HOLD, DatabaseContract.COLUMN_PE,
 				DatabaseContract.COLUMN_PB, DatabaseContract.COLUMN_DIVIDEND,
-				DatabaseContract.COLUMN_YIELD };
+				DatabaseContract.COLUMN_YIELD, DatabaseContract.COLUMN_DELTA };
 		int[] mRightTo = new int[] { R.id.price, R.id.net, R.id.type_5min,
 				R.id.type_15min, R.id.type_30min, R.id.type_60min,
 				R.id.type_day, R.id.type_week, R.id.type_month, R.id.hold,
-				R.id.pe, R.id.pb, R.id.dividend, R.id.yield };
+				R.id.pe, R.id.pb, R.id.dividend, R.id.yield, R.id.delta };
 
 		mLeftListView = (ListView) findViewById(R.id.left_listview);
 		mLeftAdapter = new SimpleCursorAdapter(this,

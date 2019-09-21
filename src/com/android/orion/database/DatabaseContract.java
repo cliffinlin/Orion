@@ -94,13 +94,7 @@ public final class DatabaseContract {
 
 	public static final String COLUMN_TIME_TO_MARKET = "time_to_market";
 
-	public static final String COLUMN_SE_X = COLUMN_SE + "_" + "x";
-	public static final String COLUMN_CODE_X = COLUMN_CODE + "_" + "x";
-	public static final String COLUMN_NAME_X = COLUMN_NAME + "_" + "x";
-
-	public static final String COLUMN_SE_Y = COLUMN_SE + "_" + "y";
-	public static final String COLUMN_CODE_Y = COLUMN_CODE + "_" + "y";
-	public static final String COLUMN_NAME_Y = COLUMN_NAME + "_" + "y";
+	public static final String COLUMN_DELTA = "delta";
 
 	private static final String DROP_TABLE_IF_EXISTS = "DROP TABLE IF EXISTS ";
 
@@ -162,7 +156,7 @@ public final class DatabaseContract {
 				COLUMN_DAY, COLUMN_WEEK, COLUMN_MONTH, COLUMN_QUARTER,
 				COLUMN_YEAR, COLUMN_OPERATION, COLUMN_HOLD, COLUMN_COST,
 				COLUMN_PROFIT, COLUMN_PE, COLUMN_PB, COLUMN_DIVIDEND,
-				COLUMN_YIELD, COLUMN_CREATED, COLUMN_MODIFIED };
+				COLUMN_YIELD, COLUMN_DELTA, COLUMN_CREATED, COLUMN_MODIFIED };
 
 		public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
 				+ " (" + _ID + " INTEGER PRIMARY KEY," + COLUMN_CLASSES
@@ -186,8 +180,9 @@ public final class DatabaseContract {
 				+ COMMA_SEP + COLUMN_PROFIT + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_PE + DOUBLE_TYPE + COMMA_SEP + COLUMN_PB + DOUBLE_TYPE
 				+ COMMA_SEP + COLUMN_DIVIDEND + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_YIELD + DOUBLE_TYPE + COMMA_SEP + COLUMN_CREATED
-				+ TEXT_TYPE + COMMA_SEP + COLUMN_MODIFIED + TEXT_TYPE + " )";
+				+ COLUMN_YIELD + DOUBLE_TYPE + COMMA_SEP + COLUMN_DELTA
+				+ DOUBLE_TYPE + COMMA_SEP + COLUMN_CREATED + TEXT_TYPE
+				+ COMMA_SEP + COLUMN_MODIFIED + TEXT_TYPE + " )";
 
 		public static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
 				+ TABLE_NAME;

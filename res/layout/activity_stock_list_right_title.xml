@@ -130,4 +130,12 @@
         android:text="@string/yield"
         android:textSize="18sp" />
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/delta"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/delta"
+        android:textSize="18sp" />
+</LinearLayout>

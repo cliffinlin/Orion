@@ -38,6 +38,7 @@ public class Stock extends StockBase {
 	private double mProfit;
 	private double mPE;
 	private double mPB;
+	private double mDelta;
 
 	public ArrayList<StockData> mStockDataListMin1 = new ArrayList<StockData>();
 	public ArrayList<StockData> mStockDataListMin5 = new ArrayList<StockData>();
@@ -122,6 +123,7 @@ public class Stock extends StockBase {
 		mProfit = 0;
 		mPE = 0;
 		mPB = 0;
+		mDelta = 0;
 	}
 
 	@Override
@@ -187,13 +189,13 @@ public class Stock extends StockBase {
 		} else if (period.equals(Constants.PERIOD_YEAR)) {
 			contentValues.put(DatabaseContract.COLUMN_YEAR, mActionYear);
 		}
-		
+
 		contentValues.put(DatabaseContract.COLUMN_PB, mPB);
 		contentValues.put(DatabaseContract.COLUMN_PE, mPE);
 
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND, mDividend);
-		contentValues.put(DatabaseContract.COLUMN_YIELD,
-				mYield);
+		contentValues.put(DatabaseContract.COLUMN_YIELD, mYield);
+		contentValues.put(DatabaseContract.COLUMN_DELTA, mDelta);
 
 		return contentValues;
 	}
@@ -204,8 +206,8 @@ public class Stock extends StockBase {
 		super.getContentValues(contentValues);
 
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND, mDividend);
-		contentValues.put(DatabaseContract.COLUMN_YIELD,
-				mYield);
+		contentValues.put(DatabaseContract.COLUMN_YIELD, mYield);
+		contentValues.put(DatabaseContract.COLUMN_DELTA, mDelta);
 
 		return contentValues;
 	}
@@ -247,6 +249,7 @@ public class Stock extends StockBase {
 		setProfit(stock.mProfit);
 		setPE(stock.mPE);
 		setPB(stock.mPB);
+		setDelta(stock.mDelta);
 	}
 
 	@Override
@@ -287,6 +290,7 @@ public class Stock extends StockBase {
 		setProfit(cursor);
 		setPE(cursor);
 		setPB(cursor);
+		setDelta(cursor);
 	}
 
 	String getClases() {
@@ -765,6 +769,23 @@ public class Stock extends StockBase {
 				.getColumnIndex(DatabaseContract.COLUMN_PB)));
 	}
 
+	public double getDelta() {
+		return mDelta;
+	}
+
+	public void setDelta(double delta) {
+		mDelta = delta;
+	}
+
+	void setDelta(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setDelta(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_DELTA)));
+	}
+
 	public String getAction(String period) {
 		String action = "";
 
@@ -821,14 +842,15 @@ public class Stock extends StockBase {
 		if ((value == 0) || (value < 0)) {
 			return;
 		}
-		
+
 		if (mPrice == 0) {
 			return;
 		}
 
-		mPE = Utility.Round(100.0 * value / mPrice, Constants.DOUBLE_FIXED_DECIMAL);
+		mPE = Utility.Round(100.0 * value / mPrice,
+				Constants.DOUBLE_FIXED_DECIMAL);
 	}
-	
+
 	public void setupPB(double value) {
 		if (value == 0) {
 			return;
@@ -836,7 +858,7 @@ public class Stock extends StockBase {
 
 		mPB = Utility.Round(mPrice / value, Constants.DOUBLE_FIXED_DECIMAL);
 	}
-	
+
 	public void setupCost(double value) {
 		if (mHold == 0) {
 			return;
@@ -852,5 +874,7 @@ public class Stock extends StockBase {
 
 		mYield = Utility.Round(100.0 * mDividend / 10.0 / mPrice,
 				Constants.DOUBLE_FIXED_DECIMAL);
+
+		mDelta = mPE - mYield;
 	}
 }
