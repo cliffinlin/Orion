@@ -44,8 +44,7 @@ public class StockDealListActivity extends ListActivity implements
 	static final int LOADER_ID_DEAL_LIST = 0;
 
 	static final int FILTER_TYPE_NONE = 0;
-	static final int FILTER_TYPE_BUY1 = 1;
-	static final int FILTER_TYPE_TO_BUY = 2;
+	static final int FILTER_TYPE_TO_BUY = 1;
 
 	static final int MESSAGE_DELETE_DEAL = 0;
 	static final int MESSAGE_DELETE_DEAL_LIST = 1;
@@ -257,11 +256,6 @@ public class StockDealListActivity extends ListActivity implements
 
 		case R.id.action_all:
 			mFilterType = FILTER_TYPE_NONE;
-			restartLoader();
-			return true;
-
-		case R.id.action_buy1:
-			mFilterType = FILTER_TYPE_BUY1;
 			restartLoader();
 			return true;
 
@@ -534,9 +528,6 @@ public class StockDealListActivity extends ListActivity implements
 						+ "\'" + code + "\'";
 			} else {
 				switch (mFilterType) {
-				case FILTER_TYPE_BUY1:
-					break;
-
 				case FILTER_TYPE_TO_BUY:
 					selection = DatabaseContract.COLUMN_VOLUME + " = " + 0;
 					break;
