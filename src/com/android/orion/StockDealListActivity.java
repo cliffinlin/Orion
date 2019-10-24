@@ -57,8 +57,8 @@ public class StockDealListActivity extends ListActivity implements
 	static final int mHeaderTextDefaultColor = Color.BLACK;
 	static final int mHeaderTextHighlightColor = Color.RED;
 
-	String mSortOrderColumn = DatabaseContract.COLUMN_CODE;
-	String mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_ASC;
+	String mSortOrderColumn = DatabaseContract.COLUMN_NET;
+	String mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_DESC;
 	String mSortOrderDefault = mSortOrderColumn + mSortOrderDirection;
 	String mSortOrder = mSortOrderDefault;
 
@@ -86,7 +86,7 @@ public class StockDealListActivity extends ListActivity implements
 	List<StockDeal> mStockDealList = new ArrayList<StockDeal>();
 	Stock mStock = new Stock();
 
-	int mFilterType = FILTER_TYPE_NONE;
+	int mFilterType = FILTER_TYPE_TO_BUY;
 
 	Handler mHandler = new Handler(Looper.getMainLooper()) {
 
@@ -254,13 +254,13 @@ public class StockDealListActivity extends ListActivity implements
 			startActivityForResult(mIntent, REQUEST_CODE_DEAL_INSERT);
 			return true;
 
-		case R.id.action_all:
-			mFilterType = FILTER_TYPE_NONE;
-			restartLoader();
-			return true;
-
 		case R.id.action_to_buy:
 			mFilterType = FILTER_TYPE_TO_BUY;
+			restartLoader();
+			return true;
+			
+		case R.id.action_all:
+			mFilterType = FILTER_TYPE_NONE;
 			restartLoader();
 			return true;
 
