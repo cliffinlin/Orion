@@ -113,6 +113,8 @@
     <string name="action_day">Day</string>
     <string name="action_week">W</string>
     <string name="action_month">M</string>
+    <string name="statistics">Statistics</string>    
+    <string name="statistics_chart">Statistics Chart</string>     
     <string name="stock_data_chart">Stock Data Chart</string>
     <string name="stock_name_code">Name</string>
     <string name="stock_code">Stock Code</string>

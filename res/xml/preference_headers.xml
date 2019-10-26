@@ -30,6 +30,13 @@
             android:targetPackage="com.android.orion" />
     </header>
     <header
+        android:icon="@drawable/ic_list"
+        android:title="@string/statistics" >
+        <intent
+            android:targetClass="com.android.orion.StatisticsChartListActivity"
+            android:targetPackage="com.android.orion" />
+    </header>    
+    <header
         android:icon="@drawable/ic_about"
         android:title="@string/about" >
         <intent

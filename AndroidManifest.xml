@@ -53,6 +53,10 @@
             android:label="@string/stock_data_chart" >
         </activity>
         <activity
+            android:name="com.android.orion.StatisticsChartListActivity"
+            android:label="@string/statistics_chart" >
+        </activity>
+        <activity
             android:name="com.android.orion.FinancialDataChartListActivity"
             android:label="@string/financial_data_chart" >
         </activity>
