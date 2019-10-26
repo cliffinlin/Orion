@@ -40,6 +40,9 @@ public class StatisticsChart {
 	ArrayList<Entry> mBookValuePerShareList = null;
 	ArrayList<Entry> mEarningsPerShareList = null;
 	ArrayList<BarEntry> mDividendEntryList = null;
+	ArrayList<BarEntry> mPEEntryList = null;
+	ArrayList<BarEntry> mYieldEntryList = null;
+	ArrayList<BarEntry> mDeltaEntryList = null;
 
 	ArrayList<Entry> mDIFEntryList = null;
 	ArrayList<Entry> mDEAEntryList = null;
@@ -97,6 +100,18 @@ public class StatisticsChart {
 			mDividendEntryList = new ArrayList<BarEntry>();
 		}
 
+		if (mPEEntryList == null) {
+			mPEEntryList = new ArrayList<BarEntry>();
+		}
+
+		if (mYieldEntryList == null) {
+			mYieldEntryList = new ArrayList<BarEntry>();
+		}
+
+		if (mDeltaEntryList == null) {
+			mDeltaEntryList = new ArrayList<BarEntry>();
+		}
+		
 		if (mAverage5EntryList == null) {
 			mAverage5EntryList = new ArrayList<Entry>();
 		}
@@ -237,10 +252,38 @@ public class StatisticsChart {
 		shareBonusDataSet.setDecreasingColor(Color.rgb(50, 128, 50));
 		shareBonusDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		barData.addDataSet(shareBonusDataSet);
+		
+		BarData peData = new BarData(mXValues);
+		BarDataSet peDataSet = new BarDataSet(mPEEntryList, "pe");
+		peDataSet.setBarSpacePercent(40f);
+		peDataSet.setIncreasingColor(Color.rgb(255, 50, 50));
+		peDataSet.setDecreasingColor(Color.rgb(50, 128, 50));
+		peDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+		peData.addDataSet(peDataSet);
+		
+		BarData yieldData = new BarData(mXValues);
+		BarDataSet yieldDataSet = new BarDataSet(mYieldEntryList, "yield");
+		yieldDataSet.setBarSpacePercent(40f);
+		yieldDataSet.setIncreasingColor(Color.rgb(255, 50, 50));
+		yieldDataSet.setDecreasingColor(Color.rgb(50, 128, 50));
+		yieldDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+		yieldData.addDataSet(yieldDataSet);
+		
+		BarData deltaData = new BarData(mXValues);
+		BarDataSet deltaDataSet = new BarDataSet(mPEEntryList, "delta");
+		deltaDataSet.setBarSpacePercent(40f);
+		deltaDataSet.setIncreasingColor(Color.rgb(255, 50, 50));
+		deltaDataSet.setDecreasingColor(Color.rgb(50, 128, 50));
+		deltaDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+		deltaData.addDataSet(deltaDataSet);
 
 		mCombinedDataMain.setData(candleData);
 		mCombinedDataMain.setData(lineData);
 		mCombinedDataMain.setData(barData);
+		
+		mCombinedDataMain.setData(peData);
+		mCombinedDataMain.setData(yieldData);
+		mCombinedDataMain.setData(deltaData);
 	}
 
 	void setSubChartData() {
@@ -390,6 +433,10 @@ public class StatisticsChart {
 		mBookValuePerShareList.clear();
 		mEarningsPerShareList.clear();
 		mDividendEntryList.clear();
+		mPEEntryList.clear();
+		mYieldEntryList.clear();
+		mDeltaEntryList.clear();
+		
 		mAverageEntryList.clear();
 		mAverage5EntryList.clear();
 		mAverage10EntryList.clear();

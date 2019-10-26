@@ -129,7 +129,7 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 
 		initListView();
 
-		mStock.setId(getIntent().getLongExtra(Constants.EXTRA_STOCK_ID, 0));
+		mStock.setId(getIntent().getLongExtra(Constants.EXTRA_STOCK_ID, 2));
 
 		mSortOrder = getIntent().getStringExtra(
 				Setting.KEY_SORT_ORDER_STOCK_LIST);
@@ -139,6 +139,8 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 				new IntentFilter(Constants.ACTION_SERVICE_FINISHED));
 
 		initLoader();
+
+		updateTitle();
 	}
 
 	@Override
@@ -247,9 +249,9 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 		id = loader.getId();
 
 		if (id == LOADER_ID_STOCK_LIST) {
-			swapStockCursor(cursor);
+			swapStockCursor(mStockDataChartList.get(4), cursor);
 		} else {
-			swapStockDataCursor(mStockDataChartList.get(id), cursor);
+//			swapStockDataCursor(mStockDataChartList.get(id), cursor);
 		}
 	}
 
@@ -264,9 +266,9 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 		id = loader.getId();
 
 		if (id == LOADER_ID_STOCK_LIST) {
-			swapStockCursor(null);
+			swapStockCursor(mStockDataChartList.get(4), null);
 		} else {
-			swapStockDataCursor(mStockDataChartList.get(id), null);
+//			swapStockDataCursor(mStockDataChartList.get(id), null);
 		}
 	}
 
@@ -306,16 +308,16 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 
 	void initLoader() {
 		mLoaderManager.initLoader(LOADER_ID_STOCK_LIST, null, this);
-//		for (int i = 0; i < Constants.PERIODS.length; i++) {
-//			mLoaderManager.initLoader(i, null, this);
-//		}
+		for (int i = 0; i < Constants.PERIODS.length; i++) {
+			mLoaderManager.initLoader(i, null, this);
+		}
 	}
 
 	void restartLoader() {
 		mLoaderManager.restartLoader(LOADER_ID_STOCK_LIST, null, this);
-//		for (int i = 0; i < Constants.PERIODS.length; i++) {
-//			mLoaderManager.restartLoader(i, null, this);
-//		}
+		for (int i = 0; i < Constants.PERIODS.length; i++) {
+			mLoaderManager.restartLoader(i, null, this);
+		}
 	}
 
 	CursorLoader getStockCursorLoader() {
@@ -376,11 +378,21 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 		}
 	}
 
-	public void swapStockCursor(Cursor cursor) {
+	void updateTitle() {
+		if (mStock != null) {
+			setTitle(mStock.getName());
+		}
+	}
+
+	public void swapStockCursor(StockDataChart stockDataChart, Cursor cursor) {
+		int index = 0;
+		
 		if (mStockList == null) {
 			return;
 		}
-
+		
+		stockDataChart.clear();
+		
 		mStockList.clear();
 
 		try {
@@ -388,6 +400,12 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 				while (cursor.moveToNext()) {
 					Stock stock = Stock.obtain();
 					stock.set(cursor);
+					
+					index = stockDataChart.mXValues.size();
+					stockDataChart.mXValues.add(stock.getName());
+					
+					BarEntry shareBonusEntry = new BarEntry((float)stock.getDelta(), index);
+					stockDataChart.mDividendEntryList.add(shareBonusEntry);
 
 					if (stock != null) {
 						if (mStock.getId() == stock.getId()) {
@@ -408,7 +426,12 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 		} finally {
 			mStockDatabaseManager.closeCursor(cursor);
 		}
+		
+		stockDataChart.setMainChartData();
+		stockDataChart.setSubChartData();
 
+		mStockDataChartArrayAdapter.notifyDataSetChanged();
+		
 		if (mMainHandler != null) {
 			mMainHandler.sendEmptyMessage(0);
 		}
@@ -574,6 +597,8 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 		} finally {
 			mStockDatabaseManager.closeCursor(cursor);
 		}
+
+		updateTitle();
 
 		mStockDatabaseManager.getStockDealList(mStock, mStockDealList);
 
@@ -816,6 +841,7 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 			super.handleMessage(msg);
 
 			StatisticsChartListActivity activity = mActivity.get();
+			activity.updateTitle();
 			activity.updateMenuAction();
 		}
 	}
