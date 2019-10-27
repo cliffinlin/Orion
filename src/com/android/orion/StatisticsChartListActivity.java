@@ -69,11 +69,11 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 	String mSortOrder = null;
 
 	ListView mListView = null;
-	StockDataChartArrayAdapter mStockDataChartArrayAdapter = null;
-	ArrayList<StockDataChartItem> mStockDataChartItemList = null;
-	ArrayList<StockDataChartItemMain> mStockDataChartItemMainList = null;
-	ArrayList<StockDataChartItemSub> mStockDataChartItemSubList = null;
-	ArrayList<StockDataChart> mStockDataChartList = null;
+	StatisticsChartArrayAdapter mStatisticsChartArrayAdapter = null;
+	ArrayList<StatisticsChartItem> mStatisticsChartItemList = null;
+	ArrayList<StatisticsChartItemMain> mStatisticsChartItemMainList = null;
+	ArrayList<StatisticsChartItemSub> mStatisticsChartItemSubList = null;
+	ArrayList<StatisticsChart> mStatisticsChartList = null;
 
 	Handler mHandler = new Handler(Looper.getMainLooper()) {
 
@@ -205,12 +205,12 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 	protected void onResume() {
 		super.onResume();
 
-		mStockDataChartItemList.clear();
+		mStatisticsChartItemList.clear();
 
 		for (int i = 0; i < Constants.PERIODS.length; i++) {
 			if (Preferences.readBoolean(this, Constants.PERIODS[i], false)) {
-				mStockDataChartItemList.add(mStockDataChartItemMainList.get(i));
-				mStockDataChartItemList.add(mStockDataChartItemSubList.get(i));
+				mStatisticsChartItemList.add(mStatisticsChartItemMainList.get(i));
+				mStatisticsChartItemList.add(mStatisticsChartItemSubList.get(i));
 			}
 		}
 
@@ -249,9 +249,9 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 		id = loader.getId();
 
 		if (id == LOADER_ID_STOCK_LIST) {
-			swapStockCursor(mStockDataChartList.get(4), cursor);
+			swapStockCursor(mStatisticsChartList.get(4), cursor);
 		} else {
-//			swapStockDataCursor(mStockDataChartList.get(id), cursor);
+//			swapStockDataCursor(mStatisticsChartList.get(id), cursor);
 		}
 	}
 
@@ -266,44 +266,44 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 		id = loader.getId();
 
 		if (id == LOADER_ID_STOCK_LIST) {
-			swapStockCursor(mStockDataChartList.get(4), null);
+			swapStockCursor(mStatisticsChartList.get(4), null);
 		} else {
-//			swapStockDataCursor(mStockDataChartList.get(id), null);
+//			swapStockDataCursor(mStatisticsChartList.get(id), null);
 		}
 	}
 
 	void initListView() {
 		mListView = (ListView) findViewById(R.id.listView);
 
-		if (mStockDataChartList == null) {
-			mStockDataChartList = new ArrayList<StockDataChart>();
+		if (mStatisticsChartList == null) {
+			mStatisticsChartList = new ArrayList<StatisticsChart>();
 		}
 
-		if (mStockDataChartItemList == null) {
-			mStockDataChartItemList = new ArrayList<StockDataChartItem>();
+		if (mStatisticsChartItemList == null) {
+			mStatisticsChartItemList = new ArrayList<StatisticsChartItem>();
 		}
 
-		if (mStockDataChartItemMainList == null) {
-			mStockDataChartItemMainList = new ArrayList<StockDataChartItemMain>();
+		if (mStatisticsChartItemMainList == null) {
+			mStatisticsChartItemMainList = new ArrayList<StatisticsChartItemMain>();
 		}
 
-		if (mStockDataChartItemSubList == null) {
-			mStockDataChartItemSubList = new ArrayList<StockDataChartItemSub>();
+		if (mStatisticsChartItemSubList == null) {
+			mStatisticsChartItemSubList = new ArrayList<StatisticsChartItemSub>();
 		}
 
 		for (int i = 0; i < Constants.PERIODS.length; i++) {
-			mStockDataChartList.add(new StockDataChart(Constants.PERIODS[i]));
-			mStockDataChartItemMainList.add(new StockDataChartItemMain(
-					mStockDataChartList.get(i)));
-			mStockDataChartItemSubList.add(new StockDataChartItemSub(
-					mStockDataChartList.get(i)));
-			mStockDataChartItemList.add(mStockDataChartItemMainList.get(i));
-			mStockDataChartItemList.add(mStockDataChartItemSubList.get(i));
+			mStatisticsChartList.add(new StatisticsChart(Constants.PERIODS[i]));
+			mStatisticsChartItemMainList.add(new StatisticsChartItemMain(
+					mStatisticsChartList.get(i)));
+			mStatisticsChartItemSubList.add(new StatisticsChartItemSub(
+					mStatisticsChartList.get(i)));
+			mStatisticsChartItemList.add(mStatisticsChartItemMainList.get(i));
+			mStatisticsChartItemList.add(mStatisticsChartItemSubList.get(i));
 		}
 
-		mStockDataChartArrayAdapter = new StockDataChartArrayAdapter(this,
-				mStockDataChartItemList);
-		mListView.setAdapter(mStockDataChartArrayAdapter);
+		mStatisticsChartArrayAdapter = new StatisticsChartArrayAdapter(this,
+				mStatisticsChartItemList);
+		mListView.setAdapter(mStatisticsChartArrayAdapter);
 	}
 
 	void initLoader() {
@@ -384,7 +384,7 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 		}
 	}
 
-	public void swapStockCursor(StockDataChart stockDataChart, Cursor cursor) {
+	public void swapStockCursor(StatisticsChart stockDataChart, Cursor cursor) {
 		int index = 0;
 		
 		if (mStockList == null) {
@@ -403,10 +403,16 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 					
 					index = stockDataChart.mXValues.size();
 					stockDataChart.mXValues.add(stock.getName());
+			
+					BarEntry peEntry = new BarEntry((float)stock.getPE(), index);
+					stockDataChart.mPEEntryList.add(peEntry);
 					
-					BarEntry shareBonusEntry = new BarEntry((float)stock.getDelta(), index);
-					stockDataChart.mDividendEntryList.add(shareBonusEntry);
-
+					Entry yieldEntry = new BarEntry((float)stock.getYield(), index);
+					stockDataChart.mYieldEntryList.add(yieldEntry);
+					
+					Entry deltaEntry = new BarEntry((float)stock.getDelta(), index);
+					stockDataChart.mDeltaEntryList.add(deltaEntry);
+					
 					if (stock != null) {
 						if (mStock.getId() == stock.getId()) {
 							mStock.set(cursor);
@@ -430,14 +436,14 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 		stockDataChart.setMainChartData();
 		stockDataChart.setSubChartData();
 
-		mStockDataChartArrayAdapter.notifyDataSetChanged();
+		mStatisticsChartArrayAdapter.notifyDataSetChanged();
 		
 		if (mMainHandler != null) {
 			mMainHandler.sendEmptyMessage(0);
 		}
 	}
 
-	public void swapStockDataCursor(StockDataChart stockDataChart, Cursor cursor) {
+	public void swapStockDataCursor(StatisticsChart stockDataChart, Cursor cursor) {
 		int index = 0;
 		float bookValuePerShare = 0;
 		float earningsPerShare = 0;
@@ -607,7 +613,7 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 		stockDataChart.setMainChartData();
 		stockDataChart.setSubChartData();
 
-		mStockDataChartArrayAdapter.notifyDataSetChanged();
+		mStatisticsChartArrayAdapter.notifyDataSetChanged();
 	}
 
 	Comparator<FinancialData> comparator = new Comparator<FinancialData>() {
@@ -846,19 +852,19 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 		}
 	}
 
-	class StockDataChartItem {
+	class StatisticsChartItem {
 		int mItemViewType;
 		int mResource;
-		StockDataChart mStockDataChart;
+		StatisticsChart mStatisticsChart;
 
-		public StockDataChartItem() {
+		public StatisticsChartItem() {
 		}
 
-		public StockDataChartItem(int itemViewType, int resource,
-				StockDataChart stockDataChart) {
+		public StatisticsChartItem(int itemViewType, int resource,
+				StatisticsChart stockDataChart) {
 			mItemViewType = itemViewType;
 			mResource = resource;
-			mStockDataChart = stockDataChart;
+			mStatisticsChart = stockDataChart;
 		}
 
 		public int getItemViewType() {
@@ -898,8 +904,8 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 				leftAxis.setValueFormatter(new DefaultYAxisValueFormatter(2));
 				leftAxis.removeAllLimitLines();
 				if (mItemViewType == ITEM_VIEW_TYPE_MAIN) {
-					for (int i = 0; i < mStockDataChart.mLimitLineList.size(); i++) {
-						leftAxis.addLimitLine(mStockDataChart.mLimitLineList
+					for (int i = 0; i < mStatisticsChart.mLimitLineList.size(); i++) {
+						leftAxis.addLimitLine(mStatisticsChart.mLimitLineList
 								.get(i));
 					}
 				}
@@ -910,12 +916,12 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 				rightAxis.setEnabled(false);
 			}
 
-			viewHolder.chart.setDescription(mStockDataChart.mDescription);
+			viewHolder.chart.setDescription(mStatisticsChart.mDescription);
 
 			if (mItemViewType == ITEM_VIEW_TYPE_MAIN) {
-				viewHolder.chart.setData(mStockDataChart.mCombinedDataMain);
+				viewHolder.chart.setData(mStatisticsChart.mCombinedDataMain);
 			} else {
-				viewHolder.chart.setData(mStockDataChart.mCombinedDataSub);
+				viewHolder.chart.setData(mStatisticsChart.mCombinedDataSub);
 			}
 
 			return view;
@@ -926,26 +932,26 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 		}
 	}
 
-	class StockDataChartItemMain extends StockDataChartItem {
-		public StockDataChartItemMain(StockDataChart stockDataChart) {
+	class StatisticsChartItemMain extends StatisticsChartItem {
+		public StatisticsChartItemMain(StatisticsChart stockDataChart) {
 			super(ITEM_VIEW_TYPE_MAIN,
 					R.layout.activity_stock_data_chart_list_item_main,
 					stockDataChart);
 		}
 	}
 
-	class StockDataChartItemSub extends StockDataChartItem {
-		public StockDataChartItemSub(StockDataChart stockDataChart) {
+	class StatisticsChartItemSub extends StatisticsChartItem {
+		public StatisticsChartItemSub(StatisticsChart stockDataChart) {
 			super(ITEM_VIEW_TYPE_SUB,
 					R.layout.activity_stock_data_chart_list_item_sub,
 					stockDataChart);
 		}
 	}
 
-	class StockDataChartArrayAdapter extends ArrayAdapter<StockDataChartItem> {
+	class StatisticsChartArrayAdapter extends ArrayAdapter<StatisticsChartItem> {
 
-		public StockDataChartArrayAdapter(Context context,
-				List<StockDataChartItem> objects) {
+		public StatisticsChartArrayAdapter(Context context,
+				List<StatisticsChartItem> objects) {
 			super(context, 0, objects);
 		}
 
@@ -962,7 +968,7 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 
 		@Override
 		public int getViewTypeCount() {
-			return mStockDataChartItemList.size();
+			return mStatisticsChartItemList.size();
 		}
 	}
 

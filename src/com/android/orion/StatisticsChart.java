@@ -41,8 +41,8 @@ public class StatisticsChart {
 	ArrayList<Entry> mEarningsPerShareList = null;
 	ArrayList<BarEntry> mDividendEntryList = null;
 	ArrayList<BarEntry> mPEEntryList = null;
-	ArrayList<BarEntry> mYieldEntryList = null;
-	ArrayList<BarEntry> mDeltaEntryList = null;
+	ArrayList<Entry> mYieldEntryList = null;
+	ArrayList<Entry> mDeltaEntryList = null;
 
 	ArrayList<Entry> mDIFEntryList = null;
 	ArrayList<Entry> mDEAEntryList = null;
@@ -105,11 +105,11 @@ public class StatisticsChart {
 		}
 
 		if (mYieldEntryList == null) {
-			mYieldEntryList = new ArrayList<BarEntry>();
+			mYieldEntryList = new ArrayList<Entry>();
 		}
 
 		if (mDeltaEntryList == null) {
-			mDeltaEntryList = new ArrayList<BarEntry>();
+			mDeltaEntryList = new ArrayList<Entry>();
 		}
 		
 		if (mAverage5EntryList == null) {
@@ -245,45 +245,38 @@ public class StatisticsChart {
 		lineData.addDataSet(earningsPerShareDataSet);
 
 		BarData barData = new BarData(mXValues);
-		BarDataSet shareBonusDataSet = new BarDataSet(mDividendEntryList,
-				"dsivident");
-		shareBonusDataSet.setBarSpacePercent(40f);
-		shareBonusDataSet.setIncreasingColor(Color.rgb(255, 50, 50));
-		shareBonusDataSet.setDecreasingColor(Color.rgb(50, 128, 50));
-		shareBonusDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		barData.addDataSet(shareBonusDataSet);
+//		BarDataSet shareBonusDataSet = new BarDataSet(mDividendEntryList,
+//				"dsivident");
+//		shareBonusDataSet.setBarSpacePercent(40f);
+//		shareBonusDataSet.setIncreasingColor(Color.rgb(255, 50, 50));
+//		shareBonusDataSet.setDecreasingColor(Color.rgb(50, 128, 50));
+//		shareBonusDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+//		barData.addDataSet(shareBonusDataSet);
 		
-		BarData peData = new BarData(mXValues);
 		BarDataSet peDataSet = new BarDataSet(mPEEntryList, "pe");
 		peDataSet.setBarSpacePercent(40f);
 		peDataSet.setIncreasingColor(Color.rgb(255, 50, 50));
 		peDataSet.setDecreasingColor(Color.rgb(50, 128, 50));
 		peDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		peData.addDataSet(peDataSet);
+		barData.addDataSet(peDataSet);
 		
-		BarData yieldData = new BarData(mXValues);
-		BarDataSet yieldDataSet = new BarDataSet(mYieldEntryList, "yield");
-		yieldDataSet.setBarSpacePercent(40f);
-		yieldDataSet.setIncreasingColor(Color.rgb(255, 50, 50));
-		yieldDataSet.setDecreasingColor(Color.rgb(50, 128, 50));
+		LineDataSet yieldDataSet = new LineDataSet(mYieldEntryList, "yield");
+		yieldDataSet.setColor(Color.YELLOW);
+		yieldDataSet.setCircleColor(Color.YELLOW);
+		yieldDataSet.setCircleSize(3f);
 		yieldDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		yieldData.addDataSet(yieldDataSet);
+		lineData.addDataSet(yieldDataSet);
 		
-		BarData deltaData = new BarData(mXValues);
-		BarDataSet deltaDataSet = new BarDataSet(mPEEntryList, "delta");
-		deltaDataSet.setBarSpacePercent(40f);
-		deltaDataSet.setIncreasingColor(Color.rgb(255, 50, 50));
-		deltaDataSet.setDecreasingColor(Color.rgb(50, 128, 50));
+		LineDataSet deltaDataSet = new LineDataSet(mDeltaEntryList, "delta");
+		deltaDataSet.setColor(Color.BLUE);
+		deltaDataSet.setCircleColor(Color.BLUE);
+		deltaDataSet.setCircleSize(3f);
 		deltaDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		deltaData.addDataSet(deltaDataSet);
+		lineData.addDataSet(deltaDataSet);
 
 		mCombinedDataMain.setData(candleData);
 		mCombinedDataMain.setData(lineData);
 		mCombinedDataMain.setData(barData);
-		
-		mCombinedDataMain.setData(peData);
-		mCombinedDataMain.setData(yieldData);
-		mCombinedDataMain.setData(deltaData);
 	}
 
 	void setSubChartData() {
