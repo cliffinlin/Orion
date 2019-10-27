@@ -1,0 +1,24 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/action_order_by_pe"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_order_by_pe"/>
+    <item
+        android:id="@+id/action_order_by_yield"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_order_by_yield"/>
+    <item
+        android:id="@+id/action_order_by_delta"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_order_by_delta"/>
+    <item
+        android:id="@+id/action_refresh"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_refresh"/>
+
+</menu>

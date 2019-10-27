@@ -2,8 +2,6 @@ package com.android.orion;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Comparator;
 import java.util.List;
 
 import android.app.LoaderManager;
@@ -20,7 +18,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,19 +28,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.android.orion.database.DatabaseContract;
-import com.android.orion.database.FinancialData;
 import com.android.orion.database.Setting;
-import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
-import com.android.orion.utility.Preferences;
-import com.android.orion.utility.Utility;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.XAxis.XAxisPosition;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.components.YAxis.YAxisLabelPosition;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.CandleEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.DefaultYAxisValueFormatter;
 import com.github.mikephil.charting.listener.ChartTouchListener.ChartGesture;
@@ -56,8 +48,7 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 			+ StatisticsChartListActivity.class.getSimpleName();
 
 	static final int ITEM_VIEW_TYPE_MAIN = 0;
-	static final int ITEM_VIEW_TYPE_SUB = 1;
-	static final int LOADER_ID_STOCK_LIST = Constants.PERIODS.length + 1;
+	static final int LOADER_ID_STOCK_LIST = 0;
 	static final int FLING_DISTANCE = 50;
 	static final int FLING_VELOCITY = 100;
 
@@ -72,7 +63,6 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 	StatisticsChartArrayAdapter mStatisticsChartArrayAdapter = null;
 	ArrayList<StatisticsChartItem> mStatisticsChartItemList = null;
 	ArrayList<StatisticsChartItemMain> mStatisticsChartItemMainList = null;
-	ArrayList<StatisticsChartItemSub> mStatisticsChartItemSubList = null;
 	ArrayList<StatisticsChart> mStatisticsChartList = null;
 
 	Handler mHandler = new Handler(Looper.getMainLooper()) {
@@ -129,7 +119,7 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 
 		initListView();
 
-		mStock.setId(getIntent().getLongExtra(Constants.EXTRA_STOCK_ID, 2));
+		mStock.setId(getIntent().getLongExtra(Constants.EXTRA_STOCK_ID, 0));
 
 		mSortOrder = getIntent().getStringExtra(
 				Setting.KEY_SORT_ORDER_STOCK_LIST);
@@ -139,14 +129,12 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 				new IntentFilter(Constants.ACTION_SERVICE_FINISHED));
 
 		initLoader();
-
-		updateTitle();
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		mMenu = menu;
-		getMenuInflater().inflate(R.menu.stock_data_chart, menu);
+		getMenuInflater().inflate(R.menu.statistics_chart, menu);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		return true;
 	}
@@ -158,37 +146,19 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 			finish();
 			return true;
 		}
-		case R.id.action_prev: {
-			navigateStock(-1);
+		case R.id.action_order_by_pe: {
+			mSortOrder =  DatabaseContract.COLUMN_PE + DatabaseContract.ORDER_DIRECTION_DESC;
+			restartLoader();
 			return true;
 		}
-		case R.id.action_next: {
-			navigateStock(1);
+		case R.id.action_order_by_yield: {
+			mSortOrder =  DatabaseContract.COLUMN_YIELD + DatabaseContract.ORDER_DIRECTION_DESC;
+			restartLoader();
 			return true;
 		}
-		case R.id.action_remove_favorite: {
-			updateStockMark(mStock.getId(), Constants.STOCK_FLAG_NONE);
-			if (mStockListIndex < mStockList.size()) {
-				mStockList.remove(mStockListIndex);
-			}
-			startService(Constants.SERVICE_REMOVE_STOCK_FAVORITE,
-					Constants.EXECUTE_IMMEDIATE);
-			return true;
-		}
-		case R.id.action_edit: {
-			mIntent = new Intent(this, StockActivity.class);
-			mIntent.setAction(StockActivity.ACTION_STOCK_EDIT);
-			mIntent.putExtra(Constants.EXTRA_STOCK_ID, mStock.getId());
-			startActivity(mIntent);
-			return true;
-		}
-		case R.id.action_deal: {
-			Bundle bundle = new Bundle();
-			bundle.putString(Constants.EXTRA_STOCK_SE, mStock.getSE());
-			bundle.putString(Constants.EXTRA_STOCK_CODE, mStock.getCode());
-			Intent intent = new Intent(this, StockDealListActivity.class);
-			intent.putExtras(bundle);
-			startActivity(intent);
+		case R.id.action_order_by_delta: {
+			mSortOrder =  DatabaseContract.COLUMN_DELTA + DatabaseContract.ORDER_DIRECTION_DESC;
+			restartLoader();
 			return true;
 		}
 		case R.id.action_refresh: {
@@ -207,12 +177,7 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 
 		mStatisticsChartItemList.clear();
 
-		for (int i = 0; i < Constants.PERIODS.length; i++) {
-			if (Preferences.readBoolean(this, Constants.PERIODS[i], false)) {
-				mStatisticsChartItemList.add(mStatisticsChartItemMainList.get(i));
-				mStatisticsChartItemList.add(mStatisticsChartItemSubList.get(i));
-			}
-		}
+		mStatisticsChartItemList.add(mStatisticsChartItemMainList.get(0));
 
 		restartLoader();
 	}
@@ -231,8 +196,6 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 
 		if (id == LOADER_ID_STOCK_LIST) {
 			loader = getStockCursorLoader();
-		} else {
-			loader = getStockDataCursorLoader(Constants.PERIODS[id]);
 		}
 
 		return loader;
@@ -249,9 +212,7 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 		id = loader.getId();
 
 		if (id == LOADER_ID_STOCK_LIST) {
-			swapStockCursor(mStatisticsChartList.get(4), cursor);
-		} else {
-//			swapStockDataCursor(mStatisticsChartList.get(id), cursor);
+			swapStockCursor(mStatisticsChartList.get(0), cursor);
 		}
 	}
 
@@ -266,9 +227,7 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 		id = loader.getId();
 
 		if (id == LOADER_ID_STOCK_LIST) {
-			swapStockCursor(mStatisticsChartList.get(4), null);
-		} else {
-//			swapStockDataCursor(mStatisticsChartList.get(id), null);
+			swapStockCursor(mStatisticsChartList.get(0), null);
 		}
 	}
 
@@ -287,19 +246,10 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 			mStatisticsChartItemMainList = new ArrayList<StatisticsChartItemMain>();
 		}
 
-		if (mStatisticsChartItemSubList == null) {
-			mStatisticsChartItemSubList = new ArrayList<StatisticsChartItemSub>();
-		}
-
-		for (int i = 0; i < Constants.PERIODS.length; i++) {
-			mStatisticsChartList.add(new StatisticsChart(Constants.PERIODS[i]));
-			mStatisticsChartItemMainList.add(new StatisticsChartItemMain(
-					mStatisticsChartList.get(i)));
-			mStatisticsChartItemSubList.add(new StatisticsChartItemSub(
-					mStatisticsChartList.get(i)));
-			mStatisticsChartItemList.add(mStatisticsChartItemMainList.get(i));
-			mStatisticsChartItemList.add(mStatisticsChartItemSubList.get(i));
-		}
+		mStatisticsChartList.add(new StatisticsChart());
+		mStatisticsChartItemMainList.add(new StatisticsChartItemMain(
+				mStatisticsChartList.get(0)));
+		mStatisticsChartItemList.add(mStatisticsChartItemMainList.get(0));
 
 		mStatisticsChartArrayAdapter = new StatisticsChartArrayAdapter(this,
 				mStatisticsChartItemList);
@@ -308,16 +258,10 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 
 	void initLoader() {
 		mLoaderManager.initLoader(LOADER_ID_STOCK_LIST, null, this);
-		for (int i = 0; i < Constants.PERIODS.length; i++) {
-			mLoaderManager.initLoader(i, null, this);
-		}
 	}
 
 	void restartLoader() {
 		mLoaderManager.restartLoader(LOADER_ID_STOCK_LIST, null, this);
-		for (int i = 0; i < Constants.PERIODS.length; i++) {
-			mLoaderManager.restartLoader(i, null, this);
-		}
 	}
 
 	CursorLoader getStockCursorLoader() {
@@ -329,23 +273,6 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 		loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
 				DatabaseContract.Stock.PROJECTION_ALL, selection, null,
 				mSortOrder);
-
-		return loader;
-	}
-
-	CursorLoader getStockDataCursorLoader(String period) {
-		String selection = "";
-		String sortOrder = "";
-		CursorLoader loader = null;
-
-		selection = mStockDatabaseManager.getStockDataSelection(mStock.getId(),
-				period);
-
-		sortOrder = mStockDatabaseManager.getStockDataOrder();
-
-		loader = new CursorLoader(this, DatabaseContract.StockData.CONTENT_URI,
-				DatabaseContract.StockData.PROJECTION_ALL, selection, null,
-				sortOrder);
 
 		return loader;
 	}
@@ -378,21 +305,15 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 		}
 	}
 
-	void updateTitle() {
-		if (mStock != null) {
-			setTitle(mStock.getName());
-		}
-	}
-
 	public void swapStockCursor(StatisticsChart stockDataChart, Cursor cursor) {
 		int index = 0;
-		
+
 		if (mStockList == null) {
 			return;
 		}
-		
+
 		stockDataChart.clear();
-		
+
 		mStockList.clear();
 
 		try {
@@ -400,19 +321,22 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 				while (cursor.moveToNext()) {
 					Stock stock = Stock.obtain();
 					stock.set(cursor);
-					
+
 					index = stockDataChart.mXValues.size();
 					stockDataChart.mXValues.add(stock.getName());
-			
-					BarEntry peEntry = new BarEntry((float)stock.getPE(), index);
+
+					BarEntry peEntry = new BarEntry((float) stock.getPE(),
+							index);
 					stockDataChart.mPEEntryList.add(peEntry);
-					
-					Entry yieldEntry = new BarEntry((float)stock.getYield(), index);
+
+					Entry yieldEntry = new BarEntry((float) stock.getYield(),
+							index);
 					stockDataChart.mYieldEntryList.add(yieldEntry);
-					
-					Entry deltaEntry = new BarEntry((float)stock.getDelta(), index);
+
+					Entry deltaEntry = new BarEntry((float) stock.getDelta(),
+							index);
 					stockDataChart.mDeltaEntryList.add(deltaEntry);
-					
+
 					if (stock != null) {
 						if (mStock.getId() == stock.getId()) {
 							mStock.set(cursor);
@@ -432,407 +356,14 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 		} finally {
 			mStockDatabaseManager.closeCursor(cursor);
 		}
-		
+
 		stockDataChart.setMainChartData();
-		stockDataChart.setSubChartData();
 
 		mStatisticsChartArrayAdapter.notifyDataSetChanged();
-		
+
 		if (mMainHandler != null) {
 			mMainHandler.sendEmptyMessage(0);
 		}
-	}
-
-	public void swapStockDataCursor(StatisticsChart stockDataChart, Cursor cursor) {
-		int index = 0;
-		float bookValuePerShare = 0;
-		float earningsPerShare = 0;
-		float dividend = 0;
-		String sortOrder = DatabaseContract.COLUMN_DATE + " ASC ";
-		FinancialData financialData = null;
-		ShareBonus shareBonus = null;
-
-		if (mStockData == null) {
-			return;
-		}
-
-		mStockDatabaseManager.getFinancialDataList(mStock, mFinancialDataList,
-				sortOrder);
-		mStockDatabaseManager.getShareBonusList(mStock, mShareBonusList,
-				sortOrder);
-
-		stockDataChart.clear();
-
-		try {
-			if ((cursor != null) && (cursor.getCount() > 0)) {
-				String dateString = "";
-
-				while (cursor.moveToNext()) {
-					index = stockDataChart.mXValues.size();
-					mStockData.set(cursor);
-
-					dateString = mStockData.getDate();
-					stockDataChart.mXValues.add(dateString);
-
-					CandleEntry candleEntry = new CandleEntry(index,
-							(float) mStockData.getHigh(),
-							(float) mStockData.getLow(),
-							(float) mStockData.getOpen(),
-							(float) mStockData.getClose(),
-							mStockData.getAction());
-					stockDataChart.mCandleEntryList.add(candleEntry);
-
-					if (mStockData.vertexOf(Constants.STOCK_VERTEX_TOP)) {
-						Entry drawEntry = new Entry(
-								(float) mStockData.getVertexHigh(), index);
-						stockDataChart.mDrawEntryList.add(drawEntry);
-					} else if (mStockData
-							.vertexOf(Constants.STOCK_VERTEX_BOTTOM)) {
-						Entry drawEntry = new Entry(
-								(float) mStockData.getVertexLow(), index);
-						stockDataChart.mDrawEntryList.add(drawEntry);
-					}
-
-					if (mStockData.vertexOf(Constants.STOCK_VERTEX_TOP_STROKE)) {
-						Entry strokeEntry = new Entry(
-								(float) mStockData.getVertexHigh(), index);
-						stockDataChart.mStrokeEntryList.add(strokeEntry);
-					} else if (mStockData
-							.vertexOf(Constants.STOCK_VERTEX_BOTTOM_STROKE)) {
-						Entry strokeEntry = new Entry(
-								(float) mStockData.getVertexLow(), index);
-						stockDataChart.mStrokeEntryList.add(strokeEntry);
-					}
-
-					if (mStockData.vertexOf(Constants.STOCK_VERTEX_TOP_SEGMENT)) {
-						Entry segmentEntry = new Entry(
-								(float) mStockData.getVertexHigh(), index);
-						stockDataChart.mSegmentEntryList.add(segmentEntry);
-					} else if (mStockData
-							.vertexOf(Constants.STOCK_VERTEX_BOTTOM_SEGMENT)) {
-						Entry segmentEntry = new Entry(
-								(float) mStockData.getVertexLow(), index);
-						stockDataChart.mSegmentEntryList.add(segmentEntry);
-					}
-
-					if ((mStockData.getOverlapHigh() > 0)
-							&& (mStockData.getOverlapLow() > 0)) {
-						Entry overlayHighEntry = new Entry(
-								(float) mStockData.getOverlapHigh(), index);
-						stockDataChart.mOverlapHighEntryList
-								.add(overlayHighEntry);
-
-						Entry overlapLowEntry = new Entry(
-								(float) mStockData.getOverlapLow(), index);
-						stockDataChart.mOverlapLowEntryList
-								.add(overlapLowEntry);
-					}
-
-					if (mFinancialDataList.size() > 0) {
-						financialData = getFinancialDataByDate(dateString,
-								mFinancialDataList);
-						if (financialData != null) {
-							bookValuePerShare = (float) financialData
-									.getBookValuePerShare();
-							earningsPerShare = (float) (financialData
-									.getEarningsPerShare() * 10.0);
-						} else {
-							bookValuePerShare = 0;
-							earningsPerShare = 0;
-						}
-
-						Entry bookValuePerShareEntry = new Entry(
-								bookValuePerShare, index);
-						stockDataChart.mBookValuePerShareList
-								.add(bookValuePerShareEntry);
-
-						Entry earningsPerShareEntry = new Entry(
-								earningsPerShare, index);
-						stockDataChart.mEarningsPerShareList
-								.add(earningsPerShareEntry);
-					}
-
-					if (mShareBonusList.size() > 0) {
-						shareBonus = getShareBonusByDate(dateString,
-								mShareBonusList);
-						if (shareBonus != null) {
-							dividend = (float) (shareBonus.getDividend());
-						} else {
-							dividend = 0;
-						}
-
-						BarEntry shareBonusEntry = new BarEntry(dividend, index);
-						stockDataChart.mDividendEntryList.add(shareBonusEntry);
-					}
-
-					Entry average5Entry = new Entry(
-							(float) mStockData.getAverage5(), index);
-					stockDataChart.mAverage5EntryList.add(average5Entry);
-
-					Entry average10Entry = new Entry(
-							(float) mStockData.getAverage10(), index);
-					stockDataChart.mAverage10EntryList.add(average10Entry);
-
-					Entry difEntry = new Entry((float) mStockData.getDIF(),
-							index);
-					stockDataChart.mDIFEntryList.add(difEntry);
-
-					Entry deaEntry = new Entry((float) mStockData.getDEA(),
-							index);
-					stockDataChart.mDEAEntryList.add(deaEntry);
-
-					BarEntry histogramBarEntry = new BarEntry(
-							(float) mStockData.getHistogram(), index);
-					stockDataChart.mHistogramEntryList.add(histogramBarEntry);
-
-					Entry averageEntry = new Entry(
-							(float) mStockData.getAverage(), index);
-					stockDataChart.mAverageEntryList.add(averageEntry);
-
-					Entry velocityEntry = new Entry(
-							(float) mStockData.getVelocity(), index);
-					stockDataChart.mVelocityEntryList.add(velocityEntry);
-
-					Entry acclerateEntry = new Entry(
-							(float) mStockData.getAcceleration(), index);
-					stockDataChart.mAccelerateEntryList.add(acclerateEntry);
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			mStockDatabaseManager.closeCursor(cursor);
-		}
-
-		updateTitle();
-
-		mStockDatabaseManager.getStockDealList(mStock, mStockDealList);
-
-		stockDataChart.updateDescription(mStock);
-		stockDataChart.updateLimitLine(mStock, mStockDealList);
-		stockDataChart.setMainChartData();
-		stockDataChart.setSubChartData();
-
-		mStatisticsChartArrayAdapter.notifyDataSetChanged();
-	}
-
-	Comparator<FinancialData> comparator = new Comparator<FinancialData>() {
-
-		@Override
-		public int compare(FinancialData arg0, FinancialData arg1) {
-			Calendar calendar0;
-			Calendar calendar1;
-
-			calendar0 = Utility.stringToCalendar(arg0.getDate(),
-					Utility.CALENDAR_DATE_TIME_FORMAT);
-			calendar1 = Utility.stringToCalendar(arg1.getDate(),
-					Utility.CALENDAR_DATE_TIME_FORMAT);
-			if (calendar1.before(calendar0)) {
-				return -1;
-			} else if (calendar1.after(calendar0)) {
-				return 1;
-			} else {
-				return 0;
-			}
-		}
-	};
-
-	int binarySearch(int arr[], int l, int r, int x) {
-		if (r >= l) {
-			int mid = l + (r - l) / 2;
-
-			// If the element is present at the
-			// middle itself
-			if (arr[mid] == x)
-				return mid;
-
-			// If element is smaller than mid, then
-			// it can only be present in left subarray
-			if (arr[mid] > x)
-				return binarySearch(arr, l, mid - 1, x);
-
-			// Else the element can only be present
-			// in right subarray
-			return binarySearch(arr, mid + 1, r, x);
-		}
-
-		// We reach here when element is not present
-		// in array
-		return -1;
-	}
-
-	int binarySearchFinancialData(int l, int r, Calendar calendar,
-			ArrayList<FinancialData> financialDataList) {
-		if (r >= l) {
-			int mid = l + (r - l) / 2;
-
-			Calendar calendarMid = Utility.stringToCalendar(financialDataList
-					.get(mid).getDate(), Utility.CALENDAR_DATE_FORMAT);
-
-			// If the element is present at the
-			// middle itself
-			if (calendarMid.equals(calendar))
-				return mid;
-
-			// If element is smaller than mid, then
-			// it can only be present in left subarray
-			if (calendar.before(calendarMid))
-				return binarySearchFinancialData(l, mid - 1, calendar,
-						financialDataList);
-
-			Calendar calendarMid1 = Utility.stringToCalendar(financialDataList
-					.get(mid + 1).getDate(), Utility.CALENDAR_DATE_FORMAT);
-			if (calendar.after(calendarMid) && (calendar.before(calendarMid1)))
-				return mid;
-
-			// Else the element can only be present
-			// in right subarray
-			return binarySearchFinancialData(mid + 1, r, calendar,
-					financialDataList);
-		}
-
-		// We reach here when element is not present
-		// in array
-		return -1;
-	}
-
-	FinancialData getFinancialDataByDate(String dateString,
-			ArrayList<FinancialData> financialDataList) {
-		int index = 0;
-		FinancialData financialData = null;
-
-		if (financialDataList.size() < 1) {
-			return financialData;
-		}
-
-		if (TextUtils.isEmpty(dateString)) {
-			return financialData;
-		}
-
-		Calendar calendar = Utility.stringToCalendar(dateString,
-				Utility.CALENDAR_DATE_FORMAT);
-		Calendar calendarMin = Utility.stringToCalendar(financialDataList
-				.get(0).getDate(), Utility.CALENDAR_DATE_FORMAT);
-		Calendar calendarMax = Utility.stringToCalendar(
-				financialDataList.get(financialDataList.size() - 1).getDate(),
-				Utility.CALENDAR_DATE_FORMAT);
-
-		if (calendar.before(calendarMin)) {
-			return financialData;
-		} else if (calendar.after(calendarMax)) {
-			return financialDataList.get(financialDataList.size() - 1);
-		} else {
-			index = binarySearchFinancialData(0, financialDataList.size() - 1,
-					calendar, financialDataList);
-
-			if ((index > 0) && (index < financialDataList.size())) {
-				financialData = financialDataList.get(index);
-			}
-		}
-
-		return financialData;
-	}
-
-	int binarySearchShareBonus(int l, int r, Calendar calendar,
-			ArrayList<ShareBonus> shareBonusList) {
-		if (r >= l) {
-			int mid = l + (r - l) / 2;
-
-			Calendar calendarMid = Utility.stringToCalendar(
-					shareBonusList.get(mid).getDate(),
-					Utility.CALENDAR_DATE_FORMAT);
-
-			// If the element is present at the
-			// middle itself
-			if (calendarMid.equals(calendar))
-				return mid;
-
-			// If element is smaller than mid, then
-			// it can only be present in left subarray
-			if (calendar.before(calendarMid))
-				return binarySearchShareBonus(l, mid - 1, calendar,
-						shareBonusList);
-
-			Calendar calendarMid1 = Utility.stringToCalendar(shareBonusList
-					.get(mid + 1).getDate(), Utility.CALENDAR_DATE_FORMAT);
-			if (calendar.after(calendarMid) && (calendar.before(calendarMid1)))
-				return mid;
-
-			// Else the element can only be present
-			// in right subarray
-			return binarySearchShareBonus(mid + 1, r, calendar, shareBonusList);
-		}
-
-		// We reach here when element is not present
-		// in array
-		return -1;
-	}
-
-	ShareBonus getShareBonusByDate(String dateString,
-			ArrayList<ShareBonus> shareBonusList) {
-		int index = 0;
-		ShareBonus shareBonus = null;
-
-		if (shareBonusList.size() < 1) {
-			return shareBonus;
-		}
-
-		if (TextUtils.isEmpty(dateString)) {
-			return shareBonus;
-		}
-
-		Calendar calendar = Utility.stringToCalendar(dateString,
-				Utility.CALENDAR_DATE_FORMAT);
-		Calendar calendarMin = Utility.stringToCalendar(shareBonusList.get(0)
-				.getDate(), Utility.CALENDAR_DATE_FORMAT);
-		Calendar calendarMax = Utility.stringToCalendar(
-				shareBonusList.get(shareBonusList.size() - 1).getDate(),
-				Utility.CALENDAR_DATE_FORMAT);
-
-		if (calendar.before(calendarMin)) {
-			return shareBonus;
-		} else if (calendar.after(calendarMax)) {
-			return shareBonusList.get(shareBonusList.size() - 1);
-		} else {
-			index = binarySearchShareBonus(0, shareBonusList.size() - 1,
-					calendar, shareBonusList);
-
-			if ((index > 0) && (index < shareBonusList.size())) {
-				shareBonus = shareBonusList.get(index);
-			}
-		}
-
-		return shareBonus;
-	}
-
-	void navigateStock(int direction) {
-		boolean loop = true;
-
-		if ((mStockList == null) || (mStockList.size() == 0)) {
-			return;
-		}
-
-		mStockListIndex += direction;
-
-		if (mStockListIndex > mStockList.size() - 1) {
-			if (loop) {
-				mStockListIndex = 0;
-			} else {
-				mStockListIndex = mStockList.size() - 1;
-			}
-		}
-
-		if (mStockListIndex < 0) {
-			if (loop) {
-				mStockListIndex = mStockList.size() - 1;
-			} else {
-				mStockListIndex = 0;
-			}
-		}
-
-		mStock = mStockList.get(mStockListIndex);
-
-		restartLoader();
 	}
 
 	static class MainHandler extends Handler {
@@ -847,7 +378,6 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 			super.handleMessage(msg);
 
 			StatisticsChartListActivity activity = mActivity.get();
-			activity.updateTitle();
 			activity.updateMenuAction();
 		}
 	}
@@ -903,12 +433,6 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 				leftAxis.setStartAtZero(false);
 				leftAxis.setValueFormatter(new DefaultYAxisValueFormatter(2));
 				leftAxis.removeAllLimitLines();
-				if (mItemViewType == ITEM_VIEW_TYPE_MAIN) {
-					for (int i = 0; i < mStatisticsChart.mLimitLineList.size(); i++) {
-						leftAxis.addLimitLine(mStatisticsChart.mLimitLineList
-								.get(i));
-					}
-				}
 			}
 
 			rightAxis = viewHolder.chart.getAxisRight();
@@ -916,12 +440,8 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 				rightAxis.setEnabled(false);
 			}
 
-			viewHolder.chart.setDescription(mStatisticsChart.mDescription);
-
 			if (mItemViewType == ITEM_VIEW_TYPE_MAIN) {
 				viewHolder.chart.setData(mStatisticsChart.mCombinedDataMain);
-			} else {
-				viewHolder.chart.setData(mStatisticsChart.mCombinedDataSub);
 			}
 
 			return view;
@@ -936,14 +456,6 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 		public StatisticsChartItemMain(StatisticsChart stockDataChart) {
 			super(ITEM_VIEW_TYPE_MAIN,
 					R.layout.activity_stock_data_chart_list_item_main,
-					stockDataChart);
-		}
-	}
-
-	class StatisticsChartItemSub extends StatisticsChartItem {
-		public StatisticsChartItemSub(StatisticsChart stockDataChart) {
-			super(ITEM_VIEW_TYPE_SUB,
-					R.layout.activity_stock_data_chart_list_item_sub,
 					stockDataChart);
 		}
 	}
@@ -992,12 +504,10 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 
 		if (me1.getX() - me2.getX() > distance
 				&& Math.abs(velocityX) > velocity) {
-			navigateStock(-1);
 		}
 
 		if (me2.getX() - me1.getX() > distance
 				&& Math.abs(velocityX) > velocity) {
-			navigateStock(1);
 		}
 	}
 
