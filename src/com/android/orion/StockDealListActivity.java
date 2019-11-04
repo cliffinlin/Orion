@@ -58,7 +58,7 @@ public class StockDealListActivity extends ListActivity implements
 	static final int mHeaderTextHighlightColor = Color.RED;
 
 	String mSortOrderColumn = DatabaseContract.COLUMN_NET;
-	String mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_DESC;
+	String mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_ASC;
 	String mSortOrderDefault = mSortOrderColumn + mSortOrderDirection;
 	String mSortOrder = mSortOrderDefault;
 
@@ -258,7 +258,7 @@ public class StockDealListActivity extends ListActivity implements
 			mFilterType = FILTER_TYPE_TO_BUY;
 			restartLoader();
 			return true;
-			
+
 		case R.id.action_all:
 			mFilterType = FILTER_TYPE_NONE;
 			restartLoader();

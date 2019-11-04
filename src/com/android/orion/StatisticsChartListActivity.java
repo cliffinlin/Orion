@@ -147,17 +147,20 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 			return true;
 		}
 		case R.id.action_order_by_pe: {
-			mSortOrder =  DatabaseContract.COLUMN_PE + DatabaseContract.ORDER_DIRECTION_DESC;
+			mSortOrder = DatabaseContract.COLUMN_PE
+					+ DatabaseContract.ORDER_DIRECTION_DESC;
 			restartLoader();
 			return true;
 		}
 		case R.id.action_order_by_yield: {
-			mSortOrder =  DatabaseContract.COLUMN_YIELD + DatabaseContract.ORDER_DIRECTION_DESC;
+			mSortOrder = DatabaseContract.COLUMN_YIELD
+					+ DatabaseContract.ORDER_DIRECTION_DESC;
 			restartLoader();
 			return true;
 		}
 		case R.id.action_order_by_delta: {
-			mSortOrder =  DatabaseContract.COLUMN_DELTA + DatabaseContract.ORDER_DIRECTION_DESC;
+			mSortOrder = DatabaseContract.COLUMN_DELTA
+					+ DatabaseContract.ORDER_DIRECTION_DESC;
 			restartLoader();
 			return true;
 		}

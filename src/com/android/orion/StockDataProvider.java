@@ -28,6 +28,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 	static final String TAG = Constants.TAG + " "
 			+ StockDataProvider.class.getSimpleName();
 
+	Calendar mNotifyCalendar = Calendar.getInstance();
 	// WifiLockManager mWifiLockManager = null;
 	RequestQueue mRequestQueue;
 	Set<String> mCurrentRequests = new HashSet<String>();
@@ -77,6 +78,21 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		 * if (mWifiLockManager == null) { mWifiLockManager = new
 		 * WifiLockManager(mContext); }
 		 */
+	}
+
+	void sendBroadcast(String action, int serviceType, long stockID) {
+		Calendar calendar = Calendar.getInstance();
+		if (calendar.getTimeInMillis() - mNotifyCalendar.getTimeInMillis() < 15 * 1000) {
+			return;
+		}
+
+		Bundle bundle = new Bundle();
+		bundle.putInt(Constants.EXTRA_SERVICE_TYPE, serviceType);
+		bundle.putLong(Constants.EXTRA_STOCK_ID, stockID);
+
+		sendBroadcast(action, bundle);
+
+		mNotifyCalendar = Calendar.getInstance();
 	}
 
 	void sendBroadcast(String action, Bundle bundle) {
@@ -632,15 +648,16 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		@Override
 		public void handleResponse(String response) {
 			removeFromCurrrentRequests(mStringRequest.getUrl());
+
 			handleResponseStockRealTime(mStock, response);
+
 			mStockDatabaseManager.updateStockDeal(mStock);
 			mStockDatabaseManager
 					.updateStock(mStock, mStock.getContentValues());
-			Bundle bundle = new Bundle();
-			bundle.putInt(Constants.EXTRA_SERVICE_TYPE,
-					Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE_REALTIME);
-			bundle.putLong(Constants.EXTRA_STOCK_ID, mStock.getId());
-			sendBroadcast(Constants.ACTION_SERVICE_FINISHED, bundle);
+
+			sendBroadcast(Constants.ACTION_SERVICE_FINISHED,
+					Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE_REALTIME,
+					mStock.getId());
 		}
 	}
 
@@ -682,11 +699,10 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			handleResponseStockDataHistory(mStock, mStockData, response);
 			analyze(mStock, mStockData.getPeriod(),
 					getStockDataList(mStock, mStockData.getPeriod()));
-			Bundle bundle = new Bundle();
-			bundle.putInt(Constants.EXTRA_SERVICE_TYPE,
-					Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE_DATA_HISTORY);
-			bundle.putLong(Constants.EXTRA_STOCK_ID, mStock.getId());
-			sendBroadcast(Constants.ACTION_SERVICE_FINISHED, bundle);
+
+			sendBroadcast(Constants.ACTION_SERVICE_FINISHED,
+					Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE_DATA_HISTORY,
+					mStock.getId());
 		}
 	}
 
@@ -728,11 +744,10 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			handleResponseStockDataRealTime(mStock, mStockData, response);
 			analyze(mStock, mStockData.getPeriod(),
 					getStockDataList(mStock, mStockData.getPeriod()));
-			Bundle bundle = new Bundle();
-			bundle.putInt(Constants.EXTRA_SERVICE_TYPE,
-					Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE_DATA_REALTIME);
-			bundle.putLong(Constants.EXTRA_STOCK_ID, mStock.getId());
-			sendBroadcast(Constants.ACTION_SERVICE_FINISHED, bundle);
+
+			sendBroadcast(Constants.ACTION_SERVICE_FINISHED,
+					Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE_DATA_REALTIME,
+					mStock.getId());
 		}
 	}
 
@@ -771,11 +786,10 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		public void handleResponse(String response) {
 			removeFromCurrrentRequests(mStringRequest.getUrl());
 			handleResponseFinancialData(mStock, mFinancialData, response);
-			Bundle bundle = new Bundle();
-			bundle.putInt(Constants.EXTRA_SERVICE_TYPE,
-					Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE_DATA_REALTIME);
-			bundle.putLong(Constants.EXTRA_STOCK_ID, mStock.getId());
-			sendBroadcast(Constants.ACTION_SERVICE_FINISHED, bundle);
+
+			sendBroadcast(Constants.ACTION_SERVICE_FINISHED,
+					Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE_DATA_REALTIME,
+					mStock.getId());
 		}
 	}
 
@@ -814,11 +828,10 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		public void handleResponse(String response) {
 			removeFromCurrrentRequests(mStringRequest.getUrl());
 			handleResponseShareBonus(mStock, mShareBonus, response);
-			Bundle bundle = new Bundle();
-			bundle.putInt(Constants.EXTRA_SERVICE_TYPE,
-					Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE_DATA_REALTIME);
-			bundle.putLong(Constants.EXTRA_STOCK_ID, mStock.getId());
-			sendBroadcast(Constants.ACTION_SERVICE_FINISHED, bundle);
+
+			sendBroadcast(Constants.ACTION_SERVICE_FINISHED,
+					Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE_DATA_REALTIME,
+					mStock.getId());
 		}
 	}
 
@@ -850,10 +863,9 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		public void handleResponse(String response) {
 			removeFromCurrrentRequests(mStringRequest.getUrl());
 			handleResponseIPO(mIPO, response);
-			Bundle bundle = new Bundle();
-			bundle.putInt(Constants.EXTRA_SERVICE_TYPE,
-					Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE_DATA_REALTIME);
-			sendBroadcast(Constants.ACTION_SERVICE_FINISHED, bundle);
+
+			sendBroadcast(Constants.ACTION_SERVICE_FINISHED,
+					Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE_DATA_REALTIME, 0);
 		}
 	}
 }
