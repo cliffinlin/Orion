@@ -136,8 +136,11 @@ public class StockFavoriteListActivity extends ListActivity implements
 			return true;
 
 		case R.id.action_deal:
-			Intent intent = new Intent(this, StockDealListActivity.class);
-			startActivity(intent);
+			startActivity(new Intent(this, StockDealListActivity.class));
+			return true;
+			
+		case R.id.action_settings:
+			startActivity(new Intent(this, StockFilterActivity.class));
 			return true;
 
 		case R.id.action_save_to_file:

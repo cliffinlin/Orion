@@ -136,6 +136,11 @@
         <service
             android:name="com.android.orion.OrionService"
             android:exported="false" />
+
+        <activity
+            android:name="com.android.orion.StockFilterActivity"
+            android:label="@string/title_activity_filter" >
+        </activity>
     </application>
 
 </manifest>

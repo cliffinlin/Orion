@@ -6,7 +6,8 @@
     <string name="acceleration">Acc</string>
     <string name="action">Action</string>
     <string name="action_all">All</string>
-    <string name="action_to_buy">To Buy</string>    <string name="action_deal">Deal</string>
+    <string name="action_to_buy">To Buy</string>
+    <string name="action_deal">Deal</string>
     <string name="action_edit">Edit</string>
     <string name="action_exit">Exit</string>
     <string name="action_from">From</string>
@@ -22,7 +23,7 @@
     <string name="action_to">To</string>
     <string name="action_order_by_pe">Order by PE</string>
     <string name="action_order_by_yield">Order by Yield</string>
-    <string name="action_order_by_delta">Order by Delta</string>        
+    <string name="action_order_by_delta">Order by Delta</string>
     <string name="added">Added</string>
     <string name="alarm">Alarm</string>
     <string name="alarm_service">Alarm Service</string>
@@ -116,8 +117,8 @@
     <string name="action_day">Day</string>
     <string name="action_week">W</string>
     <string name="action_month">M</string>
-    <string name="statistics">Statistics</string>    
-    <string name="statistics_chart">Statistics Chart</string>     
+    <string name="statistics">Statistics</string>
+    <string name="statistics_chart">Statistics Chart</string>
     <string name="stock_data_chart">Stock Data Chart</string>
     <string name="stock_name_code">Name</string>
     <string name="stock_code">Stock Code</string>
@@ -156,5 +157,6 @@
     <string name="ipo_list">IPO List</string>
     <string name="date">Date</string>
     <string name="time_to_market">TTM</string>
+    <string name="title_activity_filter">FilterActivity</string>
 
 </resources>
