@@ -41,6 +41,9 @@ public class OrionContentProvider extends ContentProvider {
 	private static final int IPO = 700;
 	private static final int IPO_ID = 701;
 
+	private static final int STOCK_FILTER = 800;
+	private static final int STOCK_FILTER_ID = 801;
+
 	private static final UriMatcher mUriMatcher = new UriMatcher(
 			UriMatcher.NO_MATCH);
 
@@ -80,6 +83,11 @@ public class OrionContentProvider extends ContentProvider {
 				DatabaseContract.IPO.TABLE_NAME, IPO);
 		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
 				DatabaseContract.IPO.TABLE_NAME + "/#", IPO_ID);
+
+		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
+				DatabaseContract.StockFilter.TABLE_NAME, STOCK_FILTER);
+		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
+				DatabaseContract.StockFilter.TABLE_NAME + "/#", STOCK_FILTER_ID);
 	}
 
 	ContentResolver mContentResolver = null;
@@ -154,6 +162,13 @@ public class OrionContentProvider extends ContentProvider {
 			break;
 		case IPO_ID:
 			type = DatabaseContract.IPO.CONTENT_ITEM_TYPE;
+			break;
+
+		case STOCK_FILTER:
+			type = DatabaseContract.StockFilter.CONTENT_TYPE;
+			break;
+		case STOCK_FILTER_ID:
+			type = DatabaseContract.StockFilter.CONTENT_ITEM_TYPE;
 			break;
 		default:
 			break;
@@ -240,6 +255,15 @@ public class OrionContentProvider extends ContentProvider {
 			builder.appendWhere(BaseColumns._ID + " = "
 					+ uri.getLastPathSegment());
 			break;
+
+		case STOCK_FILTER:
+			builder.setTables(DatabaseContract.StockFilter.TABLE_NAME);
+			break;
+		case STOCK_FILTER_ID:
+			builder.setTables(DatabaseContract.StockFilter.TABLE_NAME);
+			builder.appendWhere(BaseColumns._ID + " = "
+					+ uri.getLastPathSegment());
+			break;
 		default:
 			break;
 		}
@@ -302,6 +326,11 @@ public class OrionContentProvider extends ContentProvider {
 		case IPO:
 			id = mDatabaseManager.mDatabase.insert(
 					DatabaseContract.IPO.TABLE_NAME, null, contentValues);
+			break;
+
+		case STOCK_FILTER:
+			id = mDatabaseManager.mDatabase.insert(
+					DatabaseContract.StockFilter.TABLE_NAME, null, contentValues);
 			break;
 		default:
 			break;
@@ -477,6 +506,21 @@ public class OrionContentProvider extends ContentProvider {
 					DatabaseContract.IPO.TABLE_NAME, values, whereClause,
 					selectionArgs);
 			break;
+			
+		case STOCK_FILTER:
+			result = mDatabaseManager.mDatabase.update(
+					DatabaseContract.StockFilter.TABLE_NAME, values, selection,
+					selectionArgs);
+			break;
+		case STOCK_FILTER_ID:
+			whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
+			if (!TextUtils.isEmpty(selection)) {
+				whereClause += " AND " + whereClause;
+			}
+			result = mDatabaseManager.mDatabase.update(
+					DatabaseContract.StockFilter.TABLE_NAME, values, whereClause,
+					selectionArgs);
+			break;
 		default:
 			break;
 		}
@@ -610,6 +654,21 @@ public class OrionContentProvider extends ContentProvider {
 			}
 			result = mDatabaseManager.mDatabase
 					.delete(DatabaseContract.IPO.TABLE_NAME, whereClause,
+							selectionArgs);
+			break;
+			
+		case STOCK_FILTER:
+			result = mDatabaseManager.mDatabase.delete(
+					DatabaseContract.StockFilter.TABLE_NAME, selection, selectionArgs);
+			break;
+
+		case STOCK_FILTER_ID:
+			whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
+			if (!TextUtils.isEmpty(selection)) {
+				whereClause += " AND " + whereClause;
+			}
+			result = mDatabaseManager.mDatabase
+					.delete(DatabaseContract.StockFilter.TABLE_NAME, whereClause,
 							selectionArgs);
 			break;
 		default:

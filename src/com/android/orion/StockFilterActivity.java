@@ -9,8 +9,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.orion.database.StockFilter;
+import com.android.orion.utility.Utility;
+
 public class StockFilterActivity extends DatabaseActivity implements
 		OnClickListener {
+
+	public static final int EXECUTE_STOCK_FILTER_LOAD = 0;
+	public static final int EXECUTE_STOCK_FILTER_SAVE = 1;
 
 	EditText mEditTextPE;
 	EditText mEditTextPB;
@@ -19,12 +25,16 @@ public class StockFilterActivity extends DatabaseActivity implements
 	EditText mEditTextDelta;
 	Button mButtonOk, mButtonCancel;
 
+	StockFilter mStockFilter = StockFilter.obtain();
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_stock_filter);
 
 		initView();
+
+		startLoadTask(EXECUTE_STOCK_FILTER_LOAD);
 	}
 
 	void initView() {
@@ -48,11 +58,11 @@ public class StockFilterActivity extends DatabaseActivity implements
 	}
 
 	void updateView() {
-		// mEditTextPE.setText();
-		// mEditTextPB.setText();
-		// mEditTextDividend.setText();
-		// mEditTextYield.setText();
-		// mEditTextDelta.setText();
+		mEditTextPE.setText(mStockFilter.getPE());
+		mEditTextPB.setText(mStockFilter.getPB());
+		mEditTextDividend.setText(mStockFilter.getDividend());
+		mEditTextYield.setText(mStockFilter.getYield());
+		mEditTextDelta.setText(mStockFilter.getDelta());
 	}
 
 	@Override
@@ -79,13 +89,19 @@ public class StockFilterActivity extends DatabaseActivity implements
 
 		switch (id) {
 		case R.id.button_ok:
-//			String pe = mEditTextPE.getText().toString();
-//			String pb = mEditTextPB.getText().toString();
-//			String dividend = mEditTextDividend.getText().toString();
-//			String yield = mEditTextYield.getText().toString();
-//			String delta = mEditTextDelta.getText().toString();
+			String pe = mEditTextPE.getText().toString();
+			String pb = mEditTextPB.getText().toString();
+			String dividend = mEditTextDividend.getText().toString();
+			String yield = mEditTextYield.getText().toString();
+			String delta = mEditTextDelta.getText().toString();
 
-//			startSaveTask(EXECUTE_STOCK_SAVE);
+			mStockFilter.setPE(pe);
+			mStockFilter.setPB(pb);
+			mStockFilter.setDividend(dividend);
+			mStockFilter.setYield(yield);
+			mStockFilter.setDelta(delta);
+
+			startSaveTask(EXECUTE_STOCK_FILTER_SAVE);
 			setResult(RESULT_OK, getIntent());
 			finish();
 			break;
@@ -100,27 +116,48 @@ public class StockFilterActivity extends DatabaseActivity implements
 	}
 
 	@Override
+	Long doInBackgroundLoad(Object... params) {
+		super.doInBackgroundLoad(params);
+		int execute = (Integer) params[0];
+
+		switch (execute) {
+		case EXECUTE_STOCK_FILTER_LOAD:
+			mStockDatabaseManager.getStockFilter(mStockFilter);
+			break;
+
+		default:
+			break;
+		}
+
+		return RESULT_SUCCESS;
+	}
+
+	@Override
+	void onPostExecuteLoad(Long result) {
+		super.onPostExecuteLoad(result);
+		updateView();
+	}
+
+	@Override
 	Long doInBackgroundSave(Object... params) {
 		super.doInBackgroundSave(params);
-//		int execute = (Integer) params[0];
-//
-//		switch (execute) {
-//		case EXECUTE_STOCK_SAVE:
-//			if (ACTION_STOCK_INSERT.equals(mAction)) {
-//				if (!mStockDatabaseManager.isStockExist(mStock)) {
-//					mStockDatabaseManager.insertStock(mStock);
-//				} else {
-//					return RESULT_STOCK_EXIST;
-//				}
-//			} else if (ACTION_STOCK_EDIT.equals(mAction)) {
-//				mStockDatabaseManager.updateStock(mStock,
-//						mStock.getContentValues());
-//			}
-//			break;
-//
-//		default:
-//			break;
-//		}
+		int execute = (Integer) params[0];
+
+		switch (execute) {
+		case EXECUTE_STOCK_FILTER_SAVE:
+			if (!mStockDatabaseManager.isStockFilterExist(mStockFilter)) {
+				mStockFilter.setCreated(Utility.getCurrentDateTimeString());
+				mStockDatabaseManager.insertStockFilter(mStockFilter);
+			} else {
+				mStockFilter.setModified(Utility.getCurrentDateTimeString());
+				mStockDatabaseManager.updateStockFilter(mStockFilter,
+						mStockFilter.getContentValues());
+			}
+			break;
+
+		default:
+			break;
+		}
 
 		return RESULT_SUCCESS;
 	}

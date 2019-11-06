@@ -11,6 +11,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +27,7 @@ import android.widget.Toast;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Setting;
 import com.android.orion.database.Stock;
+import com.android.orion.database.StockFilter;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Utility;
 
@@ -46,6 +48,8 @@ public class StockFavoriteListActivity extends ListActivity implements
 	String mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_ASC;
 	String mSortOrderDefault = mSortOrderColumn + mSortOrderDirection;
 	String mSortOrder = mSortOrderDefault;
+	
+	StockFilter mStockFilter = new StockFilter();
 
 	SyncHorizontalScrollView mTitleSHSV = null;
 	SyncHorizontalScrollView mContentSHSV = null;
@@ -138,7 +142,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 		case R.id.action_deal:
 			startActivity(new Intent(this, StockDealListActivity.class));
 			return true;
-			
+
 		case R.id.action_settings:
 			startActivity(new Intent(this, StockFilterActivity.class));
 			return true;
@@ -488,7 +492,9 @@ public class StockFavoriteListActivity extends ListActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-
+		
+		mStockDatabaseManager.getStockFilter(mStockFilter);
+		
 		restartLoader();
 	}
 
@@ -514,7 +520,19 @@ public class StockFavoriteListActivity extends ListActivity implements
 		case LOADER_ID_STOCK_FAVORITE_LIST:
 			selection = DatabaseContract.Stock.COLUMN_MARK + " = '"
 					+ Constants.STOCK_FLAG_MARK_FAVORITE + "'";
-
+			
+			if (!TextUtils.isEmpty(mStockFilter.getPE())) {
+//				selection += " AND " + "pe" + mStockFilter.getPE();
+			}
+			
+			if (!TextUtils.isEmpty(mStockFilter.getYield())) {
+//				selection += " AND " + "yield" + mStockFilter.getYield();
+			}
+			
+			if (!TextUtils.isEmpty(mStockFilter.getDelta())) {
+//				selection += " AND " + "delta" + mStockFilter.getDelta();
+			}
+			
 			loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
 					DatabaseContract.Stock.PROJECTION_ALL, selection, null,
 					mSortOrder);

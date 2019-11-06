@@ -1700,7 +1700,7 @@ public class StockDatabaseManager extends DatabaseManager {
 	}
 
 	public String getIPOSelection(IPO ipo) {
-		return getShareBonusSelection(ipo.getStockId(),
+		return getIPOSelection(ipo.getStockId(),
 				ipo.getDate());
 	}
 	
@@ -1715,5 +1715,187 @@ public class StockDatabaseManager extends DatabaseManager {
 
 	public String getIPOOrder() {
 		return DatabaseContract.COLUMN_DATE + " ASC ";
+	}
+	
+	public Uri insertStockFilter(StockFilter stockFilter) {
+		Uri uri = null;
+
+		if ((stockFilter == null) || (mContentResolver == null)) {
+			return uri;
+		}
+
+		uri = mContentResolver.insert(
+				DatabaseContract.StockFilter.CONTENT_URI,
+				stockFilter.getContentValues());
+
+		return uri;
+	}
+
+	public Cursor queryStockFilter(String selection, String[] selectionArgs,
+			String sortOrder) {
+		Cursor cursor = null;
+
+		if (mContentResolver == null) {
+			return cursor;
+		}
+
+		cursor = mContentResolver.query(
+				DatabaseContract.StockFilter.CONTENT_URI,
+				DatabaseContract.StockFilter.PROJECTION_ALL, selection,
+				selectionArgs, sortOrder);
+
+		return cursor;
+	}
+
+	public Cursor queryStockFilter(StockFilter stockFilter) {
+		Cursor cursor = null;
+
+		if ((stockFilter == null) || (mContentResolver == null)) {
+			return cursor;
+		}
+
+		String selection = getStockFilterSelection(stockFilter);
+		String sortOrder = getStockFilterOrder();
+
+		cursor = mContentResolver.query(
+				DatabaseContract.StockFilter.CONTENT_URI,
+				DatabaseContract.StockFilter.PROJECTION_ALL, selection, null,
+				sortOrder);
+
+		return cursor;
+	}
+
+	public void getStockFilter(StockFilter stockFilter) {
+		Cursor cursor = null;
+
+		if ((stockFilter == null) || (mContentResolver == null)) {
+			return;
+		}
+
+		try {
+			String sortOrder = getStockFilterOrder();
+
+			cursor = mContentResolver.query(
+					DatabaseContract.StockFilter.CONTENT_URI,
+					DatabaseContract.StockFilter.PROJECTION_ALL, null,
+					null, sortOrder);
+
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				cursor.moveToNext();
+				stockFilter.set(cursor);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+	
+	public void getStockFilterList(ArrayList<StockFilter> stockFilterList, String sortOrder) {
+		Cursor cursor = null;
+
+		if (stockFilterList == null) {
+			return;
+		}
+
+		stockFilterList.clear();
+
+		try {
+			cursor = queryStockFilter(null, null, sortOrder);
+
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				while (cursor.moveToNext()) {
+					StockFilter stockFilter = new StockFilter();
+					stockFilter.set(cursor);
+					stockFilterList.add(stockFilter);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+	
+	public boolean isStockFilterExist(StockFilter stockFilter) {
+		boolean result = false;
+		Cursor cursor = null;
+
+		if (stockFilter == null) {
+			return result;
+		}
+
+		try {
+			cursor = queryStockFilter(stockFilter);
+
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				cursor.moveToNext();
+				stockFilter.setCreated(cursor);
+				result = true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+
+		return result;
+	}
+
+	public int updateStockFilter(StockFilter stockFilter,
+			ContentValues contentValues) {
+		int result = 0;
+
+		if ((stockFilter == null) || (mContentResolver == null)) {
+			return result;
+		}
+
+		String where = getStockFilterSelection(stockFilter);
+
+		result = mContentResolver.update(
+				DatabaseContract.StockFilter.CONTENT_URI, contentValues,
+				where, null);
+
+		return result;
+	}
+
+	public int deleteStockFilter() {
+		int result = 0;
+
+		if (mContentResolver == null) {
+			return result;
+		}
+
+		result = mContentResolver.delete(
+				DatabaseContract.StockFilter.CONTENT_URI, null, null);
+
+		return result;
+	}
+	
+	public int deleteStockFilter(StockFilter stockFilter) {
+		int result = 0;
+
+		if ((stockFilter == null) || (mContentResolver == null)) {
+			return result;
+		}
+
+		String where = getStockFilterSelection(stockFilter);
+
+		result = mContentResolver.delete(
+				DatabaseContract.StockFilter.CONTENT_URI, where, null);
+
+		return result;
+	}
+
+	public String getStockFilterSelection(StockFilter stockFilter) {
+		return getStockFilterSelection(stockFilter.getId());
+	}
+	
+	public String getStockFilterSelection(long id) {
+		return DatabaseContract.StockFilter._ID + " = " + id;
+	}
+
+	public String getStockFilterOrder() {
+		return DatabaseContract.COLUMN_ID + " ASC ";
 	}
 }
