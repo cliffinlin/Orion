@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.android.orion"
-    android:versionCode="457"
-    android:versionName="1.1.32_20191104" >
+    android:versionCode="458"
+    android:versionName="1.1.33_20191110" >
 
     <uses-sdk
         android:minSdkVersion="19"
@@ -139,7 +139,7 @@
 
         <activity
             android:name="com.android.orion.StockFilterActivity"
-            android:label="@string/title_activity_filter" >
+            android:label="@string/filter" >
         </activity>
     </application>
 

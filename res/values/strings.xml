@@ -157,6 +157,6 @@
     <string name="ipo_list">IPO List</string>
     <string name="date">Date</string>
     <string name="time_to_market">TTM</string>
-    <string name="title_activity_filter">FilterActivity</string>
+    <string name="filter">Filter</string>
 
 </resources>

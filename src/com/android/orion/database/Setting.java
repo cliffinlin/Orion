@@ -5,9 +5,17 @@ import android.database.Cursor;
 
 public class Setting extends DatabaseTable {
 	public static final String KEY_STOCK_HSA_UPDATED = "stock_hsa_updated";
+
 	public static final String KEY_SORT_ORDER_IPO_LIST = "sort_order_ipo_list";
 	public static final String KEY_SORT_ORDER_STOCK_LIST = "sort_order_stock_list";
 	public static final String KEY_SORT_ORDER_STOCK_DEAL_LIST = "sort_order_stock_deal_list";
+
+	public static final String KEY_STOCK_FILTER = "key_stock_filter";
+	public static final String KEY_STOCK_FILTER_PE = "key_stock_filter_pe";
+	public static final String KEY_STOCK_FILTER_PB = "key_stock_filter_pb";
+	public static final String KEY_STOCK_FILTER_DIVIDEND = "key_stock_filter_dividend";
+	public static final String KEY_STOCK_FILTER_YIELD = "key_stock_filter_yield";
+	public static final String KEY_STOCK_FILTER_DELTA = "key_stock_filter_delta";
 
 	private String mKey;
 	private String mValue;

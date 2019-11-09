@@ -5,9 +5,9 @@ import android.database.Cursor;
 
 public class ShareBonus extends DatabaseTable {
 	private long mStockId;
-	private String mDate;//公告日期
-	private double mDividend;//派息(税前)(元)(每10股)
-	private String mDividendDate;//除权除息日
+	private String mDate;// 公告日期
+	private double mDividend;// 派息(税前)(元)(每10股)
+	private String mDividendDate;// 除权除息日
 
 	private ShareBonus next;
 	private static final Object sPoolSync = new Object();

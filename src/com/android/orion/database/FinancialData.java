@@ -72,15 +72,21 @@ public class FinancialData extends DatabaseTable {
 	ContentValues getContentValues(ContentValues contentValues) {
 		contentValues.put(DatabaseContract.COLUMN_STOCK_ID, mStockId);
 		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);
-		contentValues.put(DatabaseContract.COLUMN_BOOK_VALUE_PER_SHARE, mBookValuePerShare);
-		contentValues.put(DatabaseContract.COLUMN_EARNINGS_PER_SHARE, mEarningsPerShare);
-		contentValues.put(DatabaseContract.COLUMN_CASH_FLOW_PER_SHARE, mCashFlowPerShare);
-		contentValues.put(DatabaseContract.COLUMN_CURRENT_ASSETS, mTotalCurrentAssets);
+		contentValues.put(DatabaseContract.COLUMN_BOOK_VALUE_PER_SHARE,
+				mBookValuePerShare);
+		contentValues.put(DatabaseContract.COLUMN_EARNINGS_PER_SHARE,
+				mEarningsPerShare);
+		contentValues.put(DatabaseContract.COLUMN_CASH_FLOW_PER_SHARE,
+				mCashFlowPerShare);
+		contentValues.put(DatabaseContract.COLUMN_CURRENT_ASSETS,
+				mTotalCurrentAssets);
 		contentValues.put(DatabaseContract.COLUMN_TOTALASSETS, mTotalAssets);
 		contentValues.put(DatabaseContract.COLUMN_TOTAL_LONG_TERM_LIABILITIES,
 				mTotalLongTermLiabilities);
-		contentValues.put(DatabaseContract.COLUMN_MAIN_BUSINESS_INCOME, mMainBusinessIncome);
-		contentValues.put(DatabaseContract.COLUMN_FINANCIAL_EXPENSES, mFinancialExpenses);
+		contentValues.put(DatabaseContract.COLUMN_MAIN_BUSINESS_INCOME,
+				mMainBusinessIncome);
+		contentValues.put(DatabaseContract.COLUMN_FINANCIAL_EXPENSES,
+				mFinancialExpenses);
 		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT, mNetProfit);
 
 		return contentValues;
@@ -263,8 +269,9 @@ public class FinancialData extends DatabaseTable {
 			return;
 		}
 
-		setTotalLongTermLiabilities(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_TOTAL_LONG_TERM_LIABILITIES)));
+		setTotalLongTermLiabilities(cursor
+				.getDouble(cursor
+						.getColumnIndex(DatabaseContract.COLUMN_TOTAL_LONG_TERM_LIABILITIES)));
 	}
 
 	public double getMainBusinessIncome() {

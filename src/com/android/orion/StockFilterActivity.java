@@ -6,17 +6,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import com.android.orion.database.StockFilter;
-import com.android.orion.utility.Utility;
+import com.android.orion.database.Setting;
 
 public class StockFilterActivity extends DatabaseActivity implements
 		OnClickListener {
 
 	public static final int EXECUTE_STOCK_FILTER_LOAD = 0;
 	public static final int EXECUTE_STOCK_FILTER_SAVE = 1;
+
+	CheckBox mCheckBox;
 
 	EditText mEditTextPE;
 	EditText mEditTextPB;
@@ -25,7 +26,13 @@ public class StockFilterActivity extends DatabaseActivity implements
 	EditText mEditTextDelta;
 	Button mButtonOk, mButtonCancel;
 
-	StockFilter mStockFilter = StockFilter.obtain();
+	boolean mChecked = false;
+
+	String mPE = "";
+	String mPB = "";
+	String mDividend = "";
+	String mYield = "";
+	String mDelta = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +45,8 @@ public class StockFilterActivity extends DatabaseActivity implements
 	}
 
 	void initView() {
+		mCheckBox = (CheckBox) findViewById(R.id.checkbox);
+
 		mEditTextPE = (EditText) findViewById(R.id.edittext_pe);
 		mEditTextPB = (EditText) findViewById(R.id.edittext_pb);
 		mEditTextDividend = (EditText) findViewById(R.id.edittext_dividend);
@@ -46,6 +55,8 @@ public class StockFilterActivity extends DatabaseActivity implements
 
 		mButtonOk = (Button) findViewById(R.id.button_ok);
 		mButtonCancel = (Button) findViewById(R.id.button_cancel);
+
+		mCheckBox.setOnClickListener(this);
 
 		mEditTextPE.setOnClickListener(this);
 		mEditTextPB.setOnClickListener(this);
@@ -57,12 +68,18 @@ public class StockFilterActivity extends DatabaseActivity implements
 		mButtonCancel.setOnClickListener(this);
 	}
 
-	void updateView() {
-		mEditTextPE.setText(mStockFilter.getPE());
-		mEditTextPB.setText(mStockFilter.getPB());
-		mEditTextDividend.setText(mStockFilter.getDividend());
-		mEditTextYield.setText(mStockFilter.getYield());
-		mEditTextDelta.setText(mStockFilter.getDelta());
+	void updateEditText() {
+		mEditTextPE.setText(mPE);
+		mEditTextPB.setText(mPB);
+		mEditTextDividend.setText(mDividend);
+		mEditTextYield.setText(mYield);
+		mEditTextDelta.setText(mDelta);
+
+		mEditTextPE.setEnabled(mChecked);
+		mEditTextPB.setEnabled(mChecked);
+		mEditTextDividend.setEnabled(mChecked);
+		mEditTextYield.setEnabled(mChecked);
+		mEditTextDelta.setEnabled(mChecked);
 	}
 
 	@Override
@@ -88,18 +105,20 @@ public class StockFilterActivity extends DatabaseActivity implements
 		int id = view.getId();
 
 		switch (id) {
-		case R.id.button_ok:
-			String pe = mEditTextPE.getText().toString();
-			String pb = mEditTextPB.getText().toString();
-			String dividend = mEditTextDividend.getText().toString();
-			String yield = mEditTextYield.getText().toString();
-			String delta = mEditTextDelta.getText().toString();
+		case R.id.checkbox:
+			mChecked = mCheckBox.isChecked();
 
-			mStockFilter.setPE(pe);
-			mStockFilter.setPB(pb);
-			mStockFilter.setDividend(dividend);
-			mStockFilter.setYield(yield);
-			mStockFilter.setDelta(delta);
+			updateEditText();
+			break;
+
+		case R.id.button_ok:
+			mChecked = mCheckBox.isChecked();
+
+			mPE = mEditTextPE.getText().toString();
+			mPB = mEditTextPB.getText().toString();
+			mDividend = mEditTextDividend.getText().toString();
+			mYield = mEditTextYield.getText().toString();
+			mDelta = mEditTextDelta.getText().toString();
 
 			startSaveTask(EXECUTE_STOCK_FILTER_SAVE);
 			setResult(RESULT_OK, getIntent());
@@ -122,7 +141,19 @@ public class StockFilterActivity extends DatabaseActivity implements
 
 		switch (execute) {
 		case EXECUTE_STOCK_FILTER_LOAD:
-			mStockDatabaseManager.getStockFilter(mStockFilter);
+			mChecked = mStockDatabaseManager.getSettingBoolean(
+					Setting.KEY_STOCK_FILTER, false);
+
+			mPE = mStockDatabaseManager
+					.getSettingString(Setting.KEY_STOCK_FILTER_PE);
+			mPB = mStockDatabaseManager
+					.getSettingString(Setting.KEY_STOCK_FILTER_PB);
+			mDividend = mStockDatabaseManager
+					.getSettingString(Setting.KEY_STOCK_FILTER_DIVIDEND);
+			mYield = mStockDatabaseManager
+					.getSettingString(Setting.KEY_STOCK_FILTER_YIELD);
+			mDelta = mStockDatabaseManager
+					.getSettingString(Setting.KEY_STOCK_FILTER_DELTA);
 			break;
 
 		default:
@@ -135,7 +166,8 @@ public class StockFilterActivity extends DatabaseActivity implements
 	@Override
 	void onPostExecuteLoad(Long result) {
 		super.onPostExecuteLoad(result);
-		updateView();
+		mCheckBox.setChecked(mChecked);
+		updateEditText();
 	}
 
 	@Override
@@ -145,14 +177,17 @@ public class StockFilterActivity extends DatabaseActivity implements
 
 		switch (execute) {
 		case EXECUTE_STOCK_FILTER_SAVE:
-			if (!mStockDatabaseManager.isStockFilterExist(mStockFilter)) {
-				mStockFilter.setCreated(Utility.getCurrentDateTimeString());
-				mStockDatabaseManager.insertStockFilter(mStockFilter);
-			} else {
-				mStockFilter.setModified(Utility.getCurrentDateTimeString());
-				mStockDatabaseManager.updateStockFilter(mStockFilter,
-						mStockFilter.getContentValues());
-			}
+			mStockDatabaseManager.saveSetting(Setting.KEY_STOCK_FILTER,
+					mChecked);
+
+			mStockDatabaseManager.saveSetting(Setting.KEY_STOCK_FILTER_PE, mPE);
+			mStockDatabaseManager.saveSetting(Setting.KEY_STOCK_FILTER_PB, mPB);
+			mStockDatabaseManager.saveSetting(
+					Setting.KEY_STOCK_FILTER_DIVIDEND, mDividend);
+			mStockDatabaseManager.saveSetting(Setting.KEY_STOCK_FILTER_YIELD,
+					mYield);
+			mStockDatabaseManager.saveSetting(Setting.KEY_STOCK_FILTER_DELTA,
+					mDelta);
 			break;
 
 		default:
@@ -166,7 +201,7 @@ public class StockFilterActivity extends DatabaseActivity implements
 	void onPostExecuteSave(Long result) {
 		super.onPostExecuteSave(result);
 
-		Toast.makeText(mContext, R.string.stock_exist, Toast.LENGTH_LONG)
-				.show();
+		// Toast.makeText(mContext, R.string.stock_exist, Toast.LENGTH_LONG)
+		// .show();
 	}
 }

@@ -21,8 +21,8 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 	public static final String ACTION_STOCK_INSERT = "orion.intent.action.ACTION_STOCKINSERT";
 	public static final String ACTION_STOCK_EDIT = "orion.intent.action.ACTION_STOCK_EDIT";
 
-	public static final int EXECUTE_STOCK_LOAD = 0;
-	public static final int EXECUTE_STOCK_SAVE = 1;
+	public static final int EXECUTE_STOCK_LOAD = 1;
+	public static final int EXECUTE_STOCK_SAVE = 2;
 
 	public static final long RESULT_STOCK_EXIST = -2;
 

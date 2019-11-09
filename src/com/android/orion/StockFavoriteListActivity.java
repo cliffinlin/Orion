@@ -27,7 +27,6 @@ import android.widget.Toast;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Setting;
 import com.android.orion.database.Stock;
-import com.android.orion.database.StockFilter;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Utility;
 
@@ -44,12 +43,18 @@ public class StockFavoriteListActivity extends ListActivity implements
 	static final int mHeaderTextDefaultColor = Color.BLACK;
 	static final int mHeaderTextHighlightColor = Color.RED;
 
+	boolean mStockFilter = false;
+
+	String mStockFilterPE = "";
+	String mStockFilterPB = "";
+	String mStockFilterDividend = "";
+	String mStockFilterYield = "";
+	String mStockFilterDelta = "";
+
 	String mSortOrderColumn = DatabaseContract.COLUMN_CODE;
 	String mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_ASC;
 	String mSortOrderDefault = mSortOrderColumn + mSortOrderDirection;
 	String mSortOrder = mSortOrderDefault;
-	
-	StockFilter mStockFilter = new StockFilter();
 
 	SyncHorizontalScrollView mTitleSHSV = null;
 	SyncHorizontalScrollView mContentSHSV = null;
@@ -492,9 +497,21 @@ public class StockFavoriteListActivity extends ListActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
-		mStockDatabaseManager.getStockFilter(mStockFilter);
-		
+
+		mStockFilter = mStockDatabaseManager.getSettingBoolean(
+				Setting.KEY_STOCK_FILTER, false);
+
+		mStockFilterPE = mStockDatabaseManager
+				.getSettingString(Setting.KEY_STOCK_FILTER_PE);
+		mStockFilterPB = mStockDatabaseManager
+				.getSettingString(Setting.KEY_STOCK_FILTER_PB);
+		mStockFilterDividend = mStockDatabaseManager
+				.getSettingString(Setting.KEY_STOCK_FILTER_DIVIDEND);
+		mStockFilterYield = mStockDatabaseManager
+				.getSettingString(Setting.KEY_STOCK_FILTER_YIELD);
+		mStockFilterDelta = mStockDatabaseManager
+				.getSettingString(Setting.KEY_STOCK_FILTER_DELTA);
+
 		restartLoader();
 	}
 
@@ -520,19 +537,21 @@ public class StockFavoriteListActivity extends ListActivity implements
 		case LOADER_ID_STOCK_FAVORITE_LIST:
 			selection = DatabaseContract.Stock.COLUMN_MARK + " = '"
 					+ Constants.STOCK_FLAG_MARK_FAVORITE + "'";
-			
-			if (!TextUtils.isEmpty(mStockFilter.getPE())) {
-//				selection += " AND " + "pe" + mStockFilter.getPE();
+
+			if (mStockFilter) {
+				if (!TextUtils.isEmpty(mStockFilterPE)) {
+					selection += " AND " + "pe" + mStockFilterPE;
+				}
+
+				if (!TextUtils.isEmpty(mStockFilterYield)) {
+					selection += " AND " + "yield" + mStockFilterYield;
+				}
+
+				if (!TextUtils.isEmpty(mStockFilterDelta)) {
+					selection += " AND " + "delta" + mStockFilterDelta;
+				}
 			}
-			
-			if (!TextUtils.isEmpty(mStockFilter.getYield())) {
-//				selection += " AND " + "yield" + mStockFilter.getYield();
-			}
-			
-			if (!TextUtils.isEmpty(mStockFilter.getDelta())) {
-//				selection += " AND " + "delta" + mStockFilter.getDelta();
-			}
-			
+
 			loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
 					DatabaseContract.Stock.PROJECTION_ALL, selection, null,
 					mSortOrder);
