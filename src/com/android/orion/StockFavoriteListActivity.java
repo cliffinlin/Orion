@@ -36,9 +36,12 @@ public class StockFavoriteListActivity extends ListActivity implements
 
 	public static final String ACTION_STOCK_ID = "orion.intent.action.ACTION_STOCK_ID";
 
+	public static final int EXECUTE_STOCK_FILTER_LOAD = 0;
+
 	public static final int LOADER_ID_STOCK_FAVORITE_LIST = 0;
 
 	public static final int REQUEST_CODE_STOCK_INSERT = 0;
+	public static final int REQUEST_CODE_STOCK_FILTER = 1;
 
 	static final int mHeaderTextDefaultColor = Color.BLACK;
 	static final int mHeaderTextHighlightColor = Color.RED;
@@ -113,6 +116,8 @@ public class StockFavoriteListActivity extends ListActivity implements
 
 		mLoaderManager.initLoader(LOADER_ID_STOCK_FAVORITE_LIST, null, this);
 
+		startLoadTask(EXECUTE_STOCK_FILTER_LOAD);
+
 		if (!Utility.isNetworkConnected(this)) {
 			Toast.makeText(this,
 					getResources().getString(R.string.network_unavailable),
@@ -135,9 +140,9 @@ public class StockFavoriteListActivity extends ListActivity implements
 			return true;
 
 		case R.id.action_new:
-			mIntent = new Intent(this, StockActivity.class);
-			mIntent.setAction(StockActivity.ACTION_STOCK_INSERT);
-			startActivityForResult(mIntent, REQUEST_CODE_STOCK_INSERT);
+			Intent intent = new Intent(this, StockActivity.class);
+			intent.setAction(StockActivity.ACTION_STOCK_INSERT);
+			startActivityForResult(intent, REQUEST_CODE_STOCK_INSERT);
 			return true;
 
 		case R.id.action_search:
@@ -149,7 +154,8 @@ public class StockFavoriteListActivity extends ListActivity implements
 			return true;
 
 		case R.id.action_settings:
-			startActivity(new Intent(this, StockFilterActivity.class));
+			startActivityForResult(new Intent(this, StockFilterActivity.class),
+					REQUEST_CODE_STOCK_FILTER);
 			return true;
 
 		case R.id.action_save_to_file:
@@ -170,13 +176,32 @@ public class StockFavoriteListActivity extends ListActivity implements
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
+	protected void onActivityResult(int requestCode, int resultCode,
+			Intent intent) {
+		super.onActivityResult(requestCode, resultCode, intent);
 
 		if (resultCode == RESULT_OK) {
 			switch (requestCode) {
 			case REQUEST_CODE_STOCK_INSERT:
 				mHandler.sendEmptyMessage(MESSAGE_REFRESH);
+				break;
+
+			case REQUEST_CODE_STOCK_FILTER:
+				Bundle bundle = intent.getExtras();
+				if (bundle != null) {
+					mStockFilter = bundle.getBoolean(Setting.KEY_STOCK_FILTER,
+							false);
+					mStockFilterPE = bundle
+							.getString(Setting.KEY_STOCK_FILTER_PE);
+					mStockFilterPB = bundle
+							.getString(Setting.KEY_STOCK_FILTER_PB);
+					mStockFilterDividend = bundle
+							.getString(Setting.KEY_STOCK_FILTER_DIVIDEND);
+					mStockFilterYield = bundle
+							.getString(Setting.KEY_STOCK_FILTER_YIELD);
+					mStockFilterDelta = bundle
+							.getString(Setting.KEY_STOCK_FILTER_DELTA);
+				}
 				break;
 
 			default:
@@ -190,6 +215,9 @@ public class StockFavoriteListActivity extends ListActivity implements
 		int execute = (Integer) params[0];
 
 		switch (execute) {
+		case EXECUTE_STOCK_FILTER_LOAD:
+			loadSetting();
+			break;
 
 		default:
 			break;
@@ -490,14 +518,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 		}
 	}
 
-	void restartLoader() {
-		mLoaderManager.restartLoader(LOADER_ID_STOCK_FAVORITE_LIST, null, this);
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-
+	void loadSetting() {
 		mStockFilter = mStockDatabaseManager.getSettingBoolean(
 				Setting.KEY_STOCK_FILTER, false);
 
@@ -511,6 +532,15 @@ public class StockFavoriteListActivity extends ListActivity implements
 				.getSettingString(Setting.KEY_STOCK_FILTER_YIELD);
 		mStockFilterDelta = mStockDatabaseManager
 				.getSettingString(Setting.KEY_STOCK_FILTER_DELTA);
+	}
+
+	void restartLoader() {
+		mLoaderManager.restartLoader(LOADER_ID_STOCK_FAVORITE_LIST, null, this);
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
 
 		restartLoader();
 	}

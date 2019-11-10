@@ -8,6 +8,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.android.orion.database.Setting;
 
@@ -121,7 +122,16 @@ public class StockFilterActivity extends DatabaseActivity implements
 			mDelta = mEditTextDelta.getText().toString();
 
 			startSaveTask(EXECUTE_STOCK_FILTER_SAVE);
-			setResult(RESULT_OK, getIntent());
+
+			Bundle bundle = new Bundle();
+			bundle.putBoolean(Setting.KEY_STOCK_FILTER, mChecked);
+			bundle.putString(Setting.KEY_STOCK_FILTER_PE, mPE);
+			bundle.putString(Setting.KEY_STOCK_FILTER_PB, mPB);
+			bundle.putString(Setting.KEY_STOCK_FILTER_DIVIDEND, mDividend);
+			bundle.putString(Setting.KEY_STOCK_FILTER_YIELD, mYield);
+			bundle.putString(Setting.KEY_STOCK_FILTER_DELTA, mDelta);
+			mIntent.putExtras(bundle);
+			setResult(RESULT_OK, mIntent);
 			finish();
 			break;
 
@@ -201,7 +211,6 @@ public class StockFilterActivity extends DatabaseActivity implements
 	void onPostExecuteSave(Long result) {
 		super.onPostExecuteSave(result);
 
-		// Toast.makeText(mContext, R.string.stock_exist, Toast.LENGTH_LONG)
-		// .show();
+		Toast.makeText(mContext, R.string.saved, Toast.LENGTH_LONG).show();
 	}
 }
