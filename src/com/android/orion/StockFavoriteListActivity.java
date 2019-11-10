@@ -519,19 +519,19 @@ public class StockFavoriteListActivity extends ListActivity implements
 	}
 
 	void loadSetting() {
-		mStockFilter = mStockDatabaseManager.getSettingBoolean(
-				Setting.KEY_STOCK_FILTER, false);
+		mStockFilter = Preferences.readBoolean(this, Setting.KEY_STOCK_FILTER,
+				false);
 
-		mStockFilterPE = mStockDatabaseManager
-				.getSettingString(Setting.KEY_STOCK_FILTER_PE);
-		mStockFilterPB = mStockDatabaseManager
-				.getSettingString(Setting.KEY_STOCK_FILTER_PB);
-		mStockFilterDividend = mStockDatabaseManager
-				.getSettingString(Setting.KEY_STOCK_FILTER_DIVIDEND);
-		mStockFilterYield = mStockDatabaseManager
-				.getSettingString(Setting.KEY_STOCK_FILTER_YIELD);
-		mStockFilterDelta = mStockDatabaseManager
-				.getSettingString(Setting.KEY_STOCK_FILTER_DELTA);
+		mStockFilterPE = Preferences.readString(this,
+				Setting.KEY_STOCK_FILTER_PE, "");
+		mStockFilterPB = Preferences.readString(this,
+				Setting.KEY_STOCK_FILTER_PB, "");
+		mStockFilterDividend = Preferences.readString(this,
+				Setting.KEY_STOCK_FILTER_DIVIDEND, "");
+		mStockFilterYield = Preferences.readString(this,
+				Setting.KEY_STOCK_FILTER_YIELD, "");
+		mStockFilterDelta = Preferences.readString(this,
+				Setting.KEY_STOCK_FILTER_DELTA, "");
 	}
 
 	void restartLoader() {

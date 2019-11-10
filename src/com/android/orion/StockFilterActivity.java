@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.orion.database.Setting;
+import com.android.orion.utility.Preferences;
 
 public class StockFilterActivity extends DatabaseActivity implements
 		OnClickListener {
@@ -42,7 +43,7 @@ public class StockFilterActivity extends DatabaseActivity implements
 
 		initView();
 
-		startLoadTask(EXECUTE_STOCK_FILTER_LOAD);
+		// startLoadTask(EXECUTE_STOCK_FILTER_LOAD);
 	}
 
 	void initView() {
@@ -67,6 +68,21 @@ public class StockFilterActivity extends DatabaseActivity implements
 
 		mButtonOk.setOnClickListener(this);
 		mButtonCancel.setOnClickListener(this);
+
+		mChecked = Preferences
+				.readBoolean(this, Setting.KEY_STOCK_FILTER, true);
+
+		mPE = Preferences.readString(this, Setting.KEY_STOCK_FILTER_PE, "");
+		mPB = Preferences.readString(this, Setting.KEY_STOCK_FILTER_PB, "");
+		mDividend = Preferences.readString(this,
+				Setting.KEY_STOCK_FILTER_DIVIDEND, "");
+		mYield = Preferences.readString(this, Setting.KEY_STOCK_FILTER_YIELD,
+				">3");
+		mDelta = Preferences.readString(this, Setting.KEY_STOCK_FILTER_DELTA,
+				"");
+
+		mCheckBox.setChecked(mChecked);
+		updateEditText();
 	}
 
 	void updateEditText() {
@@ -108,20 +124,28 @@ public class StockFilterActivity extends DatabaseActivity implements
 		switch (id) {
 		case R.id.checkbox:
 			mChecked = mCheckBox.isChecked();
-
 			updateEditText();
 			break;
 
 		case R.id.button_ok:
 			mChecked = mCheckBox.isChecked();
-
 			mPE = mEditTextPE.getText().toString();
 			mPB = mEditTextPB.getText().toString();
 			mDividend = mEditTextDividend.getText().toString();
 			mYield = mEditTextYield.getText().toString();
 			mDelta = mEditTextDelta.getText().toString();
 
-			startSaveTask(EXECUTE_STOCK_FILTER_SAVE);
+			Preferences.writeBoolean(this, Setting.KEY_STOCK_FILTER, mChecked);
+			Preferences.writeString(this, Setting.KEY_STOCK_FILTER_PE, mPE);
+			Preferences.writeString(this, Setting.KEY_STOCK_FILTER_PB, mPB);
+			Preferences.writeString(this, Setting.KEY_STOCK_FILTER_DIVIDEND,
+					mDividend);
+			Preferences.writeString(this, Setting.KEY_STOCK_FILTER_YIELD,
+					mYield);
+			Preferences.writeString(this, Setting.KEY_STOCK_FILTER_DELTA,
+					mDelta);
+
+			// startSaveTask(EXECUTE_STOCK_FILTER_SAVE);
 
 			Bundle bundle = new Bundle();
 			bundle.putBoolean(Setting.KEY_STOCK_FILTER, mChecked);
@@ -151,19 +175,17 @@ public class StockFilterActivity extends DatabaseActivity implements
 
 		switch (execute) {
 		case EXECUTE_STOCK_FILTER_LOAD:
-			mChecked = mStockDatabaseManager.getSettingBoolean(
-					Setting.KEY_STOCK_FILTER, false);
+			mChecked = Preferences.readBoolean(this, Setting.KEY_STOCK_FILTER,
+					false);
 
-			mPE = mStockDatabaseManager
-					.getSettingString(Setting.KEY_STOCK_FILTER_PE);
-			mPB = mStockDatabaseManager
-					.getSettingString(Setting.KEY_STOCK_FILTER_PB);
-			mDividend = mStockDatabaseManager
-					.getSettingString(Setting.KEY_STOCK_FILTER_DIVIDEND);
-			mYield = mStockDatabaseManager
-					.getSettingString(Setting.KEY_STOCK_FILTER_YIELD);
-			mDelta = mStockDatabaseManager
-					.getSettingString(Setting.KEY_STOCK_FILTER_DELTA);
+			mPE = Preferences.readString(this, Setting.KEY_STOCK_FILTER_PE, "");
+			mPB = Preferences.readString(this, Setting.KEY_STOCK_FILTER_PB, "");
+			mDividend = Preferences.readString(this,
+					Setting.KEY_STOCK_FILTER_DIVIDEND, "");
+			mYield = Preferences.readString(this,
+					Setting.KEY_STOCK_FILTER_YIELD, "");
+			mDelta = Preferences.readString(this,
+					Setting.KEY_STOCK_FILTER_DELTA, "");
 			break;
 
 		default:
@@ -187,16 +209,15 @@ public class StockFilterActivity extends DatabaseActivity implements
 
 		switch (execute) {
 		case EXECUTE_STOCK_FILTER_SAVE:
-			mStockDatabaseManager.saveSetting(Setting.KEY_STOCK_FILTER,
-					mChecked);
+			Preferences.writeBoolean(this, Setting.KEY_STOCK_FILTER, mChecked);
 
-			mStockDatabaseManager.saveSetting(Setting.KEY_STOCK_FILTER_PE, mPE);
-			mStockDatabaseManager.saveSetting(Setting.KEY_STOCK_FILTER_PB, mPB);
-			mStockDatabaseManager.saveSetting(
-					Setting.KEY_STOCK_FILTER_DIVIDEND, mDividend);
-			mStockDatabaseManager.saveSetting(Setting.KEY_STOCK_FILTER_YIELD,
+			Preferences.writeString(this, Setting.KEY_STOCK_FILTER_PE, mPE);
+			Preferences.writeString(this, Setting.KEY_STOCK_FILTER_PB, mPB);
+			Preferences.writeString(this, Setting.KEY_STOCK_FILTER_DIVIDEND,
+					mDividend);
+			Preferences.writeString(this, Setting.KEY_STOCK_FILTER_YIELD,
 					mYield);
-			mStockDatabaseManager.saveSetting(Setting.KEY_STOCK_FILTER_DELTA,
+			Preferences.writeString(this, Setting.KEY_STOCK_FILTER_DELTA,
 					mDelta);
 			break;
 
