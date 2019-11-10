@@ -876,7 +876,7 @@ public class Stock extends StockBase {
 				Constants.DOUBLE_FIXED_DECIMAL);
 
 		if (mYield > 0) {
-			mDelta = Utility.Round((mPE - mYield) / mYield, Constants.DOUBLE_FIXED_DECIMAL);
+			mDelta = Utility.Round(mPE / mYield, Constants.DOUBLE_FIXED_DECIMAL);
 		}
 	}
 }
