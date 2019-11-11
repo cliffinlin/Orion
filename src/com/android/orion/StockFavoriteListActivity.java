@@ -36,8 +36,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 
 	public static final String ACTION_STOCK_ID = "orion.intent.action.ACTION_STOCK_ID";
 
-	public static final int EXECUTE_STOCK_FILTER_LOAD = 0;
-
 	public static final int LOADER_ID_STOCK_FAVORITE_LIST = 0;
 
 	public static final int REQUEST_CODE_STOCK_INSERT = 0;
@@ -45,14 +43,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 
 	static final int mHeaderTextDefaultColor = Color.BLACK;
 	static final int mHeaderTextHighlightColor = Color.RED;
-
-	boolean mStockFilter = false;
-
-	String mStockFilterPE = "";
-	String mStockFilterPB = "";
-	String mStockFilterDividend = "";
-	String mStockFilterYield = "";
-	String mStockFilterDelta = "";
 
 	String mSortOrderColumn = DatabaseContract.COLUMN_CODE;
 	String mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_ASC;
@@ -103,6 +93,8 @@ public class StockFavoriteListActivity extends ListActivity implements
 
 		setContentView(R.layout.activity_stock_favorite_list);
 
+		loadSetting();
+		
 		mSortOrder = getSetting(Setting.KEY_SORT_ORDER_STOCK_LIST,
 				mSortOrderDefault);
 
@@ -115,8 +107,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 				new IntentFilter(Constants.ACTION_SERVICE_FINISHED));
 
 		mLoaderManager.initLoader(LOADER_ID_STOCK_FAVORITE_LIST, null, this);
-
-		startLoadTask(EXECUTE_STOCK_FILTER_LOAD);
 
 		if (!Utility.isNetworkConnected(this)) {
 			Toast.makeText(this,
@@ -215,9 +205,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 		int execute = (Integer) params[0];
 
 		switch (execute) {
-		case EXECUTE_STOCK_FILTER_LOAD:
-			loadSetting();
-			break;
 
 		default:
 			break;
@@ -516,22 +503,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 			mRightListView.setOnItemClickListener(this);
 			mRightListView.setOnItemLongClickListener(this);
 		}
-	}
-
-	void loadSetting() {
-		mStockFilter = Preferences.readBoolean(this, Setting.KEY_STOCK_FILTER,
-				false);
-
-		mStockFilterPE = Preferences.readString(this,
-				Setting.KEY_STOCK_FILTER_PE, "");
-		mStockFilterPB = Preferences.readString(this,
-				Setting.KEY_STOCK_FILTER_PB, "");
-		mStockFilterDividend = Preferences.readString(this,
-				Setting.KEY_STOCK_FILTER_DIVIDEND, "");
-		mStockFilterYield = Preferences.readString(this,
-				Setting.KEY_STOCK_FILTER_YIELD, "");
-		mStockFilterDelta = Preferences.readString(this,
-				Setting.KEY_STOCK_FILTER_DELTA, "");
 	}
 
 	void restartLoader() {

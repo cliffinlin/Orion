@@ -21,13 +21,24 @@ import android.util.ArrayMap;
 
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.FinancialData;
+import com.android.orion.database.Setting;
 import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockDatabaseManager;
 import com.android.orion.database.StockDeal;
+import com.android.orion.utility.Preferences;
 
 public class OrionBaseActivity extends Activity {
+
+	boolean mStockFilter = false;
+
+	String mStockFilterPE = "";
+	String mStockFilterPB = "";
+	String mStockFilterDividend = "";
+	String mStockFilterYield = "";
+	String mStockFilterDelta = "";
+	
 	boolean mBound = false;
 	boolean mResumed = false;
 
@@ -163,6 +174,22 @@ public class OrionBaseActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 		mResumed = true;
+	}
+
+	void loadSetting() {
+		mStockFilter = Preferences.readBoolean(this, Setting.KEY_STOCK_FILTER,
+				false);
+
+		mStockFilterPE = Preferences.readString(this,
+				Setting.KEY_STOCK_FILTER_PE, "");
+		mStockFilterPB = Preferences.readString(this,
+				Setting.KEY_STOCK_FILTER_PB, "");
+		mStockFilterDividend = Preferences.readString(this,
+				Setting.KEY_STOCK_FILTER_DIVIDEND, "");
+		mStockFilterYield = Preferences.readString(this,
+				Setting.KEY_STOCK_FILTER_YIELD, "");
+		mStockFilterDelta = Preferences.readString(this,
+				Setting.KEY_STOCK_FILTER_DELTA, "");
 	}
 
 	public void showProgressDialog(String content) {

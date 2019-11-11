@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.android.orion"
-    android:versionCode="458"
-    android:versionName="1.1.33_20191110" >
+    android:versionCode="459"
+    android:versionName="1.1.33_20191111" >
 
     <uses-sdk
         android:minSdkVersion="19"
@@ -31,7 +31,8 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="com.android.orion.OrionMainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:launchMode="singleTask" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -40,7 +41,8 @@
         </activity>
         <activity
             android:name="com.android.orion.about.AboutActivity"
-            android:label="@string/title_activity_about" >
+            android:label="@string/title_activity_about"
+            android:launchMode="singleTask" >
         </activity>
         <activity android:name="com.android.orion.DatabaseActivity" >
         </activity>
@@ -50,31 +52,38 @@
         </activity>
         <activity
             android:name="com.android.orion.StockDataChartListActivity"
-            android:label="@string/stock_data_chart" >
+            android:label="@string/stock_data_chart"
+            android:launchMode="singleTask" >
         </activity>
         <activity
             android:name="com.android.orion.StatisticsChartListActivity"
-            android:label="@string/statistics_chart" >
+            android:label="@string/statistics_chart"
+            android:launchMode="singleTask" >
         </activity>
         <activity
             android:name="com.android.orion.FinancialDataChartListActivity"
-            android:label="@string/financial_data_chart" >
+            android:label="@string/financial_data_chart"
+            android:launchMode="singleTask" >
         </activity>
         <activity
             android:name="com.android.orion.StockFavoriteListActivity"
-            android:label="@string/favorite_list" >
+            android:label="@string/favorite_list"
+            android:launchMode="singleTask" >
         </activity>
         <activity
             android:name="com.android.orion.StockListActivity"
-            android:label="@string/stock_list" >
+            android:label="@string/stock_list"
+            android:launchMode="singleTask" >
         </activity>
         <activity
             android:name="com.android.orion.StockEditActivity"
-            android:label="@string/list" >
+            android:label="@string/list"
+            android:launchMode="singleTask" >
         </activity>
         <activity
             android:name="com.android.orion.StockFavoriteEditActivity"
-            android:label="@string/list" >
+            android:label="@string/list"
+            android:launchMode="singleTask" >
         </activity>
         <activity
             android:name="com.android.orion.StockSearchActivity"
@@ -90,19 +99,28 @@
         </activity>
         <activity
             android:name="com.android.orion.ServiceSettingActivity"
-            android:label="@string/title_activity_service_setting" >
+            android:label="@string/title_activity_service_setting"
+            android:launchMode="singleTask" >
         </activity>
         <activity
             android:name="com.android.orion.StockDealListActivity"
-            android:label="@string/title_activity_deal_list" >
+            android:label="@string/title_activity_deal_list"
+            android:launchMode="singleTask" >
         </activity>
         <activity
             android:name="com.android.orion.StockDealActivity"
-            android:label="@string/title_activity_deal" >
+            android:label="@string/title_activity_deal"
+            android:launchMode="singleTask" >
         </activity>
         <activity
             android:name="com.android.orion.IPOListActivity"
-            android:label="@string/ipo_list" >
+            android:label="@string/ipo_list"
+            android:launchMode="singleTask" >
+        </activity>
+        <activity
+            android:name="com.android.orion.StockFilterActivity"
+            android:label="@string/filter"
+            android:launchMode="singleTask" >
         </activity>
 
         <provider
@@ -136,11 +154,6 @@
         <service
             android:name="com.android.orion.OrionService"
             android:exported="false" />
-
-        <activity
-            android:name="com.android.orion.StockFilterActivity"
-            android:label="@string/filter" >
-        </activity>
     </application>
 
 </manifest>

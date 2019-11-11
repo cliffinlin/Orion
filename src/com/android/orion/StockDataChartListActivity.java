@@ -224,7 +224,7 @@ public class StockDataChartListActivity extends OrionBaseActivity implements
 		LocalBroadcastManager.getInstance(this).unregisterReceiver(
 				mBroadcastReceiver);
 	}
-
+	
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle arg1) {
 		CursorLoader loader = null;
@@ -323,9 +323,26 @@ public class StockDataChartListActivity extends OrionBaseActivity implements
 	CursorLoader getStockCursorLoader() {
 		String selection = "";
 		CursorLoader loader = null;
-
+		
+		loadSetting();
+		
 		selection = DatabaseContract.Stock.COLUMN_MARK + " = '"
 				+ Constants.STOCK_FLAG_MARK_FAVORITE + "'";
+
+		if (mStockFilter) {
+			if (!TextUtils.isEmpty(mStockFilterPE)) {
+				selection += " AND " + "pe" + mStockFilterPE;
+			}
+
+			if (!TextUtils.isEmpty(mStockFilterYield)) {
+				selection += " AND " + "yield" + mStockFilterYield;
+			}
+
+			if (!TextUtils.isEmpty(mStockFilterDelta)) {
+				selection += " AND " + "delta" + mStockFilterDelta;
+			}
+		}
+		
 		loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
 				DatabaseContract.Stock.PROJECTION_ALL, selection, null,
 				mSortOrder);
