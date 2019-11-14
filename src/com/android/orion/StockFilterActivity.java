@@ -10,9 +10,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.android.orion.database.Setting;
-import com.android.orion.utility.Preferences;
-
 public class StockFilterActivity extends DatabaseActivity implements
 		OnClickListener {
 
@@ -28,22 +25,16 @@ public class StockFilterActivity extends DatabaseActivity implements
 	EditText mEditTextDelta;
 	Button mButtonOk, mButtonCancel;
 
-	boolean mChecked = false;
-
-	String mPE = "";
-	String mPB = "";
-	String mDividend = "";
-	String mYield = "";
-	String mDelta = "";
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_stock_filter);
 
-		initView();
+		mStockFilter.setDefaultEnable(true);
+		mStockFilter.setDefaultYield(">3");
+		mStockFilter.read();
 
-		// startLoadTask(EXECUTE_STOCK_FILTER_LOAD);
+		initView();
 	}
 
 	void initView() {
@@ -69,34 +60,22 @@ public class StockFilterActivity extends DatabaseActivity implements
 		mButtonOk.setOnClickListener(this);
 		mButtonCancel.setOnClickListener(this);
 
-		mChecked = Preferences
-				.readBoolean(this, Setting.KEY_STOCK_FILTER, true);
-
-		mPE = Preferences.readString(this, Setting.KEY_STOCK_FILTER_PE, "");
-		mPB = Preferences.readString(this, Setting.KEY_STOCK_FILTER_PB, "");
-		mDividend = Preferences.readString(this,
-				Setting.KEY_STOCK_FILTER_DIVIDEND, "");
-		mYield = Preferences.readString(this, Setting.KEY_STOCK_FILTER_YIELD,
-				">3");
-		mDelta = Preferences.readString(this, Setting.KEY_STOCK_FILTER_DELTA,
-				"");
-
-		mCheckBox.setChecked(mChecked);
+		mCheckBox.setChecked(mStockFilter.getEnable());
 		updateEditText();
 	}
 
 	void updateEditText() {
-		mEditTextPE.setText(mPE);
-		mEditTextPB.setText(mPB);
-		mEditTextDividend.setText(mDividend);
-		mEditTextYield.setText(mYield);
-		mEditTextDelta.setText(mDelta);
+		mEditTextPE.setText(mStockFilter.getPE());
+		mEditTextPB.setText(mStockFilter.getPB());
+		mEditTextDividend.setText(mStockFilter.getDividend());
+		mEditTextYield.setText(mStockFilter.getYield());
+		mEditTextDelta.setText(mStockFilter.getDelta());
 
-		mEditTextPE.setEnabled(mChecked);
-		mEditTextPB.setEnabled(mChecked);
-		mEditTextDividend.setEnabled(mChecked);
-		mEditTextYield.setEnabled(mChecked);
-		mEditTextDelta.setEnabled(mChecked);
+		mEditTextPE.setEnabled(mStockFilter.getEnable());
+		mEditTextPB.setEnabled(mStockFilter.getEnable());
+		mEditTextDividend.setEnabled(mStockFilter.getEnable());
+		mEditTextYield.setEnabled(mStockFilter.getEnable());
+		mEditTextDelta.setEnabled(mStockFilter.getEnable());
 	}
 
 	@Override
@@ -123,37 +102,21 @@ public class StockFilterActivity extends DatabaseActivity implements
 
 		switch (id) {
 		case R.id.checkbox:
-			mChecked = mCheckBox.isChecked();
+			mStockFilter.setEnable(mCheckBox.isChecked());
 			updateEditText();
 			break;
 
 		case R.id.button_ok:
-			mChecked = mCheckBox.isChecked();
-			mPE = mEditTextPE.getText().toString();
-			mPB = mEditTextPB.getText().toString();
-			mDividend = mEditTextDividend.getText().toString();
-			mYield = mEditTextYield.getText().toString();
-			mDelta = mEditTextDelta.getText().toString();
-
-			Preferences.writeBoolean(this, Setting.KEY_STOCK_FILTER, mChecked);
-			Preferences.writeString(this, Setting.KEY_STOCK_FILTER_PE, mPE);
-			Preferences.writeString(this, Setting.KEY_STOCK_FILTER_PB, mPB);
-			Preferences.writeString(this, Setting.KEY_STOCK_FILTER_DIVIDEND,
-					mDividend);
-			Preferences.writeString(this, Setting.KEY_STOCK_FILTER_YIELD,
-					mYield);
-			Preferences.writeString(this, Setting.KEY_STOCK_FILTER_DELTA,
-					mDelta);
-
-			// startSaveTask(EXECUTE_STOCK_FILTER_SAVE);
+			mStockFilter.setEnable(mCheckBox.isChecked());
+			mStockFilter.setPE(mEditTextPE.getText().toString());
+			mStockFilter.setPB(mEditTextPB.getText().toString());
+			mStockFilter.setDividend(mEditTextDividend.getText().toString());
+			mStockFilter.setYield(mEditTextYield.getText().toString());
+			mStockFilter.setDelta(mEditTextDelta.getText().toString());
+			mStockFilter.write();
 
 			Bundle bundle = new Bundle();
-			bundle.putBoolean(Setting.KEY_STOCK_FILTER, mChecked);
-			bundle.putString(Setting.KEY_STOCK_FILTER_PE, mPE);
-			bundle.putString(Setting.KEY_STOCK_FILTER_PB, mPB);
-			bundle.putString(Setting.KEY_STOCK_FILTER_DIVIDEND, mDividend);
-			bundle.putString(Setting.KEY_STOCK_FILTER_YIELD, mYield);
-			bundle.putString(Setting.KEY_STOCK_FILTER_DELTA, mDelta);
+			mStockFilter.put(bundle);
 			mIntent.putExtras(bundle);
 			setResult(RESULT_OK, mIntent);
 			finish();
@@ -175,17 +138,7 @@ public class StockFilterActivity extends DatabaseActivity implements
 
 		switch (execute) {
 		case EXECUTE_STOCK_FILTER_LOAD:
-			mChecked = Preferences.readBoolean(this, Setting.KEY_STOCK_FILTER,
-					false);
-
-			mPE = Preferences.readString(this, Setting.KEY_STOCK_FILTER_PE, "");
-			mPB = Preferences.readString(this, Setting.KEY_STOCK_FILTER_PB, "");
-			mDividend = Preferences.readString(this,
-					Setting.KEY_STOCK_FILTER_DIVIDEND, "");
-			mYield = Preferences.readString(this,
-					Setting.KEY_STOCK_FILTER_YIELD, "");
-			mDelta = Preferences.readString(this,
-					Setting.KEY_STOCK_FILTER_DELTA, "");
+			mStockFilter.read();
 			break;
 
 		default:
@@ -198,7 +151,7 @@ public class StockFilterActivity extends DatabaseActivity implements
 	@Override
 	void onPostExecuteLoad(Long result) {
 		super.onPostExecuteLoad(result);
-		mCheckBox.setChecked(mChecked);
+		mCheckBox.setChecked(mStockFilter.getEnable());
 		updateEditText();
 	}
 
@@ -209,16 +162,7 @@ public class StockFilterActivity extends DatabaseActivity implements
 
 		switch (execute) {
 		case EXECUTE_STOCK_FILTER_SAVE:
-			Preferences.writeBoolean(this, Setting.KEY_STOCK_FILTER, mChecked);
-
-			Preferences.writeString(this, Setting.KEY_STOCK_FILTER_PE, mPE);
-			Preferences.writeString(this, Setting.KEY_STOCK_FILTER_PB, mPB);
-			Preferences.writeString(this, Setting.KEY_STOCK_FILTER_DIVIDEND,
-					mDividend);
-			Preferences.writeString(this, Setting.KEY_STOCK_FILTER_YIELD,
-					mYield);
-			Preferences.writeString(this, Setting.KEY_STOCK_FILTER_DELTA,
-					mDelta);
+			mStockFilter.write();
 			break;
 
 		default:

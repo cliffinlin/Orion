@@ -11,7 +11,6 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -93,8 +92,8 @@ public class StockFavoriteListActivity extends ListActivity implements
 
 		setContentView(R.layout.activity_stock_favorite_list);
 
-		loadSetting();
-		
+		mStockFilter.read();
+
 		mSortOrder = getSetting(Setting.KEY_SORT_ORDER_STOCK_LIST,
 				mSortOrderDefault);
 
@@ -179,18 +178,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 			case REQUEST_CODE_STOCK_FILTER:
 				Bundle bundle = intent.getExtras();
 				if (bundle != null) {
-					mStockFilter = bundle.getBoolean(Setting.KEY_STOCK_FILTER,
-							false);
-					mStockFilterPE = bundle
-							.getString(Setting.KEY_STOCK_FILTER_PE);
-					mStockFilterPB = bundle
-							.getString(Setting.KEY_STOCK_FILTER_PB);
-					mStockFilterDividend = bundle
-							.getString(Setting.KEY_STOCK_FILTER_DIVIDEND);
-					mStockFilterYield = bundle
-							.getString(Setting.KEY_STOCK_FILTER_YIELD);
-					mStockFilterDelta = bundle
-							.getString(Setting.KEY_STOCK_FILTER_DELTA);
+					mStockFilter.get(bundle);
 				}
 				break;
 
@@ -539,19 +527,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 			selection = DatabaseContract.Stock.COLUMN_MARK + " = '"
 					+ Constants.STOCK_FLAG_MARK_FAVORITE + "'";
 
-			if (mStockFilter) {
-				if (!TextUtils.isEmpty(mStockFilterPE)) {
-					selection += " AND " + "pe" + mStockFilterPE;
-				}
-
-				if (!TextUtils.isEmpty(mStockFilterYield)) {
-					selection += " AND " + "yield" + mStockFilterYield;
-				}
-
-				if (!TextUtils.isEmpty(mStockFilterDelta)) {
-					selection += " AND " + "delta" + mStockFilterDelta;
-				}
-			}
+			selection += mStockFilter.getSelection();
 
 			loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
 					DatabaseContract.Stock.PROJECTION_ALL, selection, null,
