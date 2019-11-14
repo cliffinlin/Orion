@@ -12,10 +12,10 @@
         android:showAsAction="collapseActionView|ifRoom"
         android:title="@string/search"/>
     <item
-        android:id="@+id/action_deal"
+        android:id="@+id/action_refresh"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="@string/action_deal"/>
+        android:title="@string/action_refresh"/>
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
@@ -34,9 +34,9 @@
         android:title="@string/action_save_to_file">
     </item>
     <item
-        android:id="@+id/action_refresh"
+        android:id="@+id/action_deal"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="@string/action_refresh"/>
+        android:title="@string/action_deal"/>
 
 </menu>

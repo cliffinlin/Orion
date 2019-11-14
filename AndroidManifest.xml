@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.android.orion"
-    android:versionCode="459"
-    android:versionName="1.1.33_20191111" >
+    android:versionCode="460"
+    android:versionName="1.1.33_20191114" >
 
     <uses-sdk
         android:minSdkVersion="19"
@@ -100,6 +100,11 @@
         <activity
             android:name="com.android.orion.ServiceSettingActivity"
             android:label="@string/title_activity_service_setting"
+            android:launchMode="singleTask" >
+        </activity>
+        <activity
+            android:name="com.android.orion.DealListActivity"
+            android:label="@string/title_activity_deal_list"
             android:launchMode="singleTask" >
         </activity>
         <activity

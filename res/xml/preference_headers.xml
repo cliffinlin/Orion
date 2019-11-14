@@ -19,7 +19,7 @@
         android:icon="@drawable/ic_list"
         android:title="@string/deal" >
         <intent
-            android:targetClass="com.android.orion.StockDealListActivity"
+            android:targetClass="com.android.orion.DealListActivity"
             android:targetPackage="com.android.orion" />
     </header>
     <header
