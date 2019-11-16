@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.android.orion"
-    android:versionCode="460"
-    android:versionName="1.1.33_20191114" >
+    android:versionCode="461"
+    android:versionName="1.1.33_20191116" >
 
     <uses-sdk
         android:minSdkVersion="19"
@@ -56,8 +56,8 @@
             android:launchMode="singleTask" >
         </activity>
         <activity
-            android:name="com.android.orion.StatisticsChartListActivity"
-            android:label="@string/statistics_chart"
+            android:name="com.android.orion.StockStatisticsChartListActivity"
+            android:label="@string/stock_statistics_chart"
             android:launchMode="singleTask" >
         </activity>
         <activity
@@ -118,7 +118,7 @@
             android:launchMode="singleTask" >
         </activity>
         <activity
-            android:name="com.android.orion.IPOListActivity"
+            android:name="com.android.orion.StockIPOListActivity"
             android:label="@string/ipo_list"
             android:launchMode="singleTask" >
         </activity>

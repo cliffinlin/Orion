@@ -42,10 +42,11 @@ import com.github.mikephil.charting.listener.ChartTouchListener.ChartGesture;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.utils.Utils;
 
-public class StatisticsChartListActivity extends OrionBaseActivity implements
-		LoaderManager.LoaderCallbacks<Cursor>, OnChartGestureListener {
+public class StockStatisticsChartListActivity extends OrionBaseActivity
+		implements LoaderManager.LoaderCallbacks<Cursor>,
+		OnChartGestureListener {
 	static final String TAG = Constants.TAG + " "
-			+ StatisticsChartListActivity.class.getSimpleName();
+			+ StockStatisticsChartListActivity.class.getSimpleName();
 
 	static final int ITEM_VIEW_TYPE_MAIN = 0;
 	static final int LOADER_ID_STOCK_LIST = 0;
@@ -53,6 +54,8 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 	static final int FLING_VELOCITY = 100;
 
 	static final int MESSAGE_REFRESH = 0;
+
+	public static final int REQUEST_CODE_STOCK_FILTER = 1;
 
 	int mStockListIndex = 0;
 	Menu mMenu = null;
@@ -63,7 +66,7 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 	StatisticsChartArrayAdapter mStatisticsChartArrayAdapter = null;
 	ArrayList<StatisticsChartItem> mStatisticsChartItemList = null;
 	ArrayList<StatisticsChartItemMain> mStatisticsChartItemMainList = null;
-	ArrayList<StatisticsChart> mStatisticsChartList = null;
+	ArrayList<StockStatisticsChart> mStatisticsChartList = null;
 
 	Handler mHandler = new Handler(Looper.getMainLooper()) {
 
@@ -117,6 +120,8 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 
 		setContentView(R.layout.activity_statistics_chart_list);
 
+		mStockFilter.read();
+
 		initListView();
 
 		mStock.setId(getIntent().getLongExtra(Constants.EXTRA_STOCK_ID, 0));
@@ -134,7 +139,7 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		mMenu = menu;
-		getMenuInflater().inflate(R.menu.statistics_chart, menu);
+		getMenuInflater().inflate(R.menu.stock_statistics_chart, menu);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		return true;
 	}
@@ -142,35 +147,59 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case android.R.id.home: {
+		case android.R.id.home:
 			finish();
 			return true;
-		}
-		case R.id.action_order_by_pe: {
+
+		case R.id.action_refresh:
+			mHandler.sendEmptyMessage(MESSAGE_REFRESH);
+			return true;
+
+		case R.id.action_settings:
+			startActivityForResult(new Intent(this, StockFilterActivity.class),
+					REQUEST_CODE_STOCK_FILTER);
+			return true;
+
+		case R.id.action_order_by_pe:
 			mSortOrder = DatabaseContract.COLUMN_PE
 					+ DatabaseContract.ORDER_DIRECTION_DESC;
 			restartLoader();
 			return true;
-		}
-		case R.id.action_order_by_yield: {
+
+		case R.id.action_order_by_yield:
 			mSortOrder = DatabaseContract.COLUMN_YIELD
 					+ DatabaseContract.ORDER_DIRECTION_DESC;
 			restartLoader();
 			return true;
-		}
-		case R.id.action_order_by_delta: {
+
+		case R.id.action_order_by_delta:
 			mSortOrder = DatabaseContract.COLUMN_DELTA
 					+ DatabaseContract.ORDER_DIRECTION_DESC;
 			restartLoader();
 			return true;
-		}
-		case R.id.action_refresh: {
-			mHandler.sendEmptyMessage(MESSAGE_REFRESH);
-			return true;
-		}
 
 		default:
 			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode,
+			Intent intent) {
+		super.onActivityResult(requestCode, resultCode, intent);
+
+		if (resultCode == RESULT_OK) {
+			switch (requestCode) {
+			case REQUEST_CODE_STOCK_FILTER:
+				Bundle bundle = intent.getExtras();
+				if (bundle != null) {
+					mStockFilter.get(bundle);
+				}
+				break;
+
+			default:
+				break;
+			}
 		}
 	}
 
@@ -238,7 +267,7 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 		mListView = (ListView) findViewById(R.id.listView);
 
 		if (mStatisticsChartList == null) {
-			mStatisticsChartList = new ArrayList<StatisticsChart>();
+			mStatisticsChartList = new ArrayList<StockStatisticsChart>();
 		}
 
 		if (mStatisticsChartItemList == null) {
@@ -249,7 +278,7 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 			mStatisticsChartItemMainList = new ArrayList<StatisticsChartItemMain>();
 		}
 
-		mStatisticsChartList.add(new StatisticsChart());
+		mStatisticsChartList.add(new StockStatisticsChart());
 		mStatisticsChartItemMainList.add(new StatisticsChartItemMain(
 				mStatisticsChartList.get(0)));
 		mStatisticsChartItemList.add(mStatisticsChartItemMainList.get(0));
@@ -273,6 +302,9 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 
 		selection = DatabaseContract.Stock.COLUMN_MARK + " = '"
 				+ Constants.STOCK_FLAG_MARK_FAVORITE + "'";
+
+		selection += mStockFilter.getSelection();
+
 		loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
 				DatabaseContract.Stock.PROJECTION_ALL, selection, null,
 				mSortOrder);
@@ -308,7 +340,8 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 		}
 	}
 
-	public void swapStockCursor(StatisticsChart stockDataChart, Cursor cursor) {
+	public void swapStockCursor(StockStatisticsChart stockDataChart,
+			Cursor cursor) {
 		int index = 0;
 
 		if (mStockList == null) {
@@ -370,17 +403,18 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 	}
 
 	static class MainHandler extends Handler {
-		private final WeakReference<StatisticsChartListActivity> mActivity;
+		private final WeakReference<StockStatisticsChartListActivity> mActivity;
 
-		MainHandler(StatisticsChartListActivity activity) {
-			mActivity = new WeakReference<StatisticsChartListActivity>(activity);
+		MainHandler(StockStatisticsChartListActivity activity) {
+			mActivity = new WeakReference<StockStatisticsChartListActivity>(
+					activity);
 		}
 
 		@Override
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
 
-			StatisticsChartListActivity activity = mActivity.get();
+			StockStatisticsChartListActivity activity = mActivity.get();
 			activity.updateMenuAction();
 		}
 	}
@@ -388,13 +422,13 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 	class StatisticsChartItem {
 		int mItemViewType;
 		int mResource;
-		StatisticsChart mStatisticsChart;
+		StockStatisticsChart mStatisticsChart;
 
 		public StatisticsChartItem() {
 		}
 
 		public StatisticsChartItem(int itemViewType, int resource,
-				StatisticsChart stockDataChart) {
+				StockStatisticsChart stockDataChart) {
 			mItemViewType = itemViewType;
 			mResource = resource;
 			mStatisticsChart = stockDataChart;
@@ -456,7 +490,7 @@ public class StatisticsChartListActivity extends OrionBaseActivity implements
 	}
 
 	class StatisticsChartItemMain extends StatisticsChartItem {
-		public StatisticsChartItemMain(StatisticsChart stockDataChart) {
+		public StatisticsChartItemMain(StockStatisticsChart stockDataChart) {
 			super(ITEM_VIEW_TYPE_MAIN,
 					R.layout.activity_stock_data_chart_list_item_main,
 					stockDataChart);

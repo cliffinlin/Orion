@@ -28,7 +28,7 @@ import com.android.orion.database.Setting;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Utility;
 
-public class IPOListActivity extends ListActivity implements
+public class StockIPOListActivity extends ListActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
 		OnItemLongClickListener, OnClickListener {
 
@@ -99,7 +99,7 @@ public class IPOListActivity extends ListActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.ipo_list, menu);
+		getMenuInflater().inflate(R.menu.stock_ipo_list, menu);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		return true;
 	}

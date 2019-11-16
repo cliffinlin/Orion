@@ -1,6 +1,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
+        android:id="@+id/action_refresh"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_refresh"/>
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_settings"/>
+    <item
         android:id="@+id/action_order_by_pe"
         android:orderInCategory="100"
         android:showAsAction="never"
@@ -15,10 +25,5 @@
         android:orderInCategory="100"
         android:showAsAction="never"
         android:title="@string/action_order_by_delta"/>
-    <item
-        android:id="@+id/action_refresh"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_refresh"/>
 
 </menu>

@@ -13,7 +13,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
-public class StatisticsChart {
+public class StockStatisticsChart {
 
 	ArrayList<String> mXValues = null;
 
@@ -23,7 +23,7 @@ public class StatisticsChart {
 
 	CombinedData mCombinedDataMain = null;
 
-	public StatisticsChart() {
+	public StockStatisticsChart() {
 		if (mXValues == null) {
 			mXValues = new ArrayList<String>();
 		}
