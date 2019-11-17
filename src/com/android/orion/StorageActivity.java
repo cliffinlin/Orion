@@ -17,10 +17,12 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Xml;
+import android.widget.Toast;
 
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;
+import com.android.orion.utility.SQLiteToExcel;
 import com.android.orion.utility.Utility;
 
 public class StorageActivity extends DatabaseActivity {
@@ -56,6 +58,7 @@ public class StorageActivity extends DatabaseActivity {
 				new Thread(new Runnable() {
 					@Override
 					public void run() {
+//						saveToExcel();
 						saveToFile();
 					}
 				}).start();
@@ -157,6 +160,36 @@ public class StorageActivity extends DatabaseActivity {
 			e.printStackTrace();
 		} finally {
 			closeQuietly(os);
+		}
+
+		mHandler.sendEmptyMessage(MESSAGE_REFRESH);
+	}
+
+	void saveToExcel() {
+		try {
+			SQLiteToExcel sqliteToExcel = new SQLiteToExcel(this, DatabaseContract.DATABASE_NAME);
+			sqliteToExcel.setUri(this, mUri);
+			mStockDatabaseManager.openDatabase();
+			sqliteToExcel.setDatabase(mStockDatabaseManager.mDatabase);
+            sqliteToExcel.exportAllTables(mUri.getPath(), new SQLiteToExcel.ExportListener() {
+                @Override
+                public void onStart() {
+                }
+
+                @Override
+                public void onCompleted(String filePath) {
+                	Toast.makeText(mContext, R.string.saved, Toast.LENGTH_LONG).show();
+                }
+
+                @Override
+                public void onError(Exception e) {
+                	e.printStackTrace();
+                	Toast.makeText(mContext, R.string.error, Toast.LENGTH_LONG).show();
+                }
+            });
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
 		}
 
 		mHandler.sendEmptyMessage(MESSAGE_REFRESH);

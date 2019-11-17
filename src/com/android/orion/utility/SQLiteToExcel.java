@@ -1,8 +1,10 @@
 package com.android.orion.utility;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
@@ -18,6 +20,7 @@ import org.apache.poi.ss.usermodel.ClientAnchor;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,8 +29,10 @@ public class SQLiteToExcel {
 
     private static Handler handler = new Handler(Looper.getMainLooper());
 
-    private SQLiteDatabase database;
+    private SQLiteDatabase mDatabase;
     private String mExportPath;
+    private Context mContext = null;
+    private Uri mUri = null;
     private HSSFWorkbook workbook;
 
     private List<String> mExcludeColumns = null;
@@ -41,10 +46,19 @@ public class SQLiteToExcel {
     public SQLiteToExcel(Context context, String dbName, String exportPath) {
         mExportPath = exportPath;
         try {
-            database = SQLiteDatabase.openOrCreateDatabase(context.getDatabasePath(dbName).getAbsolutePath(), null);
+//            database = SQLiteDatabase.openOrCreateDatabase(context.getDatabasePath(dbName).getAbsolutePath(), null);
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    
+    public void setUri(Context context, Uri uri) {
+    	mContext = context;
+    	mUri = uri;
+    }
+    
+    public void setDatabase(SQLiteDatabase database) {
+    	mDatabase = database;
     }
 
     /**
@@ -75,7 +89,7 @@ public class SQLiteToExcel {
 
     private ArrayList<String> getAllTables() {
         ArrayList<String> tables = new ArrayList<String>();
-        Cursor cursor = database.rawQuery("select name from sqlite_master where type='table' order by name", null);
+        Cursor cursor = mDatabase.rawQuery("select name from sqlite_master where type='table' order by name", null);
         while (cursor.moveToNext()) {
             tables.add(cursor.getString(0));
         }
@@ -85,7 +99,7 @@ public class SQLiteToExcel {
 
     private ArrayList<String> getColumns(String table) {
         ArrayList<String> columns = new ArrayList<String>();
-        Cursor cursor = database.rawQuery("PRAGMA table_info(" + table + ")", null);
+        Cursor cursor = mDatabase.rawQuery("PRAGMA table_info(" + table + ")", null);
         while (cursor.moveToNext()) {
             columns.add(cursor.getString(1));
         }
@@ -101,13 +115,23 @@ public class SQLiteToExcel {
                 createSheet(tables.get(i), sheet);
             }
         }
-        File file = new File(mExportPath, fileName);
-        FileOutputStream fos = new FileOutputStream(file);
-        workbook.write(fos);
-        fos.flush();
-        fos.close();
-        workbook.close();
-        database.close();
+        if (mUri != null) {
+    		final ContentResolver cr = mContext.getApplicationContext().getContentResolver();
+    		OutputStream os = cr.openOutputStream(mUri);
+			workbook.write(os);
+			os.flush();
+			os.close();
+			workbook.close();
+			mDatabase.close();
+		} else {
+			File file = new File(mExportPath, fileName);
+			FileOutputStream fos = new FileOutputStream(file);
+			workbook.write(fos);
+			fos.flush();
+			fos.close();
+			workbook.close();
+			mDatabase.close();
+		}
     }
 
     public void exportSingleTable(final String table, final String fileName, ExportListener listener) {
@@ -144,8 +168,8 @@ public class SQLiteToExcel {
                         });
                     }
                 } catch (final Exception e) {
-                    if (database != null && database.isOpen()) {
-                        database.close();
+                    if (mDatabase != null && mDatabase.isOpen()) {
+                    	mDatabase.close();
                     }
                     if (listener != null)
                         handler.post(new Runnable() {
@@ -176,7 +200,7 @@ public class SQLiteToExcel {
 
     private void insertItemToSheet(String table, HSSFSheet sheet, ArrayList<String> columns) {
         HSSFPatriarch patriarch = sheet.createDrawingPatriarch();
-        Cursor cursor = database.rawQuery("select * from " + table, null);
+        Cursor cursor = mDatabase.rawQuery("select * from " + table, null);
         cursor.moveToFirst();
         int n = 1;
         while (!cursor.isAfterLast()) {
