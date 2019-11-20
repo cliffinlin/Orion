@@ -589,7 +589,8 @@ public class StockDataChartListActivity extends OrionBaseActivity implements
 
 		updateTitle();
 
-		mStockDatabaseManager.getStockDealList(mStock, mStockDealList);
+		mStockDatabaseManager.getStockDealList(mStock, mStockDealList,
+				mStockDatabaseManager.getStockDealListAllSelection(mStock));
 
 		stockDataChart.updateDescription(mStock);
 		stockDataChart.updateLimitLine(mStock, mStockDealList);

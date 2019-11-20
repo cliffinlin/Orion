@@ -509,7 +509,8 @@ public class FinancialDataChartListActivity extends OrionBaseActivity implements
 
 		updateTitle();
 
-		mStockDatabaseManager.getStockDealList(mStock, mStockDealList);
+		mStockDatabaseManager.getStockDealList(mStock, mStockDealList,
+				mStockDatabaseManager.getStockDealListAllSelection(mStock));
 
 		financialDataChart.updateDescription(mStock);
 		financialDataChart.updateLimitLine(mStock, mStockDealList);

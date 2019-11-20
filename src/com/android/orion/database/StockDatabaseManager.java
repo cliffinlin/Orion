@@ -588,14 +588,14 @@ public class StockDatabaseManager extends DatabaseManager {
 	}
 
 	public String getStockDataSelection(StockData stockData) {
-		String where = "";
+		String selection = "";
 		String period = "";
 
-		if ((stockData == null) || (mContentResolver == null)) {
-			return where;
+		if (stockData == null) {
+			return selection;
 		}
 
-		where = DatabaseContract.COLUMN_STOCK_ID + " = "
+		selection = DatabaseContract.COLUMN_STOCK_ID + " = "
 				+ stockData.getStockId() + " AND "
 				+ DatabaseContract.COLUMN_PERIOD + " = " + "\'"
 				+ stockData.getPeriod() + "\'" + " AND "
@@ -609,11 +609,11 @@ public class StockDatabaseManager extends DatabaseManager {
 				|| period.equals(Constants.PERIOD_MIN15)
 				|| period.equals(Constants.PERIOD_MIN30)
 				|| period.equals(Constants.PERIOD_MIN60)) {
-			where += " AND " + DatabaseContract.COLUMN_TIME + " = " + "\'"
+			selection += " AND " + DatabaseContract.COLUMN_TIME + " = " + "\'"
 					+ stockData.getTime() + "\'";
 		}
 
-		return where;
+		return selection;
 	}
 
 	public String getStockDataSelection(long stockId, String period) {
@@ -637,6 +637,31 @@ public class StockDatabaseManager extends DatabaseManager {
 				stockDeal.getContentValues());
 
 		return uri;
+	}
+
+	public boolean isStockDealExist(StockDeal stockDeal) {
+		boolean result = false;
+		Cursor cursor = null;
+
+		if (stockDeal == null) {
+			return result;
+		}
+
+		try {
+			cursor = queryStockDeal(stockDeal);
+
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				cursor.moveToNext();
+				stockDeal.setCreated(cursor);
+				result = true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+
+		return result;
 	}
 
 	public int updateStockDealByID(StockDeal stockDeal) {
@@ -795,9 +820,53 @@ public class StockDatabaseManager extends DatabaseManager {
 		}
 	}
 
-	public void getStockDealList(Stock stock, ArrayList<StockDeal> stockDealList) {
-		Cursor cursor = null;
+	public String getStockDealListAllSelection(Stock stock) {
 		String selection = "";
+
+		if (stock == null) {
+			return selection;
+		}
+
+		selection = DatabaseContract.COLUMN_SE + " = " + "\'" + stock.getSE()
+				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
+				+ stock.getCode() + "\'";
+
+		return selection;
+	}
+
+	public String getStockDealListBoughtSelection(Stock stock) {
+		String selection = "";
+
+		if (stock == null) {
+			return selection;
+		}
+
+		selection = DatabaseContract.COLUMN_SE + " = " + "\'" + stock.getSE()
+				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
+				+ stock.getCode() + "\'" + " AND "
+				+ DatabaseContract.COLUMN_VOLUME + " > " + 0;
+
+		return selection;
+	}
+
+	public String getStockDealListToBuySelection(Stock stock) {
+		String selection = "";
+
+		if (stock == null) {
+			return selection;
+		}
+
+		selection = DatabaseContract.COLUMN_SE + " = " + "\'" + stock.getSE()
+				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
+				+ stock.getCode() + "\'" + " AND "
+				+ DatabaseContract.COLUMN_VOLUME + " = " + 0;
+
+		return selection;
+	}
+
+	public void getStockDealList(Stock stock,
+			ArrayList<StockDeal> stockDealList, String selection) {
+		Cursor cursor = null;
 
 		if ((stock == null) || (stockDealList == null)) {
 			return;
@@ -805,12 +874,10 @@ public class StockDatabaseManager extends DatabaseManager {
 
 		stockDealList.clear();
 
-		selection = DatabaseContract.COLUMN_SE + " = " + "\'" + stock.getSE()
-				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
-				+ stock.getCode() + "\'";
+		String sortOrder = DatabaseContract.COLUMN_DEAL + " DESC ";
 
 		try {
-			cursor = queryStockDeal(selection, null, null);
+			cursor = queryStockDeal(selection, null, sortOrder);
 
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				while (cursor.moveToNext()) {
@@ -910,59 +977,46 @@ public class StockDatabaseManager extends DatabaseManager {
 		return result;
 	}
 
-	public void getStockDealTarget(Stock stock, StockDeal stockDeal) {
-		Cursor cursor = null;
-		String selection = "";
+	public void setupStockDealToBuy(Stock stock) {
+		int i = 0;
+		double deal = 0;
+		StockDeal stockDealMax = new StockDeal();
+		StockDeal stockDealMin = new StockDeal();
+		ArrayList<StockDeal> stockDealList = new ArrayList<StockDeal>();
 
-		if ((stock == null) || (stockDeal == null)) {
+		if (stock == null) {
 			return;
 		}
+		
+		getStockDealMax(stock, stockDealMax);
+		getStockDealMin(stock, stockDealMin);
 
-		selection = DatabaseContract.COLUMN_SE + " = " + "\'" + stock.getSE()
-				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
-				+ stock.getCode() + "\'" + " AND "
-				+ DatabaseContract.COLUMN_VOLUME + " = " + 0;
-
-		String sortOrder = DatabaseContract.COLUMN_DEAL + " DESC ";
-
-		try {
-			cursor = queryStockDeal(selection, null, sortOrder);
-
-			if ((cursor != null) && (cursor.getCount() > 0)) {
-				while (cursor.moveToNext()) {
-					stockDeal.set(cursor);
+		if ((stockDealMax.getVolume() > 0) && (stockDealMin.getVolume() > 0)) {
+			getStockDealList(stock, stockDealList, getStockDealListToBuySelection(stock));
+			deal = stockDealMax.getDeal();
+			while (deal > 1.0) {
+				i++;
+				deal = (1.0 - i * Constants.STOCK_DEAL_DISTRIBUTION_RATE)
+						* stockDealMax.getDeal();
+				if (deal < stockDealMin.getDeal()) {
+					for (StockDeal stockDeal : stockDealList) {
+						if (stockDeal.getDeal() < stockDealMin.getDeal()) {
+							deleteStockDealById(stockDeal);
+						}
+					}
+					
+					StockDeal stockDeal = new StockDeal();
+					stockDeal.setSE(stock.getSE());
+					stockDeal.setCode(stock.getCode());
+					stockDeal.setName(stock.getName());
+					stockDeal.setPrice(stock.getPrice());
+					stockDeal.setDeal(deal);
+					stockDeal.setDividend(stock.getDividend());
+					insertStockDeal(stockDeal);
+					break;
 				}
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			closeCursor(cursor);
 		}
-	}
-
-	public boolean isStockDealExist(StockDeal stockDeal) {
-		boolean result = false;
-		Cursor cursor = null;
-
-		if (stockDeal == null) {
-			return result;
-		}
-
-		try {
-			cursor = queryStockDeal(stockDeal);
-
-			if ((cursor != null) && (cursor.getCount() > 0)) {
-				cursor.moveToNext();
-				stockDeal.setCreated(cursor);
-				result = true;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			closeCursor(cursor);
-		}
-
-		return result;
 	}
 
 	public Uri insertFinancialData(FinancialData financialData) {
@@ -1194,16 +1248,16 @@ public class StockDatabaseManager extends DatabaseManager {
 	}
 
 	public String getFinancialDataSelection(FinancialData financialData) {
-		String where = "";
+		String selection = "";
 
-		if ((financialData == null) || (mContentResolver == null)) {
-			return where;
+		if (financialData == null) {
+			return selection;
 		}
 
-		where = getFinancialDataSelection(financialData.getStockId(),
+		selection = getFinancialDataSelection(financialData.getStockId(),
 				financialData.getDate());
 
-		return where;
+		return selection;
 	}
 
 	public String getFinancialDataSelection(long stockId) {
@@ -1447,16 +1501,16 @@ public class StockDatabaseManager extends DatabaseManager {
 	}
 
 	public String getShareBonusSelection(ShareBonus shareBonus) {
-		String where = "";
+		String selection = "";
 
-		if ((shareBonus == null) || (mContentResolver == null)) {
-			return where;
+		if (shareBonus == null) {
+			return selection;
 		}
 
-		where = getShareBonusSelection(shareBonus.getStockId(),
+		selection = getShareBonusSelection(shareBonus.getStockId(),
 				shareBonus.getDate());
 
-		return where;
+		return selection;
 	}
 
 	public String getShareBonusSelection(long stockId) {

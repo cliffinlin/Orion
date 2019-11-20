@@ -58,7 +58,7 @@ public class StorageActivity extends DatabaseActivity {
 				new Thread(new Runnable() {
 					@Override
 					public void run() {
-//						saveToExcel();
+						// saveToExcel();
 						saveToFile();
 					}
 				}).start();
@@ -167,26 +167,30 @@ public class StorageActivity extends DatabaseActivity {
 
 	void saveToExcel() {
 		try {
-			SQLiteToExcel sqliteToExcel = new SQLiteToExcel(this, DatabaseContract.DATABASE_NAME);
+			SQLiteToExcel sqliteToExcel = new SQLiteToExcel(this,
+					DatabaseContract.DATABASE_NAME);
 			sqliteToExcel.setUri(this, mUri);
 			mStockDatabaseManager.openDatabase();
 			sqliteToExcel.setDatabase(mStockDatabaseManager.mDatabase);
-            sqliteToExcel.exportAllTables(mUri.getPath(), new SQLiteToExcel.ExportListener() {
-                @Override
-                public void onStart() {
-                }
+			sqliteToExcel.exportAllTables(mUri.getPath(),
+					new SQLiteToExcel.ExportListener() {
+						@Override
+						public void onStart() {
+						}
 
-                @Override
-                public void onCompleted(String filePath) {
-                	Toast.makeText(mContext, R.string.saved, Toast.LENGTH_LONG).show();
-                }
+						@Override
+						public void onCompleted(String filePath) {
+							Toast.makeText(mContext, R.string.saved,
+									Toast.LENGTH_LONG).show();
+						}
 
-                @Override
-                public void onError(Exception e) {
-                	e.printStackTrace();
-                	Toast.makeText(mContext, R.string.error, Toast.LENGTH_LONG).show();
-                }
-            });
+						@Override
+						public void onError(Exception e) {
+							e.printStackTrace();
+							Toast.makeText(mContext, R.string.error,
+									Toast.LENGTH_LONG).show();
+						}
+					});
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -233,6 +237,7 @@ public class StorageActivity extends DatabaseActivity {
 		String tagName = "";
 		Stock stock = Stock.obtain();
 		StockDeal stockDeal = StockDeal.obtain();
+		ArrayList<Stock> stockList = new ArrayList<Stock>();
 
 		if (mStockDatabaseManager == null) {
 			return count;
@@ -245,6 +250,7 @@ public class StorageActivity extends DatabaseActivity {
 				case XmlPullParser.START_TAG:
 					tagName = parser.getName();
 					if (XML_TAG_STOCK.equals(tagName)) {
+						stock = new Stock();
 						stock.init();
 					} else if (DatabaseContract.COLUMN_SE.equals(tagName)) {
 						stock.setSE(parser.nextText());
@@ -273,6 +279,7 @@ public class StorageActivity extends DatabaseActivity {
 							stock.setCreated(now);
 							stock.setModified(now);
 							mStockDatabaseManager.insertStock(stock);
+							stockList.add(stock);
 						}
 					} else if (XML_TAG_ITEM.equals(tagName)) {
 						stockDeal.setSE(stock.getSE());
@@ -288,6 +295,10 @@ public class StorageActivity extends DatabaseActivity {
 					break;
 				}
 				eventType = parser.next();
+			}
+
+			for (Stock stock2 : stockList) {
+				mStockDatabaseManager.setupStockDealToBuy(stock2);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
