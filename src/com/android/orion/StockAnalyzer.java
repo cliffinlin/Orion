@@ -482,13 +482,13 @@ public class StockAnalyzer extends StockManager {
 		String bodyString = "";
 		String titleString = "";
 
-		ArrayList<StockDeal> stockDealList = new ArrayList<StockDeal>();
+		ArrayList<StockDeal> stockDealToBuyList = new ArrayList<StockDeal>();
 
-		mStockDatabaseManager.getStockDealList(stock, stockDealList,
+		mStockDatabaseManager.getStockDealList(stock, stockDealToBuyList,
 				mStockDatabaseManager.getStockDealListToBuySelection(stock));
 
 		if (stock.getPrice() > 0) {
-			for (StockDeal stockDeal : stockDealList) {
+			for (StockDeal stockDeal : stockDealToBuyList) {
 				if (stock.getPrice() <= stockDeal.getDeal()) {
 					titleString += "@ ";
 					break;

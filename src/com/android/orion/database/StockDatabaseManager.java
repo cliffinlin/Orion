@@ -982,7 +982,7 @@ public class StockDatabaseManager extends DatabaseManager {
 		double deal = 0;
 		StockDeal stockDealMax = new StockDeal();
 		StockDeal stockDealMin = new StockDeal();
-		ArrayList<StockDeal> stockDealList = new ArrayList<StockDeal>();
+		ArrayList<StockDeal> stockDealToBuyList = new ArrayList<StockDeal>();
 
 		if (stock == null) {
 			return;
@@ -992,16 +992,13 @@ public class StockDatabaseManager extends DatabaseManager {
 		getStockDealMin(stock, stockDealMin);
 
 		if ((stockDealMax.getVolume() > 0) && (stockDealMin.getVolume() > 0)) {
-			getStockDealList(stock, stockDealList, getStockDealListToBuySelection(stock));
+			getStockDealList(stock, stockDealToBuyList, getStockDealListToBuySelection(stock));
 			deal = stockDealMax.getDeal();
 			while (deal > 1.0) {
-				i++;
-				deal = (1.0 - i * Constants.STOCK_DEAL_DISTRIBUTION_RATE)
-						* stockDealMax.getDeal();
 				if (deal < stockDealMin.getDeal()) {
-					for (StockDeal stockDeal : stockDealList) {
-						if (stockDeal.getDeal() < stockDealMin.getDeal()) {
-							deleteStockDealById(stockDeal);
+					for (StockDeal stockDealToBuy : stockDealToBuyList) {
+						if (stockDealToBuy.getDeal() < stockDealMin.getDeal()) {
+							deleteStockDealById(stockDealToBuy);
 						}
 					}
 					
@@ -1012,9 +1009,15 @@ public class StockDatabaseManager extends DatabaseManager {
 					stockDeal.setPrice(stock.getPrice());
 					stockDeal.setDeal(deal);
 					stockDeal.setDividend(stock.getDividend());
+					stockDeal.setCreated(Utility.getCurrentDateTimeString());
 					insertStockDeal(stockDeal);
 					break;
 				}
+				
+				i++;
+				deal = (1.0 - i * Constants.STOCK_DEAL_DISTRIBUTION_RATE)
+						* stockDealMax.getDeal();
+				deal = Utility.Round(deal, Constants.DOUBLE_FIXED_DECIMAL);
 			}
 		}
 	}
