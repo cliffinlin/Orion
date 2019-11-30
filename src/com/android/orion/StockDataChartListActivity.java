@@ -62,12 +62,16 @@ public class StockDataChartListActivity extends OrionBaseActivity implements
 	static final int FLING_VELOCITY = 100;
 
 	static final int MESSAGE_REFRESH = 0;
+	static final int MESSAGE_LOAD_STOCK_LIST = 1;
 
 	int mStockListIndex = 0;
-	Menu mMenu = null;
 
+	String mSelection = null;
 	String mSortOrder = null;
 
+	ArrayList<String> mStockIDList = new ArrayList<String>();
+
+	Menu mMenu = null;
 	ListView mListView = null;
 	StockDataChartArrayAdapter mStockDataChartArrayAdapter = null;
 	ArrayList<StockDataChartItem> mStockDataChartItemList = null;
@@ -87,6 +91,20 @@ public class StockDataChartListActivity extends OrionBaseActivity implements
 						Constants.EXECUTE_IMMEDIATE, mStock.getSE(),
 						mStock.getCode());
 				restartLoader();
+				break;
+
+			case MESSAGE_LOAD_STOCK_LIST:
+				mStockList.clear();
+				for (int i = 0; i < mStockIDList.size(); i++) {
+					Stock stock = new Stock();
+					stock.setId(Long.valueOf(mStockIDList.get(i)));
+					mStockDatabaseManager.getStockById(stock);
+					if (mStock.getId() == stock.getId()) {
+						mStock.set(stock);
+						mStockListIndex = mStockList.size();
+					}
+					mStockList.add(stock);
+				}
 				break;
 
 			default:
@@ -130,7 +148,11 @@ public class StockDataChartListActivity extends OrionBaseActivity implements
 		initListView();
 
 		mStock.setId(getIntent().getLongExtra(Constants.EXTRA_STOCK_ID, 0));
-
+		mStockIDList = getIntent().getStringArrayListExtra(
+				Constants.EXTRA_STOCK_ID_LIST);
+		if ((mStockIDList != null) && (mStockIDList.size() > 0)) {
+			mHandler.sendEmptyMessage(MESSAGE_LOAD_STOCK_LIST);
+		}
 		mSortOrder = getIntent().getStringExtra(
 				Setting.KEY_SORT_ORDER_STOCK_LIST);
 
@@ -307,31 +329,38 @@ public class StockDataChartListActivity extends OrionBaseActivity implements
 	}
 
 	void initLoader() {
-		mLoaderManager.initLoader(LOADER_ID_STOCK_LIST, null, this);
+		if (mStockIDList == null) {
+			mLoaderManager.initLoader(LOADER_ID_STOCK_LIST, null, this);
+		}
+
 		for (int i = 0; i < Constants.PERIODS.length; i++) {
 			mLoaderManager.initLoader(i, null, this);
 		}
 	}
 
 	void restartLoader() {
-		mLoaderManager.restartLoader(LOADER_ID_STOCK_LIST, null, this);
+		if (mStockIDList == null) {
+			mLoaderManager.restartLoader(LOADER_ID_STOCK_LIST, null, this);
+		}
+
 		for (int i = 0; i < Constants.PERIODS.length; i++) {
 			mLoaderManager.restartLoader(i, null, this);
 		}
 	}
 
 	CursorLoader getStockCursorLoader() {
-		String selection = "";
 		CursorLoader loader = null;
 
-		selection = DatabaseContract.Stock.COLUMN_MARK + " = '"
-				+ Constants.STOCK_FLAG_MARK_FAVORITE + "'";
+		if (TextUtils.isEmpty(mSelection)) {
+			mSelection = DatabaseContract.Stock.COLUMN_MARK + " = '"
+					+ Constants.STOCK_FLAG_MARK_FAVORITE + "'";
 
-		mStockFilter.read();
-		selection += mStockFilter.getSelection();
+			mStockFilter.read();
+			mSelection += mStockFilter.getSelection();
+		}
 
 		loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
-				DatabaseContract.Stock.PROJECTION_ALL, selection, null,
+				DatabaseContract.Stock.PROJECTION_ALL, mSelection, null,
 				mSortOrder);
 
 		return loader;

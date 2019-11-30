@@ -16,24 +16,22 @@ public class StockDealListActivity extends DealListActivity {
 		mFilterType = FILTER_TYPE_NONE;
 	}
 
-	String getSelection() {
-		String selection = null;
+	void setupSelection() {
+		super.setupSelection();
 
-		String superSelection = super.getSelection();
+		String superSelection = mSelection;
 
 		if (mBundle != null) {
 			String se = mBundle.getString(Constants.EXTRA_STOCK_SE);
 			String code = mBundle.getString(Constants.EXTRA_STOCK_CODE);
 
-			selection = DatabaseContract.COLUMN_SE + " = " + "\'" + se + "\'"
+			mSelection = DatabaseContract.COLUMN_SE + " = " + "\'" + se + "\'"
 					+ " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
 					+ code + "\'";
 
 			if (!TextUtils.isEmpty(superSelection)) {
-				selection += " AND " + superSelection;
+				mSelection += " AND " + superSelection;
 			}
 		}
-
-		return selection;
 	}
 }

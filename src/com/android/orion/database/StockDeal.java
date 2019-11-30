@@ -287,7 +287,7 @@ public class StockDeal extends StockBase {
 				Constants.DOUBLE_FIXED_DECIMAL);
 	}
 
-	public void setupDividendYield() {
+	public void setupYield() {
 		if (mDeal == 0) {
 			mYield = 0;
 			return;

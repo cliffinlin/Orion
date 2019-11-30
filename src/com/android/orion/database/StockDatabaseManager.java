@@ -710,7 +710,7 @@ public class StockDatabaseManager extends DatabaseManager {
 
 					stockDeal.setPrice(stock.getPrice());
 					stockDeal.setDividend(stock.getDividend());
-					stockDeal.setupDividendYield();
+					stockDeal.setupYield();
 					stockDeal.setupNet();
 					stockDeal.setupProfit();
 
@@ -722,7 +722,7 @@ public class StockDatabaseManager extends DatabaseManager {
 				}
 			}
 
-			stock.setupDividendYield();
+			stock.setupYield();
 			stock.setHold(hold);
 			stock.setProfit(profit);
 			stock.setupCost(value);

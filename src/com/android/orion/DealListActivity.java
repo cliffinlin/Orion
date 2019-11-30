@@ -59,6 +59,7 @@ public class DealListActivity extends ListActivity implements
 	static final int mHeaderTextDefaultColor = Color.BLACK;
 	static final int mHeaderTextHighlightColor = Color.RED;
 
+	String mSelection = null;
 	String mSortOrderColumn = DatabaseContract.COLUMN_NET;
 	String mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_ASC;
 	String mSortOrderDefault = mSortOrderColumn + mSortOrderDirection;
@@ -102,6 +103,7 @@ public class DealListActivity extends ListActivity implements
 			case MESSAGE_DELETE_DEAL:
 				getStock();
 				mStockDatabaseManager.deleteStockDealById(mDeal);
+				mStockDatabaseManager.setupStockDealToBuy(mStock);
 				mStockDatabaseManager.updateStockDeal(mStock);
 				mStockDatabaseManager.updateStock(mStock,
 						mStock.getContentValues());
@@ -113,10 +115,15 @@ public class DealListActivity extends ListActivity implements
 			case MESSAGE_VIEW_STOCK_CHAT:
 				getStock();
 
+				ArrayList<String> stockIDList = new ArrayList<String>();
+				for (Stock stock : mStockList) {
+					stockIDList.add(String.valueOf(stock.getId()));
+				}
+
 				intent = new Intent(mContext, StockDataChartListActivity.class);
-				intent.putExtra(Setting.KEY_SORT_ORDER_STOCK_DEAL_LIST,
-						mSortOrder);
 				intent.putExtra(Constants.EXTRA_STOCK_ID, mStock.getId());
+				intent.putStringArrayListExtra(Constants.EXTRA_STOCK_ID_LIST,
+						stockIDList);
 				startActivity(intent);
 				break;
 
@@ -513,35 +520,32 @@ public class DealListActivity extends ListActivity implements
 		getContentResolver().unregisterContentObserver(mContentObserver);
 	}
 
-	String getSelection() {
-		String selection = null;
+	void setupSelection() {
+		mSelection = null;
 
 		switch (mFilterType) {
 		case FILTER_TYPE_TO_BUY:
-			selection = DatabaseContract.COLUMN_VOLUME + " = " + 0;
+			mSelection = DatabaseContract.COLUMN_VOLUME + " = " + 0;
 			break;
 
 		default:
-			selection = null;
+			mSelection = null;
 			break;
 		}
-
-		return selection;
 	}
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle arg1) {
-		String selection = null;
 		CursorLoader loader = null;
 
 		switch (id) {
 		case LOADER_ID_DEAL_LIST:
-			selection = getSelection();
+			setupSelection();
 
 			loader = new CursorLoader(this,
 					DatabaseContract.StockDeal.CONTENT_URI,
-					DatabaseContract.StockDeal.PROJECTION_ALL, selection, null,
-					mSortOrder);
+					DatabaseContract.StockDeal.PROJECTION_ALL, mSelection,
+					null, mSortOrder);
 			break;
 
 		default:
@@ -559,7 +563,7 @@ public class DealListActivity extends ListActivity implements
 
 		switch (loader.getId()) {
 		case LOADER_ID_DEAL_LIST:
-			// setStockDealList(cursor);
+			setStockList(cursor);
 
 			mLeftAdapter.swapCursor(cursor);
 			mRightAdapter.swapCursor(cursor);
@@ -579,15 +583,19 @@ public class DealListActivity extends ListActivity implements
 		mRightAdapter.swapCursor(null);
 	}
 
-	void setStockDealList(Cursor cursor) {
-		mStockDealList.clear();
+	void setStockList(Cursor cursor) {
+		StockDeal stockDeal = new StockDeal();
 
 		try {
 			if ((cursor != null) && (cursor.getCount() > 0)) {
+				mStockList.clear();
 				while (cursor.moveToNext()) {
-					StockDeal stockDeal = new StockDeal();
 					stockDeal.set(cursor);
-					mStockDealList.add(stockDeal);
+					Stock stock = new Stock();
+					stock.setSE(stockDeal.getSE());
+					stock.setCode(stockDeal.getCode());
+					mStockDatabaseManager.getStock(stock);
+					mStockList.add(stock);
 				}
 				cursor.moveToFirst();
 			}

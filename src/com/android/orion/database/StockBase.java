@@ -29,7 +29,10 @@ public class StockBase extends DatabaseTable {
 	@Override
 	ContentValues getContentValues(ContentValues contentValues) {
 		super.getContentValues(contentValues);
-
+		
+		contentValues.put(DatabaseContract.COLUMN_DIVIDEND, mDividend);
+		contentValues.put(DatabaseContract.COLUMN_YIELD, mYield);
+		
 		return contentValues;
 	}
 

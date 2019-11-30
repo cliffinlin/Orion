@@ -200,18 +200,6 @@ public class Stock extends StockBase {
 		return contentValues;
 	}
 
-	public ContentValues getContentValuesDividendYield() {
-		ContentValues contentValues = new ContentValues();
-
-		super.getContentValues(contentValues);
-
-		contentValues.put(DatabaseContract.COLUMN_DIVIDEND, mDividend);
-		contentValues.put(DatabaseContract.COLUMN_YIELD, mYield);
-		contentValues.put(DatabaseContract.COLUMN_DELTA, mDelta);
-
-		return contentValues;
-	}
-
 	public void set(Stock stock) {
 		if (stock == null) {
 			return;
@@ -867,7 +855,7 @@ public class Stock extends StockBase {
 		mCost = Utility.Round(value / mHold, Constants.DOUBLE_FIXED_DECIMAL);
 	}
 
-	public void setupDividendYield() {
+	public void setupYield() {
 		if (mPrice == 0) {
 			return;
 		}

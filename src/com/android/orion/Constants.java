@@ -37,7 +37,8 @@ public class Constants {
 	public static final String EXTRA_STOCK_SE = "stock_se";
 	public static final String EXTRA_STOCK_CODE = "stock_code";
 	public static final String EXTRA_STOCK_DEAL_PRICE = "stock_deal_price";
-	public static final String EXTRA_STOCK_DEAL_VOLUME = "stock_dral_volume";
+	public static final String EXTRA_STOCK_DEAL_VOLUME = "stock_deal_volume";
+	public static final String EXTRA_STOCK_ID_LIST = "stock_id_list";
 
 	public static final String PERIOD_MIN1 = "min1";
 	public static final String PERIOD_MIN5 = "min5";

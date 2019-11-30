@@ -99,7 +99,7 @@ public class StockAnalyzer extends StockManager {
 			totalDivident += shareBonus.getDividend();
 			stock.setDividend(Utility.Round(totalDivident,
 					Constants.DOUBLE_FIXED_DECIMAL));
-			stock.setupDividendYield();
+			stock.setupYield();
 
 			prevYearString = yearString;
 		}
@@ -313,7 +313,7 @@ public class StockAnalyzer extends StockManager {
 
 		stock.setAction(period, action);
 
-		stock.setupDividendYield();
+		stock.setupYield();
 	}
 
 	private void updateDatabase(Stock stock, String period,
