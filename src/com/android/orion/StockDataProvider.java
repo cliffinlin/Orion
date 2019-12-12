@@ -39,6 +39,10 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 	abstract void handleResponseStockHSA(String response);
 
+	abstract String getStockInformationURLString(Stock stock);
+
+	abstract void handleResponseStockInformation(Stock stock, String response);
+
 	abstract String getStockRealTimeURLString(Stock stock);
 
 	abstract void handleResponseStockRealTime(Stock stock, String response);
@@ -187,13 +191,14 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		stock = getStock(bundle);
 
 		if (stock != null) {
+			downloadStockInformation(executeType, stock);
 			downloadStockRealTime(executeType, stock);
 			downloadStockDataHistory(executeType, stock);
 			downloadStockDataRealTime(executeType, stock);
 			downloadFinancialData(executeType, stock);
 			downloadShareBonus(executeType, stock);
-
 		} else {
+			downloadStockInformation(executeType);
 			downloadStockRealTime(executeType);
 			downloadStockDataHistory(executeType);
 			downloadStockDataRealTime(executeType);
@@ -220,7 +225,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 		mStockDatabaseManager.getFinancialData(stock.getId(), financialData);
 		if (financialData.getCreated().contains(Utility.getCurrentDateString())) {
-			return;
+//			 return;
 		}
 
 		if (executeType == Constants.EXECUTE_IMMEDIATE) {
@@ -285,6 +290,39 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				Log.d(TAG, "downloadIPO:" + urlString);
 				IPODownloader downloader = new IPODownloader(urlString);
 				downloader.setIPO(ipo);
+				mRequestQueue.add(downloader.mStringRequest);
+			}
+		}
+	}
+
+	void downloadStockInformation(int executeType) {
+		for (Stock stock : mStockArrayMapFavorite.values()) {
+			downloadStockInformation(executeType, stock);
+		}
+	}
+
+	void downloadStockInformation(int executeType, Stock stock) {
+		String urlString;
+		String modified = "";
+
+		if (stock == null) {
+			return;
+		}
+
+		modified = stock.getModified();
+		if (TextUtils.isEmpty(modified)) {
+			modified = stock.getCreated();
+		}
+
+		if (executeType == Constants.EXECUTE_IMMEDIATE
+				|| executeTypeOf(executeType, Constants.EXECUTE_SCHEDULE_MIN1)
+				|| Market.isOutOfDate(modified)) {
+			urlString = getStockInformationURLString(stock);
+			if (addToCurrentRequests(urlString)) {
+				Log.d(TAG, "getStockInformationURLString:" + urlString);
+				StockInformationDownloader downloader = new StockInformationDownloader(
+						urlString);
+				downloader.setStock(stock);
 				mRequestQueue.add(downloader.mStringRequest);
 			}
 		}
@@ -624,6 +662,32 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			removeFromCurrrentRequests(mStringRequest.getUrl());
 			handleResponseStockHSA(response);
 			fixPinyin();
+		}
+	}
+
+	public class StockInformationDownloader extends VolleyStringDownloader {
+		public Stock mStock = null;
+
+		public StockInformationDownloader() {
+			super();
+		}
+
+		public StockInformationDownloader(String urlString) {
+			super(urlString);
+		}
+
+		public void setStock(Stock stock) {
+			if (mStock == null) {
+				mStock = Stock.obtain();
+			}
+			mStock.set(stock);
+		}
+
+		@Override
+		public void handleResponse(String response) {
+			removeFromCurrrentRequests(mStringRequest.getUrl());
+
+			handleResponseStockInformation(mStock, response);
 		}
 	}
 

@@ -36,6 +36,7 @@ public class Stock extends StockBase {
 	private long mHold;
 	private double mCost;
 	private double mProfit;
+	private double mTotalShare;
 	private double mPE;
 	private double mPB;
 	private double mDelta;
@@ -121,6 +122,7 @@ public class Stock extends StockBase {
 		mHold = 0;
 		mCost = 0;
 		mProfit = 0;
+		mTotalShare = 0;
 		mPE = 0;
 		mPB = 0;
 		mDelta = 0;
@@ -157,8 +159,22 @@ public class Stock extends StockBase {
 		contentValues.put(DatabaseContract.COLUMN_HOLD, mHold);
 		contentValues.put(DatabaseContract.COLUMN_COST, mCost);
 		contentValues.put(DatabaseContract.COLUMN_PROFIT, mProfit);
+		contentValues.put(DatabaseContract.COLUMN_TOTAL_SHARE, mTotalShare);
 		contentValues.put(DatabaseContract.COLUMN_PE, mPE);
 		contentValues.put(DatabaseContract.COLUMN_PB, mPB);
+
+		return contentValues;
+	}
+	
+	public ContentValues getContentValuesTotalShare() {
+		ContentValues contentValues = new ContentValues();
+		
+		super.getContentValues(contentValues);
+		
+		contentValues.put(DatabaseContract.Stock.COLUMN_PINYIN, mPinyin);
+		contentValues.put(DatabaseContract.Stock.COLUMN_PINYIN_FIXED,
+				mPinyinFixed);
+		contentValues.put(DatabaseContract.COLUMN_TOTAL_SHARE, mTotalShare);
 
 		return contentValues;
 	}
@@ -190,8 +206,8 @@ public class Stock extends StockBase {
 			contentValues.put(DatabaseContract.COLUMN_YEAR, mActionYear);
 		}
 
-		contentValues.put(DatabaseContract.COLUMN_PB, mPB);
 		contentValues.put(DatabaseContract.COLUMN_PE, mPE);
+		contentValues.put(DatabaseContract.COLUMN_PB, mPB);
 
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND, mDividend);
 		contentValues.put(DatabaseContract.COLUMN_YIELD, mYield);
@@ -235,6 +251,7 @@ public class Stock extends StockBase {
 		setHold(stock.mHold);
 		setCost(stock.mCost);
 		setProfit(stock.mProfit);
+		setTotalShare(stock.mTotalShare);
 		setPE(stock.mPE);
 		setPB(stock.mPB);
 		setDelta(stock.mDelta);
@@ -276,6 +293,7 @@ public class Stock extends StockBase {
 		setHold(cursor);
 		setCost(cursor);
 		setProfit(cursor);
+		setTotalShare(cursor);
 		setPE(cursor);
 		setPB(cursor);
 		setDelta(cursor);
@@ -721,6 +739,23 @@ public class Stock extends StockBase {
 
 		setProfit(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_PROFIT)));
+	}
+
+	public double getTotalShare() {
+		return mTotalShare;
+	}
+
+	public void setTotalShare(double totalShare) {
+		mTotalShare = totalShare;
+	}
+
+	void setTotalShare(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setTotalShare(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_TOTAL_SHARE)));
 	}
 
 	public double getPE() {

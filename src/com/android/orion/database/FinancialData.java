@@ -1,5 +1,8 @@
 package com.android.orion.database;
 
+import com.android.orion.Constants;
+import com.android.orion.utility.Utility;
+
 import android.content.ContentValues;
 import android.database.Cursor;
 
@@ -8,7 +11,7 @@ public class FinancialData extends DatabaseTable {
 	private String mDate;
 	private double mBookValuePerShare;// BVPS// 每股净资产-摊薄/期末股数
 	private double mEarningsPerShare;// EPS// 每股收益-摊薄/期末股数
-	private double mCashFlowPerShare;// 每股现金含量
+	private double mCashFlowPerShare;// 每股现金流
 	private double mTotalCurrentAssets;// 流动资产合计
 	private double mTotalAssets;// 资产总计
 	private double mTotalLongTermLiabilities;// 长期负债合计
@@ -80,7 +83,7 @@ public class FinancialData extends DatabaseTable {
 				mCashFlowPerShare);
 		contentValues.put(DatabaseContract.COLUMN_CURRENT_ASSETS,
 				mTotalCurrentAssets);
-		contentValues.put(DatabaseContract.COLUMN_TOTALASSETS, mTotalAssets);
+		contentValues.put(DatabaseContract.COLUMN_TOTAL_ASSETS, mTotalAssets);
 		contentValues.put(DatabaseContract.COLUMN_TOTAL_LONG_TERM_LIABILITIES,
 				mTotalLongTermLiabilities);
 		contentValues.put(DatabaseContract.COLUMN_MAIN_BUSINESS_INCOME,
@@ -253,7 +256,7 @@ public class FinancialData extends DatabaseTable {
 		}
 
 		setTotalAssets(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_TOTALASSETS)));
+				.getColumnIndex(DatabaseContract.COLUMN_TOTAL_ASSETS)));
 	}
 
 	public double getTotalLongTermLiabilities() {
@@ -323,5 +326,14 @@ public class FinancialData extends DatabaseTable {
 
 		setNetProfit(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_NET_PROFIT)));
+	}
+
+	public void setupEarningsPerShare(double totalShare) {
+		if ((mNetProfit == 0) || (totalShare == 0)) {
+			return;
+		}
+
+		mEarningsPerShare = Utility.Round(mNetProfit / totalShare,
+				Constants.DOUBLE_FIXED_DECIMAL);
 	}
 }

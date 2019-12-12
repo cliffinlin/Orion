@@ -65,6 +65,7 @@ public class StockAnalyzer extends StockManager {
 		FinancialData financialData = FinancialData.obtain();
 		financialData.setStockId(stock.getId());
 		mStockDatabaseManager.getFinancialData(stock.getId(), financialData);
+		financialData.setupEarningsPerShare(stock.getTotalShare());
 		stock.setupPE(financialData.getEarningsPerShare());
 		stock.setupPB(financialData.getBookValuePerShare());
 	}

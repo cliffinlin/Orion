@@ -47,10 +47,12 @@ public final class DatabaseContract {
 	public static final String COLUMN_HOLD = "hold";
 	public static final String COLUMN_COST = "cost";
 	public static final String COLUMN_PROFIT = "profit";
+	public static final String COLUMN_TOTAL_SHARE = "total_share";
 	public static final String COLUMN_PE = "pe";
 	public static final String COLUMN_PB = "pb";
 	public static final String COLUMN_DIVIDEND = "dividend";
 	public static final String COLUMN_YIELD = "yield";
+	public static final String COLUMN_DELTA = "delta";
 	public static final String COLUMN_CREATED = "created";
 	public static final String COLUMN_MODIFIED = "modified";
 
@@ -81,9 +83,9 @@ public final class DatabaseContract {
 	// http://money.finance.sina.com.cn/corp/go.php/vFD_FinanceSummary/stockid/600028.phtml
 	public static final String COLUMN_BOOK_VALUE_PER_SHARE = "book_value_per_share";// 每股净资产-摊薄/期末股数
 	public static final String COLUMN_EARNINGS_PER_SHARE = "earnings_per_share";// 每股收益-摊薄/期末股数
-	public static final String COLUMN_CASH_FLOW_PER_SHARE = "cash_flow_per_share";// 每股现金含量
+	public static final String COLUMN_CASH_FLOW_PER_SHARE = "cash_flow_per_share";// 每股现金流
 	public static final String COLUMN_CURRENT_ASSETS = "current_assets";// 流动资产合计
-	public static final String COLUMN_TOTALASSETS = "total_assets";// 资产总计
+	public static final String COLUMN_TOTAL_ASSETS = "total_assets";// 资产总计
 	public static final String COLUMN_TOTAL_LONG_TERM_LIABILITIES = "total_long_term_liabilities";// 长期负债合计
 	public static final String COLUMN_MAIN_BUSINESS_INCOME = "main_business_income";// 主营业务收入
 	public static final String COLUMN_FINANCIAL_EXPENSES = "financial_expenses";// 财务费用
@@ -93,8 +95,6 @@ public final class DatabaseContract {
 	public static final String COLUMN_DIVIDEND_DATE = "dividend_date";
 
 	public static final String COLUMN_TIME_TO_MARKET = "time_to_market";
-
-	public static final String COLUMN_DELTA = "delta";
 
 	private static final String DROP_TABLE_IF_EXISTS = "DROP TABLE IF EXISTS ";
 
@@ -155,8 +155,9 @@ public final class DatabaseContract {
 				COLUMN_MIN5, COLUMN_MIN15, COLUMN_MIN30, COLUMN_MIN60,
 				COLUMN_DAY, COLUMN_WEEK, COLUMN_MONTH, COLUMN_QUARTER,
 				COLUMN_YEAR, COLUMN_OPERATION, COLUMN_HOLD, COLUMN_COST,
-				COLUMN_PROFIT, COLUMN_PE, COLUMN_PB, COLUMN_DIVIDEND,
-				COLUMN_YIELD, COLUMN_DELTA, COLUMN_CREATED, COLUMN_MODIFIED };
+				COLUMN_PROFIT, COLUMN_TOTAL_SHARE, COLUMN_PE, COLUMN_PB,
+				COLUMN_DIVIDEND, COLUMN_YIELD, COLUMN_DELTA, COLUMN_CREATED,
+				COLUMN_MODIFIED };
 
 		public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
 				+ " (" + _ID + " INTEGER PRIMARY KEY," + COLUMN_CLASSES
@@ -178,11 +179,12 @@ public final class DatabaseContract {
 				+ COLUMN_OPERATION + TEXT_TYPE + COMMA_SEP + COLUMN_HOLD
 				+ INTEGER_TYPE + COMMA_SEP + COLUMN_COST + DOUBLE_TYPE
 				+ COMMA_SEP + COLUMN_PROFIT + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_PE + DOUBLE_TYPE + COMMA_SEP + COLUMN_PB + DOUBLE_TYPE
-				+ COMMA_SEP + COLUMN_DIVIDEND + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_YIELD + DOUBLE_TYPE + COMMA_SEP + COLUMN_DELTA
-				+ DOUBLE_TYPE + COMMA_SEP + COLUMN_CREATED + TEXT_TYPE
-				+ COMMA_SEP + COLUMN_MODIFIED + TEXT_TYPE + " )";
+				+ COLUMN_TOTAL_SHARE + DOUBLE_TYPE + COMMA_SEP + COLUMN_PE
+				+ DOUBLE_TYPE + COMMA_SEP + COLUMN_PB + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_DIVIDEND + DOUBLE_TYPE + COMMA_SEP + COLUMN_YIELD
+				+ DOUBLE_TYPE + COMMA_SEP + COLUMN_DELTA + DOUBLE_TYPE
+				+ COMMA_SEP + COLUMN_CREATED + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_MODIFIED + TEXT_TYPE + " )";
 
 		public static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
 				+ TABLE_NAME;
@@ -292,7 +294,7 @@ public final class DatabaseContract {
 		public static final String[] PROJECTION_ALL = { _ID, COLUMN_STOCK_ID,
 				COLUMN_DATE, COLUMN_BOOK_VALUE_PER_SHARE,
 				COLUMN_EARNINGS_PER_SHARE, COLUMN_CASH_FLOW_PER_SHARE,
-				COLUMN_CURRENT_ASSETS, COLUMN_TOTALASSETS,
+				COLUMN_CURRENT_ASSETS, COLUMN_TOTAL_ASSETS,
 				COLUMN_TOTAL_LONG_TERM_LIABILITIES,
 				COLUMN_MAIN_BUSINESS_INCOME, COLUMN_FINANCIAL_EXPENSES,
 				COLUMN_NET_PROFIT, COLUMN_CREATED, COLUMN_MODIFIED };
@@ -304,7 +306,7 @@ public final class DatabaseContract {
 				+ COLUMN_EARNINGS_PER_SHARE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_CASH_FLOW_PER_SHARE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_CURRENT_ASSETS + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_TOTALASSETS + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_TOTAL_ASSETS + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_TOTAL_LONG_TERM_LIABILITIES + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_MAIN_BUSINESS_INCOME + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_FINANCIAL_EXPENSES + DOUBLE_TYPE + COMMA_SEP

@@ -96,6 +96,28 @@ public class SinaFinance extends StockDataProvider {
 		// -3 退市
 	}
 
+	public class StockInfo_i {
+		// 0: 股票类型（A:A股, B:B股, I:指数）
+		// 1: 拼音简写
+		// 2: 前一年每股收益和
+		// 3: 最近四个季度每股收益和
+		// 4: ?
+		// 5: 最近报告的每股净资产/元
+		// 6: 过去5个交易日平均每分钟成交量
+		// 7: 总股本/万股
+		// 8: 流通股本/万股
+		// 9: 流通A股股本/万股
+		// 10: 流通B股股本/万股
+		// 11: ?
+		// 12: 最近年度净利润/亿元
+		// 13: 最近四个季度净利润/亿元
+		// 14: ?
+		// 15: ?
+		// 16: ?
+		// 17: 主营业务收入/亿元 营收
+		// 18: 净利润/亿元
+	}
+
 	@Override
 	int getAvailableHistoryLength(String period) {
 		if (period.equals(Constants.PERIOD_MIN1)) {
@@ -122,6 +144,17 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		return 0;
+	}
+
+	@Override
+	String getStockInformationURLString(Stock stock) {
+		String urlString = "";
+		if (stock == null) {
+			return urlString;
+		}
+		urlString = SINA_FINANCE_URL_HQ_JS_LIST + stock.getSE()
+				+ stock.getCode() + "_i";
+		return urlString;
 	}
 
 	@Override
@@ -210,6 +243,93 @@ public class SinaFinance extends StockDataProvider {
 		urlString = SINA_FINANCE_URL_NEWSTOCK_ISSUE;
 
 		return urlString;
+	}
+
+	@Override
+	void handleResponseStockInformation(Stock stock, String response) {
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start();
+		String keyValue[] = null;
+		String codeInfo[] = null;
+		String stockInfo[] = null;
+
+		if ((stock == null) || TextUtils.isEmpty(response)) {
+			Log.d(TAG, "handleResponseStockInformation return " + " stock = "
+					+ stock + " response = " + response);
+			return;
+		}
+
+		try {
+			keyValue = response.trim().split("=");
+
+			if (keyValue[0] == null) {
+				Log.d(TAG,
+						"handleResponseStockInformation return keyValue[0] = "
+								+ keyValue[0]);
+				return;
+			}
+
+			codeInfo = keyValue[0].trim().split("_");
+
+			if (codeInfo[2] == null) {
+				Log.d(TAG,
+						"handleResponseStockInformation return codeInfo[2] = "
+								+ codeInfo[2]);
+				return;
+			}
+
+			if (!stock.getSE().equals(codeInfo[2].substring(0, 2))
+					|| !stock.getCode().equals(codeInfo[2].substring(2, 8))) {
+				Log.d(TAG, "handleResponseStockInformation return");
+				return;
+			}
+
+			if (keyValue[1] == null) {
+				Log.d(TAG,
+						"handleResponseStockInformation return keyValue[1] = "
+								+ keyValue[1]);
+				return;
+			}
+
+			stockInfo = keyValue[1].substring(1, keyValue[1].length() - 2)
+					.split(",");
+
+			if (stockInfo == null) {
+				Log.d(TAG, "handleResponseStockInformation return stockInfo = "
+						+ stockInfo);
+				return;
+			}
+
+			if (!TextUtils.isEmpty(stockInfo[1])) {
+				stock.setPinyin(stockInfo[1]);
+				stock.setPinyinFixed(Constants.STOCK_FLAG_PINYIN_FIXED);
+			}
+
+			if (stockInfo.length > 7) {
+				if (!TextUtils.isEmpty(stockInfo[7])) {
+					stock.setTotalShare(Double.valueOf(stockInfo[7]) * 10000);
+				}
+			}
+
+			if (!mStockDatabaseManager.isStockExist(stock)) {
+				stock.setCreated(Utility.getCurrentDateTimeString());
+				mStockDatabaseManager.insertStock(stock);
+			} else {
+				stock.setModified(Utility.getCurrentDateTimeString());
+				mStockDatabaseManager.updateStock(stock,
+						stock.getContentValuesTotalShare());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		stopWatch.stop();
+		Log.d(TAG,
+				"handleResponseStockInformation:" + stock.getName() + " "
+						+ stock.getPrice() + " " + stock.getChange() + " "
+						+ stock.getNet() + " " + stock.getVolume() + " "
+						+ stock.getValue() + " " + stopWatch.getInterval()
+						+ "s");
 	}
 
 	@Override
@@ -757,7 +877,7 @@ public class SinaFinance extends StockDataProvider {
 							} else if (keyString.equals("每股收益-摊薄/期末股数")) {
 								financialData.setEarningsPerShare(Double
 										.valueOf(valueString));
-							} else if (keyString.equals("每股现金含量")) {
+							} else if (keyString.equals("每股现金流")) {
 								financialData.setCashFlowPerShare(Double
 										.valueOf(valueString));
 							} else if (keyString.equals("流动资产合计")) {
@@ -779,6 +899,7 @@ public class SinaFinance extends StockDataProvider {
 							} else if (keyString.equals("净利润")) {
 								financialData.setNetProfit(Double
 										.valueOf(valueString));
+								financialData.setupEarningsPerShare(stock.getTotalShare());
 
 								if (bulkInsert) {
 									financialData.setCreated(Utility
