@@ -1,5 +1,6 @@
 package com.android.orion;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.Set;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -23,6 +25,9 @@ import com.android.orion.utility.Market;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Utility;
 import com.android.volley.RequestQueue;
+import com.avos.avoscloud.okhttp.OkHttpClient;
+import com.avos.avoscloud.okhttp.Request;
+import com.avos.avoscloud.okhttp.Response;
 
 public abstract class StockDataProvider extends StockAnalyzer {
 	static final String TAG = Constants.TAG + " "
@@ -183,27 +188,21 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			return;
 		}
 
+		downloadStockInformation();
+
 		executeType = bundle.getInt(Constants.EXTRA_EXECUTE_TYPE,
 				Constants.EXECUTE_TYPE_NONE);
-
-		downloadIPO(executeType);
 
 		stock = getStock(bundle);
 
 		if (stock != null) {
-			downloadStockInformation(executeType, stock);
 			downloadStockRealTime(executeType, stock);
 			downloadStockDataHistory(executeType, stock);
 			downloadStockDataRealTime(executeType, stock);
-			downloadFinancialData(executeType, stock);
-			downloadShareBonus(executeType, stock);
 		} else {
-			downloadStockInformation(executeType);
 			downloadStockRealTime(executeType);
 			downloadStockDataHistory(executeType);
 			downloadStockDataRealTime(executeType);
-			downloadFinancialData(executeType);
-			downloadShareBonus(executeType);
 		}
 	}
 
@@ -225,7 +224,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 		mStockDatabaseManager.getFinancialData(stock.getId(), financialData);
 		if (financialData.getCreated().contains(Utility.getCurrentDateString())) {
-//			 return;
+			// return;
 		}
 
 		if (executeType == Constants.EXECUTE_IMMEDIATE) {
@@ -275,24 +274,39 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		}
 	}
 
-	void downloadIPO(int executeType) {
-		String urlString;
-		IPO ipo = IPO.obtain();
+	void downloadIPO() {
+		String urlString = getIPOURLString();
+		ArrayList<IPO> ipoList = new ArrayList<IPO>();
 
-		mStockDatabaseManager.getIPO(ipo);
-		if (ipo.getCreated().contains(Utility.getCurrentDateString())) {
-			return;
-		}
-
-		if (executeType == Constants.EXECUTE_IMMEDIATE) {
-			urlString = getIPOURLString();
-			if (addToCurrentRequests(urlString)) {
-				Log.d(TAG, "downloadIPO:" + urlString);
-				IPODownloader downloader = new IPODownloader(urlString);
-				downloader.setIPO(ipo);
-				mRequestQueue.add(downloader.mStringRequest);
+		mStockDatabaseManager.getIPOList(ipoList, null);
+		if ((ipoList != null) && ipoList.size() > 0) {
+			for (IPO ipo : ipoList) {
+				if (ipo.getCreated().contains(Utility.getCurrentDateString())) {
+					return;
+				}
 			}
 		}
+
+		DownloadIPOAsyncTask downloadIPOAsyncTask = new DownloadIPOAsyncTask();
+		downloadIPOAsyncTask.execute(urlString);
+	}
+
+	/*
+	 * void downloadIPO(int executeType) { String urlString; IPO ipo =
+	 * IPO.obtain();
+	 * 
+	 * mStockDatabaseManager.getIPO(ipo); if
+	 * (ipo.getCreated().contains(Utility.getCurrentDateString())) { return; }
+	 * 
+	 * if (executeType == Constants.EXECUTE_IMMEDIATE) { urlString =
+	 * getIPOURLString(); if (addToCurrentRequests(urlString)) { Log.d(TAG,
+	 * "downloadIPO:" + urlString); IPODownloader downloader = new
+	 * IPODownloader(urlString); downloader.setIPO(ipo);
+	 * mRequestQueue.add(downloader.mStringRequest); } } }
+	 */
+	void downloadStockInformation() {
+		DownloadStockInformationAsyncTask downloadStockInformationAsyncTask = new DownloadStockInformationAsyncTask();
+		downloadStockInformationAsyncTask.execute();
 	}
 
 	void downloadStockInformation(int executeType) {
@@ -647,6 +661,37 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		return stock;
 	}
 
+	public class DownloadIPOAsyncTask extends
+			AsyncTask<String, Integer, String> {
+		public IPO mIPO = new IPO();
+
+		OkHttpClient mClient = new OkHttpClient();
+
+		@Override
+		protected String doInBackground(String... params) {
+
+			Request.Builder builder = new Request.Builder();
+			builder.url(params[0]);
+			Request request = builder.build();
+
+			try {
+				Response response = mClient.newCall(request).execute();
+				byte[] b = response.body().bytes(); // 获取数据的bytes
+				String resultString = new String(b, "GB2312"); // 然后将其转为gb2312
+				handleResponseIPO(mIPO, resultString);
+				return resultString;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(String s) {
+			super.onPostExecute(s);
+		}
+	}
+
 	public class StockHSADownloader extends VolleyStringDownloader {
 
 		public StockHSADownloader() {
@@ -662,6 +707,118 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			removeFromCurrrentRequests(mStringRequest.getUrl());
 			handleResponseStockHSA(response);
 			fixPinyin();
+		}
+	}
+
+	public class DownloadStockInformationAsyncTask extends
+			AsyncTask<String, Integer, String> {
+
+		@Override
+		protected String doInBackground(String... params) {
+			OkHttpClient client = new OkHttpClient();
+			String urlString = "";
+			ArrayList<IPO> ipoList = new ArrayList<IPO>();
+			boolean needDownloadIPO = false;
+
+			mStockDatabaseManager.getIPOList(ipoList, null);
+			if (ipoList.size() == 0) {
+				needDownloadIPO = true;
+			} else {
+				for (IPO ipo : ipoList) {
+					if (!ipo.getCreated().contains(
+							Utility.getCurrentDateString())) {
+						needDownloadIPO = true;
+						break;
+					}
+				}
+			}
+
+			if (needDownloadIPO) {
+				try {
+					urlString = getIPOURLString();
+					Request.Builder builder = new Request.Builder();
+					builder.url(urlString);
+					Request request = builder.build();
+
+					Response response = client.newCall(request).execute();
+					byte[] b = response.body().bytes(); // 获取数据的bytes
+					String responseString = new String(b, "GB2312"); // 然后将其转为gb2312
+					handleResponseIPO(null, responseString);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+
+			for (Stock stock : mStockArrayMapFavorite.values()) {
+				try {
+					if (stock.getTotalShare() == 0) {
+						urlString = getStockInformationURLString(stock);
+						Request.Builder builder = new Request.Builder();
+						builder.url(urlString);
+						Request request = builder.build();
+
+						Response response = client.newCall(request).execute();
+						byte[] b = response.body().bytes(); // 获取数据的bytes
+						String responseString = new String(b, "GB2312"); // 然后将其转为gb2312
+						handleResponseStockInformation(stock, responseString);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				try {
+					FinancialData financialData = new FinancialData();
+					financialData.setStockId(stock.getId());
+
+					mStockDatabaseManager.getFinancialData(stock.getId(),
+							financialData);
+					if (!financialData.getCreated().contains(
+							Utility.getCurrentDateString())) {
+						urlString = getFinancialDataURLString(stock);
+						Request.Builder builder = new Request.Builder();
+						builder.url(urlString);
+						Request request = builder.build();
+
+						Response response = client.newCall(request).execute();
+						byte[] b = response.body().bytes(); // 获取数据的bytes
+						String responseString = new String(b, "GB2312"); // 然后将其转为gb2312
+						handleResponseFinancialData(stock, financialData,
+								responseString);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				try {
+					ShareBonus shareBonus = new ShareBonus();
+					shareBonus.setStockId(stock.getId());
+
+					mStockDatabaseManager.getShareBonus(stock.getId(),
+							shareBonus);
+					if (!shareBonus.getCreated().contains(
+							Utility.getCurrentDateString())) {
+						urlString = getShareBonusURLString(stock);
+						Request.Builder builder = new Request.Builder();
+						builder.url(urlString);
+						Request request = builder.build();
+
+						Response response = client.newCall(request).execute();
+						byte[] b = response.body().bytes(); // 获取数据的bytes
+						String responseString = new String(b, "GB2312"); // 然后将其转为gb2312
+						handleResponseShareBonus(stock, shareBonus,
+								responseString);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(String s) {
+			super.onPostExecute(s);
 		}
 	}
 

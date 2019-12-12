@@ -7,6 +7,9 @@ public class Constants {
 	public static final int FAIL = -1;
 	public static final int SUCCESS = 0;
 
+	public static final String STOCK_CLASSES_INDEX = "I";
+	public static final String STOCK_CLASSES_A = "A";
+	
 	public static final String FAVORITE = "favorite";
 	public static final String XML_FILE_EXT = ".xml";
 

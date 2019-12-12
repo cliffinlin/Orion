@@ -299,7 +299,11 @@ public class SinaFinance extends StockDataProvider {
 						+ stockInfo);
 				return;
 			}
-
+			
+			if (!TextUtils.isEmpty(stockInfo[0])) {
+				stock.setClasses(stockInfo[0]);
+			}
+			
 			if (!TextUtils.isEmpty(stockInfo[1])) {
 				stock.setPinyin(stockInfo[1]);
 				stock.setPinyinFixed(Constants.STOCK_FLAG_PINYIN_FIXED);
@@ -317,7 +321,7 @@ public class SinaFinance extends StockDataProvider {
 			} else {
 				stock.setModified(Utility.getCurrentDateTimeString());
 				mStockDatabaseManager.updateStock(stock,
-						stock.getContentValuesTotalShare());
+						stock.getContentValuesInformation());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -803,10 +807,11 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		try {
-			String responseString = new String(response.getBytes("ISO-8859-1"),
-					"GB2312");
+			// String responseString = new
+			// String(response.getBytes("ISO-8859-1"),
+			// "GB2312");
 
-			Document doc = Jsoup.parse(responseString);
+			Document doc = Jsoup.parse(response);
 			if (doc == null) {
 				Log.d(TAG, "handleResponseFinancialData return " + " doc = "
 						+ doc);
@@ -899,7 +904,8 @@ public class SinaFinance extends StockDataProvider {
 							} else if (keyString.equals("æª¿˚»Û")) {
 								financialData.setNetProfit(Double
 										.valueOf(valueString));
-								financialData.setupEarningsPerShare(stock.getTotalShare());
+								financialData.setupEarningsPerShare(stock
+										.getTotalShare());
 
 								if (bulkInsert) {
 									financialData.setCreated(Utility
@@ -972,10 +978,11 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		try {
-			String responseString = new String(response.getBytes("ISO-8859-1"),
-					"GB2312");
+			// String responseString = new
+			// String(response.getBytes("ISO-8859-1"),
+			// "GB2312");
 
-			Document doc = Jsoup.parse(responseString);
+			Document doc = Jsoup.parse(response);
 			if (doc == null) {
 				Log.d(TAG, "handleResponseShareBonus return " + " doc = " + doc);
 				return;
@@ -1114,16 +1121,21 @@ public class SinaFinance extends StockDataProvider {
 			return;
 		}
 
+		if (ipo == null) {
+			ipo = new IPO();
+		}
+
 		if (TextUtils.isEmpty(ipo.getCreated())) {
 			mStockDatabaseManager.deleteIPO();
 			bulkInsert = true;
 		}
 
 		try {
-			String responseString = new String(response.getBytes("ISO-8859-1"),
-					"GB2312");
+			// String responseString = new
+			// String(response.getBytes("ISO-8859-1"),
+			// "GB2312");
 
-			Document doc = Jsoup.parse(responseString);
+			Document doc = Jsoup.parse(response);
 			if (doc == null) {
 				Log.d(TAG, "handleResponseIPO return " + " doc = " + doc);
 				return;

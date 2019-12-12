@@ -1640,16 +1640,16 @@ public class StockDatabaseManager extends DatabaseManager {
 		}
 	}
 
-	public void getIPOList(Stock stock, ArrayList<IPO> ipoList, String sortOrder) {
+	public void getIPOList(ArrayList<IPO> ipoList, String sortOrder) {
 		Cursor cursor = null;
 
-		if ((stock == null) || (ipoList == null)) {
+		if (ipoList == null) {
 			return;
 		}
 
 		ipoList.clear();
 
-		String selection = getIPOSelection(stock.getId());
+		String selection = null;
 
 		try {
 			cursor = queryIPO(selection, null, sortOrder);

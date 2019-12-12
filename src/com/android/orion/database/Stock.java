@@ -132,7 +132,6 @@ public class Stock extends StockBase {
 	public ContentValues getContentValues(ContentValues contentValues) {
 		super.getContentValues(contentValues);
 
-		contentValues.put(DatabaseContract.Stock.COLUMN_CLASSES, mClasses);
 		contentValues.put(DatabaseContract.COLUMN_SE, mSE);
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
@@ -159,18 +158,18 @@ public class Stock extends StockBase {
 		contentValues.put(DatabaseContract.COLUMN_HOLD, mHold);
 		contentValues.put(DatabaseContract.COLUMN_COST, mCost);
 		contentValues.put(DatabaseContract.COLUMN_PROFIT, mProfit);
-		contentValues.put(DatabaseContract.COLUMN_TOTAL_SHARE, mTotalShare);
 		contentValues.put(DatabaseContract.COLUMN_PE, mPE);
 		contentValues.put(DatabaseContract.COLUMN_PB, mPB);
 
 		return contentValues;
 	}
 	
-	public ContentValues getContentValuesTotalShare() {
+	public ContentValues getContentValuesInformation() {
 		ContentValues contentValues = new ContentValues();
 		
 		super.getContentValues(contentValues);
 		
+		contentValues.put(DatabaseContract.Stock.COLUMN_CLASSES, mClasses);
 		contentValues.put(DatabaseContract.Stock.COLUMN_PINYIN, mPinyin);
 		contentValues.put(DatabaseContract.Stock.COLUMN_PINYIN_FIXED,
 				mPinyinFixed);
@@ -299,7 +298,7 @@ public class Stock extends StockBase {
 		setDelta(cursor);
 	}
 
-	String getClases() {
+	public String getClases() {
 		return mClasses;
 	}
 
