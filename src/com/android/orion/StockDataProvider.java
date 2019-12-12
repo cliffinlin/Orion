@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import android.content.Context;
@@ -744,6 +745,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 					byte[] b = response.body().bytes(); // 获取数据的bytes
 					String responseString = new String(b, "GB2312"); // 然后将其转为gb2312
 					handleResponseIPO(null, responseString);
+					Thread.sleep((long)(Math.random()*1000));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -761,6 +763,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 						byte[] b = response.body().bytes(); // 获取数据的bytes
 						String responseString = new String(b, "GB2312"); // 然后将其转为gb2312
 						handleResponseStockInformation(stock, responseString);
+						Thread.sleep((long)(Math.random()*1000));
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -784,6 +787,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 						String responseString = new String(b, "GB2312"); // 然后将其转为gb2312
 						handleResponseFinancialData(stock, financialData,
 								responseString);
+						Thread.sleep((long)(Math.random()*1000));
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -807,6 +811,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 						String responseString = new String(b, "GB2312"); // 然后将其转为gb2312
 						handleResponseShareBonus(stock, shareBonus,
 								responseString);
+						Thread.sleep((long)(Math.random()*1000));
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
