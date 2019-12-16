@@ -7,9 +7,12 @@ import java.util.Map.Entry;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.ArrayMap;
+import android.util.Log;
 
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
@@ -19,7 +22,13 @@ import com.android.orion.pinyin.Pinyin;
 import com.android.orion.utility.Utility;
 
 public class StockManager {
+	static final String TAG = Constants.TAG + " "
+			+ StockManager.class.getSimpleName();
+
 	Context mContext;
+
+	PowerManager mPowerManager;
+	WakeLock mWakeLock;
 
 	ContentResolver mContentResolver = null;
 	LocalBroadcastManager mLocalBroadcastManager = null;
@@ -30,6 +39,11 @@ public class StockManager {
 
 	public StockManager(Context context) {
 		mContext = context;
+
+		mPowerManager = (PowerManager) mContext
+				.getSystemService(Context.POWER_SERVICE);
+		mWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+				Constants.TAG);
 
 		if (mContentResolver == null) {
 			mContentResolver = mContext.getContentResolver();
@@ -53,6 +67,18 @@ public class StockManager {
 		 * (ConnectivityManager) mContext
 		 * .getSystemService(Context.CONNECTIVITY_SERVICE); }
 		 */
+	}
+
+	void acquireWakeLock() {
+		Log.d(TAG, "acquireWakeLock");
+		mWakeLock.acquire();
+	}
+
+	void releaseWakeLock() {
+		Log.d(TAG, "releaseWakeLock");
+		if (mWakeLock.isHeld()) {
+			mWakeLock.release();
+		}
 	}
 
 	/*

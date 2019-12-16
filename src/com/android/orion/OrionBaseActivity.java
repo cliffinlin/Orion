@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.util.ArrayMap;
+import android.util.Log;
 
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.FinancialData;
@@ -29,6 +30,8 @@ import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockFilter;
 
 public class OrionBaseActivity extends Activity {
+	static final String TAG = Constants.TAG + " "
+			+ OrionBaseActivity.class.getSimpleName();
 
 	boolean mBound = false;
 	boolean mResumed = false;
@@ -75,11 +78,11 @@ public class OrionBaseActivity extends Activity {
 
 		mContext = this;
 
-		mStockFilter = new StockFilter(mContext);
-
 		mPowerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		mWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
 				Constants.TAG);
+
+		mStockFilter = new StockFilter(mContext);
 
 		mIntent = getIntent();
 		if (mIntent != null) {
@@ -169,6 +172,18 @@ public class OrionBaseActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 		mResumed = true;
+	}
+
+	void acquireWakeLock() {
+		Log.d(TAG, "acquireWakeLock");
+		mWakeLock.acquire();
+	}
+
+	void releaseWakeLock() {
+		Log.d(TAG, "releaseWakeLock");
+		if (mWakeLock.isHeld()) {
+			mWakeLock.release();
+		}
 	}
 
 	public void showProgressDialog(String content) {

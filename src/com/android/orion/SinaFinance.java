@@ -299,11 +299,11 @@ public class SinaFinance extends StockDataProvider {
 						+ stockInfo);
 				return;
 			}
-			
+
 			if (!TextUtils.isEmpty(stockInfo[0])) {
 				stock.setClasses(stockInfo[0]);
 			}
-			
+
 			if (!TextUtils.isEmpty(stockInfo[1])) {
 				stock.setPinyin(stockInfo[1]);
 				stock.setPinyinFixed(Constants.STOCK_FLAG_PINYIN_FIXED);
