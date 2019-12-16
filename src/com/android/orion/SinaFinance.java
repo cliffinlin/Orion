@@ -862,7 +862,8 @@ public class SinaFinance extends StockDataProvider {
 
 					if (tdElements.size() < 2) {
 						Log.d(TAG, "handleResponseFinancialData continue "
-								+ " tdElements.size() = " + tdElements.size());
+								+ " tdElements.size() = " + tdElements.size() + 
+								" tdElements=" + tdElements);
 						continue;
 					}
 
