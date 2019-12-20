@@ -9,7 +9,6 @@ import java.util.Set;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -25,9 +24,6 @@ import com.android.orion.utility.Market;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Utility;
 import com.android.volley.RequestQueue;
-import com.avos.avoscloud.okhttp.OkHttpClient;
-import com.avos.avoscloud.okhttp.Request;
-import com.avos.avoscloud.okhttp.Response;
 
 public abstract class StockDataProvider extends StockAnalyzer {
 	static final String TAG = Constants.TAG + " "
@@ -188,27 +184,157 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			return;
 		}
 
-		downloadStockInformation();
-
 		executeType = bundle.getInt(Constants.EXTRA_EXECUTE_TYPE,
 				Constants.EXECUTE_TYPE_NONE);
 
 		stock = getStock(bundle);
 
 		if (stock != null) {
+			downloadStockInformation(executeType, stock);
 			downloadStockRealTime(executeType, stock);
 			downloadStockDataHistory(executeType, stock);
 			downloadStockDataRealTime(executeType, stock);
+			downloadFinancialData(executeType, stock);
+			downloadShareBonus(executeType, stock);
 		} else {
+			downloadStockInformation(executeType);
 			downloadStockRealTime(executeType);
 			downloadStockDataHistory(executeType);
 			downloadStockDataRealTime(executeType);
+			downloadFinancialData(executeType);
+			downloadShareBonus(executeType);
+		}
+
+		downloadIPO(executeType);
+	}
+
+	void downloadFinancialData(int executeType) {
+		for (Stock stock : mStockArrayMapFavorite.values()) {
+			downloadFinancialData(executeType, stock);
 		}
 	}
 
-	void downloadStockInformation() {
-		DownloadStockInformationAsyncTask downloadStockInformationAsyncTask = new DownloadStockInformationAsyncTask();
-		downloadStockInformationAsyncTask.execute();
+	void downloadFinancialData(int executeType, Stock stock) {
+		String urlString;
+
+		if (stock == null) {
+			return;
+		}
+
+		FinancialData financialData = new FinancialData();
+		financialData.setStockId(stock.getId());
+
+		mStockDatabaseManager.getFinancialData(stock.getId(), financialData);
+		if (financialData.getCreated().contains(Utility.getCurrentDateString())) {
+			return;
+		}
+
+		if (executeType == Constants.EXECUTE_IMMEDIATE) {
+			urlString = getFinancialDataURLString(stock);
+			if (addToCurrentRequests(urlString)) {
+				Log.d(TAG, "downloadFinancial:" + urlString);
+				FinancialDataDownloader downloader = new FinancialDataDownloader(
+						urlString);
+				downloader.setStock(stock);
+				downloader.setFinancialData(financialData);
+				mRequestQueue.add(downloader.mStringRequest);
+			}
+		}
+	}
+
+	void downloadShareBonus(int executeType) {
+		for (Stock stock : mStockArrayMapFavorite.values()) {
+			downloadShareBonus(executeType, stock);
+		}
+	}
+
+	void downloadShareBonus(int executeType, Stock stock) {
+		String urlString;
+
+		if (stock == null) {
+			return;
+		}
+
+		ShareBonus shareBonus = new ShareBonus();
+		shareBonus.setStockId(stock.getId());
+
+		mStockDatabaseManager.getShareBonus(stock.getId(), shareBonus);
+		if (shareBonus.getCreated().contains(Utility.getCurrentDateString())) {
+			return;
+		}
+
+		if (executeType == Constants.EXECUTE_IMMEDIATE) {
+			urlString = getShareBonusURLString(stock);
+			if (addToCurrentRequests(urlString)) {
+				Log.d(TAG, "downloadShareBonus:" + urlString);
+				ShareBonusDownloader downloader = new ShareBonusDownloader(
+						urlString);
+				downloader.setStock(stock);
+				downloader.setShareBonus(shareBonus);
+				mRequestQueue.add(downloader.mStringRequest);
+			}
+		}
+	}
+
+	void downloadIPO(int executeType) {
+		String urlString;
+		ArrayList<IPO> ipoList = new ArrayList<IPO>();
+		boolean needDownloadIPO = false;
+
+		mStockDatabaseManager.getIPOList(ipoList, null);
+		if (ipoList.size() == 0) {
+			needDownloadIPO = true;
+		} else {
+			for (IPO ipo : ipoList) {
+				if (!ipo.getCreated().contains(Utility.getCurrentDateString())) {
+					needDownloadIPO = true;
+					break;
+				}
+			}
+		}
+
+		if (!needDownloadIPO) {
+			return;
+		}
+
+		if (executeType == Constants.EXECUTE_IMMEDIATE) {
+			urlString = getIPOURLString();
+			if (addToCurrentRequests(urlString)) {
+				Log.d(TAG, "downloadIPO:" + urlString);
+				IPODownloader downloader = new IPODownloader(urlString);
+				downloader.setIPO(new IPO());
+				mRequestQueue.add(downloader.mStringRequest);
+			}
+		}
+	}
+
+	void downloadStockInformation(int executeType) {
+		for (Stock stock : mStockArrayMapFavorite.values()) {
+			downloadStockInformation(executeType, stock);
+		}
+	}
+
+	void downloadStockInformation(int executeType, Stock stock) {
+		String urlString;
+
+		if (stock == null) {
+			return;
+		}
+
+		if (stock.getTotalShare() != 0) {
+			return;
+		}
+
+		if (executeType == Constants.EXECUTE_IMMEDIATE) {
+			urlString = getStockInformationURLString(stock);
+			if (addToCurrentRequests(urlString)) {
+				Log.d(TAG, "getStockInformationURLString:" + urlString);
+				StockInformationDownloader downloader = new StockInformationDownloader(
+						urlString);
+				downloader.setStock(stock);
+				mRequestQueue.add(downloader.mStringRequest);
+			}
+		}
 	}
 
 	void downloadStockRealTime(int executeType) {
@@ -231,7 +357,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		}
 
 		if (executeType == Constants.EXECUTE_IMMEDIATE
-				|| executeTypeOf(executeType, Constants.EXECUTE_SCHEDULE_MIN1)
+				|| executeTypeOf(executeType, Constants.EXECUTE_SCHEDULE)
 				|| Market.isOutOfDate(modified)) {
 			urlString = getStockRealTimeURLString(stock);
 			if (addToCurrentRequests(urlString)) {
@@ -432,8 +558,6 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		defaultValue = getDownloadHistoryLengthDefault(period);
 
 		try {
-			acquireWakeLock();
-
 			selection = mStockDatabaseManager.getStockDataSelection(stockId,
 					period);
 			sortOrder = mStockDatabaseManager.getStockDataOrder();
@@ -480,7 +604,6 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			e.printStackTrace();
 		} finally {
 			mStockDatabaseManager.closeCursor(cursor);
-			releaseWakeLock();
 		}
 
 		return result;
@@ -551,138 +674,88 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		}
 	}
 
-	public class DownloadStockInformationAsyncTask extends
-			AsyncTask<String, Integer, String> {
-
-		@Override
-		protected String doInBackground(String... params) {
-			OkHttpClient client = new OkHttpClient();
-			String urlString = "";
-			ArrayList<IPO> ipoList = new ArrayList<IPO>();
-			boolean needDownloadIPO = false;
-
-			mStockDatabaseManager.getIPOList(ipoList, null);
-			if (ipoList.size() == 0) {
-				needDownloadIPO = true;
-			} else {
-				for (IPO ipo : ipoList) {
-					if (!ipo.getCreated().contains(
-							Utility.getCurrentDateString())) {
-						needDownloadIPO = true;
-						break;
-					}
-				}
-			}
-
-			if (needDownloadIPO) {
-				try {
-					acquireWakeLock();
-
-					urlString = getIPOURLString();
-					Request.Builder builder = new Request.Builder();
-					builder.url(urlString);
-					Request request = builder.build();
-
-					Response response = client.newCall(request).execute();
-					byte[] b = response.body().bytes(); // 获取数据的bytes
-					String responseString = new String(b, "GB2312"); // 然后将其转为gb2312
-					handleResponseIPO(null, responseString);
-					Thread.sleep((long) (Math.random() * 1000));
-				} catch (Exception e) {
-					e.printStackTrace();
-				} finally {
-					releaseWakeLock();
-				}
-			}
-
-			for (Stock stock : mStockArrayMapFavorite.values()) {
-				try {
-					acquireWakeLock();
-
-					if (stock.getTotalShare() == 0) {
-						urlString = getStockInformationURLString(stock);
-						Request.Builder builder = new Request.Builder();
-						builder.url(urlString);
-						Request request = builder.build();
-
-						Response response = client.newCall(request).execute();
-						byte[] b = response.body().bytes(); // 获取数据的bytes
-						String responseString = new String(b, "GB2312"); // 然后将其转为gb2312
-						handleResponseStockInformation(stock, responseString);
-						Thread.sleep((long) (Math.random() * 1000));
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				} finally {
-					releaseWakeLock();
-				}
-
-				try {
-					acquireWakeLock();
-
-					FinancialData financialData = new FinancialData();
-					financialData.setStockId(stock.getId());
-
-					mStockDatabaseManager.getFinancialData(stock.getId(),
-							financialData);
-					if (!financialData.getCreated().contains(
-							Utility.getCurrentDateString())) {
-						urlString = getFinancialDataURLString(stock);
-						Request.Builder builder = new Request.Builder();
-						builder.url(urlString);
-						Request request = builder.build();
-
-						Response response = client.newCall(request).execute();
-						byte[] b = response.body().bytes(); // 获取数据的bytes
-						String responseString = new String(b, "GB2312"); // 然后将其转为gb2312
-						handleResponseFinancialData(stock, financialData,
-								responseString);
-						Thread.sleep((long) (Math.random() * 1000));
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				} finally {
-					releaseWakeLock();
-				}
-
-				try {
-					acquireWakeLock();
-
-					ShareBonus shareBonus = new ShareBonus();
-					shareBonus.setStockId(stock.getId());
-
-					mStockDatabaseManager.getShareBonus(stock.getId(),
-							shareBonus);
-					if (!shareBonus.getCreated().contains(
-							Utility.getCurrentDateString())) {
-						urlString = getShareBonusURLString(stock);
-						Request.Builder builder = new Request.Builder();
-						builder.url(urlString);
-						Request request = builder.build();
-
-						Response response = client.newCall(request).execute();
-						byte[] b = response.body().bytes(); // 获取数据的bytes
-						String responseString = new String(b, "GB2312"); // 然后将其转为gb2312
-						handleResponseShareBonus(stock, shareBonus,
-								responseString);
-						Thread.sleep((long) (Math.random() * 1000));
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				} finally {
-					releaseWakeLock();
-				}
-			}
-
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(String s) {
-			super.onPostExecute(s);
-		}
-	}
-
+	/*
+	 * public class DownloadStockInformationAsyncTask extends AsyncTask<String,
+	 * Integer, String> {
+	 * 
+	 * @Override protected String doInBackground(String... params) {
+	 * OkHttpClient client = new OkHttpClient(); String urlString = "";
+	 * ArrayList<IPO> ipoList = new ArrayList<IPO>(); boolean needDownloadIPO =
+	 * false;
+	 * 
+	 * mStockDatabaseManager.getIPOList(ipoList, null); if (ipoList.size() == 0)
+	 * { needDownloadIPO = true; } else { for (IPO ipo : ipoList) { if
+	 * (!ipo.getCreated().contains( Utility.getCurrentDateString())) {
+	 * needDownloadIPO = true; break; } } }
+	 * 
+	 * if (needDownloadIPO) { try { acquireWakeLock();
+	 * 
+	 * urlString = getIPOURLString(); Request.Builder builder = new
+	 * Request.Builder(); builder.url(urlString); Request request =
+	 * builder.build();
+	 * 
+	 * Response response = client.newCall(request).execute(); byte[] b =
+	 * response.body().bytes(); // 获取数据的bytes String responseString = new
+	 * String(b, "GB2312"); // 然后将其转为gb2312 handleResponseIPO(null,
+	 * responseString); Thread.sleep((long) (Math.random() * 1000)); } catch
+	 * (Exception e) { e.printStackTrace(); } finally { releaseWakeLock(); } }
+	 * 
+	 * for (Stock stock : mStockArrayMapFavorite.values()) { try {
+	 * acquireWakeLock();
+	 * 
+	 * if (stock.getTotalShare() == 0) { urlString =
+	 * getStockInformationURLString(stock); Request.Builder builder = new
+	 * Request.Builder(); builder.url(urlString); Request request =
+	 * builder.build();
+	 * 
+	 * Response response = client.newCall(request).execute(); byte[] b =
+	 * response.body().bytes(); // 获取数据的bytes String responseString = new
+	 * String(b, "GB2312"); // 然后将其转为gb2312
+	 * handleResponseStockInformation(stock, responseString);
+	 * Thread.sleep((long) (Math.random() * 1000)); } } catch (Exception e) {
+	 * e.printStackTrace(); } finally { releaseWakeLock(); }
+	 * 
+	 * try { acquireWakeLock();
+	 * 
+	 * FinancialData financialData = new FinancialData();
+	 * financialData.setStockId(stock.getId());
+	 * 
+	 * mStockDatabaseManager.getFinancialData(stock.getId(), financialData); if
+	 * (!financialData.getCreated().contains( Utility.getCurrentDateString())) {
+	 * urlString = getFinancialDataURLString(stock); Request.Builder builder =
+	 * new Request.Builder(); builder.url(urlString); Request request =
+	 * builder.build();
+	 * 
+	 * Response response = client.newCall(request).execute(); byte[] b =
+	 * response.body().bytes(); // 获取数据的bytes String responseString = new
+	 * String(b, "GB2312"); // 然后将其转为gb2312 handleResponseFinancialData(stock,
+	 * financialData, responseString); Thread.sleep((long) (Math.random() *
+	 * 1000)); } } catch (Exception e) { e.printStackTrace(); } finally {
+	 * releaseWakeLock(); }
+	 * 
+	 * try { acquireWakeLock();
+	 * 
+	 * ShareBonus shareBonus = new ShareBonus();
+	 * shareBonus.setStockId(stock.getId());
+	 * 
+	 * mStockDatabaseManager.getShareBonus(stock.getId(), shareBonus); if
+	 * (!shareBonus.getCreated().contains( Utility.getCurrentDateString())) {
+	 * urlString = getShareBonusURLString(stock); Request.Builder builder = new
+	 * Request.Builder(); builder.url(urlString); Request request =
+	 * builder.build();
+	 * 
+	 * Response response = client.newCall(request).execute(); byte[] b =
+	 * response.body().bytes(); // 获取数据的bytes String responseString = new
+	 * String(b, "GB2312"); // 然后将其转为gb2312 handleResponseShareBonus(stock,
+	 * shareBonus, responseString); Thread.sleep((long) (Math.random() * 1000));
+	 * } } catch (Exception e) { e.printStackTrace(); } finally {
+	 * releaseWakeLock(); } }
+	 * 
+	 * return null; }
+	 * 
+	 * @Override protected void onPostExecute(String s) {
+	 * super.onPostExecute(s); } }
+	 */
 	public class StockInformationDownloader extends VolleyStringDownloader {
 		public Stock mStock = null;
 

@@ -16,7 +16,7 @@ public class StockDownloadBroadcastReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		int scheduleMinutes = 0;
-		int executeType = Constants.EXECUTE_SCHEDULE_MIN1;
+		int executeType = Constants.EXECUTE_SCHEDULE;
 
 		if (Market.isTradingHours(Calendar.getInstance())) {
 			Log.d(TAG,
