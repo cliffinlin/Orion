@@ -40,6 +40,8 @@ public class Stock extends StockBase {
 	private double mPE;
 	private double mPB;
 	private double mDelta;
+	private double mValuation;
+	private double mDiscount;
 
 	public ArrayList<StockData> mStockDataListMin1 = new ArrayList<StockData>();
 	public ArrayList<StockData> mStockDataListMin5 = new ArrayList<StockData>();
@@ -110,6 +112,8 @@ public class Stock extends StockBase {
 		mPE = 0;
 		mPB = 0;
 		mDelta = 0;
+		mValuation = 0;
+		mDiscount = 0;
 	}
 
 	@Override
@@ -195,6 +199,9 @@ public class Stock extends StockBase {
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND, mDividend);
 		contentValues.put(DatabaseContract.COLUMN_YIELD, mYield);
 		contentValues.put(DatabaseContract.COLUMN_DELTA, mDelta);
+		
+		contentValues.put(DatabaseContract.COLUMN_VALUATION, mValuation);
+		contentValues.put(DatabaseContract.COLUMN_DISCOUNT, mDiscount);
 
 		return contentValues;
 	}
@@ -238,6 +245,8 @@ public class Stock extends StockBase {
 		setPE(stock.mPE);
 		setPB(stock.mPB);
 		setDelta(stock.mDelta);
+		setDelta(stock.mValuation);
+		setDelta(stock.mDiscount);
 	}
 
 	@Override
@@ -280,6 +289,8 @@ public class Stock extends StockBase {
 		setPE(cursor);
 		setPB(cursor);
 		setDelta(cursor);
+		setValuation(cursor);
+		setDiscount(cursor);
 	}
 
 	public String getClases() {
@@ -792,6 +803,40 @@ public class Stock extends StockBase {
 				.getColumnIndex(DatabaseContract.COLUMN_DELTA)));
 	}
 
+	public double getValuation() {
+		return mValuation;
+	}
+
+	public void setValuation(double valuation) {
+		mValuation = valuation;
+	}
+
+	void setValuation(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setValuation(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_VALUATION)));
+	}
+
+	public double getDiscount() {
+		return mDiscount;
+	}
+
+	public void setDiscount(double discount) {
+		mDiscount = discount;
+	}
+
+	void setDiscount(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setDiscount(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_DISCOUNT)));
+	}
+	
 	public String getAction(String period) {
 		String action = "";
 
@@ -844,25 +889,37 @@ public class Stock extends StockBase {
 		}
 	}
 
-	public void setupPE(double value) {
-		if ((value == 0) || (value < 0)) {
+	public void setupPE(FinancialData financialData) {
+		if (financialData == null) {
 			return;
 		}
-
-		if (mPrice == 0) {
+		
+		if ((mPrice == 0) || (mTotalShare == 0)) {
 			return;
 		}
-
-		mPE = Utility.Round(100.0 * value / mPrice,
+		
+		double earningsPerShare = financialData.getNetProfit() / mTotalShare;
+		
+		if (earningsPerShare <= 0) {
+			return;
+		}
+		
+		mPE = Utility.Round(100.0 * earningsPerShare / mPrice,
 				Constants.DOUBLE_FIXED_DECIMAL);
 	}
 
-	public void setupPB(double value) {
-		if (value == 0) {
+	public void setupPB(FinancialData financialData) {
+		if (financialData == null) {
+			return;
+		}
+		
+		double bookValuePerShare = financialData.getBookValuePerShare();
+		
+		if (bookValuePerShare == 0) {
 			return;
 		}
 
-		mPB = Utility.Round(mPrice / value, Constants.DOUBLE_FIXED_DECIMAL);
+		mPB = Utility.Round(mPrice / bookValuePerShare, Constants.DOUBLE_FIXED_DECIMAL);
 	}
 
 	public void setupCost(double value) {
@@ -883,6 +940,24 @@ public class Stock extends StockBase {
 
 		if (mYield > 0) {
 			mDelta = Utility.Round(mPE / mYield, Constants.DOUBLE_FIXED_DECIMAL);
+		}
+	}
+
+	public void setupValuation(FinancialData financialData) {
+		if (financialData == null) {
+			return;
+		}
+
+		if ((mPrice == 0) || (mTotalShare == 0)) {
+			return;
+		}
+		
+		double netProfit = financialData.getNetProfit();
+		
+		mValuation = Utility.Round(netProfit / mTotalShare / Constants.RISK_FREE_INTEREST_RATE, Constants.DOUBLE_FIXED_DECIMAL);
+
+		if (mValuation > 0) {
+			mDiscount = Utility.Round(mPrice / mValuation, Constants.DOUBLE_FIXED_DECIMAL);
 		}
 	}
 }

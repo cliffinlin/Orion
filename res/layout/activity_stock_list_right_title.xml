@@ -95,6 +95,24 @@
         android:textSize="18sp" />
 
     <TextView
+        android:id="@+id/valuation"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/valuation"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/discount"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/discount"
+        android:textSize="18sp" />
+
+    <TextView
         android:id="@+id/pe"
         android:layout_width="80dp"
         android:layout_height="40dp"
@@ -138,4 +156,5 @@
         android:gravity="center"
         android:text="@string/delta"
         android:textSize="18sp" />
-</LinearLayout>
+
+</LinearLayout>
