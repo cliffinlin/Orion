@@ -11,6 +11,7 @@ public class StockFilter extends Setting {
 
 	boolean mEnable = false;
 
+	String mDiscount = "";
 	String mPE = "";
 	String mPB = "";
 	String mDividend = "";
@@ -18,6 +19,7 @@ public class StockFilter extends Setting {
 	String mDelta = "";
 
 	boolean mDefaultEnable = false;
+	String mDefaultDiscount = "";
 	String mDefaultPE = "";
 	String mDefaultPB = "";
 	String mDefaultDividend = "";
@@ -32,6 +34,10 @@ public class StockFilter extends Setting {
 		return mEnable;
 	}
 
+	public String getDiscount() {
+		return mDiscount;
+	}
+	
 	public String getPE() {
 		return mPE;
 	}
@@ -56,6 +62,10 @@ public class StockFilter extends Setting {
 		mEnable = enable;
 	}
 
+	public void setDiscount(String discount) {
+		mDiscount = discount;
+	}
+	
 	public void setPE(String pe) {
 		mPE = pe;
 	}
@@ -80,6 +90,10 @@ public class StockFilter extends Setting {
 		mDefaultEnable = enable;
 	}
 
+	public void setDefaultDiscount(String discount) {
+		mDefaultDiscount = discount;
+	}
+	
 	public void setDefaultPE(String pe) {
 		mDefaultPE = pe;
 	}
@@ -104,6 +118,8 @@ public class StockFilter extends Setting {
 		mEnable = Preferences.readBoolean(mContext, Setting.KEY_STOCK_FILTER_ENABLE,
 				mDefaultEnable);
 
+		mDiscount = Preferences.readString(mContext, Setting.KEY_STOCK_FILTER_DISCOUNT,
+				mDefaultDiscount);
 		mPE = Preferences.readString(mContext, Setting.KEY_STOCK_FILTER_PE,
 				mDefaultPE);
 		mPB = Preferences.readString(mContext, Setting.KEY_STOCK_FILTER_PB,
@@ -119,6 +135,7 @@ public class StockFilter extends Setting {
 	public void write() {
 		Preferences.writeBoolean(mContext, Setting.KEY_STOCK_FILTER_ENABLE, mEnable);
 
+		Preferences.writeString(mContext, Setting.KEY_STOCK_FILTER_DISCOUNT, mDiscount);
 		Preferences.writeString(mContext, Setting.KEY_STOCK_FILTER_PE, mPE);
 		Preferences.writeString(mContext, Setting.KEY_STOCK_FILTER_PB, mPB);
 		Preferences.writeString(mContext, Setting.KEY_STOCK_FILTER_DIVIDEND,
@@ -135,6 +152,8 @@ public class StockFilter extends Setting {
 		}
 
 		mEnable = bundle.getBoolean(Setting.KEY_STOCK_FILTER_ENABLE, false);
+		
+		mDiscount = bundle.getString(Setting.KEY_STOCK_FILTER_DISCOUNT);
 		mPE = bundle.getString(Setting.KEY_STOCK_FILTER_PE);
 		mPB = bundle.getString(Setting.KEY_STOCK_FILTER_PB);
 		mDividend = bundle.getString(Setting.KEY_STOCK_FILTER_DIVIDEND);
@@ -148,6 +167,8 @@ public class StockFilter extends Setting {
 		}
 
 		bundle.putBoolean(Setting.KEY_STOCK_FILTER_ENABLE, mEnable);
+		
+		bundle.putString(Setting.KEY_STOCK_FILTER_DISCOUNT, mDiscount);
 		bundle.putString(Setting.KEY_STOCK_FILTER_PE, mPE);
 		bundle.putString(Setting.KEY_STOCK_FILTER_PB, mPB);
 		bundle.putString(Setting.KEY_STOCK_FILTER_DIVIDEND, mDividend);
@@ -159,6 +180,10 @@ public class StockFilter extends Setting {
 		String selection = "";
 
 		if (mEnable) {
+			if (!TextUtils.isEmpty(mDiscount)) {
+				selection += " AND " + "discount" + mDiscount;
+			}
+			
 			if (!TextUtils.isEmpty(mPE)) {
 				selection += " AND " + "pe" + mPE;
 			}

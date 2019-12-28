@@ -18,6 +18,7 @@ public class StockFilterActivity extends DatabaseActivity implements
 
 	CheckBox mCheckBox;
 
+	EditText mEditTextDiscount;
 	EditText mEditTextPE;
 	EditText mEditTextPB;
 	EditText mEditTextDividend;
@@ -31,6 +32,8 @@ public class StockFilterActivity extends DatabaseActivity implements
 		setContentView(R.layout.activity_stock_filter);
 
 		mStockFilter.setDefaultEnable(true);
+
+		mStockFilter.setDefaultDiscount("<1");
 		mStockFilter.setDefaultYield(">3");
 		mStockFilter.read();
 
@@ -40,6 +43,7 @@ public class StockFilterActivity extends DatabaseActivity implements
 	void initView() {
 		mCheckBox = (CheckBox) findViewById(R.id.checkbox);
 
+		mEditTextDiscount = (EditText) findViewById(R.id.edittext_discount);
 		mEditTextPE = (EditText) findViewById(R.id.edittext_pe);
 		mEditTextPB = (EditText) findViewById(R.id.edittext_pb);
 		mEditTextDividend = (EditText) findViewById(R.id.edittext_dividend);
@@ -51,6 +55,7 @@ public class StockFilterActivity extends DatabaseActivity implements
 
 		mCheckBox.setOnClickListener(this);
 
+		mEditTextDiscount.setOnClickListener(this);
 		mEditTextPE.setOnClickListener(this);
 		mEditTextPB.setOnClickListener(this);
 		mEditTextDividend.setOnClickListener(this);
@@ -65,12 +70,14 @@ public class StockFilterActivity extends DatabaseActivity implements
 	}
 
 	void updateEditText() {
+		mEditTextDiscount.setText(mStockFilter.getDiscount());
 		mEditTextPE.setText(mStockFilter.getPE());
 		mEditTextPB.setText(mStockFilter.getPB());
 		mEditTextDividend.setText(mStockFilter.getDividend());
 		mEditTextYield.setText(mStockFilter.getYield());
 		mEditTextDelta.setText(mStockFilter.getDelta());
 
+		mEditTextDiscount.setEnabled(mStockFilter.getEnable());
 		mEditTextPE.setEnabled(mStockFilter.getEnable());
 		mEditTextPB.setEnabled(mStockFilter.getEnable());
 		mEditTextDividend.setEnabled(mStockFilter.getEnable());
@@ -108,6 +115,8 @@ public class StockFilterActivity extends DatabaseActivity implements
 
 		case R.id.button_ok:
 			mStockFilter.setEnable(mCheckBox.isChecked());
+
+			mStockFilter.setDiscount(mEditTextDiscount.getText().toString());
 			mStockFilter.setPE(mEditTextPE.getText().toString());
 			mStockFilter.setPB(mEditTextPB.getText().toString());
 			mStockFilter.setDividend(mEditTextDividend.getText().toString());

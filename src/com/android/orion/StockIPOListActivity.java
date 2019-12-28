@@ -64,7 +64,7 @@ public class StockIPOListActivity extends ListActivity implements
 		public void onReceive(Context context, Intent intent) {
 			if (mResumed) {
 				if (intent.getIntExtra(Constants.EXTRA_SERVICE_TYPE,
-						Constants.SERVICE_TYPE_NONE) == Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE_REALTIME) {
+						Constants.SERVICE_TYPE_NONE) == Constants.SERVICE_DATABASE_UPDATE) {
 					restartLoader();
 				}
 			}

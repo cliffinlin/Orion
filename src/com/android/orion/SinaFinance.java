@@ -840,21 +840,21 @@ public class SinaFinance extends StockDataProvider {
 
 				for (Element trElement : trElements) {
 					if (trElement == null) {
-						Log.d(TAG, "handleResponseFinancialData continue "
-								+ " trElement = " + trElement);
+						// Log.d(TAG, "handleResponseFinancialData continue "
+						// + " trElement = " + trElement);
 						continue;
 					}
 
 					Elements tdElements = trElement.select("td");
 					if (tdElements == null) {
-						Log.d(TAG, "handleResponseFinancialData continue "
-								+ " tdElements = " + tdElements);
+						// Log.d(TAG, "handleResponseFinancialData continue "
+						// + " tdElements = " + tdElements);
 						continue;
 					}
 
 					if (tdElements.size() < 2) {
-						Log.d(TAG, "handleResponseFinancialData continue "
-								+ " tdElements.size() = " + tdElements.size());
+						// Log.d(TAG, "handleResponseFinancialData continue "
+						// + " tdElements.size() = " + tdElements.size());
 						continue;
 					}
 

@@ -122,9 +122,7 @@ public class StockDataChartListActivity extends OrionBaseActivity implements
 						Constants.EXTRA_SERVICE_TYPE,
 						Constants.SERVICE_TYPE_NONE);
 
-				if ((serviceType == Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE_REALTIME)
-						|| (serviceType == Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE_DATA_HISTORY)
-						|| (serviceType == Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE_DATA_REALTIME)) {
+				if (serviceType == Constants.SERVICE_DATABASE_UPDATE) {
 					if (intent.getLongExtra(Constants.EXTRA_STOCK_ID, 0) == mStock
 							.getId()) {
 						restartLoader();
@@ -339,12 +337,15 @@ public class StockDataChartListActivity extends OrionBaseActivity implements
 	}
 
 	void restartLoader() {
-		if (mStockIDList == null) {
-			mLoaderManager.restartLoader(LOADER_ID_STOCK_LIST, null, this);
-		}
+		if (System.currentTimeMillis() - mLastRestartLoader > Constants.DEFAULT_RESTART_LOADER_INTERAL) {
+			if (mStockIDList == null) {
+				mLoaderManager.restartLoader(LOADER_ID_STOCK_LIST, null, this);
+			}
 
-		for (int i = 0; i < Constants.PERIODS.length; i++) {
-			mLoaderManager.restartLoader(i, null, this);
+			for (int i = 0; i < Constants.PERIODS.length; i++) {
+				mLoaderManager.restartLoader(i, null, this);
+			}
+			mLastRestartLoader = System.currentTimeMillis();
 		}
 	}
 

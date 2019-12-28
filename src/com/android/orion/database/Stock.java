@@ -205,6 +205,24 @@ public class Stock extends StockBase {
 
 		return contentValues;
 	}
+	
+	public ContentValues getContentValuesFinancial() {
+		ContentValues contentValues = new ContentValues();
+		
+		super.getContentValues(contentValues);
+		
+		contentValues.put(DatabaseContract.COLUMN_PE, mPE);
+		contentValues.put(DatabaseContract.COLUMN_PB, mPB);
+		
+		contentValues.put(DatabaseContract.COLUMN_DIVIDEND, mDividend);
+		contentValues.put(DatabaseContract.COLUMN_YIELD, mYield);
+		contentValues.put(DatabaseContract.COLUMN_DELTA, mDelta);
+		
+		contentValues.put(DatabaseContract.COLUMN_VALUATION, mValuation);
+		contentValues.put(DatabaseContract.COLUMN_DISCOUNT, mDiscount);
+		
+		return contentValues;
+	}
 
 	public void set(Stock stock) {
 		if (stock == null) {

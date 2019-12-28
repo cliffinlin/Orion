@@ -41,16 +41,6 @@ public class Utility {
 	private Utility() {
 	}
 
-	public static void setLogable(boolean logable) {
-		mLogable = logable;
-	}
-
-	public static void Log(String msg) {
-		if (mLogable) {
-			android.util.Log.d(Constants.TAG, msg);
-		}
-	}
-
 	public static boolean isNetworkConnected(Context context) {
 		boolean result = false;
 		ConnectivityManager connectivityManager = null;

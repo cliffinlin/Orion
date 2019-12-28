@@ -36,6 +36,8 @@ public class OrionBaseActivity extends Activity {
 	boolean mBound = false;
 	boolean mResumed = false;
 
+	long mLastRestartLoader = 0;
+
 	String mPathName = null;
 	String mFileName = null;
 
@@ -176,13 +178,17 @@ public class OrionBaseActivity extends Activity {
 
 	void acquireWakeLock() {
 		Log.d(TAG, "acquireWakeLock");
-		mWakeLock.acquire();
+		if (!mWakeLock.isHeld()) {
+			mWakeLock.acquire();
+			Log.d(TAG, "acquireWakeLock, mWakeLock acquired.");
+		}
 	}
 
 	void releaseWakeLock() {
 		Log.d(TAG, "releaseWakeLock");
 		if (mWakeLock.isHeld()) {
 			mWakeLock.release();
+			Log.d(TAG, "releaseWakeLock, mWakeLock released.");
 		}
 	}
 

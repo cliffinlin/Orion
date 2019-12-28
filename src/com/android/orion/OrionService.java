@@ -180,7 +180,6 @@ public class OrionService extends Service {
 			break;
 
 		case Constants.SERVICE_ADD_STOCK_FAVORITE:
-			mSinaFinance.fixPinyin();
 			break;
 
 		case Constants.SERVICE_REMOVE_STOCK_FAVORITE:

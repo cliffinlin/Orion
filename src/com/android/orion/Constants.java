@@ -65,9 +65,7 @@ public class Constants {
 
 	public static final int SERVICE_TYPE_NONE = -1;
 	public static final int SERVICE_DOWNLOAD_STOCK_FAVORITE = 0;
-	public static final int SERVICE_DOWNLOAD_STOCK_FAVORITE_REALTIME = 1;
-	public static final int SERVICE_DOWNLOAD_STOCK_FAVORITE_DATA_HISTORY = 2;
-	public static final int SERVICE_DOWNLOAD_STOCK_FAVORITE_DATA_REALTIME = 3;
+	public static final int SERVICE_DATABASE_UPDATE = 1;
 	public static final int SERVICE_ADD_STOCK_FAVORITE = 10;
 	public static final int SERVICE_REMOVE_STOCK_FAVORITE = 11;
 
@@ -158,4 +156,7 @@ public class Constants {
 
 	public static final double STOCK_DEAL_DISTRIBUTION_RATE = 5.0 / 100.0;
 	public static final double RISK_FREE_INTEREST_RATE = 4.0 / 100.0;
+
+	public static final long DEFAULT_DOWNLOAD_INTERVAL = 5000;
+	public static final long DEFAULT_RESTART_LOADER_INTERAL = 3000;
 }
