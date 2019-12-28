@@ -226,7 +226,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 		mStockDatabaseManager.getFinancialData(stock.getId(), financialData);
 		if (financialData.getCreated().contains(Utility.getCurrentDateString())) {
-//			return;
+			// return;
 		}
 
 		if (executeType == Constants.EXECUTE_IMMEDIATE) {
@@ -389,7 +389,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 	void downloadStockDataHistory(int executeType, Stock stock, String period) {
 		int len = 0;
 		String urlString;
-		StockData stockData = StockData.obtain(period);
+		StockData stockData = new StockData(period);
 
 		if (stock == null) {
 			return;
@@ -421,7 +421,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 	void downloadStockDataRealTime(int executeType, Stock stock) {
 		String period = Constants.PERIOD_DAY;
 		String urlString;
-		StockData stockData = StockData.obtain(period);
+		StockData stockData = new StockData(period);
 
 		if ((stock == null)
 				|| !Preferences.readBoolean(mContext, period, false)) {
@@ -472,7 +472,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 	void removeStockDataRedundant(Cursor cursor, int defaultValue) {
 		int i = 0;
-		StockData stockData = StockData.obtain();
+		StockData stockData = new StockData();
 
 		if (cursor == null) {
 			return;
@@ -767,7 +767,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 		public void setStock(Stock stock) {
 			if (mStock == null) {
-				mStock = Stock.obtain();
+				mStock = new Stock();
 			}
 			mStock.set(stock);
 		}
@@ -793,7 +793,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 		public void setStock(Stock stock) {
 			if (mStock == null) {
-				mStock = Stock.obtain();
+				mStock = new Stock();
 			}
 			mStock.set(stock);
 		}
@@ -829,14 +829,14 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 		public void setStock(Stock stock) {
 			if (mStock == null) {
-				mStock = Stock.obtain();
+				mStock = new Stock();
 			}
 			mStock.set(stock);
 		}
 
 		public void setStockData(StockData stockData) {
 			if (mStockData == null) {
-				mStockData = StockData.obtain();
+				mStockData = new StockData();
 			}
 			mStockData.set(stockData);
 		}
@@ -874,14 +874,14 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 		public void setStock(Stock stock) {
 			if (mStock == null) {
-				mStock = Stock.obtain();
+				mStock = new Stock();
 			}
 			mStock.set(stock);
 		}
 
 		public void setStockData(StockData stockData) {
 			if (mStockData == null) {
-				mStockData = StockData.obtain();
+				mStockData = new StockData();
 			}
 			mStockData.set(stockData);
 		}
@@ -919,14 +919,14 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 		public void setStock(Stock stock) {
 			if (mStock == null) {
-				mStock = Stock.obtain();
+				mStock = new Stock();
 			}
 			mStock.set(stock);
 		}
 
 		public void setFinancialData(FinancialData financialData) {
 			if (mFinancialData == null) {
-				mFinancialData = FinancialData.obtain();
+				mFinancialData = new FinancialData();
 			}
 			mFinancialData.set(financialData);
 		}
@@ -961,14 +961,14 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 		public void setStock(Stock stock) {
 			if (mStock == null) {
-				mStock = Stock.obtain();
+				mStock = new Stock();
 			}
 			mStock.set(stock);
 		}
 
 		public void setShareBonus(ShareBonus shareBonus) {
 			if (mShareBonus == null) {
-				mShareBonus = ShareBonus.obtain();
+				mShareBonus = new ShareBonus();
 			}
 			mShareBonus.set(shareBonus);
 		}
@@ -1002,7 +1002,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 		public void setIPO(IPO ipo) {
 			if (mIPO == null) {
-				mIPO = IPO.obtain();
+				mIPO = new IPO();
 			}
 
 			mIPO.set(ipo);

@@ -40,7 +40,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		setContentView(R.layout.activity_stock);
 
 		if (mStock == null) {
-			mStock = Stock.obtain();
+			mStock = new Stock();
 		}
 
 		initView();

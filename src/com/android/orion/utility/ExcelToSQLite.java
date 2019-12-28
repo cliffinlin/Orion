@@ -128,6 +128,7 @@ public class ExcelToSQLite {
         for (int i = 0; i < sheetNumber; i++) {
             createTable(workbook.getSheetAt(i));
         }
+        workbook.close();
         database.close();
     }
 

@@ -235,8 +235,8 @@ public class StorageActivity extends DatabaseActivity {
 		int eventType;
 		String now = Utility.getCurrentDateTimeString();
 		String tagName = "";
-		Stock stock = Stock.obtain();
-		StockDeal stockDeal = StockDeal.obtain();
+		Stock stock = new Stock();
+		StockDeal stockDeal = new StockDeal();
 		ArrayList<Stock> stockList = new ArrayList<Stock>();
 
 		if (mStockDatabaseManager == null) {
@@ -339,7 +339,7 @@ public class StorageActivity extends DatabaseActivity {
 
 		ArrayList<Stock> stockList = new ArrayList<Stock>();
 
-		StockDeal stockDeal = StockDeal.obtain();
+		StockDeal stockDeal = new StockDeal();
 
 		Cursor cursor = null;
 		String selection = DatabaseContract.Stock.COLUMN_MARK + " = '"
@@ -353,7 +353,7 @@ public class StorageActivity extends DatabaseActivity {
 			cursor = mStockDatabaseManager.queryStock(selection, null, null);
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				while (cursor.moveToNext()) {
-					Stock stock = Stock.obtain();
+					Stock stock = new Stock();
 					stock.set(cursor);
 					stockList.add(stock);
 				}

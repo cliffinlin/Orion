@@ -133,7 +133,7 @@ public abstract class StockEditActivity extends DatabaseActivity implements
 		@Override
 		public void bindView(View view, Context context, Cursor cursor) {
 			ViewHolder holder = (ViewHolder) view.getTag();
-			Stock stock = Stock.obtain();
+			Stock stock = new Stock();
 
 			stock.set(cursor);
 
@@ -176,7 +176,7 @@ public abstract class StockEditActivity extends DatabaseActivity implements
 			if (view != null) {
 				Cursor cursor = null;
 				long stockId = (Long) view.getTag();
-				Stock stock = Stock.obtain();
+				Stock stock = new Stock();
 				Uri uri = ContentUris.withAppendedId(
 						DatabaseContract.Stock.CONTENT_URI, stockId);
 

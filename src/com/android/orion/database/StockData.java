@@ -36,35 +36,15 @@ public class StockData extends StockDatabaseTable {
 	private int mIndexStart;
 	private int mIndexEnd;
 
-	private StockData next;
-	private static final Object sPoolSync = new Object();
-	private static StockData sPool;
-
-	public static StockData obtain() {
-		synchronized (sPoolSync) {
-			if (sPool != null) {
-				StockData m = sPool;
-				sPool = m.next;
-				m.next = null;
-				return m;
-			}
-		}
-		return new StockData();
-	}
-
-	public static StockData obtain(String period) {
-		StockData stockData = obtain();
-
-		stockData.init();
-		stockData.setPeriod(period);
-
-		return stockData;
-	}
-
 	public StockData() {
 		init();
 	}
 
+	public StockData(String period) {
+		init();
+		setPeriod(period);
+	}
+	
 	public StockData(StockData stockData) {
 		set(stockData);
 	}

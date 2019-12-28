@@ -427,7 +427,7 @@ public class StockDataChartListActivity extends OrionBaseActivity implements
 		try {
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				while (cursor.moveToNext()) {
-					Stock stock = Stock.obtain();
+					Stock stock = new Stock();
 					stock.set(cursor);
 
 					if (stock != null) {

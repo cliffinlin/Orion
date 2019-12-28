@@ -164,7 +164,7 @@ public class StockManager {
 
 	void insertStockIndexes(String se, String baseCode, int index) {
 		String now = Utility.getCurrentDateTimeString();
-		Stock stock = Stock.obtain();
+		Stock stock = new Stock();
 
 		if (mStockDatabaseManager == null) {
 			return;
@@ -234,7 +234,7 @@ public class StockManager {
 					sortOrder);
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				while (cursor.moveToNext()) {
-					Stock stock = Stock.obtain();
+					Stock stock = new Stock();
 					stock.set(cursor);
 					stockList.add(stock);
 				}
@@ -262,7 +262,7 @@ public class StockManager {
 					sortOrder);
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				while (cursor.moveToNext()) {
-					Stock stock = Stock.obtain();
+					Stock stock = new Stock();
 					stock.set(cursor);
 					stockArrayMap.put(stock.getSE() + stock.getCode(), stock);
 				}
@@ -301,7 +301,7 @@ public class StockManager {
 					sortOrder);
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				while (cursor.moveToNext()) {
-					StockData stockData = StockData.obtain(period);
+					StockData stockData = new StockData(period);
 					stockData.set(cursor);
 					index = stockDataList.size();
 					stockData.setIndex(index);

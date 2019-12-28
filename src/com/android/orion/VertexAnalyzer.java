@@ -69,9 +69,9 @@ public class VertexAnalyzer {
 
 		vertexList.clear();
 
-		prev = StockData.obtain();
-		current = StockData.obtain();
-		next = StockData.obtain();
+		prev = new StockData();
+		current = new StockData();
+		next = new StockData();
 
 		if ((prev == null) || (current == null) || (next == null)) {
 			return;
@@ -226,10 +226,7 @@ public class VertexAnalyzer {
 		int j = 0;
 		StockData stockData = null;
 
-		stockData = StockData.obtain();
-		if (stockData == null) {
-			return;
-		}
+		stockData = new StockData();
 
 		if (index == 0) {
 			i = 0;
@@ -326,10 +323,7 @@ public class VertexAnalyzer {
 				return;
 			}
 
-			stockData = StockData.obtain();
-			if (stockData == null) {
-				return;
-			}
+			stockData = new StockData();
 
 			stockData.init();
 			stockData.set(current);
@@ -388,7 +382,7 @@ public class VertexAnalyzer {
 			}
 
 			if (overlap == null) {
-				overlap = StockData.obtain();
+				overlap = new StockData();
 				overlap.set(prev);
 				overlap.setIndex(i - 2);
 				overlap.setIndexStart(i - 2);

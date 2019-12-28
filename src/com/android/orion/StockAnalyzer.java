@@ -50,6 +50,7 @@ public class StockAnalyzer extends StockManager {
 			}
 
 			analyzeStockData(stock, period, stockDataList);
+
 			updateDatabase(stock, period, stockDataList);
 			updateNotification(stock);
 		} catch (Exception e) {
@@ -62,7 +63,7 @@ public class StockAnalyzer extends StockManager {
 	}
 
 	void setupStockFinancialData(Stock stock) {
-		FinancialData financialData = FinancialData.obtain();
+		FinancialData financialData = new FinancialData();
 		financialData.setStockId(stock.getId());
 		mStockDatabaseManager.getFinancialData(stock.getId(), financialData);
 		financialData.setupEarningsPerShare(stock.getTotalShare());

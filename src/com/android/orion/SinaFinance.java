@@ -448,7 +448,7 @@ public class SinaFinance extends StockDataProvider {
 		ContentValues[] contentValuesArray = null;
 		String symbol = "";
 		String se = "";
-		Stock stock = null;
+		Stock stock = new Stock();
 		JSONArray jsonArray = null;
 
 		if (TextUtils.isEmpty(response)) {
@@ -481,13 +481,6 @@ public class SinaFinance extends StockDataProvider {
 					contentValuesArray = new ContentValues[jsonArray.size()];
 				}
 			}
-
-			stock = Stock.obtain();
-			if (stock == null) {
-				Log.d(TAG, "handleResponseStockHSA return stock = " + stock);
-				return;
-			}
-			stock.init();
 
 			for (int i = 0; i < jsonArray.size(); i++) {
 				JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -903,7 +896,8 @@ public class SinaFinance extends StockDataProvider {
 							} else if (keyString.equals("¾»ÀûÈó")) {
 								financialData.setNetProfit(Double
 										.valueOf(valueString));
-								financialData.setupEarningsPerShare(stock.getTotalShare());
+								financialData.setupEarningsPerShare(stock
+										.getTotalShare());
 
 								if (bulkInsert) {
 									financialData.setCreated(Utility

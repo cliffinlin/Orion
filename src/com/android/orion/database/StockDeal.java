@@ -17,22 +17,6 @@ public class StockDeal extends StockBase {
 	private long mVolume;
 	private double mProfit;
 
-	private StockDeal next;
-	private static final Object sPoolSync = new Object();
-	private static StockDeal sPool;
-
-	public static StockDeal obtain() {
-		synchronized (sPoolSync) {
-			if (sPool != null) {
-				StockDeal m = sPool;
-				sPool = m.next;
-				m.next = null;
-				return m;
-			}
-		}
-		return new StockDeal();
-	}
-
 	public StockDeal() {
 		init();
 	}

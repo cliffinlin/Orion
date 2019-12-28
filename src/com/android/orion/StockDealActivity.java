@@ -108,11 +108,11 @@ public class StockDealActivity extends DatabaseActivity implements
 		setContentView(R.layout.activity_stock_deal);
 
 		if (mDeal == null) {
-			mDeal = StockDeal.obtain();
+			mDeal = new StockDeal();
 		}
 
 		if (mStock == null) {
-			mStock = Stock.obtain();
+			mStock = new Stock();
 		}
 
 		initView();

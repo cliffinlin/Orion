@@ -355,7 +355,7 @@ public class StockStatisticsChartListActivity extends OrionBaseActivity
 		try {
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				while (cursor.moveToNext()) {
-					Stock stock = Stock.obtain();
+					Stock stock = new Stock();
 					stock.set(cursor);
 
 					index = stockDataChart.mXValues.size();

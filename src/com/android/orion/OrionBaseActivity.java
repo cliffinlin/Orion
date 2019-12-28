@@ -99,23 +99,23 @@ public class OrionBaseActivity extends Activity {
 		}
 
 		if (mStock == null) {
-			mStock = Stock.obtain();
+			mStock = new Stock();
 		}
 
 		if (mStockData == null) {
-			mStockData = StockData.obtain();
+			mStockData = new StockData();
 		}
 
 		if (mStockDeal == null) {
-			mStockDeal = StockDeal.obtain();
+			mStockDeal = new StockDeal();
 		}
 
 		if (mFinancialData == null) {
-			mFinancialData = FinancialData.obtain();
+			mFinancialData = new FinancialData();
 		}
 
 		if (mShareBonus == null) {
-			mShareBonus = ShareBonus.obtain();
+			mShareBonus = new ShareBonus();
 		}
 
 		if (mStockList == null) {
@@ -319,7 +319,7 @@ public class OrionBaseActivity extends Activity {
 					selectionArgs, sortOrder);
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				while (cursor.moveToNext()) {
-					Stock stock = Stock.obtain();
+					Stock stock = new Stock();
 					stock.setSE(cursor);
 					stock.setCode(cursor);
 					stock.setName(cursor);

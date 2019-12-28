@@ -12,23 +12,6 @@ public class IPO extends DatabaseTable {
 	private String mTimeToMarket;
 	private double mPE;
 
-	private IPO next;
-	private static final Object sPoolSync = new Object();
-	private static IPO sPool;
-
-	public static IPO obtain() {
-		synchronized (sPoolSync) {
-			if (sPool != null) {
-				IPO m = sPool;
-				sPool = m.next;
-				m.next = null;
-				return m;
-			}
-		}
-
-		return new IPO();
-	}
-
 	public IPO() {
 		init();
 	}

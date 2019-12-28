@@ -52,22 +52,6 @@ public class Stock extends StockBase {
 	public ArrayList<StockData> mStockDataListQuarter = new ArrayList<StockData>();
 	public ArrayList<StockData> mStockDataListYear = new ArrayList<StockData>();
 
-	private Stock next;
-	private static final Object sPoolSync = new Object();
-	private static Stock sPool;
-
-	public static Stock obtain() {
-		synchronized (sPoolSync) {
-			if (sPool != null) {
-				Stock m = sPool;
-				sPool = m.next;
-				m.next = null;
-				return m;
-			}
-		}
-		return new Stock();
-	}
-
 	public Stock() {
 		init();
 	}

@@ -19,22 +19,6 @@ public class FinancialData extends DatabaseTable {
 	private double mFinancialExpenses;// 财务费用
 	private double mNetProfit;// 净利润
 
-	private FinancialData next;
-	private static final Object sPoolSync = new Object();
-	private static FinancialData sPool;
-
-	public static FinancialData obtain() {
-		synchronized (sPoolSync) {
-			if (sPool != null) {
-				FinancialData m = sPool;
-				sPool = m.next;
-				m.next = null;
-				return m;
-			}
-		}
-		return new FinancialData();
-	}
-
 	public FinancialData() {
 		init();
 	}

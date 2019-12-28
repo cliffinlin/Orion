@@ -9,22 +9,6 @@ public class ShareBonus extends DatabaseTable {
 	private double mDividend;// 派息(税前)(元)(每10股)
 	private String mDividendDate;// 除权除息日
 
-	private ShareBonus next;
-	private static final Object sPoolSync = new Object();
-	private static ShareBonus sPool;
-
-	public static ShareBonus obtain() {
-		synchronized (sPoolSync) {
-			if (sPool != null) {
-				ShareBonus m = sPool;
-				sPool = m.next;
-				m.next = null;
-				return m;
-			}
-		}
-		return new ShareBonus();
-	}
-
 	public ShareBonus() {
 		init();
 	}

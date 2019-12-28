@@ -557,7 +557,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 			if ((cursor != null) && cursor.getCount() > 0) {
 				cursor.moveToPosition(-1);
 				while (cursor.moveToNext()) {
-					Stock stock = Stock.obtain();
+					Stock stock = new Stock();
 					stock.set(cursor);
 					mStockList.add(stock);
 				}
