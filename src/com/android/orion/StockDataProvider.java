@@ -205,7 +205,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			downloadShareBonus(executeType);
 		}
 
-		downloadIPO(executeType);
+		downloadIPO();
 	}
 
 	void downloadFinancialData(int executeType) {
@@ -226,7 +226,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 		mStockDatabaseManager.getFinancialData(stock.getId(), financialData);
 		if (financialData.getCreated().contains(Utility.getCurrentDateString())) {
-			return;
+//			return;
 		}
 
 		if (executeType == Constants.EXECUTE_IMMEDIATE) {
@@ -276,7 +276,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		}
 	}
 
-	void downloadIPO(int executeType) {
+	void downloadIPO() {
 		String urlString;
 		ArrayList<IPO> ipoList = new ArrayList<IPO>();
 		boolean needDownloadIPO = false;
@@ -297,14 +297,12 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			return;
 		}
 
-		if (executeType == Constants.EXECUTE_IMMEDIATE) {
-			urlString = getIPOURLString();
-			if (addToCurrentRequests(urlString)) {
-				Log.d(TAG, "downloadIPO:" + urlString);
-				IPODownloader downloader = new IPODownloader(urlString);
-				downloader.setIPO(new IPO());
-				mRequestQueue.add(downloader.mStringRequest);
-			}
+		urlString = getIPOURLString();
+		if (addToCurrentRequests(urlString)) {
+			Log.d(TAG, "downloadIPO:" + urlString);
+			IPODownloader downloader = new IPODownloader(urlString);
+			downloader.setIPO(new IPO());
+			mRequestQueue.add(downloader.mStringRequest);
 		}
 	}
 

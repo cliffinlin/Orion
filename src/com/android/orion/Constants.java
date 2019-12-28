@@ -157,4 +157,5 @@ public class Constants {
 	public static final int STOCK_VERTEX_BOTTOM_SEGMENT = 1 << 5;
 
 	public static final double STOCK_DEAL_DISTRIBUTION_RATE = 5.0 / 100.0;
+	public static final double RISK_FREE_INTEREST_RATE = 4.0 / 100.0;
 }
