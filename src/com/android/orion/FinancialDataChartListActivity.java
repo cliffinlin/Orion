@@ -104,7 +104,10 @@ public class FinancialDataChartListActivity extends OrionBaseActivity implements
 				if (serviceType == Constants.SERVICE_DATABASE_UPDATE) {
 					if (intent.getLongExtra(Constants.EXTRA_STOCK_ID, 0) == mStock
 							.getId()) {
-						restartLoader();
+						if (System.currentTimeMillis() - mLastRestartLoader > Constants.DEFAULT_RESTART_LOADER_INTERAL) {
+							mLastRestartLoader = System.currentTimeMillis();
+							restartLoader();
+						}
 					}
 				}
 			}
@@ -307,12 +310,8 @@ public class FinancialDataChartListActivity extends OrionBaseActivity implements
 	}
 
 	void restartLoader() {
-		if (System.currentTimeMillis() - mLastRestartLoader > Constants.DEFAULT_RESTART_LOADER_INTERAL) {
-			mLoaderManager.restartLoader(LOADER_ID_STOCK_LIST, null, this);
-			mLoaderManager.restartLoader(LOADER_ID_FINANCIAL_DATA_LIST, null,
-					this);
-			mLastRestartLoader = System.currentTimeMillis();
-		}
+		mLoaderManager.restartLoader(LOADER_ID_STOCK_LIST, null, this);
+		mLoaderManager.restartLoader(LOADER_ID_FINANCIAL_DATA_LIST, null, this);
 	}
 
 	CursorLoader getStockCursorLoader() {
