@@ -11,6 +11,11 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
+import android.os.Message;
+import android.os.Process;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -29,6 +34,8 @@ import com.android.volley.RequestQueue;
 public abstract class StockDataProvider extends StockAnalyzer {
 	static final String TAG = Constants.TAG + " "
 			+ StockDataProvider.class.getSimpleName();
+
+	private static final int MSG_DOWNLOAD_INFORMATION = 1;
 
 	Calendar mNotifyCalendar = Calendar.getInstance();
 	// WifiLockManager mWifiLockManager = null;
@@ -74,8 +81,17 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 	abstract void handleResponseIPO(IPO ipo, String response);
 
+	private HandlerThread mHandlerThread;
+	volatile DownloadHandler mHandler;
+
 	public StockDataProvider(Context context) {
 		super(context);
+
+		mHandlerThread = new HandlerThread("StockDataProvider",
+				Process.THREAD_PRIORITY_BACKGROUND);
+		mHandlerThread.start();
+
+		mHandler = new DownloadHandler(mHandlerThread.getLooper());
 
 		mRequestQueue = VolleySingleton.getInstance(
 				mContext.getApplicationContext()).getRequestQueue();
@@ -184,6 +200,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			return;
 		}
 
+		downloadIPO();
+
 		executeType = bundle.getInt(Constants.EXTRA_EXECUTE_TYPE,
 				Constants.EXECUTE_TYPE_NONE);
 
@@ -199,17 +217,15 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 			downloadFinancialData(stock);
 		} else {
-			// downloadShareBonus();
+			downloadShareBonus();
 			downloadStockInformation();
 
 			downloadStockRealTime(executeType);
 			downloadStockDataHistory(executeType);
 			downloadStockDataRealTime(executeType);
 
-			// downloadFinancialData();
+			downloadFinancialData();
 		}
-
-		downloadIPO();
 	}
 
 	void downloadFinancialData() {
@@ -316,7 +332,6 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 	void downloadStockInformation() {
 		for (Stock stock : mStockArrayMapFavorite.values()) {
-			downloadShareBonus(stock);
 			downloadStockInformation(stock);
 		}
 	}
@@ -664,6 +679,35 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		stock = mStockArrayMapFavorite.get(se + code);
 
 		return stock;
+	}
+
+	void removeMessages(int what) {
+		if (mHandler.hasMessages(what)) {
+			mHandler.removeMessages(what);
+		}
+	}
+
+	void sendEmptyMessageDelayed(int what, long delayMillis) {
+		removeMessages(what);
+		mHandler.sendEmptyMessageDelayed(what, delayMillis);
+	}
+
+	private final class DownloadHandler extends Handler {
+		public DownloadHandler(Looper looper) {
+			super(looper);
+		}
+
+		@Override
+		public void handleMessage(Message msg) {
+
+			switch (msg.what) {
+			case MSG_DOWNLOAD_INFORMATION:
+				break;
+
+			default:
+				break;
+			}
+		}
 	}
 
 	public class StockHSADownloader extends VolleyStringDownloader {
