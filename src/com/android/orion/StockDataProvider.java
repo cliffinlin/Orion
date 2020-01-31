@@ -301,21 +301,21 @@ public abstract class StockDataProvider extends StockAnalyzer {
 	void downloadIPO() {
 		String urlString;
 		ArrayList<IPO> ipoList = new ArrayList<IPO>();
-		boolean needDownloadIPO = false;
+		boolean needDownload = false;
 
 		mStockDatabaseManager.getIPOList(ipoList, null);
 		if (ipoList.size() == 0) {
-			needDownloadIPO = true;
+			needDownload = true;
 		} else {
 			for (IPO ipo : ipoList) {
 				if (!ipo.getCreated().contains(Utility.getCurrentDateString())) {
-					needDownloadIPO = true;
+					needDownload = true;
 					break;
 				}
 			}
 		}
 
-		if (!needDownloadIPO) {
+		if (!needDownload) {
 			return;
 		}
 
@@ -336,12 +336,28 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 	void downloadStockInformation(Stock stock) {
 		String urlString;
+		boolean needDownload = false;
 
 		if (stock == null) {
 			return;
 		}
 
 		mStockDatabaseManager.getStock(stock);
+
+		if (stock.getCreated().contains(Utility.getCurrentDateString())) {
+			if (TextUtils.isEmpty(stock.getClases())) {
+				needDownload = true;
+			} else if (TextUtils.isEmpty(stock.getPinyin())) {
+				needDownload = true;
+			} else if (stock.getClases().contains("A")
+					&& (stock.getTotalShare() == 0)) {
+				needDownload = true;
+			}
+		}
+
+		if (!needDownload) {
+			return;
+		}
 
 		urlString = getStockInformationURLString(stock);
 		if (addToCurrentRequests(urlString)) {

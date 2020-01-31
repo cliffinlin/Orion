@@ -379,7 +379,7 @@ public class Stock extends StockBase {
 				.getColumnIndex(DatabaseContract.COLUMN_NAME)));
 	}
 
-	String getPinyin() {
+	public String getPinyin() {
 		return mPinyin;
 	}
 
