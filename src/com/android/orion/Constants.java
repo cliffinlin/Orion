@@ -66,8 +66,6 @@ public class Constants {
 	public static final int SERVICE_TYPE_NONE = -1;
 	public static final int SERVICE_DOWNLOAD_STOCK_FAVORITE = 0;
 	public static final int SERVICE_DATABASE_UPDATE = 1;
-	public static final int SERVICE_ADD_STOCK_FAVORITE = 10;
-	public static final int SERVICE_REMOVE_STOCK_FAVORITE = 11;
 
 	public static final String SETTING_SHARED_PREFERENCE = "setting";
 	public static final String SETTING_KEY_ALARM = "alarm";

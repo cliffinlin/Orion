@@ -6,13 +6,11 @@ import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.ContentObserver;
 import android.media.AudioManager;
-import android.net.Uri;
+import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -22,9 +20,6 @@ import android.os.Message;
 import android.os.Process;
 import android.os.Vibrator;
 import android.telephony.TelephonyManager;
-import android.widget.Toast;
-
-import com.android.orion.database.DatabaseContract;
 
 public class OrionService extends Service {
 	boolean mRedelivery = true;
@@ -34,7 +29,6 @@ public class OrionService extends Service {
 	AudioManager mAudioManager;
 
 	Context mContext;
-	ContentResolver mContentResolver;
 
 	NotificationManager mNotificationManager;
 	TelephonyManager mTelephonyManager;
@@ -46,8 +40,6 @@ public class OrionService extends Service {
 
 	volatile Looper mLooper;
 	volatile ServiceHandler mHandler;
-
-	SettingObserver mSettingObserver;
 
 	SinaFinance mSinaFinance;
 
@@ -95,7 +87,7 @@ public class OrionService extends Service {
 
 		mContext = getApplicationContext();
 
-		mBinder = (IBinder) new IOrionServiceStub(this);
+		mBinder = new OrionBinder();
 
 		mAlarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
@@ -103,18 +95,12 @@ public class OrionService extends Service {
 		mTelephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
 		mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
-		mContentResolver = getContentResolver();
-
 		mHandlerThread = new HandlerThread(mName,
 				Process.THREAD_PRIORITY_BACKGROUND);
 		mHandlerThread.start();
 
 		mLooper = mHandlerThread.getLooper();
 		mHandler = new ServiceHandler(mLooper);
-
-		mSettingObserver = new SettingObserver(mHandler);
-		mContentResolver.registerContentObserver(
-				DatabaseContract.Setting.CONTENT_URI, true, mSettingObserver);
 
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(Intent.ACTION_HEADSET_PLUG);
@@ -146,10 +132,13 @@ public class OrionService extends Service {
 
 		try {
 			unregisterReceiver(mBroadcastReceiver);
-			mContentResolver.unregisterContentObserver(mSettingObserver);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	void downloadIPO() {
+		mSinaFinance.downloadIPO();
 	}
 
 	@Override
@@ -179,14 +168,15 @@ public class OrionService extends Service {
 			mSinaFinance.downloadStock(bundle);
 			break;
 
-		case Constants.SERVICE_ADD_STOCK_FAVORITE:
-			break;
-
-		case Constants.SERVICE_REMOVE_STOCK_FAVORITE:
-			break;
-
 		default:
 			break;
+		}
+	}
+
+	public class OrionBinder extends Binder {
+
+		OrionService getService() {
+			return OrionService.this;
 		}
 	}
 
@@ -195,33 +185,6 @@ public class OrionService extends Service {
 
 		IOrionServiceStub(OrionService service) {
 			mService = new WeakReference<OrionService>(service);
-		}
-	}
-
-	class SettingObserver extends ContentObserver {
-
-		public SettingObserver(Handler handler) {
-			super(handler);
-		}
-
-		@Override
-		public void onChange(boolean selfChange, Uri uri) {
-			super.onChange(selfChange, uri);
-
-			// String urlString = uri.toString();
-		}
-	}
-
-	public class DisplayToast implements Runnable {
-		String mText;
-
-		public DisplayToast(String text) {
-			mText = text;
-		}
-
-		@Override
-		public void run() {
-			Toast.makeText(mContext, mText, Toast.LENGTH_LONG).show();
 		}
 	}
 }

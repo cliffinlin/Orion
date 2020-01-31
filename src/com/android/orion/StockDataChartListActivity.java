@@ -194,8 +194,6 @@ public class StockDataChartListActivity extends OrionBaseActivity implements
 			if (mStockListIndex < mStockList.size()) {
 				mStockList.remove(mStockListIndex);
 			}
-			startService(Constants.SERVICE_REMOVE_STOCK_FAVORITE,
-					Constants.EXECUTE_IMMEDIATE);
 			return true;
 		}
 		case R.id.action_edit: {

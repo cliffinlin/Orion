@@ -200,8 +200,6 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			return;
 		}
 
-		downloadIPO();
-
 		executeType = bundle.getInt(Constants.EXTRA_EXECUTE_TYPE,
 				Constants.EXECUTE_TYPE_NONE);
 
@@ -217,14 +215,14 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 			downloadFinancialData(stock);
 		} else {
-			downloadShareBonus();
+			// downloadShareBonus();
 			downloadStockInformation();
 
 			downloadStockRealTime(executeType);
 			downloadStockDataHistory(executeType);
 			downloadStockDataRealTime(executeType);
 
-			downloadFinancialData();
+			// downloadFinancialData();
 		}
 	}
 

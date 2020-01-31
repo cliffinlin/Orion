@@ -198,17 +198,12 @@ public abstract class StockEditActivity extends DatabaseActivity implements
 					if (TextUtils.isEmpty(stock.getMark())) {
 						updateStockMark(stockId,
 								Constants.STOCK_FLAG_MARK_FAVORITE);
-						startService(Constants.SERVICE_ADD_STOCK_FAVORITE,
-								Constants.EXECUTE_IMMEDIATE);
 						startService(Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE,
 								Constants.EXECUTE_IMMEDIATE);
 					} else {
 						if (!mStockDealArrayMap.containsKey(stock.getSE()
 								+ stock.getCode())) {
 							updateStockMark(stockId, Constants.STOCK_FLAG_NONE);
-							startService(
-									Constants.SERVICE_REMOVE_STOCK_FAVORITE,
-									Constants.EXECUTE_IMMEDIATE);
 						}
 					}
 				} catch (Exception e) {

@@ -5,21 +5,25 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.app.LoaderManager;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.util.ArrayMap;
 import android.util.Log;
 
+import com.android.orion.OrionService.OrionBinder;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.FinancialData;
 import com.android.orion.database.ShareBonus;
@@ -74,11 +78,39 @@ public class OrionBaseActivity extends Activity {
 	SharedPreferences mSharedPreferences = null;
 	StockDatabaseManager mStockDatabaseManager = null;
 
+	OrionBinder mOrionBinder = null;
+
+	OrionService mOrionService = null;
+
+	ServiceConnection mServiceConnection = new ServiceConnection() {
+
+		@Override
+		public void onServiceConnected(ComponentName name, IBinder binder) {
+			if (binder == null) {
+				return;
+			}
+
+			OrionBinder mOrionBinder = (OrionBinder) binder;
+
+			mOrionService = mOrionBinder.getService();
+
+			OrionBaseActivity.this.onServiceConnected();
+		}
+
+		@Override
+		public void onServiceDisconnected(ComponentName name) {
+			mOrionService = null;
+		}
+	};
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		mContext = this;
+
+		bindService(new Intent(this, OrionService.class), mServiceConnection,
+				Context.BIND_AUTO_CREATE);
 
 		mPowerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		mWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
@@ -162,6 +194,8 @@ public class OrionBaseActivity extends Activity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+
+		unbindService(mServiceConnection);
 	}
 
 	@Override
@@ -174,6 +208,9 @@ public class OrionBaseActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 		mResumed = true;
+	}
+
+	void onServiceConnected() {
 	}
 
 	void acquireWakeLock() {
@@ -221,18 +258,6 @@ public class OrionBaseActivity extends Activity {
 		bundle.putInt(Constants.EXTRA_EXECUTE_TYPE, executeType);
 		bundle.putString(Constants.EXTRA_STOCK_SE, se);
 		bundle.putString(Constants.EXTRA_STOCK_CODE, code);
-		startService(bundle);
-	}
-
-	void startService(int serviceType, int executeType, String se, String code,
-			double stockDealPrice, long stockDealVolume) {
-		Bundle bundle = new Bundle();
-		bundle.putInt(Constants.EXTRA_SERVICE_TYPE, serviceType);
-		bundle.putInt(Constants.EXTRA_EXECUTE_TYPE, executeType);
-		bundle.putString(Constants.EXTRA_STOCK_SE, se);
-		bundle.putString(Constants.EXTRA_STOCK_CODE, code);
-		bundle.putDouble(Constants.EXTRA_STOCK_DEAL_PRICE, stockDealPrice);
-		bundle.putLong(Constants.EXTRA_STOCK_DEAL_VOLUME, stockDealVolume);
 		startService(bundle);
 	}
 

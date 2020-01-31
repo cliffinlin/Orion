@@ -137,6 +137,13 @@ public class StockIPOListActivity extends ListActivity implements
 		}
 	}
 
+	@Override
+	void onServiceConnected() {
+		if (mOrionService != null) {
+			mOrionService.downloadIPO();
+		}
+	}
+
 	Long doInBackgroundLoad(Object... params) {
 		super.doInBackgroundLoad(params);
 		int execute = (Integer) params[0];
