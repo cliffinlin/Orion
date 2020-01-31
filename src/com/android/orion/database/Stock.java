@@ -20,8 +20,8 @@ public class Stock extends StockBase {
 	private double mPrice;
 	private double mChange;
 	private double mNet;
-	private String mVolume;
-	private String mValue;
+	private long mVolume;
+	private long mValue;
 	private String mActionMin1;
 	private String mActionMin5;
 	private String mActionMin15;
@@ -92,8 +92,8 @@ public class Stock extends StockBase {
 		mPrice = 0;
 		mChange = 0;
 		mNet = 0;
-		mVolume = "";
-		mValue = "";
+		mVolume = 0;
+		mValue = 0;
 		mActionMin1 = "";
 		mActionMin5 = "";
 		mActionMin15 = "";
@@ -481,11 +481,11 @@ public class Stock extends StockBase {
 				.getColumnIndex(DatabaseContract.COLUMN_NET)));
 	}
 
-	public String getVolume() {
+	public long getVolume() {
 		return mVolume;
 	}
 
-	public void setVolume(String volume) {
+	public void setVolume(long volume) {
 		mVolume = volume;
 	}
 
@@ -494,15 +494,15 @@ public class Stock extends StockBase {
 			return;
 		}
 
-		setVolume(cursor.getString(cursor
+		setVolume(cursor.getLong(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_VOLUME)));
 	}
 
-	public String getValue() {
+	public long getValue() {
 		return mValue;
 	}
 
-	public void setValue(String value) {
+	public void setValue(long value) {
 		mValue = value;
 	}
 
@@ -511,7 +511,7 @@ public class Stock extends StockBase {
 			return;
 		}
 
-		setValue(cursor.getString(cursor
+		setValue(cursor.getLong(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_VALUE)));
 	}
 

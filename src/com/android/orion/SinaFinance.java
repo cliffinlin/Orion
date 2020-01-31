@@ -408,11 +408,11 @@ public class SinaFinance extends StockDataProvider {
 				}
 
 				if (!TextUtils.isEmpty(stockInfo[4])) {
-					stock.setVolume(stockInfo[4]);
+					stock.setVolume(Long.valueOf(stockInfo[4]));
 				}
 
 				if (!TextUtils.isEmpty(stockInfo[5])) {
-					stock.setValue(stockInfo[5]);
+					stock.setValue(Long.valueOf(stockInfo[5]));
 				}
 
 				stock.setupYield();
@@ -509,8 +509,8 @@ public class SinaFinance extends StockDataProvider {
 					stock.setPrice(jsonObject.getDouble("trade"));
 					stock.setChange(jsonObject.getDouble("pricechange"));
 					stock.setNet(jsonObject.getDouble("changepercent"));
-					stock.setVolume(jsonObject.getString("volume"));
-					stock.setValue(jsonObject.getString("amount"));
+					stock.setVolume(jsonObject.getLong("volume"));
+					stock.setValue(jsonObject.getLong("amount"));
 
 					if (bulkInsert) {
 						stock.setCreated(Utility.getCurrentDateTimeString());
