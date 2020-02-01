@@ -5,6 +5,9 @@ import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.DelayQueue;
+import java.util.concurrent.Delayed;
+import java.util.concurrent.TimeUnit;
 
 import android.content.Context;
 import android.content.Intent;
@@ -30,6 +33,7 @@ import com.android.orion.utility.Market;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Utility;
 import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.StringRequest;
 
 public abstract class StockDataProvider extends StockAnalyzer {
 	static final String TAG = Constants.TAG + " "
@@ -41,6 +45,9 @@ public abstract class StockDataProvider extends StockAnalyzer {
 	// WifiLockManager mWifiLockManager = null;
 	RequestQueue mRequestQueue;
 	Set<String> mCurrentRequests = new HashSet<String>();
+
+	DelayQueue<DelayedRequest> mDelayQueue = new DelayQueue<DelayedRequest>();
+	long mTargetTime = 0;
 
 	abstract int getAvailableHistoryLength(String period);
 
@@ -96,6 +103,9 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		mRequestQueue = VolleySingleton.getInstance(
 				mContext.getApplicationContext()).getRequestQueue();
 		removeAllCurrrentRequests();
+
+		DelayQueueConsumer queueConsumer = new DelayQueueConsumer();
+		new Thread(queueConsumer).start();
 		/*
 		 * if (mWifiLockManager == null) { mWifiLockManager = new
 		 * WifiLockManager(mContext); }
@@ -194,6 +204,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		int executeType = Constants.EXECUTE_TYPE_NONE;
 		Stock stock = null;
 
+		resetTargetTime();
 		removeAllCurrrentRequests();
 
 		if (!Utility.isNetworkConnected(mContext)) {
@@ -215,14 +226,14 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 			downloadFinancialData(stock);
 		} else {
-			// downloadShareBonus();
+			downloadShareBonus();
 			downloadStockInformation();
 
 			downloadStockRealTime(executeType);
 			downloadStockDataHistory(executeType);
 			downloadStockDataRealTime(executeType);
 
-			// downloadFinancialData();
+			downloadFinancialData();
 		}
 	}
 
@@ -259,6 +270,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			downloader.setStock(stock);
 			downloader.setFinancialData(financialData);
 			mRequestQueue.add(downloader.mStringRequest);
+			addToDelayQueue(downloader.mStringRequest);
 		}
 	}
 
@@ -295,6 +307,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			downloader.setStock(stock);
 			downloader.setShareBonus(shareBonus);
 			mRequestQueue.add(downloader.mStringRequest);
+			// addToDelayQueue(downloader.mStringRequest);
 		}
 	}
 
@@ -366,6 +379,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 					urlString);
 			downloader.setStock(stock);
 			mRequestQueue.add(downloader.mStringRequest);
+			// addToDelayQueue(downloader.mStringRequest);
 		}
 	}
 
@@ -446,6 +460,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				downloader.setStockData(stockData);
 				downloader.setExecuteType(executeType);
 				mRequestQueue.add(downloader.mStringRequest);
+				//addToDelayQueue(downloader.mStringRequest);
 			}
 		}
 	}
@@ -453,7 +468,6 @@ public abstract class StockDataProvider extends StockAnalyzer {
 	void downloadStockDataRealTime(int executeType) {
 		for (Stock stock : mStockArrayMapFavorite.values()) {
 			downloadStockDataRealTime(executeType, stock);
-			downloadFinancialData(stock);
 		}
 	}
 
@@ -683,6 +697,25 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		synchronized (mCurrentRequests) {
 			mCurrentRequests.clear();
 		}
+	}
+
+	void resetTargetTime() {
+		mTargetTime = System.currentTimeMillis();
+	}
+
+	void addToDelayQueue(StringRequest stringRequest) {
+		if (stringRequest == null) {
+			return;
+		}
+
+		DelayedRequest delayedRequest = new DelayedRequest();
+
+		delayedRequest.setStringRequest(stringRequest);
+		delayedRequest.setTargetTime(mTargetTime);
+
+		mDelayQueue.put(delayedRequest);
+
+		mTargetTime += (long) (Math.random() * Constants.DEFAULT_DOWNLOAD_INTERVAL);
 	}
 
 	Stock getStock(Bundle bundle) {
@@ -1109,5 +1142,63 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		protected void onPostExecute(String s) {
 			super.onPostExecute(s);
 		}
+	}
+
+	public class DelayedRequest implements Delayed {
+		long mTargetTime = 0;
+		StringRequest mStringRequest = null;
+
+		void setTargetTime(long targetTime) {
+			mTargetTime = targetTime;
+		}
+
+		void setStringRequest(StringRequest stringRequest) {
+			mStringRequest = stringRequest;
+		}
+
+		@Override
+		public int compareTo(Delayed delayed) {
+			DelayedRequest that = (DelayedRequest) delayed;
+
+			if (this.mTargetTime < that.mTargetTime) {
+				return -1;
+			}
+
+			if (this.mTargetTime > that.mTargetTime) {
+				return 1;
+			}
+
+			return 0;
+		}
+
+		@Override
+		public long getDelay(TimeUnit timeUnit) {
+			long result = 0;
+
+			result = timeUnit.convert(mTargetTime - System.currentTimeMillis(),
+					TimeUnit.MILLISECONDS);
+
+			return result;
+		}
+	}
+
+	public class DelayQueueConsumer implements Runnable {
+
+		public DelayQueueConsumer() {
+		}
+
+		@Override
+		public void run() {
+			while (true) {
+				try {
+					DelayedRequest delayedRequest = mDelayQueue.take();
+					mRequestQueue.add(delayedRequest.mStringRequest);
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
 	}
 }
