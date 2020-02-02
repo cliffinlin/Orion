@@ -19,6 +19,8 @@ public class Constants {
 
 	public static final int BENZIER_CURVE_GRADE_MAX = 50;
 
+	public static final int DOUBLE_CONSTANT_WAN = 10000;
+	public static final int DOUBLE_CONSTANT_YI = (DOUBLE_CONSTANT_WAN * DOUBLE_CONSTANT_WAN);
 	public static final int DOUBLE_FIXED_DECIMAL = 2;
 
 	public static final int DOWNLOAD_HISTORY_LENGTH_DEFAULT = 120;

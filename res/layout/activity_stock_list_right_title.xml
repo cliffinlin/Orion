@@ -157,4 +157,21 @@
         android:text="@string/delta"
         android:textSize="18sp" />
 
+    <TextView
+        android:id="@+id/total_share"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/total_share"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/roe"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/roe"
+        android:textSize="18sp" />
 </LinearLayout>

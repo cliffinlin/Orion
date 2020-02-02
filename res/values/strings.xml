@@ -49,6 +49,8 @@
     <string name="dividend">Dividend</string>
     <string name="valuation">Valuation</string>
     <string name="yield">Yield</string>
+    <string name="total_share">Share</string>
+    <string name="roe">Roe</string>
     <string name="download">Download</string>
     <string name="download_service">Download Service</string>
     <string name="end_date">End Date</string>
@@ -161,6 +163,6 @@
     <string name="time_to_market">TTM</string>
     <string name="filter">Filter</string>
     <string name="saved">Saved</string>
-    <string name="error">Error!</string>    
+    <string name="error">Error!</string>
 
 </resources>

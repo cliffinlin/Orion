@@ -226,14 +226,14 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 			downloadFinancialData(stock);
 		} else {
-			downloadShareBonus();
+			// downloadShareBonus();
 			downloadStockInformation();
 
 			downloadStockRealTime(executeType);
 			downloadStockDataHistory(executeType);
 			downloadStockDataRealTime(executeType);
 
-			downloadFinancialData();
+			// downloadFinancialData();
 		}
 	}
 
@@ -269,8 +269,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
 					urlString);
 			downloader.setStock(stock);
 			downloader.setFinancialData(financialData);
-			// mRequestQueue.add(downloader.mStringRequest);
-			addToDelayQueue(downloader.mStringRequest);
+			mRequestQueue.add(downloader.mStringRequest);
+			// addToDelayQueue(downloader.mStringRequest);
 		}
 	}
 
@@ -343,6 +343,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 	void downloadStockInformation() {
 		for (Stock stock : mStockArrayMapFavorite.values()) {
+			downloadShareBonus(stock);
 			downloadStockInformation(stock);
 		}
 	}
@@ -362,7 +363,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				needDownload = true;
 			} else if (TextUtils.isEmpty(stock.getPinyin())) {
 				needDownload = true;
-			} else if (stock.getClases().contains("A")
+			} else if (stock.getClases().contains(Constants.STOCK_CLASSES_A)
 					&& (stock.getTotalShare() == 0)) {
 				needDownload = true;
 			}
@@ -468,6 +469,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 	void downloadStockDataRealTime(int executeType) {
 		for (Stock stock : mStockArrayMapFavorite.values()) {
 			downloadStockDataRealTime(executeType, stock);
+			downloadFinancialData(stock);
 		}
 	}
 

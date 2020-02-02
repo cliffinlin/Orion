@@ -310,7 +310,8 @@ public class SinaFinance extends StockDataProvider {
 
 			if (stockInfo.length > 7) {
 				if (!TextUtils.isEmpty(stockInfo[7])) {
-					stock.setTotalShare(Double.valueOf(stockInfo[7]) * 10000);
+					stock.setTotalShare(Double.valueOf(stockInfo[7])
+							* Constants.DOUBLE_CONSTANT_WAN);
 				}
 			}
 

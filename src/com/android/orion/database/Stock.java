@@ -36,6 +36,7 @@ public class Stock extends DatabaseTable {
 	private double mCost;
 	private double mProfit;
 	private double mTotalShare;
+	private double mRoe;
 	private double mPE;
 	private double mPB;
 	private double mDelta;
@@ -109,6 +110,7 @@ public class Stock extends DatabaseTable {
 		mCost = 0;
 		mProfit = 0;
 		mTotalShare = 0;
+		mRoe = 0;
 		mPE = 0;
 		mPB = 0;
 		mDelta = 0;
@@ -148,22 +150,23 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_COST, mCost);
 		contentValues.put(DatabaseContract.COLUMN_PROFIT, mProfit);
 		contentValues.put(DatabaseContract.COLUMN_TOTAL_SHARE, mTotalShare);
+		contentValues.put(DatabaseContract.COLUMN_ROE, mRoe);
 		contentValues.put(DatabaseContract.COLUMN_PE, mPE);
 		contentValues.put(DatabaseContract.COLUMN_PB, mPB);
+		contentValues.put(DatabaseContract.COLUMN_DIVIDEND, mDividend);
+		contentValues.put(DatabaseContract.COLUMN_YIELD, mYield);
 		contentValues.put(DatabaseContract.COLUMN_DELTA, mDelta);
 		contentValues.put(DatabaseContract.COLUMN_VALUATION, mValuation);
 		contentValues.put(DatabaseContract.COLUMN_DISCOUNT, mDiscount);
-		contentValues.put(DatabaseContract.COLUMN_DIVIDEND, mDividend);
-		contentValues.put(DatabaseContract.COLUMN_YIELD, mYield);
 
 		return contentValues;
 	}
-	
+
 	public ContentValues getContentValuesInformation() {
 		ContentValues contentValues = new ContentValues();
-		
+
 		super.getContentValues(contentValues);
-		
+
 		contentValues.put(DatabaseContract.Stock.COLUMN_CLASSES, mClasses);
 		contentValues.put(DatabaseContract.Stock.COLUMN_PINYIN, mPinyin);
 		contentValues.put(DatabaseContract.COLUMN_TOTAL_SHARE, mTotalShare);
@@ -197,33 +200,22 @@ public class Stock extends DatabaseTable {
 		} else if (period.equals(Constants.PERIOD_YEAR)) {
 			contentValues.put(DatabaseContract.COLUMN_YEAR, mActionYear);
 		}
+		
+		contentValues.put(DatabaseContract.COLUMN_TOTAL_SHARE, mTotalShare);
+		contentValues.put(DatabaseContract.COLUMN_ROE, mRoe);
 
 		contentValues.put(DatabaseContract.COLUMN_PE, mPE);
 		contentValues.put(DatabaseContract.COLUMN_PB, mPB);
 
+		contentValues.put(DatabaseContract.COLUMN_DIVIDEND, mDividend);
 		contentValues.put(DatabaseContract.COLUMN_YIELD, mYield);
 		contentValues.put(DatabaseContract.COLUMN_DELTA, mDelta);
-		
+
 		contentValues.put(DatabaseContract.COLUMN_VALUATION, mValuation);
 		contentValues.put(DatabaseContract.COLUMN_DISCOUNT, mDiscount);
 
 		return contentValues;
 	}
-//	
-//	public ContentValues getContentValuesFinancial() {
-//		ContentValues contentValues = new ContentValues();
-//		
-//		super.getContentValues(contentValues);
-//		
-//		contentValues.put(DatabaseContract.COLUMN_DIVIDEND, mDividend);
-//		contentValues.put(DatabaseContract.COLUMN_YIELD, mYield);
-//		contentValues.put(DatabaseContract.COLUMN_DELTA, mDelta);
-//		
-//		contentValues.put(DatabaseContract.COLUMN_VALUATION, mValuation);
-//		contentValues.put(DatabaseContract.COLUMN_DISCOUNT, mDiscount);
-//		
-//		return contentValues;
-//	}
 
 	public void set(Stock stock) {
 		if (stock == null) {
@@ -260,6 +252,7 @@ public class Stock extends DatabaseTable {
 		setCost(stock.mCost);
 		setProfit(stock.mProfit);
 		setTotalShare(stock.mTotalShare);
+		setRoe(stock.mRoe);
 		setPE(stock.mPE);
 		setPB(stock.mPB);
 		setDelta(stock.mDelta);
@@ -305,6 +298,7 @@ public class Stock extends DatabaseTable {
 		setCost(cursor);
 		setProfit(cursor);
 		setTotalShare(cursor);
+		setRoe(cursor);
 		setPE(cursor);
 		setPB(cursor);
 		setDelta(cursor);
@@ -756,6 +750,23 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_TOTAL_SHARE)));
 	}
 
+	public double getRoe() {
+		return mRoe;
+	}
+
+	public void setRoe(double roe) {
+		mRoe = roe;
+	}
+
+	void setRoe(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setRoe(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_ROE)));
+	}
+
 	public double getPE() {
 		return mPE;
 	}
@@ -874,7 +885,7 @@ public class Stock extends DatabaseTable {
 		setYield(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_YIELD)));
 	}
-	
+
 	public String getAction(String period) {
 		String action = "";
 
@@ -927,21 +938,43 @@ public class Stock extends DatabaseTable {
 		}
 	}
 
-	public void setupPE(FinancialData financialData) {
+	public void setupRoe(FinancialData financialData) {
 		if (financialData == null) {
 			return;
 		}
 		
+		if (financialData.getBookValuePerShare() == 0) {
+			return;
+		}
+
+		if (mTotalShare == 0) {
+			return;
+		}
+
+		mRoe = financialData.getNetProfit() / (mTotalShare * financialData.getBookValuePerShare());
+
+		if (mRoe <= 0) {
+			return;
+		}
+
+		mRoe = Utility.Round(100.0 * mRoe, Constants.DOUBLE_FIXED_DECIMAL);
+	}
+
+	public void setupPE(FinancialData financialData) {
+		if (financialData == null) {
+			return;
+		}
+
 		if ((mPrice == 0) || (mTotalShare == 0)) {
 			return;
 		}
-		
+
 		double earningsPerShare = financialData.getNetProfit() / mTotalShare;
-		
+
 		if (earningsPerShare <= 0) {
 			return;
 		}
-		
+
 		mPE = Utility.Round(100.0 * earningsPerShare / mPrice,
 				Constants.DOUBLE_FIXED_DECIMAL);
 	}
@@ -950,14 +983,15 @@ public class Stock extends DatabaseTable {
 		if (financialData == null) {
 			return;
 		}
-		
+
 		double bookValuePerShare = financialData.getBookValuePerShare();
-		
+
 		if (bookValuePerShare == 0) {
 			return;
 		}
 
-		mPB = Utility.Round(mPrice / bookValuePerShare, Constants.DOUBLE_FIXED_DECIMAL);
+		mPB = Utility.Round(mPrice / bookValuePerShare,
+				Constants.DOUBLE_FIXED_DECIMAL);
 	}
 
 	public void setupCost(double value) {
@@ -977,7 +1011,8 @@ public class Stock extends DatabaseTable {
 				Constants.DOUBLE_FIXED_DECIMAL);
 
 		if (mYield > 0) {
-			mDelta = Utility.Round(mPE / mYield, Constants.DOUBLE_FIXED_DECIMAL);
+			mDelta = Utility
+					.Round(mPE / mYield, Constants.DOUBLE_FIXED_DECIMAL);
 		}
 	}
 
@@ -989,13 +1024,16 @@ public class Stock extends DatabaseTable {
 		if ((mPrice == 0) || (mTotalShare == 0)) {
 			return;
 		}
-		
+
 		double netProfit = financialData.getNetProfit();
-		
-		mValuation = Utility.Round(netProfit / mTotalShare / Constants.RISK_FREE_INTEREST_RATE, Constants.DOUBLE_FIXED_DECIMAL);
+
+		mValuation = Utility.Round(netProfit / mTotalShare
+				/ Constants.RISK_FREE_INTEREST_RATE,
+				Constants.DOUBLE_FIXED_DECIMAL);
 
 		if (mValuation > 0) {
-			mDiscount = Utility.Round(mPrice / mValuation, Constants.DOUBLE_FIXED_DECIMAL);
+			mDiscount = Utility.Round(mPrice / mValuation,
+					Constants.DOUBLE_FIXED_DECIMAL);
 		}
 	}
 }
