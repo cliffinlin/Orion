@@ -1,7 +1,5 @@
 package com.android.orion;
 
-import java.lang.ref.WeakReference;
-
 import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.Service;
@@ -177,14 +175,6 @@ public class OrionService extends Service {
 
 		OrionService getService() {
 			return OrionService.this;
-		}
-	}
-
-	static class IOrionServiceStub extends IOrionService.Stub {
-		WeakReference<OrionService> mService;
-
-		IOrionServiceStub(OrionService service) {
-			mService = new WeakReference<OrionService>(service);
 		}
 	}
 }

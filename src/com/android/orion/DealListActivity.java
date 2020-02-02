@@ -74,7 +74,6 @@ public class DealListActivity extends ListActivity implements
 	TextView mTextViewDeal = null;
 	TextView mTextViewVolume = null;
 	TextView mTextViewProfit = null;
-	TextView mTextViewYield = null;
 	TextView mTextViewCreated = null;
 	TextView mTextViewModified = null;
 
@@ -342,9 +341,6 @@ public class DealListActivity extends ListActivity implements
 		case R.id.profit:
 			mSortOrderColumn = DatabaseContract.COLUMN_PROFIT;
 			break;
-		case R.id.yield:
-			mSortOrderColumn = DatabaseContract.COLUMN_YIELD;
-			break;
 		case R.id.created:
 			mSortOrderColumn = DatabaseContract.COLUMN_CREATED;
 			break;
@@ -387,7 +383,6 @@ public class DealListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewDeal, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewVolume, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewProfit, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewYield, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewCreated, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewModified, mHeaderTextDefaultColor);
 	}
@@ -429,9 +424,6 @@ public class DealListActivity extends ListActivity implements
 		mTextViewProfit = (TextView) findViewById(R.id.profit);
 		mTextViewProfit.setOnClickListener(this);
 
-		mTextViewYield = (TextView) findViewById(R.id.yield);
-		mTextViewYield.setOnClickListener(this);
-
 		mTextViewCreated = (TextView) findViewById(R.id.created);
 		mTextViewCreated.setOnClickListener(this);
 
@@ -451,8 +443,6 @@ public class DealListActivity extends ListActivity implements
 			setHeaderTextColor(mTextViewVolume, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PROFIT)) {
 			setHeaderTextColor(mTextViewProfit, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_YIELD)) {
-			setHeaderTextColor(mTextViewYield, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_CREATED)) {
 			setHeaderTextColor(mTextViewCreated, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MODIFIED)) {
@@ -469,11 +459,10 @@ public class DealListActivity extends ListActivity implements
 		String[] mRightFrom = new String[] { DatabaseContract.COLUMN_PRICE,
 				DatabaseContract.COLUMN_NET, DatabaseContract.COLUMN_DEAL,
 				DatabaseContract.COLUMN_VOLUME, DatabaseContract.COLUMN_PROFIT,
-				DatabaseContract.COLUMN_YIELD, DatabaseContract.COLUMN_CREATED,
+				DatabaseContract.COLUMN_CREATED,
 				DatabaseContract.COLUMN_MODIFIED };
 		int[] mRightTo = new int[] { R.id.price, R.id.net, R.id.deal,
-				R.id.volume, R.id.profit, R.id.yield, R.id.created,
-				R.id.modified };
+				R.id.volume, R.id.profit, R.id.created, R.id.modified };
 
 		mLeftListView = (ListView) findViewById(R.id.left_listview);
 		mLeftAdapter = new SimpleCursorAdapter(this,

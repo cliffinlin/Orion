@@ -111,7 +111,6 @@ public class Constants {
 	public static final String STOCK_FLAG_CLASS_INDEXES = "indexes";
 	public static final String STOCK_FLAG_MARK_RECENT = "recent";
 	public static final String STOCK_FLAG_MARK_FAVORITE = "favorite";
-	public static final String STOCK_FLAG_PINYIN_FIXED = "1";
 
 	public static final int STOCK_ID_INVALID = 0;
 

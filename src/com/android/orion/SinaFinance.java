@@ -306,7 +306,6 @@ public class SinaFinance extends StockDataProvider {
 
 			if (!TextUtils.isEmpty(stockInfo[1])) {
 				stock.setPinyin(stockInfo[1]);
-				stock.setPinyinFixed(Constants.STOCK_FLAG_PINYIN_FIXED);
 			}
 
 			if (stockInfo.length > 7) {
@@ -391,7 +390,6 @@ public class SinaFinance extends StockDataProvider {
 			if (!stock.getName().equals(stockInfo[0])) {
 				stock.setName(stockInfo[0]);
 				stock.setPinyin(Pinyin.toPinyin(mContext, stock.getName()));
-				stock.setPinyinFixed(Constants.STOCK_FLAG_NONE);
 			}
 
 			if (stockInfo.length == 6) {
@@ -503,7 +501,6 @@ public class SinaFinance extends StockDataProvider {
 						stock.setName(jsonObject.getString("name"));
 						stock.setPinyin(Pinyin.toPinyin(mContext,
 								stock.getName()));
-						stock.setPinyinFixed(Constants.STOCK_FLAG_NONE);
 					}
 
 					stock.setPrice(jsonObject.getDouble("trade"));

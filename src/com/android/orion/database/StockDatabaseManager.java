@@ -709,8 +709,6 @@ public class StockDatabaseManager extends DatabaseManager {
 					stockDeal.set(cursor);
 
 					stockDeal.setPrice(stock.getPrice());
-					stockDeal.setDividend(stock.getDividend());
-					stockDeal.setupYield();
 					stockDeal.setupNet();
 					stockDeal.setupProfit();
 
@@ -1008,7 +1006,6 @@ public class StockDatabaseManager extends DatabaseManager {
 					stockDeal.setName(stock.getName());
 					stockDeal.setPrice(stock.getPrice());
 					stockDeal.setDeal(deal);
-					stockDeal.setDividend(stock.getDividend());
 					stockDeal.setCreated(Utility.getCurrentDateTimeString());
 					insertStockDeal(stockDeal);
 					break;

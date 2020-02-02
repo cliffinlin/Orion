@@ -7,7 +7,7 @@ import android.text.TextUtils;
 import com.android.orion.Constants;
 import com.android.orion.utility.Utility;
 
-public class StockDeal extends StockBase {
+public class StockDeal extends DatabaseTable {
 	private String mSE;
 	private String mCode;
 	private String mName;
@@ -268,16 +268,6 @@ public class StockDeal extends StockBase {
 
 	public void setupProfit() {
 		mProfit = Utility.Round((mPrice - mDeal) * mVolume,
-				Constants.DOUBLE_FIXED_DECIMAL);
-	}
-
-	public void setupYield() {
-		if (mDeal == 0) {
-			mYield = 0;
-			return;
-		}
-
-		mYield = Utility.Round(100.0 * mDividend / 10.0 / mDeal,
 				Constants.DOUBLE_FIXED_DECIMAL);
 	}
 

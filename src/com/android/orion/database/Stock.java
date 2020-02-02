@@ -9,13 +9,12 @@ import android.text.TextUtils;
 import com.android.orion.Constants;
 import com.android.orion.utility.Utility;
 
-public class Stock extends StockBase {
+public class Stock extends DatabaseTable {
 	private String mClasses;
 	private String mSE;
 	private String mCode;
 	private String mName;
 	private String mPinyin;
-	private String mPinyinFixed;
 	private String mMark;
 	private double mPrice;
 	private double mChange;
@@ -42,6 +41,8 @@ public class Stock extends StockBase {
 	private double mDelta;
 	private double mValuation;
 	private double mDiscount;
+	private double mDividend;
+	private double mYield;
 
 	public ArrayList<StockData> mStockDataListMin1 = new ArrayList<StockData>();
 	public ArrayList<StockData> mStockDataListMin5 = new ArrayList<StockData>();
@@ -87,7 +88,6 @@ public class Stock extends StockBase {
 		mCode = "";
 		mName = "";
 		mPinyin = "";
-		mPinyinFixed = "";
 		mMark = "";
 		mPrice = 0;
 		mChange = 0;
@@ -114,18 +114,19 @@ public class Stock extends StockBase {
 		mDelta = 0;
 		mValuation = 0;
 		mDiscount = 0;
+		mDividend = 0;
+		mYield = 0;
 	}
 
 	@Override
 	public ContentValues getContentValues(ContentValues contentValues) {
 		super.getContentValues(contentValues);
 
+		contentValues.put(DatabaseContract.Stock.COLUMN_CLASSES, mClasses);
 		contentValues.put(DatabaseContract.COLUMN_SE, mSE);
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
 		contentValues.put(DatabaseContract.Stock.COLUMN_PINYIN, mPinyin);
-		contentValues.put(DatabaseContract.Stock.COLUMN_PINYIN_FIXED,
-				mPinyinFixed);
 		contentValues.put(DatabaseContract.Stock.COLUMN_MARK, mMark);
 		contentValues.put(DatabaseContract.COLUMN_PRICE, mPrice);
 		contentValues.put(DatabaseContract.COLUMN_CHANGE, mChange);
@@ -146,8 +147,14 @@ public class Stock extends StockBase {
 		contentValues.put(DatabaseContract.COLUMN_HOLD, mHold);
 		contentValues.put(DatabaseContract.COLUMN_COST, mCost);
 		contentValues.put(DatabaseContract.COLUMN_PROFIT, mProfit);
+		contentValues.put(DatabaseContract.COLUMN_TOTAL_SHARE, mTotalShare);
 		contentValues.put(DatabaseContract.COLUMN_PE, mPE);
 		contentValues.put(DatabaseContract.COLUMN_PB, mPB);
+		contentValues.put(DatabaseContract.COLUMN_DELTA, mDelta);
+		contentValues.put(DatabaseContract.COLUMN_VALUATION, mValuation);
+		contentValues.put(DatabaseContract.COLUMN_DISCOUNT, mDiscount);
+		contentValues.put(DatabaseContract.COLUMN_DIVIDEND, mDividend);
+		contentValues.put(DatabaseContract.COLUMN_YIELD, mYield);
 
 		return contentValues;
 	}
@@ -159,8 +166,6 @@ public class Stock extends StockBase {
 		
 		contentValues.put(DatabaseContract.Stock.COLUMN_CLASSES, mClasses);
 		contentValues.put(DatabaseContract.Stock.COLUMN_PINYIN, mPinyin);
-		contentValues.put(DatabaseContract.Stock.COLUMN_PINYIN_FIXED,
-				mPinyinFixed);
 		contentValues.put(DatabaseContract.COLUMN_TOTAL_SHARE, mTotalShare);
 
 		return contentValues;
@@ -196,7 +201,6 @@ public class Stock extends StockBase {
 		contentValues.put(DatabaseContract.COLUMN_PE, mPE);
 		contentValues.put(DatabaseContract.COLUMN_PB, mPB);
 
-		contentValues.put(DatabaseContract.COLUMN_DIVIDEND, mDividend);
 		contentValues.put(DatabaseContract.COLUMN_YIELD, mYield);
 		contentValues.put(DatabaseContract.COLUMN_DELTA, mDelta);
 		
@@ -205,24 +209,21 @@ public class Stock extends StockBase {
 
 		return contentValues;
 	}
-	
-	public ContentValues getContentValuesFinancial() {
-		ContentValues contentValues = new ContentValues();
-		
-		super.getContentValues(contentValues);
-		
-		contentValues.put(DatabaseContract.COLUMN_PE, mPE);
-		contentValues.put(DatabaseContract.COLUMN_PB, mPB);
-		
-		contentValues.put(DatabaseContract.COLUMN_DIVIDEND, mDividend);
-		contentValues.put(DatabaseContract.COLUMN_YIELD, mYield);
-		contentValues.put(DatabaseContract.COLUMN_DELTA, mDelta);
-		
-		contentValues.put(DatabaseContract.COLUMN_VALUATION, mValuation);
-		contentValues.put(DatabaseContract.COLUMN_DISCOUNT, mDiscount);
-		
-		return contentValues;
-	}
+//	
+//	public ContentValues getContentValuesFinancial() {
+//		ContentValues contentValues = new ContentValues();
+//		
+//		super.getContentValues(contentValues);
+//		
+//		contentValues.put(DatabaseContract.COLUMN_DIVIDEND, mDividend);
+//		contentValues.put(DatabaseContract.COLUMN_YIELD, mYield);
+//		contentValues.put(DatabaseContract.COLUMN_DELTA, mDelta);
+//		
+//		contentValues.put(DatabaseContract.COLUMN_VALUATION, mValuation);
+//		contentValues.put(DatabaseContract.COLUMN_DISCOUNT, mDiscount);
+//		
+//		return contentValues;
+//	}
 
 	public void set(Stock stock) {
 		if (stock == null) {
@@ -238,7 +239,6 @@ public class Stock extends StockBase {
 		setCode(stock.mCode);
 		setName(stock.mName);
 		setPinyin(stock.mPinyin);
-		setPinyinFixed(stock.mPinyinFixed);
 		setMark(stock.mMark);
 		setPrice(stock.mPrice);
 		setChange(stock.mChange);
@@ -263,8 +263,10 @@ public class Stock extends StockBase {
 		setPE(stock.mPE);
 		setPB(stock.mPB);
 		setDelta(stock.mDelta);
-		setDelta(stock.mValuation);
-		setDelta(stock.mDiscount);
+		setValuation(stock.mValuation);
+		setDiscount(stock.mDiscount);
+		setDividend(stock.mDividend);
+		setYield(stock.mYield);
 	}
 
 	@Override
@@ -282,7 +284,6 @@ public class Stock extends StockBase {
 		setCode(cursor);
 		setName(cursor);
 		setPinyin(cursor);
-		setPinyinFiexd(cursor);
 		setMark(cursor);
 		setPrice(cursor);
 		setChange(cursor);
@@ -309,6 +310,8 @@ public class Stock extends StockBase {
 		setDelta(cursor);
 		setValuation(cursor);
 		setDiscount(cursor);
+		setDividend(cursor);
+		setYield(cursor);
 	}
 
 	public String getClases() {
@@ -394,23 +397,6 @@ public class Stock extends StockBase {
 
 		setPinyin(cursor.getString(cursor
 				.getColumnIndex(DatabaseContract.Stock.COLUMN_PINYIN)));
-	}
-
-	String getPinyinFixed() {
-		return mPinyinFixed;
-	}
-
-	public void setPinyinFixed(String pinyinFixed) {
-		mPinyinFixed = pinyinFixed;
-	}
-
-	void setPinyinFiexd(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setPinyinFixed(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.Stock.COLUMN_PINYIN_FIXED)));
 	}
 
 	public String getMark() {
@@ -853,6 +839,40 @@ public class Stock extends StockBase {
 
 		setDiscount(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_DISCOUNT)));
+	}
+
+	public double getDividend() {
+		return mDividend;
+	}
+
+	public void setDividend(double dividend) {
+		mDividend = dividend;
+	}
+
+	void setDividend(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setDividend(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_DIVIDEND)));
+	}
+
+	public double getYield() {
+		return mYield;
+	}
+
+	public void setYield(double yield) {
+		mYield = yield;
+	}
+
+	void setYield(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setYield(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_YIELD)));
 	}
 	
 	public String getAction(String period) {

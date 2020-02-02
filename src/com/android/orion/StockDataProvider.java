@@ -269,7 +269,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 					urlString);
 			downloader.setStock(stock);
 			downloader.setFinancialData(financialData);
-			mRequestQueue.add(downloader.mStringRequest);
+			// mRequestQueue.add(downloader.mStringRequest);
 			addToDelayQueue(downloader.mStringRequest);
 		}
 	}
@@ -460,7 +460,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				downloader.setStockData(stockData);
 				downloader.setExecuteType(executeType);
 				mRequestQueue.add(downloader.mStringRequest);
-				//addToDelayQueue(downloader.mStringRequest);
+				// addToDelayQueue(downloader.mStringRequest);
 			}
 		}
 	}
@@ -771,92 +771,9 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		void handleResponse(String response) {
 			removeFromCurrrentRequests(mStringRequest.getUrl());
 			handleResponseStockHSA(response);
-			fixPinyin();
 		}
 	}
 
-	/*
-	 * public class DownloadStockInformationAsyncTask extends AsyncTask<String,
-	 * Integer, String> {
-	 * 
-	 * @Override protected String doInBackground(String... params) {
-	 * OkHttpClient client = new OkHttpClient(); String urlString = "";
-	 * ArrayList<IPO> ipoList = new ArrayList<IPO>(); boolean needDownloadIPO =
-	 * false;
-	 * 
-	 * mStockDatabaseManager.getIPOList(ipoList, null); if (ipoList.size() == 0)
-	 * { needDownloadIPO = true; } else { for (IPO ipo : ipoList) { if
-	 * (!ipo.getCreated().contains( Utility.getCurrentDateString())) {
-	 * needDownloadIPO = true; break; } } }
-	 * 
-	 * if (needDownloadIPO) { try { acquireWakeLock();
-	 * 
-	 * urlString = getIPOURLString(); Request.Builder builder = new
-	 * Request.Builder(); builder.url(urlString); Request request =
-	 * builder.build();
-	 * 
-	 * Response response = client.newCall(request).execute(); byte[] b =
-	 * response.body().bytes(); // 获取数据的bytes String responseString = new
-	 * String(b, "GB2312"); // 然后将其转为gb2312 handleResponseIPO(null,
-	 * responseString); Thread.sleep((long) (Math.random() * 1000)); } catch
-	 * (Exception e) { e.printStackTrace(); } finally { releaseWakeLock(); } }
-	 * 
-	 * for (Stock stock : mStockArrayMapFavorite.values()) { try {
-	 * acquireWakeLock();
-	 * 
-	 * if (stock.getTotalShare() == 0) { urlString =
-	 * getStockInformationURLString(stock); Request.Builder builder = new
-	 * Request.Builder(); builder.url(urlString); Request request =
-	 * builder.build();
-	 * 
-	 * Response response = client.newCall(request).execute(); byte[] b =
-	 * response.body().bytes(); // 获取数据的bytes String responseString = new
-	 * String(b, "GB2312"); // 然后将其转为gb2312
-	 * handleResponseStockInformation(stock, responseString);
-	 * Thread.sleep((long) (Math.random() * 1000)); } } catch (Exception e) {
-	 * e.printStackTrace(); } finally { releaseWakeLock(); }
-	 * 
-	 * try { acquireWakeLock();
-	 * 
-	 * FinancialData financialData = new FinancialData();
-	 * financialData.setStockId(stock.getId());
-	 * 
-	 * mStockDatabaseManager.getFinancialData(stock.getId(), financialData); if
-	 * (!financialData.getCreated().contains( Utility.getCurrentDateString())) {
-	 * urlString = getFinancialDataURLString(stock); Request.Builder builder =
-	 * new Request.Builder(); builder.url(urlString); Request request =
-	 * builder.build();
-	 * 
-	 * Response response = client.newCall(request).execute(); byte[] b =
-	 * response.body().bytes(); // 获取数据的bytes String responseString = new
-	 * String(b, "GB2312"); // 然后将其转为gb2312 handleResponseFinancialData(stock,
-	 * financialData, responseString); Thread.sleep((long) (Math.random() *
-	 * 1000)); } } catch (Exception e) { e.printStackTrace(); } finally {
-	 * releaseWakeLock(); }
-	 * 
-	 * try { acquireWakeLock();
-	 * 
-	 * ShareBonus shareBonus = new ShareBonus();
-	 * shareBonus.setStockId(stock.getId());
-	 * 
-	 * mStockDatabaseManager.getShareBonus(stock.getId(), shareBonus); if
-	 * (!shareBonus.getCreated().contains( Utility.getCurrentDateString())) {
-	 * urlString = getShareBonusURLString(stock); Request.Builder builder = new
-	 * Request.Builder(); builder.url(urlString); Request request =
-	 * builder.build();
-	 * 
-	 * Response response = client.newCall(request).execute(); byte[] b =
-	 * response.body().bytes(); // 获取数据的bytes String responseString = new
-	 * String(b, "GB2312"); // 然后将其转为gb2312 handleResponseShareBonus(stock,
-	 * shareBonus, responseString); Thread.sleep((long) (Math.random() * 1000));
-	 * } } catch (Exception e) { e.printStackTrace(); } finally {
-	 * releaseWakeLock(); } }
-	 * 
-	 * return null; }
-	 * 
-	 * @Override protected void onPostExecute(String s) {
-	 * super.onPostExecute(s); } }
-	 */
 	public class StockInformationDownloader extends VolleyStringDownloader {
 		public Stock mStock = null;
 
@@ -872,6 +789,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			if (mStock == null) {
 				mStock = new Stock();
 			}
+
 			mStock.set(stock);
 		}
 
@@ -1035,10 +953,10 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			removeFromCurrrentRequests(mStringRequest.getUrl());
 			handleResponseFinancialData(mStock, mFinancialData, response);
 
-			setupStockFinancialData(mStock);
-			setupStockShareBonus(mStock);
-			mStockDatabaseManager.updateStock(mStock,
-					mStock.getContentValuesFinancial());
+			// setupStockFinancialData(mStock);
+			// setupStockShareBonus(mStock);
+			// mStockDatabaseManager.updateStock(mStock,
+			// mStock.getContentValuesFinancial());
 
 			sendBroadcast(Constants.ACTION_SERVICE_FINISHED,
 					Constants.SERVICE_DATABASE_UPDATE, mStock.getId());
@@ -1075,11 +993,11 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		public void handleResponse(String response) {
 			removeFromCurrrentRequests(mStringRequest.getUrl());
 			handleResponseShareBonus(mStock, mShareBonus, response);
-
-			setupStockFinancialData(mStock);
-			setupStockShareBonus(mStock);
-			mStockDatabaseManager.updateStock(mStock,
-					mStock.getContentValuesFinancial());
+			//
+			// setupStockFinancialData(mStock);
+			// setupStockShareBonus(mStock);
+			// mStockDatabaseManager.updateStock(mStock,
+			// mStock.getContentValuesFinancial());
 
 			sendBroadcast(Constants.ACTION_SERVICE_FINISHED,
 					Constants.SERVICE_DATABASE_UPDATE, mStock.getId());

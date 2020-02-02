@@ -2,7 +2,6 @@ package com.android.orion;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map.Entry;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -18,7 +17,6 @@ import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockDatabaseManager;
-import com.android.orion.pinyin.Pinyin;
 import com.android.orion.utility.Utility;
 
 public class StockManager {
@@ -180,40 +178,6 @@ public class StockManager {
 			mStockDatabaseManager.insertStock(stock);
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-	}
-
-	void fixPinyin() {
-		String name = "";
-		String selection = null;
-		List<Stock> stockList = null;
-
-		if (mStockDatabaseManager == null) {
-			return;
-		}
-
-		for (Entry<String, String> entry : Pinyin.fixedPinyinMap.entrySet()) {
-			selection = DatabaseContract.COLUMN_NAME + " LIKE '%"
-					+ entry.getKey() + "%'" + " AND "
-					+ DatabaseContract.Stock.COLUMN_PINYIN_FIXED
-					+ " NOT LIKE '" + Constants.STOCK_FLAG_PINYIN_FIXED + "'";
-			stockList = loadStockList(selection, null, null);
-			if (stockList == null) {
-				return;
-			}
-
-			for (Stock stock : stockList) {
-				name = stock.getName().replaceAll(entry.getKey(),
-						entry.getValue());
-				stock.setPinyin(Pinyin.toPinyin(mContext, name));
-				stock.setPinyinFixed(Constants.STOCK_FLAG_PINYIN_FIXED);
-				try {
-					mStockDatabaseManager.updateStock(stock,
-							stock.getContentValues());
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
 		}
 	}
 

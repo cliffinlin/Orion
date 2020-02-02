@@ -80,7 +80,6 @@ public class StockDealActivity extends DatabaseActivity implements
 				mDeal.setName(mStock.getName());
 				mDeal.setPrice(mStock.getPrice());
 				mDeal.setDeal(mStock.getPrice());
-				mDeal.setDividend(mStock.getDividend());
 				updateView();
 				break;
 
@@ -91,7 +90,6 @@ public class StockDealActivity extends DatabaseActivity implements
 				mDeal.setName(mStock.getName());
 				mDeal.setPrice(mStock.getPrice());
 				mDeal.setDeal(mStock.getPrice());
-				mDeal.setDividend(mStock.getDividend());
 				updateView();
 				break;
 
@@ -233,8 +231,6 @@ public class StockDealActivity extends DatabaseActivity implements
 			} else {
 				mDeal.setVolume(0);
 			}
-			mDeal.setDividend(mStock.getDividend());
-			mDeal.setupYield();
 			mDeal.setupNet();
 			mDeal.setupProfit();
 			mHandler.sendEmptyMessage(MESSAGE_SAVE_DEAL);
