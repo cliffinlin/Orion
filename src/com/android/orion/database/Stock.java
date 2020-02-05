@@ -975,7 +975,7 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-		mPE = Utility.Round(100.0 * earningsPerShare / mPrice,
+		mPE = Utility.Round(mPrice / earningsPerShare,
 				Constants.DOUBLE_FIXED_DECIMAL);
 	}
 

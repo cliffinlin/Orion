@@ -968,8 +968,7 @@ public class StockDatabaseManager extends DatabaseManager {
 		getStockDealMin(stock, stockDealMin);
 
 		if ((stockDealMax.getVolume() > 0) && (stockDealMin.getVolume() > 0)) {
-			result = (stockDealMin.getDeal() - stockDealMax.getDeal() * order
-					* Constants.STOCK_DEAL_DISTRIBUTION_RATE);
+			result = (1.0 - order * Constants.STOCK_DEAL_DISTRIBUTION_RATE) * stockDealMax.getDeal();
 		}
 
 		return result;
