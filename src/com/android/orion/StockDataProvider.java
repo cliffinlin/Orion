@@ -222,14 +222,11 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 			downloadFinancialData(stock);
 		} else {
-			downloadShareBonus();
 			downloadStockInformation();
 
 			downloadStockRealTime(executeType);
 			downloadStockDataHistory(executeType);
 			downloadStockDataRealTime(executeType);
-
-			downloadFinancialData();
 		}
 	}
 
@@ -257,15 +254,15 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		}
 
 		urlString = getFinancialDataURLString(stock);
-		if (addToCurrentRequests(urlString)) {
+//		if (addToCurrentRequests(urlString)) {
 			Log.d(TAG, "downloadFinancial:" + urlString);
 			FinancialDataDownloader downloader = new FinancialDataDownloader(
 					urlString);
 			downloader.setStock(stock);
 			downloader.setFinancialData(financialData);
-			mRequestQueue.add(downloader.mStringRequest);
-			// addToDelayQueue(downloader.mStringRequest);
-		}
+			// mRequestQueue.add(downloader.mStringRequest);
+			addToDelayQueue(downloader.mStringRequest);
+//		}
 	}
 
 	void downloadShareBonus() {
@@ -294,15 +291,15 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		}
 
 		urlString = getShareBonusURLString(stock);
-		if (addToCurrentRequests(urlString)) {
+//		if (addToCurrentRequests(urlString)) {
 			Log.d(TAG, "downloadShareBonus:" + urlString);
 			ShareBonusDownloader downloader = new ShareBonusDownloader(
 					urlString);
 			downloader.setStock(stock);
 			downloader.setShareBonus(shareBonus);
-			mRequestQueue.add(downloader.mStringRequest);
-			// addToDelayQueue(downloader.mStringRequest);
-		}
+			// mRequestQueue.add(downloader.mStringRequest);
+			addToDelayQueue(downloader.mStringRequest);
+//		}
 	}
 
 	void downloadIPO() {

@@ -23,78 +23,14 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/action_5min"
-        android:layout_width="@dimen/action_layout_width"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/action_5min"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/action_15min"
-        android:layout_width="@dimen/action_layout_width"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/action_15min"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/action_30min"
-        android:layout_width="@dimen/action_layout_width"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/action_30min"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/action_60min"
-        android:layout_width="@dimen/action_layout_width"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/action_60min"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/action_day"
-        android:layout_width="@dimen/action_layout_width"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/action_day"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/action_week"
-        android:layout_width="@dimen/action_layout_width"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/action_week"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/action_month"
-        android:layout_width="@dimen/action_layout_width"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/action_month"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/hold"
+        android:id="@+id/roe"
         android:layout_width="80dp"
         android:layout_height="40dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="@string/hold"
+        android:text="@string/roe"
         android:textSize="18sp" />
-
-    <TextView
+    <TextView
         android:id="@+id/valuation"
         android:layout_width="80dp"
         android:layout_height="40dp"
@@ -157,21 +93,4 @@
         android:text="@string/delta"
         android:textSize="18sp" />
 
-    <TextView
-        android:id="@+id/total_share"
-        android:layout_width="80dp"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/total_share"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/roe"
-        android:layout_width="80dp"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/roe"
-        android:textSize="18sp" />
 </LinearLayout>

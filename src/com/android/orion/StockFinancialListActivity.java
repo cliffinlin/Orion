@@ -29,13 +29,13 @@ import com.android.orion.database.Stock;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Utility;
 
-public class StockFavoriteListActivity extends ListActivity implements
+public class StockFinancialListActivity extends ListActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
 		OnItemLongClickListener, OnClickListener {
 
 	public static final String ACTION_STOCK_ID = "orion.intent.action.ACTION_STOCK_ID";
 
-	public static final int LOADER_ID_STOCK_FAVORITE_LIST = 0;
+	public static final int LOADER_ID_STOCK_FINANCIAL_LIST = 0;
 
 	public static final int REQUEST_CODE_STOCK_INSERT = 0;
 	public static final int REQUEST_CODE_STOCK_FILTER = 1;
@@ -54,14 +54,14 @@ public class StockFavoriteListActivity extends ListActivity implements
 	TextView mTextViewNameCode = null;
 	TextView mTextViewPrice = null;
 	TextView mTextViewNet = null;
-	TextView mTextViewMin5 = null;
-	TextView mTextViewMin15 = null;
-	TextView mTextViewMin30 = null;
-	TextView mTextViewMin60 = null;
-	TextView mTextViewDay = null;
-	TextView mTextViewWeek = null;
-	TextView mTextViewMonth = null;
-	TextView mTextViewHold = null;
+	TextView mTextViewRoe = null;
+	TextView mTextViewValuation = null;
+	TextView mTextViewDiscount = null;
+	TextView mTextViewPE = null;
+	TextView mTextViewPB = null;
+	TextView mTextViewDividend = null;
+	TextView mTextViewYield = null;
+	TextView mTextViewDelta = null;
 
 	ListView mLeftListView = null;
 	ListView mRightListView = null;
@@ -88,7 +88,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_stock_favorite_list);
+		setContentView(R.layout.activity_stock_financial_list);
 
 		mStockFilter.read();
 
@@ -103,7 +103,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 				mBroadcastReceiver,
 				new IntentFilter(Constants.ACTION_SERVICE_FINISHED));
 
-		mLoaderManager.initLoader(LOADER_ID_STOCK_FAVORITE_LIST, null, this);
+		mLoaderManager.initLoader(LOADER_ID_STOCK_FINANCIAL_LIST, null, this);
 
 		if (!Utility.isNetworkConnected(this)) {
 			Toast.makeText(this,
@@ -186,6 +186,14 @@ public class StockFavoriteListActivity extends ListActivity implements
 		}
 	}
 
+	@Override
+	void onServiceConnected() {
+		if (mOrionService != null) {
+			mOrionService.downloadFinancialData();
+			mOrionService.downloadShareBonus();
+		}
+	}
+
 	Long doInBackgroundLoad(Object... params) {
 		super.doInBackgroundLoad(params);
 		int execute = (Integer) params[0];
@@ -201,8 +209,8 @@ public class StockFavoriteListActivity extends ListActivity implements
 
 	void onPostExecuteLoad(Long result) {
 		super.onPostExecuteLoad(result);
-		startService(Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE,
-				Constants.EXECUTE_IMMEDIATE);
+//		startService(Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE,
+//				Constants.EXECUTE_IMMEDIATE);
 	}
 
 	@Override
@@ -222,29 +230,29 @@ public class StockFavoriteListActivity extends ListActivity implements
 		case R.id.net:
 			mSortOrderColumn = DatabaseContract.COLUMN_NET;
 			break;
-		case R.id.action_5min:
-			mSortOrderColumn = DatabaseContract.COLUMN_MIN5;
+		case R.id.roe:
+			mSortOrderColumn = DatabaseContract.COLUMN_ROE;
 			break;
-		case R.id.action_15min:
-			mSortOrderColumn = DatabaseContract.COLUMN_MIN15;
+		case R.id.valuation:
+			mSortOrderColumn = DatabaseContract.COLUMN_VALUATION;
 			break;
-		case R.id.action_30min:
-			mSortOrderColumn = DatabaseContract.COLUMN_MIN30;
+		case R.id.discount:
+			mSortOrderColumn = DatabaseContract.COLUMN_DISCOUNT;
 			break;
-		case R.id.action_60min:
-			mSortOrderColumn = DatabaseContract.COLUMN_MIN60;
+		case R.id.pe:
+			mSortOrderColumn = DatabaseContract.COLUMN_PE;
 			break;
-		case R.id.action_day:
-			mSortOrderColumn = DatabaseContract.COLUMN_DAY;
+		case R.id.pb:
+			mSortOrderColumn = DatabaseContract.COLUMN_PB;
 			break;
-		case R.id.action_week:
-			mSortOrderColumn = DatabaseContract.COLUMN_WEEK;
+		case R.id.dividend:
+			mSortOrderColumn = DatabaseContract.COLUMN_DIVIDEND;
 			break;
-		case R.id.action_month:
-			mSortOrderColumn = DatabaseContract.COLUMN_MONTH;
+		case R.id.yield:
+			mSortOrderColumn = DatabaseContract.COLUMN_YIELD;
 			break;
-		case R.id.hold:
-			mSortOrderColumn = DatabaseContract.COLUMN_HOLD;
+		case R.id.delta:
+			mSortOrderColumn = DatabaseContract.COLUMN_DELTA;
 			break;
 		default:
 			mSortOrderColumn = DatabaseContract.COLUMN_CODE;
@@ -279,14 +287,14 @@ public class StockFavoriteListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewNameCode, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewPrice, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewNet, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewMin5, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewMin15, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewMin30, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewMin60, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewDay, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewWeek, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewMonth, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewHold, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewRoe, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewValuation, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewDiscount, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewPE, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewPB, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewDividend, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewYield, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewDelta, mHeaderTextDefaultColor);
 	}
 
 	void setVisibility(String key, TextView textView) {
@@ -323,51 +331,44 @@ public class StockFavoriteListActivity extends ListActivity implements
 			mTextViewNet.setOnClickListener(this);
 		}
 
-		mTextViewMin5 = (TextView) findViewById(R.id.action_5min);
-		if (mTextViewMin5 != null) {
-			mTextViewMin5.setOnClickListener(this);
-			setVisibility(Constants.PERIOD_MIN5, mTextViewMin5);
+		mTextViewRoe = (TextView) findViewById(R.id.roe);
+		if (mTextViewRoe != null) {
+			mTextViewRoe.setOnClickListener(this);
 		}
 
-		mTextViewMin15 = (TextView) findViewById(R.id.action_15min);
-		if (mTextViewMin15 != null) {
-			mTextViewMin15.setOnClickListener(this);
-			setVisibility(Constants.PERIOD_MIN15, mTextViewMin15);
+		mTextViewValuation = (TextView) findViewById(R.id.valuation);
+		if (mTextViewValuation != null) {
+			mTextViewValuation.setOnClickListener(this);
 		}
 
-		mTextViewMin30 = (TextView) findViewById(R.id.action_30min);
-		if (mTextViewMin30 != null) {
-			mTextViewMin30.setOnClickListener(this);
-			setVisibility(Constants.PERIOD_MIN30, mTextViewMin30);
+		mTextViewDiscount = (TextView) findViewById(R.id.discount);
+		if (mTextViewDiscount != null) {
+			mTextViewDiscount.setOnClickListener(this);
 		}
 
-		mTextViewMin60 = (TextView) findViewById(R.id.action_60min);
-		if (mTextViewMin60 != null) {
-			mTextViewMin60.setOnClickListener(this);
-			setVisibility(Constants.PERIOD_MIN60, mTextViewMin60);
+		mTextViewPE = (TextView) findViewById(R.id.pe);
+		if (mTextViewPE != null) {
+			mTextViewPE.setOnClickListener(this);
 		}
 
-		mTextViewDay = (TextView) findViewById(R.id.action_day);
-		if (mTextViewDay != null) {
-			mTextViewDay.setOnClickListener(this);
-			setVisibility(Constants.PERIOD_DAY, mTextViewDay);
+		mTextViewPB = (TextView) findViewById(R.id.pb);
+		if (mTextViewPB != null) {
+			mTextViewPB.setOnClickListener(this);
 		}
 
-		mTextViewWeek = (TextView) findViewById(R.id.action_week);
-		if (mTextViewWeek != null) {
-			mTextViewWeek.setOnClickListener(this);
-			setVisibility(Constants.PERIOD_WEEK, mTextViewWeek);
+		mTextViewDividend = (TextView) findViewById(R.id.dividend);
+		if (mTextViewDividend != null) {
+			mTextViewDividend.setOnClickListener(this);
 		}
 
-		mTextViewMonth = (TextView) findViewById(R.id.action_month);
-		if (mTextViewMonth != null) {
-			mTextViewMonth.setOnClickListener(this);
-			setVisibility(Constants.PERIOD_MONTH, mTextViewMonth);
+		mTextViewYield = (TextView) findViewById(R.id.yield);
+		if (mTextViewYield != null) {
+			mTextViewYield.setOnClickListener(this);
 		}
 
-		mTextViewHold = (TextView) findViewById(R.id.hold);
-		if (mTextViewHold != null) {
-			mTextViewHold.setOnClickListener(this);
+		mTextViewDelta = (TextView) findViewById(R.id.delta);
+		if (mTextViewDelta != null) {
+			mTextViewDelta.setOnClickListener(this);
 		}
 
 		if (mSortOrder.contains(DatabaseContract.COLUMN_CODE)) {
@@ -376,22 +377,22 @@ public class StockFavoriteListActivity extends ListActivity implements
 			setHeaderTextColor(mTextViewPrice, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_NET)) {
 			setHeaderTextColor(mTextViewNet, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MIN5)) {
-			setHeaderTextColor(mTextViewMin15, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MIN15)) {
-			setHeaderTextColor(mTextViewMin15, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MIN30)) {
-			setHeaderTextColor(mTextViewMin30, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MIN60)) {
-			setHeaderTextColor(mTextViewMin60, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_DAY)) {
-			setHeaderTextColor(mTextViewDay, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_WEEK)) {
-			setHeaderTextColor(mTextViewWeek, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MONTH)) {
-			setHeaderTextColor(mTextViewMonth, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_HOLD)) {
-			setHeaderTextColor(mTextViewHold, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_ROE)) {
+			setHeaderTextColor(mTextViewRoe, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_VALUATION)) {
+			setHeaderTextColor(mTextViewValuation, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_DISCOUNT)) {
+			setHeaderTextColor(mTextViewDiscount, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PE)) {
+			setHeaderTextColor(mTextViewPE, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PB)) {
+			setHeaderTextColor(mTextViewPB, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_DIVIDEND)) {
+			setHeaderTextColor(mTextViewDividend, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_YIELD)) {
+			setHeaderTextColor(mTextViewYield, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_DELTA)) {
+			setHeaderTextColor(mTextViewDelta, mHeaderTextHighlightColor);
 		} else {
 		}
 	}
@@ -402,14 +403,14 @@ public class StockFavoriteListActivity extends ListActivity implements
 		int[] mLeftTo = new int[] { R.id.name, R.id.code };
 
 		String[] mRightFrom = new String[] { DatabaseContract.COLUMN_PRICE,
-				DatabaseContract.COLUMN_NET, DatabaseContract.COLUMN_MIN5,
-				DatabaseContract.COLUMN_MIN15, DatabaseContract.COLUMN_MIN30,
-				DatabaseContract.COLUMN_MIN60, DatabaseContract.COLUMN_DAY,
-				DatabaseContract.COLUMN_WEEK, DatabaseContract.COLUMN_MONTH,
-				DatabaseContract.COLUMN_HOLD };
-		int[] mRightTo = new int[] { R.id.price, R.id.net, R.id.type_5min,
-				R.id.type_15min, R.id.type_30min, R.id.type_60min,
-				R.id.type_day, R.id.type_week, R.id.type_month, R.id.hold };
+				DatabaseContract.COLUMN_NET, DatabaseContract.COLUMN_ROE,
+				DatabaseContract.COLUMN_VALUATION,
+				DatabaseContract.COLUMN_DISCOUNT, DatabaseContract.COLUMN_PE,
+				DatabaseContract.COLUMN_PB, DatabaseContract.COLUMN_DIVIDEND,
+				DatabaseContract.COLUMN_YIELD, DatabaseContract.COLUMN_DELTA };
+		int[] mRightTo = new int[] { R.id.price, R.id.net, R.id.roe,
+				R.id.valuation, R.id.discount, R.id.pe, R.id.pb, R.id.dividend,
+				R.id.yield, R.id.delta };
 
 		mLeftListView = (ListView) findViewById(R.id.left_listview);
 		mLeftAdapter = new SimpleCursorAdapter(this,
@@ -423,7 +424,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 
 		mRightListView = (ListView) findViewById(R.id.right_listview);
 		mRightAdapter = new SimpleCursorAdapter(this,
-				R.layout.activity_stock_favorite_list_right_item, null,
+				R.layout.activity_stock_financial_list_right_item, null,
 				mRightFrom, mRightTo, 0);
 		if ((mRightListView != null) && (mRightAdapter != null)) {
 			mRightAdapter.setViewBinder(new CustomViewBinder());
@@ -434,7 +435,8 @@ public class StockFavoriteListActivity extends ListActivity implements
 	}
 
 	void restartLoader() {
-		mLoaderManager.restartLoader(LOADER_ID_STOCK_FAVORITE_LIST, null, this);
+		mLoaderManager
+				.restartLoader(LOADER_ID_STOCK_FINANCIAL_LIST, null, this);
 	}
 
 	@Override
@@ -463,7 +465,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 		CursorLoader loader = null;
 
 		switch (id) {
-		case LOADER_ID_STOCK_FAVORITE_LIST:
+		case LOADER_ID_STOCK_FINANCIAL_LIST:
 			selection = DatabaseContract.Stock.COLUMN_MARK + " = '"
 					+ Constants.STOCK_FLAG_MARK_FAVORITE + "'";
 
@@ -490,7 +492,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 		}
 
 		switch (loader.getId()) {
-		case LOADER_ID_STOCK_FAVORITE_LIST:
+		case LOADER_ID_STOCK_FINANCIAL_LIST:
 			mLeftAdapter.swapCursor(cursor);
 			mRightAdapter.swapCursor(cursor);
 

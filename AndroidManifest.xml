@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.android.orion"
-    android:versionCode="472"
-    android:versionName="1.1.34_20200205" >
+    android:versionCode="473"
+    android:versionName="1.1.34_20200206" >
 
     <uses-sdk
         android:minSdkVersion="19"
@@ -71,8 +71,8 @@
             android:launchMode="singleTask" >
         </activity>
         <activity
-            android:name="com.android.orion.StockListActivity"
-            android:label="@string/stock_list"
+            android:name="com.android.orion.StockFinancialListActivity"
+            android:label="@string/financial_list"
             android:launchMode="singleTask" >
         </activity>
         <activity
