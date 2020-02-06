@@ -12,7 +12,6 @@ import java.util.concurrent.TimeUnit;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -42,7 +41,6 @@ public abstract class StockDataProvider extends StockAnalyzer {
 	private static final int MSG_DOWNLOAD_INFORMATION = 1;
 
 	Calendar mNotifyCalendar = Calendar.getInstance();
-	// WifiLockManager mWifiLockManager = null;
 	RequestQueue mRequestQueue;
 	Set<String> mCurrentRequests = new HashSet<String>();
 
@@ -106,10 +104,6 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 		DelayQueueConsumer queueConsumer = new DelayQueueConsumer();
 		new Thread(queueConsumer).start();
-		/*
-		 * if (mWifiLockManager == null) { mWifiLockManager = new
-		 * WifiLockManager(mContext); }
-		 */
 	}
 
 	void sendBroadcast(String action, int serviceType, long stockID) {
@@ -173,6 +167,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 						urlString);
 				downloader.setStock(stock);
 				mRequestQueue.add(downloader.mStringRequest);
+				// addToDelayQueue(downloader.mStringRequest);
 			}
 		}
 	}
@@ -195,6 +190,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			Log.d(TAG, "getStockHSAURLString:" + urlString);
 			StockHSADownloader downloader = new StockHSADownloader(urlString);
 			mRequestQueue.add(downloader.mStringRequest);
+			// addToDelayQueue(downloader.mStringRequest);
 			mStockDatabaseManager.saveSetting(Setting.KEY_STOCK_HSA_UPDATED,
 					Utility.getCurrentDateString());
 		}
@@ -267,8 +263,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
 					urlString);
 			downloader.setStock(stock);
 			downloader.setFinancialData(financialData);
-			// mRequestQueue.add(downloader.mStringRequest);
-			addToDelayQueue(downloader.mStringRequest);
+			mRequestQueue.add(downloader.mStringRequest);
+			// addToDelayQueue(downloader.mStringRequest);
 		}
 	}
 
@@ -304,8 +300,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
 					urlString);
 			downloader.setStock(stock);
 			downloader.setShareBonus(shareBonus);
-			// mRequestQueue.add(downloader.mStringRequest);
-			addToDelayQueue(downloader.mStringRequest);
+			mRequestQueue.add(downloader.mStringRequest);
+			// addToDelayQueue(downloader.mStringRequest);
 		}
 	}
 
@@ -336,6 +332,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			IPODownloader downloader = new IPODownloader(urlString);
 			downloader.setIPO(new IPO());
 			mRequestQueue.add(downloader.mStringRequest);
+			// addToDelayQueue(downloader.mStringRequest);
 		}
 	}
 
@@ -376,8 +373,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			StockInformationDownloader downloader = new StockInformationDownloader(
 					urlString);
 			downloader.setStock(stock);
-			// mRequestQueue.add(downloader.mStringRequest);
-			addToDelayQueue(downloader.mStringRequest);
+			mRequestQueue.add(downloader.mStringRequest);
+			// addToDelayQueue(downloader.mStringRequest);
 		}
 	}
 
@@ -412,6 +409,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 						urlString);
 				downloader.setStock(stock);
 				mRequestQueue.add(downloader.mStringRequest);
+				// addToDelayQueue(downloader.mStringRequest);
 			}
 		}
 	}
@@ -457,8 +455,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				downloader.setStock(stock);
 				downloader.setStockData(stockData);
 				downloader.setExecuteType(executeType);
-				// mRequestQueue.add(downloader.mStringRequest);
-				addToDelayQueue(downloader.mStringRequest);
+				mRequestQueue.add(downloader.mStringRequest);
+				// addToDelayQueue(downloader.mStringRequest);
 			}
 		}
 	}
@@ -494,6 +492,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				downloader.setStockData(stockData);
 				downloader.setExecuteType(executeType);
 				mRequestQueue.add(downloader.mStringRequest);
+				// addToDelayQueue(downloader.mStringRequest);
 			}
 		}
 	}
@@ -649,6 +648,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
 							period);
 				} else if ((executeType & Constants.EXECUTE_SCHEDULE_MIN5) == Constants.EXECUTE_SCHEDULE_MIN5) {
 					result = 1;
+				} else if ((executeType & Constants.EXECUTE_IMMEDIATE) == Constants.EXECUTE_IMMEDIATE) {
+					result = defaultValue;
 				}
 			}
 		} catch (Exception e) {
@@ -951,11 +952,6 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			removeFromCurrrentRequests(mStringRequest.getUrl());
 			handleResponseFinancialData(mStock, mFinancialData, response);
 
-			// setupStockFinancialData(mStock);
-			// setupStockShareBonus(mStock);
-			// mStockDatabaseManager.updateStock(mStock,
-			// mStock.getContentValuesFinancial());
-
 			sendBroadcast(Constants.ACTION_SERVICE_FINISHED,
 					Constants.SERVICE_DATABASE_UPDATE, mStock.getId());
 		}
@@ -991,11 +987,6 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		public void handleResponse(String response) {
 			removeFromCurrrentRequests(mStringRequest.getUrl());
 			handleResponseShareBonus(mStock, mShareBonus, response);
-			//
-			// setupStockFinancialData(mStock);
-			// setupStockShareBonus(mStock);
-			// mStockDatabaseManager.updateStock(mStock,
-			// mStock.getContentValuesFinancial());
 
 			sendBroadcast(Constants.ACTION_SERVICE_FINISHED,
 					Constants.SERVICE_DATABASE_UPDATE, mStock.getId());
@@ -1028,35 +1019,6 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 			sendBroadcast(Constants.ACTION_SERVICE_FINISHED,
 					Constants.SERVICE_DATABASE_UPDATE, 0);
-		}
-	}
-
-	public class DownloadFinancialAsyncTask extends
-			AsyncTask<String, Integer, String> {
-
-		@Override
-		protected String doInBackground(String... params) {
-			int counter = 0;
-			for (Stock stock : mStockArrayMapFavorite.values()) {
-				try {
-					downloadFinancialData(stock);
-					counter++;
-					downloadShareBonus(stock);
-					counter++;
-					if ((counter % 5) == 0) {
-						Thread.sleep((long) (Math.random() * Constants.DEFAULT_DOWNLOAD_INTERVAL));
-					}
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(String s) {
-			super.onPostExecute(s);
 		}
 	}
 

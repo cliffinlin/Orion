@@ -45,9 +45,9 @@ public class StockAnalyzer extends StockManager {
 			setupStockShareBonus(stock);
 
 			loadStockDataList(stock, period, stockDataList);
-			if (stockDataList.size() < Constants.STOCK_VERTEX_TYPING_SIZE) {
-				return;
-			}
+			// if (stockDataList.size() < Constants.STOCK_VERTEX_TYPING_SIZE) {
+			// return;
+			// }
 
 			analyzeStockData(stock, period, stockDataList);
 
