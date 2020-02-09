@@ -10,6 +10,7 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -188,10 +189,17 @@ public class StockFinancialListActivity extends ListActivity implements
 
 	@Override
 	void onServiceConnected() {
-		if (mOrionService != null) {
-			mOrionService.downloadFinancialData();
-			mOrionService.downloadShareBonus();
-		}
+		Handler handler = new Handler();
+		handler.post(new Runnable() {
+
+			@Override
+			public void run() {
+				if (mOrionService != null) {
+					mOrionService.downloadFinancialData();
+					mOrionService.downloadShareBonus();
+				}
+			}
+		});
 	}
 
 	Long doInBackgroundLoad(Object... params) {
@@ -209,8 +217,8 @@ public class StockFinancialListActivity extends ListActivity implements
 
 	void onPostExecuteLoad(Long result) {
 		super.onPostExecuteLoad(result);
-//		startService(Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE,
-//				Constants.EXECUTE_IMMEDIATE);
+		// startService(Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE,
+		// Constants.EXECUTE_IMMEDIATE);
 	}
 
 	@Override

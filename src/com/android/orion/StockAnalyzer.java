@@ -66,10 +66,12 @@ public class StockAnalyzer extends StockManager {
 		FinancialData financialData = new FinancialData();
 		financialData.setStockId(stock.getId());
 		mStockDatabaseManager.getFinancialData(stock.getId(), financialData);
+
 		stock.setupRoe(financialData);
+		stock.setupValuation(financialData);
 		stock.setupPE(financialData);
 		stock.setupPB(financialData);
-		stock.setupValuation(financialData);
+		stock.setupDelta(financialData);
 	}
 
 	void setupStockShareBonus(Stock stock) {
@@ -100,6 +102,7 @@ public class StockAnalyzer extends StockManager {
 			}
 
 			totalDivident += shareBonus.getDividend();
+
 			stock.setDividend(Utility.Round(totalDivident,
 					Constants.DOUBLE_FIXED_DECIMAL));
 			stock.setupYield();
@@ -316,7 +319,7 @@ public class StockAnalyzer extends StockManager {
 
 		stock.setAction(period, action);
 
-		stock.setupYield();
+		// stock.setupYield();
 	}
 
 	private void updateDatabase(Stock stock, String period,

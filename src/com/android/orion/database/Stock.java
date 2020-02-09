@@ -200,7 +200,7 @@ public class Stock extends DatabaseTable {
 		} else if (period.equals(Constants.PERIOD_YEAR)) {
 			contentValues.put(DatabaseContract.COLUMN_YEAR, mActionYear);
 		}
-		
+
 		contentValues.put(DatabaseContract.COLUMN_TOTAL_SHARE, mTotalShare);
 		contentValues.put(DatabaseContract.COLUMN_ROE, mRoe);
 
@@ -942,22 +942,23 @@ public class Stock extends DatabaseTable {
 		if (financialData == null) {
 			return;
 		}
-		
-		if (financialData.getBookValuePerShare() == 0) {
-			return;
-		}
 
 		if (mTotalShare == 0) {
 			return;
 		}
-
-		mRoe = financialData.getNetProfit() / (mTotalShare * financialData.getBookValuePerShare());
-
-		if (mRoe <= 0) {
+		
+		double netProfitPerShare = financialData.getNetProfit() / mTotalShare;
+		if (netProfitPerShare == 0) {
+			return;
+		}
+		
+		double bookValuePerShare = financialData.getBookValuePerShare();
+		if (bookValuePerShare == 0) {
 			return;
 		}
 
-		mRoe = Utility.Round(100.0 * mRoe, Constants.DOUBLE_FIXED_DECIMAL);
+		mRoe = Utility.Round(100.0 * netProfitPerShare / bookValuePerShare,
+				Constants.DOUBLE_FIXED_DECIMAL);
 	}
 
 	public void setupPE(FinancialData financialData) {
@@ -969,13 +970,12 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-		double earningsPerShare = financialData.getNetProfit() / mTotalShare;
-
-		if (earningsPerShare <= 0) {
+		double netProfitPerShare = financialData.getNetProfit() / mTotalShare;
+		if (netProfitPerShare == 0) {
 			return;
 		}
 
-		mPE = Utility.Round(mPrice / earningsPerShare,
+		mPE = Utility.Round(mPrice / netProfitPerShare,
 				Constants.DOUBLE_FIXED_DECIMAL);
 	}
 
@@ -985,7 +985,6 @@ public class Stock extends DatabaseTable {
 		}
 
 		double bookValuePerShare = financialData.getBookValuePerShare();
-
 		if (bookValuePerShare == 0) {
 			return;
 		}
@@ -1009,11 +1008,24 @@ public class Stock extends DatabaseTable {
 
 		mYield = Utility.Round(100.0 * mDividend / 10.0 / mPrice,
 				Constants.DOUBLE_FIXED_DECIMAL);
+	}
 
-		if (mYield > 0) {
-			mDelta = Utility
-					.Round(mPE / mYield, Constants.DOUBLE_FIXED_DECIMAL);
+	public void setupDelta(FinancialData financialData) {
+		if (financialData == null) {
+			return;
 		}
+
+		if ((mDividend == 0) || (mTotalShare == 0)) {
+			return;
+		}
+
+		double netProfitPerShare = financialData.getNetProfit() / mTotalShare;
+		if (netProfitPerShare == 0) {
+			return;
+		}
+
+		mDelta = Utility.Round((100.0 * mDividend / 10.0) / netProfitPerShare,
+				Constants.DOUBLE_FIXED_DECIMAL);
 	}
 
 	public void setupValuation(FinancialData financialData) {
@@ -1025,15 +1037,20 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-		double netProfit = financialData.getNetProfit();
+		double netProfitPerShare = financialData.getNetProfit() / mTotalShare;
+		if (netProfitPerShare == 0) {
+			return;
+		}
 
-		mValuation = Utility.Round(netProfit / mTotalShare
+		mValuation = Utility.Round(netProfitPerShare
 				/ Constants.RISK_FREE_INTEREST_RATE,
 				Constants.DOUBLE_FIXED_DECIMAL);
 
-		if (mValuation > 0) {
-			mDiscount = Utility.Round(mPrice / mValuation,
-					Constants.DOUBLE_FIXED_DECIMAL);
+		if (mValuation == 0) {
+			return;
 		}
+
+		mDiscount = Utility.Round(mPrice / mValuation,
+				Constants.DOUBLE_FIXED_DECIMAL);
 	}
 }

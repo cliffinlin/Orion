@@ -720,7 +720,6 @@ public class StockDatabaseManager extends DatabaseManager {
 				}
 			}
 
-			stock.setupYield();
 			stock.setHold(hold);
 			stock.setProfit(profit);
 			stock.setupCost(value);

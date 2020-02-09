@@ -414,7 +414,7 @@ public class SinaFinance extends StockDataProvider {
 					stock.setValue(Long.valueOf(stockInfo[5]));
 				}
 
-				stock.setupYield();
+				// stock.setupYield();
 			}
 
 			if (!mStockDatabaseManager.isStockExist(stock)) {
