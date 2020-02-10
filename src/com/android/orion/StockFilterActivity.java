@@ -18,6 +18,7 @@ public class StockFilterActivity extends DatabaseActivity implements
 
 	CheckBox mCheckBox;
 
+	EditText mEditTextRoe;
 	EditText mEditTextDiscount;
 	EditText mEditTextPE;
 	EditText mEditTextPB;
@@ -43,6 +44,7 @@ public class StockFilterActivity extends DatabaseActivity implements
 	void initView() {
 		mCheckBox = (CheckBox) findViewById(R.id.checkbox);
 
+		mEditTextRoe = (EditText) findViewById(R.id.edittext_roe);
 		mEditTextDiscount = (EditText) findViewById(R.id.edittext_discount);
 		mEditTextPE = (EditText) findViewById(R.id.edittext_pe);
 		mEditTextPB = (EditText) findViewById(R.id.edittext_pb);
@@ -55,6 +57,7 @@ public class StockFilterActivity extends DatabaseActivity implements
 
 		mCheckBox.setOnClickListener(this);
 
+		mEditTextRoe.setOnClickListener(this);
 		mEditTextDiscount.setOnClickListener(this);
 		mEditTextPE.setOnClickListener(this);
 		mEditTextPB.setOnClickListener(this);
@@ -70,6 +73,7 @@ public class StockFilterActivity extends DatabaseActivity implements
 	}
 
 	void updateEditText() {
+		mEditTextRoe.setText(mStockFilter.getRoe());
 		mEditTextDiscount.setText(mStockFilter.getDiscount());
 		mEditTextPE.setText(mStockFilter.getPE());
 		mEditTextPB.setText(mStockFilter.getPB());
@@ -77,6 +81,7 @@ public class StockFilterActivity extends DatabaseActivity implements
 		mEditTextYield.setText(mStockFilter.getYield());
 		mEditTextDelta.setText(mStockFilter.getDelta());
 
+		mEditTextRoe.setEnabled(mStockFilter.getEnable());
 		mEditTextDiscount.setEnabled(mStockFilter.getEnable());
 		mEditTextPE.setEnabled(mStockFilter.getEnable());
 		mEditTextPB.setEnabled(mStockFilter.getEnable());
@@ -116,6 +121,7 @@ public class StockFilterActivity extends DatabaseActivity implements
 		case R.id.button_ok:
 			mStockFilter.setEnable(mCheckBox.isChecked());
 
+			mStockFilter.setRoe(mEditTextRoe.getText().toString());
 			mStockFilter.setDiscount(mEditTextDiscount.getText().toString());
 			mStockFilter.setPE(mEditTextPE.getText().toString());
 			mStockFilter.setPB(mEditTextPB.getText().toString());

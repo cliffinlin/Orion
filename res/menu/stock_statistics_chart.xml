@@ -16,6 +16,11 @@
         android:showAsAction="never"
         android:title="@string/action_order_by_pe"/>
     <item
+        android:id="@+id/action_order_by_roe"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_order_by_roe"/>
+    <item
         android:id="@+id/action_order_by_yield"
         android:orderInCategory="100"
         android:showAsAction="never"

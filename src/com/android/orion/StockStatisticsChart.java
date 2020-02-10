@@ -17,7 +17,8 @@ public class StockStatisticsChart {
 
 	ArrayList<String> mXValues = null;
 
-	ArrayList<BarEntry> mPEEntryList = null;
+	ArrayList<BarEntry> mPeEntryList = null;
+	ArrayList<Entry> mRoeEntryList = null;
 	ArrayList<Entry> mYieldEntryList = null;
 	ArrayList<Entry> mDeltaEntryList = null;
 
@@ -28,8 +29,12 @@ public class StockStatisticsChart {
 			mXValues = new ArrayList<String>();
 		}
 
-		if (mPEEntryList == null) {
-			mPEEntryList = new ArrayList<BarEntry>();
+		if (mPeEntryList == null) {
+			mPeEntryList = new ArrayList<BarEntry>();
+		}
+
+		if (mRoeEntryList == null) {
+			mRoeEntryList = new ArrayList<Entry>();
 		}
 
 		if (mYieldEntryList == null) {
@@ -51,12 +56,19 @@ public class StockStatisticsChart {
 		LineData lineData = new LineData(mXValues);
 		BarData barData = new BarData(mXValues);
 
-		BarDataSet peDataSet = new BarDataSet(mPEEntryList, "pe");
+		BarDataSet peDataSet = new BarDataSet(mPeEntryList, "pe");
 		peDataSet.setBarSpacePercent(40f);
 		peDataSet.setIncreasingColor(Color.rgb(255, 50, 50));
 		peDataSet.setDecreasingColor(Color.rgb(50, 128, 50));
 		peDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		barData.addDataSet(peDataSet);
+
+		LineDataSet roeDataSet = new LineDataSet(mRoeEntryList, "roe");
+		roeDataSet.setColor(Color.GREEN);
+		roeDataSet.setCircleColor(Color.GREEN);
+		roeDataSet.setCircleSize(3f);
+		roeDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+		lineData.addDataSet(roeDataSet);
 
 		LineDataSet yieldDataSet = new LineDataSet(mYieldEntryList, "yield");
 		yieldDataSet.setColor(Color.YELLOW);
@@ -78,7 +90,9 @@ public class StockStatisticsChart {
 
 	void clear() {
 		mXValues.clear();
-		mPEEntryList.clear();
+
+		mPeEntryList.clear();
+		mRoeEntryList.clear();
 		mYieldEntryList.clear();
 		mDeltaEntryList.clear();
 	}

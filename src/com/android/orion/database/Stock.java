@@ -975,7 +975,7 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-		mPE = Utility.Round(mPrice / netProfitPerShare,
+		mPE = Utility.Round(100.0 * netProfitPerShare / mPrice,
 				Constants.DOUBLE_FIXED_DECIMAL);
 	}
 
@@ -1024,7 +1024,7 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-		mDelta = Utility.Round((100.0 * mDividend / 10.0) / netProfitPerShare,
+		mDelta = Utility.Round(netProfitPerShare / (mDividend / 10.0),
 				Constants.DOUBLE_FIXED_DECIMAL);
 	}
 
@@ -1043,7 +1043,7 @@ public class Stock extends DatabaseTable {
 		}
 
 		mValuation = Utility.Round(netProfitPerShare
-				/ Constants.RISK_FREE_INTEREST_RATE,
+				/ Constants.RISK_INTEREST_RATE,
 				Constants.DOUBLE_FIXED_DECIMAL);
 
 		if (mValuation == 0) {

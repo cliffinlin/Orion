@@ -217,8 +217,6 @@ public class StockFinancialListActivity extends ListActivity implements
 
 	void onPostExecuteLoad(Long result) {
 		super.onPostExecuteLoad(result);
-		// startService(Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE,
-		// Constants.EXECUTE_IMMEDIATE);
 	}
 
 	@Override

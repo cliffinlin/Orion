@@ -11,6 +11,7 @@ public class Setting extends DatabaseTable {
 	public static final String KEY_SORT_ORDER_STOCK_DEAL_LIST = "sort_order_stock_deal_list";
 
 	public static final String KEY_STOCK_FILTER_ENABLE = "key_stock_filter_enable";
+	public static final String KEY_STOCK_FILTER_ROE = "key_stock_filter_roe";
 	public static final String KEY_STOCK_FILTER_DISCOUNT = "key_stock_filter_discount";
 	public static final String KEY_STOCK_FILTER_PE = "key_stock_filter_pe";
 	public static final String KEY_STOCK_FILTER_PB = "key_stock_filter_pb";

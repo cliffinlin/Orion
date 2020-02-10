@@ -167,6 +167,12 @@ public class StockStatisticsChartListActivity extends OrionBaseActivity
 			restartLoader();
 			return true;
 
+		case R.id.action_order_by_roe:
+			mSortOrder = DatabaseContract.COLUMN_ROE
+					+ DatabaseContract.ORDER_DIRECTION_DESC;
+			restartLoader();
+			return true;
+
 		case R.id.action_order_by_yield:
 			mSortOrder = DatabaseContract.COLUMN_YIELD
 					+ DatabaseContract.ORDER_DIRECTION_DESC;
@@ -364,13 +370,16 @@ public class StockStatisticsChartListActivity extends OrionBaseActivity
 
 					BarEntry peEntry = new BarEntry((float) stock.getPE(),
 							index);
-					stockDataChart.mPEEntryList.add(peEntry);
+					stockDataChart.mPeEntryList.add(peEntry);
 
-					Entry yieldEntry = new BarEntry((float) stock.getYield(),
+					Entry roeEntry = new Entry((float) stock.getRoe(), index);
+					stockDataChart.mRoeEntryList.add(roeEntry);
+
+					Entry yieldEntry = new Entry((float) stock.getYield(),
 							index);
 					stockDataChart.mYieldEntryList.add(yieldEntry);
 
-					Entry deltaEntry = new BarEntry((float) stock.getDelta(),
+					Entry deltaEntry = new Entry((float) stock.getDelta(),
 							index);
 					stockDataChart.mDeltaEntryList.add(deltaEntry);
 
