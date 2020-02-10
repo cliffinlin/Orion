@@ -332,10 +332,6 @@ public class FinancialData extends DatabaseTable {
 			return result;
 		}
 		
-		if (getEarningsPerShare() == 0) {
-			return result;
-		}
-		
 		if (getNetProfit() == 0) {
 			return result;
 		}

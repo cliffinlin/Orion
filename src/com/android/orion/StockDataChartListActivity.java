@@ -545,8 +545,13 @@ public class StockDataChartListActivity extends OrionBaseActivity implements
 						if (financialData != null) {
 							bookValuePerShare = (float) financialData
 									.getBookValuePerShare();
-							earningsPerShare = (float) (financialData
-									.getEarningsPerShare() / Constants.RISK_INTEREST_RATE);
+							double netProfitPerShare = 0;
+							if (mStock.getTotalShare() != 0) {
+								netProfitPerShare = financialData
+										.getNetProfit()
+										/ mStock.getTotalShare();
+							}
+							earningsPerShare = (float) (netProfitPerShare / Constants.RISK_INTEREST_RATE);
 						} else {
 							bookValuePerShare = 0;
 							earningsPerShare = 0;

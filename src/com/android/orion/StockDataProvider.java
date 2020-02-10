@@ -348,15 +348,13 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 		mStockDatabaseManager.getStock(stock);
 
-		if (stock.getCreated().contains(Utility.getCurrentDateString())) {
-			if (TextUtils.isEmpty(stock.getClases())) {
-				needDownload = true;
-			} else if (TextUtils.isEmpty(stock.getPinyin())) {
-				needDownload = true;
-			} else if (stock.getClases().contains(Constants.STOCK_CLASSES_A)
-					&& (stock.getTotalShare() == 0)) {
-				needDownload = true;
-			}
+		if (TextUtils.isEmpty(stock.getClases())) {
+			needDownload = true;
+		} else if (TextUtils.isEmpty(stock.getPinyin())) {
+			needDownload = true;
+		} else if (stock.getClases().contains(Constants.STOCK_CLASSES_A)
+				&& (stock.getTotalShare() == 0)) {
+			needDownload = true;
 		}
 
 		if (!needDownload) {
@@ -439,20 +437,22 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			return;
 		}
 
-		stockData.setStockId(stock.getId());
-
-		len = getDownloadStockDataLength(executeType, stockData);
-		if (len > 0) {
-			urlString = getStockDataHistoryURLString(stock, stockData, len);
-			if (addToCurrentRequests(urlString)) {
-				Log.d(TAG, "getStockDataHistoryURLString:" + urlString);
-				StockDataHistoryDownloader downloader = new StockDataHistoryDownloader(
-						urlString);
-				downloader.setStock(stock);
-				downloader.setStockData(stockData);
-				downloader.setExecuteType(executeType);
-				mRequestQueue.add(downloader.mStringRequest);
-				// addToDelayQueue(downloader.mStringRequest);
+		if (executeType == Constants.EXECUTE_IMMEDIATE
+				|| executeTypeOf(executeType, Constants.EXECUTE_SCHEDULE)) {
+			stockData.setStockId(stock.getId());
+			len = getDownloadStockDataLength(executeType, stockData);
+			if (len > 0) {
+				urlString = getStockDataHistoryURLString(stock, stockData, len);
+				if (addToCurrentRequests(urlString)) {
+					Log.d(TAG, "getStockDataHistoryURLString:" + urlString);
+					StockDataHistoryDownloader downloader = new StockDataHistoryDownloader(
+							urlString);
+					downloader.setStock(stock);
+					downloader.setStockData(stockData);
+					downloader.setExecuteType(executeType);
+					mRequestQueue.add(downloader.mStringRequest);
+					// addToDelayQueue(downloader.mStringRequest);
+				}
 			}
 		}
 	}
