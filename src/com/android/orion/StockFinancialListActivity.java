@@ -10,7 +10,6 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,8 +34,8 @@ public class StockFinancialListActivity extends ListActivity implements
 		OnItemLongClickListener, OnClickListener {
 
 	public static final String ACTION_STOCK_ID = "orion.intent.action.ACTION_STOCK_ID";
-
 	public static final int LOADER_ID_STOCK_FINANCIAL_LIST = 0;
+	public static final int EXECUTE_STOCK_FINANCIAL_LOAD = 1;
 
 	public static final int REQUEST_CODE_STOCK_INSERT = 0;
 	public static final int REQUEST_CODE_STOCK_FILTER = 1;
@@ -189,17 +188,7 @@ public class StockFinancialListActivity extends ListActivity implements
 
 	@Override
 	void onServiceConnected() {
-		Handler handler = new Handler();
-		handler.post(new Runnable() {
-
-			@Override
-			public void run() {
-				if (mOrionService != null) {
-					mOrionService.downloadFinancialData();
-					mOrionService.downloadShareBonus();
-				}
-			}
-		});
+		startLoadTask(EXECUTE_STOCK_FINANCIAL_LOAD);
 	}
 
 	Long doInBackgroundLoad(Object... params) {
@@ -207,6 +196,12 @@ public class StockFinancialListActivity extends ListActivity implements
 		int execute = (Integer) params[0];
 
 		switch (execute) {
+		case EXECUTE_STOCK_FINANCIAL_LOAD:
+			if (mOrionService != null) {
+				mOrionService.downloadFinancialData();
+				mOrionService.downloadShareBonus();
+			}
+			break;
 
 		default:
 			break;
