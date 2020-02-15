@@ -78,7 +78,7 @@ public class StockAnalyzer extends StockManager {
 		stock.setupPE(financialData);
 		stock.setupPB(financialData);
 		stock.setupDelta(financialData);
-		stock.setupNPSRate(financialDataList);
+		stock.setupRate(financialDataList);
 	}
 
 	void setupStockShareBonus(Stock stock) {

@@ -32,6 +32,15 @@
         android:textSize="18sp" />
 
     <TextView
+        android:id="@+id/rate"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/rate"
+        android:textSize="18sp" />
+
+    <TextView
         android:id="@+id/valuation"
         android:layout_width="80dp"
         android:layout_height="40dp"
@@ -92,15 +101,6 @@
         android:layout_weight="1"
         android:gravity="center"
         android:text="@string/delta"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/nps_rate"
-        android:layout_width="80dp"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/nps_rate"
         android:textSize="18sp" />
 
 </LinearLayout>

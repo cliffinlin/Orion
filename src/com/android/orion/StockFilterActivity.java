@@ -19,13 +19,16 @@ public class StockFilterActivity extends DatabaseActivity implements
 	CheckBox mCheckBox;
 
 	EditText mEditTextRoe;
+	EditText mEditTextRate;
 	EditText mEditTextDiscount;
 	EditText mEditTextPE;
 	EditText mEditTextPB;
 	EditText mEditTextDividend;
 	EditText mEditTextYield;
 	EditText mEditTextDelta;
-	Button mButtonOk, mButtonCancel;
+
+	Button mButtonOk;
+	Button mButtonCancel;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +48,7 @@ public class StockFilterActivity extends DatabaseActivity implements
 		mCheckBox = (CheckBox) findViewById(R.id.checkbox);
 
 		mEditTextRoe = (EditText) findViewById(R.id.edittext_roe);
+		mEditTextRate = (EditText) findViewById(R.id.edittext_rate);
 		mEditTextDiscount = (EditText) findViewById(R.id.edittext_discount);
 		mEditTextPE = (EditText) findViewById(R.id.edittext_pe);
 		mEditTextPB = (EditText) findViewById(R.id.edittext_pb);
@@ -58,6 +62,7 @@ public class StockFilterActivity extends DatabaseActivity implements
 		mCheckBox.setOnClickListener(this);
 
 		mEditTextRoe.setOnClickListener(this);
+		mEditTextRate.setOnClickListener(this);
 		mEditTextDiscount.setOnClickListener(this);
 		mEditTextPE.setOnClickListener(this);
 		mEditTextPB.setOnClickListener(this);
@@ -74,6 +79,7 @@ public class StockFilterActivity extends DatabaseActivity implements
 
 	void updateEditText() {
 		mEditTextRoe.setText(mStockFilter.getRoe());
+		mEditTextRate.setText(mStockFilter.getRate());
 		mEditTextDiscount.setText(mStockFilter.getDiscount());
 		mEditTextPE.setText(mStockFilter.getPE());
 		mEditTextPB.setText(mStockFilter.getPB());
@@ -82,6 +88,7 @@ public class StockFilterActivity extends DatabaseActivity implements
 		mEditTextDelta.setText(mStockFilter.getDelta());
 
 		mEditTextRoe.setEnabled(mStockFilter.getEnable());
+		mEditTextRate.setEnabled(mStockFilter.getEnable());
 		mEditTextDiscount.setEnabled(mStockFilter.getEnable());
 		mEditTextPE.setEnabled(mStockFilter.getEnable());
 		mEditTextPB.setEnabled(mStockFilter.getEnable());
@@ -122,12 +129,14 @@ public class StockFilterActivity extends DatabaseActivity implements
 			mStockFilter.setEnable(mCheckBox.isChecked());
 
 			mStockFilter.setRoe(mEditTextRoe.getText().toString());
+			mStockFilter.setRate(mEditTextRate.getText().toString());
 			mStockFilter.setDiscount(mEditTextDiscount.getText().toString());
 			mStockFilter.setPE(mEditTextPE.getText().toString());
 			mStockFilter.setPB(mEditTextPB.getText().toString());
 			mStockFilter.setDividend(mEditTextDividend.getText().toString());
 			mStockFilter.setYield(mEditTextYield.getText().toString());
 			mStockFilter.setDelta(mEditTextDelta.getText().toString());
+
 			mStockFilter.write();
 
 			Bundle bundle = new Bundle();

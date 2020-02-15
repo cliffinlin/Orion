@@ -55,6 +55,7 @@ public class StockFinancialListActivity extends ListActivity implements
 	TextView mTextViewPrice = null;
 	TextView mTextViewNet = null;
 	TextView mTextViewRoe = null;
+	TextView mTextViewRate = null;
 	TextView mTextViewValuation = null;
 	TextView mTextViewDiscount = null;
 	TextView mTextViewPE = null;
@@ -62,7 +63,6 @@ public class StockFinancialListActivity extends ListActivity implements
 	TextView mTextViewDividend = null;
 	TextView mTextViewYield = null;
 	TextView mTextViewDelta = null;
-	TextView mTextViewNPSRate = null;
 
 	ListView mLeftListView = null;
 	ListView mRightListView = null;
@@ -235,6 +235,9 @@ public class StockFinancialListActivity extends ListActivity implements
 		case R.id.roe:
 			mSortOrderColumn = DatabaseContract.COLUMN_ROE;
 			break;
+		case R.id.rate:
+			mSortOrderColumn = DatabaseContract.COLUMN_RATE;
+			break;
 		case R.id.valuation:
 			mSortOrderColumn = DatabaseContract.COLUMN_VALUATION;
 			break;
@@ -255,9 +258,6 @@ public class StockFinancialListActivity extends ListActivity implements
 			break;
 		case R.id.delta:
 			mSortOrderColumn = DatabaseContract.COLUMN_DELTA;
-			break;
-		case R.id.nps_rate:
-			mSortOrderColumn = DatabaseContract.COLUMN_NPS_RATE;
 			break;
 		default:
 			mSortOrderColumn = DatabaseContract.COLUMN_CODE;
@@ -293,6 +293,7 @@ public class StockFinancialListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewPrice, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewNet, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewRoe, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewRate, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewValuation, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewDiscount, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewPE, mHeaderTextDefaultColor);
@@ -300,7 +301,6 @@ public class StockFinancialListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewDividend, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewYield, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewDelta, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewNPSRate, mHeaderTextDefaultColor);
 	}
 
 	void setVisibility(String key, TextView textView) {
@@ -342,6 +342,11 @@ public class StockFinancialListActivity extends ListActivity implements
 			mTextViewRoe.setOnClickListener(this);
 		}
 
+		mTextViewRate = (TextView) findViewById(R.id.rate);
+		if (mTextViewRate != null) {
+			mTextViewRate.setOnClickListener(this);
+		}
+
 		mTextViewValuation = (TextView) findViewById(R.id.valuation);
 		if (mTextViewValuation != null) {
 			mTextViewValuation.setOnClickListener(this);
@@ -377,11 +382,6 @@ public class StockFinancialListActivity extends ListActivity implements
 			mTextViewDelta.setOnClickListener(this);
 		}
 
-		mTextViewNPSRate = (TextView) findViewById(R.id.nps_rate);
-		if (mTextViewNPSRate != null) {
-			mTextViewNPSRate.setOnClickListener(this);
-		}
-
 		if (mSortOrder.contains(DatabaseContract.COLUMN_CODE)) {
 			setHeaderTextColor(mTextViewNameCode, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PRICE)) {
@@ -390,6 +390,8 @@ public class StockFinancialListActivity extends ListActivity implements
 			setHeaderTextColor(mTextViewNet, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_ROE)) {
 			setHeaderTextColor(mTextViewRoe, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_RATE)) {
+			setHeaderTextColor(mTextViewRate, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_VALUATION)) {
 			setHeaderTextColor(mTextViewValuation, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_DISCOUNT)) {
@@ -404,8 +406,6 @@ public class StockFinancialListActivity extends ListActivity implements
 			setHeaderTextColor(mTextViewYield, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_DELTA)) {
 			setHeaderTextColor(mTextViewDelta, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_NPS_RATE)) {
-			setHeaderTextColor(mTextViewNPSRate, mHeaderTextHighlightColor);
 		} else {
 		}
 	}
@@ -421,10 +421,10 @@ public class StockFinancialListActivity extends ListActivity implements
 				DatabaseContract.COLUMN_DISCOUNT, DatabaseContract.COLUMN_PE,
 				DatabaseContract.COLUMN_PB, DatabaseContract.COLUMN_DIVIDEND,
 				DatabaseContract.COLUMN_YIELD, DatabaseContract.COLUMN_DELTA,
-				DatabaseContract.COLUMN_NPS_RATE };
+				DatabaseContract.COLUMN_RATE };
 		int[] mRightTo = new int[] { R.id.price, R.id.net, R.id.roe,
 				R.id.valuation, R.id.discount, R.id.pe, R.id.pb, R.id.dividend,
-				R.id.yield, R.id.delta, R.id.nps_rate };
+				R.id.yield, R.id.delta, R.id.rate };
 
 		mLeftListView = (ListView) findViewById(R.id.left_listview);
 		mLeftAdapter = new SimpleCursorAdapter(this,

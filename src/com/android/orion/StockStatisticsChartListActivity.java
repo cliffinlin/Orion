@@ -161,14 +161,20 @@ public class StockStatisticsChartListActivity extends OrionBaseActivity
 					REQUEST_CODE_STOCK_FILTER);
 			return true;
 
-		case R.id.action_order_by_pe:
-			mSortOrder = DatabaseContract.COLUMN_PE
+		case R.id.action_order_by_roe:
+			mSortOrder = DatabaseContract.COLUMN_ROE
 					+ DatabaseContract.ORDER_DIRECTION_DESC;
 			restartLoader();
 			return true;
 
-		case R.id.action_order_by_roe:
-			mSortOrder = DatabaseContract.COLUMN_ROE
+		case R.id.action_order_by_rate:
+			mSortOrder = DatabaseContract.COLUMN_RATE
+					+ DatabaseContract.ORDER_DIRECTION_DESC;
+			restartLoader();
+			return true;
+
+		case R.id.action_order_by_pe:
+			mSortOrder = DatabaseContract.COLUMN_PE
 					+ DatabaseContract.ORDER_DIRECTION_DESC;
 			restartLoader();
 			return true;
@@ -368,12 +374,15 @@ public class StockStatisticsChartListActivity extends OrionBaseActivity
 					index = stockDataChart.mXValues.size();
 					stockDataChart.mXValues.add(stock.getName());
 
+					Entry roeEntry = new Entry((float) stock.getRoe(), index);
+					stockDataChart.mRoeEntryList.add(roeEntry);
+
+					Entry rateEntry = new Entry((float) stock.getRate(), index);
+					stockDataChart.mRateEntryList.add(rateEntry);
+
 					BarEntry peEntry = new BarEntry((float) stock.getPE(),
 							index);
 					stockDataChart.mPeEntryList.add(peEntry);
-
-					Entry roeEntry = new Entry((float) stock.getRoe(), index);
-					stockDataChart.mRoeEntryList.add(roeEntry);
 
 					Entry yieldEntry = new Entry((float) stock.getYield(),
 							index);

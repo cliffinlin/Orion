@@ -30,6 +30,14 @@
         android:textSize="18sp" />
 
     <TextView
+        android:id="@+id/rate"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="18sp" />
+
+    <TextView
         android:id="@+id/valuation"
         android:layout_width="80dp"
         android:layout_height="50dp"
@@ -85,11 +93,4 @@
         android:gravity="center"
         android:textSize="18sp" />
 
-    <TextView
-        android:id="@+id/nps_rate"
-        android:layout_width="80dp"
-        android:layout_height="50dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:textSize="18sp" />
-</LinearLayout>
+</LinearLayout>

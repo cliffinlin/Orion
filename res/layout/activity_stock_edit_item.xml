@@ -42,10 +42,10 @@
 
     <ImageView
         android:id="@+id/action"
-        android:contentDescription="@string/added"
         android:layout_width="0dp"
         android:layout_height="35dp"
         android:layout_weight="1"
+        android:contentDescription="@string/added"
         android:gravity="center"
         android:src="@drawable/ic_plus" />
 

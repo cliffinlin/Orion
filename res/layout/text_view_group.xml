@@ -4,7 +4,7 @@
     android:id="@+id/vg_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/cell_white_border_bottom_right_gray">
+    android:background="@drawable/cell_white_border_bottom_right_gray" >
 
     <TextView
         android:id="@+id/tv_text"
@@ -18,4 +18,5 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@android:color/black"
         tools:text="text" />
+
 </RelativeLayout>

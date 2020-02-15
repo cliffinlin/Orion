@@ -354,6 +354,9 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			needDownload = true;
 		} else if (stock.getTotalShare() == 0) {
 			needDownload = true;
+			if (Constants.STOCK_CLASSES_INDEX.equals(stock.getClases())) {
+				needDownload = false;
+			}
 		}
 
 		if (!needDownload) {

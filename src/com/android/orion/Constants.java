@@ -156,7 +156,10 @@ public class Constants {
 	public static final int SEASONS_PER_YEAR = 4;
 
 	public static final double STOCK_DEAL_DISTRIBUTION_RATE = 5.0 / 100.0;
-	public static final double RISK_INTEREST_RATE = (4.0 + 6.0) / 100.0;
+	public static final double RISK_FREE_INTEREST_RATE = 4.0 / 100.0;
+	public static final double INFLATION_RATE = 6.0 / 100.0;
+	public static final double RISK_INTEREST_RATE = RISK_FREE_INTEREST_RATE
+			+ INFLATION_RATE;
 
 	public static final long DEFAULT_DOWNLOAD_INTERVAL = 3000;
 	public static final long DEFAULT_RESTART_LOADER_INTERAL = 5000;
