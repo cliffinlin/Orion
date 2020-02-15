@@ -62,6 +62,7 @@ public class StockFinancialListActivity extends ListActivity implements
 	TextView mTextViewDividend = null;
 	TextView mTextViewYield = null;
 	TextView mTextViewDelta = null;
+	TextView mTextViewNPSRate = null;
 
 	ListView mLeftListView = null;
 	ListView mRightListView = null;
@@ -255,6 +256,9 @@ public class StockFinancialListActivity extends ListActivity implements
 		case R.id.delta:
 			mSortOrderColumn = DatabaseContract.COLUMN_DELTA;
 			break;
+		case R.id.nps_rate:
+			mSortOrderColumn = DatabaseContract.COLUMN_NPS_RATE;
+			break;
 		default:
 			mSortOrderColumn = DatabaseContract.COLUMN_CODE;
 			break;
@@ -296,6 +300,7 @@ public class StockFinancialListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewDividend, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewYield, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewDelta, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewNPSRate, mHeaderTextDefaultColor);
 	}
 
 	void setVisibility(String key, TextView textView) {
@@ -372,6 +377,11 @@ public class StockFinancialListActivity extends ListActivity implements
 			mTextViewDelta.setOnClickListener(this);
 		}
 
+		mTextViewNPSRate = (TextView) findViewById(R.id.nps_rate);
+		if (mTextViewNPSRate != null) {
+			mTextViewNPSRate.setOnClickListener(this);
+		}
+
 		if (mSortOrder.contains(DatabaseContract.COLUMN_CODE)) {
 			setHeaderTextColor(mTextViewNameCode, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PRICE)) {
@@ -394,6 +404,8 @@ public class StockFinancialListActivity extends ListActivity implements
 			setHeaderTextColor(mTextViewYield, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_DELTA)) {
 			setHeaderTextColor(mTextViewDelta, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_NPS_RATE)) {
+			setHeaderTextColor(mTextViewNPSRate, mHeaderTextHighlightColor);
 		} else {
 		}
 	}
@@ -408,10 +420,11 @@ public class StockFinancialListActivity extends ListActivity implements
 				DatabaseContract.COLUMN_VALUATION,
 				DatabaseContract.COLUMN_DISCOUNT, DatabaseContract.COLUMN_PE,
 				DatabaseContract.COLUMN_PB, DatabaseContract.COLUMN_DIVIDEND,
-				DatabaseContract.COLUMN_YIELD, DatabaseContract.COLUMN_DELTA };
+				DatabaseContract.COLUMN_YIELD, DatabaseContract.COLUMN_DELTA,
+				DatabaseContract.COLUMN_NPS_RATE };
 		int[] mRightTo = new int[] { R.id.price, R.id.net, R.id.roe,
 				R.id.valuation, R.id.discount, R.id.pe, R.id.pb, R.id.dividend,
-				R.id.yield, R.id.delta };
+				R.id.yield, R.id.delta, R.id.nps_rate };
 
 		mLeftListView = (ListView) findViewById(R.id.left_listview);
 		mLeftAdapter = new SimpleCursorAdapter(this,

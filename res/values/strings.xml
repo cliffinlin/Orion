@@ -22,7 +22,7 @@
     <string name="action_delete_all">Delete All</string>
     <string name="action_to">To</string>
     <string name="action_order_by_pe">Order by Pe</string>
-    <string name="action_order_by_roe">Order by Roe</string>    
+    <string name="action_order_by_roe">Order by Roe</string>
     <string name="action_order_by_yield">Order by Yield</string>
     <string name="action_order_by_delta">Order by Delta</string>
     <string name="added">Added</string>
@@ -80,6 +80,7 @@
     <string name="notification_lights">Lights</string>
     <string name="notification_vibrate">Vibrate</string>
     <string name="notification_sound">Sound</string>
+    <string name="nps_rate">NPS_Rate</string>
     <string name="ok">OK</string>
     <string name="overlap">Overlap</string>
     <string name="password_hint">Password</string>

@@ -49,13 +49,14 @@ public final class DatabaseContract {
 	public static final String COLUMN_PROFIT = "profit";
 	public static final String COLUMN_TOTAL_SHARE = "total_share";
 	public static final String COLUMN_ROE = "roe";
+	public static final String COLUMN_VALUATION = "valuation";
+	public static final String COLUMN_DISCOUNT = "discount";
 	public static final String COLUMN_PE = "pe";
 	public static final String COLUMN_PB = "pb";
 	public static final String COLUMN_DIVIDEND = "dividend";
 	public static final String COLUMN_YIELD = "yield";
 	public static final String COLUMN_DELTA = "delta";
-	public static final String COLUMN_VALUATION = "valuation";
-	public static final String COLUMN_DISCOUNT = "discount";
+	public static final String COLUMN_NPS_RATE = "nps_rate";
 	public static final String COLUMN_CREATED = "created";
 	public static final String COLUMN_MODIFIED = "modified";
 
@@ -157,9 +158,10 @@ public final class DatabaseContract {
 				COLUMN_MIN15, COLUMN_MIN30, COLUMN_MIN60, COLUMN_DAY,
 				COLUMN_WEEK, COLUMN_MONTH, COLUMN_QUARTER, COLUMN_YEAR,
 				COLUMN_OPERATION, COLUMN_HOLD, COLUMN_COST, COLUMN_PROFIT,
-				COLUMN_TOTAL_SHARE, COLUMN_ROE, COLUMN_PE, COLUMN_PB,
-				COLUMN_DIVIDEND, COLUMN_YIELD, COLUMN_DELTA, COLUMN_VALUATION,
-				COLUMN_DISCOUNT, COLUMN_CREATED, COLUMN_MODIFIED };
+				COLUMN_TOTAL_SHARE, COLUMN_ROE, COLUMN_VALUATION,
+				COLUMN_DISCOUNT, COLUMN_PE, COLUMN_PB, COLUMN_DIVIDEND,
+				COLUMN_YIELD, COLUMN_DELTA, COLUMN_NPS_RATE, COLUMN_CREATED,
+				COLUMN_MODIFIED };
 
 		public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
 				+ " (" + _ID + " INTEGER PRIMARY KEY," + COLUMN_CLASSES
@@ -181,12 +183,13 @@ public final class DatabaseContract {
 				+ COMMA_SEP + COLUMN_HOLD + INTEGER_TYPE + COMMA_SEP
 				+ COLUMN_COST + DOUBLE_TYPE + COMMA_SEP + COLUMN_PROFIT
 				+ DOUBLE_TYPE + COMMA_SEP + COLUMN_TOTAL_SHARE + DOUBLE_TYPE
-				+ COMMA_SEP + COLUMN_ROE + DOUBLE_TYPE + COMMA_SEP + COLUMN_PE
-				+ DOUBLE_TYPE + COMMA_SEP + COLUMN_PB + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_DIVIDEND + DOUBLE_TYPE + COMMA_SEP + COLUMN_YIELD
-				+ DOUBLE_TYPE + COMMA_SEP + COLUMN_DELTA + DOUBLE_TYPE
-				+ COMMA_SEP + COLUMN_VALUATION + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_DISCOUNT + DOUBLE_TYPE + COMMA_SEP + COLUMN_CREATED
+				+ COMMA_SEP + COLUMN_ROE + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_VALUATION + DOUBLE_TYPE + COMMA_SEP + COLUMN_DISCOUNT
+				+ DOUBLE_TYPE + COMMA_SEP + COLUMN_PE + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_PB + DOUBLE_TYPE + COMMA_SEP + COLUMN_DIVIDEND
+				+ DOUBLE_TYPE + COMMA_SEP + COLUMN_YIELD + DOUBLE_TYPE
+				+ COMMA_SEP + COLUMN_DELTA + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_NPS_RATE + DOUBLE_TYPE + COMMA_SEP + COLUMN_CREATED
 				+ TEXT_TYPE + COMMA_SEP + COLUMN_MODIFIED + TEXT_TYPE + " )";
 
 		public static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS

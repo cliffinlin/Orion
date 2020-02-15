@@ -248,7 +248,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		FinancialData financialData = new FinancialData();
 		financialData.setStockId(stock.getId());
 
-		mStockDatabaseManager.getFinancialData(stock.getId(), financialData);
+		mStockDatabaseManager.getFinancialData(stock, financialData);
 		if (financialData.isValid()) {
 			return;
 		}
@@ -352,8 +352,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			needDownload = true;
 		} else if (TextUtils.isEmpty(stock.getPinyin())) {
 			needDownload = true;
-		} else if (stock.getClases().contains(Constants.STOCK_CLASSES_A)
-				&& (stock.getTotalShare() == 0)) {
+		} else if (stock.getTotalShare() == 0) {
 			needDownload = true;
 		}
 

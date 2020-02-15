@@ -1105,7 +1105,7 @@ public class StockDatabaseManager extends DatabaseManager {
 		}
 	}
 
-	public void getFinancialData(long stockId, FinancialData financialData) {
+	public void getFinancialData(Stock stock, FinancialData financialData) {
 		Cursor cursor = null;
 
 		if ((financialData == null) || (mContentResolver == null)) {
@@ -1113,7 +1113,7 @@ public class StockDatabaseManager extends DatabaseManager {
 		}
 
 		try {
-			String selection = getFinancialDataSelection(stockId);
+			String selection = getFinancialDataSelection(stock.getId());
 			String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
 
 			cursor = mContentResolver.query(

@@ -63,15 +63,22 @@ public class StockAnalyzer extends StockManager {
 	}
 
 	void setupStockFinancialData(Stock stock) {
+		String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
 		FinancialData financialData = new FinancialData();
+		ArrayList<FinancialData> financialDataList = new ArrayList<FinancialData>();
+
 		financialData.setStockId(stock.getId());
-		mStockDatabaseManager.getFinancialData(stock.getId(), financialData);
+
+		mStockDatabaseManager.getFinancialData(stock, financialData);
+		mStockDatabaseManager.getFinancialDataList(stock, financialDataList,
+				sortOrder);
 
 		stock.setupRoe(financialData);
 		stock.setupValuation(financialData);
 		stock.setupPE(financialData);
 		stock.setupPB(financialData);
 		stock.setupDelta(financialData);
+		stock.setupNPSRate(financialDataList);
 	}
 
 	void setupStockShareBonus(Stock stock) {
