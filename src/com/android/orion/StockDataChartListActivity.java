@@ -457,7 +457,7 @@ public class StockDataChartListActivity extends OrionBaseActivity implements
 	public void swapStockDataCursor(StockDataChart stockDataChart, Cursor cursor) {
 		int index = 0;
 		float bookValuePerShare = 0;
-		float earningsPerShare = 0;
+		float netProfitPerShare = 0;
 		float dividend = 0;
 		String sortOrder = DatabaseContract.COLUMN_DATE + " ASC ";
 		FinancialData financialData = null;
@@ -545,16 +545,16 @@ public class StockDataChartListActivity extends OrionBaseActivity implements
 						if (financialData != null) {
 							bookValuePerShare = (float) financialData
 									.getBookValuePerShare();
-							double netProfitPerShare = 0;
+							netProfitPerShare = 0;
 							if (mStock.getTotalShare() != 0) {
-								netProfitPerShare = financialData
-										.getNetProfit()
-										/ mStock.getTotalShare();
+								netProfitPerShare = (float) (financialData
+										.getNetProfit() / mStock
+										.getTotalShare());
+								netProfitPerShare = (float) (netProfitPerShare / Constants.RISK_INTEREST_RATE);
 							}
-							earningsPerShare = (float) (netProfitPerShare / Constants.RISK_INTEREST_RATE);
 						} else {
 							bookValuePerShare = 0;
-							earningsPerShare = 0;
+							netProfitPerShare = 0;
 						}
 
 						Entry bookValuePerShareEntry = new Entry(
@@ -562,10 +562,10 @@ public class StockDataChartListActivity extends OrionBaseActivity implements
 						stockDataChart.mBookValuePerShareList
 								.add(bookValuePerShareEntry);
 
-						Entry earningsPerShareEntry = new Entry(
-								earningsPerShare, index);
-						stockDataChart.mEarningsPerShareList
-								.add(earningsPerShareEntry);
+						Entry netProfitPerShareEntry = new Entry(
+								netProfitPerShare, index);
+						stockDataChart.mNetProfitPerShareList
+								.add(netProfitPerShareEntry);
 					}
 
 					if (mShareBonusList.size() > 0) {

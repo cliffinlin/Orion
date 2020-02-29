@@ -894,7 +894,7 @@ public class SinaFinance extends StockDataProvider {
 							} else if (keyString.equals("æª¿˚»Û")) {
 								financialData.setNetProfit(Double
 										.valueOf(valueString));
-								financialData.setupEarningsPerShare(stock
+								financialData.setupNetProfitPerShare(stock
 										.getTotalShare());
 
 								if (bulkInsert) {

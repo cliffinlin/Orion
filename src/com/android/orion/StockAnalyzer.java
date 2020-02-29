@@ -73,12 +73,16 @@ public class StockAnalyzer extends StockManager {
 		mStockDatabaseManager.getFinancialDataList(stock, financialDataList,
 				sortOrder);
 
-		stock.setupRoe(financialData);
-		stock.setupValuation(financialData);
-		stock.setupPE(financialData);
-		stock.setupPB(financialData);
-		stock.setupDelta(financialData);
 		stock.setupRate(financialDataList);
+
+		stock.setBookValuePerShare(financialData.getBookValuePerShare());
+		stock.setNetProfit(financialData.getNetProfit());
+
+		stock.setupNetProfitPerShare();
+		stock.setupRoe();
+		stock.setupValuation();
+		stock.setupPE();
+		stock.setupPB();
 	}
 
 	void setupStockShareBonus(Stock stock) {
@@ -113,6 +117,7 @@ public class StockAnalyzer extends StockManager {
 			stock.setDividend(Utility.Round(totalDivident,
 					Constants.DOUBLE_FIXED_DECIMAL));
 			stock.setupYield();
+			stock.setupDelta();
 
 			prevYearString = yearString;
 		}

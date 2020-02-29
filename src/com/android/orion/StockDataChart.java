@@ -38,7 +38,7 @@ public class StockDataChart {
 	ArrayList<Entry> mOverlapHighEntryList = null;
 	ArrayList<Entry> mOverlapLowEntryList = null;
 	ArrayList<Entry> mBookValuePerShareList = null;
-	ArrayList<Entry> mEarningsPerShareList = null;
+	ArrayList<Entry> mNetProfitPerShareList = null;
 	ArrayList<BarEntry> mDividendEntryList = null;
 
 	ArrayList<Entry> mDIFEntryList = null;
@@ -89,8 +89,8 @@ public class StockDataChart {
 			mBookValuePerShareList = new ArrayList<Entry>();
 		}
 
-		if (mEarningsPerShareList == null) {
-			mEarningsPerShareList = new ArrayList<Entry>();
+		if (mNetProfitPerShareList == null) {
+			mNetProfitPerShareList = new ArrayList<Entry>();
 		}
 
 		if (mDividendEntryList == null) {
@@ -222,12 +222,12 @@ public class StockDataChart {
 		bookValuePerShareDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(bookValuePerShareDataSet);
 
-		LineDataSet earningsPerShareDataSet = new LineDataSet(
-				mEarningsPerShareList, "earnings");
-		earningsPerShareDataSet.setColor(Color.YELLOW);
-		earningsPerShareDataSet.setDrawCircles(false);
-		earningsPerShareDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		lineData.addDataSet(earningsPerShareDataSet);
+		LineDataSet netProfitPerShareDataSet = new LineDataSet(
+				mNetProfitPerShareList, "NPS");
+		netProfitPerShareDataSet.setColor(Color.YELLOW);
+		netProfitPerShareDataSet.setDrawCircles(false);
+		netProfitPerShareDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+		lineData.addDataSet(netProfitPerShareDataSet);
 
 		BarData barData = new BarData(mXValues);
 		BarDataSet shareBonusDataSet = new BarDataSet(mDividendEntryList,
@@ -388,7 +388,7 @@ public class StockDataChart {
 		mOverlapHighEntryList.clear();
 		mOverlapLowEntryList.clear();
 		mBookValuePerShareList.clear();
-		mEarningsPerShareList.clear();
+		mNetProfitPerShareList.clear();
 		mDividendEntryList.clear();
 		mAverageEntryList.clear();
 		mAverage5EntryList.clear();

@@ -232,6 +232,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 	void downloadFinancialData() {
 		for (Stock stock : mStockArrayMapFavorite.values()) {
+			downloadStockInformation(stock);
+
 			downloadFinancialData(stock);
 		}
 	}

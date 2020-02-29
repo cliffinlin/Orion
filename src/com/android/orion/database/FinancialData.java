@@ -9,7 +9,7 @@ import android.database.Cursor;
 public class FinancialData extends DatabaseTable {
 	private long mStockId;
 	private String mDate;
-	private double mBookValuePerShare;// BVPS// 每股净资产-摊薄/期末股数
+	private double mBookValuePerShare;// BPS// 每股净资产-摊薄/期末股数
 	private double mEarningsPerShare;// EPS// 每股收益-摊薄/期末股数
 	private double mCashFlowPerShare;// 每股现金流
 	private double mTotalCurrentAssets;// 流动资产合计
@@ -18,6 +18,7 @@ public class FinancialData extends DatabaseTable {
 	private double mMainBusinessIncome;// 主营业务收入
 	private double mFinancialExpenses;// 财务费用
 	private double mNetProfit;// 净利润
+	private double mNetProfitPerShare;// NPS// 每股净利润
 
 	public FinancialData() {
 		init();
@@ -47,6 +48,7 @@ public class FinancialData extends DatabaseTable {
 		mMainBusinessIncome = 0;
 		mFinancialExpenses = 0;
 		mNetProfit = 0;
+		mNetProfitPerShare = 0;
 	}
 
 	public ContentValues getContentValues() {
@@ -75,6 +77,7 @@ public class FinancialData extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_FINANCIAL_EXPENSES,
 				mFinancialExpenses);
 		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT, mNetProfit);
+		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE, mNetProfitPerShare);
 
 		return contentValues;
 	}
@@ -99,6 +102,7 @@ public class FinancialData extends DatabaseTable {
 		setMainBusinessIncome(financialData.mMainBusinessIncome);
 		setFinancialExpenses(financialData.mFinancialExpenses);
 		setNetProfit(financialData.mNetProfit);
+		setNetProfitPerShare(financialData.mNetProfitPerShare);
 	}
 
 	@Override
@@ -122,6 +126,7 @@ public class FinancialData extends DatabaseTable {
 		setMainBusinessIncome(cursor);
 		setFinancialExpenses(cursor);
 		setNetProfit(cursor);
+		setNetProfitPerShare(cursor);
 	}
 
 	public long getStockId() {
@@ -312,12 +317,29 @@ public class FinancialData extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_NET_PROFIT)));
 	}
 
-	public void setupEarningsPerShare(double totalShare) {
+	public double getNetProfitPerShare() {
+		return mNetProfitPerShare;
+	}
+
+	public void setNetProfitPerShare(double netProfitPerShare) {
+		mNetProfitPerShare = netProfitPerShare;
+	}
+
+	void setNetProfitPerShare(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setNetProfitPerShare(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE)));
+	}
+	
+	public void setupNetProfitPerShare(double totalShare) {
 		if ((mNetProfit == 0) || (totalShare == 0)) {
 			return;
 		}
 
-		mEarningsPerShare = Utility.Round(mNetProfit / totalShare,
+		mNetProfitPerShare = Utility.Round(mNetProfit / totalShare,
 				Constants.DOUBLE_FIXED_DECIMAL);
 	}
 	
