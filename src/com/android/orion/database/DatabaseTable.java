@@ -2,6 +2,7 @@ package com.android.orion.database;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.text.TextUtils;
 
 public class DatabaseTable {
 	String mTableName;
@@ -17,6 +18,30 @@ public class DatabaseTable {
 		mId = 0;
 		mCreated = "";
 		mModified = "";
+	}
+	
+	public void contentValuesPut(ContentValues contentValues, String key, int value) {
+		if (value != 0) {
+			contentValues.put(key, value);
+		}
+	}
+	
+	public void contentValuesPut(ContentValues contentValues, String key, long value) {
+		if (value != 0) {
+			contentValues.put(key, value);
+		}
+	}
+	
+	public void contentValuesPut(ContentValues contentValues, String key, double value) {
+		if (value != 0) {
+			contentValues.put(key, value);
+		}
+	}
+	
+	public void contentValuesPut(ContentValues contentValues, String key, String value) {
+		if (!TextUtils.isEmpty(value)) {
+			contentValues.put(key, value);
+		}
 	}
 
 	public ContentValues getContentValues() {

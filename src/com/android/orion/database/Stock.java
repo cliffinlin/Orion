@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.text.TextUtils;
 
 import com.android.orion.Constants;
 import com.android.orion.utility.Utility;
@@ -67,17 +66,6 @@ public class Stock extends DatabaseTable {
 
 	public Stock(Cursor cursor) {
 		set(cursor);
-	}
-
-	boolean isEmpty() {
-		boolean result = false;
-
-		if (TextUtils.isEmpty(mSE) && TextUtils.isEmpty(mCode)
-				&& TextUtils.isEmpty(mName)) {
-			result = true;
-		}
-
-		return result;
 	}
 
 	public void init() {
@@ -1085,12 +1073,12 @@ public class Stock extends DatabaseTable {
 		}
 		
 		if ((financialDataList == null)
-				|| (financialDataList.size() < Constants.SEASONS_PER_YEAR)) {
+				|| (financialDataList.size() < Constants.SEASONS_IN_A_YEAR)) {
 			return;
 		}
 
 		target = financialDataList.get(0).getNetProfit();
-		base = financialDataList.get(Constants.SEASONS_PER_YEAR).getNetProfit();
+		base = financialDataList.get(Constants.SEASONS_IN_A_YEAR).getNetProfit();
 
 		if (base != 0) {
 			mRate = target / base;
