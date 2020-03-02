@@ -50,8 +50,7 @@ public class StorageActivity extends DatabaseActivity {
 
 			switch (msg.what) {
 			case MESSAGE_REFRESH:
-				startService(Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE,
-						Constants.EXECUTE_IMMEDIATE);
+				onMessageRefresh();
 				break;
 
 			case MESSAGE_SAVE_TO_FILE:
@@ -97,6 +96,11 @@ public class StorageActivity extends DatabaseActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+	}
+
+	void onMessageRefresh() {
+		startService(Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE,
+				Constants.EXECUTE_IMMEDIATE);
 	}
 
 	void performLoadFromFile() {

@@ -232,7 +232,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 	void downloadFinancialData() {
 		loadStockArrayMapFavorite();
-		
+
 		for (Stock stock : mStockArrayMapFavorite.values()) {
 			downloadStockInformation(stock);
 
@@ -253,8 +253,14 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		financialData.setStockId(stock.getId());
 
 		mStockDatabaseManager.getFinancialData(stock, financialData);
-		if (financialData.isValid()) {
-			return;
+
+		if (financialData.getCreated().contains(Utility.getCurrentDateString())
+				|| financialData.getModified().contains(
+						Utility.getCurrentDateString())) {
+			if ((financialData.getBookValuePerShare() != 0)
+					&& (financialData.getNetProfit() != 0)) {
+				return;
+			}
 		}
 
 		urlString = getFinancialDataURLString(stock);
@@ -288,7 +294,9 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		shareBonus.setStockId(stock.getId());
 
 		mStockDatabaseManager.getShareBonus(stock.getId(), shareBonus);
-		if (shareBonus.getCreated().contains(Utility.getCurrentDateString())) {
+		if (shareBonus.getCreated().contains(Utility.getCurrentDateString())
+				|| shareBonus.getModified().contains(
+						Utility.getCurrentDateString())) {
 			if (shareBonus.getDividend() > 0) {
 				return;
 			}

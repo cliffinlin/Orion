@@ -342,24 +342,4 @@ public class FinancialData extends DatabaseTable {
 		mNetProfitPerShare = Utility.Round(mNetProfit / totalShare,
 				Constants.DOUBLE_FIXED_DECIMAL);
 	}
-	
-	public boolean isValid() {
-		boolean result = false;
-		
-		if (!getCreated().contains(Utility.getCurrentDateString())) {
-			return result;
-		}
-		
-		if (getBookValuePerShare() == 0) {
-			return result;
-		}
-		
-		if (getNetProfit() == 0) {
-			return result;
-		}
-
-		result = true;
-		
-		return result;
-	}
 }

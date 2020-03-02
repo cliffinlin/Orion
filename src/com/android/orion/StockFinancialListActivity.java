@@ -192,7 +192,7 @@ public class StockFinancialListActivity extends ListActivity implements
 	}
 
 	@Override
-	void onServiceConnected() {
+	void onMessageRefresh() {
 		startLoadTask(EXECUTE_STOCK_FINANCIAL_LOAD);
 	}
 
