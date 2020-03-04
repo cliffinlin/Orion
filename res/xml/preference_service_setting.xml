@@ -9,31 +9,34 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/download_service" >
         <com.android.orion.CustomSwitchPreference
-            android:key="min5"
-            android:title="@string/period_5min" />
-        <com.android.orion.CustomSwitchPreference
-            android:key="min15"
-            android:title="@string/period_15min" />
-        <com.android.orion.CustomSwitchPreference
-            android:key="min30"
-            android:title="@string/period_30min" />
-        <com.android.orion.CustomSwitchPreference
-            android:key="min60"
-            android:title="@string/period_60min" />
-        <com.android.orion.CustomSwitchPreference
             android:defaultValue="true"
-            android:key="day"
-            android:title="@string/period_day" />
+            android:key="month"
+            android:title="@string/period_month" />
         <com.android.orion.CustomSwitchPreference
             android:defaultValue="true"
             android:key="week"
             android:title="@string/period_week" />
         <com.android.orion.CustomSwitchPreference
             android:defaultValue="true"
-            android:key="month"
-            android:title="@string/period_month" />
+            android:key="day"
+            android:title="@string/period_day" />
+        <com.android.orion.CustomSwitchPreference
+            android:key="min60"
+            android:title="@string/period_60min" />
+        <com.android.orion.CustomSwitchPreference
+            android:key="min30"
+            android:title="@string/period_30min" />
+        <com.android.orion.CustomSwitchPreference
+            android:key="min15"
+            android:title="@string/period_15min" />
+        <com.android.orion.CustomSwitchPreference
+            android:key="min5"
+            android:title="@string/period_5min" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/notification_service" >
+        <com.android.orion.CustomSwitchPreference
+            android:key="notification_message"
+            android:title="@string/notification_message" />
         <com.android.orion.CustomSwitchPreference
             android:key="notification_lights"
             android:title="@string/notification_lights" />

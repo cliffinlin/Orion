@@ -73,6 +73,7 @@ public class Constants {
 	public static final String SETTING_KEY_ALARM = "alarm";
 	public static final String SETTING_KEY_CURRENT_PERIOD = "current_period";
 	public static final String SETTING_KEY_CONNECTION_WIFI_ONLY = "connection_wifi_only";
+	public static final String SETTING_KEY_NOTIFICATION_MESSAGE = "notification_message";
 	public static final String SETTING_KEY_NOTIFICATION_LIGHTS = "notification_lights";
 	public static final String SETTING_KEY_NOTIFICATION_VIBRATE = "notification_vibrate";
 	public static final String SETTING_KEY_NOTIFICATION_SOUND = "notification_sound";

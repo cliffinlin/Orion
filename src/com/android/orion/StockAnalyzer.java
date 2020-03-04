@@ -513,12 +513,12 @@ public class StockAnalyzer extends StockManager {
 				}
 			}
 		}
-
-		bodyString = getBodyString(stock);
-
-		if (TextUtils.isEmpty(bodyString) && TextUtils.isEmpty(titleString)) {
+		
+		if (TextUtils.isEmpty(titleString)) {
 			return;
 		}
+		
+		bodyString = getBodyString(stock);
 
 		titleString += stock.getName() + " " + stock.getPrice() + " "
 				+ stock.getNet();
@@ -552,9 +552,13 @@ public class StockAnalyzer extends StockManager {
 				Constants.SETTING_KEY_NOTIFICATION_SOUND, false)) {
 			defaults = defaults | Notification.DEFAULT_SOUND;
 		}
+		
 		notification.setDefaults(defaults);
 
-		notificationManager.notify(id, notification.build());
+		if (Preferences.readBoolean(mContext,
+				Constants.SETTING_KEY_NOTIFICATION_MESSAGE, true)) {
+			notificationManager.notify(id, notification.build());
+		}
 	}
 
 	String getBodyString(Stock stock) {

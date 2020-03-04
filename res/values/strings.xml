@@ -81,6 +81,7 @@
     <string name="no_file_found">No File Found!</string>
     <string name="no_sd_card_found">No SD Card Found!</string>
     <string name="notification_service">Notification Service</string>
+    <string name="notification_message">Message</string>
     <string name="notification_lights">Lights</string>
     <string name="notification_vibrate">Vibrate</string>
     <string name="notification_sound">Sound</string>
