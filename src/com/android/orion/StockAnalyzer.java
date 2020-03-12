@@ -513,11 +513,11 @@ public class StockAnalyzer extends StockManager {
 				}
 			}
 		}
-		
+
 		if (TextUtils.isEmpty(titleString)) {
 			return;
 		}
-		
+
 		bodyString = getBodyString(stock);
 
 		titleString += stock.getName() + " " + stock.getPrice() + " "
@@ -552,7 +552,7 @@ public class StockAnalyzer extends StockManager {
 				Constants.SETTING_KEY_NOTIFICATION_SOUND, false)) {
 			defaults = defaults | Notification.DEFAULT_SOUND;
 		}
-		
+
 		notification.setDefaults(defaults);
 
 		if (Preferences.readBoolean(mContext,

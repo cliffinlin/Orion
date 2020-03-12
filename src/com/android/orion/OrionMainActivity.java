@@ -114,6 +114,7 @@ public class OrionMainActivity extends PreferenceActivity {
 			editor.putBoolean(Constants.PERIOD_MONTH, true);
 			editor.putBoolean(Constants.PERIOD_WEEK, true);
 			editor.putBoolean(Constants.PERIOD_DAY, true);
+			editor.putBoolean(Constants.SETTING_KEY_NOTIFICATION_MESSAGE, true);
 			editor.commit();
 		}
 	}
