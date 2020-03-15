@@ -18,6 +18,7 @@ public class StockFilterActivity extends DatabaseActivity implements
 
 	CheckBox mCheckBox;
 
+	EditText mEditTextHold;
 	EditText mEditTextRoe;
 	EditText mEditTextRate;
 	EditText mEditTextDiscount;
@@ -36,9 +37,6 @@ public class StockFilterActivity extends DatabaseActivity implements
 		setContentView(R.layout.activity_stock_filter);
 
 		mStockFilter.setDefaultEnable(true);
-
-		mStockFilter.setDefaultDiscount("<1");
-		mStockFilter.setDefaultYield(">3");
 		mStockFilter.read();
 
 		initView();
@@ -47,6 +45,7 @@ public class StockFilterActivity extends DatabaseActivity implements
 	void initView() {
 		mCheckBox = (CheckBox) findViewById(R.id.checkbox);
 
+		mEditTextHold = (EditText) findViewById(R.id.edittext_hold);
 		mEditTextRoe = (EditText) findViewById(R.id.edittext_roe);
 		mEditTextRate = (EditText) findViewById(R.id.edittext_rate);
 		mEditTextDiscount = (EditText) findViewById(R.id.edittext_discount);
@@ -61,6 +60,7 @@ public class StockFilterActivity extends DatabaseActivity implements
 
 		mCheckBox.setOnClickListener(this);
 
+		mEditTextHold.setOnClickListener(this);
 		mEditTextRoe.setOnClickListener(this);
 		mEditTextRate.setOnClickListener(this);
 		mEditTextDiscount.setOnClickListener(this);
@@ -78,6 +78,7 @@ public class StockFilterActivity extends DatabaseActivity implements
 	}
 
 	void updateEditText() {
+		mEditTextHold.setText(mStockFilter.getHold());
 		mEditTextRoe.setText(mStockFilter.getRoe());
 		mEditTextRate.setText(mStockFilter.getRate());
 		mEditTextDiscount.setText(mStockFilter.getDiscount());
@@ -87,6 +88,7 @@ public class StockFilterActivity extends DatabaseActivity implements
 		mEditTextYield.setText(mStockFilter.getYield());
 		mEditTextDelta.setText(mStockFilter.getDelta());
 
+		mEditTextHold.setEnabled(mStockFilter.getEnable());
 		mEditTextRoe.setEnabled(mStockFilter.getEnable());
 		mEditTextRate.setEnabled(mStockFilter.getEnable());
 		mEditTextDiscount.setEnabled(mStockFilter.getEnable());
@@ -128,6 +130,7 @@ public class StockFilterActivity extends DatabaseActivity implements
 		case R.id.button_ok:
 			mStockFilter.setEnable(mCheckBox.isChecked());
 
+			mStockFilter.setHold(mEditTextHold.getText().toString());
 			mStockFilter.setRoe(mEditTextRoe.getText().toString());
 			mStockFilter.setRate(mEditTextRate.getText().toString());
 			mStockFilter.setDiscount(mEditTextDiscount.getText().toString());

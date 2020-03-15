@@ -62,6 +62,7 @@ public class StockManager {
 			mStockArrayMapFavorite = new ArrayMap<String, Stock>();
 		}
 
+		mStockFilter = new StockFilter(mContext);
 		/*
 		 * if (mConnectivityManager == null) { mConnectivityManager =
 		 * (ConnectivityManager) mContext
@@ -233,7 +234,7 @@ public class StockManager {
 					Stock stock = new Stock();
 					stock.set(cursor);
 
-					if (!TextUtils.isEmpty(mStockFilter.getHeld())) {
+					if (!TextUtils.isEmpty(mStockFilter.getHold())) {
 						if (stock.getHold() == 0) {
 							continue;
 						}
