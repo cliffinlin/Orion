@@ -223,8 +223,6 @@ public class StockManager {
 			return;
 		}
 
-		mStockFilter.read();
-
 		try {
 			stockArrayMap.clear();
 			cursor = mStockDatabaseManager.queryStock(selection, selectionArgs,
@@ -233,12 +231,6 @@ public class StockManager {
 				while (cursor.moveToNext()) {
 					Stock stock = new Stock();
 					stock.set(cursor);
-
-					if (!TextUtils.isEmpty(mStockFilter.getHold())) {
-						if (stock.getHold() == 0) {
-							continue;
-						}
-					}
 
 					stockArrayMap.put(stock.getSE() + stock.getCode(), stock);
 				}
@@ -326,7 +318,20 @@ public class StockManager {
 	}
 
 	protected String selectStock(String mark) {
-		return DatabaseContract.Stock.COLUMN_MARK + " = '" + mark + "'";
+		String selection = "";
+
+		selection = DatabaseContract.Stock.COLUMN_MARK + " = '" + mark + "'";
+
+		mStockFilter.read();
+
+		if (mStockFilter.getEnable()) {
+			if (!TextUtils.isEmpty(mStockFilter.getHold())) {
+				selection += " AND " + DatabaseContract.COLUMN_HOLD
+						+ mStockFilter.getHold();
+			}
+		}
+
+		return selection;
 	}
 
 	String selectStockHSA() {

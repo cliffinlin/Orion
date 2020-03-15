@@ -295,38 +295,38 @@ public class StockFilter extends Setting {
 
 		if (mEnable) {
 			if (!TextUtils.isEmpty(mHold)) {
-				selection += " AND " + "hold" + mHold;
+				selection += " AND " + DatabaseContract.COLUMN_HOLD + mHold;
 			}
 
 			if (!TextUtils.isEmpty(mRoe)) {
-				selection += " AND " + "roe" + mRoe;
+				selection += " AND " + DatabaseContract.COLUMN_ROE + mRoe;
 			}
 
 			if (!TextUtils.isEmpty(mRate)) {
-				selection += " AND " + "rate" + mRate;
+				selection += " AND " + DatabaseContract.COLUMN_RATE + mRate;
 			}
 			if (!TextUtils.isEmpty(mDiscount)) {
-				selection += " AND " + "discount" + mDiscount;
+				selection += " AND " + DatabaseContract.COLUMN_DISCOUNT + mDiscount;
 			}
 
 			if (!TextUtils.isEmpty(mPE)) {
-				selection += " AND " + "pe" + mPE;
+				selection += " AND " + DatabaseContract.COLUMN_PE + mPE;
 			}
 
 			if (!TextUtils.isEmpty(mPB)) {
-				selection += " AND " + "pb" + mPB;
+				selection += " AND " + DatabaseContract.COLUMN_PB + mPB;
 			}
 
 			if (!TextUtils.isEmpty(mDividend)) {
-				selection += " AND " + "dividend" + mDividend;
+				selection += " AND " + DatabaseContract.COLUMN_DIVIDEND + mDividend;
 			}
 
 			if (!TextUtils.isEmpty(mYield)) {
-				selection += " AND " + "yield" + mYield;
+				selection += " AND " + DatabaseContract.COLUMN_YIELD + mYield;
 			}
 
 			if (!TextUtils.isEmpty(mDelta)) {
-				selection += " AND " + "delta" + mDelta;
+				selection += " AND " + DatabaseContract.COLUMN_DELTA + mDelta;
 			}
 		}
 
