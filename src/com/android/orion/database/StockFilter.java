@@ -11,6 +11,7 @@ public class StockFilter extends Setting {
 
 	boolean mEnable = false;
 
+	String mHeld = "";
 	String mRoe = "";
 	String mRate = "";
 	String mDiscount = "";
@@ -22,6 +23,7 @@ public class StockFilter extends Setting {
 
 	boolean mDefaultEnable = false;
 
+	String mDefaultHeld = "";
 	String mDefaultRoe = "";
 	String mDefaultRate = "";
 	String mDefaultDiscount = "";
@@ -39,6 +41,10 @@ public class StockFilter extends Setting {
 		return mEnable;
 	}
 
+	public String getHeld() {
+		return mHeld;
+	}
+	
 	public String getRoe() {
 		return mRoe;
 	}
@@ -73,6 +79,10 @@ public class StockFilter extends Setting {
 
 	public void setEnable(boolean enable) {
 		mEnable = enable;
+	}
+	
+	public void setHeld(String held) {
+		mHeld = held;
 	}
 
 	public void setRoe(String roe) {
@@ -109,6 +119,10 @@ public class StockFilter extends Setting {
 
 	public void setDefaultEnable(boolean enable) {
 		mDefaultEnable = enable;
+	}
+	
+	public void setDefaultHeld(String held) {
+		mDefaultHeld = held;
 	}
 
 	public void setDefaultRoe(String roe) {
@@ -157,6 +171,10 @@ public class StockFilter extends Setting {
 	}
 
 	void validate() {
+		if (!containOperation(mHeld)) {
+			mHeld = "";
+		}
+
 		if (!containOperation(mRoe)) {
 			mRoe = "";
 		}
@@ -194,6 +212,7 @@ public class StockFilter extends Setting {
 		mEnable = Preferences.readBoolean(mContext,
 				Setting.KEY_STOCK_FILTER_ENABLE, mDefaultEnable);
 
+		mHeld = Preferences.readString(mContext, Setting.KEY_STOCK_FILTER_HELD, mDefaultHeld);
 		mRoe = Preferences.readString(mContext, Setting.KEY_STOCK_FILTER_ROE,
 				mDefaultRoe);
 		mRate = Preferences.readString(mContext, Setting.KEY_STOCK_FILTER_RATE,
@@ -220,6 +239,7 @@ public class StockFilter extends Setting {
 
 		validate();
 
+		Preferences.writeString(mContext, Setting.KEY_STOCK_FILTER_HELD, mHeld);
 		Preferences.writeString(mContext, Setting.KEY_STOCK_FILTER_ROE, mRoe);
 		Preferences.writeString(mContext, Setting.KEY_STOCK_FILTER_RATE, mRate);
 		Preferences.writeString(mContext, Setting.KEY_STOCK_FILTER_DISCOUNT,
@@ -241,6 +261,7 @@ public class StockFilter extends Setting {
 
 		mEnable = bundle.getBoolean(Setting.KEY_STOCK_FILTER_ENABLE, false);
 
+		mHeld = bundle.getString(Setting.KEY_STOCK_FILTER_HELD);
 		mRoe = bundle.getString(Setting.KEY_STOCK_FILTER_ROE);
 		mRate = bundle.getString(Setting.KEY_STOCK_FILTER_RATE);
 		mDiscount = bundle.getString(Setting.KEY_STOCK_FILTER_DISCOUNT);
@@ -258,6 +279,7 @@ public class StockFilter extends Setting {
 
 		bundle.putBoolean(Setting.KEY_STOCK_FILTER_ENABLE, mEnable);
 
+		bundle.putString(Setting.KEY_STOCK_FILTER_HELD, mHeld);
 		bundle.putString(Setting.KEY_STOCK_FILTER_ROE, mRoe);
 		bundle.putString(Setting.KEY_STOCK_FILTER_RATE, mRate);
 		bundle.putString(Setting.KEY_STOCK_FILTER_DISCOUNT, mDiscount);
@@ -272,9 +294,14 @@ public class StockFilter extends Setting {
 		String selection = "";
 
 		if (mEnable) {
+			if (!TextUtils.isEmpty(mHeld)) {
+				selection += " AND " + "hel" + mHeld;
+			}
+
 			if (!TextUtils.isEmpty(mRoe)) {
 				selection += " AND " + "roe" + mRoe;
 			}
+
 			if (!TextUtils.isEmpty(mRate)) {
 				selection += " AND " + "rate" + mRate;
 			}

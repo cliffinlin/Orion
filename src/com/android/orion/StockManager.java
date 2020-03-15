@@ -17,6 +17,7 @@ import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockDatabaseManager;
+import com.android.orion.database.StockFilter;
 import com.android.orion.utility.Utility;
 
 public class StockManager {
@@ -34,6 +35,7 @@ public class StockManager {
 	ArrayMap<String, Stock> mStockArrayMapFavorite = null;
 
 	// ConnectivityManager mConnectivityManager = null;
+	StockFilter mStockFilter;
 
 	public StockManager(Context context) {
 		mContext = context;
@@ -220,6 +222,8 @@ public class StockManager {
 			return;
 		}
 
+		mStockFilter.read();
+
 		try {
 			stockArrayMap.clear();
 			cursor = mStockDatabaseManager.queryStock(selection, selectionArgs,
@@ -228,6 +232,13 @@ public class StockManager {
 				while (cursor.moveToNext()) {
 					Stock stock = new Stock();
 					stock.set(cursor);
+
+					if (!TextUtils.isEmpty(mStockFilter.getHeld())) {
+						if (stock.getHold() == 0) {
+							continue;
+						}
+					}
+
 					stockArrayMap.put(stock.getSE() + stock.getCode(), stock);
 				}
 			}
