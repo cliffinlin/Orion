@@ -77,7 +77,8 @@ public class FinancialData extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_FINANCIAL_EXPENSES,
 				mFinancialExpenses);
 		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT, mNetProfit);
-		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE, mNetProfitPerShare);
+		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE,
+				mNetProfitPerShare);
 
 		return contentValues;
 	}
@@ -168,7 +169,8 @@ public class FinancialData extends DatabaseTable {
 	}
 
 	public void setBookValuePerShare(double bookValuePerShare) {
-		mBookValuePerShare = bookValuePerShare;
+		mBookValuePerShare = Utility.Round(bookValuePerShare,
+				Constants.DOUBLE_FIXED_DECIMAL);
 	}
 
 	void setBookValuePerShare(Cursor cursor) {
@@ -333,7 +335,7 @@ public class FinancialData extends DatabaseTable {
 		setNetProfitPerShare(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE)));
 	}
-	
+
 	public void setupNetProfitPerShare(double totalShare) {
 		if ((mNetProfit == 0) || (totalShare == 0)) {
 			return;

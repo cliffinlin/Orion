@@ -12,8 +12,10 @@ public class StockDeal extends DatabaseTable {
 	private String mCode;
 	private String mName;
 	private double mPrice;
-	private double mDeal;
 	private double mNet;
+	private double mDeal;
+	private double mRoe;
+	private double mPe;
 	private long mVolume;
 	private double mProfit;
 
@@ -49,8 +51,10 @@ public class StockDeal extends DatabaseTable {
 		mCode = "";
 		mName = "";
 		mPrice = 0;
-		mDeal = 0;
 		mNet = 0;
+		mDeal = 0;
+		mRoe = 0;
+		mPe = 0;
 		mVolume = 0;
 		mProfit = 0;
 	}
@@ -67,8 +71,10 @@ public class StockDeal extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
 		contentValues.put(DatabaseContract.COLUMN_PRICE, mPrice);
-		contentValues.put(DatabaseContract.COLUMN_DEAL, mDeal);
 		contentValues.put(DatabaseContract.COLUMN_NET, mNet);
+		contentValues.put(DatabaseContract.COLUMN_DEAL, mDeal);
+		contentValues.put(DatabaseContract.COLUMN_ROE, mRoe);
+		contentValues.put(DatabaseContract.COLUMN_PE, mPe);
 		contentValues.put(DatabaseContract.COLUMN_VOLUME, mVolume);
 		contentValues.put(DatabaseContract.COLUMN_PROFIT, mProfit);
 
@@ -88,8 +94,10 @@ public class StockDeal extends DatabaseTable {
 		setCode(stockDeal.mCode);
 		setName(stockDeal.mName);
 		setPrice(stockDeal.mPrice);
-		setDeal(stockDeal.mDeal);
 		setNet(stockDeal.mNet);
+		setRoe(stockDeal.mRoe);
+		setPe(stockDeal.mPe);
+		setDeal(stockDeal.mDeal);
 		setVolume(stockDeal.mVolume);
 		setProfit(stockDeal.mProfit);
 	}
@@ -108,8 +116,10 @@ public class StockDeal extends DatabaseTable {
 		setCode(cursor);
 		setName(cursor);
 		setPrice(cursor);
-		setDeal(cursor);
 		setNet(cursor);
+		setDeal(cursor);
+		setRoe(cursor);
+		setPe(cursor);
 		setVolume(cursor);
 		setProfit(cursor);
 	}
@@ -182,6 +192,23 @@ public class StockDeal extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_PRICE)));
 	}
 
+	public double getNet() {
+		return mNet;
+	}
+
+	public void setNet(double net) {
+		mNet = net;
+	}
+
+	void setNet(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setNet(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_NET)));
+	}
+	
 	public double getDeal() {
 		return mDeal;
 	}
@@ -199,23 +226,40 @@ public class StockDeal extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_DEAL)));
 	}
 
-	public double getNet() {
-		return mNet;
+	public double getRoe() {
+		return mRoe;
 	}
 
-	public void setNet(double net) {
-		mNet = net;
+	public void setRoe(double roe) {
+		mRoe = roe;
 	}
 
-	void setNet(Cursor cursor) {
+	void setRoe(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}
 
-		setNet(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_NET)));
+		setRoe(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_ROE)));
 	}
 
+	public double getPe() {
+		return mPe;
+	}
+
+	public void setPe(double pe) {
+		mPe = pe;
+	}
+
+	void setPe(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setPe(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_PE)));
+	}
+	
 	public long getVolume() {
 		return mVolume;
 	}

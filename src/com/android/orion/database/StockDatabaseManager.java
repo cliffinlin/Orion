@@ -709,6 +709,8 @@ public class StockDatabaseManager extends DatabaseManager {
 					stockDeal.set(cursor);
 
 					stockDeal.setPrice(stock.getPrice());
+					stockDeal.setRoe(stock.getRoe());
+					stockDeal.setPe(stock.getPE());
 					stockDeal.setupNet();
 					stockDeal.setupProfit();
 
@@ -1003,6 +1005,8 @@ public class StockDatabaseManager extends DatabaseManager {
 					stockDeal.setCode(stock.getCode());
 					stockDeal.setName(stock.getName());
 					stockDeal.setPrice(stock.getPrice());
+					stockDeal.setRoe(stock.getRoe());
+					stockDeal.setPe(stock.getPE());
 					stockDeal.setDeal(deal);
 					stockDeal.setCreated(Utility.getCurrentDateTimeString());
 					insertStockDeal(stockDeal);

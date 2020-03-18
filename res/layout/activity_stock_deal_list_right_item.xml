@@ -30,6 +30,21 @@
         android:textSize="18sp" />
 
     <TextView
+        android:id="@+id/roe"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/pe"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="18sp" />
+    <TextView
         android:id="@+id/volume"
         android:layout_width="80dp"
         android:layout_height="50dp"
