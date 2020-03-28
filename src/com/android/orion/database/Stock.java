@@ -35,8 +35,9 @@ public class Stock extends DatabaseTable {
 	private double mCost;
 	private double mProfit;
 	private double mTotalShare;
-	private double mBookValuePerShare;
 	private double mNetProfit;
+	private double mBookValuePerShare;
+	private double mCashFlowPerShare;
 	private double mNetProfitPerShare;
 	private double mRate;
 	private double mRoe;
@@ -44,6 +45,7 @@ public class Stock extends DatabaseTable {
 	private double mDiscount;
 	private double mPE;
 	private double mPB;
+	private String mDividendDate;
 	private double mDividend;
 	private double mYield;
 	private double mDelta;
@@ -102,8 +104,9 @@ public class Stock extends DatabaseTable {
 		mCost = 0;
 		mProfit = 0;
 		mTotalShare = 0;
-		mBookValuePerShare = 0;
 		mNetProfit = 0;
+		mBookValuePerShare = 0;
+		mCashFlowPerShare = 0;
 		mNetProfitPerShare = 0;
 		mRate = 0;
 		mRoe = 0;
@@ -111,6 +114,7 @@ public class Stock extends DatabaseTable {
 		mDiscount = 0;
 		mPE = 0;
 		mPB = 0;
+		mDividendDate = "";
 		mDividend = 0;
 		mYield = 0;
 		mDelta = 0;
@@ -146,9 +150,11 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_COST, mCost);
 		contentValues.put(DatabaseContract.COLUMN_PROFIT, mProfit);
 		contentValues.put(DatabaseContract.COLUMN_TOTAL_SHARE, mTotalShare);
+		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT, mNetProfit);
 		contentValues.put(DatabaseContract.COLUMN_BOOK_VALUE_PER_SHARE,
 				mBookValuePerShare);
-		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT, mNetProfit);
+		contentValues.put(DatabaseContract.COLUMN_CASH_FLOW_PER_SHARE,
+				mCashFlowPerShare);
 		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE,
 				mNetProfitPerShare);
 		contentValues.put(DatabaseContract.COLUMN_RATE, mRate);
@@ -157,6 +163,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_DISCOUNT, mDiscount);
 		contentValues.put(DatabaseContract.COLUMN_PE, mPE);
 		contentValues.put(DatabaseContract.COLUMN_PB, mPB);
+		contentValues.put(DatabaseContract.COLUMN_DIVIDEND_DATE, mDividendDate);
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND, mDividend);
 		contentValues.put(DatabaseContract.COLUMN_YIELD, mYield);
 		contentValues.put(DatabaseContract.COLUMN_DELTA, mDelta);
@@ -204,9 +211,11 @@ public class Stock extends DatabaseTable {
 		}
 
 		contentValues.put(DatabaseContract.COLUMN_TOTAL_SHARE, mTotalShare);
+		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT, mNetProfit);
 		contentValues.put(DatabaseContract.COLUMN_BOOK_VALUE_PER_SHARE,
 				mBookValuePerShare);
-		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT, mNetProfit);
+		contentValues.put(DatabaseContract.COLUMN_CASH_FLOW_PER_SHARE,
+				mCashFlowPerShare);
 		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE,
 				mNetProfitPerShare);
 		contentValues.put(DatabaseContract.COLUMN_RATE, mRate);
@@ -215,6 +224,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_DISCOUNT, mDiscount);
 		contentValues.put(DatabaseContract.COLUMN_PE, mPE);
 		contentValues.put(DatabaseContract.COLUMN_PB, mPB);
+		contentValues.put(DatabaseContract.COLUMN_DIVIDEND_DATE, mDividendDate);
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND, mDividend);
 		contentValues.put(DatabaseContract.COLUMN_YIELD, mYield);
 		contentValues.put(DatabaseContract.COLUMN_DELTA, mDelta);
@@ -257,8 +267,9 @@ public class Stock extends DatabaseTable {
 		setCost(stock.mCost);
 		setProfit(stock.mProfit);
 		setTotalShare(stock.mTotalShare);
-		setBookValuePerShare(stock.mBookValuePerShare);
 		setNetProfit(stock.mNetProfit);
+		setBookValuePerShare(stock.mBookValuePerShare);
+		setCashFlowPerShare(stock.mCashFlowPerShare);
 		setNetProfitPerShare(stock.mNetProfitPerShare);
 		setRate(stock.mRate);
 		setRoe(stock.mRoe);
@@ -266,6 +277,7 @@ public class Stock extends DatabaseTable {
 		setDiscount(stock.mDiscount);
 		setPE(stock.mPE);
 		setPB(stock.mPB);
+		setDividendDate(stock.mDividendDate);
 		setDividend(stock.mDividend);
 		setYield(stock.mYield);
 		setDelta(stock.mDelta);
@@ -307,8 +319,9 @@ public class Stock extends DatabaseTable {
 		setCost(cursor);
 		setProfit(cursor);
 		setTotalShare(cursor);
-		setBookValuePerShare(cursor);
 		setNetProfit(cursor);
+		setBookValuePerShare(cursor);
+		setCashFlowPerShare(cursor);
 		setNetProfitPerShare(cursor);
 		setRate(cursor);
 		setRoe(cursor);
@@ -316,6 +329,7 @@ public class Stock extends DatabaseTable {
 		setDiscount(cursor);
 		setPE(cursor);
 		setPB(cursor);
+		setDividendDate(cursor);
 		setDividend(cursor);
 		setYield(cursor);
 		setDelta(cursor);
@@ -763,6 +777,23 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_TOTAL_SHARE)));
 	}
 
+	public double getNetProfit() {
+		return mNetProfit;
+	}
+
+	public void setNetProfit(double netProfit) {
+		mNetProfit = netProfit;
+	}
+
+	void setNetProfit(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setNetProfit(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_NET_PROFIT)));
+	}
+	
 	public double getBookValuePerShare() {
 		return mBookValuePerShare;
 	}
@@ -780,23 +811,23 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_BOOK_VALUE_PER_SHARE)));
 	}
 
-	public double getNetProfit() {
-		return mNetProfit;
+	public double getCashFlowPerShare() {
+		return mCashFlowPerShare;
 	}
 
-	public void setNetProfit(double netProfit) {
-		mNetProfit = netProfit;
+	public void setCashFlowPerShare(double cashFlowPerShare) {
+		mCashFlowPerShare = cashFlowPerShare;
 	}
 
-	void setNetProfit(Cursor cursor) {
+	void setCashFlowPerShare(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}
 
-		setNetProfit(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_NET_PROFIT)));
+		setCashFlowPerShare(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_CASH_FLOW_PER_SHARE)));
 	}
-
+	
 	public double getNetProfitPerShare() {
 		return mNetProfitPerShare;
 	}
@@ -914,6 +945,23 @@ public class Stock extends DatabaseTable {
 
 		setPB(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_PB)));
+	}
+
+	public String getDividendDate() {
+		return mDividendDate;
+	}
+
+	public void setDividendDate(String dividendDate) {
+		mDividendDate = dividendDate;
+	}
+
+	void setDividendDate(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setDividendDate(cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_DIVIDEND_DATE)));
 	}
 
 	public double getDividend() {

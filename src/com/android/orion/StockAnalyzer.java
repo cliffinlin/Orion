@@ -76,6 +76,7 @@ public class StockAnalyzer extends StockManager {
 		stock.setupRate(financialDataList);
 
 		stock.setBookValuePerShare(financialData.getBookValuePerShare());
+		stock.setCashFlowPerShare(financialData.getCashFlowPerShare());
 		stock.setNetProfit(financialData.getNetProfit());
 
 		stock.setupNetProfitPerShare();
@@ -97,6 +98,7 @@ public class StockAnalyzer extends StockManager {
 		mStockDatabaseManager.getShareBonusList(stock, shareBonusList,
 				sortOrder);
 
+		int i = 0;
 		for (ShareBonus shareBonus : shareBonusList) {
 			String dividendDateString = shareBonus.getDividendDate();
 			if (!TextUtils.isEmpty(dividendDateString)) {
@@ -114,12 +116,16 @@ public class StockAnalyzer extends StockManager {
 
 			totalDivident += shareBonus.getDividend();
 
+			if (i == 0) {
+				stock.setDividendDate(dividendDateString);
+			}
 			stock.setDividend(Utility.Round(totalDivident,
 					Constants.DOUBLE_FIXED_DECIMAL));
 			stock.setupYield();
 			stock.setupDelta();
 
 			prevYearString = yearString;
+			i++;
 		}
 	}
 

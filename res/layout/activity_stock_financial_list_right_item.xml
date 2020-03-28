@@ -62,6 +62,14 @@
         android:textSize="18sp" />
 
     <TextView
+        android:id="@+id/cash_flow_per_share"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="18sp" />
+
+    <TextView
         android:id="@+id/net_profit_per_share"
         android:layout_width="80dp"
         android:layout_height="50dp"
@@ -96,6 +104,14 @@
     <TextView
         android:id="@+id/pb"
         android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/dividend_date"
+        android:layout_width="100dp"
         android:layout_height="50dp"
         android:layout_weight="1"
         android:gravity="center"

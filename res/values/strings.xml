@@ -49,11 +49,13 @@
     <string name="delete_confirm">Do You Qant to Delete?</string>
     <string name="discount">Discount</string>
     <string name="dividend">Dividend</string>
+    <string name="dividend_date">XD Date</string>
     <string name="valuation">Valuation</string>
     <string name="yield">Yield</string>
     <string name="total_share">Share</string>
-    <string name="book_value_per_share">BPS</string>
     <string name="net_profit">NetProfit</string>
+    <string name="book_value_per_share">BPS</string>
+    <string name="cash_flow_per_share">CPS</string>
     <string name="net_profit_per_share">NPS</string>
     <string name="roe">Roe</string>
     <string name="download">Download</string>
