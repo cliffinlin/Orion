@@ -53,6 +53,7 @@
     <string name="valuation">Valuation</string>
     <string name="yield">Yield</string>
     <string name="total_share">Share</string>
+    <string name="debt_to_net_assets_rato">D2B</string>
     <string name="net_profit">NetProfit</string>
     <string name="book_value_per_share">BPS</string>
     <string name="cash_flow_per_share">CPS</string>

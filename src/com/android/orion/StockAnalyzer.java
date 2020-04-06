@@ -75,11 +75,15 @@ public class StockAnalyzer extends StockManager {
 
 		stock.setupRate(financialDataList);
 
+		stock.setTotalAssets(financialData.getTotalAssets());
+		stock.setTotalLongTermLiabilities(financialData
+				.getTotalLongTermLiabilities());
 		stock.setBookValuePerShare(financialData.getBookValuePerShare());
 		stock.setCashFlowPerShare(financialData.getCashFlowPerShare());
 		stock.setNetProfit(financialData.getNetProfit());
 
 		stock.setupNetProfitPerShare();
+		stock.setupDebtToNetAssetsRato();
 		stock.setupRoe();
 		stock.setupValuation();
 		stock.setupPE();

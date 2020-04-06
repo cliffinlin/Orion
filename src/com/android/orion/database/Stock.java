@@ -35,7 +35,10 @@ public class Stock extends DatabaseTable {
 	private double mCost;
 	private double mProfit;
 	private double mTotalShare;
+	private double mTotalAssets;
+	private double mTotalLongTermLiabilities;
 	private double mNetProfit;
+	private double mDebtToNetAssetsRato;
 	private double mBookValuePerShare;
 	private double mCashFlowPerShare;
 	private double mNetProfitPerShare;
@@ -104,7 +107,10 @@ public class Stock extends DatabaseTable {
 		mCost = 0;
 		mProfit = 0;
 		mTotalShare = 0;
+		mTotalAssets = 0;
+		mTotalLongTermLiabilities = 0;
 		mNetProfit = 0;
+		mDebtToNetAssetsRato = 0;
 		mBookValuePerShare = 0;
 		mCashFlowPerShare = 0;
 		mNetProfitPerShare = 0;
@@ -150,7 +156,12 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_COST, mCost);
 		contentValues.put(DatabaseContract.COLUMN_PROFIT, mProfit);
 		contentValues.put(DatabaseContract.COLUMN_TOTAL_SHARE, mTotalShare);
+		contentValues.put(DatabaseContract.COLUMN_TOTAL_ASSETS, mTotalAssets);
+		contentValues.put(DatabaseContract.COLUMN_TOTAL_LONG_TERM_LIABILITIES,
+				mTotalLongTermLiabilities);
 		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT, mNetProfit);
+		contentValues.put(DatabaseContract.COLUMN_DEBT_TO_NET_ASSETS_RATIO,
+				mDebtToNetAssetsRato);
 		contentValues.put(DatabaseContract.COLUMN_BOOK_VALUE_PER_SHARE,
 				mBookValuePerShare);
 		contentValues.put(DatabaseContract.COLUMN_CASH_FLOW_PER_SHARE,
@@ -211,7 +222,12 @@ public class Stock extends DatabaseTable {
 		}
 
 		contentValues.put(DatabaseContract.COLUMN_TOTAL_SHARE, mTotalShare);
+		contentValues.put(DatabaseContract.COLUMN_TOTAL_ASSETS, mTotalAssets);
+		contentValues.put(DatabaseContract.COLUMN_TOTAL_LONG_TERM_LIABILITIES,
+				mTotalLongTermLiabilities);
 		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT, mNetProfit);
+		contentValues.put(DatabaseContract.COLUMN_DEBT_TO_NET_ASSETS_RATIO,
+				mDebtToNetAssetsRato);
 		contentValues.put(DatabaseContract.COLUMN_BOOK_VALUE_PER_SHARE,
 				mBookValuePerShare);
 		contentValues.put(DatabaseContract.COLUMN_CASH_FLOW_PER_SHARE,
@@ -267,7 +283,10 @@ public class Stock extends DatabaseTable {
 		setCost(stock.mCost);
 		setProfit(stock.mProfit);
 		setTotalShare(stock.mTotalShare);
+		setTotalAssets(stock.mTotalAssets);
+		setTotalLongTermLiabilities(stock.mTotalLongTermLiabilities);
 		setNetProfit(stock.mNetProfit);
+		setDebtToNetAssetsRato(stock.mDebtToNetAssetsRato);
 		setBookValuePerShare(stock.mBookValuePerShare);
 		setCashFlowPerShare(stock.mCashFlowPerShare);
 		setNetProfitPerShare(stock.mNetProfitPerShare);
@@ -319,7 +338,10 @@ public class Stock extends DatabaseTable {
 		setCost(cursor);
 		setProfit(cursor);
 		setTotalShare(cursor);
+		setTotalAssets(cursor);
+		setTotalLongTermLiabilities(cursor);
 		setNetProfit(cursor);
+		setDebtToNetAssetsRato(cursor);
 		setBookValuePerShare(cursor);
 		setCashFlowPerShare(cursor);
 		setNetProfitPerShare(cursor);
@@ -777,6 +799,41 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_TOTAL_SHARE)));
 	}
 
+	public double getTotalAssets() {
+		return mTotalAssets;
+	}
+
+	public void setTotalAssets(double totalAssets) {
+		mTotalAssets = totalAssets;
+	}
+
+	void setTotalAssets(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setTotalAssets(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_TOTAL_ASSETS)));
+	}
+
+	public double getTotalLongTermLiabilities() {
+		return mTotalLongTermLiabilities;
+	}
+
+	public void setTotalLongTermLiabilities(double totalLongTermLiabilities) {
+		mTotalLongTermLiabilities = totalLongTermLiabilities;
+	}
+
+	void setTotalLongTermLiabilities(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setTotalLongTermLiabilities(cursor
+				.getDouble(cursor
+						.getColumnIndex(DatabaseContract.COLUMN_TOTAL_LONG_TERM_LIABILITIES)));
+	}
+
 	public double getNetProfit() {
 		return mNetProfit;
 	}
@@ -793,7 +850,25 @@ public class Stock extends DatabaseTable {
 		setNetProfit(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_NET_PROFIT)));
 	}
-	
+
+	public double getDebtToNetAssetsRato() {
+		return mDebtToNetAssetsRato;
+	}
+
+	public void setDebtToNetAssetsRato(double debtToNetAssetsRato) {
+		mDebtToNetAssetsRato = debtToNetAssetsRato;
+	}
+
+	void setDebtToNetAssetsRato(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setDebtToNetAssetsRato(cursor
+				.getDouble(cursor
+						.getColumnIndex(DatabaseContract.COLUMN_DEBT_TO_NET_ASSETS_RATIO)));
+	}
+
 	public double getBookValuePerShare() {
 		return mBookValuePerShare;
 	}
@@ -827,7 +902,7 @@ public class Stock extends DatabaseTable {
 		setCashFlowPerShare(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_CASH_FLOW_PER_SHARE)));
 	}
-	
+
 	public double getNetProfitPerShare() {
 		return mNetProfitPerShare;
 	}
@@ -1093,6 +1168,24 @@ public class Stock extends DatabaseTable {
 		}
 
 		mNetProfitPerShare = Utility.Round(mNetProfit / mTotalShare,
+				Constants.DOUBLE_FIXED_DECIMAL);
+	}
+
+	public void setupDebtToNetAssetsRato() {
+		if (mTotalLongTermLiabilities == 0) {
+			return;
+		}
+
+		if (mTotalShare == 0) {
+			return;
+		}
+
+		if (mBookValuePerShare == 0) {
+			return;
+		}
+
+		mDebtToNetAssetsRato = Utility.Round(mTotalLongTermLiabilities
+				/ mTotalShare / mBookValuePerShare,
 				Constants.DOUBLE_FIXED_DECIMAL);
 	}
 

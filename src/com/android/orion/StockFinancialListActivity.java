@@ -11,6 +11,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -58,6 +59,7 @@ public class StockFinancialListActivity extends ListActivity implements
 	TextView mTextViewDiscount = null;
 	TextView mTextViewTotalShare = null;
 	TextView mTextViewNetProfit = null;
+	TextView mDebtToNetAssetsRato = null;
 	TextView mTextViewBookValuePerShare = null;
 	TextView mTextViewCashFlowPerShare = null;
 	TextView mTextViewNetProfitPerShare = null;
@@ -250,6 +252,9 @@ public class StockFinancialListActivity extends ListActivity implements
 		case R.id.net_profit:
 			mSortOrderColumn = DatabaseContract.COLUMN_NET_PROFIT;
 			break;
+		case R.id.debt_to_net_assets_rato:
+			mSortOrderColumn = DatabaseContract.COLUMN_DEBT_TO_NET_ASSETS_RATIO;
+			break;
 		case R.id.book_value_per_share:
 			mSortOrderColumn = DatabaseContract.COLUMN_BOOK_VALUE_PER_SHARE;
 			break;
@@ -320,6 +325,7 @@ public class StockFinancialListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewDiscount, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewTotalShare, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewNetProfit, mHeaderTextDefaultColor);
+		setHeaderTextColor(mDebtToNetAssetsRato, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewBookValuePerShare, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewCashFlowPerShare, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewNetProfitPerShare, mHeaderTextDefaultColor);
@@ -385,6 +391,11 @@ public class StockFinancialListActivity extends ListActivity implements
 		mTextViewNetProfit = (TextView) findViewById(R.id.net_profit);
 		if (mTextViewNetProfit != null) {
 			mTextViewNetProfit.setOnClickListener(this);
+		}
+
+		mDebtToNetAssetsRato = (TextView) findViewById(R.id.debt_to_net_assets_rato);
+		if (mDebtToNetAssetsRato != null) {
+			mDebtToNetAssetsRato.setOnClickListener(this);
 		}
 
 		mTextViewBookValuePerShare = (TextView) findViewById(R.id.book_value_per_share);
@@ -457,6 +468,9 @@ public class StockFinancialListActivity extends ListActivity implements
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_NET_PROFIT)) {
 			setHeaderTextColor(mTextViewNetProfit, mHeaderTextHighlightColor);
 		} else if (mSortOrder
+				.contains(DatabaseContract.COLUMN_DEBT_TO_NET_ASSETS_RATIO)) {
+			setHeaderTextColor(mDebtToNetAssetsRato, mHeaderTextHighlightColor);
+		} else if (mSortOrder
 				.contains(DatabaseContract.COLUMN_BOOK_VALUE_PER_SHARE)) {
 			setHeaderTextColor(mTextViewBookValuePerShare,
 					mHeaderTextHighlightColor);
@@ -498,6 +512,7 @@ public class StockFinancialListActivity extends ListActivity implements
 				DatabaseContract.COLUMN_DISCOUNT,
 				DatabaseContract.COLUMN_TOTAL_SHARE,
 				DatabaseContract.COLUMN_NET_PROFIT,
+				DatabaseContract.COLUMN_DEBT_TO_NET_ASSETS_RATIO,
 				DatabaseContract.COLUMN_BOOK_VALUE_PER_SHARE,
 				DatabaseContract.COLUMN_CASH_FLOW_PER_SHARE,
 				DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE,
@@ -508,10 +523,10 @@ public class StockFinancialListActivity extends ListActivity implements
 				DatabaseContract.COLUMN_YIELD, DatabaseContract.COLUMN_DELTA };
 		int[] mRightTo = new int[] { R.id.price, R.id.net, R.id.valuation,
 				R.id.discount, R.id.total_share, R.id.net_profit,
-				R.id.book_value_per_share, R.id.cash_flow_per_share,
-				R.id.net_profit_per_share, R.id.rate, R.id.roe, R.id.pe,
-				R.id.pb, R.id.dividend_date, R.id.dividend, R.id.yield,
-				R.id.delta };
+				R.id.debt_to_net_assets_rato, R.id.book_value_per_share,
+				R.id.cash_flow_per_share, R.id.net_profit_per_share, R.id.rate,
+				R.id.roe, R.id.pe, R.id.pb, R.id.dividend_date, R.id.dividend,
+				R.id.yield, R.id.delta };
 
 		mLeftListView = (ListView) findViewById(R.id.left_listview);
 		mLeftAdapter = new SimpleCursorAdapter(this,
@@ -536,6 +551,7 @@ public class StockFinancialListActivity extends ListActivity implements
 	}
 
 	void restartLoader() {
+		Log.d(TAG, "restartLoader");
 		mLoaderManager
 				.restartLoader(LOADER_ID_STOCK_FINANCIAL_LIST, null, this);
 	}
