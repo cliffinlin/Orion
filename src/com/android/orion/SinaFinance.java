@@ -798,10 +798,10 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		try {
-			String responseString = new String(response.getBytes("ISO-8859-1"),
-					"GB2312");
+//			String responseString = new String(response.getBytes("ISO-8859-1"),
+//					"GB2312");
 
-			Document doc = Jsoup.parse(responseString);
+			Document doc = Jsoup.parse(response);
 			if (doc == null) {
 				Log.d(TAG, "handleResponseFinancialData return " + " doc = "
 						+ doc);
@@ -968,10 +968,10 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		try {
-			String responseString = new String(response.getBytes("ISO-8859-1"),
-					"GB2312");
+//			String responseString = new String(response.getBytes("ISO-8859-1"),
+//					"GB2312");
 
-			Document doc = Jsoup.parse(responseString);
+			Document doc = Jsoup.parse(response);
 			if (doc == null) {
 				Log.d(TAG, "handleResponseShareBonus return " + " doc = " + doc);
 				return;
@@ -1120,10 +1120,10 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		try {
-			String responseString = new String(response.getBytes("ISO-8859-1"),
-					"GB2312");
+//			String responseString = new String(response.getBytes("ISO-8859-1"),
+//					"GB2312");
 
-			Document doc = Jsoup.parse(responseString);
+			Document doc = Jsoup.parse(response);
 			if (doc == null) {
 				Log.d(TAG, "handleResponseIPO return " + " doc = " + doc);
 				return;
