@@ -208,7 +208,7 @@ public class StockDeal extends DatabaseTable {
 		setNet(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_NET)));
 	}
-	
+
 	public double getDeal() {
 		return mDeal;
 	}
@@ -259,7 +259,7 @@ public class StockDeal extends DatabaseTable {
 		setPe(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_PE)));
 	}
-	
+
 	public long getVolume() {
 		return mVolume;
 	}

@@ -7,7 +7,7 @@ public class ShareBonus extends DatabaseTable {
 	private long mStockId;
 	private String mDate;// 公告日期
 	private double mDividend;// 派息(税前)(元)(每10股)
-	private String mDividendDate;// 除权除息日
+	private String mXDDate;// 除权除息日
 
 	public ShareBonus() {
 		init();
@@ -29,7 +29,7 @@ public class ShareBonus extends DatabaseTable {
 		mStockId = 0;
 		mDate = "";
 		mDividend = 0;
-		mDividendDate = "";
+		mXDDate = "";
 	}
 
 	public ContentValues getContentValues() {
@@ -43,7 +43,7 @@ public class ShareBonus extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_STOCK_ID, mStockId);
 		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND, mDividend);
-		contentValues.put(DatabaseContract.COLUMN_DIVIDEND_DATE, mDividendDate);
+		contentValues.put(DatabaseContract.COLUMN_XD_DATE, mXDDate);
 
 		return contentValues;
 	}
@@ -60,7 +60,7 @@ public class ShareBonus extends DatabaseTable {
 		setStockId(shareBonus.mStockId);
 		setDate(shareBonus.mDate);
 		setDividend(shareBonus.mDividend);
-		setDividendDate(shareBonus.mDividendDate);
+		setXDDate(shareBonus.mXDDate);
 	}
 
 	@Override
@@ -76,7 +76,7 @@ public class ShareBonus extends DatabaseTable {
 		setStockID(cursor);
 		setDate(cursor);
 		setDividend(cursor);
-		setDividendDate(cursor);
+		setXDDate(cursor);
 	}
 
 	public long getStockId() {
@@ -130,20 +130,20 @@ public class ShareBonus extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_DIVIDEND)));
 	}
 
-	public String getDividendDate() {
-		return mDividendDate;
+	public String getXDDate() {
+		return mXDDate;
 	}
 
-	public void setDividendDate(String dividendDate) {
-		mDividendDate = dividendDate;
+	public void setXDDate(String xdDate) {
+		mXDDate = xdDate;
 	}
 
-	void setDividendDate(Cursor cursor) {
+	void setXDDate(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}
 
-		setDividendDate(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_DIVIDEND_DATE)));
+		setXDDate(cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_XD_DATE)));
 	}
 }

@@ -104,9 +104,9 @@ public class StockAnalyzer extends StockManager {
 
 		int i = 0;
 		for (ShareBonus shareBonus : shareBonusList) {
-			String dividendDateString = shareBonus.getDividendDate();
-			if (!TextUtils.isEmpty(dividendDateString)) {
-				String[] strings = dividendDateString.split("-");
+			String dateString = shareBonus.getDate();
+			if (!TextUtils.isEmpty(dateString)) {
+				String[] strings = dateString.split("-");
 				if (strings != null && strings.length > 0) {
 					yearString = strings[0];
 				}
@@ -121,7 +121,8 @@ public class StockAnalyzer extends StockManager {
 			totalDivident += shareBonus.getDividend();
 
 			if (i == 0) {
-				stock.setDividendDate(dividendDateString);
+				stock.setDate(shareBonus.getDate());
+				stock.setXDDate(shareBonus.getXDDate());
 			}
 			stock.setDividend(Utility.Round(totalDivident,
 					Constants.DOUBLE_FIXED_DECIMAL));

@@ -798,8 +798,9 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		try {
-//			String responseString = new String(response.getBytes("ISO-8859-1"),
-//					"GB2312");
+			// String responseString = new
+			// String(response.getBytes("ISO-8859-1"),
+			// "GB2312");
 
 			Document doc = Jsoup.parse(response);
 			if (doc == null) {
@@ -953,7 +954,7 @@ public class SinaFinance extends StockDataProvider {
 		boolean bulkInsert = false;
 		String dateString = "";
 		String dividendString = "";
-		String dividendDateString = "";
+		String xdDateString = "";
 		List<ContentValues> contentValuesList = new ArrayList<ContentValues>();
 
 		if ((stock == null) || TextUtils.isEmpty(response)) {
@@ -968,8 +969,9 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		try {
-//			String responseString = new String(response.getBytes("ISO-8859-1"),
-//					"GB2312");
+			// String responseString = new
+			// String(response.getBytes("ISO-8859-1"),
+			// "GB2312");
 
 			Document doc = Jsoup.parse(response);
 			if (doc == null) {
@@ -1037,15 +1039,14 @@ public class SinaFinance extends StockDataProvider {
 						continue;
 					}
 
-					dividendDateString = tdElements.get(5).text();
-					if (TextUtils.isEmpty(dividendDateString)
-							|| dividendDateString.contains("--")) {
+					xdDateString = tdElements.get(5).text();
+					if (TextUtils.isEmpty(xdDateString)) {
 						continue;
 					}
 
 					shareBonus.setDate(dateString);
 					shareBonus.setDividend(Double.valueOf(dividendString));
-					shareBonus.setDividendDate(dividendDateString);
+					shareBonus.setXDDate(xdDateString);
 
 					if (bulkInsert) {
 						shareBonus.setCreated(Utility
@@ -1120,8 +1121,9 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		try {
-//			String responseString = new String(response.getBytes("ISO-8859-1"),
-//					"GB2312");
+			// String responseString = new
+			// String(response.getBytes("ISO-8859-1"),
+			// "GB2312");
 
 			Document doc = Jsoup.parse(response);
 			if (doc == null) {

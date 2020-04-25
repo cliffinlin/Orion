@@ -48,10 +48,11 @@ public class Stock extends DatabaseTable {
 	private double mDiscount;
 	private double mPE;
 	private double mPB;
-	private String mDividendDate;
+	private String mDate;
 	private double mDividend;
 	private double mYield;
 	private double mDelta;
+	private String mXDDate;
 
 	public ArrayList<StockData> mStockDataListMin1 = new ArrayList<StockData>();
 	public ArrayList<StockData> mStockDataListMin5 = new ArrayList<StockData>();
@@ -120,10 +121,11 @@ public class Stock extends DatabaseTable {
 		mDiscount = 0;
 		mPE = 0;
 		mPB = 0;
-		mDividendDate = "";
+		mDate = "";
 		mDividend = 0;
 		mYield = 0;
 		mDelta = 0;
+		mXDDate = "";
 	}
 
 	@Override
@@ -174,10 +176,11 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_DISCOUNT, mDiscount);
 		contentValues.put(DatabaseContract.COLUMN_PE, mPE);
 		contentValues.put(DatabaseContract.COLUMN_PB, mPB);
-		contentValues.put(DatabaseContract.COLUMN_DIVIDEND_DATE, mDividendDate);
+		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND, mDividend);
 		contentValues.put(DatabaseContract.COLUMN_YIELD, mYield);
 		contentValues.put(DatabaseContract.COLUMN_DELTA, mDelta);
+		contentValues.put(DatabaseContract.COLUMN_XD_DATE, mXDDate);
 
 		return contentValues;
 	}
@@ -240,10 +243,11 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_DISCOUNT, mDiscount);
 		contentValues.put(DatabaseContract.COLUMN_PE, mPE);
 		contentValues.put(DatabaseContract.COLUMN_PB, mPB);
-		contentValues.put(DatabaseContract.COLUMN_DIVIDEND_DATE, mDividendDate);
+		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND, mDividend);
 		contentValues.put(DatabaseContract.COLUMN_YIELD, mYield);
 		contentValues.put(DatabaseContract.COLUMN_DELTA, mDelta);
+		contentValues.put(DatabaseContract.COLUMN_XD_DATE, mXDDate);
 
 		return contentValues;
 	}
@@ -296,10 +300,11 @@ public class Stock extends DatabaseTable {
 		setDiscount(stock.mDiscount);
 		setPE(stock.mPE);
 		setPB(stock.mPB);
-		setDividendDate(stock.mDividendDate);
+		setDate(stock.mDate);
 		setDividend(stock.mDividend);
 		setYield(stock.mYield);
 		setDelta(stock.mDelta);
+		setXDDate(stock.mXDDate);
 	}
 
 	@Override
@@ -351,10 +356,11 @@ public class Stock extends DatabaseTable {
 		setDiscount(cursor);
 		setPE(cursor);
 		setPB(cursor);
-		setDividendDate(cursor);
+		setDate(cursor);
 		setDividend(cursor);
 		setYield(cursor);
 		setDelta(cursor);
+		setXDDate(cursor);
 	}
 
 	public String getClases() {
@@ -1022,21 +1028,21 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_PB)));
 	}
 
-	public String getDividendDate() {
-		return mDividendDate;
+	public String getDate() {
+		return mDate;
 	}
 
-	public void setDividendDate(String dividendDate) {
-		mDividendDate = dividendDate;
+	public void setDate(String date) {
+		mDate = date;
 	}
 
-	void setDividendDate(Cursor cursor) {
+	void setDate(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}
 
-		setDividendDate(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_DIVIDEND_DATE)));
+		setDate(cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_DATE)));
 	}
 
 	public double getDividend() {
@@ -1088,6 +1094,23 @@ public class Stock extends DatabaseTable {
 
 		setDelta(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_DELTA)));
+	}
+
+	public String getXDDate() {
+		return mXDDate;
+	}
+
+	public void setXDDate(String xdDate) {
+		mXDDate = xdDate;
+	}
+
+	void setXDDate(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setXDDate(cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_XD_DATE)));
 	}
 
 	public String getAction(String period) {

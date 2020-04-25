@@ -969,7 +969,8 @@ public class StockDatabaseManager extends DatabaseManager {
 		getStockDealMin(stock, stockDealMin);
 
 		if ((stockDealMax.getVolume() > 0) && (stockDealMin.getVolume() > 0)) {
-			result = (1.0 - order * Constants.STOCK_DEAL_DISTRIBUTION_RATE) * stockDealMax.getDeal();
+			result = (1.0 - order * Constants.STOCK_DEAL_DISTRIBUTION_RATE)
+					* stockDealMax.getDeal();
 		}
 
 		return result;
@@ -985,12 +986,13 @@ public class StockDatabaseManager extends DatabaseManager {
 		if (stock == null) {
 			return;
 		}
-		
+
 		getStockDealMax(stock, stockDealMax);
 		getStockDealMin(stock, stockDealMin);
 
 		if ((stockDealMax.getVolume() > 0) && (stockDealMin.getVolume() > 0)) {
-			getStockDealList(stock, stockDealToBuyList, getStockDealListToBuySelection(stock));
+			getStockDealList(stock, stockDealToBuyList,
+					getStockDealListToBuySelection(stock));
 			deal = stockDealMax.getDeal();
 			while (deal > 1.0) {
 				if (deal < stockDealMin.getDeal()) {
@@ -999,7 +1001,7 @@ public class StockDatabaseManager extends DatabaseManager {
 							deleteStockDealById(stockDealToBuy);
 						}
 					}
-					
+
 					StockDeal stockDeal = new StockDeal();
 					stockDeal.setSE(stock.getSE());
 					stockDeal.setCode(stock.getCode());
@@ -1012,7 +1014,7 @@ public class StockDatabaseManager extends DatabaseManager {
 					insertStockDeal(stockDeal);
 					break;
 				}
-				
+
 				i++;
 				deal = (1.0 - i * Constants.STOCK_DEAL_DISTRIBUTION_RATE)
 						* stockDealMax.getDeal();

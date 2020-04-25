@@ -44,7 +44,7 @@ public class StockData extends StockDatabaseTable {
 		init();
 		setPeriod(period);
 	}
-	
+
 	public StockData(StockData stockData) {
 		set(stockData);
 	}

@@ -67,10 +67,11 @@ public class StockFinancialListActivity extends ListActivity implements
 	TextView mTextViewRoe = null;
 	TextView mTextViewPE = null;
 	TextView mTextViewPB = null;
-	TextView mTextViewDividendDate = null;
+	TextView mTextViewDate = null;
 	TextView mTextViewDividend = null;
 	TextView mTextViewYield = null;
 	TextView mTextViewDelta = null;
+	TextView mTextViewXDDate = null;
 
 	ListView mLeftListView = null;
 	ListView mRightListView = null;
@@ -276,8 +277,8 @@ public class StockFinancialListActivity extends ListActivity implements
 		case R.id.pb:
 			mSortOrderColumn = DatabaseContract.COLUMN_PB;
 			break;
-		case R.id.dividend_date:
-			mSortOrderColumn = DatabaseContract.COLUMN_DIVIDEND_DATE;
+		case R.id.date:
+			mSortOrderColumn = DatabaseContract.COLUMN_DATE;
 			break;
 		case R.id.dividend:
 			mSortOrderColumn = DatabaseContract.COLUMN_DIVIDEND;
@@ -287,6 +288,9 @@ public class StockFinancialListActivity extends ListActivity implements
 			break;
 		case R.id.delta:
 			mSortOrderColumn = DatabaseContract.COLUMN_DELTA;
+			break;
+		case R.id.xd_date:
+			mSortOrderColumn = DatabaseContract.COLUMN_XD_DATE;
 			break;
 		default:
 			mSortOrderColumn = DatabaseContract.COLUMN_CODE;
@@ -333,10 +337,11 @@ public class StockFinancialListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewRoe, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewPE, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewPB, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewDividendDate, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewDate, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewDividend, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewYield, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewDelta, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewXDDate, mHeaderTextDefaultColor);
 	}
 
 	void setVisibility(String key, TextView textView) {
@@ -433,9 +438,9 @@ public class StockFinancialListActivity extends ListActivity implements
 			mTextViewPB.setOnClickListener(this);
 		}
 
-		mTextViewDividendDate = (TextView) findViewById(R.id.dividend_date);
-		if (mTextViewDividendDate != null) {
-			mTextViewDividendDate.setOnClickListener(this);
+		mTextViewDate = (TextView) findViewById(R.id.date);
+		if (mTextViewDate != null) {
+			mTextViewDate.setOnClickListener(this);
 		}
 
 		mTextViewDividend = (TextView) findViewById(R.id.dividend);
@@ -451,6 +456,11 @@ public class StockFinancialListActivity extends ListActivity implements
 		mTextViewDelta = (TextView) findViewById(R.id.delta);
 		if (mTextViewDelta != null) {
 			mTextViewDelta.setOnClickListener(this);
+		}
+
+		mTextViewXDDate = (TextView) findViewById(R.id.xd_date);
+		if (mTextViewXDDate != null) {
+			mTextViewXDDate.setOnClickListener(this);
 		}
 
 		if (mSortOrder.contains(DatabaseContract.COLUMN_CODE)) {
@@ -490,14 +500,16 @@ public class StockFinancialListActivity extends ListActivity implements
 			setHeaderTextColor(mTextViewPE, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PB)) {
 			setHeaderTextColor(mTextViewPB, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_DIVIDEND_DATE)) {
-			setHeaderTextColor(mTextViewDividendDate, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_DATE)) {
+			setHeaderTextColor(mTextViewDate, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_DIVIDEND)) {
 			setHeaderTextColor(mTextViewDividend, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_YIELD)) {
 			setHeaderTextColor(mTextViewYield, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_DELTA)) {
 			setHeaderTextColor(mTextViewDelta, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_XD_DATE)) {
+			setHeaderTextColor(mTextViewXDDate, mHeaderTextHighlightColor);
 		} else {
 		}
 	}
@@ -518,15 +530,15 @@ public class StockFinancialListActivity extends ListActivity implements
 				DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE,
 				DatabaseContract.COLUMN_RATE, DatabaseContract.COLUMN_ROE,
 				DatabaseContract.COLUMN_PE, DatabaseContract.COLUMN_PB,
-				DatabaseContract.COLUMN_DIVIDEND_DATE,
-				DatabaseContract.COLUMN_DIVIDEND,
-				DatabaseContract.COLUMN_YIELD, DatabaseContract.COLUMN_DELTA };
+				DatabaseContract.COLUMN_DATE, DatabaseContract.COLUMN_DIVIDEND,
+				DatabaseContract.COLUMN_YIELD, DatabaseContract.COLUMN_DELTA,
+				DatabaseContract.COLUMN_XD_DATE };
 		int[] mRightTo = new int[] { R.id.price, R.id.net, R.id.valuation,
 				R.id.discount, R.id.total_share, R.id.net_profit,
 				R.id.debt_to_net_assets_rato, R.id.book_value_per_share,
 				R.id.cash_flow_per_share, R.id.net_profit_per_share, R.id.rate,
-				R.id.roe, R.id.pe, R.id.pb, R.id.dividend_date, R.id.dividend,
-				R.id.yield, R.id.delta };
+				R.id.roe, R.id.pe, R.id.pb, R.id.date, R.id.dividend,
+				R.id.yield, R.id.delta, R.id.xd_date };
 
 		mLeftListView = (ListView) findViewById(R.id.left_listview);
 		mLeftAdapter = new SimpleCursorAdapter(this,

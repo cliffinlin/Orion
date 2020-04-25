@@ -44,7 +44,7 @@ public class StockFilter extends Setting {
 	public String getHold() {
 		return mHold;
 	}
-	
+
 	public String getRoe() {
 		return mRoe;
 	}
@@ -80,7 +80,7 @@ public class StockFilter extends Setting {
 	public void setEnable(boolean enable) {
 		mEnable = enable;
 	}
-	
+
 	public void setHold(String hold) {
 		mHold = hold;
 	}
@@ -120,7 +120,7 @@ public class StockFilter extends Setting {
 	public void setDefaultEnable(boolean enable) {
 		mDefaultEnable = enable;
 	}
-	
+
 	public void setDefaultHold(String hold) {
 		mDefaultHold = hold;
 	}
@@ -182,27 +182,27 @@ public class StockFilter extends Setting {
 		if (!containOperation(mRate)) {
 			mRate = "";
 		}
-		
+
 		if (!containOperation(mDiscount)) {
 			mDiscount = "";
 		}
-		
+
 		if (!containOperation(mPE)) {
 			mPE = "";
 		}
-		
+
 		if (!containOperation(mPB)) {
 			mPB = "";
 		}
-		
+
 		if (!containOperation(mDividend)) {
 			mDividend = "";
 		}
-		
+
 		if (!containOperation(mYield)) {
 			mYield = "";
 		}
-		
+
 		if (!containOperation(mDelta)) {
 			mDelta = "";
 		}
@@ -212,7 +212,8 @@ public class StockFilter extends Setting {
 		mEnable = Preferences.readBoolean(mContext,
 				Setting.KEY_STOCK_FILTER_ENABLE, mDefaultEnable);
 
-		mHold = Preferences.readString(mContext, Setting.KEY_STOCK_FILTER_HOLD, mDefaultHold);
+		mHold = Preferences.readString(mContext, Setting.KEY_STOCK_FILTER_HOLD,
+				mDefaultHold);
 		mRoe = Preferences.readString(mContext, Setting.KEY_STOCK_FILTER_ROE,
 				mDefaultRoe);
 		mRate = Preferences.readString(mContext, Setting.KEY_STOCK_FILTER_RATE,
@@ -306,7 +307,8 @@ public class StockFilter extends Setting {
 				selection += " AND " + DatabaseContract.COLUMN_RATE + mRate;
 			}
 			if (!TextUtils.isEmpty(mDiscount)) {
-				selection += " AND " + DatabaseContract.COLUMN_DISCOUNT + mDiscount;
+				selection += " AND " + DatabaseContract.COLUMN_DISCOUNT
+						+ mDiscount;
 			}
 
 			if (!TextUtils.isEmpty(mPE)) {
@@ -318,7 +320,8 @@ public class StockFilter extends Setting {
 			}
 
 			if (!TextUtils.isEmpty(mDividend)) {
-				selection += " AND " + DatabaseContract.COLUMN_DIVIDEND + mDividend;
+				selection += " AND " + DatabaseContract.COLUMN_DIVIDEND
+						+ mDividend;
 			}
 
 			if (!TextUtils.isEmpty(mYield)) {

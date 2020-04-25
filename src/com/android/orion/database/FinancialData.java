@@ -1,10 +1,10 @@
 package com.android.orion.database;
 
-import com.android.orion.Constants;
-import com.android.orion.utility.Utility;
-
 import android.content.ContentValues;
 import android.database.Cursor;
+
+import com.android.orion.Constants;
+import com.android.orion.utility.Utility;
 
 public class FinancialData extends DatabaseTable {
 	private long mStockId;
