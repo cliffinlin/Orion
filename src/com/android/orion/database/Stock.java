@@ -1261,8 +1261,19 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-		mDelta = Utility.Round(mNetProfitPerShare / (mDividend / 10.0),
-				Constants.DOUBLE_FIXED_DECIMAL);
+		if (mNetProfitPerShare <= 0) {
+			return;
+		}
+
+		if (mRoe <= 0) {
+			return;
+		}
+
+		double yieldRate = (mDividend / 10.0) / mNetProfitPerShare;
+
+		mDelta = mRoe * (1 - yieldRate) + mPE * yieldRate;
+
+		mDelta = Utility.Round(mDelta, Constants.DOUBLE_FIXED_DECIMAL);
 	}
 
 	public void setupValuation() {
