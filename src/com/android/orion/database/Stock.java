@@ -1211,7 +1211,7 @@ public class Stock extends DatabaseTable {
 				/ mTotalShare / mBookValuePerShare,
 				Constants.DOUBLE_FIXED_DECIMAL);
 	}
-
+	
 	public void setupRoe() {
 		if (mBookValuePerShare == 0) {
 			return;
@@ -1220,7 +1220,42 @@ public class Stock extends DatabaseTable {
 		mRoe = Utility.Round(100.0 * mNetProfitPerShare / mBookValuePerShare,
 				Constants.DOUBLE_FIXED_DECIMAL);
 	}
+	
+	public void setupRoe(ArrayList<FinancialData> financialDataList) {
+		double bookValuePerShare = 0;
+		double netProfit = 0;
+		double totalNetProfit = 0;
 
+		if ((financialDataList == null)
+				|| (financialDataList.size() < Constants.SEASONS_IN_A_YEAR + 1)) {
+			return;
+		}
+		
+		totalNetProfit = 0;
+		
+		for (int i = 0; i < Constants.SEASONS_IN_A_YEAR; i++) {
+			FinancialData financialData = financialDataList.get(i);
+			FinancialData prev = financialDataList.get(i + 1);
+			
+			if (financialData.getDate().contains("03-31")) {
+				netProfit = financialData.getNetProfitPerShare();
+			} else {
+				netProfit = financialData.getNetProfitPerShare() - prev.getNetProfitPerShare();
+			}
+			
+			totalNetProfit += netProfit;
+		}
+		
+		bookValuePerShare = financialDataList.get(Constants.SEASONS_IN_A_YEAR).getBookValuePerShare();
+		
+		if (bookValuePerShare == 0) {
+			return;
+		}
+
+		mRoe = Utility.Round(100.0 * totalNetProfit / bookValuePerShare,
+				Constants.DOUBLE_FIXED_DECIMAL);
+	}
+	
 	public void setupPE() {
 		if (mPrice == 0) {
 			return;
@@ -1229,7 +1264,39 @@ public class Stock extends DatabaseTable {
 		mPE = Utility.Round(100.0 * mNetProfitPerShare / mPrice,
 				Constants.DOUBLE_FIXED_DECIMAL);
 	}
+	
+	public void setupPE(ArrayList<FinancialData> financialDataList) {
+		double netProfit = 0;
+		double totalNetProfit = 0;
 
+		if (mPrice == 0) {
+			return;
+		}
+
+		if ((financialDataList == null)
+				|| (financialDataList.size() < Constants.SEASONS_IN_A_YEAR + 1)) {
+			return;
+		}
+		
+		totalNetProfit = 0;
+		
+		for (int i = 0; i < Constants.SEASONS_IN_A_YEAR; i++) {
+			FinancialData financialData = financialDataList.get(i);
+			FinancialData prev = financialDataList.get(i + 1);
+			
+			if (financialData.getDate().contains("03-31")) {
+				netProfit = financialData.getNetProfitPerShare();
+			} else {
+				netProfit = financialData.getNetProfitPerShare() - prev.getNetProfitPerShare();
+			}
+			
+			totalNetProfit += netProfit;
+		}
+		
+		mPE = Utility.Round(100.0 * totalNetProfit / mPrice,
+				Constants.DOUBLE_FIXED_DECIMAL);
+	}
+	
 	public void setupPB() {
 		if (mBookValuePerShare == 0) {
 			return;

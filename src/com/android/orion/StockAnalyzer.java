@@ -84,9 +84,9 @@ public class StockAnalyzer extends StockManager {
 
 		stock.setupNetProfitPerShare();
 		stock.setupDebtToNetAssetsRato();
-		stock.setupRoe();
+		stock.setupRoe(financialDataList);
 		stock.setupValuation();
-		stock.setupPE();
+		stock.setupPE(financialDataList);
 		stock.setupPB();
 	}
 
