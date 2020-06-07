@@ -954,7 +954,7 @@ public class SinaFinance extends StockDataProvider {
 		boolean bulkInsert = false;
 		String dateString = "";
 		String dividendString = "";
-		String xdDateString = "";
+		String rDateString = "";
 		List<ContentValues> contentValuesList = new ArrayList<ContentValues>();
 
 		if ((stock == null) || TextUtils.isEmpty(response)) {
@@ -1039,14 +1039,14 @@ public class SinaFinance extends StockDataProvider {
 						continue;
 					}
 
-					xdDateString = tdElements.get(5).text();
-					if (TextUtils.isEmpty(xdDateString)) {
+					rDateString = tdElements.get(6).text();
+					if (TextUtils.isEmpty(rDateString)) {
 						continue;
 					}
 
 					shareBonus.setDate(dateString);
 					shareBonus.setDividend(Double.valueOf(dividendString));
-					shareBonus.setXDDate(xdDateString);
+					shareBonus.setRDate(rDateString);
 
 					if (bulkInsert) {
 						shareBonus.setCreated(Utility
@@ -1216,7 +1216,8 @@ public class SinaFinance extends StockDataProvider {
 					}
 
 					priceString = tdElements.get(7).text();
-					if (TextUtils.isEmpty(priceString)) {
+					if (TextUtils.isEmpty(priceString)
+							|| !Utility.isNumber(priceString)) {
 						priceString = "0";
 					}
 

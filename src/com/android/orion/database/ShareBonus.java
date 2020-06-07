@@ -7,7 +7,7 @@ public class ShareBonus extends DatabaseTable {
 	private long mStockId;
 	private String mDate;// 公告日期
 	private double mDividend;// 派息(税前)(元)(每10股)
-	private String mXDDate;// 除权除息日
+	private String mRDate;// 股权登记日
 
 	public ShareBonus() {
 		init();
@@ -29,7 +29,7 @@ public class ShareBonus extends DatabaseTable {
 		mStockId = 0;
 		mDate = "";
 		mDividend = 0;
-		mXDDate = "";
+		mRDate = "";
 	}
 
 	public ContentValues getContentValues() {
@@ -43,7 +43,7 @@ public class ShareBonus extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_STOCK_ID, mStockId);
 		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND, mDividend);
-		contentValues.put(DatabaseContract.COLUMN_XD_DATE, mXDDate);
+		contentValues.put(DatabaseContract.COLUMN_R_DATE, mRDate);
 
 		return contentValues;
 	}
@@ -60,7 +60,7 @@ public class ShareBonus extends DatabaseTable {
 		setStockId(shareBonus.mStockId);
 		setDate(shareBonus.mDate);
 		setDividend(shareBonus.mDividend);
-		setXDDate(shareBonus.mXDDate);
+		setRDate(shareBonus.mRDate);
 	}
 
 	@Override
@@ -76,7 +76,7 @@ public class ShareBonus extends DatabaseTable {
 		setStockID(cursor);
 		setDate(cursor);
 		setDividend(cursor);
-		setXDDate(cursor);
+		setRDate(cursor);
 	}
 
 	public long getStockId() {
@@ -130,20 +130,20 @@ public class ShareBonus extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_DIVIDEND)));
 	}
 
-	public String getXDDate() {
-		return mXDDate;
+	public String getRDate() {
+		return mRDate;
 	}
 
-	public void setXDDate(String xdDate) {
-		mXDDate = xdDate;
+	public void setRDate(String rDate) {
+		mRDate = rDate;
 	}
 
-	void setXDDate(Cursor cursor) {
+	void setRDate(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}
 
-		setXDDate(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_XD_DATE)));
+		setRDate(cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_R_DATE)));
 	}
 }

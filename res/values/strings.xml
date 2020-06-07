@@ -49,7 +49,7 @@
     <string name="delete_confirm">Do You Qant to Delete?</string>
     <string name="discount">Discount</string>
     <string name="dividend">Dividend</string>
-    <string name="xd_date">XD Date</string>
+    <string name="r_date">R Date</string>
     <string name="valuation">Valuation</string>
     <string name="yield">Yield</string>
     <string name="total_share">Share</string>

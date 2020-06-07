@@ -98,7 +98,7 @@ public final class DatabaseContract {
 	public static final String COLUMN_DEBT_TO_NET_ASSETS_RATIO = "debt_to_net_assets_ratio";// 净资产负债率
 
 	// http://vip.stock.finance.sina.com.cn/corp/go.php/vISSUE_ShareBonus/stockid/600028.phtml
-	public static final String COLUMN_XD_DATE = "xd_date";
+	public static final String COLUMN_R_DATE = "r_date";
 
 	public static final String COLUMN_TIME_TO_MARKET = "time_to_market";
 
@@ -166,7 +166,7 @@ public final class DatabaseContract {
 				COLUMN_CASH_FLOW_PER_SHARE, COLUMN_NET_PROFIT_PER_SHARE,
 				COLUMN_RATE, COLUMN_ROE, COLUMN_VALUATION, COLUMN_DISCOUNT,
 				COLUMN_PE, COLUMN_PB, COLUMN_DATE, COLUMN_DIVIDEND,
-				COLUMN_YIELD, COLUMN_DELTA, COLUMN_XD_DATE, COLUMN_CREATED,
+				COLUMN_YIELD, COLUMN_DELTA, COLUMN_R_DATE, COLUMN_CREATED,
 				COLUMN_MODIFIED };
 
 		public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
@@ -203,7 +203,7 @@ public final class DatabaseContract {
 				+ COMMA_SEP + COLUMN_DATE + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_DIVIDEND + DOUBLE_TYPE + COMMA_SEP + COLUMN_YIELD
 				+ DOUBLE_TYPE + COMMA_SEP + COLUMN_DELTA + DOUBLE_TYPE
-				+ COMMA_SEP + COLUMN_XD_DATE + TEXT_TYPE + COMMA_SEP
+				+ COMMA_SEP + COLUMN_R_DATE + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_CREATED + TEXT_TYPE + COMMA_SEP + COLUMN_MODIFIED
 				+ TEXT_TYPE + " )";
 
@@ -357,13 +357,13 @@ public final class DatabaseContract {
 				+ " ASC";
 
 		public static final String[] PROJECTION_ALL = { _ID, COLUMN_STOCK_ID,
-				COLUMN_DATE, COLUMN_DIVIDEND, COLUMN_XD_DATE, COLUMN_CREATED,
+				COLUMN_DATE, COLUMN_DIVIDEND, COLUMN_R_DATE, COLUMN_CREATED,
 				COLUMN_MODIFIED };
 
 		private static final String CREATE_TABLE_CONTENT = " (" + _ID
 				+ " INTEGER PRIMARY KEY," + COLUMN_STOCK_ID + TEXT_TYPE
 				+ COMMA_SEP + COLUMN_DATE + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_DIVIDEND + DOUBLE_TYPE + COMMA_SEP + COLUMN_XD_DATE
+				+ COLUMN_DIVIDEND + DOUBLE_TYPE + COMMA_SEP + COLUMN_R_DATE
 				+ TEXT_TYPE + COMMA_SEP + COLUMN_CREATED + TEXT_TYPE
 				+ COMMA_SEP + COLUMN_MODIFIED + TEXT_TYPE + " )";
 

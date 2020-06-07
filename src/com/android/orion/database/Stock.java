@@ -52,7 +52,7 @@ public class Stock extends DatabaseTable {
 	private double mDividend;
 	private double mYield;
 	private double mDelta;
-	private String mXDDate;
+	private String mRDate;
 
 	public ArrayList<StockData> mStockDataListMin1 = new ArrayList<StockData>();
 	public ArrayList<StockData> mStockDataListMin5 = new ArrayList<StockData>();
@@ -125,7 +125,7 @@ public class Stock extends DatabaseTable {
 		mDividend = 0;
 		mYield = 0;
 		mDelta = 0;
-		mXDDate = "";
+		mRDate = "";
 	}
 
 	@Override
@@ -180,7 +180,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND, mDividend);
 		contentValues.put(DatabaseContract.COLUMN_YIELD, mYield);
 		contentValues.put(DatabaseContract.COLUMN_DELTA, mDelta);
-		contentValues.put(DatabaseContract.COLUMN_XD_DATE, mXDDate);
+		contentValues.put(DatabaseContract.COLUMN_R_DATE, mRDate);
 
 		return contentValues;
 	}
@@ -247,7 +247,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND, mDividend);
 		contentValues.put(DatabaseContract.COLUMN_YIELD, mYield);
 		contentValues.put(DatabaseContract.COLUMN_DELTA, mDelta);
-		contentValues.put(DatabaseContract.COLUMN_XD_DATE, mXDDate);
+		contentValues.put(DatabaseContract.COLUMN_R_DATE, mRDate);
 
 		return contentValues;
 	}
@@ -304,7 +304,7 @@ public class Stock extends DatabaseTable {
 		setDividend(stock.mDividend);
 		setYield(stock.mYield);
 		setDelta(stock.mDelta);
-		setXDDate(stock.mXDDate);
+		setRDate(stock.mRDate);
 	}
 
 	@Override
@@ -360,7 +360,7 @@ public class Stock extends DatabaseTable {
 		setDividend(cursor);
 		setYield(cursor);
 		setDelta(cursor);
-		setXDDate(cursor);
+		setRDate(cursor);
 	}
 
 	public String getClases() {
@@ -1096,21 +1096,21 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_DELTA)));
 	}
 
-	public String getXDDate() {
-		return mXDDate;
+	public String getRDate() {
+		return mRDate;
 	}
 
-	public void setXDDate(String xdDate) {
-		mXDDate = xdDate;
+	public void setRDate(String rDate) {
+		mRDate = rDate;
 	}
 
-	void setXDDate(Cursor cursor) {
+	void setRDate(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}
 
-		setXDDate(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_XD_DATE)));
+		setRDate(cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_R_DATE)));
 	}
 
 	public String getAction(String period) {

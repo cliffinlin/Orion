@@ -122,7 +122,7 @@ public class StockAnalyzer extends StockManager {
 
 			if (i == 0) {
 				stock.setDate(shareBonus.getDate());
-				stock.setXDDate(shareBonus.getXDDate());
+				stock.setRDate(shareBonus.getRDate());
 			}
 			stock.setDividend(Utility.Round(totalDivident,
 					Constants.DOUBLE_FIXED_DECIMAL));

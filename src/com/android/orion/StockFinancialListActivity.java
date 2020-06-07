@@ -71,7 +71,7 @@ public class StockFinancialListActivity extends ListActivity implements
 	TextView mTextViewDividend = null;
 	TextView mTextViewYield = null;
 	TextView mTextViewDelta = null;
-	TextView mTextViewXDDate = null;
+	TextView mTextViewRDate = null;
 
 	ListView mLeftListView = null;
 	ListView mRightListView = null;
@@ -289,8 +289,8 @@ public class StockFinancialListActivity extends ListActivity implements
 		case R.id.delta:
 			mSortOrderColumn = DatabaseContract.COLUMN_DELTA;
 			break;
-		case R.id.xd_date:
-			mSortOrderColumn = DatabaseContract.COLUMN_XD_DATE;
+		case R.id.r_date:
+			mSortOrderColumn = DatabaseContract.COLUMN_R_DATE;
 			break;
 		default:
 			mSortOrderColumn = DatabaseContract.COLUMN_CODE;
@@ -341,7 +341,7 @@ public class StockFinancialListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewDividend, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewYield, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewDelta, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewXDDate, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewRDate, mHeaderTextDefaultColor);
 	}
 
 	void setVisibility(String key, TextView textView) {
@@ -458,9 +458,9 @@ public class StockFinancialListActivity extends ListActivity implements
 			mTextViewDelta.setOnClickListener(this);
 		}
 
-		mTextViewXDDate = (TextView) findViewById(R.id.xd_date);
-		if (mTextViewXDDate != null) {
-			mTextViewXDDate.setOnClickListener(this);
+		mTextViewRDate = (TextView) findViewById(R.id.r_date);
+		if (mTextViewRDate != null) {
+			mTextViewRDate.setOnClickListener(this);
 		}
 
 		if (mSortOrder.contains(DatabaseContract.COLUMN_CODE)) {
@@ -508,8 +508,8 @@ public class StockFinancialListActivity extends ListActivity implements
 			setHeaderTextColor(mTextViewYield, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_DELTA)) {
 			setHeaderTextColor(mTextViewDelta, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_XD_DATE)) {
-			setHeaderTextColor(mTextViewXDDate, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_R_DATE)) {
+			setHeaderTextColor(mTextViewRDate, mHeaderTextHighlightColor);
 		} else {
 		}
 	}
@@ -532,13 +532,13 @@ public class StockFinancialListActivity extends ListActivity implements
 				DatabaseContract.COLUMN_PE, DatabaseContract.COLUMN_PB,
 				DatabaseContract.COLUMN_DATE, DatabaseContract.COLUMN_DIVIDEND,
 				DatabaseContract.COLUMN_YIELD, DatabaseContract.COLUMN_DELTA,
-				DatabaseContract.COLUMN_XD_DATE };
+				DatabaseContract.COLUMN_R_DATE };
 		int[] mRightTo = new int[] { R.id.price, R.id.net, R.id.valuation,
 				R.id.discount, R.id.total_share, R.id.net_profit,
 				R.id.debt_to_net_assets_rato, R.id.book_value_per_share,
 				R.id.cash_flow_per_share, R.id.net_profit_per_share, R.id.rate,
 				R.id.roe, R.id.pe, R.id.pb, R.id.date, R.id.dividend,
-				R.id.yield, R.id.delta, R.id.xd_date };
+				R.id.yield, R.id.delta, R.id.r_date };
 
 		mLeftListView = (ListView) findViewById(R.id.left_listview);
 		mLeftAdapter = new SimpleCursorAdapter(this,

@@ -199,15 +199,16 @@ public abstract class StockDataProvider extends StockAnalyzer {
 	void downloadStock(Bundle bundle) {
 		int executeType = Constants.EXECUTE_TYPE_NONE;
 		Stock stock = null;
-		
+
 		if (!Utility.isNetworkConnected(mContext)) {
 			return;
 		}
-		
-		if (!Preferences.readBoolean(mContext, Constants.SETTING_KEY_ALARM, false)) {
+
+		if (!Preferences.readBoolean(mContext, Constants.SETTING_KEY_ALARM,
+				false)) {
 			return;
 		}
-		
+
 		resetTargetTime();
 		removeAllCurrrentRequests();
 
