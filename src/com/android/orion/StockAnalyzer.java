@@ -73,8 +73,6 @@ public class StockAnalyzer extends StockManager {
 		mStockDatabaseManager.getFinancialDataList(stock, financialDataList,
 				sortOrder);
 
-		stock.setupRate(financialDataList);
-
 		stock.setTotalAssets(financialData.getTotalAssets());
 		stock.setTotalLongTermLiabilities(financialData
 				.getTotalLongTermLiabilities());
@@ -83,10 +81,12 @@ public class StockAnalyzer extends StockManager {
 		stock.setNetProfit(financialData.getNetProfit());
 
 		stock.setupNetProfitPerShare();
+		stock.setupNetProfitPerShareInYear(financialDataList);
+		stock.setupNetProfitPerShareLastYear(financialDataList);
+		stock.setupRate();
 		stock.setupDebtToNetAssetsRato();
 		stock.setupRoe(financialDataList);
-		stock.setupValuation();
-		stock.setupPE(financialDataList);
+		stock.setupPE();
 		stock.setupPB();
 	}
 

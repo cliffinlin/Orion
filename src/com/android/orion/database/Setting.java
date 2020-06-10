@@ -14,7 +14,6 @@ public class Setting extends DatabaseTable {
 	public static final String KEY_STOCK_FILTER_HOLD = "key_stock_filter_hold";
 	public static final String KEY_STOCK_FILTER_ROE = "key_stock_filter_roe";
 	public static final String KEY_STOCK_FILTER_RATE = "key_stock_filter_rate";
-	public static final String KEY_STOCK_FILTER_DISCOUNT = "key_stock_filter_discount";
 	public static final String KEY_STOCK_FILTER_PE = "key_stock_filter_pe";
 	public static final String KEY_STOCK_FILTER_PB = "key_stock_filter_pb";
 	public static final String KEY_STOCK_FILTER_DIVIDEND = "key_stock_filter_dividend";

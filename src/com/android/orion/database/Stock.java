@@ -42,10 +42,10 @@ public class Stock extends DatabaseTable {
 	private double mBookValuePerShare;
 	private double mCashFlowPerShare;
 	private double mNetProfitPerShare;
+	private double mNetProfitPerShareInYear;
+	private double mNetProfitPerShareLastYear;
 	private double mRate;
 	private double mRoe;
-	private double mValuation;
-	private double mDiscount;
 	private double mPE;
 	private double mPB;
 	private String mDate;
@@ -115,10 +115,10 @@ public class Stock extends DatabaseTable {
 		mBookValuePerShare = 0;
 		mCashFlowPerShare = 0;
 		mNetProfitPerShare = 0;
+		mNetProfitPerShareInYear = 0;
+		mNetProfitPerShareLastYear = 0;
 		mRate = 0;
 		mRoe = 0;
-		mValuation = 0;
-		mDiscount = 0;
 		mPE = 0;
 		mPB = 0;
 		mDate = "";
@@ -170,10 +170,12 @@ public class Stock extends DatabaseTable {
 				mCashFlowPerShare);
 		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE,
 				mNetProfitPerShare);
+		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE_IN_YEAR,
+				mNetProfitPerShareInYear);
+		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE_LAST_YEAR,
+				mNetProfitPerShareLastYear);
 		contentValues.put(DatabaseContract.COLUMN_RATE, mRate);
 		contentValues.put(DatabaseContract.COLUMN_ROE, mRoe);
-		contentValues.put(DatabaseContract.COLUMN_VALUATION, mValuation);
-		contentValues.put(DatabaseContract.COLUMN_DISCOUNT, mDiscount);
 		contentValues.put(DatabaseContract.COLUMN_PE, mPE);
 		contentValues.put(DatabaseContract.COLUMN_PB, mPB);
 		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);
@@ -237,10 +239,12 @@ public class Stock extends DatabaseTable {
 				mCashFlowPerShare);
 		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE,
 				mNetProfitPerShare);
+		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE_IN_YEAR,
+				mNetProfitPerShareInYear);
+		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE_LAST_YEAR,
+				mNetProfitPerShareLastYear);
 		contentValues.put(DatabaseContract.COLUMN_RATE, mRate);
 		contentValues.put(DatabaseContract.COLUMN_ROE, mRoe);
-		contentValues.put(DatabaseContract.COLUMN_VALUATION, mValuation);
-		contentValues.put(DatabaseContract.COLUMN_DISCOUNT, mDiscount);
 		contentValues.put(DatabaseContract.COLUMN_PE, mPE);
 		contentValues.put(DatabaseContract.COLUMN_PB, mPB);
 		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);
@@ -294,10 +298,10 @@ public class Stock extends DatabaseTable {
 		setBookValuePerShare(stock.mBookValuePerShare);
 		setCashFlowPerShare(stock.mCashFlowPerShare);
 		setNetProfitPerShare(stock.mNetProfitPerShare);
+		setNetProfitPerShareInYear(stock.mNetProfitPerShareInYear);
+		setNetProfitPerShareLastYear(stock.mNetProfitPerShareLastYear);
 		setRate(stock.mRate);
 		setRoe(stock.mRoe);
-		setValuation(stock.mValuation);
-		setDiscount(stock.mDiscount);
 		setPE(stock.mPE);
 		setPB(stock.mPB);
 		setDate(stock.mDate);
@@ -350,10 +354,10 @@ public class Stock extends DatabaseTable {
 		setBookValuePerShare(cursor);
 		setCashFlowPerShare(cursor);
 		setNetProfitPerShare(cursor);
+		setNetProfitPerShareInYear(cursor);
+		setNetProfitPerShareLastYear(cursor);
 		setRate(cursor);
 		setRoe(cursor);
-		setValuation(cursor);
-		setDiscount(cursor);
 		setPE(cursor);
 		setPB(cursor);
 		setDate(cursor);
@@ -926,6 +930,40 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE)));
 	}
 
+	public double getNetProfitPerShareInYear() {
+		return mNetProfitPerShareInYear;
+	}
+
+	public void setNetProfitPerShareInYear(double netProfitPerShareInYear) {
+		mNetProfitPerShareInYear = netProfitPerShareInYear;
+	}
+
+	void setNetProfitPerShareInYear(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setNetProfitPerShareInYear(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE_IN_YEAR)));
+	}
+
+	public double getNetProfitPerShareLastYear() {
+		return mNetProfitPerShareLastYear;
+	}
+
+	public void setNetProfitPerShareLastYear(double netProfitPerShareLastYear) {
+		mNetProfitPerShareLastYear = netProfitPerShareLastYear;
+	}
+
+	void setNetProfitPerShareLastYear(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setNetProfitPerShareLastYear(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE_LAST_YEAR)));
+	}
+	
 	public double getRate() {
 		return mRate;
 	}
@@ -958,40 +996,6 @@ public class Stock extends DatabaseTable {
 
 		setRoe(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_ROE)));
-	}
-
-	public double getValuation() {
-		return mValuation;
-	}
-
-	public void setValuation(double valuation) {
-		mValuation = valuation;
-	}
-
-	void setValuation(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setValuation(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_VALUATION)));
-	}
-
-	public double getDiscount() {
-		return mDiscount;
-	}
-
-	public void setDiscount(double discount) {
-		mDiscount = discount;
-	}
-
-	void setDiscount(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setDiscount(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_DISCOUNT)));
 	}
 
 	public double getPE() {
@@ -1165,22 +1169,12 @@ public class Stock extends DatabaseTable {
 		}
 	}
 
-	public void setupRate(ArrayList<FinancialData> financialDataList) {
-		double target = 0;
-		double base = 0;
-
-		if ((financialDataList == null)
-				|| (financialDataList.size() < Constants.SEASONS_IN_A_YEAR)) {
+	public void setupRate() {
+		if (mNetProfitPerShareLastYear == 0) {
 			return;
 		}
 
-		target = financialDataList.get(0).getNetProfit();
-		base = financialDataList.get(Constants.SEASONS_IN_A_YEAR)
-				.getNetProfit();
-
-		if (base != 0) {
-			mRate = target / base;
-		}
+		mRate = mNetProfitPerShareInYear / mNetProfitPerShareLastYear;
 
 		mRate = Utility.Round(mRate, Constants.DOUBLE_FIXED_DECIMAL);
 	}
@@ -1193,7 +1187,63 @@ public class Stock extends DatabaseTable {
 		mNetProfitPerShare = Utility.Round(mNetProfit / mTotalShare,
 				Constants.DOUBLE_FIXED_DECIMAL);
 	}
+	
+	public void setupNetProfitPerShareInYear(ArrayList<FinancialData> financialDataList) {
+		double netProfitPerShare = 0;
+		
+		if (mTotalShare == 0) {
+			return;
+		}
+		
+		if ((financialDataList == null)
+				|| (financialDataList.size() < Constants.SEASONS_IN_A_YEAR + 1)) {
+			return;
+		}
+		
+		mNetProfitPerShareInYear = 0;
+		
+		for (int i = 0; i < Constants.SEASONS_IN_A_YEAR; i++) {
+			FinancialData financialData = financialDataList.get(i);
+			FinancialData prev = financialDataList.get(i + 1);
+			
+			if (financialData.getDate().contains("03-31")) {
+				netProfitPerShare = financialData.getNetProfit()/mTotalShare;
+			} else {
+				netProfitPerShare = (financialData.getNetProfit() - prev.getNetProfit())/mTotalShare;
+			}
+			
+			mNetProfitPerShareInYear += netProfitPerShare;
+		}
+	}
 
+	public void setupNetProfitPerShareLastYear(ArrayList<FinancialData> financialDataList) {
+		double netProfitPerShare = 0;
+		
+		if (mTotalShare == 0) {
+			return;
+		}
+		
+		if ((financialDataList == null)
+				|| (financialDataList.size() < 2 * Constants.SEASONS_IN_A_YEAR + 1)) {
+			return;
+		}
+		
+		mNetProfitPerShareLastYear = 0;
+		
+		for (int i = Constants.SEASONS_IN_A_YEAR; i < 2 * Constants.SEASONS_IN_A_YEAR; i++) {
+			FinancialData financialData = financialDataList.get(i);
+			FinancialData prev = financialDataList.get(i + 1);
+			
+			if (financialData.getDate().contains("03-31")) {
+				netProfitPerShare = financialData.getNetProfit()/mTotalShare;
+			} else {
+				netProfitPerShare = (financialData.getNetProfit() - prev.getNetProfit())/mTotalShare;
+			}
+			
+			mNetProfitPerShareLastYear += netProfitPerShare;
+		}
+	}
+	
 	public void setupDebtToNetAssetsRato() {
 		if (mTotalLongTermLiabilities == 0) {
 			return;
@@ -1223,27 +1273,10 @@ public class Stock extends DatabaseTable {
 	
 	public void setupRoe(ArrayList<FinancialData> financialDataList) {
 		double bookValuePerShare = 0;
-		double netProfit = 0;
-		double totalNetProfit = 0;
 
 		if ((financialDataList == null)
 				|| (financialDataList.size() < Constants.SEASONS_IN_A_YEAR + 1)) {
 			return;
-		}
-		
-		totalNetProfit = 0;
-		
-		for (int i = 0; i < Constants.SEASONS_IN_A_YEAR; i++) {
-			FinancialData financialData = financialDataList.get(i);
-			FinancialData prev = financialDataList.get(i + 1);
-			
-			if (financialData.getDate().contains("03-31")) {
-				netProfit = financialData.getNetProfitPerShare();
-			} else {
-				netProfit = financialData.getNetProfitPerShare() - prev.getNetProfitPerShare();
-			}
-			
-			totalNetProfit += netProfit;
 		}
 		
 		bookValuePerShare = financialDataList.get(Constants.SEASONS_IN_A_YEAR).getBookValuePerShare();
@@ -1252,7 +1285,7 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-		mRoe = Utility.Round(100.0 * totalNetProfit / bookValuePerShare,
+		mRoe = Utility.Round(100.0 * mNetProfitPerShareInYear / bookValuePerShare,
 				Constants.DOUBLE_FIXED_DECIMAL);
 	}
 	
@@ -1261,39 +1294,7 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-		mPE = Utility.Round(100.0 * mNetProfitPerShare / mPrice,
-				Constants.DOUBLE_FIXED_DECIMAL);
-	}
-	
-	public void setupPE(ArrayList<FinancialData> financialDataList) {
-		double netProfit = 0;
-		double totalNetProfit = 0;
-
-		if (mPrice == 0) {
-			return;
-		}
-
-		if ((financialDataList == null)
-				|| (financialDataList.size() < Constants.SEASONS_IN_A_YEAR + 1)) {
-			return;
-		}
-		
-		totalNetProfit = 0;
-		
-		for (int i = 0; i < Constants.SEASONS_IN_A_YEAR; i++) {
-			FinancialData financialData = financialDataList.get(i);
-			FinancialData prev = financialDataList.get(i + 1);
-			
-			if (financialData.getDate().contains("03-31")) {
-				netProfit = financialData.getNetProfitPerShare();
-			} else {
-				netProfit = financialData.getNetProfitPerShare() - prev.getNetProfitPerShare();
-			}
-			
-			totalNetProfit += netProfit;
-		}
-		
-		mPE = Utility.Round(100.0 * totalNetProfit / mPrice,
+		mPE = Utility.Round(100.0 * mNetProfitPerShareInYear / mPrice,
 				Constants.DOUBLE_FIXED_DECIMAL);
 	}
 	
@@ -1328,7 +1329,7 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-		if (mNetProfitPerShare <= 0) {
+		if (mNetProfitPerShareInYear <= 0) {
 			return;
 		}
 
@@ -1336,22 +1337,8 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-		double yieldRate = (mDividend / 10.0) / mNetProfitPerShare;
-
-		mDelta = mRoe * (1 - yieldRate) + mPE * yieldRate;
+		mDelta = (mDividend / 10.0) / mNetProfitPerShareInYear;
 
 		mDelta = Utility.Round(mDelta, Constants.DOUBLE_FIXED_DECIMAL);
-	}
-
-	public void setupValuation() {
-		mValuation = Utility.Round(mNetProfitPerShare
-				/ Constants.RISK_INTEREST_RATE, Constants.DOUBLE_FIXED_DECIMAL);
-
-		if (mValuation == 0) {
-			return;
-		}
-
-		mDiscount = Utility.Round(mPrice / mValuation,
-				Constants.DOUBLE_FIXED_DECIMAL);
 	}
 }

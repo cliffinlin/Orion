@@ -550,7 +550,9 @@ public class StockDataChartListActivity extends OrionBaseActivity implements
 								netProfitPerShare = (float) (financialData
 										.getNetProfit() / mStock
 										.getTotalShare());
-								netProfitPerShare = (float) (netProfitPerShare / Constants.RISK_INTEREST_RATE);
+								// netProfitPerShare = (float)
+								// (netProfitPerShare /
+								// Constants.RISK_INTEREST_RATE);
 							}
 						} else {
 							bookValuePerShare = 0;

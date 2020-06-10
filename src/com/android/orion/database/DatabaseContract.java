@@ -50,8 +50,6 @@ public final class DatabaseContract {
 	public static final String COLUMN_TOTAL_SHARE = "total_share";
 	public static final String COLUMN_RATE = "rate";
 	public static final String COLUMN_ROE = "roe";
-	public static final String COLUMN_VALUATION = "valuation";
-	public static final String COLUMN_DISCOUNT = "discount";
 	public static final String COLUMN_PE = "pe";
 	public static final String COLUMN_PB = "pb";
 	public static final String COLUMN_DIVIDEND = "dividend";
@@ -95,6 +93,8 @@ public final class DatabaseContract {
 	public static final String COLUMN_FINANCIAL_EXPENSES = "financial_expenses";// 财务费用
 	public static final String COLUMN_NET_PROFIT = "net_profit";// 净利润
 	public static final String COLUMN_NET_PROFIT_PER_SHARE = "net_profit_per_share";// 每股净利润
+	public static final String COLUMN_NET_PROFIT_PER_SHARE_IN_YEAR = "net_profit_per_share_in_year";
+	public static final String COLUMN_NET_PROFIT_PER_SHARE_LAST_YEAR = "net_profit_per_share_last_year";
 	public static final String COLUMN_DEBT_TO_NET_ASSETS_RATIO = "debt_to_net_assets_ratio";// 净资产负债率
 
 	// http://vip.stock.finance.sina.com.cn/corp/go.php/vISSUE_ShareBonus/stockid/600028.phtml
@@ -164,7 +164,8 @@ public final class DatabaseContract {
 				COLUMN_TOTAL_LONG_TERM_LIABILITIES, COLUMN_NET_PROFIT,
 				COLUMN_DEBT_TO_NET_ASSETS_RATIO, COLUMN_BOOK_VALUE_PER_SHARE,
 				COLUMN_CASH_FLOW_PER_SHARE, COLUMN_NET_PROFIT_PER_SHARE,
-				COLUMN_RATE, COLUMN_ROE, COLUMN_VALUATION, COLUMN_DISCOUNT,
+				COLUMN_NET_PROFIT_PER_SHARE_IN_YEAR,
+				COLUMN_NET_PROFIT_PER_SHARE_LAST_YEAR, COLUMN_RATE, COLUMN_ROE,
 				COLUMN_PE, COLUMN_PB, COLUMN_DATE, COLUMN_DIVIDEND,
 				COLUMN_YIELD, COLUMN_DELTA, COLUMN_R_DATE, COLUMN_CREATED,
 				COLUMN_MODIFIED };
@@ -196,16 +197,16 @@ public final class DatabaseContract {
 				+ COLUMN_BOOK_VALUE_PER_SHARE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_CASH_FLOW_PER_SHARE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_NET_PROFIT_PER_SHARE + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_NET_PROFIT_PER_SHARE_IN_YEAR + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_NET_PROFIT_PER_SHARE_LAST_YEAR + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_RATE + DOUBLE_TYPE + COMMA_SEP + COLUMN_ROE
-				+ DOUBLE_TYPE + COMMA_SEP + COLUMN_VALUATION + DOUBLE_TYPE
-				+ COMMA_SEP + COLUMN_DISCOUNT + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_PE + DOUBLE_TYPE + COMMA_SEP + COLUMN_PB + DOUBLE_TYPE
-				+ COMMA_SEP + COLUMN_DATE + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_DIVIDEND + DOUBLE_TYPE + COMMA_SEP + COLUMN_YIELD
-				+ DOUBLE_TYPE + COMMA_SEP + COLUMN_DELTA + DOUBLE_TYPE
-				+ COMMA_SEP + COLUMN_R_DATE + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_CREATED + TEXT_TYPE + COMMA_SEP + COLUMN_MODIFIED
-				+ TEXT_TYPE + " )";
+				+ DOUBLE_TYPE + COMMA_SEP + COLUMN_PE + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_PB + DOUBLE_TYPE + COMMA_SEP + COLUMN_DATE + TEXT_TYPE
+				+ COMMA_SEP + COLUMN_DIVIDEND + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_YIELD + DOUBLE_TYPE + COMMA_SEP + COLUMN_DELTA
+				+ DOUBLE_TYPE + COMMA_SEP + COLUMN_R_DATE + TEXT_TYPE
+				+ COMMA_SEP + COLUMN_CREATED + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_MODIFIED + TEXT_TYPE + " )";
 
 		public static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
 				+ TABLE_NAME;

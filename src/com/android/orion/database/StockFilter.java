@@ -14,7 +14,6 @@ public class StockFilter extends Setting {
 	String mHold = "";
 	String mRoe = "";
 	String mRate = "";
-	String mDiscount = "";
 	String mPE = "";
 	String mPB = "";
 	String mDividend = "";
@@ -26,7 +25,6 @@ public class StockFilter extends Setting {
 	String mDefaultHold = "";
 	String mDefaultRoe = "";
 	String mDefaultRate = "";
-	String mDefaultDiscount = "";
 	String mDefaultPE = "";
 	String mDefaultPB = "";
 	String mDefaultDividend = "";
@@ -51,10 +49,6 @@ public class StockFilter extends Setting {
 
 	public String getRate() {
 		return mRate;
-	}
-
-	public String getDiscount() {
-		return mDiscount;
 	}
 
 	public String getPE() {
@@ -93,10 +87,6 @@ public class StockFilter extends Setting {
 		mRate = rate;
 	}
 
-	public void setDiscount(String discount) {
-		mDiscount = discount;
-	}
-
 	public void setPE(String pe) {
 		mPE = pe;
 	}
@@ -131,10 +121,6 @@ public class StockFilter extends Setting {
 
 	public void setDefaultRate(String rate) {
 		mDefaultRate = rate;
-	}
-
-	public void setDefaultDiscount(String discount) {
-		mDefaultDiscount = discount;
 	}
 
 	public void setDefaultPE(String pe) {
@@ -183,10 +169,6 @@ public class StockFilter extends Setting {
 			mRate = "";
 		}
 
-		if (!containOperation(mDiscount)) {
-			mDiscount = "";
-		}
-
 		if (!containOperation(mPE)) {
 			mPE = "";
 		}
@@ -218,8 +200,6 @@ public class StockFilter extends Setting {
 				mDefaultRoe);
 		mRate = Preferences.readString(mContext, Setting.KEY_STOCK_FILTER_RATE,
 				mDefaultRate);
-		mDiscount = Preferences.readString(mContext,
-				Setting.KEY_STOCK_FILTER_DISCOUNT, mDefaultDiscount);
 		mPE = Preferences.readString(mContext, Setting.KEY_STOCK_FILTER_PE,
 				mDefaultPE);
 		mPB = Preferences.readString(mContext, Setting.KEY_STOCK_FILTER_PB,
@@ -243,8 +223,6 @@ public class StockFilter extends Setting {
 		Preferences.writeString(mContext, Setting.KEY_STOCK_FILTER_HOLD, mHold);
 		Preferences.writeString(mContext, Setting.KEY_STOCK_FILTER_ROE, mRoe);
 		Preferences.writeString(mContext, Setting.KEY_STOCK_FILTER_RATE, mRate);
-		Preferences.writeString(mContext, Setting.KEY_STOCK_FILTER_DISCOUNT,
-				mDiscount);
 		Preferences.writeString(mContext, Setting.KEY_STOCK_FILTER_PE, mPE);
 		Preferences.writeString(mContext, Setting.KEY_STOCK_FILTER_PB, mPB);
 		Preferences.writeString(mContext, Setting.KEY_STOCK_FILTER_DIVIDEND,
@@ -265,7 +243,6 @@ public class StockFilter extends Setting {
 		mHold = bundle.getString(Setting.KEY_STOCK_FILTER_HOLD);
 		mRoe = bundle.getString(Setting.KEY_STOCK_FILTER_ROE);
 		mRate = bundle.getString(Setting.KEY_STOCK_FILTER_RATE);
-		mDiscount = bundle.getString(Setting.KEY_STOCK_FILTER_DISCOUNT);
 		mPE = bundle.getString(Setting.KEY_STOCK_FILTER_PE);
 		mPB = bundle.getString(Setting.KEY_STOCK_FILTER_PB);
 		mDividend = bundle.getString(Setting.KEY_STOCK_FILTER_DIVIDEND);
@@ -283,7 +260,6 @@ public class StockFilter extends Setting {
 		bundle.putString(Setting.KEY_STOCK_FILTER_HOLD, mHold);
 		bundle.putString(Setting.KEY_STOCK_FILTER_ROE, mRoe);
 		bundle.putString(Setting.KEY_STOCK_FILTER_RATE, mRate);
-		bundle.putString(Setting.KEY_STOCK_FILTER_DISCOUNT, mDiscount);
 		bundle.putString(Setting.KEY_STOCK_FILTER_PE, mPE);
 		bundle.putString(Setting.KEY_STOCK_FILTER_PB, mPB);
 		bundle.putString(Setting.KEY_STOCK_FILTER_DIVIDEND, mDividend);
@@ -305,10 +281,6 @@ public class StockFilter extends Setting {
 
 			if (!TextUtils.isEmpty(mRate)) {
 				selection += " AND " + DatabaseContract.COLUMN_RATE + mRate;
-			}
-			if (!TextUtils.isEmpty(mDiscount)) {
-				selection += " AND " + DatabaseContract.COLUMN_DISCOUNT
-						+ mDiscount;
 			}
 
 			if (!TextUtils.isEmpty(mPE)) {
