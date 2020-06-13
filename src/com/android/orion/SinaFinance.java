@@ -963,10 +963,10 @@ public class SinaFinance extends StockDataProvider {
 			return;
 		}
 
-		if (TextUtils.isEmpty(shareBonus.getCreated())) {
-			mStockDatabaseManager.deleteShareBonus(shareBonus.getStockId());
-			bulkInsert = true;
-		}
+		// if (TextUtils.isEmpty(shareBonus.getCreated())) {
+		mStockDatabaseManager.deleteShareBonus(shareBonus.getStockId());
+		bulkInsert = true;
+		// }
 
 		try {
 			// String responseString = new

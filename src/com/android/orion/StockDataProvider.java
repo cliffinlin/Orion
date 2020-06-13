@@ -218,37 +218,37 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		stock = getStock(bundle);
 
 		if (stock != null) {
-			downloadShareBonus(stock);
+			downloadShareBonus(executeType, stock);
 			downloadStockInformation(stock);
 
 			downloadStockRealTime(executeType, stock);
 			downloadStockDataHistory(executeType, stock);
 			downloadStockDataRealTime(executeType, stock);
 
-			downloadFinancialData(stock);
+			downloadFinancialData(executeType, stock);
 		} else {
-			downloadShareBonus();
+			downloadShareBonus(executeType);
 			downloadStockInformation();
 
 			downloadStockRealTime(executeType);
 			downloadStockDataHistory(executeType);
 			downloadStockDataRealTime(executeType);
 
-			downloadFinancialData();
+			downloadFinancialData(executeType);
 		}
 	}
 
-	void downloadFinancialData() {
+	void downloadFinancialData(int executeType) {
 		loadStockArrayMapFavorite();
 
 		for (Stock stock : mStockArrayMapFavorite.values()) {
 			downloadStockInformation(stock);
 
-			downloadFinancialData(stock);
+			downloadFinancialData(executeType, stock);
 		}
 	}
 
-	void downloadFinancialData(Stock stock) {
+	void downloadFinancialData(int executeType, Stock stock) {
 		String urlString;
 
 		if (stock == null) {
@@ -262,12 +262,15 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 		mStockDatabaseManager.getFinancialData(stock, financialData);
 
-		if (financialData.getCreated().contains(Utility.getCurrentDateString())
-				|| financialData.getModified().contains(
-						Utility.getCurrentDateString())) {
-			if ((financialData.getBookValuePerShare() != 0)
-					&& (financialData.getNetProfit() != 0)) {
-				return;
+		if (executeType == Constants.EXECUTE_SCHEDULE) {
+			if (financialData.getCreated().contains(
+					Utility.getCurrentDateString())
+					|| financialData.getModified().contains(
+							Utility.getCurrentDateString())) {
+				if ((financialData.getBookValuePerShare() != 0)
+						&& (financialData.getNetProfit() != 0)) {
+					return;
+				}
 			}
 		}
 
@@ -283,13 +286,13 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		// }
 	}
 
-	void downloadShareBonus() {
+	void downloadShareBonus(int executeType) {
 		for (Stock stock : mStockArrayMapFavorite.values()) {
-			downloadShareBonus(stock);
+			downloadShareBonus(executeType, stock);
 		}
 	}
 
-	void downloadShareBonus(Stock stock) {
+	void downloadShareBonus(int executeType, Stock stock) {
 		String urlString;
 
 		if (stock == null) {
@@ -301,12 +304,15 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		ShareBonus shareBonus = new ShareBonus();
 		shareBonus.setStockId(stock.getId());
 
-		mStockDatabaseManager.getShareBonus(stock.getId(), shareBonus);
-		if (shareBonus.getCreated().contains(Utility.getCurrentDateString())
-				|| shareBonus.getModified().contains(
-						Utility.getCurrentDateString())) {
-			if (shareBonus.getDividend() > 0) {
-				return;
+		if (executeType == Constants.EXECUTE_SCHEDULE) {
+			mStockDatabaseManager.getShareBonus(stock.getId(), shareBonus);
+			if (shareBonus.getCreated()
+					.contains(Utility.getCurrentDateString())
+					|| shareBonus.getModified().contains(
+							Utility.getCurrentDateString())) {
+				if (shareBonus.getDividend() > 0) {
+					return;
+				}
 			}
 		}
 

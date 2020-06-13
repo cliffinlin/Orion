@@ -207,8 +207,9 @@ public class StockFinancialListActivity extends ListActivity implements
 		switch (execute) {
 		case EXECUTE_STOCK_FINANCIAL_LOAD:
 			if (mOrionService != null) {
-				mOrionService.downloadFinancialData();
-				mOrionService.downloadShareBonus();
+				mOrionService
+						.downloadFinancialData(Constants.EXECUTE_IMMEDIATE);
+				mOrionService.downloadShareBonus(Constants.EXECUTE_IMMEDIATE);
 			}
 			break;
 
