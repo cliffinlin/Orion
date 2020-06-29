@@ -10,6 +10,7 @@ import com.android.orion.utility.Utility;
 
 public class Stock extends DatabaseTable {
 	private String mClasses;
+	private String mSymbol;//TODO
 	private String mSE;
 	private String mCode;
 	private String mName;
@@ -37,10 +38,10 @@ public class Stock extends DatabaseTable {
 	private double mTotalShare;
 	private double mTotalAssets;
 	private double mTotalLongTermLiabilities;
-	private double mNetProfit;
 	private double mDebtToNetAssetsRato;
 	private double mBookValuePerShare;
 	private double mCashFlowPerShare;
+	private double mNetProfit;
 	private double mNetProfitPerShare;
 	private double mNetProfitPerShareInYear;
 	private double mNetProfitPerShareLastYear;
@@ -110,10 +111,10 @@ public class Stock extends DatabaseTable {
 		mTotalShare = 0;
 		mTotalAssets = 0;
 		mTotalLongTermLiabilities = 0;
-		mNetProfit = 0;
 		mDebtToNetAssetsRato = 0;
 		mBookValuePerShare = 0;
 		mCashFlowPerShare = 0;
+		mNetProfit = 0;
 		mNetProfitPerShare = 0;
 		mNetProfitPerShareInYear = 0;
 		mNetProfitPerShareLastYear = 0;
@@ -161,13 +162,13 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_TOTAL_ASSETS, mTotalAssets);
 		contentValues.put(DatabaseContract.COLUMN_TOTAL_LONG_TERM_LIABILITIES,
 				mTotalLongTermLiabilities);
-		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT, mNetProfit);
 		contentValues.put(DatabaseContract.COLUMN_DEBT_TO_NET_ASSETS_RATIO,
 				mDebtToNetAssetsRato);
 		contentValues.put(DatabaseContract.COLUMN_BOOK_VALUE_PER_SHARE,
 				mBookValuePerShare);
 		contentValues.put(DatabaseContract.COLUMN_CASH_FLOW_PER_SHARE,
 				mCashFlowPerShare);
+		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT, mNetProfit);
 		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE,
 				mNetProfitPerShare);
 		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE_IN_YEAR,
@@ -230,13 +231,13 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_TOTAL_ASSETS, mTotalAssets);
 		contentValues.put(DatabaseContract.COLUMN_TOTAL_LONG_TERM_LIABILITIES,
 				mTotalLongTermLiabilities);
-		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT, mNetProfit);
 		contentValues.put(DatabaseContract.COLUMN_DEBT_TO_NET_ASSETS_RATIO,
 				mDebtToNetAssetsRato);
 		contentValues.put(DatabaseContract.COLUMN_BOOK_VALUE_PER_SHARE,
 				mBookValuePerShare);
 		contentValues.put(DatabaseContract.COLUMN_CASH_FLOW_PER_SHARE,
 				mCashFlowPerShare);
+		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT, mNetProfit);
 		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE,
 				mNetProfitPerShare);
 		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE_IN_YEAR,
@@ -293,10 +294,10 @@ public class Stock extends DatabaseTable {
 		setTotalShare(stock.mTotalShare);
 		setTotalAssets(stock.mTotalAssets);
 		setTotalLongTermLiabilities(stock.mTotalLongTermLiabilities);
-		setNetProfit(stock.mNetProfit);
 		setDebtToNetAssetsRato(stock.mDebtToNetAssetsRato);
 		setBookValuePerShare(stock.mBookValuePerShare);
 		setCashFlowPerShare(stock.mCashFlowPerShare);
+		setNetProfit(stock.mNetProfit);
 		setNetProfitPerShare(stock.mNetProfitPerShare);
 		setNetProfitPerShareInYear(stock.mNetProfitPerShareInYear);
 		setNetProfitPerShareLastYear(stock.mNetProfitPerShareLastYear);
@@ -844,23 +845,6 @@ public class Stock extends DatabaseTable {
 						.getColumnIndex(DatabaseContract.COLUMN_TOTAL_LONG_TERM_LIABILITIES)));
 	}
 
-	public double getNetProfit() {
-		return mNetProfit;
-	}
-
-	public void setNetProfit(double netProfit) {
-		mNetProfit = netProfit;
-	}
-
-	void setNetProfit(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setNetProfit(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_NET_PROFIT)));
-	}
-
 	public double getDebtToNetAssetsRato() {
 		return mDebtToNetAssetsRato;
 	}
@@ -913,6 +897,23 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_CASH_FLOW_PER_SHARE)));
 	}
 
+	public double getNetProfit() {
+		return mNetProfit;
+	}
+
+	public void setNetProfit(double netProfit) {
+		mNetProfit = netProfit;
+	}
+
+	void setNetProfit(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setNetProfit(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_NET_PROFIT)));
+	}
+	
 	public double getNetProfitPerShare() {
 		return mNetProfitPerShare;
 	}
