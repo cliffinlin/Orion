@@ -87,6 +87,7 @@ public class StockAnalyzer extends StockManager {
 		stock.setupDebtToNetAssetsRato();
 		stock.setupRoe(financialDataList);
 		stock.setupPE();
+		stock.setupRoi();
 		stock.setupPB();
 	}
 

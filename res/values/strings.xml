@@ -58,7 +58,8 @@
     <string name="book_value_per_share">BPS</string>
     <string name="cash_flow_per_share">CPS</string>
     <string name="net_profit_per_share">NPS</string>
-    <string name="net_profit_per_share_in_year">NPSY</string>    
+    <string name="net_profit_per_share_in_year">NPSY</string>
+    <string name="roi">Roi</string>        
     <string name="roe">Roe</string>
     <string name="download">Download</string>
     <string name="download_service">Download Service</string>
