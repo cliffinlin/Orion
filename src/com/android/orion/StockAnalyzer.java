@@ -32,6 +32,29 @@ public class StockAnalyzer extends StockManager {
 		super(context);
 	}
 
+	void analyze(Stock stock) {
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start();
+
+		if (stock == null) {
+			return;
+		}
+
+		try {
+			setupStockFinancialData(stock);
+			setupStockShareBonus(stock);
+
+			updateDatabase(stock);
+			updateNotification(stock);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		stopWatch.stop();
+		Log.d(TAG, "analyze:" + stock.getName() + " " + stopWatch.getInterval()
+				+ "s");
+	}
+
 	void analyze(Stock stock, String period, ArrayList<StockData> stockDataList) {
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
@@ -344,6 +367,21 @@ public class StockAnalyzer extends StockManager {
 		stock.setAction(period, action);
 
 		// stock.setupYield();
+	}
+
+	private void updateDatabase(Stock stock) {
+		if (mStockDatabaseManager == null) {
+			Log.d(TAG, "updateDatabase return " + " mStockDatabaseManager = "
+					+ mStockDatabaseManager);
+			return;
+		}
+
+		try {
+			mStockDatabaseManager.updateStock(stock,
+					stock.getContentValuesAnalyze(""));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void updateDatabase(Stock stock, String period,

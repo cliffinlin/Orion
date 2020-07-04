@@ -18,10 +18,12 @@ package com.android.volley;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -314,4 +316,29 @@ public class RequestQueue {
         mFinishedListeners.remove(listener);
       }
     }
+	
+	public boolean contains(String urlString) {
+		boolean result = false;
+		
+		if (TextUtils.isEmpty(urlString)) {
+			return result;
+		}
+		
+        synchronized (mCurrentRequests) {
+        	Iterator<Request<?>> iterator = mCurrentRequests.iterator();
+        	while (iterator.hasNext()) {
+        		Request<?> request = iterator.next();
+        		if (request != null) {
+        			String url = request.getUrl();
+        			if (url.contains(urlString)) {
+        				result = true;
+        				return result;
+        			}
+        		}
+        	}
+        }
+		
+		return result;
+	}
+
 }

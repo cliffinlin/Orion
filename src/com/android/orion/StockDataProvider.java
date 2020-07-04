@@ -1095,7 +1095,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				try {
 					DelayedRequest delayedRequest = mDelayQueue.take();
 					mRequestQueue.add(delayedRequest.mStringRequest);
-					Thread.sleep(1000);
+					Thread.sleep(5000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
