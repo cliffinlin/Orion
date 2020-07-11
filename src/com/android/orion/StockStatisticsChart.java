@@ -18,6 +18,7 @@ public class StockStatisticsChart {
 	ArrayList<String> mXValues = null;
 
 	ArrayList<BarEntry> mPeEntryList = null;
+	ArrayList<Entry> mRoiEntryList = null;
 	ArrayList<Entry> mRoeEntryList = null;
 	ArrayList<Entry> mRateEntryList = null;
 	ArrayList<Entry> mYieldEntryList = null;
@@ -34,6 +35,10 @@ public class StockStatisticsChart {
 			mPeEntryList = new ArrayList<BarEntry>();
 		}
 
+		if (mRoiEntryList == null) {
+			mRoiEntryList = new ArrayList<Entry>();
+		}
+		
 		if (mRoeEntryList == null) {
 			mRoeEntryList = new ArrayList<Entry>();
 		}
@@ -68,6 +73,13 @@ public class StockStatisticsChart {
 		peDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		barData.addDataSet(peDataSet);
 
+		LineDataSet roiDataSet = new LineDataSet(mRoiEntryList, "roi");
+		roiDataSet.setColor(Color.RED);
+		roiDataSet.setCircleColor(Color.RED);
+		roiDataSet.setCircleSize(3f);
+		roiDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+		lineData.addDataSet(roiDataSet);
+		
 		LineDataSet roeDataSet = new LineDataSet(mRoeEntryList, "roe");
 		roeDataSet.setColor(Color.GREEN);
 		roeDataSet.setCircleColor(Color.GREEN);
@@ -104,6 +116,7 @@ public class StockStatisticsChart {
 		mXValues.clear();
 
 		mPeEntryList.clear();
+		mRoiEntryList.clear();
 		mRoeEntryList.clear();
 		mRateEntryList.clear();
 		mYieldEntryList.clear();

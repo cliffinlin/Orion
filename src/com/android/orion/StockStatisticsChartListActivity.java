@@ -161,6 +161,12 @@ public class StockStatisticsChartListActivity extends OrionBaseActivity
 					REQUEST_CODE_STOCK_FILTER);
 			return true;
 
+		case R.id.action_order_by_roi:
+			mSortOrder = DatabaseContract.COLUMN_ROI
+					+ DatabaseContract.ORDER_DIRECTION_DESC;
+			restartLoader();
+			return true;
+			
 		case R.id.action_order_by_roe:
 			mSortOrder = DatabaseContract.COLUMN_ROE
 					+ DatabaseContract.ORDER_DIRECTION_DESC;
@@ -373,7 +379,10 @@ public class StockStatisticsChartListActivity extends OrionBaseActivity
 
 					index = stockDataChart.mXValues.size();
 					stockDataChart.mXValues.add(stock.getName());
-
+					
+					Entry roiEntry = new Entry((float) stock.getRoi(), index);
+					stockDataChart.mRoiEntryList.add(roiEntry);
+					
 					Entry roeEntry = new Entry((float) stock.getRoe(), index);
 					stockDataChart.mRoeEntryList.add(roeEntry);
 

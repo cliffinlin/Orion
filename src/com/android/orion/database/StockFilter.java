@@ -12,6 +12,7 @@ public class StockFilter extends Setting {
 	boolean mEnable = false;
 
 	String mHold = "";
+	String mRoi = "";
 	String mRoe = "";
 	String mRate = "";
 	String mPE = "";
@@ -23,6 +24,7 @@ public class StockFilter extends Setting {
 	boolean mDefaultEnable = false;
 
 	String mDefaultHold = "";
+	String mDefaultRoi = "";
 	String mDefaultRoe = "";
 	String mDefaultRate = "";
 	String mDefaultPE = "";
@@ -41,6 +43,10 @@ public class StockFilter extends Setting {
 
 	public String getHold() {
 		return mHold;
+	}
+
+	public String getRoi() {
+		return mRoi;
 	}
 
 	public String getRoe() {
@@ -79,6 +85,10 @@ public class StockFilter extends Setting {
 		mHold = hold;
 	}
 
+	public void setRoi(String roi) {
+		mRoi = roi;
+	}
+	
 	public void setRoe(String roe) {
 		mRoe = roe;
 	}
@@ -115,6 +125,10 @@ public class StockFilter extends Setting {
 		mDefaultHold = hold;
 	}
 
+	public void setDefaultRoi(String roi) {
+		mDefaultRoi = roi;
+	}
+	
 	public void setDefaultRoe(String roe) {
 		mDefaultRoe = roe;
 	}
@@ -161,6 +175,10 @@ public class StockFilter extends Setting {
 			mHold = "";
 		}
 
+		if (!containOperation(mRoi)) {
+			mRoi = "";
+		}
+		
 		if (!containOperation(mRoe)) {
 			mRoe = "";
 		}
@@ -196,6 +214,8 @@ public class StockFilter extends Setting {
 
 		mHold = Preferences.readString(mContext, Setting.KEY_STOCK_FILTER_HOLD,
 				mDefaultHold);
+		mRoi = Preferences.readString(mContext, Setting.KEY_STOCK_FILTER_ROI,
+				mDefaultRoi);
 		mRoe = Preferences.readString(mContext, Setting.KEY_STOCK_FILTER_ROE,
 				mDefaultRoe);
 		mRate = Preferences.readString(mContext, Setting.KEY_STOCK_FILTER_RATE,
@@ -221,6 +241,7 @@ public class StockFilter extends Setting {
 		validate();
 
 		Preferences.writeString(mContext, Setting.KEY_STOCK_FILTER_HOLD, mHold);
+		Preferences.writeString(mContext, Setting.KEY_STOCK_FILTER_ROI, mRoi);
 		Preferences.writeString(mContext, Setting.KEY_STOCK_FILTER_ROE, mRoe);
 		Preferences.writeString(mContext, Setting.KEY_STOCK_FILTER_RATE, mRate);
 		Preferences.writeString(mContext, Setting.KEY_STOCK_FILTER_PE, mPE);
@@ -241,6 +262,7 @@ public class StockFilter extends Setting {
 		mEnable = bundle.getBoolean(Setting.KEY_STOCK_FILTER_ENABLE, false);
 
 		mHold = bundle.getString(Setting.KEY_STOCK_FILTER_HOLD);
+		mRoi = bundle.getString(Setting.KEY_STOCK_FILTER_ROI);
 		mRoe = bundle.getString(Setting.KEY_STOCK_FILTER_ROE);
 		mRate = bundle.getString(Setting.KEY_STOCK_FILTER_RATE);
 		mPE = bundle.getString(Setting.KEY_STOCK_FILTER_PE);
@@ -258,6 +280,7 @@ public class StockFilter extends Setting {
 		bundle.putBoolean(Setting.KEY_STOCK_FILTER_ENABLE, mEnable);
 
 		bundle.putString(Setting.KEY_STOCK_FILTER_HOLD, mHold);
+		bundle.putString(Setting.KEY_STOCK_FILTER_ROI, mRoi);
 		bundle.putString(Setting.KEY_STOCK_FILTER_ROE, mRoe);
 		bundle.putString(Setting.KEY_STOCK_FILTER_RATE, mRate);
 		bundle.putString(Setting.KEY_STOCK_FILTER_PE, mPE);
@@ -275,6 +298,10 @@ public class StockFilter extends Setting {
 				selection += " AND " + DatabaseContract.COLUMN_HOLD + mHold;
 			}
 
+			if (!TextUtils.isEmpty(mRoi)) {
+				selection += " AND " + DatabaseContract.COLUMN_ROI + mRoi;
+			}
+			
 			if (!TextUtils.isEmpty(mRoe)) {
 				selection += " AND " + DatabaseContract.COLUMN_ROE + mRoe;
 			}

@@ -1323,7 +1323,7 @@ public class Stock extends DatabaseTable {
 	}
 	
 	public void setupRoi() {
-		mRoi = Utility.Round(mRoe * mPE,
+		mRoi = Utility.Round(mRoe * mPE / Constants.ROI_COEFFICIENT,
 				Constants.DOUBLE_FIXED_DECIMAL);
 	}
 	

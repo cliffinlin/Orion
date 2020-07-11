@@ -21,6 +21,7 @@
     <string name="action_download">Download</string>
     <string name="action_delete_all">Delete All</string>
     <string name="action_to">To</string>
+    <string name="action_order_by_roi">Order by Roi</string>    
     <string name="action_order_by_roe">Order by Roe</string>
     <string name="action_order_by_rate">Order by Rate</string>
     <string name="action_order_by_pe">Order by Pe</string>

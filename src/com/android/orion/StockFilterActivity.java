@@ -19,6 +19,7 @@ public class StockFilterActivity extends DatabaseActivity implements
 	CheckBox mCheckBox;
 
 	EditText mEditTextHold;
+	EditText mEditTextRoi;
 	EditText mEditTextRoe;
 	EditText mEditTextRate;
 	EditText mEditTextPE;
@@ -45,6 +46,7 @@ public class StockFilterActivity extends DatabaseActivity implements
 		mCheckBox = (CheckBox) findViewById(R.id.checkbox);
 
 		mEditTextHold = (EditText) findViewById(R.id.edittext_hold);
+		mEditTextRoi = (EditText) findViewById(R.id.edittext_roi);
 		mEditTextRoe = (EditText) findViewById(R.id.edittext_roe);
 		mEditTextRate = (EditText) findViewById(R.id.edittext_rate);
 		mEditTextPE = (EditText) findViewById(R.id.edittext_pe);
@@ -59,6 +61,7 @@ public class StockFilterActivity extends DatabaseActivity implements
 		mCheckBox.setOnClickListener(this);
 
 		mEditTextHold.setOnClickListener(this);
+		mEditTextRoi.setOnClickListener(this);
 		mEditTextRoe.setOnClickListener(this);
 		mEditTextRate.setOnClickListener(this);
 		mEditTextPE.setOnClickListener(this);
@@ -76,6 +79,7 @@ public class StockFilterActivity extends DatabaseActivity implements
 
 	void updateEditText() {
 		mEditTextHold.setText(mStockFilter.getHold());
+		mEditTextRoi.setText(mStockFilter.getRoi());
 		mEditTextRoe.setText(mStockFilter.getRoe());
 		mEditTextRate.setText(mStockFilter.getRate());
 		mEditTextPE.setText(mStockFilter.getPE());
@@ -85,6 +89,7 @@ public class StockFilterActivity extends DatabaseActivity implements
 		mEditTextDelta.setText(mStockFilter.getDelta());
 
 		mEditTextHold.setEnabled(mStockFilter.getEnable());
+		mEditTextRoi.setEnabled(mStockFilter.getEnable());
 		mEditTextRoe.setEnabled(mStockFilter.getEnable());
 		mEditTextRate.setEnabled(mStockFilter.getEnable());
 		mEditTextPE.setEnabled(mStockFilter.getEnable());
@@ -126,6 +131,7 @@ public class StockFilterActivity extends DatabaseActivity implements
 			mStockFilter.setEnable(mCheckBox.isChecked());
 
 			mStockFilter.setHold(mEditTextHold.getText().toString());
+			mStockFilter.setRoi(mEditTextRoi.getText().toString());
 			mStockFilter.setRoe(mEditTextRoe.getText().toString());
 			mStockFilter.setRate(mEditTextRate.getText().toString());
 			mStockFilter.setPE(mEditTextPE.getText().toString());
