@@ -38,7 +38,7 @@ public class StockStatisticsChart {
 		if (mRoiEntryList == null) {
 			mRoiEntryList = new ArrayList<Entry>();
 		}
-		
+
 		if (mRoeEntryList == null) {
 			mRoeEntryList = new ArrayList<Entry>();
 		}
@@ -79,7 +79,7 @@ public class StockStatisticsChart {
 		roiDataSet.setCircleSize(3f);
 		roiDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(roiDataSet);
-		
+
 		LineDataSet roeDataSet = new LineDataSet(mRoeEntryList, "roe");
 		roeDataSet.setColor(Color.GREEN);
 		roeDataSet.setCircleColor(Color.GREEN);

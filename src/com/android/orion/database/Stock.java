@@ -45,8 +45,8 @@ public class Stock extends DatabaseTable {
 	private double mNetProfitPerShare;
 	private double mNetProfitPerShareInYear;
 	private double mNetProfitPerShareLastYear;
-	private double mRate;
 	private double mRoi;
+	private double mRate;
 	private double mRoe;
 	private double mPE;
 	private double mPB;
@@ -119,8 +119,8 @@ public class Stock extends DatabaseTable {
 		mNetProfitPerShare = 0;
 		mNetProfitPerShareInYear = 0;
 		mNetProfitPerShareLastYear = 0;
-		mRate = 0;
 		mRoi = 0;
+		mRate = 0;
 		mRoe = 0;
 		mPE = 0;
 		mPB = 0;
@@ -177,8 +177,8 @@ public class Stock extends DatabaseTable {
 				mNetProfitPerShareInYear);
 		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE_LAST_YEAR,
 				mNetProfitPerShareLastYear);
-		contentValues.put(DatabaseContract.COLUMN_RATE, mRate);
 		contentValues.put(DatabaseContract.COLUMN_ROI, mRoi);
+		contentValues.put(DatabaseContract.COLUMN_RATE, mRate);
 		contentValues.put(DatabaseContract.COLUMN_ROE, mRoe);
 		contentValues.put(DatabaseContract.COLUMN_PE, mPE);
 		contentValues.put(DatabaseContract.COLUMN_PB, mPB);
@@ -247,8 +247,8 @@ public class Stock extends DatabaseTable {
 				mNetProfitPerShareInYear);
 		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE_LAST_YEAR,
 				mNetProfitPerShareLastYear);
-		contentValues.put(DatabaseContract.COLUMN_RATE, mRate);
 		contentValues.put(DatabaseContract.COLUMN_ROI, mRoi);
+		contentValues.put(DatabaseContract.COLUMN_RATE, mRate);
 		contentValues.put(DatabaseContract.COLUMN_ROE, mRoe);
 		contentValues.put(DatabaseContract.COLUMN_PE, mPE);
 		contentValues.put(DatabaseContract.COLUMN_PB, mPB);
@@ -305,8 +305,8 @@ public class Stock extends DatabaseTable {
 		setNetProfitPerShare(stock.mNetProfitPerShare);
 		setNetProfitPerShareInYear(stock.mNetProfitPerShareInYear);
 		setNetProfitPerShareLastYear(stock.mNetProfitPerShareLastYear);
-		setRate(stock.mRate);
 		setRoi(stock.mRoi);
+		setRate(stock.mRate);
 		setRoe(stock.mRoe);
 		setPE(stock.mPE);
 		setPB(stock.mPB);
@@ -362,8 +362,8 @@ public class Stock extends DatabaseTable {
 		setNetProfitPerShare(cursor);
 		setNetProfitPerShareInYear(cursor);
 		setNetProfitPerShareLastYear(cursor);
-		setRate(cursor);
 		setRoi(cursor);
+		setRate(cursor);
 		setRoe(cursor);
 		setPE(cursor);
 		setPB(cursor);
@@ -1323,7 +1323,7 @@ public class Stock extends DatabaseTable {
 	}
 	
 	public void setupRoi() {
-		mRoi = Utility.Round(mRoe * mPE / Constants.ROI_COEFFICIENT,
+		mRoi = Utility.Round(mRate * mRoe * mPE / Constants.ROI_COEFFICIENT,
 				Constants.DOUBLE_FIXED_DECIMAL);
 	}
 	

@@ -13,8 +13,8 @@ public class StockFilter extends Setting {
 
 	String mHold = "";
 	String mRoi = "";
-	String mRoe = "";
 	String mRate = "";
+	String mRoe = "";
 	String mPE = "";
 	String mPB = "";
 	String mDividend = "";
@@ -49,12 +49,12 @@ public class StockFilter extends Setting {
 		return mRoi;
 	}
 
-	public String getRoe() {
-		return mRoe;
-	}
-
 	public String getRate() {
 		return mRate;
+	}
+
+	public String getRoe() {
+		return mRoe;
 	}
 
 	public String getPE() {
@@ -88,13 +88,13 @@ public class StockFilter extends Setting {
 	public void setRoi(String roi) {
 		mRoi = roi;
 	}
-	
-	public void setRoe(String roe) {
-		mRoe = roe;
-	}
 
 	public void setRate(String rate) {
 		mRate = rate;
+	}
+
+	public void setRoe(String roe) {
+		mRoe = roe;
 	}
 
 	public void setPE(String pe) {
@@ -128,7 +128,7 @@ public class StockFilter extends Setting {
 	public void setDefaultRoi(String roi) {
 		mDefaultRoi = roi;
 	}
-	
+
 	public void setDefaultRoe(String roe) {
 		mDefaultRoe = roe;
 	}
@@ -178,13 +178,13 @@ public class StockFilter extends Setting {
 		if (!containOperation(mRoi)) {
 			mRoi = "";
 		}
-		
-		if (!containOperation(mRoe)) {
-			mRoe = "";
-		}
 
 		if (!containOperation(mRate)) {
 			mRate = "";
+		}
+
+		if (!containOperation(mRoe)) {
+			mRoe = "";
 		}
 
 		if (!containOperation(mPE)) {
@@ -216,10 +216,10 @@ public class StockFilter extends Setting {
 				mDefaultHold);
 		mRoi = Preferences.readString(mContext, Setting.KEY_STOCK_FILTER_ROI,
 				mDefaultRoi);
-		mRoe = Preferences.readString(mContext, Setting.KEY_STOCK_FILTER_ROE,
-				mDefaultRoe);
 		mRate = Preferences.readString(mContext, Setting.KEY_STOCK_FILTER_RATE,
 				mDefaultRate);
+		mRoe = Preferences.readString(mContext, Setting.KEY_STOCK_FILTER_ROE,
+				mDefaultRoe);
 		mPE = Preferences.readString(mContext, Setting.KEY_STOCK_FILTER_PE,
 				mDefaultPE);
 		mPB = Preferences.readString(mContext, Setting.KEY_STOCK_FILTER_PB,
@@ -242,8 +242,8 @@ public class StockFilter extends Setting {
 
 		Preferences.writeString(mContext, Setting.KEY_STOCK_FILTER_HOLD, mHold);
 		Preferences.writeString(mContext, Setting.KEY_STOCK_FILTER_ROI, mRoi);
-		Preferences.writeString(mContext, Setting.KEY_STOCK_FILTER_ROE, mRoe);
 		Preferences.writeString(mContext, Setting.KEY_STOCK_FILTER_RATE, mRate);
+		Preferences.writeString(mContext, Setting.KEY_STOCK_FILTER_ROE, mRoe);
 		Preferences.writeString(mContext, Setting.KEY_STOCK_FILTER_PE, mPE);
 		Preferences.writeString(mContext, Setting.KEY_STOCK_FILTER_PB, mPB);
 		Preferences.writeString(mContext, Setting.KEY_STOCK_FILTER_DIVIDEND,
@@ -263,8 +263,8 @@ public class StockFilter extends Setting {
 
 		mHold = bundle.getString(Setting.KEY_STOCK_FILTER_HOLD);
 		mRoi = bundle.getString(Setting.KEY_STOCK_FILTER_ROI);
-		mRoe = bundle.getString(Setting.KEY_STOCK_FILTER_ROE);
 		mRate = bundle.getString(Setting.KEY_STOCK_FILTER_RATE);
+		mRoe = bundle.getString(Setting.KEY_STOCK_FILTER_ROE);
 		mPE = bundle.getString(Setting.KEY_STOCK_FILTER_PE);
 		mPB = bundle.getString(Setting.KEY_STOCK_FILTER_PB);
 		mDividend = bundle.getString(Setting.KEY_STOCK_FILTER_DIVIDEND);
@@ -281,8 +281,8 @@ public class StockFilter extends Setting {
 
 		bundle.putString(Setting.KEY_STOCK_FILTER_HOLD, mHold);
 		bundle.putString(Setting.KEY_STOCK_FILTER_ROI, mRoi);
-		bundle.putString(Setting.KEY_STOCK_FILTER_ROE, mRoe);
 		bundle.putString(Setting.KEY_STOCK_FILTER_RATE, mRate);
+		bundle.putString(Setting.KEY_STOCK_FILTER_ROE, mRoe);
 		bundle.putString(Setting.KEY_STOCK_FILTER_PE, mPE);
 		bundle.putString(Setting.KEY_STOCK_FILTER_PB, mPB);
 		bundle.putString(Setting.KEY_STOCK_FILTER_DIVIDEND, mDividend);
@@ -302,12 +302,12 @@ public class StockFilter extends Setting {
 				selection += " AND " + DatabaseContract.COLUMN_ROI + mRoi;
 			}
 			
-			if (!TextUtils.isEmpty(mRoe)) {
-				selection += " AND " + DatabaseContract.COLUMN_ROE + mRoe;
-			}
-
 			if (!TextUtils.isEmpty(mRate)) {
 				selection += " AND " + DatabaseContract.COLUMN_RATE + mRate;
+			}
+
+			if (!TextUtils.isEmpty(mRoe)) {
+				selection += " AND " + DatabaseContract.COLUMN_ROE + mRoe;
 			}
 
 			if (!TextUtils.isEmpty(mPE)) {
