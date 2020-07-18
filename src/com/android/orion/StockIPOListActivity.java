@@ -116,7 +116,10 @@ public class StockIPOListActivity extends ListActivity implements
 
 		case R.id.action_refresh:
 			mStockDatabaseManager.deleteIPO();
-			mHandler.sendEmptyMessage(MESSAGE_REFRESH);
+
+			if (mOrionService != null) {
+				mOrionService.downloadIPO();
+			}
 			return true;
 
 		default:

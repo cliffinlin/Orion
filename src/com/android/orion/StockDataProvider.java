@@ -9,9 +9,14 @@ import java.util.concurrent.DelayQueue;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -88,6 +93,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 	private HandlerThread mHandlerThread;
 	volatile DownloadHandler mHandler;
+
+    OkHttpClient mOkHttpClient = new OkHttpClient();
 
 	public StockDataProvider(Context context) {
 		super(context);
@@ -349,13 +356,10 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		}
 
 		urlString = getIPOURLString();
-		if (addToCurrentRequests(urlString)) {
-			Log.d(TAG, "downloadIPO:" + urlString);
-			IPODownloader downloader = new IPODownloader(urlString);
-			downloader.setIPO(new IPO());
-			mRequestQueue.add(downloader.mStringRequest);
-			// addToDelayQueue(downloader.mStringRequest);
-		}
+		
+		DownloadIPOAsyncTask task= new DownloadIPOAsyncTask();
+		task.setIPO(new IPO());
+		task.execute(urlString);
 	}
 
 	void downloadStockInformation() {
@@ -1045,6 +1049,47 @@ public abstract class StockDataProvider extends StockAnalyzer {
 					Constants.SERVICE_DATABASE_UPDATE, 0);
 		}
 	}
+	
+    class DownloadIPOAsyncTask extends AsyncTask<String, Void, String> {
+		public IPO mIPO = null;
+		
+		public void setIPO(IPO ipo) {
+			if (mIPO == null) {
+				mIPO = new IPO();
+			}
+
+			mIPO.set(ipo);
+		}
+		
+        @Override
+        protected String doInBackground(String... params) {
+        	String responseString = "";
+
+            Request.Builder builder = new Request.Builder();
+            builder.url(params[0]);
+            Request request = builder.build();
+
+            try {
+                Response response = mOkHttpClient.newCall(request).execute();
+                if (response != null) {
+                	responseString = response.body().string();
+                	handleResponseIPO(mIPO, responseString);
+                	
+                	sendBroadcast(Constants.ACTION_SERVICE_FINISHED,
+                			Constants.SERVICE_DATABASE_UPDATE, 0);
+				}
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            
+            return responseString;
+        }
+
+        @Override
+        protected void onPostExecute(String string) {
+            super.onPostExecute(string);
+        }
+    }
 
 	public class DelayedRequest implements Delayed {
 		long mTargetTime = 0;
