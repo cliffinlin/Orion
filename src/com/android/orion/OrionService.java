@@ -19,6 +19,8 @@ import android.os.Process;
 import android.os.Vibrator;
 import android.telephony.TelephonyManager;
 
+import com.android.orion.database.Stock;
+
 public class OrionService extends Service {
 	boolean mRedelivery = true;
 	String mName = "OrionService";
@@ -135,12 +137,8 @@ public class OrionService extends Service {
 		}
 	}
 
-	void downloadShareBonus(int executeType) {
-		mSinaFinance.downloadShareBonus(executeType);
-	}
-
-	void downloadFinancialData(int executeType) {
-		mSinaFinance.downloadFinancialData(executeType);
+	void downloadFinancial(Stock stock) {
+		mSinaFinance.downloadFinancial(stock);
 	}
 
 	void downloadIPO() {

@@ -3,6 +3,7 @@
 
     <string name="about">About</string>
     <string name="about_information">About Information</string>
+    <string name="access_denied">拒绝访问</string>    
     <string name="acceleration">Acc</string>
     <string name="action">Action</string>
     <string name="action_all">All</string>

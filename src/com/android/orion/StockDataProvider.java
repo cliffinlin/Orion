@@ -5,26 +5,20 @@ import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.DelayQueue;
-import java.util.concurrent.Delayed;
-import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.HandlerThread;
-import android.os.Looper;
-import android.os.Message;
 import android.os.Process;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.FinancialData;
@@ -37,20 +31,14 @@ import com.android.orion.utility.Market;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Utility;
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.StringRequest;
 
 public abstract class StockDataProvider extends StockAnalyzer {
 	static final String TAG = Constants.TAG + " "
 			+ StockDataProvider.class.getSimpleName();
 
-	private static final int MSG_DOWNLOAD_INFORMATION = 1;
-
 	Calendar mNotifyCalendar = Calendar.getInstance();
 	RequestQueue mRequestQueue;
 	Set<String> mCurrentRequests = new HashSet<String>();
-
-	DelayQueue<DelayedRequest> mDelayQueue = new DelayQueue<DelayedRequest>();
-	long mTargetTime = 0;
 
 	abstract int getAvailableHistoryLength(String period);
 
@@ -92,9 +80,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
 	abstract void handleResponseIPO(IPO ipo, String response);
 
 	private HandlerThread mHandlerThread;
-	volatile DownloadHandler mHandler;
 
-    OkHttpClient mOkHttpClient = new OkHttpClient();
+	OkHttpClient mOkHttpClient = new OkHttpClient();
 
 	public StockDataProvider(Context context) {
 		super(context);
@@ -103,14 +90,10 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				Process.THREAD_PRIORITY_BACKGROUND);
 		mHandlerThread.start();
 
-		mHandler = new DownloadHandler(mHandlerThread.getLooper());
-
 		mRequestQueue = VolleySingleton.getInstance(
 				mContext.getApplicationContext()).getRequestQueue();
-		removeAllCurrrentRequests();
 
-		DelayQueueConsumer queueConsumer = new DelayQueueConsumer();
-		new Thread(queueConsumer).start();
+		removeAllCurrrentRequests();
 	}
 
 	void sendBroadcast(String action, int serviceType, long stockID) {
@@ -174,7 +157,6 @@ public abstract class StockDataProvider extends StockAnalyzer {
 						urlString);
 				downloader.setStock(stock);
 				mRequestQueue.add(downloader.mStringRequest);
-				// addToDelayQueue(downloader.mStringRequest);
 			}
 		}
 	}
@@ -197,7 +179,6 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			Log.d(TAG, "getStockHSAURLString:" + urlString);
 			StockHSADownloader downloader = new StockHSADownloader(urlString);
 			mRequestQueue.add(downloader.mStringRequest);
-			// addToDelayQueue(downloader.mStringRequest);
 			mStockDatabaseManager.saveSetting(Setting.KEY_STOCK_HSA_UPDATED,
 					Utility.getCurrentDateString());
 		}
@@ -216,7 +197,6 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			return;
 		}
 
-		resetTargetTime();
 		removeAllCurrrentRequests();
 
 		executeType = bundle.getInt(Constants.EXTRA_EXECUTE_TYPE,
@@ -225,183 +205,28 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		stock = getStock(bundle);
 
 		if (stock != null) {
-			downloadShareBonus(executeType, stock);
-			downloadStockInformation(stock);
-
 			downloadStockRealTime(executeType, stock);
 			downloadStockDataHistory(executeType, stock);
 			downloadStockDataRealTime(executeType, stock);
-
-			downloadFinancialData(executeType, stock);
 		} else {
-			downloadShareBonus(executeType);
-			downloadStockInformation();
-
 			downloadStockRealTime(executeType);
 			downloadStockDataHistory(executeType);
 			downloadStockDataRealTime(executeType);
-
-			downloadFinancialData(executeType);
 		}
 	}
 
-	void downloadFinancialData(int executeType) {
-		loadStockArrayMapFavorite();
+	void downloadFinancial(Stock stock) {
+		DownloadFinancialAsyncTask task = new DownloadFinancialAsyncTask();
 
-		for (Stock stock : mStockArrayMapFavorite.values()) {
-			downloadStockInformation(stock);
-
-			downloadFinancialData(executeType, stock);
-		}
-	}
-
-	void downloadFinancialData(int executeType, Stock stock) {
-		String urlString;
-
-		if (stock == null) {
-			return;
-		}
-
-		mStockDatabaseManager.getStock(stock);
-
-		FinancialData financialData = new FinancialData();
-		financialData.setStockId(stock.getId());
-
-		mStockDatabaseManager.getFinancialData(stock, financialData);
-
-		if (executeType == Constants.EXECUTE_SCHEDULE) {
-			if (financialData.getCreated().contains(
-					Utility.getCurrentDateString())
-					|| financialData.getModified().contains(
-							Utility.getCurrentDateString())) {
-				if ((financialData.getBookValuePerShare() != 0)
-						&& (financialData.getNetProfit() != 0)) {
-					return;
-				}
-			}
-		}
-
-		urlString = getFinancialDataURLString(stock);
-		// if (addToCurrentRequests(urlString)) {
-		Log.d(TAG, "downloadFinancial:" + urlString);
-		FinancialDataDownloader downloader = new FinancialDataDownloader(
-				urlString);
-		downloader.setStock(stock);
-		downloader.setFinancialData(financialData);
-		// mRequestQueue.add(downloader.mStringRequest);
-		addToDelayQueue(downloader.mStringRequest);
-		// }
-	}
-
-	void downloadShareBonus(int executeType) {
-		for (Stock stock : mStockArrayMapFavorite.values()) {
-			downloadShareBonus(executeType, stock);
-		}
-	}
-
-	void downloadShareBonus(int executeType, Stock stock) {
-		String urlString;
-
-		if (stock == null) {
-			return;
-		}
-
-		mStockDatabaseManager.getStock(stock);
-
-		ShareBonus shareBonus = new ShareBonus();
-		shareBonus.setStockId(stock.getId());
-
-		if (executeType == Constants.EXECUTE_SCHEDULE) {
-			mStockDatabaseManager.getShareBonus(stock.getId(), shareBonus);
-			if (shareBonus.getCreated()
-					.contains(Utility.getCurrentDateString())
-					|| shareBonus.getModified().contains(
-							Utility.getCurrentDateString())) {
-				if (shareBonus.getDividend() > 0) {
-					return;
-				}
-			}
-		}
-
-		urlString = getShareBonusURLString(stock);
-		// if (addToCurrentRequests(urlString)) {
-		Log.d(TAG, "downloadShareBonus:" + urlString);
-		ShareBonusDownloader downloader = new ShareBonusDownloader(urlString);
-		downloader.setStock(stock);
-		downloader.setShareBonus(shareBonus);
-		// mRequestQueue.add(downloader.mStringRequest);
-		addToDelayQueue(downloader.mStringRequest);
-		// }
+		task.setStock(stock);
+		task.execute();
 	}
 
 	void downloadIPO() {
-		String urlString;
-		ArrayList<IPO> ipoList = new ArrayList<IPO>();
-		boolean needDownload = false;
+		DownloadIPOAsyncTask task = new DownloadIPOAsyncTask();
 
-		mStockDatabaseManager.getIPOList(ipoList, null);
-		if (ipoList.size() == 0) {
-			needDownload = true;
-		} else {
-			for (IPO ipo : ipoList) {
-				if (!ipo.getCreated().contains(Utility.getCurrentDateString())) {
-					needDownload = true;
-					break;
-				}
-			}
-		}
-
-		if (!needDownload) {
-			return;
-		}
-
-		urlString = getIPOURLString();
-		
-		DownloadIPOAsyncTask task= new DownloadIPOAsyncTask();
 		task.setIPO(new IPO());
-		task.execute(urlString);
-	}
-
-	void downloadStockInformation() {
-		for (Stock stock : mStockArrayMapFavorite.values()) {
-			downloadStockInformation(stock);
-		}
-	}
-
-	void downloadStockInformation(Stock stock) {
-		String urlString;
-		boolean needDownload = false;
-
-		if (stock == null) {
-			return;
-		}
-
-		mStockDatabaseManager.getStock(stock);
-
-		if (TextUtils.isEmpty(stock.getClases())) {
-			needDownload = true;
-		} else if (TextUtils.isEmpty(stock.getPinyin())) {
-			needDownload = true;
-		} else if (stock.getTotalShare() == 0) {
-			needDownload = true;
-			if (Constants.STOCK_CLASSES_INDEX.equals(stock.getClases())) {
-				needDownload = false;
-			}
-		}
-
-		if (!needDownload) {
-			return;
-		}
-
-		urlString = getStockInformationURLString(stock);
-		if (addToCurrentRequests(urlString)) {
-			Log.d(TAG, "getStockInformationURLString:" + urlString);
-			StockInformationDownloader downloader = new StockInformationDownloader(
-					urlString);
-			downloader.setStock(stock);
-			mRequestQueue.add(downloader.mStringRequest);
-			// addToDelayQueue(downloader.mStringRequest);
-		}
+		task.execute();
 	}
 
 	void downloadStockRealTime(int executeType) {
@@ -435,7 +260,6 @@ public abstract class StockDataProvider extends StockAnalyzer {
 						urlString);
 				downloader.setStock(stock);
 				mRequestQueue.add(downloader.mStringRequest);
-				// addToDelayQueue(downloader.mStringRequest);
 			}
 		}
 	}
@@ -483,7 +307,6 @@ public abstract class StockDataProvider extends StockAnalyzer {
 					downloader.setStockData(stockData);
 					downloader.setExecuteType(executeType);
 					mRequestQueue.add(downloader.mStringRequest);
-					// addToDelayQueue(downloader.mStringRequest);
 				}
 			}
 		}
@@ -520,7 +343,6 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				downloader.setStockData(stockData);
 				downloader.setExecuteType(executeType);
 				mRequestQueue.add(downloader.mStringRequest);
-				// addToDelayQueue(downloader.mStringRequest);
 			}
 		}
 	}
@@ -726,25 +548,6 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		}
 	}
 
-	void resetTargetTime() {
-		mTargetTime = System.currentTimeMillis();
-	}
-
-	void addToDelayQueue(StringRequest stringRequest) {
-		if (stringRequest == null) {
-			return;
-		}
-
-		DelayedRequest delayedRequest = new DelayedRequest();
-
-		delayedRequest.setStringRequest(stringRequest);
-		delayedRequest.setTargetTime(mTargetTime);
-
-		mDelayQueue.put(delayedRequest);
-
-		mTargetTime += (long) (Math.random() * Constants.DEFAULT_DOWNLOAD_INTERVAL);
-	}
-
 	Stock getStock(Bundle bundle) {
 		String se = bundle.getString(Constants.EXTRA_STOCK_SE);
 		String code = bundle.getString(Constants.EXTRA_STOCK_CODE);
@@ -753,35 +556,6 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		stock = mStockArrayMapFavorite.get(se + code);
 
 		return stock;
-	}
-
-	void removeMessages(int what) {
-		if (mHandler.hasMessages(what)) {
-			mHandler.removeMessages(what);
-		}
-	}
-
-	void sendEmptyMessageDelayed(int what, long delayMillis) {
-		removeMessages(what);
-		mHandler.sendEmptyMessageDelayed(what, delayMillis);
-	}
-
-	private final class DownloadHandler extends Handler {
-		public DownloadHandler(Looper looper) {
-			super(looper);
-		}
-
-		@Override
-		public void handleMessage(Message msg) {
-
-			switch (msg.what) {
-			case MSG_DOWNLOAD_INFORMATION:
-				break;
-
-			default:
-				break;
-			}
-		}
 	}
 
 	public class StockHSADownloader extends VolleyStringDownloader {
@@ -949,88 +723,325 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		}
 	}
 
-	public class FinancialDataDownloader extends VolleyStringDownloader {
-		public Stock mStock = null;
-		public FinancialData mFinancialData = null;
+	class DownloadAsyncTask extends AsyncTask<String, Void, String> {
+		String mAccessDeniedString = mContext.getResources().getString(
+				R.string.access_denied);
 
-		public FinancialDataDownloader() {
-			super();
-		}
-
-		public FinancialDataDownloader(String urlString) {
-			super(urlString);
-		}
-
-		public void setStock(Stock stock) {
-			if (mStock == null) {
-				mStock = new Stock();
-			}
-			mStock.set(stock);
-		}
-
-		public void setFinancialData(FinancialData financialData) {
-			if (mFinancialData == null) {
-				mFinancialData = new FinancialData();
-			}
-			mFinancialData.set(financialData);
+		@Override
+		protected String doInBackground(String... arg0) {
+			return null;
 		}
 
 		@Override
-		public void handleResponse(String response) {
-			removeFromCurrrentRequests(mStringRequest.getUrl());
-			handleResponseFinancialData(mStock, mFinancialData, response);
-
-			sendBroadcast(Constants.ACTION_SERVICE_FINISHED,
-					Constants.SERVICE_DATABASE_UPDATE, mStock.getId());
+		protected void onPostExecute(String string) {
+			super.onPostExecute(string);
+			if (!TextUtils.isEmpty(string)
+					&& string.contains(mAccessDeniedString)) {
+				Toast.makeText(
+						mContext,
+						mContext.getResources().getString(
+								R.string.access_denied), Toast.LENGTH_SHORT)
+						.show();
+			}
 		}
 	}
 
-	public class ShareBonusDownloader extends VolleyStringDownloader {
-		public Stock mStock = null;
-		public ShareBonus mShareBonus = null;
-
-		public ShareBonusDownloader() {
-			super();
-		}
-
-		public ShareBonusDownloader(String urlString) {
-			super(urlString);
-		}
+	class DownloadFinancialAsyncTask extends DownloadAsyncTask {
+		Stock mStock = null;
+		FinancialData mFinancialData = null;
+		ShareBonus mShareBonus = null;
 
 		public void setStock(Stock stock) {
-			if (mStock == null) {
-				mStock = new Stock();
+			if (stock == null) {
+				mStock = null;
+			} else {
+				if (mStock == null) {
+					mStock = new Stock();
+				}
+				mStock.set(stock);
 			}
-			mStock.set(stock);
 		}
 
-		public void setShareBonus(ShareBonus shareBonus) {
-			if (mShareBonus == null) {
-				mShareBonus = new ShareBonus();
+		String downloadStockRealTime(Stock stock) {
+			String modified = "";
+
+			if (stock == null) {
+				return "";
 			}
-			mShareBonus.set(shareBonus);
+
+			mStockDatabaseManager.getStock(stock);
+
+			modified = stock.getModified();
+			if (TextUtils.isEmpty(modified)) {
+				modified = stock.getCreated();
+			}
+
+			setStock(stock);
+
+			return downloadStockRealTime(getStockRealTimeURLString(stock));
+		}
+
+		String downloadStockRealTime(String urlString) {
+			String responseString = "";
+
+			Log.d(TAG, "downloadStockRealTime:" + urlString);
+
+			Request.Builder builder = new Request.Builder();
+			builder.url(urlString);
+			Request request = builder.build();
+
+			try {
+				Response response = mOkHttpClient.newCall(request).execute();
+				if (response != null) {
+					responseString = response.body().string();
+					handleResponseStockRealTime(mStock, responseString);
+
+					mStockDatabaseManager.updateStockDeal(mStock);
+					mStockDatabaseManager.updateStock(mStock,
+							mStock.getContentValues());
+
+					Thread.sleep(Constants.DEFAULT_DOWNLOAD_INTERVAL);
+
+					sendBroadcast(Constants.ACTION_SERVICE_FINISHED,
+							Constants.SERVICE_DATABASE_UPDATE, 0);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			return responseString;
+		}
+
+		String downloadStockInformation(Stock stock) {
+			boolean needDownload = false;
+
+			if (stock == null) {
+				return "";
+			}
+
+			mStockDatabaseManager.getStock(stock);
+
+			if (TextUtils.isEmpty(stock.getClases())) {
+				needDownload = true;
+			} else if (TextUtils.isEmpty(stock.getPinyin())) {
+				needDownload = true;
+			} else if (stock.getTotalShare() == 0) {
+				needDownload = true;
+				if (Constants.STOCK_CLASSES_INDEX.equals(stock.getClases())) {
+					needDownload = false;
+				}
+			}
+
+			if (!needDownload) {
+				return "";
+			}
+
+			setStock(stock);
+
+			return downloadStockInformation(getStockInformationURLString(stock));
+		}
+
+		String downloadStockInformation(String urlString) {
+			String responseString = "";
+
+			Log.d(TAG, "downloadStockInformation:" + urlString);
+
+			Request.Builder builder = new Request.Builder();
+			builder.url(urlString);
+			Request request = builder.build();
+
+			try {
+				Response response = mOkHttpClient.newCall(request).execute();
+				if (response != null) {
+					responseString = response.body().string();
+					handleResponseStockInformation(mStock, responseString);
+
+					Thread.sleep(Constants.DEFAULT_DOWNLOAD_INTERVAL);
+
+					sendBroadcast(Constants.ACTION_SERVICE_FINISHED,
+							Constants.SERVICE_DATABASE_UPDATE, 0);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			return responseString;
+		}
+
+		String downloadFinancialData(Stock stock) {
+			if (stock == null) {
+				return "";
+			}
+
+			mStockDatabaseManager.getStock(stock);
+
+			mFinancialData = new FinancialData();
+			mFinancialData.setStockId(stock.getId());
+
+			mStockDatabaseManager.getFinancialData(stock, mFinancialData);
+
+			if (mFinancialData.getCreated().contains(
+					Utility.getCurrentDateString())
+					|| mFinancialData.getModified().contains(
+							Utility.getCurrentDateString())) {
+				if ((mFinancialData.getBookValuePerShare() != 0)
+						&& (mFinancialData.getNetProfit() != 0)) {
+					return "";
+				}
+			}
+
+			setStock(stock);
+
+			return downloadFinancialData(getFinancialDataURLString(stock));
+		}
+
+		String downloadFinancialData(String urlString) {
+			String responseString = "";
+
+			Log.d(TAG, "downloadFinancialData:" + urlString);
+
+			Request.Builder builder = new Request.Builder();
+			builder.url(urlString);
+			Request request = builder.build();
+
+			try {
+				Response response = mOkHttpClient.newCall(request).execute();
+				if (response != null) {
+					responseString = response.body().string();
+					handleResponseFinancialData(mStock, mFinancialData,
+							responseString);
+
+					Thread.sleep(Constants.DEFAULT_DOWNLOAD_INTERVAL);
+
+					sendBroadcast(Constants.ACTION_SERVICE_FINISHED,
+							Constants.SERVICE_DATABASE_UPDATE, 0);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			return responseString;
+		}
+
+		String downloadShareBonus(Stock stock) {
+			if (stock == null) {
+				return "";
+			}
+
+			mStockDatabaseManager.getStock(stock);
+
+			mShareBonus = new ShareBonus();
+			mShareBonus.setStockId(stock.getId());
+
+			mStockDatabaseManager.getShareBonus(stock.getId(), mShareBonus);
+			if (mShareBonus.getCreated().contains(
+					Utility.getCurrentDateString())
+					|| mShareBonus.getModified().contains(
+							Utility.getCurrentDateString())) {
+				if (mShareBonus.getDividend() > 0) {
+					return "";
+				}
+			}
+
+			setStock(stock);
+
+			return downloadShareBonus(getShareBonusURLString(stock));
+		}
+
+		String downloadShareBonus(String urlString) {
+			String responseString = "";
+
+			Log.d(TAG, "downloadShareBonus:" + urlString);
+
+			Request.Builder builder = new Request.Builder();
+			builder.url(urlString);
+			Request request = builder.build();
+
+			try {
+				Response response = mOkHttpClient.newCall(request).execute();
+				if (response != null) {
+					responseString = response.body().string();
+					handleResponseShareBonus(mStock, mShareBonus,
+							responseString);
+
+					Thread.sleep(Constants.DEFAULT_DOWNLOAD_INTERVAL);
+
+					sendBroadcast(Constants.ACTION_SERVICE_FINISHED,
+							Constants.SERVICE_DATABASE_UPDATE, 0);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			return responseString;
 		}
 
 		@Override
-		public void handleResponse(String response) {
-			removeFromCurrrentRequests(mStringRequest.getUrl());
-			handleResponseShareBonus(mStock, mShareBonus, response);
+		protected String doInBackground(String... params) {
+			String responseString = "";
 
-			sendBroadcast(Constants.ACTION_SERVICE_FINISHED,
-					Constants.SERVICE_DATABASE_UPDATE, mStock.getId());
+			loadStockArrayMapFavorite();
+
+			if (mStock != null) {
+				responseString = downloadStockRealTime(mStock);
+				if (responseString.contains(mAccessDeniedString)) {
+					return responseString;
+				}
+
+				responseString = downloadStockInformation(mStock);
+				if (responseString.contains(mAccessDeniedString)) {
+					return responseString;
+				}
+
+				responseString = downloadFinancialData(mStock);
+				if (responseString.contains(mAccessDeniedString)) {
+					return responseString;
+				}
+
+				responseString = downloadShareBonus(mStock);
+				if (responseString.contains(mAccessDeniedString)) {
+					return responseString;
+				}
+
+				analyze(mStock);
+
+				sendBroadcast(Constants.ACTION_SERVICE_FINISHED,
+						Constants.SERVICE_DATABASE_UPDATE, 0);
+			} else {
+				for (Stock stock : mStockArrayMapFavorite.values()) {
+					responseString = downloadStockRealTime(stock);
+					if (responseString.contains(mAccessDeniedString)) {
+						break;
+					}
+
+					responseString = downloadStockInformation(stock);
+					if (responseString.contains(mAccessDeniedString)) {
+						break;
+					}
+
+					responseString = downloadFinancialData(stock);
+					if (responseString.contains(mAccessDeniedString)) {
+						break;
+					}
+
+					responseString = downloadShareBonus(stock);
+					if (responseString.contains(mAccessDeniedString)) {
+						break;
+					}
+
+					analyze(mStock);
+
+					sendBroadcast(Constants.ACTION_SERVICE_FINISHED,
+							Constants.SERVICE_DATABASE_UPDATE, 0);
+				}
+			}
+
+			return responseString;
 		}
 	}
 
-	public class IPODownloader extends VolleyStringDownloader {
-		public IPO mIPO = null;
-
-		public IPODownloader() {
-			super();
-		}
-
-		public IPODownloader(String urlString) {
-			super(urlString);
-		}
+	class DownloadIPOAsyncTask extends DownloadAsyncTask {
+		IPO mIPO = null;
 
 		public void setIPO(IPO ipo) {
 			if (mIPO == null) {
@@ -1040,112 +1051,62 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			mIPO.set(ipo);
 		}
 
-		@Override
-		public void handleResponse(String response) {
-			removeFromCurrrentRequests(mStringRequest.getUrl());
-			handleResponseIPO(mIPO, response);
+		String downloadIPO() {
+			ArrayList<IPO> ipoList = new ArrayList<IPO>();
+			boolean needDownload = false;
 
-			sendBroadcast(Constants.ACTION_SERVICE_FINISHED,
-					Constants.SERVICE_DATABASE_UPDATE, 0);
-		}
-	}
-	
-    class DownloadIPOAsyncTask extends AsyncTask<String, Void, String> {
-		public IPO mIPO = null;
-		
-		public void setIPO(IPO ipo) {
-			if (mIPO == null) {
-				mIPO = new IPO();
-			}
-
-			mIPO.set(ipo);
-		}
-		
-        @Override
-        protected String doInBackground(String... params) {
-        	String responseString = "";
-
-            Request.Builder builder = new Request.Builder();
-            builder.url(params[0]);
-            Request request = builder.build();
-
-            try {
-                Response response = mOkHttpClient.newCall(request).execute();
-                if (response != null) {
-                	responseString = response.body().string();
-                	handleResponseIPO(mIPO, responseString);
-                	
-                	sendBroadcast(Constants.ACTION_SERVICE_FINISHED,
-                			Constants.SERVICE_DATABASE_UPDATE, 0);
-				}
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            
-            return responseString;
-        }
-
-        @Override
-        protected void onPostExecute(String string) {
-            super.onPostExecute(string);
-        }
-    }
-
-	public class DelayedRequest implements Delayed {
-		long mTargetTime = 0;
-		StringRequest mStringRequest = null;
-
-		void setTargetTime(long targetTime) {
-			mTargetTime = targetTime;
-		}
-
-		void setStringRequest(StringRequest stringRequest) {
-			mStringRequest = stringRequest;
-		}
-
-		@Override
-		public int compareTo(Delayed delayed) {
-			DelayedRequest that = (DelayedRequest) delayed;
-
-			if (this.mTargetTime < that.mTargetTime) {
-				return -1;
-			}
-
-			if (this.mTargetTime > that.mTargetTime) {
-				return 1;
-			}
-
-			return 0;
-		}
-
-		@Override
-		public long getDelay(TimeUnit timeUnit) {
-			long result = 0;
-
-			result = timeUnit.convert(mTargetTime - System.currentTimeMillis(),
-					TimeUnit.MILLISECONDS);
-
-			return result;
-		}
-	}
-
-	public class DelayQueueConsumer implements Runnable {
-
-		public DelayQueueConsumer() {
-		}
-
-		@Override
-		public void run() {
-			while (true) {
-				try {
-					DelayedRequest delayedRequest = mDelayQueue.take();
-					mRequestQueue.add(delayedRequest.mStringRequest);
-					Thread.sleep(5000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+			mStockDatabaseManager.getIPOList(ipoList, null);
+			if (ipoList.size() == 0) {
+				needDownload = true;
+			} else {
+				for (IPO ipo : ipoList) {
+					if (!ipo.getCreated().contains(
+							Utility.getCurrentDateString())) {
+						needDownload = true;
+						break;
+					}
 				}
 			}
+
+			if (!needDownload) {
+				return "";
+			}
+
+			return downloadIPO(getIPOURLString());
 		}
 
+		String downloadIPO(String urlString) {
+			String responseString = "";
+
+			Log.d(TAG, "downloadIPO:" + urlString);
+
+			Request.Builder builder = new Request.Builder();
+			builder.url(urlString);
+			Request request = builder.build();
+
+			try {
+				Response response = mOkHttpClient.newCall(request).execute();
+				if (response != null) {
+					responseString = response.body().string();
+					handleResponseIPO(mIPO, responseString);
+
+					sendBroadcast(Constants.ACTION_SERVICE_FINISHED,
+							Constants.SERVICE_DATABASE_UPDATE, 0);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			return responseString;
+		}
+
+		@Override
+		protected String doInBackground(String... params) {
+			String responseString = "";
+
+			responseString = downloadIPO();
+
+			return responseString;
+		}
 	}
 }

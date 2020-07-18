@@ -85,10 +85,11 @@ public class StockFinancialListActivity extends ListActivity implements
 			if (mResumed) {
 				if (intent.getIntExtra(Constants.EXTRA_SERVICE_TYPE,
 						Constants.SERVICE_TYPE_NONE) == Constants.SERVICE_DATABASE_UPDATE) {
-					if (System.currentTimeMillis() - mLastRestartLoader > Constants.DEFAULT_RESTART_LOADER_INTERAL) {
-						mLastRestartLoader = System.currentTimeMillis();
-						restartLoader();
-					}
+					restartLoader();
+					// if (System.currentTimeMillis() - mLastRestartLoader >
+					// Constants.DEFAULT_RESTART_LOADER_INTERAL) {
+					// mLastRestartLoader = System.currentTimeMillis();
+					// }
 				}
 			}
 		}
@@ -164,7 +165,12 @@ public class StockFinancialListActivity extends ListActivity implements
 			return true;
 
 		case R.id.action_refresh:
-			mHandler.sendEmptyMessage(MESSAGE_REFRESH);
+			if (mOrionService != null) {
+				mStockDatabaseManager.deleteFinancialData();
+				mStockDatabaseManager.deleteShareBonus();
+
+				mOrionService.downloadFinancial(null);
+			}
 			return true;
 
 		default:
@@ -197,32 +203,10 @@ public class StockFinancialListActivity extends ListActivity implements
 	}
 
 	@Override
-	void onMessageRefresh() {
-		startLoadTask(EXECUTE_STOCK_FINANCIAL_LOAD);
-	}
-
-	Long doInBackgroundLoad(Object... params) {
-		super.doInBackgroundLoad(params);
-		int execute = (Integer) params[0];
-
-		switch (execute) {
-		case EXECUTE_STOCK_FINANCIAL_LOAD:
-			if (mOrionService != null) {
-				mOrionService
-						.downloadFinancialData(Constants.EXECUTE_IMMEDIATE);
-				mOrionService.downloadShareBonus(Constants.EXECUTE_IMMEDIATE);
-			}
-			break;
-
-		default:
-			break;
+	void onServiceConnected() {
+		if (mOrionService != null) {
+			mOrionService.downloadFinancial(null);
 		}
-
-		return RESULT_SUCCESS;
-	}
-
-	void onPostExecuteLoad(Long result) {
-		super.onPostExecuteLoad(result);
 	}
 
 	@Override

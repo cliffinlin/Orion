@@ -10,7 +10,6 @@ import com.android.orion.utility.Utility;
 
 public class Stock extends DatabaseTable {
 	private String mClasses;
-	private String mSymbol;//TODO
 	private String mSE;
 	private String mCode;
 	private String mName;

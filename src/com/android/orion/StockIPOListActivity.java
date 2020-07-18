@@ -65,10 +65,11 @@ public class StockIPOListActivity extends ListActivity implements
 			if (mResumed) {
 				if (intent.getIntExtra(Constants.EXTRA_SERVICE_TYPE,
 						Constants.SERVICE_TYPE_NONE) == Constants.SERVICE_DATABASE_UPDATE) {
-					if (System.currentTimeMillis() - mLastRestartLoader > Constants.DEFAULT_RESTART_LOADER_INTERAL) {
-						mLastRestartLoader = System.currentTimeMillis();
-						restartLoader();
-					}
+					restartLoader();
+					// if (System.currentTimeMillis() - mLastRestartLoader >
+					// Constants.DEFAULT_RESTART_LOADER_INTERAL) {
+					// mLastRestartLoader = System.currentTimeMillis();
+					// }
 				}
 			}
 		}
@@ -115,9 +116,8 @@ public class StockIPOListActivity extends ListActivity implements
 			return true;
 
 		case R.id.action_refresh:
-			mStockDatabaseManager.deleteIPO();
-
 			if (mOrionService != null) {
+				mStockDatabaseManager.deleteIPO();
 				mOrionService.downloadIPO();
 			}
 			return true;
@@ -145,25 +145,6 @@ public class StockIPOListActivity extends ListActivity implements
 		if (mOrionService != null) {
 			mOrionService.downloadIPO();
 		}
-	}
-
-	Long doInBackgroundLoad(Object... params) {
-		super.doInBackgroundLoad(params);
-		int execute = (Integer) params[0];
-
-		switch (execute) {
-
-		default:
-			break;
-		}
-
-		return RESULT_SUCCESS;
-	}
-
-	void onPostExecuteLoad(Long result) {
-		super.onPostExecuteLoad(result);
-		startService(Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE,
-				Constants.EXECUTE_IMMEDIATE);
 	}
 
 	@Override

@@ -1209,6 +1209,19 @@ public class StockDatabaseManager extends DatabaseManager {
 		return result;
 	}
 
+	public int deleteFinancialData() {
+		int result = 0;
+
+		if (mContentResolver == null) {
+			return result;
+		}
+
+		result = mContentResolver.delete(DatabaseContract.FinancialData.CONTENT_URI,
+				null, null);
+
+		return result;
+	}
+	
 	public int deleteFinancialData(FinancialData financialData) {
 		int result = 0;
 
@@ -1462,6 +1475,19 @@ public class StockDatabaseManager extends DatabaseManager {
 		return result;
 	}
 
+	public int deleteShareBonus() {
+		int result = 0;
+
+		if (mContentResolver == null) {
+			return result;
+		}
+
+		result = mContentResolver.delete(DatabaseContract.ShareBonus.CONTENT_URI,
+				null, null);
+
+		return result;
+	}
+	
 	public int deleteShareBonus(ShareBonus shareBonus) {
 		int result = 0;
 
