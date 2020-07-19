@@ -206,11 +206,15 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 		if (stock != null) {
 			downloadStockRealTime(executeType, stock);
-			downloadStockDataHistory(executeType, stock);
+			if (executeTypeOf(executeType, Constants.EXECUTE_SCHEDULE)) {
+				downloadStockDataHistory(executeType, stock);
+			}
 			downloadStockDataRealTime(executeType, stock);
 		} else {
 			downloadStockRealTime(executeType);
-			downloadStockDataHistory(executeType);
+			if (executeTypeOf(executeType, Constants.EXECUTE_SCHEDULE)) {
+				downloadStockDataHistory(executeType);
+			}
 			downloadStockDataRealTime(executeType);
 		}
 	}
@@ -748,6 +752,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 	class DownloadFinancialAsyncTask extends DownloadAsyncTask {
 		Stock mStock = null;
+		StockData mStockData = null;
 		FinancialData mFinancialData = null;
 		ShareBonus mShareBonus = null;
 
@@ -760,6 +765,76 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				}
 				mStock.set(stock);
 			}
+		}
+
+		String downloadStockDataHistory(Stock stock) {
+			String responseString = "";
+
+			if (stock == null) {
+				return "";
+			}
+
+			mStockDatabaseManager.getStock(stock);
+
+			for (String period : Constants.PERIODS) {
+				if (Preferences.readBoolean(mContext, period, false)) {
+					responseString = downloadStockDataHistory(stock, period);
+				}
+			}
+
+			return responseString;
+		}
+
+		String downloadStockDataHistory(Stock stock, String period) {
+			int len = 0;
+			mStockData = new StockData(period);
+
+			if (stock == null) {
+				return "";
+			}
+
+			mStockData.setStockId(stock.getId());
+			len = getDownloadStockDataLength(Constants.EXECUTE_IMMEDIATE,
+					mStockData);
+			if (len > 0) {
+				setStock(stock);
+
+				return downloadStockDataHistory(getStockDataHistoryURLString(
+						stock, mStockData, len));
+			}
+
+			return "";
+		}
+
+		String downloadStockDataHistory(String urlString) {
+			String responseString = "";
+
+			Log.d(TAG, "downloadStockDataHistory:" + urlString);
+
+			Request.Builder builder = new Request.Builder();
+			builder.url(urlString);
+			Request request = builder.build();
+
+			try {
+				Response response = mOkHttpClient.newCall(request).execute();
+				if (response != null) {
+					responseString = response.body().string();
+					handleResponseStockDataHistory(mStock, mStockData,
+							responseString);
+
+					analyze(mStock, mStockData.getPeriod(),
+							getStockDataList(mStock, mStockData.getPeriod()));
+
+					Thread.sleep(Constants.DEFAULT_DOWNLOAD_INTERVAL);
+
+					sendBroadcast(Constants.ACTION_SERVICE_FINISHED,
+							Constants.SERVICE_DATABASE_UPDATE, 0);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			return responseString;
 		}
 
 		String downloadStockRealTime(Stock stock) {
@@ -983,6 +1058,11 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			loadStockArrayMapFavorite();
 
 			if (mStock != null) {
+				responseString = downloadStockDataHistory(mStock);
+				if (responseString.contains(mAccessDeniedString)) {
+					return responseString;
+				}
+
 				responseString = downloadStockRealTime(mStock);
 				if (responseString.contains(mAccessDeniedString)) {
 					return responseString;
@@ -1009,6 +1089,11 @@ public abstract class StockDataProvider extends StockAnalyzer {
 						Constants.SERVICE_DATABASE_UPDATE, 0);
 			} else {
 				for (Stock stock : mStockArrayMapFavorite.values()) {
+					responseString = downloadStockDataHistory(stock);
+					if (responseString.contains(mAccessDeniedString)) {
+						break;
+					}
+
 					responseString = downloadStockRealTime(stock);
 					if (responseString.contains(mAccessDeniedString)) {
 						break;

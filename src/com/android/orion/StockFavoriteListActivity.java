@@ -154,7 +154,11 @@ public class StockFavoriteListActivity extends ListActivity implements
 			return true;
 
 		case R.id.action_refresh:
-			mHandler.sendEmptyMessage(MESSAGE_REFRESH);
+			if (mOrionService != null) {
+				mStockDatabaseManager.deleteStockData();
+
+				mOrionService.downloadFinancial(null);
+			}
 			return true;
 
 		default:
@@ -170,7 +174,9 @@ public class StockFavoriteListActivity extends ListActivity implements
 		if (resultCode == RESULT_OK) {
 			switch (requestCode) {
 			case REQUEST_CODE_STOCK_INSERT:
-				mHandler.sendEmptyMessage(MESSAGE_REFRESH);
+				if (mOrionService != null) {
+					mOrionService.downloadFinancial(null);
+				}
 				break;
 
 			case REQUEST_CODE_STOCK_FILTER:
@@ -186,23 +192,11 @@ public class StockFavoriteListActivity extends ListActivity implements
 		}
 	}
 
-	Long doInBackgroundLoad(Object... params) {
-		super.doInBackgroundLoad(params);
-		int execute = (Integer) params[0];
-
-		switch (execute) {
-
-		default:
-			break;
+	@Override
+	void onServiceConnected() {
+		if (mOrionService != null) {
+			mOrionService.downloadFinancial(null);
 		}
-
-		return RESULT_SUCCESS;
-	}
-
-	void onPostExecuteLoad(Long result) {
-		super.onPostExecuteLoad(result);
-		startService(Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE,
-				Constants.EXECUTE_IMMEDIATE);
 	}
 
 	@Override

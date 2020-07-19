@@ -557,6 +557,19 @@ public class StockDatabaseManager extends DatabaseManager {
 		return result;
 	}
 
+	public int deleteStockData() {
+		int result = 0;
+
+		if (mContentResolver == null) {
+			return result;
+		}
+
+		result = mContentResolver.delete(DatabaseContract.StockData.CONTENT_URI,
+				null, null);
+
+		return result;
+	}
+	
 	public int deleteStockData(StockData stockData) {
 		int result = 0;
 
