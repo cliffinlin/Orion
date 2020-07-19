@@ -10,6 +10,9 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Menu;
@@ -78,6 +81,28 @@ public class StockFinancialListActivity extends ListActivity implements
 
 	SimpleCursorAdapter mLeftAdapter = null;
 	SimpleCursorAdapter mRightAdapter = null;
+
+	Handler mHandler = new Handler(Looper.getMainLooper()) {
+
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+
+			switch (msg.what) {
+			case MESSAGE_REFRESH:
+				if (mOrionService != null) {
+					mStockDatabaseManager.deleteFinancialData();
+					mStockDatabaseManager.deleteShareBonus();
+					mOrionService.downloadFinancial(null);
+					restartLoader();
+				}
+				break;
+
+			default:
+				break;
+			}
+		}
+	};
 
 	private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
 		@Override
@@ -161,12 +186,7 @@ public class StockFinancialListActivity extends ListActivity implements
 			return true;
 
 		case R.id.action_refresh:
-			if (mOrionService != null) {
-				mStockDatabaseManager.deleteFinancialData();
-				mStockDatabaseManager.deleteShareBonus();
-
-				mOrionService.downloadFinancial(null);
-			}
+			mHandler.sendEmptyMessage(MESSAGE_REFRESH);
 			return true;
 
 		default:
@@ -182,7 +202,10 @@ public class StockFinancialListActivity extends ListActivity implements
 		if (resultCode == RESULT_OK) {
 			switch (requestCode) {
 			case REQUEST_CODE_STOCK_INSERT:
-				mHandler.sendEmptyMessage(MESSAGE_REFRESH);
+				if (mOrionService != null) {
+					mOrionService.downloadStockDataHistory(mStock);
+					mOrionService.downloadFinancial(mStock);
+				}
 				break;
 
 			case REQUEST_CODE_STOCK_FILTER:

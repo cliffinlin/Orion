@@ -585,6 +585,27 @@ public class StockDatabaseManager extends DatabaseManager {
 		return result;
 	}
 
+	public int deleteStockData(long stockId) {
+		int result = 0;
+		String where = null;
+
+		if (mContentResolver == null) {
+			return result;
+		}
+		
+		if (stockId > 0) {
+			where = DatabaseContract.COLUMN_STOCK_ID + "=" + stockId;
+		}
+
+		try {
+			result = mContentResolver.delete(DatabaseContract.StockData.CONTENT_URI, where, null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+
 	public int deleteStockData(long stockId, String period) {
 		int result = 0;
 

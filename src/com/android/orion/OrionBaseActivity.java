@@ -284,23 +284,6 @@ public class OrionBaseActivity extends Activity {
 		}
 	}
 
-	void updateStockAction(long stockId, String action) {
-		Uri uri = null;
-
-		uri = ContentUris.withAppendedId(DatabaseContract.Stock.CONTENT_URI,
-				stockId);
-
-		try {
-			ContentValues contentValues = new ContentValues();
-			for (String period : Constants.PERIODS) {
-				contentValues.put(period, action);
-			}
-			mContentResolver.update(uri, contentValues, null, null);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	void updateStockMark(long stockId, String mark) {
 		Uri uri = null;
 
@@ -311,21 +294,6 @@ public class OrionBaseActivity extends Activity {
 			ContentValues contentValues = new ContentValues();
 			contentValues.put(DatabaseContract.Stock.COLUMN_MARK, mark);
 			mContentResolver.update(uri, contentValues, null, null);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	void deleteStockData(long stockId) {
-		Uri uri = DatabaseContract.StockData.CONTENT_URI;
-		String where = null;
-
-		if (stockId > 0) {
-			where = DatabaseContract.COLUMN_STOCK_ID + "=" + stockId;
-		}
-
-		try {
-			mContentResolver.delete(uri, where, null);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

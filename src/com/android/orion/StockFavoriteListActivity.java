@@ -10,6 +10,9 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -69,16 +72,34 @@ public class StockFavoriteListActivity extends ListActivity implements
 	SimpleCursorAdapter mLeftAdapter = null;
 	SimpleCursorAdapter mRightAdapter = null;
 
+	Handler mHandler = new Handler(Looper.getMainLooper()) {
+
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+
+			switch (msg.what) {
+			case MESSAGE_REFRESH:
+				if (mOrionService != null) {
+					mStockDatabaseManager.deleteStockData();
+					mOrionService.downloadStockDataHistory(null);
+					restartLoader();
+				}
+				break;
+
+			default:
+				break;
+			}
+		}
+	};
+
 	private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			if (mResumed) {
 				if (intent.getIntExtra(Constants.EXTRA_SERVICE_TYPE,
 						Constants.SERVICE_TYPE_NONE) == Constants.SERVICE_DATABASE_UPDATE) {
-					if (System.currentTimeMillis() - mLastRestartLoader > Constants.DEFAULT_RESTART_LOADER_INTERAL) {
-						mLastRestartLoader = System.currentTimeMillis();
-						restartLoader();
-					}
+					restartLoader();
 				}
 			}
 		}
@@ -154,11 +175,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 			return true;
 
 		case R.id.action_refresh:
-			if (mOrionService != null) {
-				mStockDatabaseManager.deleteStockData();
-
-				mOrionService.downloadFinancial(null);
-			}
+			mHandler.sendEmptyMessage(MESSAGE_REFRESH);
 			return true;
 
 		default:
@@ -175,7 +192,8 @@ public class StockFavoriteListActivity extends ListActivity implements
 			switch (requestCode) {
 			case REQUEST_CODE_STOCK_INSERT:
 				if (mOrionService != null) {
-					mOrionService.downloadFinancial(null);
+					mOrionService.downloadStockDataHistory(mStock);
+					mOrionService.downloadFinancial(mStock);
 				}
 				break;
 
@@ -195,7 +213,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 	@Override
 	void onServiceConnected() {
 		if (mOrionService != null) {
-			mOrionService.downloadFinancial(null);
+			mOrionService.downloadStockDataHistory(null);
 		}
 	}
 

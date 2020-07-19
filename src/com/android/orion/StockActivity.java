@@ -182,8 +182,20 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 			} else if (ACTION_STOCK_EDIT.equals(mAction)) {
 				mStock.setModified(Utility.getCurrentDateTimeString());
 			}
-			startSaveTask(EXECUTE_STOCK_SAVE);
+			// startSaveTask(EXECUTE_STOCK_SAVE);
 			setResult(RESULT_OK, getIntent());
+			if (ACTION_STOCK_INSERT.equals(mAction)) {
+				if (!mStockDatabaseManager.isStockExist(mStock)) {
+					mStockDatabaseManager.insertStock(mStock);
+				} else {
+					// return RESULT_STOCK_EXIST;
+					Toast.makeText(mContext, R.string.stock_exist,
+							Toast.LENGTH_LONG).show();
+				}
+			} else if (ACTION_STOCK_EDIT.equals(mAction)) {
+				mStockDatabaseManager.updateStock(mStock,
+						mStock.getContentValues());
+			}
 			finish();
 			break;
 

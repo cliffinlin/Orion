@@ -87,11 +87,16 @@ public class StockDataChartListActivity extends OrionBaseActivity implements
 
 			switch (msg.what) {
 			case MESSAGE_REFRESH:
-				deleteStockData(mStock.getId());
-				startService(Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE,
-						Constants.EXECUTE_IMMEDIATE, mStock.getSE(),
-						mStock.getCode());
-				restartLoader();
+				if (mOrionService != null) {
+					mStockDatabaseManager.deleteStockData(mStock.getId());
+					mStockDatabaseManager.deleteFinancialData(mStock.getId());
+					mStockDatabaseManager.deleteShareBonus(mStock.getId());
+
+					mOrionService.downloadStockDataHistory(mStock);
+					mOrionService.downloadFinancial(mStock);
+
+					restartLoader();
+				}
 				break;
 
 			case MESSAGE_LOAD_STOCK_LIST:
@@ -118,19 +123,9 @@ public class StockDataChartListActivity extends OrionBaseActivity implements
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			if (mResumed) {
-
-				int serviceType = intent.getIntExtra(
-						Constants.EXTRA_SERVICE_TYPE,
-						Constants.SERVICE_TYPE_NONE);
-
-				if (serviceType == Constants.SERVICE_DATABASE_UPDATE) {
-					if (intent.getLongExtra(Constants.EXTRA_STOCK_ID, 0) == mStock
-							.getId()) {
-						if (System.currentTimeMillis() - mLastRestartLoader > Constants.DEFAULT_RESTART_LOADER_INTERAL) {
-							mLastRestartLoader = System.currentTimeMillis();
-							restartLoader();
-						}
-					}
+				if (intent.getIntExtra(Constants.EXTRA_SERVICE_TYPE,
+						Constants.SERVICE_TYPE_NONE) == Constants.SERVICE_DATABASE_UPDATE) {
+					restartLoader();
 				}
 			}
 		}

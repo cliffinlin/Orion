@@ -137,6 +137,10 @@ public class OrionService extends Service {
 		}
 	}
 
+	void downloadStockDataHistory(Stock stock) {
+		mSinaFinance.downloadStockDataHistory(stock);
+	}
+
 	void downloadFinancial(Stock stock) {
 		mSinaFinance.downloadFinancial(stock);
 	}
