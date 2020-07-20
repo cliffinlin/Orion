@@ -213,7 +213,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 	@Override
 	void onServiceConnected() {
 		if (mOrionService != null) {
-			mOrionService.downloadStockDataHistory(null);
+//			mOrionService.downloadStockDataHistory(null);
 		}
 	}
 

@@ -205,17 +205,17 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		stock = getStock(bundle);
 
 		if (stock != null) {
-			downloadStockRealTime(executeType, stock);
 			if (executeTypeOf(executeType, Constants.EXECUTE_SCHEDULE)) {
+				downloadStockRealTime(executeType, stock);
 				downloadStockDataHistory(executeType, stock);
+				downloadStockDataRealTime(executeType, stock);
 			}
-			downloadStockDataRealTime(executeType, stock);
 		} else {
-			downloadStockRealTime(executeType);
 			if (executeTypeOf(executeType, Constants.EXECUTE_SCHEDULE)) {
+				downloadStockRealTime(executeType);
 				downloadStockDataHistory(executeType);
+				downloadStockDataRealTime(executeType);
 			}
-			downloadStockDataRealTime(executeType);
 		}
 	}
 
