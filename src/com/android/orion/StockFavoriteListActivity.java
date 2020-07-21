@@ -99,7 +99,10 @@ public class StockFavoriteListActivity extends ListActivity implements
 			if (mResumed) {
 				if (intent.getIntExtra(Constants.EXTRA_SERVICE_TYPE,
 						Constants.SERVICE_TYPE_NONE) == Constants.SERVICE_DATABASE_UPDATE) {
-					restartLoader();
+					if (System.currentTimeMillis() - mLastRestartLoader > Constants.DEFAULT_RESTART_LOADER_INTERAL) {
+						mLastRestartLoader = System.currentTimeMillis();
+						restartLoader();
+					}
 				}
 			}
 		}
@@ -213,7 +216,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 	@Override
 	void onServiceConnected() {
 		if (mOrionService != null) {
-//			mOrionService.downloadStockDataHistory(null);
+			// mOrionService.downloadStockDataHistory(null);
 		}
 	}
 

@@ -884,17 +884,18 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		ShareBonus mShareBonus = null;
 
 		String downloadStockRealTime(Stock stock) {
-			String modified = "";
-
 			if (stock == null) {
 				return "";
 			}
 
 			mStockDatabaseManager.getStock(stock);
 
-			modified = stock.getModified();
-			if (TextUtils.isEmpty(modified)) {
-				modified = stock.getCreated();
+			if (stock.getCreated().contains(Utility.getCurrentDateString())
+					|| stock.getModified().contains(
+							Utility.getCurrentDateString())) {
+				if (stock.getPrice() > 0) {
+					return "";
+				}
 			}
 
 			setStock(stock);
