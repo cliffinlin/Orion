@@ -83,8 +83,8 @@
         android:layout_weight="1"
         android:gravity="center"
         android:text="@string/net_profit_per_share_in_year"
-        
         android:textSize="18sp" />
+
     <TextView
         android:id="@+id/rate"
         android:layout_width="80dp"
@@ -102,7 +102,7 @@
         android:gravity="center"
         android:text="@string/roi"
         android:textSize="18sp" />
-    
+
     <TextView
         android:id="@+id/roe"
         android:layout_width="80dp"
@@ -118,7 +118,7 @@
         android:layout_height="40dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="@string/pe"
+        android:text="@string/ep"
         android:textSize="18sp" />
 
     <TextView
@@ -128,6 +128,15 @@
         android:layout_weight="1"
         android:gravity="center"
         android:text="@string/pb"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/hold"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/hold"
         android:textSize="18sp" />
 
     <TextView
@@ -165,7 +174,7 @@
         android:gravity="center"
         android:text="@string/delta"
         android:textSize="18sp" />
-    
+
     <TextView
         android:id="@+id/r_date"
         android:layout_width="100dp"

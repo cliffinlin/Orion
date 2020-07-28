@@ -85,13 +85,4 @@
         android:text="@string/action_month"
         android:textSize="18sp" />
 
-    <TextView
-        android:id="@+id/hold"
-        android:layout_width="80dp"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/hold"
-        android:textSize="18sp" />
-
 </LinearLayout>

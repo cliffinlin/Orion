@@ -64,7 +64,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 	TextView mTextViewDay = null;
 	TextView mTextViewWeek = null;
 	TextView mTextViewMonth = null;
-	TextView mTextViewHold = null;
 
 	ListView mLeftListView = null;
 	ListView mRightListView = null;
@@ -301,7 +300,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewDay, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewWeek, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewMonth, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewHold, mHeaderTextDefaultColor);
 	}
 
 	void setVisibility(String key, TextView textView) {
@@ -380,11 +378,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 			setVisibility(Constants.PERIOD_MONTH, mTextViewMonth);
 		}
 
-		mTextViewHold = (TextView) findViewById(R.id.hold);
-		if (mTextViewHold != null) {
-			mTextViewHold.setOnClickListener(this);
-		}
-
 		if (mSortOrder.contains(DatabaseContract.COLUMN_CODE)) {
 			setHeaderTextColor(mTextViewNameCode, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PRICE)) {
@@ -405,8 +398,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 			setHeaderTextColor(mTextViewWeek, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MONTH)) {
 			setHeaderTextColor(mTextViewMonth, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_HOLD)) {
-			setHeaderTextColor(mTextViewHold, mHeaderTextHighlightColor);
 		} else {
 		}
 	}

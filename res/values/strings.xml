@@ -97,6 +97,7 @@
     <string name="password_hint">Password</string>
     <string name="pb">PB</string>
     <string name="pe">PE</string>
+    <string name="ep">1/PE</string>
     <string name="percent">Percent</string>
     <string name="period_1min">1min</string>
     <string name="period_5min">5min</string>
