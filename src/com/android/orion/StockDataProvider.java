@@ -590,33 +590,6 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		}
 	}
 
-	public class StockInformationDownloader extends VolleyStringDownloader {
-		public Stock mStock = null;
-
-		public StockInformationDownloader() {
-			super();
-		}
-
-		public StockInformationDownloader(String urlString) {
-			super(urlString);
-		}
-
-		public void setStock(Stock stock) {
-			if (mStock == null) {
-				mStock = new Stock();
-			}
-
-			mStock.set(stock);
-		}
-
-		@Override
-		public void handleResponse(String response) {
-			removeFromCurrrentRequests(mStringRequest.getUrl());
-
-			handleResponseStockInformation(mStock, response);
-		}
-	}
-
 	public class StockRealTimeDownloader extends VolleyStringDownloader {
 		public Stock mStock = null;
 
@@ -1112,7 +1085,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			for (Stock stock : mStockArrayMapFavorite.values()) {
 				if (stockId != 0) {
 					if (stock.getId() != stockId) {
-						break;
+						continue;
 					}
 				}
 

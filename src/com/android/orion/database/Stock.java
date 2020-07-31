@@ -1340,7 +1340,8 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-		mCost = Utility.Round(value / mHold, Constants.DOUBLE_FIXED_DECIMAL);
+//		mCost = Utility.Round(value / mHold, Constants.DOUBLE_FIXED_DECIMAL);
+		mCost = value;
 	}
 
 	public void setupYield() {

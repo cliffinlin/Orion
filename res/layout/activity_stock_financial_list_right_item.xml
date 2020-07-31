@@ -76,7 +76,7 @@
         android:layout_weight="1"
         android:gravity="center"
         android:textSize="18sp" />
-    
+
     <TextView
         android:id="@+id/rate"
         android:layout_width="80dp"
@@ -92,7 +92,7 @@
         android:layout_weight="1"
         android:gravity="center"
         android:textSize="18sp" />
-    
+
     <TextView
         android:id="@+id/roe"
         android:layout_width="80dp"
@@ -124,9 +124,17 @@
         android:layout_weight="1"
         android:gravity="center"
         android:textSize="18sp" />
-    
+
     <TextView
-        android:id="@+id/date"
+        android:id="@+id/cost"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/r_date"
         android:layout_width="100dp"
         android:layout_height="50dp"
         android:layout_weight="1"
@@ -158,10 +166,11 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/r_date"
+        android:id="@+id/date"
         android:layout_width="100dp"
         android:layout_height="50dp"
         android:layout_weight="1"
         android:gravity="center"
         android:textSize="18sp" />
+
 </LinearLayout>

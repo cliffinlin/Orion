@@ -140,12 +140,21 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/date"
+        android:id="@+id/cost"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/cost"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/r_date"
         android:layout_width="100dp"
         android:layout_height="40dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="@string/date"
+        android:text="@string/r_date"
         android:textSize="18sp" />
 
     <TextView
@@ -176,12 +185,12 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/r_date"
+        android:id="@+id/date"
         android:layout_width="100dp"
         android:layout_height="40dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="@string/r_date"
+        android:text="@string/date"
         android:textSize="18sp" />
 
 </LinearLayout>

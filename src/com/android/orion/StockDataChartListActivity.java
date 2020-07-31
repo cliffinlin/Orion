@@ -92,6 +92,12 @@ public class StockDataChartListActivity extends OrionBaseActivity implements
 					mStockDatabaseManager.deleteFinancialData(mStock.getId());
 					mStockDatabaseManager.deleteShareBonus(mStock.getId());
 
+					mStock.setPrice(0);
+					mStock.setCreated("");
+					mStock.setModified("");
+					mStockDatabaseManager.updateStock(mStock,
+							mStock.getContentValues());
+
 					mOrionService.downloadStockDataHistory(mStock);
 					mOrionService.downloadFinancial(mStock);
 
