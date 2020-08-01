@@ -3,7 +3,7 @@
 
     <string name="about">About</string>
     <string name="about_information">About Information</string>
-    <string name="access_denied">拒绝访问</string>    
+    <string name="access_denied">拒绝访问</string>
     <string name="acceleration">Acc</string>
     <string name="action">Action</string>
     <string name="action_all">All</string>
@@ -22,7 +22,7 @@
     <string name="action_download">Download</string>
     <string name="action_delete_all">Delete All</string>
     <string name="action_to">To</string>
-    <string name="action_order_by_roi">Order by Roi</string>    
+    <string name="action_order_by_roi">Order by Roi</string>
     <string name="action_order_by_roe">Order by Roe</string>
     <string name="action_order_by_rate">Order by Rate</string>
     <string name="action_order_by_pe">Order by Pe</string>
@@ -30,7 +30,6 @@
     <string name="action_order_by_delta">Order by Delta</string>
     <string name="added">Added</string>
     <string name="alarm">Alarm</string>
-    <string name="alarm_service">Alarm Service</string>
     <string name="app_name">Orion</string>
     <string name="begin_date">Begin Date</string>
     <string name="cancel">Cancel</string>
@@ -61,10 +60,9 @@
     <string name="cash_flow_per_share">CPS</string>
     <string name="net_profit_per_share">NPS</string>
     <string name="net_profit_per_share_in_year">NPSY</string>
-    <string name="roi">Roi</string>        
+    <string name="roi">Roi</string>
     <string name="roe">Roe</string>
     <string name="download">Download</string>
-    <string name="download_service">Download Service</string>
     <string name="end_date">End Date</string>
     <string name="email_hint">Email</string>
     <string name="favorite">Favorite</string>
@@ -87,7 +85,7 @@
     <string name="network_unavailable">Network not Available</string>
     <string name="no_file_found">No File Found!</string>
     <string name="no_sd_card_found">No SD Card Found!</string>
-    <string name="notification_service">Notification Service</string>
+    <string name="notification">Notification</string>
     <string name="notification_message">Message</string>
     <string name="notification_lights">Lights</string>
     <string name="notification_vibrate">Vibrate</string>
@@ -118,6 +116,7 @@
     <string name="quota">Quota</string>
     <string name="rate">Rate</string>
     <string name="search">Search</string>
+    <string name="schedule">Schedule</string>
     <string name="service">Service</string>
     <string name="sign_up_button_label">Sign Up</string>
     <string name="signup_error_message">Please Make Sure You Eenter a Username, Password, and Email Address!</string>
@@ -181,5 +180,6 @@
     <string name="filter">Filter</string>
     <string name="saved">Saved</string>
     <string name="error">Error!</string>
-
+    <string name="limit_line">Limit Line</string>
+    <string name="display">Display</string>
 </resources>

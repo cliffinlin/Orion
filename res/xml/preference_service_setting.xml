@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <PreferenceCategory android:title="@string/alarm_service" >
+    <PreferenceCategory android:title="@string/schedule" >
         <com.android.orion.CustomSwitchPreference
             android:defaultValue="true"
             android:key="alarm"
             android:title="@string/alarm" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/download_service" >
+    <PreferenceCategory android:title="@string/display" >
+        <com.android.orion.CustomSwitchPreference
+            android:defaultValue="true"
+            android:key="limit_line"
+            android:title="@string/limit_line" />
+    </PreferenceCategory>    
+    <PreferenceCategory android:title="@string/download" >
         <com.android.orion.CustomSwitchPreference
             android:defaultValue="true"
             android:key="month"
@@ -33,7 +39,7 @@
             android:key="min5"
             android:title="@string/period_5min" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/notification_service" >
+    <PreferenceCategory android:title="@string/notification" >
         <com.android.orion.CustomSwitchPreference
             android:key="notification_message"
             android:title="@string/notification_message" />

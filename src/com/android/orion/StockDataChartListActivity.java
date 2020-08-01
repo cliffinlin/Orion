@@ -64,6 +64,8 @@ public class StockDataChartListActivity extends OrionBaseActivity implements
 	static final int MESSAGE_REFRESH = 0;
 	static final int MESSAGE_LOAD_STOCK_LIST = 1;
 
+	boolean mShowLimitLine = true;
+
 	int mStockListIndex = 0;
 
 	String mSelection = null;
@@ -165,6 +167,9 @@ public class StockDataChartListActivity extends OrionBaseActivity implements
 		LocalBroadcastManager.getInstance(this).registerReceiver(
 				mBroadcastReceiver,
 				new IntentFilter(Constants.ACTION_SERVICE_FINISHED));
+
+		mShowLimitLine = Preferences.readBoolean(mContext,
+				Constants.SETTING_KEY_LIMIT_LINE, true);
 
 		initLoader();
 
@@ -633,7 +638,9 @@ public class StockDataChartListActivity extends OrionBaseActivity implements
 				mStockDatabaseManager.getStockDealListAllSelection(mStock));
 
 		stockDataChart.updateDescription(mStock);
-		stockDataChart.updateLimitLine(mStock, mStockDealList);
+		if (mShowLimitLine) {
+			stockDataChart.updateLimitLine(mStock, mStockDealList);
+		}
 		stockDataChart.setMainChartData();
 		stockDataChart.setSubChartData();
 
