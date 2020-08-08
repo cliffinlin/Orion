@@ -345,7 +345,8 @@ public class StockDataChart {
 		mLimitLineList.clear();
 
 		if ((stock.getCost() > 0) && (stock.getHold() > 0)) {
-			average = stock.getCost() / stock.getHold();
+			average = Utility.Round(stock.getCost() / stock.getHold(),
+					Constants.DOUBLE_FIXED_DECIMAL);
 			net = Utility.Round(100 * (stock.getPrice() - average) / average,
 					Constants.DOUBLE_FIXED_DECIMAL);
 			color = Color.BLUE;

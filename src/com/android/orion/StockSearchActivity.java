@@ -25,8 +25,8 @@ public class StockSearchActivity extends StockEditActivity implements
 		super.onCreate(savedInstanceState);
 
 		mSearchRecentSuggestions = new SearchRecentSuggestions(this,
-				OrionSearchRecentSuggestionsProvider.AUTHORITY,
-				OrionSearchRecentSuggestionsProvider.MODE);
+				StockSearchRecentSuggestionsProvider.AUTHORITY,
+				StockSearchRecentSuggestionsProvider.MODE);
 
 		handleIntent(getIntent());
 	}

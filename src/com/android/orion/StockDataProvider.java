@@ -834,7 +834,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			for (Stock stock : mStockArrayMapFavorite.values()) {
 				if (stockId != 0) {
 					if (stock.getId() != stockId) {
-						break;
+						continue;
 					}
 				}
 

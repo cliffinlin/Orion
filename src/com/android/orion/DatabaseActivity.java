@@ -6,7 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 
-public class DatabaseActivity extends OrionBaseActivity {
+public class DatabaseActivity extends BaseActivity {
 
 	public static final long RESULT_FAILURE = -1;
 	public static final long RESULT_SUCCESS = 0;

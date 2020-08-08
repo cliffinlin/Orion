@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.android.orion.utility.Preferences;
 
 public class OrionMainActivity extends PreferenceActivity {
-	StockDownloadAlarmManager mStockDownloadAlarmManager = null;
+	DownloadAlarmManager mStockDownloadAlarmManager = null;
 	private long mExitTime;
 
 	@Override
@@ -24,8 +24,7 @@ public class OrionMainActivity extends PreferenceActivity {
 		initSharepreference();
 
 		if (mStockDownloadAlarmManager == null) {
-			mStockDownloadAlarmManager = StockDownloadAlarmManager
-					.getInstance(this);
+			mStockDownloadAlarmManager = DownloadAlarmManager.getInstance(this);
 		}
 
 		if (mStockDownloadAlarmManager != null) {

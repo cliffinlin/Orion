@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.android.orion"
-    android:versionCode="507"
-    android:versionName="1.1.36_20200801" >
+    android:versionCode="508"
+    android:versionName="1.1.36_20200808" >
 
     <uses-sdk
         android:minSdkVersion="19"
@@ -46,7 +46,7 @@
         </activity>
         <activity android:name="com.android.orion.DatabaseActivity" >
         </activity>
-        <activity android:name="com.android.orion.OrionBaseActivity" >
+        <activity android:name="com.android.orion.BaseActivity" >
         </activity>
         <activity android:name="com.android.orion.StockActivity" >
         </activity>
@@ -61,7 +61,7 @@
             android:launchMode="singleTask" >
         </activity>
         <activity
-            android:name="com.android.orion.FinancialDataChartListActivity"
+            android:name="com.android.orion.StockFinancialChartListActivity"
             android:label="@string/financial_data_chart"
             android:launchMode="singleTask" >
         </activity>
@@ -134,12 +134,12 @@
             android:exported="false" >
         </provider>
         <provider
-            android:name="com.android.orion.OrionSearchRecentSuggestionsProvider"
+            android:name="com.android.orion.StockSearchRecentSuggestionsProvider"
             android:authorities="com.android.orion.OrionSearchRecentSuggestionsProvider"
             android:exported="false" >
         </provider>
 
-        <receiver android:name="com.android.orion.StockDownloadBroadcastReceiver" >
+        <receiver android:name="com.android.orion.DownloadBroadcastReceiver" >
         </receiver>
         <receiver android:name="com.android.orion.OrionBroadcastReceiver" >
             <intent-filter>

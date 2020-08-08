@@ -9,9 +9,9 @@ import android.util.Log;
 
 import com.android.orion.utility.Market;
 
-public class StockDownloadBroadcastReceiver extends BroadcastReceiver {
+public class DownloadBroadcastReceiver extends BroadcastReceiver {
 	static final String TAG = Constants.TAG + " "
-			+ StockDownloadBroadcastReceiver.class.getSimpleName();
+			+ DownloadBroadcastReceiver.class.getSimpleName();
 
 	@Override
 	public void onReceive(Context context, Intent intent) {

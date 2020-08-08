@@ -547,31 +547,33 @@ public class StockAnalyzer extends StockManager {
 	private void updateNotification(Stock stock) {
 		int id = 0;
 		int defaults = 0;
-		String bodyString = "";
 		String titleString = "";
+		String dealString = "";
+		String bodyString = "";
 
-		ArrayList<StockDeal> stockDealToBuyList = new ArrayList<StockDeal>();
+		ArrayList<StockDeal> stockDealList = new ArrayList<StockDeal>();
 
-		mStockDatabaseManager.getStockDealList(stock, stockDealToBuyList,
+		mStockDatabaseManager.getStockDealList(stock, stockDealList,
 				mStockDatabaseManager.getStockDealListToBuySelection(stock));
 
 		if (stock.getPrice() > 0) {
-			for (StockDeal stockDeal : stockDealToBuyList) {
+			for (StockDeal stockDeal : stockDealList) {
 				if (stock.getPrice() <= stockDeal.getDeal()) {
-					titleString += "@ ";
+					dealString += "@" + stockDeal.getDeal() + " "
+							+ stockDeal.getNet();
 					break;
 				}
 			}
 		}
 
-		if (TextUtils.isEmpty(titleString)) {
+		if (TextUtils.isEmpty(dealString)) {
 			return;
 		}
 
 		bodyString = getBodyString(stock);
 
 		titleString += stock.getName() + " " + stock.getPrice() + " "
-				+ stock.getNet();
+				+ stock.getNet() + " " + dealString;
 
 		NotificationManager notificationManager = (NotificationManager) mContext
 				.getSystemService(Context.NOTIFICATION_SERVICE);

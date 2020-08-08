@@ -14,7 +14,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
-public class FinancialDataChart {
+public class StockFinancialChart {
 	String mPeriod;
 	String mDescription;
 
@@ -37,10 +37,10 @@ public class FinancialDataChart {
 	CombinedData mCombinedDataMain = null;
 	CombinedData mCombinedDataSub = null;
 
-	public FinancialDataChart() {
+	public StockFinancialChart() {
 	}
 
-	public FinancialDataChart(String period) {
+	public StockFinancialChart(String period) {
 		if (mXValues == null) {
 			mXValues = new ArrayList<String>();
 		}

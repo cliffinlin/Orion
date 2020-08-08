@@ -50,7 +50,7 @@ import com.github.mikephil.charting.listener.ChartTouchListener.ChartGesture;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.utils.Utils;
 
-public class StockDataChartListActivity extends OrionBaseActivity implements
+public class StockDataChartListActivity extends BaseActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnChartGestureListener {
 	static final String TAG = Constants.TAG + " "
 			+ StockDataChartListActivity.class.getSimpleName();
@@ -94,6 +94,9 @@ public class StockDataChartListActivity extends OrionBaseActivity implements
 					mStockDatabaseManager.deleteFinancialData(mStock.getId());
 					mStockDatabaseManager.deleteShareBonus(mStock.getId());
 
+					mStock.setClasses("");
+					mStock.setPinyin("");
+					mStock.setTotalShare(0);
 					mStock.setPrice(0);
 					mStock.setCreated("");
 					mStock.setModified("");

@@ -162,5 +162,5 @@ public class Constants {
 	public static final long DEFAULT_DOWNLOAD_INTERVAL = 3000;
 	public static final long DEFAULT_RESTART_LOADER_INTERAL = 5000;
 
-	public static final int ROI_COEFFICIENT = 10;
+	public static final double ROI_COEFFICIENT = 1.0 / 10;
 }

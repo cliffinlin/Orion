@@ -12,7 +12,7 @@ import com.android.orion.utility.Utility;
 public class ServiceSettingFragment extends PreferenceFragment implements
 		OnSharedPreferenceChangeListener {
 
-	StockDownloadAlarmManager mStockDownloadAlarmManager = null;
+	DownloadAlarmManager mStockDownloadAlarmManager = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -20,7 +20,7 @@ public class ServiceSettingFragment extends PreferenceFragment implements
 
 		getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
 
-		mStockDownloadAlarmManager = StockDownloadAlarmManager
+		mStockDownloadAlarmManager = DownloadAlarmManager
 				.getInstance(getActivity());
 
 		addPreferencesFromResource(R.xml.preference_service_setting);

@@ -33,9 +33,9 @@ import com.android.orion.database.StockDatabaseManager;
 import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockFilter;
 
-public class OrionBaseActivity extends Activity {
+public class BaseActivity extends Activity {
 	static final String TAG = Constants.TAG + " "
-			+ OrionBaseActivity.class.getSimpleName();
+			+ BaseActivity.class.getSimpleName();
 
 	boolean mBound = false;
 	boolean mResumed = false;
@@ -94,7 +94,7 @@ public class OrionBaseActivity extends Activity {
 
 			mOrionService = mOrionBinder.getService();
 
-			OrionBaseActivity.this.onServiceConnected();
+			BaseActivity.this.onServiceConnected();
 		}
 
 		@Override

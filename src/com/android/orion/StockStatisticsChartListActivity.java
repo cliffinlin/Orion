@@ -42,9 +42,8 @@ import com.github.mikephil.charting.listener.ChartTouchListener.ChartGesture;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.utils.Utils;
 
-public class StockStatisticsChartListActivity extends OrionBaseActivity
-		implements LoaderManager.LoaderCallbacks<Cursor>,
-		OnChartGestureListener {
+public class StockStatisticsChartListActivity extends BaseActivity implements
+		LoaderManager.LoaderCallbacks<Cursor>, OnChartGestureListener {
 	static final String TAG = Constants.TAG + " "
 			+ StockStatisticsChartListActivity.class.getSimpleName();
 

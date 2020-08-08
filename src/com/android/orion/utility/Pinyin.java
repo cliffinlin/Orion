@@ -1,10 +1,11 @@
-package com.android.orion.pinyin;
+package com.android.orion.utility;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.HashMap;
 import java.util.Map;
+
 
 import android.content.Context;
 

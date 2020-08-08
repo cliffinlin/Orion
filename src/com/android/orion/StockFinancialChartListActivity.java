@@ -46,10 +46,10 @@ import com.github.mikephil.charting.listener.ChartTouchListener.ChartGesture;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.utils.Utils;
 
-public class FinancialDataChartListActivity extends OrionBaseActivity implements
+public class StockFinancialChartListActivity extends BaseActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnChartGestureListener {
 	static final String TAG = Constants.TAG + " "
-			+ FinancialDataChartListActivity.class.getSimpleName();
+			+ StockFinancialChartListActivity.class.getSimpleName();
 
 	static final int ITEM_VIEW_TYPE_MAIN = 0;
 	static final int ITEM_VIEW_TYPE_SUB = 1;
@@ -70,7 +70,7 @@ public class FinancialDataChartListActivity extends OrionBaseActivity implements
 	ArrayList<FinancialDataChartItem> mFinancialDataChartItemList = null;
 	ArrayList<FinancialDataChartItemMain> mFinancialDataChartItemMainList = null;
 	ArrayList<FinancialDataChartItemSub> mFinancialDataChartItemSubList = null;
-	ArrayList<FinancialDataChart> mFinancialDataChartList = null;
+	ArrayList<StockFinancialChart> mFinancialDataChartList = null;
 
 	Handler mHandler = new Handler(Looper.getMainLooper()) {
 
@@ -272,7 +272,7 @@ public class FinancialDataChartListActivity extends OrionBaseActivity implements
 		mListView = (ListView) findViewById(R.id.listView);
 
 		if (mFinancialDataChartList == null) {
-			mFinancialDataChartList = new ArrayList<FinancialDataChart>();
+			mFinancialDataChartList = new ArrayList<StockFinancialChart>();
 		}
 
 		if (mFinancialDataChartItemList == null) {
@@ -288,8 +288,8 @@ public class FinancialDataChartListActivity extends OrionBaseActivity implements
 		}
 
 		int i = 0;
-		mFinancialDataChartList
-				.add(new FinancialDataChart(Constants.PERIODS[i]));
+		mFinancialDataChartList.add(new StockFinancialChart(
+				Constants.PERIODS[i]));
 		mFinancialDataChartItemMainList.add(new FinancialDataChartItemMain(
 				mFinancialDataChartList.get(i)));
 		mFinancialDataChartItemSubList.add(new FinancialDataChartItemSub(
@@ -415,7 +415,7 @@ public class FinancialDataChartListActivity extends OrionBaseActivity implements
 		}
 	}
 
-	public void swapFinancialDataCursor(FinancialDataChart financialDataChart,
+	public void swapFinancialDataCursor(StockFinancialChart financialDataChart,
 			Cursor cursor) {
 		int index = 0;
 		double unit = 100000000.0;
@@ -664,10 +664,10 @@ public class FinancialDataChartListActivity extends OrionBaseActivity implements
 	}
 
 	static class MainHandler extends Handler {
-		private final WeakReference<FinancialDataChartListActivity> mActivity;
+		private final WeakReference<StockFinancialChartListActivity> mActivity;
 
-		MainHandler(FinancialDataChartListActivity activity) {
-			mActivity = new WeakReference<FinancialDataChartListActivity>(
+		MainHandler(StockFinancialChartListActivity activity) {
+			mActivity = new WeakReference<StockFinancialChartListActivity>(
 					activity);
 		}
 
@@ -675,7 +675,7 @@ public class FinancialDataChartListActivity extends OrionBaseActivity implements
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
 
-			FinancialDataChartListActivity activity = mActivity.get();
+			StockFinancialChartListActivity activity = mActivity.get();
 			activity.updateTitle();
 			activity.updateMenuAction();
 		}
@@ -684,13 +684,13 @@ public class FinancialDataChartListActivity extends OrionBaseActivity implements
 	class FinancialDataChartItem {
 		int mItemViewType;
 		int mResource;
-		FinancialDataChart mFinancialDataChart;
+		StockFinancialChart mFinancialDataChart;
 
 		public FinancialDataChartItem() {
 		}
 
 		public FinancialDataChartItem(int itemViewType, int resource,
-				FinancialDataChart financialDataChart) {
+				StockFinancialChart financialDataChart) {
 			mItemViewType = itemViewType;
 			mResource = resource;
 			mFinancialDataChart = financialDataChart;
@@ -763,7 +763,7 @@ public class FinancialDataChartListActivity extends OrionBaseActivity implements
 	}
 
 	class FinancialDataChartItemMain extends FinancialDataChartItem {
-		public FinancialDataChartItemMain(FinancialDataChart financialDataChart) {
+		public FinancialDataChartItemMain(StockFinancialChart financialDataChart) {
 			super(ITEM_VIEW_TYPE_MAIN,
 					R.layout.activity_financial_data_chart_list_item_main,
 					financialDataChart);
@@ -771,7 +771,7 @@ public class FinancialDataChartListActivity extends OrionBaseActivity implements
 	}
 
 	class FinancialDataChartItemSub extends FinancialDataChartItem {
-		public FinancialDataChartItemSub(FinancialDataChart financialDataChart) {
+		public FinancialDataChartItemSub(StockFinancialChart financialDataChart) {
 			super(ITEM_VIEW_TYPE_SUB,
 					R.layout.activity_financial_data_chart_list_item_sub,
 					financialDataChart);

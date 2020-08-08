@@ -22,7 +22,7 @@ import com.android.orion.database.IPO;
 import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
-import com.android.orion.pinyin.Pinyin;
+import com.android.orion.utility.Pinyin;
 import com.android.orion.utility.StopWatch;
 import com.android.orion.utility.Utility;
 
@@ -390,7 +390,7 @@ public class SinaFinance extends StockDataProvider {
 
 			if (!stock.getName().equals(stockInfo[0])) {
 				stock.setName(stockInfo[0]);
-				stock.setPinyin(Pinyin.toPinyin(mContext, stock.getName()));
+				// stock.setPinyin(Pinyin.toPinyin(mContext, stock.getName()));
 			}
 
 			if (stockInfo.length == 6) {

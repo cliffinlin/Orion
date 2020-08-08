@@ -706,7 +706,7 @@ public class StockFinancialListActivity extends ListActivity implements
 		} else {
 			if (parent.getId() == R.id.left_listview) {
 				Intent intent = new Intent(this,
-						FinancialDataChartListActivity.class);
+						StockFinancialChartListActivity.class);
 				intent.putExtra(Setting.KEY_SORT_ORDER_STOCK_LIST, mSortOrder);
 				intent.putExtra(Constants.EXTRA_STOCK_ID, id);
 				startActivity(intent);
