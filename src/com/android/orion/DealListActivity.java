@@ -72,8 +72,6 @@ public class DealListActivity extends ListActivity implements
 	TextView mTextViewPrice = null;
 	TextView mTextViewNet = null;
 	TextView mTextViewDeal = null;
-	TextView mTextViewRoe = null;
-	TextView mTextViewPe = null;
 	TextView mTextViewVolume = null;
 	TextView mTextViewProfit = null;
 	TextView mTextViewCreated = null;
@@ -337,12 +335,6 @@ public class DealListActivity extends ListActivity implements
 		case R.id.deal:
 			mSortOrderColumn = DatabaseContract.COLUMN_DEAL;
 			break;
-		case R.id.roe:
-			mSortOrderColumn = DatabaseContract.COLUMN_ROE;
-			break;
-		case R.id.pe:
-			mSortOrderColumn = DatabaseContract.COLUMN_PE;
-			break;
 		case R.id.volume:
 			mSortOrderColumn = DatabaseContract.COLUMN_VOLUME;
 			break;
@@ -389,8 +381,6 @@ public class DealListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewPrice, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewNet, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewDeal, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewRoe, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewPe, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewVolume, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewProfit, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewCreated, mHeaderTextDefaultColor);
@@ -428,12 +418,6 @@ public class DealListActivity extends ListActivity implements
 		mTextViewDeal = (TextView) findViewById(R.id.deal);
 		mTextViewDeal.setOnClickListener(this);
 
-		mTextViewRoe = (TextView) findViewById(R.id.roe);
-		mTextViewRoe.setOnClickListener(this);
-
-		mTextViewPe = (TextView) findViewById(R.id.pe);
-		mTextViewPe.setOnClickListener(this);
-
 		mTextViewVolume = (TextView) findViewById(R.id.volume);
 		mTextViewVolume.setOnClickListener(this);
 
@@ -455,10 +439,6 @@ public class DealListActivity extends ListActivity implements
 			setHeaderTextColor(mTextViewNet, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_DEAL)) {
 			setHeaderTextColor(mTextViewDeal, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_ROE)) {
-			setHeaderTextColor(mTextViewRoe, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PE)) {
-			setHeaderTextColor(mTextViewPe, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_VOLUME)) {
 			setHeaderTextColor(mTextViewVolume, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PROFIT)) {
@@ -478,12 +458,11 @@ public class DealListActivity extends ListActivity implements
 
 		String[] mRightFrom = new String[] { DatabaseContract.COLUMN_PRICE,
 				DatabaseContract.COLUMN_NET, DatabaseContract.COLUMN_DEAL,
-				DatabaseContract.COLUMN_ROE, DatabaseContract.COLUMN_PE,
 				DatabaseContract.COLUMN_VOLUME, DatabaseContract.COLUMN_PROFIT,
 				DatabaseContract.COLUMN_CREATED,
 				DatabaseContract.COLUMN_MODIFIED };
-		int[] mRightTo = new int[] { R.id.price, R.id.net, R.id.deal, R.id.roe,
-				R.id.pe, R.id.volume, R.id.profit, R.id.created, R.id.modified };
+		int[] mRightTo = new int[] { R.id.price, R.id.net, R.id.deal,
+				R.id.volume, R.id.profit, R.id.created, R.id.modified };
 
 		mLeftListView = (ListView) findViewById(R.id.left_listview);
 		mLeftAdapter = new SimpleCursorAdapter(this,
