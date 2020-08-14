@@ -564,12 +564,12 @@ public class StockDatabaseManager extends DatabaseManager {
 			return result;
 		}
 
-		result = mContentResolver.delete(DatabaseContract.StockData.CONTENT_URI,
-				null, null);
+		result = mContentResolver.delete(
+				DatabaseContract.StockData.CONTENT_URI, null, null);
 
 		return result;
 	}
-	
+
 	public int deleteStockData(StockData stockData) {
 		int result = 0;
 
@@ -592,17 +592,18 @@ public class StockDatabaseManager extends DatabaseManager {
 		if (mContentResolver == null) {
 			return result;
 		}
-		
+
 		if (stockId > 0) {
 			where = DatabaseContract.COLUMN_STOCK_ID + "=" + stockId;
 		}
 
 		try {
-			result = mContentResolver.delete(DatabaseContract.StockData.CONTENT_URI, where, null);
+			result = mContentResolver.delete(
+					DatabaseContract.StockData.CONTENT_URI, where, null);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return result;
 	}
 
@@ -867,21 +868,6 @@ public class StockDatabaseManager extends DatabaseManager {
 		return selection;
 	}
 
-	public String getStockDealListBoughtSelection(Stock stock) {
-		String selection = "";
-
-		if (stock == null) {
-			return selection;
-		}
-
-		selection = DatabaseContract.COLUMN_SE + " = " + "\'" + stock.getSE()
-				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
-				+ stock.getCode() + "\'" + " AND "
-				+ DatabaseContract.COLUMN_VOLUME + " > " + 0;
-
-		return selection;
-	}
-
 	public String getStockDealListToBuySelection(Stock stock) {
 		String selection = "";
 
@@ -962,8 +948,7 @@ public class StockDatabaseManager extends DatabaseManager {
 
 		selection = DatabaseContract.COLUMN_SE + " = " + "\'" + stock.getSE()
 				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
-				+ stock.getCode() + "\'" + " AND "
-				+ DatabaseContract.COLUMN_VOLUME + " > " + 0;
+				+ stock.getCode() + "\'";
 
 		try {
 			cursor = queryStockDeal(selection, null, sortOrder);
@@ -1002,10 +987,8 @@ public class StockDatabaseManager extends DatabaseManager {
 		getStockDealMax(stock, stockDealMax);
 		getStockDealMin(stock, stockDealMin);
 
-		if ((stockDealMax.getVolume() > 0) && (stockDealMin.getVolume() > 0)) {
-			result = (1.0 - order * Constants.STOCK_DEAL_DISTRIBUTION_RATE)
-					* stockDealMax.getDeal();
-		}
+		result = (1.0 - order * Constants.STOCK_DEAL_DISTRIBUTION_RATE)
+				* stockDealMax.getDeal();
 
 		return result;
 	}
@@ -1250,12 +1233,12 @@ public class StockDatabaseManager extends DatabaseManager {
 			return result;
 		}
 
-		result = mContentResolver.delete(DatabaseContract.FinancialData.CONTENT_URI,
-				null, null);
+		result = mContentResolver.delete(
+				DatabaseContract.FinancialData.CONTENT_URI, null, null);
 
 		return result;
 	}
-	
+
 	public int deleteFinancialData(FinancialData financialData) {
 		int result = 0;
 
@@ -1516,12 +1499,12 @@ public class StockDatabaseManager extends DatabaseManager {
 			return result;
 		}
 
-		result = mContentResolver.delete(DatabaseContract.ShareBonus.CONTENT_URI,
-				null, null);
+		result = mContentResolver.delete(
+				DatabaseContract.ShareBonus.CONTENT_URI, null, null);
 
 		return result;
 	}
-	
+
 	public int deleteShareBonus(ShareBonus shareBonus) {
 		int result = 0;
 

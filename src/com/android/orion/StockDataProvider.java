@@ -202,6 +202,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		executeType = bundle.getInt(Constants.EXTRA_EXECUTE_TYPE,
 				Constants.EXECUTE_TYPE_NONE);
 
+		loadStockArrayMapFavorite();
+
 		stock = getStock(bundle);
 
 		if (stock != null) {
@@ -241,6 +243,10 @@ public abstract class StockDataProvider extends StockAnalyzer {
 	}
 
 	void downloadStockRealTime(int executeType) {
+		if (mStockArrayMapFavorite.size() == 0) {
+			return;
+		}
+
 		for (Stock stock : mStockArrayMapFavorite.values()) {
 			downloadStockRealTime(executeType, stock);
 		}
@@ -276,6 +282,10 @@ public abstract class StockDataProvider extends StockAnalyzer {
 	}
 
 	void downloadStockDataHistory(int executeType) {
+		if (mStockArrayMapFavorite.size() == 0) {
+			return;
+		}
+
 		for (Stock stock : mStockArrayMapFavorite.values()) {
 			downloadStockDataHistory(executeType, stock);
 		}
@@ -324,6 +334,10 @@ public abstract class StockDataProvider extends StockAnalyzer {
 	}
 
 	void downloadStockDataRealTime(int executeType) {
+		if (mStockArrayMapFavorite.size() == 0) {
+			return;
+		}
+
 		for (Stock stock : mStockArrayMapFavorite.values()) {
 			downloadStockDataRealTime(executeType, stock);
 		}

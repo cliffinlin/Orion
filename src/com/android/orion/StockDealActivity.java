@@ -173,6 +173,7 @@ public class StockDealActivity extends DatabaseActivity implements
 		double price = 0;
 		price = mStockDatabaseManager.getStockDealTargetPrice(mStock, mOrder);
 		price = Utility.Round(price, Constants.DOUBLE_FIXED_DECIMAL + 1);
+
 		if (price > 0) {
 			mEditTextDealPrice.setText(String.valueOf(price));
 		}
