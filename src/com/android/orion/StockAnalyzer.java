@@ -580,7 +580,7 @@ public class StockAnalyzer extends StockManager {
 
 		id = (int) stock.getId();
 
-		Intent intent = new Intent(Intent.ACTION_MAIN);
+		Intent intent = new Intent(mContext, DealListActivity.class);
 		intent.setType("vnd.android-dir/mms-sms");
 		PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0,
 				intent, 0);

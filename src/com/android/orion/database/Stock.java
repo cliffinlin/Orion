@@ -1335,13 +1335,12 @@ public class Stock extends DatabaseTable {
 				Constants.DOUBLE_FIXED_DECIMAL);
 	}
 
-	public void setupCost(double value) {
+	public void setupCost(double cost) {
 		if (mHold == 0) {
 			return;
 		}
 
-//		mCost = Utility.Round(value / mHold, Constants.DOUBLE_FIXED_DECIMAL);
-		mCost = value;
+		mCost = cost;
 	}
 
 	public void setupYield() {
