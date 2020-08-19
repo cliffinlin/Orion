@@ -296,6 +296,11 @@ public class StockDeal extends DatabaseTable {
 
 	public void setupDeal() {
 		double change = 0;
+		
+		if (mPrice == 0) {
+			return;
+		}
+		
 		if ((mDeal == 0) || (mVolume == 0)) {
 			mNet = 0;
 			mProfit = 0;
@@ -311,11 +316,19 @@ public class StockDeal extends DatabaseTable {
 	}
 
 	public void setupProfit() {
+		if (mPrice == 0) {
+			return;
+		}
+		
 		mProfit = Utility.Round((mPrice - mDeal) * mVolume,
 				Constants.DOUBLE_FIXED_DECIMAL);
 	}
 
 	public void setupNet() {
+		if (mPrice == 0) {
+			return;
+		}
+		
 		if (mDeal == 0) {
 			mNet = 0;
 			return;

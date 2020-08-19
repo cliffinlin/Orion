@@ -559,9 +559,8 @@ public class StockAnalyzer extends StockManager {
 		if (stock.getPrice() > 0) {
 			for (StockDeal stockDeal : stockDealList) {
 				if (stock.getPrice() <= stockDeal.getDeal()) {
-					dealString += "@" + stockDeal.getDeal() + " "
+					dealString += " @" + stockDeal.getDeal() + " "
 							+ stockDeal.getNet();
-					break;
 				}
 			}
 		}
