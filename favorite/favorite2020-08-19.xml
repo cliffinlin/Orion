@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
-<root date="2020-08-15 10:58:12">
+<root date="2020-08-19 21:39:31">
   <stock>
     <se>sh</se>
     <code>600486</code>
@@ -648,6 +648,12 @@
       <created>2020-07-19 22:19:58</created>
       <modified></modified>
     </item>
+    <item>
+      <deal>12.81</deal>
+      <volume>0</volume>
+      <created>2020-08-19 21:38:30</created>
+      <modified></modified>
+    </item>
   </stock>
   <stock>
     <se>sh</se>
@@ -1257,10 +1263,10 @@
     <code>000002</code>
     <name>万 科Ａ</name>
     <item>
-      <deal>26.0</deal>
+      <deal>26.87</deal>
       <volume>200</volume>
       <created>2019-09-02 08:17:35</created>
-      <modified>2020-08-07 23:00:53</modified>
+      <modified>2020-08-18 21:54:37</modified>
     </item>
     <item>
       <deal>24.72</deal>
@@ -1411,33 +1417,45 @@
       <modified></modified>
     </item>
     <item>
-      <deal>16.0</deal>
-      <volume>0</volume>
-      <created>2020-08-11 08:14:51</created>
-      <modified></modified>
-    </item>
-    <item>
-      <deal>15.2</deal>
+      <deal>15.0</deal>
       <volume>0</volume>
       <created>2020-08-15 08:21:53</created>
-      <modified></modified>
+      <modified>2020-08-16 23:09:24</modified>
     </item>
     <item>
-      <deal>14.4</deal>
+      <deal>14.0</deal>
       <volume>0</volume>
       <created>2020-08-15 08:22:04</created>
-      <modified></modified>
+      <modified>2020-08-16 23:09:33</modified>
     </item>
     <item>
-      <deal>13.6</deal>
+      <deal>13.0</deal>
       <volume>0</volume>
       <created>2020-08-15 08:22:19</created>
+      <modified>2020-08-16 23:09:43</modified>
+    </item>
+    <item>
+      <deal>12.0</deal>
+      <volume>0</volume>
+      <created>2020-08-15 08:22:30</created>
+      <modified>2020-08-16 23:09:53</modified>
+    </item>
+    <item>
+      <deal>17.0</deal>
+      <volume>400</volume>
+      <created>2020-08-16 23:09:09</created>
+      <modified>2020-08-18 13:43:00</modified>
+    </item>
+    <item>
+      <deal>16.0</deal>
+      <volume>0</volume>
+      <created>2020-08-18 13:43:13</created>
       <modified></modified>
     </item>
     <item>
-      <deal>12.8</deal>
+      <deal>18.0</deal>
       <volume>0</volume>
-      <created>2020-08-15 08:22:30</created>
+      <created>2020-08-18 21:56:09</created>
       <modified></modified>
     </item>
   </stock>
@@ -1554,23 +1572,6 @@
     </item>
     <item>
       <deal>7.34</deal>
-      <volume>0</volume>
-      <created>2020-07-19 22:19:59</created>
-      <modified></modified>
-    </item>
-  </stock>
-  <stock>
-    <se>sh</se>
-    <code>600350</code>
-    <name>山东高速</name>
-    <item>
-      <deal>4.35</deal>
-      <volume>1000</volume>
-      <created>2019-09-01 22:33:26</created>
-      <modified>2019-09-02 09:40:31</modified>
-    </item>
-    <item>
-      <deal>4.13</deal>
       <volume>0</volume>
       <created>2020-07-19 22:19:59</created>
       <modified></modified>

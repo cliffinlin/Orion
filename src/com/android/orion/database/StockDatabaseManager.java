@@ -744,8 +744,6 @@ public class StockDatabaseManager extends DatabaseManager {
 					stockDeal.set(cursor);
 
 					stockDeal.setPrice(stock.getPrice());
-					stockDeal.setRoe(stock.getRoe());
-					stockDeal.setPe(stock.getPE());
 					stockDeal.setupNet();
 					stockDeal.setupProfit();
 
@@ -980,15 +978,18 @@ public class StockDatabaseManager extends DatabaseManager {
 
 	public double getStockDealTargetPrice(Stock stock, int order) {
 		double result = 0;
-
+		
 		StockDeal stockDealMax = new StockDeal();
-		StockDeal stockDealMin = new StockDeal();
 
 		getStockDealMax(stock, stockDealMax);
-		getStockDealMin(stock, stockDealMin);
-
-		result = (1.0 - order * Constants.STOCK_DEAL_DISTRIBUTION_RATE)
-				* stockDealMax.getDeal();
+		
+		if (stock.getValuation() > 0) {
+			result = (1.0 - order * Constants.STOCK_DEAL_DISTRIBUTION_RATE)
+					* stock.getValuation();
+		} else {
+			result = (1.0 - order * Constants.STOCK_DEAL_DISTRIBUTION_RATE)
+					* stockDealMax.getDeal();
+		}
 
 		return result;
 	}
@@ -1024,8 +1025,6 @@ public class StockDatabaseManager extends DatabaseManager {
 					stockDeal.setCode(stock.getCode());
 					stockDeal.setName(stock.getName());
 					stockDeal.setPrice(stock.getPrice());
-					stockDeal.setRoe(stock.getRoe());
-					stockDeal.setPe(stock.getPE());
 					stockDeal.setDeal(deal);
 					stockDeal.setCreated(Utility.getCurrentDateTimeString());
 					insertStockDeal(stockDeal);

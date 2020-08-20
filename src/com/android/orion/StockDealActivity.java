@@ -80,8 +80,6 @@ public class StockDealActivity extends DatabaseActivity implements
 				mDeal.setName(mStock.getName());
 				mDeal.setPrice(mStock.getPrice());
 				mDeal.setDeal(mStock.getPrice());
-				mDeal.setRoe(mStock.getRoe());
-				mDeal.setPe(mStock.getPE());
 				updateView();
 				break;
 
@@ -92,8 +90,6 @@ public class StockDealActivity extends DatabaseActivity implements
 				mDeal.setName(mStock.getName());
 				mDeal.setPrice(mStock.getPrice());
 				mDeal.setDeal(mStock.getPrice());
-				mDeal.setRoe(mStock.getRoe());
-				mDeal.setPe(mStock.getPE());
 				updateView();
 				break;
 

@@ -31,7 +31,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 	RadioGroup mRadioGroup;
 	EditText mEditTextStockName;
 	EditText mEditTextStockCode;
-	EditText mEditTextStockDividend;
+	EditText mEditTextStockValuation;
 	Button mButtonOk, mButtonCancel;
 
 	@Override
@@ -55,14 +55,14 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mRadioGroup = (RadioGroup) findViewById(R.id.radioGroupSE);
 		mEditTextStockName = (EditText) findViewById(R.id.edittext_stock_name);
 		mEditTextStockCode = (EditText) findViewById(R.id.edittext_stock_code);
-		mEditTextStockDividend = (EditText) findViewById(R.id.edittext_stock_dividend);
+		mEditTextStockValuation = (EditText) findViewById(R.id.edittext_stock_valuation);
 		mButtonOk = (Button) findViewById(R.id.button_ok);
 		mButtonCancel = (Button) findViewById(R.id.button_cancel);
 
 		mRadioGroup.setOnClickListener(this);
 		mEditTextStockName.setOnClickListener(this);
 		mEditTextStockCode.setOnClickListener(this);
-		mEditTextStockDividend.setOnClickListener(this);
+		mEditTextStockValuation.setOnClickListener(this);
 		mButtonOk.setOnClickListener(this);
 		mButtonCancel.setOnClickListener(this);
 
@@ -116,7 +116,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 	void updateView() {
 		mEditTextStockName.setText(mStock.getName());
 		mEditTextStockCode.setText(mStock.getCode());
-		mEditTextStockDividend.setText(String.valueOf(mStock.getDividend()));
+		mEditTextStockValuation.setText(String.valueOf(mStock.getValuation()));
 	}
 
 	@Override
@@ -146,7 +146,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 			mSE = getSE();
 			String name = mEditTextStockName.getText().toString();
 			String code = mEditTextStockCode.getText().toString();
-			String dividend = mEditTextStockDividend.getText().toString();
+			String valuation = mEditTextStockValuation.getText().toString();
 
 			mStock.setClasses(Constants.STOCK_FLAG_CLASS_HSA);
 
@@ -169,10 +169,10 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 						Toast.LENGTH_LONG).show();
 			}
 
-			if (!TextUtils.isEmpty(dividend)) {
-				mStock.setDividend(Double.valueOf(dividend));
+			if (!TextUtils.isEmpty(valuation)) {
+				mStock.setValuation(Double.valueOf(valuation));
 			} else {
-				mStock.setDividend(0);
+				mStock.setValuation(0);
 			}
 
 			mStock.setMark(Constants.STOCK_FLAG_MARK_FAVORITE);

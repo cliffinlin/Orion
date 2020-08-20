@@ -88,16 +88,16 @@
         android:layout_height="wrap_content" >
 
         <TextView
-            android:id="@+id/textView_stock_dividend"
+            android:id="@+id/textView_stock_valuation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="14dp"
             android:layout_marginRight="14dp"
-            android:labelFor="@+id/edittext_stock_dividend"
-            android:text="@string/stock_dividend" />
+            android:labelFor="@+id/edittext_stock_valuation"
+            android:text="@string/stock_valuation" />
 
         <EditText
-            android:id="@+id/edittext_stock_dividend"
+            android:id="@+id/edittext_stock_valuation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="14dp"

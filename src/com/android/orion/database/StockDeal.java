@@ -14,8 +14,6 @@ public class StockDeal extends DatabaseTable {
 	private double mPrice;
 	private double mNet;
 	private double mDeal;
-	private double mRoe;
-	private double mPe;
 	private long mVolume;
 	private double mProfit;
 
@@ -53,8 +51,6 @@ public class StockDeal extends DatabaseTable {
 		mPrice = 0;
 		mNet = 0;
 		mDeal = 0;
-		mRoe = 0;
-		mPe = 0;
 		mVolume = 0;
 		mProfit = 0;
 	}
@@ -73,8 +69,6 @@ public class StockDeal extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_PRICE, mPrice);
 		contentValues.put(DatabaseContract.COLUMN_NET, mNet);
 		contentValues.put(DatabaseContract.COLUMN_DEAL, mDeal);
-		contentValues.put(DatabaseContract.COLUMN_ROE, mRoe);
-		contentValues.put(DatabaseContract.COLUMN_PE, mPe);
 		contentValues.put(DatabaseContract.COLUMN_VOLUME, mVolume);
 		contentValues.put(DatabaseContract.COLUMN_PROFIT, mProfit);
 
@@ -95,8 +89,6 @@ public class StockDeal extends DatabaseTable {
 		setName(stockDeal.mName);
 		setPrice(stockDeal.mPrice);
 		setNet(stockDeal.mNet);
-		setRoe(stockDeal.mRoe);
-		setPe(stockDeal.mPe);
 		setDeal(stockDeal.mDeal);
 		setVolume(stockDeal.mVolume);
 		setProfit(stockDeal.mProfit);
@@ -118,8 +110,6 @@ public class StockDeal extends DatabaseTable {
 		setPrice(cursor);
 		setNet(cursor);
 		setDeal(cursor);
-		setRoe(cursor);
-		setPe(cursor);
 		setVolume(cursor);
 		setProfit(cursor);
 	}
@@ -224,40 +214,6 @@ public class StockDeal extends DatabaseTable {
 
 		setDeal(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_DEAL)));
-	}
-
-	public double getRoe() {
-		return mRoe;
-	}
-
-	public void setRoe(double roe) {
-		mRoe = roe;
-	}
-
-	void setRoe(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setRoe(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_ROE)));
-	}
-
-	public double getPe() {
-		return mPe;
-	}
-
-	public void setPe(double pe) {
-		mPe = pe;
-	}
-
-	void setPe(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setPe(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_PE)));
 	}
 
 	public long getVolume() {
