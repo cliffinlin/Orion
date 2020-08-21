@@ -67,7 +67,6 @@ public class StockDealActivity extends DatabaseActivity implements
 					mStockDatabaseManager.updateStockDealByID(mDeal);
 				}
 
-				mStockDatabaseManager.setupStockDealToBuy(mStock);
 				mStockDatabaseManager.updateStockDeal(mStock);
 				mStockDatabaseManager.updateStock(mStock,
 						mStock.getContentValues());

@@ -101,8 +101,7 @@ public class DealListActivity extends ListActivity implements
 			switch (msg.what) {
 			case MESSAGE_DELETE_DEAL:
 				getStock();
-				mStockDatabaseManager.deleteStockDealById(mDeal);
-				mStockDatabaseManager.setupStockDealToBuy(mStock);
+				mStockDatabaseManager.deleteStockDeal(mDeal);
 				mStockDatabaseManager.updateStockDeal(mStock);
 				mStockDatabaseManager.updateStock(mStock,
 						mStock.getContentValues());

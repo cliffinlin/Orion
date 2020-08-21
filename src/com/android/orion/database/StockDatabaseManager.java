@@ -767,7 +767,20 @@ public class StockDatabaseManager extends DatabaseManager {
 		return result;
 	}
 
-	public void deleteStockDealById(StockDeal stockDeal) {
+	public int deleteStockDeal() {
+		int result = 0;
+
+		if (mContentResolver == null) {
+			return result;
+		}
+
+		result = mContentResolver.delete(
+				DatabaseContract.StockDeal.CONTENT_URI, null, null);
+
+		return result;
+	}
+	
+	public void deleteStockDeal(StockDeal stockDeal) {
 		if ((stockDeal == null) || (mContentResolver == null)) {
 			return;
 		}
@@ -992,51 +1005,6 @@ public class StockDatabaseManager extends DatabaseManager {
 		}
 
 		return result;
-	}
-
-	public void setupStockDealToBuy(Stock stock) {
-		int i = 0;
-		double deal = 0;
-		StockDeal stockDealMax = new StockDeal();
-		StockDeal stockDealMin = new StockDeal();
-		ArrayList<StockDeal> stockDealToBuyList = new ArrayList<StockDeal>();
-
-		if (stock == null) {
-			return;
-		}
-
-		getStockDealMax(stock, stockDealMax);
-		getStockDealMin(stock, stockDealMin);
-
-		if ((stockDealMax.getVolume() > 0) && (stockDealMin.getVolume() > 0)) {
-			getStockDealList(stock, stockDealToBuyList,
-					getStockDealListToBuySelection(stock));
-			deal = stockDealMax.getDeal();
-			while (deal > 1.0) {
-				if (deal < stockDealMin.getDeal()) {
-					for (StockDeal stockDealToBuy : stockDealToBuyList) {
-						if (stockDealToBuy.getDeal() < stockDealMin.getDeal()) {
-							deleteStockDealById(stockDealToBuy);
-						}
-					}
-
-					StockDeal stockDeal = new StockDeal();
-					stockDeal.setSE(stock.getSE());
-					stockDeal.setCode(stock.getCode());
-					stockDeal.setName(stock.getName());
-					stockDeal.setPrice(stock.getPrice());
-					stockDeal.setDeal(deal);
-					stockDeal.setCreated(Utility.getCurrentDateTimeString());
-					insertStockDeal(stockDeal);
-					break;
-				}
-
-				i++;
-				deal = (1.0 - i * Constants.STOCK_DEAL_DISTRIBUTION_RATE)
-						* stockDealMax.getDeal();
-				deal = Utility.Round(deal, Constants.DOUBLE_FIXED_DECIMAL);
-			}
-		}
 	}
 
 	public Uri insertFinancialData(FinancialData financialData) {
