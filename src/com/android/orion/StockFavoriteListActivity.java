@@ -115,7 +115,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 
 		mStockFilter.read();
 
-		mSortOrder = getSetting(Setting.KEY_SORT_ORDER_STOCK_LIST,
+		mSortOrder = getSetting(Setting.KEY_SORT_ORDER_FAVORITE_LIST,
 				mSortOrderDefault);
 
 		initHeader();
@@ -273,7 +273,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 
 		mSortOrder = mSortOrderColumn + mSortOrderDirection;
 
-		saveSetting(Setting.KEY_SORT_ORDER_STOCK_LIST, mSortOrder);
+		saveSetting(Setting.KEY_SORT_ORDER_FAVORITE_LIST, mSortOrder);
 
 		restartLoader();
 	}

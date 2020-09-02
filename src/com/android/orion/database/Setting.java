@@ -8,6 +8,8 @@ public class Setting extends DatabaseTable {
 
 	public static final String KEY_SORT_ORDER_IPO_LIST = "sort_order_ipo_list";
 	public static final String KEY_SORT_ORDER_STOCK_LIST = "sort_order_stock_list";
+	public static final String KEY_SORT_ORDER_FAVORITE_LIST = "sort_order_favorite_list";
+	public static final String KEY_SORT_ORDER_FINANCIAL_LIST = "sort_order_financial_list";
 	public static final String KEY_SORT_ORDER_STOCK_DEAL_LIST = "sort_order_stock_deal_list";
 
 	public static final String KEY_STOCK_FILTER_ENABLE = "key_stock_filter_enable";
