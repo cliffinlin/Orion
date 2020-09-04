@@ -22,6 +22,70 @@
         android:textSize="18sp" />
 
     <TextView
+        android:id="@+id/roi"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/roe"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/pe"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/rate"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/pb"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/valuation"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/hold"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/cost"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="18sp" />
+
+    <TextView
         android:id="@+id/total_share"
         android:layout_width="80dp"
         android:layout_height="50dp"
@@ -71,62 +135,6 @@
 
     <TextView
         android:id="@+id/net_profit_per_share_in_year"
-        android:layout_width="80dp"
-        android:layout_height="50dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/rate"
-        android:layout_width="80dp"
-        android:layout_height="50dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/roi"
-        android:layout_width="80dp"
-        android:layout_height="50dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/roe"
-        android:layout_width="80dp"
-        android:layout_height="50dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/pe"
-        android:layout_width="80dp"
-        android:layout_height="50dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/pb"
-        android:layout_width="80dp"
-        android:layout_height="50dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/hold"
-        android:layout_width="80dp"
-        android:layout_height="50dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/cost"
         android:layout_width="80dp"
         android:layout_height="50dp"
         android:layout_weight="1"

@@ -343,6 +343,19 @@ public class StockDataChart {
 		}
 
 		mLimitLineList.clear();
+		
+		if (stock.getValuation() > 0) {
+			average = Utility.Round(stock.getCost() / stock.getHold(),
+					Constants.DOUBLE_FIXED_DECIMAL);
+			net = Utility.Round(100 * (stock.getPrice() - average) / average,
+					Constants.DOUBLE_FIXED_DECIMAL);
+			color = Color.WHITE;
+			label = "                                                     "
+					+ " " + "Valuation" + " " + stock.getValuation() + " ";
+			limitLine = createLimitLine(stock.getValuation(), color, label);
+
+			mLimitLineList.add(limitLine);
+		}
 
 		if ((stock.getCost() > 0) && (stock.getHold() > 0)) {
 			average = Utility.Round(stock.getCost() / stock.getHold(),
