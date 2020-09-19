@@ -343,7 +343,7 @@ public class StockDataChart {
 		}
 
 		mLimitLineList.clear();
-		
+
 		if (stock.getValuation() > 0) {
 			average = Utility.Round(stock.getCost() / stock.getHold(),
 					Constants.DOUBLE_FIXED_DECIMAL);

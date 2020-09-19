@@ -32,7 +32,6 @@ public class StockManager {
 	ContentResolver mContentResolver = null;
 	LocalBroadcastManager mLocalBroadcastManager = null;
 	protected StockDatabaseManager mStockDatabaseManager = null;
-	ArrayMap<String, Stock> mStockArrayMapFavorite = null;
 
 	// ConnectivityManager mConnectivityManager = null;
 	StockFilter mStockFilter;
@@ -56,10 +55,6 @@ public class StockManager {
 
 		if (mStockDatabaseManager == null) {
 			mStockDatabaseManager = StockDatabaseManager.getInstance(mContext);
-		}
-
-		if (mStockArrayMapFavorite == null) {
-			mStockArrayMapFavorite = new ArrayMap<String, Stock>();
 		}
 
 		mStockFilter = new StockFilter(mContext);

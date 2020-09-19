@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.os.HandlerThread;
 import android.os.Process;
 import android.text.TextUtils;
+import android.util.ArrayMap;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -36,7 +37,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
 	static final String TAG = Constants.TAG + " "
 			+ StockDataProvider.class.getSimpleName();
 
-	Calendar mNotifyCalendar = Calendar.getInstance();
+	long mLastSendBroadcast = 0;
+	ArrayMap<String, Stock> mStockArrayMapFavorite = new ArrayMap<String, Stock>();
 	RequestQueue mRequestQueue;
 	Set<String> mCurrentRequests = new HashSet<String>();
 
@@ -97,18 +99,16 @@ public abstract class StockDataProvider extends StockAnalyzer {
 	}
 
 	void sendBroadcast(String action, int serviceType, long stockID) {
-		Calendar calendar = Calendar.getInstance();
-		if (calendar.getTimeInMillis() - mNotifyCalendar.getTimeInMillis() < 15 * 1000) {
-			return;
+		long delt = System.currentTimeMillis() - mLastSendBroadcast;
+		if (delt > Constants.DEFAULT_SEND_BROADCAST_INTERAL) {
+			mLastSendBroadcast = System.currentTimeMillis();
+			
+			Bundle bundle = new Bundle();
+			bundle.putInt(Constants.EXTRA_SERVICE_TYPE, serviceType);
+			bundle.putLong(Constants.EXTRA_STOCK_ID, stockID);
+
+			sendBroadcast(action, bundle);
 		}
-
-		Bundle bundle = new Bundle();
-		bundle.putInt(Constants.EXTRA_SERVICE_TYPE, serviceType);
-		bundle.putLong(Constants.EXTRA_STOCK_ID, stockID);
-
-		sendBroadcast(action, bundle);
-
-		mNotifyCalendar = Calendar.getInstance();
 	}
 
 	void sendBroadcast(String action, Bundle bundle) {
@@ -123,11 +123,6 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		}
 
 		mLocalBroadcastManager.sendBroadcast(intent);
-	}
-
-	void loadStockArrayMapFavorite() {
-		loadStockArrayMap(selectStock(Constants.STOCK_FLAG_MARK_FAVORITE),
-				null, null, mStockArrayMapFavorite);
 	}
 
 	void downloadStockIndexes() {
@@ -186,6 +181,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 	void downloadStock(Bundle bundle) {
 		int executeType = Constants.EXECUTE_TYPE_NONE;
+		String se = "";
+		String code = "";
 		Stock stock = null;
 
 		if (!Utility.isNetworkConnected(mContext)) {
@@ -199,12 +196,14 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 		removeAllCurrrentRequests();
 
+		loadStockArrayMap(selectStock(Constants.STOCK_FLAG_MARK_FAVORITE),
+				null, null, mStockArrayMapFavorite);
+
 		executeType = bundle.getInt(Constants.EXTRA_EXECUTE_TYPE,
 				Constants.EXECUTE_TYPE_NONE);
-
-		loadStockArrayMapFavorite();
-
-		stock = getStock(bundle);
+		se = bundle.getString(Constants.EXTRA_STOCK_SE);
+		code = bundle.getString(Constants.EXTRA_STOCK_CODE);
+		stock = mStockArrayMapFavorite.get(se + code);
 
 		if (stock != null) {
 			if (executeTypeOf(executeType, Constants.EXECUTE_SCHEDULE)) {
@@ -577,16 +576,6 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		}
 	}
 
-	Stock getStock(Bundle bundle) {
-		String se = bundle.getString(Constants.EXTRA_STOCK_SE);
-		String code = bundle.getString(Constants.EXTRA_STOCK_CODE);
-		Stock stock = null;
-
-		stock = mStockArrayMapFavorite.get(se + code);
-
-		return stock;
-	}
-
 	public class StockHSADownloader extends VolleyStringDownloader {
 
 		public StockHSADownloader() {
@@ -836,6 +825,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 		@Override
 		protected String doInBackground(String... params) {
+			ArrayMap<String, Stock> stockArrayMapFavorite = new ArrayMap<String, Stock>();
 			String responseString = "";
 			long stockId = 0;
 
@@ -843,9 +833,10 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				stockId = mStock.getId();
 			}
 
-			loadStockArrayMapFavorite();
+			loadStockArrayMap(selectStock(Constants.STOCK_FLAG_MARK_FAVORITE),
+					null, null, stockArrayMapFavorite);
 
-			for (Stock stock : mStockArrayMapFavorite.values()) {
+			for (Stock stock : stockArrayMapFavorite.values()) {
 				if (stockId != 0) {
 					if (stock.getId() != stockId) {
 						continue;
@@ -1087,6 +1078,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 		@Override
 		protected String doInBackground(String... params) {
+			ArrayMap<String, Stock> stockArrayMapFavorite = new ArrayMap<String, Stock>();
 			String responseString = "";
 			long stockId = 0;
 
@@ -1094,9 +1086,10 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				stockId = mStock.getId();
 			}
 
-			loadStockArrayMapFavorite();
+			loadStockArrayMap(selectStock(Constants.STOCK_FLAG_MARK_FAVORITE),
+					null, null, stockArrayMapFavorite);
 
-			for (Stock stock : mStockArrayMapFavorite.values()) {
+			for (Stock stock : stockArrayMapFavorite.values()) {
 				if (stockId != 0) {
 					if (stock.getId() != stockId) {
 						continue;
