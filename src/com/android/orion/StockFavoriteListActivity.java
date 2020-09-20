@@ -81,7 +81,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 			case MESSAGE_REFRESH:
 				if (mOrionService != null) {
 					mStockDatabaseManager.deleteStockData();
-					mOrionService.downloadStockDataHistory(null);
+					mOrionService.downloadStock(null);
 					restartLoader();
 				}
 				break;
@@ -194,8 +194,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 			switch (requestCode) {
 			case REQUEST_CODE_STOCK_INSERT:
 				if (mOrionService != null) {
-					mOrionService.downloadStockDataHistory(mStock);
-					mOrionService.downloadFinancial(mStock);
+					mOrionService.downloadStock(mStock);
 				}
 				break;
 

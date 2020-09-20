@@ -188,8 +188,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 				if (!mStockDatabaseManager.isStockExist(mStock)) {
 					mStockDatabaseManager.insertStock(mStock);
 
-					mOrionService.downloadStockDataHistory(mStock);
-					mOrionService.downloadFinancial(mStock);
+					mOrionService.downloadStock(mStock);
 				} else {
 					// return RESULT_STOCK_EXIST;
 					Toast.makeText(mContext, R.string.stock_exist,
