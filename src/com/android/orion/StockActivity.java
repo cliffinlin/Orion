@@ -21,11 +21,6 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 	public static final String ACTION_STOCK_INSERT = "orion.intent.action.ACTION_STOCKINSERT";
 	public static final String ACTION_STOCK_EDIT = "orion.intent.action.ACTION_STOCK_EDIT";
 
-	public static final int EXECUTE_STOCK_LOAD = 1;
-	public static final int EXECUTE_STOCK_SAVE = 2;
-
-	public static final long RESULT_STOCK_EXIST = -2;
-
 	RadioGroup mRadioGroupClass;
 	RadioGroup mRadioGroupSE;
 	EditText mEditTextStockName;
@@ -45,8 +40,13 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		initView();
 
 		if (ACTION_STOCK_EDIT.equals(mAction)) {
+			mRadioGroupClass.setEnabled(false);
+			mRadioGroupSE.setEnabled(false);
+			mEditTextStockCode.setEnabled(false);
+			
 			mStock.setId(mIntent.getLongExtra(Constants.EXTRA_STOCK_ID, 0));
-			startLoadTask(EXECUTE_STOCK_LOAD);
+			mStockDatabaseManager.getStockById(mStock);
+			updateView();
 		}
 	}
 
@@ -136,7 +136,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		switch (viewId) {
 		case R.id.button_ok:
 			int id = 0;
-			
+
 			id = mRadioGroupSE.getCheckedRadioButtonId();
 			if (id == R.id.radio_class_hsa) {
 				mStock.setClasses(Constants.STOCK_FLAG_CLASS_HSA);
@@ -150,7 +150,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 			} else if (id == R.id.radio_se_sz) {
 				mStock.setSE(Constants.STOCK_SE_SZ);
 			}
-			
+
 			String name = mEditTextStockName.getText().toString();
 			String code = mEditTextStockCode.getText().toString();
 			String valuation = mEditTextStockValuation.getText().toString();
@@ -175,27 +175,21 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 			mStock.setMark(Constants.STOCK_FLAG_MARK_FAVORITE);
 
 			if (ACTION_STOCK_INSERT.equals(mAction)) {
-				mStock.setCreated(Utility.getCurrentDateTimeString());
-			} else if (ACTION_STOCK_EDIT.equals(mAction)) {
-				mStock.setModified(Utility.getCurrentDateTimeString());
-			}
-			// startSaveTask(EXECUTE_STOCK_SAVE);
-			setResult(RESULT_OK, getIntent());
-			if (ACTION_STOCK_INSERT.equals(mAction)) {
 				if (!mStockDatabaseManager.isStockExist(mStock)) {
+					mStock.setCreated(Utility.getCurrentDateTimeString());
 					mStockDatabaseManager.insertStock(mStock);
-
-					mOrionService.downloadStockDataHistory(mStock);
-					mOrionService.downloadFinancial(mStock);
 				} else {
-					// return RESULT_STOCK_EXIST;
 					Toast.makeText(mContext, R.string.stock_exist,
 							Toast.LENGTH_LONG).show();
 				}
 			} else if (ACTION_STOCK_EDIT.equals(mAction)) {
+				mStock.setModified(Utility.getCurrentDateTimeString());
 				mStockDatabaseManager.updateStock(mStock,
 						mStock.getContentValues());
 			}
+
+			setResult(RESULT_OK, getIntent());
+
 			finish();
 			break;
 
@@ -205,65 +199,6 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 
 		default:
 			break;
-		}
-	}
-
-	@Override
-	Long doInBackgroundLoad(Object... params) {
-		super.doInBackgroundLoad(params);
-		int execute = (Integer) params[0];
-
-		switch (execute) {
-		case EXECUTE_STOCK_LOAD:
-			mStockDatabaseManager.getStockById(mStock);
-			break;
-
-		default:
-			break;
-		}
-
-		return RESULT_SUCCESS;
-	}
-
-	@Override
-	void onPostExecuteLoad(Long result) {
-		super.onPostExecuteLoad(result);
-		updateView();
-	}
-
-	@Override
-	Long doInBackgroundSave(Object... params) {
-		super.doInBackgroundSave(params);
-		int execute = (Integer) params[0];
-
-		switch (execute) {
-		case EXECUTE_STOCK_SAVE:
-			if (ACTION_STOCK_INSERT.equals(mAction)) {
-				if (!mStockDatabaseManager.isStockExist(mStock)) {
-					mStockDatabaseManager.insertStock(mStock);
-				} else {
-					return RESULT_STOCK_EXIST;
-				}
-			} else if (ACTION_STOCK_EDIT.equals(mAction)) {
-				mStockDatabaseManager.updateStock(mStock,
-						mStock.getContentValues());
-			}
-			break;
-
-		default:
-			break;
-		}
-
-		return RESULT_SUCCESS;
-	}
-
-	@Override
-	void onPostExecuteSave(Long result) {
-		super.onPostExecuteSave(result);
-
-		if (result == RESULT_STOCK_EXIST) {
-			Toast.makeText(mContext, R.string.stock_exist, Toast.LENGTH_LONG)
-					.show();
 		}
 	}
 }

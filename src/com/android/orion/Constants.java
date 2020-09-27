@@ -117,7 +117,9 @@ public class Constants {
 	public static final String STOCK_FLAG_MARK_FAVORITE = "favorite";
 
 	public static final int STOCK_ID_INVALID = 0;
-
+	
+	public static final String STOCK_INDEXES_CODE_BASE = "000000";
+	
 	public static final String STOCK_INDEXES_CODE_BASE_SH = "000000";
 	public static final String STOCK_INDEXES_CODE_BASE_SZ = "399000";
 

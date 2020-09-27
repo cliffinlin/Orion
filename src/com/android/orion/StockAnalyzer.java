@@ -266,7 +266,7 @@ public class StockAnalyzer extends StockManager {
 		stock.setAction(period, action);
 	}
 
-	private void analyzeStockData(Stock stock, String period,
+	void analyzeStockData(Stock stock, String period,
 			ArrayList<StockData> stockDataList) {
 		VertexAnalyzer vertexAnalyzer = new VertexAnalyzer();
 
@@ -384,7 +384,7 @@ public class StockAnalyzer extends StockManager {
 		}
 	}
 
-	private void updateDatabase(Stock stock, String period,
+	void updateDatabase(Stock stock, String period,
 			ArrayList<StockData> stockDataList) {
 		ContentValues contentValues[] = new ContentValues[stockDataList.size()];
 

@@ -102,7 +102,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		long delt = System.currentTimeMillis() - mLastSendBroadcast;
 		if (delt > Constants.DEFAULT_SEND_BROADCAST_INTERAL) {
 			mLastSendBroadcast = System.currentTimeMillis();
-			
+
 			Bundle bundle = new Bundle();
 			bundle.putInt(Constants.EXTRA_SERVICE_TYPE, serviceType);
 			bundle.putLong(Constants.EXTRA_STOCK_ID, stockID);
@@ -821,6 +821,52 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			}
 
 			return responseString;
+		}
+
+		// TODO
+		void generateIndexCustom() {
+			ArrayMap<String, Stock> stockArrayMapFavorite = new ArrayMap<String, Stock>();
+			ArrayList<StockData> stockDataList = null;
+			ArrayList<StockData> totalStockDataList = null;
+			long stockId = 0;
+
+			if (mStock == null) {
+				return;
+			}
+
+			stockId = mStock.getId();
+
+			try {
+				loadStockArrayMap(
+						selectStock(Constants.STOCK_FLAG_MARK_FAVORITE), null,
+						null, stockArrayMapFavorite);
+
+				for (String period : Constants.PERIODS) {
+					if (Preferences.readBoolean(mContext, period, false)) {
+						for (Stock stock : stockArrayMapFavorite.values()) {
+							if (stock.getId() == stockId) {
+								continue;
+							}
+
+							mStockDatabaseManager.getStock(stock);
+
+							stockDataList = (ArrayList<StockData>) getStockDataList(
+									stock, period);
+
+							loadStockDataList(stock, period, stockDataList);
+						}
+
+						analyzeStockData(mStock, period, totalStockDataList);
+
+						updateDatabase(mStock, period, totalStockDataList);
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			sendBroadcast(Constants.ACTION_SERVICE_FINISHED,
+					Constants.SERVICE_DATABASE_UPDATE, mStock.getId());
 		}
 
 		@Override
