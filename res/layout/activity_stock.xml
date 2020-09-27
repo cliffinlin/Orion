@@ -32,6 +32,39 @@
         android:layout_height="wrap_content" >
 
         <TextView
+            android:id="@+id/textview_stock_class"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="14dp"
+            android:layout_marginRight="14dp"
+            android:labelFor="@+id/edittext_stock_class"
+            android:text="@string/stock_class" />
+
+        <RadioGroup
+            android:id="@+id/radioGroupClass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <RadioButton
+                android:id="@+id/radio_class_hsa"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/stock_class_hsa" />
+
+            <RadioButton
+                android:id="@+id/radio_class_index"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/stock_class_index" />
+        </RadioGroup>
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
             android:id="@+id/textview_stock_se"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -46,14 +79,14 @@
             android:layout_height="wrap_content" >
 
             <RadioButton
-                android:id="@+id/radio_sh"
+                android:id="@+id/radio_se_sh"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
                 android:text="@string/stock_se_sh" />
 
             <RadioButton
-                android:id="@+id/radio_sz"
+                android:id="@+id/radio_se_sz"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/stock_se_sz" />

@@ -96,7 +96,7 @@ public class StockFinancialListActivity extends ListActivity implements
 				if (mOrionService != null) {
 					mStockDatabaseManager.deleteFinancialData();
 					mStockDatabaseManager.deleteShareBonus();
-					mOrionService.downloadStock(null);
+					mOrionService.downloadFinancial(null);
 					restartLoader();
 				}
 				break;
@@ -209,7 +209,8 @@ public class StockFinancialListActivity extends ListActivity implements
 			switch (requestCode) {
 			case REQUEST_CODE_STOCK_INSERT:
 				if (mOrionService != null) {
-					mOrionService.downloadStock(mStock);
+					mOrionService.downloadStockDataHistory(mStock);
+					mOrionService.downloadFinancial(mStock);
 				}
 				break;
 
@@ -229,7 +230,7 @@ public class StockFinancialListActivity extends ListActivity implements
 	@Override
 	void onServiceConnected() {
 		if (mOrionService != null) {
-			mOrionService.downloadStock(null);
+			mOrionService.downloadFinancial(null);
 		}
 	}
 

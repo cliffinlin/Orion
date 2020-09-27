@@ -26,9 +26,8 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 
 	public static final long RESULT_STOCK_EXIST = -2;
 
-	String mSE = "";
-
-	RadioGroup mRadioGroup;
+	RadioGroup mRadioGroupClass;
+	RadioGroup mRadioGroupSE;
 	EditText mEditTextStockName;
 	EditText mEditTextStockCode;
 	EditText mEditTextStockValuation;
@@ -52,14 +51,16 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 	}
 
 	void initView() {
-		mRadioGroup = (RadioGroup) findViewById(R.id.radioGroupSE);
+		mRadioGroupClass = (RadioGroup) findViewById(R.id.radioGroupClass);
+		mRadioGroupSE = (RadioGroup) findViewById(R.id.radioGroupSE);
 		mEditTextStockName = (EditText) findViewById(R.id.edittext_stock_name);
 		mEditTextStockCode = (EditText) findViewById(R.id.edittext_stock_code);
 		mEditTextStockValuation = (EditText) findViewById(R.id.edittext_stock_valuation);
 		mButtonOk = (Button) findViewById(R.id.button_ok);
 		mButtonCancel = (Button) findViewById(R.id.button_cancel);
 
-		mRadioGroup.setOnClickListener(this);
+		mRadioGroupClass.setOnClickListener(this);
+		mRadioGroupSE.setOnClickListener(this);
 		mEditTextStockName.setOnClickListener(this);
 		mEditTextStockCode.setOnClickListener(this);
 		mEditTextStockValuation.setOnClickListener(this);
@@ -84,9 +85,14 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 					int arg3) {
 				if ((arg0 != null) && (arg0.length() > 0)) {
 					if (arg0.charAt(0) == '6') {
-						mRadioGroup.check(R.id.radio_sh);
-					} else {
-						mRadioGroup.check(R.id.radio_sz);
+						mRadioGroupClass.check(R.id.radio_class_hsa);
+						mRadioGroupSE.check(R.id.radio_se_sh);
+					} else if (arg0.charAt(0) == '0' || arg0.charAt(0) == '3') {
+						mRadioGroupClass.check(R.id.radio_class_hsa);
+						mRadioGroupSE.check(R.id.radio_se_sz);
+					} else if (arg0.charAt(0) == '8' || arg0.charAt(0) == '9') {
+						mRadioGroupSE.check(R.id.radio_se_sh);
+						mRadioGroupClass.check(R.id.radio_class_index);
 					}
 				}
 			}
@@ -97,20 +103,6 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		} else if (ACTION_STOCK_EDIT.equals(mAction)) {
 			setTitle(R.string.stock_edit);
 		}
-	}
-
-	String getSE() {
-		String result = "";
-
-		int id = mRadioGroup.getCheckedRadioButtonId();
-
-		if (id == R.id.radio_sh) {
-			result = "sh";
-		} else {
-			result = "sz";
-		}
-
-		return result;
 	}
 
 	void updateView() {
@@ -139,24 +131,29 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 
 	@Override
 	public void onClick(View view) {
-		int id = view.getId();
+		int viewId = view.getId();
 
-		switch (id) {
+		switch (viewId) {
 		case R.id.button_ok:
-			mSE = getSE();
+			int id = 0;
+			
+			id = mRadioGroupSE.getCheckedRadioButtonId();
+			if (id == R.id.radio_class_hsa) {
+				mStock.setClasses(Constants.STOCK_FLAG_CLASS_HSA);
+			} else if (id == R.id.radio_se_sz) {
+				mStock.setClasses(Constants.STOCK_FLAG_CLASS_INDEXES);
+			}
+
+			id = mRadioGroupSE.getCheckedRadioButtonId();
+			if (id == R.id.radio_se_sh) {
+				mStock.setSE(Constants.STOCK_SE_SH);
+			} else if (id == R.id.radio_se_sz) {
+				mStock.setSE(Constants.STOCK_SE_SZ);
+			}
+			
 			String name = mEditTextStockName.getText().toString();
 			String code = mEditTextStockCode.getText().toString();
 			String valuation = mEditTextStockValuation.getText().toString();
-
-			mStock.setClasses(Constants.STOCK_FLAG_CLASS_HSA);
-
-			if (Constants.STOCK_SE_SH.equals(mSE)
-					|| Constants.STOCK_SE_SZ.equals(mSE)) {
-				mStock.setSE(mSE);
-			} else {
-				Toast.makeText(mContext, R.string.stock_se_not_found,
-						Toast.LENGTH_LONG).show();
-			}
 
 			if (!TextUtils.isEmpty(name)) {
 				mStock.setName(name);
@@ -188,7 +185,8 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 				if (!mStockDatabaseManager.isStockExist(mStock)) {
 					mStockDatabaseManager.insertStock(mStock);
 
-					mOrionService.downloadStock(mStock);
+					mOrionService.downloadStockDataHistory(mStock);
+					mOrionService.downloadFinancial(mStock);
 				} else {
 					// return RESULT_STOCK_EXIST;
 					Toast.makeText(mContext, R.string.stock_exist,

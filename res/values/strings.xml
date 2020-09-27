@@ -140,8 +140,9 @@
     <string name="stock_data_chart">Stock Data Chart</string>
     <string name="stock_name_code">Name</string>
     <string name="stock_code">Stock Code</string>
-    <string name="stock_code_x">Stock Code X</string>
-    <string name="stock_code_y">Stock Code Y</string>
+    <string name="stock_class">Stock Class</string>
+    <string name="stock_class_hsa">HSA</string>
+    <string name="stock_class_index">Index</string>    
     <string name="stock_code_empty">Stock Code Empty!</string>
     <string name="stock_dividend">Stock Dividend</string>
     <string name="stock_name">Stock Name</string>

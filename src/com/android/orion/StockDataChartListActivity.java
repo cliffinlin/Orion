@@ -103,7 +103,8 @@ public class StockDataChartListActivity extends BaseActivity implements
 					mStockDatabaseManager.updateStock(mStock,
 							mStock.getContentValues());
 
-					mOrionService.downloadStock(mStock);
+					mOrionService.downloadStockDataHistory(mStock);
+					mOrionService.downloadFinancial(mStock);
 
 					restartLoader();
 				}
