@@ -826,8 +826,13 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		// TODO
 		void generateIndexCustom() {
 			ArrayMap<String, Stock> stockArrayMapFavorite = new ArrayMap<String, Stock>();
+			ArrayMap<String, StockData> stockDataArrayMap = new ArrayMap<String, StockData>();
+
 			ArrayList<StockData> stockDataList = null;
 			ArrayList<StockData> totalStockDataList = null;
+
+			ArrayList<String> stockDataDateList = new ArrayList<String>();
+
 			long stockId = 0;
 
 			if (mStock == null) {
@@ -843,6 +848,27 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 				for (String period : Constants.PERIODS) {
 					if (Preferences.readBoolean(mContext, period, false)) {
+						stockDataArrayMap.clear();
+
+						loadStockDataDateList(period, stockDataDateList);
+
+						if (stockDataDateList.size() == 0) {
+							continue;
+						}
+
+						for (String date : stockDataDateList) {
+							StockData stockData = new StockData(period);
+							stockDataArrayMap.put(date, stockData);
+						}
+
+						if (stockDataArrayMap.size() == 0) {
+							continue;
+						}
+
+						totalStockDataList = (ArrayList<StockData>) getStockDataList(
+								mStock, period);
+						totalStockDataList.clear();
+
 						for (Stock stock : stockArrayMapFavorite.values()) {
 							if (stock.getId() == stockId) {
 								continue;
@@ -854,6 +880,33 @@ public abstract class StockDataProvider extends StockAnalyzer {
 									stock, period);
 
 							loadStockDataList(stock, period, stockDataList);
+
+							for (StockData stockData : stockDataList) {
+								if (stockData == null) {
+									continue;
+								}
+
+								StockData totalStockData = stockDataArrayMap
+										.get(stockData.getDate());
+
+								totalStockData.setOpen(totalStockData.getOpen()
+										+ stockData.getOpen());
+								totalStockData.setClose(totalStockData
+										.getClose() + stockData.getClose());
+								totalStockData.setHigh(totalStockData.getHigh()
+										+ stockData.getHigh());
+								totalStockData.setLow(totalStockData.getLow()
+										+ stockData.getLow());
+							}
+						}
+
+						for (String date : stockDataDateList) {
+							StockData stockData = stockDataArrayMap.get(date);
+							if (stockData == null) {
+								continue;
+							}
+
+							totalStockDataList.add(stockData);
 						}
 
 						analyzeStockData(mStock, period, totalStockDataList);

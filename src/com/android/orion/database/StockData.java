@@ -238,7 +238,7 @@ public class StockData extends StockDatabaseTable {
 		mDate = date;
 	}
 
-	void setDate(Cursor cursor) {
+	public void setDate(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}

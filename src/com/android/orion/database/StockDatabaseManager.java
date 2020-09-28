@@ -453,6 +453,20 @@ public class StockDatabaseManager extends DatabaseManager {
 		return result;
 	}
 
+	public Cursor queryStockData(String[] projection, String selection,
+			String[] selectionArgs, String sortOrder) {
+		Cursor cursor = null;
+
+		if (mContentResolver == null) {
+			return cursor;
+		}
+
+		cursor = mContentResolver.query(DatabaseContract.StockData.CONTENT_URI,
+				projection, selection, selectionArgs, sortOrder);
+
+		return cursor;
+	}
+
 	public Cursor queryStockData(String selection, String[] selectionArgs,
 			String sortOrder) {
 		Cursor cursor = null;
@@ -651,6 +665,10 @@ public class StockDatabaseManager extends DatabaseManager {
 		return selection;
 	}
 
+	public String getStockDataDateSelection(String period) {
+		return DatabaseContract.COLUMN_PERIOD + " = '" + period + "'";
+	}
+
 	public String getStockDataSelection(long stockId, String period) {
 		return DatabaseContract.COLUMN_STOCK_ID + " = " + stockId + " AND "
 				+ DatabaseContract.COLUMN_PERIOD + " = '" + period + "'";
@@ -779,7 +797,7 @@ public class StockDatabaseManager extends DatabaseManager {
 
 		return result;
 	}
-	
+
 	public void deleteStockDeal(StockDeal stockDeal) {
 		if ((stockDeal == null) || (mContentResolver == null)) {
 			return;
@@ -991,11 +1009,11 @@ public class StockDatabaseManager extends DatabaseManager {
 
 	public double getStockDealTargetPrice(Stock stock, int order) {
 		double result = 0;
-		
+
 		StockDeal stockDealMax = new StockDeal();
 
 		getStockDealMax(stock, stockDealMax);
-		
+
 		if (stock.getValuation() > 0) {
 			result = (1.0 - order * Constants.STOCK_DEAL_DISTRIBUTION_RATE)
 					* stock.getValuation();
