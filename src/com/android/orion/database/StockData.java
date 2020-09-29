@@ -289,7 +289,7 @@ public class StockData extends StockDatabaseTable {
 		mOpen = open;
 	}
 
-	void setOpen(Cursor cursor) {
+	public void setOpen(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}
@@ -306,7 +306,7 @@ public class StockData extends StockDatabaseTable {
 		mHigh = high;
 	}
 
-	void setHigh(Cursor cursor) {
+	public void setHigh(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}
@@ -323,7 +323,7 @@ public class StockData extends StockDatabaseTable {
 		mLow = low;
 	}
 
-	void setLow(Cursor cursor) {
+	public void setLow(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}
@@ -340,7 +340,7 @@ public class StockData extends StockDatabaseTable {
 		mClose = close;
 	}
 
-	void setClose(Cursor cursor) {
+	public void setClose(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}

@@ -823,95 +823,193 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			return responseString;
 		}
 
+		// void generateIndexCustom() {
+		// ArrayMap<String, Stock> stockArrayMapFavorite = new ArrayMap<String,
+		// Stock>();
+		// ArrayMap<String, StockData> stockDataArrayMap = new ArrayMap<String,
+		// StockData>();
+		//
+		// ArrayList<StockData> stockDataList = null;
+		// ArrayList<StockData> totalStockDataList = null;
+		//
+		// ArrayList<String> stockDataDateList = new ArrayList<String>();
+		//
+		// long stockId = 0;
+		//
+		// if (mStock == null) {
+		// return;
+		// }
+		//
+		// stockId = mStock.getId();
+		//
+		// try {
+		// loadStockArrayMap(
+		// selectStock(Constants.STOCK_FLAG_MARK_FAVORITE), null,
+		// null, stockArrayMapFavorite);
+		//
+		// for (String period : Constants.PERIODS) {
+		// if (Preferences.readBoolean(mContext, period, false)) {
+		// stockDataArrayMap.clear();
+		//
+		// loadStockDataDateList(period, stockDataDateList);
+		//
+		// if (stockDataDateList.size() == 0) {
+		// continue;
+		// }
+		//
+		// for (String date : stockDataDateList) {
+		// StockData stockData = new StockData(period);
+		// stockDataArrayMap.put(date, stockData);
+		// }
+		//
+		// if (stockDataArrayMap.size() == 0) {
+		// continue;
+		// }
+		//
+		// totalStockDataList = (ArrayList<StockData>) getStockDataList(
+		// mStock, period);
+		// totalStockDataList.clear();
+		//
+		// for (Stock stock : stockArrayMapFavorite.values()) {
+		// if (stock.getId() == stockId) {
+		// continue;
+		// }
+		//
+		// mStockDatabaseManager.getStock(stock);
+		//
+		// stockDataList = (ArrayList<StockData>) getStockDataList(
+		// stock, period);
+		//
+		// loadStockDataList(stock, period, stockDataList);
+		//
+		// for (StockData stockData : stockDataList) {
+		// if (stockData == null) {
+		// continue;
+		// }
+		//
+		// StockData totalStockData = stockDataArrayMap
+		// .get(stockData.getDate());
+		//
+		// totalStockData.setOpen(totalStockData.getOpen()
+		// + stockData.getOpen());
+		// totalStockData.setClose(totalStockData
+		// .getClose() + stockData.getClose());
+		// totalStockData.setHigh(totalStockData.getHigh()
+		// + stockData.getHigh());
+		// totalStockData.setLow(totalStockData.getLow()
+		// + stockData.getLow());
+		// }
+		// }
+		//
+		// for (String date : stockDataDateList) {
+		// StockData stockData = stockDataArrayMap.get(date);
+		// if (stockData == null) {
+		// continue;
+		// }
+		//
+		// totalStockDataList.add(stockData);
+		// }
+		//
+		// analyzeStockData(mStock, period, totalStockDataList);
+		//
+		// updateDatabase(mStock, period, totalStockDataList);
+		// }
+		// }
+		// } catch (Exception e) {
+		// e.printStackTrace();
+		// }
+		//
+		// sendBroadcast(Constants.ACTION_SERVICE_FINISHED,
+		// Constants.SERVICE_DATABASE_UPDATE, mStock.getId());
+		// }
+
 		// TODO
 		void generateIndexCustom() {
 			ArrayMap<String, Stock> stockArrayMapFavorite = new ArrayMap<String, Stock>();
-			ArrayMap<String, StockData> stockDataArrayMap = new ArrayMap<String, StockData>();
-
 			ArrayList<StockData> stockDataList = null;
-			ArrayList<StockData> totalStockDataList = null;
-
-			ArrayList<String> stockDataDateList = new ArrayList<String>();
-
+			Cursor cursor = null;
+			String[] projection = null;
+			String selection = null;
+			String sortOrder = null;
+			String ids = "";
 			long stockId = 0;
 
 			if (mStock == null) {
 				return;
 			}
-
+			
+			if (mStockDatabaseManager == null) {
+				return;
+			}
+			
 			stockId = mStock.getId();
 
 			try {
 				loadStockArrayMap(
 						selectStock(Constants.STOCK_FLAG_MARK_FAVORITE), null,
 						null, stockArrayMapFavorite);
+				
+				if (stockArrayMapFavorite.size() == 0) {
+					return;
+				}
+				
+				int i = 0;
+				for (Stock stock : stockArrayMapFavorite.values()) {
+					i++;
+					
+					if (stockId == stock.getId()) {
+						continue;
+					}
+					
+					ids += stock.getId();
+					ids += ",";
+				}
+				
+				if (ids.lastIndexOf(',') == ids.length() - 1) {
+					ids = ids.substring(0, ids.length());
+				}
 
 				for (String period : Constants.PERIODS) {
 					if (Preferences.readBoolean(mContext, period, false)) {
-						stockDataArrayMap.clear();
-
-						loadStockDataDateList(period, stockDataDateList);
-
-						if (stockDataDateList.size() == 0) {
-							continue;
-						}
-
-						for (String date : stockDataDateList) {
-							StockData stockData = new StockData(period);
-							stockDataArrayMap.put(date, stockData);
-						}
-
-						if (stockDataArrayMap.size() == 0) {
-							continue;
-						}
-
-						totalStockDataList = (ArrayList<StockData>) getStockDataList(
+						stockDataList = (ArrayList<StockData>) getStockDataList(
 								mStock, period);
-						totalStockDataList.clear();
+//						loadStockDataList(period, stockDataList);
 
-						for (Stock stock : stockArrayMapFavorite.values()) {
-							if (stock.getId() == stockId) {
-								continue;
-							}
-
-							mStockDatabaseManager.getStock(stock);
-
-							stockDataList = (ArrayList<StockData>) getStockDataList(
-									stock, period);
-
-							loadStockDataList(stock, period, stockDataList);
-
-							for (StockData stockData : stockDataList) {
-								if (stockData == null) {
-									continue;
+						try {
+							stockDataList.clear();
+							//select _id, stock_id, date, period, sum(open) as open, sum(high) as high, sum(low) as low, sum(close) as close from stock_data where period='month' and stock_id in(44, 60) group by date order by date asc
+							
+							projection = new String[] { "_id, stock_id, date, period, sum(open) as open, sum(high) as high, sum(low) as low, sum(close) as close" }; 
+							selection = DatabaseContract.COLUMN_PERIOD + " = '" + period + "'" + " and stock_id in (" + ids + ")" + ") group by (" +"date";
+							sortOrder = DatabaseContract.COLUMN_DATE + " ASC ";
+							cursor = mStockDatabaseManager
+									.queryStockData(projection, selection, null, sortOrder);
+							if ((cursor != null) && (cursor.getCount() > 0)) {
+								while (cursor.moveToNext()) {
+									StockData stockData = new StockData(period);
+									stockData.setStockId(stockId);
+									stockData.setDate(cursor);
+									stockData.setOpen(cursor);
+									stockData.setHigh(cursor);
+									stockData.setLow(cursor);
+									stockData.setClose(cursor);
+									
+									stockDataList.add(stockData);
 								}
-
-								StockData totalStockData = stockDataArrayMap
-										.get(stockData.getDate());
-
-								totalStockData.setOpen(totalStockData.getOpen()
-										+ stockData.getOpen());
-								totalStockData.setClose(totalStockData
-										.getClose() + stockData.getClose());
-								totalStockData.setHigh(totalStockData.getHigh()
-										+ stockData.getHigh());
-								totalStockData.setLow(totalStockData.getLow()
-										+ stockData.getLow());
 							}
+						} catch (Exception e) {
+							e.printStackTrace();
+						} finally {
+							mStockDatabaseManager.closeCursor(cursor);
 						}
 
-						for (String date : stockDataDateList) {
-							StockData stockData = stockDataArrayMap.get(date);
-							if (stockData == null) {
-								continue;
-							}
-
-							totalStockDataList.add(stockData);
+						if (stockDataList.size() == 0) {
+							continue;
 						}
 
-						analyzeStockData(mStock, period, totalStockDataList);
+						analyzeStockData(mStock, period, stockDataList);
 
-						updateDatabase(mStock, period, totalStockDataList);
+						updateDatabase(mStock, period, stockDataList);
 					}
 				}
 			} catch (Exception e) {
@@ -940,6 +1038,11 @@ public abstract class StockDataProvider extends StockAnalyzer {
 					if (stock.getId() != stockId) {
 						continue;
 					}
+					//TODO
+//					if (mStock.getCode().contains(Constants.STOCK_INDEXES_CODE_BASE)) {
+//						generateIndexCustom();
+//						return responseString;
+//					}
 				}
 
 				responseString = downloadStockDataHistory(stock);

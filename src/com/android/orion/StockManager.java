@@ -237,43 +237,6 @@ public class StockManager {
 		}
 	}
 
-	void loadStockDataDateList(String period,
-			ArrayList<String> stockDataDateTimeList) {
-		Cursor cursor = null;
-		String selection = null;
-		String sortOrder = null;
-
-		if (TextUtils.isEmpty(period) || (stockDataDateTimeList == null)) {
-			return;
-		}
-
-		if (mStockDatabaseManager == null) {
-			return;
-		}
-
-		try {
-			stockDataDateTimeList.clear();
-
-			selection = mStockDatabaseManager.getStockDataDateSelection(period);
-			sortOrder = mStockDatabaseManager.getStockDataOrder();
-			cursor = mStockDatabaseManager
-					.queryStockData(new String[] { " DISTINCT "
-							+ DatabaseContract.COLUMN_DATE }, selection, null,
-							sortOrder);
-			if ((cursor != null) && (cursor.getCount() > 0)) {
-				while (cursor.moveToNext()) {
-					StockData stockData = new StockData(period);
-					stockData.setDate(cursor);
-					stockDataDateTimeList.add(stockData.getDate());
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			mStockDatabaseManager.closeCursor(cursor);
-		}
-	}
-
 	void loadStockDataList(Stock stock, String period,
 			ArrayList<StockData> stockDataList) {
 		int index = 0;

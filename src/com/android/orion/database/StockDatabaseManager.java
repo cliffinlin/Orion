@@ -665,10 +665,6 @@ public class StockDatabaseManager extends DatabaseManager {
 		return selection;
 	}
 
-	public String getStockDataDateSelection(String period) {
-		return DatabaseContract.COLUMN_PERIOD + " = '" + period + "'";
-	}
-
 	public String getStockDataSelection(long stockId, String period) {
 		return DatabaseContract.COLUMN_STOCK_ID + " = " + stockId + " AND "
 				+ DatabaseContract.COLUMN_PERIOD + " = '" + period + "'";
