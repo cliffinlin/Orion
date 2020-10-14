@@ -761,9 +761,11 @@ public class StockDatabaseManager extends DatabaseManager {
 					stockDeal.setupNet();
 					stockDeal.setupProfit();
 
-					hold += stockDeal.getVolume();
-					profit += stockDeal.getProfit();
-					cost += stockDeal.getDeal() * stockDeal.getVolume();
+					if (stockDeal.getVolume() > 0) {
+						hold += stockDeal.getVolume();
+						profit += stockDeal.getProfit();
+						cost += stockDeal.getDeal() * stockDeal.getVolume();
+					}
 
 					result += updateStockDealByID(stockDeal);
 				}

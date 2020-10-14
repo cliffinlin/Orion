@@ -47,6 +47,7 @@ public class DealListActivity extends ListActivity implements
 
 	static final int FILTER_TYPE_NONE = 0;
 	static final int FILTER_TYPE_TO_BUY = 1;
+	static final int FILTER_TYPE_TO_SELL = 2;
 
 	static final int MESSAGE_DELETE_DEAL = 0;
 	static final int MESSAGE_DELETE_DEAL_LIST = 1;
@@ -265,6 +266,11 @@ public class DealListActivity extends ListActivity implements
 			restartLoader();
 			return true;
 
+		case R.id.action_to_sell:
+			mFilterType = FILTER_TYPE_TO_SELL;
+			restartLoader();
+			return true;
+			
 		case R.id.action_all:
 			mFilterType = FILTER_TYPE_NONE;
 			restartLoader();
@@ -513,9 +519,13 @@ public class DealListActivity extends ListActivity implements
 
 		switch (mFilterType) {
 		case FILTER_TYPE_TO_BUY:
-			mSelection = DatabaseContract.COLUMN_VOLUME + " = " + 0;
+			mSelection = DatabaseContract.COLUMN_VOLUME + " <= " + 0;
 			break;
-
+			
+		case FILTER_TYPE_TO_SELL:
+			mSelection = DatabaseContract.COLUMN_VOLUME + " > " + 0;
+			break;
+			
 		default:
 			mSelection = null;
 			break;
