@@ -34,6 +34,7 @@ public class Stock extends DatabaseTable {
 	private long mHold;
 	private double mCost;
 	private double mProfit;
+	private double mBonus;
 	private double mValuation;
 	private double mTotalShare;
 	private double mTotalAssets;
@@ -109,6 +110,7 @@ public class Stock extends DatabaseTable {
 		mHold = 0;
 		mCost = 0;
 		mProfit = 0;
+		mBonus = 0;
 		mValuation = 0;
 		mTotalShare = 0;
 		mTotalAssets = 0;
@@ -161,6 +163,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_HOLD, mHold);
 		contentValues.put(DatabaseContract.COLUMN_COST, mCost);
 		contentValues.put(DatabaseContract.COLUMN_PROFIT, mProfit);
+		contentValues.put(DatabaseContract.COLUMN_BONUS, mBonus);
 		contentValues.put(DatabaseContract.COLUMN_VALUATION, mValuation);
 		contentValues.put(DatabaseContract.COLUMN_TOTAL_SHARE, mTotalShare);
 		contentValues.put(DatabaseContract.COLUMN_TOTAL_ASSETS, mTotalAssets);
@@ -257,6 +260,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_PE, mPE);
 		contentValues.put(DatabaseContract.COLUMN_PB, mPB);
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND, mDividend);
+		contentValues.put(DatabaseContract.COLUMN_BONUS, mBonus);
 		contentValues.put(DatabaseContract.COLUMN_YIELD, mYield);
 		contentValues.put(DatabaseContract.COLUMN_DELTA, mDelta);
 		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);
@@ -299,6 +303,7 @@ public class Stock extends DatabaseTable {
 		setHold(stock.mHold);
 		setCost(stock.mCost);
 		setProfit(stock.mProfit);
+		setBonus(stock.mBonus);
 		setValuation(stock.mValuation);
 		setTotalShare(stock.mTotalShare);
 		setTotalAssets(stock.mTotalAssets);
@@ -357,6 +362,7 @@ public class Stock extends DatabaseTable {
 		setHold(cursor);
 		setCost(cursor);
 		setProfit(cursor);
+		setBonus(cursor);
 		setValuation(cursor);
 		setTotalShare(cursor);
 		setTotalAssets(cursor);
@@ -805,6 +811,23 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_PROFIT)));
 	}
 
+	public double getBonus() {
+		return mBonus;
+	}
+
+	public void setBonus(double bonus) {
+		mBonus = bonus;
+	}
+
+	void setBonus(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setBonus(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_BONUS)));
+	}
+
 	public double getValuation() {
 		return mValuation;
 	}
@@ -821,7 +844,7 @@ public class Stock extends DatabaseTable {
 		setValuation(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_VALUATION)));
 	}
-	
+
 	public double getTotalShare() {
 		return mTotalShare;
 	}
@@ -1366,14 +1389,18 @@ public class Stock extends DatabaseTable {
 				Constants.DOUBLE_FIXED_DECIMAL);
 	}
 
-	public void setupCost(double cost) {
+	public void setupBonus() {
+		if (mDividend == 0) {
+			return;
+		}
+
 		if (mHold == 0) {
 			return;
 		}
 
-		mCost = cost;
+		mBonus = mDividend / 10.0 * mHold;
 	}
-
+	
 	public void setupYield() {
 		if (mPrice == 0) {
 			return;

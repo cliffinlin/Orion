@@ -150,6 +150,7 @@ public class StockAnalyzer extends StockManager {
 			}
 			stock.setDividend(Utility.Round(totalDivident,
 					Constants.DOUBLE_FIXED_DECIMAL));
+			stock.setupBonus();
 			stock.setupYield();
 			stock.setupDelta();
 

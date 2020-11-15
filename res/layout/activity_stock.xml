@@ -59,7 +59,7 @@
                 android:text="@string/stock_class_index" />
         </RadioGroup>
     </LinearLayout>
-    
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >

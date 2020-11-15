@@ -772,8 +772,8 @@ public class StockDatabaseManager extends DatabaseManager {
 			}
 
 			stock.setHold(hold);
+			stock.setCost(cost);
 			stock.setProfit(profit);
-			stock.setupCost(cost);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

@@ -270,7 +270,7 @@ public class DealListActivity extends ListActivity implements
 			mFilterType = FILTER_TYPE_TO_SELL;
 			restartLoader();
 			return true;
-			
+
 		case R.id.action_all:
 			mFilterType = FILTER_TYPE_NONE;
 			restartLoader();
@@ -521,11 +521,11 @@ public class DealListActivity extends ListActivity implements
 		case FILTER_TYPE_TO_BUY:
 			mSelection = DatabaseContract.COLUMN_VOLUME + " <= " + 0;
 			break;
-			
+
 		case FILTER_TYPE_TO_SELL:
 			mSelection = DatabaseContract.COLUMN_VOLUME + " > " + 0;
 			break;
-			
+
 		default:
 			mSelection = null;
 			break;

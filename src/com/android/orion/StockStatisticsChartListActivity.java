@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Setting;
@@ -57,6 +58,7 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 	public static final int REQUEST_CODE_STOCK_FILTER = 1;
 
 	int mStockListIndex = 0;
+	float mTotalBonus = 0;
 	Menu mMenu = null;
 
 	String mSortOrder = null;
@@ -264,6 +266,9 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 		if (id == LOADER_ID_STOCK_LIST) {
 			swapStockCursor(mStatisticsChartList.get(0), cursor);
 		}
+
+		String totalBonuString = "Total bonus=" + Float.valueOf(mTotalBonus);
+		Toast.makeText(this, totalBonuString, Toast.LENGTH_LONG).show();
 	}
 
 	@Override
@@ -362,6 +367,8 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 			Cursor cursor) {
 		int index = 0;
 
+		mTotalBonus = 0;
+
 		if (mStockList == null) {
 			return;
 		}
@@ -399,6 +406,8 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 					Entry deltaEntry = new Entry((float) stock.getDelta(),
 							index);
 					stockDataChart.mDeltaEntryList.add(deltaEntry);
+
+					mTotalBonus += (float) stock.getBonus();
 
 					if (stock != null) {
 						if (mStock.getId() == stock.getId()) {
