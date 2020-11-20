@@ -4,12 +4,14 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
 
+import com.android.orion.Constants;
 import com.android.orion.utility.Preferences;
 
 public class StockFilter extends Setting {
 	Context mContext;
 
-	boolean mEnable = false;
+	boolean mEnabled = false;
+	boolean mFavorite = false;
 
 	String mHold = "";
 	String mRoi = "";
@@ -21,24 +23,16 @@ public class StockFilter extends Setting {
 	String mYield = "";
 	String mDelta = "";
 
-	boolean mDefaultEnable = false;
-
-	String mDefaultHold = "";
-	String mDefaultRoi = "";
-	String mDefaultRoe = "";
-	String mDefaultRate = "";
-	String mDefaultPE = "";
-	String mDefaultPB = "";
-	String mDefaultDividend = "";
-	String mDefaultYield = "";
-	String mDefaultDelta = "";
-
 	public StockFilter(Context context) {
 		mContext = context;
 	}
 
-	public boolean getEnable() {
-		return mEnable;
+	public boolean getEnabled() {
+		return mEnabled;
+	}
+
+	public boolean getFavorite() {
+		return mFavorite;
 	}
 
 	public String getHold() {
@@ -77,8 +71,12 @@ public class StockFilter extends Setting {
 		return mDelta;
 	}
 
-	public void setEnable(boolean enable) {
-		mEnable = enable;
+	public void setEnabled(boolean enabled) {
+		mEnabled = enabled;
+	}
+
+	public void setFavorite(boolean favorite) {
+		mFavorite = favorite;
 	}
 
 	public void setHold(String hold) {
@@ -115,46 +113,6 @@ public class StockFilter extends Setting {
 
 	public void setDelta(String delta) {
 		mDelta = delta;
-	}
-
-	public void setDefaultEnable(boolean enable) {
-		mDefaultEnable = enable;
-	}
-
-	public void setDefaultHold(String hold) {
-		mDefaultHold = hold;
-	}
-
-	public void setDefaultRoi(String roi) {
-		mDefaultRoi = roi;
-	}
-
-	public void setDefaultRoe(String roe) {
-		mDefaultRoe = roe;
-	}
-
-	public void setDefaultRate(String rate) {
-		mDefaultRate = rate;
-	}
-
-	public void setDefaultPE(String pe) {
-		mDefaultPE = pe;
-	}
-
-	public void setDefaultPB(String pb) {
-		mDefaultPB = pb;
-	}
-
-	public void setDefaultDividend(String dividend) {
-		mDefaultDividend = dividend;
-	}
-
-	public void setDefaultYield(String yield) {
-		mDefaultYield = yield;
-	}
-
-	public void setDefaultDelta(String delta) {
-		mDefaultDelta = delta;
 	}
 
 	boolean containOperation(String valueString) {
@@ -209,34 +167,37 @@ public class StockFilter extends Setting {
 	}
 
 	public void read() {
-		mEnable = Preferences.readBoolean(mContext,
-				Setting.KEY_STOCK_FILTER_ENABLE, mDefaultEnable);
+		mEnabled = Preferences.readBoolean(mContext,
+				Setting.KEY_STOCK_FILTER_ENABLED, false);
+
+		mFavorite = Preferences.readBoolean(mContext,
+				Setting.KEY_STOCK_FILTER_FAVORITE, false);
 
 		mHold = Preferences.readString(mContext, Setting.KEY_STOCK_FILTER_HOLD,
-				mDefaultHold);
+				"");
 		mRoi = Preferences.readString(mContext, Setting.KEY_STOCK_FILTER_ROI,
-				mDefaultRoi);
+				"");
 		mRate = Preferences.readString(mContext, Setting.KEY_STOCK_FILTER_RATE,
-				mDefaultRate);
+				"");
 		mRoe = Preferences.readString(mContext, Setting.KEY_STOCK_FILTER_ROE,
-				mDefaultRoe);
-		mPE = Preferences.readString(mContext, Setting.KEY_STOCK_FILTER_PE,
-				mDefaultPE);
-		mPB = Preferences.readString(mContext, Setting.KEY_STOCK_FILTER_PB,
-				mDefaultPB);
+				"");
+		mPE = Preferences.readString(mContext, Setting.KEY_STOCK_FILTER_PE, "");
+		mPB = Preferences.readString(mContext, Setting.KEY_STOCK_FILTER_PB, "");
 		mDividend = Preferences.readString(mContext,
-				Setting.KEY_STOCK_FILTER_DIVIDEND, mDefaultDividend);
+				Setting.KEY_STOCK_FILTER_DIVIDEND, "");
 		mYield = Preferences.readString(mContext,
-				Setting.KEY_STOCK_FILTER_YIELD, mDefaultYield);
+				Setting.KEY_STOCK_FILTER_YIELD, "");
 		mDelta = Preferences.readString(mContext,
-				Setting.KEY_STOCK_FILTER_DELTA, mDefaultDelta);
+				Setting.KEY_STOCK_FILTER_DELTA, "");
 
 		validate();
 	}
 
 	public void write() {
-		Preferences.writeBoolean(mContext, Setting.KEY_STOCK_FILTER_ENABLE,
-				mEnable);
+		Preferences.writeBoolean(mContext, Setting.KEY_STOCK_FILTER_ENABLED,
+				mEnabled);
+		Preferences.writeBoolean(mContext, Setting.KEY_STOCK_FILTER_FAVORITE,
+				mFavorite);
 
 		validate();
 
@@ -259,7 +220,8 @@ public class StockFilter extends Setting {
 			return;
 		}
 
-		mEnable = bundle.getBoolean(Setting.KEY_STOCK_FILTER_ENABLE, false);
+		mEnabled = bundle.getBoolean(Setting.KEY_STOCK_FILTER_ENABLED, false);
+		mFavorite = bundle.getBoolean(Setting.KEY_STOCK_FILTER_FAVORITE, false);
 
 		mHold = bundle.getString(Setting.KEY_STOCK_FILTER_HOLD);
 		mRoi = bundle.getString(Setting.KEY_STOCK_FILTER_ROI);
@@ -277,7 +239,8 @@ public class StockFilter extends Setting {
 			return;
 		}
 
-		bundle.putBoolean(Setting.KEY_STOCK_FILTER_ENABLE, mEnable);
+		bundle.putBoolean(Setting.KEY_STOCK_FILTER_ENABLED, mEnabled);
+		bundle.putBoolean(Setting.KEY_STOCK_FILTER_FAVORITE, mFavorite);
 
 		bundle.putString(Setting.KEY_STOCK_FILTER_HOLD, mHold);
 		bundle.putString(Setting.KEY_STOCK_FILTER_ROI, mRoi);
@@ -293,7 +256,12 @@ public class StockFilter extends Setting {
 	public String getSelection() {
 		String selection = "";
 
-		if (mEnable) {
+		if (mEnabled) {
+			if (mFavorite) {
+				selection += DatabaseContract.Stock.COLUMN_MARK + " = '"
+						+ Constants.STOCK_FLAG_MARK_FAVORITE + "'";
+			}
+
 			if (!TextUtils.isEmpty(mHold)) {
 				selection += " AND " + DatabaseContract.COLUMN_HOLD + mHold;
 			}
@@ -301,7 +269,7 @@ public class StockFilter extends Setting {
 			if (!TextUtils.isEmpty(mRoi)) {
 				selection += " AND " + DatabaseContract.COLUMN_ROI + mRoi;
 			}
-			
+
 			if (!TextUtils.isEmpty(mRate)) {
 				selection += " AND " + DatabaseContract.COLUMN_RATE + mRate;
 			}

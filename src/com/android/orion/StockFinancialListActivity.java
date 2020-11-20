@@ -658,9 +658,6 @@ public class StockFinancialListActivity extends ListActivity implements
 
 		switch (id) {
 		case LOADER_ID_STOCK_FINANCIAL_LIST:
-			selection = DatabaseContract.Stock.COLUMN_MARK + " = '"
-					+ Constants.STOCK_FLAG_MARK_FAVORITE + "'";
-
 			selection += mStockFilter.getSelection();
 
 			loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
@@ -732,13 +729,15 @@ public class StockFinancialListActivity extends ListActivity implements
 			if (parent.getId() == R.id.left_listview) {
 				Intent intent = new Intent(this,
 						StockFinancialChartListActivity.class);
-				intent.putExtra(Setting.KEY_SORT_ORDER_STOCK_LIST, mSortOrder);
+				intent.putExtra(Constants.EXTRA_STOCK_LIST_SORT_ORDER,
+						mSortOrder);
 				intent.putExtra(Constants.EXTRA_STOCK_ID, id);
 				startActivity(intent);
 			} else {
 				Intent intent = new Intent(this,
 						StockDataChartListActivity.class);
-				intent.putExtra(Setting.KEY_SORT_ORDER_STOCK_LIST, mSortOrder);
+				intent.putExtra(Constants.EXTRA_STOCK_LIST_SORT_ORDER,
+						mSortOrder);
 				intent.putExtra(Constants.EXTRA_STOCK_ID, id);
 				startActivity(intent);
 			}
@@ -748,8 +747,8 @@ public class StockFinancialListActivity extends ListActivity implements
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
 			int position, long id) {
-		Intent intent = new Intent(this, StockFavoriteEditActivity.class);
-		intent.putExtra(Setting.KEY_SORT_ORDER_STOCK_LIST, mSortOrder);
+		Intent intent = new Intent(this, StockListEditActivity.class);
+		intent.putExtra(Constants.EXTRA_STOCK_LIST_SORT_ORDER, mSortOrder);
 		startActivity(intent);
 		return true;
 	}

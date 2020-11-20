@@ -16,7 +16,8 @@ public class StockFilterActivity extends DatabaseActivity implements
 	public static final int EXECUTE_STOCK_FILTER_LOAD = 0;
 	public static final int EXECUTE_STOCK_FILTER_SAVE = 1;
 
-	CheckBox mCheckBox;
+	CheckBox mCheckBoxEnabled;
+	CheckBox mCheckBoxFavorite;
 
 	EditText mEditTextHold;
 	EditText mEditTextRoi;
@@ -36,14 +37,14 @@ public class StockFilterActivity extends DatabaseActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_stock_filter);
 
-		mStockFilter.setDefaultEnable(true);
 		mStockFilter.read();
 
 		initView();
 	}
 
 	void initView() {
-		mCheckBox = (CheckBox) findViewById(R.id.checkbox);
+		mCheckBoxEnabled = (CheckBox) findViewById(R.id.checkbox_enabled);
+		mCheckBoxFavorite = (CheckBox) findViewById(R.id.checkbox_favorite);
 
 		mEditTextHold = (EditText) findViewById(R.id.edittext_hold);
 		mEditTextRoi = (EditText) findViewById(R.id.edittext_roi);
@@ -58,7 +59,8 @@ public class StockFilterActivity extends DatabaseActivity implements
 		mButtonOk = (Button) findViewById(R.id.button_ok);
 		mButtonCancel = (Button) findViewById(R.id.button_cancel);
 
-		mCheckBox.setOnClickListener(this);
+		mCheckBoxEnabled.setOnClickListener(this);
+		mCheckBoxFavorite.setOnClickListener(this);
 
 		mEditTextHold.setOnClickListener(this);
 		mEditTextRoi.setOnClickListener(this);
@@ -73,11 +75,15 @@ public class StockFilterActivity extends DatabaseActivity implements
 		mButtonOk.setOnClickListener(this);
 		mButtonCancel.setOnClickListener(this);
 
-		mCheckBox.setChecked(mStockFilter.getEnable());
-		updateEditText();
+		update();
 	}
 
-	void updateEditText() {
+	void update() {
+		mCheckBoxEnabled.setChecked(mStockFilter.getEnabled());
+
+		mCheckBoxFavorite.setChecked(mStockFilter.getFavorite());
+		mCheckBoxFavorite.setEnabled(mStockFilter.getEnabled());
+
 		mEditTextHold.setText(mStockFilter.getHold());
 		mEditTextRoi.setText(mStockFilter.getRoi());
 		mEditTextRate.setText(mStockFilter.getRate());
@@ -88,15 +94,15 @@ public class StockFilterActivity extends DatabaseActivity implements
 		mEditTextYield.setText(mStockFilter.getYield());
 		mEditTextDelta.setText(mStockFilter.getDelta());
 
-		mEditTextHold.setEnabled(mStockFilter.getEnable());
-		mEditTextRoi.setEnabled(mStockFilter.getEnable());
-		mEditTextRate.setEnabled(mStockFilter.getEnable());
-		mEditTextRoe.setEnabled(mStockFilter.getEnable());
-		mEditTextPE.setEnabled(mStockFilter.getEnable());
-		mEditTextPB.setEnabled(mStockFilter.getEnable());
-		mEditTextDividend.setEnabled(mStockFilter.getEnable());
-		mEditTextYield.setEnabled(mStockFilter.getEnable());
-		mEditTextDelta.setEnabled(mStockFilter.getEnable());
+		mEditTextHold.setEnabled(mStockFilter.getEnabled());
+		mEditTextRoi.setEnabled(mStockFilter.getEnabled());
+		mEditTextRate.setEnabled(mStockFilter.getEnabled());
+		mEditTextRoe.setEnabled(mStockFilter.getEnabled());
+		mEditTextPE.setEnabled(mStockFilter.getEnabled());
+		mEditTextPB.setEnabled(mStockFilter.getEnabled());
+		mEditTextDividend.setEnabled(mStockFilter.getEnabled());
+		mEditTextYield.setEnabled(mStockFilter.getEnabled());
+		mEditTextDelta.setEnabled(mStockFilter.getEnabled());
 	}
 
 	@Override
@@ -122,13 +128,19 @@ public class StockFilterActivity extends DatabaseActivity implements
 		int id = view.getId();
 
 		switch (id) {
-		case R.id.checkbox:
-			mStockFilter.setEnable(mCheckBox.isChecked());
-			updateEditText();
+		case R.id.checkbox_enabled:
+			mStockFilter.setEnabled(mCheckBoxEnabled.isChecked());
+			update();
+			break;
+
+		case R.id.checkbox_favorite:
+			mStockFilter.setFavorite(mCheckBoxFavorite.isChecked());
+			update();
 			break;
 
 		case R.id.button_ok:
-			mStockFilter.setEnable(mCheckBox.isChecked());
+			mStockFilter.setEnabled(mCheckBoxEnabled.isChecked());
+			mStockFilter.setFavorite(mCheckBoxFavorite.isChecked());
 
 			mStockFilter.setHold(mEditTextHold.getText().toString());
 			mStockFilter.setRoi(mEditTextRoi.getText().toString());
@@ -178,8 +190,8 @@ public class StockFilterActivity extends DatabaseActivity implements
 	@Override
 	void onPostExecuteLoad(Long result) {
 		super.onPostExecuteLoad(result);
-		mCheckBox.setChecked(mStockFilter.getEnable());
-		updateEditText();
+		mCheckBoxEnabled.setChecked(mStockFilter.getEnabled());
+		update();
 	}
 
 	@Override

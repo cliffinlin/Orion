@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.android.orion"
     android:versionCode="518"
-    android:versionName="1.1.36_20201115" >
+    android:versionName="1.1.36_20201121" >
 
     <uses-sdk
         android:minSdkVersion="19"
@@ -66,8 +66,8 @@
             android:launchMode="singleTop" >
         </activity>
         <activity
-            android:name="com.android.orion.StockFavoriteListActivity"
-            android:label="@string/favorite_list"
+            android:name="com.android.orion.StockDataListActivity"
+            android:label="@string/stock_list"
             android:launchMode="singleTop" >
         </activity>
         <activity
@@ -76,12 +76,7 @@
             android:launchMode="singleTop" >
         </activity>
         <activity
-            android:name="com.android.orion.StockEditActivity"
-            android:label="@string/list"
-            android:launchMode="singleTop" >
-        </activity>
-        <activity
-            android:name="com.android.orion.StockFavoriteEditActivity"
+            android:name="com.android.orion.StockListEditActivity"
             android:label="@string/list"
             android:launchMode="singleTop" >
         </activity>

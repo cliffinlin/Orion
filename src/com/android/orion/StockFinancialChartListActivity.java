@@ -32,7 +32,6 @@ import android.widget.ListView;
 
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.FinancialData;
-import com.android.orion.database.Setting;
 import com.android.orion.database.Stock;
 import com.android.orion.utility.Utility;
 import com.github.mikephil.charting.charts.CombinedChart;
@@ -130,7 +129,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 		mStock.setId(getIntent().getLongExtra(Constants.EXTRA_STOCK_ID, 0));
 
 		mSortOrder = getIntent().getStringExtra(
-				Setting.KEY_SORT_ORDER_STOCK_LIST);
+				Constants.EXTRA_STOCK_LIST_SORT_ORDER);
 
 		LocalBroadcastManager.getInstance(this).registerReceiver(
 				mBroadcastReceiver,

@@ -38,7 +38,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			+ StockDataProvider.class.getSimpleName();
 
 	long mLastSendBroadcast = 0;
-	ArrayMap<String, Stock> mStockArrayMapFavorite = new ArrayMap<String, Stock>();
+	ArrayMap<String, Stock> mStockArrayMap = new ArrayMap<String, Stock>();
 	RequestQueue mRequestQueue;
 	Set<String> mCurrentRequests = new HashSet<String>();
 
@@ -196,14 +196,13 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 		removeAllCurrrentRequests();
 
-		loadStockArrayMap(selectStock(Constants.STOCK_FLAG_MARK_FAVORITE),
-				null, null, mStockArrayMapFavorite);
+		loadStockArrayMap(mStockArrayMap);
 
 		executeType = bundle.getInt(Constants.EXTRA_EXECUTE_TYPE,
 				Constants.EXECUTE_TYPE_NONE);
 		se = bundle.getString(Constants.EXTRA_STOCK_SE);
 		code = bundle.getString(Constants.EXTRA_STOCK_CODE);
-		stock = mStockArrayMapFavorite.get(se + code);
+		stock = mStockArrayMap.get(se + code);
 
 		if (stock != null) {
 			if (executeTypeOf(executeType, Constants.EXECUTE_SCHEDULE)) {
@@ -242,11 +241,11 @@ public abstract class StockDataProvider extends StockAnalyzer {
 	}
 
 	void downloadStockRealTime(int executeType) {
-		if (mStockArrayMapFavorite.size() == 0) {
+		if (mStockArrayMap.size() == 0) {
 			return;
 		}
 
-		for (Stock stock : mStockArrayMapFavorite.values()) {
+		for (Stock stock : mStockArrayMap.values()) {
 			downloadStockRealTime(executeType, stock);
 		}
 	}
@@ -281,11 +280,11 @@ public abstract class StockDataProvider extends StockAnalyzer {
 	}
 
 	void downloadStockDataHistory(int executeType) {
-		if (mStockArrayMapFavorite.size() == 0) {
+		if (mStockArrayMap.size() == 0) {
 			return;
 		}
 
-		for (Stock stock : mStockArrayMapFavorite.values()) {
+		for (Stock stock : mStockArrayMap.values()) {
 			downloadStockDataHistory(executeType, stock);
 		}
 	}
@@ -333,11 +332,11 @@ public abstract class StockDataProvider extends StockAnalyzer {
 	}
 
 	void downloadStockDataRealTime(int executeType) {
-		if (mStockArrayMapFavorite.size() == 0) {
+		if (mStockArrayMap.size() == 0) {
 			return;
 		}
 
-		for (Stock stock : mStockArrayMapFavorite.values()) {
+		for (Stock stock : mStockArrayMap.values()) {
 			downloadStockDataRealTime(executeType, stock);
 		}
 	}
@@ -833,8 +832,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				stockId = mStock.getId();
 			}
 
-			loadStockArrayMap(selectStock(Constants.STOCK_FLAG_MARK_FAVORITE),
-					null, null, stockArrayMapFavorite);
+			loadStockArrayMap(stockArrayMapFavorite);
 
 			for (Stock stock : stockArrayMapFavorite.values()) {
 				if (stockId != 0) {
@@ -1086,8 +1084,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				stockId = mStock.getId();
 			}
 
-			loadStockArrayMap(selectStock(Constants.STOCK_FLAG_MARK_FAVORITE),
-					null, null, stockArrayMapFavorite);
+			loadStockArrayMap(stockArrayMapFavorite);
 
 			for (Stock stock : stockArrayMapFavorite.values()) {
 				if (stockId != 0) {

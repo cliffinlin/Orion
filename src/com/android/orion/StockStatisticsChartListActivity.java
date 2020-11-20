@@ -29,7 +29,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.android.orion.database.DatabaseContract;
-import com.android.orion.database.Setting;
 import com.android.orion.database.Stock;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -129,7 +128,7 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 		mStock.setId(getIntent().getLongExtra(Constants.EXTRA_STOCK_ID, 0));
 
 		mSortOrder = getIntent().getStringExtra(
-				Setting.KEY_SORT_ORDER_STOCK_LIST);
+				Constants.EXTRA_STOCK_LIST_SORT_ORDER);
 
 		LocalBroadcastManager.getInstance(this).registerReceiver(
 				mBroadcastReceiver,
@@ -322,9 +321,6 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 	CursorLoader getStockCursorLoader() {
 		String selection = "";
 		CursorLoader loader = null;
-
-		selection = DatabaseContract.Stock.COLUMN_MARK + " = '"
-				+ Constants.STOCK_FLAG_MARK_FAVORITE + "'";
 
 		selection += mStockFilter.getSelection();
 

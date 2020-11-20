@@ -52,6 +52,7 @@
     <string name="delete_confirm">Do You Qant to Delete?</string>
     <string name="discount">Discount</string>
     <string name="dividend">Dividend</string>
+    <string name="enabled">Enabled</string>
     <string name="r_date">R Date</string>
     <string name="valuation">Valuation</string>
     <string name="yield">Yield</string>
@@ -140,6 +141,7 @@
     <string name="action_week">W</string>
     <string name="action_month">M</string>
     <string name="stock_data_chart">Stock Data Chart</string>
+    <string name="stock_data_list">Stock Data List</string>    
     <string name="stock_name_code">Name</string>
     <string name="stock_code">Stock Code</string>
     <string name="stock_class">Stock Class</string>

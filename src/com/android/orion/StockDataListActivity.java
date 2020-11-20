@@ -32,13 +32,13 @@ import com.android.orion.database.Stock;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Utility;
 
-public class StockFavoriteListActivity extends ListActivity implements
+public class StockDataListActivity extends ListActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
 		OnItemLongClickListener, OnClickListener {
 
 	public static final String ACTION_STOCK_ID = "orion.intent.action.ACTION_STOCK_ID";
 
-	public static final int LOADER_ID_STOCK_FAVORITE_LIST = 0;
+	public static final int LOADER_ID_STOCK_LIST = 0;
 
 	public static final int REQUEST_CODE_STOCK_INSERT = 0;
 	public static final int REQUEST_CODE_STOCK_FILTER = 1;
@@ -115,7 +115,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 
 		mStockFilter.read();
 
-		mSortOrder = getSetting(Setting.KEY_SORT_ORDER_FAVORITE_LIST,
+		mSortOrder = getSetting(Setting.KEY_SORT_ORDER_MARKET_LIST,
 				mSortOrderDefault);
 
 		initHeader();
@@ -126,7 +126,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 				mBroadcastReceiver,
 				new IntentFilter(Constants.ACTION_SERVICE_FINISHED));
 
-		mLoaderManager.initLoader(LOADER_ID_STOCK_FAVORITE_LIST, null, this);
+		mLoaderManager.initLoader(LOADER_ID_STOCK_LIST, null, this);
 
 		if (!Utility.isNetworkConnected(this)) {
 			Toast.makeText(this,
@@ -273,7 +273,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 
 		mSortOrder = mSortOrderColumn + mSortOrderDirection;
 
-		saveSetting(Setting.KEY_SORT_ORDER_FAVORITE_LIST, mSortOrder);
+		saveSetting(Setting.KEY_SORT_ORDER_MARKET_LIST, mSortOrder);
 
 		restartLoader();
 	}
@@ -440,7 +440,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 	}
 
 	void restartLoader() {
-		mLoaderManager.restartLoader(LOADER_ID_STOCK_FAVORITE_LIST, null, this);
+		mLoaderManager.restartLoader(LOADER_ID_STOCK_LIST, null, this);
 	}
 
 	@Override
@@ -469,10 +469,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 		CursorLoader loader = null;
 
 		switch (id) {
-		case LOADER_ID_STOCK_FAVORITE_LIST:
-			selection = DatabaseContract.Stock.COLUMN_MARK + " = '"
-					+ Constants.STOCK_FLAG_MARK_FAVORITE + "'";
-
+		case LOADER_ID_STOCK_LIST:
 			selection += mStockFilter.getSelection();
 
 			loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
@@ -496,7 +493,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 		}
 
 		switch (loader.getId()) {
-		case LOADER_ID_STOCK_FAVORITE_LIST:
+		case LOADER_ID_STOCK_LIST:
 			mLeftAdapter.swapCursor(cursor);
 			mRightAdapter.swapCursor(cursor);
 
@@ -544,13 +541,15 @@ public class StockFavoriteListActivity extends ListActivity implements
 			if (parent.getId() == R.id.left_listview) {
 				Intent intent = new Intent(this,
 						StockFinancialChartListActivity.class);
-				intent.putExtra(Setting.KEY_SORT_ORDER_STOCK_LIST, mSortOrder);
+				intent.putExtra(Constants.EXTRA_STOCK_LIST_SORT_ORDER,
+						mSortOrder);
 				intent.putExtra(Constants.EXTRA_STOCK_ID, id);
 				startActivity(intent);
 			} else {
 				Intent intent = new Intent(this,
 						StockDataChartListActivity.class);
-				intent.putExtra(Setting.KEY_SORT_ORDER_STOCK_LIST, mSortOrder);
+				intent.putExtra(Constants.EXTRA_STOCK_LIST_SORT_ORDER,
+						mSortOrder);
 				intent.putExtra(Constants.EXTRA_STOCK_ID, id);
 				startActivity(intent);
 			}
@@ -560,8 +559,8 @@ public class StockFavoriteListActivity extends ListActivity implements
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
 			int position, long id) {
-		Intent intent = new Intent(this, StockFavoriteEditActivity.class);
-		intent.putExtra(Setting.KEY_SORT_ORDER_STOCK_LIST, mSortOrder);
+		Intent intent = new Intent(this, StockListEditActivity.class);
+		intent.putExtra(Constants.EXTRA_STOCK_LIST_SORT_ORDER, mSortOrder);
 		startActivity(intent);
 		return true;
 	}

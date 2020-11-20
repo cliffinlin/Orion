@@ -14,7 +14,7 @@ import android.widget.SearchView.OnQueryTextListener;
 
 import com.android.orion.database.DatabaseContract;
 
-public class StockSearchActivity extends StockEditActivity implements
+public class StockSearchActivity extends StockListEditActivity implements
 		OnQueryTextListener {
 
 	String mSelection = "";

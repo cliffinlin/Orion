@@ -7,12 +7,12 @@ public class Setting extends DatabaseTable {
 	public static final String KEY_STOCK_HSA_UPDATED = "stock_hsa_updated";
 
 	public static final String KEY_SORT_ORDER_IPO_LIST = "sort_order_ipo_list";
-	public static final String KEY_SORT_ORDER_STOCK_LIST = "sort_order_stock_list";
-	public static final String KEY_SORT_ORDER_FAVORITE_LIST = "sort_order_favorite_list";
+	public static final String KEY_SORT_ORDER_MARKET_LIST = "sort_order_market_list";
 	public static final String KEY_SORT_ORDER_FINANCIAL_LIST = "sort_order_financial_list";
-	public static final String KEY_SORT_ORDER_STOCK_DEAL_LIST = "sort_order_stock_deal_list";
+	public static final String KEY_SORT_ORDER_DEAL_LIST = "sort_order_deal_list";
 
-	public static final String KEY_STOCK_FILTER_ENABLE = "key_stock_filter_enable";
+	public static final String KEY_STOCK_FILTER_ENABLED = "key_stock_filter_enabled";
+	public static final String KEY_STOCK_FILTER_FAVORITE = "key_stock_filter_favorite";
 	public static final String KEY_STOCK_FILTER_HOLD = "key_stock_filter_hold";
 	public static final String KEY_STOCK_FILTER_ROI = "key_stock_filter_roi";
 	public static final String KEY_STOCK_FILTER_RATE = "key_stock_filter_rate";

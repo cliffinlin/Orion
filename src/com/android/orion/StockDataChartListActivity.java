@@ -32,7 +32,6 @@ import android.widget.ListView;
 
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.FinancialData;
-import com.android.orion.database.Setting;
 import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.utility.Preferences;
@@ -164,7 +163,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 			mHandler.sendEmptyMessage(MESSAGE_LOAD_STOCK_LIST);
 		}
 		mSortOrder = getIntent().getStringExtra(
-				Setting.KEY_SORT_ORDER_STOCK_LIST);
+				Constants.EXTRA_STOCK_LIST_SORT_ORDER);
 
 		LocalBroadcastManager.getInstance(this).registerReceiver(
 				mBroadcastReceiver,
@@ -363,9 +362,6 @@ public class StockDataChartListActivity extends BaseActivity implements
 		CursorLoader loader = null;
 
 		if (TextUtils.isEmpty(mSelection)) {
-			mSelection = DatabaseContract.Stock.COLUMN_MARK + " = '"
-					+ Constants.STOCK_FLAG_MARK_FAVORITE + "'";
-
 			mStockFilter.read();
 			mSelection += mStockFilter.getSelection();
 		}

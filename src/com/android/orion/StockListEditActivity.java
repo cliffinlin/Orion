@@ -22,10 +22,9 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import com.android.orion.database.DatabaseContract;
-import com.android.orion.database.Setting;
 import com.android.orion.database.Stock;
 
-public abstract class StockEditActivity extends DatabaseActivity implements
+public class StockListEditActivity extends DatabaseActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener {
 
 	static final int LOADER_ID_STOCK_DEAL_ARRAY_MAP = 0;
@@ -40,7 +39,9 @@ public abstract class StockEditActivity extends DatabaseActivity implements
 			DatabaseContract.COLUMN_NET };
 	int[] mTo = new int[] { R.id.name, R.id.code, R.id.price, R.id.net };
 
-	abstract String getSelection();
+	String getSelection() {
+		return null;
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +50,7 @@ public abstract class StockEditActivity extends DatabaseActivity implements
 		setContentView(R.layout.activity_stock_edit);
 
 		mSortOrder = getIntent().getStringExtra(
-				Setting.KEY_SORT_ORDER_STOCK_LIST);
+				Constants.EXTRA_STOCK_LIST_SORT_ORDER);
 
 		mListView = (ListView) findViewById(R.id.stock_listview);
 
