@@ -494,7 +494,7 @@ public class SinaFinance extends StockDataProvider {
 
 					mStockDatabaseManager.getStock(stock);
 
-					stock.setClasses(Constants.STOCK_FLAG_CLASS_HSA);
+					stock.setClasses(Constants.STOCK_CLASS_HSA);
 
 					nameChanged = false;
 					if (!stock.getName().equals(jsonObject.getString("name"))) {

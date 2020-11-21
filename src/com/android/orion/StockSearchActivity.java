@@ -83,7 +83,7 @@ public class StockSearchActivity extends StockListEditActivity implements
 			if (query.matches("[0-9]+")) {
 				column = DatabaseContract.COLUMN_CODE;
 			} else if (query.matches("[a-zA-Z]+")) {
-				column = DatabaseContract.Stock.COLUMN_PINYIN;
+				column = DatabaseContract.COLUMN_PINYIN;
 				query = query.toLowerCase(Locale.US);
 			} else {
 				column = DatabaseContract.COLUMN_NAME;

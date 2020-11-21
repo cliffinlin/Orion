@@ -283,7 +283,7 @@ public class BaseActivity extends Activity {
 		}
 	}
 
-	void updateStockMark(long stockId, String mark) {
+	void updateStockFlag(long stockId, long flag) {
 		Uri uri = null;
 
 		uri = ContentUris.withAppendedId(DatabaseContract.Stock.CONTENT_URI,
@@ -291,7 +291,7 @@ public class BaseActivity extends Activity {
 
 		try {
 			ContentValues contentValues = new ContentValues();
-			contentValues.put(DatabaseContract.Stock.COLUMN_MARK, mark);
+			contentValues.put(DatabaseContract.COLUMN_FLAG, flag);
 			mContentResolver.update(uri, contentValues, null, null);
 		} catch (Exception e) {
 			e.printStackTrace();

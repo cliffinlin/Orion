@@ -14,7 +14,7 @@ public class Stock extends DatabaseTable {
 	private String mCode;
 	private String mName;
 	private String mPinyin;
-	private String mMark;
+	private long mFlag;
 	private double mPrice;
 	private double mChange;
 	private double mNet;
@@ -90,7 +90,7 @@ public class Stock extends DatabaseTable {
 		mCode = "";
 		mName = "";
 		mPinyin = "";
-		mMark = "";
+		mFlag = 0;
 		mPrice = 0;
 		mChange = 0;
 		mNet = 0;
@@ -138,12 +138,12 @@ public class Stock extends DatabaseTable {
 	public ContentValues getContentValues(ContentValues contentValues) {
 		super.getContentValues(contentValues);
 
-		contentValues.put(DatabaseContract.Stock.COLUMN_CLASSES, mClasses);
+		contentValues.put(DatabaseContract.COLUMN_CLASSES, mClasses);
 		contentValues.put(DatabaseContract.COLUMN_SE, mSE);
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
-		contentValues.put(DatabaseContract.Stock.COLUMN_PINYIN, mPinyin);
-		contentValues.put(DatabaseContract.Stock.COLUMN_MARK, mMark);
+		contentValues.put(DatabaseContract.COLUMN_PINYIN, mPinyin);
+		contentValues.put(DatabaseContract.COLUMN_FLAG, mFlag);
 		contentValues.put(DatabaseContract.COLUMN_PRICE, mPrice);
 		contentValues.put(DatabaseContract.COLUMN_CHANGE, mChange);
 		contentValues.put(DatabaseContract.COLUMN_NET, mNet);
@@ -202,8 +202,8 @@ public class Stock extends DatabaseTable {
 
 		super.getContentValues(contentValues);
 
-		contentValues.put(DatabaseContract.Stock.COLUMN_CLASSES, mClasses);
-		contentValues.put(DatabaseContract.Stock.COLUMN_PINYIN, mPinyin);
+		contentValues.put(DatabaseContract.COLUMN_CLASSES, mClasses);
+		contentValues.put(DatabaseContract.COLUMN_PINYIN, mPinyin);
 		contentValues.put(DatabaseContract.COLUMN_TOTAL_SHARE, mTotalShare);
 
 		return contentValues;
@@ -283,7 +283,7 @@ public class Stock extends DatabaseTable {
 		setCode(stock.mCode);
 		setName(stock.mName);
 		setPinyin(stock.mPinyin);
-		setMark(stock.mMark);
+		setFlag(stock.mFlag);
 		setPrice(stock.mPrice);
 		setChange(stock.mChange);
 		setNet(stock.mNet);
@@ -342,7 +342,7 @@ public class Stock extends DatabaseTable {
 		setCode(cursor);
 		setName(cursor);
 		setPinyin(cursor);
-		setMark(cursor);
+		setFlag(cursor);
 		setPrice(cursor);
 		setChange(cursor);
 		setNet(cursor);
@@ -400,7 +400,7 @@ public class Stock extends DatabaseTable {
 		}
 
 		setClasses(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.Stock.COLUMN_CLASSES)));
+				.getColumnIndex(DatabaseContract.COLUMN_CLASSES)));
 	}
 
 	public String getSE() {
@@ -468,24 +468,24 @@ public class Stock extends DatabaseTable {
 		}
 
 		setPinyin(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.Stock.COLUMN_PINYIN)));
+				.getColumnIndex(DatabaseContract.COLUMN_PINYIN)));
 	}
 
-	public String getMark() {
-		return mMark;
+	public long getFlag() {
+		return mFlag;
 	}
 
-	public void setMark(String mark) {
-		mMark = mark;
+	public void setFlag(long flag) {
+		mFlag = flag;
 	}
 
-	void setMark(Cursor cursor) {
+	void setFlag(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}
 
-		setMark(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.Stock.COLUMN_MARK)));
+		setFlag(cursor.getLong(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_FLAG)));
 	}
 
 	public double getPrice() {

@@ -111,13 +111,14 @@ public class Constants {
 	public static final int STOCK_DIVERGENCE_DIF = 1 << 1;
 	public static final int STOCK_DIVERGENCE_SIGMA_HISTOGRAM = 1 << 2;
 
-	public static final String STOCK_FLAG_NONE = "";
-	public static final String STOCK_FLAG_CLASS_HSA = "hsa";
-	public static final String STOCK_FLAG_CLASS_INDEXES = "indexes";
-	public static final String STOCK_FLAG_MARK_RECENT = "recent";
-	public static final String STOCK_FLAG_MARK_FAVORITE = "favorite";
+	public static final int STOCK_FLAG_NONE = 0;
+	public static final int STOCK_FLAG_FAVORITE = 1 << 0;
+	public static final int STOCK_FLAG_RECENT = 1 << 2;
 
 	public static final int STOCK_ID_INVALID = 0;
+
+	public static final String STOCK_CLASS_HSA = "hsa";
+	public static final String STOCK_CLASS_INDEXES = "indexes";
 
 	public static final String STOCK_INDEXES_CODE_BASE_SH = "000000";
 	public static final String STOCK_INDEXES_CODE_BASE_SZ = "399000";

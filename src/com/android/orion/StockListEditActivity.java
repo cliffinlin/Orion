@@ -8,7 +8,6 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -131,21 +130,24 @@ public class StockListEditActivity extends DatabaseActivity implements
 			setViewText(holder.mTextViewPrice, String.valueOf(stock.getPrice()));
 			setViewText(holder.mTextViewNet, String.valueOf(stock.getNet()));
 
-			if (!TextUtils.isEmpty(stock.getMark())) {
-				holder.mImageViewFavorite.setImageResource(R.drawable.ic_favorite);
+			if ((stock.getFlag() & Constants.STOCK_FLAG_FAVORITE) == 1) {
+				holder.mImageViewFavorite
+						.setImageResource(R.drawable.ic_favorite);
 			} else {
-				holder.mImageViewFavorite.setImageResource(R.drawable.ic_none_favorite);
+				holder.mImageViewFavorite
+						.setImageResource(R.drawable.ic_none_favorite);
 			}
-			
+
 			if (stock.getHold() == 0) {
 				holder.mImageViewDelete.setImageResource(R.drawable.ic_delete);
 			} else {
-				holder.mImageViewDelete.setImageResource(R.drawable.ic_undeletable);
+				holder.mImageViewDelete
+						.setImageResource(R.drawable.ic_undeletable);
 			}
 
 			holder.mImageViewFavorite.setTag(stock.getId());
 			holder.mImageViewFavorite.setOnClickListener(this);
-			
+
 			holder.mImageViewDelete.setTag(stock.getId());
 			holder.mImageViewDelete.setOnClickListener(this);
 
@@ -162,8 +164,10 @@ public class StockListEditActivity extends DatabaseActivity implements
 			holder.mTextViewCode = (TextView) view.findViewById(R.id.code);
 			holder.mTextViewPrice = (TextView) view.findViewById(R.id.price);
 			holder.mTextViewNet = (TextView) view.findViewById(R.id.net);
-			holder.mImageViewFavorite = (ImageView) view.findViewById(R.id.favorite);
-			holder.mImageViewDelete = (ImageView) view.findViewById(R.id.delete);
+			holder.mImageViewFavorite = (ImageView) view
+					.findViewById(R.id.favorite);
+			holder.mImageViewDelete = (ImageView) view
+					.findViewById(R.id.delete);
 
 			view.setTag(holder);
 
@@ -175,7 +179,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 			if (view == null) {
 				return;
 			}
-			
+
 			Cursor cursor = null;
 			long stockId = (Long) view.getTag();
 			Stock stock = new Stock();
@@ -183,9 +187,9 @@ public class StockListEditActivity extends DatabaseActivity implements
 					DatabaseContract.Stock.CONTENT_URI, stockId);
 
 			try {
-				cursor = mContentResolver.query(uri,
-						DatabaseContract.Stock.PROJECTION_ALL, null, null,
-						null);
+				cursor = mContentResolver
+						.query(uri, DatabaseContract.Stock.PROJECTION_ALL,
+								null, null, null);
 				if (cursor != null) {
 					cursor.moveToNext();
 					stock.set(cursor);
@@ -199,18 +203,17 @@ public class StockListEditActivity extends DatabaseActivity implements
 			try {
 				switch (view.getId()) {
 				case R.id.favorite:
-					if (TextUtils.isEmpty(stock.getMark())) {
-						updateStockMark(stockId,
-								Constants.STOCK_FLAG_MARK_FAVORITE);
+					if ((stock.getFlag() & Constants.STOCK_FLAG_FAVORITE) == 0) {
+						updateStockFlag(stockId, Constants.STOCK_FLAG_FAVORITE);
 						startService(Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE,
 								Constants.EXECUTE_IMMEDIATE);
 					} else {
 						if (stock.getHold() == 0) {
-							updateStockMark(stockId, Constants.STOCK_FLAG_NONE);
+							updateStockFlag(stockId, Constants.STOCK_FLAG_NONE);
 						}
 					}
 					break;
-					
+
 				case R.id.delete:
 					if (stock.getHold() == 0) {
 						mStockDatabaseManager.deleteStock(stock.getId());
@@ -220,7 +223,6 @@ public class StockListEditActivity extends DatabaseActivity implements
 				default:
 					break;
 				}
-
 
 			} catch (Exception e) {
 				e.printStackTrace();

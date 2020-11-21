@@ -201,7 +201,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 		}
 		case R.id.action_remove_favorite: {
 			if (mStock.getHold() == 0) {
-				updateStockMark(mStock.getId(), Constants.STOCK_FLAG_NONE);
+				updateStockFlag(mStock.getId(), Constants.STOCK_FLAG_NONE);
 				if (mStockListIndex < mStockList.size()) {
 					mStockList.remove(mStockListIndex);
 				}

@@ -139,9 +139,9 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 
 			id = mRadioGroupSE.getCheckedRadioButtonId();
 			if (id == R.id.radio_class_hsa) {
-				mStock.setClasses(Constants.STOCK_FLAG_CLASS_HSA);
+				mStock.setClasses(Constants.STOCK_CLASS_HSA);
 			} else if (id == R.id.radio_se_sz) {
-				mStock.setClasses(Constants.STOCK_FLAG_CLASS_INDEXES);
+				mStock.setClasses(Constants.STOCK_CLASS_INDEXES);
 			}
 
 			id = mRadioGroupSE.getCheckedRadioButtonId();
@@ -172,7 +172,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 				mStock.setValuation(0);
 			}
 
-			mStock.setMark(Constants.STOCK_FLAG_MARK_FAVORITE);
+			mStock.setFlag(Constants.STOCK_FLAG_FAVORITE);
 
 			if (ACTION_STOCK_INSERT.equals(mAction)) {
 				if (!mStockDatabaseManager.isStockExist(mStock)) {

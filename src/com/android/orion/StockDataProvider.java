@@ -136,8 +136,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 		initStockIndexes();
 
-		selection = DatabaseContract.Stock.COLUMN_CLASSES + " = " + "\'"
-				+ Constants.STOCK_FLAG_CLASS_INDEXES + "\'" + " AND "
+		selection = DatabaseContract.COLUMN_CLASSES + " = " + "\'"
+				+ Constants.STOCK_CLASS_INDEXES + "\'" + " AND "
 				+ DatabaseContract.COLUMN_NAME + " = \'\'";
 		stockList = loadStockList(selection, null, null);
 		if ((stockList == null) || (stockList.size() == 0)) {

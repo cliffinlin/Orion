@@ -258,8 +258,8 @@ public class StockFilter extends Setting {
 
 		if (mEnabled) {
 			if (mFavorite) {
-				selection += DatabaseContract.Stock.COLUMN_MARK + " = '"
-						+ Constants.STOCK_FLAG_MARK_FAVORITE + "'";
+				selection += DatabaseContract.COLUMN_FLAG + " = "
+						+ Constants.STOCK_FLAG_FAVORITE;
 			}
 
 			if (!TextUtils.isEmpty(mHold)) {

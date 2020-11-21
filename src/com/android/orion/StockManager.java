@@ -169,7 +169,7 @@ public class StockManager {
 		stock.init();
 		stock.setSE(se);
 		stock.setCode(String.format("%06d", Integer.valueOf(baseCode) + index));
-		stock.setClasses(Constants.STOCK_FLAG_CLASS_INDEXES);
+		stock.setClasses(Constants.STOCK_CLASS_INDEXES);
 		stock.setCreated(now);
 		stock.setModified(now);
 		try {
@@ -315,8 +315,8 @@ public class StockManager {
 	}
 
 	String selectStockHSA() {
-		return DatabaseContract.Stock.COLUMN_CLASSES + " = '"
-				+ Constants.STOCK_FLAG_CLASS_HSA + "'";
+		return DatabaseContract.COLUMN_CLASSES + " = '"
+				+ Constants.STOCK_CLASS_HSA + "'";
 	}
 
 	boolean isStockHSAEmpty() {

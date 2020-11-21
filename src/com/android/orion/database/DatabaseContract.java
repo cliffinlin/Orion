@@ -24,6 +24,9 @@ public final class DatabaseContract {
 	public static final String COLUMN_SE = "se";
 	public static final String COLUMN_CODE = "code";
 	public static final String COLUMN_NAME = "name";
+	public static final String COLUMN_PINYIN = "pinyin";
+	public static final String COLUMN_CLASSES = "classes";
+	public static final String COLUMN_FLAG = "flag";
 	public static final String COLUMN_PRICE = "price";
 	public static final String COLUMN_DEAL = "deal";
 	public static final String COLUMN_CHANGE = "change";
@@ -145,10 +148,6 @@ public final class DatabaseContract {
 	public static abstract class Stock implements BaseColumns {
 		public static final String TABLE_NAME = "stock";
 
-		public static final String COLUMN_CLASSES = "classes";
-		public static final String COLUMN_PINYIN = "pinyin";
-		public static final String COLUMN_MARK = "mark";
-
 		public static final Uri CONTENT_URI = Uri.withAppendedPath(
 				DatabaseContract.CONTENT_URI, TABLE_NAME);
 		public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
@@ -158,7 +157,7 @@ public final class DatabaseContract {
 		public static final String SORT_ORDER_DEFAULT = COLUMN_CODE + " ASC";
 		public static final String[] PROJECTION_ALL = { _ID, COLUMN_CLASSES,
 				COLUMN_SE, COLUMN_CODE, COLUMN_NAME, COLUMN_PINYIN,
-				COLUMN_MARK, COLUMN_PRICE, COLUMN_CHANGE, COLUMN_NET,
+				COLUMN_FLAG, COLUMN_PRICE, COLUMN_CHANGE, COLUMN_NET,
 				COLUMN_VOLUME, COLUMN_VALUE, COLUMN_MIN1, COLUMN_MIN5,
 				COLUMN_MIN15, COLUMN_MIN30, COLUMN_MIN60, COLUMN_DAY,
 				COLUMN_WEEK, COLUMN_MONTH, COLUMN_QUARTER, COLUMN_YEAR,
@@ -179,7 +178,7 @@ public final class DatabaseContract {
 				+ TEXT_TYPE + COMMA_SEP + COLUMN_SE + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_CODE + TEXT_TYPE + COMMA_SEP + COLUMN_NAME + TEXT_TYPE
 				+ COMMA_SEP + COLUMN_PINYIN + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_MARK + TEXT_TYPE + COMMA_SEP + COLUMN_PRICE
+				+ COLUMN_FLAG + INTEGER_TYPE + COMMA_SEP + COLUMN_PRICE
 				+ DOUBLE_TYPE + COMMA_SEP + COLUMN_CHANGE + DOUBLE_TYPE
 				+ COMMA_SEP + COLUMN_NET + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_VOLUME + INTEGER_TYPE + COMMA_SEP + COLUMN_VALUE
