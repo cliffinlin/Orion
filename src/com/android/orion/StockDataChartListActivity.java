@@ -67,7 +67,6 @@ public class StockDataChartListActivity extends BaseActivity implements
 
 	int mStockListIndex = 0;
 
-	String mSelection = null;
 	String mSortOrder = null;
 
 	ArrayList<String> mStockIDList = new ArrayList<String>();
@@ -201,9 +200,11 @@ public class StockDataChartListActivity extends BaseActivity implements
 			return true;
 		}
 		case R.id.action_remove_favorite: {
-			updateStockMark(mStock.getId(), Constants.STOCK_FLAG_NONE);
-			if (mStockListIndex < mStockList.size()) {
-				mStockList.remove(mStockListIndex);
+			if (mStock.getHold() == 0) {
+				updateStockMark(mStock.getId(), Constants.STOCK_FLAG_NONE);
+				if (mStockListIndex < mStockList.size()) {
+					mStockList.remove(mStockListIndex);
+				}
 			}
 			return true;
 		}
@@ -359,15 +360,14 @@ public class StockDataChartListActivity extends BaseActivity implements
 	}
 
 	CursorLoader getStockCursorLoader() {
+		String selection = "";
 		CursorLoader loader = null;
 
-		if (TextUtils.isEmpty(mSelection)) {
-			mStockFilter.read();
-			mSelection += mStockFilter.getSelection();
-		}
+		mStockFilter.read();
+		selection += mStockFilter.getSelection();
 
 		loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
-				DatabaseContract.Stock.PROJECTION_ALL, mSelection, null,
+				DatabaseContract.Stock.PROJECTION_ALL, selection, null,
 				mSortOrder);
 
 		return loader;

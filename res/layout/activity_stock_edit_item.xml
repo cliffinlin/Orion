@@ -41,12 +41,20 @@
         android:textSize="18sp" />
 
     <ImageView
-        android:id="@+id/action"
+        android:id="@+id/favorite"
         android:layout_width="0dp"
         android:layout_height="35dp"
         android:layout_weight="1"
         android:contentDescription="@string/added"
         android:gravity="center"
-        android:src="@drawable/ic_plus" />
+        android:src="@drawable/ic_favorite" />
 
+    <ImageView
+        android:id="@+id/delete"
+        android:layout_width="0dp"
+        android:layout_height="35dp"
+        android:layout_weight="1"
+        android:contentDescription="@string/delete"
+        android:gravity="center"
+        android:src="@drawable/ic_delete" />
 </LinearLayout>

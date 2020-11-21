@@ -14,7 +14,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -296,39 +295,6 @@ public class BaseActivity extends Activity {
 			mContentResolver.update(uri, contentValues, null, null);
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-	}
-
-	void loadStockDealArrayMap() {
-		loadStockDealArrayMap("1) GROUP BY (" + DatabaseContract.COLUMN_NAME,
-				null, null, mStockDealArrayMap);
-	}
-
-	void loadStockDealArrayMap(String selection, String[] selectionArgs,
-			String sortOrder, ArrayMap<String, Stock> stockArrayMap) {
-		Cursor cursor = null;
-
-		if ((mStockDatabaseManager == null) || (stockArrayMap == null)) {
-			return;
-		}
-
-		try {
-			stockArrayMap.clear();
-			cursor = mStockDatabaseManager.queryStockDeal(selection,
-					selectionArgs, sortOrder);
-			if ((cursor != null) && (cursor.getCount() > 0)) {
-				while (cursor.moveToNext()) {
-					Stock stock = new Stock();
-					stock.setSE(cursor);
-					stock.setCode(cursor);
-					stock.setName(cursor);
-					stockArrayMap.put(stock.getSE() + stock.getCode(), stock);
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			mStockDatabaseManager.closeCursor(cursor);
 		}
 	}
 }

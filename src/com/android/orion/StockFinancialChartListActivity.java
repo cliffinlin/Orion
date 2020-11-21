@@ -164,9 +164,11 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 			return true;
 		}
 		case R.id.action_remove_favorite: {
-			updateStockMark(mStock.getId(), Constants.STOCK_FLAG_NONE);
-			if (mStockListIndex < mStockList.size()) {
-				mStockList.remove(mStockListIndex);
+			if (mStock.getHold() == 0) {
+				updateStockMark(mStock.getId(), Constants.STOCK_FLAG_NONE);
+				if (mStockListIndex < mStockList.size()) {
+					mStockList.remove(mStockListIndex);
+				}
 			}
 			return true;
 		}

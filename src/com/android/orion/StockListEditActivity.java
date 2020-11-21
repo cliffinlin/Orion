@@ -27,8 +27,7 @@ import com.android.orion.database.Stock;
 public class StockListEditActivity extends DatabaseActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener {
 
-	static final int LOADER_ID_STOCK_DEAL_ARRAY_MAP = 0;
-	static final int LOADER_ID_STOCK_LIST = 1;
+	static final int LOADER_ID_STOCK_LIST = 0;
 
 	String mSortOrder = null;
 	ListView mListView = null;
@@ -61,8 +60,6 @@ public class StockListEditActivity extends DatabaseActivity implements
 			mListView.setAdapter(mAdapter);
 			mListView.setOnItemClickListener(this);
 		}
-
-		startLoadTask(LOADER_ID_STOCK_DEAL_ARRAY_MAP);
 
 		mLoaderManager.initLoader(LOADER_ID_STOCK_LIST, null, this);
 	}
@@ -110,15 +107,6 @@ public class StockListEditActivity extends DatabaseActivity implements
 	}
 
 	@Override
-	Long doInBackgroundLoad(Object... params) {
-		super.doInBackgroundLoad(params);
-
-		loadStockDealArrayMap();
-
-		return RESULT_SUCCESS;
-	}
-
-	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 	}
@@ -138,19 +126,28 @@ public class StockListEditActivity extends DatabaseActivity implements
 
 			stock.set(cursor);
 
-			setViewText(holder.nameTextView, stock.getName());
-			setViewText(holder.codeTextView, stock.getCode());
-			setViewText(holder.priceTextView, String.valueOf(stock.getPrice()));
-			setViewText(holder.netTextView, String.valueOf(stock.getNet()));
+			setViewText(holder.mTextViewName, stock.getName());
+			setViewText(holder.mTextViewCode, stock.getCode());
+			setViewText(holder.mTextViewPrice, String.valueOf(stock.getPrice()));
+			setViewText(holder.mTextViewNet, String.valueOf(stock.getNet()));
 
 			if (!TextUtils.isEmpty(stock.getMark())) {
-				holder.actionImageView.setImageResource(R.drawable.ic_minus);
+				holder.mImageViewFavorite.setImageResource(R.drawable.ic_favorite);
 			} else {
-				holder.actionImageView.setImageResource(R.drawable.ic_plus);
+				holder.mImageViewFavorite.setImageResource(R.drawable.ic_none_favorite);
+			}
+			
+			if (stock.getHold() == 0) {
+				holder.mImageViewDelete.setImageResource(R.drawable.ic_delete);
+			} else {
+				holder.mImageViewDelete.setImageResource(R.drawable.ic_undeletable);
 			}
 
-			holder.actionImageView.setTag(stock.getId());
-			holder.actionImageView.setOnClickListener(this);
+			holder.mImageViewFavorite.setTag(stock.getId());
+			holder.mImageViewFavorite.setOnClickListener(this);
+			
+			holder.mImageViewDelete.setTag(stock.getId());
+			holder.mImageViewDelete.setOnClickListener(this);
 
 			super.bindView(view, context, cursor);
 		}
@@ -161,11 +158,12 @@ public class StockListEditActivity extends DatabaseActivity implements
 
 			ViewHolder holder = new ViewHolder();
 
-			holder.nameTextView = (TextView) view.findViewById(R.id.name);
-			holder.codeTextView = (TextView) view.findViewById(R.id.code);
-			holder.priceTextView = (TextView) view.findViewById(R.id.price);
-			holder.netTextView = (TextView) view.findViewById(R.id.net);
-			holder.actionImageView = (ImageView) view.findViewById(R.id.action);
+			holder.mTextViewName = (TextView) view.findViewById(R.id.name);
+			holder.mTextViewCode = (TextView) view.findViewById(R.id.code);
+			holder.mTextViewPrice = (TextView) view.findViewById(R.id.price);
+			holder.mTextViewNet = (TextView) view.findViewById(R.id.net);
+			holder.mImageViewFavorite = (ImageView) view.findViewById(R.id.favorite);
+			holder.mImageViewDelete = (ImageView) view.findViewById(R.id.delete);
 
 			view.setTag(holder);
 
@@ -174,42 +172,58 @@ public class StockListEditActivity extends DatabaseActivity implements
 
 		@Override
 		public void onClick(View view) {
-			if (view != null) {
-				Cursor cursor = null;
-				long stockId = (Long) view.getTag();
-				Stock stock = new Stock();
-				Uri uri = ContentUris.withAppendedId(
-						DatabaseContract.Stock.CONTENT_URI, stockId);
+			if (view == null) {
+				return;
+			}
+			
+			Cursor cursor = null;
+			long stockId = (Long) view.getTag();
+			Stock stock = new Stock();
+			Uri uri = ContentUris.withAppendedId(
+					DatabaseContract.Stock.CONTENT_URI, stockId);
 
-				try {
-					cursor = mContentResolver.query(uri,
-							DatabaseContract.Stock.PROJECTION_ALL, null, null,
-							null);
-					if (cursor != null) {
-						cursor.moveToNext();
-						stock.set(cursor);
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				} finally {
-					mStockDatabaseManager.closeCursor(cursor);
+			try {
+				cursor = mContentResolver.query(uri,
+						DatabaseContract.Stock.PROJECTION_ALL, null, null,
+						null);
+				if (cursor != null) {
+					cursor.moveToNext();
+					stock.set(cursor);
 				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				mStockDatabaseManager.closeCursor(cursor);
+			}
 
-				try {
+			try {
+				switch (view.getId()) {
+				case R.id.favorite:
 					if (TextUtils.isEmpty(stock.getMark())) {
 						updateStockMark(stockId,
 								Constants.STOCK_FLAG_MARK_FAVORITE);
 						startService(Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE,
 								Constants.EXECUTE_IMMEDIATE);
 					} else {
-						if (!mStockDealArrayMap.containsKey(stock.getSE()
-								+ stock.getCode())) {
+						if (stock.getHold() == 0) {
 							updateStockMark(stockId, Constants.STOCK_FLAG_NONE);
 						}
 					}
-				} catch (Exception e) {
-					e.printStackTrace();
+					break;
+					
+				case R.id.delete:
+					if (stock.getHold() == 0) {
+						mStockDatabaseManager.deleteStock(stock.getId());
+					}
+					break;
+
+				default:
+					break;
 				}
+
+
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 
 			restartLoader();
@@ -217,10 +231,11 @@ public class StockListEditActivity extends DatabaseActivity implements
 	}
 
 	class ViewHolder {
-		public TextView nameTextView;
-		public TextView codeTextView;
-		public TextView priceTextView;
-		public TextView netTextView;
-		public ImageView actionImageView;
+		public TextView mTextViewName;
+		public TextView mTextViewCode;
+		public TextView mTextViewPrice;
+		public TextView mTextViewNet;
+		public ImageView mImageViewFavorite;
+		public ImageView mImageViewDelete;
 	}
 }

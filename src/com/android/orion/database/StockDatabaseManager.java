@@ -427,6 +427,28 @@ public class StockDatabaseManager extends DatabaseManager {
 		return result;
 	}
 
+	public int deleteStock(long stockId) {
+		int result = 0;
+		String where = null;
+
+		if (mContentResolver == null) {
+			return result;
+		}
+
+		if (stockId > 0) {
+			where = DatabaseContract.COLUMN_ID + "=" + stockId;
+		}
+
+		try {
+			result = mContentResolver.delete(
+					DatabaseContract.Stock.CONTENT_URI, where, null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+
 	public Uri insertStockData(StockData stockData) {
 		Uri uri = null;
 
