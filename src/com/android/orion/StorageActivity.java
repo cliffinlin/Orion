@@ -319,8 +319,7 @@ public class StorageActivity extends DatabaseActivity {
 		StockDeal stockDeal = new StockDeal();
 
 		Cursor cursor = null;
-		String selection = DatabaseContract.Stock.COLUMN_MARK + " = '"
-				+ Constants.STOCK_FLAG_MARK_FAVORITE + "'";
+		String selection = "";
 
 		if (mStockDatabaseManager == null) {
 			return count;

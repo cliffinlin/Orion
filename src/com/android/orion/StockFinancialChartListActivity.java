@@ -317,8 +317,9 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 		String selection = "";
 		CursorLoader loader = null;
 
-		selection = DatabaseContract.Stock.COLUMN_MARK + " = '"
-				+ Constants.STOCK_FLAG_MARK_FAVORITE + "'";
+		mStockFilter.read();
+		selection += mStockFilter.getSelection();
+
 		loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
 				DatabaseContract.Stock.PROJECTION_ALL, selection, null,
 				mSortOrder);
