@@ -7,14 +7,11 @@ import android.app.LoaderManager;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.ContentResolver;
-import android.content.ContentUris;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PowerManager;
@@ -23,7 +20,6 @@ import android.util.ArrayMap;
 import android.util.Log;
 
 import com.android.orion.OrionService.OrionBinder;
-import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.FinancialData;
 import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
@@ -280,21 +276,6 @@ public class BaseActivity extends Activity {
 			Editor editor = mSharedPreferences.edit();
 			editor.putString(key, value);
 			editor.commit();
-		}
-	}
-
-	void updateStockFlag(long stockId, long flag) {
-		Uri uri = null;
-
-		uri = ContentUris.withAppendedId(DatabaseContract.Stock.CONTENT_URI,
-				stockId);
-
-		try {
-			ContentValues contentValues = new ContentValues();
-			contentValues.put(DatabaseContract.COLUMN_FLAG, flag);
-			mContentResolver.update(uri, contentValues, null, null);
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 }

@@ -199,15 +199,6 @@ public class StockDataChartListActivity extends BaseActivity implements
 			navigateStock(1);
 			return true;
 		}
-		case R.id.action_remove_favorite: {
-			if (mStock.getHold() == 0) {
-				updateStockFlag(mStock.getId(), Constants.STOCK_FLAG_NONE);
-				if (mStockListIndex < mStockList.size()) {
-					mStockList.remove(mStockListIndex);
-				}
-			}
-			return true;
-		}
 		case R.id.action_edit: {
 			mIntent = new Intent(this, StockActivity.class);
 			mIntent.setAction(StockActivity.ACTION_STOCK_EDIT);

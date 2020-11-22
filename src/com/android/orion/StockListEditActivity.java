@@ -2,6 +2,7 @@ package com.android.orion;
 
 import android.app.LoaderManager;
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Loader;
@@ -229,6 +230,21 @@ public class StockListEditActivity extends DatabaseActivity implements
 			}
 
 			restartLoader();
+		}
+
+		void updateStockFlag(long stockId, long flag) {
+			Uri uri = null;
+
+			uri = ContentUris.withAppendedId(
+					DatabaseContract.Stock.CONTENT_URI, stockId);
+
+			try {
+				ContentValues contentValues = new ContentValues();
+				contentValues.put(DatabaseContract.COLUMN_FLAG, flag);
+				mContentResolver.update(uri, contentValues, null, null);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
