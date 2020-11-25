@@ -23,7 +23,7 @@ public class ServiceSettingFragment extends PreferenceFragment implements
 		mStockDownloadAlarmManager = DownloadAlarmManager
 				.getInstance(getActivity());
 
-		addPreferencesFromResource(R.xml.preference_service_setting);
+		addPreferencesFromResource(R.xml.preference_service);
 	}
 
 	@Override
