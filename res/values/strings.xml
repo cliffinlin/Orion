@@ -57,6 +57,7 @@
     <string name="valuation">Valuation</string>
     <string name="yield">Yield</string>
     <string name="total_share">Share</string>
+    <string name="market_value">MValue</string>
     <string name="debt_to_net_assets_rato">D2B</string>
     <string name="net_profit">NetProfit</string>
     <string name="book_value_per_share">BPS</string>
@@ -141,12 +142,12 @@
     <string name="action_week">W</string>
     <string name="action_month">M</string>
     <string name="stock_data_chart">Stock Data Chart</string>
-    <string name="stock_data_list">Stock Data List</string>    
+    <string name="stock_data_list">Stock Data List</string>
     <string name="stock_name_code">Name</string>
     <string name="stock_code">Stock Code</string>
     <string name="stock_class">Stock Class</string>
     <string name="stock_class_hsa">HSA</string>
-    <string name="stock_class_index">Index</string>    
+    <string name="stock_class_index">Index</string>
     <string name="stock_code_empty">Stock Code Empty!</string>
     <string name="stock_dividend">Stock Dividend</string>
     <string name="stock_name">Stock Name</string>
@@ -165,7 +166,7 @@
     <string name="stock_se_not_found">Stock SE not Found!</string>
     <string name="stock_statistics">Statistics</string>
     <string name="stock_statistics_chart">Statistics Chart</string>
-    <string name="stock_valuation">Stock Valuation</string>    
+    <string name="stock_valuation">Stock Valuation</string>
     <string name="symbol_add">+</string>
     <string name="symbol_subtract">-</string>
     <string name="title_activity_about">About</string>
@@ -188,4 +189,5 @@
     <string name="error">Error!</string>
     <string name="limit_line">Limit Line</string>
     <string name="display">Display</string>
+
 </resources>

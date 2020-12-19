@@ -68,6 +68,7 @@ public class StockFinancialListActivity extends ListActivity implements
 	TextView mTextViewCost = null;
 	TextView mTextViewBonus = null;
 	TextView mTextViewTotalShare = null;
+	TextView mTextViewMarketValue = null;
 	TextView mTextViewNetProfit = null;
 	TextView mDebtToNetAssetsRato = null;
 	TextView mTextViewBookValuePerShare = null;
@@ -282,6 +283,9 @@ public class StockFinancialListActivity extends ListActivity implements
 		case R.id.total_share:
 			mSortOrderColumn = DatabaseContract.COLUMN_TOTAL_SHARE;
 			break;
+		case R.id.market_value:
+			mSortOrderColumn = DatabaseContract.COLUMN_MARKET_VALUE;
+			break;
 		case R.id.net_profit:
 			mSortOrderColumn = DatabaseContract.COLUMN_NET_PROFIT;
 			break;
@@ -359,6 +363,7 @@ public class StockFinancialListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewCost, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewBonus, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewTotalShare, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewMarketValue, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewNetProfit, mHeaderTextDefaultColor);
 		setHeaderTextColor(mDebtToNetAssetsRato, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewBookValuePerShare, mHeaderTextDefaultColor);
@@ -410,6 +415,11 @@ public class StockFinancialListActivity extends ListActivity implements
 		mTextViewTotalShare = (TextView) findViewById(R.id.total_share);
 		if (mTextViewTotalShare != null) {
 			mTextViewTotalShare.setOnClickListener(this);
+		}
+
+		mTextViewMarketValue = (TextView) findViewById(R.id.market_value);
+		if (mTextViewMarketValue != null) {
+			mTextViewMarketValue.setOnClickListener(this);
 		}
 
 		mTextViewNetProfit = (TextView) findViewById(R.id.net_profit);
@@ -520,6 +530,8 @@ public class StockFinancialListActivity extends ListActivity implements
 			setHeaderTextColor(mTextViewNet, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_TOTAL_SHARE)) {
 			setHeaderTextColor(mTextViewTotalShare, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MARKET_VALUE)) {
+			setHeaderTextColor(mTextViewMarketValue, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_NET_PROFIT)) {
 			setHeaderTextColor(mTextViewNetProfit, mHeaderTextHighlightColor);
 		} else if (mSortOrder
@@ -586,6 +598,7 @@ public class StockFinancialListActivity extends ListActivity implements
 				DatabaseContract.COLUMN_HOLD, DatabaseContract.COLUMN_COST,
 				DatabaseContract.COLUMN_BONUS,
 				DatabaseContract.COLUMN_TOTAL_SHARE,
+				DatabaseContract.COLUMN_MARKET_VALUE,
 				DatabaseContract.COLUMN_NET_PROFIT,
 				DatabaseContract.COLUMN_DEBT_TO_NET_ASSETS_RATIO,
 				DatabaseContract.COLUMN_BOOK_VALUE_PER_SHARE,
@@ -597,11 +610,11 @@ public class StockFinancialListActivity extends ListActivity implements
 				DatabaseContract.COLUMN_R_DATE, DatabaseContract.COLUMN_DATE };
 		int[] mRightTo = new int[] { R.id.price, R.id.net, R.id.roi, R.id.roe,
 				R.id.pe, R.id.rate, R.id.pb, R.id.valuation, R.id.hold,
-				R.id.cost, R.id.bonus, R.id.total_share, R.id.net_profit,
-				R.id.debt_to_net_assets_rato, R.id.book_value_per_share,
-				R.id.cash_flow_per_share, R.id.net_profit_per_share,
-				R.id.net_profit_per_share_in_year, R.id.dividend, R.id.yield,
-				R.id.delta, R.id.r_date, R.id.date };
+				R.id.cost, R.id.bonus, R.id.total_share, R.id.market_value,
+				R.id.net_profit, R.id.debt_to_net_assets_rato,
+				R.id.book_value_per_share, R.id.cash_flow_per_share,
+				R.id.net_profit_per_share, R.id.net_profit_per_share_in_year,
+				R.id.dividend, R.id.yield, R.id.delta, R.id.r_date, R.id.date };
 
 		mLeftListView = (ListView) findViewById(R.id.left_listview);
 		mLeftAdapter = new SimpleCursorAdapter(this,

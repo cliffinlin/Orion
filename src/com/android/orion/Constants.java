@@ -162,8 +162,8 @@ public class Constants {
 	public static final double STOCK_DEAL_DISTRIBUTION_RATE = 5.0 / 100.0;
 
 	public static final long DEFAULT_DOWNLOAD_INTERVAL = 3 * 1000;
-	public static final long DEFAULT_RESTART_LOADER_INTERAL = 10 * 1000;
-	public static final long DEFAULT_SEND_BROADCAST_INTERAL = 15 * 1000;
+	public static final long DEFAULT_RESTART_LOADER_INTERAL = 60 * 1000;
+	public static final long DEFAULT_SEND_BROADCAST_INTERAL = 60 * 1000;
 
 	public static final double ROI_COEFFICIENT = 1.0 / 10;
 }

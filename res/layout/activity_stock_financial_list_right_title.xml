@@ -113,6 +113,14 @@
         android:textSize="18sp" />
 
     <TextView
+        android:id="@+id/market_value"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/market_value"
+        android:textSize="18sp" />
+    <TextView
         android:id="@+id/net_profit"
         android:layout_width="80dp"
         android:layout_height="40dp"

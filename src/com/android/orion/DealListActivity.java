@@ -523,7 +523,8 @@ public class DealListActivity extends ListActivity implements
 			break;
 
 		case FILTER_TYPE_TO_SELL:
-			mSelection = DatabaseContract.COLUMN_VOLUME + " > " + 0 + " AND " + DatabaseContract.COLUMN_NET + " > " + 0;
+			mSelection = DatabaseContract.COLUMN_VOLUME + " > " + 0 + " AND "
+					+ DatabaseContract.COLUMN_NET + " > " + 0;
 			break;
 
 		default:

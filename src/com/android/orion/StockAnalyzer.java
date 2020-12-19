@@ -103,6 +103,7 @@ public class StockAnalyzer extends StockManager {
 		stock.setCashFlowPerShare(financialData.getCashFlowPerShare());
 		stock.setNetProfit(financialData.getNetProfit());
 
+		stock.setupMarketValue();
 		stock.setupNetProfitPerShare();
 		stock.setupNetProfitPerShareInYear(financialDataList);
 		stock.setupNetProfitPerShareLastYear(financialDataList);

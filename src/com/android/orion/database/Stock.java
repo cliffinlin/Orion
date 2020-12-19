@@ -37,6 +37,7 @@ public class Stock extends DatabaseTable {
 	private double mBonus;
 	private double mValuation;
 	private double mTotalShare;
+	private double mMarketValue;
 	private double mTotalAssets;
 	private double mTotalLongTermLiabilities;
 	private double mDebtToNetAssetsRato;
@@ -113,6 +114,7 @@ public class Stock extends DatabaseTable {
 		mBonus = 0;
 		mValuation = 0;
 		mTotalShare = 0;
+		mMarketValue = 0;
 		mTotalAssets = 0;
 		mTotalLongTermLiabilities = 0;
 		mDebtToNetAssetsRato = 0;
@@ -166,6 +168,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_BONUS, mBonus);
 		contentValues.put(DatabaseContract.COLUMN_VALUATION, mValuation);
 		contentValues.put(DatabaseContract.COLUMN_TOTAL_SHARE, mTotalShare);
+		contentValues.put(DatabaseContract.COLUMN_MARKET_VALUE, mMarketValue);	
 		contentValues.put(DatabaseContract.COLUMN_TOTAL_ASSETS, mTotalAssets);
 		contentValues.put(DatabaseContract.COLUMN_TOTAL_LONG_TERM_LIABILITIES,
 				mTotalLongTermLiabilities);
@@ -237,6 +240,7 @@ public class Stock extends DatabaseTable {
 		}
 
 		contentValues.put(DatabaseContract.COLUMN_TOTAL_SHARE, mTotalShare);
+		contentValues.put(DatabaseContract.COLUMN_MARKET_VALUE, mMarketValue);
 		contentValues.put(DatabaseContract.COLUMN_TOTAL_ASSETS, mTotalAssets);
 		contentValues.put(DatabaseContract.COLUMN_TOTAL_LONG_TERM_LIABILITIES,
 				mTotalLongTermLiabilities);
@@ -306,6 +310,7 @@ public class Stock extends DatabaseTable {
 		setBonus(stock.mBonus);
 		setValuation(stock.mValuation);
 		setTotalShare(stock.mTotalShare);
+		setMarketValue(stock.mMarketValue);
 		setTotalAssets(stock.mTotalAssets);
 		setTotalLongTermLiabilities(stock.mTotalLongTermLiabilities);
 		setDebtToNetAssetsRato(stock.mDebtToNetAssetsRato);
@@ -365,6 +370,7 @@ public class Stock extends DatabaseTable {
 		setBonus(cursor);
 		setValuation(cursor);
 		setTotalShare(cursor);
+		setMarketValue(cursor);
 		setTotalAssets(cursor);
 		setTotalLongTermLiabilities(cursor);
 		setNetProfit(cursor);
@@ -862,6 +868,23 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_TOTAL_SHARE)));
 	}
 
+	public double getMarkerValue() {
+		return mMarketValue;
+	}
+
+	public void setMarketValue(double marketValue) {
+		mMarketValue = marketValue;
+	}
+
+	void setMarketValue(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setMarketValue(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_MARKET_VALUE)));
+	}
+	
 	public double getTotalAssets() {
 		return mTotalAssets;
 	}
@@ -1249,6 +1272,18 @@ public class Stock extends DatabaseTable {
 		mRate = mNetProfitPerShareInYear / mNetProfitPerShareLastYear;
 
 		mRate = Utility.Round(mRate, Constants.DOUBLE_FIXED_DECIMAL);
+	}
+	
+	public void setupMarketValue() {
+		if (mPrice == 0) {
+			return;
+		}
+		
+		if (mTotalShare == 0) {
+			return;
+		}
+		
+		mMarketValue = Utility.Round(mPrice * mTotalShare, Constants.DOUBLE_FIXED_DECIMAL);
 	}
 
 	public void setupNetProfitPerShare() {
