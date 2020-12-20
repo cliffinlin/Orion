@@ -202,21 +202,21 @@ public class StockDataChart {
 		lineData.addDataSet(segmentDataSet);
 
 		LineDataSet overlapHighDataSet = new LineDataSet(mOverlapHighEntryList,
-				"overHigh");
+				"OverHigh");
 		overlapHighDataSet.setColor(Color.MAGENTA);
 		overlapHighDataSet.setDrawCircles(false);
 		overlapHighDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(overlapHighDataSet);
 
 		LineDataSet overlapLowDataSet = new LineDataSet(mOverlapLowEntryList,
-				"overLow");
+				"OverLow");
 		overlapLowDataSet.setColor(Color.BLUE);
 		overlapLowDataSet.setDrawCircles(false);
 		overlapLowDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(overlapLowDataSet);
 
 		LineDataSet bookValuePerShareDataSet = new LineDataSet(
-				mBookValuePerShareList, "bookValue");
+				mBookValuePerShareList, "BookValue");
 		bookValuePerShareDataSet.setColor(Color.BLUE);
 		bookValuePerShareDataSet.setDrawCircles(false);
 		bookValuePerShareDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
@@ -230,13 +230,13 @@ public class StockDataChart {
 		lineData.addDataSet(netProfitPerShareDataSet);
 
 		BarData barData = new BarData(mXValues);
-		BarDataSet shareBonusDataSet = new BarDataSet(mDividendEntryList,
-				"dsivident");
-		shareBonusDataSet.setBarSpacePercent(40f);
-		shareBonusDataSet.setIncreasingColor(Color.rgb(255, 50, 50));
-		shareBonusDataSet.setDecreasingColor(Color.rgb(50, 128, 50));
-		shareBonusDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		barData.addDataSet(shareBonusDataSet);
+		BarDataSet dividendDataSet = new BarDataSet(mDividendEntryList,
+				"Dividend");
+		dividendDataSet.setBarSpacePercent(40f);
+		dividendDataSet.setIncreasingColor(Color.rgb(255, 50, 50));
+		dividendDataSet.setDecreasingColor(Color.rgb(50, 128, 50));
+		dividendDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+		barData.addDataSet(dividendDataSet);
 
 		mCombinedDataMain.setData(candleData);
 		mCombinedDataMain.setData(lineData);
@@ -385,6 +385,14 @@ public class StockDataChart {
 			label = "     " + " " + stockDeal.getDeal() + " "
 					+ stockDeal.getVolume() + " " + (int) stockDeal.getProfit()
 					+ " " + stockDeal.getNet() + "%";
+
+			if ((stockDeal.getVolume() <= 0) && (stockDeal.getDeal() != 0)) {
+				label += " roi:"
+						+ Utility.Round(stock.getRoi() * stock.getPrice()
+								/ stockDeal.getDeal(),
+								Constants.DOUBLE_FIXED_DECIMAL);
+			}
+
 			limitLine = createLimitLine(stockDeal.getDeal(), color, label);
 
 			mLimitLineList.add(limitLine);
