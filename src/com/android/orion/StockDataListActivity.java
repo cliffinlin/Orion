@@ -539,11 +539,15 @@ public class StockDataListActivity extends ListActivity implements
 			}
 		} else {
 			if (parent.getId() == R.id.left_listview) {
-				Intent intent = new Intent(this,
-						StockFinancialChartListActivity.class);
-				intent.putExtra(Constants.EXTRA_STOCK_LIST_SORT_ORDER,
-						mSortOrder);
-				intent.putExtra(Constants.EXTRA_STOCK_ID, id);
+				mStock.setId(id);
+				mStockDatabaseManager.getStockById(mStock);
+
+				Intent intent = new Intent(mContext,
+						StockDealListActivity.class);
+				Bundle bundle = new Bundle();
+				bundle.putString(Constants.EXTRA_STOCK_SE, mStock.getSE());
+				bundle.putString(Constants.EXTRA_STOCK_CODE, mStock.getCode());
+				intent.putExtras(bundle);
 				startActivity(intent);
 			} else {
 				Intent intent = new Intent(this,
