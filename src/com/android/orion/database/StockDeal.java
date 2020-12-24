@@ -11,10 +11,12 @@ public class StockDeal extends DatabaseTable {
 	private String mSE;
 	private String mCode;
 	private String mName;
+	private double mRoi;
 	private double mPrice;
 	private double mNet;
 	private double mDeal;
 	private long mVolume;
+	private double mValue;
 	private double mProfit;
 
 	public StockDeal() {
@@ -48,10 +50,12 @@ public class StockDeal extends DatabaseTable {
 		mSE = "";
 		mCode = "";
 		mName = "";
+		mRoi = 0;
 		mPrice = 0;
 		mNet = 0;
 		mDeal = 0;
 		mVolume = 0;
+		mValue = 0;
 		mProfit = 0;
 	}
 
@@ -66,10 +70,12 @@ public class StockDeal extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_SE, mSE);
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
+		contentValues.put(DatabaseContract.COLUMN_ROI, mRoi);
 		contentValues.put(DatabaseContract.COLUMN_PRICE, mPrice);
 		contentValues.put(DatabaseContract.COLUMN_NET, mNet);
 		contentValues.put(DatabaseContract.COLUMN_DEAL, mDeal);
 		contentValues.put(DatabaseContract.COLUMN_VOLUME, mVolume);
+		contentValues.put(DatabaseContract.COLUMN_VALUE, mValue);
 		contentValues.put(DatabaseContract.COLUMN_PROFIT, mProfit);
 
 		return contentValues;
@@ -87,10 +93,12 @@ public class StockDeal extends DatabaseTable {
 		setSE(stockDeal.mSE);
 		setCode(stockDeal.mCode);
 		setName(stockDeal.mName);
+		setRoi(stockDeal.mRoi);
 		setPrice(stockDeal.mPrice);
 		setNet(stockDeal.mNet);
 		setDeal(stockDeal.mDeal);
 		setVolume(stockDeal.mVolume);
+		setValue(stockDeal.mValue);
 		setProfit(stockDeal.mProfit);
 	}
 
@@ -107,10 +115,12 @@ public class StockDeal extends DatabaseTable {
 		setSE(cursor);
 		setCode(cursor);
 		setName(cursor);
+		setRoi(cursor);
 		setPrice(cursor);
 		setNet(cursor);
 		setDeal(cursor);
 		setVolume(cursor);
+		setValue(cursor);
 		setProfit(cursor);
 	}
 
@@ -165,6 +175,23 @@ public class StockDeal extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_NAME)));
 	}
 
+	public double getRoi() {
+		return mRoi;
+	}
+
+	public void setRoi(double roi) {
+		mRoi = roi;
+	}
+
+	void setRoi(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setRoi(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_ROI)));
+	}
+	
 	public double getPrice() {
 		return mPrice;
 	}
@@ -233,6 +260,23 @@ public class StockDeal extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_VOLUME)));
 	}
 
+	public double getValue() {
+		return mValue;
+	}
+
+	public void setValue(double value) {
+		mValue = value;
+	}
+
+	void setValue(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setValue(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_VALUE)));
+	}
+	
 	public double getProfit() {
 		return mProfit;
 	}
@@ -250,33 +294,18 @@ public class StockDeal extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_PROFIT)));
 	}
 
-	public void setupDeal() {
-		double change = 0;
-		
-		if (mPrice == 0) {
+	public void setupRoi(double stockRoi, double stockPrice) {
+		if ((stockRoi == 0) || (stockPrice == 0)) {
+			mRoi =0;
 			return;
 		}
 		
-		if ((mDeal == 0) || (mVolume == 0)) {
-			mNet = 0;
-			mProfit = 0;
-			return;
-		}
-
-		change = mPrice - mDeal;
-		mNet = 100 * change / mDeal;
-		mProfit = change * mVolume;
-
-		mNet = Utility.Round(mNet, Constants.DOUBLE_FIXED_DECIMAL);
-		mProfit = Utility.Round(mProfit, Constants.DOUBLE_FIXED_DECIMAL);
-	}
-
-	public void setupProfit() {
-		if (mPrice == 0) {
+		if (mDeal == 0) {
+			mRoi =0;
 			return;
 		}
 		
-		mProfit = Utility.Round((mPrice - mDeal) * mVolume,
+		mRoi = Utility.Round(stockRoi * stockPrice / mDeal,
 				Constants.DOUBLE_FIXED_DECIMAL);
 	}
 
@@ -291,6 +320,25 @@ public class StockDeal extends DatabaseTable {
 		}
 
 		mNet = Utility.Round(100 * (mPrice - mDeal) / mDeal,
+				Constants.DOUBLE_FIXED_DECIMAL);
+	}
+
+	public void setupValue() {
+		if ((mDeal == 0) || (mVolume == 0)) {
+			mValue = 0;
+			return;
+		}
+		
+		mValue = Utility.Round(mDeal * mVolume,
+				Constants.DOUBLE_FIXED_DECIMAL);
+	}
+
+	public void setupProfit() {
+		if (mPrice == 0) {
+			return;
+		}
+		
+		mProfit = Utility.Round((mPrice - mDeal) * mVolume,
 				Constants.DOUBLE_FIXED_DECIMAL);
 	}
 }

@@ -782,6 +782,8 @@ public class StockDatabaseManager extends DatabaseManager {
 					stockDeal.setPrice(stock.getPrice());
 					stockDeal.setupNet();
 					stockDeal.setupProfit();
+					stockDeal.setupRoi(stock.getRoi(), stock.getPrice());
+					stockDeal.setupValue();
 
 					if (stockDeal.getVolume() > 0) {
 						hold += stockDeal.getVolume();

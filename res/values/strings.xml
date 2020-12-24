@@ -179,7 +179,8 @@
     <string name="username_hint">Username</string>
     <string name="velocity">Vel</string>
     <string name="version">Version</string>
-    <string name="volume">Vol</string>
+    <string name="volume">Volume</string>
+    <string name="value">Value</string>    
     <string name="ipo">IPO</string>
     <string name="ipo_list">IPO List</string>
     <string name="date">Date</string>

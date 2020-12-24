@@ -50,6 +50,24 @@
         android:textSize="18sp" />
 
     <TextView
+        android:id="@+id/value"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/value"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/roi"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/roi"
+        android:textSize="18sp" />
+
+    <TextView
         android:id="@+id/created"
         android:layout_width="100dp"
         android:layout_height="40dp"

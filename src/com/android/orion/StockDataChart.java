@@ -387,10 +387,7 @@ public class StockDataChart {
 					+ " " + stockDeal.getNet() + "%";
 
 			if ((stockDeal.getVolume() <= 0) && (stockDeal.getDeal() != 0)) {
-				label += " roi:"
-						+ Utility.Round(stock.getRoi() * stock.getPrice()
-								/ stockDeal.getDeal(),
-								Constants.DOUBLE_FIXED_DECIMAL);
+				label += " roi:" + stockDeal.getRoi();
 			}
 
 			limitLine = createLimitLine(stockDeal.getDeal(), color, label);

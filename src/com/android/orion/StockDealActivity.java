@@ -232,6 +232,8 @@ public class StockDealActivity extends DatabaseActivity implements
 			}
 			mDeal.setupNet();
 			mDeal.setupProfit();
+			mDeal.setupRoi(mStock.getRoi(), mStock.getPrice());
+			mDeal.setupValue();
 			mHandler.sendEmptyMessage(MESSAGE_SAVE_DEAL);
 			setResult(RESULT_OK);
 			finish();
