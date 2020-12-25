@@ -1426,10 +1426,12 @@ public class Stock extends DatabaseTable {
 
 	public void setupBonus() {
 		if (mDividend == 0) {
+			mBonus = 0;
 			return;
 		}
 
 		if (mHold == 0) {
+			mBonus = 0;
 			return;
 		}
 
