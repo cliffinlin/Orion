@@ -126,10 +126,10 @@ public class Constants {
 	public static final int STOCK_MARKET_OPEN_MINUTES = 9 * 60 + 30;
 	public static final int STOCK_MARKET_LUNCH_MINUTES = 1 * 60 + 30;
 
-	public static final String STOCK_MARKET_OPEN_TIME = "09:30:00";
-	public static final String STOCK_MARKET_LUNCH_BEGIN_TIME = "11:35:00";
-	public static final String STOCK_MARKET_LUNCH_END_TIME = "13:00:00";
-	public static final String STOCK_MARKET_CLOSE_TIME = "15:05:00";
+	public static final String STOCK_MARKET_OPEN_TIME = "09:20:00";
+	public static final String STOCK_MARKET_LUNCH_BEGIN_TIME = "11:40:00";
+	public static final String STOCK_MARKET_LUNCH_END_TIME = "12:50:00";
+	public static final String STOCK_MARKET_CLOSE_TIME = "15:10:00";
 
 	public static final int STOCK_OVERLAP_MOVE_UP = 1;
 	public static final int STOCK_OVERLAP_MOVE_NONE = 0;
