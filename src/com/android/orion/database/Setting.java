@@ -21,7 +21,7 @@ public class Setting extends DatabaseTable {
 	public static final String KEY_STOCK_FILTER_PB = "key_stock_filter_pb";
 	public static final String KEY_STOCK_FILTER_DIVIDEND = "key_stock_filter_dividend";
 	public static final String KEY_STOCK_FILTER_YIELD = "key_stock_filter_yield";
-	public static final String KEY_STOCK_FILTER_DELTA = "key_stock_filter_delta";
+	public static final String KEY_STOCK_FILTER_DIVIDEND_RATIO = "key_stock_filter_dividend_ratio";
 
 	private String mKey;
 	private String mValue;

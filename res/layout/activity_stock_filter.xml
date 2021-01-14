@@ -210,16 +210,16 @@
         android:layout_height="wrap_content" >
 
         <TextView
-            android:id="@+id/textView_delta"
+            android:id="@+id/textView_dividend_ratio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="14dp"
             android:layout_marginRight="14dp"
-            android:labelFor="@+id/edittext_delta"
-            android:text="@string/delta" />
+            android:labelFor="@+id/edittext_dividend_ratio"
+            android:text="@string/dividend_ratio" />
 
         <EditText
-            android:id="@+id/edittext_delta"
+            android:id="@+id/edittext_dividend_ratio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="14dp"

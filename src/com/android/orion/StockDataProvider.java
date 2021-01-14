@@ -28,6 +28,7 @@ import com.android.orion.database.Setting;
 import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
+import com.android.orion.database.TotalShare;
 import com.android.orion.utility.Market;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Utility;
@@ -75,6 +76,11 @@ public abstract class StockDataProvider extends StockAnalyzer {
 	abstract String getShareBonusURLString(Stock stock);
 
 	abstract void handleResponseShareBonus(Stock stock, ShareBonus shareBonus,
+			String response);
+
+	abstract String getTotalShareURLString(Stock stock);
+
+	abstract void handleResponseTotalShare(Stock stock, TotalShare totalShare,
 			String response);
 
 	abstract String getIPOURLString();
@@ -858,6 +864,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		StockData mStockData = null;
 		FinancialData mFinancialData = null;
 		ShareBonus mShareBonus = null;
+		TotalShare mTotalShare = null;
 
 		String downloadStockRealTime(Stock stock) {
 			if (stock == null) {
@@ -1074,6 +1081,59 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			return responseString;
 		}
 
+		String downloadTotalShare(Stock stock) {
+			if (stock == null) {
+				return "";
+			}
+
+			mStockDatabaseManager.getStock(stock);
+
+			mTotalShare = new TotalShare();
+			mTotalShare.setStockId(stock.getId());
+
+			mStockDatabaseManager.getTotalShare(stock.getId(), mTotalShare);
+			if (mTotalShare.getCreated().contains(
+					Utility.getCurrentDateString())
+					|| mTotalShare.getModified().contains(
+							Utility.getCurrentDateString())) {
+				if (mTotalShare.getTotalShare() > 0) {
+					return "";
+				}
+			}
+
+			setStock(stock);
+
+			return downloadTotalShare(getTotalShareURLString(stock));
+		}
+
+		String downloadTotalShare(String urlString) {
+			String responseString = "";
+
+			Log.d(TAG, "downloadTotalShare:" + urlString);
+
+			Request.Builder builder = new Request.Builder();
+			builder.url(urlString);
+			Request request = builder.build();
+
+			try {
+				Response response = mOkHttpClient.newCall(request).execute();
+				if (response != null) {
+					responseString = response.body().string();
+					handleResponseTotalShare(mStock, mTotalShare,
+							responseString);
+
+					Thread.sleep(Constants.DEFAULT_DOWNLOAD_INTERVAL);
+
+					sendBroadcast(Constants.ACTION_SERVICE_FINISHED,
+							Constants.SERVICE_DATABASE_UPDATE, 0);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			return responseString;
+		}
+
 		@Override
 		protected String doInBackground(String... params) {
 			ArrayMap<String, Stock> stockArrayMapFavorite = new ArrayMap<String, Stock>();
@@ -1109,6 +1169,11 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				}
 
 				responseString = downloadShareBonus(stock);
+				if (responseString.contains(mAccessDeniedString)) {
+					break;
+				}
+
+				responseString = downloadTotalShare(stock);
 				if (responseString.contains(mAccessDeniedString)) {
 					break;
 				}

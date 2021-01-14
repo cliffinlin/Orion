@@ -28,7 +28,7 @@
     <string name="action_order_by_rate">Order by Rate</string>
     <string name="action_order_by_pe">Order by Pe</string>
     <string name="action_order_by_yield">Order by Yield</string>
-    <string name="action_order_by_delta">Order by Delta</string>
+    <string name="action_order_by_dividend_ratio">Order by DRatio</string>
     <string name="added">Added</string>
     <string name="alarm">Alarm</string>
     <string name="app_name">Orion</string>
@@ -130,7 +130,7 @@
     <string name="intercept">Intercept</string>
     <string name="mean">Mean</string>
     <string name="std">STD</string>
-    <string name="delta">Delta</string>
+    <string name="dividend_ratio">DRatio</string>
     <string name="start_service">Start</string>
     <string name="stop_service">Stop</string>
     <string name="stock">Stock</string>

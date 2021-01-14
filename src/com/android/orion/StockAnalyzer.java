@@ -108,7 +108,7 @@ public class StockAnalyzer extends StockManager {
 		stock.setupNetProfitPerShareInYear(financialDataList);
 		stock.setupNetProfitPerShareLastYear(financialDataList);
 		stock.setupRate();
-		stock.setupDebtToNetAssetsRato();
+		stock.setupDebtToNetAssetsRatio();
 		stock.setupRoe(financialDataList);
 		stock.setupPE();
 		stock.setupPB();
@@ -153,7 +153,7 @@ public class StockAnalyzer extends StockManager {
 					Constants.DOUBLE_FIXED_DECIMAL));
 			stock.setupBonus();
 			stock.setupYield();
-			stock.setupDelta();
+			stock.setupDividendRatio();
 
 			prevYearString = yearString;
 			i++;

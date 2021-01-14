@@ -21,7 +21,7 @@ public class StockFilter extends Setting {
 	String mPB = "";
 	String mDividend = "";
 	String mYield = "";
-	String mDelta = "";
+	String mDividendRatio = "";
 
 	public StockFilter(Context context) {
 		mContext = context;
@@ -67,8 +67,8 @@ public class StockFilter extends Setting {
 		return mYield;
 	}
 
-	public String getDelta() {
-		return mDelta;
+	public String getDividendRatio() {
+		return mDividendRatio;
 	}
 
 	public void setEnabled(boolean enabled) {
@@ -111,8 +111,8 @@ public class StockFilter extends Setting {
 		mYield = yield;
 	}
 
-	public void setDelta(String delta) {
-		mDelta = delta;
+	public void setDividendRatio(String dividendRatio) {
+		mDividendRatio = dividendRatio;
 	}
 
 	boolean containOperation(String valueString) {
@@ -161,8 +161,8 @@ public class StockFilter extends Setting {
 			mYield = "";
 		}
 
-		if (!containOperation(mDelta)) {
-			mDelta = "";
+		if (!containOperation(mDividendRatio)) {
+			mDividendRatio = "";
 		}
 	}
 
@@ -187,8 +187,8 @@ public class StockFilter extends Setting {
 				Setting.KEY_STOCK_FILTER_DIVIDEND, "");
 		mYield = Preferences.readString(mContext,
 				Setting.KEY_STOCK_FILTER_YIELD, "");
-		mDelta = Preferences.readString(mContext,
-				Setting.KEY_STOCK_FILTER_DELTA, "");
+		mDividendRatio = Preferences.readString(mContext,
+				Setting.KEY_STOCK_FILTER_DIVIDEND_RATIO, "");
 
 		validate();
 	}
@@ -211,8 +211,8 @@ public class StockFilter extends Setting {
 				mDividend);
 		Preferences.writeString(mContext, Setting.KEY_STOCK_FILTER_YIELD,
 				mYield);
-		Preferences.writeString(mContext, Setting.KEY_STOCK_FILTER_DELTA,
-				mDelta);
+		Preferences.writeString(mContext,
+				Setting.KEY_STOCK_FILTER_DIVIDEND_RATIO, mDividendRatio);
 	}
 
 	public void get(Bundle bundle) {
@@ -231,7 +231,8 @@ public class StockFilter extends Setting {
 		mPB = bundle.getString(Setting.KEY_STOCK_FILTER_PB);
 		mDividend = bundle.getString(Setting.KEY_STOCK_FILTER_DIVIDEND);
 		mYield = bundle.getString(Setting.KEY_STOCK_FILTER_YIELD);
-		mDelta = bundle.getString(Setting.KEY_STOCK_FILTER_DELTA);
+		mDividendRatio = bundle
+				.getString(Setting.KEY_STOCK_FILTER_DIVIDEND_RATIO);
 	}
 
 	public void put(Bundle bundle) {
@@ -250,7 +251,8 @@ public class StockFilter extends Setting {
 		bundle.putString(Setting.KEY_STOCK_FILTER_PB, mPB);
 		bundle.putString(Setting.KEY_STOCK_FILTER_DIVIDEND, mDividend);
 		bundle.putString(Setting.KEY_STOCK_FILTER_YIELD, mYield);
-		bundle.putString(Setting.KEY_STOCK_FILTER_DELTA, mDelta);
+		bundle.putString(Setting.KEY_STOCK_FILTER_DIVIDEND_RATIO,
+				mDividendRatio);
 	}
 
 	public String getSelection() {
@@ -297,8 +299,9 @@ public class StockFilter extends Setting {
 				selection += " AND " + DatabaseContract.COLUMN_YIELD + mYield;
 			}
 
-			if (!TextUtils.isEmpty(mDelta)) {
-				selection += " AND " + DatabaseContract.COLUMN_DELTA + mDelta;
+			if (!TextUtils.isEmpty(mDividendRatio)) {
+				selection += " AND " + DatabaseContract.COLUMN_DIVIDEND_RATIO
+						+ mDividendRatio;
 			}
 		}
 

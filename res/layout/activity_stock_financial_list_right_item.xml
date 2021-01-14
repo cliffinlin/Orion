@@ -182,7 +182,7 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/delta"
+        android:id="@+id/dividend_ratio"
         android:layout_width="80dp"
         android:layout_height="50dp"
         android:layout_weight="1"

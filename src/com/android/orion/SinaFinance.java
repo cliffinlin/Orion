@@ -22,6 +22,7 @@ import com.android.orion.database.IPO;
 import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
+import com.android.orion.database.TotalShare;
 import com.android.orion.utility.Pinyin;
 import com.android.orion.utility.StopWatch;
 import com.android.orion.utility.Utility;
@@ -35,7 +36,8 @@ public class SinaFinance extends StockDataProvider {
 	private static final String SINA_FINANCE_URL_HQ_JS_LIST = "http://hq.sinajs.cn/list=";
 	private static final String SINA_FINANCE_URL_HQ_JS_LIST_SIMPLE = "http://hq.sinajs.cn/list=s_";
 	private static final String SINA_FINANCE_URL_VFD_FINANCESUMMARY = "http://money.finance.sina.com.cn/corp/go.php/vFD_FinanceSummary/stockid/";// stock_id.phtml
-	private static final String SINA_FINANCE_URL_ISSUE_SHAREBONUS = "http://vip.stock.finance.sina.com.cn/corp/go.php/vISSUE_ShareBonus/stockid/";// stock_id.phtml
+	private static final String SINA_FINANCE_URL_VISSUE_SHAREBONUS = "http://vip.stock.finance.sina.com.cn/corp/go.php/vISSUE_ShareBonus/stockid/";// stock_id.phtml
+	private static final String SINA_FINANCE_URL_VCI_STOCK_STRUCTURE_HISTORY = "http://vip.stock.finance.sina.com.cn/corp/go.php/vCI_StockStructureHistory/stockid/";// stocktype/TotalStock.phtml
 	private static final String SINA_FINANCE_URL_NEWSTOCK_ISSUE = "https://vip.stock.finance.sina.com.cn/corp/go.php/vRPD_NewStockIssue/page/1.phtml";
 
 	private static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN5 = 242;
@@ -231,8 +233,19 @@ public class SinaFinance extends StockDataProvider {
 		if (stock == null) {
 			return urlString;
 		}
-		urlString = SINA_FINANCE_URL_ISSUE_SHAREBONUS + stock.getCode()
+		urlString = SINA_FINANCE_URL_VISSUE_SHAREBONUS + stock.getCode()
 				+ ".phtml";
+		return urlString;
+	}
+
+	@Override
+	String getTotalShareURLString(Stock stock) {
+		String urlString = "";
+		if (stock == null) {
+			return urlString;
+		}
+		urlString = SINA_FINANCE_URL_VCI_STOCK_STRUCTURE_HISTORY
+				+ stock.getCode() + "/stocktype/TotalStock.phtml";
 		return urlString;
 	}
 
@@ -963,10 +976,8 @@ public class SinaFinance extends StockDataProvider {
 			return;
 		}
 
-		// if (TextUtils.isEmpty(shareBonus.getCreated())) {
 		mStockDatabaseManager.deleteShareBonus(shareBonus.getStockId());
 		bulkInsert = true;
-		// }
 
 		try {
 			// String responseString = new
@@ -1084,6 +1095,146 @@ public class SinaFinance extends StockDataProvider {
 
 		stopWatch.stop();
 		Log.d(TAG, "handleResponseShareBonus:" + stock.getName() + " "
+				+ stopWatch.getInterval() + "s");
+	}
+
+	@Override
+	void handleResponseTotalShare(Stock stock, TotalShare totalShare,
+			String response) {
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start();
+
+		boolean bulkInsert = false;
+		String dateString = "";
+		String totalShareString = "";
+		List<ContentValues> contentValuesList = new ArrayList<ContentValues>();
+
+		if ((stock == null) || TextUtils.isEmpty(response)) {
+			Log.d(TAG, "handleResponseTotalShare return " + " stock = " + stock
+					+ " response = " + response);
+			return;
+		}
+
+		mStockDatabaseManager.deleteTotalShare(totalShare.getStockId());
+		bulkInsert = true;
+
+		try {
+			// String responseString = new
+			// String(response.getBytes("ISO-8859-1"),
+			// "GB2312");
+
+			Document doc = Jsoup.parse(response);
+			if (doc == null) {
+				Log.d(TAG, "handleResponseTotalShare return " + " doc = " + doc);
+				return;
+			}
+
+			Elements tableElements = doc.select("table[id^=historyTable]");
+			if (tableElements == null) {
+				Log.d(TAG, "handleResponseTotalShare return "
+						+ " tableElements = " + tableElements);
+				return;
+			}
+
+			Elements tbodyElements = tableElements.select("tbody");
+			if (tbodyElements == null) {
+				Log.d(TAG, "handleResponseTotalShare return "
+						+ " tbodyElements = " + tbodyElements);
+				return;
+			}
+
+			for (Element tbodyElement : tbodyElements) {
+				if (tbodyElement == null) {
+					Log.d(TAG, "handleResponseTotalShare return "
+							+ " tbodyElement = " + tbodyElement);
+					return;
+				}
+
+				Elements trElements = tbodyElement.select("tr");
+				if (trElements == null) {
+					Log.d(TAG, "handleResponseTotalShare return "
+							+ " trElements = " + trElements);
+					return;
+				}
+
+				for (Element trElement : trElements) {
+					if (trElement == null) {
+						Log.d(TAG, "handleResponseTotalShare continue "
+								+ " trElement = " + trElement);
+						continue;
+					}
+
+					Elements tdElements = trElement.select("td");
+					if (tdElements == null) {
+						Log.d(TAG, "handleResponseTotalShare continue "
+								+ " tdElements = " + tdElements);
+						continue;
+					}
+
+					if (tdElements.size() < 2) {
+						Log.d(TAG, "handleResponseTotalShare continue "
+								+ " tdElements.size() = " + tdElements.size());
+						continue;
+					}
+
+					dateString = tdElements.get(0).text();
+					if (TextUtils.isEmpty(dateString)
+							|| dateString.contains("--")) {
+						continue;
+					}
+
+					totalShareString = tdElements.get(1).text();
+					if (TextUtils.isEmpty(totalShareString)
+							|| totalShareString.contains("--")) {
+						continue;
+					}
+
+					if (totalShareString.contains("万股")) {
+						totalShareString = totalShareString.replace("万股", "");
+						totalShare.setDate(dateString);
+						totalShare.setTotalShare(Double
+								.valueOf(totalShareString)
+								* Constants.DOUBLE_CONSTANT_WAN);
+					} else {
+						continue;
+					}
+
+					if (bulkInsert) {
+						totalShare.setCreated(Utility
+								.getCurrentDateTimeString());
+						contentValuesList.add(totalShare.getContentValues());
+					} else {
+						if (!mStockDatabaseManager
+								.isTotalShareExist(totalShare)) {
+							totalShare.setCreated(Utility
+									.getCurrentDateTimeString());
+							mStockDatabaseManager.insertTotalShare(totalShare);
+						} else {
+							totalShare.setModified(Utility
+									.getCurrentDateTimeString());
+							mStockDatabaseManager.updateTotalShare(totalShare,
+									totalShare.getContentValues());
+						}
+					}
+				}
+			}
+
+			if (bulkInsert) {
+				if (contentValuesList.size() > 0) {
+					ContentValues[] contentValuesArray = new ContentValues[contentValuesList
+							.size()];
+					contentValuesArray = (ContentValues[]) contentValuesList
+							.toArray(contentValuesArray);
+					mStockDatabaseManager
+							.bulkInsertTotalShare(contentValuesArray);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		stopWatch.stop();
+		Log.d(TAG, "handleResponseTotalShare:" + stock.getName() + " "
 				+ stopWatch.getInterval() + "s");
 	}
 

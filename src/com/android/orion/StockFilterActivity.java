@@ -27,7 +27,7 @@ public class StockFilterActivity extends DatabaseActivity implements
 	EditText mEditTextPB;
 	EditText mEditTextDividend;
 	EditText mEditTextYield;
-	EditText mEditTextDelta;
+	EditText mEditTextDividendRatio;
 
 	Button mButtonOk;
 	Button mButtonCancel;
@@ -54,7 +54,7 @@ public class StockFilterActivity extends DatabaseActivity implements
 		mEditTextPB = (EditText) findViewById(R.id.edittext_pb);
 		mEditTextDividend = (EditText) findViewById(R.id.edittext_dividend);
 		mEditTextYield = (EditText) findViewById(R.id.edittext_yield);
-		mEditTextDelta = (EditText) findViewById(R.id.edittext_delta);
+		mEditTextDividendRatio = (EditText) findViewById(R.id.edittext_dividend_ratio);
 
 		mButtonOk = (Button) findViewById(R.id.button_ok);
 		mButtonCancel = (Button) findViewById(R.id.button_cancel);
@@ -70,7 +70,7 @@ public class StockFilterActivity extends DatabaseActivity implements
 		mEditTextPB.setOnClickListener(this);
 		mEditTextDividend.setOnClickListener(this);
 		mEditTextYield.setOnClickListener(this);
-		mEditTextDelta.setOnClickListener(this);
+		mEditTextDividendRatio.setOnClickListener(this);
 
 		mButtonOk.setOnClickListener(this);
 		mButtonCancel.setOnClickListener(this);
@@ -92,7 +92,7 @@ public class StockFilterActivity extends DatabaseActivity implements
 		mEditTextPB.setText(mStockFilter.getPB());
 		mEditTextDividend.setText(mStockFilter.getDividend());
 		mEditTextYield.setText(mStockFilter.getYield());
-		mEditTextDelta.setText(mStockFilter.getDelta());
+		mEditTextDividendRatio.setText(mStockFilter.getDividendRatio());
 
 		mEditTextHold.setEnabled(mStockFilter.getEnabled());
 		mEditTextRoi.setEnabled(mStockFilter.getEnabled());
@@ -102,7 +102,7 @@ public class StockFilterActivity extends DatabaseActivity implements
 		mEditTextPB.setEnabled(mStockFilter.getEnabled());
 		mEditTextDividend.setEnabled(mStockFilter.getEnabled());
 		mEditTextYield.setEnabled(mStockFilter.getEnabled());
-		mEditTextDelta.setEnabled(mStockFilter.getEnabled());
+		mEditTextDividendRatio.setEnabled(mStockFilter.getEnabled());
 	}
 
 	@Override
@@ -150,7 +150,8 @@ public class StockFilterActivity extends DatabaseActivity implements
 			mStockFilter.setPB(mEditTextPB.getText().toString());
 			mStockFilter.setDividend(mEditTextDividend.getText().toString());
 			mStockFilter.setYield(mEditTextYield.getText().toString());
-			mStockFilter.setDelta(mEditTextDelta.getText().toString());
+			mStockFilter.setDividendRatio(mEditTextDividendRatio.getText()
+					.toString());
 
 			mStockFilter.write();
 

@@ -22,7 +22,7 @@ public class StockStatisticsChart {
 	ArrayList<Entry> mRoeEntryList = null;
 	ArrayList<Entry> mRateEntryList = null;
 	ArrayList<Entry> mYieldEntryList = null;
-	ArrayList<Entry> mDeltaEntryList = null;
+	ArrayList<Entry> mDividendRatioEntryList = null;
 
 	CombinedData mCombinedDataMain = null;
 
@@ -51,8 +51,8 @@ public class StockStatisticsChart {
 			mYieldEntryList = new ArrayList<Entry>();
 		}
 
-		if (mDeltaEntryList == null) {
-			mDeltaEntryList = new ArrayList<Entry>();
+		if (mDividendRatioEntryList == null) {
+			mDividendRatioEntryList = new ArrayList<Entry>();
 		}
 
 		if (mCombinedDataMain == null) {
@@ -101,12 +101,13 @@ public class StockStatisticsChart {
 		yieldDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(yieldDataSet);
 
-		LineDataSet deltaDataSet = new LineDataSet(mDeltaEntryList, "delta");
-		deltaDataSet.setColor(Color.BLUE);
-		deltaDataSet.setCircleColor(Color.BLUE);
-		deltaDataSet.setCircleSize(3f);
-		deltaDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		lineData.addDataSet(deltaDataSet);
+		LineDataSet dividendRatioDataSet = new LineDataSet(
+				mDividendRatioEntryList, "dividen_ratio");
+		dividendRatioDataSet.setColor(Color.BLUE);
+		dividendRatioDataSet.setCircleColor(Color.BLUE);
+		dividendRatioDataSet.setCircleSize(3f);
+		dividendRatioDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+		lineData.addDataSet(dividendRatioDataSet);
 
 		mCombinedDataMain.setData(lineData);
 		mCombinedDataMain.setData(barData);
@@ -120,6 +121,6 @@ public class StockStatisticsChart {
 		mRoeEntryList.clear();
 		mRateEntryList.clear();
 		mYieldEntryList.clear();
-		mDeltaEntryList.clear();
+		mDividendRatioEntryList.clear();
 	}
 }

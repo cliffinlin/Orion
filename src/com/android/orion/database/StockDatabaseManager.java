@@ -1580,6 +1580,272 @@ public class StockDatabaseManager extends DatabaseManager {
 		return DatabaseContract.COLUMN_DATE + " ASC ";
 	}
 
+	public Uri insertTotalShare(TotalShare totalShare) {
+		Uri uri = null;
+
+		if ((totalShare == null) || (mContentResolver == null)) {
+			return uri;
+		}
+
+		uri = mContentResolver.insert(DatabaseContract.TotalShare.CONTENT_URI,
+				totalShare.getContentValues());
+
+		return uri;
+	}
+
+	public int bulkInsertTotalShare(ContentValues[] contentValuesArray) {
+		int result = 0;
+
+		if ((contentValuesArray.length == 0) || (mContentResolver == null)) {
+			return result;
+		}
+
+		result = mContentResolver.bulkInsert(
+				DatabaseContract.TotalShare.CONTENT_URI, contentValuesArray);
+
+		return result;
+	}
+
+	public Cursor queryTotalShare(String selection, String[] selectionArgs,
+			String sortOrder) {
+		Cursor cursor = null;
+
+		if (mContentResolver == null) {
+			return cursor;
+		}
+
+		cursor = mContentResolver.query(
+				DatabaseContract.TotalShare.CONTENT_URI,
+				DatabaseContract.TotalShare.PROJECTION_ALL, selection,
+				selectionArgs, sortOrder);
+
+		return cursor;
+	}
+
+	public Cursor queryTotalShare(TotalShare totalShare) {
+		Cursor cursor = null;
+
+		if ((totalShare == null) || (mContentResolver == null)) {
+			return cursor;
+		}
+
+		String selection = getTotalShareSelection(totalShare);
+		String sortOrder = getTotalShareOrder();
+
+		cursor = mContentResolver.query(
+				DatabaseContract.TotalShare.CONTENT_URI,
+				DatabaseContract.TotalShare.PROJECTION_ALL, selection, null,
+				sortOrder);
+
+		return cursor;
+	}
+
+	public void getTotalShare(TotalShare totalShare) {
+		Cursor cursor = null;
+
+		if ((totalShare == null) || (mContentResolver == null)) {
+			return;
+		}
+
+		try {
+			String selection = getTotalShareSelection(totalShare);
+			String sortOrder = getTotalShareOrder();
+
+			cursor = mContentResolver.query(
+					DatabaseContract.TotalShare.CONTENT_URI,
+					DatabaseContract.TotalShare.PROJECTION_ALL, selection,
+					null, sortOrder);
+
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				cursor.moveToNext();
+				totalShare.set(cursor);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
+	public void getTotalShare(long stockId, TotalShare totalShare) {
+		Cursor cursor = null;
+
+		if ((totalShare == null) || (mContentResolver == null)) {
+			return;
+		}
+
+		try {
+			String selection = getTotalShareSelection(stockId);
+			String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
+
+			cursor = mContentResolver.query(
+					DatabaseContract.TotalShare.CONTENT_URI,
+					DatabaseContract.TotalShare.PROJECTION_ALL, selection,
+					null, sortOrder);
+
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				cursor.moveToNext();
+				totalShare.set(cursor);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
+	public void getTotalShareList(Stock stock,
+			ArrayList<TotalShare> totalShareList, String sortOrder) {
+		Cursor cursor = null;
+
+		if ((stock == null) || (totalShareList == null)) {
+			return;
+		}
+
+		totalShareList.clear();
+
+		String selection = getTotalShareSelection(stock.getId());
+
+		try {
+			cursor = queryTotalShare(selection, null, sortOrder);
+
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				while (cursor.moveToNext()) {
+					TotalShare totalShare = new TotalShare();
+					totalShare.set(cursor);
+					totalShareList.add(totalShare);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
+	public boolean isTotalShareExist(TotalShare totalShare) {
+		boolean result = false;
+		Cursor cursor = null;
+
+		if (totalShare == null) {
+			return result;
+		}
+
+		try {
+			cursor = queryTotalShare(totalShare);
+
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				cursor.moveToNext();
+				totalShare.setCreated(cursor);
+				result = true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+
+		return result;
+	}
+
+	public int updateTotalShare(TotalShare totalShare,
+			ContentValues contentValues) {
+		int result = 0;
+
+		if ((totalShare == null) || (mContentResolver == null)) {
+			return result;
+		}
+
+		String where = getTotalShareSelection(totalShare);
+
+		result = mContentResolver.update(
+				DatabaseContract.TotalShare.CONTENT_URI, contentValues, where,
+				null);
+
+		return result;
+	}
+
+	public int deleteTotalShare() {
+		int result = 0;
+
+		if (mContentResolver == null) {
+			return result;
+		}
+
+		result = mContentResolver.delete(
+				DatabaseContract.TotalShare.CONTENT_URI, null, null);
+
+		return result;
+	}
+
+	public int deleteTotalShare(TotalShare totalShare) {
+		int result = 0;
+
+		if ((totalShare == null) || (mContentResolver == null)) {
+			return result;
+		}
+
+		String where = getTotalShareSelection(totalShare);
+
+		result = mContentResolver.delete(
+				DatabaseContract.TotalShare.CONTENT_URI, where, null);
+
+		return result;
+	}
+
+	public void deleteTotalShare(long stockId) {
+		Uri uri = DatabaseContract.TotalShare.CONTENT_URI;
+
+		String where = getTotalShareSelection(stockId);
+
+		try {
+			mContentResolver.delete(uri, where, null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public int deleteTotalShare(long stockId, String date) {
+		int result = 0;
+
+		if (mContentResolver == null) {
+			return result;
+		}
+
+		String where = getTotalShareSelection(stockId, date);
+
+		result = mContentResolver.delete(
+				DatabaseContract.TotalShare.CONTENT_URI, where, null);
+
+		return result;
+	}
+
+	public String getTotalShareSelection(TotalShare totalShare) {
+		String selection = "";
+
+		if (totalShare == null) {
+			return selection;
+		}
+
+		selection = getTotalShareSelection(totalShare.getStockId(),
+				totalShare.getDate());
+
+		return selection;
+	}
+	
+	public String getTotalShareSelection(long stockId) {
+		return DatabaseContract.COLUMN_STOCK_ID + " = " + stockId;
+	}
+
+	public String getTotalShareSelection(long stockId, String date) {
+		return DatabaseContract.COLUMN_STOCK_ID + " = " + stockId + " AND "
+				+ DatabaseContract.COLUMN_DATE + " = '" + date + "'";
+	}
+
+	public String getTotalShareOrder() {
+		return DatabaseContract.COLUMN_DATE + " ASC ";
+	}
+
 	public Uri insertIPO(IPO ipo) {
 		Uri uri = null;
 

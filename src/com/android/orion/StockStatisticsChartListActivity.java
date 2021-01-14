@@ -191,8 +191,8 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 			restartLoader();
 			return true;
 
-		case R.id.action_order_by_delta:
-			mSortOrder = DatabaseContract.COLUMN_DELTA
+		case R.id.action_order_by_dividend_ratio:
+			mSortOrder = DatabaseContract.COLUMN_DIVIDEND_RATIO
 					+ DatabaseContract.ORDER_DIRECTION_DESC;
 			restartLoader();
 			return true;
@@ -399,9 +399,10 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 							index);
 					stockDataChart.mYieldEntryList.add(yieldEntry);
 
-					Entry deltaEntry = new Entry((float) stock.getDelta(),
-							index);
-					stockDataChart.mDeltaEntryList.add(deltaEntry);
+					Entry dividendRatioEntry = new Entry(
+							(float) stock.getDividendRatio(), index);
+					stockDataChart.mDividendRatioEntryList
+							.add(dividendRatioEntry);
 
 					mTotalBonus += (float) stock.getBonus();
 

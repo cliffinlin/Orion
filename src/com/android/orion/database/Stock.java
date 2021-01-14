@@ -40,7 +40,7 @@ public class Stock extends DatabaseTable {
 	private double mMarketValue;
 	private double mTotalAssets;
 	private double mTotalLongTermLiabilities;
-	private double mDebtToNetAssetsRato;
+	private double mDebtToNetAssetsRatio;
 	private double mBookValuePerShare;
 	private double mCashFlowPerShare;
 	private double mNetProfit;
@@ -54,7 +54,7 @@ public class Stock extends DatabaseTable {
 	private double mPB;
 	private double mDividend;
 	private double mYield;
-	private double mDelta;
+	private double mDividendRatio;
 	private String mDate;
 	private String mRDate;
 
@@ -117,7 +117,7 @@ public class Stock extends DatabaseTable {
 		mMarketValue = 0;
 		mTotalAssets = 0;
 		mTotalLongTermLiabilities = 0;
-		mDebtToNetAssetsRato = 0;
+		mDebtToNetAssetsRatio = 0;
 		mBookValuePerShare = 0;
 		mCashFlowPerShare = 0;
 		mNetProfit = 0;
@@ -131,7 +131,7 @@ public class Stock extends DatabaseTable {
 		mPB = 0;
 		mDividend = 0;
 		mYield = 0;
-		mDelta = 0;
+		mDividendRatio = 0;
 		mDate = "";
 		mRDate = "";
 	}
@@ -168,12 +168,12 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_BONUS, mBonus);
 		contentValues.put(DatabaseContract.COLUMN_VALUATION, mValuation);
 		contentValues.put(DatabaseContract.COLUMN_TOTAL_SHARE, mTotalShare);
-		contentValues.put(DatabaseContract.COLUMN_MARKET_VALUE, mMarketValue);	
+		contentValues.put(DatabaseContract.COLUMN_MARKET_VALUE, mMarketValue);
 		contentValues.put(DatabaseContract.COLUMN_TOTAL_ASSETS, mTotalAssets);
 		contentValues.put(DatabaseContract.COLUMN_TOTAL_LONG_TERM_LIABILITIES,
 				mTotalLongTermLiabilities);
 		contentValues.put(DatabaseContract.COLUMN_DEBT_TO_NET_ASSETS_RATIO,
-				mDebtToNetAssetsRato);
+				mDebtToNetAssetsRatio);
 		contentValues.put(DatabaseContract.COLUMN_BOOK_VALUE_PER_SHARE,
 				mBookValuePerShare);
 		contentValues.put(DatabaseContract.COLUMN_CASH_FLOW_PER_SHARE,
@@ -193,7 +193,8 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_PB, mPB);
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND, mDividend);
 		contentValues.put(DatabaseContract.COLUMN_YIELD, mYield);
-		contentValues.put(DatabaseContract.COLUMN_DELTA, mDelta);
+		contentValues.put(DatabaseContract.COLUMN_DIVIDEND_RATIO,
+				mDividendRatio);
 		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);
 		contentValues.put(DatabaseContract.COLUMN_R_DATE, mRDate);
 
@@ -245,7 +246,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_TOTAL_LONG_TERM_LIABILITIES,
 				mTotalLongTermLiabilities);
 		contentValues.put(DatabaseContract.COLUMN_DEBT_TO_NET_ASSETS_RATIO,
-				mDebtToNetAssetsRato);
+				mDebtToNetAssetsRatio);
 		contentValues.put(DatabaseContract.COLUMN_BOOK_VALUE_PER_SHARE,
 				mBookValuePerShare);
 		contentValues.put(DatabaseContract.COLUMN_CASH_FLOW_PER_SHARE,
@@ -266,7 +267,8 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND, mDividend);
 		contentValues.put(DatabaseContract.COLUMN_BONUS, mBonus);
 		contentValues.put(DatabaseContract.COLUMN_YIELD, mYield);
-		contentValues.put(DatabaseContract.COLUMN_DELTA, mDelta);
+		contentValues.put(DatabaseContract.COLUMN_DIVIDEND_RATIO,
+				mDividendRatio);
 		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);
 		contentValues.put(DatabaseContract.COLUMN_R_DATE, mRDate);
 
@@ -313,7 +315,7 @@ public class Stock extends DatabaseTable {
 		setMarketValue(stock.mMarketValue);
 		setTotalAssets(stock.mTotalAssets);
 		setTotalLongTermLiabilities(stock.mTotalLongTermLiabilities);
-		setDebtToNetAssetsRato(stock.mDebtToNetAssetsRato);
+		setDebtToNetAssetsRatio(stock.mDebtToNetAssetsRatio);
 		setBookValuePerShare(stock.mBookValuePerShare);
 		setCashFlowPerShare(stock.mCashFlowPerShare);
 		setNetProfit(stock.mNetProfit);
@@ -327,7 +329,7 @@ public class Stock extends DatabaseTable {
 		setPB(stock.mPB);
 		setDividend(stock.mDividend);
 		setYield(stock.mYield);
-		setDelta(stock.mDelta);
+		setDividendRatio(stock.mDividendRatio);
 		setDate(stock.mDate);
 		setRDate(stock.mRDate);
 	}
@@ -374,7 +376,7 @@ public class Stock extends DatabaseTable {
 		setTotalAssets(cursor);
 		setTotalLongTermLiabilities(cursor);
 		setNetProfit(cursor);
-		setDebtToNetAssetsRato(cursor);
+		setDebtToNetAssetsRatio(cursor);
 		setBookValuePerShare(cursor);
 		setCashFlowPerShare(cursor);
 		setNetProfitPerShare(cursor);
@@ -388,7 +390,7 @@ public class Stock extends DatabaseTable {
 		setDate(cursor);
 		setDividend(cursor);
 		setYield(cursor);
-		setDelta(cursor);
+		setDividendRatio(cursor);
 		setRDate(cursor);
 	}
 
@@ -884,7 +886,7 @@ public class Stock extends DatabaseTable {
 		setMarketValue(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_MARKET_VALUE)));
 	}
-	
+
 	public double getTotalAssets() {
 		return mTotalAssets;
 	}
@@ -920,20 +922,20 @@ public class Stock extends DatabaseTable {
 						.getColumnIndex(DatabaseContract.COLUMN_TOTAL_LONG_TERM_LIABILITIES)));
 	}
 
-	public double getDebtToNetAssetsRato() {
-		return mDebtToNetAssetsRato;
+	public double getDebtToNetAssetsRatio() {
+		return mDebtToNetAssetsRatio;
 	}
 
-	public void setDebtToNetAssetsRato(double debtToNetAssetsRato) {
-		mDebtToNetAssetsRato = debtToNetAssetsRato;
+	public void setDebtToNetAssetsRatio(double debtToNetAssetsRatio) {
+		mDebtToNetAssetsRatio = debtToNetAssetsRatio;
 	}
 
-	void setDebtToNetAssetsRato(Cursor cursor) {
+	void setDebtToNetAssetsRatio(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}
 
-		setDebtToNetAssetsRato(cursor
+		setDebtToNetAssetsRatio(cursor
 				.getDouble(cursor
 						.getColumnIndex(DatabaseContract.COLUMN_DEBT_TO_NET_ASSETS_RATIO)));
 	}
@@ -1161,21 +1163,21 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_YIELD)));
 	}
 
-	public double getDelta() {
-		return mDelta;
+	public double getDividendRatio() {
+		return mDividendRatio;
 	}
 
-	public void setDelta(double delta) {
-		mDelta = delta;
+	public void setDividendRatio(double dividendRatio) {
+		mDividendRatio = dividendRatio;
 	}
 
-	void setDelta(Cursor cursor) {
+	void setDividendRatio(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}
 
-		setDelta(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_DELTA)));
+		setDividendRatio(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_DIVIDEND_RATIO)));
 	}
 
 	public String getDate() {
@@ -1273,17 +1275,18 @@ public class Stock extends DatabaseTable {
 
 		mRate = Utility.Round(mRate, Constants.DOUBLE_FIXED_DECIMAL);
 	}
-	
+
 	public void setupMarketValue() {
 		if (mPrice == 0) {
 			return;
 		}
-		
+
 		if (mTotalShare == 0) {
 			return;
 		}
-		
-		mMarketValue = Utility.Round(mPrice * mTotalShare, Constants.DOUBLE_FIXED_DECIMAL);
+
+		mMarketValue = Utility.Round(mPrice * mTotalShare,
+				Constants.DOUBLE_FIXED_DECIMAL);
 	}
 
 	public void setupNetProfitPerShare() {
@@ -1355,7 +1358,7 @@ public class Stock extends DatabaseTable {
 		}
 	}
 
-	public void setupDebtToNetAssetsRato() {
+	public void setupDebtToNetAssetsRatio() {
 		if (mTotalLongTermLiabilities == 0) {
 			return;
 		}
@@ -1368,7 +1371,7 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-		mDebtToNetAssetsRato = Utility.Round(mTotalLongTermLiabilities
+		mDebtToNetAssetsRatio = Utility.Round(mTotalLongTermLiabilities
 				/ mTotalShare / mBookValuePerShare,
 				Constants.DOUBLE_FIXED_DECIMAL);
 	}
@@ -1411,10 +1414,10 @@ public class Stock extends DatabaseTable {
 	}
 
 	public void setupRoi() {
-//		mRoi = Utility.Round(mRate * mRoe * mPE * Constants.ROI_COEFFICIENT,
-//				Constants.DOUBLE_FIXED_DECIMAL);
-//		mRoi = Utility.Round(mRoe * mPE * Constants.ROI_COEFFICIENT,
-//				Constants.DOUBLE_FIXED_DECIMAL);
+		// mRoi = Utility.Round(mRate * mRoe * mPE * Constants.ROI_COEFFICIENT,
+		// Constants.DOUBLE_FIXED_DECIMAL);
+		// mRoi = Utility.Round(mRoe * mPE * Constants.ROI_COEFFICIENT,
+		// Constants.DOUBLE_FIXED_DECIMAL);
 		mRoi = Utility.Round(mRoe * (mPE + mYield) * Constants.ROI_COEFFICIENT,
 				Constants.DOUBLE_FIXED_DECIMAL);
 	}
@@ -1441,7 +1444,7 @@ public class Stock extends DatabaseTable {
 
 		mBonus = mDividend / 10.0 * mHold;
 	}
-	
+
 	public void setupYield() {
 		if (mPrice == 0) {
 			return;
@@ -1451,7 +1454,7 @@ public class Stock extends DatabaseTable {
 				Constants.DOUBLE_FIXED_DECIMAL);
 	}
 
-	public void setupDelta() {
+	public void setupDividendRatio() {
 		if (mDividend == 0) {
 			return;
 		}
@@ -1464,8 +1467,9 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-		mDelta = (mDividend / 10.0) / mNetProfitPerShareInYear;
+		mDividendRatio = (mDividend / 10.0) / mNetProfitPerShareInYear;
 
-		mDelta = Utility.Round(mDelta, Constants.DOUBLE_FIXED_DECIMAL);
+		mDividendRatio = Utility.Round(mDividendRatio,
+				Constants.DOUBLE_FIXED_DECIMAL);
 	}
 }

@@ -27,6 +27,7 @@ import com.android.orion.database.StockData;
 import com.android.orion.database.StockDatabaseManager;
 import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockFilter;
+import com.android.orion.database.TotalShare;
 
 public class BaseActivity extends Activity {
 	static final String TAG = Constants.TAG + " "
@@ -61,12 +62,14 @@ public class BaseActivity extends Activity {
 	StockDeal mStockDeal = null;
 	FinancialData mFinancialData = null;
 	ShareBonus mShareBonus = null;
+	TotalShare mTotalShare = null;
 
 	ArrayList<Stock> mStockList = null;
 	ArrayList<StockData> mStockDataList = null;
 	ArrayList<StockDeal> mStockDealList = null;
 	ArrayList<FinancialData> mFinancialDataList = null;
 	ArrayList<ShareBonus> mShareBonusList = null;
+	ArrayList<TotalShare> mTotalShareList = null;
 
 	ArrayMap<String, Stock> mStockDealArrayMap = null;
 
@@ -147,6 +150,10 @@ public class BaseActivity extends Activity {
 			mShareBonus = new ShareBonus();
 		}
 
+		if (mTotalShare == null) {
+			mTotalShare = new TotalShare();
+		}
+
 		if (mStockList == null) {
 			mStockList = new ArrayList<Stock>();
 		}
@@ -165,6 +172,10 @@ public class BaseActivity extends Activity {
 
 		if (mShareBonusList == null) {
 			mShareBonusList = new ArrayList<ShareBonus>();
+		}
+
+		if (mTotalShareList == null) {
+			mTotalShareList = new ArrayList<TotalShare>();
 		}
 
 		if (mStockDealArrayMap == null) {
