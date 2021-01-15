@@ -28,7 +28,7 @@ public class StockFinancialChart {
 	ArrayList<Entry> mNetProfitEntryList = null;
 
 	ArrayList<Entry> mBookValuePerShareEntryList = null;
-	ArrayList<Entry> mEarningsPerShareEntryList = null;
+	ArrayList<Entry> mNetProfitPerShareEntryList = null;
 	ArrayList<Entry> mCashFlowPerShareEntryList = null;
 	ArrayList<Entry> mROEEntryList = null;
 
@@ -73,8 +73,8 @@ public class StockFinancialChart {
 			mBookValuePerShareEntryList = new ArrayList<Entry>();
 		}
 
-		if (mEarningsPerShareEntryList == null) {
-			mEarningsPerShareEntryList = new ArrayList<Entry>();
+		if (mNetProfitPerShareEntryList == null) {
+			mNetProfitPerShareEntryList = new ArrayList<Entry>();
 		}
 
 		if (mCashFlowPerShareEntryList == null) {
@@ -168,7 +168,7 @@ public class StockFinancialChart {
 		difDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(difDataSet);
 
-		LineDataSet deaDataSet = new LineDataSet(mEarningsPerShareEntryList,
+		LineDataSet deaDataSet = new LineDataSet(mNetProfitPerShareEntryList,
 				"DEA");
 		deaDataSet.setColor(Color.WHITE);
 		deaDataSet.setCircleColor(Color.WHITE);
@@ -283,7 +283,7 @@ public class StockFinancialChart {
 		mTotalCurrentAssetsEntryList.clear();
 		mTotalAssetsEntryList.clear();
 		mBookValuePerShareEntryList.clear();
-		mEarningsPerShareEntryList.clear();
+		mNetProfitPerShareEntryList.clear();
 		mROEEntryList.clear();
 	}
 }

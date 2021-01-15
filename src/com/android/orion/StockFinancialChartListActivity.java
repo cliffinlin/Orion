@@ -474,23 +474,20 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 					financialDataChart.mBookValuePerShareEntryList
 							.add(bookValuePerShareEntry);
 
-					Entry earningsPerShareEntry = new Entry(
-							(float) mFinancialData.getEarningsPerShare(), index);
-					financialDataChart.mEarningsPerShareEntryList
-							.add(earningsPerShareEntry);
-
-					Entry financialDataEntry = new Entry(
-							(float) mFinancialData.getEarningsPerShare(), index);
-					financialDataChart.mEarningsPerShareEntryList
-							.add(financialDataEntry);
-
-					double roe = 0;
-					if (Math.abs(mFinancialData.getBookValuePerShare()) > 0) {
-						roe = mFinancialData.getEarningsPerShare()
-								/ mFinancialData.getBookValuePerShare();
-					}
-					Entry roeEntry = new Entry((float) roe, index);
-					financialDataChart.mROEEntryList.add(roeEntry);
+					// Entry earningsPerShareEntry = new Entry(
+					// (float) mFinancialData.getEarningsPerShare(), index);
+					// financialDataChart.mEarningsPerShareEntryList
+					// .add(earningsPerShareEntry);
+					//
+					// Entry financialDataEntry = new Entry(
+					// (float) mFinancialData.getEarningsPerShare(), index);
+					// financialDataChart.mEarningsPerShareEntryList
+					// .add(financialDataEntry);
+					//
+					// Entry roeEntry = new Entry((float)
+					// mFinancialData.getRoe(),
+					// index);
+					// financialDataChart.mROEEntryList.add(roeEntry);
 				}
 			}
 		} catch (Exception e) {

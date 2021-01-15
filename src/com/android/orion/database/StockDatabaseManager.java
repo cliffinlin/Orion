@@ -552,6 +552,35 @@ public class StockDatabaseManager extends DatabaseManager {
 		}
 	}
 
+	public void getStockDataList(Stock stock, String period,
+			ArrayList<StockData> stockDataList, String sortOrder) {
+		Cursor cursor = null;
+
+		if ((stock == null) || (stockDataList == null)) {
+			return;
+		}
+
+		stockDataList.clear();
+
+		String selection = getStockDataSelection(stock.getId(), period);
+
+		try {
+			cursor = queryStockData(selection, null, sortOrder);
+
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				while (cursor.moveToNext()) {
+					StockData stockData = new StockData();
+					stockData.set(cursor);
+					stockDataList.add(stockData);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+	
 	public boolean isStockDataExist(StockData stockData) {
 		boolean result = false;
 		Cursor cursor = null;

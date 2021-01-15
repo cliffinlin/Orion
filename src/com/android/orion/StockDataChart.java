@@ -39,6 +39,8 @@ public class StockDataChart {
 	ArrayList<Entry> mOverlapLowEntryList = null;
 	ArrayList<Entry> mBookValuePerShareList = null;
 	ArrayList<Entry> mNetProfitPerShareList = null;
+	ArrayList<Entry> mRoeList = null;
+	ArrayList<Entry> mRoiList = null;
 	ArrayList<BarEntry> mDividendEntryList = null;
 
 	ArrayList<Entry> mDIFEntryList = null;
@@ -91,6 +93,14 @@ public class StockDataChart {
 
 		if (mNetProfitPerShareList == null) {
 			mNetProfitPerShareList = new ArrayList<Entry>();
+		}
+
+		if (mRoeList == null) {
+			mRoeList = new ArrayList<Entry>();
+		}
+
+		if (mRoiList == null) {
+			mRoiList = new ArrayList<Entry>();
 		}
 
 		if (mDividendEntryList == null) {
@@ -228,6 +238,18 @@ public class StockDataChart {
 		netProfitPerShareDataSet.setDrawCircles(false);
 		netProfitPerShareDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(netProfitPerShareDataSet);
+
+		LineDataSet roeDataSet = new LineDataSet(mRoeList, "ROE");
+		roeDataSet.setColor(Color.DKGRAY);
+		roeDataSet.setDrawCircles(false);
+		roeDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+		lineData.addDataSet(roeDataSet);
+
+		LineDataSet roiDataSet = new LineDataSet(mRoiList, "ROI");
+		roiDataSet.setColor(Color.RED);
+		roiDataSet.setDrawCircles(false);
+		roiDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+		lineData.addDataSet(roiDataSet);
 
 		BarData barData = new BarData(mXValues);
 		BarDataSet dividendDataSet = new BarDataSet(mDividendEntryList,
@@ -406,6 +428,8 @@ public class StockDataChart {
 		mOverlapLowEntryList.clear();
 		mBookValuePerShareList.clear();
 		mNetProfitPerShareList.clear();
+		mRoeList.clear();
+		mRoiList.clear();
 		mDividendEntryList.clear();
 		mAverageEntryList.clear();
 		mAverage5EntryList.clear();

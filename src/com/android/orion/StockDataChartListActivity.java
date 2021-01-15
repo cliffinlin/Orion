@@ -457,6 +457,8 @@ public class StockDataChartListActivity extends BaseActivity implements
 		int index = 0;
 		float bookValuePerShare = 0;
 		float netProfitPerShare = 0;
+		float roe = 0;
+		float roi = 0;
 		float dividend = 0;
 		String sortOrder = DatabaseContract.COLUMN_DATE + " ASC ";
 		FinancialData financialData = null;
@@ -538,24 +540,23 @@ public class StockDataChartListActivity extends BaseActivity implements
 								.add(overlapLowEntry);
 					}
 
+					roi = (float) mStockData.getRoi();
+					Entry roiEntry = new Entry(roi, index);
+					stockDataChart.mRoiList.add(roiEntry);
+
 					if (mFinancialDataList.size() > 0) {
+						bookValuePerShare = 0;
+						netProfitPerShare = 0;
+						roe = 0;
+
 						financialData = getFinancialDataByDate(dateString,
 								mFinancialDataList);
 						if (financialData != null) {
 							bookValuePerShare = (float) financialData
 									.getBookValuePerShare();
-							netProfitPerShare = 0;
-							if (mStock.getTotalShare() != 0) {
-								netProfitPerShare = (float) (financialData
-										.getNetProfit() / mStock
-										.getTotalShare());
-								netProfitPerShare = netProfitPerShare * 10;// compare
-																			// to
-																			// dividend
-							}
-						} else {
-							bookValuePerShare = 0;
-							netProfitPerShare = 0;
+							netProfitPerShare = (float) financialData
+									.getNetProfitPerShare() * 10;
+							roe = (float) financialData.getRoe();
 						}
 
 						Entry bookValuePerShareEntry = new Entry(
@@ -567,15 +568,18 @@ public class StockDataChartListActivity extends BaseActivity implements
 								netProfitPerShare, index);
 						stockDataChart.mNetProfitPerShareList
 								.add(netProfitPerShareEntry);
+
+						Entry roeEntry = new Entry(roe, index);
+						stockDataChart.mRoeList.add(roeEntry);
 					}
 
 					if (mShareBonusList.size() > 0) {
+						dividend = 0;
+
 						shareBonus = getShareBonusByDate(dateString,
 								mShareBonusList);
 						if (shareBonus != null) {
 							dividend = (float) (shareBonus.getDividend());
-						} else {
-							dividend = 0;
 						}
 
 						BarEntry shareBonusEntry = new BarEntry(dividend, index);

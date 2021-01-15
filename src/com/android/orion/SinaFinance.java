@@ -883,9 +883,6 @@ public class SinaFinance extends StockDataProvider {
 							} else if (keyString.equals("每股净资产-摊薄/期末股数")) {
 								financialData.setBookValuePerShare(Double
 										.valueOf(valueString));
-							} else if (keyString.equals("每股收益-摊薄/期末股数")) {
-								financialData.setEarningsPerShare(Double
-										.valueOf(valueString));
 							} else if (keyString.equals("每股现金流")) {
 								financialData.setCashFlowPerShare(Double
 										.valueOf(valueString));

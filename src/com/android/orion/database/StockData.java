@@ -31,6 +31,11 @@ public class StockData extends StockDatabaseTable {
 	private double mVelocity;
 	private double mAcceleration;
 	private String mAction;
+	
+	private double mRoi;
+	private double mPe;
+	private double mPb;
+	private double mYield;
 
 	private int mIndex;
 	private int mIndexStart;
@@ -93,6 +98,11 @@ public class StockData extends StockDatabaseTable {
 		mVelocity = 0;
 		mAcceleration = 0;
 		mAction = "";
+		
+		mRoi = 0;
+		mPe = 0;
+		mPb = 0;
+		mYield = 0;
 
 		mIndex = 0;
 		mIndexStart = 0;
@@ -134,7 +144,12 @@ public class StockData extends StockDatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_VELOCITY, mVelocity);
 		contentValues.put(DatabaseContract.COLUMN_ACCELERATION, mAcceleration);
 		contentValues.put(DatabaseContract.COLUMN_ACTION, mAction);
-
+		
+		contentValues.put(DatabaseContract.COLUMN_ROI, mRoi);
+		contentValues.put(DatabaseContract.COLUMN_PE, mPe);
+		contentValues.put(DatabaseContract.COLUMN_PB, mPb);
+		contentValues.put(DatabaseContract.COLUMN_YIELD, mYield);
+		
 		return contentValues;
 	}
 
@@ -171,6 +186,11 @@ public class StockData extends StockDatabaseTable {
 		setVelocity(stockData.mVelocity);
 		setAcceleration(stockData.mAcceleration);
 		setAction(stockData.mAction);
+		
+		setRoi(stockData.mRoi);
+		setPe(stockData.mPe);
+		setPb(stockData.mPb);
+		setYield(stockData.mYield);
 
 		setIndex(stockData.mIndex);
 		setIndexStart(stockData.mIndexStart);
@@ -210,6 +230,12 @@ public class StockData extends StockDatabaseTable {
 		setVelocity(cursor);
 		setAcceleration(cursor);
 		setAction(cursor);
+		
+		setRoi(cursor);
+		setPe(cursor);
+		setPb(cursor);
+		setYield(cursor);
+		
 		setTrendsEfforts(cursor);
 	}
 
@@ -619,6 +645,74 @@ public class StockData extends StockDatabaseTable {
 
 		setAction(cursor.getString(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_ACTION)));
+	}
+
+	public double getRoi() {
+		return mRoi;
+	}
+
+	public void setRoi(double roi) {
+		mRoi = roi;
+	}
+
+	void setRoi(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setRoi(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_ROI)));
+	}
+
+	public double getPe() {
+		return mPe;
+	}
+
+	public void setPe(double pe) {
+		mPe = pe;
+	}
+
+	void setPe(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setPe(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_PE)));
+	}
+
+	public double getPb() {
+		return mPb;
+	}
+
+	public void setPb(double pb) {
+		mPb = pb;
+	}
+
+	void setPb(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setPb(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_PB)));
+	}
+
+	public double getYield() {
+		return mYield;
+	}
+
+	public void setYield(double yield) {
+		mYield = yield;
+	}
+
+	void setYield(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setYield(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_YIELD)));
 	}
 
 	public boolean vertexOf(int vertexType) {

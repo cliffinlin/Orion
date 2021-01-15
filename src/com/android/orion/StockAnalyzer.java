@@ -19,6 +19,7 @@ import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockDeal;
+import com.android.orion.database.TotalShare;
 import com.android.orion.indicator.MACD;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.StopWatch;
@@ -41,6 +42,8 @@ public class StockAnalyzer extends StockManager {
 		}
 
 		try {
+			analyzeFinancial(stock);
+
 			setupStockFinancialData(stock);
 			setupStockShareBonus(stock);
 
@@ -83,6 +86,231 @@ public class StockAnalyzer extends StockManager {
 		stopWatch.stop();
 		Log.d(TAG, "analyze:" + stock.getName() + " " + period + " "
 				+ stopWatch.getInterval() + "s");
+	}
+
+	void analyzeFinancial(Stock stock) {
+		ArrayList<FinancialData> financialDataList = new ArrayList<FinancialData>();
+		ArrayList<TotalShare> totalShareList = new ArrayList<TotalShare>();
+		ArrayList<ShareBonus> shareBonusList = new ArrayList<ShareBonus>();
+		ArrayList<StockData> stockDataList = new ArrayList<StockData>();
+		String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
+
+		mStockDatabaseManager.getFinancialDataList(stock, financialDataList,
+				sortOrder);
+		mStockDatabaseManager.getTotalShareList(stock, totalShareList,
+				sortOrder);
+		mStockDatabaseManager.getShareBonusList(stock, shareBonusList,
+				sortOrder);
+		mStockDatabaseManager.getStockDataList(stock, Constants.PERIOD_MONTH,
+				stockDataList, sortOrder);
+
+		setupTotalShare(financialDataList, totalShareList);
+		setupNetProfitPerShare(financialDataList);
+		setupNetProfitPerShareInYear(financialDataList);
+		setupRate(financialDataList);
+		setupRoe(financialDataList);
+
+		for (FinancialData financialData : financialDataList) {
+			financialData.setModified(Utility.getCurrentDateTimeString());
+			mStockDatabaseManager.updateFinancialData(financialData,
+					financialData.getContentValues());
+		}
+
+		setupRoi(stockDataList, financialDataList);
+
+		for (StockData stockData : stockDataList) {
+			stockData.setModified(Utility.getCurrentDateTimeString());
+			mStockDatabaseManager.updateStockData(stockData,
+					stockData.getContentValues());
+		}
+	}
+
+	void setupTotalShare(ArrayList<FinancialData> financialDataList,
+			ArrayList<TotalShare> totalShareList) {
+		if (financialDataList == null || totalShareList == null) {
+			return;
+		}
+
+		int j = 0;
+		for (FinancialData financialData : financialDataList) {
+			while (j < totalShareList.size()) {
+				TotalShare totalShare = totalShareList.get(j);
+				if (Utility.stringToCalendar(financialData.getDate(),
+						Utility.CALENDAR_DATE_FORMAT).after(
+						Utility.stringToCalendar(totalShare.getDate(),
+								Utility.CALENDAR_DATE_FORMAT))) {
+					financialData.setTotalShare(totalShare.getTotalShare());
+					break;
+				} else {
+					j++;
+				}
+			}
+		}
+	}
+
+	void setupNetProfitPerShare(ArrayList<FinancialData> financialDataList) {
+		if (financialDataList == null) {
+			return;
+		}
+
+		for (FinancialData financialData : financialDataList) {
+			financialData.setupDebtToNetAssetsRatio();
+			financialData.setupNetProfitPerShare();
+		}
+	}
+
+	void setupNetProfitPerShareInYear(ArrayList<FinancialData> financialDataList) {
+		double netProfitPerShareInYear = 0;
+		double netProfitPerShare = 0;
+
+		if (financialDataList == null) {
+			return;
+		}
+
+		if (financialDataList.size() < Constants.SEASONS_IN_A_YEAR + 1) {
+			return;
+		}
+
+		for (int i = 0; i < financialDataList.size()
+				- Constants.SEASONS_IN_A_YEAR; i++) {
+			netProfitPerShareInYear = 0;
+			for (int j = 0; j < Constants.SEASONS_IN_A_YEAR; j++) {
+				FinancialData current = financialDataList.get(i + j);
+				FinancialData prev = financialDataList.get(i + j + 1);
+
+				if (current == null || prev == null) {
+					continue;
+				}
+
+				if (current.getTotalShare() == 0) {
+					continue;
+				}
+
+				netProfitPerShare = 0;
+				if (current.getDate().contains("03-31")) {
+					netProfitPerShare = current.getNetProfit()
+							/ current.getTotalShare();
+				} else {
+					netProfitPerShare = (current.getNetProfit() - prev
+							.getNetProfit()) / current.getTotalShare();
+				}
+				netProfitPerShareInYear += netProfitPerShare;
+
+			}
+
+			FinancialData financialData = financialDataList.get(i);
+			financialData.setNetProfitPerShareInYear(netProfitPerShareInYear);
+		}
+	}
+
+	void setupRate(ArrayList<FinancialData> financialDataList) {
+		double rate = 0;
+
+		if (financialDataList == null) {
+			return;
+		}
+
+		if (financialDataList.size() < Constants.SEASONS_IN_A_YEAR + 1) {
+			return;
+		}
+
+		for (int i = 0; i < financialDataList.size()
+				- Constants.SEASONS_IN_A_YEAR; i++) {
+			FinancialData financialData = financialDataList.get(i);
+			FinancialData prev = financialDataList.get(i
+					+ Constants.SEASONS_IN_A_YEAR);
+
+			if (prev == null || prev.getNetProfitPerShareInYear() == 0) {
+				continue;
+			}
+
+			rate = Utility.Round(financialData.getNetProfitPerShareInYear()
+					/ prev.getNetProfitPerShareInYear(),
+					Constants.DOUBLE_FIXED_DECIMAL);
+
+			financialData.setRate(rate);
+		}
+	}
+
+	void setupRoe(ArrayList<FinancialData> financialDataList) {
+		double roe = 0;
+
+		if (financialDataList == null) {
+			return;
+		}
+
+		if (financialDataList.size() < Constants.SEASONS_IN_A_YEAR + 1) {
+			return;
+		}
+
+		for (int i = 0; i < financialDataList.size()
+				- Constants.SEASONS_IN_A_YEAR; i++) {
+			FinancialData financialData = financialDataList.get(i);
+			FinancialData prev = financialDataList.get(i
+					+ Constants.SEASONS_IN_A_YEAR);
+
+			if (prev == null || prev.getBookValuePerShare() == 0) {
+				continue;
+			}
+
+			roe = Utility.Round(
+					100.0 * financialData.getNetProfitPerShareInYear()
+							/ prev.getBookValuePerShare(),
+					Constants.DOUBLE_FIXED_DECIMAL);
+			financialData.setRoe(roe);
+		}
+	}
+
+	void setupRoi(ArrayList<StockData> stockDataList,
+			ArrayList<FinancialData> financialDataList) {
+		double price = 0;
+		double pe = 0;
+		double pb = 0;
+		double roi = 0;
+
+		if (stockDataList == null || financialDataList == null) {
+			return;
+		}
+
+		int j = 0;
+		for (StockData stockData : stockDataList) {
+			price = stockData.getClose();
+			if (price == 0) {
+				continue;
+			}
+
+			while (j < financialDataList.size()) {
+				FinancialData financialData = financialDataList.get(j);
+				if (Utility.stringToCalendar(stockData.getDate(),
+						Utility.CALENDAR_DATE_FORMAT).after(
+						Utility.stringToCalendar(financialData.getDate(),
+								Utility.CALENDAR_DATE_FORMAT))) {
+					pe = Utility.Round(
+							100.0 * financialData.getNetProfitPerShareInYear()
+									/ price, Constants.DOUBLE_FIXED_DECIMAL);
+
+					if (financialData.getBookValuePerShare() != 0) {
+						pb = Utility.Round(
+								price / financialData.getBookValuePerShare(),
+								Constants.DOUBLE_FIXED_DECIMAL);
+					}
+
+					roi = Utility.Round(financialData.getRoe() * pe
+							* Constants.ROI_COEFFICIENT,
+							Constants.DOUBLE_FIXED_DECIMAL);
+					if (roi < 0) {
+						roi = 0;
+					}
+
+					stockData.setPe(pe);
+					stockData.setPb(pb);
+					stockData.setRoi(roi);
+					break;
+				} else {
+					j++;
+				}
+			}
+		}
 	}
 
 	void setupStockFinancialData(Stock stock) {
