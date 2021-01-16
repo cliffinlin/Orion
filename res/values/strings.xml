@@ -180,7 +180,7 @@
     <string name="velocity">Vel</string>
     <string name="version">Version</string>
     <string name="volume">Volume</string>
-    <string name="value">Value</string>    
+    <string name="value">Value</string>
     <string name="ipo">IPO</string>
     <string name="ipo_list">IPO List</string>
     <string name="date">Date</string>
@@ -189,6 +189,8 @@
     <string name="saved">Saved</string>
     <string name="error">Error!</string>
     <string name="limit_line">Limit Line</string>
+    <string name="roe_line">Roe Line</string>
+    <string name="roi_line">Roi Line</string>
     <string name="display">Display</string>
 
 </resources>

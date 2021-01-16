@@ -64,6 +64,8 @@ public class StockDataChartListActivity extends BaseActivity implements
 	static final int MESSAGE_LOAD_STOCK_LIST = 1;
 
 	boolean mShowLimitLine = true;
+	boolean mShowRoeLine = false;
+	boolean mShowRoiLine = false;
 
 	int mStockListIndex = 0;
 
@@ -170,6 +172,8 @@ public class StockDataChartListActivity extends BaseActivity implements
 
 		mShowLimitLine = Preferences.readBoolean(mContext,
 				Constants.SETTING_KEY_LIMIT_LINE, true);
+		mShowRoeLine = Preferences.readBoolean(mContext, Constants.SETTING_KEY_ROE_LINE, true);
+		mShowRoiLine = Preferences.readBoolean(mContext, Constants.SETTING_KEY_ROI_LINE, true);
 
 		initLoader();
 
@@ -540,9 +544,11 @@ public class StockDataChartListActivity extends BaseActivity implements
 								.add(overlapLowEntry);
 					}
 
-					roi = (float) mStockData.getRoi();
-					Entry roiEntry = new Entry(roi, index);
-					stockDataChart.mRoiList.add(roiEntry);
+					if (mShowRoiLine) {
+						roi = (float) mStockData.getRoi();
+						Entry roiEntry = new Entry(roi, index);
+						stockDataChart.mRoiList.add(roiEntry);
+					}
 
 					if (mFinancialDataList.size() > 0) {
 						bookValuePerShare = 0;
@@ -569,8 +575,10 @@ public class StockDataChartListActivity extends BaseActivity implements
 						stockDataChart.mNetProfitPerShareList
 								.add(netProfitPerShareEntry);
 
-						Entry roeEntry = new Entry(roe, index);
-						stockDataChart.mRoeList.add(roeEntry);
+						if (mShowRoeLine) {
+							Entry roeEntry = new Entry(roe, index);
+							stockDataChart.mRoeList.add(roeEntry);
+						}
 					}
 
 					if (mShareBonusList.size() > 0) {

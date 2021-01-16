@@ -257,6 +257,10 @@ public class StockAnalyzer extends StockManager {
 					100.0 * financialData.getNetProfitPerShareInYear()
 							/ prev.getBookValuePerShare(),
 					Constants.DOUBLE_FIXED_DECIMAL);
+			if (roe < 0) {
+				roe = 0;
+			}
+
 			financialData.setRoe(roe);
 		}
 	}

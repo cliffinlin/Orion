@@ -468,26 +468,32 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 									/ (float) unit, index);
 					financialDataChart.mNetProfitEntryList.add(netProfittEntry);
 
+					Entry totalShareEntry = new Entry(
+							(float) mFinancialData.getTotalShare()
+									/ (float) unit, index);
+					financialDataChart.mTotalShareEntryList
+							.add(totalShareEntry);
+
 					Entry bookValuePerShareEntry = new Entry(
 							(float) mFinancialData.getBookValuePerShare(),
 							index);
 					financialDataChart.mBookValuePerShareEntryList
 							.add(bookValuePerShareEntry);
 
-					// Entry earningsPerShareEntry = new Entry(
-					// (float) mFinancialData.getEarningsPerShare(), index);
-					// financialDataChart.mEarningsPerShareEntryList
-					// .add(earningsPerShareEntry);
-					//
-					// Entry financialDataEntry = new Entry(
-					// (float) mFinancialData.getEarningsPerShare(), index);
-					// financialDataChart.mEarningsPerShareEntryList
-					// .add(financialDataEntry);
-					//
-					// Entry roeEntry = new Entry((float)
-					// mFinancialData.getRoe(),
-					// index);
-					// financialDataChart.mROEEntryList.add(roeEntry);
+					Entry cashFlowPerShareEntry = new Entry(
+							(float) mFinancialData.getCashFlowPerShare(), index);
+					financialDataChart.mCashFlowPerShareEntryList
+							.add(cashFlowPerShareEntry);
+
+					Entry netProfitPerShareEntry = new Entry(
+							(float) mFinancialData.getNetProfitPerShare(),
+							index);
+					financialDataChart.mNetProfitPerShareEntryList
+							.add(netProfitPerShareEntry);
+
+					Entry roeEntry = new Entry((float) mFinancialData.getRoe(),
+							index);
+					financialDataChart.mRoeEntryList.add(roeEntry);
 				}
 			}
 		} catch (Exception e) {
@@ -501,10 +507,10 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 		mStockDatabaseManager.getStockDealList(mStock, mStockDealList,
 				mStockDatabaseManager.getStockDealListAllSelection(mStock));
 
-		financialDataChart.updateDescription(mStock);
-		financialDataChart.updateLimitLine(mStock, mStockDealList);
+		// financialDataChart.updateDescription(mStock);
+		// financialDataChart.updateLimitLine(mStock, mStockDealList);
 		financialDataChart.setMainChartData();
-		// financialDataChart.setSubChartData();
+		financialDataChart.setSubChartData();
 
 		mFinancialDataChartArrayAdapter.notifyDataSetChanged();
 	}

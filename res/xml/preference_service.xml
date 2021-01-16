@@ -12,7 +12,15 @@
             android:defaultValue="true"
             android:key="limit_line"
             android:title="@string/limit_line" />
-    </PreferenceCategory>    
+        <com.android.orion.CustomSwitchPreference
+            android:defaultValue="false"
+            android:key="roe_line"
+            android:title="@string/roe_line" />
+        <com.android.orion.CustomSwitchPreference
+            android:defaultValue="false"
+            android:key="roi_line"
+            android:title="@string/roi_line" />
+    </PreferenceCategory>
     <PreferenceCategory android:title="@string/download" >
         <com.android.orion.CustomSwitchPreference
             android:defaultValue="true"
