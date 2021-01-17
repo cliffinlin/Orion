@@ -5,8 +5,10 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
@@ -25,13 +27,26 @@ import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 
 public class StockListEditActivity extends DatabaseActivity implements
-		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener {
+		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
+		OnClickListener {
 
 	static final int LOADER_ID_STOCK_LIST = 0;
 
-	String mSortOrder = null;
+	static final int mHeaderTextDefaultColor = Color.BLACK;
+	static final int mHeaderTextHighlightColor = Color.RED;
+
+	String mSortOrderColumn = DatabaseContract.COLUMN_CODE;
+	String mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_ASC;
+	String mSortOrderDefault = mSortOrderColumn + mSortOrderDirection;
+	String mSortOrder = mSortOrderDefault;
+
 	ListView mListView = null;
 	CustomSimpleCursorAdapter mAdapter = null;
+
+	TextView mTextViewNameCode = null;
+	TextView mTextViewPrice = null;
+	TextView mTextViewNet = null;
+	TextView mTextViewFavorite = null;
 
 	String[] mFrom = new String[] { DatabaseContract.COLUMN_NAME,
 			DatabaseContract.COLUMN_CODE, DatabaseContract.COLUMN_PRICE,
@@ -46,15 +61,17 @@ public class StockListEditActivity extends DatabaseActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_stock_edit);
+		setContentView(R.layout.activity_stock_list_edit);
 
 		mSortOrder = getIntent().getStringExtra(
 				Constants.EXTRA_STOCK_LIST_SORT_ORDER);
 
-		mListView = (ListView) findViewById(R.id.stock_listview);
+		initHeader();
+
+		mListView = (ListView) findViewById(R.id.stock_list_edit_view);
 
 		mAdapter = new CustomSimpleCursorAdapter(this,
-				R.layout.activity_stock_edit_item, null, mFrom, mTo, 0);
+				R.layout.activity_stock_list_edit_item, null, mFrom, mTo, 0);
 
 		if ((mListView != null) && (mAdapter != null)) {
 			mListView.setAdapter(mAdapter);
@@ -107,8 +124,105 @@ public class StockListEditActivity extends DatabaseActivity implements
 	}
 
 	@Override
+	public void onClick(View view) {
+
+		int id = view.getId();
+
+		resetHeaderTextColor();
+		setHeaderTextColor(id, mHeaderTextHighlightColor);
+
+		switch (id) {
+		case R.id.stock_name_code:
+			mSortOrderColumn = DatabaseContract.COLUMN_NAME;
+			break;
+		case R.id.price:
+			mSortOrderColumn = DatabaseContract.COLUMN_PRICE;
+			break;
+		case R.id.net:
+			mSortOrderColumn = DatabaseContract.COLUMN_NET;
+			break;
+		case R.id.favorite:
+			mSortOrderColumn = DatabaseContract.COLUMN_FLAG;
+			break;
+
+		default:
+			mSortOrderColumn = DatabaseContract.COLUMN_CODE;
+			break;
+		}
+
+		if (mSortOrderDirection.equals(DatabaseContract.ORDER_DIRECTION_ASC)) {
+			mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_DESC;
+		} else {
+			mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_ASC;
+		}
+
+		mSortOrder = mSortOrderColumn + mSortOrderDirection;
+
+		restartLoader();
+	}
+
+	void setHeaderTextColor(int id, int color) {
+		TextView textView = (TextView) findViewById(id);
+		setHeaderTextColor(textView, color);
+	}
+
+	void setHeaderTextColor(TextView textView, int color) {
+		if (textView != null) {
+			textView.setTextColor(color);
+		}
+	}
+
+	void resetHeaderTextColor() {
+		setHeaderTextColor(mTextViewNameCode, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewPrice, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewNet, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewFavorite, mHeaderTextDefaultColor);
+	}
+
+	void initHeader() {
+		mTextViewNameCode = (TextView) findViewById(R.id.stock_name_code);
+		if (mTextViewNameCode != null) {
+			mTextViewNameCode.setOnClickListener(this);
+		}
+
+		mTextViewPrice = (TextView) findViewById(R.id.price);
+		if (mTextViewPrice != null) {
+			mTextViewPrice.setOnClickListener(this);
+		}
+
+		mTextViewNet = (TextView) findViewById(R.id.net);
+		if (mTextViewNet != null) {
+			mTextViewNet.setOnClickListener(this);
+		}
+
+		mTextViewFavorite = (TextView) findViewById(R.id.favorite);
+		if (mTextViewFavorite != null) {
+			mTextViewFavorite.setOnClickListener(this);
+		}
+
+		if (mSortOrder.contains(DatabaseContract.COLUMN_NAME)) {
+			setHeaderTextColor(mTextViewNameCode, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PRICE)) {
+			setHeaderTextColor(mTextViewPrice, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_NET)) {
+			setHeaderTextColor(mTextViewNet, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_FLAG)) {
+			setHeaderTextColor(mTextViewFavorite, mHeaderTextHighlightColor);
+		} else {
+		}
+	}
+
+	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
+		if (id <= Constants.STOCK_ID_INVALID) {
+			return;
+		}
+
+		Intent intent = new Intent(StockListEditActivity.this,
+				StockDataChartListActivity.class);
+		intent.putExtra(Constants.EXTRA_STOCK_ID, id);
+		startActivity(intent);
 	}
 
 	public class CustomSimpleCursorAdapter extends SimpleCursorAdapter

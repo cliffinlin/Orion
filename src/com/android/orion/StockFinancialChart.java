@@ -118,7 +118,7 @@ public class StockFinancialChart {
 		totalAssetsDataSet.setDrawCircles(false);
 		totalAssetsDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(totalAssetsDataSet);
-		
+
 		LineDataSet totalCurrentAssetsDataSet = new LineDataSet(
 				mTotalCurrentAssetsEntryList, "Current");
 		totalCurrentAssetsDataSet.setColor(Color.WHITE);
@@ -143,13 +143,13 @@ public class StockFinancialChart {
 		mainBusinessIncomeDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(mainBusinessIncomeDataSet);
 
-//		LineDataSet financialExpensesDataSet = new LineDataSet(
-//				mFinancialExpensesEntryList, "FinancialExpenses");
-//		financialExpensesDataSet.setColor(Color.BLACK);
-//		financialExpensesDataSet.setCircleColor(Color.BLACK);
-//		financialExpensesDataSet.setCircleSize(3f);
-//		financialExpensesDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-//		lineData.addDataSet(financialExpensesDataSet);
+		// LineDataSet financialExpensesDataSet = new LineDataSet(
+		// mFinancialExpensesEntryList, "FinancialExpenses");
+		// financialExpensesDataSet.setColor(Color.BLACK);
+		// financialExpensesDataSet.setCircleColor(Color.BLACK);
+		// financialExpensesDataSet.setCircleSize(3f);
+		// financialExpensesDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+		// lineData.addDataSet(financialExpensesDataSet);
 
 		LineDataSet netProfitDataSet = new LineDataSet(mNetProfitEntryList,
 				"NetProfit");
@@ -176,7 +176,7 @@ public class StockFinancialChart {
 		roeDataSet.setDrawCircles(false);
 		roeDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(roeDataSet);
-		
+
 		LineDataSet bookValuePerShareDataSet = new LineDataSet(
 				mBookValuePerShareEntryList, "BookValue");
 		bookValuePerShareDataSet.setColor(Color.BLUE);
@@ -190,7 +190,7 @@ public class StockFinancialChart {
 		netProfitPerShareDataSet.setDrawCircles(false);
 		netProfitPerShareDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(netProfitPerShareDataSet);
-		
+
 		LineDataSet cashFlowPerShareDataSet = new LineDataSet(
 				mCashFlowPerShareEntryList, "CashFlow");
 		cashFlowPerShareDataSet.setColor(Color.GREEN);

@@ -172,8 +172,10 @@ public class StockDataChartListActivity extends BaseActivity implements
 
 		mShowLimitLine = Preferences.readBoolean(mContext,
 				Constants.SETTING_KEY_LIMIT_LINE, true);
-		mShowRoeLine = Preferences.readBoolean(mContext, Constants.SETTING_KEY_ROE_LINE, true);
-		mShowRoiLine = Preferences.readBoolean(mContext, Constants.SETTING_KEY_ROI_LINE, true);
+		mShowRoeLine = Preferences.readBoolean(mContext,
+				Constants.SETTING_KEY_ROE_LINE, true);
+		mShowRoiLine = Preferences.readBoolean(mContext,
+				Constants.SETTING_KEY_ROI_LINE, true);
 
 		initLoader();
 

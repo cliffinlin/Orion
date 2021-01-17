@@ -57,4 +57,5 @@
         android:contentDescription="@string/delete"
         android:gravity="center"
         android:src="@drawable/ic_delete" />
+
 </LinearLayout>
