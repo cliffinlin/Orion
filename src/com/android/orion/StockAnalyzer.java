@@ -42,7 +42,9 @@ public class StockAnalyzer extends StockManager {
 		}
 
 		try {
-			analyzeFinancial(stock);
+			if (!isFinancialAnalyzed(stock)) {
+				analyzeFinancial(stock);
+			}
 
 			setupStockFinancialData(stock);
 			setupStockShareBonus(stock);
@@ -86,6 +88,25 @@ public class StockAnalyzer extends StockManager {
 		stopWatch.stop();
 		Log.d(TAG, "analyze:" + stock.getName() + " " + period + " "
 				+ stopWatch.getInterval() + "s");
+	}
+	
+	boolean isFinancialAnalyzed(Stock stock) {
+		boolean result = false;
+		
+		FinancialData financialData = new FinancialData();
+		financialData.setStockId(stock.getId());
+		mStockDatabaseManager.getFinancialData(stock, financialData);
+
+		if (financialData.getCreated().contains(
+				Utility.getCurrentDateString())
+				|| financialData.getModified().contains(
+						Utility.getCurrentDateString())) {
+			if (financialData.getRoe() != 0) {
+				result = true;
+			}
+		}
+		
+		return result;
 	}
 
 	void analyzeFinancial(Stock stock) {
