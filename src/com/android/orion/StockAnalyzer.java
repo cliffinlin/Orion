@@ -101,7 +101,7 @@ public class StockAnalyzer extends StockManager {
 				Utility.getCurrentDateString())
 				|| financialData.getModified().contains(
 						Utility.getCurrentDateString())) {
-			if (financialData.getRoe() != 0) {
+			if (financialData.getRate() != 0) {
 				result = true;
 			}
 		}
