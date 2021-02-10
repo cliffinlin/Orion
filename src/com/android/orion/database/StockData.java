@@ -715,10 +715,20 @@ public class StockData extends StockDatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_YIELD)));
 	}
 
-	public boolean vertexOf(int vertexType) {
+	public boolean directionOf(int direction) {
 		boolean result = false;
 
-		if ((mVertex & vertexType) == vertexType) {
+		if ((mDirection & direction) == direction) {
+			result = true;
+		}
+
+		return result;
+	}
+	
+	public boolean vertexOf(int vertex) {
+		boolean result = false;
+
+		if ((mVertex & vertex) == vertex) {
 			result = true;
 		}
 

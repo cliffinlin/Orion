@@ -104,9 +104,13 @@ public class Constants {
 	public static final int STOCK_BREAKPOINT_NONE = 0;
 	public static final int STOCK_BREAKPOINT_BOTTOM = -1;
 
-	public static final int STOCK_DIRECTION_UP = 1;
 	public static final int STOCK_DIRECTION_NONE = 0;
-	public static final int STOCK_DIRECTION_DOWN = -1;
+	public static final int STOCK_DIRECTION_UP = 1 << 0;
+	public static final int STOCK_DIRECTION_DOWN = 1 << 1;
+	public static final int STOCK_DIRECTION_UP_STROKE = 1 << 2;
+	public static final int STOCK_DIRECTION_DOWN_STROKE = 1 << 3;
+	public static final int STOCK_DIRECTION_UP_SEGMENT = 1 << 4;
+	public static final int STOCK_DIRECTION_DOWN_SEGMENT = 1 << 5;
 
 	public static final int STOCK_DIVERGENCE_NONE = 0;
 	public static final int STOCK_DIVERGENCE_HISTOGRAM = 1 << 0;

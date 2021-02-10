@@ -89,23 +89,22 @@ public class StockAnalyzer extends StockManager {
 		Log.d(TAG, "analyze:" + stock.getName() + " " + period + " "
 				+ stopWatch.getInterval() + "s");
 	}
-	
+
 	boolean isFinancialAnalyzed(Stock stock) {
 		boolean result = false;
-		
+
 		FinancialData financialData = new FinancialData();
 		financialData.setStockId(stock.getId());
 		mStockDatabaseManager.getFinancialData(stock, financialData);
 
-		if (financialData.getCreated().contains(
-				Utility.getCurrentDateString())
+		if (financialData.getCreated().contains(Utility.getCurrentDateString())
 				|| financialData.getModified().contains(
 						Utility.getCurrentDateString())) {
 			if (financialData.getRate() != 0) {
 				result = true;
 			}
 		}
-		
+
 		return result;
 	}
 
@@ -562,66 +561,102 @@ public class StockAnalyzer extends StockManager {
 		vertexAnalyzer.analyzeAction(stockDataList, segmentDataList,
 				overlapList);
 
-		setAction(stock, period, stockDataList, segmentDataList);
+		vertexAnalyzer.analyzeDirection(stockDataList);
+
+		// setAction(stock, period, stockDataList, segmentDataList);
+
+		setAction(stock, period, stockDataList);
 	}
 
-	private void setAction(Stock stock, String period,
-			ArrayList<StockData> stockDataList,
-			ArrayList<StockData> segmentDataList) {
-		String action = Constants.STOCK_ACTION_NONE;
-		String avv = "";
-		StockData segmentData = null;
-		StockData endStockData = null;
+	//
+	// private void setAction(Stock stock, String period,
+	// ArrayList<StockData> stockDataList,
+	// ArrayList<StockData> segmentDataList) {
+	// String action = Constants.STOCK_ACTION_NONE;
+	// String avv = "";
+	// StockData segmentData = null;
+	// StockData endStockData = null;
+	//
+	// if ((stockDataList == null) || (segmentDataList == null)
+	// || (segmentDataList.size() == 0)) {
+	// Log.d(TAG, "setAction return" + " stockDataList = " + stockDataList
+	// + " segmentDataList" + segmentDataList);
+	// return;
+	// }
+	//
+	// segmentData = segmentDataList.get(segmentDataList.size() - 1);
+	// endStockData = stockDataList.get(segmentData.getIndexEnd());
+	//
+	// action = endStockData.getAction();
+	//
+	// if (endStockData.getAcceleration() > 0) {
+	// avv += Constants.STOCK_ACTION_ADD;
+	// } else if (endStockData.getAcceleration() <= 0) {
+	// avv += Constants.STOCK_ACTION_MINUS;
+	// }
+	//
+	// avv += " ";
+	//
+	// if (endStockData.getVelocity() > 0) {
+	// avv += Constants.STOCK_ACTION_ADD;
+	// } else if (endStockData.getVelocity() <= 0) {
+	// avv += Constants.STOCK_ACTION_MINUS;
+	// }
+	//
+	// avv += " ";
+	//
+	// if (endStockData.getAverage() > 0) {
+	// avv += Constants.STOCK_ACTION_ADD;
+	// } else if (endStockData.getAverage() <= 0) {
+	// avv += Constants.STOCK_ACTION_MINUS;
+	// }
+	//
+	// action = avv + action;
+	//
+	// stock.setAction(period, action);
+	// }
 
-		if ((stockDataList == null) || (segmentDataList == null)
-				|| (segmentDataList.size() == 0)) {
-			Log.d(TAG, "setAction return" + " stockDataList = " + stockDataList
-					+ " segmentDataList" + segmentDataList);
+	private void setAction(Stock stock, String period,
+			ArrayList<StockData> stockDataList) {
+		String action = Constants.STOCK_ACTION_NONE;
+		String direction = "";
+		StockData stockData = null;
+
+		if (stockDataList == null) {
+			Log.d(TAG, "setAction return" + " stockDataList = " + stockDataList);
 			return;
 		}
 
-		segmentData = segmentDataList.get(segmentDataList.size() - 1);
-		endStockData = stockDataList.get(segmentData.getIndexEnd());
+		stockData = stockDataList.get(stockDataList.size() - 1);
 
-		action = endStockData.getAction();
+		action = stockData.getAction();
 
-		if (endStockData.getAcceleration() > 0) {
-			avv += Constants.STOCK_ACTION_ADD;
-		} else if (endStockData.getAcceleration() <= 0) {
-			avv += Constants.STOCK_ACTION_MINUS;
+		if (stockData.directionOf(Constants.STOCK_DIRECTION_UP)) {
+			direction += Constants.STOCK_ACTION_ADD;
+		} else if (stockData.directionOf(Constants.STOCK_DIRECTION_DOWN)) {
+			direction += Constants.STOCK_ACTION_MINUS;
 		}
 
-		avv += " ";
+		direction += " ";
 
-		if (endStockData.getVelocity() > 0) {
-			avv += Constants.STOCK_ACTION_ADD;
-		} else if (endStockData.getVelocity() <= 0) {
-			avv += Constants.STOCK_ACTION_MINUS;
+		if (stockData.directionOf(Constants.STOCK_DIRECTION_UP_STROKE)) {
+			direction += Constants.STOCK_ACTION_ADD;
+		} else if (stockData.directionOf(Constants.STOCK_DIRECTION_DOWN_STROKE)) {
+			direction += Constants.STOCK_ACTION_MINUS;
 		}
 
-		avv += " ";
+		direction += " ";
 
-		if (endStockData.getAverage() > 0) {
-			avv += Constants.STOCK_ACTION_ADD;
-		} else if (endStockData.getAverage() <= 0) {
-			avv += Constants.STOCK_ACTION_MINUS;
+		if (stockData.directionOf(Constants.STOCK_DIRECTION_UP_SEGMENT)) {
+			direction += Constants.STOCK_ACTION_ADD;
+		} else if (stockData
+				.directionOf(Constants.STOCK_DIRECTION_DOWN_SEGMENT)) {
+			direction += Constants.STOCK_ACTION_MINUS;
 		}
 
-		// if (action.contains("B") || action.contains("S")) {
-		// if (stock.getPrice() > endStockData.getOverlapHigh()) {
-		// action += Constants.STOCK_ACTION_UP;
-		// } else if (stock.getPrice() < endStockData.getOverlapLow()) {
-		// action += Constants.STOCK_ACTION_DOWN;
-		// }
-		// }
-
-		// action += stock.getAction(period);
-
-		action = avv + action;
+		action = direction + action;
 
 		stock.setAction(period, action);
-
-		// stock.setupYield();
 	}
 
 	private void updateDatabase(Stock stock) {
