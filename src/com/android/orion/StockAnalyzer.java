@@ -12,7 +12,6 @@ import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.android.orion.curve.BezierCurve;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.FinancialData;
 import com.android.orion.database.ShareBonus;
@@ -415,13 +414,6 @@ public class StockAnalyzer extends StockManager {
 	private void setMACD(Stock stock, String period,
 			ArrayList<StockData> stockDataList) {
 		int size = 0;
-		int grade = 0;
-		int beginIndex = 0;
-
-		double t = 0;
-		double average = 0;
-		double velocity = 0;
-		double acceleration = 0;
 
 		double average5 = 0;
 		double average10 = 0;
@@ -434,7 +426,6 @@ public class StockAnalyzer extends StockManager {
 		String action = Constants.STOCK_ACTION_NONE;
 
 		MACD macd = new MACD();
-		BezierCurve bezierCurve = new BezierCurve();
 
 		size = stockDataList.size();
 
@@ -445,23 +436,12 @@ public class StockAnalyzer extends StockManager {
 		macd.mPriceList.clear();
 
 		for (int i = 0; i < size; i++) {
-			// macd.mPriceList.add(stockDataList.get(i).getClose());
 			macd.mPriceList
 					.add((stockDataList.get(i).getVertexHigh() + stockDataList
 							.get(i).getVertexLow()) / 2.0);
 		}
 
 		macd.calculate();
-
-		grade = size - 1;
-
-		if (size > Constants.BENZIER_CURVE_GRADE_MAX) {
-			grade = Constants.BENZIER_CURVE_GRADE_MAX;
-		}
-
-		bezierCurve.init(grade);
-
-		beginIndex = size - grade - 1;
 
 		for (int i = 0; i < size; i++) {
 			average5 = macd.mEMAAverage5List.get(i);
@@ -475,34 +455,6 @@ public class StockAnalyzer extends StockManager {
 			stockDataList.get(i).setDIF(dif);
 			stockDataList.get(i).setDEA(dea);
 			stockDataList.get(i).setHistogram(histogram);
-			stockDataList.get(i).setAverage(average);
-			stockDataList.get(i).setVelocity(velocity);
-			stockDataList.get(i).setAcceleration(acceleration);
-
-			if (i >= beginIndex) {
-				bezierCurve.addControlData(i - beginIndex, histogram);
-			}
-		}
-
-		for (int i = beginIndex; i < size; i++) {
-			t = 1.0 * (i - beginIndex) / (size - 1 - beginIndex);
-			average = bezierCurve.calculate(t);
-
-			if (i == beginIndex) {
-				velocity = 0;
-				acceleration = 0;
-			} else if (i == beginIndex + 1) {
-				acceleration = 0;
-			} else {
-				velocity = 10 * (average - stockDataList.get(i - 1)
-						.getAverage());
-				acceleration = 2 * (velocity - stockDataList.get(i - 1)
-						.getVelocity());
-			}
-
-			stockDataList.get(i).setAverage(average);
-			stockDataList.get(i).setVelocity(velocity);
-			stockDataList.get(i).setAcceleration(acceleration);
 		}
 
 		histogram = macd.mHistogramList.get(size - 1);
@@ -563,58 +515,8 @@ public class StockAnalyzer extends StockManager {
 
 		vertexAnalyzer.analyzeDirection(stockDataList);
 
-		// setAction(stock, period, stockDataList, segmentDataList);
-
 		setAction(stock, period, stockDataList);
 	}
-
-	//
-	// private void setAction(Stock stock, String period,
-	// ArrayList<StockData> stockDataList,
-	// ArrayList<StockData> segmentDataList) {
-	// String action = Constants.STOCK_ACTION_NONE;
-	// String avv = "";
-	// StockData segmentData = null;
-	// StockData endStockData = null;
-	//
-	// if ((stockDataList == null) || (segmentDataList == null)
-	// || (segmentDataList.size() == 0)) {
-	// Log.d(TAG, "setAction return" + " stockDataList = " + stockDataList
-	// + " segmentDataList" + segmentDataList);
-	// return;
-	// }
-	//
-	// segmentData = segmentDataList.get(segmentDataList.size() - 1);
-	// endStockData = stockDataList.get(segmentData.getIndexEnd());
-	//
-	// action = endStockData.getAction();
-	//
-	// if (endStockData.getAcceleration() > 0) {
-	// avv += Constants.STOCK_ACTION_ADD;
-	// } else if (endStockData.getAcceleration() <= 0) {
-	// avv += Constants.STOCK_ACTION_MINUS;
-	// }
-	//
-	// avv += " ";
-	//
-	// if (endStockData.getVelocity() > 0) {
-	// avv += Constants.STOCK_ACTION_ADD;
-	// } else if (endStockData.getVelocity() <= 0) {
-	// avv += Constants.STOCK_ACTION_MINUS;
-	// }
-	//
-	// avv += " ";
-	//
-	// if (endStockData.getAverage() > 0) {
-	// avv += Constants.STOCK_ACTION_ADD;
-	// } else if (endStockData.getAverage() <= 0) {
-	// avv += Constants.STOCK_ACTION_MINUS;
-	// }
-	//
-	// action = avv + action;
-	//
-	// stock.setAction(period, action);
-	// }
 
 	private void setAction(Stock stock, String period,
 			ArrayList<StockData> stockDataList) {

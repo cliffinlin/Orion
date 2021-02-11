@@ -46,9 +46,6 @@ public class StockDataChart {
 	ArrayList<Entry> mDIFEntryList = null;
 	ArrayList<Entry> mDEAEntryList = null;
 	ArrayList<BarEntry> mHistogramEntryList = null;
-	ArrayList<Entry> mAverageEntryList = null;
-	ArrayList<Entry> mVelocityEntryList = null;
-	ArrayList<Entry> mAccelerateEntryList = null;
 
 	ArrayList<LimitLine> mLimitLineList = null;
 
@@ -125,18 +122,6 @@ public class StockDataChart {
 
 		if (mHistogramEntryList == null) {
 			mHistogramEntryList = new ArrayList<BarEntry>();
-		}
-
-		if (mAverageEntryList == null) {
-			mAverageEntryList = new ArrayList<Entry>();
-		}
-
-		if (mVelocityEntryList == null) {
-			mVelocityEntryList = new ArrayList<Entry>();
-		}
-
-		if (mAccelerateEntryList == null) {
-			mAccelerateEntryList = new ArrayList<Entry>();
 		}
 
 		if (mCombinedDataMain == null) {
@@ -291,27 +276,6 @@ public class StockDataChart {
 		deaDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(deaDataSet);
 
-		LineDataSet averageDataSet = new LineDataSet(mAverageEntryList,
-				"average");
-		averageDataSet.setColor(Color.GRAY);
-		averageDataSet.setDrawCircles(false);
-		averageDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		lineData.addDataSet(averageDataSet);
-
-		LineDataSet velocityDataSet = new LineDataSet(mVelocityEntryList,
-				"velocity");
-		velocityDataSet.setColor(Color.BLUE);
-		velocityDataSet.setDrawCircles(false);
-		velocityDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		lineData.addDataSet(velocityDataSet);
-
-		LineDataSet acclerateDataSet = new LineDataSet(mAccelerateEntryList,
-				"accelerate");
-		acclerateDataSet.setColor(Color.MAGENTA);
-		acclerateDataSet.setDrawCircles(false);
-		acclerateDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		lineData.addDataSet(acclerateDataSet);
-
 		mCombinedDataSub.setData(barData);
 		mCombinedDataSub.setData(lineData);
 	}
@@ -431,13 +395,10 @@ public class StockDataChart {
 		mRoeList.clear();
 		mRoiList.clear();
 		mDividendEntryList.clear();
-		mAverageEntryList.clear();
 		mAverage5EntryList.clear();
 		mAverage10EntryList.clear();
 		mDIFEntryList.clear();
 		mDEAEntryList.clear();
 		mHistogramEntryList.clear();
-		mVelocityEntryList.clear();
-		mAccelerateEntryList.clear();
 	}
 }

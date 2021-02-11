@@ -615,18 +615,6 @@ public class StockDataChartListActivity extends BaseActivity implements
 					BarEntry histogramBarEntry = new BarEntry(
 							(float) mStockData.getHistogram(), index);
 					stockDataChart.mHistogramEntryList.add(histogramBarEntry);
-
-					Entry averageEntry = new Entry(
-							(float) mStockData.getAverage(), index);
-					stockDataChart.mAverageEntryList.add(averageEntry);
-
-					Entry velocityEntry = new Entry(
-							(float) mStockData.getVelocity(), index);
-					stockDataChart.mVelocityEntryList.add(velocityEntry);
-
-					Entry acclerateEntry = new Entry(
-							(float) mStockData.getAcceleration(), index);
-					stockDataChart.mAccelerateEntryList.add(acclerateEntry);
 				}
 			}
 		} catch (Exception e) {

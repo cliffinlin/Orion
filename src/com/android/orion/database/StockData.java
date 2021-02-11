@@ -27,9 +27,6 @@ public class StockData extends StockDatabaseTable {
 	private double mSigmaHistogram;
 	private int mDivergence;
 	private double mTrendsEfforts;
-	private double mAverage;
-	private double mVelocity;
-	private double mAcceleration;
 	private String mAction;
 	
 	private double mRoi;
@@ -94,9 +91,6 @@ public class StockData extends StockDatabaseTable {
 		mSigmaHistogram = 0;
 		mDivergence = Constants.STOCK_DIVERGENCE_NONE;
 		mTrendsEfforts = 0;
-		mAverage = 0;
-		mVelocity = 0;
-		mAcceleration = 0;
 		mAction = "";
 		
 		mRoi = 0;
@@ -140,9 +134,6 @@ public class StockData extends StockDatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_DIVERGENCE, mDivergence);
 		contentValues.put(DatabaseContract.COLUMN_TRENDS_EFFORTS,
 				mTrendsEfforts);
-		contentValues.put(DatabaseContract.COLUMN_AVERAGE, mAverage);
-		contentValues.put(DatabaseContract.COLUMN_VELOCITY, mVelocity);
-		contentValues.put(DatabaseContract.COLUMN_ACCELERATION, mAcceleration);
 		contentValues.put(DatabaseContract.COLUMN_ACTION, mAction);
 		
 		contentValues.put(DatabaseContract.COLUMN_ROI, mRoi);
@@ -182,9 +173,6 @@ public class StockData extends StockDatabaseTable {
 		setSigmaHistogram(stockData.mSigmaHistogram);
 		setDivergence(stockData.mDivergence);
 		setTrendsEfforts(stockData.mTrendsEfforts);
-		setAverage(stockData.mAverage);
-		setVelocity(stockData.mVelocity);
-		setAcceleration(stockData.mAcceleration);
 		setAction(stockData.mAction);
 		
 		setRoi(stockData.mRoi);
@@ -226,9 +214,6 @@ public class StockData extends StockDatabaseTable {
 		setHistogram(cursor);
 		setSigmaHistogram(cursor);
 		setDivergence(cursor);
-		setAverage(cursor);
-		setVelocity(cursor);
-		setAcceleration(cursor);
 		setAction(cursor);
 		
 		setRoi(cursor);
@@ -577,57 +562,6 @@ public class StockData extends StockDatabaseTable {
 
 		setTrendsEfforts(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_TRENDS_EFFORTS)));
-	}
-
-	public double getAverage() {
-		return mAverage;
-	}
-
-	public void setAverage(double average) {
-		mAverage = average;
-	}
-
-	public void setAverage(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setAverage(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_AVERAGE)));
-	}
-
-	public double getVelocity() {
-		return mVelocity;
-	}
-
-	public void setVelocity(double velocity) {
-		mVelocity = velocity;
-	}
-
-	void setVelocity(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setVelocity(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_VELOCITY)));
-	}
-
-	public double getAcceleration() {
-		return mAcceleration;
-	}
-
-	public void setAcceleration(double acceleration) {
-		mAcceleration = acceleration;
-	}
-
-	void setAcceleration(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setAcceleration(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_ACCELERATION)));
 	}
 
 	public String getAction() {

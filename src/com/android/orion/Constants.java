@@ -17,8 +17,6 @@ public class Constants {
 
 	public static final long STOCK_DOWNLOAD_ALARM_INTERVAL_DEFAULT = 5 * 60000;
 
-	public static final int BENZIER_CURVE_GRADE_MAX = 50;
-
 	public static final int DOUBLE_CONSTANT_WAN = 10000;
 	public static final int DOUBLE_CONSTANT_YI = (DOUBLE_CONSTANT_WAN * DOUBLE_CONSTANT_WAN);
 	public static final int DOUBLE_FIXED_DECIMAL = 2;
