@@ -3,7 +3,6 @@ package com.android.orion;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import okhttp3.OkHttpClient;
@@ -21,7 +20,6 @@ import android.util.ArrayMap;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.FinancialData;
 import com.android.orion.database.IPO;
 import com.android.orion.database.Setting;
@@ -131,34 +129,87 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		mLocalBroadcastManager.sendBroadcast(intent);
 	}
 
-	void downloadStockIndexes() {
-		String selection;
-		String urlString;
-		List<Stock> stockList = null;
+	ArrayList<StockData> getStockDataList(Stock stock, String period) {
+		ArrayList<StockData> stockDataList = null;
 
-		if (!Utility.isNetworkConnected(mContext)) {
+		if (period.equals(Constants.PERIOD_MIN1)) {
+			stockDataList = stock.mStockDataListMin1;
+		} else if (period.equals(Constants.PERIOD_MIN5)) {
+			stockDataList = stock.mStockDataListMin5;
+		} else if (period.equals(Constants.PERIOD_MIN15)) {
+			stockDataList = stock.mStockDataListMin15;
+		} else if (period.equals(Constants.PERIOD_MIN30)) {
+			stockDataList = stock.mStockDataListMin30;
+		} else if (period.equals(Constants.PERIOD_MIN60)) {
+			stockDataList = stock.mStockDataListMin60;
+		} else if (period.equals(Constants.PERIOD_DAY)) {
+			stockDataList = stock.mStockDataListDay;
+		} else if (period.equals(Constants.PERIOD_WEEK)) {
+			stockDataList = stock.mStockDataListWeek;
+		} else if (period.equals(Constants.PERIOD_MONTH)) {
+			stockDataList = stock.mStockDataListMonth;
+		} else if (period.equals(Constants.PERIOD_QUARTER)) {
+			stockDataList = stock.mStockDataListQuarter;
+		} else if (period.equals(Constants.PERIOD_YEAR)) {
+			stockDataList = stock.mStockDataListYear;
+		}
+		return stockDataList;
+	}
+
+	int getPeriodCoefficient(String period) {
+		int result = 1;
+
+		if (period.equals(Constants.PERIOD_MIN1)) {
+			result = 240;
+		} else if (period.equals(Constants.PERIOD_MIN5)) {
+			result = 48;
+		} else if (period.equals(Constants.PERIOD_MIN15)) {
+			result = 16;
+		} else if (period.equals(Constants.PERIOD_MIN30)) {
+			result = 8;
+		} else if (period.equals(Constants.PERIOD_MIN60)) {
+			result = 4;
+		} else if (period.equals(Constants.PERIOD_DAY)) {
+			result = 1;
+		} else if (period.equals(Constants.PERIOD_WEEK)) {
+			result = 1;
+		} else if (period.equals(Constants.PERIOD_MONTH)) {
+			result = 1;
+		} else if (period.equals(Constants.PERIOD_QUARTER)) {
+			result = 1;
+		} else if (period.equals(Constants.PERIOD_YEAR)) {
+			result = 1;
+		}
+
+		return result;
+	}
+
+	void loadStockArrayMap(ArrayMap<String, Stock> stockArrayMap) {
+		String selection = "";
+		Cursor cursor = null;
+
+		if ((mStockDatabaseManager == null) || (stockArrayMap == null)) {
 			return;
 		}
 
-		initStockIndexes();
+		mStockFilter.read();
+		selection += mStockFilter.getSelection();
 
-		selection = DatabaseContract.COLUMN_CLASSES + " = " + "\'"
-				+ Constants.STOCK_CLASS_INDEXES + "\'" + " AND "
-				+ DatabaseContract.COLUMN_NAME + " = \'\'";
-		stockList = loadStockList(selection, null, null);
-		if ((stockList == null) || (stockList.size() == 0)) {
-			return;
-		}
+		try {
+			stockArrayMap.clear();
+			cursor = mStockDatabaseManager.queryStock(selection, null, null);
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				while (cursor.moveToNext()) {
+					Stock stock = new Stock();
+					stock.set(cursor);
 
-		for (Stock stock : stockList) {
-			urlString = getStockRealTimeURLString(stock);
-			if (addToCurrentRequests(urlString)) {
-				Log.d(TAG, "getStockRealTimeURLString:" + urlString);
-				StockRealTimeDownloader downloader = new StockRealTimeDownloader(
-						urlString);
-				downloader.setStock(stock);
-				mRequestQueue.add(downloader.mStringRequest);
+					stockArrayMap.put(stock.getSE() + stock.getCode(), stock);
+				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			mStockDatabaseManager.closeCursor(cursor);
 		}
 	}
 

@@ -17,6 +17,7 @@ import android.util.Log;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.FinancialData;
 import com.android.orion.database.IPO;
 import com.android.orion.database.ShareBonus;
@@ -180,6 +181,35 @@ public class SinaFinance extends StockDataProvider {
 		String urlString = SINA_FINANCE_URL_HQ_NODE_DATA + page + num + sort
 				+ asc + node;
 		return urlString;
+	}
+
+	int getPeriodMinutes(String period) {
+		int minutes = 0;
+
+		if (period.equals(Constants.PERIOD_MIN1)) {
+			minutes = 1;
+		} else if (period.equals(Constants.PERIOD_MIN5)) {
+			minutes = 5;
+		} else if (period.equals(Constants.PERIOD_MIN15)) {
+			minutes = 15;
+		} else if (period.equals(Constants.PERIOD_MIN30)) {
+			minutes = 30;
+		} else if (period.equals(Constants.PERIOD_MIN60)) {
+			minutes = 60;
+		} else if (period.equals(Constants.PERIOD_DAY)) {
+			minutes = 240;
+		} else if (period.equals(Constants.PERIOD_WEEK)) {
+			minutes = 1680;
+		} else if (period.equals(Constants.PERIOD_MONTH)) {
+			minutes = 7200;
+		} else if (period.equals(Constants.PERIOD_QUARTER)) {
+			minutes = 28800;
+		} else if (period.equals(Constants.PERIOD_YEAR)) {
+			minutes = 115200;
+		} else {
+		}
+
+		return minutes;
 	}
 
 	@Override
@@ -468,7 +498,8 @@ public class SinaFinance extends StockDataProvider {
 			return;
 		}
 
-		if (isStockHSAEmpty()) {
+		if (mStockDatabaseManager.getStockCount(DatabaseContract.COLUMN_CLASSES
+				+ " = '" + Constants.STOCK_CLASS_HSA + "'", null, null) == 0) {
 			bulkInsert = true;
 			Log.d(TAG, "handleResponseStockHSA bulkInsert = " + bulkInsert);
 		}

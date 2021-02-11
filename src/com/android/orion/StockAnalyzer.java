@@ -8,7 +8,11 @@ import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -17,19 +21,104 @@ import com.android.orion.database.FinancialData;
 import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
+import com.android.orion.database.StockDatabaseManager;
 import com.android.orion.database.StockDeal;
+import com.android.orion.database.StockFilter;
 import com.android.orion.database.TotalShare;
 import com.android.orion.indicator.MACD;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.StopWatch;
 import com.android.orion.utility.Utility;
 
-public class StockAnalyzer extends StockManager {
+public class StockAnalyzer {
 	static final String TAG = Constants.TAG + " "
 			+ StockAnalyzer.class.getSimpleName();
 
+	Context mContext;
+
+	PowerManager mPowerManager;
+	WakeLock mWakeLock;
+
+	LocalBroadcastManager mLocalBroadcastManager = null;
+	protected StockDatabaseManager mStockDatabaseManager = null;
+
+	StockFilter mStockFilter;
+
 	public StockAnalyzer(Context context) {
-		super(context);
+		mContext = context;
+
+		mPowerManager = (PowerManager) mContext
+				.getSystemService(Context.POWER_SERVICE);
+		mWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+				Constants.TAG);
+
+		if (mLocalBroadcastManager == null) {
+			mLocalBroadcastManager = LocalBroadcastManager
+					.getInstance(mContext);
+		}
+
+		if (mStockDatabaseManager == null) {
+			mStockDatabaseManager = StockDatabaseManager.getInstance(mContext);
+		}
+
+		mStockFilter = new StockFilter(mContext);
+	}
+
+	void acquireWakeLock() {
+		Log.d(TAG, "acquireWakeLock");
+		mWakeLock.acquire();
+	}
+
+	void releaseWakeLock() {
+		Log.d(TAG, "releaseWakeLock");
+		if (mWakeLock.isHeld()) {
+			mWakeLock.release();
+		}
+	}
+
+	void loadStockDataList(Stock stock, String period,
+			ArrayList<StockData> stockDataList) {
+		int index = 0;
+
+		Cursor cursor = null;
+		String selection = null;
+		String sortOrder = null;
+
+		if ((stock == null) || TextUtils.isEmpty(period)
+				|| (stockDataList == null)) {
+			return;
+		}
+
+		if (mStockDatabaseManager == null) {
+			return;
+		}
+
+		try {
+			stockDataList.clear();
+
+			selection = mStockDatabaseManager.getStockDataSelection(
+					stock.getId(), period);
+			sortOrder = mStockDatabaseManager.getStockDataOrder();
+			cursor = mStockDatabaseManager.queryStockData(selection, null,
+					sortOrder);
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				while (cursor.moveToNext()) {
+					StockData stockData = new StockData(period);
+					stockData.set(cursor);
+					index = stockDataList.size();
+					stockData.setIndex(index);
+					stockData.setIndexStart(index);
+					stockData.setIndexEnd(index);
+					stockData.setAction(Constants.STOCK_ACTION_NONE);
+
+					stockDataList.add(stockData);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			mStockDatabaseManager.closeCursor(cursor);
+		}
 	}
 
 	void analyze(Stock stock) {
@@ -72,9 +161,6 @@ public class StockAnalyzer extends StockManager {
 			setupStockFinancialData(stock);
 
 			loadStockDataList(stock, period, stockDataList);
-			// if (stockDataList.size() < Constants.STOCK_VERTEX_TYPING_SIZE) {
-			// return;
-			// }
 
 			analyzeStockData(stock, period, stockDataList);
 

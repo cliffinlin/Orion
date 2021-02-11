@@ -641,6 +641,10 @@ public abstract class Chart<T extends ChartData<? extends DataSet<? extends Entr
     public void setOnTouchListener(ChartTouchListener l) {
         this.mChartTouchListener = l;
     }
+    
+    public ChartTouchListener getOnTouchListener(ChartTouchListener l) {
+        return this.mChartTouchListener;
+    }
 
     /**
      * ################ ################ ################ ################

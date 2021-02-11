@@ -480,6 +480,10 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
     public Matrix getMatrix() {
         return mMatrix;
     }
+    
+    public void setMatrix(Matrix matrix) {
+    	mMatrix = matrix;
+    }
 
     @Override
     public boolean onDoubleTap(MotionEvent e) {
