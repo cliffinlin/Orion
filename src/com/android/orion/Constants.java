@@ -83,12 +83,12 @@ public class Constants {
 
 	public static final String STOCK_ACTION_NONE = "";
 	public static final String STOCK_ACTION_STAR = "*";
-	public static final String STOCK_ACTION_DX = "DX";
+	public static final String STOCK_ACTION_D = "D";
 	public static final String STOCK_ACTION_BUY = "B";
 	public static final String STOCK_ACTION_BUY1 = "1B";
 	public static final String STOCK_ACTION_BUY2 = "2B";
 	public static final String STOCK_ACTION_BUY3 = "3B";
-	public static final String STOCK_ACTION_GX = "GX";
+	public static final String STOCK_ACTION_G = "G";
 	public static final String STOCK_ACTION_SELL = "S";
 	public static final String STOCK_ACTION_SELL1 = "1S";
 	public static final String STOCK_ACTION_SELL2 = "2S";

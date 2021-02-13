@@ -548,11 +548,11 @@ public class StockAnalyzer {
 		histogram_2 = macd.mHistogramList.get(size - 3);
 
 		if ((histogram_1 < histogram_2) && (histogram_1 < histogram)) {
-			action = Constants.STOCK_ACTION_DX;
+			// action = Constants.STOCK_ACTION_D;
 		}
 
 		if ((histogram_1 > histogram_2) && (histogram_1 > histogram)) {
-			action = Constants.STOCK_ACTION_GX;
+			// action = Constants.STOCK_ACTION_G;
 		}
 
 		stock.setAction(period, action);
@@ -608,38 +608,68 @@ public class StockAnalyzer {
 			ArrayList<StockData> stockDataList) {
 		String action = Constants.STOCK_ACTION_NONE;
 		String direction = "";
+		StockData prev = null;
 		StockData stockData = null;
 
 		if (stockDataList == null) {
 			Log.d(TAG, "setAction return" + " stockDataList = " + stockDataList);
 			return;
 		}
+		
+		if (stockDataList.size() < Constants.STOCK_VERTEX_TYPING_SIZE) {
+			return;
+		}
 
+		prev = stockDataList.get(stockDataList.size() - 2);
 		stockData = stockDataList.get(stockDataList.size() - 1);
 
 		action = stockData.getAction();
 
 		if (stockData.directionOf(Constants.STOCK_DIRECTION_UP)) {
-			direction += Constants.STOCK_ACTION_ADD;
+			if (prev.vertexOf(Constants.STOCK_VERTEX_BOTTOM)) {
+				direction += Constants.STOCK_ACTION_D;
+			} else {
+				direction += Constants.STOCK_ACTION_ADD;
+			}
 		} else if (stockData.directionOf(Constants.STOCK_DIRECTION_DOWN)) {
-			direction += Constants.STOCK_ACTION_MINUS;
+			if (prev.vertexOf(Constants.STOCK_VERTEX_TOP)) {
+				direction += Constants.STOCK_ACTION_G;
+			} else {
+				direction += Constants.STOCK_ACTION_MINUS;
+			}
 		}
 
 		direction += " ";
 
 		if (stockData.directionOf(Constants.STOCK_DIRECTION_UP_STROKE)) {
-			direction += Constants.STOCK_ACTION_ADD;
+			if (prev.vertexOf(Constants.STOCK_VERTEX_BOTTOM_STROKE)) {
+				direction += Constants.STOCK_ACTION_D;
+			} else {
+				direction += Constants.STOCK_ACTION_ADD;
+			}
 		} else if (stockData.directionOf(Constants.STOCK_DIRECTION_DOWN_STROKE)) {
-			direction += Constants.STOCK_ACTION_MINUS;
+			if (prev.vertexOf(Constants.STOCK_VERTEX_TOP_STROKE)) {
+				direction += Constants.STOCK_ACTION_G;
+			} else {
+				direction += Constants.STOCK_ACTION_MINUS;
+			}
 		}
 
 		direction += " ";
 
 		if (stockData.directionOf(Constants.STOCK_DIRECTION_UP_SEGMENT)) {
-			direction += Constants.STOCK_ACTION_ADD;
+			if (prev.vertexOf(Constants.STOCK_VERTEX_BOTTOM_SEGMENT)) {
+				direction += Constants.STOCK_ACTION_D;
+			} else {
+				direction += Constants.STOCK_ACTION_ADD;
+			}
 		} else if (stockData
 				.directionOf(Constants.STOCK_DIRECTION_DOWN_SEGMENT)) {
-			direction += Constants.STOCK_ACTION_MINUS;
+			if (prev.vertexOf(Constants.STOCK_VERTEX_TOP_SEGMENT)) {
+				direction += Constants.STOCK_ACTION_G;
+			} else {
+				direction += Constants.STOCK_ACTION_MINUS;
+			}
 		}
 
 		action = direction + action;
