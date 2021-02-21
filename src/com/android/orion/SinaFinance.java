@@ -1380,7 +1380,7 @@ public class SinaFinance extends StockDataProvider {
 						Calendar calendar = Utility.stringToCalendar(
 								dateString, Utility.CALENDAR_DATE_FORMAT);
 						if (!calendar.before(today)) {
-							nameString = nameString + "*";
+							nameString = nameString + Constants.STOCK_ACTION_STAR;
 						}
 					}
 

@@ -93,8 +93,6 @@ public class Constants {
 	public static final String STOCK_ACTION_SELL1 = "1S";
 	public static final String STOCK_ACTION_SELL2 = "2S";
 	public static final String STOCK_ACTION_SELL3 = "3S";
-	public static final char STOCK_ACTION_UP = '¡ü';
-	public static final char STOCK_ACTION_DOWN = '¡ý';
 	public static final char STOCK_ACTION_ADD = '+';
 	public static final char STOCK_ACTION_MINUS = '-';
 
