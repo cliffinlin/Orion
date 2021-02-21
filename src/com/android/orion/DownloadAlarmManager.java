@@ -21,7 +21,7 @@ public class DownloadAlarmManager extends OrionAlarmManager {
 
 	@Override
 	void startAlarm() {
-		setIntervalMillis(Constants.STOCK_DOWNLOAD_ALARM_INTERVAL_DEFAULT);
+		setIntervalMillis(Constants.DEFAULT_ALARM_INTERVAL);
 		setPendingIntent(PendingIntent.getBroadcast(mContext, 0, new Intent(
 				mContext, DownloadBroadcastReceiver.class), 0));
 

@@ -81,18 +81,22 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 			}
 
 			@Override
-			public void onTextChanged(CharSequence arg0, int arg1, int arg2,
-					int arg3) {
-				if ((arg0 != null) && (arg0.length() > 0)) {
-					if (arg0.charAt(0) == '6') {
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				if (ACTION_STOCK_EDIT.equals(mAction)) {
+					return;
+				}
+
+				if ((s != null) && (s.length() > 0)) {
+					if (s.charAt(0) == '6') {
 						mRadioGroupClass.check(R.id.radio_class_hsa);
 						mRadioGroupSE.check(R.id.radio_se_sh);
-					} else if (arg0.charAt(0) == '0' || arg0.charAt(0) == '3') {
+					} else if (s.charAt(0) == '0' || s.charAt(0) == '3') {
 						mRadioGroupClass.check(R.id.radio_class_hsa);
 						mRadioGroupSE.check(R.id.radio_se_sz);
-					} else if (arg0.charAt(0) == '8' || arg0.charAt(0) == '9') {
-						mRadioGroupSE.check(R.id.radio_se_sh);
+					} else {
 						mRadioGroupClass.check(R.id.radio_class_index);
+						mRadioGroupSE.check(R.id.radio_se_sh);
 					}
 				}
 			}
@@ -106,6 +110,18 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 	}
 
 	void updateView() {
+		if (mStock.getClases().equals(Constants.STOCK_CLASS_A)) {
+			mRadioGroupClass.check(R.id.radio_class_hsa);
+		} else {
+			mRadioGroupClass.check(R.id.radio_class_index);
+		}
+
+		if (mStock.getSE().equals(Constants.STOCK_SE_SH)) {
+			mRadioGroupSE.check(R.id.radio_se_sh);
+		} else {
+			mRadioGroupSE.check(R.id.radio_se_sz);
+		}
+
 		mEditTextStockName.setText(mStock.getName());
 		mEditTextStockCode.setText(mStock.getCode());
 		mEditTextStockValuation.setText(String.valueOf(mStock.getValuation()));
@@ -137,11 +153,11 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		case R.id.button_ok:
 			int id = 0;
 
-			id = mRadioGroupSE.getCheckedRadioButtonId();
+			id = mRadioGroupClass.getCheckedRadioButtonId();
 			if (id == R.id.radio_class_hsa) {
-				mStock.setClasses(Constants.STOCK_CLASS_HSA);
-			} else if (id == R.id.radio_se_sz) {
-				mStock.setClasses(Constants.STOCK_CLASS_INDEXES);
+				mStock.setClasses(Constants.STOCK_CLASS_A);
+			} else if (id == R.id.radio_class_index) {
+				mStock.setClasses(Constants.STOCK_CLASS_INDEX);
 			}
 
 			id = mRadioGroupSE.getCheckedRadioButtonId();

@@ -29,7 +29,7 @@ public class OrionAlarmManager {
 
 	void setIntervalMillis(long intervalMillis) {
 		if (intervalMillis <= 0) {
-			mIntervalMillis = Constants.STOCK_DOWNLOAD_ALARM_INTERVAL_DEFAULT;
+			mIntervalMillis = Constants.DEFAULT_ALARM_INTERVAL;
 		} else {
 			mIntervalMillis = intervalMillis;
 		}

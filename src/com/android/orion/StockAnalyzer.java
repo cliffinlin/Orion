@@ -615,7 +615,7 @@ public class StockAnalyzer {
 			Log.d(TAG, "setAction return" + " stockDataList = " + stockDataList);
 			return;
 		}
-		
+
 		if (stockDataList.size() < Constants.STOCK_VERTEX_TYPING_SIZE) {
 			return;
 		}

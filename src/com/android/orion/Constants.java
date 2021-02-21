@@ -7,15 +7,10 @@ public class Constants {
 	public static final int FAIL = -1;
 	public static final int SUCCESS = 0;
 
-	public static final String STOCK_CLASSES_INDEX = "I";
-	public static final String STOCK_CLASSES_A = "A";
-
 	public static final String FAVORITE = "favorite";
 	public static final String XML_FILE_EXT = ".xml";
 
 	public static final String ACTION_SERVICE_FINISHED = "orion.intent.action.SERVICE_FINISHED";
-
-	public static final long STOCK_DOWNLOAD_ALARM_INTERVAL_DEFAULT = 5 * 60000;
 
 	public static final int DOUBLE_CONSTANT_WAN = 10000;
 	public static final int DOUBLE_CONSTANT_YI = (DOUBLE_CONSTANT_WAN * DOUBLE_CONSTANT_WAN);
@@ -73,13 +68,10 @@ public class Constants {
 	public static final String SETTING_KEY_LIMIT_LINE = "limit_line";
 	public static final String SETTING_KEY_ROE_LINE = "roe_line";
 	public static final String SETTING_KEY_ROI_LINE = "roi_line";
-	public static final String SETTING_KEY_CURRENT_PERIOD = "current_period";
-	public static final String SETTING_KEY_CONNECTION_WIFI_ONLY = "connection_wifi_only";
 	public static final String SETTING_KEY_NOTIFICATION_MESSAGE = "notification_message";
 	public static final String SETTING_KEY_NOTIFICATION_LIGHTS = "notification_lights";
 	public static final String SETTING_KEY_NOTIFICATION_VIBRATE = "notification_vibrate";
 	public static final String SETTING_KEY_NOTIFICATION_SOUND = "notification_sound";
-	public static final String SETTING_KEY_USER_NAME = "user_name";
 
 	public static final String STOCK_ACTION_NONE = "";
 	public static final String STOCK_ACTION_STAR = "*";
@@ -100,6 +92,9 @@ public class Constants {
 	public static final int STOCK_BREAKPOINT_NONE = 0;
 	public static final int STOCK_BREAKPOINT_BOTTOM = -1;
 
+	public static final String STOCK_CLASS_A = "A";
+	public static final String STOCK_CLASS_INDEX = "I";
+
 	public static final int STOCK_DIRECTION_NONE = 0;
 	public static final int STOCK_DIRECTION_UP = 1 << 0;
 	public static final int STOCK_DIRECTION_DOWN = 1 << 1;
@@ -118,9 +113,6 @@ public class Constants {
 	public static final int STOCK_FLAG_RECENT = 1 << 2;
 
 	public static final int STOCK_ID_INVALID = 0;
-
-	public static final String STOCK_CLASS_HSA = "hsa";
-	public static final String STOCK_CLASS_INDEXES = "indexes";
 
 	public static final String STOCK_INDEXES_CODE_BASE_SH = "000000";
 	public static final String STOCK_INDEXES_CODE_BASE_SZ = "399000";
@@ -149,7 +141,6 @@ public class Constants {
 	public static final int STOCK_SEGMENT_DOWN = -1;
 
 	public static final int STOCK_VERTEX_TYPING_SIZE = 3;
-	public static final int STOCK_STROKE_TYPING_SIZE = STOCK_VERTEX_TYPING_SIZE;
 
 	public static final int STOCK_VERTEX_NONE = 0;
 	public static final int STOCK_VERTEX_TOP = 1 << 0;
@@ -163,9 +154,10 @@ public class Constants {
 
 	public static final double STOCK_DEAL_DISTRIBUTION_RATE = 5.0 / 100.0;
 
-	public static final long DEFAULT_DOWNLOAD_INTERVAL = 3 * 1000;
-	public static final long DEFAULT_RESTART_LOADER_INTERAL = 60 * 1000;
-	public static final long DEFAULT_SEND_BROADCAST_INTERAL = 60 * 1000;
+	public static final long DEFAULT_ALARM_INTERVAL = 5 * 60 * 1000;
+	public static final long DEFAULT_RESTART_LOADER_INTERVAL = 1 * 60 * 1000;
+	public static final long DEFAULT_SEND_BROADCAST_INTERVAL = 1 * 60 * 1000;
+	public static final long DEFAULT_SLEEP_INTERVAL = 3 * 1000;
 
 	public static final double ROI_COEFFICIENT = 1.0 / 10;
 }

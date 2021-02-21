@@ -289,4 +289,19 @@ public class BaseActivity extends Activity {
 			editor.commit();
 		}
 	}
+
+	void restartLoader() {
+	}
+
+	public void restartLoader(Intent intent) {
+		if (mResumed) {
+			if (intent.getIntExtra(Constants.EXTRA_SERVICE_TYPE,
+					Constants.SERVICE_TYPE_NONE) == Constants.SERVICE_DATABASE_UPDATE) {
+				if (System.currentTimeMillis() - mLastRestartLoader > Constants.DEFAULT_RESTART_LOADER_INTERVAL) {
+					mLastRestartLoader = System.currentTimeMillis();
+					restartLoader();
+				}
+			}
+		}
+	}
 }

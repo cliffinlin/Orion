@@ -104,7 +104,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 	void sendBroadcast(String action, int serviceType, long stockID) {
 		long delt = System.currentTimeMillis() - mLastSendBroadcast;
-		if (delt > Constants.DEFAULT_SEND_BROADCAST_INTERAL) {
+		if (delt > Constants.DEFAULT_SEND_BROADCAST_INTERVAL) {
 			mLastSendBroadcast = System.currentTimeMillis();
 
 			Bundle bundle = new Bundle();
@@ -867,7 +867,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 					analyze(mStock, mStockData.getPeriod(),
 							getStockDataList(mStock, mStockData.getPeriod()));
 
-					Thread.sleep(Constants.DEFAULT_DOWNLOAD_INTERVAL);
+					Thread.sleep(Constants.DEFAULT_SLEEP_INTERVAL);
 
 					sendBroadcast(Constants.ACTION_SERVICE_FINISHED,
 							Constants.SERVICE_DATABASE_UPDATE, mStock.getId());
@@ -956,7 +956,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 					mStockDatabaseManager.updateStock(mStock,
 							mStock.getContentValues());
 
-					Thread.sleep(Constants.DEFAULT_DOWNLOAD_INTERVAL);
+					Thread.sleep(Constants.DEFAULT_SLEEP_INTERVAL);
 
 					sendBroadcast(Constants.ACTION_SERVICE_FINISHED,
 							Constants.SERVICE_DATABASE_UPDATE, 0);
@@ -983,7 +983,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				needDownload = true;
 			} else if (stock.getTotalShare() == 0) {
 				needDownload = true;
-				if (Constants.STOCK_CLASSES_INDEX.equals(stock.getClases())) {
+				if (Constants.STOCK_CLASS_INDEX.equals(stock.getClases())) {
 					needDownload = false;
 				}
 			}
@@ -1012,7 +1012,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 					responseString = response.body().string();
 					handleResponseStockInformation(mStock, responseString);
 
-					Thread.sleep(Constants.DEFAULT_DOWNLOAD_INTERVAL);
+					Thread.sleep(Constants.DEFAULT_SLEEP_INTERVAL);
 
 					sendBroadcast(Constants.ACTION_SERVICE_FINISHED,
 							Constants.SERVICE_DATABASE_UPDATE, 0);
@@ -1067,7 +1067,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 					handleResponseFinancialData(mStock, mFinancialData,
 							responseString);
 
-					Thread.sleep(Constants.DEFAULT_DOWNLOAD_INTERVAL);
+					Thread.sleep(Constants.DEFAULT_SLEEP_INTERVAL);
 
 					sendBroadcast(Constants.ACTION_SERVICE_FINISHED,
 							Constants.SERVICE_DATABASE_UPDATE, 0);
@@ -1120,7 +1120,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 					handleResponseShareBonus(mStock, mShareBonus,
 							responseString);
 
-					Thread.sleep(Constants.DEFAULT_DOWNLOAD_INTERVAL);
+					Thread.sleep(Constants.DEFAULT_SLEEP_INTERVAL);
 
 					sendBroadcast(Constants.ACTION_SERVICE_FINISHED,
 							Constants.SERVICE_DATABASE_UPDATE, 0);
@@ -1173,7 +1173,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 					handleResponseTotalShare(mStock, mTotalShare,
 							responseString);
 
-					Thread.sleep(Constants.DEFAULT_DOWNLOAD_INTERVAL);
+					Thread.sleep(Constants.DEFAULT_SLEEP_INTERVAL);
 
 					sendBroadcast(Constants.ACTION_SERVICE_FINISHED,
 							Constants.SERVICE_DATABASE_UPDATE, 0);
