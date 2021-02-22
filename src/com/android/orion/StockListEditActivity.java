@@ -65,6 +65,9 @@ public class StockListEditActivity extends DatabaseActivity implements
 
 		mSortOrder = getIntent().getStringExtra(
 				Constants.EXTRA_STOCK_LIST_SORT_ORDER);
+		if (mSortOrder == null) {
+			mSortOrder = mSortOrderDefault;
+		}
 
 		initHeader();
 

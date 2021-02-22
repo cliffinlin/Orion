@@ -19,9 +19,6 @@ public class VertexAnalyzer {
 		int direction = Constants.STOCK_DIRECTION_NONE;
 		int vertex = Constants.STOCK_VERTEX_NONE;
 
-		direction = Constants.STOCK_DIRECTION_NONE;
-		vertex = Constants.STOCK_VERTEX_NONE;
-
 		if ((current.getVertexHigh() > prev.getVertexHigh())
 				&& (current.getVertexLow() > prev.getVertexLow())) {
 			direction = Constants.STOCK_DIRECTION_UP;
@@ -108,25 +105,27 @@ public class VertexAnalyzer {
 				continue;
 			}
 
-			if (current.include(next) || current.includedBy(next)) {
-				setDirectionVertex(dataList, i, prev, current, next);
-				direction = dataList.get(i).getDirection();
-				vertex = dataList.get(i).getVertex();
-				if ((vertex == Constants.STOCK_VERTEX_TOP)
-						|| (vertex == Constants.STOCK_VERTEX_BOTTOM)) {
-					vertexList.add(dataList.get(i));
-				}
-
-				current.merge(direction, next);
-				next.merge(direction, current);
-
-				dataList.get(i).set(current);
-				dataList.get(i + 1).set(next);
-
-				current.set(next);
-
-				next.init();
-				continue;
+			if (i < size - 2) {
+				if (current.include(next) || current.includedBy(next)) {
+					setDirectionVertex(dataList, i, prev, current, next);
+					direction = dataList.get(i).getDirection();
+					vertex = dataList.get(i).getVertex();
+					if ((vertex == Constants.STOCK_VERTEX_TOP)
+							|| (vertex == Constants.STOCK_VERTEX_BOTTOM)) {
+						vertexList.add(dataList.get(i));
+					}
+	
+					current.merge(direction, next);
+					next.merge(direction, current);
+	
+					dataList.get(i).set(current);
+					dataList.get(i + 1).set(next);
+	
+					current.set(next);
+	
+					next.init();
+					continue;
+				}				
 			}
 
 			setDirectionVertex(dataList, i, prev, current, next);
