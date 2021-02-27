@@ -23,6 +23,7 @@ import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.TotalShare;
+import com.android.orion.utility.Market;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Utility;
 
@@ -224,89 +225,78 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		}
 	}
 
-	//
-	// int getDownloadStockDataLength(int executeType, StockData stockData) {
-	// int result = 0;
-	// int defaultValue = 0;
-	// int scheduleMinutes = 0;
-	// long stockId = 0;
-	// String period = "";
-	// String modified = "";
-	// String selection = null;
-	// String sortOrder = null;
-	// Cursor cursor = null;
-	//
-	// if (stockData == null) {
-	// return result;
-	// }
-	//
-	// stockId = stockData.getStockId();
-	// period = stockData.getPeriod();
-	//
-	// defaultValue = getDownloadHistoryLengthDefault(period);
-	//
-	// try {
-	// selection = mStockDatabaseManager.getStockDataSelection(stockId,
-	// period);
-	// sortOrder = mStockDatabaseManager.getStockDataOrder();
-	// cursor = mStockDatabaseManager.queryStockData(selection, null,
-	// sortOrder);
-	//
-	// if (cursor == null) {
-	// return result;
-	// }
-	//
-	// if (cursor.getCount() == 0) {
-	// result = defaultValue;
-	// } else {
-	// cursor.moveToLast();
-	// stockData.set(cursor);
-	// modified = stockData.getModified();
-	// if (TextUtils.isEmpty(modified)) {
-	// modified = stockData.getCreated();
-	// }
-	// scheduleMinutes = Market.getScheduleMinutes();
-	// if (Market.isOutOfDateNotToday(modified)) {
-	// removeStockDataRedundant(cursor, defaultValue);
-	// result = defaultValue;
-	// } else if (Market.isOutOfDateFirstHalf(modified)) {
-	// result = getScheduleMaxLengthAtMin60(scheduleMinutes,
-	// period);
-	// } else if (Market.isOutOfDateSecendHalf(modified)) {
-	// result = getScheduleMaxLengthAtMin60(scheduleMinutes,
-	// period);
-	// } else if ((executeType & Constants.EXECUTE_SCHEDULE_MIN60) ==
-	// Constants.EXECUTE_SCHEDULE_MIN60) {
-	// result = getScheduleMaxLengthAtMin60(scheduleMinutes,
-	// period);
-	// } else if ((executeType & Constants.EXECUTE_SCHEDULE_MIN30) ==
-	// Constants.EXECUTE_SCHEDULE_MIN30) {
-	// result = getScheduleMaxLengthAtMin30(scheduleMinutes,
-	// period);
-	// } else if ((executeType & Constants.EXECUTE_SCHEDULE_MIN15) ==
-	// Constants.EXECUTE_SCHEDULE_MIN15) {
-	// result = getScheduleMaxLengthAtMin15(scheduleMinutes,
-	// period);
-	// } else if ((executeType & Constants.EXECUTE_SCHEDULE_MIN5) ==
-	// Constants.EXECUTE_SCHEDULE_MIN5) {
-	// result = 1;
-	// } else if ((executeType & Constants.EXECUTE_IMMEDIATE) ==
-	// Constants.EXECUTE_IMMEDIATE) {
-	// if (defaultValue == cursor.getCount()) {
-	// return 0;
-	// } else {
-	// result = defaultValue;
-	// }
-	// }
-	// }
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// } finally {
-	// mStockDatabaseManager.closeCursor(cursor);
-	// }
-	//
-	// return result;
-	// }
+	int getDownloadStockDataLength(StockData stockData) {
+		int result = 0;
+		int defaultValue = 0;
+		int scheduleMinutes = 0;
+		long stockId = 0;
+		String period = "";
+		String modified = "";
+		String selection = null;
+		String sortOrder = null;
+		Cursor cursor = null;
+
+		if (stockData == null) {
+			return result;
+		}
+
+		stockId = stockData.getStockId();
+		period = stockData.getPeriod();
+
+		defaultValue = getDownloadHistoryLengthDefault(period);
+
+		try {
+			selection = mStockDatabaseManager.getStockDataSelection(stockId,
+					period);
+			sortOrder = mStockDatabaseManager.getStockDataOrder();
+			cursor = mStockDatabaseManager.queryStockData(selection, null,
+					sortOrder);
+
+			if (cursor == null) {
+				return result;
+			}
+
+			if (cursor.getCount() == 0) {
+				result = defaultValue;
+			} else {
+				cursor.moveToLast();
+				stockData.set(cursor);
+				modified = stockData.getModified();
+				if (TextUtils.isEmpty(modified)) {
+					modified = stockData.getCreated();
+				}
+
+				if (Market.isOutOfDateToday(modified)) {
+					removeStockDataRedundant(cursor, defaultValue);
+					result = defaultValue;
+				} else {
+					scheduleMinutes = Market.getScheduleMinutes();
+
+					if (period.equals(Constants.PERIOD_MIN5)) {
+						result = scheduleMinutes
+								/ Constants.SCHEDULE_INTERVAL_MIN5;
+					} else if (period.equals(Constants.PERIOD_MIN15)) {
+						result = scheduleMinutes
+								/ Constants.SCHEDULE_INTERVAL_MIN15;
+					} else if (period.equals(Constants.PERIOD_MIN30)) {
+						result = scheduleMinutes
+								/ Constants.SCHEDULE_INTERVAL_MIN30;
+					} else if (period.equals(Constants.PERIOD_MIN60)) {
+						result = scheduleMinutes
+								/ Constants.SCHEDULE_INTERVAL_MIN60;
+					} else {
+						result = 1;
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			mStockDatabaseManager.closeCursor(cursor);
+		}
+
+		return result;
+	}
 
 	// public class StockHSADownloader extends VolleyStringDownloader {
 	//
@@ -686,7 +676,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			mStockData.setStockId(stock.getId());
 			mStockDatabaseManager.getStockData(mStockData);
 
-			len = getDownloadHistoryLengthDefault(period);
+			len = getDownloadStockDataLength(mStockData);
 			if (len <= 0) {
 				return "";
 			}

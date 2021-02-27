@@ -174,7 +174,7 @@ public class Market {
 	public static boolean isOutOfDate(String modified) {
 		boolean result = false;
 
-		if (TextUtils.isEmpty(modified) || isOutOfDateNotToday(modified)
+		if (TextUtils.isEmpty(modified) || isOutOfDateToday(modified)
 				|| isOutOfDateFirstHalf(modified)
 				|| isOutOfDateSecendHalf(modified)) {
 			return true;
@@ -183,21 +183,14 @@ public class Market {
 		return result;
 	}
 
-	public static boolean isOutOfDateNotToday(String modified) {
+	public static boolean isOutOfDateToday(String modified) {
 		boolean result = false;
-		String dataString = "";
 
 		if (TextUtils.isEmpty(modified)) {
 			return true;
 		}
 
-		String[] stringArray = modified.split(" ");
-		if (stringArray != null && stringArray.length > 0) {
-			dataString = stringArray[0];
-		}
-
-		if (!Utility.getCalendarDateString(Calendar.getInstance()).equals(
-				dataString)) {
+		if (!modified.contains(Utility.getCalendarDateString(Calendar.getInstance()))) {
 			return true;
 		}
 
