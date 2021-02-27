@@ -394,6 +394,34 @@ public class Stock extends DatabaseTable {
 		setRDate(cursor);
 	}
 
+	public ArrayList<StockData> getStockDataList(String period) {
+		ArrayList<StockData> stockDataList = null;
+
+		if (period.equals(Constants.PERIOD_MIN1)) {
+			stockDataList = mStockDataListMin1;
+		} else if (period.equals(Constants.PERIOD_MIN5)) {
+			stockDataList = mStockDataListMin5;
+		} else if (period.equals(Constants.PERIOD_MIN15)) {
+			stockDataList = mStockDataListMin15;
+		} else if (period.equals(Constants.PERIOD_MIN30)) {
+			stockDataList = mStockDataListMin30;
+		} else if (period.equals(Constants.PERIOD_MIN60)) {
+			stockDataList = mStockDataListMin60;
+		} else if (period.equals(Constants.PERIOD_DAY)) {
+			stockDataList = mStockDataListDay;
+		} else if (period.equals(Constants.PERIOD_WEEK)) {
+			stockDataList = mStockDataListWeek;
+		} else if (period.equals(Constants.PERIOD_MONTH)) {
+			stockDataList = mStockDataListMonth;
+		} else if (period.equals(Constants.PERIOD_QUARTER)) {
+			stockDataList = mStockDataListQuarter;
+		} else if (period.equals(Constants.PERIOD_YEAR)) {
+			stockDataList = mStockDataListYear;
+		}
+
+		return stockDataList;
+	}
+
 	public String getClases() {
 		return mClasses;
 	}

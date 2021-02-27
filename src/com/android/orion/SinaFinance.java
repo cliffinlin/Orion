@@ -433,7 +433,6 @@ public class SinaFinance extends StockDataProvider {
 
 			if (!stock.getName().equals(stockInfo[0])) {
 				stock.setName(stockInfo[0]);
-				// stock.setPinyin(Pinyin.toPinyin(mContext, stock.getName()));
 			}
 
 			if (stockInfo.length == 6) {
@@ -456,8 +455,6 @@ public class SinaFinance extends StockDataProvider {
 				if (!TextUtils.isEmpty(stockInfo[5])) {
 					stock.setValue(Long.valueOf(stockInfo[5]));
 				}
-
-				// stock.setupYield();
 			}
 
 			if (!mStockDatabaseManager.isStockExist(stock)) {

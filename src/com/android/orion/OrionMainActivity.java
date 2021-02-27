@@ -28,8 +28,8 @@ public class OrionMainActivity extends PreferenceActivity {
 		}
 
 		if (mStockDownloadAlarmManager != null) {
-			boolean bChecked = Preferences.readBoolean(this,
-					Constants.SETTING_KEY_ALARM, false);
+			boolean bChecked = Preferences.getBoolean(this, Settings.KEY_ALARM,
+					false);
 
 			if (bChecked) {
 				mStockDownloadAlarmManager.startAlarm();
@@ -108,12 +108,12 @@ public class OrionMainActivity extends PreferenceActivity {
 				.getDefaultSharedPreferences(this);
 		SharedPreferences.Editor editor = settings.edit();
 
-		if (!settings.contains(Constants.SETTING_KEY_ALARM)) {
-			editor.putBoolean(Constants.SETTING_KEY_ALARM, true);
+		if (!settings.contains(Settings.KEY_ALARM)) {
+			editor.putBoolean(Settings.KEY_ALARM, true);
 			editor.putBoolean(Constants.PERIOD_MONTH, true);
 			editor.putBoolean(Constants.PERIOD_WEEK, true);
 			editor.putBoolean(Constants.PERIOD_DAY, true);
-			editor.putBoolean(Constants.SETTING_KEY_NOTIFICATION_MESSAGE, true);
+			editor.putBoolean(Settings.KEY_NOTIFICATION_MESSAGE, true);
 			editor.commit();
 		}
 	}

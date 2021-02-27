@@ -31,7 +31,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.orion.database.DatabaseContract;
-import com.android.orion.database.Setting;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;
 import com.android.orion.utility.Preferences;
@@ -87,7 +86,7 @@ public class DealListActivity extends ListActivity implements
 	SimpleCursorAdapter mRightAdapter = null;
 
 	ActionMode mCurrentActionMode = null;
-	StockDeal mDeal = new StockDeal();
+	StockDeal mStockDeal = new StockDeal();
 	List<StockDeal> mStockDealList = new ArrayList<StockDeal>();
 	Stock mStock = new Stock();
 
@@ -104,7 +103,7 @@ public class DealListActivity extends ListActivity implements
 			switch (msg.what) {
 			case MESSAGE_DELETE_DEAL:
 				getStock();
-				mStockDatabaseManager.deleteStockDeal(mDeal);
+				mStockDatabaseManager.deleteStockDeal(mStockDeal);
 				mStockDatabaseManager.updateStockDeal(mStock);
 				mStockDatabaseManager.updateStock(mStock,
 						mStock.getContentValues());
@@ -178,7 +177,8 @@ public class DealListActivity extends ListActivity implements
 			case R.id.menu_edit:
 				mIntent = new Intent(mContext, StockDealActivity.class);
 				mIntent.setAction(StockDealActivity.ACTION_DEAL_EDIT);
-				mIntent.putExtra(StockDealActivity.EXTRA_DEAL_ID, mDeal.getId());
+				mIntent.putExtra(StockDealActivity.EXTRA_DEAL_ID,
+						mStockDeal.getId());
 				startActivityForResult(mIntent, REQUEST_CODE_DEAL_EDIT);
 				mode.finish();
 				return true;
@@ -221,7 +221,7 @@ public class DealListActivity extends ListActivity implements
 
 		mFilterType = FILTER_TYPE_TO_BUY;
 
-		mSortOrder = getSetting(Setting.KEY_SORT_ORDER_DEAL_LIST,
+		mSortOrder = getSetting(Settings.KEY_SORT_ORDER_DEAL_LIST,
 				mSortOrderDefault);
 
 		initHeader();
@@ -373,7 +373,7 @@ public class DealListActivity extends ListActivity implements
 
 		mSortOrder = mSortOrderColumn + mSortOrderDirection;
 
-		saveSetting(Setting.KEY_SORT_ORDER_DEAL_LIST, mSortOrder);
+		saveSetting(Settings.KEY_SORT_ORDER_DEAL_LIST, mSortOrder);
 
 		restartLoader();
 	}
@@ -404,7 +404,7 @@ public class DealListActivity extends ListActivity implements
 
 	void setVisibility(String key, TextView textView) {
 		if (textView != null) {
-			if (Preferences.readBoolean(this, key, false)) {
+			if (Preferences.getBoolean(this, key, false)) {
 				textView.setVisibility(View.VISIBLE);
 			} else {
 				textView.setVisibility(View.GONE);
@@ -630,11 +630,11 @@ public class DealListActivity extends ListActivity implements
 			long id) {
 
 		if (parent.getId() == R.id.left_listview) {
-			mDeal.setId(id);
+			mStockDeal.setId(id);
 			mHandler.sendEmptyMessage(MESSAGE_VIEW_STOCK_DEAL);
 		} else {
 			if (mCurrentActionMode == null) {
-				mDeal.setId(id);
+				mStockDeal.setId(id);
 				mHandler.sendEmptyMessage(MESSAGE_VIEW_STOCK_CHAT);
 			}
 		}
@@ -648,7 +648,7 @@ public class DealListActivity extends ListActivity implements
 			return false;
 		}
 
-		mDeal.setId(id);
+		mStockDeal.setId(id);
 		mCurrentActionMode = startActionMode(mModeCallBack);
 		view.setSelected(true);
 		return true;
@@ -656,7 +656,7 @@ public class DealListActivity extends ListActivity implements
 
 	boolean setTextViewValue(String key, View textView) {
 		if (textView != null) {
-			if (Preferences.readBoolean(this, key, false)) {
+			if (Preferences.getBoolean(this, key, false)) {
 				textView.setVisibility(View.VISIBLE);
 				return false;
 			} else {
@@ -669,10 +669,10 @@ public class DealListActivity extends ListActivity implements
 	}
 
 	void getStock() {
-		mStockDatabaseManager.getStockDealById(mDeal);
+		mStockDatabaseManager.getStockDealById(mStockDeal);
 
-		mStock.setSE(mDeal.getSE());
-		mStock.setCode(mDeal.getCode());
+		mStock.setSE(mStockDeal.getSE());
+		mStock.setCode(mStockDeal.getCode());
 
 		mStockDatabaseManager.getStock(mStock);
 	}

@@ -34,8 +34,6 @@ public final class DatabaseContract {
 	public static final String COLUMN_VOLUME = "volume";
 	public static final String COLUMN_VALUE = "value";
 	public static final String COLUMN_OVERLAP = "overlap";
-	public static final String COLUMN_VELOCITY = "velocity";
-	public static final String COLUMN_ACCELERATION = "acceleration";
 	public static final String COLUMN_MIN1 = "min1";
 	public static final String COLUMN_MIN5 = "min5";
 	public static final String COLUMN_MIN15 = "min15";
@@ -85,8 +83,6 @@ public final class DatabaseContract {
 	public static final String COLUMN_HISTOGRAM = "histogram";
 	public static final String COLUMN_SIGMA_HISTOGRAM = "sigma_histogram";
 	public static final String COLUMN_DIVERGENCE = "divergence";
-	public static final String COLUMN_TRENDS_EFFORTS = "trends_efforts";
-	public static final String COLUMN_AVERAGE = "average";
 	public static final String COLUMN_ACTION = "action";
 
 	// http://money.finance.sina.com.cn/corp/go.php/vFD_FinanceSummary/stockid/600028.phtml
@@ -118,32 +114,6 @@ public final class DatabaseContract {
 	// To prevent someone from accidentally instantiating the contract class,
 	// give it an empty constructor.
 	private DatabaseContract() {
-	}
-
-	public static abstract class Setting implements BaseColumns {
-		public static final String TABLE_NAME = "setting";
-
-		public static final String COLUMN_KEY = "key";
-		public static final String COLUMN_VALUE = "value";
-
-		public static final Uri CONTENT_URI = Uri.withAppendedPath(
-				DatabaseContract.CONTENT_URI, TABLE_NAME);
-		public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
-				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
-		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
-				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
-		public static final String SORT_ORDER_DEFAULT = COLUMN_KEY + " ASC";
-		public static final String[] PROJECTION_ALL = { _ID, COLUMN_KEY,
-				COLUMN_VALUE, COLUMN_CREATED, COLUMN_MODIFIED };
-
-		public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
-				+ " (" + _ID + " INTEGER PRIMARY KEY," + COLUMN_KEY + TEXT_TYPE
-				+ COMMA_SEP + COLUMN_VALUE + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_CREATED + TEXT_TYPE + COMMA_SEP + COLUMN_MODIFIED
-				+ TEXT_TYPE + " )";
-
-		public static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
-				+ TABLE_NAME;
 	}
 
 	public static abstract class Stock implements BaseColumns {
@@ -239,9 +209,8 @@ public final class DatabaseContract {
 				COLUMN_OVERLAP, COLUMN_OVERLAP_LOW, COLUMN_OVERLAP_HIGH,
 				COLUMN_AVERAGE5, COLUMN_AVERAGE10, COLUMN_DIF, COLUMN_DEA,
 				COLUMN_HISTOGRAM, COLUMN_SIGMA_HISTOGRAM, COLUMN_DIVERGENCE,
-				COLUMN_TRENDS_EFFORTS, COLUMN_AVERAGE, COLUMN_VELOCITY,
-				COLUMN_ACCELERATION, COLUMN_ACTION, COLUMN_ROI, COLUMN_PE,
-				COLUMN_PB, COLUMN_YIELD, COLUMN_CREATED, COLUMN_MODIFIED };
+				COLUMN_ACTION, COLUMN_ROI, COLUMN_PE, COLUMN_PB, COLUMN_YIELD,
+				COLUMN_CREATED, COLUMN_MODIFIED };
 
 		private static final String CREATE_TABLE_CONTENT = " (" + _ID
 				+ " INTEGER PRIMARY KEY," + COLUMN_STOCK_ID + TEXT_TYPE
@@ -260,15 +229,12 @@ public final class DatabaseContract {
 				+ DOUBLE_TYPE + COMMA_SEP + COLUMN_DEA + DOUBLE_TYPE
 				+ COMMA_SEP + COLUMN_HISTOGRAM + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_SIGMA_HISTOGRAM + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_DIVERGENCE + INTEGER_TYPE + COMMA_SEP
-				+ COLUMN_TRENDS_EFFORTS + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_AVERAGE + DOUBLE_TYPE + COMMA_SEP + COLUMN_VELOCITY
-				+ DOUBLE_TYPE + COMMA_SEP + COLUMN_ACCELERATION + DOUBLE_TYPE
-				+ COMMA_SEP + COLUMN_ACTION + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_ROI + DOUBLE_TYPE + COMMA_SEP + COLUMN_PE
-				+ DOUBLE_TYPE + COMMA_SEP + COLUMN_PB + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_YIELD + DOUBLE_TYPE + COMMA_SEP + COLUMN_CREATED
-				+ TEXT_TYPE + COMMA_SEP + COLUMN_MODIFIED + TEXT_TYPE + " )";
+				+ COLUMN_DIVERGENCE + INTEGER_TYPE + COMMA_SEP + COLUMN_ACTION
+				+ TEXT_TYPE + COMMA_SEP + COLUMN_ROI + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_PE + DOUBLE_TYPE + COMMA_SEP + COLUMN_PB + DOUBLE_TYPE
+				+ COMMA_SEP + COLUMN_YIELD + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_CREATED + TEXT_TYPE + COMMA_SEP + COLUMN_MODIFIED
+				+ TEXT_TYPE + " )";
 
 		public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
 				+ CREATE_TABLE_CONTENT;

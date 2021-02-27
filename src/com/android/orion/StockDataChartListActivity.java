@@ -102,8 +102,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 					mStockDatabaseManager.updateStock(mStock,
 							mStock.getContentValues());
 
-					mOrionService.downloadStockDataHistory(mStock);
-					mOrionService.downloadFinancial(mStock);
+					mOrionService.download(mStock);
 
 					restartLoader();
 				}
@@ -165,12 +164,12 @@ public class StockDataChartListActivity extends BaseActivity implements
 				mBroadcastReceiver,
 				new IntentFilter(Constants.ACTION_SERVICE_FINISHED));
 
-		mShowLimitLine = Preferences.readBoolean(mContext,
-				Constants.SETTING_KEY_LIMIT_LINE, true);
-		mShowRoeLine = Preferences.readBoolean(mContext,
-				Constants.SETTING_KEY_ROE_LINE, true);
-		mShowRoiLine = Preferences.readBoolean(mContext,
-				Constants.SETTING_KEY_ROI_LINE, true);
+		mShowLimitLine = Preferences.getBoolean(mContext,
+				Settings.KEY_LIMIT_LINE, true);
+		mShowRoeLine = Preferences.getBoolean(mContext, Settings.KEY_ROE_LINE,
+				true);
+		mShowRoiLine = Preferences.getBoolean(mContext, Settings.KEY_ROI_LINE,
+				true);
 
 		initLoader();
 
@@ -233,7 +232,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 		mStockDataChartItemList.clear();
 
 		for (int i = 0; i < Constants.PERIODS.length; i++) {
-			if (Preferences.readBoolean(this, Constants.PERIODS[i], false)) {
+			if (Preferences.getBoolean(this, Constants.PERIODS[i], false)) {
 				mStockDataChartItemList.add(mStockDataChartItemMainList.get(i));
 				mStockDataChartItemList.add(mStockDataChartItemSubList.get(i));
 			}

@@ -26,7 +26,6 @@ import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockDatabaseManager;
 import com.android.orion.database.StockDeal;
-import com.android.orion.database.StockFilter;
 import com.android.orion.database.TotalShare;
 
 public class BaseActivity extends Activity {
@@ -184,7 +183,7 @@ public class BaseActivity extends Activity {
 
 		if (mSharedPreferences == null) {
 			mSharedPreferences = getSharedPreferences(
-					Constants.SETTING_SHARED_PREFERENCE, MODE_PRIVATE);
+					Settings.SHARED_PREFERENCE, MODE_PRIVATE);
 		}
 
 		if (mStockDatabaseManager == null) {

@@ -1,0 +1,1185 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<root date="2021-02-25 10:33:16">
+  <stock>
+    <se>sh</se>
+    <code>600028</code>
+    <name>中国石化</name>
+    <flag>1</flag>
+    <valuation>0.0</valuation>
+    <item>
+      <deal>6.36</deal>
+      <volume>1000</volume>
+      <created>2018-09-18 09:54:11</created>
+      <modified>2018-10-11 14:52:34</modified>
+    </item>
+    <item>
+      <deal>6.7</deal>
+      <volume>1000</volume>
+      <created>2018-09-18 09:53:45</created>
+      <modified></modified>
+    </item>
+    <item>
+      <deal>5.99</deal>
+      <volume>1000</volume>
+      <created>2018-10-11 22:02:44</created>
+      <modified>2018-11-14 11:21:50</modified>
+    </item>
+    <item>
+      <deal>5.56</deal>
+      <volume>1000</volume>
+      <created>2018-11-29 14:01:18</created>
+      <modified>2018-12-21 13:02:20</modified>
+    </item>
+    <item>
+      <deal>5.01</deal>
+      <volume>1000</volume>
+      <created>2018-12-21 13:02:29</created>
+      <modified>2019-01-03 21:40:58</modified>
+    </item>
+    <item>
+      <deal>6.04</deal>
+      <volume>1000</volume>
+      <created>2019-03-13 13:30:54</created>
+      <modified>2019-03-13 13:31:17</modified>
+    </item>
+    <item>
+      <deal>5.68</deal>
+      <volume>1000</volume>
+      <created>2019-03-14 00:05:23</created>
+      <modified>2019-04-30 13:02:15</modified>
+    </item>
+    <item>
+      <deal>5.34</deal>
+      <volume>1000</volume>
+      <created>2019-04-30 13:02:49</created>
+      <modified>2019-05-10 23:36:45</modified>
+    </item>
+    <item>
+      <deal>4.99</deal>
+      <volume>1000</volume>
+      <created>2019-05-10 23:37:17</created>
+      <modified>2019-08-06 13:07:03</modified>
+    </item>
+    <item>
+      <deal>5.28</deal>
+      <volume>1000</volume>
+      <created>2019-06-11 13:02:11</created>
+      <modified></modified>
+    </item>
+    <item>
+      <deal>5.21</deal>
+      <volume>1000</volume>
+      <created>2019-09-17 13:03:56</created>
+      <modified></modified>
+    </item>
+    <item>
+      <deal>4.98</deal>
+      <volume>1000</volume>
+      <created>2019-10-22 10:53:00</created>
+      <modified></modified>
+    </item>
+    <item>
+      <deal>4.69</deal>
+      <volume>1000</volume>
+      <created>2020-02-25 17:43:51</created>
+      <modified>2020-02-26 14:27:34</modified>
+    </item>
+    <item>
+      <deal>4.1</deal>
+      <volume>1000</volume>
+      <created>2020-06-10 14:24:06</created>
+      <modified></modified>
+    </item>
+    <item>
+      <deal>3.98</deal>
+      <volume>1000</volume>
+      <created>2020-07-16 20:06:14</created>
+      <modified>2020-07-17 13:07:14</modified>
+    </item>
+  </stock>
+  <stock>
+    <se>sh</se>
+    <code>688289</code>
+    <name>圣湘生物</name>
+    <flag>1</flag>
+    <valuation>0.0</valuation>
+    <item>
+      <deal>50.48</deal>
+      <volume>500</volume>
+      <created>2020-08-27 21:45:42</created>
+      <modified>2020-09-30 13:29:03</modified>
+    </item>
+  </stock>
+  <stock>
+    <se>sh</se>
+    <code>601628</code>
+    <name>中国人寿</name>
+    <flag>1</flag>
+    <valuation>30.0</valuation>
+    <item>
+      <deal>34.85</deal>
+      <volume>200</volume>
+      <created>2021-02-25 10:33:03</created>
+      <modified></modified>
+    </item>
+  </stock>
+  <stock>
+    <se>sh</se>
+    <code>600033</code>
+    <name>福建高速</name>
+    <flag>1</flag>
+    <valuation>0.0</valuation>
+    <item>
+      <deal>3.03</deal>
+      <volume>2000</volume>
+      <created>2019-12-17 10:17:08</created>
+      <modified></modified>
+    </item>
+    <item>
+      <deal>2.86</deal>
+      <volume>2000</volume>
+      <created>2020-02-10 18:17:06</created>
+      <modified>2020-02-11 10:12:18</modified>
+    </item>
+    <item>
+      <deal>2.73</deal>
+      <volume>2000</volume>
+      <created>2020-07-19 22:19:57</created>
+      <modified>2020-09-01 09:27:37</modified>
+    </item>
+    <item>
+      <deal>2.62</deal>
+      <volume>2000</volume>
+      <created>2020-12-10 15:06:39</created>
+      <modified>2020-12-11 10:20:49</modified>
+    </item>
+  </stock>
+  <stock>
+    <se>sh</se>
+    <code>000001</code>
+    <name>上证指数</name>
+    <flag>0</flag>
+    <valuation>0.0</valuation>
+  </stock>
+  <stock>
+    <se>sh</se>
+    <code>600104</code>
+    <name>上汽集团</name>
+    <flag>0</flag>
+    <valuation>26.0</valuation>
+  </stock>
+  <stock>
+    <se>sh</se>
+    <code>600157</code>
+    <name>ST永泰</name>
+    <flag>1</flag>
+    <valuation>0.0</valuation>
+    <item>
+      <deal>1.3</deal>
+      <volume>2400</volume>
+      <created>2020-12-11 12:55:22</created>
+      <modified>2021-02-08 15:09:57</modified>
+    </item>
+    <item>
+      <deal>1.42</deal>
+      <volume>4000</volume>
+      <created>2020-12-23 10:15:53</created>
+      <modified>2021-02-18 14:20:33</modified>
+    </item>
+    <item>
+      <deal>1.42</deal>
+      <volume>4000</volume>
+      <created>2020-12-25 10:16:14</created>
+      <modified>2020-12-25 14:24:49</modified>
+    </item>
+    <item>
+      <deal>1.34</deal>
+      <volume>2600</volume>
+      <created>2021-02-18 13:53:47</created>
+      <modified></modified>
+    </item>
+  </stock>
+  <stock>
+    <se>sh</se>
+    <code>601328</code>
+    <name>交通银行</name>
+    <flag>1</flag>
+    <valuation>0.0</valuation>
+    <item>
+      <deal>6.49</deal>
+      <volume>1000</volume>
+      <created>2018-03-01 13:52:21</created>
+      <modified></modified>
+    </item>
+    <item>
+      <deal>6.16</deal>
+      <volume>1000</volume>
+      <created>2018-03-22 19:42:41</created>
+      <modified>2018-03-28 10:04:27</modified>
+    </item>
+    <item>
+      <deal>5.84</deal>
+      <volume>1000</volume>
+      <created>2018-03-28 22:41:43</created>
+      <modified>2018-06-27 00:00:05</modified>
+    </item>
+    <item>
+      <deal>5.51</deal>
+      <volume>1000</volume>
+      <created>2018-06-27 00:01:05</created>
+      <modified>2018-07-19 22:56:56</modified>
+    </item>
+    <item>
+      <deal>5.78</deal>
+      <volume>1000</volume>
+      <created>2019-07-09 13:02:02</created>
+      <modified></modified>
+    </item>
+    <item>
+      <deal>5.08</deal>
+      <volume>1300</volume>
+      <created>2020-07-04 23:13:29</created>
+      <modified>2020-07-14 10:33:05</modified>
+    </item>
+    <item>
+      <deal>4.84</deal>
+      <volume>1000</volume>
+      <created>2020-07-19 22:19:58</created>
+      <modified>2020-07-24 09:47:24</modified>
+    </item>
+    <item>
+      <deal>4.57</deal>
+      <volume>1000</volume>
+      <created>2020-12-10 17:16:34</created>
+      <modified>2020-12-11 10:19:25</modified>
+    </item>
+  </stock>
+  <stock>
+    <se>sz</se>
+    <code>002160</code>
+    <name>常铝股份</name>
+    <flag>1</flag>
+    <valuation>0.0</valuation>
+    <item>
+      <deal>3.65</deal>
+      <volume>600</volume>
+      <created>2020-12-17 11:00:04</created>
+      <modified>2021-01-29 09:44:43</modified>
+    </item>
+    <item>
+      <deal>4.8</deal>
+      <volume>1000</volume>
+      <created>2020-12-23 10:18:58</created>
+      <modified>2021-01-29 09:45:32</modified>
+    </item>
+    <item>
+      <deal>4.12</deal>
+      <volume>1000</volume>
+      <created>2020-12-23 11:09:57</created>
+      <modified>2021-01-08 10:12:57</modified>
+    </item>
+    <item>
+      <deal>3.94</deal>
+      <volume>1000</volume>
+      <created>2020-12-23 11:10:09</created>
+      <modified>2021-01-19 09:32:01</modified>
+    </item>
+    <item>
+      <deal>3.93</deal>
+      <volume>1000</volume>
+      <created>2020-12-23 11:10:26</created>
+      <modified>2021-01-12 10:22:38</modified>
+    </item>
+  </stock>
+  <stock>
+    <se>sh</se>
+    <code>600383</code>
+    <name>金地集团</name>
+    <flag>1</flag>
+    <valuation>14.0</valuation>
+    <item>
+      <deal>7.93</deal>
+      <volume>1000</volume>
+      <created>2018-07-19 23:11:15</created>
+      <modified>2019-01-23 21:49:22</modified>
+    </item>
+    <item>
+      <deal>12.2</deal>
+      <volume>1000</volume>
+      <created>2018-03-19 13:08:10</created>
+      <modified></modified>
+    </item>
+    <item>
+      <deal>11.59</deal>
+      <volume>1000</volume>
+      <created>2018-03-22 19:44:11</created>
+      <modified>2018-03-26 12:07:54</modified>
+    </item>
+    <item>
+      <deal>10.98</deal>
+      <volume>1000</volume>
+      <created>2018-03-26 12:08:40</created>
+      <modified>2018-04-17 07:53:04</modified>
+    </item>
+    <item>
+      <deal>10.37</deal>
+      <volume>1000</volume>
+      <created>2018-04-17 22:01:43</created>
+      <modified>2018-06-27 00:00:19</modified>
+    </item>
+    <item>
+      <deal>9.76</deal>
+      <volume>1000</volume>
+      <created>2018-06-27 00:01:52</created>
+      <modified>2019-01-23 21:48:21</modified>
+    </item>
+    <item>
+      <deal>9.15</deal>
+      <volume>1000</volume>
+      <created>2018-07-02 22:04:39</created>
+      <modified>2019-01-23 21:48:40</modified>
+    </item>
+    <item>
+      <deal>8.54</deal>
+      <volume>1000</volume>
+      <created>2018-07-11 22:13:45</created>
+      <modified>2019-01-23 21:48:57</modified>
+    </item>
+    <item>
+      <deal>12.8</deal>
+      <volume>1000</volume>
+      <created>2020-10-21 18:37:36</created>
+      <modified>2021-01-04 15:08:51</modified>
+    </item>
+    <item>
+      <deal>13.4</deal>
+      <volume>1000</volume>
+      <created>2020-10-21 18:39:18</created>
+      <modified>2020-11-03 09:34:29</modified>
+    </item>
+    <item>
+      <deal>14.0</deal>
+      <volume>1000</volume>
+      <created>2020-12-04 07:48:27</created>
+      <modified>2020-12-10 13:33:10</modified>
+    </item>
+  </stock>
+  <stock>
+    <se>sh</se>
+    <code>601288</code>
+    <name>农业银行</name>
+    <flag>1</flag>
+    <valuation>0.0</valuation>
+    <item>
+      <deal>4.0</deal>
+      <volume>1000</volume>
+      <created>2018-03-09 14:07:19</created>
+      <modified></modified>
+    </item>
+    <item>
+      <deal>3.8</deal>
+      <volume>1000</volume>
+      <created>2018-03-22 19:46:07</created>
+      <modified>2018-03-26 22:29:52</modified>
+    </item>
+    <item>
+      <deal>3.6</deal>
+      <volume>3000</volume>
+      <created>2018-04-17 22:02:35</created>
+      <modified>2020-12-10 17:39:15</modified>
+    </item>
+    <item>
+      <deal>3.4</deal>
+      <volume>2000</volume>
+      <created>2018-05-29 13:28:40</created>
+      <modified>2019-08-08 13:02:43</modified>
+    </item>
+    <item>
+      <deal>3.45</deal>
+      <volume>400</volume>
+      <created>2020-07-10 09:46:34</created>
+      <modified>2020-07-10 09:46:43</modified>
+    </item>
+    <item>
+      <deal>3.21</deal>
+      <volume>1000</volume>
+      <created>2020-07-19 22:19:58</created>
+      <modified>2020-09-01 09:31:36</modified>
+    </item>
+  </stock>
+  <stock>
+    <se>sh</se>
+    <code>601988</code>
+    <name>中国银行</name>
+    <flag>1</flag>
+    <valuation>0.0</valuation>
+    <item>
+      <deal>4.0</deal>
+      <volume>1000</volume>
+      <created>2018-03-26 22:33:16</created>
+      <modified></modified>
+    </item>
+    <item>
+      <deal>3.8</deal>
+      <volume>2000</volume>
+      <created>2018-03-28 22:43:07</created>
+      <modified>2019-06-05 22:49:32</modified>
+    </item>
+    <item>
+      <deal>3.6</deal>
+      <volume>2000</volume>
+      <created>2018-04-17 22:02:15</created>
+      <modified>2019-08-05 13:10:11</modified>
+    </item>
+    <item>
+      <deal>3.69</deal>
+      <volume>1000</volume>
+      <created>2019-06-05 12:33:43</created>
+      <modified>2019-06-05 22:50:37</modified>
+    </item>
+    <item>
+      <deal>3.4</deal>
+      <volume>400</volume>
+      <created>2020-07-04 23:13:30</created>
+      <modified>2020-07-24 11:01:41</modified>
+    </item>
+    <item>
+      <deal>3.2</deal>
+      <volume>1000</volume>
+      <created>2020-07-24 11:02:05</created>
+      <modified>2020-09-04 10:19:37</modified>
+    </item>
+  </stock>
+  <stock>
+    <se>sh</se>
+    <code>601006</code>
+    <name>大秦铁路</name>
+    <flag>1</flag>
+    <valuation>0.0</valuation>
+    <item>
+      <deal>7.94</deal>
+      <volume>1000</volume>
+      <created>2018-09-17 11:11:39</created>
+      <modified></modified>
+    </item>
+    <item>
+      <deal>7.42</deal>
+      <volume>1000</volume>
+      <created>2018-11-29 14:05:08</created>
+      <modified>2020-02-03 14:01:38</modified>
+    </item>
+    <item>
+      <deal>8.24</deal>
+      <volume>1000</volume>
+      <created>2019-06-30 22:34:59</created>
+      <modified></modified>
+    </item>
+    <item>
+      <deal>7.87</deal>
+      <volume>1000</volume>
+      <created>2019-07-15 11:22:34</created>
+      <modified></modified>
+    </item>
+    <item>
+      <deal>7.85</deal>
+      <volume>1000</volume>
+      <created>2019-07-26 13:02:26</created>
+      <modified></modified>
+    </item>
+    <item>
+      <deal>6.53</deal>
+      <volume>400</volume>
+      <created>2020-06-10 19:07:01</created>
+      <modified>2020-07-02 10:37:58</modified>
+    </item>
+  </stock>
+  <stock>
+    <se>sh</se>
+    <code>601398</code>
+    <name>工商银行</name>
+    <flag>0</flag>
+    <valuation>0.0</valuation>
+  </stock>
+  <stock>
+    <se>sh</se>
+    <code>600741</code>
+    <name>华域汽车</name>
+    <flag>0</flag>
+    <valuation>24.0</valuation>
+  </stock>
+  <stock>
+    <se>sh</se>
+    <code>600377</code>
+    <name>宁沪高速</name>
+    <flag>1</flag>
+    <valuation>10.0</valuation>
+    <item>
+      <deal>10.0</deal>
+      <volume>1000</volume>
+      <created>2019-08-15 13:07:53</created>
+      <modified>2020-10-15 23:24:06</modified>
+    </item>
+    <item>
+      <deal>9.0</deal>
+      <volume>1000</volume>
+      <created>2020-09-02 13:46:35</created>
+      <modified>2021-01-25 12:18:49</modified>
+    </item>
+    <item>
+      <deal>9.5</deal>
+      <volume>3000</volume>
+      <created>2020-09-07 21:32:15</created>
+      <modified>2020-10-15 23:24:23</modified>
+    </item>
+  </stock>
+  <stock>
+    <se>sh</se>
+    <code>600900</code>
+    <name>长江电力</name>
+    <flag>1</flag>
+    <valuation>20.0</valuation>
+    <item>
+      <deal>16.0</deal>
+      <volume>500</volume>
+      <created>2019-02-19 13:40:19</created>
+      <modified>2020-10-16 20:47:18</modified>
+    </item>
+    <item>
+      <deal>17.0</deal>
+      <volume>500</volume>
+      <created>2019-07-25 21:11:35</created>
+      <modified>2020-10-16 20:47:09</modified>
+    </item>
+    <item>
+      <deal>19.0</deal>
+      <volume>3500</volume>
+      <created>2020-10-14 15:45:17</created>
+      <modified>2021-01-30 15:15:52</modified>
+    </item>
+    <item>
+      <deal>20.0</deal>
+      <volume>500</volume>
+      <created>2020-11-13 10:20:17</created>
+      <modified>2020-11-16 13:33:23</modified>
+    </item>
+  </stock>
+  <stock>
+    <se>sh</se>
+    <code>600585</code>
+    <name>海螺水泥</name>
+    <flag>1</flag>
+    <valuation>60.0</valuation>
+    <item>
+      <deal>54.0</deal>
+      <volume>300</volume>
+      <created>2020-06-10 19:07:02</created>
+      <modified>2020-11-10 21:52:48</modified>
+    </item>
+    <item>
+      <deal>60.0</deal>
+      <volume>200</volume>
+      <created>2020-07-28 22:02:17</created>
+      <modified>2020-10-14 08:30:09</modified>
+    </item>
+    <item>
+      <deal>57.0</deal>
+      <volume>300</volume>
+      <created>2020-08-07 23:08:39</created>
+      <modified>2020-10-14 08:30:30</modified>
+    </item>
+    <item>
+      <deal>51.0</deal>
+      <volume>300</volume>
+      <created>2020-08-10 22:17:44</created>
+      <modified>2020-12-25 10:10:24</modified>
+    </item>
+    <item>
+      <deal>54.58</deal>
+      <volume>600</volume>
+      <created>2021-02-25 10:26:55</created>
+      <modified></modified>
+    </item>
+  </stock>
+  <stock>
+    <se>sh</se>
+    <code>600897</code>
+    <name>厦门空港</name>
+    <flag>1</flag>
+    <valuation>0.0</valuation>
+    <item>
+      <deal>24.11</deal>
+      <volume>200</volume>
+      <created>2019-06-30 22:37:33</created>
+      <modified></modified>
+    </item>
+    <item>
+      <deal>22.95</deal>
+      <volume>200</volume>
+      <created>2019-07-03 22:33:53</created>
+      <modified>2019-07-23 10:33:39</modified>
+    </item>
+    <item>
+      <deal>21.73</deal>
+      <volume>200</volume>
+      <created>2019-07-23 10:33:44</created>
+      <modified>2019-08-05 14:26:13</modified>
+    </item>
+    <item>
+      <deal>20.49</deal>
+      <volume>200</volume>
+      <created>2019-08-05 14:26:30</created>
+      <modified>2020-02-03 09:45:40</modified>
+    </item>
+    <item>
+      <deal>21.65</deal>
+      <volume>200</volume>
+      <created>2019-09-18 21:37:34</created>
+      <modified></modified>
+    </item>
+    <item>
+      <deal>21.07</deal>
+      <volume>200</volume>
+      <created>2019-10-22 10:51:31</created>
+      <modified></modified>
+    </item>
+    <item>
+      <deal>19.03</deal>
+      <volume>200</volume>
+      <created>2020-02-03 09:46:29</created>
+      <modified>2020-02-03 13:27:31</modified>
+    </item>
+    <item>
+      <deal>18.08</deal>
+      <volume>200</volume>
+      <created>2020-03-15 14:49:11</created>
+      <modified>2020-03-17 15:57:57</modified>
+    </item>
+    <item>
+      <deal>17.57</deal>
+      <volume>100</volume>
+      <created>2020-07-03 10:32:32</created>
+      <modified></modified>
+    </item>
+    <item>
+      <deal>17.11</deal>
+      <volume>300</volume>
+      <created>2020-12-10 15:01:18</created>
+      <modified>2020-12-11 10:22:48</modified>
+    </item>
+    <item>
+      <deal>16.0</deal>
+      <volume>200</volume>
+      <created>2020-12-11 10:38:23</created>
+      <modified>2021-02-02 10:45:30</modified>
+    </item>
+  </stock>
+  <stock>
+    <se>sh</se>
+    <code>601318</code>
+    <name>中国平安</name>
+    <flag>1</flag>
+    <valuation>80.0</valuation>
+    <item>
+      <deal>70.0</deal>
+      <volume>100</volume>
+      <created>2020-04-13 09:53:41</created>
+      <modified>2020-10-18 11:12:55</modified>
+    </item>
+    <item>
+      <deal>76.0</deal>
+      <volume>200</volume>
+      <created>2020-08-10 22:30:18</created>
+      <modified>2021-02-03 10:13:44</modified>
+    </item>
+    <item>
+      <deal>78.0</deal>
+      <volume>100</volume>
+      <created>2020-10-18 11:32:12</created>
+      <modified>2020-10-18 11:39:02</modified>
+    </item>
+    <item>
+      <deal>80.0</deal>
+      <volume>100</volume>
+      <created>2020-11-13 10:13:47</created>
+      <modified></modified>
+    </item>
+  </stock>
+  <stock>
+    <se>sz</se>
+    <code>000002</code>
+    <name>万 科Ａ</name>
+    <flag>1</flag>
+    <valuation>30.0</valuation>
+    <item>
+      <deal>25.0</deal>
+      <volume>200</volume>
+      <created>2020-03-18 22:49:51</created>
+      <modified>2020-10-15 23:14:31</modified>
+    </item>
+    <item>
+      <deal>27.0</deal>
+      <volume>1200</volume>
+      <created>2020-08-15 09:10:09</created>
+      <modified>2021-01-30 15:14:09</modified>
+    </item>
+    <item>
+      <deal>28.0</deal>
+      <volume>200</volume>
+      <created>2020-10-14 13:36:18</created>
+      <modified>2020-10-15 23:13:52</modified>
+    </item>
+    <item>
+      <deal>29.0</deal>
+      <volume>200</volume>
+      <created>2020-12-08 13:31:57</created>
+      <modified>2020-12-09 13:17:55</modified>
+    </item>
+  </stock>
+  <stock>
+    <se>sh</se>
+    <code>600036</code>
+    <name>招商银行</name>
+    <flag>1</flag>
+    <valuation>40.0</valuation>
+    <item>
+      <deal>32.0</deal>
+      <volume>100</volume>
+      <created>2020-04-13 09:53:03</created>
+      <modified>2020-10-15 23:28:24</modified>
+    </item>
+    <item>
+      <deal>35.0</deal>
+      <volume>200</volume>
+      <created>2020-07-28 21:32:13</created>
+      <modified>2020-10-15 23:29:58</modified>
+    </item>
+    <item>
+      <deal>38.0</deal>
+      <volume>200</volume>
+      <created>2020-08-15 09:06:52</created>
+      <modified>2020-08-20 09:58:29</modified>
+    </item>
+  </stock>
+  <stock>
+    <se>sh</se>
+    <code>600048</code>
+    <name>保利地产</name>
+    <flag>1</flag>
+    <valuation>18.0</valuation>
+    <item>
+      <deal>13.0</deal>
+      <volume>400</volume>
+      <created>2019-09-02 09:54:13</created>
+      <modified>2020-10-15 23:10:41</modified>
+    </item>
+    <item>
+      <deal>15.0</deal>
+      <volume>1400</volume>
+      <created>2020-08-15 08:21:53</created>
+      <modified>2021-01-06 09:31:58</modified>
+    </item>
+    <item>
+      <deal>17.0</deal>
+      <volume>400</volume>
+      <created>2020-08-16 23:09:09</created>
+      <modified>2020-08-18 13:43:00</modified>
+    </item>
+    <item>
+      <deal>16.0</deal>
+      <volume>5200</volume>
+      <created>2020-09-29 10:13:13</created>
+      <modified>2020-11-13 15:28:11</modified>
+    </item>
+    <item>
+      <deal>14.76</deal>
+      <volume>1000</volume>
+      <created>2021-01-05 10:16:38</created>
+      <modified></modified>
+    </item>
+  </stock>
+  <stock>
+    <se>sh</se>
+    <code>600606</code>
+    <name>绿地控股</name>
+    <flag>1</flag>
+    <valuation>8.0</valuation>
+    <item>
+      <deal>7.2</deal>
+      <volume>1000</volume>
+      <created>2019-07-30 10:57:53</created>
+      <modified>2020-11-17 08:00:55</modified>
+    </item>
+    <item>
+      <deal>7.0</deal>
+      <volume>1000</volume>
+      <created>2019-10-29 10:22:28</created>
+      <modified>2020-11-16 12:51:17</modified>
+    </item>
+    <item>
+      <deal>6.6</deal>
+      <volume>1000</volume>
+      <created>2020-01-22 22:26:24</created>
+      <modified>2020-11-16 12:51:40</modified>
+    </item>
+    <item>
+      <deal>5.8</deal>
+      <volume>1000</volume>
+      <created>2020-02-03 09:48:13</created>
+      <modified>2020-11-16 12:52:12</modified>
+    </item>
+    <item>
+      <deal>5.2</deal>
+      <volume>1000</volume>
+      <created>2020-03-18 22:49:52</created>
+      <modified>2020-11-17 08:00:10</modified>
+    </item>
+    <item>
+      <deal>6.8</deal>
+      <volume>3000</volume>
+      <created>2020-08-27 08:44:43</created>
+      <modified>2020-11-16 12:48:47</modified>
+    </item>
+    <item>
+      <deal>5.6</deal>
+      <volume>1000</volume>
+      <created>2020-08-27 08:45:00</created>
+      <modified>2021-01-05 10:10:51</modified>
+    </item>
+    <item>
+      <deal>6.4</deal>
+      <volume>2000</volume>
+      <created>2020-09-11 21:31:23</created>
+      <modified>2020-11-16 12:51:57</modified>
+    </item>
+    <item>
+      <deal>6.0</deal>
+      <volume>1000</volume>
+      <created>2020-09-11 21:31:28</created>
+      <modified>2020-12-17 11:45:15</modified>
+    </item>
+    <item>
+      <deal>6.2</deal>
+      <volume>1000</volume>
+      <created>2020-11-20 13:12:53</created>
+      <modified>2020-12-11 10:23:45</modified>
+    </item>
+  </stock>
+  <stock>
+    <se>sh</se>
+    <code>600019</code>
+    <name>宝钢股份</name>
+    <flag>0</flag>
+    <valuation>0.0</valuation>
+  </stock>
+  <stock>
+    <se>sh</se>
+    <code>601601</code>
+    <name>中国太保</name>
+    <flag>1</flag>
+    <valuation>40.0</valuation>
+  </stock>
+  <stock>
+    <se>sh</se>
+    <code>601336</code>
+    <name>新华保险</name>
+    <flag>1</flag>
+    <valuation>50.0</valuation>
+    <item>
+      <deal>50.0</deal>
+      <volume>100</volume>
+      <created>2020-08-15 09:12:41</created>
+      <modified>2021-02-02 10:28:14</modified>
+    </item>
+    <item>
+      <deal>47.5</deal>
+      <volume>100</volume>
+      <created>2021-01-30 15:39:12</created>
+      <modified>2021-02-04 11:04:35</modified>
+    </item>
+  </stock>
+  <stock>
+    <se>sh</se>
+    <code>601319</code>
+    <name>中国人保</name>
+    <flag>1</flag>
+    <valuation>10.0</valuation>
+    <item>
+      <deal>6.5</deal>
+      <volume>1000</volume>
+      <created>2020-11-13 12:41:57</created>
+      <modified>2020-11-13 13:06:31</modified>
+    </item>
+    <item>
+      <deal>5.9</deal>
+      <volume>1000</volume>
+      <created>2020-11-13 13:07:22</created>
+      <modified>2021-02-03 13:47:25</modified>
+    </item>
+    <item>
+      <deal>6.2</deal>
+      <volume>1000</volume>
+      <created>2020-12-25 13:16:20</created>
+      <modified>2021-01-25 13:04:05</modified>
+    </item>
+    <item>
+      <deal>6.11</deal>
+      <volume>0</volume>
+      <created>2021-02-25 07:09:21</created>
+      <modified></modified>
+    </item>
+  </stock>
+  <stock>
+    <se>sz</se>
+    <code>000581</code>
+    <name>威孚高科</name>
+    <flag>0</flag>
+    <valuation>20.0</valuation>
+  </stock>
+  <stock>
+    <se>sh</se>
+    <code>600612</code>
+    <name>老凤祥</name>
+    <flag>0</flag>
+    <valuation>0.0</valuation>
+  </stock>
+  <stock>
+    <se>sz</se>
+    <code>000895</code>
+    <name>双汇发展</name>
+    <flag>0</flag>
+    <valuation>0.0</valuation>
+  </stock>
+  <stock>
+    <se>sz</se>
+    <code>000877</code>
+    <name>天山股份</name>
+    <flag>0</flag>
+    <valuation>0.0</valuation>
+  </stock>
+  <stock>
+    <se>sh</se>
+    <code>600519</code>
+    <name>贵州茅台</name>
+    <flag>0</flag>
+    <valuation>0.0</valuation>
+  </stock>
+  <stock>
+    <se>sh</se>
+    <code>600809</code>
+    <name>山西汾酒</name>
+    <flag>0</flag>
+    <valuation>0.0</valuation>
+  </stock>
+  <stock>
+    <se>sz</se>
+    <code>000858</code>
+    <name>五 粮 液</name>
+    <flag>0</flag>
+    <valuation>0.0</valuation>
+  </stock>
+  <stock>
+    <se>sh</se>
+    <code>600436</code>
+    <name>片仔癀</name>
+    <flag>0</flag>
+    <valuation>0.0</valuation>
+  </stock>
+  <stock>
+    <se>sz</se>
+    <code>000596</code>
+    <name>古井贡酒</name>
+    <flag>0</flag>
+    <valuation>0.0</valuation>
+  </stock>
+  <stock>
+    <se>sz</se>
+    <code>000568</code>
+    <name>泸州老窖</name>
+    <flag>0</flag>
+    <valuation>0.0</valuation>
+  </stock>
+  <stock>
+    <se>sh</se>
+    <code>601888</code>
+    <name>中国中免</name>
+    <flag>0</flag>
+    <valuation>0.0</valuation>
+  </stock>
+  <stock>
+    <se>sz</se>
+    <code>002304</code>
+    <name>洋河股份</name>
+    <flag>0</flag>
+    <valuation>0.0</valuation>
+  </stock>
+  <stock>
+    <se>sh</se>
+    <code>603288</code>
+    <name>海天味业</name>
+    <flag>0</flag>
+    <valuation>0.0</valuation>
+  </stock>
+  <stock>
+    <se>sh</se>
+    <code>600309</code>
+    <name>万华化学</name>
+    <flag>0</flag>
+    <valuation>0.0</valuation>
+  </stock>
+  <stock>
+    <se>sh</se>
+    <code>600009</code>
+    <name>上海机场</name>
+    <flag>1</flag>
+    <valuation>80.0</valuation>
+    <item>
+      <deal>75.0</deal>
+      <volume>100</volume>
+      <created>2020-12-21 22:37:25</created>
+      <modified>2021-01-07 14:18:39</modified>
+    </item>
+    <item>
+      <deal>72.0</deal>
+      <volume>400</volume>
+      <created>2021-01-07 13:32:18</created>
+      <modified>2021-01-30 15:52:49</modified>
+    </item>
+    <item>
+      <deal>60.0</deal>
+      <volume>100</volume>
+      <created>2021-01-10 22:33:30</created>
+      <modified>2021-02-03 13:01:26</modified>
+    </item>
+    <item>
+      <deal>56.0</deal>
+      <volume>100</volume>
+      <created>2021-02-03 12:14:59</created>
+      <modified>2021-02-08 09:37:55</modified>
+    </item>
+  </stock>
+  <stock>
+    <se>sz</se>
+    <code>000651</code>
+    <name>格力电器</name>
+    <flag>0</flag>
+    <valuation>0.0</valuation>
+  </stock>
+  <stock>
+    <se>sh</se>
+    <code>600887</code>
+    <name>伊利股份</name>
+    <flag>0</flag>
+    <valuation>0.0</valuation>
+  </stock>
+  <stock>
+    <se>sh</se>
+    <code>600690</code>
+    <name>海尔智家</name>
+    <flag>0</flag>
+    <valuation>0.0</valuation>
+  </stock>
+  <stock>
+    <se>sh</se>
+    <code>600056</code>
+    <name>中国医药</name>
+    <flag>1</flag>
+    <valuation>0.0</valuation>
+    <item>
+      <deal>14.47</deal>
+      <volume>400</volume>
+      <created>2021-01-10 23:20:11</created>
+      <modified>2021-01-11 09:36:51</modified>
+    </item>
+  </stock>
+  <stock>
+    <se>sh</se>
+    <code>600332</code>
+    <name>白云山</name>
+    <flag>0</flag>
+    <valuation>0.0</valuation>
+  </stock>
+  <stock>
+    <se>sh</se>
+    <code>600298</code>
+    <name>安琪酵母</name>
+    <flag>0</flag>
+    <valuation>0.0</valuation>
+  </stock>
+  <stock>
+    <se>sz</se>
+    <code>000789</code>
+    <name>万年青</name>
+    <flag>0</flag>
+    <valuation>0.0</valuation>
+  </stock>
+  <stock>
+    <se>sz</se>
+    <code>000921</code>
+    <name>海信家电</name>
+    <flag>0</flag>
+    <valuation>0.0</valuation>
+  </stock>
+  <stock>
+    <se>sh</se>
+    <code>601088</code>
+    <name>中国神华</name>
+    <flag>0</flag>
+    <valuation>0.0</valuation>
+  </stock>
+  <stock>
+    <se>sh</se>
+    <code>600563</code>
+    <name>法拉电子</name>
+    <flag>0</flag>
+    <valuation>0.0</valuation>
+  </stock>
+  <stock>
+    <se>sz</se>
+    <code>000001</code>
+    <name>平安银行</name>
+    <flag>0</flag>
+    <valuation>0.0</valuation>
+  </stock>
+  <stock>
+    <se>sz</se>
+    <code>002507</code>
+    <name>涪陵榨菜</name>
+    <flag>0</flag>
+    <valuation>0.0</valuation>
+  </stock>
+  <stock>
+    <se>sh</se>
+    <code>600597</code>
+    <name>光明乳业</name>
+    <flag>0</flag>
+    <valuation>0.0</valuation>
+  </stock>
+  <stock>
+    <se>sz</se>
+    <code>000039</code>
+    <name>中集集团</name>
+    <flag>0</flag>
+    <valuation>0.0</valuation>
+  </stock>
+  <stock>
+    <se>sz</se>
+    <code>000538</code>
+    <name>云南白药</name>
+    <flag>0</flag>
+    <valuation>0.0</valuation>
+  </stock>
+  <stock>
+    <se>sh</se>
+    <code>600030</code>
+    <name>中信证券</name>
+    <flag>0</flag>
+    <valuation>0.0</valuation>
+  </stock>
+  <stock>
+    <se>sh</se>
+    <code>601939</code>
+    <name>建设银行</name>
+    <flag>0</flag>
+    <valuation>0.0</valuation>
+  </stock>
+</root>

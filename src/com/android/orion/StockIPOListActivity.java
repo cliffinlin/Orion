@@ -24,7 +24,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.orion.database.DatabaseContract;
-import com.android.orion.database.Setting;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Utility;
 
@@ -77,7 +76,7 @@ public class StockIPOListActivity extends ListActivity implements
 
 		setContentView(R.layout.activity_ipo_list);
 
-		mSortOrder = getSetting(Setting.KEY_SORT_ORDER_IPO_LIST,
+		mSortOrder = getSetting(Settings.KEY_SORT_ORDER_IPO_LIST,
 				mSortOrderDefault);
 
 		initHeader();
@@ -114,7 +113,7 @@ public class StockIPOListActivity extends ListActivity implements
 		case R.id.action_refresh:
 			if (mOrionService != null) {
 				mStockDatabaseManager.deleteIPO();
-				mOrionService.downloadIPO();
+				mOrionService.download(null);
 			}
 			return true;
 
@@ -139,7 +138,7 @@ public class StockIPOListActivity extends ListActivity implements
 	@Override
 	void onServiceConnected() {
 		if (mOrionService != null) {
-			mOrionService.downloadIPO();
+			mOrionService.download(null);
 		}
 	}
 
@@ -179,7 +178,7 @@ public class StockIPOListActivity extends ListActivity implements
 
 		mSortOrder = mSortOrderColumn + mSortOrderDirection;
 
-		saveSetting(Setting.KEY_SORT_ORDER_IPO_LIST, mSortOrder);
+		saveSetting(Settings.KEY_SORT_ORDER_IPO_LIST, mSortOrder);
 
 		restartLoader();
 	}
@@ -205,7 +204,7 @@ public class StockIPOListActivity extends ListActivity implements
 
 	void setVisibility(String key, TextView textView) {
 		if (textView != null) {
-			if (Preferences.readBoolean(this, key, false)) {
+			if (Preferences.getBoolean(this, key, false)) {
 				textView.setVisibility(View.VISIBLE);
 			} else {
 				textView.setVisibility(View.GONE);
@@ -378,7 +377,7 @@ public class StockIPOListActivity extends ListActivity implements
 
 	boolean setTextViewValue(String key, View textView) {
 		if (textView != null) {
-			if (Preferences.readBoolean(this, key, false)) {
+			if (Preferences.getBoolean(this, key, false)) {
 				textView.setVisibility(View.VISIBLE);
 				return false;
 			} else {

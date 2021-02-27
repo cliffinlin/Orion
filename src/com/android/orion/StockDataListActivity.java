@@ -27,7 +27,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.orion.database.DatabaseContract;
-import com.android.orion.database.Setting;
 import com.android.orion.database.Stock;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Utility;
@@ -81,7 +80,7 @@ public class StockDataListActivity extends ListActivity implements
 			case MESSAGE_REFRESH:
 				if (mOrionService != null) {
 					mStockDatabaseManager.deleteStockData();
-					mOrionService.downloadStockDataHistory(null);
+					mOrionService.download(null);
 					restartLoader();
 				}
 				break;
@@ -107,7 +106,7 @@ public class StockDataListActivity extends ListActivity implements
 
 		mStockFilter.read();
 
-		mSortOrder = getSetting(Setting.KEY_SORT_ORDER_MARKET_LIST,
+		mSortOrder = getSetting(Settings.KEY_SORT_ORDER_MARKET_LIST,
 				mSortOrderDefault);
 
 		initHeader();
@@ -186,8 +185,7 @@ public class StockDataListActivity extends ListActivity implements
 			switch (requestCode) {
 			case REQUEST_CODE_STOCK_INSERT:
 				if (mOrionService != null) {
-					mOrionService.downloadStockDataHistory(mStock);
-					mOrionService.downloadFinancial(mStock);
+					mOrionService.download(mStock);
 				}
 				break;
 
@@ -265,7 +263,7 @@ public class StockDataListActivity extends ListActivity implements
 
 		mSortOrder = mSortOrderColumn + mSortOrderDirection;
 
-		saveSetting(Setting.KEY_SORT_ORDER_MARKET_LIST, mSortOrder);
+		saveSetting(Settings.KEY_SORT_ORDER_MARKET_LIST, mSortOrder);
 
 		restartLoader();
 	}
@@ -296,7 +294,7 @@ public class StockDataListActivity extends ListActivity implements
 
 	void setVisibility(String key, TextView textView) {
 		if (textView != null) {
-			if (Preferences.readBoolean(this, key, false)) {
+			if (Preferences.getBoolean(this, key, false)) {
 				textView.setVisibility(View.VISIBLE);
 			} else {
 				textView.setVisibility(View.GONE);
@@ -563,7 +561,7 @@ public class StockDataListActivity extends ListActivity implements
 
 	boolean setTextViewValue(String key, View textView) {
 		if (textView != null) {
-			if (Preferences.readBoolean(this, key, false)) {
+			if (Preferences.getBoolean(this, key, false)) {
 				textView.setVisibility(View.VISIBLE);
 				return false;
 			} else {

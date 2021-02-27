@@ -20,9 +20,6 @@ import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.DatabaseManager;
 
 public class OrionContentProvider extends ContentProvider {
-	private static final int SETTING = 100;
-	private static final int SETTING_ID = 101;
-
 	private static final int STOCK = 200;
 	private static final int STOCK_ID = 201;
 
@@ -48,11 +45,6 @@ public class OrionContentProvider extends ContentProvider {
 			UriMatcher.NO_MATCH);
 
 	static {
-		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
-				DatabaseContract.Setting.TABLE_NAME, SETTING);
-		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
-				DatabaseContract.Setting.TABLE_NAME + "/#", SETTING_ID);
-
 		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
 				DatabaseContract.Stock.TABLE_NAME, STOCK);
 		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
@@ -115,13 +107,6 @@ public class OrionContentProvider extends ContentProvider {
 		String type = null;
 
 		switch (mUriMatcher.match(uri)) {
-		case SETTING:
-			type = DatabaseContract.Setting.CONTENT_TYPE;
-			break;
-		case SETTING_ID:
-			type = DatabaseContract.Setting.CONTENT_ITEM_TYPE;
-			break;
-
 		case STOCK:
 			type = DatabaseContract.Stock.CONTENT_TYPE;
 			break;
@@ -193,15 +178,6 @@ public class OrionContentProvider extends ContentProvider {
 		SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
 
 		switch (mUriMatcher.match(uri)) {
-		case SETTING:
-			builder.setTables(DatabaseContract.Setting.TABLE_NAME);
-			break;
-		case SETTING_ID:
-			builder.setTables(DatabaseContract.Setting.TABLE_NAME);
-			builder.appendWhere(BaseColumns._ID + " = "
-					+ uri.getLastPathSegment());
-			break;
-
 		case STOCK:
 			builder.setTables(DatabaseContract.Stock.TABLE_NAME);
 			break;
@@ -291,11 +267,6 @@ public class OrionContentProvider extends ContentProvider {
 		}
 
 		switch (mUriMatcher.match(uri)) {
-		case SETTING:
-			id = mDatabaseManager.mDatabase.insert(
-					DatabaseContract.Setting.TABLE_NAME, null, contentValues);
-			break;
-
 		case STOCK:
 			id = mDatabaseManager.mDatabase.insert(
 					DatabaseContract.Stock.TABLE_NAME, null, contentValues);
@@ -403,21 +374,6 @@ public class OrionContentProvider extends ContentProvider {
 		}
 
 		switch (mUriMatcher.match(uri)) {
-		case SETTING:
-			result = mDatabaseManager.mDatabase.update(
-					DatabaseContract.Setting.TABLE_NAME, values, selection,
-					selectionArgs);
-			break;
-		case SETTING_ID:
-			whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
-			if (!TextUtils.isEmpty(selection)) {
-				whereClause += " AND " + whereClause;
-			}
-			result = mDatabaseManager.mDatabase.update(
-					DatabaseContract.Setting.TABLE_NAME, values, whereClause,
-					selectionArgs);
-			break;
-
 		case STOCK:
 			result = mDatabaseManager.mDatabase.update(
 					DatabaseContract.Stock.TABLE_NAME, values, selection,
@@ -547,22 +503,6 @@ public class OrionContentProvider extends ContentProvider {
 		}
 
 		switch (mUriMatcher.match(uri)) {
-		case SETTING:
-			result = mDatabaseManager.mDatabase.delete(
-					DatabaseContract.Setting.TABLE_NAME, selection,
-					selectionArgs);
-			break;
-
-		case SETTING_ID:
-			whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
-			if (!TextUtils.isEmpty(selection)) {
-				whereClause += " AND " + whereClause;
-			}
-			result = mDatabaseManager.mDatabase.delete(
-					DatabaseContract.Setting.TABLE_NAME, whereClause,
-					selectionArgs);
-			break;
-
 		case STOCK:
 			result = mDatabaseManager.mDatabase
 					.delete(DatabaseContract.Stock.TABLE_NAME, selection,

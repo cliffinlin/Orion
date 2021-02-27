@@ -63,16 +63,6 @@ public class Constants {
 	public static final int SERVICE_DOWNLOAD_STOCK_FAVORITE = 0;
 	public static final int SERVICE_DATABASE_UPDATE = 1;
 
-	public static final String SETTING_SHARED_PREFERENCE = "setting";
-	public static final String SETTING_KEY_ALARM = "alarm";
-	public static final String SETTING_KEY_LIMIT_LINE = "limit_line";
-	public static final String SETTING_KEY_ROE_LINE = "roe_line";
-	public static final String SETTING_KEY_ROI_LINE = "roi_line";
-	public static final String SETTING_KEY_NOTIFICATION_MESSAGE = "notification_message";
-	public static final String SETTING_KEY_NOTIFICATION_LIGHTS = "notification_lights";
-	public static final String SETTING_KEY_NOTIFICATION_VIBRATE = "notification_vibrate";
-	public static final String SETTING_KEY_NOTIFICATION_SOUND = "notification_sound";
-
 	public static final String STOCK_ACTION_NONE = "";
 	public static final String STOCK_ACTION_STAR = "*";
 	public static final String STOCK_ACTION_D = "D";

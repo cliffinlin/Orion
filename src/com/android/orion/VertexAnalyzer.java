@@ -114,18 +114,18 @@ public class VertexAnalyzer {
 							|| (vertex == Constants.STOCK_VERTEX_BOTTOM)) {
 						vertexList.add(dataList.get(i));
 					}
-	
+
 					current.merge(direction, next);
 					next.merge(direction, current);
-	
+
 					dataList.get(i).set(current);
 					dataList.get(i + 1).set(next);
-	
+
 					current.set(next);
-	
+
 					next.init();
 					continue;
-				}				
+				}
 			}
 
 			setDirectionVertex(dataList, i, prev, current, next);

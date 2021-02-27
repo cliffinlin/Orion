@@ -27,7 +27,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.orion.database.DatabaseContract;
-import com.android.orion.database.Setting;
 import com.android.orion.database.Stock;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Utility;
@@ -97,7 +96,7 @@ public class StockFinancialListActivity extends ListActivity implements
 				if (mOrionService != null) {
 					mStockDatabaseManager.deleteFinancialData();
 					mStockDatabaseManager.deleteShareBonus();
-					mOrionService.downloadFinancial(null);
+					mOrionService.download(null);
 					restartLoader();
 				}
 				break;
@@ -123,7 +122,7 @@ public class StockFinancialListActivity extends ListActivity implements
 
 		mStockFilter.read();
 
-		mSortOrder = getSetting(Setting.KEY_SORT_ORDER_FINANCIAL_LIST,
+		mSortOrder = getSetting(Settings.KEY_SORT_ORDER_FINANCIAL_LIST,
 				mSortOrderDefault);
 
 		initHeader();
@@ -202,8 +201,7 @@ public class StockFinancialListActivity extends ListActivity implements
 			switch (requestCode) {
 			case REQUEST_CODE_STOCK_INSERT:
 				if (mOrionService != null) {
-					mOrionService.downloadStockDataHistory(mStock);
-					mOrionService.downloadFinancial(mStock);
+					mOrionService.download(mStock);
 				}
 				break;
 
@@ -223,7 +221,7 @@ public class StockFinancialListActivity extends ListActivity implements
 	@Override
 	void onServiceConnected() {
 		if (mOrionService != null) {
-			mOrionService.downloadFinancial(null);
+			mOrionService.download(null);
 		}
 	}
 
@@ -324,7 +322,7 @@ public class StockFinancialListActivity extends ListActivity implements
 
 		mSortOrder = mSortOrderColumn + mSortOrderDirection;
 
-		saveSetting(Setting.KEY_SORT_ORDER_FINANCIAL_LIST, mSortOrder);
+		saveSetting(Settings.KEY_SORT_ORDER_FINANCIAL_LIST, mSortOrder);
 
 		restartLoader();
 	}
@@ -371,7 +369,7 @@ public class StockFinancialListActivity extends ListActivity implements
 
 	void setVisibility(String key, TextView textView) {
 		if (textView != null) {
-			if (Preferences.readBoolean(this, key, false)) {
+			if (Preferences.getBoolean(this, key, false)) {
 				textView.setVisibility(View.VISIBLE);
 			} else {
 				textView.setVisibility(View.GONE);
@@ -761,7 +759,7 @@ public class StockFinancialListActivity extends ListActivity implements
 
 	boolean setTextViewValue(String key, View textView) {
 		if (textView != null) {
-			if (Preferences.readBoolean(this, key, false)) {
+			if (Preferences.getBoolean(this, key, false)) {
 				textView.setVisibility(View.VISIBLE);
 				return false;
 			} else {

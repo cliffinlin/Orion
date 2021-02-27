@@ -51,7 +51,7 @@ public class ServiceSettingFragment extends PreferenceFragment implements
 		boolean bChecked;
 
 		bChecked = sharedPreferences.getBoolean(key, true);
-		if (key.equals(Constants.SETTING_KEY_ALARM)) {
+		if (key.equals(Settings.KEY_ALARM)) {
 			if (bChecked) {
 				remindNetworkConnection();
 

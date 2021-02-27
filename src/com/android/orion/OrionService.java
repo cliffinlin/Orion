@@ -137,17 +137,11 @@ public class OrionService extends Service {
 		}
 	}
 
-	void downloadStockDataHistory(Stock stock) {
-		mSinaFinance.downloadStockDataHistory(stock);
+
+	void download(Stock stock) {
+		mSinaFinance.download(stock);
 	}
 
-	void downloadFinancial(Stock stock) {
-		mSinaFinance.downloadFinancial(stock);
-	}
-
-	void downloadIPO() {
-		mSinaFinance.downloadIPO();
-	}
 
 	@Override
 	public IBinder onBind(Intent intent) {

@@ -23,7 +23,6 @@ import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockDatabaseManager;
 import com.android.orion.database.StockDeal;
-import com.android.orion.database.StockFilter;
 import com.android.orion.database.TotalShare;
 import com.android.orion.indicator.MACD;
 import com.android.orion.utility.Preferences;
@@ -148,11 +147,18 @@ public class StockAnalyzer {
 				+ "s");
 	}
 
-	void analyze(Stock stock, String period, ArrayList<StockData> stockDataList) {
+	void analyze(Stock stock, String period) {
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 
-		if ((stock == null) || (stockDataList == null)) {
+		ArrayList<StockData> stockDataList = null;
+
+		if (stock == null) {
+			return;
+		}
+
+		stockDataList = stock.getStockDataList(period);
+		if (stockDataList == null) {
 			return;
 		}
 
@@ -576,17 +582,12 @@ public class StockAnalyzer {
 
 		setMACD(stock, period, stockDataList);
 
-		// __TEST_CASE__
-		// vertexAnalyzer.testShow(stockDataList, drawDataList);
-		// __TEST_CASE__
 		vertexAnalyzer.analyzeLine(stockDataList, drawDataList,
 				strokeVertexList, Constants.STOCK_VERTEX_TOP_STROKE,
 				Constants.STOCK_VERTEX_BOTTOM_STROKE);
 		vertexAnalyzer.vertexListToDataList(stockDataList, strokeVertexList,
 				strokeDataList, false);
-		// __TEST_CASE__
-		// vertexAnalyzer.testShow(stockDataList, strokeDataList);
-		// __TEST_CASE__
+
 		vertexAnalyzer.analyzeLine(stockDataList, strokeDataList,
 				segmentVertexList, Constants.STOCK_VERTEX_TOP_SEGMENT,
 				Constants.STOCK_VERTEX_BOTTOM_SEGMENT);
@@ -899,23 +900,23 @@ public class StockAnalyzer {
 				.setLights(0xFF0000FF, 100, 300)
 				.setContentIntent(pendingIntent);
 
-		if (Preferences.readBoolean(mContext,
-				Constants.SETTING_KEY_NOTIFICATION_LIGHTS, false)) {
+		if (Preferences.getBoolean(mContext, Settings.KEY_NOTIFICATION_LIGHTS,
+				false)) {
 			defaults = defaults | Notification.DEFAULT_LIGHTS;
 		}
-		if (Preferences.readBoolean(mContext,
-				Constants.SETTING_KEY_NOTIFICATION_VIBRATE, false)) {
+		if (Preferences.getBoolean(mContext, Settings.KEY_NOTIFICATION_VIBRATE,
+				false)) {
 			defaults = defaults | Notification.DEFAULT_VIBRATE;
 		}
-		if (Preferences.readBoolean(mContext,
-				Constants.SETTING_KEY_NOTIFICATION_SOUND, false)) {
+		if (Preferences.getBoolean(mContext, Settings.KEY_NOTIFICATION_SOUND,
+				false)) {
 			defaults = defaults | Notification.DEFAULT_SOUND;
 		}
 
 		notification.setDefaults(defaults);
 
-		if (Preferences.readBoolean(mContext,
-				Constants.SETTING_KEY_NOTIFICATION_MESSAGE, true)) {
+		if (Preferences.getBoolean(mContext, Settings.KEY_NOTIFICATION_MESSAGE,
+				true)) {
 			notificationManager.notify(id, notification.build());
 		}
 	}
@@ -932,7 +933,7 @@ public class StockAnalyzer {
 
 		for (int i = Constants.PERIODS.length - 1; i >= 0; i--) {
 			String period = Constants.PERIODS[i];
-			if (Preferences.readBoolean(mContext, period, false)) {
+			if (Preferences.getBoolean(mContext, period, false)) {
 				action = stock.getAction(period);
 
 				if (action.contains("B7B7") || action.contains("S7S7")) {

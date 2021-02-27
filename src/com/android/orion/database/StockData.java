@@ -26,7 +26,6 @@ public class StockData extends StockDatabaseTable {
 	private double mHistogram;
 	private double mSigmaHistogram;
 	private int mDivergence;
-	private double mTrendsEfforts;
 	private String mAction;
 	
 	private double mRoi;
@@ -90,7 +89,6 @@ public class StockData extends StockDatabaseTable {
 		mHistogram = 0;
 		mSigmaHistogram = 0;
 		mDivergence = Constants.STOCK_DIVERGENCE_NONE;
-		mTrendsEfforts = 0;
 		mAction = "";
 		
 		mRoi = 0;
@@ -132,8 +130,6 @@ public class StockData extends StockDatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_SIGMA_HISTOGRAM,
 				mSigmaHistogram);
 		contentValues.put(DatabaseContract.COLUMN_DIVERGENCE, mDivergence);
-		contentValues.put(DatabaseContract.COLUMN_TRENDS_EFFORTS,
-				mTrendsEfforts);
 		contentValues.put(DatabaseContract.COLUMN_ACTION, mAction);
 		
 		contentValues.put(DatabaseContract.COLUMN_ROI, mRoi);
@@ -172,7 +168,6 @@ public class StockData extends StockDatabaseTable {
 		setHistogram(stockData.mHistogram);
 		setSigmaHistogram(stockData.mSigmaHistogram);
 		setDivergence(stockData.mDivergence);
-		setTrendsEfforts(stockData.mTrendsEfforts);
 		setAction(stockData.mAction);
 		
 		setRoi(stockData.mRoi);
@@ -220,8 +215,6 @@ public class StockData extends StockDatabaseTable {
 		setPe(cursor);
 		setPb(cursor);
 		setYield(cursor);
-		
-		setTrendsEfforts(cursor);
 	}
 
 	public long getStockId() {
@@ -545,23 +538,6 @@ public class StockData extends StockDatabaseTable {
 
 		setDivergence(cursor.getInt(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_DIVERGENCE)));
-	}
-
-	double getTrendsEfforts() {
-		return mTrendsEfforts;
-	}
-
-	void setTrendsEfforts(double trendsEfforts) {
-		mTrendsEfforts = trendsEfforts;
-	}
-
-	void setTrendsEfforts(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setTrendsEfforts(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_TRENDS_EFFORTS)));
 	}
 
 	public String getAction() {

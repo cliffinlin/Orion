@@ -13,7 +13,6 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		db.execSQL(DatabaseContract.Setting.CREATE_TABLE);
 		db.execSQL(DatabaseContract.Stock.CREATE_TABLE);
 		db.execSQL(DatabaseContract.StockData.CREATE_TABLE);
 		db.execSQL(DatabaseContract.StockDeal.CREATE_TABLE);
@@ -25,7 +24,6 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		db.execSQL(DatabaseContract.Setting.DELETE_TABLE);
 		db.execSQL(DatabaseContract.Stock.DELETE_TABLE);
 		db.execSQL(DatabaseContract.StockData.DELETE_TABLE);
 		db.execSQL(DatabaseContract.StockDeal.DELETE_TABLE);
