@@ -588,7 +588,6 @@ public class SinaFinance extends StockDataProvider {
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 		boolean bulkInsert = false;
-		int defaultValue = 0;
 		ContentValues[] contentValuesArray = null;
 		String dateTimeString = "";
 		String dateTime[] = null;
@@ -620,14 +619,6 @@ public class SinaFinance extends StockDataProvider {
 						"handleResponseStockDataHistory return jsonArray.size() = "
 								+ jsonArray.size());
 				return;
-			}
-
-			defaultValue = getDownloadHistoryLengthDefault(stockData
-					.getPeriod());
-			if (defaultValue == jsonArray.size()) {
-				mStockDatabaseManager.deleteStockData(stockData.getStockId(),
-						stockData.getPeriod());
-				bulkInsert = true;
 			}
 
 			if (bulkInsert) {

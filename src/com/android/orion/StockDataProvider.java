@@ -1,7 +1,6 @@
 package com.android.orion;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -24,7 +23,6 @@ import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.TotalShare;
-import com.android.orion.utility.Market;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Utility;
 
@@ -686,15 +684,17 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			}
 
 			mStockData.setStockId(stock.getId());
-			len = getDownloadHistoryLengthDefault(period);
-			if (len > 0) {
-				setStock(stock);
+			mStockDatabaseManager.getStockData(mStockData);
 
-				return downloadStockDataHistory(getStockDataHistoryURLString(
-						stock, mStockData, len));
+			len = getDownloadHistoryLengthDefault(period);
+			if (len <= 0) {
+				return "";
 			}
 
-			return "";
+			setStock(stock);
+
+			return downloadStockDataHistory(getStockDataHistoryURLString(stock,
+					mStockData, len));
 		}
 
 		String downloadStockDataHistory(String urlString) {
@@ -725,8 +725,11 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		}
 
 		String downloadStockDataRealTime(Stock stock) {
-			String responseString = "";
 			String period = Constants.PERIOD_DAY;
+
+			if (!Preferences.getBoolean(mContext, period, false)) {
+				return "";
+			}
 
 			if (stock == null) {
 				return "";
@@ -734,28 +737,13 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 			mStockDatabaseManager.getStock(stock);
 
-			if (Preferences.getBoolean(mContext, period, false)) {
-				responseString = downloadStockDataRealTime(stock, period);
-			}
-
-			return responseString;
-		}
-
-		String downloadStockDataRealTime(Stock stock, String period) {
 			mStockData = new StockData(period);
-
-			if (stock == null) {
-				return "";
-			}
-
 			mStockData.setStockId(stock.getId());
+			mStockDatabaseManager.getStockData(mStockData);
+
 			setStock(stock);
 
-			if (Market.isOpeningHours(Calendar.getInstance())) {
-				return downloadStockDataRealTime(getStockDataRealTimeURLString(stock));
-			}
-
-			return "";
+			return downloadStockDataRealTime(getStockDataRealTimeURLString(stock));
 		}
 
 		String downloadStockDataRealTime(String urlString) {
