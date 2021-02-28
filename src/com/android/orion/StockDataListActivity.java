@@ -190,7 +190,7 @@ public class StockDataListActivity extends ListActivity implements
 	@Override
 	void onServiceConnected() {
 		if (mOrionService != null) {
-			// mOrionService.downloadStockDataHistory(null);
+			mOrionService.download(null);
 		}
 	}
 
