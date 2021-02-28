@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <preference-headers xmlns:android="http://schemas.android.com/apk/res/android" >
-
-    <header
+    <header
         android:icon="@drawable/ic_service"
-        android:title="@string/service" >
+        android:title="@string/settings" >
         <intent
             android:targetClass="com.android.orion.ServiceSettingActivity"
             android:targetPackage="com.android.orion" />
@@ -49,7 +48,7 @@
         <intent
             android:targetClass="com.android.orion.StockFilterActivity"
             android:targetPackage="com.android.orion" />
-    </header>    
+    </header>
     <header
         android:icon="@drawable/ic_about"
         android:title="@string/about" >

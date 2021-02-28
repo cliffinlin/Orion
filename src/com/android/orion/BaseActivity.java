@@ -221,8 +221,6 @@ public class BaseActivity extends Activity {
 			mProgressDialog = new ProgressDialog(mContext,
 					ProgressDialog.THEME_HOLO_LIGHT);
 		}
-
-		acquireWakeLock();
 	}
 
 	@Override
@@ -233,8 +231,6 @@ public class BaseActivity extends Activity {
 				mBroadcastReceiver);
 
 		unbindService(mServiceConnection);
-
-		releaseWakeLock();
 	}
 
 	@Override

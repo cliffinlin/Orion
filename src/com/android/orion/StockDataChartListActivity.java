@@ -60,9 +60,9 @@ public class StockDataChartListActivity extends BaseActivity implements
 	static final int MESSAGE_REFRESH = 0;
 	static final int MESSAGE_LOAD_STOCK_LIST = 1;
 
-	boolean mShowLimitLine = true;
-	boolean mShowRoeLine = false;
-	boolean mShowRoiLine = false;
+	boolean mShowDeal = true;
+	boolean mShowRoe = false;
+	boolean mShowRoi = false;
 
 	int mStockListIndex = 0;
 
@@ -148,12 +148,9 @@ public class StockDataChartListActivity extends BaseActivity implements
 		mSortOrder = getIntent().getStringExtra(
 				Constants.EXTRA_STOCK_LIST_SORT_ORDER);
 
-		mShowLimitLine = Preferences.getBoolean(mContext,
-				Settings.KEY_LIMIT_LINE, true);
-		mShowRoeLine = Preferences.getBoolean(mContext, Settings.KEY_ROE_LINE,
-				true);
-		mShowRoiLine = Preferences.getBoolean(mContext, Settings.KEY_ROI_LINE,
-				true);
+		mShowDeal = Preferences.getBoolean(mContext, Settings.KEY_DEAL, true);
+		mShowRoe = Preferences.getBoolean(mContext, Settings.KEY_ROE, true);
+		mShowRoi = Preferences.getBoolean(mContext, Settings.KEY_ROI, true);
 
 		initLoader();
 
@@ -528,7 +525,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 								.add(overlapLowEntry);
 					}
 
-					if (mShowRoiLine) {
+					if (mShowRoi) {
 						roi = (float) mStockData.getRoi();
 						Entry roiEntry = new Entry(roi, index);
 						stockDataChart.mRoiList.add(roiEntry);
@@ -559,7 +556,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 						stockDataChart.mNetProfitPerShareList
 								.add(netProfitPerShareEntry);
 
-						if (mShowRoeLine) {
+						if (mShowRoe) {
 							Entry roeEntry = new Entry(roe, index);
 							stockDataChart.mRoeList.add(roeEntry);
 						}
@@ -611,7 +608,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 				mStockDatabaseManager.getStockDealListAllSelection(mStock));
 
 		stockDataChart.updateDescription(mStock);
-		if (mShowLimitLine) {
+		if (mShowDeal) {
 			stockDataChart.updateLimitLine(mStock, mStockDealList);
 		}
 		stockDataChart.setMainChartData();

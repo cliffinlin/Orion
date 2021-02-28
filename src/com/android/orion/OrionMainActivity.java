@@ -110,6 +110,7 @@ public class OrionMainActivity extends PreferenceActivity {
 
 		if (!settings.contains(Settings.KEY_ALARM)) {
 			editor.putBoolean(Settings.KEY_ALARM, true);
+			editor.putBoolean(Settings.KEY_WAKE, true);
 			editor.putBoolean(Constants.PERIOD_MONTH, true);
 			editor.putBoolean(Constants.PERIOD_WEEK, true);
 			editor.putBoolean(Constants.PERIOD_DAY, true);

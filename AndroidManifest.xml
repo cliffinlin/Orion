@@ -94,7 +94,7 @@
         </activity>
         <activity
             android:name="com.android.orion.ServiceSettingActivity"
-            android:label="@string/title_activity_service_setting"
+            android:label="@string/title_activity_settings"
             android:launchMode="singleTop" >
         </activity>
         <activity

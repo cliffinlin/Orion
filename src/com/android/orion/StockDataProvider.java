@@ -173,10 +173,6 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			return;
 		}
 
-		if (!Preferences.getBoolean(mContext, Settings.KEY_ALARM, false)) {
-			return;
-		}
-
 		DownloadAsyncTask task = new DownloadAsyncTask();
 
 		task.setStock(stock);
@@ -283,7 +279,9 @@ public abstract class StockDataProvider extends StockAnalyzer {
 						result = scheduleMinutes
 								/ Constants.SCHEDULE_INTERVAL_MIN60;
 					} else {
-						result = 1;
+						if (scheduleMinutes != 0) {
+							result = 1;
+						}
 					}
 				}
 			}
@@ -710,6 +708,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		}
 
 		String downloadStockDataRealTime(Stock stock) {
+			int len = 0;
 			String period = Constants.PERIOD_DAY;
 
 			if (!Preferences.getBoolean(mContext, period, false)) {
@@ -725,7 +724,12 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			mStockData = new StockData(period);
 			mStockData.setStockId(stock.getId());
 			mStockDatabaseManager.getStockData(mStockData);
-
+			
+			len = getDownloadStockDataLength(mStockData);
+			if (len <= 0) {
+				return "";
+			}
+			
 			setStock(stock);
 
 			return downloadStockDataRealTime(getStockDataRealTimeURLString(stock));

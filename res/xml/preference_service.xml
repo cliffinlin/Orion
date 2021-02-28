@@ -1,25 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <PreferenceCategory android:title="@string/schedule" >
+    <PreferenceCategory android:title="@string/system" >
         <com.android.orion.CustomSwitchPreference
             android:defaultValue="true"
             android:key="alarm"
             android:title="@string/alarm" />
+        <com.android.orion.CustomSwitchPreference
+            android:defaultValue="true"
+            android:key="wake"
+            android:title="@string/wake" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/display" >
         <com.android.orion.CustomSwitchPreference
             android:defaultValue="true"
-            android:key="limit_line"
-            android:title="@string/limit_line" />
+            android:key="deal"
+            android:title="@string/deal" />
         <com.android.orion.CustomSwitchPreference
             android:defaultValue="false"
-            android:key="roe_line"
-            android:title="@string/roe_line" />
+            android:key="roe"
+            android:title="@string/roe" />
         <com.android.orion.CustomSwitchPreference
             android:defaultValue="false"
-            android:key="roi_line"
-            android:title="@string/roi_line" />
+            android:key="roi"
+            android:title="@string/roi" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/download" >
         <com.android.orion.CustomSwitchPreference

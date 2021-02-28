@@ -101,16 +101,16 @@
     <string name="pe">PE</string>
     <string name="ep">1/PE</string>
     <string name="percent">Percent</string>
-    <string name="period_1min">1min</string>
-    <string name="period_5min">5min</string>
-    <string name="period_15min">15min</string>
-    <string name="period_30min">30min</string>
-    <string name="period_60min">60min</string>
-    <string name="period_day">day</string>
-    <string name="period_week">week</string>
-    <string name="period_month">month</string>
-    <string name="period_quarter">quarter</string>
-    <string name="period_year">year</string>
+    <string name="period_1min">1Min</string>
+    <string name="period_5min">5Min</string>
+    <string name="period_15min">15Min</string>
+    <string name="period_30min">30Min</string>
+    <string name="period_60min">60Min</string>
+    <string name="period_day">Day</string>
+    <string name="period_week">Week</string>
+    <string name="period_month">Month</string>
+    <string name="period_quarter">Quarter</string>
+    <string name="period_year">Year</string>
     <string name="position">Position</string>
     <string name="prev">prev</string>
     <string name="price">Price</string>
@@ -172,7 +172,7 @@
     <string name="title_activity_deal_list">Deal List</string>
     <string name="title_activity_deal">Deal</string>
     <string name="title_activity_operation">Operation</string>
-    <string name="title_activity_service_setting">Service</string>
+    <string name="title_activity_settings">Settings</string>
     <string name="title_save_to_sd_card">Save to SD Card</string>
     <string name="title_delete_all">Delete All</string>
     <string name="username_hint">Username</string>
@@ -187,9 +187,9 @@
     <string name="filter">Filter</string>
     <string name="saved">Saved</string>
     <string name="error">Error!</string>
-    <string name="limit_line">Limit Line</string>
-    <string name="roe_line">Roe Line</string>
-    <string name="roi_line">Roi Line</string>
     <string name="display">Display</string>
+    <string name="wake">Wake</string>
+    <string name="system">Systemk</string>
+    <string name="settings">Settings</string>
 
 </resources>

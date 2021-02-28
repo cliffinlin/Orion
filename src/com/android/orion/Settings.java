@@ -4,9 +4,12 @@ public class Settings {
 	public static final String SHARED_PREFERENCE = "settings";
 
 	public static final String KEY_ALARM = "alarm";
-	public static final String KEY_LIMIT_LINE = "limit_line";
-	public static final String KEY_ROE_LINE = "roe_line";
-	public static final String KEY_ROI_LINE = "roi_line";
+	public static final String KEY_WAKE = "wake";
+
+	public static final String KEY_DEAL = "deal";
+	public static final String KEY_ROE = "roe";
+	public static final String KEY_ROI = "roi";
+
 	public static final String KEY_NOTIFICATION_MESSAGE = "notification_message";
 	public static final String KEY_NOTIFICATION_LIGHTS = "notification_lights";
 	public static final String KEY_NOTIFICATION_VIBRATE = "notification_vibrate";
