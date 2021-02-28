@@ -154,7 +154,6 @@ public class DealListActivity extends ListActivity implements
 		@Override
 		public void onChange(boolean selfChange) {
 			super.onChange(selfChange);
-			// restartLoader();
 		}
 	};
 
@@ -283,10 +282,6 @@ public class DealListActivity extends ListActivity implements
 		}
 	}
 
-	void onActionSync(int serviceType) {
-		startService(serviceType, Constants.EXECUTE_IMMEDIATE);
-	}
-
 	Long doInBackgroundLoad(Object... params) {
 		super.doInBackgroundLoad(params);
 		int execute = (Integer) params[0];
@@ -302,8 +297,7 @@ public class DealListActivity extends ListActivity implements
 
 	void onPostExecuteLoad(Long result) {
 		super.onPostExecuteLoad(result);
-		startService(Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE,
-				Constants.EXECUTE_IMMEDIATE);
+		mOrionService.download(null);
 	}
 
 	@Override
@@ -511,6 +505,10 @@ public class DealListActivity extends ListActivity implements
 			mRightListView.setOnItemClickListener(this);
 			mRightListView.setOnItemLongClickListener(this);
 		}
+	}
+
+	void restartLoader(Intent intent) {
+		restartLoader();
 	}
 
 	void restartLoader() {

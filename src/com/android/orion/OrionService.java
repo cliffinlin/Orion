@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.os.Binder;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
@@ -138,6 +137,10 @@ public class OrionService extends Service {
 	}
 
 	void download(Stock stock) {
+		if (mSinaFinance == null) {
+			return;
+		}
+
 		mSinaFinance.download(stock);
 	}
 
@@ -147,25 +150,11 @@ public class OrionService extends Service {
 	}
 
 	void onHandleIntent(Intent intent) {
-		int serviceType = Constants.SERVICE_TYPE_NONE;
-		Bundle bundle;
-
 		if (mSinaFinance == null) {
 			return;
 		}
 
-		bundle = intent.getExtras();
-		serviceType = bundle.getInt(Constants.EXTRA_SERVICE_TYPE,
-				Constants.SERVICE_TYPE_NONE);
-
-		switch (serviceType) {
-		case Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE:
-			mSinaFinance.downloadStock(bundle);
-			break;
-
-		default:
-			break;
-		}
+		mSinaFinance.downloadStock(intent);
 	}
 
 	public class OrionBinder extends Binder {

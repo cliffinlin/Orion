@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.android.orion"
     android:versionCode="518"
-    android:versionName="1.1.36_20210227" >
+    android:versionName="1.1.36_20210228" >
 
     <uses-sdk
         android:minSdkVersion="19"
@@ -136,22 +136,7 @@
 
         <receiver android:name="com.android.orion.DownloadBroadcastReceiver" >
         </receiver>
-        <receiver android:name="com.android.orion.OrionBroadcastReceiver" >
-            <intent-filter>
-                <action android:name="android.provider.Telephony.SECRET_CODE" />
-
-                <data
-                    android:host="67466"
-                    android:scheme="android_secret_code" />
-            </intent-filter>
-        </receiver>
-        <receiver android:name="com.android.orion.OrionBroadcastReceiver" >
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
-
-        <service
+        <service
             android:name="com.android.orion.OrionService"
             android:exported="false" />
     </application>

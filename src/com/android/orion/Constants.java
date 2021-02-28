@@ -10,7 +10,7 @@ public class Constants {
 	public static final String FAVORITE = "favorite";
 	public static final String XML_FILE_EXT = ".xml";
 
-	public static final String ACTION_SERVICE_FINISHED = "orion.intent.action.SERVICE_FINISHED";
+	public static final String ACTION_RESTART_LOADER = "orion.intent.action.RESTART_LOADER";
 
 	public static final int DOUBLE_CONSTANT_WAN = 10000;
 	public static final int DOUBLE_CONSTANT_YI = (DOUBLE_CONSTANT_WAN * DOUBLE_CONSTANT_WAN);
@@ -20,17 +20,6 @@ public class Constants {
 	public static final int DOWNLOAD_HISTORY_LENGTH_NONE = 0;
 	public static final int DOWNLOAD_HISTORY_LENGTH_UNLIMITED = -1;
 
-	public static final int EXECUTE_TYPE_NONE = 0;
-	public static final int EXECUTE_IMMEDIATE = 1;
-	public static final int EXECUTE_SCHEDULE = 2;
-	public static final int EXECUTE_SCHEDULE_MIN1 = EXECUTE_SCHEDULE << 0;
-	public static final int EXECUTE_SCHEDULE_MIN5 = EXECUTE_SCHEDULE << 1;
-	public static final int EXECUTE_SCHEDULE_MIN15 = EXECUTE_SCHEDULE << 2;
-	public static final int EXECUTE_SCHEDULE_MIN30 = EXECUTE_SCHEDULE << 3;
-	public static final int EXECUTE_SCHEDULE_MIN60 = EXECUTE_SCHEDULE << 4;
-
-	public static final String EXTRA_EXECUTE_TYPE = "execute_type";
-	public static final String EXTRA_SERVICE_TYPE = "service_type";
 	public static final String EXTRA_STOCK_ID = "stock_id";
 	public static final String EXTRA_STOCK_SE = "stock_se";
 	public static final String EXTRA_STOCK_CODE = "stock_code";
@@ -60,7 +49,6 @@ public class Constants {
 	public static final int SCHEDULE_INTERVAL_MIN60 = 60;
 
 	public static final int SERVICE_TYPE_NONE = -1;
-	public static final int SERVICE_DOWNLOAD_STOCK_FAVORITE = 0;
 	public static final int SERVICE_DATABASE_UPDATE = 1;
 
 	public static final String STOCK_ACTION_NONE = "";
@@ -102,7 +90,7 @@ public class Constants {
 	public static final int STOCK_FLAG_FAVORITE = 1 << 0;
 	public static final int STOCK_FLAG_RECENT = 1 << 2;
 
-	public static final int STOCK_ID_INVALID = 0;
+	public static final long STOCK_ID_INVALID = 0;
 
 	public static final String STOCK_INDEXES_CODE_BASE_SH = "000000";
 	public static final String STOCK_INDEXES_CODE_BASE_SZ = "399000";

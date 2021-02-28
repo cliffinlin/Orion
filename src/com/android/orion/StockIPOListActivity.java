@@ -1,16 +1,12 @@
 package com.android.orion;
 
 import android.app.LoaderManager;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -58,18 +54,6 @@ public class StockIPOListActivity extends ListActivity implements
 	SimpleCursorAdapter mLeftAdapter = null;
 	SimpleCursorAdapter mRightAdapter = null;
 
-	private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			if (mResumed) {
-				if (intent.getIntExtra(Constants.EXTRA_SERVICE_TYPE,
-						Constants.SERVICE_TYPE_NONE) == Constants.SERVICE_DATABASE_UPDATE) {
-					restartLoader();
-				}
-			}
-		}
-	};
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -82,10 +66,6 @@ public class StockIPOListActivity extends ListActivity implements
 		initHeader();
 
 		initListView();
-
-		LocalBroadcastManager.getInstance(this).registerReceiver(
-				mBroadcastReceiver,
-				new IntentFilter(Constants.ACTION_SERVICE_FINISHED));
 
 		mLoaderManager.initLoader(LOADER_ID_IPO_LIST, null, this);
 
@@ -294,6 +274,10 @@ public class StockIPOListActivity extends ListActivity implements
 		}
 	}
 
+	void restartLoader(Intent intent) {
+		restartLoader();
+	}
+
 	void restartLoader() {
 		mLoaderManager.restartLoader(LOADER_ID_IPO_LIST, null, this);
 	}
@@ -313,9 +297,6 @@ public class StockIPOListActivity extends ListActivity implements
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-
-		LocalBroadcastManager.getInstance(this).unregisterReceiver(
-				mBroadcastReceiver);
 	}
 
 	@Override

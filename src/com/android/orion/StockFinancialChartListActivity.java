@@ -7,11 +7,9 @@ import java.util.Comparator;
 import java.util.List;
 
 import android.app.LoaderManager;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -19,7 +17,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -89,16 +86,6 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 		}
 	};
 
-	private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			if (intent.getLongExtra(Constants.EXTRA_STOCK_ID, 0) == mStock
-					.getId()) {
-				restartLoader(intent);
-			}
-		}
-	};
-
 	MainHandler mMainHandler = new MainHandler(this);
 
 	@Override
@@ -112,14 +99,11 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 
 		initListView();
 
-		mStock.setId(getIntent().getLongExtra(Constants.EXTRA_STOCK_ID, 0));
+		mStock.setId(getIntent().getLongExtra(Constants.EXTRA_STOCK_ID,
+				Constants.STOCK_ID_INVALID));
 
 		mSortOrder = getIntent().getStringExtra(
 				Constants.EXTRA_STOCK_LIST_SORT_ORDER);
-
-		LocalBroadcastManager.getInstance(this).registerReceiver(
-				mBroadcastReceiver,
-				new IntentFilter(Constants.ACTION_SERVICE_FINISHED));
 
 		initLoader();
 
@@ -191,9 +175,6 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-
-		LocalBroadcastManager.getInstance(this).unregisterReceiver(
-				mBroadcastReceiver);
 	}
 
 	@Override
@@ -283,6 +264,13 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 	void initLoader() {
 		mLoaderManager.initLoader(LOADER_ID_STOCK_LIST, null, this);
 		mLoaderManager.initLoader(LOADER_ID_FINANCIAL_DATA_LIST, null, this);
+	}
+
+	void restartLoader(Intent intent) {
+		if (intent.getLongExtra(Constants.EXTRA_STOCK_ID,
+				Constants.STOCK_ID_INVALID) == mStock.getId()) {
+			restartLoader();
+		}
 	}
 
 	void restartLoader() {

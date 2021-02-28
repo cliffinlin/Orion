@@ -65,13 +65,17 @@ public class StockAnalyzer {
 
 	void acquireWakeLock() {
 		Log.d(TAG, "acquireWakeLock");
-		mWakeLock.acquire();
+		if (!mWakeLock.isHeld()) {
+			mWakeLock.acquire();
+			Log.d(TAG, "acquireWakeLock, mWakeLock acquired.");
+		}
 	}
 
 	void releaseWakeLock() {
 		Log.d(TAG, "releaseWakeLock");
 		if (mWakeLock.isHeld()) {
 			mWakeLock.release();
+			Log.d(TAG, "releaseWakeLock, mWakeLock released.");
 		}
 	}
 

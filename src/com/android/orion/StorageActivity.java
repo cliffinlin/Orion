@@ -97,8 +97,7 @@ public class StorageActivity extends DatabaseActivity {
 	}
 
 	void onMessageRefresh() {
-		startService(Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE,
-				Constants.EXECUTE_IMMEDIATE);
+		mOrionService.download(null);
 	}
 
 	void performLoadFromFile() {

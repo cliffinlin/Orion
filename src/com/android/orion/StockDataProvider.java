@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.os.HandlerThread;
 import android.os.Process;
 import android.text.TextUtils;
@@ -90,13 +89,12 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		mHandlerThread.start();
 	}
 
-	void sendBroadcast(String action, int serviceType, long stockID) {
+	void sendBroadcast(String action, long stockID) {
 		long delt = System.currentTimeMillis() - mLastSendBroadcast;
 		if (delt > Constants.DEFAULT_SEND_BROADCAST_INTERVAL) {
 			mLastSendBroadcast = System.currentTimeMillis();
 
 			Intent intent = new Intent(action);
-			intent.putExtra(Constants.EXTRA_SERVICE_TYPE, serviceType);
 			intent.putExtra(Constants.EXTRA_STOCK_ID, stockID);
 
 			mLocalBroadcastManager.sendBroadcast(intent);
@@ -156,11 +154,21 @@ public abstract class StockDataProvider extends StockAnalyzer {
 	// }
 	// }
 
-	void downloadStock(Bundle bundle) {
+	void downloadStock(Intent intent) {
 		String se = "";
 		String code = "";
 		Stock stock = null;
 
+		loadStockArrayMap(mStockArrayMap);
+
+		se = intent.getStringExtra(Constants.EXTRA_STOCK_SE);
+		code = intent.getStringExtra(Constants.EXTRA_STOCK_CODE);
+		stock = mStockArrayMap.get(se + code);
+
+		download(stock);
+	}
+
+	void download(Stock stock) {
 		if (!Utility.isNetworkConnected(mContext)) {
 			return;
 		}
@@ -169,16 +177,6 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			return;
 		}
 
-		loadStockArrayMap(mStockArrayMap);
-
-		se = bundle.getString(Constants.EXTRA_STOCK_SE);
-		code = bundle.getString(Constants.EXTRA_STOCK_CODE);
-		stock = mStockArrayMap.get(se + code);
-
-		download(stock);
-	}
-
-	void download(Stock stock) {
 		DownloadAsyncTask task = new DownloadAsyncTask();
 
 		task.setStock(stock);
@@ -536,9 +534,6 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				if (response != null) {
 					responseString = response.body().string();
 					handleResponseIPO(mIPO, responseString);
-
-					sendBroadcast(Constants.ACTION_SERVICE_FINISHED,
-							Constants.SERVICE_DATABASE_UPDATE, 0);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -819,13 +814,21 @@ public abstract class StockDataProvider extends StockAnalyzer {
 					break;
 				}
 
-				sendBroadcast(Constants.ACTION_SERVICE_FINISHED,
-						Constants.SERVICE_DATABASE_UPDATE, 0);
+				sendBroadcast(Constants.ACTION_RESTART_LOADER, stockId);
 			}
 
 			responseString = downloadIPO();
+			sendBroadcast(Constants.ACTION_RESTART_LOADER,
+					Constants.STOCK_ID_INVALID);
 
 			return responseString;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+
+			acquireWakeLock();
 		}
 
 		@Override
@@ -840,6 +843,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
 								R.string.access_denied), Toast.LENGTH_SHORT)
 						.show();
 			}
+
+			releaseWakeLock();
 		}
 	}
 }

@@ -28,10 +28,10 @@ public class OrionMainActivity extends PreferenceActivity {
 		}
 
 		if (mStockDownloadAlarmManager != null) {
-			boolean bChecked = Preferences.getBoolean(this, Settings.KEY_ALARM,
+			boolean checked = Preferences.getBoolean(this, Settings.KEY_ALARM,
 					false);
 
-			if (bChecked) {
+			if (checked) {
 				mStockDownloadAlarmManager.startAlarm();
 			} else {
 				mStockDownloadAlarmManager.stopAlarm();
@@ -113,6 +113,7 @@ public class OrionMainActivity extends PreferenceActivity {
 			editor.putBoolean(Constants.PERIOD_MONTH, true);
 			editor.putBoolean(Constants.PERIOD_WEEK, true);
 			editor.putBoolean(Constants.PERIOD_DAY, true);
+			editor.putBoolean(Constants.PERIOD_MIN60, true);
 			editor.putBoolean(Settings.KEY_NOTIFICATION_MESSAGE, true);
 			editor.commit();
 		}

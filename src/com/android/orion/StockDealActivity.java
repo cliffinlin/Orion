@@ -254,7 +254,8 @@ public class StockDealActivity extends DatabaseActivity implements
 			switch (requestCode) {
 			case REQUEST_CODE_STOCK_ID:
 				if (mStock != null) {
-					mStock.setId(data.getLongExtra(Constants.EXTRA_STOCK_ID, 0));
+					mStock.setId(data.getLongExtra(Constants.EXTRA_STOCK_ID,
+							Constants.STOCK_ID_INVALID));
 					mHandler.sendEmptyMessage(MESSAGE_LOAD_STOCK_BY_ID);
 				}
 				break;

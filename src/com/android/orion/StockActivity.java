@@ -44,7 +44,8 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 			mRadioGroupSE.setEnabled(false);
 			mEditTextStockCode.setEnabled(false);
 
-			mStock.setId(mIntent.getLongExtra(Constants.EXTRA_STOCK_ID, 0));
+			mStock.setId(mIntent.getLongExtra(Constants.EXTRA_STOCK_ID,
+					Constants.STOCK_ID_INVALID));
 			mStockDatabaseManager.getStockById(mStock);
 			updateView();
 		}

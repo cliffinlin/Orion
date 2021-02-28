@@ -7,11 +7,9 @@ import java.util.Comparator;
 import java.util.List;
 
 import android.app.LoaderManager;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -19,7 +17,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -128,16 +125,6 @@ public class StockDataChartListActivity extends BaseActivity implements
 		}
 	};
 
-	private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			if (intent.getLongExtra(Constants.EXTRA_STOCK_ID, 0) == mStock
-					.getId()) {
-				restartLoader(intent);
-			}
-		}
-	};
-
 	MainHandler mMainHandler = new MainHandler(this);
 
 	@Override
@@ -151,7 +138,8 @@ public class StockDataChartListActivity extends BaseActivity implements
 
 		initListView();
 
-		mStock.setId(getIntent().getLongExtra(Constants.EXTRA_STOCK_ID, 0));
+		mStock.setId(getIntent().getLongExtra(Constants.EXTRA_STOCK_ID,
+				Constants.STOCK_ID_INVALID));
 		mStockIDList = getIntent().getStringArrayListExtra(
 				Constants.EXTRA_STOCK_ID_LIST);
 		if ((mStockIDList != null) && (mStockIDList.size() > 0)) {
@@ -159,10 +147,6 @@ public class StockDataChartListActivity extends BaseActivity implements
 		}
 		mSortOrder = getIntent().getStringExtra(
 				Constants.EXTRA_STOCK_LIST_SORT_ORDER);
-
-		LocalBroadcastManager.getInstance(this).registerReceiver(
-				mBroadcastReceiver,
-				new IntentFilter(Constants.ACTION_SERVICE_FINISHED));
 
 		mShowLimitLine = Preferences.getBoolean(mContext,
 				Settings.KEY_LIMIT_LINE, true);
@@ -244,9 +228,6 @@ public class StockDataChartListActivity extends BaseActivity implements
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-
-		LocalBroadcastManager.getInstance(this).unregisterReceiver(
-				mBroadcastReceiver);
 	}
 
 	@Override
@@ -337,6 +318,13 @@ public class StockDataChartListActivity extends BaseActivity implements
 
 		for (int i = 0; i < Constants.PERIODS.length; i++) {
 			mLoaderManager.initLoader(i, null, this);
+		}
+	}
+
+	void restartLoader(Intent intent) {
+		if (intent.getLongExtra(Constants.EXTRA_STOCK_ID,
+				Constants.STOCK_ID_INVALID) == mStock.getId()) {
+			restartLoader();
 		}
 	}
 

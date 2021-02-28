@@ -101,6 +101,10 @@ public class StockListEditActivity extends DatabaseActivity implements
 		}
 	}
 
+	void restartLoader(Intent intent) {
+		restartLoader();
+	}
+
 	void restartLoader() {
 		mLoaderManager.restartLoader(LOADER_ID_STOCK_LIST, null, this);
 	}
@@ -323,8 +327,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 				case R.id.favorite:
 					if ((stock.getFlag() & Constants.STOCK_FLAG_FAVORITE) == 0) {
 						updateStockFlag(stockId, Constants.STOCK_FLAG_FAVORITE);
-						startService(Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE,
-								Constants.EXECUTE_IMMEDIATE);
+						mOrionService.download(stock);
 					} else {
 						if (stock.getHold() == 0) {
 							updateStockFlag(stockId, Constants.STOCK_FLAG_NONE);

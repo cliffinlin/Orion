@@ -48,11 +48,11 @@ public class ServiceSettingFragment extends PreferenceFragment implements
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
 
-		boolean bChecked;
+		boolean checked;
 
-		bChecked = sharedPreferences.getBoolean(key, true);
+		checked = sharedPreferences.getBoolean(key, true);
 		if (key.equals(Settings.KEY_ALARM)) {
-			if (bChecked) {
+			if (checked) {
 				remindNetworkConnection();
 
 				if (mStockDownloadAlarmManager != null) {
@@ -73,12 +73,8 @@ public class ServiceSettingFragment extends PreferenceFragment implements
 				|| key.equals(Constants.PERIOD_MONTH)
 				|| key.equals(Constants.PERIOD_QUARTER)
 				|| key.equals(Constants.PERIOD_YEAR)) {
-			if (bChecked) {
+			if (checked) {
 				Intent intent = new Intent(getActivity(), OrionService.class);
-				intent.putExtra(Constants.EXTRA_SERVICE_TYPE,
-						Constants.SERVICE_DOWNLOAD_STOCK_FAVORITE);
-				intent.putExtra(Constants.EXTRA_EXECUTE_TYPE,
-						Constants.EXECUTE_IMMEDIATE);
 				getActivity().startService(intent);
 			}
 		}
