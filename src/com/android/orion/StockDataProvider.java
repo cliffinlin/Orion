@@ -1,6 +1,7 @@
 package com.android.orion;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -348,7 +349,10 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 			mStockDatabaseManager.getStock(stock);
 
-			if (stock.getCreated().contains(Utility.getCurrentDateString())
+			if (Market.isTradingHours(Calendar.getInstance())) {
+				// download in trading hours
+			} else if (stock.getCreated().contains(
+					Utility.getCurrentDateString())
 					|| stock.getModified().contains(
 							Utility.getCurrentDateString())) {
 				if (stock.getPrice() > 0) {
@@ -724,12 +728,12 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			mStockData = new StockData(period);
 			mStockData.setStockId(stock.getId());
 			mStockDatabaseManager.getStockData(mStockData);
-			
+
 			len = getDownloadStockDataLength(mStockData);
 			if (len <= 0) {
 				return "";
 			}
-			
+
 			setStock(stock);
 
 			return downloadStockDataRealTime(getStockDataRealTimeURLString(stock));
@@ -852,3 +856,41 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		}
 	}
 }
+/*
+ * public class myAsyncTask extends AsyncTask<Void,Integer,Integer> {
+ * 
+ * Activity mContext = null; static AsyncTask<Void,Integer,Integer>
+ * myAsyncTaskInstance = null;
+ * 
+ * // Private Constructor: can't be called from outside this class private
+ * myAsyncTask(Activity iContext) { mContext = iContext; }
+ * 
+ * public static AsyncTask<Void, Integer, Integer> getInstance(Activity
+ * iContext) { // if the current async task is already running, return null: no
+ * new async task // shall be created if an instance is already running if
+ * (myAsyncTaskInstance != null && myAsyncTaskInstance.getStatus() ==
+ * Status.RUNNING) { // it can be running but cancelled, in that case, return a
+ * new instance if (myAsyncTaskInstance.isCancelled()) { myAsyncTaskInstance =
+ * new myAsyncTask(iContext); } else { // display a toast to say "try later"
+ * Toast.makeText(iContext, "A task is already running, try later",
+ * Toast.LENGTH_SHORT).show();
+ * 
+ * return null; } }
+ * 
+ * //if the current async task is pending, it can be executed return this
+ * instance if (myAsyncTaskInstance != null && myAsyncTaskInstance.getStatus()
+ * == Status.PENDING) { return myAsyncTaskInstance; }
+ * 
+ * //if the current async task is finished, it can't be executed another time,
+ * so return a new instance if (myAsyncTaskInstance != null &&
+ * myAsyncTaskInstance.getStatus() == Status.FINISHED) { myAsyncTaskInstance =
+ * new myAsyncTask(iContext); }
+ * 
+ * 
+ * // if the current async task is null, create a new instance if
+ * (myAsyncTaskInstance == null) { myAsyncTaskInstance = new
+ * myAsyncTask(iContext); } // return the current instance return
+ * myAsyncTaskInstance; }
+ * 
+ * @Override protected Integer doInBackground(Void... iUnUsed) { // ... } }
+ */

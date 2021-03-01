@@ -75,7 +75,9 @@ public class OrionMainActivity extends PreferenceActivity {
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			if ((System.currentTimeMillis() - mExitTime) > 2000) {
-				Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this,
+						getResources().getString(R.string.press_again_to_exit),
+						Toast.LENGTH_SHORT).show();
 				mExitTime = System.currentTimeMillis();
 			} else {
 				onActionExit();
