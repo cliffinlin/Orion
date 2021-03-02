@@ -177,7 +177,10 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			return;
 		}
 
-		Log.d(TAG, "download, mAsyncTaskStatus=" + mAsyncTaskStatus);
+		if (mAsyncTaskStatus != Status.FINISHED) {
+			Log.d(TAG, "download return, mAsyncTaskStatus=" + mAsyncTaskStatus);
+			return;
+		}
 
 		DownloadAsyncTask task = new DownloadAsyncTask();
 
@@ -777,7 +780,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			String responseString = "";
 			long stockId = 0;
 
-			mAsyncTaskStatus = getStatus();
+			mAsyncTaskStatus = Status.RUNNING;
+			Log.d(TAG, "doInBackground, mAsyncTaskStatus=" + mAsyncTaskStatus);
 
 			if (mStock != null) {
 				stockId = mStock.getId();
@@ -843,7 +847,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		protected void onPreExecute() {
 			super.onPreExecute();
 
-			mAsyncTaskStatus = getStatus();
+			mAsyncTaskStatus = Status.PENDING;
+			Log.d(TAG, "onPreExecute, mAsyncTaskStatus=" + mAsyncTaskStatus);
 
 			acquireWakeLock();
 		}
@@ -863,7 +868,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 			releaseWakeLock();
 
-			mAsyncTaskStatus = getStatus();
+			mAsyncTaskStatus = Status.FINISHED;
+			Log.d(TAG, "onPostExecute, mAsyncTaskStatus=" + mAsyncTaskStatus);
 		}
 	}
 }
