@@ -553,10 +553,13 @@ public class SinaFinance extends StockDataProvider {
 
 					if (bulkInsert) {
 						stock.setCreated(Utility.getCurrentDateTimeString());
+						stock.setModified(Utility.getCurrentDateTimeString());
 						contentValuesArray[i] = stock.getContentValues();
 					} else {
 						if (!mStockDatabaseManager.isStockExist(stock)) {
 							stock.setCreated(Utility.getCurrentDateTimeString());
+							stock.setModified(Utility
+									.getCurrentDateTimeString());
 							mStockDatabaseManager.insertStock(stock);
 						} else {
 							stock.setModified(Utility
@@ -665,10 +668,14 @@ public class SinaFinance extends StockDataProvider {
 					if (bulkInsert) {
 						stockData
 								.setCreated(Utility.getCurrentDateTimeString());
+						stockData.setModified(Utility
+								.getCurrentDateTimeString());
 						contentValuesArray[i] = stockData.getContentValues();
 					} else {
 						if (!mStockDatabaseManager.isStockDataExist(stockData)) {
 							stockData.setCreated(Utility
+									.getCurrentDateTimeString());
+							stockData.setModified(Utility
 									.getCurrentDateTimeString());
 							mStockDatabaseManager.insertStockData(stockData);
 						} else {
@@ -936,12 +943,16 @@ public class SinaFinance extends StockDataProvider {
 								if (bulkInsert) {
 									financialData.setCreated(Utility
 											.getCurrentDateTimeString());
+									financialData.setModified(Utility
+											.getCurrentDateTimeString());
 									contentValuesList.add(financialData
 											.getContentValues());
 								} else {
 									if (!mStockDatabaseManager
 											.isFinancialDataExist(financialData)) {
 										financialData.setCreated(Utility
+												.getCurrentDateTimeString());
+										financialData.setModified(Utility
 												.getCurrentDateTimeString());
 										mStockDatabaseManager
 												.insertFinancialData(financialData);
@@ -1084,11 +1095,15 @@ public class SinaFinance extends StockDataProvider {
 					if (bulkInsert) {
 						shareBonus.setCreated(Utility
 								.getCurrentDateTimeString());
+						shareBonus.setModified(Utility
+								.getCurrentDateTimeString());
 						contentValuesList.add(shareBonus.getContentValues());
 					} else {
 						if (!mStockDatabaseManager
 								.isShareBonusExist(shareBonus)) {
 							shareBonus.setCreated(Utility
+									.getCurrentDateTimeString());
+							shareBonus.setModified(Utility
 									.getCurrentDateTimeString());
 							mStockDatabaseManager.insertShareBonus(shareBonus);
 						} else {
@@ -1224,11 +1239,15 @@ public class SinaFinance extends StockDataProvider {
 					if (bulkInsert) {
 						totalShare.setCreated(Utility
 								.getCurrentDateTimeString());
+						totalShare.setModified(Utility
+								.getCurrentDateTimeString());
 						contentValuesList.add(totalShare.getContentValues());
 					} else {
 						if (!mStockDatabaseManager
 								.isTotalShareExist(totalShare)) {
 							totalShare.setCreated(Utility
+									.getCurrentDateTimeString());
+							totalShare.setModified(Utility
 									.getCurrentDateTimeString());
 							mStockDatabaseManager.insertTotalShare(totalShare);
 						} else {
@@ -1409,10 +1428,12 @@ public class SinaFinance extends StockDataProvider {
 
 					if (bulkInsert) {
 						ipo.setCreated(Utility.getCurrentDateTimeString());
+						ipo.setModified(Utility.getCurrentDateTimeString());
 						contentValuesList.add(ipo.getContentValues());
 					} else {
 						if (!mStockDatabaseManager.isIPOExist(ipo)) {
 							ipo.setCreated(Utility.getCurrentDateTimeString());
+							ipo.setModified(Utility.getCurrentDateTimeString());
 							mStockDatabaseManager.insertIPO(ipo);
 						} else {
 							ipo.setModified(Utility.getCurrentDateTimeString());

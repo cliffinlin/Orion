@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
+import android.os.AsyncTask.Status;
 import android.os.HandlerThread;
 import android.os.Process;
 import android.text.TextUtils;
@@ -33,6 +34,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 	long mLastSendBroadcast = 0;
 	ArrayMap<String, Stock> mStockArrayMap = new ArrayMap<String, Stock>();
+
+	Status mAsyncTaskStatus = Status.FINISHED;
 
 	abstract int getAvailableHistoryLength(String period);
 
@@ -174,6 +177,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			return;
 		}
 
+		Log.d(TAG, "download, mAsyncTaskStatus=" + mAsyncTaskStatus);
+
 		DownloadAsyncTask task = new DownloadAsyncTask();
 
 		task.setStock(stock);
@@ -264,7 +269,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				if (Market.isOutOfDateToday(modified)) {
 					removeStockDataRedundant(cursor, defaultValue);
 					result = defaultValue;
-				} else {
+				} else if (Market.isTradingHours(Calendar.getInstance())) {
 					scheduleMinutes = Market.getScheduleMinutes();
 
 					if (period.equals(Constants.PERIOD_MIN5)) {
@@ -559,7 +564,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 					Utility.getCurrentDateString())
 					|| mShareBonus.getModified().contains(
 							Utility.getCurrentDateString())) {
-				if (mShareBonus.getDividend() > 0) {
+				if (!TextUtils.isEmpty(mShareBonus.getDate())) {
 					return "";
 				}
 			}
@@ -772,6 +777,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			String responseString = "";
 			long stockId = 0;
 
+			mAsyncTaskStatus = getStatus();
+
 			if (mStock != null) {
 				stockId = mStock.getId();
 			}
@@ -836,6 +843,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		protected void onPreExecute() {
 			super.onPreExecute();
 
+			mAsyncTaskStatus = getStatus();
+
 			acquireWakeLock();
 		}
 
@@ -853,44 +862,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			}
 
 			releaseWakeLock();
+
+			mAsyncTaskStatus = getStatus();
 		}
 	}
 }
-/*
- * public class myAsyncTask extends AsyncTask<Void,Integer,Integer> {
- * 
- * Activity mContext = null; static AsyncTask<Void,Integer,Integer>
- * myAsyncTaskInstance = null;
- * 
- * // Private Constructor: can't be called from outside this class private
- * myAsyncTask(Activity iContext) { mContext = iContext; }
- * 
- * public static AsyncTask<Void, Integer, Integer> getInstance(Activity
- * iContext) { // if the current async task is already running, return null: no
- * new async task // shall be created if an instance is already running if
- * (myAsyncTaskInstance != null && myAsyncTaskInstance.getStatus() ==
- * Status.RUNNING) { // it can be running but cancelled, in that case, return a
- * new instance if (myAsyncTaskInstance.isCancelled()) { myAsyncTaskInstance =
- * new myAsyncTask(iContext); } else { // display a toast to say "try later"
- * Toast.makeText(iContext, "A task is already running, try later",
- * Toast.LENGTH_SHORT).show();
- * 
- * return null; } }
- * 
- * //if the current async task is pending, it can be executed return this
- * instance if (myAsyncTaskInstance != null && myAsyncTaskInstance.getStatus()
- * == Status.PENDING) { return myAsyncTaskInstance; }
- * 
- * //if the current async task is finished, it can't be executed another time,
- * so return a new instance if (myAsyncTaskInstance != null &&
- * myAsyncTaskInstance.getStatus() == Status.FINISHED) { myAsyncTaskInstance =
- * new myAsyncTask(iContext); }
- * 
- * 
- * // if the current async task is null, create a new instance if
- * (myAsyncTaskInstance == null) { myAsyncTaskInstance = new
- * myAsyncTask(iContext); } // return the current instance return
- * myAsyncTaskInstance; }
- * 
- * @Override protected Integer doInBackground(Void... iUnUsed) { // ... } }
- */
