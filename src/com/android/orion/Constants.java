@@ -55,14 +55,14 @@ public class Constants {
 	public static final String STOCK_ACTION_STAR = "*";
 	public static final String STOCK_ACTION_D = "D";
 	public static final String STOCK_ACTION_BUY = "B";
-	public static final String STOCK_ACTION_BUY1 = "1B";
-	public static final String STOCK_ACTION_BUY2 = "2B";
-	public static final String STOCK_ACTION_BUY3 = "3B";
+	public static final String STOCK_ACTION_BUY1 = "B1";
+	public static final String STOCK_ACTION_BUY2 = "B2";
+	public static final String STOCK_ACTION_BUY3 = "B3";
 	public static final String STOCK_ACTION_G = "G";
 	public static final String STOCK_ACTION_SELL = "S";
-	public static final String STOCK_ACTION_SELL1 = "1S";
-	public static final String STOCK_ACTION_SELL2 = "2S";
-	public static final String STOCK_ACTION_SELL3 = "3S";
+	public static final String STOCK_ACTION_SELL1 = "S1";
+	public static final String STOCK_ACTION_SELL2 = "S2";
+	public static final String STOCK_ACTION_SELL3 = "S3";
 	public static final char STOCK_ACTION_ADD = '+';
 	public static final char STOCK_ACTION_MINUS = '-';
 

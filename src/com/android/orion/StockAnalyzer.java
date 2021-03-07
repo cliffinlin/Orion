@@ -614,11 +614,52 @@ public class StockAnalyzer {
 
 		vertexAnalyzer.analyzeDirection(stockDataList);
 
-		setAction(stock, period, stockDataList);
+		setAction(stock, period, stockDataList, drawVertexList,
+				strokeVertexList, segmentVertexList);
+	}
+
+	private boolean isSecondVertex(ArrayList<StockData> vertexList0,
+			ArrayList<StockData> vertexList1, ArrayList<StockData> vertexList2) {
+		boolean result = false;
+		long id0 = 0;
+		long id1 = 0;
+		long id2 = 0;
+
+		if ((vertexList0 == null)
+				|| (vertexList0.size() < Constants.STOCK_VERTEX_TYPING_SIZE + 1)) {
+			return result;
+		}
+
+		if ((vertexList1 == null)
+				|| (vertexList1.size() < Constants.STOCK_VERTEX_TYPING_SIZE)) {
+			return result;
+		}
+
+		if ((vertexList2 == null)
+				|| (vertexList2.size() < Constants.STOCK_VERTEX_TYPING_SIZE)) {
+			return result;
+		}
+
+		id0 = vertexList0.get(vertexList0.size() - 4).getId();
+
+		id1 = vertexList1.get(vertexList1.size() - 2).getId();
+		if (id0 == id1) {
+			return true;
+		}
+
+		id2 = vertexList2.get(vertexList2.size() - 2).getId();
+		if (id0 == id2) {
+			return true;
+		}
+
+		return result;
 	}
 
 	private void setAction(Stock stock, String period,
-			ArrayList<StockData> stockDataList) {
+			ArrayList<StockData> stockDataList,
+			ArrayList<StockData> drawVertexList,
+			ArrayList<StockData> strokeVertexList,
+			ArrayList<StockData> segmentVertexList) {
 		String action = Constants.STOCK_ACTION_NONE;
 		String direction = "";
 		StockData prev = null;
@@ -640,13 +681,25 @@ public class StockAnalyzer {
 
 		if (stockData.directionOf(Constants.STOCK_DIRECTION_UP)) {
 			if (prev.vertexOf(Constants.STOCK_VERTEX_BOTTOM)) {
-				direction += Constants.STOCK_ACTION_D;
+				if (isSecondVertex(drawVertexList, strokeVertexList,
+						segmentVertexList)) {
+					direction += Constants.STOCK_ACTION_BUY;
+					prev.setAction(direction + action);
+				} else {
+					direction += Constants.STOCK_ACTION_D;
+				}
 			} else {
 				direction += Constants.STOCK_ACTION_ADD;
 			}
 		} else if (stockData.directionOf(Constants.STOCK_DIRECTION_DOWN)) {
 			if (prev.vertexOf(Constants.STOCK_VERTEX_TOP)) {
-				direction += Constants.STOCK_ACTION_G;
+				if (isSecondVertex(drawVertexList, strokeVertexList,
+						segmentVertexList)) {
+					direction += Constants.STOCK_ACTION_SELL;
+					prev.setAction(direction + action);
+				} else {
+					direction += Constants.STOCK_ACTION_G;
+				}
 			} else {
 				direction += Constants.STOCK_ACTION_MINUS;
 			}
