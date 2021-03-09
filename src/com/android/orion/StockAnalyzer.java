@@ -618,26 +618,42 @@ public class StockAnalyzer {
 				strokeVertexList, segmentVertexList);
 	}
 
-	private boolean isSecondVertex(ArrayList<StockData> vertexList0,
-			ArrayList<StockData> vertexList1) {
+	private boolean isSecondBottomVertex(ArrayList<StockData> vertexList) {
 		boolean result = false;
-		long id0 = 0;
-		long id1 = 0;
+		StockData stockData = null;
 
-		if ((vertexList0 == null)
-				|| (vertexList0.size() < Constants.STOCK_VERTEX_TYPING_SIZE + 1)) {
+		if ((vertexList == null)
+				|| (vertexList.size() < Constants.STOCK_VERTEX_TYPING_SIZE + 1)) {
 			return result;
 		}
 
-		if ((vertexList1 == null)
-				|| (vertexList1.size() < Constants.STOCK_VERTEX_TYPING_SIZE)) {
+		stockData = vertexList.get(vertexList.size() - 4);
+		if (stockData == null) {
+			return result;
+		}
+		
+		if (stockData.vertexOf(Constants.STOCK_VERTEX_BOTTOM_STROKE) || stockData.vertexOf(Constants.STOCK_VERTEX_BOTTOM_SEGMENT)) {
+			result = true;
+		}
+
+		return result;
+	}
+	
+	private boolean isSecondTopVertex(ArrayList<StockData> vertexList) {
+		boolean result = false;
+		StockData stockData = null;
+
+		if ((vertexList == null)
+				|| (vertexList.size() < Constants.STOCK_VERTEX_TYPING_SIZE + 1)) {
 			return result;
 		}
 
-		id0 = vertexList0.get(vertexList0.size() - 4).getId();
-
-		id1 = vertexList1.get(vertexList1.size() - 2).getId();
-		if (id0 == id1) {
+		stockData = vertexList.get(vertexList.size() - 4);
+		if (stockData == null) {
+			return result;
+		}
+		
+		if (stockData.vertexOf(Constants.STOCK_VERTEX_TOP_STROKE) || stockData.vertexOf(Constants.STOCK_VERTEX_TOP_SEGMENT)) {
 			result = true;
 		}
 
@@ -670,23 +686,21 @@ public class StockAnalyzer {
 
 		if (stockData.directionOf(Constants.STOCK_DIRECTION_UP)) {
 			if (prev.vertexOf(Constants.STOCK_VERTEX_BOTTOM)) {
-				if (isSecondVertex(drawVertexList, strokeVertexList)) {
+				if (isSecondBottomVertex(drawVertexList)) {
 					direction += Constants.STOCK_ACTION_BUY;
 					prev.setAction(direction + action);
-				} else {
-					direction += Constants.STOCK_ACTION_D;
 				}
+				direction += Constants.STOCK_ACTION_D;
 			} else {
 				direction += Constants.STOCK_ACTION_ADD;
 			}
 		} else if (stockData.directionOf(Constants.STOCK_DIRECTION_DOWN)) {
 			if (prev.vertexOf(Constants.STOCK_VERTEX_TOP)) {
-				if (isSecondVertex(drawVertexList, strokeVertexList)) {
+				if (isSecondTopVertex(drawVertexList)) {
 					direction += Constants.STOCK_ACTION_SELL;
 					prev.setAction(direction + action);
-				} else {
-					direction += Constants.STOCK_ACTION_G;
 				}
+				direction += Constants.STOCK_ACTION_G;
 			} else {
 				direction += Constants.STOCK_ACTION_MINUS;
 			}
