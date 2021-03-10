@@ -708,7 +708,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 					handleResponseStockDataHistory(mStock, mStockData,
 							responseString);
 
-//					analyze(mStock, mStockData.getPeriod());
+					// analyze(mStock, mStockData.getPeriod());
 
 					Thread.sleep(Constants.DEFAULT_SLEEP_INTERVAL);
 				}
@@ -763,7 +763,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 					handleResponseStockDataRealTime(mStock, mStockData,
 							responseString);
 
-//					analyze(mStock, mStockData.getPeriod());
+					// analyze(mStock, mStockData.getPeriod());
 
 					Thread.sleep(Constants.DEFAULT_SLEEP_INTERVAL);
 				}
@@ -836,7 +836,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 						analyze(stock, period);
 					}
 				}
-				
+
 				analyze(stock);
 
 				sendBroadcast(Constants.ACTION_RESTART_LOADER, stockId);

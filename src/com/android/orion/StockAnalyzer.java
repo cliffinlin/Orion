@@ -614,12 +614,11 @@ public class StockAnalyzer {
 
 		vertexAnalyzer.analyzeDirection(stockDataList);
 
-		setAction(stock, period, stockDataList, drawVertexList,
-				strokeVertexList, segmentVertexList);
+		setAction(stock, period, stockDataList, drawVertexList);
 	}
 
-	private boolean isSecondBottomVertex(ArrayList<StockData> vertexList) {
-		boolean result = false;
+	private String getSecondBottomAction(ArrayList<StockData> vertexList) {
+		String result = "";
 		StockData stockData = null;
 
 		if ((vertexList == null)
@@ -631,16 +630,20 @@ public class StockAnalyzer {
 		if (stockData == null) {
 			return result;
 		}
-		
-		if (stockData.vertexOf(Constants.STOCK_VERTEX_BOTTOM_STROKE) || stockData.vertexOf(Constants.STOCK_VERTEX_BOTTOM_SEGMENT)) {
-			result = true;
+
+		if (stockData.vertexOf(Constants.STOCK_VERTEX_BOTTOM_STROKE)) {
+			result += Constants.STOCK_ACTION_BUY;
+		}
+
+		if (stockData.vertexOf(Constants.STOCK_VERTEX_BOTTOM_SEGMENT)) {
+			result += Constants.STOCK_ACTION_BUY;
 		}
 
 		return result;
 	}
-	
-	private boolean isSecondTopVertex(ArrayList<StockData> vertexList) {
-		boolean result = false;
+
+	private String getSecondTopAction(ArrayList<StockData> vertexList) {
+		String result = "";
 		StockData stockData = null;
 
 		if ((vertexList == null)
@@ -652,9 +655,13 @@ public class StockAnalyzer {
 		if (stockData == null) {
 			return result;
 		}
-		
-		if (stockData.vertexOf(Constants.STOCK_VERTEX_TOP_STROKE) || stockData.vertexOf(Constants.STOCK_VERTEX_TOP_SEGMENT)) {
-			result = true;
+
+		if (stockData.vertexOf(Constants.STOCK_VERTEX_TOP_STROKE)) {
+			result += Constants.STOCK_ACTION_SELL;
+		}
+
+		if (stockData.vertexOf(Constants.STOCK_VERTEX_TOP_SEGMENT)) {
+			result += Constants.STOCK_ACTION_SELL;
 		}
 
 		return result;
@@ -662,9 +669,7 @@ public class StockAnalyzer {
 
 	private void setAction(Stock stock, String period,
 			ArrayList<StockData> stockDataList,
-			ArrayList<StockData> drawVertexList,
-			ArrayList<StockData> strokeVertexList,
-			ArrayList<StockData> segmentVertexList) {
+			ArrayList<StockData> drawVertexList) {
 		String action = Constants.STOCK_ACTION_NONE;
 		String direction = "";
 		StockData prev = null;
@@ -686,8 +691,9 @@ public class StockAnalyzer {
 
 		if (stockData.directionOf(Constants.STOCK_DIRECTION_UP)) {
 			if (prev.vertexOf(Constants.STOCK_VERTEX_BOTTOM)) {
-				if (isSecondBottomVertex(drawVertexList)) {
-					direction += Constants.STOCK_ACTION_BUY;
+				String result = getSecondBottomAction(drawVertexList);
+				if (!TextUtils.isEmpty(result)) {
+					direction += result;
 					prev.setAction(direction + action);
 				}
 				direction += Constants.STOCK_ACTION_D;
@@ -696,8 +702,9 @@ public class StockAnalyzer {
 			}
 		} else if (stockData.directionOf(Constants.STOCK_DIRECTION_DOWN)) {
 			if (prev.vertexOf(Constants.STOCK_VERTEX_TOP)) {
-				if (isSecondTopVertex(drawVertexList)) {
-					direction += Constants.STOCK_ACTION_SELL;
+				String result = getSecondTopAction(drawVertexList);
+				if (!TextUtils.isEmpty(result)) {
+					direction += result;
 					prev.setAction(direction + action);
 				}
 				direction += Constants.STOCK_ACTION_G;
