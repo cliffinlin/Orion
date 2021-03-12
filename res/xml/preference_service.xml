@@ -17,6 +17,18 @@
             android:key="deal"
             android:title="@string/deal" />
         <com.android.orion.CustomSwitchPreference
+            android:defaultValue="true"
+            android:key="bonus"
+            android:title="@string/bonus" />
+        <com.android.orion.CustomSwitchPreference
+            android:defaultValue="true"
+            android:key="bps"
+            android:title="@string/book_value_per_share" />
+        <com.android.orion.CustomSwitchPreference
+            android:defaultValue="true"
+            android:key="nps"
+            android:title="@string/net_profit_per_share" />
+        <com.android.orion.CustomSwitchPreference
             android:defaultValue="false"
             android:key="roe"
             android:title="@string/roe" />

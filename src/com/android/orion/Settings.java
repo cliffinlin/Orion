@@ -7,6 +7,9 @@ public class Settings {
 	public static final String KEY_WAKE = "wake";
 
 	public static final String KEY_DEAL = "deal";
+	public static final String KEY_BONUS = "bonus";
+	public static final String KEY_BPS = "bps";
+	public static final String KEY_NPS = "nps";
 	public static final String KEY_ROE = "roe";
 	public static final String KEY_ROI = "roi";
 

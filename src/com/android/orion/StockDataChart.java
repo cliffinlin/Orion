@@ -157,6 +157,8 @@ public class StockDataChart {
 		candleDataSet.setDrawTags(true);
 		candleData.addDataSet(candleDataSet);
 
+		mCombinedDataMain.setData(candleData);
+
 		LineData lineData = new LineData(mXValues);
 
 		LineDataSet average5DataSet = new LineDataSet(mAverage5EntryList, "MA5");
@@ -210,44 +212,56 @@ public class StockDataChart {
 		overlapLowDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(overlapLowDataSet);
 
-		LineDataSet bookValuePerShareDataSet = new LineDataSet(
-				mBookValuePerShareList, "BookValue");
-		bookValuePerShareDataSet.setColor(Color.BLUE);
-		bookValuePerShareDataSet.setDrawCircles(false);
-		bookValuePerShareDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		lineData.addDataSet(bookValuePerShareDataSet);
+		if (mBookValuePerShareList.size() > 0) {
+			LineDataSet bookValuePerShareDataSet = new LineDataSet(
+					mBookValuePerShareList, "BPS");
+			bookValuePerShareDataSet.setColor(Color.BLUE);
+			bookValuePerShareDataSet.setDrawCircles(false);
+			bookValuePerShareDataSet
+					.setAxisDependency(YAxis.AxisDependency.LEFT);
+			lineData.addDataSet(bookValuePerShareDataSet);
+		}
 
-		LineDataSet netProfitPerShareDataSet = new LineDataSet(
-				mNetProfitPerShareList, "NPS");
-		netProfitPerShareDataSet.setColor(Color.YELLOW);
-		netProfitPerShareDataSet.setDrawCircles(false);
-		netProfitPerShareDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		lineData.addDataSet(netProfitPerShareDataSet);
+		if (mNetProfitPerShareList.size() > 0) {
+			LineDataSet netProfitPerShareDataSet = new LineDataSet(
+					mNetProfitPerShareList, "NPS");
+			netProfitPerShareDataSet.setColor(Color.YELLOW);
+			netProfitPerShareDataSet.setDrawCircles(false);
+			netProfitPerShareDataSet
+					.setAxisDependency(YAxis.AxisDependency.LEFT);
+			lineData.addDataSet(netProfitPerShareDataSet);
+		}
 
-		LineDataSet roeDataSet = new LineDataSet(mRoeList, "ROE");
-		roeDataSet.setColor(Color.DKGRAY);
-		roeDataSet.setDrawCircles(false);
-		roeDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		lineData.addDataSet(roeDataSet);
+		if (mRoeList.size() > 0) {
+			LineDataSet roeDataSet = new LineDataSet(mRoeList, "ROE");
+			roeDataSet.setColor(Color.DKGRAY);
+			roeDataSet.setDrawCircles(false);
+			roeDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+			lineData.addDataSet(roeDataSet);
+		}
 
-		LineDataSet roiDataSet = new LineDataSet(mRoiList, "ROI");
-		roiDataSet.setColor(Color.RED);
-		roiDataSet.setDrawCircles(false);
-		roiDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		lineData.addDataSet(roiDataSet);
+		if (mRoiList.size() > 0) {
+			LineDataSet roiDataSet = new LineDataSet(mRoiList, "ROI");
+			roiDataSet.setColor(Color.RED);
+			roiDataSet.setDrawCircles(false);
+			roiDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+			lineData.addDataSet(roiDataSet);
+		}
 
-		BarData barData = new BarData(mXValues);
-		BarDataSet dividendDataSet = new BarDataSet(mDividendEntryList,
-				"Dividend");
-		dividendDataSet.setBarSpacePercent(40f);
-		dividendDataSet.setIncreasingColor(Color.rgb(255, 50, 50));
-		dividendDataSet.setDecreasingColor(Color.rgb(50, 128, 50));
-		dividendDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		barData.addDataSet(dividendDataSet);
-
-		mCombinedDataMain.setData(candleData);
 		mCombinedDataMain.setData(lineData);
-		mCombinedDataMain.setData(barData);
+
+		if (mDividendEntryList.size() > 0) {
+			BarData barData = new BarData(mXValues);
+			BarDataSet dividendDataSet = new BarDataSet(mDividendEntryList,
+					"Dividend");
+			dividendDataSet.setBarSpacePercent(40f);
+			dividendDataSet.setIncreasingColor(Color.rgb(255, 50, 50));
+			dividendDataSet.setDecreasingColor(Color.rgb(50, 128, 50));
+			dividendDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+			barData.addDataSet(dividendDataSet);
+
+			mCombinedDataMain.setData(barData);
+		}
 	}
 
 	void setSubChartData() {

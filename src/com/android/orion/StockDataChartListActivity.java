@@ -61,8 +61,11 @@ public class StockDataChartListActivity extends BaseActivity implements
 	static final int MESSAGE_LOAD_STOCK_LIST = 1;
 
 	boolean mShowDeal = true;
-	boolean mShowRoe = false;
-	boolean mShowRoi = false;
+	boolean mShowBonus = true;
+	boolean mShowBPS = true;
+	boolean mShowNPS = true;
+	boolean mShowRoe = true;
+	boolean mShowRoi = true;
 
 	int mStockListIndex = 0;
 
@@ -148,9 +151,13 @@ public class StockDataChartListActivity extends BaseActivity implements
 		mSortOrder = getIntent().getStringExtra(
 				Constants.EXTRA_STOCK_LIST_SORT_ORDER);
 
-		mShowDeal = Preferences.getBoolean(mContext, Settings.KEY_DEAL, true);
-		mShowRoe = Preferences.getBoolean(mContext, Settings.KEY_ROE, true);
-		mShowRoi = Preferences.getBoolean(mContext, Settings.KEY_ROI, true);
+		mShowDeal = Preferences.getBoolean(mContext, Settings.KEY_DEAL, false);
+		mShowBonus = Preferences
+				.getBoolean(mContext, Settings.KEY_BONUS, false);
+		mShowBPS = Preferences.getBoolean(mContext, Settings.KEY_BPS, false);
+		mShowNPS = Preferences.getBoolean(mContext, Settings.KEY_NPS, false);
+		mShowRoe = Preferences.getBoolean(mContext, Settings.KEY_ROE, false);
+		mShowRoi = Preferences.getBoolean(mContext, Settings.KEY_ROI, false);
 
 		initLoader();
 
@@ -546,15 +553,19 @@ public class StockDataChartListActivity extends BaseActivity implements
 							roe = (float) financialData.getRoe();
 						}
 
-						Entry bookValuePerShareEntry = new Entry(
-								bookValuePerShare, index);
-						stockDataChart.mBookValuePerShareList
-								.add(bookValuePerShareEntry);
+						if (mShowBPS) {
+							Entry bookValuePerShareEntry = new Entry(
+									bookValuePerShare, index);
+							stockDataChart.mBookValuePerShareList
+									.add(bookValuePerShareEntry);
+						}
 
-						Entry netProfitPerShareEntry = new Entry(
-								netProfitPerShare, index);
-						stockDataChart.mNetProfitPerShareList
-								.add(netProfitPerShareEntry);
+						if (mShowNPS) {
+							Entry netProfitPerShareEntry = new Entry(
+									netProfitPerShare, index);
+							stockDataChart.mNetProfitPerShareList
+									.add(netProfitPerShareEntry);
+						}
 
 						if (mShowRoe) {
 							Entry roeEntry = new Entry(roe, index);
@@ -565,14 +576,18 @@ public class StockDataChartListActivity extends BaseActivity implements
 					if (mShareBonusList.size() > 0) {
 						dividend = 0;
 
-						shareBonus = getShareBonusByDate(dateString,
-								mShareBonusList);
-						if (shareBonus != null) {
-							dividend = (float) (shareBonus.getDividend());
-						}
+						if (mShowBonus) {
+							shareBonus = getShareBonusByDate(dateString,
+									mShareBonusList);
+							if (shareBonus != null) {
+								dividend = (float) (shareBonus.getDividend());
+							}
 
-						BarEntry shareBonusEntry = new BarEntry(dividend, index);
-						stockDataChart.mDividendEntryList.add(shareBonusEntry);
+							BarEntry shareBonusEntry = new BarEntry(dividend,
+									index);
+							stockDataChart.mDividendEntryList
+									.add(shareBonusEntry);
+						}
 					}
 
 					Entry average5Entry = new Entry(
