@@ -274,21 +274,28 @@ public abstract class StockDataProvider extends StockAnalyzer {
 					result = defaultValue;
 				} else if (Market.isTradingHours(Calendar.getInstance())) {
 					scheduleMinutes = Market.getScheduleMinutes();
+					if (scheduleMinutes != 0) {
+						result = 1;
 
-					if (period.equals(Constants.PERIOD_MIN5)) {
-						result = scheduleMinutes
-								/ Constants.SCHEDULE_INTERVAL_MIN5;
-					} else if (period.equals(Constants.PERIOD_MIN15)) {
-						result = scheduleMinutes
-								/ Constants.SCHEDULE_INTERVAL_MIN15;
-					} else if (period.equals(Constants.PERIOD_MIN30)) {
-						result = scheduleMinutes
-								/ Constants.SCHEDULE_INTERVAL_MIN30;
-					} else if (period.equals(Constants.PERIOD_MIN60)) {
-						result = scheduleMinutes
-								/ Constants.SCHEDULE_INTERVAL_MIN60;
-					} else {
-						if (scheduleMinutes != 0) {
+						if (period.equals(Constants.PERIOD_MIN60)) {
+							result += scheduleMinutes
+									/ Constants.SCHEDULE_INTERVAL_MIN60;
+						} else if (period.equals(Constants.PERIOD_MIN30)) {
+							result += scheduleMinutes
+									/ Constants.SCHEDULE_INTERVAL_MIN30;
+						} else if (period.equals(Constants.PERIOD_MIN15)) {
+							result += scheduleMinutes
+									/ Constants.SCHEDULE_INTERVAL_MIN15;
+						} else if (period.equals(Constants.PERIOD_MIN5)) {
+							result += scheduleMinutes
+									/ Constants.SCHEDULE_INTERVAL_MIN5;
+						}
+					}
+				} else if (Market.isHalfTime(Calendar.getInstance())) {
+					if (period.equals(Constants.PERIOD_DAY)) {
+						if (!stockData.getDate().equals(
+								Utility.getCalendarDateString(Calendar
+										.getInstance()))) {
 							result = 1;
 						}
 					}
@@ -351,8 +358,10 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		}
 
 		String downloadStockRealTime(Stock stock) {
+			String result = "";
+			
 			if (stock == null) {
-				return "";
+				return result;
 			}
 
 			mStockDatabaseManager.getStock(stock);
@@ -364,7 +373,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 					|| stock.getModified().contains(
 							Utility.getCurrentDateString())) {
 				if (stock.getPrice() > 0) {
-					return "";
+					return result;
 				}
 			}
 
@@ -374,7 +383,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		}
 
 		String downloadStockRealTime(String urlString) {
-			String responseString = "";
+			String result = "";
 
 			Log.d(TAG, "downloadStockRealTime:" + urlString);
 
@@ -385,8 +394,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			try {
 				Response response = mOkHttpClient.newCall(request).execute();
 				if (response != null) {
-					responseString = response.body().string();
-					handleResponseStockRealTime(mStock, responseString);
+					result = response.body().string();
+					handleResponseStockRealTime(mStock, result);
 
 					mStockDatabaseManager.updateStockDeal(mStock);
 					mStockDatabaseManager.updateStock(mStock,
@@ -398,14 +407,16 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				e.printStackTrace();
 			}
 
-			return responseString;
+			return result;
 		}
 
 		String downloadStockInformation(Stock stock) {
+			String result = "";
+			
 			boolean needDownload = false;
 
 			if (stock == null) {
-				return "";
+				return result;
 			}
 
 			mStockDatabaseManager.getStock(stock);
@@ -422,7 +433,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			}
 
 			if (!needDownload) {
-				return "";
+				return result;
 			}
 
 			setStock(stock);
@@ -431,7 +442,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		}
 
 		String downloadStockInformation(String urlString) {
-			String responseString = "";
+			String result = "";
 
 			Log.d(TAG, "downloadStockInformation:" + urlString);
 
@@ -442,8 +453,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			try {
 				Response response = mOkHttpClient.newCall(request).execute();
 				if (response != null) {
-					responseString = response.body().string();
-					handleResponseStockInformation(mStock, responseString);
+					result = response.body().string();
+					handleResponseStockInformation(mStock, result);
 
 					Thread.sleep(Constants.DEFAULT_SLEEP_INTERVAL);
 				}
@@ -451,12 +462,14 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				e.printStackTrace();
 			}
 
-			return responseString;
+			return result;
 		}
 
 		String downloadFinancialData(Stock stock) {
+			String result = "";
+			
 			if (stock == null) {
-				return "";
+				return result;
 			}
 
 			mStockDatabaseManager.getStock(stock);
@@ -472,7 +485,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 							Utility.getCurrentDateString())) {
 				if ((mFinancialData.getBookValuePerShare() != 0)
 						&& (mFinancialData.getNetProfit() != 0)) {
-					return "";
+					return result;
 				}
 			}
 
@@ -482,7 +495,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		}
 
 		String downloadFinancialData(String urlString) {
-			String responseString = "";
+			String result = "";
 
 			Log.d(TAG, "downloadFinancialData:" + urlString);
 
@@ -493,9 +506,9 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			try {
 				Response response = mOkHttpClient.newCall(request).execute();
 				if (response != null) {
-					responseString = response.body().string();
+					result = response.body().string();
 					handleResponseFinancialData(mStock, mFinancialData,
-							responseString);
+							result);
 
 					Thread.sleep(Constants.DEFAULT_SLEEP_INTERVAL);
 				}
@@ -503,10 +516,12 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				e.printStackTrace();
 			}
 
-			return responseString;
+			return result;
 		}
 
 		String downloadIPO() {
+			String result = "";
+			
 			ArrayList<IPO> ipoList = new ArrayList<IPO>();
 			boolean needDownload = false;
 
@@ -524,14 +539,14 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			}
 
 			if (!needDownload) {
-				return "";
+				return result;
 			}
 
 			return downloadIPO(getIPOURLString());
 		}
 
 		String downloadIPO(String urlString) {
-			String responseString = "";
+			String result = "";
 
 			Log.d(TAG, "downloadIPO:" + urlString);
 
@@ -542,19 +557,21 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			try {
 				Response response = mOkHttpClient.newCall(request).execute();
 				if (response != null) {
-					responseString = response.body().string();
-					handleResponseIPO(mIPO, responseString);
+					result = response.body().string();
+					handleResponseIPO(mIPO, result);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 
-			return responseString;
+			return result;
 		}
 
 		String downloadShareBonus(Stock stock) {
+			String result = "";
+			
 			if (stock == null) {
-				return "";
+				return result;
 			}
 
 			mStockDatabaseManager.getStock(stock);
@@ -568,7 +585,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 					|| mShareBonus.getModified().contains(
 							Utility.getCurrentDateString())) {
 				if (!TextUtils.isEmpty(mShareBonus.getDate())) {
-					return "";
+					return result;
 				}
 			}
 
@@ -578,7 +595,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		}
 
 		String downloadShareBonus(String urlString) {
-			String responseString = "";
+			String result = "";
 
 			Log.d(TAG, "downloadShareBonus:" + urlString);
 
@@ -589,9 +606,9 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			try {
 				Response response = mOkHttpClient.newCall(request).execute();
 				if (response != null) {
-					responseString = response.body().string();
+					result = response.body().string();
 					handleResponseShareBonus(mStock, mShareBonus,
-							responseString);
+							result);
 
 					Thread.sleep(Constants.DEFAULT_SLEEP_INTERVAL);
 				}
@@ -599,12 +616,14 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				e.printStackTrace();
 			}
 
-			return responseString;
+			return result;
 		}
 
 		String downloadTotalShare(Stock stock) {
+			String result = "";
+			
 			if (stock == null) {
-				return "";
+				return result;
 			}
 
 			mStockDatabaseManager.getStock(stock);
@@ -618,7 +637,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 					|| mTotalShare.getModified().contains(
 							Utility.getCurrentDateString())) {
 				if (mTotalShare.getTotalShare() > 0) {
-					return "";
+					return result;
 				}
 			}
 
@@ -628,7 +647,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		}
 
 		String downloadTotalShare(String urlString) {
-			String responseString = "";
+			String result = "";
 
 			Log.d(TAG, "downloadTotalShare:" + urlString);
 
@@ -639,9 +658,9 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			try {
 				Response response = mOkHttpClient.newCall(request).execute();
 				if (response != null) {
-					responseString = response.body().string();
+					result = response.body().string();
 					handleResponseTotalShare(mStock, mTotalShare,
-							responseString);
+							result);
 
 					Thread.sleep(Constants.DEFAULT_SLEEP_INTERVAL);
 				}
@@ -649,33 +668,34 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				e.printStackTrace();
 			}
 
-			return responseString;
+			return result;
 		}
 
 		String downloadStockDataHistory(Stock stock) {
-			String responseString = "";
-
+			String result = "";
+			
 			if (stock == null) {
-				return "";
+				return result;
 			}
 
 			mStockDatabaseManager.getStock(stock);
 
 			for (String period : Constants.PERIODS) {
 				if (Preferences.getBoolean(mContext, period, false)) {
-					responseString = downloadStockDataHistory(stock, period);
+					result = downloadStockDataHistory(stock, period);
 				}
 			}
 
-			return responseString;
+			return result;
 		}
 
 		String downloadStockDataHistory(Stock stock, String period) {
+			String result = "";
 			int len = 0;
 			mStockData = new StockData(period);
 
 			if (stock == null) {
-				return "";
+				return result;
 			}
 
 			mStockData.setStockId(stock.getId());
@@ -683,7 +703,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 			len = getDownloadStockDataLength(mStockData);
 			if (len <= 0) {
-				return "";
+				return result;
 			}
 
 			setStock(stock);
@@ -693,7 +713,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		}
 
 		String downloadStockDataHistory(String urlString) {
-			String responseString = "";
+			String result = "";
 
 			Log.d(TAG, "downloadStockDataHistory:" + urlString);
 
@@ -704,11 +724,9 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			try {
 				Response response = mOkHttpClient.newCall(request).execute();
 				if (response != null) {
-					responseString = response.body().string();
+					result = response.body().string();
 					handleResponseStockDataHistory(mStock, mStockData,
-							responseString);
-
-					// analyze(mStock, mStockData.getPeriod());
+							result);
 
 					Thread.sleep(Constants.DEFAULT_SLEEP_INTERVAL);
 				}
@@ -716,19 +734,20 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				e.printStackTrace();
 			}
 
-			return responseString;
+			return result;
 		}
 
 		String downloadStockDataRealTime(Stock stock) {
+			String result = "";
 			int len = 0;
 			String period = Constants.PERIOD_DAY;
 
 			if (!Preferences.getBoolean(mContext, period, false)) {
-				return "";
+				return result;
 			}
 
 			if (stock == null) {
-				return "";
+				return result;
 			}
 
 			mStockDatabaseManager.getStock(stock);
@@ -739,7 +758,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 			len = getDownloadStockDataLength(mStockData);
 			if (len <= 0) {
-				return "";
+				return result;
 			}
 
 			setStock(stock);
@@ -748,7 +767,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		}
 
 		String downloadStockDataRealTime(String urlString) {
-			String responseString = "";
+			String result = "";
 
 			Log.d(TAG, "downloadStockDataRealTime:" + urlString);
 
@@ -759,11 +778,9 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			try {
 				Response response = mOkHttpClient.newCall(request).execute();
 				if (response != null) {
-					responseString = response.body().string();
+					result = response.body().string();
 					handleResponseStockDataRealTime(mStock, mStockData,
-							responseString);
-
-					// analyze(mStock, mStockData.getPeriod());
+							result);
 
 					Thread.sleep(Constants.DEFAULT_SLEEP_INTERVAL);
 				}
@@ -771,13 +788,13 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				e.printStackTrace();
 			}
 
-			return responseString;
+			return result;
 		}
 
 		@Override
 		protected String doInBackground(String... params) {
 			ArrayMap<String, Stock> stockArrayMapFavorite = new ArrayMap<String, Stock>();
-			String responseString = "";
+			String result = "";
 			long stockId = 0;
 
 			mAsyncTaskStatus = Status.RUNNING;
@@ -796,38 +813,38 @@ public abstract class StockDataProvider extends StockAnalyzer {
 					}
 				}
 
-				responseString = downloadStockRealTime(stock);
-				if (responseString.contains(mAccessDeniedString)) {
+				result = downloadStockRealTime(stock);
+				if (result.contains(mAccessDeniedString)) {
 					break;
 				}
 
-				responseString = downloadStockInformation(stock);
-				if (responseString.contains(mAccessDeniedString)) {
+				result = downloadStockInformation(stock);
+				if (result.contains(mAccessDeniedString)) {
 					break;
 				}
 
-				responseString = downloadFinancialData(stock);
-				if (responseString.contains(mAccessDeniedString)) {
+				result = downloadFinancialData(stock);
+				if (result.contains(mAccessDeniedString)) {
 					break;
 				}
 
-				responseString = downloadShareBonus(stock);
-				if (responseString.contains(mAccessDeniedString)) {
+				result = downloadShareBonus(stock);
+				if (result.contains(mAccessDeniedString)) {
 					break;
 				}
 
-				responseString = downloadTotalShare(stock);
-				if (responseString.contains(mAccessDeniedString)) {
+				result = downloadTotalShare(stock);
+				if (result.contains(mAccessDeniedString)) {
 					break;
 				}
 
-				responseString = downloadStockDataHistory(stock);
-				if (responseString.contains(mAccessDeniedString)) {
+				result = downloadStockDataHistory(stock);
+				if (result.contains(mAccessDeniedString)) {
 					break;
 				}
 
-				responseString = downloadStockDataRealTime(stock);
-				if (responseString.contains(mAccessDeniedString)) {
+				result = downloadStockDataRealTime(stock);
+				if (result.contains(mAccessDeniedString)) {
 					break;
 				}
 
@@ -842,11 +859,11 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				sendBroadcast(Constants.ACTION_RESTART_LOADER, stockId);
 			}
 
-			responseString = downloadIPO();
+			result = downloadIPO();
 			sendBroadcast(Constants.ACTION_RESTART_LOADER,
 					Constants.STOCK_ID_INVALID);
 
-			return responseString;
+			return result;
 		}
 
 		@Override

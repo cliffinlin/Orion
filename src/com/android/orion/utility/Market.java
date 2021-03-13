@@ -119,6 +119,28 @@ public class Market {
 		return result;
 	}
 
+	public static boolean isHalfTime(Calendar calendar) {
+		boolean result = false;
+		Calendar currentCalendar;
+		Calendar stockMarketLunchBeginCalendar;
+		Calendar stockMarketLunchEndCalendar;
+
+		if (!isWeekday(calendar)) {
+			return result;
+		}
+
+		currentCalendar = Calendar.getInstance();
+		stockMarketLunchBeginCalendar = getStockMarketLunchBeginCalendar(currentCalendar);
+		stockMarketLunchEndCalendar = getStockMarketLunchEndCalendar(currentCalendar);
+
+		if (currentCalendar.after(stockMarketLunchBeginCalendar)
+				&& currentCalendar.before(stockMarketLunchEndCalendar)) {
+			result = true;
+		}
+
+		return result;
+	}
+	
 	public static boolean inSecondHalf(Calendar calendar) {
 		boolean result = false;
 		Calendar currentCalendar;

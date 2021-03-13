@@ -59,7 +59,8 @@ public class StockDataChartListActivity extends BaseActivity implements
 
 	static final int MESSAGE_REFRESH = 0;
 	static final int MESSAGE_LOAD_STOCK_LIST = 1;
-
+	
+	boolean mShowCandle = true;
 	boolean mShowDeal = true;
 	boolean mShowBonus = true;
 	boolean mShowBPS = true;
@@ -151,6 +152,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 		mSortOrder = getIntent().getStringExtra(
 				Constants.EXTRA_STOCK_LIST_SORT_ORDER);
 
+		mShowCandle = Preferences.getBoolean(mContext, Settings.KEY_CANDLE, false);
 		mShowDeal = Preferences.getBoolean(mContext, Settings.KEY_DEAL, false);
 		mShowBonus = Preferences
 				.getBoolean(mContext, Settings.KEY_BONUS, false);
@@ -478,13 +480,15 @@ public class StockDataChartListActivity extends BaseActivity implements
 					dateString = mStockData.getDate();
 					stockDataChart.mXValues.add(dateString);
 
-					CandleEntry candleEntry = new CandleEntry(index,
-							(float) mStockData.getHigh(),
-							(float) mStockData.getLow(),
-							(float) mStockData.getOpen(),
-							(float) mStockData.getClose(),
-							mStockData.getAction());
-					stockDataChart.mCandleEntryList.add(candleEntry);
+					if (mShowCandle) {
+						CandleEntry candleEntry = new CandleEntry(index,
+								(float) mStockData.getHigh(),
+								(float) mStockData.getLow(),
+								(float) mStockData.getOpen(),
+								(float) mStockData.getClose(),
+								mStockData.getAction());
+						stockDataChart.mCandleEntryList.add(candleEntry);
+					}
 
 					if (mStockData.vertexOf(Constants.STOCK_VERTEX_TOP)) {
 						Entry drawEntry = new Entry(

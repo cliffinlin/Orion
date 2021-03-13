@@ -13,19 +13,23 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/display" >
         <com.android.orion.CustomSwitchPreference
-            android:defaultValue="true"
+            android:defaultValue="false"
+            android:key="candle"
+            android:title="@string/candle" />        
+        <com.android.orion.CustomSwitchPreference
+            android:defaultValue="false"
             android:key="deal"
             android:title="@string/deal" />
         <com.android.orion.CustomSwitchPreference
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:key="bonus"
             android:title="@string/bonus" />
         <com.android.orion.CustomSwitchPreference
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:key="bps"
             android:title="@string/book_value_per_share" />
         <com.android.orion.CustomSwitchPreference
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:key="nps"
             android:title="@string/net_profit_per_share" />
         <com.android.orion.CustomSwitchPreference
