@@ -181,7 +181,7 @@ public class StockDataChart {
 		LineDataSet drawDataSet = new LineDataSet(mDrawEntryList, "Draw");
 		drawDataSet.setColor(Color.GRAY);
 		drawDataSet.setCircleColor(Color.GRAY);
-		drawDataSet.setCircleSize(3f);
+		drawDataSet.setCircleSize(0);
 		drawDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(drawDataSet);
 

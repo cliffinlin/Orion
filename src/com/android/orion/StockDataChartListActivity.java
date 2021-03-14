@@ -500,6 +500,12 @@ public class StockDataChartListActivity extends BaseActivity implements
 								(float) mStockData.getVertexLow(), index);
 						stockDataChart.mDrawEntryList.add(drawEntry);
 					}
+					
+					if (index == cursor.getCount() - 1) {
+						Entry drawEntry = new Entry(
+								(float) mStockData.getClose(), index);
+						stockDataChart.mDrawEntryList.add(drawEntry);
+					}
 
 					if (mStockData.vertexOf(Constants.STOCK_VERTEX_TOP_STROKE)) {
 						Entry strokeEntry = new Entry(
@@ -594,13 +600,15 @@ public class StockDataChartListActivity extends BaseActivity implements
 						}
 					}
 
-					Entry average5Entry = new Entry(
-							(float) mStockData.getAverage5(), index);
-					stockDataChart.mAverage5EntryList.add(average5Entry);
-
-					Entry average10Entry = new Entry(
-							(float) mStockData.getAverage10(), index);
-					stockDataChart.mAverage10EntryList.add(average10Entry);
+					if (mShowCandle) {
+						Entry average5Entry = new Entry(
+								(float) mStockData.getAverage5(), index);
+						stockDataChart.mAverage5EntryList.add(average5Entry);
+						
+						Entry average10Entry = new Entry(
+								(float) mStockData.getAverage10(), index);
+						stockDataChart.mAverage10EntryList.add(average10Entry);
+					}
 
 					Entry difEntry = new Entry((float) mStockData.getDIF(),
 							index);
