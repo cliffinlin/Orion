@@ -1,6 +1,7 @@
 package com.android.orion;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -25,6 +26,7 @@ import com.android.orion.database.StockDatabaseManager;
 import com.android.orion.database.StockDeal;
 import com.android.orion.database.TotalShare;
 import com.android.orion.indicator.MACD;
+import com.android.orion.utility.Market;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.StopWatch;
 import com.android.orion.utility.Utility;
@@ -935,8 +937,16 @@ public class StockAnalyzer {
 
 		ArrayList<StockDeal> stockDealList = new ArrayList<StockDeal>();
 
+		if (!Market.isTradingHours(Calendar.getInstance())) {
+			return;
+		}
+		
 		mStockDatabaseManager.getStockDealList(stock, stockDealList,
 				mStockDatabaseManager.getStockDealListToBuySelection(stock));
+		
+		if (stockDealList.size() == 0) {
+			return;
+		}
 
 		if (stock.getPrice() > 0) {
 			for (StockDeal stockDeal : stockDealList) {
@@ -946,12 +956,12 @@ public class StockAnalyzer {
 				}
 			}
 		}
-
-		if (TextUtils.isEmpty(dealString)) {
+		
+		bodyString = getBodyString(stock);
+		
+		if (TextUtils.isEmpty(dealString) && TextUtils.isEmpty(bodyString)) {
 			return;
 		}
-
-		bodyString = getBodyString(stock);
 
 		titleString += stock.getName() + " " + stock.getPrice() + " "
 				+ stock.getNet() + " " + dealString;
@@ -1008,8 +1018,8 @@ public class StockAnalyzer {
 			String period = Constants.PERIODS[i];
 			if (Preferences.getBoolean(mContext, period, false)) {
 				action = stock.getAction(period);
-
-				if (action.contains("B7B7") || action.contains("S7S7")) {
+				if (action.contains("BBD") || action.contains("SSG")
+						|| action.contains("B7B7") || action.contains("S7S7")) {
 					result += period + " " + action + " ";
 				}
 			}

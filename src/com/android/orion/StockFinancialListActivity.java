@@ -151,25 +151,29 @@ public class StockFinancialListActivity extends ListActivity implements
 			startActivity(new Intent(this, StockSearchActivity.class));
 			return true;
 
-		case R.id.action_deal:
-			startActivity(new Intent(this, DealListActivity.class));
+		case R.id.action_refresh:
+			mHandler.sendEmptyMessage(MESSAGE_REFRESH);
 			return true;
 
 		case R.id.action_settings:
+			startActivity(new Intent(this, ServiceSettingActivity.class));
+			return true;
+
+		case R.id.action_filter:
 			startActivityForResult(new Intent(this, StockFilterActivity.class),
 					REQUEST_CODE_STOCK_FILTER);
 			return true;
 
-		case R.id.action_save_to_file:
-			performSaveToFile();
-			return true;
-
-		case R.id.action_load_from_file:
+		case R.id.action_load:
 			performLoadFromFile();
 			return true;
 
-		case R.id.action_refresh:
-			mHandler.sendEmptyMessage(MESSAGE_REFRESH);
+		case R.id.action_save:
+			performSaveToFile();
+			return true;
+
+		case R.id.action_deal:
+			startActivity(new Intent(this, DealListActivity.class));
 			return true;
 
 		default:

@@ -51,15 +51,16 @@ public class StockDataChartListActivity extends BaseActivity implements
 	static final String TAG = Constants.TAG + " "
 			+ StockDataChartListActivity.class.getSimpleName();
 
-	static final int ITEM_VIEW_TYPE_MAIN = 0;
-	static final int ITEM_VIEW_TYPE_SUB = 1;
-	static final int LOADER_ID_STOCK_LIST = Constants.PERIODS.length + 1;
-	static final int FLING_DISTANCE = 50;
-	static final int FLING_VELOCITY = 100;
+	public static final int ITEM_VIEW_TYPE_MAIN = 0;
+	public static final int ITEM_VIEW_TYPE_SUB = 1;
+	public static final int LOADER_ID_STOCK_LIST = Constants.PERIODS.length + 1;
+	public static final int FLING_DISTANCE = 50;
+	public static final int FLING_VELOCITY = 100;
+	public static final int REQUEST_CODE_SETTINGS = 0;
 
 	static final int MESSAGE_REFRESH = 0;
 	static final int MESSAGE_LOAD_STOCK_LIST = 1;
-	
+
 	boolean mShowCandle = true;
 	boolean mShowDeal = true;
 	boolean mShowBonus = true;
@@ -152,7 +153,8 @@ public class StockDataChartListActivity extends BaseActivity implements
 		mSortOrder = getIntent().getStringExtra(
 				Constants.EXTRA_STOCK_LIST_SORT_ORDER);
 
-		mShowCandle = Preferences.getBoolean(mContext, Settings.KEY_CANDLE, false);
+		mShowCandle = Preferences.getBoolean(mContext, Settings.KEY_CANDLE,
+				false);
 		mShowDeal = Preferences.getBoolean(mContext, Settings.KEY_DEAL, false);
 		mShowBonus = Preferences
 				.getBoolean(mContext, Settings.KEY_BONUS, false);
@@ -177,26 +179,27 @@ public class StockDataChartListActivity extends BaseActivity implements
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case android.R.id.home: {
+		case android.R.id.home:
 			finish();
 			return true;
-		}
-		case R.id.action_prev: {
+
+		case R.id.action_prev:
 			navigateStock(-1);
 			return true;
-		}
-		case R.id.action_next: {
+
+		case R.id.action_next:
 			navigateStock(1);
 			return true;
-		}
-		case R.id.action_edit: {
-			mIntent = new Intent(this, StockActivity.class);
-			mIntent.setAction(StockActivity.ACTION_STOCK_EDIT);
-			mIntent.putExtra(Constants.EXTRA_STOCK_ID, mStock.getId());
-			startActivity(mIntent);
+
+		case R.id.action_refresh:
+			mHandler.sendEmptyMessage(MESSAGE_REFRESH);
 			return true;
-		}
-		case R.id.action_deal: {
+
+		case R.id.action_settings:
+			startActivityForResult(new Intent(this, ServiceSettingActivity.class), REQUEST_CODE_SETTINGS);
+			return true;
+
+		case R.id.action_deal:
 			Bundle bundle = new Bundle();
 			bundle.putString(Constants.EXTRA_STOCK_SE, mStock.getSE());
 			bundle.putString(Constants.EXTRA_STOCK_CODE, mStock.getCode());
@@ -204,17 +207,36 @@ public class StockDataChartListActivity extends BaseActivity implements
 			intent.putExtras(bundle);
 			startActivity(intent);
 			return true;
-		}
-		case R.id.action_refresh: {
-			mHandler.sendEmptyMessage(MESSAGE_REFRESH);
+
+		case R.id.action_edit:
+			mIntent = new Intent(this, StockActivity.class);
+			mIntent.setAction(StockActivity.ACTION_STOCK_EDIT);
+			mIntent.putExtra(Constants.EXTRA_STOCK_ID, mStock.getId());
+			startActivity(mIntent);
 			return true;
-		}
 
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode,
+			Intent intent) {
+		super.onActivityResult(requestCode, resultCode, intent);
+
+		if (resultCode == RESULT_OK) {
+			switch (requestCode) {
+			case REQUEST_CODE_SETTINGS:
+				restartLoader();
+				break;
+
+			default:
+				break;
+			}
+		}
+	}
+	
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -500,7 +522,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 								(float) mStockData.getVertexLow(), index);
 						stockDataChart.mDrawEntryList.add(drawEntry);
 					}
-					
+
 					if (index == cursor.getCount() - 1) {
 						Entry drawEntry = new Entry(
 								(float) mStockData.getClose(), index);
@@ -604,7 +626,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 						Entry average5Entry = new Entry(
 								(float) mStockData.getAverage5(), index);
 						stockDataChart.mAverage5EntryList.add(average5Entry);
-						
+
 						Entry average10Entry = new Entry(
 								(float) mStockData.getAverage10(), index);
 						stockDataChart.mAverage10EntryList.add(average10Entry);

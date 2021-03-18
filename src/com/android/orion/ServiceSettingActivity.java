@@ -1,11 +1,10 @@
 package com.android.orion;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class ServiceSettingActivity extends Activity {
+public class ServiceSettingActivity extends BaseActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +23,7 @@ public class ServiceSettingActivity extends Activity {
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
+			setResult(RESULT_OK, mIntent);
 			finish();
 			return true;
 

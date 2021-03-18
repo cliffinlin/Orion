@@ -359,7 +359,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 		String downloadStockRealTime(Stock stock) {
 			String result = "";
-			
+
 			if (stock == null) {
 				return result;
 			}
@@ -412,7 +412,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 		String downloadStockInformation(Stock stock) {
 			String result = "";
-			
+
 			boolean needDownload = false;
 
 			if (stock == null) {
@@ -467,7 +467,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 		String downloadFinancialData(Stock stock) {
 			String result = "";
-			
+
 			if (stock == null) {
 				return result;
 			}
@@ -507,8 +507,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				Response response = mOkHttpClient.newCall(request).execute();
 				if (response != null) {
 					result = response.body().string();
-					handleResponseFinancialData(mStock, mFinancialData,
-							result);
+					handleResponseFinancialData(mStock, mFinancialData, result);
 
 					Thread.sleep(Constants.DEFAULT_SLEEP_INTERVAL);
 				}
@@ -521,7 +520,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 		String downloadIPO() {
 			String result = "";
-			
+
 			ArrayList<IPO> ipoList = new ArrayList<IPO>();
 			boolean needDownload = false;
 
@@ -569,7 +568,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 		String downloadShareBonus(Stock stock) {
 			String result = "";
-			
+
 			if (stock == null) {
 				return result;
 			}
@@ -607,8 +606,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				Response response = mOkHttpClient.newCall(request).execute();
 				if (response != null) {
 					result = response.body().string();
-					handleResponseShareBonus(mStock, mShareBonus,
-							result);
+					handleResponseShareBonus(mStock, mShareBonus, result);
 
 					Thread.sleep(Constants.DEFAULT_SLEEP_INTERVAL);
 				}
@@ -621,7 +619,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 		String downloadTotalShare(Stock stock) {
 			String result = "";
-			
+
 			if (stock == null) {
 				return result;
 			}
@@ -659,8 +657,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				Response response = mOkHttpClient.newCall(request).execute();
 				if (response != null) {
 					result = response.body().string();
-					handleResponseTotalShare(mStock, mTotalShare,
-							result);
+					handleResponseTotalShare(mStock, mTotalShare, result);
 
 					Thread.sleep(Constants.DEFAULT_SLEEP_INTERVAL);
 				}
@@ -673,7 +670,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 		String downloadStockDataHistory(Stock stock) {
 			String result = "";
-			
+
 			if (stock == null) {
 				return result;
 			}
@@ -725,8 +722,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				Response response = mOkHttpClient.newCall(request).execute();
 				if (response != null) {
 					result = response.body().string();
-					handleResponseStockDataHistory(mStock, mStockData,
-							result);
+					handleResponseStockDataHistory(mStock, mStockData, result);
 
 					Thread.sleep(Constants.DEFAULT_SLEEP_INTERVAL);
 				}
@@ -779,8 +775,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				Response response = mOkHttpClient.newCall(request).execute();
 				if (response != null) {
 					result = response.body().string();
-					handleResponseStockDataRealTime(mStock, mStockData,
-							result);
+					handleResponseStockDataRealTime(mStock, mStockData, result);
 
 					Thread.sleep(Constants.DEFAULT_SLEEP_INTERVAL);
 				}
