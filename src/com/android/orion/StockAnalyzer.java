@@ -940,10 +940,10 @@ public class StockAnalyzer {
 		if (!Market.isTradingHours(Calendar.getInstance())) {
 			return;
 		}
-		
+
 		mStockDatabaseManager.getStockDealList(stock, stockDealList,
 				mStockDatabaseManager.getStockDealListToBuySelection(stock));
-		
+
 		if (stockDealList.size() == 0) {
 			return;
 		}
@@ -956,9 +956,9 @@ public class StockAnalyzer {
 				}
 			}
 		}
-		
+
 		bodyString = getBodyString(stock);
-		
+
 		if (TextUtils.isEmpty(dealString) && TextUtils.isEmpty(bodyString)) {
 			return;
 		}

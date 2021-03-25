@@ -228,6 +228,31 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		}
 	}
 
+	int findStockDataToday(Cursor cursor) {
+		String dataString = Utility.getCalendarDateString(Calendar
+				.getInstance());
+		int result = 0;
+
+		StockData stockData = new StockData();
+
+		if (cursor == null) {
+			return result;
+		}
+
+		cursor.moveToLast();
+
+		while (cursor.moveToPrevious()) {
+			stockData.set(cursor);
+			if (stockData.getDate().equals(dataString)) {
+				result++;
+			} else {
+				break;
+			}
+		}
+
+		return result;
+	}
+
 	int getDownloadStockDataLength(StockData stockData) {
 		int result = 0;
 		int defaultValue = 0;
@@ -239,65 +264,106 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		String sortOrder = null;
 		Cursor cursor = null;
 
-		if (stockData == null) {
-			return result;
-		}
-
-		stockId = stockData.getStockId();
-		period = stockData.getPeriod();
-
-		defaultValue = getDownloadHistoryLengthDefault(period);
-
 		try {
+			if (stockData == null) {
+				return result;
+			}
+
+			stockId = stockData.getStockId();
+			period = stockData.getPeriod();
+
+			defaultValue = getDownloadHistoryLengthDefault(period);
+
 			selection = mStockDatabaseManager.getStockDataSelection(stockId,
 					period);
 			sortOrder = mStockDatabaseManager.getStockDataOrder();
 			cursor = mStockDatabaseManager.queryStockData(selection, null,
 					sortOrder);
 
-			if (cursor == null) {
+			if ((cursor == null) || (cursor.getCount() == 0)) {
+				return defaultValue;
+			}
+
+			cursor.moveToLast();
+			stockData.set(cursor);
+			modified = stockData.getModified();
+			if (TextUtils.isEmpty(modified)) {
+				modified = stockData.getCreated();
+			}
+
+			if (Market.isOutOfDateToday(modified)) {
+				removeStockDataRedundant(cursor, defaultValue);
+				return defaultValue;
+			}
+
+			if (!Market.isWeekday(Calendar.getInstance())) {
 				return result;
 			}
 
-			if (cursor.getCount() == 0) {
-				result = defaultValue;
-			} else {
-				cursor.moveToLast();
-				stockData.set(cursor);
-				modified = stockData.getModified();
-				if (TextUtils.isEmpty(modified)) {
-					modified = stockData.getCreated();
-				}
+			if (Market.isTradingHours(Calendar.getInstance())) {
+				scheduleMinutes = Market.getScheduleMinutes();
+				if (scheduleMinutes != 0) {
+					result = 1;
 
-				if (Market.isOutOfDateToday(modified)) {
-					removeStockDataRedundant(cursor, defaultValue);
-					result = defaultValue;
-				} else if (Market.isTradingHours(Calendar.getInstance())) {
-					scheduleMinutes = Market.getScheduleMinutes();
-					if (scheduleMinutes != 0) {
-						result = 1;
-
-						if (period.equals(Constants.PERIOD_MIN60)) {
-							result += scheduleMinutes
-									/ Constants.SCHEDULE_INTERVAL_MIN60;
-						} else if (period.equals(Constants.PERIOD_MIN30)) {
-							result += scheduleMinutes
-									/ Constants.SCHEDULE_INTERVAL_MIN30;
-						} else if (period.equals(Constants.PERIOD_MIN15)) {
-							result += scheduleMinutes
-									/ Constants.SCHEDULE_INTERVAL_MIN15;
-						} else if (period.equals(Constants.PERIOD_MIN5)) {
-							result += scheduleMinutes
-									/ Constants.SCHEDULE_INTERVAL_MIN5;
-						}
+					if (period.equals(Constants.PERIOD_MIN60)) {
+						result += scheduleMinutes
+								/ Constants.SCHEDULE_INTERVAL_MIN60;
+					} else if (period.equals(Constants.PERIOD_MIN30)) {
+						result += scheduleMinutes
+								/ Constants.SCHEDULE_INTERVAL_MIN30;
+					} else if (period.equals(Constants.PERIOD_MIN15)) {
+						result += scheduleMinutes
+								/ Constants.SCHEDULE_INTERVAL_MIN15;
+					} else if (period.equals(Constants.PERIOD_MIN5)) {
+						result += scheduleMinutes
+								/ Constants.SCHEDULE_INTERVAL_MIN5;
 					}
-				} else if (Market.isHalfTime(Calendar.getInstance())) {
-					if (period.equals(Constants.PERIOD_DAY)) {
-						if (!stockData.getDate().equals(
-								Utility.getCalendarDateString(Calendar
-										.getInstance()))) {
-							result = 1;
-						}
+				}
+			} else {
+				int count = findStockDataToday(cursor);
+				Calendar modifiedCalendar = Utility.stringToCalendar(modified,
+						Utility.CALENDAR_DATE_TIME_FORMAT);
+				Calendar stockMarketLunchBeginCalendar = Market
+						.getStockMarketLunchBeginCalendar(Calendar
+								.getInstance());
+				Calendar stockMarketCloseCalendar = Market
+						.getStockMarketCloseCalendar(Calendar.getInstance());
+
+				if (Market.inHalfTime(Calendar.getInstance())) {
+					if (modifiedCalendar.after(stockMarketLunchBeginCalendar)) {
+						return result;
+					}
+
+					if (period.equals(Constants.PERIOD_MONTH)
+							|| period.equals(Constants.PERIOD_WEEK)
+							|| period.equals(Constants.PERIOD_DAY)) {
+						result = 1 - count;
+					} else if (period.equals(Constants.PERIOD_MIN60)) {
+						result = 2 - count;
+					} else if (period.equals(Constants.PERIOD_MIN30)) {
+						result = 4 - count;
+					} else if (period.equals(Constants.PERIOD_MIN15)) {
+						result = 8 - count;
+					} else if (period.equals(Constants.PERIOD_MIN5)) {
+						result = 24 - count;
+					}
+				} else if (Market.afterStockMarketClose(Calendar.getInstance())) {
+					if (modifiedCalendar.after(stockMarketCloseCalendar)) {
+						return result;
+					}
+
+					if (period.equals(Constants.PERIOD_MONTH)
+							|| period.equals(Constants.PERIOD_WEEK)
+							|| period.equals(Constants.PERIOD_DAY)) {
+						result = 1 - count;
+					} else if (period.equals(Constants.PERIOD_MIN60)) {
+						result = 4 - count;
+					} else if (period.equals(Constants.PERIOD_MIN30)) {
+						result = 8 - count;
+					} else if (period.equals(Constants.PERIOD_MIN15)) {
+						result = 16 - count;
+					} else if (period.equals(Constants.PERIOD_MIN5)) {
+						result = 48 - count;
 					}
 				}
 			}

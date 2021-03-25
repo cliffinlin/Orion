@@ -16,25 +16,6 @@ public class Market {
 				+ calendar.get(Calendar.MINUTE);
 	}
 
-	public static boolean isTimeUp(int begin, int interval) {
-		boolean result = false;
-		int minutes = 0;
-		int remainder = 0;
-
-		if (interval == 0) {
-			return true;
-		}
-
-		minutes = Market.getCalendarDayMinutes(Calendar.getInstance()) - begin;
-		remainder = minutes % interval;
-
-		if (remainder == 0) {
-			result = true;
-		}
-
-		return result;
-	}
-
 	public static int getScheduleMinutes() {
 		int result = 0;
 		int start = 0;
@@ -71,23 +52,15 @@ public class Market {
 		return result;
 	}
 
-	public static boolean isOpeningHours(Calendar calendar) {
+	public static boolean isOutOfDateToday(String modified) {
 		boolean result = false;
-		Calendar currentCalendar;
-		Calendar stockMarketOpenCalendar;
-		Calendar stockMarketCloseCalendar;
 
-		if (!isWeekday(calendar)) {
-			return result;
+		if (TextUtils.isEmpty(modified)) {
+			return true;
 		}
 
-		currentCalendar = Calendar.getInstance();
-		stockMarketOpenCalendar = getStockMarketOpenCalendar(currentCalendar);
-		stockMarketCloseCalendar = getStockMarketCloseCalendar(currentCalendar);
-
-		if (currentCalendar.after(stockMarketOpenCalendar)
-				&& currentCalendar.before(stockMarketCloseCalendar)) {
-			result = true;
+		if (!modified.contains(Utility.getCalendarDateString(Calendar.getInstance()))) {
+			return true;
 		}
 
 		return result;
@@ -119,7 +92,7 @@ public class Market {
 		return result;
 	}
 
-	public static boolean isHalfTime(Calendar calendar) {
+	public static boolean inHalfTime(Calendar calendar) {
 		boolean result = false;
 		Calendar currentCalendar;
 		Calendar stockMarketLunchBeginCalendar;
@@ -162,7 +135,26 @@ public class Market {
 
 		return result;
 	}
+	
+	public static boolean afterStockMarketClose(Calendar calendar) {
+		boolean result = false;
+		Calendar currentCalendar;
+		Calendar stockMarketCloseCalendar;
 
+		if (!isWeekday(calendar)) {
+			return result;
+		}
+
+		currentCalendar = Calendar.getInstance();
+		stockMarketCloseCalendar = getStockMarketCloseCalendar(currentCalendar);
+
+		if (currentCalendar.after(stockMarketCloseCalendar)) {
+			result = true;
+		}
+
+		return result;
+	}
+	
 	public static Calendar getStockMarketCalendar(Calendar calendar,
 			String timeString) {
 		Calendar result = Calendar.getInstance();
@@ -193,85 +185,4 @@ public class Market {
 				Constants.STOCK_MARKET_CLOSE_TIME);
 	}
 
-	public static boolean isOutOfDate(String modified) {
-		boolean result = false;
-
-		if (TextUtils.isEmpty(modified) || isOutOfDateToday(modified)
-				|| isOutOfDateFirstHalf(modified)
-				|| isOutOfDateSecendHalf(modified)) {
-			return true;
-		}
-
-		return result;
-	}
-
-	public static boolean isOutOfDateToday(String modified) {
-		boolean result = false;
-
-		if (TextUtils.isEmpty(modified)) {
-			return true;
-		}
-
-		if (!modified.contains(Utility.getCalendarDateString(Calendar.getInstance()))) {
-			return true;
-		}
-
-		return result;
-	}
-
-	public static boolean isOutOfDateFirstHalf(String modified) {
-		boolean result = false;
-
-		Calendar currentCalendar;
-		Calendar modifiedCalendar;
-		Calendar stockMarketLunchBeginCalendar;
-
-		if (TextUtils.isEmpty(modified)) {
-			return true;
-		}
-
-		currentCalendar = Calendar.getInstance();
-		if (!Market.isWeekday(currentCalendar)) {
-			return result;
-		}
-		modifiedCalendar = Utility.stringToCalendar(modified,
-				Utility.CALENDAR_DATE_TIME_FORMAT);
-
-		stockMarketLunchBeginCalendar = Market
-				.getStockMarketLunchBeginCalendar(currentCalendar);
-		if (modifiedCalendar.before(stockMarketLunchBeginCalendar)
-				&& currentCalendar.after(stockMarketLunchBeginCalendar)) {
-			result = true;
-		}
-
-		return result;
-	}
-
-	public static boolean isOutOfDateSecendHalf(String modified) {
-		boolean result = false;
-
-		Calendar currentCalendar;
-		Calendar modifiedCalendar;
-		Calendar stockMarketCloseCalendar;
-
-		if (TextUtils.isEmpty(modified)) {
-			return true;
-		}
-
-		currentCalendar = Calendar.getInstance();
-		if (!Market.isWeekday(currentCalendar)) {
-			return result;
-		}
-		modifiedCalendar = Utility.stringToCalendar(modified,
-				Utility.CALENDAR_DATE_TIME_FORMAT);
-
-		stockMarketCloseCalendar = Market
-				.getStockMarketCloseCalendar(currentCalendar);
-		if (modifiedCalendar.before(stockMarketCloseCalendar)
-				&& currentCalendar.after(stockMarketCloseCalendar)) {
-			result = true;
-		}
-
-		return result;
-	}
 }

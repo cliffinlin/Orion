@@ -196,7 +196,8 @@ public class StockDataChartListActivity extends BaseActivity implements
 			return true;
 
 		case R.id.action_settings:
-			startActivityForResult(new Intent(this, ServiceSettingActivity.class), REQUEST_CODE_SETTINGS);
+			startActivityForResult(new Intent(this,
+					ServiceSettingActivity.class), REQUEST_CODE_SETTINGS);
 			return true;
 
 		case R.id.action_deal:
@@ -236,7 +237,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 			}
 		}
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
