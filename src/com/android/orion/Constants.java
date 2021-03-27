@@ -65,6 +65,8 @@ public class Constants {
 	public static final String STOCK_ACTION_SELL3 = "S3";
 	public static final char STOCK_ACTION_ADD = '+';
 	public static final char STOCK_ACTION_MINUS = '-';
+	public static final char STOCK_ACTION_HIGH = 'H';
+	public static final char STOCK_ACTION_LOW = 'L';
 
 	public static final int STOCK_BREAKPOINT_TOP = 1;
 	public static final int STOCK_BREAKPOINT_NONE = 0;

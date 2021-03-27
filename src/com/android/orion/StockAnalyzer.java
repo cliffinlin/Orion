@@ -633,12 +633,9 @@ public class StockAnalyzer {
 			return result;
 		}
 
-		if (stockData.vertexOf(Constants.STOCK_VERTEX_BOTTOM_STROKE)) {
-			result += Constants.STOCK_ACTION_BUY;
-		}
-
-		if (stockData.vertexOf(Constants.STOCK_VERTEX_BOTTOM_SEGMENT)) {
-			result += Constants.STOCK_ACTION_BUY;
+		if (stockData.vertexOf(Constants.STOCK_VERTEX_BOTTOM_STROKE)
+				&& stockData.vertexOf(Constants.STOCK_VERTEX_BOTTOM_SEGMENT)) {
+			result += Constants.STOCK_ACTION_BUY + Constants.STOCK_ACTION_BUY;
 		}
 
 		return result;
@@ -658,12 +655,9 @@ public class StockAnalyzer {
 			return result;
 		}
 
-		if (stockData.vertexOf(Constants.STOCK_VERTEX_TOP_STROKE)) {
-			result += Constants.STOCK_ACTION_SELL;
-		}
-
-		if (stockData.vertexOf(Constants.STOCK_VERTEX_TOP_SEGMENT)) {
-			result += Constants.STOCK_ACTION_SELL;
+		if (stockData.vertexOf(Constants.STOCK_VERTEX_TOP_STROKE)
+				&& stockData.vertexOf(Constants.STOCK_VERTEX_TOP_SEGMENT)) {
+			result += Constants.STOCK_ACTION_SELL + Constants.STOCK_ACTION_SELL;
 		}
 
 		return result;
