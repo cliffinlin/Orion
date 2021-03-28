@@ -621,6 +621,8 @@ public class StockAnalyzer {
 
 	void analyzeAction(ArrayList<StockData> stockDataList,
 			ArrayList<StockData> lineDataList) {
+		int divergence = Constants.STOCK_DIVERGENCE_NONE;
+		String action = Constants.STOCK_ACTION_NONE;
 		StockData stockData = null;
 		StockData current = null;
 		StockData base = null;
@@ -641,14 +643,6 @@ public class StockAnalyzer {
 		current = lineDataList.get(lineDataList.size() - 1);
 		base = lineDataList.get(lineDataList.size() - 3);
 
-		setAction(base, current, stockData);
-	}
-
-	void setAction(StockData base, StockData current, StockData stockData) {
-		int direction = Constants.STOCK_DIRECTION_NONE;
-		int divergence = Constants.STOCK_DIVERGENCE_NONE;
-		String action = Constants.STOCK_ACTION_NONE;
-
 		if ((base == null) || (current == null) || (stockData == null)) {
 			return;
 		}
@@ -657,15 +651,25 @@ public class StockAnalyzer {
 			return;
 		}
 
-		action = Constants.STOCK_ACTION_NONE;
-		direction = base.getDirection();
-		divergence = current.divergenceValue(direction, base);
+		divergence = current.divergenceValue(current.getDirection(), base);
 		stockData.setDivergence(divergence);
 
 		if (divergence == Constants.STOCK_DIVERGENCE_SIGMA_HISTOGRAM) {
-			if (direction == Constants.STOCK_DIRECTION_UP) {
+			if (current.directionOf(Constants.STOCK_DIRECTION_UP) && stockData.directionOf(Constants.STOCK_DIRECTION_UP)) {
 				action = Constants.STOCK_ACTION_HIGH;
-			} else if (direction == Constants.STOCK_DIRECTION_DOWN) {
+			} else if (current.directionOf(Constants.STOCK_DIRECTION_DOWN) && stockData.directionOf(Constants.STOCK_DIRECTION_DOWN)) {
+				action = Constants.STOCK_ACTION_LOW;
+			}
+		} else if (divergence == Constants.STOCK_DIVERGENCE_SIGMA_HISTOGRAM_STROKE) {
+			if (current.directionOf(Constants.STOCK_DIRECTION_UP_STROKE) && stockData.directionOf(Constants.STOCK_DIRECTION_UP)) {
+				action = Constants.STOCK_ACTION_HIGH;
+			} else if (current.directionOf(Constants.STOCK_DIRECTION_DOWN_STROKE) && stockData.directionOf(Constants.STOCK_DIRECTION_DOWN)) {
+				action = Constants.STOCK_ACTION_LOW;
+			}
+		} else if (divergence == Constants.STOCK_DIVERGENCE_SIGMA_HISTOGRAM_SEGMENT) {
+			if (current.directionOf(Constants.STOCK_DIRECTION_UP_SEGMENT) && stockData.directionOf(Constants.STOCK_DIRECTION_UP)) {
+				action = Constants.STOCK_ACTION_HIGH;
+			} else if (current.directionOf(Constants.STOCK_DIRECTION_DOWN_SEGMENT) && stockData.directionOf(Constants.STOCK_DIRECTION_DOWN)) {
 				action = Constants.STOCK_ACTION_LOW;
 			}
 		}

@@ -27,7 +27,7 @@ public class StockData extends StockDatabaseTable {
 	private double mSigmaHistogram;
 	private int mDivergence;
 	private String mAction;
-	
+
 	private double mRoi;
 	private double mPe;
 	private double mPb;
@@ -90,7 +90,7 @@ public class StockData extends StockDatabaseTable {
 		mSigmaHistogram = 0;
 		mDivergence = Constants.STOCK_DIVERGENCE_NONE;
 		mAction = "";
-		
+
 		mRoi = 0;
 		mPe = 0;
 		mPb = 0;
@@ -131,12 +131,12 @@ public class StockData extends StockDatabaseTable {
 				mSigmaHistogram);
 		contentValues.put(DatabaseContract.COLUMN_DIVERGENCE, mDivergence);
 		contentValues.put(DatabaseContract.COLUMN_ACTION, mAction);
-		
+
 		contentValues.put(DatabaseContract.COLUMN_ROI, mRoi);
 		contentValues.put(DatabaseContract.COLUMN_PE, mPe);
 		contentValues.put(DatabaseContract.COLUMN_PB, mPb);
 		contentValues.put(DatabaseContract.COLUMN_YIELD, mYield);
-		
+
 		return contentValues;
 	}
 
@@ -169,7 +169,7 @@ public class StockData extends StockDatabaseTable {
 		setSigmaHistogram(stockData.mSigmaHistogram);
 		setDivergence(stockData.mDivergence);
 		setAction(stockData.mAction);
-		
+
 		setRoi(stockData.mRoi);
 		setPe(stockData.mPe);
 		setPb(stockData.mPb);
@@ -210,7 +210,7 @@ public class StockData extends StockDatabaseTable {
 		setSigmaHistogram(cursor);
 		setDivergence(cursor);
 		setAction(cursor);
-		
+
 		setRoi(cursor);
 		setPe(cursor);
 		setPb(cursor);
@@ -634,7 +634,7 @@ public class StockData extends StockDatabaseTable {
 
 		return result;
 	}
-	
+
 	public boolean vertexOf(int vertex) {
 		boolean result = false;
 
@@ -760,11 +760,45 @@ public class StockData extends StockDatabaseTable {
 
 		if (direction == Constants.STOCK_DIRECTION_UP) {
 			if (getVertexHigh() > stockData.getVertexHigh()) {
-				result = divergenceValue(stockData);
+				if (Math.abs(getSigmaHistogram()) < Math.abs(stockData
+						.getSigmaHistogram())) {
+					result = Constants.STOCK_DIVERGENCE_SIGMA_HISTOGRAM;
+				}
 			}
 		} else if (direction == Constants.STOCK_DIRECTION_DOWN) {
 			if (getVertexLow() < stockData.getVertexLow()) {
-				result = divergenceValue(stockData);
+				if (Math.abs(getSigmaHistogram()) < Math.abs(stockData
+						.getSigmaHistogram())) {
+					result = Constants.STOCK_DIVERGENCE_SIGMA_HISTOGRAM;
+				}
+			}
+		} else if (direction == Constants.STOCK_DIRECTION_UP_STROKE) {
+			if (getVertexHigh() > stockData.getVertexHigh()) {
+				if (Math.abs(getSigmaHistogram()) < Math.abs(stockData
+						.getSigmaHistogram())) {
+					result = Constants.STOCK_DIVERGENCE_SIGMA_HISTOGRAM_STROKE;
+				}
+			}
+		} else if (direction == Constants.STOCK_DIRECTION_DOWN_STROKE) {
+			if (getVertexLow() < stockData.getVertexLow()) {
+				if (Math.abs(getSigmaHistogram()) < Math.abs(stockData
+						.getSigmaHistogram())) {
+					result = Constants.STOCK_DIVERGENCE_SIGMA_HISTOGRAM_STROKE;
+				}
+			}
+		} else if (direction == Constants.STOCK_DIRECTION_UP_SEGMENT) {
+			if (getVertexHigh() > stockData.getVertexHigh()) {
+				if (Math.abs(getSigmaHistogram()) < Math.abs(stockData
+						.getSigmaHistogram())) {
+					result = Constants.STOCK_DIVERGENCE_SIGMA_HISTOGRAM_SEGMENT;
+				}
+			}
+		} else if (direction == Constants.STOCK_DIRECTION_DOWN_SEGMENT) {
+			if (getVertexLow() < stockData.getVertexLow()) {
+				if (Math.abs(getSigmaHistogram()) < Math.abs(stockData
+						.getSigmaHistogram())) {
+					result = Constants.STOCK_DIVERGENCE_SIGMA_HISTOGRAM_SEGMENT;
+				}
 			}
 		} else {
 			result = Constants.STOCK_DIVERGENCE_NONE;
@@ -776,18 +810,18 @@ public class StockData extends StockDatabaseTable {
 	int divergenceValue(StockData stockData) {
 		int result = Constants.STOCK_DIVERGENCE_NONE;
 
-		if (Math.abs(getSigmaHistogram()) < Math.abs(stockData
-				.getSigmaHistogram())) {
-			result += Constants.STOCK_DIVERGENCE_SIGMA_HISTOGRAM;
-		}
-//
-//		if (Math.abs(getDIF()) < Math.abs(stockData.getDIF())) {
-//			result += Constants.STOCK_DIVERGENCE_DIF;
-//		}
-//
-//		if (Math.abs(getHistogram()) < Math.abs(stockData.getHistogram())) {
-//			result += Constants.STOCK_DIVERGENCE_HISTOGRAM;
-//		}
+		// if (Math.abs(getSigmaHistogram()) < Math.abs(stockData
+		// .getSigmaHistogram())) {
+		// result += Constants.STOCK_DIVERGENCE_SIGMA_HISTOGRAM;
+		// }
+		//
+		// if (Math.abs(getDIF()) < Math.abs(stockData.getDIF())) {
+		// result += Constants.STOCK_DIVERGENCE_DIF;
+		// }
+		//
+		// if (Math.abs(getHistogram()) < Math.abs(stockData.getHistogram())) {
+		// result += Constants.STOCK_DIVERGENCE_HISTOGRAM;
+		// }
 
 		return result;
 	}
