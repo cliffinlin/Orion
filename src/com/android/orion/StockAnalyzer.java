@@ -600,7 +600,7 @@ public class StockAnalyzer {
 				strokeVertexList, Constants.STOCK_VERTEX_TOP_STROKE,
 				Constants.STOCK_VERTEX_BOTTOM_STROKE);
 		vertexAnalyzer.vertexListToDataList(stockDataList, strokeVertexList,
-				strokeDataList, false);
+				strokeDataList, true);
 
 		vertexAnalyzer.analyzeLine(stockDataList, strokeDataList,
 				segmentVertexList, Constants.STOCK_VERTEX_TOP_SEGMENT,
@@ -611,12 +611,66 @@ public class StockAnalyzer {
 		vertexAnalyzer.analyzeOverlap(stockDataList, segmentDataList,
 				overlapList);
 
-		vertexAnalyzer.analyzeAction(stockDataList, segmentDataList,
-				overlapList);
-
 		vertexAnalyzer.analyzeDirection(stockDataList);
 
+		analyzeAction(stockDataList, drawDataList);
+		analyzeAction(stockDataList, segmentDataList);
+
 		setAction(stock, period, stockDataList, drawVertexList);
+	}
+
+	void analyzeAction(ArrayList<StockData> stockDataList,
+			ArrayList<StockData> lineDataList) {
+		StockData stockData = null;
+		StockData current = null;
+		StockData base = null;
+
+		if ((stockDataList == null) || (lineDataList == null)) {
+			return;
+		}
+
+		if (stockDataList.size() < Constants.STOCK_VERTEX_TYPING_SIZE) {
+			return;
+		}
+
+		if (lineDataList.size() < Constants.STOCK_VERTEX_TYPING_SIZE) {
+			return;
+		}
+
+		stockData = stockDataList.get(stockDataList.size() - 1);
+		current = lineDataList.get(lineDataList.size() - 1);
+		base = lineDataList.get(lineDataList.size() - 3);
+
+		setAction(base, current, stockData);
+	}
+
+	void setAction(StockData base, StockData current, StockData stockData) {
+		int direction = Constants.STOCK_DIRECTION_NONE;
+		int divergence = Constants.STOCK_DIVERGENCE_NONE;
+		String action = Constants.STOCK_ACTION_NONE;
+
+		if ((base == null) || (current == null) || (stockData == null)) {
+			return;
+		}
+
+		if (current.getDirection() != base.getDirection()) {
+			return;
+		}
+
+		action = Constants.STOCK_ACTION_NONE;
+		direction = base.getDirection();
+		divergence = current.divergenceValue(direction, base);
+		stockData.setDivergence(divergence);
+
+		if (divergence == Constants.STOCK_DIVERGENCE_SIGMA_HISTOGRAM) {
+			if (direction == Constants.STOCK_DIRECTION_UP) {
+				action = Constants.STOCK_ACTION_HIGH;
+			} else if (direction == Constants.STOCK_DIRECTION_DOWN) {
+				action = Constants.STOCK_ACTION_LOW;
+			}
+		}
+
+		stockData.setAction(stockData.getAction() + action);
 	}
 
 	private String getSecondBottomAction(ArrayList<StockData> vertexList) {
@@ -667,7 +721,6 @@ public class StockAnalyzer {
 			ArrayList<StockData> stockDataList,
 			ArrayList<StockData> drawVertexList) {
 		String action = Constants.STOCK_ACTION_NONE;
-		String direction = "";
 		StockData prev = null;
 		StockData stockData = null;
 
@@ -683,68 +736,64 @@ public class StockAnalyzer {
 		prev = stockDataList.get(stockDataList.size() - 2);
 		stockData = stockDataList.get(stockDataList.size() - 1);
 
-		action = stockData.getAction();
-
 		if (stockData.directionOf(Constants.STOCK_DIRECTION_UP)) {
 			if (prev.vertexOf(Constants.STOCK_VERTEX_BOTTOM)) {
+				action += Constants.STOCK_ACTION_D;
 				String result = getSecondBottomAction(drawVertexList);
 				if (!TextUtils.isEmpty(result)) {
-					direction += result;
-					prev.setAction(direction + action);
+					action += result;
+					prev.setAction(action);
 				}
-				direction += Constants.STOCK_ACTION_D;
 			} else {
-				direction += Constants.STOCK_ACTION_ADD;
+				action += Constants.STOCK_ACTION_ADD;
 			}
 		} else if (stockData.directionOf(Constants.STOCK_DIRECTION_DOWN)) {
 			if (prev.vertexOf(Constants.STOCK_VERTEX_TOP)) {
+				action += Constants.STOCK_ACTION_G;
 				String result = getSecondTopAction(drawVertexList);
 				if (!TextUtils.isEmpty(result)) {
-					direction += result;
-					prev.setAction(direction + action);
+					action += result;
+					prev.setAction(action);
 				}
-				direction += Constants.STOCK_ACTION_G;
 			} else {
-				direction += Constants.STOCK_ACTION_MINUS;
+				action += Constants.STOCK_ACTION_MINUS;
 			}
 		}
 
-		direction += " ";
+		action += " ";
 
 		if (stockData.directionOf(Constants.STOCK_DIRECTION_UP_STROKE)) {
 			if (prev.vertexOf(Constants.STOCK_VERTEX_BOTTOM_STROKE)) {
-				direction += Constants.STOCK_ACTION_D;
+				action += Constants.STOCK_ACTION_D;
 			} else {
-				direction += Constants.STOCK_ACTION_ADD;
+				action += Constants.STOCK_ACTION_ADD;
 			}
 		} else if (stockData.directionOf(Constants.STOCK_DIRECTION_DOWN_STROKE)) {
 			if (prev.vertexOf(Constants.STOCK_VERTEX_TOP_STROKE)) {
-				direction += Constants.STOCK_ACTION_G;
+				action += Constants.STOCK_ACTION_G;
 			} else {
-				direction += Constants.STOCK_ACTION_MINUS;
+				action += Constants.STOCK_ACTION_MINUS;
 			}
 		}
 
-		direction += " ";
+		action += " ";
 
 		if (stockData.directionOf(Constants.STOCK_DIRECTION_UP_SEGMENT)) {
 			if (prev.vertexOf(Constants.STOCK_VERTEX_BOTTOM_SEGMENT)) {
-				direction += Constants.STOCK_ACTION_D;
+				action += Constants.STOCK_ACTION_D;
 			} else {
-				direction += Constants.STOCK_ACTION_ADD;
+				action += Constants.STOCK_ACTION_ADD;
 			}
 		} else if (stockData
 				.directionOf(Constants.STOCK_DIRECTION_DOWN_SEGMENT)) {
 			if (prev.vertexOf(Constants.STOCK_VERTEX_TOP_SEGMENT)) {
-				direction += Constants.STOCK_ACTION_G;
+				action += Constants.STOCK_ACTION_G;
 			} else {
-				direction += Constants.STOCK_ACTION_MINUS;
+				action += Constants.STOCK_ACTION_MINUS;
 			}
 		}
 
-		action = direction + action;
-
-		stock.setAction(period, action);
+		stock.setAction(period, action + stockData.getAction());
 	}
 
 	private void updateDatabase(Stock stock) {
@@ -1012,8 +1061,8 @@ public class StockAnalyzer {
 			String period = Constants.PERIODS[i];
 			if (Preferences.getBoolean(mContext, period, false)) {
 				action = stock.getAction(period);
-				if (action.contains("BBD") || action.contains("SSG")
-						|| action.contains("B7B7") || action.contains("S7S7")) {
+				if (action.contains("DBB") || action.contains("GSS")
+						|| action.contains("LL") || action.contains("HH")) {
 					result += period + " " + action + " ";
 				}
 			}

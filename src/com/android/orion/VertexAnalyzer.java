@@ -620,4 +620,44 @@ public class VertexAnalyzer {
 			stockData.setAction(String.valueOf(i));
 		}
 	}
+
+	void testShowVertextNumber(ArrayList<StockData> stockDataList,
+			ArrayList<StockData> dataList) {
+		int index = 0;
+		StockData data = null;
+		StockData stockData = null;
+
+		if ((stockDataList == null) || (dataList == null)) {
+			return;
+		}
+
+		if ((stockDataList.size() == 0) || (dataList.size() == 0)) {
+			return;
+		}
+
+		if (dataList.size() > stockDataList.size()) {
+			return;
+		}
+
+		for (int i = 0; i < dataList.size(); i++) {
+			data = dataList.get(i);
+
+			if (data == null) {
+				return;
+			}
+
+			index = data.getIndex();
+			if (index > stockDataList.size() - 1) {
+				return;
+			}
+
+			stockData = stockDataList.get(index);
+
+			if (stockData == null) {
+				return;
+			}
+
+			stockData.setAction(String.valueOf(i));
+		}
+	}
 }

@@ -780,14 +780,14 @@ public class StockData extends StockDatabaseTable {
 				.getSigmaHistogram())) {
 			result += Constants.STOCK_DIVERGENCE_SIGMA_HISTOGRAM;
 		}
-
-		if (Math.abs(getDIF()) < Math.abs(stockData.getDIF())) {
-			result += Constants.STOCK_DIVERGENCE_DIF;
-		}
-
-		if (Math.abs(getHistogram()) < Math.abs(stockData.getHistogram())) {
-			result += Constants.STOCK_DIVERGENCE_HISTOGRAM;
-		}
+//
+//		if (Math.abs(getDIF()) < Math.abs(stockData.getDIF())) {
+//			result += Constants.STOCK_DIVERGENCE_DIF;
+//		}
+//
+//		if (Math.abs(getHistogram()) < Math.abs(stockData.getHistogram())) {
+//			result += Constants.STOCK_DIVERGENCE_HISTOGRAM;
+//		}
 
 		return result;
 	}
