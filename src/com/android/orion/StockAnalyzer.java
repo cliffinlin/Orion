@@ -611,70 +611,14 @@ public class StockAnalyzer {
 		vertexAnalyzer.analyzeOverlap(stockDataList, segmentDataList,
 				overlapList);
 
+//		vertexAnalyzer.analyzeAction(stockDataList, segmentDataList,
+//				overlapList);
+		vertexAnalyzer.analyzeAction(stockDataList, drawDataList);
+		vertexAnalyzer.analyzeAction(stockDataList, segmentDataList);
+
 		vertexAnalyzer.analyzeDirection(stockDataList);
 
-		analyzeAction(stockDataList, drawDataList);
-		analyzeAction(stockDataList, segmentDataList);
-
 		setAction(stock, period, stockDataList, drawVertexList);
-	}
-
-	void analyzeAction(ArrayList<StockData> stockDataList,
-			ArrayList<StockData> lineDataList) {
-		int divergence = Constants.STOCK_DIVERGENCE_NONE;
-		String action = Constants.STOCK_ACTION_NONE;
-		StockData stockData = null;
-		StockData current = null;
-		StockData base = null;
-
-		if ((stockDataList == null) || (lineDataList == null)) {
-			return;
-		}
-
-		if (stockDataList.size() < Constants.STOCK_VERTEX_TYPING_SIZE) {
-			return;
-		}
-
-		if (lineDataList.size() < Constants.STOCK_VERTEX_TYPING_SIZE) {
-			return;
-		}
-
-		stockData = stockDataList.get(stockDataList.size() - 1);
-		current = lineDataList.get(lineDataList.size() - 1);
-		base = lineDataList.get(lineDataList.size() - 3);
-
-		if ((base == null) || (current == null) || (stockData == null)) {
-			return;
-		}
-
-		if (current.getDirection() != base.getDirection()) {
-			return;
-		}
-
-		divergence = current.divergenceValue(current.getDirection(), base);
-		stockData.setDivergence(divergence);
-
-		if (divergence == Constants.STOCK_DIVERGENCE_SIGMA_HISTOGRAM) {
-			if (current.directionOf(Constants.STOCK_DIRECTION_UP) && stockData.directionOf(Constants.STOCK_DIRECTION_UP)) {
-				action = Constants.STOCK_ACTION_HIGH;
-			} else if (current.directionOf(Constants.STOCK_DIRECTION_DOWN) && stockData.directionOf(Constants.STOCK_DIRECTION_DOWN)) {
-				action = Constants.STOCK_ACTION_LOW;
-			}
-		} else if (divergence == Constants.STOCK_DIVERGENCE_SIGMA_HISTOGRAM_STROKE) {
-			if (current.directionOf(Constants.STOCK_DIRECTION_UP_STROKE) && stockData.directionOf(Constants.STOCK_DIRECTION_UP)) {
-				action = Constants.STOCK_ACTION_HIGH;
-			} else if (current.directionOf(Constants.STOCK_DIRECTION_DOWN_STROKE) && stockData.directionOf(Constants.STOCK_DIRECTION_DOWN)) {
-				action = Constants.STOCK_ACTION_LOW;
-			}
-		} else if (divergence == Constants.STOCK_DIVERGENCE_SIGMA_HISTOGRAM_SEGMENT) {
-			if (current.directionOf(Constants.STOCK_DIRECTION_UP_SEGMENT) && stockData.directionOf(Constants.STOCK_DIRECTION_UP)) {
-				action = Constants.STOCK_ACTION_HIGH;
-			} else if (current.directionOf(Constants.STOCK_DIRECTION_DOWN_SEGMENT) && stockData.directionOf(Constants.STOCK_DIRECTION_DOWN)) {
-				action = Constants.STOCK_ACTION_LOW;
-			}
-		}
-
-		stockData.setAction(stockData.getAction() + action);
 	}
 
 	private String getSecondBottomAction(ArrayList<StockData> vertexList) {

@@ -760,45 +760,11 @@ public class StockData extends StockDatabaseTable {
 
 		if (direction == Constants.STOCK_DIRECTION_UP) {
 			if (getVertexHigh() > stockData.getVertexHigh()) {
-				if (Math.abs(getSigmaHistogram()) < Math.abs(stockData
-						.getSigmaHistogram())) {
-					result = Constants.STOCK_DIVERGENCE_SIGMA_HISTOGRAM;
-				}
+				result = divergenceValue(stockData);
 			}
 		} else if (direction == Constants.STOCK_DIRECTION_DOWN) {
 			if (getVertexLow() < stockData.getVertexLow()) {
-				if (Math.abs(getSigmaHistogram()) < Math.abs(stockData
-						.getSigmaHistogram())) {
-					result = Constants.STOCK_DIVERGENCE_SIGMA_HISTOGRAM;
-				}
-			}
-		} else if (direction == Constants.STOCK_DIRECTION_UP_STROKE) {
-			if (getVertexHigh() > stockData.getVertexHigh()) {
-				if (Math.abs(getSigmaHistogram()) < Math.abs(stockData
-						.getSigmaHistogram())) {
-					result = Constants.STOCK_DIVERGENCE_SIGMA_HISTOGRAM_STROKE;
-				}
-			}
-		} else if (direction == Constants.STOCK_DIRECTION_DOWN_STROKE) {
-			if (getVertexLow() < stockData.getVertexLow()) {
-				if (Math.abs(getSigmaHistogram()) < Math.abs(stockData
-						.getSigmaHistogram())) {
-					result = Constants.STOCK_DIVERGENCE_SIGMA_HISTOGRAM_STROKE;
-				}
-			}
-		} else if (direction == Constants.STOCK_DIRECTION_UP_SEGMENT) {
-			if (getVertexHigh() > stockData.getVertexHigh()) {
-				if (Math.abs(getSigmaHistogram()) < Math.abs(stockData
-						.getSigmaHistogram())) {
-					result = Constants.STOCK_DIVERGENCE_SIGMA_HISTOGRAM_SEGMENT;
-				}
-			}
-		} else if (direction == Constants.STOCK_DIRECTION_DOWN_SEGMENT) {
-			if (getVertexLow() < stockData.getVertexLow()) {
-				if (Math.abs(getSigmaHistogram()) < Math.abs(stockData
-						.getSigmaHistogram())) {
-					result = Constants.STOCK_DIVERGENCE_SIGMA_HISTOGRAM_SEGMENT;
-				}
+				result = divergenceValue(stockData);
 			}
 		} else {
 			result = Constants.STOCK_DIVERGENCE_NONE;
@@ -810,10 +776,10 @@ public class StockData extends StockDatabaseTable {
 	int divergenceValue(StockData stockData) {
 		int result = Constants.STOCK_DIVERGENCE_NONE;
 
-		// if (Math.abs(getSigmaHistogram()) < Math.abs(stockData
-		// .getSigmaHistogram())) {
-		// result += Constants.STOCK_DIVERGENCE_SIGMA_HISTOGRAM;
-		// }
+		if (Math.abs(getSigmaHistogram()) < Math.abs(stockData
+				.getSigmaHistogram())) {
+			result += Constants.STOCK_DIVERGENCE_SIGMA_HISTOGRAM;
+		}
 		//
 		// if (Math.abs(getDIF()) < Math.abs(stockData.getDIF())) {
 		// result += Constants.STOCK_DIVERGENCE_DIF;
