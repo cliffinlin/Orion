@@ -611,10 +611,10 @@ public class StockAnalyzer {
 		vertexAnalyzer.analyzeOverlap(stockDataList, segmentDataList,
 				overlapList);
 
-//		vertexAnalyzer.analyzeAction(stockDataList, segmentDataList,
-//				overlapList);
-		vertexAnalyzer.analyzeAction(stockDataList, drawDataList);
-		vertexAnalyzer.analyzeAction(stockDataList, segmentDataList);
+		vertexAnalyzer.analyzeAction(stockDataList, drawDataList,
+				Constants.STOCK_DIVERGENCE_TYPE_STROKE);
+		vertexAnalyzer.analyzeAction(stockDataList, segmentDataList,
+				Constants.STOCK_DIVERGENCE_TYPE_SEGMENT);
 
 		vertexAnalyzer.analyzeDirection(stockDataList);
 

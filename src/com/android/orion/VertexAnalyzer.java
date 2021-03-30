@@ -1,6 +1,7 @@
 package com.android.orion;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import android.util.Log;
 
@@ -424,6 +425,62 @@ public class VertexAnalyzer {
 		}
 	}
 
+	void analyzeAction(ArrayList<StockData> stockDataList,
+			ArrayList<StockData> lineDataList, int type) {
+		int divergence = Constants.STOCK_DIVERGENCE_NONE;
+		String action = Constants.STOCK_ACTION_NONE;
+		StockData stockData = null;
+		StockData current = null;
+		StockData base = null;
+
+		if ((stockDataList == null) || (lineDataList == null)) {
+			return;
+		}
+
+		if (stockDataList.size() < Constants.STOCK_VERTEX_TYPING_SIZE) {
+			return;
+		}
+
+		if (lineDataList.size() < Constants.STOCK_VERTEX_TYPING_SIZE) {
+			return;
+		}
+
+		stockData = stockDataList.get(stockDataList.size() - 1);
+		current = lineDataList.get(lineDataList.size() - 1);
+		base = lineDataList.get(lineDataList.size() - 3);
+
+		if ((base == null) || (current == null) || (stockData == null)) {
+			return;
+		}
+
+		if (current.getDirection() != base.getDirection()) {
+			return;
+		}
+
+		divergence = current.divergenceValue(current.getDirection(), base);
+		stockData.setDivergence(divergence);
+
+		if (divergence == Constants.STOCK_DIVERGENCE_SIGMA_HISTOGRAM) {
+			if (current.directionOf(Constants.STOCK_DIRECTION_UP)
+					&& stockData.directionOf(Constants.STOCK_DIRECTION_UP)) {
+				if (type == Constants.STOCK_DIVERGENCE_TYPE_STROKE) {
+					action = Constants.STOCK_ACTION_HIGH.toLowerCase(Locale.US);
+				} else if (type == Constants.STOCK_DIVERGENCE_TYPE_SEGMENT) {
+					action = Constants.STOCK_ACTION_HIGH;
+				}
+			} else if (current.directionOf(Constants.STOCK_DIRECTION_DOWN)
+					&& stockData.directionOf(Constants.STOCK_DIRECTION_DOWN)) {
+				if (type == Constants.STOCK_DIVERGENCE_TYPE_STROKE) {
+					action = Constants.STOCK_ACTION_LOW.toLowerCase(Locale.US);
+				} else if (type == Constants.STOCK_DIVERGENCE_TYPE_SEGMENT) {
+					action = Constants.STOCK_ACTION_LOW;
+				}
+			}
+		}
+
+		stockData.setAction(stockData.getAction() + action);
+	}
+
 	void analyzeDirection(ArrayList<StockData> stockDataList) {
 		int i = 0;
 		int direction = Constants.STOCK_DIRECTION_NONE;
@@ -486,138 +543,7 @@ public class VertexAnalyzer {
 			}
 		}
 	}
-/*
-	void analyzeAction(ArrayList<StockData> stockDataList,
-			ArrayList<StockData> segmentDataList,
-			ArrayList<StockData> overlapList) {
-		int i = 0;
-		int indexStart = 0;
-		int indexEnd = 0;
-		String action = Constants.STOCK_ACTION_NONE;
-		StockData baseSegmentData = null;
-		StockData segmentData = null;
-		StockData endStockData = null;
-		StockData prevOverlap = null;
 
-		if ((stockDataList == null) || (segmentDataList == null)
-				|| (overlapList == null)) {
-			return;
-		}
-
-		for (StockData overlap : overlapList) {
-			indexStart = overlap.getIndexStart();
-			indexEnd = overlap.getIndexEnd();
-
-			i = indexStart + 1;
-			if (prevOverlap != null) {
-				segmentData = segmentDataList.get(i);
-				endStockData = stockDataList.get(segmentData.getIndexEnd());
-				action = endStockData.getAction();
-				if (overlap.getVertexLow() > prevOverlap.getVertexHigh()) {
-					action += Constants.STOCK_ACTION_BUY3;
-				} else if (overlap.getVertexHigh() < prevOverlap.getVertexLow()) {
-					action += Constants.STOCK_ACTION_SELL3;
-				}
-				endStockData.setAction(action);
-			}
-			prevOverlap = overlap;
-
-			for (i = indexStart + 2; i <= indexEnd; i++) {
-				segmentData = segmentDataList.get(i);
-				endStockData = stockDataList.get(segmentData.getIndexEnd());
-
-				baseSegmentData = segmentDataList.get(indexStart);
-				setAction(baseSegmentData, segmentData, endStockData);
-
-				baseSegmentData = segmentDataList.get(i - 2);
-				setAction(baseSegmentData, segmentData, endStockData);
-			}
-		}
-	}
-
-	void setAction(StockData baseSegmentData, StockData segmentData,
-			StockData endStockData) {
-		int direction = Constants.STOCK_DIRECTION_NONE;
-		int divergence = Constants.STOCK_DIVERGENCE_NONE;
-		int maxDivergence = Constants.STOCK_DIVERGENCE_HISTOGRAM
-				+ Constants.STOCK_DIVERGENCE_DIF
-				+ Constants.STOCK_DIVERGENCE_SIGMA_HISTOGRAM;
-		String action = Constants.STOCK_ACTION_NONE;
-
-		if ((baseSegmentData == null) || (segmentData == null)
-				|| (endStockData == null)) {
-			return;
-		}
-
-		if (segmentData.getDirection() != baseSegmentData.getDirection()) {
-			return;
-		}
-
-		action = Constants.STOCK_ACTION_NONE;
-		direction = baseSegmentData.getDirection();
-		divergence = segmentData.divergenceValue(direction, baseSegmentData);
-		endStockData.setDivergence(divergence);
-
-		if (direction == Constants.STOCK_DIRECTION_UP) {
-			if (divergence == maxDivergence) {
-				action = Constants.STOCK_ACTION_SELL + divergence;
-			}
-		} else if (direction == Constants.STOCK_DIRECTION_DOWN) {
-			if (divergence == maxDivergence) {
-				action = Constants.STOCK_ACTION_BUY + divergence;
-			}
-		}
-
-		endStockData.setAction(endStockData.getAction() + action);
-	}
-*/
-
-	void analyzeAction(ArrayList<StockData> stockDataList,
-			ArrayList<StockData> lineDataList) {
-		int divergence = Constants.STOCK_DIVERGENCE_NONE;
-		String action = Constants.STOCK_ACTION_NONE;
-		StockData stockData = null;
-		StockData current = null;
-		StockData base = null;
-
-		if ((stockDataList == null) || (lineDataList == null)) {
-			return;
-		}
-
-		if (stockDataList.size() < Constants.STOCK_VERTEX_TYPING_SIZE) {
-			return;
-		}
-
-		if (lineDataList.size() < Constants.STOCK_VERTEX_TYPING_SIZE) {
-			return;
-		}
-
-		stockData = stockDataList.get(stockDataList.size() - 1);
-		current = lineDataList.get(lineDataList.size() - 1);
-		base = lineDataList.get(lineDataList.size() - 3);
-
-		if ((base == null) || (current == null) || (stockData == null)) {
-			return;
-		}
-
-		if (current.getDirection() != base.getDirection()) {
-			return;
-		}
-
-		divergence = current.divergenceValue(current.getDirection(), base);
-		stockData.setDivergence(divergence);
-
-		if (divergence == Constants.STOCK_DIVERGENCE_SIGMA_HISTOGRAM) {
-			if (current.directionOf(Constants.STOCK_DIRECTION_UP) && stockData.directionOf(Constants.STOCK_DIRECTION_UP)) {
-				action = Constants.STOCK_ACTION_HIGH;
-			} else if (current.directionOf(Constants.STOCK_DIRECTION_DOWN) && stockData.directionOf(Constants.STOCK_DIRECTION_DOWN)) {
-				action = Constants.STOCK_ACTION_LOW;
-			}
-		}
-
-		stockData.setAction(stockData.getAction() + action);
-	}
-	
 	void testShow(ArrayList<StockData> stockDataList,
 			ArrayList<StockData> dataList) {
 		int index = 0;

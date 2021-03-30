@@ -4,9 +4,6 @@ public class Constants {
 	public static final String APP_NAME = "Orion";
 	public static final String TAG = APP_NAME;
 
-	public static final int FAIL = -1;
-	public static final int SUCCESS = 0;
-
 	public static final String FAVORITE = "favorite";
 	public static final String XML_FILE_EXT = ".xml";
 
@@ -48,9 +45,6 @@ public class Constants {
 	public static final int SCHEDULE_INTERVAL_MIN30 = 30;
 	public static final int SCHEDULE_INTERVAL_MIN60 = 60;
 
-	public static final int SERVICE_TYPE_NONE = -1;
-	public static final int SERVICE_DATABASE_UPDATE = 1;
-
 	public static final String STOCK_ACTION_NONE = "";
 	public static final String STOCK_ACTION_STAR = "*";
 	public static final String STOCK_ACTION_D = "D";
@@ -68,10 +62,6 @@ public class Constants {
 	public static final char STOCK_ACTION_ADD = '+';
 	public static final char STOCK_ACTION_MINUS = '-';
 
-	public static final int STOCK_BREAKPOINT_TOP = 1;
-	public static final int STOCK_BREAKPOINT_NONE = 0;
-	public static final int STOCK_BREAKPOINT_BOTTOM = -1;
-
 	public static final String STOCK_CLASS_A = "A";
 	public static final String STOCK_CLASS_INDEX = "I";
 
@@ -82,6 +72,10 @@ public class Constants {
 	public static final int STOCK_DIRECTION_DOWN_STROKE = 1 << 3;
 	public static final int STOCK_DIRECTION_UP_SEGMENT = 1 << 4;
 	public static final int STOCK_DIRECTION_DOWN_SEGMENT = 1 << 5;
+
+	public static final int STOCK_DIVERGENCE_TYPE_NONE = 0;
+	public static final int STOCK_DIVERGENCE_TYPE_STROKE = 1;
+	public static final int STOCK_DIVERGENCE_TYPE_SEGMENT = 2;
 
 	public static final int STOCK_DIVERGENCE_NONE = 0;
 	public static final int STOCK_DIVERGENCE_HISTOGRAM = 1 << 0;
@@ -111,20 +105,12 @@ public class Constants {
 	public static final String STOCK_MARKET_LUNCH_END_TIME = "12:50:00";
 	public static final String STOCK_MARKET_CLOSE_TIME = "15:10:00";
 
-	public static final int STOCK_OVERLAP_MOVE_UP = 1;
-	public static final int STOCK_OVERLAP_MOVE_NONE = 0;
-	public static final int STOCK_OVERLAP_MOVE_DOWN = -1;
-
 	public static final int STOCK_POSITION_ABOVE = 1;
 	public static final int STOCK_POSITION_NONE = 0;
 	public static final int STOCK_POSITION_BELOW = -1;
 
 	public static final String STOCK_SE_SH = "sh";
 	public static final String STOCK_SE_SZ = "sz";
-
-	public static final int STOCK_SEGMENT_UP = 1;
-	public static final int STOCK_SEGMENT_NONE = 0;
-	public static final int STOCK_SEGMENT_DOWN = -1;
 
 	public static final int STOCK_VERTEX_TYPING_SIZE = 3;
 
