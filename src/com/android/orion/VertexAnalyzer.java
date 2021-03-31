@@ -1,7 +1,6 @@
 package com.android.orion;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 import android.util.Log;
 
@@ -463,18 +462,10 @@ public class VertexAnalyzer {
 		if (divergence == Constants.STOCK_DIVERGENCE_SIGMA_HISTOGRAM) {
 			if (current.directionOf(Constants.STOCK_DIRECTION_UP)
 					&& stockData.directionOf(Constants.STOCK_DIRECTION_UP)) {
-				if (type == Constants.STOCK_DIVERGENCE_TYPE_STROKE) {
-					action = Constants.STOCK_ACTION_HIGH.toLowerCase(Locale.US);
-				} else if (type == Constants.STOCK_DIVERGENCE_TYPE_SEGMENT) {
-					action = Constants.STOCK_ACTION_HIGH;
-				}
+				action = Constants.STOCK_ACTION_HIGH + String.valueOf(type);
 			} else if (current.directionOf(Constants.STOCK_DIRECTION_DOWN)
 					&& stockData.directionOf(Constants.STOCK_DIRECTION_DOWN)) {
-				if (type == Constants.STOCK_DIVERGENCE_TYPE_STROKE) {
-					action = Constants.STOCK_ACTION_LOW.toLowerCase(Locale.US);
-				} else if (type == Constants.STOCK_DIVERGENCE_TYPE_SEGMENT) {
-					action = Constants.STOCK_ACTION_LOW;
-				}
+				action = Constants.STOCK_ACTION_LOW + String.valueOf(type);
 			}
 		}
 

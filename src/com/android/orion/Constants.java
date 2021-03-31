@@ -74,8 +74,9 @@ public class Constants {
 	public static final int STOCK_DIRECTION_DOWN_SEGMENT = 1 << 5;
 
 	public static final int STOCK_DIVERGENCE_TYPE_NONE = 0;
-	public static final int STOCK_DIVERGENCE_TYPE_STROKE = 1;
-	public static final int STOCK_DIVERGENCE_TYPE_SEGMENT = 2;
+	public static final int STOCK_DIVERGENCE_TYPE_DRAW = 1 << 0;
+	public static final int STOCK_DIVERGENCE_TYPE_STROKE = 1 << 1;
+	public static final int STOCK_DIVERGENCE_TYPE_SEGMENT = 1 << 2;
 
 	public static final int STOCK_DIVERGENCE_NONE = 0;
 	public static final int STOCK_DIVERGENCE_HISTOGRAM = 1 << 0;
