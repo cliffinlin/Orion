@@ -592,7 +592,7 @@ public class StockAnalyzer {
 
 		vertexAnalyzer.analyzeVertex(stockDataList, drawVertexList);
 		vertexAnalyzer.vertexListToDataList(stockDataList, drawVertexList,
-				drawDataList, true);
+				drawDataList);
 
 		setMACD(stock, period, stockDataList);
 
@@ -600,13 +600,13 @@ public class StockAnalyzer {
 				strokeVertexList, Constants.STOCK_VERTEX_TOP_STROKE,
 				Constants.STOCK_VERTEX_BOTTOM_STROKE);
 		vertexAnalyzer.vertexListToDataList(stockDataList, strokeVertexList,
-				strokeDataList, true);
+				strokeDataList);
 
 		vertexAnalyzer.analyzeLine(stockDataList, strokeDataList,
 				segmentVertexList, Constants.STOCK_VERTEX_TOP_SEGMENT,
 				Constants.STOCK_VERTEX_BOTTOM_SEGMENT);
 		vertexAnalyzer.vertexListToDataList(stockDataList, segmentVertexList,
-				segmentDataList, true);
+				segmentDataList);
 
 		vertexAnalyzer.analyzeOverlap(stockDataList, segmentDataList,
 				overlapList);

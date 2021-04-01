@@ -79,15 +79,9 @@ public class Constants {
 	public static final int STOCK_DIVERGENCE_TYPE_SEGMENT = 1 << 2;
 
 	public static final int STOCK_DIVERGENCE_NONE = 0;
-	public static final int STOCK_DIVERGENCE_HISTOGRAM = 1 << 0;
-	public static final int STOCK_DIVERGENCE_DIF = 1 << 1;
+	public static final int STOCK_DIVERGENCE_DIF_DEA = 1 << 0;
+	public static final int STOCK_DIVERGENCE_HISTOGRAM = 1 << 1;
 	public static final int STOCK_DIVERGENCE_SIGMA_HISTOGRAM = 1 << 2;
-	public static final int STOCK_DIVERGENCE_HISTOGRAM_STROKE = 1 << 3;
-	public static final int STOCK_DIVERGENCE_DIF_STROKE = 1 << 4;
-	public static final int STOCK_DIVERGENCE_SIGMA_HISTOGRAM_STROKE = 1 << 5;
-	public static final int STOCK_DIVERGENCE_HISTOGRAM_SEGMENT = 1 << 6;
-	public static final int STOCK_DIVERGENCE_DIF_SEGMENT = 1 << 7;
-	public static final int STOCK_DIVERGENCE_SIGMA_HISTOGRAM_SEGMENT = 1 << 8;
 
 	public static final int STOCK_FLAG_NONE = 0;
 	public static final int STOCK_FLAG_FAVORITE = 1 << 0;

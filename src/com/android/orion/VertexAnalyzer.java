@@ -249,7 +249,10 @@ public class VertexAnalyzer {
 	}
 
 	void sigmaHistogram(StockData stockData, ArrayList<StockData> stockDataList) {
+		double difDea = 0;
+		double difDeaMax = 0;
 		double histogram = 0;
+		double histogramMax = 0;
 		double sigmaHistogram = 0;
 
 		StockData current = null;
@@ -258,8 +261,6 @@ public class VertexAnalyzer {
 			return;
 		}
 
-		sigmaHistogram = 0;
-
 		for (int i = stockData.getIndexStart() + 1; i <= stockData
 				.getIndexEnd(); i++) {
 			current = stockDataList.get(i);
@@ -267,25 +268,49 @@ public class VertexAnalyzer {
 				return;
 			}
 
+			difDea = (current.getDIF() + current.getDEA()) / 2;
 			histogram = current.getHistogram();
 
-			if ((stockData.getDirection() == Constants.STOCK_DIRECTION_UP)
-					&& (histogram > 0)) {
-				sigmaHistogram += histogram;
-			} else if ((stockData.getDirection() == Constants.STOCK_DIRECTION_DOWN)
-					&& (histogram < 0)) {
-				sigmaHistogram += histogram;
+			if (stockData.getDirection() == Constants.STOCK_DIRECTION_UP) {
+				if (difDea > 0) {
+					if (difDea > difDeaMax) {
+						difDeaMax = difDea;
+					}
+				}
+
+				if (histogram > 0) {
+					if (histogram > histogramMax) {
+						histogramMax = histogram;
+					}
+
+					sigmaHistogram += histogram;
+				}
+			} else if (stockData.getDirection() == Constants.STOCK_DIRECTION_DOWN) {
+				if (difDea < 0) {
+					if (difDea < difDeaMax) {
+						difDeaMax = difDea;
+					}
+				}
+
+				if (histogram < 0) {
+					if (histogram < histogramMax) {
+						histogramMax = histogram;
+					}
+
+					sigmaHistogram += histogram;
+				}
 			}
 
 			if (i == stockData.getIndexEnd()) {
+				stockData.setDIF(difDeaMax);
+				stockData.setHistogram(histogram);
 				stockData.setSigmaHistogram(sigmaHistogram);
 			}
 		}
 	}
 
 	void vertexListToDataList(ArrayList<StockData> stockDataList,
-			ArrayList<StockData> vertexList, ArrayList<StockData> dataList,
-			boolean sigmaHistogram) {
+			ArrayList<StockData> vertexList, ArrayList<StockData> dataList) {
 		int size = 0;
 		int direction = Constants.STOCK_DIRECTION_NONE;
 
@@ -338,9 +363,7 @@ public class VertexAnalyzer {
 
 			stockData.setDirection(direction);
 
-			if (sigmaHistogram) {
-				sigmaHistogram(stockData, stockDataList);
-			}
+			sigmaHistogram(stockData, stockDataList);
 
 			dataList.add(stockData);
 		}
@@ -459,7 +482,7 @@ public class VertexAnalyzer {
 		divergence = current.divergenceValue(current.getDirection(), base);
 		stockData.setDivergence(divergence);
 
-		if (divergence == Constants.STOCK_DIVERGENCE_SIGMA_HISTOGRAM) {
+		if (divergence > Constants.STOCK_DIVERGENCE_SIGMA_HISTOGRAM) {
 			if (current.directionOf(Constants.STOCK_DIRECTION_UP)
 					&& stockData.directionOf(Constants.STOCK_DIRECTION_UP)) {
 				action = Constants.STOCK_ACTION_HIGH + String.valueOf(type);

@@ -776,19 +776,19 @@ public class StockData extends StockDatabaseTable {
 	int divergenceValue(StockData stockData) {
 		int result = Constants.STOCK_DIVERGENCE_NONE;
 
+		if (Math.abs(getDIF()) < Math.abs(stockData.getDIF())) {
+			result |= Constants.STOCK_DIVERGENCE_DIF_DEA;
+		}
+
+		if (Math.abs(getHistogram()) < Math.abs(stockData.getHistogram())) {
+			result |= Constants.STOCK_DIVERGENCE_HISTOGRAM;
+		}
+
 		if (Math.abs(getSigmaHistogram()) < Math.abs(stockData
 				.getSigmaHistogram())) {
-			result += Constants.STOCK_DIVERGENCE_SIGMA_HISTOGRAM;
+			result |= Constants.STOCK_DIVERGENCE_SIGMA_HISTOGRAM;
 		}
-		//
-		// if (Math.abs(getDIF()) < Math.abs(stockData.getDIF())) {
-		// result += Constants.STOCK_DIVERGENCE_DIF;
-		// }
-		//
-		// if (Math.abs(getHistogram()) < Math.abs(stockData.getHistogram())) {
-		// result += Constants.STOCK_DIVERGENCE_HISTOGRAM;
-		// }
-
+		
 		return result;
 	}
 }
