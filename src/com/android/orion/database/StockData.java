@@ -759,11 +759,13 @@ public class StockData extends StockDatabaseTable {
 		int result = Constants.STOCK_DIVERGENCE_NONE;
 
 		if (direction == Constants.STOCK_DIRECTION_UP) {
-			if (getVertexHigh() > stockData.getVertexHigh()) {
+			if ((getVertexHigh() > stockData.getVertexHigh())
+					&& (getVertexLow() > stockData.getVertexLow())) {
 				result = divergenceValue(stockData);
 			}
 		} else if (direction == Constants.STOCK_DIRECTION_DOWN) {
-			if (getVertexLow() < stockData.getVertexLow()) {
+			if ((getVertexHigh() < stockData.getVertexHigh())
+					&& (getVertexLow() < stockData.getVertexLow())) {
 				result = divergenceValue(stockData);
 			}
 		} else {
@@ -788,7 +790,7 @@ public class StockData extends StockDatabaseTable {
 				.getSigmaHistogram())) {
 			result |= Constants.STOCK_DIVERGENCE_SIGMA_HISTOGRAM;
 		}
-		
+
 		return result;
 	}
 }

@@ -525,8 +525,15 @@ public class StockDataChartListActivity extends BaseActivity implements
 					}
 
 					if (index == cursor.getCount() - 1) {
-						Entry drawEntry = new Entry(
-								(float) mStockData.getClose(), index);
+						float val = 0;
+						if (mStockData
+								.directionOf(Constants.STOCK_DIRECTION_UP)) {
+							val = (float) mStockData.getHigh();
+						} else if (mStockData
+								.directionOf(Constants.STOCK_DIRECTION_DOWN)) {
+							val = (float) mStockData.getLow();
+						}
+						Entry drawEntry = new Entry(val, index);
 						stockDataChart.mDrawEntryList.add(drawEntry);
 					}
 

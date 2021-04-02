@@ -447,12 +447,49 @@ public class VertexAnalyzer {
 		}
 	}
 
+	boolean checkStockDateVertex(ArrayList<StockData> stockDataList,
+			StockData stockData, int bottomVertexType, int topVertexType) {
+		StockData start = null;
+		StockData end = null;
+		boolean result = false;
+
+		if (stockDataList == null) {
+			return result;
+		}
+
+		if (stockData == null) {
+			return result;
+		}
+
+		start = stockDataList.get(stockData.getIndexStart());
+		if (start == null) {
+			return result;
+		}
+		if ((start.getVertex() != bottomVertexType)
+				|| (start.getVertex() != topVertexType)) {
+			return result;
+		}
+		end = stockDataList.get(stockData.getIndexEnd());
+		if (end == null) {
+			return result;
+		}
+		if ((end.getVertex() != bottomVertexType)
+				|| (end.getVertex() != topVertexType)) {
+			return result;
+		}
+
+		result = true;
+
+		return result;
+	}
+
 	void analyzeAction(ArrayList<StockData> stockDataList,
 			ArrayList<StockData> lineDataList, int type) {
 		int divergence = Constants.STOCK_DIVERGENCE_NONE;
 		String action = Constants.STOCK_ACTION_NONE;
 		StockData stockData = null;
 		StockData current = null;
+		StockData middle = null;
 		StockData base = null;
 
 		if ((stockDataList == null) || (lineDataList == null)) {
@@ -469,14 +506,45 @@ public class VertexAnalyzer {
 
 		stockData = stockDataList.get(stockDataList.size() - 1);
 		current = lineDataList.get(lineDataList.size() - 1);
+		middle = lineDataList.get(lineDataList.size() - 2);
 		base = lineDataList.get(lineDataList.size() - 3);
 
-		if ((base == null) || (current == null) || (stockData == null)) {
+		if ((stockData == null) || (current == null) || (middle == null)
+				|| (base == null)) {
+			return;
+		}
+
+		if (base.getIndexStart() == 0) {
 			return;
 		}
 
 		if (current.getDirection() != base.getDirection()) {
 			return;
+		}
+
+		if (stockData.directionOf(Constants.STOCK_DIRECTION_UP)) {
+			if (stockData.getHigh() < stockData.getOverlapHigh()) {
+				return;
+			}
+		}
+
+		if (stockData.directionOf(Constants.STOCK_DIRECTION_DOWN)) {
+			if (stockData.getLow() > stockData.getOverlapLow()) {
+				return;
+			}
+		}
+
+		if (type == Constants.STOCK_DIVERGENCE_TYPE_DRAW) {
+			if (!checkStockDateVertex(stockDataList, middle,
+					Constants.STOCK_VERTEX_BOTTOM, Constants.STOCK_VERTEX_TOP)) {
+				return;
+			}
+		} else if (type == Constants.STOCK_DIVERGENCE_TYPE_STROKE) {
+			if (!checkStockDateVertex(stockDataList, middle,
+					Constants.STOCK_VERTEX_BOTTOM_STROKE,
+					Constants.STOCK_VERTEX_TOP_STROKE)) {
+				return;
+			}
 		}
 
 		divergence = current.divergenceValue(current.getDirection(), base);
