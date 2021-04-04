@@ -229,6 +229,8 @@ public class StorageActivity extends DatabaseActivity {
 						stock.setName(parser.nextText());
 					} else if (DatabaseContract.COLUMN_FLAG.equals(tagName)) {
 						stock.setFlag(Long.valueOf(parser.nextText()));
+					} else if (DatabaseContract.COLUMN_COST.equals(tagName)) {
+						stock.setCost(Double.valueOf(parser.nextText()));
 					} else if (DatabaseContract.COLUMN_VALUATION
 							.equals(tagName)) {
 						stock.setValuation(Double.valueOf(parser.nextText()));
@@ -238,6 +240,8 @@ public class StorageActivity extends DatabaseActivity {
 						stockDeal.setDeal(Double.valueOf(parser.nextText()));
 					} else if (DatabaseContract.COLUMN_VOLUME.equals(tagName)) {
 						stockDeal.setVolume(Long.valueOf(parser.nextText()));
+					} else if (DatabaseContract.COLUMN_ACTION.equals(tagName)) {
+						stockDeal.setAction(parser.nextText());
 					} else if (DatabaseContract.COLUMN_CREATED.equals(tagName)) {
 						stockDeal.setCreated(parser.nextText());
 					} else if (DatabaseContract.COLUMN_MODIFIED.equals(tagName)) {
@@ -355,6 +359,8 @@ public class StorageActivity extends DatabaseActivity {
 						stock.getName());
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_FLAG,
 						String.valueOf(stock.getFlag()));
+				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_COST,
+						String.valueOf(stock.getCost()));
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_VALUATION,
 						String.valueOf(stock.getValuation()));
 			} catch (Exception e) {
@@ -380,6 +386,9 @@ public class StorageActivity extends DatabaseActivity {
 						xmlSerialize(xmlSerializer,
 								DatabaseContract.COLUMN_VOLUME,
 								String.valueOf(stockDeal.getVolume()));
+						xmlSerialize(xmlSerializer,
+								DatabaseContract.COLUMN_ACTION,
+								stockDeal.getAction());
 						xmlSerialize(xmlSerializer,
 								DatabaseContract.COLUMN_CREATED,
 								stockDeal.getCreated());

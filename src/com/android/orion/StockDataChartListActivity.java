@@ -665,9 +665,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 				mStockDatabaseManager.getStockDealListAllSelection(mStock));
 
 		stockDataChart.updateDescription(mStock);
-		if (mShowDeal) {
-			stockDataChart.updateLimitLine(mStock, mStockDealList);
-		}
+		stockDataChart.updateLimitLine(mStock, mStockDealList, mShowDeal);
 		stockDataChart.setMainChartData();
 		stockDataChart.setSubChartData();
 

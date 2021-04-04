@@ -1,5 +1,8 @@
 package com.android.orion;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,8 +14,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;
@@ -33,11 +38,19 @@ public class StockDealActivity extends DatabaseActivity implements
 
 	static final int REQUEST_CODE_STOCK_ID = 0;
 
-	EditText mEditTextStockName, mEditTextStockCode;
-	EditText mEditTextDealPrice, mEditTextDealVolume;
+	EditText mEditTextStockName;
+	EditText mEditTextStockCode;
+	EditText mEditTextDealPrice;
+	EditText mEditTextDealVolume;
 
-	Button mButtonAdd, mButtonSubtract;
-	Button mButtonOk, mButtonCancel;
+	Button mButtonAdd;
+	Button mButtonSubtract;
+	Button mButtonOk;
+	Button mButtonCancel;
+
+	ArrayAdapter<String> mArrayAdapter;
+	List<String> mListStockAction;
+	Spinner mSpinnerStockAcion;
 
 	StockDeal mDeal = null;
 
@@ -127,6 +140,7 @@ public class StockDealActivity extends DatabaseActivity implements
 	}
 
 	void initView() {
+		mSpinnerStockAcion = (Spinner) findViewById(R.id.spinner_stock_action);
 		mEditTextStockName = (EditText) findViewById(R.id.edittext_stock_name);
 		mEditTextStockCode = (EditText) findViewById(R.id.edittext_stock_code);
 		mEditTextDealPrice = (EditText) findViewById(R.id.edittext_deal_price);
@@ -150,6 +164,22 @@ public class StockDealActivity extends DatabaseActivity implements
 		mEditTextStockCode.setInputType(InputType.TYPE_NULL);
 		mEditTextStockCode.setFocusable(false);
 
+		mListStockAction = new ArrayList<String>();
+		mListStockAction.add("");
+		mListStockAction.add(Constants.PERIOD_MONTH);
+		mListStockAction.add(Constants.PERIOD_WEEK);
+		mListStockAction.add(Constants.PERIOD_DAY);
+		mListStockAction.add(Constants.PERIOD_MIN60);
+		mListStockAction.add(Constants.PERIOD_MIN30);
+		mListStockAction.add(Constants.PERIOD_MIN15);
+		mListStockAction.add(Constants.PERIOD_MIN5);
+
+		mArrayAdapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_spinner_item, mListStockAction);
+		mArrayAdapter
+				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		mSpinnerStockAcion.setAdapter(mArrayAdapter);
+
 		if (ACTION_DEAL_INSERT.equals(mAction)) {
 			setTitle(R.string.deal_insert);
 		} else if (ACTION_DEAL_EDIT.equals(mAction)) {
@@ -160,6 +190,13 @@ public class StockDealActivity extends DatabaseActivity implements
 	void updateView() {
 		mEditTextStockName.setText(mDeal.getName());
 		mEditTextStockCode.setText(mDeal.getCode());
+		String dealAction = mDeal.getAction();
+		for (int i = 0; i < mListStockAction.size(); i++) {
+			if (mListStockAction.get(i).equals(dealAction)) {
+				mSpinnerStockAcion.setSelection(i);
+				break;
+			}
+		}
 		mEditTextDealPrice.setText(String.valueOf(mDeal.getDeal()));
 		mEditTextDealVolume.setText(String.valueOf(mDeal.getVolume()));
 	}
@@ -217,6 +254,9 @@ public class StockDealActivity extends DatabaseActivity implements
 			String dealString = "";
 			String volumeString = "";
 
+			String dealAction = mSpinnerStockAcion.getSelectedItem().toString();
+			mDeal.setAction(dealAction);
+
 			dealString = mEditTextDealPrice.getText().toString();
 			if (!TextUtils.isEmpty(dealString)) {
 				mDeal.setDeal(Double.valueOf(dealString));
@@ -232,7 +272,6 @@ public class StockDealActivity extends DatabaseActivity implements
 			}
 			mDeal.setupNet();
 			mDeal.setupProfit();
-			mDeal.setupRoi(mStock.getRoi(), mStock.getPrice());
 			mDeal.setupValue();
 			mHandler.sendEmptyMessage(MESSAGE_SAVE_DEAL);
 			setResult(RESULT_OK);

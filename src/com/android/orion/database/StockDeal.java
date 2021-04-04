@@ -11,7 +11,7 @@ public class StockDeal extends DatabaseTable {
 	private String mSE;
 	private String mCode;
 	private String mName;
-	private double mRoi;
+	private String mAction;
 	private double mPrice;
 	private double mNet;
 	private double mDeal;
@@ -50,7 +50,7 @@ public class StockDeal extends DatabaseTable {
 		mSE = "";
 		mCode = "";
 		mName = "";
-		mRoi = 0;
+		mAction = "";
 		mPrice = 0;
 		mNet = 0;
 		mDeal = 0;
@@ -70,7 +70,7 @@ public class StockDeal extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_SE, mSE);
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
-		contentValues.put(DatabaseContract.COLUMN_ROI, mRoi);
+		contentValues.put(DatabaseContract.COLUMN_ACTION, mAction);
 		contentValues.put(DatabaseContract.COLUMN_PRICE, mPrice);
 		contentValues.put(DatabaseContract.COLUMN_NET, mNet);
 		contentValues.put(DatabaseContract.COLUMN_DEAL, mDeal);
@@ -93,7 +93,7 @@ public class StockDeal extends DatabaseTable {
 		setSE(stockDeal.mSE);
 		setCode(stockDeal.mCode);
 		setName(stockDeal.mName);
-		setRoi(stockDeal.mRoi);
+		setAction(stockDeal.mAction);
 		setPrice(stockDeal.mPrice);
 		setNet(stockDeal.mNet);
 		setDeal(stockDeal.mDeal);
@@ -115,7 +115,7 @@ public class StockDeal extends DatabaseTable {
 		setSE(cursor);
 		setCode(cursor);
 		setName(cursor);
-		setRoi(cursor);
+		setAction(cursor);
 		setPrice(cursor);
 		setNet(cursor);
 		setDeal(cursor);
@@ -175,21 +175,21 @@ public class StockDeal extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_NAME)));
 	}
 
-	public double getRoi() {
-		return mRoi;
+	public String getAction() {
+		return mAction;
 	}
 
-	public void setRoi(double roi) {
-		mRoi = roi;
+	public void setAction(String action) {
+		mAction = action;
 	}
 
-	void setRoi(Cursor cursor) {
+	void setAction(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}
 
-		setRoi(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_ROI)));
+		setAction(cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_ACTION)));
 	}
 	
 	public double getPrice() {
@@ -292,21 +292,6 @@ public class StockDeal extends DatabaseTable {
 
 		setProfit(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_PROFIT)));
-	}
-
-	public void setupRoi(double stockRoi, double stockPrice) {
-		if ((stockRoi == 0) || (stockPrice == 0)) {
-			mRoi =0;
-			return;
-		}
-		
-		if (mDeal == 0) {
-			mRoi =0;
-			return;
-		}
-		
-		mRoi = Utility.Round(stockRoi * stockPrice / mDeal,
-				Constants.DOUBLE_FIXED_DECIMAL);
 	}
 
 	public void setupNet() {

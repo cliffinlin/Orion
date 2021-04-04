@@ -522,16 +522,9 @@ public class VertexAnalyzer {
 			return;
 		}
 
-		if (stockData.directionOf(Constants.STOCK_DIRECTION_UP)) {
-			if (stockData.getHigh() < stockData.getOverlapHigh()) {
-				return;
-			}
-		}
-
-		if (stockData.directionOf(Constants.STOCK_DIRECTION_DOWN)) {
-			if (stockData.getLow() > stockData.getOverlapLow()) {
-				return;
-			}
+		if ((stockData.getLow() > stockData.getOverlapLow())
+				&& (stockData.getClose() < stockData.getOverlapHigh())) {
+			return;
 		}
 
 		if (type == Constants.STOCK_DIVERGENCE_TYPE_DRAW) {

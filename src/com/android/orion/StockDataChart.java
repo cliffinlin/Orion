@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.text.TextUtils;
 
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;
@@ -317,8 +318,7 @@ public class StockDataChart {
 
 		mDescription += stock.getNet() + "%" + "  ";
 
-		mDescription += "cost:" + stock.getCost() + "  " + "hold:"
-				+ stock.getHold() + "   " + "profit:" + stock.getProfit();
+		mDescription += "action:" + stock.getAction(mPeriod);
 	}
 
 	LimitLine createLimitLine(double limit, int color, String label) {
@@ -335,12 +335,8 @@ public class StockDataChart {
 		return limitLine;
 	}
 
-	void updateLimitLine(Stock stock, ArrayList<StockDeal> stockDealList) {
-		int color = Color.WHITE;
-		double average = 0;
-		double net = 0;
-		String label = "";
-		LimitLine limitLine;
+	void updateLimitLine(Stock stock, ArrayList<StockDeal> stockDealList,
+			boolean showDeal) {
 
 		if ((stockDealList == null) || (mLimitLineList == null)) {
 			return;
@@ -348,31 +344,86 @@ public class StockDataChart {
 
 		mLimitLineList.clear();
 
+		updateActionLimitLine(stock, stockDealList);
+		updateCostLimitLine(stock, stockDealList);
+		updateDealLimitLine(stock, stockDealList, showDeal);
+	}
+
+	void updateActionLimitLine(Stock stock, ArrayList<StockDeal> stockDealList) {
+		int color = Color.WHITE;
+		String action = "";
+		String label = "";
+		LimitLine limitLine;
+
+		if ((mLimitLineList == null) || (stockDealList == null)) {
+			return;
+		}
+
+		action = stock.getAction(mPeriod);
+
+		if (TextUtils.isEmpty(action)) {
+			return;
+		}
+
+		if (action.contains("L") || action.contains("DBB")) {
+			color = Color.CYAN;
+		} else if (action.contains("H") || action.contains("GSS")) {
+			color = Color.MAGENTA;
+		}
+
+		label = "                                                     " + " "
+				+ "Action" + " " + action + " ";
+		limitLine = createLimitLine(stock.getPrice(), color, label);
+		mLimitLineList.add(limitLine);
+	}
+
+	void updateCostLimitLine(Stock stock, ArrayList<StockDeal> stockDealList) {
+		int color = Color.WHITE;
+		double cost = 0;
+		double net = 0;
+		String label = "";
+		LimitLine limitLine;
+
+		if ((stock == null) || (stockDealList == null)
+				|| (mLimitLineList == null)) {
+			return;
+		}
+
+		cost = stock.getCost();
+
 		if (stock.getValuation() > 0) {
-			average = Utility.Round(stock.getCost() / stock.getHold(),
-					Constants.DOUBLE_FIXED_DECIMAL);
-			net = Utility.Round(100 * (stock.getPrice() - average) / average,
-					Constants.DOUBLE_FIXED_DECIMAL);
 			color = Color.WHITE;
 			label = "                                                     "
 					+ " " + "Valuation" + " " + stock.getValuation() + " ";
 			limitLine = createLimitLine(stock.getValuation(), color, label);
-
 			mLimitLineList.add(limitLine);
 		}
 
-		if ((stock.getCost() > 0) && (stock.getHold() > 0)) {
-			average = Utility.Round(stock.getCost() / stock.getHold(),
-					Constants.DOUBLE_FIXED_DECIMAL);
-			net = Utility.Round(100 * (stock.getPrice() - average) / average,
+		if ((cost > 0) && (stock.getHold() > 0)) {
+			net = Utility.Round(100 * (stock.getPrice() - cost) / cost,
 					Constants.DOUBLE_FIXED_DECIMAL);
 			color = Color.BLUE;
 			label = "                                                     "
-					+ " " + average + " " + stock.getHold() + " "
+					+ " " + cost + " " + stock.getHold() + " "
 					+ (int) stock.getProfit() + " " + net + "%";
-			limitLine = createLimitLine(average, color, label);
+			limitLine = createLimitLine(cost, color, label);
 
 			mLimitLineList.add(limitLine);
+		}
+	}
+
+	void updateDealLimitLine(Stock stock, ArrayList<StockDeal> stockDealList,
+			boolean showDeal) {
+		int color = Color.WHITE;
+		String label = "";
+		LimitLine limitLine;
+
+		if ((mLimitLineList == null) || (stockDealList == null)) {
+			return;
+		}
+
+		if (!showDeal) {
+			return;
 		}
 
 		for (StockDeal stockDeal : stockDealList) {
@@ -390,8 +441,8 @@ public class StockDataChart {
 					+ stockDeal.getVolume() + " " + (int) stockDeal.getProfit()
 					+ " " + stockDeal.getNet() + "%";
 
-			if ((stockDeal.getVolume() <= 0) && (stockDeal.getDeal() != 0)) {
-				label += " roi:" + stockDeal.getRoi();
+			if (!TextUtils.isEmpty(stockDeal.getAction())) {
+				label += " action:" + stockDeal.getAction();
 			}
 
 			limitLine = createLimitLine(stockDeal.getDeal(), color, label);

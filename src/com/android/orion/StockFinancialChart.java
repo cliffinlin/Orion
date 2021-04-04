@@ -4,10 +4,7 @@ import java.util.ArrayList;
 
 import android.graphics.Color;
 
-import com.android.orion.database.Stock;
-import com.android.orion.database.StockDeal;
 import com.github.mikephil.charting.components.LimitLine;
-import com.github.mikephil.charting.components.LimitLine.LimitLabelPosition;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.CombinedData;
 import com.github.mikephil.charting.data.Entry;
@@ -199,86 +196,6 @@ public class StockFinancialChart {
 		lineData.addDataSet(cashFlowPerShareDataSet);
 
 		mCombinedDataSub.setData(lineData);
-	}
-
-	void updateDescription(Stock stock) {
-		mDescription = "";
-
-		if (stock == null) {
-			return;
-		}
-		mDescription += mPeriod;
-		mDescription += " ";
-
-		mDescription += stock.getPrice() + "  ";
-
-		if (stock.getNet() > 0) {
-			mDescription += "+";
-		} else if (stock.getNet() < 0) {
-			mDescription += "-";
-		}
-
-		mDescription += stock.getNet() + "%" + "  ";
-
-		mDescription += "cost " + stock.getCost() + "  " + stock.getProfit()
-				+ "%" + "   " + "hold " + stock.getHold();
-	}
-
-	LimitLine createLimitLine(double limit, int color, String label) {
-		LimitLine limitLine = new LimitLine(0);
-
-		limitLine.enableDashedLine(10f, 10f, 0f);
-		limitLine.setLineWidth(3);
-		limitLine.setTextSize(10f);
-		limitLine.setLabelPosition(LimitLabelPosition.LEFT_TOP);
-		limitLine.setLimit((float) limit);
-		limitLine.setLineColor(color);
-		limitLine.setLabel(label);
-
-		return limitLine;
-	}
-
-	void updateLimitLine(Stock stock, ArrayList<StockDeal> stockDealList) {
-		int color = Color.WHITE;
-		String label = "";
-		LimitLine limitLine;
-
-		if ((stockDealList == null) || (mLimitLineList == null)) {
-			return;
-		}
-
-		mLimitLineList.clear();
-
-		color = Color.BLUE;
-		label = "                                                                      "
-				+ stock.getCost()
-				+ " "
-				+ stock.getProfit()
-				+ "%"
-				+ "   "
-				+ "hold " + stock.getHold();
-		limitLine = createLimitLine(stock.getCost(), color, label);
-
-		mLimitLineList.add(limitLine);
-
-		for (StockDeal stockDeal : stockDealList) {
-			if (stockDeal.getProfit() > 0) {
-				color = Color.RED;
-			} else {
-				color = Color.GREEN;
-			}
-
-			if (stockDeal.getVolume() == 0) {
-				color = Color.YELLOW;
-			}
-
-			label = "        " + stockDeal.getDeal() + " " + stockDeal.getNet()
-					+ "%" + " " + stockDeal.getVolume() + " "
-					+ (int) stockDeal.getProfit();
-			limitLine = createLimitLine(stockDeal.getDeal(), color, label);
-
-			mLimitLineList.add(limitLine);
-		}
 	}
 
 	void clear() {

@@ -146,6 +146,7 @@
     <string name="stock_data_list">Stock Data List</string>
     <string name="stock_name_code">Name</string>
     <string name="stock_code">Stock Code</string>
+    <string name="stock_action">Stock Action</string>    
     <string name="stock_class">Stock Class</string>
     <string name="stock_class_hsa">HSA</string>
     <string name="stock_class_index">Index</string>
@@ -167,6 +168,7 @@
     <string name="stock_se_not_found">Stock SE not Found!</string>
     <string name="stock_statistics">Statistics</string>
     <string name="stock_statistics_chart">Statistics Chart</string>
+    <string name="stock_cost">Stock Cost</string>    
     <string name="stock_valuation">Stock Valuation</string>
     <string name="symbol_add">+</string>
     <string name="symbol_subtract">-</string>

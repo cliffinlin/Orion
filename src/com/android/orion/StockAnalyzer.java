@@ -691,10 +691,13 @@ public class StockAnalyzer {
 		if (stockData.directionOf(Constants.STOCK_DIRECTION_UP)) {
 			if (prev.vertexOf(Constants.STOCK_VERTEX_BOTTOM)) {
 				action += Constants.STOCK_ACTION_D;
-				String result = getSecondBottomAction(drawVertexList);
-				if (!TextUtils.isEmpty(result)) {
-					action += result;
-					prev.setAction(action);
+				if ((stockData.getLow() <= stockData.getOverlapLow())
+						|| (stockData.getClose() >= stockData.getOverlapHigh())) {
+					String result = getSecondBottomAction(drawVertexList);
+					if (!TextUtils.isEmpty(result)) {
+						action += result;
+						prev.setAction(action);
+					}
 				}
 			} else {
 				action += Constants.STOCK_ACTION_ADD;
@@ -745,7 +748,7 @@ public class StockAnalyzer {
 			}
 		}
 
-		stock.setAction(period, action + stockData.getAction());
+		stock.setAction(period, stockData.getAction() + action);
 	}
 
 	private void updateDatabase(Stock stock) {
@@ -1014,7 +1017,7 @@ public class StockAnalyzer {
 			if (Preferences.getBoolean(mContext, period, false)) {
 				action = stock.getAction(period);
 				if (action.contains("DBB") || action.contains("GSS")
-						|| action.contains("LL") || action.contains("HH")) {
+						|| action.contains("L") || action.contains("H")) {
 					result += period + " " + action + " ";
 				}
 			}
