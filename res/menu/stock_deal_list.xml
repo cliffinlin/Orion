@@ -13,6 +13,12 @@
         android:title="@string/action_new">
     </item>
     <item
+        android:id="@+id/action_to_operate"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_to_operate">
+    </item>
+    <item
         android:id="@+id/action_to_buy"
         android:orderInCategory="100"
         android:showAsAction="never"

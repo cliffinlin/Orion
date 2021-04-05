@@ -45,8 +45,9 @@ public class DealListActivity extends ListActivity implements
 	static final int LOADER_ID_DEAL_LIST = 0;
 
 	static final int FILTER_TYPE_NONE = 0;
-	static final int FILTER_TYPE_TO_BUY = 1;
-	static final int FILTER_TYPE_TO_SELL = 2;
+	static final int FILTER_TYPE_TO_OPERATE = 1;
+	static final int FILTER_TYPE_TO_BUY = 2;
+	static final int FILTER_TYPE_TO_SELL = 3;
 
 	static final int MESSAGE_DELETE_DEAL = 0;
 	static final int MESSAGE_DELETE_DEAL_LIST = 1;
@@ -218,7 +219,7 @@ public class DealListActivity extends ListActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_stock_deal_list);
 
-		mFilterType = FILTER_TYPE_TO_BUY;
+		mFilterType = FILTER_TYPE_TO_OPERATE;
 
 		mSortOrder = getSetting(Settings.KEY_SORT_ORDER_DEAL_LIST,
 				mSortOrderDefault);
@@ -260,6 +261,11 @@ public class DealListActivity extends ListActivity implements
 				mIntent.putExtras(mBundle);
 			}
 			startActivityForResult(mIntent, REQUEST_CODE_DEAL_INSERT);
+			return true;
+
+		case R.id.action_to_operate:
+			mFilterType = FILTER_TYPE_TO_OPERATE;
+			restartLoader();
 			return true;
 
 		case R.id.action_to_buy:
@@ -538,6 +544,10 @@ public class DealListActivity extends ListActivity implements
 		mSelection = null;
 
 		switch (mFilterType) {
+		case FILTER_TYPE_TO_OPERATE:
+			mSelection = DatabaseContract.COLUMN_ACTION + " != ''";
+			break;
+
 		case FILTER_TYPE_TO_BUY:
 			mSelection = DatabaseContract.COLUMN_VOLUME + " <= " + 0;
 			break;

@@ -7,6 +7,7 @@
     <string name="acceleration">Acc</string>
     <string name="action">Action</string>
     <string name="action_all">All</string>
+    <string name="action_to_operate">To Operate</string>    
     <string name="action_to_buy">To Buy</string>
     <string name="action_to_sell">To Sell</string>
     <string name="action_deal">Deal</string>

@@ -929,9 +929,9 @@ public class StockAnalyzer {
 	private void updateNotification(Stock stock) {
 		int id = 0;
 		int defaults = 0;
-		String titleString = "";
-		String dealString = "";
-		String bodyString = "";
+		String actionString = "";
+		String contentTitle = "";
+		String contentText = "";
 
 		ArrayList<StockDeal> stockDealList = new ArrayList<StockDeal>();
 
@@ -940,29 +940,39 @@ public class StockAnalyzer {
 		}
 
 		mStockDatabaseManager.getStockDealList(stock, stockDealList,
-				mStockDatabaseManager.getStockDealListToBuySelection(stock));
+				mStockDatabaseManager.getStockDealListToOperateSelection(stock));
 
 		if (stockDealList.size() == 0) {
 			return;
 		}
-
-		if (stock.getPrice() > 0) {
-			for (StockDeal stockDeal : stockDealList) {
-				if (stock.getPrice() <= stockDeal.getDeal()) {
-					dealString += " @" + stockDeal.getDeal() + " "
-							+ stockDeal.getNet();
+		
+		contentTitle += stock.getName() + " " + stock.getPrice() + " "
+				+ stock.getNet();
+		
+		for (int i = Constants.PERIODS.length - 1; i >= 0; i--) {
+			String period = Constants.PERIODS[i];
+			if (Preferences.getBoolean(mContext, period, false)) {
+				String action = stock.getAction(period);
+				if (action.contains("DBB") || action.contains("GSS")
+						|| action.contains("L") || action.contains("H")) {
+					actionString += period + " " + action + " ";
 				}
 			}
 		}
-
-		bodyString = getBodyString(stock);
-
-		if (TextUtils.isEmpty(dealString) && TextUtils.isEmpty(bodyString)) {
-			return;
+		
+		contentTitle += " " + actionString;
+		
+		if (stock.getPrice() > 0) {
+			for (StockDeal stockDeal : stockDealList) {
+				contentText += " @" + stockDeal.getDeal() + " "
+						+ stockDeal.getNet() + " " + stockDeal.getAction();
+			}
 		}
 
-		titleString += stock.getName() + " " + stock.getPrice() + " "
-				+ stock.getNet() + " " + dealString;
+		
+		if (TextUtils.isEmpty(contentTitle) && TextUtils.isEmpty(contentText)) {
+			return;
+		}
 
 		NotificationManager notificationManager = (NotificationManager) mContext
 				.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -975,8 +985,8 @@ public class StockAnalyzer {
 				intent, 0);
 
 		NotificationCompat.Builder notification = new NotificationCompat.Builder(
-				mContext).setContentTitle(titleString)
-				.setContentText(bodyString)
+				mContext).setContentTitle(contentTitle)
+				.setContentText(contentText)
 				.setSmallIcon(R.drawable.ic_dialog_email).setAutoCancel(true)
 				.setLights(0xFF0000FF, 100, 300)
 				.setContentIntent(pendingIntent);
@@ -1000,44 +1010,5 @@ public class StockAnalyzer {
 				true)) {
 			notificationManager.notify(id, notification.build());
 		}
-	}
-
-	String getBodyString(Stock stock) {
-		String action = "";
-		String result = "";
-
-		// ArrayList<StockDeal> stockDealList = new ArrayList<StockDeal>();
-
-		// result += stock.getName();
-		// result += stock.getPrice() + " ";
-		// result += String.valueOf(stock.getNet()) + " ";
-
-		for (int i = Constants.PERIODS.length - 1; i >= 0; i--) {
-			String period = Constants.PERIODS[i];
-			if (Preferences.getBoolean(mContext, period, false)) {
-				action = stock.getAction(period);
-				if (action.contains("DBB") || action.contains("GSS")
-						|| action.contains("L") || action.contains("H")) {
-					result += period + " " + action + " ";
-				}
-			}
-		}
-
-		// result += "\n";
-
-		// mStockDatabaseManager.getStockDealList(stock, stockDealList);
-		//
-		// for (StockDeal stockDeal : stockDealList) {
-		// if ((stockDeal.getDeal() > 0)
-		// && Math.abs(stockDeal.getVolume()) > 0) {
-		// result += stockDeal.getDeal() + " ";
-		// result += stockDeal.getNet() + " ";
-		// result += stockDeal.getVolume() + " ";
-		// result += stockDeal.getProfit() + " ";
-		// result += "\n";
-		// }
-		// }
-
-		return result;
 	}
 }

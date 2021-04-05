@@ -200,6 +200,13 @@ public class StockDataChartListActivity extends BaseActivity implements
 					ServiceSettingActivity.class), REQUEST_CODE_SETTINGS);
 			return true;
 
+		case R.id.action_edit:
+			mIntent = new Intent(this, StockActivity.class);
+			mIntent.setAction(StockActivity.ACTION_STOCK_EDIT);
+			mIntent.putExtra(Constants.EXTRA_STOCK_ID, mStock.getId());
+			startActivity(mIntent);
+			return true;
+			
 		case R.id.action_deal:
 			Bundle bundle = new Bundle();
 			bundle.putString(Constants.EXTRA_STOCK_SE, mStock.getSE());
@@ -207,13 +214,6 @@ public class StockDataChartListActivity extends BaseActivity implements
 			Intent intent = new Intent(this, StockDealListActivity.class);
 			intent.putExtras(bundle);
 			startActivity(intent);
-			return true;
-
-		case R.id.action_edit:
-			mIntent = new Intent(this, StockActivity.class);
-			mIntent.setAction(StockActivity.ACTION_STOCK_EDIT);
-			mIntent.putExtra(Constants.EXTRA_STOCK_ID, mStock.getId());
-			startActivity(mIntent);
 			return true;
 
 		default:
