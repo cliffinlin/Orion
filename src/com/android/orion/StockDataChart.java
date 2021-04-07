@@ -437,12 +437,9 @@ public class StockDataChart {
 			}
 
 			label = "     " + " " + stockDeal.getDeal() + " "
-					+ stockDeal.getVolume() + " " + (int) stockDeal.getProfit()
-					+ " " + stockDeal.getNet() + "%";
-
-			if (!TextUtils.isEmpty(stockDeal.getAction())) {
-				label += " action:" + stockDeal.getAction();
-			}
+					+ stockDeal.getNet() + "%" + " " + stockDeal.getAction()
+					+ " " + stockDeal.getVolume() + " "
+					+ (int) stockDeal.getProfit();
 
 			limitLine = createLimitLine(stockDeal.getDeal(), color, label);
 
