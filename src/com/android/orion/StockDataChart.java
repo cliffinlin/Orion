@@ -391,13 +391,13 @@ public class StockDataChart {
 
 		cost = stock.getCost();
 
-//		if (stock.getValuation() > 0) {
-//			color = Color.WHITE;
-//			label = "                                                     "
-//					+ " " + "Valuation" + " " + stock.getValuation() + " ";
-//			limitLine = createLimitLine(stock.getValuation(), color, label);
-//			mLimitLineList.add(limitLine);
-//		}
+		// if (stock.getValuation() > 0) {
+		// color = Color.WHITE;
+		// label = "                                                     "
+		// + " " + "Valuation" + " " + stock.getValuation() + " ";
+		// limitLine = createLimitLine(stock.getValuation(), color, label);
+		// mLimitLineList.add(limitLine);
+		// }
 
 		if ((cost > 0) && (stock.getHold() > 0)) {
 			net = Utility.Round(100 * (stock.getPrice() - cost) / cost,

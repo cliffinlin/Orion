@@ -393,6 +393,10 @@ public class VertexAnalyzer {
 
 		size = segmentDataList.size();
 
+		if (size < Constants.STOCK_VERTEX_TYPING_SIZE) {
+			return;
+		}
+
 		for (int i = 2; i < size; i++) {
 			prev = segmentDataList.get(i - 1);
 			current = segmentDataList.get(i);

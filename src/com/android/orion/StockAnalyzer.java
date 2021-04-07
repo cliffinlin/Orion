@@ -608,8 +608,16 @@ public class StockAnalyzer {
 		vertexAnalyzer.vertexListToDataList(stockDataList, segmentVertexList,
 				segmentDataList);
 
-		vertexAnalyzer.analyzeOverlap(stockDataList, segmentDataList,
-				overlapList);
+		if (segmentDataList.size() > Constants.STOCK_VERTEX_TYPING_SIZE) {
+			vertexAnalyzer.analyzeOverlap(stockDataList, segmentDataList,
+					overlapList);
+		} else if (strokeDataList.size() > Constants.STOCK_VERTEX_TYPING_SIZE) {
+			vertexAnalyzer.analyzeOverlap(stockDataList, strokeDataList,
+					overlapList);
+		} else {
+			vertexAnalyzer.analyzeOverlap(stockDataList, drawDataList,
+					overlapList);
+		}
 
 		// vertexAnalyzer.testShowVertextNumber(stockDataList, stockDataList);
 
@@ -939,16 +947,17 @@ public class StockAnalyzer {
 			return;
 		}
 
-		mStockDatabaseManager.getStockDealList(stock, stockDealList,
-				mStockDatabaseManager.getStockDealListToOperateSelection(stock));
+		mStockDatabaseManager
+				.getStockDealList(stock, stockDealList, mStockDatabaseManager
+						.getStockDealListToOperateSelection(stock));
 
 		if (stockDealList.size() == 0) {
 			return;
 		}
-		
+
 		contentTitle += stock.getName() + " " + stock.getPrice() + " "
 				+ stock.getNet();
-		
+
 		for (int i = Constants.PERIODS.length - 1; i >= 0; i--) {
 			String period = Constants.PERIODS[i];
 			if (Preferences.getBoolean(mContext, period, false)) {
@@ -959,17 +968,18 @@ public class StockAnalyzer {
 				}
 			}
 		}
-		
+
 		contentTitle += " " + actionString;
-		
+
 		if (stock.getPrice() > 0) {
 			for (StockDeal stockDeal : stockDealList) {
 				contentText += " @" + stockDeal.getDeal() + " "
-						+ stockDeal.getNet() + " " + stockDeal.getAction();
+						+ stockDeal.getNet() + " " + stockDeal.getAction()
+						+ " " + stockDeal.getVolume() + " "
+						+ stockDeal.getProfit();
 			}
 		}
 
-		
 		if (TextUtils.isEmpty(contentTitle) && TextUtils.isEmpty(contentText)) {
 			return;
 		}

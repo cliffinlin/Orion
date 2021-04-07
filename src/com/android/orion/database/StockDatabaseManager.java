@@ -710,21 +710,6 @@ public class StockDatabaseManager extends DatabaseManager {
 		return selection;
 	}
 
-	public String getStockDealListToBuySelection(Stock stock) {
-		String selection = "";
-
-		if (stock == null) {
-			return selection;
-		}
-
-		selection = DatabaseContract.COLUMN_SE + " = " + "\'" + stock.getSE()
-				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
-				+ stock.getCode() + "\'" + " AND "
-				+ DatabaseContract.COLUMN_VOLUME + " = " + 0;
-
-		return selection;
-	}
-
 	public String getStockDealListToOperateSelection(Stock stock) {
 		String selection = "";
 

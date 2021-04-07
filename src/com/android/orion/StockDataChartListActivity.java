@@ -206,7 +206,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 			mIntent.putExtra(Constants.EXTRA_STOCK_ID, mStock.getId());
 			startActivity(mIntent);
 			return true;
-			
+
 		case R.id.action_deal:
 			Bundle bundle = new Bundle();
 			bundle.putString(Constants.EXTRA_STOCK_SE, mStock.getSE());
