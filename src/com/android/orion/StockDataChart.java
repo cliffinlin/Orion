@@ -436,7 +436,7 @@ public class StockDataChart {
 				color = Color.YELLOW;
 			}
 
-			label = "     " + " " + stockDeal.getDeal() + " "
+			label = "               " + " " + stockDeal.getDeal() + " "
 					+ stockDeal.getNet() + "%" + " " + stockDeal.getAction()
 					+ " " + stockDeal.getVolume() + " "
 					+ (int) stockDeal.getProfit();

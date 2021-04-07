@@ -611,11 +611,8 @@ public class StockAnalyzer {
 		if (segmentDataList.size() > Constants.STOCK_VERTEX_TYPING_SIZE) {
 			vertexAnalyzer.analyzeOverlap(stockDataList, segmentDataList,
 					overlapList);
-		} else if (strokeDataList.size() > Constants.STOCK_VERTEX_TYPING_SIZE) {
-			vertexAnalyzer.analyzeOverlap(stockDataList, strokeDataList,
-					overlapList);
 		} else {
-			vertexAnalyzer.analyzeOverlap(stockDataList, drawDataList,
+			vertexAnalyzer.analyzeOverlap(stockDataList, strokeDataList,
 					overlapList);
 		}
 
