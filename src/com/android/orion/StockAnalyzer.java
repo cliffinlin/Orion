@@ -608,13 +608,8 @@ public class StockAnalyzer {
 		vertexAnalyzer.vertexListToDataList(stockDataList, segmentVertexList,
 				segmentDataList);
 
-		if (segmentDataList.size() > Constants.STOCK_VERTEX_TYPING_SIZE) {
 			vertexAnalyzer.analyzeOverlap(stockDataList, segmentDataList,
 					overlapList);
-		} else {
-			vertexAnalyzer.analyzeOverlap(stockDataList, strokeDataList,
-					overlapList);
-		}
 
 		// vertexAnalyzer.testShowVertextNumber(stockDataList, stockDataList);
 

@@ -478,11 +478,6 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 
 		updateTitle();
 
-		// mStockDatabaseManager.getStockDealList(mStock, mStockDealList,
-		// mStockDatabaseManager.getStockDealListAllSelection(mStock));
-
-		// financialDataChart.updateDescription(mStock);
-		// financialDataChart.updateLimitLine(mStock, mStockDealList);
 		financialDataChart.setMainChartData();
 		financialDataChart.setSubChartData();
 
