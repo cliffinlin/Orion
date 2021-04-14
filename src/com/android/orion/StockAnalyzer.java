@@ -608,8 +608,8 @@ public class StockAnalyzer {
 		vertexAnalyzer.vertexListToDataList(stockDataList, segmentVertexList,
 				segmentDataList);
 
-			vertexAnalyzer.analyzeOverlap(stockDataList, segmentDataList,
-					overlapList);
+		vertexAnalyzer.analyzeOverlap(stockDataList, segmentDataList,
+				overlapList);
 
 		// vertexAnalyzer.testShowVertextNumber(stockDataList, stockDataList);
 
@@ -939,6 +939,10 @@ public class StockAnalyzer {
 			return;
 		}
 
+		if (stock.getPrice() == 0) {
+			return;
+		}
+
 		mStockDatabaseManager
 				.getStockDealList(stock, stockDealList, mStockDatabaseManager
 						.getStockDealListToOperateSelection(stock));
@@ -950,31 +954,36 @@ public class StockAnalyzer {
 		contentTitle += stock.getName() + " " + stock.getPrice() + " "
 				+ stock.getNet();
 
-		for (int i = Constants.PERIODS.length - 1; i >= 0; i--) {
-			String period = Constants.PERIODS[i];
+		for (StockDeal stockDeal : stockDealList) {
+			contentText += " @" + stockDeal.getDeal() + " "
+					+ stockDeal.getNet() + " " + stockDeal.getAction() + " "
+					+ stockDeal.getVolume() + " " + stockDeal.getProfit();
+
+			String period = stockDeal.getAction();
 			if (Preferences.getBoolean(mContext, period, false)) {
 				String action = stock.getAction(period);
-				if (action.contains("DBB") || action.contains("GSS")
-						|| action.contains("L") || action.contains("H")) {
-					actionString += period + " " + action + " ";
+				String periodAction = "";
+				if (stockDeal.getVolume() > 0) {
+					if (action.contains("GSS") || action.contains("H")) {
+						periodAction = period + " " + action;
+					}
+				} else {
+					if (action.contains("DBB") || action.contains("L")) {
+						periodAction = period + " " + action;
+					}
+				}
+
+				if (!actionString.contains(periodAction)) {
+					actionString += periodAction + " ";
 				}
 			}
 		}
 
-		contentTitle += " " + actionString;
-
-		if (stock.getPrice() > 0) {
-			for (StockDeal stockDeal : stockDealList) {
-				contentText += " @" + stockDeal.getDeal() + " "
-						+ stockDeal.getNet() + " " + stockDeal.getAction()
-						+ " " + stockDeal.getVolume() + " "
-						+ stockDeal.getProfit();
-			}
-		}
-
-		if (TextUtils.isEmpty(contentTitle) && TextUtils.isEmpty(contentText)) {
+		if (TextUtils.isEmpty(actionString)) {
 			return;
 		}
+
+		contentTitle += " " + actionString;
 
 		NotificationManager notificationManager = (NotificationManager) mContext
 				.getSystemService(Context.NOTIFICATION_SERVICE);
