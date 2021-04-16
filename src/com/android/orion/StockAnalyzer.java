@@ -691,13 +691,10 @@ public class StockAnalyzer {
 		if (stockData.directionOf(Constants.STOCK_DIRECTION_UP)) {
 			if (prev.vertexOf(Constants.STOCK_VERTEX_BOTTOM)) {
 				action += Constants.STOCK_ACTION_D;
-				if ((stockData.getLow() <= stockData.getOverlapLow())
-						|| (stockData.getClose() >= stockData.getOverlapHigh())) {
-					String result = getSecondBottomAction(drawVertexList);
-					if (!TextUtils.isEmpty(result)) {
-						action += result;
-						prev.setAction(action);
-					}
+				String result = getSecondBottomAction(drawVertexList);
+				if (!TextUtils.isEmpty(result)) {
+					action += result;
+					prev.setAction(action);
 				}
 			} else {
 				action += Constants.STOCK_ACTION_ADD;
@@ -953,7 +950,7 @@ public class StockAnalyzer {
 
 		contentTitle += stock.getName() + " " + stock.getPrice() + " "
 				+ stock.getNet();
-
+/*
 		for (StockDeal stockDeal : stockDealList) {
 			contentText += " @" + stockDeal.getDeal() + " "
 					+ stockDeal.getNet() + " " + stockDeal.getAction() + " "
@@ -975,6 +972,16 @@ public class StockAnalyzer {
 
 				if (!actionString.contains(periodAction)) {
 					actionString += periodAction + " ";
+				}
+			}
+		}
+*/		
+		for (int i = Constants.PERIODS.length - 1; i >= 0; i--) {
+			String period = Constants.PERIODS[i];
+			if (Preferences.getBoolean(mContext, period, false)) {
+				String action = stock.getAction(period);
+				if (action.contains("L") || action.contains("H")) {
+					actionString += period + " " + action + " ";
 				}
 			}
 		}
