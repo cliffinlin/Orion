@@ -716,12 +716,12 @@ public class StockData extends StockDatabaseTable {
 		return result;
 	}
 
-	public int positionTo(StockData stockData) {
+	public int positionTo(StockData overlap) {
 		int position = 0;
 
-		if (getVertexLow() > stockData.getVertexHigh()) {
+		if (getVertexLow() > overlap.getOverlapHigh()) {
 			position = Constants.STOCK_POSITION_ABOVE;
-		} else if (getVertexHigh() < stockData.getVertexLow()) {
+		} else if (getVertexHigh() < overlap.getOverlapLow()) {
 			position = Constants.STOCK_POSITION_BELOW;
 		} else {
 			position = Constants.STOCK_POSITION_NONE;

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import android.util.Log;
 
 import com.android.orion.database.StockData;
-import com.android.orion.utility.Utility;
 
 public class VertexAnalyzer {
 	static final String TAG = Constants.TAG + " "
@@ -375,10 +374,10 @@ public class VertexAnalyzer {
 		int size = 0;
 		double Zg = 0;
 		double Zd = 0;
-		double overlapValue = 0;
 
 		StockData prev = null;
 		StockData current = null;
+		StockData next = null;
 
 		StockData stockData = null;
 		StockData segmentData = null;
@@ -397,34 +396,32 @@ public class VertexAnalyzer {
 			return;
 		}
 
-		for (int i = 2; i < size; i++) {
+		for (int i = 2; i < size - 1; i++) {
 			prev = segmentDataList.get(i - 1);
 			current = segmentDataList.get(i);
+			next = segmentDataList.get(i + 1);
 
-			if ((prev == null) || current == null) {
+			if ((prev == null) || (current == null) || (next == null)) {
 				continue;
 			}
 
 			if (overlap == null) {
 				overlap = new StockData();
+
 				overlap.set(prev);
 				overlap.setIndex(i - 2);
 				overlap.setIndexStart(i - 2);
 				overlap.setIndexEnd(i);
-				Zg = Math.min(prev.getVertexHigh(), current.getVertexHigh());
-				Zd = Math.max(prev.getVertexLow(), current.getVertexLow());
-				overlap.setHigh(Zg);
-				overlap.setLow(Zd);
-				if (overlap.getVertexLow() > 0) {
-					overlapValue = 100
-							* (overlap.getVertexHigh() - overlap.getVertexLow())
-							/ overlap.getVertexLow();
-					overlapValue = Utility.Round(overlapValue,
-							Constants.DOUBLE_FIXED_DECIMAL);
-				}
-				overlap.setOverlapHigh(overlap.getVertexHigh());
-				overlap.setOverlapLow(overlap.getVertexLow());
-				overlap.setOverlap(overlapValue);
+
+				Zg = Math
+						.min(Math.min(prev.getVertexHigh(),
+								current.getVertexHigh()), next.getVertexHigh());
+				Zd = Math.max(
+						Math.max(prev.getVertexLow(), current.getVertexLow()),
+						next.getVertexLow());
+
+				overlap.setOverlapHigh(Zg);
+				overlap.setOverlapLow(Zd);
 				overlapList.add(overlap);
 				continue;
 			}
@@ -443,9 +440,8 @@ public class VertexAnalyzer {
 				for (int k = segmentData.getIndexStart(); k <= segmentData
 						.getIndexEnd(); k++) {
 					stockData = stockDataList.get(k);
-					stockData.setOverlapHigh(overlap.getVertexHigh());
-					stockData.setOverlapLow(overlap.getVertexLow());
-					stockData.setOverlap(overlap.getOverlap());
+					stockData.setOverlapHigh(overlap.getOverlapHigh());
+					stockData.setOverlapLow(overlap.getOverlapLow());
 				}
 			}
 		}

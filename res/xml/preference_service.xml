@@ -15,7 +15,7 @@
         <com.android.orion.CustomSwitchPreference
             android:defaultValue="false"
             android:key="candle"
-            android:title="@string/candle" />        
+            android:title="@string/candle" />
         <com.android.orion.CustomSwitchPreference
             android:defaultValue="false"
             android:key="deal"
