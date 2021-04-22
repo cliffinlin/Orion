@@ -933,8 +933,7 @@ public class StockAnalyzer {
 		ArrayList<StockDeal> stockDealList = new ArrayList<StockDeal>();
 
 		if (!Market.isTradingHours(Calendar.getInstance())) {
-			// __TEST_CASE__
-			// return;
+			 return;
 		}
 
 		if (stock.getPrice() == 0) {
