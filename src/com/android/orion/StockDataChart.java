@@ -203,19 +203,22 @@ public class StockDataChart {
 		segmentDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(segmentDataSet);
 
-		LineDataSet overlapHighDataSet = new LineDataSet(mOverlapHighEntryList,
-				"OverHigh");
-		overlapHighDataSet.setColor(Color.MAGENTA);
-		overlapHighDataSet.setDrawCircles(false);
-		overlapHighDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		lineData.addDataSet(overlapHighDataSet);
+		if ((mOverlapHighEntryList.size() > 0)
+				&& (mOverlapLowEntryList.size() > 0)) {
+			LineDataSet overlapHighDataSet = new LineDataSet(
+					mOverlapHighEntryList, "OverHigh");
+			overlapHighDataSet.setColor(Color.MAGENTA);
+			overlapHighDataSet.setDrawCircles(false);
+			overlapHighDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+			lineData.addDataSet(overlapHighDataSet);
 
-		LineDataSet overlapLowDataSet = new LineDataSet(mOverlapLowEntryList,
-				"OverLow");
-		overlapLowDataSet.setColor(Color.BLUE);
-		overlapLowDataSet.setDrawCircles(false);
-		overlapLowDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		lineData.addDataSet(overlapLowDataSet);
+			LineDataSet overlapLowDataSet = new LineDataSet(
+					mOverlapLowEntryList, "OverLow");
+			overlapLowDataSet.setColor(Color.BLUE);
+			overlapLowDataSet.setDrawCircles(false);
+			overlapLowDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+			lineData.addDataSet(overlapLowDataSet);
+		}
 
 		if (mBookValuePerShareList.size() > 0) {
 			LineDataSet bookValuePerShareDataSet = new LineDataSet(
