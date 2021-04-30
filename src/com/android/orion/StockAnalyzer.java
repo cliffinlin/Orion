@@ -613,12 +613,12 @@ public class StockAnalyzer {
 
 		// vertexAnalyzer.testShowVertextNumber(stockDataList, stockDataList);
 
-		vertexAnalyzer.analyzeAction(stockDataList, drawDataList,
-				Constants.STOCK_DIVERGENCE_TYPE_DRAW);
-		vertexAnalyzer.analyzeAction(stockDataList, strokeDataList,
-				Constants.STOCK_DIVERGENCE_TYPE_STROKE);
 		vertexAnalyzer.analyzeAction(stockDataList, segmentDataList,
 				Constants.STOCK_DIVERGENCE_TYPE_SEGMENT);
+		vertexAnalyzer.analyzeAction(stockDataList, strokeDataList,
+				Constants.STOCK_DIVERGENCE_TYPE_STROKE);
+		vertexAnalyzer.analyzeAction(stockDataList, drawDataList,
+				Constants.STOCK_DIVERGENCE_TYPE_DRAW);
 
 		vertexAnalyzer.analyzeDirection(stockDataList);
 
@@ -688,48 +688,6 @@ public class StockAnalyzer {
 		prev = stockDataList.get(stockDataList.size() - 2);
 		stockData = stockDataList.get(stockDataList.size() - 1);
 
-		if (stockData.directionOf(Constants.STOCK_DIRECTION_UP)) {
-			if (prev.vertexOf(Constants.STOCK_VERTEX_BOTTOM)) {
-				action += Constants.STOCK_ACTION_D;
-				String result = getSecondBottomAction(drawVertexList);
-				if (!TextUtils.isEmpty(result)) {
-					action += result;
-					prev.setAction(action);
-				}
-			} else {
-				action += Constants.STOCK_ACTION_ADD;
-			}
-		} else if (stockData.directionOf(Constants.STOCK_DIRECTION_DOWN)) {
-			if (prev.vertexOf(Constants.STOCK_VERTEX_TOP)) {
-				action += Constants.STOCK_ACTION_G;
-				String result = getSecondTopAction(drawVertexList);
-				if (!TextUtils.isEmpty(result)) {
-					action += result;
-					prev.setAction(action);
-				}
-			} else {
-				action += Constants.STOCK_ACTION_MINUS;
-			}
-		}
-
-		action += " ";
-
-		if (stockData.directionOf(Constants.STOCK_DIRECTION_UP_STROKE)) {
-			if (prev.vertexOf(Constants.STOCK_VERTEX_BOTTOM_STROKE)) {
-				action += Constants.STOCK_ACTION_D;
-			} else {
-				action += Constants.STOCK_ACTION_ADD;
-			}
-		} else if (stockData.directionOf(Constants.STOCK_DIRECTION_DOWN_STROKE)) {
-			if (prev.vertexOf(Constants.STOCK_VERTEX_TOP_STROKE)) {
-				action += Constants.STOCK_ACTION_G;
-			} else {
-				action += Constants.STOCK_ACTION_MINUS;
-			}
-		}
-
-		action += " ";
-
 		if (stockData.directionOf(Constants.STOCK_DIRECTION_UP_SEGMENT)) {
 			if (prev.vertexOf(Constants.STOCK_VERTEX_BOTTOM_SEGMENT)) {
 				action += Constants.STOCK_ACTION_D;
@@ -745,7 +703,47 @@ public class StockAnalyzer {
 			}
 		}
 
-		stock.setAction(period, stockData.getAction() + action);
+		if (stockData.directionOf(Constants.STOCK_DIRECTION_UP_STROKE)) {
+			if (prev.vertexOf(Constants.STOCK_VERTEX_BOTTOM_STROKE)) {
+				action += Constants.STOCK_ACTION_D;
+			} else {
+				action += Constants.STOCK_ACTION_ADD;
+			}
+		} else if (stockData.directionOf(Constants.STOCK_DIRECTION_DOWN_STROKE)) {
+			if (prev.vertexOf(Constants.STOCK_VERTEX_TOP_STROKE)) {
+				action += Constants.STOCK_ACTION_G;
+			} else {
+				action += Constants.STOCK_ACTION_MINUS;
+			}
+		}
+
+		if (stockData.directionOf(Constants.STOCK_DIRECTION_UP)) {
+			if (prev.vertexOf(Constants.STOCK_VERTEX_BOTTOM)) {
+				String result = getSecondBottomAction(drawVertexList);
+				if (!TextUtils.isEmpty(result)) {
+					action += result;
+					prev.setAction(action);
+				} else {
+					action += Constants.STOCK_ACTION_D;
+				}
+			} else {
+				action += Constants.STOCK_ACTION_ADD;
+			}
+		} else if (stockData.directionOf(Constants.STOCK_DIRECTION_DOWN)) {
+			if (prev.vertexOf(Constants.STOCK_VERTEX_TOP)) {
+				String result = getSecondTopAction(drawVertexList);
+				if (!TextUtils.isEmpty(result)) {
+					action += result;
+					prev.setAction(action);
+				} else {
+					action += Constants.STOCK_ACTION_G;
+				}
+			} else {
+				action += Constants.STOCK_ACTION_MINUS;
+			}
+		}
+
+		stock.setAction(period, action + stockData.getAction());
 	}
 
 	private void updateDatabase(Stock stock) {
@@ -933,7 +931,7 @@ public class StockAnalyzer {
 		ArrayList<StockDeal> stockDealList = new ArrayList<StockDeal>();
 
 		if (!Market.isTradingHours(Calendar.getInstance())) {
-			 return;
+			return;
 		}
 
 		if (stock.getPrice() == 0) {
@@ -950,32 +948,23 @@ public class StockAnalyzer {
 
 		contentTitle += stock.getName() + " " + stock.getPrice() + " "
 				+ stock.getNet();
-/*
-		for (StockDeal stockDeal : stockDealList) {
-			contentText += " @" + stockDeal.getDeal() + " "
-					+ stockDeal.getNet() + " " + stockDeal.getAction() + " "
-					+ stockDeal.getVolume() + " " + stockDeal.getProfit();
-
-			String period = stockDeal.getAction();
-			if (Preferences.getBoolean(mContext, period, false)) {
-				String action = stock.getAction(period);
-				String periodAction = "";
-				if (stockDeal.getVolume() > 0) {
-					if (action.contains("GSS") || action.contains("H")) {
-						periodAction = period + " " + action;
-					}
-				} else {
-					if (action.contains("DBB") || action.contains("L")) {
-						periodAction = period + " " + action;
-					}
-				}
-
-				if (!actionString.contains(periodAction)) {
-					actionString += periodAction + " ";
-				}
-			}
-		}
-*/		
+		/*
+		 * for (StockDeal stockDeal : stockDealList) { contentText += " @" +
+		 * stockDeal.getDeal() + " " + stockDeal.getNet() + " " +
+		 * stockDeal.getAction() + " " + stockDeal.getVolume() + " " +
+		 * stockDeal.getProfit();
+		 * 
+		 * String period = stockDeal.getAction(); if
+		 * (Preferences.getBoolean(mContext, period, false)) { String action =
+		 * stock.getAction(period); String periodAction = ""; if
+		 * (stockDeal.getVolume() > 0) { if (action.contains("GSS") ||
+		 * action.contains("H")) { periodAction = period + " " + action; } }
+		 * else { if (action.contains("DBB") || action.contains("L")) {
+		 * periodAction = period + " " + action; } }
+		 * 
+		 * if (!actionString.contains(periodAction)) { actionString +=
+		 * periodAction + " "; } } }
+		 */
 		for (int i = Constants.PERIODS.length - 1; i >= 0; i--) {
 			String period = Constants.PERIODS[i];
 			if (Preferences.getBoolean(mContext, period, false)) {
