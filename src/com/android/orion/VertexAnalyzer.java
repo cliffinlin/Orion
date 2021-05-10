@@ -405,13 +405,13 @@ public class VertexAnalyzer {
 				continue;
 			}
 
-			if (overlap == null) {
+			if ((overlap == null)
+					|| (current.positionTo(overlap) != Constants.STOCK_POSITION_NONE)) {
 				overlap = new StockData();
 
-				overlap.set(prev);
+				overlap.set(current);
 				overlap.setIndex(i - 2);
 				overlap.setIndexStart(i - 2);
-				overlap.setIndexEnd(i);
 
 				Zg = Math
 						.min(Math.min(prev.getVertexHigh(),
@@ -423,14 +423,9 @@ public class VertexAnalyzer {
 				overlap.setOverlapHigh(Zg);
 				overlap.setOverlapLow(Zd);
 				overlapList.add(overlap);
-				continue;
 			}
 
-			if (current.positionTo(overlap) == Constants.STOCK_POSITION_NONE) {
-				overlap.setIndexEnd(i);
-			} else {
-				overlap = null;
-			}
+			overlap.setIndexEnd(i);
 		}
 
 		for (int i = 0; i < overlapList.size(); i++) {
