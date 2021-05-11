@@ -23,7 +23,6 @@ import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockDatabaseManager;
-import com.android.orion.database.StockDeal;
 import com.android.orion.database.TotalShare;
 import com.android.orion.indicator.MACD;
 import com.android.orion.utility.Market;
@@ -622,37 +621,72 @@ public class StockAnalyzer {
 
 		vertexAnalyzer.analyzeDirection(stockDataList);
 
-		setAction(stock, period, stockDataList, drawVertexList);
+		setAction(stock, period, stockDataList, drawVertexList, overlapList);
 	}
 
-	private String getSecondBottomAction(ArrayList<StockData> vertexList) {
+	private String getSecondBottomAction(ArrayList<StockData> vertexList,
+			ArrayList<StockData> overlapList) {
 		String result = "";
+		StockData prev = null;
 		StockData stockData = null;
+		StockData overlap = null;
 
 		if ((vertexList == null)
 				|| (vertexList.size() < Constants.STOCK_VERTEX_TYPING_SIZE + 1)) {
 			return result;
 		}
 
+		if ((overlapList == null) || (overlapList.size() < 1)) {
+			return result;
+		}
+
+		prev = vertexList.get(vertexList.size() - 2);
+		if (prev == null) {
+			return result;
+		}
+
 		stockData = vertexList.get(vertexList.size() - 4);
 		if (stockData == null) {
+			return result;
+		}
+
+		overlap = overlapList.get(overlapList.size() - 1);
+		if (overlap == null) {
 			return result;
 		}
 
 		if (stockData.vertexOf(Constants.STOCK_VERTEX_BOTTOM_STROKE)
 				&& stockData.vertexOf(Constants.STOCK_VERTEX_BOTTOM_SEGMENT)) {
-			result += Constants.STOCK_ACTION_BUY + Constants.STOCK_ACTION_BUY;
+			if (prev.getVertexHigh() < overlap.getLow()) {
+				result += Constants.STOCK_ACTION_BUY2
+						+ Constants.STOCK_ACTION_BUY2;
+			} else if (prev.getVertexLow() > overlap.getHigh()) {
+				result += Constants.STOCK_ACTION_BUY3
+						+ Constants.STOCK_ACTION_BUY3;
+			}
 		}
 
 		return result;
 	}
 
-	private String getSecondTopAction(ArrayList<StockData> vertexList) {
+	private String getSecondTopAction(ArrayList<StockData> vertexList,
+			ArrayList<StockData> overlapList) {
 		String result = "";
+		StockData prev = null;
 		StockData stockData = null;
+		StockData overlap = null;
 
 		if ((vertexList == null)
 				|| (vertexList.size() < Constants.STOCK_VERTEX_TYPING_SIZE + 1)) {
+			return result;
+		}
+
+		if ((overlapList == null) || (overlapList.size() < 1)) {
+			return result;
+		}
+
+		prev = vertexList.get(vertexList.size() - 2);
+		if (prev == null) {
 			return result;
 		}
 
@@ -661,9 +695,20 @@ public class StockAnalyzer {
 			return result;
 		}
 
+		overlap = overlapList.get(overlapList.size() - 1);
+		if (overlap == null) {
+			return result;
+		}
+
 		if (stockData.vertexOf(Constants.STOCK_VERTEX_TOP_STROKE)
 				&& stockData.vertexOf(Constants.STOCK_VERTEX_TOP_SEGMENT)) {
-			result += Constants.STOCK_ACTION_SELL + Constants.STOCK_ACTION_SELL;
+			if (prev.getVertexLow() > overlap.getHigh()) {
+				result += Constants.STOCK_ACTION_SELL2
+						+ Constants.STOCK_ACTION_SELL2;
+			} else if (prev.getVertexHigh() < overlap.getLow()) {
+				result += Constants.STOCK_ACTION_SELL3
+						+ Constants.STOCK_ACTION_SELL3;
+			}
 		}
 
 		return result;
@@ -671,7 +716,8 @@ public class StockAnalyzer {
 
 	private void setAction(Stock stock, String period,
 			ArrayList<StockData> stockDataList,
-			ArrayList<StockData> drawVertexList) {
+			ArrayList<StockData> drawVertexList,
+			ArrayList<StockData> overlapList) {
 		String action = Constants.STOCK_ACTION_NONE;
 		StockData prev = null;
 		StockData stockData = null;
@@ -719,7 +765,8 @@ public class StockAnalyzer {
 
 		if (stockData.directionOf(Constants.STOCK_DIRECTION_UP)) {
 			if (prev.vertexOf(Constants.STOCK_VERTEX_BOTTOM)) {
-				String result = getSecondBottomAction(drawVertexList);
+				String result = getSecondBottomAction(drawVertexList,
+						overlapList);
 				if (!TextUtils.isEmpty(result)) {
 					action += result;
 					prev.setAction(action);
@@ -731,7 +778,7 @@ public class StockAnalyzer {
 			}
 		} else if (stockData.directionOf(Constants.STOCK_DIRECTION_DOWN)) {
 			if (prev.vertexOf(Constants.STOCK_VERTEX_TOP)) {
-				String result = getSecondTopAction(drawVertexList);
+				String result = getSecondTopAction(drawVertexList, overlapList);
 				if (!TextUtils.isEmpty(result)) {
 					action += result;
 					prev.setAction(action);
@@ -928,48 +975,23 @@ public class StockAnalyzer {
 		String contentTitle = "";
 		String contentText = "";
 
-		ArrayList<StockDeal> stockDealList = new ArrayList<StockDeal>();
-
 		if (!Market.isTradingHours(Calendar.getInstance())) {
-			return;
+			 return;
 		}
 
 		if (stock.getPrice() == 0) {
 			return;
 		}
 
-		mStockDatabaseManager
-				.getStockDealList(stock, stockDealList, mStockDatabaseManager
-						.getStockDealListToOperateSelection(stock));
-
-		if (stockDealList.size() == 0) {
-			return;
-		}
-
 		contentTitle += stock.getName() + " " + stock.getPrice() + " "
 				+ stock.getNet();
-		/*
-		 * for (StockDeal stockDeal : stockDealList) { contentText += " @" +
-		 * stockDeal.getDeal() + " " + stockDeal.getNet() + " " +
-		 * stockDeal.getAction() + " " + stockDeal.getVolume() + " " +
-		 * stockDeal.getProfit();
-		 * 
-		 * String period = stockDeal.getAction(); if
-		 * (Preferences.getBoolean(mContext, period, false)) { String action =
-		 * stock.getAction(period); String periodAction = ""; if
-		 * (stockDeal.getVolume() > 0) { if (action.contains("GSS") ||
-		 * action.contains("H")) { periodAction = period + " " + action; } }
-		 * else { if (action.contains("DBB") || action.contains("L")) {
-		 * periodAction = period + " " + action; } }
-		 * 
-		 * if (!actionString.contains(periodAction)) { actionString +=
-		 * periodAction + " "; } } }
-		 */
+
 		for (int i = Constants.PERIODS.length - 1; i >= 0; i--) {
 			String period = Constants.PERIODS[i];
 			if (Preferences.getBoolean(mContext, period, false)) {
 				String action = stock.getAction(period);
-				if (action.contains("L") || action.contains("H")) {
+				if (action.contains("L") || action.contains("H")
+						|| action.contains("B") || action.contains("S")) {
 					actionString += period + " " + action + " ";
 				}
 			}
