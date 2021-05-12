@@ -654,13 +654,17 @@ public class StockAnalyzer {
 		if (overlap == null) {
 			return result;
 		}
+		
+		if (prev.getVertexLow() < stockData.getVertexLow()) {
+			return result;
+		}
 
 		if (stockData.vertexOf(Constants.STOCK_VERTEX_BOTTOM_STROKE)
 				&& stockData.vertexOf(Constants.STOCK_VERTEX_BOTTOM_SEGMENT)) {
-			if (prev.getVertexHigh() < overlap.getLow()) {
+			if (prev.getVertexHigh() < overlap.getOverlapLow()) {
 				result += Constants.STOCK_ACTION_BUY2
 						+ Constants.STOCK_ACTION_BUY2;
-			} else if (prev.getVertexLow() > overlap.getHigh()) {
+			} else if (prev.getVertexLow() > overlap.getOverlapHigh()) {
 				result += Constants.STOCK_ACTION_BUY3
 						+ Constants.STOCK_ACTION_BUY3;
 			}
@@ -699,13 +703,17 @@ public class StockAnalyzer {
 		if (overlap == null) {
 			return result;
 		}
-
+		
+		if (prev.getVertexHigh() > stockData.getVertexHigh()) {
+			return result;
+		}
+		
 		if (stockData.vertexOf(Constants.STOCK_VERTEX_TOP_STROKE)
 				&& stockData.vertexOf(Constants.STOCK_VERTEX_TOP_SEGMENT)) {
-			if (prev.getVertexLow() > overlap.getHigh()) {
+			if (prev.getVertexLow() > overlap.getOverlapHigh()) {
 				result += Constants.STOCK_ACTION_SELL2
 						+ Constants.STOCK_ACTION_SELL2;
-			} else if (prev.getVertexHigh() < overlap.getLow()) {
+			} else if (prev.getVertexHigh() < overlap.getOverlapLow()) {
 				result += Constants.STOCK_ACTION_SELL3
 						+ Constants.STOCK_ACTION_SELL3;
 			}
@@ -976,7 +984,7 @@ public class StockAnalyzer {
 		String contentText = "";
 
 		if (!Market.isTradingHours(Calendar.getInstance())) {
-			 return;
+			return;
 		}
 
 		if (stock.getPrice() == 0) {
@@ -990,8 +998,7 @@ public class StockAnalyzer {
 			String period = Constants.PERIODS[i];
 			if (Preferences.getBoolean(mContext, period, false)) {
 				String action = stock.getAction(period);
-				if (action.contains("L") || action.contains("H")
-						|| action.contains("B") || action.contains("S")) {
+				if (action.contains("B") || action.contains("S")) {
 					actionString += period + " " + action + " ";
 				}
 			}

@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.android.orion"
     android:versionCode="518"
-    android:versionName="1.1.36_20210511" >
+    android:versionName="1.1.36_20210512" >
 
     <uses-sdk
         android:minSdkVersion="19"

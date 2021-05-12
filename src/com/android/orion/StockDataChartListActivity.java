@@ -428,7 +428,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 
 	void updateTitle() {
 		if (mStock != null) {
-			setTitle(mStock.getName());
+			setTitle(mStock.getName() + " " + mStock.getCode());
 		}
 	}
 
