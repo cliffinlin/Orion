@@ -48,7 +48,7 @@ public class StockDataChart {
 	ArrayList<Entry> mDEAEntryList = null;
 	ArrayList<BarEntry> mHistogramEntryList = null;
 
-	ArrayList<LimitLine> mLimitLineList = null;
+	ArrayList<LimitLine> mXLimitLineList = null;
 
 	CombinedData mCombinedDataMain = null;
 	CombinedData mCombinedDataSub = null;
@@ -133,8 +133,8 @@ public class StockDataChart {
 			mCombinedDataSub = new CombinedData(mXValues);
 		}
 
-		if (mLimitLineList == null) {
-			mLimitLineList = new ArrayList<LimitLine>();
+		if (mXLimitLineList == null) {
+			mXLimitLineList = new ArrayList<LimitLine>();
 		}
 
 		mPeriod = period;
@@ -338,14 +338,14 @@ public class StockDataChart {
 		return limitLine;
 	}
 
-	void updateLimitLine(Stock stock, ArrayList<StockDeal> stockDealList,
+	void updateXLimitLines(Stock stock, ArrayList<StockDeal> stockDealList,
 			boolean showDeal) {
-
-		if ((stockDealList == null) || (mLimitLineList == null)) {
+		if ((stock == null) || (stockDealList == null)
+				|| (mXLimitLineList == null)) {
 			return;
 		}
 
-		mLimitLineList.clear();
+		mXLimitLineList.clear();
 
 		updateActionLimitLine(stock, stockDealList);
 		updateCostLimitLine(stock, stockDealList);
@@ -358,7 +358,8 @@ public class StockDataChart {
 		String label = "";
 		LimitLine limitLine;
 
-		if ((mLimitLineList == null) || (stockDealList == null)) {
+		if ((stock == null) || (stockDealList == null)
+				|| (mXLimitLineList == null)) {
 			return;
 		}
 
@@ -377,7 +378,7 @@ public class StockDataChart {
 		label = "                                                     " + " "
 				+ "Action" + " " + action + " ";
 		limitLine = createLimitLine(stock.getPrice(), color, label);
-		mLimitLineList.add(limitLine);
+		mXLimitLineList.add(limitLine);
 	}
 
 	void updateCostLimitLine(Stock stock, ArrayList<StockDeal> stockDealList) {
@@ -388,7 +389,7 @@ public class StockDataChart {
 		LimitLine limitLine;
 
 		if ((stock == null) || (stockDealList == null)
-				|| (mLimitLineList == null)) {
+				|| (mXLimitLineList == null)) {
 			return;
 		}
 
@@ -410,7 +411,7 @@ public class StockDataChart {
 					+ " " + cost + " " + net + "%";
 			limitLine = createLimitLine(cost, color, label);
 
-			mLimitLineList.add(limitLine);
+			mXLimitLineList.add(limitLine);
 		}
 	}
 
@@ -420,7 +421,8 @@ public class StockDataChart {
 		String label = "";
 		LimitLine limitLine;
 
-		if ((mLimitLineList == null) || (stockDealList == null)) {
+		if ((stock == null) || (stockDealList == null)
+				|| (mXLimitLineList == null)) {
 			return;
 		}
 
@@ -446,7 +448,7 @@ public class StockDataChart {
 
 			limitLine = createLimitLine(stockDeal.getDeal(), color, label);
 
-			mLimitLineList.add(limitLine);
+			mXLimitLineList.add(limitLine);
 		}
 	}
 

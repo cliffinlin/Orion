@@ -654,7 +654,7 @@ public class StockAnalyzer {
 		if (overlap == null) {
 			return result;
 		}
-		
+
 		if (prev.getVertexLow() < stockData.getVertexLow()) {
 			return result;
 		}
@@ -703,11 +703,11 @@ public class StockAnalyzer {
 		if (overlap == null) {
 			return result;
 		}
-		
+
 		if (prev.getVertexHigh() > stockData.getVertexHigh()) {
 			return result;
 		}
-		
+
 		if (stockData.vertexOf(Constants.STOCK_VERTEX_TOP_STROKE)
 				&& stockData.vertexOf(Constants.STOCK_VERTEX_TOP_SEGMENT)) {
 			if (prev.getVertexLow() > overlap.getOverlapHigh()) {
@@ -994,8 +994,7 @@ public class StockAnalyzer {
 		contentTitle += stock.getName() + " " + stock.getPrice() + " "
 				+ stock.getNet();
 
-		for (int i = Constants.PERIODS.length - 1; i >= 0; i--) {
-			String period = Constants.PERIODS[i];
+		for (String period : Constants.PERIODS) {
 			if (Preferences.getBoolean(mContext, period, false)) {
 				String action = stock.getAction(period);
 				if (action.contains("B") || action.contains("S")) {

@@ -495,13 +495,28 @@ public class StockDataChartListActivity extends BaseActivity implements
 		try {
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				String dateString = "";
+				String timeString = "";
 
 				while (cursor.moveToNext()) {
 					index = stockDataChart.mXValues.size();
 					mStockData.set(cursor);
 
 					dateString = mStockData.getDate();
-					stockDataChart.mXValues.add(dateString);
+					timeString = mStockData.getTime();
+
+					if (mStockData.getPeriod().equals(Constants.PERIOD_YEAR)
+							|| mStockData.getPeriod().equals(
+									Constants.PERIOD_QUARTER)
+							|| mStockData.getPeriod().equals(
+									Constants.PERIOD_MONTH)
+							|| mStockData.getPeriod().equals(
+									Constants.PERIOD_WEEK)
+							|| mStockData.getPeriod().equals(
+									Constants.PERIOD_DAY)) {
+						stockDataChart.mXValues.add(dateString);
+					} else {
+						stockDataChart.mXValues.add(dateString + " " + timeString);
+					}
 
 					if (mShowCandle) {
 						CandleEntry candleEntry = new CandleEntry(index,
@@ -665,7 +680,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 				mStockDatabaseManager.getStockDealListAllSelection(mStock));
 
 		stockDataChart.updateDescription(mStock);
-		stockDataChart.updateLimitLine(mStock, mStockDealList, mShowDeal);
+		stockDataChart.updateXLimitLines(mStock, mStockDealList, mShowDeal);
 		stockDataChart.setMainChartData();
 		stockDataChart.setSubChartData();
 
@@ -930,8 +945,8 @@ public class StockDataChartListActivity extends BaseActivity implements
 		public View getView(int position, View view, Context context) {
 			ViewHolder viewHolder = null;
 			XAxis xAxis = null;
-			YAxis leftAxis = null;
-			YAxis rightAxis = null;
+			YAxis leftYAxis = null;
+			YAxis rightYAxis = null;
 
 			// For android 5 and above solution:
 			// if (view == null) {
@@ -953,23 +968,23 @@ public class StockDataChartListActivity extends BaseActivity implements
 				xAxis.setPosition(XAxisPosition.BOTTOM);
 			}
 
-			leftAxis = viewHolder.chart.getAxisLeft();
-			if (leftAxis != null) {
-				leftAxis.setPosition(YAxisLabelPosition.INSIDE_CHART);
-				leftAxis.setStartAtZero(false);
-				leftAxis.setValueFormatter(new DefaultYAxisValueFormatter(2));
-				leftAxis.removeAllLimitLines();
+			leftYAxis = viewHolder.chart.getAxisLeft();
+			if (leftYAxis != null) {
+				leftYAxis.setPosition(YAxisLabelPosition.INSIDE_CHART);
+				leftYAxis.setStartAtZero(false);
+				leftYAxis.setValueFormatter(new DefaultYAxisValueFormatter(2));
+				leftYAxis.removeAllLimitLines();
 				if (mItemViewType == ITEM_VIEW_TYPE_MAIN) {
-					for (int i = 0; i < mStockDataChart.mLimitLineList.size(); i++) {
-						leftAxis.addLimitLine(mStockDataChart.mLimitLineList
+					for (int i = 0; i < mStockDataChart.mXLimitLineList.size(); i++) {
+						leftYAxis.addLimitLine(mStockDataChart.mXLimitLineList
 								.get(i));
 					}
 				}
 			}
 
-			rightAxis = viewHolder.chart.getAxisRight();
-			if (rightAxis != null) {
-				rightAxis.setEnabled(false);
+			rightYAxis = viewHolder.chart.getAxisRight();
+			if (rightYAxis != null) {
+				rightYAxis.setEnabled(false);
 			}
 
 			viewHolder.chart.setDescription(mStockDataChart.mDescription);
