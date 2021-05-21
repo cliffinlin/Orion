@@ -24,7 +24,12 @@ public class StockStatisticsChart {
 	ArrayList<Entry> mYieldEntryList = null;
 	ArrayList<Entry> mDividendRatioEntryList = null;
 
+	ArrayList<Entry> mDIFEntryList = null;
+	ArrayList<Entry> mDEAEntryList = null;
+	ArrayList<BarEntry> mHistogramEntryList = null;
+
 	CombinedData mCombinedDataMain = null;
+	CombinedData mCombinedDataSub = null;
 
 	public StockStatisticsChart() {
 		if (mXValues == null) {
@@ -55,11 +60,28 @@ public class StockStatisticsChart {
 			mDividendRatioEntryList = new ArrayList<Entry>();
 		}
 
+
+		if (mDIFEntryList == null) {
+			mDIFEntryList = new ArrayList<Entry>();
+		}
+
+		if (mDEAEntryList == null) {
+			mDEAEntryList = new ArrayList<Entry>();
+		}
+
+		if (mHistogramEntryList == null) {
+			mHistogramEntryList = new ArrayList<BarEntry>();
+		}
+
 		if (mCombinedDataMain == null) {
 			mCombinedDataMain = new CombinedData(mXValues);
 		}
 
+		if (mCombinedDataSub == null) {
+			mCombinedDataSub = new CombinedData(mXValues);
+		}
 		setMainChartData();
+		setSubChartData();
 	}
 
 	void setMainChartData() {
@@ -113,6 +135,35 @@ public class StockStatisticsChart {
 		mCombinedDataMain.setData(barData);
 	}
 
+	void setSubChartData() {
+		BarData barData = new BarData(mXValues);
+		BarDataSet histogramDataSet = new BarDataSet(mHistogramEntryList,
+				"Histogram");
+		histogramDataSet.setBarSpacePercent(40f);
+		histogramDataSet.setIncreasingColor(Color.rgb(255, 50, 50));
+		histogramDataSet.setDecreasingColor(Color.rgb(50, 128, 50));
+		histogramDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+		barData.addDataSet(histogramDataSet);
+
+		LineData lineData = new LineData(mXValues);
+
+		LineDataSet difDataSet = new LineDataSet(mDIFEntryList, "DIF");
+		difDataSet.setColor(Color.YELLOW);
+		// difDataSet.setCircleColor(Color.YELLOW);
+		difDataSet.setDrawCircles(false);
+		difDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+		lineData.addDataSet(difDataSet);
+
+		LineDataSet deaDataSet = new LineDataSet(mDEAEntryList, "DEA");
+		deaDataSet.setColor(Color.WHITE);
+		// deaDataSet.setCircleColor(Color.WHITE);
+		deaDataSet.setDrawCircles(false);
+		deaDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+		lineData.addDataSet(deaDataSet);
+
+		mCombinedDataSub.setData(barData);
+		mCombinedDataSub.setData(lineData);
+	}
 	void clear() {
 		mXValues.clear();
 
@@ -122,5 +173,8 @@ public class StockStatisticsChart {
 		mRateEntryList.clear();
 		mYieldEntryList.clear();
 		mDividendRatioEntryList.clear();
+		mDIFEntryList.clear();
+		mDEAEntryList.clear();
+		mHistogramEntryList.clear();
 	}
 }

@@ -107,14 +107,14 @@ public class StockDataListActivity extends ListActivity implements
 		if (!Utility.isNetworkConnected(this)) {
 			Toast.makeText(this,
 					getResources().getString(R.string.network_unavailable),
-					Toast.LENGTH_SHORT).show();
+					Toast.LENGTH_LONG).show();
 		}
 		
 		if (!Preferences.getBoolean(mContext, Settings.KEY_NOTIFICATION_MESSAGE,
 				false)) {
 			Toast.makeText(this,
 					getResources().getString(R.string.notification_unavailable),
-					Toast.LENGTH_SHORT).show();
+					Toast.LENGTH_LONG).show();
 		}
 	}
 
