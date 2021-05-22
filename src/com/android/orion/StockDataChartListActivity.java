@@ -515,7 +515,8 @@ public class StockDataChartListActivity extends BaseActivity implements
 									Constants.PERIOD_DAY)) {
 						stockDataChart.mXValues.add(dateString);
 					} else {
-						stockDataChart.mXValues.add(dateString + " " + timeString);
+						stockDataChart.mXValues.add(dateString + " "
+								+ timeString);
 					}
 
 					if (mShowCandle) {

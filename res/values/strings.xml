@@ -31,6 +31,7 @@
     <string name="action_order_by_pe">Order by Pe</string>
     <string name="action_order_by_yield">Order by Yield</string>
     <string name="action_order_by_dividend_ratio">Order by DRatio</string>
+    <string name="action_order_by_valuation">Order by Valuation</string>
     <string name="added">Added</string>
     <string name="alarm">Alarm</string>
     <string name="app_name">Orion</string>

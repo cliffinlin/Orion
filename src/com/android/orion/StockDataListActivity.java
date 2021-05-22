@@ -109,10 +109,11 @@ public class StockDataListActivity extends ListActivity implements
 					getResources().getString(R.string.network_unavailable),
 					Toast.LENGTH_LONG).show();
 		}
-		
-		if (!Preferences.getBoolean(mContext, Settings.KEY_NOTIFICATION_MESSAGE,
-				false)) {
-			Toast.makeText(this,
+
+		if (!Preferences.getBoolean(mContext,
+				Settings.KEY_NOTIFICATION_MESSAGE, false)) {
+			Toast.makeText(
+					this,
 					getResources().getString(R.string.notification_unavailable),
 					Toast.LENGTH_LONG).show();
 		}

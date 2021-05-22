@@ -1,6 +1,7 @@
 package com.android.orion;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import android.graphics.Color;
 
@@ -12,6 +13,9 @@ import com.github.mikephil.charting.data.CombinedData;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.formatter.PercentFormatter;
 
 public class StockStatisticsChart {
 
@@ -28,8 +32,11 @@ public class StockStatisticsChart {
 	ArrayList<Entry> mDEAEntryList = null;
 	ArrayList<BarEntry> mHistogramEntryList = null;
 
+	ArrayList<Entry> mValuationEntryList = null;
+
 	CombinedData mCombinedDataMain = null;
 	CombinedData mCombinedDataSub = null;
+	PieData mPieData = null;
 
 	public StockStatisticsChart() {
 		if (mXValues == null) {
@@ -60,7 +67,6 @@ public class StockStatisticsChart {
 			mDividendRatioEntryList = new ArrayList<Entry>();
 		}
 
-
 		if (mDIFEntryList == null) {
 			mDIFEntryList = new ArrayList<Entry>();
 		}
@@ -73,6 +79,10 @@ public class StockStatisticsChart {
 			mHistogramEntryList = new ArrayList<BarEntry>();
 		}
 
+		if (mValuationEntryList == null) {
+			mValuationEntryList = new ArrayList<Entry>();
+		}
+
 		if (mCombinedDataMain == null) {
 			mCombinedDataMain = new CombinedData(mXValues);
 		}
@@ -80,6 +90,11 @@ public class StockStatisticsChart {
 		if (mCombinedDataSub == null) {
 			mCombinedDataSub = new CombinedData(mXValues);
 		}
+
+		if (mPieData == null) {
+			mPieData = new PieData();
+		}
+
 		setMainChartData();
 		setSubChartData();
 	}
@@ -136,35 +151,51 @@ public class StockStatisticsChart {
 	}
 
 	void setSubChartData() {
-		BarData barData = new BarData(mXValues);
-		BarDataSet histogramDataSet = new BarDataSet(mHistogramEntryList,
-				"Histogram");
-		histogramDataSet.setBarSpacePercent(40f);
-		histogramDataSet.setIncreasingColor(Color.rgb(255, 50, 50));
-		histogramDataSet.setDecreasingColor(Color.rgb(50, 128, 50));
-		histogramDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		barData.addDataSet(histogramDataSet);
+		mPieData = new PieData(mXValues);
+		PieDataSet pieDataSet = new PieDataSet(mValuationEntryList, "Valuation");
 
-		LineData lineData = new LineData(mXValues);
+		for (int i = 0; i < mXValues.size(); i++) {
+			Random random = new Random();
+			int r = random.nextInt(256);
+			int g = random.nextInt(256);
+			int b = random.nextInt(256);
+			pieDataSet.addColor(Color.rgb(r, g, b));
+		}
 
-		LineDataSet difDataSet = new LineDataSet(mDIFEntryList, "DIF");
-		difDataSet.setColor(Color.YELLOW);
-		// difDataSet.setCircleColor(Color.YELLOW);
-		difDataSet.setDrawCircles(false);
-		difDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		lineData.addDataSet(difDataSet);
+		mPieData.addDataSet(pieDataSet);
+		mPieData.setValueTextSize(9f);
+		mPieData.setValueFormatter(new PercentFormatter());
 
-		LineDataSet deaDataSet = new LineDataSet(mDEAEntryList, "DEA");
-		deaDataSet.setColor(Color.WHITE);
-		// deaDataSet.setCircleColor(Color.WHITE);
-		deaDataSet.setDrawCircles(false);
-		deaDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		lineData.addDataSet(deaDataSet);
-
-		mCombinedDataSub.setData(barData);
-		mCombinedDataSub.setData(lineData);
+		/*
+		 * BarData barData = new BarData(mXValues); BarDataSet histogramDataSet
+		 * = new BarDataSet(mHistogramEntryList, "Histogram");
+		 * histogramDataSet.setBarSpacePercent(40f);
+		 * histogramDataSet.setIncreasingColor(Color.rgb(255, 50, 50));
+		 * histogramDataSet.setDecreasingColor(Color.rgb(50, 128, 50));
+		 * histogramDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+		 * barData.addDataSet(histogramDataSet);
+		 * 
+		 * LineData lineData = new LineData(mXValues);
+		 * 
+		 * LineDataSet difDataSet = new LineDataSet(mDIFEntryList, "DIF");
+		 * difDataSet.setColor(Color.YELLOW); //
+		 * difDataSet.setCircleColor(Color.YELLOW);
+		 * difDataSet.setDrawCircles(false);
+		 * difDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+		 * lineData.addDataSet(difDataSet);
+		 * 
+		 * LineDataSet deaDataSet = new LineDataSet(mDEAEntryList, "DEA");
+		 * deaDataSet.setColor(Color.WHITE); //
+		 * deaDataSet.setCircleColor(Color.WHITE);
+		 * deaDataSet.setDrawCircles(false);
+		 * deaDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+		 * lineData.addDataSet(deaDataSet);
+		 * 
+		 * mCombinedDataSub.setData(barData);
+		 * mCombinedDataSub.setData(lineData);
+		 */
 	}
-	
+
 	void clear() {
 		mXValues.clear();
 
@@ -177,5 +208,6 @@ public class StockStatisticsChart {
 		mDIFEntryList.clear();
 		mDEAEntryList.clear();
 		mHistogramEntryList.clear();
+		mValuationEntryList.clear();
 	}
 }

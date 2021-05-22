@@ -169,6 +169,12 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 			restartLoader();
 			return true;
 
+		case R.id.action_order_by_valuation:
+			mSortOrder = DatabaseContract.COLUMN_VALUATION
+					+ DatabaseContract.ORDER_DIRECTION_DESC;
+			restartLoader();
+			return true;
+
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -385,6 +391,10 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 					stockDataChart.mDividendRatioEntryList
 							.add(dividendRatioEntry);
 
+					Entry valuationEntry = new Entry(
+							(float) stock.getValuation(), index);
+					stockDataChart.mValuationEntryList.add(valuationEntry);
+
 					mTotalBonus += (float) stock.getBonus();
 
 					if (stock != null) {
@@ -409,7 +419,7 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 
 		stockDataChart.setMainChartData();
 		stockDataChart.setSubChartData();
-		
+
 		mStatisticsChartArrayAdapter.notifyDataSetChanged();
 
 		if (mMainHandler != null) {
@@ -463,39 +473,49 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 			// if (view == null) {
 			view = LayoutInflater.from(context).inflate(mResource, null);
 			viewHolder = new ViewHolder();
-			viewHolder.mCombinedChart = (CombinedChart) view.findViewById(R.id.chart);
+			if (mItemViewType == ITEM_VIEW_TYPE_MAIN) {
+				viewHolder.mCombinedChart = (CombinedChart) view
+						.findViewById(R.id.chart);
+			} else {
+				viewHolder.mPieChart = (PieChart) view
+						.findViewById(R.id.pie_chart);
+			}
 			view.setTag(viewHolder);
 			// } else {
 			// viewHolder = (ViewHolder) view.getTag();
 			// }
 
-			viewHolder.mCombinedChart.setBackgroundColor(Color.LTGRAY);
-			viewHolder.mCombinedChart.setGridBackgroundColor(Color.LTGRAY);
-
-			viewHolder.mCombinedChart.setMaxVisibleValueCount(0);
-
-			xAxis = viewHolder.mCombinedChart.getXAxis();
-			if (xAxis != null) {
-				xAxis.setPosition(XAxisPosition.BOTTOM);
-			}
-
-			leftYAxis = viewHolder.mCombinedChart.getAxisLeft();
-			if (leftYAxis != null) {
-				leftYAxis.setPosition(YAxisLabelPosition.INSIDE_CHART);
-				leftYAxis.setStartAtZero(false);
-				leftYAxis.setValueFormatter(new DefaultYAxisValueFormatter(2));
-				leftYAxis.removeAllLimitLines();
-			}
-
-			rightYAxis = viewHolder.mCombinedChart.getAxisRight();
-			if (rightYAxis != null) {
-				rightYAxis.setEnabled(false);
-			}
-
 			if (mItemViewType == ITEM_VIEW_TYPE_MAIN) {
-				viewHolder.mCombinedChart.setData(mStatisticsChart.mCombinedDataMain);
+				viewHolder.mCombinedChart.setBackgroundColor(Color.LTGRAY);
+				viewHolder.mCombinedChart.setGridBackgroundColor(Color.LTGRAY);
+
+				viewHolder.mCombinedChart.setMaxVisibleValueCount(0);
+
+				xAxis = viewHolder.mCombinedChart.getXAxis();
+				if (xAxis != null) {
+					xAxis.setPosition(XAxisPosition.BOTTOM);
+				}
+
+				leftYAxis = viewHolder.mCombinedChart.getAxisLeft();
+				if (leftYAxis != null) {
+					leftYAxis.setPosition(YAxisLabelPosition.INSIDE_CHART);
+					leftYAxis.setStartAtZero(false);
+					leftYAxis.setValueFormatter(new DefaultYAxisValueFormatter(
+							2));
+					leftYAxis.removeAllLimitLines();
+				}
+
+				rightYAxis = viewHolder.mCombinedChart.getAxisRight();
+				if (rightYAxis != null) {
+					rightYAxis.setEnabled(false);
+				}
+
+				viewHolder.mCombinedChart
+						.setData(mStatisticsChart.mCombinedDataMain);
 			} else {
-				viewHolder.mCombinedChart.setData(mStatisticsChart.mCombinedDataSub);
+				viewHolder.mPieChart.setData(mStatisticsChart.mPieData);
+				viewHolder.mPieChart.setRotationEnabled(false);
+				viewHolder.mPieChart.setUsePercentValues(true);
 			}
 
 			return view;

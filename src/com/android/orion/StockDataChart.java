@@ -321,7 +321,7 @@ public class StockDataChart {
 
 		mDescription += stock.getNet() + "%" + "  ";
 
-		mDescription += "action:" + stock.getAction(mPeriod);
+		mDescription += stock.getAction(mPeriod);
 	}
 
 	LimitLine createLimitLine(double limit, int color, String label) {
