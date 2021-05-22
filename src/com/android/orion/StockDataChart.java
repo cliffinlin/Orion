@@ -369,9 +369,9 @@ public class StockDataChart {
 			return;
 		}
 
-		if (action.contains("L") || action.contains("DBB")) {
+		if (action.contains("L") || action.contains("B")) {
 			color = Color.CYAN;
-		} else if (action.contains("H") || action.contains("GSS")) {
+		} else if (action.contains("H") || action.contains("S")) {
 			color = Color.MAGENTA;
 		}
 
