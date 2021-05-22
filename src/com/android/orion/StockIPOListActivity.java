@@ -58,7 +58,7 @@ public class StockIPOListActivity extends ListActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_ipo_list);
+		setContentView(R.layout.activity_stock_ipo_list);
 
 		mSortOrder = getSetting(Settings.KEY_SORT_ORDER_IPO_LIST,
 				mSortOrderDefault);
@@ -264,7 +264,7 @@ public class StockIPOListActivity extends ListActivity implements
 
 		mRightListView = (ListView) findViewById(R.id.right_listview);
 		mRightAdapter = new SimpleCursorAdapter(this,
-				R.layout.activity_ipo_list_right_item, null, mRightFrom,
+				R.layout.activity_stock_ipo_list_right_item, null, mRightFrom,
 				mRightTo, 0);
 		if ((mRightListView != null) && (mRightAdapter != null)) {
 			mRightAdapter.setViewBinder(new CustomViewBinder());

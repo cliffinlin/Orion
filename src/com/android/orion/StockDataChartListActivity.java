@@ -58,8 +58,8 @@ public class StockDataChartListActivity extends BaseActivity implements
 	public static final int FLING_VELOCITY = 100;
 	public static final int REQUEST_CODE_SETTINGS = 0;
 
-	static final int MESSAGE_REFRESH = 0;
-	static final int MESSAGE_LOAD_STOCK_LIST = 1;
+	public static final int MESSAGE_REFRESH = 0;
+	public static final int MESSAGE_LOAD_STOCK_LIST = 1;
 
 	boolean mShowCandle = true;
 	boolean mShowDeal = true;

@@ -164,6 +164,7 @@ public class StockStatisticsChart {
 		mCombinedDataSub.setData(barData);
 		mCombinedDataSub.setData(lineData);
 	}
+	
 	void clear() {
 		mXValues.clear();
 

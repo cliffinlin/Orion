@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.github.mikephil.charting.charts.CombinedChart;
+import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.XAxis.XAxisPosition;
 import com.github.mikephil.charting.components.YAxis;
@@ -44,25 +45,26 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 	static final String TAG = Constants.TAG + " "
 			+ StockStatisticsChartListActivity.class.getSimpleName();
 
-	static final int ITEM_VIEW_TYPE_MAIN = 0;
-	static final int LOADER_ID_STOCK_LIST = 0;
-	static final int FLING_DISTANCE = 50;
-	static final int FLING_VELOCITY = 100;
+	public static final int ITEM_VIEW_TYPE_MAIN = 0;
+	public static final int ITEM_VIEW_TYPE_SUB = 1;
+	public static final int LOADER_ID_STOCK_LIST = 0;
+	public static final int FLING_DISTANCE = 50;
+	public static final int FLING_VELOCITY = 100;
 
-	static final int MESSAGE_REFRESH = 0;
-
+	public static final int MESSAGE_REFRESH = 0;
 	public static final int REQUEST_CODE_STOCK_FILTER = 1;
 
 	int mStockListIndex = 0;
-	float mTotalBonus = 0;
-	Menu mMenu = null;
 
 	String mSortOrder = null;
 
+	float mTotalBonus = 0;
+	Menu mMenu = null;
 	ListView mListView = null;
 	StatisticsChartArrayAdapter mStatisticsChartArrayAdapter = null;
 	ArrayList<StatisticsChartItem> mStatisticsChartItemList = null;
 	ArrayList<StatisticsChartItemMain> mStatisticsChartItemMainList = null;
+	ArrayList<StatisticsChartItemSub> mStatisticsChartItemSubList = null;
 	ArrayList<StockStatisticsChart> mStatisticsChartList = null;
 
 	Handler mHandler = new Handler(Looper.getMainLooper()) {
@@ -92,7 +94,7 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 		Utils.init(this);
 		// For chart init only
 
-		setContentView(R.layout.activity_statistics_chart_list);
+		setContentView(R.layout.activity_stock_statistics_chart_list);
 
 		mStockFilter.read();
 
@@ -199,6 +201,7 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 		mStatisticsChartItemList.clear();
 
 		mStatisticsChartItemList.add(mStatisticsChartItemMainList.get(0));
+		mStatisticsChartItemList.add(mStatisticsChartItemSubList.get(0));
 
 		restartLoader();
 	}
@@ -267,10 +270,17 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 			mStatisticsChartItemMainList = new ArrayList<StatisticsChartItemMain>();
 		}
 
+		if (mStatisticsChartItemSubList == null) {
+			mStatisticsChartItemSubList = new ArrayList<StatisticsChartItemSub>();
+		}
+
 		mStatisticsChartList.add(new StockStatisticsChart());
 		mStatisticsChartItemMainList.add(new StatisticsChartItemMain(
 				mStatisticsChartList.get(0)));
+		mStatisticsChartItemSubList.add(new StatisticsChartItemSub(
+				mStatisticsChartList.get(0)));
 		mStatisticsChartItemList.add(mStatisticsChartItemMainList.get(0));
+		mStatisticsChartItemList.add(mStatisticsChartItemSubList.get(0));
 
 		mStatisticsChartArrayAdapter = new StatisticsChartArrayAdapter(this,
 				mStatisticsChartItemList);
@@ -398,7 +408,8 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 		}
 
 		stockDataChart.setMainChartData();
-
+		stockDataChart.setSubChartData();
+		
 		mStatisticsChartArrayAdapter.notifyDataSetChanged();
 
 		if (mMainHandler != null) {
@@ -445,58 +456,69 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 		public View getView(int position, View view, Context context) {
 			ViewHolder viewHolder = null;
 			XAxis xAxis = null;
-			YAxis leftAxis = null;
-			YAxis rightAxis = null;
+			YAxis leftYAxis = null;
+			YAxis rightYAxis = null;
 
 			// For android 5 and above solution:
 			// if (view == null) {
 			view = LayoutInflater.from(context).inflate(mResource, null);
 			viewHolder = new ViewHolder();
-			viewHolder.chart = (CombinedChart) view.findViewById(R.id.chart);
+			viewHolder.mCombinedChart = (CombinedChart) view.findViewById(R.id.chart);
 			view.setTag(viewHolder);
 			// } else {
 			// viewHolder = (ViewHolder) view.getTag();
 			// }
 
-			viewHolder.chart.setBackgroundColor(Color.LTGRAY);
-			viewHolder.chart.setGridBackgroundColor(Color.LTGRAY);
+			viewHolder.mCombinedChart.setBackgroundColor(Color.LTGRAY);
+			viewHolder.mCombinedChart.setGridBackgroundColor(Color.LTGRAY);
 
-			viewHolder.chart.setMaxVisibleValueCount(0);
+			viewHolder.mCombinedChart.setMaxVisibleValueCount(0);
 
-			xAxis = viewHolder.chart.getXAxis();
+			xAxis = viewHolder.mCombinedChart.getXAxis();
 			if (xAxis != null) {
 				xAxis.setPosition(XAxisPosition.BOTTOM);
 			}
 
-			leftAxis = viewHolder.chart.getAxisLeft();
-			if (leftAxis != null) {
-				leftAxis.setPosition(YAxisLabelPosition.INSIDE_CHART);
-				leftAxis.setStartAtZero(false);
-				leftAxis.setValueFormatter(new DefaultYAxisValueFormatter(2));
-				leftAxis.removeAllLimitLines();
+			leftYAxis = viewHolder.mCombinedChart.getAxisLeft();
+			if (leftYAxis != null) {
+				leftYAxis.setPosition(YAxisLabelPosition.INSIDE_CHART);
+				leftYAxis.setStartAtZero(false);
+				leftYAxis.setValueFormatter(new DefaultYAxisValueFormatter(2));
+				leftYAxis.removeAllLimitLines();
 			}
 
-			rightAxis = viewHolder.chart.getAxisRight();
-			if (rightAxis != null) {
-				rightAxis.setEnabled(false);
+			rightYAxis = viewHolder.mCombinedChart.getAxisRight();
+			if (rightYAxis != null) {
+				rightYAxis.setEnabled(false);
 			}
 
 			if (mItemViewType == ITEM_VIEW_TYPE_MAIN) {
-				viewHolder.chart.setData(mStatisticsChart.mCombinedDataMain);
+				viewHolder.mCombinedChart.setData(mStatisticsChart.mCombinedDataMain);
+			} else {
+				viewHolder.mCombinedChart.setData(mStatisticsChart.mCombinedDataSub);
 			}
 
 			return view;
 		}
 
 		class ViewHolder {
-			CombinedChart chart;
+			CombinedChart mCombinedChart;
+			PieChart mPieChart;
 		}
 	}
 
 	class StatisticsChartItemMain extends StatisticsChartItem {
 		public StatisticsChartItemMain(StockStatisticsChart stockDataChart) {
 			super(ITEM_VIEW_TYPE_MAIN,
-					R.layout.activity_stock_data_chart_list_item_main,
+					R.layout.activity_stock_statistics_chart_list_item_main,
+					stockDataChart);
+		}
+	}
+
+	class StatisticsChartItemSub extends StatisticsChartItem {
+		public StatisticsChartItemSub(StockStatisticsChart stockDataChart) {
+			super(ITEM_VIEW_TYPE_SUB,
+					R.layout.activity_stock_statistics_chart_list_item_sub,
 					stockDataChart);
 		}
 	}

@@ -95,7 +95,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 		Utils.init(this);
 		// For chart init only
 
-		setContentView(R.layout.activity_financial_data_chart_list);
+		setContentView(R.layout.activity_stock_financial_chart_list);
 
 		initListView();
 
@@ -730,7 +730,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 	class FinancialDataChartItemMain extends FinancialDataChartItem {
 		public FinancialDataChartItemMain(StockFinancialChart financialDataChart) {
 			super(ITEM_VIEW_TYPE_MAIN,
-					R.layout.activity_financial_data_chart_list_item_main,
+					R.layout.activity_stock_financial_chart_list_item_main,
 					financialDataChart);
 		}
 	}
@@ -738,7 +738,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 	class FinancialDataChartItemSub extends FinancialDataChartItem {
 		public FinancialDataChartItemSub(StockFinancialChart financialDataChart) {
 			super(ITEM_VIEW_TYPE_SUB,
-					R.layout.activity_financial_data_chart_list_item_sub,
+					R.layout.activity_stock_financial_chart_list_item_sub,
 					financialDataChart);
 		}
 	}
