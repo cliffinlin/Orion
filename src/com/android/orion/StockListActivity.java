@@ -27,7 +27,7 @@ import com.android.orion.database.Stock;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Utility;
 
-public class StockDataListActivity extends ListActivity implements
+public class StockListActivity extends ListActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
 		OnItemLongClickListener, OnClickListener {
 
@@ -59,6 +59,8 @@ public class StockDataListActivity extends ListActivity implements
 	TextView mTextViewMin30 = null;
 	TextView mTextViewMin15 = null;
 	TextView mTextViewMin5 = null;
+	TextView mTextViewCreated = null;
+	TextView mTextViewModify = null;
 
 	ListView mLeftListView = null;
 	ListView mRightListView = null;
@@ -91,7 +93,7 @@ public class StockDataListActivity extends ListActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_stock_favorite_list);
+		setContentView(R.layout.activity_stock_list);
 
 		mStockFilter.read();
 
@@ -244,6 +246,12 @@ public class StockDataListActivity extends ListActivity implements
 		case R.id.action_5min:
 			mSortOrderColumn = DatabaseContract.COLUMN_MIN5;
 			break;
+		case R.id.created:
+			mSortOrderColumn = DatabaseContract.COLUMN_CREATED;
+			break;
+		case R.id.modified:
+			mSortOrderColumn = DatabaseContract.COLUMN_MODIFIED;
+			break;
 		default:
 			mSortOrderColumn = DatabaseContract.COLUMN_CODE;
 			break;
@@ -284,6 +292,8 @@ public class StockDataListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewMin30, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewMin15, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewMin5, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewCreated, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewModify, mHeaderTextDefaultColor);
 	}
 
 	void setVisibility(String key, TextView textView) {
@@ -362,6 +372,16 @@ public class StockDataListActivity extends ListActivity implements
 			setVisibility(Constants.PERIOD_MIN5, mTextViewMin5);
 		}
 
+		mTextViewCreated = (TextView) findViewById(R.id.created);
+		if (mTextViewCreated != null) {
+			mTextViewCreated.setOnClickListener(this);
+		}
+
+		mTextViewModify = (TextView) findViewById(R.id.modified);
+		if (mTextViewModify != null) {
+			mTextViewModify.setOnClickListener(this);
+		}
+
 		if (mSortOrder.contains(DatabaseContract.COLUMN_CODE)) {
 			setHeaderTextColor(mTextViewNameCode, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PRICE)) {
@@ -382,6 +402,10 @@ public class StockDataListActivity extends ListActivity implements
 			setHeaderTextColor(mTextViewMin15, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MIN5)) {
 			setHeaderTextColor(mTextViewMin5, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_CREATED)) {
+			setHeaderTextColor(mTextViewCreated, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MODIFIED)) {
+			setHeaderTextColor(mTextViewModify, mHeaderTextHighlightColor);
 		} else {
 		}
 	}
@@ -395,10 +419,13 @@ public class StockDataListActivity extends ListActivity implements
 				DatabaseContract.COLUMN_NET, DatabaseContract.COLUMN_MONTH,
 				DatabaseContract.COLUMN_WEEK, DatabaseContract.COLUMN_DAY,
 				DatabaseContract.COLUMN_MIN60, DatabaseContract.COLUMN_MIN30,
-				DatabaseContract.COLUMN_MIN15, DatabaseContract.COLUMN_MIN5 };
+				DatabaseContract.COLUMN_MIN15, DatabaseContract.COLUMN_MIN5,
+				DatabaseContract.COLUMN_CREATED,
+				DatabaseContract.COLUMN_MODIFIED };
 		int[] mRightTo = new int[] { R.id.price, R.id.net, R.id.type_month,
 				R.id.type_week, R.id.type_day, R.id.type_60min,
-				R.id.type_30min, R.id.type_15min, R.id.type_5min };
+				R.id.type_30min, R.id.type_15min, R.id.type_5min, R.id.created,
+				R.id.modified };
 
 		mLeftListView = (ListView) findViewById(R.id.left_listview);
 		mLeftAdapter = new SimpleCursorAdapter(this,
@@ -412,8 +439,8 @@ public class StockDataListActivity extends ListActivity implements
 
 		mRightListView = (ListView) findViewById(R.id.right_listview);
 		mRightAdapter = new SimpleCursorAdapter(this,
-				R.layout.activity_stock_favorite_list_right_item, null,
-				mRightFrom, mRightTo, 0);
+				R.layout.activity_stock_list_right_item, null, mRightFrom,
+				mRightTo, 0);
 		if ((mRightListView != null) && (mRightAdapter != null)) {
 			mRightAdapter.setViewBinder(new CustomViewBinder());
 			mRightListView.setAdapter(mRightAdapter);
@@ -596,6 +623,10 @@ public class StockDataListActivity extends ListActivity implements
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MIN5)) {
 				return setTextViewValue(Constants.PERIOD_MIN5, view);
+			} else if (columnIndex == cursor
+					.getColumnIndex(DatabaseContract.COLUMN_CREATED)) {
+			} else if (columnIndex == cursor
+					.getColumnIndex(DatabaseContract.COLUMN_MODIFIED)) {
 			}
 
 			return false;

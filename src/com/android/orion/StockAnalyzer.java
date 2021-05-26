@@ -607,8 +607,11 @@ public class StockAnalyzer {
 		vertexAnalyzer.vertexListToDataList(stockDataList, segmentVertexList,
 				segmentDataList);
 
-		vertexAnalyzer.analyzeOverlap(stockDataList, segmentDataList,
+		vertexAnalyzer.analyzeOverlap(stockDataList, strokeDataList,
 				overlapList);
+		
+//		vertexAnalyzer.analyzeOverlap(stockDataList, segmentDataList,
+//				overlapList);
 
 		// vertexAnalyzer.testShowVertextNumber(stockDataList, stockDataList);
 
@@ -835,6 +838,7 @@ public class StockAnalyzer {
 			}
 
 			mStockDatabaseManager.bulkInsertStockData(contentValues);
+			stock.setModified(Utility.getCurrentDateTimeString());
 			mStockDatabaseManager.updateStock(stock,
 					stock.getContentValuesAnalyze(period));
 		} catch (Exception e) {

@@ -41,6 +41,7 @@
     <string name="candle">Candle</string>
     <string name="cost">Cost</string>
     <string name="created">Created</string>
+    <string name="modify">Modify</string>    
     <string name="deal">Deal</string>
     <string name="deal_insert">Deal Insert</string>
     <string name="deal_delete">Deal Delete</string>
