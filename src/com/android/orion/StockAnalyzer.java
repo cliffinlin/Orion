@@ -1018,7 +1018,7 @@ public class StockAnalyzer {
 
 		id = (int) stock.getId();
 
-		Intent intent = new Intent(mContext, DealListActivity.class);
+		Intent intent = new Intent(mContext, StockListActivity.class);
 		intent.setType("vnd.android-dir/mms-sms");
 		PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0,
 				intent, 0);
