@@ -173,6 +173,7 @@
     <string name="stock_statistics">Statistics</string>
     <string name="stock_statistics_chart">Statistics Chart</string>
     <string name="stock_cost">Stock Cost</string>
+    <string name="stock_hold">Stock Hold</string>    
     <string name="stock_valuation">Stock Valuation</string>
     <string name="symbol_add">+</string>
     <string name="symbol_subtract">-</string>

@@ -26,6 +26,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 	EditText mEditTextStockName;
 	EditText mEditTextStockCode;
 	EditText mEditTextStockCost;
+	EditText mEditTextStockHold;
 	EditText mEditTextStockValuation;
 	Button mButtonOk, mButtonCancel;
 
@@ -58,6 +59,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mEditTextStockName = (EditText) findViewById(R.id.edittext_stock_name);
 		mEditTextStockCode = (EditText) findViewById(R.id.edittext_stock_code);
 		mEditTextStockCost = (EditText) findViewById(R.id.edittext_stock_cost);
+		mEditTextStockHold = (EditText) findViewById(R.id.edittext_stock_hold);
 		mEditTextStockValuation = (EditText) findViewById(R.id.edittext_stock_valuation);
 		mButtonOk = (Button) findViewById(R.id.button_ok);
 		mButtonCancel = (Button) findViewById(R.id.button_cancel);
@@ -67,6 +69,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mEditTextStockName.setOnClickListener(this);
 		mEditTextStockCode.setOnClickListener(this);
 		mEditTextStockCost.setOnClickListener(this);
+		mEditTextStockHold.setOnClickListener(this);
 		mEditTextStockValuation.setOnClickListener(this);
 		mButtonOk.setOnClickListener(this);
 		mButtonCancel.setOnClickListener(this);
@@ -129,6 +132,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mEditTextStockName.setText(mStock.getName());
 		mEditTextStockCode.setText(mStock.getCode());
 		mEditTextStockCost.setText(String.valueOf(mStock.getCost()));
+		mEditTextStockHold.setText(String.valueOf(mStock.getHold()));
 		mEditTextStockValuation.setText(String.valueOf(mStock.getValuation()));
 	}
 
@@ -175,7 +179,6 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 			String name = mEditTextStockName.getText().toString();
 			String code = mEditTextStockCode.getText().toString();
 			String cost = mEditTextStockCost.getText().toString();
-			String valuation = mEditTextStockValuation.getText().toString();
 
 			if (!TextUtils.isEmpty(name)) {
 				mStock.setName(name);
@@ -192,12 +195,6 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 				mStock.setCost(Double.valueOf(cost));
 			} else {
 				mStock.setCost(0);
-			}
-
-			if (!TextUtils.isEmpty(valuation)) {
-				mStock.setValuation(Double.valueOf(valuation));
-			} else {
-				mStock.setValuation(0);
 			}
 
 			mStock.setFlag(Constants.STOCK_FLAG_FAVORITE);
