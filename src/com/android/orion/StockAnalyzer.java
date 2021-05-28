@@ -609,9 +609,9 @@ public class StockAnalyzer {
 
 		vertexAnalyzer.analyzeOverlap(stockDataList, strokeDataList,
 				overlapList);
-		
-//		vertexAnalyzer.analyzeOverlap(stockDataList, segmentDataList,
-//				overlapList);
+
+		// vertexAnalyzer.analyzeOverlap(stockDataList, segmentDataList,
+		// overlapList);
 
 		// vertexAnalyzer.testShowVertextNumber(stockDataList, stockDataList);
 
