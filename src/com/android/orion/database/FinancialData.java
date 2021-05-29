@@ -9,17 +9,17 @@ import com.android.orion.utility.Utility;
 public class FinancialData extends DatabaseTable {
 	private long mStockId;
 	private String mDate;
-	private double mBookValuePerShare;// BPS// 每股净资产-摊薄/期末股数
-	private double mCashFlowPerShare;// 每股现金流
-	private double mTotalCurrentAssets;// 流动资产合计
-	private double mTotalAssets;// 资产总计
-	private double mTotalLongTermLiabilities;// 长期负债合计
-	private double mMainBusinessIncome;// 主营业务收入
-	private double mFinancialExpenses;// 财务费用
-	private double mNetProfit;// 净利润
+	private double mBookValuePerShare;
+	private double mCashFlowPerShare;
+	private double mTotalCurrentAssets;
+	private double mTotalAssets;
+	private double mTotalLongTermLiabilities;
+	private double mMainBusinessIncome;
+	private double mFinancialExpenses;
+	private double mNetProfit;
 	private double mTotalShare;
 	private double mDebtToNetAssetsRatio;
-	private double mNetProfitPerShare;// NPS// 每股净利润
+	private double mNetProfitPerShare;
 	private double mNetProfitPerShareInYear;
 	private double mRate;
 	private double mRoe;

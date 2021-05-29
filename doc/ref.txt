@@ -910,3 +910,76 @@ var hq_str_sh601998_i="A,zxyh,0.8700,0.8833,0.7000,6.2900,2515.7172,4893479.6573
 16: ?
 17: 主营业务收入/亿元 营收
 18: 净利润/亿元
+
+
+
+	public class StockInfo {
+		public String code;
+
+		public String name;// 0
+		public String open_price;// 1
+		public String yesterday_close_price;// 2
+		public String current_price;// 3
+		public String high_price;// 4
+		public String low_price;// 5
+		public String bid_price;// 6
+		public String ask_price;// 7
+		public String volume;// 8
+		public String value;// 9
+		public String bid_volume_1;// 10
+		public String bid_price_1;// 11
+		public String bid_volume_2;// 12
+		public String bid_price_2;// 13
+		public String bid_volume_3;// 14
+		public String bid_price_3;// 15
+		public String bid_volume_4;// 16
+		public String bid_price_4;// 17
+		public String bid_volume_5;// 18
+		public String bid_price_5;// 19
+		public String ask_volume_1;// 20
+		public String ask_price_1;// 21
+		public String ask_volume_2;// 22
+		public String ask_price_2;// 23
+		public String ask_volume_3;// 24
+		public String ask_price_3;// 25
+		public String ask_volume_4;// 26
+		public String ask_price_4;// 27
+		public String ask_volume_5;// 28
+		public String ask_price_5;// 29
+		public String date;// 30
+		public String time;// 31
+		public String status;// 32
+		// 状态码 状态
+		// 00 正常
+		// 01 停牌一小时
+		// 02 停牌一天
+		// 03 连续停牌
+		// 04 盘中停牌
+		// 05 停牌半天
+		// 07 暂停
+		// -1 无该记录
+		// -2 未上市
+		// -3 退市
+	}
+
+	public class StockInfo_i {
+		// 0: 股票类型（A:A股, B:B股, I:指数）
+		// 1: 拼音简写
+		// 2: 前一年每股收益和
+		// 3: 最近四个季度每股收益和
+		// 4: ?
+		// 5: 最近报告的每股净资产/元
+		// 6: 过去5个交易日平均每分钟成交量
+		// 7: 总股本/万股
+		// 8: 流通股本/万股
+		// 9: 流通A股股本/万股
+		// 10: 流通B股股本/万股
+		// 11: ?
+		// 12: 最近年度净利润/亿元
+		// 13: 最近四个季度净利润/亿元
+		// 14: ?
+		// 15: ?
+		// 16: ?
+		// 17: 主营业务收入/亿元 营收
+		// 18: 净利润/亿元
+	}

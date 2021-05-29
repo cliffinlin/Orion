@@ -86,19 +86,19 @@ public final class DatabaseContract {
 	public static final String COLUMN_ACTION = "action";
 
 	// http://money.finance.sina.com.cn/corp/go.php/vFD_FinanceSummary/stockid/600028.phtml
-	public static final String COLUMN_BOOK_VALUE_PER_SHARE = "book_value_per_share";// 每股净资产-摊薄/期末股数
-	public static final String COLUMN_CASH_FLOW_PER_SHARE = "cash_flow_per_share";// 每股现金流
-	public static final String COLUMN_TOTAL_CURRENT_ASSETS = "total_current_assets";// 流动资产合计
-	public static final String COLUMN_TOTAL_ASSETS = "total_assets";// 资产总计
-	public static final String COLUMN_TOTAL_LONG_TERM_LIABILITIES = "total_long_term_liabilities";// 长期负债合计
-	public static final String COLUMN_MAIN_BUSINESS_INCOME = "main_business_income";// 主营业务收入
-	public static final String COLUMN_FINANCIAL_EXPENSES = "financial_expenses";// 财务费用
-	public static final String COLUMN_NET_PROFIT = "net_profit";// 净利润
+	public static final String COLUMN_BOOK_VALUE_PER_SHARE = "book_value_per_share";
+	public static final String COLUMN_CASH_FLOW_PER_SHARE = "cash_flow_per_share";
+	public static final String COLUMN_TOTAL_CURRENT_ASSETS = "total_current_assets";
+	public static final String COLUMN_TOTAL_ASSETS = "total_assets";
+	public static final String COLUMN_TOTAL_LONG_TERM_LIABILITIES = "total_long_term_liabilities";
+	public static final String COLUMN_MAIN_BUSINESS_INCOME = "main_business_income";
+	public static final String COLUMN_FINANCIAL_EXPENSES = "financial_expenses";
+	public static final String COLUMN_NET_PROFIT = "net_profit";
 
-	public static final String COLUMN_NET_PROFIT_PER_SHARE = "net_profit_per_share";// 每股净利润
+	public static final String COLUMN_NET_PROFIT_PER_SHARE = "net_profit_per_share";
 	public static final String COLUMN_NET_PROFIT_PER_SHARE_IN_YEAR = "net_profit_per_share_in_year";
 	public static final String COLUMN_NET_PROFIT_PER_SHARE_LAST_YEAR = "net_profit_per_share_last_year";
-	public static final String COLUMN_DEBT_TO_NET_ASSETS_RATIO = "debt_to_net_assets_ratio";// 净资产负债率
+	public static final String COLUMN_DEBT_TO_NET_ASSETS_RATIO = "debt_to_net_assets_ratio";
 
 	// http://vip.stock.finance.sina.com.cn/corp/go.php/vISSUE_ShareBonus/stockid/600028.phtml
 	public static final String COLUMN_R_DATE = "r_date";

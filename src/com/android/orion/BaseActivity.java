@@ -134,7 +134,7 @@ public class BaseActivity extends Activity {
 
 		mPowerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		mWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-				Constants.TAG);
+				Constants.TAG + ":" + BaseActivity.class.getSimpleName());
 
 		LocalBroadcastManager.getInstance(this).registerReceiver(
 				mBroadcastReceiver,

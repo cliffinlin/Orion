@@ -5,9 +5,9 @@ import android.database.Cursor;
 
 public class ShareBonus extends DatabaseTable {
 	private long mStockId;
-	private String mDate;// 公告日期
-	private double mDividend;// 派息(税前)(元)(每10股)
-	private String mRDate;// 股权登记日
+	private String mDate;
+	private double mDividend;
+	private String mRDate;
 
 	public ShareBonus() {
 		init();

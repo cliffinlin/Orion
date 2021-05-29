@@ -12,7 +12,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -50,7 +49,7 @@ public class StockAnalyzer {
 		mPowerManager = (PowerManager) mContext
 				.getSystemService(Context.POWER_SERVICE);
 		mWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-				Constants.TAG);
+				Constants.TAG + ":" + StockAnalyzer.class.getSimpleName());
 
 		if (mLocalBroadcastManager == null) {
 			mLocalBroadcastManager = LocalBroadcastManager
@@ -1023,9 +1022,8 @@ public class StockAnalyzer {
 		PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0,
 				intent, 0);
 
-		NotificationCompat.Builder notification = new NotificationCompat.Builder(
-				mContext).setContentTitle(contentTitle)
-				.setContentText(contentText)
+		Notification.Builder notification = new Notification.Builder(mContext)
+				.setContentTitle(contentTitle).setContentText(contentText)
 				.setSmallIcon(R.drawable.ic_dialog_email).setAutoCancel(true)
 				.setLights(0xFF0000FF, 100, 300)
 				.setContentIntent(pendingIntent);

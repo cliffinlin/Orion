@@ -734,9 +734,6 @@ public class Utility {
 		return !allowSigns && foundDigit;
 	}
 
-	/**
-	 * int类型转换为byte[],4个字节
-	 */
 	public static byte[] toByteArray(int iSource) {
 		byte[] bLocalArr = new byte[4];
 		for (int i = 0, a = 3; i < 4; i++, a--) {
@@ -745,9 +742,6 @@ public class Utility {
 		return bLocalArr;
 	}
 
-	/*
-	 * 将两个byte数组拼接成一个byte数组
-	 */
 	public static byte[] byteMerger(byte[] a, byte[] b) {
 		byte[] data = new byte[a.length + b.length];
 		System.arraycopy(a, 0, data, 0, a.length);
@@ -756,9 +750,6 @@ public class Utility {
 		return data;
 	}
 
-	/*
-	 * 将三个byte数组拼接成一个byte数组
-	 */
 	public static byte[] byteMerger(byte[] a, byte[] b, byte[] c) {
 		byte[] data = new byte[a.length + b.length + c.length];
 		System.arraycopy(a, 0, data, 0, a.length);
@@ -767,10 +758,6 @@ public class Utility {
 		return data;
 	}
 
-	/**
-	 * byte数组转16进制字符串
-	 * 
-	 */
 	public static String byteArrayToHexString(byte[] src) {
 		return byteArrayToHexString(src, " ");
 	}

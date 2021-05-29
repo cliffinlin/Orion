@@ -24,7 +24,6 @@ import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.TotalShare;
-import com.android.orion.utility.Pinyin;
 import com.android.orion.utility.StopWatch;
 import com.android.orion.utility.Utility;
 
@@ -86,39 +85,9 @@ public class SinaFinance extends StockDataProvider {
 		public String date;// 30
 		public String time;// 31
 		public String status;// 32
-		// 状态码 状态
-		// 00 正常
-		// 01 停牌一小时
-		// 02 停牌一天
-		// 03 连续停牌
-		// 04 盘中停牌
-		// 05 停牌半天
-		// 07 暂停
-		// -1 无该记录
-		// -2 未上市
-		// -3 退市
 	}
 
 	public class StockInfo_i {
-		// 0: 股票类型（A:A股, B:B股, I:指数）
-		// 1: 拼音简写
-		// 2: 前一年每股收益和
-		// 3: 最近四个季度每股收益和
-		// 4: ?
-		// 5: 最近报告的每股净资产/元
-		// 6: 过去5个交易日平均每分钟成交量
-		// 7: 总股本/万股
-		// 8: 流通股本/万股
-		// 9: 流通A股股本/万股
-		// 10: 流通B股股本/万股
-		// 11: ?
-		// 12: 最近年度净利润/亿元
-		// 13: 最近四个季度净利润/亿元
-		// 14: ?
-		// 15: ?
-		// 16: ?
-		// 17: 主营业务收入/亿元 营收
-		// 18: 净利润/亿元
 	}
 
 	@Override
@@ -541,8 +510,6 @@ public class SinaFinance extends StockDataProvider {
 					if (!stock.getName().equals(jsonObject.getString("name"))) {
 						nameChanged = true;
 						stock.setName(jsonObject.getString("name"));
-						stock.setPinyin(Pinyin.toPinyin(mContext,
-								stock.getName()));
 					}
 
 					stock.setPrice(jsonObject.getDouble("trade"));
