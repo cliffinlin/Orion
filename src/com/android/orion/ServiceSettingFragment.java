@@ -18,8 +18,6 @@ public class ServiceSettingFragment extends PreferenceFragment implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
-
 		mStockDownloadAlarmManager = DownloadAlarmManager
 				.getInstance(getActivity());
 

@@ -16,8 +16,6 @@ public class AboutFragment extends PreferenceFragment {
 
 		mContext = getActivity();
 
-		getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
-
 		addPreferencesFromResource(R.xml.preference_about);
 	}
 
