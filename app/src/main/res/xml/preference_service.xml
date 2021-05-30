@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="@string/system" >
+        <com.android.orion.CustomSwitchPreference
+            android:defaultValue="true"
+            android:key="alarm"
+            android:title="@string/alarm" />
+        <com.android.orion.CustomSwitchPreference
+            android:defaultValue="true"
+            android:key="wake"
+            android:title="@string/wake" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/display" >
+        <com.android.orion.CustomSwitchPreference
+            android:defaultValue="false"
+            android:key="candle"
+            android:title="@string/candle" />
+        <com.android.orion.CustomSwitchPreference
+            android:defaultValue="false"
+            android:key="deal"
+            android:title="@string/deal" />
+        <com.android.orion.CustomSwitchPreference
+            android:defaultValue="false"
+            android:key="bonus"
+            android:title="@string/bonus" />
+        <com.android.orion.CustomSwitchPreference
+            android:defaultValue="false"
+            android:key="bps"
+            android:title="@string/book_value_per_share" />
+        <com.android.orion.CustomSwitchPreference
+            android:defaultValue="false"
+            android:key="nps"
+            android:title="@string/net_profit_per_share" />
+        <com.android.orion.CustomSwitchPreference
+            android:defaultValue="false"
+            android:key="roe"
+            android:title="@string/roe" />
+        <com.android.orion.CustomSwitchPreference
+            android:defaultValue="false"
+            android:key="roi"
+            android:title="@string/roi" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/download" >
+        <com.android.orion.CustomSwitchPreference
+            android:defaultValue="true"
+            android:key="month"
+            android:title="@string/period_month" />
+        <com.android.orion.CustomSwitchPreference
+            android:defaultValue="true"
+            android:key="week"
+            android:title="@string/period_week" />
+        <com.android.orion.CustomSwitchPreference
+            android:defaultValue="true"
+            android:key="day"
+            android:title="@string/period_day" />
+        <com.android.orion.CustomSwitchPreference
+            android:key="min60"
+            android:title="@string/period_60min" />
+        <com.android.orion.CustomSwitchPreference
+            android:key="min30"
+            android:title="@string/period_30min" />
+        <com.android.orion.CustomSwitchPreference
+            android:key="min15"
+            android:title="@string/period_15min" />
+        <com.android.orion.CustomSwitchPreference
+            android:key="min5"
+            android:title="@string/period_5min" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/notification" >
+        <com.android.orion.CustomSwitchPreference
+            android:key="notification_message"
+            android:title="@string/notification_message" />
+        <com.android.orion.CustomSwitchPreference
+            android:key="notification_lights"
+            android:title="@string/notification_lights" />
+        <com.android.orion.CustomSwitchPreference
+            android:key="notification_vibrate"
+            android:title="@string/notification_vibrate" />
+        <com.android.orion.CustomSwitchPreference
+            android:key="notification_sound"
+            android:title="@string/notification_sound" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

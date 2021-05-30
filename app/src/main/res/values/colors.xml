@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="backColor">#18181A</color>
+    <color name="textColor">#D1D1D1</color>
+    <color name="greenColor">#009A01</color>
+    <color name="redColor">#E04644</color>
+    <color name="tabTextColor">#6F6F71</color>
+    <color name="line">#353638</color>
+    <color name="tabTextTitle">#CCA763</color>
+    <color name="marqueeBackground">#28292D</color>
+    <color name="marqueeTextColor">#A5A7A6</color>
+    <color name="colorWhite">#ffffff</color>
+    <color name="colorGray">#cccccc</color>
+    <color name="colorDarkGray">#FFCDD2</color>
+    <color name="colorGrayLight">#eeeeee</color>
+    <color name="colorBlue">#6f99ff</color>
+    <color name="colorYellow">#FFD54F</color>
+
+</resources>
