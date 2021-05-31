@@ -40,7 +40,6 @@
     <string name="candle">Candle</string>
     <string name="cost">Cost</string>
     <string name="created">Created</string>
-    <string name="modify">Modify</string>
     <string name="deal">Deal</string>
     <string name="deal_insert">Deal Insert</string>
     <string name="deal_delete">Deal Delete</string>
@@ -98,7 +97,7 @@
     <string name="notification_lights">Lights</string>
     <string name="notification_vibrate">Vibrate</string>
     <string name="notification_sound">Sound</string>
-    <string name="notification_unavailable">Notification not Available</string>
+    <string name="notification_is_off">Notification is off</string>
     <string name="ok">OK</string>
     <string name="overlap">Overlap</string>
     <string name="password_hint">Password</string>

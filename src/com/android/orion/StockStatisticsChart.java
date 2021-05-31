@@ -154,11 +154,12 @@ public class StockStatisticsChart {
 		mPieData = new PieData(mXValues);
 		PieDataSet pieDataSet = new PieDataSet(mValuationEntryList, "Valuation");
 
+		int values[] = {0x00, 0x3f, 0x6f, 0x9f, 0xcf, 0xff};
 		for (int i = 0; i < mXValues.size(); i++) {
 			Random random = new Random();
-			int r = random.nextInt(256);
-			int g = random.nextInt(256);
-			int b = random.nextInt(256);
+			int r = values[random.nextInt(values.length)];
+			int g = 0xff;
+			int b = values[random.nextInt(values.length)];
 			pieDataSet.addColor(Color.rgb(r, g, b));
 		}
 

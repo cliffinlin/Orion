@@ -59,7 +59,7 @@ public class StockListActivity extends ListActivity implements
 	TextView mTextViewMin30 = null;
 	TextView mTextViewMin15 = null;
 	TextView mTextViewMin5 = null;
-	TextView mTextViewModify = null;
+	TextView mTextViewModified = null;
 
 	ListView mLeftListView = null;
 	ListView mRightListView = null;
@@ -115,7 +115,7 @@ public class StockListActivity extends ListActivity implements
 				Settings.KEY_NOTIFICATION_MESSAGE, false)) {
 			Toast.makeText(
 					this,
-					getResources().getString(R.string.notification_unavailable),
+					getResources().getString(R.string.notification_is_off),
 					Toast.LENGTH_LONG).show();
 		}
 	}
@@ -288,7 +288,7 @@ public class StockListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewMin30, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewMin15, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewMin5, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewModify, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewModified, mHeaderTextDefaultColor);
 	}
 
 	void setVisibility(String key, TextView textView) {
@@ -367,9 +367,9 @@ public class StockListActivity extends ListActivity implements
 			setVisibility(Constants.PERIOD_MIN5, mTextViewMin5);
 		}
 
-		mTextViewModify = (TextView) findViewById(R.id.modified);
-		if (mTextViewModify != null) {
-			mTextViewModify.setOnClickListener(this);
+		mTextViewModified = (TextView) findViewById(R.id.modified);
+		if (mTextViewModified != null) {
+			mTextViewModified.setOnClickListener(this);
 		}
 
 		if (mSortOrder.contains(DatabaseContract.COLUMN_CODE)) {
@@ -393,7 +393,7 @@ public class StockListActivity extends ListActivity implements
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MIN5)) {
 			setHeaderTextColor(mTextViewMin5, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MODIFIED)) {
-			setHeaderTextColor(mTextViewModify, mHeaderTextHighlightColor);
+			setHeaderTextColor(mTextViewModified, mHeaderTextHighlightColor);
 		} else {
 		}
 	}
