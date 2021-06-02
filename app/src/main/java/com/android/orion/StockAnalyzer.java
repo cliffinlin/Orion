@@ -988,7 +988,7 @@ public class StockAnalyzer {
 		String contentText = "";
 
 		if (!Market.isTradingHours(Calendar.getInstance())) {
-			return;
+//			return;
 		}
 
 		if (stock.getPrice() == 0) {
