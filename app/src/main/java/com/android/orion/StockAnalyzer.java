@@ -516,8 +516,7 @@ public class StockAnalyzer {
 		}
 	}
 
-	private void setMACD(Stock stock, String period,
-			ArrayList<StockData> stockDataList) {
+	private void setMACD(ArrayList<StockData> stockDataList) {
 		int size = 0;
 
 		double average5 = 0;
@@ -525,10 +524,6 @@ public class StockAnalyzer {
 		double dif = 0;
 		double dea = 0;
 		double histogram = 0;
-		double histogram_1 = 0;
-		double histogram_2 = 0;
-
-		String action = Constants.STOCK_ACTION_NONE;
 
 		MACD macd = new MACD();
 
@@ -561,20 +556,6 @@ public class StockAnalyzer {
 			stockDataList.get(i).setDEA(dea);
 			stockDataList.get(i).setHistogram(histogram);
 		}
-
-		histogram = macd.mHistogramList.get(size - 1);
-		histogram_1 = macd.mHistogramList.get(size - 2);
-		histogram_2 = macd.mHistogramList.get(size - 3);
-
-		if ((histogram_1 < histogram_2) && (histogram_1 < histogram)) {
-			// action = Constants.STOCK_ACTION_D;
-		}
-
-		if ((histogram_1 > histogram_2) && (histogram_1 > histogram)) {
-			// action = Constants.STOCK_ACTION_G;
-		}
-
-		stock.setAction(period, action);
 	}
 
 	void analyzeStockData(Stock stock, String period,
@@ -593,7 +574,7 @@ public class StockAnalyzer {
 		vertexAnalyzer.vertexListToDataList(stockDataList, drawVertexList,
 				drawDataList);
 
-		setMACD(stock, period, stockDataList);
+		setMACD(stockDataList);
 
 		vertexAnalyzer.analyzeLine(stockDataList, drawDataList,
 				strokeVertexList, Constants.STOCK_VERTEX_TOP_STROKE,
@@ -624,7 +605,7 @@ public class StockAnalyzer {
 
 		vertexAnalyzer.analyzeDirection(stockDataList);
 
-		setAction(stock, period, stockDataList, drawVertexList, overlapList);
+		analyzeAction(stock, period, stockDataList, drawVertexList, overlapList);
 	}
 
 	private String getSecondBottomAction(ArrayList<StockData> vertexList,
@@ -725,7 +706,7 @@ public class StockAnalyzer {
 		return result;
 	}
 
-	private void setAction(Stock stock, String period,
+	private void analyzeAction(Stock stock, String period,
 			ArrayList<StockData> stockDataList,
 			ArrayList<StockData> drawVertexList,
 			ArrayList<StockData> overlapList) {
@@ -734,7 +715,7 @@ public class StockAnalyzer {
 		StockData stockData = null;
 
 		if (stockDataList == null) {
-			Log.d(TAG, "setAction return" + " stockDataList = " + stockDataList);
+			Log.d(TAG, "analyzeAction return" + " stockDataList = " + stockDataList);
 			return;
 		}
 
@@ -776,29 +757,27 @@ public class StockAnalyzer {
 
 		if (stockData.directionOf(Constants.STOCK_DIRECTION_UP)) {
 			if (prev.vertexOf(Constants.STOCK_VERTEX_BOTTOM)) {
-				String result = getSecondBottomAction(drawVertexList,
-						overlapList);
-				if (!TextUtils.isEmpty(result)) {
-					action += result;
-					prev.setAction(action);
-				} else {
 					action += Constants.STOCK_ACTION_D;
-				}
 			} else {
 				action += Constants.STOCK_ACTION_ADD;
 			}
+
+			String result = getSecondBottomAction(drawVertexList,
+					overlapList);
+			if (!TextUtils.isEmpty(result)) {
+				action += result;
+			}
 		} else if (stockData.directionOf(Constants.STOCK_DIRECTION_DOWN)) {
 			if (prev.vertexOf(Constants.STOCK_VERTEX_TOP)) {
-				String result = getSecondTopAction(drawVertexList, overlapList);
-				if (!TextUtils.isEmpty(result)) {
-					action += result;
-					prev.setAction(action);
-				} else {
 					action += Constants.STOCK_ACTION_G;
-				}
 			} else {
 				action += Constants.STOCK_ACTION_MINUS;
 			}
+
+            String result = getSecondTopAction(drawVertexList, overlapList);
+            if (!TextUtils.isEmpty(result)) {
+                action += result;
+            }
 		}
 
 		stock.setAction(period, action + stockData.getAction());
