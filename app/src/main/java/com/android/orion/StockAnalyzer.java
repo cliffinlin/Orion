@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.text.TextUtils;
@@ -1002,31 +1004,51 @@ public class StockAnalyzer {
 		PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0,
 				intent, 0);
 
-		Notification.Builder notification = new Notification.Builder(
-				mContext).setContentTitle(contentTitle)
-				.setContentText(contentText)
-				.setSmallIcon(R.drawable.ic_dialog_email).setAutoCancel(true)
-				.setLights(0xFF0000FF, 100, 300)
-				.setContentIntent(pendingIntent);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			String channel_id = "channel_id";
+			CharSequence channel_name = "channel_name";
+			int importance = NotificationManager.IMPORTANCE_LOW;
 
-		if (Preferences.getBoolean(mContext, Settings.KEY_NOTIFICATION_LIGHTS,
-				false)) {
-			defaults = defaults | Notification.DEFAULT_LIGHTS;
-		}
-		if (Preferences.getBoolean(mContext, Settings.KEY_NOTIFICATION_VIBRATE,
-				false)) {
-			defaults = defaults | Notification.DEFAULT_VIBRATE;
-		}
-		if (Preferences.getBoolean(mContext, Settings.KEY_NOTIFICATION_SOUND,
-				false)) {
-			defaults = defaults | Notification.DEFAULT_SOUND;
-		}
+			NotificationChannel notificationChannel = new NotificationChannel(channel_id, channel_name, importance);
+			notificationManager.createNotificationChannel(notificationChannel);
 
-		notification.setDefaults(defaults);
+			Notification.Builder notification = new Notification.Builder(
+					mContext, channel_id).setContentTitle(contentTitle)
+					.setContentText(contentText)
+					.setSmallIcon(R.drawable.ic_dialog_email).setAutoCancel(true)
+					.setContentIntent(pendingIntent);
 
-		if (Preferences.getBoolean(mContext, Settings.KEY_NOTIFICATION_MESSAGE,
-				true)) {
-			notificationManager.notify(id, notification.build());
+			if (Preferences.getBoolean(mContext, Settings.KEY_NOTIFICATION_MESSAGE,
+					true)) {
+				notificationManager.notify(id, notification.build());
+			}
+		} else {
+			Notification.Builder notification = new Notification.Builder(
+					mContext).setContentTitle(contentTitle)
+					.setContentText(contentText)
+					.setSmallIcon(R.drawable.ic_dialog_email).setAutoCancel(true)
+					.setLights(0xFF0000FF, 100, 300)
+					.setContentIntent(pendingIntent);
+
+			if (Preferences.getBoolean(mContext, Settings.KEY_NOTIFICATION_LIGHTS,
+					false)) {
+				defaults = defaults | Notification.DEFAULT_LIGHTS;
+			}
+			if (Preferences.getBoolean(mContext, Settings.KEY_NOTIFICATION_VIBRATE,
+					false)) {
+				defaults = defaults | Notification.DEFAULT_VIBRATE;
+			}
+			if (Preferences.getBoolean(mContext, Settings.KEY_NOTIFICATION_SOUND,
+					false)) {
+				defaults = defaults | Notification.DEFAULT_SOUND;
+			}
+
+			notification.setDefaults(defaults);
+
+			if (Preferences.getBoolean(mContext, Settings.KEY_NOTIFICATION_MESSAGE,
+					true)) {
+				notificationManager.notify(id, notification.build());
+			}
 		}
 	}
 }
