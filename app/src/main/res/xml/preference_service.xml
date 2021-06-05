@@ -43,15 +43,12 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/download" >
         <com.android.orion.CustomSwitchPreference
-            android:defaultValue="true"
             android:key="month"
             android:title="@string/period_month" />
         <com.android.orion.CustomSwitchPreference
-            android:defaultValue="true"
             android:key="week"
             android:title="@string/period_week" />
         <com.android.orion.CustomSwitchPreference
-            android:defaultValue="true"
             android:key="day"
             android:title="@string/period_day" />
         <com.android.orion.CustomSwitchPreference

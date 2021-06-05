@@ -111,7 +111,7 @@ public class StockFinancialListActivity extends ListActivity implements
 
 		mStockFilter.read();
 
-		mSortOrder = getSetting(Settings.KEY_SORT_ORDER_FINANCIAL_LIST,
+		mSortOrder = Preferences.getString(mContext, Settings.KEY_SORT_ORDER_FINANCIAL_LIST,
 				mSortOrderDefault);
 
 		initHeader();
@@ -311,7 +311,7 @@ public class StockFinancialListActivity extends ListActivity implements
 
 		mSortOrder = mSortOrderColumn + mSortOrderDirection;
 
-		saveSetting(Settings.KEY_SORT_ORDER_FINANCIAL_LIST, mSortOrder);
+		Preferences.putString(mContext, Settings.KEY_SORT_ORDER_FINANCIAL_LIST, mSortOrder);
 
 		restartLoader();
 	}

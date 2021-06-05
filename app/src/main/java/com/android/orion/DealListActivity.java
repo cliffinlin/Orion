@@ -221,7 +221,7 @@ public class DealListActivity extends ListActivity implements
 
 		mFilterType = FILTER_TYPE_TO_OPERATE;
 
-		mSortOrder = getSetting(Settings.KEY_SORT_ORDER_DEAL_LIST,
+		mSortOrder = Preferences.getString(mContext, Settings.KEY_SORT_ORDER_DEAL_LIST,
 				mSortOrderDefault);
 
 		initHeader();
@@ -373,7 +373,7 @@ public class DealListActivity extends ListActivity implements
 
 		mSortOrder = mSortOrderColumn + mSortOrderDirection;
 
-		saveSetting(Settings.KEY_SORT_ORDER_DEAL_LIST, mSortOrder);
+		Preferences.putString(mContext, Settings.KEY_SORT_ORDER_DEAL_LIST, mSortOrder);
 
 		restartLoader();
 	}

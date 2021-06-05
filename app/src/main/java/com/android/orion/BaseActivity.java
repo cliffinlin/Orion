@@ -76,7 +76,6 @@ public class BaseActivity extends Activity {
 
 	ArrayMap<String, Stock> mStockDealArrayMap = null;
 
-	SharedPreferences mSharedPreferences = null;
 	StockDatabaseManager mStockDatabaseManager = null;
 
 	OrionBinder mOrionBinder = null;
@@ -209,11 +208,6 @@ public class BaseActivity extends Activity {
 			mStockDealArrayMap = new ArrayMap<String, Stock>();
 		}
 
-		if (mSharedPreferences == null) {
-			mSharedPreferences = getSharedPreferences(
-					Settings.SHARED_PREFERENCE, MODE_PRIVATE);
-		}
-
 		if (mStockDatabaseManager == null) {
 			mStockDatabaseManager = StockDatabaseManager.getInstance(this);
 		}
@@ -278,24 +272,6 @@ public class BaseActivity extends Activity {
 			if (mProgressDialog.isShowing()) {
 				mProgressDialog.dismiss();
 			}
-		}
-	}
-
-	public String getSetting(String key, String defaultValue) {
-		String value = "";
-
-		if (mSharedPreferences != null) {
-			value = mSharedPreferences.getString(key, defaultValue);
-		}
-
-		return value;
-	}
-
-	public void saveSetting(String key, String value) {
-		if (mSharedPreferences != null) {
-			Editor editor = mSharedPreferences.edit();
-			editor.putString(key, value);
-			editor.commit();
 		}
 	}
 

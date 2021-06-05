@@ -108,18 +108,16 @@ public class OrionMainActivity extends PreferenceActivity {
 	void initSharepreference() {
 		SharedPreferences settings = PreferenceManager
 				.getDefaultSharedPreferences(this);
-		SharedPreferences.Editor editor = settings.edit();
 
 		if (!settings.contains(Settings.KEY_ALARM)) {
-			editor.putBoolean(Settings.KEY_ALARM, true);
-			editor.putBoolean(Settings.KEY_WAKE, true);
-			editor.putBoolean(Constants.PERIOD_DAY, true);
-			editor.putBoolean(Constants.PERIOD_MIN60, true);
-			editor.putBoolean(Constants.PERIOD_MIN30, true);
-			editor.putBoolean(Constants.PERIOD_MIN15, true);
-			editor.putBoolean(Constants.PERIOD_MIN5, true);
-			editor.putBoolean(Settings.KEY_NOTIFICATION_MESSAGE, true);
-			editor.commit();
+			Preferences.putBoolean (this, Settings.KEY_ALARM, true);
+			Preferences.putBoolean (this, Settings.KEY_WAKE, true);
+			Preferences.putBoolean (this, Constants.PERIOD_DAY, true);
+			Preferences.putBoolean (this, Constants.PERIOD_MIN60, true);
+			Preferences.putBoolean (this, Constants.PERIOD_MIN30, true);
+			Preferences.putBoolean (this, Constants.PERIOD_MIN15, true);
+			Preferences.putBoolean (this, Constants.PERIOD_MIN5, true);
+			Preferences.putBoolean (this, Settings.KEY_NOTIFICATION_MESSAGE, true);
 		}
 	}
 }

@@ -60,7 +60,7 @@ public class StockIPOListActivity extends ListActivity implements
 
 		setContentView(R.layout.activity_stock_ipo_list);
 
-		mSortOrder = getSetting(Settings.KEY_SORT_ORDER_IPO_LIST,
+		mSortOrder = Preferences.getString(mContext, Settings.KEY_SORT_ORDER_IPO_LIST,
 				mSortOrderDefault);
 
 		initHeader();
@@ -158,7 +158,7 @@ public class StockIPOListActivity extends ListActivity implements
 
 		mSortOrder = mSortOrderColumn + mSortOrderDirection;
 
-		saveSetting(Settings.KEY_SORT_ORDER_IPO_LIST, mSortOrder);
+		Preferences.putString(mContext, Settings.KEY_SORT_ORDER_IPO_LIST, mSortOrder);
 
 		restartLoader();
 	}

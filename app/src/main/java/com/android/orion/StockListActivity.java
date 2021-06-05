@@ -96,7 +96,7 @@ public class StockListActivity extends ListActivity implements
 
 		mStockFilter.read();
 
-		mSortOrder = getSetting(Settings.KEY_SORT_ORDER_MARKET_LIST,
+		mSortOrder = Preferences.getString(mContext, Settings.KEY_SORT_ORDER_MARKET_LIST,
 				mSortOrderDefault);
 
 		initHeader();
@@ -261,7 +261,7 @@ public class StockListActivity extends ListActivity implements
 
 		mSortOrder = mSortOrderColumn + mSortOrderDirection;
 
-		saveSetting(Settings.KEY_SORT_ORDER_MARKET_LIST, mSortOrder);
+		Preferences.putString(mContext, Settings.KEY_SORT_ORDER_MARKET_LIST, mSortOrder);
 
 		restartLoader();
 	}

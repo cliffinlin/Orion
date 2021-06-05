@@ -1,8 +1,6 @@
 package com.android.orion;
 
 public class Settings {
-	public static final String SHARED_PREFERENCE = "settings";
-
 	public static final String KEY_ALARM = "alarm";
 	public static final String KEY_WAKE = "wake";
 
