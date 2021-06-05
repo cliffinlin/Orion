@@ -1,11 +1,13 @@
 package com.android.orion.about;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.android.orion.R;
+import com.android.orion.ServiceSettingActivity;
 
 public class AboutActivity extends Activity {
 
@@ -27,6 +29,10 @@ public class AboutActivity extends Activity {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
+			return true;
+
+		case R.id.action_settings:
+			startActivity(new Intent(this, ServiceSettingActivity.class));
 			return true;
 
 		default:

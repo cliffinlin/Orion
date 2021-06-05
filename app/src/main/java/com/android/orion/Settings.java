@@ -15,9 +15,6 @@ public class Settings {
 	public static final String KEY_ROI = "roi";
 
 	public static final String KEY_NOTIFICATION_MESSAGE = "notification_message";
-	public static final String KEY_NOTIFICATION_LIGHTS = "notification_lights";
-	public static final String KEY_NOTIFICATION_VIBRATE = "notification_vibrate";
-	public static final String KEY_NOTIFICATION_SOUND = "notification_sound";
 
 	public static final String KEY_SORT_ORDER_IPO_LIST = "sort_order_ipo_list";
 	public static final String KEY_SORT_ORDER_MARKET_LIST = "sort_order_market_list";

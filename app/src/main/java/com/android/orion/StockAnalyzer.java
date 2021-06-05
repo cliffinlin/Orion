@@ -824,7 +824,6 @@ public class StockAnalyzer {
 					stock.getContentValuesAnalyze(period));
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
 		}
 	}
 
@@ -963,27 +962,24 @@ public class StockAnalyzer {
 
 	private void updateNotification(Stock stock) {
 		int id = 0;
-		int defaults = 0;
-		String actionString = "";
-		String contentTitle = "";
 		String contentText = "";
+		Notification.Builder notification = null;
 
-		if (!Market.isTradingHours(Calendar.getInstance())) {
-//			return;
+		if (!Preferences.getBoolean(mContext, Settings.KEY_NOTIFICATION_MESSAGE,
+				true)) {
+			return;
 		}
 
 		if (stock.getPrice() == 0) {
 			return;
 		}
 
-		contentTitle += stock.getName() + " " + stock.getPrice() + " "
-				+ stock.getNet();
-
+		StringBuilder actionString = new StringBuilder();
 		for (String period : Constants.PERIODS) {
 			if (Preferences.getBoolean(mContext, period, false)) {
 				String action = stock.getAction(period);
 				if (action.contains("B") || action.contains("S")) {
-					actionString += period + " " + action + " ";
+					actionString.append(period + " " + action + " ");
 				}
 			}
 		}
@@ -992,7 +988,10 @@ public class StockAnalyzer {
 			return;
 		}
 
-		contentTitle += " " + actionString;
+		StringBuilder contentTitle = new StringBuilder();
+		contentTitle.append(stock.getName() + " " + stock.getPrice() + " "
+				+ stock.getNet());
+		contentTitle.append(" " + actionString);
 
 		NotificationManager notificationManager = (NotificationManager) mContext
 				.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -1006,49 +1005,28 @@ public class StockAnalyzer {
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 			String channel_id = "channel_id";
-			CharSequence channel_name = "channel_name";
+			CharSequence channel_name = mContext.getResources().getString(R.string.notification);
 			int importance = NotificationManager.IMPORTANCE_LOW;
 
 			NotificationChannel notificationChannel = new NotificationChannel(channel_id, channel_name, importance);
 			notificationManager.createNotificationChannel(notificationChannel);
 
-			Notification.Builder notification = new Notification.Builder(
+			notification = new Notification.Builder(
 					mContext, channel_id).setContentTitle(contentTitle)
 					.setContentText(contentText)
 					.setSmallIcon(R.drawable.ic_dialog_email).setAutoCancel(true)
 					.setContentIntent(pendingIntent);
-
-			if (Preferences.getBoolean(mContext, Settings.KEY_NOTIFICATION_MESSAGE,
-					true)) {
-				notificationManager.notify(id, notification.build());
-			}
 		} else {
-			Notification.Builder notification = new Notification.Builder(
+			notification = new Notification.Builder(
 					mContext).setContentTitle(contentTitle)
 					.setContentText(contentText)
 					.setSmallIcon(R.drawable.ic_dialog_email).setAutoCancel(true)
 					.setLights(0xFF0000FF, 100, 300)
 					.setContentIntent(pendingIntent);
+		}
 
-			if (Preferences.getBoolean(mContext, Settings.KEY_NOTIFICATION_LIGHTS,
-					false)) {
-				defaults = defaults | Notification.DEFAULT_LIGHTS;
-			}
-			if (Preferences.getBoolean(mContext, Settings.KEY_NOTIFICATION_VIBRATE,
-					false)) {
-				defaults = defaults | Notification.DEFAULT_VIBRATE;
-			}
-			if (Preferences.getBoolean(mContext, Settings.KEY_NOTIFICATION_SOUND,
-					false)) {
-				defaults = defaults | Notification.DEFAULT_SOUND;
-			}
-
-			notification.setDefaults(defaults);
-
-			if (Preferences.getBoolean(mContext, Settings.KEY_NOTIFICATION_MESSAGE,
-					true)) {
-				notificationManager.notify(id, notification.build());
-			}
+		if (notificationManager != null) {
+			notificationManager.notify(id, notification.build());
 		}
 	}
 }
