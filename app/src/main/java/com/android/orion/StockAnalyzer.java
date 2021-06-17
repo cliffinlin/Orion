@@ -590,11 +590,13 @@ public class StockAnalyzer {
 		vertexAnalyzer.vertexListToDataList(stockDataList, segmentVertexList,
 				segmentDataList);
 
-		vertexAnalyzer.analyzeOverlap(stockDataList, strokeDataList,
-				overlapList);
-
-		// vertexAnalyzer.analyzeOverlap(stockDataList, segmentDataList,
-		// overlapList);
+		if (period.equals(Constants.PERIOD_DAY) || period.equals(Constants.PERIOD_WEEK) || (period.equals(Constants.PERIOD_MONTH))) {
+			vertexAnalyzer.analyzeOverlap(stockDataList, strokeDataList,
+					overlapList);
+		} else {
+			vertexAnalyzer.analyzeOverlap(stockDataList, segmentDataList,
+					overlapList);
+		}
 
 		// vertexAnalyzer.testShowVertextNumber(stockDataList, stockDataList);
 
@@ -651,8 +653,8 @@ public class StockAnalyzer {
 				result += Constants.STOCK_ACTION_BUY2
 						+ Constants.STOCK_ACTION_BUY2;
 			} else if (prev.getVertexLow() > overlap.getOverlapHigh()) {
-				result += Constants.STOCK_ACTION_BUY3
-						+ Constants.STOCK_ACTION_BUY3;
+//				result += Constants.STOCK_ACTION_BUY3
+//						+ Constants.STOCK_ACTION_BUY3;
 			}
 		}
 
@@ -700,8 +702,8 @@ public class StockAnalyzer {
 				result += Constants.STOCK_ACTION_SELL2
 						+ Constants.STOCK_ACTION_SELL2;
 			} else if (prev.getVertexHigh() < overlap.getOverlapLow()) {
-				result += Constants.STOCK_ACTION_SELL3
-						+ Constants.STOCK_ACTION_SELL3;
+//				result += Constants.STOCK_ACTION_SELL3
+//						+ Constants.STOCK_ACTION_SELL3;
 			}
 		}
 
