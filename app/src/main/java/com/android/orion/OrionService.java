@@ -1,6 +1,8 @@
 package com.android.orion;
 
 import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -9,6 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.os.Binder;
+import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
@@ -17,6 +20,8 @@ import android.os.Message;
 import android.os.Process;
 import android.os.Vibrator;
 import android.telephony.TelephonyManager;
+
+import androidx.core.app.NotificationCompat;
 
 import com.android.orion.database.Stock;
 
@@ -100,6 +105,19 @@ public class OrionService extends Service {
 
 		mLooper = mHandlerThread.getLooper();
 		mHandler = new ServiceHandler(mLooper);
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			NotificationChannel channel = new NotificationChannel(Constants.CHANNEL_ID_SERVICE,
+					mContext.getResources().getString(R.string.service), NotificationManager.IMPORTANCE_LOW);
+			mNotificationManager.createNotificationChannel(channel);
+			Notification notification = new NotificationCompat.Builder(this, Constants.CHANNEL_ID_SERVICE)
+					.setAutoCancel(true)
+					.setCategory(Notification.CATEGORY_SERVICE)
+					.setOngoing(true)
+					.setPriority(NotificationManager.IMPORTANCE_LOW)
+					.build();
+			startForeground(1, notification);
+		}
 
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(Intent.ACTION_HEADSET_PLUG);

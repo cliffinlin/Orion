@@ -590,13 +590,8 @@ public class StockAnalyzer {
 		vertexAnalyzer.vertexListToDataList(stockDataList, segmentVertexList,
 				segmentDataList);
 
-		if (period.equals(Constants.PERIOD_DAY) || period.equals(Constants.PERIOD_WEEK) || (period.equals(Constants.PERIOD_MONTH))) {
-			vertexAnalyzer.analyzeOverlap(stockDataList, strokeDataList,
-					overlapList);
-		} else {
-			vertexAnalyzer.analyzeOverlap(stockDataList, segmentDataList,
-					overlapList);
-		}
+        vertexAnalyzer.analyzeOverlap(stockDataList, segmentDataList,
+                overlapList);
 
 		// vertexAnalyzer.testShowVertextNumber(stockDataList, stockDataList);
 
@@ -967,6 +962,15 @@ public class StockAnalyzer {
 		String contentText = "";
 		Notification.Builder notification = null;
 
+		NotificationManager notificationManager = (NotificationManager) mContext
+				.getSystemService(Context.NOTIFICATION_SERVICE);
+		if (notificationManager == null) {
+			return;
+		}
+
+		id = (int) stock.getId();
+		notificationManager.cancel(id);
+
 		if (!Preferences.getBoolean(mContext, Settings.KEY_NOTIFICATION_MESSAGE,
 				true)) {
 			return;
@@ -995,26 +999,18 @@ public class StockAnalyzer {
 				+ stock.getNet());
 		contentTitle.append(" " + actionString);
 
-		NotificationManager notificationManager = (NotificationManager) mContext
-				.getSystemService(Context.NOTIFICATION_SERVICE);
-
-		id = (int) stock.getId();
-
 		Intent intent = new Intent(mContext, StockListActivity.class);
 		intent.setType("vnd.android-dir/mms-sms");
 		PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0,
 				intent, 0);
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			String channel_id = "channel_id";
-			CharSequence channel_name = mContext.getResources().getString(R.string.notification);
-			int importance = NotificationManager.IMPORTANCE_LOW;
-
-			NotificationChannel notificationChannel = new NotificationChannel(channel_id, channel_name, importance);
+			NotificationChannel notificationChannel = new NotificationChannel(Constants.CHANNEL_ID_MESSAGE,
+                    mContext.getResources().getString(R.string.notification_message), NotificationManager.IMPORTANCE_LOW);
 			notificationManager.createNotificationChannel(notificationChannel);
 
 			notification = new Notification.Builder(
-					mContext, channel_id).setContentTitle(contentTitle)
+					mContext, Constants.CHANNEL_ID_MESSAGE).setContentTitle(contentTitle)
 					.setContentText(contentText)
 					.setSmallIcon(R.drawable.ic_dialog_email).setAutoCancel(true)
 					.setContentIntent(pendingIntent);
@@ -1027,8 +1023,6 @@ public class StockAnalyzer {
 					.setContentIntent(pendingIntent);
 		}
 
-		if (notificationManager != null) {
-			notificationManager.notify(id, notification.build());
-		}
+		notificationManager.notify(id, notification.build());
 	}
 }

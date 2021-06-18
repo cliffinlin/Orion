@@ -3,6 +3,7 @@ package com.android.orion;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import android.widget.Toast;
@@ -73,7 +74,11 @@ public class ServiceSettingFragment extends PreferenceFragment implements
 				|| key.equals(Constants.PERIOD_YEAR)) {
 			if (checked) {
 				Intent intent = new Intent(getActivity(), OrionService.class);
-				getActivity().startService(intent);
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+					getActivity().startForegroundService(intent);
+				} else {
+					getActivity().startService(intent);
+				}
 			}
 		}
 	}
