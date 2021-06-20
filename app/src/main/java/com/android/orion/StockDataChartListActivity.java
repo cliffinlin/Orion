@@ -346,7 +346,9 @@ public class StockDataChartListActivity extends BaseActivity implements
 		}
 
 		for (int i = 0; i < Constants.PERIODS.length; i++) {
-			mLoaderManager.initLoader(i, null, this);
+			if (Preferences.getBoolean(this, Constants.PERIODS[i], false)) {
+				mLoaderManager.initLoader(i, null, this);
+			}
 		}
 	}
 
@@ -363,7 +365,9 @@ public class StockDataChartListActivity extends BaseActivity implements
 		}
 
 		for (int i = 0; i < Constants.PERIODS.length; i++) {
-			mLoaderManager.restartLoader(i, null, this);
+			if (Preferences.getBoolean(this, Constants.PERIODS[i], false)) {
+				mLoaderManager.restartLoader(i, null, this);
+			}
 		}
 	}
 
@@ -485,17 +489,17 @@ public class StockDataChartListActivity extends BaseActivity implements
 			return;
 		}
 
-		mStockDatabaseManager.getFinancialDataList(mStock, mFinancialDataList,
-				sortOrder);
-		mStockDatabaseManager.getShareBonusList(mStock, mShareBonusList,
-				sortOrder);
-
 		stockDataChart.clear();
 
 		try {
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				String dateString = "";
 				String timeString = "";
+
+				mStockDatabaseManager.getFinancialDataList(mStock, mFinancialDataList,
+						sortOrder);
+				mStockDatabaseManager.getShareBonusList(mStock, mShareBonusList,
+						sortOrder);
 
 				while (cursor.moveToNext()) {
 					index = stockDataChart.mXValues.size();
@@ -669,23 +673,23 @@ public class StockDataChartListActivity extends BaseActivity implements
 					stockDataChart.mHistogramEntryList.add(histogramBarEntry);
 				}
 			}
+
+			updateTitle();
+
+			mStockDatabaseManager.getStockDealList(mStock, mStockDealList,
+					mStockDatabaseManager.getStockDealListAllSelection(mStock));
+
+			stockDataChart.updateDescription(mStock);
+			stockDataChart.updateXLimitLines(mStock, mStockDealList, mShowDeal);
+			stockDataChart.setMainChartData();
+			stockDataChart.setSubChartData();
+
+			mStockDataChartArrayAdapter.notifyDataSetChanged();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			mStockDatabaseManager.closeCursor(cursor);
 		}
-
-		updateTitle();
-
-		mStockDatabaseManager.getStockDealList(mStock, mStockDealList,
-				mStockDatabaseManager.getStockDealListAllSelection(mStock));
-
-		stockDataChart.updateDescription(mStock);
-		stockDataChart.updateXLimitLines(mStock, mStockDealList, mShowDeal);
-		stockDataChart.setMainChartData();
-		stockDataChart.setSubChartData();
-
-		mStockDataChartArrayAdapter.notifyDataSetChanged();
 	}
 
 	Comparator<FinancialData> comparator = new Comparator<FinancialData>() {
