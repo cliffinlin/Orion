@@ -34,6 +34,9 @@ public class OrionService extends Service {
 
 	Context mContext;
 
+	IntentFilter mIntentFilter;
+	DownloadBroadcastReceiver mDownloadBroadcastReceiver;
+
 	NotificationManager mNotificationManager;
 	TelephonyManager mTelephonyManager;
 	Vibrator mVibrator;
@@ -46,16 +49,6 @@ public class OrionService extends Service {
 	volatile ServiceHandler mHandler;
 
 	SinaFinance mSinaFinance;
-
-	OrionBroadcastReceiver mBroadcastReceiver;
-
-	public class OrionBroadcastReceiver extends BroadcastReceiver {
-
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			// String action = intent.getAction();
-		}
-	}
 
 	private final class ServiceHandler extends Handler {
 		public ServiceHandler(Looper looper) {
@@ -119,10 +112,13 @@ public class OrionService extends Service {
 			startForeground(1, notification);
 		}
 
-		IntentFilter filter = new IntentFilter();
-		filter.addAction(Intent.ACTION_HEADSET_PLUG);
-		mBroadcastReceiver = new OrionBroadcastReceiver();
-		registerReceiver(mBroadcastReceiver, filter);
+		mDownloadBroadcastReceiver = new DownloadBroadcastReceiver();
+
+		mIntentFilter = new IntentFilter();
+		mIntentFilter.addAction(Intent.ACTION_TIME_TICK);
+		mIntentFilter.addAction(Intent.ACTION_DATE_CHANGED);
+		mIntentFilter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
+		registerReceiver(mDownloadBroadcastReceiver, mIntentFilter);
 
 		mSinaFinance = new SinaFinance(this);
 	}
@@ -145,10 +141,11 @@ public class OrionService extends Service {
 	public void onDestroy() {
 		super.onDestroy();
 
+
 		mLooper.quit();
 
 		try {
-			unregisterReceiver(mBroadcastReceiver);
+			unregisterReceiver(mDownloadBroadcastReceiver);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

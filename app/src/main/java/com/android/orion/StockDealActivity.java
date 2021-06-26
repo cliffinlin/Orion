@@ -8,8 +8,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,6 +42,7 @@ public class StockDealActivity extends DatabaseActivity implements
 
 	EditText mEditTextStockName;
 	EditText mEditTextStockCode;
+	EditText mEditTextDealProfit;
 	EditText mEditTextDealPrice;
 	EditText mEditTextDealVolume;
 
@@ -140,18 +143,20 @@ public class StockDealActivity extends DatabaseActivity implements
 	}
 
 	void initView() {
-		mSpinnerStockAcion = (Spinner) findViewById(R.id.spinner_stock_action);
 		mEditTextStockName = (EditText) findViewById(R.id.edittext_stock_name);
 		mEditTextStockCode = (EditText) findViewById(R.id.edittext_stock_code);
+		mEditTextDealProfit = (EditText) findViewById(R.id.edittext_deal_profit);
 		mEditTextDealPrice = (EditText) findViewById(R.id.edittext_deal_price);
 		mEditTextDealVolume = (EditText) findViewById(R.id.edittext_deal_volume);
 		mButtonAdd = (Button) findViewById(R.id.button_add);
 		mButtonSubtract = (Button) findViewById(R.id.button_subtract);
+		mSpinnerStockAcion = (Spinner) findViewById(R.id.spinner_stock_action);
 		mButtonOk = (Button) findViewById(R.id.button_ok);
 		mButtonCancel = (Button) findViewById(R.id.button_cancel);
 
 		mEditTextStockName.setOnClickListener(this);
 		mEditTextStockCode.setOnClickListener(this);
+		mEditTextDealProfit.setOnClickListener(this);
 		mEditTextDealPrice.setOnClickListener(this);
 		mEditTextDealVolume.setOnClickListener(this);
 		mButtonAdd.setOnClickListener(this);
@@ -185,11 +190,94 @@ public class StockDealActivity extends DatabaseActivity implements
 		} else if (ACTION_DEAL_EDIT.equals(mAction)) {
 			setTitle(R.string.deal_edit);
 		}
+
+		mEditTextDealProfit.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				String profitString = s.toString();
+				double profit = 0;
+				if (!TextUtils.isEmpty(profitString)) {
+					profit = Double.valueOf(s.toString());
+				}
+
+				String volumeString = mEditTextDealVolume.getText().toString();
+				long volume = 0;
+				if (!TextUtils.isEmpty(volumeString)) {
+					volume = Long.valueOf(volumeString);
+				}
+
+				if (volume == 0) {
+					return;
+				}
+
+				double deal = 0;
+				deal = Utility.Round(mStock.getPrice() - profit / volume,
+						Constants.DOUBLE_FIXED_DECIMAL);
+
+				mDeal.setDeal(deal);
+				mEditTextDealPrice.setText(String.valueOf(mDeal.getDeal()));
+
+				mDeal.setProfit(profit);
+			}
+		});
+
+        mEditTextDealVolume.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+				String volumeString = s.toString();
+				long volume = 0;
+				if (!TextUtils.isEmpty(volumeString)) {
+					volume = Long.valueOf(volumeString);
+				}
+
+				if (volume == 0) {
+					return;
+				}
+
+				String dealString = mEditTextDealPrice.getText().toString();
+				double deal = 0;
+				if (!TextUtils.isEmpty(dealString)) {
+					deal = Double.valueOf(dealString.toString());
+				}
+
+				double profit = 0;
+				profit = Utility.Round((mStock.getPrice() - deal) * volume,
+						Constants.DOUBLE_FIXED_DECIMAL);
+
+				mDeal.setProfit(profit);
+				mEditTextDealProfit.setText(String.valueOf(mDeal.getProfit()));
+
+				mDeal.setVolume(volume);
+            }
+        });
 	}
 
 	void updateView() {
 		mEditTextStockName.setText(mDeal.getName());
 		mEditTextStockCode.setText(mDeal.getCode());
+		mEditTextDealProfit.setText(String.valueOf(mDeal.getProfit()));
+		mEditTextDealPrice.setText(String.valueOf(mDeal.getDeal()));
+		mEditTextDealVolume.setText(String.valueOf(mDeal.getVolume()));
 		String dealAction = mDeal.getAction();
 		for (int i = 0; i < mListStockAction.size(); i++) {
 			if (mListStockAction.get(i).equals(dealAction)) {
@@ -197,8 +285,6 @@ public class StockDealActivity extends DatabaseActivity implements
 				break;
 			}
 		}
-		mEditTextDealPrice.setText(String.valueOf(mDeal.getDeal()));
-		mEditTextDealVolume.setText(String.valueOf(mDeal.getVolume()));
 	}
 
 	void setupDealPrice() {

@@ -23,9 +23,7 @@ public class OrionMainActivity extends PreferenceActivity {
 
 		initSharepreference();
 
-		if (mStockDownloadAlarmManager == null) {
-			mStockDownloadAlarmManager = DownloadAlarmManager.getInstance(this);
-		}
+		mStockDownloadAlarmManager = DownloadAlarmManager.getInstance(this);
 
 		if (mStockDownloadAlarmManager != null) {
 			boolean checked = Preferences.getBoolean(this, Settings.KEY_ALARM,
@@ -115,8 +113,8 @@ public class OrionMainActivity extends PreferenceActivity {
 			Preferences.putBoolean (this, Constants.PERIOD_DAY, true);
 			Preferences.putBoolean (this, Constants.PERIOD_MIN60, true);
 			Preferences.putBoolean (this, Constants.PERIOD_MIN30, true);
-			Preferences.putBoolean (this, Constants.PERIOD_MIN15, true);
-			Preferences.putBoolean (this, Constants.PERIOD_MIN5, true);
+//			Preferences.putBoolean (this, Constants.PERIOD_MIN15, true);
+//			Preferences.putBoolean (this, Constants.PERIOD_MIN5, true);
 			Preferences.putBoolean (this, Settings.KEY_NOTIFICATION_MESSAGE, true);
 		}
 	}

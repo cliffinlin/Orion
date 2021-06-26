@@ -50,7 +50,7 @@
     <string name="deal_net">Net</string>
     <string name="deal_volume">Deal Volume</string>
     <string name="deal_volume_prompt">Volume:</string>
-    <string name="deal_profit">Profit</string>
+    <string name="deal_profit">Deal Profit</string>
     <string name="delete">Delete</string>
     <string name="delete_confirm">Do You Qant to Delete?</string>
     <string name="discount">Discount</string>

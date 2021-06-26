@@ -127,7 +127,7 @@ public class Constants {
 	public static final long DEFAULT_ALARM_INTERVAL = 5 * 60 * 1000;
 	public static final long DEFAULT_RESTART_LOADER_INTERVAL = 1 * 60 * 1000;
 	public static final long DEFAULT_SEND_BROADCAST_INTERVAL = 1 * 60 * 1000;
-	public static final long DEFAULT_SLEEP_INTERVAL = 3 * 1000;
+	public static final long DEFAULT_SLEEP_INTERVAL = 3 * 100;
 
 	public static final double ROI_COEFFICIENT = 1.0 / 10;
 }

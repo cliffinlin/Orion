@@ -610,7 +610,7 @@ public class StockAnalyzer {
 		analyzeAction(stock, period, stockDataList, drawVertexList, overlapList);
 	}
 
-	private String getSecondBottomAction(ArrayList<StockData> vertexList,
+	private String getSecondBottomAction(Stock stock, ArrayList<StockData> vertexList,
 			ArrayList<StockData> overlapList) {
 		String result = "";
 		StockData prev = null;
@@ -645,21 +645,34 @@ public class StockAnalyzer {
 			return result;
 		}
 
-		if (stockData.vertexOf(Constants.STOCK_VERTEX_BOTTOM_STROKE)
-				&& stockData.vertexOf(Constants.STOCK_VERTEX_BOTTOM_SEGMENT)) {
-			if (prev.getVertexHigh() < overlap.getOverlapLow()) {
-				result += Constants.STOCK_ACTION_BUY2
-						+ Constants.STOCK_ACTION_BUY2;
-			} else if (prev.getVertexLow() > overlap.getOverlapHigh()) {
-				result += Constants.STOCK_ACTION_BUY3
-						+ Constants.STOCK_ACTION_BUY3;
+		if (stock.getPrice() > prev.getVertexHigh()) {
+			return result;
+		}
+
+		if (stockData.vertexOf(Constants.STOCK_VERTEX_BOTTOM)) {
+			if (stockData.vertexOf(Constants.STOCK_VERTEX_BOTTOM_STROKE)) {
+				result += Constants.STOCK_ACTION_BUY2;
+				if (stockData.vertexOf(Constants.STOCK_VERTEX_BOTTOM_SEGMENT)) {
+					result += Constants.STOCK_ACTION_BUY2;
+				}
 			}
 		}
+
+//		if (stockData.vertexOf(Constants.STOCK_VERTEX_BOTTOM_STROKE)
+//				&& stockData.vertexOf(Constants.STOCK_VERTEX_BOTTOM_SEGMENT)) {
+//			if (prev.getVertexHigh() < overlap.getOverlapLow()) {
+//				result += Constants.STOCK_ACTION_BUY2
+//						+ Constants.STOCK_ACTION_BUY2;
+//			} else if (prev.getVertexLow() > overlap.getOverlapHigh()) {
+//				result += Constants.STOCK_ACTION_BUY3
+//						+ Constants.STOCK_ACTION_BUY3;
+//			}
+//		}
 
 		return result;
 	}
 
-	private String getSecondTopAction(ArrayList<StockData> vertexList,
+	private String getSecondTopAction(Stock stock, ArrayList<StockData> vertexList,
 			ArrayList<StockData> overlapList) {
 		String result = "";
 		StockData prev = null;
@@ -694,16 +707,29 @@ public class StockAnalyzer {
 			return result;
 		}
 
-		if (stockData.vertexOf(Constants.STOCK_VERTEX_TOP_STROKE)
-				&& stockData.vertexOf(Constants.STOCK_VERTEX_TOP_SEGMENT)) {
-			if (prev.getVertexLow() > overlap.getOverlapHigh()) {
-				result += Constants.STOCK_ACTION_SELL2
-						+ Constants.STOCK_ACTION_SELL2;
-			} else if (prev.getVertexHigh() < overlap.getOverlapLow()) {
-				result += Constants.STOCK_ACTION_SELL3
-						+ Constants.STOCK_ACTION_SELL3;
+        if (stock.getPrice() < prev.getVertexLow()) {
+            return result;
+        }
+
+		if (stockData.vertexOf(Constants.STOCK_VERTEX_TOP)) {
+			if (stockData.vertexOf(Constants.STOCK_VERTEX_TOP_STROKE)) {
+				result += Constants.STOCK_ACTION_SELL2;
+				if (stockData.vertexOf(Constants.STOCK_VERTEX_TOP_SEGMENT)) {
+					result += Constants.STOCK_ACTION_SELL2;
+				}
 			}
 		}
+
+//		if (stockData.vertexOf(Constants.STOCK_VERTEX_TOP_STROKE)
+//				&& stockData.vertexOf(Constants.STOCK_VERTEX_TOP_SEGMENT)) {
+//			if (prev.getVertexLow() > overlap.getOverlapHigh()) {
+//				result += Constants.STOCK_ACTION_SELL2
+//						+ Constants.STOCK_ACTION_SELL2;
+//			} else if (prev.getVertexHigh() < overlap.getOverlapLow()) {
+//				result += Constants.STOCK_ACTION_SELL3
+//						+ Constants.STOCK_ACTION_SELL3;
+//			}
+//		}
 
 		return result;
 	}
@@ -764,7 +790,7 @@ public class StockAnalyzer {
 				action += Constants.STOCK_ACTION_ADD;
 			}
 
-			String result = getSecondBottomAction(drawVertexList,
+			String result = getSecondBottomAction(stock, drawVertexList,
 					overlapList);
 			if (!TextUtils.isEmpty(result)) {
 				action += result;
@@ -776,7 +802,7 @@ public class StockAnalyzer {
 				action += Constants.STOCK_ACTION_MINUS;
 			}
 
-            String result = getSecondTopAction(drawVertexList, overlapList);
+            String result = getSecondTopAction(stock, drawVertexList, overlapList);
             if (!TextUtils.isEmpty(result)) {
                 action += result;
             }
