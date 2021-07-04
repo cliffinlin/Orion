@@ -713,21 +713,6 @@ public class StockDatabaseManager extends DatabaseManager {
 		return selection;
 	}
 
-	public String getStockDealListToOperateSelection(Stock stock) {
-		String selection = "";
-
-		if (stock == null) {
-			return selection;
-		}
-
-		selection = DatabaseContract.COLUMN_SE + " = " + "\'" + stock.getSE()
-				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
-				+ stock.getCode() + "\'" + " AND "
-				+ DatabaseContract.COLUMN_ACTION + " != ''";
-
-		return selection;
-	}
-	
 	public void getStockDealList(Stock stock,
 			ArrayList<StockDeal> stockDealList, String selection) {
 		Cursor cursor = null;
@@ -783,17 +768,12 @@ public class StockDatabaseManager extends DatabaseManager {
 		}
 	}
 
-	public void getStockDeal(Stock stock, StockDeal stockDeal, String sortOrder) {
+	public void getStockDeal(Stock stock, StockDeal stockDeal, String selection, String sortOrder) {
 		Cursor cursor = null;
-		String selection = "";
 
 		if ((stock == null) || (stockDeal == null)) {
 			return;
 		}
-
-		selection = DatabaseContract.COLUMN_SE + " = " + "\'" + stock.getSE()
-				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
-				+ stock.getCode() + "\'";
 
 		try {
 			cursor = queryStockDeal(selection, null, sortOrder);
@@ -811,16 +791,66 @@ public class StockDatabaseManager extends DatabaseManager {
 		}
 	}
 
+	public void getStockDealToBuy(Stock stock, StockDeal stockDeal) {
+        String sortOrder = DatabaseContract.COLUMN_NET + DatabaseContract.ORDER_DIRECTION_ASC;
+
+		if ((stock == null) || (stockDeal == null)) {
+			return;
+		}
+
+        String selection = DatabaseContract.COLUMN_SE + " = " + "\'" + stock.getSE()
+                + "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
+                + stock.getCode() + "\'";
+
+		selection +=   " AND " + DatabaseContract.COLUMN_VOLUME + " <= " + 0 + " AND "
+				+ DatabaseContract.COLUMN_PROFIT + " >= " + 0;
+
+		getStockDeal(stock, stockDeal, selection, sortOrder);
+	}
+
+	public void getStockDealToSell(Stock stock, StockDeal stockDeal) {
+        String sortOrder = DatabaseContract.COLUMN_NET + DatabaseContract.ORDER_DIRECTION_ASC;
+
+		if ((stock == null) || (stockDeal == null)) {
+			return;
+		}
+
+        String selection = DatabaseContract.COLUMN_SE + " = " + "\'" + stock.getSE()
+                + "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
+                + stock.getCode() + "\'";
+
+		selection +=  " AND " + DatabaseContract.COLUMN_VOLUME + " > " + 0 + " AND "
+				+ DatabaseContract.COLUMN_PROFIT + " > " + 0;
+
+		getStockDeal(stock, stockDeal, selection, sortOrder);
+	}
+
 	public void getStockDealMax(Stock stock, StockDeal stockDeal) {
 		String sortOrder = DatabaseContract.COLUMN_DEAL + " DESC ";
 
-		getStockDeal(stock, stockDeal, sortOrder);
+		if (stock == null) {
+			return;
+		}
+
+		String selection = DatabaseContract.COLUMN_SE + " = " + "\'" + stock.getSE()
+				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
+				+ stock.getCode() + "\'";
+
+		getStockDeal(stock, stockDeal, selection, sortOrder);
 	}
 
 	public void getStockDealMin(Stock stock, StockDeal stockDeal) {
 		String sortOrder = DatabaseContract.COLUMN_DEAL + " ASC ";
 
-		getStockDeal(stock, stockDeal, sortOrder);
+		if (stock == null) {
+			return;
+		}
+
+		String selection = DatabaseContract.COLUMN_SE + " = " + "\'" + stock.getSE()
+				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
+				+ stock.getCode() + "\'";
+
+		getStockDeal(stock, stockDeal, selection, sortOrder);
 	}
 
 	public double getStockDealTargetPrice(Stock stock, int order) {

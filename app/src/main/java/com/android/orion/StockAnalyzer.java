@@ -25,6 +25,7 @@ import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockDatabaseManager;
+import com.android.orion.database.StockDeal;
 import com.android.orion.database.TotalShare;
 import com.android.orion.indicator.MACD;
 import com.android.orion.utility.Market;
@@ -990,6 +991,7 @@ public class StockAnalyzer {
 		int id = 0;
 		String contentText = "";
 		Notification.Builder notification = null;
+		StockDeal stockDeal = new StockDeal();
 
 		NotificationManager notificationManager = (NotificationManager) mContext
 				.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -1013,8 +1015,18 @@ public class StockAnalyzer {
 		for (String period : Constants.PERIODS) {
 			if (Preferences.getBoolean(mContext, period, false)) {
 				String action = stock.getAction(period);
-				if (action.contains("B") || action.contains("S")) {
-					actionString.append(period + " " + action + " ");
+				if (action.contains("B")) {
+					mStockDatabaseManager.getStockDealToBuy(stock, stockDeal);
+                    if (!TextUtils.isEmpty(stockDeal.getCode()) && (stockDeal.getProfit() >= 0)) {
+                        actionString.append(period + " " + action + " ");
+                        actionString.append(" " + stockDeal.getProfit() + " ");
+					}
+				} else if (action.contains("S")) {
+					mStockDatabaseManager.getStockDealToSell(stock, stockDeal);
+                    if (!TextUtils.isEmpty(stockDeal.getCode()) && (stockDeal.getProfit() > 0)) {
+                        actionString.append(period + " " + action + " ");
+                        actionString.append(" " + stockDeal.getProfit() + " ");
+					}
 				}
 			}
 		}
