@@ -576,7 +576,7 @@ public class StockDatabaseManager extends DatabaseManager {
 
 					stockDeal.setPrice(stock.getPrice());
 					stockDeal.setupNet();
-					stockDeal.setupProfit();
+					stockDeal.setupProfit(stock.getRDate(), stock.getDividend());
 					stockDeal.setupValue();
 
 					if (stockDeal.getVolume() > 0) {

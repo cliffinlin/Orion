@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.android.orion"
     android:versionCode="518"
-    android:versionName="1.1.36_20210528" >
+    android:versionName="1.1.36_20210807" >
 
     <uses-sdk
         android:minSdkVersion="19"
@@ -136,7 +136,8 @@
 
         <receiver android:name="com.android.orion.DownloadBroadcastReceiver" >
         </receiver>
-        <service
+
+        <service
             android:name="com.android.orion.OrionService"
             android:exported="false" />
     </application>

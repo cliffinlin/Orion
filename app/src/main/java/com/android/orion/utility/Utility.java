@@ -36,8 +36,6 @@ public class Utility {
 	public static final String CALENDAR_DATE_TIME_FORMAT = CALENDAR_DATE_FORMAT
 			+ " " + CALENDAR_TIME_FORMAT;
 
-	static boolean mLogable = true;
-
 	private Utility() {
 	}
 
