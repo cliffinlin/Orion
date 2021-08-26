@@ -322,7 +322,6 @@ public class StockAnalyzer {
 							.getNetProfit()) / current.getTotalShare();
 				}
 				netProfitPerShareInYear += netProfitPerShare;
-
 			}
 
 			FinancialData financialData = financialDataList.get(i);
@@ -650,25 +649,27 @@ public class StockAnalyzer {
 			return result;
 		}
 
-		if (stockData.vertexOf(Constants.STOCK_VERTEX_BOTTOM)) {
-			if (stockData.vertexOf(Constants.STOCK_VERTEX_BOTTOM_STROKE)) {
-				result += Constants.STOCK_ACTION_BUY2;
-				if (stockData.vertexOf(Constants.STOCK_VERTEX_BOTTOM_SEGMENT)) {
-					result += Constants.STOCK_ACTION_BUY2;
-				}
-			}
-		}
-
-//		if (stockData.vertexOf(Constants.STOCK_VERTEX_BOTTOM_STROKE)
-//				&& stockData.vertexOf(Constants.STOCK_VERTEX_BOTTOM_SEGMENT)) {
-//			if (prev.getVertexHigh() < overlap.getOverlapLow()) {
-//				result += Constants.STOCK_ACTION_BUY2
-//						+ Constants.STOCK_ACTION_BUY2;
-//			} else if (prev.getVertexLow() > overlap.getOverlapHigh()) {
-//				result += Constants.STOCK_ACTION_BUY3
-//						+ Constants.STOCK_ACTION_BUY3;
+//		if (stockData.vertexOf(Constants.STOCK_VERTEX_BOTTOM)) {
+//			if (stockData.vertexOf(Constants.STOCK_VERTEX_BOTTOM_STROKE)) {
+//				result += Constants.STOCK_ACTION_BUY2;
+//				if (stockData.vertexOf(Constants.STOCK_VERTEX_BOTTOM_SEGMENT)) {
+//					result += Constants.STOCK_ACTION_BUY2;
+//				}
 //			}
 //		}
+
+        if (stockData.vertexOf(Constants.STOCK_VERTEX_BOTTOM)) {
+            if (stockData.vertexOf(Constants.STOCK_VERTEX_BOTTOM_STROKE)
+                    && stockData.vertexOf(Constants.STOCK_VERTEX_BOTTOM_SEGMENT)) {
+                if (prev.getVertexHigh() < overlap.getOverlapLow()) {
+                    result += Constants.STOCK_ACTION_BUY2
+                            + Constants.STOCK_ACTION_BUY2;
+                } else if (prev.getVertexLow() > overlap.getOverlapHigh()) {
+                    result += Constants.STOCK_ACTION_BUY3
+                            + Constants.STOCK_ACTION_BUY3;
+                }
+            }
+        }
 
 		return result;
 	}
