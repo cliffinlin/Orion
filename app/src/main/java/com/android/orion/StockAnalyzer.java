@@ -207,9 +207,7 @@ public class StockAnalyzer {
 		if (financialData.getCreated().contains(Utility.getCurrentDateString())
 				|| financialData.getModified().contains(
 						Utility.getCurrentDateString())) {
-			if (financialData.getRate() != 0) {
-				result = true;
-			}
+		    result = true;
 		}
 
 		return result;
@@ -236,14 +234,13 @@ public class StockAnalyzer {
 		setupNetProfitPerShareInYear(financialDataList);
 		setupRate(financialDataList);
 		setupRoe(financialDataList);
+        setupRoi(stockDataList, financialDataList);
 
 		for (FinancialData financialData : financialDataList) {
 			financialData.setModified(Utility.getCurrentDateTimeString());
 			mStockDatabaseManager.updateFinancialData(financialData,
 					financialData.getContentValues());
 		}
-
-		setupRoi(stockDataList, financialDataList);
 
 		for (StockData stockData : stockDataList) {
 			stockData.setModified(Utility.getCurrentDateTimeString());
@@ -1016,15 +1013,15 @@ public class StockAnalyzer {
 		for (String period : Constants.PERIODS) {
 			if (Preferences.getBoolean(mContext, period, false)) {
 				String action = stock.getAction(period);
-				if (action.contains("B")) {
+				if (action.contains("B2B2")) {
 					mStockDatabaseManager.getStockDealToBuy(stock, stockDeal);
-                    if (!TextUtils.isEmpty(stockDeal.getCode()) && (stockDeal.getProfit() >= 0)) {
+                    if (!TextUtils.isEmpty(stockDeal.getCode()) && (stockDeal.getVolume() <= 0)) {
                         actionString.append(period + " " + action + " ");
                         actionString.append(" " + stockDeal.getProfit() + " ");
 					}
-				} else if (action.contains("S")) {
+				} else if (action.contains("S2S2")) {
 					mStockDatabaseManager.getStockDealToSell(stock, stockDeal);
-                    if (!TextUtils.isEmpty(stockDeal.getCode()) && (stockDeal.getProfit() > 0)) {
+                    if (!TextUtils.isEmpty(stockDeal.getCode()) && (stockDeal.getProfit() > 0) && !TextUtils.isEmpty(stockDeal.getAction())) {
                         actionString.append(period + " " + action + " ");
                         actionString.append(" " + stockDeal.getProfit() + " ");
 					}
