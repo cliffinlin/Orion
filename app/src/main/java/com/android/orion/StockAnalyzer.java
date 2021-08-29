@@ -145,9 +145,9 @@ public class StockAnalyzer {
 		}
 
 		try {
-			if (!isFinancialAnalyzed(stock)) {
+//			if (!isFinancialAnalyzed(stock)) {
 				analyzeFinancial(stock);
-			}
+//			}
 
 			setupStockFinancialData(stock);
 			setupStockShareBonus(stock);
@@ -230,8 +230,8 @@ public class StockAnalyzer {
 				stockDataList, sortOrder);
 
 		setupTotalShare(financialDataList, totalShareList);
-		setupNetProfitPerShare(financialDataList);
 		setupNetProfitPerShareInYear(financialDataList);
+		setupNetProfitPerShare(financialDataList);
 		setupRate(financialDataList);
 		setupRoe(financialDataList);
         setupRoi(stockDataList, financialDataList);
@@ -279,11 +279,16 @@ public class StockAnalyzer {
 
 		for (FinancialData financialData : financialDataList) {
 			financialData.setupDebtToNetAssetsRatio();
+			financialData.setupNetProfitMargin();
 			financialData.setupNetProfitPerShare();
 		}
 	}
 
 	void setupNetProfitPerShareInYear(ArrayList<FinancialData> financialDataList) {
+		double mainBusinessIncome = 0;
+		double mainBusinessIncomeInYear = 0;
+		double netProfit = 0;
+		double netProfitInYear = 0;
 		double netProfitPerShareInYear = 0;
 		double netProfitPerShare = 0;
 
@@ -297,6 +302,8 @@ public class StockAnalyzer {
 
 		for (int i = 0; i < financialDataList.size()
 				- Constants.SEASONS_IN_A_YEAR; i++) {
+			mainBusinessIncomeInYear = 0;
+			netProfitInYear = 0;
 			netProfitPerShareInYear = 0;
 			for (int j = 0; j < Constants.SEASONS_IN_A_YEAR; j++) {
 				FinancialData current = financialDataList.get(i + j);
@@ -310,18 +317,30 @@ public class StockAnalyzer {
 					continue;
 				}
 
+				mainBusinessIncome = 0;
+				netProfit = 0;
 				netProfitPerShare = 0;
+
 				if (current.getDate().contains("03-31")) {
+					mainBusinessIncome = current.getMainBusinessIncome();
+					netProfit = current.getNetProfit();
 					netProfitPerShare = current.getNetProfit()
 							/ current.getTotalShare();
 				} else {
+					mainBusinessIncome = current.getMainBusinessIncome() - prev.getMainBusinessIncome();
+					netProfit = current.getNetProfit() - prev.getNetProfit();
 					netProfitPerShare = (current.getNetProfit() - prev
 							.getNetProfit()) / current.getTotalShare();
 				}
+
+				mainBusinessIncomeInYear += mainBusinessIncome;
+				netProfitInYear += netProfit;
 				netProfitPerShareInYear += netProfitPerShare;
 			}
 
 			FinancialData financialData = financialDataList.get(i);
+			financialData.setMainBusinessIncomeInYear(mainBusinessIncomeInYear);
+			financialData.setNetProfitInYear(netProfitInYear);
 			financialData.setNetProfitPerShareInYear(netProfitPerShareInYear);
 		}
 	}
@@ -451,18 +470,19 @@ public class StockAnalyzer {
 		mStockDatabaseManager.getFinancialDataList(stock, financialDataList,
 				sortOrder);
 
+		stock.setBookValuePerShare(financialData.getBookValuePerShare());
 		stock.setTotalAssets(financialData.getTotalAssets());
 		stock.setTotalLongTermLiabilities(financialData
 				.getTotalLongTermLiabilities());
-		stock.setBookValuePerShare(financialData.getBookValuePerShare());
-		stock.setCashFlowPerShare(financialData.getCashFlowPerShare());
+		stock.setMainBusinessIncome(financialData.getMainBusinessIncome());
 		stock.setNetProfit(financialData.getNetProfit());
+		stock.setCashFlowPerShare(financialData.getCashFlowPerShare());
 
 		stock.setupMarketValue();
 		stock.setupNetProfitPerShare();
 		stock.setupNetProfitPerShareInYear(financialDataList);
-		stock.setupNetProfitPerShareLastYear(financialDataList);
-		stock.setupRate();
+		stock.setupNetProfitMargin();
+		stock.setupRate(financialDataList);
 		stock.setupDebtToNetAssetsRatio();
 		stock.setupRoe(financialDataList);
 		stock.setupPE();

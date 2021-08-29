@@ -114,7 +114,7 @@ public class Utility {
 
 		Date data = null;
 
-		if (TextUtils.isEmpty(string)) {
+		if (TextUtils.isEmpty(string) || string.contains("--")) {
 			return calendar;
 		}
 

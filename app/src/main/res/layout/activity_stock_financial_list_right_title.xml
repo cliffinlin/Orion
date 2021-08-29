@@ -122,12 +122,48 @@
         android:textSize="18sp" />
 
     <TextView
+        android:id="@+id/main_business_income"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/main_business_income"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/main_business_income_in_year"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/main_business_income_in_year"
+        android:textSize="18sp" />
+
+    <TextView
         android:id="@+id/net_profit"
         android:layout_width="80dp"
         android:layout_height="40dp"
         android:layout_weight="1"
         android:gravity="center"
         android:text="@string/net_profit"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/net_profit_in_year"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/net_profit_in_year"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/net_profit_margin"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/net_profit_margin"
         android:textSize="18sp" />
 
     <TextView

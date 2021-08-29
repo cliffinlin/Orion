@@ -15,8 +15,11 @@ public class FinancialData extends DatabaseTable {
 	private double mTotalAssets;
 	private double mTotalLongTermLiabilities;
 	private double mMainBusinessIncome;
+	private double mMainBusinessIncomeInYear;
 	private double mFinancialExpenses;
 	private double mNetProfit;
+	private double mNetProfitInYear;
+	private double mNetProfitMargin;
 	private double mTotalShare;
 	private double mDebtToNetAssetsRatio;
 	private double mNetProfitPerShare;
@@ -50,8 +53,11 @@ public class FinancialData extends DatabaseTable {
 		mTotalAssets = 0;
 		mTotalLongTermLiabilities = 0;
 		mMainBusinessIncome = 0;
+		mMainBusinessIncomeInYear = 0;
 		mFinancialExpenses = 0;
 		mNetProfit = 0;
+		mNetProfitInYear = 0;
+        mNetProfitMargin = 0;
 		mTotalShare = 0;
 		mDebtToNetAssetsRatio = 0;
 		mNetProfitPerShare = 0;
@@ -82,9 +88,13 @@ public class FinancialData extends DatabaseTable {
 				mTotalLongTermLiabilities);
 		contentValues.put(DatabaseContract.COLUMN_MAIN_BUSINESS_INCOME,
 				mMainBusinessIncome);
+		contentValues.put(DatabaseContract.COLUMN_MAIN_BUSINESS_INCOME_IN_YEAR,
+				mMainBusinessIncomeInYear);
 		contentValues.put(DatabaseContract.COLUMN_FINANCIAL_EXPENSES,
 				mFinancialExpenses);
 		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT, mNetProfit);
+		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_IN_YEAR, mNetProfitInYear);
+		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_MARGIN, mNetProfitMargin);
 		contentValues.put(DatabaseContract.COLUMN_TOTAL_SHARE, mTotalShare);
 		contentValues.put(DatabaseContract.COLUMN_DEBT_TO_NET_ASSETS_RATIO,
 				mDebtToNetAssetsRatio);
@@ -117,8 +127,11 @@ public class FinancialData extends DatabaseTable {
 		setTotalAssets(financialData.mTotalAssets);
 		setTotalLongTermLiabilities(financialData.mTotalLongTermLiabilities);
 		setMainBusinessIncome(financialData.mMainBusinessIncome);
+		setMainBusinessIncomeInYear(financialData.mMainBusinessIncomeInYear);
 		setFinancialExpenses(financialData.mFinancialExpenses);
 		setNetProfit(financialData.mNetProfit);
+		setNetProfitInYear(financialData.mNetProfitInYear);
+		setNetProfitMargin(financialData.mNetProfitMargin);
 		setTotalShare(financialData.mTotalShare);
 		setDebtToNetAssetsRatio(financialData.mDebtToNetAssetsRatio);
 		setNetProfitPerShare(financialData.mNetProfitPerShare);
@@ -146,8 +159,11 @@ public class FinancialData extends DatabaseTable {
 		setTotalAssets(cursor);
 		setTotalLongTermLiabilities(cursor);
 		setMainBusinessIncome(cursor);
+		setMainBusinessIncomeInYear(cursor);
 		setFinancialExpenses(cursor);
 		setNetProfit(cursor);
+		setNetProfitInYear(cursor);
+		setNetProfitMargin(cursor);
 		setTotalShare(cursor);
 		setDebtToNetAssetsRatio(cursor);
 		setNetProfitPerShare(cursor);
@@ -295,6 +311,23 @@ public class FinancialData extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_MAIN_BUSINESS_INCOME)));
 	}
 
+	public double getMainBusinessIncomeInYear() {
+		return mMainBusinessIncomeInYear;
+	}
+
+	public void setMainBusinessIncomeInYear(double mainBusinessIncomeInYear) {
+		mMainBusinessIncomeInYear = mainBusinessIncomeInYear;
+	}
+
+	void setMainBusinessIncomeInYear(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setMainBusinessIncomeInYear(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_MAIN_BUSINESS_INCOME_IN_YEAR)));
+	}
+
 	public double getFinancialExpenses() {
 		return mFinancialExpenses;
 	}
@@ -327,6 +360,40 @@ public class FinancialData extends DatabaseTable {
 
 		setNetProfit(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_NET_PROFIT)));
+	}
+
+	public double getNetProfitInYear() {
+		return mNetProfitInYear;
+	}
+
+	public void setNetProfitInYear(double netProfitInYear) {
+		mNetProfitInYear = netProfitInYear;
+	}
+
+	void setNetProfitInYear(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setNetProfitInYear(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_NET_PROFIT_IN_YEAR)));
+	}
+
+	public double getNetProfitMargin() {
+		return mNetProfitMargin;
+	}
+
+	public void setNetProfitMargin(double netProfitMargin) {
+		mNetProfitMargin = netProfitMargin;
+	}
+
+	void setNetProfitMargin(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setNetProfitMargin(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_NET_PROFIT_MARGIN)));
 	}
 
 	public double getTotalShare() {
@@ -455,10 +522,19 @@ public class FinancialData extends DatabaseTable {
 			return;
 		}
 
-		mDebtToNetAssetsRatio = mTotalLongTermLiabilities / mTotalShare
-				/ mBookValuePerShare;
+		mDebtToNetAssetsRatio = Utility.Round(mTotalLongTermLiabilities / mTotalShare
+				/ mBookValuePerShare, Constants.DOUBLE_FIXED_DECIMAL);
 	}
-	
+
+    public void setupNetProfitMargin() {
+        if ((mNetProfitInYear == 0) || (mMainBusinessIncomeInYear == 0)) {
+            return;
+        }
+
+        mNetProfitMargin = Utility.Round(mNetProfitInYear / mMainBusinessIncomeInYear,
+                Constants.DOUBLE_FIXED_DECIMAL);
+    }
+
 	public void setupNetProfitPerShare() {
 		if ((mNetProfit == 0) || (mTotalShare == 0)) {
 			return;
