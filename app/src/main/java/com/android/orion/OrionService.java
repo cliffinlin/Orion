@@ -100,14 +100,14 @@ public class OrionService extends Service {
 		mHandler = new ServiceHandler(mLooper);
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			NotificationChannel channel = new NotificationChannel(Constants.CHANNEL_ID_SERVICE,
-					mContext.getResources().getString(R.string.service), NotificationManager.IMPORTANCE_LOW);
+			NotificationChannel channel = new NotificationChannel(Constants.SERVICE_CHANNEL_ID,
+					Constants.SERVICE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
 			mNotificationManager.createNotificationChannel(channel);
-			Notification notification = new NotificationCompat.Builder(this, Constants.CHANNEL_ID_SERVICE)
+			Notification notification = new NotificationCompat.Builder(this, Constants.SERVICE_CHANNEL_ID)
 					.setAutoCancel(true)
 					.setCategory(Notification.CATEGORY_SERVICE)
 					.setOngoing(true)
-					.setPriority(NotificationManager.IMPORTANCE_LOW)
+					.setPriority(NotificationManager.IMPORTANCE_HIGH)
 					.build();
 			startForeground(1, notification);
 		}

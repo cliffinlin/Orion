@@ -4,8 +4,11 @@ public class Constants {
 	public static final String APP_NAME = "Orion";
 	public static final String TAG = APP_NAME;
 
-    public static final String CHANNEL_ID_MESSAGE = "channel_id_message";
-    public static final String CHANNEL_ID_SERVICE = "channel_id_service";
+	public static final String MESSAGE_CHANNEL_ID = "message_channel";
+	public static final String MESSAGE_CHANNEL_NAME = "Message Channel";
+
+	public static final String SERVICE_CHANNEL_ID = "service_channel";
+	public static final String SERVICE_CHANNEL_NAME = "Service Channel";
 
 	public static final String FAVORITE = "favorite";
 	public static final String XML_FILE_EXT = ".xml";

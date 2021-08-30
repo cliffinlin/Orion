@@ -1064,14 +1064,19 @@ public class StockAnalyzer {
 				intent, 0);
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			NotificationChannel notificationChannel = new NotificationChannel(Constants.CHANNEL_ID_MESSAGE,
-                    mContext.getResources().getString(R.string.notification_message), NotificationManager.IMPORTANCE_LOW);
+			NotificationChannel notificationChannel = new NotificationChannel(Constants.MESSAGE_CHANNEL_ID,
+					Constants.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
+			notificationChannel.enableVibration(true);
+			notificationChannel.setVibrationPattern(new long[]{500, 500, 500, 500, 500});
+			notificationChannel.enableLights(true);
+			notificationChannel.setLightColor(0xFF0000FF);
 			notificationManager.createNotificationChannel(notificationChannel);
 
 			notification = new Notification.Builder(
-					mContext, Constants.CHANNEL_ID_MESSAGE).setContentTitle(contentTitle)
+					mContext, Constants.MESSAGE_CHANNEL_ID).setContentTitle(contentTitle)
 					.setContentText(contentText)
-					.setSmallIcon(R.drawable.ic_dialog_email).setAutoCancel(true)
+					.setSmallIcon(R.drawable.ic_dialog_email)
+					.setAutoCancel(true)
 					.setContentIntent(pendingIntent);
 		} else {
 			notification = new Notification.Builder(
