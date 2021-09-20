@@ -56,7 +56,8 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 
 	int mStockListIndex = 0;
 
-	String mSortOrder = null;
+	String mSortOrder = DatabaseContract.COLUMN_VALUATION
+					+ DatabaseContract.ORDER_DIRECTION_DESC;
 
 	float mTotalBonus = 0;
 	Menu mMenu = null;
@@ -102,9 +103,6 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 
 		mStock.setId(getIntent().getLongExtra(Constants.EXTRA_STOCK_ID,
 				Constants.STOCK_ID_INVALID));
-
-		mSortOrder = getIntent().getStringExtra(
-				Constants.EXTRA_STOCK_LIST_SORT_ORDER);
 
 		initLoader();
 	}

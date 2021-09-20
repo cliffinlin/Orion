@@ -26,8 +26,8 @@ public class Constants {
 	public static final String EXTRA_STOCK_ID = "stock_id";
 	public static final String EXTRA_STOCK_SE = "stock_se";
 	public static final String EXTRA_STOCK_CODE = "stock_code";
-	public static final String EXTRA_STOCK_DEAL_PRICE = "stock_deal_price";
-	public static final String EXTRA_STOCK_DEAL_VOLUME = "stock_deal_volume";
+	public static final String EXTRA_STOCK_DEAL = "stock_deal";
+	public static final String EXTRA_STOCK_FINANCIAL = "stock_financial";
 	public static final String EXTRA_STOCK_ID_LIST = "stock_id_list";
 	public static final String EXTRA_STOCK_LIST_SORT_ORDER = "stock_list_sort_order";
 

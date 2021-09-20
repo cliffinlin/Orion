@@ -785,6 +785,7 @@ public class StockFinancialListActivity extends ListActivity implements
                 intent.putExtra(Constants.EXTRA_STOCK_LIST_SORT_ORDER,
                         mSortOrder);
                 intent.putExtra(Constants.EXTRA_STOCK_ID, id);
+                intent.putExtra(Constants.EXTRA_STOCK_FINANCIAL, true);
                 startActivity(intent);
             }
         }

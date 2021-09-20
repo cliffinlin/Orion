@@ -125,6 +125,7 @@ public class DealListActivity extends ListActivity implements
 				intent.putExtra(Constants.EXTRA_STOCK_ID, mStock.getId());
 				intent.putStringArrayListExtra(Constants.EXTRA_STOCK_ID_LIST,
 						stockIDList);
+				intent.putExtra(Constants.EXTRA_STOCK_DEAL, true);
 				startActivity(intent);
 				break;
 

@@ -61,13 +61,13 @@ public class StockDataChartListActivity extends BaseActivity implements
 	public static final int MESSAGE_REFRESH = 0;
 	public static final int MESSAGE_LOAD_STOCK_LIST = 1;
 
-	boolean mShowCandle = true;
-	boolean mShowDeal = true;
-	boolean mShowBonus = true;
-	boolean mShowBPS = true;
-	boolean mShowNPS = true;
-	boolean mShowRoe = true;
-	boolean mShowRoi = true;
+	boolean mShowCandle = false;
+	boolean mShowDeal = false;
+	boolean mShowBonus = false;
+	boolean mShowBPS = false;
+	boolean mShowNPS = false;
+	boolean mShowRoe = false;
+	boolean mShowRoi = false;
 
 	int mStockListIndex = 0;
 
@@ -155,13 +155,27 @@ public class StockDataChartListActivity extends BaseActivity implements
 
 		mShowCandle = Preferences.getBoolean(mContext, Settings.KEY_CANDLE,
 				false);
-		mShowDeal = Preferences.getBoolean(mContext, Settings.KEY_DEAL, false);
-		mShowBonus = Preferences
-				.getBoolean(mContext, Settings.KEY_BONUS, false);
-		mShowBPS = Preferences.getBoolean(mContext, Settings.KEY_BPS, false);
-		mShowNPS = Preferences.getBoolean(mContext, Settings.KEY_NPS, false);
-		mShowRoe = Preferences.getBoolean(mContext, Settings.KEY_ROE, false);
-		mShowRoi = Preferences.getBoolean(mContext, Settings.KEY_ROI, false);
+
+		if (getIntent().getBooleanExtra(Constants.EXTRA_STOCK_DEAL, false)) {
+			mShowDeal = true;
+		} else {
+			mShowDeal = Preferences.getBoolean(mContext, Settings.KEY_DEAL, false);
+		}
+
+		if (getIntent().getBooleanExtra(Constants.EXTRA_STOCK_FINANCIAL, false)) {
+			mShowBonus = Preferences
+					.getBoolean(mContext, Settings.KEY_BONUS, false);
+			mShowBPS = Preferences.getBoolean(mContext, Settings.KEY_BPS, false);
+			mShowNPS = Preferences.getBoolean(mContext, Settings.KEY_NPS, false);
+			mShowRoe = Preferences.getBoolean(mContext, Settings.KEY_ROE, false);
+			mShowRoi = Preferences.getBoolean(mContext, Settings.KEY_ROI, false);
+		} else {
+			mShowBonus = false;
+			mShowBPS = false;
+			mShowNPS = false;
+			mShowRoe = false;
+			mShowRoi = false;
+		}
 
 		initLoader();
 
