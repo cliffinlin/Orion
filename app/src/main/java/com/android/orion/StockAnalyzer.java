@@ -70,13 +70,6 @@ public class StockAnalyzer {
 	void acquireWakeLock() {
 		Log.d(TAG, "acquireWakeLock");
 
-		boolean checked = Preferences.getBoolean(mContext, Settings.KEY_WAKE,
-				false);
-		if (!checked) {
-			Log.d(TAG, "acquireWakeLock return, checked=" + checked);
-			return;
-		}
-
 		if (!mWakeLock.isHeld()) {
 			mWakeLock.acquire();
 			Log.d(TAG, "acquireWakeLock, mWakeLock acquired.");

@@ -6,10 +6,29 @@
             android:defaultValue="true"
             android:key="alarm"
             android:title="@string/alarm" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/download" >
         <com.android.orion.CustomSwitchPreference
-            android:defaultValue="true"
-            android:key="wake"
-            android:title="@string/wake" />
+            android:key="month"
+            android:title="@string/period_month" />
+        <com.android.orion.CustomSwitchPreference
+            android:key="week"
+            android:title="@string/period_week" />
+        <com.android.orion.CustomSwitchPreference
+            android:key="day"
+            android:title="@string/period_day" />
+        <com.android.orion.CustomSwitchPreference
+            android:key="min60"
+            android:title="@string/period_60min" />
+        <com.android.orion.CustomSwitchPreference
+            android:key="min30"
+            android:title="@string/period_30min" />
+        <com.android.orion.CustomSwitchPreference
+            android:key="min15"
+            android:title="@string/period_15min" />
+        <com.android.orion.CustomSwitchPreference
+            android:key="min5"
+            android:title="@string/period_5min" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/display" >
         <com.android.orion.CustomSwitchPreference
@@ -40,29 +59,6 @@
             android:defaultValue="false"
             android:key="roi"
             android:title="@string/roi" />
-    </PreferenceCategory>
-    <PreferenceCategory android:title="@string/download" >
-        <com.android.orion.CustomSwitchPreference
-            android:key="month"
-            android:title="@string/period_month" />
-        <com.android.orion.CustomSwitchPreference
-            android:key="week"
-            android:title="@string/period_week" />
-        <com.android.orion.CustomSwitchPreference
-            android:key="day"
-            android:title="@string/period_day" />
-        <com.android.orion.CustomSwitchPreference
-            android:key="min60"
-            android:title="@string/period_60min" />
-        <com.android.orion.CustomSwitchPreference
-            android:key="min30"
-            android:title="@string/period_30min" />
-        <com.android.orion.CustomSwitchPreference
-            android:key="min15"
-            android:title="@string/period_15min" />
-        <com.android.orion.CustomSwitchPreference
-            android:key="min5"
-            android:title="@string/period_5min" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/notification" >
         <com.android.orion.CustomSwitchPreference
