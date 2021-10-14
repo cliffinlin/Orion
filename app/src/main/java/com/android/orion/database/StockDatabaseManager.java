@@ -802,8 +802,7 @@ public class StockDatabaseManager extends DatabaseManager {
                 + "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
                 + stock.getCode() + "\'";
 
-		selection +=   " AND " + DatabaseContract.COLUMN_VOLUME + " <= " + 0 + " AND "
-				+ DatabaseContract.COLUMN_PROFIT + " >= " + 0;
+		selection +=   " AND " + DatabaseContract.COLUMN_VOLUME + " <= " + 0;
 
 		getStockDeal(stock, stockDeal, selection, sortOrder);
 	}
