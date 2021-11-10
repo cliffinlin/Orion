@@ -168,6 +168,8 @@ public class StockDealActivity extends DatabaseActivity implements
 		mEditTextStockName.setFocusable(false);
 		mEditTextStockCode.setInputType(InputType.TYPE_NULL);
 		mEditTextStockCode.setFocusable(false);
+		mEditTextDealProfit.setInputType(InputType.TYPE_NULL);
+		mEditTextDealProfit.setFocusable(false);
 
 		mListStockAction = new ArrayList<String>();
 		mListStockAction.add("");
@@ -190,46 +192,6 @@ public class StockDealActivity extends DatabaseActivity implements
 		} else if (ACTION_DEAL_EDIT.equals(mAction)) {
 			setTitle(R.string.deal_edit);
 		}
-
-		mEditTextDealProfit.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-			}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
-				String profitString = s.toString();
-				double profit = 0;
-				if (!TextUtils.isEmpty(profitString)) {
-					profit = Double.valueOf(s.toString());
-				}
-
-				String volumeString = mEditTextDealVolume.getText().toString();
-				long volume = 0;
-				if (!TextUtils.isEmpty(volumeString)) {
-					volume = Long.valueOf(volumeString);
-				}
-
-				if (volume == 0) {
-					return;
-				}
-
-				double deal = 0;
-				deal = Utility.Round(mStock.getPrice() - profit / volume,
-						Constants.DOUBLE_FIXED_DECIMAL);
-
-				mDeal.setDeal(deal);
-				mEditTextDealPrice.setText(String.valueOf(mDeal.getDeal()));
-
-				mDeal.setProfit(profit);
-			}
-		});
 
         mEditTextDealVolume.addTextChangedListener(new TextWatcher() {
             @Override
@@ -258,20 +220,10 @@ public class StockDealActivity extends DatabaseActivity implements
 					return;
 				}
 
-				String dealString = mEditTextDealPrice.getText().toString();
-				double deal = 0;
-				if (!TextUtils.isEmpty(dealString)) {
-					deal = Double.valueOf(dealString.toString());
-				}
-
-				double profit = 0;
-				profit = Utility.Round((mStock.getPrice() - deal) * volume,
-						Constants.DOUBLE_FIXED_DECIMAL);
-
-				mDeal.setProfit(profit);
-				mEditTextDealProfit.setText(String.valueOf(mDeal.getProfit()));
-
 				mDeal.setVolume(volume);
+
+				mDeal.setupProfit(mStock.getRDate(), mStock.getDividend());
+				mEditTextDealProfit.setText(String.valueOf(mDeal.getProfit()));
             }
         });
 	}
@@ -292,12 +244,16 @@ public class StockDealActivity extends DatabaseActivity implements
 	}
 
 	void setupDealPrice() {
-		double price = 0;
-		price = mStockDatabaseManager.getStockDealTargetPrice(mStock, mOrder);
-		price = Utility.Round(price, Constants.DOUBLE_FIXED_DECIMAL + 1);
+		double dealPrice = 0;
+		dealPrice = mStockDatabaseManager.getStockDealTargetPrice(mStock, mOrder);
+		dealPrice = Utility.Round(dealPrice, Constants.DOUBLE_FIXED_DECIMAL);
 
-		if (price > 0) {
-			mEditTextDealPrice.setText(String.valueOf(price));
+		if (dealPrice > 0) {
+			mDeal.setDeal(dealPrice);
+			mEditTextDealPrice.setText(String.valueOf(mDeal.getDeal()));
+
+			mDeal.setupProfit(mStock.getRDate(), mStock.getDividend());
+			mEditTextDealProfit.setText(String.valueOf(mDeal.getProfit()));
 		}
 	}
 

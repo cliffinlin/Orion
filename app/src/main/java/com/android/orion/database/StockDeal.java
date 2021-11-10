@@ -321,14 +321,14 @@ public class StockDeal extends DatabaseTable {
     }
 
     public void setupProfit(String rDate, double dividend) {
-        if (mPrice == 0) {
+        if (mPrice <= 0) {
             return;
         }
 
-        double stampDuty = mPrice * mVolume * 1.0 / 1000.0;
+        double stampDuty = mPrice * Math.abs(mVolume) * 1.0 / 1000.0;
 
-        double buyTransferFee = mDeal * mVolume * 0.2 / 10000.0;
-        double sellTransferFee = mPrice * mVolume * 0.2 / 10000.0;
+        double buyTransferFee = mDeal * Math.abs(mVolume) * 0.2 / 10000.0;
+        double sellTransferFee = mPrice * Math.abs(mVolume) * 0.2 / 10000.0;
 
         if (buyTransferFee < 1.0) {
             buyTransferFee = 1.0;
@@ -338,8 +338,8 @@ public class StockDeal extends DatabaseTable {
             sellTransferFee = 1.0;
         }
 
-        double buyCommission = mDeal * mVolume * 5.0 / 10000.0;
-        double sellCommission = mPrice * mVolume * 5.0 / 10000.0;
+        double buyCommission = mDeal * Math.abs(mVolume) * 5.0 / 10000.0;
+        double sellCommission = mPrice * Math.abs(mVolume) * 5.0 / 10000.0;
 
         if (buyCommission < 5.0) {
             buyCommission = 5.0;
@@ -363,20 +363,16 @@ public class StockDeal extends DatabaseTable {
         rDateCalendarAfterYear.add(Calendar.YEAR, 1);
 
         if (todayCalendar.before(rDateCalendarAfterMonth)) {
-            dividendTax = dividend / 10.0 * mVolume * 20.0 / 100.0;
+            dividendTax = dividend / 10.0 * Math.abs(mVolume) * 20.0 / 100.0;
         } else if (todayCalendar.before(rDateCalendarAfterYear)) {
-            dividendTax = dividend / 10.0 * mVolume * 10.0 / 100.0;
+            dividendTax = dividend / 10.0 * Math.abs(mVolume) * 10.0 / 100.0;
         } else {
             dividendTax = 0;
         }
 
         double totalFee = stampDuty + buyTransferFee + sellTransferFee + buyCommission + sellCommission + dividendTax;
 
-        if (mVolume < 0) {
-            totalFee = 0;
-        }
-
-        mProfit = Utility.Round((mPrice - mDeal) * mVolume - totalFee,
+        mProfit = Utility.Round((mPrice - mDeal) * Math.abs(mVolume) - totalFee,
                 Constants.DOUBLE_FIXED_DECIMAL);
     }
 }
