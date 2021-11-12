@@ -50,19 +50,8 @@ public class ServiceSettingFragment extends PreferenceFragment implements
 		boolean checked;
 
 		checked = sharedPreferences.getBoolean(key, true);
-		if (key.equals(Settings.KEY_ALARM)) {
-			if (checked) {
-				remindNetworkConnection();
 
-				if (mStockDownloadAlarmManager != null) {
-					mStockDownloadAlarmManager.startAlarm();
-				}
-			} else {
-				if (mStockDownloadAlarmManager != null) {
-					mStockDownloadAlarmManager.stopAlarm();
-				}
-			}
-		} else if (key.equals(Constants.PERIOD_MIN1)
+		if (key.equals(Constants.PERIOD_MIN1)
 				|| key.equals(Constants.PERIOD_MIN5)
 				|| key.equals(Constants.PERIOD_MIN15)
 				|| key.equals(Constants.PERIOD_MIN30)
@@ -73,6 +62,12 @@ public class ServiceSettingFragment extends PreferenceFragment implements
 				|| key.equals(Constants.PERIOD_QUARTER)
 				|| key.equals(Constants.PERIOD_YEAR)) {
 			if (checked) {
+				remindNetworkConnection();
+
+				if (mStockDownloadAlarmManager != null) {
+					mStockDownloadAlarmManager.startAlarm();
+				}
+
 				Intent intent = new Intent(getActivity(), OrionService.class);
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 					getActivity().startForegroundService(intent);

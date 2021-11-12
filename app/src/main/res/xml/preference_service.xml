@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <PreferenceCategory android:title="@string/system" >
-        <com.android.orion.CustomSwitchPreference
-            android:defaultValue="true"
-            android:key="alarm"
-            android:title="@string/alarm" />
-    </PreferenceCategory>
     <PreferenceCategory android:title="@string/download" >
         <com.android.orion.CustomSwitchPreference
             android:key="month"

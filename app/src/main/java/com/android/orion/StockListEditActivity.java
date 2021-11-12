@@ -46,12 +46,13 @@ public class StockListEditActivity extends DatabaseActivity implements
 	TextView mTextViewNameCode = null;
 	TextView mTextViewPrice = null;
 	TextView mTextViewNet = null;
+	TextView mTextViewHold = null;
 	TextView mTextViewFavorite = null;
 
 	String[] mFrom = new String[] { DatabaseContract.COLUMN_NAME,
 			DatabaseContract.COLUMN_CODE, DatabaseContract.COLUMN_PRICE,
-			DatabaseContract.COLUMN_NET };
-	int[] mTo = new int[] { R.id.name, R.id.code, R.id.price, R.id.net };
+			DatabaseContract.COLUMN_NET, DatabaseContract.COLUMN_HOLD };
+	int[] mTo = new int[] { R.id.name, R.id.code, R.id.price, R.id.net, R.id.hold };
 
 	String getSelection() {
 		return null;
@@ -148,6 +149,9 @@ public class StockListEditActivity extends DatabaseActivity implements
 		case R.id.net:
 			mSortOrderColumn = DatabaseContract.COLUMN_NET;
 			break;
+		case R.id.hold:
+			mSortOrderColumn = DatabaseContract.COLUMN_HOLD;
+			break;
 		case R.id.favorite:
 			mSortOrderColumn = DatabaseContract.COLUMN_FLAG;
 			break;
@@ -183,6 +187,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 		setHeaderTextColor(mTextViewNameCode, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewPrice, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewNet, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewHold, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewFavorite, mHeaderTextDefaultColor);
 	}
 
@@ -202,6 +207,11 @@ public class StockListEditActivity extends DatabaseActivity implements
 			mTextViewNet.setOnClickListener(this);
 		}
 
+		mTextViewHold = (TextView) findViewById(R.id.hold);
+		if (mTextViewHold != null) {
+			mTextViewHold.setOnClickListener(this);
+		}
+
 		mTextViewFavorite = (TextView) findViewById(R.id.favorite);
 		if (mTextViewFavorite != null) {
 			mTextViewFavorite.setOnClickListener(this);
@@ -213,6 +223,8 @@ public class StockListEditActivity extends DatabaseActivity implements
 			setHeaderTextColor(mTextViewPrice, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_NET)) {
 			setHeaderTextColor(mTextViewNet, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_HOLD)) {
+			setHeaderTextColor(mTextViewHold, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_FLAG)) {
 			setHeaderTextColor(mTextViewFavorite, mHeaderTextHighlightColor);
 		} else {
@@ -251,6 +263,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 			setViewText(holder.mTextViewCode, stock.getCode());
 			setViewText(holder.mTextViewPrice, String.valueOf(stock.getPrice()));
 			setViewText(holder.mTextViewNet, String.valueOf(stock.getNet()));
+			setViewText(holder.mTextViewHold, String.valueOf(stock.getHold()));
 
 			if ((stock.getFlag() & Constants.STOCK_FLAG_FAVORITE) == 1) {
 				holder.mImageViewFavorite
@@ -286,6 +299,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 			holder.mTextViewCode = (TextView) view.findViewById(R.id.code);
 			holder.mTextViewPrice = (TextView) view.findViewById(R.id.price);
 			holder.mTextViewNet = (TextView) view.findViewById(R.id.net);
+			holder.mTextViewHold = (TextView) view.findViewById(R.id.hold);
 			holder.mImageViewFavorite = (ImageView) view
 					.findViewById(R.id.favorite);
 			holder.mImageViewDelete = (ImageView) view
@@ -329,9 +343,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 						updateStockFlag(stockId, Constants.STOCK_FLAG_FAVORITE);
 						mOrionService.download(stock);
 					} else {
-						if (stock.getHold() == 0) {
-							updateStockFlag(stockId, Constants.STOCK_FLAG_NONE);
-						}
+					    updateStockFlag(stockId, Constants.STOCK_FLAG_NONE);
 					}
 					break;
 
@@ -373,6 +385,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 		public TextView mTextViewCode;
 		public TextView mTextViewPrice;
 		public TextView mTextViewNet;
+		public TextView mTextViewHold;
 		public ImageView mImageViewFavorite;
 		public ImageView mImageViewDelete;
 	}
