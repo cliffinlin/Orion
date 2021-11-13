@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -28,6 +29,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 	EditText mEditTextStockCost;
 	EditText mEditTextStockHold;
 	EditText mEditTextStockValuation;
+	CheckBox mCheckBoxStockOperation;
 	Button mButtonOk, mButtonCancel;
 
 	@Override
@@ -61,6 +63,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mEditTextStockCost = (EditText) findViewById(R.id.edittext_stock_cost);
 		mEditTextStockHold = (EditText) findViewById(R.id.edittext_stock_hold);
 		mEditTextStockValuation = (EditText) findViewById(R.id.edittext_stock_valuation);
+		mCheckBoxStockOperation = (CheckBox) findViewById(R.id.checkbox_stock_operation);
 		mButtonOk = (Button) findViewById(R.id.button_ok);
 		mButtonCancel = (Button) findViewById(R.id.button_cancel);
 
@@ -71,6 +74,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mEditTextStockCost.setOnClickListener(this);
 		mEditTextStockHold.setOnClickListener(this);
 		mEditTextStockValuation.setOnClickListener(this);
+		mCheckBoxStockOperation.setOnClickListener(this);
 		mButtonOk.setOnClickListener(this);
 		mButtonCancel.setOnClickListener(this);
 
@@ -129,6 +133,8 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 			mRadioGroupSE.check(R.id.radio_se_sz);
 		}
 
+		mCheckBoxStockOperation.setChecked(!TextUtils.isEmpty(mStock.getOperation()));
+
 		mEditTextStockName.setText(mStock.getName());
 		mEditTextStockCode.setText(mStock.getCode());
 		mEditTextStockCost.setText(String.valueOf(mStock.getCost()));
@@ -174,6 +180,12 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 				mStock.setSE(Constants.STOCK_SE_SH);
 			} else if (id == R.id.radio_se_sz) {
 				mStock.setSE(Constants.STOCK_SE_SZ);
+			}
+
+			if (mCheckBoxStockOperation.isChecked()) {
+				mStock.setOperation(Constants.STOCK_OPERATION_ALERT);
+			} else {
+				mStock.setOperation(Constants.STOCK_OPERATION_NONE);
 			}
 
 			String name = mEditTextStockName.getText().toString();

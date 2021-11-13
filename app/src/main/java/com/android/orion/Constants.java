@@ -71,6 +71,9 @@ public class Constants {
 	public static final String STOCK_CLASS_A = "A";
 	public static final String STOCK_CLASS_INDEX = "I";
 
+	public static final String STOCK_OPERATION_NONE = "";
+	public static final String STOCK_OPERATION_ALERT = "A";
+
 	public static final int STOCK_DIRECTION_NONE = 0;
 	public static final int STOCK_DIRECTION_UP = 1 << 0;
 	public static final int STOCK_DIRECTION_DOWN = 1 << 1;
