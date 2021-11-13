@@ -1028,6 +1028,10 @@ public class StockAnalyzer {
 			return;
 		}
 
+		if (TextUtils.isEmpty(stock.getOperation())) {
+			return;
+		}
+
 		if (stock.getPrice() == 0) {
 			return;
 		}
