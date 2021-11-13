@@ -28,21 +28,21 @@
             android:textSize="18sp" />
 
         <TextView
-            android:id="@+id/net"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/net"
-            android:textSize="18sp" />
-
-        <TextView
             android:id="@+id/hold"
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/hold"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/operation"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/stock_operation"
             android:textSize="18sp" />
 
         <TextView

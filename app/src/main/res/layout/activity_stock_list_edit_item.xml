@@ -2,13 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal" >
+    android:orientation="horizontal">
 
     <LinearLayout
         android:layout_width="0dip"
         android:layout_height="50dp"
         android:layout_weight="1"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/name"
@@ -33,20 +33,21 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/net"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:textSize="18sp" />
-
-    <TextView
         android:id="@+id/hold"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_weight="1"
         android:gravity="center"
         android:textSize="18sp" />
+
+    <ImageView
+        android:id="@+id/operation"
+        android:layout_width="0dp"
+        android:layout_height="35dp"
+        android:layout_weight="1"
+        android:contentDescription="@string/stock_operation"
+        android:gravity="center"
+        android:src="@drawable/ic_start" />
 
     <ImageView
         android:id="@+id/favorite"

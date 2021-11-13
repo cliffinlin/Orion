@@ -92,9 +92,9 @@ public class Constants {
 	public static final int STOCK_DIVERGENCE_HISTOGRAM = 1 << 1;
 	public static final int STOCK_DIVERGENCE_SIGMA_HISTOGRAM = 1 << 2;
 
-	public static final int STOCK_FLAG_NONE = 0;
-	public static final int STOCK_FLAG_FAVORITE = 1 << 0;
-	public static final int STOCK_FLAG_RECENT = 1 << 2;
+	public static final long STOCK_FLAG_NONE = 0;
+	public static final long STOCK_FLAG_FAVORITE = 1 << 0;
+	public static final long STOCK_FLAG_RECENT = 1 << 2;
 
 	public static final long STOCK_ID_INVALID = 0;
 

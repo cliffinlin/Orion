@@ -11,6 +11,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -45,14 +46,14 @@ public class StockListEditActivity extends DatabaseActivity implements
 
 	TextView mTextViewNameCode = null;
 	TextView mTextViewPrice = null;
-	TextView mTextViewNet = null;
 	TextView mTextViewHold = null;
+	TextView mTextViewOperation = null;
 	TextView mTextViewFavorite = null;
 
 	String[] mFrom = new String[] { DatabaseContract.COLUMN_NAME,
 			DatabaseContract.COLUMN_CODE, DatabaseContract.COLUMN_PRICE,
-			DatabaseContract.COLUMN_NET, DatabaseContract.COLUMN_HOLD };
-	int[] mTo = new int[] { R.id.name, R.id.code, R.id.price, R.id.net, R.id.hold };
+			DatabaseContract.COLUMN_HOLD };
+	int[] mTo = new int[] { R.id.name, R.id.code, R.id.price, R.id.hold };
 
 	String getSelection() {
 		return null;
@@ -146,11 +147,11 @@ public class StockListEditActivity extends DatabaseActivity implements
 		case R.id.price:
 			mSortOrderColumn = DatabaseContract.COLUMN_PRICE;
 			break;
-		case R.id.net:
-			mSortOrderColumn = DatabaseContract.COLUMN_NET;
-			break;
 		case R.id.hold:
 			mSortOrderColumn = DatabaseContract.COLUMN_HOLD;
+			break;
+		case R.id.operation:
+			mSortOrderColumn = DatabaseContract.COLUMN_OPERATION;
 			break;
 		case R.id.favorite:
 			mSortOrderColumn = DatabaseContract.COLUMN_FLAG;
@@ -186,8 +187,8 @@ public class StockListEditActivity extends DatabaseActivity implements
 	void resetHeaderTextColor() {
 		setHeaderTextColor(mTextViewNameCode, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewPrice, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewNet, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewHold, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewOperation, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewFavorite, mHeaderTextDefaultColor);
 	}
 
@@ -202,14 +203,14 @@ public class StockListEditActivity extends DatabaseActivity implements
 			mTextViewPrice.setOnClickListener(this);
 		}
 
-		mTextViewNet = (TextView) findViewById(R.id.net);
-		if (mTextViewNet != null) {
-			mTextViewNet.setOnClickListener(this);
-		}
-
 		mTextViewHold = (TextView) findViewById(R.id.hold);
 		if (mTextViewHold != null) {
 			mTextViewHold.setOnClickListener(this);
+		}
+
+		mTextViewOperation = (TextView) findViewById(R.id.operation);
+		if (mTextViewOperation != null) {
+			mTextViewOperation.setOnClickListener(this);
 		}
 
 		mTextViewFavorite = (TextView) findViewById(R.id.favorite);
@@ -221,10 +222,10 @@ public class StockListEditActivity extends DatabaseActivity implements
 			setHeaderTextColor(mTextViewNameCode, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PRICE)) {
 			setHeaderTextColor(mTextViewPrice, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_NET)) {
-			setHeaderTextColor(mTextViewNet, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_HOLD)) {
 			setHeaderTextColor(mTextViewHold, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_OPERATION)) {
+			setHeaderTextColor(mTextViewOperation, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_FLAG)) {
 			setHeaderTextColor(mTextViewFavorite, mHeaderTextHighlightColor);
 		} else {
@@ -262,8 +263,15 @@ public class StockListEditActivity extends DatabaseActivity implements
 			setViewText(holder.mTextViewName, stock.getName());
 			setViewText(holder.mTextViewCode, stock.getCode());
 			setViewText(holder.mTextViewPrice, String.valueOf(stock.getPrice()));
-			setViewText(holder.mTextViewNet, String.valueOf(stock.getNet()));
 			setViewText(holder.mTextViewHold, String.valueOf(stock.getHold()));
+
+			if (!TextUtils.isEmpty(stock.getOperation())) {
+				holder.mImageViewOperation
+						.setImageResource(R.drawable.ic_start);
+			} else {
+				holder.mImageViewOperation
+						.setImageResource(R.drawable.ic_pause);
+			}
 
 			if ((stock.getFlag() & Constants.STOCK_FLAG_FAVORITE) == 1) {
 				holder.mImageViewFavorite
@@ -279,6 +287,9 @@ public class StockListEditActivity extends DatabaseActivity implements
 				holder.mImageViewDelete
 						.setImageResource(R.drawable.ic_undeletable);
 			}
+
+			holder.mImageViewOperation.setTag(stock.getId());
+			holder.mImageViewOperation.setOnClickListener(this);
 
 			holder.mImageViewFavorite.setTag(stock.getId());
 			holder.mImageViewFavorite.setOnClickListener(this);
@@ -298,8 +309,8 @@ public class StockListEditActivity extends DatabaseActivity implements
 			holder.mTextViewName = (TextView) view.findViewById(R.id.name);
 			holder.mTextViewCode = (TextView) view.findViewById(R.id.code);
 			holder.mTextViewPrice = (TextView) view.findViewById(R.id.price);
-			holder.mTextViewNet = (TextView) view.findViewById(R.id.net);
 			holder.mTextViewHold = (TextView) view.findViewById(R.id.hold);
+			holder.mImageViewOperation = (ImageView) view.findViewById(R.id.operation);
 			holder.mImageViewFavorite = (ImageView) view
 					.findViewById(R.id.favorite);
 			holder.mImageViewDelete = (ImageView) view
@@ -338,11 +349,20 @@ public class StockListEditActivity extends DatabaseActivity implements
 
 			try {
 				switch (view.getId()) {
+				case R.id.operation:
+					if (TextUtils.isEmpty(stock.getOperation())) {
+						updateStockOperation(stockId, Constants.STOCK_OPERATION_ALERT);
+					} else {
+						updateStockOperation(stockId, Constants.STOCK_OPERATION_NONE);
+					}
+					break;
+
 				case R.id.favorite:
 					if ((stock.getFlag() & Constants.STOCK_FLAG_FAVORITE) == 0) {
-						updateStockFlag(stockId, Constants.STOCK_FLAG_FAVORITE);
+						updateStockFlag(stockId, stock.getFlag() | Constants.STOCK_FLAG_FAVORITE);
 						mOrionService.download(stock);
 					} else {
+						//TODO
 					    updateStockFlag(stockId, Constants.STOCK_FLAG_NONE);
 					}
 					break;
@@ -362,6 +382,21 @@ public class StockListEditActivity extends DatabaseActivity implements
 			}
 
 			restartLoader();
+		}
+
+		void updateStockOperation(long stockId, String operation) {
+			Uri uri = null;
+
+			uri = ContentUris.withAppendedId(
+					DatabaseContract.Stock.CONTENT_URI, stockId);
+
+			try {
+				ContentValues contentValues = new ContentValues();
+				contentValues.put(DatabaseContract.COLUMN_OPERATION, operation);
+				mContentResolver.update(uri, contentValues, null, null);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 		void updateStockFlag(long stockId, long flag) {
@@ -384,8 +419,8 @@ public class StockListEditActivity extends DatabaseActivity implements
 		public TextView mTextViewName;
 		public TextView mTextViewCode;
 		public TextView mTextViewPrice;
-		public TextView mTextViewNet;
 		public TextView mTextViewHold;
+		public ImageView mImageViewOperation;
 		public ImageView mImageViewFavorite;
 		public ImageView mImageViewDelete;
 	}
