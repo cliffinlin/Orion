@@ -625,7 +625,6 @@ public class StockAnalyzer {
 		String result = "";
 		StockData prev = null;
 		StockData stockData = null;
-		StockData overlap = null;
 
 		if ((vertexList == null)
 				|| (vertexList.size() < Constants.STOCK_VERTEX_TYPING_SIZE + 1)) {
@@ -646,11 +645,6 @@ public class StockAnalyzer {
 			return result;
 		}
 
-		overlap = overlapList.get(overlapList.size() - 1);
-		if (overlap == null) {
-			return result;
-		}
-
 		if (prev.getVertexLow() < stockData.getVertexLow()) {
 			return result;
 		}
@@ -664,11 +658,6 @@ public class StockAnalyzer {
 				result += Constants.STOCK_ACTION_BUY2;
 				if (stockData.vertexOf(Constants.STOCK_VERTEX_BOTTOM_SEGMENT)) {
 					result += Constants.STOCK_ACTION_BUY2;
-				}
-
-				if (overlap.getOverlapLow() > 0) {
-					result += " " + (int)(100 * (stock.getPrice() - overlap.getOverlapLow())/overlap.getOverlapLow());
-					result += "/" + (int)(100 * (overlap.getOverlapHigh() - overlap.getOverlapLow())/overlap.getOverlapLow());
 				}
 			}
 		}
@@ -694,7 +683,6 @@ public class StockAnalyzer {
 		String result = "";
 		StockData prev = null;
 		StockData stockData = null;
-		StockData overlap = null;
 
 		if ((vertexList == null)
 				|| (vertexList.size() < Constants.STOCK_VERTEX_TYPING_SIZE + 1)) {
@@ -715,11 +703,6 @@ public class StockAnalyzer {
 			return result;
 		}
 
-		overlap = overlapList.get(overlapList.size() - 1);
-		if (overlap == null) {
-			return result;
-		}
-
 		if (prev.getVertexHigh() > stockData.getVertexHigh()) {
 			return result;
 		}
@@ -733,11 +716,6 @@ public class StockAnalyzer {
 				result += Constants.STOCK_ACTION_SELL2;
 				if (stockData.vertexOf(Constants.STOCK_VERTEX_TOP_SEGMENT)) {
 					result += Constants.STOCK_ACTION_SELL2;
-				}
-
-				if (overlap.getOverlapLow() > 0) {
-					result += " " + (int)(100 * (stock.getPrice() - overlap.getOverlapLow())/overlap.getOverlapLow());
-					result += "/" + (int)(100 * (overlap.getOverlapHigh() - overlap.getOverlapLow())/overlap.getOverlapLow());
 				}
 			}
 		}

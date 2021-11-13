@@ -59,6 +59,7 @@ public class StockListActivity extends ListActivity implements
 	TextView mTextViewMin30 = null;
 	TextView mTextViewMin15 = null;
 	TextView mTextViewMin5 = null;
+	TextView mTextViewOperation = null;
 	TextView mTextViewModified = null;
 
 	ListView mLeftListView = null;
@@ -245,6 +246,9 @@ public class StockListActivity extends ListActivity implements
 		case R.id.action_5min:
 			mSortOrderColumn = DatabaseContract.COLUMN_MIN5;
 			break;
+		case R.id.operation:
+			mSortOrderColumn = DatabaseContract.COLUMN_OPERATION;
+			break;
 		case R.id.modified:
 			mSortOrderColumn = DatabaseContract.COLUMN_MODIFIED;
 			break;
@@ -288,6 +292,7 @@ public class StockListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewMin30, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewMin15, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewMin5, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewOperation, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewModified, mHeaderTextDefaultColor);
 	}
 
@@ -367,6 +372,11 @@ public class StockListActivity extends ListActivity implements
 			setVisibility(Constants.PERIOD_MIN5, mTextViewMin5);
 		}
 
+		mTextViewOperation = (TextView) findViewById(R.id.operation);
+		if (mTextViewOperation != null) {
+			mTextViewOperation.setOnClickListener(this);
+		}
+
 		mTextViewModified = (TextView) findViewById(R.id.modified);
 		if (mTextViewModified != null) {
 			mTextViewModified.setOnClickListener(this);
@@ -392,6 +402,8 @@ public class StockListActivity extends ListActivity implements
 			setHeaderTextColor(mTextViewMin15, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MIN5)) {
 			setHeaderTextColor(mTextViewMin5, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_OPERATION)) {
+			setHeaderTextColor(mTextViewOperation, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MODIFIED)) {
 			setHeaderTextColor(mTextViewModified, mHeaderTextHighlightColor);
 		} else {
@@ -408,10 +420,10 @@ public class StockListActivity extends ListActivity implements
 				DatabaseContract.COLUMN_WEEK, DatabaseContract.COLUMN_DAY,
 				DatabaseContract.COLUMN_MIN60, DatabaseContract.COLUMN_MIN30,
 				DatabaseContract.COLUMN_MIN15, DatabaseContract.COLUMN_MIN5,
-				DatabaseContract.COLUMN_MODIFIED };
+				DatabaseContract.COLUMN_OPERATION, DatabaseContract.COLUMN_MODIFIED };
 		int[] mRightTo = new int[] { R.id.price, R.id.net, R.id.type_month,
 				R.id.type_week, R.id.type_day, R.id.type_60min,
-				R.id.type_30min, R.id.type_15min, R.id.type_5min, R.id.modified };
+				R.id.type_30min, R.id.type_15min, R.id.type_5min, R.id.operation, R.id.modified };
 
 		mLeftListView = (ListView) findViewById(R.id.left_listview);
 		mLeftAdapter = new SimpleCursorAdapter(this,
@@ -428,7 +440,7 @@ public class StockListActivity extends ListActivity implements
 				R.layout.activity_stock_list_right_item, null, mRightFrom,
 				mRightTo, 0);
 		if ((mRightListView != null) && (mRightAdapter != null)) {
-			mRightAdapter.setViewBinder(new CustomViewBinder());
+			mRightAdapter.setViewBinder(new RightViewBinder());
 			mRightListView.setAdapter(mRightAdapter);
 			mRightListView.setOnItemClickListener(this);
 			mRightListView.setOnItemLongClickListener(this);
@@ -566,7 +578,7 @@ public class StockListActivity extends ListActivity implements
 		return true;
 	}
 
-	boolean setTextViewValue(String key, View textView) {
+	boolean setRightTextViewVisibility(String key, View textView) {
 		if (textView != null) {
 			if (Preferences.getBoolean(this, key, false)) {
 				textView.setVisibility(View.VISIBLE);
@@ -580,7 +592,7 @@ public class StockListActivity extends ListActivity implements
 		return false;
 	}
 
-	private class CustomViewBinder implements SimpleCursorAdapter.ViewBinder {
+	private class RightViewBinder implements SimpleCursorAdapter.ViewBinder {
 
 		@Override
 		public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
@@ -590,25 +602,25 @@ public class StockListActivity extends ListActivity implements
 
 			if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MONTH)) {
-				return setTextViewValue(Constants.PERIOD_MONTH, view);
+				return setRightTextViewVisibility(Constants.PERIOD_MONTH, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_WEEK)) {
-				return setTextViewValue(Constants.PERIOD_WEEK, view);
+				return setRightTextViewVisibility(Constants.PERIOD_WEEK, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_DAY)) {
-				return setTextViewValue(Constants.PERIOD_DAY, view);
+				return setRightTextViewVisibility(Constants.PERIOD_DAY, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MIN60)) {
-				return setTextViewValue(Constants.PERIOD_MIN60, view);
+				return setRightTextViewVisibility(Constants.PERIOD_MIN60, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MIN30)) {
-				return setTextViewValue(Constants.PERIOD_MIN30, view);
+				return setRightTextViewVisibility(Constants.PERIOD_MIN30, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MIN15)) {
-				return setTextViewValue(Constants.PERIOD_MIN15, view);
+				return setRightTextViewVisibility(Constants.PERIOD_MIN15, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MIN5)) {
-				return setTextViewValue(Constants.PERIOD_MIN5, view);
+				return setRightTextViewVisibility(Constants.PERIOD_MIN5, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MODIFIED)) {
 			}
