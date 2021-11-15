@@ -100,10 +100,10 @@ public class OrionMainActivity extends PreferenceActivity {
 		SharedPreferences settings = PreferenceManager
 				.getDefaultSharedPreferences(this);
 
-		Preferences.putBoolean (this, Constants.PERIOD_MONTH, true);
-		Preferences.putBoolean (this, Constants.PERIOD_WEEK, true);
-		Preferences.putBoolean (this, Constants.PERIOD_DAY, true);
-		Preferences.putBoolean (this, Constants.PERIOD_MIN60, true);
+//		Preferences.putBoolean (this, Constants.PERIOD_MONTH, true);
+//		Preferences.putBoolean (this, Constants.PERIOD_WEEK, true);
+//		Preferences.putBoolean (this, Constants.PERIOD_DAY, true);
+//		Preferences.putBoolean (this, Constants.PERIOD_MIN60, true);
 		Preferences.putBoolean (this, Settings.KEY_NOTIFICATION_MESSAGE, true);
 	}
 }

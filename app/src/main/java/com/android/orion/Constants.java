@@ -135,5 +135,5 @@ public class Constants {
 	public static final long DEFAULT_SEND_BROADCAST_INTERVAL = 1 * 60 * 1000;
 	public static final long DEFAULT_SLEEP_INTERVAL = 3 * 100;
 
-	public static final double ROI_COEFFICIENT = 1.0 / 10;
+	public static final double ROI_COEFFICIENT = 1.0 / 1000;
 }
