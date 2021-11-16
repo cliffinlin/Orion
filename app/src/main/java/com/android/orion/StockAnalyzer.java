@@ -625,9 +625,10 @@ public class StockAnalyzer {
 		String result = "";
 		StockData prev = null;
 		StockData stockData = null;
+		StockData start = null;
 
 		if ((vertexList == null)
-				|| (vertexList.size() < Constants.STOCK_VERTEX_TYPING_SIZE + 1)) {
+				|| (vertexList.size() < Constants.STOCK_VERTEX_TYPING_SIZE + 2)) {
 			return result;
 		}
 
@@ -658,6 +659,17 @@ public class StockAnalyzer {
 				result += Constants.STOCK_ACTION_BUY2;
 				if (stockData.vertexOf(Constants.STOCK_VERTEX_BOTTOM_SEGMENT)) {
 					result += Constants.STOCK_ACTION_BUY2;
+
+					for (int i = vertexList.size() - 5; i >= 0; i--) {
+						start = vertexList.get(i);
+						if ((start != null) && (start.vertexOf(Constants.STOCK_VERTEX_TOP_SEGMENT))) {
+							if (start.getHigh() > 0) {
+								result += " " + (int)(100 * (stock.getPrice() - start.getHigh())/start.getHigh());
+								result += "/" + (int)(100 * (stockData.getLow() - start.getHigh())/start.getHigh());
+							}
+							break;
+						}
+					}
 				}
 			}
 		}
@@ -683,9 +695,10 @@ public class StockAnalyzer {
 		String result = "";
 		StockData prev = null;
 		StockData stockData = null;
+		StockData start = null;
 
 		if ((vertexList == null)
-				|| (vertexList.size() < Constants.STOCK_VERTEX_TYPING_SIZE + 1)) {
+				|| (vertexList.size() < Constants.STOCK_VERTEX_TYPING_SIZE + 2)) {
 			return result;
 		}
 
@@ -716,6 +729,17 @@ public class StockAnalyzer {
 				result += Constants.STOCK_ACTION_SELL2;
 				if (stockData.vertexOf(Constants.STOCK_VERTEX_TOP_SEGMENT)) {
 					result += Constants.STOCK_ACTION_SELL2;
+
+					for (int i = vertexList.size() - 5; i >= 0; i--) {
+						start = vertexList.get(i);
+						if ((start != null) && (start.vertexOf(Constants.STOCK_VERTEX_BOTTOM_SEGMENT))) {
+							if (start.getLow() > 0) {
+								result += " " + (int)(100 * (stock.getPrice() - start.getLow())/start.getLow());
+								result += "/" + (int)(100 * (stockData.getHigh() - start.getLow())/start.getLow());
+							}
+							break;
+						}
+					}
 				}
 			}
 		}
