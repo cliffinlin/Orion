@@ -107,7 +107,7 @@ public class Constants {
 	public static final String STOCK_MARKET_OPEN_TIME = "09:15:00";
 	public static final String STOCK_MARKET_LUNCH_BEGIN_TIME = "11:40:00";
 	public static final String STOCK_MARKET_LUNCH_END_TIME = "12:50:00";
-	public static final String STOCK_MARKET_CLOSE_TIME = "15:10:00";
+	public static final String STOCK_MARKET_CLOSE_TIME = "15:15:00";
 
 	public static final int STOCK_POSITION_ABOVE = 1;
 	public static final int STOCK_POSITION_NONE = 0;

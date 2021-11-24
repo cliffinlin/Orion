@@ -189,6 +189,7 @@ public class StockDealActivity extends DatabaseActivity implements
 
 		if (ACTION_DEAL_INSERT.equals(mAction)) {
 			setTitle(R.string.deal_insert);
+			mDeal.setAction(Constants.PERIOD_DAY);
 		} else if (ACTION_DEAL_EDIT.equals(mAction)) {
 			setTitle(R.string.deal_edit);
 		}
