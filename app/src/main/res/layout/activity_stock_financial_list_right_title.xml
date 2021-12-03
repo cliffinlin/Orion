@@ -50,39 +50,12 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/rate"
-        android:layout_width="80dp"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/rate"
-        android:textSize="18sp" />
-
-    <TextView
         android:id="@+id/pb"
         android:layout_width="80dp"
         android:layout_height="40dp"
         android:layout_weight="1"
         android:gravity="center"
         android:text="@string/pb"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/valuation"
-        android:layout_width="80dp"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/valuation"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/hold"
-        android:layout_width="80dp"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/hold"
         android:textSize="18sp" />
 
     <TextView
@@ -95,12 +68,30 @@
         android:textSize="18sp" />
 
     <TextView
+        android:id="@+id/hold"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/hold"
+        android:textSize="18sp" />
+
+    <TextView
         android:id="@+id/bonus"
         android:layout_width="80dp"
         android:layout_height="40dp"
         android:layout_weight="1"
         android:gravity="center"
         android:text="@string/bonus"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/valuation"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/valuation"
         android:textSize="18sp" />
 
     <TextView
@@ -131,21 +122,21 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/net_profit"
-        android:layout_width="80dp"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/net_profit"
-        android:textSize="18sp" />
-
-    <TextView
         android:id="@+id/main_business_income_in_year"
         android:layout_width="80dp"
         android:layout_height="40dp"
         android:layout_weight="1"
         android:gravity="center"
         android:text="@string/main_business_income_in_year"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/net_profit"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/net_profit"
         android:textSize="18sp" />
 
     <TextView
@@ -212,12 +203,12 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/r_date"
-        android:layout_width="100dp"
+        android:id="@+id/rate"
+        android:layout_width="80dp"
         android:layout_height="40dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="@string/r_date"
+        android:text="@string/rate"
         android:textSize="18sp" />
 
     <TextView
@@ -248,12 +239,12 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/date"
+        android:id="@+id/r_date"
         android:layout_width="100dp"
         android:layout_height="40dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="@string/date"
+        android:text="@string/r_date"
         android:textSize="18sp" />
 
 </LinearLayout>
