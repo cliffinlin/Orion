@@ -114,10 +114,10 @@ public class BaseActivity extends Activity {
 				String action = intent.getAction();
 
 				if (Constants.ACTION_RESTART_LOADER.equals(action)) {
-					if (System.currentTimeMillis() - mLastRestartLoader > Constants.DEFAULT_RESTART_LOADER_INTERVAL) {
-						mLastRestartLoader = System.currentTimeMillis();
+//					if (System.currentTimeMillis() - mLastRestartLoader > Constants.DEFAULT_RESTART_LOADER_INTERVAL) {
+//						mLastRestartLoader = System.currentTimeMillis();
 						restartLoader(intent);
-					}
+//					}
 				}
 			}
 		}

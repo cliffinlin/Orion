@@ -94,15 +94,15 @@ public abstract class StockDataProvider extends StockAnalyzer {
 	}
 
 	void sendBroadcast(String action, long stockID) {
-		long delt = System.currentTimeMillis() - mLastSendBroadcast;
-		if (delt > Constants.DEFAULT_SEND_BROADCAST_INTERVAL) {
+//		long delt = System.currentTimeMillis() - mLastSendBroadcast;
+//		if (delt > Constants.DEFAULT_SEND_BROADCAST_INTERVAL) {
 			mLastSendBroadcast = System.currentTimeMillis();
 
 			Intent intent = new Intent(action);
 			intent.putExtra(Constants.EXTRA_STOCK_ID, stockID);
 
 			mLocalBroadcastManager.sendBroadcast(intent);
-		}
+//		}
 	}
 
 	void loadStockArrayMap(ArrayMap<String, Stock> stockArrayMap) {
@@ -178,8 +178,13 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		}
 
 		if (mAsyncTaskStatus != Status.FINISHED) {
-			Log.d(TAG, "download return, mAsyncTaskStatus=" + mAsyncTaskStatus);
-			return;
+			if (stock != null) {
+				mAsyncTaskStatus = Status.FINISHED;
+				Log.d(TAG, "download, set mAsyncTaskStatus=" + mAsyncTaskStatus);
+			} else {
+				Log.d(TAG, "download return, mAsyncTaskStatus=" + mAsyncTaskStatus);
+				return;
+			}
 		}
 
 		DownloadAsyncTask task = new DownloadAsyncTask();
@@ -858,6 +863,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			String result = "";
 			long stockId = 0;
 
+			acquireWakeLock();
+
 			mAsyncTaskStatus = Status.RUNNING;
 			Log.d(TAG, "doInBackground, mAsyncTaskStatus=" + mAsyncTaskStatus);
 
@@ -868,6 +875,13 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			loadStockArrayMap(stockArrayMapFavorite);
 
 			for (Stock stock : stockArrayMapFavorite.values()) {
+				if (mAsyncTaskStatus != Status.RUNNING) {
+					releaseWakeLock();
+
+					Log.d(TAG, "doInBackground return, mAsyncTaskStatus=" + mAsyncTaskStatus);
+					return result;
+				}
+
 				if (stockId != 0) {
 					if (stock.getId() != stockId) {
 						continue;
@@ -917,12 +931,17 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 				analyze(stock);
 
-				sendBroadcast(Constants.ACTION_RESTART_LOADER, stockId);
+				sendBroadcast(Constants.ACTION_RESTART_LOADER, stock.getId());
 			}
 
 			result = downloadIPO();
 			sendBroadcast(Constants.ACTION_RESTART_LOADER,
 					Constants.STOCK_ID_INVALID);
+
+            mAsyncTaskStatus = Status.FINISHED;
+            Log.d(TAG, "doInBackground, mAsyncTaskStatus=" + mAsyncTaskStatus);
+
+            releaseWakeLock();
 
 			return result;
 		}
@@ -930,11 +949,6 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-
-			mAsyncTaskStatus = Status.PENDING;
-			Log.d(TAG, "onPreExecute, mAsyncTaskStatus=" + mAsyncTaskStatus);
-
-			acquireWakeLock();
 		}
 
 		@Override
