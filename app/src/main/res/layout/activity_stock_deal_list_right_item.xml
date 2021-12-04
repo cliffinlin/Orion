@@ -38,6 +38,14 @@
         android:textSize="18sp" />
 
     <TextView
+        android:id="@+id/value"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="18sp" />
+
+    <TextView
         android:id="@+id/profit"
         android:layout_width="80dp"
         android:layout_height="50dp"
@@ -46,7 +54,15 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/value"
+        android:id="@+id/bonus"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/yield"
         android:layout_width="80dp"
         android:layout_height="50dp"
         android:layout_weight="1"

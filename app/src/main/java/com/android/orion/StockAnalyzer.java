@@ -462,6 +462,7 @@ public class StockAnalyzer {
 		mStockDatabaseManager.getFinancialData(stock, financialData);
 		mStockDatabaseManager.getFinancialDataList(stock, financialDataList,
 				sortOrder);
+		mStockDatabaseManager.updateStockDeal(stock);
 
 		stock.setBookValuePerShare(financialData.getBookValuePerShare());
 		stock.setTotalAssets(financialData.getTotalAssets());

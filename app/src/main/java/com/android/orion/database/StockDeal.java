@@ -20,6 +20,8 @@ public class StockDeal extends DatabaseTable {
     private long mVolume;
     private double mValue;
     private double mProfit;
+    private double mBonus;
+    private double mYield;
 
     public StockDeal() {
         init();
@@ -59,6 +61,8 @@ public class StockDeal extends DatabaseTable {
         mVolume = 0;
         mValue = 0;
         mProfit = 0;
+        mBonus = 0;
+        mYield = 0;
     }
 
     public ContentValues getContentValues() {
@@ -79,6 +83,8 @@ public class StockDeal extends DatabaseTable {
         contentValues.put(DatabaseContract.COLUMN_VOLUME, mVolume);
         contentValues.put(DatabaseContract.COLUMN_VALUE, mValue);
         contentValues.put(DatabaseContract.COLUMN_PROFIT, mProfit);
+        contentValues.put(DatabaseContract.COLUMN_BONUS, mBonus);
+        contentValues.put(DatabaseContract.COLUMN_YIELD, mYield);
 
         return contentValues;
     }
@@ -102,6 +108,8 @@ public class StockDeal extends DatabaseTable {
         setVolume(stockDeal.mVolume);
         setValue(stockDeal.mValue);
         setProfit(stockDeal.mProfit);
+        setBonus(stockDeal.mBonus);
+        setYield(stockDeal.mYield);
     }
 
     @Override
@@ -124,6 +132,8 @@ public class StockDeal extends DatabaseTable {
         setVolume(cursor);
         setValue(cursor);
         setProfit(cursor);
+        setBonus(cursor);
+        setYield(cursor);
     }
 
     public String getSE() {
@@ -296,6 +306,40 @@ public class StockDeal extends DatabaseTable {
                 .getColumnIndex(DatabaseContract.COLUMN_PROFIT)));
     }
 
+    public double getBonus() {
+        return mBonus;
+    }
+
+    public void setBonus(double bonus) {
+        mBonus = bonus;
+    }
+
+    void setBonus(Cursor cursor) {
+        if (cursor == null) {
+            return;
+        }
+
+        setBonus(cursor.getDouble(cursor
+                .getColumnIndex(DatabaseContract.COLUMN_BONUS)));
+    }
+
+    public double getYield() {
+        return mYield;
+    }
+
+    public void setYield(double yield) {
+        mYield = yield;
+    }
+
+    void setYield(Cursor cursor) {
+        if (cursor == null) {
+            return;
+        }
+
+        setYield(cursor.getDouble(cursor
+                .getColumnIndex(DatabaseContract.COLUMN_YIELD)));
+    }
+
     public void setupNet() {
         if (mPrice == 0) {
             return;
@@ -373,6 +417,29 @@ public class StockDeal extends DatabaseTable {
         double totalFee = stampDuty + buyTransferFee + sellTransferFee + buyCommission + sellCommission + dividendTax;
 
         mProfit = Utility.Round((mPrice - mDeal) * Math.abs(mVolume) - totalFee,
+                Constants.DOUBLE_FIXED_DECIMAL);
+    }
+
+    public void setupBonus(double dividend) {
+        if (dividend == 0) {
+            mBonus = 0;
+            return;
+        }
+
+        if (mVolume <= 0) {
+            mBonus = 0;
+            return;
+        }
+
+        mBonus = dividend / 10.0 * mVolume;
+    }
+
+    public void setupYield(double dividend) {
+        if (mDeal == 0) {
+            return;
+        }
+
+        mYield = Utility.Round(100.0 * dividend / 10.0 / mDeal,
                 Constants.DOUBLE_FIXED_DECIMAL);
     }
 }

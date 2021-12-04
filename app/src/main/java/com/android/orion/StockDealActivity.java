@@ -318,8 +318,10 @@ public class StockDealActivity extends DatabaseActivity implements
 				mDeal.setVolume(0);
 			}
 			mDeal.setupNet();
-			mDeal.setupProfit(mStock.getRDate(), mStock.getDividend());
 			mDeal.setupValue();
+			mDeal.setupProfit(mStock.getRDate(), mStock.getDividend());
+			mDeal.setupBonus(mStock.getDividend());
+			mDeal.setupYield(mStock.getDividend());
 			mHandler.sendEmptyMessage(MESSAGE_SAVE_DEAL);
 			setResult(RESULT_OK);
 			finish();
