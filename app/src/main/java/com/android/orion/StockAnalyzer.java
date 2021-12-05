@@ -1011,11 +1011,41 @@ public class StockAnalyzer {
 	// }
 	// }
 
+	private int getNetFromAction(String action) {
+		int index = 0;
+		int result = 0;
+		String remainingString;
+		String netString;
+
+		try {
+			remainingString = action.substring(4);
+			if (TextUtils.isEmpty(remainingString)) {
+				return result;
+			}
+
+			index = remainingString.indexOf("/");
+			if (index < 0) {
+				return result;
+			}
+
+			netString = remainingString.substring(0, index).trim();
+			if (TextUtils.isEmpty(netString)) {
+				return result;
+			}
+
+			result = Integer.valueOf(netString);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			return result;
+		}
+	}
+
 	private void updateNotification(Stock stock) {
 		int id = 0;
 		String contentText = "";
 		Notification.Builder notification = null;
-		StockDeal stockDeal = new StockDeal();
+        ArrayList<StockDeal> stockDealList = new ArrayList<StockDeal>();
 
 		NotificationManager notificationManager = (NotificationManager) mContext
 				.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -1044,16 +1074,25 @@ public class StockAnalyzer {
 			if (Preferences.getBoolean(mContext, period, false)) {
 				String action = stock.getAction(period);
 				if (action.contains("B2B2")) {
-					mStockDatabaseManager.getStockDealToBuy(stock, stockDeal);
-                    if (!TextUtils.isEmpty(stockDeal.getCode()) && (stockDeal.getVolume() <= 0)) {
-                        actionString.append(period + " " + action + " ");
-                        actionString.append(" " + stockDeal.getProfit() + " ");
+					if (getNetFromAction(action) <= Constants.NOTIFY_B2B2_NET) {
+						StockDeal stockDeal = new StockDeal();
+						mStockDatabaseManager.getStockDealToBuy(stock, stockDeal);
+						if (!TextUtils.isEmpty(stockDeal.getCode()) && (stockDeal.getVolume() <= 0)) {
+							actionString.append(period + " " + action + " ");
+							actionString.append(" " + stockDeal.getProfit() + " ");
+						}
 					}
 				} else if (action.contains("S2S2")) {
-					mStockDatabaseManager.getStockDealToSell(stock, stockDeal);
-                    if (!TextUtils.isEmpty(stockDeal.getCode()) && (stockDeal.getProfit() > 0) && !TextUtils.isEmpty(stockDeal.getAction())) {
-                        actionString.append(period + " " + action + " ");
-                        actionString.append(" " + stockDeal.getProfit() + " ");
+					if (getNetFromAction(action) >= Constants.NOTIFY_S2S2_NET) {
+						mStockDatabaseManager.getStockDealListToSell(stock, stockDealList);
+						double totalProfit = 0;
+						for (StockDeal stockDeal : stockDealList) {
+							totalProfit += stockDeal.getProfit();
+						}
+						if (totalProfit > Constants.NOTIFY_S2S2_PROFIT) {
+							actionString.append(period + " " + action + " ");
+							actionString.append(" " + totalProfit + " ");
+						}
 					}
 				}
 			}

@@ -701,22 +701,8 @@ public class StockDatabaseManager extends DatabaseManager {
 		}
 	}
 
-	public String getStockDealListAllSelection(Stock stock) {
-		String selection = "";
-
-		if (stock == null) {
-			return selection;
-		}
-
-		selection = DatabaseContract.COLUMN_SE + " = " + "\'" + stock.getSE()
-				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
-				+ stock.getCode() + "\'";
-
-		return selection;
-	}
-
 	public void getStockDealList(Stock stock,
-			ArrayList<StockDeal> stockDealList, String selection) {
+			ArrayList<StockDeal> stockDealList, String selection, String sortOrder) {
 		Cursor cursor = null;
 
 		if ((stock == null) || (stockDealList == null)) {
@@ -724,8 +710,6 @@ public class StockDatabaseManager extends DatabaseManager {
 		}
 
 		stockDealList.clear();
-
-		String sortOrder = DatabaseContract.COLUMN_DEAL + " DESC ";
 
 		try {
 			cursor = queryStockDeal(selection, null, sortOrder);
@@ -825,6 +809,25 @@ public class StockDatabaseManager extends DatabaseManager {
 
 		getStockDeal(stock, stockDeal, selection, sortOrder);
 	}
+
+    public void getStockDealListToSell(Stock stock, ArrayList<StockDeal> stockDealList) {
+        String sortOrder = DatabaseContract.COLUMN_NET + DatabaseContract.ORDER_DIRECTION_ASC;
+
+        if ((stock == null) || (stockDealList == null)) {
+            return;
+        }
+
+        String selection = DatabaseContract.COLUMN_SE + " = " + "\'" + stock.getSE()
+                + "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
+                + stock.getCode() + "\'";
+
+        selection += " AND " + DatabaseContract.COLUMN_VOLUME + " > " + 0 + " AND "
+                + DatabaseContract.COLUMN_PROFIT + " > " + 0;
+
+        selection += " AND " + DatabaseContract.COLUMN_ACTION + " != " + "\'\'";
+
+        getStockDealList(stock, stockDealList, selection, sortOrder);
+    }
 
 	public void getStockDealMax(Stock stock, StockDeal stockDeal) {
 		String sortOrder = DatabaseContract.COLUMN_DEAL + " DESC ";

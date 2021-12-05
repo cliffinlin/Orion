@@ -136,4 +136,8 @@ public class Constants {
 	public static final long DEFAULT_SLEEP_INTERVAL = 3 * 100;
 
 	public static final double ROI_COEFFICIENT = 1.0 / 1000;
+
+	public static final int NOTIFY_B2B2_NET = -5;
+	public static final int NOTIFY_S2S2_NET = 5;
+	public static final int NOTIFY_S2S2_PROFIT = 100;
 }

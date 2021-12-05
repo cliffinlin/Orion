@@ -690,8 +690,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 
 			updateTitle();
 
-			mStockDatabaseManager.getStockDealList(mStock, mStockDealList,
-					mStockDatabaseManager.getStockDealListAllSelection(mStock));
+			loadStockDealList();
 
 			stockDataChart.updateDescription(mStock);
 			stockDataChart.updateXLimitLines(mStock, mStockDealList, mShowDeal);
@@ -704,6 +703,15 @@ public class StockDataChartListActivity extends BaseActivity implements
 		} finally {
 			mStockDatabaseManager.closeCursor(cursor);
 		}
+	}
+
+	void loadStockDealList() {
+		String selection = DatabaseContract.COLUMN_SE + " = " + "\'" + mStock.getSE()
+				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
+				+ mStock.getCode() + "\'";
+		String sortOrder = DatabaseContract.COLUMN_DEAL + " DESC ";
+
+		mStockDatabaseManager.getStockDealList(mStock, mStockDealList, selection, sortOrder);
 	}
 
 	Comparator<FinancialData> comparator = new Comparator<FinancialData>() {
