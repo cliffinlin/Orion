@@ -1089,7 +1089,8 @@ public class StockAnalyzer {
 						for (StockDeal stockDeal : stockDealList) {
 							totalProfit += stockDeal.getProfit();
 						}
-						if (totalProfit > Constants.NOTIFY_S2S2_PROFIT) {
+
+						if (totalProfit > 0) {
 							actionString.append(period + " " + action + " ");
 							actionString.append(" " + totalProfit + " ");
 						}

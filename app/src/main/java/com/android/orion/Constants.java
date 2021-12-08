@@ -139,5 +139,4 @@ public class Constants {
 
 	public static final int NOTIFY_B2B2_NET = -5;
 	public static final int NOTIFY_S2S2_NET = 5;
-	public static final int NOTIFY_S2S2_PROFIT = 100;
 }
