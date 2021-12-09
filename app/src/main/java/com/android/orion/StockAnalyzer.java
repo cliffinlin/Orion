@@ -129,33 +129,6 @@ public class StockAnalyzer {
 		}
 	}
 
-	void analyze(Stock stock) {
-		StopWatch stopWatch = new StopWatch();
-		stopWatch.start();
-
-		if (stock == null) {
-			return;
-		}
-
-		try {
-//			if (!isFinancialAnalyzed(stock)) {
-				analyzeFinancial(stock);
-//			}
-
-			setupStockFinancialData(stock);
-			setupStockShareBonus(stock);
-
-			updateDatabase(stock);
-			updateNotification(stock);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		stopWatch.stop();
-		Log.d(TAG, "analyze:" + stock.getName() + " " + stopWatch.getInterval()
-				+ "s");
-	}
-
 	void analyze(Stock stock, String period) {
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
@@ -176,12 +149,8 @@ public class StockAnalyzer {
 			setupStockFinancialData(stock);
 
 			loadStockDataList(stock, period, stockDataList);
-
 			analyzeStockData(stock, period, stockDataList);
-
 			updateDatabase(stock, period, stockDataList);
-			updateActionFile(stock);
-			updateNotification(stock);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -189,6 +158,35 @@ public class StockAnalyzer {
 		stopWatch.stop();
 		Log.d(TAG, "analyze:" + stock.getName() + " " + period + " "
 				+ stopWatch.getInterval() + "s");
+	}
+
+	void analyze(Stock stock) {
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start();
+
+		if (stock == null) {
+			return;
+		}
+
+		try {
+//			if (!isFinancialAnalyzed(stock)) {
+			analyzeFinancial(stock);
+//			}
+
+			setupStockFinancialData(stock);
+			setupStockShareBonus(stock);
+
+			updateDatabase(stock);
+
+			updateActionFile(stock);
+			updateNotification(stock);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		stopWatch.stop();
+		Log.d(TAG, "analyze:" + stock.getName() + " " + stopWatch.getInterval()
+				+ "s");
 	}
 
 	boolean isFinancialAnalyzed(Stock stock) {
