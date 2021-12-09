@@ -2,6 +2,7 @@ package com.android.orion;
 
 import java.util.ArrayList;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.LoaderManager;
 import android.app.ProgressDialog;
@@ -12,15 +13,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.util.ArrayMap;
 import android.util.Log;
+import android.widget.Toast;
 
+import androidx.core.app.ActivityCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.android.orion.OrionService.OrionBinder;
@@ -216,6 +218,8 @@ public class BaseActivity extends Activity {
 			mProgressDialog = new ProgressDialog(mContext,
 					ProgressDialog.THEME_HOLO_LIGHT);
 		}
+
+		checkPermission();
 	}
 
 	@Override
@@ -276,5 +280,39 @@ public class BaseActivity extends Activity {
 	}
 
 	void restartLoader(Intent intent) {
+	}
+
+	private static final int REQUEST_EXTERNAL_STORAGE = 1;
+	private static String[] PERMISSIONS_STORAGE = {"android.permission.READ_EXTERNAL_STORAGE",
+			"android.permission.WRITE_EXTERNAL_STORAGE"};
+
+	private void checkPermission() {
+		if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+				!= PackageManager.PERMISSION_GRANTED) {
+			if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission
+					.WRITE_EXTERNAL_STORAGE)) {
+				Toast.makeText(this, "请开通相关权限！", Toast.LENGTH_SHORT).show();
+			}
+
+			ActivityCompat.requestPermissions(this, PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
+
+		}
+	}
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode,
+										   String permissions[], int[] grantResults) {
+		switch (requestCode) {
+			case REQUEST_EXTERNAL_STORAGE: {
+				if (grantResults.length > 0
+						&& grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+					Toast.makeText(this, "授权成功！", Toast.LENGTH_SHORT).show();
+				} else {
+					Toast.makeText(this, "授权被拒绝！", Toast.LENGTH_SHORT).show();
+				}
+				return;
+			}
+
+		}
 	}
 }

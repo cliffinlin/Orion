@@ -1,7 +1,6 @@
 package com.android.orion;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -12,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Build;
+import android.os.Environment;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.text.TextUtils;
@@ -28,10 +28,10 @@ import com.android.orion.database.StockDatabaseManager;
 import com.android.orion.database.StockDeal;
 import com.android.orion.database.TotalShare;
 import com.android.orion.indicator.MACD;
-import com.android.orion.utility.Market;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.StopWatch;
 import com.android.orion.utility.Utility;
+
 
 public class StockAnalyzer {
 	static final String TAG = Constants.TAG + " "
@@ -180,6 +180,7 @@ public class StockAnalyzer {
 			analyzeStockData(stock, period, stockDataList);
 
 			updateDatabase(stock, period, stockDataList);
+			updateActionFile(stock);
 			updateNotification(stock);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1041,6 +1042,28 @@ public class StockAnalyzer {
 		}
 	}
 
+	private void updateActionFile(Stock stock) {
+		String fileName;
+		StringBuilder logString = new StringBuilder();
+
+		logString.append(stock.getName() + " " + stock.getPrice() + " "
+				+ stock.getNet() + " ");
+
+		for (String period : Constants.PERIODS) {
+			if (Preferences.getBoolean(mContext, period, false)) {
+				logString.append(period + " " + stock.getAction(period) + " ");
+			}
+		}
+		logString.append(stock.getModified() + "\n");
+
+		try {
+			fileName = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Android/" + stock.getSE() + stock.getCode() + stock.getName() + ".txt";
+			Utility.writeFile(fileName, logString.toString(), true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	private void updateNotification(Stock stock) {
 		int id = 0;
 		String contentText = "";
@@ -1074,16 +1097,16 @@ public class StockAnalyzer {
 			if (Preferences.getBoolean(mContext, period, false)) {
 				String action = stock.getAction(period);
 				if (action.contains("B2B2")) {
-					if (getNetFromAction(action) <= Constants.NOTIFY_B2B2_NET) {
+//					if (getNetFromAction(action) <= Constants.NOTIFY_B2B2_NET) {
 						StockDeal stockDeal = new StockDeal();
 						mStockDatabaseManager.getStockDealToBuy(stock, stockDeal);
 						if (!TextUtils.isEmpty(stockDeal.getCode()) && (stockDeal.getVolume() <= 0)) {
 							actionString.append(period + " " + action + " ");
 							actionString.append(" " + stockDeal.getProfit() + " ");
 						}
-					}
+//					}
 				} else if (action.contains("S2S2")) {
-					if (getNetFromAction(action) >= Constants.NOTIFY_S2S2_NET) {
+//					if (getNetFromAction(action) >= Constants.NOTIFY_S2S2_NET) {
 						mStockDatabaseManager.getStockDealListToSell(stock, stockDealList);
 						double totalProfit = 0;
 						for (StockDeal stockDeal : stockDealList) {
@@ -1094,7 +1117,7 @@ public class StockAnalyzer {
 							actionString.append(period + " " + action + " ");
 							actionString.append(" " + totalProfit + " ");
 						}
-					}
+//					}
 				}
 			}
 		}

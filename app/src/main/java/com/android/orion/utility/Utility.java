@@ -4,12 +4,16 @@ import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.RandomAccessFile;
+import java.io.Reader;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,6 +29,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -447,6 +452,93 @@ public class Utility {
 		}
 
 		writeFile(fileName, string);
+	}
+
+	private void writeSdcard()  {
+		String text = "";
+		if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+			if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+				File storage = Environment.getExternalStorageDirectory();
+				File tmepfile = new File(storage.getPath());
+				if (! tmepfile.exists()) {
+					tmepfile.mkdirs();
+				}
+				File file1=new File(tmepfile,"test.txt");
+				if (!file1.exists()){
+					try {
+						file1.createNewFile();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				FileOutputStream fileOutputStream = null;
+				try {
+					fileOutputStream = new FileOutputStream(file1);
+					fileOutputStream.write(text.getBytes());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}finally {
+					if (fileOutputStream != null) {
+						try {
+							fileOutputStream.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+	private void readSdcard() {
+		if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+			if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+				InputStream inputStream = null;
+				Reader reader = null;
+				BufferedReader bufferedReader = null;
+				try {
+					File storage = Environment.getExternalStorageDirectory();
+					File tmepfile = new File(storage.getPath());
+					File file=new File(tmepfile, "test.txt");
+					inputStream = new FileInputStream(file);
+					reader = new InputStreamReader(inputStream);
+					bufferedReader = new BufferedReader(reader);
+					StringBuilder result = new StringBuilder();
+					String temp;
+					while ((temp = bufferedReader.readLine()) != null) {
+						result.append(temp);
+					}
+					Log.i("MainActivity", "result:" + result);
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				} finally {
+					if (reader != null) {
+						try {
+							reader.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+					if (inputStream != null) {
+						try {
+							inputStream.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+					if (bufferedReader != null) {
+						try {
+							bufferedReader.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+
+				}
+			}
+		}
 	}
 
 	public static byte[] readFileByte(String fileName) {
