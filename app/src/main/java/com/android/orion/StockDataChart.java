@@ -308,6 +308,10 @@ public class StockDataChart {
 		if (stock == null) {
 			return;
 		}
+
+		mDescription += stock.getName();
+		mDescription += " ";
+
 		mDescription += mPeriod;
 		mDescription += " ";
 
