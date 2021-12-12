@@ -713,12 +713,12 @@ public class StockAnalyzer {
 		if (stockData == null) {
 			return result;
 		}
-//
-//		if (prev.getVertexLow() < stockData.getVertexLow()) {
-//			return result;
-//		}
-//
-		if (stock.getPrice() > prev.getHigh()) {
+
+		if (prev.getVertexLow() < stockData.getVertexLow()) {
+			return result;
+		}
+
+		if (stock.getPrice() > prev.getVertexHigh()) {
 			return result;
 		}
 
@@ -779,12 +779,12 @@ public class StockAnalyzer {
 		if (stockData == null) {
 			return result;
 		}
-//
-//		if (prev.getVertexHigh() > stockData.getVertexHigh()) {
-//			return result;
-//		}
-//
-		if (stock.getPrice() < prev.getLow()) {
+
+		if (prev.getVertexHigh() > stockData.getVertexHigh()) {
+			return result;
+		}
+
+		if (stock.getPrice() < prev.getVertexLow()) {
 			return result;
 		}
 
