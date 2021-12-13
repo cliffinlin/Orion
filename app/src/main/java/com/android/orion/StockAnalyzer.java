@@ -873,11 +873,11 @@ public class StockAnalyzer {
 			} else {
 				action += Constants.STOCK_ACTION_ADD;
 			}
-
-			String result1 = getFirstBottomAction(stock, drawVertexList);
-			if (!TextUtils.isEmpty(result1)) {
-				action = result1;
-			}
+//
+//			String result1 = getFirstBottomAction(stock, drawVertexList);
+//			if (!TextUtils.isEmpty(result1)) {
+//				action = result1;
+//			}
 
 			String result2 = getSecondBottomAction(stock, drawVertexList,
 					overlapList);
@@ -890,11 +890,11 @@ public class StockAnalyzer {
 			} else {
 				action += Constants.STOCK_ACTION_MINUS;
 			}
-
-			String result1 = getFirstTopAction(stock, drawVertexList);
-			if (!TextUtils.isEmpty(result1)) {
-				action = result1;
-			}
+//
+//			String result1 = getFirstTopAction(stock, drawVertexList);
+//			if (!TextUtils.isEmpty(result1)) {
+//				action = result1;
+//			}
 
             String result2 = getSecondTopAction(stock, drawVertexList, overlapList);
             if (!TextUtils.isEmpty(result2)) {
