@@ -619,31 +619,40 @@ public class StockAnalyzer {
 		analyzeAction(stock, period, stockDataList, drawVertexList, overlapList);
 	}
 
-	private String getFirstBottomAction(Stock stock, ArrayList<StockData> vertexList) {
+	private String getFirstBottomAction(Stock stock, ArrayList<StockData> vertexList, ArrayList<StockData> overlapList) {
 		String result = "";
-		StockData stockData = null;
 		StockData start = null;
+		StockData end = null;
+		StockData overlap = null;
 
 		if ((vertexList == null)
 				|| (vertexList.size() < Constants.STOCK_VERTEX_TYPING_SIZE + 2)) {
 			return result;
 		}
 
-		stockData = vertexList.get(vertexList.size() - 2);
-		if (stockData == null) {
+		end = vertexList.get(vertexList.size() - 2);
+		if (end == null) {
 			return result;
 		}
 
-		if (stockData.vertexOf(Constants.STOCK_VERTEX_BOTTOM_SEGMENT)) {
+		if ((overlapList == null) || (overlapList.size() < 1)) {
+			return result;
+		}
+
+		if (end.getVertexLow() > overlapList.get(overlapList.size() - 1).getOverlapLow()) {
+			return result;
+		}
+
+		if (end.vertexOf(Constants.STOCK_VERTEX_BOTTOM)) {
 			result += Constants.STOCK_ACTION_BUY1;
 			result += Constants.STOCK_ACTION_BUY1;
 
 			for (int i = vertexList.size() - 3; i >= 0; i--) {
 				start = vertexList.get(i);
-				if ((start != null) && (start.vertexOf(Constants.STOCK_VERTEX_TOP_SEGMENT))) {
-					if ((stock.getPrice() > 0) && (start.getHigh() > 0)) {
-						result += " " + (int)(100 * (stock.getPrice() - start.getHigh())/start.getHigh());
-						result += "/" + (int)(100 * (stockData.getLow() - start.getHigh())/start.getHigh());
+				if ((start != null) && (start.vertexOf(Constants.STOCK_VERTEX_TOP))) {
+					if ((stock.getPrice() > 0) && (start.getVertexHigh() > 0)) {
+						result += " " + (int)(100 * (stock.getPrice() - start.getVertexHigh())/start.getVertexHigh());
+						result += "/" + (int)(100 * (end.getVertexLow() - start.getVertexHigh())/start.getVertexHigh());
 					}
 					break;
 				}
@@ -653,31 +662,39 @@ public class StockAnalyzer {
 		return result;
 	}
 
-	private String getFirstTopAction(Stock stock, ArrayList<StockData> vertexList) {
+	private String getFirstTopAction(Stock stock, ArrayList<StockData> vertexList, ArrayList<StockData> overlapList) {
 		String result = "";
-		StockData stockData = null;
 		StockData start = null;
+        StockData end = null;
 
 		if ((vertexList == null)
 				|| (vertexList.size() < Constants.STOCK_VERTEX_TYPING_SIZE + 2)) {
 			return result;
 		}
 
-		stockData = vertexList.get(vertexList.size() - 2);
-		if (stockData == null) {
+		end = vertexList.get(vertexList.size() - 2);
+		if (end == null) {
 			return result;
 		}
 
-		if (stockData.vertexOf(Constants.STOCK_VERTEX_TOP_SEGMENT)) {
+		if ((overlapList == null) || (overlapList.size() < 1)) {
+			return result;
+		}
+
+		if (end.getVertexHigh() < overlapList.get(overlapList.size() - 1).getOverlapHigh()) {
+			return result;
+		}
+
+		if (end.vertexOf(Constants.STOCK_VERTEX_TOP)) {
 			result += Constants.STOCK_ACTION_SELL1;
 			result += Constants.STOCK_ACTION_SELL1;
 
 			for (int i = vertexList.size() - 3; i >= 0; i--) {
 				start = vertexList.get(i);
-				if ((start != null) && (start.vertexOf(Constants.STOCK_VERTEX_BOTTOM_SEGMENT))) {
-					if ((stock.getPrice() > 0) && (start.getLow() > 0)) {
-						result += " " + (int)(100 * (stock.getPrice() - start.getLow())/start.getLow());
-						result += "/" + (int)(100 * (stockData.getHigh() - start.getLow())/start.getLow());
+				if ((start != null) && (start.vertexOf(Constants.STOCK_VERTEX_BOTTOM))) {
+					if ((stock.getPrice() > 0) && (start.getVertexLow() > 0)) {
+						result += " " + (int)(100 * (stock.getPrice() - start.getVertexLow())/start.getVertexLow());
+						result += "/" + (int)(100 * (end.getVertexHigh() - start.getVertexLow())/start.getVertexLow());
 					}
 					break;
 				}
@@ -699,9 +716,9 @@ public class StockAnalyzer {
 			return result;
 		}
 
-		if ((overlapList == null) || (overlapList.size() < 1)) {
-			return result;
-		}
+//		if ((overlapList == null) || (overlapList.size() < 1)) {
+//			return result;
+//		}
 
 		prev = vertexList.get(vertexList.size() - 2);
 		if (prev == null) {
@@ -752,9 +769,9 @@ public class StockAnalyzer {
 			return result;
 		}
 
-		if ((overlapList == null) || (overlapList.size() < 1)) {
-			return result;
-		}
+//		if ((overlapList == null) || (overlapList.size() < 1)) {
+//			return result;
+//		}
 
 		prev = vertexList.get(vertexList.size() - 2);
 		if (prev == null) {
@@ -844,26 +861,38 @@ public class StockAnalyzer {
 
 		if (stockData.directionOf(Constants.STOCK_DIRECTION_UP)) {
 			if (prev.vertexOf(Constants.STOCK_VERTEX_BOTTOM)) {
-					action += Constants.STOCK_ACTION_D;
+				action += Constants.STOCK_ACTION_D;
+				if (period.equals(Constants.PERIOD_DAY)) {
+					String result1 = getFirstBottomAction(stock, drawVertexList, overlapList);
+					if (!TextUtils.isEmpty(result1)) {
+						action = result1;
+					}
+				}
 			} else {
 				action += Constants.STOCK_ACTION_ADD;
 			}
 
-			String result = getSecondBottomAction(stock, drawVertexList,
+			String result2 = getSecondBottomAction(stock, drawVertexList,
 					overlapList);
-			if (!TextUtils.isEmpty(result)) {
-				action = result;
+			if (!TextUtils.isEmpty(result2)) {
+				action = result2;
 			}
 		} else if (stockData.directionOf(Constants.STOCK_DIRECTION_DOWN)) {
 			if (prev.vertexOf(Constants.STOCK_VERTEX_TOP)) {
-					action += Constants.STOCK_ACTION_G;
+				action += Constants.STOCK_ACTION_G;
+				if (period.equals(Constants.PERIOD_DAY)) {
+					String result1 = getFirstTopAction(stock, drawVertexList, overlapList);
+					if (!TextUtils.isEmpty(result1)) {
+						action = result1;
+					}
+				}
 			} else {
 				action += Constants.STOCK_ACTION_MINUS;
 			}
 
-            String result = getSecondTopAction(stock, drawVertexList, overlapList);
-            if (!TextUtils.isEmpty(result)) {
-                action = result;
+            String result2 = getSecondTopAction(stock, drawVertexList, overlapList);
+            if (!TextUtils.isEmpty(result2)) {
+                action = result2;
             }
 		}
 

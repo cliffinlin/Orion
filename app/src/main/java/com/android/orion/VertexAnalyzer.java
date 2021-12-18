@@ -541,10 +541,10 @@ public class VertexAnalyzer {
 		if (divergence > Constants.STOCK_DIVERGENCE_SIGMA_HISTOGRAM) {
 			if (current.directionOf(Constants.STOCK_DIRECTION_UP)
 					&& stockData.directionOf(Constants.STOCK_DIRECTION_UP)) {
-				action = Constants.STOCK_ACTION_HIGH + String.valueOf(type);
+				action = Constants.STOCK_ACTION_HIGH + type;
 			} else if (current.directionOf(Constants.STOCK_DIRECTION_DOWN)
 					&& stockData.directionOf(Constants.STOCK_DIRECTION_DOWN)) {
-				action = Constants.STOCK_ACTION_LOW + String.valueOf(type);
+				action = Constants.STOCK_ACTION_LOW + type;
 			}
 		}
 
