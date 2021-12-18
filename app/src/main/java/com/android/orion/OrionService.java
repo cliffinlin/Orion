@@ -88,8 +88,8 @@ public class OrionService extends Service {
 
 		mAlarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-		mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-		mTelephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+		mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		mTelephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 		mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
 		mHandlerThread = new HandlerThread(mName,
@@ -102,14 +102,16 @@ public class OrionService extends Service {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 			NotificationChannel channel = new NotificationChannel(Constants.SERVICE_CHANNEL_ID,
 					Constants.SERVICE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
-			mNotificationManager.createNotificationChannel(channel);
+			if (mNotificationManager != null) {
+				mNotificationManager.createNotificationChannel(channel);
+			}
 			Notification notification = new NotificationCompat.Builder(this, Constants.SERVICE_CHANNEL_ID)
 					.setAutoCancel(true)
-					.setCategory(Notification.CATEGORY_SERVICE)
+					.setCategory(NotificationCompat.CATEGORY_SERVICE)
 					.setOngoing(true)
 					.setPriority(NotificationManager.IMPORTANCE_HIGH)
 					.build();
-			startForeground(1, notification);
+			startForeground(Constants.SERVICE_NOTIFICATION_ID, notification);
 		}
 
 		mDownloadBroadcastReceiver = new DownloadBroadcastReceiver();

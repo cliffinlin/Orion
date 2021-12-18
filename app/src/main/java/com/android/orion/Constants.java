@@ -4,11 +4,13 @@ public class Constants {
 	public static final String APP_NAME = "Orion";
 	public static final String TAG = APP_NAME;
 
-	public static final String MESSAGE_CHANNEL_ID = "message_channel";
-	public static final String MESSAGE_CHANNEL_NAME = "Message Channel";
-
 	public static final String SERVICE_CHANNEL_ID = "service_channel";
 	public static final String SERVICE_CHANNEL_NAME = "Service Channel";
+
+	public static final int SERVICE_NOTIFICATION_ID = 600000;
+
+	public static final String MESSAGE_CHANNEL_ID = "message_channel";
+	public static final String MESSAGE_CHANNEL_NAME = "Message Channel";
 
 	public static final String FAVORITE = "favorite";
 	public static final String XML_FILE_EXT = ".xml";
@@ -136,7 +138,4 @@ public class Constants {
 	public static final long DEFAULT_SLEEP_INTERVAL = 3 * 100;
 
 	public static final double ROI_COEFFICIENT = 1.0 / 1000;
-
-	public static final int NOTIFY_B2B2_NET = -5;
-	public static final int NOTIFY_S2S2_NET = 5;
 }
