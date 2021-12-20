@@ -868,14 +868,14 @@ public class StockAnalyzer {
 						action = result1;
 					}
 				}
+
+				String result2 = getSecondBottomAction(stock, drawVertexList,
+						overlapList);
+				if (!TextUtils.isEmpty(result2)) {
+					action = result2;
+				}
 			} else {
 				action += Constants.STOCK_ACTION_ADD;
-			}
-
-			String result2 = getSecondBottomAction(stock, drawVertexList,
-					overlapList);
-			if (!TextUtils.isEmpty(result2)) {
-				action = result2;
 			}
 		} else if (stockData.directionOf(Constants.STOCK_DIRECTION_DOWN)) {
 			if (prev.vertexOf(Constants.STOCK_VERTEX_TOP)) {
@@ -886,14 +886,14 @@ public class StockAnalyzer {
 						action = result1;
 					}
 				}
+
+				String result2 = getSecondTopAction(stock, drawVertexList, overlapList);
+				if (!TextUtils.isEmpty(result2)) {
+					action = result2;
+				}
 			} else {
 				action += Constants.STOCK_ACTION_MINUS;
 			}
-
-            String result2 = getSecondTopAction(stock, drawVertexList, overlapList);
-            if (!TextUtils.isEmpty(result2)) {
-                action = result2;
-            }
 		}
 
 		stock.setAction(period, action + stockData.getAction());
