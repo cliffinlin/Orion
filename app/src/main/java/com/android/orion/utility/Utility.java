@@ -57,12 +57,12 @@ public class Utility {
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
 
 		if (connectivityManager != null) {
-			networkInfo = connectivityManager
-					.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+//			networkInfo = connectivityManager
+//					.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 
-			if (networkInfo != null && networkInfo.isConnected()) {
-				return true;
-			}
+//			if (networkInfo != null && networkInfo.isConnected()) {
+//				return true;
+//			}
 
 			networkInfo = connectivityManager
 					.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);

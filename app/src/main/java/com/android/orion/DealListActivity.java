@@ -231,12 +231,6 @@ public class DealListActivity extends ListActivity implements
 
         mLoaderManager.initLoader(LOADER_ID_DEAL_LIST, null, this);
 
-        if (!Utility.isNetworkConnected(this)) {
-            Toast.makeText(this,
-                    getResources().getString(R.string.network_unavailable),
-                    Toast.LENGTH_SHORT).show();
-        }
-
         getContentResolver().registerContentObserver(
                 DatabaseContract.StockDeal.CONTENT_URI, true, mContentObserver);
     }

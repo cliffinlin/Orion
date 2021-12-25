@@ -122,12 +122,6 @@ public class StockFinancialListActivity extends ListActivity implements
         initListView();
 
         mLoaderManager.initLoader(LOADER_ID_STOCK_FINANCIAL_LIST, null, this);
-
-        if (!Utility.isNetworkConnected(this)) {
-            Toast.makeText(this,
-                    getResources().getString(R.string.network_unavailable),
-                    Toast.LENGTH_SHORT).show();
-        }
     }
 
     @Override
@@ -207,13 +201,6 @@ public class StockFinancialListActivity extends ListActivity implements
                 default:
                     break;
             }
-        }
-    }
-
-    @Override
-    void onServiceConnected() {
-        if (mOrionService != null) {
-            mOrionService.download(null);
         }
     }
 

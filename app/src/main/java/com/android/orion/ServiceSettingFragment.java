@@ -37,8 +37,6 @@ public class ServiceSettingFragment extends PreferenceFragment implements
 	public void onResume() {
 		super.onResume();
 
-		remindNetworkConnection();
-
 		getPreferenceManager().getSharedPreferences()
 				.registerOnSharedPreferenceChangeListener(this);
 	}
@@ -62,8 +60,6 @@ public class ServiceSettingFragment extends PreferenceFragment implements
 				|| key.equals(Constants.PERIOD_QUARTER)
 				|| key.equals(Constants.PERIOD_YEAR)) {
 			if (checked) {
-				remindNetworkConnection();
-
 				if (mStockDownloadAlarmManager != null) {
 					mStockDownloadAlarmManager.startAlarm();
 				}
@@ -75,14 +71,6 @@ public class ServiceSettingFragment extends PreferenceFragment implements
 					getActivity().startService(intent);
 				}
 			}
-		}
-	}
-
-	void remindNetworkConnection() {
-		if (!Utility.isNetworkConnected(getActivity())) {
-			Toast.makeText(getActivity(),
-					getResources().getString(R.string.network_unavailable),
-					Toast.LENGTH_SHORT).show();
 		}
 	}
 }

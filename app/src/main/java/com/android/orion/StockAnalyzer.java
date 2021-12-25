@@ -1049,6 +1049,10 @@ public class StockAnalyzer {
 			return;
 		}
 
+		if (actionString.toString().contains("B") && actionString.toString().contains("S")) {
+			return;
+		}
+
 		StringBuilder contentTitle = new StringBuilder();
 		contentTitle.append(stock.getName() + " " + stock.getPrice() + " "
 				+ stock.getNet());

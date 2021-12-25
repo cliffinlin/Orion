@@ -33,18 +33,15 @@ import com.android.orion.database.StockData;
 import com.android.orion.database.StockDatabaseManager;
 import com.android.orion.database.StockDeal;
 import com.android.orion.database.TotalShare;
+import com.android.orion.utility.Utility;
 
 public class BaseActivity extends Activity {
 	static final String TAG = Constants.TAG + " "
 			+ BaseActivity.class.getSimpleName();
 
-	boolean mBound = false;
 	boolean mResumed = false;
 
 	long mLastRestartLoader = 0;
-
-	String mPathName = null;
-	String mFileName = null;
 
 	Context mContext = null;
 
@@ -79,8 +76,6 @@ public class BaseActivity extends Activity {
 	ArrayMap<String, Stock> mStockDealArrayMap = null;
 
 	StockDatabaseManager mStockDatabaseManager = null;
-
-	OrionBinder mOrionBinder = null;
 
 	OrionService mOrionService = null;
 
@@ -245,6 +240,15 @@ public class BaseActivity extends Activity {
 	}
 
 	void onServiceConnected() {
+		if (!Utility.isNetworkConnected(this)) {
+			Toast.makeText(this,
+					getResources().getString(R.string.network_unavailable),
+					Toast.LENGTH_SHORT).show();
+		}
+
+		if (mOrionService != null) {
+			mOrionService.download(null);
+		}
 	}
 
 	void acquireWakeLock() {

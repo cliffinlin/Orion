@@ -106,12 +106,6 @@ public class StockListActivity extends ListActivity implements
 
 		mLoaderManager.initLoader(LOADER_ID_STOCK_LIST, null, this);
 
-		if (!Utility.isNetworkConnected(this)) {
-			Toast.makeText(this,
-					getResources().getString(R.string.network_unavailable),
-					Toast.LENGTH_LONG).show();
-		}
-
 		if (!Preferences.getBoolean(mContext,
 				Settings.KEY_NOTIFICATION_MESSAGE, false)) {
 			Toast.makeText(
@@ -198,13 +192,6 @@ public class StockListActivity extends ListActivity implements
 			default:
 				break;
 			}
-		}
-	}
-
-	@Override
-	void onServiceConnected() {
-		if (mOrionService != null) {
-			mOrionService.download(null);
 		}
 	}
 
