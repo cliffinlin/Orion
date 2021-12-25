@@ -49,16 +49,16 @@ public class ServiceSettingFragment extends PreferenceFragment implements
 
 		checked = sharedPreferences.getBoolean(key, true);
 
-		if (key.equals(Constants.PERIOD_MIN1)
-				|| key.equals(Constants.PERIOD_MIN5)
-				|| key.equals(Constants.PERIOD_MIN15)
-				|| key.equals(Constants.PERIOD_MIN30)
-				|| key.equals(Constants.PERIOD_MIN60)
-				|| key.equals(Constants.PERIOD_DAY)
-				|| key.equals(Constants.PERIOD_WEEK)
-				|| key.equals(Constants.PERIOD_MONTH)
-				|| key.equals(Constants.PERIOD_QUARTER)
-				|| key.equals(Constants.PERIOD_YEAR)) {
+		if (key.equals(Settings.KEY_PERIOD_MIN1)
+				|| key.equals(Settings.KEY_PERIOD_MIN5)
+				|| key.equals(Settings.KEY_PERIOD_MIN15)
+				|| key.equals(Settings.KEY_PERIOD_MIN30)
+				|| key.equals(Settings.KEY_PERIOD_MIN60)
+				|| key.equals(Settings.KEY_PERIOD_DAY)
+				|| key.equals(Settings.KEY_PERIOD_WEEK)
+				|| key.equals(Settings.KEY_PERIOD_MONTH)
+				|| key.equals(Settings.KEY_PERIOD_QUARTER)
+				|| key.equals(Settings.KEY_PERIOD_YEAR)) {
 			if (checked) {
 				if (mStockDownloadAlarmManager != null) {
 					mStockDownloadAlarmManager.startAlarm();

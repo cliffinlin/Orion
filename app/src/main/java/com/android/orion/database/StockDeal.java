@@ -20,6 +20,7 @@ public class StockDeal extends DatabaseTable {
     private long mVolume;
     private double mValue;
     private double mProfit;
+    private double mFee;
     private double mBonus;
     private double mYield;
 
@@ -61,6 +62,7 @@ public class StockDeal extends DatabaseTable {
         mVolume = 0;
         mValue = 0;
         mProfit = 0;
+        mFee = 0;
         mBonus = 0;
         mYield = 0;
     }
@@ -83,6 +85,7 @@ public class StockDeal extends DatabaseTable {
         contentValues.put(DatabaseContract.COLUMN_VOLUME, mVolume);
         contentValues.put(DatabaseContract.COLUMN_VALUE, mValue);
         contentValues.put(DatabaseContract.COLUMN_PROFIT, mProfit);
+        contentValues.put(DatabaseContract.COLUMN_FEE, mFee);
         contentValues.put(DatabaseContract.COLUMN_BONUS, mBonus);
         contentValues.put(DatabaseContract.COLUMN_YIELD, mYield);
 
@@ -108,6 +111,7 @@ public class StockDeal extends DatabaseTable {
         setVolume(stockDeal.mVolume);
         setValue(stockDeal.mValue);
         setProfit(stockDeal.mProfit);
+        setFee(stockDeal.mFee);
         setBonus(stockDeal.mBonus);
         setYield(stockDeal.mYield);
     }
@@ -132,6 +136,7 @@ public class StockDeal extends DatabaseTable {
         setVolume(cursor);
         setValue(cursor);
         setProfit(cursor);
+        setFee(cursor);
         setBonus(cursor);
         setYield(cursor);
     }
@@ -306,6 +311,23 @@ public class StockDeal extends DatabaseTable {
                 .getColumnIndex(DatabaseContract.COLUMN_PROFIT)));
     }
 
+    public double getFee() {
+        return mFee;
+    }
+
+    public void setFee(double fee) {
+        mFee = fee;
+    }
+
+    void setFee(Cursor cursor) {
+        if (cursor == null) {
+            return;
+        }
+
+        setFee(cursor.getDouble(cursor
+                .getColumnIndex(DatabaseContract.COLUMN_FEE)));
+    }
+
     public double getBonus() {
         return mBonus;
     }
@@ -341,16 +363,12 @@ public class StockDeal extends DatabaseTable {
     }
 
     public void setupNet() {
-        if (mPrice == 0) {
-            return;
-        }
-
-        if (mDeal == 0) {
+        if ((mPrice == 0) || (mDeal == 0) || (mVolume ==0)) {
             mNet = 0;
             return;
         }
 
-        mNet = Utility.Round(100 * (mPrice - mDeal) / mDeal,
+        mNet = Utility.Round(100 * ((mPrice - mDeal) * Math.abs(mVolume) - mFee) / Math.abs(mVolume) / mDeal,
                 Constants.DOUBLE_FIXED_DECIMAL);
     }
 
@@ -364,15 +382,15 @@ public class StockDeal extends DatabaseTable {
                 Constants.DOUBLE_FIXED_DECIMAL);
     }
 
-    public void setupProfit(String rDate, double dividend) {
-        if (mPrice <= 0) {
-            return;
-        }
-
+    public void setupFee(String rDate, double dividend) {
         double stampDuty = mPrice * Math.abs(mVolume) * 1.0 / 1000.0;
-
         double buyTransferFee = mDeal * Math.abs(mVolume) * 0.2 / 10000.0;
         double sellTransferFee = mPrice * Math.abs(mVolume) * 0.2 / 10000.0;
+        double dividendTax = 0;
+
+        if ((mPrice == 0) || (mDeal == 0) || (mVolume ==0)) {
+            return;
+        }
 
         if (buyTransferFee < 1.0) {
             buyTransferFee = 1.0;
@@ -393,30 +411,37 @@ public class StockDeal extends DatabaseTable {
             sellCommission = 5.0;
         }
 
-        double dividendTax = 0;
+        if (dividend > 0) {
+            Calendar todayCalendar = Utility.stringToCalendar(
+                    Utility.getCurrentDateString(), Utility.CALENDAR_DATE_FORMAT);
 
-        Calendar todayCalendar = Utility.stringToCalendar(
-                Utility.getCurrentDateString(), Utility.CALENDAR_DATE_FORMAT);
+            Calendar rDateCalendarAfterMonth = Utility.stringToCalendar(
+                    rDate, Utility.CALENDAR_DATE_FORMAT);
+            rDateCalendarAfterMonth.add(Calendar.MONTH, 1);
 
-        Calendar rDateCalendarAfterMonth = Utility.stringToCalendar(
-                rDate, Utility.CALENDAR_DATE_FORMAT);
-        rDateCalendarAfterMonth.add(Calendar.MONTH, 1);
+            Calendar rDateCalendarAfterYear = Utility.stringToCalendar(
+                    rDate, Utility.CALENDAR_DATE_FORMAT);
+            rDateCalendarAfterYear.add(Calendar.YEAR, 1);
 
-        Calendar rDateCalendarAfterYear = Utility.stringToCalendar(
-                rDate, Utility.CALENDAR_DATE_FORMAT);
-        rDateCalendarAfterYear.add(Calendar.YEAR, 1);
-
-        if (todayCalendar.before(rDateCalendarAfterMonth)) {
-            dividendTax = dividend / 10.0 * Math.abs(mVolume) * 20.0 / 100.0;
-        } else if (todayCalendar.before(rDateCalendarAfterYear)) {
-            dividendTax = dividend / 10.0 * Math.abs(mVolume) * 10.0 / 100.0;
-        } else {
-            dividendTax = 0;
+            if (todayCalendar.before(rDateCalendarAfterMonth)) {
+                dividendTax = dividend / 10.0 * Math.abs(mVolume) * 20.0 / 100.0;
+            } else if (todayCalendar.before(rDateCalendarAfterYear)) {
+                dividendTax = dividend / 10.0 * Math.abs(mVolume) * 10.0 / 100.0;
+            } else {
+                dividendTax = 0;
+            }
         }
 
-        double totalFee = stampDuty + buyTransferFee + sellTransferFee + buyCommission + sellCommission + dividendTax;
+        mFee = Utility.Round(stampDuty + buyTransferFee + sellTransferFee + buyCommission + sellCommission + dividendTax,
+                Constants.DOUBLE_FIXED_DECIMAL);
+    }
 
-        mProfit = Utility.Round((mPrice - mDeal) * Math.abs(mVolume) - totalFee,
+    public void setupProfit() {
+        if ((mPrice == 0) || (mDeal == 0) || (mVolume ==0)) {
+            return;
+        }
+
+        mProfit = Utility.Round((mPrice - mDeal) * Math.abs(mVolume) - mFee,
                 Constants.DOUBLE_FIXED_DECIMAL);
     }
 
@@ -426,16 +451,22 @@ public class StockDeal extends DatabaseTable {
             return;
         }
 
-        if (mVolume <= 0) {
+        if (mVolume == 0) {
             mBonus = 0;
             return;
         }
 
-        mBonus = dividend / 10.0 * mVolume;
+        mBonus = dividend / 10.0 * Math.abs(mVolume);
     }
 
     public void setupYield(double dividend) {
+        if (dividend == 0) {
+            mYield = 0;
+            return;
+        }
+
         if (mDeal == 0) {
+            mYield = 0;
             return;
         }
 

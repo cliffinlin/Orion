@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.net.Uri;
 
 import com.android.orion.Constants;
+import com.android.orion.Settings;
 
 public class StockDatabaseManager extends DatabaseManager {
 	private static StockDatabaseManager mInstance = null;
@@ -470,11 +471,11 @@ public class StockDatabaseManager extends DatabaseManager {
 
 		period = stockData.getPeriod();
 
-		if (period.equals(Constants.PERIOD_MIN1)
-				|| period.equals(Constants.PERIOD_MIN5)
-				|| period.equals(Constants.PERIOD_MIN15)
-				|| period.equals(Constants.PERIOD_MIN30)
-				|| period.equals(Constants.PERIOD_MIN60)) {
+		if (period.equals(Settings.KEY_PERIOD_MIN1)
+				|| period.equals(Settings.KEY_PERIOD_MIN5)
+				|| period.equals(Settings.KEY_PERIOD_MIN15)
+				|| period.equals(Settings.KEY_PERIOD_MIN30)
+				|| period.equals(Settings.KEY_PERIOD_MIN60)) {
 			selection += " AND " + DatabaseContract.COLUMN_TIME + " = " + "\'"
 					+ stockData.getTime() + "\'";
 		}
@@ -575,9 +576,10 @@ public class StockDatabaseManager extends DatabaseManager {
 					stockDeal.set(cursor);
 
 					stockDeal.setPrice(stock.getPrice());
+					stockDeal.setupFee(stock.getRDate(), stock.getDividend());
 					stockDeal.setupNet();
 					stockDeal.setupValue();
-					stockDeal.setupProfit(stock.getRDate(), stock.getDividend());
+					stockDeal.setupProfit();
 					stockDeal.setupBonus(stock.getDividend());
 					stockDeal.setupYield(stock.getDividend());
 
@@ -793,23 +795,6 @@ public class StockDatabaseManager extends DatabaseManager {
 		getStockDeal(stock, stockDeal, selection, sortOrder);
 	}
 
-	public void getStockDealToSell(Stock stock, StockDeal stockDeal) {
-        String sortOrder = DatabaseContract.COLUMN_NET + DatabaseContract.ORDER_DIRECTION_ASC;
-
-		if ((stock == null) || (stockDeal == null)) {
-			return;
-		}
-
-        String selection = DatabaseContract.COLUMN_SE + " = " + "\'" + stock.getSE()
-                + "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
-                + stock.getCode() + "\'";
-
-		selection +=  " AND " + DatabaseContract.COLUMN_VOLUME + " > " + 0 + " AND "
-				+ DatabaseContract.COLUMN_PROFIT + " > " + 0;
-
-		getStockDeal(stock, stockDeal, selection, sortOrder);
-	}
-
     public void getStockDealListToSell(Stock stock, ArrayList<StockDeal> stockDealList) {
         String sortOrder = DatabaseContract.COLUMN_NET + DatabaseContract.ORDER_DIRECTION_ASC;
 
@@ -823,7 +808,8 @@ public class StockDatabaseManager extends DatabaseManager {
 
         selection += " AND " + DatabaseContract.COLUMN_VOLUME + " > " + 0 ;
 		selection += " AND " + DatabaseContract.COLUMN_PROFIT + " > " + DatabaseContract.COLUMN_BONUS;
-        selection += " AND " + DatabaseContract.COLUMN_ACTION + " != " + "\'\'";
+		selection += " AND " + DatabaseContract.COLUMN_NET + " > " + Constants.AVERAGE_DIVIDEND_YIELD;
+		selection += " AND " + DatabaseContract.COLUMN_ACTION + " != " + "\'\'";
 
         getStockDealList(stock, stockDealList, selection, sortOrder);
     }

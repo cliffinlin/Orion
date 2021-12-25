@@ -29,7 +29,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 	EditText mEditTextStockCost;
 	EditText mEditTextStockHold;
 	EditText mEditTextStockValuation;
-	CheckBox mCheckBoxStockOperation;
+	CheckBox mCheckBoxStockOperate;
 	Button mButtonOk, mButtonCancel;
 
 	@Override
@@ -63,7 +63,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mEditTextStockCost = (EditText) findViewById(R.id.edittext_stock_cost);
 		mEditTextStockHold = (EditText) findViewById(R.id.edittext_stock_hold);
 		mEditTextStockValuation = (EditText) findViewById(R.id.edittext_stock_valuation);
-		mCheckBoxStockOperation = (CheckBox) findViewById(R.id.checkbox_stock_operation);
+		mCheckBoxStockOperate = (CheckBox) findViewById(R.id.checkbox_stock_operate);
 		mButtonOk = (Button) findViewById(R.id.button_ok);
 		mButtonCancel = (Button) findViewById(R.id.button_cancel);
 
@@ -74,7 +74,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mEditTextStockCost.setOnClickListener(this);
 		mEditTextStockHold.setOnClickListener(this);
 		mEditTextStockValuation.setOnClickListener(this);
-		mCheckBoxStockOperation.setOnClickListener(this);
+		mCheckBoxStockOperate.setOnClickListener(this);
 		mButtonOk.setOnClickListener(this);
 		mButtonCancel.setOnClickListener(this);
 
@@ -133,7 +133,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 			mRadioGroupSE.check(R.id.radio_se_sz);
 		}
 
-		mCheckBoxStockOperation.setChecked(!TextUtils.isEmpty(mStock.getOperation()));
+		mCheckBoxStockOperate.setChecked(!TextUtils.isEmpty(mStock.getOperate()));
 
 		mEditTextStockName.setText(mStock.getName());
 		mEditTextStockCode.setText(mStock.getCode());
@@ -182,10 +182,10 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 				mStock.setSE(Constants.STOCK_SE_SZ);
 			}
 
-			if (mCheckBoxStockOperation.isChecked()) {
-				mStock.setOperation(Constants.STOCK_OPERATION_ALERT);
+			if (mCheckBoxStockOperate.isChecked()) {
+				mStock.setOperate(Constants.STOCK_OPERATE_ALERT);
 			} else {
-				mStock.setOperation(Constants.STOCK_OPERATION_NONE);
+				mStock.setOperate(Constants.STOCK_OPERATE_NONE);
 			}
 
 			String name = mEditTextStockName.getText().toString();

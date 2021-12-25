@@ -310,16 +310,16 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				if (scheduleMinutes != 0) {
 					result = 1;
 
-					if (period.equals(Constants.PERIOD_MIN60)) {
+					if (period.equals(Settings.KEY_PERIOD_MIN60)) {
 						result += scheduleMinutes
 								/ Constants.SCHEDULE_INTERVAL_MIN60;
-					} else if (period.equals(Constants.PERIOD_MIN30)) {
+					} else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
 						result += scheduleMinutes
 								/ Constants.SCHEDULE_INTERVAL_MIN30;
-					} else if (period.equals(Constants.PERIOD_MIN15)) {
+					} else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
 						result += scheduleMinutes
 								/ Constants.SCHEDULE_INTERVAL_MIN15;
-					} else if (period.equals(Constants.PERIOD_MIN5)) {
+					} else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
 						result += scheduleMinutes
 								/ Constants.SCHEDULE_INTERVAL_MIN5;
 					}
@@ -339,17 +339,17 @@ public abstract class StockDataProvider extends StockAnalyzer {
 						return result;
 					}
 
-					if (period.equals(Constants.PERIOD_MONTH)
-							|| period.equals(Constants.PERIOD_WEEK)
-							|| period.equals(Constants.PERIOD_DAY)) {
+					if (period.equals(Settings.KEY_PERIOD_MONTH)
+							|| period.equals(Settings.KEY_PERIOD_WEEK)
+							|| period.equals(Settings.KEY_PERIOD_DAY)) {
 						result = 1 - count;
-					} else if (period.equals(Constants.PERIOD_MIN60)) {
+					} else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
 						result = 2 - count;
-					} else if (period.equals(Constants.PERIOD_MIN30)) {
+					} else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
 						result = 4 - count;
-					} else if (period.equals(Constants.PERIOD_MIN15)) {
+					} else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
 						result = 8 - count;
-					} else if (period.equals(Constants.PERIOD_MIN5)) {
+					} else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
 						result = 24 - count;
 					}
 				} else if (Market.afterStockMarketClose(Calendar.getInstance())) {
@@ -357,17 +357,17 @@ public abstract class StockDataProvider extends StockAnalyzer {
 						return result;
 					}
 
-					if (period.equals(Constants.PERIOD_MONTH)
-							|| period.equals(Constants.PERIOD_WEEK)
-							|| period.equals(Constants.PERIOD_DAY)) {
+					if (period.equals(Settings.KEY_PERIOD_MONTH)
+							|| period.equals(Settings.KEY_PERIOD_WEEK)
+							|| period.equals(Settings.KEY_PERIOD_DAY)) {
 						result = 1 - count;
-					} else if (period.equals(Constants.PERIOD_MIN60)) {
+					} else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
 						result = 4 - count;
-					} else if (period.equals(Constants.PERIOD_MIN30)) {
+					} else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
 						result = 8 - count;
-					} else if (period.equals(Constants.PERIOD_MIN15)) {
+					} else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
 						result = 16 - count;
-					} else if (period.equals(Constants.PERIOD_MIN5)) {
+					} else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
 						result = 48 - count;
 					}
 				}
@@ -748,7 +748,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 			mStockDatabaseManager.getStock(stock);
 
-			for (String period : Constants.PERIODS) {
+			for (String period : Settings.KEY_PERIODS) {
 				if (Preferences.getBoolean(mContext, period, false)) {
 					result = downloadStockDataHistory(stock, period);
 				}
@@ -807,7 +807,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		String downloadStockDataRealTime(Stock stock) {
 			String result = "";
 			int len = 0;
-			String period = Constants.PERIOD_DAY;
+			String period = Settings.KEY_PERIOD_DAY;
 
 			if (!Preferences.getBoolean(mContext, period, false)) {
 				return result;
@@ -923,7 +923,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 					break;
 				}
 
-				for (String period : Constants.PERIODS) {
+				for (String period : Settings.KEY_PERIODS) {
 					if (Preferences.getBoolean(mContext, period, false)) {
 						analyze(stock, period);
 					}

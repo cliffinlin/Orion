@@ -221,7 +221,7 @@ public class StockAnalyzer {
 				sortOrder);
 		mStockDatabaseManager.getShareBonusList(stock, shareBonusList,
 				sortOrder);
-		mStockDatabaseManager.getStockDataList(stock, Constants.PERIOD_MONTH,
+		mStockDatabaseManager.getStockDataList(stock, Settings.KEY_PERIOD_MONTH,
 				stockDataList, sortOrder);
 
 		setupTotalShare(financialDataList, totalShareList);
@@ -862,7 +862,7 @@ public class StockAnalyzer {
 		if (stockData.directionOf(Constants.STOCK_DIRECTION_UP)) {
 			if (prev.vertexOf(Constants.STOCK_VERTEX_BOTTOM)) {
 				action += Constants.STOCK_ACTION_D;
-				if (period.equals(Constants.PERIOD_DAY)) {
+				if (period.equals(Settings.KEY_PERIOD_DAY)) {
 					String result1 = getFirstBottomAction(stock, drawVertexList, overlapList);
 					if (!TextUtils.isEmpty(result1)) {
 						action = result1;
@@ -880,7 +880,7 @@ public class StockAnalyzer {
 		} else if (stockData.directionOf(Constants.STOCK_DIRECTION_DOWN)) {
 			if (prev.vertexOf(Constants.STOCK_VERTEX_TOP)) {
 				action += Constants.STOCK_ACTION_G;
-				if (period.equals(Constants.PERIOD_DAY)) {
+				if (period.equals(Settings.KEY_PERIOD_DAY)) {
 					String result1 = getFirstTopAction(stock, drawVertexList, overlapList);
 					if (!TextUtils.isEmpty(result1)) {
 						action = result1;
@@ -978,7 +978,7 @@ public class StockAnalyzer {
 		logString.append(stock.getName() + " " + stock.getPrice() + " "
 				+ stock.getNet() + " ");
 
-		for (String period : Constants.PERIODS) {
+		for (String period : Settings.KEY_PERIODS) {
 			if (Preferences.getBoolean(mContext, period, false)) {
 				logString.append(period + " " + stock.getAction(period) + " ");
 			}
@@ -1011,7 +1011,7 @@ public class StockAnalyzer {
 			return;
 		}
 
-		if (TextUtils.isEmpty(stock.getOperation())) {
+		if (TextUtils.isEmpty(stock.getOperate())) {
 			return;
 		}
 
@@ -1020,7 +1020,7 @@ public class StockAnalyzer {
 		}
 
 		StringBuilder actionString = new StringBuilder();
-		for (String period : Constants.PERIODS) {
+		for (String period : Settings.KEY_PERIODS) {
 			if (Preferences.getBoolean(mContext, period, false)) {
 				String action = stock.getAction(period);
 				if (action.contains("B1B1") || action.contains("B2B2")) {

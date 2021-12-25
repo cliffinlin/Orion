@@ -41,11 +41,11 @@
         android:textSize="18sp" />
 
     <ImageView
-        android:id="@+id/operation"
+        android:id="@+id/operate"
         android:layout_width="0dp"
         android:layout_height="35dp"
         android:layout_weight="1"
-        android:contentDescription="@string/stock_operation"
+        android:contentDescription="@string/stock_operate"
         android:gravity="center"
         android:src="@drawable/ic_start" />
 

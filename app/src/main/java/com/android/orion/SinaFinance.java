@@ -92,25 +92,25 @@ public class SinaFinance extends StockDataProvider {
 
 	@Override
 	int getAvailableHistoryLength(String period) {
-		if (period.equals(Constants.PERIOD_MIN1)) {
+		if (period.equals(Settings.KEY_PERIOD_MIN1)) {
 			return Constants.DOWNLOAD_HISTORY_LENGTH_NONE;
-		} else if (period.equals(Constants.PERIOD_MIN5)) {
+		} else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
 			return DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN5;
-		} else if (period.equals(Constants.PERIOD_MIN15)) {
+		} else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
 			return DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN15;
-		} else if (period.equals(Constants.PERIOD_MIN30)) {
+		} else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
 			return DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN30;
-		} else if (period.equals(Constants.PERIOD_MIN60)) {
+		} else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
 			return DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN60;
-		} else if (period.equals(Constants.PERIOD_DAY)) {
+		} else if (period.equals(Settings.KEY_PERIOD_DAY)) {
 			return Constants.DOWNLOAD_HISTORY_LENGTH_UNLIMITED;
-		} else if (period.equals(Constants.PERIOD_WEEK)) {
+		} else if (period.equals(Settings.KEY_PERIOD_WEEK)) {
 			return Constants.DOWNLOAD_HISTORY_LENGTH_UNLIMITED;
-		} else if (period.equals(Constants.PERIOD_MONTH)) {
+		} else if (period.equals(Settings.KEY_PERIOD_MONTH)) {
 			return Constants.DOWNLOAD_HISTORY_LENGTH_UNLIMITED;
-		} else if (period.equals(Constants.PERIOD_QUARTER)) {
+		} else if (period.equals(Settings.KEY_PERIOD_QUARTER)) {
 			return Constants.DOWNLOAD_HISTORY_LENGTH_NONE;
-		} else if (period.equals(Constants.PERIOD_YEAR)) {
+		} else if (period.equals(Settings.KEY_PERIOD_YEAR)) {
 			return Constants.DOWNLOAD_HISTORY_LENGTH_NONE;
 		} else {
 		}
@@ -155,25 +155,25 @@ public class SinaFinance extends StockDataProvider {
 	int getPeriodMinutes(String period) {
 		int minutes = 0;
 
-		if (period.equals(Constants.PERIOD_MIN1)) {
+		if (period.equals(Settings.KEY_PERIOD_MIN1)) {
 			minutes = 1;
-		} else if (period.equals(Constants.PERIOD_MIN5)) {
+		} else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
 			minutes = 5;
-		} else if (period.equals(Constants.PERIOD_MIN15)) {
+		} else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
 			minutes = 15;
-		} else if (period.equals(Constants.PERIOD_MIN30)) {
+		} else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
 			minutes = 30;
-		} else if (period.equals(Constants.PERIOD_MIN60)) {
+		} else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
 			minutes = 60;
-		} else if (period.equals(Constants.PERIOD_DAY)) {
+		} else if (period.equals(Settings.KEY_PERIOD_DAY)) {
 			minutes = 240;
-		} else if (period.equals(Constants.PERIOD_WEEK)) {
+		} else if (period.equals(Settings.KEY_PERIOD_WEEK)) {
 			minutes = 1680;
-		} else if (period.equals(Constants.PERIOD_MONTH)) {
+		} else if (period.equals(Settings.KEY_PERIOD_MONTH)) {
 			minutes = 7200;
-		} else if (period.equals(Constants.PERIOD_QUARTER)) {
+		} else if (period.equals(Settings.KEY_PERIOD_QUARTER)) {
 			minutes = 28800;
-		} else if (period.equals(Constants.PERIOD_YEAR)) {
+		} else if (period.equals(Settings.KEY_PERIOD_YEAR)) {
 			minutes = 115200;
 		} else {
 		}

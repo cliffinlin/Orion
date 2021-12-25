@@ -53,7 +53,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 
 	public static final int ITEM_VIEW_TYPE_MAIN = 0;
 	public static final int ITEM_VIEW_TYPE_SUB = 1;
-	public static final int LOADER_ID_STOCK_LIST = Constants.PERIODS.length + 1;
+	public static final int LOADER_ID_STOCK_LIST = Settings.KEY_PERIODS.length + 1;
 	public static final int FLING_DISTANCE = 50;
 	public static final int FLING_VELOCITY = 100;
 	public static final int REQUEST_CODE_SETTINGS = 0;
@@ -258,8 +258,8 @@ public class StockDataChartListActivity extends BaseActivity implements
 
 		mStockDataChartItemList.clear();
 
-		for (int i = 0; i < Constants.PERIODS.length; i++) {
-			if (Preferences.getBoolean(this, Constants.PERIODS[i], false)) {
+		for (int i = 0; i < Settings.KEY_PERIODS.length; i++) {
+			if (Preferences.getBoolean(this, Settings.KEY_PERIODS[i], false)) {
 				mStockDataChartItemList.add(mStockDataChartItemMainList.get(i));
 				mStockDataChartItemList.add(mStockDataChartItemSubList.get(i));
 			}
@@ -280,7 +280,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 		if (id == LOADER_ID_STOCK_LIST) {
 			loader = getStockCursorLoader();
 		} else {
-			loader = getStockDataCursorLoader(Constants.PERIODS[id]);
+			loader = getStockDataCursorLoader(Settings.KEY_PERIODS[id]);
 		}
 
 		return loader;
@@ -339,8 +339,8 @@ public class StockDataChartListActivity extends BaseActivity implements
 			mStockDataChartItemSubList = new ArrayList<StockDataChartItemSub>();
 		}
 
-		for (int i = 0; i < Constants.PERIODS.length; i++) {
-			mStockDataChartList.add(new StockDataChart(Constants.PERIODS[i]));
+		for (int i = 0; i < Settings.KEY_PERIODS.length; i++) {
+			mStockDataChartList.add(new StockDataChart(Settings.KEY_PERIODS[i]));
 			mStockDataChartItemMainList.add(new StockDataChartItemMain(
 					mStockDataChartList.get(i)));
 			mStockDataChartItemSubList.add(new StockDataChartItemSub(
@@ -359,8 +359,8 @@ public class StockDataChartListActivity extends BaseActivity implements
 			mLoaderManager.initLoader(LOADER_ID_STOCK_LIST, null, this);
 		}
 
-		for (int i = 0; i < Constants.PERIODS.length; i++) {
-			if (Preferences.getBoolean(this, Constants.PERIODS[i], false)) {
+		for (int i = 0; i < Settings.KEY_PERIODS.length; i++) {
+			if (Preferences.getBoolean(this, Settings.KEY_PERIODS[i], false)) {
 				mLoaderManager.initLoader(i, null, this);
 			}
 		}
@@ -378,8 +378,8 @@ public class StockDataChartListActivity extends BaseActivity implements
 			mLoaderManager.restartLoader(LOADER_ID_STOCK_LIST, null, this);
 		}
 
-		for (int i = 0; i < Constants.PERIODS.length; i++) {
-			if (Preferences.getBoolean(this, Constants.PERIODS[i], false)) {
+		for (int i = 0; i < Settings.KEY_PERIODS.length; i++) {
+			if (Preferences.getBoolean(this, Settings.KEY_PERIODS[i], false)) {
 				mLoaderManager.restartLoader(i, null, this);
 			}
 		}
@@ -522,15 +522,15 @@ public class StockDataChartListActivity extends BaseActivity implements
 					dateString = mStockData.getDate();
 					timeString = mStockData.getTime();
 
-					if (mStockData.getPeriod().equals(Constants.PERIOD_YEAR)
+					if (mStockData.getPeriod().equals(Settings.KEY_PERIOD_YEAR)
 							|| mStockData.getPeriod().equals(
-									Constants.PERIOD_QUARTER)
+									Settings.KEY_PERIOD_QUARTER)
 							|| mStockData.getPeriod().equals(
-									Constants.PERIOD_MONTH)
+									Settings.KEY_PERIOD_MONTH)
 							|| mStockData.getPeriod().equals(
-									Constants.PERIOD_WEEK)
+									Settings.KEY_PERIOD_WEEK)
 							|| mStockData.getPeriod().equals(
-									Constants.PERIOD_DAY)) {
+									Settings.KEY_PERIOD_DAY)) {
 						stockDataChart.mXValues.add(dateString);
 					} else {
 						stockDataChart.mXValues.add(dateString + " "

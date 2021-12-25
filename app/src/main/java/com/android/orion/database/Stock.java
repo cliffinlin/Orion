@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 import com.android.orion.Constants;
+import com.android.orion.Settings;
 import com.android.orion.utility.Utility;
 
 public class Stock extends DatabaseTable {
@@ -30,7 +31,7 @@ public class Stock extends DatabaseTable {
 	private String mActionMonth;
 	private String mActionQuarter;
 	private String mActionYear;
-	private String mOperation;
+	private String mOperate;
 	private long mHold;
 	private double mCost;
 	private double mProfit;
@@ -110,7 +111,7 @@ public class Stock extends DatabaseTable {
 		mActionMonth = "";
 		mActionQuarter = "";
 		mActionYear = "";
-		mOperation = "";
+		mOperate = "";
 		mHold = 0;
 		mCost = 0;
 		mProfit = 0;
@@ -167,7 +168,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_MONTH, mActionMonth);
 		contentValues.put(DatabaseContract.COLUMN_QUARTER, mActionQuarter);
 		contentValues.put(DatabaseContract.COLUMN_YEAR, mActionYear);
-		contentValues.put(DatabaseContract.COLUMN_OPERATION, mOperation);
+		contentValues.put(DatabaseContract.COLUMN_OPERATE, mOperate);
 		contentValues.put(DatabaseContract.COLUMN_HOLD, mHold);
 		contentValues.put(DatabaseContract.COLUMN_COST, mCost);
 		contentValues.put(DatabaseContract.COLUMN_PROFIT, mProfit);
@@ -227,25 +228,25 @@ public class Stock extends DatabaseTable {
 
 		super.getContentValues(contentValues);
 
-		if (period.equals(Constants.PERIOD_MIN1)) {
+		if (period.equals(Settings.KEY_PERIOD_MIN1)) {
 			contentValues.put(DatabaseContract.COLUMN_MIN1, mActionMin1);
-		} else if (period.equals(Constants.PERIOD_MIN5)) {
+		} else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
 			contentValues.put(DatabaseContract.COLUMN_MIN5, mActionMin5);
-		} else if (period.equals(Constants.PERIOD_MIN15)) {
+		} else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
 			contentValues.put(DatabaseContract.COLUMN_MIN15, mActionMin15);
-		} else if (period.equals(Constants.PERIOD_MIN30)) {
+		} else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
 			contentValues.put(DatabaseContract.COLUMN_MIN30, mActionMin30);
-		} else if (period.equals(Constants.PERIOD_MIN60)) {
+		} else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
 			contentValues.put(DatabaseContract.COLUMN_MIN60, mActionMin60);
-		} else if (period.equals(Constants.PERIOD_DAY)) {
+		} else if (period.equals(Settings.KEY_PERIOD_DAY)) {
 			contentValues.put(DatabaseContract.COLUMN_DAY, mActionDay);
-		} else if (period.equals(Constants.PERIOD_WEEK)) {
+		} else if (period.equals(Settings.KEY_PERIOD_WEEK)) {
 			contentValues.put(DatabaseContract.COLUMN_WEEK, mActionWeek);
-		} else if (period.equals(Constants.PERIOD_MONTH)) {
+		} else if (period.equals(Settings.KEY_PERIOD_MONTH)) {
 			contentValues.put(DatabaseContract.COLUMN_MONTH, mActionMonth);
-		} else if (period.equals(Constants.PERIOD_QUARTER)) {
+		} else if (period.equals(Settings.KEY_PERIOD_QUARTER)) {
 			contentValues.put(DatabaseContract.COLUMN_QUARTER, mActionQuarter);
-		} else if (period.equals(Constants.PERIOD_YEAR)) {
+		} else if (period.equals(Settings.KEY_PERIOD_YEAR)) {
 			contentValues.put(DatabaseContract.COLUMN_YEAR, mActionYear);
 		}
 
@@ -317,7 +318,7 @@ public class Stock extends DatabaseTable {
 		setActionMonth(stock.mActionMonth);
 		setActionQuarter(stock.mActionQuarter);
 		setActionYear(stock.mActionYear);
-		setOperation(stock.mOperation);
+		setOperate(stock.mOperate);
 		setHold(stock.mHold);
 		setCost(stock.mCost);
 		setProfit(stock.mProfit);
@@ -380,7 +381,7 @@ public class Stock extends DatabaseTable {
 		setActionMonth(cursor);
 		setActionQuarter(cursor);
 		setActionYear(cursor);
-		setOperation(cursor);
+		setOperate(cursor);
 		setHold(cursor);
 		setCost(cursor);
 		setProfit(cursor);
@@ -415,25 +416,25 @@ public class Stock extends DatabaseTable {
 	public ArrayList<StockData> getStockDataList(String period) {
 		ArrayList<StockData> stockDataList = null;
 
-		if (period.equals(Constants.PERIOD_MIN1)) {
+		if (period.equals(Settings.KEY_PERIOD_MIN1)) {
 			stockDataList = mStockDataListMin1;
-		} else if (period.equals(Constants.PERIOD_MIN5)) {
+		} else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
 			stockDataList = mStockDataListMin5;
-		} else if (period.equals(Constants.PERIOD_MIN15)) {
+		} else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
 			stockDataList = mStockDataListMin15;
-		} else if (period.equals(Constants.PERIOD_MIN30)) {
+		} else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
 			stockDataList = mStockDataListMin30;
-		} else if (period.equals(Constants.PERIOD_MIN60)) {
+		} else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
 			stockDataList = mStockDataListMin60;
-		} else if (period.equals(Constants.PERIOD_DAY)) {
+		} else if (period.equals(Settings.KEY_PERIOD_DAY)) {
 			stockDataList = mStockDataListDay;
-		} else if (period.equals(Constants.PERIOD_WEEK)) {
+		} else if (period.equals(Settings.KEY_PERIOD_WEEK)) {
 			stockDataList = mStockDataListWeek;
-		} else if (period.equals(Constants.PERIOD_MONTH)) {
+		} else if (period.equals(Settings.KEY_PERIOD_MONTH)) {
 			stockDataList = mStockDataListMonth;
-		} else if (period.equals(Constants.PERIOD_QUARTER)) {
+		} else if (period.equals(Settings.KEY_PERIOD_QUARTER)) {
 			stockDataList = mStockDataListQuarter;
-		} else if (period.equals(Constants.PERIOD_YEAR)) {
+		} else if (period.equals(Settings.KEY_PERIOD_YEAR)) {
 			stockDataList = mStockDataListYear;
 		}
 
@@ -797,21 +798,21 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_YEAR)));
 	}
 
-	public String getOperation() {
-		return mOperation;
+	public String getOperate() {
+		return mOperate;
 	}
 
-	public void setOperation(String operation) {
-		mOperation = operation;
+	public void setOperate(String operate) {
+		mOperate = operate;
 	}
 
-	void setOperation(Cursor cursor) {
+	void setOperate(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}
 
-		setOperation(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_OPERATION)));
+		setOperate(cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_OPERATE)));
 	}
 
 	public long getHold() {
@@ -1313,25 +1314,25 @@ public class Stock extends DatabaseTable {
 	public String getAction(String period) {
 		String action = "";
 
-		if (period.equals(Constants.PERIOD_MIN1)) {
+		if (period.equals(Settings.KEY_PERIOD_MIN1)) {
 			action = getActionMin1();
-		} else if (period.equals(Constants.PERIOD_MIN5)) {
+		} else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
 			action = getActionMin5();
-		} else if (period.equals(Constants.PERIOD_MIN15)) {
+		} else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
 			action = getActionMin15();
-		} else if (period.equals(Constants.PERIOD_MIN30)) {
+		} else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
 			action = getActionMin30();
-		} else if (period.equals(Constants.PERIOD_MIN60)) {
+		} else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
 			action = getActionMin60();
-		} else if (period.equals(Constants.PERIOD_DAY)) {
+		} else if (period.equals(Settings.KEY_PERIOD_DAY)) {
 			action = getActionDay();
-		} else if (period.equals(Constants.PERIOD_WEEK)) {
+		} else if (period.equals(Settings.KEY_PERIOD_WEEK)) {
 			action = getActionWeek();
-		} else if (period.equals(Constants.PERIOD_MONTH)) {
+		} else if (period.equals(Settings.KEY_PERIOD_MONTH)) {
 			action = getActionMonth();
-		} else if (period.equals(Constants.PERIOD_QUARTER)) {
+		} else if (period.equals(Settings.KEY_PERIOD_QUARTER)) {
 			action = getActionQuarter();
-		} else if (period.equals(Constants.PERIOD_YEAR)) {
+		} else if (period.equals(Settings.KEY_PERIOD_YEAR)) {
 			action = getActionYear();
 		}
 
@@ -1339,25 +1340,25 @@ public class Stock extends DatabaseTable {
 	}
 
 	public void setAction(String period, String action) {
-		if (period.equals(Constants.PERIOD_MIN1)) {
+		if (period.equals(Settings.KEY_PERIOD_MIN1)) {
 			setActionMin1(action);
-		} else if (period.equals(Constants.PERIOD_MIN5)) {
+		} else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
 			setActionMin5(action);
-		} else if (period.equals(Constants.PERIOD_MIN15)) {
+		} else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
 			setActionMin15(action);
-		} else if (period.equals(Constants.PERIOD_MIN30)) {
+		} else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
 			setActionMin30(action);
-		} else if (period.equals(Constants.PERIOD_MIN60)) {
+		} else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
 			setActionMin60(action);
-		} else if (period.equals(Constants.PERIOD_DAY)) {
+		} else if (period.equals(Settings.KEY_PERIOD_DAY)) {
 			setActionDay(action);
-		} else if (period.equals(Constants.PERIOD_WEEK)) {
+		} else if (period.equals(Settings.KEY_PERIOD_WEEK)) {
 			setActionWeek(action);
-		} else if (period.equals(Constants.PERIOD_MONTH)) {
+		} else if (period.equals(Settings.KEY_PERIOD_MONTH)) {
 			setActionMonth(action);
-		} else if (period.equals(Constants.PERIOD_QUARTER)) {
+		} else if (period.equals(Settings.KEY_PERIOD_QUARTER)) {
 			setActionQuarter(action);
-		} else if (period.equals(Constants.PERIOD_YEAR)) {
+		} else if (period.equals(Settings.KEY_PERIOD_YEAR)) {
 			setActionYear(action);
 		}
 	}

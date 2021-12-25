@@ -38,8 +38,8 @@ public class OrionAlarmManager {
 				+ mIntervalMillis);
 	}
 
-	void setPendingIntent(PendingIntent operation) {
-		mPendingIntent = operation;
+	void setPendingIntent(PendingIntent pendingIntent) {
+		mPendingIntent = pendingIntent;
 	}
 
 	void startAlarm() {

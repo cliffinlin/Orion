@@ -33,20 +33,6 @@ public class Constants {
 	public static final String EXTRA_STOCK_ID_LIST = "stock_id_list";
 	public static final String EXTRA_STOCK_LIST_SORT_ORDER = "stock_list_sort_order";
 
-	public static final String PERIOD_MIN1 = "min1";
-	public static final String PERIOD_MIN5 = "min5";
-	public static final String PERIOD_MIN15 = "min15";
-	public static final String PERIOD_MIN30 = "min30";
-	public static final String PERIOD_MIN60 = "min60";
-	public static final String PERIOD_DAY = "day";
-	public static final String PERIOD_WEEK = "week";
-	public static final String PERIOD_MONTH = "month";
-	public static final String PERIOD_QUARTER = "quarter";
-	public static final String PERIOD_YEAR = "year";
-	public static final String PERIODS[] = { PERIOD_YEAR, PERIOD_QUARTER,
-			PERIOD_MONTH, PERIOD_WEEK, PERIOD_DAY, PERIOD_MIN60, PERIOD_MIN30,
-			PERIOD_MIN15, PERIOD_MIN5, PERIOD_MIN1 };
-
 	public static final int SCHEDULE_INTERVAL_MIN1 = 1;
 	public static final int SCHEDULE_INTERVAL_MIN5 = 5;
 	public static final int SCHEDULE_INTERVAL_MIN15 = 15;
@@ -73,8 +59,8 @@ public class Constants {
 	public static final String STOCK_CLASS_A = "A";
 	public static final String STOCK_CLASS_INDEX = "I";
 
-	public static final String STOCK_OPERATION_NONE = "";
-	public static final String STOCK_OPERATION_ALERT = "A";
+	public static final String STOCK_OPERATE_NONE = "";
+	public static final String STOCK_OPERATE_ALERT = "A";
 
 	public static final int STOCK_DIRECTION_NONE = 0;
 	public static final int STOCK_DIRECTION_UP = 1 << 0;

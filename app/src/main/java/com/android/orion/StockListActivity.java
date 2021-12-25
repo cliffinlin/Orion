@@ -59,7 +59,7 @@ public class StockListActivity extends ListActivity implements
 	TextView mTextViewMin30 = null;
 	TextView mTextViewMin15 = null;
 	TextView mTextViewMin5 = null;
-	TextView mTextViewOperation = null;
+	TextView mTextViewOperate = null;
 	TextView mTextViewModified = null;
 
 	ListView mLeftListView = null;
@@ -233,8 +233,8 @@ public class StockListActivity extends ListActivity implements
 		case R.id.action_5min:
 			mSortOrderColumn = DatabaseContract.COLUMN_MIN5;
 			break;
-		case R.id.operation:
-			mSortOrderColumn = DatabaseContract.COLUMN_OPERATION;
+		case R.id.operate:
+			mSortOrderColumn = DatabaseContract.COLUMN_OPERATE;
 			break;
 		case R.id.modified:
 			mSortOrderColumn = DatabaseContract.COLUMN_MODIFIED;
@@ -279,7 +279,7 @@ public class StockListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewMin30, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewMin15, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewMin5, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewOperation, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewOperate, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewModified, mHeaderTextDefaultColor);
 	}
 
@@ -320,48 +320,48 @@ public class StockListActivity extends ListActivity implements
 		mTextViewMonth = (TextView) findViewById(R.id.action_month);
 		if (mTextViewMonth != null) {
 			mTextViewMonth.setOnClickListener(this);
-			setVisibility(Constants.PERIOD_MONTH, mTextViewMonth);
+			setVisibility(Settings.KEY_PERIOD_MONTH, mTextViewMonth);
 		}
 
 		mTextViewWeek = (TextView) findViewById(R.id.action_week);
 		if (mTextViewWeek != null) {
 			mTextViewWeek.setOnClickListener(this);
-			setVisibility(Constants.PERIOD_WEEK, mTextViewWeek);
+			setVisibility(Settings.KEY_PERIOD_WEEK, mTextViewWeek);
 		}
 
 		mTextViewDay = (TextView) findViewById(R.id.action_day);
 		if (mTextViewDay != null) {
 			mTextViewDay.setOnClickListener(this);
-			setVisibility(Constants.PERIOD_DAY, mTextViewDay);
+			setVisibility(Settings.KEY_PERIOD_DAY, mTextViewDay);
 		}
 
 		mTextViewMin60 = (TextView) findViewById(R.id.action_60min);
 		if (mTextViewMin60 != null) {
 			mTextViewMin60.setOnClickListener(this);
-			setVisibility(Constants.PERIOD_MIN60, mTextViewMin60);
+			setVisibility(Settings.KEY_PERIOD_MIN60, mTextViewMin60);
 		}
 
 		mTextViewMin30 = (TextView) findViewById(R.id.action_30min);
 		if (mTextViewMin30 != null) {
 			mTextViewMin30.setOnClickListener(this);
-			setVisibility(Constants.PERIOD_MIN30, mTextViewMin30);
+			setVisibility(Settings.KEY_PERIOD_MIN30, mTextViewMin30);
 		}
 
 		mTextViewMin15 = (TextView) findViewById(R.id.action_15min);
 		if (mTextViewMin15 != null) {
 			mTextViewMin15.setOnClickListener(this);
-			setVisibility(Constants.PERIOD_MIN15, mTextViewMin15);
+			setVisibility(Settings.KEY_PERIOD_MIN15, mTextViewMin15);
 		}
 
 		mTextViewMin5 = (TextView) findViewById(R.id.action_5min);
 		if (mTextViewMin5 != null) {
 			mTextViewMin5.setOnClickListener(this);
-			setVisibility(Constants.PERIOD_MIN5, mTextViewMin5);
+			setVisibility(Settings.KEY_PERIOD_MIN5, mTextViewMin5);
 		}
 
-		mTextViewOperation = (TextView) findViewById(R.id.operation);
-		if (mTextViewOperation != null) {
-			mTextViewOperation.setOnClickListener(this);
+		mTextViewOperate = (TextView) findViewById(R.id.operate);
+		if (mTextViewOperate != null) {
+			mTextViewOperate.setOnClickListener(this);
 		}
 
 		mTextViewModified = (TextView) findViewById(R.id.modified);
@@ -389,8 +389,8 @@ public class StockListActivity extends ListActivity implements
 			setHeaderTextColor(mTextViewMin15, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MIN5)) {
 			setHeaderTextColor(mTextViewMin5, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_OPERATION)) {
-			setHeaderTextColor(mTextViewOperation, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_OPERATE)) {
+			setHeaderTextColor(mTextViewOperate, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MODIFIED)) {
 			setHeaderTextColor(mTextViewModified, mHeaderTextHighlightColor);
 		} else {
@@ -407,10 +407,10 @@ public class StockListActivity extends ListActivity implements
 				DatabaseContract.COLUMN_WEEK, DatabaseContract.COLUMN_DAY,
 				DatabaseContract.COLUMN_MIN60, DatabaseContract.COLUMN_MIN30,
 				DatabaseContract.COLUMN_MIN15, DatabaseContract.COLUMN_MIN5,
-				DatabaseContract.COLUMN_OPERATION, DatabaseContract.COLUMN_MODIFIED };
+				DatabaseContract.COLUMN_OPERATE, DatabaseContract.COLUMN_MODIFIED };
 		int[] mRightTo = new int[] { R.id.price, R.id.net, R.id.type_month,
 				R.id.type_week, R.id.type_day, R.id.type_60min,
-				R.id.type_30min, R.id.type_15min, R.id.type_5min, R.id.operation, R.id.modified };
+				R.id.type_30min, R.id.type_15min, R.id.type_5min, R.id.operate, R.id.modified };
 
 		mLeftListView = (ListView) findViewById(R.id.left_listview);
 		mLeftAdapter = new SimpleCursorAdapter(this,
@@ -589,25 +589,25 @@ public class StockListActivity extends ListActivity implements
 
 			if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MONTH)) {
-				return setRightTextViewVisibility(Constants.PERIOD_MONTH, view);
+				return setRightTextViewVisibility(Settings.KEY_PERIOD_MONTH, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_WEEK)) {
-				return setRightTextViewVisibility(Constants.PERIOD_WEEK, view);
+				return setRightTextViewVisibility(Settings.KEY_PERIOD_WEEK, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_DAY)) {
-				return setRightTextViewVisibility(Constants.PERIOD_DAY, view);
+				return setRightTextViewVisibility(Settings.KEY_PERIOD_DAY, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MIN60)) {
-				return setRightTextViewVisibility(Constants.PERIOD_MIN60, view);
+				return setRightTextViewVisibility(Settings.KEY_PERIOD_MIN60, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MIN30)) {
-				return setRightTextViewVisibility(Constants.PERIOD_MIN30, view);
+				return setRightTextViewVisibility(Settings.KEY_PERIOD_MIN30, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MIN15)) {
-				return setRightTextViewVisibility(Constants.PERIOD_MIN15, view);
+				return setRightTextViewVisibility(Settings.KEY_PERIOD_MIN15, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MIN5)) {
-				return setRightTextViewVisibility(Constants.PERIOD_MIN5, view);
+				return setRightTextViewVisibility(Settings.KEY_PERIOD_MIN5, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MODIFIED)) {
 			}

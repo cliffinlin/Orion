@@ -173,13 +173,13 @@ public class StockDealActivity extends DatabaseActivity implements
 
 		mListStockAction = new ArrayList<String>();
 		mListStockAction.add("");
-		mListStockAction.add(Constants.PERIOD_MONTH);
-		mListStockAction.add(Constants.PERIOD_WEEK);
-		mListStockAction.add(Constants.PERIOD_DAY);
-		mListStockAction.add(Constants.PERIOD_MIN60);
-		mListStockAction.add(Constants.PERIOD_MIN30);
-		mListStockAction.add(Constants.PERIOD_MIN15);
-		mListStockAction.add(Constants.PERIOD_MIN5);
+		mListStockAction.add(Settings.KEY_PERIOD_MONTH);
+		mListStockAction.add(Settings.KEY_PERIOD_WEEK);
+		mListStockAction.add(Settings.KEY_PERIOD_DAY);
+		mListStockAction.add(Settings.KEY_PERIOD_MIN60);
+		mListStockAction.add(Settings.KEY_PERIOD_MIN30);
+		mListStockAction.add(Settings.KEY_PERIOD_MIN15);
+		mListStockAction.add(Settings.KEY_PERIOD_MIN5);
 
 		mArrayAdapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_spinner_item, mListStockAction);
@@ -189,7 +189,7 @@ public class StockDealActivity extends DatabaseActivity implements
 
 		if (ACTION_DEAL_INSERT.equals(mAction)) {
 			setTitle(R.string.deal_insert);
-			mDeal.setAction(Constants.PERIOD_DAY);
+			mDeal.setAction(Settings.KEY_PERIOD_DAY);
 		} else if (ACTION_DEAL_EDIT.equals(mAction)) {
 			setTitle(R.string.deal_edit);
 		}
@@ -223,7 +223,10 @@ public class StockDealActivity extends DatabaseActivity implements
 
 				mDeal.setVolume(volume);
 
-				mDeal.setupProfit(mStock.getRDate(), mStock.getDividend());
+				mDeal.setupFee(mStock.getRDate(), mStock.getDividend());
+				mDeal.setupNet();
+				mDeal.setupValue();
+				mDeal.setupProfit();
 				mEditTextDealProfit.setText(String.valueOf(mDeal.getProfit()));
             }
         });
@@ -253,7 +256,10 @@ public class StockDealActivity extends DatabaseActivity implements
 			mDeal.setDeal(dealPrice);
 			mEditTextDealPrice.setText(String.valueOf(mDeal.getDeal()));
 
-			mDeal.setupProfit(mStock.getRDate(), mStock.getDividend());
+			mDeal.setupFee(mStock.getRDate(), mStock.getDividend());
+			mDeal.setupNet();
+			mDeal.setupValue();
+			mDeal.setupProfit();
 			mEditTextDealProfit.setText(String.valueOf(mDeal.getProfit()));
 		}
 	}
@@ -317,9 +323,11 @@ public class StockDealActivity extends DatabaseActivity implements
 			} else {
 				mDeal.setVolume(0);
 			}
+
+			mDeal.setupFee(mStock.getRDate(), mStock.getDividend());
 			mDeal.setupNet();
 			mDeal.setupValue();
-			mDeal.setupProfit(mStock.getRDate(), mStock.getDividend());
+			mDeal.setupProfit();
 			mDeal.setupBonus(mStock.getDividend());
 			mDeal.setupYield(mStock.getDividend());
 			mHandler.sendEmptyMessage(MESSAGE_SAVE_DEAL);

@@ -77,6 +77,7 @@ public class DealListActivity extends ListActivity implements
     TextView mTextViewVolume = null;
     TextView mTextViewValue = null;
     TextView mTextViewProfit = null;
+    TextView mTextViewFee = null;
     TextView mTextViewBonus = null;
     TextView mTextViewYield = null;
     TextView mTextViewCreated = null;
@@ -349,6 +350,9 @@ public class DealListActivity extends ListActivity implements
             case R.id.profit:
                 mSortOrderColumn = DatabaseContract.COLUMN_PROFIT;
                 break;
+            case R.id.fee:
+                mSortOrderColumn = DatabaseContract.COLUMN_FEE;
+                break;
             case R.id.created:
                 mSortOrderColumn = DatabaseContract.COLUMN_CREATED;
                 break;
@@ -393,6 +397,7 @@ public class DealListActivity extends ListActivity implements
         setHeaderTextColor(mTextViewVolume, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewValue, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewProfit, mHeaderTextDefaultColor);
+        setHeaderTextColor(mTextViewFee, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewBonus, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewYield, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewCreated, mHeaderTextDefaultColor);
@@ -442,6 +447,9 @@ public class DealListActivity extends ListActivity implements
         mTextViewProfit = (TextView) findViewById(R.id.profit);
         mTextViewProfit.setOnClickListener(this);
 
+        mTextViewFee = (TextView) findViewById(R.id.fee);
+        mTextViewFee.setOnClickListener(this);
+
         mTextViewBonus = (TextView) findViewById(R.id.bonus);
         mTextViewBonus.setOnClickListener(this);
 
@@ -471,6 +479,8 @@ public class DealListActivity extends ListActivity implements
             setHeaderTextColor(mTextViewValue, mHeaderTextHighlightColor);
         } else if (mSortOrder.contains(DatabaseContract.COLUMN_PROFIT)) {
             setHeaderTextColor(mTextViewProfit, mHeaderTextHighlightColor);
+        } else if (mSortOrder.contains(DatabaseContract.COLUMN_FEE)) {
+            setHeaderTextColor(mTextViewFee, mHeaderTextHighlightColor);
         } else if (mSortOrder.contains(DatabaseContract.COLUMN_BONUS)) {
             setHeaderTextColor(mTextViewBonus, mHeaderTextHighlightColor);
         } else if (mSortOrder.contains(DatabaseContract.COLUMN_YIELD)) {
@@ -495,6 +505,7 @@ public class DealListActivity extends ListActivity implements
                 DatabaseContract.COLUMN_VOLUME,
                 DatabaseContract.COLUMN_VALUE,
                 DatabaseContract.COLUMN_PROFIT,
+                DatabaseContract.COLUMN_FEE,
                 DatabaseContract.COLUMN_BONUS,
                 DatabaseContract.COLUMN_YIELD,
                 DatabaseContract.COLUMN_ACTION,
@@ -507,6 +518,7 @@ public class DealListActivity extends ListActivity implements
                 R.id.volume,
                 R.id.value,
                 R.id.profit,
+                R.id.fee,
                 R.id.bonus,
                 R.id.yield,
                 R.id.action,

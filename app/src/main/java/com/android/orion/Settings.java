@@ -1,6 +1,23 @@
 package com.android.orion;
 
 public class Settings {
+	public static final String KEY_SHARED_PREFERENCES_INIT = "shared_preferences_init";
+
+	public static final String KEY_PERIOD_MIN1 = "min1";
+	public static final String KEY_PERIOD_MIN5 = "min5";
+	public static final String KEY_PERIOD_MIN15 = "min15";
+	public static final String KEY_PERIOD_MIN30 = "min30";
+	public static final String KEY_PERIOD_MIN60 = "min60";
+	public static final String KEY_PERIOD_DAY = "day";
+	public static final String KEY_PERIOD_WEEK = "week";
+	public static final String KEY_PERIOD_MONTH = "month";
+	public static final String KEY_PERIOD_QUARTER = "quarter";
+	public static final String KEY_PERIOD_YEAR = "year";
+
+	public static final String KEY_PERIODS[] = { KEY_PERIOD_YEAR, KEY_PERIOD_QUARTER,
+			KEY_PERIOD_MONTH, KEY_PERIOD_WEEK, KEY_PERIOD_DAY, KEY_PERIOD_MIN60, KEY_PERIOD_MIN30,
+			KEY_PERIOD_MIN15, KEY_PERIOD_MIN5, KEY_PERIOD_MIN1 };
+
 	public static final String KEY_CANDLE = "candle";
 	public static final String KEY_DEAL = "deal";
 	public static final String KEY_BONUS = "bonus";
