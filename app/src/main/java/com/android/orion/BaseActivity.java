@@ -61,10 +61,7 @@ public class BaseActivity extends Activity {
 
 	Stock mStock = null;
 	StockData mStockData = null;
-	StockDeal mStockDeal = null;
 	FinancialData mFinancialData = null;
-	ShareBonus mShareBonus = null;
-	TotalShare mTotalShare = null;
 
 	ArrayList<Stock> mStockList = null;
 	ArrayList<StockData> mStockDataList = null;
@@ -161,20 +158,8 @@ public class BaseActivity extends Activity {
 			mStockData = new StockData();
 		}
 
-		if (mStockDeal == null) {
-			mStockDeal = new StockDeal();
-		}
-
 		if (mFinancialData == null) {
 			mFinancialData = new FinancialData();
-		}
-
-		if (mShareBonus == null) {
-			mShareBonus = new ShareBonus();
-		}
-
-		if (mTotalShare == null) {
-			mTotalShare = new TotalShare();
 		}
 
 		if (mStockList == null) {

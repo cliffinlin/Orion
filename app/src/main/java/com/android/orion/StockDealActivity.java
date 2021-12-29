@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -72,17 +73,19 @@ public class StockDealActivity extends DatabaseActivity implements
 				mStock.setCode(mDeal.getCode());
 				mStockDatabaseManager.getStock(mStock);
 				updateView();
+				updateDealFile("edit");
 				break;
 
 			case MESSAGE_SAVE_DEAL:
 				if (ACTION_DEAL_INSERT.equals(mAction)) {
 					mDeal.setCreated(Utility.getCurrentDateTimeString());
+					updateDealFile("insert");
 					mStockDatabaseManager.insertStockDeal(mDeal);
 				} else if (ACTION_DEAL_EDIT.equals(mAction)) {
 					mDeal.setModified(Utility.getCurrentDateTimeString());
+					updateDealFile("edit");
 					mStockDatabaseManager.updateStockDealByID(mDeal);
 				}
-
 				mStockDatabaseManager.updateStockDeal(mStock);
 				mStockDatabaseManager.updateStock(mStock,
 						mStock.getContentValues());
@@ -359,6 +362,33 @@ public class StockDealActivity extends DatabaseActivity implements
 			default:
 				break;
 			}
+		}
+	}
+
+	private void updateDealFile(String action) {
+		String fileName;
+		StringBuilder logString = new StringBuilder();
+
+		logString.append(mStock.getName() + " "
+				+ mDeal.getPrice() + " "
+				+ mDeal.getNet() + " "
+				+ mDeal.getDeal() + " "
+				+ mDeal.getVolume() + " "
+				+ mDeal.getValue() + " "
+				+ mDeal.getProfit() + " "
+				+ mDeal.getFee() + " "
+				+ mDeal.getBonus() + " "
+				+ mDeal.getYield() + " "
+				+ action + " "
+				+ mDeal.getCreated() + " "
+				+ mDeal.getModified() + " ");
+		logString.append("\n");
+
+		try {
+			fileName = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Android/" + mStock.getSE() + mStock.getCode() + mStock.getName() + "_deal.txt";
+			Utility.writeFile(fileName, logString.toString(), true);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 }

@@ -710,6 +710,8 @@ public class StockAnalyzer {
 		StockData prev = null;
 		StockData stockData = null;
 		StockData start = null;
+        int numerator = 0;
+        int denominator = 0;
 
 		if ((vertexList == null)
 				|| (vertexList.size() < Constants.STOCK_VERTEX_TYPING_SIZE + 2)) {
@@ -739,19 +741,23 @@ public class StockAnalyzer {
 		}
 
 		if (stockData.vertexOf(Constants.STOCK_VERTEX_BOTTOM_SEGMENT)) {
-			result += Constants.STOCK_ACTION_BUY2;
-			result += Constants.STOCK_ACTION_BUY2;
-
 			for (int i = vertexList.size() - 5; i >= 0; i--) {
 				start = vertexList.get(i);
 				if ((start != null) && (start.vertexOf(Constants.STOCK_VERTEX_TOP_SEGMENT))) {
 					if ((stock.getPrice() > 0) && (start.getHigh() > 0)) {
-						result += " " + (int)(100 * (stock.getPrice() - start.getHigh())/start.getHigh());
-						result += "/" + (int)(100 * (stockData.getLow() - start.getHigh())/start.getHigh());
+                        numerator = (int)(100 * (stock.getPrice() - start.getHigh())/start.getHigh());
+                        denominator = (int)(100 * (stockData.getLow() - start.getHigh())/start.getHigh());
 					}
 					break;
 				}
 			}
+
+            if (Math.abs(denominator) >= Constants.MIN_OPERATE_PROFIT) {
+                result += Constants.STOCK_ACTION_BUY2;
+                result += Constants.STOCK_ACTION_BUY2;
+                result += " " + numerator;
+                result += "/" + denominator;
+            }
 		}
 
 		return result;
@@ -763,6 +769,8 @@ public class StockAnalyzer {
 		StockData prev = null;
 		StockData stockData = null;
 		StockData start = null;
+		int numerator = 0;
+		int denominator = 0;
 
 		if ((vertexList == null)
 				|| (vertexList.size() < Constants.STOCK_VERTEX_TYPING_SIZE + 2)) {
@@ -792,19 +800,23 @@ public class StockAnalyzer {
 		}
 
 		if (stockData.vertexOf(Constants.STOCK_VERTEX_TOP_SEGMENT)) {
-			result += Constants.STOCK_ACTION_SELL2;
-			result += Constants.STOCK_ACTION_SELL2;
-
 			for (int i = vertexList.size() - 5; i >= 0; i--) {
 				start = vertexList.get(i);
 				if ((start != null) && (start.vertexOf(Constants.STOCK_VERTEX_BOTTOM_SEGMENT))) {
 					if ((stock.getPrice() > 0) && (start.getLow() > 0)) {
-						result += " " + (int)(100 * (stock.getPrice() - start.getLow())/start.getLow());
-						result += "/" + (int)(100 * (stockData.getHigh() - start.getLow())/start.getLow());
+                        numerator = (int)(100 * (stock.getPrice() - start.getLow())/start.getLow());
+                        denominator = (int)(100 * (stockData.getHigh() - start.getLow())/start.getLow());
 					}
 					break;
 				}
 			}
+
+			if (Math.abs(denominator) >= Constants.MIN_OPERATE_PROFIT) {
+                result += Constants.STOCK_ACTION_SELL2;
+                result += Constants.STOCK_ACTION_SELL2;
+                result += " " + numerator;
+                result += "/" + denominator;
+            }
 		}
 
 		return result;
@@ -986,7 +998,7 @@ public class StockAnalyzer {
 		logString.append(stock.getModified() + "\n");
 
 		try {
-			fileName = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Android/" + stock.getSE() + stock.getCode() + stock.getName() + ".txt";
+			fileName = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Android/" + stock.getSE() + stock.getCode() + stock.getName() + "_action.txt";
 			Utility.writeFile(fileName, logString.toString(), true);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1030,7 +1042,9 @@ public class StockAnalyzer {
 						actionString.append(period + " " + action + " ");
 						actionString.append(" " + stockDeal.getProfit() + " ");
 					}
-				} else if (action.contains("S1S1") || action.contains("S2S2")) {
+				}
+
+				if (action.contains("S1S1") || action.contains("S2S2")) {
 					mStockDatabaseManager.getStockDealListToSell(stock, stockDealList);
 					double totalProfit = 0;
 					for (StockDeal stockDeal : stockDealList) {
@@ -1046,10 +1060,6 @@ public class StockAnalyzer {
 		}
 
 		if (TextUtils.isEmpty(actionString)) {
-			return;
-		}
-
-		if (actionString.toString().contains("B") && actionString.toString().contains("S")) {
 			return;
 		}
 

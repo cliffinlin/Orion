@@ -14,6 +14,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -90,8 +91,8 @@ public class DealListActivity extends ListActivity implements
     SimpleCursorAdapter mRightAdapter = null;
 
     ActionMode mCurrentActionMode = null;
-    StockDeal mStockDeal = new StockDeal();
-    List<StockDeal> mStockDealList = new ArrayList<StockDeal>();
+    StockDeal mDeal = new StockDeal();
+    List<StockDeal> mDealList = new ArrayList<StockDeal>();
     Stock mStock = new Stock();
 
     int mFilterType = FILTER_TYPE_NONE;
@@ -107,7 +108,8 @@ public class DealListActivity extends ListActivity implements
             switch (msg.what) {
                 case MESSAGE_DELETE_DEAL:
                     getStock();
-                    mStockDatabaseManager.deleteStockDeal(mStockDeal);
+                    updateDealFile("delete");
+                    mStockDatabaseManager.deleteStockDeal(mDeal);
                     mStockDatabaseManager.updateStockDeal(mStock);
                     mStockDatabaseManager.updateStock(mStock,
                             mStock.getContentValues());
@@ -180,7 +182,7 @@ public class DealListActivity extends ListActivity implements
                     mIntent = new Intent(mContext, StockDealActivity.class);
                     mIntent.setAction(StockDealActivity.ACTION_DEAL_EDIT);
                     mIntent.putExtra(StockDealActivity.EXTRA_DEAL_ID,
-                            mStockDeal.getId());
+                            mDeal.getId());
                     startActivityForResult(mIntent, REQUEST_CODE_DEAL_EDIT);
                     mode.finish();
                     return true;
@@ -675,11 +677,11 @@ public class DealListActivity extends ListActivity implements
                             long id) {
 
         if (parent.getId() == R.id.left_listview) {
-            mStockDeal.setId(id);
+            mDeal.setId(id);
             mHandler.sendEmptyMessage(MESSAGE_VIEW_STOCK_DEAL);
         } else {
             if (mCurrentActionMode == null) {
-                mStockDeal.setId(id);
+                mDeal.setId(id);
                 mHandler.sendEmptyMessage(MESSAGE_VIEW_STOCK_CHAT);
             }
         }
@@ -693,7 +695,7 @@ public class DealListActivity extends ListActivity implements
             return false;
         }
 
-        mStockDeal.setId(id);
+        mDeal.setId(id);
         mCurrentActionMode = startActionMode(mModeCallBack);
         view.setSelected(true);
         return true;
@@ -714,10 +716,10 @@ public class DealListActivity extends ListActivity implements
     }
 
     void getStock() {
-        mStockDatabaseManager.getStockDealById(mStockDeal);
+        mStockDatabaseManager.getStockDealById(mDeal);
 
-        mStock.setSE(mStockDeal.getSE());
-        mStock.setCode(mStockDeal.getCode());
+        mStock.setSE(mDeal.getSE());
+        mStock.setCode(mDeal.getCode());
 
         mStockDatabaseManager.getStock(mStock);
     }
@@ -731,6 +733,33 @@ public class DealListActivity extends ListActivity implements
             }
 
             return false;
+        }
+    }
+
+    private void updateDealFile(String action) {
+        String fileName;
+        StringBuilder logString = new StringBuilder();
+
+        logString.append(mStock.getName() + " "
+                + mDeal.getPrice() + " "
+                + mDeal.getNet() + " "
+                + mDeal.getDeal() + " "
+                + mDeal.getVolume() + " "
+                + mDeal.getValue() + " "
+                + mDeal.getProfit() + " "
+                + mDeal.getFee() + " "
+                + mDeal.getBonus() + " "
+                + mDeal.getYield() + " "
+                + action + " "
+                + mDeal.getCreated() + " "
+                + mDeal.getModified() + " ");
+        logString.append("\n");
+
+        try {
+            fileName = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Android/" + mStock.getSE() + mStock.getCode() + mStock.getName() + "_deal.txt";
+            Utility.writeFile(fileName, logString.toString(), true);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

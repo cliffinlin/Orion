@@ -54,7 +54,7 @@
     <string name="deal_volume_prompt">Volume:</string>
     <string name="deal_profit">Deal Profit</string>
     <string name="delete">Delete</string>
-    <string name="delete_confirm">Do You Qant to Delete?</string>
+    <string name="delete_confirm">Do You Want to Delete?</string>
     <string name="discount">Discount</string>
     <string name="dividend">Dividend</string>
     <string name="enabled">Enabled</string>
