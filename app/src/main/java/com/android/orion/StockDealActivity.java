@@ -73,17 +73,17 @@ public class StockDealActivity extends DatabaseActivity implements
 				mStock.setCode(mDeal.getCode());
 				mStockDatabaseManager.getStock(mStock);
 				updateView();
-				updateDealFile("edit");
+				updateDealFile(Constants.DEAL_OPERATE_EDIT);
 				break;
 
 			case MESSAGE_SAVE_DEAL:
 				if (ACTION_DEAL_INSERT.equals(mAction)) {
 					mDeal.setCreated(Utility.getCurrentDateTimeString());
-					updateDealFile("insert");
+					updateDealFile(Constants.DEAL_OPERATE_INSERT);
 					mStockDatabaseManager.insertStockDeal(mDeal);
 				} else if (ACTION_DEAL_EDIT.equals(mAction)) {
 					mDeal.setModified(Utility.getCurrentDateTimeString());
-					updateDealFile("edit");
+					updateDealFile(Constants.DEAL_OPERATE_EDIT);
 					mStockDatabaseManager.updateStockDealByID(mDeal);
 				}
 				mStockDatabaseManager.updateStockDeal(mStock);
@@ -385,7 +385,7 @@ public class StockDealActivity extends DatabaseActivity implements
 		logString.append("\n");
 
 		try {
-			fileName = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Android/" + mStock.getSE() + mStock.getCode() + mStock.getName() + "_deal.txt";
+			fileName = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Android/" + Constants.DEAL + Constants.DEAL_FILE_EXT;
 			Utility.writeFile(fileName, logString.toString(), true);
 		} catch (Exception e) {
 			e.printStackTrace();

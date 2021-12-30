@@ -110,7 +110,7 @@ public class StorageActivity extends DatabaseActivity {
 
 	void performSaveToFile() {
 		String fileNameString = Constants.FAVORITE
-				+ Utility.getCurrentDateString() + Constants.XML_FILE_EXT;
+				+ Utility.getCurrentDateString() + Constants.FAVORITE_FILE_EXT;
 
 		Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
 		intent.addCategory(Intent.CATEGORY_OPENABLE);

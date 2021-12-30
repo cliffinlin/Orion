@@ -12,8 +12,21 @@ public class Constants {
 	public static final String MESSAGE_CHANNEL_ID = "message_channel";
 	public static final String MESSAGE_CHANNEL_NAME = "Message Channel";
 
+	public static final String ACTION = "action";
+	public static final String ACTION_FILE_EXT = ".txt";
+
+	public static final String DEAL = "deal";
+	public static final String DEAL_FILE_EXT = ".txt";
+
+	public static final String DEAL_OPERATE_INSERT = "insert";
+	public static final String DEAL_OPERATE_EDIT = "edit";
+	public static final String DEAL_OPERATE_DELETE = "delete";
+
 	public static final String FAVORITE = "favorite";
-	public static final String XML_FILE_EXT = ".xml";
+	public static final String FAVORITE_FILE_EXT = ".xml";
+
+	public static final String NOTIFICATION = "notification";
+	public static final String NOTIFICATION_FILE_EXT = ".txt";
 
 	public static final String ACTION_RESTART_LOADER = "orion.intent.action.RESTART_LOADER";
 
@@ -126,5 +139,5 @@ public class Constants {
 	public static final double ROI_COEFFICIENT = 1.0 / 1000;
 
 	public static final double AVERAGE_DIVIDEND_YIELD = 5.0;
-	public static final double MIN_OPERATE_PROFIT = 10.0;
+	public static final double MIN_OPERATE_PROFIT = 5.0;
 }

@@ -108,7 +108,7 @@ public class DealListActivity extends ListActivity implements
             switch (msg.what) {
                 case MESSAGE_DELETE_DEAL:
                     getStock();
-                    updateDealFile("delete");
+                    updateDealFile(Constants.DEAL_OPERATE_DELETE);
                     mStockDatabaseManager.deleteStockDeal(mDeal);
                     mStockDatabaseManager.updateStockDeal(mStock);
                     mStockDatabaseManager.updateStock(mStock,
@@ -756,7 +756,7 @@ public class DealListActivity extends ListActivity implements
         logString.append("\n");
 
         try {
-            fileName = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Android/" + mStock.getSE() + mStock.getCode() + mStock.getName() + "_deal.txt";
+            fileName = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Android/" + Constants.DEAL + Constants.DEAL_FILE_EXT;
             Utility.writeFile(fileName, logString.toString(), true);
         } catch (Exception e) {
             e.printStackTrace();

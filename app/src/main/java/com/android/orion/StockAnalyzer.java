@@ -624,6 +624,8 @@ public class StockAnalyzer {
 		StockData start = null;
 		StockData end = null;
 		StockData overlap = null;
+		int numerator = 0;
+		int denominator = 0;
 
 		if ((vertexList == null)
 				|| (vertexList.size() < Constants.STOCK_VERTEX_TYPING_SIZE + 2)) {
@@ -644,18 +646,22 @@ public class StockAnalyzer {
 		}
 
 		if (end.vertexOf(Constants.STOCK_VERTEX_BOTTOM)) {
-			result += Constants.STOCK_ACTION_BUY1;
-			result += Constants.STOCK_ACTION_BUY1;
-
 			for (int i = vertexList.size() - 3; i >= 0; i--) {
 				start = vertexList.get(i);
 				if ((start != null) && (start.vertexOf(Constants.STOCK_VERTEX_TOP))) {
 					if ((stock.getPrice() > 0) && (start.getVertexHigh() > 0)) {
-						result += " " + (int)(100 * (stock.getPrice() - start.getVertexHigh())/start.getVertexHigh());
-						result += "/" + (int)(100 * (end.getVertexLow() - start.getVertexHigh())/start.getVertexHigh());
+						numerator = (int)(100 * (stock.getPrice() - start.getVertexHigh())/start.getVertexHigh());
+						denominator = (int)(100 * (end.getVertexLow() - start.getVertexHigh())/start.getVertexHigh());
 					}
 					break;
 				}
+			}
+
+			if (Math.abs(denominator) >= Constants.MIN_OPERATE_PROFIT) {
+				result += Constants.STOCK_ACTION_BUY1;
+				result += Constants.STOCK_ACTION_BUY1;
+				result += " " + numerator;
+				result += "/" + denominator;
 			}
 		}
 
@@ -666,6 +672,8 @@ public class StockAnalyzer {
 		String result = "";
 		StockData start = null;
         StockData end = null;
+		int numerator = 0;
+		int denominator = 0;
 
 		if ((vertexList == null)
 				|| (vertexList.size() < Constants.STOCK_VERTEX_TYPING_SIZE + 2)) {
@@ -686,18 +694,22 @@ public class StockAnalyzer {
 		}
 
 		if (end.vertexOf(Constants.STOCK_VERTEX_TOP)) {
-			result += Constants.STOCK_ACTION_SELL1;
-			result += Constants.STOCK_ACTION_SELL1;
-
 			for (int i = vertexList.size() - 3; i >= 0; i--) {
 				start = vertexList.get(i);
 				if ((start != null) && (start.vertexOf(Constants.STOCK_VERTEX_BOTTOM))) {
 					if ((stock.getPrice() > 0) && (start.getVertexLow() > 0)) {
-						result += " " + (int)(100 * (stock.getPrice() - start.getVertexLow())/start.getVertexLow());
-						result += "/" + (int)(100 * (end.getVertexHigh() - start.getVertexLow())/start.getVertexLow());
+						numerator = (int)(100 * (stock.getPrice() - start.getVertexLow())/start.getVertexLow());
+						denominator = (int)(100 * (end.getVertexHigh() - start.getVertexLow())/start.getVertexLow());
 					}
 					break;
 				}
+			}
+
+			if (Math.abs(denominator) >= Constants.MIN_OPERATE_PROFIT) {
+				result += Constants.STOCK_ACTION_SELL1;
+				result += Constants.STOCK_ACTION_SELL1;
+				result += " " + numerator;
+				result += "/" + denominator;
 			}
 		}
 
@@ -998,7 +1010,8 @@ public class StockAnalyzer {
 		logString.append(stock.getModified() + "\n");
 
 		try {
-			fileName = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Android/" + stock.getSE() + stock.getCode() + stock.getName() + "_action.txt";
+			fileName = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Android/"
+					+ stock.getSE() + stock.getCode() + stock.getName() + Constants.ACTION_FILE_EXT;
 			Utility.writeFile(fileName, logString.toString(), true);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1007,6 +1020,7 @@ public class StockAnalyzer {
 
 	private void updateNotification(Stock stock) {
 		int id = 0;
+		String fileName;
 		String contentText = "";
 		Notification.Builder notification;
         ArrayList<StockDeal> stockDealList = new ArrayList<StockDeal>();
@@ -1067,6 +1081,19 @@ public class StockAnalyzer {
 		contentTitle.append(stock.getName() + " " + stock.getPrice() + " "
 				+ stock.getNet());
 		contentTitle.append(" " + actionString);
+
+		StringBuilder logString = new StringBuilder();
+		logString.append(stock.getName() + " " + stock.getPrice() + " "
+				+ stock.getNet() + " ");
+		logString.append(" " + actionString);
+		logString.append(stock.getModified() + "\n");
+
+		try {
+			fileName = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Android/" + Constants.NOTIFICATION + Constants.NOTIFICATION_FILE_EXT;
+			Utility.writeFile(fileName, logString.toString(), true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		Intent intent = new Intent(mContext, StockListActivity.class);
 		intent.setType("vnd.android-dir/mms-sms");
