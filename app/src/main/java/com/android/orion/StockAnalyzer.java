@@ -657,7 +657,7 @@ public class StockAnalyzer {
 				}
 			}
 
-			if (Math.abs(denominator) >= Constants.MIN_OPERATE_PROFIT) {
+			if (Math.abs(denominator) >= 2 * Constants.MIN_OPERATE_PROFIT) {
 				result += Constants.STOCK_ACTION_BUY1;
 				result += Constants.STOCK_ACTION_BUY1;
 				result += " " + numerator;
@@ -705,7 +705,7 @@ public class StockAnalyzer {
 				}
 			}
 
-			if (Math.abs(denominator) >= Constants.MIN_OPERATE_PROFIT) {
+			if (Math.abs(denominator) >= 2 * Constants.MIN_OPERATE_PROFIT) {
 				result += Constants.STOCK_ACTION_SELL1;
 				result += Constants.STOCK_ACTION_SELL1;
 				result += " " + numerator;
@@ -1049,7 +1049,8 @@ public class StockAnalyzer {
 		for (String period : Settings.KEY_PERIODS) {
 			if (Preferences.getBoolean(mContext, period, false)) {
 				String action = stock.getAction(period);
-				if (action.contains("B1B1") || action.contains("B2B2")) {
+				if (action.contains(Constants.STOCK_ACTION_BUY1 + Constants.STOCK_ACTION_BUY1)
+						|| action.contains(Constants.STOCK_ACTION_BUY2 + Constants.STOCK_ACTION_BUY2)) {
 					StockDeal stockDeal = new StockDeal();
 					mStockDatabaseManager.getStockDealToBuy(stock, stockDeal);
 					if (!TextUtils.isEmpty(stockDeal.getCode()) && (stockDeal.getVolume() <= 0)) {
@@ -1058,7 +1059,8 @@ public class StockAnalyzer {
 					}
 				}
 
-				if (action.contains("S1S1") || action.contains("S2S2")) {
+				if (action.contains(Constants.STOCK_ACTION_SELL1 + Constants.STOCK_ACTION_SELL1)
+						|| action.contains(Constants.STOCK_ACTION_SELL2 + Constants.STOCK_ACTION_SELL2)) {
 					mStockDatabaseManager.getStockDealListToSell(stock, stockDealList);
 					double totalProfit = 0;
 					for (StockDeal stockDeal : stockDealList) {
