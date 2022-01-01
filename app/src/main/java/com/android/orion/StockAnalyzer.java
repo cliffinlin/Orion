@@ -587,12 +587,17 @@ public class StockAnalyzer {
 
 		setMACD(stockDataList);
 
+		// __TEST_CASE__
+		//vertexAnalyzer.testShow(stockDataList, drawDataList);
+		// __TEST_CASE__
 		vertexAnalyzer.analyzeLine(stockDataList, drawDataList,
 				strokeVertexList, Constants.STOCK_VERTEX_TOP_STROKE,
 				Constants.STOCK_VERTEX_BOTTOM_STROKE);
 		vertexAnalyzer.vertexListToDataList(stockDataList, strokeVertexList,
 				strokeDataList);
-
+		// __TEST_CASE__
+		// vertexAnalyzer.testShow(stockDataList, strokeDataList);
+		// __TEST_CASE__
 		vertexAnalyzer.analyzeLine(stockDataList, strokeDataList,
 				segmentVertexList, Constants.STOCK_VERTEX_TOP_SEGMENT,
 				Constants.STOCK_VERTEX_BOTTOM_SEGMENT);
