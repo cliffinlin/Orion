@@ -230,10 +230,6 @@ public class BaseActivity extends Activity {
 					getResources().getString(R.string.network_unavailable),
 					Toast.LENGTH_SHORT).show();
 		}
-
-		if (mOrionService != null) {
-			mOrionService.download(null);
-		}
 	}
 
 	void acquireWakeLock() {
