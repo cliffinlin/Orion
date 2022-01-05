@@ -456,7 +456,8 @@ public class StockDeal extends DatabaseTable {
             return;
         }
 
-        mBonus = dividend / 10.0 * Math.abs(mVolume);
+        mBonus = Utility.Round(dividend / 10.0 * Math.abs(mVolume),
+                Constants.DOUBLE_FIXED_DECIMAL);
     }
 
     public void setupYield(double dividend) {

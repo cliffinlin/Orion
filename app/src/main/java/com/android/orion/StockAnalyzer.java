@@ -1061,12 +1061,12 @@ public class StockAnalyzer {
 				String action = stock.getAction(period);
 				if (action.contains(Constants.STOCK_ACTION_BUY1 + Constants.STOCK_ACTION_BUY1)
 						|| action.contains(Constants.STOCK_ACTION_BUY2 + Constants.STOCK_ACTION_BUY2)) {
-					StockDeal stockDeal = new StockDeal();
-					mStockDatabaseManager.getStockDealToBuy(stock, stockDeal);
-					if (!TextUtils.isEmpty(stockDeal.getCode()) && (stockDeal.getVolume() <= 0)) {
+//					StockDeal stockDeal = new StockDeal();
+//					mStockDatabaseManager.getStockDealToBuy(stock, stockDeal);
+//					if (!TextUtils.isEmpty(stockDeal.getCode()) && (stockDeal.getVolume() <= 0)) {
 						actionString.append(period + " " + action + " ");
-						actionString.append(" " + stockDeal.getProfit() + " ");
-					}
+//						actionString.append(" " + stockDeal.getProfit() + " ");
+//					}
 				}
 
 				if (action.contains(Constants.STOCK_ACTION_SELL1 + Constants.STOCK_ACTION_SELL1)

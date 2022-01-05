@@ -231,9 +231,6 @@ public class StorageActivity extends DatabaseActivity {
 						stock.setFlag(Long.valueOf(parser.nextText()));
 					} else if (DatabaseContract.COLUMN_COST.equals(tagName)) {
 						stock.setCost(Double.valueOf(parser.nextText()));
-					} else if (DatabaseContract.COLUMN_VALUATION
-							.equals(tagName)) {
-						stock.setValuation(Double.valueOf(parser.nextText()));
 					} else if (DatabaseContract.COLUMN_OPERATE.equals(tagName)) {
 						stock.setOperate(parser.nextText());
 					} else if (XML_TAG_ITEM.equals(tagName)) {
@@ -363,8 +360,6 @@ public class StorageActivity extends DatabaseActivity {
 						String.valueOf(stock.getFlag()));
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_COST,
 						String.valueOf(stock.getCost()));
-				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_VALUATION,
-						String.valueOf(stock.getValuation()));
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_OPERATE,
 						stock.getOperate());
 			} catch (Exception e) {
