@@ -361,6 +361,7 @@ public class VertexAnalyzer {
 			}
 
 			stockData.setDirection(direction);
+			stockData.setupAmplitude();
 
 			sigmaHistogram(stockData, stockDataList);
 
@@ -660,7 +661,7 @@ public class VertexAnalyzer {
 
 			stockData.setHigh(data.getVertexHigh());
 			stockData.setLow(data.getVertexLow());
-			stockData.setAction(String.valueOf(i));
+			stockData.setAction(String.valueOf(i) + " " + data.getAmplitude());
 		}
 	}
 

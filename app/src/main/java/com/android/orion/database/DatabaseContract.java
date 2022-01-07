@@ -71,6 +71,7 @@ public final class DatabaseContract {
     public static final String COLUMN_HIGH = "high";
     public static final String COLUMN_LOW = "low";
     public static final String COLUMN_CLOSE = "close";
+    public static final String COLUMN_AMPLITUDE = "amplitude";
     public static final String COLUMN_DIRECTION = "direction";
     public static final String COLUMN_VERTEX = "vertex";
     public static final String COLUMN_VERTEX_LOW = "vertex_low";
@@ -213,7 +214,7 @@ public final class DatabaseContract {
 
         public static final String[] PROJECTION_ALL = {_ID, COLUMN_STOCK_ID,
                 COLUMN_DATE, COLUMN_TIME, COLUMN_PERIOD, COLUMN_OPEN,
-                COLUMN_HIGH, COLUMN_LOW, COLUMN_CLOSE, COLUMN_DIRECTION,
+                COLUMN_HIGH, COLUMN_LOW, COLUMN_CLOSE, COLUMN_AMPLITUDE, COLUMN_DIRECTION,
                 COLUMN_VERTEX, COLUMN_VERTEX_LOW, COLUMN_VERTEX_HIGH,
                 COLUMN_OVERLAP, COLUMN_OVERLAP_LOW, COLUMN_OVERLAP_HIGH,
                 COLUMN_AVERAGE5, COLUMN_AVERAGE10, COLUMN_DIF, COLUMN_DEA,
@@ -228,6 +229,7 @@ public final class DatabaseContract {
                 + COLUMN_OPEN + DOUBLE_TYPE + COMMA_SEP + COLUMN_HIGH
                 + DOUBLE_TYPE + COMMA_SEP + COLUMN_LOW + DOUBLE_TYPE
                 + COMMA_SEP + COLUMN_CLOSE + DOUBLE_TYPE + COMMA_SEP
+                + COLUMN_AMPLITUDE + DOUBLE_TYPE + COMMA_SEP
                 + COLUMN_DIRECTION + INTEGER_TYPE + COMMA_SEP + COLUMN_VERTEX
                 + INTEGER_TYPE + COMMA_SEP + COLUMN_VERTEX_LOW + DOUBLE_TYPE
                 + COMMA_SEP + COLUMN_VERTEX_HIGH + DOUBLE_TYPE + COMMA_SEP

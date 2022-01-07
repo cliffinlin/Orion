@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.text.TextUtils;
 
 import com.android.orion.Constants;
+import com.android.orion.utility.Utility;
 
 public class StockData extends StockDatabaseTable {
 	private long mStockId;
@@ -15,6 +16,7 @@ public class StockData extends StockDatabaseTable {
 	private double mHigh;
 	private double mLow;
 	private double mClose;
+	private double mAmplitude;
 	private int mDirection;
 	private int mVertex;
 	private double mVertexLow;
@@ -78,6 +80,7 @@ public class StockData extends StockDatabaseTable {
 		mHigh = 0;
 		mLow = 0;
 		mClose = 0;
+		mAmplitude = 0;
 		mDirection = Constants.STOCK_DIRECTION_NONE;
 		mVertex = Constants.STOCK_VERTEX_NONE;
 		mVertexLow = 0;
@@ -117,6 +120,7 @@ public class StockData extends StockDatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_HIGH, mHigh);
 		contentValues.put(DatabaseContract.COLUMN_LOW, mLow);
 		contentValues.put(DatabaseContract.COLUMN_CLOSE, mClose);
+		contentValues.put(DatabaseContract.COLUMN_AMPLITUDE, mAmplitude);
 		contentValues.put(DatabaseContract.COLUMN_DIRECTION, mDirection);
 		contentValues.put(DatabaseContract.COLUMN_VERTEX, mVertex);
 		contentValues.put(DatabaseContract.COLUMN_VERTEX_LOW, mVertexLow);
@@ -157,6 +161,7 @@ public class StockData extends StockDatabaseTable {
 		setHigh(stockData.mHigh);
 		setLow(stockData.mLow);
 		setClose(stockData.mClose);
+		setAmplitude(stockData.mAmplitude);
 		setDirection(stockData.mDirection);
 		setVertex(stockData.mVertex);
 		setVertexLow(stockData.mVertexLow);
@@ -198,6 +203,7 @@ public class StockData extends StockDatabaseTable {
 		setHigh(cursor);
 		setLow(cursor);
 		setClose(cursor);
+		setAmplitude(cursor);
 		setDirection(cursor);
 		setVertex(cursor);
 		setVertexLow(cursor);
@@ -351,6 +357,23 @@ public class StockData extends StockDatabaseTable {
 
 		setClose(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_CLOSE)));
+	}
+
+	public double getAmplitude() {
+		return mAmplitude;
+	}
+
+	public void setAmplitude(double amplitude) {
+		mAmplitude = amplitude;
+	}
+
+	public void setAmplitude(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setAmplitude(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_AMPLITUDE)));
 	}
 
 	public int getDirection() {
@@ -796,5 +819,23 @@ public class StockData extends StockDatabaseTable {
 		}
 
 		return result;
+	}
+
+    public void setupAmplitude() {
+		mAmplitude = 0;
+
+		if ((mVertexHigh == 0) || (mVertexLow == 0)) {
+			return;
+		}
+
+		if (directionOf(Constants.STOCK_DIRECTION_UP)) {
+			mAmplitude = 100.0 * (mVertexHigh - mVertexLow) / mVertexLow;
+		} else if (directionOf(Constants.STOCK_DIRECTION_DOWN)) {
+			mAmplitude = 100.0 * (mVertexLow - mVertexHigh) / mVertexHigh;
+		} else {
+			mAmplitude = 100.0 * Math.abs(mVertexHigh - mVertexLow) / mVertexLow;
+		}
+
+		mAmplitude = Utility.Round(mAmplitude, Constants.DOUBLE_FIXED_DECIMAL);
 	}
 }
