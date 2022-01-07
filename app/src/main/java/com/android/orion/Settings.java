@@ -18,13 +18,19 @@ public class Settings {
 			KEY_PERIOD_MONTH, KEY_PERIOD_WEEK, KEY_PERIOD_DAY, KEY_PERIOD_MIN60, KEY_PERIOD_MIN30,
 			KEY_PERIOD_MIN15, KEY_PERIOD_MIN5, KEY_PERIOD_MIN1 };
 
-	public static final String KEY_CANDLE = "candle";
-	public static final String KEY_DEAL = "deal";
-	public static final String KEY_BONUS = "bonus";
-	public static final String KEY_BPS = "bps";
-	public static final String KEY_NPS = "nps";
-	public static final String KEY_ROE = "roe";
-	public static final String KEY_ROI = "roi";
+	public static final String KEY_DISPLAY_LATEST = "display_latest";
+	public static final String KEY_DISPLAY_COST = "display_cost";
+	public static final String KEY_DISPLAY_CANDLE = "display_candle";
+	public static final String KEY_DISPLAY_DIRECT = "display_direct";
+	public static final String KEY_DISPLAY_DRAW = "display_draw";
+	public static final String KEY_DISPLAY_STROKE = "display_stroke";
+	public static final String KEY_DISPLAY_SEGMENT = "display_segment";
+	public static final String KEY_DISPLAY_DEAL = "display_deal";
+	public static final String KEY_DISPLAY_BONUS = "display_bonus";
+	public static final String KEY_DISPLAY_BPS = "display_bps";
+	public static final String KEY_DISPLAY_NPS = "display_nps";
+	public static final String KEY_DISPLAY_ROE = "display_roe";
+	public static final String KEY_DISPLAY_ROI = "display_roi";
 
 	public static final String KEY_NOTIFICATION_MESSAGE = "notification_message";
 

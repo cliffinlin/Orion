@@ -30,25 +30,43 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/display" >
         <com.android.orion.CustomSwitchPreference
-            android:key="candle"
+            android:key="display_latest"
+            android:title="@string/latest" />
+        <com.android.orion.CustomSwitchPreference
+            android:key="display_cost"
+            android:title="@string/cost" />
+        <com.android.orion.CustomSwitchPreference
+            android:key="display_candle"
             android:title="@string/candle" />
         <com.android.orion.CustomSwitchPreference
-            android:key="deal"
+            android:key="display_direct"
+            android:title="@string/direct" />
+        <com.android.orion.CustomSwitchPreference
+            android:key="display_draw"
+            android:title="@string/draw" />
+        <com.android.orion.CustomSwitchPreference
+            android:key="display_stroke"
+            android:title="@string/stroke" />
+        <com.android.orion.CustomSwitchPreference
+            android:key="display_segment"
+            android:title="@string/segment" />
+        <com.android.orion.CustomSwitchPreference
+            android:key="display_deal"
             android:title="@string/deal" />
         <com.android.orion.CustomSwitchPreference
-            android:key="bonus"
+            android:key="display_bonus"
             android:title="@string/bonus" />
         <com.android.orion.CustomSwitchPreference
-            android:key="bps"
+            android:key="display_bps"
             android:title="@string/book_value_per_share" />
         <com.android.orion.CustomSwitchPreference
-            android:key="nps"
+            android:key="display_nps"
             android:title="@string/net_profit_per_share" />
         <com.android.orion.CustomSwitchPreference
-            android:key="roe"
+            android:key="display_roe"
             android:title="@string/roe" />
         <com.android.orion.CustomSwitchPreference
-            android:key="roi"
+            android:key="display_roi"
             android:title="@string/roi" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/notification" >

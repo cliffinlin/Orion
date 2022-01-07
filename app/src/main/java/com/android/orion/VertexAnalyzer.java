@@ -620,6 +620,7 @@ public class VertexAnalyzer {
 		int index = 0;
 		StockData data = null;
 		StockData stockData = null;
+		String actionString = "";
 
 		if ((stockDataList == null) || (dataList == null)) {
 			return;
@@ -661,7 +662,16 @@ public class VertexAnalyzer {
 
 			stockData.setHigh(data.getVertexHigh());
 			stockData.setLow(data.getVertexLow());
-			stockData.setAction(String.valueOf(i) + " " + data.getAmplitude());
+
+			actionString = String.valueOf(i);
+
+			if (data.getAmplitude() > 0) {
+				actionString += " +" + data.getAmplitude();
+			} else if (data.getAmplitude() < 0) {
+                actionString += " " + data.getAmplitude();
+            }
+
+			stockData.setAction(actionString);
 		}
 	}
 

@@ -61,13 +61,15 @@ public class StockDataChartListActivity extends BaseActivity implements
 	public static final int MESSAGE_REFRESH = 0;
 	public static final int MESSAGE_LOAD_STOCK_LIST = 1;
 
-	boolean mShowCandle = false;
-	boolean mShowDeal = false;
-	boolean mShowBonus = false;
-	boolean mShowBPS = false;
-	boolean mShowNPS = false;
-	boolean mShowRoe = false;
-	boolean mShowRoi = false;
+	boolean mKeyDisplayLatest = true;
+	boolean mKeyDisplayCost = true;
+	boolean mKeyDisplayCandle = false;
+	boolean mKeyDisplayDeal = false;
+	boolean mKeyDisplayBonus = false;
+	boolean mKeyDisplayBPS = false;
+	boolean mKeyDisplayNPS = false;
+	boolean mKeyDisplayRoe = false;
+	boolean mKeyDisplayRoi = false;
 
 	int mStockListIndex = 0;
 
@@ -153,28 +155,30 @@ public class StockDataChartListActivity extends BaseActivity implements
 		mSortOrder = getIntent().getStringExtra(
 				Constants.EXTRA_STOCK_LIST_SORT_ORDER);
 
-		mShowCandle = Preferences.getBoolean(mContext, Settings.KEY_CANDLE,
+		mKeyDisplayLatest = Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_LATEST, true);
+		mKeyDisplayCost = Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_COST, true);
+		mKeyDisplayCandle = Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_CANDLE,
 				false);
 
 		if (getIntent().getBooleanExtra(Constants.EXTRA_STOCK_DEAL, false)) {
-			mShowDeal = true;
+			mKeyDisplayDeal = true;
 		} else {
-			mShowDeal = Preferences.getBoolean(mContext, Settings.KEY_DEAL, false);
+			mKeyDisplayDeal = Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_DEAL, false);
 		}
 
 		if (getIntent().getBooleanExtra(Constants.EXTRA_STOCK_FINANCIAL, false)) {
-			mShowBonus = Preferences
-					.getBoolean(mContext, Settings.KEY_BONUS, false);
-			mShowBPS = Preferences.getBoolean(mContext, Settings.KEY_BPS, false);
-			mShowNPS = Preferences.getBoolean(mContext, Settings.KEY_NPS, false);
-			mShowRoe = Preferences.getBoolean(mContext, Settings.KEY_ROE, false);
-			mShowRoi = Preferences.getBoolean(mContext, Settings.KEY_ROI, false);
+			mKeyDisplayBonus = Preferences
+					.getBoolean(mContext, Settings.KEY_DISPLAY_BONUS, false);
+			mKeyDisplayBPS = Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_BPS, false);
+			mKeyDisplayNPS = Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_NPS, false);
+			mKeyDisplayRoe = Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_ROE, false);
+			mKeyDisplayRoi = Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_ROI, false);
 		} else {
-			mShowBonus = false;
-			mShowBPS = false;
-			mShowNPS = false;
-			mShowRoe = false;
-			mShowRoi = false;
+			mKeyDisplayBonus = false;
+			mKeyDisplayBPS = false;
+			mKeyDisplayNPS = false;
+			mKeyDisplayRoe = false;
+			mKeyDisplayRoi = false;
 		}
 
 		initLoader();
@@ -537,7 +541,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 								+ timeString);
 					}
 
-					if (mShowCandle) {
+					if (mKeyDisplayCandle) {
 						CandleEntry candleEntry = new CandleEntry(index,
 								(float) mStockData.getHigh(),
 								(float) mStockData.getLow(),
@@ -606,7 +610,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 								.add(overlapLowEntry);
 					}
 
-					if (mShowRoi) {
+					if (mKeyDisplayRoi) {
 						roi = (float) mStockData.getRoi();
 						Entry roiEntry = new Entry(roi, index);
 						stockDataChart.mRoiList.add(roiEntry);
@@ -627,21 +631,21 @@ public class StockDataChartListActivity extends BaseActivity implements
 							roe = (float) financialData.getRoe();
 						}
 
-						if (mShowBPS) {
+						if (mKeyDisplayBPS) {
 							Entry bookValuePerShareEntry = new Entry(
 									bookValuePerShare, index);
 							stockDataChart.mBookValuePerShareList
 									.add(bookValuePerShareEntry);
 						}
 
-						if (mShowNPS) {
+						if (mKeyDisplayNPS) {
 							Entry netProfitPerShareEntry = new Entry(
 									netProfitPerShare, index);
 							stockDataChart.mNetProfitPerShareList
 									.add(netProfitPerShareEntry);
 						}
 
-						if (mShowRoe) {
+						if (mKeyDisplayRoe) {
 							Entry roeEntry = new Entry(roe, index);
 							stockDataChart.mRoeList.add(roeEntry);
 						}
@@ -650,7 +654,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 					if (mShareBonusList.size() > 0) {
 						dividend = 0;
 
-						if (mShowBonus) {
+						if (mKeyDisplayBonus) {
 							shareBonus = getShareBonusByDate(dateString,
 									mShareBonusList);
 							if (shareBonus != null) {
@@ -664,7 +668,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 						}
 					}
 
-					if (mShowCandle) {
+					if (mKeyDisplayCandle) {
 						Entry average5Entry = new Entry(
 								(float) mStockData.getAverage5(), index);
 						stockDataChart.mAverage5EntryList.add(average5Entry);
@@ -693,7 +697,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 			loadStockDealList();
 
 			stockDataChart.updateDescription(mStock);
-			stockDataChart.updateXLimitLines(mStock, mStockDealList, mShowDeal);
+			stockDataChart.updateXLimitLines(mStock, mStockDealList, mKeyDisplayLatest, mKeyDisplayCost, mKeyDisplayDeal);
 			stockDataChart.setMainChartData();
 			stockDataChart.setSubChartData();
 

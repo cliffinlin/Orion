@@ -108,6 +108,9 @@ public class OrionMainActivity extends PreferenceActivity {
 			Preferences.putBoolean (this, Settings.KEY_PERIOD_MIN30, true);
 			Preferences.putBoolean (this, Settings.KEY_PERIOD_MIN15, true);
 
+			Preferences.putBoolean (this, Settings.KEY_DISPLAY_LATEST, true);
+			Preferences.putBoolean (this, Settings.KEY_DISPLAY_COST, true);
+
 			Preferences.putBoolean (this, Settings.KEY_NOTIFICATION_MESSAGE, true);
 		}
 	}

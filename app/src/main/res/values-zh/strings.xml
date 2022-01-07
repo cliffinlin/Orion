@@ -38,7 +38,12 @@
     <string name="book_value_per_share">BPS</string>
     <string name="bonus">Bonus</string>
     <string name="cancel">Cancel</string>
+    <string name="latest">Latest</string>
     <string name="candle">Candle</string>
+    <string name="direct">Direct</string>
+    <string name="draw">Draw</string>
+    <string name="stroke">Stroke</string>
+    <string name="segment">Segment</string>
     <string name="cash_flow_per_share">CPS</string>
     <string name="cost">Cost</string>
     <string name="created">Created</string>

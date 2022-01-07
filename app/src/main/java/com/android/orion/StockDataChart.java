@@ -343,7 +343,7 @@ public class StockDataChart {
 	}
 
 	void updateXLimitLines(Stock stock, ArrayList<StockDeal> stockDealList,
-			boolean showDeal) {
+			boolean keyDisplayLatest, boolean keyDisplayCost, boolean keyDisplayDeal) {
 		if ((stock == null) || (stockDealList == null)
 				|| (mXLimitLineList == null)) {
 			return;
@@ -351,12 +351,12 @@ public class StockDataChart {
 
 		mXLimitLineList.clear();
 
-		updateActionLimitLine(stock, stockDealList);
-		updateCostLimitLine(stock, stockDealList);
-		updateDealLimitLine(stock, stockDealList, showDeal);
+		updateLatestLimitLine(stock, stockDealList, keyDisplayLatest);
+		updateCostLimitLine(stock, stockDealList, keyDisplayCost);
+		updateDealLimitLine(stock, stockDealList, keyDisplayDeal);
 	}
 
-	void updateActionLimitLine(Stock stock, ArrayList<StockDeal> stockDealList) {
+	void updateLatestLimitLine(Stock stock, ArrayList<StockDeal> stockDealList, boolean keyDisplayLatest) {
 		int color = Color.WHITE;
 		String action = "";
 		String label = "";
@@ -367,11 +367,11 @@ public class StockDataChart {
 			return;
 		}
 
-		action = stock.getAction(mPeriod);
-
-		if (TextUtils.isEmpty(action)) {
+		if (!keyDisplayLatest) {
 			return;
 		}
+
+		action = stock.getAction(mPeriod);
 
 		if (action.contains("L") || action.contains("B")) {
 			color = Color.CYAN;
@@ -385,7 +385,7 @@ public class StockDataChart {
 		mXLimitLineList.add(limitLine);
 	}
 
-	void updateCostLimitLine(Stock stock, ArrayList<StockDeal> stockDealList) {
+	void updateCostLimitLine(Stock stock, ArrayList<StockDeal> stockDealList, boolean keyDisplayCost) {
 		int color = Color.WHITE;
 		double cost = 0;
 		double net = 0;
@@ -394,6 +394,10 @@ public class StockDataChart {
 
 		if ((stock == null) || (stockDealList == null)
 				|| (mXLimitLineList == null)) {
+			return;
+		}
+
+		if (!keyDisplayCost) {
 			return;
 		}
 
@@ -412,7 +416,7 @@ public class StockDataChart {
 	}
 
 	void updateDealLimitLine(Stock stock, ArrayList<StockDeal> stockDealList,
-			boolean showDeal) {
+			boolean keyDisplayDeal) {
 		double average = 0;
 		double net = 0;
 		int color = Color.WHITE;
@@ -425,7 +429,7 @@ public class StockDataChart {
 			return;
 		}
 
-		if (!showDeal) {
+		if (!keyDisplayDeal) {
 			return;
 		}
 
