@@ -896,12 +896,12 @@ public class StockAnalyzer {
 		if (stockData.directionOf(Constants.STOCK_DIRECTION_UP)) {
 			if (prev.vertexOf(Constants.STOCK_VERTEX_BOTTOM)) {
 				action += Constants.STOCK_ACTION_D;
-				if (period.equals(Settings.KEY_PERIOD_DAY)) {
-					String result1 = getFirstBottomAction(stock, drawVertexList, overlapList);
-					if (!TextUtils.isEmpty(result1)) {
-						action = result1;
-					}
-				}
+//				if (period.equals(Settings.KEY_PERIOD_DAY)) {
+//					String result1 = getFirstBottomAction(stock, drawVertexList, overlapList);
+//					if (!TextUtils.isEmpty(result1)) {
+//						action = result1;
+//					}
+//				}
 
 				String result2 = getSecondBottomAction(stock, drawVertexList,
 						overlapList);
@@ -914,12 +914,12 @@ public class StockAnalyzer {
 		} else if (stockData.directionOf(Constants.STOCK_DIRECTION_DOWN)) {
 			if (prev.vertexOf(Constants.STOCK_VERTEX_TOP)) {
 				action += Constants.STOCK_ACTION_G;
-				if (period.equals(Settings.KEY_PERIOD_DAY)) {
-					String result1 = getFirstTopAction(stock, drawVertexList, overlapList);
-					if (!TextUtils.isEmpty(result1)) {
-						action = result1;
-					}
-				}
+//				if (period.equals(Settings.KEY_PERIOD_DAY)) {
+//					String result1 = getFirstTopAction(stock, drawVertexList, overlapList);
+//					if (!TextUtils.isEmpty(result1)) {
+//						action = result1;
+//					}
+//				}
 
 				String result2 = getSecondTopAction(stock, drawVertexList, overlapList);
 				if (!TextUtils.isEmpty(result2)) {
