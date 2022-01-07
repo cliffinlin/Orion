@@ -29,6 +29,7 @@ import com.android.orion.database.StockDeal;
 import com.android.orion.database.TotalShare;
 import com.android.orion.indicator.MACD;
 import com.android.orion.utility.Preferences;
+import com.android.orion.utility.RecordFile;
 import com.android.orion.utility.StopWatch;
 import com.android.orion.utility.Utility;
 
@@ -1094,18 +1095,7 @@ public class StockAnalyzer {
 				+ stock.getNet());
 		contentTitle.append(" " + actionString);
 
-		StringBuilder logString = new StringBuilder();
-		logString.append(stock.getName() + " " + stock.getPrice() + " "
-				+ stock.getNet() + " ");
-		logString.append(" " + actionString);
-		logString.append(stock.getModified() + "\n");
-
-		try {
-			fileName = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Android/" + Constants.NOTIFICATION + Constants.NOTIFICATION_FILE_EXT;
-			Utility.writeFile(fileName, logString.toString(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		RecordFile.writeNotificationFile(stock, actionString.toString());
 
 		Intent intent = new Intent(mContext, StockListActivity.class);
 		intent.setType("vnd.android-dir/mms-sms");

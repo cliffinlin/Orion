@@ -5,7 +5,6 @@ import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -24,6 +23,7 @@ import android.widget.Spinner;
 
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;
+import com.android.orion.utility.RecordFile;
 import com.android.orion.utility.Utility;
 
 public class StockDealActivity extends DatabaseActivity implements
@@ -73,17 +73,17 @@ public class StockDealActivity extends DatabaseActivity implements
 				mStock.setCode(mDeal.getCode());
 				mStockDatabaseManager.getStock(mStock);
 				updateView();
-				updateDealFile(Constants.DEAL_OPERATE_EDIT);
+				RecordFile.writeDealFile(mStock, mDeal, Constants.DEAL_OPERATE_EDIT);
 				break;
 
 			case MESSAGE_SAVE_DEAL:
 				if (ACTION_DEAL_INSERT.equals(mAction)) {
 					mDeal.setCreated(Utility.getCurrentDateTimeString());
-					updateDealFile(Constants.DEAL_OPERATE_INSERT);
+					RecordFile.writeDealFile(mStock, mDeal, Constants.DEAL_OPERATE_INSERT);
 					mStockDatabaseManager.insertStockDeal(mDeal);
 				} else if (ACTION_DEAL_EDIT.equals(mAction)) {
 					mDeal.setModified(Utility.getCurrentDateTimeString());
-					updateDealFile(Constants.DEAL_OPERATE_EDIT);
+					RecordFile.writeDealFile(mStock, mDeal, Constants.DEAL_OPERATE_EDIT);
 					mStockDatabaseManager.updateStockDealByID(mDeal);
 				}
 				mStockDatabaseManager.updateStockDeal(mStock);
@@ -362,33 +362,6 @@ public class StockDealActivity extends DatabaseActivity implements
 			default:
 				break;
 			}
-		}
-	}
-
-	private void updateDealFile(String action) {
-		String fileName;
-		StringBuilder logString = new StringBuilder();
-
-		logString.append(mStock.getName() + " "
-				+ mDeal.getPrice() + " "
-				+ mDeal.getNet() + " "
-				+ mDeal.getDeal() + " "
-				+ mDeal.getVolume() + " "
-				+ mDeal.getValue() + " "
-				+ mDeal.getProfit() + " "
-				+ mDeal.getFee() + " "
-				+ mDeal.getBonus() + " "
-				+ mDeal.getYield() + " "
-				+ action + " "
-				+ mDeal.getCreated() + " "
-				+ mDeal.getModified() + " ");
-		logString.append("\n");
-
-		try {
-			fileName = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Android/" + Constants.DEAL + Constants.DEAL_FILE_EXT;
-			Utility.writeFile(fileName, logString.toString(), true);
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 }
