@@ -139,5 +139,5 @@ public class Constants {
 	public static final double ROI_COEFFICIENT = 1.0 / 1000;
 
 	public static final double AVERAGE_DIVIDEND_YIELD = 5.0;
-	public static final double MIN_OPERATE_PROFIT = 5.0;
+	public static final double MIN_OPERATE_PROFIT = 10.0;
 }
