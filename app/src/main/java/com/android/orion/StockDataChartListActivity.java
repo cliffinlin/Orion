@@ -31,7 +31,9 @@ import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.FinancialData;
 import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
+import com.android.orion.database.StockData;
 import com.android.orion.utility.Preferences;
+import com.android.orion.utility.Search;
 import com.android.orion.utility.Utility;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -621,7 +623,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 						netProfitPerShare = 0;
 						roe = 0;
 
-						financialData = getFinancialDataByDate(dateString,
+						financialData = Search.getFinancialDataByDate(dateString,
 								mFinancialDataList);
 						if (financialData != null) {
 							bookValuePerShare = (float) financialData
@@ -655,7 +657,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 						dividend = 0;
 
 						if (mKeyDisplayBonus) {
-							shareBonus = getShareBonusByDate(dateString,
+							shareBonus = Search.getShareBonusByDate(dateString,
 									mShareBonusList);
 							if (shareBonus != null) {
 								dividend = (float) (shareBonus.getDividend());
@@ -716,195 +718,6 @@ public class StockDataChartListActivity extends BaseActivity implements
 		String sortOrder = DatabaseContract.COLUMN_DEAL + " DESC ";
 
 		mStockDatabaseManager.getStockDealList(mStock, mStockDealList, selection, sortOrder);
-	}
-
-	Comparator<FinancialData> comparator = new Comparator<FinancialData>() {
-
-		@Override
-		public int compare(FinancialData arg0, FinancialData arg1) {
-			Calendar calendar0;
-			Calendar calendar1;
-
-			calendar0 = Utility.stringToCalendar(arg0.getDate(),
-					Utility.CALENDAR_DATE_TIME_FORMAT);
-			calendar1 = Utility.stringToCalendar(arg1.getDate(),
-					Utility.CALENDAR_DATE_TIME_FORMAT);
-			if (calendar1.before(calendar0)) {
-				return -1;
-			} else if (calendar1.after(calendar0)) {
-				return 1;
-			} else {
-				return 0;
-			}
-		}
-	};
-
-	int binarySearch(int arr[], int l, int r, int x) {
-		if (r >= l) {
-			int mid = l + (r - l) / 2;
-
-			// If the element is present at the
-			// middle itself
-			if (arr[mid] == x)
-				return mid;
-
-			// If element is smaller than mid, then
-			// it can only be present in left subarray
-			if (arr[mid] > x)
-				return binarySearch(arr, l, mid - 1, x);
-
-			// Else the element can only be present
-			// in right subarray
-			return binarySearch(arr, mid + 1, r, x);
-		}
-
-		// We reach here when element is not present
-		// in array
-		return -1;
-	}
-
-	int binarySearchFinancialData(int l, int r, Calendar calendar,
-			ArrayList<FinancialData> financialDataList) {
-		if (r >= l) {
-			int mid = l + (r - l) / 2;
-
-			Calendar calendarMid = Utility.stringToCalendar(financialDataList
-					.get(mid).getDate(), Utility.CALENDAR_DATE_FORMAT);
-
-			// If the element is present at the
-			// middle itself
-			if (calendarMid.equals(calendar))
-				return mid;
-
-			// If element is smaller than mid, then
-			// it can only be present in left subarray
-			if (calendar.before(calendarMid))
-				return binarySearchFinancialData(l, mid - 1, calendar,
-						financialDataList);
-
-			Calendar calendarMid1 = Utility.stringToCalendar(financialDataList
-					.get(mid + 1).getDate(), Utility.CALENDAR_DATE_FORMAT);
-			if (calendar.after(calendarMid) && (calendar.before(calendarMid1)))
-				return mid;
-
-			// Else the element can only be present
-			// in right subarray
-			return binarySearchFinancialData(mid + 1, r, calendar,
-					financialDataList);
-		}
-
-		// We reach here when element is not present
-		// in array
-		return -1;
-	}
-
-	FinancialData getFinancialDataByDate(String dateString,
-			ArrayList<FinancialData> financialDataList) {
-		int index = 0;
-		FinancialData financialData = null;
-
-		if (financialDataList.size() < 1) {
-			return financialData;
-		}
-
-		if (TextUtils.isEmpty(dateString)) {
-			return financialData;
-		}
-
-		Calendar calendar = Utility.stringToCalendar(dateString,
-				Utility.CALENDAR_DATE_FORMAT);
-		Calendar calendarMin = Utility.stringToCalendar(financialDataList
-				.get(0).getDate(), Utility.CALENDAR_DATE_FORMAT);
-		Calendar calendarMax = Utility.stringToCalendar(
-				financialDataList.get(financialDataList.size() - 1).getDate(),
-				Utility.CALENDAR_DATE_FORMAT);
-
-		if (calendar.before(calendarMin)) {
-			return financialData;
-		} else if (calendar.after(calendarMax)) {
-			return financialDataList.get(financialDataList.size() - 1);
-		} else {
-			index = binarySearchFinancialData(0, financialDataList.size() - 1,
-					calendar, financialDataList);
-
-			if ((index > 0) && (index < financialDataList.size())) {
-				financialData = financialDataList.get(index);
-			}
-		}
-
-		return financialData;
-	}
-
-	int binarySearchShareBonus(int l, int r, Calendar calendar,
-			ArrayList<ShareBonus> shareBonusList) {
-		if (r >= l) {
-			int mid = l + (r - l) / 2;
-
-			Calendar calendarMid = Utility.stringToCalendar(
-					shareBonusList.get(mid).getDate(),
-					Utility.CALENDAR_DATE_FORMAT);
-
-			// If the element is present at the
-			// middle itself
-			if (calendarMid.equals(calendar))
-				return mid;
-
-			// If element is smaller than mid, then
-			// it can only be present in left subarray
-			if (calendar.before(calendarMid))
-				return binarySearchShareBonus(l, mid - 1, calendar,
-						shareBonusList);
-
-			Calendar calendarMid1 = Utility.stringToCalendar(shareBonusList
-					.get(mid + 1).getDate(), Utility.CALENDAR_DATE_FORMAT);
-			if (calendar.after(calendarMid) && (calendar.before(calendarMid1)))
-				return mid;
-
-			// Else the element can only be present
-			// in right subarray
-			return binarySearchShareBonus(mid + 1, r, calendar, shareBonusList);
-		}
-
-		// We reach here when element is not present
-		// in array
-		return -1;
-	}
-
-	ShareBonus getShareBonusByDate(String dateString,
-			ArrayList<ShareBonus> shareBonusList) {
-		int index = 0;
-		ShareBonus shareBonus = null;
-
-		if (shareBonusList.size() < 1) {
-			return shareBonus;
-		}
-
-		if (TextUtils.isEmpty(dateString)) {
-			return shareBonus;
-		}
-
-		Calendar calendar = Utility.stringToCalendar(dateString,
-				Utility.CALENDAR_DATE_FORMAT);
-		Calendar calendarMin = Utility.stringToCalendar(shareBonusList.get(0)
-				.getDate(), Utility.CALENDAR_DATE_FORMAT);
-		Calendar calendarMax = Utility.stringToCalendar(
-				shareBonusList.get(shareBonusList.size() - 1).getDate(),
-				Utility.CALENDAR_DATE_FORMAT);
-
-		if (calendar.before(calendarMin)) {
-			return shareBonus;
-		} else if (calendar.after(calendarMax)) {
-			return shareBonusList.get(shareBonusList.size() - 1);
-		} else {
-			index = binarySearchShareBonus(0, shareBonusList.size() - 1,
-					calendar, shareBonusList);
-
-			if ((index > 0) && (index < shareBonusList.size())) {
-				shareBonus = shareBonusList.get(index);
-			}
-		}
-
-		return shareBonus;
 	}
 
 	void navigateStock(int direction) {

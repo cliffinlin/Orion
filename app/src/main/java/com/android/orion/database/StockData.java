@@ -274,6 +274,14 @@ public class StockData extends StockDatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_TIME)));
 	}
 
+	public String getDateTime() {
+		if (!TextUtils.isEmpty(mTime)) {
+			return mDate + " " + mTime;
+		} else {
+			return mDate + " " + "00:00:00";
+		}
+	}
+
 	public String getPeriod() {
 		return mPeriod;
 	}

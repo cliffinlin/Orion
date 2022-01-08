@@ -26,6 +26,8 @@ import com.android.orion.database.StockData;
 import com.android.orion.database.TotalShare;
 import com.android.orion.utility.Market;
 import com.android.orion.utility.Preferences;
+import com.android.orion.utility.Search;
+import com.android.orion.utility.StopWatch;
 import com.android.orion.utility.Utility;
 
 public abstract class StockDataProvider extends StockAnalyzer {
@@ -435,6 +437,10 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				return result;
 			}
 
+			if (Constants.STOCK_CLASS_INDEX.equals(stock.getClases())) {
+				return result;
+			}
+
 			mStockDatabaseManager.getStock(stock);
 
 			if (Market.isTradingHours(Calendar.getInstance())) {
@@ -467,10 +473,10 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				if (response != null) {
 					result = response.body().string();
 					handleResponseStockRealTime(mStock, result);
-
-					mStockDatabaseManager.updateStockDeal(mStock);
-					mStockDatabaseManager.updateStock(mStock,
-							mStock.getContentValues());
+//
+//					mStockDatabaseManager.updateStockDeal(mStock);
+//					mStockDatabaseManager.updateStock(mStock,
+//							mStock.getContentValues());
 
 					Thread.sleep(Constants.DEFAULT_SLEEP_INTERVAL);
 				}
@@ -487,6 +493,10 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			boolean needDownload = false;
 
 			if (stock == null) {
+				return result;
+			}
+
+			if (Constants.STOCK_CLASS_INDEX.equals(stock.getClases())) {
 				return result;
 			}
 
@@ -540,6 +550,10 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			String result = "";
 
 			if (stock == null) {
+				return result;
+			}
+
+			if (Constants.STOCK_CLASS_INDEX.equals(stock.getClases())) {
 				return result;
 			}
 
@@ -644,6 +658,10 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				return result;
 			}
 
+			if (Constants.STOCK_CLASS_INDEX.equals(stock.getClases())) {
+				return result;
+			}
+
 			mStockDatabaseManager.getStock(stock);
 
 			mShareBonus = new ShareBonus();
@@ -695,6 +713,10 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				return result;
 			}
 
+			if (Constants.STOCK_CLASS_INDEX.equals(stock.getClases())) {
+				return result;
+			}
+
 			mStockDatabaseManager.getStock(stock);
 
 			mTotalShare = new TotalShare();
@@ -743,6 +765,10 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			String result = "";
 
 			if (stock == null) {
+				return result;
+			}
+
+			if (Constants.STOCK_CLASS_INDEX.equals(stock.getClases())) {
 				return result;
 			}
 
@@ -817,6 +843,10 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				return result;
 			}
 
+			if (Constants.STOCK_CLASS_INDEX.equals(stock.getClases())) {
+				return result;
+			}
+
 			mStockDatabaseManager.getStock(stock);
 
 			mStockData = new StockData(period);
@@ -855,6 +885,95 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			}
 
 			return result;
+		}
+
+		void setupCompositeIndex() {
+            StopWatch stopWatch = new StopWatch();
+            stopWatch.start();
+
+			Stock compositeIndex = new Stock();
+			ArrayList<StockData> compositeIndexStockDataList = null;
+			ArrayMap<String, Stock> stockArrayMapFavorite = new ArrayMap<String, Stock>();
+			int index = 0;
+
+			loadStockArrayMap(stockArrayMapFavorite);
+
+			try {
+				for (Stock stock : stockArrayMapFavorite.values()) {
+					if (Constants.STOCK_CLASS_INDEX.equals(stock.getClases())) {
+						compositeIndex.set(stock);
+						break;
+					}
+				}
+
+				for (Stock stock : stockArrayMapFavorite.values()) {
+					if (Constants.STOCK_CLASS_INDEX.equals(stock.getClases())) {
+						continue;
+					}
+
+					for (String period : Settings.KEY_PERIODS) {
+						if (Preferences.getBoolean(mContext, period, false)) {
+							ArrayList<StockData> stockDataList = stock.getStockDataList(period);
+							if (stockDataList == null) {
+								continue;
+							}
+
+							loadStockDataList(stock, period, stockDataList);
+
+							compositeIndexStockDataList = compositeIndex.getStockDataList(period);
+
+							if (compositeIndexStockDataList.size() == 0) {
+                                for (StockData stockData : stockDataList) {
+									StockData compositeIndexStockData = new StockData(period);
+									compositeIndexStockData.setStockId(compositeIndex.getId());
+
+									compositeIndexStockData.setDate(stockData.getDate());
+									compositeIndexStockData.setTime(stockData.getTime());
+									compositeIndexStockData.setOpen(stockData.getOpen());
+									compositeIndexStockData.setClose(stockData.getClose());
+									compositeIndexStockData.setHigh(stockData.getHigh());
+									compositeIndexStockData.setLow(stockData.getLow());
+
+									compositeIndexStockData.setVertexHigh(compositeIndexStockData.getHigh());
+									compositeIndexStockData.setVertexLow(compositeIndexStockData.getLow());
+
+									compositeIndexStockDataList.add(compositeIndexStockData);
+                                }
+                            } else {
+							    for (StockData stockData : stockDataList) {
+							        StockData compositeIndexStockData = Search.getStockDataByDateTime(stockData.getDateTime(), compositeIndexStockDataList);
+							        if (compositeIndexStockData != null) {
+                                        compositeIndexStockData.setOpen(compositeIndexStockData.getOpen() + stockData.getOpen());
+                                        compositeIndexStockData.setClose(compositeIndexStockData.getClose() + stockData.getClose());
+                                        compositeIndexStockData.setHigh(compositeIndexStockData.getHigh() + stockData.getHigh());
+                                        compositeIndexStockData.setLow(compositeIndexStockData.getLow() + stockData.getLow());
+
+										compositeIndexStockData.setVertexHigh(compositeIndexStockData.getHigh());
+										compositeIndexStockData.setVertexLow(compositeIndexStockData.getLow());
+                                    } else {
+							            //TODO
+                                        //compositeIndexStockDataList.add(stockData);
+                                    }
+                                }
+                            }
+
+                            updateDatabase(compositeIndex, period, compositeIndexStockDataList);
+						}
+					}
+				}
+
+                for (String period : Settings.KEY_PERIODS) {
+                    if (Preferences.getBoolean(mContext, period, false)) {
+                        analyze(compositeIndex, period);
+                    }
+                }
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+            stopWatch.stop();
+            Log.d(TAG, "setupCompositeIndex:" + compositeIndex.getName() + " "
+                    + stopWatch.getInterval() + "s");
 		}
 
 		@Override
@@ -938,10 +1057,12 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			sendBroadcast(Constants.ACTION_RESTART_LOADER,
 					Constants.STOCK_ID_INVALID);
 
-            mAsyncTaskStatus = Status.FINISHED;
-            Log.d(TAG, "doInBackground, mAsyncTaskStatus=" + mAsyncTaskStatus);
+//			setupCompositeIndex();
 
-            releaseWakeLock();
+			mAsyncTaskStatus = Status.FINISHED;
+			Log.d(TAG, "doInBackground, mAsyncTaskStatus=" + mAsyncTaskStatus);
+
+			releaseWakeLock();
 
 			return result;
 		}
