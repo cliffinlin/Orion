@@ -615,8 +615,8 @@ public class VertexAnalyzer {
 		}
 	}
 
-	void testShow(ArrayList<StockData> stockDataList,
-			ArrayList<StockData> dataList) {
+	void debugShow(ArrayList<StockData> stockDataList,
+				   ArrayList<StockData> dataList) {
 		int index = 0;
 		StockData data = null;
 		StockData stockData = null;
