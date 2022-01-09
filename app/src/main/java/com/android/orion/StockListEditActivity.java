@@ -1,10 +1,12 @@
 package com.android.orion;
 
+import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
@@ -369,7 +371,24 @@ public class StockListEditActivity extends DatabaseActivity implements
 
 				case R.id.delete:
 					if (stock.getHold() == 0) {
-						mStockDatabaseManager.deleteStock(stock.getId());
+						final long stock_id = stock.getId();
+						new AlertDialog.Builder(mContext)
+								.setTitle(R.string.delete)
+								.setMessage(R.string.delete_confirm)
+								.setPositiveButton(R.string.ok,
+										new DialogInterface.OnClickListener() {
+											public void onClick(DialogInterface dialog,
+																int which) {
+												mStockDatabaseManager.deleteStock(stock_id);
+											}
+										})
+								.setNegativeButton(R.string.cancel,
+										new DialogInterface.OnClickListener() {
+											public void onClick(DialogInterface dialog,
+																int which) {
+											}
+										}).setIcon(android.R.drawable.ic_dialog_alert)
+								.show();
 					}
 					break;
 

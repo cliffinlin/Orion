@@ -671,7 +671,7 @@ public class StockAnalyzer {
 				}
 			}
 
-			if (Math.abs(denominator) >= 2 * Constants.MIN_OPERATE_PROFIT) {
+			if (Math.abs(denominator) >= Constants.FIRST_ACTION_THRESHOLD) {
 				result += Constants.STOCK_ACTION_BUY1;
 				result += Constants.STOCK_ACTION_BUY1;
 				result += " " + numerator;
@@ -719,7 +719,7 @@ public class StockAnalyzer {
 				}
 			}
 
-			if (Math.abs(denominator) >= 2 * Constants.MIN_OPERATE_PROFIT) {
+			if (Math.abs(denominator) >= Constants.FIRST_ACTION_THRESHOLD) {
 				result += Constants.STOCK_ACTION_SELL1;
 				result += Constants.STOCK_ACTION_SELL1;
 				result += " " + numerator;
@@ -778,7 +778,7 @@ public class StockAnalyzer {
 				}
 			}
 
-			if (Math.abs(denominator) >= Constants.MIN_OPERATE_PROFIT) {
+			if (Math.abs(denominator) >= Constants.SECEND_ACTION_THRESHOLD) {
 				result += Constants.STOCK_ACTION_BUY2;
 				result += Constants.STOCK_ACTION_BUY2;
 				result += " " + numerator;
@@ -837,7 +837,7 @@ public class StockAnalyzer {
 				}
 			}
 
-			if (Math.abs(denominator) >= Constants.MIN_OPERATE_PROFIT) {
+			if (Math.abs(denominator) >= Constants.SECEND_ACTION_THRESHOLD) {
 				result += Constants.STOCK_ACTION_SELL2;
 				result += Constants.STOCK_ACTION_SELL2;
 				result += " " + numerator;
