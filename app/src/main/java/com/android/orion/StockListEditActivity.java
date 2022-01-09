@@ -25,13 +25,18 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.orion.database.Component;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
+import com.android.orion.utility.Utility;
 
 public class StockListEditActivity extends DatabaseActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
 		OnClickListener {
+
+    public static final String ACTION_COMPONENT_STOCK_SELECT = "orion.intent.action.ACTION_COMPONENT_STOCK_SELECT";
 
 	static final int LOADER_ID_STOCK_LIST = 0;
 
@@ -241,10 +246,37 @@ public class StockListEditActivity extends DatabaseActivity implements
 			return;
 		}
 
-		Intent intent = new Intent(StockListEditActivity.this,
-				StockDataChartListActivity.class);
-		intent.putExtra(Constants.EXTRA_STOCK_ID, id);
-		startActivity(intent);
+		if (ACTION_COMPONENT_STOCK_SELECT.equals(mAction)) {
+			mStock.setId(id);
+			mStockDatabaseManager.getStockById(mStock);
+
+			Component component = new Component();
+
+			component.setIndexId(Long.valueOf(mIntent.getStringExtra(Constants.EXTRA_INDEX_ID)));
+			component.setStockId(mStock.getId());
+			component.setSE(mStock.getSE());
+			component.setCode(mStock.getCode());
+			component.setName(mStock.getName());
+
+			if (!mStockDatabaseManager.isComponentExist(component)) {
+				component.setCreated(Utility.getCurrentDateTimeString());
+				mStockDatabaseManager.insertComponent(component);
+			} else {
+				Toast.makeText(mContext, R.string.stock_exist,
+						Toast.LENGTH_LONG).show();
+			}
+
+			if (mIntent != null) {
+				mIntent.putExtra(Constants.EXTRA_STOCK_ID, mStock.getId());
+				setResult(RESULT_OK, mIntent);
+				finish();
+			}
+		} else {
+			Intent intent = new Intent(StockListEditActivity.this,
+					StockDataChartListActivity.class);
+			intent.putExtra(Constants.EXTRA_STOCK_ID, id);
+			startActivity(intent);
+		}
 	}
 
 	public class CustomSimpleCursorAdapter extends SimpleCursorAdapter
@@ -329,25 +361,27 @@ public class StockListEditActivity extends DatabaseActivity implements
 				return;
 			}
 
-			Cursor cursor = null;
 			long stockId = (Long) view.getTag();
-			Stock stock = new Stock();
-			Uri uri = ContentUris.withAppendedId(
+            Stock stock = new Stock();
+            Uri uri = ContentUris.withAppendedId(
 					DatabaseContract.Stock.CONTENT_URI, stockId);
 
-			try {
-				cursor = mContentResolver
-						.query(uri, DatabaseContract.Stock.PROJECTION_ALL,
-								null, null, null);
-				if (cursor != null) {
-					cursor.moveToNext();
-					stock.set(cursor);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				mStockDatabaseManager.closeCursor(cursor);
-			}
+//            Cursor cursor = null;
+//
+//            try {
+//				cursor = mContentResolver
+//						.query(uri, DatabaseContract.Stock.PROJECTION_ALL,
+//								null, null, null);
+//				if (cursor != null) {
+//					cursor.moveToNext();
+//					stock.set(cursor);
+//				}
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			} finally {
+//				mStockDatabaseManager.closeCursor(cursor);
+//			}
+            mStockDatabaseManager.getStock(uri, stock);
 
 			try {
 				switch (view.getId()) {
@@ -379,7 +413,18 @@ public class StockListEditActivity extends DatabaseActivity implements
 										new DialogInterface.OnClickListener() {
 											public void onClick(DialogInterface dialog,
 																int which) {
-												mStockDatabaseManager.deleteStock(stock_id);
+												if (ACTION_COMPONENT_STOCK_SELECT.equals(mAction)) {
+													mStockDatabaseManager.deleteComponent(
+															Long.valueOf(mIntent.getStringExtra(Constants.EXTRA_INDEX_ID)), stock_id);
+
+													if (mIntent != null) {
+                                                        mIntent.putExtra(Constants.EXTRA_STOCK_ID, stock_id);
+                                                        setResult(RESULT_OK, mIntent);
+                                                        finish();
+                                                    }
+												} else {
+													mStockDatabaseManager.deleteStock(stock_id);
+												}
 											}
 										})
 								.setNegativeButton(R.string.cancel,

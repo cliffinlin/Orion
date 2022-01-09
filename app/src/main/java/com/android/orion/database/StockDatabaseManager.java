@@ -151,6 +151,28 @@ public class StockDatabaseManager extends DatabaseManager {
 		}
 	}
 
+	public void getStock(Uri uri, Stock stock) {
+        Cursor cursor = null;
+
+        if (stock == null) {
+            return;
+        }
+
+        try {
+            cursor = mContentResolver
+                    .query(uri, DatabaseContract.Stock.PROJECTION_ALL,
+                            null, null, null);
+            if (cursor != null) {
+                cursor.moveToNext();
+                stock.set(cursor);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeCursor(cursor);
+        }
+    }
+
 	public boolean isStockExist(Stock stock) {
 		boolean result = false;
 		Cursor cursor = null;
@@ -2103,14 +2125,14 @@ public class StockDatabaseManager extends DatabaseManager {
 		return result;
 	}
 
-	public int deleteComponent(long stockId) {
+	public int deleteComponent(long indexId, long stockId) {
 		int result = 0;
 
 		if (mContentResolver == null) {
 			return result;
 		}
 
-		String where = getComponentSelection(stockId);
+		String where = getComponentSelection(indexId, stockId);
 
 		result = mContentResolver.delete(DatabaseContract.Component.CONTENT_URI,
 				where, null);
@@ -2119,11 +2141,17 @@ public class StockDatabaseManager extends DatabaseManager {
 	}
 
 	public String getComponentSelection(Component component) {
-		return getComponentSelection(component.getStockId());
+		return getComponentSelection(component.getIndexId(), component.getStockId());
 	}
 
 	public String getComponentSelection(long stockId) {
 		return DatabaseContract.COLUMN_STOCK_ID + " = " + stockId;
+	}
+
+	public String getComponentSelection(long indexId, long stockId) {
+		return DatabaseContract.COLUMN_INDEX_ID + " = " + indexId
+				+ " AND "
+				+ DatabaseContract.COLUMN_STOCK_ID + " = " + stockId;
 	}
 
 	public String getComponentOrder() {

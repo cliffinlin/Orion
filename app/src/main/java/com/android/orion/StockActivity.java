@@ -219,9 +219,12 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 				if (!mStockDatabaseManager.isStockExist(mStock)) {
 					mStock.setCreated(Utility.getCurrentDateTimeString());
 					Uri uri = mStockDatabaseManager.insertStock(mStock);
-					String uriPath = uri.getPath();
-					String stockId = uriPath.replace("/" + DatabaseContract.Stock.TABLE_NAME + "/", "");
-					mStock.setId(Long.valueOf(stockId));
+
+//					String uriPath = uri.getPath();
+//					String stockId = uriPath.replace("/" + DatabaseContract.Stock.TABLE_NAME + "/", "");
+//					mStock.setId(Long.valueOf(stockId));
+
+                    mStockDatabaseManager.getStock(uri, mStock);
 
 					if (ACTION_COMPONENT_STOCK_INSERT.equals(mAction)) {
 						Component component = new Component();
@@ -231,10 +234,6 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 						component.setSE(mStock.getSE());
 						component.setCode(mStock.getCode());
 						component.setName(mStock.getName());
-						component.setPrice(mStock.getPrice());
-						component.setNet(mStock.getNet());
-						component.setFlag(mStock.getFlag());
-						component.setOperate(mStock.getOperate());
 
 						if (!mStockDatabaseManager.isComponentExist(component)) {
 							component.setCreated(Utility.getCurrentDateTimeString());
@@ -253,6 +252,8 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 				mStockDatabaseManager.updateStock(mStock,
 						mStock.getContentValues());
 			}
+
+			getIntent().putExtra(Constants.EXTRA_STOCK_ID, mStock.getId());
 
 			setResult(RESULT_OK, getIntent());
 

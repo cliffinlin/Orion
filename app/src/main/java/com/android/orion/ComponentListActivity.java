@@ -26,6 +26,7 @@ import com.android.orion.database.Component;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.utility.Preferences;
+import com.android.orion.utility.Utility;
 
 import java.util.ArrayList;
 
@@ -39,7 +40,7 @@ public class ComponentListActivity extends ListActivity implements
 	public static final int LOADER_ID_COMPONENT_LIST = 0;
 
 	public static final int REQUEST_CODE_COMPONENT_STOCK_INSERT = 0;
-    public static final int REQUEST_CODE_COMPONENT_STOCK_SEARCH = 1;
+    public static final int REQUEST_CODE_COMPONENT_STOCK_SELECT = 1;
 
 	static final int mHeaderTextDefaultColor = Color.BLACK;
 	static final int mHeaderTextHighlightColor = Color.RED;
@@ -131,14 +132,18 @@ public class ComponentListActivity extends ListActivity implements
 			return true;
 
 		case R.id.action_new:
-			Intent intent = new Intent(this, StockActivity.class);
-			intent.setAction(StockActivity.ACTION_COMPONENT_STOCK_INSERT);
-			intent.putExtra(Constants.EXTRA_INDEX_ID, mIntent.getStringExtra(Constants.EXTRA_INDEX_ID));
-			startActivityForResult(intent, REQUEST_CODE_COMPONENT_STOCK_INSERT);
+			Intent intentNew = new Intent(this, StockActivity.class);
+			intentNew.setAction(StockActivity.ACTION_COMPONENT_STOCK_INSERT);
+			intentNew.putExtra(Constants.EXTRA_INDEX_ID, mIntent.getStringExtra(Constants.EXTRA_INDEX_ID));
+			startActivityForResult(intentNew, REQUEST_CODE_COMPONENT_STOCK_INSERT);
 			return true;
 
 		case R.id.action_search:
-            startActivityForResult(new Intent(this, StockSearchActivity.class), REQUEST_CODE_COMPONENT_STOCK_SEARCH);
+//            startActivityForResult(new Intent(this, StockSearchActivity.class), REQUEST_CODE_COMPONENT_STOCK_SELECT);
+			Intent intentSearch = new Intent(this, StockSearchActivity.class);
+			intentSearch.setAction(StockListEditActivity.ACTION_COMPONENT_STOCK_SELECT);
+			intentSearch.putExtra(Constants.EXTRA_INDEX_ID, mIntent.getStringExtra(Constants.EXTRA_INDEX_ID));
+			startActivityForResult(intentSearch, REQUEST_CODE_COMPONENT_STOCK_SELECT);
 			return true;
 
 		case R.id.action_refresh:
@@ -177,7 +182,7 @@ public class ComponentListActivity extends ListActivity implements
 		if (resultCode == RESULT_OK) {
 			switch (requestCode) {
 			case REQUEST_CODE_COMPONENT_STOCK_INSERT:
-			case REQUEST_CODE_COMPONENT_STOCK_SEARCH:
+			case REQUEST_CODE_COMPONENT_STOCK_SELECT:
 				if (mOrionService != null) {
 					mOrionService.download(mStock);
 				}
@@ -577,9 +582,14 @@ public class ComponentListActivity extends ListActivity implements
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
 			int position, long id) {
-		Intent intent = new Intent(this, StockListEditActivity.class);
-		intent.putExtra(Constants.EXTRA_STOCK_LIST_SORT_ORDER, mSortOrder);
-		startActivity(intent);
+//		Intent intent = new Intent(this, StockListEditActivity.class);
+//		intent.putExtra(Constants.EXTRA_STOCK_LIST_SORT_ORDER, mSortOrder);
+//		startActivity(intent);
+
+        Intent intentSearch = new Intent(this, StockSearchActivity.class);
+        intentSearch.setAction(StockListEditActivity.ACTION_COMPONENT_STOCK_SELECT);
+        intentSearch.putExtra(Constants.EXTRA_INDEX_ID, mIntent.getStringExtra(Constants.EXTRA_INDEX_ID));
+        startActivityForResult(intentSearch, REQUEST_CODE_COMPONENT_STOCK_SELECT);
 		return true;
 	}
 
