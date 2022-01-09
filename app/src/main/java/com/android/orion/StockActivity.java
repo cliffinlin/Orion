@@ -1,5 +1,6 @@
 package com.android.orion;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -14,12 +15,15 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.android.orion.database.Component;
+import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.utility.Utility;
 
 public class StockActivity extends DatabaseActivity implements OnClickListener {
 
-	public static final String ACTION_STOCK_INSERT = "orion.intent.action.ACTION_STOCKINSERT";
+	public static final String ACTION_COMPONENT_STOCK_INSERT = "orion.intent.action.ACTION_COMPONENT_STOCK_INSERT";
+	public static final String ACTION_FAVORITE_STOCK_INSERT = "orion.intent.action.ACTION_FAVORITE_STOCK_INSERT";
 	public static final String ACTION_STOCK_EDIT = "orion.intent.action.ACTION_STOCK_EDIT";
 
 	RadioGroup mRadioGroupClass;
@@ -113,7 +117,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 			}
 		});
 
-		if (ACTION_STOCK_INSERT.equals(mAction)) {
+		if (ACTION_COMPONENT_STOCK_INSERT.equals(mAction) || ACTION_FAVORITE_STOCK_INSERT.equals(mAction)) {
 			setTitle(R.string.stock_insert);
 		} else if (ACTION_STOCK_EDIT.equals(mAction)) {
 			setTitle(R.string.stock_edit);
@@ -211,10 +215,35 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 
 			mStock.setFlag(Constants.STOCK_FLAG_FAVORITE);
 
-			if (ACTION_STOCK_INSERT.equals(mAction)) {
+			if (ACTION_FAVORITE_STOCK_INSERT.equals(mAction) || ACTION_COMPONENT_STOCK_INSERT.equals(mAction)) {
 				if (!mStockDatabaseManager.isStockExist(mStock)) {
 					mStock.setCreated(Utility.getCurrentDateTimeString());
-					mStockDatabaseManager.insertStock(mStock);
+					Uri uri = mStockDatabaseManager.insertStock(mStock);
+					String uriPath = uri.getPath();
+					String stockId = uriPath.replace("/" + DatabaseContract.Stock.TABLE_NAME + "/", "");
+					mStock.setId(Long.valueOf(stockId));
+
+					if (ACTION_COMPONENT_STOCK_INSERT.equals(mAction)) {
+						Component component = new Component();
+
+						component.setIndexId(Long.valueOf(mIntent.getStringExtra(Constants.EXTRA_INDEX_ID)));
+						component.setStockId(mStock.getId());
+						component.setSE(mStock.getSE());
+						component.setCode(mStock.getCode());
+						component.setName(mStock.getName());
+						component.setPrice(mStock.getPrice());
+						component.setNet(mStock.getNet());
+						component.setFlag(mStock.getFlag());
+						component.setOperate(mStock.getOperate());
+
+						if (!mStockDatabaseManager.isComponentExist(component)) {
+							component.setCreated(Utility.getCurrentDateTimeString());
+							mStockDatabaseManager.insertComponent(component);
+						} else {
+							Toast.makeText(mContext, R.string.stock_exist,
+									Toast.LENGTH_LONG).show();
+						}
+					}
 				} else {
 					Toast.makeText(mContext, R.string.stock_exist,
 							Toast.LENGTH_LONG).show();

@@ -27,8 +27,6 @@ public class StockIPOListActivity extends ListActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
 		OnItemLongClickListener, OnClickListener {
 
-	public static final String ACTION_STOCK_ID = "orion.intent.action.ACTION_STOCK_ID";
-
 	public static final int LOADER_ID_IPO_LIST = 0;
 
 	static final int mHeaderTextDefaultColor = Color.BLACK;

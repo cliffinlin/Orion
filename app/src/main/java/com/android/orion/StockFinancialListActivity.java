@@ -20,12 +20,10 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.utility.Preferences;
-import com.android.orion.utility.Utility;
 
 public class StockFinancialListActivity extends ListActivity implements
         LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
@@ -140,7 +138,7 @@ public class StockFinancialListActivity extends ListActivity implements
 
             case R.id.action_new:
                 Intent intent = new Intent(this, StockActivity.class);
-                intent.setAction(StockActivity.ACTION_STOCK_INSERT);
+                intent.setAction(StockActivity.ACTION_FAVORITE_STOCK_INSERT);
                 startActivityForResult(intent, REQUEST_CODE_STOCK_INSERT);
                 return true;
 

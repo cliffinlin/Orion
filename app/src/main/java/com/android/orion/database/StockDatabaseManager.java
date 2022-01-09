@@ -2009,7 +2009,7 @@ public class StockDatabaseManager extends DatabaseManager {
 		}
 	}
 
-	public void getComponentList(ArrayList<Component> componentList, String sortOrder) {
+	public void getComponentList(ArrayList<Component> componentList, String selection, String sortOrder) {
 		Cursor cursor = null;
 
 		if (componentList == null) {
@@ -2017,8 +2017,6 @@ public class StockDatabaseManager extends DatabaseManager {
 		}
 
 		componentList.clear();
-
-		String selection = null;
 
 		try {
 			cursor = queryComponent(selection, null, sortOrder);
@@ -2128,12 +2126,7 @@ public class StockDatabaseManager extends DatabaseManager {
 		return DatabaseContract.COLUMN_STOCK_ID + " = " + stockId;
 	}
 
-	public String getComponentSelection(long stockId, String date) {
-		return DatabaseContract.COLUMN_STOCK_ID + " = " + stockId + " AND "
-				+ DatabaseContract.COLUMN_DATE + " = '" + date + "'";
-	}
-
 	public String getComponentOrder() {
-		return DatabaseContract.COLUMN_DATE + " ASC ";
+		return DatabaseContract.COLUMN_STOCK_ID + " ASC ";
 	}
 }

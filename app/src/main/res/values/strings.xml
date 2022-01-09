@@ -171,6 +171,7 @@
     <string name="stock_exist">Stock Exist!</string>
     <string name="stock_edit">Stock Edit</string>
     <string name="stock_list">Stock List</string>
+    <string name="component_list">Component List</string>
     <string name="stock_operate">Operate</string>
     <string name="stock_quota">Stock Quota</string>
     <string name="stock_se">Stock SE</string>

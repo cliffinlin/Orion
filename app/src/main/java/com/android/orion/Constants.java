@@ -38,6 +38,7 @@ public class Constants {
 	public static final int DOWNLOAD_HISTORY_LENGTH_NONE = 0;
 	public static final int DOWNLOAD_HISTORY_LENGTH_UNLIMITED = -1;
 
+	public static final String EXTRA_INDEX_ID = "index_id";
 	public static final String EXTRA_STOCK_ID = "stock_id";
 	public static final String EXTRA_STOCK_SE = "stock_se";
 	public static final String EXTRA_STOCK_CODE = "stock_code";

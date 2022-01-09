@@ -446,7 +446,7 @@ public final class DatabaseContract {
                 + "/" + DATABASE_NAME + "/" + TABLE_NAME;
         public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
                 + "/" + DATABASE_NAME + "/" + TABLE_NAME;
-        public static final String SORT_ORDER_DEFAULT = COLUMN_STOCK_ID
+        public static final String SORT_ORDER_DEFAULT = COLUMN_INDEX_ID
                 + " ASC";
 
         public static final String[] PROJECTION_ALL = {_ID, COLUMN_INDEX_ID, COLUMN_STOCK_ID,

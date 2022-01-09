@@ -74,6 +74,11 @@
             android:launchMode="singleTop" >
         </activity>
         <activity
+            android:name="com.android.orion.ComponentListActivity"
+            android:label="@string/component_list"
+            android:launchMode="singleTop" >
+        </activity>
+        <activity
             android:name="com.android.orion.StockFinancialListActivity"
             android:label="@string/financial_list"
             android:launchMode="singleTop" >
