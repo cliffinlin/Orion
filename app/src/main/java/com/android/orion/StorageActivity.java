@@ -97,7 +97,7 @@ public class StorageActivity extends DatabaseActivity {
 	}
 
 	void onMessageRefresh() {
-		mOrionService.download(null);
+		mOrionService.download();
 	}
 
 	void performLoadFromFile() {

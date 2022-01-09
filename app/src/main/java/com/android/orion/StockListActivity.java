@@ -78,7 +78,7 @@ public class StockListActivity extends ListActivity implements
 			case MESSAGE_REFRESH:
 				if (mOrionService != null) {
 					mStockDatabaseManager.deleteStockData();
-					mOrionService.download(null);
+					mOrionService.download();
 					restartLoader();
 				}
 				break;

@@ -362,11 +362,11 @@ public class StockListEditActivity extends DatabaseActivity implements
 				case R.id.favorite:
 					if ((stock.getFlag() & Constants.STOCK_FLAG_FAVORITE) == 0) {
 						updateStockFlag(stockId, stock.getFlag() | Constants.STOCK_FLAG_FAVORITE);
-						mOrionService.download(stock);
 					} else {
 						//TODO
 					    updateStockFlag(stockId, Constants.STOCK_FLAG_NONE);
 					}
+					mOrionService.download();
 					break;
 
 				case R.id.delete:

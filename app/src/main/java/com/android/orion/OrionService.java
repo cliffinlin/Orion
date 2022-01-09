@@ -153,6 +153,14 @@ public class OrionService extends Service {
 		}
 	}
 
+	void download() {
+		if (mSinaFinance == null) {
+			return;
+		}
+
+		mSinaFinance.download(null);
+	}
+
 	void download(Stock stock) {
 		if (mSinaFinance == null) {
 			return;

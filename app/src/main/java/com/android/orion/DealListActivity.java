@@ -299,7 +299,7 @@ public class DealListActivity extends ListActivity implements
 
     void onPostExecuteLoad(Long result) {
         super.onPostExecuteLoad(result);
-        mOrionService.download(null);
+        mOrionService.download();
     }
 
     @Override

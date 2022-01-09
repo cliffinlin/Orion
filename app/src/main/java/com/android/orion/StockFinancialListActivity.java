@@ -95,7 +95,7 @@ public class StockFinancialListActivity extends ListActivity implements
                     if (mOrionService != null) {
                         mStockDatabaseManager.deleteFinancialData();
                         mStockDatabaseManager.deleteShareBonus();
-                        mOrionService.download(null);
+                        mOrionService.download();
                         restartLoader();
                     }
                     break;
