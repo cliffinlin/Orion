@@ -41,6 +41,9 @@ public class OrionContentProvider extends ContentProvider {
 	private static final int IPO = 800;
 	private static final int IPO_ID = 801;
 
+	private static final int COMPONENT = 900;
+	private static final int COMPONENT_ID = 901;
+
 	private static final UriMatcher mUriMatcher = new UriMatcher(
 			UriMatcher.NO_MATCH);
 
@@ -80,6 +83,11 @@ public class OrionContentProvider extends ContentProvider {
 				DatabaseContract.IPO.TABLE_NAME, IPO);
 		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
 				DatabaseContract.IPO.TABLE_NAME + "/#", IPO_ID);
+
+		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
+				DatabaseContract.Component.TABLE_NAME, COMPONENT);
+		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
+				DatabaseContract.Component.TABLE_NAME + "/#", COMPONENT_ID);
 	}
 
 	ContentResolver mContentResolver = null;
@@ -154,6 +162,13 @@ public class OrionContentProvider extends ContentProvider {
 			break;
 		case IPO_ID:
 			type = DatabaseContract.IPO.CONTENT_ITEM_TYPE;
+			break;
+
+		case COMPONENT:
+			type = DatabaseContract.Component.CONTENT_TYPE;
+			break;
+		case COMPONENT_ID:
+			type = DatabaseContract.Component.CONTENT_ITEM_TYPE;
 			break;
 		default:
 			break;
@@ -240,6 +255,15 @@ public class OrionContentProvider extends ContentProvider {
 			builder.appendWhere(BaseColumns._ID + " = "
 					+ uri.getLastPathSegment());
 			break;
+
+		case COMPONENT:
+			builder.setTables(DatabaseContract.Component.TABLE_NAME);
+			break;
+		case COMPONENT_ID:
+			builder.setTables(DatabaseContract.Component.TABLE_NAME);
+			builder.appendWhere(BaseColumns._ID + " = "
+					+ uri.getLastPathSegment());
+			break;
 		default:
 			break;
 		}
@@ -303,6 +327,11 @@ public class OrionContentProvider extends ContentProvider {
 		case IPO:
 			id = mDatabaseManager.mDatabase.insert(
 					DatabaseContract.IPO.TABLE_NAME, null, contentValues);
+			break;
+
+		case COMPONENT:
+			id = mDatabaseManager.mDatabase.insert(
+					DatabaseContract.Component.TABLE_NAME, null, contentValues);
 			break;
 		default:
 			break;
@@ -478,6 +507,21 @@ public class OrionContentProvider extends ContentProvider {
 					DatabaseContract.IPO.TABLE_NAME, values, whereClause,
 					selectionArgs);
 			break;
+
+		case COMPONENT:
+			result = mDatabaseManager.mDatabase.update(
+					DatabaseContract.Component.TABLE_NAME, values, selection,
+					selectionArgs);
+			break;
+		case COMPONENT_ID:
+			whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
+			if (!TextUtils.isEmpty(selection)) {
+				whereClause += " AND " + whereClause;
+			}
+			result = mDatabaseManager.mDatabase.update(
+					DatabaseContract.Component.TABLE_NAME, values, whereClause,
+					selectionArgs);
+			break;
 		default:
 			break;
 		}
@@ -611,6 +655,21 @@ public class OrionContentProvider extends ContentProvider {
 			}
 			result = mDatabaseManager.mDatabase
 					.delete(DatabaseContract.IPO.TABLE_NAME, whereClause,
+							selectionArgs);
+			break;
+
+		case COMPONENT:
+			result = mDatabaseManager.mDatabase.delete(
+					DatabaseContract.Component.TABLE_NAME, selection, selectionArgs);
+			break;
+
+		case COMPONENT_ID:
+			whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
+			if (!TextUtils.isEmpty(selection)) {
+				whereClause += " AND " + whereClause;
+			}
+			result = mDatabaseManager.mDatabase
+					.delete(DatabaseContract.Component.TABLE_NAME, whereClause,
 							selectionArgs);
 			break;
 		default:

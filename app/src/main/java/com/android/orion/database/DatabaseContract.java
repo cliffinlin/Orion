@@ -20,6 +20,7 @@ public final class DatabaseContract {
     private static final String COMMA_SEP = ",";
 
     public static final String COLUMN_ID = BaseColumns._ID;
+    public static final String COLUMN_INDEX_ID = "index_id";
     public static final String COLUMN_STOCK_ID = "stock_id";
     public static final String COLUMN_SE = "se";
     public static final String COLUMN_CODE = "code";
@@ -427,6 +428,43 @@ public final class DatabaseContract {
                 + COMMA_SEP + COLUMN_DATE + TEXT_TYPE + COMMA_SEP
                 + COLUMN_TIME_TO_MARKET + TEXT_TYPE + COMMA_SEP + COLUMN_PE
                 + DOUBLE_TYPE + COMMA_SEP + COLUMN_CREATED + TEXT_TYPE
+                + COMMA_SEP + COLUMN_MODIFIED + TEXT_TYPE + " )";
+
+        public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
+                + CREATE_TABLE_CONTENT;
+
+        public static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
+                + TABLE_NAME;
+    }
+
+    public static abstract class Component implements BaseColumns {
+        public static final String TABLE_NAME = "component";
+
+        public static final Uri CONTENT_URI = Uri.withAppendedPath(
+                DatabaseContract.CONTENT_URI, TABLE_NAME);
+        public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
+                + "/" + DATABASE_NAME + "/" + TABLE_NAME;
+        public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
+                + "/" + DATABASE_NAME + "/" + TABLE_NAME;
+        public static final String SORT_ORDER_DEFAULT = COLUMN_STOCK_ID
+                + " ASC";
+
+        public static final String[] PROJECTION_ALL = {_ID, COLUMN_INDEX_ID, COLUMN_STOCK_ID,
+                COLUMN_SE, COLUMN_CODE, COLUMN_NAME, COLUMN_PRICE, COLUMN_NET,
+                COLUMN_FLAG, COLUMN_OPERATE, COLUMN_CREATED, COLUMN_MODIFIED};
+
+        private static final String CREATE_TABLE_CONTENT = " (" + _ID
+                + " INTEGER PRIMARY KEY,"
+                + COLUMN_INDEX_ID + TEXT_TYPE + COMMA_SEP
+                + COLUMN_STOCK_ID + TEXT_TYPE + COMMA_SEP
+                + COLUMN_SE + TEXT_TYPE + COMMA_SEP
+                + COLUMN_CODE + TEXT_TYPE + COMMA_SEP
+                + COLUMN_NAME + TEXT_TYPE + COMMA_SEP
+                + COLUMN_PRICE + DOUBLE_TYPE + COMMA_SEP
+                + COLUMN_NET + DOUBLE_TYPE + COMMA_SEP
+                + COLUMN_FLAG + INTEGER_TYPE + COMMA_SEP
+                + COLUMN_OPERATE + TEXT_TYPE + COMMA_SEP
+                + COLUMN_CREATED + TEXT_TYPE
                 + COMMA_SEP + COLUMN_MODIFIED + TEXT_TYPE + " )";
 
         public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
