@@ -937,7 +937,7 @@ public class StockAnalyzer {
 		stock.setAction(period, action + stockData.getAction());
 	}
 
-	private void updateDatabase(Stock stock) {
+	void updateDatabase(Stock stock) {
 		if (mStockDatabaseManager == null) {
 			Log.d(TAG, "updateDatabase return " + " mStockDatabaseManager = "
 					+ mStockDatabaseManager);
