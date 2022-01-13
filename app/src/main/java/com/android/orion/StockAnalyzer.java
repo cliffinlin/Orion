@@ -631,7 +631,7 @@ public class StockAnalyzer {
 
 		vertexAnalyzer.analyzeDirection(stockDataList);
 
-		analyzeAction(stock, period, stockDataList, drawVertexList, overlapList);
+		analyzeAction(stock, period, stockDataList, drawVertexList, overlapList, drawDataList, strokeDataList, segmentDataList);
 	}
 
 	private String getFirstBottomAction(Stock stock, ArrayList<StockData> vertexList, ArrayList<StockData> overlapList) {
@@ -848,13 +848,34 @@ public class StockAnalyzer {
 		return result;
 	}
 
+	int getLastAmplitude(ArrayList<StockData> stockDataList) {
+		int result = 0;
+		StockData stockData;
+
+		if (stockDataList == null || stockDataList.size() == 0) {
+			return result;
+		}
+
+		stockData = stockDataList.get(stockDataList.size() - 1);
+
+		result = (int) Math.abs(stockData.getAmplitude());
+
+		return result;
+	}
+
 	private void analyzeAction(Stock stock, String period,
 			ArrayList<StockData> stockDataList,
 			ArrayList<StockData> drawVertexList,
-			ArrayList<StockData> overlapList) {
+			ArrayList<StockData> overlapList,
+			ArrayList<StockData> drawDataList,
+			ArrayList<StockData> strokeDataList,
+			ArrayList<StockData> segmentDataList) {
 		String action = Constants.STOCK_ACTION_NONE;
 		StockData prev = null;
 		StockData stockData = null;
+		int drawAmplitude = 0;
+		int strokeAmplitude = 0;
+		int segmentAmplitude = 0;
 
 		if (stockDataList == null) {
 			Log.d(TAG, "analyzeAction return" + " stockDataList = " + stockDataList);
@@ -865,6 +886,10 @@ public class StockAnalyzer {
 			return;
 		}
 
+		drawAmplitude = getLastAmplitude(drawDataList);
+		strokeAmplitude = getLastAmplitude(strokeDataList);
+		segmentAmplitude = getLastAmplitude(segmentDataList);
+
 		prev = stockDataList.get(stockDataList.size() - 2);
 		stockData = stockDataList.get(stockDataList.size() - 1);
 
@@ -873,6 +898,7 @@ public class StockAnalyzer {
 				action += Constants.STOCK_ACTION_D;
 			} else {
 				action += Constants.STOCK_ACTION_ADD;
+				action += segmentAmplitude;
 			}
 		} else if (stockData
 				.directionOf(Constants.STOCK_DIRECTION_DOWN_SEGMENT)) {
@@ -880,6 +906,7 @@ public class StockAnalyzer {
 				action += Constants.STOCK_ACTION_G;
 			} else {
 				action += Constants.STOCK_ACTION_MINUS;
+				action += segmentAmplitude;
 			}
 		}
 
@@ -888,12 +915,14 @@ public class StockAnalyzer {
 				action += Constants.STOCK_ACTION_D;
 			} else {
 				action += Constants.STOCK_ACTION_ADD;
+				action += strokeAmplitude;
 			}
 		} else if (stockData.directionOf(Constants.STOCK_DIRECTION_DOWN_STROKE)) {
 			if (prev.vertexOf(Constants.STOCK_VERTEX_TOP_STROKE)) {
 				action += Constants.STOCK_ACTION_G;
 			} else {
 				action += Constants.STOCK_ACTION_MINUS;
+				action += strokeAmplitude;
 			}
 		}
 
@@ -914,6 +943,7 @@ public class StockAnalyzer {
 				}
 			} else {
 				action += Constants.STOCK_ACTION_ADD;
+				action += drawAmplitude;
 			}
 		} else if (stockData.directionOf(Constants.STOCK_DIRECTION_DOWN)) {
 			if (prev.vertexOf(Constants.STOCK_VERTEX_TOP)) {
@@ -931,6 +961,7 @@ public class StockAnalyzer {
 				}
 			} else {
 				action += Constants.STOCK_ACTION_MINUS;
+				action += drawAmplitude;
 			}
 		}
 
