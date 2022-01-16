@@ -351,7 +351,7 @@ public class StockDatabaseManager extends DatabaseManager {
 
 		stockDataList.clear();
 
-		String selection = getStockDataSelection(stock.getId(), period);
+		String selection = getStockDataSelection(stock.getId(), period, StockData.LEVEL_NONE);
 
 		try {
 			cursor = queryStockData(selection, null, sortOrder);
@@ -508,6 +508,12 @@ public class StockDatabaseManager extends DatabaseManager {
 	public String getStockDataSelection(long stockId, String period) {
 		return DatabaseContract.COLUMN_STOCK_ID + " = " + stockId + " AND "
 				+ DatabaseContract.COLUMN_PERIOD + " = '" + period + "'";
+	}
+
+	public String getStockDataSelection(long stockId, String period, int level) {
+		return DatabaseContract.COLUMN_STOCK_ID + " = " + stockId
+				+ " AND " + DatabaseContract.COLUMN_PERIOD + " = '" + period + "'"
+				+ " AND " + DatabaseContract.COLUMN_LEVEL + " = '" + level + "'";
 	}
 
 	public String getStockDataOrder() {

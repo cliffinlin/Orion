@@ -283,7 +283,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
             defaultValue = getDownloadHistoryLengthDefault(period);
 
             selection = mStockDatabaseManager.getStockDataSelection(stockId,
-                    period);
+                    period, StockData.LEVEL_NONE);
             sortOrder = mStockDatabaseManager.getStockDataOrder();
             cursor = mStockDatabaseManager.queryStockData(selection, null,
                     sortOrder);
@@ -940,7 +940,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
                                 }
                             }
 
-                            updateDatabase(indexStock, period, indexStockDataList);
+                            //TODO
+//                            updateDatabase(indexStock, period, indexStockDataList);
                         }
                     }
                 }

@@ -111,7 +111,7 @@ public class StockAnalyzer {
 			stockDataList.clear();
 
 			selection = mStockDatabaseManager.getStockDataSelection(
-					stock.getId(), period);
+					stock.getId(), period, StockData.LEVEL_NONE);
 			sortOrder = mStockDatabaseManager.getStockDataOrder();
 			cursor = mStockDatabaseManager.queryStockData(selection, null,
 					sortOrder);
@@ -140,6 +140,12 @@ public class StockAnalyzer {
 		stopWatch.start();
 
 		ArrayList<StockData> stockDataList = null;
+		ArrayList<StockData> drawVertexList =  null;
+		ArrayList<StockData> drawDataList =  null;
+		ArrayList<StockData> strokeVertexList =  null;
+		ArrayList<StockData> strokeDataList =  null;
+		ArrayList<StockData> segmentVertexList =  null;
+		ArrayList<StockData> segmentDataList =  null;
 
 		if (stock == null) {
 			return;
@@ -150,13 +156,47 @@ public class StockAnalyzer {
 			return;
 		}
 
+		drawVertexList = stock.getDrawVertexList(period);
+		if (drawVertexList == null) {
+			return;
+		}
+
+		drawDataList = stock.getDrawDataList(period);
+		if (drawDataList == null) {
+			return;
+		}
+
+		strokeVertexList = stock.getStrokeVertexList(period);
+		if (strokeVertexList == null) {
+			return;
+		}
+
+		strokeDataList = stock.getStrokeDataList(period);
+		if (strokeDataList == null) {
+			return;
+		}
+
+		segmentVertexList = stock.getSegmentVertexList(period);
+		if (segmentVertexList == null) {
+			return;
+		}
+
+		segmentDataList = stock.getSegmentDataList(period);
+		if (segmentDataList == null) {
+			return;
+		}
+
 		try {
 			setupStockShareBonus(stock);
 			setupStockFinancialData(stock);
 
 			loadStockDataList(stock, period, stockDataList);
-			analyzeStockData(stock, period, stockDataList);
-			updateDatabase(stock, period, stockDataList);
+			analyzeStockData(stock, period, stockDataList,
+					drawVertexList, drawDataList,
+					strokeVertexList, strokeDataList,
+					segmentVertexList, segmentDataList);
+			updateDatabase(stock, period, stockDataList,
+					drawDataList, strokeDataList, segmentDataList);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -570,21 +610,17 @@ public class StockAnalyzer {
 		}
 	}
 
-	void analyzeStockData(Stock stock, String period,
-			ArrayList<StockData> stockDataList) {
+	void analyzeStockData(Stock stock, String period, ArrayList<StockData> stockDataList,
+						  ArrayList<StockData> drawVertexList, ArrayList<StockData> drawDataList,
+						  ArrayList<StockData> strokeVertexList, ArrayList<StockData> strokeDataList,
+						  ArrayList<StockData> segmentVertexList, ArrayList<StockData> segmentDataList) {
 		VertexAnalyzer vertexAnalyzer = new VertexAnalyzer();
 
-		ArrayList<StockData> drawVertexList = new ArrayList<StockData>();
-		ArrayList<StockData> drawDataList = new ArrayList<StockData>();
-		ArrayList<StockData> strokeVertexList = new ArrayList<StockData>();
-		ArrayList<StockData> strokeDataList = new ArrayList<StockData>();
-		ArrayList<StockData> segmentVertexList = new ArrayList<StockData>();
-		ArrayList<StockData> segmentDataList = new ArrayList<StockData>();
 		ArrayList<StockData> overlapList = new ArrayList<StockData>();
 
 		vertexAnalyzer.analyzeVertex(stockDataList, drawVertexList);
 		vertexAnalyzer.vertexListToDataList(stockDataList, drawVertexList,
-				drawDataList);
+				drawDataList, StockData.LEVEL_DRAW);
 
 		setMACD(stockDataList);
 
@@ -592,13 +628,13 @@ public class StockAnalyzer {
 				strokeVertexList, StockData.VERTEX_TOP_STROKE,
 				StockData.VERTEX_BOTTOM_STROKE);
 		vertexAnalyzer.vertexListToDataList(stockDataList, strokeVertexList,
-				strokeDataList);
+				strokeDataList, StockData.LEVEL_STROKE);
 
 		vertexAnalyzer.analyzeLine(stockDataList, strokeDataList,
 				segmentVertexList, StockData.VERTEX_TOP_SEGMENT,
 				StockData.VERTEX_BOTTOM_SEGMENT);
 		vertexAnalyzer.vertexListToDataList(stockDataList, segmentVertexList,
-				segmentDataList);
+				segmentDataList, StockData.LEVEL_SEGMENT);
 
 		vertexAnalyzer.analyzeOverlap(stockDataList, strokeDataList,
 				overlapList);
@@ -983,10 +1019,25 @@ public class StockAnalyzer {
 		}
 	}
 
-	void updateDatabase(Stock stock, String period,
-			ArrayList<StockData> stockDataList) {
+	void updateDatabase(ArrayList<StockData> stockDataList) {
+		if ((stockDataList == null) || (stockDataList.size() == 0)) {
+			return;
+		}
+
 		ContentValues contentValues[] = new ContentValues[stockDataList.size()];
 
+		for (int i = 0; i < stockDataList.size(); i++) {
+			StockData stockData = stockDataList.get(i);
+			contentValues[i] = stockData.getContentValues();
+		}
+
+		mStockDatabaseManager.bulkInsertStockData(contentValues);
+	}
+
+	void updateDatabase(Stock stock, String period, ArrayList<StockData> stockDataList,
+						ArrayList<StockData> drawDataList,
+						ArrayList<StockData> strokeDataList,
+						ArrayList<StockData> segmentDataList) {
 		if (mStockDatabaseManager == null) {
 			Log.d(TAG, "updateDatabase return " + " mStockDatabaseManager = "
 					+ mStockDatabaseManager);
@@ -996,12 +1047,11 @@ public class StockAnalyzer {
 		try {
 			mStockDatabaseManager.deleteStockData(stock.getId(), period);
 
-			for (int i = 0; i < stockDataList.size(); i++) {
-				StockData stockData = stockDataList.get(i);
-				contentValues[i] = stockData.getContentValues();
-			}
+			updateDatabase(stockDataList);
+			updateDatabase(drawDataList);
+			updateDatabase(strokeDataList);
+			updateDatabase(segmentDataList);
 
-			mStockDatabaseManager.bulkInsertStockData(contentValues);
 			stock.setModified(Utility.getCurrentDateTimeString());
 			mStockDatabaseManager.updateStock(stock,
 					stock.getContentValuesAnalyze(period));

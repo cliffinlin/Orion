@@ -411,7 +411,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 		CursorLoader loader = null;
 
 		selection = mStockDatabaseManager.getStockDataSelection(mStock.getId(),
-				period);
+				period, StockData.LEVEL_NONE);
 
 		sortOrder = mStockDatabaseManager.getStockDataOrder();
 

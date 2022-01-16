@@ -309,7 +309,7 @@ public class VertexAnalyzer {
 	}
 
 	void vertexListToDataList(ArrayList<StockData> stockDataList,
-			ArrayList<StockData> vertexList, ArrayList<StockData> dataList) {
+			ArrayList<StockData> vertexList, ArrayList<StockData> dataList, int level) {
 		int size = 0;
 		int direction = StockData.DIRECTION_NONE;
 
@@ -364,6 +364,8 @@ public class VertexAnalyzer {
 			stockData.setupAmplitude();
 
 			sigmaHistogram(stockData, stockDataList);
+
+			stockData.setLevel(level);
 
 			dataList.add(stockData);
 		}
