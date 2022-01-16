@@ -15,14 +15,13 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.android.orion.database.Component;
-import com.android.orion.database.DatabaseContract;
+import com.android.orion.database.IndexComponent;
 import com.android.orion.database.Stock;
 import com.android.orion.utility.Utility;
 
 public class StockActivity extends DatabaseActivity implements OnClickListener {
 
-	public static final String ACTION_COMPONENT_STOCK_INSERT = "orion.intent.action.ACTION_COMPONENT_STOCK_INSERT";
+	public static final String ACTION_INDEX_COMPONENT_INSERT = "orion.intent.action.ACTION_INDEX_COMPONENT_INSERT";
 	public static final String ACTION_FAVORITE_STOCK_INSERT = "orion.intent.action.ACTION_FAVORITE_STOCK_INSERT";
 	public static final String ACTION_STOCK_EDIT = "orion.intent.action.ACTION_STOCK_EDIT";
 
@@ -117,7 +116,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 			}
 		});
 
-		if (ACTION_COMPONENT_STOCK_INSERT.equals(mAction) || ACTION_FAVORITE_STOCK_INSERT.equals(mAction)) {
+		if (ACTION_INDEX_COMPONENT_INSERT.equals(mAction) || ACTION_FAVORITE_STOCK_INSERT.equals(mAction)) {
 			setTitle(R.string.stock_insert);
 		} else if (ACTION_STOCK_EDIT.equals(mAction)) {
 			setTitle(R.string.stock_edit);
@@ -215,7 +214,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 
 			mStock.setFlag(Constants.STOCK_FLAG_FAVORITE);
 
-			if (ACTION_FAVORITE_STOCK_INSERT.equals(mAction) || ACTION_COMPONENT_STOCK_INSERT.equals(mAction)) {
+			if (ACTION_FAVORITE_STOCK_INSERT.equals(mAction) || ACTION_INDEX_COMPONENT_INSERT.equals(mAction)) {
 				if (!mStockDatabaseManager.isStockExist(mStock)) {
 					mStock.setCreated(Utility.getCurrentDateTimeString());
 					Uri uri = mStockDatabaseManager.insertStock(mStock);
@@ -226,18 +225,18 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 
                     mStockDatabaseManager.getStock(uri, mStock);
 
-					if (ACTION_COMPONENT_STOCK_INSERT.equals(mAction)) {
-						Component component = new Component();
+					if (ACTION_INDEX_COMPONENT_INSERT.equals(mAction)) {
+						IndexComponent indexComponent = new IndexComponent();
 
-						component.setIndexId(Long.valueOf(mIntent.getStringExtra(Constants.EXTRA_INDEX_ID)));
-						component.setStockId(mStock.getId());
-						component.setSE(mStock.getSE());
-						component.setCode(mStock.getCode());
-						component.setName(mStock.getName());
+						//TODO
+//						indexComponent.setIndexId(Long.valueOf(mIntent.getStringExtra(Constants.EXTRA_INDEX_ID)));
+						indexComponent.setSE(mStock.getSE());
+						indexComponent.setCode(mStock.getCode());
+						indexComponent.setName(mStock.getName());
 
-						if (!mStockDatabaseManager.isComponentExist(component)) {
-							component.setCreated(Utility.getCurrentDateTimeString());
-							mStockDatabaseManager.insertComponent(component);
+						if (!mStockDatabaseManager.isIndexComponentExist(indexComponent)) {
+							indexComponent.setCreated(Utility.getCurrentDateTimeString());
+							mStockDatabaseManager.insertIndexComponent(indexComponent);
 						} else {
 							Toast.makeText(mContext, R.string.stock_exist,
 									Toast.LENGTH_LONG).show();

@@ -9,6 +9,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
 
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -18,6 +19,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Xml;
 
+import com.android.orion.database.IndexComponent;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;
@@ -28,8 +30,14 @@ public class StorageActivity extends DatabaseActivity {
 	static final String XML_DIR_NAME = Constants.APP_NAME;
 	static final String XML_TAG_ROOT = "root";
 	static final String XML_TAG_STOCK = "stock";
-	static final String XML_TAG_ITEM = "item";
+	static final String XML_TAG_STOCK_DEAL = "stock_deal";
+	static final String XML_TAG_INDEX_COMPONENT = "index_component";
 	static final String XML_ATTRIBUTE_DATE = "date";
+
+    static final int XML_PARSE_TYPE_NONE = 0;
+	static final int XML_PARSE_TYPE_STOCK = 1;
+    static final int XML_PARSE_TYPE_STOCK_DEAL = 2;
+	static final int XML_PARSE_TYPE_INDEX_COMPONENT = 3;
 
 	static final int MESSAGE_REFRESH = 0;
 	static final int MESSAGE_SAVE_TO_FILE = 1;
@@ -55,7 +63,6 @@ public class StorageActivity extends DatabaseActivity {
 				new Thread(new Runnable() {
 					@Override
 					public void run() {
-						// saveToExcel();
 						saveToFile();
 					}
 				}).start();
@@ -203,69 +210,133 @@ public class StorageActivity extends DatabaseActivity {
 		String now = Utility.getCurrentDateTimeString();
 		String tagName = "";
 		Stock stock = new Stock();
+		IndexComponent indexComponent = new IndexComponent();
 		StockDeal stockDeal = new StockDeal();
 		ArrayList<Stock> stockList = new ArrayList<Stock>();
+		ArrayList<IndexComponent> indexComponentArrayList = new ArrayList<>();
+		ArrayList<StockDeal> stockDealArrayList = new ArrayList<>();
+		ContentValues[] contentValues = null;
+		int parseType = XML_PARSE_TYPE_NONE;
 
 		if (mStockDatabaseManager == null) {
 			return count;
 		}
 
+		mStockDatabaseManager.deleteIndexComponent();
 		mStockDatabaseManager.deleteStockDeal();
 
 		try {
 			eventType = parser.getEventType();
 			while (eventType != XmlPullParser.END_DOCUMENT) {
 				switch (eventType) {
-				case XmlPullParser.START_TAG:
-					tagName = parser.getName();
-					if (XML_TAG_STOCK.equals(tagName)) {
-						stock = new Stock();
-						stock.init();
-					} else if (DatabaseContract.COLUMN_SE.equals(tagName)) {
-						stock.setSE(parser.nextText());
-					} else if (DatabaseContract.COLUMN_CODE.equals(tagName)) {
-						stock.setCode(parser.nextText());
-					} else if (DatabaseContract.COLUMN_NAME.equals(tagName)) {
-						stock.setName(parser.nextText());
-					} else if (DatabaseContract.COLUMN_FLAG.equals(tagName)) {
-						stock.setFlag(Long.valueOf(parser.nextText()));
-					} else if (DatabaseContract.COLUMN_COST.equals(tagName)) {
-						stock.setCost(Double.valueOf(parser.nextText()));
-					} else if (DatabaseContract.COLUMN_OPERATE.equals(tagName)) {
-						stock.setOperate(parser.nextText());
-					} else if (XML_TAG_ITEM.equals(tagName)) {
-						stockDeal.init();
-					} else if (DatabaseContract.COLUMN_DEAL.equals(tagName)) {
-						stockDeal.setDeal(Double.valueOf(parser.nextText()));
-					} else if (DatabaseContract.COLUMN_VOLUME.equals(tagName)) {
-						stockDeal.setVolume(Long.valueOf(parser.nextText()));
-					} else if (DatabaseContract.COLUMN_ACTION.equals(tagName)) {
-						stockDeal.setAction(parser.nextText());
-					} else if (DatabaseContract.COLUMN_CREATED.equals(tagName)) {
-						stockDeal.setCreated(parser.nextText());
-					} else if (DatabaseContract.COLUMN_MODIFIED.equals(tagName)) {
-						stockDeal.setModified(parser.nextText());
-					}
+                    case XmlPullParser.START_TAG:
+                        tagName = parser.getName();
+                        if (XML_TAG_STOCK.equals(tagName)) {
+							parseType = XML_PARSE_TYPE_STOCK;
+
+							stock = new Stock();
+
+							indexComponentArrayList.clear();
+							stockDealArrayList.clear();
+						} else if (XML_TAG_STOCK_DEAL.equals(tagName)) {
+							parseType = XML_PARSE_TYPE_STOCK_DEAL;
+
+							stockDeal = new StockDeal();
+							stockDeal.setSE(stock.getSE());
+							stockDeal.setCode(stock.getCode());
+							stockDeal.setName(stock.getName());
+                        } else if (XML_TAG_INDEX_COMPONENT.equals(tagName)) {
+							parseType = XML_PARSE_TYPE_INDEX_COMPONENT;
+
+							indexComponent = new IndexComponent();
+							indexComponent.setIndexSE(stock.getSE());
+							indexComponent.setIndexCode(stock.getCode());
+							indexComponent.setIndexName(stock.getName());
+                        } else if (parseType == XML_PARSE_TYPE_STOCK) {
+                            if (DatabaseContract.COLUMN_CLASSES.equals(tagName)) {
+                                stock.setClasses(parser.nextText());
+                            } else if (DatabaseContract.COLUMN_SE.equals(tagName)) {
+                                stock.setSE(parser.nextText());
+                            } else if (DatabaseContract.COLUMN_CODE.equals(tagName)) {
+                                stock.setCode(parser.nextText());
+                            } else if (DatabaseContract.COLUMN_NAME.equals(tagName)) {
+                                stock.setName(parser.nextText());
+                            } else if (DatabaseContract.COLUMN_FLAG.equals(tagName)) {
+                                stock.setFlag(Long.valueOf(parser.nextText()));
+                            } else if (DatabaseContract.COLUMN_COST.equals(tagName)) {
+                                stock.setCost(Double.valueOf(parser.nextText()));
+                            } else if (DatabaseContract.COLUMN_OPERATE.equals(tagName)) {
+                                stock.setOperate(parser.nextText());
+                            }
+                        } else if (parseType == XML_PARSE_TYPE_STOCK_DEAL) {
+                            if (DatabaseContract.COLUMN_DEAL.equals(tagName)) {
+                                stockDeal.setDeal(Double.valueOf(parser.nextText()));
+                            } else if (DatabaseContract.COLUMN_VOLUME.equals(tagName)) {
+                                stockDeal.setVolume(Long.valueOf(parser.nextText()));
+                            } else if (DatabaseContract.COLUMN_ACTION.equals(tagName)) {
+                                stockDeal.setAction(parser.nextText());
+                            } else if (DatabaseContract.COLUMN_CREATED.equals(tagName)) {
+                                stockDeal.setCreated(parser.nextText());
+                            } else if (DatabaseContract.COLUMN_MODIFIED.equals(tagName)) {
+                                stockDeal.setModified(parser.nextText());
+                            }
+						} else if (parseType == XML_PARSE_TYPE_INDEX_COMPONENT) {
+							if (DatabaseContract.COLUMN_SE.equals(tagName)) {
+								indexComponent.setSE(parser.nextText());
+							} else if (DatabaseContract.COLUMN_CODE.equals(tagName)) {
+								indexComponent.setCode(parser.nextText());
+							} else if (DatabaseContract.COLUMN_NAME.equals(tagName)) {
+								indexComponent.setName(parser.nextText());
+							}
+                        }
 					break;
 				case XmlPullParser.END_TAG:
 					tagName = parser.getName();
 					if (XML_TAG_STOCK.equals(tagName)) {
+						parseType = XML_PARSE_TYPE_NONE;
+
 						mStockDatabaseManager.getStock(stock);
 						if (!mStockDatabaseManager.isStockExist(stock)) {
 							stock.setCreated(now);
 							stock.setModified(now);
 							mStockDatabaseManager.insertStock(stock);
+							mStockDatabaseManager.getStock(stock);
 						} else {
 							stock.setModified(now);
 							mStockDatabaseManager.updateStock(stock,
 									stock.getContentValues());
 						}
-						stockList.add(stock);
-					} else if (XML_TAG_ITEM.equals(tagName)) {
-						stockDeal.setSE(stock.getSE());
-						stockDeal.setCode(stock.getCode());
-						stockDeal.setName(stock.getName());
-						mStockDatabaseManager.insertStockDeal(stockDeal);
+                        stockList.add(stock);
+
+						if (stockDealArrayList.size() > 0) {
+							contentValues = new ContentValues[stockDealArrayList.size()];
+
+							for (int i = 0; i < stockDealArrayList.size(); i++) {
+								stockDeal = stockDealArrayList.get(i);
+								contentValues[i] = stockDeal.getContentValues();
+							}
+
+							mStockDatabaseManager.bulkInsertStockDeal(contentValues);
+						}
+
+						if (indexComponentArrayList.size() > 0) {
+							contentValues = new ContentValues[indexComponentArrayList.size()];
+
+							for (int i = 0; i < indexComponentArrayList.size(); i++) {
+								indexComponent = indexComponentArrayList.get(i);
+								contentValues[i] = indexComponent.getContentValues();
+							}
+
+							mStockDatabaseManager.bulkInsertIndexComponent(contentValues);
+						}
+					} else if (XML_TAG_STOCK_DEAL.equals(tagName)) {
+						parseType = XML_PARSE_TYPE_NONE;
+
+						stockDealArrayList.add(stockDeal);
+					} else if (XML_TAG_INDEX_COMPONENT.equals(tagName)) {
+						parseType = XML_PARSE_TYPE_NONE;
+
+						indexComponentArrayList.add(indexComponent);
 					}
 					count++;
 					break;
@@ -318,7 +389,7 @@ public class StorageActivity extends DatabaseActivity {
 		int count = 0;
 
 		ArrayList<Stock> stockList = new ArrayList<Stock>();
-
+		IndexComponent indexComponent = new IndexComponent();
 		StockDeal stockDeal = new StockDeal();
 
 		Cursor cursor = null;
@@ -350,6 +421,8 @@ public class StorageActivity extends DatabaseActivity {
 		for (Stock stock : stockList) {
 			try {
 				xmlSerializer.startTag(null, XML_TAG_STOCK);
+				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_CLASSES,
+						stock.getClases());
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_SE,
 						stock.getSE());
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_CODE,
@@ -366,19 +439,19 @@ public class StorageActivity extends DatabaseActivity {
 				e.printStackTrace();
 			}
 
-			selection = DatabaseContract.COLUMN_SE + " = " + "\'"
-					+ stock.getSE() + "\'" + " AND "
-					+ DatabaseContract.COLUMN_CODE + " = " + "\'"
-					+ stock.getCode() + "\'";
-
 			try {
+				selection = DatabaseContract.COLUMN_SE + " = " + "\'"
+						+ stock.getSE() + "\'" + " AND "
+						+ DatabaseContract.COLUMN_CODE + " = " + "\'"
+						+ stock.getCode() + "\'";
+
 				cursor = mStockDatabaseManager.queryStockDeal(selection, null,
 						null);
 				if ((cursor != null) && (cursor.getCount() > 0)) {
 					while (cursor.moveToNext()) {
 						stockDeal.set(cursor);
 
-						xmlSerializer.startTag(null, XML_TAG_ITEM);
+						xmlSerializer.startTag(null, XML_TAG_STOCK_DEAL);
 						xmlSerialize(xmlSerializer,
 								DatabaseContract.COLUMN_DEAL,
 								String.valueOf(stockDeal.getDeal()));
@@ -394,7 +467,38 @@ public class StorageActivity extends DatabaseActivity {
 						xmlSerialize(xmlSerializer,
 								DatabaseContract.COLUMN_MODIFIED,
 								stockDeal.getModified());
-						xmlSerializer.endTag(null, XML_TAG_ITEM);
+						xmlSerializer.endTag(null, XML_TAG_STOCK_DEAL);
+
+						count++;
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				mStockDatabaseManager.closeCursor(cursor);
+			}
+
+			try {
+				selection = DatabaseContract.COLUMN_INDEX_CODE + " = " + "\'"
+						+ stock.getCode() + "\'";
+
+				cursor = mStockDatabaseManager.queryIndexComponent(selection, null,
+						null);
+				if ((cursor != null) && (cursor.getCount() > 0)) {
+					while (cursor.moveToNext()) {
+						indexComponent.set(cursor);
+
+						xmlSerializer.startTag(null, XML_TAG_INDEX_COMPONENT);
+						xmlSerialize(xmlSerializer,
+								DatabaseContract.COLUMN_SE,
+								String.valueOf(indexComponent.getSE()));
+						xmlSerialize(xmlSerializer,
+								DatabaseContract.COLUMN_CODE,
+								String.valueOf(indexComponent.getCode()));
+						xmlSerialize(xmlSerializer,
+								DatabaseContract.COLUMN_NAME,
+								indexComponent.getName());
+						xmlSerializer.endTag(null, XML_TAG_INDEX_COMPONENT);
 
 						count++;
 					}

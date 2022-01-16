@@ -18,7 +18,7 @@ import android.util.ArrayMap;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.android.orion.database.Component;
+import com.android.orion.database.IndexComponent;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.FinancialData;
 import com.android.orion.database.IPO;
@@ -29,7 +29,6 @@ import com.android.orion.database.TotalShare;
 import com.android.orion.utility.Market;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Search;
-import com.android.orion.utility.StopWatch;
 import com.android.orion.utility.Utility;
 
 public abstract class StockDataProvider extends StockAnalyzer {
@@ -862,7 +861,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
         }
 
         void setupIndexStock(Stock indexStock) {
-            ArrayList<Component> componentList = new ArrayList<>();
+            ArrayList<IndexComponent> indexComponentList = new ArrayList<>();
             String selection = "";
             double totalPrice = 0;
             double totalNet = 0;
@@ -872,18 +871,20 @@ public abstract class StockDataProvider extends StockAnalyzer {
             }
 
             try {
-                selection = DatabaseContract.COLUMN_INDEX_ID + " = " + indexStock.getId();
-                mStockDatabaseManager.getComponentList(componentList, selection, null);
-                if (componentList.size() == 0) {
+                selection = DatabaseContract.COLUMN_INDEX_CODE + " = " + indexStock.getCode();
+                mStockDatabaseManager.getIndexComponentList(indexComponentList, selection, null);
+                if (indexComponentList.size() == 0) {
                     return;
                 }
 
-                for (Component component : componentList) {
+                for (IndexComponent indexComponent : indexComponentList) {
                     Stock stock = new Stock();
 
-                    stock.setId(component.getStockId());
+                    stock.setSE(indexComponent.getSE());
+                    stock.setCode(indexComponent.getCode());
+                    stock.setName(indexComponent.getName());
 
-                    mStockDatabaseManager.getStockById(stock);
+                    mStockDatabaseManager.getStock(stock);
 
                     if ((stock.getFlag() & Constants.STOCK_FLAG_FAVORITE) != 1) {
                         continue;
@@ -944,8 +945,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
                     }
                 }
 
-                indexStock.setPrice(totalPrice / componentList.size());
-                indexStock.setNet(totalNet / componentList.size());
+                indexStock.setPrice(totalPrice / indexComponentList.size());
+                indexStock.setNet(totalNet / indexComponentList.size());
 
                 updateDatabase(indexStock);
             } catch (Exception e) {

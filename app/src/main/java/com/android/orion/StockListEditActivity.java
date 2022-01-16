@@ -27,7 +27,7 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.orion.database.Component;
+import com.android.orion.database.IndexComponent;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.utility.Utility;
@@ -36,7 +36,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
 		OnClickListener {
 
-    public static final String ACTION_COMPONENT_STOCK_SELECT = "orion.intent.action.ACTION_COMPONENT_STOCK_SELECT";
+    public static final String ACTION_INDEX_COMPONENT_SELECT = "orion.intent.action.ACTION_INDEX_COMPONENT_SELECT";
 
 	static final int LOADER_ID_STOCK_LIST = 0;
 
@@ -246,21 +246,21 @@ public class StockListEditActivity extends DatabaseActivity implements
 			return;
 		}
 
-		if (ACTION_COMPONENT_STOCK_SELECT.equals(mAction)) {
+		if (ACTION_INDEX_COMPONENT_SELECT.equals(mAction)) {
 			mStock.setId(id);
 			mStockDatabaseManager.getStockById(mStock);
 
-			Component component = new Component();
+			IndexComponent indexComponent = new IndexComponent();
 
-			component.setIndexId(Long.valueOf(mIntent.getStringExtra(Constants.EXTRA_INDEX_ID)));
-			component.setStockId(mStock.getId());
-			component.setSE(mStock.getSE());
-			component.setCode(mStock.getCode());
-			component.setName(mStock.getName());
+			//TODO
+//			indexComponent.setIndexId(Long.valueOf(mIntent.getStringExtra(Constants.EXTRA_INDEX_ID)));
+			indexComponent.setSE(mStock.getSE());
+			indexComponent.setCode(mStock.getCode());
+			indexComponent.setName(mStock.getName());
 
-			if (!mStockDatabaseManager.isComponentExist(component)) {
-				component.setCreated(Utility.getCurrentDateTimeString());
-				mStockDatabaseManager.insertComponent(component);
+			if (!mStockDatabaseManager.isIndexComponentExist(indexComponent)) {
+				indexComponent.setCreated(Utility.getCurrentDateTimeString());
+				mStockDatabaseManager.insertIndexComponent(indexComponent);
 			} else {
 				Toast.makeText(mContext, R.string.stock_exist,
 						Toast.LENGTH_LONG).show();
@@ -413,9 +413,10 @@ public class StockListEditActivity extends DatabaseActivity implements
 										new DialogInterface.OnClickListener() {
 											public void onClick(DialogInterface dialog,
 																int which) {
-												if (ACTION_COMPONENT_STOCK_SELECT.equals(mAction)) {
-													mStockDatabaseManager.deleteComponent(
-															Long.valueOf(mIntent.getStringExtra(Constants.EXTRA_INDEX_ID)), stock_id);
+												if (ACTION_INDEX_COMPONENT_SELECT.equals(mAction)) {
+													//TODO
+//													mStockDatabaseManager.deleteIndexComponent(
+//															Long.valueOf(mIntent.getStringExtra(Constants.EXTRA_INDEX_ID)), stock_id);
 
 													if (mIntent != null) {
                                                         mIntent.putExtra(Constants.EXTRA_STOCK_ID, stock_id);

@@ -539,7 +539,7 @@ public class StockListActivity extends ListActivity implements
 
 				if (Constants.STOCK_CLASS_INDEX.equals(mStock.getClases())) {
 					Intent intent = new Intent(mContext,
-							ComponentListActivity.class);
+							IndexComponentListActivity.class);
 					intent.putExtra(Constants.EXTRA_INDEX_ID, String.valueOf(mStock.getId()));
 					startActivity(intent);
 				} else {

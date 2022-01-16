@@ -528,6 +528,19 @@ public class StockDatabaseManager extends DatabaseManager {
 		return uri;
 	}
 
+    public int bulkInsertStockDeal(ContentValues[] contentValuesArray) {
+        int result = 0;
+
+        if ((contentValuesArray.length == 0) || (mContentResolver == null)) {
+            return result;
+        }
+
+        result = mContentResolver.bulkInsert(
+                DatabaseContract.StockDeal.CONTENT_URI, contentValuesArray);
+
+        return result;
+    }
+
 	public boolean isStockDealExist(StockDeal stockDeal) {
 		boolean result = false;
 		Cursor cursor = null;
@@ -1920,33 +1933,33 @@ public class StockDatabaseManager extends DatabaseManager {
 		return DatabaseContract.COLUMN_DATE + " ASC ";
 	}
 
-	public Uri insertComponent(Component component) {
+	public Uri insertIndexComponent(IndexComponent indexComponent) {
 		Uri uri = null;
 
-		if ((component == null) || (mContentResolver == null)) {
+		if ((indexComponent == null) || (mContentResolver == null)) {
 			return uri;
 		}
 
-		uri = mContentResolver.insert(DatabaseContract.Component.CONTENT_URI,
-				component.getContentValues());
+		uri = mContentResolver.insert(DatabaseContract.IndexComponent.CONTENT_URI,
+				indexComponent.getContentValues());
 
 		return uri;
 	}
 
-	public int bulkInsertComponent(ContentValues[] contentValuesArray) {
+	public int bulkInsertIndexComponent(ContentValues[] contentValuesArray) {
 		int result = 0;
 
 		if ((contentValuesArray.length == 0) || (mContentResolver == null)) {
 			return result;
 		}
 
-		result = mContentResolver.bulkInsert(DatabaseContract.Component.CONTENT_URI,
+		result = mContentResolver.bulkInsert(DatabaseContract.IndexComponent.CONTENT_URI,
 				contentValuesArray);
 
 		return result;
 	}
 
-	public Cursor queryComponent(String selection, String[] selectionArgs,
+	public Cursor queryIndexComponent(String selection, String[] selectionArgs,
 						   String sortOrder) {
 		Cursor cursor = null;
 
@@ -1954,49 +1967,49 @@ public class StockDatabaseManager extends DatabaseManager {
 			return cursor;
 		}
 
-		cursor = mContentResolver.query(DatabaseContract.Component.CONTENT_URI,
-				DatabaseContract.Component.PROJECTION_ALL, selection, selectionArgs,
+		cursor = mContentResolver.query(DatabaseContract.IndexComponent.CONTENT_URI,
+				DatabaseContract.IndexComponent.PROJECTION_ALL, selection, selectionArgs,
 				sortOrder);
 
 		return cursor;
 	}
 
-	public Cursor queryComponent(Component component) {
+	public Cursor queryIndexComponent(IndexComponent indexComponent) {
 		Cursor cursor = null;
 
-		if ((component == null) || (mContentResolver == null)) {
+		if ((indexComponent == null) || (mContentResolver == null)) {
 			return cursor;
 		}
 
-		String selection = getComponentSelection(component);
-		String sortOrder = getComponentOrder();
+		String selection = getIndexComponentSelection(indexComponent);
+		String sortOrder = getIndexComponentOrder();
 
 		cursor = mContentResolver
-				.query(DatabaseContract.Component.CONTENT_URI,
-						DatabaseContract.Component.PROJECTION_ALL, selection, null,
+				.query(DatabaseContract.IndexComponent.CONTENT_URI,
+						DatabaseContract.IndexComponent.PROJECTION_ALL, selection, null,
 						sortOrder);
 
 		return cursor;
 	}
 
-	public void getComponent(Component component) {
+	public void getIndexComponent(IndexComponent indexComponent) {
 		Cursor cursor = null;
 
-		if ((component == null) || (mContentResolver == null)) {
+		if ((indexComponent == null) || (mContentResolver == null)) {
 			return;
 		}
 
 		try {
-			String selection = getComponentSelection(component);
-			String sortOrder = getComponentOrder();
+			String selection = getIndexComponentSelection(indexComponent);
+			String sortOrder = getIndexComponentOrder();
 
-			cursor = mContentResolver.query(DatabaseContract.Component.CONTENT_URI,
-					DatabaseContract.Component.PROJECTION_ALL, selection, null,
+			cursor = mContentResolver.query(DatabaseContract.IndexComponent.CONTENT_URI,
+					DatabaseContract.IndexComponent.PROJECTION_ALL, selection, null,
 					sortOrder);
 
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
-				component.set(cursor);
+				indexComponent.set(cursor);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2005,24 +2018,24 @@ public class StockDatabaseManager extends DatabaseManager {
 		}
 	}
 
-	public void getComponent(long stockId, Component component) {
+	public void getIndexComponent(String stockCode, IndexComponent indexComponent) {
 		Cursor cursor = null;
 
-		if ((component == null) || (mContentResolver == null)) {
+		if ((indexComponent == null) || (mContentResolver == null)) {
 			return;
 		}
 
 		try {
-			String selection = getComponentSelection(stockId);
+			String selection = getIndexComponentSelection(stockCode);
 			String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
 
-			cursor = mContentResolver.query(DatabaseContract.Component.CONTENT_URI,
-					DatabaseContract.Component.PROJECTION_ALL, selection, null,
+			cursor = mContentResolver.query(DatabaseContract.IndexComponent.CONTENT_URI,
+					DatabaseContract.IndexComponent.PROJECTION_ALL, selection, null,
 					sortOrder);
 
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
-				component.set(cursor);
+				indexComponent.set(cursor);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2031,23 +2044,23 @@ public class StockDatabaseManager extends DatabaseManager {
 		}
 	}
 
-	public void getComponentList(ArrayList<Component> componentList, String selection, String sortOrder) {
+	public void getIndexComponentList(ArrayList<IndexComponent> indexComponentList, String selection, String sortOrder) {
 		Cursor cursor = null;
 
-		if (componentList == null) {
+		if (indexComponentList == null) {
 			return;
 		}
 
-		componentList.clear();
+		indexComponentList.clear();
 
 		try {
-			cursor = queryComponent(selection, null, sortOrder);
+			cursor = queryIndexComponent(selection, null, sortOrder);
 
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				while (cursor.moveToNext()) {
-					Component component = new Component();
-					component.set(cursor);
-					componentList.add(component);
+					IndexComponent indexComponent = new IndexComponent();
+					indexComponent.set(cursor);
+					indexComponentList.add(indexComponent);
 				}
 			}
 		} catch (Exception e) {
@@ -2057,20 +2070,20 @@ public class StockDatabaseManager extends DatabaseManager {
 		}
 	}
 
-	public boolean isComponentExist(Component component) {
+	public boolean isIndexComponentExist(IndexComponent indexComponent) {
 		boolean result = false;
 		Cursor cursor = null;
 
-		if (component == null) {
+		if (indexComponent == null) {
 			return result;
 		}
 
 		try {
-			cursor = queryComponent(component);
+			cursor = queryIndexComponent(indexComponent);
 
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
-				component.setCreated(cursor);
+				indexComponent.setCreated(cursor);
 				result = true;
 			}
 		} catch (Exception e) {
@@ -2082,79 +2095,79 @@ public class StockDatabaseManager extends DatabaseManager {
 		return result;
 	}
 
-	public int updateComponent(Component component, ContentValues contentValues) {
+	public int updateIndexComponent(IndexComponent indexComponent, ContentValues contentValues) {
 		int result = 0;
 
-		if ((component == null) || (mContentResolver == null)) {
+		if ((indexComponent == null) || (mContentResolver == null)) {
 			return result;
 		}
 
-		String where = getComponentSelection(component);
+		String where = getIndexComponentSelection(indexComponent);
 
-		result = mContentResolver.update(DatabaseContract.Component.CONTENT_URI,
+		result = mContentResolver.update(DatabaseContract.IndexComponent.CONTENT_URI,
 				contentValues, where, null);
 
 		return result;
 	}
 
-	public int deleteComponent() {
+	public int deleteIndexComponent() {
 		int result = 0;
 
 		if (mContentResolver == null) {
 			return result;
 		}
 
-		result = mContentResolver.delete(DatabaseContract.Component.CONTENT_URI,
+		result = mContentResolver.delete(DatabaseContract.IndexComponent.CONTENT_URI,
 				null, null);
 
 		return result;
 	}
 
-	public int deleteComponent(Component component) {
+	public int deleteIndexComponent(IndexComponent indexComponent) {
 		int result = 0;
 
-		if ((component == null) || (mContentResolver == null)) {
+		if ((indexComponent == null) || (mContentResolver == null)) {
 			return result;
 		}
 
-		String where = getComponentSelection(component);
+		String where = getIndexComponentSelection(indexComponent);
 
-		result = mContentResolver.delete(DatabaseContract.Component.CONTENT_URI,
+		result = mContentResolver.delete(DatabaseContract.IndexComponent.CONTENT_URI,
 				where, null);
 
 		return result;
 	}
 
-	public int deleteComponent(long indexId, long stockId) {
+	public int deleteIndexComponent(String indexCode, String stockCode) {
 		int result = 0;
 
 		if (mContentResolver == null) {
 			return result;
 		}
 
-		String where = getComponentSelection(indexId, stockId);
+		String where = getIndexComponentSelection(indexCode, stockCode);
 
-		result = mContentResolver.delete(DatabaseContract.Component.CONTENT_URI,
+		result = mContentResolver.delete(DatabaseContract.IndexComponent.CONTENT_URI,
 				where, null);
 
 		return result;
 	}
 
-	public String getComponentSelection(Component component) {
-		return getComponentSelection(component.getIndexId(), component.getStockId());
+	public String getIndexComponentSelection(IndexComponent indexComponent) {
+		return getIndexComponentSelection(indexComponent.getIndexCode(), indexComponent.getCode());
 	}
 
-	public String getComponentSelection(long stockId) {
-		return DatabaseContract.COLUMN_STOCK_ID + " = " + stockId;
+	public String getIndexComponentSelection(String stockCode) {
+		return DatabaseContract.COLUMN_CODE + " = " + stockCode;
 	}
 
-	public String getComponentSelection(long indexId, long stockId) {
-		return DatabaseContract.COLUMN_INDEX_ID + " = " + indexId
+	public String getIndexComponentSelection(String indexCode, String stockCode) {
+		return DatabaseContract.COLUMN_INDEX_CODE + " = " + indexCode
 				+ " AND "
-				+ DatabaseContract.COLUMN_STOCK_ID + " = " + stockId;
+				+ DatabaseContract.COLUMN_CODE + " = " + stockCode;
 	}
 
-	public String getComponentOrder() {
-		return DatabaseContract.COLUMN_STOCK_ID + " ASC ";
+	public String getIndexComponentOrder() {
+		return DatabaseContract.IndexComponent.SORT_ORDER_DEFAULT;
 	}
 }

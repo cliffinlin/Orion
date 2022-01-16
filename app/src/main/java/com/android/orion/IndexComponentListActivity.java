@@ -22,25 +22,24 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.orion.database.Component;
+import com.android.orion.database.IndexComponent;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.utility.Preferences;
-import com.android.orion.utility.Utility;
 
 import java.util.ArrayList;
 
-public class ComponentListActivity extends ListActivity implements
+public class IndexComponentListActivity extends ListActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
 		OnItemLongClickListener, OnClickListener {
 
 	public static final String ACTION_STOCK_ID = "orion.intent.action.ACTION_STOCK_ID";
-	public static final String ACTION_COMPONENT_LIST = "orion.intent.action.ACTION_COMPONENT_LIST";
+	public static final String ACTION_INDEX_COMPONENT_LIST = "orion.intent.action.ACTION_INDEX_COMPONENT_LIST";
 
-	public static final int LOADER_ID_COMPONENT_LIST = 0;
+	public static final int LOADER_ID_INDEX_COMPONENT_LIST = 0;
 
-	public static final int REQUEST_CODE_COMPONENT_STOCK_INSERT = 0;
-    public static final int REQUEST_CODE_COMPONENT_STOCK_SELECT = 1;
+	public static final int REQUEST_CODE_INDEX_COMPONENT_INSERT = 0;
+    public static final int REQUEST_CODE_INDEX_COMPONENT_SELECT = 1;
 
 	static final int mHeaderTextDefaultColor = Color.BLACK;
 	static final int mHeaderTextHighlightColor = Color.RED;
@@ -106,7 +105,7 @@ public class ComponentListActivity extends ListActivity implements
 
 		initListView();
 
-		mLoaderManager.initLoader(LOADER_ID_COMPONENT_LIST, null, this);
+		mLoaderManager.initLoader(LOADER_ID_INDEX_COMPONENT_LIST, null, this);
 
 		if (!Preferences.getBoolean(mContext,
 				Settings.KEY_NOTIFICATION_MESSAGE, false)) {
@@ -133,17 +132,17 @@ public class ComponentListActivity extends ListActivity implements
 
 		case R.id.action_new:
 			Intent intentNew = new Intent(this, StockActivity.class);
-			intentNew.setAction(StockActivity.ACTION_COMPONENT_STOCK_INSERT);
+			intentNew.setAction(StockActivity.ACTION_INDEX_COMPONENT_INSERT);
 			intentNew.putExtra(Constants.EXTRA_INDEX_ID, mIntent.getStringExtra(Constants.EXTRA_INDEX_ID));
-			startActivityForResult(intentNew, REQUEST_CODE_COMPONENT_STOCK_INSERT);
+			startActivityForResult(intentNew, REQUEST_CODE_INDEX_COMPONENT_INSERT);
 			return true;
 
 		case R.id.action_search:
-//            startActivityForResult(new Intent(this, StockSearchActivity.class), REQUEST_CODE_COMPONENT_STOCK_SELECT);
+//            startActivityForResult(new Intent(this, StockSearchActivity.class), REQUEST_CODE_INDEX_COMPONENT_SELECT);
 			Intent intentSearch = new Intent(this, StockSearchActivity.class);
-			intentSearch.setAction(StockListEditActivity.ACTION_COMPONENT_STOCK_SELECT);
+			intentSearch.setAction(StockListEditActivity.ACTION_INDEX_COMPONENT_SELECT);
 			intentSearch.putExtra(Constants.EXTRA_INDEX_ID, mIntent.getStringExtra(Constants.EXTRA_INDEX_ID));
-			startActivityForResult(intentSearch, REQUEST_CODE_COMPONENT_STOCK_SELECT);
+			startActivityForResult(intentSearch, REQUEST_CODE_INDEX_COMPONENT_SELECT);
 			return true;
 
 		case R.id.action_refresh:
@@ -181,8 +180,8 @@ public class ComponentListActivity extends ListActivity implements
 
 		if (resultCode == RESULT_OK) {
 			switch (requestCode) {
-			case REQUEST_CODE_COMPONENT_STOCK_INSERT:
-			case REQUEST_CODE_COMPONENT_STOCK_SELECT:
+			case REQUEST_CODE_INDEX_COMPONENT_INSERT:
+			case REQUEST_CODE_INDEX_COMPONENT_SELECT:
 				if (mOrionService != null) {
 					mOrionService.download(mStock);
 				}
@@ -438,7 +437,7 @@ public class ComponentListActivity extends ListActivity implements
 	}
 
 	void restartLoader() {
-		mLoaderManager.restartLoader(LOADER_ID_COMPONENT_LIST, null, this);
+		mLoaderManager.restartLoader(LOADER_ID_INDEX_COMPONENT_LIST, null, this);
 	}
 
 	@Override
@@ -464,22 +463,25 @@ public class ComponentListActivity extends ListActivity implements
 		CursorLoader loader = null;
 
 		switch (id) {
-		case LOADER_ID_COMPONENT_LIST:
-			ArrayList<Component> componentList = new ArrayList<>();
+		case LOADER_ID_INDEX_COMPONENT_LIST:
+			ArrayList<IndexComponent> indexComponentList = new ArrayList<>();
 			String componentSelection = "";
 			StringBuilder placeHolder = new StringBuilder();
 			StringBuilder indexIds = new StringBuilder();
 
-			componentSelection += DatabaseContract.COLUMN_INDEX_ID + " = " + mIntent.getStringExtra(Constants.EXTRA_INDEX_ID);
+			//TODO
+//			componentSelection += DatabaseContract.COLUMN_INDEX_ID + " = " + mIntent.getStringExtra(Constants.EXTRA_INDEX_ID);
 
-			mStockDatabaseManager.getComponentList(componentList, componentSelection, null);
+			mStockDatabaseManager.getIndexComponentList(indexComponentList, componentSelection, null);
 
-			if (componentList.size() > 0) {
+			if (indexComponentList.size() > 0) {
+				//TODO
+				/*
 				placeHolder.append("?");
-				indexIds.append(componentList.get(0).getStockId());
-				for (int i = 1; i < componentList.size(); i++) {
+				indexIds.append(indexComponentList.get(0).getStockId());
+				for (int i = 1; i < indexComponentList.size(); i++) {
 					placeHolder.append("," + "?");
-					indexIds.append("," + componentList.get(i).getStockId());
+					indexIds.append("," + indexComponentList.get(i).getStockId());
 				}
 
 				selection = DatabaseContract.COLUMN_ID + " in (" + placeHolder.toString() + " )";
@@ -488,6 +490,7 @@ public class ComponentListActivity extends ListActivity implements
 				loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
 						DatabaseContract.Stock.PROJECTION_ALL, selection, selectionArgs,
 						mSortOrder);
+						*/
 			} else {
 				selection = DatabaseContract.COLUMN_ID + " = " + Constants.STOCK_ID_INVALID;
 				loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
@@ -512,7 +515,7 @@ public class ComponentListActivity extends ListActivity implements
 		}
 
 		switch (loader.getId()) {
-		case LOADER_ID_COMPONENT_LIST:
+		case LOADER_ID_INDEX_COMPONENT_LIST:
 			mLeftAdapter.swapCursor(cursor);
 			mRightAdapter.swapCursor(cursor);
 
@@ -587,9 +590,9 @@ public class ComponentListActivity extends ListActivity implements
 //		startActivity(intent);
 
         Intent intentSearch = new Intent(this, StockSearchActivity.class);
-        intentSearch.setAction(StockListEditActivity.ACTION_COMPONENT_STOCK_SELECT);
+        intentSearch.setAction(StockListEditActivity.ACTION_INDEX_COMPONENT_SELECT);
         intentSearch.putExtra(Constants.EXTRA_INDEX_ID, mIntent.getStringExtra(Constants.EXTRA_INDEX_ID));
-        startActivityForResult(intentSearch, REQUEST_CODE_COMPONENT_STOCK_SELECT);
+        startActivityForResult(intentSearch, REQUEST_CODE_INDEX_COMPONENT_SELECT);
 		return true;
 	}
 

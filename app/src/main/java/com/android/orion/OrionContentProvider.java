@@ -41,8 +41,8 @@ public class OrionContentProvider extends ContentProvider {
 	private static final int IPO = 800;
 	private static final int IPO_ID = 801;
 
-	private static final int COMPONENT = 900;
-	private static final int COMPONENT_ID = 901;
+	private static final int INDEX_COMPONENT = 900;
+	private static final int INDEX_COMPONENT_ID = 901;
 
 	private static final UriMatcher mUriMatcher = new UriMatcher(
 			UriMatcher.NO_MATCH);
@@ -85,9 +85,9 @@ public class OrionContentProvider extends ContentProvider {
 				DatabaseContract.IPO.TABLE_NAME + "/#", IPO_ID);
 
 		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
-				DatabaseContract.Component.TABLE_NAME, COMPONENT);
+				DatabaseContract.IndexComponent.TABLE_NAME, INDEX_COMPONENT);
 		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
-				DatabaseContract.Component.TABLE_NAME + "/#", COMPONENT_ID);
+				DatabaseContract.IndexComponent.TABLE_NAME + "/#", INDEX_COMPONENT_ID);
 	}
 
 	ContentResolver mContentResolver = null;
@@ -164,11 +164,11 @@ public class OrionContentProvider extends ContentProvider {
 			type = DatabaseContract.IPO.CONTENT_ITEM_TYPE;
 			break;
 
-		case COMPONENT:
-			type = DatabaseContract.Component.CONTENT_TYPE;
+		case INDEX_COMPONENT:
+			type = DatabaseContract.IndexComponent.CONTENT_TYPE;
 			break;
-		case COMPONENT_ID:
-			type = DatabaseContract.Component.CONTENT_ITEM_TYPE;
+		case INDEX_COMPONENT_ID:
+			type = DatabaseContract.IndexComponent.CONTENT_ITEM_TYPE;
 			break;
 		default:
 			break;
@@ -256,11 +256,11 @@ public class OrionContentProvider extends ContentProvider {
 					+ uri.getLastPathSegment());
 			break;
 
-		case COMPONENT:
-			builder.setTables(DatabaseContract.Component.TABLE_NAME);
+		case INDEX_COMPONENT:
+			builder.setTables(DatabaseContract.IndexComponent.TABLE_NAME);
 			break;
-		case COMPONENT_ID:
-			builder.setTables(DatabaseContract.Component.TABLE_NAME);
+		case INDEX_COMPONENT_ID:
+			builder.setTables(DatabaseContract.IndexComponent.TABLE_NAME);
 			builder.appendWhere(BaseColumns._ID + " = "
 					+ uri.getLastPathSegment());
 			break;
@@ -329,9 +329,9 @@ public class OrionContentProvider extends ContentProvider {
 					DatabaseContract.IPO.TABLE_NAME, null, contentValues);
 			break;
 
-		case COMPONENT:
+		case INDEX_COMPONENT:
 			id = mDatabaseManager.mDatabase.insert(
-					DatabaseContract.Component.TABLE_NAME, null, contentValues);
+					DatabaseContract.IndexComponent.TABLE_NAME, null, contentValues);
 			break;
 		default:
 			break;
@@ -508,18 +508,18 @@ public class OrionContentProvider extends ContentProvider {
 					selectionArgs);
 			break;
 
-		case COMPONENT:
+		case INDEX_COMPONENT:
 			result = mDatabaseManager.mDatabase.update(
-					DatabaseContract.Component.TABLE_NAME, values, selection,
+					DatabaseContract.IndexComponent.TABLE_NAME, values, selection,
 					selectionArgs);
 			break;
-		case COMPONENT_ID:
+		case INDEX_COMPONENT_ID:
 			whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
 			if (!TextUtils.isEmpty(selection)) {
 				whereClause += " AND " + whereClause;
 			}
 			result = mDatabaseManager.mDatabase.update(
-					DatabaseContract.Component.TABLE_NAME, values, whereClause,
+					DatabaseContract.IndexComponent.TABLE_NAME, values, whereClause,
 					selectionArgs);
 			break;
 		default:
@@ -658,18 +658,18 @@ public class OrionContentProvider extends ContentProvider {
 							selectionArgs);
 			break;
 
-		case COMPONENT:
+		case INDEX_COMPONENT:
 			result = mDatabaseManager.mDatabase.delete(
-					DatabaseContract.Component.TABLE_NAME, selection, selectionArgs);
+					DatabaseContract.IndexComponent.TABLE_NAME, selection, selectionArgs);
 			break;
 
-		case COMPONENT_ID:
+		case INDEX_COMPONENT_ID:
 			whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
 			if (!TextUtils.isEmpty(selection)) {
 				whereClause += " AND " + whereClause;
 			}
 			result = mDatabaseManager.mDatabase
-					.delete(DatabaseContract.Component.TABLE_NAME, whereClause,
+					.delete(DatabaseContract.IndexComponent.TABLE_NAME, whereClause,
 							selectionArgs);
 			break;
 		default:
