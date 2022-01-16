@@ -133,15 +133,14 @@ public class IndexComponentListActivity extends ListActivity implements
 		case R.id.action_new:
 			Intent intentNew = new Intent(this, StockActivity.class);
 			intentNew.setAction(StockActivity.ACTION_INDEX_COMPONENT_INSERT);
-			intentNew.putExtra(Constants.EXTRA_INDEX_ID, mIntent.getStringExtra(Constants.EXTRA_INDEX_ID));
+			intentNew.putExtra(Constants.EXTRA_INDEX_CODE, mIntent.getStringExtra(Constants.EXTRA_INDEX_CODE));
 			startActivityForResult(intentNew, REQUEST_CODE_INDEX_COMPONENT_INSERT);
 			return true;
 
 		case R.id.action_search:
-//            startActivityForResult(new Intent(this, StockSearchActivity.class), REQUEST_CODE_INDEX_COMPONENT_SELECT);
 			Intent intentSearch = new Intent(this, StockSearchActivity.class);
 			intentSearch.setAction(StockListEditActivity.ACTION_INDEX_COMPONENT_SELECT);
-			intentSearch.putExtra(Constants.EXTRA_INDEX_ID, mIntent.getStringExtra(Constants.EXTRA_INDEX_ID));
+			intentSearch.putExtra(Constants.EXTRA_INDEX_CODE, mIntent.getStringExtra(Constants.EXTRA_INDEX_CODE));
 			startActivityForResult(intentSearch, REQUEST_CODE_INDEX_COMPONENT_SELECT);
 			return true;
 
@@ -469,28 +468,24 @@ public class IndexComponentListActivity extends ListActivity implements
 			StringBuilder placeHolder = new StringBuilder();
 			StringBuilder indexIds = new StringBuilder();
 
-			//TODO
-//			componentSelection += DatabaseContract.COLUMN_INDEX_ID + " = " + mIntent.getStringExtra(Constants.EXTRA_INDEX_ID);
+			componentSelection += DatabaseContract.COLUMN_INDEX_CODE + " = " + mIntent.getStringExtra(Constants.EXTRA_INDEX_CODE);
 
 			mStockDatabaseManager.getIndexComponentList(indexComponentList, componentSelection, null);
 
 			if (indexComponentList.size() > 0) {
-				//TODO
-				/*
 				placeHolder.append("?");
-				indexIds.append(indexComponentList.get(0).getStockId());
+				indexIds.append(indexComponentList.get(0).getCode());
 				for (int i = 1; i < indexComponentList.size(); i++) {
 					placeHolder.append("," + "?");
-					indexIds.append("," + indexComponentList.get(i).getStockId());
+					indexIds.append("," + indexComponentList.get(i).getCode());
 				}
 
-				selection = DatabaseContract.COLUMN_ID + " in (" + placeHolder.toString() + " )";
+				selection = DatabaseContract.COLUMN_CODE + " in (" + placeHolder.toString() + " )";
 				String[] selectionArgs = indexIds.toString().split(",");
 
 				loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
 						DatabaseContract.Stock.PROJECTION_ALL, selection, selectionArgs,
 						mSortOrder);
-						*/
 			} else {
 				selection = DatabaseContract.COLUMN_ID + " = " + Stock.INVALID_ID;
 				loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
@@ -585,13 +580,9 @@ public class IndexComponentListActivity extends ListActivity implements
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
 			int position, long id) {
-//		Intent intent = new Intent(this, StockListEditActivity.class);
-//		intent.putExtra(Constants.EXTRA_STOCK_LIST_SORT_ORDER, mSortOrder);
-//		startActivity(intent);
-
         Intent intentSearch = new Intent(this, StockSearchActivity.class);
         intentSearch.setAction(StockListEditActivity.ACTION_INDEX_COMPONENT_SELECT);
-        intentSearch.putExtra(Constants.EXTRA_INDEX_ID, mIntent.getStringExtra(Constants.EXTRA_INDEX_ID));
+        intentSearch.putExtra(Constants.EXTRA_INDEX_CODE, mIntent.getStringExtra(Constants.EXTRA_INDEX_CODE));
         startActivityForResult(intentSearch, REQUEST_CODE_INDEX_COMPONENT_SELECT);
 		return true;
 	}

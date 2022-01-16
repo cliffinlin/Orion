@@ -252,8 +252,6 @@ public class StockListEditActivity extends DatabaseActivity implements
 
 			IndexComponent indexComponent = new IndexComponent();
 
-			//TODO
-//			indexComponent.setIndexId(Long.valueOf(mIntent.getStringExtra(Constants.EXTRA_INDEX_ID)));
 			indexComponent.setSE(mStock.getSE());
 			indexComponent.setCode(mStock.getCode());
 			indexComponent.setName(mStock.getName());
@@ -406,6 +404,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 				case R.id.delete:
 					if (stock.getHold() == 0) {
 						final long stock_id = stock.getId();
+						final String stock_code = stock.getCode();
 						new AlertDialog.Builder(mContext)
 								.setTitle(R.string.delete)
 								.setMessage(R.string.delete_confirm)
@@ -414,9 +413,8 @@ public class StockListEditActivity extends DatabaseActivity implements
 											public void onClick(DialogInterface dialog,
 																int which) {
 												if (ACTION_INDEX_COMPONENT_SELECT.equals(mAction)) {
-													//TODO
-//													mStockDatabaseManager.deleteIndexComponent(
-//															Long.valueOf(mIntent.getStringExtra(Constants.EXTRA_INDEX_ID)), stock_id);
+													mStockDatabaseManager.deleteIndexComponent(
+															mIntent.getStringExtra(Constants.EXTRA_INDEX_CODE), stock_code);
 
 													if (mIntent != null) {
                                                         mIntent.putExtra(Constants.EXTRA_STOCK_ID, stock_id);

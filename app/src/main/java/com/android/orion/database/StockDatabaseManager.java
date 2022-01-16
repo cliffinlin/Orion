@@ -2143,7 +2143,7 @@ public class StockDatabaseManager extends DatabaseManager {
 	}
 
 	public String getIndexComponentSelection(IndexComponent indexComponent) {
-		return getIndexComponentSelection(indexComponent.getIndexCode(), indexComponent.getCode());
+		return getIndexComponentSelection(indexComponent.getCode());
 	}
 
 	public String getIndexComponentSelection(String stockCode) {

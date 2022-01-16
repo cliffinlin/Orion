@@ -219,17 +219,11 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 					mStock.setCreated(Utility.getCurrentDateTimeString());
 					Uri uri = mStockDatabaseManager.insertStock(mStock);
 
-//					String uriPath = uri.getPath();
-//					String stockId = uriPath.replace("/" + DatabaseContract.Stock.TABLE_NAME + "/", "");
-//					mStock.setId(Long.valueOf(stockId));
-
                     mStockDatabaseManager.getStock(uri, mStock);
 
 					if (ACTION_INDEX_COMPONENT_INSERT.equals(mAction)) {
 						IndexComponent indexComponent = new IndexComponent();
 
-						//TODO
-//						indexComponent.setIndexId(Long.valueOf(mIntent.getStringExtra(Constants.EXTRA_INDEX_ID)));
 						indexComponent.setSE(mStock.getSE());
 						indexComponent.setCode(mStock.getCode());
 						indexComponent.setName(mStock.getName());
