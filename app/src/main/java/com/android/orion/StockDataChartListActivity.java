@@ -148,7 +148,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 		initListView();
 
 		mStock.setId(getIntent().getLongExtra(Constants.EXTRA_STOCK_ID,
-				Constants.STOCK_ID_INVALID));
+				Stock.INVALID_ID));
 		mStockIDList = getIntent().getStringArrayListExtra(
 				Constants.EXTRA_STOCK_ID_LIST);
 		if ((mStockIDList != null) && (mStockIDList.size() > 0)) {
@@ -374,7 +374,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 
 	void restartLoader(Intent intent) {
 		if (intent.getLongExtra(Constants.EXTRA_STOCK_ID,
-				Constants.STOCK_ID_INVALID) == mStock.getId()) {
+				Stock.INVALID_ID) == mStock.getId()) {
 			restartLoader();
 		}
 	}
@@ -553,12 +553,12 @@ public class StockDataChartListActivity extends BaseActivity implements
 						stockDataChart.mCandleEntryList.add(candleEntry);
 					}
 
-					if (mStockData.vertexOf(Constants.STOCK_VERTEX_TOP)) {
+					if (mStockData.vertexOf(StockData.VERTEX_TOP)) {
 						Entry drawEntry = new Entry(
 								(float) mStockData.getVertexHigh(), index);
 						stockDataChart.mDrawEntryList.add(drawEntry);
 					} else if (mStockData
-							.vertexOf(Constants.STOCK_VERTEX_BOTTOM)) {
+							.vertexOf(StockData.VERTEX_BOTTOM)) {
 						Entry drawEntry = new Entry(
 								(float) mStockData.getVertexLow(), index);
 						stockDataChart.mDrawEntryList.add(drawEntry);
@@ -567,33 +567,33 @@ public class StockDataChartListActivity extends BaseActivity implements
 					if (index == cursor.getCount() - 1) {
 						float val = 0;
 						if (mStockData
-								.directionOf(Constants.STOCK_DIRECTION_UP)) {
+								.directionOf(StockData.DIRECTION_UP)) {
 							val = (float) mStockData.getHigh();
 						} else if (mStockData
-								.directionOf(Constants.STOCK_DIRECTION_DOWN)) {
+								.directionOf(StockData.DIRECTION_DOWN)) {
 							val = (float) mStockData.getLow();
 						}
 						Entry drawEntry = new Entry(val, index);
 						stockDataChart.mDrawEntryList.add(drawEntry);
 					}
 
-					if (mStockData.vertexOf(Constants.STOCK_VERTEX_TOP_STROKE)) {
+					if (mStockData.vertexOf(StockData.VERTEX_TOP_STROKE)) {
 						Entry strokeEntry = new Entry(
 								(float) mStockData.getVertexHigh(), index);
 						stockDataChart.mStrokeEntryList.add(strokeEntry);
 					} else if (mStockData
-							.vertexOf(Constants.STOCK_VERTEX_BOTTOM_STROKE)) {
+							.vertexOf(StockData.VERTEX_BOTTOM_STROKE)) {
 						Entry strokeEntry = new Entry(
 								(float) mStockData.getVertexLow(), index);
 						stockDataChart.mStrokeEntryList.add(strokeEntry);
 					}
 
-					if (mStockData.vertexOf(Constants.STOCK_VERTEX_TOP_SEGMENT)) {
+					if (mStockData.vertexOf(StockData.VERTEX_TOP_SEGMENT)) {
 						Entry segmentEntry = new Entry(
 								(float) mStockData.getVertexHigh(), index);
 						stockDataChart.mSegmentEntryList.add(segmentEntry);
 					} else if (mStockData
-							.vertexOf(Constants.STOCK_VERTEX_BOTTOM_SEGMENT)) {
+							.vertexOf(StockData.VERTEX_BOTTOM_SEGMENT)) {
 						Entry segmentEntry = new Entry(
 								(float) mStockData.getVertexLow(), index);
 						stockDataChart.mSegmentEntryList.add(segmentEntry);

@@ -8,6 +8,14 @@ import com.android.orion.Constants;
 
 public class Market {
 
+	public static final int OPEN_MINUTES = 9 * 60 + 30;
+	public static final int LUNCH_MINUTES = 1 * 60 + 30;
+
+	public static final String OPEN_TIME = "09:25:00";
+	public static final String LUNCH_BEGIN_TIME = "11:45:00";
+	public static final String LUNCH_END_TIME = "12:55:00";
+	public static final String CLOSE_TIME = "15:15:00";
+
 	private Market() {
 	}
 
@@ -27,13 +35,13 @@ public class Market {
 			return result;
 		}
 
-		start = Constants.STOCK_MARKET_OPEN_MINUTES;
+		start = OPEN_MINUTES;
 
 		if (inFirstHalf(currentCalendar)) {
 			result = Market.getCalendarDayMinutes(currentCalendar) - start;
 		} else if (inSecondHalf(currentCalendar)) {
 			result = Market.getCalendarDayMinutes(currentCalendar) - start
-					- Constants.STOCK_MARKET_LUNCH_MINUTES;
+					- LUNCH_MINUTES;
 		} else {
 			result = 0;
 		}
@@ -167,22 +175,22 @@ public class Market {
 
 	public static Calendar getStockMarketOpenCalendar(Calendar calendar) {
 		return getStockMarketCalendar(calendar,
-				Constants.STOCK_MARKET_OPEN_TIME);
+				OPEN_TIME);
 	}
 
 	public static Calendar getStockMarketLunchBeginCalendar(Calendar calendar) {
 		return getStockMarketCalendar(calendar,
-				Constants.STOCK_MARKET_LUNCH_BEGIN_TIME);
+				LUNCH_BEGIN_TIME);
 	}
 
 	public static Calendar getStockMarketLunchEndCalendar(Calendar calendar) {
 		return getStockMarketCalendar(calendar,
-				Constants.STOCK_MARKET_LUNCH_END_TIME);
+				LUNCH_END_TIME);
 	}
 
 	public static Calendar getStockMarketCloseCalendar(Calendar calendar) {
 		return getStockMarketCalendar(calendar,
-				Constants.STOCK_MARKET_CLOSE_TIME);
+				CLOSE_TIME);
 	}
 
 }

@@ -354,7 +354,7 @@ public class StockDealActivity extends DatabaseActivity implements
 			case REQUEST_CODE_STOCK_ID:
 				if (mStock != null) {
 					mStock.setId(data.getLongExtra(Constants.EXTRA_STOCK_ID,
-							Constants.STOCK_ID_INVALID));
+							Stock.INVALID_ID));
 					mHandler.sendEmptyMessage(MESSAGE_LOAD_STOCK_BY_ID);
 				}
 				break;

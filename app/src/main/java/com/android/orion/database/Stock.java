@@ -10,12 +10,28 @@ import com.android.orion.Settings;
 import com.android.orion.utility.Utility;
 
 public class Stock extends DatabaseTable {
+
+	public static final String CLASS_A = "A";
+	public static final String CLASS_INDEX = "I";
+
+	public static final String OPERATE_NONE = "";
+	public static final String OPERATE_ALERT = "A";
+
+	public static final String SE_SH = "sh";
+	public static final String SE_SZ = "sz";
+
+	public static final long INVALID_ID = 0;
+
+	public static final int FLAG_NONE = 0;
+	public static final int FLAG_FAVORITE = 1 << 0;
+	public static final int FLAG_RECENT = 1 << 2;
+
 	private String mClasses;
 	private String mSE;
 	private String mCode;
 	private String mName;
 	private String mPinyin;
-	private long mFlag;
+	private int mFlag;
 	private double mPrice;
 	private double mChange;
 	private double mNet;
@@ -526,11 +542,11 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_PINYIN)));
 	}
 
-	public long getFlag() {
+	public int getFlag() {
 		return mFlag;
 	}
 
-	public void setFlag(long flag) {
+	public void setFlag(int flag) {
 		mFlag = flag;
 	}
 
@@ -539,7 +555,7 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-		setFlag(cursor.getLong(cursor
+		setFlag(cursor.getInt(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_FLAG)));
 	}
 

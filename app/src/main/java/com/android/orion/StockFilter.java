@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.android.orion.database.DatabaseContract;
+import com.android.orion.database.Stock;
 import com.android.orion.utility.Preferences;
 
 public class StockFilter {
@@ -261,7 +262,7 @@ public class StockFilter {
 		if (mEnabled) {
 			if (mFavorite) {
 				selection += DatabaseContract.COLUMN_FLAG + " = "
-						+ Constants.STOCK_FLAG_FAVORITE;
+						+ Stock.FLAG_FAVORITE;
 			} else {
 				selection += " 1 ";
 			}

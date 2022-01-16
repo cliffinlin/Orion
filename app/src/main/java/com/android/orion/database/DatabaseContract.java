@@ -20,7 +20,6 @@ public final class DatabaseContract {
     private static final String COMMA_SEP = ",";
 
     public static final String COLUMN_ID = BaseColumns._ID;
-    public static final String COLUMN_STOCK_ID = "stock_id";
     public static final String COLUMN_SE = "se";
     public static final String COLUMN_CODE = "code";
     public static final String COLUMN_NAME = "name";
@@ -68,6 +67,8 @@ public final class DatabaseContract {
     public static final String COLUMN_INDEX_CODE = "index_code";
     public static final String COLUMN_INDEX_NAME = "index_name";
 
+    public static final String COLUMN_STOCK_ID = "stock_id";
+    public static final String COLUMN_LEVEL = "level";
     public static final String COLUMN_DATE = "date";
     public static final String COLUMN_TIME = "time";
     public static final String COLUMN_PERIOD = "period";
@@ -216,7 +217,7 @@ public final class DatabaseContract {
         public static final String SORT_ORDER_DEFAULT = COLUMN_STOCK_ID
                 + " ASC";
 
-        public static final String[] PROJECTION_ALL = {_ID, COLUMN_STOCK_ID,
+        public static final String[] PROJECTION_ALL = {_ID, COLUMN_STOCK_ID, COLUMN_LEVEL,
                 COLUMN_DATE, COLUMN_TIME, COLUMN_PERIOD, COLUMN_OPEN,
                 COLUMN_HIGH, COLUMN_LOW, COLUMN_CLOSE, COLUMN_AMPLITUDE, COLUMN_DIRECTION,
                 COLUMN_VERTEX, COLUMN_VERTEX_LOW, COLUMN_VERTEX_HIGH,
@@ -228,7 +229,8 @@ public final class DatabaseContract {
 
         private static final String CREATE_TABLE_CONTENT = " (" + _ID
                 + " INTEGER PRIMARY KEY," + COLUMN_STOCK_ID + TEXT_TYPE
-                + COMMA_SEP + COLUMN_DATE + TEXT_TYPE + COMMA_SEP + COLUMN_TIME
+                + COMMA_SEP + COLUMN_LEVEL + INTEGER_TYPE + COMMA_SEP
+                + COLUMN_DATE + TEXT_TYPE + COMMA_SEP + COLUMN_TIME
                 + TEXT_TYPE + COMMA_SEP + COLUMN_PERIOD + TEXT_TYPE + COMMA_SEP
                 + COLUMN_OPEN + DOUBLE_TYPE + COMMA_SEP + COLUMN_HIGH
                 + DOUBLE_TYPE + COMMA_SEP + COLUMN_LOW + DOUBLE_TYPE

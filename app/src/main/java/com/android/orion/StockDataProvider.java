@@ -501,7 +501,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
                 needDownload = true;
             } else if (stock.getTotalShare() == 0) {
                 needDownload = true;
-                if (Constants.STOCK_CLASS_INDEX.equals(stock.getClases())) {
+                if (Stock.CLASS_INDEX.equals(stock.getClases())) {
                     needDownload = false;
                 }
             }
@@ -886,7 +886,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
                     mStockDatabaseManager.getStock(stock);
 
-                    if ((stock.getFlag() & Constants.STOCK_FLAG_FAVORITE) != 1) {
+                    if ((stock.getFlag() & Stock.FLAG_FAVORITE) != 1) {
                         continue;
                     }
 
@@ -1033,10 +1033,10 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
             result = downloadIPO();
             sendBroadcast(Constants.ACTION_RESTART_LOADER,
-                    Constants.STOCK_ID_INVALID);
+                    Stock.INVALID_ID);
 
             for (Stock stock : stockArrayMapFavorite.values()) {
-                if (Constants.STOCK_CLASS_INDEX.equals(stock.getClases())) {
+                if (Stock.CLASS_INDEX.equals(stock.getClases())) {
                     setupIndexStock(stock);
 
                     for (String period : Settings.KEY_PERIODS) {

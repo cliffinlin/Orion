@@ -10,6 +10,9 @@ import com.android.orion.utility.Utility;
 import java.util.Calendar;
 
 public class StockDeal extends DatabaseTable {
+
+    public static final double DISTRIBUTION_RATE = 5.0 / 100.0;
+
     private String mSE;
     private String mCode;
     private String mName;

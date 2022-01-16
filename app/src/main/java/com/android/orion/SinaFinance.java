@@ -465,7 +465,7 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		if (mStockDatabaseManager.getStockCount(DatabaseContract.COLUMN_CLASSES
-				+ " = '" + Constants.STOCK_CLASS_A + "'", null, null) == 0) {
+				+ " = '" + Stock.CLASS_A + "'", null, null) == 0) {
 			bulkInsert = true;
 			Log.d(TAG, "handleResponseStockHSA bulkInsert = " + bulkInsert);
 		}
@@ -504,7 +504,7 @@ public class SinaFinance extends StockDataProvider {
 
 					mStockDatabaseManager.getStock(stock);
 
-					stock.setClasses(Constants.STOCK_CLASS_A);
+					stock.setClasses(Stock.CLASS_A);
 
 					nameChanged = false;
 					if (!stock.getName().equals(jsonObject.getString("name"))) {
@@ -1361,7 +1361,7 @@ public class SinaFinance extends StockDataProvider {
 								dateString, Utility.CALENDAR_DATE_FORMAT);
 						if (!calendar.before(today)) {
 							nameString = nameString
-									+ Constants.STOCK_ACTION_STAR;
+									+ StockData.ACTION_STAR;
 						}
 					}
 

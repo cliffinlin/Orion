@@ -492,7 +492,7 @@ public class IndexComponentListActivity extends ListActivity implements
 						mSortOrder);
 						*/
 			} else {
-				selection = DatabaseContract.COLUMN_ID + " = " + Constants.STOCK_ID_INVALID;
+				selection = DatabaseContract.COLUMN_ID + " = " + Stock.INVALID_ID;
 				loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
 						DatabaseContract.Stock.PROJECTION_ALL, selection, null,
 						mSortOrder);
@@ -549,7 +549,7 @@ public class IndexComponentListActivity extends ListActivity implements
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 
-		if (id <= Constants.STOCK_ID_INVALID) {
+		if (id <= Stock.INVALID_ID) {
 			return;
 		}
 

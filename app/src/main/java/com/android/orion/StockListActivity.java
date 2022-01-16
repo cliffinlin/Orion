@@ -522,7 +522,7 @@ public class StockListActivity extends ListActivity implements
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 
-		if (id <= Constants.STOCK_ID_INVALID) {
+		if (id <= Stock.INVALID_ID) {
 			return;
 		}
 
@@ -537,7 +537,7 @@ public class StockListActivity extends ListActivity implements
 				mStock.setId(id);
 				mStockDatabaseManager.getStockById(mStock);
 
-				if (Constants.STOCK_CLASS_INDEX.equals(mStock.getClases())) {
+				if (Stock.CLASS_INDEX.equals(mStock.getClases())) {
 					Intent intent = new Intent(mContext,
 							IndexComponentListActivity.class);
 					intent.putExtra(Constants.EXTRA_INDEX_ID, String.valueOf(mStock.getId()));

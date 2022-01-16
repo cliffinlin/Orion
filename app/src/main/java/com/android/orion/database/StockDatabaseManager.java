@@ -885,10 +885,10 @@ public class StockDatabaseManager extends DatabaseManager {
 		getStockDealMax(stock, stockDealMax);
 
 		if (stock.getPrice() > 0) {
-			result = (1.0 - order * Constants.STOCK_DEAL_DISTRIBUTION_RATE)
+			result = (1.0 - order * StockDeal.DISTRIBUTION_RATE)
 					* stock.getPrice();
 		} else {
-			result = (1.0 - order * Constants.STOCK_DEAL_DISTRIBUTION_RATE)
+			result = (1.0 - order * StockDeal.DISTRIBUTION_RATE)
 					* stockDealMax.getDeal();
 		}
 

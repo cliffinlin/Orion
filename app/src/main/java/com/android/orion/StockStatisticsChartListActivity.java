@@ -102,7 +102,7 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 		initListView();
 
 		mStock.setId(getIntent().getLongExtra(Constants.EXTRA_STOCK_ID,
-				Constants.STOCK_ID_INVALID));
+				Stock.INVALID_ID));
 
 		initLoader();
 	}

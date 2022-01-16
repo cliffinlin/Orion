@@ -52,7 +52,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 			mEditTextStockCode.setEnabled(false);
 
 			mStock.setId(mIntent.getLongExtra(Constants.EXTRA_STOCK_ID,
-					Constants.STOCK_ID_INVALID));
+					Stock.INVALID_ID));
 			mStockDatabaseManager.getStockById(mStock);
 			updateView();
 		}
@@ -124,13 +124,13 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 	}
 
 	void updateView() {
-		if (mStock.getClases().equals(Constants.STOCK_CLASS_A)) {
+		if (mStock.getClases().equals(Stock.CLASS_A)) {
 			mRadioGroupClass.check(R.id.radio_class_hsa);
 		} else {
 			mRadioGroupClass.check(R.id.radio_class_index);
 		}
 
-		if (mStock.getSE().equals(Constants.STOCK_SE_SH)) {
+		if (mStock.getSE().equals(Stock.SE_SH)) {
 			mRadioGroupSE.check(R.id.radio_se_sh);
 		} else {
 			mRadioGroupSE.check(R.id.radio_se_sz);
@@ -173,22 +173,22 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 
 			id = mRadioGroupClass.getCheckedRadioButtonId();
 			if (id == R.id.radio_class_hsa) {
-				mStock.setClasses(Constants.STOCK_CLASS_A);
+				mStock.setClasses(Stock.CLASS_A);
 			} else if (id == R.id.radio_class_index) {
-				mStock.setClasses(Constants.STOCK_CLASS_INDEX);
+				mStock.setClasses(Stock.CLASS_INDEX);
 			}
 
 			id = mRadioGroupSE.getCheckedRadioButtonId();
 			if (id == R.id.radio_se_sh) {
-				mStock.setSE(Constants.STOCK_SE_SH);
+				mStock.setSE(Stock.SE_SH);
 			} else if (id == R.id.radio_se_sz) {
-				mStock.setSE(Constants.STOCK_SE_SZ);
+				mStock.setSE(Stock.SE_SZ);
 			}
 
 			if (mCheckBoxStockOperate.isChecked()) {
-				mStock.setOperate(Constants.STOCK_OPERATE_ALERT);
+				mStock.setOperate(Stock.OPERATE_ALERT);
 			} else {
-				mStock.setOperate(Constants.STOCK_OPERATE_NONE);
+				mStock.setOperate(Stock.OPERATE_NONE);
 			}
 
 			String name = mEditTextStockName.getText().toString();
@@ -212,7 +212,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 				mStock.setCost(0);
 			}
 
-			mStock.setFlag(Constants.STOCK_FLAG_FAVORITE);
+			mStock.setFlag(Stock.FLAG_FAVORITE);
 
 			if (ACTION_FAVORITE_STOCK_INSERT.equals(mAction) || ACTION_INDEX_COMPONENT_INSERT.equals(mAction)) {
 				if (!mStockDatabaseManager.isStockExist(mStock)) {

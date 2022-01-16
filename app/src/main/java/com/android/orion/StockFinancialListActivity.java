@@ -737,7 +737,7 @@ public class StockFinancialListActivity extends ListActivity implements
     public void onItemClick(AdapterView<?> parent, View view, int position,
                             long id) {
 
-        if (id <= Constants.STOCK_ID_INVALID) {
+        if (id <= Stock.INVALID_ID) {
             return;
         }
 

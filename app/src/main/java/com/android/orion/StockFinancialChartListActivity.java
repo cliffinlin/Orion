@@ -100,7 +100,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 		initListView();
 
 		mStock.setId(getIntent().getLongExtra(Constants.EXTRA_STOCK_ID,
-				Constants.STOCK_ID_INVALID));
+				Stock.INVALID_ID));
 
 		mSortOrder = getIntent().getStringExtra(
 				Constants.EXTRA_STOCK_LIST_SORT_ORDER);
@@ -268,7 +268,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 
 	void restartLoader(Intent intent) {
 		if (intent.getLongExtra(Constants.EXTRA_STOCK_ID,
-				Constants.STOCK_ID_INVALID) == mStock.getId()) {
+				Stock.INVALID_ID) == mStock.getId()) {
 			restartLoader();
 		}
 	}

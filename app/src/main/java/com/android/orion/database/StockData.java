@@ -8,7 +8,59 @@ import com.android.orion.Constants;
 import com.android.orion.utility.Utility;
 
 public class StockData extends StockDatabaseTable {
+
+    public static final String ACTION_NONE = "";
+    public static final String ACTION_STAR = "*";
+    public static final String ACTION_D = "D";
+    public static final String ACTION_BUY = "B";
+    public static final String ACTION_BUY1 = "B1";
+    public static final String ACTION_BUY2 = "B2";
+    public static final String ACTION_BUY3 = "B3";
+    public static final String ACTION_G = "G";
+    public static final String ACTION_SELL = "S";
+    public static final String ACTION_SELL1 = "S1";
+    public static final String ACTION_SELL2 = "S2";
+    public static final String ACTION_SELL3 = "S3";
+    public static final String ACTION_HIGH = "H";
+    public static final String ACTION_LOW = "L";
+
+    public static final char ACTION_ADD = '+';
+    public static final char ACTION_MINUS = '-';
+
+	public static final int LEVEL_NONE = 0;
+	public static final int LEVEL_DRAW = 1 << 0;
+	public static final int LEVEL_STROKE = 1 << 1;
+	public static final int LEVEL_SEGMENT = 1 << 2;
+
+	public static final int DIVERGENCE_NONE = 0;
+	public static final int DIVERGENCE_DIF_DEA = 1 << 0;
+	public static final int DIVERGENCE_HISTOGRAM = 1 << 1;
+	public static final int DIVERGENCE_SIGMA_HISTOGRAM = 1 << 2;
+
+	public static final int DIRECTION_NONE = 0;
+	public static final int DIRECTION_UP = 1 << 0;
+	public static final int DIRECTION_DOWN = 1 << 1;
+	public static final int DIRECTION_UP_STROKE = 1 << 2;
+	public static final int DIRECTION_DOWN_STROKE = 1 << 3;
+	public static final int DIRECTION_UP_SEGMENT = 1 << 4;
+	public static final int DIRECTION_DOWN_SEGMENT = 1 << 5;
+
+	public static final int VERTEX_NONE = 0;
+	public static final int VERTEX_TOP = 1 << 0;
+	public static final int VERTEX_BOTTOM = 1 << 1;
+	public static final int VERTEX_TOP_STROKE = 1 << 2;
+	public static final int VERTEX_BOTTOM_STROKE = 1 << 3;
+	public static final int VERTEX_TOP_SEGMENT = 1 << 4;
+	public static final int VERTEX_BOTTOM_SEGMENT = 1 << 5;
+
+    public static final int VERTEX_TYPING_SIZE = 3;
+
+	public static final int POSITION_ABOVE = 1;
+	public static final int POSITION_NONE = 0;
+	public static final int POSITION_BELOW = -1;
+
 	private long mStockId;
+	private int mLevel;
 	private String mDate;
 	private String mTime;
 	private String mPeriod;
@@ -73,6 +125,7 @@ public class StockData extends StockDatabaseTable {
 		setTableName(DatabaseContract.StockData.TABLE_NAME);
 
 		mStockId = 0;
+		mLevel = LEVEL_NONE;
 		mDate = "";
 		mTime = "";
 		mPeriod = "";
@@ -81,8 +134,8 @@ public class StockData extends StockDatabaseTable {
 		mLow = 0;
 		mClose = 0;
 		mAmplitude = 0;
-		mDirection = Constants.STOCK_DIRECTION_NONE;
-		mVertex = Constants.STOCK_VERTEX_NONE;
+		mDirection = DIRECTION_NONE;
+		mVertex = VERTEX_NONE;
 		mVertexLow = 0;
 		mVertexHigh = 0;
 		mAverage5 = 0;
@@ -91,7 +144,7 @@ public class StockData extends StockDatabaseTable {
 		mDEA = 0;
 		mHistogram = 0;
 		mSigmaHistogram = 0;
-		mDivergence = Constants.STOCK_DIVERGENCE_NONE;
+		mDivergence = DIVERGENCE_NONE;
 		mAction = "";
 
 		mRoi = 0;
@@ -113,6 +166,7 @@ public class StockData extends StockDatabaseTable {
 
 	ContentValues getContentValues(ContentValues contentValues) {
 		contentValues.put(DatabaseContract.COLUMN_STOCK_ID, mStockId);
+		contentValues.put(DatabaseContract.COLUMN_LEVEL, mLevel);
 		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);
 		contentValues.put(DatabaseContract.COLUMN_TIME, mTime);
 		contentValues.put(DatabaseContract.COLUMN_PERIOD, mPeriod);
@@ -154,6 +208,7 @@ public class StockData extends StockDatabaseTable {
 		super.set(stockData);
 
 		setStockId(stockData.mStockId);
+		setLevel(stockData.mLevel);
 		setDate(stockData.mDate);
 		setTime(stockData.mTime);
 		setPeriod(stockData.mPeriod);
@@ -196,6 +251,7 @@ public class StockData extends StockDatabaseTable {
 		super.set(cursor);
 
 		setStockID(cursor);
+		setLevel(cursor);
 		setDate(cursor);
 		setTime(cursor);
 		setPeriod(cursor);
@@ -238,6 +294,23 @@ public class StockData extends StockDatabaseTable {
 
 		setStockId(cursor.getLong(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_STOCK_ID)));
+	}
+
+	public int getLevel() {
+		return mLevel;
+	}
+
+	public void setLevel(int level) {
+		mLevel = level;
+	}
+
+	void setLevel(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setLevel(cursor.getInt(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_LEVEL)));
 	}
 
 	public String getDate() {
@@ -732,44 +805,44 @@ public class StockData extends StockDatabaseTable {
 	}
 
 	public int directionTo(StockData stockData) {
-		int result = Constants.STOCK_DIRECTION_NONE;
+		int result = DIRECTION_NONE;
 
 		if ((getVertexHigh() >= stockData.getVertexHigh())
 				&& (getVertexLow() > stockData.getVertexLow())) {
-			result = Constants.STOCK_DIRECTION_UP;
+			result = DIRECTION_UP;
 		} else if ((getVertexHigh() < stockData.getVertexHigh())
 				&& (getVertexLow() <= stockData.getVertexLow())) {
-			result = Constants.STOCK_DIRECTION_DOWN;
+			result = DIRECTION_DOWN;
 		} else {
-			result = Constants.STOCK_DIRECTION_NONE;
+			result = DIRECTION_NONE;
 		}
 
 		return result;
 	}
 
 	public int positionTo(StockData overlap) {
-		int position = Constants.STOCK_POSITION_NONE;
+		int position = POSITION_NONE;
 		
 		if (overlap == null) {
 			return position;
 		}
 
 		if (getVertexLow() > overlap.getOverlapHigh()) {
-			position = Constants.STOCK_POSITION_ABOVE;
+			position = POSITION_ABOVE;
 		} else if (getVertexHigh() < overlap.getOverlapLow()) {
-			position = Constants.STOCK_POSITION_BELOW;
+			position = POSITION_BELOW;
 		} else {
-			position = Constants.STOCK_POSITION_NONE;
+			position = POSITION_NONE;
 		}
 
 		return position;
 	}
 
 	public void merge(int directionType, StockData stockData) {
-		if (directionType == Constants.STOCK_DIRECTION_UP) {
+		if (directionType == DIRECTION_UP) {
 			setVertexHigh(Math.max(getVertexHigh(), stockData.getVertexHigh()));
 			setVertexLow(Math.max(getVertexLow(), stockData.getVertexLow()));
-		} else if (directionType == Constants.STOCK_DIRECTION_DOWN) {
+		} else if (directionType == DIRECTION_DOWN) {
 			setVertexHigh(Math.min(getVertexHigh(), stockData.getVertexHigh()));
 			setVertexLow(Math.min(getVertexLow(), stockData.getVertexLow()));
 		} else {
@@ -791,39 +864,39 @@ public class StockData extends StockDatabaseTable {
 	}
 
 	public int divergenceValue(int direction, StockData stockData) {
-		int result = Constants.STOCK_DIVERGENCE_NONE;
+		int result = DIVERGENCE_NONE;
 
-		if (direction == Constants.STOCK_DIRECTION_UP) {
+		if (direction == DIRECTION_UP) {
 			if ((getVertexHigh() > stockData.getVertexHigh())
 					&& (getVertexLow() > stockData.getVertexLow())) {
 				result = divergenceValue(stockData);
 			}
-		} else if (direction == Constants.STOCK_DIRECTION_DOWN) {
+		} else if (direction == DIRECTION_DOWN) {
 			if ((getVertexHigh() < stockData.getVertexHigh())
 					&& (getVertexLow() < stockData.getVertexLow())) {
 				result = divergenceValue(stockData);
 			}
 		} else {
-			result = Constants.STOCK_DIVERGENCE_NONE;
+			result = DIVERGENCE_NONE;
 		}
 
 		return result;
 	}
 
 	int divergenceValue(StockData stockData) {
-		int result = Constants.STOCK_DIVERGENCE_NONE;
+		int result = DIVERGENCE_NONE;
 
 		if (Math.abs(getDIF()) < Math.abs(stockData.getDIF())) {
-			result |= Constants.STOCK_DIVERGENCE_DIF_DEA;
+			result |= DIVERGENCE_DIF_DEA;
 		}
 
 		if (Math.abs(getHistogram()) < Math.abs(stockData.getHistogram())) {
-			result |= Constants.STOCK_DIVERGENCE_HISTOGRAM;
+			result |= DIVERGENCE_HISTOGRAM;
 		}
 
 		if (Math.abs(getSigmaHistogram()) < Math.abs(stockData
 				.getSigmaHistogram())) {
-			result |= Constants.STOCK_DIVERGENCE_SIGMA_HISTOGRAM;
+			result |= DIVERGENCE_SIGMA_HISTOGRAM;
 		}
 
 		return result;
@@ -836,9 +909,9 @@ public class StockData extends StockDatabaseTable {
 			return;
 		}
 
-		if (directionOf(Constants.STOCK_DIRECTION_UP)) {
+		if (directionOf(DIRECTION_UP)) {
 			mAmplitude = 100.0 * (mVertexHigh - mVertexLow) / mVertexLow;
-		} else if (directionOf(Constants.STOCK_DIRECTION_DOWN)) {
+		} else if (directionOf(DIRECTION_DOWN)) {
 			mAmplitude = 100.0 * (mVertexLow - mVertexHigh) / mVertexHigh;
 		} else {
 			mAmplitude = 100.0 * Math.abs(mVertexHigh - mVertexLow) / mVertexLow;

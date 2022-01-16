@@ -262,7 +262,7 @@ public class StorageActivity extends DatabaseActivity {
                             } else if (DatabaseContract.COLUMN_NAME.equals(tagName)) {
                                 stock.setName(parser.nextText());
                             } else if (DatabaseContract.COLUMN_FLAG.equals(tagName)) {
-                                stock.setFlag(Long.valueOf(parser.nextText()));
+                                stock.setFlag(Integer.valueOf(parser.nextText()));
                             } else if (DatabaseContract.COLUMN_COST.equals(tagName)) {
                                 stock.setCost(Double.valueOf(parser.nextText()));
                             } else if (DatabaseContract.COLUMN_OPERATE.equals(tagName)) {

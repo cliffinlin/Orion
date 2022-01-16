@@ -242,7 +242,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		if (id <= Constants.STOCK_ID_INVALID) {
+		if (id <= Stock.INVALID_ID) {
 			return;
 		}
 
@@ -307,7 +307,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 						.setImageResource(R.drawable.ic_pause);
 			}
 
-			if ((stock.getFlag() & Constants.STOCK_FLAG_FAVORITE) == 1) {
+			if ((stock.getFlag() & Stock.FLAG_FAVORITE) == 1) {
 				holder.mImageViewFavorite
 						.setImageResource(R.drawable.ic_favorite);
 			} else {
@@ -387,18 +387,18 @@ public class StockListEditActivity extends DatabaseActivity implements
 				switch (view.getId()) {
 				case R.id.operate:
 					if (TextUtils.isEmpty(stock.getOperate())) {
-						updateStockOperate(stockId, Constants.STOCK_OPERATE_ALERT);
+						updateStockOperate(stockId, Stock.OPERATE_ALERT);
 					} else {
-						updateStockOperate(stockId, Constants.STOCK_OPERATE_NONE);
+						updateStockOperate(stockId, Stock.OPERATE_NONE);
 					}
 					break;
 
 				case R.id.favorite:
-					if ((stock.getFlag() & Constants.STOCK_FLAG_FAVORITE) == 0) {
-						updateStockFlag(stockId, stock.getFlag() | Constants.STOCK_FLAG_FAVORITE);
+					if ((stock.getFlag() & Stock.FLAG_FAVORITE) == 0) {
+						updateStockFlag(stockId, stock.getFlag() | Stock.FLAG_FAVORITE);
 					} else {
 						//TODO
-					    updateStockFlag(stockId, Constants.STOCK_FLAG_NONE);
+					    updateStockFlag(stockId, Stock.FLAG_NONE);
 					}
 					mOrionService.download();
 					break;
