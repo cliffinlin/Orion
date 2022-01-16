@@ -820,22 +820,6 @@ public class StockDatabaseManager extends DatabaseManager {
 		}
 	}
 
-	public void getStockDealToBuy(Stock stock, StockDeal stockDeal) {
-        String sortOrder = DatabaseContract.COLUMN_NET + DatabaseContract.ORDER_DIRECTION_ASC;
-
-		if ((stock == null) || (stockDeal == null)) {
-			return;
-		}
-
-        String selection = DatabaseContract.COLUMN_SE + " = " + "\'" + stock.getSE()
-                + "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
-                + stock.getCode() + "\'";
-
-		selection +=   " AND " + DatabaseContract.COLUMN_VOLUME + " <= " + 0;
-
-		getStockDeal(stock, stockDeal, selection, sortOrder);
-	}
-
     public void getStockDealListToSell(Stock stock, ArrayList<StockDeal> stockDealList) {
         String sortOrder = DatabaseContract.COLUMN_NET + DatabaseContract.ORDER_DIRECTION_ASC;
 
@@ -847,7 +831,6 @@ public class StockDatabaseManager extends DatabaseManager {
                 + "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
                 + stock.getCode() + "\'";
 
-//		selection += " AND " + DatabaseContract.COLUMN_ACTION + " != ''";
 		selection += " AND " + DatabaseContract.COLUMN_VOLUME + " > " + 0 ;
 		selection += " AND " + DatabaseContract.COLUMN_PROFIT + " > " + DatabaseContract.COLUMN_BONUS;
 		selection += " AND " + DatabaseContract.COLUMN_NET + " > " + Constants.AVERAGE_DIVIDEND_YIELD;

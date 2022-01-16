@@ -1,6 +1,7 @@
 package com.android.orion;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -15,6 +16,7 @@ import android.os.Environment;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.text.TextUtils;
+import android.util.ArrayMap;
 import android.util.Log;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -894,7 +896,7 @@ public class StockAnalyzer {
 
 		stockData = stockDataList.get(stockDataList.size() - 1);
 
-		result = (int) Math.abs(stockData.getAmplitude());
+		result = (int) stockData.getAmplitude();
 
 		return result;
 	}
@@ -934,7 +936,7 @@ public class StockAnalyzer {
 				action += StockData.ACTION_D;
 			} else {
 				action += StockData.ACTION_ADD;
-				action += segmentAmplitude;
+				action += Math.abs(segmentAmplitude);
 			}
 		} else if (stockData
 				.directionOf(StockData.DIRECTION_DOWN_SEGMENT)) {
@@ -942,7 +944,7 @@ public class StockAnalyzer {
 				action += StockData.ACTION_G;
 			} else {
 				action += StockData.ACTION_MINUS;
-				action += segmentAmplitude;
+				action += Math.abs(segmentAmplitude);
 			}
 		}
 
@@ -951,26 +953,26 @@ public class StockAnalyzer {
 				action += StockData.ACTION_D;
 			} else {
 				action += StockData.ACTION_ADD;
-				action += strokeAmplitude;
+				action += Math.abs(strokeAmplitude);
 			}
 		} else if (stockData.directionOf(StockData.DIRECTION_DOWN_STROKE)) {
 			if (prev.vertexOf(StockData.VERTEX_TOP_STROKE)) {
 				action += StockData.ACTION_G;
 			} else {
 				action += StockData.ACTION_MINUS;
-				action += strokeAmplitude;
+				action += Math.abs(strokeAmplitude);
 			}
 		}
 
 		if (stockData.directionOf(StockData.DIRECTION_UP)) {
 			if (prev.vertexOf(StockData.VERTEX_BOTTOM)) {
 				action += StockData.ACTION_D;
-				if (period.equals(Settings.KEY_PERIOD_DAY)) {
-					String result1 = getFirstBottomAction(stock, drawVertexList, overlapList);
-					if (!TextUtils.isEmpty(result1)) {
-						action = result1;
-					}
-				}
+//				if (period.equals(Settings.KEY_PERIOD_DAY)) {
+//					String result1 = getFirstBottomAction(stock, drawVertexList, overlapList);
+//					if (!TextUtils.isEmpty(result1)) {
+//						action = result1;
+//					}
+//				}
 
 				String result2 = getSecondBottomAction(stock, drawVertexList,
 						overlapList);
@@ -979,17 +981,17 @@ public class StockAnalyzer {
 				}
 			} else {
 				action += StockData.ACTION_ADD;
-				action += drawAmplitude;
+				action += Math.abs(drawAmplitude);
 			}
 		} else if (stockData.directionOf(StockData.DIRECTION_DOWN)) {
 			if (prev.vertexOf(StockData.VERTEX_TOP)) {
 				action += StockData.ACTION_G;
-				if (period.equals(Settings.KEY_PERIOD_DAY)) {
-					String result1 = getFirstTopAction(stock, drawVertexList, overlapList);
-					if (!TextUtils.isEmpty(result1)) {
-						action = result1;
-					}
-				}
+//				if (period.equals(Settings.KEY_PERIOD_DAY)) {
+//					String result1 = getFirstTopAction(stock, drawVertexList, overlapList);
+//					if (!TextUtils.isEmpty(result1)) {
+//						action = result1;
+//					}
+//				}
 
 				String result2 = getSecondTopAction(stock, drawVertexList, overlapList);
 				if (!TextUtils.isEmpty(result2)) {
@@ -997,7 +999,7 @@ public class StockAnalyzer {
 				}
 			} else {
 				action += StockData.ACTION_MINUS;
-				action += drawAmplitude;
+				action += Math.abs(drawAmplitude);
 			}
 		}
 
@@ -1048,9 +1050,10 @@ public class StockAnalyzer {
 			mStockDatabaseManager.deleteStockData(stock.getId(), period);
 
 			updateDatabase(stockDataList);
-			updateDatabase(drawDataList);
-			updateDatabase(strokeDataList);
-			updateDatabase(segmentDataList);
+
+//			updateDatabase(drawDataList);
+//			updateDatabase(strokeDataList);
+//			updateDatabase(segmentDataList);
 
 			stock.setModified(Utility.getCurrentDateTimeString());
 			mStockDatabaseManager.updateStock(stock,
@@ -1083,11 +1086,62 @@ public class StockAnalyzer {
 		}
 	}
 
+	void updateAmplitudeArrayMap(ArrayMap<Integer, Integer> amplitudeArrayMap, ArrayList<StockData> stockDataList) {
+		int amplitude = 0;
+
+		if ((amplitudeArrayMap == null) || (stockDataList == null)) {
+			return;
+		}
+
+		amplitude = getLastAmplitude(stockDataList);
+
+		if (amplitudeArrayMap.containsKey(amplitude)) {
+			int value = amplitudeArrayMap.get(amplitude);
+			amplitudeArrayMap.put(amplitude, ++value);
+		} else {
+			amplitudeArrayMap.put(amplitude, 1);
+		}
+	}
+
+	int getDenominator(String action) {
+		int index = 0;
+		int result = 0;
+		String remainingString;
+		String netString;
+
+		try {
+			remainingString = action.substring(4);
+			if (TextUtils.isEmpty(remainingString)) {
+				return result;
+			}
+
+			index = remainingString.indexOf("/");
+			if (index < 0) {
+				return result;
+			}
+
+			netString = remainingString.substring(0, index).trim();
+			if (TextUtils.isEmpty(netString)) {
+				return result;
+			}
+
+			result = Integer.valueOf(netString);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			return result;
+		}
+	}
+
 	private void updateNotification(Stock stock) {
 		int id = 0;
-		String contentText = "";
-		Notification.Builder notification;
+        int denominator = 0;
+        ArrayMap<Integer, Integer> amplitudeArrayMap = new ArrayMap<Integer, Integer>();
         ArrayList<StockDeal> stockDealList = new ArrayList<StockDeal>();
+        ArrayList<Integer> denominatorArrayList = new ArrayList<>();
+        Notification.Builder notification;
+        String contentText = "";
+        StringBuilder contentTitle = new StringBuilder();
 
 		if (mNotificationManager == null) {
 			return;
@@ -1113,18 +1167,28 @@ public class StockAnalyzer {
 		for (String period : Settings.KEY_PERIODS) {
 			if (Preferences.getBoolean(mContext, period, false)) {
 				String action = stock.getAction(period);
+
+				updateAmplitudeArrayMap(amplitudeArrayMap, stock.getDrawDataList(period));
+				updateAmplitudeArrayMap(amplitudeArrayMap, stock.getStrokeDataList(period));
+				updateAmplitudeArrayMap(amplitudeArrayMap, stock.getSegmentDataList(period));
+
 				if (action.contains(StockData.ACTION_BUY1 + StockData.ACTION_BUY1)
 						|| action.contains(StockData.ACTION_BUY2 + StockData.ACTION_BUY2)) {
-//					StockDeal stockDeal = new StockDeal();
-//					mStockDatabaseManager.getStockDealToBuy(stock, stockDeal);
-//					if (!TextUtils.isEmpty(stockDeal.getCode()) && (stockDeal.getVolume() <= 0)) {
-						actionString.append(period + " " + action + " ");
-//						actionString.append(" " + stockDeal.getProfit() + " ");
-//					}
+					denominator = getDenominator(action);
+					if (denominator != 0) {
+						denominatorArrayList.add(denominator);
+					}
+
+					actionString.append(period + " " + action + " ");
 				}
 
 				if (action.contains(StockData.ACTION_SELL1 + StockData.ACTION_SELL1)
 						|| action.contains(StockData.ACTION_SELL2 + StockData.ACTION_SELL2)) {
+					denominator = getDenominator(action);
+					if (denominator != 0) {
+						denominatorArrayList.add(denominator);
+					}
+
 					mStockDatabaseManager.getStockDealListToSell(stock, stockDealList);
 					double totalProfit = 0;
 					for (StockDeal stockDeal : stockDealList) {
@@ -1143,12 +1207,21 @@ public class StockAnalyzer {
 			return;
 		}
 
-		StringBuilder contentTitle = new StringBuilder();
 		contentTitle.append(stock.getName() + " " + stock.getPrice() + " "
 				+ stock.getNet());
-		contentTitle.append(" " + actionString);
 
-		RecordFile.writeNotificationFile(stock, actionString.toString());
+        if (denominatorArrayList.size() > 0) {
+            for (int i = 0; i < denominatorArrayList.size(); i++) {
+                denominator = denominatorArrayList.get(i);
+                if (amplitudeArrayMap.containsKey(denominator)) {
+                    actionString.append(" " + StockData.ACTION_X + amplitudeArrayMap.get(denominator) + " ");
+                }
+            }
+        }
+
+		RecordFile.writeNotificationFile(contentTitle.toString(), actionString.toString());
+
+		contentTitle.append(" " + actionString);
 
 		Intent intent = new Intent(mContext, StockListActivity.class);
 		intent.setType("vnd.android-dir/mms-sms");

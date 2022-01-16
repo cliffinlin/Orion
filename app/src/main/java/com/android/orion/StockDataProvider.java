@@ -1036,19 +1036,21 @@ public abstract class StockDataProvider extends StockAnalyzer {
             sendBroadcast(Constants.ACTION_RESTART_LOADER,
                     Stock.INVALID_ID);
 
-            for (Stock stock : stockArrayMapFavorite.values()) {
-                if (Stock.CLASS_INDEX.equals(stock.getClases())) {
-                    setupIndexStock(stock);
+            //TODO
 
-                    for (String period : Settings.KEY_PERIODS) {
-                        if (Preferences.getBoolean(mContext, period, false)) {
-                            analyze(stock, period);
-                        }
-                    }
-
-                    sendBroadcast(Constants.ACTION_RESTART_LOADER, stock.getId());
-                }
-            }
+//            for (Stock stock : stockArrayMapFavorite.values()) {
+//                if (Stock.CLASS_INDEX.equals(stock.getClases())) {
+//                    setupIndexStock(stock);
+//
+//                    for (String period : Settings.KEY_PERIODS) {
+//                        if (Preferences.getBoolean(mContext, period, false)) {
+//                            analyze(stock, period);
+//                        }
+//                    }
+//
+//                    sendBroadcast(Constants.ACTION_RESTART_LOADER, stock.getId());
+//                }
+//            }
 
             mAsyncTaskStatus = Status.FINISHED;
             Log.d(TAG, "doInBackground, mAsyncTaskStatus=" + mAsyncTaskStatus);

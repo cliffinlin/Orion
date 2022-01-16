@@ -37,14 +37,13 @@ public class RecordFile {
         }
     }
 
-    public static void writeNotificationFile(Stock stock, String action) {
+    public static void writeNotificationFile(String title, String action) {
         String fileName;
         StringBuilder logString = new StringBuilder();
 
-        logString.append(stock.getName() + " " + stock.getPrice() + " "
-                + stock.getNet() + " ");
+        logString.append(title);
         logString.append(" " + action);
-        logString.append(stock.getModified() + "\n");
+        logString.append(" " + Utility.getCurrentDateTimeString() + "\n");
 
         try {
             fileName = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Android/" + Constants.NOTIFICATION + Constants.NOTIFICATION_FILE_EXT;
