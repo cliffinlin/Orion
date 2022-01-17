@@ -364,21 +364,6 @@ public class StockListEditActivity extends DatabaseActivity implements
             Uri uri = ContentUris.withAppendedId(
 					DatabaseContract.Stock.CONTENT_URI, stockId);
 
-//            Cursor cursor = null;
-//
-//            try {
-//				cursor = mContentResolver
-//						.query(uri, DatabaseContract.Stock.PROJECTION_ALL,
-//								null, null, null);
-//				if (cursor != null) {
-//					cursor.moveToNext();
-//					stock.set(cursor);
-//				}
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			} finally {
-//				mStockDatabaseManager.closeCursor(cursor);
-//			}
             mStockDatabaseManager.getStock(uri, stock);
 
 			try {
@@ -395,7 +380,6 @@ public class StockListEditActivity extends DatabaseActivity implements
 					if ((stock.getFlag() & Stock.FLAG_FAVORITE) == 0) {
 						updateStockFlag(stockId, stock.getFlag() | Stock.FLAG_FAVORITE);
 					} else {
-						//TODO
 					    updateStockFlag(stockId, Stock.FLAG_NONE);
 					}
 					mOrionService.download();

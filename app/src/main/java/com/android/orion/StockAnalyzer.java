@@ -1036,6 +1036,26 @@ public class StockAnalyzer {
 		mStockDatabaseManager.bulkInsertStockData(contentValues);
 	}
 
+	void updateDatabase(Stock stock, String period, ArrayList<StockData> stockDataList) {
+		if (mStockDatabaseManager == null) {
+			Log.d(TAG, "updateDatabase return " + " mStockDatabaseManager = "
+					+ mStockDatabaseManager);
+			return;
+		}
+
+		try {
+			mStockDatabaseManager.deleteStockData(stock.getId(), period);
+
+			updateDatabase(stockDataList);
+
+			stock.setModified(Utility.getCurrentDateTimeString());
+			mStockDatabaseManager.updateStock(stock,
+					stock.getContentValuesAnalyze(period));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	void updateDatabase(Stock stock, String period, ArrayList<StockData> stockDataList,
 						ArrayList<StockData> drawDataList,
 						ArrayList<StockData> strokeDataList,

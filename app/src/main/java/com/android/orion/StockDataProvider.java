@@ -501,9 +501,6 @@ public abstract class StockDataProvider extends StockAnalyzer {
                 needDownload = true;
             } else if (stock.getTotalShare() == 0) {
                 needDownload = true;
-                if (Stock.CLASS_INDEX.equals(stock.getClases())) {
-                    needDownload = false;
-                }
             }
 
             if (!needDownload) {
@@ -940,16 +937,17 @@ public abstract class StockDataProvider extends StockAnalyzer {
                                 }
                             }
 
-                            //TODO
-//                            updateDatabase(indexStock, period, indexStockDataList);
+                            updateDatabase(indexStock, period, indexStockDataList);
                         }
                     }
                 }
 
-                indexStock.setPrice(totalPrice / indexComponentList.size());
-                indexStock.setNet(totalNet / indexComponentList.size());
+                indexStock.setPrice(Utility.Round(totalPrice / indexComponentList.size(), Constants.DOUBLE_FIXED_DECIMAL));
+                indexStock.setNet(Utility.Round(totalNet / indexComponentList.size(), Constants.DOUBLE_FIXED_DECIMAL));
 
-                updateDatabase(indexStock);
+                indexStock.setModified(Utility.getCurrentDateTimeString());
+                mStockDatabaseManager.updateStock(indexStock,
+                        indexStock.getContentValues());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -984,6 +982,10 @@ public abstract class StockDataProvider extends StockAnalyzer {
                     if (stock.getId() != stockId) {
                         continue;
                     }
+                }
+
+                if (Stock.CLASS_INDEX.equals(stock.getClases())) {
+                    continue;
                 }
 
                 result = downloadStockRealTime(stock);
@@ -1036,21 +1038,19 @@ public abstract class StockDataProvider extends StockAnalyzer {
             sendBroadcast(Constants.ACTION_RESTART_LOADER,
                     Stock.INVALID_ID);
 
-            //TODO
+            for (Stock stock : stockArrayMapFavorite.values()) {
+                if (Stock.CLASS_INDEX.equals(stock.getClases())) {
+                    setupIndexStock(stock);
 
-//            for (Stock stock : stockArrayMapFavorite.values()) {
-//                if (Stock.CLASS_INDEX.equals(stock.getClases())) {
-//                    setupIndexStock(stock);
-//
-//                    for (String period : Settings.KEY_PERIODS) {
-//                        if (Preferences.getBoolean(mContext, period, false)) {
-//                            analyze(stock, period);
-//                        }
-//                    }
-//
-//                    sendBroadcast(Constants.ACTION_RESTART_LOADER, stock.getId());
-//                }
-//            }
+                    for (String period : Settings.KEY_PERIODS) {
+                        if (Preferences.getBoolean(mContext, period, false)) {
+                            analyze(stock, period);
+                        }
+                    }
+
+                    sendBroadcast(Constants.ACTION_RESTART_LOADER, stock.getId());
+                }
+            }
 
             mAsyncTaskStatus = Status.FINISHED;
             Log.d(TAG, "doInBackground, mAsyncTaskStatus=" + mAsyncTaskStatus);
