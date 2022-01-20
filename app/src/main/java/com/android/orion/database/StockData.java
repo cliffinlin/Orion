@@ -10,8 +10,6 @@ import com.android.orion.utility.Utility;
 public class StockData extends StockDatabaseTable {
 
     public static final String ACTION_NONE = "";
-    public static final String ACTION_STAR = "*";
-	public static final String ACTION_X = "X";
     public static final String ACTION_D = "D";
     public static final String ACTION_BUY = "B";
     public static final String ACTION_BUY1 = "B1";

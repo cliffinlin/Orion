@@ -212,20 +212,44 @@ public class StockAnalyzer {
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 
+		int maxKey = 0;
+		int maxValue = 0;
+		ArrayMap<Integer, Integer> amplitudeArrayMap = new ArrayMap<Integer, Integer>();
+
 		if (stock == null) {
 			return;
 		}
 
 		try {
-			analyzeFinancial(stock);
+            if (!Stock.CLASS_INDEX.equals(stock.getClases())) {
+                analyzeFinancial(stock);
+                setupStockFinancialData(stock);
+                setupStockShareBonus(stock);
+            }
 
-			setupStockFinancialData(stock);
-			setupStockShareBonus(stock);
+			for (String period : Settings.KEY_PERIODS) {
+				if (Preferences.getBoolean(mContext, period, false)) {
+					updateAmplitudeArrayMap(amplitudeArrayMap, stock.getDrawDataList(period));
+					updateAmplitudeArrayMap(amplitudeArrayMap, stock.getStrokeDataList(period));
+					updateAmplitudeArrayMap(amplitudeArrayMap, stock.getSegmentDataList(period));
+				}
+			}
+
+			if (amplitudeArrayMap.size() > 0) {
+				for (int i = 0; i < amplitudeArrayMap.size(); i++) {
+					if (amplitudeArrayMap.valueAt(i) > maxValue) {
+						maxKey = amplitudeArrayMap.keyAt(i);
+						maxValue = amplitudeArrayMap.valueAt(i);
+					}
+				}
+			}
+
+			stock.setOperate(maxValue + Stock.OPERATE_AMPLITUDE + maxKey);
 
 			updateDatabase(stock);
 
 			updateActionFile(stock);
-			updateNotification(stock);
+			updateNotification(stock, amplitudeArrayMap);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1095,7 +1119,8 @@ public class StockAnalyzer {
 				logString.append(period + " " + stock.getAction(period) + " ");
 			}
 		}
-		logString.append(stock.getModified() + "\n");
+
+		logString.append(stock.getOperate() + " " + stock.getModified() + "\n");
 
 		try {
 			fileName = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Android/"
@@ -1124,28 +1149,21 @@ public class StockAnalyzer {
 	}
 
 	int getDenominator(String action) {
-		int index = 0;
+		String strings[] = null;
 		int result = 0;
-		String remainingString;
-		String netString;
 
 		try {
-			remainingString = action.substring(4);
-			if (TextUtils.isEmpty(remainingString)) {
+			if (TextUtils.isEmpty(action)) {
 				return result;
 			}
 
-			index = remainingString.indexOf("/");
-			if (index < 0) {
+			strings = action.split("/");
+
+			if ((strings == null) | (strings.length < 2)) {
 				return result;
 			}
 
-			netString = remainingString.substring(0, index).trim();
-			if (TextUtils.isEmpty(netString)) {
-				return result;
-			}
-
-			result = Integer.valueOf(netString);
+			result = Integer.valueOf(strings[1]);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -1153,10 +1171,9 @@ public class StockAnalyzer {
 		}
 	}
 
-	private void updateNotification(Stock stock) {
+	private void updateNotification(Stock stock, ArrayMap<Integer, Integer> amplitudeArrayMap) {
 		int id = 0;
         int denominator = 0;
-        ArrayMap<Integer, Integer> amplitudeArrayMap = new ArrayMap<Integer, Integer>();
         ArrayList<StockDeal> stockDealList = new ArrayList<StockDeal>();
         ArrayList<Integer> denominatorArrayList = new ArrayList<>();
         Notification.Builder notification;
@@ -1187,11 +1204,6 @@ public class StockAnalyzer {
 		for (String period : Settings.KEY_PERIODS) {
 			if (Preferences.getBoolean(mContext, period, false)) {
 				String action = stock.getAction(period);
-
-				updateAmplitudeArrayMap(amplitudeArrayMap, stock.getDrawDataList(period));
-				updateAmplitudeArrayMap(amplitudeArrayMap, stock.getStrokeDataList(period));
-				updateAmplitudeArrayMap(amplitudeArrayMap, stock.getSegmentDataList(period));
-
 				if (action.contains(StockData.ACTION_BUY1 + StockData.ACTION_BUY1)
 						|| action.contains(StockData.ACTION_BUY2 + StockData.ACTION_BUY2)) {
 					denominator = getDenominator(action);
@@ -1230,14 +1242,12 @@ public class StockAnalyzer {
 		contentTitle.append(stock.getName() + " " + stock.getPrice() + " "
 				+ stock.getNet());
 
-        if (denominatorArrayList.size() > 0) {
-            for (int i = 0; i < denominatorArrayList.size(); i++) {
-                denominator = denominatorArrayList.get(i);
-                if (amplitudeArrayMap.containsKey(denominator)) {
-                    actionString.append(" " + StockData.ACTION_X + amplitudeArrayMap.get(denominator) + " ");
-                }
-            }
-        }
+		for (int i = 0; i < denominatorArrayList.size(); i++) {
+			denominator = denominatorArrayList.get(i);
+			if (amplitudeArrayMap.containsKey(denominator)) {
+				actionString.append(" " + amplitudeArrayMap.get(denominator) + Stock.OPERATE_AMPLITUDE + denominator + " ");
+			}
+		}
 
 		RecordFile.writeNotificationFile(contentTitle.toString(), actionString.toString());
 

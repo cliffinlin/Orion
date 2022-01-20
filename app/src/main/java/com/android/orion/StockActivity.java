@@ -186,7 +186,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 			}
 
 			if (mCheckBoxStockOperate.isChecked()) {
-				mStock.setOperate(Stock.OPERATE_ALERT);
+				mStock.setOperate(Stock.OPERATE_AMPLITUDE);
 			} else {
 				mStock.setOperate(Stock.OPERATE_NONE);
 			}

@@ -15,7 +15,9 @@ public class Stock extends DatabaseTable {
 	public static final String CLASS_INDEX = "I";
 
 	public static final String OPERATE_NONE = "";
-	public static final String OPERATE_ALERT = "A";
+	public static final String OPERATE_AMPLITUDE = "A";
+
+	public static final String ACTION_STAR = "*";
 
 	public static final String SE_SH = "sh";
 	public static final String SE_SZ = "sz";
@@ -331,6 +333,8 @@ public class Stock extends DatabaseTable {
 		} else if (period.equals(Settings.KEY_PERIOD_YEAR)) {
 			contentValues.put(DatabaseContract.COLUMN_YEAR, mActionYear);
 		}
+
+		contentValues.put(DatabaseContract.COLUMN_OPERATE, mOperate);
 
 		contentValues.put(DatabaseContract.COLUMN_TOTAL_SHARE, mTotalShare);
 		contentValues.put(DatabaseContract.COLUMN_MARKET_VALUE, mMarketValue);

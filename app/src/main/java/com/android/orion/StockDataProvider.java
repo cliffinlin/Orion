@@ -36,7 +36,6 @@ public abstract class StockDataProvider extends StockAnalyzer {
             + StockDataProvider.class.getSimpleName();
 
     long mLastSendBroadcast = 0;
-    ArrayMap<String, Stock> mStockArrayMap = new ArrayMap<String, Stock>();
 
     Status mAsyncTaskStatus = Status.FINISHED;
 
@@ -165,12 +164,13 @@ public abstract class StockDataProvider extends StockAnalyzer {
         String se = "";
         String code = "";
         Stock stock = null;
+        ArrayMap<String, Stock> stockArrayMap = new ArrayMap<String, Stock>();
 
-        loadStockArrayMap(mStockArrayMap);
+        loadStockArrayMap(stockArrayMap);
 
         se = intent.getStringExtra(Constants.EXTRA_STOCK_SE);
         code = intent.getStringExtra(Constants.EXTRA_STOCK_CODE);
-        stock = mStockArrayMap.get(se + code);
+        stock = stockArrayMap.get(se + code);
 
         download(stock);
     }
@@ -857,18 +857,18 @@ public abstract class StockDataProvider extends StockAnalyzer {
             return result;
         }
 
-        void setupIndexStock(Stock indexStock) {
+        void setupIndex(Stock index) {
             ArrayList<IndexComponent> indexComponentList = new ArrayList<>();
             String selection = "";
             double totalPrice = 0;
             double totalNet = 0;
 
-            if (indexStock == null) {
+            if (index == null) {
                 return;
             }
 
             try {
-                selection = DatabaseContract.COLUMN_INDEX_CODE + " = " + indexStock.getCode();
+                selection = DatabaseContract.COLUMN_INDEX_CODE + " = " + index.getCode();
                 mStockDatabaseManager.getIndexComponentList(indexComponentList, selection, null);
                 if (indexComponentList.size() == 0) {
                     return;
@@ -893,7 +893,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
                     for (String period : Settings.KEY_PERIODS) {
                         if (Preferences.getBoolean(mContext, period, false)) {
                             ArrayList<StockData> stockDataList = stock.getStockDataList(period);
-                            ArrayList<StockData> indexStockDataList = indexStock.getStockDataList(period);
+                            ArrayList<StockData> indexStockDataList = index.getStockDataList(period);
 
                             if (stockDataList == null) {
                                 continue;
@@ -905,7 +905,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
                                 for (StockData stockData : stockDataList) {
                                     StockData indexStockData = new StockData(period);
 
-                                    indexStockData.setStockId(indexStock.getId());
+                                    indexStockData.setStockId(index.getId());
 
                                     indexStockData.setDate(stockData.getDate());
                                     indexStockData.setTime(stockData.getTime());
@@ -937,17 +937,17 @@ public abstract class StockDataProvider extends StockAnalyzer {
                                 }
                             }
 
-                            updateDatabase(indexStock, period, indexStockDataList);
+                            updateDatabase(index, period, indexStockDataList);
                         }
                     }
                 }
 
-                indexStock.setPrice(Utility.Round(totalPrice / indexComponentList.size(), Constants.DOUBLE_FIXED_DECIMAL));
-                indexStock.setNet(Utility.Round(totalNet / indexComponentList.size(), Constants.DOUBLE_FIXED_DECIMAL));
+                index.setPrice(Utility.Round(totalPrice / indexComponentList.size(), Constants.DOUBLE_FIXED_DECIMAL));
+                index.setNet(Utility.Round(totalNet / indexComponentList.size(), Constants.DOUBLE_FIXED_DECIMAL));
 
-                indexStock.setModified(Utility.getCurrentDateTimeString());
-                mStockDatabaseManager.updateStock(indexStock,
-                        indexStock.getContentValues());
+                index.setModified(Utility.getCurrentDateTimeString());
+                mStockDatabaseManager.updateStock(index,
+                        index.getContentValues());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -955,7 +955,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
         @Override
         protected String doInBackground(String... params) {
-            ArrayMap<String, Stock> stockArrayMapFavorite = new ArrayMap<String, Stock>();
+            ArrayMap<String, Stock> stockArrayMap = new ArrayMap<String, Stock>();
+            ArrayMap<String, Stock> indexArrayMap = new ArrayMap<String, Stock>();
             String result = "";
             long stockId = 0;
 
@@ -968,9 +969,9 @@ public abstract class StockDataProvider extends StockAnalyzer {
                 stockId = mStock.getId();
             }
 
-            loadStockArrayMap(stockArrayMapFavorite);
+            loadStockArrayMap(stockArrayMap);
 
-            for (Stock stock : stockArrayMapFavorite.values()) {
+            for (Stock stock : stockArrayMap.values()) {
                 if (mAsyncTaskStatus != Status.RUNNING) {
                     releaseWakeLock();
 
@@ -985,6 +986,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
                 }
 
                 if (Stock.CLASS_INDEX.equals(stock.getClases())) {
+                    indexArrayMap.put(stock.getSE() + stock.getCode(), stock);
                     continue;
                 }
 
@@ -1030,7 +1032,6 @@ public abstract class StockDataProvider extends StockAnalyzer {
                 }
 
                 analyze(stock);
-
                 sendBroadcast(Constants.ACTION_RESTART_LOADER, stock.getId());
             }
 
@@ -1038,18 +1039,17 @@ public abstract class StockDataProvider extends StockAnalyzer {
             sendBroadcast(Constants.ACTION_RESTART_LOADER,
                     Stock.INVALID_ID);
 
-            for (Stock stock : stockArrayMapFavorite.values()) {
-                if (Stock.CLASS_INDEX.equals(stock.getClases())) {
-                    setupIndexStock(stock);
+            for (Stock index : indexArrayMap.values()) {
+                setupIndex(index);
 
-                    for (String period : Settings.KEY_PERIODS) {
-                        if (Preferences.getBoolean(mContext, period, false)) {
-                            analyze(stock, period);
-                        }
+                for (String period : Settings.KEY_PERIODS) {
+                    if (Preferences.getBoolean(mContext, period, false)) {
+                        analyze(index, period);
                     }
-
-                    sendBroadcast(Constants.ACTION_RESTART_LOADER, stock.getId());
                 }
+
+                analyze(index);
+                sendBroadcast(Constants.ACTION_RESTART_LOADER, index.getId());
             }
 
             mAsyncTaskStatus = Status.FINISHED;

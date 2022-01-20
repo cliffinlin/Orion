@@ -370,7 +370,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 				switch (view.getId()) {
 				case R.id.operate:
 					if (TextUtils.isEmpty(stock.getOperate())) {
-						updateStockOperate(stockId, Stock.OPERATE_ALERT);
+						updateStockOperate(stockId, Stock.OPERATE_AMPLITUDE);
 					} else {
 						updateStockOperate(stockId, Stock.OPERATE_NONE);
 					}
