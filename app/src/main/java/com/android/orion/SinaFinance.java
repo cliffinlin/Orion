@@ -12,6 +12,7 @@ import org.jsoup.select.Elements;
 import android.content.ContentValues;
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.ArrayMap;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
@@ -31,20 +32,23 @@ public class SinaFinance extends StockDataProvider {
 	static final String TAG = Constants.TAG + " "
 			+ SinaFinance.class.getSimpleName();
 
-	private static final String SINA_FINANCE_URL_HQ_NODE_DATA = "http://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/Market_Center.getHQNodeData?";
-	private static final String SINA_FINANCE_URL_HQ_KLINE_DATA = "http://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData?";
-	private static final String SINA_FINANCE_URL_HQ_JS_LIST = "http://hq.sinajs.cn/list=";
-	private static final String SINA_FINANCE_URL_HQ_JS_LIST_SIMPLE = "http://hq.sinajs.cn/list=s_";
-	private static final String SINA_FINANCE_URL_VFD_FINANCESUMMARY = "http://money.finance.sina.com.cn/corp/go.php/vFD_FinanceSummary/stockid/";// stock_id.phtml
-	private static final String SINA_FINANCE_URL_VISSUE_SHAREBONUS = "http://vip.stock.finance.sina.com.cn/corp/go.php/vISSUE_ShareBonus/stockid/";// stock_id.phtml
-	private static final String SINA_FINANCE_URL_VCI_STOCK_STRUCTURE_HISTORY = "http://vip.stock.finance.sina.com.cn/corp/go.php/vCI_StockStructureHistory/stockid/";// stocktype/TotalStock.phtml
-	private static final String SINA_FINANCE_URL_NEWSTOCK_ISSUE = "https://vip.stock.finance.sina.com.cn/corp/go.php/vRPD_NewStockIssue/page/1.phtml";
+	public static final String SINA_FINANCE_URL_HQ_NODE_DATA = "http://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/Market_Center.getHQNodeData?";
+	public static final String SINA_FINANCE_URL_HQ_KLINE_DATA = "http://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData?";
+	public static final String SINA_FINANCE_URL_HQ_JS_LIST = "http://hq.sinajs.cn/list=";
+	public static final String SINA_FINANCE_URL_HQ_JS_LIST_SIMPLE = "http://hq.sinajs.cn/list=s_";
+	public static final String SINA_FINANCE_URL_VFD_FINANCESUMMARY = "http://money.finance.sina.com.cn/corp/go.php/vFD_FinanceSummary/stockid/";// stock_id.phtml
+	public static final String SINA_FINANCE_URL_VISSUE_SHAREBONUS = "http://vip.stock.finance.sina.com.cn/corp/go.php/vISSUE_ShareBonus/stockid/";// stock_id.phtml
+	public static final String SINA_FINANCE_URL_VCI_STOCK_STRUCTURE_HISTORY = "http://vip.stock.finance.sina.com.cn/corp/go.php/vCI_StockStructureHistory/stockid/";// stocktype/TotalStock.phtml
+	public static final String SINA_FINANCE_URL_NEWSTOCK_ISSUE = "https://vip.stock.finance.sina.com.cn/corp/go.php/vRPD_NewStockIssue/page/1.phtml";
 
-	private static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN5 = 242;
-	private static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN15 = 192;
-	private static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN30 = 192;
-	private static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN60 = 192;
+	public static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN5 = 242;
+	public static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN15 = 192;
+	public static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN30 = 192;
+	public static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN60 = 192;
 
+	public static final String SINA_FINANCE_HEAD_REFERER_KEY = "Referer";
+	public static final String SINA_FINANCE_HEAD_REFERER_VALUE = "http://vip.stock.finance.sina.com.cn/";
+	
 	public SinaFinance(Context context) {
 		super(context);
 	}
@@ -116,6 +120,15 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		return 0;
+	}
+
+	@Override
+	ArrayMap<String, String> getRequestHeader() {
+		ArrayMap<String, String> result = new ArrayMap<>();
+
+		result.put(SINA_FINANCE_HEAD_REFERER_KEY, SINA_FINANCE_HEAD_REFERER_VALUE);
+
+		return result;
 	}
 
 	@Override

@@ -41,6 +41,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
     abstract int getAvailableHistoryLength(String period);
 
+    abstract ArrayMap<String, String> getRequestHeader();
+
     abstract String getStockHSAURLString();
 
     abstract void handleResponseStockHSA(String response);
@@ -453,15 +455,18 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
             setStock(stock);
 
-            return downloadStockRealTime(getStockRealTimeURLString(stock));
+            return downloadStockRealTime(getRequestHeader(), getStockRealTimeURLString(stock));
         }
 
-        String downloadStockRealTime(String urlString) {
+        String downloadStockRealTime(ArrayMap<String, String> requestHeaderArray, String urlString) {
             String result = "";
 
             Log.d(TAG, "downloadStockRealTime:" + urlString);
 
             Request.Builder builder = new Request.Builder();
+            for (int i = 0; i < requestHeaderArray.size(); i++) {
+                builder.addHeader(requestHeaderArray.keyAt(i), requestHeaderArray.valueAt(i));
+            }
             builder.url(urlString);
             Request request = builder.build();
 
@@ -509,15 +514,18 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
             setStock(stock);
 
-            return downloadStockInformation(getStockInformationURLString(stock));
+            return downloadStockInformation(getRequestHeader(), getStockInformationURLString(stock));
         }
 
-        String downloadStockInformation(String urlString) {
+        String downloadStockInformation(ArrayMap<String, String> requestHeaderArray, String urlString) {
             String result = "";
 
             Log.d(TAG, "downloadStockInformation:" + urlString);
 
             Request.Builder builder = new Request.Builder();
+            for (int i = 0; i < requestHeaderArray.size(); i++) {
+                builder.addHeader(requestHeaderArray.keyAt(i), requestHeaderArray.valueAt(i));
+            }
             builder.url(urlString);
             Request request = builder.build();
 
@@ -830,15 +838,18 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
             setStock(stock);
 
-            return downloadStockDataRealTime(getStockDataRealTimeURLString(stock));
+            return downloadStockDataRealTime(getRequestHeader(), getStockDataRealTimeURLString(stock));
         }
 
-        String downloadStockDataRealTime(String urlString) {
+        String downloadStockDataRealTime(ArrayMap<String, String> requestHeaderArray, String urlString) {
             String result = "";
 
             Log.d(TAG, "downloadStockDataRealTime:" + urlString);
 
             Request.Builder builder = new Request.Builder();
+            for (int i = 0; i < requestHeaderArray.size(); i++) {
+                builder.addHeader(requestHeaderArray.keyAt(i), requestHeaderArray.valueAt(i));
+            }
             builder.url(urlString);
             Request request = builder.build();
 
