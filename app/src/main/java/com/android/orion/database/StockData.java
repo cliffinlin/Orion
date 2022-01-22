@@ -7,6 +7,8 @@ import android.text.TextUtils;
 import com.android.orion.Constants;
 import com.android.orion.utility.Utility;
 
+import java.util.Calendar;
+
 public class StockData extends StockDatabaseTable {
 
     public static final String ACTION_NONE = "";
@@ -772,8 +774,22 @@ public class StockData extends StockDatabaseTable {
 		mIndexEnd = index;
 	}
 
-	String getMapKey() {
-		return getDate() + " " + getTime();
+	public Calendar getCalendar() {
+		Calendar result = Calendar.getInstance();
+
+		if (TextUtils.isEmpty(getDate())) {
+			return result;
+		}
+
+		if (TextUtils.isEmpty(getTime())) {
+			result = Utility.stringToCalendar(getDate(),
+					Utility.CALENDAR_DATE_FORMAT);
+		} else {
+			result = Utility.stringToCalendar(getDate() + " " + getTime(),
+					Utility.CALENDAR_DATE_TIME_FORMAT);
+		}
+
+		return result;
 	}
 
 	String getOHLCString() {

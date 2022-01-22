@@ -48,7 +48,7 @@ public class SinaFinance extends StockDataProvider {
 
 	public static final String SINA_FINANCE_HEAD_REFERER_KEY = "Referer";
 	public static final String SINA_FINANCE_HEAD_REFERER_VALUE = "http://vip.stock.finance.sina.com.cn/";
-	
+
 	public SinaFinance(Context context) {
 		super(context);
 	}

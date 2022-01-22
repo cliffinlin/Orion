@@ -165,14 +165,14 @@ public abstract class StockDataProvider extends StockAnalyzer {
     void downloadStock(Intent intent) {
         String se = "";
         String code = "";
-        Stock stock = null;
-        ArrayMap<String, Stock> stockArrayMap = new ArrayMap<String, Stock>();
-
-        loadStockArrayMap(stockArrayMap);
+        Stock stock = new Stock();
 
         se = intent.getStringExtra(Constants.EXTRA_STOCK_SE);
         code = intent.getStringExtra(Constants.EXTRA_STOCK_CODE);
-        stock = stockArrayMap.get(se + code);
+        stock.setSE(se);
+        stock.setCode(code);
+
+        mStockDatabaseManager.getStock(stock);
 
         download(stock);
     }
@@ -868,13 +868,21 @@ public abstract class StockDataProvider extends StockAnalyzer {
             return result;
         }
 
-        void setupIndex(Stock index) {
+        void setupIndex(Stock index, ArrayMap<String, Stock> stockArrayMap) {
             ArrayList<IndexComponent> indexComponentList = new ArrayList<>();
+            ArrayList<StockData> indexStockDataList = null;
+            ArrayList<StockData> stockDataList = null;
+            Stock stock = null;
+            Stock baseStock = null;
             String selection = "";
             double totalPrice = 0;
             double totalNet = 0;
 
             if (index == null) {
+                return;
+            }
+
+            if ((stockArrayMap == null) || (stockArrayMap.size() == 0)) {
                 return;
             }
 
@@ -884,6 +892,142 @@ public abstract class StockDataProvider extends StockAnalyzer {
                 if (indexComponentList.size() == 0) {
                     return;
                 }
+
+                for (String period : Settings.KEY_PERIODS) {
+                    if (Preferences.getBoolean(mContext, period, false)) {
+                        int maxSize = 0;
+                        Calendar begin = null;
+                        indexStockDataList = index.getStockDataList(period);
+
+                        for (IndexComponent indexComponent : indexComponentList) {
+                            if (stockArrayMap.containsKey(indexComponent.getSE() + indexComponent.getCode())) {
+                                stock = stockArrayMap.get(indexComponent.getSE() + indexComponent.getCode());
+                                stockDataList = stock.getStockDataList(period);
+                                if ((stockDataList == null) || (stockDataList.size() == 0)) {
+                                    continue;
+                                }
+
+                                if (stockDataList.size() > maxSize) {
+                                    maxSize = stockDataList.size();
+                                }
+                            }
+                        }
+
+                        for (IndexComponent indexComponent : indexComponentList) {
+                            if (stockArrayMap.containsKey(indexComponent.getSE() + indexComponent.getCode())) {
+                                stock = stockArrayMap.get(indexComponent.getSE() + indexComponent.getCode());
+                                stockDataList = stock.getStockDataList(period);
+                                if ((stockDataList == null) || (stockDataList.size() == 0)) {
+                                    continue;
+                                }
+
+                                if (stockDataList.size() == maxSize) {
+                                    if (begin == null) {
+                                        begin = stockDataList.get(0).getCalendar();
+                                        baseStock = stock;
+                                    } else {
+                                        if (stockDataList.get(0).getCalendar().after(begin)) {
+                                            begin = stockDataList.get(0).getCalendar();
+                                            baseStock = stock;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        indexStockDataList.clear();
+                        stockDataList = baseStock.getStockDataList(period);
+                        for (StockData stockData : stockDataList) {
+                            StockData indexStockData = new StockData(period);
+
+                            indexStockData.setStockId(index.getId());
+
+                            indexStockData.setDate(stockData.getDate());
+                            indexStockData.setTime(stockData.getTime());
+                            indexStockData.setOpen(stockData.getOpen() / indexComponentList.size());
+                            indexStockData.setClose(stockData.getClose() / indexComponentList.size());
+                            indexStockData.setHigh(stockData.getHigh() / indexComponentList.size());
+                            indexStockData.setLow(stockData.getLow() / indexComponentList.size());
+
+                            indexStockData.setVertexHigh(indexStockData.getHigh());
+                            indexStockData.setVertexLow(indexStockData.getLow());
+
+                            indexStockDataList.add(indexStockData);
+                        }
+
+                        for (IndexComponent indexComponent : indexComponentList) {
+                            if (stockArrayMap.containsKey(indexComponent.getSE() + indexComponent.getCode())) {
+                                stock = stockArrayMap.get(indexComponent.getSE() + indexComponent.getCode());
+                                stockDataList = stock.getStockDataList(period);
+                                if ((stockDataList == null) || (stockDataList.size() == 0)) {
+                                    continue;
+                                }
+
+                                if (stock == baseStock) {
+                                    continue;
+                                }
+
+                                StockData stockDataLastMatched = null;
+                                int lastMatched = 0;
+                                for (int i = 0; i < indexStockDataList.size(); i++) {
+                                    StockData indexStockData = indexStockDataList.get(i);
+                                    Calendar indexStockDataCalendar = indexStockDataList.get(i).getCalendar();
+                                    for (int j = lastMatched; j < stockDataList.size(); j++) {
+                                        StockData stockData = stockDataList.get(j);
+                                        Calendar stockDataCalendar = stockDataList.get(j).getCalendar();
+                                        if (stockDataCalendar.before(indexStockDataCalendar)) {
+                                            continue;
+                                        } else if (stockDataCalendar.equals(indexStockDataCalendar)) {
+                                            lastMatched = j;
+                                            stockDataLastMatched = stockData;
+                                            indexStockData.setOpen(indexStockData.getOpen() + stockData.getOpen() / indexComponentList.size());
+                                            indexStockData.setClose(indexStockData.getClose() + stockData.getClose() / indexComponentList.size());
+                                            indexStockData.setHigh(indexStockData.getHigh() + stockData.getHigh() / indexComponentList.size());
+                                            indexStockData.setLow(indexStockData.getLow() + stockData.getLow() / indexComponentList.size());
+
+                                            indexStockData.setVertexHigh(indexStockData.getHigh());
+                                            indexStockData.setVertexLow(indexStockData.getLow());
+                                            break;
+                                        } else if (stockDataCalendar.after(indexStockDataCalendar)) {
+                                            if (stockDataLastMatched != null) {
+                                                indexStockData.setOpen(indexStockData.getOpen() + stockDataLastMatched.getOpen() / indexComponentList.size());
+                                                indexStockData.setClose(indexStockData.getClose() + stockDataLastMatched.getClose() / indexComponentList.size());
+                                                indexStockData.setHigh(indexStockData.getHigh() + stockDataLastMatched.getHigh() / indexComponentList.size());
+                                                indexStockData.setLow(indexStockData.getLow() + stockDataLastMatched.getLow() / indexComponentList.size());
+
+                                                indexStockData.setVertexHigh(indexStockData.getHigh());
+                                                indexStockData.setVertexLow(indexStockData.getLow());
+                                            }
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        updateDatabase(index, period, indexStockDataList);
+                    }
+                }
+
+                for (IndexComponent indexComponent : indexComponentList) {
+                    if (stockArrayMap.containsKey(indexComponent.getSE() + indexComponent.getCode())) {
+                        stock = stockArrayMap.get(indexComponent.getSE() + indexComponent.getCode());
+                        if ((stockDataList == null) || (stockDataList.size() == 0)) {
+                            continue;
+                        }
+
+                        totalPrice += stock.getPrice();
+                        totalNet += stock.getNet();
+                    }
+                }
+
+                index.setPrice(Utility.Round(totalPrice / indexComponentList.size(), Constants.DOUBLE_FIXED_DECIMAL));
+                index.setNet(Utility.Round(totalNet / indexComponentList.size(), Constants.DOUBLE_FIXED_DECIMAL));
+
+                index.setModified(Utility.getCurrentDateTimeString());
+                mStockDatabaseManager.updateStock(index,
+                        index.getContentValues());
+/*
 
                 for (IndexComponent indexComponent : indexComponentList) {
                     Stock stock = new Stock();
@@ -959,6 +1103,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
                 index.setModified(Utility.getCurrentDateTimeString());
                 mStockDatabaseManager.updateStock(index,
                         index.getContentValues());
+                        */
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -1051,7 +1196,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
                     Stock.INVALID_ID);
 
             for (Stock index : indexArrayMap.values()) {
-                setupIndex(index);
+                setupIndex(index, stockArrayMap);
 
                 for (String period : Settings.KEY_PERIODS) {
                     if (Preferences.getBoolean(mContext, period, false)) {
