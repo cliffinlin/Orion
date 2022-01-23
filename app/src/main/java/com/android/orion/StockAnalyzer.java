@@ -1221,15 +1221,19 @@ public class StockAnalyzer {
 						denominatorArrayList.add(denominator);
 					}
 
-					mStockDatabaseManager.getStockDealListToSell(stock, stockDealList);
-					double totalProfit = 0;
-					for (StockDeal stockDeal : stockDealList) {
-						totalProfit += stockDeal.getProfit();
-					}
-
-					if (totalProfit > 0) {
+					if (Stock.CLASS_INDEX.equals(stock.getClases())) {
 						actionString.append(period + " " + action + " ");
-						actionString.append(" " + (int)totalProfit + " ");
+					} else {
+						mStockDatabaseManager.getStockDealListToSell(stock, stockDealList);
+						double totalProfit = 0;
+						for (StockDeal stockDeal : stockDealList) {
+							totalProfit += stockDeal.getProfit();
+						}
+
+						if (totalProfit > 0) {
+							actionString.append(period + " " + action + " ");
+							actionString.append(" " + (int)totalProfit + " ");
+						}
 					}
 				}
 			}
