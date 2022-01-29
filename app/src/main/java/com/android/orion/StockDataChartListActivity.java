@@ -236,6 +236,13 @@ public class StockDataChartListActivity extends BaseActivity implements
 			startActivity(intent);
 			return true;
 
+		case R.id.action_trends:
+			mIntent = new Intent(this, StockTrendsListActivity.class);
+			mIntent.setAction(StockTrendsListActivity.ACTION_STOCK_TRENDS_LIST);
+			mIntent.putExtra(Constants.EXTRA_STOCK_ID, mStock.getId());
+			startActivity(mIntent);
+			return true;
+
 		default:
 			return super.onOptionsItemSelected(item);
 		}

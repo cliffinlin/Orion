@@ -463,7 +463,13 @@ public class StockTrendsListActivity extends ListActivity implements
 
 		switch (id) {
 		case LOADER_ID_STOCK_TRENDS_LIST:
-			selection = DatabaseContract.COLUMN_ID + " = " + Stock.INVALID_ID;
+			if (ACTION_STOCK_TRENDS_LIST.equals(mIntent.getAction())) {
+				long stockId = getIntent().getLongExtra(Constants.EXTRA_STOCK_ID,
+						Stock.INVALID_ID);
+				selection = DatabaseContract.COLUMN_ID + " = " + stockId;
+			} else {
+				selection = DatabaseContract.COLUMN_ID + " != " + Stock.INVALID_ID;
+			}
 			loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
 					DatabaseContract.Stock.PROJECTION_ALL, selection, null,
 					mSortOrder);

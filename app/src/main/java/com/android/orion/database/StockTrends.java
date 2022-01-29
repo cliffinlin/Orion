@@ -169,7 +169,8 @@ public class StockTrends extends DatabaseTable {
 		setActionQuarter(stock.getActionQuarter());
 		setActionYear(stock.getActionYear());
 		setOperate(stock.getOperate());
-
+		setCreated(stock.getCreated());
+		setModified(stock.getModified());
 	}
 
 	public long getStockId() {
