@@ -66,6 +66,8 @@ public class StockListEditActivity extends DatabaseActivity implements
 		return null;
 	}
 
+	boolean mNeedDownload = false;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -107,6 +109,15 @@ public class StockListEditActivity extends DatabaseActivity implements
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+
+		if (mNeedDownload) {
+			mOrionService.download();
 		}
 	}
 
@@ -382,7 +393,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 					} else {
 					    updateStockFlag(stockId, Stock.FLAG_NONE);
 					}
-					mOrionService.download();
+					mNeedDownload = true;
 					break;
 
 				case R.id.delete:

@@ -56,7 +56,7 @@ public class StorageActivity extends DatabaseActivity {
 
 			switch (msg.what) {
 			case MESSAGE_REFRESH:
-				onMessageRefresh();
+				mOrionService.download();
 				break;
 
 			case MESSAGE_SAVE_TO_FILE:
