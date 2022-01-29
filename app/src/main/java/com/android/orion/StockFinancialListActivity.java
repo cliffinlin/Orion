@@ -34,7 +34,7 @@ public class StockFinancialListActivity extends ListActivity implements
     public static final int EXECUTE_STOCK_FINANCIAL_LOAD = 1;
 
     public static final int REQUEST_CODE_STOCK_INSERT = 0;
-    public static final int REQUEST_CODE_STOCK_FILTER = 1;
+    public static final int REQUEST_CODE_STOCK_TRENDS = 1;
 
     static final int mHeaderTextDefaultColor = Color.BLACK;
     static final int mHeaderTextHighlightColor = Color.RED;
@@ -154,9 +154,9 @@ public class StockFinancialListActivity extends ListActivity implements
                 startActivity(new Intent(this, ServiceSettingActivity.class));
                 return true;
 
-            case R.id.action_filter:
-                startActivityForResult(new Intent(this, StockFilterActivity.class),
-                        REQUEST_CODE_STOCK_FILTER);
+            case R.id.action_trends:
+                startActivityForResult(new Intent(this, StockTrendsListActivity.class),
+                        REQUEST_CODE_STOCK_TRENDS);
                 return true;
 
             case R.id.action_load:
@@ -189,11 +189,11 @@ public class StockFinancialListActivity extends ListActivity implements
                     }
                     break;
 
-                case REQUEST_CODE_STOCK_FILTER:
-                    Bundle bundle = intent.getExtras();
-                    if (bundle != null) {
-                        mStockFilter.get(bundle);
-                    }
+                case REQUEST_CODE_STOCK_TRENDS:
+//                    Bundle bundle = intent.getExtras();
+//                    if (bundle != null) {
+//                        mStockFilter.get(bundle);
+//                    }
                     break;
 
                 default:

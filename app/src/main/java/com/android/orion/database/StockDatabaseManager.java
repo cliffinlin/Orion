@@ -2159,4 +2159,242 @@ public class StockDatabaseManager extends DatabaseManager {
 	public String getIndexComponentOrder() {
 		return DatabaseContract.IndexComponent.SORT_ORDER_DEFAULT;
 	}
+
+	public Uri insertStockTrends(StockTrends stockTrends) {
+		Uri uri = null;
+
+		if ((stockTrends == null) || (mContentResolver == null)) {
+			return uri;
+		}
+
+		uri = mContentResolver.insert(DatabaseContract.StockTrends.CONTENT_URI,
+				stockTrends.getContentValues());
+
+		return uri;
+	}
+
+	public int bulkInsertStockTrends(ContentValues[] contentValuesArray) {
+		int result = 0;
+
+		if ((contentValuesArray.length == 0) || (mContentResolver == null)) {
+			return result;
+		}
+
+		result = mContentResolver.bulkInsert(DatabaseContract.StockTrends.CONTENT_URI,
+				contentValuesArray);
+
+		return result;
+	}
+
+	public Cursor queryStockTrends(String selection, String[] selectionArgs,
+									  String sortOrder) {
+		Cursor cursor = null;
+
+		if (mContentResolver == null) {
+			return cursor;
+		}
+
+		cursor = mContentResolver.query(DatabaseContract.StockTrends.CONTENT_URI,
+				DatabaseContract.StockTrends.PROJECTION_ALL, selection, selectionArgs,
+				sortOrder);
+
+		return cursor;
+	}
+
+	public Cursor queryStockTrends(StockTrends stockTrends) {
+		Cursor cursor = null;
+
+		if ((stockTrends == null) || (stockTrends == null)) {
+			return cursor;
+		}
+
+		String selection = getStockTrendsSelection(stockTrends);
+		String sortOrder = getStockTrendsOrder();
+
+		cursor = mContentResolver
+				.query(DatabaseContract.StockTrends.CONTENT_URI,
+						DatabaseContract.StockTrends.PROJECTION_ALL, selection, null,
+						sortOrder);
+
+		return cursor;
+	}
+
+	public void getStockTrends(StockTrends stockTrends) {
+		Cursor cursor = null;
+
+		if ((stockTrends == null) || (mContentResolver == null)) {
+			return;
+		}
+
+		try {
+			String selection = getStockTrendsSelection(stockTrends);
+			String sortOrder = getStockTrendsOrder();
+
+			cursor = mContentResolver.query(DatabaseContract.StockTrends.CONTENT_URI,
+					DatabaseContract.StockTrends.PROJECTION_ALL, selection, null,
+					sortOrder);
+
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				cursor.moveToNext();
+				stockTrends.set(cursor);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
+	public void getStockTrends(String stockCode, StockTrends stockTrends) {
+		Cursor cursor = null;
+
+		if ((stockTrends == null) || (mContentResolver == null)) {
+			return;
+		}
+
+		try {
+			String selection = getStockTrendsSelection(stockCode);
+			String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
+
+			cursor = mContentResolver.query(DatabaseContract.StockTrends.CONTENT_URI,
+					DatabaseContract.StockTrends.PROJECTION_ALL, selection, null,
+					sortOrder);
+
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				cursor.moveToNext();
+				stockTrends.set(cursor);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
+	public void getStockTrendsList(ArrayList<StockTrends> stockTrendsList, String selection, String sortOrder) {
+		Cursor cursor = null;
+
+		if (stockTrendsList == null) {
+			return;
+		}
+
+		stockTrendsList.clear();
+
+		try {
+			cursor = queryStockTrends(selection, null, sortOrder);
+
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				while (cursor.moveToNext()) {
+					StockTrends stockTrends = new StockTrends();
+					stockTrends.set(cursor);
+					stockTrendsList.add(stockTrends);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
+	public boolean isStockTrendsExist(StockTrends stockTrends) {
+		boolean result = false;
+		Cursor cursor = null;
+
+		if (stockTrends == null) {
+			return result;
+		}
+
+		try {
+			cursor = queryStockTrends(stockTrends);
+
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				cursor.moveToNext();
+				stockTrends.setCreated(cursor);
+				result = true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+
+		return result;
+	}
+
+	public int updateStockTrends(StockTrends stockTrends, ContentValues contentValues) {
+		int result = 0;
+
+		if ((stockTrends == null) || (mContentResolver == null)) {
+			return result;
+		}
+
+		String where = getStockTrendsSelection(stockTrends);
+
+		result = mContentResolver.update(DatabaseContract.StockTrends.CONTENT_URI,
+				contentValues, where, null);
+
+		return result;
+	}
+
+	public int deleteStockTrends() {
+		int result = 0;
+
+		if (mContentResolver == null) {
+			return result;
+		}
+
+		result = mContentResolver.delete(DatabaseContract.StockTrends.CONTENT_URI,
+				null, null);
+
+		return result;
+	}
+
+	public int deleteStockTrends(StockTrends stockTrends) {
+		int result = 0;
+
+		if ((stockTrends == null) || (mContentResolver == null)) {
+			return result;
+		}
+
+		String where = getStockTrendsSelection(stockTrends);
+
+		result = mContentResolver.delete(DatabaseContract.StockTrends.CONTENT_URI,
+				where, null);
+
+		return result;
+	}
+
+	public int deleteStockTrends(String indexCode, String stockCode) {
+		int result = 0;
+
+		if (mContentResolver == null) {
+			return result;
+		}
+
+		String where = getStockTrendsSelection(indexCode, stockCode);
+
+		result = mContentResolver.delete(DatabaseContract.StockTrends.CONTENT_URI,
+				where, null);
+
+		return result;
+	}
+
+	public String getStockTrendsSelection(StockTrends stockTrends) {
+		return getStockTrendsSelection(stockTrends.getCode());
+	}
+
+	public String getStockTrendsSelection(String stockCode) {
+		return DatabaseContract.COLUMN_CODE + " = " + stockCode;
+	}
+
+	public String getStockTrendsSelection(String indexCode, String stockCode) {
+		return DatabaseContract.COLUMN_INDEX_CODE + " = " + indexCode
+				+ " AND "
+				+ DatabaseContract.COLUMN_CODE + " = " + stockCode;
+	}
+
+	public String getStockTrendsOrder() {
+		return DatabaseContract.StockTrends.SORT_ORDER_DEFAULT;
+	}
 }

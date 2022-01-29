@@ -23,19 +23,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.orion.database.DatabaseContract;
+import com.android.orion.database.StockTrends;
 import com.android.orion.database.Stock;
 import com.android.orion.utility.Preferences;
 
-public class StockListActivity extends ListActivity implements
+import java.util.ArrayList;
+
+public class StockTrendsListActivity extends ListActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
 		OnItemLongClickListener, OnClickListener {
 
 	public static final String ACTION_STOCK_ID = "orion.intent.action.ACTION_STOCK_ID";
+	public static final String ACTION_STOCK_TRENDS_LIST = "orion.intent.action.ACTION_STOCK_TRENDS_LIST";
 
-	public static final int LOADER_ID_STOCK_LIST = 0;
+	public static final int LOADER_ID_STOCK_TRENDS_LIST = 0;
 
-	public static final int REQUEST_CODE_STOCK_INSERT = 0;
-	public static final int REQUEST_CODE_STOCK_TRENDS = 1;
+	public static final int REQUEST_CODE_STOCK_TRENDS_INSERT = 0;
+    public static final int REQUEST_CODE_STOCK_TRENDS_SELECT = 1;
 
 	static final int mHeaderTextDefaultColor = Color.BLACK;
 	static final int mHeaderTextHighlightColor = Color.RED;
@@ -94,8 +98,6 @@ public class StockListActivity extends ListActivity implements
 
 		setContentView(R.layout.activity_stock_list);
 
-		mStockFilter.read();
-
 		mSortOrder = Preferences.getString(mContext, Settings.KEY_SORT_ORDER_MARKET_LIST,
 				mSortOrderDefault);
 
@@ -103,7 +105,7 @@ public class StockListActivity extends ListActivity implements
 
 		initListView();
 
-		mLoaderManager.initLoader(LOADER_ID_STOCK_LIST, null, this);
+		mLoaderManager.initLoader(LOADER_ID_STOCK_TRENDS_LIST, null, this);
 
 		if (!Preferences.getBoolean(mContext,
 				Settings.KEY_NOTIFICATION_MESSAGE, false)) {
@@ -129,13 +131,17 @@ public class StockListActivity extends ListActivity implements
 			return true;
 
 		case R.id.action_new:
-			Intent intent = new Intent(this, StockActivity.class);
-			intent.setAction(StockActivity.ACTION_FAVORITE_STOCK_INSERT);
-			startActivityForResult(intent, REQUEST_CODE_STOCK_INSERT);
+//			Intent intentNew = new Intent(this, StockActivity.class);
+//			intentNew.setAction(StockActivity.ACTION_STOCK_TRENDS_INSERT);
+//			intentNew.putExtra(Constants.EXTRA_INDEX_CODE, mIntent.getStringExtra(Constants.EXTRA_INDEX_CODE));
+//			startActivityForResult(intentNew, REQUEST_CODE_STOCK_TRENDS_INSERT);
 			return true;
 
 		case R.id.action_search:
-			startActivity(new Intent(this, StockSearchActivity.class));
+//			Intent intentSearch = new Intent(this, StockSearchActivity.class);
+//			intentSearch.setAction(StockListEditActivity.ACTION_STOCK_TRENDS_SELECT);
+//			intentSearch.putExtra(Constants.EXTRA_INDEX_CODE, mIntent.getStringExtra(Constants.EXTRA_INDEX_CODE));
+//			startActivityForResult(intentSearch, REQUEST_CODE_STOCK_TRENDS_SELECT);
 			return true;
 
 		case R.id.action_refresh:
@@ -147,8 +153,6 @@ public class StockListActivity extends ListActivity implements
 			return true;
 
 		case R.id.action_trends:
-			startActivityForResult(new Intent(this, StockTrendsListActivity.class),
-					REQUEST_CODE_STOCK_TRENDS);
 			return true;
 
 		case R.id.action_load:
@@ -175,17 +179,11 @@ public class StockListActivity extends ListActivity implements
 
 		if (resultCode == RESULT_OK) {
 			switch (requestCode) {
-			case REQUEST_CODE_STOCK_INSERT:
+			case REQUEST_CODE_STOCK_TRENDS_INSERT:
+			case REQUEST_CODE_STOCK_TRENDS_SELECT:
 				if (mOrionService != null) {
 					mOrionService.download(mStock);
 				}
-				break;
-
-			case REQUEST_CODE_STOCK_TRENDS:
-//				Bundle bundle = intent.getExtras();
-//				if (bundle != null) {
-//					mStockFilter.get(bundle);
-//				}
 				break;
 
 			default:
@@ -438,7 +436,7 @@ public class StockListActivity extends ListActivity implements
 	}
 
 	void restartLoader() {
-		mLoaderManager.restartLoader(LOADER_ID_STOCK_LIST, null, this);
+		mLoaderManager.restartLoader(LOADER_ID_STOCK_TRENDS_LIST, null, this);
 	}
 
 	@Override
@@ -464,14 +462,13 @@ public class StockListActivity extends ListActivity implements
 		CursorLoader loader = null;
 
 		switch (id) {
-		case LOADER_ID_STOCK_LIST:
-			selection += mStockFilter.getSelection();
-
+		case LOADER_ID_STOCK_TRENDS_LIST:
+			selection = DatabaseContract.COLUMN_ID + " = " + Stock.INVALID_ID;
 			loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
 					DatabaseContract.Stock.PROJECTION_ALL, selection, null,
 					mSortOrder);
 
-			mStockList.clear();
+//			mStockList.clear();
 			break;
 
 		default:
@@ -488,18 +485,18 @@ public class StockListActivity extends ListActivity implements
 		}
 
 		switch (loader.getId()) {
-		case LOADER_ID_STOCK_LIST:
+		case LOADER_ID_STOCK_TRENDS_LIST:
 			mLeftAdapter.swapCursor(cursor);
 			mRightAdapter.swapCursor(cursor);
-
-			if ((cursor != null) && cursor.getCount() > 0) {
-				cursor.moveToPosition(-1);
-				while (cursor.moveToNext()) {
-					Stock stock = new Stock();
-					stock.set(cursor);
-					mStockList.add(stock);
-				}
-			}
+//
+//			if ((cursor != null) && cursor.getCount() > 0) {
+//				cursor.moveToPosition(-1);
+//				while (cursor.moveToNext()) {
+//					Stock stock = new Stock();
+//					stock.set(cursor);
+//					mStockList.add(stock);
+//				}
+//			}
 			break;
 
 		default:
@@ -515,7 +512,7 @@ public class StockListActivity extends ListActivity implements
 		mLeftAdapter.swapCursor(null);
 		mRightAdapter.swapCursor(null);
 
-		mStockList.clear();
+//		mStockList.clear();
 	}
 
 	@Override
@@ -537,20 +534,13 @@ public class StockListActivity extends ListActivity implements
 				mStock.setId(id);
 				mStockDatabaseManager.getStockById(mStock);
 
-				if (Stock.CLASS_INDEX.equals(mStock.getClases())) {
-					Intent intent = new Intent(mContext,
-							IndexComponentListActivity.class);
-					intent.putExtra(Constants.EXTRA_INDEX_CODE, String.valueOf(mStock.getCode()));
-					startActivity(intent);
-				} else {
-					Intent intent = new Intent(mContext,
-							StockDealListActivity.class);
-					Bundle bundle = new Bundle();
-					bundle.putString(Constants.EXTRA_STOCK_SE, mStock.getSE());
-					bundle.putString(Constants.EXTRA_STOCK_CODE, mStock.getCode());
-					intent.putExtras(bundle);
-					startActivity(intent);
-				}
+				Intent intent = new Intent(mContext,
+						StockDealListActivity.class);
+				Bundle bundle = new Bundle();
+				bundle.putString(Constants.EXTRA_STOCK_SE, mStock.getSE());
+				bundle.putString(Constants.EXTRA_STOCK_CODE, mStock.getCode());
+				intent.putExtras(bundle);
+				startActivity(intent);
 			} else {
 				Intent intent = new Intent(this,
 						StockDataChartListActivity.class);
@@ -565,9 +555,10 @@ public class StockListActivity extends ListActivity implements
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
 			int position, long id) {
-		Intent intent = new Intent(this, StockListEditActivity.class);
-		intent.putExtra(Constants.EXTRA_STOCK_LIST_SORT_ORDER, mSortOrder);
-		startActivity(intent);
+//        Intent intentSearch = new Intent(this, StockSearchActivity.class);
+//        intentSearch.setAction(StockListEditActivity.ACTION_STOCK_TRENDS_SELECT);
+//        intentSearch.putExtra(Constants.EXTRA_INDEX_CODE, mIntent.getStringExtra(Constants.EXTRA_INDEX_CODE));
+//        startActivityForResult(intentSearch, REQUEST_CODE_STOCK_TRENDS_SELECT);
 		return true;
 	}
 

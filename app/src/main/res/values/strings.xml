@@ -21,6 +21,7 @@
     <string name="action_save">Save</string>
     <string name="action_settings">Settings</string>
     <string name="action_filter">Filter</string>
+    <string name="action_trends">Trends</string>
     <string name="action_download">Download</string>
     <string name="action_delete_all">Delete All</string>
     <string name="action_to">To</string>
@@ -172,6 +173,7 @@
     <string name="stock_edit">Stock Edit</string>
     <string name="stock_list">Stock List</string>
     <string name="component_list">Component List</string>
+    <string name="trends_list">Trends List</string>
     <string name="stock_operate">Operate</string>
     <string name="stock_quota">Stock Quota</string>
     <string name="stock_se">Stock SE</string>

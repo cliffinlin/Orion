@@ -146,6 +146,32 @@ public class StockTrends extends DatabaseTable {
 		setOperate(cursor);
 	}
 
+	public void set(Stock stock) {
+		if (stock == null) {
+			return;
+		}
+
+		setStockId(stock.getId());
+		setClasses(stock.getClases());
+		setSE(stock.getSE());
+		setCode(stock.getCode());
+		setName(stock.getName());
+		setPrice(stock.getPrice());
+		setNet(stock.getNet());
+		setActionMin1(stock.getActionMin1());
+		setActionMin5(stock.getActionMin5());
+		setActionMin15(stock.getActionMin15());
+		setActionMin30(stock.getActionMin30());
+		setActionMin60(stock.getActionMin60());
+		setActionDay(stock.getActionDay());
+		setActionWeek(stock.getActionWeek());
+		setActionMonth(stock.getActionMonth());
+		setActionQuarter(stock.getActionQuarter());
+		setActionYear(stock.getActionYear());
+		setOperate(stock.getOperate());
+
+	}
+
 	public long getStockId() {
 		return mStockId;
 	}

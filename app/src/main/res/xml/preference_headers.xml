@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <preference-headers xmlns:android="http://schemas.android.com/apk/res/android" >
-    <header
+
+    <header
         android:icon="@drawable/ic_service"
         android:title="@string/settings" >
         <intent
@@ -30,6 +31,13 @@
     </header>
     <header
         android:icon="@drawable/ic_list"
+        android:title="@string/action_trends" >
+        <intent
+            android:targetClass="com.android.orion.StockTrendsListActivity"
+            android:targetPackage="com.android.orion" />
+    </header>
+    <header
+        android:icon="@drawable/ic_list"
         android:title="@string/ipo" >
         <intent
             android:targetClass="com.android.orion.StockIPOListActivity"
@@ -40,13 +48,6 @@
         android:title="@string/stock_statistics" >
         <intent
             android:targetClass="com.android.orion.StockStatisticsChartListActivity"
-            android:targetPackage="com.android.orion" />
-    </header>
-    <header
-        android:icon="@drawable/ic_list"
-        android:title="@string/filter" >
-        <intent
-            android:targetClass="com.android.orion.StockFilterActivity"
             android:targetPackage="com.android.orion" />
     </header>
     <header

@@ -28,6 +28,7 @@ import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockDatabaseManager;
 import com.android.orion.database.StockDeal;
+import com.android.orion.database.StockTrends;
 import com.android.orion.database.TotalShare;
 import com.android.orion.indicator.MACD;
 import com.android.orion.utility.Preferences;
@@ -1031,6 +1032,8 @@ public class StockAnalyzer {
 	}
 
 	void updateDatabase(Stock stock) {
+		StockTrends stockTrends = new StockTrends();
+
 		if (mStockDatabaseManager == null) {
 			Log.d(TAG, "updateDatabase return " + " mStockDatabaseManager = "
 					+ mStockDatabaseManager);
@@ -1040,6 +1043,9 @@ public class StockAnalyzer {
 		try {
 			mStockDatabaseManager.updateStock(stock,
 					stock.getContentValuesAnalyze(""));
+
+			stockTrends.set(stock);
+			mStockDatabaseManager.insertStockTrends(stockTrends);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
