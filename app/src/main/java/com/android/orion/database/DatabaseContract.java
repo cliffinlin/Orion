@@ -301,8 +301,8 @@ public final class DatabaseContract {
                 + TABLE_NAME;
     }
 
-    public static abstract class FinancialData implements BaseColumns {
-        public static final String TABLE_NAME = "financial_data";
+    public static abstract class StockFinancial implements BaseColumns {
+        public static final String TABLE_NAME = "stock_financial";
 
         public static final Uri CONTENT_URI = Uri.withAppendedPath(
                 DatabaseContract.CONTENT_URI, TABLE_NAME);

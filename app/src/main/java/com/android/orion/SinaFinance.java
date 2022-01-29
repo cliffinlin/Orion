@@ -19,7 +19,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.android.orion.database.DatabaseContract;
-import com.android.orion.database.FinancialData;
+import com.android.orion.database.StockFinancial;
 import com.android.orion.database.IPO;
 import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
@@ -229,7 +229,7 @@ public class SinaFinance extends StockDataProvider {
 	}
 
 	@Override
-	String getFinancialDataURLString(Stock stock) {
+	String getStockFinancialURLString(Stock stock) {
 		String urlString = "";
 		if (stock == null) {
 			return urlString;
@@ -800,7 +800,7 @@ public class SinaFinance extends StockDataProvider {
 	}
 
 	@Override
-	void handleResponseFinancialData(Stock stock, FinancialData financialData,
+	void handleResponseStockFinancial(Stock stock, StockFinancial stockFinancial,
 			String response) {
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
@@ -811,13 +811,13 @@ public class SinaFinance extends StockDataProvider {
 		List<ContentValues> contentValuesList = new ArrayList<ContentValues>();
 
 		if ((stock == null) || TextUtils.isEmpty(response)) {
-			Log.d(TAG, "handleResponseFinancialData return " + " stock = "
+			Log.d(TAG, "handleResponseStockFinancial return " + " stock = "
 					+ stock + " response = " + response);
 			return;
 		}
 
-		if (TextUtils.isEmpty(financialData.getCreated())) {
-			mStockDatabaseManager.deleteFinancialData(financialData
+		if (TextUtils.isEmpty(stockFinancial.getCreated())) {
+			mStockDatabaseManager.deleteStockFinancial(stockFinancial
 					.getStockId());
 			bulkInsert = true;
 		}
@@ -829,55 +829,55 @@ public class SinaFinance extends StockDataProvider {
 
 			Document doc = Jsoup.parse(response);
 			if (doc == null) {
-				Log.d(TAG, "handleResponseFinancialData return " + " doc = "
+				Log.d(TAG, "handleResponseStockFinancial return " + " doc = "
 						+ doc);
 				return;
 			}
 
 			Elements tableElements = doc.select("table#FundHoldSharesTable");
 			if (tableElements == null) {
-				Log.d(TAG, "handleResponseFinancialData return "
+				Log.d(TAG, "handleResponseStockFinancial return "
 						+ " tableElements = " + tableElements);
 				return;
 			}
 
 			Elements tbodyElements = tableElements.select("tbody");
 			if (tbodyElements == null) {
-				Log.d(TAG, "handleResponseFinancialData return "
+				Log.d(TAG, "handleResponseStockFinancial return "
 						+ " tbodyElements = " + tbodyElements);
 				return;
 			}
 
 			for (Element tbodyElement : tbodyElements) {
 				if (tbodyElement == null) {
-					Log.d(TAG, "handleResponseFinancialData return "
+					Log.d(TAG, "handleResponseStockFinancial return "
 							+ " tbodyElement = " + tbodyElement);
 					return;
 				}
 
 				Elements trElements = tbodyElement.select("tr");
 				if (trElements == null) {
-					Log.d(TAG, "handleResponseFinancialData return "
+					Log.d(TAG, "handleResponseStockFinancial return "
 							+ " trElements = " + trElements);
 					return;
 				}
 
 				for (Element trElement : trElements) {
 					if (trElement == null) {
-						// Log.d(TAG, "handleResponseFinancialData continue "
+						// Log.d(TAG, "handleResponseStockFinancial continue "
 						// + " trElement = " + trElement);
 						continue;
 					}
 
 					Elements tdElements = trElement.select("td");
 					if (tdElements == null) {
-						// Log.d(TAG, "handleResponseFinancialData continue "
+						// Log.d(TAG, "handleResponseStockFinancial continue "
 						// + " tdElements = " + tdElements);
 						continue;
 					}
 
 					if (tdElements.size() < 2) {
-						// Log.d(TAG, "handleResponseFinancialData continue "
+						// Log.d(TAG, "handleResponseStockFinancial continue "
 						// + " tdElements.size() = " + tdElements.size());
 						continue;
 					}
@@ -891,58 +891,58 @@ public class SinaFinance extends StockDataProvider {
 							valueString = valueString.replace(",", "");
 
 							if (keyString.equals(mContext.getResources().getString(R.string.key_deadline_date))) {
-								financialData.setDate(valueString);
+								stockFinancial.setDate(valueString);
 							} else if (keyString.equals(mContext.getResources().getString(R.string.key_book_value_per_share_diluted))) {
-								financialData.setBookValuePerShare(Double
+								stockFinancial.setBookValuePerShare(Double
 										.valueOf(valueString));
 							} else if (keyString.equals(mContext.getResources().getString(R.string.key_cash_flow_per_share))) {
-								financialData.setCashFlowPerShare(Double
+								stockFinancial.setCashFlowPerShare(Double
 										.valueOf(valueString));
 							} else if (keyString.equals(mContext.getResources().getString(R.string.key_total_current_assets))) {
-								financialData.setTotalCurrentAssets(Double
+								stockFinancial.setTotalCurrentAssets(Double
 										.valueOf(valueString));
 							} else if (keyString.equals(mContext.getResources().getString(R.string.key_total_assets))) {
-								financialData.setTotalAssets(Double
+								stockFinancial.setTotalAssets(Double
 										.valueOf(valueString));
 							} else if (keyString.equals(mContext.getResources().getString(R.string.key_total_longTerm_liabilities))) {
-								financialData
+								stockFinancial
 										.setTotalLongTermLiabilities(Double
 												.valueOf(valueString));
 							} else if (keyString.equals(mContext.getResources().getString(R.string.key_main_business_income))) {
-								financialData.setMainBusinessIncome(Double
+								stockFinancial.setMainBusinessIncome(Double
 										.valueOf(valueString));
 							} else if (keyString.equals(mContext.getResources().getString(R.string.key_financial_expenses))) {
-								financialData.setFinancialExpenses(Double
+								stockFinancial.setFinancialExpenses(Double
 										.valueOf(valueString));
 							} else if (keyString.equals(mContext.getResources().getString(R.string.key_net_profit))) {
-								financialData.setNetProfit(Double
+								stockFinancial.setNetProfit(Double
 										.valueOf(valueString));
-								financialData.setupNetProfitPerShare(stock
+								stockFinancial.setupNetProfitPerShare(stock
 										.getTotalShare());
 
 								if (bulkInsert) {
-									financialData.setCreated(Utility
+									stockFinancial.setCreated(Utility
 											.getCurrentDateTimeString());
-									financialData.setModified(Utility
+									stockFinancial.setModified(Utility
 											.getCurrentDateTimeString());
-									contentValuesList.add(financialData
+									contentValuesList.add(stockFinancial
 											.getContentValues());
 								} else {
 									if (!mStockDatabaseManager
-											.isFinancialDataExist(financialData)) {
-										financialData.setCreated(Utility
+											.isStockFinancialExist(stockFinancial)) {
+										stockFinancial.setCreated(Utility
 												.getCurrentDateTimeString());
-										financialData.setModified(Utility
+										stockFinancial.setModified(Utility
 												.getCurrentDateTimeString());
 										mStockDatabaseManager
-												.insertFinancialData(financialData);
+												.insertStockFinancial(stockFinancial);
 									} else {
-										financialData.setModified(Utility
+										stockFinancial.setModified(Utility
 												.getCurrentDateTimeString());
 										mStockDatabaseManager
-												.updateFinancialData(
-														financialData,
-														financialData
+												.updateStockFinancial(
+														stockFinancial,
+														stockFinancial
 																.getContentValues());
 									}
 								}
@@ -959,7 +959,7 @@ public class SinaFinance extends StockDataProvider {
 					contentValuesArray = (ContentValues[]) contentValuesList
 							.toArray(contentValuesArray);
 					mStockDatabaseManager
-							.bulkInsertFinancialData(contentValuesArray);
+							.bulkInsertStockFinancial(contentValuesArray);
 				}
 			}
 		} catch (Exception e) {
@@ -967,7 +967,7 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		stopWatch.stop();
-		Log.d(TAG, "handleResponseFinancialData:" + stock.getName() + " "
+		Log.d(TAG, "handleResponseStockFinancial:" + stock.getName() + " "
 				+ stopWatch.getInterval() + "s");
 	}
 

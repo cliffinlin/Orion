@@ -91,7 +91,7 @@ public class StockFinancialListActivity extends ListActivity implements
             switch (msg.what) {
                 case MESSAGE_REFRESH:
                     if (mOrionService != null) {
-                        mStockDatabaseManager.deleteFinancialData();
+                        mStockDatabaseManager.deleteStockFinancial();
                         mStockDatabaseManager.deleteShareBonus();
                         mOrionService.download();
                         restartLoader();

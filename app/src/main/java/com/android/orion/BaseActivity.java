@@ -26,7 +26,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.android.orion.OrionService.OrionBinder;
-import com.android.orion.database.FinancialData;
+import com.android.orion.database.StockFinancial;
 import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
@@ -61,12 +61,12 @@ public class BaseActivity extends Activity {
 
 	Stock mStock = null;
 	StockData mStockData = null;
-	FinancialData mFinancialData = null;
+	StockFinancial mStockFinancial = null;
 
 	ArrayList<Stock> mStockList = null;
 	ArrayList<StockData> mStockDataList = null;
 	ArrayList<StockDeal> mStockDealList = null;
-	ArrayList<FinancialData> mFinancialDataList = null;
+	ArrayList<StockFinancial> mStockFinancialList = null;
 	ArrayList<ShareBonus> mShareBonusList = null;
 	ArrayList<TotalShare> mTotalShareList = null;
 
@@ -158,8 +158,8 @@ public class BaseActivity extends Activity {
 			mStockData = new StockData();
 		}
 
-		if (mFinancialData == null) {
-			mFinancialData = new FinancialData();
+		if (mStockFinancial == null) {
+			mStockFinancial = new StockFinancial();
 		}
 
 		if (mStockList == null) {
@@ -174,8 +174,8 @@ public class BaseActivity extends Activity {
 			mStockDealList = new ArrayList<StockDeal>();
 		}
 
-		if (mFinancialDataList == null) {
-			mFinancialDataList = new ArrayList<FinancialData>();
+		if (mStockFinancialList == null) {
+			mStockFinancialList = new ArrayList<StockFinancial>();
 		}
 
 		if (mShareBonusList == null) {

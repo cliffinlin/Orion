@@ -20,7 +20,7 @@ import android.widget.Toast;
 
 import com.android.orion.database.IndexComponent;
 import com.android.orion.database.DatabaseContract;
-import com.android.orion.database.FinancialData;
+import com.android.orion.database.StockFinancial;
 import com.android.orion.database.IPO;
 import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
@@ -66,10 +66,10 @@ public abstract class StockDataProvider extends StockAnalyzer {
     abstract void handleResponseStockDataRealTime(Stock stock,
                                                   StockData stockData, String response);
 
-    abstract String getFinancialDataURLString(Stock stock);
+    abstract String getStockFinancialURLString(Stock stock);
 
-    abstract void handleResponseFinancialData(Stock stock,
-                                              FinancialData financialData, String response);
+    abstract void handleResponseStockFinancial(Stock stock,
+                                              StockFinancial stockFinancial, String response);
 
     abstract String getShareBonusURLString(Stock stock);
 
@@ -404,7 +404,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
     // }
 
     class DownloadAsyncTask extends AsyncTask<String, Void, String> {
-        FinancialData mFinancialData = null;
+        StockFinancial mStockFinancial = null;
         IPO mIPO = null;
         Stock mStock = null;
         StockData mStockData = null;
@@ -544,7 +544,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
             return result;
         }
 
-        String downloadFinancialData(Stock stock) {
+        String downloadStockFinancial(Stock stock) {
             String result = "";
 
             if (stock == null) {
@@ -553,30 +553,30 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
             mStockDatabaseManager.getStock(stock);
 
-            mFinancialData = new FinancialData();
-            mFinancialData.setStockId(stock.getId());
+            mStockFinancial = new StockFinancial();
+            mStockFinancial.setStockId(stock.getId());
 
-            mStockDatabaseManager.getFinancialData(stock, mFinancialData);
+            mStockDatabaseManager.getStockFinancial(stock, mStockFinancial);
 
-            if (mFinancialData.getCreated().contains(
+            if (mStockFinancial.getCreated().contains(
                     Utility.getCurrentDateString())
-                    || mFinancialData.getModified().contains(
+                    || mStockFinancial.getModified().contains(
                     Utility.getCurrentDateString())) {
-                if ((mFinancialData.getBookValuePerShare() != 0)
-                        && (mFinancialData.getNetProfit() != 0)) {
+                if ((mStockFinancial.getBookValuePerShare() != 0)
+                        && (mStockFinancial.getNetProfit() != 0)) {
                     return result;
                 }
             }
 
             setStock(stock);
 
-            return downloadFinancialData(getFinancialDataURLString(stock));
+            return downloadStockFinancial(getStockFinancialURLString(stock));
         }
 
-        String downloadFinancialData(String urlString) {
+        String downloadStockFinancial(String urlString) {
             String result = "";
 
-            Log.d(TAG, "downloadFinancialData:" + urlString);
+            Log.d(TAG, "downloadStockFinancial:" + urlString);
 
             Request.Builder builder = new Request.Builder();
             builder.url(urlString);
@@ -586,7 +586,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
                 Response response = mOkHttpClient.newCall(request).execute();
                 if (response != null) {
                     result = response.body().string();
-                    handleResponseFinancialData(mStock, mFinancialData, result);
+                    handleResponseStockFinancial(mStock, mStockFinancial, result);
 
                     Thread.sleep(Constants.DEFAULT_SLEEP_INTERVAL);
                 }
@@ -1079,7 +1079,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
                     break;
                 }
 
-                result = downloadFinancialData(stock);
+                result = downloadStockFinancial(stock);
                 if (result.contains(mAccessDeniedString)) {
                     break;
                 }

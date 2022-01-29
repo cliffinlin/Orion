@@ -6,7 +6,7 @@ import android.database.Cursor;
 import com.android.orion.Constants;
 import com.android.orion.utility.Utility;
 
-public class FinancialData extends DatabaseTable {
+public class StockFinancial extends DatabaseTable {
 	private long mStockId;
 	private String mDate;
 	private double mBookValuePerShare;
@@ -28,22 +28,22 @@ public class FinancialData extends DatabaseTable {
 	private double mRoe;
 	private double mDividendRatio;
 
-	public FinancialData() {
+	public StockFinancial() {
 		init();
 	}
 
-	public FinancialData(FinancialData financialData) {
-		set(financialData);
+	public StockFinancial(StockFinancial stockFinancial) {
+		set(stockFinancial);
 	}
 
-	public FinancialData(Cursor cursor) {
+	public StockFinancial(Cursor cursor) {
 		set(cursor);
 	}
 
 	void init() {
 		super.init();
 
-		setTableName(DatabaseContract.FinancialData.TABLE_NAME);
+		setTableName(DatabaseContract.StockFinancial.TABLE_NAME);
 
 		mStockId = 0;
 		mDate = "";
@@ -110,34 +110,34 @@ public class FinancialData extends DatabaseTable {
 		return contentValues;
 	}
 
-	public void set(FinancialData financialData) {
-		if (financialData == null) {
+	public void set(StockFinancial stockFinancial) {
+		if (stockFinancial == null) {
 			return;
 		}
 
 		init();
 
-		super.set(financialData);
+		super.set(stockFinancial);
 
-		setStockId(financialData.mStockId);
-		setDate(financialData.mDate);
-		setBookValuePerShare(financialData.mBookValuePerShare);
-		setCashFlowPerShare(financialData.mCashFlowPerShare);
-		setTotalCurrentAssets(financialData.mTotalCurrentAssets);
-		setTotalAssets(financialData.mTotalAssets);
-		setTotalLongTermLiabilities(financialData.mTotalLongTermLiabilities);
-		setMainBusinessIncome(financialData.mMainBusinessIncome);
-		setMainBusinessIncomeInYear(financialData.mMainBusinessIncomeInYear);
-		setFinancialExpenses(financialData.mFinancialExpenses);
-		setNetProfit(financialData.mNetProfit);
-		setNetProfitInYear(financialData.mNetProfitInYear);
-		setNetProfitMargin(financialData.mNetProfitMargin);
-		setTotalShare(financialData.mTotalShare);
-		setDebtToNetAssetsRatio(financialData.mDebtToNetAssetsRatio);
-		setNetProfitPerShare(financialData.mNetProfitPerShare);
-		setNetProfitPerShareInYear(financialData.mNetProfitPerShareInYear);
-		setRate(financialData.mRate);
-		setRoe(financialData.mRoe);
+		setStockId(stockFinancial.mStockId);
+		setDate(stockFinancial.mDate);
+		setBookValuePerShare(stockFinancial.mBookValuePerShare);
+		setCashFlowPerShare(stockFinancial.mCashFlowPerShare);
+		setTotalCurrentAssets(stockFinancial.mTotalCurrentAssets);
+		setTotalAssets(stockFinancial.mTotalAssets);
+		setTotalLongTermLiabilities(stockFinancial.mTotalLongTermLiabilities);
+		setMainBusinessIncome(stockFinancial.mMainBusinessIncome);
+		setMainBusinessIncomeInYear(stockFinancial.mMainBusinessIncomeInYear);
+		setFinancialExpenses(stockFinancial.mFinancialExpenses);
+		setNetProfit(stockFinancial.mNetProfit);
+		setNetProfitInYear(stockFinancial.mNetProfitInYear);
+		setNetProfitMargin(stockFinancial.mNetProfitMargin);
+		setTotalShare(stockFinancial.mTotalShare);
+		setDebtToNetAssetsRatio(stockFinancial.mDebtToNetAssetsRatio);
+		setNetProfitPerShare(stockFinancial.mNetProfitPerShare);
+		setNetProfitPerShareInYear(stockFinancial.mNetProfitPerShareInYear);
+		setRate(stockFinancial.mRate);
+		setRoe(stockFinancial.mRoe);
 		setDividendRatio(mDividendRatio);
 	}
 

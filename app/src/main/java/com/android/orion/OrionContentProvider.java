@@ -29,8 +29,8 @@ public class OrionContentProvider extends ContentProvider {
 	private static final int STOCK_DEAL = 400;
 	private static final int STOCK_DEAL_ID = 401;
 
-	private static final int FINANCIAL_DATA = 500;
-	private static final int FINANCIAL_DATA_ID = 501;
+	private static final int STOCK_FINANCIAL = 500;
+	private static final int STOCK_FINANCIAL_ID = 501;
 
 	private static final int SHARE_BONUS = 600;
 	private static final int SHARE_BONUS_ID = 601;
@@ -64,10 +64,10 @@ public class OrionContentProvider extends ContentProvider {
 				DatabaseContract.StockDeal.TABLE_NAME + "/#", STOCK_DEAL_ID);
 
 		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
-				DatabaseContract.FinancialData.TABLE_NAME, FINANCIAL_DATA);
+				DatabaseContract.StockFinancial.TABLE_NAME, STOCK_FINANCIAL);
 		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
-				DatabaseContract.FinancialData.TABLE_NAME + "/#",
-				FINANCIAL_DATA_ID);
+				DatabaseContract.StockFinancial.TABLE_NAME + "/#",
+				STOCK_FINANCIAL_ID);
 
 		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
 				DatabaseContract.ShareBonus.TABLE_NAME, SHARE_BONUS);
@@ -136,11 +136,11 @@ public class OrionContentProvider extends ContentProvider {
 			type = DatabaseContract.StockDeal.CONTENT_ITEM_TYPE;
 			break;
 
-		case FINANCIAL_DATA:
-			type = DatabaseContract.FinancialData.CONTENT_TYPE;
+		case STOCK_FINANCIAL:
+			type = DatabaseContract.StockFinancial.CONTENT_TYPE;
 			break;
-		case FINANCIAL_DATA_ID:
-			type = DatabaseContract.FinancialData.CONTENT_ITEM_TYPE;
+		case STOCK_FINANCIAL_ID:
+			type = DatabaseContract.StockFinancial.CONTENT_ITEM_TYPE;
 			break;
 
 		case SHARE_BONUS:
@@ -220,11 +220,11 @@ public class OrionContentProvider extends ContentProvider {
 					+ uri.getLastPathSegment());
 			break;
 
-		case FINANCIAL_DATA:
-			builder.setTables(DatabaseContract.FinancialData.TABLE_NAME);
+		case STOCK_FINANCIAL:
+			builder.setTables(DatabaseContract.StockFinancial.TABLE_NAME);
 			break;
-		case FINANCIAL_DATA_ID:
-			builder.setTables(DatabaseContract.FinancialData.TABLE_NAME);
+		case STOCK_FINANCIAL_ID:
+			builder.setTables(DatabaseContract.StockFinancial.TABLE_NAME);
 			builder.appendWhere(BaseColumns._ID + " = "
 					+ uri.getLastPathSegment());
 			break;
@@ -306,9 +306,9 @@ public class OrionContentProvider extends ContentProvider {
 					DatabaseContract.StockDeal.TABLE_NAME, null, contentValues);
 			break;
 
-		case FINANCIAL_DATA:
+		case STOCK_FINANCIAL:
 			id = mDatabaseManager.mDatabase.insert(
-					DatabaseContract.FinancialData.TABLE_NAME, null,
+					DatabaseContract.StockFinancial.TABLE_NAME, null,
 					contentValues);
 			break;
 
@@ -448,18 +448,18 @@ public class OrionContentProvider extends ContentProvider {
 					selectionArgs);
 			break;
 
-		case FINANCIAL_DATA:
+		case STOCK_FINANCIAL:
 			result = mDatabaseManager.mDatabase.update(
-					DatabaseContract.FinancialData.TABLE_NAME, values,
+					DatabaseContract.StockFinancial.TABLE_NAME, values,
 					selection, selectionArgs);
 			break;
-		case FINANCIAL_DATA_ID:
+		case STOCK_FINANCIAL_ID:
 			whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
 			if (!TextUtils.isEmpty(selection)) {
 				whereClause += " AND " + whereClause;
 			}
 			result = mDatabaseManager.mDatabase.update(
-					DatabaseContract.FinancialData.TABLE_NAME, values,
+					DatabaseContract.StockFinancial.TABLE_NAME, values,
 					whereClause, selectionArgs);
 			break;
 
@@ -595,19 +595,19 @@ public class OrionContentProvider extends ContentProvider {
 					selectionArgs);
 			break;
 
-		case FINANCIAL_DATA:
+		case STOCK_FINANCIAL:
 			result = mDatabaseManager.mDatabase.delete(
-					DatabaseContract.FinancialData.TABLE_NAME, selection,
+					DatabaseContract.StockFinancial.TABLE_NAME, selection,
 					selectionArgs);
 			break;
 
-		case FINANCIAL_DATA_ID:
+		case STOCK_FINANCIAL_ID:
 			whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
 			if (!TextUtils.isEmpty(selection)) {
 				whereClause += " AND " + whereClause;
 			}
 			result = mDatabaseManager.mDatabase.delete(
-					DatabaseContract.FinancialData.TABLE_NAME, whereClause,
+					DatabaseContract.StockFinancial.TABLE_NAME, whereClause,
 					selectionArgs);
 			break;
 

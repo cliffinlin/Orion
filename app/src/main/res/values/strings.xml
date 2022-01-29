@@ -83,7 +83,7 @@
     <string name="favorite_list">Favorite List</string>
     <string name="financial">Financial</string>
     <string name="financial_list">Financial List</string>
-    <string name="financial_data_chart">Financial Data Chart</string>
+    <string name="stock_financial_chart">Stock Financial Chart</string>
     <string name="high">High</string>
     <string name="hold">Hold</string>
     <string name="list">List</string>

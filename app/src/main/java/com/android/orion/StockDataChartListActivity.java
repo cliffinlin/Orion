@@ -28,7 +28,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.android.orion.database.DatabaseContract;
-import com.android.orion.database.FinancialData;
+import com.android.orion.database.StockFinancial;
 import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
@@ -97,7 +97,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 			case MESSAGE_REFRESH:
 				if (mOrionService != null) {
 					mStockDatabaseManager.deleteStockData(mStock.getId());
-					mStockDatabaseManager.deleteFinancialData(mStock.getId());
+					mStockDatabaseManager.deleteStockFinancial(mStock.getId());
 					mStockDatabaseManager.deleteShareBonus(mStock.getId());
 
 					mStock.setPinyin("");
@@ -502,7 +502,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 		float roi = 0;
 		float dividend = 0;
 		String sortOrder = DatabaseContract.COLUMN_DATE + " ASC ";
-		FinancialData financialData = null;
+		StockFinancial stockFinancial = null;
 		ShareBonus shareBonus = null;
 
 		if (mStockData == null) {
@@ -516,7 +516,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 				String dateString = "";
 				String timeString = "";
 
-				mStockDatabaseManager.getFinancialDataList(mStock, mFinancialDataList,
+				mStockDatabaseManager.getStockFinancialList(mStock, mStockFinancialList,
 						sortOrder);
 				mStockDatabaseManager.getShareBonusList(mStock, mShareBonusList,
 						sortOrder);
@@ -618,19 +618,19 @@ public class StockDataChartListActivity extends BaseActivity implements
 						stockDataChart.mRoiList.add(roiEntry);
 					}
 
-					if (mFinancialDataList.size() > 0) {
+					if (mStockFinancialList.size() > 0) {
 						bookValuePerShare = 0;
 						netProfitPerShare = 0;
 						roe = 0;
 
-						financialData = Search.getFinancialDataByDate(dateString,
-								mFinancialDataList);
-						if (financialData != null) {
-							bookValuePerShare = (float) financialData
+						stockFinancial = Search.getStockFinancialByDate(dateString,
+								mStockFinancialList);
+						if (stockFinancial != null) {
+							bookValuePerShare = (float) stockFinancial
 									.getBookValuePerShare();
-							netProfitPerShare = (float) financialData
+							netProfitPerShare = (float) stockFinancial
 									.getNetProfitPerShare() * 10;
-							roe = (float) financialData.getRoe();
+							roe = (float) stockFinancial.getRoe();
 						}
 
 						if (mKeyDisplayBPS) {

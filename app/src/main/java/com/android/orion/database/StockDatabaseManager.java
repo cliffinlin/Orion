@@ -884,21 +884,21 @@ public class StockDatabaseManager extends DatabaseManager {
 		return result;
 	}
 
-	public Uri insertFinancialData(FinancialData financialData) {
+	public Uri insertStockFinancial(StockFinancial stockFinancial) {
 		Uri uri = null;
 
-		if ((financialData == null) || (mContentResolver == null)) {
+		if ((stockFinancial == null) || (mContentResolver == null)) {
 			return uri;
 		}
 
 		uri = mContentResolver.insert(
-				DatabaseContract.FinancialData.CONTENT_URI,
-				financialData.getContentValues());
+				DatabaseContract.StockFinancial.CONTENT_URI,
+				stockFinancial.getContentValues());
 
 		return uri;
 	}
 
-	public int bulkInsertFinancialData(ContentValues[] contentValuesArray) {
+	public int bulkInsertStockFinancial(ContentValues[] contentValuesArray) {
 		int result = 0;
 
 		if ((contentValuesArray.length == 0) || (mContentResolver == null)) {
@@ -906,12 +906,12 @@ public class StockDatabaseManager extends DatabaseManager {
 		}
 
 		result = mContentResolver.bulkInsert(
-				DatabaseContract.FinancialData.CONTENT_URI, contentValuesArray);
+				DatabaseContract.StockFinancial.CONTENT_URI, contentValuesArray);
 
 		return result;
 	}
 
-	public Cursor queryFinancialData(String selection, String[] selectionArgs,
+	public Cursor queryStockFinancial(String selection, String[] selectionArgs,
 			String sortOrder) {
 		Cursor cursor = null;
 
@@ -920,50 +920,50 @@ public class StockDatabaseManager extends DatabaseManager {
 		}
 
 		cursor = mContentResolver.query(
-				DatabaseContract.FinancialData.CONTENT_URI,
-				DatabaseContract.FinancialData.PROJECTION_ALL, selection,
+				DatabaseContract.StockFinancial.CONTENT_URI,
+				DatabaseContract.StockFinancial.PROJECTION_ALL, selection,
 				selectionArgs, sortOrder);
 
 		return cursor;
 	}
 
-	public Cursor queryFinancialData(FinancialData financialData) {
+	public Cursor queryStockFinancial(StockFinancial stockFinancial) {
 		Cursor cursor = null;
 
-		if ((financialData == null) || (mContentResolver == null)) {
+		if ((stockFinancial == null) || (mContentResolver == null)) {
 			return cursor;
 		}
 
-		String selection = getFinancialDataSelection(financialData);
-		String sortOrder = getFinancialDataOrder();
+		String selection = getStockFinancialSelection(stockFinancial);
+		String sortOrder = getStockFinancialOrder();
 
 		cursor = mContentResolver.query(
-				DatabaseContract.FinancialData.CONTENT_URI,
-				DatabaseContract.FinancialData.PROJECTION_ALL, selection, null,
+				DatabaseContract.StockFinancial.CONTENT_URI,
+				DatabaseContract.StockFinancial.PROJECTION_ALL, selection, null,
 				sortOrder);
 
 		return cursor;
 	}
 
-	public void getFinancialData(FinancialData financialData) {
+	public void getStockFinancial(StockFinancial stockFinancial) {
 		Cursor cursor = null;
 
-		if ((financialData == null) || (mContentResolver == null)) {
+		if ((stockFinancial == null) || (mContentResolver == null)) {
 			return;
 		}
 
 		try {
-			String selection = getFinancialDataSelection(financialData);
-			String sortOrder = getFinancialDataOrder();
+			String selection = getStockFinancialSelection(stockFinancial);
+			String sortOrder = getStockFinancialOrder();
 
 			cursor = mContentResolver.query(
-					DatabaseContract.FinancialData.CONTENT_URI,
-					DatabaseContract.FinancialData.PROJECTION_ALL, selection,
+					DatabaseContract.StockFinancial.CONTENT_URI,
+					DatabaseContract.StockFinancial.PROJECTION_ALL, selection,
 					null, sortOrder);
 
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
-				financialData.set(cursor);
+				stockFinancial.set(cursor);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -972,25 +972,25 @@ public class StockDatabaseManager extends DatabaseManager {
 		}
 	}
 
-	public void getFinancialData(Stock stock, FinancialData financialData) {
+	public void getStockFinancial(Stock stock, StockFinancial stockFinancial) {
 		Cursor cursor = null;
 
-		if ((financialData == null) || (mContentResolver == null)) {
+		if ((stockFinancial == null) || (mContentResolver == null)) {
 			return;
 		}
 
 		try {
-			String selection = getFinancialDataSelection(stock.getId());
+			String selection = getStockFinancialSelection(stock.getId());
 			String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
 
 			cursor = mContentResolver.query(
-					DatabaseContract.FinancialData.CONTENT_URI,
-					DatabaseContract.FinancialData.PROJECTION_ALL, selection,
+					DatabaseContract.StockFinancial.CONTENT_URI,
+					DatabaseContract.StockFinancial.PROJECTION_ALL, selection,
 					null, sortOrder);
 
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
-				financialData.set(cursor);
+				stockFinancial.set(cursor);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -999,26 +999,26 @@ public class StockDatabaseManager extends DatabaseManager {
 		}
 	}
 
-	public void getFinancialDataList(Stock stock,
-			ArrayList<FinancialData> financialDataList, String sortOrder) {
+	public void getStockFinancialList(Stock stock,
+			ArrayList<StockFinancial> stockFinancialList, String sortOrder) {
 		Cursor cursor = null;
 
-		if ((stock == null) || (financialDataList == null)) {
+		if ((stock == null) || (stockFinancialList == null)) {
 			return;
 		}
 
-		financialDataList.clear();
+		stockFinancialList.clear();
 
-		String selection = getFinancialDataSelection(stock.getId());
+		String selection = getStockFinancialSelection(stock.getId());
 
 		try {
-			cursor = queryFinancialData(selection, null, sortOrder);
+			cursor = queryStockFinancial(selection, null, sortOrder);
 
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				while (cursor.moveToNext()) {
-					FinancialData financialData = new FinancialData();
-					financialData.set(cursor);
-					financialDataList.add(financialData);
+					StockFinancial stockFinancial = new StockFinancial();
+					stockFinancial.set(cursor);
+					stockFinancialList.add(stockFinancial);
 				}
 			}
 		} catch (Exception e) {
@@ -1028,20 +1028,20 @@ public class StockDatabaseManager extends DatabaseManager {
 		}
 	}
 
-	public boolean isFinancialDataExist(FinancialData financialData) {
+	public boolean isStockFinancialExist(StockFinancial stockFinancial) {
 		boolean result = false;
 		Cursor cursor = null;
 
-		if (financialData == null) {
+		if (stockFinancial == null) {
 			return result;
 		}
 
 		try {
-			cursor = queryFinancialData(financialData);
+			cursor = queryStockFinancial(stockFinancial);
 
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
-				financialData.setCreated(cursor);
+				stockFinancial.setCreated(cursor);
 				result = true;
 			}
 		} catch (Exception e) {
@@ -1053,24 +1053,24 @@ public class StockDatabaseManager extends DatabaseManager {
 		return result;
 	}
 
-	public int updateFinancialData(FinancialData financialData,
+	public int updateStockFinancial(StockFinancial stockFinancial,
 			ContentValues contentValues) {
 		int result = 0;
 
-		if ((financialData == null) || (mContentResolver == null)) {
+		if ((stockFinancial == null) || (mContentResolver == null)) {
 			return result;
 		}
 
-		String where = getFinancialDataSelection(financialData);
+		String where = getStockFinancialSelection(stockFinancial);
 
 		result = mContentResolver.update(
-				DatabaseContract.FinancialData.CONTENT_URI, contentValues,
+				DatabaseContract.StockFinancial.CONTENT_URI, contentValues,
 				where, null);
 
 		return result;
 	}
 
-	public int deleteFinancialData() {
+	public int deleteStockFinancial() {
 		int result = 0;
 
 		if (mContentResolver == null) {
@@ -1078,30 +1078,30 @@ public class StockDatabaseManager extends DatabaseManager {
 		}
 
 		result = mContentResolver.delete(
-				DatabaseContract.FinancialData.CONTENT_URI, null, null);
+				DatabaseContract.StockFinancial.CONTENT_URI, null, null);
 
 		return result;
 	}
 
-	public int deleteFinancialData(FinancialData financialData) {
+	public int deleteStockFinancial(StockFinancial stockFinancial) {
 		int result = 0;
 
-		if ((financialData == null) || (mContentResolver == null)) {
+		if ((stockFinancial == null) || (mContentResolver == null)) {
 			return result;
 		}
 
-		String where = getFinancialDataSelection(financialData);
+		String where = getStockFinancialSelection(stockFinancial);
 
 		result = mContentResolver.delete(
-				DatabaseContract.FinancialData.CONTENT_URI, where, null);
+				DatabaseContract.StockFinancial.CONTENT_URI, where, null);
 
 		return result;
 	}
 
-	public void deleteFinancialData(long stockId) {
-		Uri uri = DatabaseContract.FinancialData.CONTENT_URI;
+	public void deleteStockFinancial(long stockId) {
+		Uri uri = DatabaseContract.StockFinancial.CONTENT_URI;
 
-		String where = getFinancialDataSelection(stockId);
+		String where = getStockFinancialSelection(stockId);
 
 		try {
 			mContentResolver.delete(uri, where, null);
@@ -1110,44 +1110,44 @@ public class StockDatabaseManager extends DatabaseManager {
 		}
 	}
 
-	public int deleteFinancialData(long stockId, String date) {
+	public int deleteStockFinancial(long stockId, String date) {
 		int result = 0;
 
 		if (mContentResolver == null) {
 			return result;
 		}
 
-		String where = getFinancialDataSelection(stockId, date);
+		String where = getStockFinancialSelection(stockId, date);
 
 		result = mContentResolver.delete(
-				DatabaseContract.FinancialData.CONTENT_URI, where, null);
+				DatabaseContract.StockFinancial.CONTENT_URI, where, null);
 
 		return result;
 	}
 
-	public String getFinancialDataSelection(FinancialData financialData) {
+	public String getStockFinancialSelection(StockFinancial stockFinancial) {
 		String selection = "";
 
-		if (financialData == null) {
+		if (stockFinancial == null) {
 			return selection;
 		}
 
-		selection = getFinancialDataSelection(financialData.getStockId(),
-				financialData.getDate());
+		selection = getStockFinancialSelection(stockFinancial.getStockId(),
+				stockFinancial.getDate());
 
 		return selection;
 	}
 
-	public String getFinancialDataSelection(long stockId) {
+	public String getStockFinancialSelection(long stockId) {
 		return DatabaseContract.COLUMN_STOCK_ID + " = " + stockId;
 	}
 
-	public String getFinancialDataSelection(long stockId, String date) {
+	public String getStockFinancialSelection(long stockId, String date) {
 		return DatabaseContract.COLUMN_STOCK_ID + " = " + stockId + " AND "
 				+ DatabaseContract.COLUMN_DATE + " = '" + date + "'";
 	}
 
-	public String getFinancialDataOrder() {
+	public String getStockFinancialOrder() {
 		return DatabaseContract.COLUMN_DATE + " ASC ";
 	}
 

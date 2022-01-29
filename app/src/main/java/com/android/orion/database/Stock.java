@@ -1649,7 +1649,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	public void setupNetProfitPerShareInYear(
-			ArrayList<FinancialData> financialDataList) {
+			ArrayList<StockFinancial> stockFinancialList) {
 		double mainBusinessIncome = 0;
 		double netProfit = 0;
 		double netProfitPerShare = 0;
@@ -1658,8 +1658,8 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-		if ((financialDataList == null)
-				|| (financialDataList.size() < Constants.SEASONS_IN_A_YEAR + 1)) {
+		if ((stockFinancialList == null)
+				|| (stockFinancialList.size() < Constants.SEASONS_IN_A_YEAR + 1)) {
 			return;
 		}
 
@@ -1668,17 +1668,17 @@ public class Stock extends DatabaseTable {
 		mNetProfitPerShareInYear = 0;
 
 		for (int i = 0; i < Constants.SEASONS_IN_A_YEAR; i++) {
-			FinancialData financialData = financialDataList.get(i);
-			FinancialData prev = financialDataList.get(i + 1);
+			StockFinancial stockFinancial = stockFinancialList.get(i);
+			StockFinancial prev = stockFinancialList.get(i + 1);
 
-			if (financialData.getDate().contains("03-31")) {
-				mainBusinessIncome = financialData.getMainBusinessIncome();
-				netProfit = financialData.getNetProfit();
-				netProfitPerShare = financialData.getNetProfit() / mTotalShare;
+			if (stockFinancial.getDate().contains("03-31")) {
+				mainBusinessIncome = stockFinancial.getMainBusinessIncome();
+				netProfit = stockFinancial.getNetProfit();
+				netProfitPerShare = stockFinancial.getNetProfit() / mTotalShare;
 			} else {
-				mainBusinessIncome = financialData.getMainBusinessIncome()  - prev.getMainBusinessIncome();
-				netProfit = financialData.getNetProfit() - prev.getNetProfit();
-				netProfitPerShare = (financialData.getNetProfit() - prev
+				mainBusinessIncome = stockFinancial.getMainBusinessIncome()  - prev.getMainBusinessIncome();
+				netProfit = stockFinancial.getNetProfit() - prev.getNetProfit();
+				netProfitPerShare = (stockFinancial.getNetProfit() - prev
 						.getNetProfit()) / mTotalShare;
 			}
 
@@ -1689,7 +1689,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	public void setupRate(
-			ArrayList<FinancialData> financialDataList) {
+			ArrayList<StockFinancial> stockFinancialList) {
 		double netProfitPerShare = 0;
         double netProfitPerShareLastYear = 0;
 
@@ -1697,21 +1697,21 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-		if ((financialDataList == null)
-				|| (financialDataList.size() < 2 * Constants.SEASONS_IN_A_YEAR + 1)) {
+		if ((stockFinancialList == null)
+				|| (stockFinancialList.size() < 2 * Constants.SEASONS_IN_A_YEAR + 1)) {
 			return;
 		}
 
         netProfitPerShareLastYear = 0;
 
 		for (int i = Constants.SEASONS_IN_A_YEAR; i < 2 * Constants.SEASONS_IN_A_YEAR; i++) {
-			FinancialData financialData = financialDataList.get(i);
-			FinancialData prev = financialDataList.get(i + 1);
+			StockFinancial stockFinancial = stockFinancialList.get(i);
+			StockFinancial prev = stockFinancialList.get(i + 1);
 
-			if (financialData.getDate().contains("03-31")) {
-				netProfitPerShare = financialData.getNetProfit() / mTotalShare;
+			if (stockFinancial.getDate().contains("03-31")) {
+				netProfitPerShare = stockFinancial.getNetProfit() / mTotalShare;
 			} else {
-				netProfitPerShare = (financialData.getNetProfit() - prev
+				netProfitPerShare = (stockFinancial.getNetProfit() - prev
 						.getNetProfit()) / mTotalShare;
 			}
 
@@ -1754,15 +1754,15 @@ public class Stock extends DatabaseTable {
 				Constants.DOUBLE_FIXED_DECIMAL);
 	}
 
-	public void setupRoe(ArrayList<FinancialData> financialDataList) {
+	public void setupRoe(ArrayList<StockFinancial> stockFinancialList) {
 		double bookValuePerShare = 0;
 
-		if ((financialDataList == null)
-				|| (financialDataList.size() < Constants.SEASONS_IN_A_YEAR + 1)) {
+		if ((stockFinancialList == null)
+				|| (stockFinancialList.size() < Constants.SEASONS_IN_A_YEAR + 1)) {
 			return;
 		}
 
-		bookValuePerShare = financialDataList.get(Constants.SEASONS_IN_A_YEAR)
+		bookValuePerShare = stockFinancialList.get(Constants.SEASONS_IN_A_YEAR)
 				.getBookValuePerShare();
 
 		if (bookValuePerShare == 0) {

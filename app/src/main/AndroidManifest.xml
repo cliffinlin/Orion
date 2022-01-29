@@ -65,7 +65,7 @@
         </activity>
         <activity
             android:name="com.android.orion.StockFinancialChartListActivity"
-            android:label="@string/financial_data_chart"
+            android:label="@string/stock_financial_chart"
             android:launchMode="singleTop" >
         </activity>
         <activity

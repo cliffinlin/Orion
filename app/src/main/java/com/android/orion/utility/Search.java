@@ -2,7 +2,7 @@ package com.android.orion.utility;
 
 import android.text.TextUtils;
 
-import com.android.orion.database.FinancialData;
+import com.android.orion.database.StockFinancial;
 import com.android.orion.database.ShareBonus;
 import com.android.orion.database.StockData;
 
@@ -118,10 +118,10 @@ public class Search {
         return stockData;
     }
 
-    Comparator<FinancialData> comparator = new Comparator<FinancialData>() {
+    Comparator<StockFinancial> comparator = new Comparator<StockFinancial>() {
 
         @Override
-        public int compare(FinancialData arg0, FinancialData arg1) {
+        public int compare(StockFinancial arg0, StockFinancial arg1) {
             Calendar calendar0;
             Calendar calendar1;
 
@@ -139,12 +139,12 @@ public class Search {
         }
     };
 
-    static int binarySearchFinancialData(int l, int r, Calendar calendar,
-                                  ArrayList<FinancialData> financialDataList) {
+    static int binarySearchStockFinancial(int l, int r, Calendar calendar,
+                                  ArrayList<StockFinancial> stockFinancialList) {
         if (r >= l) {
             int mid = l + (r - l) / 2;
 
-            Calendar calendarMid = Utility.stringToCalendar(financialDataList
+            Calendar calendarMid = Utility.stringToCalendar(stockFinancialList
                     .get(mid).getDate(), Utility.CALENDAR_DATE_FORMAT);
 
             // If the element is present at the
@@ -155,18 +155,18 @@ public class Search {
             // If element is smaller than mid, then
             // it can only be present in left subarray
             if (calendar.before(calendarMid))
-                return binarySearchFinancialData(l, mid - 1, calendar,
-                        financialDataList);
+                return binarySearchStockFinancial(l, mid - 1, calendar,
+                        stockFinancialList);
 
-            Calendar calendarMid1 = Utility.stringToCalendar(financialDataList
+            Calendar calendarMid1 = Utility.stringToCalendar(stockFinancialList
                     .get(mid + 1).getDate(), Utility.CALENDAR_DATE_FORMAT);
             if (calendar.after(calendarMid) && (calendar.before(calendarMid1)))
                 return mid;
 
             // Else the element can only be present
             // in right subarray
-            return binarySearchFinancialData(mid + 1, r, calendar,
-                    financialDataList);
+            return binarySearchStockFinancial(mid + 1, r, calendar,
+                    stockFinancialList);
         }
 
         // We reach here when element is not present
@@ -174,41 +174,41 @@ public class Search {
         return -1;
     }
 
-    public static FinancialData getFinancialDataByDate(String dateString,
-                                         ArrayList<FinancialData> financialDataList) {
+    public static StockFinancial getStockFinancialByDate(String dateString,
+                                         ArrayList<StockFinancial> stockFinancialList) {
         int index = 0;
-        FinancialData financialData = null;
+        StockFinancial stockFinancial = null;
 
-        if (financialDataList.size() < 1) {
-            return financialData;
+        if (stockFinancialList.size() < 1) {
+            return stockFinancial;
         }
 
         if (TextUtils.isEmpty(dateString)) {
-            return financialData;
+            return stockFinancial;
         }
 
         Calendar calendar = Utility.stringToCalendar(dateString,
                 Utility.CALENDAR_DATE_FORMAT);
-        Calendar calendarMin = Utility.stringToCalendar(financialDataList
+        Calendar calendarMin = Utility.stringToCalendar(stockFinancialList
                 .get(0).getDate(), Utility.CALENDAR_DATE_FORMAT);
         Calendar calendarMax = Utility.stringToCalendar(
-                financialDataList.get(financialDataList.size() - 1).getDate(),
+                stockFinancialList.get(stockFinancialList.size() - 1).getDate(),
                 Utility.CALENDAR_DATE_FORMAT);
 
         if (calendar.before(calendarMin)) {
-            return financialData;
+            return stockFinancial;
         } else if (calendar.after(calendarMax)) {
-            return financialDataList.get(financialDataList.size() - 1);
+            return stockFinancialList.get(stockFinancialList.size() - 1);
         } else {
-            index = binarySearchFinancialData(0, financialDataList.size() - 1,
-                    calendar, financialDataList);
+            index = binarySearchStockFinancial(0, stockFinancialList.size() - 1,
+                    calendar, stockFinancialList);
 
-            if ((index > 0) && (index < financialDataList.size())) {
-                financialData = financialDataList.get(index);
+            if ((index > 0) && (index < stockFinancialList.size())) {
+                stockFinancial = stockFinancialList.get(index);
             }
         }
 
-        return financialData;
+        return stockFinancial;
     }
 
     static int binarySearchShareBonus(int l, int r, Calendar calendar,

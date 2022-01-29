@@ -22,7 +22,7 @@ import android.util.Log;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.android.orion.database.DatabaseContract;
-import com.android.orion.database.FinancialData;
+import com.android.orion.database.StockFinancial;
 import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
@@ -190,7 +190,7 @@ public class StockAnalyzer {
 
 		try {
 			setupStockShareBonus(stock);
-			setupStockFinancialData(stock);
+			setupStockStockFinancial(stock);
 
 			loadStockDataList(stock, period, stockDataList);
 			analyzeStockData(stock, period, stockDataList,
@@ -223,7 +223,7 @@ public class StockAnalyzer {
 		try {
             if (!Stock.CLASS_INDEX.equals(stock.getClases())) {
                 analyzeFinancial(stock);
-                setupStockFinancialData(stock);
+                setupStockStockFinancial(stock);
                 setupStockShareBonus(stock);
             }
 
@@ -262,12 +262,12 @@ public class StockAnalyzer {
 	boolean isFinancialAnalyzed(Stock stock) {
 		boolean result = false;
 
-		FinancialData financialData = new FinancialData();
-		financialData.setStockId(stock.getId());
-		mStockDatabaseManager.getFinancialData(stock, financialData);
+		StockFinancial stockFinancial = new StockFinancial();
+		stockFinancial.setStockId(stock.getId());
+		mStockDatabaseManager.getStockFinancial(stock, stockFinancial);
 
-		if (financialData.getCreated().contains(Utility.getCurrentDateString())
-				|| financialData.getModified().contains(
+		if (stockFinancial.getCreated().contains(Utility.getCurrentDateString())
+				|| stockFinancial.getModified().contains(
 						Utility.getCurrentDateString())) {
 		    result = true;
 		}
@@ -276,13 +276,13 @@ public class StockAnalyzer {
 	}
 
 	void analyzeFinancial(Stock stock) {
-		ArrayList<FinancialData> financialDataList = new ArrayList<FinancialData>();
+		ArrayList<StockFinancial> stockFinancialList = new ArrayList<StockFinancial>();
 		ArrayList<TotalShare> totalShareList = new ArrayList<TotalShare>();
 		ArrayList<ShareBonus> shareBonusList = new ArrayList<ShareBonus>();
 		ArrayList<StockData> stockDataList = new ArrayList<StockData>();
 		String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
 
-		mStockDatabaseManager.getFinancialDataList(stock, financialDataList,
+		mStockDatabaseManager.getStockFinancialList(stock, stockFinancialList,
 				sortOrder);
 		mStockDatabaseManager.getTotalShareList(stock, totalShareList,
 				sortOrder);
@@ -291,17 +291,17 @@ public class StockAnalyzer {
 		mStockDatabaseManager.getStockDataList(stock, Settings.KEY_PERIOD_MONTH,
 				stockDataList, sortOrder);
 
-		setupTotalShare(financialDataList, totalShareList);
-		setupNetProfitPerShareInYear(financialDataList);
-		setupNetProfitPerShare(financialDataList);
-		setupRate(financialDataList);
-		setupRoe(financialDataList);
-        setupRoi(stockDataList, financialDataList);
+		setupTotalShare(stockFinancialList, totalShareList);
+		setupNetProfitPerShareInYear(stockFinancialList);
+		setupNetProfitPerShare(stockFinancialList);
+		setupRate(stockFinancialList);
+		setupRoe(stockFinancialList);
+        setupRoi(stockDataList, stockFinancialList);
 
-		for (FinancialData financialData : financialDataList) {
-			financialData.setModified(Utility.getCurrentDateTimeString());
-			mStockDatabaseManager.updateFinancialData(financialData,
-					financialData.getContentValues());
+		for (StockFinancial stockFinancial : stockFinancialList) {
+			stockFinancial.setModified(Utility.getCurrentDateTimeString());
+			mStockDatabaseManager.updateStockFinancial(stockFinancial,
+					stockFinancial.getContentValues());
 		}
 
 		for (StockData stockData : stockDataList) {
@@ -311,21 +311,21 @@ public class StockAnalyzer {
 		}
 	}
 
-	void setupTotalShare(ArrayList<FinancialData> financialDataList,
+	void setupTotalShare(ArrayList<StockFinancial> stockFinancialList,
 			ArrayList<TotalShare> totalShareList) {
-		if (financialDataList == null || totalShareList == null) {
+		if (stockFinancialList == null || totalShareList == null) {
 			return;
 		}
 
 		int j = 0;
-		for (FinancialData financialData : financialDataList) {
+		for (StockFinancial stockFinancial : stockFinancialList) {
 			while (j < totalShareList.size()) {
 				TotalShare totalShare = totalShareList.get(j);
-				if (Utility.stringToCalendar(financialData.getDate(),
+				if (Utility.stringToCalendar(stockFinancial.getDate(),
 						Utility.CALENDAR_DATE_FORMAT).after(
 						Utility.stringToCalendar(totalShare.getDate(),
 								Utility.CALENDAR_DATE_FORMAT))) {
-					financialData.setTotalShare(totalShare.getTotalShare());
+					stockFinancial.setTotalShare(totalShare.getTotalShare());
 					break;
 				} else {
 					j++;
@@ -334,19 +334,19 @@ public class StockAnalyzer {
 		}
 	}
 
-	void setupNetProfitPerShare(ArrayList<FinancialData> financialDataList) {
-		if (financialDataList == null) {
+	void setupNetProfitPerShare(ArrayList<StockFinancial> stockFinancialList) {
+		if (stockFinancialList == null) {
 			return;
 		}
 
-		for (FinancialData financialData : financialDataList) {
-			financialData.setupDebtToNetAssetsRatio();
-			financialData.setupNetProfitMargin();
-			financialData.setupNetProfitPerShare();
+		for (StockFinancial stockFinancial : stockFinancialList) {
+			stockFinancial.setupDebtToNetAssetsRatio();
+			stockFinancial.setupNetProfitMargin();
+			stockFinancial.setupNetProfitPerShare();
 		}
 	}
 
-	void setupNetProfitPerShareInYear(ArrayList<FinancialData> financialDataList) {
+	void setupNetProfitPerShareInYear(ArrayList<StockFinancial> stockFinancialList) {
 		double mainBusinessIncome = 0;
 		double mainBusinessIncomeInYear = 0;
 		double netProfit = 0;
@@ -354,22 +354,22 @@ public class StockAnalyzer {
 		double netProfitPerShareInYear = 0;
 		double netProfitPerShare = 0;
 
-		if (financialDataList == null) {
+		if (stockFinancialList == null) {
 			return;
 		}
 
-		if (financialDataList.size() < Constants.SEASONS_IN_A_YEAR + 1) {
+		if (stockFinancialList.size() < Constants.SEASONS_IN_A_YEAR + 1) {
 			return;
 		}
 
-		for (int i = 0; i < financialDataList.size()
+		for (int i = 0; i < stockFinancialList.size()
 				- Constants.SEASONS_IN_A_YEAR; i++) {
 			mainBusinessIncomeInYear = 0;
 			netProfitInYear = 0;
 			netProfitPerShareInYear = 0;
 			for (int j = 0; j < Constants.SEASONS_IN_A_YEAR; j++) {
-				FinancialData current = financialDataList.get(i + j);
-				FinancialData prev = financialDataList.get(i + j + 1);
+				StockFinancial current = stockFinancialList.get(i + j);
+				StockFinancial prev = stockFinancialList.get(i + j + 1);
 
 				if (current == null || prev == null) {
 					continue;
@@ -396,57 +396,57 @@ public class StockAnalyzer {
 				netProfitPerShareInYear += netProfitPerShare;
 			}
 
-			FinancialData financialData = financialDataList.get(i);
-			financialData.setMainBusinessIncomeInYear(mainBusinessIncomeInYear);
-			financialData.setNetProfitInYear(netProfitInYear);
-			financialData.setNetProfitPerShareInYear(netProfitPerShareInYear);
+			StockFinancial stockFinancial = stockFinancialList.get(i);
+			stockFinancial.setMainBusinessIncomeInYear(mainBusinessIncomeInYear);
+			stockFinancial.setNetProfitInYear(netProfitInYear);
+			stockFinancial.setNetProfitPerShareInYear(netProfitPerShareInYear);
 		}
 	}
 
-	void setupRate(ArrayList<FinancialData> financialDataList) {
+	void setupRate(ArrayList<StockFinancial> stockFinancialList) {
 		double rate = 0;
 
-		if (financialDataList == null) {
+		if (stockFinancialList == null) {
 			return;
 		}
 
-		if (financialDataList.size() < Constants.SEASONS_IN_A_YEAR + 1) {
+		if (stockFinancialList.size() < Constants.SEASONS_IN_A_YEAR + 1) {
 			return;
 		}
 
-		for (int i = 0; i < financialDataList.size()
+		for (int i = 0; i < stockFinancialList.size()
 				- Constants.SEASONS_IN_A_YEAR; i++) {
-			FinancialData financialData = financialDataList.get(i);
-			FinancialData prev = financialDataList.get(i
+			StockFinancial stockFinancial = stockFinancialList.get(i);
+			StockFinancial prev = stockFinancialList.get(i
 					+ Constants.SEASONS_IN_A_YEAR);
 
 			if (prev == null || prev.getNetProfitPerShareInYear() == 0) {
 				continue;
 			}
 
-			rate = Utility.Round(financialData.getNetProfitPerShareInYear()
+			rate = Utility.Round(stockFinancial.getNetProfitPerShareInYear()
 					/ prev.getNetProfitPerShareInYear(),
 					Constants.DOUBLE_FIXED_DECIMAL);
 
-			financialData.setRate(rate);
+			stockFinancial.setRate(rate);
 		}
 	}
 
-	void setupRoe(ArrayList<FinancialData> financialDataList) {
+	void setupRoe(ArrayList<StockFinancial> stockFinancialList) {
 		double roe = 0;
 
-		if (financialDataList == null) {
+		if (stockFinancialList == null) {
 			return;
 		}
 
-		if (financialDataList.size() < Constants.SEASONS_IN_A_YEAR + 1) {
+		if (stockFinancialList.size() < Constants.SEASONS_IN_A_YEAR + 1) {
 			return;
 		}
 
-		for (int i = 0; i < financialDataList.size()
+		for (int i = 0; i < stockFinancialList.size()
 				- Constants.SEASONS_IN_A_YEAR; i++) {
-			FinancialData financialData = financialDataList.get(i);
-			FinancialData prev = financialDataList.get(i
+			StockFinancial stockFinancial = stockFinancialList.get(i);
+			StockFinancial prev = stockFinancialList.get(i
 					+ Constants.SEASONS_IN_A_YEAR);
 
 			if (prev == null || prev.getBookValuePerShare() == 0) {
@@ -454,25 +454,25 @@ public class StockAnalyzer {
 			}
 
 			roe = Utility.Round(
-					100.0 * financialData.getNetProfitPerShareInYear()
+					100.0 * stockFinancial.getNetProfitPerShareInYear()
 							/ prev.getBookValuePerShare(),
 					Constants.DOUBLE_FIXED_DECIMAL);
 			if (roe < 0) {
 				roe = 0;
 			}
 
-			financialData.setRoe(roe);
+			stockFinancial.setRoe(roe);
 		}
 	}
 
 	void setupRoi(ArrayList<StockData> stockDataList,
-			ArrayList<FinancialData> financialDataList) {
+			ArrayList<StockFinancial> stockFinancialList) {
 		double price = 0;
 		double pe = 0;
 		double pb = 0;
 		double roi = 0;
 
-		if (stockDataList == null || financialDataList == null) {
+		if (stockDataList == null || stockFinancialList == null) {
 			return;
 		}
 
@@ -483,23 +483,23 @@ public class StockAnalyzer {
 				continue;
 			}
 
-			while (j < financialDataList.size()) {
-				FinancialData financialData = financialDataList.get(j);
+			while (j < stockFinancialList.size()) {
+				StockFinancial stockFinancial = stockFinancialList.get(j);
 				if (Utility.stringToCalendar(stockData.getDate(),
 						Utility.CALENDAR_DATE_FORMAT).after(
-						Utility.stringToCalendar(financialData.getDate(),
+						Utility.stringToCalendar(stockFinancial.getDate(),
 								Utility.CALENDAR_DATE_FORMAT))) {
 					pe = Utility.Round(
-							100.0 * financialData.getNetProfitPerShareInYear()
+							100.0 * stockFinancial.getNetProfitPerShareInYear()
 									/ price, Constants.DOUBLE_FIXED_DECIMAL);
 
-					if (financialData.getBookValuePerShare() != 0) {
+					if (stockFinancial.getBookValuePerShare() != 0) {
 						pb = Utility.Round(
-								price / financialData.getBookValuePerShare(),
+								price / stockFinancial.getBookValuePerShare(),
 								Constants.DOUBLE_FIXED_DECIMAL);
 					}
 
-					roi = Utility.Round(financialData.getRoe() * pe
+					roi = Utility.Round(stockFinancial.getRoe() * pe
 							* Constants.ROI_COEFFICIENT,
 							Constants.DOUBLE_FIXED_DECIMAL);
 					if (roi < 0) {
@@ -517,33 +517,33 @@ public class StockAnalyzer {
 		}
 	}
 
-	void setupStockFinancialData(Stock stock) {
+	void setupStockStockFinancial(Stock stock) {
 		String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
-		FinancialData financialData = new FinancialData();
-		ArrayList<FinancialData> financialDataList = new ArrayList<FinancialData>();
+		StockFinancial stockFinancial = new StockFinancial();
+		ArrayList<StockFinancial> stockFinancialList = new ArrayList<StockFinancial>();
 
-		financialData.setStockId(stock.getId());
+		stockFinancial.setStockId(stock.getId());
 
-		mStockDatabaseManager.getFinancialData(stock, financialData);
-		mStockDatabaseManager.getFinancialDataList(stock, financialDataList,
+		mStockDatabaseManager.getStockFinancial(stock, stockFinancial);
+		mStockDatabaseManager.getStockFinancialList(stock, stockFinancialList,
 				sortOrder);
 		mStockDatabaseManager.updateStockDeal(stock);
 
-		stock.setBookValuePerShare(financialData.getBookValuePerShare());
-		stock.setTotalAssets(financialData.getTotalAssets());
-		stock.setTotalLongTermLiabilities(financialData
+		stock.setBookValuePerShare(stockFinancial.getBookValuePerShare());
+		stock.setTotalAssets(stockFinancial.getTotalAssets());
+		stock.setTotalLongTermLiabilities(stockFinancial
 				.getTotalLongTermLiabilities());
-		stock.setMainBusinessIncome(financialData.getMainBusinessIncome());
-		stock.setNetProfit(financialData.getNetProfit());
-		stock.setCashFlowPerShare(financialData.getCashFlowPerShare());
+		stock.setMainBusinessIncome(stockFinancial.getMainBusinessIncome());
+		stock.setNetProfit(stockFinancial.getNetProfit());
+		stock.setCashFlowPerShare(stockFinancial.getCashFlowPerShare());
 
 		stock.setupMarketValue();
 		stock.setupNetProfitPerShare();
-		stock.setupNetProfitPerShareInYear(financialDataList);
+		stock.setupNetProfitPerShareInYear(stockFinancialList);
 		stock.setupNetProfitMargin();
-		stock.setupRate(financialDataList);
+		stock.setupRate(stockFinancialList);
 		stock.setupDebtToNetAssetsRatio();
-		stock.setupRoe(financialDataList);
+		stock.setupRoe(stockFinancialList);
 		stock.setupPE();
 		stock.setupPB();
 		stock.setupRoi();
