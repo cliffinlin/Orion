@@ -20,29 +20,32 @@ import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.DatabaseManager;
 
 public class OrionContentProvider extends ContentProvider {
-	private static final int STOCK = 200;
-	private static final int STOCK_ID = 201;
+	private static final int STOCK = 100;
+	private static final int STOCK_ID = 101;
 
-	private static final int STOCK_DATA = 300;
-	private static final int STOCK_DATA_ID = 301;
+	private static final int STOCK_DATA = 200;
+	private static final int STOCK_DATA_ID = 201;
 
-	private static final int STOCK_DEAL = 400;
-	private static final int STOCK_DEAL_ID = 401;
+	private static final int STOCK_DEAL = 300;
+	private static final int STOCK_DEAL_ID = 301;
 
-	private static final int STOCK_FINANCIAL = 500;
-	private static final int STOCK_FINANCIAL_ID = 501;
+	private static final int STOCK_FINANCIAL = 400;
+	private static final int STOCK_FINANCIAL_ID = 401;
 
-	private static final int SHARE_BONUS = 600;
-	private static final int SHARE_BONUS_ID = 601;
+	private static final int SHARE_BONUS = 500;
+	private static final int SHARE_BONUS_ID = 501;
 
-	private static final int TOTAL_SHARE = 700;
-	private static final int TOTAL_SHARE_ID = 701;
+	private static final int TOTAL_SHARE = 600;
+	private static final int TOTAL_SHARE_ID = 601;
 
-	private static final int IPO = 800;
-	private static final int IPO_ID = 801;
+	private static final int IPO = 700;
+	private static final int IPO_ID = 701;
 
-	private static final int INDEX_COMPONENT = 900;
-	private static final int INDEX_COMPONENT_ID = 901;
+	private static final int INDEX_COMPONENT = 800;
+	private static final int INDEX_COMPONENT_ID = 801;
+
+	private static final int STOCK_TRENDS = 900;
+	private static final int STOCK_TRENDS_ID = 901;
 
 	private static final UriMatcher mUriMatcher = new UriMatcher(
 			UriMatcher.NO_MATCH);
@@ -88,6 +91,11 @@ public class OrionContentProvider extends ContentProvider {
 				DatabaseContract.IndexComponent.TABLE_NAME, INDEX_COMPONENT);
 		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
 				DatabaseContract.IndexComponent.TABLE_NAME + "/#", INDEX_COMPONENT_ID);
+
+		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
+				DatabaseContract.StockTrends.TABLE_NAME, STOCK_TRENDS);
+		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
+				DatabaseContract.StockTrends.TABLE_NAME + "/#", STOCK_TRENDS_ID);
 	}
 
 	ContentResolver mContentResolver = null;
@@ -169,6 +177,13 @@ public class OrionContentProvider extends ContentProvider {
 			break;
 		case INDEX_COMPONENT_ID:
 			type = DatabaseContract.IndexComponent.CONTENT_ITEM_TYPE;
+			break;
+
+		case STOCK_TRENDS:
+			type = DatabaseContract.StockTrends.CONTENT_TYPE;
+			break;
+		case STOCK_TRENDS_ID:
+			type = DatabaseContract.StockTrends.CONTENT_ITEM_TYPE;
 			break;
 		default:
 			break;
@@ -264,6 +279,15 @@ public class OrionContentProvider extends ContentProvider {
 			builder.appendWhere(BaseColumns._ID + " = "
 					+ uri.getLastPathSegment());
 			break;
+
+		case STOCK_TRENDS:
+			builder.setTables(DatabaseContract.StockTrends.TABLE_NAME);
+			break;
+		case STOCK_TRENDS_ID:
+			builder.setTables(DatabaseContract.StockTrends.TABLE_NAME);
+			builder.appendWhere(BaseColumns._ID + " = "
+					+ uri.getLastPathSegment());
+			break;
 		default:
 			break;
 		}
@@ -332,6 +356,11 @@ public class OrionContentProvider extends ContentProvider {
 		case INDEX_COMPONENT:
 			id = mDatabaseManager.mDatabase.insert(
 					DatabaseContract.IndexComponent.TABLE_NAME, null, contentValues);
+			break;
+
+		case STOCK_TRENDS:
+			id = mDatabaseManager.mDatabase.insert(
+					DatabaseContract.StockTrends.TABLE_NAME, null, contentValues);
 			break;
 		default:
 			break;
@@ -522,6 +551,21 @@ public class OrionContentProvider extends ContentProvider {
 					DatabaseContract.IndexComponent.TABLE_NAME, values, whereClause,
 					selectionArgs);
 			break;
+
+		case STOCK_TRENDS:
+			result = mDatabaseManager.mDatabase.update(
+					DatabaseContract.StockTrends.TABLE_NAME, values, selection,
+					selectionArgs);
+			break;
+		case STOCK_TRENDS_ID:
+			whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
+			if (!TextUtils.isEmpty(selection)) {
+				whereClause += " AND " + whereClause;
+			}
+			result = mDatabaseManager.mDatabase.update(
+					DatabaseContract.StockTrends.TABLE_NAME, values, whereClause,
+					selectionArgs);
+			break;
 		default:
 			break;
 		}
@@ -670,6 +714,21 @@ public class OrionContentProvider extends ContentProvider {
 			}
 			result = mDatabaseManager.mDatabase
 					.delete(DatabaseContract.IndexComponent.TABLE_NAME, whereClause,
+							selectionArgs);
+			break;
+
+		case STOCK_TRENDS:
+			result = mDatabaseManager.mDatabase.delete(
+					DatabaseContract.StockTrends.TABLE_NAME, selection, selectionArgs);
+			break;
+
+		case STOCK_TRENDS_ID:
+			whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
+			if (!TextUtils.isEmpty(selection)) {
+				whereClause += " AND " + whereClause;
+			}
+			result = mDatabaseManager.mDatabase
+					.delete(DatabaseContract.StockTrends.TABLE_NAME, whereClause,
 							selectionArgs);
 			break;
 		default:

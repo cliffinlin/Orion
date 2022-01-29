@@ -477,4 +477,54 @@ public final class DatabaseContract {
         public static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
                 + TABLE_NAME;
     }
+
+    public static abstract class StockTrends implements BaseColumns {
+        public static final String TABLE_NAME = "stock_trends";
+
+        public static final Uri CONTENT_URI = Uri.withAppendedPath(
+                DatabaseContract.CONTENT_URI, TABLE_NAME);
+        public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
+                + "/" + DATABASE_NAME + "/" + TABLE_NAME;
+        public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
+                + "/" + DATABASE_NAME + "/" + TABLE_NAME;
+        public static final String SORT_ORDER_DEFAULT = COLUMN_STOCK_ID
+                + " ASC";
+
+        public static final String[] PROJECTION_ALL = {_ID,
+                COLUMN_STOCK_ID, COLUMN_CLASSES, COLUMN_SE, COLUMN_CODE,
+                COLUMN_NAME, COLUMN_PRICE, COLUMN_NET,
+                COLUMN_MIN1, COLUMN_MIN5, COLUMN_MIN15,
+                COLUMN_MIN30, COLUMN_MIN60, COLUMN_DAY,
+                COLUMN_WEEK, COLUMN_MONTH, COLUMN_QUARTER, COLUMN_YEAR,
+                COLUMN_OPERATE, COLUMN_CREATED, COLUMN_MODIFIED};
+
+        private static final String CREATE_TABLE_CONTENT = " (" + _ID
+                + " INTEGER PRIMARY KEY,"
+                + COLUMN_STOCK_ID + TEXT_TYPE + COMMA_SEP
+                + COLUMN_CLASSES + TEXT_TYPE + COMMA_SEP
+                + COLUMN_SE + TEXT_TYPE + COMMA_SEP
+                + COLUMN_CODE + TEXT_TYPE + COMMA_SEP
+                + COLUMN_NAME + TEXT_TYPE + COMMA_SEP
+                + COLUMN_PRICE + DOUBLE_TYPE + COMMA_SEP
+                + COLUMN_NET + DOUBLE_TYPE + COMMA_SEP
+                + COLUMN_MIN1 + TEXT_TYPE + COMMA_SEP
+                + COLUMN_MIN5 + TEXT_TYPE + COMMA_SEP
+                + COLUMN_MIN15 + TEXT_TYPE + COMMA_SEP
+                + COLUMN_MIN30 + TEXT_TYPE + COMMA_SEP
+                + COLUMN_MIN60 + TEXT_TYPE + COMMA_SEP
+                + COLUMN_DAY + TEXT_TYPE + COMMA_SEP
+                + COLUMN_WEEK + TEXT_TYPE + COMMA_SEP
+                + COLUMN_MONTH + TEXT_TYPE + COMMA_SEP
+                + COLUMN_QUARTER + TEXT_TYPE + COMMA_SEP
+                + COLUMN_YEAR + TEXT_TYPE + COMMA_SEP
+                + COLUMN_OPERATE + TEXT_TYPE + COMMA_SEP
+                + COLUMN_CREATED + TEXT_TYPE + COMMA_SEP
+                + COLUMN_MODIFIED + TEXT_TYPE + " )";
+
+        public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
+                + CREATE_TABLE_CONTENT;
+
+        public static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
+                + TABLE_NAME;
+    }
 }
