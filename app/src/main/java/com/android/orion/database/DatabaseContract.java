@@ -156,8 +156,8 @@ public final class DatabaseContract {
                 COLUMN_YIELD, COLUMN_DIVIDEND_RATIO, COLUMN_R_DATE,
                 COLUMN_CREATED, COLUMN_MODIFIED};
 
-        public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
-                + " (" + _ID + " INTEGER PRIMARY KEY," + COLUMN_CLASSES
+        private static final String CREATE_TABLE_CONTENT = " (" + _ID
+                + " INTEGER PRIMARY KEY," + COLUMN_CLASSES
                 + TEXT_TYPE + COMMA_SEP + COLUMN_SE + TEXT_TYPE + COMMA_SEP
                 + COLUMN_CODE + TEXT_TYPE + COMMA_SEP + COLUMN_NAME + TEXT_TYPE
                 + COMMA_SEP + COLUMN_PINYIN + TEXT_TYPE + COMMA_SEP
@@ -200,6 +200,9 @@ public final class DatabaseContract {
                 + COLUMN_DIVIDEND_RATIO + DOUBLE_TYPE + COMMA_SEP
                 + COLUMN_R_DATE + TEXT_TYPE + COMMA_SEP + COLUMN_CREATED
                 + TEXT_TYPE + COMMA_SEP + COLUMN_MODIFIED + TEXT_TYPE + " )";
+
+        public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
+                + CREATE_TABLE_CONTENT;
 
         public static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
                 + TABLE_NAME;
