@@ -23,8 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.orion.database.DatabaseContract;
-import com.android.orion.database.IndexComponent;
-import com.android.orion.database.StockTrends;
 import com.android.orion.database.Stock;
 import com.android.orion.utility.Preferences;
 
@@ -151,9 +149,6 @@ public class StockTrendsListActivity extends ListActivity implements
 
 		case R.id.action_settings:
 			startActivity(new Intent(this, ServiceSettingActivity.class));
-			return true;
-
-		case R.id.action_trends:
 			return true;
 
 		case R.id.action_load:

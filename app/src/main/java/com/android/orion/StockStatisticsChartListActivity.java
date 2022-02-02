@@ -127,8 +127,6 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 			return true;
 
 		case R.id.action_settings:
-//			startActivityForResult(new Intent(this, StockTrendsListActivity.class),
-//					REQUEST_CODE_STOCK_FILTER);
 			return true;
 
 		case R.id.action_order_by_roi:

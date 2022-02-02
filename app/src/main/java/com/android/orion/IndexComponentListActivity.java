@@ -152,9 +152,6 @@ public class IndexComponentListActivity extends ListActivity implements
 			startActivity(new Intent(this, ServiceSettingActivity.class));
 			return true;
 
-		case R.id.action_trends:
-			return true;
-
 		case R.id.action_load:
 			performLoadFromFile();
 			return true;
