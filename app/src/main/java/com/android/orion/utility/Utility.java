@@ -111,7 +111,7 @@ public class Utility {
 				CALENDAR_DATE_TIME_FORMAT);
 	}
 
-	public static Calendar stringToCalendar(String string, String format) {
+	public static Calendar getCalendar(String string, String format) {
 		Calendar calendar = Calendar.getInstance();
 
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format,

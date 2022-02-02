@@ -1,9 +1,11 @@
 package com.android.orion.database;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.text.TextUtils;
 
 import com.android.orion.Constants;
 import com.android.orion.Settings;
@@ -504,202 +506,6 @@ public class Stock extends DatabaseTable {
 		setYield(cursor);
 		setDividendRatio(cursor);
 		setRDate(cursor);
-	}
-
-	public ArrayList<StockData> getStockDataList(String period) {
-		ArrayList<StockData> result = null;
-
-		if (period.equals(Settings.KEY_PERIOD_MIN1)) {
-			result = mStockDataListMin1;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
-			result = mStockDataListMin5;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
-			result = mStockDataListMin15;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
-			result = mStockDataListMin30;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
-			result = mStockDataListMin60;
-		} else if (period.equals(Settings.KEY_PERIOD_DAY)) {
-			result = mStockDataListDay;
-		} else if (period.equals(Settings.KEY_PERIOD_WEEK)) {
-			result = mStockDataListWeek;
-		} else if (period.equals(Settings.KEY_PERIOD_MONTH)) {
-			result = mStockDataListMonth;
-		} else if (period.equals(Settings.KEY_PERIOD_QUARTER)) {
-			result = mStockDataListQuarter;
-		} else if (period.equals(Settings.KEY_PERIOD_YEAR)) {
-			result = mStockDataListYear;
-		}
-
-		return result;
-	}
-
-	public ArrayList<StockData> getDrawVertexList(String period) {
-		ArrayList<StockData> result = null;
-
-		if (period.equals(Settings.KEY_PERIOD_MIN1)) {
-			result = mDrawVertexListMin1;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
-			result = mDrawVertexListMin5;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
-			result = mDrawVertexListMin15;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
-			result = mDrawVertexListMin30;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
-			result = mDrawVertexListMin60;
-		} else if (period.equals(Settings.KEY_PERIOD_DAY)) {
-			result = mDrawVertexListDay;
-		} else if (period.equals(Settings.KEY_PERIOD_WEEK)) {
-			result = mDrawVertexListWeek;
-		} else if (period.equals(Settings.KEY_PERIOD_MONTH)) {
-			result = mDrawVertexListMonth;
-		} else if (period.equals(Settings.KEY_PERIOD_QUARTER)) {
-			result = mDrawVertexListQuarter;
-		} else if (period.equals(Settings.KEY_PERIOD_YEAR)) {
-			result = mDrawVertexListYear;
-		}
-
-		return result;
-	}
-
-	public ArrayList<StockData> getDrawDataList(String period) {
-		ArrayList<StockData> result = null;
-
-		if (period.equals(Settings.KEY_PERIOD_MIN1)) {
-			result = mDrawDataListMin1;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
-			result = mDrawDataListMin5;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
-			result = mDrawDataListMin15;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
-			result = mDrawDataListMin30;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
-			result = mDrawDataListMin60;
-		} else if (period.equals(Settings.KEY_PERIOD_DAY)) {
-			result = mDrawDataListDay;
-		} else if (period.equals(Settings.KEY_PERIOD_WEEK)) {
-			result = mDrawDataListWeek;
-		} else if (period.equals(Settings.KEY_PERIOD_MONTH)) {
-			result = mDrawDataListMonth;
-		} else if (period.equals(Settings.KEY_PERIOD_QUARTER)) {
-			result = mDrawDataListQuarter;
-		} else if (period.equals(Settings.KEY_PERIOD_YEAR)) {
-			result = mDrawDataListYear;
-		}
-
-		return result;
-	}
-
-	public ArrayList<StockData> getStrokeVertexList(String period) {
-		ArrayList<StockData> result = null;
-
-		if (period.equals(Settings.KEY_PERIOD_MIN1)) {
-			result = mStrokeVertexListMin1;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
-			result = mStrokeVertexListMin5;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
-			result = mStrokeVertexListMin15;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
-			result = mStrokeVertexListMin30;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
-			result = mStrokeVertexListMin60;
-		} else if (period.equals(Settings.KEY_PERIOD_DAY)) {
-			result = mStrokeVertexListDay;
-		} else if (period.equals(Settings.KEY_PERIOD_WEEK)) {
-			result = mStrokeVertexListWeek;
-		} else if (period.equals(Settings.KEY_PERIOD_MONTH)) {
-			result = mStrokeVertexListMonth;
-		} else if (period.equals(Settings.KEY_PERIOD_QUARTER)) {
-			result = mStrokeVertexListQuarter;
-		} else if (period.equals(Settings.KEY_PERIOD_YEAR)) {
-			result = mStrokeVertexListYear;
-		}
-
-		return result;
-	}
-
-	public ArrayList<StockData> getStrokeDataList(String period) {
-		ArrayList<StockData> result = null;
-
-		if (period.equals(Settings.KEY_PERIOD_MIN1)) {
-			result = mStrokeDataListMin1;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
-			result = mStrokeDataListMin5;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
-			result = mStrokeDataListMin15;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
-			result = mStrokeDataListMin30;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
-			result = mStrokeDataListMin60;
-		} else if (period.equals(Settings.KEY_PERIOD_DAY)) {
-			result = mStrokeDataListDay;
-		} else if (period.equals(Settings.KEY_PERIOD_WEEK)) {
-			result = mStrokeDataListWeek;
-		} else if (period.equals(Settings.KEY_PERIOD_MONTH)) {
-			result = mStrokeDataListMonth;
-		} else if (period.equals(Settings.KEY_PERIOD_QUARTER)) {
-			result = mStrokeDataListQuarter;
-		} else if (period.equals(Settings.KEY_PERIOD_YEAR)) {
-			result = mStrokeDataListYear;
-		}
-
-		return result;
-	}
-
-	public ArrayList<StockData> getSegmentVertexList(String period) {
-		ArrayList<StockData> result = null;
-
-		if (period.equals(Settings.KEY_PERIOD_MIN1)) {
-			result = mSegmentVertexListMin1;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
-			result = mSegmentVertexListMin5;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
-			result = mSegmentVertexListMin15;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
-			result = mSegmentVertexListMin30;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
-			result = mSegmentVertexListMin60;
-		} else if (period.equals(Settings.KEY_PERIOD_DAY)) {
-			result = mSegmentVertexListDay;
-		} else if (period.equals(Settings.KEY_PERIOD_WEEK)) {
-			result = mSegmentVertexListWeek;
-		} else if (period.equals(Settings.KEY_PERIOD_MONTH)) {
-			result = mSegmentVertexListMonth;
-		} else if (period.equals(Settings.KEY_PERIOD_QUARTER)) {
-			result = mSegmentVertexListQuarter;
-		} else if (period.equals(Settings.KEY_PERIOD_YEAR)) {
-			result = mSegmentVertexListYear;
-		}
-
-		return result;
-	}
-
-	public ArrayList<StockData> getSegmentDataList(String period) {
-		ArrayList<StockData> result = null;
-
-		if (period.equals(Settings.KEY_PERIOD_MIN1)) {
-			result = mSegmentDataListMin1;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
-			result = mSegmentDataListMin5;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
-			result = mSegmentDataListMin15;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
-			result = mSegmentDataListMin30;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
-			result = mSegmentDataListMin60;
-		} else if (period.equals(Settings.KEY_PERIOD_DAY)) {
-			result = mSegmentDataListDay;
-		} else if (period.equals(Settings.KEY_PERIOD_WEEK)) {
-			result = mSegmentDataListWeek;
-		} else if (period.equals(Settings.KEY_PERIOD_MONTH)) {
-			result = mSegmentDataListMonth;
-		} else if (period.equals(Settings.KEY_PERIOD_QUARTER)) {
-			result = mSegmentDataListQuarter;
-		} else if (period.equals(Settings.KEY_PERIOD_YEAR)) {
-			result = mSegmentDataListYear;
-		}
-
-		return result;
 	}
 
 	public String getClases() {
@@ -1587,6 +1393,241 @@ public class Stock extends DatabaseTable {
 
 		setRDate(cursor.getString(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_R_DATE)));
+	}
+
+	public ArrayList<StockData> getStockDataList(String period) {
+		ArrayList<StockData> result = null;
+
+		if (period.equals(Settings.KEY_PERIOD_MIN1)) {
+			result = mStockDataListMin1;
+		} else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
+			result = mStockDataListMin5;
+		} else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
+			result = mStockDataListMin15;
+		} else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
+			result = mStockDataListMin30;
+		} else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
+			result = mStockDataListMin60;
+		} else if (period.equals(Settings.KEY_PERIOD_DAY)) {
+			result = mStockDataListDay;
+		} else if (period.equals(Settings.KEY_PERIOD_WEEK)) {
+			result = mStockDataListWeek;
+		} else if (period.equals(Settings.KEY_PERIOD_MONTH)) {
+			result = mStockDataListMonth;
+		} else if (period.equals(Settings.KEY_PERIOD_QUARTER)) {
+			result = mStockDataListQuarter;
+		} else if (period.equals(Settings.KEY_PERIOD_YEAR)) {
+			result = mStockDataListYear;
+		}
+
+		return result;
+	}
+
+	public ArrayList<StockData> getDrawVertexList(String period) {
+		ArrayList<StockData> result = null;
+
+		if (period.equals(Settings.KEY_PERIOD_MIN1)) {
+			result = mDrawVertexListMin1;
+		} else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
+			result = mDrawVertexListMin5;
+		} else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
+			result = mDrawVertexListMin15;
+		} else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
+			result = mDrawVertexListMin30;
+		} else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
+			result = mDrawVertexListMin60;
+		} else if (period.equals(Settings.KEY_PERIOD_DAY)) {
+			result = mDrawVertexListDay;
+		} else if (period.equals(Settings.KEY_PERIOD_WEEK)) {
+			result = mDrawVertexListWeek;
+		} else if (period.equals(Settings.KEY_PERIOD_MONTH)) {
+			result = mDrawVertexListMonth;
+		} else if (period.equals(Settings.KEY_PERIOD_QUARTER)) {
+			result = mDrawVertexListQuarter;
+		} else if (period.equals(Settings.KEY_PERIOD_YEAR)) {
+			result = mDrawVertexListYear;
+		}
+
+		return result;
+	}
+
+	public ArrayList<StockData> getDrawDataList(String period) {
+		ArrayList<StockData> result = null;
+
+		if (period.equals(Settings.KEY_PERIOD_MIN1)) {
+			result = mDrawDataListMin1;
+		} else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
+			result = mDrawDataListMin5;
+		} else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
+			result = mDrawDataListMin15;
+		} else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
+			result = mDrawDataListMin30;
+		} else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
+			result = mDrawDataListMin60;
+		} else if (period.equals(Settings.KEY_PERIOD_DAY)) {
+			result = mDrawDataListDay;
+		} else if (period.equals(Settings.KEY_PERIOD_WEEK)) {
+			result = mDrawDataListWeek;
+		} else if (period.equals(Settings.KEY_PERIOD_MONTH)) {
+			result = mDrawDataListMonth;
+		} else if (period.equals(Settings.KEY_PERIOD_QUARTER)) {
+			result = mDrawDataListQuarter;
+		} else if (period.equals(Settings.KEY_PERIOD_YEAR)) {
+			result = mDrawDataListYear;
+		}
+
+		return result;
+	}
+
+	public ArrayList<StockData> getStrokeVertexList(String period) {
+		ArrayList<StockData> result = null;
+
+		if (period.equals(Settings.KEY_PERIOD_MIN1)) {
+			result = mStrokeVertexListMin1;
+		} else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
+			result = mStrokeVertexListMin5;
+		} else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
+			result = mStrokeVertexListMin15;
+		} else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
+			result = mStrokeVertexListMin30;
+		} else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
+			result = mStrokeVertexListMin60;
+		} else if (period.equals(Settings.KEY_PERIOD_DAY)) {
+			result = mStrokeVertexListDay;
+		} else if (period.equals(Settings.KEY_PERIOD_WEEK)) {
+			result = mStrokeVertexListWeek;
+		} else if (period.equals(Settings.KEY_PERIOD_MONTH)) {
+			result = mStrokeVertexListMonth;
+		} else if (period.equals(Settings.KEY_PERIOD_QUARTER)) {
+			result = mStrokeVertexListQuarter;
+		} else if (period.equals(Settings.KEY_PERIOD_YEAR)) {
+			result = mStrokeVertexListYear;
+		}
+
+		return result;
+	}
+
+	public ArrayList<StockData> getStrokeDataList(String period) {
+		ArrayList<StockData> result = null;
+
+		if (period.equals(Settings.KEY_PERIOD_MIN1)) {
+			result = mStrokeDataListMin1;
+		} else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
+			result = mStrokeDataListMin5;
+		} else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
+			result = mStrokeDataListMin15;
+		} else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
+			result = mStrokeDataListMin30;
+		} else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
+			result = mStrokeDataListMin60;
+		} else if (period.equals(Settings.KEY_PERIOD_DAY)) {
+			result = mStrokeDataListDay;
+		} else if (period.equals(Settings.KEY_PERIOD_WEEK)) {
+			result = mStrokeDataListWeek;
+		} else if (period.equals(Settings.KEY_PERIOD_MONTH)) {
+			result = mStrokeDataListMonth;
+		} else if (period.equals(Settings.KEY_PERIOD_QUARTER)) {
+			result = mStrokeDataListQuarter;
+		} else if (period.equals(Settings.KEY_PERIOD_YEAR)) {
+			result = mStrokeDataListYear;
+		}
+
+		return result;
+	}
+
+	public ArrayList<StockData> getSegmentVertexList(String period) {
+		ArrayList<StockData> result = null;
+
+		if (period.equals(Settings.KEY_PERIOD_MIN1)) {
+			result = mSegmentVertexListMin1;
+		} else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
+			result = mSegmentVertexListMin5;
+		} else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
+			result = mSegmentVertexListMin15;
+		} else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
+			result = mSegmentVertexListMin30;
+		} else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
+			result = mSegmentVertexListMin60;
+		} else if (period.equals(Settings.KEY_PERIOD_DAY)) {
+			result = mSegmentVertexListDay;
+		} else if (period.equals(Settings.KEY_PERIOD_WEEK)) {
+			result = mSegmentVertexListWeek;
+		} else if (period.equals(Settings.KEY_PERIOD_MONTH)) {
+			result = mSegmentVertexListMonth;
+		} else if (period.equals(Settings.KEY_PERIOD_QUARTER)) {
+			result = mSegmentVertexListQuarter;
+		} else if (period.equals(Settings.KEY_PERIOD_YEAR)) {
+			result = mSegmentVertexListYear;
+		}
+
+		return result;
+	}
+
+	public ArrayList<StockData> getSegmentDataList(String period) {
+		ArrayList<StockData> result = null;
+
+		if (period.equals(Settings.KEY_PERIOD_MIN1)) {
+			result = mSegmentDataListMin1;
+		} else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
+			result = mSegmentDataListMin5;
+		} else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
+			result = mSegmentDataListMin15;
+		} else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
+			result = mSegmentDataListMin30;
+		} else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
+			result = mSegmentDataListMin60;
+		} else if (period.equals(Settings.KEY_PERIOD_DAY)) {
+			result = mSegmentDataListDay;
+		} else if (period.equals(Settings.KEY_PERIOD_WEEK)) {
+			result = mSegmentDataListWeek;
+		} else if (period.equals(Settings.KEY_PERIOD_MONTH)) {
+			result = mSegmentDataListMonth;
+		} else if (period.equals(Settings.KEY_PERIOD_QUARTER)) {
+			result = mSegmentDataListQuarter;
+		} else if (period.equals(Settings.KEY_PERIOD_YEAR)) {
+			result = mSegmentDataListYear;
+		}
+
+		return result;
+	}
+
+	public Calendar getCalendar() {
+		Calendar result = null;
+
+		if (TextUtils.isEmpty(getDate())) {
+			return result;
+		}
+
+		if (TextUtils.isEmpty(getTime())) {
+			result = Utility.getCalendar(getDate(),
+					Utility.CALENDAR_DATE_FORMAT);
+		} else {
+			result = Utility.getCalendar(getDate() + " " + getTime(),
+					Utility.CALENDAR_DATE_TIME_FORMAT);
+		}
+
+		return result;
+	}
+
+	public void setDateTime(String date, String time) {
+		Calendar current;
+
+		if (TextUtils.isEmpty(date)) {
+			return;
+		}
+
+		if (TextUtils.isEmpty(time)) {
+			current = Utility.getCalendar(getDate(),
+					Utility.CALENDAR_DATE_FORMAT);
+		} else {
+			current = Utility.getCalendar(getDate() + " " + getTime(),
+					Utility.CALENDAR_DATE_TIME_FORMAT);
+		}
+
+		if ((getCalendar() == null) || current.after(getCalendar())) {
+			setDate(date);
+			setTime(time);
+		}
 	}
 
 	public String getAction(String period) {

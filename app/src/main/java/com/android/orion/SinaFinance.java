@@ -1266,7 +1266,7 @@ public class SinaFinance extends StockDataProvider {
 
 		boolean bulkInsert = false;
 
-		Calendar today = Utility.stringToCalendar(
+		Calendar today = Utility.getCalendar(
 				Utility.getCurrentDateString(), Utility.CALENDAR_DATE_FORMAT);
 
 		String codeString = "";
@@ -1370,7 +1370,7 @@ public class SinaFinance extends StockDataProvider {
 					}
 
 					if (!TextUtils.isEmpty(dateString)) {
-						Calendar calendar = Utility.stringToCalendar(
+						Calendar calendar = Utility.getCalendar(
 								dateString, Utility.CALENDAR_DATE_FORMAT);
 						if (!calendar.before(today)) {
 							nameString = nameString
@@ -1380,7 +1380,7 @@ public class SinaFinance extends StockDataProvider {
 
 					timeToMarketString = tdElements.get(4).text();
 					if (!TextUtils.isEmpty(timeToMarketString)) {
-						Calendar calendar = Utility.stringToCalendar(
+						Calendar calendar = Utility.getCalendar(
 								timeToMarketString,
 								Utility.CALENDAR_DATE_FORMAT);
 						if (calendar.before(today)) {

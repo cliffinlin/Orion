@@ -28,7 +28,6 @@ import com.android.orion.database.StockData;
 import com.android.orion.database.TotalShare;
 import com.android.orion.utility.Market;
 import com.android.orion.utility.Preferences;
-import com.android.orion.utility.Search;
 import com.android.orion.utility.Utility;
 
 public abstract class StockDataProvider extends StockAnalyzer {
@@ -331,7 +330,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
                 }
             } else {
                 int count = findStockDataToday(cursor);
-                Calendar modifiedCalendar = Utility.stringToCalendar(modified,
+                Calendar modifiedCalendar = Utility.getCalendar(modified,
                         Utility.CALENDAR_DATE_TIME_FORMAT);
                 Calendar stockMarketLunchBeginCalendar = Market
                         .getStockMarketLunchBeginCalendar(Calendar

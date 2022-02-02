@@ -41,7 +41,7 @@ public class Search {
         if (r >= l) {
             int mid = l + (r - l) / 2;
 
-            Calendar calendarMid = Utility.stringToCalendar(stockDataList
+            Calendar calendarMid = Utility.getCalendar(stockDataList
                     .get(mid).getDateTime(), Utility.CALENDAR_DATE_TIME_FORMAT);
 
             // If the element is present at the
@@ -55,7 +55,7 @@ public class Search {
                 return binarySearchStockData(l, mid - 1, calendar,
                         stockDataList);
 
-            Calendar calendarMid1 = Utility.stringToCalendar(stockDataList
+            Calendar calendarMid1 = Utility.getCalendar(stockDataList
                     .get(mid + 1).getDateTime(), Utility.CALENDAR_DATE_TIME_FORMAT);
             if (calendar.after(calendarMid) && (calendar.before(calendarMid1)))
                 return mid;
@@ -94,11 +94,11 @@ public class Search {
             return stockDataList.get(stockDataList.size() - 1);
         }
 
-        Calendar calendar = Utility.stringToCalendar(dateTimeString,
+        Calendar calendar = Utility.getCalendar(dateTimeString,
                 Utility.CALENDAR_DATE_TIME_FORMAT);
-        Calendar calendarMin = Utility.stringToCalendar(stockDataList
+        Calendar calendarMin = Utility.getCalendar(stockDataList
                 .get(0).getDateTime(), Utility.CALENDAR_DATE_TIME_FORMAT);
-        Calendar calendarMax = Utility.stringToCalendar(
+        Calendar calendarMax = Utility.getCalendar(
                 stockDataList.get(stockDataList.size() - 1).getDateTime(),
                 Utility.CALENDAR_DATE_TIME_FORMAT);
 
@@ -125,9 +125,9 @@ public class Search {
             Calendar calendar0;
             Calendar calendar1;
 
-            calendar0 = Utility.stringToCalendar(arg0.getDate(),
+            calendar0 = Utility.getCalendar(arg0.getDate(),
                     Utility.CALENDAR_DATE_TIME_FORMAT);
-            calendar1 = Utility.stringToCalendar(arg1.getDate(),
+            calendar1 = Utility.getCalendar(arg1.getDate(),
                     Utility.CALENDAR_DATE_TIME_FORMAT);
             if (calendar1.before(calendar0)) {
                 return -1;
@@ -144,7 +144,7 @@ public class Search {
         if (r >= l) {
             int mid = l + (r - l) / 2;
 
-            Calendar calendarMid = Utility.stringToCalendar(stockFinancialList
+            Calendar calendarMid = Utility.getCalendar(stockFinancialList
                     .get(mid).getDate(), Utility.CALENDAR_DATE_FORMAT);
 
             // If the element is present at the
@@ -158,7 +158,7 @@ public class Search {
                 return binarySearchStockFinancial(l, mid - 1, calendar,
                         stockFinancialList);
 
-            Calendar calendarMid1 = Utility.stringToCalendar(stockFinancialList
+            Calendar calendarMid1 = Utility.getCalendar(stockFinancialList
                     .get(mid + 1).getDate(), Utility.CALENDAR_DATE_FORMAT);
             if (calendar.after(calendarMid) && (calendar.before(calendarMid1)))
                 return mid;
@@ -187,11 +187,11 @@ public class Search {
             return stockFinancial;
         }
 
-        Calendar calendar = Utility.stringToCalendar(dateString,
+        Calendar calendar = Utility.getCalendar(dateString,
                 Utility.CALENDAR_DATE_FORMAT);
-        Calendar calendarMin = Utility.stringToCalendar(stockFinancialList
+        Calendar calendarMin = Utility.getCalendar(stockFinancialList
                 .get(0).getDate(), Utility.CALENDAR_DATE_FORMAT);
-        Calendar calendarMax = Utility.stringToCalendar(
+        Calendar calendarMax = Utility.getCalendar(
                 stockFinancialList.get(stockFinancialList.size() - 1).getDate(),
                 Utility.CALENDAR_DATE_FORMAT);
 
@@ -216,7 +216,7 @@ public class Search {
         if (r >= l) {
             int mid = l + (r - l) / 2;
 
-            Calendar calendarMid = Utility.stringToCalendar(
+            Calendar calendarMid = Utility.getCalendar(
                     shareBonusList.get(mid).getDate(),
                     Utility.CALENDAR_DATE_FORMAT);
 
@@ -231,7 +231,7 @@ public class Search {
                 return binarySearchShareBonus(l, mid - 1, calendar,
                         shareBonusList);
 
-            Calendar calendarMid1 = Utility.stringToCalendar(shareBonusList
+            Calendar calendarMid1 = Utility.getCalendar(shareBonusList
                     .get(mid + 1).getDate(), Utility.CALENDAR_DATE_FORMAT);
             if (calendar.after(calendarMid) && (calendar.before(calendarMid1)))
                 return mid;
@@ -259,11 +259,11 @@ public class Search {
             return shareBonus;
         }
 
-        Calendar calendar = Utility.stringToCalendar(dateString,
+        Calendar calendar = Utility.getCalendar(dateString,
                 Utility.CALENDAR_DATE_FORMAT);
-        Calendar calendarMin = Utility.stringToCalendar(shareBonusList.get(0)
+        Calendar calendarMin = Utility.getCalendar(shareBonusList.get(0)
                 .getDate(), Utility.CALENDAR_DATE_FORMAT);
-        Calendar calendarMax = Utility.stringToCalendar(
+        Calendar calendarMax = Utility.getCalendar(
                 shareBonusList.get(shareBonusList.size() - 1).getDate(),
                 Utility.CALENDAR_DATE_FORMAT);
 

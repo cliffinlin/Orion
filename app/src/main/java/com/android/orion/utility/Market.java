@@ -4,8 +4,6 @@ import java.util.Calendar;
 
 import android.text.TextUtils;
 
-import com.android.orion.Constants;
-
 public class Market {
 
 	public static final int OPEN_MINUTES = 9 * 60 + 30;
@@ -168,7 +166,7 @@ public class Market {
 		Calendar result = Calendar.getInstance();
 		String dateTimeString = Utility.getCalendarDateString(calendar) + " "
 				+ timeString;
-		result = Utility.stringToCalendar(dateTimeString,
+		result = Utility.getCalendar(dateTimeString,
 				Utility.CALENDAR_DATE_TIME_FORMAT);
 		return result;
 	}

@@ -415,14 +415,14 @@ public class StockDeal extends DatabaseTable {
         }
 
         if (dividend > 0) {
-            Calendar todayCalendar = Utility.stringToCalendar(
+            Calendar todayCalendar = Utility.getCalendar(
                     Utility.getCurrentDateString(), Utility.CALENDAR_DATE_FORMAT);
 
-            Calendar rDateCalendarAfterMonth = Utility.stringToCalendar(
+            Calendar rDateCalendarAfterMonth = Utility.getCalendar(
                     rDate, Utility.CALENDAR_DATE_FORMAT);
             rDateCalendarAfterMonth.add(Calendar.MONTH, 1);
 
-            Calendar rDateCalendarAfterYear = Utility.stringToCalendar(
+            Calendar rDateCalendarAfterYear = Utility.getCalendar(
                     rDate, Utility.CALENDAR_DATE_FORMAT);
             rDateCalendarAfterYear.add(Calendar.YEAR, 1);
 

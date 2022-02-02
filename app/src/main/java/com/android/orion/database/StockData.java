@@ -782,10 +782,10 @@ public class StockData extends StockDatabaseTable {
 		}
 
 		if (TextUtils.isEmpty(getTime())) {
-			result = Utility.stringToCalendar(getDate(),
+			result = Utility.getCalendar(getDate(),
 					Utility.CALENDAR_DATE_FORMAT);
 		} else {
-			result = Utility.stringToCalendar(getDate() + " " + getTime(),
+			result = Utility.getCalendar(getDate() + " " + getTime(),
 					Utility.CALENDAR_DATE_TIME_FORMAT);
 		}
 

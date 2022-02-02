@@ -1,7 +1,6 @@
 package com.android.orion;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -318,9 +317,9 @@ public class StockAnalyzer {
 		for (StockFinancial stockFinancial : stockFinancialList) {
 			while (j < totalShareList.size()) {
 				TotalShare totalShare = totalShareList.get(j);
-				if (Utility.stringToCalendar(stockFinancial.getDate(),
+				if (Utility.getCalendar(stockFinancial.getDate(),
 						Utility.CALENDAR_DATE_FORMAT).after(
-						Utility.stringToCalendar(totalShare.getDate(),
+						Utility.getCalendar(totalShare.getDate(),
 								Utility.CALENDAR_DATE_FORMAT))) {
 					stockFinancial.setTotalShare(totalShare.getTotalShare());
 					break;
@@ -482,9 +481,9 @@ public class StockAnalyzer {
 
 			while (j < stockFinancialList.size()) {
 				StockFinancial stockFinancial = stockFinancialList.get(j);
-				if (Utility.stringToCalendar(stockData.getDate(),
+				if (Utility.getCalendar(stockData.getDate(),
 						Utility.CALENDAR_DATE_FORMAT).after(
-						Utility.stringToCalendar(stockFinancial.getDate(),
+						Utility.getCalendar(stockFinancial.getDate(),
 								Utility.CALENDAR_DATE_FORMAT))) {
 					pe = Utility.Round(
 							100.0 * stockFinancial.getNetProfitPerShareInYear()
@@ -1023,6 +1022,7 @@ public class StockAnalyzer {
 			}
 		}
 
+		stock.setDateTime(stockData.getDate(), stockData.getTime());
 		stock.setAction(period, action + stockData.getAction());
 	}
 

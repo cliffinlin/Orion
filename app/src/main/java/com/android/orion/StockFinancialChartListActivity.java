@@ -491,9 +491,9 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 			Calendar calendar0;
 			Calendar calendar1;
 
-			calendar0 = Utility.stringToCalendar(arg0.getDate(),
+			calendar0 = Utility.getCalendar(arg0.getDate(),
 					Utility.CALENDAR_DATE_TIME_FORMAT);
-			calendar1 = Utility.stringToCalendar(arg1.getDate(),
+			calendar1 = Utility.getCalendar(arg1.getDate(),
 					Utility.CALENDAR_DATE_TIME_FORMAT);
 			if (calendar1.before(calendar0)) {
 				return -1;
@@ -533,7 +533,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 		if (r >= l) {
 			int mid = l + (r - l) / 2;
 
-			Calendar calendarMid = Utility.stringToCalendar(mStockFinancialList
+			Calendar calendarMid = Utility.getCalendar(mStockFinancialList
 					.get(mid).getDate(), Utility.CALENDAR_DATE_FORMAT);
 
 			// If the element is present at the
@@ -546,7 +546,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 			if (calendar.before(calendarMid))
 				return binarySearch(l, mid - 1, calendar);
 
-			Calendar calendarMid1 = Utility.stringToCalendar(mStockFinancialList
+			Calendar calendarMid1 = Utility.getCalendar(mStockFinancialList
 					.get(mid + 1).getDate(), Utility.CALENDAR_DATE_FORMAT);
 			if (calendar.after(calendarMid) && (calendar.before(calendarMid1)))
 				return mid;
@@ -573,13 +573,13 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 			return stockFinancial;
 		}
 
-		Calendar calendar = Utility.stringToCalendar(dateString,
+		Calendar calendar = Utility.getCalendar(dateString,
 				Utility.CALENDAR_DATE_FORMAT);
-		Calendar calendarMin = Utility.stringToCalendar(
+		Calendar calendarMin = Utility.getCalendar(
 				mStockFinancialList.get(0).getDate(),
 				Utility.CALENDAR_DATE_FORMAT);
 		Calendar calendarMax = Utility
-				.stringToCalendar(
+				.getCalendar(
 						mStockFinancialList.get(mStockFinancialList.size() - 1)
 								.getDate(), Utility.CALENDAR_DATE_FORMAT);
 
