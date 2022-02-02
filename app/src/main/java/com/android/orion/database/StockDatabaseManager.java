@@ -7,6 +7,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.ArrayMap;
 
 import com.android.orion.Constants;
 import com.android.orion.Settings;
@@ -84,6 +85,39 @@ public class StockDatabaseManager extends DatabaseManager {
 		cursor = queryStock(selection, null, null);
 
 		return cursor;
+	}
+
+	public void getStockList(String selection, ArrayList<Stock> stockList) {
+		Cursor cursor = null;
+
+		if (stockList == null) {
+			return;
+		}
+
+		stockList.clear();
+
+		try {
+			cursor = queryStock(selection, null, null);
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				while (cursor.moveToNext()) {
+					Stock stock = new Stock();
+					stock.set(cursor);
+
+					stockList.add(stock);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
+	public void getFavoriteStockList(ArrayList<Stock> stockList) {
+		String selection = DatabaseContract.COLUMN_FLAG + " = "
+				+ Stock.FLAG_FAVORITE;
+
+		getStockList(selection, stockList);
 	}
 
 	public void getStockById(Stock stock) {

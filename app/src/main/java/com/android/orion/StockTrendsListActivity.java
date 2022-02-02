@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.orion.database.DatabaseContract;
+import com.android.orion.database.IndexComponent;
 import com.android.orion.database.StockTrends;
 import com.android.orion.database.Stock;
 import com.android.orion.utility.Preferences;
@@ -459,6 +460,7 @@ public class StockTrendsListActivity extends ListActivity implements
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle arg1) {
 		String selection = "";
+		String[] selectionArgs = null;
 		CursorLoader loader = null;
 
 		switch (id) {
@@ -467,11 +469,28 @@ public class StockTrendsListActivity extends ListActivity implements
 				long stockId = getIntent().getLongExtra(Constants.EXTRA_STOCK_ID,
 						Stock.INVALID_ID);
 				selection = DatabaseContract.COLUMN_STOCK_ID + " = " + stockId;
+                selectionArgs = null;
 			} else {
-				selection = DatabaseContract.COLUMN_ID + " != " + Stock.INVALID_ID;
+                ArrayList<Stock> stockList = new ArrayList<>();
+                StringBuilder placeHolder = new StringBuilder();
+                StringBuilder stockIds = new StringBuilder();
+
+                mStockDatabaseManager.getFavoriteStockList(stockList);
+                if (stockList.size() > 0) {
+                    placeHolder.append("?");
+                    stockIds.append(stockList.get(0).getId());
+                    for (int i = 1; i < stockList.size(); i++) {
+                        placeHolder.append("," + "?");
+                        stockIds.append("," + stockList.get(i).getId());
+                    }
+
+                    selection = DatabaseContract.COLUMN_STOCK_ID + " in (" + placeHolder.toString() + " )";
+                    selectionArgs = stockIds.toString().split(",");
+                }
 			}
+
 			loader = new CursorLoader(this, DatabaseContract.StockTrends.CONTENT_URI,
-					DatabaseContract.StockTrends.PROJECTION_ALL, selection, null,
+					DatabaseContract.StockTrends.PROJECTION_ALL, selection, selectionArgs,
 					mSortOrder);
 
 //			mStockList.clear();

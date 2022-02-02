@@ -459,6 +459,7 @@ public class IndexComponentListActivity extends ListActivity implements
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle arg1) {
 		String selection = "";
+		String[] selectionArgs = null;
 		CursorLoader loader = null;
 
 		switch (id) {
@@ -481,17 +482,15 @@ public class IndexComponentListActivity extends ListActivity implements
 				}
 
 				selection = DatabaseContract.COLUMN_CODE + " in (" + placeHolder.toString() + " )";
-				String[] selectionArgs = indexIds.toString().split(",");
-
-				loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
-						DatabaseContract.Stock.PROJECTION_ALL, selection, selectionArgs,
-						mSortOrder);
+				selectionArgs = indexIds.toString().split(",");
 			} else {
 				selection = DatabaseContract.COLUMN_ID + " = " + Stock.INVALID_ID;
-				loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
-						DatabaseContract.Stock.PROJECTION_ALL, selection, null,
-						mSortOrder);
+				selectionArgs = null;
 			}
+
+			loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
+					DatabaseContract.Stock.PROJECTION_ALL, selection, selectionArgs,
+					mSortOrder);
 
 			mStockList.clear();
 			break;
