@@ -109,8 +109,6 @@ public class StockFinancialListActivity extends ListActivity implements
 
         setContentView(R.layout.activity_stock_financial_list);
 
-        mStockFilter.read();
-
         mSortOrder = Preferences.getString(mContext, Settings.KEY_SORT_ORDER_FINANCIAL_LIST,
                 mSortOrderDefault);
 
@@ -667,7 +665,8 @@ public class StockFinancialListActivity extends ListActivity implements
 
         switch (id) {
             case LOADER_ID_STOCK_FINANCIAL_LIST:
-                selection += mStockFilter.getSelection();
+                selection += DatabaseContract.COLUMN_FLAG + " = "
+                        + Stock.FLAG_FAVORITE;
 
                 loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
                         DatabaseContract.Stock.PROJECTION_ALL, selection, null,

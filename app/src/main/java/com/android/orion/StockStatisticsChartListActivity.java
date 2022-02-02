@@ -52,7 +52,6 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 	public static final int FLING_VELOCITY = 100;
 
 	public static final int MESSAGE_REFRESH = 0;
-	public static final int REQUEST_CODE_STOCK_FILTER = 1;
 
 	int mStockListIndex = 0;
 
@@ -96,8 +95,6 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 		// For chart init only
 
 		setContentView(R.layout.activity_stock_statistics_chart_list);
-
-		mStockFilter.read();
 
 		initListView();
 
@@ -183,12 +180,6 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 
 		if (resultCode == RESULT_OK) {
 			switch (requestCode) {
-			case REQUEST_CODE_STOCK_FILTER:
-				Bundle bundle = intent.getExtras();
-				if (bundle != null) {
-					mStockFilter.get(bundle);
-				}
-				break;
 
 			default:
 				break;
@@ -305,7 +296,8 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 		String selection = "";
 		CursorLoader loader = null;
 
-		selection += mStockFilter.getSelection();
+		selection += DatabaseContract.COLUMN_FLAG + " = "
+				+ Stock.FLAG_FAVORITE;
 
 		loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
 				DatabaseContract.Stock.PROJECTION_ALL, selection, null,

@@ -93,8 +93,6 @@ public class StockListActivity extends ListActivity implements
 
 		setContentView(R.layout.activity_stock_list);
 
-		mStockFilter.read();
-
 		mSortOrder = Preferences.getString(mContext, Settings.KEY_SORT_ORDER_MARKET_LIST,
 				mSortOrderDefault);
 
@@ -452,7 +450,8 @@ public class StockListActivity extends ListActivity implements
 
 		switch (id) {
 		case LOADER_ID_STOCK_LIST:
-			selection += mStockFilter.getSelection();
+			selection += DatabaseContract.COLUMN_FLAG + " = "
+					+ Stock.FLAG_FAVORITE;
 
 			loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
 					DatabaseContract.Stock.PROJECTION_ALL, selection, null,

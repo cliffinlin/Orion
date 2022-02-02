@@ -49,8 +49,6 @@ public class BaseActivity extends Activity {
 	String mAction = null;
 	Intent mIntent = null;
 
-	StockFilter mStockFilter;
-
 	PowerManager mPowerManager;
 	WakeLock mWakeLock;
 
@@ -133,8 +131,6 @@ public class BaseActivity extends Activity {
 		LocalBroadcastManager.getInstance(this).registerReceiver(
 				mBroadcastReceiver,
 				new IntentFilter(Constants.ACTION_RESTART_LOADER));
-
-		mStockFilter = new StockFilter(mContext);
 
 		mIntent = getIntent();
 		if (mIntent != null) {

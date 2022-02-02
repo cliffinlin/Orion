@@ -50,8 +50,6 @@ public class StockAnalyzer {
 	NotificationManager mNotificationManager;
 	StockDatabaseManager mStockDatabaseManager;
 
-	StockFilter mStockFilter;
-
 	public StockAnalyzer(Context context) {
 		mContext = context;
 
@@ -72,8 +70,6 @@ public class StockAnalyzer {
 		if (mStockDatabaseManager == null) {
 			mStockDatabaseManager = StockDatabaseManager.getInstance(mContext);
 		}
-
-		mStockFilter = new StockFilter(mContext);
 	}
 
 	void acquireWakeLock() {

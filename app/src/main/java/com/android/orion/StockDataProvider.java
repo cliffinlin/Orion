@@ -117,8 +117,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
             return;
         }
 
-        mStockFilter.read();
-        selection += mStockFilter.getSelection();
+        selection += DatabaseContract.COLUMN_FLAG + " = "
+                + Stock.FLAG_FAVORITE;
 
         try {
             stockArrayMap.clear();

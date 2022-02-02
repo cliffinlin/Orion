@@ -402,8 +402,8 @@ public class StockDataChartListActivity extends BaseActivity implements
 		String selection = "";
 		CursorLoader loader = null;
 
-		mStockFilter.read();
-		selection += mStockFilter.getSelection();
+		selection += DatabaseContract.COLUMN_FLAG + " = "
+				+ Stock.FLAG_FAVORITE;
 
 		loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
 				DatabaseContract.Stock.PROJECTION_ALL, selection, null,

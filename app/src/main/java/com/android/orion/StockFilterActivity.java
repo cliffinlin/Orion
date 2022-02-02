@@ -32,11 +32,14 @@ public class StockFilterActivity extends DatabaseActivity implements
 	Button mButtonOk;
 	Button mButtonCancel;
 
+	StockFilter mStockFilter = null;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_stock_filter);
 
+		mStockFilter = new StockFilter(this);
 		mStockFilter.read();
 
 		initView();
