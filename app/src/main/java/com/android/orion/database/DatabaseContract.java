@@ -488,12 +488,12 @@ public final class DatabaseContract {
                 + "/" + DATABASE_NAME + "/" + TABLE_NAME;
         public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
                 + "/" + DATABASE_NAME + "/" + TABLE_NAME;
-        public static final String SORT_ORDER_DEFAULT = COLUMN_STOCK_ID
-                + " ASC";
+        public static final String SORT_ORDER_DEFAULT = COLUMN_DATE + " ASC";
 
         public static final String[] PROJECTION_ALL = {_ID,
                 COLUMN_STOCK_ID, COLUMN_CLASSES, COLUMN_SE, COLUMN_CODE,
                 COLUMN_NAME, COLUMN_PRICE, COLUMN_NET,
+                COLUMN_DATE, COLUMN_TIME,
                 COLUMN_MIN1, COLUMN_MIN5, COLUMN_MIN15,
                 COLUMN_MIN30, COLUMN_MIN60, COLUMN_DAY,
                 COLUMN_WEEK, COLUMN_MONTH, COLUMN_QUARTER, COLUMN_YEAR,
@@ -508,6 +508,8 @@ public final class DatabaseContract {
                 + COLUMN_NAME + TEXT_TYPE + COMMA_SEP
                 + COLUMN_PRICE + DOUBLE_TYPE + COMMA_SEP
                 + COLUMN_NET + DOUBLE_TYPE + COMMA_SEP
+                + COLUMN_DATE + TEXT_TYPE + COMMA_SEP
+                + COLUMN_TIME + TEXT_TYPE + COMMA_SEP
                 + COLUMN_MIN1 + TEXT_TYPE + COMMA_SEP
                 + COLUMN_MIN5 + TEXT_TYPE + COMMA_SEP
                 + COLUMN_MIN15 + TEXT_TYPE + COMMA_SEP

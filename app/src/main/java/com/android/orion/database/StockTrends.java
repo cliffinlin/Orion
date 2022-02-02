@@ -12,6 +12,8 @@ public class StockTrends extends DatabaseTable {
 	private String mName;
 	private double mPrice;
 	private double mNet;
+	private String mDate;
+	private String mTime;
 	private String mActionMin1;
 	private String mActionMin5;
 	private String mActionMin15;
@@ -48,6 +50,8 @@ public class StockTrends extends DatabaseTable {
 		mName = "";
 		mPrice = 0;
 		mNet = 0;
+		mDate = "";
+		mTime = "";
 		mActionMin1 = "";
 		mActionMin5 = "";
 		mActionMin15 = "";
@@ -72,6 +76,8 @@ public class StockTrends extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
 		contentValues.put(DatabaseContract.COLUMN_PRICE, mPrice);
 		contentValues.put(DatabaseContract.COLUMN_NET, mNet);
+		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);
+		contentValues.put(DatabaseContract.COLUMN_TIME, mTime);
 		contentValues.put(DatabaseContract.COLUMN_MIN1, mActionMin1);
 		contentValues.put(DatabaseContract.COLUMN_MIN5, mActionMin5);
 		contentValues.put(DatabaseContract.COLUMN_MIN15, mActionMin15);
@@ -103,6 +109,8 @@ public class StockTrends extends DatabaseTable {
 		setName(stockTrends.mName);
 		setPrice(stockTrends.mPrice);
 		setNet(stockTrends.mNet);
+		setDate(stockTrends.mDate);
+		setTime(stockTrends.mTime);
 		setActionMin1(stockTrends.mActionMin1);
 		setActionMin5(stockTrends.mActionMin5);
 		setActionMin15(stockTrends.mActionMin15);
@@ -133,6 +141,8 @@ public class StockTrends extends DatabaseTable {
 		setName(cursor);
 		setPrice(cursor);
 		setNet(cursor);
+		setDate(cursor);
+		setTime(cursor);
 		setActionMin1(cursor);
 		setActionMin5(cursor);
 		setActionMin15(cursor);
@@ -158,6 +168,8 @@ public class StockTrends extends DatabaseTable {
 		setName(stock.getName());
 		setPrice(stock.getPrice());
 		setNet(stock.getNet());
+		setDate(stock.getDate());
+		setTime(stock.getTime());
 		setActionMin1(stock.getActionMin1());
 		setActionMin5(stock.getActionMin5());
 		setActionMin15(stock.getActionMin15());
@@ -290,6 +302,40 @@ public class StockTrends extends DatabaseTable {
 
 		setNet(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_NET)));
+	}
+
+	public String getDate() {
+		return mDate;
+	}
+
+	public void setDate(String date) {
+		mDate = date;
+	}
+
+	void setDate(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setDate(cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_DATE)));
+	}
+
+	public String getTime() {
+		return mTime;
+	}
+
+	public void setTime(String time) {
+		mTime = time;
+	}
+
+	void setTime(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setTime(cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_TIME)));
 	}
 
 	String getActionMin1() {

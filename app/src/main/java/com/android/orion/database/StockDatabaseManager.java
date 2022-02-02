@@ -1,6 +1,7 @@
 package com.android.orion.database;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import android.content.ContentValues;
@@ -2242,7 +2243,9 @@ public class StockDatabaseManager extends DatabaseManager {
 			return cursor;
 		}
 
-		String selection = getStockTrendsSelection(stockTrends);
+		String selection = DatabaseContract.COLUMN_STOCK_ID + " = " + stockTrends.getStockId()
+				+ " AND " + DatabaseContract.COLUMN_DATE + " = " + "\'" + stockTrends.getDate() + "\'"
+				+ " AND " + DatabaseContract.COLUMN_TIME + " = " + "\'" + stockTrends.getTime() + "\'";
 		String sortOrder = getStockTrendsOrder();
 
 		cursor = mContentResolver
@@ -2344,7 +2347,6 @@ public class StockDatabaseManager extends DatabaseManager {
 
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
-				stockTrends.setCreated(cursor);
 				result = true;
 			}
 		} catch (Exception e) {
@@ -2363,7 +2365,9 @@ public class StockDatabaseManager extends DatabaseManager {
 			return result;
 		}
 
-		String where = getStockTrendsSelection(stockTrends);
+		String where = DatabaseContract.COLUMN_STOCK_ID + " = " + stockTrends.getStockId()
+				+ " AND " + DatabaseContract.COLUMN_DATE + " = " + "\'" + stockTrends.getDate() + "\'"
+				+ " AND " + DatabaseContract.COLUMN_TIME + " = " + "\'" + stockTrends.getTime() + "\'";
 
 		result = mContentResolver.update(DatabaseContract.StockTrends.CONTENT_URI,
 				contentValues, where, null);
@@ -2429,6 +2433,7 @@ public class StockDatabaseManager extends DatabaseManager {
 	}
 
 	public String getStockTrendsOrder() {
-		return DatabaseContract.StockTrends.SORT_ORDER_DEFAULT;
+		return DatabaseContract.COLUMN_DATE + " ASC " + ","
+				+ DatabaseContract.COLUMN_TIME + " ASC ";
 	}
 }

@@ -1040,7 +1040,12 @@ public class StockAnalyzer {
 					stock.getContentValuesAnalyze(""));
 
 			stockTrends.set(stock);
-			mStockDatabaseManager.insertStockTrends(stockTrends);
+
+			if (mStockDatabaseManager.isStockTrendsExist(stockTrends)) {
+                mStockDatabaseManager.updateStockTrends(stockTrends, stockTrends.getContentValues());
+            } else {
+                mStockDatabaseManager.insertStockTrends(stockTrends);
+            }
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
