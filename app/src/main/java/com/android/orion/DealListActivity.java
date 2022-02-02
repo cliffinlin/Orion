@@ -50,8 +50,9 @@ public class DealListActivity extends ListActivity implements
 
     static final int MESSAGE_DELETE_DEAL = 0;
     static final int MESSAGE_DELETE_DEAL_LIST = 1;
-    static final int MESSAGE_VIEW_STOCK_CHAT = 4;
-    static final int MESSAGE_VIEW_STOCK_DEAL = 5;
+
+    static final int MESSAGE_VIEW_STOCK_DEAL = 4;
+    static final int MESSAGE_VIEW_STOCK_CHAT = 5;
 
     static final int REQUEST_CODE_DEAL_INSERT = 0;
     static final int REQUEST_CODE_DEAL_EDIT = 1;
@@ -89,8 +90,10 @@ public class DealListActivity extends ListActivity implements
     SimpleCursorAdapter mRightAdapter = null;
 
     ActionMode mCurrentActionMode = null;
+
     StockDeal mDeal = new StockDeal();
     List<StockDeal> mDealList = new ArrayList<StockDeal>();
+
     Stock mStock = new Stock();
 
     int mFilterType = FILTER_TYPE_NONE;
@@ -116,6 +119,15 @@ public class DealListActivity extends ListActivity implements
                 case MESSAGE_DELETE_DEAL_LIST:
                     break;
 
+                case MESSAGE_VIEW_STOCK_DEAL:
+                    getStock();
+
+                    intent = new Intent(mContext, StockActivity.class);
+                    intent.setAction(StockActivity.ACTION_STOCK_EDIT);
+                    intent.putExtra(Constants.EXTRA_STOCK_ID, mStock.getId());
+                    startActivity(intent);
+                    break;
+
                 case MESSAGE_VIEW_STOCK_CHAT:
                     getStock();
 
@@ -129,15 +141,6 @@ public class DealListActivity extends ListActivity implements
                     intent.putStringArrayListExtra(Constants.EXTRA_STOCK_ID_LIST,
                             stockIDList);
                     intent.putExtra(Constants.EXTRA_STOCK_DEAL, true);
-                    startActivity(intent);
-                    break;
-
-                case MESSAGE_VIEW_STOCK_DEAL:
-                    getStock();
-
-                    intent = new Intent(mContext, StockActivity.class);
-                    intent.setAction(StockActivity.ACTION_STOCK_EDIT);
-                    intent.putExtra(Constants.EXTRA_STOCK_ID, mStock.getId());
                     startActivity(intent);
                     break;
 

@@ -1,7 +1,9 @@
 package com.android.orion;
 
+import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
@@ -10,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,6 +27,7 @@ import android.widget.Toast;
 
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
+import com.android.orion.database.StockTrends;
 import com.android.orion.utility.Preferences;
 
 import java.util.ArrayList;
@@ -39,6 +43,9 @@ public class StockTrendsListActivity extends ListActivity implements
 
 	public static final int REQUEST_CODE_STOCK_TRENDS_INSERT = 0;
     public static final int REQUEST_CODE_STOCK_TRENDS_SELECT = 1;
+
+	static final int MESSAGE_VIEW_STOCK_DEAL = 4;
+	static final int MESSAGE_VIEW_STOCK_CHAT = 5;
 
 	static final int mHeaderTextDefaultColor = Color.BLACK;
 	static final int mHeaderTextHighlightColor = Color.RED;
@@ -70,11 +77,17 @@ public class StockTrendsListActivity extends ListActivity implements
 	SimpleCursorAdapter mLeftAdapter = null;
 	SimpleCursorAdapter mRightAdapter = null;
 
+	ActionMode mCurrentActionMode = null;
+
+	StockTrends mStockTrends = new StockTrends();
+
 	Handler mHandler = new Handler(Looper.getMainLooper()) {
 
 		@Override
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
+
+			Intent intent = null;
 
 			switch (msg.what) {
 			case MESSAGE_REFRESH:
@@ -83,6 +96,31 @@ public class StockTrendsListActivity extends ListActivity implements
 					mOrionService.download();
 					restartLoader();
 				}
+				break;
+
+			case MESSAGE_VIEW_STOCK_DEAL:
+				getStock();
+
+				intent = new Intent(mContext, StockActivity.class);
+				intent.setAction(StockActivity.ACTION_STOCK_EDIT);
+				intent.putExtra(Constants.EXTRA_STOCK_ID, mStock.getId());
+				startActivity(intent);
+				break;
+
+			case MESSAGE_VIEW_STOCK_CHAT:
+				getStock();
+
+				ArrayList<String> stockIDList = new ArrayList<String>();
+				for (Stock stock : mStockList) {
+					stockIDList.add(String.valueOf(stock.getId()));
+				}
+
+				intent = new Intent(mContext, StockDataChartListActivity.class);
+				intent.putExtra(Constants.EXTRA_STOCK_ID, mStock.getId());
+				intent.putStringArrayListExtra(Constants.EXTRA_STOCK_ID_LIST,
+						stockIDList);
+				intent.putExtra(Constants.EXTRA_STOCK_DEAL, true);
+				startActivity(intent);
 				break;
 
 			default:
@@ -117,7 +155,7 @@ public class StockTrendsListActivity extends ListActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.stock_list, menu);
+		getMenuInflater().inflate(R.menu.stock_trends_list, menu);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		return true;
 	}
@@ -129,38 +167,32 @@ public class StockTrendsListActivity extends ListActivity implements
 			finish();
 			return true;
 
-		case R.id.action_new:
-//			Intent intentNew = new Intent(this, StockActivity.class);
-//			intentNew.setAction(StockActivity.ACTION_STOCK_TRENDS_INSERT);
-//			intentNew.putExtra(Constants.EXTRA_INDEX_CODE, mIntent.getStringExtra(Constants.EXTRA_INDEX_CODE));
-//			startActivityForResult(intentNew, REQUEST_CODE_STOCK_TRENDS_INSERT);
-			return true;
-
-		case R.id.action_search:
-//			Intent intentSearch = new Intent(this, StockSearchActivity.class);
-//			intentSearch.setAction(StockListEditActivity.ACTION_STOCK_TRENDS_SELECT);
-//			intentSearch.putExtra(Constants.EXTRA_INDEX_CODE, mIntent.getStringExtra(Constants.EXTRA_INDEX_CODE));
-//			startActivityForResult(intentSearch, REQUEST_CODE_STOCK_TRENDS_SELECT);
-			return true;
-
-		case R.id.action_refresh:
-			mHandler.sendEmptyMessage(MESSAGE_REFRESH);
-			return true;
-
 		case R.id.action_settings:
 			startActivity(new Intent(this, ServiceSettingActivity.class));
 			return true;
 
-		case R.id.action_load:
-			performLoadFromFile();
-			return true;
-
-		case R.id.action_save:
-			performSaveToFile();
-			return true;
-
-		case R.id.action_deal:
-			startActivity(new Intent(this, DealListActivity.class));
+		case R.id.action_delete_all:
+            new AlertDialog.Builder(mContext)
+                    .setTitle(R.string.delete)
+                    .setMessage(R.string.delete_confirm)
+                    .setPositiveButton(R.string.ok,
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                    StockTrends stockTrends = new StockTrends();
+                                    long stockId = getIntent().getLongExtra(Constants.EXTRA_STOCK_ID,
+                                            Stock.INVALID_ID);
+                                    stockTrends.setStockId(stockId);
+                                    mStockDatabaseManager.deleteStockTrends(stockTrends);
+                                }
+                            })
+                    .setNegativeButton(R.string.cancel,
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                }
+                            }).setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
 			return true;
 
 		default:
@@ -551,23 +583,13 @@ public class StockTrendsListActivity extends ListActivity implements
 			}
 		} else {
 			if (parent.getId() == R.id.left_listview) {
-				mStock.setId(id);
-				mStockDatabaseManager.getStockById(mStock);
-
-				Intent intent = new Intent(mContext,
-						StockDealListActivity.class);
-				Bundle bundle = new Bundle();
-				bundle.putString(Constants.EXTRA_STOCK_SE, mStock.getSE());
-				bundle.putString(Constants.EXTRA_STOCK_CODE, mStock.getCode());
-				intent.putExtras(bundle);
-				startActivity(intent);
+				mStockTrends.setId(id);
+				mHandler.sendEmptyMessage(MESSAGE_VIEW_STOCK_DEAL);
 			} else {
-				Intent intent = new Intent(this,
-						StockDataChartListActivity.class);
-				intent.putExtra(Constants.EXTRA_STOCK_LIST_SORT_ORDER,
-						mSortOrder);
-				intent.putExtra(Constants.EXTRA_STOCK_ID, id);
-				startActivity(intent);
+				if (mCurrentActionMode == null) {
+					mStockTrends.setId(id);
+					mHandler.sendEmptyMessage(MESSAGE_VIEW_STOCK_CHAT);
+				}
 			}
 		}
 	}
@@ -575,10 +597,6 @@ public class StockTrendsListActivity extends ListActivity implements
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
 			int position, long id) {
-//        Intent intentSearch = new Intent(this, StockSearchActivity.class);
-//        intentSearch.setAction(StockListEditActivity.ACTION_STOCK_TRENDS_SELECT);
-//        intentSearch.putExtra(Constants.EXTRA_INDEX_CODE, mIntent.getStringExtra(Constants.EXTRA_INDEX_CODE));
-//        startActivityForResult(intentSearch, REQUEST_CODE_STOCK_TRENDS_SELECT);
 		return true;
 	}
 
@@ -594,6 +612,15 @@ public class StockTrendsListActivity extends ListActivity implements
 		}
 
 		return false;
+	}
+
+	void getStock() {
+		mStockDatabaseManager.getStockTrendsById(mStockTrends);
+
+		mStock.setSE(mStockTrends.getSE());
+		mStock.setCode(mStockTrends.getCode());
+
+		mStockDatabaseManager.getStock(mStock);
 	}
 
 	private class RightViewBinder implements SimpleCursorAdapter.ViewBinder {

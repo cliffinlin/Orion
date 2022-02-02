@@ -2256,6 +2256,41 @@ public class StockDatabaseManager extends DatabaseManager {
 		return cursor;
 	}
 
+	public Cursor queryStockTrendsById(StockTrends stockTrends) {
+		Cursor cursor = null;
+
+		if (stockTrends == null) {
+			return cursor;
+		}
+
+		String selection = DatabaseContract.COLUMN_ID + "=" + stockTrends.getId();
+
+		cursor = queryStockTrends(selection, null, null);
+
+		return cursor;
+	}
+
+	public void getStockTrendsById(StockTrends stockTrends) {
+		Cursor cursor = null;
+
+		if (stockTrends == null) {
+			return;
+		}
+
+		try {
+			cursor = queryStockTrendsById(stockTrends);
+
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				cursor.moveToNext();
+				stockTrends.set(cursor);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
 	public void getStockTrends(StockTrends stockTrends) {
 		Cursor cursor = null;
 
@@ -2395,7 +2430,7 @@ public class StockDatabaseManager extends DatabaseManager {
 			return result;
 		}
 
-		String where = getStockTrendsSelection(stockTrends);
+		String where = DatabaseContract.COLUMN_STOCK_ID + " = " + stockTrends.getStockId();
 
 		result = mContentResolver.delete(DatabaseContract.StockTrends.CONTENT_URI,
 				where, null);
