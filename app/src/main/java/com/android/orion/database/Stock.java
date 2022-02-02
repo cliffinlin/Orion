@@ -39,6 +39,8 @@ public class Stock extends DatabaseTable {
 	private double mNet;
 	private long mVolume;
 	private long mValue;
+	private String mDate;
+	private String mTime;
 	private String mActionMin1;
 	private String mActionMin5;
 	private String mActionMin15;
@@ -77,7 +79,6 @@ public class Stock extends DatabaseTable {
 	private double mDividend;
 	private double mYield;
 	private double mDividendRatio;
-	private String mDate;
 	private String mRDate;
 
 	public ArrayList<StockData> mStockDataListMin1 = new ArrayList<StockData>();
@@ -185,6 +186,8 @@ public class Stock extends DatabaseTable {
 		mNet = 0;
 		mVolume = 0;
 		mValue = 0;
+		mDate = "";
+		mTime = "";
 		mActionMin1 = "";
 		mActionMin5 = "";
 		mActionMin15 = "";
@@ -223,7 +226,6 @@ public class Stock extends DatabaseTable {
 		mDividend = 0;
 		mYield = 0;
 		mDividendRatio = 0;
-		mDate = "";
 		mRDate = "";
 	}
 
@@ -242,6 +244,8 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_NET, mNet);
 		contentValues.put(DatabaseContract.COLUMN_VOLUME, mVolume);
 		contentValues.put(DatabaseContract.COLUMN_VALUE, mValue);
+		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);
+		contentValues.put(DatabaseContract.COLUMN_TIME, mTime);
 		contentValues.put(DatabaseContract.COLUMN_MIN1, mActionMin1);
 		contentValues.put(DatabaseContract.COLUMN_MIN5, mActionMin5);
 		contentValues.put(DatabaseContract.COLUMN_MIN15, mActionMin15);
@@ -289,7 +293,6 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_YIELD, mYield);
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND_RATIO,
 				mDividendRatio);
-		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);
 		contentValues.put(DatabaseContract.COLUMN_R_DATE, mRDate);
 
 		return contentValues;
@@ -311,6 +314,9 @@ public class Stock extends DatabaseTable {
 		ContentValues contentValues = new ContentValues();
 
 		super.getContentValues(contentValues);
+
+		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);
+		contentValues.put(DatabaseContract.COLUMN_TIME, mTime);
 
 		if (period.equals(Settings.KEY_PERIOD_MIN1)) {
 			contentValues.put(DatabaseContract.COLUMN_MIN1, mActionMin1);
@@ -368,7 +374,6 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_YIELD, mYield);
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND_RATIO,
 				mDividendRatio);
-		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);
 		contentValues.put(DatabaseContract.COLUMN_R_DATE, mRDate);
 
 		return contentValues;
@@ -394,6 +399,8 @@ public class Stock extends DatabaseTable {
 		setNet(stock.mNet);
 		setVolume(stock.mVolume);
 		setValue(stock.mValue);
+		setDate(stock.mDate);
+		setTime(stock.mTime);
 		setActionMin1(stock.mActionMin1);
 		setActionMin5(stock.mActionMin5);
 		setActionMin15(stock.mActionMin15);
@@ -432,7 +439,6 @@ public class Stock extends DatabaseTable {
 		setDividend(stock.mDividend);
 		setYield(stock.mYield);
 		setDividendRatio(stock.mDividendRatio);
-		setDate(stock.mDate);
 		setRDate(stock.mRDate);
 	}
 
@@ -457,6 +463,8 @@ public class Stock extends DatabaseTable {
 		setNet(cursor);
 		setVolume(cursor);
 		setValue(cursor);
+		setDate(cursor);
+		setTime(cursor);
 		setActionMin1(cursor);
 		setActionMin5(cursor);
 		setActionMin15(cursor);
@@ -492,7 +500,6 @@ public class Stock extends DatabaseTable {
 		setRoe(cursor);
 		setPE(cursor);
 		setPB(cursor);
-		setDate(cursor);
 		setDividend(cursor);
 		setYield(cursor);
 		setDividendRatio(cursor);
@@ -880,6 +887,40 @@ public class Stock extends DatabaseTable {
 
 		setValue(cursor.getLong(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_VALUE)));
+	}
+
+	public String getDate() {
+		return mDate;
+	}
+
+	public void setDate(String date) {
+		mDate = date;
+	}
+
+	void setDate(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setDate(cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_DATE)));
+	}
+
+	public String getTime() {
+		return mTime;
+	}
+
+	public void setTime(String time) {
+		mTime = time;
+	}
+
+	void setTime(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setTime(cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_TIME)));
 	}
 
 	String getActionMin1() {
@@ -1529,23 +1570,6 @@ public class Stock extends DatabaseTable {
 
 		setDividendRatio(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_DIVIDEND_RATIO)));
-	}
-
-	public String getDate() {
-		return mDate;
-	}
-
-	public void setDate(String date) {
-		mDate = date;
-	}
-
-	void setDate(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setDate(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_DATE)));
 	}
 
 	public String getRDate() {

@@ -577,7 +577,6 @@ public class StockAnalyzer {
 			totalDivident += shareBonus.getDividend();
 
 			if (i == 0) {
-				stock.setDate(shareBonus.getDate());
 				stock.setRDate(shareBonus.getRDate());
 			}
 			stock.setDividend(Utility.Round(totalDivident,
