@@ -2243,9 +2243,7 @@ public class StockDatabaseManager extends DatabaseManager {
 			return cursor;
 		}
 
-		String selection = DatabaseContract.COLUMN_STOCK_ID + " = " + stockTrends.getStockId()
-				+ " AND " + DatabaseContract.COLUMN_DATE + " = " + "\'" + stockTrends.getDate() + "\'"
-				+ " AND " + DatabaseContract.COLUMN_TIME + " = " + "\'" + stockTrends.getTime() + "\'";
+		String selection = getStockTrendsSelection(stockTrends);
 		String sortOrder = getStockTrendsOrder();
 
 		cursor = mContentResolver
@@ -2301,32 +2299,6 @@ public class StockDatabaseManager extends DatabaseManager {
 		try {
 			String selection = getStockTrendsSelection(stockTrends);
 			String sortOrder = getStockTrendsOrder();
-
-			cursor = mContentResolver.query(DatabaseContract.StockTrends.CONTENT_URI,
-					DatabaseContract.StockTrends.PROJECTION_ALL, selection, null,
-					sortOrder);
-
-			if ((cursor != null) && (cursor.getCount() > 0)) {
-				cursor.moveToNext();
-				stockTrends.set(cursor);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			closeCursor(cursor);
-		}
-	}
-
-	public void getStockTrends(String stockCode, StockTrends stockTrends) {
-		Cursor cursor = null;
-
-		if ((stockTrends == null) || (mContentResolver == null)) {
-			return;
-		}
-
-		try {
-			String selection = getStockTrendsSelection(stockCode);
-			String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
 
 			cursor = mContentResolver.query(DatabaseContract.StockTrends.CONTENT_URI,
 					DatabaseContract.StockTrends.PROJECTION_ALL, selection, null,
@@ -2400,9 +2372,7 @@ public class StockDatabaseManager extends DatabaseManager {
 			return result;
 		}
 
-		String where = DatabaseContract.COLUMN_STOCK_ID + " = " + stockTrends.getStockId()
-				+ " AND " + DatabaseContract.COLUMN_DATE + " = " + "\'" + stockTrends.getDate() + "\'"
-				+ " AND " + DatabaseContract.COLUMN_TIME + " = " + "\'" + stockTrends.getTime() + "\'";
+		String where = getStockTrendsSelection(stockTrends);
 
 		result = mContentResolver.update(DatabaseContract.StockTrends.CONTENT_URI,
 				contentValues, where, null);
@@ -2438,33 +2408,10 @@ public class StockDatabaseManager extends DatabaseManager {
 		return result;
 	}
 
-	public int deleteStockTrends(String indexCode, String stockCode) {
-		int result = 0;
-
-		if (mContentResolver == null) {
-			return result;
-		}
-
-		String where = getStockTrendsSelection(indexCode, stockCode);
-
-		result = mContentResolver.delete(DatabaseContract.StockTrends.CONTENT_URI,
-				where, null);
-
-		return result;
-	}
-
 	public String getStockTrendsSelection(StockTrends stockTrends) {
-		return getStockTrendsSelection(stockTrends.getCode());
-	}
-
-	public String getStockTrendsSelection(String stockCode) {
-		return DatabaseContract.COLUMN_CODE + " = " + stockCode;
-	}
-
-	public String getStockTrendsSelection(String indexCode, String stockCode) {
-		return DatabaseContract.COLUMN_INDEX_CODE + " = " + indexCode
-				+ " AND "
-				+ DatabaseContract.COLUMN_CODE + " = " + stockCode;
+		return DatabaseContract.COLUMN_STOCK_ID + " = " + stockTrends.getStockId()
+				+ " AND " + DatabaseContract.COLUMN_DATE + " = " + "\'" + stockTrends.getDate() + "\'"
+				+ " AND " + DatabaseContract.COLUMN_TIME + " = " + "\'" + stockTrends.getTime() + "\'";
 	}
 
 	public String getStockTrendsOrder() {

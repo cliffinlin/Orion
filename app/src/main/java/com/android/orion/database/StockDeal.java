@@ -39,17 +39,6 @@ public class StockDeal extends DatabaseTable {
         set(cursor);
     }
 
-    boolean isEmpty() {
-        boolean result = false;
-
-        if (TextUtils.isEmpty(mSE) && TextUtils.isEmpty(mCode)
-                && TextUtils.isEmpty(mName)) {
-            result = true;
-        }
-
-        return result;
-    }
-
     public void init() {
         super.init();
 

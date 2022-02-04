@@ -524,4 +524,13 @@ public class StockTrends extends DatabaseTable {
 		setOperate(cursor.getString(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_OPERATE)));
 	}
+
+	public String getTrends() {
+		String result = "";
+
+		result += mActionMin1 + mActionMin5 + mActionMin15 + mActionMin30 + mActionMin60
+				+ mActionDay + mActionWeek + mActionMonth + mActionQuarter + mActionYear;
+
+		return result;
+	}
 }

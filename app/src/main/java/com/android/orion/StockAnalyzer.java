@@ -1042,7 +1042,19 @@ public class StockAnalyzer {
 			stockTrends.set(stock);
 
 			if (mStockDatabaseManager.isStockTrendsExist(stockTrends)) {
-                mStockDatabaseManager.updateStockTrends(stockTrends, stockTrends.getContentValues());
+				StockTrends temp = new StockTrends();
+
+				temp.setStockId(stock.getId());
+				temp.setDate(stock.getDate());
+				temp.setTime(stock.getTime());
+
+				mStockDatabaseManager.getStockTrends(temp);
+
+				if (stockTrends.getTrends().equals(temp.getTrends())) {
+					mStockDatabaseManager.updateStockTrends(stockTrends, stockTrends.getContentValues());
+				} else {
+					mStockDatabaseManager.insertStockTrends(stockTrends);
+				}
             } else {
                 mStockDatabaseManager.insertStockTrends(stockTrends);
             }
