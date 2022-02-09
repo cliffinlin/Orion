@@ -1610,6 +1610,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	public void setDateTime(String date, String time) {
+		Calendar calendar;
 		Calendar current;
 
 		if (TextUtils.isEmpty(date)) {
@@ -1617,14 +1618,21 @@ public class Stock extends DatabaseTable {
 		}
 
 		if (TextUtils.isEmpty(time)) {
-			current = Utility.getCalendar(getDate(),
+			current = Utility.getCalendar(date,
 					Utility.CALENDAR_DATE_FORMAT);
 		} else {
-			current = Utility.getCalendar(getDate() + " " + getTime(),
+			current = Utility.getCalendar(date + " " + time,
 					Utility.CALENDAR_DATE_TIME_FORMAT);
 		}
 
-		if ((getCalendar() == null) || current.after(getCalendar())) {
+		calendar = getCalendar();
+		if (calendar == null) {
+			setDate(date);
+			setTime(time);
+			return;
+		}
+
+		if (current.after(calendar)) {
 			setDate(date);
 			setTime(time);
 		}
