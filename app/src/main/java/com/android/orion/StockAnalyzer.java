@@ -1050,9 +1050,7 @@ public class StockAnalyzer {
 
 				mStockDatabaseManager.getStockTrends(temp);
 
-				if (stockTrends.getTrends().equals(temp.getTrends())) {
-					mStockDatabaseManager.updateStockTrends(stockTrends, stockTrends.getContentValues());
-				} else {
+				if (!stockTrends.getTrends().equals(temp.getTrends())) {
 					mStockDatabaseManager.insertStockTrends(stockTrends);
 				}
             } else {
