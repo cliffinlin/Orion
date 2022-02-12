@@ -35,7 +35,9 @@ public class Settings {
 	public static final String KEY_NOTIFICATION_MESSAGE = "notification_message";
 
 	public static final String KEY_SORT_ORDER_IPO_LIST = "sort_order_ipo_list";
-	public static final String KEY_SORT_ORDER_MARKET_LIST = "sort_order_market_list";
+	public static final String KEY_SORT_ORDER_COMPONENT_LIST = "sort_order_component_list";
+	public static final String KEY_SORT_ORDER_STOCK_LIST = "sort_order_stock_list";
+	public static final String KEY_SORT_ORDER_STOCK_TRENDS_LIST = "sort_order_stock_trends_list";
 	public static final String KEY_SORT_ORDER_FINANCIAL_LIST = "sort_order_financial_list";
 	public static final String KEY_SORT_ORDER_DEAL_LIST = "sort_order_deal_list";
 

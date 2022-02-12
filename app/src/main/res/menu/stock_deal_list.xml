@@ -36,5 +36,11 @@
         android:showAsAction="never"
         android:title="@string/action_all">
     </item>
+    <item
+        android:id="@+id/action_trends"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_trends">
+    </item>
 
 </menu>

@@ -32,6 +32,9 @@ public class StockDealListActivity extends DealListActivity {
 			if (!TextUtils.isEmpty(superSelection)) {
 				mSelection += " AND " + superSelection;
 			}
+
+			mStock.setSE(se);
+			mStock.setCode(code);
 		}
 	}
 }

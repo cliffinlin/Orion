@@ -50,7 +50,7 @@ public class StockTrendsListActivity extends ListActivity implements
 	static final int mHeaderTextDefaultColor = Color.BLACK;
 	static final int mHeaderTextHighlightColor = Color.RED;
 
-	String mSortOrderColumn = DatabaseContract.COLUMN_CODE;
+	String mSortOrderColumn = DatabaseContract.COLUMN_MODIFIED;
 	String mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_ASC;
 	String mSortOrderDefault = mSortOrderColumn + mSortOrderDirection;
 	String mSortOrder = mSortOrderDefault;
@@ -135,7 +135,7 @@ public class StockTrendsListActivity extends ListActivity implements
 
 		setContentView(R.layout.activity_stock_list);
 
-		mSortOrder = Preferences.getString(mContext, Settings.KEY_SORT_ORDER_MARKET_LIST,
+		mSortOrder = Preferences.getString(mContext, Settings.KEY_SORT_ORDER_STOCK_TRENDS_LIST,
 				mSortOrderDefault);
 
 		initHeader();
@@ -277,7 +277,7 @@ public class StockTrendsListActivity extends ListActivity implements
 
 		mSortOrder = mSortOrderColumn + mSortOrderDirection;
 
-		Preferences.putString(mContext, Settings.KEY_SORT_ORDER_MARKET_LIST, mSortOrder);
+		Preferences.putString(mContext, Settings.KEY_SORT_ORDER_STOCK_TRENDS_LIST, mSortOrder);
 
 		restartLoader();
 	}

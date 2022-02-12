@@ -98,7 +98,7 @@ public class IndexComponentListActivity extends ListActivity implements
 
 		setContentView(R.layout.activity_stock_list);
 
-		mSortOrder = Preferences.getString(mContext, Settings.KEY_SORT_ORDER_MARKET_LIST,
+		mSortOrder = Preferences.getString(mContext, Settings.KEY_SORT_ORDER_COMPONENT_LIST,
 				mSortOrderDefault);
 
 		initHeader();
@@ -246,7 +246,7 @@ public class IndexComponentListActivity extends ListActivity implements
 
 		mSortOrder = mSortOrderColumn + mSortOrderDirection;
 
-		Preferences.putString(mContext, Settings.KEY_SORT_ORDER_MARKET_LIST, mSortOrder);
+		Preferences.putString(mContext, Settings.KEY_SORT_ORDER_COMPONENT_LIST, mSortOrder);
 
 		restartLoader();
 	}

@@ -53,6 +53,7 @@ public class DealListActivity extends ListActivity implements
 
     static final int MESSAGE_VIEW_STOCK_DEAL = 4;
     static final int MESSAGE_VIEW_STOCK_CHAT = 5;
+    static final int MESSAGE_VIEW_STOCK_TREMDS = 6;
 
     static final int REQUEST_CODE_DEAL_INSERT = 0;
     static final int REQUEST_CODE_DEAL_EDIT = 1;
@@ -142,6 +143,15 @@ public class DealListActivity extends ListActivity implements
                             stockIDList);
                     intent.putExtra(Constants.EXTRA_STOCK_DEAL, true);
                     startActivity(intent);
+                    break;
+
+                case MESSAGE_VIEW_STOCK_TREMDS:
+                    mStockDatabaseManager.getStock(mStock);
+
+                    mIntent = new Intent(mContext, StockTrendsListActivity.class);
+                    mIntent.setAction(StockTrendsListActivity.ACTION_STOCK_TRENDS_LIST);
+                    mIntent.putExtra(Constants.EXTRA_STOCK_ID, mStock.getId());
+                    startActivity(mIntent);
                     break;
 
                 default:
@@ -280,6 +290,10 @@ public class DealListActivity extends ListActivity implements
             case R.id.action_all:
                 mFilterType = FILTER_TYPE_NONE;
                 restartLoader();
+                return true;
+
+            case R.id.action_trends:
+                mHandler.sendEmptyMessage(MESSAGE_VIEW_STOCK_TREMDS);
                 return true;
 
             default:

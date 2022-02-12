@@ -168,19 +168,23 @@ public class StockDataChartListActivity extends BaseActivity implements
 			mKeyDisplayDeal = Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_DEAL, false);
 		}
 
-		if (getIntent().getBooleanExtra(Constants.EXTRA_STOCK_FINANCIAL, false)) {
-			mKeyDisplayBonus = Preferences
-					.getBoolean(mContext, Settings.KEY_DISPLAY_BONUS, false);
-			mKeyDisplayBPS = Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_BPS, false);
-			mKeyDisplayNPS = Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_NPS, false);
-			mKeyDisplayRoe = Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_ROE, false);
-			mKeyDisplayRoi = Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_ROI, false);
-		} else {
-			mKeyDisplayBonus = false;
-			mKeyDisplayBPS = false;
-			mKeyDisplayNPS = false;
-			mKeyDisplayRoe = false;
-			mKeyDisplayRoi = false;
+		mKeyDisplayBonus = Preferences
+				.getBoolean(mContext, Settings.KEY_DISPLAY_BONUS, false);
+		mKeyDisplayBPS = Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_BPS, false);
+		mKeyDisplayNPS = Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_NPS, false);
+		mKeyDisplayRoe = Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_ROE, false);
+		mKeyDisplayRoi = Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_ROI, false);
+
+		if (getIntent().getBooleanExtra(Constants.EXTRA_STOCK_BONUS, false)) {
+			mKeyDisplayBonus = true;
+		}
+
+		if (getIntent().getBooleanExtra(Constants.EXTRA_STOCK_BPS, false)) {
+			mKeyDisplayBPS = true;
+		}
+
+		if (getIntent().getBooleanExtra(Constants.EXTRA_STOCK_NPS, false)) {
+			mKeyDisplayNPS = true;
 		}
 
 		initLoader();
