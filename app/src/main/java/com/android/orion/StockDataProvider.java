@@ -175,14 +175,22 @@ public abstract class StockDataProvider extends StockAnalyzer {
             loadStockArrayMap(stockArrayMap);
 
             for (Stock current : stockArrayMap.values()) {
-                Message msg = mHandler.obtainMessage();
-                msg.obj = current;
-                mHandler.sendMessage(msg);
+                if (mHandler.hasMessages(Integer.valueOf(current.getCode()))) {
+                    Log.d(TAG, "mHandler.hasMessages " + Integer.valueOf(current.getCode()) + ", skip!");
+                } else {
+                    Message msg = mHandler.obtainMessage(Integer.valueOf(current.getCode()), current);
+                    mHandler.sendMessage(msg);
+                    Log.d(TAG, "mHandler.sendMessage " + msg);
+                }
             }
         } else {
-            Message msg = mHandler.obtainMessage();
-            msg.obj = stock;
-            mHandler.sendMessage(msg);
+           if (mHandler.hasMessages(Integer.valueOf(stock.getCode()))) {
+               Log.d(TAG, "mHandler.hasMessages " + Integer.valueOf(stock.getCode()) + ", skip!");
+           } else {
+               Message msg = mHandler.obtainMessage(Integer.valueOf(stock.getCode()), stock);
+               mHandler.sendMessage(msg);
+               Log.d(TAG, "mHandler.sendMessage" + msg);
+           }
         }
     }
 
