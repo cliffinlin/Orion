@@ -1220,7 +1220,7 @@ public class StockAnalyzer {
 		for (String period : Settings.KEY_PERIODS) {
 			if (Preferences.getBoolean(mContext, period, false)) {
 				String action = stock.getAction(period);
-				if (action.contains(StockData.ACTION_D + StockData.ACTION_D + StockData.ACTION_D)
+				if (action.contains(StockData.ACTION_D + StockData.ACTION_D)
 						|| action.contains(StockData.ACTION_BUY2 + StockData.ACTION_BUY2)) {
 					denominator = getDenominator(action);
 					if (denominator != 0) {
@@ -1230,7 +1230,7 @@ public class StockAnalyzer {
 					actionString.append(period + " " + action + " ");
 				}
 
-				if (action.contains(StockData.ACTION_G + StockData.ACTION_G + StockData.ACTION_G)
+				if (action.contains(StockData.ACTION_G + StockData.ACTION_G)
 						|| action.contains(StockData.ACTION_SELL2 + StockData.ACTION_SELL2)) {
 					denominator = getDenominator(action);
 					if (denominator != 0) {
