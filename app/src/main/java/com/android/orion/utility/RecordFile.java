@@ -37,12 +37,11 @@ public class RecordFile {
         }
     }
 
-    public static void writeNotificationFile(String title, String action) {
+    public static void writeNotificationFile(String content) {
         String fileName;
         StringBuilder logString = new StringBuilder();
 
-        logString.append(title);
-        logString.append(" " + action);
+        logString.append(content);
         logString.append(" " + Utility.getCurrentDateTimeString() + "\n");
 
         try {

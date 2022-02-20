@@ -245,7 +245,7 @@ public class StockAnalyzer {
 			updateDatabase(stock);
 
 			updateActionFile(stock);
-			updateNotification(stock, amplitudeArrayMap);
+			updateNotification(stock);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1187,56 +1187,28 @@ public class StockAnalyzer {
 		}
 	}
 
-	private void updateNotification(Stock stock, ArrayMap<Integer, Integer> amplitudeArrayMap) {
+	private void updateNotification(Stock stock) {
 		int id = 0;
-        int denominator = 0;
         ArrayList<StockDeal> stockDealList = new ArrayList<StockDeal>();
-        ArrayList<Integer> denominatorArrayList = new ArrayList<>();
         Notification.Builder notification;
         String contentText = "";
         StringBuilder contentTitle = new StringBuilder();
-
-		if (mNotificationManager == null) {
-			return;
-		}
-
-		id = (int) stock.getId();
-		mNotificationManager.cancel(id);
-
-		if (!Preferences.getBoolean(mContext, Settings.KEY_NOTIFICATION_MESSAGE,
-				true)) {
-			return;
-		}
-
-		if (TextUtils.isEmpty(stock.getOperate())) {
-			return;
-		}
-
-		if (stock.getPrice() == 0) {
-			return;
-		}
-
 		StringBuilder actionString = new StringBuilder();
+
+		if (stock == null) {
+			return;
+		}
+
 		for (String period : Settings.KEY_PERIODS) {
 			if (Preferences.getBoolean(mContext, period, false)) {
 				String action = stock.getAction(period);
 				if (action.contains(StockData.ACTION_D + StockData.ACTION_D)
 						|| action.contains(StockData.ACTION_BUY2 + StockData.ACTION_BUY2)) {
-					denominator = getDenominator(action);
-					if (denominator != 0) {
-						denominatorArrayList.add(denominator);
-					}
-
 					actionString.append(period + " " + action + " ");
 				}
 
 				if (action.contains(StockData.ACTION_G + StockData.ACTION_G)
 						|| action.contains(StockData.ACTION_SELL2 + StockData.ACTION_SELL2)) {
-					denominator = getDenominator(action);
-					if (denominator != 0) {
-						denominatorArrayList.add(denominator);
-					}
-
 					if (Stock.CLASS_INDEX.equals(stock.getClases())) {
 						actionString.append(period + " " + action + " ");
 					} else {
@@ -1260,18 +1232,29 @@ public class StockAnalyzer {
 		}
 
 		contentTitle.append(stock.getName() + " " + stock.getPrice() + " "
-				+ stock.getNet());
+				+ stock.getNet() + " " + stock.getOperate() + " " + actionString);
 
-		for (int i = 0; i < denominatorArrayList.size(); i++) {
-			denominator = denominatorArrayList.get(i);
-			if (amplitudeArrayMap.containsKey(denominator)) {
-				actionString.append(" " + amplitudeArrayMap.get(denominator) + Stock.OPERATE_AMPLITUDE + denominator + " ");
-			}
+		RecordFile.writeNotificationFile(contentTitle.toString());
+
+		if (!Preferences.getBoolean(mContext, Settings.KEY_NOTIFICATION_MESSAGE,
+				true)) {
+			return;
 		}
 
-		RecordFile.writeNotificationFile(contentTitle.toString(), actionString.toString());
+		if (TextUtils.isEmpty(stock.getOperate())) {
+			return;
+		}
 
-		contentTitle.append(" " + actionString);
+		if (mNotificationManager == null) {
+			return;
+		}
+
+		id = (int) stock.getId();
+		mNotificationManager.cancel(id);
+
+		if (stock.getPrice() == 0) {
+			return;
+		}
 
 		Intent intent = new Intent(mContext, StockListActivity.class);
 		intent.setType("vnd.android-dir/mms-sms");
