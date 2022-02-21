@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import com.android.orion.utility.Utility;
 
-public class ServiceSettingFragment extends PreferenceFragment implements
+public class SettingFragment extends PreferenceFragment implements
 		OnSharedPreferenceChangeListener {
 
 	DownloadAlarmManager mStockDownloadAlarmManager = null;
@@ -22,7 +22,7 @@ public class ServiceSettingFragment extends PreferenceFragment implements
 		mStockDownloadAlarmManager = DownloadAlarmManager
 				.getInstance(getActivity());
 
-		addPreferencesFromResource(R.xml.preference_service);
+		addPreferencesFromResource(R.xml.preference_setting);
 	}
 
 	@Override

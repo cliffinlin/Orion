@@ -221,7 +221,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 
 		case R.id.action_settings:
 			startActivityForResult(new Intent(this,
-					ServiceSettingActivity.class), REQUEST_CODE_SETTINGS);
+					SettingActivity.class), REQUEST_CODE_SETTINGS);
 			return true;
 
 		case R.id.action_edit:

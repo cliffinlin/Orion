@@ -106,7 +106,7 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:name="com.android.orion.ServiceSettingActivity"
+            android:name="com.android.orion.SettingActivity"
             android:label="@string/title_activity_settings"
             android:launchMode="singleTop" >
         </activity>

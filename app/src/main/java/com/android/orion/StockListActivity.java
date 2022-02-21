@@ -141,7 +141,7 @@ public class StockListActivity extends ListActivity implements
 			return true;
 
 		case R.id.action_settings:
-			startActivity(new Intent(this, ServiceSettingActivity.class));
+			startActivity(new Intent(this, SettingActivity.class));
 			return true;
 
 		case R.id.action_load:

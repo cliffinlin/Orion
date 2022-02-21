@@ -168,22 +168,38 @@ public class StockTrendsListActivity extends ListActivity implements
 			return true;
 
 		case R.id.action_settings:
-			startActivity(new Intent(this, ServiceSettingActivity.class));
+			new AlertDialog.Builder(mContext)
+					.setTitle(R.string.title_delete)
+					.setMessage(R.string.delete_confirm)
+					.setPositiveButton(R.string.ok,
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+													int which) {
+									StockTrends stockTrends = new StockTrends();
+									long stockId = getIntent().getLongExtra(Constants.EXTRA_STOCK_ID,
+											Stock.INVALID_ID);
+									stockTrends.setStockId(stockId);
+									mStockDatabaseManager.deleteStockTrends(stockTrends);
+								}
+							})
+					.setNegativeButton(R.string.cancel,
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+													int which) {
+								}
+							}).setIcon(android.R.drawable.ic_dialog_alert)
+					.show();
 			return true;
 
 		case R.id.action_delete_all:
             new AlertDialog.Builder(mContext)
-                    .setTitle(R.string.delete)
+                    .setTitle(R.string.title_delete_all)
                     .setMessage(R.string.delete_confirm)
                     .setPositiveButton(R.string.ok,
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,
                                                     int which) {
-                                    StockTrends stockTrends = new StockTrends();
-                                    long stockId = getIntent().getLongExtra(Constants.EXTRA_STOCK_ID,
-                                            Stock.INVALID_ID);
-                                    stockTrends.setStockId(stockId);
-                                    mStockDatabaseManager.deleteStockTrends(stockTrends);
+                                    mStockDatabaseManager.deleteStockTrends();
                                 }
                             })
                     .setNegativeButton(R.string.cancel,

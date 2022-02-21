@@ -194,6 +194,7 @@
     <string name="title_activity_operate">Operate</string>
     <string name="title_activity_settings">Settings</string>
     <string name="title_save_to_sd_card">Save to SD Card</string>
+    <string name="title_delete">Delete</string>
     <string name="title_delete_all">Delete All</string>
     <string name="username_hint">Username</string>
     <string name="velocity">Vel</string>

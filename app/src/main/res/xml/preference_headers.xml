@@ -5,7 +5,7 @@
         android:icon="@drawable/ic_service"
         android:title="@string/settings" >
         <intent
-            android:targetClass="com.android.orion.ServiceSettingActivity"
+            android:targetClass="com.android.orion.SettingActivity"
             android:targetPackage="com.android.orion" />
     </header>
     <header

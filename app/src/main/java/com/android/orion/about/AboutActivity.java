@@ -7,7 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.android.orion.R;
-import com.android.orion.ServiceSettingActivity;
+import com.android.orion.SettingActivity;
 
 public class AboutActivity extends Activity {
 
@@ -32,7 +32,7 @@ public class AboutActivity extends Activity {
 			return true;
 
 		case R.id.action_settings:
-			startActivity(new Intent(this, ServiceSettingActivity.class));
+			startActivity(new Intent(this, SettingActivity.class));
 			return true;
 
 		default:
