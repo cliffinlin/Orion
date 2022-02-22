@@ -23,6 +23,7 @@
     <string name="action_filter">Filter</string>
     <string name="action_trends">Trends</string>
     <string name="action_download">Download</string>
+    <string name="action_delete">Delete</string>
     <string name="action_delete_all">Delete All</string>
     <string name="action_to">To</string>
     <string name="action_order_by_roi">Order by Roi</string>

@@ -75,7 +75,7 @@ public class StockAnalyzer {
 		Log.d(TAG, "acquireWakeLock");
 
 		if (!mWakeLock.isHeld()) {
-			mWakeLock.acquire();
+			mWakeLock.acquire(10*60*1000L /*10 minutes*/);
 			Log.d(TAG, "acquireWakeLock, mWakeLock acquired.");
 		}
 	}
@@ -255,23 +255,7 @@ public class StockAnalyzer {
 				+ "s");
 	}
 
-	boolean isFinancialAnalyzed(Stock stock) {
-		boolean result = false;
-
-		StockFinancial stockFinancial = new StockFinancial();
-		stockFinancial.setStockId(stock.getId());
-		mStockDatabaseManager.getStockFinancial(stock, stockFinancial);
-
-		if (stockFinancial.getCreated().contains(Utility.getCurrentDateString())
-				|| stockFinancial.getModified().contains(
-						Utility.getCurrentDateString())) {
-		    result = true;
-		}
-
-		return result;
-	}
-
-	void analyzeFinancial(Stock stock) {
+	private void analyzeFinancial(Stock stock) {
 		ArrayList<StockFinancial> stockFinancialList = new ArrayList<StockFinancial>();
 		ArrayList<TotalShare> totalShareList = new ArrayList<TotalShare>();
 		ArrayList<ShareBonus> shareBonusList = new ArrayList<ShareBonus>();
@@ -307,8 +291,8 @@ public class StockAnalyzer {
 		}
 	}
 
-	void setupTotalShare(ArrayList<StockFinancial> stockFinancialList,
-			ArrayList<TotalShare> totalShareList) {
+	private void setupTotalShare(ArrayList<StockFinancial> stockFinancialList,
+								 ArrayList<TotalShare> totalShareList) {
 		if (stockFinancialList == null || totalShareList == null) {
 			return;
 		}
@@ -330,7 +314,7 @@ public class StockAnalyzer {
 		}
 	}
 
-	void setupNetProfitPerShare(ArrayList<StockFinancial> stockFinancialList) {
+	private void setupNetProfitPerShare(ArrayList<StockFinancial> stockFinancialList) {
 		if (stockFinancialList == null) {
 			return;
 		}
@@ -342,7 +326,7 @@ public class StockAnalyzer {
 		}
 	}
 
-	void setupNetProfitPerShareInYear(ArrayList<StockFinancial> stockFinancialList) {
+	private void setupNetProfitPerShareInYear(ArrayList<StockFinancial> stockFinancialList) {
 		double mainBusinessIncome = 0;
 		double mainBusinessIncomeInYear = 0;
 		double netProfit = 0;
@@ -399,7 +383,7 @@ public class StockAnalyzer {
 		}
 	}
 
-	void setupRate(ArrayList<StockFinancial> stockFinancialList) {
+	private void setupRate(ArrayList<StockFinancial> stockFinancialList) {
 		double rate = 0;
 
 		if (stockFinancialList == null) {
@@ -428,7 +412,7 @@ public class StockAnalyzer {
 		}
 	}
 
-	void setupRoe(ArrayList<StockFinancial> stockFinancialList) {
+	private void setupRoe(ArrayList<StockFinancial> stockFinancialList) {
 		double roe = 0;
 
 		if (stockFinancialList == null) {
@@ -461,7 +445,7 @@ public class StockAnalyzer {
 		}
 	}
 
-	void setupRoi(ArrayList<StockData> stockDataList,
+	private void setupRoi(ArrayList<StockData> stockDataList,
 			ArrayList<StockFinancial> stockFinancialList) {
 		double price = 0;
 		double pe = 0;
@@ -513,7 +497,7 @@ public class StockAnalyzer {
 		}
 	}
 
-	void setupStockStockFinancial(Stock stock) {
+	private void setupStockStockFinancial(Stock stock) {
 		String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
 		StockFinancial stockFinancial = new StockFinancial();
 		ArrayList<StockFinancial> stockFinancialList = new ArrayList<StockFinancial>();
@@ -545,7 +529,7 @@ public class StockAnalyzer {
 		stock.setupRoi();
 	}
 
-	void setupStockShareBonus(Stock stock) {
+	private void setupStockShareBonus(Stock stock) {
 		double totalDivident = 0;
 
 		String yearString = "";
@@ -631,7 +615,7 @@ public class StockAnalyzer {
 		}
 	}
 
-	void analyzeStockData(Stock stock, String period, ArrayList<StockData> stockDataList,
+	private void analyzeStockData(Stock stock, String period, ArrayList<StockData> stockDataList,
 						  ArrayList<StockData> drawVertexList, ArrayList<StockData> drawDataList,
 						  ArrayList<StockData> strokeVertexList, ArrayList<StockData> strokeDataList,
 						  ArrayList<StockData> segmentVertexList, ArrayList<StockData> segmentDataList) {
@@ -657,8 +641,16 @@ public class StockAnalyzer {
 		vertexAnalyzer.vertexListToDataList(stockDataList, segmentVertexList,
 				segmentDataList, StockData.LEVEL_SEGMENT);
 
-		vertexAnalyzer.analyzeOverlap(stockDataList, strokeDataList,
-				overlapList);
+		if (segmentDataList.size() > Constants.OVERLAP_ANALYZE_THRESHOLD) {
+			vertexAnalyzer.analyzeOverlap(stockDataList, segmentDataList,
+					overlapList);
+		} else if (strokeDataList.size() > Constants.OVERLAP_ANALYZE_THRESHOLD) {
+			vertexAnalyzer.analyzeOverlap(stockDataList, strokeDataList,
+					overlapList);
+		} else {
+			vertexAnalyzer.analyzeOverlap(stockDataList, drawDataList,
+					overlapList);
+		}
 
 		//vertexAnalyzer.analyzeOverlap(stockDataList, segmentDataList, overlapList);
 		//vertexAnalyzer.testShowVertextNumber(stockDataList, stockDataList);
@@ -835,7 +827,7 @@ public class StockAnalyzer {
 				}
 			}
 
-			if (Math.abs(denominator) >= Constants.SECEND_ACTION_THRESHOLD) {
+			if (Math.abs(denominator) > Constants.SECEND_ACTION_THRESHOLD) {
 				result += StockData.ACTION_BUY2;
 				result += StockData.ACTION_BUY2;
 				result += " " + numerator;
@@ -894,7 +886,7 @@ public class StockAnalyzer {
 				}
 			}
 
-			if (Math.abs(denominator) >= Constants.SECEND_ACTION_THRESHOLD) {
+			if (Math.abs(denominator) > Constants.SECEND_ACTION_THRESHOLD) {
 				result += StockData.ACTION_SELL2;
 				result += StockData.ACTION_SELL2;
 				result += " " + numerator;
@@ -905,7 +897,7 @@ public class StockAnalyzer {
 		return result;
 	}
 
-	int getLastAmplitude(ArrayList<StockData> stockDataList) {
+	private int getLastAmplitude(ArrayList<StockData> stockDataList) {
 		int result = 0;
 		StockData stockData;
 
@@ -1026,7 +1018,7 @@ public class StockAnalyzer {
 		stock.setAction(period, action + stockData.getAction());
 	}
 
-	void updateDatabase(Stock stock) {
+	private void updateDatabase(Stock stock) {
 		StockTrends stockTrends = new StockTrends();
 
 		if (mStockDatabaseManager == null) {
@@ -1061,7 +1053,7 @@ public class StockAnalyzer {
 		}
 	}
 
-	void updateDatabase(ArrayList<StockData> stockDataList) {
+	private void updateDatabase(ArrayList<StockData> stockDataList) {
 		if ((stockDataList == null) || (stockDataList.size() == 0)) {
 			return;
 		}
@@ -1096,7 +1088,7 @@ public class StockAnalyzer {
 		}
 	}
 
-	void updateDatabase(Stock stock, String period, ArrayList<StockData> stockDataList,
+	private void updateDatabase(Stock stock, String period, ArrayList<StockData> stockDataList,
 						ArrayList<StockData> drawDataList,
 						ArrayList<StockData> strokeDataList,
 						ArrayList<StockData> segmentDataList) {
@@ -1147,7 +1139,7 @@ public class StockAnalyzer {
 		}
 	}
 
-	void updateAmplitudeArrayMap(ArrayMap<Integer, Integer> amplitudeArrayMap, ArrayList<StockData> stockDataList) {
+	private void updateAmplitudeArrayMap(ArrayMap<Integer, Integer> amplitudeArrayMap, ArrayList<StockData> stockDataList) {
 		int amplitude = 0;
 
 		if ((amplitudeArrayMap == null) || (stockDataList == null)) {

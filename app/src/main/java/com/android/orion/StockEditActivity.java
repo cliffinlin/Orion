@@ -19,7 +19,7 @@ import com.android.orion.database.IndexComponent;
 import com.android.orion.database.Stock;
 import com.android.orion.utility.Utility;
 
-public class StockActivity extends DatabaseActivity implements OnClickListener {
+public class StockEditActivity extends DatabaseActivity implements OnClickListener {
 
 	public static final String ACTION_INDEX_COMPONENT_INSERT = "orion.intent.action.ACTION_INDEX_COMPONENT_INSERT";
 	public static final String ACTION_FAVORITE_STOCK_INSERT = "orion.intent.action.ACTION_FAVORITE_STOCK_INSERT";
@@ -38,7 +38,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_stock);
+		setContentView(R.layout.activity_stock_edit);
 
 		if (mStock == null) {
 			mStock = new Stock();

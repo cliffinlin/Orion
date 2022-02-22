@@ -225,8 +225,8 @@ public class StockDataChartListActivity extends BaseActivity implements
 			return true;
 
 		case R.id.action_edit:
-			mIntent = new Intent(this, StockActivity.class);
-			mIntent.setAction(StockActivity.ACTION_STOCK_EDIT);
+			mIntent = new Intent(this, StockEditActivity.class);
+			mIntent.setAction(StockEditActivity.ACTION_STOCK_EDIT);
 			mIntent.putExtra(Constants.EXTRA_STOCK_ID, mStock.getId());
 			startActivity(mIntent);
 			return true;

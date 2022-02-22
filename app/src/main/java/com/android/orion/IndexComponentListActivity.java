@@ -131,8 +131,8 @@ public class IndexComponentListActivity extends ListActivity implements
 			return true;
 
 		case R.id.action_new:
-			Intent intentNew = new Intent(this, StockActivity.class);
-			intentNew.setAction(StockActivity.ACTION_INDEX_COMPONENT_INSERT);
+			Intent intentNew = new Intent(this, StockEditActivity.class);
+			intentNew.setAction(StockEditActivity.ACTION_INDEX_COMPONENT_INSERT);
 			intentNew.putExtra(Constants.EXTRA_INDEX_CODE, mIntent.getStringExtra(Constants.EXTRA_INDEX_CODE));
 			startActivityForResult(intentNew, REQUEST_CODE_INDEX_COMPONENT_INSERT);
 			return true;

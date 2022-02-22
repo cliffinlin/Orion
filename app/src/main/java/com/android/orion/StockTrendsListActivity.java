@@ -101,8 +101,8 @@ public class StockTrendsListActivity extends ListActivity implements
 			case MESSAGE_VIEW_STOCK_DEAL:
 				getStock();
 
-				intent = new Intent(mContext, StockActivity.class);
-				intent.setAction(StockActivity.ACTION_STOCK_EDIT);
+				intent = new Intent(mContext, StockEditActivity.class);
+				intent.setAction(StockEditActivity.ACTION_STOCK_EDIT);
 				intent.putExtra(Constants.EXTRA_STOCK_ID, mStock.getId());
 				startActivity(intent);
 				break;
@@ -167,7 +167,7 @@ public class StockTrendsListActivity extends ListActivity implements
 			finish();
 			return true;
 
-		case R.id.action_settings:
+		case R.id.action_delete:
 			new AlertDialog.Builder(mContext)
 					.setTitle(R.string.title_delete)
 					.setMessage(R.string.delete_confirm)

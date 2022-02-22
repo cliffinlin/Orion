@@ -134,8 +134,8 @@ public class StockFinancialListActivity extends ListActivity implements
                 return true;
 
             case R.id.action_new:
-                Intent intent = new Intent(this, StockActivity.class);
-                intent.setAction(StockActivity.ACTION_FAVORITE_STOCK_INSERT);
+                Intent intent = new Intent(this, StockEditActivity.class);
+                intent.setAction(StockEditActivity.ACTION_FAVORITE_STOCK_INSERT);
                 startActivityForResult(intent, REQUEST_CODE_STOCK_INSERT);
                 return true;
 

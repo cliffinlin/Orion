@@ -51,7 +51,7 @@
         </activity>
         <activity android:name="com.android.orion.BaseActivity" >
         </activity>
-        <activity android:name="com.android.orion.StockActivity" >
+        <activity android:name="com.android.orion.StockEditActivity" >
         </activity>
         <activity
             android:name="com.android.orion.StockDataChartListActivity"

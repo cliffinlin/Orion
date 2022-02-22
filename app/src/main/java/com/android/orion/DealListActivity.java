@@ -123,8 +123,8 @@ public class DealListActivity extends ListActivity implements
                 case MESSAGE_VIEW_STOCK_DEAL:
                     getStock();
 
-                    intent = new Intent(mContext, StockActivity.class);
-                    intent.setAction(StockActivity.ACTION_STOCK_EDIT);
+                    intent = new Intent(mContext, StockEditActivity.class);
+                    intent.setAction(StockEditActivity.ACTION_STOCK_EDIT);
                     intent.putExtra(Constants.EXTRA_STOCK_ID, mStock.getId());
                     startActivity(intent);
                     break;
