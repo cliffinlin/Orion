@@ -184,6 +184,10 @@ public abstract class StockDataProvider extends StockAnalyzer {
                 }
             }
         } else {
+           if (TextUtils.isEmpty(stock.getCode())) {
+               return;
+           }
+
            if (mHandler.hasMessages(Integer.valueOf(stock.getCode()))) {
                Log.d(TAG, "mHandler.hasMessages " + Integer.valueOf(stock.getCode()) + ", skip!");
            } else {

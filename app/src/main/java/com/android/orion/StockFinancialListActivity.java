@@ -759,7 +759,6 @@ public class StockFinancialListActivity extends ListActivity implements
     public boolean onItemLongClick(AdapterView<?> parent, View view,
                                    int position, long id) {
         Intent intent = new Intent(this, StockListEditActivity.class);
-        intent.putExtra(Constants.EXTRA_STOCK_LIST_SORT_ORDER, mSortOrder);
         startActivity(intent);
         return true;
     }

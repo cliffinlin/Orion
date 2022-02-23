@@ -43,8 +43,8 @@ public class StockListEditActivity extends DatabaseActivity implements
 	static final int mHeaderTextDefaultColor = Color.BLACK;
 	static final int mHeaderTextHighlightColor = Color.RED;
 
-	String mSortOrderColumn = DatabaseContract.COLUMN_CODE;
-	String mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_ASC;
+	String mSortOrderColumn = DatabaseContract.COLUMN_HOLD;
+	String mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_DESC;
 	String mSortOrderDefault = mSortOrderColumn + mSortOrderDirection;
 	String mSortOrder = mSortOrderDefault;
 
