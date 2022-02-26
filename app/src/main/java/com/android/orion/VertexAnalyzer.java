@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.util.Log;
 
+import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 
 public class VertexAnalyzer {
@@ -248,10 +249,7 @@ public class VertexAnalyzer {
 	}
 
 	void sigmaHistogram(StockData stockData, ArrayList<StockData> stockDataList) {
-		double difDea = 0;
-		double difDeaMax = 0;
 		double histogram = 0;
-		double histogramMax = 0;
 		double sigmaHistogram = 0;
 
 		StockData current = null;
@@ -267,42 +265,22 @@ public class VertexAnalyzer {
 				return;
 			}
 
-			difDea = (current.getDIF() + current.getDEA()) / 2;
 			histogram = current.getHistogram();
 
 			if (stockData.getDirection() == StockData.DIRECTION_UP) {
-				if (difDea > 0) {
-					if (difDea > difDeaMax) {
-						difDeaMax = difDea;
-					}
-				}
-
 				if (histogram > 0) {
-					if (histogram > histogramMax) {
-						histogramMax = histogram;
-					}
-
 					sigmaHistogram += histogram;
 				}
 			} else if (stockData.getDirection() == StockData.DIRECTION_DOWN) {
-				if (difDea < 0) {
-					if (difDea < difDeaMax) {
-						difDeaMax = difDea;
-					}
-				}
-
 				if (histogram < 0) {
-					if (histogram < histogramMax) {
-						histogramMax = histogram;
-					}
-
 					sigmaHistogram += histogram;
 				}
 			}
 
 			if (i == stockData.getIndexEnd()) {
-				stockData.setDIF(difDeaMax);
-				stockData.setHistogram(histogram);
+				stockData.setDIF(current.getDIF());
+				stockData.setDEA(current.getDEA());
+				stockData.setHistogram(current.getHistogram());
 				stockData.setSigmaHistogram(sigmaHistogram);
 			}
 		}
@@ -372,7 +350,7 @@ public class VertexAnalyzer {
 	}
 
 	void analyzeOverlap(ArrayList<StockData> stockDataList,
-			ArrayList<StockData> segmentDataList,
+			ArrayList<StockData> lineDataList,
 			ArrayList<StockData> overlapList) {
 		int size = 0;
 		double Zg = 0;
@@ -383,26 +361,26 @@ public class VertexAnalyzer {
 		StockData next = null;
 
 		StockData stockData = null;
-		StockData segmentData = null;
+		StockData lineData = null;
 		StockData overlap = null;
 
-		if ((stockDataList == null) || (segmentDataList == null)
+		if ((stockDataList == null) || (lineDataList == null)
 				|| (overlapList == null)) {
 			return;
 		}
 
 		overlapList.clear();
 
-		size = segmentDataList.size();
+		size = lineDataList.size();
 
 		if (size < StockData.VERTEX_TYPING_SIZE) {
 			return;
 		}
 
 		for (int i = 2; i < size - 1; i++) {
-			prev = segmentDataList.get(i - 1);
-			current = segmentDataList.get(i);
-			next = segmentDataList.get(i + 1);
+			prev = lineDataList.get(i - 1);
+			current = lineDataList.get(i);
+			next = lineDataList.get(i + 1);
 
 			if ((prev == null) || (current == null) || (next == null)) {
 				continue;
@@ -434,8 +412,8 @@ public class VertexAnalyzer {
 		for (int i = 0; i < overlapList.size(); i++) {
 			overlap = overlapList.get(i);
 			for (int j = overlap.getIndexStart(); j <= overlap.getIndexEnd(); j++) {
-				segmentData = segmentDataList.get(j);
-				for (int k = segmentData.getIndexStart(); k <= segmentData
+				lineData = lineDataList.get(j);
+				for (int k = lineData.getIndexStart(); k <= lineData
 						.getIndexEnd(); k++) {
 					stockData = stockDataList.get(k);
 					stockData.setOverlapHigh(overlap.getOverlapHigh());
@@ -481,16 +459,15 @@ public class VertexAnalyzer {
 		return result;
 	}
 
-	void analyzeAction(ArrayList<StockData> stockDataList,
-			ArrayList<StockData> lineDataList, int level) {
-		int divergence = StockData.DIVERGENCE_NONE;
-		String action = StockData.ACTION_NONE;
+	void analyzeDivergence(Stock stock, ArrayList<StockData> stockDataList,
+						   ArrayList<StockData> lineDataList) {
 		StockData stockData = null;
 		StockData current = null;
 		StockData middle = null;
 		StockData base = null;
+		int divergence = StockData.DIVERGENCE_NONE;
 
-		if ((stockDataList == null) || (lineDataList == null)) {
+		if ((stock == null) || (stockDataList == null) || (lineDataList == null)) {
 			return;
 		}
 
@@ -503,6 +480,7 @@ public class VertexAnalyzer {
 		}
 
 		stockData = stockDataList.get(stockDataList.size() - 1);
+
 		current = lineDataList.get(lineDataList.size() - 1);
 		middle = lineDataList.get(lineDataList.size() - 2);
 		base = lineDataList.get(lineDataList.size() - 3);
@@ -512,46 +490,11 @@ public class VertexAnalyzer {
 			return;
 		}
 
-		if (base.getIndexStart() == 0) {
-			return;
+		if (stock.getPrice() > base.getVertexHigh() || stock.getPrice() < base.getVertexLow()) {
+			divergence = current.divergenceValue(current.getDirection(), base);
 		}
 
-		if (current.getDirection() != base.getDirection()) {
-			return;
-		}
-
-		if ((stockData.getLow() > stockData.getOverlapLow())
-				&& (stockData.getClose() < stockData.getOverlapHigh())) {
-			return;
-		}
-
-		if (level == StockData.LEVEL_DRAW) {
-			if (!checkStockDateVertex(stockDataList, middle,
-					StockData.VERTEX_BOTTOM, StockData.VERTEX_TOP)) {
-				return;
-			}
-		} else if (level == StockData.LEVEL_STROKE) {
-			if (!checkStockDateVertex(stockDataList, middle,
-					StockData.VERTEX_BOTTOM_STROKE,
-					StockData.VERTEX_TOP_STROKE)) {
-				return;
-			}
-		}
-
-		divergence = current.divergenceValue(current.getDirection(), base);
-		stockData.setDivergence(divergence);
-
-		if (divergence > StockData.DIVERGENCE_SIGMA_HISTOGRAM) {
-			if (current.directionOf(StockData.DIRECTION_UP)
-					&& stockData.directionOf(StockData.DIRECTION_UP)) {
-				action = StockData.ACTION_HIGH + level;
-			} else if (current.directionOf(StockData.DIRECTION_DOWN)
-					&& stockData.directionOf(StockData.DIRECTION_DOWN)) {
-				action = StockData.ACTION_LOW + level;
-			}
-		}
-
-		stockData.setAction(stockData.getAction() + action);
+		current.setDivergence(divergence);
 	}
 
 	void analyzeDirection(ArrayList<StockData> stockDataList) {

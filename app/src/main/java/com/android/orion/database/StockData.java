@@ -34,9 +34,10 @@ public class StockData extends StockDatabaseTable {
 	public static final int LEVEL_SEGMENT = 1 << 2;
 
 	public static final int DIVERGENCE_NONE = 0;
-	public static final int DIVERGENCE_DIF_DEA = 1 << 0;
+	public static final int DIVERGENCE_SIGMA_HISTOGRAM = 1 << 0;
 	public static final int DIVERGENCE_HISTOGRAM = 1 << 1;
-	public static final int DIVERGENCE_SIGMA_HISTOGRAM = 1 << 2;
+	public static final int DIVERGENCE_DIF = 1 << 2;
+	public static final int DIVERGENCE_DEA = 1 << 3;
 
 	public static final int DIRECTION_NONE = 0;
 	public static final int DIRECTION_UP = 1 << 0;
@@ -628,7 +629,7 @@ public class StockData extends StockDatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_SIGMA_HISTOGRAM)));
 	}
 
-	int getDivergence() {
+	public int getDivergence() {
 		return mDivergence;
 	}
 
@@ -901,18 +902,23 @@ public class StockData extends StockDatabaseTable {
 	int divergenceValue(StockData stockData) {
 		int result = DIVERGENCE_NONE;
 
-		if (Math.abs(getDIF()) < Math.abs(stockData.getDIF())) {
-			result |= DIVERGENCE_DIF_DEA;
-		}
-
-		if (Math.abs(getHistogram()) < Math.abs(stockData.getHistogram())) {
-			result |= DIVERGENCE_HISTOGRAM;
-		}
-
 		if (Math.abs(getSigmaHistogram()) < Math.abs(stockData
 				.getSigmaHistogram())) {
 			result |= DIVERGENCE_SIGMA_HISTOGRAM;
 		}
+//
+//		if (Math.abs(getHistogram()) < Math.abs(stockData
+//				.getHistogram())) {
+//			result |= DIVERGENCE_HISTOGRAM;
+//		}
+//
+//		if (Math.abs(getDIF()) < Math.abs(stockData.getDIF())) {
+//			result |= DIVERGENCE_DIF;
+//		}
+//
+//		if (Math.abs(getDEA()) < Math.abs(stockData.getDEA())) {
+//			result |= DIVERGENCE_DEA;
+//		}
 
 		return result;
 	}
