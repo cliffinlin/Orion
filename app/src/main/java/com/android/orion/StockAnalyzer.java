@@ -186,7 +186,7 @@ public class StockAnalyzer {
 
 		try {
 			setupStockShareBonus(stock);
-			setupStockStockFinancial(stock);
+			setupStockFinancial(stock);
 
 			loadStockDataList(stock, period, stockDataList);
 			analyzeStockData(stock, period, stockDataList,
@@ -218,8 +218,8 @@ public class StockAnalyzer {
 
 		try {
             if (!Stock.CLASS_INDEX.equals(stock.getClases())) {
-                analyzeFinancial(stock);
-                setupStockStockFinancial(stock);
+                analyzeStockFinancial(stock);
+                setupStockFinancial(stock);
                 setupStockShareBonus(stock);
             }
 
@@ -244,7 +244,6 @@ public class StockAnalyzer {
 
 			updateDatabase(stock);
 
-			updateActionFile(stock);
 			updateNotification(stock);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -255,12 +254,16 @@ public class StockAnalyzer {
 				+ "s");
 	}
 
-	private void analyzeFinancial(Stock stock) {
+	private void analyzeStockFinancial(Stock stock) {
 		ArrayList<StockFinancial> stockFinancialList = new ArrayList<StockFinancial>();
 		ArrayList<TotalShare> totalShareList = new ArrayList<TotalShare>();
 		ArrayList<ShareBonus> shareBonusList = new ArrayList<ShareBonus>();
 		ArrayList<StockData> stockDataList = new ArrayList<StockData>();
 		String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
+
+		if (Stock.CLASS_INDEX.equals(stock.getClases())) {
+		    return;
+        }
 
 		mStockDatabaseManager.getStockFinancialList(stock, stockFinancialList,
 				sortOrder);
@@ -497,10 +500,14 @@ public class StockAnalyzer {
 		}
 	}
 
-	private void setupStockStockFinancial(Stock stock) {
+	private void setupStockFinancial(Stock stock) {
 		String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
 		StockFinancial stockFinancial = new StockFinancial();
 		ArrayList<StockFinancial> stockFinancialList = new ArrayList<StockFinancial>();
+
+        if (Stock.CLASS_INDEX.equals(stock.getClases())) {
+            return;
+        }
 
 		stockFinancial.setStockId(stock.getId());
 
@@ -535,8 +542,11 @@ public class StockAnalyzer {
 		String yearString = "";
 		String prevYearString = "";
 		String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
-
 		ArrayList<ShareBonus> shareBonusList = new ArrayList<ShareBonus>();
+
+        if (Stock.CLASS_INDEX.equals(stock.getClases())) {
+            return;
+        }
 
 		mStockDatabaseManager.getShareBonusList(stock, shareBonusList,
 				sortOrder);
@@ -581,11 +591,13 @@ public class StockAnalyzer {
 		double dif = 0;
 		double dea = 0;
 		double histogram = 0;
-
 		MACD macd = new MACD();
 
-		size = stockDataList.size();
+		if (stockDataList == null) {
+		    return;
+        }
 
+		size = stockDataList.size();
 		if (size < StockData.VERTEX_TYPING_SIZE) {
 			return;
 		}
@@ -1110,30 +1122,6 @@ public class StockAnalyzer {
 			stock.setModified(Utility.getCurrentDateTimeString());
 			mStockDatabaseManager.updateStock(stock,
 					stock.getContentValuesAnalyze(period));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void updateActionFile(Stock stock) {
-		String fileName;
-		StringBuilder logString = new StringBuilder();
-
-		logString.append(stock.getName() + " " + stock.getPrice() + " "
-				+ stock.getNet() + " ");
-
-		for (String period : Settings.KEY_PERIODS) {
-			if (Preferences.getBoolean(mContext, period, false)) {
-				logString.append(period + " " + stock.getAction(period) + " ");
-			}
-		}
-
-		logString.append(stock.getOperate() + " " + stock.getModified() + "\n");
-
-		try {
-			fileName = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Android/"
-					+ stock.getSE() + stock.getCode() + stock.getName() + Constants.ACTION_FILE_EXT;
-			Utility.writeFile(fileName, logString.toString(), true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

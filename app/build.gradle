@@ -8,7 +8,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 29
         versionCode 518
-        versionName "1.1.36.20220223"
+        versionName "1.1.36.20220226"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -36,4 +36,5 @@ dependencies {
     implementation files('libs/httpmime-4.2.4.jar')
     implementation files('libs/okio-1.13.0.jar')
     implementation files('libs/poi-3.17.jar')
+    implementation 'org.jetbrains:annotations-java5:15.0'
 }
