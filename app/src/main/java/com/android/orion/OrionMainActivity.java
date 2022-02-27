@@ -112,6 +112,7 @@ public class OrionMainActivity extends PreferenceActivity {
 			Preferences.putBoolean (this, Settings.KEY_DISPLAY_COST, true);
 
 			Preferences.putBoolean (this, Settings.KEY_NOTIFICATION_MESSAGE, true);
+			Preferences.putBoolean (this, Settings.KEY_NOTIFICATION_OPERATE, false);
 		}
 	}
 }

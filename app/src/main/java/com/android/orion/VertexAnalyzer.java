@@ -268,13 +268,17 @@ public class VertexAnalyzer {
 			histogram = current.getHistogram();
 
 			if (stockData.getDirection() == StockData.DIRECTION_UP) {
-				if (histogram > 0) {
-					sigmaHistogram += histogram;
-				}
+//				if (histogram > 0) {
+//					sigmaHistogram += histogram;
+//				}
+
+				sigmaHistogram += Math.abs(histogram);
 			} else if (stockData.getDirection() == StockData.DIRECTION_DOWN) {
-				if (histogram < 0) {
-					sigmaHistogram += histogram;
-				}
+//				if (histogram < 0) {
+//					sigmaHistogram += histogram;
+//				}
+
+				sigmaHistogram += Math.abs(histogram);
 			}
 
 			if (i == stockData.getIndexEnd()) {

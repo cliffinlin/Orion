@@ -1374,7 +1374,7 @@ public class SinaFinance extends StockDataProvider {
 								dateString, Utility.CALENDAR_DATE_FORMAT);
 						if (!calendar.before(today)) {
 							nameString = nameString
-									+ Stock.ACTION_STAR;
+									+ StockData.ACTION_STAR;
 						}
 					}
 

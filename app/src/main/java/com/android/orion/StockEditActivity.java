@@ -32,7 +32,6 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 	EditText mEditTextStockCost;
 	EditText mEditTextStockHold;
 	EditText mEditTextStockValuation;
-	CheckBox mCheckBoxStockOperate;
 	Button mButtonOk, mButtonCancel;
 
 	@Override
@@ -66,7 +65,6 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 		mEditTextStockCost = (EditText) findViewById(R.id.edittext_stock_cost);
 		mEditTextStockHold = (EditText) findViewById(R.id.edittext_stock_hold);
 		mEditTextStockValuation = (EditText) findViewById(R.id.edittext_stock_valuation);
-		mCheckBoxStockOperate = (CheckBox) findViewById(R.id.checkbox_stock_operate);
 		mButtonOk = (Button) findViewById(R.id.button_ok);
 		mButtonCancel = (Button) findViewById(R.id.button_cancel);
 
@@ -77,7 +75,6 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 		mEditTextStockCost.setOnClickListener(this);
 		mEditTextStockHold.setOnClickListener(this);
 		mEditTextStockValuation.setOnClickListener(this);
-		mCheckBoxStockOperate.setOnClickListener(this);
 		mButtonOk.setOnClickListener(this);
 		mButtonCancel.setOnClickListener(this);
 
@@ -136,8 +133,6 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 			mRadioGroupSE.check(R.id.radio_se_sz);
 		}
 
-		mCheckBoxStockOperate.setChecked(!TextUtils.isEmpty(mStock.getOperate()));
-
 		mEditTextStockName.setText(mStock.getName());
 		mEditTextStockCode.setText(mStock.getCode());
 		mEditTextStockCost.setText(String.valueOf(mStock.getCost()));
@@ -183,12 +178,6 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 				mStock.setSE(Stock.SE_SH);
 			} else if (id == R.id.radio_se_sz) {
 				mStock.setSE(Stock.SE_SZ);
-			}
-
-			if (mCheckBoxStockOperate.isChecked()) {
-				mStock.setOperate(Stock.OPERATE_AMPLITUDE);
-			} else {
-				mStock.setOperate(Stock.OPERATE_NONE);
 			}
 
 			String name = mEditTextStockName.getText().toString();

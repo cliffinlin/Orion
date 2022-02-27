@@ -208,10 +208,6 @@ public class StockAnalyzer {
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 
-		int maxKey = 0;
-		int maxValue = 0;
-		ArrayMap<Integer, Integer> amplitudeArrayMap = new ArrayMap<Integer, Integer>();
-
 		if (stock == null) {
 			return;
 		}
@@ -223,24 +219,7 @@ public class StockAnalyzer {
                 setupStockShareBonus(stock);
             }
 
-			for (String period : Settings.KEY_PERIODS) {
-				if (Preferences.getBoolean(mContext, period, false)) {
-					updateAmplitudeArrayMap(amplitudeArrayMap, stock.getDrawDataList(period));
-					updateAmplitudeArrayMap(amplitudeArrayMap, stock.getStrokeDataList(period));
-					updateAmplitudeArrayMap(amplitudeArrayMap, stock.getSegmentDataList(period));
-				}
-			}
-
-			if (amplitudeArrayMap.size() > 0) {
-				for (int i = 0; i < amplitudeArrayMap.size(); i++) {
-					if (amplitudeArrayMap.valueAt(i) > maxValue) {
-						maxKey = amplitudeArrayMap.keyAt(i);
-						maxValue = amplitudeArrayMap.valueAt(i);
-					}
-				}
-			}
-
-			stock.setOperate(maxValue + Stock.OPERATE_AMPLITUDE + maxKey);
+			setupStockOperate(stock);
 
 			updateDatabase(stock);
 
@@ -583,6 +562,40 @@ public class StockAnalyzer {
 		}
 	}
 
+	private void setupStockOperate(Stock stock) {
+		StringBuilder result = new StringBuilder();
+		ArrayMap<Integer, Integer> divergenceArrayMap = new ArrayMap<Integer, Integer>();
+
+		if (stock == null) {
+			return;
+		}
+
+		for (String period : Settings.KEY_PERIODS) {
+			if (Preferences.getBoolean(mContext, period, false)) {
+				updateDivergenceArrayMap(divergenceArrayMap, stock.getSegmentDataList(period));
+				updateDivergenceArrayMap(divergenceArrayMap, stock.getStrokeDataList(period));
+				updateDivergenceArrayMap(divergenceArrayMap, stock.getDrawDataList(period));
+			}
+		}
+
+		if (divergenceArrayMap.size() > 0) {
+			for (int i = 0; i < divergenceArrayMap.size(); i++) {
+				result.append(divergenceArrayMap.valueAt(i));
+				if (divergenceArrayMap.keyAt(i) == StockData.DIVERGENCE_UP) {
+					result.append(StockData.ACTION_HIGH);
+				} else if (divergenceArrayMap.keyAt(i) == StockData.DIVERGENCE_DOWN) {
+					result.append(StockData.ACTION_LOW);
+				}
+
+				if (i < divergenceArrayMap.size() - 1) {
+					result.append(" ");
+				}
+			}
+		}
+
+		stock.setOperate(result.toString());
+	}
+
 	private void setMACD(ArrayList<StockData> stockDataList) {
 		int size = 0;
 
@@ -787,130 +800,13 @@ public class StockAnalyzer {
 	}
 
 	private String getSecondBottomAction(Stock stock, ArrayList<StockData> vertexList,
-										ArrayList<StockData> overlapList) {
-		String result = "";
-		StockData prev = null;
-		StockData stockData = null;
-		StockData start = null;
-		int numerator = 0;
-		int denominator = 0;
-
-		if ((vertexList == null)
-				|| (vertexList.size() < StockData.VERTEX_TYPING_SIZE + 2)) {
-			return result;
-		}
-
-		if ((overlapList == null) || (overlapList.size() < 1)) {
-			return result;
-		}
-
-		prev = vertexList.get(vertexList.size() - 2);
-		if (prev == null) {
-			return result;
-		}
-
-		stockData = vertexList.get(vertexList.size() - 4);
-		if (stockData == null) {
-			return result;
-		}
-
-		if (prev.getVertexLow() < stockData.getVertexLow()) {
-			return result;
-		}
-
-		if (stock.getPrice() > prev.getVertexHigh()) {
-			return result;
-		}
-
-		if (stockData.vertexOf(StockData.VERTEX_BOTTOM_SEGMENT)) {
-			for (int i = vertexList.size() - 5; i >= 0; i--) {
-				start = vertexList.get(i);
-				if ((start != null) && (start.vertexOf(StockData.VERTEX_TOP_SEGMENT))) {
-					if ((stock.getPrice() > 0) && (start.getHigh() > 0)) {
-						numerator = (int)(100 * (stock.getPrice() - start.getHigh())/start.getHigh());
-						denominator = (int)(100 * (stockData.getLow() - start.getHigh())/start.getHigh());
-					}
-					break;
-				}
-			}
-
-			if (Math.abs(denominator) > Constants.SECEND_ACTION_THRESHOLD) {
-				result += StockData.ACTION_BUY2;
-				result += StockData.ACTION_BUY2;
-				result += " " + numerator;
-				result += "/" + denominator;
-			}
-		}
-
-		return result;
-	}
-
-	private String getSecondTopAction(Stock stock, ArrayList<StockData> vertexList,
-									ArrayList<StockData> overlapList) {
-		String result = "";
-		StockData prev = null;
-		StockData stockData = null;
-		StockData start = null;
-		int numerator = 0;
-		int denominator = 0;
-
-		if ((vertexList == null)
-				|| (vertexList.size() < StockData.VERTEX_TYPING_SIZE + 2)) {
-			return result;
-		}
-
-		if ((overlapList == null) || (overlapList.size() < 1)) {
-			return result;
-		}
-
-		prev = vertexList.get(vertexList.size() - 2);
-		if (prev == null) {
-			return result;
-		}
-
-		stockData = vertexList.get(vertexList.size() - 4);
-		if (stockData == null) {
-			return result;
-		}
-
-		if (prev.getVertexHigh() > stockData.getVertexHigh()) {
-			return result;
-		}
-
-		if (stock.getPrice() < prev.getVertexLow()) {
-			return result;
-		}
-
-		if (stockData.vertexOf(StockData.VERTEX_TOP_SEGMENT)) {
-			for (int i = vertexList.size() - 5; i >= 0; i--) {
-				start = vertexList.get(i);
-				if ((start != null) && (start.vertexOf(StockData.VERTEX_BOTTOM_SEGMENT))) {
-					if ((stock.getPrice() > 0) && (start.getLow() > 0)) {
-						numerator = (int)(100 * (stock.getPrice() - start.getLow())/start.getLow());
-						denominator = (int)(100 * (stockData.getHigh() - start.getLow())/start.getLow());
-					}
-					break;
-				}
-			}
-
-			if (Math.abs(denominator) > Constants.SECEND_ACTION_THRESHOLD) {
-				result += StockData.ACTION_SELL2;
-				result += StockData.ACTION_SELL2;
-				result += " " + numerator;
-				result += "/" + denominator;
-			}
-		}
-
-		return result;
-	}
-
-	private String getSecondBottomAction(Stock stock, ArrayList<StockData> vertexList,
 										 ArrayList<StockData> strokeDataList,
 										 ArrayList<StockData> segmentDataList) {
 		String result = "";
 		StockData firstBottomVertex = null;
 		StockData secondBottomVertex = null;
 		StockData secondTopVertex = null;
+
 		StockData stockData = null;
 		int numerator = 0;
 		int denominator = 0;
@@ -946,7 +842,7 @@ public class StockAnalyzer {
 		if (firstBottomVertex.vertexOf(StockData.VERTEX_BOTTOM_SEGMENT)) {
 			stockData = segmentDataList.get(segmentDataList.size() - 2);
 		} else if (firstBottomVertex.vertexOf(StockData.VERTEX_BOTTOM_STROKE)) {
-			stockData = segmentDataList.get(strokeDataList.size() - 2);
+			stockData = strokeDataList.get(strokeDataList.size() - 2);
 		} else {
 			return result;
 		}
@@ -978,8 +874,9 @@ public class StockAnalyzer {
 									  ArrayList<StockData> segmentDataList) {
 		String result = "";
 		StockData firstTopVertex = null;
-		StockData secondTopVertex = null;
 		StockData secondBottomVertex = null;
+		StockData secondTopVertex = null;
+
 		StockData stockData = null;
 		int numerator = 0;
 		int denominator = 0;
@@ -1015,7 +912,7 @@ public class StockAnalyzer {
 		if (firstTopVertex.vertexOf(StockData.VERTEX_TOP_SEGMENT)) {
 			stockData = segmentDataList.get(segmentDataList.size() - 2);
 		} else if (firstTopVertex.vertexOf(StockData.VERTEX_TOP_STROKE)) {
-			stockData = segmentDataList.get(strokeDataList.size() - 2);
+			stockData = strokeDataList.get(strokeDataList.size() - 2);
 		} else {
 			return result;
 		}
@@ -1117,7 +1014,7 @@ public class StockAnalyzer {
 				action += Math.abs(segmentAmplitude);
 			}
 
-			if (segmentDivergence > StockData.DIVERGENCE_NONE) {
+			if (segmentDivergence == StockData.DIVERGENCE_UP) {
 				action += StockData.ACTION_HIGH;
 			}
 		} else if (stockData
@@ -1129,7 +1026,7 @@ public class StockAnalyzer {
 				action += Math.abs(segmentAmplitude);
 			}
 
-			if (segmentDivergence > StockData.DIVERGENCE_NONE) {
+			if (segmentDivergence == StockData.DIVERGENCE_DOWN) {
 				action += StockData.ACTION_LOW;
 			}
 		}
@@ -1142,7 +1039,7 @@ public class StockAnalyzer {
 				action += Math.abs(strokeAmplitude);
 			}
 
-			if (strokeDivergence > StockData.DIVERGENCE_NONE) {
+			if (strokeDivergence == StockData.DIVERGENCE_UP) {
 				action += StockData.ACTION_HIGH;
 			}
 		} else if (stockData.directionOf(StockData.DIRECTION_DOWN_STROKE)) {
@@ -1153,7 +1050,7 @@ public class StockAnalyzer {
 				action += Math.abs(strokeAmplitude);
 			}
 
-			if (strokeDivergence > StockData.DIVERGENCE_NONE) {
+			if (strokeDivergence == StockData.DIVERGENCE_DOWN) {
 				action += StockData.ACTION_LOW;
 			}
 		}
@@ -1179,7 +1076,7 @@ public class StockAnalyzer {
 				action += Math.abs(drawAmplitude);
 			}
 
-			if (drawDivergence > StockData.DIVERGENCE_NONE) {
+			if (drawDivergence == StockData.DIVERGENCE_UP) {
 				action += StockData.ACTION_HIGH;
 			}
 		} else if (stockData.directionOf(StockData.DIRECTION_DOWN)) {
@@ -1202,7 +1099,7 @@ public class StockAnalyzer {
 				action += Math.abs(drawAmplitude);
 			}
 
-			if (drawDivergence > StockData.DIVERGENCE_NONE) {
+			if (drawDivergence == StockData.DIVERGENCE_DOWN) {
 				action += StockData.ACTION_LOW;
 			}
 		}
@@ -1325,6 +1222,27 @@ public class StockAnalyzer {
 		}
 	}
 
+	private void updateDivergenceArrayMap(ArrayMap<Integer, Integer> divergenceArrayMap, ArrayList<StockData> stockDataList) {
+		int divergence = 0;
+
+		if ((divergenceArrayMap == null) || (stockDataList == null)) {
+			return;
+		}
+
+		divergence = getLastDivergence(stockDataList);
+
+		if (divergence == StockData.DIVERGENCE_NONE) {
+			return;
+		}
+
+		if (divergenceArrayMap.containsKey(divergence)) {
+			int value = divergenceArrayMap.get(divergence);
+			divergenceArrayMap.put(divergence, ++value);
+		} else {
+			divergenceArrayMap.put(divergence, 1);
+		}
+	}
+
 	int getDenominator(String action) {
 		String strings[] = null;
 		int result = 0;
@@ -1402,8 +1320,11 @@ public class StockAnalyzer {
 			return;
 		}
 
-		if (TextUtils.isEmpty(stock.getOperate())) {
-			return;
+		if (Preferences.getBoolean(mContext, Settings.KEY_NOTIFICATION_OPERATE,
+				false)) {
+			if (TextUtils.isEmpty(stock.getOperate())) {
+				return;
+			}
 		}
 
 		if (mNotificationManager == null) {

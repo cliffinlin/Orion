@@ -22,6 +22,9 @@ public class StockData extends StockDatabaseTable {
     public static final String ACTION_SELL1 = "S1";
     public static final String ACTION_SELL2 = "S2";
     public static final String ACTION_SELL3 = "S3";
+
+    public static final String ACTION_STAR = "*";
+
     public static final String ACTION_HIGH = "H";
     public static final String ACTION_LOW = "L";
 
@@ -34,10 +37,8 @@ public class StockData extends StockDatabaseTable {
 	public static final int LEVEL_SEGMENT = 1 << 2;
 
 	public static final int DIVERGENCE_NONE = 0;
-	public static final int DIVERGENCE_SIGMA_HISTOGRAM = 1 << 0;
-	public static final int DIVERGENCE_HISTOGRAM = 1 << 1;
-	public static final int DIVERGENCE_DIF = 1 << 2;
-	public static final int DIVERGENCE_DEA = 1 << 3;
+	public static final int DIVERGENCE_UP = 1;
+	public static final int DIVERGENCE_DOWN = -1;
 
 	public static final int DIRECTION_NONE = 0;
 	public static final int DIRECTION_UP = 1 << 0;
@@ -885,40 +886,20 @@ public class StockData extends StockDatabaseTable {
 		if (direction == DIRECTION_UP) {
 			if ((getVertexHigh() > stockData.getVertexHigh())
 					&& (getVertexLow() > stockData.getVertexLow())) {
-				result = divergenceValue(stockData);
+				if (Math.abs(getSigmaHistogram()) < Math.abs(stockData
+						.getSigmaHistogram())) {
+					result = DIVERGENCE_UP;
+				}
 			}
 		} else if (direction == DIRECTION_DOWN) {
 			if ((getVertexHigh() < stockData.getVertexHigh())
 					&& (getVertexLow() < stockData.getVertexLow())) {
-				result = divergenceValue(stockData);
+				if (Math.abs(getSigmaHistogram()) < Math.abs(stockData
+						.getSigmaHistogram())) {
+					result = DIVERGENCE_DOWN;
+				}
 			}
-		} else {
-			result = DIVERGENCE_NONE;
 		}
-
-		return result;
-	}
-
-	int divergenceValue(StockData stockData) {
-		int result = DIVERGENCE_NONE;
-
-		if (Math.abs(getSigmaHistogram()) < Math.abs(stockData
-				.getSigmaHistogram())) {
-			result |= DIVERGENCE_SIGMA_HISTOGRAM;
-		}
-//
-//		if (Math.abs(getHistogram()) < Math.abs(stockData
-//				.getHistogram())) {
-//			result |= DIVERGENCE_HISTOGRAM;
-//		}
-//
-//		if (Math.abs(getDIF()) < Math.abs(stockData.getDIF())) {
-//			result |= DIVERGENCE_DIF;
-//		}
-//
-//		if (Math.abs(getDEA()) < Math.abs(stockData.getDEA())) {
-//			result |= DIVERGENCE_DEA;
-//		}
 
 		return result;
 	}

@@ -54,7 +54,6 @@ public class StockListEditActivity extends DatabaseActivity implements
 	TextView mTextViewNameCode = null;
 	TextView mTextViewPrice = null;
 	TextView mTextViewHold = null;
-	TextView mTextViewOperate = null;
 	TextView mTextViewFavorite = null;
 
 	String[] mFrom = new String[] { DatabaseContract.COLUMN_NAME,
@@ -168,9 +167,6 @@ public class StockListEditActivity extends DatabaseActivity implements
 		case R.id.hold:
 			mSortOrderColumn = DatabaseContract.COLUMN_HOLD;
 			break;
-		case R.id.operate:
-			mSortOrderColumn = DatabaseContract.COLUMN_OPERATE;
-			break;
 		case R.id.favorite:
 			mSortOrderColumn = DatabaseContract.COLUMN_FLAG;
 			break;
@@ -206,7 +202,6 @@ public class StockListEditActivity extends DatabaseActivity implements
 		setHeaderTextColor(mTextViewNameCode, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewPrice, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewHold, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewOperate, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewFavorite, mHeaderTextDefaultColor);
 	}
 
@@ -226,11 +221,6 @@ public class StockListEditActivity extends DatabaseActivity implements
 			mTextViewHold.setOnClickListener(this);
 		}
 
-		mTextViewOperate = (TextView) findViewById(R.id.operate);
-		if (mTextViewOperate != null) {
-			mTextViewOperate.setOnClickListener(this);
-		}
-
 		mTextViewFavorite = (TextView) findViewById(R.id.favorite);
 		if (mTextViewFavorite != null) {
 			mTextViewFavorite.setOnClickListener(this);
@@ -242,8 +232,6 @@ public class StockListEditActivity extends DatabaseActivity implements
 			setHeaderTextColor(mTextViewPrice, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_HOLD)) {
 			setHeaderTextColor(mTextViewHold, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_OPERATE)) {
-			setHeaderTextColor(mTextViewOperate, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_FLAG)) {
 			setHeaderTextColor(mTextViewFavorite, mHeaderTextHighlightColor);
 		} else {
@@ -308,14 +296,6 @@ public class StockListEditActivity extends DatabaseActivity implements
 			setViewText(holder.mTextViewPrice, String.valueOf(stock.getPrice()));
 			setViewText(holder.mTextViewHold, String.valueOf(stock.getHold()));
 
-			if (!TextUtils.isEmpty(stock.getOperate())) {
-				holder.mImageViewOperate
-						.setImageResource(R.drawable.ic_start);
-			} else {
-				holder.mImageViewOperate
-						.setImageResource(R.drawable.ic_pause);
-			}
-
 			if ((stock.getFlag() & Stock.FLAG_FAVORITE) == 1) {
 				holder.mImageViewFavorite
 						.setImageResource(R.drawable.ic_favorite);
@@ -330,9 +310,6 @@ public class StockListEditActivity extends DatabaseActivity implements
 				holder.mImageViewDelete
 						.setImageResource(R.drawable.ic_undeletable);
 			}
-
-			holder.mImageViewOperate.setTag(stock.getId());
-			holder.mImageViewOperate.setOnClickListener(this);
 
 			holder.mImageViewFavorite.setTag(stock.getId());
 			holder.mImageViewFavorite.setOnClickListener(this);
@@ -353,7 +330,6 @@ public class StockListEditActivity extends DatabaseActivity implements
 			holder.mTextViewCode = (TextView) view.findViewById(R.id.code);
 			holder.mTextViewPrice = (TextView) view.findViewById(R.id.price);
 			holder.mTextViewHold = (TextView) view.findViewById(R.id.hold);
-			holder.mImageViewOperate = (ImageView) view.findViewById(R.id.operate);
 			holder.mImageViewFavorite = (ImageView) view
 					.findViewById(R.id.favorite);
 			holder.mImageViewDelete = (ImageView) view
@@ -379,14 +355,6 @@ public class StockListEditActivity extends DatabaseActivity implements
 
 			try {
 				switch (view.getId()) {
-				case R.id.operate:
-					if (TextUtils.isEmpty(stock.getOperate())) {
-						updateStockOperate(stockId, Stock.OPERATE_AMPLITUDE);
-					} else {
-						updateStockOperate(stockId, Stock.OPERATE_NONE);
-					}
-					break;
-
 				case R.id.favorite:
 					if ((stock.getFlag() & Stock.FLAG_FAVORITE) == 0) {
 						updateStockFlag(stockId, stock.getFlag() | Stock.FLAG_FAVORITE);
@@ -442,21 +410,6 @@ public class StockListEditActivity extends DatabaseActivity implements
 			restartLoader();
 		}
 
-		void updateStockOperate(long stockId, String operate) {
-			Uri uri = null;
-
-			uri = ContentUris.withAppendedId(
-					DatabaseContract.Stock.CONTENT_URI, stockId);
-
-			try {
-				ContentValues contentValues = new ContentValues();
-				contentValues.put(DatabaseContract.COLUMN_OPERATE, operate);
-				mContentResolver.update(uri, contentValues, null, null);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-
 		void updateStockFlag(long stockId, long flag) {
 			Uri uri = null;
 
@@ -478,7 +431,6 @@ public class StockListEditActivity extends DatabaseActivity implements
 		public TextView mTextViewCode;
 		public TextView mTextViewPrice;
 		public TextView mTextViewHold;
-		public ImageView mImageViewOperate;
 		public ImageView mImageViewFavorite;
 		public ImageView mImageViewDelete;
 	}

@@ -33,6 +33,7 @@ public class Settings {
 	public static final String KEY_DISPLAY_ROI = "display_roi";
 
 	public static final String KEY_NOTIFICATION_MESSAGE = "notification_message";
+	public static final String KEY_NOTIFICATION_OPERATE = "notification_operate";
 
 	public static final String KEY_SORT_ORDER_IPO_LIST = "sort_order_ipo_list";
 	public static final String KEY_SORT_ORDER_COMPONENT_LIST = "sort_order_component_list";

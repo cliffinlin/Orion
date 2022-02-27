@@ -49,7 +49,9 @@ public class SettingFragment extends PreferenceFragment implements
 
 		checked = sharedPreferences.getBoolean(key, true);
 
-		if (key.equals(Settings.KEY_PERIOD_MIN1)
+		if (key.equals(Settings.KEY_NOTIFICATION_MESSAGE)
+				|| key.equals(Settings.KEY_NOTIFICATION_OPERATE)
+				|| key.equals(Settings.KEY_PERIOD_MIN1)
 				|| key.equals(Settings.KEY_PERIOD_MIN5)
 				|| key.equals(Settings.KEY_PERIOD_MIN15)
 				|| key.equals(Settings.KEY_PERIOD_MIN30)
@@ -63,13 +65,13 @@ public class SettingFragment extends PreferenceFragment implements
 				if (mStockDownloadAlarmManager != null) {
 					mStockDownloadAlarmManager.startAlarm();
 				}
+			}
 
-				Intent intent = new Intent(getActivity(), OrionService.class);
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-					getActivity().startForegroundService(intent);
-				} else {
-					getActivity().startService(intent);
-				}
+			Intent intent = new Intent(getActivity(), OrionService.class);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+				getActivity().startForegroundService(intent);
+			} else {
+				getActivity().startService(intent);
 			}
 		}
 	}

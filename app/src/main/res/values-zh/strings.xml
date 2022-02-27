@@ -105,6 +105,7 @@
     <string name="no_sd_card_found">No SD Card Found!</string>
     <string name="notification">Notification</string>
     <string name="notification_message">Message</string>
+    <string name="notification_operate">Operate</string>
     <string name="notification_lights">Lights</string>
     <string name="notification_vibrate">Vibrate</string>
     <string name="notification_sound">Sound</string>
