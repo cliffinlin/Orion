@@ -309,10 +309,10 @@ public class StockDataChart {
 			return;
 		}
 
-		mDescription += stock.getName();
+		mDescription += mPeriod;
 		mDescription += " ";
 
-		mDescription += mPeriod;
+		mDescription += stock.getName();
 		mDescription += " ";
 
 		mDescription += stock.getPrice() + "  ";
