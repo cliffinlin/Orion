@@ -841,8 +841,6 @@ public class StockAnalyzer {
 
 		if (firstBottomVertex.vertexOf(StockData.VERTEX_BOTTOM_SEGMENT)) {
 			stockData = segmentDataList.get(segmentDataList.size() - 2);
-		} else if (firstBottomVertex.vertexOf(StockData.VERTEX_BOTTOM_STROKE)) {
-			stockData = strokeDataList.get(strokeDataList.size() - 2);
 		} else {
 			return result;
 		}
@@ -911,8 +909,6 @@ public class StockAnalyzer {
 
 		if (firstTopVertex.vertexOf(StockData.VERTEX_TOP_SEGMENT)) {
 			stockData = segmentDataList.get(segmentDataList.size() - 2);
-		} else if (firstTopVertex.vertexOf(StockData.VERTEX_TOP_STROKE)) {
-			stockData = strokeDataList.get(strokeDataList.size() - 2);
 		} else {
 			return result;
 		}
