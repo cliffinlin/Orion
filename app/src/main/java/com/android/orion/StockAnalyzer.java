@@ -865,9 +865,9 @@ public class StockAnalyzer {
         if (firstBottomVertex.vertexOf(StockData.VERTEX_BOTTOM_SEGMENT)) {
             baseStockData = segmentDataList.get(segmentDataList.size() - 4);
             brokenStockData = segmentDataList.get(segmentDataList.size() - 2);
-		} else if (firstBottomVertex.vertexOf(StockData.VERTEX_BOTTOM_STROKE)) {
-			baseStockData = strokeDataList.get(strokeDataList.size() - 4);
-			brokenStockData = strokeDataList.get(strokeDataList.size() - 2);
+//		} else if (firstBottomVertex.vertexOf(StockData.VERTEX_BOTTOM_STROKE)) {
+//			baseStockData = strokeDataList.get(strokeDataList.size() - 4);
+//			brokenStockData = strokeDataList.get(strokeDataList.size() - 2);
         } else {
             return result;
         }
@@ -953,9 +953,9 @@ public class StockAnalyzer {
         if (firstTopVertex.vertexOf(StockData.VERTEX_TOP_SEGMENT)) {
             baseStockData = segmentDataList.get(segmentDataList.size() - 4);
             brokenStockData = segmentDataList.get(segmentDataList.size() - 2);
-		} else if (firstTopVertex.vertexOf(StockData.VERTEX_TOP_STROKE)) {
-			baseStockData = strokeDataList.get(strokeDataList.size() - 4);
-			brokenStockData = strokeDataList.get(strokeDataList.size() - 2);
+//		} else if (firstTopVertex.vertexOf(StockData.VERTEX_TOP_STROKE)) {
+//			baseStockData = strokeDataList.get(strokeDataList.size() - 4);
+//			brokenStockData = strokeDataList.get(strokeDataList.size() - 2);
         } else {
             return result;
         }
