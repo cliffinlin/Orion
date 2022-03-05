@@ -32,6 +32,9 @@ public class Settings {
 	public static final String KEY_DISPLAY_ROE = "display_roe";
 	public static final String KEY_DISPLAY_ROI = "display_roi";
 
+	public static final String KEY_BACKTEST = "backtest";
+	public static final String KEY_BACKTEST_DATE_TIME = "backtest_date_time";
+
 	public static final String KEY_NOTIFICATION_MESSAGE = "notification_message";
 	public static final String KEY_NOTIFICATION_OPERATE = "notification_operate";
 

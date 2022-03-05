@@ -110,6 +110,14 @@ public class StockListActivity extends ListActivity implements
 					getResources().getString(R.string.notification_is_off),
 					Toast.LENGTH_LONG).show();
 		}
+
+		if (Preferences.getBoolean(mContext,
+				Settings.KEY_BACKTEST, false)) {
+			Toast.makeText(
+					this,
+					getResources().getString(R.string.backtest_is_on),
+					Toast.LENGTH_LONG).show();
+		}
 	}
 
 	@Override

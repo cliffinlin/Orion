@@ -103,6 +103,9 @@ public class OrionMainActivity extends PreferenceActivity {
 		if (!Preferences.getBoolean(this, Settings.KEY_SHARED_PREFERENCES_INIT, false)) {
 			Preferences.putBoolean (this, Settings.KEY_SHARED_PREFERENCES_INIT, true);
 
+			Preferences.putBoolean (this, Settings.KEY_NOTIFICATION_MESSAGE, true);
+			Preferences.putBoolean (this, Settings.KEY_NOTIFICATION_OPERATE, false);
+
 			Preferences.putBoolean (this, Settings.KEY_PERIOD_DAY, true);
 			Preferences.putBoolean (this, Settings.KEY_PERIOD_MIN60, true);
 			Preferences.putBoolean (this, Settings.KEY_PERIOD_MIN30, true);
@@ -111,8 +114,7 @@ public class OrionMainActivity extends PreferenceActivity {
 			Preferences.putBoolean (this, Settings.KEY_DISPLAY_LATEST, true);
 			Preferences.putBoolean (this, Settings.KEY_DISPLAY_COST, true);
 
-			Preferences.putBoolean (this, Settings.KEY_NOTIFICATION_MESSAGE, true);
-			Preferences.putBoolean (this, Settings.KEY_NOTIFICATION_OPERATE, false);
+			Preferences.putBoolean (this, Settings.KEY_BACKTEST, false);
 		}
 	}
 }

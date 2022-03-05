@@ -467,7 +467,6 @@ public class VertexAnalyzer {
 						   ArrayList<StockData> lineDataList) {
 		StockData stockData = null;
 		StockData current = null;
-		StockData middle = null;
 		StockData base = null;
 		int divergence = StockData.DIVERGENCE_NONE;
 
@@ -486,16 +485,14 @@ public class VertexAnalyzer {
 		stockData = stockDataList.get(stockDataList.size() - 1);
 
 		current = lineDataList.get(lineDataList.size() - 1);
-		middle = lineDataList.get(lineDataList.size() - 2);
 		base = lineDataList.get(lineDataList.size() - 3);
 
-		if ((stockData == null) || (current == null) || (middle == null)
-				|| (base == null)) {
+		if ((stockData == null) || (current == null) || (base == null)) {
 			return;
 		}
 
 		if (stock.getPrice() > base.getVertexHigh() || stock.getPrice() < base.getVertexLow()) {
-			divergence = current.divergenceValue(current.getDirection(), base);
+			divergence = current.divergenceTo(base);
 		}
 
 		current.setDivergence(divergence);

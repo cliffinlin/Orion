@@ -6,9 +6,6 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
-import android.widget.Toast;
-
-import com.android.orion.utility.Utility;
 
 public class SettingFragment extends PreferenceFragment implements
 		OnSharedPreferenceChangeListener {
@@ -72,6 +69,17 @@ public class SettingFragment extends PreferenceFragment implements
 				getActivity().startForegroundService(intent);
 			} else {
 				getActivity().startService(intent);
+			}
+		}
+
+		if (key.equals(Settings.KEY_BACKTEST)) {
+			Intent intent = new Intent(getActivity(), SettingBacktestActivity.class);
+			if (checked) {
+				intent.putExtra(SettingBacktestActivity.EXTRA_BACK_TEST, SettingBacktestActivity.EXTRA_BACK_TEST_ON);
+				getActivity().startActivity(intent);
+			} else {
+				intent.putExtra(SettingBacktestActivity.EXTRA_BACK_TEST, SettingBacktestActivity.EXTRA_BACK_TEST_OFF);
+				getActivity().startActivity(intent);
 			}
 		}
 	}

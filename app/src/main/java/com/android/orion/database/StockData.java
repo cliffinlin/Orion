@@ -880,10 +880,10 @@ public class StockData extends StockDatabaseTable {
 		setVertexHigh(Math.max(prev.getVertexHigh(), current.getVertexHigh()));
 	}
 
-	public int divergenceValue(int direction, StockData stockData) {
+	public int divergenceTo(StockData stockData) {
 		int result = DIVERGENCE_NONE;
 
-		if (direction == DIRECTION_UP) {
+		if (mDirection == DIRECTION_UP) {
 			if ((getVertexHigh() > stockData.getVertexHigh())
 					&& (getVertexLow() > stockData.getVertexLow())) {
 				if (Math.abs(getSigmaHistogram()) < Math.abs(stockData
@@ -891,7 +891,7 @@ public class StockData extends StockDatabaseTable {
 					result = DIVERGENCE_UP;
 				}
 			}
-		} else if (direction == DIRECTION_DOWN) {
+		} else if (mDirection == DIRECTION_DOWN) {
 			if ((getVertexHigh() < stockData.getVertexHigh())
 					&& (getVertexLow() < stockData.getVertexLow())) {
 				if (Math.abs(getSigmaHistogram()) < Math.abs(stockData

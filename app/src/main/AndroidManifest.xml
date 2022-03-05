@@ -111,6 +111,11 @@
             android:launchMode="singleTop" >
         </activity>
         <activity
+            android:name="com.android.orion.SettingBacktestActivity"
+            android:label="@string/title_activity_settings_backtest"
+            android:launchMode="singleTop" >
+        </activity>
+        <activity
             android:name="com.android.orion.DealListActivity"
             android:label="@string/title_activity_deal_list"
             android:launchMode="singleTop" >

@@ -143,14 +143,6 @@ public class StockTrendsListActivity extends ListActivity implements
 		initListView();
 
 		mLoaderManager.initLoader(LOADER_ID_STOCK_TRENDS_LIST, null, this);
-
-		if (!Preferences.getBoolean(mContext,
-				Settings.KEY_NOTIFICATION_MESSAGE, false)) {
-			Toast.makeText(
-					this,
-					getResources().getString(R.string.notification_is_off),
-					Toast.LENGTH_LONG).show();
-		}
 	}
 
 	@Override
