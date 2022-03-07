@@ -73,8 +73,11 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 		mEditTextStockName.setOnClickListener(this);
 		mEditTextStockCode.setOnClickListener(this);
 		mEditTextStockCost.setOnClickListener(this);
+		mEditTextStockCost.setEnabled(false);
 		mEditTextStockHold.setOnClickListener(this);
+		mEditTextStockHold.setEnabled(false);
 		mEditTextStockValuation.setOnClickListener(this);
+		mEditTextStockValuation.setEnabled(false);
 		mButtonOk.setOnClickListener(this);
 		mButtonCancel.setOnClickListener(this);
 

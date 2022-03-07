@@ -417,12 +417,9 @@ public class StockDataChart {
 
 	void updateDealLimitLine(Stock stock, ArrayList<StockDeal> stockDealList,
 			boolean keyDisplayDeal) {
-		double average = 0;
-		double net = 0;
 		int color = Color.WHITE;
 		String label = "";
 		LimitLine limitLineDeal;
-		LimitLine limitLineAverage;
 
 		if ((stock == null) || (stockDealList == null)
 				|| (mXLimitLineList == null)) {
@@ -453,20 +450,6 @@ public class StockDataChart {
 			limitLineDeal = createLimitLine(stockDeal.getDeal(), color, label);
 
 			mXLimitLineList.add(limitLineDeal);
-		}
-
-		if (stock.getHold() > 0) {
-			average = Utility.Round(stock.getValuation() / stock.getHold(),Constants.DOUBLE_FIXED_DECIMAL);
-			if (average > 0) {
-				net = Utility.Round(100 * (stock.getPrice() - average) / average,
-						Constants.DOUBLE_FIXED_DECIMAL);
-				color = Color.BLACK;
-				label = "                                                     "
-						+ " " + average + " " + net + "%";
-				limitLineAverage = createLimitLine(average, color, label);
-
-				mXLimitLineList.add(limitLineAverage);
-			}
 		}
 	}
 

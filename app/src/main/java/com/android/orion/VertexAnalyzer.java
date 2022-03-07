@@ -327,8 +327,6 @@ public class VertexAnalyzer {
 			}
 
 			stockData = new StockData();
-
-			stockData.init();
 			stockData.set(current);
 			stockData.merge(prev, current);
 

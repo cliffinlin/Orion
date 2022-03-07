@@ -12,6 +12,7 @@ import android.util.ArrayMap;
 
 import com.android.orion.Constants;
 import com.android.orion.Settings;
+import com.android.orion.utility.Utility;
 
 public class StockDatabaseManager extends DatabaseManager {
 	private static StockDatabaseManager mInstance = null;
@@ -636,8 +637,6 @@ public class StockDatabaseManager extends DatabaseManager {
 			return result;
 		}
 
-		stock.setHold(0);
-
 		stockDeal = new StockDeal();
 
 		String selection = DatabaseContract.COLUMN_SE + " = " + "\'"
@@ -672,6 +671,9 @@ public class StockDatabaseManager extends DatabaseManager {
 			stock.setHold(hold);
 			stock.setProfit(profit);
 			stock.setValuation(valuation);
+			if (hold > 0) {
+				stock.setCost(Utility.Round(valuation / hold, Constants.DOUBLE_FIXED_DECIMAL));
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
