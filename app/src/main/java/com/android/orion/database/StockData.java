@@ -613,7 +613,7 @@ public class StockData extends StockDatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_HISTOGRAM)));
 	}
 
-	double getSigmaHistogram() {
+	public double getSigmaHistogram() {
 		return mSigmaHistogram;
 	}
 
@@ -886,18 +886,28 @@ public class StockData extends StockDatabaseTable {
 		if (mDirection == DIRECTION_UP) {
 			if ((getVertexHigh() > stockData.getVertexHigh())
 					&& (getVertexLow() > stockData.getVertexLow())) {
-				if (Math.abs(getSigmaHistogram()) < Math.abs(stockData
-						.getSigmaHistogram())) {
+//				if (Math.abs(getSigmaHistogram()) < Math.abs(stockData
+//						.getSigmaHistogram())) {
+//					result = DIVERGENCE_UP;
+//				}
+//__TEST_CASE__
+				if (getSigmaHistogram() < stockData.getSigmaHistogram()) {
 					result = DIVERGENCE_UP;
 				}
+//__TEST_CASE__
 			}
 		} else if (mDirection == DIRECTION_DOWN) {
 			if ((getVertexHigh() < stockData.getVertexHigh())
 					&& (getVertexLow() < stockData.getVertexLow())) {
-				if (Math.abs(getSigmaHistogram()) < Math.abs(stockData
-						.getSigmaHistogram())) {
+//				if (Math.abs(getSigmaHistogram()) < Math.abs(stockData
+//						.getSigmaHistogram())) {
+//					result = DIVERGENCE_DOWN;
+//				}
+//__TEST_CASE__
+				if (getSigmaHistogram() > stockData.getSigmaHistogram()) {
 					result = DIVERGENCE_DOWN;
 				}
+//__TEST_CASE__
 			}
 		}
 

@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
+import com.android.orion.utility.Utility;
 
 public class VertexAnalyzer {
 	static final String TAG = Constants.TAG + " "
@@ -249,6 +250,7 @@ public class VertexAnalyzer {
 	}
 
 	void sigmaHistogram(StockData stockData, ArrayList<StockData> stockDataList) {
+		int delt = 0;
 		double histogram = 0;
 		double sigmaHistogram = 0;
 
@@ -272,19 +274,33 @@ public class VertexAnalyzer {
 //					sigmaHistogram += histogram;
 //				}
 
-				sigmaHistogram += Math.abs(histogram);
+//				sigmaHistogram += Math.abs(histogram);
 			} else if (stockData.getDirection() == StockData.DIRECTION_DOWN) {
 //				if (histogram < 0) {
 //					sigmaHistogram += histogram;
 //				}
 
-				sigmaHistogram += Math.abs(histogram);
+//				sigmaHistogram += Math.abs(histogram);
 			}
 
 			if (i == stockData.getIndexEnd()) {
 				stockData.setDIF(current.getDIF());
 				stockData.setDEA(current.getDEA());
 				stockData.setHistogram(current.getHistogram());
+
+				//__TEST_CASE__
+				delt = stockData.getIndexEnd() - stockData.getIndexStart();
+				if (delt > 0) {
+					if (stockData.getDirection() == StockData.DIRECTION_UP) {
+						sigmaHistogram = (stockData.getVertexHigh() - stockData.getVertexLow()) / delt;
+					} else if (stockData.getDirection() == StockData.DIRECTION_DOWN) {
+						sigmaHistogram = (stockData.getVertexLow() - stockData.getVertexHigh()) / delt;
+					} else {
+//						sigmaHistogram = Math.abs(stockData.getVertexHigh - stockData.getVertexLow) / (stockData.getIndexEnd() - stockData.getIndexStart());
+					}
+				}
+				//__TEST_CASE__
+
 				stockData.setSigmaHistogram(sigmaHistogram);
 			}
 		}
@@ -610,10 +626,10 @@ public class VertexAnalyzer {
 			actionString = String.valueOf(i);
 
 			if (data.getAmplitude() > 0) {
-				actionString += " +" + data.getAmplitude();
+				actionString += " +" + data.getAmplitude() + " " + Utility.Round(data.getSigmaHistogram(), Constants.DOUBLE_FIXED_DECIMAL);
 			} else if (data.getAmplitude() < 0) {
-                actionString += " " + data.getAmplitude();
-            }
+				actionString += " " + data.getAmplitude() + " " + Utility.Round(data.getSigmaHistogram(), Constants.DOUBLE_FIXED_DECIMAL);
+			}
 
 			stockData.setAction(actionString);
 		}
