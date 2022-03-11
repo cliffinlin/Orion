@@ -6,9 +6,15 @@ import java.util.Calendar;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
@@ -17,6 +23,7 @@ import android.os.Process;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.orion.database.IndexComponent;
 import com.android.orion.database.DatabaseContract;
@@ -29,6 +36,9 @@ import com.android.orion.database.TotalShare;
 import com.android.orion.utility.Market;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Utility;
+
+import static java.lang.Thread.State.RUNNABLE;
+import static java.lang.Thread.State.TERMINATED;
 
 public abstract class StockDataProvider extends StockAnalyzer {
     static final String TAG = Constants.TAG + " "
@@ -94,11 +104,17 @@ public abstract class StockDataProvider extends StockAnalyzer {
     ShareBonus mShareBonus = null;
     TotalShare mTotalShare = null;
 
-    String mAccessDeniedString = mContext.getResources().getString(
-            R.string.access_denied);
+    ArrayList<String> mAccessDeniedStringArray = new ArrayList<>();
 
     public StockDataProvider(Context context) {
         super(context);
+
+        mAccessDeniedStringArray.add(mContext.getResources().getString(
+                R.string.access_denied_jp));
+        mAccessDeniedStringArray.add(mContext.getResources().getString(
+                R.string.access_denied_zh));
+        mAccessDeniedStringArray.add(mContext.getResources().getString(
+                R.string.access_denied_default));
 
         mHandlerThread = new HandlerThread("StockDataProvider",
                 Process.THREAD_PRIORITY_BACKGROUND);
@@ -167,6 +183,11 @@ public abstract class StockDataProvider extends StockAnalyzer {
     void download(Stock stock) {
         if (!Utility.isNetworkConnected(mContext)) {
             return;
+        }
+
+        Thread.State state = mHandlerThread.getState();
+        if (state != RUNNABLE) {
+            Toast.makeText(mContext, mContext.getResources().getString(R.string.handlerthread_not_running), Toast.LENGTH_LONG).show();
         }
 
        if (stock == null) {
@@ -438,6 +459,10 @@ public abstract class StockDataProvider extends StockAnalyzer {
             Response response = mOkHttpClient.newCall(request).execute();
             if (response != null) {
                 result = response.body().string();
+                if (isAccessDenied(result)) {
+                    return result;
+                }
+
                 handleResponseStockRealTime(mStock, result);
                 Thread.sleep(Constants.DEFAULT_SLEEP_INTERVAL);
             }
@@ -492,8 +517,11 @@ public abstract class StockDataProvider extends StockAnalyzer {
             Response response = mOkHttpClient.newCall(request).execute();
             if (response != null) {
                 result = response.body().string();
-                handleResponseStockInformation(mStock, result);
+                if (isAccessDenied(result)) {
+                    return result;
+                }
 
+                handleResponseStockInformation(mStock, result);
                 Thread.sleep(Constants.DEFAULT_SLEEP_INTERVAL);
             }
         } catch (Exception e) {
@@ -545,8 +573,11 @@ public abstract class StockDataProvider extends StockAnalyzer {
             Response response = mOkHttpClient.newCall(request).execute();
             if (response != null) {
                 result = response.body().string();
-                handleResponseStockFinancial(mStock, mStockFinancial, result);
+                if (isAccessDenied(result)) {
+                    return result;
+                }
 
+                handleResponseStockFinancial(mStock, mStockFinancial, result);
                 Thread.sleep(Constants.DEFAULT_SLEEP_INTERVAL);
             }
         } catch (Exception e) {
@@ -595,7 +626,12 @@ public abstract class StockDataProvider extends StockAnalyzer {
             Response response = mOkHttpClient.newCall(request).execute();
             if (response != null) {
                 result = response.body().string();
+                if (isAccessDenied(result)) {
+                    return result;
+                }
+
                 handleResponseIPO(mIPO, result);
+                Thread.sleep(Constants.DEFAULT_SLEEP_INTERVAL);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -644,8 +680,11 @@ public abstract class StockDataProvider extends StockAnalyzer {
             Response response = mOkHttpClient.newCall(request).execute();
             if (response != null) {
                 result = response.body().string();
-                handleResponseShareBonus(mStock, mShareBonus, result);
+                if (isAccessDenied(result)) {
+                    return result;
+                }
 
+                handleResponseShareBonus(mStock, mShareBonus, result);
                 Thread.sleep(Constants.DEFAULT_SLEEP_INTERVAL);
             }
         } catch (Exception e) {
@@ -695,8 +734,11 @@ public abstract class StockDataProvider extends StockAnalyzer {
             Response response = mOkHttpClient.newCall(request).execute();
             if (response != null) {
                 result = response.body().string();
-                handleResponseTotalShare(mStock, mTotalShare, result);
+                if (isAccessDenied(result)) {
+                    return result;
+                }
 
+                handleResponseTotalShare(mStock, mTotalShare, result);
                 Thread.sleep(Constants.DEFAULT_SLEEP_INTERVAL);
             }
         } catch (Exception e) {
@@ -760,64 +802,11 @@ public abstract class StockDataProvider extends StockAnalyzer {
             Response response = mOkHttpClient.newCall(request).execute();
             if (response != null) {
                 result = response.body().string();
+                if (isAccessDenied(result)) {
+                    return result;
+                }
+
                 handleResponseStockDataHistory(mStock, mStockData, result);
-
-                Thread.sleep(Constants.DEFAULT_SLEEP_INTERVAL);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return result;
-    }
-
-    String downloadStockDataRealTime(Stock stock) {
-        String result = "";
-        int len = 0;
-        String period = Settings.KEY_PERIOD_DAY;
-
-        if (!Preferences.getBoolean(mContext, period, false)) {
-            return result;
-        }
-
-        if (stock == null) {
-            return result;
-        }
-
-        mStockDatabaseManager.getStock(stock);
-
-        mStockData = new StockData(period);
-        mStockData.setStockId(stock.getId());
-        mStockDatabaseManager.getStockData(mStockData);
-
-        len = getDownloadStockDataLength(mStockData);
-        if (len <= 0) {
-            return result;
-        }
-
-        setStock(stock);
-
-        return downloadStockDataRealTime(getRequestHeader(), getStockDataRealTimeURLString(stock));
-    }
-
-    String downloadStockDataRealTime(ArrayMap<String, String> requestHeaderArray, String urlString) {
-        String result = "";
-
-        Log.d(TAG, "downloadStockDataRealTime:" + urlString);
-
-        Request.Builder builder = new Request.Builder();
-        for (int i = 0; i < requestHeaderArray.size(); i++) {
-            builder.addHeader(requestHeaderArray.keyAt(i), requestHeaderArray.valueAt(i));
-        }
-        builder.url(urlString);
-        Request request = builder.build();
-
-        try {
-            Response response = mOkHttpClient.newCall(request).execute();
-            if (response != null) {
-                result = response.body().string();
-                handleResponseStockDataRealTime(mStock, mStockData, result);
-
                 Thread.sleep(Constants.DEFAULT_SLEEP_INTERVAL);
             }
         } catch (Exception e) {
@@ -1024,37 +1013,32 @@ public abstract class StockDataProvider extends StockAnalyzer {
                             setupIndex(stock);
                         } else {
                             result = downloadStockRealTime(stock);
-                            if (result.contains(mAccessDeniedString)) {
+                            if (isAccessDenied(result)) {
                                 break;
                             }
 
                             result = downloadStockInformation(stock);
-                            if (result.contains(mAccessDeniedString)) {
+                            if (isAccessDenied(result)) {
                                 break;
                             }
 
                             result = downloadStockFinancial(stock);
-                            if (result.contains(mAccessDeniedString)) {
+                            if (isAccessDenied(result)) {
                                 break;
                             }
 
                             result = downloadShareBonus(stock);
-                            if (result.contains(mAccessDeniedString)) {
+                            if (isAccessDenied(result)) {
                                 break;
                             }
 
                             result = downloadTotalShare(stock);
-                            if (result.contains(mAccessDeniedString)) {
+                            if (isAccessDenied(result)) {
                                 break;
                             }
 
                             result = downloadStockDataHistory(stock);
-                            if (result.contains(mAccessDeniedString)) {
-                                break;
-                            }
-
-                            result = downloadStockDataRealTime(stock);
-                            if (result.contains(mAccessDeniedString)) {
+                            if (isAccessDenied(result)) {
                                 break;
                             }
                         }
@@ -1069,7 +1053,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
                         sendBroadcast(Constants.ACTION_RESTART_LOADER, stock.getId());
 
                         result = downloadIPO();
-                        if (result.contains(mAccessDeniedString)) {
+                        if (isAccessDenied(result)) {
                             break;
                         }
                         sendBroadcast(Constants.ACTION_RESTART_LOADER,
@@ -1082,5 +1066,58 @@ public abstract class StockDataProvider extends StockAnalyzer {
                     break;
             }
         }
+    }
+
+    boolean isAccessDenied(String string) {
+        boolean result = false;
+
+        String accessDeniedString = "";
+
+        if (TextUtils.isEmpty(string)) {
+            return result;
+        }
+
+        for (int i = 0; i < mAccessDeniedStringArray.size(); i++) {
+            accessDeniedString = mAccessDeniedStringArray.get(i);
+
+            if (string.contains(accessDeniedString)) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    String contentText = "";
+                    StringBuilder contentTitle = new StringBuilder();
+                    Notification.Builder notification;
+
+                    contentTitle.append(mContext.getResources().getString(R.string.action_download) + " ");
+                    contentTitle.append(accessDeniedString);
+
+                    Intent intent = new Intent(mContext, StockListActivity.class);
+                    intent.setType("vnd.android-dir/mms-sms");
+                    PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0,
+                            intent, 0);
+
+                    NotificationChannel notificationChannel = new NotificationChannel(Constants.MESSAGE_CHANNEL_ID,
+                            Constants.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
+                    notificationChannel.enableVibration(true);
+                    notificationChannel.setVibrationPattern(new long[]{500, 500, 500, 500, 500});
+                    notificationChannel.enableLights(true);
+                    notificationChannel.setLightColor(0xFF0000FF);
+                    mNotificationManager.createNotificationChannel(notificationChannel);
+
+                    notification = new Notification.Builder(
+                            mContext, Constants.MESSAGE_CHANNEL_ID).setContentTitle(contentTitle)
+                            .setContentText(contentText)
+                            .setSmallIcon(R.drawable.ic_dialog_email)
+                            .setAutoCancel(true)
+                            .setContentIntent(pendingIntent);
+                    mNotificationManager.notify(1, notification.build());
+                }
+
+                mHandlerThread.quit();
+
+                result = true;
+                break;
+            }
+        }
+
+        return result;
     }
 }

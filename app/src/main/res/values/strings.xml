@@ -2,7 +2,9 @@
 <resources>
     <string name="about">About</string>
     <string name="about_information">About Information</string>
-    <string name="access_denied">Access Denied</string>
+    <string name="access_denied_default">Access Denied</string>
+    <string name="access_denied_jp">Kinsoku jikou desu!</string>
+    <string name="access_denied_zh">Access Denied</string>
     <string name="acceleration">Acc</string>
     <string name="action">Action</string>
     <string name="action_all">All</string>
@@ -220,6 +222,7 @@
     <string name="system">System</string>
     <string name="settings">Settings</string>
     <string name="press_again_to_exit">Press again to exit!</string>
+    <string name="handlerthread_not_running">HandlerThread not running, force stop then start!</string>
     <string name="yuan">yuan</string>
     <string name="key_deadline_date">key_deadline_date</string>
     <string name="key_book_value_per_share_diluted">key_book_value_per_share_diluted</string>
