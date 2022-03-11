@@ -1071,14 +1071,12 @@ public abstract class StockDataProvider extends StockAnalyzer {
     boolean isAccessDenied(String string) {
         boolean result = false;
 
-        String accessDeniedString = "";
-
         if (TextUtils.isEmpty(string)) {
             return result;
         }
 
         for (int i = 0; i < mAccessDeniedStringArray.size(); i++) {
-            accessDeniedString = mAccessDeniedStringArray.get(i);
+            String accessDeniedString = mAccessDeniedStringArray.get(i);
 
             if (string.contains(accessDeniedString)) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

@@ -885,12 +885,9 @@ public class StockAnalyzer {
                 denominator = (int)(brokenStockData.getNet());
             }
 
-            if (Preferences.getBoolean(mContext, Settings.KEY_NOTIFICATION_OPERATE,
-                    false)) {
-                if (Math.abs(denominator) < Constants.SECEND_ACTION_THRESHOLD) {
-                    return result;
-                }
-            }
+			if (Math.abs(denominator) < Constants.SECEND_ACTION_THRESHOLD) {
+				return result;
+			}
 
 			divergence = brokenStockData.divergenceTo(baseStockData);
 			if (divergence == StockData.DIVERGENCE_UP) {
@@ -973,12 +970,9 @@ public class StockAnalyzer {
                 denominator = (int)(brokenStockData.getNet());
             }
 
-            if (Preferences.getBoolean(mContext, Settings.KEY_NOTIFICATION_OPERATE,
-                    false)) {
-                if (Math.abs(denominator) < Constants.SECEND_ACTION_THRESHOLD) {
-                    return result;
-                }
-            }
+			if (Math.abs(denominator) < Constants.SECEND_ACTION_THRESHOLD) {
+				return result;
+			}
 
 			divergence = brokenStockData.divergenceTo(baseStockData);
 			if (divergence == StockData.DIVERGENCE_UP) {
