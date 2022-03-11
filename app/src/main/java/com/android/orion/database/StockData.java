@@ -71,7 +71,8 @@ public class StockData extends StockDatabaseTable {
 	private double mHigh;
 	private double mLow;
 	private double mClose;
-	private double mAmplitude;
+    private double mChange;
+    private double mNet;
 	private int mDirection;
 	private int mVertex;
 	private double mVertexLow;
@@ -81,7 +82,7 @@ public class StockData extends StockDatabaseTable {
 	private double mDIF;
 	private double mDEA;
 	private double mHistogram;
-	private double mSigmaHistogram;
+    private double mVelocity;
 	private int mDivergence;
 	private String mAction;
 
@@ -136,7 +137,8 @@ public class StockData extends StockDatabaseTable {
 		mHigh = 0;
 		mLow = 0;
 		mClose = 0;
-		mAmplitude = 0;
+		mChange = 0;
+		mNet = 0;
 		mDirection = DIRECTION_NONE;
 		mVertex = VERTEX_NONE;
 		mVertexLow = 0;
@@ -146,7 +148,7 @@ public class StockData extends StockDatabaseTable {
 		mDIF = 0;
 		mDEA = 0;
 		mHistogram = 0;
-		mSigmaHistogram = 0;
+		mVelocity = 0;
 		mDivergence = DIVERGENCE_NONE;
 		mAction = "";
 
@@ -177,7 +179,8 @@ public class StockData extends StockDatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_HIGH, mHigh);
 		contentValues.put(DatabaseContract.COLUMN_LOW, mLow);
 		contentValues.put(DatabaseContract.COLUMN_CLOSE, mClose);
-		contentValues.put(DatabaseContract.COLUMN_AMPLITUDE, mAmplitude);
+		contentValues.put(DatabaseContract.COLUMN_CHANGE, mChange);
+		contentValues.put(DatabaseContract.COLUMN_NET, mNet);
 		contentValues.put(DatabaseContract.COLUMN_DIRECTION, mDirection);
 		contentValues.put(DatabaseContract.COLUMN_VERTEX, mVertex);
 		contentValues.put(DatabaseContract.COLUMN_VERTEX_LOW, mVertexLow);
@@ -188,8 +191,7 @@ public class StockData extends StockDatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_DIF, mDIF);
 		contentValues.put(DatabaseContract.COLUMN_DEA, mDEA);
 		contentValues.put(DatabaseContract.COLUMN_HISTOGRAM, mHistogram);
-		contentValues.put(DatabaseContract.COLUMN_SIGMA_HISTOGRAM,
-				mSigmaHistogram);
+		contentValues.put(DatabaseContract.COLUMN_VELOCITY, mVelocity);
 		contentValues.put(DatabaseContract.COLUMN_DIVERGENCE, mDivergence);
 		contentValues.put(DatabaseContract.COLUMN_ACTION, mAction);
 
@@ -219,7 +221,8 @@ public class StockData extends StockDatabaseTable {
 		setHigh(stockData.mHigh);
 		setLow(stockData.mLow);
 		setClose(stockData.mClose);
-		setAmplitude(stockData.mAmplitude);
+		setChange(stockData.mChange);
+		setNet(stockData.mNet);
 		setDirection(stockData.mDirection);
 		setVertex(stockData.mVertex);
 		setVertexLow(stockData.mVertexLow);
@@ -229,7 +232,7 @@ public class StockData extends StockDatabaseTable {
 		setDIF(stockData.mDIF);
 		setDEA(stockData.mDEA);
 		setHistogram(stockData.mHistogram);
-		setSigmaHistogram(stockData.mSigmaHistogram);
+		setVelocity(stockData.mVelocity);
 		setDivergence(stockData.mDivergence);
 		setAction(stockData.mAction);
 
@@ -262,7 +265,8 @@ public class StockData extends StockDatabaseTable {
 		setHigh(cursor);
 		setLow(cursor);
 		setClose(cursor);
-		setAmplitude(cursor);
+		setChange(cursor);
+		setNet(cursor);
 		setDirection(cursor);
 		setVertex(cursor);
 		setVertexLow(cursor);
@@ -272,7 +276,7 @@ public class StockData extends StockDatabaseTable {
 		setDIF(cursor);
 		setDEA(cursor);
 		setHistogram(cursor);
-		setSigmaHistogram(cursor);
+		setVelocity(cursor);
 		setDivergence(cursor);
 		setAction(cursor);
 
@@ -443,22 +447,39 @@ public class StockData extends StockDatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_CLOSE)));
 	}
 
-	public double getAmplitude() {
-		return mAmplitude;
-	}
+    public double getChange() {
+        return mChange;
+    }
 
-	public void setAmplitude(double amplitude) {
-		mAmplitude = amplitude;
-	}
+    public void setChange(double change) {
+        mChange = change;
+    }
 
-	public void setAmplitude(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
+    void setChange(Cursor cursor) {
+        if (cursor == null) {
+            return;
+        }
 
-		setAmplitude(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_AMPLITUDE)));
-	}
+        setChange(cursor.getDouble(cursor
+                .getColumnIndex(DatabaseContract.COLUMN_CHANGE)));
+    }
+
+    public double getNet() {
+        return mNet;
+    }
+
+    public void setNet(double net) {
+        mNet = net;
+    }
+
+    void setNet(Cursor cursor) {
+        if (cursor == null) {
+            return;
+        }
+
+        setNet(cursor.getDouble(cursor
+                .getColumnIndex(DatabaseContract.COLUMN_NET)));
+    }
 
 	public int getDirection() {
 		return mDirection;
@@ -613,21 +634,21 @@ public class StockData extends StockDatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_HISTOGRAM)));
 	}
 
-	public double getSigmaHistogram() {
-		return mSigmaHistogram;
+	public double getVelocity() {
+		return mVelocity;
 	}
 
-	public void setSigmaHistogram(double sigmaHistogram) {
-		mSigmaHistogram = sigmaHistogram;
+	public void setVelocity(double velocity) {
+		mVelocity = velocity;
 	}
 
-	void setSigmaHistogram(Cursor cursor) {
+	void setVelocity(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}
 
-		setSigmaHistogram(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_SIGMA_HISTOGRAM)));
+		setVelocity(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_VELOCITY)));
 	}
 
 	public int getDivergence() {
@@ -886,49 +907,65 @@ public class StockData extends StockDatabaseTable {
 		if (mDirection == DIRECTION_UP) {
 			if ((getVertexHigh() > stockData.getVertexHigh())
 					&& (getVertexLow() > stockData.getVertexLow())) {
-//				if (Math.abs(getSigmaHistogram()) < Math.abs(stockData
-//						.getSigmaHistogram())) {
-//					result = DIVERGENCE_UP;
-//				}
-//__TEST_CASE__
-				if (getSigmaHistogram() < stockData.getSigmaHistogram()) {
+				if (getVelocity() < stockData.getVelocity()) {
 					result = DIVERGENCE_UP;
 				}
-//__TEST_CASE__
 			}
 		} else if (mDirection == DIRECTION_DOWN) {
 			if ((getVertexHigh() < stockData.getVertexHigh())
 					&& (getVertexLow() < stockData.getVertexLow())) {
-//				if (Math.abs(getSigmaHistogram()) < Math.abs(stockData
-//						.getSigmaHistogram())) {
-//					result = DIVERGENCE_DOWN;
-//				}
-//__TEST_CASE__
-				if (getSigmaHistogram() > stockData.getSigmaHistogram()) {
+				if (getVelocity() > stockData.getVelocity()) {
 					result = DIVERGENCE_DOWN;
 				}
-//__TEST_CASE__
 			}
 		}
 
 		return result;
 	}
 
-    public void setupAmplitude() {
-		mAmplitude = 0;
+	public void setupChange() {
+		mChange = 0;
+
+		if (directionOf(DIRECTION_UP)) {
+			mChange = mVertexHigh - mVertexLow;
+		} else if (directionOf(DIRECTION_DOWN)) {
+			mChange = mVertexLow - mVertexHigh;
+		} else {
+			mChange = mVertexHigh - mVertexLow;
+		}
+
+		mChange = Utility.Round(mChange, Constants.DOUBLE_FIXED_DECIMAL);
+	}
+
+	public void setupNet() {
+		mNet = 0;
 
 		if ((mVertexHigh == 0) || (mVertexLow == 0)) {
 			return;
 		}
 
 		if (directionOf(DIRECTION_UP)) {
-			mAmplitude = 100.0 * (mVertexHigh - mVertexLow) / mVertexLow;
+			mNet = 100.0 * mChange / mVertexLow;
 		} else if (directionOf(DIRECTION_DOWN)) {
-			mAmplitude = 100.0 * (mVertexLow - mVertexHigh) / mVertexHigh;
+			mNet = 100.0 * mChange / mVertexHigh;
 		} else {
-			mAmplitude = 100.0 * Math.abs(mVertexHigh - mVertexLow) / mVertexLow;
+			mNet = 100.0 * mChange / mVertexLow;
 		}
 
-		mAmplitude = Utility.Round(mAmplitude, Constants.DOUBLE_FIXED_DECIMAL);
+		mNet = Utility.Round(mNet, Constants.DOUBLE_FIXED_DECIMAL);
+	}
+
+    public void setupVelocity() {
+		mVelocity = 0;
+		int dt = 0;
+
+		dt = getIndexEnd() - getIndexStart();
+		if (dt == 0) {
+			return;
+		}
+
+		mVelocity = mChange / dt;
+
+		mVelocity = Utility.Round(mVelocity, Constants.DOUBLE_FIXED_DECIMAL);
 	}
 }

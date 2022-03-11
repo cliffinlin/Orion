@@ -249,63 +249,6 @@ public class VertexAnalyzer {
 		}
 	}
 
-	void sigmaHistogram(StockData stockData, ArrayList<StockData> stockDataList) {
-		int delt = 0;
-		double histogram = 0;
-		double sigmaHistogram = 0;
-
-		StockData current = null;
-
-		if ((stockData == null) || (stockDataList == null)) {
-			return;
-		}
-
-		for (int i = stockData.getIndexStart() + 1; i <= stockData
-				.getIndexEnd(); i++) {
-			current = stockDataList.get(i);
-			if (current == null) {
-				return;
-			}
-
-			histogram = current.getHistogram();
-
-			if (stockData.getDirection() == StockData.DIRECTION_UP) {
-//				if (histogram > 0) {
-//					sigmaHistogram += histogram;
-//				}
-
-//				sigmaHistogram += Math.abs(histogram);
-			} else if (stockData.getDirection() == StockData.DIRECTION_DOWN) {
-//				if (histogram < 0) {
-//					sigmaHistogram += histogram;
-//				}
-
-//				sigmaHistogram += Math.abs(histogram);
-			}
-
-			if (i == stockData.getIndexEnd()) {
-				stockData.setDIF(current.getDIF());
-				stockData.setDEA(current.getDEA());
-				stockData.setHistogram(current.getHistogram());
-
-				//__TEST_CASE__
-				delt = stockData.getIndexEnd() - stockData.getIndexStart();
-				if (delt > 0) {
-					if (stockData.getDirection() == StockData.DIRECTION_UP) {
-						sigmaHistogram = (stockData.getVertexHigh() - stockData.getVertexLow()) / delt;
-					} else if (stockData.getDirection() == StockData.DIRECTION_DOWN) {
-						sigmaHistogram = (stockData.getVertexLow() - stockData.getVertexHigh()) / delt;
-					} else {
-//						sigmaHistogram = Math.abs(stockData.getVertexHigh - stockData.getVertexLow) / (stockData.getIndexEnd() - stockData.getIndexStart());
-					}
-				}
-				//__TEST_CASE__
-
-				stockData.setSigmaHistogram(sigmaHistogram);
-			}
-		}
-	}
-
 	void vertexListToDataList(ArrayList<StockData> stockDataList,
 			ArrayList<StockData> vertexList, ArrayList<StockData> dataList, int level) {
 		int size = 0;
@@ -357,10 +300,9 @@ public class VertexAnalyzer {
 			}
 
 			stockData.setDirection(direction);
-			stockData.setupAmplitude();
-
-			sigmaHistogram(stockData, stockDataList);
-
+			stockData.setupChange();
+			stockData.setupNet();
+			stockData.setupVelocity();
 			stockData.setLevel(level);
 
 			dataList.add(stockData);
@@ -625,10 +567,10 @@ public class VertexAnalyzer {
 
 			actionString = String.valueOf(i);
 
-			if (data.getAmplitude() > 0) {
-				actionString += " +" + data.getAmplitude() + " " + Utility.Round(data.getSigmaHistogram(), Constants.DOUBLE_FIXED_DECIMAL);
-			} else if (data.getAmplitude() < 0) {
-				actionString += " " + data.getAmplitude() + " " + Utility.Round(data.getSigmaHistogram(), Constants.DOUBLE_FIXED_DECIMAL);
+			if (data.getNet() > 0) {
+				actionString += " +" + data.getNet() + " " + Utility.Round(data.getVelocity(), Constants.DOUBLE_FIXED_DECIMAL);
+			} else if (data.getNet() < 0) {
+				actionString += " " + data.getNet() + " " + Utility.Round(data.getVelocity(), Constants.DOUBLE_FIXED_DECIMAL);
 			}
 
 			stockData.setAction(actionString);

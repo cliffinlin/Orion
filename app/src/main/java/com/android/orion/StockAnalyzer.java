@@ -882,7 +882,7 @@ public class StockAnalyzer {
         ) {
             if ((stock.getPrice() > 0) && (brokenStockData.getVertexHigh() > 0)) {
                 numerator = (int)(100 * (stock.getPrice() - brokenStockData.getVertexHigh())/brokenStockData.getVertexHigh());
-                denominator = (int)(brokenStockData.getAmplitude());
+                denominator = (int)(brokenStockData.getNet());
             }
 
             if (Preferences.getBoolean(mContext, Settings.KEY_NOTIFICATION_OPERATE,
@@ -970,7 +970,7 @@ public class StockAnalyzer {
         ) {
             if ((stock.getPrice() > 0) && (brokenStockData.getVertexLow() > 0)) {
                 numerator = (int)(100 * (stock.getPrice() - brokenStockData.getVertexLow())/brokenStockData.getVertexLow());
-                denominator = (int)(brokenStockData.getAmplitude());
+                denominator = (int)(brokenStockData.getNet());
             }
 
             if (Preferences.getBoolean(mContext, Settings.KEY_NOTIFICATION_OPERATE,
@@ -996,7 +996,7 @@ public class StockAnalyzer {
         return result;
     }
 
-    private int getLastAmplitude(ArrayList<StockData> stockDataList) {
+    private int getLastNet(ArrayList<StockData> stockDataList) {
 		int result = 0;
 		StockData stockData;
 
@@ -1006,7 +1006,7 @@ public class StockAnalyzer {
 
 		stockData = stockDataList.get(stockDataList.size() - 1);
 
-		result = (int) stockData.getAmplitude();
+		result = (int) stockData.getNet();
 
 		return result;
 	}
@@ -1036,9 +1036,9 @@ public class StockAnalyzer {
 		String action = StockData.ACTION_NONE;
 		StockData prev = null;
 		StockData stockData = null;
-		int drawAmplitude = 0;
-		int strokeAmplitude = 0;
-		int segmentAmplitude = 0;
+		int drawNet = 0;
+		int strokeNet = 0;
+		int segmentNet = 0;
 		int drawDivergence = 0;
 		int strokeDivergence = 0;
 		int segmentDivergence = 0;
@@ -1052,9 +1052,9 @@ public class StockAnalyzer {
 			return;
 		}
 
-		drawAmplitude = getLastAmplitude(drawDataList);
-		strokeAmplitude = getLastAmplitude(strokeDataList);
-		segmentAmplitude = getLastAmplitude(segmentDataList);
+		drawNet = getLastNet(drawDataList);
+		strokeNet = getLastNet(strokeDataList);
+		segmentNet = getLastNet(segmentDataList);
 
 		drawDivergence = getLastDivergence(drawDataList);
 		strokeDivergence = getLastDivergence(strokeDataList);
@@ -1068,7 +1068,7 @@ public class StockAnalyzer {
 				action += StockData.ACTION_D;
 			} else {
 				action += StockData.ACTION_ADD;
-				action += Math.abs(segmentAmplitude);
+				action += Math.abs(segmentNet);
 			}
 
 			if (segmentDivergence == StockData.DIVERGENCE_UP) {
@@ -1080,7 +1080,7 @@ public class StockAnalyzer {
 				action += StockData.ACTION_G;
 			} else {
 				action += StockData.ACTION_MINUS;
-				action += Math.abs(segmentAmplitude);
+				action += Math.abs(segmentNet);
 			}
 
 			if (segmentDivergence == StockData.DIVERGENCE_DOWN) {
@@ -1093,7 +1093,7 @@ public class StockAnalyzer {
 				action += StockData.ACTION_D;
 			} else {
 				action += StockData.ACTION_ADD;
-				action += Math.abs(strokeAmplitude);
+				action += Math.abs(strokeNet);
 			}
 
 			if (strokeDivergence == StockData.DIVERGENCE_UP) {
@@ -1104,7 +1104,7 @@ public class StockAnalyzer {
 				action += StockData.ACTION_G;
 			} else {
 				action += StockData.ACTION_MINUS;
-				action += Math.abs(strokeAmplitude);
+				action += Math.abs(strokeNet);
 			}
 
 			if (strokeDivergence == StockData.DIVERGENCE_DOWN) {
@@ -1128,7 +1128,7 @@ public class StockAnalyzer {
 				}
 			} else {
 				action += StockData.ACTION_ADD;
-				action += Math.abs(drawAmplitude);
+				action += Math.abs(drawNet);
 			}
 
 			if (drawDivergence == StockData.DIVERGENCE_UP) {
@@ -1150,7 +1150,7 @@ public class StockAnalyzer {
 				}
 			} else {
 				action += StockData.ACTION_MINUS;
-				action += Math.abs(drawAmplitude);
+				action += Math.abs(drawNet);
 			}
 
 			if (drawDivergence == StockData.DIVERGENCE_DOWN) {
@@ -1259,20 +1259,20 @@ public class StockAnalyzer {
 		}
 	}
 
-	private void updateAmplitudeArrayMap(ArrayMap<Integer, Integer> amplitudeArrayMap, ArrayList<StockData> stockDataList) {
-		int amplitude = 0;
+	private void updateNetArrayMap(ArrayMap<Integer, Integer> netArrayMap, ArrayList<StockData> stockDataList) {
+		int net = 0;
 
-		if ((amplitudeArrayMap == null) || (stockDataList == null)) {
+		if ((netArrayMap == null) || (stockDataList == null)) {
 			return;
 		}
 
-		amplitude = getLastAmplitude(stockDataList);
+		net = getLastNet(stockDataList);
 
-		if (amplitudeArrayMap.containsKey(amplitude)) {
-			int value = amplitudeArrayMap.get(amplitude);
-			amplitudeArrayMap.put(amplitude, ++value);
+		if (netArrayMap.containsKey(net)) {
+			int value = netArrayMap.get(net);
+			netArrayMap.put(net, ++value);
 		} else {
-			amplitudeArrayMap.put(amplitude, 1);
+			netArrayMap.put(net, 1);
 		}
 	}
 
