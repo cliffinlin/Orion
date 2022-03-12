@@ -87,6 +87,7 @@ public final class DatabaseContract {
     public static final String COLUMN_DIF = "dif";
     public static final String COLUMN_DEA = "dea";
     public static final String COLUMN_HISTOGRAM = "histogram";
+    public static final String COLUMN_SIGMA_HISTOGRAM = "sigma_histogram";
     public static final String COLUMN_VELOCITY = "velocity";
     public static final String COLUMN_DIVERGENCE = "divergence";
     public static final String COLUMN_ACTION = "action";
@@ -227,7 +228,7 @@ public final class DatabaseContract {
                 COLUMN_VERTEX, COLUMN_VERTEX_LOW, COLUMN_VERTEX_HIGH,
                 COLUMN_OVERLAP, COLUMN_OVERLAP_LOW, COLUMN_OVERLAP_HIGH,
                 COLUMN_AVERAGE5, COLUMN_AVERAGE10, COLUMN_DIF, COLUMN_DEA,
-                COLUMN_HISTOGRAM, COLUMN_VELOCITY, COLUMN_DIVERGENCE,
+                COLUMN_HISTOGRAM, COLUMN_SIGMA_HISTOGRAM, COLUMN_VELOCITY, COLUMN_DIVERGENCE,
                 COLUMN_ACTION, COLUMN_ROI, COLUMN_PE, COLUMN_PB, COLUMN_YIELD,
                 COLUMN_CREATED, COLUMN_MODIFIED};
 
@@ -250,6 +251,7 @@ public final class DatabaseContract {
                 + COLUMN_AVERAGE10 + DOUBLE_TYPE + COMMA_SEP + COLUMN_DIF
                 + DOUBLE_TYPE + COMMA_SEP + COLUMN_DEA + DOUBLE_TYPE
                 + COMMA_SEP + COLUMN_HISTOGRAM + DOUBLE_TYPE + COMMA_SEP
+                + COLUMN_SIGMA_HISTOGRAM + DOUBLE_TYPE + COMMA_SEP
                 + COLUMN_VELOCITY + DOUBLE_TYPE + COMMA_SEP
                 + COLUMN_DIVERGENCE + INTEGER_TYPE + COMMA_SEP + COLUMN_ACTION
                 + TEXT_TYPE + COMMA_SEP + COLUMN_ROI + DOUBLE_TYPE + COMMA_SEP

@@ -106,6 +106,9 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
     ArrayList<String> mAccessDeniedStringArray = new ArrayList<>();
 
+    public static int DOWNLOAD_RESULT_NONE = 0;
+    public static int DOWNLOAD_RESULT_FAILED = -1;
+
     public StockDataProvider(Context context) {
         super(context);
 
@@ -418,8 +421,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
         }
     }
 
-    String downloadStockRealTime(Stock stock) {
-        String result = "";
+    int downloadStockRealTime(Stock stock) {
+        int result = DOWNLOAD_RESULT_NONE;
 
         if (stock == null) {
             return result;
@@ -443,8 +446,9 @@ public abstract class StockDataProvider extends StockAnalyzer {
         return downloadStockRealTime(getRequestHeader(), getStockRealTimeURLString(stock));
     }
 
-    String downloadStockRealTime(ArrayMap<String, String> requestHeaderArray, String urlString) {
-        String result = "";
+    int downloadStockRealTime(ArrayMap<String, String> requestHeaderArray, String urlString) {
+        String resultString = "";
+        int result = DOWNLOAD_RESULT_NONE;
 
         Log.d(TAG, "downloadStockRealTime:" + urlString);
 
@@ -458,13 +462,14 @@ public abstract class StockDataProvider extends StockAnalyzer {
         try {
             Response response = mOkHttpClient.newCall(request).execute();
             if (response != null) {
-                result = response.body().string();
-                if (isAccessDenied(result)) {
+                resultString = response.body().string();
+                if (isAccessDenied(resultString)) {
+                    result =DOWNLOAD_RESULT_FAILED;
                     return result;
                 }
 
-                handleResponseStockRealTime(mStock, result);
-                Thread.sleep(Constants.DEFAULT_SLEEP_INTERVAL);
+                handleResponseStockRealTime(mStock, resultString);
+                Thread.sleep(Constants.DEFAULT_DOWNLOAD_SLEEP_INTERVAL);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -473,8 +478,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
         return result;
     }
 
-    String downloadStockInformation(Stock stock) {
-        String result = "";
+    int downloadStockInformation(Stock stock) {
+        int result = DOWNLOAD_RESULT_NONE;
 
         boolean needDownload = false;
 
@@ -501,8 +506,9 @@ public abstract class StockDataProvider extends StockAnalyzer {
         return downloadStockInformation(getRequestHeader(), getStockInformationURLString(stock));
     }
 
-    String downloadStockInformation(ArrayMap<String, String> requestHeaderArray, String urlString) {
-        String result = "";
+    int downloadStockInformation(ArrayMap<String, String> requestHeaderArray, String urlString) {
+        String resultString = "";
+        int result = DOWNLOAD_RESULT_NONE;
 
         Log.d(TAG, "downloadStockInformation:" + urlString);
 
@@ -516,13 +522,14 @@ public abstract class StockDataProvider extends StockAnalyzer {
         try {
             Response response = mOkHttpClient.newCall(request).execute();
             if (response != null) {
-                result = response.body().string();
-                if (isAccessDenied(result)) {
+                resultString = response.body().string();
+                if (isAccessDenied(resultString)) {
+                    result = DOWNLOAD_RESULT_FAILED;
                     return result;
                 }
 
-                handleResponseStockInformation(mStock, result);
-                Thread.sleep(Constants.DEFAULT_SLEEP_INTERVAL);
+                handleResponseStockInformation(mStock, resultString);
+                Thread.sleep(Constants.DEFAULT_DOWNLOAD_SLEEP_INTERVAL);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -531,8 +538,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
         return result;
     }
 
-    String downloadStockFinancial(Stock stock) {
-        String result = "";
+    int downloadStockFinancial(Stock stock) {
+        int result = DOWNLOAD_RESULT_NONE;
 
         if (stock == null) {
             return result;
@@ -560,8 +567,9 @@ public abstract class StockDataProvider extends StockAnalyzer {
         return downloadStockFinancial(getStockFinancialURLString(stock));
     }
 
-    String downloadStockFinancial(String urlString) {
-        String result = "";
+    int downloadStockFinancial(String urlString) {
+        String resultString = "";
+        int result = DOWNLOAD_RESULT_NONE;
 
         Log.d(TAG, "downloadStockFinancial:" + urlString);
 
@@ -572,13 +580,14 @@ public abstract class StockDataProvider extends StockAnalyzer {
         try {
             Response response = mOkHttpClient.newCall(request).execute();
             if (response != null) {
-                result = response.body().string();
-                if (isAccessDenied(result)) {
+                resultString = response.body().string();
+                if (isAccessDenied(resultString)) {
+                    result = DOWNLOAD_RESULT_FAILED;
                     return result;
                 }
 
-                handleResponseStockFinancial(mStock, mStockFinancial, result);
-                Thread.sleep(Constants.DEFAULT_SLEEP_INTERVAL);
+                handleResponseStockFinancial(mStock, mStockFinancial, resultString);
+                Thread.sleep(Constants.DEFAULT_DOWNLOAD_SLEEP_INTERVAL);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -587,8 +596,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
         return result;
     }
 
-    String downloadIPO() {
-        String result = "";
+    int downloadIPO() {
+        int result = DOWNLOAD_RESULT_NONE;
 
         ArrayList<IPO> ipoList = new ArrayList<IPO>();
         boolean needDownload = false;
@@ -613,8 +622,9 @@ public abstract class StockDataProvider extends StockAnalyzer {
         return downloadIPO(getIPOURLString());
     }
 
-    String downloadIPO(String urlString) {
-        String result = "";
+    int downloadIPO(String urlString) {
+        String resultString = "";
+        int result = DOWNLOAD_RESULT_NONE;
 
         Log.d(TAG, "downloadIPO:" + urlString);
 
@@ -625,13 +635,14 @@ public abstract class StockDataProvider extends StockAnalyzer {
         try {
             Response response = mOkHttpClient.newCall(request).execute();
             if (response != null) {
-                result = response.body().string();
-                if (isAccessDenied(result)) {
+                resultString = response.body().string();
+                if (isAccessDenied(resultString)) {
+                    result = DOWNLOAD_RESULT_FAILED;
                     return result;
                 }
 
-                handleResponseIPO(mIPO, result);
-                Thread.sleep(Constants.DEFAULT_SLEEP_INTERVAL);
+                handleResponseIPO(mIPO, resultString);
+                Thread.sleep(Constants.DEFAULT_DOWNLOAD_SLEEP_INTERVAL);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -640,8 +651,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
         return result;
     }
 
-    String downloadShareBonus(Stock stock) {
-        String result = "";
+    int downloadShareBonus(Stock stock) {
+        int result = DOWNLOAD_RESULT_NONE;
 
         if (stock == null) {
             return result;
@@ -667,8 +678,9 @@ public abstract class StockDataProvider extends StockAnalyzer {
         return downloadShareBonus(getShareBonusURLString(stock));
     }
 
-    String downloadShareBonus(String urlString) {
-        String result = "";
+    int downloadShareBonus(String urlString) {
+        String resultString = "";
+        int result =DOWNLOAD_RESULT_NONE;
 
         Log.d(TAG, "downloadShareBonus:" + urlString);
 
@@ -679,13 +691,14 @@ public abstract class StockDataProvider extends StockAnalyzer {
         try {
             Response response = mOkHttpClient.newCall(request).execute();
             if (response != null) {
-                result = response.body().string();
-                if (isAccessDenied(result)) {
+                resultString = response.body().string();
+                if (isAccessDenied(resultString)) {
+                    result = DOWNLOAD_RESULT_FAILED;
                     return result;
                 }
 
-                handleResponseShareBonus(mStock, mShareBonus, result);
-                Thread.sleep(Constants.DEFAULT_SLEEP_INTERVAL);
+                handleResponseShareBonus(mStock, mShareBonus, resultString);
+                Thread.sleep(Constants.DEFAULT_DOWNLOAD_SLEEP_INTERVAL);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -694,8 +707,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
         return result;
     }
 
-    String downloadTotalShare(Stock stock) {
-        String result = "";
+    int downloadTotalShare(Stock stock) {
+        int result = DOWNLOAD_RESULT_NONE;
 
         if (stock == null) {
             return result;
@@ -721,8 +734,9 @@ public abstract class StockDataProvider extends StockAnalyzer {
         return downloadTotalShare(getTotalShareURLString(stock));
     }
 
-    String downloadTotalShare(String urlString) {
-        String result = "";
+    int downloadTotalShare(String urlString) {
+        String resultString = "";
+        int result = DOWNLOAD_RESULT_NONE;
 
         Log.d(TAG, "downloadTotalShare:" + urlString);
 
@@ -733,13 +747,14 @@ public abstract class StockDataProvider extends StockAnalyzer {
         try {
             Response response = mOkHttpClient.newCall(request).execute();
             if (response != null) {
-                result = response.body().string();
-                if (isAccessDenied(result)) {
+                resultString = response.body().string();
+                if (isAccessDenied(resultString)) {
+                    result =DOWNLOAD_RESULT_FAILED;
                     return result;
                 }
 
-                handleResponseTotalShare(mStock, mTotalShare, result);
-                Thread.sleep(Constants.DEFAULT_SLEEP_INTERVAL);
+                handleResponseTotalShare(mStock, mTotalShare, resultString);
+                Thread.sleep(Constants.DEFAULT_DOWNLOAD_SLEEP_INTERVAL);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -748,8 +763,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
         return result;
     }
 
-    String downloadStockDataHistory(Stock stock) {
-        String result = "";
+    int downloadStockDataHistory(Stock stock) {
+        int result = DOWNLOAD_RESULT_NONE;
 
         if (stock == null) {
             return result;
@@ -766,8 +781,9 @@ public abstract class StockDataProvider extends StockAnalyzer {
         return result;
     }
 
-    String downloadStockDataHistory(Stock stock, String period) {
-        String result = "";
+    int downloadStockDataHistory(Stock stock, String period) {
+        String resultSting = "";
+        int result = DOWNLOAD_RESULT_NONE;
         int len = 0;
         mStockData = new StockData(period);
 
@@ -789,8 +805,9 @@ public abstract class StockDataProvider extends StockAnalyzer {
                 mStockData, len));
     }
 
-    String downloadStockDataHistory(String urlString) {
-        String result = "";
+    int downloadStockDataHistory(String urlString) {
+        String resultString = "";
+        int result = DOWNLOAD_RESULT_NONE;
 
         Log.d(TAG, "downloadStockDataHistory:" + urlString);
 
@@ -801,13 +818,14 @@ public abstract class StockDataProvider extends StockAnalyzer {
         try {
             Response response = mOkHttpClient.newCall(request).execute();
             if (response != null) {
-                result = response.body().string();
-                if (isAccessDenied(result)) {
+                resultString = response.body().string();
+                if (isAccessDenied(resultString)) {
+                    result = DOWNLOAD_RESULT_FAILED;
                     return result;
                 }
 
-                handleResponseStockDataHistory(mStock, mStockData, result);
-                Thread.sleep(Constants.DEFAULT_SLEEP_INTERVAL);
+                handleResponseStockDataHistory(mStock, mStockData, resultString);
+                Thread.sleep(Constants.DEFAULT_DOWNLOAD_SLEEP_INTERVAL);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -992,7 +1010,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
         @Override
         public void handleMessage(Message msg) {
             Stock stock;
-            String result = "";
+            int result = DOWNLOAD_RESULT_NONE;
 
             switch (msg.what) {
                 default:
@@ -1002,44 +1020,38 @@ public abstract class StockDataProvider extends StockAnalyzer {
                         stock = (Stock) msg.obj;
 
                         if (stock == null) {
-                            break;
+                            return;
                         }
 
                         if (TextUtils.isEmpty(stock.getSE()) || TextUtils.isEmpty(stock.getCode())) {
-                            break;
+                            return;
                         }
 
                         if (Stock.CLASS_INDEX.equals(stock.getClases())) {
                             setupIndex(stock);
                         } else {
-                            result = downloadStockRealTime(stock);
-                            if (isAccessDenied(result)) {
-                                break;
+                            if (downloadStockRealTime(stock) == DOWNLOAD_RESULT_FAILED) {
+                                return;
                             }
 
-                            result = downloadStockInformation(stock);
-                            if (isAccessDenied(result)) {
-                                break;
+                            if (downloadStockInformation(stock) == DOWNLOAD_RESULT_FAILED) {
+                                return;
                             }
 
-                            result = downloadStockFinancial(stock);
-                            if (isAccessDenied(result)) {
-                                break;
+                            if (downloadStockFinancial(stock) == DOWNLOAD_RESULT_FAILED) {
+                                return;
                             }
 
-                            result = downloadShareBonus(stock);
-                            if (isAccessDenied(result)) {
-                                break;
+                            if (downloadShareBonus(stock) == DOWNLOAD_RESULT_FAILED) {
+                                return;
                             }
 
-                            result = downloadTotalShare(stock);
-                            if (isAccessDenied(result)) {
-                                break;
+                            if (downloadTotalShare(stock) == DOWNLOAD_RESULT_FAILED) {
+                                return;
                             }
 
-                            result = downloadStockDataHistory(stock);
-                            if (isAccessDenied(result)) {
-                                break;
+                            if (downloadStockDataHistory(stock) == DOWNLOAD_RESULT_FAILED) {
+                                return;
                             }
                         }
 
@@ -1052,9 +1064,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
                         analyze(stock);
                         sendBroadcast(Constants.ACTION_RESTART_LOADER, stock.getId());
 
-                        result = downloadIPO();
-                        if (isAccessDenied(result)) {
-                            break;
+                        if (downloadIPO() == DOWNLOAD_RESULT_FAILED) {
+                            return;
                         }
                         sendBroadcast(Constants.ACTION_RESTART_LOADER,
                                 Stock.INVALID_ID);
@@ -1069,6 +1080,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
     }
 
     boolean isAccessDenied(String string) {
+        String accessDeniedString = "";
+        StringBuilder contentTitle = new StringBuilder();
         boolean result = false;
 
         if (TextUtils.isEmpty(string)) {
@@ -1076,38 +1089,14 @@ public abstract class StockDataProvider extends StockAnalyzer {
         }
 
         for (int i = 0; i < mAccessDeniedStringArray.size(); i++) {
-            String accessDeniedString = mAccessDeniedStringArray.get(i);
+            accessDeniedString = mAccessDeniedStringArray.get(i);
 
             if (string.contains(accessDeniedString)) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    String contentText = "";
-                    StringBuilder contentTitle = new StringBuilder();
-                    Notification.Builder notification;
+                contentTitle.append(mContext.getResources().getString(R.string.action_download) + " ");
+                contentTitle.append(accessDeniedString);
 
-                    contentTitle.append(mContext.getResources().getString(R.string.action_download) + " ");
-                    contentTitle.append(accessDeniedString);
-
-                    Intent intent = new Intent(mContext, StockListActivity.class);
-                    intent.setType("vnd.android-dir/mms-sms");
-                    PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0,
-                            intent, 0);
-
-                    NotificationChannel notificationChannel = new NotificationChannel(Constants.MESSAGE_CHANNEL_ID,
-                            Constants.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
-                    notificationChannel.enableVibration(true);
-                    notificationChannel.setVibrationPattern(new long[]{500, 500, 500, 500, 500});
-                    notificationChannel.enableLights(true);
-                    notificationChannel.setLightColor(0xFF0000FF);
-                    mNotificationManager.createNotificationChannel(notificationChannel);
-
-                    notification = new Notification.Builder(
-                            mContext, Constants.MESSAGE_CHANNEL_ID).setContentTitle(contentTitle)
-                            .setContentText(contentText)
-                            .setSmallIcon(R.drawable.ic_dialog_email)
-                            .setAutoCancel(true)
-                            .setContentIntent(pendingIntent);
-                    mNotificationManager.notify(1, notification.build());
-                }
+                notify(Constants.SERVICE_NOTIFICATION_ID, Constants.MESSAGE_CHANNEL_ID, Constants.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
+                        contentTitle.toString(), "");
 
                 mHandlerThread.quit();
 

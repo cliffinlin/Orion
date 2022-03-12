@@ -71,8 +71,8 @@ public class StockData extends StockDatabaseTable {
 	private double mHigh;
 	private double mLow;
 	private double mClose;
-    private double mChange;
-    private double mNet;
+	private double mChange;
+	private double mNet;
 	private int mDirection;
 	private int mVertex;
 	private double mVertexLow;
@@ -82,7 +82,8 @@ public class StockData extends StockDatabaseTable {
 	private double mDIF;
 	private double mDEA;
 	private double mHistogram;
-    private double mVelocity;
+	private double mSigmaHistogram;
+	private double mVelocity;
 	private int mDivergence;
 	private String mAction;
 
@@ -148,6 +149,7 @@ public class StockData extends StockDatabaseTable {
 		mDIF = 0;
 		mDEA = 0;
 		mHistogram = 0;
+		mSigmaHistogram = 0;
 		mVelocity = 0;
 		mDivergence = DIVERGENCE_NONE;
 		mAction = "";
@@ -191,6 +193,8 @@ public class StockData extends StockDatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_DIF, mDIF);
 		contentValues.put(DatabaseContract.COLUMN_DEA, mDEA);
 		contentValues.put(DatabaseContract.COLUMN_HISTOGRAM, mHistogram);
+		contentValues.put(DatabaseContract.COLUMN_SIGMA_HISTOGRAM,
+				mSigmaHistogram);
 		contentValues.put(DatabaseContract.COLUMN_VELOCITY, mVelocity);
 		contentValues.put(DatabaseContract.COLUMN_DIVERGENCE, mDivergence);
 		contentValues.put(DatabaseContract.COLUMN_ACTION, mAction);
@@ -232,6 +236,7 @@ public class StockData extends StockDatabaseTable {
 		setDIF(stockData.mDIF);
 		setDEA(stockData.mDEA);
 		setHistogram(stockData.mHistogram);
+		setSigmaHistogram(stockData.mSigmaHistogram);
 		setVelocity(stockData.mVelocity);
 		setDivergence(stockData.mDivergence);
 		setAction(stockData.mAction);
@@ -276,6 +281,7 @@ public class StockData extends StockDatabaseTable {
 		setDIF(cursor);
 		setDEA(cursor);
 		setHistogram(cursor);
+		setSigmaHistogram(cursor);
 		setVelocity(cursor);
 		setDivergence(cursor);
 		setAction(cursor);
@@ -634,6 +640,23 @@ public class StockData extends StockDatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_HISTOGRAM)));
 	}
 
+	double getSigmaHistogram() {
+		return mSigmaHistogram;
+	}
+
+	public void setSigmaHistogram(double sigmaHistogram) {
+		mSigmaHistogram = sigmaHistogram;
+	}
+
+	void setSigmaHistogram(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setSigmaHistogram(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_SIGMA_HISTOGRAM)));
+	}
+
 	public double getVelocity() {
 		return mVelocity;
 	}
@@ -907,6 +930,11 @@ public class StockData extends StockDatabaseTable {
 		if (mDirection == DIRECTION_UP) {
 			if ((getVertexHigh() > stockData.getVertexHigh())
 					&& (getVertexLow() > stockData.getVertexLow())) {
+				if (Math.abs(getSigmaHistogram()) < Math.abs(stockData
+						.getSigmaHistogram())) {
+					result = DIVERGENCE_UP;
+				}
+
 				if (getVelocity() < stockData.getVelocity()) {
 					result = DIVERGENCE_UP;
 				}
@@ -914,6 +942,11 @@ public class StockData extends StockDatabaseTable {
 		} else if (mDirection == DIRECTION_DOWN) {
 			if ((getVertexHigh() < stockData.getVertexHigh())
 					&& (getVertexLow() < stockData.getVertexLow())) {
+				if (Math.abs(getSigmaHistogram()) < Math.abs(stockData
+						.getSigmaHistogram())) {
+					result = DIVERGENCE_DOWN;
+				}
+
 				if (getVelocity() > stockData.getVelocity()) {
 					result = DIVERGENCE_DOWN;
 				}

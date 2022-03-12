@@ -1315,14 +1315,15 @@ public class StockAnalyzer {
 	}
 
 	private void updateNotification(Stock stock) {
-		int id = 0;
         ArrayList<StockDeal> stockDealList = new ArrayList<StockDeal>();
-        Notification.Builder notification;
-        String contentText = "";
-        StringBuilder contentTitle = new StringBuilder();
 		StringBuilder actionString = new StringBuilder();
+		StringBuilder contentTitle = new StringBuilder();
 
 		if (stock == null) {
+			return;
+		}
+
+		if (stock.getPrice() == 0) {
 			return;
 		}
 
@@ -1381,16 +1382,18 @@ public class StockAnalyzer {
 			}
 		}
 
+		notify((int) stock.getId(), Constants.MESSAGE_CHANNEL_ID, Constants.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
+				contentTitle.toString(), "");
+	}
+
+	void notify(int id, String channelID, String channelName, int importance, String contentTitle, String contentText) {
+		Notification.Builder notification;
+
 		if (mNotificationManager == null) {
 			return;
 		}
 
-		id = (int) stock.getId();
 		mNotificationManager.cancel(id);
-
-		if (stock.getPrice() == 0) {
-			return;
-		}
 
 		Intent intent = new Intent(mContext, StockListActivity.class);
 		intent.setType("vnd.android-dir/mms-sms");
@@ -1398,8 +1401,8 @@ public class StockAnalyzer {
 				intent, 0);
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			NotificationChannel notificationChannel = new NotificationChannel(Constants.MESSAGE_CHANNEL_ID,
-					Constants.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
+			NotificationChannel notificationChannel = new NotificationChannel(channelID,
+					channelName, importance);
 			notificationChannel.enableVibration(true);
 			notificationChannel.setVibrationPattern(new long[]{500, 500, 500, 500, 500});
 			notificationChannel.enableLights(true);
@@ -1407,7 +1410,7 @@ public class StockAnalyzer {
 			mNotificationManager.createNotificationChannel(notificationChannel);
 
 			notification = new Notification.Builder(
-					mContext, Constants.MESSAGE_CHANNEL_ID).setContentTitle(contentTitle)
+					mContext, channelID).setContentTitle(contentTitle)
 					.setContentText(contentText)
 					.setSmallIcon(R.drawable.ic_dialog_email)
 					.setAutoCancel(true)
