@@ -12,7 +12,9 @@ public class ListActivity extends StorageActivity {
 		if (listAdapter == null) {
 			return;
 		}
+
 		int totalHeight = 0;
+
 		for (int i = 0, len = listAdapter.getCount(); i < len; i++) {
 			View listItem = listAdapter.getView(i, null, listView);
 			listItem.measure(0, 0);
@@ -22,6 +24,7 @@ public class ListActivity extends StorageActivity {
 		ViewGroup.LayoutParams params = listView.getLayoutParams();
 		params.height = totalHeight
 				+ (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+
 		listView.setLayoutParams(params);
 	}
 }

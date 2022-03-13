@@ -8,11 +8,11 @@ import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.utility.Utility;
 
-public class VertexAnalyzer {
+public class StockVertexAnalyzer {
 	static final String TAG = Constants.TAG + " "
-			+ VertexAnalyzer.class.getSimpleName();
+			+ StockVertexAnalyzer.class.getSimpleName();
 
-	public VertexAnalyzer() {
+	public StockVertexAnalyzer() {
 	}
 
 	private void setDirectionVertex(ArrayList<StockData> dataList, int index,

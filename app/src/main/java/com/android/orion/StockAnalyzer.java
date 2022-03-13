@@ -12,7 +12,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Build;
-import android.os.Environment;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.text.TextUtils;
@@ -664,62 +663,62 @@ public class StockAnalyzer {
 						  ArrayList<StockData> drawVertexList, ArrayList<StockData> drawDataList,
 						  ArrayList<StockData> strokeVertexList, ArrayList<StockData> strokeDataList,
 						  ArrayList<StockData> segmentVertexList, ArrayList<StockData> segmentDataList) {
-		VertexAnalyzer vertexAnalyzer = new VertexAnalyzer();
+		StockVertexAnalyzer stockVertexAnalyzer = new StockVertexAnalyzer();
 		ArrayList<StockData> overlapList = new ArrayList<StockData>();
 
 		setMACD(stockDataList);
 
-		vertexAnalyzer.analyzeVertex(stockDataList, drawVertexList);
-		vertexAnalyzer.vertexListToDataList(stockDataList, drawVertexList,
+		stockVertexAnalyzer.analyzeVertex(stockDataList, drawVertexList);
+		stockVertexAnalyzer.vertexListToDataList(stockDataList, drawVertexList,
 				drawDataList, StockData.LEVEL_DRAW);
 
-		vertexAnalyzer.analyzeLine(stockDataList, drawDataList,
+		stockVertexAnalyzer.analyzeLine(stockDataList, drawDataList,
 				strokeVertexList, StockData.VERTEX_TOP_STROKE,
 				StockData.VERTEX_BOTTOM_STROKE);
-		vertexAnalyzer.vertexListToDataList(stockDataList, strokeVertexList,
+		stockVertexAnalyzer.vertexListToDataList(stockDataList, strokeVertexList,
 				strokeDataList, StockData.LEVEL_STROKE);
 
-		vertexAnalyzer.analyzeLine(stockDataList, strokeDataList,
+		stockVertexAnalyzer.analyzeLine(stockDataList, strokeDataList,
 				segmentVertexList, StockData.VERTEX_TOP_SEGMENT,
 				StockData.VERTEX_BOTTOM_SEGMENT);
-		vertexAnalyzer.vertexListToDataList(stockDataList, segmentVertexList,
+		stockVertexAnalyzer.vertexListToDataList(stockDataList, segmentVertexList,
 				segmentDataList, StockData.LEVEL_SEGMENT);
 
 		if (segmentDataList.size() > Constants.OVERLAP_ANALYZE_THRESHOLD) {
-			vertexAnalyzer.analyzeOverlap(stockDataList, segmentDataList,
+			stockVertexAnalyzer.analyzeOverlap(stockDataList, segmentDataList,
 					overlapList);
 		} else if (strokeDataList.size() > Constants.OVERLAP_ANALYZE_THRESHOLD) {
-			vertexAnalyzer.analyzeOverlap(stockDataList, strokeDataList,
+			stockVertexAnalyzer.analyzeOverlap(stockDataList, strokeDataList,
 					overlapList);
 		} else {
-			vertexAnalyzer.analyzeOverlap(stockDataList, drawDataList,
+			stockVertexAnalyzer.analyzeOverlap(stockDataList, drawDataList,
 					overlapList);
 		}
 
-		//vertexAnalyzer.analyzeOverlap(stockDataList, segmentDataList, overlapList);
-		//vertexAnalyzer.testShowVertextNumber(stockDataList, stockDataList);
+		//stockVertexAnalyzer.analyzeOverlap(stockDataList, segmentDataList, overlapList);
+		//stockVertexAnalyzer.testShowVertextNumber(stockDataList, stockDataList);
 
 		if (Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_DIRECT,false)) {
-			vertexAnalyzer.debugShow(stockDataList, stockDataList);
+			stockVertexAnalyzer.debugShow(stockDataList, stockDataList);
 		}
 
 		if (Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_DRAW,false)) {
-			vertexAnalyzer.debugShow(stockDataList, drawDataList);
+			stockVertexAnalyzer.debugShow(stockDataList, drawDataList);
 		}
 
 		if (Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_STROKE,false)) {
-			vertexAnalyzer.debugShow(stockDataList, strokeDataList);
+			stockVertexAnalyzer.debugShow(stockDataList, strokeDataList);
 		}
 
 		if (Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_SEGMENT,false)) {
-			vertexAnalyzer.debugShow(stockDataList, segmentDataList);
+			stockVertexAnalyzer.debugShow(stockDataList, segmentDataList);
 		}
 
-		vertexAnalyzer.analyzeDivergence(stock, stockDataList, segmentDataList);
-		vertexAnalyzer.analyzeDivergence(stock, stockDataList, strokeDataList);
-		vertexAnalyzer.analyzeDivergence(stock, stockDataList, drawDataList);
+		stockVertexAnalyzer.analyzeDivergence(stock, stockDataList, segmentDataList);
+		stockVertexAnalyzer.analyzeDivergence(stock, stockDataList, strokeDataList);
+		stockVertexAnalyzer.analyzeDivergence(stock, stockDataList, drawDataList);
 
-		vertexAnalyzer.analyzeDirection(stockDataList);
+		stockVertexAnalyzer.analyzeDirection(stockDataList);
 
 		analyzeAction(stock, period, stockDataList, drawVertexList, overlapList, drawDataList, strokeDataList, segmentDataList);
 	}
