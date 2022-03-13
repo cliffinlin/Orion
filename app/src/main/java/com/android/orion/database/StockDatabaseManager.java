@@ -642,7 +642,7 @@ public class StockDatabaseManager extends DatabaseManager {
 		String selection = DatabaseContract.COLUMN_SE + " = " + "\'"
 				+ stock.getSE() + "\'" + " AND " + DatabaseContract.COLUMN_CODE
 				+ " = " + "\'" + stock.getCode() + "\'";
-		String sortOrder = DatabaseContract.COLUMN_DEAL + " ASC ";
+		String sortOrder = DatabaseContract.COLUMN_BUY + " ASC ";
 
 		try {
 			cursor = queryStockDeal(selection, null, sortOrder);
@@ -722,7 +722,7 @@ public class StockDatabaseManager extends DatabaseManager {
 				+ stockDeal.getSE() + "\'" + " AND "
 				+ DatabaseContract.COLUMN_CODE + " = " + "\'"
 				+ stockDeal.getCode() + "\'" + " AND "
-				+ DatabaseContract.COLUMN_DEAL + " = " + stockDeal.getDeal()
+				+ DatabaseContract.COLUMN_BUY + " = " + stockDeal.getBuy()
 				+ " AND " + DatabaseContract.COLUMN_VOLUME + " = "
 				+ stockDeal.getVolume();
 
@@ -874,52 +874,6 @@ public class StockDatabaseManager extends DatabaseManager {
 
         getStockDealList(stock, stockDealList, selection, sortOrder);
     }
-
-	public void getStockDealMax(Stock stock, StockDeal stockDeal) {
-		String sortOrder = DatabaseContract.COLUMN_DEAL + " DESC ";
-
-		if (stock == null) {
-			return;
-		}
-
-		String selection = DatabaseContract.COLUMN_SE + " = " + "\'" + stock.getSE()
-				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
-				+ stock.getCode() + "\'";
-
-		getStockDeal(stock, stockDeal, selection, sortOrder);
-	}
-
-	public void getStockDealMin(Stock stock, StockDeal stockDeal) {
-		String sortOrder = DatabaseContract.COLUMN_DEAL + " ASC ";
-
-		if (stock == null) {
-			return;
-		}
-
-		String selection = DatabaseContract.COLUMN_SE + " = " + "\'" + stock.getSE()
-				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
-				+ stock.getCode() + "\'";
-
-		getStockDeal(stock, stockDeal, selection, sortOrder);
-	}
-
-	public double getStockDealTargetPrice(Stock stock, int order) {
-		double result = 0;
-
-		StockDeal stockDealMax = new StockDeal();
-
-		getStockDealMax(stock, stockDealMax);
-
-		if (stock.getPrice() > 0) {
-			result = (1.0 - order * StockDeal.DISTRIBUTION_RATE)
-					* stock.getPrice();
-		} else {
-			result = (1.0 - order * StockDeal.DISTRIBUTION_RATE)
-					* stockDealMax.getDeal();
-		}
-
-		return result;
-	}
 
 	public Uri insertStockFinancial(StockFinancial stockFinancial) {
 		Uri uri = null;

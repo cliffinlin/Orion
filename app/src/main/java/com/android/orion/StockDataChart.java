@@ -442,12 +442,12 @@ public class StockDataChart {
 			}
 
 			label = "               "
-					+ "  " + stockDeal.getDeal()
+					+ "  " + stockDeal.getBuy()
 					+ "  " + stockDeal.getVolume()
 					+ "  " + (int) stockDeal.getProfit()
 					+ "  " + stockDeal.getNet() + "%";
 
-			limitLineDeal = createLimitLine(stockDeal.getDeal(), color, label);
+			limitLineDeal = createLimitLine(stockDeal.getBuy(), color, label);
 
 			mXLimitLineList.add(limitLineDeal);
 		}

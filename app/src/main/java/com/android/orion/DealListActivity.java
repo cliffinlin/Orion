@@ -54,7 +54,7 @@ public class DealListActivity extends ListActivity implements
 
     static final int MESSAGE_VIEW_STOCK_DEAL = 4;
     static final int MESSAGE_VIEW_STOCK_CHAT = 5;
-    static final int MESSAGE_VIEW_STOCK_TREMDS = 6;
+    static final int MESSAGE_VIEW_STOCK_TRENDS = 6;
 
     static final int REQUEST_CODE_DEAL_INSERT = 0;
     static final int REQUEST_CODE_DEAL_EDIT = 1;
@@ -75,7 +75,8 @@ public class DealListActivity extends ListActivity implements
     TextView mTextViewAction = null;
     TextView mTextViewPrice = null;
     TextView mTextViewNet = null;
-    TextView mTextViewDeal = null;
+    TextView mTextViewBuy = null;
+    TextView mTextViewSell = null;
     TextView mTextViewVolume = null;
     TextView mTextViewValue = null;
     TextView mTextViewProfit = null;
@@ -146,7 +147,7 @@ public class DealListActivity extends ListActivity implements
                     startActivity(intent);
                     break;
 
-                case MESSAGE_VIEW_STOCK_TREMDS:
+                case MESSAGE_VIEW_STOCK_TRENDS:
                     mStockDatabaseManager.getStock(mStock);
 
                     mIntent = new Intent(mContext, StockTrendsListActivity.class);
@@ -294,7 +295,7 @@ public class DealListActivity extends ListActivity implements
                 return true;
 
             case R.id.action_trends:
-                mHandler.sendEmptyMessage(MESSAGE_VIEW_STOCK_TREMDS);
+                mHandler.sendEmptyMessage(MESSAGE_VIEW_STOCK_TRENDS);
                 return true;
 
             default:
@@ -356,8 +357,11 @@ public class DealListActivity extends ListActivity implements
             case R.id.net:
                 mSortOrderColumn = DatabaseContract.COLUMN_NET;
                 break;
-            case R.id.deal:
-                mSortOrderColumn = DatabaseContract.COLUMN_DEAL;
+            case R.id.buy:
+                mSortOrderColumn = DatabaseContract.COLUMN_BUY;
+                break;
+            case R.id.sell:
+                mSortOrderColumn = DatabaseContract.COLUMN_SELL;
                 break;
             case R.id.volume:
                 mSortOrderColumn = DatabaseContract.COLUMN_VOLUME;
@@ -411,7 +415,8 @@ public class DealListActivity extends ListActivity implements
         setHeaderTextColor(mTextViewAction, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewPrice, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewNet, mHeaderTextDefaultColor);
-        setHeaderTextColor(mTextViewDeal, mHeaderTextDefaultColor);
+        setHeaderTextColor(mTextViewBuy, mHeaderTextDefaultColor);
+        setHeaderTextColor(mTextViewSell, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewVolume, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewValue, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewProfit, mHeaderTextDefaultColor);
@@ -453,8 +458,11 @@ public class DealListActivity extends ListActivity implements
         mTextViewNet = (TextView) findViewById(R.id.net);
         mTextViewNet.setOnClickListener(this);
 
-        mTextViewDeal = (TextView) findViewById(R.id.deal);
-        mTextViewDeal.setOnClickListener(this);
+        mTextViewBuy = (TextView) findViewById(R.id.buy);
+        mTextViewBuy.setOnClickListener(this);
+
+        mTextViewSell = (TextView) findViewById(R.id.sell);
+        mTextViewSell.setOnClickListener(this);
 
         mTextViewVolume = (TextView) findViewById(R.id.volume);
         mTextViewVolume.setOnClickListener(this);
@@ -489,8 +497,10 @@ public class DealListActivity extends ListActivity implements
             setHeaderTextColor(mTextViewPrice, mHeaderTextHighlightColor);
         } else if (mSortOrder.contains(DatabaseContract.COLUMN_NET)) {
             setHeaderTextColor(mTextViewNet, mHeaderTextHighlightColor);
-        } else if (mSortOrder.contains(DatabaseContract.COLUMN_DEAL)) {
-            setHeaderTextColor(mTextViewDeal, mHeaderTextHighlightColor);
+        } else if (mSortOrder.contains(DatabaseContract.COLUMN_BUY)) {
+            setHeaderTextColor(mTextViewBuy, mHeaderTextHighlightColor);
+        } else if (mSortOrder.contains(DatabaseContract.COLUMN_SELL)) {
+            setHeaderTextColor(mTextViewSell, mHeaderTextHighlightColor);
         } else if (mSortOrder.contains(DatabaseContract.COLUMN_VOLUME)) {
             setHeaderTextColor(mTextViewVolume, mHeaderTextHighlightColor);
         } else if (mSortOrder.contains(DatabaseContract.COLUMN_VALUE)) {
@@ -519,7 +529,8 @@ public class DealListActivity extends ListActivity implements
         String[] mRightFrom = new String[]{
                 DatabaseContract.COLUMN_PRICE,
                 DatabaseContract.COLUMN_NET,
-                DatabaseContract.COLUMN_DEAL,
+                DatabaseContract.COLUMN_BUY,
+                DatabaseContract.COLUMN_SELL,
                 DatabaseContract.COLUMN_VOLUME,
                 DatabaseContract.COLUMN_VALUE,
                 DatabaseContract.COLUMN_PROFIT,
@@ -532,7 +543,8 @@ public class DealListActivity extends ListActivity implements
         int[] mRightTo = new int[]{
                 R.id.price,
                 R.id.net,
-                R.id.deal,
+                R.id.buy,
+                R.id.sell,
                 R.id.volume,
                 R.id.value,
                 R.id.profit,

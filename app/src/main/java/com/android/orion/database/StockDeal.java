@@ -11,7 +11,23 @@ import java.util.Calendar;
 
 public class StockDeal extends DatabaseTable {
 
-    public static final double DISTRIBUTION_RATE = 5.0 / 100.0;
+    public static final double BUY_STAMP_DUTY_RATE = 0;
+    public static final double SELL_STAMP_DUTY_RATE = 1.0 / 1000.0;
+
+    public static final double BUY_TRANSFER_FEE_MIN = 1.0;
+    public static final double BUY_TRANSFER_FEE_RATE = 0.2 / 10000.0;
+
+    public static final double SELL_TRANSFER_FEE_MIN = 1.0;
+    public static final double SELL_TRANSFER_FEE_RATE = 0.2 / 10000.0;
+
+    public static final double BUY_COMMISSION_FEE_MIN = 5.0;
+    public static final double BUY_COMMISSION_FEE_RATE = 5.0 / 10000.0;
+
+    public static final double SELL_COMMISSION_FEE_MIN = 5.0;
+    public static final double SELL_COMMISSION_FEE_RATE = 5.0 / 10000.0;
+
+    public static final double DIVIDEND_INCOME_TAX_RATE_10_PERCENT = 10.0 / 100.0;
+    public static final double DIVIDEND_INCOME_TAX_RATE_20_PERCENT = 20.0 / 100.0;
 
     private String mSE;
     private String mCode;
@@ -19,7 +35,8 @@ public class StockDeal extends DatabaseTable {
     private String mAction;
     private double mPrice;
     private double mNet;
-    private double mDeal;
+    private double mBuy;
+    private double mSell;
     private long mVolume;
     private double mValue;
     private double mProfit;
@@ -50,7 +67,8 @@ public class StockDeal extends DatabaseTable {
         mAction = "";
         mPrice = 0;
         mNet = 0;
-        mDeal = 0;
+        mBuy = 0;
+        mSell = 0;
         mVolume = 0;
         mValue = 0;
         mProfit = 0;
@@ -73,7 +91,8 @@ public class StockDeal extends DatabaseTable {
         contentValues.put(DatabaseContract.COLUMN_ACTION, mAction);
         contentValues.put(DatabaseContract.COLUMN_PRICE, mPrice);
         contentValues.put(DatabaseContract.COLUMN_NET, mNet);
-        contentValues.put(DatabaseContract.COLUMN_DEAL, mDeal);
+        contentValues.put(DatabaseContract.COLUMN_BUY, mBuy);
+        contentValues.put(DatabaseContract.COLUMN_SELL, mSell);
         contentValues.put(DatabaseContract.COLUMN_VOLUME, mVolume);
         contentValues.put(DatabaseContract.COLUMN_VALUE, mValue);
         contentValues.put(DatabaseContract.COLUMN_PROFIT, mProfit);
@@ -99,7 +118,8 @@ public class StockDeal extends DatabaseTable {
         setAction(stockDeal.mAction);
         setPrice(stockDeal.mPrice);
         setNet(stockDeal.mNet);
-        setDeal(stockDeal.mDeal);
+        setBuy(stockDeal.mBuy);
+        setSell(stockDeal.mSell);
         setVolume(stockDeal.mVolume);
         setValue(stockDeal.mValue);
         setProfit(stockDeal.mProfit);
@@ -124,7 +144,8 @@ public class StockDeal extends DatabaseTable {
         setAction(cursor);
         setPrice(cursor);
         setNet(cursor);
-        setDeal(cursor);
+        setBuy(cursor);
+        setSell(cursor);
         setVolume(cursor);
         setValue(cursor);
         setProfit(cursor);
@@ -235,21 +256,38 @@ public class StockDeal extends DatabaseTable {
                 .getColumnIndex(DatabaseContract.COLUMN_NET)));
     }
 
-    public double getDeal() {
-        return mDeal;
+    public double getBuy() {
+        return mBuy;
     }
 
-    public void setDeal(double deal) {
-        mDeal = deal;
+    public void setBuy(double buy) {
+        mBuy = buy;
     }
 
-    void setDeal(Cursor cursor) {
+    void setBuy(Cursor cursor) {
         if (cursor == null) {
             return;
         }
 
-        setDeal(cursor.getDouble(cursor
-                .getColumnIndex(DatabaseContract.COLUMN_DEAL)));
+        setBuy(cursor.getDouble(cursor
+                .getColumnIndex(DatabaseContract.COLUMN_BUY)));
+    }
+
+    public double getSell() {
+        return mSell;
+    }
+
+    public void setSell(double sell) {
+        mSell = sell;
+    }
+
+    void setSell(Cursor cursor) {
+        if (cursor == null) {
+            return;
+        }
+
+        setSell(cursor.getDouble(cursor
+                .getColumnIndex(DatabaseContract.COLUMN_SELL)));
     }
 
     public long getVolume() {
@@ -355,52 +393,75 @@ public class StockDeal extends DatabaseTable {
     }
 
     public void setupNet() {
-        if ((mPrice == 0) || (mDeal == 0) || (mVolume ==0)) {
+        if ((mPrice == 0) || (mBuy == 0) || (mVolume ==0)) {
             mNet = 0;
             return;
         }
 
-        mNet = Utility.Round(100 * ((mPrice - mDeal) * Math.abs(mVolume) - mFee) / Math.abs(mVolume) / mDeal,
-                Constants.DOUBLE_FIXED_DECIMAL);
+        if (mSell > 0) {
+            mNet = Utility.Round(100 * ((mSell - mBuy) * Math.abs(mVolume) - mFee) / Math.abs(mVolume) / mBuy,
+                    Constants.DOUBLE_FIXED_DECIMAL);
+        } else {
+            mNet = Utility.Round(100 * ((mPrice - mBuy) * Math.abs(mVolume) - mFee) / Math.abs(mVolume) / mBuy,
+                    Constants.DOUBLE_FIXED_DECIMAL);
+        }
     }
 
     public void setupValue() {
-        if ((mDeal == 0) || (mVolume == 0)) {
+        if ((mBuy == 0) || (mVolume == 0)) {
             mValue = 0;
             return;
         }
 
-        mValue = Utility.Round(mDeal * mVolume,
+        mValue = Utility.Round(mBuy * mVolume,
                 Constants.DOUBLE_FIXED_DECIMAL);
     }
 
     public void setupFee(String rDate, double dividend) {
-        double stampDuty = mPrice * Math.abs(mVolume) * 1.0 / 1000.0;
-        double buyTransferFee = mDeal * Math.abs(mVolume) * 0.2 / 10000.0;
-        double sellTransferFee = mPrice * Math.abs(mVolume) * 0.2 / 10000.0;
-        double dividendTax = 0;
+        double buyStampDuty = 0;
+        double sellStampDuty = 0;
+        double buyTransferFee = 0;
+        double sellTransferFee = 0;
+        double buyCommissionFee = 0;
+        double sellCommissionFee = 0;
+        double dividendIncomeTax = 0;
 
-        if ((mPrice == 0) || (mDeal == 0) || (mVolume ==0)) {
+        if ((mPrice == 0) || (mBuy == 0) || (mVolume ==0)) {
+            mFee = 0;
             return;
         }
 
-        if (buyTransferFee < 1.0) {
-            buyTransferFee = 1.0;
+        buyStampDuty = mBuy * Math.abs(mVolume) * BUY_STAMP_DUTY_RATE;
+
+        if (mSell > 0) {
+            sellStampDuty = mSell * Math.abs(mVolume) * SELL_STAMP_DUTY_RATE;
+        } else {
+            sellStampDuty = mPrice * Math.abs(mVolume) * SELL_STAMP_DUTY_RATE;
         }
 
-        if (sellTransferFee < 1.0) {
-            sellTransferFee = 1.0;
+        buyTransferFee = mBuy * Math.abs(mVolume) * BUY_TRANSFER_FEE_RATE;
+        if (buyTransferFee < BUY_TRANSFER_FEE_MIN) {
+            buyTransferFee = BUY_TRANSFER_FEE_MIN;
         }
 
-        double buyCommission = mDeal * Math.abs(mVolume) * 5.0 / 10000.0;
-        double sellCommission = mPrice * Math.abs(mVolume) * 5.0 / 10000.0;
-
-        if (buyCommission < 5.0) {
-            buyCommission = 5.0;
+        if (mSell > 0) {
+            sellTransferFee = mSell * Math.abs(mVolume) * SELL_TRANSFER_FEE_RATE;
+        } else {
+            sellTransferFee = mPrice * Math.abs(mVolume) * SELL_TRANSFER_FEE_RATE;
         }
 
-        if (sellCommission < 5.0) {
-            sellCommission = 5.0;
+        if (sellTransferFee < SELL_TRANSFER_FEE_MIN) {
+            sellTransferFee = SELL_TRANSFER_FEE_MIN;
+        }
+
+        buyCommissionFee = mBuy * Math.abs(mVolume) * BUY_COMMISSION_FEE_RATE;
+        if (buyCommissionFee < BUY_COMMISSION_FEE_MIN) {
+            buyCommissionFee = BUY_COMMISSION_FEE_MIN;
+        }
+
+        sellCommissionFee = mPrice * Math.abs(mVolume) * SELL_COMMISSION_FEE_RATE;
+        if (sellCommissionFee < SELL_COMMISSION_FEE_MIN) {
+            sellCommissionFee = SELL_COMMISSION_FEE_MIN;
         }
 
         if (dividend > 0) {
@@ -416,34 +477,38 @@ public class StockDeal extends DatabaseTable {
             rDateCalendarAfterYear.add(Calendar.YEAR, 1);
 
             if (todayCalendar.before(rDateCalendarAfterMonth)) {
-                dividendTax = dividend / 10.0 * Math.abs(mVolume) * 20.0 / 100.0;
+                dividendIncomeTax = dividend / 10.0 * Math.abs(mVolume) * DIVIDEND_INCOME_TAX_RATE_20_PERCENT;
             } else if (todayCalendar.before(rDateCalendarAfterYear)) {
-                dividendTax = dividend / 10.0 * Math.abs(mVolume) * 10.0 / 100.0;
+                dividendIncomeTax = dividend / 10.0 * Math.abs(mVolume) * DIVIDEND_INCOME_TAX_RATE_10_PERCENT;
             } else {
-                dividendTax = 0;
+                dividendIncomeTax = 0;;
             }
         }
 
-        mFee = Utility.Round(stampDuty + buyTransferFee + sellTransferFee + buyCommission + sellCommission + dividendTax,
+        mFee = Utility.Round(buyStampDuty + sellStampDuty
+                        + buyTransferFee + sellTransferFee
+                        + buyCommissionFee + sellCommissionFee
+                        + dividendIncomeTax,
                 Constants.DOUBLE_FIXED_DECIMAL);
     }
 
     public void setupProfit() {
-        if ((mPrice == 0) || (mDeal == 0) || (mVolume ==0)) {
+        if ((mPrice == 0) || (mBuy == 0) || (mVolume ==0)) {
+            mProfit = 0;
             return;
         }
 
-        mProfit = Utility.Round((mPrice - mDeal) * Math.abs(mVolume) - mFee,
-                Constants.DOUBLE_FIXED_DECIMAL);
+        if (mSell > 0) {
+            mProfit = Utility.Round((mSell - mBuy) * Math.abs(mVolume) - mFee,
+                    Constants.DOUBLE_FIXED_DECIMAL);
+        } else {
+            mProfit = Utility.Round((mPrice - mBuy) * Math.abs(mVolume) - mFee,
+                    Constants.DOUBLE_FIXED_DECIMAL);
+        }
     }
 
     public void setupBonus(double dividend) {
-        if (dividend == 0) {
-            mBonus = 0;
-            return;
-        }
-
-        if (mVolume == 0) {
+        if ((dividend == 0) || (mVolume == 0)) {
             mBonus = 0;
             return;
         }
@@ -453,17 +518,12 @@ public class StockDeal extends DatabaseTable {
     }
 
     public void setupYield(double dividend) {
-        if (dividend == 0) {
+        if ((dividend == 0) || (mBuy == 0)) {
             mYield = 0;
             return;
         }
 
-        if (mDeal == 0) {
-            mYield = 0;
-            return;
-        }
-
-        mYield = Utility.Round(100.0 * dividend / 10.0 / mDeal,
+        mYield = Utility.Round(100.0 * dividend / 10.0 / mBuy,
                 Constants.DOUBLE_FIXED_DECIMAL);
     }
 }

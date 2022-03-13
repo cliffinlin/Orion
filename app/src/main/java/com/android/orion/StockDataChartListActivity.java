@@ -726,7 +726,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 		String selection = DatabaseContract.COLUMN_SE + " = " + "\'" + mStock.getSE()
 				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
 				+ mStock.getCode() + "\'";
-		String sortOrder = DatabaseContract.COLUMN_DEAL + " DESC ";
+		String sortOrder = DatabaseContract.COLUMN_BUY + " DESC ";
 
 		mStockDatabaseManager.getStockDealList(mStock, mStockDealList, selection, sortOrder);
 	}

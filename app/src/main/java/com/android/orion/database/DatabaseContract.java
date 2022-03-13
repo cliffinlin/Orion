@@ -27,7 +27,6 @@ public final class DatabaseContract {
     public static final String COLUMN_CLASSES = "classes";
     public static final String COLUMN_FLAG = "flag";
     public static final String COLUMN_PRICE = "price";
-    public static final String COLUMN_DEAL = "deal";
     public static final String COLUMN_CHANGE = "change";
     public static final String COLUMN_NET = "net";
     public static final String COLUMN_VOLUME = "volume";
@@ -44,6 +43,8 @@ public final class DatabaseContract {
     public static final String COLUMN_QUARTER = "quarter";
     public static final String COLUMN_YEAR = "year";
     public static final String COLUMN_OPERATE = "operate";
+    public static final String COLUMN_BUY = "buy";
+    public static final String COLUMN_SELL = "sell";
     public static final String COLUMN_HOLD = "hold";
     public static final String COLUMN_COST = "cost";
     public static final String COLUMN_PROFIT = "profit";
@@ -280,7 +281,8 @@ public final class DatabaseContract {
 
         public static final String[] PROJECTION_ALL = {_ID, COLUMN_SE,
                 COLUMN_CODE, COLUMN_NAME, COLUMN_ACTION, COLUMN_PRICE, COLUMN_NET,
-                COLUMN_DEAL, COLUMN_VOLUME, COLUMN_VALUE, COLUMN_PROFIT, COLUMN_FEE, COLUMN_BONUS, COLUMN_YIELD,
+                COLUMN_BUY, COLUMN_SELL, COLUMN_VOLUME, COLUMN_VALUE, COLUMN_PROFIT,
+                COLUMN_FEE, COLUMN_BONUS, COLUMN_YIELD,
                 COLUMN_CREATED, COLUMN_MODIFIED};
 
         private static final String CREATE_TABLE_CONTENT = " (" + _ID
@@ -288,8 +290,10 @@ public final class DatabaseContract {
                 + COLUMN_CODE + TEXT_TYPE + COMMA_SEP + COLUMN_NAME + TEXT_TYPE
                 + COMMA_SEP + COLUMN_ACTION + TEXT_TYPE + COMMA_SEP
                 + COLUMN_PRICE + DOUBLE_TYPE + COMMA_SEP + COLUMN_NET
-                + DOUBLE_TYPE + COMMA_SEP + COLUMN_DEAL + DOUBLE_TYPE
-                + COMMA_SEP + COLUMN_VOLUME + INTEGER_TYPE + COMMA_SEP
+                + DOUBLE_TYPE + COMMA_SEP
+                + COLUMN_BUY + DOUBLE_TYPE + COMMA_SEP
+                + COLUMN_SELL + DOUBLE_TYPE + COMMA_SEP
+                + COLUMN_VOLUME + INTEGER_TYPE + COMMA_SEP
                 + COLUMN_VALUE + DOUBLE_TYPE + COMMA_SEP
                 + COLUMN_PROFIT + DOUBLE_TYPE + COMMA_SEP
                 + COLUMN_FEE + DOUBLE_TYPE + COMMA_SEP

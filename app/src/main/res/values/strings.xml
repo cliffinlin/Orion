@@ -51,12 +51,16 @@
     <string name="cash_flow_per_share">CPS</string>
     <string name="cost">Cost</string>
     <string name="created">Created</string>
+    <string name="buy">Buy</string>
+    <string name="sell">Sell</string>
     <string name="deal">Deal</string>
     <string name="deal_insert">Deal Insert</string>
     <string name="deal_delete">Deal Delete</string>
     <string name="deal_edit">Deal Edit</string>
     <string name="deal_list">Deal List</string>
     <string name="deal_price">Deal price</string>
+    <string name="buy_price">Buy price</string>
+    <string name="sell_price">Sell price</string>
     <string name="deal_price_prompt">Price:</string>
     <string name="deal_net">Net</string>
     <string name="deal_volume">Deal Volume</string>

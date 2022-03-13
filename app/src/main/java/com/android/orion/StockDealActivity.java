@@ -44,11 +44,10 @@ public class StockDealActivity extends DatabaseActivity implements
 	EditText mEditTextStockName;
 	EditText mEditTextStockCode;
 	EditText mEditTextDealProfit;
-	EditText mEditTextDealPrice;
+	EditText mEditTextBuyPrice;
+	EditText mEditTextSellPrice;
 	EditText mEditTextDealVolume;
 
-	Button mButtonAdd;
-	Button mButtonSubtract;
 	Button mButtonOk;
 	Button mButtonCancel;
 
@@ -57,8 +56,6 @@ public class StockDealActivity extends DatabaseActivity implements
 	Spinner mSpinnerStockAcion;
 
 	StockDeal mDeal = null;
-
-	int mOrder = 0;
 
 	Handler mHandler = new Handler(Looper.getMainLooper()) {
 
@@ -97,7 +94,7 @@ public class StockDealActivity extends DatabaseActivity implements
 				mDeal.setCode(mStock.getCode());
 				mDeal.setName(mStock.getName());
 				mDeal.setPrice(mStock.getPrice());
-				mDeal.setDeal(mStock.getPrice());
+				mDeal.setBuy(mStock.getPrice());
 				updateView();
 				break;
 
@@ -107,7 +104,7 @@ public class StockDealActivity extends DatabaseActivity implements
 				mDeal.setCode(mStock.getCode());
 				mDeal.setName(mStock.getName());
 				mDeal.setPrice(mStock.getPrice());
-				mDeal.setDeal(mStock.getPrice());
+				mDeal.setBuy(mStock.getPrice());
 				updateView();
 				break;
 
@@ -149,10 +146,9 @@ public class StockDealActivity extends DatabaseActivity implements
 		mEditTextStockName = (EditText) findViewById(R.id.edittext_stock_name);
 		mEditTextStockCode = (EditText) findViewById(R.id.edittext_stock_code);
 		mEditTextDealProfit = (EditText) findViewById(R.id.edittext_deal_profit);
-		mEditTextDealPrice = (EditText) findViewById(R.id.edittext_deal_price);
+		mEditTextBuyPrice = (EditText) findViewById(R.id.edittext_buy_price);
+		mEditTextSellPrice = (EditText) findViewById(R.id.edittext_sell_price);
 		mEditTextDealVolume = (EditText) findViewById(R.id.edittext_deal_volume);
-		mButtonAdd = (Button) findViewById(R.id.button_add);
-		mButtonSubtract = (Button) findViewById(R.id.button_subtract);
 		mSpinnerStockAcion = (Spinner) findViewById(R.id.spinner_stock_action);
 		mButtonOk = (Button) findViewById(R.id.button_ok);
 		mButtonCancel = (Button) findViewById(R.id.button_cancel);
@@ -160,10 +156,9 @@ public class StockDealActivity extends DatabaseActivity implements
 		mEditTextStockName.setOnClickListener(this);
 		mEditTextStockCode.setOnClickListener(this);
 		mEditTextDealProfit.setOnClickListener(this);
-		mEditTextDealPrice.setOnClickListener(this);
+		mEditTextBuyPrice.setOnClickListener(this);
+		mEditTextSellPrice.setOnClickListener(this);
 		mEditTextDealVolume.setOnClickListener(this);
-		mButtonAdd.setOnClickListener(this);
-		mButtonSubtract.setOnClickListener(this);
 		mButtonOk.setOnClickListener(this);
 		mButtonCancel.setOnClickListener(this);
 
@@ -173,6 +168,10 @@ public class StockDealActivity extends DatabaseActivity implements
 		mEditTextStockCode.setFocusable(false);
 		mEditTextDealProfit.setInputType(InputType.TYPE_NULL);
 		mEditTextDealProfit.setFocusable(false);
+
+		mEditTextStockName.setEnabled(false);
+		mEditTextStockCode.setEnabled(false);
+		mEditTextDealProfit.setEnabled(false);
 
 		mListStockAction = new ArrayList<String>();
 		mListStockAction.add("");
@@ -239,7 +238,8 @@ public class StockDealActivity extends DatabaseActivity implements
 		mEditTextStockName.setText(mDeal.getName());
 		mEditTextStockCode.setText(mDeal.getCode());
 		mEditTextDealProfit.setText(String.valueOf(mDeal.getProfit()));
-		mEditTextDealPrice.setText(String.valueOf(mDeal.getDeal()));
+		mEditTextBuyPrice.setText(String.valueOf(mDeal.getBuy()));
+		mEditTextSellPrice.setText(String.valueOf(mDeal.getSell()));
 		mEditTextDealVolume.setText(String.valueOf(mDeal.getVolume()));
 		String dealAction = mDeal.getAction();
 		for (int i = 0; i < mListStockAction.size(); i++) {
@@ -247,23 +247,6 @@ public class StockDealActivity extends DatabaseActivity implements
 				mSpinnerStockAcion.setSelection(i);
 				break;
 			}
-		}
-	}
-
-	void setupDealPrice() {
-		double dealPrice = 0;
-		dealPrice = mStockDatabaseManager.getStockDealTargetPrice(mStock, mOrder);
-		dealPrice = Utility.Round(dealPrice, Constants.DOUBLE_FIXED_DECIMAL);
-
-		if (dealPrice > 0) {
-			mDeal.setDeal(dealPrice);
-			mEditTextDealPrice.setText(String.valueOf(mDeal.getDeal()));
-
-			mDeal.setupFee(mStock.getRDate(), mStock.getDividend());
-			mDeal.setupNet();
-			mDeal.setupValue();
-			mDeal.setupProfit();
-			mEditTextDealProfit.setText(String.valueOf(mDeal.getProfit()));
 		}
 	}
 
@@ -298,26 +281,26 @@ public class StockDealActivity extends DatabaseActivity implements
 				startActivityForResult(intent, REQUEST_CODE_STOCK_ID);
 			}
 			break;
-		case R.id.button_add:
-			mOrder--;
-			setupDealPrice();
-			break;
-		case R.id.button_subtract:
-			mOrder++;
-			setupDealPrice();
-			break;
 		case R.id.button_ok:
-			String dealString = "";
+			String buyString = "";
+			String sellString = "";
 			String volumeString = "";
 
 			String dealAction = mSpinnerStockAcion.getSelectedItem().toString();
 			mDeal.setAction(dealAction);
 
-			dealString = mEditTextDealPrice.getText().toString();
-			if (!TextUtils.isEmpty(dealString)) {
-				mDeal.setDeal(Double.valueOf(dealString));
+			buyString = mEditTextBuyPrice.getText().toString();
+			if (!TextUtils.isEmpty(buyString)) {
+				mDeal.setBuy(Double.valueOf(buyString));
 			} else {
-				mDeal.setDeal(0);
+				mDeal.setBuy(0);
+			}
+
+			sellString = mEditTextSellPrice.getText().toString();
+			if (!TextUtils.isEmpty(sellString)) {
+				mDeal.setSell(Double.valueOf(sellString));
+			} else {
+				mDeal.setSell(0);
 			}
 
 			volumeString = mEditTextDealVolume.getText().toString();

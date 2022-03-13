@@ -169,8 +169,6 @@ public class StorageActivity extends DatabaseActivity {
 		} finally {
 			closeQuietly(os);
 		}
-
-		mHandler.sendEmptyMessage(MESSAGE_REFRESH);
 	}
 
 	void loadFromFile() {
@@ -267,8 +265,10 @@ public class StorageActivity extends DatabaseActivity {
                                 stock.setCost(Double.valueOf(parser.nextText()));
                             }
                         } else if (parseType == XML_PARSE_TYPE_STOCK_DEAL) {
-                            if (DatabaseContract.COLUMN_DEAL.equals(tagName)) {
-                                stockDeal.setDeal(Double.valueOf(parser.nextText()));
+                            if (DatabaseContract.COLUMN_BUY.equals(tagName)) {
+                                stockDeal.setBuy(Double.valueOf(parser.nextText()));
+							} else if (DatabaseContract.COLUMN_SELL.equals(tagName)) {
+								stockDeal.setSell(Long.valueOf(parser.nextText()));
                             } else if (DatabaseContract.COLUMN_VOLUME.equals(tagName)) {
                                 stockDeal.setVolume(Long.valueOf(parser.nextText()));
                             } else if (DatabaseContract.COLUMN_ACTION.equals(tagName)) {
@@ -449,8 +449,11 @@ public class StorageActivity extends DatabaseActivity {
 
 						xmlSerializer.startTag(null, XML_TAG_STOCK_DEAL);
 						xmlSerialize(xmlSerializer,
-								DatabaseContract.COLUMN_DEAL,
-								String.valueOf(stockDeal.getDeal()));
+								DatabaseContract.COLUMN_BUY,
+								String.valueOf(stockDeal.getBuy()));
+						xmlSerialize(xmlSerializer,
+								DatabaseContract.COLUMN_SELL,
+								String.valueOf(stockDeal.getSell()));
 						xmlSerialize(xmlSerializer,
 								DatabaseContract.COLUMN_VOLUME,
 								String.valueOf(stockDeal.getVolume()));
