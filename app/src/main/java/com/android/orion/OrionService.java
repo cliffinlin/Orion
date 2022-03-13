@@ -153,6 +153,29 @@ public class OrionService extends Service {
 		}
 	}
 
+	@Override
+	public IBinder onBind(Intent intent) {
+		return mBinder;
+	}
+
+	void onHandleIntent(Intent intent) {
+		String se = "";
+		String code = "";
+
+		se = intent.getStringExtra(Constants.EXTRA_STOCK_SE);
+		code = intent.getStringExtra(Constants.EXTRA_STOCK_CODE);
+
+		download(se, code);
+	}
+
+	void download(String se, String code) {
+		if (mSinaFinance == null) {
+			return;
+		}
+
+		mSinaFinance.download(se, code);
+	}
+
 	void download() {
 		if (mSinaFinance == null) {
 			return;
@@ -167,19 +190,6 @@ public class OrionService extends Service {
 		}
 
 		mSinaFinance.download(stock);
-	}
-
-	@Override
-	public IBinder onBind(Intent intent) {
-		return mBinder;
-	}
-
-	void onHandleIntent(Intent intent) {
-		if (mSinaFinance == null) {
-			return;
-		}
-
-		mSinaFinance.downloadStock(intent);
 	}
 
 	public class OrionBinder extends Binder {

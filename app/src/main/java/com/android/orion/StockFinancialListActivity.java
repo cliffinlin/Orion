@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.utility.Preferences;
+import com.android.orion.view.SyncHorizontalScrollView;
 
 public class StockFinancialListActivity extends ListActivity implements
         LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,

@@ -154,7 +154,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
                     Stock stock = new Stock();
                     stock.set(cursor);
 
-                    stockArrayMap.put(stock.getSE() + stock.getCode(), stock);
+                    stockArrayMap.put(stock.getCode(), stock);
                 }
             }
         } catch (Exception e) {
@@ -164,13 +164,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
         }
     }
 
-    void downloadStock(Intent intent) {
-        String se = "";
-        String code = "";
+    void download(String se, String code) {
         Stock stock = null;
-
-        se = intent.getStringExtra(Constants.EXTRA_STOCK_SE);
-        code = intent.getStringExtra(Constants.EXTRA_STOCK_CODE);
 
         if (!TextUtils.isEmpty(se) && !TextUtils.isEmpty(code)) {
             stock = new Stock();
@@ -212,12 +207,39 @@ public abstract class StockDataProvider extends StockAnalyzer {
                return;
            }
 
+           ArrayMap<String, Stock> stockArrayMap = new ArrayMap<String, Stock>();
+           ArrayMap<String, Stock> removedArrayMap = new ArrayMap<String, Stock>();
+
+           loadStockArrayMap(stockArrayMap);
+
+           for (Stock current : stockArrayMap.values()) {
+               if (current.getCode().equals(stock.getCode())) {
+                   continue;
+               }
+
+               if (mHandler.hasMessages(Integer.valueOf(current.getCode()))) {
+                   mHandler.removeMessages(Integer.valueOf(current.getCode()));
+                   Log.d(TAG, "mHandler.hasMessages " + Integer.valueOf(current.getCode()) + ", removed!");
+                   removedArrayMap.put(current.getCode(), current);
+               }
+           }
+
            if (mHandler.hasMessages(Integer.valueOf(stock.getCode()))) {
                Log.d(TAG, "mHandler.hasMessages " + Integer.valueOf(stock.getCode()) + ", skip!");
            } else {
                Message msg = mHandler.obtainMessage(Integer.valueOf(stock.getCode()), stock);
                mHandler.sendMessage(msg);
                Log.d(TAG, "mHandler.sendMessage" + msg);
+           }
+
+           for (Stock current : removedArrayMap.values()) {
+               if (mHandler.hasMessages(Integer.valueOf(current.getCode()))) {
+                   Log.d(TAG, "mHandler.hasMessages " + Integer.valueOf(current.getCode()) + ", skip!");
+               } else {
+                   Message msg = mHandler.obtainMessage(Integer.valueOf(current.getCode()), current);
+                   mHandler.sendMessage(msg);
+                   Log.d(TAG, "mHandler.sendMessage " + msg);
+               }
            }
         }
     }
@@ -869,8 +891,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
                     indexStockDataList = index.getStockDataList(period);
 
                     for (IndexComponent indexComponent : indexComponentList) {
-                        if (stockArrayMap.containsKey(indexComponent.getSE() + indexComponent.getCode())) {
-                            stock = stockArrayMap.get(indexComponent.getSE() + indexComponent.getCode());
+                        if (stockArrayMap.containsKey(indexComponent.getCode())) {
+                            stock = stockArrayMap.get(indexComponent.getCode());
                             stockDataList = stock.getStockDataList(period);
                             loadStockDataList(stock, period, stockDataList);
                             if ((stockDataList == null) || (stockDataList.size() == 0)) {
@@ -884,8 +906,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
                     }
 
                     for (IndexComponent indexComponent : indexComponentList) {
-                        if (stockArrayMap.containsKey(indexComponent.getSE() + indexComponent.getCode())) {
-                            stock = stockArrayMap.get(indexComponent.getSE() + indexComponent.getCode());
+                        if (stockArrayMap.containsKey(indexComponent.getCode())) {
+                            stock = stockArrayMap.get(indexComponent.getCode());
                             stockDataList = stock.getStockDataList(period);
                             if ((stockDataList == null) || (stockDataList.size() == 0)) {
                                 continue;
@@ -926,8 +948,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
                     }
 
                     for (IndexComponent indexComponent : indexComponentList) {
-                        if (stockArrayMap.containsKey(indexComponent.getSE() + indexComponent.getCode())) {
-                            stock = stockArrayMap.get(indexComponent.getSE() + indexComponent.getCode());
+                        if (stockArrayMap.containsKey(indexComponent.getCode())) {
+                            stock = stockArrayMap.get(indexComponent.getCode());
                             stockDataList = stock.getStockDataList(period);
                             if ((stockDataList == null) || (stockDataList.size() == 0)) {
                                 continue;
@@ -980,8 +1002,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
             }
 
             for (IndexComponent indexComponent : indexComponentList) {
-                if (stockArrayMap.containsKey(indexComponent.getSE() + indexComponent.getCode())) {
-                    stock = stockArrayMap.get(indexComponent.getSE() + indexComponent.getCode());
+                if (stockArrayMap.containsKey(indexComponent.getCode())) {
+                    stock = stockArrayMap.get(indexComponent.getCode());
                     if ((stockDataList == null) || (stockDataList.size() == 0)) {
                         continue;
                     }

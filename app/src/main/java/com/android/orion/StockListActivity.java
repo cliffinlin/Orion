@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.utility.Preferences;
+import com.android.orion.view.SyncHorizontalScrollView;
 
 public class StockListActivity extends ListActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,

@@ -34,6 +34,7 @@ import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.RecordFile;
+import com.android.orion.view.SyncHorizontalScrollView;
 
 public class DealListActivity extends ListActivity implements
         LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,

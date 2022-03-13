@@ -18,7 +18,7 @@
             <include layout="@layout/activity_stock_list_left_title" />
         </LinearLayout>
 
-        <com.android.orion.SyncHorizontalScrollView
+        <com.android.orion.view.SyncHorizontalScrollView
             android:id="@+id/title_shsv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -33,7 +33,7 @@
 
                 <include layout="@layout/activity_stock_financial_list_right_title" />
             </LinearLayout>
-        </com.android.orion.SyncHorizontalScrollView>
+        </com.android.orion.view.SyncHorizontalScrollView>
     </LinearLayout>
 
     <ScrollView
@@ -58,7 +58,7 @@
                 </ListView>
             </LinearLayout>
 
-            <com.android.orion.SyncHorizontalScrollView
+            <com.android.orion.view.SyncHorizontalScrollView
                 android:id="@+id/content_shsv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -78,7 +78,7 @@
                         android:layout_height="match_parent" >
                     </ListView>
                 </LinearLayout>
-            </com.android.orion.SyncHorizontalScrollView>
+            </com.android.orion.view.SyncHorizontalScrollView>
         </LinearLayout>
     </ScrollView>
 

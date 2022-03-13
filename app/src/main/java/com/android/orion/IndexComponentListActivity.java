@@ -26,6 +26,7 @@ import com.android.orion.database.IndexComponent;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.utility.Preferences;
+import com.android.orion.view.SyncHorizontalScrollView;
 
 import java.util.ArrayList;
 

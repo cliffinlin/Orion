@@ -17,11 +17,10 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.utility.Preferences;
-import com.android.orion.utility.Utility;
+import com.android.orion.view.SyncHorizontalScrollView;
 
 public class StockIPOListActivity extends ListActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
