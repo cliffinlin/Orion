@@ -59,8 +59,6 @@ public class Constants {
 	public static final int SEASONS_IN_A_YEAR = 4;
 
 	public static final long DEFAULT_ALARM_INTERVAL = 5 * 60 * 1000;
-	public static final long DEFAULT_RESTART_LOADER_INTERVAL = 1 * 60 * 1000;
-	public static final long DEFAULT_SEND_BROADCAST_INTERVAL = 1 * 60 * 1000;
 	public static final long DEFAULT_DOWNLOAD_SLEEP_INTERVAL = 1 * 1000;
 
 	public static final double ROI_COEFFICIENT = 1.0 / 1000;

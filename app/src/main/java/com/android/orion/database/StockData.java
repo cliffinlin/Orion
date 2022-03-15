@@ -927,28 +927,27 @@ public class StockData extends StockDatabaseTable {
 	public int divergenceTo(StockData stockData) {
 		int result = DIVERGENCE_NONE;
 
+		if ((Math.abs(getNet()) < Constants.SECEND_ACTION_THRESHOLD)
+				|| Math.abs(stockData.getNet()) < Constants.SECEND_ACTION_THRESHOLD) {
+			return result;
+		}
+
 		if (mDirection == DIRECTION_UP) {
 			if ((getVertexHigh() > stockData.getVertexHigh())
 					&& (getVertexLow() > stockData.getVertexLow())) {
-				if (Math.abs(getSigmaHistogram()) < Math.abs(stockData
-						.getSigmaHistogram())) {
-					result = DIVERGENCE_UP;
-				}
-
-				if (getVelocity() < stockData.getVelocity()) {
-					result = DIVERGENCE_UP;
+				if (Math.abs(getSigmaHistogram()) < Math.abs(stockData.getSigmaHistogram())) {
+					if (Math.abs(getVelocity()) < Math.abs(stockData.getVelocity())) {
+						result = DIVERGENCE_UP;
+					}
 				}
 			}
 		} else if (mDirection == DIRECTION_DOWN) {
 			if ((getVertexHigh() < stockData.getVertexHigh())
 					&& (getVertexLow() < stockData.getVertexLow())) {
-				if (Math.abs(getSigmaHistogram()) < Math.abs(stockData
-						.getSigmaHistogram())) {
-					result = DIVERGENCE_DOWN;
-				}
-
-				if (getVelocity() > stockData.getVelocity()) {
-					result = DIVERGENCE_DOWN;
+				if (Math.abs(getSigmaHistogram()) < Math.abs(stockData.getSigmaHistogram())) {
+					if (Math.abs(getVelocity()) < Math.abs(stockData.getVelocity())) {
+						result = DIVERGENCE_DOWN;
+					}
 				}
 			}
 		}

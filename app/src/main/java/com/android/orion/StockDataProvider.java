@@ -183,11 +183,6 @@ public abstract class StockDataProvider extends StockAnalyzer {
             return;
         }
 
-        Thread.State state = mHandlerThread.getState();
-        if (state != RUNNABLE) {
-            Toast.makeText(mContext, mContext.getResources().getString(R.string.handlerthread_not_running), Toast.LENGTH_LONG).show();
-        }
-
        if (stock == null) {
             ArrayMap<String, Stock> stockArrayMap = new ArrayMap<String, Stock>();
 
