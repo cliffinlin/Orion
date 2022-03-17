@@ -279,7 +279,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
         }
     }
 
-    int findStockDataToday(Cursor cursor) {
+    int getStockDataCountOfToday(Cursor cursor) {
         String dataString = Utility.getCalendarDateString(Calendar
                 .getInstance());
         int result = 0;
@@ -292,13 +292,15 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
         cursor.moveToLast();
 
-        while (cursor.moveToPrevious()) {
+        while (cursor != null) {
             stockData.set(cursor);
             if (stockData.getDate().equals(dataString)) {
                 result++;
             } else {
                 break;
             }
+
+            cursor.moveToPrevious();
         }
 
         return result;
@@ -337,19 +339,24 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
             cursor.moveToLast();
             stockData.set(cursor);
-            modified = stockData.getModified();
-            if (TextUtils.isEmpty(modified)) {
-                modified = stockData.getCreated();
-            }
 
+            modified = stockData.getModified();
             if (Market.isOutOfDateToday(modified)) {
-                removeStockDataRedundant(cursor, defaultValue);
                 return defaultValue;
             }
 
             if (!Market.isWeekday(Calendar.getInstance())) {
                 return result;
             }
+
+            int count = getStockDataCountOfToday(cursor);
+            Calendar modifiedCalendar = Utility.getCalendar(modified,
+                    Utility.CALENDAR_DATE_TIME_FORMAT);
+            Calendar stockMarketLunchBeginCalendar = Market
+                    .getMarketLunchBeginCalendar(Calendar
+                            .getInstance());
+            Calendar stockMarketCloseCalendar = Market
+                    .getMarketCloseCalendar(Calendar.getInstance());
 
             if (Market.isTradingHours(Calendar.getInstance())) {
                 scheduleMinutes = Market.getScheduleMinutes();
@@ -370,52 +377,41 @@ public abstract class StockDataProvider extends StockAnalyzer {
                                 / Constants.SCHEDULE_INTERVAL_MIN5;
                     }
                 }
-            } else {
-                int count = findStockDataToday(cursor);
-                Calendar modifiedCalendar = Utility.getCalendar(modified,
-                        Utility.CALENDAR_DATE_TIME_FORMAT);
-                Calendar stockMarketLunchBeginCalendar = Market
-                        .getStockMarketLunchBeginCalendar(Calendar
-                                .getInstance());
-                Calendar stockMarketCloseCalendar = Market
-                        .getStockMarketCloseCalendar(Calendar.getInstance());
+            } else if (Market.isLunchTime(Calendar.getInstance())) {
+                if ((count > 0) && modifiedCalendar.after(stockMarketLunchBeginCalendar)) {
+                    return result;
+                }
 
-                if (Market.inHalfTime(Calendar.getInstance())) {
-                    if (modifiedCalendar.after(stockMarketLunchBeginCalendar)) {
-                        return result;
-                    }
+                if (period.equals(Settings.KEY_PERIOD_MONTH)
+                        || period.equals(Settings.KEY_PERIOD_WEEK)
+                        || period.equals(Settings.KEY_PERIOD_DAY)) {
+                    result = 1 - count;
+                } else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
+                    result = 2 - count;
+                } else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
+                    result = 4 - count;
+                } else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
+                    result = 8 - count;
+                } else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
+                    result = 24 - count;
+                }
+            } else if (Market.isMarketClosed(Calendar.getInstance())) {
+                if ((count > 0) && modifiedCalendar.after(stockMarketCloseCalendar)) {
+                    return result;
+                }
 
-                    if (period.equals(Settings.KEY_PERIOD_MONTH)
-                            || period.equals(Settings.KEY_PERIOD_WEEK)
-                            || period.equals(Settings.KEY_PERIOD_DAY)) {
-                        result = 1 - count;
-                    } else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
-                        result = 2 - count;
-                    } else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
-                        result = 4 - count;
-                    } else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
-                        result = 8 - count;
-                    } else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
-                        result = 24 - count;
-                    }
-                } else if (Market.afterStockMarketClose(Calendar.getInstance())) {
-                    if (modifiedCalendar.after(stockMarketCloseCalendar)) {
-                        return result;
-                    }
-
-                    if (period.equals(Settings.KEY_PERIOD_MONTH)
-                            || period.equals(Settings.KEY_PERIOD_WEEK)
-                            || period.equals(Settings.KEY_PERIOD_DAY)) {
-                        result = 1 - count;
-                    } else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
-                        result = 4 - count;
-                    } else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
-                        result = 8 - count;
-                    } else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
-                        result = 16 - count;
-                    } else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
-                        result = 48 - count;
-                    }
+                if (period.equals(Settings.KEY_PERIOD_MONTH)
+                        || period.equals(Settings.KEY_PERIOD_WEEK)
+                        || period.equals(Settings.KEY_PERIOD_DAY)) {
+                    result = 1 - count;
+                } else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
+                    result = 4 - count;
+                } else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
+                    result = 8 - count;
+                } else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
+                    result = 16 - count;
+                } else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
+                    result = 48 - count;
                 }
             }
         } catch (Exception e) {
@@ -799,7 +795,6 @@ public abstract class StockDataProvider extends StockAnalyzer {
     }
 
     int downloadStockDataHistory(Stock stock, String period) {
-        String resultSting = "";
         int result = DOWNLOAD_RESULT_NONE;
         int len = 0;
         mStockData = new StockData(period);
@@ -842,6 +837,67 @@ public abstract class StockDataProvider extends StockAnalyzer {
                 }
 
                 handleResponseStockDataHistory(mStock, mStockData, resultString);
+                Thread.sleep(Constants.DEFAULT_DOWNLOAD_SLEEP_INTERVAL);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+    int downloadStockDataRealTime(Stock stock) {
+        int result = DOWNLOAD_RESULT_NONE;
+        int len = 0;
+        String period = Settings.KEY_PERIOD_DAY;
+
+        if (!Preferences.getBoolean(mContext, period, false)) {
+            return result;
+        }
+
+        if (stock == null) {
+            return result;
+        }
+
+        mStockDatabaseManager.getStock(stock);
+
+        mStockData = new StockData(period);
+        mStockData.setStockId(stock.getId());
+        mStockDatabaseManager.getStockData(mStockData);
+
+        len = getDownloadStockDataLength(mStockData);
+        if (len <= 0) {
+            return result;
+        }
+
+        setStock(stock);
+
+        return downloadStockDataRealTime(getRequestHeader(), getStockDataRealTimeURLString(stock));
+    }
+
+    int downloadStockDataRealTime(ArrayMap<String, String> requestHeaderArray, String urlString) {
+        String resultString = "";
+        int result = DOWNLOAD_RESULT_NONE;
+
+        Log.d(TAG, "downloadStockDataRealTime:" + urlString);
+
+        Request.Builder builder = new Request.Builder();
+        for (int i = 0; i < requestHeaderArray.size(); i++) {
+            builder.addHeader(requestHeaderArray.keyAt(i), requestHeaderArray.valueAt(i));
+        }
+        builder.url(urlString);
+        Request request = builder.build();
+
+        try {
+            Response response = mOkHttpClient.newCall(request).execute();
+            if (response != null) {
+                resultString = response.body().string();
+                if (isAccessDenied(resultString)) {
+                    result = DOWNLOAD_RESULT_FAILED;
+                    return result;
+                }
+
+                handleResponseStockDataRealTime(mStock, mStockData, resultString);
                 Thread.sleep(Constants.DEFAULT_DOWNLOAD_SLEEP_INTERVAL);
             }
         } catch (Exception e) {
@@ -1068,6 +1124,10 @@ public abstract class StockDataProvider extends StockAnalyzer {
                             }
 
                             if (downloadStockDataHistory(stock) == DOWNLOAD_RESULT_FAILED) {
+                                return;
+                            }
+
+                            if (downloadStockDataRealTime(stock) == DOWNLOAD_RESULT_FAILED) {
                                 return;
                             }
                         }

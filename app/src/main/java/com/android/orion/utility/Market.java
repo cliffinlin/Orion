@@ -6,8 +6,8 @@ import android.text.TextUtils;
 
 public class Market {
 
-	public static final int OPEN_MINUTES = 9 * 60 + 30;
-	public static final int LUNCH_MINUTES = 1 * 60 + 30;
+	public static final int OPEN_TIME_IN_MINUTES = 9 * 60 + 30;
+	public static final int LUNCH_TIME_IN_MINUTES = 1 * 60 + 30;
 
 	public static final String OPEN_TIME = "09:25:00";
 	public static final String LUNCH_BEGIN_TIME = "11:30:00";
@@ -17,7 +17,7 @@ public class Market {
 	private Market() {
 	}
 
-	public static int getCalendarDayMinutes(Calendar calendar) {
+	public static int getMinutesOfToday(Calendar calendar) {
 		return calendar.get(Calendar.HOUR_OF_DAY) * 60
 				+ calendar.get(Calendar.MINUTE);
 	}
@@ -33,13 +33,13 @@ public class Market {
 			return result;
 		}
 
-		start = OPEN_MINUTES;
+		start = OPEN_TIME_IN_MINUTES;
 
 		if (inFirstHalf(currentCalendar)) {
-			result = Market.getCalendarDayMinutes(currentCalendar) - start;
+			result = Market.getMinutesOfToday(currentCalendar) - start;
 		} else if (inSecondHalf(currentCalendar)) {
-			result = Market.getCalendarDayMinutes(currentCalendar) - start
-					- LUNCH_MINUTES;
+			result = Market.getMinutesOfToday(currentCalendar) - (start
+					+ LUNCH_TIME_IN_MINUTES);
 		} else {
 			result = 0;
 		}
@@ -87,8 +87,8 @@ public class Market {
 		}
 
 		currentCalendar = Calendar.getInstance();
-		stockMarketOpenCalendar = getStockMarketOpenCalendar(currentCalendar);
-		stockMarketLunchBeginCalendar = getStockMarketLunchBeginCalendar(currentCalendar);
+		stockMarketOpenCalendar = getMarketOpenCalendar(currentCalendar);
+		stockMarketLunchBeginCalendar = getMarketLunchBeginCalendar(currentCalendar);
 
 		if (currentCalendar.after(stockMarketOpenCalendar)
 				&& currentCalendar.before(stockMarketLunchBeginCalendar)) {
@@ -98,7 +98,7 @@ public class Market {
 		return result;
 	}
 
-	public static boolean inHalfTime(Calendar calendar) {
+	public static boolean isLunchTime(Calendar calendar) {
 		boolean result = false;
 		Calendar currentCalendar;
 		Calendar stockMarketLunchBeginCalendar;
@@ -109,8 +109,8 @@ public class Market {
 		}
 
 		currentCalendar = Calendar.getInstance();
-		stockMarketLunchBeginCalendar = getStockMarketLunchBeginCalendar(currentCalendar);
-		stockMarketLunchEndCalendar = getStockMarketLunchEndCalendar(currentCalendar);
+		stockMarketLunchBeginCalendar = getMarketLunchBeginCalendar(currentCalendar);
+		stockMarketLunchEndCalendar = getMarketLunchEndCalendar(currentCalendar);
 
 		if (currentCalendar.after(stockMarketLunchBeginCalendar)
 				&& currentCalendar.before(stockMarketLunchEndCalendar)) {
@@ -131,8 +131,8 @@ public class Market {
 		}
 
 		currentCalendar = Calendar.getInstance();
-		stockMarketLunchEndCalendar = getStockMarketLunchEndCalendar(currentCalendar);
-		stockMarketCloseCalendar = getStockMarketCloseCalendar(currentCalendar);
+		stockMarketLunchEndCalendar = getMarketLunchEndCalendar(currentCalendar);
+		stockMarketCloseCalendar = getMarketCloseCalendar(currentCalendar);
 
 		if (currentCalendar.after(stockMarketLunchEndCalendar)
 				&& currentCalendar.before(stockMarketCloseCalendar)) {
@@ -142,7 +142,7 @@ public class Market {
 		return result;
 	}
 	
-	public static boolean afterStockMarketClose(Calendar calendar) {
+	public static boolean isMarketClosed(Calendar calendar) {
 		boolean result = false;
 		Calendar currentCalendar;
 		Calendar stockMarketCloseCalendar;
@@ -152,7 +152,7 @@ public class Market {
 		}
 
 		currentCalendar = Calendar.getInstance();
-		stockMarketCloseCalendar = getStockMarketCloseCalendar(currentCalendar);
+		stockMarketCloseCalendar = getMarketCloseCalendar(currentCalendar);
 
 		if (currentCalendar.after(stockMarketCloseCalendar)) {
 			result = true;
@@ -161,9 +161,9 @@ public class Market {
 		return result;
 	}
 	
-	public static Calendar getStockMarketCalendar(Calendar calendar,
+	public static Calendar getMarketCalendar(Calendar calendar,
 			String timeString) {
-		Calendar result = Calendar.getInstance();
+		Calendar result;
 		String dateTimeString = Utility.getCalendarDateString(calendar) + " "
 				+ timeString;
 		result = Utility.getCalendar(dateTimeString,
@@ -171,24 +171,23 @@ public class Market {
 		return result;
 	}
 
-	public static Calendar getStockMarketOpenCalendar(Calendar calendar) {
-		return getStockMarketCalendar(calendar,
+	public static Calendar getMarketOpenCalendar(Calendar calendar) {
+		return getMarketCalendar(calendar,
 				OPEN_TIME);
 	}
 
-	public static Calendar getStockMarketLunchBeginCalendar(Calendar calendar) {
-		return getStockMarketCalendar(calendar,
+	public static Calendar getMarketLunchBeginCalendar(Calendar calendar) {
+		return getMarketCalendar(calendar,
 				LUNCH_BEGIN_TIME);
 	}
 
-	public static Calendar getStockMarketLunchEndCalendar(Calendar calendar) {
-		return getStockMarketCalendar(calendar,
+	public static Calendar getMarketLunchEndCalendar(Calendar calendar) {
+		return getMarketCalendar(calendar,
 				LUNCH_END_TIME);
 	}
 
-	public static Calendar getStockMarketCloseCalendar(Calendar calendar) {
-		return getStockMarketCalendar(calendar,
+	public static Calendar getMarketCloseCalendar(Calendar calendar) {
+		return getMarketCalendar(calendar,
 				CLOSE_TIME);
 	}
-
 }

@@ -779,6 +779,8 @@ public class SinaFinance extends StockDataProvider {
 			stockData.setDate(stockInfo[30]);
 			stockData.setTime(stockInfo[31]);
 
+//            stock.setSuspensionStatus(stockInfo[31]);//00	正常 TODO
+
 			if (!mStockDatabaseManager.isStockDataExist(stockData)) {
 				stockData.setCreated(Utility.getCurrentDateTimeString());
 				mStockDatabaseManager.insertStockData(stockData);

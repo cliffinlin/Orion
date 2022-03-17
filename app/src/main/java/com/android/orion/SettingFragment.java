@@ -1,5 +1,6 @@
 package com.android.orion;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -10,14 +11,13 @@ import android.preference.PreferenceFragment;
 public class SettingFragment extends PreferenceFragment implements
 		OnSharedPreferenceChangeListener {
 
-	DownloadAlarmManager mStockDownloadAlarmManager = null;
+	Context mContext;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mStockDownloadAlarmManager = DownloadAlarmManager
-				.getInstance(getActivity());
+		mContext = getActivity();
 
 		addPreferencesFromResource(R.xml.preference_setting);
 	}
@@ -58,28 +58,25 @@ public class SettingFragment extends PreferenceFragment implements
 				|| key.equals(Settings.KEY_PERIOD_MONTH)
 				|| key.equals(Settings.KEY_PERIOD_QUARTER)
 				|| key.equals(Settings.KEY_PERIOD_YEAR)) {
-			if (checked) {
-				if (mStockDownloadAlarmManager != null) {
-					mStockDownloadAlarmManager.startAlarm();
-				}
-			}
 
-			Intent intent = new Intent(getActivity(), OrionService.class);
+			Intent serviceIntent = new Intent(mContext, OrionService.class);
+
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-				getActivity().startForegroundService(intent);
+				mContext.startForegroundService(serviceIntent);
 			} else {
-				getActivity().startService(intent);
+				mContext.startService(serviceIntent);
 			}
 		}
 
 		if (key.equals(Settings.KEY_BACKTEST)) {
-			Intent intent = new Intent(getActivity(), SettingBacktestActivity.class);
+			Intent intent = new Intent(mContext, SettingBacktestActivity.class);
+
 			if (checked) {
 				intent.putExtra(SettingBacktestActivity.EXTRA_BACK_TEST, SettingBacktestActivity.EXTRA_BACK_TEST_ON);
-				getActivity().startActivity(intent);
+				mContext.startActivity(intent);
 			} else {
 				intent.putExtra(SettingBacktestActivity.EXTRA_BACK_TEST, SettingBacktestActivity.EXTRA_BACK_TEST_OFF);
-				getActivity().startActivity(intent);
+				mContext.startActivity(intent);
 			}
 		}
 	}
