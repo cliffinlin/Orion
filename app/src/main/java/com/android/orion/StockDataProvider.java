@@ -279,12 +279,10 @@ public abstract class StockDataProvider extends StockAnalyzer {
         }
     }
 
-    int getStockDataCountOfToday(Cursor cursor) {
+    int getStockDataOfToday(Cursor cursor, StockData stockData) {
         String dataString = Utility.getCalendarDateString(Calendar
                 .getInstance());
         int result = 0;
-
-        StockData stockData = new StockData();
 
         if (cursor == null) {
             return result;
@@ -292,15 +290,11 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
         cursor.moveToLast();
 
-        while (cursor != null) {
+        if (cursor != null) {
             stockData.set(cursor);
             if (stockData.getDate().equals(dataString)) {
                 result++;
-            } else {
-                break;
             }
-
-            cursor.moveToPrevious();
         }
 
         return result;
@@ -342,6 +336,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
             modified = stockData.getModified();
             if (Market.isOutOfDateToday(modified)) {
+                mStockDatabaseManager.deleteStockData(stockId,  period);
                 return defaultValue;
             }
 
@@ -349,7 +344,10 @@ public abstract class StockDataProvider extends StockAnalyzer {
                 return result;
             }
 
-            int count = getStockDataCountOfToday(cursor);
+            int count = getStockDataOfToday(cursor, stockData);
+            if (count > 0) {
+                modified = stockData.getModified();
+            }
             Calendar modifiedCalendar = Utility.getCalendar(modified,
                     Utility.CALENDAR_DATE_TIME_FORMAT);
             Calendar stockMarketLunchBeginCalendar = Market

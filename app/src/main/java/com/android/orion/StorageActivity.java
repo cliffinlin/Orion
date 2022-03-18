@@ -268,7 +268,7 @@ public class StorageActivity extends DatabaseActivity {
                             if (DatabaseContract.COLUMN_BUY.equals(tagName)) {
                                 stockDeal.setBuy(Double.valueOf(parser.nextText()));
 							} else if (DatabaseContract.COLUMN_SELL.equals(tagName)) {
-								stockDeal.setSell(Long.valueOf(parser.nextText()));
+								stockDeal.setSell(Double.valueOf(parser.nextText()));
                             } else if (DatabaseContract.COLUMN_VOLUME.equals(tagName)) {
                                 stockDeal.setVolume(Long.valueOf(parser.nextText()));
                             } else if (DatabaseContract.COLUMN_ACTION.equals(tagName)) {
