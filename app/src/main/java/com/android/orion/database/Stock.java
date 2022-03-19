@@ -19,6 +19,8 @@ public class Stock extends DatabaseTable {
 	public static final String SE_SH = "sh";
 	public static final String SE_SZ = "sz";
 
+	public static final String STATUS_SUSPENSION = "--";
+
 	public static final long INVALID_ID = 0;
 
 	public static final int FLAG_NONE = 0;
@@ -77,6 +79,7 @@ public class Stock extends DatabaseTable {
 	private double mYield;
 	private double mDividendRatio;
 	private String mRDate;
+	private String mStatus;
 
 	public ArrayList<StockData> mStockDataListMin1 = new ArrayList<StockData>();
 	public ArrayList<StockData> mStockDataListMin5 = new ArrayList<StockData>();
@@ -224,6 +227,7 @@ public class Stock extends DatabaseTable {
 		mYield = 0;
 		mDividendRatio = 0;
 		mRDate = "";
+		mStatus = "";
 	}
 
 	@Override
@@ -296,6 +300,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND_RATIO,
 				mDividendRatio);
 		contentValues.put(DatabaseContract.COLUMN_R_DATE, mRDate);
+		contentValues.put(DatabaseContract.COLUMN_STATUS, mStatus);
 
 		return contentValues;
 	}
@@ -382,6 +387,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND_RATIO,
 				mDividendRatio);
 		contentValues.put(DatabaseContract.COLUMN_R_DATE, mRDate);
+		contentValues.put(DatabaseContract.COLUMN_STATUS, mStatus);
 
 		return contentValues;
 	}
@@ -447,6 +453,7 @@ public class Stock extends DatabaseTable {
 		setYield(stock.mYield);
 		setDividendRatio(stock.mDividendRatio);
 		setRDate(stock.mRDate);
+		setStatus(stock.mStatus);
 	}
 
 	@Override
@@ -511,6 +518,7 @@ public class Stock extends DatabaseTable {
 		setYield(cursor);
 		setDividendRatio(cursor);
 		setRDate(cursor);
+		setStatus(cursor);
 	}
 
 	public String getClases() {
@@ -1398,6 +1406,23 @@ public class Stock extends DatabaseTable {
 
 		setRDate(cursor.getString(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_R_DATE)));
+	}
+
+	public String getStatus() {
+		return mStatus;
+	}
+
+	public void setStatus(String status) {
+		mStatus = status;
+	}
+
+	void setStatus(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setStatus(cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_STATUS)));
 	}
 
 	public ArrayList<StockData> getStockDataList(String period) {

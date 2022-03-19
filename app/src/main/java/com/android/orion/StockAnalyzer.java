@@ -590,6 +590,16 @@ public class StockAnalyzer {
 			return;
 		}
 
+
+		if (TextUtils.isEmpty(stock.getStatus())) {
+			stock.setOperate("");
+		} else {
+			if (stock.getStatus().equals(Stock.STATUS_SUSPENSION)) {
+				stock.setOperate(Stock.STATUS_SUSPENSION);
+				return;
+			}
+		}
+
 		for (String period : Settings.KEY_PERIODS) {
 			if (Preferences.getBoolean(mContext, period, false)) {
 				updateDivergenceArrayMap(divergenceArrayMap, stock.getSegmentDataList(period));

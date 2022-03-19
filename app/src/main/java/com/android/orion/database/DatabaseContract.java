@@ -42,6 +42,7 @@ public final class DatabaseContract {
     public static final String COLUMN_MONTH = "month";
     public static final String COLUMN_QUARTER = "quarter";
     public static final String COLUMN_YEAR = "year";
+    public static final String COLUMN_STATUS = "status";
     public static final String COLUMN_OPERATE = "operate";
     public static final String COLUMN_BUY = "buy";
     public static final String COLUMN_SELL = "sell";
@@ -154,7 +155,7 @@ public final class DatabaseContract {
                 COLUMN_NET_PROFIT_PER_SHARE_IN_YEAR,
                 COLUMN_RATE, COLUMN_ROI,
                 COLUMN_ROE, COLUMN_PE, COLUMN_PB, COLUMN_DIVIDEND,
-                COLUMN_YIELD, COLUMN_DIVIDEND_RATIO, COLUMN_R_DATE,
+                COLUMN_YIELD, COLUMN_DIVIDEND_RATIO, COLUMN_R_DATE, COLUMN_STATUS,
                 COLUMN_CREATED, COLUMN_MODIFIED};
 
         private static final String CREATE_TABLE_CONTENT = " (" + _ID
@@ -200,8 +201,10 @@ public final class DatabaseContract {
                 + COLUMN_DIVIDEND + DOUBLE_TYPE + COMMA_SEP
                 + COLUMN_YIELD + DOUBLE_TYPE + COMMA_SEP
                 + COLUMN_DIVIDEND_RATIO + DOUBLE_TYPE + COMMA_SEP
-                + COLUMN_R_DATE + TEXT_TYPE + COMMA_SEP + COLUMN_CREATED
-                + TEXT_TYPE + COMMA_SEP + COLUMN_MODIFIED + TEXT_TYPE + " )";
+                + COLUMN_R_DATE + TEXT_TYPE + COMMA_SEP
+                + COLUMN_STATUS + TEXT_TYPE + COMMA_SEP
+                + COLUMN_CREATED + TEXT_TYPE + COMMA_SEP
+                + COLUMN_MODIFIED + TEXT_TYPE + " )";
 
         public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
                 + CREATE_TABLE_CONTENT;

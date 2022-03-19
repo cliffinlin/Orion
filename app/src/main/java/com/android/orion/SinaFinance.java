@@ -41,13 +41,24 @@ public class SinaFinance extends StockDataProvider {
 	public static final String SINA_FINANCE_URL_VCI_STOCK_STRUCTURE_HISTORY = "http://vip.stock.finance.sina.com.cn/corp/go.php/vCI_StockStructureHistory/stockid/";// stocktype/TotalStock.phtml
 	public static final String SINA_FINANCE_URL_NEWSTOCK_ISSUE = "https://vip.stock.finance.sina.com.cn/corp/go.php/vRPD_NewStockIssue/page/1.phtml";
 
+	public static final String SINA_FINANCE_HEAD_REFERER_KEY = "Referer";
+	public static final String SINA_FINANCE_HEAD_REFERER_VALUE = "http://vip.stock.finance.sina.com.cn/";
+
 	public static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN5 = 242;
 	public static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN15 = 192;
 	public static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN30 = 192;
 	public static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN60 = 192;
 
-	public static final String SINA_FINANCE_HEAD_REFERER_KEY = "Referer";
-	public static final String SINA_FINANCE_HEAD_REFERER_VALUE = "http://vip.stock.finance.sina.com.cn/";
+	public static final int PERIOD_MINUTES_MIN1 = 1;
+	public static final int PERIOD_MINUTES_MIN5 = 5;
+	public static final int PERIOD_MINUTES_MIN15 = 15;
+	public static final int PERIOD_MINUTES_MIN30 = 30;
+	public static final int PERIOD_MINUTES_MIN60 = 60;
+	public static final int PERIOD_MINUTES_DAY = 240;
+	public static final int PERIOD_MINUTES_WEEK = 1680;
+	public static final int PERIOD_MINUTES_MONTH = 7200;
+	public static final int PERIOD_MINUTES_QUARTER = 28800;
+	public static final int PERIOD_MINUTES_YEAR = 115200;
 
 	public SinaFinance(Context context) {
 		super(context);
@@ -166,32 +177,32 @@ public class SinaFinance extends StockDataProvider {
 	}
 
 	int getPeriodMinutes(String period) {
-		int minutes = 0;
+		int result = 0;
 
 		if (period.equals(Settings.KEY_PERIOD_MIN1)) {
-			minutes = 1;
+			result = PERIOD_MINUTES_MIN1;
 		} else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
-			minutes = 5;
+			result = PERIOD_MINUTES_MIN5;
 		} else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
-			minutes = 15;
+			result = PERIOD_MINUTES_MIN15;
 		} else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
-			minutes = 30;
+			result = PERIOD_MINUTES_MIN30;
 		} else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
-			minutes = 60;
+			result = PERIOD_MINUTES_MIN60;
 		} else if (period.equals(Settings.KEY_PERIOD_DAY)) {
-			minutes = 240;
+			result = PERIOD_MINUTES_DAY;
 		} else if (period.equals(Settings.KEY_PERIOD_WEEK)) {
-			minutes = 1680;
+			result = PERIOD_MINUTES_WEEK;
 		} else if (period.equals(Settings.KEY_PERIOD_MONTH)) {
-			minutes = 7200;
+			result = PERIOD_MINUTES_MONTH;
 		} else if (period.equals(Settings.KEY_PERIOD_QUARTER)) {
-			minutes = 28800;
+			result = PERIOD_MINUTES_QUARTER;
 		} else if (period.equals(Settings.KEY_PERIOD_YEAR)) {
-			minutes = 115200;
+			result = PERIOD_MINUTES_YEAR;
 		} else {
 		}
 
-		return minutes;
+		return result;
 	}
 
 	@Override
@@ -779,7 +790,11 @@ public class SinaFinance extends StockDataProvider {
 			stockData.setDate(stockInfo[30]);
 			stockData.setTime(stockInfo[31]);
 
-//            stock.setSuspensionStatus(stockInfo[31]);//00	正常 TODO
+			if ("00".equals(stockInfo[32])) {
+				stock.setStatus("");
+			} else {
+				stock.setStatus(Stock.STATUS_SUSPENSION);
+			}
 
 			if (!mStockDatabaseManager.isStockDataExist(stockData)) {
 				stockData.setCreated(Utility.getCurrentDateTimeString());
