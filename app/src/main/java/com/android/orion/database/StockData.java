@@ -164,14 +164,10 @@ public class StockData extends StockDatabaseTable {
 		mIndexEnd = 0;
 	}
 
-	public ContentValues getContentValues() {
-		ContentValues contentValues = new ContentValues();
-		super.getContentValues(contentValues);
-		contentValues = getContentValues(contentValues);
-		return contentValues;
-	}
-
+	@Override
 	ContentValues getContentValues(ContentValues contentValues) {
+		super.getContentValues(contentValues);
+
 		contentValues.put(DatabaseContract.COLUMN_STOCK_ID, mStockId);
 		contentValues.put(DatabaseContract.COLUMN_LEVEL, mLevel);
 		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);

@@ -20,6 +20,7 @@ public class StockDatabaseTable extends DatabaseTable {
 		mOverlapHigh = 0;
 	}
 
+	@Override
 	ContentValues getContentValues(ContentValues contentValues) {
 		super.getContentValues(contentValues);
 

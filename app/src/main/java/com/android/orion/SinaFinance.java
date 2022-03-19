@@ -357,7 +357,7 @@ public class SinaFinance extends StockDataProvider {
 			} else {
 				stock.setModified(Utility.getCurrentDateTimeString());
 				mStockDatabaseManager.updateStock(stock,
-						stock.getContentValuesInformation());
+						stock.getContentValues());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1277,9 +1277,11 @@ public class SinaFinance extends StockDataProvider {
 	}
 
 	@Override
-	void handleResponseIPO(IPO ipo, String response) {
+	void handleResponseIPO(String response) {
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
+
+		IPO ipo = new IPO();
 
 		boolean bulkInsert = false;
 
@@ -1298,10 +1300,6 @@ public class SinaFinance extends StockDataProvider {
 		if (TextUtils.isEmpty(response)) {
 			Log.d(TAG, "handleResponseIPO return " + " response = " + response);
 			return;
-		}
-
-		if (ipo == null) {
-			ipo = new IPO();
 		}
 
 		if (TextUtils.isEmpty(ipo.getCreated())) {

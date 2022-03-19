@@ -38,15 +38,10 @@ public class IPO extends DatabaseTable {
 		mPE = 0;
 	}
 
-	public ContentValues getContentValues() {
-		ContentValues contentValues = new ContentValues();
-		super.getContentValues(contentValues);
-		contentValues = getContentValues(contentValues);
-
-		return contentValues;
-	}
-
+	@Override
 	ContentValues getContentValues(ContentValues contentValues) {
+		super.getContentValues(contentValues);
+
 		contentValues.put(DatabaseContract.COLUMN_STOCK_ID, mStockId);
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);

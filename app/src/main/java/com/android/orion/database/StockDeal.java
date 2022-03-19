@@ -77,14 +77,10 @@ public class StockDeal extends DatabaseTable {
         mYield = 0;
     }
 
-    public ContentValues getContentValues() {
-        ContentValues contentValues = new ContentValues();
-        super.getContentValues(contentValues);
-        contentValues = getContentValues(contentValues);
-        return contentValues;
-    }
-
+    @Override
     ContentValues getContentValues(ContentValues contentValues) {
+        super.getContentValues(contentValues);
+
         contentValues.put(DatabaseContract.COLUMN_SE, mSE);
         contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
         contentValues.put(DatabaseContract.COLUMN_NAME, mName);

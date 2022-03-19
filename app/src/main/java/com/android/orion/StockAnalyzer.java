@@ -1176,7 +1176,7 @@ public class StockAnalyzer {
 
 		try {
 			mStockDatabaseManager.updateStock(stock,
-					stock.getContentValuesAnalyze(""));
+					stock.getContentValues());
 
 			stockTrends.set(stock);
 
@@ -1229,7 +1229,7 @@ public class StockAnalyzer {
 
 			stock.setModified(Utility.getCurrentDateTimeString());
 			mStockDatabaseManager.updateStock(stock,
-					stock.getContentValuesAnalyze(period));
+					stock.getContentValues());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1256,7 +1256,7 @@ public class StockAnalyzer {
 
 			stock.setModified(Utility.getCurrentDateTimeString());
 			mStockDatabaseManager.updateStock(stock,
-					stock.getContentValuesAnalyze(period));
+					stock.getContentValues());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
