@@ -733,12 +733,27 @@ public class StockAnalyzer {
 		analyzeAction(stock, period, stockDataList, drawVertexList, overlapList, drawDataList, strokeDataList, segmentDataList);
 	}
 
-	private String getFirstBottomAction(Stock stock, ArrayList<StockData> vertexList, ArrayList<StockData> overlapList) {
+	private String getFirstBottomAction(Stock stock, ArrayList<StockData> stockDataList, ArrayList<StockData> vertexList) {
 		String result = "";
+		StockData prev = null;
 		StockData start = null;
 		StockData end = null;
 		int numerator = 0;
 		int denominator = 0;
+
+		if ((stockDataList == null)
+				|| (stockDataList.size() < StockData.VERTEX_TYPING_SIZE)) {
+			return result;
+		}
+
+		prev = stockDataList.get(stockDataList.size() - 2);
+		if (prev == null) {
+			return result;
+		}
+
+		if (!prev.vertexOf(StockData.VERTEX_BOTTOM)) {
+			return result;
+		}
 
 		if ((vertexList == null)
 				|| (vertexList.size() < StockData.VERTEX_TYPING_SIZE + 2)) {
@@ -747,14 +762,6 @@ public class StockAnalyzer {
 
 		end = vertexList.get(vertexList.size() - 2);
 		if (end == null) {
-			return result;
-		}
-
-		if ((overlapList == null) || (overlapList.size() < 1)) {
-			return result;
-		}
-
-		if (end.getVertexLow() > overlapList.get(overlapList.size() - 1).getOverlapLow()) {
 			return result;
 		}
 
@@ -772,7 +779,6 @@ public class StockAnalyzer {
 
 			if (Math.abs(denominator) >= Constants.FIRST_ACTION_THRESHOLD) {
 				result += StockData.ACTION_BUY1;
-				result += StockData.ACTION_BUY1;
 				result += " " + numerator;
 				result += "/" + denominator;
 			}
@@ -781,12 +787,27 @@ public class StockAnalyzer {
 		return result;
 	}
 
-	private String getFirstTopAction(Stock stock, ArrayList<StockData> vertexList, ArrayList<StockData> overlapList) {
+	private String getFirstTopAction(Stock stock, ArrayList<StockData> stockDataList, ArrayList<StockData> vertexList) {
 		String result = "";
+		StockData prev = null;
 		StockData start = null;
 		StockData end = null;
 		int numerator = 0;
 		int denominator = 0;
+
+		if ((stockDataList == null)
+				|| (stockDataList.size() < StockData.VERTEX_TYPING_SIZE)) {
+			return result;
+		}
+
+		prev = stockDataList.get(stockDataList.size() - 2);
+		if (prev == null) {
+			return result;
+		}
+
+		if (!prev.vertexOf(StockData.VERTEX_TOP)) {
+			return result;
+		}
 
 		if ((vertexList == null)
 				|| (vertexList.size() < StockData.VERTEX_TYPING_SIZE + 2)) {
@@ -795,14 +816,6 @@ public class StockAnalyzer {
 
 		end = vertexList.get(vertexList.size() - 2);
 		if (end == null) {
-			return result;
-		}
-
-		if ((overlapList == null) || (overlapList.size() < 1)) {
-			return result;
-		}
-
-		if (end.getVertexHigh() < overlapList.get(overlapList.size() - 1).getOverlapHigh()) {
 			return result;
 		}
 
@@ -819,7 +832,6 @@ public class StockAnalyzer {
 			}
 
 			if (Math.abs(denominator) >= Constants.FIRST_ACTION_THRESHOLD) {
-				result += StockData.ACTION_SELL1;
 				result += StockData.ACTION_SELL1;
 				result += " " + numerator;
 				result += "/" + denominator;
@@ -1119,9 +1131,9 @@ public class StockAnalyzer {
 			if (prev.vertexOf(StockData.VERTEX_BOTTOM)) {
 				action += StockData.ACTION_D;
 //				if (period.equals(Settings.KEY_PERIOD_DAY)) {
-//					String result1 = getFirstBottomAction(stock, drawVertexList, overlapList);
+//					String result1 = getFirstBottomAction(stock, stockDataList, drawVertexList);
 //					if (!TextUtils.isEmpty(result1)) {
-//						action = result1;
+//						action += result1;
 //					}
 //				}
 
@@ -1141,9 +1153,9 @@ public class StockAnalyzer {
 			if (prev.vertexOf(StockData.VERTEX_TOP)) {
 				action += StockData.ACTION_G;
 //				if (period.equals(Settings.KEY_PERIOD_DAY)) {
-//					String result1 = getFirstTopAction(stock, drawVertexList, overlapList);
+//					String result1 = getFirstTopAction(stock, stockDataList, drawVertexList);
 //					if (!TextUtils.isEmpty(result1)) {
-//						action = result1;
+//						action += result1;
 //					}
 //				}
 
