@@ -596,7 +596,7 @@ public class StockAnalyzer {
 		} else {
 			if (stock.getStatus().equals(Stock.STATUS_SUSPENSION)) {
 				stock.setOperate(Stock.STATUS_SUSPENSION);
-				return;
+//				return;
 			}
 		}
 
