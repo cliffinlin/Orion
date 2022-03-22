@@ -596,7 +596,6 @@ public class StockAnalyzer {
 		} else {
 			if (stock.getStatus().equals(Stock.STATUS_SUSPENSION)) {
 				stock.setOperate(Stock.STATUS_SUSPENSION);
-//				return;
 			}
 		}
 
@@ -1386,21 +1385,6 @@ public class StockAnalyzer {
 		if (!Preferences.getBoolean(mContext, Settings.KEY_NOTIFICATION_MESSAGE,
 				true)) {
 			return;
-		}
-
-		if (Preferences.getBoolean(mContext, Settings.KEY_NOTIFICATION_OPERATE,
-				false)) {
-			if (TextUtils.isEmpty(stock.getOperate())) {
-				return;
-			}
-
-			if (stock.getOperate().contains(StockData.ACTION_HIGH) && actionString.toString().contains(StockData.ACTION_BUY)) {
-				return;
-			}
-
-			if (stock.getOperate().contains(StockData.ACTION_LOW) && actionString.toString().contains(StockData.ACTION_SELL)) {
-				return;
-			}
 		}
 
 		notify((int) stock.getId(), Constants.MESSAGE_CHANNEL_ID, Constants.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,

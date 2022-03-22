@@ -6,9 +6,6 @@
             android:defaultValue="true"
             android:key="notification_message"
             android:title="@string/notification_message" />
-        <com.android.orion.CustomSwitchPreference
-            android:key="notification_operate"
-            android:title="@string/notification_operate" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/download" >
         <com.android.orion.CustomSwitchPreference
@@ -38,6 +35,9 @@
             android:title="@string/period_5min" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/display" >
+        <com.android.orion.CustomSwitchPreference
+            android:key="display_net"
+            android:title="@string/net" />
         <com.android.orion.CustomSwitchPreference
             android:key="display_latest"
             android:title="@string/latest" />

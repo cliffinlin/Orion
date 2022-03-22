@@ -3,6 +3,8 @@ package com.android.orion;
 public class Settings {
 	public static final String KEY_SHARED_PREFERENCES_INIT = "shared_preferences_init";
 
+	public static final String KEY_NOTIFICATION_MESSAGE = "notification_message";
+
 	public static final String KEY_PERIOD_MIN1 = "min1";
 	public static final String KEY_PERIOD_MIN5 = "min5";
 	public static final String KEY_PERIOD_MIN15 = "min15";
@@ -18,6 +20,7 @@ public class Settings {
 			KEY_PERIOD_MONTH, KEY_PERIOD_WEEK, KEY_PERIOD_DAY, KEY_PERIOD_MIN60, KEY_PERIOD_MIN30,
 			KEY_PERIOD_MIN15, KEY_PERIOD_MIN5, KEY_PERIOD_MIN1 };
 
+	public static final String KEY_DISPLAY_NET = "display_net";
 	public static final String KEY_DISPLAY_LATEST = "display_latest";
 	public static final String KEY_DISPLAY_COST = "display_cost";
 	public static final String KEY_DISPLAY_CANDLE = "display_candle";
@@ -34,9 +37,6 @@ public class Settings {
 
 	public static final String KEY_BACKTEST = "backtest";
 	public static final String KEY_BACKTEST_DATE_TIME = "backtest_date_time";
-
-	public static final String KEY_NOTIFICATION_MESSAGE = "notification_message";
-	public static final String KEY_NOTIFICATION_OPERATE = "notification_operate";
 
 	public static final String KEY_SORT_ORDER_IPO_LIST = "sort_order_ipo_list";
 	public static final String KEY_SORT_ORDER_COMPONENT_LIST = "sort_order_component_list";

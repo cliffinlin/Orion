@@ -309,6 +309,7 @@ public class StockListActivity extends ListActivity implements
 		mTextViewNet = (TextView) findViewById(R.id.net);
 		if (mTextViewNet != null) {
 			mTextViewNet.setOnClickListener(this);
+			setVisibility(Settings.KEY_DISPLAY_NET, mTextViewNet);
 		}
 
 		mTextViewMonth = (TextView) findViewById(R.id.action_month);
@@ -589,6 +590,9 @@ public class StockListActivity extends ListActivity implements
 			}
 
 			if (columnIndex == cursor
+					.getColumnIndex(DatabaseContract.COLUMN_NET)) {
+				return setRightTextViewVisibility(Settings.KEY_DISPLAY_NET, view);
+			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MONTH)) {
 				return setRightTextViewVisibility(Settings.KEY_PERIOD_MONTH, view);
 			} else if (columnIndex == cursor

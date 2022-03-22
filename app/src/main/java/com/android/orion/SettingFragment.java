@@ -47,7 +47,6 @@ public class SettingFragment extends PreferenceFragment implements
 		checked = sharedPreferences.getBoolean(key, true);
 
 		if (key.equals(Settings.KEY_NOTIFICATION_MESSAGE)
-				|| key.equals(Settings.KEY_NOTIFICATION_OPERATE)
 				|| key.equals(Settings.KEY_PERIOD_MIN1)
 				|| key.equals(Settings.KEY_PERIOD_MIN5)
 				|| key.equals(Settings.KEY_PERIOD_MIN15)
