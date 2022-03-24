@@ -16,6 +16,11 @@ public class DatabaseTable {
 
 	void init() {
 		mId = 0;
+
+		reset();
+	}
+
+	void reset() {
 		mCreated = "";
 		mModified = "";
 	}

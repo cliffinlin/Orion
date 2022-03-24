@@ -175,12 +175,19 @@ public class Stock extends DatabaseTable {
 
 		setTableName(DatabaseContract.Stock.TABLE_NAME);
 
+		mFlag = 0;
 		mClasses = "";
 		mSE = "";
 		mCode = "";
+
+		reset();
+	}
+
+	public void reset() {
+		super.reset();
+
 		mName = "";
 		mPinyin = "";
-		mFlag = 0;
 		mPrice = 0;
 		mChange = 0;
 		mNet = 0;

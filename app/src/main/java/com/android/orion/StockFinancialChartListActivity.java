@@ -76,7 +76,9 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 
 			switch (msg.what) {
 			case MESSAGE_REFRESH:
-				mOrionService.download(mStock);
+				if (mOrionService != null) {
+					mOrionService.download(mStock);
+				}
 				restartLoader();
 				break;
 

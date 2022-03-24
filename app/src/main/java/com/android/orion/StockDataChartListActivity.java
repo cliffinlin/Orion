@@ -100,16 +100,10 @@ public class StockDataChartListActivity extends BaseActivity implements
 					mStockDatabaseManager.deleteStockFinancial(mStock.getId());
 					mStockDatabaseManager.deleteShareBonus(mStock.getId());
 
-					mStock.setPinyin("");
-					mStock.setTotalShare(0);
-					mStock.setPrice(0);
-					mStock.setCreated("");
-					mStock.setModified("");
+					mStock.reset();
 					mStockDatabaseManager.updateStock(mStock,
 							mStock.getContentValues());
-
 					mOrionService.download(mStock);
-
 					restartLoader();
 				}
 				break;

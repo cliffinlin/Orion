@@ -92,7 +92,7 @@ public class StockTrendsListActivity extends ListActivity implements
 			switch (msg.what) {
 			case MESSAGE_REFRESH:
 				if (mOrionService != null) {
-					mStockDatabaseManager.deleteStockData();
+					mStockDatabaseManager.deleteStockTrends();
 					mOrionService.download();
 					restartLoader();
 				}

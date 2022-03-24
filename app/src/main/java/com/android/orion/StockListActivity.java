@@ -76,6 +76,11 @@ public class StockListActivity extends ListActivity implements
 			switch (msg.what) {
 			case MESSAGE_REFRESH:
 				if (mOrionService != null) {
+					for (int i = 0; i < mStockList.size(); i++) {
+						Stock stock = mStockList.get(i);
+						stock.reset();
+						mStockDatabaseManager.updateStock(stock, stock.getContentValues());
+					}
 					mStockDatabaseManager.deleteStockData();
 					mStockDatabaseManager.deleteStockTrends();
 					mOrionService.download();
