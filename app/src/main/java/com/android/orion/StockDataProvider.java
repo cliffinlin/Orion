@@ -409,27 +409,6 @@ public abstract class StockDataProvider extends StockAnalyzer {
         return result;
     }
 
-    int downloadStockRealTime(Stock stock) {
-        int result = DOWNLOAD_RESULT_NONE;
-
-        if (stock == null) {
-            return result;
-        }
-
-        if (Market.isTradingHours(Calendar.getInstance())) {
-            // download in trading hours
-        } else if (stock.getCreated().contains(
-                Utility.getCurrentDateString())
-                || stock.getModified().contains(
-                Utility.getCurrentDateString())) {
-            if (stock.getPrice() > 0) {
-                return result;
-            }
-        }
-
-        return downloadStockRealTime(stock, getRequestHeader(), getStockRealTimeURLString(stock));
-    }
-
     int downloadStockRealTime(Stock stock, ArrayMap<String, String> requestHeaderArray, String urlString) {
         String resultString = "";
         int result = DOWNLOAD_RESULT_NONE;
@@ -763,6 +742,21 @@ public abstract class StockDataProvider extends StockAnalyzer {
             return result;
         }
 
+        result = downloadStockRealTime(stock, getRequestHeader(), getStockRealTimeURLString(stock));
+        if (result == DOWNLOAD_RESULT_FAILED) {
+            return result;
+        }
+
+        if ((period == Settings.KEY_PERIOD_MONTH)
+                || (period == Settings.KEY_PERIOD_WEEK)
+                || (period == Settings.KEY_PERIOD_DAY)
+        ) {
+            result = downloadStockDataRealTime(stock, stockData, getRequestHeader(), getStockDataRealTimeURLString(stock));
+            if (result == DOWNLOAD_RESULT_FAILED) {
+                return result;
+            }
+        }
+
         return downloadStockDataHistory(stock, stockData, getStockDataHistoryURLString(stock,
                 stockData, len));
     }
@@ -794,46 +788,6 @@ public abstract class StockDataProvider extends StockAnalyzer {
         }
 
         return result;
-    }
-
-    int downloadStockDataRealTime(Stock stock) {
-        int result = DOWNLOAD_RESULT_NONE;
-
-        if (stock == null) {
-            return result;
-        }
-
-        for (String period : Settings.KEY_PERIODS) {
-            if (Preferences.getBoolean(mContext, period, false)) {
-                if ((period == Settings.KEY_PERIOD_MONTH)
-                        || (period == Settings.KEY_PERIOD_WEEK)
-                        || (period == Settings.KEY_PERIOD_DAY)
-                ) {
-                    result = downloadStockDataRealTime(stock, period);
-                }
-            }
-        }
-
-        return result;
-    }
-
-    int downloadStockDataRealTime(Stock stock, String period) {
-        int result = DOWNLOAD_RESULT_NONE;
-
-        if (stock == null) {
-            return result;
-        }
-
-        StockData stockData = new StockData(period);
-        stockData.setStockId(stock.getId());
-        mStockDatabaseManager.getStockData(stockData);
-
-        int len = getDownloadStockDataLength(stockData);
-        if (len <= 0) {
-            return result;
-        }
-
-        return downloadStockDataRealTime(stock, stockData, getRequestHeader(), getStockDataRealTimeURLString(stock));
     }
 
     int downloadStockDataRealTime(Stock stock, StockData stockData, ArrayMap<String, String> requestHeaderArray, String urlString) {
@@ -1064,10 +1018,6 @@ public abstract class StockDataProvider extends StockAnalyzer {
                         if (Stock.CLASS_INDEX.equals(stock.getClases())) {
                             setupIndex(stock);
                         } else {
-                            if (downloadStockRealTime(stock) == DOWNLOAD_RESULT_FAILED) {
-                                return;
-                            }
-
                             if (downloadStockInformation(stock) == DOWNLOAD_RESULT_FAILED) {
                                 return;
                             }
@@ -1085,10 +1035,6 @@ public abstract class StockDataProvider extends StockAnalyzer {
                             }
 
                             if (downloadStockDataHistory(stock) == DOWNLOAD_RESULT_FAILED) {
-                                return;
-                            }
-
-                            if (downloadStockDataRealTime(stock) == DOWNLOAD_RESULT_FAILED) {
                                 return;
                             }
                         }
