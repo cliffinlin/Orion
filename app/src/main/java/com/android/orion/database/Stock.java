@@ -27,17 +27,19 @@ public class Stock extends DatabaseTable {
 	public static final int FLAG_FAVORITE = 1 << 0;
 	public static final int FLAG_RECENT = 1 << 2;
 
+	private int mFlag;
 	private String mClasses;
 	private String mSE;
 	private String mCode;
 	private String mName;
 	private String mPinyin;
-	private int mFlag;
+
 	private double mPrice;
 	private double mChange;
 	private double mNet;
 	private long mVolume;
 	private long mValue;
+
 	private String mDate;
 	private String mTime;
 	private String mActionMin1;
@@ -50,6 +52,7 @@ public class Stock extends DatabaseTable {
 	private String mActionMonth;
 	private String mActionQuarter;
 	private String mActionYear;
+
 	private String mOperate;
 	private long mHold;
 	private double mCost;
@@ -71,92 +74,92 @@ public class Stock extends DatabaseTable {
 	private double mNetProfitPerShare;
 	private double mNetProfitPerShareInYear;
 	private double mRoi;
-	private double mRate;
 	private double mRoe;
 	private double mPE;
 	private double mPB;
+	private double mRate;
 	private double mDividend;
 	private double mYield;
 	private double mDividendRatio;
 	private String mRDate;
 	private String mStatus;
 
-	public ArrayList<StockData> mStockDataListMin1 = new ArrayList<StockData>();
-	public ArrayList<StockData> mStockDataListMin5 = new ArrayList<StockData>();
-	public ArrayList<StockData> mStockDataListMin15 = new ArrayList<StockData>();
-	public ArrayList<StockData> mStockDataListMin30 = new ArrayList<StockData>();
-	public ArrayList<StockData> mStockDataListMin60 = new ArrayList<StockData>();
-	public ArrayList<StockData> mStockDataListDay = new ArrayList<StockData>();
-	public ArrayList<StockData> mStockDataListWeek = new ArrayList<StockData>();
-	public ArrayList<StockData> mStockDataListMonth = new ArrayList<StockData>();
-	public ArrayList<StockData> mStockDataListQuarter = new ArrayList<StockData>();
-	public ArrayList<StockData> mStockDataListYear = new ArrayList<StockData>();
+	private ArrayList<StockData> mStockDataListMin1 = new ArrayList<StockData>();
+	private ArrayList<StockData> mStockDataListMin5 = new ArrayList<StockData>();
+	private ArrayList<StockData> mStockDataListMin15 = new ArrayList<StockData>();
+	private ArrayList<StockData> mStockDataListMin30 = new ArrayList<StockData>();
+	private ArrayList<StockData> mStockDataListMin60 = new ArrayList<StockData>();
+	private ArrayList<StockData> mStockDataListDay = new ArrayList<StockData>();
+	private ArrayList<StockData> mStockDataListWeek = new ArrayList<StockData>();
+	private ArrayList<StockData> mStockDataListMonth = new ArrayList<StockData>();
+	private ArrayList<StockData> mStockDataListQuarter = new ArrayList<StockData>();
+	private ArrayList<StockData> mStockDataListYear = new ArrayList<StockData>();
 
-	public ArrayList<StockData> mDrawVertexListMin1 = new ArrayList<StockData>();
-	public ArrayList<StockData> mDrawVertexListMin5 = new ArrayList<StockData>();
-	public ArrayList<StockData> mDrawVertexListMin15 = new ArrayList<StockData>();
-	public ArrayList<StockData> mDrawVertexListMin30 = new ArrayList<StockData>();
-	public ArrayList<StockData> mDrawVertexListMin60 = new ArrayList<StockData>();
-	public ArrayList<StockData> mDrawVertexListDay = new ArrayList<StockData>();
-	public ArrayList<StockData> mDrawVertexListWeek = new ArrayList<StockData>();
-	public ArrayList<StockData> mDrawVertexListMonth = new ArrayList<StockData>();
-	public ArrayList<StockData> mDrawVertexListQuarter = new ArrayList<StockData>();
-	public ArrayList<StockData> mDrawVertexListYear = new ArrayList<StockData>();
+	private ArrayList<StockData> mDrawVertexListMin1 = new ArrayList<StockData>();
+	private ArrayList<StockData> mDrawVertexListMin5 = new ArrayList<StockData>();
+	private ArrayList<StockData> mDrawVertexListMin15 = new ArrayList<StockData>();
+	private ArrayList<StockData> mDrawVertexListMin30 = new ArrayList<StockData>();
+	private ArrayList<StockData> mDrawVertexListMin60 = new ArrayList<StockData>();
+	private ArrayList<StockData> mDrawVertexListDay = new ArrayList<StockData>();
+	private ArrayList<StockData> mDrawVertexListWeek = new ArrayList<StockData>();
+	private ArrayList<StockData> mDrawVertexListMonth = new ArrayList<StockData>();
+	private ArrayList<StockData> mDrawVertexListQuarter = new ArrayList<StockData>();
+	private ArrayList<StockData> mDrawVertexListYear = new ArrayList<StockData>();
 
-	public ArrayList<StockData> mDrawDataListMin1 = new ArrayList<StockData>();
-	public ArrayList<StockData> mDrawDataListMin5 = new ArrayList<StockData>();
-	public ArrayList<StockData> mDrawDataListMin15 = new ArrayList<StockData>();
-	public ArrayList<StockData> mDrawDataListMin30 = new ArrayList<StockData>();
-	public ArrayList<StockData> mDrawDataListMin60 = new ArrayList<StockData>();
-	public ArrayList<StockData> mDrawDataListDay = new ArrayList<StockData>();
-	public ArrayList<StockData> mDrawDataListWeek = new ArrayList<StockData>();
-	public ArrayList<StockData> mDrawDataListMonth = new ArrayList<StockData>();
-	public ArrayList<StockData> mDrawDataListQuarter = new ArrayList<StockData>();
-	public ArrayList<StockData> mDrawDataListYear = new ArrayList<StockData>();
+	private ArrayList<StockData> mDrawDataListMin1 = new ArrayList<StockData>();
+	private ArrayList<StockData> mDrawDataListMin5 = new ArrayList<StockData>();
+	private ArrayList<StockData> mDrawDataListMin15 = new ArrayList<StockData>();
+	private ArrayList<StockData> mDrawDataListMin30 = new ArrayList<StockData>();
+	private ArrayList<StockData> mDrawDataListMin60 = new ArrayList<StockData>();
+	private ArrayList<StockData> mDrawDataListDay = new ArrayList<StockData>();
+	private ArrayList<StockData> mDrawDataListWeek = new ArrayList<StockData>();
+	private ArrayList<StockData> mDrawDataListMonth = new ArrayList<StockData>();
+	private ArrayList<StockData> mDrawDataListQuarter = new ArrayList<StockData>();
+	private ArrayList<StockData> mDrawDataListYear = new ArrayList<StockData>();
 
-	public ArrayList<StockData> mStrokeVertexListMin1 = new ArrayList<StockData>();
-	public ArrayList<StockData> mStrokeVertexListMin5 = new ArrayList<StockData>();
-	public ArrayList<StockData> mStrokeVertexListMin15 = new ArrayList<StockData>();
-	public ArrayList<StockData> mStrokeVertexListMin30 = new ArrayList<StockData>();
-	public ArrayList<StockData> mStrokeVertexListMin60 = new ArrayList<StockData>();
-	public ArrayList<StockData> mStrokeVertexListDay = new ArrayList<StockData>();
-	public ArrayList<StockData> mStrokeVertexListWeek = new ArrayList<StockData>();
-	public ArrayList<StockData> mStrokeVertexListMonth = new ArrayList<StockData>();
-	public ArrayList<StockData> mStrokeVertexListQuarter = new ArrayList<StockData>();
-	public ArrayList<StockData> mStrokeVertexListYear = new ArrayList<StockData>();
+	private ArrayList<StockData> mStrokeVertexListMin1 = new ArrayList<StockData>();
+	private ArrayList<StockData> mStrokeVertexListMin5 = new ArrayList<StockData>();
+	private ArrayList<StockData> mStrokeVertexListMin15 = new ArrayList<StockData>();
+	private ArrayList<StockData> mStrokeVertexListMin30 = new ArrayList<StockData>();
+	private ArrayList<StockData> mStrokeVertexListMin60 = new ArrayList<StockData>();
+	private ArrayList<StockData> mStrokeVertexListDay = new ArrayList<StockData>();
+	private ArrayList<StockData> mStrokeVertexListWeek = new ArrayList<StockData>();
+	private ArrayList<StockData> mStrokeVertexListMonth = new ArrayList<StockData>();
+	private ArrayList<StockData> mStrokeVertexListQuarter = new ArrayList<StockData>();
+	private ArrayList<StockData> mStrokeVertexListYear = new ArrayList<StockData>();
 
-	public ArrayList<StockData> mStrokeDataListMin1 = new ArrayList<StockData>();
-	public ArrayList<StockData> mStrokeDataListMin5 = new ArrayList<StockData>();
-	public ArrayList<StockData> mStrokeDataListMin15 = new ArrayList<StockData>();
-	public ArrayList<StockData> mStrokeDataListMin30 = new ArrayList<StockData>();
-	public ArrayList<StockData> mStrokeDataListMin60 = new ArrayList<StockData>();
-	public ArrayList<StockData> mStrokeDataListDay = new ArrayList<StockData>();
-	public ArrayList<StockData> mStrokeDataListWeek = new ArrayList<StockData>();
-	public ArrayList<StockData> mStrokeDataListMonth = new ArrayList<StockData>();
-	public ArrayList<StockData> mStrokeDataListQuarter = new ArrayList<StockData>();
-	public ArrayList<StockData> mStrokeDataListYear = new ArrayList<StockData>();
+	private ArrayList<StockData> mStrokeDataListMin1 = new ArrayList<StockData>();
+	private ArrayList<StockData> mStrokeDataListMin5 = new ArrayList<StockData>();
+	private ArrayList<StockData> mStrokeDataListMin15 = new ArrayList<StockData>();
+	private ArrayList<StockData> mStrokeDataListMin30 = new ArrayList<StockData>();
+	private ArrayList<StockData> mStrokeDataListMin60 = new ArrayList<StockData>();
+	private ArrayList<StockData> mStrokeDataListDay = new ArrayList<StockData>();
+	private ArrayList<StockData> mStrokeDataListWeek = new ArrayList<StockData>();
+	private ArrayList<StockData> mStrokeDataListMonth = new ArrayList<StockData>();
+	private ArrayList<StockData> mStrokeDataListQuarter = new ArrayList<StockData>();
+	private ArrayList<StockData> mStrokeDataListYear = new ArrayList<StockData>();
 
-	public ArrayList<StockData> mSegmentVertexListMin1 = new ArrayList<StockData>();
-	public ArrayList<StockData> mSegmentVertexListMin5 = new ArrayList<StockData>();
-	public ArrayList<StockData> mSegmentVertexListMin15 = new ArrayList<StockData>();
-	public ArrayList<StockData> mSegmentVertexListMin30 = new ArrayList<StockData>();
-	public ArrayList<StockData> mSegmentVertexListMin60 = new ArrayList<StockData>();
-	public ArrayList<StockData> mSegmentVertexListDay = new ArrayList<StockData>();
-	public ArrayList<StockData> mSegmentVertexListWeek = new ArrayList<StockData>();
-	public ArrayList<StockData> mSegmentVertexListMonth = new ArrayList<StockData>();
-	public ArrayList<StockData> mSegmentVertexListQuarter = new ArrayList<StockData>();
-	public ArrayList<StockData> mSegmentVertexListYear = new ArrayList<StockData>();
+	private ArrayList<StockData> mSegmentVertexListMin1 = new ArrayList<StockData>();
+	private ArrayList<StockData> mSegmentVertexListMin5 = new ArrayList<StockData>();
+	private ArrayList<StockData> mSegmentVertexListMin15 = new ArrayList<StockData>();
+	private ArrayList<StockData> mSegmentVertexListMin30 = new ArrayList<StockData>();
+	private ArrayList<StockData> mSegmentVertexListMin60 = new ArrayList<StockData>();
+	private ArrayList<StockData> mSegmentVertexListDay = new ArrayList<StockData>();
+	private ArrayList<StockData> mSegmentVertexListWeek = new ArrayList<StockData>();
+	private ArrayList<StockData> mSegmentVertexListMonth = new ArrayList<StockData>();
+	private ArrayList<StockData> mSegmentVertexListQuarter = new ArrayList<StockData>();
+	private ArrayList<StockData> mSegmentVertexListYear = new ArrayList<StockData>();
 
-	public ArrayList<StockData> mSegmentDataListMin1 = new ArrayList<StockData>();
-	public ArrayList<StockData> mSegmentDataListMin5 = new ArrayList<StockData>();
-	public ArrayList<StockData> mSegmentDataListMin15 = new ArrayList<StockData>();
-	public ArrayList<StockData> mSegmentDataListMin30 = new ArrayList<StockData>();
-	public ArrayList<StockData> mSegmentDataListMin60 = new ArrayList<StockData>();
-	public ArrayList<StockData> mSegmentDataListDay = new ArrayList<StockData>();
-	public ArrayList<StockData> mSegmentDataListWeek = new ArrayList<StockData>();
-	public ArrayList<StockData> mSegmentDataListMonth = new ArrayList<StockData>();
-	public ArrayList<StockData> mSegmentDataListQuarter = new ArrayList<StockData>();
-	public ArrayList<StockData> mSegmentDataListYear = new ArrayList<StockData>();
+	private ArrayList<StockData> mSegmentDataListMin1 = new ArrayList<StockData>();
+	private ArrayList<StockData> mSegmentDataListMin5 = new ArrayList<StockData>();
+	private ArrayList<StockData> mSegmentDataListMin15 = new ArrayList<StockData>();
+	private ArrayList<StockData> mSegmentDataListMin30 = new ArrayList<StockData>();
+	private ArrayList<StockData> mSegmentDataListMin60 = new ArrayList<StockData>();
+	private ArrayList<StockData> mSegmentDataListDay = new ArrayList<StockData>();
+	private ArrayList<StockData> mSegmentDataListWeek = new ArrayList<StockData>();
+	private ArrayList<StockData> mSegmentDataListMonth = new ArrayList<StockData>();
+	private ArrayList<StockData> mSegmentDataListQuarter = new ArrayList<StockData>();
+	private ArrayList<StockData> mSegmentDataListYear = new ArrayList<StockData>();
 
 	public Stock() {
 		init();
@@ -179,6 +182,8 @@ public class Stock extends DatabaseTable {
 		mClasses = "";
 		mSE = "";
 		mCode = "";
+		mName = "";
+		mPinyin = "";
 
 		reset();
 	}
@@ -186,13 +191,12 @@ public class Stock extends DatabaseTable {
 	public void reset() {
 		super.reset();
 
-		mName = "";
-		mPinyin = "";
 		mPrice = 0;
 		mChange = 0;
 		mNet = 0;
 		mVolume = 0;
 		mValue = 0;
+
 		mDate = "";
 		mTime = "";
 		mActionMin1 = "";
@@ -205,6 +209,7 @@ public class Stock extends DatabaseTable {
 		mActionMonth = "";
 		mActionQuarter = "";
 		mActionYear = "";
+
 		mOperate = "";
 		mHold = 0;
 		mCost = 0;
@@ -226,10 +231,10 @@ public class Stock extends DatabaseTable {
 		mNetProfitPerShare = 0;
 		mNetProfitPerShareInYear = 0;
 		mRoi = 0;
-		mRate = 0;
 		mRoe = 0;
 		mPE = 0;
 		mPB = 0;
+		mRate = 0;
 		mDividend = 0;
 		mYield = 0;
 		mDividendRatio = 0;
@@ -241,12 +246,13 @@ public class Stock extends DatabaseTable {
 	public ContentValues getContentValues(ContentValues contentValues) {
 		super.getContentValues(contentValues);
 
+		contentValues.put(DatabaseContract.COLUMN_FLAG, mFlag);
 		contentValues.put(DatabaseContract.COLUMN_CLASSES, mClasses);
 		contentValues.put(DatabaseContract.COLUMN_SE, mSE);
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
 		contentValues.put(DatabaseContract.COLUMN_PINYIN, mPinyin);
-		contentValues.put(DatabaseContract.COLUMN_FLAG, mFlag);
+
 		contentValues.put(DatabaseContract.COLUMN_PRICE, mPrice);
 		contentValues.put(DatabaseContract.COLUMN_CHANGE, mChange);
 		contentValues.put(DatabaseContract.COLUMN_NET, mNet);
@@ -255,7 +261,6 @@ public class Stock extends DatabaseTable {
 
 		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);
 		contentValues.put(DatabaseContract.COLUMN_TIME, mTime);
-
 		contentValues.put(DatabaseContract.COLUMN_MIN1, mActionMin1);
 		contentValues.put(DatabaseContract.COLUMN_MIN5, mActionMin5);
 		contentValues.put(DatabaseContract.COLUMN_MIN15, mActionMin15);
@@ -266,46 +271,35 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_MONTH, mActionMonth);
 		contentValues.put(DatabaseContract.COLUMN_QUARTER, mActionQuarter);
 		contentValues.put(DatabaseContract.COLUMN_YEAR, mActionYear);
-		contentValues.put(DatabaseContract.COLUMN_OPERATE, mOperate);
 
+		contentValues.put(DatabaseContract.COLUMN_OPERATE, mOperate);
+		contentValues.put(DatabaseContract.COLUMN_HOLD, mHold);
+		contentValues.put(DatabaseContract.COLUMN_COST, mCost);
+		contentValues.put(DatabaseContract.COLUMN_PROFIT, mProfit);
+		contentValues.put(DatabaseContract.COLUMN_BONUS, mBonus);
+		contentValues.put(DatabaseContract.COLUMN_VALUATION, mValuation);
+		contentValues.put(DatabaseContract.COLUMN_TOTAL_SHARE, mTotalShare);
+		contentValues.put(DatabaseContract.COLUMN_MARKET_VALUE, mMarketValue);
+		contentValues.put(DatabaseContract.COLUMN_TOTAL_ASSETS, mTotalAssets);
+		contentValues.put(DatabaseContract.COLUMN_TOTAL_LONG_TERM_LIABILITIES, mTotalLongTermLiabilities);
+		contentValues.put(DatabaseContract.COLUMN_MAIN_BUSINESS_INCOME, mMainBusinessIncome);
+		contentValues.put(DatabaseContract.COLUMN_MAIN_BUSINESS_INCOME_IN_YEAR,	mMainBusinessIncomeInYear);
+		contentValues.put(DatabaseContract.COLUMN_DEBT_TO_NET_ASSETS_RATIO,	mDebtToNetAssetsRatio);
+		contentValues.put(DatabaseContract.COLUMN_BOOK_VALUE_PER_SHARE,	mBookValuePerShare);
+		contentValues.put(DatabaseContract.COLUMN_CASH_FLOW_PER_SHARE, mCashFlowPerShare);
+		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT, mNetProfit);
+		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_IN_YEAR, mNetProfitInYear);
+		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_MARGIN, mNetProfitMargin);
+		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE, mNetProfitPerShare);
+		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE_IN_YEAR, mNetProfitPerShareInYear);
 		contentValues.put(DatabaseContract.COLUMN_ROI, mRoi);
 		contentValues.put(DatabaseContract.COLUMN_ROE, mRoe);
 		contentValues.put(DatabaseContract.COLUMN_PE, mPE);
 		contentValues.put(DatabaseContract.COLUMN_PB, mPB);
-
-		contentValues.put(DatabaseContract.COLUMN_COST, mCost);
-		contentValues.put(DatabaseContract.COLUMN_HOLD, mHold);
-		contentValues.put(DatabaseContract.COLUMN_BONUS, mBonus);
-		contentValues.put(DatabaseContract.COLUMN_VALUATION, mValuation);
-		contentValues.put(DatabaseContract.COLUMN_PROFIT, mProfit);
-
-		contentValues.put(DatabaseContract.COLUMN_TOTAL_SHARE, mTotalShare);
-		contentValues.put(DatabaseContract.COLUMN_MARKET_VALUE, mMarketValue);
-		contentValues.put(DatabaseContract.COLUMN_TOTAL_ASSETS, mTotalAssets);
-		contentValues.put(DatabaseContract.COLUMN_TOTAL_LONG_TERM_LIABILITIES,
-				mTotalLongTermLiabilities);
-		contentValues.put(DatabaseContract.COLUMN_MAIN_BUSINESS_INCOME,
-				mMainBusinessIncome);
-		contentValues.put(DatabaseContract.COLUMN_MAIN_BUSINESS_INCOME_IN_YEAR,
-				mMainBusinessIncomeInYear);
-		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT, mNetProfit);
-		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_IN_YEAR, mNetProfitInYear);
-		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_MARGIN, mNetProfitMargin);
-		contentValues.put(DatabaseContract.COLUMN_DEBT_TO_NET_ASSETS_RATIO,
-				mDebtToNetAssetsRatio);
-		contentValues.put(DatabaseContract.COLUMN_BOOK_VALUE_PER_SHARE,
-				mBookValuePerShare);
-		contentValues.put(DatabaseContract.COLUMN_CASH_FLOW_PER_SHARE,
-				mCashFlowPerShare);
-		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE,
-				mNetProfitPerShare);
-		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE_IN_YEAR,
-				mNetProfitPerShareInYear);
 		contentValues.put(DatabaseContract.COLUMN_RATE, mRate);
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND, mDividend);
 		contentValues.put(DatabaseContract.COLUMN_YIELD, mYield);
-		contentValues.put(DatabaseContract.COLUMN_DIVIDEND_RATIO,
-				mDividendRatio);
+		contentValues.put(DatabaseContract.COLUMN_DIVIDEND_RATIO, mDividendRatio);
 		contentValues.put(DatabaseContract.COLUMN_R_DATE, mRDate);
 		contentValues.put(DatabaseContract.COLUMN_STATUS, mStatus);
 
@@ -321,17 +315,19 @@ public class Stock extends DatabaseTable {
 
 		super.set(stock);
 
+		setFlag(stock.mFlag);
 		setClasses(stock.mClasses);
 		setSE(stock.mSE);
 		setCode(stock.mCode);
 		setName(stock.mName);
 		setPinyin(stock.mPinyin);
-		setFlag(stock.mFlag);
+
 		setPrice(stock.mPrice);
 		setChange(stock.mChange);
 		setNet(stock.mNet);
 		setVolume(stock.mVolume);
 		setValue(stock.mValue);
+
 		setDate(stock.mDate);
 		setTime(stock.mTime);
 		setActionMin1(stock.mActionMin1);
@@ -344,6 +340,7 @@ public class Stock extends DatabaseTable {
 		setActionMonth(stock.mActionMonth);
 		setActionQuarter(stock.mActionQuarter);
 		setActionYear(stock.mActionYear);
+
 		setOperate(stock.mOperate);
 		setHold(stock.mHold);
 		setCost(stock.mCost);
@@ -365,10 +362,10 @@ public class Stock extends DatabaseTable {
 		setNetProfitPerShare(stock.mNetProfitPerShare);
 		setNetProfitPerShareInYear(stock.mNetProfitPerShareInYear);
 		setRoi(stock.mRoi);
-		setRate(stock.mRate);
 		setRoe(stock.mRoe);
 		setPE(stock.mPE);
 		setPB(stock.mPB);
+		setRate(stock.mRate);
 		setDividend(stock.mDividend);
 		setYield(stock.mYield);
 		setDividendRatio(stock.mDividendRatio);

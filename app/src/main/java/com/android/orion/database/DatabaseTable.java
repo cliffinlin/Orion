@@ -5,10 +5,10 @@ import android.database.Cursor;
 import android.text.TextUtils;
 
 public class DatabaseTable {
-	String mTableName;
-	long mId;
-	String mCreated;
-	String mModified;
+	private String mTableName;
+	private long mId;
+	private String mCreated;
+	private String mModified;
 
 	public DatabaseTable() {
 		init();

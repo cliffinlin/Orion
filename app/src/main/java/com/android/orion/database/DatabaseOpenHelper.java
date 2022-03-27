@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
-	public DatabaseOpenHelper(Context context) {
+	DatabaseOpenHelper(Context context) {
 		super(context, DatabaseContract.DATABASE_FILE, null,
 				DatabaseContract.DATABASE_VERSION);
 	}

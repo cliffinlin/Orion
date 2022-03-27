@@ -206,10 +206,10 @@ public final class DatabaseContract {
                 + COLUMN_CREATED + TEXT_TYPE + COMMA_SEP
                 + COLUMN_MODIFIED + TEXT_TYPE + " )";
 
-        public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
+        static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
                 + CREATE_TABLE_CONTENT;
 
-        public static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
+        static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
                 + TABLE_NAME;
     }
 
@@ -264,10 +264,10 @@ public final class DatabaseContract {
                 + COLUMN_CREATED + TEXT_TYPE + COMMA_SEP + COLUMN_MODIFIED
                 + TEXT_TYPE + " )";
 
-        public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
+        static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
                 + CREATE_TABLE_CONTENT;
 
-        public static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
+        static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
                 + TABLE_NAME;
     }
 
@@ -305,10 +305,10 @@ public final class DatabaseContract {
                 + COLUMN_CREATED + TEXT_TYPE
                 + COMMA_SEP + COLUMN_MODIFIED + TEXT_TYPE + " )";
 
-        public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
+        static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
                 + CREATE_TABLE_CONTENT;
 
-        public static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
+        static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
                 + TABLE_NAME;
     }
 
@@ -358,10 +358,10 @@ public final class DatabaseContract {
                 + COMMA_SEP + COLUMN_CREATED + TEXT_TYPE + COMMA_SEP
                 + COLUMN_MODIFIED + TEXT_TYPE + " )";
 
-        public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
+        static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
                 + CREATE_TABLE_CONTENT;
 
-        public static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
+        static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
                 + TABLE_NAME;
     }
 
@@ -388,10 +388,10 @@ public final class DatabaseContract {
                 + TEXT_TYPE + COMMA_SEP + COLUMN_CREATED + TEXT_TYPE
                 + COMMA_SEP + COLUMN_MODIFIED + TEXT_TYPE + " )";
 
-        public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
+        static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
                 + CREATE_TABLE_CONTENT;
 
-        public static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
+        static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
                 + TABLE_NAME;
     }
 
@@ -417,10 +417,10 @@ public final class DatabaseContract {
                 + COLUMN_TOTAL_SHARE + DOUBLE_TYPE + COMMA_SEP + COLUMN_CREATED
                 + TEXT_TYPE + COMMA_SEP + COLUMN_MODIFIED + TEXT_TYPE + " )";
 
-        public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
+        static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
                 + CREATE_TABLE_CONTENT;
 
-        public static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
+        static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
                 + TABLE_NAME;
     }
 
@@ -449,10 +449,10 @@ public final class DatabaseContract {
                 + DOUBLE_TYPE + COMMA_SEP + COLUMN_CREATED + TEXT_TYPE
                 + COMMA_SEP + COLUMN_MODIFIED + TEXT_TYPE + " )";
 
-        public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
+        static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
                 + CREATE_TABLE_CONTENT;
 
-        public static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
+        static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
                 + TABLE_NAME;
     }
 
@@ -465,7 +465,7 @@ public final class DatabaseContract {
                 + "/" + DATABASE_NAME + "/" + TABLE_NAME;
         public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
                 + "/" + DATABASE_NAME + "/" + TABLE_NAME;
-        public static final String SORT_ORDER_DEFAULT = COLUMN_INDEX_CODE
+        static final String SORT_ORDER_DEFAULT = COLUMN_INDEX_CODE
                 + " ASC";
 
         public static final String[] PROJECTION_ALL = {_ID, COLUMN_INDEX_SE, COLUMN_INDEX_CODE, COLUMN_INDEX_NAME,
@@ -482,10 +482,10 @@ public final class DatabaseContract {
                 + COLUMN_CREATED + TEXT_TYPE
                 + COMMA_SEP + COLUMN_MODIFIED + TEXT_TYPE + " )";
 
-        public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
+        static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
                 + CREATE_TABLE_CONTENT;
 
-        public static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
+        static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
                 + TABLE_NAME;
     }
 
@@ -534,10 +534,10 @@ public final class DatabaseContract {
                 + COLUMN_CREATED + TEXT_TYPE + COMMA_SEP
                 + COLUMN_MODIFIED + TEXT_TYPE + " )";
 
-        public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
+        static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
                 + CREATE_TABLE_CONTENT;
 
-        public static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
+        static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
                 + TABLE_NAME;
     }
 }
