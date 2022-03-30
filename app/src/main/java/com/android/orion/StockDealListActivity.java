@@ -13,7 +13,7 @@ public class StockDealListActivity extends DealListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mFilterType = FILTER_TYPE_OPERATE;
+		mFilterType = FILTER_TYPE_ALL;
 	}
 
 	void setupSelection() {

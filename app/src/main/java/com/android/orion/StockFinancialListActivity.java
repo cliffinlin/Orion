@@ -20,6 +20,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
@@ -118,6 +119,22 @@ public class StockFinancialListActivity extends ListActivity implements
         initListView();
 
         mLoaderManager.initLoader(LOADER_ID_STOCK_FINANCIAL_LIST, null, this);
+
+        if (!Preferences.getBoolean(mContext,
+                Settings.KEY_NOTIFICATION_MESSAGE, false)) {
+            Toast.makeText(
+                    this,
+                    getResources().getString(R.string.notification_is_off),
+                    Toast.LENGTH_LONG).show();
+        }
+
+        if (Preferences.getBoolean(mContext,
+                Settings.KEY_BACKTEST, false)) {
+            Toast.makeText(
+                    this,
+                    getResources().getString(R.string.backtest_is_on),
+                    Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -374,6 +391,7 @@ public class StockFinancialListActivity extends ListActivity implements
         mTextViewNet = (TextView) findViewById(R.id.net);
         if (mTextViewNet != null) {
             mTextViewNet.setOnClickListener(this);
+            setVisibility(Settings.KEY_DISPLAY_NET, mTextViewNet);
         }
 
         mTextViewRoi = (TextView) findViewById(R.id.roi);
@@ -764,7 +782,7 @@ public class StockFinancialListActivity extends ListActivity implements
         return true;
     }
 
-    boolean setTextViewValue(String key, View textView) {
+    boolean setRightTextViewVisibility(String key, View textView) {
         if (textView != null) {
             if (Preferences.getBoolean(this, key, false)) {
                 textView.setVisibility(View.VISIBLE);
@@ -786,28 +804,33 @@ public class StockFinancialListActivity extends ListActivity implements
                 return false;
             }
 
-            if (columnIndex == cursor
-                    .getColumnIndex(DatabaseContract.COLUMN_MIN5)) {
-                return setTextViewValue(Settings.KEY_PERIOD_MIN5, view);
-            } else if (columnIndex == cursor
-                    .getColumnIndex(DatabaseContract.COLUMN_MIN15)) {
-                return setTextViewValue(Settings.KEY_PERIOD_MIN15, view);
-            } else if (columnIndex == cursor
-                    .getColumnIndex(DatabaseContract.COLUMN_MIN30)) {
-                return setTextViewValue(Settings.KEY_PERIOD_MIN30, view);
-            } else if (columnIndex == cursor
-                    .getColumnIndex(DatabaseContract.COLUMN_MIN60)) {
-                return setTextViewValue(Settings.KEY_PERIOD_MIN60, view);
-            } else if (columnIndex == cursor
-                    .getColumnIndex(DatabaseContract.COLUMN_DAY)) {
-                return setTextViewValue(Settings.KEY_PERIOD_DAY, view);
-            } else if (columnIndex == cursor
-                    .getColumnIndex(DatabaseContract.COLUMN_WEEK)) {
-                return setTextViewValue(Settings.KEY_PERIOD_WEEK, view);
-            } else if (columnIndex == cursor
-                    .getColumnIndex(DatabaseContract.COLUMN_MONTH)) {
-                return setTextViewValue(Settings.KEY_PERIOD_MONTH, view);
-            }
+			if (columnIndex == cursor
+					.getColumnIndex(DatabaseContract.COLUMN_NET)) {
+				return setRightTextViewVisibility(Settings.KEY_DISPLAY_NET, view);
+			} else if (columnIndex == cursor
+					.getColumnIndex(DatabaseContract.COLUMN_MONTH)) {
+				return setRightTextViewVisibility(Settings.KEY_PERIOD_MONTH, view);
+			} else if (columnIndex == cursor
+					.getColumnIndex(DatabaseContract.COLUMN_WEEK)) {
+				return setRightTextViewVisibility(Settings.KEY_PERIOD_WEEK, view);
+			} else if (columnIndex == cursor
+					.getColumnIndex(DatabaseContract.COLUMN_DAY)) {
+				return setRightTextViewVisibility(Settings.KEY_PERIOD_DAY, view);
+			} else if (columnIndex == cursor
+					.getColumnIndex(DatabaseContract.COLUMN_MIN60)) {
+				return setRightTextViewVisibility(Settings.KEY_PERIOD_MIN60, view);
+			} else if (columnIndex == cursor
+					.getColumnIndex(DatabaseContract.COLUMN_MIN30)) {
+				return setRightTextViewVisibility(Settings.KEY_PERIOD_MIN30, view);
+			} else if (columnIndex == cursor
+					.getColumnIndex(DatabaseContract.COLUMN_MIN15)) {
+				return setRightTextViewVisibility(Settings.KEY_PERIOD_MIN15, view);
+			} else if (columnIndex == cursor
+					.getColumnIndex(DatabaseContract.COLUMN_MIN5)) {
+				return setRightTextViewVisibility(Settings.KEY_PERIOD_MIN5, view);
+			} else if (columnIndex == cursor
+					.getColumnIndex(DatabaseContract.COLUMN_MODIFIED)) {
+			}
 
             return false;
         }

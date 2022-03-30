@@ -21,10 +21,10 @@ public class RecordFile {
                 + deal.getSell() + " "
                 + deal.getVolume() + " "
                 + deal.getValue() + " "
-                + deal.getProfit() + " "
-                + deal.getFee() + " "
                 + deal.getBonus() + " "
                 + deal.getYield() + " "
+                + deal.getFee() + " "
+                + deal.getProfit() + " "
                 + action + " "
                 + deal.getCreated() + " "
                 + deal.getModified() + " ");

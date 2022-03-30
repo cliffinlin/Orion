@@ -73,17 +73,17 @@ public class DealListActivity extends ListActivity implements
     SyncHorizontalScrollView mContentSHSV = null;
 
     TextView mTextViewStockNameCode = null;
-    TextView mTextViewAction = null;
     TextView mTextViewPrice = null;
     TextView mTextViewNet = null;
     TextView mTextViewBuy = null;
     TextView mTextViewSell = null;
     TextView mTextViewVolume = null;
     TextView mTextViewValue = null;
-    TextView mTextViewProfit = null;
-    TextView mTextViewFee = null;
     TextView mTextViewBonus = null;
     TextView mTextViewYield = null;
+    TextView mTextViewFee = null;
+    TextView mTextViewProfit = null;
+    TextView mTextViewAction = null;
     TextView mTextViewCreated = null;
     TextView mTextViewModified = null;
 
@@ -237,7 +237,7 @@ public class DealListActivity extends ListActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stock_deal_list);
 
-        mFilterType = FILTER_TYPE_OPERATE;
+        mFilterType = FILTER_TYPE_ALL;
 
         mSortOrder = Preferences.getString(mContext, Settings.KEY_SORT_ORDER_DEAL_LIST,
                 mSortOrderDefault);
@@ -418,17 +418,17 @@ public class DealListActivity extends ListActivity implements
 
     void resetHeaderTextColor() {
         setHeaderTextColor(mTextViewStockNameCode, mHeaderTextDefaultColor);
-        setHeaderTextColor(mTextViewAction, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewPrice, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewNet, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewBuy, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewSell, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewVolume, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewValue, mHeaderTextDefaultColor);
-        setHeaderTextColor(mTextViewProfit, mHeaderTextDefaultColor);
-        setHeaderTextColor(mTextViewFee, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewBonus, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewYield, mHeaderTextDefaultColor);
+        setHeaderTextColor(mTextViewFee, mHeaderTextDefaultColor);
+        setHeaderTextColor(mTextViewProfit, mHeaderTextDefaultColor);
+        setHeaderTextColor(mTextViewAction, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewCreated, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewModified, mHeaderTextDefaultColor);
     }
@@ -455,9 +455,6 @@ public class DealListActivity extends ListActivity implements
         mTextViewStockNameCode = (TextView) findViewById(R.id.stock_name_code);
         mTextViewStockNameCode.setOnClickListener(this);
 
-        mTextViewAction = (TextView) findViewById(R.id.action);
-        mTextViewAction.setOnClickListener(this);
-
         mTextViewPrice = (TextView) findViewById(R.id.price);
         mTextViewPrice.setOnClickListener(this);
 
@@ -476,17 +473,20 @@ public class DealListActivity extends ListActivity implements
         mTextViewValue = (TextView) findViewById(R.id.value);
         mTextViewValue.setOnClickListener(this);
 
-        mTextViewProfit = (TextView) findViewById(R.id.profit);
-        mTextViewProfit.setOnClickListener(this);
-
-        mTextViewFee = (TextView) findViewById(R.id.fee);
-        mTextViewFee.setOnClickListener(this);
-
         mTextViewBonus = (TextView) findViewById(R.id.bonus);
         mTextViewBonus.setOnClickListener(this);
 
         mTextViewYield = (TextView) findViewById(R.id.yield);
         mTextViewYield.setOnClickListener(this);
+
+        mTextViewFee = (TextView) findViewById(R.id.fee);
+        mTextViewFee.setOnClickListener(this);
+
+        mTextViewProfit = (TextView) findViewById(R.id.profit);
+        mTextViewProfit.setOnClickListener(this);
+
+        mTextViewAction = (TextView) findViewById(R.id.action);
+        mTextViewAction.setOnClickListener(this);
 
         mTextViewCreated = (TextView) findViewById(R.id.created);
         mTextViewCreated.setOnClickListener(this);
@@ -497,8 +497,6 @@ public class DealListActivity extends ListActivity implements
         if (mSortOrder.contains(DatabaseContract.COLUMN_CODE)) {
             setHeaderTextColor(mTextViewStockNameCode,
                     mHeaderTextHighlightColor);
-        } else if (mSortOrder.contains(DatabaseContract.COLUMN_ACTION)) {
-            setHeaderTextColor(mTextViewAction, mHeaderTextHighlightColor);
         } else if (mSortOrder.contains(DatabaseContract.COLUMN_PRICE)) {
             setHeaderTextColor(mTextViewPrice, mHeaderTextHighlightColor);
         } else if (mSortOrder.contains(DatabaseContract.COLUMN_NET)) {
@@ -511,14 +509,16 @@ public class DealListActivity extends ListActivity implements
             setHeaderTextColor(mTextViewVolume, mHeaderTextHighlightColor);
         } else if (mSortOrder.contains(DatabaseContract.COLUMN_VALUE)) {
             setHeaderTextColor(mTextViewValue, mHeaderTextHighlightColor);
-        } else if (mSortOrder.contains(DatabaseContract.COLUMN_PROFIT)) {
-            setHeaderTextColor(mTextViewProfit, mHeaderTextHighlightColor);
-        } else if (mSortOrder.contains(DatabaseContract.COLUMN_FEE)) {
-            setHeaderTextColor(mTextViewFee, mHeaderTextHighlightColor);
         } else if (mSortOrder.contains(DatabaseContract.COLUMN_BONUS)) {
             setHeaderTextColor(mTextViewBonus, mHeaderTextHighlightColor);
         } else if (mSortOrder.contains(DatabaseContract.COLUMN_YIELD)) {
             setHeaderTextColor(mTextViewYield, mHeaderTextHighlightColor);
+        } else if (mSortOrder.contains(DatabaseContract.COLUMN_FEE)) {
+            setHeaderTextColor(mTextViewFee, mHeaderTextHighlightColor);
+        } else if (mSortOrder.contains(DatabaseContract.COLUMN_PROFIT)) {
+            setHeaderTextColor(mTextViewProfit, mHeaderTextHighlightColor);
+        } else if (mSortOrder.contains(DatabaseContract.COLUMN_ACTION)) {
+            setHeaderTextColor(mTextViewAction, mHeaderTextHighlightColor);
         } else if (mSortOrder.contains(DatabaseContract.COLUMN_CREATED)) {
             setHeaderTextColor(mTextViewCreated, mHeaderTextHighlightColor);
         } else if (mSortOrder.contains(DatabaseContract.COLUMN_MODIFIED)) {
@@ -539,10 +539,10 @@ public class DealListActivity extends ListActivity implements
                 DatabaseContract.COLUMN_SELL,
                 DatabaseContract.COLUMN_VOLUME,
                 DatabaseContract.COLUMN_VALUE,
-                DatabaseContract.COLUMN_PROFIT,
-                DatabaseContract.COLUMN_FEE,
                 DatabaseContract.COLUMN_BONUS,
                 DatabaseContract.COLUMN_YIELD,
+                DatabaseContract.COLUMN_FEE,
+                DatabaseContract.COLUMN_PROFIT,
                 DatabaseContract.COLUMN_ACTION,
                 DatabaseContract.COLUMN_CREATED,
                 DatabaseContract.COLUMN_MODIFIED};
@@ -553,10 +553,10 @@ public class DealListActivity extends ListActivity implements
                 R.id.sell,
                 R.id.volume,
                 R.id.value,
-                R.id.profit,
-                R.id.fee,
                 R.id.bonus,
                 R.id.yield,
+                R.id.fee,
+                R.id.profit,
                 R.id.action,
                 R.id.created,
                 R.id.modified};
