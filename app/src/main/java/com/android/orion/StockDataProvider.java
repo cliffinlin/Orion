@@ -7,14 +7,10 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-import android.app.Notification;
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
@@ -23,7 +19,6 @@ import android.os.Process;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.android.orion.database.IndexComponent;
 import com.android.orion.database.DatabaseContract;
@@ -36,9 +31,6 @@ import com.android.orion.database.TotalShare;
 import com.android.orion.utility.Market;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Utility;
-
-import static java.lang.Thread.State.RUNNABLE;
-import static java.lang.Thread.State.TERMINATED;
 
 abstract class StockDataProvider extends StockAnalyzer {
     static final String TAG = Constants.TAG + " "
@@ -388,7 +380,7 @@ abstract class StockDataProvider extends StockAnalyzer {
                         result = 24 - count;
                         break;
                 }
-            } else if (Market.isMarketClosed(Calendar.getInstance())) {
+            } else if (Market.afterClosed(Calendar.getInstance())) {
                 if ((count > 0) && modifiedCalendar.after(stockMarketCloseCalendar)) {
                     return result;
                 }

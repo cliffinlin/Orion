@@ -26,19 +26,17 @@ public class Market {
 		int result = 0;
 		int start = 0;
 
-		Calendar currentCalendar;
-
-		currentCalendar = Calendar.getInstance();
-		if (!isWeekday(currentCalendar)) {
+		Calendar calendar = Calendar.getInstance();
+		if (!isWeekday(calendar)) {
 			return result;
 		}
 
 		start = OPEN_TIME_IN_MINUTES;
 
-		if (inFirstHalf(currentCalendar)) {
-			result = Market.getMinutesOfToday(currentCalendar) - start;
-		} else if (inSecondHalf(currentCalendar)) {
-			result = Market.getMinutesOfToday(currentCalendar) - (start
+		if (inFirstHalf(calendar)) {
+			result = Market.getMinutesOfToday(calendar) - start;
+		} else if (inSecondHalf(calendar)) {
+			result = Market.getMinutesOfToday(calendar) - (start
 					+ LUNCH_TIME_IN_MINUTES);
 		} else {
 			result = 0;
@@ -74,6 +72,25 @@ public class Market {
 
 	public static boolean isTradingHours(Calendar calendar) {
 		return inFirstHalf(calendar) || inSecondHalf(calendar);
+	}
+
+	public static boolean beforeOpen(Calendar calendar) {
+		boolean result = false;
+		Calendar currentCalendar;
+		Calendar stockMarketOpenCalendar;
+
+		if (!isWeekday(calendar)) {
+			return result;
+		}
+
+		currentCalendar = Calendar.getInstance();
+		stockMarketOpenCalendar = getMarketOpenCalendar(currentCalendar);
+
+		if (currentCalendar.before(stockMarketOpenCalendar)) {
+			result = true;
+		}
+
+		return result;
 	}
 
 	public static boolean inFirstHalf(Calendar calendar) {
@@ -142,7 +159,7 @@ public class Market {
 		return result;
 	}
 	
-	public static boolean isMarketClosed(Calendar calendar) {
+	public static boolean afterClosed(Calendar calendar) {
 		boolean result = false;
 		Calendar currentCalendar;
 		Calendar stockMarketCloseCalendar;

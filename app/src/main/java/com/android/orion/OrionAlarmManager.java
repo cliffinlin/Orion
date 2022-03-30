@@ -5,6 +5,9 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.util.Log;
 
+import com.android.orion.utility.Market;
+import com.android.orion.utility.Utility;
+
 import java.util.Calendar;
 
 public class OrionAlarmManager {
@@ -43,7 +46,7 @@ public class OrionAlarmManager {
 	void setPendingIntent(PendingIntent pendingIntent) {
 		mPendingIntent = pendingIntent;
 	}
-
+/*
 	void startAlarm() {
 		stopAlarm();
 
@@ -58,38 +61,62 @@ public class OrionAlarmManager {
 		mAlarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
 				System.currentTimeMillis(), mIntervalMillis, mPendingIntent);
 	}
+*/
+	void startAlarm() {
+		int minutes = 0;
+        int dayOfWeek = Calendar.SUNDAY;
+		long triggerMillis = 0;
 
-//	public void startAlarm1() {
-//		int value = 0;
-//		long triggerMillis = 0;
-//		long intervalMillis = 0;
-//
-//		Calendar calendar;
-//
-//		if ((mAlarmManager == null) || (mPendingIntent == null)) {
-//			Utility.Log("startAlarm return:" + "mAlarmManager=" + mAlarmManager
-//					+ " mPendingIntent=" + mPendingIntent);
-//			return;
-//		}
-//
-//		calendar = Calendar.getInstance();
-//		value = EPHEMERIS_VALID_IN_MINUTE - calendar.get(Calendar.MINUTE)
-//				% EPHEMERIS_VALID_IN_MINUTE;
-//		calendar.add(Calendar.MINUTE, value);
-//		calendar.add(Calendar.SECOND, -1 * calendar.get(Calendar.SECOND));
-//
-//		triggerMillis = calendar.getTimeInMillis();
-//		intervalMillis = EPHEMERIS_VALID_IN_MINUTE * MINUTE_TO_MILLIS;
-//
-//		Utility.Log("startAlarm will arrive at "
-//				+ calendar.get(Calendar.HOUR_OF_DAY) + ":"
-//				+ calendar.get(Calendar.MINUTE) + ":"
-//				+ calendar.get(Calendar.SECOND) + " triggerMillis="
-//				+ triggerMillis + " intervalMillis=" + intervalMillis);
-//
-//		mAlarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-//				triggerMillis, intervalMillis, mPendingIntent);
-//	}
+		stopAlarm();
+
+		if ((mAlarmManager == null) || (mPendingIntent == null)
+				|| (mIntervalMillis <= 0)) {
+			Log.d(TAG, "startAlarm return " + "mAlarmManager = "
+					+ mAlarmManager + " mPendingIntent = " + mPendingIntent
+					+ " mIntervalMillis = " + mIntervalMillis);
+			return;
+		}
+
+		Calendar calendar = Calendar.getInstance();
+
+		dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+
+		if (Market.isWeekday(calendar)) {
+			if (Market.beforeOpen(calendar)) {
+                calendar = Market.getMarketOpenCalendar(calendar);
+			} else if (Market.inFirstHalf(calendar)) {
+                calendar = Calendar.getInstance();
+			} else if (Market.isLunchTime(calendar)) {
+                calendar = Market.getMarketLunchEndCalendar(calendar);
+			} else if (Market.inSecondHalf(calendar)) {
+                calendar = Calendar.getInstance();
+			} else if (Market.afterClosed(calendar)) {
+                if (dayOfWeek < Calendar.FRIDAY) {
+                    calendar.add(Calendar.DAY_OF_WEEK, 1);
+                } else {
+                    calendar.add(Calendar.DAY_OF_WEEK, 3);
+                }
+                calendar = Market.getMarketOpenCalendar(calendar);
+			}
+		} else {
+            if (dayOfWeek == Calendar.SATURDAY) {
+                calendar.add(Calendar.DAY_OF_WEEK, 2);
+            } else if (dayOfWeek == Calendar.SUNDAY) {
+                calendar.add(Calendar.DAY_OF_WEEK, 1);
+            }
+            calendar = Market.getMarketOpenCalendar(calendar);
+		}
+
+        triggerMillis = calendar.getTimeInMillis();
+
+		Log.d(TAG, "startAlarm will arrive at "
+                + Utility.getCalendarDateTimeString(calendar)
+				+ " triggerMillis=" + triggerMillis
+				+ " intervalMillis=" + mIntervalMillis);
+
+		mAlarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+				triggerMillis, mIntervalMillis, mPendingIntent);
+	}
 
 	void stopAlarm() {
 		if ((mAlarmManager == null) || (mPendingIntent == null)) {
