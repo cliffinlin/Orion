@@ -8,9 +8,11 @@
     <string name="acceleration">Acc</string>
     <string name="action">Action</string>
     <string name="action_all">All</string>
-    <string name="action_to_operate">To Operate</string>
-    <string name="action_to_buy">To Buy</string>
-    <string name="action_to_sell">To Sell</string>
+    <string name="action_operate">Operate</string>
+    <string name="action_buy">Buy</string>
+    <string name="action_none">None</string>
+    <string name="action_sell">Sell</string>
+    <string name="action_sold">Sold</string>
     <string name="action_deal">Deal</string>
     <string name="action_edit">Edit</string>
     <string name="action_exit">Exit</string>

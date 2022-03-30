@@ -45,9 +45,10 @@ public class DealListActivity extends ListActivity implements
     static final int LOADER_ID_DEAL_LIST = 0;
 
     static final int FILTER_TYPE_NONE = 0;
-    static final int FILTER_TYPE_TO_OPERATE = 1;
-    static final int FILTER_TYPE_TO_BUY = 2;
-    static final int FILTER_TYPE_TO_SELL = 3;
+    static final int FILTER_TYPE_OPERATE = 1;
+    static final int FILTER_TYPE_BUY = 2;
+    static final int FILTER_TYPE_SELL = 3;
+    static final int FILTER_TYPE_ALL = 4;
 
     static final int MESSAGE_DELETE_DEAL = 0;
     static final int MESSAGE_DELETE_DEAL_LIST = 1;
@@ -236,7 +237,7 @@ public class DealListActivity extends ListActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stock_deal_list);
 
-        mFilterType = FILTER_TYPE_TO_OPERATE;
+        mFilterType = FILTER_TYPE_OPERATE;
 
         mSortOrder = Preferences.getString(mContext, Settings.KEY_SORT_ORDER_DEAL_LIST,
                 mSortOrderDefault);
@@ -274,23 +275,28 @@ public class DealListActivity extends ListActivity implements
                 startActivityForResult(mIntent, REQUEST_CODE_DEAL_INSERT);
                 return true;
 
-            case R.id.action_to_operate:
-                mFilterType = FILTER_TYPE_TO_OPERATE;
+            case R.id.action_none:
+                mFilterType = FILTER_TYPE_NONE;
                 restartLoader();
                 return true;
 
-            case R.id.action_to_buy:
-                mFilterType = FILTER_TYPE_TO_BUY;
+            case R.id.action_operate:
+                mFilterType = FILTER_TYPE_OPERATE;
                 restartLoader();
                 return true;
 
-            case R.id.action_to_sell:
-                mFilterType = FILTER_TYPE_TO_SELL;
+            case R.id.action_buy:
+                mFilterType = FILTER_TYPE_BUY;
+                restartLoader();
+                return true;
+
+            case R.id.action_sell:
+                mFilterType = FILTER_TYPE_SELL;
                 restartLoader();
                 return true;
 
             case R.id.action_all:
-                mFilterType = FILTER_TYPE_NONE;
+                mFilterType = FILTER_TYPE_ALL;
                 restartLoader();
                 return true;
 
@@ -608,20 +614,28 @@ public class DealListActivity extends ListActivity implements
         mSelection = null;
 
         switch (mFilterType) {
-            case FILTER_TYPE_TO_OPERATE:
+            case FILTER_TYPE_NONE:
+                mSelection = DatabaseContract.COLUMN_ACTION + " = ''";
+                break;
+
+            case FILTER_TYPE_OPERATE:
                 mSelection = DatabaseContract.COLUMN_ACTION + " != ''";
                 break;
 
-            case FILTER_TYPE_TO_BUY:
+            case FILTER_TYPE_BUY:
                 mSelection = DatabaseContract.COLUMN_ACTION + " != ''";
                 mSelection += " AND " + DatabaseContract.COLUMN_VOLUME + " <= " + 0;
                 break;
 
-            case FILTER_TYPE_TO_SELL:
+            case FILTER_TYPE_SELL:
                 mSelection = DatabaseContract.COLUMN_ACTION + " != ''";
                 mSelection += " AND " + DatabaseContract.COLUMN_VOLUME + " > " + 0;
                 mSelection += " AND " + DatabaseContract.COLUMN_PROFIT + " > " + DatabaseContract.COLUMN_BONUS;
                 mSelection += " AND " + DatabaseContract.COLUMN_NET + " > " + Constants.AVERAGE_DIVIDEND_YIELD;
+                break;
+
+            case FILTER_TYPE_ALL:
+                mSelection = null;
                 break;
 
             default:

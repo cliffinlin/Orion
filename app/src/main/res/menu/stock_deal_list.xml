@@ -13,22 +13,28 @@
         android:title="@string/action_new">
     </item>
     <item
-        android:id="@+id/action_to_operate"
+        android:id="@+id/action_none"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="@string/action_to_operate">
+        android:title="@string/action_none">
     </item>
     <item
-        android:id="@+id/action_to_buy"
+        android:id="@+id/action_operate"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="@string/action_to_buy">
+        android:title="@string/action_operate">
     </item>
     <item
-        android:id="@+id/action_to_sell"
+        android:id="@+id/action_buy"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="@string/action_to_sell">
+        android:title="@string/action_buy">
+    </item>
+    <item
+        android:id="@+id/action_sell"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_sell">
     </item>
     <item
         android:id="@+id/action_all"
