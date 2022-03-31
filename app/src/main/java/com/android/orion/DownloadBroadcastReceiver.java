@@ -25,12 +25,6 @@ public class DownloadBroadcastReceiver extends BroadcastReceiver {
 			} else {
 				context.startService(serviceIntent);
 			}
-		} else {
-			DownloadAlarmManager stockDownloadAlarmManager = DownloadAlarmManager.getInstance(context);
-
-			if (stockDownloadAlarmManager != null) {
-				stockDownloadAlarmManager.stopAlarm();
-			}
 		}
 	}
 }
