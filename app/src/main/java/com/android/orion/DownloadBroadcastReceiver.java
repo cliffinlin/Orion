@@ -16,14 +16,20 @@ public class DownloadBroadcastReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		if (Market.isTradingHours(Calendar.getInstance())) {
-			Log.d(TAG, "onReceive intent:" + intent);
+		Log.d(TAG, "onReceive intent:" + intent);
 
+		if (Market.isTradingHours(Calendar.getInstance())) {
 			Intent serviceIntent = new Intent(context, OrionService.class);
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 				context.startForegroundService(serviceIntent);
 			} else {
 				context.startService(serviceIntent);
+			}
+		} else {
+			DownloadAlarmManager stockDownloadAlarmManager = DownloadAlarmManager.getInstance(context);
+
+			if (stockDownloadAlarmManager != null) {
+				stockDownloadAlarmManager.stopAlarm();
 			}
 		}
 	}
