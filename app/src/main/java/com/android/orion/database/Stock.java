@@ -185,6 +185,8 @@ public class Stock extends DatabaseTable {
 		mName = "";
 		mPinyin = "";
 
+		mHold = 0;
+
 		reset();
 	}
 
@@ -211,7 +213,6 @@ public class Stock extends DatabaseTable {
 		mActionYear = "";
 
 		mOperate = "";
-		mHold = 0;
 		mCost = 0;
 		mProfit = 0;
 		mBonus = 0;

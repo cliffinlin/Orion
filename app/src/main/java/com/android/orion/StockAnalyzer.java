@@ -232,6 +232,10 @@ public class StockAnalyzer {
 			return;
 		}
 
+		if (!mStockDatabaseManager.isStockFavorite(stock.getSE(), stock.getCode())) {
+			return;
+		}
+
 		try {
             if (!Stock.CLASS_INDEX.equals(stock.getClases())) {
                 analyzeStockFinancial(stock);

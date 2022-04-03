@@ -65,8 +65,6 @@ public class StockListEditActivity extends DatabaseActivity implements
 		return null;
 	}
 
-	boolean mNeedDownload = false;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -114,10 +112,6 @@ public class StockListEditActivity extends DatabaseActivity implements
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-
-		if (mNeedDownload) {
-			mOrionService.download();
-		}
 	}
 
 	void restartLoader(Intent intent) {
@@ -357,12 +351,12 @@ public class StockListEditActivity extends DatabaseActivity implements
 				switch (view.getId()) {
 				case R.id.favorite:
 					if ((stock.getFlag() & Stock.FLAG_FAVORITE) == 0) {
-						updateStockFlag(stockId, stock.getFlag() | Stock.FLAG_FAVORITE);
+						mStockDatabaseManager.updateStockFlag(stockId, stock.getFlag() | Stock.FLAG_FAVORITE);
 					} else {
-					    updateStockFlag(stockId, Stock.FLAG_NONE);
-					}
-					mNeedDownload = true;
-					break;
+                        mStockDatabaseManager.updateStockFlag(stockId, Stock.FLAG_NONE);
+                    }
+                    mOrionService.download();
+                    break;
 
 				case R.id.delete:
 					if (stock.getHold() == 0) {
@@ -408,21 +402,6 @@ public class StockListEditActivity extends DatabaseActivity implements
 			}
 
 			restartLoader();
-		}
-
-		void updateStockFlag(long stockId, long flag) {
-			Uri uri = null;
-
-			uri = ContentUris.withAppendedId(
-					DatabaseContract.Stock.CONTENT_URI, stockId);
-
-			try {
-				ContentValues contentValues = new ContentValues();
-				contentValues.put(DatabaseContract.COLUMN_FLAG, flag);
-				mContentResolver.update(uri, contentValues, null, null);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 		}
 	}
 

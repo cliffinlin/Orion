@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.util.ArrayMap;
 
 import com.android.orion.Constants;
@@ -232,6 +234,57 @@ public class StockDatabaseManager extends DatabaseManager {
 		}
 
 		return result;
+	}
+
+	public boolean isStockFavorite(String se, String code) {
+		boolean result = false;
+		Stock stock = null;
+		Cursor cursor = null;
+
+		if (TextUtils.isEmpty(se) || TextUtils.isEmpty(code)) {
+			return result;
+		}
+
+		try {
+			stock = new Stock();
+			stock.setSE(se);
+			stock.setCode(code);
+
+			cursor = queryStock(stock);
+
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				cursor.moveToNext();
+				stock.set(cursor);
+				if (stock.getFlag() == Stock.FLAG_FAVORITE) {
+					result = true;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+
+		return result;
+	}
+
+	public void updateStockFlag(long stockId, long flag) {
+		Uri uri;
+
+		if ((stockId == 0) || (mContentResolver == null)) {
+			return;
+		}
+
+		uri = ContentUris.withAppendedId(
+				DatabaseContract.Stock.CONTENT_URI, stockId);
+
+		try {
+			ContentValues contentValues = new ContentValues();
+			contentValues.put(DatabaseContract.COLUMN_FLAG, flag);
+			mContentResolver.update(uri, contentValues, null, null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public int updateStock(Stock stock, ContentValues contentValues) {
