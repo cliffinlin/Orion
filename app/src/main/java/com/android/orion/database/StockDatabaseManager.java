@@ -301,9 +301,9 @@ public class StockDatabaseManager extends DatabaseManager {
 		return delete(DatabaseContract.Stock.CONTENT_URI);
 	}
 
-	public int deleteStock(long stockId) {
+	public int deleteStock(long id) {
 		int result = 0;
-		String where = DatabaseContract.COLUMN_ID + "=" + stockId;
+		String where = DatabaseContract.COLUMN_ID + "=" + id;
 
 		try {
 			result = delete(DatabaseContract.Stock.CONTENT_URI, where);
@@ -508,7 +508,7 @@ public class StockDatabaseManager extends DatabaseManager {
 
 	public int deleteStockData(long stockId) {
 		int result = 0;
-		String where = DatabaseContract.COLUMN_ID + "=" + stockId;
+		String where = DatabaseContract.COLUMN_STOCK_ID + "=" + stockId;
 
 		try {
 			result = delete(DatabaseContract.StockData.CONTENT_URI, where);
@@ -1097,7 +1097,7 @@ public class StockDatabaseManager extends DatabaseManager {
 
 	public int deleteStockFinancial(long stockId) {
 		int result = 0;
-		String where = DatabaseContract.COLUMN_ID + "=" + stockId;
+		String where = DatabaseContract.COLUMN_STOCK_ID + "=" + stockId;
 
 		try {
 			result = delete(DatabaseContract.StockFinancial.CONTENT_URI, where);
@@ -1355,7 +1355,7 @@ public class StockDatabaseManager extends DatabaseManager {
 
 	public int deleteShareBonus(long stockId) {
 		int result =0;
-		String where = DatabaseContract.COLUMN_ID + "=" + stockId;
+		String where = DatabaseContract.COLUMN_STOCK_ID + "=" + stockId;
 
 		try {
 			result = delete(DatabaseContract.ShareBonus.CONTENT_URI, where);
@@ -1613,7 +1613,7 @@ public class StockDatabaseManager extends DatabaseManager {
 
 	public int deleteTotalShare(long stockId) {
 		int result = 0;
-		String where = DatabaseContract.COLUMN_ID + "=" + stockId;
+		String where = DatabaseContract.COLUMN_STOCK_ID + "=" + stockId;
 
 		try {
 			result = delete(DatabaseContract.TotalShare.CONTENT_URI, where);
@@ -2330,7 +2330,7 @@ public class StockDatabaseManager extends DatabaseManager {
 
 	public int deleteStockTrends(long stockId) {
 		int result = 0;
-		String where = DatabaseContract.COLUMN_ID + "=" + stockId;
+		String where = DatabaseContract.COLUMN_STOCK_ID + "=" + stockId;
 
 		try {
 			result = delete(DatabaseContract.StockTrends.CONTENT_URI, where);
