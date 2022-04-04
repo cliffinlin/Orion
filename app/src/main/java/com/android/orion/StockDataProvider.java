@@ -1059,10 +1059,6 @@ abstract class StockDataProvider extends StockAnalyzer {
                     return;
                 }
 
-                if (!mStockDatabaseManager.isStockFavorite(stock.getSE(), stock.getCode())) {
-                    return;
-                }
-
                 if (Stock.CLASS_INDEX.equals(stock.getClases())) {
                     setupIndex(stock);
                 } else {

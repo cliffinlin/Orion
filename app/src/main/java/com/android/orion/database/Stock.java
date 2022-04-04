@@ -192,13 +192,13 @@ public class Stock extends DatabaseTable {
 
 	public void reset() {
 		super.reset();
-
+		
 		mPrice = 0;
 		mChange = 0;
 		mNet = 0;
 		mVolume = 0;
 		mValue = 0;
-
+		
 		mDate = "";
 		mTime = "";
 		mActionMin1 = "";
@@ -247,7 +247,8 @@ public class Stock extends DatabaseTable {
 	public ContentValues getContentValues(ContentValues contentValues) {
 		super.getContentValues(contentValues);
 
-		contentValues.put(DatabaseContract.COLUMN_FLAG, mFlag);
+//		contentValues.put(DatabaseContract.COLUMN_FLAG, mFlag);
+
 		contentValues.put(DatabaseContract.COLUMN_CLASSES, mClasses);
 		contentValues.put(DatabaseContract.COLUMN_SE, mSE);
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);

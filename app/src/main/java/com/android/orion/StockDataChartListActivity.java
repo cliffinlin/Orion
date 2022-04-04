@@ -96,13 +96,13 @@ public class StockDataChartListActivity extends BaseActivity implements
 			switch (msg.what) {
 			case MESSAGE_REFRESH:
 				if (mOrionService != null) {
-					mStockDatabaseManager.deleteStockData(mStock.getId());
-					mStockDatabaseManager.deleteStockFinancial(mStock.getId());
-					mStockDatabaseManager.deleteShareBonus(mStock.getId());
-
 					mStock.reset();
 					mStockDatabaseManager.updateStock(mStock,
 							mStock.getContentValues());
+					mStockDatabaseManager.deleteStockData(mStock.getId());
+					mStockDatabaseManager.deleteStockFinancial(mStock.getId());
+					mStockDatabaseManager.deleteShareBonus(mStock.getId());
+					mStockDatabaseManager.deleteStockTrends(mStock.getId());
 					mOrionService.download(mStock);
 					restartLoader();
 				}

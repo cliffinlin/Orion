@@ -34,6 +34,30 @@ public class StockDatabaseManager extends DatabaseManager {
 		super(context);
 	}
 
+	public int delete(Uri uri) {
+		return delete(uri, null);
+	}
+
+	public int delete(Uri uri, String where) {
+		int result = 0;
+
+		if (mContentResolver == null) {
+			return result;
+		}
+
+		if (uri == null) {
+			return result;
+		}
+
+		try {
+			result = mContentResolver.delete(uri, where, null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+
 	public Uri insertStock(Stock stock) {
 		Uri uri = null;
 
@@ -236,38 +260,6 @@ public class StockDatabaseManager extends DatabaseManager {
 		return result;
 	}
 
-	public boolean isStockFavorite(String se, String code) {
-		boolean result = false;
-		Stock stock = null;
-		Cursor cursor = null;
-
-		if (TextUtils.isEmpty(se) || TextUtils.isEmpty(code)) {
-			return result;
-		}
-
-		try {
-			stock = new Stock();
-			stock.setSE(se);
-			stock.setCode(code);
-
-			cursor = queryStock(stock);
-
-			if ((cursor != null) && (cursor.getCount() > 0)) {
-				cursor.moveToNext();
-				stock.set(cursor);
-				if (stock.getFlag() == Stock.FLAG_FAVORITE) {
-					result = true;
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			closeCursor(cursor);
-		}
-
-		return result;
-	}
-
 	public void updateStockFlag(long stockId, long flag) {
 		Uri uri;
 
@@ -305,21 +297,16 @@ public class StockDatabaseManager extends DatabaseManager {
 		return result;
 	}
 
+	public int deleteStock() {
+		return delete(DatabaseContract.Stock.CONTENT_URI);
+	}
+
 	public int deleteStock(long stockId) {
 		int result = 0;
-		String where = null;
-
-		if (mContentResolver == null) {
-			return result;
-		}
-
-		if (stockId > 0) {
-			where = DatabaseContract.COLUMN_ID + "=" + stockId;
-		}
+		String where = DatabaseContract.COLUMN_ID + "=" + stockId;
 
 		try {
-			result = mContentResolver.delete(
-					DatabaseContract.Stock.CONTENT_URI, where, null);
+			result = delete(DatabaseContract.Stock.CONTENT_URI, where);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -501,16 +488,7 @@ public class StockDatabaseManager extends DatabaseManager {
 	}
 
 	public int deleteStockData() {
-		int result = 0;
-
-		if (mContentResolver == null) {
-			return result;
-		}
-
-		result = mContentResolver.delete(
-				DatabaseContract.StockData.CONTENT_URI, null, null);
-
-		return result;
+		return delete(DatabaseContract.StockData.CONTENT_URI);
 	}
 
 	public int deleteStockData(StockData stockData) {
@@ -530,19 +508,10 @@ public class StockDatabaseManager extends DatabaseManager {
 
 	public int deleteStockData(long stockId) {
 		int result = 0;
-		String where = null;
-
-		if (mContentResolver == null) {
-			return result;
-		}
-
-		if (stockId > 0) {
-			where = DatabaseContract.COLUMN_STOCK_ID + "=" + stockId;
-		}
+		String where = DatabaseContract.COLUMN_ID + "=" + stockId;
 
 		try {
-			result = mContentResolver.delete(
-					DatabaseContract.StockData.CONTENT_URI, where, null);
+			result = delete(DatabaseContract.StockData.CONTENT_URI, where);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -737,16 +706,7 @@ public class StockDatabaseManager extends DatabaseManager {
 	}
 
 	public int deleteStockDeal() {
-		int result = 0;
-
-		if (mContentResolver == null) {
-			return result;
-		}
-
-		result = mContentResolver.delete(
-				DatabaseContract.StockDeal.CONTENT_URI, null, null);
-
-		return result;
+		return delete(DatabaseContract.StockDeal.CONTENT_URI);
 	}
 
 	public void deleteStockDeal(StockDeal stockDeal) {
@@ -1117,16 +1077,7 @@ public class StockDatabaseManager extends DatabaseManager {
 	}
 
 	public int deleteStockFinancial() {
-		int result = 0;
-
-		if (mContentResolver == null) {
-			return result;
-		}
-
-		result = mContentResolver.delete(
-				DatabaseContract.StockFinancial.CONTENT_URI, null, null);
-
-		return result;
+		return delete(DatabaseContract.StockFinancial.CONTENT_URI);
 	}
 
 	public int deleteStockFinancial(StockFinancial stockFinancial) {
@@ -1144,16 +1095,17 @@ public class StockDatabaseManager extends DatabaseManager {
 		return result;
 	}
 
-	public void deleteStockFinancial(long stockId) {
-		Uri uri = DatabaseContract.StockFinancial.CONTENT_URI;
-
-		String where = getStockFinancialSelection(stockId);
+	public int deleteStockFinancial(long stockId) {
+		int result = 0;
+		String where = DatabaseContract.COLUMN_ID + "=" + stockId;
 
 		try {
-			mContentResolver.delete(uri, where, null);
+			result = delete(DatabaseContract.StockFinancial.CONTENT_URI, where);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		return result;
 	}
 
 	public int deleteStockFinancial(long stockId, String date) {
@@ -1383,16 +1335,7 @@ public class StockDatabaseManager extends DatabaseManager {
 	}
 
 	public int deleteShareBonus() {
-		int result = 0;
-
-		if (mContentResolver == null) {
-			return result;
-		}
-
-		result = mContentResolver.delete(
-				DatabaseContract.ShareBonus.CONTENT_URI, null, null);
-
-		return result;
+		return delete(DatabaseContract.ShareBonus.CONTENT_URI);
 	}
 
 	public int deleteShareBonus(ShareBonus shareBonus) {
@@ -1410,16 +1353,17 @@ public class StockDatabaseManager extends DatabaseManager {
 		return result;
 	}
 
-	public void deleteShareBonus(long stockId) {
-		Uri uri = DatabaseContract.ShareBonus.CONTENT_URI;
-
-		String where = getShareBonusSelection(stockId);
+	public int deleteShareBonus(long stockId) {
+		int result =0;
+		String where = DatabaseContract.COLUMN_ID + "=" + stockId;
 
 		try {
-			mContentResolver.delete(uri, where, null);
+			result = delete(DatabaseContract.ShareBonus.CONTENT_URI, where);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		return result;
 	}
 
 	public int deleteShareBonus(long stockId, String date) {
@@ -1649,16 +1593,7 @@ public class StockDatabaseManager extends DatabaseManager {
 	}
 
 	public int deleteTotalShare() {
-		int result = 0;
-
-		if (mContentResolver == null) {
-			return result;
-		}
-
-		result = mContentResolver.delete(
-				DatabaseContract.TotalShare.CONTENT_URI, null, null);
-
-		return result;
+		return delete(DatabaseContract.TotalShare.CONTENT_URI);
 	}
 
 	public int deleteTotalShare(TotalShare totalShare) {
@@ -1676,16 +1611,17 @@ public class StockDatabaseManager extends DatabaseManager {
 		return result;
 	}
 
-	public void deleteTotalShare(long stockId) {
-		Uri uri = DatabaseContract.TotalShare.CONTENT_URI;
-
-		String where = getTotalShareSelection(stockId);
+	public int deleteTotalShare(long stockId) {
+		int result = 0;
+		String where = DatabaseContract.COLUMN_ID + "=" + stockId;
 
 		try {
-			mContentResolver.delete(uri, where, null);
+			result = delete(DatabaseContract.TotalShare.CONTENT_URI, where);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		return result;
 	}
 
 	public int deleteTotalShare(long stockId, String date) {
@@ -1909,16 +1845,7 @@ public class StockDatabaseManager extends DatabaseManager {
 	}
 
 	public int deleteIPO() {
-		int result = 0;
-
-		if (mContentResolver == null) {
-			return result;
-		}
-
-		result = mContentResolver.delete(DatabaseContract.IPO.CONTENT_URI,
-				null, null);
-
-		return result;
+		return delete(DatabaseContract.IPO.CONTENT_URI);
 	}
 
 	public int deleteIPO(IPO ipo) {
@@ -2146,16 +2073,7 @@ public class StockDatabaseManager extends DatabaseManager {
 	}
 
 	public int deleteIndexComponent() {
-		int result = 0;
-
-		if (mContentResolver == null) {
-			return result;
-		}
-
-		result = mContentResolver.delete(DatabaseContract.IndexComponent.CONTENT_URI,
-				null, null);
-
-		return result;
+		return delete(DatabaseContract.IndexComponent.CONTENT_URI);
 	}
 
 	public int deleteIndexComponent(IndexComponent indexComponent) {
@@ -2392,16 +2310,7 @@ public class StockDatabaseManager extends DatabaseManager {
 	}
 
 	public int deleteStockTrends() {
-		int result = 0;
-
-		if (mContentResolver == null) {
-			return result;
-		}
-
-		result = mContentResolver.delete(DatabaseContract.StockTrends.CONTENT_URI,
-				null, null);
-
-		return result;
+		return delete(DatabaseContract.StockTrends.CONTENT_URI);
 	}
 
 	public int deleteStockTrends(StockTrends stockTrends) {
@@ -2415,6 +2324,19 @@ public class StockDatabaseManager extends DatabaseManager {
 
 		result = mContentResolver.delete(DatabaseContract.StockTrends.CONTENT_URI,
 				where, null);
+
+		return result;
+	}
+
+	public int deleteStockTrends(long stockId) {
+		int result = 0;
+		String where = DatabaseContract.COLUMN_ID + "=" + stockId;
+
+		try {
+			result = delete(DatabaseContract.StockTrends.CONTENT_URI, where);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		return result;
 	}

@@ -232,10 +232,6 @@ public class StockAnalyzer {
 			return;
 		}
 
-		if (!mStockDatabaseManager.isStockFavorite(stock.getSE(), stock.getCode())) {
-			return;
-		}
-
 		try {
             if (!Stock.CLASS_INDEX.equals(stock.getClases())) {
                 analyzeStockFinancial(stock);
@@ -844,70 +840,76 @@ public class StockAnalyzer {
 		return result;
 	}
 
-    private String getSecondBottomAction(Stock stock, ArrayList<StockData> vertexList,
-                                         ArrayList<StockData> strokeDataList,
-                                         ArrayList<StockData> segmentDataList) {
-        String result = "";
-        StockData firstBottomVertex = null;
-        StockData secondBottomVertex = null;
-        StockData secondTopVertex = null;
+	private String getSecondBottomAction(Stock stock, ArrayList<StockData> vertexList,
+										 ArrayList<StockData> strokeDataList,
+										 ArrayList<StockData> segmentDataList) {
+		String result = "";
+		StockData firstBottomVertex = null;
+		StockData firstTopVertex = null;
+		StockData secondBottomVertex = null;
+		StockData secondTopVertex = null;
 
-        StockData baseStockData = null;
-        StockData brokenStockData = null;
-        int divergence = 0;
-        int numerator = 0;
-        int denominator = 0;
+		StockData baseStockData = null;
+		StockData brokenStockData = null;
+		int divergence = 0;
+		int numerator = 0;
+		int denominator = 0;
 
-        if ((vertexList == null)
-                || (vertexList.size() < 2 * StockData.VERTEX_TYPING_SIZE + 1)) {
-            return result;
-        }
+		if ((vertexList == null)
+				|| (vertexList.size() < 2 * StockData.VERTEX_TYPING_SIZE + 1)) {
+			return result;
+		}
 
-        if ((strokeDataList == null) || (strokeDataList.size() < 2 * StockData.VERTEX_TYPING_SIZE)) {
-            return result;
-        }
+		if ((strokeDataList == null) || (strokeDataList.size() < 2 * StockData.VERTEX_TYPING_SIZE)) {
+			return result;
+		}
 
-        if ((segmentDataList == null) || (segmentDataList.size() < 2 * StockData.VERTEX_TYPING_SIZE)) {
-            return result;
-        }
+		if ((segmentDataList == null) || (segmentDataList.size() < 2 * StockData.VERTEX_TYPING_SIZE)) {
+			return result;
+		}
 
-        firstBottomVertex = vertexList.get(vertexList.size() - 4);
-        if (firstBottomVertex == null) {
-            return result;
-        }
+		firstBottomVertex = vertexList.get(vertexList.size() - 4);
+		if (firstBottomVertex == null) {
+			return result;
+		}
 
-        secondTopVertex = vertexList.get(vertexList.size() - 3);
-        if (secondTopVertex == null) {
-            return result;
-        }
+		firstTopVertex = vertexList.get(vertexList.size() - 3);
+		if (firstTopVertex == null) {
+			return result;
+		}
 
-        secondBottomVertex = vertexList.get(vertexList.size() - 2);
-        if (secondBottomVertex == null) {
-            return result;
-        }
+		secondBottomVertex = vertexList.get(vertexList.size() - 2);
+		if (secondBottomVertex == null) {
+			return result;
+		}
 
-        if (firstBottomVertex.vertexOf(StockData.VERTEX_BOTTOM_SEGMENT)) {
-            baseStockData = segmentDataList.get(segmentDataList.size() - 4);
-            brokenStockData = segmentDataList.get(segmentDataList.size() - 2);
+		secondTopVertex = vertexList.get(vertexList.size() - 1);
+		if (secondTopVertex == null) {
+			return result;
+		}
+
+		if (firstBottomVertex.vertexOf(StockData.VERTEX_BOTTOM_SEGMENT)) {
+			baseStockData = segmentDataList.get(segmentDataList.size() - 4);
+			brokenStockData = segmentDataList.get(segmentDataList.size() - 2);
 //		} else if (firstBottomVertex.vertexOf(StockData.VERTEX_BOTTOM_STROKE)) {
 //			baseStockData = strokeDataList.get(strokeDataList.size() - 4);
 //			brokenStockData = strokeDataList.get(strokeDataList.size() - 2);
-        } else {
-            return result;
-        }
+		} else {
+			return result;
+		}
 
-        if ((baseStockData == null) || (brokenStockData == null)) {
-            return result;
-        }
+		if ((baseStockData == null) || (brokenStockData == null)) {
+			return result;
+		}
 
-        if ((firstBottomVertex.getVertexLow() < secondBottomVertex.getVertexLow())
-                && (secondBottomVertex.getVertexLow() < stock.getPrice())
-                && (stock.getPrice() < secondTopVertex.getVertexHigh())
-        ) {
-            if ((stock.getPrice() > 0) && (brokenStockData.getVertexHigh() > 0)) {
-                numerator = (int)(100 * (stock.getPrice() - brokenStockData.getVertexHigh())/brokenStockData.getVertexHigh());
-                denominator = (int)(brokenStockData.getNet());
-            }
+		if ((firstBottomVertex.getVertexLow() < secondBottomVertex.getVertexLow())
+				&& (secondBottomVertex.getVertexLow() < stock.getPrice())
+				&& (stock.getPrice() < firstTopVertex.getVertexHigh())
+		) {
+			if ((stock.getPrice() > 0) && (brokenStockData.getVertexHigh() > 0)) {
+				numerator = (int)(100 * (stock.getPrice() - brokenStockData.getVertexHigh())/brokenStockData.getVertexHigh());
+				denominator = (int)(brokenStockData.getNet());
+			}
 
 			if (Math.abs(denominator) < Constants.SECEND_ACTION_THRESHOLD) {
 				return result;
@@ -920,79 +922,88 @@ public class StockAnalyzer {
 				result += StockData.ACTION_LOW;
 			}
 
-            result += StockData.ACTION_BUY2;
-            result += StockData.ACTION_BUY2;
-            result += " " + numerator;
-            result += "/" + denominator;
-        }
+			if (firstTopVertex.getVertexHigh() < secondTopVertex.getVertexHigh()) {
+				result += StockData.ACTION_STAR;
+			}
+			result += StockData.ACTION_BUY2;
+			result += StockData.ACTION_BUY2;
+			result += " " + numerator;
+			result += "/" + denominator;
+		}
 
-        return result;
-    }
+		return result;
+	}
 
-    private String getSecondTopAction(Stock stock, ArrayList<StockData> vertexList,
-                                      ArrayList<StockData> strokeDataList,
-                                      ArrayList<StockData> segmentDataList) {
-        String result = "";
-        StockData firstTopVertex = null;
-        StockData secondBottomVertex = null;
-        StockData secondTopVertex = null;
+	private String getSecondTopAction(Stock stock, ArrayList<StockData> vertexList,
+									  ArrayList<StockData> strokeDataList,
+									  ArrayList<StockData> segmentDataList) {
+		String result = "";
+		StockData firstBottomVertex = null;
+		StockData firstTopVertex = null;
+		StockData secondBottomVertex = null;
+		StockData secondTopVertex = null;
 
-        StockData baseStockData = null;
-        StockData brokenStockData = null;
-        int divergence = 0;
-        int numerator = 0;
-        int denominator = 0;
+		StockData baseStockData = null;
+		StockData brokenStockData = null;
+		int divergence = 0;
+		int numerator = 0;
+		int denominator = 0;
 
-        if ((vertexList == null)
-                || (vertexList.size() < 2 * StockData.VERTEX_TYPING_SIZE + 1)) {
-            return result;
-        }
+		if ((vertexList == null)
+				|| (vertexList.size() < 2 * StockData.VERTEX_TYPING_SIZE + 1)) {
+			return result;
+		}
 
-        if ((strokeDataList == null) || (strokeDataList.size() < 2 * StockData.VERTEX_TYPING_SIZE)) {
-            return result;
-        }
+		if ((strokeDataList == null) || (strokeDataList.size() < 2 * StockData.VERTEX_TYPING_SIZE)) {
+			return result;
+		}
 
-        if ((segmentDataList == null) || (segmentDataList.size() < 2 * StockData.VERTEX_TYPING_SIZE)) {
-            return result;
-        }
+		if ((segmentDataList == null) || (segmentDataList.size() < 2 * StockData.VERTEX_TYPING_SIZE)) {
+			return result;
+		}
 
-        firstTopVertex = vertexList.get(vertexList.size() - 4);
-        if (firstTopVertex == null) {
-            return result;
-        }
+		firstTopVertex = vertexList.get(vertexList.size() - 4);
+		if (firstTopVertex == null) {
+			return result;
+		}
 
-        secondBottomVertex = vertexList.get(vertexList.size() - 3);
-        if (secondBottomVertex == null) {
-            return result;
-        }
+		firstBottomVertex = vertexList.get(vertexList.size() - 3);
+		if (firstBottomVertex == null) {
+			return result;
+		}
 
-        secondTopVertex = vertexList.get(vertexList.size() - 2);
-        if (secondTopVertex == null) {
-            return result;
-        }
+		secondTopVertex = vertexList.get(vertexList.size() - 2);
+		if (secondTopVertex == null) {
+			return result;
+		}
 
-        if (firstTopVertex.vertexOf(StockData.VERTEX_TOP_SEGMENT)) {
-            baseStockData = segmentDataList.get(segmentDataList.size() - 4);
-            brokenStockData = segmentDataList.get(segmentDataList.size() - 2);
+		secondBottomVertex = vertexList.get(vertexList.size() - 1);
+		if (secondBottomVertex == null) {
+			return result;
+		}
+
+		if (firstTopVertex.vertexOf(StockData.VERTEX_TOP_SEGMENT)) {
+			baseStockData = segmentDataList.get(segmentDataList.size() - 4);
+			brokenStockData = segmentDataList.get(segmentDataList.size() - 2);
 //		} else if (firstTopVertex.vertexOf(StockData.VERTEX_TOP_STROKE)) {
 //			baseStockData = strokeDataList.get(strokeDataList.size() - 4);
 //			brokenStockData = strokeDataList.get(strokeDataList.size() - 2);
-        } else {
-            return result;
-        }
+		} else {
+			return result;
+		}
 
-        if ((baseStockData == null) || (brokenStockData == null)) {
-            return result;
-        }
+		if ((baseStockData == null) || (brokenStockData == null)) {
+			return result;
+		}
 
-        if ((firstTopVertex.getVertexHigh() > secondTopVertex.getVertexHigh())
-                && (secondTopVertex.getVertexHigh() > stock.getPrice())
-                && (stock.getPrice() > secondBottomVertex.getVertexLow())
-        ) {
-            if ((stock.getPrice() > 0) && (brokenStockData.getVertexLow() > 0)) {
-                numerator = (int)(100 * (stock.getPrice() - brokenStockData.getVertexLow())/brokenStockData.getVertexLow());
-                denominator = (int)(brokenStockData.getNet());
-            }
+		if ((firstTopVertex.getVertexHigh() > secondTopVertex.getVertexHigh())
+				&& (secondTopVertex.getVertexHigh() > stock.getPrice())
+				&& (stock.getPrice() > firstBottomVertex.getVertexLow())
+		) {
+			if ((stock.getPrice() > 0) && (brokenStockData.getVertexLow() > 0)) {
+				numerator = (int)(100 * (stock.getPrice() - brokenStockData.getVertexLow())/brokenStockData.getVertexLow());
+				denominator = (int)(brokenStockData.getNet());
+			}
 
 			if (Math.abs(denominator) < Constants.SECEND_ACTION_THRESHOLD) {
 				return result;
@@ -1005,14 +1016,18 @@ public class StockAnalyzer {
 				result += StockData.ACTION_LOW;
 			}
 
-            result += StockData.ACTION_SELL2;
-            result += StockData.ACTION_SELL2;
-            result += " " + numerator;
-            result += "/" + denominator;
-        }
+			if (firstBottomVertex.getVertexLow() > secondBottomVertex.getVertexLow()) {
+				result += StockData.ACTION_STAR;
+			}
 
-        return result;
-    }
+			result += StockData.ACTION_SELL2;
+			result += StockData.ACTION_SELL2;
+			result += " " + numerator;
+			result += "/" + denominator;
+		}
+
+		return result;
+	}
 
     private int getLastNet(ArrayList<StockData> stockDataList) {
 		int result = 0;
@@ -1085,8 +1100,10 @@ public class StockAnalyzer {
 			if (prev.vertexOf(StockData.VERTEX_BOTTOM_SEGMENT)) {
 				action += StockData.ACTION_D;
 			} else {
-				action += StockData.ACTION_ADD;
-				action += Math.abs(segmentNet);
+				if (segmentNet >= 0) {
+					action += StockData.ACTION_ADD;
+				}
+				action += segmentNet;//Math.abs(segmentNet);
 			}
 
 			if (segmentDivergence == StockData.DIVERGENCE_UP) {
@@ -1097,8 +1114,11 @@ public class StockAnalyzer {
 			if (prev.vertexOf(StockData.VERTEX_TOP_SEGMENT)) {
 				action += StockData.ACTION_G;
 			} else {
-				action += StockData.ACTION_MINUS;
-				action += Math.abs(segmentNet);
+				if (segmentNet >= 0) {
+					action += StockData.ACTION_ADD;
+				}
+//				action += StockData.ACTION_MINUS;
+				action += segmentNet;//Math.abs(segmentNet);
 			}
 
 			if (segmentDivergence == StockData.DIVERGENCE_DOWN) {
@@ -1110,8 +1130,10 @@ public class StockAnalyzer {
 			if (prev.vertexOf(StockData.VERTEX_BOTTOM_STROKE)) {
 				action += StockData.ACTION_D;
 			} else {
-				action += StockData.ACTION_ADD;
-				action += Math.abs(strokeNet);
+				if (strokeNet >= 0) {
+					action += StockData.ACTION_ADD;
+				}
+				action += strokeNet;//Math.abs(strokeNet);
 			}
 
 			if (strokeDivergence == StockData.DIVERGENCE_UP) {
@@ -1121,8 +1143,11 @@ public class StockAnalyzer {
 			if (prev.vertexOf(StockData.VERTEX_TOP_STROKE)) {
 				action += StockData.ACTION_G;
 			} else {
-				action += StockData.ACTION_MINUS;
-				action += Math.abs(strokeNet);
+				if (strokeNet >= 0) {
+					action += StockData.ACTION_ADD;
+				}
+//				action += StockData.ACTION_MINUS;
+				action += strokeNet;//Math.abs(strokeNet);
 			}
 
 			if (strokeDivergence == StockData.DIVERGENCE_DOWN) {
@@ -1145,8 +1170,10 @@ public class StockAnalyzer {
 					action = result2;
 				}
 			} else {
-				action += StockData.ACTION_ADD;
-				action += Math.abs(drawNet);
+				if (drawNet >= 0) {
+					action += StockData.ACTION_ADD;
+				}
+				action += drawNet;//Math.abs(drawNet);
 			}
 
 			if (drawDivergence == StockData.DIVERGENCE_UP) {
@@ -1167,8 +1194,11 @@ public class StockAnalyzer {
 					action = result2;
 				}
 			} else {
-				action += StockData.ACTION_MINUS;
-				action += Math.abs(drawNet);
+				if (drawNet >= 0) {
+					action += StockData.ACTION_ADD;
+				}
+//				action += StockData.ACTION_MINUS;
+				action += drawNet;//Math.abs(drawNet);
 			}
 
 			if (drawDivergence == StockData.DIVERGENCE_DOWN) {

@@ -224,8 +224,6 @@ public class StockVertexAnalyzer {
 		int j = 0;
 		StockData stockData = null;
 
-		stockData = new StockData();
-
 		if (index == 0) {
 			i = 0;
 			j = 0;
@@ -234,12 +232,21 @@ public class StockVertexAnalyzer {
 			j = vertexList.size() - 1;
 		}
 
+		stockData = new StockData();
+		stockData.set(stockDataList.get(i));
+
 		if (vertexList.get(j).vertexOf(StockData.VERTEX_TOP)) {
-			stockData.set(stockDataList.get(i));
-			stockData.setVertex(StockData.VERTEX_BOTTOM);
+			if (stockDataList.get(i).getVertexHigh() > vertexList.get(j).getVertexHigh()) {
+				stockData.setVertex(StockData.VERTEX_TOP);
+			} else {
+				stockData.setVertex(StockData.VERTEX_BOTTOM);
+			}
 		} else if (vertexList.get(j).vertexOf(StockData.VERTEX_BOTTOM)) {
-			stockData.set(stockDataList.get(i));
-			stockData.setVertex(StockData.VERTEX_TOP);
+			if (stockDataList.get(i).getVertexLow() < vertexList.get(j).getVertexLow()) {
+				stockData.setVertex(StockData.VERTEX_BOTTOM);
+			} else {
+				stockData.setVertex(StockData.VERTEX_TOP);
+			}
 		}
 
 		if (index == 0) {

@@ -16,11 +16,11 @@ public class OrionAlarmManager {
 
 	Context mContext = null;
 
-	long mIntervalMillis = 0;
-	AlarmManager mAlarmManager = null;
-	PendingIntent mPendingIntent = null;
+	private long mIntervalMillis = 0;
+	private AlarmManager mAlarmManager = null;
+	private PendingIntent mPendingIntent = null;
 
-	public OrionAlarmManager() {
+	private OrionAlarmManager() {
 	}
 
 	public OrionAlarmManager(Context context) {
@@ -63,8 +63,7 @@ public class OrionAlarmManager {
 	}
 */
 	void startAlarm() {
-		int minutes = 0;
-        int dayOfWeek = Calendar.SUNDAY;
+		int dayOfWeek = Calendar.SUNDAY;
 		long triggerMillis = 0;
 
 		stopAlarm();
