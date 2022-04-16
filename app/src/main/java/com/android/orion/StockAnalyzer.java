@@ -239,7 +239,7 @@ public class StockAnalyzer {
                 setupStockShareBonus(stock);
             }
 
-			setupStockOperate(stock);
+//			setupStockOperate(stock);
 
 			updateDatabase(stock);
 
@@ -589,7 +589,6 @@ public class StockAnalyzer {
 		if (stock == null) {
 			return;
 		}
-
 
 		if (TextUtils.isEmpty(stock.getStatus())) {
 			stock.setOperate("");
@@ -1412,7 +1411,7 @@ public class StockAnalyzer {
 		}
 
 		contentTitle.append(stock.getName() + " " + stock.getPrice() + " "
-				+ stock.getNet() + " " + stock.getOperate() + " " + actionString);
+				+ stock.getNet() + " " + actionString);
 
 		RecordFile.writeNotificationFile(contentTitle.toString());
 

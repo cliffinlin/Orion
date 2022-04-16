@@ -60,10 +60,9 @@
     <string name="deal_delete">Deal Delete</string>
     <string name="deal_edit">Deal Edit</string>
     <string name="deal_list">Deal List</string>
-    <string name="deal_price">Deal price</string>
-    <string name="buy_price">Buy price</string>
-    <string name="sell_price">Sell price</string>
-    <string name="deal_price_prompt">Price:</string>
+    <string name="deal_price">Deal Price</string>
+    <string name="buy_price">Buy Price</string>
+    <string name="sell_price">Sell Price</string>
     <string name="deal_net">Net</string>
     <string name="deal_volume">Deal Volume</string>
     <string name="deal_volume_prompt">Volume:</string>
@@ -173,7 +172,6 @@
     <string name="stock_data_list">Stock Data List</string>
     <string name="stock_name_code">Name</string>
     <string name="stock_code">Stock Code</string>
-    <string name="stock_action">Stock Action</string>
     <string name="stock_class">Stock Class</string>
     <string name="stock_class_hsa">HSA</string>
     <string name="stock_class_index">Index</string>
@@ -188,7 +186,7 @@
     <string name="stock_list">Stock List</string>
     <string name="component_list">Component List</string>
     <string name="trends_list">Trends List</string>
-    <string name="stock_operate">Operate</string>
+    <string name="stock_operate">Stock Operate</string>
     <string name="stock_quota">Stock Quota</string>
     <string name="stock_se">Stock SE</string>
     <string name="stock_se_sh">SH</string>

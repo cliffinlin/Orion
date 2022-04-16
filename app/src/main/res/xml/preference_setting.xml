@@ -27,7 +27,6 @@
             android:key="min30"
             android:title="@string/period_30min" />
         <com.android.orion.CustomSwitchPreference
-            android:defaultValue="true"
             android:key="min15"
             android:title="@string/period_15min" />
         <com.android.orion.CustomSwitchPreference

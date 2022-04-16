@@ -185,6 +185,7 @@ public class Stock extends DatabaseTable {
 		mName = "";
 		mPinyin = "";
 
+		mOperate = "";
 		mHold = 0;
 
 		reset();
@@ -212,7 +213,6 @@ public class Stock extends DatabaseTable {
 		mActionQuarter = "";
 		mActionYear = "";
 
-		mOperate = "";
 		mCost = 0;
 		mProfit = 0;
 		mBonus = 0;
@@ -304,6 +304,14 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND_RATIO, mDividendRatio);
 		contentValues.put(DatabaseContract.COLUMN_R_DATE, mRDate);
 		contentValues.put(DatabaseContract.COLUMN_STATUS, mStatus);
+
+		return contentValues;
+	}
+
+	public ContentValues getContentValuesForLoad() {
+		ContentValues contentValues = getContentValues();
+
+		contentValues.put(DatabaseContract.COLUMN_FLAG, mFlag);
 
 		return contentValues;
 	}

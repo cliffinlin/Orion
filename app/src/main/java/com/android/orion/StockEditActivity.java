@@ -9,15 +9,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.android.orion.database.IndexComponent;
 import com.android.orion.database.Stock;
 import com.android.orion.utility.Utility;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class StockEditActivity extends DatabaseActivity implements OnClickListener {
 
@@ -32,7 +37,13 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 	EditText mEditTextStockCost;
 	EditText mEditTextStockHold;
 	EditText mEditTextStockValuation;
-	Button mButtonOk, mButtonCancel;
+
+	List<String> mListStockOperate;
+	ArrayAdapter<String> mArrayAdapter;
+	Spinner mSpinnerStockAcion;
+
+	Button mButtonOk;
+	Button mButtonCancel;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +76,7 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 		mEditTextStockCost = (EditText) findViewById(R.id.edittext_stock_cost);
 		mEditTextStockHold = (EditText) findViewById(R.id.edittext_stock_hold);
 		mEditTextStockValuation = (EditText) findViewById(R.id.edittext_stock_valuation);
+		mSpinnerStockAcion = (Spinner) findViewById(R.id.spinner_stock_operate);
 		mButtonOk = (Button) findViewById(R.id.button_ok);
 		mButtonCancel = (Button) findViewById(R.id.button_cancel);
 
@@ -80,6 +92,22 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 		mEditTextStockValuation.setEnabled(false);
 		mButtonOk.setOnClickListener(this);
 		mButtonCancel.setOnClickListener(this);
+
+		mListStockOperate = new ArrayList<String>();
+		mListStockOperate.add("");
+		mListStockOperate.add(Settings.KEY_PERIOD_MONTH);
+		mListStockOperate.add(Settings.KEY_PERIOD_WEEK);
+		mListStockOperate.add(Settings.KEY_PERIOD_DAY);
+		mListStockOperate.add(Settings.KEY_PERIOD_MIN60);
+		mListStockOperate.add(Settings.KEY_PERIOD_MIN30);
+		mListStockOperate.add(Settings.KEY_PERIOD_MIN15);
+		mListStockOperate.add(Settings.KEY_PERIOD_MIN5);
+
+		mArrayAdapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_spinner_item, mListStockOperate);
+		mArrayAdapter
+				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		mSpinnerStockAcion.setAdapter(mArrayAdapter);
 
 		mEditTextStockCode.addTextChangedListener(new TextWatcher() {
 
@@ -141,6 +169,14 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 		mEditTextStockCost.setText(String.valueOf(mStock.getCost()));
 		mEditTextStockHold.setText(String.valueOf(mStock.getHold()));
 		mEditTextStockValuation.setText(String.valueOf(mStock.getValuation()));
+
+		String operate = mStock.getOperate();
+		for (int i = 0; i < mListStockOperate.size(); i++) {
+			if (mListStockOperate.get(i).equals(operate)) {
+				mSpinnerStockAcion.setSelection(i);
+				break;
+			}
+		}
 	}
 
 	@Override
@@ -203,6 +239,9 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 			} else {
 				mStock.setCost(0);
 			}
+
+			String operate = mSpinnerStockAcion.getSelectedItem().toString();
+			mStock.setOperate(operate);
 
 			mStock.setFlag(Stock.FLAG_FAVORITE);
 

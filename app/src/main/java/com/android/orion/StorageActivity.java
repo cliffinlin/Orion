@@ -261,6 +261,8 @@ public class StorageActivity extends DatabaseActivity {
                                 stock.setName(parser.nextText());
                             } else if (DatabaseContract.COLUMN_FLAG.equals(tagName)) {
                                 stock.setFlag(Integer.valueOf(parser.nextText()));
+							} else if (DatabaseContract.COLUMN_OPERATE.equals(tagName)) {
+								stock.setOperate(parser.nextText());
                             } else if (DatabaseContract.COLUMN_COST.equals(tagName)) {
                                 stock.setCost(Double.valueOf(parser.nextText()));
                             }
@@ -298,13 +300,12 @@ public class StorageActivity extends DatabaseActivity {
 							stock.setCreated(now);
 							stock.setModified(now);
 							mStockDatabaseManager.insertStock(stock);
-							mStockDatabaseManager.getStock(stock);
 						} else {
 							stock.setModified(now);
 							mStockDatabaseManager.updateStock(stock,
 									stock.getContentValues());
 						}
-                        stockList.add(stock);
+						stockList.add(stock);
 
 						if (stockDealArrayList.size() > 0) {
 							contentValues = new ContentValues[stockDealArrayList.size()];
@@ -347,7 +348,7 @@ public class StorageActivity extends DatabaseActivity {
 			for (Stock stock2 : stockList) {
 				mStockDatabaseManager.updateStockDeal(stock2);
 				mStockDatabaseManager.updateStock(stock2,
-						stock2.getContentValues());
+						stock2.getContentValuesForLoad());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -429,6 +430,8 @@ public class StorageActivity extends DatabaseActivity {
 						stock.getName());
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_FLAG,
 						String.valueOf(stock.getFlag()));
+				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_OPERATE,
+						stock.getOperate());
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_COST,
 						String.valueOf(stock.getCost()));
 			} catch (Exception e) {
