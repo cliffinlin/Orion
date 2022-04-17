@@ -269,8 +269,12 @@ public class StockDataChartListActivity extends BaseActivity implements
 
 		mStockDataChartItemList.clear();
 
+		String lastPeriod = "";
+		mStockDatabaseManager.getStockById(mStock);
 		for (int i = 0; i < Settings.KEY_PERIODS.length; i++) {
-			if (Preferences.getBoolean(this, Settings.KEY_PERIODS[i], false)) {
+			if (Preferences.getBoolean(this, Settings.KEY_PERIODS[i], false)
+					|| Settings.checkOperatePeriod(lastPeriod, Settings.KEY_PERIODS[i], mStock.getOperate())) {
+				lastPeriod = Settings.KEY_PERIODS[i];
 				mStockDataChartItemList.add(mStockDataChartItemMainList.get(i));
 				mStockDataChartItemList.add(mStockDataChartItemSubList.get(i));
 			}
@@ -370,8 +374,12 @@ public class StockDataChartListActivity extends BaseActivity implements
 			mLoaderManager.initLoader(LOADER_ID_STOCK_LIST, null, this);
 		}
 
+		String lastPeriod = "";
+		mStockDatabaseManager.getStockById(mStock);
 		for (int i = 0; i < Settings.KEY_PERIODS.length; i++) {
-			if (Preferences.getBoolean(this, Settings.KEY_PERIODS[i], false)) {
+			if (Preferences.getBoolean(this, Settings.KEY_PERIODS[i], false)
+					|| Settings.checkOperatePeriod(lastPeriod, Settings.KEY_PERIODS[i], mStock.getOperate())) {
+				lastPeriod = Settings.KEY_PERIODS[i];
 				mLoaderManager.initLoader(i, null, this);
 			}
 		}
@@ -389,8 +397,12 @@ public class StockDataChartListActivity extends BaseActivity implements
 			mLoaderManager.restartLoader(LOADER_ID_STOCK_LIST, null, this);
 		}
 
+		String lastPeriod = "";
+		mStockDatabaseManager.getStockById(mStock);
 		for (int i = 0; i < Settings.KEY_PERIODS.length; i++) {
-			if (Preferences.getBoolean(this, Settings.KEY_PERIODS[i], false)) {
+			if (Preferences.getBoolean(this, Settings.KEY_PERIODS[i], false)
+					|| Settings.checkOperatePeriod(lastPeriod, Settings.KEY_PERIODS[i], mStock.getOperate())) {
+				lastPeriod = Settings.KEY_PERIODS[i];
 				mLoaderManager.restartLoader(i, null, this);
 			}
 		}

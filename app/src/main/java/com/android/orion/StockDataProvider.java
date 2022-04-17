@@ -735,8 +735,11 @@ abstract class StockDataProvider extends StockAnalyzer {
             return result;
         }
 
+        String lastPeriod = "";
         for (String period : Settings.KEY_PERIODS) {
-            if (Preferences.getBoolean(mContext, period, false)) {
+            if (Preferences.getBoolean(mContext, period, false)
+                    || Settings.checkOperatePeriod(lastPeriod, period, stock.getOperate())) {
+                lastPeriod = period;
                 result = downloadStockDataHistory(stock, period);
             }
         }
@@ -1091,8 +1094,11 @@ abstract class StockDataProvider extends StockAnalyzer {
                     }
                 }
 
+                String lastPeriod = "";
                 for (String period : Settings.KEY_PERIODS) {
-                    if (Preferences.getBoolean(mContext, period, false)) {
+                    if (Preferences.getBoolean(mContext, period, false)
+                            || Settings.checkOperatePeriod(lastPeriod, period, stock.getOperate())) {
+                        lastPeriod = period;
                         analyze(stock, period);
                     }
                 }

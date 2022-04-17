@@ -923,10 +923,10 @@ public class StockData extends StockDatabaseTable {
 	public int divergenceTo(StockData stockData) {
 		int result = DIVERGENCE_NONE;
 
-		if ((Math.abs(getNet()) < Constants.SECEND_ACTION_THRESHOLD)
-				|| Math.abs(stockData.getNet()) < Constants.SECEND_ACTION_THRESHOLD) {
-			return result;
-		}
+//		if ((Math.abs(getNet()) < Constants.SECEND_ACTION_THRESHOLD)
+//				|| Math.abs(stockData.getNet()) < Constants.SECEND_ACTION_THRESHOLD) {
+//			return result;
+//		}
 
 		if (mDirection == DIRECTION_UP) {
 			if ((getVertexHigh() > stockData.getVertexHigh())

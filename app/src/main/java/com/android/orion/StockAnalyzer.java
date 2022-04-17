@@ -583,6 +583,7 @@ public class StockAnalyzer {
 	}
 
 	private void setupStockOperate(Stock stock) {
+		String lastPeriod = "";
 		StringBuilder result = new StringBuilder();
 		ArrayMap<Integer, Integer> divergenceArrayMap = new ArrayMap<Integer, Integer>();
 
@@ -599,7 +600,9 @@ public class StockAnalyzer {
 		}
 
 		for (String period : Settings.KEY_PERIODS) {
-			if (Preferences.getBoolean(mContext, period, false)) {
+			if (Preferences.getBoolean(mContext, period, false)
+                    || Settings.checkOperatePeriod(lastPeriod, period, stock.getOperate())) {
+				lastPeriod = period;
 				updateDivergenceArrayMap(divergenceArrayMap, stock.getSegmentDataList(period));
 				updateDivergenceArrayMap(divergenceArrayMap, stock.getStrokeDataList(period));
 				updateDivergenceArrayMap(divergenceArrayMap, stock.getDrawDataList(period));
@@ -910,8 +913,10 @@ public class StockAnalyzer {
 				denominator = (int)(brokenStockData.getNet());
 			}
 
-			if (Math.abs(denominator) < Constants.SECEND_ACTION_THRESHOLD) {
-				return result;
+			if (TextUtils.isEmpty(stock.getOperate())) {
+				if (Math.abs(denominator) < Constants.SECEND_ACTION_THRESHOLD) {
+					return result;
+				}
 			}
 
 			divergence = brokenStockData.divergenceTo(baseStockData);
@@ -1004,8 +1009,10 @@ public class StockAnalyzer {
 				denominator = (int)(brokenStockData.getNet());
 			}
 
-			if (Math.abs(denominator) < Constants.SECEND_ACTION_THRESHOLD) {
-				return result;
+			if (TextUtils.isEmpty(stock.getOperate())) {
+				if (Math.abs(denominator) < Constants.SECEND_ACTION_THRESHOLD) {
+					return result;
+				}
 			}
 
 			divergence = brokenStockData.divergenceTo(baseStockData);
@@ -1368,6 +1375,7 @@ public class StockAnalyzer {
 	}
 
 	private void updateNotification(Stock stock) {
+		String lastPeriod = "";
         ArrayList<StockDeal> stockDealList = new ArrayList<StockDeal>();
 		StringBuilder actionString = new StringBuilder();
 		StringBuilder contentTitle = new StringBuilder();
@@ -1381,7 +1389,9 @@ public class StockAnalyzer {
 		}
 
 		for (String period : Settings.KEY_PERIODS) {
-			if (Preferences.getBoolean(mContext, period, false)) {
+			if (Preferences.getBoolean(mContext, period, false)
+                    || Settings.checkOperatePeriod(lastPeriod, period, stock.getOperate())) {
+				lastPeriod = period;
 				String action = stock.getAction(period);
 				if (action.contains(StockData.ACTION_BUY2 + StockData.ACTION_BUY2)) {
 					actionString.append(period + " " + action + " ");

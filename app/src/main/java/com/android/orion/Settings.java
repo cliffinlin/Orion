@@ -1,5 +1,7 @@
 package com.android.orion;
 
+import android.text.TextUtils;
+
 public class Settings {
 	public static final String KEY_SHARED_PREFERENCES_INIT = "shared_preferences_init";
 
@@ -61,4 +63,53 @@ public class Settings {
 
 	private Settings() {
 	}
+
+    public static < E extends Enum < E >> boolean isInEnum(String value, Class < E > enumClass) {
+        for (E e: enumClass.getEnumConstants()) {
+            if (e.name().equals(value)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static int indexOfStrings(String value, String[] strings) {
+		int result = -1;
+
+		if (value == null) {
+			return result;
+		}
+
+		if ((strings == null) || (strings.length == 0)) {
+			return result;
+		}
+
+		for (int i = 0; i < strings.length; i++) {
+			if (value.equals(strings[i])) {
+				result = i;
+				break;
+			}
+		}
+
+		return result;
+	}
+
+	public static boolean checkOperatePeriod(String lastPeriod, String period, String operate) {
+	    boolean result = false;
+	    int periodIndex = -1;
+	    int operateIndex = -1;
+
+		if (TextUtils.isEmpty(lastPeriod) || TextUtils.isEmpty(period) || TextUtils.isEmpty(operate)) {
+	        return result;
+        }
+
+		periodIndex = indexOfStrings(period, KEY_PERIODS);
+	    operateIndex = indexOfStrings(operate, KEY_PERIODS);
+
+	    if (periodIndex <= operateIndex) {
+	        result = true;
+        }
+
+	    return result;
+    }
 }
