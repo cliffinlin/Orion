@@ -926,9 +926,6 @@ public class StockAnalyzer {
 				result += StockData.ACTION_LOW;
 			}
 
-			if (firstTopVertex.getVertexHigh() < secondTopVertex.getVertexHigh()) {
-				result += StockData.ACTION_STAR;
-			}
 			result += StockData.ACTION_BUY2;
 			result += StockData.ACTION_BUY2;
 			result += " " + numerator;
@@ -1020,10 +1017,6 @@ public class StockAnalyzer {
 				result += StockData.ACTION_HIGH;
 			} else if (divergence == StockData.DIVERGENCE_DOWN) {
 				result += StockData.ACTION_LOW;
-			}
-
-			if (firstBottomVertex.getVertexLow() > secondBottomVertex.getVertexLow()) {
-				result += StockData.ACTION_STAR;
 			}
 
 			result += StockData.ACTION_SELL2;

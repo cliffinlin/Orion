@@ -12,24 +12,26 @@ import java.util.Calendar;
 public class StockData extends StockDatabaseTable {
 
     public static final String ACTION_NONE = "";
-    public static final String ACTION_D = "D";
-    public static final String ACTION_BUY = "B";
-    public static final String ACTION_BUY1 = "B1";
-    public static final String ACTION_BUY2 = "B2";
-    public static final String ACTION_BUY3 = "B3";
-    public static final String ACTION_G = "G";
+
+	public static final String ACTION_BUY = "B";
+	public static final String ACTION_BUY1 = "B1";
+	public static final String ACTION_BUY2 = "B2";
+	public static final String ACTION_BUY3 = "B3";
     public static final String ACTION_SELL = "S";
     public static final String ACTION_SELL1 = "S1";
     public static final String ACTION_SELL2 = "S2";
     public static final String ACTION_SELL3 = "S3";
 
-    public static final String ACTION_STAR = "*";
+	public static final String ACTION_D = "D";
+	public static final String ACTION_G = "G";
 
     public static final String ACTION_HIGH = "H";
     public static final String ACTION_LOW = "L";
 
     public static final char ACTION_ADD = '+';
     public static final char ACTION_MINUS = '-';
+
+    public static final String ACTION_STAR = "*";
 
 	public static final int LEVEL_NONE = 0;
 	public static final int LEVEL_DRAW = 1 << 0;
@@ -922,11 +924,6 @@ public class StockData extends StockDatabaseTable {
 
 	public int divergenceTo(StockData stockData) {
 		int result = DIVERGENCE_NONE;
-
-//		if ((Math.abs(getNet()) < Constants.SECEND_ACTION_THRESHOLD)
-//				|| Math.abs(stockData.getNet()) < Constants.SECEND_ACTION_THRESHOLD) {
-//			return result;
-//		}
 
 		if (mDirection == DIRECTION_UP) {
 			if ((getVertexHigh() > stockData.getVertexHigh())

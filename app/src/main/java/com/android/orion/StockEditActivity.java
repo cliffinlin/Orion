@@ -30,6 +30,7 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 	public static final String ACTION_FAVORITE_STOCK_INSERT = "orion.intent.action.ACTION_FAVORITE_STOCK_INSERT";
 	public static final String ACTION_STOCK_EDIT = "orion.intent.action.ACTION_STOCK_EDIT";
 
+	CheckBox mCheckBoxFavorite;
 	RadioGroup mRadioGroupClass;
 	RadioGroup mRadioGroupSE;
 	EditText mEditTextStockName;
@@ -69,6 +70,7 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 	}
 
 	void initView() {
+		mCheckBoxFavorite = (CheckBox) findViewById(R.id.checkbox_favorite);
 		mRadioGroupClass = (RadioGroup) findViewById(R.id.radioGroupClass);
 		mRadioGroupSE = (RadioGroup) findViewById(R.id.radioGroupSE);
 		mEditTextStockName = (EditText) findViewById(R.id.edittext_stock_name);
@@ -80,6 +82,7 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 		mButtonOk = (Button) findViewById(R.id.button_ok);
 		mButtonCancel = (Button) findViewById(R.id.button_cancel);
 
+		mCheckBoxFavorite.setOnClickListener(this);
 		mRadioGroupClass.setOnClickListener(this);
 		mRadioGroupSE.setOnClickListener(this);
 		mEditTextStockName.setOnClickListener(this);
@@ -152,6 +155,8 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 	}
 
 	void updateView() {
+		mCheckBoxFavorite.setChecked(mStock.getFlag() == Stock.FLAG_FAVORITE);
+
 		if (mStock.getClases().equals(Stock.CLASS_A)) {
 			mRadioGroupClass.check(R.id.radio_class_hsa);
 		} else {
@@ -202,9 +207,14 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 		int viewId = view.getId();
 
 		switch (viewId) {
+		case R.id.checkbox_favorite:
+			mStock.setFlag(mCheckBoxFavorite.isChecked() ? Stock.FLAG_FAVORITE : Stock.FLAG_NONE);
+			break;
+
 		case R.id.button_ok:
 			int id = 0;
 
+			mStock.setFlag(mCheckBoxFavorite.isChecked() ? Stock.FLAG_FAVORITE : Stock.FLAG_NONE);
 			id = mRadioGroupClass.getCheckedRadioButtonId();
 			if (id == R.id.radio_class_hsa) {
 				mStock.setClasses(Stock.CLASS_A);
@@ -243,8 +253,6 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 			String operate = mSpinnerStockAcion.getSelectedItem().toString();
 			mStock.setOperate(operate);
 
-			mStock.setFlag(Stock.FLAG_FAVORITE);
-
 			if (ACTION_FAVORITE_STOCK_INSERT.equals(mAction) || ACTION_INDEX_COMPONENT_INSERT.equals(mAction)) {
 				if (!mStockDatabaseManager.isStockExist(mStock)) {
 					mStock.setCreated(Utility.getCurrentDateTimeString());
@@ -274,7 +282,7 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 			} else if (ACTION_STOCK_EDIT.equals(mAction)) {
 				mStock.setModified(Utility.getCurrentDateTimeString());
 				mStockDatabaseManager.updateStock(mStock,
-						mStock.getContentValues());
+						mStock.getContentValuesForEdit());
 			}
 
 			getIntent().putExtra(Constants.EXTRA_STOCK_ID, mStock.getId());

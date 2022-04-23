@@ -274,7 +274,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_QUARTER, mActionQuarter);
 		contentValues.put(DatabaseContract.COLUMN_YEAR, mActionYear);
 
-		contentValues.put(DatabaseContract.COLUMN_OPERATE, mOperate);
+//		contentValues.put(DatabaseContract.COLUMN_OPERATE, mOperate);
 		contentValues.put(DatabaseContract.COLUMN_HOLD, mHold);
 		contentValues.put(DatabaseContract.COLUMN_COST, mCost);
 		contentValues.put(DatabaseContract.COLUMN_PROFIT, mProfit);
@@ -308,10 +308,16 @@ public class Stock extends DatabaseTable {
 		return contentValues;
 	}
 
-	public ContentValues getContentValuesForLoad() {
+	public ContentValues getContentValuesForEdit() {
 		ContentValues contentValues = getContentValues();
 
+		contentValues.put(DatabaseContract.COLUMN_CLASSES, mClasses);
+		contentValues.put(DatabaseContract.COLUMN_SE, mSE);
+		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
+		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
+
 		contentValues.put(DatabaseContract.COLUMN_FLAG, mFlag);
+		contentValues.put(DatabaseContract.COLUMN_OPERATE, mOperate);
 
 		return contentValues;
 	}

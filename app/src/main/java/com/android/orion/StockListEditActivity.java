@@ -348,18 +348,19 @@ public class StockListEditActivity extends DatabaseActivity implements
 
 			long stockId = (Long) view.getTag();
             Stock stock = new Stock();
-            Uri uri = ContentUris.withAppendedId(
-					DatabaseContract.Stock.CONTENT_URI, stockId);
 
-            mStockDatabaseManager.getStock(uri, stock);
+            stock.setId(stockId);
+            mStockDatabaseManager.getStockById(stock);
 
 			try {
 				switch (view.getId()) {
 				case R.id.favorite:
 					if ((stock.getFlag() & Stock.FLAG_FAVORITE) == 0) {
-						mStockDatabaseManager.updateStockFlag(stockId, stock.getFlag() | Stock.FLAG_FAVORITE);
+						stock.setFlag(Stock.FLAG_FAVORITE);
+						mStockDatabaseManager.updateStock(stock, stock.getContentValuesForEdit());
 					} else {
-						mStockDatabaseManager.updateStockFlag(stockId, Stock.FLAG_NONE);
+						stock.setFlag(Stock.FLAG_NONE);
+						mStockDatabaseManager.updateStock(stock, stock.getContentValuesForEdit());
 					}
 					mNeedDownload = true;
 					break;

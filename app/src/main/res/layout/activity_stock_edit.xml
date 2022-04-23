@@ -4,6 +4,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+    <CheckBox
+        android:id="@+id/checkbox_favorite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/favorite" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
@@ -29,68 +35,76 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
 
-        <TextView
-            android:id="@+id/textview_stock_class"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="14dp"
-            android:layout_marginRight="14dp"
-            android:labelFor="@+id/edittext_stock_class"
-            android:text="@string/stock_class" />
+            android:layout_weight="1">
 
-        <RadioGroup
-            android:id="@+id/radioGroupClass"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-
-            <RadioButton
-                android:id="@+id/radio_class_hsa"
+            <TextView
+                android:id="@+id/textview_stock_class"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="@string/stock_class_hsa" />
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:labelFor="@+id/edittext_stock_class"
+                android:text="@string/stock_class" />
 
-            <RadioButton
-                android:id="@+id/radio_class_index"
+            <RadioGroup
+                android:id="@+id/radioGroupClass"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/stock_class_index" />
-        </RadioGroup>
-    </LinearLayout>
+                android:layout_height="wrap_content" >
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+                <RadioButton
+                    android:id="@+id/radio_class_hsa"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="@string/stock_class_hsa" />
 
-        <TextView
-            android:id="@+id/textview_stock_se"
+                <RadioButton
+                    android:id="@+id/radio_class_index"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/stock_class_index" />
+            </RadioGroup>
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="14dp"
-            android:layout_marginRight="14dp"
-            android:labelFor="@+id/edittext_stock_se"
-            android:text="@string/stock_se" />
+            android:layout_weight="1">
 
-        <RadioGroup
-            android:id="@+id/radioGroupSE"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-
-            <RadioButton
-                android:id="@+id/radio_se_sh"
+            <TextView
+                android:id="@+id/textview_stock_se"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="@string/stock_se_sh" />
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:labelFor="@+id/edittext_stock_se"
+                android:text="@string/stock_se" />
 
-            <RadioButton
-                android:id="@+id/radio_se_sz"
+            <RadioGroup
+                android:id="@+id/radioGroupSE"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/stock_se_sz" />
-        </RadioGroup>
+                android:layout_height="wrap_content" >
+
+                <RadioButton
+                    android:id="@+id/radio_se_sh"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="@string/stock_se_sh" />
+
+                <RadioButton
+                    android:id="@+id/radio_se_sz"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/stock_se_sz" />
+            </RadioGroup>
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
