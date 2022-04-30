@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -24,7 +25,7 @@ import com.android.orion.utility.Utility;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StockEditActivity extends DatabaseActivity implements OnClickListener {
+public class StockEditActivity extends DatabaseActivity implements OnClickListener, AdapterView.OnItemSelectedListener {
 
 	public static final String ACTION_INDEX_COMPONENT_INSERT = "orion.intent.action.ACTION_INDEX_COMPONENT_INSERT";
 	public static final String ACTION_FAVORITE_STOCK_INSERT = "orion.intent.action.ACTION_FAVORITE_STOCK_INSERT";
@@ -45,6 +46,8 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 
 	Button mButtonOk;
 	Button mButtonCancel;
+
+	boolean mNeedDownload = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +96,7 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 		mEditTextStockHold.setEnabled(false);
 		mEditTextStockValuation.setOnClickListener(this);
 		mEditTextStockValuation.setEnabled(false);
+		mSpinnerStockAcion.setOnItemSelectedListener(this);
 		mButtonOk.setOnClickListener(this);
 		mButtonCancel.setOnClickListener(this);
 
@@ -204,6 +208,7 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 
 	@Override
 	public void onClick(View view) {
+        String operate;
 		int viewId = view.getId();
 
 		switch (viewId) {
@@ -250,7 +255,7 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 				mStock.setCost(0);
 			}
 
-			String operate = mSpinnerStockAcion.getSelectedItem().toString();
+			operate = mSpinnerStockAcion.getSelectedItem().toString();
 			mStock.setOperate(operate);
 
 			if (ACTION_FAVORITE_STOCK_INSERT.equals(mAction) || ACTION_INDEX_COMPONENT_INSERT.equals(mAction)) {
@@ -289,6 +294,10 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 
 			setResult(RESULT_OK, getIntent());
 
+			if (mNeedDownload) {
+				mOrionService.download(mStock.getSE(), mStock.getCode());
+			}
+
 			finish();
 			break;
 
@@ -299,5 +308,22 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 		default:
 			break;
 		}
+	}
+
+	@Override
+	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+		String operate;
+
+		operate = mSpinnerStockAcion.getSelectedItem().toString();
+		if (!TextUtils.isEmpty(operate)) {
+			if (!operate.equals(mStock.getOperate())) {
+				mNeedDownload = true;
+			}
+		}
+	}
+
+	@Override
+	public void onNothingSelected(AdapterView<?> parent) {
+
 	}
 }

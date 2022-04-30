@@ -2,8 +2,6 @@ package com.android.orion;
 
 import android.app.AlertDialog;
 import android.app.LoaderManager;
-import android.content.ContentUris;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
@@ -11,9 +9,7 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -65,7 +61,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 		return null;
 	}
 
-	boolean mNeedDownload = false;
+	int mChangeCounter = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +111,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 	public void onDestroy() {
 		super.onDestroy();
 
-		if (mNeedDownload) {
+		if (mChangeCounter > 0) {
 			mOrionService.download();
 		}
 	}
@@ -356,13 +352,13 @@ public class StockListEditActivity extends DatabaseActivity implements
 				switch (view.getId()) {
 				case R.id.favorite:
 					if ((stock.getFlag() & Stock.FLAG_FAVORITE) == 0) {
+						mChangeCounter++;
 						stock.setFlag(Stock.FLAG_FAVORITE);
 						mStockDatabaseManager.updateStock(stock, stock.getContentValuesForEdit());
 					} else {
 						stock.setFlag(Stock.FLAG_NONE);
 						mStockDatabaseManager.updateStock(stock, stock.getContentValuesForEdit());
 					}
-					mNeedDownload = true;
 					break;
 
 				case R.id.delete:
