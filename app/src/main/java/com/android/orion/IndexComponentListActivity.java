@@ -180,7 +180,7 @@ public class IndexComponentListActivity extends ListActivity implements
 			case REQUEST_CODE_INDEX_COMPONENT_INSERT:
 			case REQUEST_CODE_INDEX_COMPONENT_SELECT:
 				if (mOrionService != null) {
-					mOrionService.download(mStock);
+					mOrionService.download();
 				}
 				break;
 

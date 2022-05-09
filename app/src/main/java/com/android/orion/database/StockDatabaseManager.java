@@ -1980,32 +1980,6 @@ public class StockDatabaseManager extends DatabaseManager {
 		}
 	}
 
-	public void getIndexComponent(String stockCode, IndexComponent indexComponent) {
-		Cursor cursor = null;
-
-		if ((indexComponent == null) || (mContentResolver == null)) {
-			return;
-		}
-
-		try {
-			String selection = getIndexComponentSelection(stockCode);
-			String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
-
-			cursor = mContentResolver.query(DatabaseContract.IndexComponent.CONTENT_URI,
-					DatabaseContract.IndexComponent.PROJECTION_ALL, selection, null,
-					sortOrder);
-
-			if ((cursor != null) && (cursor.getCount() > 0)) {
-				cursor.moveToNext();
-				indexComponent.set(cursor);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			closeCursor(cursor);
-		}
-	}
-
 	public void getIndexComponentList(ArrayList<IndexComponent> indexComponentList, String selection, String sortOrder) {
 		Cursor cursor = null;
 
@@ -2107,11 +2081,7 @@ public class StockDatabaseManager extends DatabaseManager {
 	}
 
 	public String getIndexComponentSelection(IndexComponent indexComponent) {
-		return getIndexComponentSelection(indexComponent.getCode());
-	}
-
-	public String getIndexComponentSelection(String stockCode) {
-		return DatabaseContract.COLUMN_CODE + " = " + stockCode;
+		return getIndexComponentSelection(indexComponent.getIndexCode(), indexComponent.getCode());
 	}
 
 	public String getIndexComponentSelection(String indexCode, String stockCode) {

@@ -247,6 +247,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 
 			IndexComponent indexComponent = new IndexComponent();
 
+			indexComponent.setIndexCode(mIntent.getStringExtra(Constants.EXTRA_INDEX_CODE));
 			indexComponent.setSE(mStock.getSE());
 			indexComponent.setCode(mStock.getCode());
 			indexComponent.setName(mStock.getName());
