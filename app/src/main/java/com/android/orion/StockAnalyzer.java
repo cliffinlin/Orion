@@ -1224,6 +1224,11 @@ public class StockAnalyzer {
 
 			stockTrends.set(stock);
 
+			if (!stockTrends.getTrends().contains(StockData.ACTION_BUY)
+					&& !stockTrends.getTrends().contains(StockData.ACTION_SELL)) {
+				return;
+			}
+
 			if (mStockDatabaseManager.isStockTrendsExist(stockTrends)) {
 				StockTrends temp = new StockTrends();
 
