@@ -39,6 +39,8 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 	EditText mEditTextStockCost;
 	EditText mEditTextStockHold;
 	EditText mEditTextStockValuation;
+	EditText mEditTextStockBonus;
+	EditText mEditTextStockYield;
 
 	List<String> mListStockOperate;
 	ArrayAdapter<String> mArrayAdapter;
@@ -81,6 +83,8 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 		mEditTextStockCost = (EditText) findViewById(R.id.edittext_stock_cost);
 		mEditTextStockHold = (EditText) findViewById(R.id.edittext_stock_hold);
 		mEditTextStockValuation = (EditText) findViewById(R.id.edittext_stock_valuation);
+		mEditTextStockBonus = (EditText) findViewById(R.id.edittext_stock_bonus);
+		mEditTextStockYield = (EditText) findViewById(R.id.edittext_stock_yield);
 		mSpinnerStockAcion = (Spinner) findViewById(R.id.spinner_stock_operate);
 		mButtonOk = (Button) findViewById(R.id.button_ok);
 		mButtonCancel = (Button) findViewById(R.id.button_cancel);
@@ -96,6 +100,10 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 		mEditTextStockHold.setEnabled(false);
 		mEditTextStockValuation.setOnClickListener(this);
 		mEditTextStockValuation.setEnabled(false);
+		mEditTextStockBonus.setOnClickListener(this);
+		mEditTextStockBonus.setEnabled(false);
+		mEditTextStockYield.setOnClickListener(this);
+		mEditTextStockYield.setEnabled(false);
 		mSpinnerStockAcion.setOnItemSelectedListener(this);
 		mButtonOk.setOnClickListener(this);
 		mButtonCancel.setOnClickListener(this);
@@ -178,6 +186,8 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 		mEditTextStockCost.setText(String.valueOf(mStock.getCost()));
 		mEditTextStockHold.setText(String.valueOf(mStock.getHold()));
 		mEditTextStockValuation.setText(String.valueOf(mStock.getValuation()));
+		mEditTextStockBonus.setText(String.valueOf(mStock.getBonus()));
+		mEditTextStockYield.setText(String.valueOf(mStock.getYield()));
 
 		String operate = mStock.getOperate();
 		for (int i = 0; i < mListStockOperate.size(); i++) {

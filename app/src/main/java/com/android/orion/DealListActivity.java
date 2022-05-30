@@ -237,7 +237,7 @@ public class DealListActivity extends ListActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stock_deal_list);
 
-        mFilterType = FILTER_TYPE_ALL;
+        mFilterType = FILTER_TYPE_SELL;
 
         mSortOrder = Preferences.getString(mContext, Settings.KEY_SORT_ORDER_DEAL_LIST,
                 mSortOrderDefault);

@@ -198,6 +198,8 @@
     <string name="stock_cost">Stock Cost</string>
     <string name="stock_hold">Stock Hold</string>
     <string name="stock_valuation">Stock Valuation</string>
+    <string name="stock_bonus">Stock Bonus</string>
+    <string name="stock_yield">Stock Yield</string>
     <string name="symbol_add">+</string>
     <string name="symbol_subtract">-</string>
     <string name="title_activity_about">About</string>
