@@ -92,6 +92,7 @@ public final class DatabaseContract {
     public static final String COLUMN_SIGMA_HISTOGRAM = "sigma_histogram";
     public static final String COLUMN_VELOCITY = "velocity";
     public static final String COLUMN_DIVERGENCE = "divergence";
+    public static final String COLUMN_ACCOUNT = "account";
     public static final String COLUMN_ACTION = "action";
 
     // http://money.finance.sina.com.cn/corp/go.php/vFD_FinanceSummary/stockid/600028.phtml
@@ -283,7 +284,7 @@ public final class DatabaseContract {
         public static final String SORT_ORDER_DEFAULT = COLUMN_CODE + " ASC";
 
         public static final String[] PROJECTION_ALL = {_ID, COLUMN_SE,
-                COLUMN_CODE, COLUMN_NAME, COLUMN_ACTION, COLUMN_PRICE, COLUMN_NET,
+                COLUMN_CODE, COLUMN_NAME, COLUMN_ACCOUNT, COLUMN_ACTION, COLUMN_PRICE, COLUMN_NET,
                 COLUMN_BUY, COLUMN_SELL, COLUMN_VOLUME, COLUMN_VALUE, COLUMN_PROFIT,
                 COLUMN_FEE, COLUMN_BONUS, COLUMN_YIELD,
                 COLUMN_CREATED, COLUMN_MODIFIED};
@@ -291,7 +292,8 @@ public final class DatabaseContract {
         private static final String CREATE_TABLE_CONTENT = " (" + _ID
                 + " INTEGER PRIMARY KEY," + COLUMN_SE + TEXT_TYPE + COMMA_SEP
                 + COLUMN_CODE + TEXT_TYPE + COMMA_SEP + COLUMN_NAME + TEXT_TYPE
-                + COMMA_SEP + COLUMN_ACTION + TEXT_TYPE + COMMA_SEP
+                + COMMA_SEP + COLUMN_ACCOUNT + TEXT_TYPE + COMMA_SEP
+                + COLUMN_ACTION + TEXT_TYPE + COMMA_SEP
                 + COLUMN_PRICE + DOUBLE_TYPE + COMMA_SEP + COLUMN_NET
                 + DOUBLE_TYPE + COMMA_SEP
                 + COLUMN_BUY + DOUBLE_TYPE + COMMA_SEP

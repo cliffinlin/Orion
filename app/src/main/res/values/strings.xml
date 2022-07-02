@@ -6,6 +6,7 @@
     <string name="access_denied_jp">Kinsoku jikou desu!</string>
     <string name="access_denied_zh">Access Denied</string>
     <string name="acceleration">Acc</string>
+    <string name="account">Account</string>
     <string name="action">Action</string>
     <string name="action_all">All</string>
     <string name="action_operate">Operate</string>
@@ -186,6 +187,7 @@
     <string name="stock_list">Stock List</string>
     <string name="component_list">Component List</string>
     <string name="trends_list">Trends List</string>
+    <string name="stock_account">Stock Account</string>
     <string name="stock_operate">Stock Operate</string>
     <string name="stock_quota">Stock Quota</string>
     <string name="stock_se">Stock SE</string>

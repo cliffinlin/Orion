@@ -59,6 +59,9 @@ public class Settings {
 	public static final String KEY_STOCK_FILTER_YIELD = "stock_filter_yield";
 	public static final String KEY_STOCK_FILTER_DIVIDEND_RATIO = "stock_filter_dividend_ratio";
 
+	public static final String KEY_STOCK_ACCOUNT_A = "A";
+	public static final String KEY_STOCK_ACCOUNT_B = "B";
+
 	public static final String KEY_STOCK_HSA_UPDATED = "stock_hsa_updated";
 
 	private Settings() {

@@ -273,8 +273,10 @@ public class StorageActivity extends DatabaseActivity {
 								stockDeal.setSell(Double.valueOf(parser.nextText()));
                             } else if (DatabaseContract.COLUMN_VOLUME.equals(tagName)) {
                                 stockDeal.setVolume(Long.valueOf(parser.nextText()));
-                            } else if (DatabaseContract.COLUMN_ACTION.equals(tagName)) {
-                                stockDeal.setAction(parser.nextText());
+							} else if (DatabaseContract.COLUMN_ACCOUNT.equals(tagName)) {
+								stockDeal.setAccount(parser.nextText());
+							} else if (DatabaseContract.COLUMN_ACTION.equals(tagName)) {
+								stockDeal.setAction(parser.nextText());
                             } else if (DatabaseContract.COLUMN_CREATED.equals(tagName)) {
                                 stockDeal.setCreated(parser.nextText());
                             } else if (DatabaseContract.COLUMN_MODIFIED.equals(tagName)) {
@@ -460,6 +462,9 @@ public class StorageActivity extends DatabaseActivity {
 						xmlSerialize(xmlSerializer,
 								DatabaseContract.COLUMN_VOLUME,
 								String.valueOf(stockDeal.getVolume()));
+						xmlSerialize(xmlSerializer,
+								DatabaseContract.COLUMN_ACCOUNT,
+								stockDeal.getAccount());
 						xmlSerialize(xmlSerializer,
 								DatabaseContract.COLUMN_ACTION,
 								stockDeal.getAction());

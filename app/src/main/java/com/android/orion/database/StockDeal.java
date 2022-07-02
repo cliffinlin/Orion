@@ -32,6 +32,7 @@ public class StockDeal extends DatabaseTable {
     private String mSE;
     private String mCode;
     private String mName;
+    private String mAccount;
     private String mAction;
     private double mPrice;
     private double mNet;
@@ -64,6 +65,7 @@ public class StockDeal extends DatabaseTable {
         mSE = "";
         mCode = "";
         mName = "";
+        mAccount = "";
         mAction = "";
         mPrice = 0;
         mNet = 0;
@@ -84,6 +86,7 @@ public class StockDeal extends DatabaseTable {
         contentValues.put(DatabaseContract.COLUMN_SE, mSE);
         contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
         contentValues.put(DatabaseContract.COLUMN_NAME, mName);
+        contentValues.put(DatabaseContract.COLUMN_ACCOUNT, mAccount);
         contentValues.put(DatabaseContract.COLUMN_ACTION, mAction);
         contentValues.put(DatabaseContract.COLUMN_PRICE, mPrice);
         contentValues.put(DatabaseContract.COLUMN_NET, mNet);
@@ -111,6 +114,7 @@ public class StockDeal extends DatabaseTable {
         setSE(stockDeal.mSE);
         setCode(stockDeal.mCode);
         setName(stockDeal.mName);
+        setAccount(stockDeal.mAccount);
         setAction(stockDeal.mAction);
         setPrice(stockDeal.mPrice);
         setNet(stockDeal.mNet);
@@ -137,6 +141,7 @@ public class StockDeal extends DatabaseTable {
         setSE(cursor);
         setCode(cursor);
         setName(cursor);
+        setAccount(cursor);
         setAction(cursor);
         setPrice(cursor);
         setNet(cursor);
@@ -199,6 +204,23 @@ public class StockDeal extends DatabaseTable {
 
         setName(cursor.getString(cursor
                 .getColumnIndex(DatabaseContract.COLUMN_NAME)));
+    }
+
+    public String getAccount() {
+        return mAccount;
+    }
+
+    public void setAccount(String account) {
+        mAccount = account;
+    }
+
+    void setAccount(Cursor cursor) {
+        if (cursor == null) {
+            return;
+        }
+
+        setAccount(cursor.getString(cursor
+                .getColumnIndex(DatabaseContract.COLUMN_ACCOUNT)));
     }
 
     public String getAction() {

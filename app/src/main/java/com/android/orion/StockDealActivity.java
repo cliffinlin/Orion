@@ -41,6 +41,10 @@ public class StockDealActivity extends DatabaseActivity implements
 
 	static final int REQUEST_CODE_STOCK_ID = 0;
 
+	List<String> mListStockAccount;
+	ArrayAdapter<String> mArrayAdapterStockAccount;
+	Spinner mSpinnerStockAccount;
+
 	EditText mEditTextStockName;
 	EditText mEditTextStockCode;
 	EditText mEditTextDealProfit;
@@ -49,7 +53,7 @@ public class StockDealActivity extends DatabaseActivity implements
 	EditText mEditTextDealVolume;
 
 	List<String> mListStockOperate;
-	ArrayAdapter<String> mArrayAdapter;
+	ArrayAdapter<String> mArrayAdapterStockOperate;
 	Spinner mSpinnerStockOperate;
 
 	Button mButtonOk;
@@ -143,6 +147,7 @@ public class StockDealActivity extends DatabaseActivity implements
 	}
 
 	void initView() {
+		mSpinnerStockAccount = (Spinner) findViewById(R.id.spinner_stock_account);
 		mEditTextStockName = (EditText) findViewById(R.id.edittext_stock_name);
 		mEditTextStockCode = (EditText) findViewById(R.id.edittext_stock_code);
 		mEditTextDealProfit = (EditText) findViewById(R.id.edittext_deal_profit);
@@ -173,6 +178,17 @@ public class StockDealActivity extends DatabaseActivity implements
 		mEditTextStockCode.setEnabled(false);
 		mEditTextDealProfit.setEnabled(false);
 
+		mListStockAccount = new ArrayList<String>();
+		mListStockAccount.add("");
+		mListStockAccount.add(Settings.KEY_STOCK_ACCOUNT_A);
+		mListStockAccount.add(Settings.KEY_STOCK_ACCOUNT_B);
+
+		mArrayAdapterStockAccount = new ArrayAdapter<String>(this,
+				android.R.layout.simple_spinner_item, mListStockAccount);
+		mArrayAdapterStockAccount
+				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		mSpinnerStockAccount.setAdapter(mArrayAdapterStockAccount);
+
 		mListStockOperate = new ArrayList<String>();
 		mListStockOperate.add("");
 		mListStockOperate.add(Settings.KEY_PERIOD_MONTH);
@@ -183,11 +199,11 @@ public class StockDealActivity extends DatabaseActivity implements
 		mListStockOperate.add(Settings.KEY_PERIOD_MIN15);
 		mListStockOperate.add(Settings.KEY_PERIOD_MIN5);
 
-		mArrayAdapter = new ArrayAdapter<String>(this,
+		mArrayAdapterStockOperate = new ArrayAdapter<String>(this,
 				android.R.layout.simple_spinner_item, mListStockOperate);
-		mArrayAdapter
+		mArrayAdapterStockOperate
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		mSpinnerStockOperate.setAdapter(mArrayAdapter);
+		mSpinnerStockOperate.setAdapter(mArrayAdapterStockOperate);
 
 		if (ACTION_DEAL_INSERT.equals(mAction)) {
 			setTitle(R.string.deal_insert);
@@ -235,6 +251,13 @@ public class StockDealActivity extends DatabaseActivity implements
 	}
 
 	void updateView() {
+		String stockAccount = mDeal.getAccount();
+		for (int i = 0; i < mListStockAccount.size(); i++) {
+			if (mListStockAccount.get(i).equals(stockAccount)) {
+				mSpinnerStockAccount.setSelection(i);
+				break;
+			}
+		}
 		mEditTextStockName.setText(mDeal.getName());
 		mEditTextStockCode.setText(mDeal.getCode());
 		mEditTextDealProfit.setText(String.valueOf(mDeal.getProfit()));
@@ -285,6 +308,9 @@ public class StockDealActivity extends DatabaseActivity implements
 			String buyString = "";
 			String sellString = "";
 			String volumeString = "";
+
+			String stockAccount = mSpinnerStockAccount.getSelectedItem().toString();
+			mDeal.setAccount(stockAccount);
 
 			String dealAction = mSpinnerStockOperate.getSelectedItem().toString();
 			mDeal.setAction(dealAction);

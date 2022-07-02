@@ -95,6 +95,15 @@
         android:textSize="18sp" />
 
     <TextView
+        android:id="@+id/account"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/account"
+        android:textSize="18sp" />
+
+    <TextView
         android:id="@+id/action"
         android:layout_width="80dp"
         android:layout_height="40dp"
