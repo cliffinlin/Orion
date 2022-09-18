@@ -36,6 +36,7 @@ abstract class StockDataProvider extends StockAnalyzer {
     static final String TAG = Constants.TAG + " "
             + StockDataProvider.class.getSimpleName();
 
+    private static int DOWNLOAD_RESULT_SUCCESS = 1;
     private static int DOWNLOAD_RESULT_NONE = 0;
     private static int DOWNLOAD_RESULT_FAILED = -1;
 
@@ -450,8 +451,9 @@ abstract class StockDataProvider extends StockAnalyzer {
             if ((response != null) && (response.body() != null)) {
                 String resultString = response.body().string();
                 if (isAccessDenied(resultString)) {
-                    result =DOWNLOAD_RESULT_FAILED;
-                    return result;
+                    return DOWNLOAD_RESULT_FAILED;
+                } else {
+                    result = DOWNLOAD_RESULT_SUCCESS;
                 }
 
                 handleResponseStockRealTime(stock, resultString);
@@ -505,8 +507,9 @@ abstract class StockDataProvider extends StockAnalyzer {
             if ((response != null) && (response.body() != null)) {
                 String resultString = response.body().string();
                 if (isAccessDenied(resultString)) {
-                    result = DOWNLOAD_RESULT_FAILED;
-                    return result;
+                    return DOWNLOAD_RESULT_FAILED;
+                } else {
+                    result = DOWNLOAD_RESULT_SUCCESS;
                 }
 
                 handleResponseStockInformation(stock, resultString);
@@ -558,8 +561,9 @@ abstract class StockDataProvider extends StockAnalyzer {
             if ((response != null) && (response.body() != null)) {
                 String resultString = response.body().string();
                 if (isAccessDenied(resultString)) {
-                    result = DOWNLOAD_RESULT_FAILED;
-                    return result;
+                    return DOWNLOAD_RESULT_FAILED;
+                } else {
+                    result = DOWNLOAD_RESULT_SUCCESS;
                 }
 
                 handleResponseStockFinancial(stock, stockFinancial, resultString);
@@ -612,8 +616,9 @@ abstract class StockDataProvider extends StockAnalyzer {
             if ((response != null) && (response.body() != null)) {
                 String resultString = response.body().string();
                 if (isAccessDenied(resultString)) {
-                    result = DOWNLOAD_RESULT_FAILED;
-                    return result;
+                    return DOWNLOAD_RESULT_FAILED;
+                } else {
+                    result = DOWNLOAD_RESULT_SUCCESS;
                 }
 
                 handleResponseIPO(resultString);
@@ -663,8 +668,9 @@ abstract class StockDataProvider extends StockAnalyzer {
             if ((response != null) && (response.body() != null)) {
                 String resultString = response.body().string();
                 if (isAccessDenied(resultString)) {
-                    result = DOWNLOAD_RESULT_FAILED;
-                    return result;
+                    return DOWNLOAD_RESULT_FAILED;
+                } else {
+                    result = DOWNLOAD_RESULT_SUCCESS;
                 }
 
                 handleResponseShareBonus(stock, shareBonus, resultString);
@@ -714,8 +720,9 @@ abstract class StockDataProvider extends StockAnalyzer {
             if ((response != null) && (response.body() != null)) {
                 String resultString = response.body().string();
                 if (isAccessDenied(resultString)) {
-                    result =DOWNLOAD_RESULT_FAILED;
-                    return result;
+                    return DOWNLOAD_RESULT_FAILED;
+                } else {
+                    result = DOWNLOAD_RESULT_SUCCESS;
                 }
 
                 handleResponseTotalShare(stock, totalShare, resultString);
@@ -781,8 +788,9 @@ abstract class StockDataProvider extends StockAnalyzer {
             if ((response != null) && (response.body() != null)) {
                 String resultString = response.body().string();
                 if (isAccessDenied(resultString)) {
-                    result = DOWNLOAD_RESULT_FAILED;
-                    return result;
+                    return DOWNLOAD_RESULT_FAILED;
+                } else {
+                    result = DOWNLOAD_RESULT_SUCCESS;
                 }
 
                 handleResponseStockDataHistory(stock, stockData, resultString);
@@ -852,8 +860,9 @@ abstract class StockDataProvider extends StockAnalyzer {
             if ((response != null) && (response.body() != null)) {
                 String resultString = response.body().string();
                 if (isAccessDenied(resultString)) {
-                    result = DOWNLOAD_RESULT_FAILED;
-                    return result;
+                    return DOWNLOAD_RESULT_FAILED;
+                } else {
+                    result = DOWNLOAD_RESULT_SUCCESS;
                 }
 
                 handleResponseStockDataRealTime(stock, stockData, resultString);
@@ -1045,6 +1054,8 @@ abstract class StockDataProvider extends StockAnalyzer {
 
         @Override
         public void handleMessage(Message msg) {
+            boolean dataChanged = false;
+
             if (msg == null) {
                 return;
             }
@@ -1065,52 +1076,77 @@ abstract class StockDataProvider extends StockAnalyzer {
                 if (Stock.CLASS_INDEX.equals(stock.getClases())) {
                     setupIndex(stock);
                 } else {
-                    if (downloadStockRealTime(stock) == DOWNLOAD_RESULT_FAILED) {
+                    int result = DOWNLOAD_RESULT_NONE;
+
+                    result = downloadStockRealTime(stock);
+                    if (result == DOWNLOAD_RESULT_FAILED) {
                         return;
+                    } else if (result == DOWNLOAD_RESULT_SUCCESS) {
+                        dataChanged = true;
                     }
 
-                    if (downloadStockInformation(stock) == DOWNLOAD_RESULT_FAILED) {
+                    result = downloadStockInformation(stock);
+                    if (result == DOWNLOAD_RESULT_FAILED) {
                         return;
+                    } else if (result == DOWNLOAD_RESULT_SUCCESS) {
+                        dataChanged = true;
                     }
 
-                    if (downloadStockFinancial(stock) == DOWNLOAD_RESULT_FAILED) {
+                    result = downloadStockFinancial(stock);
+                    if (result == DOWNLOAD_RESULT_FAILED) {
                         return;
+                    } else if (result == DOWNLOAD_RESULT_SUCCESS) {
+                        dataChanged = true;
                     }
 
-                    if (downloadShareBonus(stock) == DOWNLOAD_RESULT_FAILED) {
+                    result = downloadShareBonus(stock);
+                    if (result == DOWNLOAD_RESULT_FAILED) {
                         return;
+                    } else if (result == DOWNLOAD_RESULT_SUCCESS) {
+                        dataChanged = true;
                     }
 
-                    if (downloadTotalShare(stock) == DOWNLOAD_RESULT_FAILED) {
+                    result = downloadTotalShare(stock);
+                    if (result == DOWNLOAD_RESULT_FAILED) {
                         return;
+                    } else if (result == DOWNLOAD_RESULT_SUCCESS) {
+                        dataChanged = true;
                     }
 
-                    if (downloadStockDataHistory(stock) == DOWNLOAD_RESULT_FAILED) {
+                    result = downloadStockDataHistory(stock);
+                    if (result == DOWNLOAD_RESULT_FAILED) {
                         return;
+                    } else if (result == DOWNLOAD_RESULT_SUCCESS) {
+                        dataChanged = true;
                     }
 
-                    if (downloadStockDataRealTime(stock) == DOWNLOAD_RESULT_FAILED) {
+                    result = downloadStockDataRealTime(stock);
+                    if (result == DOWNLOAD_RESULT_FAILED) {
                         return;
+                    } else if (result == DOWNLOAD_RESULT_SUCCESS) {
+                        dataChanged = true;
                     }
                 }
 
-                String lastPeriod = "";
-                for (String period : Settings.KEY_PERIODS) {
-                    if (Preferences.getBoolean(mContext, period, false)
-                            || Settings.checkOperatePeriod(lastPeriod, period, stock.getOperate())) {
-                        lastPeriod = period;
-                        analyze(stock, period);
+                if (dataChanged) {
+                    String lastPeriod = "";
+                    for (String period : Settings.KEY_PERIODS) {
+                        if (Preferences.getBoolean(mContext, period, false)
+                                || Settings.checkOperatePeriod(lastPeriod, period, stock.getOperate())) {
+                            lastPeriod = period;
+                            analyze(stock, period);
+                        }
                     }
+
+                    analyze(stock);
+                    sendBroadcast(Constants.ACTION_RESTART_LOADER, stock.getId());
                 }
 
-                analyze(stock);
-                sendBroadcast(Constants.ACTION_RESTART_LOADER, stock.getId());
-
-                if (downloadIPO() == DOWNLOAD_RESULT_FAILED) {
-                    return;
-                }
-                sendBroadcast(Constants.ACTION_RESTART_LOADER,
-                        Stock.INVALID_ID);
+//                if (downloadIPO() == DOWNLOAD_RESULT_FAILED) {
+//                    return;
+//                }
+//                sendBroadcast(Constants.ACTION_RESTART_LOADER,
+//                        Stock.INVALID_ID);
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {

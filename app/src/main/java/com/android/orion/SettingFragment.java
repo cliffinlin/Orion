@@ -59,13 +59,7 @@ public class SettingFragment extends PreferenceFragment implements
 				|| key.equals(Settings.KEY_PERIOD_YEAR)) {
 
 			if (checked) {
-				Intent serviceIntent = new Intent(mContext, OrionService.class);
-
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-					mContext.startForegroundService(serviceIntent);
-				} else {
-					mContext.startService(serviceIntent);
-				}
+				OrionService.startService(mContext);
 			}
 		}
 

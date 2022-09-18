@@ -2,6 +2,8 @@ package com.android.orion;
 
 import android.text.TextUtils;
 
+import com.android.orion.utility.Utility;
+
 public class Settings {
 	public static final String KEY_SHARED_PREFERENCES_INIT = "shared_preferences_init";
 
@@ -76,27 +78,6 @@ public class Settings {
         return false;
     }
 
-    public static int indexOfStrings(String value, String[] strings) {
-		int result = -1;
-
-		if (value == null) {
-			return result;
-		}
-
-		if ((strings == null) || (strings.length == 0)) {
-			return result;
-		}
-
-		for (int i = 0; i < strings.length; i++) {
-			if (value.equals(strings[i])) {
-				result = i;
-				break;
-			}
-		}
-
-		return result;
-	}
-
 	public static boolean checkOperatePeriod(String lastPeriod, String period, String operate) {
 	    boolean result = false;
 	    int periodIndex = -1;
@@ -106,8 +87,8 @@ public class Settings {
 	        return result;
         }
 
-		periodIndex = indexOfStrings(period, KEY_PERIODS);
-	    operateIndex = indexOfStrings(operate, KEY_PERIODS);
+		periodIndex = Utility.indexOfStrings(period, KEY_PERIODS);
+	    operateIndex = Utility.indexOfStrings(operate, KEY_PERIODS);
 
 	    if (periodIndex <= operateIndex) {
 	        result = true;

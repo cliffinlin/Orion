@@ -19,12 +19,7 @@ public class DownloadBroadcastReceiver extends BroadcastReceiver {
 		Log.d(TAG, "onReceive intent:" + intent);
 
 		if (Market.isTradingHours(Calendar.getInstance())) {
-			Intent serviceIntent = new Intent(context, OrionService.class);
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-				context.startForegroundService(serviceIntent);
-			} else {
-				context.startService(serviceIntent);
-			}
+			OrionService.startService(context);
 		}
 	}
 }

@@ -633,6 +633,27 @@ public class Utility {
 		return "";
 	}
 
+	public static int indexOfStrings(String value, String[] strings) {
+		int result = -1;
+
+		if (value == null) {
+			return result;
+		}
+
+		if ((strings == null) || (strings.length == 0)) {
+			return result;
+		}
+
+		for (int i = 0; i < strings.length; i++) {
+			if (value.equals(strings[i])) {
+				result = i;
+				break;
+			}
+		}
+
+		return result;
+	}
+
 	public static ArrayList<String> stringToArrayList(String string) {
 		if (TextUtils.isEmpty(string)) {
 			return null;

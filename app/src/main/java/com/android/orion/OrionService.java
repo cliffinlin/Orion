@@ -50,6 +50,20 @@ public class OrionService extends Service {
 
 	SinaFinance mSinaFinance;
 
+	public static void startService(Context context) {
+		if (context == null) {
+			return;
+		}
+
+		Intent serviceIntent = new Intent(context, OrionService.class);
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			context.startForegroundService(serviceIntent);
+		} else {
+			context.startService(serviceIntent);
+		}
+	}
+
 	private final class ServiceHandler extends Handler {
 		public ServiceHandler(Looper looper) {
 			super(looper);

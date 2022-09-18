@@ -28,6 +28,8 @@ public class OrionMainActivity extends PreferenceActivity {
 		if (mStockDownloadAlarmManager != null) {
 			mStockDownloadAlarmManager.startAlarm();
 		}
+
+		OrionService.startService(getApplicationContext());
 	}
 
 	@Override
