@@ -63,9 +63,10 @@ public class StockDataChartListActivity extends BaseActivity implements
 	public static final int MESSAGE_REFRESH = 0;
 	public static final int MESSAGE_LOAD_STOCK_LIST = 1;
 
+	boolean mKeyDisplayCandle = false;
+	boolean mKeyDisplayOverlap = true;
 	boolean mKeyDisplayLatest = true;
 	boolean mKeyDisplayCost = true;
-	boolean mKeyDisplayCandle = false;
 	boolean mKeyDisplayDeal = false;
 	boolean mKeyDisplayBonus = false;
 	boolean mKeyDisplayBPS = false;
@@ -151,10 +152,12 @@ public class StockDataChartListActivity extends BaseActivity implements
 		mSortOrder = getIntent().getStringExtra(
 				Constants.EXTRA_STOCK_LIST_SORT_ORDER);
 
-		mKeyDisplayLatest = Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_LATEST, true);
-		mKeyDisplayCost = Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_COST, true);
 		mKeyDisplayCandle = Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_CANDLE,
 				false);
+		mKeyDisplayOverlap = Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_OVERLAP,
+				true);
+		mKeyDisplayLatest = Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_LATEST, true);
+		mKeyDisplayCost = Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_COST, true);
 
 		if (getIntent().getBooleanExtra(Constants.EXTRA_STOCK_DEAL, false)) {
 			mKeyDisplayDeal = true;
@@ -616,17 +619,19 @@ public class StockDataChartListActivity extends BaseActivity implements
 						stockDataChart.mSegmentEntryList.add(segmentEntry);
 					}
 
-					if ((mStockData.getOverlapHigh() > 0)
-							&& (mStockData.getOverlapLow() > 0)) {
-						Entry overlayHighEntry = new Entry(
-								(float) mStockData.getOverlapHigh(), index);
-						stockDataChart.mOverlapHighEntryList
-								.add(overlayHighEntry);
+					if (mKeyDisplayOverlap) {
+						if ((mStockData.getOverlapHigh() > 0)
+								&& (mStockData.getOverlapLow() > 0)) {
+							Entry overlayHighEntry = new Entry(
+									(float) mStockData.getOverlapHigh(), index);
+							stockDataChart.mOverlapHighEntryList
+									.add(overlayHighEntry);
 
-						Entry overlapLowEntry = new Entry(
-								(float) mStockData.getOverlapLow(), index);
-						stockDataChart.mOverlapLowEntryList
-								.add(overlapLowEntry);
+							Entry overlapLowEntry = new Entry(
+									(float) mStockData.getOverlapLow(), index);
+							stockDataChart.mOverlapLowEntryList
+									.add(overlapLowEntry);
+						}
 					}
 
 					if (mKeyDisplayRoi) {

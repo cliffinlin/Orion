@@ -25,9 +25,10 @@ public class Settings {
 			KEY_PERIOD_MIN15, KEY_PERIOD_MIN5, KEY_PERIOD_MIN1 };
 
 	public static final String KEY_DISPLAY_NET = "display_net";
+	public static final String KEY_DISPLAY_CANDLE = "display_candle";
+	public static final String KEY_DISPLAY_OVERLAP = "display_overlap";
 	public static final String KEY_DISPLAY_LATEST = "display_latest";
 	public static final String KEY_DISPLAY_COST = "display_cost";
-	public static final String KEY_DISPLAY_CANDLE = "display_candle";
 	public static final String KEY_DISPLAY_DIRECT = "display_direct";
 	public static final String KEY_DISPLAY_DRAW = "display_draw";
 	public static final String KEY_DISPLAY_STROKE = "display_stroke";
