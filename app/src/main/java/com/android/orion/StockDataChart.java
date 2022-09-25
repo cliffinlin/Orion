@@ -28,6 +28,11 @@ public class StockDataChart {
 	String mPeriod;
 	String mDescription;
 
+	double mMainChartYMin = 0;
+	double mMainChartYMax = 0;
+    double mSubChartYMin = 0;
+    double mSubChartYMax = 0;
+
 	ArrayList<String> mXValues = null;
 
 	ArrayList<CandleEntry> mCandleEntryList = null;
@@ -47,6 +52,10 @@ public class StockDataChart {
 	ArrayList<Entry> mDIFEntryList = null;
 	ArrayList<Entry> mDEAEntryList = null;
 	ArrayList<BarEntry> mHistogramEntryList = null;
+
+    ArrayList<Entry> mSubChartDrawEntryList = null;
+    ArrayList<Entry> mSubChartStrokeEntryList = null;
+    ArrayList<Entry> mSubChartSegmentEntryList = null;
 
 	ArrayList<LimitLine> mXLimitLineList = null;
 
@@ -124,6 +133,18 @@ public class StockDataChart {
 		if (mHistogramEntryList == null) {
 			mHistogramEntryList = new ArrayList<BarEntry>();
 		}
+
+        if (mSubChartDrawEntryList == null) {
+            mSubChartDrawEntryList = new ArrayList<Entry>();
+        }
+
+        if (mSubChartStrokeEntryList == null) {
+            mSubChartStrokeEntryList = new ArrayList<Entry>();
+        }
+
+        if (mSubChartSegmentEntryList == null) {
+            mSubChartSegmentEntryList = new ArrayList<Entry>();
+        }
 
 		if (mCombinedDataMain == null) {
 			mCombinedDataMain = new CombinedData(mXValues);
@@ -298,9 +319,112 @@ public class StockDataChart {
 		deaDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(deaDataSet);
 
+		//__TEST_CASE__
+        transferMainChartDataToSubChartData(mDrawEntryList, mSubChartDrawEntryList);
+        LineDataSet drawDataSet = new LineDataSet(mSubChartDrawEntryList, "Draw");
+        drawDataSet.setColor(Color.GRAY);
+        drawDataSet.setCircleColor(Color.GRAY);
+        drawDataSet.setCircleSize(0);
+        drawDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+        lineData.addDataSet(drawDataSet);
+
+        transferMainChartDataToSubChartData(mStrokeEntryList, mSubChartStrokeEntryList);
+        LineDataSet strokeDataSet = new LineDataSet(mSubChartStrokeEntryList, "Stroke");
+        strokeDataSet.setColor(Color.YELLOW);
+        strokeDataSet.setCircleColor(Color.YELLOW);
+        strokeDataSet.setCircleSize(3f);
+        strokeDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+        lineData.addDataSet(strokeDataSet);
+
+        transferMainChartDataToSubChartData(mSegmentEntryList, mSubChartSegmentEntryList);
+        LineDataSet segmentDataSet = new LineDataSet(mSubChartSegmentEntryList,
+                "Segment");
+        segmentDataSet.setColor(Color.BLACK);
+        segmentDataSet.setCircleColor(Color.BLACK);
+        segmentDataSet.setCircleSize(3f);
+        segmentDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+        lineData.addDataSet(segmentDataSet);
+        //__TEST_CASE__
+
 		mCombinedDataSub.setData(barData);
 		mCombinedDataSub.setData(lineData);
 	}
+
+    void setMainChartYMinMax(int index, ArrayList<Entry> drawEntryList, ArrayList<Entry> strokeEntryList, ArrayList<Entry> segmentEntryList) {
+	    double draw = 0;
+	    double stroke = 0;
+	    double segment = 0;
+
+	    if (drawEntryList == null || drawEntryList.size() == 0) {
+	        return;
+        }
+
+	    if (strokeEntryList == null || strokeEntryList.size() == 0) {
+            return;
+        }
+
+        if (segmentEntryList == null || segmentEntryList.size() == 0) {
+            return;
+        }
+
+	    draw = drawEntryList.get(drawEntryList.size() - 1).getVal();
+        stroke = strokeEntryList.get(strokeEntryList.size() - 1).getVal();
+        segment = segmentEntryList.get(segmentEntryList.size() - 1).getVal();
+
+        if (index == 0) {
+            mMainChartYMin = Math.min(Math.min(draw, stroke), segment);
+            mMainChartYMax = Math.max(Math.max(draw, stroke), segment);
+        } else {
+            mMainChartYMin = Math.min(Math.min(Math.min(draw, stroke), segment), mMainChartYMin);
+            mMainChartYMax = Math.max(Math.max(Math.max(draw, stroke), segment), mMainChartYMax);
+        }
+    }
+
+	void setSubChartYMinMax(int index, ArrayList<Entry> difEntryList, ArrayList<Entry> deaEntryList) {
+        double dif = 0;
+        double dea = 0;
+
+        if (difEntryList == null ||difEntryList.size() == 0) {
+            return;
+        }
+
+        if (deaEntryList == null || deaEntryList.size() == 0) {
+            return;
+        }
+
+        dif = difEntryList.get(difEntryList.size() - 1).getVal();
+        dea = deaEntryList.get(deaEntryList.size() - 1).getVal();
+
+        if (index == 0) {
+	        mSubChartYMin = Math.min(dif, dea);
+	        mSubChartYMax = Math.max(dif, dea);
+        } else {
+            mSubChartYMin = Math.min(Math.min(dif, dea), mSubChartYMin);
+            mSubChartYMax = Math.max(Math.max(dif, dea), mSubChartYMax);
+        }
+    }
+
+    void transferMainChartDataToSubChartData(ArrayList<Entry> mainChartEntryList, ArrayList<Entry> subChartEntryList) {
+	    if ((mainChartEntryList == null) || (subChartEntryList == null)) {
+	        return;
+        }
+
+        if (((mMainChartYMax - mMainChartYMin) == 0) || (mSubChartYMax - mSubChartYMin) == 0) {
+            return;
+        }
+
+        subChartEntryList.clear();
+
+        for (int i = 0; i < mainChartEntryList.size(); i++) {
+           Entry mainChartEntry = mainChartEntryList.get(i);
+           if (mainChartEntry != null) {
+               Entry subChartEntry = new Entry((float) ((mainChartEntry.getVal() - mMainChartYMin) / (mMainChartYMax - mMainChartYMin)
+                       * (mSubChartYMax - mSubChartYMin) + mSubChartYMin),
+                       mainChartEntry.getXIndex());
+               subChartEntryList.add(subChartEntry);
+           }
+        }
+    }
 
 	void updateDescription(Stock stock) {
 		mDescription = "";
@@ -471,5 +595,8 @@ public class StockDataChart {
 		mDIFEntryList.clear();
 		mDEAEntryList.clear();
 		mHistogramEntryList.clear();
+        mSubChartDrawEntryList.clear();
+        mSubChartStrokeEntryList.clear();
+        mSubChartSegmentEntryList.clear();
 	}
 }

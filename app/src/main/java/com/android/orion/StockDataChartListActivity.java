@@ -702,6 +702,8 @@ public class StockDataChartListActivity extends BaseActivity implements
 						stockDataChart.mAverage10EntryList.add(average10Entry);
 					}
 
+					stockDataChart.setMainChartYMinMax(index, stockDataChart.mDrawEntryList, stockDataChart.mStrokeEntryList, stockDataChart.mSegmentEntryList);
+
 					Entry difEntry = new Entry((float) mStockData.getDIF(),
 							index);
 					stockDataChart.mDIFEntryList.add(difEntry);
@@ -713,6 +715,8 @@ public class StockDataChartListActivity extends BaseActivity implements
 					BarEntry histogramBarEntry = new BarEntry(
 							(float) mStockData.getHistogram(), index);
 					stockDataChart.mHistogramEntryList.add(histogramBarEntry);
+
+					stockDataChart.setSubChartYMinMax(index, stockDataChart.mDIFEntryList, stockDataChart.mDEAEntryList);
 				}
 			}
 
