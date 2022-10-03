@@ -47,6 +47,9 @@ public class OrionContentProvider extends ContentProvider {
 	private static final int STOCK_TRENDS = 900;
 	private static final int STOCK_TRENDS_ID = 901;
 
+	private static final int STOCK_MARKET_KEY = 1000;
+	private static final int STOCK_MARKET_KEY_ID = 1001;
+
 	private static final UriMatcher mUriMatcher = new UriMatcher(
 			UriMatcher.NO_MATCH);
 
@@ -96,6 +99,11 @@ public class OrionContentProvider extends ContentProvider {
 				DatabaseContract.StockTrends.TABLE_NAME, STOCK_TRENDS);
 		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
 				DatabaseContract.StockTrends.TABLE_NAME + "/#", STOCK_TRENDS_ID);
+
+		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
+				DatabaseContract.MarketKey.TABLE_NAME, STOCK_MARKET_KEY);
+		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
+				DatabaseContract.MarketKey.TABLE_NAME + "/#", STOCK_MARKET_KEY_ID);
 	}
 
 	ContentResolver mContentResolver = null;
@@ -185,6 +193,14 @@ public class OrionContentProvider extends ContentProvider {
 		case STOCK_TRENDS_ID:
 			type = DatabaseContract.StockTrends.CONTENT_ITEM_TYPE;
 			break;
+
+		case STOCK_MARKET_KEY:
+			type = DatabaseContract.MarketKey.CONTENT_TYPE;
+			break;
+		case STOCK_MARKET_KEY_ID:
+			type = DatabaseContract.MarketKey.CONTENT_ITEM_TYPE;
+			break;
+
 		default:
 			break;
 		}
@@ -288,6 +304,16 @@ public class OrionContentProvider extends ContentProvider {
 			builder.appendWhere(BaseColumns._ID + " = "
 					+ uri.getLastPathSegment());
 			break;
+
+		case STOCK_MARKET_KEY:
+			builder.setTables(DatabaseContract.MarketKey.TABLE_NAME);
+			break;
+		case STOCK_MARKET_KEY_ID:
+			builder.setTables(DatabaseContract.MarketKey.TABLE_NAME);
+			builder.appendWhere(BaseColumns._ID + " = "
+					+ uri.getLastPathSegment());
+			break;
+
 		default:
 			break;
 		}
@@ -362,6 +388,12 @@ public class OrionContentProvider extends ContentProvider {
 			id = mDatabaseManager.mDatabase.insert(
 					DatabaseContract.StockTrends.TABLE_NAME, null, contentValues);
 			break;
+
+		case STOCK_MARKET_KEY:
+			id = mDatabaseManager.mDatabase.insert(
+					DatabaseContract.MarketKey.TABLE_NAME, null, contentValues);
+			break;
+
 		default:
 			break;
 		}
@@ -566,6 +598,22 @@ public class OrionContentProvider extends ContentProvider {
 					DatabaseContract.StockTrends.TABLE_NAME, values, whereClause,
 					selectionArgs);
 			break;
+
+		case STOCK_MARKET_KEY:
+			result = mDatabaseManager.mDatabase.update(
+					DatabaseContract.MarketKey.TABLE_NAME, values, selection,
+					selectionArgs);
+			break;
+		case STOCK_MARKET_KEY_ID:
+			whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
+			if (!TextUtils.isEmpty(selection)) {
+				whereClause += " AND " + whereClause;
+			}
+			result = mDatabaseManager.mDatabase.update(
+					DatabaseContract.MarketKey.TABLE_NAME, values, whereClause,
+					selectionArgs);
+			break;
+
 		default:
 			break;
 		}
@@ -729,6 +777,21 @@ public class OrionContentProvider extends ContentProvider {
 			}
 			result = mDatabaseManager.mDatabase
 					.delete(DatabaseContract.StockTrends.TABLE_NAME, whereClause,
+							selectionArgs);
+			break;
+
+		case STOCK_MARKET_KEY:
+			result = mDatabaseManager.mDatabase.delete(
+					DatabaseContract.MarketKey.TABLE_NAME, selection, selectionArgs);
+			break;
+
+		case STOCK_MARKET_KEY_ID:
+			whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
+			if (!TextUtils.isEmpty(selection)) {
+				whereClause += " AND " + whereClause;
+			}
+			result = mDatabaseManager.mDatabase
+					.delete(DatabaseContract.MarketKey.TABLE_NAME, whereClause,
 							selectionArgs);
 			break;
 		default:
