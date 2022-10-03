@@ -232,6 +232,8 @@ public final class DatabaseContract {
                 COLUMN_AVERAGE5, COLUMN_AVERAGE10, COLUMN_DIF, COLUMN_DEA,
                 COLUMN_HISTOGRAM, COLUMN_SIGMA_HISTOGRAM, COLUMN_VELOCITY, COLUMN_DIVERGENCE,
                 COLUMN_ACTION, COLUMN_ROI, COLUMN_PE, COLUMN_PB, COLUMN_YIELD,
+                COLUMN_SECONDARY_RALLY, COLUMN_NATURAL_RALLY, COLUMN_UPWARD_TREND,
+                COLUMN_DOWNWARD_TREND, COLUMN_NATURAL_REACTION, COLUMN_SECONDARY_REACTION,
                 COLUMN_CREATED, COLUMN_MODIFIED};
         static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
                 + TABLE_NAME;
@@ -260,6 +262,12 @@ public final class DatabaseContract {
                 + TEXT_TYPE + COMMA_SEP + COLUMN_ROI + DOUBLE_TYPE + COMMA_SEP
                 + COLUMN_PE + DOUBLE_TYPE + COMMA_SEP + COLUMN_PB + DOUBLE_TYPE
                 + COMMA_SEP + COLUMN_YIELD + DOUBLE_TYPE + COMMA_SEP
+                + COLUMN_SECONDARY_RALLY + DOUBLE_TYPE + COMMA_SEP
+                + COLUMN_NATURAL_RALLY + DOUBLE_TYPE + COMMA_SEP
+                + COLUMN_UPWARD_TREND + DOUBLE_TYPE + COMMA_SEP
+                + COLUMN_DOWNWARD_TREND + DOUBLE_TYPE + COMMA_SEP
+                + COLUMN_NATURAL_REACTION + DOUBLE_TYPE + COMMA_SEP
+                + COLUMN_SECONDARY_REACTION + DOUBLE_TYPE + COMMA_SEP
                 + COLUMN_CREATED + TEXT_TYPE + COMMA_SEP + COLUMN_MODIFIED
                 + TEXT_TYPE + " )";
         static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
@@ -511,41 +519,6 @@ public final class DatabaseContract {
                 + COLUMN_OPERATE + TEXT_TYPE + COMMA_SEP
                 + COLUMN_CREATED + TEXT_TYPE + COMMA_SEP
                 + COLUMN_MODIFIED + TEXT_TYPE + " )";
-        static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
-                + CREATE_TABLE_CONTENT;
-    }
-
-    public static abstract class MarketKey implements BaseColumns {
-        public static final String TABLE_NAME = "market_key";
-
-        public static final Uri CONTENT_URI = Uri.withAppendedPath(
-                DatabaseContract.CONTENT_URI, TABLE_NAME);
-        public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
-                + "/" + DATABASE_NAME + "/" + TABLE_NAME;
-        public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
-                + "/" + DATABASE_NAME + "/" + TABLE_NAME;
-        public static final String SORT_ORDER_DEFAULT = COLUMN_STOCK_ID
-                + " ASC";
-
-        public static final String[] PROJECTION_ALL = {_ID, COLUMN_STOCK_ID,
-                COLUMN_DATE, COLUMN_TIME, COLUMN_PERIOD,
-                COLUMN_SECONDARY_RALLY, COLUMN_NATURAL_RALLY, COLUMN_UPWARD_TREND,
-                COLUMN_DOWNWARD_TREND, COLUMN_NATURAL_REACTION, COLUMN_SECONDARY_REACTION,
-                COLUMN_CREATED, COLUMN_MODIFIED};
-        static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
-                + TABLE_NAME;
-        private static final String CREATE_TABLE_CONTENT = " (" + _ID
-                + " INTEGER PRIMARY KEY," + COLUMN_STOCK_ID + TEXT_TYPE + COMMA_SEP
-                + COLUMN_DATE + TEXT_TYPE + COMMA_SEP + COLUMN_TIME
-                + TEXT_TYPE + COMMA_SEP + COLUMN_PERIOD + TEXT_TYPE + COMMA_SEP
-                + COLUMN_SECONDARY_RALLY + DOUBLE_TYPE + COMMA_SEP
-                + COLUMN_NATURAL_RALLY + DOUBLE_TYPE + COMMA_SEP
-                + COLUMN_UPWARD_TREND + DOUBLE_TYPE + COMMA_SEP
-                + COLUMN_DOWNWARD_TREND + DOUBLE_TYPE + COMMA_SEP
-                + COLUMN_NATURAL_REACTION + DOUBLE_TYPE + COMMA_SEP
-                + COLUMN_SECONDARY_REACTION + DOUBLE_TYPE + COMMA_SEP
-                + COLUMN_CREATED + TEXT_TYPE + COMMA_SEP + COLUMN_MODIFIED
-                + TEXT_TYPE + " )";
         static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
                 + CREATE_TABLE_CONTENT;
     }

@@ -94,6 +94,13 @@ public class StockData extends StockDatabaseTable {
 	private double mPb;
 	private double mYield;
 
+	private double mSecondaryRally;
+	private double mNaturalRally;
+	private double mUpwardTrend;
+	private double mDownwardTrend;
+	private double mNaturalReaction;
+	private double mSecondaryReaction;
+
 	private int mIndex;
 	private int mIndexStart;
 	private int mIndexEnd;
@@ -164,6 +171,13 @@ public class StockData extends StockDatabaseTable {
 		mIndex = 0;
 		mIndexStart = 0;
 		mIndexEnd = 0;
+
+		mSecondaryRally = 0;
+		mNaturalRally = 0;
+		mUpwardTrend = 0;
+		mDownwardTrend = 0;
+		mNaturalReaction = 0;
+		mSecondaryReaction = 0;
 	}
 
 	@Override
@@ -201,6 +215,13 @@ public class StockData extends StockDatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_PE, mPe);
 		contentValues.put(DatabaseContract.COLUMN_PB, mPb);
 		contentValues.put(DatabaseContract.COLUMN_YIELD, mYield);
+
+		contentValues.put(DatabaseContract.COLUMN_SECONDARY_RALLY, mSecondaryRally);
+		contentValues.put(DatabaseContract.COLUMN_NATURAL_RALLY, mNaturalRally);
+		contentValues.put(DatabaseContract.COLUMN_UPWARD_TREND, mUpwardTrend);
+		contentValues.put(DatabaseContract.COLUMN_DOWNWARD_TREND, mDownwardTrend);
+		contentValues.put(DatabaseContract.COLUMN_NATURAL_REACTION, mNaturalReaction);
+		contentValues.put(DatabaseContract.COLUMN_SECONDARY_REACTION, mSecondaryReaction);
 
 		return contentValues;
 	}
@@ -243,6 +264,13 @@ public class StockData extends StockDatabaseTable {
 		setPe(stockData.mPe);
 		setPb(stockData.mPb);
 		setYield(stockData.mYield);
+
+		setSecondaryRally(stockData.mSecondaryRally);
+		setNaturalRally(stockData.mNaturalRally);
+		setUpwardTrend(stockData.mUpwardTrend);
+		setDownwardTrend(stockData.mDownwardTrend);
+		setNaturalReaction(stockData.mNaturalReaction);
+		setSecondaryReaction(stockData.mSecondaryReaction);
 
 		setIndex(stockData.mIndex);
 		setIndexStart(stockData.mIndexStart);
@@ -288,6 +316,13 @@ public class StockData extends StockDatabaseTable {
 		setPe(cursor);
 		setPb(cursor);
 		setYield(cursor);
+
+		setSecondaryRally(cursor);
+		setNaturalRally(cursor);
+		setUpwardTrend(cursor);
+		setDownwardTrend(cursor);
+		setNaturalReaction(cursor);
+		setSecondaryReaction(cursor);
 	}
 
 	public long getStockId() {
@@ -772,6 +807,108 @@ public class StockData extends StockDatabaseTable {
 
 		setYield(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_YIELD)));
+	}
+
+	public double getSecondaryRally() {
+		return mSecondaryRally;
+	}
+
+	public void setSecondaryRally(double secondaryRally) {
+		mSecondaryRally = secondaryRally;
+	}
+
+	public void setSecondaryRally(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setSecondaryRally(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_SECONDARY_RALLY)));
+	}
+
+	public double getNaturalRally() {
+		return mNaturalRally;
+	}
+
+	public void setNaturalRally(double naturalRally) {
+		mNaturalRally = naturalRally;
+	}
+
+	public void setNaturalRally(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setNaturalRally(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_NATURAL_RALLY)));
+	}
+
+	public double getUpwardTrend() {
+		return mUpwardTrend;
+	}
+
+	public void setUpwardTrend(double upwardTrend) {
+		mUpwardTrend = upwardTrend;
+	}
+
+	public void setUpwardTrend(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setUpwardTrend(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_UPWARD_TREND)));
+	}
+
+	public double getDownwardTrend() {
+		return mDownwardTrend;
+	}
+
+	public void setDownwardTrend(double downwardTrend) {
+		mDownwardTrend = downwardTrend;
+	}
+
+	public void setDownwardTrend(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setDownwardTrend(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_DOWNWARD_TREND)));
+	}
+
+	public double getNaturalReaction() {
+		return mNaturalReaction;
+	}
+
+	public void setNaturalReaction(double naturalReaction) {
+		mNaturalReaction = naturalReaction;
+	}
+
+	void setNaturalReaction(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setNaturalReaction(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_NATURAL_REACTION)));
+	}
+
+	public double getSecondaryReaction() {
+		return mSecondaryReaction;
+	}
+
+	public void setSecondaryReaction(double secondaryReaction) {
+		mSecondaryReaction = secondaryReaction;
+	}
+
+	void setSecondaryReaction(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setSecondaryReaction(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_SECONDARY_REACTION)));
 	}
 
 	public boolean directionOf(int direction) {
