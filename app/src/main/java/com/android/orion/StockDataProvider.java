@@ -415,79 +415,21 @@ abstract class StockDataProvider extends StockAnalyzer {
         return result;
     }
 
-    private int downloadStockRealTime(Stock stock) {
+    private int downloadStockInformation(Stock stock) {
+        String modified = "";
         int result = DOWNLOAD_RESULT_NONE;
 
         if (stock == null) {
             return result;
         }
 
-        StockData stockData = new StockData(Settings.KEY_PERIOD_DAY);
-        stockData.setStockId(stock.getId());
-        mStockDatabaseManager.getStockData(stockData);
+        modified = stock.getInformationModified();
 
-        int len = getDownloadStockDataLength(stockData);
-        if (len <= 0) {
-            return result;
-        }
-
-        return downloadStockRealTime(stock, getRequestHeader(), getStockRealTimeURLString(stock));
-    }
-
-    private int downloadStockRealTime(Stock stock, ArrayMap<String, String> requestHeaderArray, String urlString) {
-        int result = DOWNLOAD_RESULT_NONE;
-
-        Log.d(TAG, "downloadStockRealTime:" + urlString);
-
-        Request.Builder builder = new Request.Builder();
-        for (int i = 0; i < requestHeaderArray.size(); i++) {
-            builder.addHeader(requestHeaderArray.keyAt(i), requestHeaderArray.valueAt(i));
-        }
-        builder.url(urlString);
-        Request request = builder.build();
-
-        try {
-            Response response = mOkHttpClient.newCall(request).execute();
-            if ((response != null) && (response.body() != null)) {
-                String resultString = response.body().string();
-                if (isAccessDenied(resultString)) {
-                    return DOWNLOAD_RESULT_FAILED;
-                } else {
-                    result = DOWNLOAD_RESULT_SUCCESS;
-                }
-
-                handleResponseStockRealTime(stock, resultString);
-                Thread.sleep(Constants.DEFAULT_DOWNLOAD_SLEEP_INTERVAL);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (Market.isOutOfDateToday(modified)) {
+            return downloadStockInformation(stock, getRequestHeader(), getStockInformationURLString(stock));
         }
 
         return result;
-    }
-
-    private int downloadStockInformation(Stock stock) {
-        int result = DOWNLOAD_RESULT_NONE;
-
-        boolean needDownload = false;
-
-        if (stock == null) {
-            return result;
-        }
-
-        if (TextUtils.isEmpty(stock.getClases())) {
-            needDownload = true;
-        } else if (TextUtils.isEmpty(stock.getPinyin())) {
-            needDownload = true;
-        } else if (stock.getTotalShare() == 0) {
-            needDownload = true;
-        }
-
-        if (!needDownload) {
-            return result;
-        }
-
-        return downloadStockInformation(stock, getRequestHeader(), getStockInformationURLString(stock));
     }
 
     private int downloadStockInformation(Stock stock, ArrayMap<String, String> requestHeaderArray, String urlString) {
@@ -513,6 +455,55 @@ abstract class StockDataProvider extends StockAnalyzer {
                 }
 
                 handleResponseStockInformation(stock, resultString);
+                Thread.sleep(Constants.DEFAULT_DOWNLOAD_SLEEP_INTERVAL);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+    private int downloadStockRealTime(Stock stock) {
+        String modified = "";
+        int result = DOWNLOAD_RESULT_NONE;
+
+        if (stock == null) {
+            return result;
+        }
+
+        modified = stock.getRealTimeModified();
+
+        if (Market.isOutOfDateToday(modified) || Market.isTradingHours(Calendar.getInstance())) {
+            return downloadStockRealTime(stock, getRequestHeader(), getStockRealTimeURLString(stock));
+        }
+
+        return result;
+    }
+
+    private int downloadStockRealTime(Stock stock, ArrayMap<String, String> requestHeaderArray, String urlString) {
+        int result = DOWNLOAD_RESULT_NONE;
+
+        Log.d(TAG, "downloadStockRealTime:" + urlString);
+
+        Request.Builder builder = new Request.Builder();
+        for (int i = 0; i < requestHeaderArray.size(); i++) {
+            builder.addHeader(requestHeaderArray.keyAt(i), requestHeaderArray.valueAt(i));
+        }
+        builder.url(urlString);
+        Request request = builder.build();
+
+        try {
+            Response response = mOkHttpClient.newCall(request).execute();
+            if ((response != null) && (response.body() != null)) {
+                String resultString = response.body().string();
+                if (isAccessDenied(resultString)) {
+                    return DOWNLOAD_RESULT_FAILED;
+                } else {
+                    result = DOWNLOAD_RESULT_SUCCESS;
+                }
+
+                handleResponseStockRealTime(stock, resultString);
                 Thread.sleep(Constants.DEFAULT_DOWNLOAD_SLEEP_INTERVAL);
             }
         } catch (Exception e) {
@@ -1073,19 +1064,19 @@ abstract class StockDataProvider extends StockAnalyzer {
                     return;
                 }
 
-                if (Stock.CLASS_INDEX.equals(stock.getClases())) {
+                if (Stock.CLASS_INDEX.equals(stock.getClasses())) {
                     setupIndex(stock);
                 } else {
                     int result = DOWNLOAD_RESULT_NONE;
 
-                    result = downloadStockRealTime(stock);
+                    result = downloadStockInformation(stock);
                     if (result == DOWNLOAD_RESULT_FAILED) {
                         return;
                     } else if (result == DOWNLOAD_RESULT_SUCCESS) {
                         dataChanged = true;
                     }
 
-                    result = downloadStockInformation(stock);
+                    result = downloadStockRealTime(stock);
                     if (result == DOWNLOAD_RESULT_FAILED) {
                         return;
                     } else if (result == DOWNLOAD_RESULT_SUCCESS) {

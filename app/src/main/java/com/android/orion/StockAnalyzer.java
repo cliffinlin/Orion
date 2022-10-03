@@ -233,7 +233,7 @@ public class StockAnalyzer {
 		}
 
 		try {
-            if (!Stock.CLASS_INDEX.equals(stock.getClases())) {
+            if (!Stock.CLASS_INDEX.equals(stock.getClasses())) {
                 analyzeStockFinancial(stock);
                 setupStockFinancial(stock);
                 setupStockShareBonus(stock);
@@ -260,7 +260,7 @@ public class StockAnalyzer {
 		ArrayList<StockData> stockDataList = new ArrayList<StockData>();
 		String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
 
-		if (Stock.CLASS_INDEX.equals(stock.getClases())) {
+		if (Stock.CLASS_INDEX.equals(stock.getClasses())) {
 		    return;
         }
 
@@ -504,7 +504,7 @@ public class StockAnalyzer {
 		StockFinancial stockFinancial = new StockFinancial();
 		ArrayList<StockFinancial> stockFinancialList = new ArrayList<StockFinancial>();
 
-        if (Stock.CLASS_INDEX.equals(stock.getClases())) {
+        if (Stock.CLASS_INDEX.equals(stock.getClasses())) {
             return;
         }
 
@@ -543,7 +543,7 @@ public class StockAnalyzer {
 		String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
 		ArrayList<ShareBonus> shareBonusList = new ArrayList<ShareBonus>();
 
-        if (Stock.CLASS_INDEX.equals(stock.getClases())) {
+        if (Stock.CLASS_INDEX.equals(stock.getClasses())) {
             return;
         }
 
@@ -1396,7 +1396,7 @@ public class StockAnalyzer {
 				}
 
 				if (action.contains(StockData.ACTION_SELL2 + StockData.ACTION_SELL2)) {
-					if (Stock.CLASS_INDEX.equals(stock.getClases())) {
+					if (Stock.CLASS_INDEX.equals(stock.getClasses())) {
 						actionString.append(period + " " + action + " ");
 					} else {
 						mStockDatabaseManager.getStockDealListToSell(stock, stockDealList);

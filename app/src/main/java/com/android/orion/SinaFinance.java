@@ -288,7 +288,7 @@ public class SinaFinance extends StockDataProvider {
 		String keyValue[] = null;
 		String codeInfo[] = null;
 		String stockInfo[] = null;
-
+//var hq_str_sh600048_i="A,blfz,2.2900,2.3320,0.9000,15.0848,2380.5596,1197044.3418,1197044.3418,1197044.3418,0,CNY,273.8784,279.1460,13.9500,1,5.3900,1107.2303,108.2586,19.202,11.62,0.1,保利发展,X|O|0|0|0,19.01|15.55,20220630|5412930886.28,709.9800|90.4440,|,,1/1,EQA,,3.41,15.097|18.000|18.000,房地产开发,,-3";
 		if ((stock == null) || TextUtils.isEmpty(response)) {
 			Log.d(TAG, "handleResponseStockInformation return " + " stock = "
 					+ stock + " response = " + response);
@@ -298,19 +298,23 @@ public class SinaFinance extends StockDataProvider {
 		try {
 			keyValue = response.trim().split("=");
 
-			if (keyValue[0] == null) {
+			if (keyValue == null || keyValue.length != 2) {
 				Log.d(TAG,
-						"handleResponseStockInformation return keyValue[0] = "
-								+ keyValue[0]);
+						"handleResponseStockInformation return keyValue == null || keyValue.length != 2");
 				return;
 			}
 
+			if (keyValue[0] == null) {
+                Log.d(TAG,
+                        "handleResponseStockInformation return keyValue[0] == null");
+                return;
+            }
+
 			codeInfo = keyValue[0].trim().split("_");
 
-			if (codeInfo[2] == null) {
+			if (codeInfo == null || codeInfo.length != 4) {
 				Log.d(TAG,
-						"handleResponseStockInformation return codeInfo[2] = "
-								+ codeInfo[2]);
+						"handleResponseStockInformation return codeInfo == null || codeInfo.length != 4");
 				return;
 			}
 
@@ -322,17 +326,15 @@ public class SinaFinance extends StockDataProvider {
 
 			if (keyValue[1] == null) {
 				Log.d(TAG,
-						"handleResponseStockInformation return keyValue[1] = "
-								+ keyValue[1]);
+						"handleResponseStockInformation return keyValue[1] == null");
 				return;
 			}
 
 			stockInfo = keyValue[1].substring(1, keyValue[1].length() - 2)
 					.split(",");
 
-			if (stockInfo == null) {
-				Log.d(TAG, "handleResponseStockInformation return stockInfo = "
-						+ stockInfo);
+			if (stockInfo == null || stockInfo.length != 37) {
+				Log.d(TAG, "handleResponseStockInformation return stockInfo == null || stockInfo.length != 37");
 				return;
 			}
 
@@ -344,32 +346,24 @@ public class SinaFinance extends StockDataProvider {
 				stock.setPinyin(stockInfo[1]);
 			}
 
-			if (stockInfo.length > 7) {
-				if (!TextUtils.isEmpty(stockInfo[7])) {
-					stock.setTotalShare(Double.valueOf(stockInfo[7])
-							* Constants.DOUBLE_CONSTANT_WAN);
-				}
+			if (!TextUtils.isEmpty(stockInfo[7])) {
+				stock.setTotalShare(Double.valueOf(stockInfo[7])
+						* Constants.DOUBLE_CONSTANT_WAN);
 			}
 
-			if (!mStockDatabaseManager.isStockExist(stock)) {
-				stock.setCreated(Utility.getCurrentDateTimeString());
-				mStockDatabaseManager.insertStock(stock);
-			} else {
-				stock.setModified(Utility.getCurrentDateTimeString());
-				mStockDatabaseManager.updateStock(stock,
-						stock.getContentValues());
-			}
+			stock.setInformationModified(Utility.getCurrentDateTimeString());
+			mStockDatabaseManager.updateStock(stock,
+					stock.getContentValuesInformation());
+
+			stopWatch.stop();
+			Log.d(TAG,
+					"handleResponseStockInformation:" + stock.getName() + " "
+							+ stock.getClasses() + " " + stock.getPinyin() + " "
+							+ stock.getTotalShare() + " " + stopWatch.getInterval()
+							+ "s");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		stopWatch.stop();
-		Log.d(TAG,
-				"handleResponseStockInformation:" + stock.getName() + " "
-						+ stock.getPrice() + " " + stock.getChange() + " "
-						+ stock.getNet() + " " + stock.getVolume() + " "
-						+ stock.getValue() + " " + stopWatch.getInterval()
-						+ "s");
 	}
 
 	@Override
@@ -380,6 +374,8 @@ public class SinaFinance extends StockDataProvider {
 		String codeInfo[] = null;
 		String stockInfo[] = null;
 
+		//var hq_str_s_sh600048="保利发展,17.690,0.140,0.80,645118,115512";
+
 		if ((stock == null) || TextUtils.isEmpty(response)) {
 			Log.d(TAG, "handleResponseStockRealTime return " + " stock = "
 					+ stock + " response = " + response);
@@ -389,17 +385,20 @@ public class SinaFinance extends StockDataProvider {
 		try {
 			keyValue = response.trim().split("=");
 
+			if (keyValue == null || keyValue.length != 2) {
+				Log.d(TAG, "handleResponseStockRealTime return (keyValue == null) || (keyValue.length != 2)");
+				return;
+			}
+
 			if (keyValue[0] == null) {
-				Log.d(TAG, "handleResponseStockRealTime return keyValue[0] = "
-						+ keyValue[0]);
+				Log.d(TAG, "handleResponseStockRealTime return keyValue[0] == null");
 				return;
 			}
 
 			codeInfo = keyValue[0].trim().split("_");
 
-			if (codeInfo[3] == null) {
-				Log.d(TAG, "handleResponseStockRealTime return codeInfo[3] = "
-						+ codeInfo[3]);
+			if (codeInfo == null || codeInfo.length != 4) {
+				Log.d(TAG, "handleResponseStockRealTime return (codeInfo == null) || (codeInfo.length != 4) ");
 				return;
 			}
 
@@ -410,15 +409,14 @@ public class SinaFinance extends StockDataProvider {
 			}
 
 			if (keyValue[1] == null) {
-				Log.d(TAG, "handleResponseStockRealTime return keyValue[1] = "
-						+ keyValue[1]);
+				Log.d(TAG, "handleResponseStockRealTime return keyValue[1] == null");
 				return;
 			}
 
 			stockInfo = keyValue[1].substring(1, keyValue[1].length() - 2)
 					.split(",");
 
-			if (stockInfo == null) {
+			if (stockInfo == null || stockInfo.length != 6) {
 				Log.d(TAG, "handleResponseStockRealTime return stockInfo = "
 						+ stockInfo);
 				return;
@@ -428,36 +426,30 @@ public class SinaFinance extends StockDataProvider {
 				stock.setName(stockInfo[0]);
 			}
 
-			if (stockInfo.length == 6) {
-				if (!TextUtils.isEmpty(stockInfo[1])) {
-					stock.setPrice(Double.valueOf(stockInfo[1]));
-				}
-
-				if (!TextUtils.isEmpty(stockInfo[2])) {
-					stock.setChange(Double.valueOf(stockInfo[2]));
-				}
-
-				if (!TextUtils.isEmpty(stockInfo[3])) {
-					stock.setNet(Double.valueOf(stockInfo[3]));
-				}
-
-				if (!TextUtils.isEmpty(stockInfo[4])) {
-					stock.setVolume(Long.valueOf(stockInfo[4]));
-				}
-
-				if (!TextUtils.isEmpty(stockInfo[5])) {
-					stock.setValue(Long.valueOf(stockInfo[5]));
-				}
+			if (!TextUtils.isEmpty(stockInfo[1])) {
+				stock.setPrice(Double.valueOf(stockInfo[1]));
 			}
 
-			if (!mStockDatabaseManager.isStockExist(stock)) {
-				stock.setCreated(Utility.getCurrentDateTimeString());
-				mStockDatabaseManager.insertStock(stock);
-			} else {
-				stock.setModified(Utility.getCurrentDateTimeString());
-				mStockDatabaseManager.updateStock(stock,
-						stock.getContentValues());
+			if (!TextUtils.isEmpty(stockInfo[2])) {
+				stock.setChange(Double.valueOf(stockInfo[2]));
 			}
+
+			if (!TextUtils.isEmpty(stockInfo[3])) {
+				stock.setNet(Double.valueOf(stockInfo[3]));
+			}
+
+			if (!TextUtils.isEmpty(stockInfo[4])) {
+				stock.setVolume(Long.valueOf(stockInfo[4]));
+			}
+
+			if (!TextUtils.isEmpty(stockInfo[5])) {
+				stock.setValue(Long.valueOf(stockInfo[5]));
+			}
+
+			stock.setRealTimeModified(Utility.getCurrentDateTimeString());
+
+			mStockDatabaseManager.updateStock(stock,
+					stock.getContentValuesRealTime());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

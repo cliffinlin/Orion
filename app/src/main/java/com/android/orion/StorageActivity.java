@@ -423,7 +423,7 @@ public class StorageActivity extends DatabaseActivity {
 			try {
 				xmlSerializer.startTag(null, XML_TAG_STOCK);
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_CLASSES,
-						stock.getClases());
+						stock.getClasses());
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_SE,
 						stock.getSE());
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_CODE,

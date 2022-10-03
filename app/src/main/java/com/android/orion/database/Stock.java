@@ -83,6 +83,8 @@ public class Stock extends DatabaseTable {
 	private double mDividendRatio;
 	private String mRDate;
 	private String mStatus;
+    private String mRealTimeModified;
+    private String mInformationModified;
 
 	private ArrayList<StockData> mStockDataListMin1 = new ArrayList<StockData>();
 	private ArrayList<StockData> mStockDataListMin5 = new ArrayList<StockData>();
@@ -241,6 +243,8 @@ public class Stock extends DatabaseTable {
 		mDividendRatio = 0;
 		mRDate = "";
 		mStatus = "";
+		mRealTimeModified = "";
+		mInformationModified = "";
 	}
 
 	@Override
@@ -304,6 +308,33 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND_RATIO, mDividendRatio);
 		contentValues.put(DatabaseContract.COLUMN_R_DATE, mRDate);
 		contentValues.put(DatabaseContract.COLUMN_STATUS, mStatus);
+		contentValues.put(DatabaseContract.COLUMN_INFORMATION_MODIFIED, mInformationModified);
+		contentValues.put(DatabaseContract.COLUMN_REALTIME_MODIFIED, mRealTimeModified);
+
+		return contentValues;
+	}
+
+	public ContentValues getContentValuesInformation() {
+		ContentValues contentValues = getContentValues();
+
+		contentValues.put(DatabaseContract.COLUMN_CLASSES, mClasses);
+		contentValues.put(DatabaseContract.COLUMN_PINYIN, mPinyin);
+		contentValues.put(DatabaseContract.COLUMN_TOTAL_SHARE, mTotalShare);
+		contentValues.put(DatabaseContract.COLUMN_INFORMATION_MODIFIED, mInformationModified);
+
+		return contentValues;
+	}
+
+	public ContentValues getContentValuesRealTime() {
+		ContentValues contentValues = getContentValues();
+
+		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
+		contentValues.put(DatabaseContract.COLUMN_PRICE, mPrice);
+		contentValues.put(DatabaseContract.COLUMN_CHANGE, mChange);
+		contentValues.put(DatabaseContract.COLUMN_NET, mNet);
+		contentValues.put(DatabaseContract.COLUMN_VOLUME, mVolume);
+		contentValues.put(DatabaseContract.COLUMN_VALUE, mValue);
+		contentValues.put(DatabaseContract.COLUMN_REALTIME_MODIFIED, mRealTimeModified);
 
 		return contentValues;
 	}
@@ -387,6 +418,8 @@ public class Stock extends DatabaseTable {
 		setDividendRatio(stock.mDividendRatio);
 		setRDate(stock.mRDate);
 		setStatus(stock.mStatus);
+		setRealTimeModified(mRealTimeModified);
+		setInformationModified(mInformationModified);
 	}
 
 	@Override
@@ -452,9 +485,11 @@ public class Stock extends DatabaseTable {
 		setDividendRatio(cursor);
 		setRDate(cursor);
 		setStatus(cursor);
+		setRealTimeModified(cursor);
+		setInformationModified(cursor);
 	}
 
-	public String getClases() {
+	public String getClasses() {
 		return mClasses;
 	}
 
@@ -1341,24 +1376,58 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_R_DATE)));
 	}
 
-	public String getStatus() {
-		return mStatus;
-	}
+    public String getStatus() {
+        return mStatus;
+    }
 
-	public void setStatus(String status) {
-		mStatus = status;
-	}
+    public void setStatus(String status) {
+        mStatus = status;
+    }
 
-	void setStatus(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
+    void setStatus(Cursor cursor) {
+        if (cursor == null) {
+            return;
+        }
 
-		setStatus(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_STATUS)));
-	}
+        setStatus(cursor.getString(cursor
+                .getColumnIndex(DatabaseContract.COLUMN_STATUS)));
+    }
 
-	public ArrayList<StockData> getStockDataList(String period) {
+    public String getRealTimeModified() {
+        return mRealTimeModified;
+    }
+
+    public void setRealTimeModified(String realtimeModified) {
+        mRealTimeModified = realtimeModified;
+    }
+
+    void setRealTimeModified(Cursor cursor) {
+        if (cursor == null) {
+            return;
+        }
+
+        setRealTimeModified(cursor.getString(cursor
+                .getColumnIndex(DatabaseContract.COLUMN_REALTIME_MODIFIED)));
+    }
+
+    public String getInformationModified() {
+        return mInformationModified;
+    }
+
+    public void setInformationModified(String informationModified) {
+        mInformationModified = informationModified;
+    }
+
+    void setInformationModified(Cursor cursor) {
+        if (cursor == null) {
+            return;
+        }
+
+        setInformationModified(cursor.getString(cursor
+                .getColumnIndex(DatabaseContract.COLUMN_INFORMATION_MODIFIED)));
+    }
+
+    public ArrayList<StockData> getStockDataList(String period) {
 		ArrayList<StockData> result = null;
 
 		if (period.equals(Settings.KEY_PERIOD_MIN1)) {

@@ -169,7 +169,7 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 	void updateView() {
 		mCheckBoxFavorite.setChecked(mStock.getFlag() == Stock.FLAG_FAVORITE);
 
-		if (mStock.getClases().equals(Stock.CLASS_A)) {
+		if (mStock.getClasses().equals(Stock.CLASS_A)) {
 			mRadioGroupClass.check(R.id.radio_class_hsa);
 		} else {
 			mRadioGroupClass.check(R.id.radio_class_index);

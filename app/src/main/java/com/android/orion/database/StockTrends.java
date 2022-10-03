@@ -162,7 +162,7 @@ public class StockTrends extends DatabaseTable {
 		}
 
 		setStockId(stock.getId());
-		setClasses(stock.getClases());
+		setClasses(stock.getClasses());
 		setSE(stock.getSE());
 		setCode(stock.getCode());
 		setName(stock.getName());
@@ -202,7 +202,7 @@ public class StockTrends extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_STOCK_ID)));
 	}
 
-	public String getClases() {
+	public String getClasses() {
 		return mClasses;
 	}
 
