@@ -16,6 +16,9 @@ import com.github.mikephil.charting.components.YAxis.AxisDependency;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.BubbleData;
+import com.github.mikephil.charting.data.BubbleDataSet;
+import com.github.mikephil.charting.data.BubbleEntry;
 import com.github.mikephil.charting.data.CandleData;
 import com.github.mikephil.charting.data.CandleDataSet;
 import com.github.mikephil.charting.data.CandleEntry;
@@ -34,6 +37,11 @@ public class StockDataChart {
     double mSubChartYMax = 0;
 
 	ArrayList<String> mXValues = null;
+
+	ArrayList<BubbleEntry> mNaturalRallyList = null;
+	ArrayList<BubbleEntry> mUpwardTrendList = null;
+	ArrayList<BubbleEntry> mDownwardTrendList = null;
+	ArrayList<BubbleEntry> mNaturalReactionList = null;
 
 	ArrayList<CandleEntry> mCandleEntryList = null;
 	ArrayList<Entry> mAverage5EntryList = null;
@@ -70,8 +78,32 @@ public class StockDataChart {
 			mXValues = new ArrayList<String>();
 		}
 
+		if (mNaturalRallyList == null) {
+			mNaturalRallyList = new ArrayList<BubbleEntry>();
+		}
+
+		if (mUpwardTrendList == null) {
+			mUpwardTrendList = new ArrayList<BubbleEntry>();
+		}
+
+		if (mDownwardTrendList == null) {
+			mDownwardTrendList = new ArrayList<BubbleEntry>();
+		}
+
+		if (mNaturalReactionList == null) {
+			mNaturalReactionList = new ArrayList<BubbleEntry>();
+		}
+
 		if (mCandleEntryList == null) {
 			mCandleEntryList = new ArrayList<CandleEntry>();
+		}
+
+		if (mAverage5EntryList == null) {
+			mAverage5EntryList = new ArrayList<Entry>();
+		}
+
+		if (mAverage10EntryList == null) {
+			mAverage10EntryList = new ArrayList<Entry>();
 		}
 
 		if (mDrawEntryList == null) {
@@ -112,14 +144,6 @@ public class StockDataChart {
 
 		if (mDividendEntryList == null) {
 			mDividendEntryList = new ArrayList<BarEntry>();
-		}
-
-		if (mAverage5EntryList == null) {
-			mAverage5EntryList = new ArrayList<Entry>();
-		}
-
-		if (mAverage10EntryList == null) {
-			mAverage10EntryList = new ArrayList<Entry>();
 		}
 
 		if (mDIFEntryList == null) {
@@ -166,8 +190,41 @@ public class StockDataChart {
 	}
 
 	void setMainChartData() {
+		BubbleData bubbleData = new BubbleData(mXValues);
+
+		if (mNaturalRallyList.size() > 0) {
+			BubbleDataSet bubbleDataSet = new BubbleDataSet(mNaturalRallyList, "NUp");
+			bubbleDataSet.setColor(Color.BLUE);
+
+			bubbleData.addDataSet(bubbleDataSet);
+		}
+
+		if (mUpwardTrendList.size() > 0) {
+			BubbleDataSet bubbleDataSet = new BubbleDataSet(mUpwardTrendList, "Up");
+			bubbleDataSet.setColor(Color.RED);
+
+			bubbleData.addDataSet(bubbleDataSet);
+		}
+
+		if (mDownwardTrendList.size() > 0) {
+			BubbleDataSet bubbleDataSet = new BubbleDataSet(mDownwardTrendList, "Dn");
+			bubbleDataSet.setColor(Color.GREEN);
+
+			bubbleData.addDataSet(bubbleDataSet);
+		}
+
+		if (mNaturalReactionList.size() > 0) {
+			BubbleDataSet bubbleDataSet = new BubbleDataSet(mNaturalReactionList, "NDn");
+			bubbleDataSet.setColor(Color.YELLOW);
+
+			bubbleData.addDataSet(bubbleDataSet);
+		}
+
+		mCombinedDataMain.setData(bubbleData);
+
 		if (mCandleEntryList.size() > 0) {
 			CandleData candleData = new CandleData(mXValues);
+
 			CandleDataSet candleDataSet = new CandleDataSet(mCandleEntryList,
 					"K");
 			candleDataSet.setDecreasingColor(Color.rgb(50, 128, 50));
@@ -179,8 +236,8 @@ public class StockDataChart {
 			candleDataSet.setColor(Color.RED);
 			candleDataSet.setHighLightColor(Color.TRANSPARENT);
 			candleDataSet.setDrawTags(true);
-			candleData.addDataSet(candleDataSet);
 
+			candleData.addDataSet(candleDataSet);
 			mCombinedDataMain.setData(candleData);
 		}
 
@@ -579,10 +636,17 @@ public class StockDataChart {
 
 	void clear() {
 		mXValues.clear();
+
+		mNaturalRallyList.clear();
+		mUpwardTrendList.clear();
+		mDownwardTrendList.clear();
+		mNaturalReactionList.clear();
+		mCandleEntryList.clear();
+		mAverage5EntryList.clear();
+		mAverage10EntryList.clear();
 		mDrawEntryList.clear();
 		mStrokeEntryList.clear();
 		mSegmentEntryList.clear();
-		mCandleEntryList.clear();
 		mOverlapHighEntryList.clear();
 		mOverlapLowEntryList.clear();
 		mBookValuePerShareList.clear();
@@ -590,8 +654,6 @@ public class StockDataChart {
 		mRoeList.clear();
 		mRoiList.clear();
 		mDividendEntryList.clear();
-		mAverage5EntryList.clear();
-		mAverage10EntryList.clear();
 		mDIFEntryList.clear();
 		mDEAEntryList.clear();
 		mHistogramEntryList.clear();

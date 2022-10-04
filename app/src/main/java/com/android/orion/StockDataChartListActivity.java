@@ -41,6 +41,7 @@ import com.github.mikephil.charting.components.XAxis.XAxisPosition;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.components.YAxis.YAxisLabelPosition;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.BubbleEntry;
 import com.github.mikephil.charting.data.CandleEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.DefaultYAxisValueFormatter;
@@ -561,6 +562,26 @@ public class StockDataChartListActivity extends BaseActivity implements
 					} else {
 						stockDataChart.mXValues.add(dateString + " "
 								+ timeString);
+					}
+
+					if (mStockData.getNaturalRally() > 0) {
+						BubbleEntry entry = new BubbleEntry(index, (float) mStockData.getNaturalRally(), 10);
+						stockDataChart.mNaturalRallyList.add(entry);
+					}
+
+					if (mStockData.getUpwardTrend() > 0) {
+						BubbleEntry entry = new BubbleEntry(index, (float) mStockData.getUpwardTrend(), 10);
+						stockDataChart.mUpwardTrendList.add(entry);
+					}
+
+					if (mStockData.getDownwardTrend() > 0) {
+						BubbleEntry entry = new BubbleEntry(index, (float) mStockData.getDownwardTrend(), 10);
+						stockDataChart.mDownwardTrendList.add(entry);
+					}
+
+					if (mStockData.getNaturalReaction() > 0) {
+						BubbleEntry entry = new BubbleEntry(index, (float) mStockData.getNaturalReaction(), 10);
+						stockDataChart.mNaturalReactionList.add(entry);
 					}
 
 					if (mKeyDisplayCandle) {
