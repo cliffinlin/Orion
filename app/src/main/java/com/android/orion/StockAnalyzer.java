@@ -674,8 +674,11 @@ public class StockAnalyzer {
 						  ArrayList<StockData> drawVertexList, ArrayList<StockData> drawDataList,
 						  ArrayList<StockData> strokeVertexList, ArrayList<StockData> strokeDataList,
 						  ArrayList<StockData> segmentVertexList, ArrayList<StockData> segmentDataList) {
+        MarketKeyAnalyzer marketKeyAnalyzer = new MarketKeyAnalyzer();
 		StockVertexAnalyzer stockVertexAnalyzer = new StockVertexAnalyzer();
 		ArrayList<StockData> overlapList = new ArrayList<StockData>();
+
+        marketKeyAnalyzer.analyzeMarketKey(stockDataList);
 
 		setMACD(stockDataList);
 

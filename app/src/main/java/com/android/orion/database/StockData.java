@@ -38,8 +38,8 @@ public class StockData extends StockDatabaseTable {
 	public static final int LEVEL_STROKE = 1 << 1;
 	public static final int LEVEL_SEGMENT = 1 << 2;
 
-	public static final int DIVERGENCE_NONE = 0;
 	public static final int DIVERGENCE_UP = 1;
+	public static final int DIVERGENCE_NONE = 0;
 	public static final int DIVERGENCE_DOWN = -1;
 
 	public static final int DIRECTION_NONE = 0;
@@ -63,6 +63,14 @@ public class StockData extends StockDatabaseTable {
 	public static final int POSITION_ABOVE = 1;
 	public static final int POSITION_NONE = 0;
 	public static final int POSITION_BELOW = -1;
+
+	public static final int MARKET_KEY_NONE = 0;
+	public static final int MARKET_KEY_SECONDARY_RALLY = 1 << 0;
+	public static final int MARKET_KEY_NATURAL_RALLY = 1 << 1;
+	public static final int MARKET_KEY_UPWARD_TREND = 1 << 2;
+	public static final int MARKET_KEY_DOWNWARD_TREND = 1 << 3;
+	public static final int MARKET_KEY_NATURAL_REACTION = 1 << 4;
+	public static final int MARKET_KEY_SECONDARY_REACTION = 1 << 5;
 
 	private long mStockId;
 	private int mLevel;
