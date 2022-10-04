@@ -2,12 +2,14 @@ package com.android.orion;
 
 import java.util.ArrayList;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.text.TextUtils;
 
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;
+import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Utility;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.LimitLine.LimitLabelPosition;
@@ -35,6 +37,10 @@ public class StockDataChart {
 	double mMainChartYMax = 0;
     double mSubChartYMin = 0;
     double mSubChartYMax = 0;
+
+	boolean mKeyDisplayDraw = true;
+	boolean mKeyDisplayStroke = false;
+	boolean mKeyDisplaySegment = false;
 
 	ArrayList<String> mXValues = null;
 
@@ -185,11 +191,18 @@ public class StockDataChart {
 		mPeriod = period;
 		mDescription = mPeriod;
 
-		setMainChartData();
-		setSubChartData();
+//		setMainChartData();
+//		setSubChartData();
 	}
 
-	void setMainChartData() {
+	void setMainChartData(Context context) {
+		mKeyDisplayDraw = Preferences.getBoolean(context, Settings.KEY_DISPLAY_DRAW,
+				true);
+		mKeyDisplayStroke = Preferences.getBoolean(context, Settings.KEY_DISPLAY_STROKE,
+				false);
+		mKeyDisplaySegment = Preferences.getBoolean(context, Settings.KEY_DISPLAY_SEGMENT,
+				false);
+
 		BubbleData bubbleData = new BubbleData(mXValues);
 		if (mNaturalRallyList.size() > 0) {
 			BubbleDataSet bubbleDataSet = new BubbleDataSet(mNaturalRallyList, "NUp");
@@ -253,27 +266,39 @@ public class StockDataChart {
 			lineData.addDataSet(average10DataSet);
 		}
 
-		LineDataSet drawDataSet = new LineDataSet(mDrawEntryList, "Draw");
-		drawDataSet.setColor(Color.GRAY);
-		drawDataSet.setCircleColor(Color.GRAY);
-		drawDataSet.setCircleSize(0);
-		drawDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		lineData.addDataSet(drawDataSet);
+		if (mKeyDisplayDraw) {
+			if (mDrawEntryList.size() > 0) {
+				LineDataSet drawDataSet = new LineDataSet(mDrawEntryList, "Draw");
+				drawDataSet.setColor(Color.GRAY);
+				drawDataSet.setCircleColor(Color.GRAY);
+				drawDataSet.setCircleSize(0);
+				drawDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+				lineData.addDataSet(drawDataSet);
+			}
+		}
 
-		LineDataSet strokeDataSet = new LineDataSet(mStrokeEntryList, "Stroke");
-		strokeDataSet.setColor(Color.YELLOW);
-		strokeDataSet.setCircleColor(Color.YELLOW);
-		strokeDataSet.setCircleSize(3f);
-		strokeDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		lineData.addDataSet(strokeDataSet);
+		if (mKeyDisplayStroke) {
+			if (mStrokeEntryList.size() > 0) {
+				LineDataSet strokeDataSet = new LineDataSet(mStrokeEntryList, "Stroke");
+				strokeDataSet.setColor(Color.YELLOW);
+				strokeDataSet.setCircleColor(Color.YELLOW);
+				strokeDataSet.setCircleSize(3f);
+				strokeDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+				lineData.addDataSet(strokeDataSet);
+			}
+		}
 
-		LineDataSet segmentDataSet = new LineDataSet(mSegmentEntryList,
-				"Segment");
-		segmentDataSet.setColor(Color.BLACK);
-		segmentDataSet.setCircleColor(Color.BLACK);
-		segmentDataSet.setCircleSize(3f);
-		segmentDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		lineData.addDataSet(segmentDataSet);
+		if (mKeyDisplaySegment) {
+			if (mSegmentEntryList.size() > 0) {
+				LineDataSet segmentDataSet = new LineDataSet(mSegmentEntryList,
+						"Segment");
+				segmentDataSet.setColor(Color.BLACK);
+				segmentDataSet.setCircleColor(Color.BLACK);
+				segmentDataSet.setCircleSize(3f);
+				segmentDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+				lineData.addDataSet(segmentDataSet);
+			}
+		}
 
 		if ((mOverlapHighEntryList.size() > 0)
 				&& (mOverlapLowEntryList.size() > 0)) {
@@ -344,7 +369,7 @@ public class StockDataChart {
 		}
 	}
 
-	void setSubChartData() {
+	void setSubChartData(Context context) {
 		BarData barData = new BarData(mXValues);
 		BarDataSet histogramDataSet = new BarDataSet(mHistogramEntryList,
 				"Histogram");
@@ -370,7 +395,6 @@ public class StockDataChart {
 		deaDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(deaDataSet);
 
-		//__TEST_CASE__
         transferMainChartDataToSubChartData(mDrawEntryList, mSubChartDrawEntryList);
         LineDataSet drawDataSet = new LineDataSet(mSubChartDrawEntryList, "Draw");
         drawDataSet.setColor(Color.GRAY);
@@ -395,7 +419,6 @@ public class StockDataChart {
         segmentDataSet.setCircleSize(3f);
         segmentDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
         lineData.addDataSet(segmentDataSet);
-        //__TEST_CASE__
 
 		mCombinedDataSub.setData(barData);
 		mCombinedDataSub.setData(lineData);

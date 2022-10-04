@@ -712,20 +712,22 @@ public class StockAnalyzer {
 		//stockVertexAnalyzer.analyzeOverlap(stockDataList, segmentDataList, overlapList);
 		//stockVertexAnalyzer.testShowVertextNumber(stockDataList, stockDataList);
 
-		if (Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_DIRECT,false)) {
-			stockVertexAnalyzer.debugShow(stockDataList, stockDataList);
-		}
+		if (Preferences.getBoolean(mContext, Settings.KEY_BACKTEST,false)) {
+			if (Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_DIRECT,false)) {
+				stockVertexAnalyzer.debugShow(stockDataList, stockDataList);
+			}
 
-		if (Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_DRAW,false)) {
-			stockVertexAnalyzer.debugShow(stockDataList, drawDataList);
-		}
+			if (Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_DRAW,false)) {
+				stockVertexAnalyzer.debugShow(stockDataList, drawDataList);
+			}
 
-		if (Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_STROKE,false)) {
-			stockVertexAnalyzer.debugShow(stockDataList, strokeDataList);
-		}
+			if (Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_STROKE,false)) {
+				stockVertexAnalyzer.debugShow(stockDataList, strokeDataList);
+			}
 
-		if (Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_SEGMENT,false)) {
-			stockVertexAnalyzer.debugShow(stockDataList, segmentDataList);
+			if (Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_SEGMENT,false)) {
+				stockVertexAnalyzer.debugShow(stockDataList, segmentDataList);
+			}
 		}
 
 		stockVertexAnalyzer.analyzeDivergence(stock, stockDataList, segmentDataList);

@@ -59,54 +59,54 @@ public class MarketKeyAnalyzer {
                     break;
 
                 case StockData.MARKET_KEY_NATURAL_RALLY:
-                    if (current.getClose() > mNaturalRally) {
-                        mNaturalRally = current.getClose();
+                    if (current.getHigh() > mNaturalRally) {
+                        mNaturalRally = current.getHigh();
                         current.setNaturalRally(mNaturalRally);
-                        if (current.getClose() > mUpwardTrend * (1.0 + NATURAL_THRESHOLD / 2.0)) {
-                            mUpwardTrend = current.getClose();
+                        if (current.getHigh() > mUpwardTrend * (1.0 + NATURAL_THRESHOLD / 2.0)) {
+                            mUpwardTrend = current.getHigh();
                             current.setUpwardTrend(mUpwardTrend);
                             mMarketKeyType = StockData.MARKET_KEY_UPWARD_TREND;
                         }
-                    } else if (current.getClose() < mNaturalRally * (1.0 - NATURAL_THRESHOLD)) {
-                        mNaturalReaction = current.getClose();
+                    } else if (current.getLow() < mNaturalRally * (1.0 - NATURAL_THRESHOLD)) {
+                        mNaturalReaction = current.getLow();
                         current.setNaturalReaction(mNaturalReaction);
                         mMarketKeyType = StockData.MARKET_KEY_NATURAL_REACTION;
                     }
                     break;
 
                 case StockData.MARKET_KEY_UPWARD_TREND:
-                    if (current.getClose() > mUpwardTrend) {
-                        mUpwardTrend = current.getClose();
+                    if (current.getHigh() > mUpwardTrend) {
+                        mUpwardTrend = current.getHigh();
                         current.setUpwardTrend(mUpwardTrend);
-                    } else if (current.getClose() < mUpwardTrend * (1.0 - NATURAL_THRESHOLD)) {
-                        mNaturalReaction = current.getClose();
+                    } else if (current.getLow() < mUpwardTrend * (1.0 - NATURAL_THRESHOLD)) {
+                        mNaturalReaction = current.getLow();
                         current.setNaturalReaction(mNaturalReaction);
                         mMarketKeyType = StockData.MARKET_KEY_NATURAL_REACTION;
                     }
                     break;
 
                 case StockData.MARKET_KEY_DOWNWARD_TREND:
-                    if (current.getClose() < mDownwardTrend) {
-                        mDownwardTrend = current.getClose();
+                    if (current.getLow() < mDownwardTrend) {
+                        mDownwardTrend = current.getLow();
                         current.setDownwardTrend(mDownwardTrend);
-                    } else if (current.getClose() > mDownwardTrend * (1.0 + NATURAL_THRESHOLD)) {
-                        mNaturalRally = current.getClose();
+                    } else if (current.getHigh() > mDownwardTrend * (1.0 + NATURAL_THRESHOLD)) {
+                        mNaturalRally = current.getHigh();
                         current.setNaturalRally(mNaturalRally);
                         mMarketKeyType = StockData.MARKET_KEY_NATURAL_RALLY;
                     }
                     break;
 
                 case StockData.MARKET_KEY_NATURAL_REACTION:
-                    if (current.getClose() < mNaturalReaction) {
-                        mNaturalReaction = current.getClose();
+                    if (current.getLow() < mNaturalReaction) {
+                        mNaturalReaction = current.getLow();
                         current.setNaturalReaction(mNaturalReaction);
-                        if (current.getClose() < mDownwardTrend * (1.0 - NATURAL_THRESHOLD / 2.0)) {
-                            mDownwardTrend = current.getClose();
+                        if (current.getLow() < mDownwardTrend * (1.0 - NATURAL_THRESHOLD / 2.0)) {
+                            mDownwardTrend = current.getLow();
                             current.setDownwardTrend(mDownwardTrend);
                             mMarketKeyType = StockData.MARKET_KEY_DOWNWARD_TREND;
                         }
-                    } else if (current.getClose() > mNaturalReaction * (1.0 + NATURAL_THRESHOLD)) {
-                        mNaturalRally = current.getClose();
+                    } else if (current.getHigh() > mNaturalReaction * (1.0 + NATURAL_THRESHOLD)) {
+                        mNaturalRally = current.getHigh();
                         current.setNaturalRally(mNaturalRally);
                         mMarketKeyType = StockData.MARKET_KEY_NATURAL_RALLY;
                     }
@@ -116,14 +116,14 @@ public class MarketKeyAnalyzer {
                     break;
 
                 default:
-                    if (current.getClose() > prev.getClose()) {
+                    if (current.getHigh() > prev.getHigh()) {
                         mMarketKeyType = StockData.MARKET_KEY_UPWARD_TREND;
-                        mUpwardTrend = current.getClose();
-                        mDownwardTrend = current.getClose();
-                    } else if (current.getClose() < prev.getClose()) {
+                        mUpwardTrend = current.getHigh();
+                        mDownwardTrend = current.getHigh();
+                    } else if (current.getLow() < prev.getLow()) {
                         mMarketKeyType = StockData.MARKET_KEY_DOWNWARD_TREND;
-                        mUpwardTrend = current.getClose();
-                        mDownwardTrend = current.getClose();
+                        mUpwardTrend = current.getLow();
+                        mDownwardTrend = current.getLow();
                     }
                     break;
             }

@@ -44,6 +44,15 @@
             android:key="display_candle"
             android:title="@string/candle" />
         <com.android.orion.CustomSwitchPreference
+            android:key="display_draw"
+            android:title="@string/draw" />
+        <com.android.orion.CustomSwitchPreference
+            android:key="display_stroke"
+            android:title="@string/stroke" />
+        <com.android.orion.CustomSwitchPreference
+            android:key="display_segment"
+            android:title="@string/segment" />
+        <com.android.orion.CustomSwitchPreference
             android:key="display_overlap"
             android:title="@string/overlap" />
         <com.android.orion.CustomSwitchPreference
@@ -78,15 +87,6 @@
         <com.android.orion.CustomSwitchPreference
             android:key="display_direct"
             android:title="@string/direct" />
-        <com.android.orion.CustomSwitchPreference
-            android:key="display_draw"
-            android:title="@string/draw" />
-        <com.android.orion.CustomSwitchPreference
-            android:key="display_stroke"
-            android:title="@string/stroke" />
-        <com.android.orion.CustomSwitchPreference
-            android:key="display_segment"
-            android:title="@string/segment" />
     </PreferenceCategory>
 
 </PreferenceScreen>

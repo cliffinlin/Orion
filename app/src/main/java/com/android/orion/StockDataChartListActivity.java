@@ -752,8 +752,8 @@ public class StockDataChartListActivity extends BaseActivity implements
 
 			stockDataChart.updateDescription(mStock);
 			stockDataChart.updateXLimitLines(mStock, mStockDealList, mKeyDisplayLatest, mKeyDisplayCost, mKeyDisplayDeal);
-			stockDataChart.setMainChartData();
-			stockDataChart.setSubChartData();
+			stockDataChart.setMainChartData(mContext);
+			stockDataChart.setSubChartData(mContext);
 
 			mStockDataChartArrayAdapter.notifyDataSetChanged();
 		} catch (Exception e) {
