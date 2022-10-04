@@ -25,6 +25,7 @@ public class Settings {
 			KEY_PERIOD_MIN15, KEY_PERIOD_MIN5, KEY_PERIOD_MIN1 };
 
 	public static final String KEY_DISPLAY_NET = "display_net";
+	public static final String KEY_DISPLAY_MARKET_KEY = "display_market_key";
 	public static final String KEY_DISPLAY_CANDLE = "display_candle";
 	public static final String KEY_DISPLAY_OVERLAP = "display_overlap";
 	public static final String KEY_DISPLAY_LATEST = "display_latest";

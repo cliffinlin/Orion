@@ -191,35 +191,29 @@ public class StockDataChart {
 
 	void setMainChartData() {
 		BubbleData bubbleData = new BubbleData(mXValues);
-
 		if (mNaturalRallyList.size() > 0) {
 			BubbleDataSet bubbleDataSet = new BubbleDataSet(mNaturalRallyList, "NUp");
 			bubbleDataSet.setColor(Color.BLUE);
-
 			bubbleData.addDataSet(bubbleDataSet);
 		}
 
 		if (mUpwardTrendList.size() > 0) {
 			BubbleDataSet bubbleDataSet = new BubbleDataSet(mUpwardTrendList, "Up");
 			bubbleDataSet.setColor(Color.RED);
-
 			bubbleData.addDataSet(bubbleDataSet);
 		}
 
 		if (mDownwardTrendList.size() > 0) {
 			BubbleDataSet bubbleDataSet = new BubbleDataSet(mDownwardTrendList, "Dn");
 			bubbleDataSet.setColor(Color.GREEN);
-
 			bubbleData.addDataSet(bubbleDataSet);
 		}
 
 		if (mNaturalReactionList.size() > 0) {
 			BubbleDataSet bubbleDataSet = new BubbleDataSet(mNaturalReactionList, "NDn");
 			bubbleDataSet.setColor(Color.YELLOW);
-
 			bubbleData.addDataSet(bubbleDataSet);
 		}
-
 		mCombinedDataMain.setData(bubbleData);
 
 		if (mCandleEntryList.size() > 0) {

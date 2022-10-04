@@ -64,8 +64,9 @@ public class StockDataChartListActivity extends BaseActivity implements
 	public static final int MESSAGE_REFRESH = 0;
 	public static final int MESSAGE_LOAD_STOCK_LIST = 1;
 
+	boolean mKeyDisplayMarketKey = true;
 	boolean mKeyDisplayCandle = false;
-	boolean mKeyDisplayOverlap = true;
+	boolean mKeyDisplayOverlap = false;
 	boolean mKeyDisplayLatest = true;
 	boolean mKeyDisplayCost = true;
 	boolean mKeyDisplayDeal = false;
@@ -153,10 +154,12 @@ public class StockDataChartListActivity extends BaseActivity implements
 		mSortOrder = getIntent().getStringExtra(
 				Constants.EXTRA_STOCK_LIST_SORT_ORDER);
 
+		mKeyDisplayMarketKey = Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_MARKET_KEY,
+				false);
 		mKeyDisplayCandle = Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_CANDLE,
 				false);
 		mKeyDisplayOverlap = Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_OVERLAP,
-				true);
+                false);
 		mKeyDisplayLatest = Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_LATEST, true);
 		mKeyDisplayCost = Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_COST, true);
 
@@ -564,24 +567,26 @@ public class StockDataChartListActivity extends BaseActivity implements
 								+ timeString);
 					}
 
-					if (mStockData.getNaturalRally() > 0) {
-						BubbleEntry entry = new BubbleEntry(index, (float) mStockData.getNaturalRally(), 10);
-						stockDataChart.mNaturalRallyList.add(entry);
-					}
+					if (mKeyDisplayMarketKey) {
+						if (mStockData.getNaturalRally() > 0) {
+							BubbleEntry entry = new BubbleEntry(index, (float) mStockData.getNaturalRally(), 10);
+							stockDataChart.mNaturalRallyList.add(entry);
+						}
 
-					if (mStockData.getUpwardTrend() > 0) {
-						BubbleEntry entry = new BubbleEntry(index, (float) mStockData.getUpwardTrend(), 10);
-						stockDataChart.mUpwardTrendList.add(entry);
-					}
+						if (mStockData.getUpwardTrend() > 0) {
+							BubbleEntry entry = new BubbleEntry(index, (float) mStockData.getUpwardTrend(), 10);
+							stockDataChart.mUpwardTrendList.add(entry);
+						}
 
-					if (mStockData.getDownwardTrend() > 0) {
-						BubbleEntry entry = new BubbleEntry(index, (float) mStockData.getDownwardTrend(), 10);
-						stockDataChart.mDownwardTrendList.add(entry);
-					}
+						if (mStockData.getDownwardTrend() > 0) {
+							BubbleEntry entry = new BubbleEntry(index, (float) mStockData.getDownwardTrend(), 10);
+							stockDataChart.mDownwardTrendList.add(entry);
+						}
 
-					if (mStockData.getNaturalReaction() > 0) {
-						BubbleEntry entry = new BubbleEntry(index, (float) mStockData.getNaturalReaction(), 10);
-						stockDataChart.mNaturalReactionList.add(entry);
+						if (mStockData.getNaturalReaction() > 0) {
+							BubbleEntry entry = new BubbleEntry(index, (float) mStockData.getNaturalReaction(), 10);
+							stockDataChart.mNaturalReactionList.add(entry);
+						}
 					}
 
 					if (mKeyDisplayCandle) {

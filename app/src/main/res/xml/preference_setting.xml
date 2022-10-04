@@ -38,11 +38,14 @@
             android:key="display_net"
             android:title="@string/net" />
         <com.android.orion.CustomSwitchPreference
-            android:key="display_overlap"
-            android:title="@string/overlap" />
+            android:key="display_market_key"
+            android:title="@string/market_key" />
         <com.android.orion.CustomSwitchPreference
             android:key="display_candle"
             android:title="@string/candle" />
+        <com.android.orion.CustomSwitchPreference
+            android:key="display_overlap"
+            android:title="@string/overlap" />
         <com.android.orion.CustomSwitchPreference
             android:key="display_latest"
             android:title="@string/latest" />
