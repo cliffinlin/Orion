@@ -1107,7 +1107,7 @@ public class StockAnalyzer {
 				if (segmentNet >= 0) {
 					action += StockData.ACTION_ADD;
 				}
-				action += segmentNet;//Math.abs(segmentNet);
+				action += segmentNet;
 			}
 
 			if (segmentDivergence == StockData.DIVERGENCE_UP) {
@@ -1121,8 +1121,7 @@ public class StockAnalyzer {
 				if (segmentNet >= 0) {
 					action += StockData.ACTION_ADD;
 				}
-//				action += StockData.ACTION_MINUS;
-				action += segmentNet;//Math.abs(segmentNet);
+				action += segmentNet;
 			}
 
 			if (segmentDivergence == StockData.DIVERGENCE_DOWN) {
@@ -1137,7 +1136,7 @@ public class StockAnalyzer {
 				if (strokeNet >= 0) {
 					action += StockData.ACTION_ADD;
 				}
-				action += strokeNet;//Math.abs(strokeNet);
+				action += strokeNet;
 			}
 
 			if (strokeDivergence == StockData.DIVERGENCE_UP) {
@@ -1150,8 +1149,7 @@ public class StockAnalyzer {
 				if (strokeNet >= 0) {
 					action += StockData.ACTION_ADD;
 				}
-//				action += StockData.ACTION_MINUS;
-				action += strokeNet;//Math.abs(strokeNet);
+				action += strokeNet;
 			}
 
 			if (strokeDivergence == StockData.DIVERGENCE_DOWN) {
@@ -1177,7 +1175,7 @@ public class StockAnalyzer {
 				if (drawNet >= 0) {
 					action += StockData.ACTION_ADD;
 				}
-				action += drawNet;//Math.abs(drawNet);
+				action += drawNet;
 			}
 
 			if (drawDivergence == StockData.DIVERGENCE_UP) {
@@ -1201,12 +1199,29 @@ public class StockAnalyzer {
 				if (drawNet >= 0) {
 					action += StockData.ACTION_ADD;
 				}
-//				action += StockData.ACTION_MINUS;
-				action += drawNet;//Math.abs(drawNet);
+				action += drawNet;
 			}
 
 			if (drawDivergence == StockData.DIVERGENCE_DOWN) {
 				action += StockData.ACTION_LOW;
+			}
+		}
+
+		if (!period.equals(Settings.KEY_PERIOD_MONTH) && !period.equals(Settings.KEY_PERIOD_WEEK)) {
+			if (stockData.getNaturalRally() != 0) {
+				action += StockData.ACTION_NATURAL_RALLY;
+			}
+
+			if (stockData.getUpwardTrend() != 0) {
+				action += StockData.ACTION_UPWARD_TREND;
+			}
+
+			if (stockData.getDownwardTrend() != 0) {
+				action += StockData.ACTION_DOWNWARD_TREND;
+			}
+
+			if (stockData.getNaturalReaction() != 0) {
+				action += StockData.ACTION_NATURAL_REACTION;
 			}
 		}
 

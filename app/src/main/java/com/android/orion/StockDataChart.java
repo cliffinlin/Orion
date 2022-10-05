@@ -38,10 +38,6 @@ public class StockDataChart {
     double mSubChartYMin = 0;
     double mSubChartYMax = 0;
 
-	boolean mKeyDisplayDraw = true;
-	boolean mKeyDisplayStroke = false;
-	boolean mKeyDisplaySegment = false;
-
 	ArrayList<String> mXValues = null;
 
 	ArrayList<BubbleEntry> mNaturalRallyList = null;
@@ -196,38 +192,36 @@ public class StockDataChart {
 	}
 
 	void setMainChartData(Context context) {
-		mKeyDisplayDraw = Preferences.getBoolean(context, Settings.KEY_DISPLAY_DRAW,
-				true);
-		mKeyDisplayStroke = Preferences.getBoolean(context, Settings.KEY_DISPLAY_STROKE,
-				false);
-		mKeyDisplaySegment = Preferences.getBoolean(context, Settings.KEY_DISPLAY_SEGMENT,
-				false);
+		mCombinedDataMain = new CombinedData(mXValues);
 
-		BubbleData bubbleData = new BubbleData(mXValues);
-		if (mNaturalRallyList.size() > 0) {
-			BubbleDataSet bubbleDataSet = new BubbleDataSet(mNaturalRallyList, "NUp");
-			bubbleDataSet.setColor(Color.BLUE);
-			bubbleData.addDataSet(bubbleDataSet);
-		}
+		if (Preferences.getBoolean(context, Settings.KEY_DISPLAY_MARKET_KEY,
+				true)) {
+			BubbleData bubbleData = new BubbleData(mXValues);
+			if (mNaturalRallyList.size() > 0) {
+				BubbleDataSet bubbleDataSet = new BubbleDataSet(mNaturalRallyList, "NUp");
+				bubbleDataSet.setColor(Color.BLUE);
+				bubbleData.addDataSet(bubbleDataSet);
+			}
 
-		if (mUpwardTrendList.size() > 0) {
-			BubbleDataSet bubbleDataSet = new BubbleDataSet(mUpwardTrendList, "Up");
-			bubbleDataSet.setColor(Color.RED);
-			bubbleData.addDataSet(bubbleDataSet);
-		}
+			if (mUpwardTrendList.size() > 0) {
+				BubbleDataSet bubbleDataSet = new BubbleDataSet(mUpwardTrendList, "Up");
+				bubbleDataSet.setColor(Color.RED);
+				bubbleData.addDataSet(bubbleDataSet);
+			}
 
-		if (mDownwardTrendList.size() > 0) {
-			BubbleDataSet bubbleDataSet = new BubbleDataSet(mDownwardTrendList, "Dn");
-			bubbleDataSet.setColor(Color.GREEN);
-			bubbleData.addDataSet(bubbleDataSet);
-		}
+			if (mDownwardTrendList.size() > 0) {
+				BubbleDataSet bubbleDataSet = new BubbleDataSet(mDownwardTrendList, "Dn");
+				bubbleDataSet.setColor(Color.GREEN);
+				bubbleData.addDataSet(bubbleDataSet);
+			}
 
-		if (mNaturalReactionList.size() > 0) {
-			BubbleDataSet bubbleDataSet = new BubbleDataSet(mNaturalReactionList, "NDn");
-			bubbleDataSet.setColor(Color.YELLOW);
-			bubbleData.addDataSet(bubbleDataSet);
+			if (mNaturalReactionList.size() > 0) {
+				BubbleDataSet bubbleDataSet = new BubbleDataSet(mNaturalReactionList, "NDn");
+				bubbleDataSet.setColor(Color.YELLOW);
+				bubbleData.addDataSet(bubbleDataSet);
+			}
+			mCombinedDataMain.setData(bubbleData);
 		}
-		mCombinedDataMain.setData(bubbleData);
 
 		if (mCandleEntryList.size() > 0) {
 			CandleData candleData = new CandleData(mXValues);
@@ -266,7 +260,8 @@ public class StockDataChart {
 			lineData.addDataSet(average10DataSet);
 		}
 
-		if (mKeyDisplayDraw) {
+		if (Preferences.getBoolean(context, Settings.KEY_DISPLAY_DRAW,
+				true)) {
 			if (mDrawEntryList.size() > 0) {
 				LineDataSet drawDataSet = new LineDataSet(mDrawEntryList, "Draw");
 				drawDataSet.setColor(Color.GRAY);
@@ -277,7 +272,8 @@ public class StockDataChart {
 			}
 		}
 
-		if (mKeyDisplayStroke) {
+		if (Preferences.getBoolean(context, Settings.KEY_DISPLAY_STROKE,
+				false)) {
 			if (mStrokeEntryList.size() > 0) {
 				LineDataSet strokeDataSet = new LineDataSet(mStrokeEntryList, "Stroke");
 				strokeDataSet.setColor(Color.YELLOW);
@@ -288,7 +284,8 @@ public class StockDataChart {
 			}
 		}
 
-		if (mKeyDisplaySegment) {
+		if (Preferences.getBoolean(context, Settings.KEY_DISPLAY_SEGMENT,
+				false)) {
 			if (mSegmentEntryList.size() > 0) {
 				LineDataSet segmentDataSet = new LineDataSet(mSegmentEntryList,
 						"Segment");
@@ -370,6 +367,8 @@ public class StockDataChart {
 	}
 
 	void setSubChartData(Context context) {
+		mCombinedDataSub = new CombinedData(mXValues);
+
 		BarData barData = new BarData(mXValues);
 		BarDataSet histogramDataSet = new BarDataSet(mHistogramEntryList,
 				"Histogram");
