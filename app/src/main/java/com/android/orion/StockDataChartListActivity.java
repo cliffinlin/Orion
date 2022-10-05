@@ -569,22 +569,22 @@ public class StockDataChartListActivity extends BaseActivity implements
 
 					if (mKeyDisplayMarketKey) {
 						if (mStockData.getNaturalRally() > 0) {
-							BubbleEntry entry = new BubbleEntry(index, (float) mStockData.getNaturalRally(), 10);
+							BubbleEntry entry = new BubbleEntry(index, (float) mStockData.getNaturalRally(), 0);
 							stockDataChart.mNaturalRallyList.add(entry);
 						}
 
 						if (mStockData.getUpwardTrend() > 0) {
-							BubbleEntry entry = new BubbleEntry(index, (float) mStockData.getUpwardTrend(), 10);
+							BubbleEntry entry = new BubbleEntry(index, (float) mStockData.getUpwardTrend(), 0);
 							stockDataChart.mUpwardTrendList.add(entry);
 						}
 
 						if (mStockData.getDownwardTrend() > 0) {
-							BubbleEntry entry = new BubbleEntry(index, (float) mStockData.getDownwardTrend(), 10);
+							BubbleEntry entry = new BubbleEntry(index, (float) mStockData.getDownwardTrend(), 0);
 							stockDataChart.mDownwardTrendList.add(entry);
 						}
 
 						if (mStockData.getNaturalReaction() > 0) {
-							BubbleEntry entry = new BubbleEntry(index, (float) mStockData.getNaturalReaction(), 10);
+							BubbleEntry entry = new BubbleEntry(index, (float) mStockData.getNaturalReaction(), 0);
 							stockDataChart.mNaturalReactionList.add(entry);
 						}
 					}
