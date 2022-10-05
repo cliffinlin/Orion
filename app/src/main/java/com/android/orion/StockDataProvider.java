@@ -317,14 +317,14 @@ abstract class StockDataProvider extends StockAnalyzer {
                 return defaultValue;
             }
 
-            if (!Market.isWeekday(Calendar.getInstance())) {
-                return result;
-            }
+//            if (!Market.isWeekday(Calendar.getInstance())) {
+//                return result;
+//            }
 
-            int count = getStockDataOfToday(cursor, stockData);
-            if (count > 0) {
-                modified = stockData.getModified();
-            }
+//            int count = getStockDataOfToday(cursor, stockData);
+//            if (count > 0) {
+//                modified = stockData.getModified();
+//            }
             Calendar modifiedCalendar = Utility.getCalendar(modified,
                     Utility.CALENDAR_DATE_TIME_FORMAT);
             Calendar stockMarketLunchBeginCalendar = Market
@@ -358,7 +358,7 @@ abstract class StockDataProvider extends StockAnalyzer {
                     }
                 }
             } else if (Market.isLunchTime(Calendar.getInstance())) {
-                if ((count > 0) && modifiedCalendar.after(stockMarketLunchBeginCalendar)) {
+                if (modifiedCalendar.after(stockMarketLunchBeginCalendar)) {
                     return result;
                 }
 
@@ -366,23 +366,23 @@ abstract class StockDataProvider extends StockAnalyzer {
                     case Settings.KEY_PERIOD_MONTH:
                     case Settings.KEY_PERIOD_WEEK:
                     case Settings.KEY_PERIOD_DAY:
-                        result = 1 - count;
+                        result = 1;
                         break;
                     case Settings.KEY_PERIOD_MIN60:
-                        result = 2 - count;
+                        result = 2;
                         break;
                     case Settings.KEY_PERIOD_MIN30:
-                        result = 4 - count;
+                        result = 4;
                         break;
                     case Settings.KEY_PERIOD_MIN15:
-                        result = 8 - count;
+                        result = 8;
                         break;
                     case Settings.KEY_PERIOD_MIN5:
-                        result = 24 - count;
+                        result = 24;
                         break;
                 }
             } else if (Market.afterClosed(Calendar.getInstance())) {
-                if ((count > 0) && modifiedCalendar.after(stockMarketCloseCalendar)) {
+                if (modifiedCalendar.after(stockMarketCloseCalendar)) {
                     return result;
                 }
 
@@ -390,19 +390,19 @@ abstract class StockDataProvider extends StockAnalyzer {
                     case Settings.KEY_PERIOD_MONTH:
                     case Settings.KEY_PERIOD_WEEK:
                     case Settings.KEY_PERIOD_DAY:
-                        result = 1 - count;
+                        result = 1;
                         break;
                     case Settings.KEY_PERIOD_MIN60:
-                        result = 4 - count;
+                        result = 4;
                         break;
                     case Settings.KEY_PERIOD_MIN30:
-                        result = 8 - count;
+                        result = 8;
                         break;
                     case Settings.KEY_PERIOD_MIN15:
-                        result = 16 - count;
+                        result = 16;
                         break;
                     case Settings.KEY_PERIOD_MIN5:
-                        result = 48 - count;
+                        result = 48;
                         break;
                 }
             }
