@@ -115,6 +115,7 @@
     <string name="notification">Notification</string>
     <string name="notification_message">Message</string>
     <string name="notification_operate">Operate</string>
+    <string name="notification_market_key">Market Key</string>
     <string name="test">Test</string>
     <string name="backtest">Backtest</string>
     <string name="backtest_date_time">Backtest date time</string>

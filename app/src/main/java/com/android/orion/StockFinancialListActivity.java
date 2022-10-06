@@ -119,22 +119,6 @@ public class StockFinancialListActivity extends ListActivity implements
         initListView();
 
         mLoaderManager.initLoader(LOADER_ID_STOCK_FINANCIAL_LIST, null, this);
-
-        if (!Preferences.getBoolean(mContext,
-                Settings.KEY_NOTIFICATION_MESSAGE, false)) {
-            Toast.makeText(
-                    this,
-                    getResources().getString(R.string.notification_is_off),
-                    Toast.LENGTH_LONG).show();
-        }
-
-        if (Preferences.getBoolean(mContext,
-                Settings.KEY_BACKTEST, false)) {
-            Toast.makeText(
-                    this,
-                    getResources().getString(R.string.backtest_is_on),
-                    Toast.LENGTH_LONG).show();
-        }
     }
 
     @Override

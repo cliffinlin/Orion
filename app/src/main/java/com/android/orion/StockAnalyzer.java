@@ -1102,7 +1102,7 @@ public class StockAnalyzer {
 
 		if (stockData.directionOf(StockData.DIRECTION_UP_SEGMENT)) {
 			if (prev.vertexOf(StockData.VERTEX_BOTTOM_SEGMENT)) {
-				action += StockData.ACTION_D;
+//				action += StockData.ACTION_D;
 			} else {
 				if (segmentNet >= 0) {
 					action += StockData.ACTION_ADD;
@@ -1116,7 +1116,7 @@ public class StockAnalyzer {
 		} else if (stockData
 				.directionOf(StockData.DIRECTION_DOWN_SEGMENT)) {
 			if (prev.vertexOf(StockData.VERTEX_TOP_SEGMENT)) {
-				action += StockData.ACTION_G;
+//				action += StockData.ACTION_G;
 			} else {
 				if (segmentNet >= 0) {
 					action += StockData.ACTION_ADD;
@@ -1131,7 +1131,7 @@ public class StockAnalyzer {
 
 		if (stockData.directionOf(StockData.DIRECTION_UP_STROKE)) {
 			if (prev.vertexOf(StockData.VERTEX_BOTTOM_STROKE)) {
-				action += StockData.ACTION_D;
+//				action += StockData.ACTION_D;
 			} else {
 				if (strokeNet >= 0) {
 					action += StockData.ACTION_ADD;
@@ -1144,7 +1144,7 @@ public class StockAnalyzer {
 			}
 		} else if (stockData.directionOf(StockData.DIRECTION_DOWN_STROKE)) {
 			if (prev.vertexOf(StockData.VERTEX_TOP_STROKE)) {
-				action += StockData.ACTION_G;
+//				action += StockData.ACTION_G;
 			} else {
 				if (strokeNet >= 0) {
 					action += StockData.ACTION_ADD;
@@ -1159,7 +1159,7 @@ public class StockAnalyzer {
 
 		if (stockData.directionOf(StockData.DIRECTION_UP)) {
 			if (prev.vertexOf(StockData.VERTEX_BOTTOM)) {
-				action += StockData.ACTION_D;
+//				action += StockData.ACTION_D;
 //				if (period.equals(Settings.KEY_PERIOD_DAY)) {
 //					String result1 = getFirstBottomAction(stock, stockDataList, drawVertexList);
 //					if (!TextUtils.isEmpty(result1)) {
@@ -1183,7 +1183,7 @@ public class StockAnalyzer {
 			}
 		} else if (stockData.directionOf(StockData.DIRECTION_DOWN)) {
 			if (prev.vertexOf(StockData.VERTEX_TOP)) {
-				action += StockData.ACTION_G;
+//				action += StockData.ACTION_G;
 //				if (period.equals(Settings.KEY_PERIOD_DAY)) {
 //					String result1 = getFirstTopAction(stock, stockDataList, drawVertexList);
 //					if (!TextUtils.isEmpty(result1)) {
@@ -1393,6 +1393,8 @@ public class StockAnalyzer {
 	}
 
 	private void updateNotification(Stock stock) {
+	    boolean found = false;
+        double totalProfit = 0;
 		String lastPeriod = "";
         ArrayList<StockDeal> stockDealList = new ArrayList<StockDeal>();
 		StringBuilder actionString = new StringBuilder();
@@ -1411,26 +1413,50 @@ public class StockAnalyzer {
                     || Settings.checkOperatePeriod(lastPeriod, period, stock.getOperate())) {
 				lastPeriod = period;
 				String action = stock.getAction(period);
-				if (action.contains(StockData.ACTION_BUY2 + StockData.ACTION_BUY2)) {
-					actionString.append(period + " " + action + " ");
+				found = false;
+
+				if (Preferences.getBoolean(mContext, Settings.KEY_NOTIFICATION_MARKET_KEY,
+						true)) {
+					if (action.contains(StockData.ACTION_NATURAL_RALLY)
+							|| action.contains(StockData.ACTION_UPWARD_TREND)
+							|| action.contains(StockData.ACTION_DOWNWARD_TREND)
+							|| action.contains(StockData.ACTION_NATURAL_REACTION)) {
+						found = true;
+					}
 				}
 
-				if (action.contains(StockData.ACTION_SELL2 + StockData.ACTION_SELL2)) {
-					if (Stock.CLASS_INDEX.equals(stock.getClasses())) {
-						actionString.append(period + " " + action + " ");
-					} else {
-						mStockDatabaseManager.getStockDealListToSell(stock, stockDealList);
-						double totalProfit = 0;
-						for (StockDeal stockDeal : stockDealList) {
-							totalProfit += stockDeal.getProfit();
-						}
+				if (Preferences.getBoolean(mContext, Settings.KEY_NOTIFICATION_OPERATE,
+						true)) {
+					if (action.contains(StockData.ACTION_BUY2 + StockData.ACTION_BUY2)) {
+						found = true;
+					} else if (action.contains(StockData.ACTION_NATURAL_RALLY)) {
+						found = true;
+                    }
 
-						if (totalProfit > 0) {
-							actionString.append(period + " " + action + " ");
-							actionString.append(" " + (int)totalProfit + " ");
+					if (action.contains(StockData.ACTION_SELL2 + StockData.ACTION_SELL2)) {
+						if (Stock.CLASS_INDEX.equals(stock.getClasses())) {
+							found = true;
+						} else {
+							mStockDatabaseManager.getStockDealListToSell(stock, stockDealList);
+                            totalProfit = 0;
+							for (StockDeal stockDeal : stockDealList) {
+								totalProfit += stockDeal.getProfit();
+							}
+
+							if (totalProfit > 0) {
+								found = true;
+							}
 						}
 					}
 				}
+
+				if (found) {
+                    actionString.append(period + " " + action + " ");
+
+                    if (totalProfit > 0) {
+                        actionString.append(" " + (int)totalProfit + " ");
+                    }
+                }
 			}
 		}
 
@@ -1442,11 +1468,6 @@ public class StockAnalyzer {
 				+ stock.getNet() + " " + actionString);
 
 		RecordFile.writeNotificationFile(contentTitle.toString());
-
-		if (!Preferences.getBoolean(mContext, Settings.KEY_NOTIFICATION_MESSAGE,
-				true)) {
-			return;
-		}
 
 		notify((int) stock.getId(), Constants.MESSAGE_CHANNEL_ID, Constants.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
 				contentTitle.toString(), "");

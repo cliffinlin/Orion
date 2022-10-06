@@ -105,7 +105,8 @@ public class OrionMainActivity extends PreferenceActivity {
 		if (!Preferences.getBoolean(this, Settings.KEY_SHARED_PREFERENCES_INIT, false)) {
 			Preferences.putBoolean (this, Settings.KEY_SHARED_PREFERENCES_INIT, true);
 
-			Preferences.putBoolean (this, Settings.KEY_NOTIFICATION_MESSAGE, true);
+			Preferences.putBoolean (this, Settings.KEY_NOTIFICATION_OPERATE, true);
+			Preferences.putBoolean (this, Settings.KEY_NOTIFICATION_MARKET_KEY, true);
 
 			Preferences.putBoolean (this, Settings.KEY_DISPLAY_NET, true);
 

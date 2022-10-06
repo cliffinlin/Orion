@@ -22,8 +22,8 @@ public class StockData extends StockDatabaseTable {
     public static final String ACTION_SELL2 = "S2";
     public static final String ACTION_SELL3 = "S3";
 
-	public static final String ACTION_D = "D";
-	public static final String ACTION_G = "G";
+//	public static final String ACTION_G = "G";
+//	public static final String ACTION_D = "D";
 
     public static final String ACTION_HIGH = "H";
     public static final String ACTION_LOW = "L";
@@ -33,10 +33,10 @@ public class StockData extends StockDatabaseTable {
 
     public static final String ACTION_STAR = "*";
 
-	public static final String ACTION_NATURAL_RALLY = "NUp";
-	public static final String ACTION_UPWARD_TREND = "Up";
-	public static final String ACTION_DOWNWARD_TREND = "Dn";
-	public static final String ACTION_NATURAL_REACTION = "NDn";
+	public static final String ACTION_NATURAL_RALLY = "NG";
+	public static final String ACTION_UPWARD_TREND = "GG";
+	public static final String ACTION_DOWNWARD_TREND = "DD";
+	public static final String ACTION_NATURAL_REACTION = "ND";
 
 	public static final int LEVEL_NONE = 0;
 	public static final int LEVEL_DRAW = 1 << 0;

@@ -1066,6 +1066,7 @@ abstract class StockDataProvider extends StockAnalyzer {
 
                 if (Stock.CLASS_INDEX.equals(stock.getClasses())) {
                     setupIndex(stock);
+                    dataChanged = true;
                 } else {
                     int result = DOWNLOAD_RESULT_NONE;
 
