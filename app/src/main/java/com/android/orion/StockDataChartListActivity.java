@@ -274,19 +274,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 	protected void onResume() {
 		super.onResume();
 
-		mStockDataChartItemList.clear();
-
-		String lastPeriod = "";
-		mStockDatabaseManager.getStockById(mStock);
-		for (int i = 0; i < Settings.KEY_PERIODS.length; i++) {
-			if (Preferences.getBoolean(this, Settings.KEY_PERIODS[i], false)
-					|| Settings.checkOperatePeriod(lastPeriod, Settings.KEY_PERIODS[i], mStock.getOperate())) {
-				lastPeriod = Settings.KEY_PERIODS[i];
-				mStockDataChartItemList.add(mStockDataChartItemMainList.get(i));
-				mStockDataChartItemList.add(mStockDataChartItemSubList.get(i));
-			}
-		}
-
+		updateStockDataChartItemList();
 		restartLoader();
 	}
 
@@ -772,6 +760,21 @@ public class StockDataChartListActivity extends BaseActivity implements
 		mStockDatabaseManager.getStockDealList(mStock, mStockDealList, selection, sortOrder);
 	}
 
+	void updateStockDataChartItemList() {
+		mStockDataChartItemList.clear();
+
+		String lastPeriod = "";
+		mStockDatabaseManager.getStockById(mStock);
+		for (int i = 0; i < Settings.KEY_PERIODS.length; i++) {
+			if (Preferences.getBoolean(this, Settings.KEY_PERIODS[i], false)
+					|| Settings.checkOperatePeriod(lastPeriod, Settings.KEY_PERIODS[i], mStock.getOperate())) {
+				lastPeriod = Settings.KEY_PERIODS[i];
+				mStockDataChartItemList.add(mStockDataChartItemMainList.get(i));
+				mStockDataChartItemList.add(mStockDataChartItemSubList.get(i));
+			}
+		}
+	}
+
 	void navigateStock(int direction) {
 		boolean loop = true;
 
@@ -799,6 +802,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 
 		mStock = mStockList.get(mStockListIndex);
 
+		updateStockDataChartItemList();
 		restartLoader();
 	}
 
