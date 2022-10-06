@@ -394,30 +394,39 @@ public class StockDataChart {
 		deaDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(deaDataSet);
 
-        transferMainChartDataToSubChartData(mDrawEntryList, mSubChartDrawEntryList);
-        LineDataSet drawDataSet = new LineDataSet(mSubChartDrawEntryList, "Draw");
-        drawDataSet.setColor(Color.GRAY);
-        drawDataSet.setCircleColor(Color.GRAY);
-        drawDataSet.setCircleSize(0);
-        drawDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-        lineData.addDataSet(drawDataSet);
+        if (Preferences.getBoolean(context, Settings.KEY_DISPLAY_DRAW,
+                true)) {
+            transferMainChartDataToSubChartData(mDrawEntryList, mSubChartDrawEntryList);
+            LineDataSet drawDataSet = new LineDataSet(mSubChartDrawEntryList, "Draw");
+            drawDataSet.setColor(Color.GRAY);
+            drawDataSet.setCircleColor(Color.GRAY);
+            drawDataSet.setCircleSize(0);
+            drawDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+            lineData.addDataSet(drawDataSet);
+        }
 
-        transferMainChartDataToSubChartData(mStrokeEntryList, mSubChartStrokeEntryList);
-        LineDataSet strokeDataSet = new LineDataSet(mSubChartStrokeEntryList, "Stroke");
-        strokeDataSet.setColor(Color.YELLOW);
-        strokeDataSet.setCircleColor(Color.YELLOW);
-        strokeDataSet.setCircleSize(3f);
-        strokeDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-        lineData.addDataSet(strokeDataSet);
+        if (Preferences.getBoolean(context, Settings.KEY_DISPLAY_STROKE,
+                false)) {
+            transferMainChartDataToSubChartData(mStrokeEntryList, mSubChartStrokeEntryList);
+            LineDataSet strokeDataSet = new LineDataSet(mSubChartStrokeEntryList, "Stroke");
+            strokeDataSet.setColor(Color.YELLOW);
+            strokeDataSet.setCircleColor(Color.YELLOW);
+            strokeDataSet.setCircleSize(3f);
+            strokeDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+            lineData.addDataSet(strokeDataSet);
+        }
 
-        transferMainChartDataToSubChartData(mSegmentEntryList, mSubChartSegmentEntryList);
-        LineDataSet segmentDataSet = new LineDataSet(mSubChartSegmentEntryList,
-                "Segment");
-        segmentDataSet.setColor(Color.BLACK);
-        segmentDataSet.setCircleColor(Color.BLACK);
-        segmentDataSet.setCircleSize(3f);
-        segmentDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-        lineData.addDataSet(segmentDataSet);
+        if (Preferences.getBoolean(context, Settings.KEY_DISPLAY_SEGMENT,
+                false)) {
+            transferMainChartDataToSubChartData(mSegmentEntryList, mSubChartSegmentEntryList);
+            LineDataSet segmentDataSet = new LineDataSet(mSubChartSegmentEntryList,
+                    "Segment");
+            segmentDataSet.setColor(Color.BLACK);
+            segmentDataSet.setCircleColor(Color.BLACK);
+            segmentDataSet.setCircleSize(3f);
+            segmentDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+            lineData.addDataSet(segmentDataSet);
+        }
 
 		mCombinedDataSub.setData(barData);
 		mCombinedDataSub.setData(lineData);
