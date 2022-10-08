@@ -75,8 +75,8 @@ public class MarketKeyAnalyzer {
                     if (current.getHigh() > mNaturalRally) {
                         DEBUG(TAG, "case StockData.MARKET_KEY_NATURAL_RALLY: current.getHigh()=" + current.getHigh() + " > mNaturalRally=" +  mNaturalRally);
                         setNaturalRally(current);
-                        if (current.getHigh() > mPrevHigh * (1.0 + NATURAL_THRESHOLD / 2.0)) {
-                            DEBUG(TAG, "case StockData.MARKET_KEY_NATURAL_RALLY: current.getHigh()=" + current.getHigh() + " > mPrevHigh * (1.0 + NATURAL_THRESHOLD / 2.0)=" + mPrevHigh * (1.0 + NATURAL_THRESHOLD / 2.0));
+                        if (current.getHigh() > mPrevLow * (1.0 + NATURAL_THRESHOLD / 2.0)) {
+                            DEBUG(TAG, "case StockData.MARKET_KEY_NATURAL_RALLY: current.getHigh()=" + current.getHigh() + " > mPrevLow * (1.0 + NATURAL_THRESHOLD / 2.0)=" + mPrevLow * (1.0 + NATURAL_THRESHOLD / 2.0));
                             mMarketKeyType = StockData.MARKET_KEY_UPWARD_TREND;
                             DEBUG(TAG, "case StockData.MARKET_KEY_NATURAL_RALLY: mMarketKeyType = StockData.MARKET_KEY_UPWARD_TREND");
                             setUpwardTrend(current);
@@ -128,8 +128,8 @@ public class MarketKeyAnalyzer {
                     if (current.getLow() < mNaturalReaction) {
                         DEBUG(TAG, "case StockData.MARKET_KEY_NATURAL_REACTION: current.getLow()=" + current.getLow() + " < mNaturalReaction=" + mNaturalReaction);
                         setNaturalReaction(current);
-                        if (current.getLow() < mPrevLow * (1.0 - NATURAL_THRESHOLD / 2.0)) {
-                            DEBUG(TAG, "case StockData.MARKET_KEY_NATURAL_REACTION: current.getLow()=" + current.getLow() + "  < mPrevLow * (1.0 - NATURAL_THRESHOLD / 2.0)=" +  mPrevLow * (1.0 - NATURAL_THRESHOLD / 2.0));
+                        if (current.getLow() < mPrevHigh * (1.0 - NATURAL_THRESHOLD / 2.0)) {
+                            DEBUG(TAG, "case StockData.MARKET_KEY_NATURAL_REACTION: current.getLow()=" + current.getLow() + "  < mPrevHigh * (1.0 - NATURAL_THRESHOLD / 2.0)=" +  mPrevHigh * (1.0 - NATURAL_THRESHOLD / 2.0));
                             mMarketKeyType = StockData.MARKET_KEY_DOWNWARD_TREND;
                             DEBUG(TAG, "case StockData.MARKET_KEY_NATURAL_REACTION: mMarketKeyType = StockData.MARKET_KEY_DOWNWARD_TREND");
                             setDownwardTrend(current);
