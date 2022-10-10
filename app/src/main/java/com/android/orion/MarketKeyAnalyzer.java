@@ -10,7 +10,7 @@ public class MarketKeyAnalyzer {
     static final String TAG = Constants.TAG + " "
             + MarketKeyAnalyzer.class.getSimpleName();
 
-    public static final boolean LOG = false;
+    public static final boolean LOG = true;
 
     public static final double NATURAL_THRESHOLD = 6.0 / 100.0;
 
@@ -60,9 +60,14 @@ public class MarketKeyAnalyzer {
             return;
         }
 
+        i = 0;
+        current = dataList.get(i);
+        resetMarketKey(current);
+
         for (i = 1; i < size; i++) {
             prev = dataList.get(i - 1);
             current = dataList.get(i);
+            resetMarketKey(current);
 
             DEBUG(TAG, "i=" + i + " current.getDate()=" + current.getDate() + " current.getLow()=" + current.getLow() + " current.getHigh()=" + current.getHigh());
 
@@ -173,6 +178,19 @@ public class MarketKeyAnalyzer {
                     break;
             }
         }
+    }
+
+    void resetMarketKey(StockData stockData) {
+        if (stockData == null) {
+            return;
+        }
+
+        stockData.setSecondaryRally(0);
+        stockData.setNaturalRally(0);
+        stockData.setUpwardTrend(0);
+        stockData.setDownwardTrend(0);
+        stockData.setNaturalReaction(0);
+        stockData.setSecondaryReaction(0);
     }
 
     void setNaturalRally(StockData stockData) {

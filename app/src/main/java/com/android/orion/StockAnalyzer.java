@@ -1429,9 +1429,7 @@ public class StockAnalyzer {
 						true)) {
 					if (action.contains(StockData.ACTION_BUY2 + StockData.ACTION_BUY2)) {
 						found = true;
-					} else if (action.contains(StockData.ACTION_NATURAL_RALLY)) {
-						found = true;
-                    }
+					}
 
 					if (action.contains(StockData.ACTION_SELL2 + StockData.ACTION_SELL2)) {
 						if (Stock.CLASS_INDEX.equals(stock.getClasses())) {
