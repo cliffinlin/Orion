@@ -920,7 +920,7 @@ public class StockAnalyzer {
 
 			if (TextUtils.isEmpty(stock.getOperate())) {
 				if (Math.abs(denominator) < Constants.SECEND_ACTION_THRESHOLD) {
-					return result;
+//					return result;
 				}
 			}
 
@@ -1013,7 +1013,7 @@ public class StockAnalyzer {
 
 			if (TextUtils.isEmpty(stock.getOperate())) {
 				if (Math.abs(denominator) < Constants.SECEND_ACTION_THRESHOLD) {
-					return result;
+//					return result;
 				}
 			}
 
@@ -1392,11 +1392,27 @@ public class StockAnalyzer {
 		}
 	}
 
+	double getProfit(Stock stock) {
+		ArrayList<StockDeal> stockDealList = new ArrayList<StockDeal>();
+		double result = 0;
+
+		if (stock == null) {
+			return result;
+		}
+
+		mStockDatabaseManager.getStockDealListToSell(stock, stockDealList);
+		for (StockDeal stockDeal : stockDealList) {
+			result += stockDeal.getProfit();
+		}
+
+		return result;
+	}
+
 	private void updateNotification(Stock stock) {
-	    boolean found = false;
-        double totalProfit = 0;
+	    boolean notifyBuy = false;
+		boolean notifySell = false;
+	    double profit = 0;
 		String lastPeriod = "";
-        ArrayList<StockDeal> stockDealList = new ArrayList<StockDeal>();
 		StringBuilder actionString = new StringBuilder();
 		StringBuilder contentTitle = new StringBuilder();
 
@@ -1408,52 +1424,49 @@ public class StockAnalyzer {
 			return;
 		}
 
+		profit = getProfit(stock);
+
 		for (String period : Settings.KEY_PERIODS) {
 			if (Preferences.getBoolean(mContext, period, false)
                     || Settings.checkOperatePeriod(lastPeriod, period, stock.getOperate())) {
 				lastPeriod = period;
 				String action = stock.getAction(period);
-				found = false;
+				notifyBuy = false;
+				notifySell = false;
 
 				if (Preferences.getBoolean(mContext, Settings.KEY_NOTIFICATION_MARKET_KEY,
 						true)) {
 					if (action.contains(StockData.ACTION_NATURAL_RALLY)
-							|| action.contains(StockData.ACTION_UPWARD_TREND)
-							|| action.contains(StockData.ACTION_DOWNWARD_TREND)
-							|| action.contains(StockData.ACTION_NATURAL_REACTION)) {
-						found = true;
+							|| action.contains(StockData.ACTION_UPWARD_TREND)) {
+						if (profit > 0) {
+							notifySell = true;
+						}
 					}
 				}
 
 				if (Preferences.getBoolean(mContext, Settings.KEY_NOTIFICATION_OPERATE,
 						true)) {
 					if (action.contains(StockData.ACTION_BUY2 + StockData.ACTION_BUY2)) {
-						found = true;
+						notifyBuy = true;
 					}
 
 					if (action.contains(StockData.ACTION_SELL2 + StockData.ACTION_SELL2)) {
 						if (Stock.CLASS_INDEX.equals(stock.getClasses())) {
-							found = true;
+							notifySell = true;
 						} else {
-							mStockDatabaseManager.getStockDealListToSell(stock, stockDealList);
-                            totalProfit = 0;
-							for (StockDeal stockDeal : stockDealList) {
-								totalProfit += stockDeal.getProfit();
-							}
-
-							if (totalProfit > 0) {
-								found = true;
+							if (profit > 0) {
+								notifySell = true;
 							}
 						}
 					}
 				}
 
-				if (found) {
+				if (notifyBuy || notifySell) {
                     actionString.append(period + " " + action + " ");
 
-                    if (totalProfit > 0) {
-                        actionString.append(" " + (int)totalProfit + " ");
-                    }
+                    if (notifySell && (profit > 0)) {
+                    	actionString.append(" " + (int)profit + " ");
+					}
                 }
 			}
 		}
