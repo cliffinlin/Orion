@@ -13,3 +13,5 @@
 /build
 /captures
 .externalNativeBuild
+/Orion.iml
+/.idea
