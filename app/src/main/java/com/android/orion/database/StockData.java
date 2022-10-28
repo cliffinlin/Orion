@@ -78,6 +78,9 @@ public class StockData extends StockDatabaseTable {
 	public static final int MARKET_KEY_SECONDARY_REACTION = 1 << 5;
 
 	private long mStockId;
+	private String mSE;
+	private String mCode;
+	private String mName;
 	private int mLevel;
 	private String mDate;
 	private String mTime;
@@ -152,6 +155,9 @@ public class StockData extends StockDatabaseTable {
 		setTableName(DatabaseContract.StockData.TABLE_NAME);
 
 		mStockId = 0;
+		mSE = "";
+		mCode = "";
+		mName = "";
 		mLevel = LEVEL_NONE;
 		mDate = "";
 		mTime = "";
@@ -198,6 +204,9 @@ public class StockData extends StockDatabaseTable {
 		super.getContentValues(contentValues);
 
 		contentValues.put(DatabaseContract.COLUMN_STOCK_ID, mStockId);
+		contentValues.put(DatabaseContract.COLUMN_SE, mSE);
+		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
+		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
 		contentValues.put(DatabaseContract.COLUMN_LEVEL, mLevel);
 		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);
 		contentValues.put(DatabaseContract.COLUMN_TIME, mTime);
@@ -249,6 +258,9 @@ public class StockData extends StockDatabaseTable {
 		super.set(stockData);
 
 		setStockId(stockData.mStockId);
+		setSE(stockData.mSE);
+		setCode(stockData.mCode);
+		setName(stockData.mName);
 		setLevel(stockData.mLevel);
 		setDate(stockData.mDate);
 		setTime(stockData.mTime);
@@ -301,6 +313,9 @@ public class StockData extends StockDatabaseTable {
 		super.set(cursor);
 
 		setStockID(cursor);
+		setSE(cursor);
+		setCode(cursor);
+		setName(cursor);
 		setLevel(cursor);
 		setDate(cursor);
 		setTime(cursor);
@@ -353,6 +368,57 @@ public class StockData extends StockDatabaseTable {
 
 		setStockId(cursor.getLong(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_STOCK_ID)));
+	}
+
+	public String getSE() {
+		return mSE;
+	}
+
+	public void setSE(String se) {
+		mSE = se;
+	}
+
+	void setSE(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setSE(cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_SE)));
+	}
+
+	public String getCode() {
+		return mCode;
+	}
+
+	public void setCode(String code) {
+		mCode = code;
+	}
+
+	void setCode(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setCode(cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_CODE)));
+	}
+
+	public String getName() {
+		return mName;
+	}
+
+	public void setName(String name) {
+		mName = name;
+	}
+
+	void setName(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setName(cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_NAME)));
 	}
 
 	public int getLevel() {

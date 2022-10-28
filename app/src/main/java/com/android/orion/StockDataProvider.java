@@ -755,6 +755,9 @@ abstract class StockDataProvider extends StockAnalyzer {
         StockData stockData = new StockData(period);
         stockData.setStockId(stock.getId());
         mStockDatabaseManager.getStockData(stockData);
+        stockData.setSE(stock.getSE());
+        stockData.setCode(stock.getCode());
+        stockData.setName(stock.getName());
 
         int len = getDownloadStockDataLength(stockData);
         if (len <= 0) {
@@ -825,6 +828,9 @@ abstract class StockDataProvider extends StockAnalyzer {
         StockData stockData = new StockData(period);
         stockData.setStockId(stock.getId());
         mStockDatabaseManager.getStockData(stockData);
+        stockData.setSE(stock.getSE());
+        stockData.setCode(stock.getCode());
+        stockData.setName(stock.getName());
 
         int len = getDownloadStockDataLength(stockData);
         if (len <= 0) {

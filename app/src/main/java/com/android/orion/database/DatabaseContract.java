@@ -223,7 +223,8 @@ public final class DatabaseContract {
         public static final String SORT_ORDER_DEFAULT = COLUMN_STOCK_ID
                 + " ASC";
 
-        public static final String[] PROJECTION_ALL = {_ID, COLUMN_STOCK_ID, COLUMN_LEVEL,
+        public static final String[] PROJECTION_ALL = {_ID, COLUMN_STOCK_ID,
+                COLUMN_SE, COLUMN_CODE, COLUMN_NAME, COLUMN_LEVEL,
                 COLUMN_DATE, COLUMN_TIME, COLUMN_PERIOD, COLUMN_OPEN,
                 COLUMN_HIGH, COLUMN_LOW, COLUMN_CLOSE,
                 COLUMN_CHANGE, COLUMN_NET, COLUMN_DIRECTION,
@@ -239,7 +240,11 @@ public final class DatabaseContract {
                 + TABLE_NAME;
         private static final String CREATE_TABLE_CONTENT = " (" + _ID
                 + " INTEGER PRIMARY KEY," + COLUMN_STOCK_ID + TEXT_TYPE
-                + COMMA_SEP + COLUMN_LEVEL + INTEGER_TYPE + COMMA_SEP
+                + COMMA_SEP
+                + COLUMN_SE + TEXT_TYPE + COMMA_SEP
+                + COLUMN_CODE + TEXT_TYPE + COMMA_SEP
+                + COLUMN_NAME + TEXT_TYPE + COMMA_SEP
+                + COLUMN_LEVEL + INTEGER_TYPE + COMMA_SEP
                 + COLUMN_DATE + TEXT_TYPE + COMMA_SEP + COLUMN_TIME
                 + TEXT_TYPE + COMMA_SEP + COLUMN_PERIOD + TEXT_TYPE + COMMA_SEP
                 + COLUMN_OPEN + DOUBLE_TYPE + COMMA_SEP + COLUMN_HIGH
