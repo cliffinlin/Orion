@@ -263,8 +263,8 @@ public class StorageActivity extends DatabaseActivity {
                                 stock.setFlag(Integer.valueOf(parser.nextText()));
 							} else if (DatabaseContract.COLUMN_OPERATE.equals(tagName)) {
 								stock.setOperate(parser.nextText());
-                            } else if (DatabaseContract.COLUMN_COST.equals(tagName)) {
-                                stock.setCost(Double.valueOf(parser.nextText()));
+                            } else if (DatabaseContract.COLUMN_NATURAL_THRESHOLD.equals(tagName)) {
+                                stock.setNaturalThreshold(Double.valueOf(parser.nextText()));
                             }
                         } else if (parseType == XML_PARSE_TYPE_STOCK_DEAL) {
                             if (DatabaseContract.COLUMN_BUY.equals(tagName)) {
@@ -434,8 +434,8 @@ public class StorageActivity extends DatabaseActivity {
 						String.valueOf(stock.getFlag()));
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_OPERATE,
 						stock.getOperate());
-				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_COST,
-						String.valueOf(stock.getCost()));
+				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_NATURAL_THRESHOLD,
+						String.valueOf(stock.getNaturalThreshold()));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

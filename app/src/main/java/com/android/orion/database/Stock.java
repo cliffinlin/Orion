@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.text.TextUtils;
 
 import com.android.orion.Constants;
+import com.android.orion.MarketKeyAnalyzer;
 import com.android.orion.Settings;
 import com.android.orion.utility.Utility;
 
@@ -52,6 +53,8 @@ public class Stock extends DatabaseTable {
 	private String mActionMonth;
 	private String mActionQuarter;
 	private String mActionYear;
+
+	private double mNaturalThreshold;
 
 	private String mOperate;
 	private long mHold;
@@ -215,6 +218,8 @@ public class Stock extends DatabaseTable {
 		mActionQuarter = "";
 		mActionYear = "";
 
+	    mNaturalThreshold = 0;
+
 		mCost = 0;
 		mProfit = 0;
 		mBonus = 0;
@@ -348,6 +353,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
 
 		contentValues.put(DatabaseContract.COLUMN_FLAG, mFlag);
+		contentValues.put(DatabaseContract.COLUMN_NATURAL_THRESHOLD, mNaturalThreshold);
 		contentValues.put(DatabaseContract.COLUMN_OPERATE, mOperate);
 
 		return contentValues;
@@ -387,6 +393,8 @@ public class Stock extends DatabaseTable {
 		setActionMonth(stock.mActionMonth);
 		setActionQuarter(stock.mActionQuarter);
 		setActionYear(stock.mActionYear);
+
+		setNaturalThreshold(stock.mNaturalThreshold);
 
 		setOperate(stock.mOperate);
 		setHold(stock.mHold);
@@ -455,6 +463,7 @@ public class Stock extends DatabaseTable {
 		setActionMonth(cursor);
 		setActionQuarter(cursor);
 		setActionYear(cursor);
+		setNaturalThreshold(cursor);
 		setOperate(cursor);
 		setHold(cursor);
 		setCost(cursor);
@@ -878,6 +887,23 @@ public class Stock extends DatabaseTable {
 
 		setActionYear(cursor.getString(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_YEAR)));
+	}
+
+	public double getNaturalThreshold() {
+		return mNaturalThreshold;
+	}
+
+	public void setNaturalThreshold(double naturalThreshold) {
+		mNaturalThreshold = naturalThreshold;
+	}
+
+	void setNaturalThreshold(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setNaturalThreshold(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_NATURAL_THRESHOLD)));
 	}
 
 	public String getOperate() {

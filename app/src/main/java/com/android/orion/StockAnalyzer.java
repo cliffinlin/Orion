@@ -678,7 +678,7 @@ public class StockAnalyzer {
 		StockVertexAnalyzer stockVertexAnalyzer = new StockVertexAnalyzer();
 		ArrayList<StockData> overlapList = new ArrayList<StockData>();
 
-        marketKeyAnalyzer.analyzeMarketKey(stockDataList);
+        marketKeyAnalyzer.analyzeMarketKey(stock.getNaturalThreshold(), stockDataList);
 
 		setMACD(stockDataList);
 

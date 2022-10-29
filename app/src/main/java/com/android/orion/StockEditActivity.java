@@ -36,10 +36,7 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 	RadioGroup mRadioGroupSE;
 	EditText mEditTextStockName;
 	EditText mEditTextStockCode;
-	EditText mEditTextStockCost;
-	EditText mEditTextStockHold;
-	EditText mEditTextStockValuation;
-	EditText mEditTextStockBonus;
+	EditText mEditTextStockNaturalThreshold;
 	EditText mEditTextStockYield;
 
 	List<String> mListStockOperate;
@@ -80,10 +77,7 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 		mRadioGroupSE = (RadioGroup) findViewById(R.id.radioGroupSE);
 		mEditTextStockName = (EditText) findViewById(R.id.edittext_stock_name);
 		mEditTextStockCode = (EditText) findViewById(R.id.edittext_stock_code);
-		mEditTextStockCost = (EditText) findViewById(R.id.edittext_stock_cost);
-		mEditTextStockHold = (EditText) findViewById(R.id.edittext_stock_hold);
-		mEditTextStockValuation = (EditText) findViewById(R.id.edittext_stock_valuation);
-		mEditTextStockBonus = (EditText) findViewById(R.id.edittext_stock_bonus);
+		mEditTextStockNaturalThreshold = (EditText) findViewById(R.id.edittext_stock_natural_threshold);
 		mEditTextStockYield = (EditText) findViewById(R.id.edittext_stock_yield);
 		mSpinnerStockAcion = (Spinner) findViewById(R.id.spinner_stock_operate);
 		mButtonOk = (Button) findViewById(R.id.button_ok);
@@ -94,14 +88,7 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 		mRadioGroupSE.setOnClickListener(this);
 		mEditTextStockName.setOnClickListener(this);
 		mEditTextStockCode.setOnClickListener(this);
-		mEditTextStockCost.setOnClickListener(this);
-		mEditTextStockCost.setEnabled(false);
-		mEditTextStockHold.setOnClickListener(this);
-		mEditTextStockHold.setEnabled(false);
-		mEditTextStockValuation.setOnClickListener(this);
-		mEditTextStockValuation.setEnabled(false);
-		mEditTextStockBonus.setOnClickListener(this);
-		mEditTextStockBonus.setEnabled(false);
+		mEditTextStockNaturalThreshold.setOnClickListener(this);
 		mEditTextStockYield.setOnClickListener(this);
 		mEditTextStockYield.setEnabled(false);
 		mSpinnerStockAcion.setOnItemSelectedListener(this);
@@ -183,10 +170,10 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 
 		mEditTextStockName.setText(mStock.getName());
 		mEditTextStockCode.setText(mStock.getCode());
-		mEditTextStockCost.setText(String.valueOf(mStock.getCost()));
-		mEditTextStockHold.setText(String.valueOf(mStock.getHold()));
-		mEditTextStockValuation.setText(String.valueOf(mStock.getValuation()));
-		mEditTextStockBonus.setText(String.valueOf(mStock.getBonus()));
+		if (mStock.getNaturalThreshold() == 0) {
+            mStock.setNaturalThreshold(Constants.STOCK_NATURAL_THRESHOLD);
+        }
+		mEditTextStockNaturalThreshold.setText(String.valueOf(mStock.getNaturalThreshold()));
 		mEditTextStockYield.setText(String.valueOf(mStock.getYield()));
 
 		String operate = mStock.getOperate();
@@ -246,7 +233,7 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 
 			String name = mEditTextStockName.getText().toString();
 			String code = mEditTextStockCode.getText().toString();
-			String cost = mEditTextStockCost.getText().toString();
+			String naturalThreshold = mEditTextStockNaturalThreshold.getText().toString();
 
 			if (!TextUtils.isEmpty(name)) {
 				mStock.setName(name);
@@ -259,10 +246,10 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 						Toast.LENGTH_LONG).show();
 			}
 
-			if (!TextUtils.isEmpty(cost)) {
-				mStock.setCost(Double.valueOf(cost));
+			if (!TextUtils.isEmpty(naturalThreshold)) {
+				mStock.setNaturalThreshold(Double.valueOf(naturalThreshold));
 			} else {
-				mStock.setCost(0);
+				mStock.setNaturalThreshold(0);
 			}
 
 			operate = mSpinnerStockAcion.getSelectedItem().toString();

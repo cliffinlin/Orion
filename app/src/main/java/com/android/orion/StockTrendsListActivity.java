@@ -99,8 +99,6 @@ public class StockTrendsListActivity extends ListActivity implements
                     break;
 
                 case MESSAGE_VIEW_STOCK_DEAL:
-                    getStock();
-
                     intent = new Intent(mContext, StockEditActivity.class);
                     intent.setAction(StockEditActivity.ACTION_STOCK_EDIT);
                     intent.putExtra(Constants.EXTRA_STOCK_ID, mStock.getId());
@@ -108,8 +106,6 @@ public class StockTrendsListActivity extends ListActivity implements
                     break;
 
                 case MESSAGE_VIEW_STOCK_CHAT:
-                    getStock();
-
                     ArrayList<String> stockIDList = new ArrayList<String>();
                     for (Stock stock : mStockList) {
                         stockIDList.add(String.valueOf(stock.getId()));
@@ -446,6 +442,7 @@ public class StockTrendsListActivity extends ListActivity implements
                             + " AND "
                             + "(" + DatabaseContract.COLUMN_PERIOD + " = \'" + KEY_PERIOD_DAY + "\') ";
                     selectionArgs = null;
+                    mStock.setId(stockId);
                 } else {
                     ArrayList<Stock> stockList = new ArrayList<>();
                     StringBuilder placeHolder = new StringBuilder();
@@ -489,15 +486,7 @@ public class StockTrendsListActivity extends ListActivity implements
             case LOADER_ID_STOCK_TRENDS_LIST:
                 mLeftAdapter.swapCursor(cursor);
                 mRightAdapter.swapCursor(cursor);
-//
-//			if ((cursor != null) && cursor.getCount() > 0) {
-//				cursor.moveToPosition(-1);
-//				while (cursor.moveToNext()) {
-//					Stock stock = new Stock();
-//					stock.set(cursor);
-//					mStockList.add(stock);
-//				}
-//			}
+                mRightAdapter.notifyDataSetChanged();
                 break;
 
             default:
@@ -512,6 +501,7 @@ public class StockTrendsListActivity extends ListActivity implements
     public void onLoaderReset(Loader<Cursor> loader) {
         mLeftAdapter.swapCursor(null);
         mRightAdapter.swapCursor(null);
+        mRightAdapter.notifyDataSetChanged();
 
 //		mStockList.clear();
     }
@@ -585,15 +575,6 @@ public class StockTrendsListActivity extends ListActivity implements
         }
 
         return true;
-    }
-
-    void getStock() {
-        mStockDatabaseManager.getStockData(mStockData);
-
-		mStock.setSE(mStockData.getSE());
-		mStock.setCode(mStockData.getCode());
-
-        mStockDatabaseManager.getStock(mStock);
     }
 
     private class RightViewBinder implements SimpleCursorAdapter.ViewBinder {
