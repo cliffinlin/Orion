@@ -338,14 +338,20 @@ public class StockVertexAnalyzer {
 			stockData.set(current);
 			stockData.merge(prev, current);
 
-			if (prev.vertexOf(StockData.VERTEX_TOP)
-					&& current.vertexOf(StockData.VERTEX_BOTTOM)) {
-				direction = StockData.DIRECTION_DOWN;
-			} else if (prev.vertexOf(StockData.VERTEX_BOTTOM)
-					&& current.vertexOf(StockData.VERTEX_TOP)) {
-				direction = StockData.DIRECTION_UP;
-			} else {
-				direction = StockData.DIRECTION_NONE;
+			direction = StockData.DIRECTION_NONE;
+
+			if (prev.vertexOf(StockData.VERTEX_TOP)) {
+				if (current.vertexOf(StockData.VERTEX_BOTTOM)) {
+					direction = StockData.DIRECTION_DOWN;
+				} else {
+					direction = StockData.DIRECTION_UP;
+				}
+			} else if (prev.vertexOf(StockData.VERTEX_BOTTOM)) {
+				if (current.vertexOf(StockData.VERTEX_TOP)) {
+					direction = StockData.DIRECTION_UP;
+				} else {
+					direction = StockData.DIRECTION_DOWN;
+				}
 			}
 
 			stockData.setDirection(direction);

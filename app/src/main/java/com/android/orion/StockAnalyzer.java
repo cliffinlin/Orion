@@ -1128,7 +1128,7 @@ public class StockAnalyzer {
 				action += StockData.ACTION_LOW;
 			}
 		}
-
+/*
 		if (stockData.directionOf(StockData.DIRECTION_UP_STROKE)) {
 			if (prev.vertexOf(StockData.VERTEX_BOTTOM_STROKE)) {
 //				action += StockData.ACTION_D;
@@ -1156,7 +1156,8 @@ public class StockAnalyzer {
 				action += StockData.ACTION_LOW;
 			}
 		}
-
+*/
+/*
 		if (stockData.directionOf(StockData.DIRECTION_UP)) {
 			if (prev.vertexOf(StockData.VERTEX_BOTTOM)) {
 //				action += StockData.ACTION_D;
@@ -1206,7 +1207,7 @@ public class StockAnalyzer {
 				action += StockData.ACTION_LOW;
 			}
 		}
-
+*/
 		if (!period.equals(Settings.KEY_PERIOD_MONTH) && !period.equals(Settings.KEY_PERIOD_WEEK)) {
 			if (stockData.getNaturalRally() != 0) {
 				action += StockData.ACTION_NATURAL_RALLY;
