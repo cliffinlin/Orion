@@ -317,9 +317,9 @@ abstract class StockDataProvider extends StockAnalyzer {
                 return defaultValue;
             }
 
-//            if (!Market.isWeekday(Calendar.getInstance())) {
-//                return result;
-//            }
+            if (!Market.isWeekday(Calendar.getInstance())) {
+                return result;
+            }
 
 //            int count = getStockDataOfToday(cursor, stockData);
 //            if (count > 0) {
@@ -358,16 +358,20 @@ abstract class StockDataProvider extends StockAnalyzer {
                     }
                 }
             } else if (Market.isLunchTime(Calendar.getInstance())) {
+                if (period.equals(Settings.KEY_PERIOD_MONTH)
+                        || period.equals(Settings.KEY_PERIOD_WEEK)
+                        || period.equals(Settings.KEY_PERIOD_DAY)) {
+                    if (Market.isOutOfDateToday(stockData.getDate())) {
+                        result = 1;
+                    }
+                    return result;
+                }
+
                 if (modifiedCalendar.after(stockMarketLunchBeginCalendar)) {
                     return result;
                 }
 
                 switch (period) {
-                    case Settings.KEY_PERIOD_MONTH:
-                    case Settings.KEY_PERIOD_WEEK:
-                    case Settings.KEY_PERIOD_DAY:
-                        result = 1;
-                        break;
                     case Settings.KEY_PERIOD_MIN60:
                         result = 2;
                         break;
