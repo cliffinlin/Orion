@@ -27,7 +27,6 @@ import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockDatabaseManager;
 import com.android.orion.database.StockDeal;
-import com.android.orion.database.StockTrends;
 import com.android.orion.database.TotalShare;
 import com.android.orion.indicator.MACD;
 import com.android.orion.utility.Preferences;
@@ -678,7 +677,7 @@ public class StockAnalyzer {
 		StockVertexAnalyzer stockVertexAnalyzer = new StockVertexAnalyzer();
 		ArrayList<StockData> overlapList = new ArrayList<StockData>();
 
-        marketKeyAnalyzer.analyzeMarketKey(stock.getNaturalThreshold(), stockDataList);
+        marketKeyAnalyzer.analyzeMarketKey(stock, period, stockDataList);
 
 		setMACD(stockDataList);
 
@@ -1231,8 +1230,6 @@ public class StockAnalyzer {
 	}
 
 	private void updateDatabase(Stock stock) {
-		StockTrends stockTrends = new StockTrends();
-
 		if (mStockDatabaseManager == null) {
 			Log.d(TAG, "updateDatabase return " + " mStockDatabaseManager = "
 					+ mStockDatabaseManager);
@@ -1242,29 +1239,6 @@ public class StockAnalyzer {
 		try {
 			mStockDatabaseManager.updateStock(stock,
 					stock.getContentValues());
-
-			stockTrends.set(stock);
-
-			if (!stockTrends.getTrends().contains(StockData.ACTION_BUY)
-					&& !stockTrends.getTrends().contains(StockData.ACTION_SELL)) {
-				return;
-			}
-
-			if (mStockDatabaseManager.isStockTrendsExist(stockTrends)) {
-				StockTrends temp = new StockTrends();
-
-				temp.setStockId(stock.getId());
-				temp.setDate(stock.getDate());
-				temp.setTime(stock.getTime());
-
-				mStockDatabaseManager.getStockTrends(temp);
-
-				if (!stockTrends.getTrends().equals(temp.getTrends())) {
-					mStockDatabaseManager.insertStockTrends(stockTrends);
-				}
-            } else {
-                mStockDatabaseManager.insertStockTrends(stockTrends);
-            }
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

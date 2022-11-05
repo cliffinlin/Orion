@@ -26,7 +26,7 @@
     <string name="action_save">Save</string>
     <string name="action_settings">Settings</string>
     <string name="action_filter">Filter</string>
-    <string name="action_trends">Trends</string>
+    <string name="action_trend">Trend</string>
     <string name="action_download">Download</string>
     <string name="action_delete">Delete</string>
     <string name="action_delete_all">Delete All</string>
@@ -188,7 +188,7 @@
     <string name="stock_edit">Stock Edit</string>
     <string name="stock_list">Stock List</string>
     <string name="component_list">Component List</string>
-    <string name="trends_list">Trends List</string>
+    <string name="trend_list">Trend List</string>
     <string name="stock_account">Stock Account</string>
     <string name="stock_operate">Stock Operate</string>
     <string name="stock_quota">Stock Quota</string>
@@ -225,7 +225,7 @@
     <string name="ipo_list">IPO List</string>
     <string name="natural_rally">Rally</string>
     <string name="upward_trend">Up</string>
-    <string name="downward_trend">Downward</string>
+    <string name="downward_trend">Down</string>
     <string name="natural_reaction">React</string>
     <string name="date">Date</string>
     <string name="time">Time</string>

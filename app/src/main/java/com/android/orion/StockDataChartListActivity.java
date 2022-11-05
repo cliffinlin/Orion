@@ -2,8 +2,6 @@ package com.android.orion;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Comparator;
 import java.util.List;
 
 import android.app.LoaderManager;
@@ -17,7 +15,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,7 +31,6 @@ import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Search;
-import com.android.orion.utility.Utility;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.XAxis.XAxisPosition;
@@ -105,7 +101,6 @@ public class StockDataChartListActivity extends BaseActivity implements
 					mStockDatabaseManager.deleteStockData(mStock.getId());
 					mStockDatabaseManager.deleteStockFinancial(mStock.getId());
 					mStockDatabaseManager.deleteShareBonus(mStock.getId());
-					mStockDatabaseManager.deleteStockTrends(mStock.getId());
 					mOrionService.download(mStock);
 					restartLoader();
 				}
@@ -241,9 +236,9 @@ public class StockDataChartListActivity extends BaseActivity implements
 			startActivity(intent);
 			return true;
 
-		case R.id.action_trends:
-			mIntent = new Intent(this, StockTrendsListActivity.class);
-			mIntent.setAction(StockTrendsListActivity.ACTION_STOCK_TRENDS_LIST);
+		case R.id.action_trend:
+			mIntent = new Intent(this, StockTrendListActivity.class);
+			mIntent.setAction(StockTrendListActivity.ACTION_STOCK_TREND_LIST);
 			mIntent.putExtra(Constants.EXTRA_STOCK_ID, mStock.getId());
 			startActivity(mIntent);
 			return true;

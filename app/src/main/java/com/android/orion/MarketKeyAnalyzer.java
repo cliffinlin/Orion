@@ -2,6 +2,7 @@ package com.android.orion;
 
 import android.util.Log;
 
+import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 
 import java.util.ArrayList;
@@ -42,12 +43,17 @@ public class MarketKeyAnalyzer {
         mPrevLow = 0;
     }
 
-    void analyzeMarketKey(double naturalThreshold, ArrayList<StockData> dataList) {
+    void analyzeMarketKey(Stock stock,  String period, ArrayList<StockData> dataList) {
         int i = 0;
         int size = 0;
+        double naturalThreshold = 0;
 
         StockData prev = null;
         StockData current = null;
+
+        if (stock == null) {
+            return;
+        }
 
         if (dataList == null) {
             return;
@@ -58,8 +64,11 @@ public class MarketKeyAnalyzer {
             return;
         }
 
+        naturalThreshold = stock.getNaturalThreshold();
+
         if (naturalThreshold == 0) {
             naturalThreshold = Constants.STOCK_NATURAL_THRESHOLD;
+            stock.setNaturalThreshold(naturalThreshold);
         }
 
         naturalThreshold = naturalThreshold / 100.0;
@@ -181,6 +190,33 @@ public class MarketKeyAnalyzer {
                     }
                     break;
             }
+        }
+
+        if (Settings.KEY_PERIOD_DAY.equals(period)) {
+            String trendString = "";
+
+            switch (mMarketKeyType) {
+                case StockData.MARKET_KEY_NATURAL_RALLY:
+                    trendString = StockData.NAME_NATURAL_RALLY;
+                    break;
+
+                case StockData.MARKET_KEY_UPWARD_TREND:
+                    trendString = StockData.NAME_UPWARD_TREND;
+                    break;
+
+                case StockData.MARKET_KEY_DOWNWARD_TREND:
+                    trendString = StockData.NAME_DOWNWARD_TREND;
+                    break;
+
+                case StockData.MARKET_KEY_NATURAL_REACTION:
+                    trendString = StockData.NAME_NATURAL_REACTION;
+                    break;
+
+                default:
+                    break;
+            }
+
+            stock.setTrend(trendString);
         }
     }
 

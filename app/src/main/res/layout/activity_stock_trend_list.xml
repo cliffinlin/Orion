@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal" >
 
-                <include layout="@layout/activity_stock_trends_list_right_title" />
+                <include layout="@layout/activity_stock_trend_list_right_title" />
             </LinearLayout>
         </com.android.orion.view.SyncHorizontalScrollView>
     </LinearLayout>

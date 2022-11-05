@@ -87,6 +87,7 @@ public final class DatabaseContract {
     public static final String COLUMN_DIVERGENCE = "divergence";
     public static final String COLUMN_ACCOUNT = "account";
     public static final String COLUMN_ACTION = "action";
+    public static final String COLUMN_TREND = "trend";
     public static final String COLUMN_SECONDARY_RALLY = "secondary_rally";
     public static final String COLUMN_NATURAL_RALLY = "natural_rally";
     public static final String COLUMN_UPWARD_TREND = "upward_trend";
@@ -143,7 +144,7 @@ public final class DatabaseContract {
                 COLUMN_VOLUME, COLUMN_VALUE, COLUMN_DATE, COLUMN_TIME, COLUMN_MIN1, COLUMN_MIN5,
                 COLUMN_MIN15, COLUMN_MIN30, COLUMN_MIN60, COLUMN_DAY,
                 COLUMN_WEEK, COLUMN_MONTH, COLUMN_QUARTER, COLUMN_YEAR,
-                COLUMN_NATURAL_THRESHOLD,
+                COLUMN_NATURAL_THRESHOLD,COLUMN_TREND,
                 COLUMN_OPERATE, COLUMN_HOLD, COLUMN_COST, COLUMN_PROFIT,
                 COLUMN_BONUS, COLUMN_VALUATION, COLUMN_TOTAL_SHARE,
                 COLUMN_MARKET_VALUE, COLUMN_TOTAL_ASSETS,
@@ -179,8 +180,9 @@ public final class DatabaseContract {
                 + COLUMN_QUARTER + TEXT_TYPE + COMMA_SEP + COLUMN_YEAR
                 + TEXT_TYPE + COMMA_SEP
                 + COLUMN_NATURAL_THRESHOLD + DOUBLE_TYPE + COMMA_SEP
-                + COLUMN_OPERATE + TEXT_TYPE
-                + COMMA_SEP + COLUMN_HOLD + INTEGER_TYPE + COMMA_SEP
+                + COLUMN_TREND + TEXT_TYPE + COMMA_SEP
+                + COLUMN_OPERATE + TEXT_TYPE + COMMA_SEP
+                + COLUMN_HOLD + INTEGER_TYPE + COMMA_SEP
                 + COLUMN_COST + DOUBLE_TYPE + COMMA_SEP + COLUMN_PROFIT
                 + DOUBLE_TYPE + COMMA_SEP + COLUMN_BONUS + DOUBLE_TYPE
                 + COMMA_SEP + COLUMN_VALUATION + DOUBLE_TYPE + COMMA_SEP
@@ -479,55 +481,6 @@ public final class DatabaseContract {
                 + COLUMN_NAME + TEXT_TYPE + COMMA_SEP
                 + COLUMN_CREATED + TEXT_TYPE
                 + COMMA_SEP + COLUMN_MODIFIED + TEXT_TYPE + " )";
-        static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
-                + CREATE_TABLE_CONTENT;
-    }
-
-    public static abstract class StockTrends implements BaseColumns {
-        public static final String TABLE_NAME = "stock_trends";
-
-        public static final Uri CONTENT_URI = Uri.withAppendedPath(
-                DatabaseContract.CONTENT_URI, TABLE_NAME);
-        public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
-                + "/" + DATABASE_NAME + "/" + TABLE_NAME;
-        public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
-                + "/" + DATABASE_NAME + "/" + TABLE_NAME;
-        public static final String SORT_ORDER_DEFAULT = COLUMN_DATE + " ASC";
-
-        public static final String[] PROJECTION_ALL = {_ID,
-                COLUMN_STOCK_ID, COLUMN_CLASSES, COLUMN_SE, COLUMN_CODE,
-                COLUMN_NAME, COLUMN_PRICE, COLUMN_NET,
-                COLUMN_DATE, COLUMN_TIME,
-                COLUMN_MIN1, COLUMN_MIN5, COLUMN_MIN15,
-                COLUMN_MIN30, COLUMN_MIN60, COLUMN_DAY,
-                COLUMN_WEEK, COLUMN_MONTH, COLUMN_QUARTER, COLUMN_YEAR,
-                COLUMN_OPERATE, COLUMN_CREATED, COLUMN_MODIFIED};
-        static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
-                + TABLE_NAME;
-        private static final String CREATE_TABLE_CONTENT = " (" + _ID
-                + " INTEGER PRIMARY KEY,"
-                + COLUMN_STOCK_ID + TEXT_TYPE + COMMA_SEP
-                + COLUMN_CLASSES + TEXT_TYPE + COMMA_SEP
-                + COLUMN_SE + TEXT_TYPE + COMMA_SEP
-                + COLUMN_CODE + TEXT_TYPE + COMMA_SEP
-                + COLUMN_NAME + TEXT_TYPE + COMMA_SEP
-                + COLUMN_PRICE + DOUBLE_TYPE + COMMA_SEP
-                + COLUMN_NET + DOUBLE_TYPE + COMMA_SEP
-                + COLUMN_DATE + TEXT_TYPE + COMMA_SEP
-                + COLUMN_TIME + TEXT_TYPE + COMMA_SEP
-                + COLUMN_MIN1 + TEXT_TYPE + COMMA_SEP
-                + COLUMN_MIN5 + TEXT_TYPE + COMMA_SEP
-                + COLUMN_MIN15 + TEXT_TYPE + COMMA_SEP
-                + COLUMN_MIN30 + TEXT_TYPE + COMMA_SEP
-                + COLUMN_MIN60 + TEXT_TYPE + COMMA_SEP
-                + COLUMN_DAY + TEXT_TYPE + COMMA_SEP
-                + COLUMN_WEEK + TEXT_TYPE + COMMA_SEP
-                + COLUMN_MONTH + TEXT_TYPE + COMMA_SEP
-                + COLUMN_QUARTER + TEXT_TYPE + COMMA_SEP
-                + COLUMN_YEAR + TEXT_TYPE + COMMA_SEP
-                + COLUMN_OPERATE + TEXT_TYPE + COMMA_SEP
-                + COLUMN_CREATED + TEXT_TYPE + COMMA_SEP
-                + COLUMN_MODIFIED + TEXT_TYPE + " )";
         static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
                 + CREATE_TABLE_CONTENT;
     }

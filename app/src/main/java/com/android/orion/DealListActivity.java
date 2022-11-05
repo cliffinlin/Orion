@@ -55,7 +55,7 @@ public class DealListActivity extends ListActivity implements
 
     static final int MESSAGE_VIEW_STOCK_DEAL = 4;
     static final int MESSAGE_VIEW_STOCK_CHAT = 5;
-    static final int MESSAGE_VIEW_STOCK_TRENDS = 6;
+    static final int MESSAGE_VIEW_STOCK_TREND = 6;
 
     static final int REQUEST_CODE_DEAL_INSERT = 0;
     static final int REQUEST_CODE_DEAL_EDIT = 1;
@@ -149,11 +149,11 @@ public class DealListActivity extends ListActivity implements
                     startActivity(intent);
                     break;
 
-                case MESSAGE_VIEW_STOCK_TRENDS:
+                case MESSAGE_VIEW_STOCK_TREND:
                     mStockDatabaseManager.getStock(mStock);
 
-                    mIntent = new Intent(mContext, StockTrendsListActivity.class);
-                    mIntent.setAction(StockTrendsListActivity.ACTION_STOCK_TRENDS_LIST);
+                    mIntent = new Intent(mContext, StockTrendListActivity.class);
+                    mIntent.setAction(StockTrendListActivity.ACTION_STOCK_TREND_LIST);
                     mIntent.putExtra(Constants.EXTRA_STOCK_ID, mStock.getId());
                     startActivity(mIntent);
                     break;
@@ -301,8 +301,8 @@ public class DealListActivity extends ListActivity implements
                 restartLoader();
                 return true;
 
-            case R.id.action_trends:
-                mHandler.sendEmptyMessage(MESSAGE_VIEW_STOCK_TRENDS);
+            case R.id.action_trend:
+                mHandler.sendEmptyMessage(MESSAGE_VIEW_STOCK_TREND);
                 return true;
 
             default:

@@ -44,9 +44,6 @@ public class OrionContentProvider extends ContentProvider {
 	private static final int INDEX_COMPONENT = 800;
 	private static final int INDEX_COMPONENT_ID = 801;
 
-	private static final int STOCK_TRENDS = 900;
-	private static final int STOCK_TRENDS_ID = 901;
-
 	private static final UriMatcher mUriMatcher = new UriMatcher(
 			UriMatcher.NO_MATCH);
 
@@ -91,11 +88,6 @@ public class OrionContentProvider extends ContentProvider {
 				DatabaseContract.IndexComponent.TABLE_NAME, INDEX_COMPONENT);
 		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
 				DatabaseContract.IndexComponent.TABLE_NAME + "/#", INDEX_COMPONENT_ID);
-
-		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
-				DatabaseContract.StockTrends.TABLE_NAME, STOCK_TRENDS);
-		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
-				DatabaseContract.StockTrends.TABLE_NAME + "/#", STOCK_TRENDS_ID);
 	}
 
 	ContentResolver mContentResolver = null;
@@ -177,13 +169,6 @@ public class OrionContentProvider extends ContentProvider {
 			break;
 		case INDEX_COMPONENT_ID:
 			type = DatabaseContract.IndexComponent.CONTENT_ITEM_TYPE;
-			break;
-
-		case STOCK_TRENDS:
-			type = DatabaseContract.StockTrends.CONTENT_TYPE;
-			break;
-		case STOCK_TRENDS_ID:
-			type = DatabaseContract.StockTrends.CONTENT_ITEM_TYPE;
 			break;
 
 		default:
@@ -281,15 +266,6 @@ public class OrionContentProvider extends ContentProvider {
 					+ uri.getLastPathSegment());
 			break;
 
-		case STOCK_TRENDS:
-			builder.setTables(DatabaseContract.StockTrends.TABLE_NAME);
-			break;
-		case STOCK_TRENDS_ID:
-			builder.setTables(DatabaseContract.StockTrends.TABLE_NAME);
-			builder.appendWhere(BaseColumns._ID + " = "
-					+ uri.getLastPathSegment());
-			break;
-
 		default:
 			break;
 		}
@@ -358,11 +334,6 @@ public class OrionContentProvider extends ContentProvider {
 		case INDEX_COMPONENT:
 			id = mDatabaseManager.mDatabase.insert(
 					DatabaseContract.IndexComponent.TABLE_NAME, null, contentValues);
-			break;
-
-		case STOCK_TRENDS:
-			id = mDatabaseManager.mDatabase.insert(
-					DatabaseContract.StockTrends.TABLE_NAME, null, contentValues);
 			break;
 
 		default:
@@ -555,21 +526,6 @@ public class OrionContentProvider extends ContentProvider {
 					selectionArgs);
 			break;
 
-		case STOCK_TRENDS:
-			result = mDatabaseManager.mDatabase.update(
-					DatabaseContract.StockTrends.TABLE_NAME, values, selection,
-					selectionArgs);
-			break;
-		case STOCK_TRENDS_ID:
-			whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
-			if (!TextUtils.isEmpty(selection)) {
-				whereClause += " AND " + whereClause;
-			}
-			result = mDatabaseManager.mDatabase.update(
-					DatabaseContract.StockTrends.TABLE_NAME, values, whereClause,
-					selectionArgs);
-			break;
-
 		default:
 			break;
 		}
@@ -718,21 +674,6 @@ public class OrionContentProvider extends ContentProvider {
 			}
 			result = mDatabaseManager.mDatabase
 					.delete(DatabaseContract.IndexComponent.TABLE_NAME, whereClause,
-							selectionArgs);
-			break;
-
-		case STOCK_TRENDS:
-			result = mDatabaseManager.mDatabase.delete(
-					DatabaseContract.StockTrends.TABLE_NAME, selection, selectionArgs);
-			break;
-
-		case STOCK_TRENDS_ID:
-			whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
-			if (!TextUtils.isEmpty(selection)) {
-				whereClause += " AND " + whereClause;
-			}
-			result = mDatabaseManager.mDatabase
-					.delete(DatabaseContract.StockTrends.TABLE_NAME, whereClause,
 							selectionArgs);
 			break;
 

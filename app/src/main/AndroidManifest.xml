@@ -78,14 +78,9 @@
             android:label="@string/component_list"
             android:launchMode="singleTop" >
         </activity>
-        <activity
-            android:name="com.android.orion.StockActionListActivity"
-            android:label="@string/trends_list"
-            android:launchMode="singleTop" >
-        </activity>
-        <activity
-            android:name="com.android.orion.StockTrendsListActivity"
-            android:label="@string/trends_list"
+         <activity
+            android:name="com.android.orion.StockTrendListActivity"
+            android:label="@string/trend_list"
             android:launchMode="singleTop" >
         </activity>
         <activity

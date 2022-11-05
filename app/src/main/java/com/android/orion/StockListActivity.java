@@ -58,6 +58,7 @@ public class StockListActivity extends ListActivity implements
 	TextView mTextViewMin30 = null;
 	TextView mTextViewMin15 = null;
 	TextView mTextViewMin5 = null;
+	TextView mTextViewTrend = null;
 	TextView mTextViewOperate = null;
 	TextView mTextViewModified = null;
 
@@ -84,7 +85,6 @@ public class StockListActivity extends ListActivity implements
 					mStockDatabaseManager.deleteStockData();
 					mStockDatabaseManager.deleteStockFinancial();
 					mStockDatabaseManager.deleteShareBonus();
-					mStockDatabaseManager.deleteStockTrends();
 					mOrionService.download();
 					restartLoader();
 				}
@@ -218,6 +218,9 @@ public class StockListActivity extends ListActivity implements
 		case R.id.action_5min:
 			mSortOrderColumn = DatabaseContract.COLUMN_MIN5;
 			break;
+		case R.id.trend:
+			mSortOrderColumn = DatabaseContract.COLUMN_TREND;
+			break;
 		case R.id.operate:
 			mSortOrderColumn = DatabaseContract.COLUMN_OPERATE;
 			break;
@@ -264,6 +267,7 @@ public class StockListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewMin30, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewMin15, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewMin5, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewTrend, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewOperate, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewModified, mHeaderTextDefaultColor);
 	}
@@ -345,6 +349,11 @@ public class StockListActivity extends ListActivity implements
 			setVisibility(Settings.KEY_PERIOD_MIN5, mTextViewMin5);
 		}
 
+		mTextViewTrend = (TextView) findViewById(R.id.trend);
+		if (mTextViewTrend != null) {
+			mTextViewTrend.setOnClickListener(this);
+		}
+
 		mTextViewOperate = (TextView) findViewById(R.id.operate);
 		if (mTextViewOperate != null) {
 			mTextViewOperate.setOnClickListener(this);
@@ -375,6 +384,8 @@ public class StockListActivity extends ListActivity implements
 			setHeaderTextColor(mTextViewMin15, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MIN5)) {
 			setHeaderTextColor(mTextViewMin5, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_TREND)) {
+			setHeaderTextColor(mTextViewTrend, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_OPERATE)) {
 			setHeaderTextColor(mTextViewOperate, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MODIFIED)) {
@@ -393,10 +404,12 @@ public class StockListActivity extends ListActivity implements
 				DatabaseContract.COLUMN_WEEK, DatabaseContract.COLUMN_DAY,
 				DatabaseContract.COLUMN_MIN60, DatabaseContract.COLUMN_MIN30,
 				DatabaseContract.COLUMN_MIN15, DatabaseContract.COLUMN_MIN5,
+				DatabaseContract.COLUMN_TREND,
 				DatabaseContract.COLUMN_OPERATE, DatabaseContract.COLUMN_MODIFIED };
 		int[] mRightTo = new int[] { R.id.price, R.id.net, R.id.type_month,
 				R.id.type_week, R.id.type_day, R.id.type_60min,
-				R.id.type_30min, R.id.type_15min, R.id.type_5min, R.id.operate, R.id.modified };
+				R.id.type_30min, R.id.type_15min, R.id.type_5min,
+				R.id.trend, R.id.operate, R.id.modified };
 
 		mLeftListView = (ListView) findViewById(R.id.left_listview);
 		mLeftAdapter = new SimpleCursorAdapter(this,

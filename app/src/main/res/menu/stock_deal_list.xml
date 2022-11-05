@@ -43,10 +43,10 @@
         android:title="@string/action_all">
     </item>
     <item
-        android:id="@+id/action_trends"
+        android:id="@+id/action_trend"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="@string/action_trends">
+        android:title="@string/action_trend">
     </item>
 
 </menu>

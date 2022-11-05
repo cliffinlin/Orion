@@ -31,23 +31,21 @@ import com.android.orion.database.StockData;
 import com.android.orion.utility.Preferences;
 import com.android.orion.view.SyncHorizontalScrollView;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
 import static com.android.orion.Settings.KEY_PERIOD_DAY;
 
-public class StockTrendsListActivity extends ListActivity implements
+public class StockTrendListActivity extends ListActivity implements
         LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
         OnItemLongClickListener, OnClickListener {
 
     public static final String ACTION_STOCK_ID = "orion.intent.action.ACTION_STOCK_ID";
-    public static final String ACTION_STOCK_TRENDS_LIST = "orion.intent.action.ACTION_STOCK_TRENDS_LIST";
+    public static final String ACTION_STOCK_TREND_LIST = "orion.intent.action.ACTION_STOCK_TREND_LIST";
 
-    public static final int LOADER_ID_STOCK_TRENDS_LIST = 0;
+    public static final int LOADER_ID_STOCK_TREND_LIST = 0;
 
-    public static final int REQUEST_CODE_STOCK_TRENDS_INSERT = 0;
-    public static final int REQUEST_CODE_STOCK_TRENDS_SELECT = 1;
+    public static final int REQUEST_CODE_STOCK_TREND_INSERT = 0;
+    public static final int REQUEST_CODE_STOCK_TREND_SELECT = 1;
 
     static final int MESSAGE_VIEW_STOCK_DEAL = 4;
     static final int MESSAGE_VIEW_STOCK_CHAT = 5;
@@ -129,21 +127,21 @@ public class StockTrendsListActivity extends ListActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_stock_trends_list);
+        setContentView(R.layout.activity_stock_trend_list);
 
-        mSortOrder = Preferences.getString(mContext, Settings.KEY_SORT_ORDER_STOCK_TRENDS_LIST,
+        mSortOrder = Preferences.getString(mContext, Settings.KEY_SORT_ORDER_STOCK_TREND_LIST,
                 mSortOrderDefault);
 
         initHeader();
 
         initListView();
 
-        mLoaderManager.initLoader(LOADER_ID_STOCK_TRENDS_LIST, null, this);
+        mLoaderManager.initLoader(LOADER_ID_STOCK_TREND_LIST, null, this);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.stock_trends_list, menu);
+        getMenuInflater().inflate(R.menu.stock_trend_list, menu);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         return true;
     }
@@ -211,8 +209,8 @@ public class StockTrendsListActivity extends ListActivity implements
 
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
-                case REQUEST_CODE_STOCK_TRENDS_INSERT:
-                case REQUEST_CODE_STOCK_TRENDS_SELECT:
+                case REQUEST_CODE_STOCK_TREND_INSERT:
+                case REQUEST_CODE_STOCK_TREND_SELECT:
                     if (mOrionService != null) {
                         mOrionService.download(mStock);
                     }
@@ -266,7 +264,7 @@ public class StockTrendsListActivity extends ListActivity implements
 
         mSortOrder = mSortOrderColumn + mSortOrderDirection;
 
-        Preferences.putString(mContext, Settings.KEY_SORT_ORDER_STOCK_TRENDS_LIST, mSortOrder);
+        Preferences.putString(mContext, Settings.KEY_SORT_ORDER_STOCK_TREND_LIST, mSortOrder);
 
         restartLoader();
     }
@@ -392,7 +390,7 @@ public class StockTrendsListActivity extends ListActivity implements
 
         mRightListView = (ListView) findViewById(R.id.right_listview);
         mRightAdapter = new SimpleCursorAdapter(this,
-                R.layout.activity_stock_trends_list_right_item, null, mRightFrom,
+                R.layout.activity_stock_trend_list_right_item, null, mRightFrom,
                 mRightTo, 0);
         if ((mRightListView != null) && (mRightAdapter != null)) {
             mRightAdapter.setViewBinder(new RightViewBinder());
@@ -407,7 +405,7 @@ public class StockTrendsListActivity extends ListActivity implements
     }
 
     void restartLoader() {
-        mLoaderManager.restartLoader(LOADER_ID_STOCK_TRENDS_LIST, null, this);
+        mLoaderManager.restartLoader(LOADER_ID_STOCK_TREND_LIST, null, this);
     }
 
     @Override
@@ -434,8 +432,8 @@ public class StockTrendsListActivity extends ListActivity implements
         CursorLoader loader = null;
 
         switch (id) {
-            case LOADER_ID_STOCK_TRENDS_LIST:
-                if (ACTION_STOCK_TRENDS_LIST.equals(mIntent.getAction())) {
+            case LOADER_ID_STOCK_TREND_LIST:
+                if (ACTION_STOCK_TREND_LIST.equals(mIntent.getAction())) {
                     long stockId = getIntent().getLongExtra(Constants.EXTRA_STOCK_ID,
                             Stock.INVALID_ID);
                     selection = "(" + DatabaseContract.COLUMN_STOCK_ID + " = " + stockId + ") "
@@ -483,7 +481,7 @@ public class StockTrendsListActivity extends ListActivity implements
         }
 
         switch (loader.getId()) {
-            case LOADER_ID_STOCK_TRENDS_LIST:
+            case LOADER_ID_STOCK_TREND_LIST:
                 mLeftAdapter.swapCursor(cursor);
                 mRightAdapter.swapCursor(cursor);
                 mRightAdapter.notifyDataSetChanged();

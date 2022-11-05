@@ -53,6 +53,7 @@ public class Stock extends DatabaseTable {
 	private String mActionMonth;
 	private String mActionQuarter;
 	private String mActionYear;
+	private String mTrend;
 
 	private double mNaturalThreshold;
 
@@ -217,6 +218,7 @@ public class Stock extends DatabaseTable {
 		mActionMonth = "";
 		mActionQuarter = "";
 		mActionYear = "";
+		mTrend = "";
 
 	    mNaturalThreshold = 0;
 
@@ -282,8 +284,8 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_MONTH, mActionMonth);
 		contentValues.put(DatabaseContract.COLUMN_QUARTER, mActionQuarter);
 		contentValues.put(DatabaseContract.COLUMN_YEAR, mActionYear);
+		contentValues.put(DatabaseContract.COLUMN_TREND, mTrend);
 
-//		contentValues.put(DatabaseContract.COLUMN_OPERATE, mOperate);
 		contentValues.put(DatabaseContract.COLUMN_HOLD, mHold);
 		contentValues.put(DatabaseContract.COLUMN_COST, mCost);
 		contentValues.put(DatabaseContract.COLUMN_PROFIT, mProfit);
@@ -393,6 +395,7 @@ public class Stock extends DatabaseTable {
 		setActionMonth(stock.mActionMonth);
 		setActionQuarter(stock.mActionQuarter);
 		setActionYear(stock.mActionYear);
+		setTrend(stock.mTrend);
 
 		setNaturalThreshold(stock.mNaturalThreshold);
 
@@ -463,6 +466,7 @@ public class Stock extends DatabaseTable {
 		setActionMonth(cursor);
 		setActionQuarter(cursor);
 		setActionYear(cursor);
+		setTrend(cursor);
 		setNaturalThreshold(cursor);
 		setOperate(cursor);
 		setHold(cursor);
@@ -887,6 +891,23 @@ public class Stock extends DatabaseTable {
 
 		setActionYear(cursor.getString(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_YEAR)));
+	}
+
+	String getTrend() {
+		return mTrend;
+	}
+
+	public void setTrend(String trend) {
+		mTrend = trend;
+	}
+
+	void setTrend(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setTrend(cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_TREND)));
 	}
 
 	public double getNaturalThreshold() {
