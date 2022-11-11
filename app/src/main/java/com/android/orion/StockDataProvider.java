@@ -235,48 +235,6 @@ abstract class StockDataProvider extends StockAnalyzer {
         return result;
     }
 
-    void removeStockDataRedundant(Cursor cursor, int defaultValue) {
-        int i = 0;
-        StockData stockData = new StockData();
-
-        if (cursor == null) {
-            return;
-        }
-
-        if (defaultValue <= 0) {
-            return;
-        }
-
-        cursor.moveToFirst();
-
-        i = cursor.getCount() - defaultValue;
-        while (i > 0) {
-            stockData.set(cursor);
-            mStockDatabaseManager.deleteStockData(stockData);
-            cursor.moveToNext();
-            i--;
-        }
-    }
-
-    private int getStockDataOfToday(Cursor cursor, StockData stockData) {
-        String dataString = Utility.getCalendarDateString(Calendar
-                .getInstance());
-        int result = 0;
-
-        if (cursor == null) {
-            return result;
-        }
-
-        cursor.moveToLast();
-
-        stockData.set(cursor);
-        if (stockData.getDate().equals(dataString)) {
-            result++;
-        }
-
-        return result;
-    }
-
     private int getDownloadStockDataLength(StockData stockData) {
         int result = 0;
         int defaultValue = 0;

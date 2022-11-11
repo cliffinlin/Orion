@@ -247,8 +247,18 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 			}
 
 			if (!TextUtils.isEmpty(naturalThreshold)) {
+				if (Double.valueOf(naturalThreshold) != mStock.getNaturalThreshold()) {
+					mStockDatabaseManager.deleteStockData();
+					mNeedDownload |= true;
+				}
+
 				mStock.setNaturalThreshold(Double.valueOf(naturalThreshold));
 			} else {
+				if (0 != mStock.getNaturalThreshold()) {
+					mStockDatabaseManager.deleteStockData();
+					mNeedDownload |= true;
+				}
+
 				mStock.setNaturalThreshold(0);
 			}
 
@@ -314,7 +324,7 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 		operate = mSpinnerStockAcion.getSelectedItem().toString();
 		if (!TextUtils.isEmpty(operate)) {
 			if (!operate.equals(mStock.getOperate())) {
-				mNeedDownload = true;
+				mNeedDownload |= true;
 			}
 		}
 	}
