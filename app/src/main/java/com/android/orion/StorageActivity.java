@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Xml;
 
 import com.android.orion.database.IndexComponent;
@@ -529,7 +530,11 @@ public class StorageActivity extends DatabaseActivity {
 	void xmlSerialize(XmlSerializer xmlSerializer, String tag, String text) {
 		try {
 			xmlSerializer.startTag(null, tag);
-			xmlSerializer.text(text);
+			if (TextUtils.isEmpty(text)) {
+				xmlSerializer.text("");
+			} else {
+				xmlSerializer.text(text);
+			}
 			xmlSerializer.endTag(null, tag);
 		} catch (Exception e) {
 			e.printStackTrace();
