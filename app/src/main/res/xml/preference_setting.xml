@@ -4,10 +4,6 @@
     <PreferenceCategory android:title="@string/notification" >
         <com.android.orion.CustomSwitchPreference
             android:defaultValue="true"
-            android:key="notification_market_key"
-            android:title="@string/notification_market_key" />
-        <com.android.orion.CustomSwitchPreference
-            android:defaultValue="true"
             android:key="notification_operate"
             android:title="@string/notification_operate" />
     </PreferenceCategory>
