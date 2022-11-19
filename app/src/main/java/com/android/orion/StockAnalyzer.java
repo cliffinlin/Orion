@@ -919,7 +919,7 @@ public class StockAnalyzer {
 
 			if (TextUtils.isEmpty(stock.getOperate())) {
 				if (Math.abs(denominator) < Constants.SECEND_ACTION_THRESHOLD) {
-//					return result;
+					return result;
 				}
 			}
 
@@ -1012,7 +1012,7 @@ public class StockAnalyzer {
 
 			if (TextUtils.isEmpty(stock.getOperate())) {
 				if (Math.abs(denominator) < Constants.SECEND_ACTION_THRESHOLD) {
-//					return result;
+					return result;
 				}
 			}
 
@@ -1127,15 +1127,15 @@ public class StockAnalyzer {
 				action += StockData.ACTION_LOW;
 			}
 		}
-/*
+
 		if (stockData.directionOf(StockData.DIRECTION_UP_STROKE)) {
 			if (prev.vertexOf(StockData.VERTEX_BOTTOM_STROKE)) {
 //				action += StockData.ACTION_D;
 			} else {
-				if (strokeNet >= 0) {
-					action += StockData.ACTION_ADD;
-				}
-				action += strokeNet;
+//				if (strokeNet >= 0) {
+//					action += StockData.ACTION_ADD;
+//				}
+//				action += strokeNet;
 			}
 
 			if (strokeDivergence == StockData.DIVERGENCE_UP) {
@@ -1145,18 +1145,17 @@ public class StockAnalyzer {
 			if (prev.vertexOf(StockData.VERTEX_TOP_STROKE)) {
 //				action += StockData.ACTION_G;
 			} else {
-				if (strokeNet >= 0) {
-					action += StockData.ACTION_ADD;
-				}
-				action += strokeNet;
+//				if (strokeNet >= 0) {
+//					action += StockData.ACTION_ADD;
+//				}
+//				action += strokeNet;
 			}
 
 			if (strokeDivergence == StockData.DIVERGENCE_DOWN) {
 				action += StockData.ACTION_LOW;
 			}
 		}
-*/
-/*
+
 		if (stockData.directionOf(StockData.DIRECTION_UP)) {
 			if (prev.vertexOf(StockData.VERTEX_BOTTOM)) {
 //				action += StockData.ACTION_D;
@@ -1172,10 +1171,10 @@ public class StockAnalyzer {
 					action = result2;
 				}
 			} else {
-				if (drawNet >= 0) {
-					action += StockData.ACTION_ADD;
-				}
-				action += drawNet;
+//				if (drawNet >= 0) {
+//					action += StockData.ACTION_ADD;
+//				}
+//				action += drawNet;
 			}
 
 			if (drawDivergence == StockData.DIVERGENCE_UP) {
@@ -1196,17 +1195,17 @@ public class StockAnalyzer {
 					action = result2;
 				}
 			} else {
-				if (drawNet >= 0) {
-					action += StockData.ACTION_ADD;
-				}
-				action += drawNet;
+//				if (drawNet >= 0) {
+//					action += StockData.ACTION_ADD;
+//				}
+//				action += drawNet;
 			}
 
 			if (drawDivergence == StockData.DIVERGENCE_DOWN) {
 				action += StockData.ACTION_LOW;
 			}
 		}
-*/
+
 		if (!period.equals(Settings.KEY_PERIOD_MONTH) && !period.equals(Settings.KEY_PERIOD_WEEK)) {
 			if (stockData.getNaturalRally() != 0) {
 				action += StockData.ACTION_NATURAL_RALLY;
@@ -1409,16 +1408,6 @@ public class StockAnalyzer {
 				notifyBuy = false;
 				notifySell = false;
 
-				if (Preferences.getBoolean(mContext, Settings.KEY_NOTIFICATION_MARKET_KEY,
-						true)) {
-					if (action.contains(StockData.ACTION_NATURAL_RALLY)
-							|| action.contains(StockData.ACTION_UPWARD_TREND)) {
-						if (profit > 0) {
-							notifySell = true;
-						}
-					}
-				}
-
 				if (Preferences.getBoolean(mContext, Settings.KEY_NOTIFICATION_OPERATE,
 						true)) {
 					if (action.contains(StockData.ACTION_BUY2 + StockData.ACTION_BUY2)) {
@@ -1426,12 +1415,8 @@ public class StockAnalyzer {
 					}
 
 					if (action.contains(StockData.ACTION_SELL2 + StockData.ACTION_SELL2)) {
-						if (Stock.CLASS_INDEX.equals(stock.getClasses())) {
+						if (profit > 0) {
 							notifySell = true;
-						} else {
-							if (profit > 0) {
-								notifySell = true;
-							}
 						}
 					}
 				}

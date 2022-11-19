@@ -7,9 +7,7 @@ import com.android.orion.utility.Utility;
 public class Settings {
 	public static final String KEY_SHARED_PREFERENCES_INIT = "shared_preferences_init";
 
-	public static final String KEY_NOTIFICATION_MESSAGE = "notification_message";
 	public static final String KEY_NOTIFICATION_OPERATE = "notification_operate";
-	public static final String KEY_NOTIFICATION_MARKET_KEY = "notification_market_key";
 
 	public static final String KEY_PERIOD_MIN1 = "min1";
 	public static final String KEY_PERIOD_MIN5 = "min5";
