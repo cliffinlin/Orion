@@ -233,7 +233,6 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 
 			String name = mEditTextStockName.getText().toString();
 			String code = mEditTextStockCode.getText().toString();
-			String naturalThreshold = mEditTextStockNaturalThreshold.getText().toString();
 
 			if (!TextUtils.isEmpty(name)) {
 				mStock.setName(name);
@@ -246,21 +245,13 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 						Toast.LENGTH_LONG).show();
 			}
 
-			if (!TextUtils.isEmpty(naturalThreshold)) {
-				if (Double.valueOf(naturalThreshold) != mStock.getNaturalThreshold()) {
-					mStockDatabaseManager.deleteStockData();
-					mNeedDownload |= true;
-				}
-
-				mStock.setNaturalThreshold(Double.valueOf(naturalThreshold));
-			} else {
-				if (0 != mStock.getNaturalThreshold()) {
-					mStockDatabaseManager.deleteStockData();
-					mNeedDownload |= true;
-				}
-
-				mStock.setNaturalThreshold(0);
+			String naturalThreshold = mEditTextStockNaturalThreshold.getText().toString();
+			double naturalThresholdValue = TextUtils.isEmpty(naturalThreshold) ? 0 : Double.valueOf(naturalThreshold);
+			if (naturalThresholdValue != mStock.getNaturalThreshold()) {
+				mStockDatabaseManager.deleteStockData(mStock.getId());
+				mNeedDownload |= true;
 			}
+			mStock.setNaturalThreshold(naturalThresholdValue);
 
 			operate = mSpinnerStockAcion.getSelectedItem().toString();
 			mStock.setOperate(operate);
