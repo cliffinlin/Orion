@@ -11,7 +11,7 @@ public class MarketKeyAnalyzer {
     static final String TAG = Constants.TAG + " "
             + MarketKeyAnalyzer.class.getSimpleName();
 
-    public static final boolean LOG = true;
+    public static final boolean LOG = false;
 
     private int mMarketKeyType = StockData.MARKET_KEY_NONE;
 

@@ -288,7 +288,7 @@ public class SinaFinance extends StockDataProvider {
 		String keyValue[] = null;
 		String codeInfo[] = null;
 		String stockInfo[] = null;
-//var hq_str_sh600048_i="A,blfz,2.2900,2.3320,0.9000,15.0848,2380.5596,1197044.3418,1197044.3418,1197044.3418,0,CNY,273.8784,279.1460,13.9500,1,5.3900,1107.2303,108.2586,19.202,11.62,0.1,保利发展,X|O|0|0|0,19.01|15.55,20220630|5412930886.28,709.9800|90.4440,|,,1/1,EQA,,3.41,15.097|18.000|18.000,房地产开发,,-3";
+//var hq_str_sh600036_i="A,zsyh,4.6100,5.2827,4.1500,31.6900,4255.813,2521984.5601,2062894.4429,2062894.4429,0,CNY,1199.2200,1332.2900,7.3000,1,13.6650,2648.3300,1069.2200,51.939,26.3,0.1,招商银行,X|O|0|0|0,39.71|32.49,20220930|35640666666.67,697.4600|89.7750,|,,1/1,EQA,,4.17,46.678|34.960|34.390,股份制银行Ⅱ,,1,344676000000";
 		if ((stock == null) || TextUtils.isEmpty(response)) {
 			Log.d(TAG, "handleResponseStockInformation return " + " stock = "
 					+ stock + " response = " + response);
@@ -333,8 +333,8 @@ public class SinaFinance extends StockDataProvider {
 			stockInfo = keyValue[1].substring(1, keyValue[1].length() - 2)
 					.split(",");
 
-			if (stockInfo == null || stockInfo.length != 37) {
-				Log.d(TAG, "handleResponseStockInformation return stockInfo == null || stockInfo.length != 37");
+			if (stockInfo == null || stockInfo.length < 37) {
+				Log.d(TAG, "handleResponseStockInformation return stockInfo == null || stockInfo.length < 37");
 				return;
 			}
 
