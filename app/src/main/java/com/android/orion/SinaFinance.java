@@ -333,8 +333,8 @@ public class SinaFinance extends StockDataProvider {
 			stockInfo = keyValue[1].substring(1, keyValue[1].length() - 2)
 					.split(",");
 
-			if (stockInfo == null || stockInfo.length < 37) {
-				Log.d(TAG, "handleResponseStockInformation return stockInfo == null || stockInfo.length < 37");
+			if (stockInfo == null || stockInfo.length < 8) {
+				Log.d(TAG, "handleResponseStockInformation return stockInfo == null || stockInfo.length < 8");
 				return;
 			}
 
