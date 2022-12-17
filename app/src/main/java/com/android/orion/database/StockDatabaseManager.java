@@ -689,10 +689,10 @@ public class StockDatabaseManager extends DatabaseManager {
 
 			stock.setHold(hold);
 			stock.setProfit(profit);
-			stock.setValuation(valuation);
 			if (hold > 0) {
 				stock.setCost(Utility.Round(valuation / hold, Constants.DOUBLE_FIXED_DECIMAL));
 			}
+			stock.setValuation(hold * stock.getPrice());
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
