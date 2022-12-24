@@ -27,6 +27,7 @@
     <string name="action_settings">Settings</string>
     <string name="action_filter">Filter</string>
     <string name="action_trend">Trend</string>
+    <string name="action_natural">Natural</string>
     <string name="action_download">Download</string>
     <string name="action_delete">Delete</string>
     <string name="action_delete_all">Delete All</string>
