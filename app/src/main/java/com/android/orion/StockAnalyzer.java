@@ -321,7 +321,6 @@ public class StockAnalyzer {
 		}
 
 		for (StockFinancial stockFinancial : stockFinancialList) {
-			stockFinancial.setupDebtToNetAssetsRatio();
 			stockFinancial.setupNetProfitMargin();
 			stockFinancial.setupNetProfitPerShare();
 		}
@@ -527,7 +526,7 @@ public class StockAnalyzer {
 		stock.setupNetProfitPerShareInYear(stockFinancialList);
 		stock.setupNetProfitMargin();
 		stock.setupRate(stockFinancialList);
-		stock.setupDebtToNetAssetsRatio();
+		stock.setupDebtToNetAssetsRatio(stockFinancialList);
 		stock.setupRoe(stockFinancialList);
 		stock.setupPE();
 		stock.setupPB();

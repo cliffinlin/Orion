@@ -37,6 +37,7 @@ public class SinaFinance extends StockDataProvider {
 	public static final String SINA_FINANCE_URL_HQ_JS_LIST = "http://hq.sinajs.cn/list=";
 	public static final String SINA_FINANCE_URL_HQ_JS_LIST_SIMPLE = "http://hq.sinajs.cn/list=s_";
 	public static final String SINA_FINANCE_URL_VFD_FINANCESUMMARY = "http://money.finance.sina.com.cn/corp/go.php/vFD_FinanceSummary/stockid/";// stock_id.phtml
+	public static final String SINA_FINANCE_URL_VFD_FINANCEREPORT2022 = "https://quotes.sina.cn/cn/api/openapi.php/CompanyFinanceService.getFinanceReport2022?paperCode=";
 	public static final String SINA_FINANCE_URL_VISSUE_SHAREBONUS = "http://vip.stock.finance.sina.com.cn/corp/go.php/vISSUE_ShareBonus/stockid/";// stock_id.phtml
 	public static final String SINA_FINANCE_URL_VCI_STOCK_STRUCTURE_HISTORY = "http://vip.stock.finance.sina.com.cn/corp/go.php/vCI_StockStructureHistory/stockid/";// stocktype/TotalStock.phtml
 	public static final String SINA_FINANCE_URL_NEWSTOCK_ISSUE = "https://vip.stock.finance.sina.com.cn/corp/go.php/vRPD_NewStockIssue/page/1.phtml";
@@ -245,8 +246,11 @@ public class SinaFinance extends StockDataProvider {
 		if (stock == null) {
 			return urlString;
 		}
-		urlString = SINA_FINANCE_URL_VFD_FINANCESUMMARY + stock.getCode()
-				+ ".phtml";
+
+		urlString = SINA_FINANCE_URL_VFD_FINANCEREPORT2022
+				+ stock.getSE() +  stock.getCode()
+				+ "&source=gjzb&type=0&page=1&num=10000";
+
 		return urlString;
 	}
 
@@ -834,131 +838,138 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		try {
-			// String responseString = new
-			// String(response.getBytes("ISO-8859-1"),
-			// "GB2312");
-
-			Document doc = Jsoup.parse(response);
-			if (doc == null) {
-				Log.d(TAG, "handleResponseStockFinancial return " + " doc = "
-						+ doc);
+			JSONObject responseJSONObject = JSON.parseObject(response);
+			if (responseJSONObject == null) {
+				Log.d(TAG, "handleResponseStockFinancial return responseJSONObject = "
+						+ responseJSONObject);
 				return;
 			}
 
-			Elements tableElements = doc.select("table#FundHoldSharesTable");
-			if (tableElements == null) {
-				Log.d(TAG, "handleResponseStockFinancial return "
-						+ " tableElements = " + tableElements);
+			JSONObject resultJSONObject = responseJSONObject.getJSONObject("result");
+			if (resultJSONObject == null) {
+				Log.d(TAG, "handleResponseStockFinancial return resultJSONObject = "
+						+ resultJSONObject);
 				return;
 			}
 
-			Elements tbodyElements = tableElements.select("tbody");
-			if (tbodyElements == null) {
-				Log.d(TAG, "handleResponseStockFinancial return "
-						+ " tbodyElements = " + tbodyElements);
+			JSONObject dataJSONObject = resultJSONObject.getJSONObject("data");
+			if (dataJSONObject == null) {
+				Log.d(TAG, "handleResponseStockFinancial return dataJSONObject = "
+						+ dataJSONObject);
 				return;
 			}
 
-			for (Element tbodyElement : tbodyElements) {
-				if (tbodyElement == null) {
-					Log.d(TAG, "handleResponseStockFinancial return "
-							+ " tbodyElement = " + tbodyElement);
-					return;
+			JSONObject reportListJSONObject = dataJSONObject.getJSONObject("report_list");
+			if (reportListJSONObject == null) {
+				Log.d(TAG, "handleResponseStockFinancial return reportListJSONObject = "
+						+ reportListJSONObject);
+				return;
+			}
+
+			JSONArray reportDateJSONArray = dataJSONObject.getJSONArray("report_date");
+			if (reportDateJSONArray == null) {
+				Log.d(TAG, "handleResponseStockFinancial return reportDateJSONArray = "
+						+ reportDateJSONArray);
+				return;
+			}
+
+			for (int i = 0; i < reportDateJSONArray.size(); i++) {
+				JSONObject reportDatejsonObject = reportDateJSONArray.getJSONObject(i);
+				if (reportDatejsonObject == null) {
+						continue;
 				}
 
-				Elements trElements = tbodyElement.select("tr");
-				if (trElements == null) {
-					Log.d(TAG, "handleResponseStockFinancial return "
-							+ " trElements = " + trElements);
-					return;
+				String reportDate = reportDatejsonObject.getString("date_value");
+				if (TextUtils.isEmpty(reportDate) || reportDate.length() < 8) {
+						continue;
 				}
 
-				for (Element trElement : trElements) {
-					if (trElement == null) {
-						// Log.d(TAG, "handleResponseStockFinancial continue "
-						// + " trElement = " + trElement);
+				valueString = reportDate.substring(0, 4) + "-" + reportDate.substring(4, 6) + "-" + reportDate.substring(6);
+				stockFinancial.setDate(valueString);
+
+				JSONObject reportDateJSONObject = reportListJSONObject.getJSONObject(reportDate);
+				if (reportDateJSONObject == null) {
+					continue;
+				}
+
+				JSONArray dataJSONArray = reportDateJSONObject.getJSONArray("data");
+				if (dataJSONArray == null) {
+					continue;
+				}
+
+				for (int j = 0; j < dataJSONArray.size(); j++) {
+					JSONObject jsonObject = dataJSONArray.getJSONObject(j);
+					if (jsonObject == null) {
 						continue;
 					}
 
-					Elements tdElements = trElement.select("td");
-					if (tdElements == null) {
-						// Log.d(TAG, "handleResponseStockFinancial continue "
-						// + " tdElements = " + tdElements);
+					keyString = jsonObject.getString("item_field");
+					if (TextUtils.isEmpty(keyString)) {
 						continue;
 					}
 
-					if (tdElements.size() < 2) {
-						// Log.d(TAG, "handleResponseStockFinancial continue "
-						// + " tdElements.size() = " + tdElements.size());
+					valueString = jsonObject.getString("item_value");
+					if (TextUtils.isEmpty(valueString)) {
 						continue;
 					}
 
-					keyString = tdElements.get(0).text();
-					if (!TextUtils.isEmpty(keyString)) {
-						valueString = tdElements.get(1).text();
+					if (keyString.equals("BIZINCO")) {//营业总收入
+						stockFinancial.setMainBusinessIncome(Double
+								.valueOf(valueString));
+					} else if (keyString.equals("BIZEXPE")) {//营业成本
+						stockFinancial.setFinancialExpenses(Double
+								.valueOf(valueString));
+					} else if (keyString.equals("NETPROFIT")) {//净利润
+						stockFinancial.setNetProfit(Double
+								.valueOf(valueString));
+					} else if (keyString.equals("NAPS")) {//每股净资产
+						stockFinancial.setBookValuePerShare(Double
+								.valueOf(valueString));
+					} else if (keyString.equals("OPNCFPS")) {//每股现金流
+						stockFinancial.setCashFlowPerShare(Double
+								.valueOf(valueString));
+					} else if (keyString.equals(mContext.getResources().getString(R.string.key_total_current_assets))) {
+						stockFinancial.setTotalCurrentAssets(Double
+								.valueOf(valueString));
+					} else if (keyString.equals(mContext.getResources().getString(R.string.key_total_assets))) {
+						stockFinancial.setTotalAssets(Double
+								.valueOf(valueString));
+					} else if (keyString.equals("ASSLIABRT")) {
+						stockFinancial
+								.setDebtToNetAssetsRatio(Double
+										.valueOf(valueString));//资产负债率
 
-						if (!TextUtils.isEmpty(valueString)) {
-							valueString = valueString.replace(mContext.getResources().getString(R.string.yuan), "");
-							valueString = valueString.replace(",", "");
+						stockFinancial.setupNetProfitPerShare(stock
+								.getTotalShare());
 
-							if (keyString.equals(mContext.getResources().getString(R.string.key_deadline_date))) {
-								stockFinancial.setDate(valueString);
-							} else if (keyString.equals(mContext.getResources().getString(R.string.key_book_value_per_share_diluted))) {
-								stockFinancial.setBookValuePerShare(Double
-										.valueOf(valueString));
-							} else if (keyString.equals(mContext.getResources().getString(R.string.key_cash_flow_per_share))) {
-								stockFinancial.setCashFlowPerShare(Double
-										.valueOf(valueString));
-							} else if (keyString.equals(mContext.getResources().getString(R.string.key_total_current_assets))) {
-								stockFinancial.setTotalCurrentAssets(Double
-										.valueOf(valueString));
-							} else if (keyString.equals(mContext.getResources().getString(R.string.key_total_assets))) {
-								stockFinancial.setTotalAssets(Double
-										.valueOf(valueString));
-							} else if (keyString.equals(mContext.getResources().getString(R.string.key_total_longTerm_liabilities))) {
-								stockFinancial
-										.setTotalLongTermLiabilities(Double
-												.valueOf(valueString));
-							} else if (keyString.equals(mContext.getResources().getString(R.string.key_main_business_income))) {
-								stockFinancial.setMainBusinessIncome(Double
-										.valueOf(valueString));
-							} else if (keyString.equals(mContext.getResources().getString(R.string.key_financial_expenses))) {
-								stockFinancial.setFinancialExpenses(Double
-										.valueOf(valueString));
-							} else if (keyString.equals(mContext.getResources().getString(R.string.key_net_profit))) {
-								stockFinancial.setNetProfit(Double
-										.valueOf(valueString));
-								stockFinancial.setupNetProfitPerShare(stock
-										.getTotalShare());
-
-								if (bulkInsert) {
-									stockFinancial.setCreated(Utility
-											.getCurrentDateTimeString());
-									stockFinancial.setModified(Utility
-											.getCurrentDateTimeString());
-									contentValuesList.add(stockFinancial
-											.getContentValues());
-								} else {
-									if (!mStockDatabaseManager
-											.isStockFinancialExist(stockFinancial)) {
-										stockFinancial.setCreated(Utility
-												.getCurrentDateTimeString());
-										stockFinancial.setModified(Utility
-												.getCurrentDateTimeString());
-										mStockDatabaseManager
-												.insertStockFinancial(stockFinancial);
-									} else {
-										stockFinancial.setModified(Utility
-												.getCurrentDateTimeString());
-										mStockDatabaseManager
-												.updateStockFinancial(
-														stockFinancial,
-														stockFinancial
-																.getContentValues());
-									}
-								}
+						if (bulkInsert) {
+							stockFinancial.setCreated(Utility
+									.getCurrentDateTimeString());
+							stockFinancial.setModified(Utility
+									.getCurrentDateTimeString());
+							contentValuesList.add(stockFinancial
+									.getContentValues());
+						} else {
+							if (!mStockDatabaseManager
+									.isStockFinancialExist(stockFinancial)) {
+								stockFinancial.setCreated(Utility
+										.getCurrentDateTimeString());
+								stockFinancial.setModified(Utility
+										.getCurrentDateTimeString());
+								mStockDatabaseManager
+										.insertStockFinancial(stockFinancial);
+							} else {
+								stockFinancial.setModified(Utility
+										.getCurrentDateTimeString());
+								mStockDatabaseManager
+										.updateStockFinancial(
+												stockFinancial,
+												stockFinancial
+														.getContentValues());
 							}
 						}
+
+						break;
 					}
 				}
 			}

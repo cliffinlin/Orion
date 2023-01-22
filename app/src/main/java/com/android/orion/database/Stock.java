@@ -1879,22 +1879,13 @@ public class Stock extends DatabaseTable {
         mRate = Utility.Round(mRate, Constants.DOUBLE_FIXED_DECIMAL);
 	}
 
-	public void setupDebtToNetAssetsRatio() {
-		if (mTotalLongTermLiabilities == 0) {
+	public void setupDebtToNetAssetsRatio(ArrayList<StockFinancial> stockFinancialList) {
+		if ((stockFinancialList == null)
+				|| (stockFinancialList.size() < Constants.SEASONS_IN_A_YEAR + 1)) {
 			return;
 		}
 
-		if (mTotalShare == 0) {
-			return;
-		}
-
-		if (mBookValuePerShare == 0) {
-			return;
-		}
-
-		mDebtToNetAssetsRatio = Utility.Round(mTotalLongTermLiabilities
-				/ mTotalShare / mBookValuePerShare,
-				Constants.DOUBLE_FIXED_DECIMAL);
+		mDebtToNetAssetsRatio = stockFinancialList.get(0).getDebtToNetAssetsRatio();
 	}
 
 	public void setupRoe() {
