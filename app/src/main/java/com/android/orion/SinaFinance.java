@@ -913,10 +913,10 @@ public class SinaFinance extends StockDataProvider {
 						continue;
 					}
 
-					if (keyString.equals("BIZINCO")) {//营业总收入
+					if (keyString.equals("BIZINCO") || keyString.equals("BIZTOTINCO")) {//营业总收入
 						stockFinancial.setMainBusinessIncome(Double
 								.valueOf(valueString));
-					} else if (keyString.equals("BIZEXPE")) {//营业成本
+					} else if (keyString.equals("BIZEXPE") || keyString.equals("BIZTOTCOST")) {//营业成本
 						stockFinancial.setFinancialExpenses(Double
 								.valueOf(valueString));
 					} else if (keyString.equals("NETPROFIT")) {//净利润
