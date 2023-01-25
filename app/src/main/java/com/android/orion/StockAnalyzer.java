@@ -238,8 +238,6 @@ public class StockAnalyzer {
                 setupStockShareBonus(stock);
             }
 
-//			setupStockOperate(stock);
-
 			updateDatabase(stock);
 
 			updateNotification(stock);
@@ -578,51 +576,6 @@ public class StockAnalyzer {
 			prevYearString = yearString;
 			i++;
 		}
-	}
-
-	private void setupStockOperate(Stock stock) {
-		String lastPeriod = "";
-		StringBuilder result = new StringBuilder();
-		ArrayMap<Integer, Integer> divergenceArrayMap = new ArrayMap<Integer, Integer>();
-
-		if (stock == null) {
-			return;
-		}
-
-		if (TextUtils.isEmpty(stock.getStatus())) {
-			stock.setOperate("");
-		} else {
-			if (stock.getStatus().equals(Stock.STATUS_SUSPENSION)) {
-				stock.setOperate(Stock.STATUS_SUSPENSION);
-			}
-		}
-
-		for (String period : Settings.KEY_PERIODS) {
-			if (Preferences.getBoolean(mContext, period, false)
-                    || Settings.checkOperatePeriod(lastPeriod, period, stock.getOperate())) {
-				lastPeriod = period;
-				updateDivergenceArrayMap(divergenceArrayMap, stock.getSegmentDataList(period));
-				updateDivergenceArrayMap(divergenceArrayMap, stock.getStrokeDataList(period));
-				updateDivergenceArrayMap(divergenceArrayMap, stock.getDrawDataList(period));
-			}
-		}
-
-		if (divergenceArrayMap.size() > 0) {
-			for (int i = 0; i < divergenceArrayMap.size(); i++) {
-				result.append(divergenceArrayMap.valueAt(i));
-				if (divergenceArrayMap.keyAt(i) == StockData.DIVERGENCE_UP) {
-					result.append(StockData.ACTION_HIGH);
-				} else if (divergenceArrayMap.keyAt(i) == StockData.DIVERGENCE_DOWN) {
-					result.append(StockData.ACTION_LOW);
-				}
-
-				if (i < divergenceArrayMap.size() - 1) {
-					result.append(" ");
-				}
-			}
-		}
-
-		stock.setOperate(result.toString());
 	}
 
 	private void setMACD(ArrayList<StockData> stockDataList) {
@@ -1304,67 +1257,6 @@ public class StockAnalyzer {
 		}
 	}
 
-	private void updateNetArrayMap(ArrayMap<Integer, Integer> netArrayMap, ArrayList<StockData> stockDataList) {
-		int net = 0;
-
-		if ((netArrayMap == null) || (stockDataList == null)) {
-			return;
-		}
-
-		net = getLastNet(stockDataList);
-
-		if (netArrayMap.containsKey(net)) {
-			int value = netArrayMap.get(net);
-			netArrayMap.put(net, ++value);
-		} else {
-			netArrayMap.put(net, 1);
-		}
-	}
-
-	private void updateDivergenceArrayMap(ArrayMap<Integer, Integer> divergenceArrayMap, ArrayList<StockData> stockDataList) {
-		int divergence = 0;
-
-		if ((divergenceArrayMap == null) || (stockDataList == null)) {
-			return;
-		}
-
-		divergence = getLastDivergence(stockDataList);
-
-		if (divergence == StockData.DIVERGENCE_NONE) {
-			return;
-		}
-
-		if (divergenceArrayMap.containsKey(divergence)) {
-			int value = divergenceArrayMap.get(divergence);
-			divergenceArrayMap.put(divergence, ++value);
-		} else {
-			divergenceArrayMap.put(divergence, 1);
-		}
-	}
-
-	int getDenominator(String action) {
-		String strings[] = null;
-		int result = 0;
-
-		try {
-			if (TextUtils.isEmpty(action)) {
-				return result;
-			}
-
-			strings = action.split("/");
-
-			if ((strings == null) | (strings.length < 2)) {
-				return result;
-			}
-
-			result = Integer.valueOf(strings[1]);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			return result;
-		}
-	}
-
 	double getProfit(Stock stock) {
 		ArrayList<StockDeal> stockDealList = new ArrayList<StockDeal>();
 		double result = 0;
@@ -1382,6 +1274,7 @@ public class StockAnalyzer {
 	}
 
 	private void updateNotification(Stock stock) {
+		boolean operate = false;
 	    boolean notifyBuy = false;
 		boolean notifySell = false;
 	    double profit = 0;
@@ -1397,6 +1290,8 @@ public class StockAnalyzer {
 			return;
 		}
 
+		operate = TextUtils.isEmpty(stock.getOperate()) ? false : true;
+
 		profit = getProfit(stock);
 
 		for (String period : Settings.KEY_PERIODS) {
@@ -1410,7 +1305,9 @@ public class StockAnalyzer {
 				if (Preferences.getBoolean(mContext, Settings.KEY_NOTIFICATION_OPERATE,
 						true)) {
 					if (action.contains(StockData.ACTION_BUY2 + StockData.ACTION_BUY2)) {
-						notifyBuy = true;
+						if (operate) {
+							notifyBuy = true;
+						}
 					}
 
 					if (action.contains(StockData.ACTION_SELL2 + StockData.ACTION_SELL2)) {

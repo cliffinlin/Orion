@@ -110,7 +110,7 @@
     <string name="modified">Modified</string>
     <string name="next">next</string>
     <string name="net">Net</string>
-    <string name="network_unavailable">Network not Available</string>
+    <string name="network_unavailable">Mobile Data Network not Available</string>
     <string name="no_file_found">No File Found!</string>
     <string name="no_sd_card_found">No SD Card Found!</string>
     <string name="notification">Notification</string>
