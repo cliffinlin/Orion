@@ -1,8 +1,5 @@
 package com.android.orion;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -15,24 +12,26 @@ import android.os.Build;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.text.TextUtils;
-import android.util.ArrayMap;
 import android.util.Log;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.android.orion.database.DatabaseContract;
-import com.android.orion.database.StockFinancial;
 import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockDatabaseManager;
 import com.android.orion.database.StockDeal;
+import com.android.orion.database.StockFinancial;
 import com.android.orion.database.TotalShare;
 import com.android.orion.indicator.MACD;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.RecordFile;
 import com.android.orion.utility.StopWatch;
 import com.android.orion.utility.Utility;
+
+import java.util.ArrayList;
+import java.util.Calendar;
 
 
 public class StockAnalyzer {
@@ -869,11 +868,11 @@ public class StockAnalyzer {
 				denominator = (int)(brokenStockData.getNet());
 			}
 
-			if (TextUtils.isEmpty(stock.getOperate())) {
-				if (Math.abs(denominator) < Constants.SECEND_ACTION_THRESHOLD) {
-					return result;
-				}
-			}
+//			if (TextUtils.isEmpty(stock.getOperate())) {
+//				if (Math.abs(denominator) < Constants.SECEND_ACTION_THRESHOLD) {
+//					return result;
+//				}
+//			}
 
 			divergence = brokenStockData.divergenceTo(baseStockData);
 			if (divergence == StockData.DIVERGENCE_UP) {
@@ -962,11 +961,11 @@ public class StockAnalyzer {
 				denominator = (int)(brokenStockData.getNet());
 			}
 
-			if (TextUtils.isEmpty(stock.getOperate())) {
-				if (Math.abs(denominator) < Constants.SECEND_ACTION_THRESHOLD) {
-					return result;
-				}
-			}
+//			if (TextUtils.isEmpty(stock.getOperate())) {
+//				if (Math.abs(denominator) < Constants.SECEND_ACTION_THRESHOLD) {
+//					return result;
+//				}
+//			}
 
 			divergence = brokenStockData.divergenceTo(baseStockData);
 			if (divergence == StockData.DIVERGENCE_UP) {
@@ -1274,7 +1273,6 @@ public class StockAnalyzer {
 	}
 
 	private void updateNotification(Stock stock) {
-		boolean operate = false;
 	    boolean notifyBuy = false;
 		boolean notifySell = false;
 	    double profit = 0;
@@ -1290,7 +1288,9 @@ public class StockAnalyzer {
 			return;
 		}
 
-		operate = TextUtils.isEmpty(stock.getOperate()) ? false : true;
+		if (TextUtils.isEmpty(stock.getOperate())) {
+			return;
+		}
 
 		profit = getProfit(stock);
 
@@ -1305,9 +1305,7 @@ public class StockAnalyzer {
 				if (Preferences.getBoolean(mContext, Settings.KEY_NOTIFICATION_OPERATE,
 						true)) {
 					if (action.contains(StockData.ACTION_BUY2 + StockData.ACTION_BUY2)) {
-						if (operate) {
-							notifyBuy = true;
-						}
+						notifyBuy = true;
 					}
 
 					if (action.contains(StockData.ACTION_SELL2 + StockData.ACTION_SELL2)) {
