@@ -411,28 +411,36 @@ public class StockDeal extends DatabaseTable {
     }
 
     public void setupNet() {
-        if ((mPrice == 0) || (mBuy == 0) || (mVolume ==0)) {
+        if ((mPrice == 0) || (mVolume ==0)) {
             mNet = 0;
             return;
         }
 
-        if (mSell > 0) {
-            mNet = Utility.Round(100 * ((mSell - mBuy) * Math.abs(mVolume) - mFee) / Math.abs(mVolume) / mBuy,
+        if ((mBuy > 0) && (mSell > 0)) {
+            mNet = Utility.Round(100 * ((mSell - mBuy) * mVolume - mFee) / mVolume / mBuy,
                     Constants.DOUBLE_FIXED_DECIMAL);
-        } else {
-            mNet = Utility.Round(100 * ((mPrice - mBuy) * Math.abs(mVolume) - mFee) / Math.abs(mVolume) / mBuy,
+        } else if (mBuy > 0) {
+            mNet = Utility.Round(100 * ((mPrice - mBuy) * mVolume - mFee) / mVolume / mBuy,
+                    Constants.DOUBLE_FIXED_DECIMAL);
+        } else if (mSell > 0) {
+            mNet = Utility.Round(100 * (mSell - mPrice) / mSell,
                     Constants.DOUBLE_FIXED_DECIMAL);
         }
     }
 
     public void setupValue() {
-        if ((mBuy == 0) || (mVolume == 0)) {
+        if (mVolume == 0) {
             mValue = 0;
             return;
         }
 
-        mValue = Utility.Round(mBuy * mVolume,
-                Constants.DOUBLE_FIXED_DECIMAL);
+        if (mVolume > 0) {
+            mValue = Utility.Round(mBuy * mVolume,
+                    Constants.DOUBLE_FIXED_DECIMAL);
+        } else {
+            mValue = Utility.Round(mPrice * mVolume,
+                    Constants.DOUBLE_FIXED_DECIMAL);
+        }
     }
 
     public void setupFee(String rDate, double dividend) {
@@ -511,16 +519,19 @@ public class StockDeal extends DatabaseTable {
     }
 
     public void setupProfit() {
-        if ((mPrice == 0) || (mBuy == 0) || (mVolume ==0)) {
+        if ((mPrice == 0) || (mVolume ==0)) {
             mProfit = 0;
             return;
         }
 
-        if (mSell > 0) {
-            mProfit = Utility.Round((mSell - mBuy) * Math.abs(mVolume) - mFee,
+        if ((mBuy > 0) && (mSell > 0)) {
+            mProfit = Utility.Round((mSell - mBuy) * mVolume - mFee,
                     Constants.DOUBLE_FIXED_DECIMAL);
-        } else {
-            mProfit = Utility.Round((mPrice - mBuy) * Math.abs(mVolume) - mFee,
+        } else if (mBuy > 0) {
+                mProfit = Utility.Round((mPrice - mBuy) * mVolume - mFee,
+                        Constants.DOUBLE_FIXED_DECIMAL);
+        } else if (mSell > 0) {
+            mProfit = Utility.Round((mPrice - mSell) * mVolume,
                     Constants.DOUBLE_FIXED_DECIMAL);
         }
     }
@@ -536,12 +547,17 @@ public class StockDeal extends DatabaseTable {
     }
 
     public void setupYield(double dividend) {
-        if ((dividend == 0) || (mBuy == 0)) {
+        if (dividend == 0) {
             mYield = 0;
             return;
         }
 
-        mYield = Utility.Round(100.0 * dividend / 10.0 / mBuy,
-                Constants.DOUBLE_FIXED_DECIMAL);
+        if (mBuy > 0) {
+            mYield = Utility.Round(100.0 * dividend / 10.0 / mBuy,
+                    Constants.DOUBLE_FIXED_DECIMAL);
+        } else {
+            mYield = Utility.Round(100.0 * dividend / 10.0 / mPrice,
+                    Constants.DOUBLE_FIXED_DECIMAL);
+        }
     }
 }

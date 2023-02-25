@@ -636,7 +636,9 @@ public class DealListActivity extends ListActivity implements
 
             case FILTER_TYPE_BUY:
                 mSelection = DatabaseContract.COLUMN_ACTION + " != ''";
-                mSelection += " AND " + DatabaseContract.COLUMN_VOLUME + " <= " + 0;
+                mSelection += " AND " + DatabaseContract.COLUMN_VOLUME + " < " + 0;
+                mSelection += " AND " + DatabaseContract.COLUMN_PROFIT + " > " + DatabaseContract.COLUMN_BONUS;
+                mSelection += " AND " + DatabaseContract.COLUMN_NET + " > " + Constants.AVERAGE_DIVIDEND_YIELD;
                 break;
 
             case FILTER_TYPE_SELL:

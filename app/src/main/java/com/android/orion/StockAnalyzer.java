@@ -1256,7 +1256,23 @@ public class StockAnalyzer {
 		}
 	}
 
-	double getProfit(Stock stock) {
+	double getToBuyProfit(Stock stock) {
+		ArrayList<StockDeal> stockDealList = new ArrayList<StockDeal>();
+		double result = 0;
+
+		if (stock == null) {
+			return result;
+		}
+
+		mStockDatabaseManager.getStockDealListToBuy(stock, stockDealList);
+		for (StockDeal stockDeal : stockDealList) {
+			result += stockDeal.getProfit();
+		}
+
+		return result;
+	}
+
+	double getToSellProfit(Stock stock) {
 		ArrayList<StockDeal> stockDealList = new ArrayList<StockDeal>();
 		double result = 0;
 
@@ -1273,9 +1289,8 @@ public class StockAnalyzer {
 	}
 
 	private void updateNotification(Stock stock) {
-	    boolean notifyBuy = false;
-		boolean notifySell = false;
-	    double profit = 0;
+	    double toBuyProfit = 0;
+		double toSellProfit = 0;
 		String lastPeriod = "";
 		StringBuilder actionString = new StringBuilder();
 		StringBuilder contentTitle = new StringBuilder();
@@ -1292,34 +1307,44 @@ public class StockAnalyzer {
 			return;
 		}
 
-		profit = getProfit(stock);
+		toBuyProfit = getToBuyProfit(stock);
+		toSellProfit = getToSellProfit(stock);
 
 		for (String period : Settings.KEY_PERIODS) {
 			if (Preferences.getBoolean(mContext, period, false)
                     || Settings.checkOperatePeriod(lastPeriod, period, stock.getOperate())) {
 				lastPeriod = period;
 				String action = stock.getAction(period);
-				notifyBuy = false;
-				notifySell = false;
+				boolean notifyToBuy = false;
+				boolean notifyToSell = false;
 
 				if (Preferences.getBoolean(mContext, Settings.KEY_NOTIFICATION_OPERATE,
 						true)) {
-					if (action.contains(StockData.ACTION_BUY2 + StockData.ACTION_BUY2)) {
-						notifyBuy = true;
+					if (toBuyProfit > 0) {
+						if (action.contains(StockData.ACTION_BUY2 + StockData.ACTION_BUY2)
+								|| action.contains(StockData.ACTION_DOWNWARD_TREND)
+								|| action.contains(StockData.ACTION_NATURAL_REACTION)) {
+							notifyToBuy = true;
+						}
 					}
 
-					if (action.contains(StockData.ACTION_SELL2 + StockData.ACTION_SELL2)) {
-						if (profit > 0) {
-							notifySell = true;
+					if (toSellProfit > 0) {
+						if (action.contains(StockData.ACTION_SELL2 + StockData.ACTION_SELL2)
+								|| action.contains(StockData.ACTION_UPWARD_TREND)
+								|| action.contains(StockData.ACTION_NATURAL_RALLY)) {
+							notifyToSell = true;
 						}
 					}
 				}
 
-				if (notifyBuy || notifySell) {
+				if (notifyToBuy || notifyToSell) {
                     actionString.append(period + " " + action + " ");
+					if (notifyToBuy) {
+						actionString.append(" " + (int)toBuyProfit + " ");
+					}
 
-                    if (notifySell && (profit > 0)) {
-                    	actionString.append(" " + (int)profit + " ");
+                    if (notifyToSell) {
+                    	actionString.append(" " + (int)toSellProfit + " ");
 					}
                 }
 			}

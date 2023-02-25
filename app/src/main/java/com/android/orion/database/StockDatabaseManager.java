@@ -887,6 +887,26 @@ public class StockDatabaseManager extends DatabaseManager {
         getStockDealList(stock, stockDealList, selection, sortOrder);
     }
 
+	public void getStockDealListToBuy(Stock stock, ArrayList<StockDeal> stockDealList) {
+		String sortOrder = DatabaseContract.COLUMN_NET + DatabaseContract.ORDER_DIRECTION_ASC;
+
+		if ((stock == null) || (stockDealList == null)) {
+			return;
+		}
+
+		String selection = DatabaseContract.COLUMN_SE + " = " + "\'" + stock.getSE()
+				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
+				+ stock.getCode() + "\'";
+
+		selection += " AND " + DatabaseContract.COLUMN_ACTION + " != ''";
+		selection += " AND " + DatabaseContract.COLUMN_VOLUME + " < " + 0 ;
+		selection += " AND " + DatabaseContract.COLUMN_PROFIT + " > " + DatabaseContract.COLUMN_BONUS;
+		selection += " AND " + DatabaseContract.COLUMN_NET + " > " + Constants.AVERAGE_DIVIDEND_YIELD;
+		selection += " AND " + DatabaseContract.COLUMN_BUY + " = " + 0;
+
+		getStockDealList(stock, stockDealList, selection, sortOrder);
+	}
+
 	public Uri insertStockFinancial(StockFinancial stockFinancial) {
 		Uri uri = null;
 
