@@ -651,7 +651,8 @@ public class StockDataChart {
 					+ "  " + stockDeal.getBuy()
 					+ "  " + stockDeal.getVolume()
 					+ "  " + (int) stockDeal.getProfit()
-					+ "  " + stockDeal.getNet() + "%";
+					+ "  " + stockDeal.getNet() + "%"
+					+ "  " + stockDeal.getAccount();
 
 			limitLineDeal = createLimitLine(stockDeal.getBuy(), color, label);
 

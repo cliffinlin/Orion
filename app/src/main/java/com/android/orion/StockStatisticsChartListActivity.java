@@ -59,6 +59,7 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 					+ DatabaseContract.ORDER_DIRECTION_DESC;
 
 	float mTotalBonus = 0;
+	String mDescription = "";
 	Menu mMenu = null;
 	ListView mListView = null;
 	StatisticsChartArrayAdapter mStatisticsChartArrayAdapter = null;
@@ -229,8 +230,7 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 			swapStockCursor(mStatisticsChartList.get(0), cursor);
 		}
 
-		String totalBonuString = "Total bonus=" + Float.valueOf(mTotalBonus);
-		Toast.makeText(this, totalBonuString, Toast.LENGTH_LONG).show();
+		mDescription = "Total bonus=" + Float.valueOf(mTotalBonus);
 	}
 
 	@Override
@@ -500,10 +500,12 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 
 				viewHolder.mCombinedChart
 						.setData(mStatisticsChart.mCombinedDataMain);
+				viewHolder.mCombinedChart.setDescription(mDescription);
 			} else {
 				viewHolder.mPieChart.setData(mStatisticsChart.mPieData);
 				viewHolder.mPieChart.setRotationEnabled(false);
 				viewHolder.mPieChart.setUsePercentValues(true);
+				viewHolder.mPieChart.setDescription(mDescription);
 			}
 
 			return view;

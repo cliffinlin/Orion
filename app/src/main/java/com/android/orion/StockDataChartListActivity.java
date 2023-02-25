@@ -1,9 +1,5 @@
 package com.android.orion;
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.LoaderManager;
 import android.content.Context;
 import android.content.CursorLoader;
@@ -25,10 +21,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.android.orion.database.DatabaseContract;
-import com.android.orion.database.StockFinancial;
 import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
+import com.android.orion.database.StockFinancial;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Search;
 import com.github.mikephil.charting.charts.CombinedChart;
@@ -44,6 +40,10 @@ import com.github.mikephil.charting.formatter.DefaultYAxisValueFormatter;
 import com.github.mikephil.charting.listener.ChartTouchListener.ChartGesture;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.utils.Utils;
+
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 
 public class StockDataChartListActivity extends BaseActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnChartGestureListener {
