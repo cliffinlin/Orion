@@ -623,9 +623,10 @@ public class StockDataChart {
 
 	void updateDealLimitLine(Stock stock, ArrayList<StockDeal> stockDealList,
 			boolean keyDisplayDeal) {
+		double limit = 0;
 		int color = Color.WHITE;
 		String label = "";
-		LimitLine limitLineDeal;
+		LimitLine limitLineDeal = new LimitLine(0);
 
 		if ((stock == null) || (stockDealList == null)
 				|| (mXLimitLineList == null)) {
@@ -637,6 +638,14 @@ public class StockDataChart {
 		}
 
 		for (StockDeal stockDeal : stockDealList) {
+			if ((stockDeal.getBuy() > 0) && (stockDeal.getSell() > 0)) {
+				limit = stockDeal.getBuy();
+			} else if (stockDeal.getBuy() > 0) {
+				limit = stockDeal.getBuy();
+			} else if (stockDeal.getSell() > 0) {
+				limit = stockDeal.getSell();
+			}
+
 			if (stockDeal.getProfit() > 0) {
 				color = Color.RED;
 			} else {
@@ -648,13 +657,13 @@ public class StockDataChart {
 			}
 
 			label = "               "
-					+ "  " + stockDeal.getBuy()
+					+ "  " + limit
 					+ "  " + stockDeal.getVolume()
 					+ "  " + (int) stockDeal.getProfit()
 					+ "  " + stockDeal.getNet() + "%"
 					+ "  " + stockDeal.getAccount();
 
-			limitLineDeal = createLimitLine(stockDeal.getBuy(), color, label);
+			limitLineDeal = createLimitLine(limit, color, label);
 
 			mXLimitLineList.add(limitLineDeal);
 		}
