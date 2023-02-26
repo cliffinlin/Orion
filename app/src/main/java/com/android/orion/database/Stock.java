@@ -1926,13 +1926,18 @@ public class Stock extends DatabaseTable {
 	}
 
 	public void setupRoi() {
+        double rate = mRate;
+		if (rate == 0) {
+            rate = 1;
+		}
+
 		// mRoi = Utility.Round(mRate * mRoe * mPE * Constants.ROI_COEFFICIENT,
 		// Constants.DOUBLE_FIXED_DECIMAL);
 		// mRoi = Utility.Round(mRoe * mPE * Constants.ROI_COEFFICIENT,
 		// Constants.DOUBLE_FIXED_DECIMAL);
 //		mRoi = Utility.Round(mRoe * (mPE + mYield) * Constants.ROI_COEFFICIENT,
 //				Constants.DOUBLE_FIXED_DECIMAL);
-		mRoi = Utility.Round(mRoe * (mPE + mYield) * mNetProfitMargin * mPB * Constants.ROI_COEFFICIENT,
+		mRoi = Utility.Round(mRoe * (mPE + mYield) * mNetProfitMargin * rate * Constants.ROI_COEFFICIENT,
 				Constants.DOUBLE_FIXED_DECIMAL);
 	}
 
