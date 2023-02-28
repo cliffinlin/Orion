@@ -25,8 +25,8 @@ public class StockData extends StockDatabaseTable {
 //	public static final String ACTION_G = "G";
 //	public static final String ACTION_D = "D";
 
-    public static final String ACTION_HIGH = "H";
-    public static final String ACTION_LOW = "L";
+//    public static final String ACTION_HIGH = "H";
+//    public static final String ACTION_LOW = "L";
 
     public static final char ACTION_ADD = '+';
     public static final char ACTION_MINUS = '-';

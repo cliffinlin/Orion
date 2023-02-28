@@ -876,9 +876,9 @@ public class StockAnalyzer {
 
 			divergence = brokenStockData.divergenceTo(baseStockData);
 			if (divergence == StockData.DIVERGENCE_UP) {
-				result += StockData.ACTION_HIGH;
+//				result += StockData.ACTION_HIGH;
 			} else if (divergence == StockData.DIVERGENCE_DOWN) {
-				result += StockData.ACTION_LOW;
+//				result += StockData.ACTION_LOW;
 			}
 
 			result += StockData.ACTION_BUY2;
@@ -969,9 +969,9 @@ public class StockAnalyzer {
 
 			divergence = brokenStockData.divergenceTo(baseStockData);
 			if (divergence == StockData.DIVERGENCE_UP) {
-				result += StockData.ACTION_HIGH;
+//				result += StockData.ACTION_HIGH;
 			} else if (divergence == StockData.DIVERGENCE_DOWN) {
-				result += StockData.ACTION_LOW;
+//				result += StockData.ACTION_LOW;
 			}
 
 			result += StockData.ACTION_SELL2;
@@ -1061,7 +1061,7 @@ public class StockAnalyzer {
 			}
 
 			if (segmentDivergence == StockData.DIVERGENCE_UP) {
-				action += StockData.ACTION_HIGH;
+//				action += StockData.ACTION_HIGH;
 			}
 		} else if (stockData
 				.directionOf(StockData.DIRECTION_DOWN_SEGMENT)) {
@@ -1075,7 +1075,7 @@ public class StockAnalyzer {
 			}
 
 			if (segmentDivergence == StockData.DIVERGENCE_DOWN) {
-				action += StockData.ACTION_LOW;
+//				action += StockData.ACTION_LOW;
 			}
 		}
 
@@ -1090,7 +1090,7 @@ public class StockAnalyzer {
 			}
 
 			if (strokeDivergence == StockData.DIVERGENCE_UP) {
-				action += StockData.ACTION_HIGH;
+//				action += StockData.ACTION_HIGH;
 			}
 		} else if (stockData.directionOf(StockData.DIRECTION_DOWN_STROKE)) {
 			if (prev.vertexOf(StockData.VERTEX_TOP_STROKE)) {
@@ -1103,7 +1103,7 @@ public class StockAnalyzer {
 			}
 
 			if (strokeDivergence == StockData.DIVERGENCE_DOWN) {
-				action += StockData.ACTION_LOW;
+//				action += StockData.ACTION_LOW;
 			}
 		}
 
@@ -1129,7 +1129,7 @@ public class StockAnalyzer {
 			}
 
 			if (drawDivergence == StockData.DIVERGENCE_UP) {
-				action += StockData.ACTION_HIGH;
+//				action += StockData.ACTION_HIGH;
 			}
 		} else if (stockData.directionOf(StockData.DIRECTION_DOWN)) {
 			if (prev.vertexOf(StockData.VERTEX_TOP)) {
@@ -1153,7 +1153,7 @@ public class StockAnalyzer {
 			}
 
 			if (drawDivergence == StockData.DIVERGENCE_DOWN) {
-				action += StockData.ACTION_LOW;
+//				action += StockData.ACTION_LOW;
 			}
 		}
 
