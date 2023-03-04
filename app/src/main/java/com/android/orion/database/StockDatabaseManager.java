@@ -881,6 +881,7 @@ public class StockDatabaseManager extends DatabaseManager {
 		selection += " AND " + DatabaseContract.COLUMN_ACTION + " != ''";
 		selection += " AND " + DatabaseContract.COLUMN_VOLUME + " < " + 0 ;
 		selection += " AND " + DatabaseContract.COLUMN_BUY + " = " + 0;
+		selection += " AND " + DatabaseContract.COLUMN_SELL + " > " + 0;
 		selection += " AND " + DatabaseContract.COLUMN_NET + " > " + Constants.AVERAGE_DIVIDEND_YIELD;
 
 		getStockDealList(stock, stockDealList, selection, sortOrder);
@@ -899,6 +900,7 @@ public class StockDatabaseManager extends DatabaseManager {
 
 		selection += " AND " + DatabaseContract.COLUMN_ACTION + " != ''";
 		selection += " AND " + DatabaseContract.COLUMN_VOLUME + " > " + 0 ;
+		selection += " AND " + DatabaseContract.COLUMN_BUY + " > " + 0;
 		selection += " AND " + DatabaseContract.COLUMN_SELL + " = " + 0;
 		selection += " AND " + DatabaseContract.COLUMN_NET + " > " + Constants.AVERAGE_DIVIDEND_YIELD;
 
