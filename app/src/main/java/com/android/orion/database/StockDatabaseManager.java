@@ -2102,9 +2102,9 @@ public class StockDatabaseManager extends DatabaseManager {
 	}
 
 	public String getIndexComponentSelection(String indexCode, String stockCode) {
-		return DatabaseContract.COLUMN_INDEX_CODE + " = " + indexCode
+		return DatabaseContract.COLUMN_INDEX_CODE + " = " + "\'" + indexCode + "\'"
 				+ " AND "
-				+ DatabaseContract.COLUMN_CODE + " = " + stockCode;
+				+ DatabaseContract.COLUMN_CODE + " = " + "\'"  + stockCode + "\'" ;
 	}
 
 	public String getIndexComponentOrder() {
