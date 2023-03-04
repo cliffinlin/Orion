@@ -573,6 +573,8 @@ public class IndexComponentListActivity extends ListActivity implements
         Intent intentSearch = new Intent(this, StockSearchActivity.class);
         intentSearch.setAction(StockListEditActivity.ACTION_INDEX_COMPONENT_SELECT);
         intentSearch.putExtra(Constants.EXTRA_INDEX_CODE, mIntent.getStringExtra(Constants.EXTRA_INDEX_CODE));
+		intentSearch.putExtra(Constants.EXTRA_INDEX_NAME, mIntent.getStringExtra(Constants.EXTRA_INDEX_NAME));
+		intentSearch.putExtra(Constants.EXTRA_INDEX_SE, mIntent.getStringExtra(Constants.EXTRA_INDEX_SE));
         startActivityForResult(intentSearch, REQUEST_CODE_INDEX_COMPONENT_SELECT);
 		return true;
 	}

@@ -866,6 +866,8 @@ abstract class StockDataProvider extends StockAnalyzer {
             for (IndexComponent indexComponent : componentList) {
                 if (stockArrayMap.containsKey(indexComponent.getCode())) {
                     indexComponentList.add(indexComponent);
+                } else {
+                    mStockDatabaseManager.deleteIndexComponent(indexComponent);
                 }
             }
 

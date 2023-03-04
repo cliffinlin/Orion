@@ -49,6 +49,8 @@ public class Constants {
 	public static final String EXTRA_STOCK_LIST_SORT_ORDER = "stock_list_sort_order";
 
 	public static final String EXTRA_INDEX_CODE = "index_code";
+	public static final String EXTRA_INDEX_NAME = "index_name";
+	public static final String EXTRA_INDEX_SE = "index_se";
 
 	public static final int SCHEDULE_INTERVAL_MIN1 = 1;
 	public static final int SCHEDULE_INTERVAL_MIN5 = 5;

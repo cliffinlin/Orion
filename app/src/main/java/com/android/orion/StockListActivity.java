@@ -555,6 +555,8 @@ public class StockListActivity extends ListActivity implements
 					Intent intent = new Intent(mContext,
 							IndexComponentListActivity.class);
 					intent.putExtra(Constants.EXTRA_INDEX_CODE, String.valueOf(mStock.getCode()));
+					intent.putExtra(Constants.EXTRA_INDEX_NAME, String.valueOf(mStock.getName()));
+					intent.putExtra(Constants.EXTRA_INDEX_SE, String.valueOf(mStock.getSE()));
 					startActivity(intent);
 				} else {
 					Intent intent = new Intent(mContext,
