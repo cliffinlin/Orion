@@ -856,10 +856,17 @@ abstract class StockDataProvider extends StockAnalyzer {
         }
 
         try {
+            ArrayList<IndexComponent> componentList = new ArrayList<>();
             selection = DatabaseContract.COLUMN_INDEX_CODE + " = " + index.getCode();
-            mStockDatabaseManager.getIndexComponentList(indexComponentList, selection, null);
-            if (indexComponentList.size() == 0) {
+            mStockDatabaseManager.getIndexComponentList(componentList, selection, null);
+            if (componentList.size() == 0) {
                 return;
+            }
+
+            for (IndexComponent indexComponent : componentList) {
+                if (stockArrayMap.containsKey(indexComponent.getCode())) {
+                    indexComponentList.add(indexComponent);
+                }
             }
 
             for (String period : Settings.KEY_PERIODS) {
@@ -869,37 +876,33 @@ abstract class StockDataProvider extends StockAnalyzer {
                     indexStockDataList = index.getStockDataList(period);
 
                     for (IndexComponent indexComponent : indexComponentList) {
-                        if (stockArrayMap.containsKey(indexComponent.getCode())) {
-                            stock = stockArrayMap.get(indexComponent.getCode());
-                            stockDataList = stock.getStockDataList(period);
-                            loadStockDataList(stock, period, stockDataList);
-                            if ((stockDataList == null) || (stockDataList.size() == 0)) {
-                                continue;
-                            }
+                        stock = stockArrayMap.get(indexComponent.getCode());
+                        stockDataList = stock.getStockDataList(period);
+                        loadStockDataList(stock, period, stockDataList);
+                        if ((stockDataList == null) || (stockDataList.size() == 0)) {
+                            continue;
+                        }
 
-                            if (stockDataList.size() > maxSize) {
-                                maxSize = stockDataList.size();
-                            }
+                        if (stockDataList.size() > maxSize) {
+                            maxSize = stockDataList.size();
                         }
                     }
 
                     for (IndexComponent indexComponent : indexComponentList) {
-                        if (stockArrayMap.containsKey(indexComponent.getCode())) {
-                            stock = stockArrayMap.get(indexComponent.getCode());
-                            stockDataList = stock.getStockDataList(period);
-                            if ((stockDataList == null) || (stockDataList.size() == 0)) {
-                                continue;
-                            }
+                        stock = stockArrayMap.get(indexComponent.getCode());
+                        stockDataList = stock.getStockDataList(period);
+                        if ((stockDataList == null) || (stockDataList.size() == 0)) {
+                            continue;
+                        }
 
-                            if (stockDataList.size() == maxSize) {
-                                if (begin == null) {
+                        if (stockDataList.size() == maxSize) {
+                            if (begin == null) {
+                                begin = stockDataList.get(0).getCalendar();
+                                baseStock = stock;
+                            } else {
+                                if (stockDataList.get(0).getCalendar().after(begin)) {
                                     begin = stockDataList.get(0).getCalendar();
                                     baseStock = stock;
-                                } else {
-                                    if (stockDataList.get(0).getCalendar().after(begin)) {
-                                        begin = stockDataList.get(0).getCalendar();
-                                        baseStock = stock;
-                                    }
                                 }
                             }
                         }
@@ -930,50 +933,48 @@ abstract class StockDataProvider extends StockAnalyzer {
                     }
 
                     for (IndexComponent indexComponent : indexComponentList) {
-                        if (stockArrayMap.containsKey(indexComponent.getCode())) {
-                            stock = stockArrayMap.get(indexComponent.getCode());
-                            stockDataList = stock.getStockDataList(period);
-                            if ((stockDataList == null) || (stockDataList.size() == 0)) {
-                                continue;
-                            }
+                        stock = stockArrayMap.get(indexComponent.getCode());
+                        stockDataList = stock.getStockDataList(period);
+                        if ((stockDataList == null) || (stockDataList.size() == 0)) {
+                            continue;
+                        }
 
-                            if (stock == baseStock) {
-                                continue;
-                            }
+                        if (stock == baseStock) {
+                            continue;
+                        }
 
-                            StockData stockDataLastMatched = null;
-                            int lastMatched = 0;
-                            for (int i = 0; i < indexStockDataList.size(); i++) {
-                                StockData indexStockData = indexStockDataList.get(i);
-                                Calendar indexStockDataCalendar = indexStockDataList.get(i).getCalendar();
-                                for (int j = lastMatched; j < stockDataList.size(); j++) {
-                                    StockData stockData = stockDataList.get(j);
-                                    Calendar stockDataCalendar = stockDataList.get(j).getCalendar();
-                                    if (stockDataCalendar.before(indexStockDataCalendar)) {
+                        StockData stockDataLastMatched = null;
+                        int lastMatched = 0;
+                        for (int i = 0; i < indexStockDataList.size(); i++) {
+                            StockData indexStockData = indexStockDataList.get(i);
+                            Calendar indexStockDataCalendar = indexStockDataList.get(i).getCalendar();
+                            for (int j = lastMatched; j < stockDataList.size(); j++) {
+                                StockData stockData = stockDataList.get(j);
+                                Calendar stockDataCalendar = stockDataList.get(j).getCalendar();
+                                if (stockDataCalendar.before(indexStockDataCalendar)) {
 //                                        continue;
-                                    } else if (stockDataCalendar.equals(indexStockDataCalendar)) {
-                                        lastMatched = j;
-                                        stockDataLastMatched = stockData;
-                                        indexStockData.setOpen(indexStockData.getOpen() + stockData.getOpen() / indexComponentList.size());
-                                        indexStockData.setClose(indexStockData.getClose() + stockData.getClose() / indexComponentList.size());
-                                        indexStockData.setHigh(indexStockData.getHigh() + stockData.getHigh() / indexComponentList.size());
-                                        indexStockData.setLow(indexStockData.getLow() + stockData.getLow() / indexComponentList.size());
+                                } else if (stockDataCalendar.equals(indexStockDataCalendar)) {
+                                    lastMatched = j;
+                                    stockDataLastMatched = stockData;
+                                    indexStockData.setOpen(indexStockData.getOpen() + stockData.getOpen() / indexComponentList.size());
+                                    indexStockData.setClose(indexStockData.getClose() + stockData.getClose() / indexComponentList.size());
+                                    indexStockData.setHigh(indexStockData.getHigh() + stockData.getHigh() / indexComponentList.size());
+                                    indexStockData.setLow(indexStockData.getLow() + stockData.getLow() / indexComponentList.size());
+
+                                    indexStockData.setVertexHigh(indexStockData.getHigh());
+                                    indexStockData.setVertexLow(indexStockData.getLow());
+                                    break;
+                                } else if (stockDataCalendar.after(indexStockDataCalendar)) {
+                                    if (stockDataLastMatched != null) {
+                                        indexStockData.setOpen(indexStockData.getOpen() + stockDataLastMatched.getOpen() / indexComponentList.size());
+                                        indexStockData.setClose(indexStockData.getClose() + stockDataLastMatched.getClose() / indexComponentList.size());
+                                        indexStockData.setHigh(indexStockData.getHigh() + stockDataLastMatched.getHigh() / indexComponentList.size());
+                                        indexStockData.setLow(indexStockData.getLow() + stockDataLastMatched.getLow() / indexComponentList.size());
 
                                         indexStockData.setVertexHigh(indexStockData.getHigh());
                                         indexStockData.setVertexLow(indexStockData.getLow());
-                                        break;
-                                    } else if (stockDataCalendar.after(indexStockDataCalendar)) {
-                                        if (stockDataLastMatched != null) {
-                                            indexStockData.setOpen(indexStockData.getOpen() + stockDataLastMatched.getOpen() / indexComponentList.size());
-                                            indexStockData.setClose(indexStockData.getClose() + stockDataLastMatched.getClose() / indexComponentList.size());
-                                            indexStockData.setHigh(indexStockData.getHigh() + stockDataLastMatched.getHigh() / indexComponentList.size());
-                                            indexStockData.setLow(indexStockData.getLow() + stockDataLastMatched.getLow() / indexComponentList.size());
-
-                                            indexStockData.setVertexHigh(indexStockData.getHigh());
-                                            indexStockData.setVertexLow(indexStockData.getLow());
-                                        }
-                                        break;
                                     }
+                                    break;
                                 }
                             }
                         }
@@ -984,15 +985,13 @@ abstract class StockDataProvider extends StockAnalyzer {
             }
 
             for (IndexComponent indexComponent : indexComponentList) {
-                if (stockArrayMap.containsKey(indexComponent.getCode())) {
-                    stock = stockArrayMap.get(indexComponent.getCode());
-                    if ((stockDataList == null) || (stockDataList.size() == 0)) {
-                        continue;
-                    }
-
-                    totalPrice += stock.getPrice();
-                    totalNet += stock.getNet();
+                stock = stockArrayMap.get(indexComponent.getCode());
+                if ((stockDataList == null) || (stockDataList.size() == 0)) {
+                    continue;
                 }
+
+                totalPrice += stock.getPrice();
+                totalNet += stock.getNet();
             }
 
             index.setPrice(Utility.Round(totalPrice / indexComponentList.size(), Constants.DOUBLE_FIXED_DECIMAL));

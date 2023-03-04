@@ -471,7 +471,8 @@ public class IndexComponentListActivity extends ListActivity implements
 					indexIds.append("," + indexComponentList.get(i).getCode());
 				}
 
-				selection = DatabaseContract.COLUMN_CODE + " in (" + placeHolder.toString() + " )";
+				selection = DatabaseContract.COLUMN_CODE + " in (" + placeHolder.toString() + " ) AND " + DatabaseContract.COLUMN_FLAG + " = "
+						+ Stock.FLAG_FAVORITE;
 				selectionArgs = indexIds.toString().split(",");
 			} else {
 				selection = DatabaseContract.COLUMN_ID + " = " + Stock.INVALID_ID;

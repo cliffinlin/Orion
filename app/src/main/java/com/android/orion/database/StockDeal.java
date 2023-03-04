@@ -507,7 +507,7 @@ public class StockDeal extends DatabaseTable {
             } else if (todayCalendar.before(rDateCalendarAfterYear)) {
                 dividendIncomeTax = dividend / 10.0 * Math.abs(mVolume) * DIVIDEND_INCOME_TAX_RATE_10_PERCENT;
             } else {
-                dividendIncomeTax = 0;;
+                dividendIncomeTax = 0;
             }
         }
 
