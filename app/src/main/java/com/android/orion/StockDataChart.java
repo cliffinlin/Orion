@@ -278,7 +278,7 @@ public class StockDataChart {
 				LineDataSet strokeDataSet = new LineDataSet(mStrokeEntryList, "Stroke");
 				strokeDataSet.setColor(Color.YELLOW);
 				strokeDataSet.setCircleColor(Color.YELLOW);
-				strokeDataSet.setCircleSize(3f);
+				strokeDataSet.setCircleSize(0);
 				strokeDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 				lineData.addDataSet(strokeDataSet);
 			}
@@ -291,7 +291,7 @@ public class StockDataChart {
 						"Segment");
 				segmentDataSet.setColor(Color.BLACK);
 				segmentDataSet.setCircleColor(Color.BLACK);
-				segmentDataSet.setCircleSize(3f);
+				segmentDataSet.setCircleSize(0);
 				segmentDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 				lineData.addDataSet(segmentDataSet);
 			}
@@ -411,7 +411,7 @@ public class StockDataChart {
             LineDataSet strokeDataSet = new LineDataSet(mSubChartStrokeEntryList, "Stroke");
             strokeDataSet.setColor(Color.YELLOW);
             strokeDataSet.setCircleColor(Color.YELLOW);
-            strokeDataSet.setCircleSize(3f);
+            strokeDataSet.setCircleSize(0);
             strokeDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
             lineData.addDataSet(strokeDataSet);
         }
@@ -423,7 +423,7 @@ public class StockDataChart {
                     "Segment");
             segmentDataSet.setColor(Color.BLACK);
             segmentDataSet.setCircleColor(Color.BLACK);
-            segmentDataSet.setCircleSize(3f);
+            segmentDataSet.setCircleSize(0);
             segmentDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
             lineData.addDataSet(segmentDataSet);
         }

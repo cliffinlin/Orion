@@ -648,10 +648,10 @@ public class StockAnalyzer {
 		stockVertexAnalyzer.vertexListToDataList(stockDataList, segmentVertexList,
 				segmentDataList, StockData.LEVEL_SEGMENT);
 
-		if (segmentDataList.size() > Constants.OVERLAP_ANALYZE_THRESHOLD) {
+		if (segmentDataList.size() > StockData.OVERLAP_TYPING_SIZE) {
 			stockVertexAnalyzer.analyzeOverlap(stockDataList, segmentDataList,
 					overlapList);
-		} else if (strokeDataList.size() > Constants.OVERLAP_ANALYZE_THRESHOLD) {
+		} else if (strokeDataList.size() > StockData.OVERLAP_TYPING_SIZE) {
 			stockVertexAnalyzer.analyzeOverlap(stockDataList, strokeDataList,
 					overlapList);
 		} else {
@@ -733,7 +733,7 @@ public class StockAnalyzer {
 				}
 			}
 
-			if (Math.abs(denominator) >= Constants.FIRST_ACTION_THRESHOLD) {
+			if (Math.abs(denominator) >= Constants.STOCK_NATURAL_THRESHOLD) {
 				result += StockData.ACTION_BUY1;
 				result += " " + numerator;
 				result += "/" + denominator;
@@ -787,7 +787,7 @@ public class StockAnalyzer {
 				}
 			}
 
-			if (Math.abs(denominator) >= Constants.FIRST_ACTION_THRESHOLD) {
+			if (Math.abs(denominator) >= Constants.STOCK_NATURAL_THRESHOLD) {
 				result += StockData.ACTION_SELL1;
 				result += " " + numerator;
 				result += "/" + denominator;

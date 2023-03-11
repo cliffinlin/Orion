@@ -13,14 +13,10 @@ public class StockData extends StockDatabaseTable {
 
     public static final String ACTION_NONE = "";
 
-	public static final String ACTION_BUY = "B";
 	public static final String ACTION_BUY1 = "B1";
 	public static final String ACTION_BUY2 = "B2";
-	public static final String ACTION_BUY3 = "B3";
-    public static final String ACTION_SELL = "S";
     public static final String ACTION_SELL1 = "S1";
     public static final String ACTION_SELL2 = "S2";
-    public static final String ACTION_SELL3 = "S3";
 
 //	public static final String ACTION_G = "G";
 //	public static final String ACTION_D = "D";
@@ -69,6 +65,7 @@ public class StockData extends StockDatabaseTable {
 	public static final int VERTEX_BOTTOM_SEGMENT = 1 << 5;
 
     public static final int VERTEX_TYPING_SIZE = 3;
+	public static final int OVERLAP_TYPING_SIZE = 6;
 
 	public static final int POSITION_ABOVE = 1;
 	public static final int POSITION_NONE = 0;

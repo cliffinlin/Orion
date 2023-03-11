@@ -65,10 +65,5 @@ public class Constants {
 
 	public static final double ROI_COEFFICIENT = 1.0 / 1000;
 
-	public static final double AVERAGE_DIVIDEND_YIELD = 5.0;
-	public static final double FIRST_ACTION_THRESHOLD = 5.0;
-	public static final double SECEND_ACTION_THRESHOLD = 5.0;
 	public static final double STOCK_NATURAL_THRESHOLD = 6.0;
-
-	public static final int OVERLAP_ANALYZE_THRESHOLD = 6;
 }
