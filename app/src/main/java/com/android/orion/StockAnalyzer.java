@@ -689,114 +689,6 @@ public class StockAnalyzer {
 		analyzeAction(stock, period, stockDataList, drawVertexList, overlapList, drawDataList, strokeDataList, segmentDataList);
 	}
 
-	private String getFirstBottomAction(Stock stock, ArrayList<StockData> stockDataList, ArrayList<StockData> vertexList) {
-		String result = "";
-		StockData prev = null;
-		StockData start = null;
-		StockData end = null;
-		int numerator = 0;
-		int denominator = 0;
-
-		if ((stockDataList == null)
-				|| (stockDataList.size() < StockData.VERTEX_TYPING_SIZE)) {
-			return result;
-		}
-
-		prev = stockDataList.get(stockDataList.size() - 2);
-		if (prev == null) {
-			return result;
-		}
-
-		if (!prev.vertexOf(StockData.VERTEX_BOTTOM)) {
-			return result;
-		}
-
-		if ((vertexList == null)
-				|| (vertexList.size() < StockData.VERTEX_TYPING_SIZE + 2)) {
-			return result;
-		}
-
-		end = vertexList.get(vertexList.size() - 2);
-		if (end == null) {
-			return result;
-		}
-
-		if (end.vertexOf(StockData.VERTEX_BOTTOM)) {
-			for (int i = vertexList.size() - 3; i >= 0; i--) {
-				start = vertexList.get(i);
-				if ((start != null) && (start.vertexOf(StockData.VERTEX_TOP))) {
-					if ((stock.getPrice() > 0) && (start.getVertexHigh() > 0)) {
-						numerator = (int)(100 * (stock.getPrice() - start.getVertexHigh())/start.getVertexHigh());
-						denominator = (int)(100 * (end.getVertexLow() - start.getVertexHigh())/start.getVertexHigh());
-					}
-					break;
-				}
-			}
-
-			if (Math.abs(denominator) >= Constants.STOCK_NATURAL_THRESHOLD) {
-				result += StockData.ACTION_BUY1;
-				result += " " + numerator;
-				result += "/" + denominator;
-			}
-		}
-
-		return result;
-	}
-
-	private String getFirstTopAction(Stock stock, ArrayList<StockData> stockDataList, ArrayList<StockData> vertexList) {
-		String result = "";
-		StockData prev = null;
-		StockData start = null;
-		StockData end = null;
-		int numerator = 0;
-		int denominator = 0;
-
-		if ((stockDataList == null)
-				|| (stockDataList.size() < StockData.VERTEX_TYPING_SIZE)) {
-			return result;
-		}
-
-		prev = stockDataList.get(stockDataList.size() - 2);
-		if (prev == null) {
-			return result;
-		}
-
-		if (!prev.vertexOf(StockData.VERTEX_TOP)) {
-			return result;
-		}
-
-		if ((vertexList == null)
-				|| (vertexList.size() < StockData.VERTEX_TYPING_SIZE + 2)) {
-			return result;
-		}
-
-		end = vertexList.get(vertexList.size() - 2);
-		if (end == null) {
-			return result;
-		}
-
-		if (end.vertexOf(StockData.VERTEX_TOP)) {
-			for (int i = vertexList.size() - 3; i >= 0; i--) {
-				start = vertexList.get(i);
-				if ((start != null) && (start.vertexOf(StockData.VERTEX_BOTTOM))) {
-					if ((stock.getPrice() > 0) && (start.getVertexLow() > 0)) {
-						numerator = (int)(100 * (stock.getPrice() - start.getVertexLow())/start.getVertexLow());
-						denominator = (int)(100 * (end.getVertexHigh() - start.getVertexLow())/start.getVertexLow());
-					}
-					break;
-				}
-			}
-
-			if (Math.abs(denominator) >= Constants.STOCK_NATURAL_THRESHOLD) {
-				result += StockData.ACTION_SELL1;
-				result += " " + numerator;
-				result += "/" + denominator;
-			}
-		}
-
-		return result;
-	}
-
 	private String getSecondBottomAction(Stock stock, ArrayList<StockData> vertexList,
 										 ArrayList<StockData> strokeDataList,
 										 ArrayList<StockData> segmentDataList) {
@@ -848,9 +740,6 @@ public class StockAnalyzer {
 		if (firstBottomVertex.vertexOf(StockData.VERTEX_BOTTOM_SEGMENT)) {
 			baseStockData = segmentDataList.get(segmentDataList.size() - 4);
 			brokenStockData = segmentDataList.get(segmentDataList.size() - 2);
-//		} else if (firstBottomVertex.vertexOf(StockData.VERTEX_BOTTOM_STROKE)) {
-//			baseStockData = strokeDataList.get(strokeDataList.size() - 4);
-//			brokenStockData = strokeDataList.get(strokeDataList.size() - 2);
 		} else {
 			return result;
 		}
@@ -867,12 +756,6 @@ public class StockAnalyzer {
 				numerator = (int)(100 * (stock.getPrice() - brokenStockData.getVertexHigh())/brokenStockData.getVertexHigh());
 				denominator = (int)(brokenStockData.getNet());
 			}
-
-//			if (TextUtils.isEmpty(stock.getOperate())) {
-//				if (Math.abs(denominator) < Constants.SECEND_ACTION_THRESHOLD) {
-//					return result;
-//				}
-//			}
 
 			divergence = brokenStockData.divergenceTo(baseStockData);
 			if (divergence == StockData.DIVERGENCE_UP) {
@@ -941,9 +824,6 @@ public class StockAnalyzer {
 		if (firstTopVertex.vertexOf(StockData.VERTEX_TOP_SEGMENT)) {
 			baseStockData = segmentDataList.get(segmentDataList.size() - 4);
 			brokenStockData = segmentDataList.get(segmentDataList.size() - 2);
-//		} else if (firstTopVertex.vertexOf(StockData.VERTEX_TOP_STROKE)) {
-//			baseStockData = strokeDataList.get(strokeDataList.size() - 4);
-//			brokenStockData = strokeDataList.get(strokeDataList.size() - 2);
 		} else {
 			return result;
 		}
@@ -960,12 +840,6 @@ public class StockAnalyzer {
 				numerator = (int)(100 * (stock.getPrice() - brokenStockData.getVertexLow())/brokenStockData.getVertexLow());
 				denominator = (int)(brokenStockData.getNet());
 			}
-
-//			if (TextUtils.isEmpty(stock.getOperate())) {
-//				if (Math.abs(denominator) < Constants.SECEND_ACTION_THRESHOLD) {
-//					return result;
-//				}
-//			}
 
 			divergence = brokenStockData.divergenceTo(baseStockData);
 			if (divergence == StockData.DIVERGENCE_UP) {
@@ -1109,14 +983,6 @@ public class StockAnalyzer {
 
 		if (stockData.directionOf(StockData.DIRECTION_UP)) {
 			if (prev.vertexOf(StockData.VERTEX_BOTTOM)) {
-//				action += StockData.ACTION_D;
-//				if (period.equals(Settings.KEY_PERIOD_DAY)) {
-//					String result1 = getFirstBottomAction(stock, stockDataList, drawVertexList);
-//					if (!TextUtils.isEmpty(result1)) {
-//						action += result1;
-//					}
-//				}
-
 				String result2 = getSecondBottomAction(stock, drawVertexList, strokeDataList, segmentDataList);
 				if (!TextUtils.isEmpty(result2)) {
 					action = result2;
@@ -1133,14 +999,6 @@ public class StockAnalyzer {
 			}
 		} else if (stockData.directionOf(StockData.DIRECTION_DOWN)) {
 			if (prev.vertexOf(StockData.VERTEX_TOP)) {
-//				action += StockData.ACTION_G;
-//				if (period.equals(Settings.KEY_PERIOD_DAY)) {
-//					String result1 = getFirstTopAction(stock, stockDataList, drawVertexList);
-//					if (!TextUtils.isEmpty(result1)) {
-//						action += result1;
-//					}
-//				}
-
 				String result2 = getSecondTopAction(stock, drawVertexList, strokeDataList, segmentDataList);
 				if (!TextUtils.isEmpty(result2)) {
 					action = result2;
@@ -1320,13 +1178,13 @@ public class StockAnalyzer {
 
 				if (Preferences.getBoolean(mContext, Settings.KEY_NOTIFICATION_OPERATE,
 						true)) {
-					if (toBuyProfit > 0) {
+//					if (toBuyProfit > 0) {
 						if (action.contains(StockData.ACTION_BUY2 + StockData.ACTION_BUY2)
 								|| action.contains(StockData.ACTION_DOWNWARD_TREND)
 								|| action.contains(StockData.ACTION_NATURAL_REACTION)) {
 							notifyToBuy = true;
 						}
-					}
+//					}
 
 					if (toSellProfit > 0) {
 						if (action.contains(StockData.ACTION_SELL2 + StockData.ACTION_SELL2)
