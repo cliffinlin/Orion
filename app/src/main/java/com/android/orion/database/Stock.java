@@ -1927,8 +1927,11 @@ public class Stock extends DatabaseTable {
 
 	public void setupRoi() {
         double rate = mRate;
+
 		if (rate == 0) {
             rate = 1;
+		} else if (rate > 2) {
+			rate = 2;
 		}
 
 		// mRoi = Utility.Round(mRate * mRoe * mPE * Constants.ROI_COEFFICIENT,
