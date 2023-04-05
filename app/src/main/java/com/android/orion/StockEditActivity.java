@@ -46,8 +46,6 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 	Button mButtonOk;
 	Button mButtonCancel;
 
-	boolean mNeedDownload = false;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -247,10 +245,6 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 
 			String naturalThreshold = mEditTextStockNaturalThreshold.getText().toString();
 			double naturalThresholdValue = TextUtils.isEmpty(naturalThreshold) ? 0 : Double.valueOf(naturalThreshold);
-			if (naturalThresholdValue != mStock.getNaturalThreshold()) {
-				mStockDatabaseManager.deleteStockData(mStock.getId());
-				mNeedDownload |= true;
-			}
 			mStock.setNaturalThreshold(naturalThresholdValue);
 
 			operate = mSpinnerStockAcion.getSelectedItem().toString();
@@ -292,9 +286,7 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 
 			setResult(RESULT_OK, getIntent());
 
-			if (mNeedDownload) {
-				mOrionService.download(mStock.getSE(), mStock.getCode());
-			}
+			mOrionService.download(mStock.getSE(), mStock.getCode());
 
 			finish();
 			break;
@@ -315,7 +307,6 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 		operate = mSpinnerStockAcion.getSelectedItem().toString();
 		if (!TextUtils.isEmpty(operate)) {
 			if (!operate.equals(mStock.getOperate())) {
-				mNeedDownload |= true;
 			}
 		}
 	}
