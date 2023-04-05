@@ -2,9 +2,8 @@ package com.android.orion.database;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.text.TextUtils;
 
-import com.android.orion.Constants;
+import com.android.orion.setting.Constants;
 import com.android.orion.utility.Utility;
 
 import java.util.Calendar;

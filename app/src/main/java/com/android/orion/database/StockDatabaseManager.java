@@ -9,8 +9,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 
-import com.android.orion.Constants;
-import com.android.orion.Settings;
+import com.android.orion.setting.Constants;
+import com.android.orion.setting.Settings;
 import com.android.orion.utility.Utility;
 
 public class StockDatabaseManager extends DatabaseManager {

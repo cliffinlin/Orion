@@ -2,7 +2,7 @@ package com.android.orion.utility;
 
 import android.os.Environment;
 
-import com.android.orion.Constants;
+import com.android.orion.setting.Constants;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;
 

@@ -3,7 +3,7 @@ package com.android.orion.database;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import com.android.orion.Constants;
+import com.android.orion.setting.Constants;
 import com.android.orion.utility.Utility;
 
 public class StockFinancial extends DatabaseTable {

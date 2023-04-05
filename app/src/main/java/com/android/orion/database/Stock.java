@@ -7,9 +7,8 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.text.TextUtils;
 
-import com.android.orion.Constants;
-import com.android.orion.MarketKeyAnalyzer;
-import com.android.orion.Settings;
+import com.android.orion.setting.Constants;
+import com.android.orion.setting.Settings;
 import com.android.orion.utility.Utility;
 
 public class Stock extends DatabaseTable {

@@ -10,7 +10,7 @@
 
     <fragment
         android:id="@+id/about_fragment"
-        android:name="com.android.orion.about.AboutFragment"
+        android:name="com.android.orion.fragment.AboutFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

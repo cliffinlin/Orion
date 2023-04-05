@@ -33,7 +33,7 @@ import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.android.orion.Constants;
+import com.android.orion.setting.Constants;
 
 public class Utility {
 	public static final String CALENDAR_DATE_FORMAT = "yyyy-MM-dd";

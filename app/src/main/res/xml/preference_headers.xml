@@ -5,49 +5,49 @@
         android:icon="@drawable/ic_service"
         android:title="@string/settings" >
         <intent
-            android:targetClass="com.android.orion.SettingActivity"
+            android:targetClass="com.android.orion.activity.SettingActivity"
             android:targetPackage="com.android.orion" />
     </header>
     <header
         android:icon="@drawable/ic_list"
         android:title="@string/favorite" >
         <intent
-            android:targetClass="com.android.orion.StockListActivity"
+            android:targetClass="com.android.orion.activity.StockListActivity"
             android:targetPackage="com.android.orion" />
     </header>
     <header
         android:icon="@drawable/ic_list"
         android:title="@string/financial" >
         <intent
-            android:targetClass="com.android.orion.StockFinancialListActivity"
+            android:targetClass="com.android.orion.activity.StockFinancialListActivity"
             android:targetPackage="com.android.orion" />
     </header>
     <header
         android:icon="@drawable/ic_list"
         android:title="@string/deal" >
         <intent
-            android:targetClass="com.android.orion.DealListActivity"
+            android:targetClass="com.android.orion.activity.DealListActivity"
             android:targetPackage="com.android.orion" />
     </header>
     <!--<header-->
         <!--android:icon="@drawable/ic_list"-->
         <!--android:title="@string/ipo" >-->
         <!--<intent-->
-            <!--android:targetClass="com.android.orion.StockIPOListActivity"-->
+            <!--android:targetClass="com.android.orion.activity.StockIPOListActivity"-->
             <!--android:targetPackage="com.android.orion" />-->
     <!--</header>-->
     <header
         android:icon="@drawable/ic_list"
         android:title="@string/stock_statistics" >
         <intent
-            android:targetClass="com.android.orion.StockStatisticsChartListActivity"
+            android:targetClass="com.android.orion.activity.StockStatisticsChartListActivity"
             android:targetPackage="com.android.orion" />
     </header>
     <header
         android:icon="@drawable/ic_about"
         android:title="@string/about" >
         <intent
-            android:targetClass="com.android.orion.about.AboutActivity"
+            android:targetClass="com.android.orion.activity.AboutActivity"
             android:targetPackage="com.android.orion" />
     </header>
 
