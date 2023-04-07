@@ -94,8 +94,8 @@ public class StockFilterActivity extends DatabaseActivity implements
 		mEditTextRoi.setText(mStockFilter.getRoi());
 		mEditTextRate.setText(mStockFilter.getRate());
 		mEditTextRoe.setText(mStockFilter.getRoe());
-		mEditTextPE.setText(mStockFilter.getPE());
-		mEditTextPB.setText(mStockFilter.getPB());
+		mEditTextPE.setText(mStockFilter.getPe());
+		mEditTextPB.setText(mStockFilter.getPb());
 		mEditTextDividend.setText(mStockFilter.getDividend());
 		mEditTextYield.setText(mStockFilter.getYield());
 		mEditTextDividendRatio.setText(mStockFilter.getDividendRatio());
@@ -152,8 +152,8 @@ public class StockFilterActivity extends DatabaseActivity implements
 			mStockFilter.setRoi(mEditTextRoi.getText().toString());
 			mStockFilter.setRate(mEditTextRate.getText().toString());
 			mStockFilter.setRoe(mEditTextRoe.getText().toString());
-			mStockFilter.setPE(mEditTextPE.getText().toString());
-			mStockFilter.setPB(mEditTextPB.getText().toString());
+			mStockFilter.setPe(mEditTextPE.getText().toString());
+			mStockFilter.setPb(mEditTextPB.getText().toString());
 			mStockFilter.setDividend(mEditTextDividend.getText().toString());
 			mStockFilter.setYield(mEditTextYield.getText().toString());
 			mStockFilter.setDividendRatio(mEditTextDividendRatio.getText()

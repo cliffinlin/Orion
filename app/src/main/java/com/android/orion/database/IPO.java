@@ -10,7 +10,7 @@ public class IPO extends DatabaseTable {
 	private double mPrice;
 	private String mDate;
 	private String mTimeToMarket;
-	private double mPE;
+	private double mPe;
 
 	public IPO() {
 		init();
@@ -35,7 +35,7 @@ public class IPO extends DatabaseTable {
 		mPrice = 0;
 		mDate = "";
 		mTimeToMarket = "";
-		mPE = 0;
+		mPe = 0;
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public class IPO extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);
 		contentValues
 				.put(DatabaseContract.COLUMN_TIME_TO_MARKET, mTimeToMarket);
-		contentValues.put(DatabaseContract.COLUMN_PE, mPE);
+		contentValues.put(DatabaseContract.COLUMN_PE, mPe);
 
 		return contentValues;
 	}
@@ -69,7 +69,7 @@ public class IPO extends DatabaseTable {
 		setPrice(ipo.mPrice);
 		setDate(ipo.mDate);
 		setDate(ipo.mTimeToMarket);
-		setPE(ipo.mPE);
+		setPe(ipo.mPe);
 	}
 
 	@Override
@@ -88,7 +88,7 @@ public class IPO extends DatabaseTable {
 		setPrice(cursor);
 		setDate(cursor);
 		setTimeToMarket(cursor);
-		setPE(cursor);
+		setPe(cursor);
 	}
 
 	public long getStockId() {
@@ -193,20 +193,20 @@ public class IPO extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_TIME_TO_MARKET)));
 	}
 
-	public double getPE() {
-		return mPE;
+	public double getPe() {
+		return mPe;
 	}
 
-	public void setPE(double pe) {
-		mPE = pe;
+	public void setPe(double pe) {
+		mPe = pe;
 	}
 
-	void setPE(Cursor cursor) {
+	void setPe(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}
 
-		setPE(cursor.getDouble(cursor
+		setPe(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_PE)));
 	}
 }

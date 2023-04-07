@@ -367,7 +367,7 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 					Entry rateEntry = new Entry((float) stock.getRate(), index);
 					stockDataChart.mRateEntryList.add(rateEntry);
 
-					BarEntry peEntry = new BarEntry((float) stock.getPE(),
+					BarEntry peEntry = new BarEntry((float) stock.getPe(),
 							index);
 					stockDataChart.mPeEntryList.add(peEntry);
 

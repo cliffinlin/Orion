@@ -46,7 +46,7 @@
         android:layout_height="40dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="@string/ep"
+        android:text="@string/pe"
         android:textSize="18sp" />
 
     <TextView

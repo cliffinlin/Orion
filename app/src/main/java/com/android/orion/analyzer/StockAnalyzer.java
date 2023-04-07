@@ -529,8 +529,8 @@ public class StockAnalyzer {
 		stock.setupRate(stockFinancialList);
 		stock.setupDebtToNetAssetsRatio(stockFinancialList);
 		stock.setupRoe(stockFinancialList);
-		stock.setupPE();
-		stock.setupPB();
+		stock.setupPe();
+		stock.setupPb();
 		stock.setupRoi();
 	}
 

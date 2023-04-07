@@ -128,9 +128,8 @@
     <string name="ok">OK</string>
     <string name="overlap">Overlap</string>
     <string name="password_hint">Password</string>
-    <string name="pb">PB</string>
-    <string name="pe">PE</string>
-    <string name="ep">1/PE</string>
+    <string name="pb">Pb</string>
+    <string name="pe">Pe</string>
     <string name="percent">Percent</string>
     <string name="period_1min">1Min</string>
     <string name="period_5min">5Min</string>

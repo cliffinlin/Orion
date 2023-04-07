@@ -78,8 +78,8 @@ public class Stock extends DatabaseTable {
 	private double mNetProfitPerShareInYear;
 	private double mRoi;
 	private double mRoe;
-	private double mPE;
-	private double mPB;
+	private double mPe;
+	private double mPb;
 	private double mRate;
 	private double mDividend;
 	private double mYield;
@@ -241,8 +241,8 @@ public class Stock extends DatabaseTable {
 		mNetProfitPerShareInYear = 0;
 		mRoi = 0;
 		mRoe = 0;
-		mPE = 0;
-		mPB = 0;
+		mPe = 0;
+		mPb = 0;
 		mRate = 0;
 		mDividend = 0;
 		mYield = 0;
@@ -306,8 +306,8 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE_IN_YEAR, mNetProfitPerShareInYear);
 		contentValues.put(DatabaseContract.COLUMN_ROI, mRoi);
 		contentValues.put(DatabaseContract.COLUMN_ROE, mRoe);
-		contentValues.put(DatabaseContract.COLUMN_PE, mPE);
-		contentValues.put(DatabaseContract.COLUMN_PB, mPB);
+		contentValues.put(DatabaseContract.COLUMN_PE, mPe);
+		contentValues.put(DatabaseContract.COLUMN_PB, mPb);
 		contentValues.put(DatabaseContract.COLUMN_RATE, mRate);
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND, mDividend);
 		contentValues.put(DatabaseContract.COLUMN_YIELD, mYield);
@@ -420,8 +420,8 @@ public class Stock extends DatabaseTable {
 		setNetProfitPerShareInYear(stock.mNetProfitPerShareInYear);
 		setRoi(stock.mRoi);
 		setRoe(stock.mRoe);
-		setPE(stock.mPE);
-		setPB(stock.mPB);
+		setPe(stock.mPe);
+		setPb(stock.mPb);
 		setRate(stock.mRate);
 		setDividend(stock.mDividend);
 		setYield(stock.mYield);
@@ -490,8 +490,8 @@ public class Stock extends DatabaseTable {
 		setRoi(cursor);
 		setRate(cursor);
 		setRoe(cursor);
-		setPE(cursor);
-		setPB(cursor);
+		setPe(cursor);
+		setPb(cursor);
 		setDividend(cursor);
 		setYield(cursor);
 		setDividendRatio(cursor);
@@ -1320,37 +1320,37 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_ROE)));
 	}
 
-	public double getPE() {
-		return mPE;
+	public double getPe() {
+		return mPe;
 	}
 
-	public void setPE(double pe) {
-		mPE = pe;
+	public void setPe(double pe) {
+		mPe = pe;
 	}
 
-	void setPE(Cursor cursor) {
+	void setPe(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}
 
-		setPE(cursor.getDouble(cursor
+		setPe(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_PE)));
 	}
 
-	public double getPB() {
-		return mPB;
+	public double getPb() {
+		return mPb;
 	}
 
-	public void setPB(double pb) {
-		mPB = pb;
+	public void setPb(double pb) {
+		mPb = pb;
 	}
 
-	void setPB(Cursor cursor) {
+	void setPb(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}
 
-		setPB(cursor.getDouble(cursor
+		setPb(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_PB)));
 	}
 
@@ -1915,12 +1915,12 @@ public class Stock extends DatabaseTable {
 				/ bookValuePerShare, Constants.DOUBLE_FIXED_DECIMAL);
 	}
 
-	public void setupPE() {
+	public void setupPe() {
 		if (mPrice == 0) {
 			return;
 		}
 
-		mPE = Utility.Round(100.0 * mNetProfitPerShareInYear / mPrice,
+		mPe = Utility.Round(100.0 * mNetProfitPerShareInYear / mPrice,
 				Constants.DOUBLE_FIXED_DECIMAL);
 	}
 
@@ -1933,22 +1933,22 @@ public class Stock extends DatabaseTable {
 			rate = 2;
 		}
 
-		// mRoi = Utility.Round(mRate * mRoe * mPE * Constants.ROI_COEFFICIENT,
+		// mRoi = Utility.Round(mRate * mRoe * mPe * Constants.ROI_COEFFICIENT,
 		// Constants.DOUBLE_FIXED_DECIMAL);
-		// mRoi = Utility.Round(mRoe * mPE * Constants.ROI_COEFFICIENT,
+		// mRoi = Utility.Round(mRoe * mPe * Constants.ROI_COEFFICIENT,
 		// Constants.DOUBLE_FIXED_DECIMAL);
-//		mRoi = Utility.Round(mRoe * (mPE + mYield) * Constants.ROI_COEFFICIENT,
+//		mRoi = Utility.Round(mRoe * (mPe + mYield) * Constants.ROI_COEFFICIENT,
 //				Constants.DOUBLE_FIXED_DECIMAL);
-		mRoi = Utility.Round(mRoe * (mPE + mYield) * mNetProfitMargin * rate * Constants.ROI_COEFFICIENT,
+		mRoi = Utility.Round(mRoe * (mPe + mYield) * mNetProfitMargin * rate * Constants.ROI_COEFFICIENT,
 				Constants.DOUBLE_FIXED_DECIMAL);
 	}
 
-	public void setupPB() {
+	public void setupPb() {
 		if (mBookValuePerShare == 0) {
 			return;
 		}
 
-		mPB = Utility.Round(mPrice / mBookValuePerShare,
+		mPb = Utility.Round(mPrice / mBookValuePerShare,
 				Constants.DOUBLE_FIXED_DECIMAL);
 	}
 

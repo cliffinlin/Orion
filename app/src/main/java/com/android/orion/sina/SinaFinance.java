@@ -1428,7 +1428,7 @@ public class SinaFinance extends StockDataProvider {
 					ipo.setDate(dateString);
 					ipo.setTimeToMarket(timeToMarketString);
 					ipo.setPrice(Double.valueOf(priceString));
-					ipo.setPE(Double.valueOf(peString));
+					ipo.setPe(Double.valueOf(peString));
 
 					if (bulkInsert) {
 						ipo.setCreated(Utility.getCurrentDateTimeString());

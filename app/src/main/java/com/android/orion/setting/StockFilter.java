@@ -18,8 +18,8 @@ public class StockFilter {
 	String mRoi = "";
 	String mRate = "";
 	String mRoe = "";
-	String mPE = "";
-	String mPB = "";
+	String mPe = "";
+	String mPb = "";
 	String mDividend = "";
 	String mYield = "";
 	String mDividendRatio = "";
@@ -52,12 +52,12 @@ public class StockFilter {
 		return mRoe;
 	}
 
-	public String getPE() {
-		return mPE;
+	public String getPe() {
+		return mPe;
 	}
 
-	public String getPB() {
-		return mPB;
+	public String getPb() {
+		return mPb;
 	}
 
 	public String getDividend() {
@@ -96,12 +96,12 @@ public class StockFilter {
 		mRoe = roe;
 	}
 
-	public void setPE(String pe) {
-		mPE = pe;
+	public void setPe(String pe) {
+		mPe = pe;
 	}
 
-	public void setPB(String pb) {
-		mPB = pb;
+	public void setPb(String pb) {
+		mPb = pb;
 	}
 
 	public void setDividend(String dividend) {
@@ -146,12 +146,12 @@ public class StockFilter {
 			mRoe = "";
 		}
 
-		if (!containOperation(mPE)) {
-			mPE = "";
+		if (!containOperation(mPe)) {
+			mPe = "";
 		}
 
-		if (!containOperation(mPB)) {
-			mPB = "";
+		if (!containOperation(mPb)) {
+			mPb = "";
 		}
 
 		if (!containOperation(mDividend)) {
@@ -182,8 +182,8 @@ public class StockFilter {
 				"");
 		mRoe = Preferences.getString(mContext, Settings.KEY_STOCK_FILTER_ROE,
 				"");
-		mPE = Preferences.getString(mContext, Settings.KEY_STOCK_FILTER_PE, "");
-		mPB = Preferences.getString(mContext, Settings.KEY_STOCK_FILTER_PB, "");
+		mPe = Preferences.getString(mContext, Settings.KEY_STOCK_FILTER_PE, "");
+		mPb = Preferences.getString(mContext, Settings.KEY_STOCK_FILTER_PB, "");
 		mDividend = Preferences.getString(mContext,
 				Settings.KEY_STOCK_FILTER_DIVIDEND, "");
 		mYield = Preferences.getString(mContext,
@@ -206,8 +206,8 @@ public class StockFilter {
 		Preferences.putString(mContext, Settings.KEY_STOCK_FILTER_ROI, mRoi);
 		Preferences.putString(mContext, Settings.KEY_STOCK_FILTER_RATE, mRate);
 		Preferences.putString(mContext, Settings.KEY_STOCK_FILTER_ROE, mRoe);
-		Preferences.putString(mContext, Settings.KEY_STOCK_FILTER_PE, mPE);
-		Preferences.putString(mContext, Settings.KEY_STOCK_FILTER_PB, mPB);
+		Preferences.putString(mContext, Settings.KEY_STOCK_FILTER_PE, mPe);
+		Preferences.putString(mContext, Settings.KEY_STOCK_FILTER_PB, mPb);
 		Preferences.putString(mContext, Settings.KEY_STOCK_FILTER_DIVIDEND,
 				mDividend);
 		Preferences
@@ -228,8 +228,8 @@ public class StockFilter {
 		mRoi = bundle.getString(Settings.KEY_STOCK_FILTER_ROI);
 		mRate = bundle.getString(Settings.KEY_STOCK_FILTER_RATE);
 		mRoe = bundle.getString(Settings.KEY_STOCK_FILTER_ROE);
-		mPE = bundle.getString(Settings.KEY_STOCK_FILTER_PE);
-		mPB = bundle.getString(Settings.KEY_STOCK_FILTER_PB);
+		mPe = bundle.getString(Settings.KEY_STOCK_FILTER_PE);
+		mPb = bundle.getString(Settings.KEY_STOCK_FILTER_PB);
 		mDividend = bundle.getString(Settings.KEY_STOCK_FILTER_DIVIDEND);
 		mYield = bundle.getString(Settings.KEY_STOCK_FILTER_YIELD);
 		mDividendRatio = bundle
@@ -248,8 +248,8 @@ public class StockFilter {
 		bundle.putString(Settings.KEY_STOCK_FILTER_ROI, mRoi);
 		bundle.putString(Settings.KEY_STOCK_FILTER_RATE, mRate);
 		bundle.putString(Settings.KEY_STOCK_FILTER_ROE, mRoe);
-		bundle.putString(Settings.KEY_STOCK_FILTER_PE, mPE);
-		bundle.putString(Settings.KEY_STOCK_FILTER_PB, mPB);
+		bundle.putString(Settings.KEY_STOCK_FILTER_PE, mPe);
+		bundle.putString(Settings.KEY_STOCK_FILTER_PB, mPb);
 		bundle.putString(Settings.KEY_STOCK_FILTER_DIVIDEND, mDividend);
 		bundle.putString(Settings.KEY_STOCK_FILTER_YIELD, mYield);
 		bundle.putString(Settings.KEY_STOCK_FILTER_DIVIDEND_RATIO,
@@ -283,12 +283,12 @@ public class StockFilter {
 				selection += " AND " + DatabaseContract.COLUMN_ROE + mRoe;
 			}
 
-			if (!TextUtils.isEmpty(mPE)) {
-				selection += " AND " + DatabaseContract.COLUMN_PE + mPE;
+			if (!TextUtils.isEmpty(mPe)) {
+				selection += " AND " + DatabaseContract.COLUMN_PE + mPe;
 			}
 
-			if (!TextUtils.isEmpty(mPB)) {
-				selection += " AND " + DatabaseContract.COLUMN_PB + mPB;
+			if (!TextUtils.isEmpty(mPb)) {
+				selection += " AND " + DatabaseContract.COLUMN_PB + mPb;
 			}
 
 			if (!TextUtils.isEmpty(mDividend)) {
