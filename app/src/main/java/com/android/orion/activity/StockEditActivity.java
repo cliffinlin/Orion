@@ -310,6 +310,7 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 		operate = mSpinnerStockAcion.getSelectedItem().toString();
 		if (!TextUtils.isEmpty(operate)) {
 			if (!operate.equals(mStock.getOperate())) {
+				mStock.setOperate(operate);
 			}
 		}
 	}

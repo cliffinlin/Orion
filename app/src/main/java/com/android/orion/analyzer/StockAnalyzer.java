@@ -630,6 +630,7 @@ public class StockAnalyzer {
 						  ArrayList<StockData> segmentVertexList, ArrayList<StockData> segmentDataList) {
         MarketKeyAnalyzer marketKeyAnalyzer = new MarketKeyAnalyzer();
 		StockVertexAnalyzer stockVertexAnalyzer = new StockVertexAnalyzer();
+		ProfileAnalyzer profileAnalyzer = new ProfileAnalyzer();
 		ArrayList<StockData> overlapList = new ArrayList<StockData>();
 
         marketKeyAnalyzer.analyzeMarketKey(stock, period, stockDataList);
@@ -691,6 +692,8 @@ public class StockAnalyzer {
 		stockVertexAnalyzer.analyzeDirection(stockDataList);
 
 		analyzeAction(stock, period, stockDataList, drawVertexList, overlapList, drawDataList, strokeDataList, segmentDataList);
+
+//		profileAnalyzer.analyzeProfite(stock, period, stockDataList);
 	}
 
 	private String getSecondBottomAction(Stock stock, ArrayList<StockData> vertexList,
@@ -1020,19 +1023,19 @@ public class StockAnalyzer {
 		}
 
 		if (!period.equals(Settings.KEY_PERIOD_MONTH) && !period.equals(Settings.KEY_PERIOD_WEEK)) {
-			if (stockData.getNaturalRally() != 0) {
+			if (stockData.getNaturalRally() > 0) {
 				action += StockData.ACTION_NATURAL_RALLY;
 			}
 
-			if (stockData.getUpwardTrend() != 0) {
+			if (stockData.getUpwardTrend() > 0) {
 				action += StockData.ACTION_UPWARD_TREND;
 			}
 
-			if (stockData.getDownwardTrend() != 0) {
+			if (stockData.getDownwardTrend() > 0) {
 				action += StockData.ACTION_DOWNWARD_TREND;
 			}
 
-			if (stockData.getNaturalReaction() != 0) {
+			if (stockData.getNaturalReaction() > 0) {
 				action += StockData.ACTION_NATURAL_REACTION;
 			}
 		}
