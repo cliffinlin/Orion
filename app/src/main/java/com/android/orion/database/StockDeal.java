@@ -30,16 +30,16 @@ public class StockDeal extends DatabaseTable {
 
     private String mSE;
     private String mCode;
-    private String mName;
+    protected String mName;
     private String mAccount;
-    private String mAction;
-    private double mPrice;
-    private double mNet;
-    private double mBuy;
-    private double mSell;
-    private long mVolume;
-    private double mValue;
-    private double mProfit;
+    protected String mAction;
+    protected double mPrice;
+    protected double mNet;
+    protected double mBuy;
+    protected double mSell;
+    protected long mVolume;
+    protected double mValue;
+    protected double mProfit;
     private double mFee;
     private double mBonus;
     private double mYield;

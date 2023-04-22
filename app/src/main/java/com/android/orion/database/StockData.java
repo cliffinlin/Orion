@@ -13,6 +13,8 @@ public class StockData extends StockDatabaseTable {
 
     public static final String ACTION_NONE = "";
 
+	public static final String ACTION_BUY = "B";
+	public static final String ACTION_SELL = "S";
 	public static final String ACTION_BUY1 = "B1";
 	public static final String ACTION_BUY2 = "B2";
     public static final String ACTION_SELL1 = "S1";

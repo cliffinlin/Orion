@@ -909,6 +909,339 @@ public class StockDatabaseManager extends DatabaseManager {
 		getStockDealList(stock, stockDealList, selection, sortOrder);
     }
 
+	public Uri insertStockQuant(StockQuant StockQuant) {
+		Uri uri = null;
+
+		if ((StockQuant == null) || (mContentResolver == null)) {
+			return uri;
+		}
+
+		uri = mContentResolver.insert(DatabaseContract.StockQuant.CONTENT_URI,
+				StockQuant.getContentValues());
+
+		return uri;
+	}
+
+	public int bulkInsertStockQuant(ContentValues[] contentValuesArray) {
+		int result = 0;
+
+		if ((contentValuesArray.length == 0) || (mContentResolver == null)) {
+			return result;
+		}
+
+		result = mContentResolver.bulkInsert(
+				DatabaseContract.StockQuant.CONTENT_URI, contentValuesArray);
+
+		return result;
+	}
+
+	public boolean isStockQuantExist(StockQuant StockQuant) {
+		boolean result = false;
+		Cursor cursor = null;
+
+		if (StockQuant == null) {
+			return result;
+		}
+
+		try {
+			cursor = queryStockQuant(StockQuant);
+
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				cursor.moveToNext();
+				StockQuant.setCreated(cursor);
+				result = true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+
+		return result;
+	}
+
+	public int updateStockQuantByID(StockQuant StockQuant) {
+		int result = 0;
+
+		if ((StockQuant == null) || (mContentResolver == null)) {
+			return result;
+		}
+
+		String where = DatabaseContract.COLUMN_ID + "=" + StockQuant.getId();
+
+		result = mContentResolver.update(
+				DatabaseContract.StockQuant.CONTENT_URI,
+				StockQuant.getContentValues(), where, null);
+
+		return result;
+	}
+
+	public int updateStockQuant(Stock stock) {
+		int result = 0;
+		long hold = 0;
+		double profit = 0;
+		double valuation = 0;
+
+		Cursor cursor = null;
+		StockQuant StockQuant = null;
+
+		if ((stock == null) || (mContentResolver == null)) {
+			return result;
+		}
+
+		StockQuant = new StockQuant();
+
+		String selection = DatabaseContract.COLUMN_SE + " = " + "\'"
+				+ stock.getSE() + "\'" + " AND " + DatabaseContract.COLUMN_CODE
+				+ " = " + "\'" + stock.getCode() + "\'";
+		String sortOrder = DatabaseContract.COLUMN_BUY + " ASC ";
+
+		try {
+			cursor = queryStockQuant(selection, null, sortOrder);
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				while (cursor.moveToNext()) {
+					StockQuant.set(cursor);
+
+					StockQuant.setPrice(stock.getPrice());
+					StockQuant.setupFee(stock.getRDate(), stock.getDividend());
+					StockQuant.setupNet();
+					StockQuant.setupValue();
+					StockQuant.setupProfit();
+					StockQuant.setupBonus(stock.getDividend());
+					StockQuant.setupYield(stock.getDividend());
+
+					if (StockQuant.getVolume() > 0) {
+						hold += StockQuant.getVolume();
+						profit += StockQuant.getProfit();
+						valuation += StockQuant.getValue();
+					}
+
+					result += updateStockQuantByID(StockQuant);
+				}
+			}
+
+			stock.setHold(hold);
+			stock.setProfit(profit);
+			if (hold > 0) {
+				stock.setCost(Utility.Round(valuation / hold, Constants.DOUBLE_FIXED_DECIMAL));
+			}
+			stock.setValuation(hold * stock.getPrice());
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+
+		return result;
+	}
+
+	public int deleteStockQuant() {
+		return delete(DatabaseContract.StockQuant.CONTENT_URI);
+	}
+
+	public void deleteStockQuant(StockQuant StockQuant) {
+		if ((StockQuant == null) || (mContentResolver == null)) {
+			return;
+		}
+
+		String where = DatabaseContract.COLUMN_ID + "=" + StockQuant.getId();
+
+		try {
+			mContentResolver.delete(DatabaseContract.StockQuant.CONTENT_URI,
+					where, null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public Cursor queryStockQuant(StockQuant StockQuant) {
+		Cursor cursor = null;
+
+		if (StockQuant == null) {
+			return cursor;
+		}
+
+		String selection = DatabaseContract.COLUMN_SE + " = " + "\'"
+				+ StockQuant.getSE() + "\'" + " AND "
+				+ DatabaseContract.COLUMN_CODE + " = " + "\'"
+				+ StockQuant.getCode() + "\'" + " AND "
+				+ DatabaseContract.COLUMN_BUY + " = " + StockQuant.getBuy()
+				+ " AND " + DatabaseContract.COLUMN_VOLUME + " = "
+				+ StockQuant.getVolume();
+
+		cursor = queryStockQuant(selection, null, null);
+
+		return cursor;
+	}
+
+	public Cursor queryStockQuant(String selection, String[] selectionArgs,
+								 String sortOrder) {
+		Cursor cursor = null;
+
+		if (mContentResolver == null) {
+			return cursor;
+		}
+
+		cursor = mContentResolver.query(DatabaseContract.StockQuant.CONTENT_URI,
+				DatabaseContract.StockQuant.PROJECTION_ALL, selection,
+				selectionArgs, sortOrder);
+
+		return cursor;
+	}
+
+	public Cursor queryStockQuantById(StockQuant StockQuant) {
+		Cursor cursor = null;
+
+		if (StockQuant == null) {
+			return cursor;
+		}
+
+		String selection = DatabaseContract.COLUMN_ID + "=" + StockQuant.getId();
+
+		cursor = queryStockQuant(selection, null, null);
+
+		return cursor;
+	}
+
+	public void getStockQuantById(StockQuant StockQuant) {
+		Cursor cursor = null;
+
+		if (StockQuant == null) {
+			return;
+		}
+
+		try {
+			cursor = queryStockQuantById(StockQuant);
+
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				cursor.moveToNext();
+				StockQuant.set(cursor);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
+	public void getStockQuantList(Stock stock,
+								 ArrayList<StockQuant> StockQuantList, String selection, String sortOrder) {
+		Cursor cursor = null;
+
+		if ((stock == null) || (StockQuantList == null)) {
+			return;
+		}
+
+		StockQuantList.clear();
+
+		try {
+			cursor = queryStockQuant(selection, null, sortOrder);
+
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				while (cursor.moveToNext()) {
+					StockQuant StockQuant = new StockQuant();
+					StockQuant.set(cursor);
+					StockQuantList.add(StockQuant);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
+	public void getStockQuantList(List<StockQuant> StockQuantList) {
+		Cursor cursor = null;
+
+		if (StockQuantList == null) {
+			return;
+		}
+
+		StockQuantList.clear();
+
+		try {
+			cursor = queryStockQuant(null, null, null);
+
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				while (cursor.moveToNext()) {
+					StockQuant StockQuant = new StockQuant();
+					StockQuant.set(cursor);
+					StockQuantList.add(StockQuant);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
+	public void getStockQuant(Stock stock, StockQuant StockQuant, String selection, String sortOrder) {
+		Cursor cursor = null;
+
+		if ((stock == null) || (StockQuant == null)) {
+			return;
+		}
+
+		try {
+			cursor = queryStockQuant(selection, null, sortOrder);
+
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				while (cursor.moveToNext()) {
+					StockQuant.set(cursor);
+					break;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
+	public void getStockQuantListToBuy(Stock stock, ArrayList<StockQuant> StockQuantList) {
+		String sortOrder = DatabaseContract.COLUMN_NET + DatabaseContract.ORDER_DIRECTION_ASC;
+
+		if ((stock == null) || (StockQuantList == null)) {
+			return;
+		}
+
+		String selection = DatabaseContract.COLUMN_SE + " = " + "\'" + stock.getSE()
+				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
+				+ stock.getCode() + "\'";
+
+		selection += " AND " + DatabaseContract.COLUMN_ACTION + " != ''";
+		selection += " AND " + DatabaseContract.COLUMN_VOLUME + " < " + 0 ;
+		selection += " AND " + DatabaseContract.COLUMN_BUY + " = " + 0;
+		selection += " AND " + DatabaseContract.COLUMN_SELL + " > " + 0;
+		selection += " AND " + DatabaseContract.COLUMN_PROFIT + " > " + DatabaseContract.COLUMN_BONUS;
+		selection += " AND " + DatabaseContract.COLUMN_NET + " > " + Math.max(Constants.STOCK_NATURAL_THRESHOLD, Constants.STOCK_NATURAL_THRESHOLD);
+
+		getStockQuantList(stock, StockQuantList, selection, sortOrder);
+	}
+
+	public void getStockQuantListToSell(Stock stock, ArrayList<StockQuant> StockQuantList) {
+		String sortOrder = DatabaseContract.COLUMN_NET + DatabaseContract.ORDER_DIRECTION_ASC;
+
+		if ((stock == null) || (StockQuantList == null)) {
+			return;
+		}
+
+		String selection = DatabaseContract.COLUMN_SE + " = " + "\'" + stock.getSE()
+				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
+				+ stock.getCode() + "\'";
+
+		selection += " AND " + DatabaseContract.COLUMN_ACTION + " != ''";
+		selection += " AND " + DatabaseContract.COLUMN_VOLUME + " > " + 0 ;
+		selection += " AND " + DatabaseContract.COLUMN_BUY + " > " + 0;
+		selection += " AND " + DatabaseContract.COLUMN_SELL + " = " + 0;
+		selection += " AND " + DatabaseContract.COLUMN_PROFIT + " > " + DatabaseContract.COLUMN_BONUS;
+		selection += " AND " + DatabaseContract.COLUMN_NET + " > " + Math.max(Constants.STOCK_NATURAL_THRESHOLD, Constants.STOCK_NATURAL_THRESHOLD);
+
+		getStockQuantList(stock, StockQuantList, selection, sortOrder);
+	}
+
 	public Uri insertStockFinancial(StockFinancial stockFinancial) {
 		Uri uri = null;
 

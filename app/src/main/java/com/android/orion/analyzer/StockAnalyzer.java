@@ -630,7 +630,7 @@ public class StockAnalyzer {
 						  ArrayList<StockData> segmentVertexList, ArrayList<StockData> segmentDataList) {
         MarketKeyAnalyzer marketKeyAnalyzer = new MarketKeyAnalyzer();
 		StockVertexAnalyzer stockVertexAnalyzer = new StockVertexAnalyzer();
-		ProfileAnalyzer profileAnalyzer = new ProfileAnalyzer();
+		StockQuantAnalyzer stockQuantAnalyzer = new StockQuantAnalyzer();
 		ArrayList<StockData> overlapList = new ArrayList<StockData>();
 
         marketKeyAnalyzer.analyzeMarketKey(stock, period, stockDataList);
@@ -693,7 +693,8 @@ public class StockAnalyzer {
 
 		analyzeAction(stock, period, stockDataList, drawVertexList, overlapList, drawDataList, strokeDataList, segmentDataList);
 
-//		profileAnalyzer.analyzeProfite(stock, period, stockDataList);
+//		stockQuantAnalyzer.setVolume(1000);
+//		stockQuantAnalyzer.analyze(mContext, stock, period, stockDataList);
 	}
 
 	private String getSecondBottomAction(Stock stock, ArrayList<StockData> vertexList,
