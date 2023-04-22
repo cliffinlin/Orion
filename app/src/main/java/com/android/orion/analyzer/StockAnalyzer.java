@@ -693,8 +693,7 @@ public class StockAnalyzer {
 
 		analyzeAction(stock, period, stockDataList, drawVertexList, overlapList, drawDataList, strokeDataList, segmentDataList);
 
-//		stockQuantAnalyzer.setVolume(1000);
-//		stockQuantAnalyzer.analyze(mContext, stock, period, stockDataList);
+		stockQuantAnalyzer.analyze(mContext, stock, period, stockDataList);
 	}
 
 	private String getSecondBottomAction(Stock stock, ArrayList<StockData> vertexList,

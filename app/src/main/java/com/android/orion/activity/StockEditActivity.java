@@ -40,6 +40,7 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 	EditText mEditTextStockName;
 	EditText mEditTextStockCode;
 	EditText mEditTextStockNaturalThreshold;
+	EditText mEditTextStockQuantVolume;
 	EditText mEditTextStockYield;
 
 	List<String> mListStockOperate;
@@ -79,6 +80,7 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 		mEditTextStockName = (EditText) findViewById(R.id.edittext_stock_name);
 		mEditTextStockCode = (EditText) findViewById(R.id.edittext_stock_code);
 		mEditTextStockNaturalThreshold = (EditText) findViewById(R.id.edittext_stock_natural_threshold);
+		mEditTextStockQuantVolume = (EditText) findViewById(R.id.edittext_stock_quant_volume);
 		mEditTextStockYield = (EditText) findViewById(R.id.edittext_stock_yield);
 		mSpinnerStockAcion = (Spinner) findViewById(R.id.spinner_stock_operate);
 		mButtonOk = (Button) findViewById(R.id.button_ok);
@@ -90,6 +92,7 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 		mEditTextStockName.setOnClickListener(this);
 		mEditTextStockCode.setOnClickListener(this);
 		mEditTextStockNaturalThreshold.setOnClickListener(this);
+		mEditTextStockQuantVolume.setOnClickListener(this);
 		mEditTextStockYield.setOnClickListener(this);
 		mEditTextStockYield.setEnabled(false);
 		mSpinnerStockAcion.setOnItemSelectedListener(this);
@@ -175,6 +178,10 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
             mStock.setNaturalThreshold(Constants.STOCK_NATURAL_THRESHOLD);
         }
 		mEditTextStockNaturalThreshold.setText(String.valueOf(mStock.getNaturalThreshold()));
+		if (mStock.getQuantVolume() == 0) {
+			mStock.setQuantVolume(Constants.STOCK_QUANT_VOLUME);
+		}
+		mEditTextStockQuantVolume.setText(String.valueOf(mStock.getQuantVolume()));
 		mEditTextStockYield.setText(String.valueOf(mStock.getYield()));
 
 		String operate = mStock.getOperate();
@@ -249,6 +256,10 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 			String naturalThreshold = mEditTextStockNaturalThreshold.getText().toString();
 			double naturalThresholdValue = TextUtils.isEmpty(naturalThreshold) ? 0 : Double.valueOf(naturalThreshold);
 			mStock.setNaturalThreshold(naturalThresholdValue);
+
+			String quantVolume = mEditTextStockQuantVolume.getText().toString();
+			long quantVolumeValue = TextUtils.isEmpty(quantVolume) ? 0 : Long.valueOf(quantVolume);
+			mStock.setQuantVolume(quantVolumeValue);
 
 			operate = mSpinnerStockAcion.getSelectedItem().toString();
 			mStock.setOperate(operate);

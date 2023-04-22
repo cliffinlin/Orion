@@ -202,6 +202,7 @@
     <string name="stock_statistics_chart">Statistics Chart</string>
     <string name="stock_cost">Stock Cost</string>
     <string name="stock_natural_threshold">Natural Threshold</string>
+    <string name="stock_quant_volume">Quant Volume</string>
     <string name="stock_hold">Stock Hold</string>
     <string name="stock_valuation">Stock Valuation</string>
     <string name="stock_bonus">Stock Bonus</string>

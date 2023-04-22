@@ -55,6 +55,7 @@ public class Stock extends DatabaseTable {
 	private String mTrend;
 
 	private double mNaturalThreshold;
+	private long mQuantVolume;
 
 	private String mOperate;
 	private long mHold;
@@ -220,6 +221,7 @@ public class Stock extends DatabaseTable {
 		mTrend = "";
 
 	    mNaturalThreshold = 0;
+		mQuantVolume = 0;
 
 		mCost = 0;
 		mProfit = 0;
@@ -355,6 +357,7 @@ public class Stock extends DatabaseTable {
 
 		contentValues.put(DatabaseContract.COLUMN_FLAG, mFlag);
 		contentValues.put(DatabaseContract.COLUMN_NATURAL_THRESHOLD, mNaturalThreshold);
+		contentValues.put(DatabaseContract.COLUMN_QUANT_VOLUME, mQuantVolume);
 		contentValues.put(DatabaseContract.COLUMN_OPERATE, mOperate);
 
 		return contentValues;
@@ -397,6 +400,7 @@ public class Stock extends DatabaseTable {
 		setTrend(stock.mTrend);
 
 		setNaturalThreshold(stock.mNaturalThreshold);
+		setQuantVolume(stock.mQuantVolume);
 
 		setOperate(stock.mOperate);
 		setHold(stock.mHold);
@@ -467,6 +471,7 @@ public class Stock extends DatabaseTable {
 		setActionYear(cursor);
 		setTrend(cursor);
 		setNaturalThreshold(cursor);
+		setQuantVolume(cursor);
 		setOperate(cursor);
 		setHold(cursor);
 		setCost(cursor);
@@ -924,6 +929,23 @@ public class Stock extends DatabaseTable {
 
 		setNaturalThreshold(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_NATURAL_THRESHOLD)));
+	}
+
+	public long getQuantVolume() {
+		return mQuantVolume;
+	}
+
+	public void setQuantVolume(long quantVolume) {
+		mQuantVolume = quantVolume;
+	}
+
+	void setQuantVolume(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setQuantVolume(cursor.getLong(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_QUANT_VOLUME)));
 	}
 
 	public String getOperate() {

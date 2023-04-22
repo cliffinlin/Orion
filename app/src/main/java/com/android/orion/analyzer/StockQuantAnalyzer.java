@@ -41,12 +41,6 @@ public class StockQuantAnalyzer {
         }
     }
 
-    public void setVolume(long volume) {
-        mVolume = volume;
-    }
-
-
-
     void setupStockQuantBuy(Stock stock, StockData stockData, double buyPrice, StockQuant stockQuant) {
         stockQuant.setSE(stock.getSE());
         stockQuant.setCode(stock.getCode());
@@ -120,15 +114,20 @@ public class StockQuantAnalyzer {
         StockDatabaseManager.getInstance(mContext).insertStockQuant(stockQuant);
     }
 
-    public void analyze(Context contex, Stock stock, String period,
+    public void analyze(Context context, Stock stock, String period,
                         ArrayList<StockData> stockDataList) {
-        if (contex == null) {
+        if (context == null) {
             return;
         }
 
-        mContext = contex;
+        mContext = context;
 
         if (stock == null) {
+            return;
+        }
+
+        mVolume = stock.getQuantVolume();
+        if (mVolume == 0) {
             return;
         }
 
@@ -140,9 +139,6 @@ public class StockQuantAnalyzer {
             return;
         }
 
-        if (mVolume == 0) {
-            return;
-        }
 
         StockDatabaseManager.getInstance(mContext).deleteStockQuant();
 
