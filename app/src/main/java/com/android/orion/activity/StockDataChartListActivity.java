@@ -247,6 +247,10 @@ public class StockDataChartListActivity extends BaseActivity implements
 			startActivity(mIntent);
 			return true;
 
+		case R.id.action_quant:
+			startActivity(new Intent(this, StockQuantListActivity.class));
+			return true;
+
 		default:
 			return super.onOptionsItemSelected(item);
 		}

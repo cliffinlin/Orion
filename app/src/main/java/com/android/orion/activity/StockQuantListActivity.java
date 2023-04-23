@@ -29,7 +29,7 @@ import android.widget.TextView;
 import com.android.orion.R;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
-import com.android.orion.database.StockDeal;
+import com.android.orion.database.StockQuant;
 import com.android.orion.setting.Constants;
 import com.android.orion.setting.Settings;
 import com.android.orion.utility.Preferences;
@@ -45,7 +45,7 @@ public class StockQuantListActivity extends ListActivity implements
     static final String TAG = Constants.TAG + " "
             + StockQuantListActivity.class.getSimpleName();
 
-    static final int LOADER_ID_DEAL_LIST = 0;
+    static final int LOADER_ID_QUANT_LIST = 0;
 
     static final int FILTER_TYPE_NONE = 0;
     static final int FILTER_TYPE_OPERATE = 1;
@@ -53,15 +53,10 @@ public class StockQuantListActivity extends ListActivity implements
     static final int FILTER_TYPE_SELL = 3;
     static final int FILTER_TYPE_ALL = 4;
 
-    static final int MESSAGE_DELETE_DEAL = 0;
-    static final int MESSAGE_DELETE_DEAL_LIST = 1;
-
     static final int MESSAGE_VIEW_STOCK_DEAL = 4;
     static final int MESSAGE_VIEW_STOCK_CHAT = 5;
     static final int MESSAGE_VIEW_STOCK_TREND = 6;
 
-    static final int REQUEST_CODE_DEAL_INSERT = 0;
-    static final int REQUEST_CODE_DEAL_EDIT = 1;
 
     static final int mHeaderTextDefaultColor = Color.BLACK;
     static final int mHeaderTextHighlightColor = Color.RED;
@@ -99,8 +94,7 @@ public class StockQuantListActivity extends ListActivity implements
 
     ActionMode mCurrentActionMode = null;
 
-    StockDeal mDeal = new StockDeal();
-    List<StockDeal> mDealList = new ArrayList<StockDeal>();
+    StockQuant mStockQuant = new StockQuant();
 
     Stock mStock = new Stock();
 
@@ -115,18 +109,6 @@ public class StockQuantListActivity extends ListActivity implements
             Intent intent = null;
 
             switch (msg.what) {
-                case MESSAGE_DELETE_DEAL:
-                    getStock();
-                    RecordFile.writeDealFile(mStock, mDeal, Constants.DEAL_OPERATE_DELETE);
-                    mStockDatabaseManager.deleteStockDeal(mDeal);
-                    mStockDatabaseManager.updateStockDeal(mStock);
-                    mStockDatabaseManager.updateStock(mStock,
-                            mStock.getContentValues());
-                    break;
-
-                case MESSAGE_DELETE_DEAL_LIST:
-                    break;
-
                 case MESSAGE_VIEW_STOCK_DEAL:
                     getStock();
 
@@ -197,33 +179,33 @@ public class StockQuantListActivity extends ListActivity implements
         public boolean onActionItemClicked(final ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.menu_edit:
-                    mIntent = new Intent(mContext, StockDealActivity.class);
-                    mIntent.setAction(StockDealActivity.ACTION_DEAL_EDIT);
-                    mIntent.putExtra(StockDealActivity.EXTRA_DEAL_ID,
-                            mDeal.getId());
-                    startActivityForResult(mIntent, REQUEST_CODE_DEAL_EDIT);
-                    mode.finish();
+//                    mIntent = new Intent(mContext, StockDealActivity.class);
+//                    mIntent.setAction(StockDealActivity.ACTION_DEAL_EDIT);
+//                    mIntent.putExtra(StockDealActivity.EXTRA_DEAL_ID,
+//                            mDeal.getId());
+//                    startActivityForResult(mIntent, REQUEST_CODE_DEAL_EDIT);
+//                    mode.finish();
                     return true;
                 case R.id.menu_delete:
-                    new AlertDialog.Builder(mContext)
-                            .setTitle(R.string.delete)
-                            .setMessage(R.string.delete_confirm)
-                            .setPositiveButton(R.string.ok,
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog,
-                                                            int which) {
-                                            mHandler.sendEmptyMessage(MESSAGE_DELETE_DEAL);
-                                            mode.finish();
-                                        }
-                                    })
-                            .setNegativeButton(R.string.cancel,
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog,
-                                                            int which) {
-                                            mode.finish();
-                                        }
-                                    }).setIcon(android.R.drawable.ic_dialog_alert)
-                            .show();
+//                    new AlertDialog.Builder(mContext)
+//                            .setTitle(R.string.delete)
+//                            .setMessage(R.string.delete_confirm)
+//                            .setPositiveButton(R.string.ok,
+//                                    new DialogInterface.OnClickListener() {
+//                                        public void onClick(DialogInterface dialog,
+//                                                            int which) {
+//                                            mHandler.sendEmptyMessage(MESSAGE_DELETE_DEAL);
+//                                            mode.finish();
+//                                        }
+//                                    })
+//                            .setNegativeButton(R.string.cancel,
+//                                    new DialogInterface.OnClickListener() {
+//                                        public void onClick(DialogInterface dialog,
+//                                                            int which) {
+//                                            mode.finish();
+//                                        }
+//                                    }).setIcon(android.R.drawable.ic_dialog_alert)
+//                            .show();
                     return true;
                 default:
                     return false;
@@ -241,7 +223,7 @@ public class StockQuantListActivity extends ListActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stock_deal_list);
 
-        mFilterType = FILTER_TYPE_SELL;
+        mFilterType = FILTER_TYPE_ALL;
 
         mSortOrder = Preferences.getString(mContext, Settings.KEY_SORT_ORDER_DEAL_LIST,
                 mSortOrderDefault);
@@ -250,10 +232,10 @@ public class StockQuantListActivity extends ListActivity implements
 
         initListView();
 
-        mLoaderManager.initLoader(LOADER_ID_DEAL_LIST, null, this);
+        mLoaderManager.initLoader(LOADER_ID_QUANT_LIST, null, this);
 
         getContentResolver().registerContentObserver(
-                DatabaseContract.StockDeal.CONTENT_URI, true, mContentObserver);
+                DatabaseContract.StockQuant.CONTENT_URI, true, mContentObserver);
     }
 
     @Override
@@ -271,41 +253,41 @@ public class StockQuantListActivity extends ListActivity implements
                 return true;
 
             case R.id.action_new:
-                mIntent = new Intent(this, StockDealActivity.class);
-                mIntent.setAction(StockDealActivity.ACTION_DEAL_INSERT);
-                if (mBundle != null) {
-                    mIntent.putExtras(mBundle);
-                }
-                startActivityForResult(mIntent, REQUEST_CODE_DEAL_INSERT);
+//                mIntent = new Intent(this, StockDealActivity.class);
+//                mIntent.setAction(StockDealActivity.ACTION_DEAL_INSERT);
+//                if (mBundle != null) {
+//                    mIntent.putExtras(mBundle);
+//                }
+//                startActivityForResult(mIntent, REQUEST_CODE_DEAL_INSERT);
                 return true;
 
             case R.id.action_none:
-                mFilterType = FILTER_TYPE_NONE;
-                restartLoader();
+//                mFilterType = FILTER_TYPE_NONE;
+//                restartLoader();
                 return true;
 
             case R.id.action_operate:
-                mFilterType = FILTER_TYPE_OPERATE;
-                restartLoader();
+//                mFilterType = FILTER_TYPE_OPERATE;
+//                restartLoader();
                 return true;
 
             case R.id.action_buy:
-                mFilterType = FILTER_TYPE_BUY;
-                restartLoader();
+//                mFilterType = FILTER_TYPE_BUY;
+//                restartLoader();
                 return true;
 
             case R.id.action_sell:
-                mFilterType = FILTER_TYPE_SELL;
-                restartLoader();
+//                mFilterType = FILTER_TYPE_SELL;
+//                restartLoader();
                 return true;
 
             case R.id.action_all:
-                mFilterType = FILTER_TYPE_ALL;
-                restartLoader();
+//                mFilterType = FILTER_TYPE_ALL;
+//                restartLoader();
                 return true;
 
             case R.id.action_trend:
-                mHandler.sendEmptyMessage(MESSAGE_VIEW_STOCK_TREND);
+//                mHandler.sendEmptyMessage(MESSAGE_VIEW_STOCK_TREND);
                 return true;
 
             default:
@@ -328,24 +310,25 @@ public class StockQuantListActivity extends ListActivity implements
 
     void onPostExecuteLoad(Long result) {
         super.onPostExecuteLoad(result);
+
         mOrionService.download();
     }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case REQUEST_CODE_DEAL_INSERT:
-                case REQUEST_CODE_DEAL_EDIT:
-                    break;
-
-                default:
-                    break;
-            }
-        }
-    }
+//
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        if (resultCode == RESULT_OK) {
+//            switch (requestCode) {
+//                case REQUEST_CODE_DEAL_INSERT:
+//                case REQUEST_CODE_DEAL_EDIT:
+//                    break;
+//
+//                default:
+//                    break;
+//            }
+//        }
+//    }
 
     @Override
     public void onClick(View view) {
@@ -603,7 +586,7 @@ public class StockQuantListActivity extends ListActivity implements
     }
 
     void restartLoader() {
-        mLoaderManager.restartLoader(LOADER_ID_DEAL_LIST, null, this);
+        mLoaderManager.restartLoader(LOADER_ID_QUANT_LIST, null, this);
     }
 
     @Override
@@ -664,12 +647,12 @@ public class StockQuantListActivity extends ListActivity implements
         CursorLoader loader = null;
 
         switch (id) {
-            case LOADER_ID_DEAL_LIST:
+            case LOADER_ID_QUANT_LIST:
                 setupSelection();
 
                 loader = new CursorLoader(this,
-                        DatabaseContract.StockDeal.CONTENT_URI,
-                        DatabaseContract.StockDeal.PROJECTION_ALL, mSelection,
+                        DatabaseContract.StockQuant.CONTENT_URI,
+                        DatabaseContract.StockQuant.PROJECTION_ALL, mSelection,
                         null, mSortOrder);
                 break;
 
@@ -687,7 +670,7 @@ public class StockQuantListActivity extends ListActivity implements
         }
 
         switch (loader.getId()) {
-            case LOADER_ID_DEAL_LIST:
+            case LOADER_ID_QUANT_LIST:
                 setStockList(cursor);
 
                 mLeftAdapter.swapCursor(cursor);
@@ -709,7 +692,7 @@ public class StockQuantListActivity extends ListActivity implements
     }
 
     void setStockList(Cursor cursor) {
-        StockDeal stockDeal = new StockDeal();
+        StockQuant stockDeal = new StockQuant();
 
         try {
             if ((cursor != null) && (cursor.getCount() > 0)) {
@@ -734,12 +717,12 @@ public class StockQuantListActivity extends ListActivity implements
                             long id) {
 
         if (parent.getId() == R.id.left_listview) {
-            mDeal.setId(id);
-            mHandler.sendEmptyMessage(MESSAGE_VIEW_STOCK_DEAL);
+//            mDeal.setId(id);
+//            mHandler.sendEmptyMessage(MESSAGE_VIEW_STOCK_DEAL);
         } else {
             if (mCurrentActionMode == null) {
-                mDeal.setId(id);
-                mHandler.sendEmptyMessage(MESSAGE_VIEW_STOCK_CHAT);
+//                mDeal.setId(id);
+//                mHandler.sendEmptyMessage(MESSAGE_VIEW_STOCK_CHAT);
             }
         }
     }
@@ -752,9 +735,9 @@ public class StockQuantListActivity extends ListActivity implements
             return false;
         }
 
-        mDeal.setId(id);
-        mCurrentActionMode = startActionMode(mModeCallBack);
-        view.setSelected(true);
+//        mDeal.setId(id);
+//        mCurrentActionMode = startActionMode(mModeCallBack);
+//        view.setSelected(true);
         return true;
     }
 
@@ -773,12 +756,12 @@ public class StockQuantListActivity extends ListActivity implements
     }
 
     void getStock() {
-        mStockDatabaseManager.getStockDealById(mDeal);
-
-        mStock.setSE(mDeal.getSE());
-        mStock.setCode(mDeal.getCode());
-
-        mStockDatabaseManager.getStock(mStock);
+//        mStockDatabaseManager.getStockDealById(mDeal);
+//
+//        mStock.setSE(mDeal.getSE());
+//        mStock.setCode(mDeal.getCode());
+//
+//        mStockDatabaseManager.getStock(mStock);
     }
 
     private class CustomViewBinder implements SimpleCursorAdapter.ViewBinder {
