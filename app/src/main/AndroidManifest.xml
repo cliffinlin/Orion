@@ -139,6 +139,11 @@
             android:label="@string/filter"
             android:launchMode="singleTop" >
         </activity>
+        <activity
+            android:name="com.android.orion.activity.StockQuantListActivity"
+            android:label="@string/filter"
+            android:launchMode="singleTop" >
+        </activity>
 
         <provider
             android:name="com.android.orion.provider.OrionContentProvider"
