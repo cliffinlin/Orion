@@ -144,6 +144,7 @@
     <string name="period_year">Year</string>
     <string name="position">Position</string>
     <string name="prev">prev</string>
+    <string name="id">ID</string>
     <string name="price">Price</string>
     <string name="price_change">Change</string>
     <string name="profit">Profit</string>

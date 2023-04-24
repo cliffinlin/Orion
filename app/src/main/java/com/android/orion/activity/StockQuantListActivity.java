@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.provider.BaseColumns;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -76,6 +77,7 @@ public class StockQuantListActivity extends ListActivity implements
     SyncHorizontalScrollView mContentSHSV = null;
 
     TextView mTextViewStockNameCode = null;
+    TextView mTextViewId = null;
     TextView mTextViewPrice = null;
     TextView mTextViewNet = null;
     TextView mTextViewBuy = null;
@@ -355,6 +357,9 @@ public class StockQuantListActivity extends ListActivity implements
             case R.id.action:
                 mSortOrderColumn = DatabaseContract.COLUMN_ACTION;
                 break;
+            case R.id.id:
+                mSortOrderColumn = BaseColumns._ID;
+                break;
             case R.id.price:
                 mSortOrderColumn = DatabaseContract.COLUMN_PRICE;
                 break;
@@ -416,6 +421,7 @@ public class StockQuantListActivity extends ListActivity implements
 
     void resetHeaderTextColor() {
         setHeaderTextColor(mTextViewStockNameCode, mHeaderTextDefaultColor);
+        setHeaderTextColor(mTextViewId, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewPrice, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewNet, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewBuy, mHeaderTextDefaultColor);
@@ -457,6 +463,9 @@ public class StockQuantListActivity extends ListActivity implements
 
         mTextViewStockNameCode = (TextView) findViewById(R.id.stock_name_code);
         mTextViewStockNameCode.setOnClickListener(this);
+
+        mTextViewId = (TextView) findViewById(R.id.id);
+        mTextViewId.setOnClickListener(this);
 
         mTextViewPrice = (TextView) findViewById(R.id.price);
         mTextViewPrice.setOnClickListener(this);
@@ -515,6 +524,8 @@ public class StockQuantListActivity extends ListActivity implements
         if (mSortOrder.contains(DatabaseContract.COLUMN_CODE)) {
             setHeaderTextColor(mTextViewStockNameCode,
                     mHeaderTextHighlightColor);
+        } else if (mSortOrder.contains(BaseColumns._ID)) {
+            setHeaderTextColor(mTextViewId, mHeaderTextHighlightColor);
         } else if (mSortOrder.contains(DatabaseContract.COLUMN_PRICE)) {
             setHeaderTextColor(mTextViewPrice, mHeaderTextHighlightColor);
         } else if (mSortOrder.contains(DatabaseContract.COLUMN_NET)) {
@@ -561,6 +572,7 @@ public class StockQuantListActivity extends ListActivity implements
         int[] mLeftTo = new int[]{R.id.name, R.id.code};
 
         String[] mRightFrom = new String[]{
+                BaseColumns._ID,
                 DatabaseContract.COLUMN_PRICE,
                 DatabaseContract.COLUMN_NET,
                 DatabaseContract.COLUMN_BUY,
@@ -580,6 +592,7 @@ public class StockQuantListActivity extends ListActivity implements
                 DatabaseContract.COLUMN_CREATED,
                 DatabaseContract.COLUMN_MODIFIED};
         int[] mRightTo = new int[]{
+                R.id.id,
                 R.id.price,
                 R.id.net,
                 R.id.buy,
