@@ -53,10 +53,15 @@ public class StockQuantListActivity extends ListActivity implements
     static final int FILTER_TYPE_SELL = 3;
     static final int FILTER_TYPE_ALL = 4;
 
+    static final int MESSAGE_DELETE_DEAL = 0;
+    static final int MESSAGE_DELETE_DEAL_LIST = 1;
+
     static final int MESSAGE_VIEW_STOCK_DEAL = 4;
     static final int MESSAGE_VIEW_STOCK_CHAT = 5;
     static final int MESSAGE_VIEW_STOCK_TREND = 6;
 
+    static final int REQUEST_CODE_DEAL_INSERT = 0;
+    static final int REQUEST_CODE_DEAL_EDIT = 1;
 
     static final int mHeaderTextDefaultColor = Color.BLACK;
     static final int mHeaderTextHighlightColor = Color.RED;
@@ -83,6 +88,10 @@ public class StockQuantListActivity extends ListActivity implements
     TextView mTextViewProfit = null;
     TextView mTextViewAccount = null;
     TextView mTextViewAction = null;
+    TextView mTextViewHold = null;
+    TextView mTextViewValuation = null;
+    TextView mTextViewNetProfit = null;
+    TextView mTextViewNetProfitMargin = null;
     TextView mTextViewCreated = null;
     TextView mTextViewModified = null;
 
@@ -166,7 +175,7 @@ public class StockQuantListActivity extends ListActivity implements
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             mode.setTitle("Actions");
-            mode.getMenuInflater().inflate(R.menu.stock_deal_list_action, menu);
+            mode.getMenuInflater().inflate(R.menu.stock_quant_list_action, menu);
             return true;
         }
 
@@ -221,7 +230,7 @@ public class StockQuantListActivity extends ListActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_stock_deal_list);
+        setContentView(R.layout.activity_stock_quant_list);
 
         mFilterType = FILTER_TYPE_ALL;
 
@@ -240,7 +249,7 @@ public class StockQuantListActivity extends ListActivity implements
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.stock_deal_list, menu);
+        getMenuInflater().inflate(R.menu.stock_quant_list, menu);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         return true;
     }
@@ -310,7 +319,6 @@ public class StockQuantListActivity extends ListActivity implements
 
     void onPostExecuteLoad(Long result) {
         super.onPostExecuteLoad(result);
-
         mOrionService.download();
     }
 //
@@ -420,6 +428,10 @@ public class StockQuantListActivity extends ListActivity implements
         setHeaderTextColor(mTextViewProfit, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewAccount, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewAction, mHeaderTextDefaultColor);
+        setHeaderTextColor(mTextViewHold, mHeaderTextDefaultColor);
+        setHeaderTextColor(mTextViewValuation, mHeaderTextDefaultColor);
+        setHeaderTextColor(mTextViewNetProfit, mHeaderTextDefaultColor);
+        setHeaderTextColor(mTextViewNetProfitMargin, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewCreated, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewModified, mHeaderTextDefaultColor);
     }
@@ -482,6 +494,18 @@ public class StockQuantListActivity extends ListActivity implements
         mTextViewAction = (TextView) findViewById(R.id.action);
         mTextViewAction.setOnClickListener(this);
 
+        mTextViewHold = (TextView) findViewById(R.id.hold);
+        mTextViewHold.setOnClickListener(this);
+
+        mTextViewValuation = (TextView) findViewById(R.id.valuation);
+        mTextViewValuation.setOnClickListener(this);
+
+        mTextViewNetProfit = (TextView) findViewById(R.id.net_profit);
+        mTextViewNetProfit.setOnClickListener(this);
+
+        mTextViewNetProfitMargin = (TextView) findViewById(R.id.net_profit_margin);
+        mTextViewNetProfitMargin.setOnClickListener(this);
+
         mTextViewCreated = (TextView) findViewById(R.id.created);
         mTextViewCreated.setOnClickListener(this);
 
@@ -515,6 +539,14 @@ public class StockQuantListActivity extends ListActivity implements
             setHeaderTextColor(mTextViewAccount, mHeaderTextHighlightColor);
         } else if (mSortOrder.contains(DatabaseContract.COLUMN_ACTION)) {
             setHeaderTextColor(mTextViewAction, mHeaderTextHighlightColor);
+        } else if (mSortOrder.contains(DatabaseContract.COLUMN_HOLD)) {
+            setHeaderTextColor(mTextViewHold, mHeaderTextHighlightColor);
+        } else if (mSortOrder.contains(DatabaseContract.COLUMN_VALUATION)) {
+            setHeaderTextColor(mTextViewValuation, mHeaderTextHighlightColor);
+        } else if (mSortOrder.contains(DatabaseContract.COLUMN_NET_PROFIT)) {
+            setHeaderTextColor(mTextViewNetProfit, mHeaderTextHighlightColor);
+        } else if (mSortOrder.contains(DatabaseContract.COLUMN_NET_PROFIT_MARGIN)) {
+            setHeaderTextColor(mTextViewNetProfitMargin, mHeaderTextHighlightColor);
         } else if (mSortOrder.contains(DatabaseContract.COLUMN_CREATED)) {
             setHeaderTextColor(mTextViewCreated, mHeaderTextHighlightColor);
         } else if (mSortOrder.contains(DatabaseContract.COLUMN_MODIFIED)) {
@@ -541,6 +573,10 @@ public class StockQuantListActivity extends ListActivity implements
                 DatabaseContract.COLUMN_PROFIT,
                 DatabaseContract.COLUMN_ACCOUNT,
                 DatabaseContract.COLUMN_ACTION,
+                DatabaseContract.COLUMN_HOLD,
+                DatabaseContract.COLUMN_VALUATION,
+                DatabaseContract.COLUMN_NET_PROFIT,
+                DatabaseContract.COLUMN_NET_PROFIT_MARGIN,
                 DatabaseContract.COLUMN_CREATED,
                 DatabaseContract.COLUMN_MODIFIED};
         int[] mRightTo = new int[]{
@@ -556,6 +592,10 @@ public class StockQuantListActivity extends ListActivity implements
                 R.id.profit,
                 R.id.account,
                 R.id.action,
+                R.id.hold,
+                R.id.valuation,
+                R.id.net_profit,
+                R.id.net_profit_margin,
                 R.id.created,
                 R.id.modified};
 
@@ -571,7 +611,7 @@ public class StockQuantListActivity extends ListActivity implements
 
         mRightListView = (ListView) findViewById(R.id.right_listview);
         mRightAdapter = new SimpleCursorAdapter(this,
-                R.layout.activity_stock_deal_list_right_item, null, mRightFrom,
+                R.layout.activity_stock_quant_list_right_item, null, mRightFrom,
                 mRightTo, 0);
         if ((mRightListView != null) && (mRightAdapter != null)) {
             mRightAdapter.setViewBinder(new CustomViewBinder());
@@ -717,12 +757,12 @@ public class StockQuantListActivity extends ListActivity implements
                             long id) {
 
         if (parent.getId() == R.id.left_listview) {
-//            mDeal.setId(id);
-//            mHandler.sendEmptyMessage(MESSAGE_VIEW_STOCK_DEAL);
+            mStockQuant.setId(id);
+            mHandler.sendEmptyMessage(MESSAGE_VIEW_STOCK_DEAL);
         } else {
             if (mCurrentActionMode == null) {
-//                mDeal.setId(id);
-//                mHandler.sendEmptyMessage(MESSAGE_VIEW_STOCK_CHAT);
+                mStockQuant.setId(id);
+                mHandler.sendEmptyMessage(MESSAGE_VIEW_STOCK_CHAT);
             }
         }
     }
@@ -756,12 +796,12 @@ public class StockQuantListActivity extends ListActivity implements
     }
 
     void getStock() {
-//        mStockDatabaseManager.getStockDealById(mDeal);
-//
-//        mStock.setSE(mDeal.getSE());
-//        mStock.setCode(mDeal.getCode());
-//
-//        mStockDatabaseManager.getStock(mStock);
+        mStockDatabaseManager.getStockQuantById(mStockQuant);
+
+        mStock.setSE(mStockQuant.getSE());
+        mStock.setCode(mStockQuant.getCode());
+
+        mStockDatabaseManager.getStock(mStock);
     }
 
     private class CustomViewBinder implements SimpleCursorAdapter.ViewBinder {
