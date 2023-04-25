@@ -231,7 +231,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 			startActivity(mIntent);
 			return true;
 
-		case R.id.action_deal:
+		case R.id.action_deal: {
 			Bundle bundle = new Bundle();
 			bundle.putString(Constants.EXTRA_STOCK_SE, mStock.getSE());
 			bundle.putString(Constants.EXTRA_STOCK_CODE, mStock.getCode());
@@ -239,6 +239,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 			intent.putExtras(bundle);
 			startActivity(intent);
 			return true;
+		}
 
 		case R.id.action_trend:
 			mIntent = new Intent(this, StockTrendListActivity.class);
@@ -247,9 +248,15 @@ public class StockDataChartListActivity extends BaseActivity implements
 			startActivity(mIntent);
 			return true;
 
-		case R.id.action_quant:
-			startActivity(new Intent(this, StockQuantListActivity.class));
+		case R.id.action_quant: {
+			Bundle bundle = new Bundle();
+			bundle.putString(Constants.EXTRA_STOCK_SE, mStock.getSE());
+			bundle.putString(Constants.EXTRA_STOCK_CODE, mStock.getCode());
+			Intent intent = new Intent(this, StockQuantListActivity.class);
+			intent.putExtras(bundle);
+			startActivity(intent);
 			return true;
+		}
 
 		default:
 			return super.onOptionsItemSelected(item);

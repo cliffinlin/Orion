@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.provider.BaseColumns;
+import android.text.TextUtils;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -84,11 +85,8 @@ public class StockQuantListActivity extends ListActivity implements
     TextView mTextViewSell = null;
     TextView mTextViewVolume = null;
     TextView mTextViewValue = null;
-    TextView mTextViewBonus = null;
-    TextView mTextViewYield = null;
     TextView mTextViewFee = null;
     TextView mTextViewProfit = null;
-    TextView mTextViewAccount = null;
     TextView mTextViewAction = null;
     TextView mTextViewHold = null;
     TextView mTextViewValuation = null;
@@ -236,7 +234,7 @@ public class StockQuantListActivity extends ListActivity implements
 
         mFilterType = FILTER_TYPE_ALL;
 
-        mSortOrder = Preferences.getString(mContext, Settings.KEY_SORT_ORDER_DEAL_LIST,
+        mSortOrder = Preferences.getString(mContext, Settings.KEY_SORT_ORDER_QUANT_LIST,
                 mSortOrderDefault);
 
         initHeader();
@@ -273,32 +271,32 @@ public class StockQuantListActivity extends ListActivity implements
                 return true;
 
             case R.id.action_none:
-//                mFilterType = FILTER_TYPE_NONE;
-//                restartLoader();
+                mFilterType = FILTER_TYPE_NONE;
+                restartLoader();
                 return true;
 
             case R.id.action_operate:
-//                mFilterType = FILTER_TYPE_OPERATE;
-//                restartLoader();
+                mFilterType = FILTER_TYPE_OPERATE;
+                restartLoader();
                 return true;
 
             case R.id.action_buy:
-//                mFilterType = FILTER_TYPE_BUY;
-//                restartLoader();
+                mFilterType = FILTER_TYPE_BUY;
+                restartLoader();
                 return true;
 
             case R.id.action_sell:
-//                mFilterType = FILTER_TYPE_SELL;
-//                restartLoader();
+                mFilterType = FILTER_TYPE_SELL;
+                restartLoader();
                 return true;
 
             case R.id.action_all:
-//                mFilterType = FILTER_TYPE_ALL;
-//                restartLoader();
+                mFilterType = FILTER_TYPE_ALL;
+                restartLoader();
                 return true;
 
             case R.id.action_trend:
-//                mHandler.sendEmptyMessage(MESSAGE_VIEW_STOCK_TREND);
+                mHandler.sendEmptyMessage(MESSAGE_VIEW_STOCK_TREND);
                 return true;
 
             default:
@@ -403,7 +401,7 @@ public class StockQuantListActivity extends ListActivity implements
 
         mSortOrder = mSortOrderColumn + mSortOrderDirection;
 
-        Preferences.putString(mContext, Settings.KEY_SORT_ORDER_DEAL_LIST, mSortOrder);
+        Preferences.putString(mContext, Settings.KEY_SORT_ORDER_QUANT_LIST, mSortOrder);
 
         restartLoader();
     }
@@ -428,11 +426,8 @@ public class StockQuantListActivity extends ListActivity implements
         setHeaderTextColor(mTextViewSell, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewVolume, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewValue, mHeaderTextDefaultColor);
-        setHeaderTextColor(mTextViewBonus, mHeaderTextDefaultColor);
-        setHeaderTextColor(mTextViewYield, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewFee, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewProfit, mHeaderTextDefaultColor);
-        setHeaderTextColor(mTextViewAccount, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewAction, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewHold, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewValuation, mHeaderTextDefaultColor);
@@ -485,20 +480,11 @@ public class StockQuantListActivity extends ListActivity implements
         mTextViewValue = (TextView) findViewById(R.id.value);
         mTextViewValue.setOnClickListener(this);
 
-        mTextViewBonus = (TextView) findViewById(R.id.bonus);
-        mTextViewBonus.setOnClickListener(this);
-
-        mTextViewYield = (TextView) findViewById(R.id.yield);
-        mTextViewYield.setOnClickListener(this);
-
         mTextViewFee = (TextView) findViewById(R.id.fee);
         mTextViewFee.setOnClickListener(this);
 
         mTextViewProfit = (TextView) findViewById(R.id.profit);
         mTextViewProfit.setOnClickListener(this);
-
-        mTextViewAccount = (TextView) findViewById(R.id.account);
-        mTextViewAccount.setOnClickListener(this);
 
         mTextViewAction = (TextView) findViewById(R.id.action);
         mTextViewAction.setOnClickListener(this);
@@ -538,16 +524,10 @@ public class StockQuantListActivity extends ListActivity implements
             setHeaderTextColor(mTextViewVolume, mHeaderTextHighlightColor);
         } else if (mSortOrder.contains(DatabaseContract.COLUMN_VALUE)) {
             setHeaderTextColor(mTextViewValue, mHeaderTextHighlightColor);
-        } else if (mSortOrder.contains(DatabaseContract.COLUMN_BONUS)) {
-            setHeaderTextColor(mTextViewBonus, mHeaderTextHighlightColor);
-        } else if (mSortOrder.contains(DatabaseContract.COLUMN_YIELD)) {
-            setHeaderTextColor(mTextViewYield, mHeaderTextHighlightColor);
         } else if (mSortOrder.contains(DatabaseContract.COLUMN_FEE)) {
             setHeaderTextColor(mTextViewFee, mHeaderTextHighlightColor);
         } else if (mSortOrder.contains(DatabaseContract.COLUMN_PROFIT)) {
             setHeaderTextColor(mTextViewProfit, mHeaderTextHighlightColor);
-        } else if (mSortOrder.contains(DatabaseContract.COLUMN_ACCOUNT)) {
-            setHeaderTextColor(mTextViewAccount, mHeaderTextHighlightColor);
         } else if (mSortOrder.contains(DatabaseContract.COLUMN_ACTION)) {
             setHeaderTextColor(mTextViewAction, mHeaderTextHighlightColor);
         } else if (mSortOrder.contains(DatabaseContract.COLUMN_HOLD)) {
@@ -579,11 +559,8 @@ public class StockQuantListActivity extends ListActivity implements
                 DatabaseContract.COLUMN_SELL,
                 DatabaseContract.COLUMN_VOLUME,
                 DatabaseContract.COLUMN_VALUE,
-                DatabaseContract.COLUMN_BONUS,
-                DatabaseContract.COLUMN_YIELD,
                 DatabaseContract.COLUMN_FEE,
                 DatabaseContract.COLUMN_PROFIT,
-                DatabaseContract.COLUMN_ACCOUNT,
                 DatabaseContract.COLUMN_ACTION,
                 DatabaseContract.COLUMN_HOLD,
                 DatabaseContract.COLUMN_VALUATION,
@@ -599,11 +576,8 @@ public class StockQuantListActivity extends ListActivity implements
                 R.id.sell,
                 R.id.volume,
                 R.id.value,
-                R.id.bonus,
-                R.id.yield,
                 R.id.fee,
                 R.id.profit,
-                R.id.account,
                 R.id.action,
                 R.id.hold,
                 R.id.valuation,
@@ -664,34 +638,16 @@ public class StockQuantListActivity extends ListActivity implements
     void setupSelection() {
         mSelection = null;
 
-        switch (mFilterType) {
-            case FILTER_TYPE_NONE:
-                mSelection = DatabaseContract.COLUMN_ACTION + " = ''";
-                break;
+        if (mBundle != null) {
+            String se = mBundle.getString(Constants.EXTRA_STOCK_SE);
+            String code = mBundle.getString(Constants.EXTRA_STOCK_CODE);
 
-            case FILTER_TYPE_OPERATE:
-                mSelection = DatabaseContract.COLUMN_ACTION + " != ''";
-                break;
+            mStock.setSE(se);
+            mStock.setCode(code);
 
-            case FILTER_TYPE_BUY:
-                mSelection = DatabaseContract.COLUMN_ACTION + " != ''";
-                mSelection += " AND " + DatabaseContract.COLUMN_VOLUME + " < " + 0;
-                break;
-
-            case FILTER_TYPE_SELL:
-                mSelection = DatabaseContract.COLUMN_ACTION + " != ''";
-                mSelection += " AND " + DatabaseContract.COLUMN_VOLUME + " > " + 0;
-                mSelection += " AND " + DatabaseContract.COLUMN_PROFIT + " > " + DatabaseContract.COLUMN_BONUS;
-                mSelection += " AND " + DatabaseContract.COLUMN_NET + " > " + Math.max(Constants.STOCK_NATURAL_THRESHOLD, Constants.STOCK_NATURAL_THRESHOLD);
-                break;
-
-            case FILTER_TYPE_ALL:
-                mSelection = null;
-                break;
-
-            default:
-                mSelection = null;
-                break;
+            mSelection = DatabaseContract.COLUMN_SE + " = " + "\'" + se + "\'"
+                    + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
+                    + code + "\'";
         }
     }
 
@@ -745,16 +701,16 @@ public class StockQuantListActivity extends ListActivity implements
     }
 
     void setStockList(Cursor cursor) {
-        StockQuant stockDeal = new StockQuant();
+        StockQuant stockQuant = new StockQuant();
 
         try {
             if ((cursor != null) && (cursor.getCount() > 0)) {
                 mStockList.clear();
                 while (cursor.moveToNext()) {
-                    stockDeal.set(cursor);
+                    stockQuant.set(cursor);
                     Stock stock = new Stock();
-                    stock.setSE(stockDeal.getSE());
-                    stock.setCode(stockDeal.getCode());
+                    stock.setSE(stockQuant.getSE());
+                    stock.setCode(stockQuant.getCode());
                     mStockDatabaseManager.getStock(stock);
                     mStockList.add(stock);
                 }

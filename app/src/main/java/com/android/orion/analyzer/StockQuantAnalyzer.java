@@ -139,8 +139,7 @@ public class StockQuantAnalyzer {
             return;
         }
 
-
-        StockDatabaseManager.getInstance(mContext).deleteStockQuant();
+        StockDatabaseManager.getInstance(mContext).deleteStockQuant(stock);
 
         mStockQuantList.clear();
 

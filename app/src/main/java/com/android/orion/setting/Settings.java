@@ -50,6 +50,7 @@ public class Settings {
 	public static final String KEY_SORT_ORDER_STOCK_TREND_LIST = "sort_order_stock_trend_list";
 	public static final String KEY_SORT_ORDER_FINANCIAL_LIST = "sort_order_financial_list";
 	public static final String KEY_SORT_ORDER_DEAL_LIST = "sort_order_deal_list";
+	public static final String KEY_SORT_ORDER_QUANT_LIST = "sort_order_quant_list";
 
 	public static final String KEY_STOCK_FILTER_ENABLED = "stock_filter_enabled";
 	public static final String KEY_STOCK_FILTER_FAVORITE = "stock_filter_favorite";

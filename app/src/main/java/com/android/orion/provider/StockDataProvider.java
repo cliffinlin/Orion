@@ -1093,7 +1093,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
                     }
                 }
 
-                if (dataChanged) {
+                if (true) {
                     String lastPeriod = "";
                     for (String period : Settings.KEY_PERIODS) {
                         if (Preferences.getBoolean(mContext, period, false)

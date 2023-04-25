@@ -68,24 +68,6 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/bonus"
-        android:layout_width="80dp"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/bonus"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/yield"
-        android:layout_width="80dp"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/yield"
-        android:textSize="18sp" />
-
-    <TextView
         android:id="@+id/fee"
         android:layout_width="80dp"
         android:layout_height="40dp"
@@ -101,15 +83,6 @@
         android:layout_weight="1"
         android:gravity="center"
         android:text="@string/profit"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/account"
-        android:layout_width="80dp"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/account"
         android:textSize="18sp" />
 
     <TextView

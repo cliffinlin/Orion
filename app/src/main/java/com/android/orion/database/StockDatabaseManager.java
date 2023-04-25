@@ -1039,6 +1039,23 @@ public class StockDatabaseManager extends DatabaseManager {
 		return delete(DatabaseContract.StockQuant.CONTENT_URI);
 	}
 
+	public void deleteStockQuant(Stock stock) {
+		if ((stock == null) || (mContentResolver == null)) {
+			return;
+		}
+
+        String selection = DatabaseContract.COLUMN_SE + " = " + "\'"
+                + stock.getSE() + "\'" + " AND " + DatabaseContract.COLUMN_CODE
+                + " = " + "\'" + stock.getCode() + "\'";
+
+		try {
+			mContentResolver.delete(DatabaseContract.StockQuant.CONTENT_URI,
+                    selection, null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public void deleteStockQuant(StockQuant StockQuant) {
 		if ((StockQuant == null) || (mContentResolver == null)) {
 			return;
