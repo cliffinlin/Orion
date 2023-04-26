@@ -632,6 +632,7 @@ public class StockAnalyzer {
 		StockVertexAnalyzer stockVertexAnalyzer = new StockVertexAnalyzer();
 		StockQuantAnalyzer stockQuantAnalyzer = new StockQuantAnalyzer();
 		ArrayList<StockData> overlapList = new ArrayList<StockData>();
+		ArrayList<ShareBonus> shareBonusList = new ArrayList<ShareBonus>();
 
         marketKeyAnalyzer.analyzeMarketKey(stock, period, stockDataList);
 
@@ -693,7 +694,9 @@ public class StockAnalyzer {
 
 		analyzeAction(stock, period, stockDataList, drawVertexList, overlapList, drawDataList, strokeDataList, segmentDataList);
 
-		stockQuantAnalyzer.analyze(mContext, stock, period, stockDataList);
+		mStockDatabaseManager.getShareBonusList(stock, shareBonusList,
+				DatabaseContract.COLUMN_DATE + " DESC ");
+		stockQuantAnalyzer.analyze(mContext, stock, period, stockDataList, shareBonusList);
 	}
 
 	private String getSecondBottomAction(Stock stock, ArrayList<StockData> vertexList,

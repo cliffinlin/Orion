@@ -3,13 +3,13 @@ package com.android.orion.analyzer;
 import android.content.Context;
 import android.util.Log;
 
+import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockDatabaseManager;
 import com.android.orion.database.StockQuant;
 import com.android.orion.setting.Constants;
 import com.android.orion.setting.Settings;
-import com.android.orion.utility.Utility;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,6 +19,7 @@ public class StockQuantAnalyzer {
     static final String TAG = Constants.TAG + " "
             + StockQuantAnalyzer.class.getSimpleName();
 
+    ArrayList<ShareBonus> mShareBonusList;
     ArrayList<StockQuant> mStockQuantList;
     Context mContext;
 	
@@ -54,7 +55,7 @@ public class StockQuantAnalyzer {
         stockQuant.setPrice(buyPrice);
         stockQuant.setBuy(buyPrice);
 
-        stockQuant.setupFee(stock.getRDate(), stock.getDividend());
+        stockQuant.setupBuyFee();
         stockQuant.setupNet();
         stockQuant.setupValue();
         stockQuant.setupProfit();
@@ -86,7 +87,7 @@ public class StockQuantAnalyzer {
         stockQuant.setPrice(sellPrice);
         stockQuant.setSell(sellPrice);
 
-        stockQuant.setupFee(stock.getRDate(), stock.getDividend());
+        stockQuant.setupSellFee(mShareBonusList);
         stockQuant.setupNet();
         stockQuant.setupValue();
         stockQuant.setupProfit();
@@ -115,7 +116,7 @@ public class StockQuantAnalyzer {
     }
 
     public void analyze(Context context, Stock stock, String period,
-                        ArrayList<StockData> stockDataList) {
+                        ArrayList<StockData> stockDataList, ArrayList<ShareBonus> shareBonusList) {
         if (context == null) {
             return;
         }
@@ -138,6 +139,12 @@ public class StockQuantAnalyzer {
         if (stockDataList == null || stockDataList.size() < StockData.VERTEX_TYPING_SIZE) {
             return;
         }
+
+        if (shareBonusList == null || shareBonusList.size() < StockData.VERTEX_TYPING_SIZE) {
+            return;
+        }
+
+        mShareBonusList = shareBonusList;
 
         StockDatabaseManager.getInstance(mContext).deleteStockQuant(stock);
 
