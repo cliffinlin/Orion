@@ -6,6 +6,8 @@ import android.database.Cursor;
 import com.android.orion.setting.Constants;
 import com.android.orion.utility.Utility;
 
+import java.util.Calendar;
+
 public class StockQuant extends StockDeal {
 
     private long mHold;
@@ -147,8 +149,41 @@ public class StockQuant extends StockDeal {
                 .getColumnIndex(DatabaseContract.COLUMN_NET_PROFIT_MARGIN)));
     }
 
+    public double getBuyValueDay() {
+        int days = 0;
+        double result = 0;
+
+        Calendar todayCalendar = Utility.getCalendar(
+                Utility.getCurrentDateString(), Utility.CALENDAR_DATE_FORMAT);
+
+        Calendar buyCalendar = Utility.getCalendar(
+                getCreated(), Utility.CALENDAR_DATE_FORMAT);
+
+        days = (int) ((todayCalendar.getTime().getTime() - buyCalendar.getTime().getTime()) / (1000 * 60 * 60 * 24));
+        result = mValue * days;
+
+        return result;
+    }
+
+    public double getSellValueDay() {
+        int days = 0;
+        double result = 0;
+
+        Calendar todayCalendar = Utility.getCalendar(
+                Utility.getCurrentDateString(), Utility.CALENDAR_DATE_FORMAT);
+
+        Calendar sellCalendar = Utility.getCalendar(
+                getModified(), Utility.CALENDAR_DATE_FORMAT);
+
+        days = (int) ((todayCalendar.getTime().getTime() - sellCalendar.getTime().getTime()) / (1000 * 60 * 60 * 24));
+        result = mValue * days;
+
+        return result;
+    }
+
     public void setupNetProfitMargin() {
         if (mValuation != 0) {
+            mValuation = mValuation / 365.0;
             mNetProfitMargin = Utility.Round(100 * mNetProfit / mValuation,
                     Constants.DOUBLE_FIXED_DECIMAL);
         } else {
