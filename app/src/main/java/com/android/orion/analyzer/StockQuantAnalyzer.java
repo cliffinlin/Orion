@@ -66,7 +66,7 @@ public class StockQuantAnalyzer {
         mNetProfit += stockQuant.getProfit();
         stockQuant.setNetProfit(mNetProfit);
 
-        mValuation += stockQuant.getBuyValueDay();
+        mValuation += stockQuant.getValue();
         stockQuant.setValuation(mValuation);
 
         stockQuant.setupNetProfitMargin();
@@ -102,10 +102,10 @@ public class StockQuantAnalyzer {
         mNetProfit += stockQuant.getProfit();
         stockQuant.setNetProfit(mNetProfit);
 
-        mValuation -= stockQuant.getSellValueDay();
-        stockQuant.setValuation(mValuation);
-
         stockQuant.setupNetProfitMargin();
+
+        mValuation -= stockQuant.getValue();
+        stockQuant.setValuation(mValuation);
 
         Log.d(TAG, stockQuant.toString());
 

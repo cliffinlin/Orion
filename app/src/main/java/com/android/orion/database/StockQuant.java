@@ -148,42 +148,41 @@ public class StockQuant extends StockDeal {
         setNetProfitMargin(cursor.getDouble(cursor
                 .getColumnIndex(DatabaseContract.COLUMN_NET_PROFIT_MARGIN)));
     }
-
-    public double getBuyValueDay() {
-        int days = 0;
-        double result = 0;
-
-        Calendar todayCalendar = Utility.getCalendar(
-                Utility.getCurrentDateString(), Utility.CALENDAR_DATE_FORMAT);
-
-        Calendar buyCalendar = Utility.getCalendar(
-                getCreated(), Utility.CALENDAR_DATE_FORMAT);
-
-        days = (int) ((todayCalendar.getTime().getTime() - buyCalendar.getTime().getTime()) / (1000 * 60 * 60 * 24));
-        result = mValue * days;
-
-        return result;
-    }
-
-    public double getSellValueDay() {
-        int days = 0;
-        double result = 0;
-
-        Calendar todayCalendar = Utility.getCalendar(
-                Utility.getCurrentDateString(), Utility.CALENDAR_DATE_FORMAT);
-
-        Calendar sellCalendar = Utility.getCalendar(
-                getModified(), Utility.CALENDAR_DATE_FORMAT);
-
-        days = (int) ((todayCalendar.getTime().getTime() - sellCalendar.getTime().getTime()) / (1000 * 60 * 60 * 24));
-        result = mValue * days;
-
-        return result;
-    }
+//
+//    public double getBuyValueDay() {
+//        int days = 0;
+//        double result = 0;
+//
+//        Calendar todayCalendar = Utility.getCalendar(
+//                Utility.getCurrentDateString(), Utility.CALENDAR_DATE_FORMAT);
+//
+//        Calendar buyCalendar = Utility.getCalendar(
+//                getCreated(), Utility.CALENDAR_DATE_FORMAT);
+//
+//        days = (int) ((todayCalendar.getTime().getTime() - buyCalendar.getTime().getTime()) / (1000 * 60 * 60 * 24));
+//        result = mValue * days;
+//
+//        return result;
+//    }
+//
+//    public double getSellValueDay() {
+//        int days = 0;
+//        double result = 0;
+//
+//        Calendar todayCalendar = Utility.getCalendar(
+//                Utility.getCurrentDateString(), Utility.CALENDAR_DATE_FORMAT);
+//
+//        Calendar sellCalendar = Utility.getCalendar(
+//                getModified(), Utility.CALENDAR_DATE_FORMAT);
+//
+//        days = (int) ((todayCalendar.getTime().getTime() - sellCalendar.getTime().getTime()) / (1000 * 60 * 60 * 24));
+//        result = mValue * days;
+//
+//        return result;
+//    }
 
     public void setupNetProfitMargin() {
         if (mValuation != 0) {
-            mValuation = mValuation / 365.0;
             mNetProfitMargin = Utility.Round(100 * mNetProfit / mValuation,
                     Constants.DOUBLE_FIXED_DECIMAL);
         } else {
