@@ -628,13 +628,13 @@ public class StockAnalyzer {
 						  ArrayList<StockData> drawVertexList, ArrayList<StockData> drawDataList,
 						  ArrayList<StockData> strokeVertexList, ArrayList<StockData> strokeDataList,
 						  ArrayList<StockData> segmentVertexList, ArrayList<StockData> segmentDataList) {
-        MarketKeyAnalyzer marketKeyAnalyzer = new MarketKeyAnalyzer();
+        StockKeyAnalyzer stockKeyAnalyzer = new StockKeyAnalyzer();
 		StockVertexAnalyzer stockVertexAnalyzer = new StockVertexAnalyzer();
 		StockQuantAnalyzer stockQuantAnalyzer = new StockQuantAnalyzer();
 		ArrayList<StockData> overlapList = new ArrayList<StockData>();
 		ArrayList<ShareBonus> shareBonusList = new ArrayList<ShareBonus>();
 
-        marketKeyAnalyzer.analyzeMarketKey(stock, period, stockDataList);
+		stockKeyAnalyzer.analyze(stock, period, stockDataList);
 
 		setMACD(stockDataList);
 
@@ -993,10 +993,10 @@ public class StockAnalyzer {
 
 		if (stockData.directionOf(StockData.DIRECTION_UP)) {
 			if (prev.vertexOf(StockData.VERTEX_BOTTOM)) {
-				String result2 = getSecondBottomAction(stock, drawVertexList, strokeDataList, segmentDataList);
-				if (!TextUtils.isEmpty(result2)) {
-					action = result2;
-				}
+//				String result2 = getSecondBottomAction(stock, drawVertexList, strokeDataList, segmentDataList);
+//				if (!TextUtils.isEmpty(result2)) {
+//					action = result2;
+//				}
 			} else {
 //				if (drawNet >= 0) {
 //					action += StockData.ACTION_ADD;
@@ -1009,10 +1009,10 @@ public class StockAnalyzer {
 			}
 		} else if (stockData.directionOf(StockData.DIRECTION_DOWN)) {
 			if (prev.vertexOf(StockData.VERTEX_TOP)) {
-				String result2 = getSecondTopAction(stock, drawVertexList, strokeDataList, segmentDataList);
-				if (!TextUtils.isEmpty(result2)) {
-					action = result2;
-				}
+//				String result2 = getSecondTopAction(stock, drawVertexList, strokeDataList, segmentDataList);
+//				if (!TextUtils.isEmpty(result2)) {
+//					action = result2;
+//				}
 			} else {
 //				if (drawNet >= 0) {
 //					action += StockData.ACTION_ADD;
@@ -1196,19 +1196,19 @@ public class StockAnalyzer {
 						}
 //					}
 
-					if (toSellProfit > 0) {
+//					if (toSellProfit > 0) {
 						if (action.contains(StockData.ACTION_SELL2 + StockData.ACTION_SELL2)
 								|| action.contains(StockData.ACTION_UPWARD_TREND)
 								|| action.contains(StockData.ACTION_NATURAL_RALLY)) {
 							notifyToSell = true;
 						}
-					}
+//					}
 				}
 
 				if (notifyToBuy || notifyToSell) {
                     actionString.append(period + " " + action + " ");
 					if (notifyToBuy) {
-						actionString.append(" " + (int)toBuyProfit + " ");
+//						actionString.append(" " + (int)toBuyProfit + " ");
 					}
 
                     if (notifyToSell) {

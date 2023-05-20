@@ -9,9 +9,9 @@ import com.android.orion.database.StockData;
 
 import java.util.ArrayList;
 
-public class MarketKeyAnalyzer {
+public class StockKeyAnalyzer {
     static final String TAG = Constants.TAG + " "
-            + MarketKeyAnalyzer.class.getSimpleName();
+            + StockKeyAnalyzer.class.getSimpleName();
 
     public static final boolean LOG = false;
 
@@ -27,7 +27,7 @@ public class MarketKeyAnalyzer {
     private double mPrevHigh;
     private double mPrevLow;
 
-    public MarketKeyAnalyzer() {
+    public StockKeyAnalyzer() {
         init();
     }
 
@@ -45,7 +45,7 @@ public class MarketKeyAnalyzer {
         mPrevLow = 0;
     }
 
-    void analyzeMarketKey(Stock stock,  String period, ArrayList<StockData> dataList) {
+    void analyze(Stock stock,  String period, ArrayList<StockData> dataList) {
         int i = 0;
         int size = 0;
         double naturalThreshold = 0;
