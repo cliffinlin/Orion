@@ -1909,15 +1909,6 @@ public class Stock extends DatabaseTable {
 		mDebtToNetAssetsRatio = stockFinancialList.get(0).getDebtToNetAssetsRatio();
 	}
 
-	public void setupRoe() {
-		if (mBookValuePerShare == 0) {
-			return;
-		}
-
-		mRoe = Utility.Round(100.0 * mNetProfitPerShare / mBookValuePerShare,
-				Constants.DOUBLE_FIXED_DECIMAL);
-	}
-
 	public void setupRoe(ArrayList<StockFinancial> stockFinancialList) {
 		double bookValuePerShare = 0;
 
@@ -1942,26 +1933,20 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-		mPe = Utility.Round(100.0 * mNetProfitPerShareInYear / mPrice,
+		if (mNetProfitPerShareInYear == 0) {
+			return;
+		}
+
+		mPe = Utility.Round(mPrice / mNetProfitPerShareInYear,
 				Constants.DOUBLE_FIXED_DECIMAL);
 	}
 
 	public void setupRoi() {
-        double rate = mRate;
-
-		if (rate == 0) {
-            rate = 1;
-		} else if (rate > 2) {
-			rate = 2;
+		if (mPe == 0) {
+			return;
 		}
 
-		// mRoi = Utility.Round(mRate * mRoe * mPe * Constants.ROI_COEFFICIENT,
-		// Constants.DOUBLE_FIXED_DECIMAL);
-		// mRoi = Utility.Round(mRoe * mPe * Constants.ROI_COEFFICIENT,
-		// Constants.DOUBLE_FIXED_DECIMAL);
-//		mRoi = Utility.Round(mRoe * (mPe + mYield) * Constants.ROI_COEFFICIENT,
-//				Constants.DOUBLE_FIXED_DECIMAL);
-		mRoi = Utility.Round(mRoe * (mPe + mYield) * mNetProfitMargin * rate * Constants.ROI_COEFFICIENT,
+		mRoi = Utility.Round(mRoe * (100.0 * 1.0 / mPe + mYield) * mNetProfitMargin * mRate * Constants.ROI_COEFFICIENT,
 				Constants.DOUBLE_FIXED_DECIMAL);
 	}
 
@@ -2003,10 +1988,6 @@ public class Stock extends DatabaseTable {
 		}
 
 		if (mNetProfitPerShareInYear <= 0) {
-			return;
-		}
-
-		if (mRoe <= 0) {
 			return;
 		}
 
