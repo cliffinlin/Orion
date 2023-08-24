@@ -52,6 +52,7 @@ public class StockDataChart {
 	public ArrayList<Entry> mDrawEntryList = null;
 	public ArrayList<Entry> mStrokeEntryList = null;
 	public ArrayList<Entry> mSegmentEntryList = null;
+	public ArrayList<Entry> mLineEntryList = null;
 	public ArrayList<Entry> mOverlapHighEntryList = null;
 	public ArrayList<Entry> mOverlapLowEntryList = null;
 	public ArrayList<Entry> mBookValuePerShareList = null;
@@ -119,6 +120,10 @@ public class StockDataChart {
 
 		if (mSegmentEntryList == null) {
 			mSegmentEntryList = new ArrayList<Entry>();
+		}
+
+		if (mLineEntryList == null) {
+			mLineEntryList = new ArrayList<Entry>();
 		}
 
 		if (mOverlapHighEntryList == null) {
@@ -295,6 +300,19 @@ public class StockDataChart {
 				segmentDataSet.setCircleSize(0);
 				segmentDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 				lineData.addDataSet(segmentDataSet);
+			}
+		}
+
+		if (Preferences.getBoolean(context, Settings.KEY_DISPLAY_SEGMENT,
+				false)) {
+			if (mLineEntryList.size() > 0) {
+				LineDataSet lineDataSet = new LineDataSet(mLineEntryList,
+						"Line");
+				lineDataSet.setColor(Color.RED);
+				lineDataSet.setCircleColor(Color.RED);
+				lineDataSet.setCircleSize(0);
+				lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+				lineData.addDataSet(lineDataSet);
 			}
 		}
 
@@ -683,6 +701,7 @@ public class StockDataChart {
 		mDrawEntryList.clear();
 		mStrokeEntryList.clear();
 		mSegmentEntryList.clear();
+		mLineEntryList.clear();
 		mOverlapHighEntryList.clear();
 		mOverlapLowEntryList.clear();
 		mBookValuePerShareList.clear();

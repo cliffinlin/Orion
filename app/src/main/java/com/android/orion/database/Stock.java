@@ -167,6 +167,28 @@ public class Stock extends DatabaseTable {
 	private ArrayList<StockData> mSegmentDataListQuarter = new ArrayList<StockData>();
 	private ArrayList<StockData> mSegmentDataListYear = new ArrayList<StockData>();
 
+	private ArrayList<StockData> mLineVertexListMin1 = new ArrayList<StockData>();
+	private ArrayList<StockData> mLineVertexListMin5 = new ArrayList<StockData>();
+	private ArrayList<StockData> mLineVertexListMin15 = new ArrayList<StockData>();
+	private ArrayList<StockData> mLineVertexListMin30 = new ArrayList<StockData>();
+	private ArrayList<StockData> mLineVertexListMin60 = new ArrayList<StockData>();
+	private ArrayList<StockData> mLineVertexListDay = new ArrayList<StockData>();
+	private ArrayList<StockData> mLineVertexListWeek = new ArrayList<StockData>();
+	private ArrayList<StockData> mLineVertexListMonth = new ArrayList<StockData>();
+	private ArrayList<StockData> mLineVertexListQuarter = new ArrayList<StockData>();
+	private ArrayList<StockData> mLineVertexListYear = new ArrayList<StockData>();
+
+	private ArrayList<StockData> mLineDataListMin1 = new ArrayList<StockData>();
+	private ArrayList<StockData> mLineDataListMin5 = new ArrayList<StockData>();
+	private ArrayList<StockData> mLineDataListMin15 = new ArrayList<StockData>();
+	private ArrayList<StockData> mLineDataListMin30 = new ArrayList<StockData>();
+	private ArrayList<StockData> mLineDataListMin60 = new ArrayList<StockData>();
+	private ArrayList<StockData> mLineDataListDay = new ArrayList<StockData>();
+	private ArrayList<StockData> mLineDataListWeek = new ArrayList<StockData>();
+	private ArrayList<StockData> mLineDataListMonth = new ArrayList<StockData>();
+	private ArrayList<StockData> mLineDataListQuarter = new ArrayList<StockData>();
+	private ArrayList<StockData> mLineDataListYear = new ArrayList<StockData>();
+
 	public Stock() {
 		init();
 	}
@@ -1686,6 +1708,62 @@ public class Stock extends DatabaseTable {
 			result = mSegmentDataListQuarter;
 		} else if (period.equals(Settings.KEY_PERIOD_YEAR)) {
 			result = mSegmentDataListYear;
+		}
+
+		return result;
+	}
+
+	public ArrayList<StockData> getLineVertexList(String period) {
+		ArrayList<StockData> result = null;
+
+		if (period.equals(Settings.KEY_PERIOD_MIN1)) {
+			result = mLineVertexListMin1;
+		} else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
+			result = mLineVertexListMin5;
+		} else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
+			result = mLineVertexListMin15;
+		} else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
+			result = mLineVertexListMin30;
+		} else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
+			result = mLineVertexListMin60;
+		} else if (period.equals(Settings.KEY_PERIOD_DAY)) {
+			result = mLineVertexListDay;
+		} else if (period.equals(Settings.KEY_PERIOD_WEEK)) {
+			result = mLineVertexListWeek;
+		} else if (period.equals(Settings.KEY_PERIOD_MONTH)) {
+			result = mLineVertexListMonth;
+		} else if (period.equals(Settings.KEY_PERIOD_QUARTER)) {
+			result = mLineVertexListQuarter;
+		} else if (period.equals(Settings.KEY_PERIOD_YEAR)) {
+			result = mLineVertexListYear;
+		}
+
+		return result;
+	}
+
+	public ArrayList<StockData> getLineDataList(String period) {
+		ArrayList<StockData> result = null;
+
+		if (period.equals(Settings.KEY_PERIOD_MIN1)) {
+			result = mLineDataListMin1;
+		} else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
+			result = mLineDataListMin5;
+		} else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
+			result = mLineDataListMin15;
+		} else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
+			result = mLineDataListMin30;
+		} else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
+			result = mLineDataListMin60;
+		} else if (period.equals(Settings.KEY_PERIOD_DAY)) {
+			result = mLineDataListDay;
+		} else if (period.equals(Settings.KEY_PERIOD_WEEK)) {
+			result = mLineDataListWeek;
+		} else if (period.equals(Settings.KEY_PERIOD_MONTH)) {
+			result = mLineDataListMonth;
+		} else if (period.equals(Settings.KEY_PERIOD_QUARTER)) {
+			result = mLineDataListQuarter;
+		} else if (period.equals(Settings.KEY_PERIOD_YEAR)) {
+			result = mLineDataListYear;
 		}
 
 		return result;

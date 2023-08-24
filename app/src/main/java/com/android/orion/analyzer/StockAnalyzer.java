@@ -166,6 +166,8 @@ public class StockAnalyzer {
 		ArrayList<StockData> strokeDataList =  null;
 		ArrayList<StockData> segmentVertexList =  null;
 		ArrayList<StockData> segmentDataList =  null;
+		ArrayList<StockData> lineVertexList =  null;
+		ArrayList<StockData> lineDataList =  null;
 
 		if (stock == null) {
 			return;
@@ -206,6 +208,16 @@ public class StockAnalyzer {
 			return;
 		}
 
+		lineVertexList = stock.getLineVertexList(period);
+		if (lineVertexList == null) {
+			return;
+		}
+
+		lineDataList = stock.getLineDataList(period);
+		if (lineDataList == null) {
+			return;
+		}
+
 		try {
 			setupStockShareBonus(stock);
 			setupStockFinancial(stock);
@@ -214,7 +226,8 @@ public class StockAnalyzer {
 			analyzeStockData(stock, period, stockDataList,
 					drawVertexList, drawDataList,
 					strokeVertexList, strokeDataList,
-					segmentVertexList, segmentDataList);
+					segmentVertexList, segmentDataList,
+					lineVertexList, lineDataList);
 			updateDatabase(stock, period, stockDataList,
 					drawDataList, strokeDataList, segmentDataList);
 		} catch (Exception e) {
@@ -627,7 +640,8 @@ public class StockAnalyzer {
 	private void analyzeStockData(Stock stock, String period, ArrayList<StockData> stockDataList,
 						  ArrayList<StockData> drawVertexList, ArrayList<StockData> drawDataList,
 						  ArrayList<StockData> strokeVertexList, ArrayList<StockData> strokeDataList,
-						  ArrayList<StockData> segmentVertexList, ArrayList<StockData> segmentDataList) {
+						  ArrayList<StockData> segmentVertexList, ArrayList<StockData> segmentDataList,
+						  ArrayList<StockData> lineVertexList, ArrayList<StockData> lineDataList) {
         StockKeyAnalyzer stockKeyAnalyzer = new StockKeyAnalyzer();
 		StockVertexAnalyzer stockVertexAnalyzer = new StockVertexAnalyzer();
 		StockQuantAnalyzer stockQuantAnalyzer = new StockQuantAnalyzer();
@@ -653,6 +667,12 @@ public class StockAnalyzer {
 				StockData.VERTEX_BOTTOM_SEGMENT);
 		stockVertexAnalyzer.vertexListToDataList(stockDataList, segmentVertexList,
 				segmentDataList, StockData.LEVEL_SEGMENT);
+
+		stockVertexAnalyzer.analyzeLine(stockDataList, segmentDataList,
+				lineVertexList, StockData.VERTEX_TOP_LINE,
+				StockData.VERTEX_BOTTOM_LINE);
+		stockVertexAnalyzer.vertexListToDataList(stockDataList, lineVertexList,
+				lineDataList, StockData.LEVEL_LINE);
 
 		if (segmentDataList.size() > StockData.OVERLAP_TYPING_SIZE) {
 			stockVertexAnalyzer.analyzeOverlap(stockDataList, segmentDataList,
