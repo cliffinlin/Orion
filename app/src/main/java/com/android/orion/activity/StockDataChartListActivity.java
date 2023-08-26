@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.android.orion.service.OrionService;
 import com.android.orion.setting.Constants;
 import com.android.orion.R;
 import com.android.orion.setting.Settings;
@@ -59,7 +60,9 @@ public class StockDataChartListActivity extends BaseActivity implements
 	public static final int LOADER_ID_STOCK_LIST = Settings.KEY_PERIODS.length + 1;
 	public static final int FLING_DISTANCE = 50;
 	public static final int FLING_VELOCITY = 100;
+
 	public static final int REQUEST_CODE_SETTINGS = 0;
+	public static final int REQUEST_CODE_SETTING_BACK_TEST = 1;
 
 	public static final int MESSAGE_REFRESH = 0;
 	public static final int MESSAGE_LOAD_STOCK_LIST = 1;
@@ -197,6 +200,14 @@ public class StockDataChartListActivity extends BaseActivity implements
 		mMenu = menu;
 		getMenuInflater().inflate(R.menu.stock_data_chart, menu);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
+
+		MenuItem menuBacktest = menu.findItem(R.id.action_backtest);
+		if (Preferences.getBoolean(mContext, Settings.KEY_BACKTEST, false)) {
+			menuBacktest.setVisible(true);
+		} else {
+			menuBacktest.setVisible(false);
+		}
+
 		return true;
 	}
 
@@ -258,6 +269,12 @@ public class StockDataChartListActivity extends BaseActivity implements
 			return true;
 		}
 
+		case R.id.action_backtest: {
+			startActivityForResult(new Intent(this,
+					SettingBackTestActivity.class), REQUEST_CODE_SETTING_BACK_TEST);
+			return true;
+		}
+
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -272,6 +289,18 @@ public class StockDataChartListActivity extends BaseActivity implements
 			switch (requestCode) {
 			case REQUEST_CODE_SETTINGS:
 				restartLoader();
+				break;
+
+			case REQUEST_CODE_SETTING_BACK_TEST:
+				String lastPeriod = "";
+				for (String period : Settings.KEY_PERIODS) {
+					if (Preferences.getBoolean(mContext, period, false)
+							|| Settings.checkOperatePeriod(lastPeriod, period, mStock.getOperate())) {
+						lastPeriod = period;
+						mStockDatabaseManager.deleteStockData(mStock.getId(), period);
+					}
+				}
+				mOrionService.download(mStock.getSE(), mStock.getCode());
 				break;
 
 			default:

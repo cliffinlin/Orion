@@ -9,7 +9,7 @@ import android.preference.PreferenceFragment;
 
 import com.android.orion.R;
 import com.android.orion.setting.Settings;
-import com.android.orion.activity.SettingBacktestActivity;
+import com.android.orion.activity.SettingBackTestActivity;
 import com.android.orion.service.OrionService;
 
 public class SettingFragment extends PreferenceFragment implements
@@ -68,15 +68,11 @@ public class SettingFragment extends PreferenceFragment implements
 		}
 
 		if (key.equals(Settings.KEY_BACKTEST)) {
-			Intent intent = new Intent(mContext, SettingBacktestActivity.class);
+			Intent intent = new Intent(mContext, SettingBackTestActivity.class);
 
 			if (checked) {
-				intent.putExtra(SettingBacktestActivity.EXTRA_BACK_TEST, SettingBacktestActivity.EXTRA_BACK_TEST_ON);
-			} else {
-				intent.putExtra(SettingBacktestActivity.EXTRA_BACK_TEST, SettingBacktestActivity.EXTRA_BACK_TEST_OFF);
+				mContext.startActivity(intent);
 			}
-
-			mContext.startActivity(intent);
 		}
 	}
 }
