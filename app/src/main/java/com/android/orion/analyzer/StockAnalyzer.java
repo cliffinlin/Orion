@@ -704,6 +704,10 @@ public class StockAnalyzer {
 			if (Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_SEGMENT,false)) {
 				stockVertexAnalyzer.debugShow(stockDataList, segmentDataList);
 			}
+
+            if (Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_LINE,false)) {
+                stockVertexAnalyzer.debugShow(stockDataList, lineDataList);
+            }
 		}
 
 		stockVertexAnalyzer.analyzeDivergence(stock, stockDataList, segmentDataList);

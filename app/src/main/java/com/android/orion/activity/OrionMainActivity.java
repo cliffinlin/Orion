@@ -122,6 +122,7 @@ public class OrionMainActivity extends PreferenceActivity {
 			Preferences.putBoolean (this, Settings.KEY_DISPLAY_DRAW, true);
 			Preferences.putBoolean (this, Settings.KEY_DISPLAY_STROKE, true);
 			Preferences.putBoolean (this, Settings.KEY_DISPLAY_SEGMENT, true);
+			Preferences.putBoolean (this, Settings.KEY_DISPLAY_LINE, true);
 			Preferences.putBoolean (this, Settings.KEY_DISPLAY_LATEST, true);
 			Preferences.putBoolean (this, Settings.KEY_DISPLAY_COST, true);
 

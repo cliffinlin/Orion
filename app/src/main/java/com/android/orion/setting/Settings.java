@@ -30,6 +30,7 @@ public class Settings {
 	public static final String KEY_DISPLAY_DRAW = "display_draw";
 	public static final String KEY_DISPLAY_STROKE = "display_stroke";
 	public static final String KEY_DISPLAY_SEGMENT = "display_segment";
+	public static final String KEY_DISPLAY_LINE = "display_line";
 	public static final String KEY_DISPLAY_OVERLAP = "display_overlap";
 	public static final String KEY_DISPLAY_LATEST = "display_latest";
 	public static final String KEY_DISPLAY_COST = "display_cost";

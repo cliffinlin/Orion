@@ -53,6 +53,9 @@
             android:key="display_segment"
             android:title="@string/segment" />
         <com.android.orion.preference.CustomSwitchPreference
+            android:key="display_line"
+            android:title="@string/line" />
+        <com.android.orion.preference.CustomSwitchPreference
             android:key="display_overlap"
             android:title="@string/overlap" />
         <com.android.orion.preference.CustomSwitchPreference

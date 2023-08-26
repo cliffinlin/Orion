@@ -53,6 +53,7 @@
     <string name="draw">Draw</string>
     <string name="stroke">Stroke</string>
     <string name="segment">Segment</string>
+    <string name="line">Line</string>
     <string name="cash_flow_per_share">CPS</string>
     <string name="cost">Cost</string>
     <string name="created">Created</string>

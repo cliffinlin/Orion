@@ -303,7 +303,7 @@ public class StockDataChart {
 			}
 		}
 
-		if (Preferences.getBoolean(context, Settings.KEY_DISPLAY_SEGMENT,
+		if (Preferences.getBoolean(context, Settings.KEY_DISPLAY_LINE,
 				false)) {
 			if (mLineEntryList.size() > 0) {
 				LineDataSet lineDataSet = new LineDataSet(mLineEntryList,
