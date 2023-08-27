@@ -8,8 +8,8 @@ import android.os.Bundle;
 import android.preference.PreferenceFragment;
 
 import com.android.orion.R;
+import com.android.orion.activity.SettingLoopbackActivity;
 import com.android.orion.setting.Settings;
-import com.android.orion.activity.SettingBackTestActivity;
 import com.android.orion.service.OrionService;
 
 public class SettingFragment extends PreferenceFragment implements
@@ -67,8 +67,8 @@ public class SettingFragment extends PreferenceFragment implements
 			}
 		}
 
-		if (key.equals(Settings.KEY_BACKTEST)) {
-			Intent intent = new Intent(mContext, SettingBackTestActivity.class);
+		if (key.equals(Settings.KEY_LOOPBACK)) {
+			Intent intent = new Intent(mContext, SettingLoopbackActivity.class);
 
 			if (checked) {
 				mContext.startActivity(intent);

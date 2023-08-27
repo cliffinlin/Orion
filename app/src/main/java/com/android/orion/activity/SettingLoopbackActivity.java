@@ -19,7 +19,7 @@ import com.android.orion.utility.Utility;
 
 import java.util.Calendar;
 
-public class SettingBackTestActivity extends BaseActivity {
+public class SettingLoopbackActivity extends BaseActivity {
 
 	static final int MESSAGE_BACK_TEST_ON = 1;
 
@@ -40,7 +40,7 @@ public class SettingBackTestActivity extends BaseActivity {
 			switch (msg.what) {
 				case MESSAGE_BACK_TEST_ON:
 					Calendar calendar;
-					String dateTime = Preferences.getString(mContext, Settings.KEY_BACKTEST_DATE_TIME, "");
+					String dateTime = Preferences.getString(mContext, Settings.KEY_LOOPBACK_DATE_TIME, "");
 					if (!TextUtils.isEmpty(dateTime)) {
 						calendar = Utility.getCalendar(dateTime, Utility.CALENDAR_DATE_TIME_FORMAT);
 					} else {
@@ -53,7 +53,7 @@ public class SettingBackTestActivity extends BaseActivity {
 					mHourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
 					mMinute = calendar.get(Calendar.MINUTE);
 
-					DatePickerDialog datePicker = new DatePickerDialog(SettingBackTestActivity.this, new DatePickerDialog.OnDateSetListener() {
+					DatePickerDialog datePicker = new DatePickerDialog(SettingLoopbackActivity.this, new DatePickerDialog.OnDateSetListener() {
 
 						@Override
 						public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -61,14 +61,14 @@ public class SettingBackTestActivity extends BaseActivity {
 							mMonth = month;
 							mDayOfMonth = dayOfMonth;
 
-							TimePickerDialog timePicker = new TimePickerDialog(SettingBackTestActivity.this, new TimePickerDialog.OnTimeSetListener() {
+							TimePickerDialog timePicker = new TimePickerDialog(SettingLoopbackActivity.this, new TimePickerDialog.OnTimeSetListener() {
 
 								@Override
 								public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 									mHourOfDay = hourOfDay;
 									mMinute = minute;
 									String dateTime = mYear + "-" + String.format("%02d", mMonth + 1) + "-" + String.format("%02d", mDayOfMonth) + " " + String.format("%02d", hourOfDay) + ":" + String.format("%02d", minute) + ":00";
-									Preferences.putString(SettingBackTestActivity.this, Settings.KEY_BACKTEST_DATE_TIME, dateTime);
+									Preferences.putString(SettingLoopbackActivity.this, Settings.KEY_LOOPBACK_DATE_TIME, dateTime);
 									setResult(RESULT_OK, mIntent);
 									finish();
 								}
@@ -89,7 +89,7 @@ public class SettingBackTestActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_setting_backtest);
+		setContentView(R.layout.activity_setting_loopback);
 
 		mHandler.sendEmptyMessage(MESSAGE_BACK_TEST_ON);
 	}

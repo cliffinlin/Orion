@@ -62,7 +62,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 	public static final int FLING_VELOCITY = 100;
 
 	public static final int REQUEST_CODE_SETTINGS = 0;
-	public static final int REQUEST_CODE_SETTING_BACK_TEST = 1;
+	public static final int REQUEST_CODE_SETTING_LOOPBACK = 1;
 
 	public static final int MESSAGE_REFRESH = 0;
 	public static final int MESSAGE_LOAD_STOCK_LIST = 1;
@@ -201,11 +201,11 @@ public class StockDataChartListActivity extends BaseActivity implements
 		getMenuInflater().inflate(R.menu.stock_data_chart, menu);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
-		MenuItem menuBacktest = menu.findItem(R.id.action_backtest);
-		if (Preferences.getBoolean(mContext, Settings.KEY_BACKTEST, false)) {
-			menuBacktest.setVisible(true);
+		MenuItem menuLoopback = menu.findItem(R.id.action_loopback);
+		if (Preferences.getBoolean(mContext, Settings.KEY_LOOPBACK, false)) {
+			menuLoopback.setVisible(true);
 		} else {
-			menuBacktest.setVisible(false);
+			menuLoopback.setVisible(false);
 		}
 
 		return true;
@@ -269,9 +269,9 @@ public class StockDataChartListActivity extends BaseActivity implements
 			return true;
 		}
 
-		case R.id.action_backtest: {
+		case R.id.action_loopback: {
 			startActivityForResult(new Intent(this,
-					SettingBackTestActivity.class), REQUEST_CODE_SETTING_BACK_TEST);
+					SettingLoopbackActivity.class), REQUEST_CODE_SETTING_LOOPBACK);
 			return true;
 		}
 
@@ -291,7 +291,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 				restartLoader();
 				break;
 
-			case REQUEST_CODE_SETTING_BACK_TEST:
+			case REQUEST_CODE_SETTING_LOOPBACK:
 				String lastPeriod = "";
 				for (String period : Settings.KEY_PERIODS) {
 					if (Preferences.getBoolean(mContext, period, false)

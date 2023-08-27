@@ -85,8 +85,8 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/test" >
         <com.android.orion.preference.CustomSwitchPreference
-            android:key="backtest"
-            android:title="@string/backtest" />
+            android:key="loopback"
+            android:title="@string/loopback" />
         <com.android.orion.preference.CustomSwitchPreference
             android:key="display_direct"
             android:title="@string/direct" />

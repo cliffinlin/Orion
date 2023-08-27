@@ -126,7 +126,7 @@ public class OrionMainActivity extends PreferenceActivity {
 			Preferences.putBoolean (this, Settings.KEY_DISPLAY_LATEST, true);
 			Preferences.putBoolean (this, Settings.KEY_DISPLAY_COST, true);
 
-			Preferences.putBoolean (this, Settings.KEY_BACKTEST, false);
+			Preferences.putBoolean (this, Settings.KEY_LOOPBACK, false);
 		}
 	}
 }

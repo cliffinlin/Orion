@@ -26,10 +26,10 @@ public class ListActivity extends StorageActivity {
 		}
 
 		if (Preferences.getBoolean(mContext,
-				Settings.KEY_BACKTEST, false)) {
+				Settings.KEY_LOOPBACK, false)) {
 			Toast.makeText(
 					this,
-					getResources().getString(R.string.backtest_is_on),
+					getResources().getString(R.string.loopback_is_on),
 					Toast.LENGTH_LONG).show();
 		}
 	}

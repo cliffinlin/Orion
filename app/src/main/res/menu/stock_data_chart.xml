@@ -43,9 +43,9 @@
         android:showAsAction="never"
         android:title="@string/action_quant"/>
     <item
-        android:id="@+id/action_backtest"
+        android:id="@+id/action_loopback"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="@string/backtest"/>
+        android:title="@string/loopback"/>
 
 </menu>

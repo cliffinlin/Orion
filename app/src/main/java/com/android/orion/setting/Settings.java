@@ -42,8 +42,8 @@ public class Settings {
 	public static final String KEY_DISPLAY_ROE = "display_roe";
 	public static final String KEY_DISPLAY_ROI = "display_roi";
 
-	public static final String KEY_BACKTEST = "backtest";
-	public static final String KEY_BACKTEST_DATE_TIME = "backtest_date_time";
+	public static final String KEY_LOOPBACK = "loopback";
+	public static final String KEY_LOOPBACK_DATE_TIME = "loopback_date_time";
 
 	public static final String KEY_SORT_ORDER_IPO_LIST = "sort_order_ipo_list";
 	public static final String KEY_SORT_ORDER_COMPONENT_LIST = "sort_order_component_list";

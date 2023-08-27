@@ -92,7 +92,7 @@ public class StockAnalyzer {
 
 	public void loadStockDataList(Stock stock, String period,
 			ArrayList<StockData> stockDataList) {
-		boolean backTest = false;
+		boolean loopback = false;
 		int index = 0;
 
 		Calendar calendar = Calendar.getInstance();
@@ -109,10 +109,10 @@ public class StockAnalyzer {
 			return;
 		}
 
-		backTest = Preferences.getBoolean(mContext, Settings.KEY_BACKTEST,
+		loopback = Preferences.getBoolean(mContext, Settings.KEY_LOOPBACK,
 				false);
-		if (backTest) {
-			String dateTime = Preferences.getString(mContext, Settings.KEY_BACKTEST_DATE_TIME, "");
+		if (loopback) {
+			String dateTime = Preferences.getString(mContext, Settings.KEY_LOOPBACK_DATE_TIME, "");
 			if (!TextUtils.isEmpty(dateTime)) {
 				calendar = Utility.getCalendar(dateTime, Utility.CALENDAR_DATE_TIME_FORMAT);
 			} else {
@@ -138,7 +138,7 @@ public class StockAnalyzer {
 					stockData.setIndexEnd(index);
 					stockData.setAction(StockData.ACTION_NONE);
 
-					if (backTest) {
+					if (loopback) {
 						if (stockData.getCalendar().after(calendar)) {
 							stock.setPrice(stockData.getClose());
 							break;
@@ -688,7 +688,7 @@ public class StockAnalyzer {
 		//stockVertexAnalyzer.analyzeOverlap(stockDataList, segmentDataList, overlapList);
 		//stockVertexAnalyzer.testShowVertextNumber(stockDataList, stockDataList);
 
-		if (Preferences.getBoolean(mContext, Settings.KEY_BACKTEST,false)) {
+		if (Preferences.getBoolean(mContext, Settings.KEY_LOOPBACK,false)) {
 			if (Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_DIRECT,false)) {
 				stockVertexAnalyzer.debugShow(stockDataList, stockDataList);
 			}
