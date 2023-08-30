@@ -1187,7 +1187,6 @@ public class StockAnalyzer {
 		boolean notifyToSell2;
 	    double toBuyProfit = 0;
 		double toSellProfit = 0;
-		String lastPeriod = "";
 		StringBuilder actionString = new StringBuilder();
 		StringBuilder contentTitle = new StringBuilder();
 
@@ -1210,9 +1209,7 @@ public class StockAnalyzer {
 		notifyToSell1 = false;
 
 		for (String period : Settings.KEY_PERIODS) {
-			if (Preferences.getBoolean(mContext, period, false)
-                    || Settings.checkOperatePeriod(lastPeriod, period, stock.getOperate())) {
-				lastPeriod = period;
+			if (Preferences.getBoolean(mContext, period, false)) {
 				String action = stock.getAction(period);
 
 				notifyToBuy2 = false;

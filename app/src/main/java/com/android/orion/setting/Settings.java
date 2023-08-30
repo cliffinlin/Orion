@@ -2,6 +2,7 @@ package com.android.orion.setting;
 
 import android.text.TextUtils;
 
+import com.android.orion.database.DatabaseContract;
 import com.android.orion.utility.Utility;
 
 public class Settings {
@@ -9,17 +10,16 @@ public class Settings {
 
 	public static final String KEY_NOTIFICATION_OPERATE = "notification_operate";
 
-	public static final String KEY_PERIOD_MIN1 = "min1";
-	public static final String KEY_PERIOD_MIN5 = "min5";
-	public static final String KEY_PERIOD_MIN15 = "min15";
-	public static final String KEY_PERIOD_MIN30 = "min30";
-	public static final String KEY_PERIOD_MIN60 = "min60";
-	public static final String KEY_PERIOD_DAY = "day";
-	public static final String KEY_PERIOD_WEEK = "week";
-	public static final String KEY_PERIOD_MONTH = "month";
-	public static final String KEY_PERIOD_QUARTER = "quarter";
-	public static final String KEY_PERIOD_YEAR = "year";
-
+	public static final String KEY_PERIOD_MIN1 = DatabaseContract.COLUMN_MIN1;
+	public static final String KEY_PERIOD_MIN5 = DatabaseContract.COLUMN_MIN5;
+	public static final String KEY_PERIOD_MIN15 = DatabaseContract.COLUMN_MIN15;
+	public static final String KEY_PERIOD_MIN30 = DatabaseContract.COLUMN_MIN30;
+	public static final String KEY_PERIOD_MIN60 = DatabaseContract.COLUMN_MIN60;
+	public static final String KEY_PERIOD_DAY = DatabaseContract.COLUMN_DAY;
+	public static final String KEY_PERIOD_WEEK = DatabaseContract.COLUMN_WEEK;
+	public static final String KEY_PERIOD_MONTH = DatabaseContract.COLUMN_MONTH;
+	public static final String KEY_PERIOD_QUARTER = DatabaseContract.COLUMN_QUARTER;
+	public static final String KEY_PERIOD_YEAR = DatabaseContract.COLUMN_YEAR;
 	public static final String KEY_PERIODS[] = { KEY_PERIOD_YEAR, KEY_PERIOD_QUARTER,
 			KEY_PERIOD_MONTH, KEY_PERIOD_WEEK, KEY_PERIOD_DAY, KEY_PERIOD_MIN60, KEY_PERIOD_MIN30,
 			KEY_PERIOD_MIN15, KEY_PERIOD_MIN5, KEY_PERIOD_MIN1 };
@@ -72,32 +72,4 @@ public class Settings {
 
 	private Settings() {
 	}
-
-    public static < E extends Enum < E >> boolean isInEnum(String value, Class < E > enumClass) {
-        for (E e: enumClass.getEnumConstants()) {
-            if (e.name().equals(value)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-	public static boolean checkOperatePeriod(String lastPeriod, String period, String operate) {
-	    boolean result = false;
-	    int periodIndex = -1;
-	    int operateIndex = -1;
-
-		if (TextUtils.isEmpty(lastPeriod) || TextUtils.isEmpty(period) || TextUtils.isEmpty(operate)) {
-	        return result;
-        }
-
-		periodIndex = Utility.indexOfStrings(period, KEY_PERIODS);
-	    operateIndex = Utility.indexOfStrings(operate, KEY_PERIODS);
-
-	    if (periodIndex <= operateIndex) {
-	        result = true;
-        }
-
-	    return result;
-    }
 }

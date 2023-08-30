@@ -292,11 +292,8 @@ public class StockDataChartListActivity extends BaseActivity implements
 				break;
 
 			case REQUEST_CODE_SETTING_LOOPBACK:
-				String lastPeriod = "";
 				for (String period : Settings.KEY_PERIODS) {
-					if (Preferences.getBoolean(mContext, period, false)
-							|| Settings.checkOperatePeriod(lastPeriod, period, mStock.getOperate())) {
-						lastPeriod = period;
+					if (Preferences.getBoolean(mContext, period, false)) {
 						mStockDatabaseManager.deleteStockData(mStock.getId(), period);
 					}
 				}
@@ -408,12 +405,9 @@ public class StockDataChartListActivity extends BaseActivity implements
 			mLoaderManager.initLoader(LOADER_ID_STOCK_LIST, null, this);
 		}
 
-		String lastPeriod = "";
 		mStockDatabaseManager.getStockById(mStock);
 		for (int i = 0; i < Settings.KEY_PERIODS.length; i++) {
-			if (Preferences.getBoolean(this, Settings.KEY_PERIODS[i], false)
-					|| Settings.checkOperatePeriod(lastPeriod, Settings.KEY_PERIODS[i], mStock.getOperate())) {
-				lastPeriod = Settings.KEY_PERIODS[i];
+			if (Preferences.getBoolean(this, Settings.KEY_PERIODS[i], false)) {
 				mLoaderManager.initLoader(i, null, this);
 			}
 		}
@@ -431,12 +425,9 @@ public class StockDataChartListActivity extends BaseActivity implements
 			mLoaderManager.restartLoader(LOADER_ID_STOCK_LIST, null, this);
 		}
 
-		String lastPeriod = "";
 		mStockDatabaseManager.getStockById(mStock);
 		for (int i = 0; i < Settings.KEY_PERIODS.length; i++) {
-			if (Preferences.getBoolean(this, Settings.KEY_PERIODS[i], false)
-					|| Settings.checkOperatePeriod(lastPeriod, Settings.KEY_PERIODS[i], mStock.getOperate())) {
-				lastPeriod = Settings.KEY_PERIODS[i];
+			if (Preferences.getBoolean(this, Settings.KEY_PERIODS[i], false)) {
 				mLoaderManager.restartLoader(i, null, this);
 			}
 		}
@@ -813,12 +804,9 @@ public class StockDataChartListActivity extends BaseActivity implements
 	void updateStockDataChartItemList() {
 		mStockDataChartItemList.clear();
 
-		String lastPeriod = "";
 		mStockDatabaseManager.getStockById(mStock);
 		for (int i = 0; i < Settings.KEY_PERIODS.length; i++) {
-			if (Preferences.getBoolean(this, Settings.KEY_PERIODS[i], false)
-					|| Settings.checkOperatePeriod(lastPeriod, Settings.KEY_PERIODS[i], mStock.getOperate())) {
-				lastPeriod = Settings.KEY_PERIODS[i];
+			if (Preferences.getBoolean(this, Settings.KEY_PERIODS[i], false)) {
 				mStockDataChartItemList.add(mStockDataChartItemMainList.get(i));
 				mStockDataChartItemList.add(mStockDataChartItemSubList.get(i));
 			}
