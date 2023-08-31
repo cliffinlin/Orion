@@ -29,6 +29,7 @@ import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.TotalShare;
+import com.android.orion.utility.Market;
 import com.android.orion.utility.StopWatch;
 import com.android.orion.utility.Utility;
 
@@ -675,6 +676,10 @@ public class SinaFinance extends StockDataProvider {
 							mStockDatabaseManager.updateStockData(stockData,
 									stockData.getContentValues());
 						}
+
+						if (i == jsonArray.size()-1) {
+							setupStockDataRealtime(stock, stockData);
+						}
 					}
 				}
 			}
@@ -689,6 +694,100 @@ public class SinaFinance extends StockDataProvider {
 		stopWatch.stop();
 		Log.d(TAG, "handleResponseStockDataHistory:" + stock.getName() + " "
 				+ stockData.getPeriod() + " " + stopWatch.getInterval() + "s");
+	}
+
+	void setupStockDataRealtime(Stock stock, StockData stockData) {
+		int minutes = 0;
+		boolean result = false;
+
+		if (!Market.isTradingHours(Calendar.getInstance())) {
+			Log.d(TAG, "setupStockDataRealtime return, not in isTradingHours");
+			return;
+		}
+
+		switch (stockData.getPeriod()) {
+			case Settings.KEY_PERIOD_MIN1:
+				minutes = Constants.SCHEDULE_INTERVAL_MIN1;
+				break;
+			case Settings.KEY_PERIOD_MIN5:
+				minutes = Constants.SCHEDULE_INTERVAL_MIN5;
+				break;
+			case Settings.KEY_PERIOD_MIN15:
+				minutes = Constants.SCHEDULE_INTERVAL_MIN15;
+				break;
+			case Settings.KEY_PERIOD_MIN30:
+				minutes = Constants.SCHEDULE_INTERVAL_MIN30;
+				break;
+			case Settings.KEY_PERIOD_MIN60:
+				minutes = Constants.SCHEDULE_INTERVAL_MIN60;
+				break;
+			case Settings.KEY_PERIOD_DAY:
+			case Settings.KEY_PERIOD_WEEK:
+			case Settings.KEY_PERIOD_MONTH:
+			case Settings.KEY_PERIOD_QUARTER:
+			case Settings.KEY_PERIOD_YEAR:
+			default:
+				break;
+		}
+
+		if (minutes > 0) {
+			Calendar stockMarketLunchBeginCalendar = Market
+					.getMarketLunchBeginCalendar(Calendar
+							.getInstance());
+			Calendar stockMarketCloseCalendar = Market
+					.getMarketCloseCalendar(Calendar.getInstance());
+
+			Calendar datetimeCalendar = Utility.getCalendar(stockData.getDateTime(),
+					Utility.CALENDAR_DATE_TIME_FORMAT);
+			datetimeCalendar.add(Calendar.MINUTE, minutes);
+
+			if (Market.inFirstHalf(Calendar.getInstance()) && datetimeCalendar.after(stockMarketLunchBeginCalendar)) {
+				Log.d(TAG, "setupStockDataRealtime return, inFirstHalf datetimeCalendar.after(stockMarketLunchBeginCalendar)");
+				return;
+			}
+
+			if (Market.inSecondHalf(Calendar.getInstance()) && datetimeCalendar.after(stockMarketCloseCalendar)) {
+				Log.d(TAG, "setupStockDataRealtime return, inSecondHalf datetimeCalendar.after(stockMarketCloseCalendar)");
+				return;
+			}
+
+			stockData.setDate(Utility.getCalendarDateString(datetimeCalendar));
+			stockData.setTime(Utility.getCalendarTimeString(datetimeCalendar));
+
+			if (!mStockDatabaseManager.isStockDataExist(stockData)) {
+				stockData.setOpen(stock.getPrice());
+				stockData.setClose(stock.getPrice());
+
+				stockData.setHigh(stock.getPrice());
+				stockData.setLow(stock.getPrice());
+
+				stockData.setVertexHigh(stockData.getHigh());
+				stockData.setVertexLow(stockData.getLow());
+
+				stockData.setCreated(Utility
+						.getCurrentDateTimeString());
+				stockData.setModified(Utility
+						.getCurrentDateTimeString());
+				mStockDatabaseManager.insertStockData(stockData);
+			} else {
+				stockData.setClose(stock.getPrice());
+
+				if (stock.getPrice() > stockData.getHigh()) {
+					stockData.setHigh(stock.getPrice());
+				}
+				if (stock.getPrice() < stockData.getLow()) {
+					stockData.setLow(stock.getPrice());
+				}
+
+				stockData.setVertexHigh(stockData.getHigh());
+				stockData.setVertexLow(stockData.getLow());
+
+				stockData.setModified(Utility
+						.getCurrentDateTimeString());
+				mStockDatabaseManager.updateStockData(stockData,
+						stockData.getContentValues());
+			}
+		}
 	}
 
 	@Override
