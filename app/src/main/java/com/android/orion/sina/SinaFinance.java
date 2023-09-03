@@ -677,9 +677,9 @@ public class SinaFinance extends StockDataProvider {
 									stockData.getContentValues());
 						}
 
-						if (i == jsonArray.size()-1) {
-							setupStockDataRealtime(stock, stockData);
-						}
+//						if (i == jsonArray.size()-1) {
+//							setupStockDataRealtime(stock, stockData);
+//						}
 					}
 				}
 			}
@@ -695,7 +695,7 @@ public class SinaFinance extends StockDataProvider {
 		Log.d(TAG, "handleResponseStockDataHistory:" + stock.getName() + " "
 				+ stockData.getPeriod() + " " + stopWatch.getInterval() + "s");
 	}
-
+/*
 	void setupStockDataRealtime(Stock stock, StockData stockData) {
 		int minutes = 0;
 		boolean result = false;
@@ -789,7 +789,7 @@ public class SinaFinance extends StockDataProvider {
 			}
 		}
 	}
-
+*/
 	@Override
 	public void handleResponseStockDataRealTime(Stock stock, StockData stockData,
 												String response) {
