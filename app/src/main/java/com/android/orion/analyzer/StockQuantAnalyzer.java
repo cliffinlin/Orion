@@ -24,7 +24,6 @@ public class StockQuantAnalyzer {
     Context mContext;
 	
     long mHold;
-    long mVolume;
     double mNetProfit;
     double mValuation;
 
@@ -36,7 +35,7 @@ public class StockQuantAnalyzer {
         mHold = 0;
         mNetProfit = 0;
         mValuation = 0;
-			
+
         if (mStockQuantList == null) {
             mStockQuantList = new ArrayList<>();
         }
@@ -51,7 +50,7 @@ public class StockQuantAnalyzer {
 
         stockQuant.setAction(StockData.ACTION_BUY);
 
-        stockQuant.setVolume(mVolume);
+        stockQuant.setVolume(stock.getQuantVolume());
         stockQuant.setPrice(buyPrice);
         stockQuant.setBuy(buyPrice);
 
@@ -127,8 +126,7 @@ public class StockQuantAnalyzer {
             return;
         }
 
-        mVolume = stock.getQuantVolume();
-        if (mVolume == 0) {
+        if (stock.getNaturalThreshold() == 0 || stock.getQuantVolume() == 0) {
             return;
         }
 
@@ -163,20 +161,15 @@ public class StockQuantAnalyzer {
                 StockQuant stockQuant = new StockQuant();
                 setupStockQuantBuy(stock, stockData, stockData.getDownwardTrend(), stockQuant);
             } else if (stockData.getNaturalRally() > 0) {
-                if (mStockQuantList.size() == 0) {
-                    continue;
+                if (mStockQuantList.size() > 0) {
+                    StockQuant stockQuant = mStockQuantList.get(0);
+                    setupStockQuantSell(stock, stockData, stockData.getNaturalRally(), stockQuant);
                 }
-
-                StockQuant stockQuant = mStockQuantList.get(0);
-                setupStockQuantSell(stock, stockData, stockData.getNaturalRally(), stockQuant);
-
             } else if (stockData.getUpwardTrend() > 0) {
-                if (mStockQuantList.size() == 0) {
-                    continue;
+                if (mStockQuantList.size() > 0) {
+                    StockQuant stockQuant = mStockQuantList.get(0);
+                    setupStockQuantSell(stock, stockData, stockData.getUpwardTrend(), stockQuant);
                 }
-
-                StockQuant stockQuant = mStockQuantList.get(0);
-                setupStockQuantSell(stock, stockData, stockData.getUpwardTrend(), stockQuant);
             }
         }
     }
