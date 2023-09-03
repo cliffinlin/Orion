@@ -12,8 +12,8 @@ public class StockQuant extends StockDeal {
 
     private long mHold;
     private double mValuation;
-    private double mNetProfit;
-    private double mNetProfitMargin;
+    private double mQuantProfit;
+    private double mQuantProfitMargin;
 
     public StockQuant() {
         init();
@@ -34,8 +34,8 @@ public class StockQuant extends StockDeal {
 
         mHold = 0;
         mValuation = 0;
-        mNetProfit = 0;
-        mNetProfitMargin = 0;
+        mQuantProfit = 0;
+        mQuantProfitMargin = 0;
     }
 
     @Override
@@ -44,8 +44,8 @@ public class StockQuant extends StockDeal {
 
         contentValues.put(DatabaseContract.COLUMN_HOLD, mHold);
         contentValues.put(DatabaseContract.COLUMN_VALUATION, mValuation);
-        contentValues.put(DatabaseContract.COLUMN_NET_PROFIT, mNetProfit);
-        contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_MARGIN, mNetProfitMargin);
+        contentValues.put(DatabaseContract.COLUMN_QUANT_PROFIT, mQuantProfit);
+        contentValues.put(DatabaseContract.COLUMN_QUANT_PROFIT_MARGIN, mQuantProfitMargin);
 
         return contentValues;
     }
@@ -61,8 +61,8 @@ public class StockQuant extends StockDeal {
 
         setHold(stockQuant.mHold);
         setValuation(stockQuant.mValuation);
-        setNetProfit(stockQuant.mNetProfit);
-        setNetProfitMargin(stockQuant.mNetProfitMargin);
+        setQuantProfit(stockQuant.mQuantProfit);
+        setQuantProfitMargin(stockQuant.mQuantProfitMargin);
     }
 
     @Override
@@ -77,8 +77,8 @@ public class StockQuant extends StockDeal {
 
         setHold(cursor);
         setValuation(cursor);
-        setNetProfit(cursor);
-        setNetProfitMargin(cursor);
+        setQuantProfit(cursor);
+        setQuantProfitMargin(cursor);
     }
 
     public long getHold() {
@@ -115,38 +115,38 @@ public class StockQuant extends StockDeal {
                 .getColumnIndex(DatabaseContract.COLUMN_VALUATION)));
     }
 
-    public double getNetProfit() {
-        return mNetProfit;
+    public double getQuantProfit() {
+        return mQuantProfit;
     }
 
-    public void setNetProfit(double netProfit) {
-        mNetProfit = netProfit;
+    public void setQuantProfit(double quantProfit) {
+        mQuantProfit = quantProfit;
     }
 
-    void setNetProfit(Cursor cursor) {
+    void setQuantProfit(Cursor cursor) {
         if (cursor == null) {
             return;
         }
 
-        setNetProfit(cursor.getDouble(cursor
-                .getColumnIndex(DatabaseContract.COLUMN_NET_PROFIT)));
+        setQuantProfit(cursor.getDouble(cursor
+                .getColumnIndex(DatabaseContract.COLUMN_QUANT_PROFIT)));
     }
 
-    public double getNetProfitMargin() {
-        return mNetProfitMargin;
+    public double getQuantProfitMargin() {
+        return mQuantProfitMargin;
     }
 
-    public void setNetProfitMargin(double netProfitMargin) {
-        mNetProfitMargin = netProfitMargin;
+    public void setQuantProfitMargin(double quantProfitMargin) {
+        mQuantProfitMargin = quantProfitMargin;
     }
 
-    void setNetProfitMargin(Cursor cursor) {
+    void setQuantProfitMargin(Cursor cursor) {
         if (cursor == null) {
             return;
         }
 
-        setNetProfitMargin(cursor.getDouble(cursor
-                .getColumnIndex(DatabaseContract.COLUMN_NET_PROFIT_MARGIN)));
+        setQuantProfitMargin(cursor.getDouble(cursor
+                .getColumnIndex(DatabaseContract.COLUMN_QUANT_PROFIT_MARGIN)));
     }
 
     public double getBuyValueDay() {
@@ -181,12 +181,12 @@ public class StockQuant extends StockDeal {
         return result;
     }
 
-    public void setupNetProfitMargin() {
+    public void setupQuantProfitMargin() {
         if (mValuation != 0) {
-            mNetProfitMargin = Utility.Round(100 * mNetProfit / mValuation,
+            mQuantProfitMargin = Utility.Round(100 * mQuantProfit / mValuation,
                     Constants.DOUBLE_FIXED_DECIMAL);
         } else {
-            mNetProfitMargin = 0;
+            mQuantProfitMargin = 0;
         }
     }
 
@@ -201,8 +201,8 @@ public class StockQuant extends StockDeal {
         stringBuilder.append("mProfit=" + mProfit + ",  ");
         stringBuilder.append("mHold=" + mHold + ",  ");
         stringBuilder.append("mValuation=" + mValuation + ",  ");
-        stringBuilder.append("mNetProfit=" + mNetProfit + ",  ");
-        stringBuilder.append("mNetProfitMargin=" + mNetProfitMargin);
+        stringBuilder.append("mQuantProfit=" + mQuantProfit + ",  ");
+        stringBuilder.append("mQuantProfitMargin=" + mQuantProfitMargin);
 
         return stringBuilder.toString();
     }

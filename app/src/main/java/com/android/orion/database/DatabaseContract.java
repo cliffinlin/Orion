@@ -36,6 +36,8 @@ public final class DatabaseContract {
     public static final String COLUMN_YEAR = "year";
     public static final String COLUMN_NATURAL_THRESHOLD = "natural_threshold";
     public static final String COLUMN_QUANT_VOLUME = "quant_volume";
+    public static final String COLUMN_QUANT_PROFIT = "quant_profit";
+    public static final String COLUMN_QUANT_PROFIT_MARGIN = "quant_profit_margin";
     public static final String COLUMN_STATUS = "status";
     public static final String COLUMN_OPERATE = "operate";
     public static final String COLUMN_BUY = "buy";
@@ -113,6 +115,8 @@ public final class DatabaseContract {
     // http://vip.stock.finance.sina.com.cn/corp/go.php/vISSUE_ShareBonus/stockid/600028.phtml
     public static final String COLUMN_R_DATE = "r_date";
     public static final String COLUMN_TIME_TO_MARKET = "time_to_market";
+
+
     public static final String ORDER_BY = " ORDER BY ";
     public static final String ORDER_DIRECTION_ASC = " ASC ";
     public static final String ORDER_DIRECTION_DESC = " DESC ";
@@ -145,7 +149,7 @@ public final class DatabaseContract {
                 COLUMN_VOLUME, COLUMN_VALUE, COLUMN_DATE, COLUMN_TIME, COLUMN_MIN1, COLUMN_MIN5,
                 COLUMN_MIN15, COLUMN_MIN30, COLUMN_MIN60, COLUMN_DAY,
                 COLUMN_WEEK, COLUMN_MONTH, COLUMN_QUARTER, COLUMN_YEAR,
-                COLUMN_NATURAL_THRESHOLD, COLUMN_QUANT_VOLUME, COLUMN_TREND,
+                COLUMN_NATURAL_THRESHOLD, COLUMN_QUANT_VOLUME, COLUMN_QUANT_PROFIT, COLUMN_QUANT_PROFIT_MARGIN, COLUMN_TREND,
                 COLUMN_OPERATE, COLUMN_HOLD, COLUMN_COST, COLUMN_PROFIT,
                 COLUMN_BONUS, COLUMN_VALUATION, COLUMN_TOTAL_SHARE,
                 COLUMN_MARKET_VALUE, COLUMN_TOTAL_ASSETS,
@@ -182,6 +186,8 @@ public final class DatabaseContract {
                 + TEXT_TYPE + COMMA_SEP
                 + COLUMN_NATURAL_THRESHOLD + DOUBLE_TYPE + COMMA_SEP
                 + COLUMN_QUANT_VOLUME + INTEGER_TYPE + COMMA_SEP
+                + COLUMN_QUANT_PROFIT + DOUBLE_TYPE + COMMA_SEP
+                + COLUMN_QUANT_PROFIT_MARGIN + DOUBLE_TYPE + COMMA_SEP
                 + COLUMN_TREND + TEXT_TYPE + COMMA_SEP
                 + COLUMN_OPERATE + TEXT_TYPE + COMMA_SEP
                 + COLUMN_HOLD + INTEGER_TYPE + COMMA_SEP
@@ -341,7 +347,7 @@ public final class DatabaseContract {
                 COLUMN_CODE, COLUMN_NAME, COLUMN_ACCOUNT, COLUMN_ACTION, COLUMN_PRICE, COLUMN_NET,
                 COLUMN_BUY, COLUMN_SELL, COLUMN_VOLUME, COLUMN_VALUE, COLUMN_PROFIT,
                 COLUMN_FEE, COLUMN_BONUS, COLUMN_YIELD, COLUMN_HOLD, COLUMN_VALUATION,
-                COLUMN_NET_PROFIT, COLUMN_NET_PROFIT_MARGIN,
+                COLUMN_QUANT_PROFIT, COLUMN_QUANT_PROFIT_MARGIN,
                 COLUMN_CREATED, COLUMN_MODIFIED};
         static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
                 + TABLE_NAME;
@@ -362,8 +368,8 @@ public final class DatabaseContract {
                 + COLUMN_YIELD + DOUBLE_TYPE + COMMA_SEP
                 + COLUMN_HOLD + INTEGER_TYPE + COMMA_SEP
                 + COLUMN_VALUATION + DOUBLE_TYPE + COMMA_SEP
-                + COLUMN_NET_PROFIT + DOUBLE_TYPE + COMMA_SEP
-                + COLUMN_NET_PROFIT_MARGIN + DOUBLE_TYPE + COMMA_SEP
+                + COLUMN_QUANT_PROFIT + DOUBLE_TYPE + COMMA_SEP
+                + COLUMN_QUANT_PROFIT_MARGIN + DOUBLE_TYPE + COMMA_SEP
                 + COLUMN_CREATED + TEXT_TYPE
                 + COMMA_SEP + COLUMN_MODIFIED + TEXT_TYPE + " )";
         static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME

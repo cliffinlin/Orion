@@ -102,7 +102,7 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/net_profit"
+        android:id="@+id/quant_profit"
         android:layout_width="80dp"
         android:layout_height="50dp"
         android:layout_weight="1"
@@ -110,7 +110,7 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/net_profit_margin"
+        android:id="@+id/quant_profit_margin"
         android:layout_width="80dp"
         android:layout_height="50dp"
         android:layout_weight="1"

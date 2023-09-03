@@ -24,7 +24,7 @@ public class StockQuantAnalyzer {
     Context mContext;
 	
     long mHold;
-    double mNetProfit;
+    double mQuantProfit;
     double mValuation;
 
     public StockQuantAnalyzer() {
@@ -33,7 +33,7 @@ public class StockQuantAnalyzer {
 
     void init() {
         mHold = 0;
-        mNetProfit = 0;
+        mQuantProfit = 0;
         mValuation = 0;
 
         if (mStockQuantList == null) {
@@ -62,13 +62,13 @@ public class StockQuantAnalyzer {
         mHold += stockQuant.getVolume();
         stockQuant.setHold(mHold);
 
-        mNetProfit += stockQuant.getProfit();
-        stockQuant.setNetProfit(mNetProfit);
+        mQuantProfit += stockQuant.getProfit();
+        stockQuant.setQuantProfit(mQuantProfit);
 
         mValuation += stockQuant.getValue();
         stockQuant.setValuation(mValuation);
 
-        stockQuant.setupNetProfitMargin();
+        stockQuant.setupQuantProfitMargin();
 
         Log.d(TAG, stockQuant.toString());
 
@@ -76,6 +76,8 @@ public class StockQuantAnalyzer {
         Collections.sort(mStockQuantList, mComparator);
 
         StockDatabaseManager.getInstance(mContext).insertStockQuant(stockQuant);
+        stock.setQuantProfit(stockQuant.getQuantProfit());
+        stock.setQuantProfitMargin(stockQuant.getQuantProfitMargin());
     }
 
     void setupStockQuantSell(Stock stock, StockData stockData, double sellPrice, StockQuant stockQuant) {
@@ -98,10 +100,10 @@ public class StockQuantAnalyzer {
         mHold -= stockQuant.getVolume();
         stockQuant.setHold(mHold);
 
-        mNetProfit += stockQuant.getProfit();
-        stockQuant.setNetProfit(mNetProfit);
+        mQuantProfit += stockQuant.getProfit();
+        stockQuant.setQuantProfit(mQuantProfit);
 
-        stockQuant.setupNetProfitMargin();
+        stockQuant.setupQuantProfitMargin();
 
         mValuation -= stockQuant.getValue();
         stockQuant.setValuation(mValuation);
@@ -112,6 +114,8 @@ public class StockQuantAnalyzer {
         Collections.sort(mStockQuantList, mComparator);
 
         StockDatabaseManager.getInstance(mContext).insertStockQuant(stockQuant);
+        stock.setQuantProfit(stockQuant.getQuantProfit());
+        stock.setQuantProfitMargin(stockQuant.getQuantProfitMargin());
     }
 
     public void analyze(Context context, Stock stock, String period,

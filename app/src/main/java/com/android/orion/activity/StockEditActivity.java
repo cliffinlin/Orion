@@ -178,9 +178,9 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
             mStock.setNaturalThreshold(Constants.STOCK_NATURAL_THRESHOLD);
         }
 		mEditTextStockNaturalThreshold.setText(String.valueOf(mStock.getNaturalThreshold()));
-//		if (mStock.getQuantVolume() == 0) {
-//			mStock.setQuantVolume(Constants.STOCK_QUANT_VOLUME);
-//		}
+		if (mStock.getQuantVolume() == 0) {
+			mStock.setQuantVolume(Constants.STOCK_QUANT_VOLUME);
+		}
 		mEditTextStockQuantVolume.setText(String.valueOf(mStock.getQuantVolume()));
 		mEditTextStockYield.setText(String.valueOf(mStock.getYield()));
 

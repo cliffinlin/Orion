@@ -56,6 +56,8 @@ public class Stock extends DatabaseTable {
 
 	private double mNaturalThreshold;
 	private long mQuantVolume;
+	private double mQuantProfit;
+	private double mQuantProfitMargin;
 
 	private String mOperate;
 	private long mHold;
@@ -244,6 +246,8 @@ public class Stock extends DatabaseTable {
 
 	    mNaturalThreshold = 0;
 		mQuantVolume = 0;
+		mQuantProfit = 0;
+		mQuantProfitMargin = 0;
 
 		mCost = 0;
 		mProfit = 0;
@@ -308,6 +312,8 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_QUARTER, mActionQuarter);
 		contentValues.put(DatabaseContract.COLUMN_YEAR, mActionYear);
 		contentValues.put(DatabaseContract.COLUMN_TREND, mTrend);
+		contentValues.put(DatabaseContract.COLUMN_QUANT_PROFIT, mQuantProfit);
+		contentValues.put(DatabaseContract.COLUMN_QUANT_PROFIT_MARGIN, mQuantProfitMargin);
 
 		contentValues.put(DatabaseContract.COLUMN_HOLD, mHold);
 		contentValues.put(DatabaseContract.COLUMN_COST, mCost);
@@ -423,6 +429,8 @@ public class Stock extends DatabaseTable {
 
 		setNaturalThreshold(stock.mNaturalThreshold);
 		setQuantVolume(stock.mQuantVolume);
+		setQuantProfit(stock.mQuantProfit);
+		setQuantProfitMargin(stock.mQuantProfitMargin);
 
 		setOperate(stock.mOperate);
 		setHold(stock.mHold);
@@ -494,6 +502,8 @@ public class Stock extends DatabaseTable {
 		setTrend(cursor);
 		setNaturalThreshold(cursor);
 		setQuantVolume(cursor);
+		setQuantProfit(cursor);
+		setQuantProfitMargin(cursor);
 		setOperate(cursor);
 		setHold(cursor);
 		setCost(cursor);
@@ -968,6 +978,40 @@ public class Stock extends DatabaseTable {
 
 		setQuantVolume(cursor.getLong(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_QUANT_VOLUME)));
+	}
+
+	public double getQuantProfit() {
+		return mQuantProfit;
+	}
+
+	public void setQuantProfit(double quantProfit) {
+		mQuantProfit = quantProfit;
+	}
+
+	void setQuantProfit(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setQuantProfit(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_QUANT_PROFIT)));
+	}
+
+	public double getQuantProfitMargin() {
+		return mQuantProfitMargin;
+	}
+
+	public void setQuantProfitMargin(double quantProfitMargin) {
+		mQuantProfitMargin = quantProfitMargin;
+	}
+
+	void setQuantProfitMargin(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setQuantProfitMargin(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_QUANT_PROFIT_MARGIN)));
 	}
 
 	public String getOperate() {

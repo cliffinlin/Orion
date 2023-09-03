@@ -69,7 +69,7 @@ public class StockQuantListActivity extends ListActivity implements
     static final int mHeaderTextHighlightColor = Color.RED;
 
     String mSelection = null;
-    String mSortOrderColumn = DatabaseContract.COLUMN_NET;
+    String mSortOrderColumn = DatabaseContract.COLUMN_ID;
     String mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_ASC;
     String mSortOrderDefault = mSortOrderColumn + mSortOrderDirection;
     String mSortOrder = mSortOrderDefault;
@@ -90,8 +90,8 @@ public class StockQuantListActivity extends ListActivity implements
     TextView mTextViewAction = null;
     TextView mTextViewHold = null;
     TextView mTextViewValuation = null;
-    TextView mTextViewNetProfit = null;
-    TextView mTextViewNetProfitMargin = null;
+    TextView mTextViewQuantProfit = null;
+    TextView mTextViewQuantProfitMargin = null;
     TextView mTextViewCreated = null;
     TextView mTextViewModified = null;
 
@@ -352,9 +352,7 @@ public class StockQuantListActivity extends ListActivity implements
             case R.id.account:
                 mSortOrderColumn = DatabaseContract.COLUMN_ACCOUNT;
                 break;
-            case R.id.action:
-                mSortOrderColumn = DatabaseContract.COLUMN_ACTION;
-                break;
+
             case R.id.id:
                 mSortOrderColumn = BaseColumns._ID;
                 break;
@@ -376,11 +374,26 @@ public class StockQuantListActivity extends ListActivity implements
             case R.id.value:
                 mSortOrderColumn = DatabaseContract.COLUMN_VALUE;
                 break;
+            case R.id.fee:
+                mSortOrderColumn = DatabaseContract.COLUMN_FEE;
+                break;
             case R.id.profit:
                 mSortOrderColumn = DatabaseContract.COLUMN_PROFIT;
                 break;
-            case R.id.fee:
-                mSortOrderColumn = DatabaseContract.COLUMN_FEE;
+            case R.id.action:
+                mSortOrderColumn = DatabaseContract.COLUMN_ACTION;
+                break;
+            case R.id.hold:
+                mSortOrderColumn = DatabaseContract.COLUMN_HOLD;
+                break;
+            case R.id.valuation:
+                mSortOrderColumn = DatabaseContract.COLUMN_VALUATION;
+                break;
+            case R.id.quant_profit:
+                mSortOrderColumn = DatabaseContract.COLUMN_QUANT_PROFIT;
+                break;
+            case R.id.quant_profit_margin:
+                mSortOrderColumn = DatabaseContract.COLUMN_QUANT_PROFIT_MARGIN;
                 break;
             case R.id.created:
                 mSortOrderColumn = DatabaseContract.COLUMN_CREATED;
@@ -431,8 +444,8 @@ public class StockQuantListActivity extends ListActivity implements
         setHeaderTextColor(mTextViewAction, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewHold, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewValuation, mHeaderTextDefaultColor);
-        setHeaderTextColor(mTextViewNetProfit, mHeaderTextDefaultColor);
-        setHeaderTextColor(mTextViewNetProfitMargin, mHeaderTextDefaultColor);
+        setHeaderTextColor(mTextViewQuantProfit, mHeaderTextDefaultColor);
+        setHeaderTextColor(mTextViewQuantProfitMargin, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewCreated, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewModified, mHeaderTextDefaultColor);
     }
@@ -495,11 +508,11 @@ public class StockQuantListActivity extends ListActivity implements
         mTextViewValuation = (TextView) findViewById(R.id.valuation);
         mTextViewValuation.setOnClickListener(this);
 
-        mTextViewNetProfit = (TextView) findViewById(R.id.net_profit);
-        mTextViewNetProfit.setOnClickListener(this);
+        mTextViewQuantProfit = (TextView) findViewById(R.id.quant_profit);
+        mTextViewQuantProfit.setOnClickListener(this);
 
-        mTextViewNetProfitMargin = (TextView) findViewById(R.id.net_profit_margin);
-        mTextViewNetProfitMargin.setOnClickListener(this);
+        mTextViewQuantProfitMargin = (TextView) findViewById(R.id.quant_profit_margin);
+        mTextViewQuantProfitMargin.setOnClickListener(this);
 
         mTextViewCreated = (TextView) findViewById(R.id.created);
         mTextViewCreated.setOnClickListener(this);
@@ -534,10 +547,10 @@ public class StockQuantListActivity extends ListActivity implements
             setHeaderTextColor(mTextViewHold, mHeaderTextHighlightColor);
         } else if (mSortOrder.contains(DatabaseContract.COLUMN_VALUATION)) {
             setHeaderTextColor(mTextViewValuation, mHeaderTextHighlightColor);
-        } else if (mSortOrder.contains(DatabaseContract.COLUMN_NET_PROFIT)) {
-            setHeaderTextColor(mTextViewNetProfit, mHeaderTextHighlightColor);
-        } else if (mSortOrder.contains(DatabaseContract.COLUMN_NET_PROFIT_MARGIN)) {
-            setHeaderTextColor(mTextViewNetProfitMargin, mHeaderTextHighlightColor);
+        } else if (mSortOrder.contains(DatabaseContract.COLUMN_QUANT_PROFIT)) {
+            setHeaderTextColor(mTextViewQuantProfit, mHeaderTextHighlightColor);
+        } else if (mSortOrder.contains(DatabaseContract.COLUMN_QUANT_PROFIT_MARGIN)) {
+            setHeaderTextColor(mTextViewQuantProfitMargin, mHeaderTextHighlightColor);
         } else if (mSortOrder.contains(DatabaseContract.COLUMN_CREATED)) {
             setHeaderTextColor(mTextViewCreated, mHeaderTextHighlightColor);
         } else if (mSortOrder.contains(DatabaseContract.COLUMN_MODIFIED)) {
@@ -564,8 +577,8 @@ public class StockQuantListActivity extends ListActivity implements
                 DatabaseContract.COLUMN_ACTION,
                 DatabaseContract.COLUMN_HOLD,
                 DatabaseContract.COLUMN_VALUATION,
-                DatabaseContract.COLUMN_NET_PROFIT,
-                DatabaseContract.COLUMN_NET_PROFIT_MARGIN,
+                DatabaseContract.COLUMN_QUANT_PROFIT,
+                DatabaseContract.COLUMN_QUANT_PROFIT_MARGIN,
                 DatabaseContract.COLUMN_CREATED,
                 DatabaseContract.COLUMN_MODIFIED};
         int[] mRightTo = new int[]{
@@ -581,8 +594,8 @@ public class StockQuantListActivity extends ListActivity implements
                 R.id.action,
                 R.id.hold,
                 R.id.valuation,
-                R.id.net_profit,
-                R.id.net_profit_margin,
+                R.id.quant_profit,
+                R.id.quant_profit_margin,
                 R.id.created,
                 R.id.modified};
 
