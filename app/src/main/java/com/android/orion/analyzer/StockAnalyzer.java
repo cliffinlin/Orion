@@ -1206,7 +1206,7 @@ public class StockAnalyzer {
 		toSellProfit = getToSellProfit(stock);
 
 		notifyToBuy1 = true;
-		notifyToSell1 = false;
+		notifyToSell1 = true;
 
 		for (String period : Settings.KEY_PERIODS) {
 			if (Preferences.getBoolean(mContext, period, false)) {

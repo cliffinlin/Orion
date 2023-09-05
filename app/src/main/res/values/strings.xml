@@ -29,9 +29,9 @@
     <string name="action_filter">Filter</string>
     <string name="action_trend">Trend</string>
     <string name="action_natural">Natural</string>
-    <string name="action_quant_volume">QVolume</string>
-    <string name="action_quant_profit">QProfit</string>
-    <string name="action_quant_profit_margin">QMargin</string>
+    <string name="quant_volume">QVolume</string>
+    <string name="quant_profit">QProfit</string>
+    <string name="quant_profit_margin">QMargin</string>
     <string name="action_download">Download</string>
     <string name="action_delete">Delete</string>
     <string name="action_delete_all">Delete All</string>
