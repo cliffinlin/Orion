@@ -1,8 +1,10 @@
 package com.android.orion.sina;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -11,6 +13,7 @@ import org.jsoup.select.Elements;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.util.Log;
@@ -584,10 +587,11 @@ public class SinaFinance extends StockDataProvider {
 		stopWatch.start();
 		boolean bulkInsert = false;
 		int defaultValue = 0;
-		ContentValues[] contentValuesArray = null;
 		String dateTimeString = "";
 		String dateTime[] = null;
 		JSONArray jsonArray = null;
+		Calendar importCalendar = Utility.getCalendar("1998-01-01 00:00:00", Utility.CALENDAR_DATE_TIME_FORMAT);
+		List<ContentValues> contentValuesList = new ArrayList<ContentValues>();
 
 		if ((stock == null) || (stockData == null)
 				|| TextUtils.isEmpty(response)) {
@@ -622,9 +626,11 @@ public class SinaFinance extends StockDataProvider {
 				bulkInsert = true;
 			}
 
-			if (bulkInsert) {
-				if (contentValuesArray == null) {
-					contentValuesArray = new ContentValues[jsonArray.size()];
+			if (bulkInsert && Settings.KEY_PERIOD_MIN5.equals(stockData.getPeriod())) {
+				importFromFile(stock, stockData, contentValuesList);
+
+				if (!TextUtils.isEmpty(stockData.getDateTime())) {
+					importCalendar = Utility.getCalendar(stockData.getDateTime(), Utility.CALENDAR_DATE_TIME_FORMAT);
 				}
 			}
 
@@ -658,11 +664,18 @@ public class SinaFinance extends StockDataProvider {
 					stockData.setVertexLow(stockData.getLow());
 
 					if (bulkInsert) {
-						stockData
-								.setCreated(Utility.getCurrentDateTimeString());
-						stockData.setModified(Utility
-								.getCurrentDateTimeString());
-						contentValuesArray[i] = stockData.getContentValues();
+						if (Settings.KEY_PERIOD_MIN5.equals(stockData.getPeriod())) {
+							Calendar calendar = Utility.getCalendar(stockData.getDateTime(), Utility.CALENDAR_DATE_TIME_FORMAT);
+							if (calendar.after(importCalendar)) {
+								exportToFile(stock, stockData);
+							} else {
+								continue;
+							}
+						}
+
+						stockData.setCreated(Utility.getCurrentDateTimeString());
+						stockData.setModified(Utility.getCurrentDateTimeString());
+						contentValuesList.add(stockData.getContentValues());
 					} else {
 						if (!mStockDatabaseManager.isStockDataExist(stockData)) {
 							stockData.setCreated(Utility
@@ -685,7 +698,13 @@ public class SinaFinance extends StockDataProvider {
 			}
 
 			if (bulkInsert) {
-				mStockDatabaseManager.bulkInsertStockData(contentValuesArray);
+				if (contentValuesList.size() > 0) {
+					ContentValues[] contentValuesArray = new ContentValues[contentValuesList
+							.size()];
+					contentValuesArray = (ContentValues[]) contentValuesList
+							.toArray(contentValuesArray);
+					mStockDatabaseManager.bulkInsertStockData(contentValuesArray);
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -695,6 +714,99 @@ public class SinaFinance extends StockDataProvider {
 		Log.d(TAG, "handleResponseStockDataHistory:" + stock.getName() + " "
 				+ stockData.getPeriod() + " " + stopWatch.getInterval() + "s");
 	}
+
+	//					SH#600938.txt
+	//					日期	    时间	    开盘	    最高	    最低	    收盘	    成交量	    成交额
+	//					2023/01/03	0935	37.08	37.08	36.72	36.81	6066500	223727792.00
+
+	String getFileName(Stock stock) {
+		String fileName = "";
+
+		try {
+			fileName = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Orion/"
+					+ stock.getSE().toUpperCase(Locale.getDefault()) + "#" + stock.getCode() + Constants.DEAL_FILE_EXT;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return fileName;
+	}
+
+	void importFromFile(Stock stock, StockData stockData, List<ContentValues> contentValuesList) {
+		String fileName = "";
+		String dateString = "";
+		String timeString = "";
+		ArrayList<String> lineArray = new ArrayList<>();
+
+		if (stock == null || stockData == null || contentValuesList == null) {
+			return;
+		}
+
+		try {
+			fileName = getFileName(stock);
+			Utility.readFile(fileName, lineArray);
+
+			for (int i = 0; i < lineArray.size(); i++) {
+				String line = lineArray.get(i);
+				if (!TextUtils.isEmpty(line)) {
+					String[] strings = line.split("\t");
+					if (strings != null && strings.length > 6) {
+						dateString = strings[0].replace("/", "-");
+						stockData.setDate(dateString);
+						timeString = strings[1].substring(0, 2) + ":" + strings[1].substring(2, 4) + ":" + "00";
+						stockData.setTime(timeString);
+
+						stockData.setOpen(Double.valueOf(strings[2]));
+						stockData.setHigh(Double.valueOf(strings[3]));
+						stockData.setLow(Double.valueOf(strings[4]));
+						stockData.setClose(Double.valueOf(strings[5]));
+
+						stockData.setVertexHigh(stockData.getHigh());
+						stockData.setVertexLow(stockData.getLow());
+
+						stockData.setCreated(Utility.getCurrentDateTimeString());
+						stockData.setModified(Utility.getCurrentDateTimeString());
+
+						contentValuesList.add(stockData.getContentValues());
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	void exportToFile(Stock stock, StockData stockData) {
+		String fileName = "";
+		String dateString = "";
+		String timeString = "";
+		StringBuilder stockDataString = new StringBuilder();
+
+		if (stock == null || stockData == null) {
+			return;
+		}
+
+		try {
+			dateString = stockData.getDate().replace("-", "/");
+			timeString = stockData.getTime().substring(0, 5).replace(":", "");
+
+			stockDataString.append(dateString + "\t"
+					+ timeString + "\t"
+					+ stockData.getOpen() + "\t"
+					+ stockData.getHigh() + "\t"
+					+ stockData.getLow() + "\t"
+					+ stockData.getClose() + "\t"
+					+ 0 + "\t"
+					+ 0);
+			stockDataString.append("\r\n");
+
+			fileName = getFileName(stock);
+			Utility.writeFile(fileName, stockDataString.toString(), true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 /*
 	void setupStockDataRealtime(Stock stock, StockData stockData) {
 		int minutes = 0;

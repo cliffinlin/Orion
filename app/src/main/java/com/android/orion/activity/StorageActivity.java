@@ -165,7 +165,7 @@ public class StorageActivity extends DatabaseActivity {
 		OutputStream os = null;
 		try {
 			os = cr.openOutputStream(mUri);
-			saveToXml(os);
+			saveToXmlFile(os);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -179,7 +179,7 @@ public class StorageActivity extends DatabaseActivity {
 		InputStream is = null;
 		try {
 			is = cr.openInputStream(mUri);
-			loadFromXml(is);
+			loadFromXmlFile(is);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -189,7 +189,7 @@ public class StorageActivity extends DatabaseActivity {
 		mHandler.sendEmptyMessage(MESSAGE_REFRESH);
 	}
 
-	int loadFromXml(InputStream inputStream) {
+	int loadFromXmlFile(InputStream inputStream) {
 		int count = 0;
 
 		try {
@@ -363,7 +363,7 @@ public class StorageActivity extends DatabaseActivity {
 		return count;
 	}
 
-	int saveToXml(OutputStream outputStream) {
+	int saveToXmlFile(OutputStream outputStream) {
 		int count = 0;
 
 		XmlSerializer xmlSerializer = Xml.newSerializer();

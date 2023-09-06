@@ -579,21 +579,18 @@ public class Utility {
 	public static void readFile(String fileName, ArrayList<String> lineArray) {
 		FileReader fileReader = null;
 		BufferedReader bufferedReader = null;
-
 		String strLine;
-
-		lineArray.clear();
 
 		if (TextUtils.isEmpty(fileName) || (lineArray == null)) {
 			return;
 		}
 
+		lineArray.clear();
+
 		try {
 			fileReader = new FileReader(fileName);
-
 			if (fileReader != null) {
 				bufferedReader = new BufferedReader(fileReader);
-
 				if (bufferedReader != null) {
 					while ((strLine = bufferedReader.readLine()) != null) {
 						lineArray.add(strLine);

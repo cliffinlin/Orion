@@ -28,7 +28,7 @@ public class RecordFile {
                 + action + " "
                 + deal.getCreated() + " "
                 + deal.getModified() + " ");
-        logString.append("\n");
+        logString.append("\r\n");
 
         try {
             fileName = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Android/" + Constants.DEAL + Constants.DEAL_FILE_EXT;
@@ -43,7 +43,7 @@ public class RecordFile {
         StringBuilder logString = new StringBuilder();
 
         logString.append(content);
-        logString.append(" " + Utility.getCurrentDateTimeString() + "\n");
+        logString.append(" " + Utility.getCurrentDateTimeString() + "\r\n");
 
         try {
             fileName = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Android/" + Constants.NOTIFICATION + Constants.NOTIFICATION_FILE_EXT;
