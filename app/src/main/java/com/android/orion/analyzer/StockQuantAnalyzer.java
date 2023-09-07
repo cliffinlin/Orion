@@ -70,7 +70,7 @@ public class StockQuantAnalyzer {
 
         stockQuant.setupQuantProfitMargin();
 
-        Log.d(TAG, stockQuant.toString());
+//        Log.d(TAG, stockQuant.toString());
 
         mStockQuantList.add(stockQuant);
         Collections.sort(mStockQuantList, mComparator);
@@ -108,7 +108,7 @@ public class StockQuantAnalyzer {
         mValuation -= stockQuant.getValue();
         stockQuant.setValuation(mValuation);
 
-        Log.d(TAG, stockQuant.toString());
+//        Log.d(TAG, stockQuant.toString());
 
         mStockQuantList.remove(stockQuant);
         Collections.sort(mStockQuantList, mComparator);

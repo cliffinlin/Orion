@@ -63,8 +63,6 @@ public class StockListEditActivity extends DatabaseActivity implements
 		return null;
 	}
 
-	int mChangeCounter = 0;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -113,9 +111,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 	public void onDestroy() {
 		super.onDestroy();
 
-		if (mChangeCounter > 0) {
-			mOrionService.download();
-		}
+		mOrionService.download();
 	}
 
 	void restartLoader(Intent intent) {
@@ -366,7 +362,6 @@ public class StockListEditActivity extends DatabaseActivity implements
 				switch (view.getId()) {
 				case R.id.favorite:
 					if ((stock.getFlag() & Stock.FLAG_FAVORITE) == 0) {
-						mChangeCounter++;
 						stock.setFlag(Stock.FLAG_FAVORITE);
 						mStockDatabaseManager.updateStock(stock, stock.getContentValuesForEdit());
 					} else {

@@ -396,6 +396,18 @@ public class Utility {
 		}
 	}
 
+	public static void writeFile(String fileName, boolean value) {
+		String string;
+
+		if (value) {
+			string = "1";
+		} else {
+			string = "0";
+		}
+
+		writeFile(fileName, string);
+	}
+
 	public static void writeFile(String fileName, String value) {
 		writeFile(fileName, value, false);
 	}
@@ -406,6 +418,10 @@ public class Utility {
 
 		if (TextUtils.isEmpty(fileName) || (value == null)) {
 			return;
+		}
+
+		if (!isFileExists(fileName, false)) {
+			createFile(fileName, false);
 		}
 
 		try {
@@ -442,16 +458,52 @@ public class Utility {
 		}
 	}
 
-	public static void writeFile(String fileName, boolean value) {
-		String string;
+	public static void writeFile(String fileName, ArrayList<String> contentArray, boolean append) {
+		FileWriter fileWriter = null;
+		BufferedWriter bufferedWriter = null;
 
-		if (value) {
-			string = "1";
-		} else {
-			string = "0";
+		if (TextUtils.isEmpty(fileName) || contentArray == null || contentArray.size() == 0) {
+			return;
 		}
 
-		writeFile(fileName, string);
+		if (!isFileExists(fileName, false)) {
+			createFile(fileName, false);
+		}
+
+		try {
+			fileWriter = new FileWriter(fileName, append);
+
+			if (fileWriter != null) {
+				bufferedWriter = new BufferedWriter(fileWriter);
+
+				if (bufferedWriter != null) {
+					for (int i = 0; i < contentArray.size(); i++) {
+						bufferedWriter.write(contentArray.get(i));
+					}
+					bufferedWriter.flush();
+				}
+			}
+		} catch (FileNotFoundException e) {
+			Log.d(Constants.TAG, fileName + " not found.");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (bufferedWriter != null) {
+				try {
+					bufferedWriter.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (fileWriter != null) {
+				try {
+					fileWriter.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 
 	private void writeSdcard()  {
@@ -582,6 +634,10 @@ public class Utility {
 		String strLine;
 
 		if (TextUtils.isEmpty(fileName) || (lineArray == null)) {
+			return;
+		}
+
+		if (!isFileExists(fileName, false)) {
 			return;
 		}
 

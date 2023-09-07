@@ -6,9 +6,14 @@ import android.content.Context;
 public class OrionApplication extends Application {
 
 	public static Context mContext;
+	public static OrionApplication mInstance;
 
 	public static Context getContext() {
 		return mContext;
+	}
+
+	public static OrionApplication getInstance() {
+		return mInstance;
 	}
 
 	@Override
@@ -16,5 +21,6 @@ public class OrionApplication extends Application {
 		super.onCreate();
 
 		mContext = getApplicationContext();
+		mInstance = this;
 	}
 }

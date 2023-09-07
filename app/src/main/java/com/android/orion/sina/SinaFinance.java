@@ -591,7 +591,8 @@ public class SinaFinance extends StockDataProvider {
 		String dateTime[] = null;
 		JSONArray jsonArray = null;
 		Calendar importCalendar = Utility.getCalendar("1998-01-01 00:00:00", Utility.CALENDAR_DATE_TIME_FORMAT);
-		List<ContentValues> contentValuesList = new ArrayList<ContentValues>();
+		ArrayList<ContentValues> contentValuesList = new ArrayList<ContentValues>();
+		ArrayList<String> stockDataStringList = new ArrayList<String>();
 
 		if ((stock == null) || (stockData == null)
 				|| TextUtils.isEmpty(response)) {
@@ -629,7 +630,7 @@ public class SinaFinance extends StockDataProvider {
 			if (bulkInsert && Settings.KEY_PERIOD_MIN5.equals(stockData.getPeriod())) {
 				importFromFile(stock, stockData, contentValuesList);
 
-				if (!TextUtils.isEmpty(stockData.getDateTime())) {
+				if (contentValuesList.size() > 0) {
 					importCalendar = Utility.getCalendar(stockData.getDateTime(), Utility.CALENDAR_DATE_TIME_FORMAT);
 				}
 			}
@@ -667,7 +668,7 @@ public class SinaFinance extends StockDataProvider {
 						if (Settings.KEY_PERIOD_MIN5.equals(stockData.getPeriod())) {
 							Calendar calendar = Utility.getCalendar(stockData.getDateTime(), Utility.CALENDAR_DATE_TIME_FORMAT);
 							if (calendar.after(importCalendar)) {
-								exportToFile(stock, stockData);
+								addToStockDataStringList(stockData, stockDataStringList);
 							} else {
 								continue;
 							}
@@ -698,6 +699,12 @@ public class SinaFinance extends StockDataProvider {
 			}
 
 			if (bulkInsert) {
+				if (Settings.KEY_PERIOD_MIN5.equals(stockData.getPeriod())) {
+					if (stockDataStringList.size() > 0) {
+						exportToFile(stock, stockDataStringList);
+					}
+				}
+
 				if (contentValuesList.size() > 0) {
 					ContentValues[] contentValuesArray = new ContentValues[contentValuesList
 							.size()];
@@ -722,6 +729,10 @@ public class SinaFinance extends StockDataProvider {
 	String getFileName(Stock stock) {
 		String fileName = "";
 
+		if (stock == null) {
+			return fileName;
+		}
+
 		try {
 			fileName = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Orion/"
 					+ stock.getSE().toUpperCase(Locale.getDefault()) + "#" + stock.getCode() + Constants.DEAL_FILE_EXT;
@@ -732,7 +743,7 @@ public class SinaFinance extends StockDataProvider {
 		return fileName;
 	}
 
-	void importFromFile(Stock stock, StockData stockData, List<ContentValues> contentValuesList) {
+	void importFromFile(Stock stock, StockData stockData, ArrayList<ContentValues> contentValuesList) {
 		String fileName = "";
 		String dateString = "";
 		String timeString = "";
@@ -776,37 +787,40 @@ public class SinaFinance extends StockDataProvider {
 		}
 	}
 
-	void exportToFile(Stock stock, StockData stockData) {
-		String fileName = "";
-		String dateString = "";
-		String timeString = "";
-		StringBuilder stockDataString = new StringBuilder();
+	void addToStockDataStringList(StockData stockData, ArrayList<String> stockDataStringList) {
+		if (stockData == null || stockDataStringList == null) {
+			return;
+		}
 
-		if (stock == null || stockData == null) {
+		StringBuilder stockDataString = new StringBuilder();
+		String dateString = stockData.getDate().replace("-", "/");
+		String timeString = stockData.getTime().substring(0, 5).replace(":", "");
+		stockDataString.append(dateString + "\t"
+				+ timeString + "\t"
+				+ stockData.getOpen() + "\t"
+				+ stockData.getHigh() + "\t"
+				+ stockData.getLow() + "\t"
+				+ stockData.getClose() + "\t"
+				+ 0 + "\t"
+				+ 0);
+		stockDataString.append("\r\n");
+		stockDataStringList.add(stockDataString.toString());
+	}
+
+	void exportToFile(Stock stock, ArrayList<String> stockDataStringList) {
+		String fileName = "";
+
+		if (stock == null || stockDataStringList == null) {
 			return;
 		}
 
 		try {
-			dateString = stockData.getDate().replace("-", "/");
-			timeString = stockData.getTime().substring(0, 5).replace(":", "");
-
-			stockDataString.append(dateString + "\t"
-					+ timeString + "\t"
-					+ stockData.getOpen() + "\t"
-					+ stockData.getHigh() + "\t"
-					+ stockData.getLow() + "\t"
-					+ stockData.getClose() + "\t"
-					+ 0 + "\t"
-					+ 0);
-			stockDataString.append("\r\n");
-
 			fileName = getFileName(stock);
-			Utility.writeFile(fileName, stockDataString.toString(), true);
+			Utility.writeFile(fileName, stockDataStringList, true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-
 /*
 	void setupStockDataRealtime(Stock stock, StockData stockData) {
 		int minutes = 0;
@@ -1038,7 +1052,7 @@ public class SinaFinance extends StockDataProvider {
 		boolean bulkInsert = false;
 		String keyString = "";
 		String valueString = "";
-		List<ContentValues> contentValuesList = new ArrayList<ContentValues>();
+		ArrayList<ContentValues> contentValuesList = new ArrayList<ContentValues>();
 
 		if ((stock == null) || TextUtils.isEmpty(response)) {
 			Log.d(TAG, "handleResponseStockFinancial return " + " stock = "
@@ -1218,7 +1232,7 @@ public class SinaFinance extends StockDataProvider {
 		String dateString = "";
 		String dividendString = "";
 		String rDateString = "";
-		List<ContentValues> contentValuesList = new ArrayList<ContentValues>();
+		ArrayList<ContentValues> contentValuesList = new ArrayList<ContentValues>();
 
 		if ((stock == null) || TextUtils.isEmpty(response)) {
 			Log.d(TAG, "handleResponseShareBonus return " + " stock = " + stock
@@ -1361,7 +1375,7 @@ public class SinaFinance extends StockDataProvider {
 		boolean bulkInsert = false;
 		String dateString = "";
 		String totalShareString = "";
-		List<ContentValues> contentValuesList = new ArrayList<ContentValues>();
+		ArrayList<ContentValues> contentValuesList = new ArrayList<ContentValues>();
 
 		if ((stock == null) || TextUtils.isEmpty(response)) {
 			Log.d(TAG, "handleResponseTotalShare return " + " stock = " + stock
@@ -1515,7 +1529,7 @@ public class SinaFinance extends StockDataProvider {
 		String priceString = "";
 		String peString = "";
 
-		List<ContentValues> contentValuesList = new ArrayList<ContentValues>();
+		ArrayList<ContentValues> contentValuesList = new ArrayList<ContentValues>();
 
 		if (TextUtils.isEmpty(response)) {
 			Log.d(TAG, "handleResponseIPO return " + " response = " + response);

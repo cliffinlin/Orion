@@ -35,7 +35,7 @@
         <activity
             android:name="com.android.orion.activity.OrionMainActivity"
             android:label="@string/app_name"
-            android:launchMode="singleTop" >
+            android:launchMode="singleTask" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -45,58 +45,61 @@
         <activity
             android:name="com.android.orion.activity.AboutActivity"
             android:label="@string/title_activity_about"
-            android:launchMode="singleTop" >
+            android:launchMode="singleTask" >
         </activity>
         <activity android:name="com.android.orion.activity.DatabaseActivity" >
         </activity>
         <activity android:name="com.android.orion.activity.BaseActivity" >
         </activity>
-        <activity android:name="com.android.orion.activity.StockEditActivity" >
+        <activity
+            android:name="com.android.orion.activity.StockEditActivity"
+            android:label="@string/stock_edit"
+            android:launchMode="singleTask" >
         </activity>
         <activity
             android:name="com.android.orion.activity.StockDataChartListActivity"
             android:label="@string/stock_data_chart"
-            android:launchMode="singleTop" >
+            android:launchMode="singleTask" >
         </activity>
         <activity
             android:name="com.android.orion.activity.StockStatisticsChartListActivity"
             android:label="@string/stock_statistics_chart"
-            android:launchMode="singleTop" >
+            android:launchMode="singleTask" >
         </activity>
         <activity
             android:name="com.android.orion.activity.StockFinancialChartListActivity"
             android:label="@string/stock_financial_chart"
-            android:launchMode="singleTop" >
+            android:launchMode="singleTask" >
         </activity>
         <activity
             android:name="com.android.orion.activity.StockListActivity"
             android:label="@string/stock_list"
-            android:launchMode="singleTop" >
+            android:launchMode="singleTask" >
         </activity>
         <activity
             android:name="com.android.orion.activity.IndexComponentListActivity"
             android:label="@string/component_list"
-            android:launchMode="singleTop" >
+            android:launchMode="singleTask" >
         </activity>
          <activity
             android:name="com.android.orion.activity.StockTrendListActivity"
             android:label="@string/trend_list"
-            android:launchMode="singleTop" >
+            android:launchMode="singleTask" >
         </activity>
         <activity
             android:name="com.android.orion.activity.StockFinancialListActivity"
             android:label="@string/financial_list"
-            android:launchMode="singleTop" >
+            android:launchMode="singleTask" >
         </activity>
         <activity
             android:name="com.android.orion.activity.StockListEditActivity"
             android:label="@string/list"
-            android:launchMode="singleTop" >
+            android:launchMode="singleTask" >
         </activity>
         <activity
             android:name="com.android.orion.activity.StockSearchActivity"
             android:label="@string/search"
-            android:launchMode="singleTop" >
+            android:launchMode="singleTask" >
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -108,42 +111,42 @@
         <activity
             android:name="com.android.orion.activity.SettingActivity"
             android:label="@string/title_activity_settings"
-            android:launchMode="singleTop" >
+            android:launchMode="singleTask" >
         </activity>
         <activity
             android:name="com.android.orion.activity.SettingLoopbackActivity"
             android:label="@string/title_activity_setting_loopback"
-            android:launchMode="singleTop" >
+            android:launchMode="singleTask" >
         </activity>
         <activity
             android:name="com.android.orion.activity.DealListActivity"
             android:label="@string/title_activity_deal_list"
-            android:launchMode="singleTop" >
+            android:launchMode="singleTask" >
         </activity>
         <activity
             android:name="com.android.orion.activity.StockDealListActivity"
             android:label="@string/title_activity_deal_list"
-            android:launchMode="singleTop" >
+            android:launchMode="singleTask" >
         </activity>
         <activity
             android:name="com.android.orion.activity.StockDealActivity"
             android:label="@string/title_activity_deal"
-            android:launchMode="singleTop" >
+            android:launchMode="singleTask" >
         </activity>
         <activity
             android:name="com.android.orion.activity.StockIPOListActivity"
             android:label="@string/ipo_list"
-            android:launchMode="singleTop" >
+            android:launchMode="singleTask" >
         </activity>
         <activity
             android:name="com.android.orion.activity.StockFilterActivity"
             android:label="@string/filter"
-            android:launchMode="singleTop" >
+            android:launchMode="singleTask" >
         </activity>
         <activity
             android:name="com.android.orion.activity.StockQuantListActivity"
             android:label="@string/filter"
-            android:launchMode="singleTop" >
+            android:launchMode="singleTask" >
         </activity>
 
         <provider
