@@ -458,11 +458,11 @@ public class Utility {
 		}
 	}
 
-	public static void writeFile(String fileName, ArrayList<String> contentArray, boolean append) {
+	public static void writeFile(String fileName, ArrayList<String> lineList, boolean append) {
 		FileWriter fileWriter = null;
 		BufferedWriter bufferedWriter = null;
 
-		if (TextUtils.isEmpty(fileName) || contentArray == null || contentArray.size() == 0) {
+		if (TextUtils.isEmpty(fileName) || lineList == null || lineList.size() == 0) {
 			return;
 		}
 
@@ -477,8 +477,8 @@ public class Utility {
 				bufferedWriter = new BufferedWriter(fileWriter);
 
 				if (bufferedWriter != null) {
-					for (int i = 0; i < contentArray.size(); i++) {
-						bufferedWriter.write(contentArray.get(i));
+					for (int i = 0; i < lineList.size(); i++) {
+						bufferedWriter.write(lineList.get(i));
 					}
 					bufferedWriter.flush();
 				}
@@ -628,12 +628,12 @@ public class Utility {
 		return bytes;
 	}
 
-	public static void readFile(String fileName, ArrayList<String> lineArray) {
+	public static void readFile(String fileName, ArrayList<String> lineList) {
 		FileReader fileReader = null;
 		BufferedReader bufferedReader = null;
 		String strLine;
 
-		if (TextUtils.isEmpty(fileName) || (lineArray == null)) {
+		if (TextUtils.isEmpty(fileName) || (lineList == null)) {
 			return;
 		}
 
@@ -641,7 +641,7 @@ public class Utility {
 			return;
 		}
 
-		lineArray.clear();
+		lineList.clear();
 
 		try {
 			fileReader = new FileReader(fileName);
@@ -649,7 +649,7 @@ public class Utility {
 				bufferedReader = new BufferedReader(fileReader);
 				if (bufferedReader != null) {
 					while ((strLine = bufferedReader.readLine()) != null) {
-						lineArray.add(strLine);
+						lineList.add(strLine);
 					}
 				}
 			}
