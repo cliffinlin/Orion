@@ -91,12 +91,10 @@ public final class DatabaseContract {
     public static final String COLUMN_ACCOUNT = "account";
     public static final String COLUMN_ACTION = "action";
     public static final String COLUMN_TREND = "trend";
-    public static final String COLUMN_SECONDARY_RALLY = "secondary_rally";
     public static final String COLUMN_NATURAL_RALLY = "natural_rally";
     public static final String COLUMN_UPWARD_TREND = "upward_trend";
     public static final String COLUMN_DOWNWARD_TREND = "downward_trend";
     public static final String COLUMN_NATURAL_REACTION = "natural_reaction";
-    public static final String COLUMN_SECONDARY_REACTION = "secondary_reaction";
     // http://money.finance.sina.com.cn/corp/go.php/vFD_FinanceSummary/stockid/600028.phtml
     public static final String COLUMN_BOOK_VALUE_PER_SHARE = "book_value_per_share";
     public static final String COLUMN_CASH_FLOW_PER_SHARE = "cash_flow_per_share";
@@ -247,8 +245,8 @@ public final class DatabaseContract {
                 COLUMN_AVERAGE5, COLUMN_AVERAGE10, COLUMN_DIF, COLUMN_DEA,
                 COLUMN_HISTOGRAM, COLUMN_SIGMA_HISTOGRAM, COLUMN_VELOCITY, COLUMN_DIVERGENCE,
                 COLUMN_ACTION, COLUMN_ROI, COLUMN_PE, COLUMN_PB, COLUMN_YIELD,
-                COLUMN_SECONDARY_RALLY, COLUMN_NATURAL_RALLY, COLUMN_UPWARD_TREND,
-                COLUMN_DOWNWARD_TREND, COLUMN_NATURAL_REACTION, COLUMN_SECONDARY_REACTION,
+                COLUMN_NATURAL_RALLY, COLUMN_UPWARD_TREND,
+                COLUMN_DOWNWARD_TREND, COLUMN_NATURAL_REACTION,
                 COLUMN_CREATED, COLUMN_MODIFIED};
         static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
                 + TABLE_NAME;
@@ -281,12 +279,10 @@ public final class DatabaseContract {
                 + TEXT_TYPE + COMMA_SEP + COLUMN_ROI + DOUBLE_TYPE + COMMA_SEP
                 + COLUMN_PE + DOUBLE_TYPE + COMMA_SEP + COLUMN_PB + DOUBLE_TYPE
                 + COMMA_SEP + COLUMN_YIELD + DOUBLE_TYPE + COMMA_SEP
-                + COLUMN_SECONDARY_RALLY + DOUBLE_TYPE + COMMA_SEP
                 + COLUMN_NATURAL_RALLY + DOUBLE_TYPE + COMMA_SEP
                 + COLUMN_UPWARD_TREND + DOUBLE_TYPE + COMMA_SEP
                 + COLUMN_DOWNWARD_TREND + DOUBLE_TYPE + COMMA_SEP
                 + COLUMN_NATURAL_REACTION + DOUBLE_TYPE + COMMA_SEP
-                + COLUMN_SECONDARY_REACTION + DOUBLE_TYPE + COMMA_SEP
                 + COLUMN_CREATED + TEXT_TYPE + COMMA_SEP + COLUMN_MODIFIED
                 + TEXT_TYPE + " )";
         static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME

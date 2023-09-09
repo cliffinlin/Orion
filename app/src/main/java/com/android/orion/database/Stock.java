@@ -24,8 +24,7 @@ public class Stock extends DatabaseTable {
 	public static final long INVALID_ID = 0;
 
 	public static final int FLAG_NONE = 0;
-	public static final int FLAG_FAVORITE = 1 << 0;
-	public static final int FLAG_RECENT = 1 << 2;
+	public static final int FLAG_FAVORITE = 1;
 
 	private int mFlag;
 	private String mClasses;

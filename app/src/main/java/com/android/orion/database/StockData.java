@@ -76,13 +76,11 @@ public class StockData extends StockDatabaseTable {
 	public static final int POSITION_NONE = 0;
 	public static final int POSITION_BELOW = -1;
 
+	public static final int MARKET_KEY_UPWARD_TREND = 2;
+	public static final int MARKET_KEY_NATURAL_RALLY = 1;
 	public static final int MARKET_KEY_NONE = 0;
-	public static final int MARKET_KEY_SECONDARY_RALLY = 1 << 0;
-	public static final int MARKET_KEY_NATURAL_RALLY = 1 << 1;
-	public static final int MARKET_KEY_UPWARD_TREND = 1 << 2;
-	public static final int MARKET_KEY_DOWNWARD_TREND = 1 << 3;
-	public static final int MARKET_KEY_NATURAL_REACTION = 1 << 4;
-	public static final int MARKET_KEY_SECONDARY_REACTION = 1 << 5;
+	public static final int MARKET_KEY_NATURAL_REACTION = -1;
+    public static final int MARKET_KEY_DOWNWARD_TREND = -2;
 
 	private long mStockId;
 	private String mSE;
@@ -117,12 +115,10 @@ public class StockData extends StockDatabaseTable {
 	private double mPb;
 	private double mYield;
 
-	private double mSecondaryRally;
 	private double mNaturalRally;
 	private double mUpwardTrend;
 	private double mDownwardTrend;
 	private double mNaturalReaction;
-	private double mSecondaryReaction;
 
 	private int mIndex;
 	private int mIndexStart;
@@ -198,12 +194,10 @@ public class StockData extends StockDatabaseTable {
 		mIndexStart = 0;
 		mIndexEnd = 0;
 
-		mSecondaryRally = 0;
 		mNaturalRally = 0;
 		mUpwardTrend = 0;
 		mDownwardTrend = 0;
 		mNaturalReaction = 0;
-		mSecondaryReaction = 0;
 	}
 
 	@Override
@@ -245,12 +239,10 @@ public class StockData extends StockDatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_PB, mPb);
 		contentValues.put(DatabaseContract.COLUMN_YIELD, mYield);
 
-		contentValues.put(DatabaseContract.COLUMN_SECONDARY_RALLY, mSecondaryRally);
 		contentValues.put(DatabaseContract.COLUMN_NATURAL_RALLY, mNaturalRally);
 		contentValues.put(DatabaseContract.COLUMN_UPWARD_TREND, mUpwardTrend);
 		contentValues.put(DatabaseContract.COLUMN_DOWNWARD_TREND, mDownwardTrend);
 		contentValues.put(DatabaseContract.COLUMN_NATURAL_REACTION, mNaturalReaction);
-		contentValues.put(DatabaseContract.COLUMN_SECONDARY_REACTION, mSecondaryReaction);
 
 		return contentValues;
 	}
@@ -297,12 +289,10 @@ public class StockData extends StockDatabaseTable {
 		setPb(stockData.mPb);
 		setYield(stockData.mYield);
 
-		setSecondaryRally(stockData.mSecondaryRally);
 		setNaturalRally(stockData.mNaturalRally);
 		setUpwardTrend(stockData.mUpwardTrend);
 		setDownwardTrend(stockData.mDownwardTrend);
 		setNaturalReaction(stockData.mNaturalReaction);
-		setSecondaryReaction(stockData.mSecondaryReaction);
 
 		setIndex(stockData.mIndex);
 		setIndexStart(stockData.mIndexStart);
@@ -352,12 +342,10 @@ public class StockData extends StockDatabaseTable {
 		setPb(cursor);
 		setYield(cursor);
 
-		setSecondaryRally(cursor);
 		setNaturalRally(cursor);
 		setUpwardTrend(cursor);
 		setDownwardTrend(cursor);
 		setNaturalReaction(cursor);
-		setSecondaryReaction(cursor);
 	}
 
 	public long getStockId() {
@@ -895,23 +883,6 @@ public class StockData extends StockDatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_YIELD)));
 	}
 
-	public double getSecondaryRally() {
-		return mSecondaryRally;
-	}
-
-	public void setSecondaryRally(double secondaryRally) {
-		mSecondaryRally = secondaryRally;
-	}
-
-	public void setSecondaryRally(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setSecondaryRally(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_SECONDARY_RALLY)));
-	}
-
 	public double getNaturalRally() {
 		return mNaturalRally;
 	}
@@ -978,23 +949,6 @@ public class StockData extends StockDatabaseTable {
 
 		setNaturalReaction(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_NATURAL_REACTION)));
-	}
-
-	public double getSecondaryReaction() {
-		return mSecondaryReaction;
-	}
-
-	public void setSecondaryReaction(double secondaryReaction) {
-		mSecondaryReaction = secondaryReaction;
-	}
-
-	void setSecondaryReaction(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setSecondaryReaction(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_SECONDARY_REACTION)));
 	}
 
 	public boolean directionOf(int direction) {

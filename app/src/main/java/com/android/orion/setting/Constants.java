@@ -65,6 +65,6 @@ public class Constants {
 
 	public static final double ROI_COEFFICIENT = 1.0 / 1000;
 
-	public static final double STOCK_NATURAL_THRESHOLD = 3.0;
+	public static final double STOCK_NATURAL_THRESHOLD = 6.0;
 	public static final long STOCK_QUANT_VOLUME = 500;
 }

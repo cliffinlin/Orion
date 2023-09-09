@@ -17,12 +17,10 @@ public class StockKeyAnalyzer {
 
     private int mMarketKeyType = StockData.MARKET_KEY_NONE;
 
-    private double mSecondaryRally;
     private double mNaturalRally;
     private double mUpwardTrend;
     private double mDownwardTrend;
     private double mNaturalReaction;
-    private double mSecondaryReaction;
 
     private double mPrevHigh;
     private double mPrevLow;
@@ -34,12 +32,10 @@ public class StockKeyAnalyzer {
     void init() {
         mMarketKeyType = StockData.MARKET_KEY_NONE;
 
-        mSecondaryRally = 0;
         mNaturalRally = 0;
         mUpwardTrend = 0;
         mDownwardTrend = 0;
         mNaturalReaction = 0;
-        mSecondaryReaction = 0;
 
         mPrevHigh = 0;
         mPrevLow = 0;
@@ -87,9 +83,6 @@ public class StockKeyAnalyzer {
             DEBUG(TAG, "i=" + i + " current.getDate()=" + current.getDate() + " current.getLow()=" + current.getLow() + " current.getHigh()=" + current.getHigh());
 
             switch (mMarketKeyType) {
-                case StockData.MARKET_KEY_SECONDARY_RALLY:
-                    break;
-
                 case StockData.MARKET_KEY_NATURAL_RALLY:
                     DEBUG(TAG, "case StockData.MARKET_KEY_NATURAL_RALLY: mNaturalRally=" + mNaturalRally);
                     if (current.getHigh() > mNaturalRally) {
@@ -166,9 +159,6 @@ public class StockKeyAnalyzer {
                     }
                     break;
 
-                case StockData.MARKET_KEY_SECONDARY_REACTION:
-                    break;
-
                 default:
                     DEBUG(TAG, "default:");
                     if (current.getHigh() > prev.getHigh()) {
@@ -227,12 +217,10 @@ public class StockKeyAnalyzer {
             return;
         }
 
-        stockData.setSecondaryRally(0);
         stockData.setNaturalRally(0);
         stockData.setUpwardTrend(0);
         stockData.setDownwardTrend(0);
         stockData.setNaturalReaction(0);
-        stockData.setSecondaryReaction(0);
     }
 
     void setNaturalRally(StockData stockData) {
