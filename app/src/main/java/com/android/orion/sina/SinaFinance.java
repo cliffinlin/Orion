@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -583,7 +584,7 @@ public class SinaFinance extends StockDataProvider {
 	}
 
 	@Override
-	public void handleResponseStockDataHistory(Stock stock, StockData stockData,
+	public void handleResponseStockDataHistory(@NonNull Stock stock, @NonNull StockData stockData,
 											   String response) {
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
@@ -597,8 +598,7 @@ public class SinaFinance extends StockDataProvider {
 		ArrayList<String> exportLineList = new ArrayList<>();
 		Calendar importCalendar = Utility.getCalendar("1998-01-01 00:00:00", Utility.CALENDAR_DATE_TIME_FORMAT);
 
-		if ((stock == null) || (stockData == null)
-				|| TextUtils.isEmpty(response)) {
+		if (TextUtils.isEmpty(response)) {
 			Log.d(TAG, "handleResponseStockDataHistory return " + " stock = "
 					+ stock + " stockData = " + stockData + " response = "
 					+ response);
@@ -631,6 +631,8 @@ public class SinaFinance extends StockDataProvider {
 			}
 
 			if (bulkInsert) {
+				convertStockDataFile(stock);
+
 				if (isMinutePeriod(stockData)) {
 					importFromFile(stock, stockData, contentValuesList);
 
@@ -706,7 +708,7 @@ public class SinaFinance extends StockDataProvider {
 			if (bulkInsert) {
 				if (isMinutePeriod(stockData)) {
 					if (exportLineList.size() > 0) {
-						exportToFile(stock, stockData.getPeriod(), exportLineList);
+						exportToFile(stock, stockData.getPeriod(), exportLineList, true);
 					}
 				}
 
@@ -732,6 +734,20 @@ public class SinaFinance extends StockDataProvider {
 	//					2023/01/03	0935	37.08	37.08	36.72	36.81	6066500	223727792.00
 
 	@NonNull
+	String getStockDataFileName(@NonNull Stock stock) {
+		String fileName = "";
+
+		try {
+			fileName = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Orion/"
+					+ stock.getSE().toUpperCase(Locale.getDefault()) + "#" + stock.getCode() + Constants.DEAL_FILE_EXT;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return fileName;
+	}
+
+	@NonNull
 	String getStockDataFileName(@NonNull Stock stock, String period) {
 		String fileName = "";
 
@@ -743,6 +759,172 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		return fileName;
+	}
+
+	void initMinList(@NonNull ArrayList<String> min15List, @NonNull ArrayList<String> min30List, @NonNull ArrayList<String> min60List) {
+		min15List.add("0945");
+		min15List.add("1000");
+		min15List.add("1015");
+		min15List.add("1030");
+		min15List.add("1045");
+		min15List.add("1100");
+		min15List.add("1115");
+		min15List.add("1130");
+		min15List.add("1315");
+		min15List.add("1330");
+		min15List.add("1345");
+		min15List.add("1400");
+		min15List.add("1415");
+		min15List.add("1430");
+		min15List.add("1445");
+		min15List.add("1500");
+
+		min30List.add("1000");
+		min30List.add("1030");
+		min30List.add("1100");
+		min30List.add("1130");
+		min30List.add("1330");
+		min30List.add("1400");
+		min30List.add("1430");
+		min30List.add("1500");
+
+		min60List.add("1030");
+		min60List.add("1130");
+		min60List.add("1400");
+		min60List.add("1500");
+	}
+
+	StockData mergeStockData(@NonNull ArrayList<StockData> stockDataList, int size) {
+		double high = 0;
+		double low = 0;
+
+		if (stockDataList.size() == 0 || size <= 0) {
+			return null;
+		}
+
+		int j = 0;
+		StockData result = new StockData();
+		for (int i = stockDataList.size()-1; i >=0; i--, j++) {
+			if (j >= size) {
+				break;
+			}
+
+			StockData stockData = stockDataList.get(i);
+
+			if (i == stockDataList.size()-1) {
+				high = stockData.getHigh();
+				low = stockData.getLow();
+
+				result.setDate(stockData.getDate());
+				result.setTime(stockData.getTime());
+			}
+
+			result.setOpen(stockData.getOpen());
+
+			if (stockData.getHigh() > high) {
+				high = stockData.getHigh();
+			}
+			result.setHigh(high);
+
+			if (stockData.getLow() < low) {
+				low = stockData.getLow();
+			}
+			result.setLow(low);
+
+			if (i == stockDataList.size()-1) {
+				result.setClose(stockData.getClose());
+			}
+		}
+
+		return result;
+	}
+
+	void convertStockDataFile(@NonNull Stock stock) {
+		String fileName = "";
+		String dateString = "";
+		String timeString = "";
+
+		ArrayList<String> min15List = new ArrayList<>();
+		ArrayList<String> min30List = new ArrayList<>();
+		ArrayList<String> min60List = new ArrayList<>();
+
+		ArrayList<String> importLineList = new ArrayList<>();
+
+		ArrayList<String> exportLineMin5List = new ArrayList<>();
+		ArrayList<String> exportLineMin15List = new ArrayList<>();
+		ArrayList<String> exportLineMin30List = new ArrayList<>();
+		ArrayList<String> exportLineMin60List = new ArrayList<>();
+
+		ArrayList<StockData> StockDataMin5List = new ArrayList<>();
+		ArrayList<StockData> StockDataMin15List = new ArrayList<>();
+		ArrayList<StockData> StockDataMin30List = new ArrayList<>();
+		ArrayList<StockData> StockDataMin60List = new ArrayList<>();
+
+		try {
+			fileName = getStockDataFileName(stock);
+			Utility.readFile(fileName, importLineList);
+
+			if (importLineList.size() == 0) {
+				return;
+			}
+
+			initMinList(min15List, min30List, min60List);
+
+			for (int i = 0; i < importLineList.size(); i++) {
+				String line = importLineList.get(i);
+				if (!TextUtils.isEmpty(line)) {
+					String[] strings = line.split("\t");
+					if (strings != null && strings.length > 6) {
+						StockData stockData5 = new StockData();
+
+						dateString = strings[0].replace("/", "-");
+						stockData5.setDate(dateString);
+						timeString = strings[1].substring(0, 2) + ":" + strings[1].substring(2, 4) + ":" + "00";
+						stockData5.setTime(timeString);
+
+						stockData5.setOpen(Double.valueOf(strings[2]));
+						stockData5.setHigh(Double.valueOf(strings[3]));
+						stockData5.setLow(Double.valueOf(strings[4]));
+						stockData5.setClose(Double.valueOf(strings[5]));
+
+						StockDataMin5List.add(stockData5);
+                        addToExportLineList(stockData5, exportLineMin5List);
+
+						if (min15List.contains(strings[1])) {
+							StockData stockData15 = mergeStockData(StockDataMin5List, 3);
+							if (stockData15 != null) {
+								StockDataMin15List.add(stockData15);
+								addToExportLineList(stockData15, exportLineMin15List);
+							}
+						}
+
+						if (min30List.contains(strings[1])) {
+							StockData stockData30 = mergeStockData(StockDataMin15List, 2);
+							if (stockData30 != null) {
+								StockDataMin30List.add(stockData30);
+								addToExportLineList(stockData30, exportLineMin30List);
+							}
+						}
+
+						if (min60List.contains(strings[1])) {
+							StockData stockData60 = mergeStockData(StockDataMin30List, 2);
+							if (stockData60 != null) {
+								StockDataMin60List.add(stockData60);
+								addToExportLineList(stockData60, exportLineMin60List);
+							}
+						}
+					}
+				}
+			}
+
+			exportToFile(stock, Settings.KEY_PERIOD_MIN5, exportLineMin5List, false);
+//			exportToFile(stock, Settings.KEY_PERIOD_MIN15, exportLineMin15List, false);
+//			exportToFile(stock, Settings.KEY_PERIOD_MIN30, exportLineMin30List, false);
+//			exportToFile(stock, Settings.KEY_PERIOD_MIN60, exportLineMin60List, false);
+			Utility.deleteFile(fileName, false);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	void importFromFile(@NonNull Stock stock, @NonNull StockData stockData, @NonNull ArrayList<ContentValues> contentValuesList) {
@@ -759,7 +941,7 @@ public class SinaFinance extends StockDataProvider {
 				String line = importLineList.get(i);
 				if (!TextUtils.isEmpty(line)) {
 					String[] strings = line.split("\t");
-					if (strings != null && strings.length == 6) {
+					if (strings != null && strings.length > 6) {
 						dateString = strings[0].replace("/", "-");
 						stockData.setDate(dateString);
 						timeString = strings[1].substring(0, 2) + ":" + strings[1].substring(2, 4) + ":" + "00";
@@ -801,12 +983,12 @@ public class SinaFinance extends StockDataProvider {
         exportLineList.add(stockDataString.toString());
 	}
 
-	void exportToFile(@NonNull Stock stock, String period, @NonNull ArrayList<String> lineList) {
+	void exportToFile(@NonNull Stock stock, String period, @NonNull ArrayList<String> lineList, boolean append) {
 		String fileName = "";
 
 		try {
 			fileName = getStockDataFileName(stock, period);
-			Utility.writeFile(fileName, lineList, true);
+			Utility.writeFile(fileName, lineList, append);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

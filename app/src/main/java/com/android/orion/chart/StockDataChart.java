@@ -317,22 +317,22 @@ public class StockDataChart {
 			if (mLineEntryList.size() > 0) {
 				LineDataSet lineDataSet = new LineDataSet(mLineEntryList,
 						"Line");
-				lineDataSet.setColor(Color.GREEN);
-				lineDataSet.setCircleColor(Color.GREEN);
-				lineDataSet.setCircleSize(0);
-				lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-				lineData.addDataSet(lineDataSet);
-			}
-
-			if (mOutlineEntryList.size() > 0) {
-				LineDataSet lineDataSet = new LineDataSet(mOutlineEntryList,
-						"Outline");
 				lineDataSet.setColor(Color.RED);
 				lineDataSet.setCircleColor(Color.RED);
 				lineDataSet.setCircleSize(0);
 				lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 				lineData.addDataSet(lineDataSet);
 			}
+
+//			if (mOutlineEntryList.size() > 0) {
+//				LineDataSet lineDataSet = new LineDataSet(mOutlineEntryList,
+//						"Outline");
+//				lineDataSet.setColor(Color.RED);
+//				lineDataSet.setCircleColor(Color.RED);
+//				lineDataSet.setCircleSize(0);
+//				lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+//				lineData.addDataSet(lineDataSet);
+//			}
 		}
 
 		if ((mOverlapHighEntryList.size() > 0)

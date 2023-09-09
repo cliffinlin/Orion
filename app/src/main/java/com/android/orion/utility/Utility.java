@@ -630,12 +630,12 @@ public class Utility {
 		return bytes;
 	}
 
-	public static void readFile(String fileName, ArrayList<String> lineList) {
+	public static void readFile(String fileName, @NonNull ArrayList<String> lineList) {
 		FileReader fileReader = null;
 		BufferedReader bufferedReader = null;
 		String strLine;
 
-		if (TextUtils.isEmpty(fileName) || (lineList == null)) {
+		if (TextUtils.isEmpty(fileName)) {
 			return;
 		}
 
