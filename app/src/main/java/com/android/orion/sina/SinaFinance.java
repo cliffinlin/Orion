@@ -18,6 +18,8 @@ import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -628,11 +630,13 @@ public class SinaFinance extends StockDataProvider {
 				bulkInsert = true;
 			}
 
-			if (bulkInsert && Settings.KEY_PERIOD_MIN5.equals(stockData.getPeriod())) {
-				importFromFile(stock, stockData, contentValuesList);
+			if (bulkInsert) {
+				if (isMinutePeriod(stockData)) {
+					importFromFile(stock, stockData, contentValuesList);
 
-				if (contentValuesList.size() > 0) {
-					importCalendar = Utility.getCalendar(stockData.getDateTime(), Utility.CALENDAR_DATE_TIME_FORMAT);
+					if (contentValuesList.size() > 0) {
+						importCalendar = Utility.getCalendar(stockData.getDateTime(), Utility.CALENDAR_DATE_TIME_FORMAT);
+					}
 				}
 			}
 
@@ -666,7 +670,7 @@ public class SinaFinance extends StockDataProvider {
 					stockData.setVertexLow(stockData.getLow());
 
 					if (bulkInsert) {
-						if (Settings.KEY_PERIOD_MIN5.equals(stockData.getPeriod())) {
+						if (isMinutePeriod(stockData)) {
 							Calendar calendar = Utility.getCalendar(stockData.getDateTime(), Utility.CALENDAR_DATE_TIME_FORMAT);
 							if (calendar.after(importCalendar)) {
 								addToExportLineList(stockData, exportLineList);
@@ -700,9 +704,9 @@ public class SinaFinance extends StockDataProvider {
 			}
 
 			if (bulkInsert) {
-				if (Settings.KEY_PERIOD_MIN5.equals(stockData.getPeriod())) {
+				if (isMinutePeriod(stockData)) {
 					if (exportLineList.size() > 0) {
-						exportToFile(stock, exportLineList);
+						exportToFile(stock, stockData.getPeriod(), exportLineList);
 					}
 				}
 
@@ -727,16 +731,13 @@ public class SinaFinance extends StockDataProvider {
 	//					日期	    时间	    开盘	    最高	    最低	    收盘	    成交量	    成交额
 	//					2023/01/03	0935	37.08	37.08	36.72	36.81	6066500	223727792.00
 
-	String getFileName(Stock stock) {
+	@NonNull
+	String getStockDataFileName(@NonNull Stock stock, String period) {
 		String fileName = "";
-
-		if (stock == null) {
-			return fileName;
-		}
 
 		try {
 			fileName = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Orion/"
-					+ stock.getSE().toUpperCase(Locale.getDefault()) + "#" + stock.getCode() + Constants.DEAL_FILE_EXT;
+					+ stock.getSE().toUpperCase(Locale.getDefault()) + "#" + stock.getCode() + "#" + period + Constants.DEAL_FILE_EXT;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -744,25 +745,21 @@ public class SinaFinance extends StockDataProvider {
 		return fileName;
 	}
 
-	void importFromFile(Stock stock, StockData stockData, ArrayList<ContentValues> contentValuesList) {
+	void importFromFile(@NonNull Stock stock, @NonNull StockData stockData, @NonNull ArrayList<ContentValues> contentValuesList) {
 		String fileName = "";
 		String dateString = "";
 		String timeString = "";
         ArrayList<String> importLineList = new ArrayList<>();
 
-		if (stock == null || stockData == null || contentValuesList == null) {
-			return;
-		}
-
 		try {
-			fileName = getFileName(stock);
+			fileName = getStockDataFileName(stock, stockData.getPeriod());
 			Utility.readFile(fileName, importLineList);
 
 			for (int i = 0; i < importLineList.size(); i++) {
 				String line = importLineList.get(i);
 				if (!TextUtils.isEmpty(line)) {
 					String[] strings = line.split("\t");
-					if (strings != null && strings.length > 6) {
+					if (strings != null && strings.length == 6) {
 						dateString = strings[0].replace("/", "-");
 						stockData.setDate(dateString);
 						timeString = strings[1].substring(0, 2) + ":" + strings[1].substring(2, 4) + ":" + "00";
@@ -788,11 +785,7 @@ public class SinaFinance extends StockDataProvider {
 		}
 	}
 
-	void addToExportLineList(StockData stockData, ArrayList<String> exportLineList) {
-		if (stockData == null || exportLineList == null) {
-			return;
-		}
-
+	void addToExportLineList(@NonNull StockData stockData, @NonNull ArrayList<String> exportLineList) {
 		StringBuilder stockDataString = new StringBuilder();
 		String dateString = stockData.getDate().replace("-", "/");
 		String timeString = stockData.getTime().substring(0, 5).replace(":", "");
@@ -808,21 +801,41 @@ public class SinaFinance extends StockDataProvider {
         exportLineList.add(stockDataString.toString());
 	}
 
-	void exportToFile(Stock stock, ArrayList<String> lineList) {
+	void exportToFile(@NonNull Stock stock, String period, @NonNull ArrayList<String> lineList) {
 		String fileName = "";
 
-		if (stock == null || lineList == null) {
-			return;
-		}
-
 		try {
-			fileName = getFileName(stock);
+			fileName = getStockDataFileName(stock, period);
 			Utility.writeFile(fileName, lineList, true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-/*
+
+	boolean isMinutePeriod(@NonNull StockData stockData) {
+		boolean result = false;
+
+		switch (stockData.getPeriod()) {
+			case Settings.KEY_PERIOD_MIN1:
+			case Settings.KEY_PERIOD_MIN5:
+			case Settings.KEY_PERIOD_MIN15:
+			case Settings.KEY_PERIOD_MIN30:
+			case Settings.KEY_PERIOD_MIN60:
+				result = true;
+				break;
+			case Settings.KEY_PERIOD_DAY:
+			case Settings.KEY_PERIOD_WEEK:
+			case Settings.KEY_PERIOD_MONTH:
+			case Settings.KEY_PERIOD_QUARTER:
+			case Settings.KEY_PERIOD_YEAR:
+			default:
+				break;
+		}
+
+		return result;
+	}
+
+	/*
 	void setupStockDataRealtime(Stock stock, StockData stockData) {
 		int minutes = 0;
 		boolean result = false;

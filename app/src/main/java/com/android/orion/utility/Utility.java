@@ -33,6 +33,8 @@ import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.android.orion.setting.Constants;
 
 public class Utility {
@@ -458,11 +460,11 @@ public class Utility {
 		}
 	}
 
-	public static void writeFile(String fileName, ArrayList<String> lineList, boolean append) {
+	public static void writeFile(@NonNull String fileName, @NonNull ArrayList<String> lineList, boolean append) {
 		FileWriter fileWriter = null;
 		BufferedWriter bufferedWriter = null;
 
-		if (TextUtils.isEmpty(fileName) || lineList == null || lineList.size() == 0) {
+		if (TextUtils.isEmpty(fileName) || lineList.size() == 0) {
 			return;
 		}
 
