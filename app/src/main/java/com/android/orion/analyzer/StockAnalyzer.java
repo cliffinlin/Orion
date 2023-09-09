@@ -160,55 +160,24 @@ public class StockAnalyzer {
 		ArrayList<StockData> segmentDataList =  null;
 		ArrayList<StockData> lineVertexList =  null;
 		ArrayList<StockData> lineDataList =  null;
+		ArrayList<StockData> outlineVertexList =  null;
+		ArrayList<StockData> outlineDataList =  null;
 
 		if (stock == null) {
 			return;
 		}
 
 		stockDataList = stock.getStockDataList(period);
-		if (stockDataList == null) {
-			return;
-		}
-
 		drawVertexList = stock.getDrawVertexList(period);
-		if (drawVertexList == null) {
-			return;
-		}
-
 		drawDataList = stock.getDrawDataList(period);
-		if (drawDataList == null) {
-			return;
-		}
-
 		strokeVertexList = stock.getStrokeVertexList(period);
-		if (strokeVertexList == null) {
-			return;
-		}
-
 		strokeDataList = stock.getStrokeDataList(period);
-		if (strokeDataList == null) {
-			return;
-		}
-
 		segmentVertexList = stock.getSegmentVertexList(period);
-		if (segmentVertexList == null) {
-			return;
-		}
-
 		segmentDataList = stock.getSegmentDataList(period);
-		if (segmentDataList == null) {
-			return;
-		}
-
 		lineVertexList = stock.getLineVertexList(period);
-		if (lineVertexList == null) {
-			return;
-		}
-
 		lineDataList = stock.getLineDataList(period);
-		if (lineDataList == null) {
-			return;
-		}
+		outlineVertexList = stock.getOutlineVertexList(period);
+		outlineDataList = stock.getOutlineDataList(period);
 
 		try {
 			setupStockShareBonus(stock);
@@ -219,7 +188,8 @@ public class StockAnalyzer {
 					drawVertexList, drawDataList,
 					strokeVertexList, strokeDataList,
 					segmentVertexList, segmentDataList,
-					lineVertexList, lineDataList);
+					lineVertexList, lineDataList,
+					outlineVertexList, outlineDataList);
 			updateDatabase(stock, period, stockDataList,
 					drawDataList, strokeDataList, segmentDataList);
 		} catch (Exception e) {
@@ -633,7 +603,8 @@ public class StockAnalyzer {
 						  ArrayList<StockData> drawVertexList, ArrayList<StockData> drawDataList,
 						  ArrayList<StockData> strokeVertexList, ArrayList<StockData> strokeDataList,
 						  ArrayList<StockData> segmentVertexList, ArrayList<StockData> segmentDataList,
-						  ArrayList<StockData> lineVertexList, ArrayList<StockData> lineDataList) {
+						  ArrayList<StockData> lineVertexList, ArrayList<StockData> lineDataList,
+						  ArrayList<StockData> outlineVertexList, ArrayList<StockData> outlineDataList) {
         StockKeyAnalyzer stockKeyAnalyzer = new StockKeyAnalyzer();
 		StockVertexAnalyzer stockVertexAnalyzer = new StockVertexAnalyzer();
 		StockQuantAnalyzer stockQuantAnalyzer = new StockQuantAnalyzer();
@@ -665,6 +636,12 @@ public class StockAnalyzer {
 				StockData.VERTEX_BOTTOM_LINE);
 		stockVertexAnalyzer.vertexListToDataList(stockDataList, lineVertexList,
 				lineDataList, StockData.LEVEL_LINE);
+
+		stockVertexAnalyzer.analyzeLine(stockDataList, lineDataList,
+				outlineVertexList, StockData.VERTEX_TOP_OUTLINE,
+				StockData.VERTEX_BOTTOM_OUTLINE);
+		stockVertexAnalyzer.vertexListToDataList(stockDataList, outlineVertexList,
+				outlineDataList, StockData.LEVEL_OUTLINE);
 
 		if (segmentDataList.size() > StockData.OVERLAP_TYPING_SIZE) {
 			stockVertexAnalyzer.analyzeOverlap(stockDataList, segmentDataList,

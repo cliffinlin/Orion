@@ -190,6 +190,28 @@ public class Stock extends DatabaseTable {
 	private ArrayList<StockData> mLineDataListQuarter = new ArrayList<StockData>();
 	private ArrayList<StockData> mLineDataListYear = new ArrayList<StockData>();
 
+	private ArrayList<StockData> mOutlineVertexListMin1 = new ArrayList<StockData>();
+	private ArrayList<StockData> mOutlineVertexListMin5 = new ArrayList<StockData>();
+	private ArrayList<StockData> mOutlineVertexListMin15 = new ArrayList<StockData>();
+	private ArrayList<StockData> mOutlineVertexListMin30 = new ArrayList<StockData>();
+	private ArrayList<StockData> mOutlineVertexListMin60 = new ArrayList<StockData>();
+	private ArrayList<StockData> mOutlineVertexListDay = new ArrayList<StockData>();
+	private ArrayList<StockData> mOutlineVertexListWeek = new ArrayList<StockData>();
+	private ArrayList<StockData> mOutlineVertexListMonth = new ArrayList<StockData>();
+	private ArrayList<StockData> mOutlineVertexListQuarter = new ArrayList<StockData>();
+	private ArrayList<StockData> mOutlineVertexListYear = new ArrayList<StockData>();
+
+	private ArrayList<StockData> mOutlineDataListMin1 = new ArrayList<StockData>();
+	private ArrayList<StockData> mOutlineDataListMin5 = new ArrayList<StockData>();
+	private ArrayList<StockData> mOutlineDataListMin15 = new ArrayList<StockData>();
+	private ArrayList<StockData> mOutlineDataListMin30 = new ArrayList<StockData>();
+	private ArrayList<StockData> mOutlineDataListMin60 = new ArrayList<StockData>();
+	private ArrayList<StockData> mOutlineDataListDay = new ArrayList<StockData>();
+	private ArrayList<StockData> mOutlineDataListWeek = new ArrayList<StockData>();
+	private ArrayList<StockData> mOutlineDataListMonth = new ArrayList<StockData>();
+	private ArrayList<StockData> mOutlineDataListQuarter = new ArrayList<StockData>();
+	private ArrayList<StockData> mOutlineDataListYear = new ArrayList<StockData>();
+
 	public Stock() {
 		init();
 	}
@@ -1807,6 +1829,62 @@ public class Stock extends DatabaseTable {
 			result = mLineDataListQuarter;
 		} else if (period.equals(Settings.KEY_PERIOD_YEAR)) {
 			result = mLineDataListYear;
+		}
+
+		return result;
+	}
+
+	public ArrayList<StockData> getOutlineVertexList(String period) {
+		ArrayList<StockData> result = null;
+
+		if (period.equals(Settings.KEY_PERIOD_MIN1)) {
+			result = mOutlineVertexListMin1;
+		} else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
+			result = mOutlineVertexListMin5;
+		} else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
+			result = mOutlineVertexListMin15;
+		} else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
+			result = mOutlineVertexListMin30;
+		} else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
+			result = mOutlineVertexListMin60;
+		} else if (period.equals(Settings.KEY_PERIOD_DAY)) {
+			result = mOutlineVertexListDay;
+		} else if (period.equals(Settings.KEY_PERIOD_WEEK)) {
+			result = mOutlineVertexListWeek;
+		} else if (period.equals(Settings.KEY_PERIOD_MONTH)) {
+			result = mOutlineVertexListMonth;
+		} else if (period.equals(Settings.KEY_PERIOD_QUARTER)) {
+			result = mOutlineVertexListQuarter;
+		} else if (period.equals(Settings.KEY_PERIOD_YEAR)) {
+			result = mOutlineVertexListYear;
+		}
+
+		return result;
+	}
+
+	public ArrayList<StockData> getOutlineDataList(String period) {
+		ArrayList<StockData> result = null;
+
+		if (period.equals(Settings.KEY_PERIOD_MIN1)) {
+			result = mOutlineDataListMin1;
+		} else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
+			result = mOutlineDataListMin5;
+		} else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
+			result = mOutlineDataListMin15;
+		} else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
+			result = mOutlineDataListMin30;
+		} else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
+			result = mOutlineDataListMin60;
+		} else if (period.equals(Settings.KEY_PERIOD_DAY)) {
+			result = mOutlineDataListDay;
+		} else if (period.equals(Settings.KEY_PERIOD_WEEK)) {
+			result = mOutlineDataListWeek;
+		} else if (period.equals(Settings.KEY_PERIOD_MONTH)) {
+			result = mOutlineDataListMonth;
+		} else if (period.equals(Settings.KEY_PERIOD_QUARTER)) {
+			result = mOutlineDataListQuarter;
+		} else if (period.equals(Settings.KEY_PERIOD_YEAR)) {
+			result = mOutlineDataListYear;
 		}
 
 		return result;

@@ -42,10 +42,11 @@ public class StockData extends StockDatabaseTable {
 	public static final String NAME_NATURAL_REACTION = "React";
 
 	public static final int LEVEL_NONE = 0;
-	public static final int LEVEL_DRAW = 1 << 0;
-	public static final int LEVEL_STROKE = 1 << 1;
-	public static final int LEVEL_SEGMENT = 1 << 2;
-	public static final int LEVEL_LINE = 1 << 3;
+	public static final int LEVEL_DRAW = 1;
+	public static final int LEVEL_STROKE = 2;
+	public static final int LEVEL_SEGMENT = 3;
+	public static final int LEVEL_LINE = 4;
+	public static final int LEVEL_OUTLINE = 5;
 
 	public static final int DIVERGENCE_UP = 1;
 	public static final int DIVERGENCE_NONE = 0;
@@ -68,6 +69,8 @@ public class StockData extends StockDatabaseTable {
 	public static final int VERTEX_BOTTOM_SEGMENT = 1 << 5;
 	public static final int VERTEX_TOP_LINE = 1 << 6;
 	public static final int VERTEX_BOTTOM_LINE = 1 << 7;
+	public static final int VERTEX_TOP_OUTLINE = 1 << 8;
+	public static final int VERTEX_BOTTOM_OUTLINE = 1 << 9;
 
     public static final int VERTEX_TYPING_SIZE = 3;
 	public static final int OVERLAP_TYPING_SIZE = 6;

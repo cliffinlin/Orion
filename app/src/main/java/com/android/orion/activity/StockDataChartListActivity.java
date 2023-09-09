@@ -674,6 +674,17 @@ public class StockDataChartListActivity extends BaseActivity implements
 						stockDataChart.mLineEntryList.add(lineEntry);
 					}
 
+					if (mStockData.vertexOf(StockData.VERTEX_TOP_OUTLINE)) {
+						Entry outlineEntry = new Entry(
+								(float) mStockData.getVertexHigh(), index);
+						stockDataChart.mOutlineEntryList.add(outlineEntry);
+					} else if (mStockData
+							.vertexOf(StockData.VERTEX_BOTTOM_OUTLINE)) {
+						Entry outlineEntry = new Entry(
+								(float) mStockData.getVertexLow(), index);
+						stockDataChart.mOutlineEntryList.add(outlineEntry);
+					}
+
 					if (mKeyDisplayOverlap) {
 						if ((mStockData.getOverlapHigh() > 0)
 								&& (mStockData.getOverlapLow() > 0)) {

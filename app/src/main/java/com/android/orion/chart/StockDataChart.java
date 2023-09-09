@@ -53,6 +53,7 @@ public class StockDataChart {
 	public ArrayList<Entry> mStrokeEntryList = null;
 	public ArrayList<Entry> mSegmentEntryList = null;
 	public ArrayList<Entry> mLineEntryList = null;
+	public ArrayList<Entry> mOutlineEntryList = null;
 	public ArrayList<Entry> mOverlapHighEntryList = null;
 	public ArrayList<Entry> mOverlapLowEntryList = null;
 	public ArrayList<Entry> mBookValuePerShareList = null;
@@ -124,6 +125,10 @@ public class StockDataChart {
 
 		if (mLineEntryList == null) {
 			mLineEntryList = new ArrayList<Entry>();
+		}
+
+		if (mOutlineEntryList == null) {
+			mOutlineEntryList = new ArrayList<Entry>();
 		}
 
 		if (mOverlapHighEntryList == null) {
@@ -251,55 +256,59 @@ public class StockDataChart {
 		LineData lineData = new LineData(mXValues);
 
 		if (mCandleEntryList.size() > 0) {
-			LineDataSet average5DataSet = new LineDataSet(mAverage5EntryList,
-					"MA5");
-			average5DataSet.setColor(Color.WHITE);
-			average5DataSet.setDrawCircles(false);
-			average5DataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-			lineData.addDataSet(average5DataSet);
+			{
+				LineDataSet lineDataSet = new LineDataSet(mAverage5EntryList,
+						"MA5");
+				lineDataSet.setColor(Color.WHITE);
+				lineDataSet.setDrawCircles(false);
+				lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+				lineData.addDataSet(lineDataSet);
+			}
 
-			LineDataSet average10DataSet = new LineDataSet(mAverage10EntryList,
-					"MA10");
-			average10DataSet.setColor(Color.CYAN);
-			average10DataSet.setDrawCircles(false);
-			average10DataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-			lineData.addDataSet(average10DataSet);
+			{
+				LineDataSet lineDataSet = new LineDataSet(mAverage10EntryList,
+						"MA10");
+				lineDataSet.setColor(Color.CYAN);
+				lineDataSet.setDrawCircles(false);
+				lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+				lineData.addDataSet(lineDataSet);
+			}
 		}
 
 		if (Preferences.getBoolean(context, Settings.KEY_DISPLAY_DRAW,
 				true)) {
 			if (mDrawEntryList.size() > 0) {
-				LineDataSet drawDataSet = new LineDataSet(mDrawEntryList, "Draw");
-				drawDataSet.setColor(Color.GRAY);
-				drawDataSet.setCircleColor(Color.GRAY);
-				drawDataSet.setCircleSize(0);
-				drawDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-				lineData.addDataSet(drawDataSet);
+				LineDataSet lineDataSet = new LineDataSet(mDrawEntryList, "Draw");
+				lineDataSet.setColor(Color.GRAY);
+				lineDataSet.setCircleColor(Color.GRAY);
+				lineDataSet.setCircleSize(0);
+				lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+				lineData.addDataSet(lineDataSet);
 			}
 		}
 
 		if (Preferences.getBoolean(context, Settings.KEY_DISPLAY_STROKE,
 				false)) {
 			if (mStrokeEntryList.size() > 0) {
-				LineDataSet strokeDataSet = new LineDataSet(mStrokeEntryList, "Stroke");
-				strokeDataSet.setColor(Color.YELLOW);
-				strokeDataSet.setCircleColor(Color.YELLOW);
-				strokeDataSet.setCircleSize(0);
-				strokeDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-				lineData.addDataSet(strokeDataSet);
+				LineDataSet lineDataSet = new LineDataSet(mStrokeEntryList, "Stroke");
+				lineDataSet.setColor(Color.YELLOW);
+				lineDataSet.setCircleColor(Color.YELLOW);
+				lineDataSet.setCircleSize(0);
+				lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+				lineData.addDataSet(lineDataSet);
 			}
 		}
 
 		if (Preferences.getBoolean(context, Settings.KEY_DISPLAY_SEGMENT,
 				false)) {
 			if (mSegmentEntryList.size() > 0) {
-				LineDataSet segmentDataSet = new LineDataSet(mSegmentEntryList,
+				LineDataSet lineDataSet = new LineDataSet(mSegmentEntryList,
 						"Segment");
-				segmentDataSet.setColor(Color.BLACK);
-				segmentDataSet.setCircleColor(Color.BLACK);
-				segmentDataSet.setCircleSize(0);
-				segmentDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-				lineData.addDataSet(segmentDataSet);
+				lineDataSet.setColor(Color.BLACK);
+				lineDataSet.setCircleColor(Color.BLACK);
+				lineDataSet.setCircleSize(0);
+				lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+				lineData.addDataSet(lineDataSet);
 			}
 		}
 
@@ -308,6 +317,16 @@ public class StockDataChart {
 			if (mLineEntryList.size() > 0) {
 				LineDataSet lineDataSet = new LineDataSet(mLineEntryList,
 						"Line");
+				lineDataSet.setColor(Color.GREEN);
+				lineDataSet.setCircleColor(Color.GREEN);
+				lineDataSet.setCircleSize(0);
+				lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+				lineData.addDataSet(lineDataSet);
+			}
+
+			if (mOutlineEntryList.size() > 0) {
+				LineDataSet lineDataSet = new LineDataSet(mOutlineEntryList,
+						"Outline");
 				lineDataSet.setColor(Color.RED);
 				lineDataSet.setCircleColor(Color.RED);
 				lineDataSet.setCircleSize(0);
@@ -318,55 +337,57 @@ public class StockDataChart {
 
 		if ((mOverlapHighEntryList.size() > 0)
 				&& (mOverlapLowEntryList.size() > 0)) {
-			LineDataSet overlapHighDataSet = new LineDataSet(
-					mOverlapHighEntryList, "OverHigh");
-			overlapHighDataSet.setColor(Color.MAGENTA);
-			overlapHighDataSet.setDrawCircles(false);
-			overlapHighDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-			lineData.addDataSet(overlapHighDataSet);
+			{
+				LineDataSet lineDataSet = new LineDataSet(
+						mOverlapHighEntryList, "OverHigh");
+				lineDataSet.setColor(Color.MAGENTA);
+				lineDataSet.setDrawCircles(false);
+				lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+				lineData.addDataSet(lineDataSet);
+			}
 
-			LineDataSet overlapLowDataSet = new LineDataSet(
-					mOverlapLowEntryList, "OverLow");
-			overlapLowDataSet.setColor(Color.BLUE);
-			overlapLowDataSet.setDrawCircles(false);
-			overlapLowDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-			lineData.addDataSet(overlapLowDataSet);
+			{
+				LineDataSet lineDataSet = new LineDataSet(
+						mOverlapLowEntryList, "OverLow");
+				lineDataSet.setColor(Color.BLUE);
+				lineDataSet.setDrawCircles(false);
+				lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+				lineData.addDataSet(lineDataSet);
+			}
 		}
 
 		if (mBookValuePerShareList.size() > 0) {
-			LineDataSet bookValuePerShareDataSet = new LineDataSet(
+			LineDataSet lineDataSet = new LineDataSet(
 					mBookValuePerShareList, "BPS");
-			bookValuePerShareDataSet.setColor(Color.BLUE);
-			bookValuePerShareDataSet.setDrawCircles(false);
-			bookValuePerShareDataSet
-					.setAxisDependency(YAxis.AxisDependency.LEFT);
-			lineData.addDataSet(bookValuePerShareDataSet);
+			lineDataSet.setColor(Color.BLUE);
+			lineDataSet.setDrawCircles(false);
+			lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+			lineData.addDataSet(lineDataSet);
 		}
 
 		if (mNetProfitPerShareList.size() > 0) {
-			LineDataSet netProfitPerShareDataSet = new LineDataSet(
+			LineDataSet lineDataSet = new LineDataSet(
 					mNetProfitPerShareList, "NPS");
-			netProfitPerShareDataSet.setColor(Color.YELLOW);
-			netProfitPerShareDataSet.setDrawCircles(false);
-			netProfitPerShareDataSet
-					.setAxisDependency(YAxis.AxisDependency.LEFT);
-			lineData.addDataSet(netProfitPerShareDataSet);
+			lineDataSet.setColor(Color.YELLOW);
+			lineDataSet.setDrawCircles(false);
+			lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+			lineData.addDataSet(lineDataSet);
 		}
 
 		if (mRoeList.size() > 0) {
-			LineDataSet roeDataSet = new LineDataSet(mRoeList, "ROE");
-			roeDataSet.setColor(Color.DKGRAY);
-			roeDataSet.setDrawCircles(false);
-			roeDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-			lineData.addDataSet(roeDataSet);
+			LineDataSet lineDataSet = new LineDataSet(mRoeList, "ROE");
+			lineDataSet.setColor(Color.DKGRAY);
+			lineDataSet.setDrawCircles(false);
+			lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+			lineData.addDataSet(lineDataSet);
 		}
 
 		if (mRoiList.size() > 0) {
-			LineDataSet roiDataSet = new LineDataSet(mRoiList, "ROI");
-			roiDataSet.setColor(Color.RED);
-			roiDataSet.setDrawCircles(false);
-			roiDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-			lineData.addDataSet(roiDataSet);
+			LineDataSet lineDataSet = new LineDataSet(mRoiList, "ROI");
+			lineDataSet.setColor(Color.RED);
+			lineDataSet.setDrawCircles(false);
+			lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+			lineData.addDataSet(lineDataSet);
 		}
 
 		mCombinedDataMain.setData(lineData);
@@ -702,6 +723,7 @@ public class StockDataChart {
 		mStrokeEntryList.clear();
 		mSegmentEntryList.clear();
 		mLineEntryList.clear();
+		mOutlineEntryList.clear();
 		mOverlapHighEntryList.clear();
 		mOverlapLowEntryList.clear();
 		mBookValuePerShareList.clear();
