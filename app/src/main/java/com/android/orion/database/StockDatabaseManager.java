@@ -9,22 +9,25 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 
+import androidx.annotation.NonNull;
+
 import com.android.orion.setting.Constants;
 import com.android.orion.setting.Settings;
 import com.android.orion.utility.Utility;
 
 public class StockDatabaseManager extends DatabaseManager {
-	private static StockDatabaseManager mInstance = null;
 
-	public static synchronized StockDatabaseManager getInstance(Context context) {
-		if (mInstance == null) {
-			mInstance = new StockDatabaseManager(context);
+	private static final Object mLock = new Object();
+	private static StockDatabaseManager mInstance;
+
+	@NonNull
+	public static StockDatabaseManager getInstance(@NonNull Context context) {
+		synchronized (mLock) {
+			if (mInstance == null) {
+				mInstance = new StockDatabaseManager(context.getApplicationContext());
+			}
+			return mInstance;
 		}
-		return mInstance;
-	}
-
-	private StockDatabaseManager() {
-		super();
 	}
 
 	private StockDatabaseManager(Context context) {

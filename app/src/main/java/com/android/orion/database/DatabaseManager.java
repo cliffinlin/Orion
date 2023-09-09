@@ -5,25 +5,35 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-public class DatabaseManager {
-	Context mContext;
-	public ContentResolver mContentResolver = null;
-	public SQLiteDatabase mDatabase = null;
-	public DatabaseOpenHelper mDatabaseHelper = null;
+import androidx.annotation.NonNull;
 
-	public DatabaseManager() {
+public class DatabaseManager {
+
+
+	Context mContext;
+
+	public ContentResolver mContentResolver;
+	public SQLiteDatabase mDatabase = null;
+	public DatabaseOpenHelper mDatabaseHelper;
+
+	private static final Object mLock = new Object();
+	private static DatabaseManager mInstance;
+
+	@NonNull
+	public static DatabaseManager getInstance(@NonNull Context context) {
+		synchronized (mLock) {
+			if (mInstance == null) {
+				mInstance = new DatabaseManager(context.getApplicationContext());
+			}
+			return mInstance;
+		}
 	}
 
-	public DatabaseManager(Context context) {
+	public DatabaseManager(@NonNull Context context) {
 		mContext = context;
 
-		if (mContentResolver == null) {
-			mContentResolver = mContext.getContentResolver();
-		}
-
-		if (mDatabaseHelper == null) {
-			mDatabaseHelper = new DatabaseOpenHelper(mContext);
-		}
+		mContentResolver = mContext.getContentResolver();
+		mDatabaseHelper = new DatabaseOpenHelper(mContext);
 	}
 
 	public void openDatabase() {

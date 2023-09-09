@@ -71,7 +71,7 @@ public class BaseActivity extends Activity {
 
 	ArrayMap<String, Stock> mStockDealArrayMap = null;
 
-	StockDatabaseManager mStockDatabaseManager = null;
+	StockDatabaseManager mStockDatabaseManager;
 
 	OrionService mOrionService = null;
 
@@ -184,9 +184,7 @@ public class BaseActivity extends Activity {
 			mStockDealArrayMap = new ArrayMap<String, Stock>();
 		}
 
-		if (mStockDatabaseManager == null) {
-			mStockDatabaseManager = StockDatabaseManager.getInstance(this);
-		}
+		mStockDatabaseManager = StockDatabaseManager.getInstance(this);
 
 		if (mProgressDialog == null) {
 			mProgressDialog = new ProgressDialog(mContext,

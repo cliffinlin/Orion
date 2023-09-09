@@ -20,6 +20,8 @@ import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.android.orion.setting.Constants;
 import com.android.orion.R;
 import com.android.orion.setting.Settings;
@@ -96,7 +98,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
     private OkHttpClient mOkHttpClient = new OkHttpClient();
     private ArrayList<String> mAccessDeniedStringArray = new ArrayList<>();
 
-    public StockDataProvider(Context context) {
+    public StockDataProvider(@NonNull Context context) {
         super(context);
 
         mAccessDeniedStringArray.add(mContext.getResources().getString(

@@ -98,22 +98,15 @@ public class OrionContentProvider extends ContentProvider {
 				DatabaseContract.StockQuant.TABLE_NAME + "/#", STOCK_QUANT_ID);
 	}
 
-	ContentResolver mContentResolver = null;
-	DatabaseManager mDatabaseManager = null;
+	ContentResolver mContentResolver;
+	DatabaseManager mDatabaseManager;
 
 	@Override
 	public boolean onCreate() {
-		if (mContentResolver == null) {
-			mContentResolver = getContext().getContentResolver();
-		}
+		mContentResolver = getContext().getContentResolver();
 
-		if (mDatabaseManager == null) {
-			mDatabaseManager = new DatabaseManager(getContext());
-		}
-
-		if (mDatabaseManager != null) {
-			mDatabaseManager.openDatabase();
-		}
+		mDatabaseManager = DatabaseManager.getInstance(getContext());
+		mDatabaseManager.openDatabase();
 
 		return true;
 	}

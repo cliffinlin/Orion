@@ -14,6 +14,7 @@ import android.os.PowerManager.WakeLock;
 import android.text.TextUtils;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.android.orion.setting.Constants;
@@ -51,7 +52,7 @@ public class StockAnalyzer {
 	NotificationManager mNotificationManager;
 	public StockDatabaseManager mStockDatabaseManager;
 
-	public StockAnalyzer(Context context) {
+	public StockAnalyzer(@NonNull Context context) {
 		mContext = context;
 
 		mPowerManager = (PowerManager) mContext
@@ -59,18 +60,9 @@ public class StockAnalyzer {
 		mWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
 				Constants.TAG + ":" + StockAnalyzer.class.getSimpleName());
 
-		if (mLocalBroadcastManager == null) {
-			mLocalBroadcastManager = LocalBroadcastManager
-					.getInstance(mContext);
-		}
-
-		if (mNotificationManager == null) {
-			mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-		}
-
-		if (mStockDatabaseManager == null) {
-			mStockDatabaseManager = StockDatabaseManager.getInstance(mContext);
-		}
+		mLocalBroadcastManager = LocalBroadcastManager.getInstance(mContext);
+		mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+		mStockDatabaseManager = StockDatabaseManager.getInstance(mContext);
 	}
 
 	public void acquireWakeLock() {
