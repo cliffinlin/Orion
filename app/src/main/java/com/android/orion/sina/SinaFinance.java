@@ -918,9 +918,9 @@ public class SinaFinance extends StockDataProvider {
 			}
 
 			exportToFile(stock, Settings.KEY_PERIOD_MIN5, exportLineMin5List, false);
-//			exportToFile(stock, Settings.KEY_PERIOD_MIN15, exportLineMin15List, false);
-//			exportToFile(stock, Settings.KEY_PERIOD_MIN30, exportLineMin30List, false);
-//			exportToFile(stock, Settings.KEY_PERIOD_MIN60, exportLineMin60List, false);
+			exportToFile(stock, Settings.KEY_PERIOD_MIN15, exportLineMin15List, false);
+			exportToFile(stock, Settings.KEY_PERIOD_MIN30, exportLineMin30List, false);
+			exportToFile(stock, Settings.KEY_PERIOD_MIN60, exportLineMin60List, false);
 			Utility.deleteFile(fileName, false);
 		} catch (Exception e) {
 			e.printStackTrace();
