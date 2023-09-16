@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.ArrayMap;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -709,20 +710,24 @@ public class DealListActivity extends ListActivity implements
     }
 
     void setStockList(Cursor cursor) {
+        ArrayMap<String, Stock> stockMap = new ArrayMap<>();
         StockDeal stockDeal = new StockDeal();
 
         try {
+            mStockList.clear();
             if ((cursor != null) && (cursor.getCount() > 0)) {
-                mStockList.clear();
                 while (cursor.moveToNext()) {
                     stockDeal.set(cursor);
-                    Stock stock = new Stock();
-                    stock.setSE(stockDeal.getSE());
-                    stock.setCode(stockDeal.getCode());
-                    mStockDatabaseManager.getStock(stock);
-                    mStockList.add(stock);
+                    if (!stockMap.containsKey(stockDeal.getSE() + stockDeal.getCode())) {
+                        Stock stock = new Stock();
+                        stock.setSE(stockDeal.getSE());
+                        stock.setCode(stockDeal.getCode());
+                        mStockDatabaseManager.getStock(stock);
+                        stockMap.put(stockDeal.getSE() + stockDeal.getCode(), stock);
+                    }
                 }
                 cursor.moveToFirst();
+                mStockList = new ArrayList<>(stockMap.values());
             }
         } catch (Exception e) {
             e.printStackTrace();

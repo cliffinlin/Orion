@@ -16,6 +16,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
+import android.util.ArrayMap;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -73,6 +74,7 @@ public class StockQuantListActivity extends ListActivity implements
     String mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_ASC;
     String mSortOrderDefault = mSortOrderColumn + mSortOrderDirection;
     String mSortOrder = mSortOrderDefault;
+    String mGroupBy = "";
 
     SyncHorizontalScrollView mTitleSHSV = null;
     SyncHorizontalScrollView mContentSHSV = null;
@@ -661,6 +663,10 @@ public class StockQuantListActivity extends ListActivity implements
             mSelection = DatabaseContract.COLUMN_SE + " = " + "\'" + se + "\'"
                     + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
                     + code + "\'";
+        } else {
+            mSelection = "1";
+            mGroupBy = ") GROUP BY (" + DatabaseContract.COLUMN_SE
+                    + " + " + DatabaseContract.COLUMN_CODE;
         }
     }
 
@@ -671,10 +677,10 @@ public class StockQuantListActivity extends ListActivity implements
         switch (id) {
             case LOADER_ID_QUANT_LIST:
                 setupSelection();
-
+                //selection+") GROUP BY (coloum_name"
                 loader = new CursorLoader(this,
                         DatabaseContract.StockQuant.CONTENT_URI,
-                        DatabaseContract.StockQuant.PROJECTION_ALL, mSelection,
+                        DatabaseContract.StockQuant.PROJECTION_ALL, mSelection + mGroupBy,
                         null, mSortOrder);
                 break;
 
@@ -714,20 +720,24 @@ public class StockQuantListActivity extends ListActivity implements
     }
 
     void setStockList(Cursor cursor) {
+        ArrayMap<String, Stock> stockMap = new ArrayMap<>();
         StockQuant stockQuant = new StockQuant();
 
         try {
+            mStockList.clear();
             if ((cursor != null) && (cursor.getCount() > 0)) {
-                mStockList.clear();
                 while (cursor.moveToNext()) {
                     stockQuant.set(cursor);
-                    Stock stock = new Stock();
-                    stock.setSE(stockQuant.getSE());
-                    stock.setCode(stockQuant.getCode());
-                    mStockDatabaseManager.getStock(stock);
-                    mStockList.add(stock);
+                    if (!stockMap.containsKey(stockQuant.getSE() + stockQuant.getCode())) {
+                        Stock stock = new Stock();
+                        stock.setSE(stockQuant.getSE());
+                        stock.setCode(stockQuant.getCode());
+                        mStockDatabaseManager.getStock(stock);
+                        stockMap.put(stockQuant.getSE() + stockQuant.getCode(), stock);
+                    }
                 }
                 cursor.moveToFirst();
+                mStockList = new ArrayList<>(stockMap.values());
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -29,6 +29,7 @@
     <string name="action_filter">Filter</string>
     <string name="action_trend">Trend</string>
     <string name="action_natural">Natural</string>
+    <string name="quant">Quant</string>
     <string name="quant_volume">QVolume</string>
     <string name="quant_profit">QProfit</string>
     <string name="quant_profit_margin">QMargin</string>
