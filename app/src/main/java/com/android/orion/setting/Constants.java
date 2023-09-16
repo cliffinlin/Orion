@@ -4,6 +4,8 @@ public class Constants {
 	public static final String APP_NAME = "Orion";
 	public static final String TAG = APP_NAME;
 
+	public static final String TAB = "\t";
+
 	public static final String SERVICE_CHANNEL_ID = "service_channel";
 	public static final String SERVICE_CHANNEL_NAME = "Service Channel";
 
@@ -12,21 +14,16 @@ public class Constants {
 	public static final String MESSAGE_CHANNEL_ID = "message_channel";
 	public static final String MESSAGE_CHANNEL_NAME = "Message Channel";
 
+	public static final String FILE_EXT_TEXT = ".txt";
+	public static final String FILE_EXT_XML = ".xml";
+
 	public static final String ACTION = "action";
-	public static final String ACTION_FILE_EXT = ".txt";
-
 	public static final String DEAL = "deal";
-	public static final String DEAL_FILE_EXT = ".txt";
-
 	public static final String DEAL_OPERATE_INSERT = "insert";
 	public static final String DEAL_OPERATE_EDIT = "edit";
 	public static final String DEAL_OPERATE_DELETE = "delete";
-
 	public static final String FAVORITE = "favorite";
-	public static final String FAVORITE_FILE_EXT = ".xml";
-
 	public static final String NOTIFICATION = "notification";
-	public static final String NOTIFICATION_FILE_EXT = ".txt";
 
 	public static final String ACTION_RESTART_LOADER = "orion.intent.action.RESTART_LOADER";
 

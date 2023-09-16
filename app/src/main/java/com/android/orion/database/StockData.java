@@ -4,10 +4,14 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+
 import com.android.orion.setting.Constants;
 import com.android.orion.utility.Utility;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 
 public class StockData extends StockDatabaseTable {
 
@@ -1172,5 +1176,129 @@ public class StockData extends StockDatabaseTable {
 		mVelocity = mChange / dt;
 
 		mVelocity = Utility.Round(mVelocity, Constants.DOUBLE_FIXED_DECIMAL);
+	}
+
+	public StockData fromString(@NonNull String string) {
+		String dateString = "";
+		String timeString = "";
+
+		if (TextUtils.isEmpty(string)) {
+			return null;
+		}
+
+		//TDX
+		String[] strings = string.split(Constants.TAB);
+		if (strings == null || strings.length < 6) {
+			return null;
+		}
+
+		dateString = strings[0].replace("/", "-");
+		setDate(dateString);
+		timeString = strings[1].substring(0, 2) + ":" + strings[1].substring(2, 4) + ":" + "00";
+		setTime(timeString);
+
+		setOpen(Double.valueOf(strings[2]));
+		setHigh(Double.valueOf(strings[3]));
+		setLow(Double.valueOf(strings[4]));
+		setClose(Double.valueOf(strings[5]));
+
+		setVertexHigh(getHigh());
+		setVertexLow(getLow());
+
+		setCreated(Utility.getCurrentDateTimeString());
+		setModified(Utility.getCurrentDateTimeString());
+
+		return this;
+	}
+
+	public String toString() {
+		StringBuilder stockDataString = new StringBuilder();
+
+		//TDX
+		String dateString = getDate().replace("-", "/");
+		String timeString = getTime().substring(0, 5).replace(":", "");
+
+		stockDataString.append(dateString + Constants.TAB
+				+ timeString + Constants.TAB
+				+ getOpen() + Constants.TAB
+				+ getHigh() + Constants.TAB
+				+ getLow() + Constants.TAB
+				+ getClose() + Constants.TAB
+				+ 0 + Constants.TAB
+				+ 0);
+
+		stockDataString.append("\r\n");
+
+		return stockDataString.toString();
+	}
+
+	public static Comparator<StockData> comparator = new Comparator<StockData>() {
+
+		@Override
+		public int compare(StockData arg0, StockData arg1) {
+			Calendar calendar0;
+			Calendar calendar1;
+
+			calendar0 = Utility.getCalendar(arg0.getDateTime(),
+					Utility.CALENDAR_DATE_TIME_FORMAT);
+			calendar1 = Utility.getCalendar(arg1.getDateTime(),
+					Utility.CALENDAR_DATE_TIME_FORMAT);
+			if (calendar0.before(calendar1)) {
+				return -1;
+			} else if (calendar0.after(calendar1)) {
+				return 1;
+			} else {
+				return 0;
+			}
+		}
+	};
+
+	public  static ArrayList<String> getDatetimeMin15List() {
+		ArrayList<String> datetimeList = new ArrayList<>();
+
+		datetimeList.add("09:45:00");
+		datetimeList.add("10:00:00");
+		datetimeList.add("10:15:00");
+		datetimeList.add("10:30:00");
+		datetimeList.add("10:45:00");
+		datetimeList.add("11:00:00");
+		datetimeList.add("11:15:00");
+		datetimeList.add("11:30:00");
+		datetimeList.add("13:15:00");
+		datetimeList.add("13:30:00");
+		datetimeList.add("13:45:00");
+		datetimeList.add("14:00:00");
+		datetimeList.add("14:15:00");
+		datetimeList.add("14:30:00");
+		datetimeList.add("14:45:00");
+		datetimeList.add("15:00:00");
+
+		return datetimeList;
+	}
+
+	public  static ArrayList<String> getDatetimeMinL30ist() {
+		ArrayList<String> datetimeList = new ArrayList<>();
+
+		datetimeList.add("10:00:00");
+		datetimeList.add("10:30:00");
+		datetimeList.add("11:00:00");
+		datetimeList.add("11:30:00");
+		datetimeList.add("13:30:00");
+		datetimeList.add("14:00:00");
+		datetimeList.add("14:30:00");
+		datetimeList.add("15:00:00");
+
+		return datetimeList;
+	}
+
+	public  static ArrayList<String> getDatetimeMin60List() {
+		ArrayList<String> datetimeList = new ArrayList<>();
+
+		datetimeList.add("10:30:00");
+		datetimeList.add("11:30:00");
+		datetimeList.add("14:00:00");
+		datetimeList.add("15:00:00");
+
+		return datetimeList;
 	}
 }

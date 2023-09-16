@@ -31,7 +31,7 @@ public class RecordFile {
         logString.append("\r\n");
 
         try {
-            fileName = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Android/" + Constants.DEAL + Constants.DEAL_FILE_EXT;
+            fileName = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Android/" + Constants.DEAL + Constants.FILE_EXT_TEXT;
             Utility.writeFile(fileName, logString.toString(), true);
         } catch (Exception e) {
             e.printStackTrace();
@@ -46,7 +46,7 @@ public class RecordFile {
         logString.append(" " + Utility.getCurrentDateTimeString() + "\r\n");
 
         try {
-            fileName = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Android/" + Constants.NOTIFICATION + Constants.NOTIFICATION_FILE_EXT;
+            fileName = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Android/" + Constants.NOTIFICATION + Constants.FILE_EXT_TEXT;
             Utility.writeFile(fileName, logString.toString(), true);
         } catch (Exception e) {
             e.printStackTrace();

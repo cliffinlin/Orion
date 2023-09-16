@@ -231,7 +231,15 @@ public class Utility {
 		return (Math.round(v * p)) / p;
 	}
 
-	public static boolean isFileExists(String path, boolean isDirectory) {
+	public static boolean isFileExist(String path) {
+		return isFileExist(path, false);
+	}
+
+	public static boolean isDirectoryExist(String path) {
+		return isFileExist(path, true);
+	}
+
+	public static boolean isFileExist(String path, boolean isDirectory) {
 		boolean result = false;
 
 		if (TextUtils.isEmpty(path)) {
@@ -299,6 +307,14 @@ public class Utility {
 		return length;
 	}
 
+	public static boolean createFile(String path) {
+		return createFile(path, false);
+	}
+
+	public static boolean createDirectory(String path) {
+		return createFile(path, true);
+	}
+
 	public static boolean createFile(String path, boolean isDirectory) {
 		boolean result = false;
 
@@ -321,6 +337,14 @@ public class Utility {
 		}
 
 		return result;
+	}
+
+	public static boolean deleteFile(String path) {
+		return deleteFile(path, false);
+	}
+
+	public static boolean deleteDirectory(String path) {
+		return deleteFile(path, true);
 	}
 
 	public static boolean deleteFile(String path, boolean isDirectory) {
@@ -422,8 +446,8 @@ public class Utility {
 			return;
 		}
 
-		if (!isFileExists(fileName, false)) {
-			createFile(fileName, false);
+		if (!isFileExist(fileName)) {
+			createFile(fileName);
 		}
 
 		try {
@@ -468,8 +492,8 @@ public class Utility {
 			return;
 		}
 
-		if (!isFileExists(fileName, false)) {
-			createFile(fileName, false);
+		if (!isFileExist(fileName)) {
+			createFile(fileName);
 		}
 
 		try {
@@ -639,7 +663,7 @@ public class Utility {
 			return;
 		}
 
-		if (!isFileExists(fileName, false)) {
+		if (!isFileExist(fileName)) {
 			return;
 		}
 
