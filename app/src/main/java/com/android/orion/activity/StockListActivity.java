@@ -388,7 +388,7 @@ public class StockListActivity extends ListActivity implements
 			setVisibility(Settings.KEY_DISPLAY_MARKET_KEY, mTextViewQuantVolume);
 		}
 
-		mTextViewQuantProfit = (TextView) findViewById(R.id.quant_profit_margin);
+		mTextViewQuantProfit = (TextView) findViewById(R.id.quant_profit);
 		if (mTextViewQuantProfit != null) {
 			mTextViewQuantProfit.setOnClickListener(this);
 			setVisibility(Settings.KEY_DISPLAY_MARKET_KEY, mTextViewQuantProfit);

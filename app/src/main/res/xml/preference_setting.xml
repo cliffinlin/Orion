@@ -68,6 +68,9 @@
             android:key="display_deal"
             android:title="@string/deal" />
         <com.android.orion.preference.CustomSwitchPreference
+            android:key="display_quant"
+            android:title="@string/quant" />
+        <com.android.orion.preference.CustomSwitchPreference
             android:key="display_bonus"
             android:title="@string/bonus" />
         <com.android.orion.preference.CustomSwitchPreference

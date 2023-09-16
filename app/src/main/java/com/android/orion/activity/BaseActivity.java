@@ -25,6 +25,7 @@ import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import com.android.orion.database.StockQuant;
 import com.android.orion.setting.Constants;
 import com.android.orion.service.OrionService;
 import com.android.orion.service.OrionService.OrionBinder;
@@ -65,6 +66,7 @@ public class BaseActivity extends Activity {
 	ArrayList<Stock> mStockList = null;
 	ArrayList<StockData> mStockDataList = null;
 	ArrayList<StockDeal> mStockDealList = null;
+	ArrayList<StockQuant> mStockQuantList = null;
 	ArrayList<StockFinancial> mStockFinancialList = null;
 	ArrayList<ShareBonus> mShareBonusList = null;
 	ArrayList<TotalShare> mTotalShareList = null;
@@ -167,6 +169,10 @@ public class BaseActivity extends Activity {
 		if (mStockDealList == null) {
 			mStockDealList = new ArrayList<StockDeal>();
 		}
+
+		if (mStockQuantList == null) {
+            mStockQuantList = new ArrayList<StockQuant>();
+        }
 
 		if (mStockFinancialList == null) {
 			mStockFinancialList = new ArrayList<StockFinancial>();

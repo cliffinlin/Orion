@@ -6,6 +6,9 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
 
+import androidx.annotation.NonNull;
+
+import com.android.orion.database.StockQuant;
 import com.android.orion.setting.Constants;
 import com.android.orion.setting.Settings;
 import com.android.orion.database.Stock;
@@ -588,10 +591,9 @@ public class StockDataChart {
 		return limitLine;
 	}
 
-	public void updateXLimitLines(Stock stock, ArrayList<StockDeal> stockDealList,
-								  boolean keyDisplayLatest, boolean keyDisplayCost, boolean keyDisplayDeal) {
-		if ((stock == null) || (stockDealList == null)
-				|| (mXLimitLineList == null)) {
+	public void updateLimitLines(@NonNull Stock stock, @NonNull ArrayList<StockDeal> stockDealList, @NonNull ArrayList<StockQuant> stockQuantList,
+								 boolean keyDisplayLatest, boolean keyDisplayCost, boolean keyDisplayDeal, boolean keyDisplayQuant) {
+		if (mXLimitLineList == null) {
 			return;
 		}
 
@@ -600,16 +602,16 @@ public class StockDataChart {
 		updateLatestLimitLine(stock, stockDealList, keyDisplayLatest);
 		updateCostLimitLine(stock, stockDealList, keyDisplayCost);
 		updateDealLimitLine(stock, stockDealList, keyDisplayDeal);
+		updateQuantLimitLine(stock, stockQuantList, keyDisplayQuant);
 	}
 
-	void updateLatestLimitLine(Stock stock, ArrayList<StockDeal> stockDealList, boolean keyDisplayLatest) {
+	void updateLatestLimitLine(@NonNull Stock stock, @NonNull ArrayList<StockDeal> stockDealList, boolean keyDisplayLatest) {
 		int color = Color.WHITE;
 		String action = "";
 		String label = "";
 		LimitLine limitLine;
 
-		if ((stock == null) || (stockDealList == null)
-				|| (mXLimitLineList == null)) {
+		if (mXLimitLineList == null) {
 			return;
 		}
 
@@ -631,15 +633,14 @@ public class StockDataChart {
 		mXLimitLineList.add(limitLine);
 	}
 
-	void updateCostLimitLine(Stock stock, ArrayList<StockDeal> stockDealList, boolean keyDisplayCost) {
+	void updateCostLimitLine(@NonNull Stock stock, @NonNull ArrayList<StockDeal> stockDealList, boolean keyDisplayCost) {
 		int color = Color.WHITE;
 		double cost = 0;
 		double net = 0;
 		String label = "";
 		LimitLine limitLine;
 
-		if ((stock == null) || (stockDealList == null)
-				|| (mXLimitLineList == null)) {
+		if (mXLimitLineList == null) {
 			return;
 		}
 
@@ -661,15 +662,14 @@ public class StockDataChart {
 		}
 	}
 
-	void updateDealLimitLine(Stock stock, ArrayList<StockDeal> stockDealList,
+	void updateDealLimitLine(@NonNull Stock stock, @NonNull ArrayList<StockDeal> stockDealList,
 			boolean keyDisplayDeal) {
 		double limit = 0;
 		int color = Color.WHITE;
 		String label = "";
 		LimitLine limitLineDeal = new LimitLine(0);
 
-		if ((stock == null) || (stockDealList == null)
-				|| (mXLimitLineList == null)) {
+		if (mXLimitLineList == null) {
 			return;
 		}
 
@@ -706,6 +706,53 @@ public class StockDataChart {
 			limitLineDeal = createLimitLine(limit, color, label);
 
 			mXLimitLineList.add(limitLineDeal);
+		}
+	}
+
+	void updateQuantLimitLine(@NonNull Stock stock, @NonNull ArrayList<StockQuant> stockQuantList,
+							 boolean keyDisplayDeal) {
+		double limit = 0;
+		int color = Color.WHITE;
+		String label = "";
+		LimitLine limitLineQuant = new LimitLine(0);
+
+		if (mXLimitLineList == null) {
+			return;
+		}
+
+		if (!keyDisplayDeal) {
+			return;
+		}
+
+		for (StockQuant stockQuant : stockQuantList) {
+			if ((stockQuant.getBuy() > 0) && (stockQuant.getSell() > 0)) {
+				limit = stockQuant.getBuy();
+			} else if (stockQuant.getBuy() > 0) {
+				limit = stockQuant.getBuy();
+			} else if (stockQuant.getSell() > 0) {
+				limit = stockQuant.getSell();
+			}
+
+			if (stockQuant.getProfit() > 0) {
+				color = Color.RED;
+			} else {
+				color = Color.GREEN;
+			}
+
+			if (stockQuant.getVolume() <= 0) {
+				color = Color.YELLOW;
+			}
+
+			label = "               "
+					+ "  " + limit
+					+ "  " + stockQuant.getVolume()
+					+ "  " + (int) stockQuant.getProfit()
+					+ "  " + stockQuant.getNet() + "%"
+					+ "  " + stockQuant.getAccount();
+
+			limitLineQuant = createLimitLine(limit, color, label);
+
+			mXLimitLineList.add(limitLineQuant);
 		}
 	}
 

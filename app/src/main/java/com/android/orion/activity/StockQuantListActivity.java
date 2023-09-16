@@ -141,7 +141,7 @@ public class StockQuantListActivity extends ListActivity implements
                     intent.putExtra(Constants.EXTRA_STOCK_ID, mStock.getId());
                     intent.putStringArrayListExtra(Constants.EXTRA_STOCK_ID_LIST,
                             stockIDList);
-                    intent.putExtra(Constants.EXTRA_STOCK_DEAL, true);
+                    intent.putExtra(Constants.EXTRA_STOCK_QUANT, true);
                     startActivity(intent);
                     break;
 

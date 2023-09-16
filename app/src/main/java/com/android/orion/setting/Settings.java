@@ -36,6 +36,7 @@ public class Settings {
 	public static final String KEY_DISPLAY_COST = "display_cost";
 	public static final String KEY_DISPLAY_DIRECT = "display_direct";
 	public static final String KEY_DISPLAY_DEAL = "display_deal";
+	public static final String KEY_DISPLAY_QUANT = "display_quant";
 	public static final String KEY_DISPLAY_BONUS = "display_bonus";
 	public static final String KEY_DISPLAY_BPS = "display_bps";
 	public static final String KEY_DISPLAY_NPS = "display_nps";
