@@ -27,6 +27,9 @@ public class StockQuantAnalyzer {
     double mQuantProfit;
     double mValuation;
 
+    String mBuyDate = "";
+    String mSellDate = "";
+
     public StockQuantAnalyzer() {
         init();
     }
@@ -42,6 +45,11 @@ public class StockQuantAnalyzer {
     }
 
     void setupStockQuantBuy(Stock stock, StockData stockData, double buyPrice, StockQuant stockQuant) {
+        if (stockData.getDate().equals(mBuyDate)) {
+            return;
+        }
+        mBuyDate = stockData.getDate();
+
         stockQuant.setSE(stock.getSE());
         stockQuant.setCode(stock.getCode());
         stockQuant.setName(stock.getName());
@@ -81,6 +89,11 @@ public class StockQuantAnalyzer {
     }
 
     void setupStockQuantSell(Stock stock, StockData stockData, double sellPrice, StockQuant stockQuant) {
+        if (stockData.getDate().equals(mSellDate)) {
+            return;
+        }
+        mSellDate = stockData.getDate();
+
         stockQuant.setModified(stockData.getDate());
 
         stockQuant.setAction(StockData.ACTION_SELL);
@@ -131,10 +144,6 @@ public class StockQuantAnalyzer {
         }
 
         if (stock.getNaturalThreshold() == 0 || stock.getQuantVolume() == 0) {
-            return;
-        }
-
-        if (!period.equals(Settings.KEY_PERIOD_DAY)) {
             return;
         }
 

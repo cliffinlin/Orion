@@ -689,7 +689,10 @@ public class StockAnalyzer {
 
 		mStockDatabaseManager.getShareBonusList(stock, shareBonusList,
 				DatabaseContract.COLUMN_DATE + " DESC ");
-		stockQuantAnalyzer.analyze(mContext, stock, period, stockDataList, shareBonusList);
+
+		if (period.equals(Settings.KEY_PERIOD_MIN60)) {
+			stockQuantAnalyzer.analyze(mContext, stock, period, stockDataList, shareBonusList);
+		}
 	}
 
 	private String getSecondBottomAction(Stock stock, ArrayList<StockData> vertexList,
