@@ -83,11 +83,11 @@ public class StockData extends StockDatabaseTable {
 	public static final int POSITION_NONE = 0;
 	public static final int POSITION_BELOW = -1;
 
-	public static final int MARKET_KEY_UPWARD_TREND = 2;
-	public static final int MARKET_KEY_NATURAL_RALLY = 1;
-	public static final int MARKET_KEY_NONE = 0;
-	public static final int MARKET_KEY_NATURAL_REACTION = -1;
-    public static final int MARKET_KEY_DOWNWARD_TREND = -2;
+	public static final int THRESHOLD_UPWARD_TREND = 2;
+	public static final int THRESHOLD_NATURAL_RALLY = 1;
+	public static final int THRESHOLD_NONE = 0;
+	public static final int THRESHOLD_NATURAL_REACTION = -1;
+    public static final int THRESHOLD_DOWNWARD_TREND = -2;
 
 	private long mStockId;
 	private String mSE;

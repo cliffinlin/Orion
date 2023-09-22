@@ -143,7 +143,7 @@ public class StockQuantAnalyzer {
             return;
         }
 
-        if (stock.getNaturalThreshold() == 0 || stock.getQuantVolume() == 0) {
+        if (stock.getThreshold() == 0 || stock.getQuantVolume() == 0) {
             return;
         }
 

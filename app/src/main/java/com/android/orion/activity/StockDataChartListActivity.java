@@ -23,7 +23,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.android.orion.database.StockQuant;
-import com.android.orion.service.OrionService;
 import com.android.orion.setting.Constants;
 import com.android.orion.R;
 import com.android.orion.setting.Settings;
@@ -70,7 +69,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 	public static final int MESSAGE_REFRESH = 0;
 	public static final int MESSAGE_LOAD_STOCK_LIST = 1;
 
-	boolean mKeyDisplayMarketKey = true;
+	boolean mKeyDisplayThreshold = true;
 	boolean mKeyDisplayCandle = false;
 	boolean mKeyDisplayOverlap = false;
 	boolean mKeyDisplayLatest = true;
@@ -160,7 +159,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 		mSortOrder = getIntent().getStringExtra(
 				Constants.EXTRA_STOCK_LIST_SORT_ORDER);
 
-		mKeyDisplayMarketKey = Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_MARKET_KEY,
+		mKeyDisplayThreshold = Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_THRESHOLD,
 				false);
 		mKeyDisplayCandle = Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_CANDLE,
 				false);
@@ -596,7 +595,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 								+ timeString);
 					}
 
-					if (mKeyDisplayMarketKey) {
+					if (mKeyDisplayThreshold) {
 						if (mStockData.getNaturalRally() > 0) {
 							BubbleEntry entry = new BubbleEntry(index, (float) mStockData.getNaturalRally(), 0);
 							stockDataChart.mNaturalRallyList.add(entry);

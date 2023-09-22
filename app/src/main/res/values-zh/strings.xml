@@ -28,7 +28,7 @@
     <string name="action_settings">Settings</string>
     <string name="action_filter">Filter</string>
     <string name="action_trend">Trend</string>
-    <string name="action_natural">Natural</string>
+    <string name="action_threshold">Threshold</string>
     <string name="quant">Quant</string>
     <string name="quant_volume">QVolume</string>
     <string name="quant_profit">QProfit</string>
@@ -107,7 +107,6 @@
     <string name="low">Low</string>
     <string name="main_business_income">MBI</string>
     <string name="main_business_income_in_year">MBIY</string>
-    <string name="market_key">Market Key</string>
     <string name="match">Match</string>
     <string name="match_delete">Match Delete</string>
     <string name="match_edit">Match Edit</string>
@@ -122,7 +121,6 @@
     <string name="notification">Notification</string>
     <string name="notification_message">Message</string>
     <string name="notification_operate">Operate</string>
-    <string name="notification_market_key">Market Key</string>
     <string name="test">Test</string>
     <string name="loopback">Loopback</string>
     <string name="loopback_date_time">Loopback date time</string>
@@ -208,7 +206,7 @@
     <string name="stock_statistics">Statistics</string>
     <string name="stock_statistics_chart">Statistics Chart</string>
     <string name="stock_cost">Stock Cost</string>
-    <string name="stock_natural_threshold">Natural Threshold</string>
+    <string name="stock_threshold">Threshold</string>
     <string name="stock_quant_volume">Quant Volume</string>
     <string name="stock_hold">Stock Hold</string>
     <string name="stock_valuation">Stock Valuation</string>

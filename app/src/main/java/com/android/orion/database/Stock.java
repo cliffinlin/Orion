@@ -53,7 +53,7 @@ public class Stock extends DatabaseTable {
 	private String mActionYear;
 	private String mTrend;
 
-	private double mNaturalThreshold;
+	private double mThreshold;
 	private long mQuantVolume;
 	private double mQuantProfit;
 	private double mQuantProfitMargin;
@@ -265,7 +265,7 @@ public class Stock extends DatabaseTable {
 		mActionYear = "";
 		mTrend = "";
 
-	    mNaturalThreshold = 0;
+	    mThreshold = 0;
 		mQuantVolume = 0;
 		mQuantProfit = 0;
 		mQuantProfitMargin = 0;
@@ -405,7 +405,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
 
 		contentValues.put(DatabaseContract.COLUMN_FLAG, mFlag);
-		contentValues.put(DatabaseContract.COLUMN_NATURAL_THRESHOLD, mNaturalThreshold);
+		contentValues.put(DatabaseContract.COLUMN_THRESHOLD, mThreshold);
 		contentValues.put(DatabaseContract.COLUMN_QUANT_VOLUME, mQuantVolume);
 		contentValues.put(DatabaseContract.COLUMN_OPERATE, mOperate);
 
@@ -448,7 +448,7 @@ public class Stock extends DatabaseTable {
 		setActionYear(stock.mActionYear);
 		setTrend(stock.mTrend);
 
-		setNaturalThreshold(stock.mNaturalThreshold);
+		setThreshold(stock.mThreshold);
 		setQuantVolume(stock.mQuantVolume);
 		setQuantProfit(stock.mQuantProfit);
 		setQuantProfitMargin(stock.mQuantProfitMargin);
@@ -521,7 +521,7 @@ public class Stock extends DatabaseTable {
 		setActionQuarter(cursor);
 		setActionYear(cursor);
 		setTrend(cursor);
-		setNaturalThreshold(cursor);
+		setThreshold(cursor);
 		setQuantVolume(cursor);
 		setQuantProfit(cursor);
 		setQuantProfitMargin(cursor);
@@ -967,21 +967,21 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_TREND)));
 	}
 
-	public double getNaturalThreshold() {
-		return mNaturalThreshold;
+	public double getThreshold() {
+		return mThreshold;
 	}
 
-	public void setNaturalThreshold(double naturalThreshold) {
-		mNaturalThreshold = naturalThreshold;
+	public void setThreshold(double threshold) {
+		mThreshold = threshold;
 	}
 
-	void setNaturalThreshold(Cursor cursor) {
+	void setThreshold(Cursor cursor) {
 		if (cursor == null) {
 			return;
 		}
 
-		setNaturalThreshold(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_NATURAL_THRESHOLD)));
+		setThreshold(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_THRESHOLD)));
 	}
 
 	public long getQuantVolume() {

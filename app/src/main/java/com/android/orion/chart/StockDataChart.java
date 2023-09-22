@@ -208,7 +208,7 @@ public class StockDataChart {
 	public void setMainChartData(Context context) {
 		mCombinedDataMain = new CombinedData(mXValues);
 
-		if (Preferences.getBoolean(context, Settings.KEY_DISPLAY_MARKET_KEY,
+		if (Preferences.getBoolean(context, Settings.KEY_DISPLAY_THRESHOLD,
 				true)) {
 			BubbleData bubbleData = new BubbleData(mXValues);
 			if (mNaturalRallyList.size() > 0) {

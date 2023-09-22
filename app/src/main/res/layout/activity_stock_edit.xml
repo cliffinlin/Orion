@@ -135,16 +135,16 @@
         android:layout_height="wrap_content" >
 
         <TextView
-            android:id="@+id/textView_stock_natural_threshold"
+            android:id="@+id/textView_threshold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="14dp"
             android:layout_marginRight="14dp"
-            android:labelFor="@+id/edittext_stock_natural_threshold"
-            android:text="@string/stock_natural_threshold" />
+            android:labelFor="@+id/edittext_threshold"
+            android:text="@string/stock_threshold" />
 
         <EditText
-            android:id="@+id/edittext_stock_natural_threshold"
+            android:id="@+id/edittext_threshold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="14dp"

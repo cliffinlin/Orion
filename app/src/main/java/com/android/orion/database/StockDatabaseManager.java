@@ -886,7 +886,7 @@ public class StockDatabaseManager extends DatabaseManager {
 		selection += " AND " + DatabaseContract.COLUMN_BUY + " = " + 0;
 		selection += " AND " + DatabaseContract.COLUMN_SELL + " > " + 0;
 		selection += " AND " + DatabaseContract.COLUMN_PROFIT + " > " + DatabaseContract.COLUMN_BONUS;
-		selection += " AND " + DatabaseContract.COLUMN_NET + " > " + Math.max(Constants.STOCK_NATURAL_THRESHOLD, Constants.STOCK_NATURAL_THRESHOLD);
+		selection += " AND " + DatabaseContract.COLUMN_NET + " > " + Math.max(Constants.STOCK_THRESHOLD, Constants.STOCK_THRESHOLD);
 
 		getStockDealList(stock, stockDealList, selection, sortOrder);
 	}
@@ -907,7 +907,7 @@ public class StockDatabaseManager extends DatabaseManager {
 		selection += " AND " + DatabaseContract.COLUMN_BUY + " > " + 0;
 		selection += " AND " + DatabaseContract.COLUMN_SELL + " = " + 0;
 		selection += " AND " + DatabaseContract.COLUMN_PROFIT + " > " + DatabaseContract.COLUMN_BONUS;
-		selection += " AND " + DatabaseContract.COLUMN_NET + " > " + Math.max(Constants.STOCK_NATURAL_THRESHOLD, Constants.STOCK_NATURAL_THRESHOLD);
+		selection += " AND " + DatabaseContract.COLUMN_NET + " > " + Math.max(Constants.STOCK_THRESHOLD, Constants.STOCK_THRESHOLD);
 
 		getStockDealList(stock, stockDealList, selection, sortOrder);
     }
@@ -1236,7 +1236,7 @@ public class StockDatabaseManager extends DatabaseManager {
 		selection += " AND " + DatabaseContract.COLUMN_BUY + " = " + 0;
 		selection += " AND " + DatabaseContract.COLUMN_SELL + " > " + 0;
 		selection += " AND " + DatabaseContract.COLUMN_PROFIT + " > " + DatabaseContract.COLUMN_BONUS;
-		selection += " AND " + DatabaseContract.COLUMN_NET + " > " + Math.max(Constants.STOCK_NATURAL_THRESHOLD, Constants.STOCK_NATURAL_THRESHOLD);
+		selection += " AND " + DatabaseContract.COLUMN_NET + " > " + Math.max(Constants.STOCK_THRESHOLD, Constants.STOCK_THRESHOLD);
 
 		getStockQuantList(stock, StockQuantList, selection, sortOrder);
 	}
@@ -1257,7 +1257,7 @@ public class StockDatabaseManager extends DatabaseManager {
 		selection += " AND " + DatabaseContract.COLUMN_BUY + " > " + 0;
 		selection += " AND " + DatabaseContract.COLUMN_SELL + " = " + 0;
 		selection += " AND " + DatabaseContract.COLUMN_PROFIT + " > " + DatabaseContract.COLUMN_BONUS;
-		selection += " AND " + DatabaseContract.COLUMN_NET + " > " + Math.max(Constants.STOCK_NATURAL_THRESHOLD, Constants.STOCK_NATURAL_THRESHOLD);
+		selection += " AND " + DatabaseContract.COLUMN_NET + " > " + Math.max(Constants.STOCK_THRESHOLD, Constants.STOCK_THRESHOLD);
 
 		getStockQuantList(stock, StockQuantList, selection, sortOrder);
 	}

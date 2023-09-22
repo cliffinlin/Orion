@@ -39,7 +39,7 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 	RadioGroup mRadioGroupSE;
 	EditText mEditTextStockName;
 	EditText mEditTextStockCode;
-	EditText mEditTextStockNaturalThreshold;
+	EditText mEditTextStockThreshold;
 	EditText mEditTextStockQuantVolume;
 	EditText mEditTextStockYield;
 
@@ -79,7 +79,7 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 		mRadioGroupSE = (RadioGroup) findViewById(R.id.radioGroupSE);
 		mEditTextStockName = (EditText) findViewById(R.id.edittext_stock_name);
 		mEditTextStockCode = (EditText) findViewById(R.id.edittext_stock_code);
-		mEditTextStockNaturalThreshold = (EditText) findViewById(R.id.edittext_stock_natural_threshold);
+		mEditTextStockThreshold = (EditText) findViewById(R.id.edittext_threshold);
 		mEditTextStockQuantVolume = (EditText) findViewById(R.id.edittext_stock_quant_volume);
 		mEditTextStockYield = (EditText) findViewById(R.id.edittext_stock_yield);
 		mSpinnerStockAcion = (Spinner) findViewById(R.id.spinner_stock_operate);
@@ -91,7 +91,7 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 		mRadioGroupSE.setOnClickListener(this);
 		mEditTextStockName.setOnClickListener(this);
 		mEditTextStockCode.setOnClickListener(this);
-		mEditTextStockNaturalThreshold.setOnClickListener(this);
+		mEditTextStockThreshold.setOnClickListener(this);
 		mEditTextStockQuantVolume.setOnClickListener(this);
 		mEditTextStockYield.setOnClickListener(this);
 		mEditTextStockYield.setEnabled(false);
@@ -174,10 +174,10 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 
 		mEditTextStockName.setText(mStock.getName());
 		mEditTextStockCode.setText(mStock.getCode());
-		if (mStock.getNaturalThreshold() == 0) {
-            mStock.setNaturalThreshold(Constants.STOCK_NATURAL_THRESHOLD);
+		if (mStock.getThreshold() == 0) {
+            mStock.setThreshold(Constants.STOCK_THRESHOLD);
         }
-		mEditTextStockNaturalThreshold.setText(String.valueOf(mStock.getNaturalThreshold()));
+		mEditTextStockThreshold.setText(String.valueOf(mStock.getThreshold()));
 		if (mStock.getQuantVolume() == 0) {
 			mStock.setQuantVolume(Constants.STOCK_QUANT_VOLUME);
 		}
@@ -253,9 +253,9 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 						Toast.LENGTH_LONG).show();
 			}
 
-			String naturalThreshold = mEditTextStockNaturalThreshold.getText().toString();
-			double naturalThresholdValue = TextUtils.isEmpty(naturalThreshold) ? 0 : Double.valueOf(naturalThreshold);
-			mStock.setNaturalThreshold(naturalThresholdValue);
+			String threshold = mEditTextStockThreshold.getText().toString();
+			double thresholdValue = TextUtils.isEmpty(threshold) ? 0 : Double.valueOf(threshold);
+			mStock.setThreshold(thresholdValue);
 
 			String quantVolume = mEditTextStockQuantVolume.getText().toString();
 			long quantVolumeValue = TextUtils.isEmpty(quantVolume) ? 0 : Long.valueOf(quantVolume);

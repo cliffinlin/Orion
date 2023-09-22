@@ -61,7 +61,7 @@ public class StockListActivity extends ListActivity implements
 	TextView mTextViewMin15 = null;
 	TextView mTextViewMin5 = null;
 	TextView mTextViewTrend = null;
-	TextView mTextViewNatural = null;
+	TextView mTextViewThreshold = null;
 	TextView mTextViewQuantVolume = null;
 	TextView mTextViewQuantProfit = null;
 	TextView mTextViewQuantProfitMargin = null;
@@ -227,8 +227,8 @@ public class StockListActivity extends ListActivity implements
 		case R.id.trend:
 			mSortOrderColumn = DatabaseContract.COLUMN_TREND;
 			break;
-		case R.id.natural:
-			mSortOrderColumn = DatabaseContract.COLUMN_NATURAL_THRESHOLD;
+		case R.id.threshold:
+			mSortOrderColumn = DatabaseContract.COLUMN_THRESHOLD;
 			break;
 		case R.id.quant_volume:
 			mSortOrderColumn = DatabaseContract.COLUMN_QUANT_VOLUME;
@@ -286,7 +286,7 @@ public class StockListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewMin15, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewMin5, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewTrend, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewNatural, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewThreshold, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewQuantVolume, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewQuantProfit, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewQuantProfitMargin, mHeaderTextDefaultColor);
@@ -376,28 +376,28 @@ public class StockListActivity extends ListActivity implements
 			mTextViewTrend.setOnClickListener(this);
 		}
 
-		mTextViewNatural = (TextView) findViewById(R.id.natural);
-		if (mTextViewNatural != null) {
-			mTextViewNatural.setOnClickListener(this);
-			setVisibility(Settings.KEY_DISPLAY_MARKET_KEY, mTextViewNatural);
+		mTextViewThreshold = (TextView) findViewById(R.id.threshold);
+		if (mTextViewThreshold != null) {
+			mTextViewThreshold.setOnClickListener(this);
+			setVisibility(Settings.KEY_DISPLAY_THRESHOLD, mTextViewThreshold);
 		}
 
 		mTextViewQuantVolume = (TextView) findViewById(R.id.quant_volume);
 		if (mTextViewQuantVolume != null) {
 			mTextViewQuantVolume.setOnClickListener(this);
-			setVisibility(Settings.KEY_DISPLAY_MARKET_KEY, mTextViewQuantVolume);
+			setVisibility(Settings.KEY_DISPLAY_THRESHOLD, mTextViewQuantVolume);
 		}
 
 		mTextViewQuantProfit = (TextView) findViewById(R.id.quant_profit);
 		if (mTextViewQuantProfit != null) {
 			mTextViewQuantProfit.setOnClickListener(this);
-			setVisibility(Settings.KEY_DISPLAY_MARKET_KEY, mTextViewQuantProfit);
+			setVisibility(Settings.KEY_DISPLAY_THRESHOLD, mTextViewQuantProfit);
 		}
 
 		mTextViewQuantProfitMargin = (TextView) findViewById(R.id.quant_profit_margin);
 		if (mTextViewQuantProfitMargin != null) {
 			mTextViewQuantProfitMargin.setOnClickListener(this);
-			setVisibility(Settings.KEY_DISPLAY_MARKET_KEY, mTextViewQuantProfitMargin);
+			setVisibility(Settings.KEY_DISPLAY_THRESHOLD, mTextViewQuantProfitMargin);
 		}
 
 		mTextViewOperate = (TextView) findViewById(R.id.operate);
@@ -432,8 +432,8 @@ public class StockListActivity extends ListActivity implements
 			setHeaderTextColor(mTextViewMin5, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_TREND)) {
 			setHeaderTextColor(mTextViewTrend, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_NATURAL_THRESHOLD)) {
-			setHeaderTextColor(mTextViewNatural, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_THRESHOLD)) {
+			setHeaderTextColor(mTextViewThreshold, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_QUANT_VOLUME)) {
 			setHeaderTextColor(mTextViewQuantVolume, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_QUANT_PROFIT)) {
@@ -458,14 +458,14 @@ public class StockListActivity extends ListActivity implements
 				DatabaseContract.COLUMN_WEEK, DatabaseContract.COLUMN_DAY,
 				DatabaseContract.COLUMN_MIN60, DatabaseContract.COLUMN_MIN30,
 				DatabaseContract.COLUMN_MIN15, DatabaseContract.COLUMN_MIN5,
-				DatabaseContract.COLUMN_TREND, DatabaseContract.COLUMN_NATURAL_THRESHOLD,
+				DatabaseContract.COLUMN_TREND, DatabaseContract.COLUMN_THRESHOLD,
 				DatabaseContract.COLUMN_QUANT_VOLUME, DatabaseContract.COLUMN_QUANT_PROFIT,
 				DatabaseContract.COLUMN_QUANT_PROFIT_MARGIN,
 				DatabaseContract.COLUMN_OPERATE, DatabaseContract.COLUMN_MODIFIED };
 		int[] mRightTo = new int[] { R.id.price, R.id.net, R.id.type_month,
 				R.id.type_week, R.id.type_day, R.id.type_60min,
 				R.id.type_30min, R.id.type_15min, R.id.type_5min,
-				R.id.trend, R.id.natural, R.id.quant_volume,
+				R.id.trend, R.id.threshold, R.id.quant_volume,
 				R.id.quant_profit, R.id.quant_profit_margin,
 				R.id.operate, R.id.modified };
 
@@ -678,17 +678,17 @@ public class StockListActivity extends ListActivity implements
 					.getColumnIndex(DatabaseContract.COLUMN_MIN5)) {
 				return setRightTextViewVisibility(Settings.KEY_PERIOD_MIN5, view);
 			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_NATURAL_THRESHOLD)) {
-				return setRightTextViewVisibility(Settings.KEY_DISPLAY_MARKET_KEY, view);
+					.getColumnIndex(DatabaseContract.COLUMN_THRESHOLD)) {
+				return setRightTextViewVisibility(Settings.KEY_DISPLAY_THRESHOLD, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_QUANT_VOLUME)) {
-				return setRightTextViewVisibility(Settings.KEY_DISPLAY_MARKET_KEY, view);
+				return setRightTextViewVisibility(Settings.KEY_DISPLAY_THRESHOLD, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_QUANT_PROFIT)) {
-				return setRightTextViewVisibility(Settings.KEY_DISPLAY_MARKET_KEY, view);
+				return setRightTextViewVisibility(Settings.KEY_DISPLAY_THRESHOLD, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_QUANT_PROFIT_MARGIN)) {
-				return setRightTextViewVisibility(Settings.KEY_DISPLAY_MARKET_KEY, view);
+				return setRightTextViewVisibility(Settings.KEY_DISPLAY_THRESHOLD, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MODIFIED)) {
 			}

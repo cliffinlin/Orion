@@ -647,7 +647,7 @@ public class DealListActivity extends ListActivity implements
                 mSelection = DatabaseContract.COLUMN_ACTION + " != ''";
                 mSelection += " AND " + DatabaseContract.COLUMN_VOLUME + " > " + 0;
                 mSelection += " AND " + DatabaseContract.COLUMN_PROFIT + " > " + DatabaseContract.COLUMN_BONUS;
-                mSelection += " AND " + DatabaseContract.COLUMN_NET + " > " + Math.max(Constants.STOCK_NATURAL_THRESHOLD, Constants.STOCK_NATURAL_THRESHOLD);
+                mSelection += " AND " + DatabaseContract.COLUMN_NET + " > " + Math.max(Constants.STOCK_THRESHOLD, Constants.STOCK_THRESHOLD);
                 break;
 
             case FILTER_TYPE_ALL:

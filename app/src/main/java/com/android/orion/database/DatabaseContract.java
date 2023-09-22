@@ -34,7 +34,7 @@ public final class DatabaseContract {
     public static final String COLUMN_MONTH = "month";
     public static final String COLUMN_QUARTER = "quarter";
     public static final String COLUMN_YEAR = "year";
-    public static final String COLUMN_NATURAL_THRESHOLD = "natural_threshold";
+    public static final String COLUMN_THRESHOLD = "threshold";
     public static final String COLUMN_QUANT_VOLUME = "quant_volume";
     public static final String COLUMN_QUANT_PROFIT = "quant_profit";
     public static final String COLUMN_QUANT_PROFIT_MARGIN = "quant_profit_margin";
@@ -147,7 +147,7 @@ public final class DatabaseContract {
                 COLUMN_VOLUME, COLUMN_VALUE, COLUMN_DATE, COLUMN_TIME, COLUMN_MIN1, COLUMN_MIN5,
                 COLUMN_MIN15, COLUMN_MIN30, COLUMN_MIN60, COLUMN_DAY,
                 COLUMN_WEEK, COLUMN_MONTH, COLUMN_QUARTER, COLUMN_YEAR,
-                COLUMN_NATURAL_THRESHOLD, COLUMN_QUANT_VOLUME, COLUMN_QUANT_PROFIT, COLUMN_QUANT_PROFIT_MARGIN, COLUMN_TREND,
+                COLUMN_THRESHOLD, COLUMN_QUANT_VOLUME, COLUMN_QUANT_PROFIT, COLUMN_QUANT_PROFIT_MARGIN, COLUMN_TREND,
                 COLUMN_OPERATE, COLUMN_HOLD, COLUMN_COST, COLUMN_PROFIT,
                 COLUMN_BONUS, COLUMN_VALUATION, COLUMN_TOTAL_SHARE,
                 COLUMN_MARKET_VALUE, COLUMN_TOTAL_ASSETS,
@@ -182,7 +182,7 @@ public final class DatabaseContract {
                 + COMMA_SEP + COLUMN_MONTH + TEXT_TYPE + COMMA_SEP
                 + COLUMN_QUARTER + TEXT_TYPE + COMMA_SEP + COLUMN_YEAR
                 + TEXT_TYPE + COMMA_SEP
-                + COLUMN_NATURAL_THRESHOLD + DOUBLE_TYPE + COMMA_SEP
+                + COLUMN_THRESHOLD + DOUBLE_TYPE + COMMA_SEP
                 + COLUMN_QUANT_VOLUME + INTEGER_TYPE + COMMA_SEP
                 + COLUMN_QUANT_PROFIT + DOUBLE_TYPE + COMMA_SEP
                 + COLUMN_QUANT_PROFIT_MARGIN + DOUBLE_TYPE + COMMA_SEP
