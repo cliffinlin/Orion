@@ -10,10 +10,11 @@ import java.util.Calendar;
 
 public class StockQuant extends StockDeal {
 
-    private long mHold;
-    private double mValuation;
-    private double mQuantProfit;
-    private double mQuantProfitMargin;
+    long mHold;
+    double mValuation;
+    double mQuantProfit;
+    double mQuantProfitMargin;
+    double mThreshold;
 
     public StockQuant() {
         init();
@@ -36,6 +37,7 @@ public class StockQuant extends StockDeal {
         mValuation = 0;
         mQuantProfit = 0;
         mQuantProfitMargin = 0;
+        mThreshold = 0;
     }
 
     @Override
@@ -46,6 +48,7 @@ public class StockQuant extends StockDeal {
         contentValues.put(DatabaseContract.COLUMN_VALUATION, mValuation);
         contentValues.put(DatabaseContract.COLUMN_QUANT_PROFIT, mQuantProfit);
         contentValues.put(DatabaseContract.COLUMN_QUANT_PROFIT_MARGIN, mQuantProfitMargin);
+        contentValues.put(DatabaseContract.COLUMN_THRESHOLD, mThreshold);
 
         return contentValues;
     }
@@ -63,6 +66,7 @@ public class StockQuant extends StockDeal {
         setValuation(stockQuant.mValuation);
         setQuantProfit(stockQuant.mQuantProfit);
         setQuantProfitMargin(stockQuant.mQuantProfitMargin);
+        setThreshold(stockQuant.mThreshold);
     }
 
     @Override
@@ -79,6 +83,7 @@ public class StockQuant extends StockDeal {
         setValuation(cursor);
         setQuantProfit(cursor);
         setQuantProfitMargin(cursor);
+        setThreshold(cursor);
     }
 
     public long getHold() {
@@ -149,6 +154,23 @@ public class StockQuant extends StockDeal {
                 .getColumnIndex(DatabaseContract.COLUMN_QUANT_PROFIT_MARGIN)));
     }
 
+    public double getThreshold() {
+        return mThreshold;
+    }
+
+    public void setThreshold(double threshold) {
+        mThreshold = threshold;
+    }
+
+    void setThreshold(Cursor cursor) {
+        if (cursor == null) {
+            return;
+        }
+
+        setThreshold(cursor.getDouble(cursor
+                .getColumnIndex(DatabaseContract.COLUMN_THRESHOLD)));
+    }
+
     public double getBuyValueDay() {
         int days = 0;
         double result = 0;
@@ -212,6 +234,7 @@ public class StockQuant extends StockDeal {
         stringBuilder.append("mValuation=" + mValuation + ",  ");
         stringBuilder.append("mQuantProfit=" + mQuantProfit + ",  ");
         stringBuilder.append("mQuantProfitMargin=" + mQuantProfitMargin);
+        stringBuilder.append("mThreshold=" + mThreshold);
 
         return stringBuilder.toString();
     }

@@ -95,42 +95,6 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/threshold"
-        android:layout_width="80dp"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/action_threshold"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/quant_volume"
-        android:layout_width="80dp"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/quant_volume"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/quant_profit"
-        android:layout_width="80dp"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/quant_profit"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/quant_profit_margin"
-        android:layout_width="80dp"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/quant_profit_margin"
-        android:textSize="18sp" />
-
-    <TextView
         android:id="@+id/operate"
         android:layout_width="80dp"
         android:layout_height="40dp"

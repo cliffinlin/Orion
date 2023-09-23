@@ -69,6 +69,7 @@ public class StockQuantAnalyzer {
         stockQuant.setSE(stock.getSE());
         stockQuant.setCode(stock.getCode());
         stockQuant.setName(stock.getName());
+        stockQuant.setThreshold(stock.getThreshold());
 
         stockQuant.setVolume(stock.getQuantVolume());
         stockQuant.setPrice(price);
@@ -127,6 +128,7 @@ public class StockQuantAnalyzer {
         stockQuant.setSE(stock.getSE());
         stockQuant.setCode(stock.getCode());
         stockQuant.setName(stock.getName());
+        stockQuant.setThreshold(stock.getThreshold());
 
         stockQuant.setVolume(-1 * stock.getQuantVolume());
         stockQuant.setPrice(price);

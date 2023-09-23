@@ -61,10 +61,6 @@ public class StockListActivity extends ListActivity implements
 	TextView mTextViewMin15 = null;
 	TextView mTextViewMin5 = null;
 	TextView mTextViewTrend = null;
-	TextView mTextViewThreshold = null;
-	TextView mTextViewQuantVolume = null;
-	TextView mTextViewQuantProfit = null;
-	TextView mTextViewQuantProfitMargin = null;
 	TextView mTextViewOperate = null;
 	TextView mTextViewModified = null;
 
@@ -227,18 +223,6 @@ public class StockListActivity extends ListActivity implements
 		case R.id.trend:
 			mSortOrderColumn = DatabaseContract.COLUMN_TREND;
 			break;
-		case R.id.threshold:
-			mSortOrderColumn = DatabaseContract.COLUMN_THRESHOLD;
-			break;
-		case R.id.quant_volume:
-			mSortOrderColumn = DatabaseContract.COLUMN_QUANT_VOLUME;
-			break;
-		case R.id.quant_profit:
-			mSortOrderColumn = DatabaseContract.COLUMN_QUANT_PROFIT;
-			break;
-		case R.id.quant_profit_margin:
-			mSortOrderColumn = DatabaseContract.COLUMN_QUANT_PROFIT_MARGIN;
-			break;
 		case R.id.operate:
 			mSortOrderColumn = DatabaseContract.COLUMN_OPERATE;
 			break;
@@ -286,10 +270,6 @@ public class StockListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewMin15, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewMin5, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewTrend, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewThreshold, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewQuantVolume, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewQuantProfit, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewQuantProfitMargin, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewOperate, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewModified, mHeaderTextDefaultColor);
 	}
@@ -376,30 +356,6 @@ public class StockListActivity extends ListActivity implements
 			mTextViewTrend.setOnClickListener(this);
 		}
 
-		mTextViewThreshold = (TextView) findViewById(R.id.threshold);
-		if (mTextViewThreshold != null) {
-			mTextViewThreshold.setOnClickListener(this);
-			setVisibility(Setting.KEY_DISPLAY_THRESHOLD, mTextViewThreshold);
-		}
-
-		mTextViewQuantVolume = (TextView) findViewById(R.id.quant_volume);
-		if (mTextViewQuantVolume != null) {
-			mTextViewQuantVolume.setOnClickListener(this);
-			setVisibility(Setting.KEY_DISPLAY_THRESHOLD, mTextViewQuantVolume);
-		}
-
-		mTextViewQuantProfit = (TextView) findViewById(R.id.quant_profit);
-		if (mTextViewQuantProfit != null) {
-			mTextViewQuantProfit.setOnClickListener(this);
-			setVisibility(Setting.KEY_DISPLAY_THRESHOLD, mTextViewQuantProfit);
-		}
-
-		mTextViewQuantProfitMargin = (TextView) findViewById(R.id.quant_profit_margin);
-		if (mTextViewQuantProfitMargin != null) {
-			mTextViewQuantProfitMargin.setOnClickListener(this);
-			setVisibility(Setting.KEY_DISPLAY_THRESHOLD, mTextViewQuantProfitMargin);
-		}
-
 		mTextViewOperate = (TextView) findViewById(R.id.operate);
 		if (mTextViewOperate != null) {
 			mTextViewOperate.setOnClickListener(this);
@@ -432,14 +388,6 @@ public class StockListActivity extends ListActivity implements
 			setHeaderTextColor(mTextViewMin5, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_TREND)) {
 			setHeaderTextColor(mTextViewTrend, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_THRESHOLD)) {
-			setHeaderTextColor(mTextViewThreshold, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_QUANT_VOLUME)) {
-			setHeaderTextColor(mTextViewQuantVolume, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_QUANT_PROFIT)) {
-			setHeaderTextColor(mTextViewQuantProfit, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_QUANT_PROFIT_MARGIN)) {
-			setHeaderTextColor(mTextViewQuantProfitMargin, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_OPERATE)) {
 			setHeaderTextColor(mTextViewOperate, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MODIFIED)) {
@@ -458,16 +406,12 @@ public class StockListActivity extends ListActivity implements
 				DatabaseContract.COLUMN_WEEK, DatabaseContract.COLUMN_DAY,
 				DatabaseContract.COLUMN_MIN60, DatabaseContract.COLUMN_MIN30,
 				DatabaseContract.COLUMN_MIN15, DatabaseContract.COLUMN_MIN5,
-				DatabaseContract.COLUMN_TREND, DatabaseContract.COLUMN_THRESHOLD,
-				DatabaseContract.COLUMN_QUANT_VOLUME, DatabaseContract.COLUMN_QUANT_PROFIT,
-				DatabaseContract.COLUMN_QUANT_PROFIT_MARGIN,
-				DatabaseContract.COLUMN_OPERATE, DatabaseContract.COLUMN_MODIFIED };
+				DatabaseContract.COLUMN_TREND, DatabaseContract.COLUMN_OPERATE,
+				DatabaseContract.COLUMN_MODIFIED };
 		int[] mRightTo = new int[] { R.id.price, R.id.net, R.id.type_month,
 				R.id.type_week, R.id.type_day, R.id.type_60min,
 				R.id.type_30min, R.id.type_15min, R.id.type_5min,
-				R.id.trend, R.id.threshold, R.id.quant_volume,
-				R.id.quant_profit, R.id.quant_profit_margin,
-				R.id.operate, R.id.modified };
+				R.id.trend,	R.id.operate, R.id.modified };
 
 		mLeftListView = (ListView) findViewById(R.id.left_listview);
 		mLeftAdapter = new SimpleCursorAdapter(this,
@@ -677,18 +621,6 @@ public class StockListActivity extends ListActivity implements
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MIN5)) {
 				return setRightTextViewVisibility(Setting.KEY_PERIOD_MIN5, view);
-			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_THRESHOLD)) {
-				return setRightTextViewVisibility(Setting.KEY_DISPLAY_THRESHOLD, view);
-			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_QUANT_VOLUME)) {
-				return setRightTextViewVisibility(Setting.KEY_DISPLAY_THRESHOLD, view);
-			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_QUANT_PROFIT)) {
-				return setRightTextViewVisibility(Setting.KEY_DISPLAY_THRESHOLD, view);
-			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_QUANT_PROFIT_MARGIN)) {
-				return setRightTextViewVisibility(Setting.KEY_DISPLAY_THRESHOLD, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MODIFIED)) {
 			}
