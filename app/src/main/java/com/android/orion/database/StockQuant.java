@@ -14,6 +14,7 @@ public class StockQuant extends StockDeal {
     double mValuation;
     double mQuantProfit;
     double mQuantProfitMargin;
+    long mQuantX;
     double mThreshold;
 
     public StockQuant() {
@@ -37,6 +38,7 @@ public class StockQuant extends StockDeal {
         mValuation = 0;
         mQuantProfit = 0;
         mQuantProfitMargin = 0;
+        mQuantX = 0;
         mThreshold = 0;
     }
 
@@ -48,6 +50,7 @@ public class StockQuant extends StockDeal {
         contentValues.put(DatabaseContract.COLUMN_VALUATION, mValuation);
         contentValues.put(DatabaseContract.COLUMN_QUANT_PROFIT, mQuantProfit);
         contentValues.put(DatabaseContract.COLUMN_QUANT_PROFIT_MARGIN, mQuantProfitMargin);
+        contentValues.put(DatabaseContract.COLUMN_QUANT_X, mQuantX);
         contentValues.put(DatabaseContract.COLUMN_THRESHOLD, mThreshold);
 
         return contentValues;
@@ -66,6 +69,7 @@ public class StockQuant extends StockDeal {
         setValuation(stockQuant.mValuation);
         setQuantProfit(stockQuant.mQuantProfit);
         setQuantProfitMargin(stockQuant.mQuantProfitMargin);
+        setQuantX(stockQuant.mQuantX);
         setThreshold(stockQuant.mThreshold);
     }
 
@@ -83,6 +87,7 @@ public class StockQuant extends StockDeal {
         setValuation(cursor);
         setQuantProfit(cursor);
         setQuantProfitMargin(cursor);
+        setQuantX(cursor);
         setThreshold(cursor);
     }
 
@@ -152,6 +157,23 @@ public class StockQuant extends StockDeal {
 
         setQuantProfitMargin(cursor.getDouble(cursor
                 .getColumnIndex(DatabaseContract.COLUMN_QUANT_PROFIT_MARGIN)));
+    }
+
+    public double getQuantX() {
+        return mQuantX;
+    }
+
+    public void setQuantX(long quantX) {
+        mQuantX = quantX;
+    }
+
+    void setQuantX(Cursor cursor) {
+        if (cursor == null) {
+            return;
+        }
+
+        setQuantX(cursor.getLong(cursor
+                .getColumnIndex(DatabaseContract.COLUMN_QUANT_X)));
     }
 
     public double getThreshold() {

@@ -82,6 +82,7 @@ public class StockQuantAnalyzer {
 
         mHold += stock.getQuantVolume();
         stockQuant.setHold(mHold);
+        stockQuant.setQuantX(mHold/stock.getQuantVolume());
 
         mQuantProfit += stockQuant.getProfit();
         stockQuant.setQuantProfit(mQuantProfit);
@@ -145,6 +146,7 @@ public class StockQuantAnalyzer {
 
         mHold -= stock.getQuantVolume();
         stockQuant.setHold(mHold);
+        stockQuant.setQuantX(mHold / stock.getQuantVolume());
 
         mQuantProfit += stockQuant.getProfit();
         stockQuant.setQuantProfit(mQuantProfit);

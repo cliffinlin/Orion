@@ -89,6 +89,7 @@ public class StockQuantListActivity extends ListActivity implements
     TextView mTextViewValuation = null;
     TextView mTextViewQuantProfit = null;
     TextView mTextViewQuantProfitMargin = null;
+    TextView mTextViewQuantX = null;
     TextView mTextViewThreshold = null;
     TextView mTextViewCreated = null;
     TextView mTextViewModified = null;
@@ -393,6 +394,9 @@ public class StockQuantListActivity extends ListActivity implements
             case R.id.quant_profit_margin:
                 mSortOrderColumn = DatabaseContract.COLUMN_QUANT_PROFIT_MARGIN;
                 break;
+            case R.id.quant_x:
+                mSortOrderColumn = DatabaseContract.COLUMN_QUANT_X;
+                break;
             case R.id.threshold:
                 mSortOrderColumn = DatabaseContract.COLUMN_THRESHOLD;
                 break;
@@ -447,6 +451,7 @@ public class StockQuantListActivity extends ListActivity implements
         setHeaderTextColor(mTextViewValuation, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewQuantProfit, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewQuantProfitMargin, mHeaderTextDefaultColor);
+        setHeaderTextColor(mTextViewQuantX, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewThreshold, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewCreated, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewModified, mHeaderTextDefaultColor);
@@ -516,6 +521,9 @@ public class StockQuantListActivity extends ListActivity implements
         mTextViewQuantProfitMargin = (TextView) findViewById(R.id.quant_profit_margin);
         mTextViewQuantProfitMargin.setOnClickListener(this);
 
+        mTextViewQuantX = (TextView) findViewById(R.id.quant_x);
+        mTextViewQuantX.setOnClickListener(this);
+
         mTextViewThreshold = (TextView) findViewById(R.id.threshold);
         mTextViewThreshold.setOnClickListener(this);
 
@@ -556,6 +564,8 @@ public class StockQuantListActivity extends ListActivity implements
             setHeaderTextColor(mTextViewQuantProfit, mHeaderTextHighlightColor);
         } else if (mSortOrder.contains(DatabaseContract.COLUMN_QUANT_PROFIT_MARGIN)) {
             setHeaderTextColor(mTextViewQuantProfitMargin, mHeaderTextHighlightColor);
+        } else if (mSortOrder.contains(DatabaseContract.COLUMN_QUANT_X)) {
+            setHeaderTextColor(mTextViewQuantX, mHeaderTextHighlightColor);
         } else if (mSortOrder.contains(DatabaseContract.COLUMN_THRESHOLD)) {
             setHeaderTextColor(mTextViewThreshold, mHeaderTextHighlightColor);
         } else if (mSortOrder.contains(DatabaseContract.COLUMN_CREATED)) {
@@ -586,6 +596,7 @@ public class StockQuantListActivity extends ListActivity implements
                 DatabaseContract.COLUMN_VALUATION,
                 DatabaseContract.COLUMN_QUANT_PROFIT,
                 DatabaseContract.COLUMN_QUANT_PROFIT_MARGIN,
+                DatabaseContract.COLUMN_QUANT_X,
                 DatabaseContract.COLUMN_THRESHOLD,
                 DatabaseContract.COLUMN_CREATED,
                 DatabaseContract.COLUMN_MODIFIED};
@@ -604,6 +615,7 @@ public class StockQuantListActivity extends ListActivity implements
                 R.id.valuation,
                 R.id.quant_profit,
                 R.id.quant_profit_margin,
+                R.id.quant_x,
                 R.id.threshold,
                 R.id.created,
                 R.id.modified};

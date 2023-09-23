@@ -34,6 +34,7 @@
     <string name="quant_volume">QVolume</string>
     <string name="quant_profit">QProfit</string>
     <string name="quant_profit_margin">QMargin</string>
+    <string name="quant_x">QX</string>
     <string name="action_download">Download</string>
     <string name="action_delete">Delete</string>
     <string name="action_delete_all">Delete All</string>
