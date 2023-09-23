@@ -21,9 +21,9 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
-import com.android.orion.setting.Constants;
+import com.android.orion.setting.Constant;
 import com.android.orion.R;
-import com.android.orion.setting.Settings;
+import com.android.orion.setting.Setting;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.utility.Preferences;
@@ -108,7 +108,7 @@ public class StockListActivity extends ListActivity implements
 
 		setContentView(R.layout.activity_stock_list);
 
-		mSortOrder = Preferences.getString(mContext, Settings.KEY_SORT_ORDER_STOCK_LIST,
+		mSortOrder = Preferences.getString(mContext, Setting.KEY_SORT_ORDER_STOCK_LIST,
 				mSortOrderDefault);
 
 		initHeader();
@@ -258,7 +258,7 @@ public class StockListActivity extends ListActivity implements
 
 		mSortOrder = mSortOrderColumn + mSortOrderDirection;
 
-		Preferences.putString(mContext, Settings.KEY_SORT_ORDER_STOCK_LIST, mSortOrder);
+		Preferences.putString(mContext, Setting.KEY_SORT_ORDER_STOCK_LIST, mSortOrder);
 
 		restartLoader();
 	}
@@ -326,49 +326,49 @@ public class StockListActivity extends ListActivity implements
 		mTextViewNet = (TextView) findViewById(R.id.net);
 		if (mTextViewNet != null) {
 			mTextViewNet.setOnClickListener(this);
-			setVisibility(Settings.KEY_DISPLAY_NET, mTextViewNet);
+			setVisibility(Setting.KEY_DISPLAY_NET, mTextViewNet);
 		}
 
 		mTextViewMonth = (TextView) findViewById(R.id.action_month);
 		if (mTextViewMonth != null) {
 			mTextViewMonth.setOnClickListener(this);
-			setVisibility(Settings.KEY_PERIOD_MONTH, mTextViewMonth);
+			setVisibility(Setting.KEY_PERIOD_MONTH, mTextViewMonth);
 		}
 
 		mTextViewWeek = (TextView) findViewById(R.id.action_week);
 		if (mTextViewWeek != null) {
 			mTextViewWeek.setOnClickListener(this);
-			setVisibility(Settings.KEY_PERIOD_WEEK, mTextViewWeek);
+			setVisibility(Setting.KEY_PERIOD_WEEK, mTextViewWeek);
 		}
 
 		mTextViewDay = (TextView) findViewById(R.id.action_day);
 		if (mTextViewDay != null) {
 			mTextViewDay.setOnClickListener(this);
-			setVisibility(Settings.KEY_PERIOD_DAY, mTextViewDay);
+			setVisibility(Setting.KEY_PERIOD_DAY, mTextViewDay);
 		}
 
 		mTextViewMin60 = (TextView) findViewById(R.id.action_60min);
 		if (mTextViewMin60 != null) {
 			mTextViewMin60.setOnClickListener(this);
-			setVisibility(Settings.KEY_PERIOD_MIN60, mTextViewMin60);
+			setVisibility(Setting.KEY_PERIOD_MIN60, mTextViewMin60);
 		}
 
 		mTextViewMin30 = (TextView) findViewById(R.id.action_30min);
 		if (mTextViewMin30 != null) {
 			mTextViewMin30.setOnClickListener(this);
-			setVisibility(Settings.KEY_PERIOD_MIN30, mTextViewMin30);
+			setVisibility(Setting.KEY_PERIOD_MIN30, mTextViewMin30);
 		}
 
 		mTextViewMin15 = (TextView) findViewById(R.id.action_15min);
 		if (mTextViewMin15 != null) {
 			mTextViewMin15.setOnClickListener(this);
-			setVisibility(Settings.KEY_PERIOD_MIN15, mTextViewMin15);
+			setVisibility(Setting.KEY_PERIOD_MIN15, mTextViewMin15);
 		}
 
 		mTextViewMin5 = (TextView) findViewById(R.id.action_5min);
 		if (mTextViewMin5 != null) {
 			mTextViewMin5.setOnClickListener(this);
-			setVisibility(Settings.KEY_PERIOD_MIN5, mTextViewMin5);
+			setVisibility(Setting.KEY_PERIOD_MIN5, mTextViewMin5);
 		}
 
 		mTextViewTrend = (TextView) findViewById(R.id.trend);
@@ -379,25 +379,25 @@ public class StockListActivity extends ListActivity implements
 		mTextViewThreshold = (TextView) findViewById(R.id.threshold);
 		if (mTextViewThreshold != null) {
 			mTextViewThreshold.setOnClickListener(this);
-			setVisibility(Settings.KEY_DISPLAY_THRESHOLD, mTextViewThreshold);
+			setVisibility(Setting.KEY_DISPLAY_THRESHOLD, mTextViewThreshold);
 		}
 
 		mTextViewQuantVolume = (TextView) findViewById(R.id.quant_volume);
 		if (mTextViewQuantVolume != null) {
 			mTextViewQuantVolume.setOnClickListener(this);
-			setVisibility(Settings.KEY_DISPLAY_THRESHOLD, mTextViewQuantVolume);
+			setVisibility(Setting.KEY_DISPLAY_THRESHOLD, mTextViewQuantVolume);
 		}
 
 		mTextViewQuantProfit = (TextView) findViewById(R.id.quant_profit);
 		if (mTextViewQuantProfit != null) {
 			mTextViewQuantProfit.setOnClickListener(this);
-			setVisibility(Settings.KEY_DISPLAY_THRESHOLD, mTextViewQuantProfit);
+			setVisibility(Setting.KEY_DISPLAY_THRESHOLD, mTextViewQuantProfit);
 		}
 
 		mTextViewQuantProfitMargin = (TextView) findViewById(R.id.quant_profit_margin);
 		if (mTextViewQuantProfitMargin != null) {
 			mTextViewQuantProfitMargin.setOnClickListener(this);
-			setVisibility(Settings.KEY_DISPLAY_THRESHOLD, mTextViewQuantProfitMargin);
+			setVisibility(Setting.KEY_DISPLAY_THRESHOLD, mTextViewQuantProfitMargin);
 		}
 
 		mTextViewOperate = (TextView) findViewById(R.id.operate);
@@ -587,7 +587,7 @@ public class StockListActivity extends ListActivity implements
 
 		if (ACTION_STOCK_ID.equals(mAction)) {
 			if (mIntent != null) {
-				mIntent.putExtra(Constants.EXTRA_STOCK_ID, id);
+				mIntent.putExtra(Constant.EXTRA_STOCK_ID, id);
 				setResult(RESULT_OK, mIntent);
 				finish();
 			}
@@ -599,25 +599,25 @@ public class StockListActivity extends ListActivity implements
 				if (Stock.CLASS_INDEX.equals(mStock.getClasses())) {
 					Intent intent = new Intent(mContext,
 							IndexComponentListActivity.class);
-					intent.putExtra(Constants.EXTRA_INDEX_CODE, String.valueOf(mStock.getCode()));
-					intent.putExtra(Constants.EXTRA_INDEX_NAME, String.valueOf(mStock.getName()));
-					intent.putExtra(Constants.EXTRA_INDEX_SE, String.valueOf(mStock.getSE()));
+					intent.putExtra(Constant.EXTRA_INDEX_CODE, String.valueOf(mStock.getCode()));
+					intent.putExtra(Constant.EXTRA_INDEX_NAME, String.valueOf(mStock.getName()));
+					intent.putExtra(Constant.EXTRA_INDEX_SE, String.valueOf(mStock.getSE()));
 					startActivity(intent);
 				} else {
 					Intent intent = new Intent(mContext,
 							StockDealListActivity.class);
 					Bundle bundle = new Bundle();
-					bundle.putString(Constants.EXTRA_STOCK_SE, mStock.getSE());
-					bundle.putString(Constants.EXTRA_STOCK_CODE, mStock.getCode());
+					bundle.putString(Constant.EXTRA_STOCK_SE, mStock.getSE());
+					bundle.putString(Constant.EXTRA_STOCK_CODE, mStock.getCode());
 					intent.putExtras(bundle);
 					startActivity(intent);
 				}
 			} else {
 				Intent intent = new Intent(this,
 						StockDataChartListActivity.class);
-				intent.putExtra(Constants.EXTRA_STOCK_LIST_SORT_ORDER,
+				intent.putExtra(Constant.EXTRA_STOCK_LIST_SORT_ORDER,
 						mSortOrder);
-				intent.putExtra(Constants.EXTRA_STOCK_ID, id);
+				intent.putExtra(Constant.EXTRA_STOCK_ID, id);
 				startActivity(intent);
 			}
 		}
@@ -655,40 +655,40 @@ public class StockListActivity extends ListActivity implements
 
 			if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_NET)) {
-				return setRightTextViewVisibility(Settings.KEY_DISPLAY_NET, view);
+				return setRightTextViewVisibility(Setting.KEY_DISPLAY_NET, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MONTH)) {
-				return setRightTextViewVisibility(Settings.KEY_PERIOD_MONTH, view);
+				return setRightTextViewVisibility(Setting.KEY_PERIOD_MONTH, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_WEEK)) {
-				return setRightTextViewVisibility(Settings.KEY_PERIOD_WEEK, view);
+				return setRightTextViewVisibility(Setting.KEY_PERIOD_WEEK, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_DAY)) {
-				return setRightTextViewVisibility(Settings.KEY_PERIOD_DAY, view);
+				return setRightTextViewVisibility(Setting.KEY_PERIOD_DAY, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MIN60)) {
-				return setRightTextViewVisibility(Settings.KEY_PERIOD_MIN60, view);
+				return setRightTextViewVisibility(Setting.KEY_PERIOD_MIN60, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MIN30)) {
-				return setRightTextViewVisibility(Settings.KEY_PERIOD_MIN30, view);
+				return setRightTextViewVisibility(Setting.KEY_PERIOD_MIN30, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MIN15)) {
-				return setRightTextViewVisibility(Settings.KEY_PERIOD_MIN15, view);
+				return setRightTextViewVisibility(Setting.KEY_PERIOD_MIN15, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MIN5)) {
-				return setRightTextViewVisibility(Settings.KEY_PERIOD_MIN5, view);
+				return setRightTextViewVisibility(Setting.KEY_PERIOD_MIN5, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_THRESHOLD)) {
-				return setRightTextViewVisibility(Settings.KEY_DISPLAY_THRESHOLD, view);
+				return setRightTextViewVisibility(Setting.KEY_DISPLAY_THRESHOLD, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_QUANT_VOLUME)) {
-				return setRightTextViewVisibility(Settings.KEY_DISPLAY_THRESHOLD, view);
+				return setRightTextViewVisibility(Setting.KEY_DISPLAY_THRESHOLD, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_QUANT_PROFIT)) {
-				return setRightTextViewVisibility(Settings.KEY_DISPLAY_THRESHOLD, view);
+				return setRightTextViewVisibility(Setting.KEY_DISPLAY_THRESHOLD, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_QUANT_PROFIT_MARGIN)) {
-				return setRightTextViewVisibility(Settings.KEY_DISPLAY_THRESHOLD, view);
+				return setRightTextViewVisibility(Setting.KEY_DISPLAY_THRESHOLD, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MODIFIED)) {
 			}

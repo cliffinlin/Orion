@@ -30,9 +30,9 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
-import com.android.orion.setting.Constants;
+import com.android.orion.setting.Constant;
 import com.android.orion.R;
-import com.android.orion.setting.Settings;
+import com.android.orion.setting.Setting;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;
@@ -43,7 +43,7 @@ import com.android.orion.view.SyncHorizontalScrollView;
 public class DealListActivity extends ListActivity implements
         LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
         OnItemLongClickListener, OnClickListener {
-    static final String TAG = Constants.TAG + " "
+    static final String TAG = Constant.TAG + " "
             + DealListActivity.class.getSimpleName();
 
     static final int LOADER_ID_DEAL_LIST = 0;
@@ -118,7 +118,7 @@ public class DealListActivity extends ListActivity implements
             switch (msg.what) {
                 case MESSAGE_DELETE_DEAL:
                     getStock();
-                    RecordFile.writeDealFile(mStock, mDeal, Constants.DEAL_OPERATE_DELETE);
+                    RecordFile.writeDealFile(mStock, mDeal, Constant.DEAL_OPERATE_DELETE);
                     mStockDatabaseManager.deleteStockDeal(mDeal);
                     mStockDatabaseManager.updateStockDeal(mStock);
                     mStockDatabaseManager.updateStock(mStock,
@@ -133,7 +133,7 @@ public class DealListActivity extends ListActivity implements
 
                     intent = new Intent(mContext, StockEditActivity.class);
                     intent.setAction(StockEditActivity.ACTION_STOCK_EDIT);
-                    intent.putExtra(Constants.EXTRA_STOCK_ID, mStock.getId());
+                    intent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
                     startActivity(intent);
                     break;
 
@@ -146,10 +146,10 @@ public class DealListActivity extends ListActivity implements
                     }
 
                     intent = new Intent(mContext, StockDataChartListActivity.class);
-                    intent.putExtra(Constants.EXTRA_STOCK_ID, mStock.getId());
-                    intent.putStringArrayListExtra(Constants.EXTRA_STOCK_ID_LIST,
+                    intent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
+                    intent.putStringArrayListExtra(Constant.EXTRA_STOCK_ID_LIST,
                             stockIDList);
-                    intent.putExtra(Constants.EXTRA_STOCK_DEAL, true);
+                    intent.putExtra(Constant.EXTRA_STOCK_DEAL, true);
                     startActivity(intent);
                     break;
 
@@ -158,7 +158,7 @@ public class DealListActivity extends ListActivity implements
 
                     mIntent = new Intent(mContext, StockTrendListActivity.class);
                     mIntent.setAction(StockTrendListActivity.ACTION_STOCK_TREND_LIST);
-                    mIntent.putExtra(Constants.EXTRA_STOCK_ID, mStock.getId());
+                    mIntent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
                     startActivity(mIntent);
                     break;
 
@@ -244,7 +244,7 @@ public class DealListActivity extends ListActivity implements
 
         mFilterType = FILTER_TYPE_SELL;
 
-        mSortOrder = Preferences.getString(mContext, Settings.KEY_SORT_ORDER_DEAL_LIST,
+        mSortOrder = Preferences.getString(mContext, Setting.KEY_SORT_ORDER_DEAL_LIST,
                 mSortOrderDefault);
 
         initHeader();
@@ -408,7 +408,7 @@ public class DealListActivity extends ListActivity implements
 
         mSortOrder = mSortOrderColumn + mSortOrderDirection;
 
-        Preferences.putString(mContext, Settings.KEY_SORT_ORDER_DEAL_LIST, mSortOrder);
+        Preferences.putString(mContext, Setting.KEY_SORT_ORDER_DEAL_LIST, mSortOrder);
 
         restartLoader();
     }
@@ -647,7 +647,7 @@ public class DealListActivity extends ListActivity implements
                 mSelection = DatabaseContract.COLUMN_ACTION + " != ''";
                 mSelection += " AND " + DatabaseContract.COLUMN_VOLUME + " > " + 0;
                 mSelection += " AND " + DatabaseContract.COLUMN_PROFIT + " > " + DatabaseContract.COLUMN_BONUS;
-                mSelection += " AND " + DatabaseContract.COLUMN_NET + " > " + Math.max(Constants.STOCK_THRESHOLD, Constants.STOCK_THRESHOLD);
+                mSelection += " AND " + DatabaseContract.COLUMN_NET + " > " + Math.max(Constant.STOCK_THRESHOLD, Constant.STOCK_THRESHOLD);
                 break;
 
             case FILTER_TYPE_ALL:

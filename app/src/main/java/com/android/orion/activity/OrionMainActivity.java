@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.android.orion.manager.DownloadAlarmManager;
 import com.android.orion.service.OrionService;
 import com.android.orion.R;
-import com.android.orion.setting.Settings;
+import com.android.orion.setting.Setting;
 import com.android.orion.utility.Preferences;
 
 public class OrionMainActivity extends PreferenceActivity {
@@ -106,28 +106,28 @@ public class OrionMainActivity extends PreferenceActivity {
 		SharedPreferences settings = PreferenceManager
 				.getDefaultSharedPreferences(this);
 
-		if (!Preferences.getBoolean(this, Settings.KEY_SHARED_PREFERENCES_INIT, false)) {
-			Preferences.putBoolean (this, Settings.KEY_SHARED_PREFERENCES_INIT, true);
+		if (!Preferences.getBoolean(this, Setting.KEY_SHARED_PREFERENCES_INIT, false)) {
+			Preferences.putBoolean (this, Setting.KEY_SHARED_PREFERENCES_INIT, true);
 
-			Preferences.putBoolean (this, Settings.KEY_NOTIFICATION_OPERATE, true);
+			Preferences.putBoolean (this, Setting.KEY_NOTIFICATION_OPERATE, true);
 
-			Preferences.putBoolean (this, Settings.KEY_DISPLAY_NET, true);
+			Preferences.putBoolean (this, Setting.KEY_DISPLAY_NET, true);
 
-			Preferences.putBoolean (this, Settings.KEY_PERIOD_DAY, true);
-			Preferences.putBoolean (this, Settings.KEY_PERIOD_MIN60, true);
-			Preferences.putBoolean (this, Settings.KEY_PERIOD_MIN30, true);
-			Preferences.putBoolean (this, Settings.KEY_PERIOD_MIN15, true);
-			Preferences.putBoolean (this, Settings.KEY_PERIOD_MIN5, true);
+			Preferences.putBoolean (this, Setting.KEY_PERIOD_DAY, true);
+			Preferences.putBoolean (this, Setting.KEY_PERIOD_MIN60, true);
+			Preferences.putBoolean (this, Setting.KEY_PERIOD_MIN30, true);
+			Preferences.putBoolean (this, Setting.KEY_PERIOD_MIN15, true);
+			Preferences.putBoolean (this, Setting.KEY_PERIOD_MIN5, true);
 
-			Preferences.putBoolean (this, Settings.KEY_DISPLAY_THRESHOLD, true);
-			Preferences.putBoolean (this, Settings.KEY_DISPLAY_DRAW, true);
-			Preferences.putBoolean (this, Settings.KEY_DISPLAY_STROKE, true);
-			Preferences.putBoolean (this, Settings.KEY_DISPLAY_SEGMENT, true);
-			Preferences.putBoolean (this, Settings.KEY_DISPLAY_LINE, true);
-			Preferences.putBoolean (this, Settings.KEY_DISPLAY_LATEST, true);
-			Preferences.putBoolean (this, Settings.KEY_DISPLAY_COST, true);
+			Preferences.putBoolean (this, Setting.KEY_DISPLAY_THRESHOLD, true);
+			Preferences.putBoolean (this, Setting.KEY_DISPLAY_DRAW, true);
+			Preferences.putBoolean (this, Setting.KEY_DISPLAY_STROKE, true);
+			Preferences.putBoolean (this, Setting.KEY_DISPLAY_SEGMENT, true);
+			Preferences.putBoolean (this, Setting.KEY_DISPLAY_LINE, true);
+			Preferences.putBoolean (this, Setting.KEY_DISPLAY_LATEST, true);
+			Preferences.putBoolean (this, Setting.KEY_DISPLAY_COST, true);
 
-			Preferences.putBoolean (this, Settings.KEY_LOOPBACK, false);
+			Preferences.putBoolean (this, Setting.KEY_LOOPBACK, false);
 		}
 	}
 }

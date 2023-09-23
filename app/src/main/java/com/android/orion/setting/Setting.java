@@ -5,7 +5,7 @@ import android.text.TextUtils;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.utility.Utility;
 
-public class Settings {
+public class Setting {
 	public static final String KEY_SHARED_PREFERENCES_INIT = "shared_preferences_init";
 
 	public static final String KEY_NOTIFICATION_OPERATE = "notification_operate";
@@ -71,6 +71,6 @@ public class Settings {
 
 	public static final String KEY_STOCK_HSA_UPDATED = "stock_hsa_updated";
 
-	private Settings() {
+	private Setting() {
 	}
 }

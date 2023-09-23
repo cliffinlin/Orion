@@ -21,9 +21,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import com.android.orion.setting.Constants;
+import com.android.orion.setting.Constant;
 import com.android.orion.R;
-import com.android.orion.setting.Settings;
+import com.android.orion.setting.Setting;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;
 import com.android.orion.utility.RecordFile;
@@ -77,17 +77,17 @@ public class StockDealActivity extends DatabaseActivity implements
 				mStock.setCode(mDeal.getCode());
 				mStockDatabaseManager.getStock(mStock);
 				updateView();
-				RecordFile.writeDealFile(mStock, mDeal, Constants.DEAL_OPERATE_EDIT);
+				RecordFile.writeDealFile(mStock, mDeal, Constant.DEAL_OPERATE_EDIT);
 				break;
 
 			case MESSAGE_SAVE_DEAL:
 				if (ACTION_DEAL_INSERT.equals(mAction)) {
 					mDeal.setCreated(Utility.getCurrentDateTimeString());
-					RecordFile.writeDealFile(mStock, mDeal, Constants.DEAL_OPERATE_INSERT);
+					RecordFile.writeDealFile(mStock, mDeal, Constant.DEAL_OPERATE_INSERT);
 					mStockDatabaseManager.insertStockDeal(mDeal);
 				} else if (ACTION_DEAL_EDIT.equals(mAction)) {
 					mDeal.setModified(Utility.getCurrentDateTimeString());
-					RecordFile.writeDealFile(mStock, mDeal, Constants.DEAL_OPERATE_EDIT);
+					RecordFile.writeDealFile(mStock, mDeal, Constant.DEAL_OPERATE_EDIT);
 					mStockDatabaseManager.updateStockDealByID(mDeal);
 				}
 				mStockDatabaseManager.updateStockDeal(mStock);
@@ -139,8 +139,8 @@ public class StockDealActivity extends DatabaseActivity implements
 
 		if (ACTION_DEAL_INSERT.equals(mAction)) {
 			if (mBundle != null) {
-				mStock.setSE(mBundle.getString(Constants.EXTRA_STOCK_SE));
-				mStock.setCode(mBundle.getString(Constants.EXTRA_STOCK_CODE));
+				mStock.setSE(mBundle.getString(Constant.EXTRA_STOCK_SE));
+				mStock.setCode(mBundle.getString(Constant.EXTRA_STOCK_CODE));
 				mHandler.sendEmptyMessage(MESSAGE_LOAD_STOCK_BY_SE_CODE);
 			}
 		} else if (ACTION_DEAL_EDIT.equals(mAction)) {
@@ -183,8 +183,8 @@ public class StockDealActivity extends DatabaseActivity implements
 
 		mListStockAccount = new ArrayList<String>();
 		mListStockAccount.add("");
-		mListStockAccount.add(Settings.KEY_STOCK_ACCOUNT_A);
-		mListStockAccount.add(Settings.KEY_STOCK_ACCOUNT_B);
+		mListStockAccount.add(Setting.KEY_STOCK_ACCOUNT_A);
+		mListStockAccount.add(Setting.KEY_STOCK_ACCOUNT_B);
 
 		mArrayAdapterStockAccount = new ArrayAdapter<String>(this,
 				android.R.layout.simple_spinner_item, mListStockAccount);
@@ -194,13 +194,13 @@ public class StockDealActivity extends DatabaseActivity implements
 
 		mListStockOperate = new ArrayList<String>();
 		mListStockOperate.add("");
-		mListStockOperate.add(Settings.KEY_PERIOD_MONTH);
-		mListStockOperate.add(Settings.KEY_PERIOD_WEEK);
-		mListStockOperate.add(Settings.KEY_PERIOD_DAY);
-		mListStockOperate.add(Settings.KEY_PERIOD_MIN60);
-		mListStockOperate.add(Settings.KEY_PERIOD_MIN30);
-		mListStockOperate.add(Settings.KEY_PERIOD_MIN15);
-		mListStockOperate.add(Settings.KEY_PERIOD_MIN5);
+		mListStockOperate.add(Setting.KEY_PERIOD_MONTH);
+		mListStockOperate.add(Setting.KEY_PERIOD_WEEK);
+		mListStockOperate.add(Setting.KEY_PERIOD_DAY);
+		mListStockOperate.add(Setting.KEY_PERIOD_MIN60);
+		mListStockOperate.add(Setting.KEY_PERIOD_MIN30);
+		mListStockOperate.add(Setting.KEY_PERIOD_MIN15);
+		mListStockOperate.add(Setting.KEY_PERIOD_MIN5);
 
 		mArrayAdapterStockOperate = new ArrayAdapter<String>(this,
 				android.R.layout.simple_spinner_item, mListStockOperate);
@@ -210,7 +210,7 @@ public class StockDealActivity extends DatabaseActivity implements
 
 		if (ACTION_DEAL_INSERT.equals(mAction)) {
 			setTitle(R.string.deal_insert);
-			mDeal.setAction(Settings.KEY_PERIOD_DAY);
+			mDeal.setAction(Setting.KEY_PERIOD_DAY);
 		} else if (ACTION_DEAL_EDIT.equals(mAction)) {
 			setTitle(R.string.deal_edit);
 		}
@@ -365,7 +365,7 @@ public class StockDealActivity extends DatabaseActivity implements
 			switch (requestCode) {
 			case REQUEST_CODE_STOCK_ID:
 				if (mStock != null) {
-					mStock.setId(data.getLongExtra(Constants.EXTRA_STOCK_ID,
+					mStock.setId(data.getLongExtra(Constant.EXTRA_STOCK_ID,
 							Stock.INVALID_ID));
 					mHandler.sendEmptyMessage(MESSAGE_LOAD_STOCK_BY_ID);
 				}

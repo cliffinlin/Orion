@@ -13,7 +13,7 @@ import android.widget.DatePicker;
 import android.widget.TimePicker;
 
 import com.android.orion.R;
-import com.android.orion.setting.Settings;
+import com.android.orion.setting.Setting;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Utility;
 
@@ -40,7 +40,7 @@ public class SettingLoopbackActivity extends BaseActivity {
 			switch (msg.what) {
 				case MESSAGE_BACK_TEST_ON:
 					Calendar calendar;
-					String dateTime = Preferences.getString(mContext, Settings.KEY_LOOPBACK_DATE_TIME, "");
+					String dateTime = Preferences.getString(mContext, Setting.KEY_LOOPBACK_DATE_TIME, "");
 					if (!TextUtils.isEmpty(dateTime)) {
 						calendar = Utility.getCalendar(dateTime, Utility.CALENDAR_DATE_TIME_FORMAT);
 					} else {
@@ -68,7 +68,7 @@ public class SettingLoopbackActivity extends BaseActivity {
 									mHourOfDay = hourOfDay;
 									mMinute = minute;
 									String dateTime = mYear + "-" + String.format("%02d", mMonth + 1) + "-" + String.format("%02d", mDayOfMonth) + " " + String.format("%02d", hourOfDay) + ":" + String.format("%02d", minute) + ":00";
-									Preferences.putString(SettingLoopbackActivity.this, Settings.KEY_LOOPBACK_DATE_TIME, dateTime);
+									Preferences.putString(SettingLoopbackActivity.this, Setting.KEY_LOOPBACK_DATE_TIME, dateTime);
 									setResult(RESULT_OK, mIntent);
 									finish();
 								}

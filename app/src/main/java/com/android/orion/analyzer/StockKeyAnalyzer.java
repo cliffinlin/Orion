@@ -2,28 +2,28 @@ package com.android.orion.analyzer;
 
 import android.util.Log;
 
-import com.android.orion.setting.Constants;
-import com.android.orion.setting.Settings;
+import com.android.orion.setting.Constant;
+import com.android.orion.setting.Setting;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 
 import java.util.ArrayList;
 
 public class StockKeyAnalyzer {
-    static final String TAG = Constants.TAG + " "
+    static final String TAG = Constant.TAG + " "
             + StockKeyAnalyzer.class.getSimpleName();
 
-    public static final boolean LOG = false;
+    static final boolean LOG = false;
 
-    private int mThresholdType = StockData.THRESHOLD_NONE;
+    int mThresholdType = StockData.THRESHOLD_NONE;
 
-    private double mNaturalRally;
-    private double mUpwardTrend;
-    private double mDownwardTrend;
-    private double mNaturalReaction;
+    double mNaturalRally;
+    double mUpwardTrend;
+    double mDownwardTrend;
+    double mNaturalReaction;
 
-    private double mPrevHigh;
-    private double mPrevLow;
+    double mPrevHigh;
+    double mPrevLow;
 
     public StockKeyAnalyzer() {
         init();
@@ -65,7 +65,7 @@ public class StockKeyAnalyzer {
         threshold = stock.getThreshold();
 
         if (threshold == 0) {
-            threshold = Constants.STOCK_THRESHOLD;
+            threshold = Constant.STOCK_THRESHOLD;
             stock.setThreshold(threshold);
         }
 
@@ -184,7 +184,7 @@ public class StockKeyAnalyzer {
             }
         }
 
-        if (Settings.KEY_PERIOD_DAY.equals(period)) {
+        if (Setting.KEY_PERIOD_DAY.equals(period)) {
             String trendString = "";
 
             switch (mThresholdType) {

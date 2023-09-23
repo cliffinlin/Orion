@@ -7,12 +7,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.android.orion.setting.Constants;
+import com.android.orion.setting.Constant;
 import com.android.orion.service.OrionService;
 import com.android.orion.utility.Market;
 
 public class DownloadBroadcastReceiver extends BroadcastReceiver {
-	static final String TAG = Constants.TAG + " "
+	static final String TAG = Constant.TAG + " "
 			+ DownloadBroadcastReceiver.class.getSimpleName();
 
 	@Override

@@ -27,9 +27,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.android.orion.setting.Constants;
+import com.android.orion.setting.Constant;
 import com.android.orion.R;
-import com.android.orion.setting.Settings;
+import com.android.orion.setting.Setting;
 import com.android.orion.chart.StockFinancialChart;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.StockFinancial;
@@ -48,7 +48,7 @@ import com.github.mikephil.charting.utils.Utils;
 
 public class StockFinancialChartListActivity extends BaseActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnChartGestureListener {
-	static final String TAG = Constants.TAG + " "
+	static final String TAG = Constant.TAG + " "
 			+ StockFinancialChartListActivity.class.getSimpleName();
 
 	static final int ITEM_VIEW_TYPE_MAIN = 0;
@@ -105,11 +105,11 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 
 		initListView();
 
-		mStock.setId(getIntent().getLongExtra(Constants.EXTRA_STOCK_ID,
+		mStock.setId(getIntent().getLongExtra(Constant.EXTRA_STOCK_ID,
 				Stock.INVALID_ID));
 
 		mSortOrder = getIntent().getStringExtra(
-				Constants.EXTRA_STOCK_LIST_SORT_ORDER);
+				Constant.EXTRA_STOCK_LIST_SORT_ORDER);
 
 		initLoader();
 
@@ -142,14 +142,14 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 		case R.id.action_edit: {
 			mIntent = new Intent(this, StockEditActivity.class);
 			mIntent.setAction(StockEditActivity.ACTION_STOCK_EDIT);
-			mIntent.putExtra(Constants.EXTRA_STOCK_ID, mStock.getId());
+			mIntent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
 			startActivity(mIntent);
 			return true;
 		}
 		case R.id.action_deal: {
 			Bundle bundle = new Bundle();
-			bundle.putString(Constants.EXTRA_STOCK_SE, mStock.getSE());
-			bundle.putString(Constants.EXTRA_STOCK_CODE, mStock.getCode());
+			bundle.putString(Constant.EXTRA_STOCK_SE, mStock.getSE());
+			bundle.putString(Constant.EXTRA_STOCK_CODE, mStock.getCode());
 			Intent intent = new Intent(this, StockDealListActivity.class);
 			intent.putExtras(bundle);
 			startActivity(intent);
@@ -254,7 +254,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 
 		int i = 0;
 		mStockFinancialChartList.add(new StockFinancialChart(
-				Settings.KEY_PERIODS[i]));
+				Setting.KEY_PERIODS[i]));
 		mStockFinancialChartItemMainList.add(new StockFinancialChartItemMain(
 				mStockFinancialChartList.get(i)));
 		mStockFinancialChartItemSubList.add(new StockFinancialChartItemSub(
@@ -273,7 +273,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 	}
 
 	void restartLoader(Intent intent) {
-		if (intent.getLongExtra(Constants.EXTRA_STOCK_ID,
+		if (intent.getLongExtra(Constant.EXTRA_STOCK_ID,
 				Stock.INVALID_ID) == mStock.getId()) {
 			restartLoader();
 		}

@@ -26,7 +26,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.android.orion.database.StockQuant;
-import com.android.orion.setting.Constants;
+import com.android.orion.setting.Constant;
 import com.android.orion.service.OrionService;
 import com.android.orion.service.OrionService.OrionBinder;
 import com.android.orion.R;
@@ -40,7 +40,7 @@ import com.android.orion.database.TotalShare;
 import com.android.orion.utility.Utility;
 
 public class BaseActivity extends Activity {
-	static final String TAG = Constants.TAG + " "
+	static final String TAG = Constant.TAG + " "
 			+ BaseActivity.class.getSimpleName();
 
 	boolean mResumed = false;
@@ -108,7 +108,7 @@ public class BaseActivity extends Activity {
 			if (mResumed) {
 				String action = intent.getAction();
 
-				if (Constants.ACTION_RESTART_LOADER.equals(action)) {
+				if (Constant.ACTION_RESTART_LOADER.equals(action)) {
 					restartLoader(intent);
 				}
 			}
@@ -126,11 +126,11 @@ public class BaseActivity extends Activity {
 
 		mPowerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		mWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-				Constants.TAG + ":" + BaseActivity.class.getSimpleName());
+				Constant.TAG + ":" + BaseActivity.class.getSimpleName());
 
 		LocalBroadcastManager.getInstance(this).registerReceiver(
 				mBroadcastReceiver,
-				new IntentFilter(Constants.ACTION_RESTART_LOADER));
+				new IntentFilter(Constant.ACTION_RESTART_LOADER));
 
 		mIntent = getIntent();
 		if (mIntent != null) {

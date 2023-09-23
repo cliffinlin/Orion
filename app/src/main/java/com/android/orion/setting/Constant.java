@@ -1,6 +1,6 @@
 package com.android.orion.setting;
 
-public class Constants {
+public class Constant {
 	public static final String APP_NAME = "Orion";
 	public static final String TAG = APP_NAME;
 

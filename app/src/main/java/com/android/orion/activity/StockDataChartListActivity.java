@@ -23,9 +23,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.android.orion.database.StockQuant;
-import com.android.orion.setting.Constants;
+import com.android.orion.setting.Constant;
 import com.android.orion.R;
-import com.android.orion.setting.Settings;
+import com.android.orion.setting.Setting;
 import com.android.orion.chart.StockDataChart;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.ShareBonus;
@@ -54,12 +54,12 @@ import java.util.List;
 
 public class StockDataChartListActivity extends BaseActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnChartGestureListener {
-	static final String TAG = Constants.TAG + " "
+	static final String TAG = Constant.TAG + " "
 			+ StockDataChartListActivity.class.getSimpleName();
 
 	public static final int ITEM_VIEW_TYPE_MAIN = 0;
 	public static final int ITEM_VIEW_TYPE_SUB = 1;
-	public static final int LOADER_ID_STOCK_LIST = Settings.KEY_PERIODS.length + 1;
+	public static final int LOADER_ID_STOCK_LIST = Setting.KEY_PERIODS.length + 1;
 	public static final int FLING_DISTANCE = 50;
 	public static final int FLING_VELOCITY = 100;
 
@@ -149,53 +149,53 @@ public class StockDataChartListActivity extends BaseActivity implements
 
 		initListView();
 
-		mStock.setId(getIntent().getLongExtra(Constants.EXTRA_STOCK_ID,
+		mStock.setId(getIntent().getLongExtra(Constant.EXTRA_STOCK_ID,
 				Stock.INVALID_ID));
 		mStockIDList = getIntent().getStringArrayListExtra(
-				Constants.EXTRA_STOCK_ID_LIST);
+				Constant.EXTRA_STOCK_ID_LIST);
 		if ((mStockIDList != null) && (mStockIDList.size() > 0)) {
 			mHandler.sendEmptyMessage(MESSAGE_LOAD_STOCK_LIST);
 		}
 		mSortOrder = getIntent().getStringExtra(
-				Constants.EXTRA_STOCK_LIST_SORT_ORDER);
+				Constant.EXTRA_STOCK_LIST_SORT_ORDER);
 
-		mKeyDisplayThreshold = Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_THRESHOLD,
+		mKeyDisplayThreshold = Preferences.getBoolean(mContext, Setting.KEY_DISPLAY_THRESHOLD,
 				false);
-		mKeyDisplayCandle = Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_CANDLE,
+		mKeyDisplayCandle = Preferences.getBoolean(mContext, Setting.KEY_DISPLAY_CANDLE,
 				false);
-		mKeyDisplayOverlap = Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_OVERLAP,
+		mKeyDisplayOverlap = Preferences.getBoolean(mContext, Setting.KEY_DISPLAY_OVERLAP,
                 false);
-		mKeyDisplayLatest = Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_LATEST, true);
-		mKeyDisplayCost = Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_COST, true);
+		mKeyDisplayLatest = Preferences.getBoolean(mContext, Setting.KEY_DISPLAY_LATEST, true);
+		mKeyDisplayCost = Preferences.getBoolean(mContext, Setting.KEY_DISPLAY_COST, true);
 
-		if (getIntent().getBooleanExtra(Constants.EXTRA_STOCK_DEAL, false)) {
+		if (getIntent().getBooleanExtra(Constant.EXTRA_STOCK_DEAL, false)) {
 			mKeyDisplayDeal = true;
 		} else {
-			mKeyDisplayDeal = Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_DEAL, false);
+			mKeyDisplayDeal = Preferences.getBoolean(mContext, Setting.KEY_DISPLAY_DEAL, false);
 		}
 
-		if (getIntent().getBooleanExtra(Constants.EXTRA_STOCK_QUANT, false)) {
+		if (getIntent().getBooleanExtra(Constant.EXTRA_STOCK_QUANT, false)) {
 			mKeyDisplayQuant = true;
 		} else {
-			mKeyDisplayQuant = Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_QUANT, false);
+			mKeyDisplayQuant = Preferences.getBoolean(mContext, Setting.KEY_DISPLAY_QUANT, false);
 		}
 
 		mKeyDisplayBonus = Preferences
-				.getBoolean(mContext, Settings.KEY_DISPLAY_BONUS, false);
-		mKeyDisplayBPS = Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_BPS, false);
-		mKeyDisplayNPS = Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_NPS, false);
-		mKeyDisplayRoe = Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_ROE, false);
-		mKeyDisplayRoi = Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_ROI, false);
+				.getBoolean(mContext, Setting.KEY_DISPLAY_BONUS, false);
+		mKeyDisplayBPS = Preferences.getBoolean(mContext, Setting.KEY_DISPLAY_BPS, false);
+		mKeyDisplayNPS = Preferences.getBoolean(mContext, Setting.KEY_DISPLAY_NPS, false);
+		mKeyDisplayRoe = Preferences.getBoolean(mContext, Setting.KEY_DISPLAY_ROE, false);
+		mKeyDisplayRoi = Preferences.getBoolean(mContext, Setting.KEY_DISPLAY_ROI, false);
 
-		if (getIntent().getBooleanExtra(Constants.EXTRA_STOCK_BONUS, false)) {
+		if (getIntent().getBooleanExtra(Constant.EXTRA_STOCK_BONUS, false)) {
 			mKeyDisplayBonus = true;
 		}
 
-		if (getIntent().getBooleanExtra(Constants.EXTRA_STOCK_BPS, false)) {
+		if (getIntent().getBooleanExtra(Constant.EXTRA_STOCK_BPS, false)) {
 			mKeyDisplayBPS = true;
 		}
 
-		if (getIntent().getBooleanExtra(Constants.EXTRA_STOCK_NPS, false)) {
+		if (getIntent().getBooleanExtra(Constant.EXTRA_STOCK_NPS, false)) {
 			mKeyDisplayNPS = true;
 		}
 
@@ -211,7 +211,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		MenuItem menuLoopback = menu.findItem(R.id.action_loopback);
-		if (Preferences.getBoolean(mContext, Settings.KEY_LOOPBACK, false)) {
+		if (Preferences.getBoolean(mContext, Setting.KEY_LOOPBACK, false)) {
 			menuLoopback.setVisible(true);
 		} else {
 			menuLoopback.setVisible(false);
@@ -247,14 +247,14 @@ public class StockDataChartListActivity extends BaseActivity implements
 		case R.id.action_edit:
 			mIntent = new Intent(this, StockEditActivity.class);
 			mIntent.setAction(StockEditActivity.ACTION_STOCK_EDIT);
-			mIntent.putExtra(Constants.EXTRA_STOCK_ID, mStock.getId());
+			mIntent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
 			startActivity(mIntent);
 			return true;
 
 		case R.id.action_deal: {
 			Bundle bundle = new Bundle();
-			bundle.putString(Constants.EXTRA_STOCK_SE, mStock.getSE());
-			bundle.putString(Constants.EXTRA_STOCK_CODE, mStock.getCode());
+			bundle.putString(Constant.EXTRA_STOCK_SE, mStock.getSE());
+			bundle.putString(Constant.EXTRA_STOCK_CODE, mStock.getCode());
 			Intent intent = new Intent(this, StockDealListActivity.class);
 			intent.putExtras(bundle);
 			startActivity(intent);
@@ -264,14 +264,14 @@ public class StockDataChartListActivity extends BaseActivity implements
 		case R.id.action_trend:
 			mIntent = new Intent(this, StockTrendListActivity.class);
 			mIntent.setAction(StockTrendListActivity.ACTION_STOCK_TREND_LIST);
-			mIntent.putExtra(Constants.EXTRA_STOCK_ID, mStock.getId());
+			mIntent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
 			startActivity(mIntent);
 			return true;
 
 		case R.id.action_quant: {
 			Bundle bundle = new Bundle();
-			bundle.putString(Constants.EXTRA_STOCK_SE, mStock.getSE());
-			bundle.putString(Constants.EXTRA_STOCK_CODE, mStock.getCode());
+			bundle.putString(Constant.EXTRA_STOCK_SE, mStock.getSE());
+			bundle.putString(Constant.EXTRA_STOCK_CODE, mStock.getCode());
 			Intent intent = new Intent(this, StockQuantListActivity.class);
 			intent.putExtras(bundle);
 			startActivity(intent);
@@ -302,7 +302,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 				break;
 
 			case REQUEST_CODE_SETTING_LOOPBACK:
-				for (String period : Settings.KEY_PERIODS) {
+				for (String period : Setting.KEY_PERIODS) {
 					if (Preferences.getBoolean(mContext, period, false)) {
 						mStockDatabaseManager.deleteStockData(mStock.getId(), period);
 					}
@@ -336,7 +336,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 		if (id == LOADER_ID_STOCK_LIST) {
 			loader = getStockCursorLoader();
 		} else {
-			loader = getStockDataCursorLoader(Settings.KEY_PERIODS[id]);
+			loader = getStockDataCursorLoader(Setting.KEY_PERIODS[id]);
 		}
 
 		return loader;
@@ -395,8 +395,8 @@ public class StockDataChartListActivity extends BaseActivity implements
 			mStockDataChartItemSubList = new ArrayList<StockDataChartItemSub>();
 		}
 
-		for (int i = 0; i < Settings.KEY_PERIODS.length; i++) {
-			mStockDataChartList.add(new StockDataChart(Settings.KEY_PERIODS[i]));
+		for (int i = 0; i < Setting.KEY_PERIODS.length; i++) {
+			mStockDataChartList.add(new StockDataChart(Setting.KEY_PERIODS[i]));
 			mStockDataChartItemMainList.add(new StockDataChartItemMain(
 					mStockDataChartList.get(i)));
 			mStockDataChartItemSubList.add(new StockDataChartItemSub(
@@ -416,15 +416,15 @@ public class StockDataChartListActivity extends BaseActivity implements
 		}
 
 		mStockDatabaseManager.getStockById(mStock);
-		for (int i = 0; i < Settings.KEY_PERIODS.length; i++) {
-			if (Preferences.getBoolean(this, Settings.KEY_PERIODS[i], false)) {
+		for (int i = 0; i < Setting.KEY_PERIODS.length; i++) {
+			if (Preferences.getBoolean(this, Setting.KEY_PERIODS[i], false)) {
 				mLoaderManager.initLoader(i, null, this);
 			}
 		}
 	}
 
 	void restartLoader(Intent intent) {
-		if (intent.getLongExtra(Constants.EXTRA_STOCK_ID,
+		if (intent.getLongExtra(Constant.EXTRA_STOCK_ID,
 				Stock.INVALID_ID) == mStock.getId()) {
 			restartLoader();
 		}
@@ -436,8 +436,8 @@ public class StockDataChartListActivity extends BaseActivity implements
 		}
 
 		mStockDatabaseManager.getStockById(mStock);
-		for (int i = 0; i < Settings.KEY_PERIODS.length; i++) {
-			if (Preferences.getBoolean(this, Settings.KEY_PERIODS[i], false)) {
+		for (int i = 0; i < Setting.KEY_PERIODS.length; i++) {
+			if (Preferences.getBoolean(this, Setting.KEY_PERIODS[i], false)) {
 				mLoaderManager.restartLoader(i, null, this);
 			}
 		}
@@ -580,15 +580,15 @@ public class StockDataChartListActivity extends BaseActivity implements
 					dateString = mStockData.getDate();
 					timeString = mStockData.getTime();
 
-					if (mStockData.getPeriod().equals(Settings.KEY_PERIOD_YEAR)
+					if (mStockData.getPeriod().equals(Setting.KEY_PERIOD_YEAR)
 							|| mStockData.getPeriod().equals(
-									Settings.KEY_PERIOD_QUARTER)
+									Setting.KEY_PERIOD_QUARTER)
 							|| mStockData.getPeriod().equals(
-									Settings.KEY_PERIOD_MONTH)
+									Setting.KEY_PERIOD_MONTH)
 							|| mStockData.getPeriod().equals(
-									Settings.KEY_PERIOD_WEEK)
+									Setting.KEY_PERIOD_WEEK)
 							|| mStockData.getPeriod().equals(
-									Settings.KEY_PERIOD_DAY)) {
+									Setting.KEY_PERIOD_DAY)) {
 						stockDataChart.mXValues.add(dateString);
 					} else {
 						stockDataChart.mXValues.add(dateString + " "
@@ -863,8 +863,8 @@ public class StockDataChartListActivity extends BaseActivity implements
 		mStockDataChartItemList.clear();
 
 		mStockDatabaseManager.getStockById(mStock);
-		for (int i = 0; i < Settings.KEY_PERIODS.length; i++) {
-			if (Preferences.getBoolean(this, Settings.KEY_PERIODS[i], false)) {
+		for (int i = 0; i < Setting.KEY_PERIODS.length; i++) {
+			if (Preferences.getBoolean(this, Setting.KEY_PERIODS[i], false)) {
 				mStockDataChartItemList.add(mStockDataChartItemMainList.get(i));
 				mStockDataChartItemList.add(mStockDataChartItemSubList.get(i));
 			}

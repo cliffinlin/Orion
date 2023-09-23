@@ -3,7 +3,7 @@ package com.android.orion.database;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import com.android.orion.setting.Constants;
+import com.android.orion.setting.Constant;
 import com.android.orion.utility.Utility;
 
 public class StockFinancial extends DatabaseTable {
@@ -209,7 +209,7 @@ public class StockFinancial extends DatabaseTable {
 
 	public void setBookValuePerShare(double bookValuePerShare) {
 		mBookValuePerShare = Utility.Round(bookValuePerShare,
-				Constants.DOUBLE_FIXED_DECIMAL);
+				Constant.DOUBLE_FIXED_DECIMAL);
 	}
 
 	void setBookValuePerShare(Cursor cursor) {
@@ -519,7 +519,7 @@ public class StockFinancial extends DatabaseTable {
 		}
 
 		mDebtToNetAssetsRatio = Utility.Round(mTotalLongTermLiabilities / mTotalShare
-				/ mBookValuePerShare, Constants.DOUBLE_FIXED_DECIMAL);
+				/ mBookValuePerShare, Constant.DOUBLE_FIXED_DECIMAL);
 	}
 
     public void setupNetProfitMargin() {
@@ -528,7 +528,7 @@ public class StockFinancial extends DatabaseTable {
         }
 
         mNetProfitMargin = Utility.Round(mNetProfitInYear / mMainBusinessIncomeInYear,
-                Constants.DOUBLE_FIXED_DECIMAL);
+                Constant.DOUBLE_FIXED_DECIMAL);
     }
 
 	public void setupNetProfitPerShare() {
@@ -537,7 +537,7 @@ public class StockFinancial extends DatabaseTable {
 		}
 
 		mNetProfitPerShare = Utility.Round(mNetProfit / mTotalShare,
-				Constants.DOUBLE_FIXED_DECIMAL);
+				Constant.DOUBLE_FIXED_DECIMAL);
 	}
 
 	public void setupNetProfitPerShare(double totalShare) {
@@ -546,6 +546,6 @@ public class StockFinancial extends DatabaseTable {
 		}
 
 		mNetProfitPerShare = Utility.Round(mNetProfit / totalShare,
-				Constants.DOUBLE_FIXED_DECIMAL);
+				Constant.DOUBLE_FIXED_DECIMAL);
 	}
 }

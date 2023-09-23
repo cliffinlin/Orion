@@ -22,7 +22,7 @@ import android.telephony.TelephonyManager;
 
 import androidx.core.app.NotificationCompat;
 
-import com.android.orion.setting.Constants;
+import com.android.orion.setting.Constant;
 import com.android.orion.receiver.DownloadBroadcastReceiver;
 import com.android.orion.sina.SinaFinance;
 import com.android.orion.database.Stock;
@@ -116,18 +116,18 @@ public class OrionService extends Service {
 		mHandler = new ServiceHandler(mLooper);
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			NotificationChannel channel = new NotificationChannel(Constants.SERVICE_CHANNEL_ID,
-					Constants.SERVICE_CHANNEL_NAME, NotificationManager.IMPORTANCE_LOW);
+			NotificationChannel channel = new NotificationChannel(Constant.SERVICE_CHANNEL_ID,
+					Constant.SERVICE_CHANNEL_NAME, NotificationManager.IMPORTANCE_LOW);
 			if (mNotificationManager != null) {
 				mNotificationManager.createNotificationChannel(channel);
 			}
-			Notification notification = new NotificationCompat.Builder(this, Constants.SERVICE_CHANNEL_ID)
+			Notification notification = new NotificationCompat.Builder(this, Constant.SERVICE_CHANNEL_ID)
 					.setAutoCancel(true)
 					.setCategory(NotificationCompat.CATEGORY_SERVICE)
 					.setOngoing(true)
 					.setPriority(NotificationManager.IMPORTANCE_LOW)
 					.build();
-			startForeground(Constants.SERVICE_NOTIFICATION_ID, notification);
+			startForeground(Constant.SERVICE_NOTIFICATION_ID, notification);
 		}
 
 		mDownloadBroadcastReceiver = new DownloadBroadcastReceiver();
@@ -178,8 +178,8 @@ public class OrionService extends Service {
 		String se = "";
 		String code = "";
 
-		se = intent.getStringExtra(Constants.EXTRA_STOCK_SE);
-		code = intent.getStringExtra(Constants.EXTRA_STOCK_CODE);
+		se = intent.getStringExtra(Constant.EXTRA_STOCK_SE);
+		code = intent.getStringExtra(Constant.EXTRA_STOCK_CODE);
 
 		download(se, code);
 	}

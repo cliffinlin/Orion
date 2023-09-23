@@ -22,9 +22,9 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.android.orion.setting.Constants;
+import com.android.orion.setting.Constant;
 import com.android.orion.R;
-import com.android.orion.setting.Settings;
+import com.android.orion.setting.Setting;
 import com.android.orion.analyzer.StockAnalyzer;
 import com.android.orion.database.IndexComponent;
 import com.android.orion.database.DatabaseContract;
@@ -39,7 +39,7 @@ import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Utility;
 
 public abstract class StockDataProvider extends StockAnalyzer {
-    static final String TAG = Constants.TAG + " "
+    static final String TAG = Constant.TAG + " "
             + StockDataProvider.class.getSimpleName();
 
     private static int DOWNLOAD_RESULT_SUCCESS = 1;
@@ -117,7 +117,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
     private void sendBroadcast(String action, long stockID) {
         Intent intent = new Intent(action);
-        intent.putExtra(Constants.EXTRA_STOCK_ID, stockID);
+        intent.putExtra(Constant.EXTRA_STOCK_ID, stockID);
 
         mLocalBroadcastManager.sendBroadcast(intent);
     }
@@ -234,8 +234,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
         if (availableHistoryLength > 0) {
             result = availableHistoryLength;
-        } else if (availableHistoryLength == Constants.DOWNLOAD_HISTORY_LENGTH_UNLIMITED) {
-            result = Constants.DOWNLOAD_HISTORY_LENGTH_DEFAULT;
+        } else if (availableHistoryLength == Constant.DOWNLOAD_HISTORY_LENGTH_UNLIMITED) {
+            result = Constant.DOWNLOAD_HISTORY_LENGTH_DEFAULT;
         }
 
         return result;
@@ -303,28 +303,28 @@ public abstract class StockDataProvider extends StockAnalyzer {
                     result = 1;
 
                     switch (period) {
-                        case Settings.KEY_PERIOD_MIN60:
+                        case Setting.KEY_PERIOD_MIN60:
                             result += scheduleMinutes
-                                    / Constants.SCHEDULE_INTERVAL_MIN60;
+                                    / Constant.SCHEDULE_INTERVAL_MIN60;
                             break;
-                        case Settings.KEY_PERIOD_MIN30:
+                        case Setting.KEY_PERIOD_MIN30:
                             result += scheduleMinutes
-                                    / Constants.SCHEDULE_INTERVAL_MIN30;
+                                    / Constant.SCHEDULE_INTERVAL_MIN30;
                             break;
-                        case Settings.KEY_PERIOD_MIN15:
+                        case Setting.KEY_PERIOD_MIN15:
                             result += scheduleMinutes
-                                    / Constants.SCHEDULE_INTERVAL_MIN15;
+                                    / Constant.SCHEDULE_INTERVAL_MIN15;
                             break;
-                        case Settings.KEY_PERIOD_MIN5:
+                        case Setting.KEY_PERIOD_MIN5:
                             result += scheduleMinutes
-                                    / Constants.SCHEDULE_INTERVAL_MIN5;
+                                    / Constant.SCHEDULE_INTERVAL_MIN5;
                             break;
                     }
                 }
             } else if (Market.isLunchTime(Calendar.getInstance())) {
-                if (period.equals(Settings.KEY_PERIOD_MONTH)
-                        || period.equals(Settings.KEY_PERIOD_WEEK)
-                        || period.equals(Settings.KEY_PERIOD_DAY)) {
+                if (period.equals(Setting.KEY_PERIOD_MONTH)
+                        || period.equals(Setting.KEY_PERIOD_WEEK)
+                        || period.equals(Setting.KEY_PERIOD_DAY)) {
                     if (Market.isOutOfDateToday(stockData.getDate())) {
                         result = 1;
                     }
@@ -336,16 +336,16 @@ public abstract class StockDataProvider extends StockAnalyzer {
                 }
 
                 switch (period) {
-                    case Settings.KEY_PERIOD_MIN60:
+                    case Setting.KEY_PERIOD_MIN60:
                         result = 2;
                         break;
-                    case Settings.KEY_PERIOD_MIN30:
+                    case Setting.KEY_PERIOD_MIN30:
                         result = 4;
                         break;
-                    case Settings.KEY_PERIOD_MIN15:
+                    case Setting.KEY_PERIOD_MIN15:
                         result = 8;
                         break;
-                    case Settings.KEY_PERIOD_MIN5:
+                    case Setting.KEY_PERIOD_MIN5:
                         result = 24;
                         break;
                 }
@@ -355,21 +355,21 @@ public abstract class StockDataProvider extends StockAnalyzer {
                 }
 
                 switch (period) {
-                    case Settings.KEY_PERIOD_MONTH:
-                    case Settings.KEY_PERIOD_WEEK:
-                    case Settings.KEY_PERIOD_DAY:
+                    case Setting.KEY_PERIOD_MONTH:
+                    case Setting.KEY_PERIOD_WEEK:
+                    case Setting.KEY_PERIOD_DAY:
                         result = 1;
                         break;
-                    case Settings.KEY_PERIOD_MIN60:
+                    case Setting.KEY_PERIOD_MIN60:
                         result = 4;
                         break;
-                    case Settings.KEY_PERIOD_MIN30:
+                    case Setting.KEY_PERIOD_MIN30:
                         result = 8;
                         break;
-                    case Settings.KEY_PERIOD_MIN15:
+                    case Setting.KEY_PERIOD_MIN15:
                         result = 16;
                         break;
-                    case Settings.KEY_PERIOD_MIN5:
+                    case Setting.KEY_PERIOD_MIN5:
                         result = 48;
                         break;
                 }
@@ -423,7 +423,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
                 }
 
                 handleResponseStockInformation(stock, resultString);
-                Thread.sleep(Constants.DEFAULT_DOWNLOAD_SLEEP_INTERVAL);
+                Thread.sleep(Constant.DEFAULT_DOWNLOAD_SLEEP_INTERVAL);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -472,7 +472,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
                 }
 
                 handleResponseStockRealTime(stock, resultString);
-                Thread.sleep(Constants.DEFAULT_DOWNLOAD_SLEEP_INTERVAL);
+                Thread.sleep(Constant.DEFAULT_DOWNLOAD_SLEEP_INTERVAL);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -526,7 +526,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
                 }
 
                 handleResponseStockFinancial(stock, stockFinancial, resultString);
-                Thread.sleep(Constants.DEFAULT_DOWNLOAD_SLEEP_INTERVAL);
+                Thread.sleep(Constant.DEFAULT_DOWNLOAD_SLEEP_INTERVAL);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -581,7 +581,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
                 }
 
                 handleResponseIPO(resultString);
-                Thread.sleep(Constants.DEFAULT_DOWNLOAD_SLEEP_INTERVAL);
+                Thread.sleep(Constant.DEFAULT_DOWNLOAD_SLEEP_INTERVAL);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -633,7 +633,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
                 }
 
                 handleResponseShareBonus(stock, shareBonus, resultString);
-                Thread.sleep(Constants.DEFAULT_DOWNLOAD_SLEEP_INTERVAL);
+                Thread.sleep(Constant.DEFAULT_DOWNLOAD_SLEEP_INTERVAL);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -685,7 +685,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
                 }
 
                 handleResponseTotalShare(stock, totalShare, resultString);
-                Thread.sleep(Constants.DEFAULT_DOWNLOAD_SLEEP_INTERVAL);
+                Thread.sleep(Constant.DEFAULT_DOWNLOAD_SLEEP_INTERVAL);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -701,7 +701,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
             return result;
         }
 
-        for (String period : Settings.KEY_PERIODS) {
+        for (String period : Setting.KEY_PERIODS) {
             if (Preferences.getBoolean(mContext, period, false)) {
                 result = downloadStockDataHistory(stock, period);
             }
@@ -753,7 +753,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
                 }
 
                 handleResponseStockDataHistory(stock, stockData, resultString);
-                Thread.sleep(Constants.DEFAULT_DOWNLOAD_SLEEP_INTERVAL);
+                Thread.sleep(Constant.DEFAULT_DOWNLOAD_SLEEP_INTERVAL);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -769,9 +769,9 @@ public abstract class StockDataProvider extends StockAnalyzer {
             return result;
         }
 
-        for (String period : Settings.KEY_PERIODS) {
+        for (String period : Setting.KEY_PERIODS) {
             if (Preferences.getBoolean(mContext, period, false)) {
-                if (Settings.KEY_PERIOD_DAY.equals(period)) {
+                if (Setting.KEY_PERIOD_DAY.equals(period)) {
                     result = downloadStockDataRealTime(stock, period);
                 }
             }
@@ -825,7 +825,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
                 }
 
                 handleResponseStockDataRealTime(stock, stockData, resultString);
-                Thread.sleep(Constants.DEFAULT_DOWNLOAD_SLEEP_INTERVAL);
+                Thread.sleep(Constant.DEFAULT_DOWNLOAD_SLEEP_INTERVAL);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -871,7 +871,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
                 }
             }
 
-            for (String period : Settings.KEY_PERIODS) {
+            for (String period : Setting.KEY_PERIODS) {
                 if (Preferences.getBoolean(mContext, period, false)) {
                     int maxSize = 0;
                     Calendar begin = null;
@@ -996,8 +996,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
                 totalNet += stock.getNet();
             }
 
-            index.setPrice(Utility.Round(totalPrice / indexComponentList.size(), Constants.DOUBLE_FIXED_DECIMAL));
-            index.setNet(Utility.Round(totalNet / indexComponentList.size(), Constants.DOUBLE_FIXED_DECIMAL));
+            index.setPrice(Utility.Round(totalPrice / indexComponentList.size(), Constant.DOUBLE_FIXED_DECIMAL));
+            index.setNet(Utility.Round(totalNet / indexComponentList.size(), Constant.DOUBLE_FIXED_DECIMAL));
 
             index.setModified(Utility.getCurrentDateTimeString());
             mStockDatabaseManager.updateStock(index,
@@ -1090,20 +1090,20 @@ public abstract class StockDataProvider extends StockAnalyzer {
                 }
 
                 if (true) {
-                    for (String period : Settings.KEY_PERIODS) {
+                    for (String period : Setting.KEY_PERIODS) {
                         if (Preferences.getBoolean(mContext, period, false)) {
                             analyze(stock, period);
                         }
                     }
 
                     analyze(stock);
-                    sendBroadcast(Constants.ACTION_RESTART_LOADER, stock.getId());
+                    sendBroadcast(Constant.ACTION_RESTART_LOADER, stock.getId());
                 }
 
 //                if (downloadIPO() == DOWNLOAD_RESULT_FAILED) {
 //                    return;
 //                }
-//                sendBroadcast(Constants.ACTION_RESTART_LOADER,
+//                sendBroadcast(Constant.ACTION_RESTART_LOADER,
 //                        Stock.INVALID_ID);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1130,7 +1130,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
                 contentTitle.append(" ");
                 contentTitle.append(accessDeniedString);
 
-                notify(Constants.SERVICE_NOTIFICATION_ID, Constants.MESSAGE_CHANNEL_ID, Constants.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
+                notify(Constant.SERVICE_NOTIFICATION_ID, Constant.MESSAGE_CHANNEL_ID, Constant.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
                         contentTitle.toString(), "");
 
                 mHandlerThread.quit();

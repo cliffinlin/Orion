@@ -20,7 +20,7 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.Xml;
 
-import com.android.orion.setting.Constants;
+import com.android.orion.setting.Constant;
 import com.android.orion.database.IndexComponent;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
@@ -29,7 +29,7 @@ import com.android.orion.utility.Utility;
 
 public class StorageActivity extends DatabaseActivity {
 
-	static final String XML_DIR_NAME = Constants.APP_NAME;
+	static final String XML_DIR_NAME = Constant.APP_NAME;
 	static final String XML_TAG_ROOT = "root";
 	static final String XML_TAG_STOCK = "stock";
 	static final String XML_TAG_STOCK_DEAL = "stock_deal";
@@ -118,8 +118,8 @@ public class StorageActivity extends DatabaseActivity {
 	}
 
 	void performSaveToFile() {
-		String fileNameString = Constants.FAVORITE
-				+ Utility.getCurrentDateString() + Constants.FILE_EXT_XML;
+		String fileNameString = Constant.FAVORITE
+				+ Utility.getCurrentDateString() + Constant.FILE_EXT_XML;
 
 		Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
 		intent.addCategory(Intent.CATEGORY_OPENABLE);

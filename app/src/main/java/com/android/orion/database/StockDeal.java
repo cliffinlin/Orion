@@ -4,7 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.text.TextUtils;
 
-import com.android.orion.setting.Constants;
+import com.android.orion.setting.Constant;
 import com.android.orion.utility.Utility;
 
 import java.util.ArrayList;
@@ -418,14 +418,14 @@ public class StockDeal extends DatabaseTable {
         }
 
         if ((mBuy > 0) && (mSell > 0)) {
-            mNet = Utility.Round(100 * ((mSell - mBuy) * mVolume - mFee) / mVolume / mBuy,
-                    Constants.DOUBLE_FIXED_DECIMAL);
+            mNet = Utility.Round(100 * ((mSell - mBuy) * Math.abs(mVolume) - mFee) / Math.abs(mVolume) / mBuy,
+                    Constant.DOUBLE_FIXED_DECIMAL);
         } else if (mBuy > 0) {
-            mNet = Utility.Round(100 * ((mPrice - mBuy) * mVolume - mFee) / mVolume / mBuy,
-                    Constants.DOUBLE_FIXED_DECIMAL);
+            mNet = Utility.Round(100 * ((mPrice - mBuy) * Math.abs(mVolume) - mFee) / Math.abs(mVolume) / mBuy,
+                    Constant.DOUBLE_FIXED_DECIMAL);
         } else if (mSell > 0) {
             mNet = Utility.Round(100 * (mSell - mPrice) / mSell,
-                    Constants.DOUBLE_FIXED_DECIMAL);
+                    Constant.DOUBLE_FIXED_DECIMAL);
         }
     }
 
@@ -436,11 +436,11 @@ public class StockDeal extends DatabaseTable {
         }
 
         if (mVolume > 0) {
-            mValue = Utility.Round(mBuy * mVolume,
-                    Constants.DOUBLE_FIXED_DECIMAL);
+            mValue = Utility.Round(mBuy * Math.abs(mVolume),
+                    Constant.DOUBLE_FIXED_DECIMAL);
         } else {
-            mValue = Utility.Round(mPrice * mVolume,
-                    Constants.DOUBLE_FIXED_DECIMAL);
+            mValue = Utility.Round(mPrice * Math.abs(mVolume),
+                    Constant.DOUBLE_FIXED_DECIMAL);
         }
     }
 
@@ -466,7 +466,7 @@ public class StockDeal extends DatabaseTable {
         }
 
         mFee = Utility.Round(buyStampDuty + buyTransferFee + buyCommissionFee ,
-                Constants.DOUBLE_FIXED_DECIMAL);
+                Constant.DOUBLE_FIXED_DECIMAL);
     }
 
     public void setupSellFee(ArrayList<ShareBonus> shareBonusList) {
@@ -507,7 +507,7 @@ public class StockDeal extends DatabaseTable {
         dividendIncomeTax = getDividendIncomeTax(shareBonusList);
 
         mFee = Utility.Round(sellStampDuty + sellTransferFee + sellCommissionFee + dividendIncomeTax,
-                Constants.DOUBLE_FIXED_DECIMAL);
+                Constant.DOUBLE_FIXED_DECIMAL);
     }
 
     double getDividendIncomeTax(ArrayList<ShareBonus> shareBonusList) {
@@ -647,7 +647,7 @@ public class StockDeal extends DatabaseTable {
                         + buyTransferFee + sellTransferFee
                         + buyCommissionFee + sellCommissionFee
                         + dividendIncomeTax,
-                Constants.DOUBLE_FIXED_DECIMAL);
+                Constant.DOUBLE_FIXED_DECIMAL);
     }
 
     public void setupProfit() {
@@ -657,14 +657,14 @@ public class StockDeal extends DatabaseTable {
         }
 
         if ((mBuy > 0) && (mSell > 0)) {
-            mProfit = Utility.Round((mSell - mBuy) * mVolume - mFee,
-                    Constants.DOUBLE_FIXED_DECIMAL);
+            mProfit = Utility.Round((mSell - mBuy) * Math.abs(mVolume) - mFee,
+                    Constant.DOUBLE_FIXED_DECIMAL);
         } else if (mBuy > 0) {
-                mProfit = Utility.Round((mPrice - mBuy) * mVolume - mFee,
-                        Constants.DOUBLE_FIXED_DECIMAL);
+                mProfit = Utility.Round((mPrice - mBuy) * Math.abs(mVolume) - mFee,
+                        Constant.DOUBLE_FIXED_DECIMAL);
         } else if (mSell > 0) {
-            mProfit = Utility.Round((mPrice - mSell) * mVolume,
-                    Constants.DOUBLE_FIXED_DECIMAL);
+            mProfit = Utility.Round((mPrice - mSell) * Math.abs(mVolume),
+                    Constant.DOUBLE_FIXED_DECIMAL);
         }
     }
 
@@ -675,7 +675,7 @@ public class StockDeal extends DatabaseTable {
         }
 
         mBonus = Utility.Round(dividend / 10.0 * Math.abs(mVolume),
-                Constants.DOUBLE_FIXED_DECIMAL);
+                Constant.DOUBLE_FIXED_DECIMAL);
     }
 
     public void setupYield(double dividend) {
@@ -686,10 +686,10 @@ public class StockDeal extends DatabaseTable {
 
         if (mBuy > 0) {
             mYield = Utility.Round(100.0 * dividend / 10.0 / mBuy,
-                    Constants.DOUBLE_FIXED_DECIMAL);
+                    Constant.DOUBLE_FIXED_DECIMAL);
         } else {
             mYield = Utility.Round(100.0 * dividend / 10.0 / mPrice,
-                    Constants.DOUBLE_FIXED_DECIMAL);
+                    Constant.DOUBLE_FIXED_DECIMAL);
         }
     }
 }

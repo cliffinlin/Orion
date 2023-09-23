@@ -169,51 +169,51 @@ public class StockFilter {
 
 	public void read() {
 		mEnabled = Preferences.getBoolean(mContext,
-				Settings.KEY_STOCK_FILTER_ENABLED, true);
+				Setting.KEY_STOCK_FILTER_ENABLED, true);
 
 		mFavorite = Preferences.getBoolean(mContext,
-				Settings.KEY_STOCK_FILTER_FAVORITE, true);
+				Setting.KEY_STOCK_FILTER_FAVORITE, true);
 
-		mHold = Preferences.getString(mContext, Settings.KEY_STOCK_FILTER_HOLD,
+		mHold = Preferences.getString(mContext, Setting.KEY_STOCK_FILTER_HOLD,
 				"");
-		mRoi = Preferences.getString(mContext, Settings.KEY_STOCK_FILTER_ROI,
+		mRoi = Preferences.getString(mContext, Setting.KEY_STOCK_FILTER_ROI,
 				"");
-		mRate = Preferences.getString(mContext, Settings.KEY_STOCK_FILTER_RATE,
+		mRate = Preferences.getString(mContext, Setting.KEY_STOCK_FILTER_RATE,
 				"");
-		mRoe = Preferences.getString(mContext, Settings.KEY_STOCK_FILTER_ROE,
+		mRoe = Preferences.getString(mContext, Setting.KEY_STOCK_FILTER_ROE,
 				"");
-		mPe = Preferences.getString(mContext, Settings.KEY_STOCK_FILTER_PE, "");
-		mPb = Preferences.getString(mContext, Settings.KEY_STOCK_FILTER_PB, "");
+		mPe = Preferences.getString(mContext, Setting.KEY_STOCK_FILTER_PE, "");
+		mPb = Preferences.getString(mContext, Setting.KEY_STOCK_FILTER_PB, "");
 		mDividend = Preferences.getString(mContext,
-				Settings.KEY_STOCK_FILTER_DIVIDEND, "");
+				Setting.KEY_STOCK_FILTER_DIVIDEND, "");
 		mYield = Preferences.getString(mContext,
-				Settings.KEY_STOCK_FILTER_YIELD, "");
+				Setting.KEY_STOCK_FILTER_YIELD, "");
 		mDividendRatio = Preferences.getString(mContext,
-				Settings.KEY_STOCK_FILTER_DIVIDEND_RATIO, "");
+				Setting.KEY_STOCK_FILTER_DIVIDEND_RATIO, "");
 
 		validate();
 	}
 
 	public void write() {
-		Preferences.putBoolean(mContext, Settings.KEY_STOCK_FILTER_ENABLED,
+		Preferences.putBoolean(mContext, Setting.KEY_STOCK_FILTER_ENABLED,
 				mEnabled);
-		Preferences.putBoolean(mContext, Settings.KEY_STOCK_FILTER_FAVORITE,
+		Preferences.putBoolean(mContext, Setting.KEY_STOCK_FILTER_FAVORITE,
 				mFavorite);
 
 		validate();
 
-		Preferences.putString(mContext, Settings.KEY_STOCK_FILTER_HOLD, mHold);
-		Preferences.putString(mContext, Settings.KEY_STOCK_FILTER_ROI, mRoi);
-		Preferences.putString(mContext, Settings.KEY_STOCK_FILTER_RATE, mRate);
-		Preferences.putString(mContext, Settings.KEY_STOCK_FILTER_ROE, mRoe);
-		Preferences.putString(mContext, Settings.KEY_STOCK_FILTER_PE, mPe);
-		Preferences.putString(mContext, Settings.KEY_STOCK_FILTER_PB, mPb);
-		Preferences.putString(mContext, Settings.KEY_STOCK_FILTER_DIVIDEND,
+		Preferences.putString(mContext, Setting.KEY_STOCK_FILTER_HOLD, mHold);
+		Preferences.putString(mContext, Setting.KEY_STOCK_FILTER_ROI, mRoi);
+		Preferences.putString(mContext, Setting.KEY_STOCK_FILTER_RATE, mRate);
+		Preferences.putString(mContext, Setting.KEY_STOCK_FILTER_ROE, mRoe);
+		Preferences.putString(mContext, Setting.KEY_STOCK_FILTER_PE, mPe);
+		Preferences.putString(mContext, Setting.KEY_STOCK_FILTER_PB, mPb);
+		Preferences.putString(mContext, Setting.KEY_STOCK_FILTER_DIVIDEND,
 				mDividend);
 		Preferences
-				.putString(mContext, Settings.KEY_STOCK_FILTER_YIELD, mYield);
+				.putString(mContext, Setting.KEY_STOCK_FILTER_YIELD, mYield);
 		Preferences.putString(mContext,
-				Settings.KEY_STOCK_FILTER_DIVIDEND_RATIO, mDividendRatio);
+				Setting.KEY_STOCK_FILTER_DIVIDEND_RATIO, mDividendRatio);
 	}
 
 	public void get(Bundle bundle) {
@@ -221,19 +221,19 @@ public class StockFilter {
 			return;
 		}
 
-		mEnabled = bundle.getBoolean(Settings.KEY_STOCK_FILTER_ENABLED, true);
-		mFavorite = bundle.getBoolean(Settings.KEY_STOCK_FILTER_FAVORITE, true);
+		mEnabled = bundle.getBoolean(Setting.KEY_STOCK_FILTER_ENABLED, true);
+		mFavorite = bundle.getBoolean(Setting.KEY_STOCK_FILTER_FAVORITE, true);
 
-		mHold = bundle.getString(Settings.KEY_STOCK_FILTER_HOLD);
-		mRoi = bundle.getString(Settings.KEY_STOCK_FILTER_ROI);
-		mRate = bundle.getString(Settings.KEY_STOCK_FILTER_RATE);
-		mRoe = bundle.getString(Settings.KEY_STOCK_FILTER_ROE);
-		mPe = bundle.getString(Settings.KEY_STOCK_FILTER_PE);
-		mPb = bundle.getString(Settings.KEY_STOCK_FILTER_PB);
-		mDividend = bundle.getString(Settings.KEY_STOCK_FILTER_DIVIDEND);
-		mYield = bundle.getString(Settings.KEY_STOCK_FILTER_YIELD);
+		mHold = bundle.getString(Setting.KEY_STOCK_FILTER_HOLD);
+		mRoi = bundle.getString(Setting.KEY_STOCK_FILTER_ROI);
+		mRate = bundle.getString(Setting.KEY_STOCK_FILTER_RATE);
+		mRoe = bundle.getString(Setting.KEY_STOCK_FILTER_ROE);
+		mPe = bundle.getString(Setting.KEY_STOCK_FILTER_PE);
+		mPb = bundle.getString(Setting.KEY_STOCK_FILTER_PB);
+		mDividend = bundle.getString(Setting.KEY_STOCK_FILTER_DIVIDEND);
+		mYield = bundle.getString(Setting.KEY_STOCK_FILTER_YIELD);
 		mDividendRatio = bundle
-				.getString(Settings.KEY_STOCK_FILTER_DIVIDEND_RATIO);
+				.getString(Setting.KEY_STOCK_FILTER_DIVIDEND_RATIO);
 	}
 
 	public void put(Bundle bundle) {
@@ -241,18 +241,18 @@ public class StockFilter {
 			return;
 		}
 
-		bundle.putBoolean(Settings.KEY_STOCK_FILTER_ENABLED, mEnabled);
-		bundle.putBoolean(Settings.KEY_STOCK_FILTER_FAVORITE, mFavorite);
+		bundle.putBoolean(Setting.KEY_STOCK_FILTER_ENABLED, mEnabled);
+		bundle.putBoolean(Setting.KEY_STOCK_FILTER_FAVORITE, mFavorite);
 
-		bundle.putString(Settings.KEY_STOCK_FILTER_HOLD, mHold);
-		bundle.putString(Settings.KEY_STOCK_FILTER_ROI, mRoi);
-		bundle.putString(Settings.KEY_STOCK_FILTER_RATE, mRate);
-		bundle.putString(Settings.KEY_STOCK_FILTER_ROE, mRoe);
-		bundle.putString(Settings.KEY_STOCK_FILTER_PE, mPe);
-		bundle.putString(Settings.KEY_STOCK_FILTER_PB, mPb);
-		bundle.putString(Settings.KEY_STOCK_FILTER_DIVIDEND, mDividend);
-		bundle.putString(Settings.KEY_STOCK_FILTER_YIELD, mYield);
-		bundle.putString(Settings.KEY_STOCK_FILTER_DIVIDEND_RATIO,
+		bundle.putString(Setting.KEY_STOCK_FILTER_HOLD, mHold);
+		bundle.putString(Setting.KEY_STOCK_FILTER_ROI, mRoi);
+		bundle.putString(Setting.KEY_STOCK_FILTER_RATE, mRate);
+		bundle.putString(Setting.KEY_STOCK_FILTER_ROE, mRoe);
+		bundle.putString(Setting.KEY_STOCK_FILTER_PE, mPe);
+		bundle.putString(Setting.KEY_STOCK_FILTER_PB, mPb);
+		bundle.putString(Setting.KEY_STOCK_FILTER_DIVIDEND, mDividend);
+		bundle.putString(Setting.KEY_STOCK_FILTER_YIELD, mYield);
+		bundle.putString(Setting.KEY_STOCK_FILTER_DIVIDEND_RATIO,
 				mDividendRatio);
 	}
 

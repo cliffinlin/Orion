@@ -25,9 +25,9 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
-import com.android.orion.setting.Constants;
+import com.android.orion.setting.Constant;
 import com.android.orion.R;
-import com.android.orion.setting.Settings;
+import com.android.orion.setting.Setting;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
@@ -36,7 +36,7 @@ import com.android.orion.view.SyncHorizontalScrollView;
 
 import java.util.ArrayList;
 
-import static com.android.orion.setting.Settings.KEY_PERIOD_DAY;
+import static com.android.orion.setting.Setting.KEY_PERIOD_DAY;
 
 public class StockTrendListActivity extends ListActivity implements
         LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
@@ -102,7 +102,7 @@ public class StockTrendListActivity extends ListActivity implements
                 case MESSAGE_VIEW_STOCK_DEAL:
                     intent = new Intent(mContext, StockEditActivity.class);
                     intent.setAction(StockEditActivity.ACTION_STOCK_EDIT);
-                    intent.putExtra(Constants.EXTRA_STOCK_ID, mStock.getId());
+                    intent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
                     startActivity(intent);
                     break;
 
@@ -113,10 +113,10 @@ public class StockTrendListActivity extends ListActivity implements
                     }
 
                     intent = new Intent(mContext, StockDataChartListActivity.class);
-                    intent.putExtra(Constants.EXTRA_STOCK_ID, mStock.getId());
-                    intent.putStringArrayListExtra(Constants.EXTRA_STOCK_ID_LIST,
+                    intent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
+                    intent.putStringArrayListExtra(Constant.EXTRA_STOCK_ID_LIST,
                             stockIDList);
-                    intent.putExtra(Constants.EXTRA_STOCK_DEAL, true);
+                    intent.putExtra(Constant.EXTRA_STOCK_DEAL, true);
                     startActivity(intent);
                     break;
 
@@ -132,7 +132,7 @@ public class StockTrendListActivity extends ListActivity implements
 
         setContentView(R.layout.activity_stock_trend_list);
 
-        mSortOrder = Preferences.getString(mContext, Settings.KEY_SORT_ORDER_STOCK_TREND_LIST,
+        mSortOrder = Preferences.getString(mContext, Setting.KEY_SORT_ORDER_STOCK_TREND_LIST,
                 mSortOrderDefault);
 
         initHeader();
@@ -165,7 +165,7 @@ public class StockTrendListActivity extends ListActivity implements
                                     public void onClick(DialogInterface dialog,
                                                         int which) {
                                         StockData stockData = new StockData();
-                                        long stockId = getIntent().getLongExtra(Constants.EXTRA_STOCK_ID,
+                                        long stockId = getIntent().getLongExtra(Constant.EXTRA_STOCK_ID,
                                                 Stock.INVALID_ID);
                                         stockData.setStockId(stockId);
                                         mStockDatabaseManager.deleteStockData(stockData);
@@ -267,7 +267,7 @@ public class StockTrendListActivity extends ListActivity implements
 
         mSortOrder = mSortOrderColumn + mSortOrderDirection;
 
-        Preferences.putString(mContext, Settings.KEY_SORT_ORDER_STOCK_TREND_LIST, mSortOrder);
+        Preferences.putString(mContext, Setting.KEY_SORT_ORDER_STOCK_TREND_LIST, mSortOrder);
 
         restartLoader();
     }
@@ -437,7 +437,7 @@ public class StockTrendListActivity extends ListActivity implements
         switch (id) {
             case LOADER_ID_STOCK_TREND_LIST:
                 if (ACTION_STOCK_TREND_LIST.equals(mIntent.getAction())) {
-                    long stockId = getIntent().getLongExtra(Constants.EXTRA_STOCK_ID,
+                    long stockId = getIntent().getLongExtra(Constant.EXTRA_STOCK_ID,
                             Stock.INVALID_ID);
                     selection = "(" + DatabaseContract.COLUMN_STOCK_ID + " = " + stockId + ") "
                             + " AND "
@@ -517,7 +517,7 @@ public class StockTrendListActivity extends ListActivity implements
 
         if (ACTION_STOCK_ID.equals(mAction)) {
             if (mIntent != null) {
-                mIntent.putExtra(Constants.EXTRA_STOCK_ID, id);
+                mIntent.putExtra(Constant.EXTRA_STOCK_ID, id);
                 setResult(RESULT_OK, mIntent);
                 finish();
             }

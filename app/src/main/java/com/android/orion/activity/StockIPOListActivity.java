@@ -19,7 +19,7 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import com.android.orion.R;
-import com.android.orion.setting.Settings;
+import com.android.orion.setting.Setting;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.utility.Preferences;
 import com.android.orion.view.SyncHorizontalScrollView;
@@ -59,7 +59,7 @@ public class StockIPOListActivity extends ListActivity implements
 
 		setContentView(R.layout.activity_stock_ipo_list);
 
-		mSortOrder = Preferences.getString(mContext, Settings.KEY_SORT_ORDER_IPO_LIST,
+		mSortOrder = Preferences.getString(mContext, Setting.KEY_SORT_ORDER_IPO_LIST,
 				mSortOrderDefault);
 
 		initHeader();
@@ -144,7 +144,7 @@ public class StockIPOListActivity extends ListActivity implements
 
 		mSortOrder = mSortOrderColumn + mSortOrderDirection;
 
-		Preferences.putString(mContext, Settings.KEY_SORT_ORDER_IPO_LIST, mSortOrder);
+		Preferences.putString(mContext, Setting.KEY_SORT_ORDER_IPO_LIST, mSortOrder);
 
 		restartLoader();
 	}
@@ -366,25 +366,25 @@ public class StockIPOListActivity extends ListActivity implements
 
 			if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MIN5)) {
-				return setTextViewValue(Settings.KEY_PERIOD_MIN5, view);
+				return setTextViewValue(Setting.KEY_PERIOD_MIN5, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MIN15)) {
-				return setTextViewValue(Settings.KEY_PERIOD_MIN15, view);
+				return setTextViewValue(Setting.KEY_PERIOD_MIN15, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MIN30)) {
-				return setTextViewValue(Settings.KEY_PERIOD_MIN30, view);
+				return setTextViewValue(Setting.KEY_PERIOD_MIN30, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MIN60)) {
-				return setTextViewValue(Settings.KEY_PERIOD_MIN60, view);
+				return setTextViewValue(Setting.KEY_PERIOD_MIN60, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_DAY)) {
-				return setTextViewValue(Settings.KEY_PERIOD_DAY, view);
+				return setTextViewValue(Setting.KEY_PERIOD_DAY, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_WEEK)) {
-				return setTextViewValue(Settings.KEY_PERIOD_WEEK, view);
+				return setTextViewValue(Setting.KEY_PERIOD_WEEK, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MONTH)) {
-				return setTextViewValue(Settings.KEY_PERIOD_MONTH, view);
+				return setTextViewValue(Setting.KEY_PERIOD_MONTH, view);
 			}
 
 			return false;

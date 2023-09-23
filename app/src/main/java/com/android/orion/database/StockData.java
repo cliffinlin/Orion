@@ -6,7 +6,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
-import com.android.orion.setting.Constants;
+import com.android.orion.setting.Constant;
 import com.android.orion.utility.Utility;
 
 import java.util.ArrayList;
@@ -1143,7 +1143,7 @@ public class StockData extends StockDatabaseTable {
 			mChange = mVertexHigh - mVertexLow;
 		}
 
-		mChange = Utility.Round(mChange, Constants.DOUBLE_FIXED_DECIMAL);
+		mChange = Utility.Round(mChange, Constant.DOUBLE_FIXED_DECIMAL);
 	}
 
 	public void setupNet() {
@@ -1161,7 +1161,7 @@ public class StockData extends StockDatabaseTable {
 			mNet = 100.0 * mChange / mVertexLow;
 		}
 
-		mNet = Utility.Round(mNet, Constants.DOUBLE_FIXED_DECIMAL);
+		mNet = Utility.Round(mNet, Constant.DOUBLE_FIXED_DECIMAL);
 	}
 
     public void setupVelocity() {
@@ -1175,7 +1175,7 @@ public class StockData extends StockDatabaseTable {
 
 		mVelocity = mChange / dt;
 
-		mVelocity = Utility.Round(mVelocity, Constants.DOUBLE_FIXED_DECIMAL);
+		mVelocity = Utility.Round(mVelocity, Constant.DOUBLE_FIXED_DECIMAL);
 	}
 
 	public StockData fromString(@NonNull String string) {
@@ -1187,7 +1187,7 @@ public class StockData extends StockDatabaseTable {
 		}
 
 		//TDX
-		String[] strings = string.split(Constants.TAB);
+		String[] strings = string.split(Constant.TAB);
 		if (strings == null || strings.length < 6) {
 			return null;
 		}
@@ -1218,13 +1218,13 @@ public class StockData extends StockDatabaseTable {
 		String dateString = getDate().replace("-", "/");
 		String timeString = getTime().substring(0, 5).replace(":", "");
 
-		stockDataString.append(dateString + Constants.TAB
-				+ timeString + Constants.TAB
-				+ getOpen() + Constants.TAB
-				+ getHigh() + Constants.TAB
-				+ getLow() + Constants.TAB
-				+ getClose() + Constants.TAB
-				+ 0 + Constants.TAB
+		stockDataString.append(dateString + Constant.TAB
+				+ timeString + Constant.TAB
+				+ getOpen() + Constant.TAB
+				+ getHigh() + Constant.TAB
+				+ getLow() + Constant.TAB
+				+ getClose() + Constant.TAB
+				+ 0 + Constant.TAB
 				+ 0);
 
 		stockDataString.append("\r\n");

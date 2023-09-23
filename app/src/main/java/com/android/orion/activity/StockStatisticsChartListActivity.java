@@ -24,7 +24,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.android.orion.setting.Constants;
+import com.android.orion.setting.Constant;
 import com.android.orion.R;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
@@ -43,7 +43,7 @@ import com.github.mikephil.charting.utils.Utils;
 
 public class StockStatisticsChartListActivity extends BaseActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnChartGestureListener {
-	static final String TAG = Constants.TAG + " "
+	static final String TAG = Constant.TAG + " "
 			+ StockStatisticsChartListActivity.class.getSimpleName();
 
 	public static final int ITEM_VIEW_TYPE_MAIN = 0;
@@ -100,7 +100,7 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 
 		initListView();
 
-		mStock.setId(getIntent().getLongExtra(Constants.EXTRA_STOCK_ID,
+		mStock.setId(getIntent().getLongExtra(Constant.EXTRA_STOCK_ID,
 				Stock.INVALID_ID));
 
 		initLoader();

@@ -9,7 +9,7 @@ import android.preference.PreferenceFragment;
 
 import com.android.orion.R;
 import com.android.orion.activity.SettingLoopbackActivity;
-import com.android.orion.setting.Settings;
+import com.android.orion.setting.Setting;
 import com.android.orion.service.OrionService;
 
 public class SettingFragment extends PreferenceFragment implements
@@ -50,24 +50,24 @@ public class SettingFragment extends PreferenceFragment implements
 
 		checked = sharedPreferences.getBoolean(key, true);
 
-		if (key.equals(Settings.KEY_NOTIFICATION_OPERATE)
-				|| key.equals(Settings.KEY_PERIOD_MIN1)
-				|| key.equals(Settings.KEY_PERIOD_MIN5)
-				|| key.equals(Settings.KEY_PERIOD_MIN15)
-				|| key.equals(Settings.KEY_PERIOD_MIN30)
-				|| key.equals(Settings.KEY_PERIOD_MIN60)
-				|| key.equals(Settings.KEY_PERIOD_DAY)
-				|| key.equals(Settings.KEY_PERIOD_WEEK)
-				|| key.equals(Settings.KEY_PERIOD_MONTH)
-				|| key.equals(Settings.KEY_PERIOD_QUARTER)
-				|| key.equals(Settings.KEY_PERIOD_YEAR)) {
+		if (key.equals(Setting.KEY_NOTIFICATION_OPERATE)
+				|| key.equals(Setting.KEY_PERIOD_MIN1)
+				|| key.equals(Setting.KEY_PERIOD_MIN5)
+				|| key.equals(Setting.KEY_PERIOD_MIN15)
+				|| key.equals(Setting.KEY_PERIOD_MIN30)
+				|| key.equals(Setting.KEY_PERIOD_MIN60)
+				|| key.equals(Setting.KEY_PERIOD_DAY)
+				|| key.equals(Setting.KEY_PERIOD_WEEK)
+				|| key.equals(Setting.KEY_PERIOD_MONTH)
+				|| key.equals(Setting.KEY_PERIOD_QUARTER)
+				|| key.equals(Setting.KEY_PERIOD_YEAR)) {
 
 			if (checked) {
 				OrionService.startService(mContext);
 			}
 		}
 
-		if (key.equals(Settings.KEY_LOOPBACK)) {
+		if (key.equals(Setting.KEY_LOOPBACK)) {
 			Intent intent = new Intent(mContext, SettingLoopbackActivity.class);
 
 			if (checked) {

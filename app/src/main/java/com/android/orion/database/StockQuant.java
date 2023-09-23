@@ -3,7 +3,7 @@ package com.android.orion.database;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import com.android.orion.setting.Constants;
+import com.android.orion.setting.Constant;
 import com.android.orion.utility.Utility;
 
 import java.util.Calendar;
@@ -184,7 +184,16 @@ public class StockQuant extends StockDeal {
     public void setupQuantProfitMargin() {
         if (mValuation != 0) {
             mQuantProfitMargin = Utility.Round(100 * mQuantProfit / mValuation,
-                    Constants.DOUBLE_FIXED_DECIMAL);
+                    Constant.DOUBLE_FIXED_DECIMAL);
+        } else {
+            mQuantProfitMargin = 0;
+        }
+    }
+
+    public void setupQuantProfitMargin(double valuation) {
+        if (valuation != 0) {
+            mQuantProfitMargin = Utility.Round(100 * mQuantProfit / valuation,
+                    Constant.DOUBLE_FIXED_DECIMAL);
         } else {
             mQuantProfitMargin = 0;
         }

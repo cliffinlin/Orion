@@ -9,8 +9,8 @@ import android.graphics.Paint;
 import androidx.annotation.NonNull;
 
 import com.android.orion.database.StockQuant;
-import com.android.orion.setting.Constants;
-import com.android.orion.setting.Settings;
+import com.android.orion.setting.Constant;
+import com.android.orion.setting.Setting;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;
 import com.android.orion.utility.Preferences;
@@ -208,7 +208,7 @@ public class StockDataChart {
 	public void setMainChartData(Context context) {
 		mCombinedDataMain = new CombinedData(mXValues);
 
-		if (Preferences.getBoolean(context, Settings.KEY_DISPLAY_THRESHOLD,
+		if (Preferences.getBoolean(context, Setting.KEY_DISPLAY_THRESHOLD,
 				true)) {
 			BubbleData bubbleData = new BubbleData(mXValues);
 			if (mNaturalRallyList.size() > 0) {
@@ -278,7 +278,7 @@ public class StockDataChart {
 			}
 		}
 
-		if (Preferences.getBoolean(context, Settings.KEY_DISPLAY_DRAW,
+		if (Preferences.getBoolean(context, Setting.KEY_DISPLAY_DRAW,
 				true)) {
 			if (mDrawEntryList.size() > 0) {
 				LineDataSet lineDataSet = new LineDataSet(mDrawEntryList, "Draw");
@@ -290,7 +290,7 @@ public class StockDataChart {
 			}
 		}
 
-		if (Preferences.getBoolean(context, Settings.KEY_DISPLAY_STROKE,
+		if (Preferences.getBoolean(context, Setting.KEY_DISPLAY_STROKE,
 				false)) {
 			if (mStrokeEntryList.size() > 0) {
 				LineDataSet lineDataSet = new LineDataSet(mStrokeEntryList, "Stroke");
@@ -302,7 +302,7 @@ public class StockDataChart {
 			}
 		}
 
-		if (Preferences.getBoolean(context, Settings.KEY_DISPLAY_SEGMENT,
+		if (Preferences.getBoolean(context, Setting.KEY_DISPLAY_SEGMENT,
 				false)) {
 			if (mSegmentEntryList.size() > 0) {
 				LineDataSet lineDataSet = new LineDataSet(mSegmentEntryList,
@@ -315,7 +315,7 @@ public class StockDataChart {
 			}
 		}
 
-		if (Preferences.getBoolean(context, Settings.KEY_DISPLAY_LINE,
+		if (Preferences.getBoolean(context, Setting.KEY_DISPLAY_LINE,
 				false)) {
 			if (mLineEntryList.size() > 0) {
 				LineDataSet lineDataSet = new LineDataSet(mLineEntryList,
@@ -437,7 +437,7 @@ public class StockDataChart {
 		deaDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(deaDataSet);
 
-        if (Preferences.getBoolean(context, Settings.KEY_DISPLAY_DRAW,
+        if (Preferences.getBoolean(context, Setting.KEY_DISPLAY_DRAW,
                 true)) {
             transferMainChartDataToSubChartData(mDrawEntryList, mSubChartDrawEntryList);
             LineDataSet drawDataSet = new LineDataSet(mSubChartDrawEntryList, "Draw");
@@ -448,7 +448,7 @@ public class StockDataChart {
             lineData.addDataSet(drawDataSet);
         }
 
-        if (Preferences.getBoolean(context, Settings.KEY_DISPLAY_STROKE,
+        if (Preferences.getBoolean(context, Setting.KEY_DISPLAY_STROKE,
                 false)) {
             transferMainChartDataToSubChartData(mStrokeEntryList, mSubChartStrokeEntryList);
             LineDataSet strokeDataSet = new LineDataSet(mSubChartStrokeEntryList, "Stroke");
@@ -459,7 +459,7 @@ public class StockDataChart {
             lineData.addDataSet(strokeDataSet);
         }
 
-        if (Preferences.getBoolean(context, Settings.KEY_DISPLAY_SEGMENT,
+        if (Preferences.getBoolean(context, Setting.KEY_DISPLAY_SEGMENT,
                 false)) {
             transferMainChartDataToSubChartData(mSegmentEntryList, mSubChartSegmentEntryList);
             LineDataSet segmentDataSet = new LineDataSet(mSubChartSegmentEntryList,
@@ -652,7 +652,7 @@ public class StockDataChart {
 
 		if ((cost > 0) && (stock.getHold() > 0)) {
 			net = Utility.Round(100 * (stock.getPrice() - cost) / cost,
-					Constants.DOUBLE_FIXED_DECIMAL);
+					Constant.DOUBLE_FIXED_DECIMAL);
 			color = Color.BLUE;
 			label = "                                                     "
 					+ " " + cost + " " + net + "%";

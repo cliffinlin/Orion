@@ -21,9 +21,9 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
-import com.android.orion.setting.Constants;
+import com.android.orion.setting.Constant;
 import com.android.orion.R;
-import com.android.orion.setting.Settings;
+import com.android.orion.setting.Setting;
 import com.android.orion.database.IndexComponent;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
@@ -101,7 +101,7 @@ public class IndexComponentListActivity extends ListActivity implements
 
 		setContentView(R.layout.activity_stock_list);
 
-		mSortOrder = Preferences.getString(mContext, Settings.KEY_SORT_ORDER_COMPONENT_LIST,
+		mSortOrder = Preferences.getString(mContext, Setting.KEY_SORT_ORDER_COMPONENT_LIST,
 				mSortOrderDefault);
 
 		initHeader();
@@ -128,14 +128,14 @@ public class IndexComponentListActivity extends ListActivity implements
 		case R.id.action_new:
 			Intent intentNew = new Intent(this, StockEditActivity.class);
 			intentNew.setAction(StockEditActivity.ACTION_INDEX_COMPONENT_INSERT);
-			intentNew.putExtra(Constants.EXTRA_INDEX_CODE, mIntent.getStringExtra(Constants.EXTRA_INDEX_CODE));
+			intentNew.putExtra(Constant.EXTRA_INDEX_CODE, mIntent.getStringExtra(Constant.EXTRA_INDEX_CODE));
 			startActivityForResult(intentNew, REQUEST_CODE_INDEX_COMPONENT_INSERT);
 			return true;
 
 		case R.id.action_search:
 			Intent intentSearch = new Intent(this, StockSearchActivity.class);
 			intentSearch.setAction(StockListEditActivity.ACTION_INDEX_COMPONENT_SELECT);
-			intentSearch.putExtra(Constants.EXTRA_INDEX_CODE, mIntent.getStringExtra(Constants.EXTRA_INDEX_CODE));
+			intentSearch.putExtra(Constant.EXTRA_INDEX_CODE, mIntent.getStringExtra(Constant.EXTRA_INDEX_CODE));
 			startActivityForResult(intentSearch, REQUEST_CODE_INDEX_COMPONENT_SELECT);
 			return true;
 
@@ -241,7 +241,7 @@ public class IndexComponentListActivity extends ListActivity implements
 
 		mSortOrder = mSortOrderColumn + mSortOrderDirection;
 
-		Preferences.putString(mContext, Settings.KEY_SORT_ORDER_COMPONENT_LIST, mSortOrder);
+		Preferences.putString(mContext, Setting.KEY_SORT_ORDER_COMPONENT_LIST, mSortOrder);
 
 		restartLoader();
 	}
@@ -309,43 +309,43 @@ public class IndexComponentListActivity extends ListActivity implements
 		mTextViewMonth = (TextView) findViewById(R.id.action_month);
 		if (mTextViewMonth != null) {
 			mTextViewMonth.setOnClickListener(this);
-			setVisibility(Settings.KEY_PERIOD_MONTH, mTextViewMonth);
+			setVisibility(Setting.KEY_PERIOD_MONTH, mTextViewMonth);
 		}
 
 		mTextViewWeek = (TextView) findViewById(R.id.action_week);
 		if (mTextViewWeek != null) {
 			mTextViewWeek.setOnClickListener(this);
-			setVisibility(Settings.KEY_PERIOD_WEEK, mTextViewWeek);
+			setVisibility(Setting.KEY_PERIOD_WEEK, mTextViewWeek);
 		}
 
 		mTextViewDay = (TextView) findViewById(R.id.action_day);
 		if (mTextViewDay != null) {
 			mTextViewDay.setOnClickListener(this);
-			setVisibility(Settings.KEY_PERIOD_DAY, mTextViewDay);
+			setVisibility(Setting.KEY_PERIOD_DAY, mTextViewDay);
 		}
 
 		mTextViewMin60 = (TextView) findViewById(R.id.action_60min);
 		if (mTextViewMin60 != null) {
 			mTextViewMin60.setOnClickListener(this);
-			setVisibility(Settings.KEY_PERIOD_MIN60, mTextViewMin60);
+			setVisibility(Setting.KEY_PERIOD_MIN60, mTextViewMin60);
 		}
 
 		mTextViewMin30 = (TextView) findViewById(R.id.action_30min);
 		if (mTextViewMin30 != null) {
 			mTextViewMin30.setOnClickListener(this);
-			setVisibility(Settings.KEY_PERIOD_MIN30, mTextViewMin30);
+			setVisibility(Setting.KEY_PERIOD_MIN30, mTextViewMin30);
 		}
 
 		mTextViewMin15 = (TextView) findViewById(R.id.action_15min);
 		if (mTextViewMin15 != null) {
 			mTextViewMin15.setOnClickListener(this);
-			setVisibility(Settings.KEY_PERIOD_MIN15, mTextViewMin15);
+			setVisibility(Setting.KEY_PERIOD_MIN15, mTextViewMin15);
 		}
 
 		mTextViewMin5 = (TextView) findViewById(R.id.action_5min);
 		if (mTextViewMin5 != null) {
 			mTextViewMin5.setOnClickListener(this);
-			setVisibility(Settings.KEY_PERIOD_MIN5, mTextViewMin5);
+			setVisibility(Setting.KEY_PERIOD_MIN5, mTextViewMin5);
 		}
 
 		mTextViewOperate = (TextView) findViewById(R.id.operate);
@@ -461,7 +461,7 @@ public class IndexComponentListActivity extends ListActivity implements
 			StringBuilder placeHolder = new StringBuilder();
 			StringBuilder indexIds = new StringBuilder();
 
-			componentSelection += DatabaseContract.COLUMN_INDEX_CODE + " = " + mIntent.getStringExtra(Constants.EXTRA_INDEX_CODE);
+			componentSelection += DatabaseContract.COLUMN_INDEX_CODE + " = " + mIntent.getStringExtra(Constant.EXTRA_INDEX_CODE);
 
 			mStockDatabaseManager.getIndexComponentList(indexComponentList, componentSelection, null);
 
@@ -542,7 +542,7 @@ public class IndexComponentListActivity extends ListActivity implements
 
 		if (ACTION_STOCK_ID.equals(mAction)) {
 			if (mIntent != null) {
-				mIntent.putExtra(Constants.EXTRA_STOCK_ID, id);
+				mIntent.putExtra(Constant.EXTRA_STOCK_ID, id);
 				setResult(RESULT_OK, mIntent);
 				finish();
 			}
@@ -554,16 +554,16 @@ public class IndexComponentListActivity extends ListActivity implements
 				Intent intent = new Intent(mContext,
 						StockDealListActivity.class);
 				Bundle bundle = new Bundle();
-				bundle.putString(Constants.EXTRA_STOCK_SE, mStock.getSE());
-				bundle.putString(Constants.EXTRA_STOCK_CODE, mStock.getCode());
+				bundle.putString(Constant.EXTRA_STOCK_SE, mStock.getSE());
+				bundle.putString(Constant.EXTRA_STOCK_CODE, mStock.getCode());
 				intent.putExtras(bundle);
 				startActivity(intent);
 			} else {
 				Intent intent = new Intent(this,
 						StockDataChartListActivity.class);
-				intent.putExtra(Constants.EXTRA_STOCK_LIST_SORT_ORDER,
+				intent.putExtra(Constant.EXTRA_STOCK_LIST_SORT_ORDER,
 						mSortOrder);
-				intent.putExtra(Constants.EXTRA_STOCK_ID, id);
+				intent.putExtra(Constant.EXTRA_STOCK_ID, id);
 				startActivity(intent);
 			}
 		}
@@ -574,9 +574,9 @@ public class IndexComponentListActivity extends ListActivity implements
 			int position, long id) {
         Intent intentSearch = new Intent(this, StockSearchActivity.class);
         intentSearch.setAction(StockListEditActivity.ACTION_INDEX_COMPONENT_SELECT);
-        intentSearch.putExtra(Constants.EXTRA_INDEX_CODE, mIntent.getStringExtra(Constants.EXTRA_INDEX_CODE));
-		intentSearch.putExtra(Constants.EXTRA_INDEX_NAME, mIntent.getStringExtra(Constants.EXTRA_INDEX_NAME));
-		intentSearch.putExtra(Constants.EXTRA_INDEX_SE, mIntent.getStringExtra(Constants.EXTRA_INDEX_SE));
+        intentSearch.putExtra(Constant.EXTRA_INDEX_CODE, mIntent.getStringExtra(Constant.EXTRA_INDEX_CODE));
+		intentSearch.putExtra(Constant.EXTRA_INDEX_NAME, mIntent.getStringExtra(Constant.EXTRA_INDEX_NAME));
+		intentSearch.putExtra(Constant.EXTRA_INDEX_SE, mIntent.getStringExtra(Constant.EXTRA_INDEX_SE));
         startActivityForResult(intentSearch, REQUEST_CODE_INDEX_COMPONENT_SELECT);
 		return true;
 	}
@@ -605,25 +605,25 @@ public class IndexComponentListActivity extends ListActivity implements
 
 			if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MONTH)) {
-				return setRightTextViewVisibility(Settings.KEY_PERIOD_MONTH, view);
+				return setRightTextViewVisibility(Setting.KEY_PERIOD_MONTH, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_WEEK)) {
-				return setRightTextViewVisibility(Settings.KEY_PERIOD_WEEK, view);
+				return setRightTextViewVisibility(Setting.KEY_PERIOD_WEEK, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_DAY)) {
-				return setRightTextViewVisibility(Settings.KEY_PERIOD_DAY, view);
+				return setRightTextViewVisibility(Setting.KEY_PERIOD_DAY, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MIN60)) {
-				return setRightTextViewVisibility(Settings.KEY_PERIOD_MIN60, view);
+				return setRightTextViewVisibility(Setting.KEY_PERIOD_MIN60, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MIN30)) {
-				return setRightTextViewVisibility(Settings.KEY_PERIOD_MIN30, view);
+				return setRightTextViewVisibility(Setting.KEY_PERIOD_MIN30, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MIN15)) {
-				return setRightTextViewVisibility(Settings.KEY_PERIOD_MIN15, view);
+				return setRightTextViewVisibility(Setting.KEY_PERIOD_MIN15, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MIN5)) {
-				return setRightTextViewVisibility(Settings.KEY_PERIOD_MIN5, view);
+				return setRightTextViewVisibility(Setting.KEY_PERIOD_MIN5, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MODIFIED)) {
 			}

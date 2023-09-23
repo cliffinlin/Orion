@@ -22,7 +22,7 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
-import com.android.orion.setting.Constants;
+import com.android.orion.setting.Constant;
 import com.android.orion.R;
 import com.android.orion.database.IndexComponent;
 import com.android.orion.database.DatabaseContract;
@@ -70,7 +70,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 		setContentView(R.layout.activity_stock_list_edit);
 
 		mSortOrder = getIntent().getStringExtra(
-				Constants.EXTRA_STOCK_LIST_SORT_ORDER);
+				Constant.EXTRA_STOCK_LIST_SORT_ORDER);
 		if (mSortOrder == null) {
 			mSortOrder = mSortOrderDefault;
 		}
@@ -249,7 +249,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 
 		Intent intent = new Intent(StockListEditActivity.this,
 				StockDataChartListActivity.class);
-		intent.putExtra(Constants.EXTRA_STOCK_ID, id);
+		intent.putExtra(Constant.EXTRA_STOCK_ID, id);
 		startActivity(intent);
 	}
 
@@ -302,9 +302,9 @@ public class StockListEditActivity extends DatabaseActivity implements
 				mStockDatabaseManager.getStockById(mStock);
 
 				IndexComponent indexComponent = new IndexComponent();
-				indexComponent.setIndexCode(mIntent.getStringExtra(Constants.EXTRA_INDEX_CODE));
-				indexComponent.setIndexName(mIntent.getStringExtra(Constants.EXTRA_INDEX_NAME));
-				indexComponent.setIndexSE(mIntent.getStringExtra(Constants.EXTRA_INDEX_SE));
+				indexComponent.setIndexCode(mIntent.getStringExtra(Constant.EXTRA_INDEX_CODE));
+				indexComponent.setIndexName(mIntent.getStringExtra(Constant.EXTRA_INDEX_NAME));
+				indexComponent.setIndexSE(mIntent.getStringExtra(Constant.EXTRA_INDEX_SE));
 				indexComponent.setCode(mStock.getCode());
 				indexComponent.setName(mStock.getName());
 				indexComponent.setSE(mStock.getSE());
@@ -400,9 +400,9 @@ public class StockListEditActivity extends DatabaseActivity implements
 						mStockDatabaseManager.getStockById(mStock);
 
 						IndexComponent indexComponent = new IndexComponent();
-						indexComponent.setIndexCode(mIntent.getStringExtra(Constants.EXTRA_INDEX_CODE));
-						indexComponent.setIndexName(mIntent.getStringExtra(Constants.EXTRA_INDEX_NAME));
-						indexComponent.setIndexSE(mIntent.getStringExtra(Constants.EXTRA_INDEX_SE));
+						indexComponent.setIndexCode(mIntent.getStringExtra(Constant.EXTRA_INDEX_CODE));
+						indexComponent.setIndexName(mIntent.getStringExtra(Constant.EXTRA_INDEX_NAME));
+						indexComponent.setIndexSE(mIntent.getStringExtra(Constant.EXTRA_INDEX_SE));
 						indexComponent.setCode(mStock.getCode());
 						indexComponent.setName(mStock.getName());
 						indexComponent.setSE(mStock.getSE());

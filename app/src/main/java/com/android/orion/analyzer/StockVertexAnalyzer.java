@@ -4,13 +4,13 @@ import java.util.ArrayList;
 
 import android.util.Log;
 
-import com.android.orion.setting.Constants;
+import com.android.orion.setting.Constant;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.utility.Utility;
 
 public class StockVertexAnalyzer {
-	static final String TAG = Constants.TAG + " "
+	static final String TAG = Constant.TAG + " "
 			+ StockVertexAnalyzer.class.getSimpleName();
 
 	public StockVertexAnalyzer() {
@@ -626,9 +626,9 @@ public class StockVertexAnalyzer {
 			actionString = String.valueOf(i);
 
 			if (data.getNet() > 0) {
-				actionString += " +" + data.getNet() + " " + Utility.Round(data.getVelocity(), Constants.DOUBLE_FIXED_DECIMAL);
+				actionString += " +" + data.getNet() + " " + Utility.Round(data.getVelocity(), Constant.DOUBLE_FIXED_DECIMAL);
 			} else if (data.getNet() < 0) {
-				actionString += " " + data.getNet() + " " + Utility.Round(data.getVelocity(), Constants.DOUBLE_FIXED_DECIMAL);
+				actionString += " " + data.getNet() + " " + Utility.Round(data.getVelocity(), Constant.DOUBLE_FIXED_DECIMAL);
 			}
 
 			stockData.setAction(actionString);

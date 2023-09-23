@@ -3,11 +3,11 @@ package com.android.orion.activity;
 import android.os.Bundle;
 import android.text.TextUtils;
 
-import com.android.orion.setting.Constants;
+import com.android.orion.setting.Constant;
 import com.android.orion.database.DatabaseContract;
 
 public class StockDealListActivity extends DealListActivity {
-	static final String TAG = Constants.TAG + " "
+	static final String TAG = Constant.TAG + " "
 			+ StockDealListActivity.class.getSimpleName();
 
 	@Override
@@ -23,8 +23,8 @@ public class StockDealListActivity extends DealListActivity {
 		String superSelection = mSelection;
 
 		if (mBundle != null) {
-			String se = mBundle.getString(Constants.EXTRA_STOCK_SE);
-			String code = mBundle.getString(Constants.EXTRA_STOCK_CODE);
+			String se = mBundle.getString(Constant.EXTRA_STOCK_SE);
+			String code = mBundle.getString(Constant.EXTRA_STOCK_CODE);
 
 			mSelection = DatabaseContract.COLUMN_SE + " = " + "\'" + se + "\'"
 					+ " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"

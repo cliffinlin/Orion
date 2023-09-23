@@ -35,7 +35,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.android.orion.setting.Constants;
+import com.android.orion.setting.Constant;
 
 public class Utility {
 	public static final String CALENDAR_DATE_FORMAT = "yyyy-MM-dd";
@@ -291,7 +291,7 @@ public class Utility {
 				length = randomAccessFile.length();
 			}
 		} catch (FileNotFoundException e) {
-			Log.d(Constants.TAG, fileName + " not found.");
+			Log.d(Constant.TAG, fileName + " not found.");
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -400,7 +400,7 @@ public class Utility {
 				}
 			}
 		} catch (FileNotFoundException e) {
-			Log.d(Constants.TAG, path + " not found.");
+			Log.d(Constant.TAG, path + " not found.");
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -462,7 +462,7 @@ public class Utility {
 				}
 			}
 		} catch (FileNotFoundException e) {
-			Log.d(Constants.TAG, fileName + " not found.");
+			Log.d(Constant.TAG, fileName + " not found.");
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -510,7 +510,7 @@ public class Utility {
 				}
 			}
 		} catch (FileNotFoundException e) {
-			Log.d(Constants.TAG, fileName + " not found.");
+			Log.d(Constant.TAG, fileName + " not found.");
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -638,7 +638,7 @@ public class Utility {
 				}
 			}
 		} catch (FileNotFoundException e) {
-			Log.d(Constants.TAG, fileName + " not found.");
+			Log.d(Constant.TAG, fileName + " not found.");
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -680,7 +680,7 @@ public class Utility {
 				}
 			}
 		} catch (FileNotFoundException e) {
-			Log.d(Constants.TAG, fileName + " not found.");
+			Log.d(Constant.TAG, fileName + " not found.");
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

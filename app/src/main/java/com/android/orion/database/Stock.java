@@ -7,8 +7,8 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.text.TextUtils;
 
-import com.android.orion.setting.Constants;
-import com.android.orion.setting.Settings;
+import com.android.orion.setting.Constant;
+import com.android.orion.setting.Setting;
 import com.android.orion.utility.Utility;
 
 public class Stock extends DatabaseTable {
@@ -1585,25 +1585,25 @@ public class Stock extends DatabaseTable {
     public ArrayList<StockData> getStockDataList(String period) {
 		ArrayList<StockData> result = null;
 
-		if (period.equals(Settings.KEY_PERIOD_MIN1)) {
+		if (period.equals(Setting.KEY_PERIOD_MIN1)) {
 			result = mStockDataListMin1;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN5)) {
 			result = mStockDataListMin5;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN15)) {
 			result = mStockDataListMin15;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN30)) {
 			result = mStockDataListMin30;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN60)) {
 			result = mStockDataListMin60;
-		} else if (period.equals(Settings.KEY_PERIOD_DAY)) {
+		} else if (period.equals(Setting.KEY_PERIOD_DAY)) {
 			result = mStockDataListDay;
-		} else if (period.equals(Settings.KEY_PERIOD_WEEK)) {
+		} else if (period.equals(Setting.KEY_PERIOD_WEEK)) {
 			result = mStockDataListWeek;
-		} else if (period.equals(Settings.KEY_PERIOD_MONTH)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MONTH)) {
 			result = mStockDataListMonth;
-		} else if (period.equals(Settings.KEY_PERIOD_QUARTER)) {
+		} else if (period.equals(Setting.KEY_PERIOD_QUARTER)) {
 			result = mStockDataListQuarter;
-		} else if (period.equals(Settings.KEY_PERIOD_YEAR)) {
+		} else if (period.equals(Setting.KEY_PERIOD_YEAR)) {
 			result = mStockDataListYear;
 		}
 
@@ -1613,25 +1613,25 @@ public class Stock extends DatabaseTable {
 	public ArrayList<StockData> getDrawVertexList(String period) {
 		ArrayList<StockData> result = null;
 
-		if (period.equals(Settings.KEY_PERIOD_MIN1)) {
+		if (period.equals(Setting.KEY_PERIOD_MIN1)) {
 			result = mDrawVertexListMin1;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN5)) {
 			result = mDrawVertexListMin5;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN15)) {
 			result = mDrawVertexListMin15;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN30)) {
 			result = mDrawVertexListMin30;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN60)) {
 			result = mDrawVertexListMin60;
-		} else if (period.equals(Settings.KEY_PERIOD_DAY)) {
+		} else if (period.equals(Setting.KEY_PERIOD_DAY)) {
 			result = mDrawVertexListDay;
-		} else if (period.equals(Settings.KEY_PERIOD_WEEK)) {
+		} else if (period.equals(Setting.KEY_PERIOD_WEEK)) {
 			result = mDrawVertexListWeek;
-		} else if (period.equals(Settings.KEY_PERIOD_MONTH)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MONTH)) {
 			result = mDrawVertexListMonth;
-		} else if (period.equals(Settings.KEY_PERIOD_QUARTER)) {
+		} else if (period.equals(Setting.KEY_PERIOD_QUARTER)) {
 			result = mDrawVertexListQuarter;
-		} else if (period.equals(Settings.KEY_PERIOD_YEAR)) {
+		} else if (period.equals(Setting.KEY_PERIOD_YEAR)) {
 			result = mDrawVertexListYear;
 		}
 
@@ -1641,25 +1641,25 @@ public class Stock extends DatabaseTable {
 	public ArrayList<StockData> getDrawDataList(String period) {
 		ArrayList<StockData> result = null;
 
-		if (period.equals(Settings.KEY_PERIOD_MIN1)) {
+		if (period.equals(Setting.KEY_PERIOD_MIN1)) {
 			result = mDrawDataListMin1;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN5)) {
 			result = mDrawDataListMin5;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN15)) {
 			result = mDrawDataListMin15;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN30)) {
 			result = mDrawDataListMin30;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN60)) {
 			result = mDrawDataListMin60;
-		} else if (period.equals(Settings.KEY_PERIOD_DAY)) {
+		} else if (period.equals(Setting.KEY_PERIOD_DAY)) {
 			result = mDrawDataListDay;
-		} else if (period.equals(Settings.KEY_PERIOD_WEEK)) {
+		} else if (period.equals(Setting.KEY_PERIOD_WEEK)) {
 			result = mDrawDataListWeek;
-		} else if (period.equals(Settings.KEY_PERIOD_MONTH)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MONTH)) {
 			result = mDrawDataListMonth;
-		} else if (period.equals(Settings.KEY_PERIOD_QUARTER)) {
+		} else if (period.equals(Setting.KEY_PERIOD_QUARTER)) {
 			result = mDrawDataListQuarter;
-		} else if (period.equals(Settings.KEY_PERIOD_YEAR)) {
+		} else if (period.equals(Setting.KEY_PERIOD_YEAR)) {
 			result = mDrawDataListYear;
 		}
 
@@ -1669,25 +1669,25 @@ public class Stock extends DatabaseTable {
 	public ArrayList<StockData> getStrokeVertexList(String period) {
 		ArrayList<StockData> result = null;
 
-		if (period.equals(Settings.KEY_PERIOD_MIN1)) {
+		if (period.equals(Setting.KEY_PERIOD_MIN1)) {
 			result = mStrokeVertexListMin1;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN5)) {
 			result = mStrokeVertexListMin5;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN15)) {
 			result = mStrokeVertexListMin15;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN30)) {
 			result = mStrokeVertexListMin30;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN60)) {
 			result = mStrokeVertexListMin60;
-		} else if (period.equals(Settings.KEY_PERIOD_DAY)) {
+		} else if (period.equals(Setting.KEY_PERIOD_DAY)) {
 			result = mStrokeVertexListDay;
-		} else if (period.equals(Settings.KEY_PERIOD_WEEK)) {
+		} else if (period.equals(Setting.KEY_PERIOD_WEEK)) {
 			result = mStrokeVertexListWeek;
-		} else if (period.equals(Settings.KEY_PERIOD_MONTH)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MONTH)) {
 			result = mStrokeVertexListMonth;
-		} else if (period.equals(Settings.KEY_PERIOD_QUARTER)) {
+		} else if (period.equals(Setting.KEY_PERIOD_QUARTER)) {
 			result = mStrokeVertexListQuarter;
-		} else if (period.equals(Settings.KEY_PERIOD_YEAR)) {
+		} else if (period.equals(Setting.KEY_PERIOD_YEAR)) {
 			result = mStrokeVertexListYear;
 		}
 
@@ -1697,25 +1697,25 @@ public class Stock extends DatabaseTable {
 	public ArrayList<StockData> getStrokeDataList(String period) {
 		ArrayList<StockData> result = null;
 
-		if (period.equals(Settings.KEY_PERIOD_MIN1)) {
+		if (period.equals(Setting.KEY_PERIOD_MIN1)) {
 			result = mStrokeDataListMin1;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN5)) {
 			result = mStrokeDataListMin5;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN15)) {
 			result = mStrokeDataListMin15;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN30)) {
 			result = mStrokeDataListMin30;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN60)) {
 			result = mStrokeDataListMin60;
-		} else if (period.equals(Settings.KEY_PERIOD_DAY)) {
+		} else if (period.equals(Setting.KEY_PERIOD_DAY)) {
 			result = mStrokeDataListDay;
-		} else if (period.equals(Settings.KEY_PERIOD_WEEK)) {
+		} else if (period.equals(Setting.KEY_PERIOD_WEEK)) {
 			result = mStrokeDataListWeek;
-		} else if (period.equals(Settings.KEY_PERIOD_MONTH)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MONTH)) {
 			result = mStrokeDataListMonth;
-		} else if (period.equals(Settings.KEY_PERIOD_QUARTER)) {
+		} else if (period.equals(Setting.KEY_PERIOD_QUARTER)) {
 			result = mStrokeDataListQuarter;
-		} else if (period.equals(Settings.KEY_PERIOD_YEAR)) {
+		} else if (period.equals(Setting.KEY_PERIOD_YEAR)) {
 			result = mStrokeDataListYear;
 		}
 
@@ -1725,25 +1725,25 @@ public class Stock extends DatabaseTable {
 	public ArrayList<StockData> getSegmentVertexList(String period) {
 		ArrayList<StockData> result = null;
 
-		if (period.equals(Settings.KEY_PERIOD_MIN1)) {
+		if (period.equals(Setting.KEY_PERIOD_MIN1)) {
 			result = mSegmentVertexListMin1;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN5)) {
 			result = mSegmentVertexListMin5;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN15)) {
 			result = mSegmentVertexListMin15;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN30)) {
 			result = mSegmentVertexListMin30;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN60)) {
 			result = mSegmentVertexListMin60;
-		} else if (period.equals(Settings.KEY_PERIOD_DAY)) {
+		} else if (period.equals(Setting.KEY_PERIOD_DAY)) {
 			result = mSegmentVertexListDay;
-		} else if (period.equals(Settings.KEY_PERIOD_WEEK)) {
+		} else if (period.equals(Setting.KEY_PERIOD_WEEK)) {
 			result = mSegmentVertexListWeek;
-		} else if (period.equals(Settings.KEY_PERIOD_MONTH)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MONTH)) {
 			result = mSegmentVertexListMonth;
-		} else if (period.equals(Settings.KEY_PERIOD_QUARTER)) {
+		} else if (period.equals(Setting.KEY_PERIOD_QUARTER)) {
 			result = mSegmentVertexListQuarter;
-		} else if (period.equals(Settings.KEY_PERIOD_YEAR)) {
+		} else if (period.equals(Setting.KEY_PERIOD_YEAR)) {
 			result = mSegmentVertexListYear;
 		}
 
@@ -1753,25 +1753,25 @@ public class Stock extends DatabaseTable {
 	public ArrayList<StockData> getSegmentDataList(String period) {
 		ArrayList<StockData> result = null;
 
-		if (period.equals(Settings.KEY_PERIOD_MIN1)) {
+		if (period.equals(Setting.KEY_PERIOD_MIN1)) {
 			result = mSegmentDataListMin1;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN5)) {
 			result = mSegmentDataListMin5;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN15)) {
 			result = mSegmentDataListMin15;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN30)) {
 			result = mSegmentDataListMin30;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN60)) {
 			result = mSegmentDataListMin60;
-		} else if (period.equals(Settings.KEY_PERIOD_DAY)) {
+		} else if (period.equals(Setting.KEY_PERIOD_DAY)) {
 			result = mSegmentDataListDay;
-		} else if (period.equals(Settings.KEY_PERIOD_WEEK)) {
+		} else if (period.equals(Setting.KEY_PERIOD_WEEK)) {
 			result = mSegmentDataListWeek;
-		} else if (period.equals(Settings.KEY_PERIOD_MONTH)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MONTH)) {
 			result = mSegmentDataListMonth;
-		} else if (period.equals(Settings.KEY_PERIOD_QUARTER)) {
+		} else if (period.equals(Setting.KEY_PERIOD_QUARTER)) {
 			result = mSegmentDataListQuarter;
-		} else if (period.equals(Settings.KEY_PERIOD_YEAR)) {
+		} else if (period.equals(Setting.KEY_PERIOD_YEAR)) {
 			result = mSegmentDataListYear;
 		}
 
@@ -1781,25 +1781,25 @@ public class Stock extends DatabaseTable {
 	public ArrayList<StockData> getLineVertexList(String period) {
 		ArrayList<StockData> result = null;
 
-		if (period.equals(Settings.KEY_PERIOD_MIN1)) {
+		if (period.equals(Setting.KEY_PERIOD_MIN1)) {
 			result = mLineVertexListMin1;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN5)) {
 			result = mLineVertexListMin5;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN15)) {
 			result = mLineVertexListMin15;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN30)) {
 			result = mLineVertexListMin30;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN60)) {
 			result = mLineVertexListMin60;
-		} else if (period.equals(Settings.KEY_PERIOD_DAY)) {
+		} else if (period.equals(Setting.KEY_PERIOD_DAY)) {
 			result = mLineVertexListDay;
-		} else if (period.equals(Settings.KEY_PERIOD_WEEK)) {
+		} else if (period.equals(Setting.KEY_PERIOD_WEEK)) {
 			result = mLineVertexListWeek;
-		} else if (period.equals(Settings.KEY_PERIOD_MONTH)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MONTH)) {
 			result = mLineVertexListMonth;
-		} else if (period.equals(Settings.KEY_PERIOD_QUARTER)) {
+		} else if (period.equals(Setting.KEY_PERIOD_QUARTER)) {
 			result = mLineVertexListQuarter;
-		} else if (period.equals(Settings.KEY_PERIOD_YEAR)) {
+		} else if (period.equals(Setting.KEY_PERIOD_YEAR)) {
 			result = mLineVertexListYear;
 		}
 
@@ -1809,25 +1809,25 @@ public class Stock extends DatabaseTable {
 	public ArrayList<StockData> getLineDataList(String period) {
 		ArrayList<StockData> result = null;
 
-		if (period.equals(Settings.KEY_PERIOD_MIN1)) {
+		if (period.equals(Setting.KEY_PERIOD_MIN1)) {
 			result = mLineDataListMin1;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN5)) {
 			result = mLineDataListMin5;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN15)) {
 			result = mLineDataListMin15;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN30)) {
 			result = mLineDataListMin30;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN60)) {
 			result = mLineDataListMin60;
-		} else if (period.equals(Settings.KEY_PERIOD_DAY)) {
+		} else if (period.equals(Setting.KEY_PERIOD_DAY)) {
 			result = mLineDataListDay;
-		} else if (period.equals(Settings.KEY_PERIOD_WEEK)) {
+		} else if (period.equals(Setting.KEY_PERIOD_WEEK)) {
 			result = mLineDataListWeek;
-		} else if (period.equals(Settings.KEY_PERIOD_MONTH)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MONTH)) {
 			result = mLineDataListMonth;
-		} else if (period.equals(Settings.KEY_PERIOD_QUARTER)) {
+		} else if (period.equals(Setting.KEY_PERIOD_QUARTER)) {
 			result = mLineDataListQuarter;
-		} else if (period.equals(Settings.KEY_PERIOD_YEAR)) {
+		} else if (period.equals(Setting.KEY_PERIOD_YEAR)) {
 			result = mLineDataListYear;
 		}
 
@@ -1837,25 +1837,25 @@ public class Stock extends DatabaseTable {
 	public ArrayList<StockData> getOutlineVertexList(String period) {
 		ArrayList<StockData> result = null;
 
-		if (period.equals(Settings.KEY_PERIOD_MIN1)) {
+		if (period.equals(Setting.KEY_PERIOD_MIN1)) {
 			result = mOutlineVertexListMin1;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN5)) {
 			result = mOutlineVertexListMin5;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN15)) {
 			result = mOutlineVertexListMin15;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN30)) {
 			result = mOutlineVertexListMin30;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN60)) {
 			result = mOutlineVertexListMin60;
-		} else if (period.equals(Settings.KEY_PERIOD_DAY)) {
+		} else if (period.equals(Setting.KEY_PERIOD_DAY)) {
 			result = mOutlineVertexListDay;
-		} else if (period.equals(Settings.KEY_PERIOD_WEEK)) {
+		} else if (period.equals(Setting.KEY_PERIOD_WEEK)) {
 			result = mOutlineVertexListWeek;
-		} else if (period.equals(Settings.KEY_PERIOD_MONTH)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MONTH)) {
 			result = mOutlineVertexListMonth;
-		} else if (period.equals(Settings.KEY_PERIOD_QUARTER)) {
+		} else if (period.equals(Setting.KEY_PERIOD_QUARTER)) {
 			result = mOutlineVertexListQuarter;
-		} else if (period.equals(Settings.KEY_PERIOD_YEAR)) {
+		} else if (period.equals(Setting.KEY_PERIOD_YEAR)) {
 			result = mOutlineVertexListYear;
 		}
 
@@ -1865,25 +1865,25 @@ public class Stock extends DatabaseTable {
 	public ArrayList<StockData> getOutlineDataList(String period) {
 		ArrayList<StockData> result = null;
 
-		if (period.equals(Settings.KEY_PERIOD_MIN1)) {
+		if (period.equals(Setting.KEY_PERIOD_MIN1)) {
 			result = mOutlineDataListMin1;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN5)) {
 			result = mOutlineDataListMin5;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN15)) {
 			result = mOutlineDataListMin15;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN30)) {
 			result = mOutlineDataListMin30;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN60)) {
 			result = mOutlineDataListMin60;
-		} else if (period.equals(Settings.KEY_PERIOD_DAY)) {
+		} else if (period.equals(Setting.KEY_PERIOD_DAY)) {
 			result = mOutlineDataListDay;
-		} else if (period.equals(Settings.KEY_PERIOD_WEEK)) {
+		} else if (period.equals(Setting.KEY_PERIOD_WEEK)) {
 			result = mOutlineDataListWeek;
-		} else if (period.equals(Settings.KEY_PERIOD_MONTH)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MONTH)) {
 			result = mOutlineDataListMonth;
-		} else if (period.equals(Settings.KEY_PERIOD_QUARTER)) {
+		} else if (period.equals(Setting.KEY_PERIOD_QUARTER)) {
 			result = mOutlineDataListQuarter;
-		} else if (period.equals(Settings.KEY_PERIOD_YEAR)) {
+		} else if (period.equals(Setting.KEY_PERIOD_YEAR)) {
 			result = mOutlineDataListYear;
 		}
 
@@ -1940,25 +1940,25 @@ public class Stock extends DatabaseTable {
 	public String getAction(String period) {
 		String action = "";
 
-		if (period.equals(Settings.KEY_PERIOD_MIN1)) {
+		if (period.equals(Setting.KEY_PERIOD_MIN1)) {
 			action = getActionMin1();
-		} else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN5)) {
 			action = getActionMin5();
-		} else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN15)) {
 			action = getActionMin15();
-		} else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN30)) {
 			action = getActionMin30();
-		} else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN60)) {
 			action = getActionMin60();
-		} else if (period.equals(Settings.KEY_PERIOD_DAY)) {
+		} else if (period.equals(Setting.KEY_PERIOD_DAY)) {
 			action = getActionDay();
-		} else if (period.equals(Settings.KEY_PERIOD_WEEK)) {
+		} else if (period.equals(Setting.KEY_PERIOD_WEEK)) {
 			action = getActionWeek();
-		} else if (period.equals(Settings.KEY_PERIOD_MONTH)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MONTH)) {
 			action = getActionMonth();
-		} else if (period.equals(Settings.KEY_PERIOD_QUARTER)) {
+		} else if (period.equals(Setting.KEY_PERIOD_QUARTER)) {
 			action = getActionQuarter();
-		} else if (period.equals(Settings.KEY_PERIOD_YEAR)) {
+		} else if (period.equals(Setting.KEY_PERIOD_YEAR)) {
 			action = getActionYear();
 		}
 
@@ -1966,25 +1966,25 @@ public class Stock extends DatabaseTable {
 	}
 
 	public void setAction(String period, String action) {
-		if (period.equals(Settings.KEY_PERIOD_MIN1)) {
+		if (period.equals(Setting.KEY_PERIOD_MIN1)) {
 			setActionMin1(action);
-		} else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN5)) {
 			setActionMin5(action);
-		} else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN15)) {
 			setActionMin15(action);
-		} else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN30)) {
 			setActionMin30(action);
-		} else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN60)) {
 			setActionMin60(action);
-		} else if (period.equals(Settings.KEY_PERIOD_DAY)) {
+		} else if (period.equals(Setting.KEY_PERIOD_DAY)) {
 			setActionDay(action);
-		} else if (period.equals(Settings.KEY_PERIOD_WEEK)) {
+		} else if (period.equals(Setting.KEY_PERIOD_WEEK)) {
 			setActionWeek(action);
-		} else if (period.equals(Settings.KEY_PERIOD_MONTH)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MONTH)) {
 			setActionMonth(action);
-		} else if (period.equals(Settings.KEY_PERIOD_QUARTER)) {
+		} else if (period.equals(Setting.KEY_PERIOD_QUARTER)) {
 			setActionQuarter(action);
-		} else if (period.equals(Settings.KEY_PERIOD_YEAR)) {
+		} else if (period.equals(Setting.KEY_PERIOD_YEAR)) {
 			setActionYear(action);
 		}
 	}
@@ -1999,7 +1999,7 @@ public class Stock extends DatabaseTable {
 		}
 
 		mMarketValue = Utility.Round(mPrice * mTotalShare,
-				Constants.DOUBLE_FIXED_DECIMAL);
+				Constant.DOUBLE_FIXED_DECIMAL);
 	}
 
 	public void setupNetProfitMargin() {
@@ -2008,7 +2008,7 @@ public class Stock extends DatabaseTable {
 		}
 
 		mNetProfitMargin = Utility.Round(100.0 * mNetProfitInYear / mMainBusinessIncomeInYear,
-				Constants.DOUBLE_FIXED_DECIMAL);
+				Constant.DOUBLE_FIXED_DECIMAL);
 	}
 
 	public void setupNetProfitPerShare() {
@@ -2017,7 +2017,7 @@ public class Stock extends DatabaseTable {
 		}
 
 		mNetProfitPerShare = Utility.Round(mNetProfit / mTotalShare,
-				Constants.DOUBLE_FIXED_DECIMAL);
+				Constant.DOUBLE_FIXED_DECIMAL);
 	}
 
 	public void setupNetProfitPerShareInYear(
@@ -2031,7 +2031,7 @@ public class Stock extends DatabaseTable {
 		}
 
 		if ((stockFinancialList == null)
-				|| (stockFinancialList.size() < Constants.SEASONS_IN_A_YEAR + 1)) {
+				|| (stockFinancialList.size() < Constant.SEASONS_IN_A_YEAR + 1)) {
 			return;
 		}
 
@@ -2039,7 +2039,7 @@ public class Stock extends DatabaseTable {
 		mNetProfitInYear = 0;
 		mNetProfitPerShareInYear = 0;
 
-		for (int i = 0; i < Constants.SEASONS_IN_A_YEAR; i++) {
+		for (int i = 0; i < Constant.SEASONS_IN_A_YEAR; i++) {
 			StockFinancial stockFinancial = stockFinancialList.get(i);
 			StockFinancial prev = stockFinancialList.get(i + 1);
 
@@ -2070,13 +2070,13 @@ public class Stock extends DatabaseTable {
 		}
 
 		if ((stockFinancialList == null)
-				|| (stockFinancialList.size() < 2 * Constants.SEASONS_IN_A_YEAR + 1)) {
+				|| (stockFinancialList.size() < 2 * Constant.SEASONS_IN_A_YEAR + 1)) {
 			return;
 		}
 
         netProfitPerShareLastYear = 0;
 
-		for (int i = Constants.SEASONS_IN_A_YEAR; i < 2 * Constants.SEASONS_IN_A_YEAR; i++) {
+		for (int i = Constant.SEASONS_IN_A_YEAR; i < 2 * Constant.SEASONS_IN_A_YEAR; i++) {
 			StockFinancial stockFinancial = stockFinancialList.get(i);
 			StockFinancial prev = stockFinancialList.get(i + 1);
 
@@ -2096,12 +2096,12 @@ public class Stock extends DatabaseTable {
 
         mRate = mNetProfitPerShareInYear / netProfitPerShareLastYear;
 
-        mRate = Utility.Round(mRate, Constants.DOUBLE_FIXED_DECIMAL);
+        mRate = Utility.Round(mRate, Constant.DOUBLE_FIXED_DECIMAL);
 	}
 
 	public void setupDebtToNetAssetsRatio(ArrayList<StockFinancial> stockFinancialList) {
 		if ((stockFinancialList == null)
-				|| (stockFinancialList.size() < Constants.SEASONS_IN_A_YEAR + 1)) {
+				|| (stockFinancialList.size() < Constant.SEASONS_IN_A_YEAR + 1)) {
 			return;
 		}
 
@@ -2112,11 +2112,11 @@ public class Stock extends DatabaseTable {
 		double bookValuePerShare = 0;
 
 		if ((stockFinancialList == null)
-				|| (stockFinancialList.size() < Constants.SEASONS_IN_A_YEAR + 1)) {
+				|| (stockFinancialList.size() < Constant.SEASONS_IN_A_YEAR + 1)) {
 			return;
 		}
 
-		bookValuePerShare = stockFinancialList.get(Constants.SEASONS_IN_A_YEAR)
+		bookValuePerShare = stockFinancialList.get(Constant.SEASONS_IN_A_YEAR)
 				.getBookValuePerShare();
 
 		if (bookValuePerShare == 0) {
@@ -2124,7 +2124,7 @@ public class Stock extends DatabaseTable {
 		}
 
 		mRoe = Utility.Round(100.0 * mNetProfitPerShareInYear
-				/ bookValuePerShare, Constants.DOUBLE_FIXED_DECIMAL);
+				/ bookValuePerShare, Constant.DOUBLE_FIXED_DECIMAL);
 	}
 
 	public void setupPe() {
@@ -2137,7 +2137,7 @@ public class Stock extends DatabaseTable {
 		}
 
 		mPe = Utility.Round(mPrice / mNetProfitPerShareInYear,
-				Constants.DOUBLE_FIXED_DECIMAL);
+				Constant.DOUBLE_FIXED_DECIMAL);
 	}
 
 	public void setupRoi() {
@@ -2145,8 +2145,8 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-		mRoi = Utility.Round(mRoe * (100.0 * 1.0 / mPe + mYield) * mNetProfitMargin * mRate * Constants.ROI_COEFFICIENT,
-				Constants.DOUBLE_FIXED_DECIMAL);
+		mRoi = Utility.Round(mRoe * (100.0 * 1.0 / mPe + mYield) * mNetProfitMargin * mRate * Constant.ROI_COEFFICIENT,
+				Constant.DOUBLE_FIXED_DECIMAL);
 	}
 
 	public void setupPb() {
@@ -2155,7 +2155,7 @@ public class Stock extends DatabaseTable {
 		}
 
 		mPb = Utility.Round(mPrice / mBookValuePerShare,
-				Constants.DOUBLE_FIXED_DECIMAL);
+				Constant.DOUBLE_FIXED_DECIMAL);
 	}
 
 	public void setupBonus() {
@@ -2178,7 +2178,7 @@ public class Stock extends DatabaseTable {
 		}
 
 		mYield = Utility.Round(100.0 * mDividend / 10.0 / mPrice,
-				Constants.DOUBLE_FIXED_DECIMAL);
+				Constant.DOUBLE_FIXED_DECIMAL);
 	}
 
 	public void setupDividendRatio() {
@@ -2193,6 +2193,6 @@ public class Stock extends DatabaseTable {
 		mDividendRatio = (mDividend / 10.0) / mNetProfitPerShareInYear;
 
 		mDividendRatio = Utility.Round(mDividendRatio,
-				Constants.DOUBLE_FIXED_DECIMAL);
+				Constant.DOUBLE_FIXED_DECIMAL);
 	}
 }

@@ -1,9 +1,7 @@
 package com.android.orion.activity;
 
-import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.ContentObserver;
@@ -15,7 +13,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.provider.BaseColumns;
-import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.view.ActionMode;
 import android.view.Menu;
@@ -33,19 +30,17 @@ import com.android.orion.R;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockQuant;
-import com.android.orion.setting.Constants;
-import com.android.orion.setting.Settings;
+import com.android.orion.setting.Constant;
+import com.android.orion.setting.Setting;
 import com.android.orion.utility.Preferences;
-import com.android.orion.utility.RecordFile;
 import com.android.orion.view.SyncHorizontalScrollView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class StockQuantListActivity extends ListActivity implements
         LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
         OnItemLongClickListener, OnClickListener {
-    static final String TAG = Constants.TAG + " "
+    static final String TAG = Constant.TAG + " "
             + StockQuantListActivity.class.getSimpleName();
 
     static final int LOADER_ID_QUANT_LIST = 0;
@@ -125,7 +120,7 @@ public class StockQuantListActivity extends ListActivity implements
 
                     intent = new Intent(mContext, StockEditActivity.class);
                     intent.setAction(StockEditActivity.ACTION_STOCK_EDIT);
-                    intent.putExtra(Constants.EXTRA_STOCK_ID, mStock.getId());
+                    intent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
                     startActivity(intent);
                     break;
 
@@ -138,10 +133,10 @@ public class StockQuantListActivity extends ListActivity implements
                     }
 
                     intent = new Intent(mContext, StockDataChartListActivity.class);
-                    intent.putExtra(Constants.EXTRA_STOCK_ID, mStock.getId());
-                    intent.putStringArrayListExtra(Constants.EXTRA_STOCK_ID_LIST,
+                    intent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
+                    intent.putStringArrayListExtra(Constant.EXTRA_STOCK_ID_LIST,
                             stockIDList);
-                    intent.putExtra(Constants.EXTRA_STOCK_QUANT, true);
+                    intent.putExtra(Constant.EXTRA_STOCK_QUANT, true);
                     startActivity(intent);
                     break;
 
@@ -150,7 +145,7 @@ public class StockQuantListActivity extends ListActivity implements
 
                     mIntent = new Intent(mContext, StockTrendListActivity.class);
                     mIntent.setAction(StockTrendListActivity.ACTION_STOCK_TREND_LIST);
-                    mIntent.putExtra(Constants.EXTRA_STOCK_ID, mStock.getId());
+                    mIntent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
                     startActivity(mIntent);
                     break;
 
@@ -236,7 +231,7 @@ public class StockQuantListActivity extends ListActivity implements
 
         mFilterType = FILTER_TYPE_ALL;
 
-        mSortOrder = Preferences.getString(mContext, Settings.KEY_SORT_ORDER_QUANT_LIST,
+        mSortOrder = Preferences.getString(mContext, Setting.KEY_SORT_ORDER_QUANT_LIST,
                 mSortOrderDefault);
 
         initHeader();
@@ -416,7 +411,7 @@ public class StockQuantListActivity extends ListActivity implements
 
         mSortOrder = mSortOrderColumn + mSortOrderDirection;
 
-        Preferences.putString(mContext, Settings.KEY_SORT_ORDER_QUANT_LIST, mSortOrder);
+        Preferences.putString(mContext, Setting.KEY_SORT_ORDER_QUANT_LIST, mSortOrder);
 
         restartLoader();
     }
@@ -654,8 +649,8 @@ public class StockQuantListActivity extends ListActivity implements
         mSelection = null;
 
         if (mBundle != null) {
-            String se = mBundle.getString(Constants.EXTRA_STOCK_SE);
-            String code = mBundle.getString(Constants.EXTRA_STOCK_CODE);
+            String se = mBundle.getString(Constant.EXTRA_STOCK_SE);
+            String code = mBundle.getString(Constant.EXTRA_STOCK_CODE);
 
             mStock.setSE(se);
             mStock.setCode(code);

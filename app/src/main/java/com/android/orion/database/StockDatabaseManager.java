@@ -11,8 +11,8 @@ import android.net.Uri;
 
 import androidx.annotation.NonNull;
 
-import com.android.orion.setting.Constants;
-import com.android.orion.setting.Settings;
+import com.android.orion.setting.Constant;
+import com.android.orion.setting.Setting;
 import com.android.orion.utility.Utility;
 
 public class StockDatabaseManager extends DatabaseManager {
@@ -551,11 +551,11 @@ public class StockDatabaseManager extends DatabaseManager {
 
 		period = stockData.getPeriod();
 
-		if (period.equals(Settings.KEY_PERIOD_MIN1)
-				|| period.equals(Settings.KEY_PERIOD_MIN5)
-				|| period.equals(Settings.KEY_PERIOD_MIN15)
-				|| period.equals(Settings.KEY_PERIOD_MIN30)
-				|| period.equals(Settings.KEY_PERIOD_MIN60)) {
+		if (period.equals(Setting.KEY_PERIOD_MIN1)
+				|| period.equals(Setting.KEY_PERIOD_MIN5)
+				|| period.equals(Setting.KEY_PERIOD_MIN15)
+				|| period.equals(Setting.KEY_PERIOD_MIN30)
+				|| period.equals(Setting.KEY_PERIOD_MIN60)) {
 			selection += " AND " + DatabaseContract.COLUMN_TIME + " = " + "\'"
 					+ stockData.getTime() + "\'";
 		}
@@ -693,7 +693,7 @@ public class StockDatabaseManager extends DatabaseManager {
 			stock.setHold(hold);
 			stock.setProfit(profit);
 			if (hold > 0) {
-				stock.setCost(Utility.Round(valuation / hold, Constants.DOUBLE_FIXED_DECIMAL));
+				stock.setCost(Utility.Round(valuation / hold, Constant.DOUBLE_FIXED_DECIMAL));
 			}
 			stock.setValuation(hold * stock.getPrice());
 		} catch (Exception e) {
@@ -886,7 +886,7 @@ public class StockDatabaseManager extends DatabaseManager {
 		selection += " AND " + DatabaseContract.COLUMN_BUY + " = " + 0;
 		selection += " AND " + DatabaseContract.COLUMN_SELL + " > " + 0;
 		selection += " AND " + DatabaseContract.COLUMN_PROFIT + " > " + DatabaseContract.COLUMN_BONUS;
-		selection += " AND " + DatabaseContract.COLUMN_NET + " > " + Math.max(Constants.STOCK_THRESHOLD, Constants.STOCK_THRESHOLD);
+		selection += " AND " + DatabaseContract.COLUMN_NET + " > " + Math.max(Constant.STOCK_THRESHOLD, Constant.STOCK_THRESHOLD);
 
 		getStockDealList(stock, stockDealList, selection, sortOrder);
 	}
@@ -907,7 +907,7 @@ public class StockDatabaseManager extends DatabaseManager {
 		selection += " AND " + DatabaseContract.COLUMN_BUY + " > " + 0;
 		selection += " AND " + DatabaseContract.COLUMN_SELL + " = " + 0;
 		selection += " AND " + DatabaseContract.COLUMN_PROFIT + " > " + DatabaseContract.COLUMN_BONUS;
-		selection += " AND " + DatabaseContract.COLUMN_NET + " > " + Math.max(Constants.STOCK_THRESHOLD, Constants.STOCK_THRESHOLD);
+		selection += " AND " + DatabaseContract.COLUMN_NET + " > " + Math.max(Constant.STOCK_THRESHOLD, Constant.STOCK_THRESHOLD);
 
 		getStockDealList(stock, stockDealList, selection, sortOrder);
     }
@@ -963,7 +963,7 @@ public class StockDatabaseManager extends DatabaseManager {
 		return result;
 	}
 
-	public int updateStockQuantByID(StockQuant StockQuant) {
+	public int updateStockQuantById(StockQuant StockQuant) {
 		int result = 0;
 
 		if ((StockQuant == null) || (mContentResolver == null)) {
@@ -1019,14 +1019,14 @@ public class StockDatabaseManager extends DatabaseManager {
 						valuation += StockQuant.getValue();
 					}
 
-					result += updateStockQuantByID(StockQuant);
+					result += updateStockQuantById(StockQuant);
 				}
 			}
 
 			stock.setHold(hold);
 			stock.setProfit(profit);
 			if (hold > 0) {
-				stock.setCost(Utility.Round(valuation / hold, Constants.DOUBLE_FIXED_DECIMAL));
+				stock.setCost(Utility.Round(valuation / hold, Constant.DOUBLE_FIXED_DECIMAL));
 			}
 			stock.setValuation(hold * stock.getPrice());
 		} catch (Exception e) {
@@ -1220,6 +1220,16 @@ public class StockDatabaseManager extends DatabaseManager {
 		}
 	}
 
+	public void getStockQuantList(@NonNull Stock stock, @NonNull ArrayList<StockQuant> StockQuantList) {
+		String sortOrder = DatabaseContract.COLUMN_ID + DatabaseContract.ORDER_DIRECTION_ASC;
+
+		String selection = DatabaseContract.COLUMN_SE + " = " + "\'" + stock.getSE()
+				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
+				+ stock.getCode() + "\'";
+
+		getStockQuantList(stock, StockQuantList, selection, sortOrder);
+	}
+
 	public void getStockQuantListToBuy(Stock stock, ArrayList<StockQuant> StockQuantList) {
 		String sortOrder = DatabaseContract.COLUMN_NET + DatabaseContract.ORDER_DIRECTION_ASC;
 
@@ -1236,7 +1246,7 @@ public class StockDatabaseManager extends DatabaseManager {
 		selection += " AND " + DatabaseContract.COLUMN_BUY + " = " + 0;
 		selection += " AND " + DatabaseContract.COLUMN_SELL + " > " + 0;
 		selection += " AND " + DatabaseContract.COLUMN_PROFIT + " > " + DatabaseContract.COLUMN_BONUS;
-		selection += " AND " + DatabaseContract.COLUMN_NET + " > " + Math.max(Constants.STOCK_THRESHOLD, Constants.STOCK_THRESHOLD);
+		selection += " AND " + DatabaseContract.COLUMN_NET + " > " + Math.max(Constant.STOCK_THRESHOLD, Constant.STOCK_THRESHOLD);
 
 		getStockQuantList(stock, StockQuantList, selection, sortOrder);
 	}
@@ -1257,7 +1267,7 @@ public class StockDatabaseManager extends DatabaseManager {
 		selection += " AND " + DatabaseContract.COLUMN_BUY + " > " + 0;
 		selection += " AND " + DatabaseContract.COLUMN_SELL + " = " + 0;
 		selection += " AND " + DatabaseContract.COLUMN_PROFIT + " > " + DatabaseContract.COLUMN_BONUS;
-		selection += " AND " + DatabaseContract.COLUMN_NET + " > " + Math.max(Constants.STOCK_THRESHOLD, Constants.STOCK_THRESHOLD);
+		selection += " AND " + DatabaseContract.COLUMN_NET + " > " + Math.max(Constant.STOCK_THRESHOLD, Constant.STOCK_THRESHOLD);
 
 		getStockQuantList(stock, StockQuantList, selection, sortOrder);
 	}

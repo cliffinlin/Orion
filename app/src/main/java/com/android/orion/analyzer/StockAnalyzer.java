@@ -17,9 +17,9 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import com.android.orion.setting.Constants;
+import com.android.orion.setting.Constant;
 import com.android.orion.R;
-import com.android.orion.setting.Settings;
+import com.android.orion.setting.Setting;
 import com.android.orion.activity.StockListActivity;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.ShareBonus;
@@ -40,7 +40,7 @@ import java.util.Calendar;
 
 
 public class StockAnalyzer {
-	static final String TAG = Constants.TAG + " "
+	static final String TAG = Constant.TAG + " "
 			+ StockAnalyzer.class.getSimpleName();
 
 	public Context mContext;
@@ -58,7 +58,7 @@ public class StockAnalyzer {
 		mPowerManager = (PowerManager) mContext
 				.getSystemService(Context.POWER_SERVICE);
 		mWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-				Constants.TAG + ":" + StockAnalyzer.class.getSimpleName());
+				Constant.TAG + ":" + StockAnalyzer.class.getSimpleName());
 
 		mLocalBroadcastManager = LocalBroadcastManager.getInstance(mContext);
 		mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -101,10 +101,10 @@ public class StockAnalyzer {
 			return;
 		}
 
-		loopback = Preferences.getBoolean(mContext, Settings.KEY_LOOPBACK,
+		loopback = Preferences.getBoolean(mContext, Setting.KEY_LOOPBACK,
 				false);
 		if (loopback) {
-			String dateTime = Preferences.getString(mContext, Settings.KEY_LOOPBACK_DATE_TIME, "");
+			String dateTime = Preferences.getString(mContext, Setting.KEY_LOOPBACK_DATE_TIME, "");
 			if (!TextUtils.isEmpty(dateTime)) {
 				calendar = Utility.getCalendar(dateTime, Utility.CALENDAR_DATE_TIME_FORMAT);
 			} else {
@@ -245,7 +245,7 @@ public class StockAnalyzer {
 				sortOrder);
 		mStockDatabaseManager.getShareBonusList(stock, shareBonusList,
 				sortOrder);
-		mStockDatabaseManager.getStockDataList(stock, Settings.KEY_PERIOD_MONTH,
+		mStockDatabaseManager.getStockDataList(stock, Setting.KEY_PERIOD_MONTH,
 				stockDataList, sortOrder);
 
 		setupTotalShare(stockFinancialList, totalShareList);
@@ -314,16 +314,16 @@ public class StockAnalyzer {
 			return;
 		}
 
-		if (stockFinancialList.size() < Constants.SEASONS_IN_A_YEAR + 1) {
+		if (stockFinancialList.size() < Constant.SEASONS_IN_A_YEAR + 1) {
 			return;
 		}
 
 		for (int i = 0; i < stockFinancialList.size()
-				- Constants.SEASONS_IN_A_YEAR; i++) {
+				- Constant.SEASONS_IN_A_YEAR; i++) {
 			mainBusinessIncomeInYear = 0;
 			netProfitInYear = 0;
 			netProfitPerShareInYear = 0;
-			for (int j = 0; j < Constants.SEASONS_IN_A_YEAR; j++) {
+			for (int j = 0; j < Constant.SEASONS_IN_A_YEAR; j++) {
 				StockFinancial current = stockFinancialList.get(i + j);
 				StockFinancial prev = stockFinancialList.get(i + j + 1);
 
@@ -366,15 +366,15 @@ public class StockAnalyzer {
 			return;
 		}
 
-		if (stockFinancialList.size() < Constants.SEASONS_IN_A_YEAR + 1) {
+		if (stockFinancialList.size() < Constant.SEASONS_IN_A_YEAR + 1) {
 			return;
 		}
 
 		for (int i = 0; i < stockFinancialList.size()
-				- Constants.SEASONS_IN_A_YEAR; i++) {
+				- Constant.SEASONS_IN_A_YEAR; i++) {
 			StockFinancial stockFinancial = stockFinancialList.get(i);
 			StockFinancial prev = stockFinancialList.get(i
-					+ Constants.SEASONS_IN_A_YEAR);
+					+ Constant.SEASONS_IN_A_YEAR);
 
 			if (prev == null || prev.getNetProfitPerShareInYear() == 0) {
 				continue;
@@ -382,7 +382,7 @@ public class StockAnalyzer {
 
 			rate = Utility.Round(stockFinancial.getNetProfitPerShareInYear()
 					/ prev.getNetProfitPerShareInYear(),
-					Constants.DOUBLE_FIXED_DECIMAL);
+					Constant.DOUBLE_FIXED_DECIMAL);
 
 			stockFinancial.setRate(rate);
 		}
@@ -395,15 +395,15 @@ public class StockAnalyzer {
 			return;
 		}
 
-		if (stockFinancialList.size() < Constants.SEASONS_IN_A_YEAR + 1) {
+		if (stockFinancialList.size() < Constant.SEASONS_IN_A_YEAR + 1) {
 			return;
 		}
 
 		for (int i = 0; i < stockFinancialList.size()
-				- Constants.SEASONS_IN_A_YEAR; i++) {
+				- Constant.SEASONS_IN_A_YEAR; i++) {
 			StockFinancial stockFinancial = stockFinancialList.get(i);
 			StockFinancial prev = stockFinancialList.get(i
-					+ Constants.SEASONS_IN_A_YEAR);
+					+ Constant.SEASONS_IN_A_YEAR);
 
 			if (prev == null || prev.getBookValuePerShare() == 0) {
 				continue;
@@ -412,7 +412,7 @@ public class StockAnalyzer {
 			roe = Utility.Round(
 					100.0 * stockFinancial.getNetProfitPerShareInYear()
 							/ prev.getBookValuePerShare(),
-					Constants.DOUBLE_FIXED_DECIMAL);
+					Constant.DOUBLE_FIXED_DECIMAL);
 			if (roe < 0) {
 				roe = 0;
 			}
@@ -447,17 +447,17 @@ public class StockAnalyzer {
 								Utility.CALENDAR_DATE_FORMAT))) {
 					pe = Utility.Round(
 							100.0 * stockFinancial.getNetProfitPerShareInYear()
-									/ price, Constants.DOUBLE_FIXED_DECIMAL);
+									/ price, Constant.DOUBLE_FIXED_DECIMAL);
 
 					if (stockFinancial.getBookValuePerShare() != 0) {
 						pb = Utility.Round(
 								price / stockFinancial.getBookValuePerShare(),
-								Constants.DOUBLE_FIXED_DECIMAL);
+								Constant.DOUBLE_FIXED_DECIMAL);
 					}
 
 					roi = Utility.Round(stockFinancial.getRoe() * pe
-							* Constants.ROI_COEFFICIENT,
-							Constants.DOUBLE_FIXED_DECIMAL);
+							* Constant.ROI_COEFFICIENT,
+							Constant.DOUBLE_FIXED_DECIMAL);
 					if (roi < 0) {
 						roi = 0;
 					}
@@ -546,7 +546,7 @@ public class StockAnalyzer {
 				stock.setRDate(shareBonus.getRDate());
 			}
 			stock.setDividend(Utility.Round(totalDivident,
-					Constants.DOUBLE_FIXED_DECIMAL));
+					Constant.DOUBLE_FIXED_DECIMAL));
 			stock.setupBonus();
 			stock.setupYield();
 			stock.setupDividendRatio();
@@ -657,24 +657,24 @@ public class StockAnalyzer {
 		//stockVertexAnalyzer.analyzeOverlap(stockDataList, segmentDataList, overlapList);
 		//stockVertexAnalyzer.testShowVertextNumber(stockDataList, stockDataList);
 
-		if (Preferences.getBoolean(mContext, Settings.KEY_LOOPBACK,false)) {
-			if (Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_DIRECT,false)) {
+		if (Preferences.getBoolean(mContext, Setting.KEY_LOOPBACK,false)) {
+			if (Preferences.getBoolean(mContext, Setting.KEY_DISPLAY_DIRECT,false)) {
 				stockVertexAnalyzer.debugShow(stockDataList, stockDataList);
 			}
 
-			if (Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_DRAW,false)) {
+			if (Preferences.getBoolean(mContext, Setting.KEY_DISPLAY_DRAW,false)) {
 				stockVertexAnalyzer.debugShow(stockDataList, drawDataList);
 			}
 
-			if (Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_STROKE,false)) {
+			if (Preferences.getBoolean(mContext, Setting.KEY_DISPLAY_STROKE,false)) {
 				stockVertexAnalyzer.debugShow(stockDataList, strokeDataList);
 			}
 
-			if (Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_SEGMENT,false)) {
+			if (Preferences.getBoolean(mContext, Setting.KEY_DISPLAY_SEGMENT,false)) {
 				stockVertexAnalyzer.debugShow(stockDataList, segmentDataList);
 			}
 
-            if (Preferences.getBoolean(mContext, Settings.KEY_DISPLAY_LINE,false)) {
+            if (Preferences.getBoolean(mContext, Setting.KEY_DISPLAY_LINE,false)) {
                 stockVertexAnalyzer.debugShow(stockDataList, lineDataList);
             }
 		}
@@ -690,8 +690,8 @@ public class StockAnalyzer {
 		mStockDatabaseManager.getShareBonusList(stock, shareBonusList,
 				DatabaseContract.COLUMN_DATE + " DESC ");
 
-		if (period.equals(Settings.KEY_PERIOD_MIN60)) {
-			stockQuantAnalyzer.analyze(mContext, stock, period, stockDataList, shareBonusList);
+		if (period.equals(Setting.KEY_PERIOD_MIN60)) {
+			stockQuantAnalyzer.analyze(mContext, stock, stockDataList, shareBonusList);
 		}
 	}
 
@@ -1021,7 +1021,7 @@ public class StockAnalyzer {
 			}
 		}
 
-		if (!period.equals(Settings.KEY_PERIOD_MONTH) && !period.equals(Settings.KEY_PERIOD_WEEK)) {
+		if (!period.equals(Setting.KEY_PERIOD_MONTH) && !period.equals(Setting.KEY_PERIOD_WEEK)) {
 			if (stockData.getNaturalRally() > 0) {
 				action += StockData.ACTION_NATURAL_RALLY;
 			}
@@ -1180,14 +1180,14 @@ public class StockAnalyzer {
 		notifyToBuy1 = true;
 		notifyToSell1 = true;
 
-		for (String period : Settings.KEY_PERIODS) {
+		for (String period : Setting.KEY_PERIODS) {
 			if (Preferences.getBoolean(mContext, period, false)) {
 				String action = stock.getAction(period);
 
 				notifyToBuy2 = false;
 				notifyToSell2 = false;
 
-				if (Preferences.getBoolean(mContext, Settings.KEY_NOTIFICATION_OPERATE,
+				if (Preferences.getBoolean(mContext, Setting.KEY_NOTIFICATION_OPERATE,
 						true)) {
 					if (action.contains(StockData.ACTION_BUY2 + StockData.ACTION_BUY2)) {
 						notifyToBuy2 = true;
@@ -1233,7 +1233,7 @@ public class StockAnalyzer {
 
 		RecordFile.writeNotificationFile(contentTitle.toString());
 
-		notify((int) stock.getId(), Constants.MESSAGE_CHANNEL_ID, Constants.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
+		notify((int) stock.getId(), Constant.MESSAGE_CHANNEL_ID, Constant.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
 				contentTitle.toString(), "");
 	}
 

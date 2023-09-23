@@ -5,14 +5,14 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.util.Log;
 
-import com.android.orion.setting.Constants;
+import com.android.orion.setting.Constant;
 import com.android.orion.utility.Market;
 import com.android.orion.utility.Utility;
 
 import java.util.Calendar;
 
 public class OrionAlarmManager {
-	static final String TAG = Constants.TAG + " "
+	static final String TAG = Constant.TAG + " "
 			+ OrionAlarmManager.class.getSimpleName();
 
 	Context mContext = null;
@@ -35,7 +35,7 @@ public class OrionAlarmManager {
 
 	void setIntervalMillis(long intervalMillis) {
 		if (intervalMillis <= 0) {
-			mIntervalMillis = Constants.DEFAULT_ALARM_INTERVAL;
+			mIntervalMillis = Constant.DEFAULT_ALARM_INTERVAL;
 		} else {
 			mIntervalMillis = intervalMillis;
 		}

@@ -2,7 +2,7 @@ package com.android.orion.utility;
 
 import android.os.Environment;
 
-import com.android.orion.setting.Constants;
+import com.android.orion.setting.Constant;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;
 
@@ -31,7 +31,7 @@ public class RecordFile {
         logString.append("\r\n");
 
         try {
-            fileName = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Android/" + Constants.DEAL + Constants.FILE_EXT_TEXT;
+            fileName = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Android/" + Constant.DEAL + Constant.FILE_EXT_TEXT;
             Utility.writeFile(fileName, logString.toString(), true);
         } catch (Exception e) {
             e.printStackTrace();
@@ -46,7 +46,7 @@ public class RecordFile {
         logString.append(" " + Utility.getCurrentDateTimeString() + "\r\n");
 
         try {
-            fileName = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Android/" + Constants.NOTIFICATION + Constants.FILE_EXT_TEXT;
+            fileName = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Android/" + Constant.NOTIFICATION + Constant.FILE_EXT_TEXT;
             Utility.writeFile(fileName, logString.toString(), true);
         } catch (Exception e) {
             e.printStackTrace();

@@ -18,9 +18,9 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.android.orion.setting.Constants;
+import com.android.orion.setting.Constant;
 import com.android.orion.R;
-import com.android.orion.setting.Settings;
+import com.android.orion.setting.Setting;
 import com.android.orion.database.IndexComponent;
 import com.android.orion.database.Stock;
 import com.android.orion.utility.Utility;
@@ -50,6 +50,8 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 	Button mButtonOk;
 	Button mButtonCancel;
 
+	double mStockThreshold;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -66,9 +68,10 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 			mRadioGroupSE.setEnabled(false);
 			mEditTextStockCode.setEnabled(false);
 
-			mStock.setId(mIntent.getLongExtra(Constants.EXTRA_STOCK_ID,
+			mStock.setId(mIntent.getLongExtra(Constant.EXTRA_STOCK_ID,
 					Stock.INVALID_ID));
 			mStockDatabaseManager.getStockById(mStock);
+			mStockThreshold = mStock.getThreshold();
 			updateView();
 		}
 	}
@@ -101,13 +104,13 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 
 		mListStockOperate = new ArrayList<String>();
 		mListStockOperate.add("");
-		mListStockOperate.add(Settings.KEY_PERIOD_MONTH);
-		mListStockOperate.add(Settings.KEY_PERIOD_WEEK);
-		mListStockOperate.add(Settings.KEY_PERIOD_DAY);
-		mListStockOperate.add(Settings.KEY_PERIOD_MIN60);
-		mListStockOperate.add(Settings.KEY_PERIOD_MIN30);
-		mListStockOperate.add(Settings.KEY_PERIOD_MIN15);
-		mListStockOperate.add(Settings.KEY_PERIOD_MIN5);
+		mListStockOperate.add(Setting.KEY_PERIOD_MONTH);
+		mListStockOperate.add(Setting.KEY_PERIOD_WEEK);
+		mListStockOperate.add(Setting.KEY_PERIOD_DAY);
+		mListStockOperate.add(Setting.KEY_PERIOD_MIN60);
+		mListStockOperate.add(Setting.KEY_PERIOD_MIN30);
+		mListStockOperate.add(Setting.KEY_PERIOD_MIN15);
+		mListStockOperate.add(Setting.KEY_PERIOD_MIN5);
 
 		mArrayAdapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_spinner_item, mListStockOperate);
@@ -175,11 +178,11 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 		mEditTextStockName.setText(mStock.getName());
 		mEditTextStockCode.setText(mStock.getCode());
 		if (mStock.getThreshold() == 0) {
-            mStock.setThreshold(Constants.STOCK_THRESHOLD);
+            mStock.setThreshold(Constant.STOCK_THRESHOLD);
         }
 		mEditTextStockThreshold.setText(String.valueOf(mStock.getThreshold()));
 		if (mStock.getQuantVolume() == 0) {
-			mStock.setQuantVolume(Constants.STOCK_QUANT_VOLUME);
+			mStock.setQuantVolume(Constant.STOCK_QUANT_VOLUME);
 		}
 		mEditTextStockQuantVolume.setText(String.valueOf(mStock.getQuantVolume()));
 		mEditTextStockYield.setText(String.valueOf(mStock.getYield()));
@@ -255,7 +258,11 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 
 			String threshold = mEditTextStockThreshold.getText().toString();
 			double thresholdValue = TextUtils.isEmpty(threshold) ? 0 : Double.valueOf(threshold);
-			mStock.setThreshold(thresholdValue);
+			if (thresholdValue != mStockThreshold) {
+				mStockThreshold = thresholdValue;
+				mStock.setThreshold(mStockThreshold);
+				mStockDatabaseManager.deleteStockQuant(mStock);
+			}
 
 			String quantVolume = mEditTextStockQuantVolume.getText().toString();
 			long quantVolumeValue = TextUtils.isEmpty(quantVolume) ? 0 : Long.valueOf(quantVolume);
@@ -296,7 +303,7 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 						mStock.getContentValuesForEdit());
 			}
 
-			getIntent().putExtra(Constants.EXTRA_STOCK_ID, mStock.getId());
+			getIntent().putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
 
 			setResult(RESULT_OK, getIntent());
 

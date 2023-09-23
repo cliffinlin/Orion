@@ -24,9 +24,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.android.orion.provider.StockDataProvider;
-import com.android.orion.setting.Constants;
+import com.android.orion.setting.Constant;
 import com.android.orion.R;
-import com.android.orion.setting.Settings;
+import com.android.orion.setting.Setting;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.StockFinancial;
 import com.android.orion.database.IPO;
@@ -38,7 +38,7 @@ import com.android.orion.utility.StopWatch;
 import com.android.orion.utility.Utility;
 
 public class SinaFinance extends StockDataProvider {
-	static final String TAG = Constants.TAG + " "
+	static final String TAG = Constant.TAG + " "
 			+ SinaFinance.class.getSimpleName();
 
 	public static final String SINA_FINANCE_URL_HQ_NODE_DATA = "http://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/Market_Center.getHQNodeData?";
@@ -117,26 +117,26 @@ public class SinaFinance extends StockDataProvider {
 
 	@Override
 	public int getAvailableHistoryLength(String period) {
-		if (period.equals(Settings.KEY_PERIOD_MIN1)) {
-			return Constants.DOWNLOAD_HISTORY_LENGTH_NONE;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
+		if (period.equals(Setting.KEY_PERIOD_MIN1)) {
+			return Constant.DOWNLOAD_HISTORY_LENGTH_NONE;
+		} else if (period.equals(Setting.KEY_PERIOD_MIN5)) {
 			return DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN5;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN15)) {
 			return DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN15;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN30)) {
 			return DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN30;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN60)) {
 			return DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN60;
-		} else if (period.equals(Settings.KEY_PERIOD_DAY)) {
-			return Constants.DOWNLOAD_HISTORY_LENGTH_UNLIMITED;
-		} else if (period.equals(Settings.KEY_PERIOD_WEEK)) {
-			return Constants.DOWNLOAD_HISTORY_LENGTH_UNLIMITED;
-		} else if (period.equals(Settings.KEY_PERIOD_MONTH)) {
-			return Constants.DOWNLOAD_HISTORY_LENGTH_UNLIMITED;
-		} else if (period.equals(Settings.KEY_PERIOD_QUARTER)) {
-			return Constants.DOWNLOAD_HISTORY_LENGTH_NONE;
-		} else if (period.equals(Settings.KEY_PERIOD_YEAR)) {
-			return Constants.DOWNLOAD_HISTORY_LENGTH_NONE;
+		} else if (period.equals(Setting.KEY_PERIOD_DAY)) {
+			return Constant.DOWNLOAD_HISTORY_LENGTH_UNLIMITED;
+		} else if (period.equals(Setting.KEY_PERIOD_WEEK)) {
+			return Constant.DOWNLOAD_HISTORY_LENGTH_UNLIMITED;
+		} else if (period.equals(Setting.KEY_PERIOD_MONTH)) {
+			return Constant.DOWNLOAD_HISTORY_LENGTH_UNLIMITED;
+		} else if (period.equals(Setting.KEY_PERIOD_QUARTER)) {
+			return Constant.DOWNLOAD_HISTORY_LENGTH_NONE;
+		} else if (period.equals(Setting.KEY_PERIOD_YEAR)) {
+			return Constant.DOWNLOAD_HISTORY_LENGTH_NONE;
 		} else {
 		}
 
@@ -189,25 +189,25 @@ public class SinaFinance extends StockDataProvider {
 	int getPeriodMinutes(String period) {
 		int result = 0;
 
-		if (period.equals(Settings.KEY_PERIOD_MIN1)) {
+		if (period.equals(Setting.KEY_PERIOD_MIN1)) {
 			result = PERIOD_MINUTES_MIN1;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN5)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN5)) {
 			result = PERIOD_MINUTES_MIN5;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN15)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN15)) {
 			result = PERIOD_MINUTES_MIN15;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN30)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN30)) {
 			result = PERIOD_MINUTES_MIN30;
-		} else if (period.equals(Settings.KEY_PERIOD_MIN60)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MIN60)) {
 			result = PERIOD_MINUTES_MIN60;
-		} else if (period.equals(Settings.KEY_PERIOD_DAY)) {
+		} else if (period.equals(Setting.KEY_PERIOD_DAY)) {
 			result = PERIOD_MINUTES_DAY;
-		} else if (period.equals(Settings.KEY_PERIOD_WEEK)) {
+		} else if (period.equals(Setting.KEY_PERIOD_WEEK)) {
 			result = PERIOD_MINUTES_WEEK;
-		} else if (period.equals(Settings.KEY_PERIOD_MONTH)) {
+		} else if (period.equals(Setting.KEY_PERIOD_MONTH)) {
 			result = PERIOD_MINUTES_MONTH;
-		} else if (period.equals(Settings.KEY_PERIOD_QUARTER)) {
+		} else if (period.equals(Setting.KEY_PERIOD_QUARTER)) {
 			result = PERIOD_MINUTES_QUARTER;
-		} else if (period.equals(Settings.KEY_PERIOD_YEAR)) {
+		} else if (period.equals(Setting.KEY_PERIOD_YEAR)) {
 			result = PERIOD_MINUTES_YEAR;
 		} else {
 		}
@@ -361,7 +361,7 @@ public class SinaFinance extends StockDataProvider {
 
 			if (!TextUtils.isEmpty(stockInfo[7])) {
 				stock.setTotalShare(Double.valueOf(stockInfo[7])
-						* Constants.DOUBLE_CONSTANT_WAN);
+						* Constant.DOUBLE_CONSTANT_WAN);
 			}
 
 			stock.setInformationModified(Utility.getCurrentDateTimeString());
@@ -667,13 +667,17 @@ public class SinaFinance extends StockDataProvider {
 					stockData.setVertexLow(stockData.getLow());
 
 					if (bulkInsert) {
-						if (isMinutePeriod(stockData)) {
-							stockDataMap.put(stockData.getDateTime(), new StockData(stockData));
-						}
-
 						stockData.setCreated(Utility.getCurrentDateTimeString());
 						stockData.setModified(Utility.getCurrentDateTimeString());
-						contentValuesList.add(stockData.getContentValues());
+
+						if (isMinutePeriod(stockData)) {
+							if (!stockDataMap.containsKey(stockData.getDateTime())) {
+								stockDataMap.put(stockData.getDateTime(), new StockData(stockData));
+								contentValuesList.add(stockData.getContentValues());
+							}
+						} else {
+							contentValuesList.add(stockData.getContentValues());
+						}
 					} else {
 						if (!mStockDatabaseManager.isStockDataExist(stockData)) {
 							stockData.setCreated(Utility
@@ -727,7 +731,7 @@ public class SinaFinance extends StockDataProvider {
 
 		try {
 			fileName = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Orion/"
-					+ stock.getSE().toUpperCase(Locale.getDefault()) + "#" + stock.getCode() + Constants.FILE_EXT_TEXT;
+					+ stock.getSE().toUpperCase(Locale.getDefault()) + "#" + stock.getCode() + Constant.FILE_EXT_TEXT;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -741,7 +745,7 @@ public class SinaFinance extends StockDataProvider {
 
 		try {
 			fileName = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Orion/"
-					+ stock.getSE().toUpperCase(Locale.getDefault()) + "#" + stock.getCode() + "#" + period + Constants.FILE_EXT_TEXT;
+					+ stock.getSE().toUpperCase(Locale.getDefault()) + "#" + stock.getCode() + "#" + period + Constant.FILE_EXT_TEXT;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -855,10 +859,10 @@ public class SinaFinance extends StockDataProvider {
 				}
 			}
 
-			exportStockDataFile(stock, Settings.KEY_PERIOD_MIN5, StockDataMin5List);
-			exportStockDataFile(stock, Settings.KEY_PERIOD_MIN15, StockDataMin15List);
-			exportStockDataFile(stock, Settings.KEY_PERIOD_MIN30, StockDataMin30List);
-			exportStockDataFile(stock, Settings.KEY_PERIOD_MIN60, StockDataMin60List);
+			exportStockDataFile(stock, Setting.KEY_PERIOD_MIN5, StockDataMin5List);
+			exportStockDataFile(stock, Setting.KEY_PERIOD_MIN15, StockDataMin15List);
+			exportStockDataFile(stock, Setting.KEY_PERIOD_MIN30, StockDataMin30List);
+			exportStockDataFile(stock, Setting.KEY_PERIOD_MIN60, StockDataMin60List);
 			Utility.deleteFile(fileName);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -910,18 +914,18 @@ public class SinaFinance extends StockDataProvider {
 		boolean result = false;
 
 		switch (stockData.getPeriod()) {
-			case Settings.KEY_PERIOD_MIN1:
-			case Settings.KEY_PERIOD_MIN5:
-			case Settings.KEY_PERIOD_MIN15:
-			case Settings.KEY_PERIOD_MIN30:
-			case Settings.KEY_PERIOD_MIN60:
+			case Setting.KEY_PERIOD_MIN1:
+			case Setting.KEY_PERIOD_MIN5:
+			case Setting.KEY_PERIOD_MIN15:
+			case Setting.KEY_PERIOD_MIN30:
+			case Setting.KEY_PERIOD_MIN60:
 				result = true;
 				break;
-			case Settings.KEY_PERIOD_DAY:
-			case Settings.KEY_PERIOD_WEEK:
-			case Settings.KEY_PERIOD_MONTH:
-			case Settings.KEY_PERIOD_QUARTER:
-			case Settings.KEY_PERIOD_YEAR:
+			case Setting.KEY_PERIOD_DAY:
+			case Setting.KEY_PERIOD_WEEK:
+			case Setting.KEY_PERIOD_MONTH:
+			case Setting.KEY_PERIOD_QUARTER:
+			case Setting.KEY_PERIOD_YEAR:
 			default:
 				break;
 		}
@@ -940,26 +944,26 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		switch (stockData.getPeriod()) {
-			case Settings.KEY_PERIOD_MIN1:
-				minutes = Constants.SCHEDULE_INTERVAL_MIN1;
+			case Setting.KEY_PERIOD_MIN1:
+				minutes = Constant.SCHEDULE_INTERVAL_MIN1;
 				break;
-			case Settings.KEY_PERIOD_MIN5:
-				minutes = Constants.SCHEDULE_INTERVAL_MIN5;
+			case Setting.KEY_PERIOD_MIN5:
+				minutes = Constant.SCHEDULE_INTERVAL_MIN5;
 				break;
-			case Settings.KEY_PERIOD_MIN15:
-				minutes = Constants.SCHEDULE_INTERVAL_MIN15;
+			case Setting.KEY_PERIOD_MIN15:
+				minutes = Constant.SCHEDULE_INTERVAL_MIN15;
 				break;
-			case Settings.KEY_PERIOD_MIN30:
-				minutes = Constants.SCHEDULE_INTERVAL_MIN30;
+			case Setting.KEY_PERIOD_MIN30:
+				minutes = Constant.SCHEDULE_INTERVAL_MIN30;
 				break;
-			case Settings.KEY_PERIOD_MIN60:
-				minutes = Constants.SCHEDULE_INTERVAL_MIN60;
+			case Setting.KEY_PERIOD_MIN60:
+				minutes = Constant.SCHEDULE_INTERVAL_MIN60;
 				break;
-			case Settings.KEY_PERIOD_DAY:
-			case Settings.KEY_PERIOD_WEEK:
-			case Settings.KEY_PERIOD_MONTH:
-			case Settings.KEY_PERIOD_QUARTER:
-			case Settings.KEY_PERIOD_YEAR:
+			case Setting.KEY_PERIOD_DAY:
+			case Setting.KEY_PERIOD_WEEK:
+			case Setting.KEY_PERIOD_MONTH:
+			case Setting.KEY_PERIOD_QUARTER:
+			case Setting.KEY_PERIOD_YEAR:
 			default:
 				break;
 		}
@@ -1570,7 +1574,7 @@ public class SinaFinance extends StockDataProvider {
 						totalShare.setDate(dateString);
 						totalShare.setTotalShare(Double
 								.valueOf(totalShareString)
-								* Constants.DOUBLE_CONSTANT_WAN);
+								* Constant.DOUBLE_CONSTANT_WAN);
 					} else {
 						continue;
 					}

@@ -8,7 +8,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.android.orion.R;
-import com.android.orion.setting.Settings;
+import com.android.orion.setting.Setting;
 import com.android.orion.utility.Preferences;
 
 public class ListActivity extends StorageActivity {
@@ -18,7 +18,7 @@ public class ListActivity extends StorageActivity {
 		super.onCreate(savedInstanceState);
 
 		if (!Preferences.getBoolean(mContext,
-				Settings.KEY_NOTIFICATION_OPERATE, false)) {
+				Setting.KEY_NOTIFICATION_OPERATE, false)) {
 			Toast.makeText(
 					this,
 					getResources().getString(R.string.notification_is_off),
@@ -26,7 +26,7 @@ public class ListActivity extends StorageActivity {
 		}
 
 		if (Preferences.getBoolean(mContext,
-				Settings.KEY_LOOPBACK, false)) {
+				Setting.KEY_LOOPBACK, false)) {
 			Toast.makeText(
 					this,
 					getResources().getString(R.string.loopback_is_on),
