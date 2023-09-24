@@ -87,6 +87,7 @@ public class StockListActivity extends ListActivity implements
 					mStockDatabaseManager.deleteStockData();
 					mStockDatabaseManager.deleteStockFinancial();
 					mStockDatabaseManager.deleteShareBonus();
+					mStockDatabaseManager.deleteStockQuant();
 					mOrionService.download();
 					restartLoader();
 				}
