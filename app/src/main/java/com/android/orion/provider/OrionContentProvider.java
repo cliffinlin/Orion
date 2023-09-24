@@ -17,7 +17,7 @@ import android.provider.BaseColumns;
 import android.text.TextUtils;
 
 import com.android.orion.database.DatabaseContract;
-import com.android.orion.database.DatabaseManager;
+import com.android.orion.manager.DatabaseManager;
 
 public class OrionContentProvider extends ContentProvider {
 	private static final int STOCK = 100;

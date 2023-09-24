@@ -682,6 +682,7 @@ public class StockQuantListActivity extends ListActivity implements
             mSelection = DatabaseContract.COLUMN_SE + " = " + "\'" + se + "\'"
                     + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
                     + code + "\'";
+            mGroupBy = "";
         } else {
             mSelection = "1";
             mGroupBy = ") GROUP BY (" + DatabaseContract.COLUMN_SE

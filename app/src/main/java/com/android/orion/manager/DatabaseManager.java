@@ -1,4 +1,4 @@
-package com.android.orion.database;
+package com.android.orion.manager;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import androidx.annotation.NonNull;
+
+import com.android.orion.database.DatabaseOpenHelper;
 
 public class DatabaseManager {
 
@@ -29,7 +31,7 @@ public class DatabaseManager {
 		}
 	}
 
-	public DatabaseManager(@NonNull Context context) {
+	DatabaseManager(@NonNull Context context) {
 		mContext = context;
 
 		mContentResolver = mContext.getContentResolver();

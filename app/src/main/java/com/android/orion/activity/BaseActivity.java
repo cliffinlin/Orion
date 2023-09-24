@@ -34,7 +34,7 @@ import com.android.orion.database.StockFinancial;
 import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
-import com.android.orion.database.StockDatabaseManager;
+import com.android.orion.manager.StockDatabaseManager;
 import com.android.orion.database.StockDeal;
 import com.android.orion.database.TotalShare;
 import com.android.orion.utility.Utility;
@@ -220,6 +220,19 @@ public class BaseActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 		mResumed = true;
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+
+		setIntent(intent);
+
+		mIntent = getIntent();
+		if (mIntent != null) {
+			mAction = mIntent.getAction();
+			mBundle = mIntent.getExtras();
+		}
 	}
 
 	void onServiceConnected() {

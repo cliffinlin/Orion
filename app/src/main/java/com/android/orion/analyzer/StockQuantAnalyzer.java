@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
-import com.android.orion.database.StockDatabaseManager;
+import com.android.orion.manager.StockDatabaseManager;
 import com.android.orion.database.StockQuant;
 import com.android.orion.setting.Constant;
 

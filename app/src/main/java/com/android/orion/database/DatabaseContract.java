@@ -518,9 +518,9 @@ public final class DatabaseContract {
                 + "/" + DATABASE_NAME + "/" + TABLE_NAME;
         public static final String[] PROJECTION_ALL = {_ID, COLUMN_INDEX_SE, COLUMN_INDEX_CODE, COLUMN_INDEX_NAME,
                 COLUMN_SE, COLUMN_CODE, COLUMN_NAME, COLUMN_CREATED, COLUMN_MODIFIED};
-        static final String SORT_ORDER_DEFAULT = COLUMN_INDEX_CODE
+        public static final String SORT_ORDER_DEFAULT = COLUMN_INDEX_CODE
                 + " ASC";
-        static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
+        public static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
                 + TABLE_NAME;
         private static final String CREATE_TABLE_CONTENT = " (" + _ID
                 + " INTEGER PRIMARY KEY,"
