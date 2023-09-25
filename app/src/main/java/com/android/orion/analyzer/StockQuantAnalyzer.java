@@ -31,9 +31,9 @@ public class StockQuantAnalyzer {
     String mBuyDate = "";
     String mSellDate = "";
 
-    ArrayList<ShareBonus> mShareBonusList = new ArrayList<>();;
-    ArrayList<StockQuant> mBuyList = new ArrayList<>();;
-    ArrayList<StockQuant> mStockQuantList = new ArrayList<>();;
+    ArrayList<ShareBonus> mShareBonusList = new ArrayList<>();
+    ArrayList<StockQuant> mBuyList = new ArrayList<>();
+    ArrayList<StockQuant> mStockQuantList = new ArrayList<>();
     ArrayList<ContentValues> mContentValuesList = new ArrayList<ContentValues>();
 
     Context mContext;
@@ -55,7 +55,7 @@ public class StockQuantAnalyzer {
         mSellDate = "";
     }
 
-    void setupStockQuantBuy(Stock stock, StockData stockData, double price, StockQuant stockQuant) {
+    void setupStockQuantBuy(Stock stock, StockData stockData, double price) {
         if (stockData.getDate().equals(mBuyDate)) {
             return;
         }
@@ -63,6 +63,8 @@ public class StockQuantAnalyzer {
         if (mFirstBuy == 0) {
             mFirstBuy = price;
         }
+
+        StockQuant stockQuant = new StockQuant();
 
         stockQuant.setAction(StockData.ACTION_BUY);
 
@@ -113,66 +115,72 @@ public class StockQuantAnalyzer {
         }
     }
 
-    void setupStockQuantSell(Stock stock, StockData stockData, double price, StockQuant stockQuant) {
+    void setupStockQuantSell(Stock stock, StockData stockData, double price) {
+        StockQuant stockQuant;
+
         if (stockData.getDate().equals(mSellDate)) {
             return;
         }
 
-        if (mHold == stock.getQuantVolume()) {
-            if (stockData.getDate().equals(stockQuant.getCreated().split(" ")[0])) {
+        while (mBuyList.size() > 0) {
+            stockQuant = mBuyList.get(0);
+
+            if (mHold == stock.getQuantVolume()) {
+                if (stockData.getDate().equals(stockQuant.getCreated().split(" ")[0])) {
+                    return;
+                }
+            }
+
+            stockQuant.setAction(StockData.ACTION_SELL);
+
+            stockQuant.setSE(stock.getSE());
+            stockQuant.setCode(stock.getCode());
+            stockQuant.setName(stock.getName());
+            stockQuant.setThreshold(stock.getThreshold());
+
+            stockQuant.setVolume(-1 * stock.getQuantVolume());
+            stockQuant.setPrice(price);
+            stockQuant.setSell(price);
+
+            stockQuant.setupSellFee(mShareBonusList);
+            stockQuant.setupNet();
+            stockQuant.setupValue();
+            stockQuant.setupProfit();
+
+            if (stockQuant.getNet() < Constant.STOCK_THRESHOLD) {
                 return;
             }
-        }
 
-        stockQuant.setAction(StockData.ACTION_SELL);
+            mHold -= stock.getQuantVolume();
+            stockQuant.setHold(mHold);
+            stockQuant.setQuantX(mHold / stock.getQuantVolume());
 
-        stockQuant.setSE(stock.getSE());
-        stockQuant.setCode(stock.getCode());
-        stockQuant.setName(stock.getName());
-        stockQuant.setThreshold(stock.getThreshold());
+            mQuantProfit += stockQuant.getProfit();
+            stockQuant.setQuantProfit(mQuantProfit);
 
-        stockQuant.setVolume(-1 * stock.getQuantVolume());
-        stockQuant.setPrice(price);
-        stockQuant.setSell(price);
+            mValuation = mHold * price;
+            stockQuant.setValuation(mValuation);
 
-        stockQuant.setupSellFee(mShareBonusList);
-        stockQuant.setupNet();
-        stockQuant.setupValue();
-        stockQuant.setupProfit();
+            stockQuant.setupQuantProfitMargin(mFirstBuy * stock.getQuantVolume());
 
-        if (stockQuant.getNet() < Constant.STOCK_THRESHOLD) {
-            return;
-        }
+            stockQuant.setModified(stockData.getDateTime());
 
-        mHold -= stock.getQuantVolume();
-        stockQuant.setHold(mHold);
-        stockQuant.setQuantX(mHold / stock.getQuantVolume());
+            mBuyList.remove(stockQuant);
+            Collections.sort(mBuyList, mComparator);
 
-        mQuantProfit += stockQuant.getProfit();
-        stockQuant.setQuantProfit(mQuantProfit);
+            stock.setQuantProfit(stockQuant.getQuantProfit());
+            stock.setQuantProfitMargin(stockQuant.getQuantProfitMargin());
 
-        mValuation = mHold * price;
-        stockQuant.setValuation(mValuation);
+            mSellDate = stockData.getDate();
 
-        stockQuant.setupQuantProfitMargin(mFirstBuy * stock.getQuantVolume());
-
-        stockQuant.setModified(stockData.getDateTime());
-
-        mBuyList.remove(stockQuant);
-        Collections.sort(mBuyList, mComparator);
-
-        stock.setQuantProfit(stockQuant.getQuantProfit());
-        stock.setQuantProfitMargin(stockQuant.getQuantProfitMargin());
-
-        mSellDate = stockData.getDate();
-
-        if (mBulkInsert) {
-            mContentValuesList.add(stockQuant.getContentValues());
-        } else {
-            if (!mStockDatabaseManager.isStockQuantExist(stockQuant)) {
-                mStockDatabaseManager.insertStockQuant(stockQuant);
+            if (mBulkInsert) {
+                mContentValuesList.add(stockQuant.getContentValues());
             } else {
-                mStockDatabaseManager.updateStockQuantById(stockQuant);
+                if (!mStockDatabaseManager.isStockQuantExist(stockQuant)) {
+                    mStockDatabaseManager.insertStockQuant(stockQuant);
+                } else {
+                    mStockDatabaseManager.updateStockQuantById(stockQuant);
+                }
             }
         }
     }
@@ -210,21 +218,13 @@ public class StockQuantAnalyzer {
             }
 
             if (stockData.getNaturalReaction() > 0) {
-                StockQuant stockQuant = new StockQuant();
-                setupStockQuantBuy(stock, stockData, stockData.getNaturalReaction(), stockQuant);
+                setupStockQuantBuy(stock, stockData, stockData.getNaturalReaction());
             } else if (stockData.getDownwardTrend() > 0) {
-                StockQuant stockQuant = new StockQuant();
-                setupStockQuantBuy(stock, stockData, stockData.getDownwardTrend(), stockQuant);
+                setupStockQuantBuy(stock, stockData, stockData.getDownwardTrend());
             } else if (stockData.getNaturalRally() > 0) {
-                if (mBuyList.size() > 0) {
-                    StockQuant stockQuant = mBuyList.get(0);
-                    setupStockQuantSell(stock, stockData, stockData.getNaturalRally(), stockQuant);
-                }
+                setupStockQuantSell(stock, stockData, stockData.getNaturalRally());
             } else if (stockData.getUpwardTrend() > 0) {
-                if (mBuyList.size() > 0) {
-                    StockQuant stockQuant = mBuyList.get(0);
-                    setupStockQuantSell(stock, stockData, stockData.getUpwardTrend(), stockQuant);
-                }
+                setupStockQuantSell(stock, stockData, stockData.getUpwardTrend());
             }
         }
 
