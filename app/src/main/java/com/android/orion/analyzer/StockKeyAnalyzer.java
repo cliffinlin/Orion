@@ -88,8 +88,8 @@ public class StockKeyAnalyzer {
                     if (current.getHigh() > mNaturalRally) {
                         DEBUG(TAG, "case StockData.THRESHOLD_NATURAL_RALLY: current.getHigh()=" + current.getHigh() + " > mNaturalRally=" +  mNaturalRally);
                         setNaturalRally(current);
-                        if (current.getHigh() > mPrevLow * (1.0 + threshold / 2.0)) {
-                            DEBUG(TAG, "case StockData.THRESHOLD_NATURAL_RALLY: current.getHigh()=" + current.getHigh() + " > mPrevLow * (1.0 + threshold / 2.0)=" + mPrevLow * (1.0 + threshold / 2.0));
+                        if (current.getHigh() > mPrevLow * (1.0 + threshold / 1.0)) {
+                            DEBUG(TAG, "case StockData.THRESHOLD_NATURAL_RALLY: current.getHigh()=" + current.getHigh() + " > mPrevLow * (1.0 + threshold / 1.0)=" + mPrevLow * (1.0 + threshold / 1.0));
                             mThresholdType = StockData.THRESHOLD_UPWARD_TREND;
                             DEBUG(TAG, "case StockData.THRESHOLD_NATURAL_RALLY: mThresholdType = StockData.THRESHOLD_UPWARD_TREND");
                             setUpwardTrend(current);
@@ -141,8 +141,8 @@ public class StockKeyAnalyzer {
                     if (current.getLow() < mNaturalReaction) {
                         DEBUG(TAG, "case StockData.THRESHOLD_NATURAL_REACTION: current.getLow()=" + current.getLow() + " < mNaturalReaction=" + mNaturalReaction);
                         setNaturalReaction(current);
-                        if (current.getLow() < mPrevHigh * (1.0 - threshold / 2.0)) {
-                            DEBUG(TAG, "case StockData.THRESHOLD_NATURAL_REACTION: current.getLow()=" + current.getLow() + "  < mPrevHigh * (1.0 - threshold / 2.0)=" +  mPrevHigh * (1.0 - threshold / 2.0));
+                        if (current.getLow() < mPrevHigh * (1.0 - threshold / 1.0)) {
+                            DEBUG(TAG, "case StockData.THRESHOLD_NATURAL_REACTION: current.getLow()=" + current.getLow() + "  < mPrevHigh * (1.0 - threshold / 1.0)=" +  mPrevHigh * (1.0 - threshold / 1.0));
                             mThresholdType = StockData.THRESHOLD_DOWNWARD_TREND;
                             DEBUG(TAG, "case StockData.THRESHOLD_NATURAL_REACTION: mThresholdType = StockData.THRESHOLD_DOWNWARD_TREND");
                             setDownwardTrend(current);

@@ -218,11 +218,11 @@ public class StockQuantAnalyzer {
             }
 
             if (stockData.getNaturalReaction() > 0) {
-                setupStockQuantBuy(stock, stockData, stockData.getNaturalReaction());
+//                setupStockQuantBuy(stock, stockData, stockData.getNaturalReaction());
             } else if (stockData.getDownwardTrend() > 0) {
                 setupStockQuantBuy(stock, stockData, stockData.getDownwardTrend());
             } else if (stockData.getNaturalRally() > 0) {
-                setupStockQuantSell(stock, stockData, stockData.getNaturalRally());
+//                setupStockQuantSell(stock, stockData, stockData.getNaturalRally());
             } else if (stockData.getUpwardTrend() > 0) {
                 setupStockQuantSell(stock, stockData, stockData.getUpwardTrend());
             }

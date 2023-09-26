@@ -1091,13 +1091,10 @@ public class StockDatabaseManager extends DatabaseManager {
 			return cursor;
 		}
 
-		String selection = DatabaseContract.COLUMN_SE + " = " + "\'"
-				+ StockQuant.getSE() + "\'" + " AND "
-				+ DatabaseContract.COLUMN_CODE + " = " + "\'"
-				+ StockQuant.getCode() + "\'" + " AND "
-				+ DatabaseContract.COLUMN_BUY + " = " + StockQuant.getBuy()
-				+ " AND " + DatabaseContract.COLUMN_VOLUME + " = "
-				+ StockQuant.getVolume();
+		String selection = DatabaseContract.COLUMN_SE + " = " + "\'" + StockQuant.getSE() + "\'"
+				+ " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'" + StockQuant.getCode() + "\'"
+				+ " AND " + DatabaseContract.COLUMN_CREATED + " = " + "\'" + StockQuant.getCreated() + "\'"
+				+ " AND " + DatabaseContract.COLUMN_MODIFIED + " = " + "\'" + StockQuant.getModified() + "\'";
 
 		cursor = queryStockQuant(selection, null, null);
 
