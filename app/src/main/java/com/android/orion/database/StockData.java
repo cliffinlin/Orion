@@ -40,6 +40,8 @@ public class StockData extends StockDatabaseTable {
 	public static final String ACTION_DOWNWARD_TREND = "DD";
 	public static final String ACTION_NATURAL_REACTION = "ND";
 
+	public static final String ACTION_QUANT = "Q";
+
 	public static final String NAME_NATURAL_RALLY = "Rally";
 	public static final String NAME_UPWARD_TREND = "Up";
 	public static final String NAME_DOWNWARD_TREND = "Down";

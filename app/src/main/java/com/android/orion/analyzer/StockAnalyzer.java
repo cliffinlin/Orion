@@ -17,6 +17,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import com.android.orion.database.StockQuant;
 import com.android.orion.setting.Constant;
 import com.android.orion.R;
 import com.android.orion.setting.Setting;
@@ -51,6 +52,8 @@ public class StockAnalyzer {
 	public LocalBroadcastManager mLocalBroadcastManager;
 	NotificationManager mNotificationManager;
 	public StockDatabaseManager mStockDatabaseManager;
+
+	String mQuantPeriod = Setting.KEY_PERIOD_MIN60;
 
 	public StockAnalyzer(@NonNull Context context) {
 		mContext = context;
@@ -690,7 +693,7 @@ public class StockAnalyzer {
 		mStockDatabaseManager.getShareBonusList(stock, shareBonusList,
 				DatabaseContract.COLUMN_DATE + " DESC ");
 
-		if (period.equals(Setting.KEY_PERIOD_MIN60)) {
+		if (period.equals(mQuantPeriod)) {
 			stockQuantAnalyzer.analyze(mContext, stock, stockDataList, shareBonusList);
 		}
 	}
@@ -1039,6 +1042,24 @@ public class StockAnalyzer {
 			}
 		}
 
+		if (period.equals(mQuantPeriod)) {
+			StockQuant stockQuant = new StockQuant();
+			String selection = DatabaseContract.COLUMN_SE + " = " + "\'" + stock.getSE() + "\'"
+					+ " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"	+ stock.getCode() + "\'";
+			String sortOrder = DatabaseContract.COLUMN_ID + DatabaseContract.ORDER_DIRECTION_DESC;
+
+			mStockDatabaseManager.getStockQuant(stock, stockQuant, selection, sortOrder);
+			if (stockQuant.getCreated().contains(Utility.getCurrentDateString())) {
+				if (Calendar.getInstance().before(Utility.getCalendar(stockQuant.getCreated(), Utility.CALENDAR_DATE_TIME_FORMAT))) {
+					if (stockQuant.getAction().equals(StockData.ACTION_BUY)) {
+						action += StockData.ACTION_QUANT + StockData.ACTION_BUY;
+					} else if (stockQuant.getAction().equals(StockData.ACTION_SELL)) {
+						action += StockData.ACTION_QUANT + StockData.ACTION_SELL;
+					}
+				}
+			}
+		}
+
 		stock.setDateTime(stockData.getDate(), stockData.getTime());
 		stock.setAction(period, action + stockData.getAction());
 	}
@@ -1152,7 +1173,9 @@ public class StockAnalyzer {
 		return result;
 	}
 
-	private void updateNotification(Stock stock) {
+	private void updateNotification(@NonNull Stock stock) {
+		boolean notifyQuantBuy;
+		boolean notifyQuantSell;
 		boolean notifyToBuy1;
 		boolean notifyToSell1;
 		boolean notifyToBuy2;
@@ -1162,15 +1185,16 @@ public class StockAnalyzer {
 		StringBuilder actionString = new StringBuilder();
 		StringBuilder contentTitle = new StringBuilder();
 
-		if (stock == null) {
-			return;
-		}
-
-		if (stock.getPrice() == 0) {
+		if (!Preferences.getBoolean(mContext, Setting.KEY_NOTIFICATION_OPERATE,
+				true)) {
 			return;
 		}
 
 		if (TextUtils.isEmpty(stock.getOperate())) {
+			return;
+		}
+
+		if (stock.getPrice() == 0) {
 			return;
 		}
 
@@ -1180,6 +1204,9 @@ public class StockAnalyzer {
 		notifyToBuy1 = true;
 		notifyToSell1 = true;
 
+		notifyQuantBuy = false;
+		notifyQuantSell = false;
+
 		for (String period : Setting.KEY_PERIODS) {
 			if (Preferences.getBoolean(mContext, period, false)) {
 				String action = stock.getAction(period);
@@ -1187,22 +1214,29 @@ public class StockAnalyzer {
 				notifyToBuy2 = false;
 				notifyToSell2 = false;
 
-				if (Preferences.getBoolean(mContext, Setting.KEY_NOTIFICATION_OPERATE,
-						true)) {
-					if (action.contains(StockData.ACTION_BUY2 + StockData.ACTION_BUY2)) {
-						notifyToBuy2 = true;
-					} else if (!action.contains(StockData.ACTION_D)) {
-						notifyToBuy1 &= false;
+				if (action.contains(StockData.ACTION_BUY2 + StockData.ACTION_BUY2)) {
+					notifyToBuy2 = true;
+				} else if (!action.contains(StockData.ACTION_D)) {
+					notifyToBuy1 &= false;
+				}
+
+				if (action.contains(StockData.ACTION_SELL2 + StockData.ACTION_SELL2)) {
+					notifyToSell2 = true;
+				} else if (!action.contains(StockData.ACTION_G)) {
+					notifyToSell1 &= false;
+				}
+
+				if (notifyToBuy2 || notifyToSell2) {
+					actionString.append(period + " " + action + " ");
+				}
+
+				if (period.equals(mQuantPeriod)) {
+					if (action.contains(StockData.ACTION_QUANT + StockData.ACTION_BUY)) {
+						notifyQuantBuy = true;
 					}
 
-					if (action.contains(StockData.ACTION_SELL2 + StockData.ACTION_SELL2)) {
-						notifyToSell2 = true;
-					} else if (!action.contains(StockData.ACTION_G)) {
-						notifyToSell1 &= false;
-					}
-
-					if (notifyToBuy2 || notifyToSell2) {
-						actionString.append(period + " " + action + " ");
+					if (action.contains(StockData.ACTION_QUANT + StockData.ACTION_SELL)) {
+						notifyQuantSell = true;
 					}
 				}
 			}
@@ -1222,6 +1256,14 @@ public class StockAnalyzer {
 			} else {
 				actionString.append(StockData.ACTION_G + " ");
 			}
+		}
+
+		if (notifyQuantBuy) {
+			actionString.append(StockData.ACTION_QUANT + StockData.ACTION_BUY);
+		}
+
+		if (notifyQuantSell) {
+			actionString.append(StockData.ACTION_QUANT + StockData.ACTION_SELL);
 		}
 
 		if (TextUtils.isEmpty(actionString)) {
