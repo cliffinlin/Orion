@@ -183,33 +183,6 @@ public class StockKeyAnalyzer {
                     break;
             }
         }
-
-        if (Setting.KEY_PERIOD_DAY.equals(period)) {
-            String trendString = "";
-
-            switch (mThresholdType) {
-                case StockData.THRESHOLD_NATURAL_RALLY:
-                    trendString = StockData.NAME_NATURAL_RALLY;
-                    break;
-
-                case StockData.THRESHOLD_UPWARD_TREND:
-                    trendString = StockData.NAME_UPWARD_TREND;
-                    break;
-
-                case StockData.THRESHOLD_DOWNWARD_TREND:
-                    trendString = StockData.NAME_DOWNWARD_TREND;
-                    break;
-
-                case StockData.THRESHOLD_NATURAL_REACTION:
-                    trendString = StockData.NAME_NATURAL_REACTION;
-                    break;
-
-                default:
-                    break;
-            }
-
-            stock.setTrend(trendString);
-        }
     }
 
     void resetThreshold(StockData stockData) {

@@ -904,6 +904,7 @@ public class StockAnalyzer {
 			ArrayList<StockData> strokeDataList,
 			ArrayList<StockData> segmentDataList) {
 		String action = StockData.ACTION_NONE;
+		String trendString = "";
 		StockData prev = null;
 		StockData stockData = null;
 		int drawNet = 0;
@@ -937,7 +938,7 @@ public class StockAnalyzer {
 			if (prev.vertexOf(StockData.VERTEX_BOTTOM_SEGMENT)) {
 //				action += StockData.ACTION_D;
 			} else {
-				if (segmentNet >= 0) {
+				if (segmentNet > 0) {
 					action += StockData.ACTION_ADD;
 				}
 				action += segmentNet;
@@ -946,12 +947,14 @@ public class StockAnalyzer {
 			if (segmentDivergence == StockData.DIVERGENCE_UP) {
 //				action += StockData.ACTION_HIGH;
 			}
+
+			trendString = StockData.NAME_UPWARD_TREND;
 		} else if (stockData
 				.directionOf(StockData.DIRECTION_DOWN_SEGMENT)) {
 			if (prev.vertexOf(StockData.VERTEX_TOP_SEGMENT)) {
 //				action += StockData.ACTION_G;
 			} else {
-				if (segmentNet >= 0) {
+				if (segmentNet > 0) {
 					action += StockData.ACTION_ADD;
 				}
 				action += segmentNet;
@@ -960,6 +963,8 @@ public class StockAnalyzer {
 			if (segmentDivergence == StockData.DIVERGENCE_DOWN) {
 //				action += StockData.ACTION_LOW;
 			}
+
+			trendString = StockData.NAME_DOWNWARD_TREND;
 		}
 
 		if (stockData.directionOf(StockData.DIRECTION_UP_STROKE)) {
@@ -1062,6 +1067,10 @@ public class StockAnalyzer {
 
 		stock.setDateTime(stockData.getDate(), stockData.getTime());
 		stock.setAction(period, action + stockData.getAction());
+
+        if (Setting.KEY_PERIOD_DAY.equals(period)) {
+            stock.setTrend(trendString);
+        }
 	}
 
 	private void updateDatabase(Stock stock) {

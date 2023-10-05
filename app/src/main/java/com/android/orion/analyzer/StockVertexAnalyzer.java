@@ -521,6 +521,10 @@ public class StockVertexAnalyzer {
 
 		StockData prev = null;
 		StockData stockData = null;
+		StockData strokeTop = null;
+		StockData strokeBottom = null;
+		StockData segmentTop = null;
+		StockData segmentBottom = null;
 
 		if (stockDataList.size() < StockData.VERTEX_TYPING_SIZE) {
 			return;
@@ -546,9 +550,23 @@ public class StockVertexAnalyzer {
 			}
 
 			if (prev.vertexOf(StockData.VERTEX_TOP_STROKE)) {
+				strokeTop = new StockData(prev);
 				directionStroke = StockData.DIRECTION_DOWN_STROKE;
 			} else if (prev.vertexOf(StockData.VERTEX_BOTTOM_STROKE)) {
+				strokeBottom = new StockData(prev);
 				directionStroke = StockData.DIRECTION_UP_STROKE;
+			}
+
+			if (strokeTop != null) {
+				if (stockData.getHigh() > strokeTop.getHigh()) {
+					directionStroke = StockData.DIRECTION_UP_STROKE;
+				}
+			}
+
+			if (strokeBottom != null) {
+				if (stockData.getLow() < strokeBottom.getLow()) {
+					directionStroke = StockData.DIRECTION_DOWN_STROKE;
+				}
 			}
 
 			if (!(stockData.vertexOf(StockData.VERTEX_TOP_STROKE) || stockData
@@ -557,9 +575,23 @@ public class StockVertexAnalyzer {
 			}
 
 			if (prev.vertexOf(StockData.VERTEX_TOP_SEGMENT)) {
+				segmentTop = new StockData(prev);
 				directionSegment = StockData.DIRECTION_DOWN_SEGMENT;
 			} else if (prev.vertexOf(StockData.VERTEX_BOTTOM_SEGMENT)) {
+				segmentBottom = new StockData(prev);
 				directionSegment = StockData.DIRECTION_UP_SEGMENT;
+			}
+
+			if (segmentTop != null) {
+				if (stockData.getHigh() > segmentTop.getHigh()) {
+					directionSegment = StockData.DIRECTION_UP_SEGMENT;
+				}
+			}
+
+			if (segmentBottom != null) {
+				if (stockData.getLow() < segmentBottom.getLow()) {
+					directionSegment = StockData.DIRECTION_DOWN_SEGMENT;
+				}
 			}
 
 			if (!(stockData.vertexOf(StockData.VERTEX_TOP_SEGMENT) || stockData

@@ -367,6 +367,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 					} else {
 						stock.setFlag(Stock.FLAG_NONE);
 						mStockDatabaseManager.updateStock(stock, stock.getContentValuesForEdit());
+						mStockDatabaseManager.deleteStockQuant(stock);
 					}
 					break;
 
