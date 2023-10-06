@@ -20,7 +20,7 @@ public class DownloadBroadcastReceiver extends BroadcastReceiver {
 		Log.d(TAG, "onReceive intent:" + intent);
 
 		if (Market.isTradingHours(Calendar.getInstance())) {
-			OrionService.startService(context);
+			OrionService.getInstance().download();
 		}
 	}
 }

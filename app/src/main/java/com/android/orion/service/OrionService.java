@@ -22,6 +22,7 @@ import android.telephony.TelephonyManager;
 
 import androidx.core.app.NotificationCompat;
 
+import com.android.orion.application.OrionApplication;
 import com.android.orion.setting.Constant;
 import com.android.orion.receiver.DownloadBroadcastReceiver;
 import com.android.orion.sina.SinaFinance;
@@ -33,8 +34,6 @@ public class OrionService extends Service {
 
 	AlarmManager mAlarmManager;
 	AudioManager mAudioManager;
-
-	Context mContext;
 
 	IntentFilter mIntentFilter;
 	DownloadBroadcastReceiver mDownloadBroadcastReceiver;
@@ -52,18 +51,10 @@ public class OrionService extends Service {
 
 	SinaFinance mSinaFinance;
 
-	public static void startService(Context context) {
-		if (context == null) {
-			return;
-		}
+	public static OrionService mInstance;
 
-		Intent serviceIntent = new Intent(context, OrionService.class);
-
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			context.startForegroundService(serviceIntent);
-		} else {
-			context.startService(serviceIntent);
-		}
+	public static OrionService getInstance() {
+		return mInstance;
 	}
 
 	private final class ServiceHandler extends Handler {
@@ -73,32 +64,14 @@ public class OrionService extends Service {
 
 		@Override
 		public void handleMessage(Message msg) {
-			onHandleIntent((Intent) msg.obj);
-
-			switch (msg.what) {
-			default:
-				break;
-			}
 		}
-	}
-
-	public OrionService() {
-	}
-
-	public OrionService(String name) {
-		super();
-		mName = name;
-	}
-
-	public void setIntentRedelivery(boolean enabled) {
-		mRedelivery = enabled;
 	}
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
 
-		mContext = getApplicationContext();
+		mInstance = this;
 
 		mBinder = new OrionBinder();
 
@@ -159,7 +132,6 @@ public class OrionService extends Service {
 	public void onDestroy() {
 		super.onDestroy();
 
-
 		mLooper.quit();
 
 		try {
@@ -172,16 +144,6 @@ public class OrionService extends Service {
 	@Override
 	public IBinder onBind(Intent intent) {
 		return mBinder;
-	}
-
-	void onHandleIntent(Intent intent) {
-		String se = "";
-		String code = "";
-
-		se = intent.getStringExtra(Constant.EXTRA_STOCK_SE);
-		code = intent.getStringExtra(Constant.EXTRA_STOCK_CODE);
-
-		download(se, code);
 	}
 
 	public void download(String se, String code) {

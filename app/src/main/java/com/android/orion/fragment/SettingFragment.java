@@ -46,9 +46,9 @@ public class SettingFragment extends PreferenceFragment implements
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
 
-		boolean checked;
-
-		checked = sharedPreferences.getBoolean(key, true);
+		if (!sharedPreferences.getBoolean(key, true)) {
+			return;
+		}
 
 		if (key.equals(Setting.KEY_NOTIFICATION_OPERATE)
 				|| key.equals(Setting.KEY_PERIOD_MIN1)
@@ -61,18 +61,10 @@ public class SettingFragment extends PreferenceFragment implements
 				|| key.equals(Setting.KEY_PERIOD_MONTH)
 				|| key.equals(Setting.KEY_PERIOD_QUARTER)
 				|| key.equals(Setting.KEY_PERIOD_YEAR)) {
-
-			if (checked) {
-				OrionService.startService(mContext);
-			}
-		}
-
-		if (key.equals(Setting.KEY_LOOPBACK)) {
+			OrionService.getInstance().download();
+		} else if (key.equals(Setting.KEY_LOOPBACK)) {
 			Intent intent = new Intent(mContext, SettingLoopbackActivity.class);
-
-			if (checked) {
-				mContext.startActivity(intent);
-			}
+			mContext.startActivity(intent);
 		}
 	}
 }
