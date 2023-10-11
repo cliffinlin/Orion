@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.android.orion.setting.Constant;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
@@ -12,9 +14,6 @@ import com.android.orion.utility.Utility;
 public class StockVertexAnalyzer {
 	static final String TAG = Constant.TAG + " "
 			+ StockVertexAnalyzer.class.getSimpleName();
-
-	public StockVertexAnalyzer() {
-	}
 
 	private void setDirectionVertex(ArrayList<StockData> dataList, int index,
 			StockData prev, StockData current, StockData next) {
@@ -46,39 +45,21 @@ public class StockVertexAnalyzer {
 		dataList.get(index).setVertex(vertex);
 	}
 
-	void analyzeVertex(ArrayList<StockData> dataList,
-			ArrayList<StockData> vertexList) {
+	void analyzeVertex(@NonNull ArrayList<StockData> dataList, @NonNull	ArrayList<StockData> vertexList) {
 		int i = 0;
-		int size = 0;
-		int direction = StockData.DIRECTION_NONE;
+        int direction = StockData.DIRECTION_NONE;
 		int vertex = StockData.VERTEX_NONE;
 
-		StockData prev = null;
-		StockData current = null;
-		StockData next = null;
-
-		if ((dataList == null) || (vertexList == null)) {
-			return;
-		}
-
-		size = dataList.size();
+        int size = dataList.size();
 		if (size < StockData.VERTEX_TYPING_SIZE) {
 			return;
 		}
 
-		vertexList.clear();
+        StockData prev = new StockData();
+        StockData current = new StockData();
+        StockData next = new StockData();
 
-		prev = new StockData();
-		current = new StockData();
-		next = new StockData();
-
-		if ((prev == null) || (current == null) || (next == null)) {
-			return;
-		}
-
-		prev.init();
-		current.init();
-		next.init();
+        vertexList.clear();
 
 		for (i = 1; i < size - 1; i++) {
 			if (prev.isEmpty()) {
