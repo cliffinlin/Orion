@@ -259,6 +259,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 			Intent intent = new Intent(this, StockDealListActivity.class);
 			intent.putExtras(bundle);
 			startActivity(intent);
+			finish();
 			return true;
 		}
 

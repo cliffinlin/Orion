@@ -13,39 +13,6 @@ public class StockVertexAnalyzer {
 	static final String TAG = Constant.TAG + " "
 			+ StockVertexAnalyzer.class.getSimpleName();
 
-	public StockVertexAnalyzer() {
-	}
-
-	private void setDirectionVertex(ArrayList<StockData> dataList, int index,
-			StockData prev, StockData current, StockData next) {
-		int direction = StockData.DIRECTION_NONE;
-		int vertex = StockData.VERTEX_NONE;
-
-		if ((current.getVertexHigh() > prev.getVertexHigh())
-				&& (current.getVertexLow() > prev.getVertexLow())) {
-			direction = StockData.DIRECTION_UP;
-
-			if ((current.getVertexHigh() > next.getVertexHigh())
-					&& (current.getVertexLow() > next.getVertexLow())) {
-				vertex = StockData.VERTEX_TOP;
-			}
-		} else if ((current.getVertexHigh() < prev.getVertexHigh())
-				&& (current.getVertexLow() < prev.getVertexLow())) {
-			direction = StockData.DIRECTION_DOWN;
-
-			if ((current.getVertexHigh() < next.getVertexHigh())
-					&& (current.getVertexLow() < next.getVertexLow())) {
-				vertex = StockData.VERTEX_BOTTOM;
-			}
-		} else {
-			direction = StockData.DIRECTION_NONE;
-			vertex = StockData.VERTEX_NONE;
-		}
-
-		dataList.get(index).setDirection(direction);
-		dataList.get(index).setVertex(vertex);
-	}
-
 	void analyzeVertex(ArrayList<StockData> dataList,
 			ArrayList<StockData> vertexList) {
 		int i = 0;
