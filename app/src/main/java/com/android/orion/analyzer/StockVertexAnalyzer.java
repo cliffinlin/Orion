@@ -4,8 +4,6 @@ import java.util.ArrayList;
 
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-
 import com.android.orion.setting.Constant;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
@@ -14,6 +12,9 @@ import com.android.orion.utility.Utility;
 public class StockVertexAnalyzer {
 	static final String TAG = Constant.TAG + " "
 			+ StockVertexAnalyzer.class.getSimpleName();
+
+	public StockVertexAnalyzer() {
+	}
 
 	private void setDirectionVertex(ArrayList<StockData> dataList, int index,
 			StockData prev, StockData current, StockData next) {
@@ -45,21 +46,39 @@ public class StockVertexAnalyzer {
 		dataList.get(index).setVertex(vertex);
 	}
 
-	void analyzeVertex(@NonNull ArrayList<StockData> dataList, @NonNull	ArrayList<StockData> vertexList) {
+	void analyzeVertex(ArrayList<StockData> dataList,
+			ArrayList<StockData> vertexList) {
 		int i = 0;
-        int direction = StockData.DIRECTION_NONE;
+		int size = 0;
+		int direction = StockData.DIRECTION_NONE;
 		int vertex = StockData.VERTEX_NONE;
 
-        int size = dataList.size();
+		StockData prev = null;
+		StockData current = null;
+		StockData next = null;
+
+		if ((dataList == null) || (vertexList == null)) {
+			return;
+		}
+
+		size = dataList.size();
 		if (size < StockData.VERTEX_TYPING_SIZE) {
 			return;
 		}
 
-        StockData prev = new StockData();
-        StockData current = new StockData();
-        StockData next = new StockData();
+		vertexList.clear();
 
-        vertexList.clear();
+		prev = new StockData();
+		current = new StockData();
+		next = new StockData();
+
+		if ((prev == null) || (current == null) || (next == null)) {
+			return;
+		}
+
+		prev.init();
+		current.init();
+		next.init();
 
 		for (i = 1; i < size - 1; i++) {
 			if (prev.isEmpty()) {
@@ -88,16 +107,19 @@ public class StockVertexAnalyzer {
 				continue;
 			}
 
-			if (i < size - 2) {
-				if (current.include(next) || current.includedBy(next)) {
-					setDirectionVertex(dataList, i, prev, current, next);
-					direction = dataList.get(i).getDirection();
-					vertex = dataList.get(i).getVertex();
-					if ((vertex == StockData.VERTEX_TOP)
-							|| (vertex == StockData.VERTEX_BOTTOM)) {
-						vertexList.add(dataList.get(i));
-					}
+			direction = current.directionTo(prev);
+			vertex = current.vertexTo(prev, next);
 
+			dataList.get(i).setDirection(direction);
+			dataList.get(i).setVertex(vertex);
+
+			if ((vertex == StockData.VERTEX_TOP)
+					|| (vertex == StockData.VERTEX_BOTTOM)) {
+				vertexList.add(dataList.get(i));
+			}
+
+			if (current.include(next) || current.includedBy(next)) {
+				if (i < size - 2) {
 					current.merge(direction, next);
 					next.merge(direction, current);
 
@@ -109,14 +131,6 @@ public class StockVertexAnalyzer {
 					next.init();
 					continue;
 				}
-			}
-
-			setDirectionVertex(dataList, i, prev, current, next);
-			direction = dataList.get(i).getDirection();
-			vertex = dataList.get(i).getVertex();
-			if ((vertex == StockData.VERTEX_TOP)
-					|| (vertex == StockData.VERTEX_BOTTOM)) {
-				vertexList.add(dataList.get(i));
 			}
 
 			prev.set(current);

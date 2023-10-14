@@ -1049,6 +1049,28 @@ public class StockData extends StockDatabaseTable {
 		return result;
 	}
 
+    public int vertexTo(StockData prev, StockData next) {
+        int vertex = StockData.VERTEX_NONE;
+
+        if ((getVertexHigh() > prev.getVertexHigh())
+                && (getVertexLow() > prev.getVertexLow())) {
+            if ((getVertexHigh() > next.getVertexHigh())
+                    && (getVertexLow() > next.getVertexLow())) {
+                vertex = StockData.VERTEX_TOP;
+            }
+        } else if ((getVertexHigh() < prev.getVertexHigh())
+                && (getVertexLow() < prev.getVertexLow())) {
+            if ((getVertexHigh() < next.getVertexHigh())
+                    && (getVertexLow() < next.getVertexLow())) {
+                vertex = StockData.VERTEX_BOTTOM;
+            }
+        } else {
+            vertex = StockData.VERTEX_NONE;
+        }
+
+        return vertex;
+    }
+
 	public int directionTo(StockData stockData) {
 		int result = DIRECTION_NONE;
 
@@ -1083,6 +1105,32 @@ public class StockData extends StockDatabaseTable {
 		return position;
 	}
 
+    public int divergenceTo(StockData stockData) {
+        int result = DIVERGENCE_NONE;
+
+        if (mDirection == DIRECTION_UP) {
+            if ((getVertexHigh() > stockData.getVertexHigh())
+                    && (getVertexLow() > stockData.getVertexLow())) {
+                if (Math.abs(getSigmaHistogram()) < Math.abs(stockData.getSigmaHistogram())) {
+                    if (Math.abs(getVelocity()) < Math.abs(stockData.getVelocity())) {
+                        result = DIVERGENCE_UP;
+                    }
+                }
+            }
+        } else if (mDirection == DIRECTION_DOWN) {
+            if ((getVertexHigh() < stockData.getVertexHigh())
+                    && (getVertexLow() < stockData.getVertexLow())) {
+                if (Math.abs(getSigmaHistogram()) < Math.abs(stockData.getSigmaHistogram())) {
+                    if (Math.abs(getVelocity()) < Math.abs(stockData.getVelocity())) {
+                        result = DIVERGENCE_DOWN;
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
 	public void merge(int directionType, StockData stockData) {
 		if (directionType == DIRECTION_UP) {
 			setVertexHigh(Math.max(getVertexHigh(), stockData.getVertexHigh()));
@@ -1106,32 +1154,6 @@ public class StockData extends StockDatabaseTable {
 		setIndexStart(prev.getIndexStart());
 		setVertexLow(Math.min(prev.getVertexLow(), current.getVertexLow()));
 		setVertexHigh(Math.max(prev.getVertexHigh(), current.getVertexHigh()));
-	}
-
-	public int divergenceTo(StockData stockData) {
-		int result = DIVERGENCE_NONE;
-
-		if (mDirection == DIRECTION_UP) {
-			if ((getVertexHigh() > stockData.getVertexHigh())
-					&& (getVertexLow() > stockData.getVertexLow())) {
-				if (Math.abs(getSigmaHistogram()) < Math.abs(stockData.getSigmaHistogram())) {
-					if (Math.abs(getVelocity()) < Math.abs(stockData.getVelocity())) {
-						result = DIVERGENCE_UP;
-					}
-				}
-			}
-		} else if (mDirection == DIRECTION_DOWN) {
-			if ((getVertexHigh() < stockData.getVertexHigh())
-					&& (getVertexLow() < stockData.getVertexLow())) {
-				if (Math.abs(getSigmaHistogram()) < Math.abs(stockData.getSigmaHistogram())) {
-					if (Math.abs(getVelocity()) < Math.abs(stockData.getVelocity())) {
-						result = DIVERGENCE_DOWN;
-					}
-				}
-			}
-		}
-
-		return result;
 	}
 
 	public void setupChange() {
