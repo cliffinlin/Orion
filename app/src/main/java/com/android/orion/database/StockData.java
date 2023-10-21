@@ -1144,16 +1144,16 @@ public class StockData extends StockDatabaseTable {
 		}
 	}
 
-	public void merge(StockData prev, StockData current) {
-		if ((prev == null) || (current == null)) {
+	public void merge(StockData prev) {
+		if ((prev == null)) {
 			return;
 		}
 
 		setStockId(prev.getStockId());
 		setIndex(prev.getIndex());
 		setIndexStart(prev.getIndexStart());
-		setVertexLow(Math.min(prev.getVertexLow(), current.getVertexLow()));
-		setVertexHigh(Math.max(prev.getVertexHigh(), current.getVertexHigh()));
+		setVertexLow(Math.min(prev.getVertexLow(), getVertexLow()));
+		setVertexHigh(Math.max(prev.getVertexHigh(), getVertexHigh()));
 	}
 
 	public void setupChange() {

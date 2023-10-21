@@ -206,6 +206,25 @@ public class StockDataChartListActivity extends BaseActivity implements
 	}
 
 	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+
+		if (getIntent().getBooleanExtra(Constant.EXTRA_STOCK_DEAL, false)) {
+			mKeyDisplayDeal = true;
+		} else {
+			mKeyDisplayDeal = Preferences.getBoolean(mContext, Setting.KEY_DISPLAY_DEAL, false);
+		}
+
+		if (getIntent().getBooleanExtra(Constant.EXTRA_STOCK_QUANT, false)) {
+			mKeyDisplayQuant = true;
+		} else {
+			mKeyDisplayQuant = Preferences.getBoolean(mContext, Setting.KEY_DISPLAY_QUANT, false);
+		}
+
+		restartLoader();
+	}
+
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		mMenu = menu;
 		getMenuInflater().inflate(R.menu.stock_data_chart, menu);
@@ -259,7 +278,6 @@ public class StockDataChartListActivity extends BaseActivity implements
 			Intent intent = new Intent(this, StockDealListActivity.class);
 			intent.putExtras(bundle);
 			startActivity(intent);
-			finish();
 			return true;
 		}
 
@@ -277,7 +295,6 @@ public class StockDataChartListActivity extends BaseActivity implements
 			Intent intent = new Intent(this, StockQuantListActivity.class);
 			intent.putExtras(bundle);
 			startActivity(intent);
-			finish();
 			return true;
 		}
 
