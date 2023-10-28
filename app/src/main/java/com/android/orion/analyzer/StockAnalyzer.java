@@ -84,6 +84,29 @@ public class StockAnalyzer {
 		}
 	}
 
+	public boolean isMinutePeriod(@NonNull StockData stockData) {
+		boolean result = false;
+
+		switch (stockData.getPeriod()) {
+			case Setting.KEY_PERIOD_MIN1:
+			case Setting.KEY_PERIOD_MIN5:
+			case Setting.KEY_PERIOD_MIN15:
+			case Setting.KEY_PERIOD_MIN30:
+			case Setting.KEY_PERIOD_MIN60:
+				result = true;
+				break;
+			case Setting.KEY_PERIOD_DAY:
+			case Setting.KEY_PERIOD_WEEK:
+			case Setting.KEY_PERIOD_MONTH:
+			case Setting.KEY_PERIOD_QUARTER:
+			case Setting.KEY_PERIOD_YEAR:
+			default:
+				break;
+		}
+
+		return result;
+	}
+
 	public void loadStockDataList(Stock stock, String period,
 			ArrayList<StockData> stockDataList) {
 		boolean loopback = false;
@@ -1028,23 +1051,23 @@ public class StockAnalyzer {
 			}
 		}
 
-		if (!period.equals(Setting.KEY_PERIOD_MONTH) && !period.equals(Setting.KEY_PERIOD_WEEK)) {
-			if (stockData.getNaturalRally() > 0) {
-				action += StockData.ACTION_NATURAL_RALLY;
-			}
-
-			if (stockData.getUpwardTrend() > 0) {
-				action += StockData.ACTION_UPWARD_TREND;
-			}
-
-			if (stockData.getDownwardTrend() > 0) {
-				action += StockData.ACTION_DOWNWARD_TREND;
-			}
-
-			if (stockData.getNaturalReaction() > 0) {
-				action += StockData.ACTION_NATURAL_REACTION;
-			}
-		}
+//		if (isMinutePeriod(stockData)) {
+//			if (stockData.getNaturalRally() > 0) {
+//				action += StockData.ACTION_NATURAL_RALLY;
+//			}
+//
+//			if (stockData.getUpwardTrend() > 0) {
+//				action += StockData.ACTION_UPWARD_TREND;
+//			}
+//
+//			if (stockData.getDownwardTrend() > 0) {
+//				action += StockData.ACTION_DOWNWARD_TREND;
+//			}
+//
+//			if (stockData.getNaturalReaction() > 0) {
+//				action += StockData.ACTION_NATURAL_REACTION;
+//			}
+//		}
 
 		stock.setDateTime(stockData.getDate(), stockData.getTime());
 		stock.setAction(period, action + stockData.getAction());
@@ -1163,7 +1186,7 @@ public class StockAnalyzer {
 		return result;
 	}
 
-	private void updateNotification(@NonNull Stock stock) {
+	protected void updateNotification(@NonNull Stock stock) {
 		boolean notifyToBuy1;
 		boolean notifyToSell1;
 		boolean notifyToBuy2;

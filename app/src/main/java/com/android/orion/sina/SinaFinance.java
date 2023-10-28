@@ -59,17 +59,6 @@ public class SinaFinance extends StockDataProvider {
 	public static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN30 = 192;
 	public static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN60 = 192;
 
-	public static final int PERIOD_MINUTES_MIN1 = 1;
-	public static final int PERIOD_MINUTES_MIN5 = 5;
-	public static final int PERIOD_MINUTES_MIN15 = 15;
-	public static final int PERIOD_MINUTES_MIN30 = 30;
-	public static final int PERIOD_MINUTES_MIN60 = 60;
-	public static final int PERIOD_MINUTES_DAY = 240;
-	public static final int PERIOD_MINUTES_WEEK = 1680;
-	public static final int PERIOD_MINUTES_MONTH = 7200;
-	public static final int PERIOD_MINUTES_QUARTER = 28800;
-	public static final int PERIOD_MINUTES_YEAR = 115200;
-
 	public SinaFinance(Context context) {
 		super(context);
 	}
@@ -184,35 +173,6 @@ public class SinaFinance extends StockDataProvider {
 		String urlString = SINA_FINANCE_URL_HQ_NODE_DATA + page + num + sort
 				+ asc + node;
 		return urlString;
-	}
-
-	int getPeriodMinutes(String period) {
-		int result = 0;
-
-		if (period.equals(Setting.KEY_PERIOD_MIN1)) {
-			result = PERIOD_MINUTES_MIN1;
-		} else if (period.equals(Setting.KEY_PERIOD_MIN5)) {
-			result = PERIOD_MINUTES_MIN5;
-		} else if (period.equals(Setting.KEY_PERIOD_MIN15)) {
-			result = PERIOD_MINUTES_MIN15;
-		} else if (period.equals(Setting.KEY_PERIOD_MIN30)) {
-			result = PERIOD_MINUTES_MIN30;
-		} else if (period.equals(Setting.KEY_PERIOD_MIN60)) {
-			result = PERIOD_MINUTES_MIN60;
-		} else if (period.equals(Setting.KEY_PERIOD_DAY)) {
-			result = PERIOD_MINUTES_DAY;
-		} else if (period.equals(Setting.KEY_PERIOD_WEEK)) {
-			result = PERIOD_MINUTES_WEEK;
-		} else if (period.equals(Setting.KEY_PERIOD_MONTH)) {
-			result = PERIOD_MINUTES_MONTH;
-		} else if (period.equals(Setting.KEY_PERIOD_QUARTER)) {
-			result = PERIOD_MINUTES_QUARTER;
-		} else if (period.equals(Setting.KEY_PERIOD_YEAR)) {
-			result = PERIOD_MINUTES_YEAR;
-		} else {
-		}
-
-		return result;
 	}
 
 	@Override
@@ -705,6 +665,8 @@ public class SinaFinance extends StockDataProvider {
 				}
 
 				if (contentValuesList.size() > 0) {
+					fixContentValuesList(stockData, contentValuesList);
+
 					ContentValues[] contentValuesArray = new ContentValues[contentValuesList
 							.size()];
 					contentValuesArray = (ContentValues[]) contentValuesList
@@ -908,29 +870,6 @@ public class SinaFinance extends StockDataProvider {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	boolean isMinutePeriod(@NonNull StockData stockData) {
-		boolean result = false;
-
-		switch (stockData.getPeriod()) {
-			case Setting.KEY_PERIOD_MIN1:
-			case Setting.KEY_PERIOD_MIN5:
-			case Setting.KEY_PERIOD_MIN15:
-			case Setting.KEY_PERIOD_MIN30:
-			case Setting.KEY_PERIOD_MIN60:
-				result = true;
-				break;
-			case Setting.KEY_PERIOD_DAY:
-			case Setting.KEY_PERIOD_WEEK:
-			case Setting.KEY_PERIOD_MONTH:
-			case Setting.KEY_PERIOD_QUARTER:
-			case Setting.KEY_PERIOD_YEAR:
-			default:
-				break;
-		}
-
-		return result;
 	}
 
 	/*

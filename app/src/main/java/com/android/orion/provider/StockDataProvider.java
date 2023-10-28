@@ -8,6 +8,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 import android.app.NotificationManager;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -41,6 +42,22 @@ import com.android.orion.utility.Utility;
 public abstract class StockDataProvider extends StockAnalyzer {
     static final String TAG = Constant.TAG + " "
             + StockDataProvider.class.getSimpleName();
+
+    public static final int PERIOD_MINUTES_MIN1 = 1;
+    public static final int PERIOD_MINUTES_MIN5 = 5;
+    public static final int PERIOD_MINUTES_MIN15 = 15;
+    public static final int PERIOD_MINUTES_MIN30 = 30;
+    public static final int PERIOD_MINUTES_MIN60 = 60;
+    public static final int PERIOD_MINUTES_DAY = 240;
+    public static final int PERIOD_MINUTES_WEEK = 1680;
+    public static final int PERIOD_MINUTES_MONTH = 7200;
+    public static final int PERIOD_MINUTES_QUARTER = 28800;
+    public static final int PERIOD_MINUTES_YEAR = 115200;
+
+    public static final int MAX_CONTENT_LENGTH_MIN5 = 960;
+    public static final int MAX_CONTENT_LENGTH_MIN15 = 640;
+    public static final int MAX_CONTENT_LENGTH_MIN30 = 480;
+    public static final int MAX_CONTENT_LENGTH_MIN60 = 360;
 
     private static int DOWNLOAD_RESULT_SUCCESS = 1;
     private static int DOWNLOAD_RESULT_NONE = 0;
@@ -113,6 +130,63 @@ public abstract class StockDataProvider extends StockAnalyzer {
         mHandlerThread.start();
 
         mHandler = new ServiceHandler(mHandlerThread.getLooper());
+    }
+
+    public int getPeriodMinutes(String period) {
+        int result = 0;
+
+        if (period.equals(Setting.KEY_PERIOD_MIN1)) {
+            result = PERIOD_MINUTES_MIN1;
+        } else if (period.equals(Setting.KEY_PERIOD_MIN5)) {
+            result = PERIOD_MINUTES_MIN5;
+        } else if (period.equals(Setting.KEY_PERIOD_MIN15)) {
+            result = PERIOD_MINUTES_MIN15;
+        } else if (period.equals(Setting.KEY_PERIOD_MIN30)) {
+            result = PERIOD_MINUTES_MIN30;
+        } else if (period.equals(Setting.KEY_PERIOD_MIN60)) {
+            result = PERIOD_MINUTES_MIN60;
+        } else if (period.equals(Setting.KEY_PERIOD_DAY)) {
+            result = PERIOD_MINUTES_DAY;
+        } else if (period.equals(Setting.KEY_PERIOD_WEEK)) {
+            result = PERIOD_MINUTES_WEEK;
+        } else if (period.equals(Setting.KEY_PERIOD_MONTH)) {
+            result = PERIOD_MINUTES_MONTH;
+        } else if (period.equals(Setting.KEY_PERIOD_QUARTER)) {
+            result = PERIOD_MINUTES_QUARTER;
+        } else if (period.equals(Setting.KEY_PERIOD_YEAR)) {
+            result = PERIOD_MINUTES_YEAR;
+        } else {
+        }
+
+        return result;
+    }
+
+    public void fixContentValuesList(@NonNull StockData stockData, @NonNull ArrayList<ContentValues> contentValuesList) {
+        int size = contentValuesList.size();
+        int n = 0;
+
+        switch (stockData.getPeriod()) {
+            case Setting.KEY_PERIOD_MIN1:
+                break;
+            case Setting.KEY_PERIOD_MIN5:
+                n = size - MAX_CONTENT_LENGTH_MIN5;
+                break;
+            case Setting.KEY_PERIOD_MIN15:
+                n = size - MAX_CONTENT_LENGTH_MIN15;
+                break;
+            case Setting.KEY_PERIOD_MIN30:
+                n = size - MAX_CONTENT_LENGTH_MIN30;
+                break;
+            case Setting.KEY_PERIOD_MIN60:
+                n = size - MAX_CONTENT_LENGTH_MIN60;
+                break;
+            default:
+                break;
+        }
+
+        for (int i = 0; i < n; i++) {
+            contentValuesList.remove(i);
+        }
     }
 
     private void sendBroadcast(String action, long stockID) {
