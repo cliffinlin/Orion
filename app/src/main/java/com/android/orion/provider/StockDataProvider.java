@@ -54,10 +54,10 @@ public abstract class StockDataProvider extends StockAnalyzer {
     public static final int PERIOD_MINUTES_QUARTER = 28800;
     public static final int PERIOD_MINUTES_YEAR = 115200;
 
-    public static final int MAX_CONTENT_LENGTH_MIN5 = 960;
-    public static final int MAX_CONTENT_LENGTH_MIN15 = 640;
-    public static final int MAX_CONTENT_LENGTH_MIN30 = 480;
-    public static final int MAX_CONTENT_LENGTH_MIN60 = 360;
+    public static final int MAX_CONTENT_LENGTH_MIN60 = 240;
+    public static final int MAX_CONTENT_LENGTH_MIN30 = 240;
+    public static final int MAX_CONTENT_LENGTH_MIN15 = 240;
+    public static final int MAX_CONTENT_LENGTH_MIN5 = 240;
 
     private static int DOWNLOAD_RESULT_SUCCESS = 1;
     private static int DOWNLOAD_RESULT_NONE = 0;
@@ -185,7 +185,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
         }
 
         for (int i = 0; i < n; i++) {
-            contentValuesList.remove(i);
+            contentValuesList.remove(0);
         }
     }
 

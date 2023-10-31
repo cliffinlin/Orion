@@ -1051,23 +1051,23 @@ public class StockAnalyzer {
 			}
 		}
 
-//		if (isMinutePeriod(stockData)) {
-//			if (stockData.getNaturalRally() > 0) {
-//				action += StockData.ACTION_NATURAL_RALLY;
-//			}
-//
-//			if (stockData.getUpwardTrend() > 0) {
-//				action += StockData.ACTION_UPWARD_TREND;
-//			}
-//
-//			if (stockData.getDownwardTrend() > 0) {
-//				action += StockData.ACTION_DOWNWARD_TREND;
-//			}
-//
-//			if (stockData.getNaturalReaction() > 0) {
-//				action += StockData.ACTION_NATURAL_REACTION;
-//			}
-//		}
+		if (isMinutePeriod(stockData)) {
+			if (stockData.getNaturalRally() > 0) {
+				action += StockData.ACTION_NATURAL_RALLY;
+			}
+
+			if (stockData.getUpwardTrend() > 0) {
+				action += StockData.ACTION_UPWARD_TREND;
+			}
+
+			if (stockData.getDownwardTrend() > 0) {
+				action += StockData.ACTION_DOWNWARD_TREND;
+			}
+
+			if (stockData.getNaturalReaction() > 0) {
+				action += StockData.ACTION_NATURAL_REACTION;
+			}
+		}
 
 		stock.setDateTime(stockData.getDate(), stockData.getTime());
 		stock.setAction(period, action + stockData.getAction());
