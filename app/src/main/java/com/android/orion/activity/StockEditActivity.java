@@ -39,9 +39,8 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 	RadioGroup mRadioGroupSE;
 	EditText mEditTextStockName;
 	EditText mEditTextStockCode;
-	EditText mEditTextStockThreshold;
 	EditText mEditTextStockQuantVolume;
-	EditText mEditTextStockYield;
+	EditText mEditTextStockThreshold;
 
 	List<String> mListStockOperate;
 	ArrayAdapter<String> mArrayAdapter;
@@ -78,13 +77,12 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 
 	void initView() {
 		mCheckBoxFavorite = (CheckBox) findViewById(R.id.checkbox_favorite);
-		mRadioGroupClass = (RadioGroup) findViewById(R.id.radioGroupClass);
-		mRadioGroupSE = (RadioGroup) findViewById(R.id.radioGroupSE);
+		mRadioGroupClass = (RadioGroup) findViewById(R.id.radio_group_class);
+		mRadioGroupSE = (RadioGroup) findViewById(R.id.radio_group_se);
 		mEditTextStockName = (EditText) findViewById(R.id.edittext_stock_name);
 		mEditTextStockCode = (EditText) findViewById(R.id.edittext_stock_code);
-		mEditTextStockThreshold = (EditText) findViewById(R.id.edittext_threshold);
 		mEditTextStockQuantVolume = (EditText) findViewById(R.id.edittext_stock_quant_volume);
-		mEditTextStockYield = (EditText) findViewById(R.id.edittext_stock_yield);
+		mEditTextStockThreshold = (EditText) findViewById(R.id.edittext_threshold);
 		mSpinnerStockAcion = (Spinner) findViewById(R.id.spinner_stock_operate);
 		mButtonOk = (Button) findViewById(R.id.button_ok);
 		mButtonCancel = (Button) findViewById(R.id.button_cancel);
@@ -94,10 +92,8 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 		mRadioGroupSE.setOnClickListener(this);
 		mEditTextStockName.setOnClickListener(this);
 		mEditTextStockCode.setOnClickListener(this);
-		mEditTextStockThreshold.setOnClickListener(this);
 		mEditTextStockQuantVolume.setOnClickListener(this);
-		mEditTextStockYield.setOnClickListener(this);
-		mEditTextStockYield.setEnabled(false);
+		mEditTextStockThreshold.setOnClickListener(this);
 		mSpinnerStockAcion.setOnItemSelectedListener(this);
 		mButtonOk.setOnClickListener(this);
 		mButtonCancel.setOnClickListener(this);
@@ -180,12 +176,11 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 		if (mStock.getThreshold() == 0) {
             mStock.setThreshold(Constant.STOCK_THRESHOLD);
         }
+		mEditTextStockQuantVolume.setText(String.valueOf(mStock.getQuantVolume()));
 		mEditTextStockThreshold.setText(String.valueOf(mStock.getThreshold()));
 		if (mStock.getQuantVolume() == 0) {
 			mStock.setQuantVolume(Constant.STOCK_QUANT_VOLUME);
 		}
-		mEditTextStockQuantVolume.setText(String.valueOf(mStock.getQuantVolume()));
-		mEditTextStockYield.setText(String.valueOf(mStock.getYield()));
 
 		String operate = mStock.getOperate();
 		for (int i = 0; i < mListStockOperate.size(); i++) {
@@ -256,6 +251,10 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 						Toast.LENGTH_LONG).show();
 			}
 
+			String quantVolume = mEditTextStockQuantVolume.getText().toString();
+			long quantVolumeValue = TextUtils.isEmpty(quantVolume) ? 0 : Long.valueOf(quantVolume);
+			mStock.setQuantVolume(quantVolumeValue);
+
 			String threshold = mEditTextStockThreshold.getText().toString();
 			double thresholdValue = TextUtils.isEmpty(threshold) ? 0 : Double.valueOf(threshold);
 			if (thresholdValue != mStockThreshold) {
@@ -263,10 +262,6 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 				mStock.setThreshold(mStockThreshold);
 				mStockDatabaseManager.deleteStockQuant(mStock);
 			}
-
-			String quantVolume = mEditTextStockQuantVolume.getText().toString();
-			long quantVolumeValue = TextUtils.isEmpty(quantVolume) ? 0 : Long.valueOf(quantVolume);
-			mStock.setQuantVolume(quantVolumeValue);
 
 			operate = mSpinnerStockAcion.getSelectedItem().toString();
 			mStock.setOperate(operate);
