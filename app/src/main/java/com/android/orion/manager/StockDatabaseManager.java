@@ -152,7 +152,7 @@ public class StockDatabaseManager extends DatabaseManager {
 	}
 
 	public void getFavoriteStockList(ArrayList<Stock> stockList) {
-		String selection = DatabaseContract.COLUMN_FLAG + " = "
+		String selection = DatabaseContract.COLUMN_FLAG + " >= "
 				+ Stock.FLAG_FAVORITE;
 
 		getStockList(selection, stockList);

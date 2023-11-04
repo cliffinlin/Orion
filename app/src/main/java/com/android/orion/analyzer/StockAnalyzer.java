@@ -1069,6 +1069,10 @@ public class StockAnalyzer {
 			}
 		}
 
+		if (period.equals(stock.getOperate())) {
+			action += StockData.ACTION_STAR;
+		}
+
 		stock.setDateTime(stockData.getDate(), stockData.getTime());
 		stock.setAction(period, action + stockData.getAction());
 

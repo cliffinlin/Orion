@@ -273,7 +273,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 			setViewText(holder.mTextViewPrice, String.valueOf(stock.getPrice()));
 			setViewText(holder.mTextViewHold, String.valueOf(stock.getHold()));
 
-			if (stock.getFlag() == Stock.FLAG_FAVORITE) {
+			if (stock.hasFlag(Stock.FLAG_FAVORITE)) {
 				holder.mImageViewFavorite
 						.setImageResource(R.drawable.ic_favorite);
 			} else {
@@ -361,8 +361,8 @@ public class StockListEditActivity extends DatabaseActivity implements
 			try {
 				switch (view.getId()) {
 				case R.id.favorite:
-					if (stock.getFlag() != Stock.FLAG_FAVORITE) {
-						stock.setFlag(Stock.FLAG_FAVORITE);
+					if (!stock.hasFlag(Stock.FLAG_FAVORITE)) {
+						stock.addFlag(Stock.FLAG_FAVORITE);
 						mStockDatabaseManager.updateStock(stock, stock.getContentValuesForEdit());
 					} else {
 						stock.setFlag(Stock.FLAG_NONE);

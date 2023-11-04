@@ -468,7 +468,7 @@ public class StockListActivity extends ListActivity implements
 
 		switch (id) {
 		case LOADER_ID_STOCK_LIST:
-			selection += DatabaseContract.COLUMN_FLAG + " = "
+			selection += DatabaseContract.COLUMN_FLAG + " >= "
 					+ Stock.FLAG_FAVORITE;
 
 			loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,

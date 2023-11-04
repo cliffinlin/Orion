@@ -157,7 +157,7 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 	}
 
 	void updateView() {
-		mCheckBoxFavorite.setChecked(mStock.getFlag() == Stock.FLAG_FAVORITE);
+		mCheckBoxFavorite.setChecked(mStock.hasFlag(Stock.FLAG_FAVORITE));
 
 		if (mStock.getClasses().equals(Stock.CLASS_A)) {
 			mRadioGroupClass.check(R.id.radio_class_hsa);
@@ -191,6 +191,14 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 		}
 	}
 
+	void onCheckBoxFavoriteChanged() {
+        if (mCheckBoxFavorite.isChecked()) {
+            mStock.addFlag(Stock.FLAG_FAVORITE);
+        } else {
+            mStock.removeFlag(Stock.FLAG_FAVORITE);
+        }
+    }
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.stock_deal_edit, menu);
@@ -216,13 +224,14 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 
 		switch (viewId) {
 		case R.id.checkbox_favorite:
-			mStock.setFlag(mCheckBoxFavorite.isChecked() ? Stock.FLAG_FAVORITE : Stock.FLAG_NONE);
+            onCheckBoxFavoriteChanged();
 			break;
 
 		case R.id.button_ok:
 			int id = 0;
 
-			mStock.setFlag(mCheckBoxFavorite.isChecked() ? Stock.FLAG_FAVORITE : Stock.FLAG_NONE);
+            onCheckBoxFavoriteChanged();
+
 			id = mRadioGroupClass.getCheckedRadioButtonId();
 			if (id == R.id.radio_class_hsa) {
 				mStock.setClasses(Stock.CLASS_A);

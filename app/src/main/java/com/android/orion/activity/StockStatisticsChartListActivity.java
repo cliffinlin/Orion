@@ -297,7 +297,7 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 		String selection = "";
 		CursorLoader loader = null;
 
-		selection += DatabaseContract.COLUMN_FLAG + " = "
+		selection += DatabaseContract.COLUMN_FLAG + " >= "
 				+ Stock.FLAG_FAVORITE;
 
 		loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,

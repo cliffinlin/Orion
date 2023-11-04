@@ -204,7 +204,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
             return;
         }
 
-        selection += DatabaseContract.COLUMN_FLAG + " = "
+        selection += DatabaseContract.COLUMN_FLAG + " >= "
                 + Stock.FLAG_FAVORITE;
 
         try {

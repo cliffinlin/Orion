@@ -261,7 +261,7 @@ public class StockFilter {
 
 		if (mEnabled) {
 			if (mFavorite) {
-				selection += DatabaseContract.COLUMN_FLAG + " = "
+				selection += DatabaseContract.COLUMN_FLAG + " >= "
 						+ Stock.FLAG_FAVORITE;
 			} else {
 				selection += " 1 ";

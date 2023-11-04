@@ -24,7 +24,7 @@ public class Stock extends DatabaseTable {
 	public static final long INVALID_ID = 0;
 
 	public static final int FLAG_NONE = 0;
-	public static final int FLAG_FAVORITE = 1;
+	public static final int FLAG_FAVORITE = 1 << 0;
 
 	private int mFlag;
 	private String mClasses;
@@ -1580,6 +1580,24 @@ public class Stock extends DatabaseTable {
 
         setInformationModified(cursor.getString(cursor
                 .getColumnIndex(DatabaseContract.COLUMN_INFORMATION_MODIFIED)));
+    }
+
+    public void addFlag(int flag) {
+		mFlag |= flag;
+	}
+
+	public void removeFlag(int flag) {
+		mFlag &= ~flag;
+	}
+
+    public boolean hasFlag(int flag) {
+        boolean result = false;
+
+        if ((mFlag & flag) == flag) {
+            result = true;
+        }
+
+        return result;
     }
 
     public ArrayList<StockData> getStockDataList(String period) {
