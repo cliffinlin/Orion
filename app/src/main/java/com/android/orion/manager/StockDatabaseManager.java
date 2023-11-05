@@ -896,7 +896,7 @@ public class StockDatabaseManager extends DatabaseManager {
 		selection += " AND " + DatabaseContract.COLUMN_BUY + " = " + 0;
 		selection += " AND " + DatabaseContract.COLUMN_SELL + " > " + 0;
 		selection += " AND " + DatabaseContract.COLUMN_PROFIT + " > " + DatabaseContract.COLUMN_BONUS;
-		selection += " AND " + DatabaseContract.COLUMN_NET + " > " + Math.max(Constant.STOCK_THRESHOLD, Constant.STOCK_THRESHOLD);
+		selection += " AND " + DatabaseContract.COLUMN_NET + " > " + 0;
 
 		getStockDealList(stock, stockDealList, selection, sortOrder);
 	}
@@ -917,7 +917,7 @@ public class StockDatabaseManager extends DatabaseManager {
 		selection += " AND " + DatabaseContract.COLUMN_BUY + " > " + 0;
 		selection += " AND " + DatabaseContract.COLUMN_SELL + " = " + 0;
 		selection += " AND " + DatabaseContract.COLUMN_PROFIT + " > " + DatabaseContract.COLUMN_BONUS;
-		selection += " AND " + DatabaseContract.COLUMN_NET + " > " + Math.max(Constant.STOCK_THRESHOLD, Constant.STOCK_THRESHOLD);
+		selection += " AND " + DatabaseContract.COLUMN_NET + " > " + 0;
 
 		getStockDealList(stock, stockDealList, selection, sortOrder);
     }
@@ -1233,48 +1233,6 @@ public class StockDatabaseManager extends DatabaseManager {
 		String selection = DatabaseContract.COLUMN_SE + " = " + "\'" + stock.getSE()
 				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
 				+ stock.getCode() + "\'";
-
-		getStockQuantList(stock, StockQuantList, selection, sortOrder);
-	}
-
-	public void getStockQuantListToBuy(Stock stock, ArrayList<StockQuant> StockQuantList) {
-		String sortOrder = DatabaseContract.COLUMN_NET + DatabaseContract.ORDER_DIRECTION_ASC;
-
-		if ((stock == null) || (StockQuantList == null)) {
-			return;
-		}
-
-		String selection = DatabaseContract.COLUMN_SE + " = " + "\'" + stock.getSE()
-				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
-				+ stock.getCode() + "\'";
-
-		selection += " AND " + DatabaseContract.COLUMN_ACTION + " != ''";
-		selection += " AND " + DatabaseContract.COLUMN_VOLUME + " < " + 0 ;
-		selection += " AND " + DatabaseContract.COLUMN_BUY + " = " + 0;
-		selection += " AND " + DatabaseContract.COLUMN_SELL + " > " + 0;
-		selection += " AND " + DatabaseContract.COLUMN_PROFIT + " > " + DatabaseContract.COLUMN_BONUS;
-		selection += " AND " + DatabaseContract.COLUMN_NET + " > " + Math.max(Constant.STOCK_THRESHOLD, Constant.STOCK_THRESHOLD);
-
-		getStockQuantList(stock, StockQuantList, selection, sortOrder);
-	}
-
-	public void getStockQuantListToSell(Stock stock, ArrayList<StockQuant> StockQuantList) {
-		String sortOrder = DatabaseContract.COLUMN_NET + DatabaseContract.ORDER_DIRECTION_ASC;
-
-		if ((stock == null) || (StockQuantList == null)) {
-			return;
-		}
-
-		String selection = DatabaseContract.COLUMN_SE + " = " + "\'" + stock.getSE()
-				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
-				+ stock.getCode() + "\'";
-
-		selection += " AND " + DatabaseContract.COLUMN_ACTION + " != ''";
-		selection += " AND " + DatabaseContract.COLUMN_VOLUME + " > " + 0 ;
-		selection += " AND " + DatabaseContract.COLUMN_BUY + " > " + 0;
-		selection += " AND " + DatabaseContract.COLUMN_SELL + " = " + 0;
-		selection += " AND " + DatabaseContract.COLUMN_PROFIT + " > " + DatabaseContract.COLUMN_BONUS;
-		selection += " AND " + DatabaseContract.COLUMN_NET + " > " + Math.max(Constant.STOCK_THRESHOLD, Constant.STOCK_THRESHOLD);
 
 		getStockQuantList(stock, StockQuantList, selection, sortOrder);
 	}

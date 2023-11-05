@@ -52,8 +52,6 @@ public class StockAnalyzer {
 	NotificationManager mNotificationManager;
 	public StockDatabaseManager mStockDatabaseManager;
 
-	String mQuantPeriod = Setting.KEY_PERIOD_MIN60;
-
 	public StockAnalyzer(@NonNull Context context) {
 		mContext = context;
 
@@ -715,7 +713,7 @@ public class StockAnalyzer {
 		mStockDatabaseManager.getShareBonusList(stock, shareBonusList,
 				DatabaseContract.COLUMN_DATE + " DESC ");
 
-		if (period.equals(mQuantPeriod)) {
+		if (period.equals(stock.getOperate())) {
 			stockQuantAnalyzer.analyze(mContext, stock, stockDataList, shareBonusList);
 		}
 	}

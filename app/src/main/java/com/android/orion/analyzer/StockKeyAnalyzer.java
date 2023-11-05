@@ -63,10 +63,8 @@ public class StockKeyAnalyzer {
         }
 
         threshold = stock.getThreshold();
-
         if (threshold == 0) {
-            threshold = Constant.STOCK_THRESHOLD;
-            stock.setThreshold(threshold);
+            return;
         }
 
         threshold = threshold / 100.0;

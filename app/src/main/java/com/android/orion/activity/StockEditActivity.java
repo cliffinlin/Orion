@@ -49,6 +49,8 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 	Button mButtonOk;
 	Button mButtonCancel;
 
+	String mStockOperate;
+	long mStockQuantVolume;
 	double mStockThreshold;
 
 	@Override
@@ -70,6 +72,8 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 			mStock.setId(mIntent.getLongExtra(Constant.EXTRA_STOCK_ID,
 					Stock.INVALID_ID));
 			mStockDatabaseManager.getStockById(mStock);
+			mStockOperate = mStock.getOperate();
+			mStockQuantVolume = mStock.getQuantVolume();
 			mStockThreshold = mStock.getThreshold();
 			updateView();
 		}
@@ -173,14 +177,8 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 
 		mEditTextStockName.setText(mStock.getName());
 		mEditTextStockCode.setText(mStock.getCode());
-		if (mStock.getThreshold() == 0) {
-            mStock.setThreshold(Constant.STOCK_THRESHOLD);
-        }
 		mEditTextStockQuantVolume.setText(String.valueOf(mStock.getQuantVolume()));
 		mEditTextStockThreshold.setText(String.valueOf(mStock.getThreshold()));
-		if (mStock.getQuantVolume() == 0) {
-			mStock.setQuantVolume(Constant.STOCK_QUANT_VOLUME);
-		}
 
 		String operate = mStock.getOperate();
 		for (int i = 0; i < mListStockOperate.size(); i++) {
@@ -232,6 +230,13 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 
             onCheckBoxFavoriteChanged();
 
+			operate = mSpinnerStockAcion.getSelectedItem().toString();
+			if (!operate.equals(mStockOperate)) {
+				mStockOperate = operate;
+				mStock.setOperate(mStockOperate);
+				mStockDatabaseManager.deleteStockQuant(mStock);
+			}
+
 			id = mRadioGroupClass.getCheckedRadioButtonId();
 			if (id == R.id.radio_class_hsa) {
 				mStock.setClasses(Stock.CLASS_A);
@@ -262,7 +267,11 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 
 			String quantVolume = mEditTextStockQuantVolume.getText().toString();
 			long quantVolumeValue = TextUtils.isEmpty(quantVolume) ? 0 : Long.valueOf(quantVolume);
-			mStock.setQuantVolume(quantVolumeValue);
+			if (quantVolumeValue != mStockQuantVolume) {
+				mStockQuantVolume = quantVolumeValue;
+				mStock.setQuantVolume(mStockQuantVolume);
+				mStockDatabaseManager.deleteStockQuant(mStock);
+			}
 
 			String threshold = mEditTextStockThreshold.getText().toString();
 			double thresholdValue = TextUtils.isEmpty(threshold) ? 0 : Double.valueOf(threshold);
@@ -271,9 +280,6 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 				mStock.setThreshold(mStockThreshold);
 				mStockDatabaseManager.deleteStockQuant(mStock);
 			}
-
-			operate = mSpinnerStockAcion.getSelectedItem().toString();
-			mStock.setOperate(operate);
 
 			if (ACTION_FAVORITE_STOCK_INSERT.equals(mAction) || ACTION_INDEX_COMPONENT_INSERT.equals(mAction)) {
 				if (!mStockDatabaseManager.isStockExist(mStock)) {

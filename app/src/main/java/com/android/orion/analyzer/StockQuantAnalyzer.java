@@ -147,7 +147,7 @@ public class StockQuantAnalyzer {
             stockQuant.setupValue();
             stockQuant.setupProfit();
 
-            if (stockQuant.getNet() < Constant.STOCK_THRESHOLD) {
+            if (stockQuant.getNet() < stock.getThreshold()) {
                 return;
             }
 
