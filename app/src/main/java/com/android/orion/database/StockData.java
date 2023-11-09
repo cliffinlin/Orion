@@ -53,6 +53,7 @@ public class StockData extends StockDatabaseTable {
 	public static final int LEVEL_SEGMENT = 3;
 	public static final int LEVEL_LINE = 4;
 	public static final int LEVEL_OUTLINE = 5;
+	public static final int LEVEL_MAX = LEVEL_OUTLINE;
 
 	public static final int DIVERGENCE_UP = 1;
 	public static final int DIVERGENCE_NONE = 0;

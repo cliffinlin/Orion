@@ -1,6 +1,7 @@
 package com.android.orion.chart;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -8,6 +9,7 @@ import android.graphics.Paint;
 
 import androidx.annotation.NonNull;
 
+import com.android.orion.database.StockData;
 import com.android.orion.database.StockQuant;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
@@ -52,11 +54,6 @@ public class StockDataChart {
 	public ArrayList<CandleEntry> mCandleEntryList = null;
 	public ArrayList<Entry> mAverage5EntryList = null;
 	public ArrayList<Entry> mAverage10EntryList = null;
-	public ArrayList<Entry> mDrawEntryList = null;
-	public ArrayList<Entry> mStrokeEntryList = null;
-	public ArrayList<Entry> mSegmentEntryList = null;
-	public ArrayList<Entry> mLineEntryList = null;
-	public ArrayList<Entry> mOutlineEntryList = null;
 	public ArrayList<Entry> mOverlapHighEntryList = null;
 	public ArrayList<Entry> mOverlapLowEntryList = null;
 	public ArrayList<Entry> mBookValuePerShareList = null;
@@ -69,17 +66,17 @@ public class StockDataChart {
 	public ArrayList<Entry> mDEAEntryList = null;
 	public ArrayList<BarEntry> mHistogramEntryList = null;
 
-    ArrayList<Entry> mSubChartDrawEntryList = null;
-    ArrayList<Entry> mSubChartStrokeEntryList = null;
-    ArrayList<Entry> mSubChartSegmentEntryList = null;
+	public ArrayList<Entry> mSubChartDrawEntryList = null;
+	public ArrayList<Entry> mSubChartStrokeEntryList = null;
+	public ArrayList<Entry> mSubChartSegmentEntryList = null;
 
 	public ArrayList<LimitLine> mXLimitLineList = null;
 
+	public List<Entry>[] mLineList = new List[StockData.LEVEL_MAX];
+	public int[] mLineColors = {Color.GRAY, Color.YELLOW, Color.BLACK, Color.MAGENTA, Color.RED};
+
 	public CombinedData mCombinedDataMain = null;
 	public CombinedData mCombinedDataSub = null;
-
-	public StockDataChart() {
-	}
 
 	public StockDataChart(String period) {
 		if (mXValues == null) {
@@ -112,26 +109,6 @@ public class StockDataChart {
 
 		if (mAverage10EntryList == null) {
 			mAverage10EntryList = new ArrayList<Entry>();
-		}
-
-		if (mDrawEntryList == null) {
-			mDrawEntryList = new ArrayList<Entry>();
-		}
-
-		if (mStrokeEntryList == null) {
-			mStrokeEntryList = new ArrayList<Entry>();
-		}
-
-		if (mSegmentEntryList == null) {
-			mSegmentEntryList = new ArrayList<Entry>();
-		}
-
-		if (mLineEntryList == null) {
-			mLineEntryList = new ArrayList<Entry>();
-		}
-
-		if (mOutlineEntryList == null) {
-			mOutlineEntryList = new ArrayList<Entry>();
 		}
 
 		if (mOverlapHighEntryList == null) {
@@ -196,6 +173,10 @@ public class StockDataChart {
 
 		if (mXLimitLineList == null) {
 			mXLimitLineList = new ArrayList<LimitLine>();
+		}
+
+		for (int i = 0; i < StockData.LEVEL_MAX; i++) {
+			mLineList[i] = new ArrayList<Entry>();
 		}
 
 		mPeriod = period;
@@ -280,10 +261,10 @@ public class StockDataChart {
 
 		if (Preferences.getBoolean(context, Setting.KEY_DISPLAY_DRAW,
 				true)) {
-			if (mDrawEntryList.size() > 0) {
-				LineDataSet lineDataSet = new LineDataSet(mDrawEntryList, "Draw");
-				lineDataSet.setColor(Color.GRAY);
-				lineDataSet.setCircleColor(Color.GRAY);
+			if (mLineList[0].size() > 0) {
+				LineDataSet lineDataSet = new LineDataSet(mLineList[0], "Draw");
+				lineDataSet.setColor(mLineColors[0]);
+				lineDataSet.setCircleColor(mLineColors[0]);
 				lineDataSet.setCircleSize(0);
 				lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 				lineData.addDataSet(lineDataSet);
@@ -292,10 +273,10 @@ public class StockDataChart {
 
 		if (Preferences.getBoolean(context, Setting.KEY_DISPLAY_STROKE,
 				false)) {
-			if (mStrokeEntryList.size() > 0) {
-				LineDataSet lineDataSet = new LineDataSet(mStrokeEntryList, "Stroke");
-				lineDataSet.setColor(Color.YELLOW);
-				lineDataSet.setCircleColor(Color.YELLOW);
+			if (mLineList[1].size() > 0) {
+				LineDataSet lineDataSet = new LineDataSet(mLineList[1], "Stroke");
+				lineDataSet.setColor(mLineColors[1]);
+				lineDataSet.setCircleColor(mLineColors[1]);
 				lineDataSet.setCircleSize(0);
 				lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 				lineData.addDataSet(lineDataSet);
@@ -304,11 +285,11 @@ public class StockDataChart {
 
 		if (Preferences.getBoolean(context, Setting.KEY_DISPLAY_SEGMENT,
 				false)) {
-			if (mSegmentEntryList.size() > 0) {
-				LineDataSet lineDataSet = new LineDataSet(mSegmentEntryList,
+			if (mLineList[2].size() > 0) {
+				LineDataSet lineDataSet = new LineDataSet(mLineList[2],
 						"Segment");
-				lineDataSet.setColor(Color.BLACK);
-				lineDataSet.setCircleColor(Color.BLACK);
+				lineDataSet.setColor(mLineColors[2]);
+				lineDataSet.setCircleColor(mLineColors[2]);
 				lineDataSet.setCircleSize(0);
 				lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 				lineData.addDataSet(lineDataSet);
@@ -317,25 +298,25 @@ public class StockDataChart {
 
 		if (Preferences.getBoolean(context, Setting.KEY_DISPLAY_LINE,
 				false)) {
-			if (mLineEntryList.size() > 0) {
-				LineDataSet lineDataSet = new LineDataSet(mLineEntryList,
+			if (mLineList[3].size() > 0) {
+				LineDataSet lineDataSet = new LineDataSet(mLineList[3],
 						"Line");
-				lineDataSet.setColor(Color.RED);
-				lineDataSet.setCircleColor(Color.RED);
+				lineDataSet.setColor(mLineColors[3]);
+				lineDataSet.setCircleColor(mLineColors[3]);
 				lineDataSet.setCircleSize(0);
 				lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 				lineData.addDataSet(lineDataSet);
 			}
 
-//			if (mOutlineEntryList.size() > 0) {
-//				LineDataSet lineDataSet = new LineDataSet(mOutlineEntryList,
-//						"Outline");
-//				lineDataSet.setColor(Color.RED);
-//				lineDataSet.setCircleColor(Color.RED);
-//				lineDataSet.setCircleSize(0);
-//				lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-//				lineData.addDataSet(lineDataSet);
-//			}
+			if (mLineList[4].size() > 0) {
+				LineDataSet lineDataSet = new LineDataSet(mLineList[4],
+						"Outline");
+				lineDataSet.setColor(mLineColors[4]);
+				lineDataSet.setCircleColor(mLineColors[4]);
+				lineDataSet.setCircleSize(0);
+				lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+				lineData.addDataSet(lineDataSet);
+			}
 		}
 
 		if ((mOverlapHighEntryList.size() > 0)
@@ -439,10 +420,10 @@ public class StockDataChart {
 
         if (Preferences.getBoolean(context, Setting.KEY_DISPLAY_DRAW,
                 true)) {
-            transferMainChartDataToSubChartData(mDrawEntryList, mSubChartDrawEntryList);
+            transferMainChartDataToSubChartData(mLineList[0], mSubChartDrawEntryList);
             LineDataSet drawDataSet = new LineDataSet(mSubChartDrawEntryList, "Draw");
-            drawDataSet.setColor(Color.GRAY);
-            drawDataSet.setCircleColor(Color.GRAY);
+            drawDataSet.setColor(mLineColors[0]);
+            drawDataSet.setCircleColor(mLineColors[0]);
             drawDataSet.setCircleSize(0);
             drawDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
             lineData.addDataSet(drawDataSet);
@@ -450,10 +431,10 @@ public class StockDataChart {
 
         if (Preferences.getBoolean(context, Setting.KEY_DISPLAY_STROKE,
                 false)) {
-            transferMainChartDataToSubChartData(mStrokeEntryList, mSubChartStrokeEntryList);
+            transferMainChartDataToSubChartData(mLineList[1], mSubChartStrokeEntryList);
             LineDataSet strokeDataSet = new LineDataSet(mSubChartStrokeEntryList, "Stroke");
-            strokeDataSet.setColor(Color.YELLOW);
-            strokeDataSet.setCircleColor(Color.YELLOW);
+            strokeDataSet.setColor(mLineColors[1]);
+            strokeDataSet.setCircleColor(mLineColors[1]);
             strokeDataSet.setCircleSize(0);
             strokeDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
             lineData.addDataSet(strokeDataSet);
@@ -461,11 +442,11 @@ public class StockDataChart {
 
         if (Preferences.getBoolean(context, Setting.KEY_DISPLAY_SEGMENT,
                 false)) {
-            transferMainChartDataToSubChartData(mSegmentEntryList, mSubChartSegmentEntryList);
+            transferMainChartDataToSubChartData(mLineList[2], mSubChartSegmentEntryList);
             LineDataSet segmentDataSet = new LineDataSet(mSubChartSegmentEntryList,
                     "Segment");
-            segmentDataSet.setColor(Color.BLACK);
-            segmentDataSet.setCircleColor(Color.BLACK);
+            segmentDataSet.setColor(mLineColors[2]);
+            segmentDataSet.setCircleColor(mLineColors[2]);
             segmentDataSet.setCircleSize(0);
             segmentDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
             lineData.addDataSet(segmentDataSet);
@@ -475,7 +456,7 @@ public class StockDataChart {
 		mCombinedDataSub.setData(lineData);
 	}
 
-    public void setMainChartYMinMax(int index, ArrayList<Entry> drawEntryList, ArrayList<Entry> strokeEntryList, ArrayList<Entry> segmentEntryList) {
+    public void setMainChartYMinMax(int index, List<Entry> drawEntryList, List<Entry> strokeEntryList, List<Entry> segmentEntryList) {
 	    double draw = 0;
 	    double stroke = 0;
 	    double segment = 0;
@@ -505,7 +486,7 @@ public class StockDataChart {
         }
     }
 
-	public void setSubChartYMinMax(int index, ArrayList<Entry> difEntryList, ArrayList<Entry> deaEntryList) {
+	public void setSubChartYMinMax(int index, List<Entry> difEntryList, List<Entry> deaEntryList) {
         double dif = 0;
         double dea = 0;
 
@@ -529,7 +510,7 @@ public class StockDataChart {
         }
     }
 
-    void transferMainChartDataToSubChartData(ArrayList<Entry> mainChartEntryList, ArrayList<Entry> subChartEntryList) {
+    void transferMainChartDataToSubChartData(List<Entry> mainChartEntryList, List<Entry> subChartEntryList) {
 	    if ((mainChartEntryList == null) || (subChartEntryList == null)) {
 	        return;
         }
@@ -766,11 +747,6 @@ public class StockDataChart {
 		mCandleEntryList.clear();
 		mAverage5EntryList.clear();
 		mAverage10EntryList.clear();
-		mDrawEntryList.clear();
-		mStrokeEntryList.clear();
-		mSegmentEntryList.clear();
-		mLineEntryList.clear();
-		mOutlineEntryList.clear();
 		mOverlapHighEntryList.clear();
 		mOverlapLowEntryList.clear();
 		mBookValuePerShareList.clear();
@@ -784,5 +760,9 @@ public class StockDataChart {
         mSubChartDrawEntryList.clear();
         mSubChartStrokeEntryList.clear();
         mSubChartSegmentEntryList.clear();
+
+		for (int i = 0; i < StockData.LEVEL_MAX; i++) {
+			mLineList[i].clear();
+		}
 	}
 }

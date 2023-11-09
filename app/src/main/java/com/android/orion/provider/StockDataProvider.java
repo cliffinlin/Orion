@@ -54,10 +54,10 @@ public abstract class StockDataProvider extends StockAnalyzer {
     public static final int PERIOD_MINUTES_QUARTER = 28800;
     public static final int PERIOD_MINUTES_YEAR = 115200;
 
-    public static final int MAX_CONTENT_LENGTH_MIN60 = 240;
-    public static final int MAX_CONTENT_LENGTH_MIN30 = 240;
-    public static final int MAX_CONTENT_LENGTH_MIN15 = 240;
-    public static final int MAX_CONTENT_LENGTH_MIN5 = 240;
+    public static final int MAX_CONTENT_LENGTH_MIN60 = 60 * 4;
+    public static final int MAX_CONTENT_LENGTH_MIN30 = 30 * 8;
+    public static final int MAX_CONTENT_LENGTH_MIN15 = 20 * 16;
+    public static final int MAX_CONTENT_LENGTH_MIN5 = 20 * 48;
 
     private static int DOWNLOAD_RESULT_SUCCESS = 1;
     private static int DOWNLOAD_RESULT_NONE = 0;
