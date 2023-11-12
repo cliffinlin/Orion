@@ -119,9 +119,12 @@ public class StockQuantListActivity extends ListActivity implements
                 case MESSAGE_VIEW_STOCK_DEAL:
                     getStock();
 
-                    intent = new Intent(mContext, StockEditActivity.class);
-                    intent.setAction(StockEditActivity.ACTION_STOCK_EDIT);
-                    intent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
+                    intent = new Intent(mContext,
+                            StockQuantDealListActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(Constant.EXTRA_STOCK_SE, mStock.getSE());
+                    bundle.putString(Constant.EXTRA_STOCK_CODE, mStock.getCode());
+                    intent.putExtras(bundle);
                     startActivity(intent);
                     break;
 
