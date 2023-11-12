@@ -4,8 +4,7 @@ import com.android.orion.setting.Constant;
 
 
 public class QuantManager {
-	static final String TAG = Constant.TAG + " "
-			+ QuantManager.class.getSimpleName();
+	static final String TAG = QuantManager.class.getSimpleName();
 
 	private static QuantManager mInstance;
 

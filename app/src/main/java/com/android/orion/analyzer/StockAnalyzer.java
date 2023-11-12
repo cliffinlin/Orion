@@ -40,8 +40,7 @@ import java.util.Calendar;
 
 
 public class StockAnalyzer {
-	static final String TAG = Constant.TAG + " "
-			+ StockAnalyzer.class.getSimpleName();
+	static final String TAG = StockAnalyzer.class.getSimpleName();
 
 	public Context mContext;
 

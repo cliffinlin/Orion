@@ -1,12 +1,7 @@
 package com.android.orion.activity;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.ContentObserver;
@@ -17,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.provider.BaseColumns;
 import android.util.ArrayMap;
 import android.view.ActionMode;
 import android.view.Menu;
@@ -30,23 +26,23 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
-import com.android.orion.setting.Constant;
 import com.android.orion.R;
-import com.android.orion.setting.Setting;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
-import com.android.orion.database.StockDeal;
+import com.android.orion.database.StockQuant;
+import com.android.orion.setting.Constant;
+import com.android.orion.setting.Setting;
 import com.android.orion.utility.Preferences;
-import com.android.orion.utility.RecordFile;
 import com.android.orion.view.SyncHorizontalScrollView;
 
-public class DealListActivity extends ListActivity implements
+import java.util.ArrayList;
+
+public class StockQuantDealListActivity extends ListActivity implements
         LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
         OnItemLongClickListener, OnClickListener {
-    static final String TAG = Constant.TAG + " "
-            + DealListActivity.class.getSimpleName();
+    static final String TAG = StockQuantDealListActivity.class.getSimpleName();
 
-    static final int LOADER_ID_DEAL_LIST = 0;
+    static final int LOADER_ID_QUANT_LIST = 0;
 
     static final int FILTER_TYPE_NONE = 0;
     static final int FILTER_TYPE_OPERATE = 1;
@@ -68,27 +64,32 @@ public class DealListActivity extends ListActivity implements
     static final int mHeaderTextHighlightColor = Color.RED;
 
     String mSelection = null;
-    String mSortOrderColumn = DatabaseContract.COLUMN_NET;
+    String mSortOrderColumn = DatabaseContract.COLUMN_ID;
     String mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_ASC;
     String mSortOrderDefault = mSortOrderColumn + mSortOrderDirection;
     String mSortOrder = mSortOrderDefault;
+    String mGroupBy = "";
 
     SyncHorizontalScrollView mTitleSHSV = null;
     SyncHorizontalScrollView mContentSHSV = null;
 
-    TextView mTextViewStockNameCode = null;
+    TextView mTextViewNameCode = null;
+    TextView mTextViewId = null;
     TextView mTextViewPrice = null;
     TextView mTextViewNet = null;
     TextView mTextViewBuy = null;
     TextView mTextViewSell = null;
     TextView mTextViewVolume = null;
     TextView mTextViewValue = null;
-    TextView mTextViewBonus = null;
-    TextView mTextViewYield = null;
     TextView mTextViewFee = null;
     TextView mTextViewProfit = null;
-    TextView mTextViewAccount = null;
     TextView mTextViewAction = null;
+    TextView mTextViewHold = null;
+    TextView mTextViewValuation = null;
+    TextView mTextViewQuantProfit = null;
+    TextView mTextViewQuantProfitMargin = null;
+    TextView mTextViewQuantX = null;
+    TextView mTextViewThreshold = null;
     TextView mTextViewCreated = null;
     TextView mTextViewModified = null;
 
@@ -100,8 +101,7 @@ public class DealListActivity extends ListActivity implements
 
     ActionMode mCurrentActionMode = null;
 
-    StockDeal mDeal = new StockDeal();
-    List<StockDeal> mDealList = new ArrayList<StockDeal>();
+    StockQuant mStockQuant = new StockQuant();
 
     Stock mStock = new Stock();
 
@@ -116,18 +116,6 @@ public class DealListActivity extends ListActivity implements
             Intent intent = null;
 
             switch (msg.what) {
-                case MESSAGE_DELETE_DEAL:
-                    getStock();
-                    RecordFile.writeDealFile(mStock, mDeal, Constant.DEAL_OPERATE_DELETE);
-                    mStockDatabaseManager.deleteStockDeal(mDeal);
-                    mStockDatabaseManager.updateStockDeal(mStock);
-                    mStockDatabaseManager.updateStock(mStock,
-                            mStock.getContentValues());
-                    break;
-
-                case MESSAGE_DELETE_DEAL_LIST:
-                    break;
-
                 case MESSAGE_VIEW_STOCK_DEAL:
                     getStock();
 
@@ -149,7 +137,7 @@ public class DealListActivity extends ListActivity implements
                     intent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
                     intent.putStringArrayListExtra(Constant.EXTRA_STOCK_ID_LIST,
                             stockIDList);
-                    intent.putExtra(Constant.EXTRA_STOCK_DEAL, true);
+                    intent.putExtra(Constant.EXTRA_STOCK_QUANT, true);
                     startActivity(intent);
                     break;
 
@@ -185,7 +173,7 @@ public class DealListActivity extends ListActivity implements
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             mode.setTitle("Actions");
-            mode.getMenuInflater().inflate(R.menu.stock_deal_list_action, menu);
+            mode.getMenuInflater().inflate(R.menu.stock_quant_list_action, menu);
             return true;
         }
 
@@ -198,33 +186,33 @@ public class DealListActivity extends ListActivity implements
         public boolean onActionItemClicked(final ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.menu_edit:
-                    mIntent = new Intent(mContext, StockDealActivity.class);
-                    mIntent.setAction(StockDealActivity.ACTION_DEAL_EDIT);
-                    mIntent.putExtra(StockDealActivity.EXTRA_DEAL_ID,
-                            mDeal.getId());
-                    startActivityForResult(mIntent, REQUEST_CODE_DEAL_EDIT);
-                    mode.finish();
+//                    mIntent = new Intent(mContext, StockDealActivity.class);
+//                    mIntent.setAction(StockDealActivity.ACTION_DEAL_EDIT);
+//                    mIntent.putExtra(StockDealActivity.EXTRA_DEAL_ID,
+//                            mDeal.getId());
+//                    startActivityForResult(mIntent, REQUEST_CODE_DEAL_EDIT);
+//                    mode.finish();
                     return true;
                 case R.id.menu_delete:
-                    new AlertDialog.Builder(mContext)
-                            .setTitle(R.string.delete)
-                            .setMessage(R.string.delete_confirm)
-                            .setPositiveButton(R.string.ok,
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog,
-                                                            int which) {
-                                            mHandler.sendEmptyMessage(MESSAGE_DELETE_DEAL);
-                                            mode.finish();
-                                        }
-                                    })
-                            .setNegativeButton(R.string.cancel,
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog,
-                                                            int which) {
-                                            mode.finish();
-                                        }
-                                    }).setIcon(android.R.drawable.ic_dialog_alert)
-                            .show();
+//                    new AlertDialog.Builder(mContext)
+//                            .setTitle(R.string.delete)
+//                            .setMessage(R.string.delete_confirm)
+//                            .setPositiveButton(R.string.ok,
+//                                    new DialogInterface.OnClickListener() {
+//                                        public void onClick(DialogInterface dialog,
+//                                                            int which) {
+//                                            mHandler.sendEmptyMessage(MESSAGE_DELETE_DEAL);
+//                                            mode.finish();
+//                                        }
+//                                    })
+//                            .setNegativeButton(R.string.cancel,
+//                                    new DialogInterface.OnClickListener() {
+//                                        public void onClick(DialogInterface dialog,
+//                                                            int which) {
+//                                            mode.finish();
+//                                        }
+//                                    }).setIcon(android.R.drawable.ic_dialog_alert)
+//                            .show();
                     return true;
                 default:
                     return false;
@@ -240,26 +228,26 @@ public class DealListActivity extends ListActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_stock_deal_list);
+        setContentView(R.layout.activity_stock_quant_list);
 
-        mFilterType = FILTER_TYPE_SELL;
+        mFilterType = FILTER_TYPE_ALL;
 
-        mSortOrder = Preferences.getString(mContext, Setting.KEY_SORT_ORDER_DEAL_LIST,
+        mSortOrder = Preferences.getString(mContext, Setting.KEY_SORT_ORDER_QUANT_LIST,
                 mSortOrderDefault);
 
         initHeader();
 
         initListView();
 
-        mLoaderManager.initLoader(LOADER_ID_DEAL_LIST, null, this);
+        mLoaderManager.initLoader(LOADER_ID_QUANT_LIST, null, this);
 
         getContentResolver().registerContentObserver(
-                DatabaseContract.StockDeal.CONTENT_URI, true, mContentObserver);
+                DatabaseContract.StockQuant.CONTENT_URI, true, mContentObserver);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.stock_deal_list, menu);
+        getMenuInflater().inflate(R.menu.stock_quant_list, menu);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         return true;
     }
@@ -272,12 +260,12 @@ public class DealListActivity extends ListActivity implements
                 return true;
 
             case R.id.action_new:
-                mIntent = new Intent(this, StockDealActivity.class);
-                mIntent.setAction(StockDealActivity.ACTION_DEAL_INSERT);
-                if (mBundle != null) {
-                    mIntent.putExtras(mBundle);
-                }
-                startActivityForResult(mIntent, REQUEST_CODE_DEAL_INSERT);
+//                mIntent = new Intent(this, StockDealActivity.class);
+//                mIntent.setAction(StockDealActivity.ACTION_DEAL_INSERT);
+//                if (mBundle != null) {
+//                    mIntent.putExtras(mBundle);
+//                }
+//                startActivityForResult(mIntent, REQUEST_CODE_DEAL_INSERT);
                 return true;
 
             case R.id.action_none:
@@ -309,16 +297,6 @@ public class DealListActivity extends ListActivity implements
                 mHandler.sendEmptyMessage(MESSAGE_VIEW_STOCK_TREND);
                 return true;
 
-            case R.id.action_quant: {
-                Bundle bundle = new Bundle();
-                bundle.putString(Constant.EXTRA_STOCK_SE, mStock.getSE());
-                bundle.putString(Constant.EXTRA_STOCK_CODE, mStock.getCode());
-                Intent intent = new Intent(this, StockQuantListActivity.class);
-                intent.putExtras(bundle);
-                startActivity(intent);
-                return true;
-            }
-
             default:
                 return super.onMenuItemSelected(featureId, item);
         }
@@ -341,22 +319,22 @@ public class DealListActivity extends ListActivity implements
         super.onPostExecuteLoad(result);
         mOrionService.download();
     }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case REQUEST_CODE_DEAL_INSERT:
-                case REQUEST_CODE_DEAL_EDIT:
-                    break;
-
-                default:
-                    break;
-            }
-        }
-    }
+//
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        if (resultCode == RESULT_OK) {
+//            switch (requestCode) {
+//                case REQUEST_CODE_DEAL_INSERT:
+//                case REQUEST_CODE_DEAL_EDIT:
+//                    break;
+//
+//                default:
+//                    break;
+//            }
+//        }
+//    }
 
     @Override
     public void onClick(View view) {
@@ -372,8 +350,9 @@ public class DealListActivity extends ListActivity implements
             case R.id.account:
                 mSortOrderColumn = DatabaseContract.COLUMN_ACCOUNT;
                 break;
-            case R.id.action:
-                mSortOrderColumn = DatabaseContract.COLUMN_ACTION;
+
+            case R.id.id:
+                mSortOrderColumn = BaseColumns._ID;
                 break;
             case R.id.price:
                 mSortOrderColumn = DatabaseContract.COLUMN_PRICE;
@@ -393,11 +372,32 @@ public class DealListActivity extends ListActivity implements
             case R.id.value:
                 mSortOrderColumn = DatabaseContract.COLUMN_VALUE;
                 break;
+            case R.id.fee:
+                mSortOrderColumn = DatabaseContract.COLUMN_FEE;
+                break;
             case R.id.profit:
                 mSortOrderColumn = DatabaseContract.COLUMN_PROFIT;
                 break;
-            case R.id.fee:
-                mSortOrderColumn = DatabaseContract.COLUMN_FEE;
+            case R.id.action:
+                mSortOrderColumn = DatabaseContract.COLUMN_ACTION;
+                break;
+            case R.id.hold:
+                mSortOrderColumn = DatabaseContract.COLUMN_HOLD;
+                break;
+            case R.id.valuation:
+                mSortOrderColumn = DatabaseContract.COLUMN_VALUATION;
+                break;
+            case R.id.quant_profit:
+                mSortOrderColumn = DatabaseContract.COLUMN_QUANT_PROFIT;
+                break;
+            case R.id.quant_profit_margin:
+                mSortOrderColumn = DatabaseContract.COLUMN_QUANT_PROFIT_MARGIN;
+                break;
+            case R.id.quant_x:
+                mSortOrderColumn = DatabaseContract.COLUMN_QUANT_X;
+                break;
+            case R.id.threshold:
+                mSortOrderColumn = DatabaseContract.COLUMN_THRESHOLD;
                 break;
             case R.id.created:
                 mSortOrderColumn = DatabaseContract.COLUMN_CREATED;
@@ -418,7 +418,7 @@ public class DealListActivity extends ListActivity implements
 
         mSortOrder = mSortOrderColumn + mSortOrderDirection;
 
-        Preferences.putString(mContext, Setting.KEY_SORT_ORDER_DEAL_LIST, mSortOrder);
+        Preferences.putString(mContext, Setting.KEY_SORT_ORDER_QUANT_LIST, mSortOrder);
 
         restartLoader();
     }
@@ -435,19 +435,23 @@ public class DealListActivity extends ListActivity implements
     }
 
     void resetHeaderTextColor() {
-        setHeaderTextColor(mTextViewStockNameCode, mHeaderTextDefaultColor);
+        setHeaderTextColor(mTextViewNameCode, mHeaderTextDefaultColor);
+        setHeaderTextColor(mTextViewId, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewPrice, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewNet, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewBuy, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewSell, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewVolume, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewValue, mHeaderTextDefaultColor);
-        setHeaderTextColor(mTextViewBonus, mHeaderTextDefaultColor);
-        setHeaderTextColor(mTextViewYield, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewFee, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewProfit, mHeaderTextDefaultColor);
-        setHeaderTextColor(mTextViewAccount, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewAction, mHeaderTextDefaultColor);
+        setHeaderTextColor(mTextViewHold, mHeaderTextDefaultColor);
+        setHeaderTextColor(mTextViewValuation, mHeaderTextDefaultColor);
+        setHeaderTextColor(mTextViewQuantProfit, mHeaderTextDefaultColor);
+        setHeaderTextColor(mTextViewQuantProfitMargin, mHeaderTextDefaultColor);
+        setHeaderTextColor(mTextViewQuantX, mHeaderTextDefaultColor);
+        setHeaderTextColor(mTextViewThreshold, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewCreated, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewModified, mHeaderTextDefaultColor);
     }
@@ -471,54 +475,105 @@ public class DealListActivity extends ListActivity implements
             mContentSHSV.setScrollView(mTitleSHSV);
         }
 
-        mTextViewStockNameCode = (TextView) findViewById(R.id.stock_name_code);
-        mTextViewStockNameCode.setOnClickListener(this);
+        mTextViewNameCode = (TextView) findViewById(R.id.stock_name_code);
+        if (mTextViewNameCode != null) {
+        	mTextViewNameCode.setOnClickListener(this);
+		}
+
+        mTextViewId = (TextView) findViewById(R.id.id);
+        if (mTextViewId != null) {
+			mTextViewId.setOnClickListener(this);
+		}
 
         mTextViewPrice = (TextView) findViewById(R.id.price);
-        mTextViewPrice.setOnClickListener(this);
+        if (mTextViewPrice != null) {
+			mTextViewPrice.setOnClickListener(this);
+		}
 
         mTextViewNet = (TextView) findViewById(R.id.net);
-        mTextViewNet.setOnClickListener(this);
+        if (mTextViewPrice != null) {
+			mTextViewNet.setOnClickListener(this);
+		}
 
         mTextViewBuy = (TextView) findViewById(R.id.buy);
-        mTextViewBuy.setOnClickListener(this);
+        if (mTextViewBuy != null) {
+        	mTextViewBuy.setOnClickListener(this);
+		}
 
         mTextViewSell = (TextView) findViewById(R.id.sell);
-        mTextViewSell.setOnClickListener(this);
+        if (mTextViewSell != null) {
+        	mTextViewSell.setOnClickListener(this);
+		}
 
         mTextViewVolume = (TextView) findViewById(R.id.volume);
-        mTextViewVolume.setOnClickListener(this);
+        if (mTextViewVolume != null) {
+        	mTextViewVolume.setOnClickListener(this);
+		}
 
         mTextViewValue = (TextView) findViewById(R.id.value);
-        mTextViewValue.setOnClickListener(this);
-
-        mTextViewBonus = (TextView) findViewById(R.id.bonus);
-        mTextViewBonus.setOnClickListener(this);
-
-        mTextViewYield = (TextView) findViewById(R.id.yield);
-        mTextViewYield.setOnClickListener(this);
+        if (mTextViewValue != null) {
+        	mTextViewValue.setOnClickListener(this);
+		}
 
         mTextViewFee = (TextView) findViewById(R.id.fee);
-        mTextViewFee.setOnClickListener(this);
+        if (mTextViewFee != null) {
+        	mTextViewFee.setOnClickListener(this);
+		}
 
         mTextViewProfit = (TextView) findViewById(R.id.profit);
-        mTextViewProfit.setOnClickListener(this);
-
-        mTextViewAccount = (TextView) findViewById(R.id.account);
-        mTextViewAccount.setOnClickListener(this);
+        if (mTextViewProfit != null) {
+        	mTextViewProfit.setOnClickListener(this);
+		}
 
         mTextViewAction = (TextView) findViewById(R.id.action);
-        mTextViewAction.setOnClickListener(this);
+        if (mTextViewAction != null) {
+        	mTextViewAction.setOnClickListener(this);
+		}
+
+        mTextViewHold = (TextView) findViewById(R.id.hold);
+        if (mTextViewHold != null) {
+        	mTextViewHold.setOnClickListener(this);
+		}
+
+        mTextViewValuation = (TextView) findViewById(R.id.valuation);
+        if (mTextViewValuation != null) {
+			mTextViewValuation.setOnClickListener(this);
+		}
+
+        mTextViewQuantProfit = (TextView) findViewById(R.id.quant_profit);
+        if (mTextViewQuantProfit != null) {
+        	mTextViewQuantProfit.setOnClickListener(this);
+		}
+
+        mTextViewQuantProfitMargin = (TextView) findViewById(R.id.quant_profit_margin);
+        if (mTextViewQuantProfitMargin != null) {
+        	mTextViewQuantProfitMargin.setOnClickListener(this);
+		}
+
+        mTextViewQuantX = (TextView) findViewById(R.id.quant_x);
+        if (mTextViewQuantX != null) {
+        	mTextViewQuantX.setOnClickListener(this);
+		}
+
+        mTextViewThreshold = (TextView) findViewById(R.id.threshold);
+        if (mTextViewThreshold != null) {
+        	mTextViewThreshold.setOnClickListener(this);
+		}
 
         mTextViewCreated = (TextView) findViewById(R.id.created);
-        mTextViewCreated.setOnClickListener(this);
+        if (mTextViewCreated != null) {
+        	mTextViewCreated.setOnClickListener(this);
+		}
 
         mTextViewModified = (TextView) findViewById(R.id.modified);
-        mTextViewModified.setOnClickListener(this);
+        if (mTextViewModified != null) {
+        	mTextViewModified.setOnClickListener(this);
+		}
 
         if (mSortOrder.contains(DatabaseContract.COLUMN_CODE)) {
-            setHeaderTextColor(mTextViewStockNameCode,
-                    mHeaderTextHighlightColor);
+            setHeaderTextColor(mTextViewNameCode, mHeaderTextHighlightColor);
+        } else if (mSortOrder.contains(BaseColumns._ID)) {
+            setHeaderTextColor(mTextViewId, mHeaderTextHighlightColor);
         } else if (mSortOrder.contains(DatabaseContract.COLUMN_PRICE)) {
             setHeaderTextColor(mTextViewPrice, mHeaderTextHighlightColor);
         } else if (mSortOrder.contains(DatabaseContract.COLUMN_NET)) {
@@ -531,18 +586,24 @@ public class DealListActivity extends ListActivity implements
             setHeaderTextColor(mTextViewVolume, mHeaderTextHighlightColor);
         } else if (mSortOrder.contains(DatabaseContract.COLUMN_VALUE)) {
             setHeaderTextColor(mTextViewValue, mHeaderTextHighlightColor);
-        } else if (mSortOrder.contains(DatabaseContract.COLUMN_BONUS)) {
-            setHeaderTextColor(mTextViewBonus, mHeaderTextHighlightColor);
-        } else if (mSortOrder.contains(DatabaseContract.COLUMN_YIELD)) {
-            setHeaderTextColor(mTextViewYield, mHeaderTextHighlightColor);
         } else if (mSortOrder.contains(DatabaseContract.COLUMN_FEE)) {
             setHeaderTextColor(mTextViewFee, mHeaderTextHighlightColor);
         } else if (mSortOrder.contains(DatabaseContract.COLUMN_PROFIT)) {
             setHeaderTextColor(mTextViewProfit, mHeaderTextHighlightColor);
-        } else if (mSortOrder.contains(DatabaseContract.COLUMN_ACCOUNT)) {
-            setHeaderTextColor(mTextViewAccount, mHeaderTextHighlightColor);
         } else if (mSortOrder.contains(DatabaseContract.COLUMN_ACTION)) {
             setHeaderTextColor(mTextViewAction, mHeaderTextHighlightColor);
+        } else if (mSortOrder.contains(DatabaseContract.COLUMN_HOLD)) {
+            setHeaderTextColor(mTextViewHold, mHeaderTextHighlightColor);
+        } else if (mSortOrder.contains(DatabaseContract.COLUMN_VALUATION)) {
+            setHeaderTextColor(mTextViewValuation, mHeaderTextHighlightColor);
+        } else if (mSortOrder.contains(DatabaseContract.COLUMN_QUANT_PROFIT)) {
+            setHeaderTextColor(mTextViewQuantProfit, mHeaderTextHighlightColor);
+        } else if (mSortOrder.contains(DatabaseContract.COLUMN_QUANT_PROFIT_MARGIN)) {
+            setHeaderTextColor(mTextViewQuantProfitMargin, mHeaderTextHighlightColor);
+        } else if (mSortOrder.contains(DatabaseContract.COLUMN_QUANT_X)) {
+            setHeaderTextColor(mTextViewQuantX, mHeaderTextHighlightColor);
+        } else if (mSortOrder.contains(DatabaseContract.COLUMN_THRESHOLD)) {
+            setHeaderTextColor(mTextViewThreshold, mHeaderTextHighlightColor);
         } else if (mSortOrder.contains(DatabaseContract.COLUMN_CREATED)) {
             setHeaderTextColor(mTextViewCreated, mHeaderTextHighlightColor);
         } else if (mSortOrder.contains(DatabaseContract.COLUMN_MODIFIED)) {
@@ -557,33 +618,41 @@ public class DealListActivity extends ListActivity implements
         int[] mLeftTo = new int[]{R.id.name, R.id.code};
 
         String[] mRightFrom = new String[]{
+                BaseColumns._ID,
                 DatabaseContract.COLUMN_PRICE,
                 DatabaseContract.COLUMN_NET,
                 DatabaseContract.COLUMN_BUY,
                 DatabaseContract.COLUMN_SELL,
                 DatabaseContract.COLUMN_VOLUME,
                 DatabaseContract.COLUMN_VALUE,
-                DatabaseContract.COLUMN_BONUS,
-                DatabaseContract.COLUMN_YIELD,
                 DatabaseContract.COLUMN_FEE,
                 DatabaseContract.COLUMN_PROFIT,
-                DatabaseContract.COLUMN_ACCOUNT,
                 DatabaseContract.COLUMN_ACTION,
+                DatabaseContract.COLUMN_HOLD,
+                DatabaseContract.COLUMN_VALUATION,
+                DatabaseContract.COLUMN_QUANT_PROFIT,
+                DatabaseContract.COLUMN_QUANT_PROFIT_MARGIN,
+                DatabaseContract.COLUMN_QUANT_X,
+                DatabaseContract.COLUMN_THRESHOLD,
                 DatabaseContract.COLUMN_CREATED,
                 DatabaseContract.COLUMN_MODIFIED};
         int[] mRightTo = new int[]{
+                R.id.id,
                 R.id.price,
                 R.id.net,
                 R.id.buy,
                 R.id.sell,
                 R.id.volume,
                 R.id.value,
-                R.id.bonus,
-                R.id.yield,
                 R.id.fee,
                 R.id.profit,
-                R.id.account,
                 R.id.action,
+                R.id.hold,
+                R.id.valuation,
+                R.id.quant_profit,
+                R.id.quant_profit_margin,
+                R.id.quant_x,
+                R.id.threshold,
                 R.id.created,
                 R.id.modified};
 
@@ -599,7 +668,7 @@ public class DealListActivity extends ListActivity implements
 
         mRightListView = (ListView) findViewById(R.id.right_listview);
         mRightAdapter = new SimpleCursorAdapter(this,
-                R.layout.activity_stock_deal_list_right_item, null, mRightFrom,
+                R.layout.activity_stock_quant_list_right_item, null, mRightFrom,
                 mRightTo, 0);
         if ((mRightListView != null) && (mRightAdapter != null)) {
             mRightAdapter.setViewBinder(new CustomViewBinder());
@@ -614,7 +683,7 @@ public class DealListActivity extends ListActivity implements
     }
 
     void restartLoader() {
-        mLoaderManager.restartLoader(LOADER_ID_DEAL_LIST, null, this);
+        mLoaderManager.restartLoader(LOADER_ID_QUANT_LIST, null, this);
     }
 
     @Override
@@ -639,34 +708,21 @@ public class DealListActivity extends ListActivity implements
     void setupSelection() {
         mSelection = null;
 
-        switch (mFilterType) {
-            case FILTER_TYPE_NONE:
-                mSelection = DatabaseContract.COLUMN_ACTION + " = ''";
-                break;
+        if (mBundle != null) {
+            String se = mBundle.getString(Constant.EXTRA_STOCK_SE);
+            String code = mBundle.getString(Constant.EXTRA_STOCK_CODE);
 
-            case FILTER_TYPE_OPERATE:
-                mSelection = DatabaseContract.COLUMN_ACTION + " != ''";
-                break;
+            mStock.setSE(se);
+            mStock.setCode(code);
 
-            case FILTER_TYPE_BUY:
-                mSelection = DatabaseContract.COLUMN_ACTION + " != ''";
-                mSelection += " AND " + DatabaseContract.COLUMN_VOLUME + " < " + 0;
-                break;
-
-            case FILTER_TYPE_SELL:
-                mSelection = DatabaseContract.COLUMN_ACTION + " != ''";
-                mSelection += " AND " + DatabaseContract.COLUMN_VOLUME + " > " + 0;
-                mSelection += " AND " + DatabaseContract.COLUMN_PROFIT + " > " + DatabaseContract.COLUMN_BONUS;
-                mSelection += " AND " + DatabaseContract.COLUMN_NET + " > " + 0;
-                break;
-
-            case FILTER_TYPE_ALL:
-                mSelection = null;
-                break;
-
-            default:
-                mSelection = null;
-                break;
+            mSelection = DatabaseContract.COLUMN_SE + " = " + "\'" + se + "\'"
+                    + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
+                    + code + "\'";
+            mGroupBy = "";
+        } else {
+            mSelection = "1";
+            mGroupBy = ") GROUP BY (" + DatabaseContract.COLUMN_SE
+                    + " + " + DatabaseContract.COLUMN_CODE;
         }
     }
 
@@ -675,12 +731,12 @@ public class DealListActivity extends ListActivity implements
         CursorLoader loader = null;
 
         switch (id) {
-            case LOADER_ID_DEAL_LIST:
+            case LOADER_ID_QUANT_LIST:
                 setupSelection();
-
+                //selection+") GROUP BY (coloum_name"
                 loader = new CursorLoader(this,
-                        DatabaseContract.StockDeal.CONTENT_URI,
-                        DatabaseContract.StockDeal.PROJECTION_ALL, mSelection,
+                        DatabaseContract.StockQuant.CONTENT_URI,
+                        DatabaseContract.StockQuant.PROJECTION_ALL, mSelection + mGroupBy,
                         null, mSortOrder);
                 break;
 
@@ -698,7 +754,7 @@ public class DealListActivity extends ListActivity implements
         }
 
         switch (loader.getId()) {
-            case LOADER_ID_DEAL_LIST:
+            case LOADER_ID_QUANT_LIST:
                 setStockList(cursor);
 
                 mLeftAdapter.swapCursor(cursor);
@@ -721,19 +777,19 @@ public class DealListActivity extends ListActivity implements
 
     void setStockList(Cursor cursor) {
         ArrayMap<String, Stock> stockMap = new ArrayMap<>();
-        StockDeal stockDeal = new StockDeal();
+        StockQuant stockQuant = new StockQuant();
 
         try {
             mStockList.clear();
             if ((cursor != null) && (cursor.getCount() > 0)) {
                 while (cursor.moveToNext()) {
-                    stockDeal.set(cursor);
-                    if (!stockMap.containsKey(stockDeal.getSE() + stockDeal.getCode())) {
+                    stockQuant.set(cursor);
+                    if (!stockMap.containsKey(stockQuant.getSE() + stockQuant.getCode())) {
                         Stock stock = new Stock();
-                        stock.setSE(stockDeal.getSE());
-                        stock.setCode(stockDeal.getCode());
+                        stock.setSE(stockQuant.getSE());
+                        stock.setCode(stockQuant.getCode());
                         mStockDatabaseManager.getStock(stock);
-                        stockMap.put(stockDeal.getSE() + stockDeal.getCode(), stock);
+                        stockMap.put(stockQuant.getSE() + stockQuant.getCode(), stock);
                     }
                 }
                 cursor.moveToFirst();
@@ -749,11 +805,11 @@ public class DealListActivity extends ListActivity implements
                             long id) {
 
         if (parent.getId() == R.id.left_listview) {
-            mDeal.setId(id);
+            mStockQuant.setId(id);
             mHandler.sendEmptyMessage(MESSAGE_VIEW_STOCK_DEAL);
         } else {
             if (mCurrentActionMode == null) {
-                mDeal.setId(id);
+                mStockQuant.setId(id);
                 mHandler.sendEmptyMessage(MESSAGE_VIEW_STOCK_CHAT);
             }
         }
@@ -767,9 +823,9 @@ public class DealListActivity extends ListActivity implements
             return false;
         }
 
-        mDeal.setId(id);
-        mCurrentActionMode = startActionMode(mModeCallBack);
-        view.setSelected(true);
+//        mDeal.setId(id);
+//        mCurrentActionMode = startActionMode(mModeCallBack);
+//        view.setSelected(true);
         return true;
     }
 
@@ -788,10 +844,10 @@ public class DealListActivity extends ListActivity implements
     }
 
     void getStock() {
-        mStockDatabaseManager.getStockDealById(mDeal);
+        mStockDatabaseManager.getStockQuantById(mStockQuant);
 
-        mStock.setSE(mDeal.getSE());
-        mStock.setCode(mDeal.getCode());
+        mStock.setSE(mStockQuant.getSE());
+        mStock.setCode(mStockQuant.getCode());
 
         mStockDatabaseManager.getStock(mStock);
     }

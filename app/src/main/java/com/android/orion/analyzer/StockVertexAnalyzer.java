@@ -10,8 +10,7 @@ import com.android.orion.database.StockData;
 import com.android.orion.utility.Utility;
 
 public class StockVertexAnalyzer {
-	static final String TAG = Constant.TAG + " "
-			+ StockVertexAnalyzer.class.getSimpleName();
+	static final String TAG = StockVertexAnalyzer.class.getSimpleName();
 
 	void analyzeVertex(ArrayList<StockData> dataList,
 			ArrayList<StockData> vertexList) {

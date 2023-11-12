@@ -43,8 +43,7 @@ import com.github.mikephil.charting.utils.Utils;
 
 public class StockStatisticsChartListActivity extends BaseActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnChartGestureListener {
-	static final String TAG = Constant.TAG + " "
-			+ StockStatisticsChartListActivity.class.getSimpleName();
+	static final String TAG = StockStatisticsChartListActivity.class.getSimpleName();
 
 	public static final int ITEM_VIEW_TYPE_MAIN = 0;
 	public static final int ITEM_VIEW_TYPE_SUB = 1;

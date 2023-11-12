@@ -10,8 +10,7 @@ import com.android.orion.database.StockData;
 import java.util.ArrayList;
 
 public class StockKeyAnalyzer {
-    static final String TAG = Constant.TAG + " "
-            + StockKeyAnalyzer.class.getSimpleName();
+    static final String TAG = StockKeyAnalyzer.class.getSimpleName();
 
     static final boolean LOG = false;
 

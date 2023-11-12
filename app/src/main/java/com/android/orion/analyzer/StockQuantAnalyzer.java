@@ -17,8 +17,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 public class StockQuantAnalyzer {
-    static final String TAG = Constant.TAG + " "
-            + StockQuantAnalyzer.class.getSimpleName();
+    static final String TAG = StockQuantAnalyzer.class.getSimpleName();
 
     boolean mBulkInsert;
 

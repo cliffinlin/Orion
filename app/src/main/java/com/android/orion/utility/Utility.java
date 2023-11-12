@@ -38,6 +38,8 @@ import androidx.annotation.NonNull;
 import com.android.orion.setting.Constant;
 
 public class Utility {
+	static final String TAG = Utility.class.getSimpleName();
+
 	public static final String CALENDAR_DATE_FORMAT = "yyyy-MM-dd";
 	public static final String CALENDAR_TIME_FORMAT = "HH:mm:ss";
 	public static final String CALENDAR_DATE_TIME_FORMAT = CALENDAR_DATE_FORMAT
@@ -291,7 +293,8 @@ public class Utility {
 				length = randomAccessFile.length();
 			}
 		} catch (FileNotFoundException e) {
-			Log.d(Constant.TAG, fileName + " not found.");
+			Log.d(TAG, fileName + " not found.");
+			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -400,7 +403,8 @@ public class Utility {
 				}
 			}
 		} catch (FileNotFoundException e) {
-			Log.d(Constant.TAG, path + " not found.");
+			Log.d(TAG, path + " not found.");
+			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -462,7 +466,8 @@ public class Utility {
 				}
 			}
 		} catch (FileNotFoundException e) {
-			Log.d(Constant.TAG, fileName + " not found.");
+			Log.d(TAG, fileName + " not found.");
+			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -510,7 +515,8 @@ public class Utility {
 				}
 			}
 		} catch (FileNotFoundException e) {
-			Log.d(Constant.TAG, fileName + " not found.");
+			Log.d(TAG, fileName + " not found.");
+			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -638,7 +644,8 @@ public class Utility {
 				}
 			}
 		} catch (FileNotFoundException e) {
-			Log.d(Constant.TAG, fileName + " not found.");
+			Log.d(TAG, fileName + " not found.");
+			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -680,7 +687,8 @@ public class Utility {
 				}
 			}
 		} catch (FileNotFoundException e) {
-			Log.d(Constant.TAG, fileName + " not found.");
+			Log.d(TAG, fileName + " not found.");
+			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

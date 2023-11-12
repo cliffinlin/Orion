@@ -156,7 +156,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 			return true;
 
 		case R.id.action_deal:
-			startActivity(new Intent(this, DealListActivity.class));
+			startActivity(new Intent(this, StockFavoriteDealListActivity.class));
 			return true;
 
 		default:
@@ -550,7 +550,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 					startActivity(intent);
 				} else {
 					Intent intent = new Intent(mContext,
-							StockDealListActivity.class);
+							StockFavoriteDealListActivity.class);
 					Bundle bundle = new Bundle();
 					bundle.putString(Constant.EXTRA_STOCK_SE, mStock.getSE());
 					bundle.putString(Constant.EXTRA_STOCK_CODE, mStock.getCode());

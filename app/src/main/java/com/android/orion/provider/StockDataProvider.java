@@ -40,8 +40,7 @@ import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Utility;
 
 public abstract class StockDataProvider extends StockAnalyzer {
-    static final String TAG = Constant.TAG + " "
-            + StockDataProvider.class.getSimpleName();
+    static final String TAG = StockDataProvider.class.getSimpleName();
 
     public static final int PERIOD_MINUTES_MIN1 = 1;
     public static final int PERIOD_MINUTES_MIN5 = 5;

@@ -12,8 +12,7 @@ import com.android.orion.utility.Utility;
 import java.util.Calendar;
 
 public class OrionAlarmManager {
-	static final String TAG = Constant.TAG + " "
-			+ OrionAlarmManager.class.getSimpleName();
+	static final String TAG = OrionAlarmManager.class.getSimpleName();
 
 	Context mContext = null;
 

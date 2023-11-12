@@ -54,8 +54,7 @@ import java.util.List;
 
 public class StockDataChartListActivity extends BaseActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnChartGestureListener {
-	static final String TAG = Constant.TAG + " "
-			+ StockDataChartListActivity.class.getSimpleName();
+	static final String TAG = StockDataChartListActivity.class.getSimpleName();
 
 	public static final int ITEM_VIEW_TYPE_MAIN = 0;
 	public static final int ITEM_VIEW_TYPE_SUB = 1;
@@ -275,7 +274,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 			Bundle bundle = new Bundle();
 			bundle.putString(Constant.EXTRA_STOCK_SE, mStock.getSE());
 			bundle.putString(Constant.EXTRA_STOCK_CODE, mStock.getCode());
-			Intent intent = new Intent(this, StockDealListActivity.class);
+			Intent intent = new Intent(this, StockFavoriteDealListActivity.class);
 			intent.putExtras(bundle);
 			startActivity(intent);
 			return true;

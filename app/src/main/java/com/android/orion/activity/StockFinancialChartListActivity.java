@@ -48,8 +48,7 @@ import com.github.mikephil.charting.utils.Utils;
 
 public class StockFinancialChartListActivity extends BaseActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnChartGestureListener {
-	static final String TAG = Constant.TAG + " "
-			+ StockFinancialChartListActivity.class.getSimpleName();
+	static final String TAG = StockFinancialChartListActivity.class.getSimpleName();
 
 	static final int ITEM_VIEW_TYPE_MAIN = 0;
 	static final int ITEM_VIEW_TYPE_SUB = 1;
@@ -150,7 +149,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 			Bundle bundle = new Bundle();
 			bundle.putString(Constant.EXTRA_STOCK_SE, mStock.getSE());
 			bundle.putString(Constant.EXTRA_STOCK_CODE, mStock.getCode());
-			Intent intent = new Intent(this, StockDealListActivity.class);
+			Intent intent = new Intent(this, StockFavoriteDealListActivity.class);
 			intent.putExtras(bundle);
 			startActivity(intent);
 			return true;

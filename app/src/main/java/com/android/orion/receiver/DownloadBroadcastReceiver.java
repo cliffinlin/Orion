@@ -12,8 +12,7 @@ import com.android.orion.service.OrionService;
 import com.android.orion.utility.Market;
 
 public class DownloadBroadcastReceiver extends BroadcastReceiver {
-	static final String TAG = Constant.TAG + " "
-			+ DownloadBroadcastReceiver.class.getSimpleName();
+	static final String TAG = DownloadBroadcastReceiver.class.getSimpleName();
 
 	@Override
 	public void onReceive(Context context, Intent intent) {

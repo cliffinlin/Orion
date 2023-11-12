@@ -40,8 +40,7 @@ import com.android.orion.database.TotalShare;
 import com.android.orion.utility.Utility;
 
 public class BaseActivity extends Activity {
-	static final String TAG = Constant.TAG + " "
-			+ BaseActivity.class.getSimpleName();
+	static final String TAG = BaseActivity.class.getSimpleName();
 
 	boolean mResumed = false;
 

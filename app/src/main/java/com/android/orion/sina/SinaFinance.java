@@ -38,8 +38,7 @@ import com.android.orion.utility.StopWatch;
 import com.android.orion.utility.Utility;
 
 public class SinaFinance extends StockDataProvider {
-	static final String TAG = Constant.TAG + " "
-			+ SinaFinance.class.getSimpleName();
+	static final String TAG = SinaFinance.class.getSimpleName();
 
 	public static final String SINA_FINANCE_URL_HQ_NODE_DATA = "http://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/Market_Center.getHQNodeData?";
 	public static final String SINA_FINANCE_URL_HQ_KLINE_DATA = "http://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData?";
