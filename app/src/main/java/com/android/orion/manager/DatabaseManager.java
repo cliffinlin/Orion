@@ -12,30 +12,27 @@ import com.android.orion.database.DatabaseOpenHelper;
 public class DatabaseManager {
 
 
-	Context mContext;
-
+	private static DatabaseManager mInstance;
 	public ContentResolver mContentResolver;
 	public SQLiteDatabase mDatabase = null;
 	public DatabaseOpenHelper mDatabaseHelper;
-
-	private static final Object mLock = new Object();
-	private static DatabaseManager mInstance;
-
-	@NonNull
-	public static DatabaseManager getInstance(@NonNull Context context) {
-		synchronized (mLock) {
-			if (mInstance == null) {
-				mInstance = new DatabaseManager(context.getApplicationContext());
-			}
-			return mInstance;
-		}
-	}
+	Context mContext;
 
 	DatabaseManager(@NonNull Context context) {
 		mContext = context;
 
 		mContentResolver = mContext.getContentResolver();
 		mDatabaseHelper = new DatabaseOpenHelper(mContext);
+	}
+
+	@NonNull
+	public static DatabaseManager getInstance(@NonNull Context context) {
+		synchronized (DatabaseManager.class) {
+			if (mInstance == null) {
+				mInstance = new DatabaseManager(context.getApplicationContext());
+			}
+			return mInstance;
+		}
 	}
 
 	public void openDatabase() {

@@ -1,11 +1,5 @@
 package com.android.orion.activity;
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Comparator;
-import java.util.List;
-
 import android.app.LoaderManager;
 import android.content.Context;
 import android.content.CursorLoader;
@@ -27,13 +21,13 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.android.orion.setting.Constant;
 import com.android.orion.R;
-import com.android.orion.setting.Setting;
 import com.android.orion.chart.StockFinancialChart;
 import com.android.orion.database.DatabaseContract;
-import com.android.orion.database.StockFinancial;
 import com.android.orion.database.Stock;
+import com.android.orion.database.StockFinancial;
+import com.android.orion.setting.Constant;
+import com.android.orion.setting.Setting;
 import com.android.orion.utility.Utility;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -46,9 +40,15 @@ import com.github.mikephil.charting.listener.ChartTouchListener.ChartGesture;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.utils.Utils;
 
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Comparator;
+import java.util.List;
+
 public class StockFinancialChartListActivity extends BaseActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnChartGestureListener {
-	static final String TAG = StockFinancialChartListActivity.class.getSimpleName();
+	public static final String TAG = StockFinancialChartListActivity.class.getSimpleName();
 
 	static final int ITEM_VIEW_TYPE_MAIN = 0;
 	static final int ITEM_VIEW_TYPE_SUB = 1;
@@ -78,20 +78,40 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 			super.handleMessage(msg);
 
 			switch (msg.what) {
-			case MESSAGE_REFRESH:
-				if (mOrionService != null) {
-					mOrionService.download(mStock);
-				}
-				restartLoader();
-				break;
+				case MESSAGE_REFRESH:
+					if (mOrionService != null) {
+						mOrionService.download(mStock);
+					}
+					restartLoader();
+					break;
 
-			default:
-				break;
+				default:
+					break;
 			}
 		}
 	};
 
 	MainHandler mMainHandler = new MainHandler(this);
+	Comparator<StockFinancial> comparator = new Comparator<StockFinancial>() {
+
+		@Override
+		public int compare(StockFinancial arg0, StockFinancial arg1) {
+			Calendar calendar0;
+			Calendar calendar1;
+
+			calendar0 = Utility.getCalendar(arg0.getDate(),
+					Utility.CALENDAR_DATE_TIME_FORMAT);
+			calendar1 = Utility.getCalendar(arg1.getDate(),
+					Utility.CALENDAR_DATE_TIME_FORMAT);
+			if (calendar1.before(calendar0)) {
+				return -1;
+			} else if (calendar1.after(calendar0)) {
+				return 1;
+			} else {
+				return 0;
+			}
+		}
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -126,41 +146,41 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case android.R.id.home: {
-			finish();
-			return true;
-		}
-		case R.id.action_prev: {
-			navigateStock(-1);
-			return true;
-		}
-		case R.id.action_next: {
-			navigateStock(1);
-			return true;
-		}
-		case R.id.action_edit: {
-			mIntent = new Intent(this, StockEditActivity.class);
-			mIntent.setAction(StockEditActivity.ACTION_STOCK_EDIT);
-			mIntent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
-			startActivity(mIntent);
-			return true;
-		}
-		case R.id.action_deal: {
-			Bundle bundle = new Bundle();
-			bundle.putString(Constant.EXTRA_STOCK_SE, mStock.getSE());
-			bundle.putString(Constant.EXTRA_STOCK_CODE, mStock.getCode());
-			Intent intent = new Intent(this, StockFavoriteDealListActivity.class);
-			intent.putExtras(bundle);
-			startActivity(intent);
-			return true;
-		}
-		case R.id.action_refresh: {
-			mHandler.sendEmptyMessage(MESSAGE_REFRESH);
-			return true;
-		}
+			case android.R.id.home: {
+				finish();
+				return true;
+			}
+			case R.id.action_prev: {
+				navigateStock(-1);
+				return true;
+			}
+			case R.id.action_next: {
+				navigateStock(1);
+				return true;
+			}
+			case R.id.action_edit: {
+				mIntent = new Intent(this, StockEditActivity.class);
+				mIntent.setAction(StockEditActivity.ACTION_STOCK_EDIT);
+				mIntent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
+				startActivity(mIntent);
+				return true;
+			}
+			case R.id.action_deal: {
+				Bundle bundle = new Bundle();
+				bundle.putString(Constant.EXTRA_STOCK_SE, mStock.getSE());
+				bundle.putString(Constant.EXTRA_STOCK_CODE, mStock.getCode());
+				Intent intent = new Intent(this, StockFavoriteDealListActivity.class);
+				intent.putExtras(bundle);
+				startActivity(intent);
+				return true;
+			}
+			case R.id.action_refresh: {
+				mHandler.sendEmptyMessage(MESSAGE_REFRESH);
+				return true;
+			}
 
-		default:
-			return super.onOptionsItemSelected(item);
+			default:
+				return super.onOptionsItemSelected(item);
 		}
 	}
 
@@ -233,7 +253,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 	}
 
 	void initListView() {
-		mListView = (ListView) findViewById(R.id.listView);
+		mListView = findViewById(R.id.listView);
 
 		if (mStockFinancialChartList == null) {
 			mStockFinancialChartList = new ArrayList<StockFinancialChart>();
@@ -388,7 +408,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 	}
 
 	public void swapStockFinancialCursor(StockFinancialChart stockFinancialChart,
-			Cursor cursor) {
+										 Cursor cursor) {
 		int index = 0;
 		double unit = 100000000.0;
 
@@ -489,28 +509,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 		mStockFinancialChartArrayAdapter.notifyDataSetChanged();
 	}
 
-	Comparator<StockFinancial> comparator = new Comparator<StockFinancial>() {
-
-		@Override
-		public int compare(StockFinancial arg0, StockFinancial arg1) {
-			Calendar calendar0;
-			Calendar calendar1;
-
-			calendar0 = Utility.getCalendar(arg0.getDate(),
-					Utility.CALENDAR_DATE_TIME_FORMAT);
-			calendar1 = Utility.getCalendar(arg1.getDate(),
-					Utility.CALENDAR_DATE_TIME_FORMAT);
-			if (calendar1.before(calendar0)) {
-				return -1;
-			} else if (calendar1.after(calendar0)) {
-				return 1;
-			} else {
-				return 0;
-			}
-		}
-	};
-
-	int binarySearch(int arr[], int l, int r, int x) {
+	int binarySearch(int[] arr, int l, int r, int x) {
 		if (r >= l) {
 			int mid = l + (r - l) / 2;
 
@@ -633,6 +632,53 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 		restartLoader();
 	}
 
+	@Override
+	public void onChartLongPressed(MotionEvent me) {
+	}
+
+	@Override
+	public void onChartDoubleTapped(MotionEvent me) {
+	}
+
+	@Override
+	public void onChartSingleTapped(MotionEvent me) {
+	}
+
+	@Override
+	public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX,
+							 float velocityY) {
+		int distance = FLING_DISTANCE;
+		int velocity = FLING_VELOCITY;
+
+		if (me1.getX() - me2.getX() > distance
+				&& Math.abs(velocityX) > velocity) {
+			navigateStock(-1);
+		}
+
+		if (me2.getX() - me1.getX() > distance
+				&& Math.abs(velocityX) > velocity) {
+			navigateStock(1);
+		}
+	}
+
+	@Override
+	public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
+	}
+
+	@Override
+	public void onChartTranslate(MotionEvent me, float dX, float dY) {
+	}
+
+	@Override
+	public void onChartGestureStart(MotionEvent me,
+									ChartGesture lastPerformedGesture) {
+	}
+
+	@Override
+	public void onChartGestureEnd(MotionEvent me,
+								  ChartGesture lastPerformedGesture) {
+	}
+
 	static class MainHandler extends Handler {
 		private final WeakReference<StockFinancialChartListActivity> mActivity;
 
@@ -660,7 +706,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 		}
 
 		public StockFinancialChartItem(int itemViewType, int resource,
-				StockFinancialChart stockFinancialChart) {
+									   StockFinancialChart stockFinancialChart) {
 			mItemViewType = itemViewType;
 			mResource = resource;
 			mStockFinancialChart = stockFinancialChart;
@@ -680,7 +726,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 			// if (view == null) {
 			view = LayoutInflater.from(context).inflate(mResource, null);
 			viewHolder = new ViewHolder();
-			viewHolder.chart = (CombinedChart) view.findViewById(R.id.chart);
+			viewHolder.chart = view.findViewById(R.id.chart);
 			view.setTag(viewHolder);
 			// } else {
 			// viewHolder = (ViewHolder) view.getTag();
@@ -752,7 +798,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 			ArrayAdapter<StockFinancialChartItem> {
 
 		public StockFinancialChartArrayAdapter(Context context,
-				List<StockFinancialChartItem> objects) {
+											   List<StockFinancialChartItem> objects) {
 			super(context, 0, objects);
 		}
 
@@ -771,52 +817,5 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 		public int getViewTypeCount() {
 			return mStockFinancialChartItemList.size();
 		}
-	}
-
-	@Override
-	public void onChartLongPressed(MotionEvent me) {
-	}
-
-	@Override
-	public void onChartDoubleTapped(MotionEvent me) {
-	}
-
-	@Override
-	public void onChartSingleTapped(MotionEvent me) {
-	}
-
-	@Override
-	public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX,
-			float velocityY) {
-		int distance = FLING_DISTANCE;
-		int velocity = FLING_VELOCITY;
-
-		if (me1.getX() - me2.getX() > distance
-				&& Math.abs(velocityX) > velocity) {
-			navigateStock(-1);
-		}
-
-		if (me2.getX() - me1.getX() > distance
-				&& Math.abs(velocityX) > velocity) {
-			navigateStock(1);
-		}
-	}
-
-	@Override
-	public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
-	}
-
-	@Override
-	public void onChartTranslate(MotionEvent me, float dX, float dY) {
-	}
-
-	@Override
-	public void onChartGestureStart(MotionEvent me,
-			ChartGesture lastPerformedGesture) {
-	}
-
-	@Override
-	public void onChartGestureEnd(MotionEvent me,
-			ChartGesture lastPerformedGesture) {
 	}
 }

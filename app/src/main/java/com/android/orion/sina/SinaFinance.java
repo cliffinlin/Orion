@@ -1,16 +1,5 @@
 package com.android.orion.sina;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Locale;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.os.Environment;
@@ -23,22 +12,33 @@ import androidx.annotation.NonNull;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.android.orion.provider.StockDataProvider;
-import com.android.orion.setting.Constant;
 import com.android.orion.R;
-import com.android.orion.setting.Setting;
 import com.android.orion.database.DatabaseContract;
-import com.android.orion.database.StockFinancial;
 import com.android.orion.database.IPO;
 import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
+import com.android.orion.database.StockFinancial;
 import com.android.orion.database.TotalShare;
+import com.android.orion.provider.StockDataProvider;
+import com.android.orion.setting.Constant;
+import com.android.orion.setting.Setting;
 import com.android.orion.utility.StopWatch;
 import com.android.orion.utility.Utility;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Locale;
+
 public class SinaFinance extends StockDataProvider {
-	static final String TAG = SinaFinance.class.getSimpleName();
+	public static final String TAG = SinaFinance.class.getSimpleName();
 
 	public static final String SINA_FINANCE_URL_HQ_NODE_DATA = "http://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/Market_Center.getHQNodeData?";
 	public static final String SINA_FINANCE_URL_HQ_KLINE_DATA = "http://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData?";
@@ -49,58 +49,16 @@ public class SinaFinance extends StockDataProvider {
 	public static final String SINA_FINANCE_URL_VISSUE_SHAREBONUS = "http://vip.stock.finance.sina.com.cn/corp/go.php/vISSUE_ShareBonus/stockid/";// stock_id.phtml
 	public static final String SINA_FINANCE_URL_VCI_STOCK_STRUCTURE_HISTORY = "http://vip.stock.finance.sina.com.cn/corp/go.php/vCI_StockStructureHistory/stockid/";// stocktype/TotalStock.phtml
 	public static final String SINA_FINANCE_URL_NEWSTOCK_ISSUE = "https://vip.stock.finance.sina.com.cn/corp/go.php/vRPD_NewStockIssue/page/1.phtml";
-
 	public static final String SINA_FINANCE_HEAD_REFERER_KEY = "Referer";
 	public static final String SINA_FINANCE_HEAD_REFERER_VALUE = "http://vip.stock.finance.sina.com.cn/";
-
 	public static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN5 = 242;
 	public static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN15 = 192;
 	public static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN30 = 192;
 	public static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN60 = 192;
 
+
 	public SinaFinance(Context context) {
 		super(context);
-	}
-
-	public class StockInfo {
-		public String code;
-
-		public String name;// 0
-		public String open_price;// 1
-		public String yesterday_close_price;// 2
-		public String current_price;// 3
-		public String high_price;// 4
-		public String low_price;// 5
-		public String bid_price;// 6
-		public String ask_price;// 7
-		public String volume;// 8
-		public String value;// 9
-		public String bid_volume_1;// 10
-		public String bid_price_1;// 11
-		public String bid_volume_2;// 12
-		public String bid_price_2;// 13
-		public String bid_volume_3;// 14
-		public String bid_price_3;// 15
-		public String bid_volume_4;// 16
-		public String bid_price_4;// 17
-		public String bid_volume_5;// 18
-		public String bid_price_5;// 19
-		public String ask_volume_1;// 20
-		public String ask_price_1;// 21
-		public String ask_volume_2;// 22
-		public String ask_price_2;// 23
-		public String ask_volume_3;// 24
-		public String ask_price_3;// 25
-		public String ask_volume_4;// 26
-		public String ask_price_4;// 27
-		public String ask_volume_5;// 28
-		public String ask_price_5;// 29
-		public String date;// 30
-		public String time;// 31
-		public String status;// 32
-	}
-
-	public class StockInfo_i {
 	}
 
 	@Override
@@ -216,7 +174,7 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		urlString = SINA_FINANCE_URL_VFD_FINANCEREPORT2022
-				+ stock.getSE() +  stock.getCode()
+				+ stock.getSE() + stock.getCode()
 				+ "&source=gjzb&type=0&page=1&num=10000";
 
 		return urlString;
@@ -257,9 +215,9 @@ public class SinaFinance extends StockDataProvider {
 	public void handleResponseStockInformation(Stock stock, String response) {
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
-		String keyValue[] = null;
-		String codeInfo[] = null;
-		String stockInfo[] = null;
+		String[] keyValue = null;
+		String[] codeInfo = null;
+		String[] stockInfo = null;
 //var hq_str_sh600036_i="A,zsyh,4.6100,5.2827,4.1500,31.6900,4255.813,2521984.5601,2062894.4429,2062894.4429,0,CNY,1199.2200,1332.2900,7.3000,1,13.6650,2648.3300,1069.2200,51.939,26.3,0.1,招商银行,X|O|0|0|0,39.71|32.49,20220930|35640666666.67,697.4600|89.7750,|,,1/1,EQA,,4.17,46.678|34.960|34.390,股份制银行Ⅱ,,1,344676000000";
 		if ((stock == null) || TextUtils.isEmpty(response)) {
 			Log.d(TAG, "handleResponseStockInformation return " + " stock = "
@@ -277,10 +235,10 @@ public class SinaFinance extends StockDataProvider {
 			}
 
 			if (keyValue[0] == null) {
-                Log.d(TAG,
-                        "handleResponseStockInformation return keyValue[0] == null");
-                return;
-            }
+				Log.d(TAG,
+						"handleResponseStockInformation return keyValue[0] == null");
+				return;
+			}
 
 			codeInfo = keyValue[0].trim().split("_");
 
@@ -342,9 +300,9 @@ public class SinaFinance extends StockDataProvider {
 	public void handleResponseStockRealTime(Stock stock, String response) {
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
-		String keyValue[] = null;
-		String codeInfo[] = null;
-		String stockInfo[] = null;
+		String[] keyValue = null;
+		String[] codeInfo = null;
+		String[] stockInfo = null;
 
 		//var hq_str_s_sh600048="保利发展,17.690,0.140,0.80,645118,115512";
 
@@ -548,7 +506,7 @@ public class SinaFinance extends StockDataProvider {
 		boolean bulkInsert = false;
 		int defaultValue = 0;
 		String dateTimeString = "";
-		String dateTime[] = null;
+		String[] dateTime = null;
 		JSONArray jsonArray = null;
 
 		ArrayList<ContentValues> contentValuesList = new ArrayList<ContentValues>();
@@ -604,16 +562,16 @@ public class SinaFinance extends StockDataProvider {
 					if (!TextUtils.isEmpty(dateTimeString)) {
 						dateTime = dateTimeString.trim().split(" ");
 						switch (dateTime.length) {
-						case 1:
-							stockData.setDate(dateTime[0]);
-							stockData.setTime("");
-							break;
-						case 2:
-							stockData.setDate(dateTime[0]);
-							stockData.setTime(dateTime[1]);
-							break;
-						default:
-							break;
+							case 1:
+								stockData.setDate(dateTime[0]);
+								stockData.setTime("");
+								break;
+							case 2:
+								stockData.setDate(dateTime[0]);
+								stockData.setTime(dateTime[1]);
+								break;
+							default:
+								break;
 						}
 					}
 
@@ -668,7 +626,7 @@ public class SinaFinance extends StockDataProvider {
 
 					ContentValues[] contentValuesArray = new ContentValues[contentValuesList
 							.size()];
-					contentValuesArray = (ContentValues[]) contentValuesList
+					contentValuesArray = contentValuesList
 							.toArray(contentValuesArray);
 					mStockDatabaseManager.bulkInsertStockData(contentValuesArray);
 				}
@@ -681,10 +639,6 @@ public class SinaFinance extends StockDataProvider {
 		Log.d(TAG, "handleResponseStockDataHistory:" + stock.getName() + " "
 				+ stockData.getPeriod() + " " + stopWatch.getInterval() + "s");
 	}
-
-	//					SH#600938.txt
-	//					日期	    时间	    开盘	    最高	    最低	    收盘	    成交量	    成交额
-	//					2023/01/03	0935	37.08	37.08	36.72	36.81	6066500	223727792.00
 
 	@NonNull
 	String getStockDataFileName(@NonNull Stock stock) {
@@ -714,6 +668,10 @@ public class SinaFinance extends StockDataProvider {
 		return fileName;
 	}
 
+	//					SH#600938.txt
+	//					日期	    时间	    开盘	    最高	    最低	    收盘	    成交量	    成交额
+	//					2023/01/03	0935	37.08	37.08	36.72	36.81	6066500	223727792.00
+
 	StockData mergeStockData(@NonNull ArrayList<StockData> stockDataList, int size) {
 		double high = 0;
 		double low = 0;
@@ -724,14 +682,14 @@ public class SinaFinance extends StockDataProvider {
 
 		int j = 0;
 		StockData result = new StockData();
-		for (int i = stockDataList.size()-1; i >=0; i--, j++) {
+		for (int i = stockDataList.size() - 1; i >= 0; i--, j++) {
 			if (j >= size) {
 				break;
 			}
 
 			StockData stockData = stockDataList.get(i);
 
-			if (i == stockDataList.size()-1) {
+			if (i == stockDataList.size() - 1) {
 				high = stockData.getHigh();
 				low = stockData.getLow();
 
@@ -751,7 +709,7 @@ public class SinaFinance extends StockDataProvider {
 			}
 			result.setLow(low);
 
-			if (i == stockDataList.size()-1) {
+			if (i == stockDataList.size() - 1) {
 				result.setClose(stockData.getClose());
 			}
 		}
@@ -799,21 +757,21 @@ public class SinaFinance extends StockDataProvider {
 				StockDataMin5List.add(stockDataMin5);
 
 				if (datetimeMin15List.contains(stockDataMin5.getTime())) {
-					StockData stockData15 = mergeStockData(StockDataMin5List, 15/5);
+					StockData stockData15 = mergeStockData(StockDataMin5List, 15 / 5);
 					if (stockData15 != null) {
 						StockDataMin15List.add(stockData15);
 					}
 				}
 
 				if (datetimeMin30List.contains(stockDataMin5.getTime())) {
-					StockData stockData30 = mergeStockData(StockDataMin15List, 30/15);
+					StockData stockData30 = mergeStockData(StockDataMin15List, 30 / 15);
 					if (stockData30 != null) {
 						StockDataMin30List.add(stockData30);
 					}
 				}
 
 				if (datetimeMin60List.contains(stockDataMin5.getTime())) {
-					StockData stockData60 = mergeStockData(StockDataMin30List, 60/30);
+					StockData stockData60 = mergeStockData(StockDataMin30List, 60 / 30);
 					if (stockData60 != null) {
 						StockDataMin60List.add(stockData60);
 					}
@@ -834,7 +792,7 @@ public class SinaFinance extends StockDataProvider {
 							 @NonNull ArrayList<ContentValues> contentValuesList,
 							 @NonNull ArrayMap<String, StockData> stockDataMap) {
 		String fileName = "";
-        ArrayList<String> lineList = new ArrayList<>();
+		ArrayList<String> lineList = new ArrayList<>();
 
 		try {
 			fileName = getStockDataFileName(stock, stockData.getPeriod());
@@ -971,9 +929,9 @@ public class SinaFinance extends StockDataProvider {
 												String response) {
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
-		String keyValue[] = null;
-		String codeInfo[] = null;
-		String stockInfo[] = null;
+		String[] keyValue = null;
+		String[] codeInfo = null;
+		String[] stockInfo = null;
 
 		if ((stock == null) || (stockData == null)
 				|| TextUtils.isEmpty(response)) {
@@ -1155,12 +1113,12 @@ public class SinaFinance extends StockDataProvider {
 			for (int i = 0; i < reportDateJSONArray.size(); i++) {
 				JSONObject reportDatejsonObject = reportDateJSONArray.getJSONObject(i);
 				if (reportDatejsonObject == null) {
-						continue;
+					continue;
 				}
 
 				String reportDate = reportDatejsonObject.getString("date_value");
 				if (TextUtils.isEmpty(reportDate) || reportDate.length() < 8) {
-						continue;
+					continue;
 				}
 
 				valueString = reportDate.substring(0, 4) + "-" + reportDate.substring(4, 6) + "-" + reportDate.substring(6);
@@ -1257,7 +1215,7 @@ public class SinaFinance extends StockDataProvider {
 				if (contentValuesList.size() > 0) {
 					ContentValues[] contentValuesArray = new ContentValues[contentValuesList
 							.size()];
-					contentValuesArray = (ContentValues[]) contentValuesList
+					contentValuesArray = contentValuesList
 							.toArray(contentValuesArray);
 					mStockDatabaseManager
 							.bulkInsertStockFinancial(contentValuesArray);
@@ -1401,7 +1359,7 @@ public class SinaFinance extends StockDataProvider {
 				if (contentValuesList.size() > 0) {
 					ContentValues[] contentValuesArray = new ContentValues[contentValuesList
 							.size()];
-					contentValuesArray = (ContentValues[]) contentValuesList
+					contentValuesArray = contentValuesList
 							.toArray(contentValuesArray);
 					mStockDatabaseManager
 							.bulkInsertShareBonus(contentValuesArray);
@@ -1545,7 +1503,7 @@ public class SinaFinance extends StockDataProvider {
 				if (contentValuesList.size() > 0) {
 					ContentValues[] contentValuesArray = new ContentValues[contentValuesList
 							.size()];
-					contentValuesArray = (ContentValues[]) contentValuesList
+					contentValuesArray = contentValuesList
 							.toArray(contentValuesArray);
 					mStockDatabaseManager
 							.bulkInsertTotalShare(contentValuesArray);
@@ -1727,7 +1685,7 @@ public class SinaFinance extends StockDataProvider {
 				if (contentValuesList.size() > 0) {
 					ContentValues[] contentValuesArray = new ContentValues[contentValuesList
 							.size()];
-					contentValuesArray = (ContentValues[]) contentValuesList
+					contentValuesArray = contentValuesList
 							.toArray(contentValuesArray);
 					mStockDatabaseManager.bulkInsertIPO(contentValuesArray);
 				}
@@ -1739,5 +1697,46 @@ public class SinaFinance extends StockDataProvider {
 		stopWatch.stop();
 		Log.d(TAG, "handleResponseIPO:" + contentValuesList.size() + " "
 				+ stopWatch.getInterval() + "s");
+	}
+
+	public class StockInfo {
+		public String code;
+
+		public String name;// 0
+		public String open_price;// 1
+		public String yesterday_close_price;// 2
+		public String current_price;// 3
+		public String high_price;// 4
+		public String low_price;// 5
+		public String bid_price;// 6
+		public String ask_price;// 7
+		public String volume;// 8
+		public String value;// 9
+		public String bid_volume_1;// 10
+		public String bid_price_1;// 11
+		public String bid_volume_2;// 12
+		public String bid_price_2;// 13
+		public String bid_volume_3;// 14
+		public String bid_price_3;// 15
+		public String bid_volume_4;// 16
+		public String bid_price_4;// 17
+		public String bid_volume_5;// 18
+		public String bid_price_5;// 19
+		public String ask_volume_1;// 20
+		public String ask_price_1;// 21
+		public String ask_volume_2;// 22
+		public String ask_price_2;// 23
+		public String ask_volume_3;// 24
+		public String ask_price_3;// 25
+		public String ask_volume_4;// 26
+		public String ask_price_4;// 27
+		public String ask_volume_5;// 28
+		public String ask_price_5;// 29
+		public String date;// 30
+		public String time;// 31
+		public String status;// 32
+	}
+
+	public class StockInfo_i {
 	}
 }

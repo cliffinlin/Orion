@@ -12,15 +12,15 @@
         android:orientation="horizontal">
 
         <TextView
-            android:textStyle="bold"
-            android:textColor="@color/textColor"
-            android:textSize="15dp"
             android:id="@+id/stockName"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_weight="2"
             android:gravity="center"
-            android:text="多股同列" />
+            android:text="多股同列"
+            android:textColor="@color/textColor"
+            android:textSize="15dp"
+            android:textStyle="bold" />
 
 
         <com.android.orion.view.CustomizeScrollView
@@ -48,8 +48,8 @@
     </LinearLayout>
 
     <View
-        android:background="@color/line"
         android:layout_width="match_parent"
-        android:layout_height="1px"/>
+        android:layout_height="1px"
+        android:background="@color/line" />
 
 </LinearLayout>

@@ -32,84 +32,84 @@ public class StockFilter {
 		return mEnabled;
 	}
 
-	public boolean getFavorite() {
-		return mFavorite;
-	}
-
-	public String getHold() {
-		return mHold;
-	}
-
-	public String getRoi() {
-		return mRoi;
-	}
-
-	public String getRate() {
-		return mRate;
-	}
-
-	public String getRoe() {
-		return mRoe;
-	}
-
-	public String getPe() {
-		return mPe;
-	}
-
-	public String getPb() {
-		return mPb;
-	}
-
-	public String getDividend() {
-		return mDividend;
-	}
-
-	public String getYield() {
-		return mYield;
-	}
-
-	public String getDividendRatio() {
-		return mDividendRatio;
-	}
-
 	public void setEnabled(boolean enabled) {
 		mEnabled = enabled;
+	}
+
+	public boolean getFavorite() {
+		return mFavorite;
 	}
 
 	public void setFavorite(boolean favorite) {
 		mFavorite = favorite;
 	}
 
+	public String getHold() {
+		return mHold;
+	}
+
 	public void setHold(String hold) {
 		mHold = hold;
+	}
+
+	public String getRoi() {
+		return mRoi;
 	}
 
 	public void setRoi(String roi) {
 		mRoi = roi;
 	}
 
+	public String getRate() {
+		return mRate;
+	}
+
 	public void setRate(String rate) {
 		mRate = rate;
+	}
+
+	public String getRoe() {
+		return mRoe;
 	}
 
 	public void setRoe(String roe) {
 		mRoe = roe;
 	}
 
+	public String getPe() {
+		return mPe;
+	}
+
 	public void setPe(String pe) {
 		mPe = pe;
+	}
+
+	public String getPb() {
+		return mPb;
 	}
 
 	public void setPb(String pb) {
 		mPb = pb;
 	}
 
+	public String getDividend() {
+		return mDividend;
+	}
+
 	public void setDividend(String dividend) {
 		mDividend = dividend;
 	}
 
+	public String getYield() {
+		return mYield;
+	}
+
 	public void setYield(String yield) {
 		mYield = yield;
+	}
+
+	public String getDividendRatio() {
+		return mDividendRatio;
 	}
 
 	public void setDividendRatio(String dividendRatio) {

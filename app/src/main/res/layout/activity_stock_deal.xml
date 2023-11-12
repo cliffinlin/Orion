@@ -2,11 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/textview_stock_account"
@@ -25,7 +25,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/textview_stock_name"
@@ -40,15 +40,15 @@
             android:id="@+id/edittext_stock_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="14dp"
             android:layout_marginLeft="18dp"
             android:layout_marginRight="14dp"
+            android:layout_marginBottom="14dp"
             android:inputType="text" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/textview_stock_code"
@@ -63,15 +63,15 @@
             android:id="@+id/edittext_stock_code"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="14dp"
             android:layout_marginLeft="18dp"
             android:layout_marginRight="14dp"
+            android:layout_marginBottom="14dp"
             android:inputType="numberDecimal" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/textview_deal_profit"
@@ -88,13 +88,12 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="2dp"
             android:layout_marginRight="14dp"
-            android:inputType="numberSigned" >
-        </EditText>
+            android:inputType="numberSigned"></EditText>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/textview_deal_volume"
@@ -111,7 +110,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="2dp"
             android:layout_marginRight="14dp"
-            android:inputType="numberSigned" >
+            android:inputType="numberSigned">
 
             <requestFocus />
         </EditText>
@@ -119,7 +118,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/textview_buy_price"
@@ -134,18 +133,17 @@
             android:id="@+id/edittext_buy_price"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="14dp"
             android:layout_marginLeft="18dp"
             android:layout_marginRight="14dp"
+            android:layout_marginBottom="14dp"
             android:layout_weight="0.08"
             android:ems="10"
-            android:inputType="numberDecimal" >
-        </EditText>
+            android:inputType="numberDecimal"></EditText>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/textview_sell_price"
@@ -160,18 +158,17 @@
             android:id="@+id/edittext_sell_price"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="14dp"
             android:layout_marginLeft="18dp"
             android:layout_marginRight="14dp"
+            android:layout_marginBottom="14dp"
             android:layout_weight="0.08"
             android:ems="10"
-            android:inputType="numberDecimal" >
-        </EditText>
+            android:inputType="numberDecimal"></EditText>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/textview_stock_operate"
@@ -192,7 +189,7 @@
         style="?android:buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/button_cancel"

@@ -3,6 +3,6 @@
     android:hint="@string/search"
     android:label="@string/app_name"
     android:searchSuggestAuthority="com.android.orion.OrionSearchRecentSuggestionsProvider"
-    android:searchSuggestSelection=" ?" >
+    android:searchSuggestSelection=" ?">
 
 </searchable>

@@ -2,18 +2,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="3"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <include layout="@layout/activity_stock_list_left_title" />
         </LinearLayout>
@@ -23,13 +23,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:scrollbars="@null" >
+            android:scrollbars="@null">
 
             <LinearLayout
                 android:id="@+id/right_title_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
 
                 <include layout="@layout/activity_stock_list_right_title" />
             </LinearLayout>
@@ -38,24 +38,23 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="3"
                 android:gravity="center_vertical"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
                 <ListView
                     android:id="@+id/left_listview"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
-                </ListView>
+                    android:layout_height="match_parent"></ListView>
             </LinearLayout>
 
             <com.android.orion.view.SyncHorizontalScrollView
@@ -63,20 +62,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:scrollbars="@null" >
+                android:scrollbars="@null">
 
                 <LinearLayout
                     android:id="@+id/right_container"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal" >
+                    android:orientation="horizontal">
 
                     <ListView
                         android:id="@+id/right_listview"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" >
-                    </ListView>
+                        android:layout_height="match_parent"></ListView>
                 </LinearLayout>
             </com.android.orion.view.SyncHorizontalScrollView>
         </LinearLayout>

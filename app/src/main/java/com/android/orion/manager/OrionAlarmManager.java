@@ -12,7 +12,7 @@ import com.android.orion.utility.Utility;
 import java.util.Calendar;
 
 public class OrionAlarmManager {
-	static final String TAG = OrionAlarmManager.class.getSimpleName();
+	public static final String TAG = OrionAlarmManager.class.getSimpleName();
 
 	Context mContext = null;
 
@@ -46,22 +46,23 @@ public class OrionAlarmManager {
 	void setPendingIntent(PendingIntent pendingIntent) {
 		mPendingIntent = pendingIntent;
 	}
-/*
-	void startAlarm() {
-		stopAlarm();
 
-		if ((mAlarmManager == null) || (mPendingIntent == null)
-				|| (mIntervalMillis <= 0)) {
-			Log.d(TAG, "startAlarm return " + "mAlarmManager = "
-					+ mAlarmManager + " mPendingIntent = " + mPendingIntent
-					+ " mIntervalMillis = " + mIntervalMillis);
-			return;
+	/*
+		void startAlarm() {
+			stopAlarm();
+
+			if ((mAlarmManager == null) || (mPendingIntent == null)
+					|| (mIntervalMillis <= 0)) {
+				Log.d(TAG, "startAlarm return " + "mAlarmManager = "
+						+ mAlarmManager + " mPendingIntent = " + mPendingIntent
+						+ " mIntervalMillis = " + mIntervalMillis);
+				return;
+			}
+
+			mAlarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+					System.currentTimeMillis(), mIntervalMillis, mPendingIntent);
 		}
-
-		mAlarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-				System.currentTimeMillis(), mIntervalMillis, mPendingIntent);
-	}
-*/
+	*/
 	void startAlarm() {
 		int dayOfWeek = Calendar.SUNDAY;
 		long triggerMillis = 0;
@@ -82,34 +83,34 @@ public class OrionAlarmManager {
 
 		if (Market.isWeekday(calendar)) {
 			if (Market.beforeOpen(calendar)) {
-                calendar = Market.getMarketOpenCalendar(calendar);
+				calendar = Market.getMarketOpenCalendar(calendar);
 			} else if (Market.inFirstHalf(calendar)) {
-                calendar = Calendar.getInstance();
+				calendar = Calendar.getInstance();
 			} else if (Market.isLunchTime(calendar)) {
-                calendar = Market.getMarketLunchEndCalendar(calendar);
+				calendar = Market.getMarketLunchEndCalendar(calendar);
 			} else if (Market.inSecondHalf(calendar)) {
-                calendar = Calendar.getInstance();
+				calendar = Calendar.getInstance();
 			} else if (Market.afterClosed(calendar)) {
-                if (dayOfWeek < Calendar.FRIDAY) {
-                    calendar.add(Calendar.DAY_OF_WEEK, 1);
-                } else {
-                    calendar.add(Calendar.DAY_OF_WEEK, 3);
-                }
-                calendar = Market.getMarketOpenCalendar(calendar);
+				if (dayOfWeek < Calendar.FRIDAY) {
+					calendar.add(Calendar.DAY_OF_WEEK, 1);
+				} else {
+					calendar.add(Calendar.DAY_OF_WEEK, 3);
+				}
+				calendar = Market.getMarketOpenCalendar(calendar);
 			}
 		} else {
-            if (dayOfWeek == Calendar.SATURDAY) {
-                calendar.add(Calendar.DAY_OF_WEEK, 2);
-            } else if (dayOfWeek == Calendar.SUNDAY) {
-                calendar.add(Calendar.DAY_OF_WEEK, 1);
-            }
-            calendar = Market.getMarketOpenCalendar(calendar);
+			if (dayOfWeek == Calendar.SATURDAY) {
+				calendar.add(Calendar.DAY_OF_WEEK, 2);
+			} else if (dayOfWeek == Calendar.SUNDAY) {
+				calendar.add(Calendar.DAY_OF_WEEK, 1);
+			}
+			calendar = Market.getMarketOpenCalendar(calendar);
 		}
 
-        triggerMillis = calendar.getTimeInMillis();
+		triggerMillis = calendar.getTimeInMillis();
 
 		Log.d(TAG, "startAlarm will arrive at "
-                + Utility.getCalendarDateTimeString(calendar)
+				+ Utility.getCalendarDateTimeString(calendar)
 				+ " triggerMillis=" + triggerMillis
 				+ " intervalMillis=" + mIntervalMillis);
 

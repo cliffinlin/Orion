@@ -1,9 +1,6 @@
 package com.android.orion.setting;
 
-import android.text.TextUtils;
-
 import com.android.orion.database.DatabaseContract;
-import com.android.orion.utility.Utility;
 
 public class Setting {
 	public static final String KEY_SHARED_PREFERENCES_INIT = "shared_preferences_init";
@@ -20,9 +17,9 @@ public class Setting {
 	public static final String KEY_PERIOD_MONTH = DatabaseContract.COLUMN_MONTH;
 	public static final String KEY_PERIOD_QUARTER = DatabaseContract.COLUMN_QUARTER;
 	public static final String KEY_PERIOD_YEAR = DatabaseContract.COLUMN_YEAR;
-	public static final String KEY_PERIODS[] = { KEY_PERIOD_YEAR, KEY_PERIOD_QUARTER,
+	public static final String[] KEY_PERIODS = {KEY_PERIOD_YEAR, KEY_PERIOD_QUARTER,
 			KEY_PERIOD_MONTH, KEY_PERIOD_WEEK, KEY_PERIOD_DAY, KEY_PERIOD_MIN60, KEY_PERIOD_MIN30,
-			KEY_PERIOD_MIN15, KEY_PERIOD_MIN5, KEY_PERIOD_MIN1 };
+			KEY_PERIOD_MIN15, KEY_PERIOD_MIN5, KEY_PERIOD_MIN1};
 
 	public static final String KEY_DISPLAY_NET = "display_net";
 	public static final String KEY_DISPLAY_THRESHOLD = "display_threshold";

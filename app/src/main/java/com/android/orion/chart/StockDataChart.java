@@ -1,20 +1,17 @@
 package com.android.orion.chart;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
 
 import androidx.annotation.NonNull;
 
+import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
+import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockQuant;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
-import com.android.orion.database.Stock;
-import com.android.orion.database.StockDeal;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Utility;
 import com.github.mikephil.charting.components.LimitLine;
@@ -35,22 +32,16 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class StockDataChart {
-	String mPeriod;
 	public String mDescription;
-
-	double mMainChartYMin = 0;
-	double mMainChartYMax = 0;
-    double mSubChartYMin = 0;
-    double mSubChartYMax = 0;
-
 	public ArrayList<String> mXValues = null;
-
 	public ArrayList<BubbleEntry> mNaturalRallyList = null;
 	public ArrayList<BubbleEntry> mUpwardTrendList = null;
 	public ArrayList<BubbleEntry> mDownwardTrendList = null;
 	public ArrayList<BubbleEntry> mNaturalReactionList = null;
-
 	public ArrayList<CandleEntry> mCandleEntryList = null;
 	public ArrayList<Entry> mAverage5EntryList = null;
 	public ArrayList<Entry> mAverage10EntryList = null;
@@ -61,22 +52,22 @@ public class StockDataChart {
 	public ArrayList<Entry> mRoeList = null;
 	public ArrayList<Entry> mRoiList = null;
 	public ArrayList<BarEntry> mDividendEntryList = null;
-
 	public ArrayList<Entry> mDIFEntryList = null;
 	public ArrayList<Entry> mDEAEntryList = null;
 	public ArrayList<BarEntry> mHistogramEntryList = null;
-
 	public ArrayList<Entry> mSubChartDrawEntryList = null;
 	public ArrayList<Entry> mSubChartStrokeEntryList = null;
 	public ArrayList<Entry> mSubChartSegmentEntryList = null;
-
 	public ArrayList<LimitLine> mXLimitLineList = null;
-
 	public List<Entry>[] mLineList = new List[StockData.LEVEL_MAX];
 	public int[] mLineColors = {Color.GRAY, Color.YELLOW, Color.BLACK, Color.MAGENTA, Color.RED};
-
 	public CombinedData mCombinedDataMain = null;
 	public CombinedData mCombinedDataSub = null;
+	String mPeriod;
+	double mMainChartYMin = 0;
+	double mMainChartYMax = 0;
+	double mSubChartYMin = 0;
+	double mSubChartYMax = 0;
 
 	public StockDataChart(String period) {
 		if (mXValues == null) {
@@ -151,17 +142,17 @@ public class StockDataChart {
 			mHistogramEntryList = new ArrayList<BarEntry>();
 		}
 
-        if (mSubChartDrawEntryList == null) {
-            mSubChartDrawEntryList = new ArrayList<Entry>();
-        }
+		if (mSubChartDrawEntryList == null) {
+			mSubChartDrawEntryList = new ArrayList<Entry>();
+		}
 
-        if (mSubChartStrokeEntryList == null) {
-            mSubChartStrokeEntryList = new ArrayList<Entry>();
-        }
+		if (mSubChartStrokeEntryList == null) {
+			mSubChartStrokeEntryList = new ArrayList<Entry>();
+		}
 
-        if (mSubChartSegmentEntryList == null) {
-            mSubChartSegmentEntryList = new ArrayList<Entry>();
-        }
+		if (mSubChartSegmentEntryList == null) {
+			mSubChartSegmentEntryList = new ArrayList<Entry>();
+		}
 
 		if (mCombinedDataMain == null) {
 			mCombinedDataMain = new CombinedData(mXValues);
@@ -418,119 +409,119 @@ public class StockDataChart {
 		deaDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(deaDataSet);
 
-        if (Preferences.getBoolean(context, Setting.KEY_DISPLAY_DRAW,
-                true)) {
-            transferMainChartDataToSubChartData(mLineList[0], mSubChartDrawEntryList);
-            LineDataSet drawDataSet = new LineDataSet(mSubChartDrawEntryList, "Draw");
-            drawDataSet.setColor(mLineColors[0]);
-            drawDataSet.setCircleColor(mLineColors[0]);
-            drawDataSet.setCircleSize(0);
-            drawDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-            lineData.addDataSet(drawDataSet);
-        }
+		if (Preferences.getBoolean(context, Setting.KEY_DISPLAY_DRAW,
+				true)) {
+			transferMainChartDataToSubChartData(mLineList[0], mSubChartDrawEntryList);
+			LineDataSet drawDataSet = new LineDataSet(mSubChartDrawEntryList, "Draw");
+			drawDataSet.setColor(mLineColors[0]);
+			drawDataSet.setCircleColor(mLineColors[0]);
+			drawDataSet.setCircleSize(0);
+			drawDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+			lineData.addDataSet(drawDataSet);
+		}
 
-        if (Preferences.getBoolean(context, Setting.KEY_DISPLAY_STROKE,
-                false)) {
-            transferMainChartDataToSubChartData(mLineList[1], mSubChartStrokeEntryList);
-            LineDataSet strokeDataSet = new LineDataSet(mSubChartStrokeEntryList, "Stroke");
-            strokeDataSet.setColor(mLineColors[1]);
-            strokeDataSet.setCircleColor(mLineColors[1]);
-            strokeDataSet.setCircleSize(0);
-            strokeDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-            lineData.addDataSet(strokeDataSet);
-        }
+		if (Preferences.getBoolean(context, Setting.KEY_DISPLAY_STROKE,
+				false)) {
+			transferMainChartDataToSubChartData(mLineList[1], mSubChartStrokeEntryList);
+			LineDataSet strokeDataSet = new LineDataSet(mSubChartStrokeEntryList, "Stroke");
+			strokeDataSet.setColor(mLineColors[1]);
+			strokeDataSet.setCircleColor(mLineColors[1]);
+			strokeDataSet.setCircleSize(0);
+			strokeDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+			lineData.addDataSet(strokeDataSet);
+		}
 
-        if (Preferences.getBoolean(context, Setting.KEY_DISPLAY_SEGMENT,
-                false)) {
-            transferMainChartDataToSubChartData(mLineList[2], mSubChartSegmentEntryList);
-            LineDataSet segmentDataSet = new LineDataSet(mSubChartSegmentEntryList,
-                    "Segment");
-            segmentDataSet.setColor(mLineColors[2]);
-            segmentDataSet.setCircleColor(mLineColors[2]);
-            segmentDataSet.setCircleSize(0);
-            segmentDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-            lineData.addDataSet(segmentDataSet);
-        }
+		if (Preferences.getBoolean(context, Setting.KEY_DISPLAY_SEGMENT,
+				false)) {
+			transferMainChartDataToSubChartData(mLineList[2], mSubChartSegmentEntryList);
+			LineDataSet segmentDataSet = new LineDataSet(mSubChartSegmentEntryList,
+					"Segment");
+			segmentDataSet.setColor(mLineColors[2]);
+			segmentDataSet.setCircleColor(mLineColors[2]);
+			segmentDataSet.setCircleSize(0);
+			segmentDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+			lineData.addDataSet(segmentDataSet);
+		}
 
 		mCombinedDataSub.setData(barData);
 		mCombinedDataSub.setData(lineData);
 	}
 
-    public void setMainChartYMinMax(int index, List<Entry> drawEntryList, List<Entry> strokeEntryList, List<Entry> segmentEntryList) {
-	    double draw = 0;
-	    double stroke = 0;
-	    double segment = 0;
+	public void setMainChartYMinMax(int index, List<Entry> drawEntryList, List<Entry> strokeEntryList, List<Entry> segmentEntryList) {
+		double draw = 0;
+		double stroke = 0;
+		double segment = 0;
 
-	    if (drawEntryList == null || drawEntryList.size() == 0) {
-	        return;
-        }
+		if (drawEntryList == null || drawEntryList.size() == 0) {
+			return;
+		}
 
-	    if (strokeEntryList == null || strokeEntryList.size() == 0) {
-            return;
-        }
+		if (strokeEntryList == null || strokeEntryList.size() == 0) {
+			return;
+		}
 
-        if (segmentEntryList == null || segmentEntryList.size() == 0) {
-            return;
-        }
+		if (segmentEntryList == null || segmentEntryList.size() == 0) {
+			return;
+		}
 
-	    draw = drawEntryList.get(drawEntryList.size() - 1).getVal();
-        stroke = strokeEntryList.get(strokeEntryList.size() - 1).getVal();
-        segment = segmentEntryList.get(segmentEntryList.size() - 1).getVal();
+		draw = drawEntryList.get(drawEntryList.size() - 1).getVal();
+		stroke = strokeEntryList.get(strokeEntryList.size() - 1).getVal();
+		segment = segmentEntryList.get(segmentEntryList.size() - 1).getVal();
 
-        if (index == 0) {
-            mMainChartYMin = Math.min(Math.min(draw, stroke), segment);
-            mMainChartYMax = Math.max(Math.max(draw, stroke), segment);
-        } else {
-            mMainChartYMin = Math.min(Math.min(Math.min(draw, stroke), segment), mMainChartYMin);
-            mMainChartYMax = Math.max(Math.max(Math.max(draw, stroke), segment), mMainChartYMax);
-        }
-    }
+		if (index == 0) {
+			mMainChartYMin = Math.min(Math.min(draw, stroke), segment);
+			mMainChartYMax = Math.max(Math.max(draw, stroke), segment);
+		} else {
+			mMainChartYMin = Math.min(Math.min(Math.min(draw, stroke), segment), mMainChartYMin);
+			mMainChartYMax = Math.max(Math.max(Math.max(draw, stroke), segment), mMainChartYMax);
+		}
+	}
 
 	public void setSubChartYMinMax(int index, List<Entry> difEntryList, List<Entry> deaEntryList) {
-        double dif = 0;
-        double dea = 0;
+		double dif = 0;
+		double dea = 0;
 
-        if (difEntryList == null ||difEntryList.size() == 0) {
-            return;
-        }
+		if (difEntryList == null || difEntryList.size() == 0) {
+			return;
+		}
 
-        if (deaEntryList == null || deaEntryList.size() == 0) {
-            return;
-        }
+		if (deaEntryList == null || deaEntryList.size() == 0) {
+			return;
+		}
 
-        dif = difEntryList.get(difEntryList.size() - 1).getVal();
-        dea = deaEntryList.get(deaEntryList.size() - 1).getVal();
+		dif = difEntryList.get(difEntryList.size() - 1).getVal();
+		dea = deaEntryList.get(deaEntryList.size() - 1).getVal();
 
-        if (index == 0) {
-	        mSubChartYMin = Math.min(dif, dea);
-	        mSubChartYMax = Math.max(dif, dea);
-        } else {
-            mSubChartYMin = Math.min(Math.min(dif, dea), mSubChartYMin);
-            mSubChartYMax = Math.max(Math.max(dif, dea), mSubChartYMax);
-        }
-    }
+		if (index == 0) {
+			mSubChartYMin = Math.min(dif, dea);
+			mSubChartYMax = Math.max(dif, dea);
+		} else {
+			mSubChartYMin = Math.min(Math.min(dif, dea), mSubChartYMin);
+			mSubChartYMax = Math.max(Math.max(dif, dea), mSubChartYMax);
+		}
+	}
 
-    void transferMainChartDataToSubChartData(List<Entry> mainChartEntryList, List<Entry> subChartEntryList) {
-	    if ((mainChartEntryList == null) || (subChartEntryList == null)) {
-	        return;
-        }
+	void transferMainChartDataToSubChartData(List<Entry> mainChartEntryList, List<Entry> subChartEntryList) {
+		if ((mainChartEntryList == null) || (subChartEntryList == null)) {
+			return;
+		}
 
-        if (((mMainChartYMax - mMainChartYMin) == 0) || (mSubChartYMax - mSubChartYMin) == 0) {
-            return;
-        }
+		if (((mMainChartYMax - mMainChartYMin) == 0) || (mSubChartYMax - mSubChartYMin) == 0) {
+			return;
+		}
 
-        subChartEntryList.clear();
+		subChartEntryList.clear();
 
-        for (int i = 0; i < mainChartEntryList.size(); i++) {
-           Entry mainChartEntry = mainChartEntryList.get(i);
-           if (mainChartEntry != null) {
-               Entry subChartEntry = new Entry((float) ((mainChartEntry.getVal() - mMainChartYMin) / (mMainChartYMax - mMainChartYMin)
-                       * (mSubChartYMax - mSubChartYMin) + mSubChartYMin),
-                       mainChartEntry.getXIndex());
-               subChartEntryList.add(subChartEntry);
-           }
-        }
-    }
+		for (int i = 0; i < mainChartEntryList.size(); i++) {
+			Entry mainChartEntry = mainChartEntryList.get(i);
+			if (mainChartEntry != null) {
+				Entry subChartEntry = new Entry((float) ((mainChartEntry.getVal() - mMainChartYMin) / (mMainChartYMax - mMainChartYMin)
+						* (mSubChartYMax - mSubChartYMin) + mSubChartYMin),
+						mainChartEntry.getXIndex());
+				subChartEntryList.add(subChartEntry);
+			}
+		}
+	}
 
 	public void updateDescription(Stock stock) {
 		mDescription = "";
@@ -644,7 +635,7 @@ public class StockDataChart {
 	}
 
 	void updateDealLimitLine(@NonNull Stock stock, @NonNull ArrayList<StockDeal> stockDealList,
-			boolean keyDisplayDeal) {
+							 boolean keyDisplayDeal) {
 		double limit = 0;
 		int color = Color.WHITE;
 		String label = "";
@@ -691,7 +682,7 @@ public class StockDataChart {
 	}
 
 	void updateQuantLimitLine(@NonNull Stock stock, @NonNull ArrayList<StockQuant> stockQuantList,
-							 boolean keyDisplayDeal) {
+							  boolean keyDisplayDeal) {
 		double limit = 0;
 		int color = Color.WHITE;
 		String label = "";
@@ -757,9 +748,9 @@ public class StockDataChart {
 		mDIFEntryList.clear();
 		mDEAEntryList.clear();
 		mHistogramEntryList.clear();
-        mSubChartDrawEntryList.clear();
-        mSubChartStrokeEntryList.clear();
-        mSubChartSegmentEntryList.clear();
+		mSubChartDrawEntryList.clear();
+		mSubChartStrokeEntryList.clear();
+		mSubChartSegmentEntryList.clear();
 
 		for (int i = 0; i < StockData.LEVEL_MAX; i++) {
 			mLineList[i].clear();

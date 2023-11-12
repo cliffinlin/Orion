@@ -19,8 +19,8 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import com.android.orion.R;
-import com.android.orion.setting.Setting;
 import com.android.orion.database.DatabaseContract;
+import com.android.orion.setting.Setting;
 import com.android.orion.utility.Preferences;
 import com.android.orion.view.SyncHorizontalScrollView;
 
@@ -79,19 +79,19 @@ public class StockIPOListActivity extends ListActivity implements
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 		switch (item.getItemId()) {
-		case android.R.id.home:
-			finish();
-			return true;
+			case android.R.id.home:
+				finish();
+				return true;
 
-		case R.id.action_refresh:
-			if (mOrionService != null) {
-				mStockDatabaseManager.deleteIPO();
-				mOrionService.download();
-			}
-			return true;
+			case R.id.action_refresh:
+				if (mOrionService != null) {
+					mStockDatabaseManager.deleteIPO();
+					mOrionService.download();
+				}
+				return true;
 
-		default:
-			return super.onMenuItemSelected(featureId, item);
+			default:
+				return super.onMenuItemSelected(featureId, item);
 		}
 	}
 
@@ -102,8 +102,8 @@ public class StockIPOListActivity extends ListActivity implements
 		if (resultCode == RESULT_OK) {
 			switch (requestCode) {
 
-			default:
-				break;
+				default:
+					break;
 			}
 		}
 	}
@@ -116,24 +116,24 @@ public class StockIPOListActivity extends ListActivity implements
 		setHeaderTextColor(id, mHeaderTextHighlightColor);
 
 		switch (id) {
-		case R.id.stock_name_code:
-			mSortOrderColumn = DatabaseContract.COLUMN_CODE;
-			break;
-		case R.id.price:
-			mSortOrderColumn = DatabaseContract.COLUMN_PRICE;
-			break;
-		case R.id.date:
-			mSortOrderColumn = DatabaseContract.COLUMN_DATE;
-			break;
-		case R.id.time_to_market:
-			mSortOrderColumn = DatabaseContract.COLUMN_TIME_TO_MARKET;
-			break;
-		case R.id.pe:
-			mSortOrderColumn = DatabaseContract.COLUMN_PE;
-			break;
-		default:
-			mSortOrderColumn = DatabaseContract.COLUMN_CODE;
-			break;
+			case R.id.stock_name_code:
+				mSortOrderColumn = DatabaseContract.COLUMN_CODE;
+				break;
+			case R.id.price:
+				mSortOrderColumn = DatabaseContract.COLUMN_PRICE;
+				break;
+			case R.id.date:
+				mSortOrderColumn = DatabaseContract.COLUMN_DATE;
+				break;
+			case R.id.time_to_market:
+				mSortOrderColumn = DatabaseContract.COLUMN_TIME_TO_MARKET;
+				break;
+			case R.id.pe:
+				mSortOrderColumn = DatabaseContract.COLUMN_PE;
+				break;
+			default:
+				mSortOrderColumn = DatabaseContract.COLUMN_CODE;
+				break;
 		}
 
 		if (mSortOrderDirection.equals(DatabaseContract.ORDER_DIRECTION_ASC)) {
@@ -150,7 +150,7 @@ public class StockIPOListActivity extends ListActivity implements
 	}
 
 	void setHeaderTextColor(int id, int color) {
-		TextView textView = (TextView) findViewById(id);
+		TextView textView = findViewById(id);
 		setHeaderTextColor(textView, color);
 	}
 
@@ -179,35 +179,35 @@ public class StockIPOListActivity extends ListActivity implements
 	}
 
 	void initHeader() {
-		mTitleSHSV = (SyncHorizontalScrollView) findViewById(R.id.title_shsv);
-		mContentSHSV = (SyncHorizontalScrollView) findViewById(R.id.content_shsv);
+		mTitleSHSV = findViewById(R.id.title_shsv);
+		mContentSHSV = findViewById(R.id.content_shsv);
 
 		if (mTitleSHSV != null && mContentSHSV != null) {
 			mTitleSHSV.setScrollView(mContentSHSV);
 			mContentSHSV.setScrollView(mTitleSHSV);
 		}
 
-		mTextViewNameCode = (TextView) findViewById(R.id.stock_name_code);
+		mTextViewNameCode = findViewById(R.id.stock_name_code);
 		if (mTextViewNameCode != null) {
 			mTextViewNameCode.setOnClickListener(this);
 		}
 
-		mTextViewPrice = (TextView) findViewById(R.id.price);
+		mTextViewPrice = findViewById(R.id.price);
 		if (mTextViewPrice != null) {
 			mTextViewPrice.setOnClickListener(this);
 		}
 
-		mTextViewDate = (TextView) findViewById(R.id.date);
+		mTextViewDate = findViewById(R.id.date);
 		if (mTextViewDate != null) {
 			mTextViewDate.setOnClickListener(this);
 		}
 
-		mTextViewTimeToMarket = (TextView) findViewById(R.id.time_to_market);
+		mTextViewTimeToMarket = findViewById(R.id.time_to_market);
 		if (mTextViewTimeToMarket != null) {
 			mTextViewTimeToMarket.setOnClickListener(this);
 		}
 
-		mTextViewPE = (TextView) findViewById(R.id.pe);
+		mTextViewPE = findViewById(R.id.pe);
 		if (mTextViewPE != null) {
 			mTextViewPE.setOnClickListener(this);
 		}
@@ -227,18 +227,22 @@ public class StockIPOListActivity extends ListActivity implements
 	}
 
 	void initListView() {
-		String[] mLeftFrom = new String[] { DatabaseContract.COLUMN_NAME,
-				DatabaseContract.COLUMN_CODE };
-		int[] mLeftTo = new int[] { R.id.name, R.id.code };
+		String[] mLeftFrom = new String[]{DatabaseContract.COLUMN_NAME,
+				DatabaseContract.COLUMN_CODE};
+		int[] mLeftTo = new int[]{R.id.name, R.id.code};
 
-		String[] mRightFrom = new String[] { DatabaseContract.COLUMN_PRICE,
+		String[] mRightFrom = new String[]{
+				DatabaseContract.COLUMN_PRICE,
 				DatabaseContract.COLUMN_DATE,
 				DatabaseContract.COLUMN_TIME_TO_MARKET,
-				DatabaseContract.COLUMN_PE };
-		int[] mRightTo = new int[] { R.id.price, R.id.date,
-				R.id.time_to_market, R.id.pe };
+				DatabaseContract.COLUMN_PE};
+		int[] mRightTo = new int[]{
+				R.id.price,
+				R.id.date,
+				R.id.time_to_market,
+				R.id.pe};
 
-		mLeftListView = (ListView) findViewById(R.id.left_listview);
+		mLeftListView = findViewById(R.id.left_listview);
 		mLeftAdapter = new SimpleCursorAdapter(this,
 				R.layout.activity_stock_list_left_item, null, mLeftFrom,
 				mLeftTo, 0);
@@ -248,7 +252,7 @@ public class StockIPOListActivity extends ListActivity implements
 			mLeftListView.setOnItemLongClickListener(this);
 		}
 
-		mRightListView = (ListView) findViewById(R.id.right_listview);
+		mRightListView = findViewById(R.id.right_listview);
 		mRightAdapter = new SimpleCursorAdapter(this,
 				R.layout.activity_stock_ipo_list_right_item, null, mRightFrom,
 				mRightTo, 0);
@@ -290,16 +294,16 @@ public class StockIPOListActivity extends ListActivity implements
 		CursorLoader loader = null;
 
 		switch (id) {
-		case LOADER_ID_IPO_LIST:
+			case LOADER_ID_IPO_LIST:
 
-			loader = new CursorLoader(this, DatabaseContract.IPO.CONTENT_URI,
-					DatabaseContract.IPO.PROJECTION_ALL, null, null, mSortOrder);
+				loader = new CursorLoader(this, DatabaseContract.IPO.CONTENT_URI,
+						DatabaseContract.IPO.PROJECTION_ALL, null, null, mSortOrder);
 
-			mStockList.clear();
-			break;
+				mStockList.clear();
+				break;
 
-		default:
-			break;
+			default:
+				break;
 		}
 
 		return loader;
@@ -312,13 +316,13 @@ public class StockIPOListActivity extends ListActivity implements
 		}
 
 		switch (loader.getId()) {
-		case LOADER_ID_IPO_LIST:
-			mLeftAdapter.swapCursor(cursor);
-			mRightAdapter.swapCursor(cursor);
-			break;
+			case LOADER_ID_IPO_LIST:
+				mLeftAdapter.swapCursor(cursor);
+				mRightAdapter.swapCursor(cursor);
+				break;
 
-		default:
-			break;
+			default:
+				break;
 		}
 
 		setListViewHeightBasedOnChildren(mLeftListView);
@@ -333,12 +337,12 @@ public class StockIPOListActivity extends ListActivity implements
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
-			long id) {
+							long id) {
 	}
 
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
-			int position, long id) {
+								   int position, long id) {
 		return true;
 	}
 

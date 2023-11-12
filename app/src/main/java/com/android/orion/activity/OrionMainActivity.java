@@ -1,7 +1,5 @@
 package com.android.orion.activity;
 
-import java.util.List;
-
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
@@ -11,11 +9,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.android.orion.manager.DownloadAlarmManager;
-import com.android.orion.service.OrionService;
 import com.android.orion.R;
+import com.android.orion.manager.DownloadAlarmManager;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Preferences;
+
+import java.util.List;
 
 public class OrionMainActivity extends PreferenceActivity {
 	DownloadAlarmManager mStockDownloadAlarmManager = null;
@@ -54,13 +53,13 @@ public class OrionMainActivity extends PreferenceActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.action_exit: {
-			onActionExit();
-			return true;
-		}
-		case android.R.id.home:
-			finish();
-			return true;
+			case R.id.action_exit: {
+				onActionExit();
+				return true;
+			}
+			case android.R.id.home:
+				finish();
+				return true;
 		}
 
 		return super.onOptionsItemSelected(item);
@@ -105,27 +104,27 @@ public class OrionMainActivity extends PreferenceActivity {
 				.getDefaultSharedPreferences(this);
 
 		if (!Preferences.getBoolean(this, Setting.KEY_SHARED_PREFERENCES_INIT, false)) {
-			Preferences.putBoolean (this, Setting.KEY_SHARED_PREFERENCES_INIT, true);
+			Preferences.putBoolean(this, Setting.KEY_SHARED_PREFERENCES_INIT, true);
 
-			Preferences.putBoolean (this, Setting.KEY_NOTIFICATION_OPERATE, true);
+			Preferences.putBoolean(this, Setting.KEY_NOTIFICATION_OPERATE, true);
 
-			Preferences.putBoolean (this, Setting.KEY_DISPLAY_NET, true);
+			Preferences.putBoolean(this, Setting.KEY_DISPLAY_NET, true);
 
-			Preferences.putBoolean (this, Setting.KEY_PERIOD_DAY, true);
-			Preferences.putBoolean (this, Setting.KEY_PERIOD_MIN60, true);
-			Preferences.putBoolean (this, Setting.KEY_PERIOD_MIN30, true);
-			Preferences.putBoolean (this, Setting.KEY_PERIOD_MIN15, true);
-			Preferences.putBoolean (this, Setting.KEY_PERIOD_MIN5, true);
+			Preferences.putBoolean(this, Setting.KEY_PERIOD_DAY, true);
+			Preferences.putBoolean(this, Setting.KEY_PERIOD_MIN60, true);
+			Preferences.putBoolean(this, Setting.KEY_PERIOD_MIN30, true);
+			Preferences.putBoolean(this, Setting.KEY_PERIOD_MIN15, true);
+			Preferences.putBoolean(this, Setting.KEY_PERIOD_MIN5, true);
 
-			Preferences.putBoolean (this, Setting.KEY_DISPLAY_THRESHOLD, true);
-			Preferences.putBoolean (this, Setting.KEY_DISPLAY_DRAW, true);
-			Preferences.putBoolean (this, Setting.KEY_DISPLAY_STROKE, true);
-			Preferences.putBoolean (this, Setting.KEY_DISPLAY_SEGMENT, true);
-			Preferences.putBoolean (this, Setting.KEY_DISPLAY_LINE, true);
-			Preferences.putBoolean (this, Setting.KEY_DISPLAY_LATEST, true);
-			Preferences.putBoolean (this, Setting.KEY_DISPLAY_COST, true);
+			Preferences.putBoolean(this, Setting.KEY_DISPLAY_THRESHOLD, true);
+			Preferences.putBoolean(this, Setting.KEY_DISPLAY_DRAW, true);
+			Preferences.putBoolean(this, Setting.KEY_DISPLAY_STROKE, true);
+			Preferences.putBoolean(this, Setting.KEY_DISPLAY_SEGMENT, true);
+			Preferences.putBoolean(this, Setting.KEY_DISPLAY_LINE, true);
+			Preferences.putBoolean(this, Setting.KEY_DISPLAY_LATEST, true);
+			Preferences.putBoolean(this, Setting.KEY_DISPLAY_COST, true);
 
-			Preferences.putBoolean (this, Setting.KEY_LOOPBACK, false);
+			Preferences.putBoolean(this, Setting.KEY_LOOPBACK, false);
 		}
 	}
 }

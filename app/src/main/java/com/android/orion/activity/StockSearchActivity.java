@@ -1,7 +1,5 @@
 package com.android.orion.activity;
 
-import java.util.Locale;
-
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -13,8 +11,10 @@ import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 
 import com.android.orion.R;
-import com.android.orion.provider.StockSearchRecentSuggestionsProvider;
 import com.android.orion.database.DatabaseContract;
+import com.android.orion.provider.StockSearchRecentSuggestionsProvider;
+
+import java.util.Locale;
 
 public class StockSearchActivity extends StockListEditActivity implements
 		OnQueryTextListener {

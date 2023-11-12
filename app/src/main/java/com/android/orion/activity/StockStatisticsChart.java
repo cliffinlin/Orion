@@ -1,8 +1,5 @@
 package com.android.orion.activity;
 
-import java.util.ArrayList;
-import java.util.Random;
-
 import android.graphics.Color;
 
 import com.github.mikephil.charting.components.YAxis;
@@ -16,6 +13,9 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.formatter.PercentFormatter;
+
+import java.util.ArrayList;
+import java.util.Random;
 
 public class StockStatisticsChart {
 
@@ -154,7 +154,7 @@ public class StockStatisticsChart {
 		mPieData = new PieData(mXValues);
 		PieDataSet pieDataSet = new PieDataSet(mValuationEntryList, "Valuation");
 
-		int values[] = {0x00, 0x3f, 0x6f, 0x9f, 0xcf, 0xff};
+		int[] values = {0x00, 0x3f, 0x6f, 0x9f, 0xcf, 0xff};
 		for (int i = 0; i < mXValues.size(); i++) {
 			Random random = new Random();
 			int r = values[random.nextInt(values.length)];
@@ -175,23 +175,23 @@ public class StockStatisticsChart {
 		 * histogramDataSet.setDecreasingColor(Color.rgb(50, 128, 50));
 		 * histogramDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		 * barData.addDataSet(histogramDataSet);
-		 * 
+		 *
 		 * LineData lineData = new LineData(mXValues);
-		 * 
+		 *
 		 * LineDataSet difDataSet = new LineDataSet(mDIFEntryList, "DIF");
 		 * difDataSet.setColor(Color.YELLOW); //
 		 * difDataSet.setCircleColor(Color.YELLOW);
 		 * difDataSet.setDrawCircles(false);
 		 * difDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		 * lineData.addDataSet(difDataSet);
-		 * 
+		 *
 		 * LineDataSet deaDataSet = new LineDataSet(mDEAEntryList, "DEA");
 		 * deaDataSet.setColor(Color.WHITE); //
 		 * deaDataSet.setCircleColor(Color.WHITE);
 		 * deaDataSet.setDrawCircles(false);
 		 * deaDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		 * lineData.addDataSet(deaDataSet);
-		 * 
+		 *
 		 * mCombinedDataSub.setData(barData);
 		 * mCombinedDataSub.setData(lineData);
 		 */

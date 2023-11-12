@@ -42,7 +42,7 @@ public class AboutFragment extends PreferenceFragment {
 
 			if (preference != null) {
 				versionInfo = versionName + " build "
-						+ String.valueOf(versionCode);
+						+ versionCode;
 
 				preference.setSummary(versionInfo);
 			}

@@ -11,26 +11,21 @@ public class CustomSwitchPreference extends SwitchPreference {
 
 	/**
 	 * Construct a new SwitchPreference with the given style options.
-	 * 
-	 * @param context
-	 *            The Context that will style this preference
-	 * @param attrs
-	 *            Style attributes that differ from the default
-	 * @param defStyle
-	 *            Theme attribute defining the default style options
+	 *
+	 * @param context  The Context that will style this preference
+	 * @param attrs    Style attributes that differ from the default
+	 * @param defStyle Theme attribute defining the default style options
 	 */
 	public CustomSwitchPreference(Context context, AttributeSet attrs,
-			int defStyle) {
+								  int defStyle) {
 		super(context, attrs, defStyle);
 	}
 
 	/**
 	 * Construct a new SwitchPreference with the given style options.
-	 * 
-	 * @param context
-	 *            The Context that will style this preference
-	 * @param attrs
-	 *            Style attributes that differ from the default
+	 *
+	 * @param context The Context that will style this preference
+	 * @param attrs   Style attributes that differ from the default
 	 */
 	public CustomSwitchPreference(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -38,9 +33,8 @@ public class CustomSwitchPreference extends SwitchPreference {
 
 	/**
 	 * Construct a new SwitchPreference with default style options.
-	 * 
-	 * @param context
-	 *            The Context that will style this preference
+	 *
+	 * @param context The Context that will style this preference
 	 */
 	public CustomSwitchPreference(Context context) {
 		super(context, null);
@@ -56,9 +50,8 @@ public class CustomSwitchPreference extends SwitchPreference {
 
 	/**
 	 * Clear listener in Switch for specify ViewGroup.
-	 * 
-	 * @param viewGroup
-	 *            The ViewGroup that will need to clear the listener.
+	 *
+	 * @param viewGroup The ViewGroup that will need to clear the listener.
 	 */
 	private void clearListenerInViewGroup(ViewGroup viewGroup) {
 		if (null == viewGroup) {

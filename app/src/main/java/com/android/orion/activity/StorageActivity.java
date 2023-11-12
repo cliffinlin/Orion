@@ -1,13 +1,5 @@
 package com.android.orion.activity;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserFactory;
-import org.xmlpull.v1.XmlSerializer;
-
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -20,12 +12,20 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.Xml;
 
-import com.android.orion.setting.Constant;
-import com.android.orion.database.IndexComponent;
 import com.android.orion.database.DatabaseContract;
+import com.android.orion.database.IndexComponent;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;
+import com.android.orion.setting.Constant;
 import com.android.orion.utility.Utility;
+
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserFactory;
+import org.xmlpull.v1.XmlSerializer;
+
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
 
 public class StorageActivity extends DatabaseActivity {
 
@@ -36,9 +36,9 @@ public class StorageActivity extends DatabaseActivity {
 	static final String XML_TAG_INDEX_COMPONENT = "index_component";
 	static final String XML_ATTRIBUTE_DATE = "date";
 
-    static final int XML_PARSE_TYPE_NONE = 0;
+	static final int XML_PARSE_TYPE_NONE = 0;
 	static final int XML_PARSE_TYPE_STOCK = 1;
-    static final int XML_PARSE_TYPE_STOCK_DEAL = 2;
+	static final int XML_PARSE_TYPE_STOCK_DEAL = 2;
 	static final int XML_PARSE_TYPE_INDEX_COMPONENT = 3;
 
 	static final int MESSAGE_REFRESH = 0;
@@ -57,30 +57,30 @@ public class StorageActivity extends DatabaseActivity {
 			super.handleMessage(msg);
 
 			switch (msg.what) {
-			case MESSAGE_REFRESH:
-				mOrionService.download();
-				break;
+				case MESSAGE_REFRESH:
+					mOrionService.download();
+					break;
 
-			case MESSAGE_SAVE_TO_FILE:
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-						saveToFile();
-					}
-				}).start();
-				break;
+				case MESSAGE_SAVE_TO_FILE:
+					new Thread(new Runnable() {
+						@Override
+						public void run() {
+							saveToFile();
+						}
+					}).start();
+					break;
 
-			case MESSAGE_LOAD_FROM_FILE:
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-						loadFromFile();
-					}
-				}).start();
-				break;
+				case MESSAGE_LOAD_FROM_FILE:
+					new Thread(new Runnable() {
+						@Override
+						public void run() {
+							loadFromFile();
+						}
+					}).start();
+					break;
 
-			default:
-				break;
+				default:
+					break;
 			}
 		}
 	};
@@ -229,9 +229,9 @@ public class StorageActivity extends DatabaseActivity {
 			eventType = parser.getEventType();
 			while (eventType != XmlPullParser.END_DOCUMENT) {
 				switch (eventType) {
-                    case XmlPullParser.START_TAG:
-                        tagName = parser.getName();
-                        if (XML_TAG_STOCK.equals(tagName)) {
+					case XmlPullParser.START_TAG:
+						tagName = parser.getName();
+						if (XML_TAG_STOCK.equals(tagName)) {
 							parseType = XML_PARSE_TYPE_STOCK;
 
 							stock = new Stock();
@@ -245,47 +245,47 @@ public class StorageActivity extends DatabaseActivity {
 							stockDeal.setSE(stock.getSE());
 							stockDeal.setCode(stock.getCode());
 							stockDeal.setName(stock.getName());
-                        } else if (XML_TAG_INDEX_COMPONENT.equals(tagName)) {
+						} else if (XML_TAG_INDEX_COMPONENT.equals(tagName)) {
 							parseType = XML_PARSE_TYPE_INDEX_COMPONENT;
 
 							indexComponent = new IndexComponent();
 							indexComponent.setIndexSE(stock.getSE());
 							indexComponent.setIndexCode(stock.getCode());
 							indexComponent.setIndexName(stock.getName());
-                        } else if (parseType == XML_PARSE_TYPE_STOCK) {
-                            if (DatabaseContract.COLUMN_CLASSES.equals(tagName)) {
-                                stock.setClasses(parser.nextText());
-                            } else if (DatabaseContract.COLUMN_SE.equals(tagName)) {
-                                stock.setSE(parser.nextText());
-                            } else if (DatabaseContract.COLUMN_CODE.equals(tagName)) {
-                                stock.setCode(parser.nextText());
-                            } else if (DatabaseContract.COLUMN_NAME.equals(tagName)) {
-                                stock.setName(parser.nextText());
-                            } else if (DatabaseContract.COLUMN_FLAG.equals(tagName)) {
-                                stock.setFlag(Integer.valueOf(parser.nextText()));
+						} else if (parseType == XML_PARSE_TYPE_STOCK) {
+							if (DatabaseContract.COLUMN_CLASSES.equals(tagName)) {
+								stock.setClasses(parser.nextText());
+							} else if (DatabaseContract.COLUMN_SE.equals(tagName)) {
+								stock.setSE(parser.nextText());
+							} else if (DatabaseContract.COLUMN_CODE.equals(tagName)) {
+								stock.setCode(parser.nextText());
+							} else if (DatabaseContract.COLUMN_NAME.equals(tagName)) {
+								stock.setName(parser.nextText());
+							} else if (DatabaseContract.COLUMN_FLAG.equals(tagName)) {
+								stock.setFlag(Integer.valueOf(parser.nextText()));
 							} else if (DatabaseContract.COLUMN_OPERATE.equals(tagName)) {
 								stock.setOperate(parser.nextText());
-                            } else if (DatabaseContract.COLUMN_THRESHOLD.equals(tagName)) {
-                                stock.setThreshold(Double.valueOf(parser.nextText()));
+							} else if (DatabaseContract.COLUMN_THRESHOLD.equals(tagName)) {
+								stock.setThreshold(Double.valueOf(parser.nextText()));
 							} else if (DatabaseContract.COLUMN_QUANT_VOLUME.equals(tagName)) {
 								stock.setQuantVolume(Long.valueOf(parser.nextText()));
-                            }
-                        } else if (parseType == XML_PARSE_TYPE_STOCK_DEAL) {
-                            if (DatabaseContract.COLUMN_BUY.equals(tagName)) {
-                                stockDeal.setBuy(Double.valueOf(parser.nextText()));
+							}
+						} else if (parseType == XML_PARSE_TYPE_STOCK_DEAL) {
+							if (DatabaseContract.COLUMN_BUY.equals(tagName)) {
+								stockDeal.setBuy(Double.valueOf(parser.nextText()));
 							} else if (DatabaseContract.COLUMN_SELL.equals(tagName)) {
 								stockDeal.setSell(Double.valueOf(parser.nextText()));
-                            } else if (DatabaseContract.COLUMN_VOLUME.equals(tagName)) {
-                                stockDeal.setVolume(Long.valueOf(parser.nextText()));
+							} else if (DatabaseContract.COLUMN_VOLUME.equals(tagName)) {
+								stockDeal.setVolume(Long.valueOf(parser.nextText()));
 							} else if (DatabaseContract.COLUMN_ACCOUNT.equals(tagName)) {
 								stockDeal.setAccount(parser.nextText());
 							} else if (DatabaseContract.COLUMN_ACTION.equals(tagName)) {
 								stockDeal.setAction(parser.nextText());
-                            } else if (DatabaseContract.COLUMN_CREATED.equals(tagName)) {
-                                stockDeal.setCreated(parser.nextText());
-                            } else if (DatabaseContract.COLUMN_MODIFIED.equals(tagName)) {
-                                stockDeal.setModified(parser.nextText());
-                            }
+							} else if (DatabaseContract.COLUMN_CREATED.equals(tagName)) {
+								stockDeal.setCreated(parser.nextText());
+							} else if (DatabaseContract.COLUMN_MODIFIED.equals(tagName)) {
+								stockDeal.setModified(parser.nextText());
+							}
 						} else if (parseType == XML_PARSE_TYPE_INDEX_COMPONENT) {
 							if (DatabaseContract.COLUMN_SE.equals(tagName)) {
 								indexComponent.setSE(parser.nextText());
@@ -294,59 +294,59 @@ public class StorageActivity extends DatabaseActivity {
 							} else if (DatabaseContract.COLUMN_NAME.equals(tagName)) {
 								indexComponent.setName(parser.nextText());
 							}
-                        }
-					break;
-				case XmlPullParser.END_TAG:
-					tagName = parser.getName();
-					if (XML_TAG_STOCK.equals(tagName)) {
-						parseType = XML_PARSE_TYPE_NONE;
-
-						mStockDatabaseManager.getStock(stock);
-						if (!mStockDatabaseManager.isStockExist(stock)) {
-							stock.setCreated(now);
-							stock.setModified(now);
-							mStockDatabaseManager.insertStock(stock);
-						} else {
-							stock.setModified(now);
-							mStockDatabaseManager.updateStock(stock,
-									stock.getContentValues());
 						}
-						stockList.add(stock);
+						break;
+					case XmlPullParser.END_TAG:
+						tagName = parser.getName();
+						if (XML_TAG_STOCK.equals(tagName)) {
+							parseType = XML_PARSE_TYPE_NONE;
 
-						if (stockDealArrayList.size() > 0) {
-							contentValues = new ContentValues[stockDealArrayList.size()];
+							mStockDatabaseManager.getStock(stock);
+							if (!mStockDatabaseManager.isStockExist(stock)) {
+								stock.setCreated(now);
+								stock.setModified(now);
+								mStockDatabaseManager.insertStock(stock);
+							} else {
+								stock.setModified(now);
+								mStockDatabaseManager.updateStock(stock,
+										stock.getContentValues());
+							}
+							stockList.add(stock);
 
-							for (int i = 0; i < stockDealArrayList.size(); i++) {
-								stockDeal = stockDealArrayList.get(i);
-								contentValues[i] = stockDeal.getContentValues();
+							if (stockDealArrayList.size() > 0) {
+								contentValues = new ContentValues[stockDealArrayList.size()];
+
+								for (int i = 0; i < stockDealArrayList.size(); i++) {
+									stockDeal = stockDealArrayList.get(i);
+									contentValues[i] = stockDeal.getContentValues();
+								}
+
+								mStockDatabaseManager.bulkInsertStockDeal(contentValues);
 							}
 
-							mStockDatabaseManager.bulkInsertStockDeal(contentValues);
-						}
+							if (indexComponentArrayList.size() > 0) {
+								contentValues = new ContentValues[indexComponentArrayList.size()];
 
-						if (indexComponentArrayList.size() > 0) {
-							contentValues = new ContentValues[indexComponentArrayList.size()];
+								for (int i = 0; i < indexComponentArrayList.size(); i++) {
+									indexComponent = indexComponentArrayList.get(i);
+									contentValues[i] = indexComponent.getContentValues();
+								}
 
-							for (int i = 0; i < indexComponentArrayList.size(); i++) {
-								indexComponent = indexComponentArrayList.get(i);
-								contentValues[i] = indexComponent.getContentValues();
+								mStockDatabaseManager.bulkInsertIndexComponent(contentValues);
 							}
+						} else if (XML_TAG_STOCK_DEAL.equals(tagName)) {
+							parseType = XML_PARSE_TYPE_NONE;
 
-							mStockDatabaseManager.bulkInsertIndexComponent(contentValues);
+							stockDealArrayList.add(stockDeal);
+						} else if (XML_TAG_INDEX_COMPONENT.equals(tagName)) {
+							parseType = XML_PARSE_TYPE_NONE;
+
+							indexComponentArrayList.add(indexComponent);
 						}
-					} else if (XML_TAG_STOCK_DEAL.equals(tagName)) {
-						parseType = XML_PARSE_TYPE_NONE;
-
-						stockDealArrayList.add(stockDeal);
-					} else if (XML_TAG_INDEX_COMPONENT.equals(tagName)) {
-						parseType = XML_PARSE_TYPE_NONE;
-
-						indexComponentArrayList.add(indexComponent);
-					}
-					count++;
-					break;
-				default:
-					break;
+						count++;
+						break;
+					default:
+						break;
 				}
 				eventType = parser.next();
 			}

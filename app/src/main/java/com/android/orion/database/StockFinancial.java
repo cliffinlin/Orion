@@ -57,7 +57,7 @@ public class StockFinancial extends DatabaseTable {
 		mFinancialExpenses = 0;
 		mNetProfit = 0;
 		mNetProfitInYear = 0;
-        mNetProfitMargin = 0;
+		mNetProfitMargin = 0;
 		mTotalShare = 0;
 		mDebtToNetAssetsRatio = 0;
 		mNetProfitPerShare = 0;
@@ -522,14 +522,14 @@ public class StockFinancial extends DatabaseTable {
 				/ mBookValuePerShare, Constant.DOUBLE_FIXED_DECIMAL);
 	}
 
-    public void setupNetProfitMargin() {
-        if ((mNetProfitInYear == 0) || (mMainBusinessIncomeInYear == 0)) {
-            return;
-        }
+	public void setupNetProfitMargin() {
+		if ((mNetProfitInYear == 0) || (mMainBusinessIncomeInYear == 0)) {
+			return;
+		}
 
-        mNetProfitMargin = Utility.Round(mNetProfitInYear / mMainBusinessIncomeInYear,
-                Constant.DOUBLE_FIXED_DECIMAL);
-    }
+		mNetProfitMargin = Utility.Round(mNetProfitInYear / mMainBusinessIncomeInYear,
+				Constant.DOUBLE_FIXED_DECIMAL);
+	}
 
 	public void setupNetProfitPerShare() {
 		if ((mNetProfit == 0) || (mTotalShare == 0)) {

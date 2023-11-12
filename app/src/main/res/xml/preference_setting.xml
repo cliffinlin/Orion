@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="@string/notification" >
+    <PreferenceCategory android:title="@string/notification">
         <com.android.orion.preference.CustomSwitchPreference
             android:defaultValue="true"
             android:key="notification_operate"
             android:title="@string/notification_operate" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/download" >
+    <PreferenceCategory android:title="@string/download">
         <com.android.orion.preference.CustomSwitchPreference
             android:key="month"
             android:title="@string/period_month" />
@@ -33,7 +33,7 @@
             android:key="min5"
             android:title="@string/period_5min" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/display" >
+    <PreferenceCategory android:title="@string/display">
         <com.android.orion.preference.CustomSwitchPreference
             android:key="display_net"
             android:title="@string/net" />
@@ -86,7 +86,7 @@
             android:key="display_roi"
             android:title="@string/roi" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/test" >
+    <PreferenceCategory android:title="@string/test">
         <com.android.orion.preference.CustomSwitchPreference
             android:key="loopback"
             android:title="@string/loopback" />

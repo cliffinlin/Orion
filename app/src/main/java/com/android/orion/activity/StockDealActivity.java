@@ -1,8 +1,5 @@
 package com.android.orion.activity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,13 +18,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import com.android.orion.setting.Constant;
 import com.android.orion.R;
-import com.android.orion.setting.Setting;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;
+import com.android.orion.setting.Constant;
+import com.android.orion.setting.Setting;
 import com.android.orion.utility.RecordFile;
 import com.android.orion.utility.Utility;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class StockDealActivity extends DatabaseActivity implements
 		OnClickListener {
@@ -71,52 +71,52 @@ public class StockDealActivity extends DatabaseActivity implements
 			super.handleMessage(msg);
 
 			switch (msg.what) {
-			case MESSAGE_LOAD_DEAL:
-				mStockDatabaseManager.getStockDealById(mDeal);
-				mStock.setSE(mDeal.getSE());
-				mStock.setCode(mDeal.getCode());
-				mStockDatabaseManager.getStock(mStock);
-				updateView();
-				RecordFile.writeDealFile(mStock, mDeal, Constant.DEAL_OPERATE_EDIT);
-				break;
-
-			case MESSAGE_SAVE_DEAL:
-				if (ACTION_DEAL_INSERT.equals(mAction)) {
-					mDeal.setCreated(Utility.getCurrentDateTimeString());
-					RecordFile.writeDealFile(mStock, mDeal, Constant.DEAL_OPERATE_INSERT);
-					mStockDatabaseManager.insertStockDeal(mDeal);
-				} else if (ACTION_DEAL_EDIT.equals(mAction)) {
-					mDeal.setModified(Utility.getCurrentDateTimeString());
+				case MESSAGE_LOAD_DEAL:
+					mStockDatabaseManager.getStockDealById(mDeal);
+					mStock.setSE(mDeal.getSE());
+					mStock.setCode(mDeal.getCode());
+					mStockDatabaseManager.getStock(mStock);
+					updateView();
 					RecordFile.writeDealFile(mStock, mDeal, Constant.DEAL_OPERATE_EDIT);
-					mStockDatabaseManager.updateStockDealByID(mDeal);
-				}
-				mStockDatabaseManager.updateStockDeal(mStock);
-				mStockDatabaseManager.updateStock(mStock,
-						mStock.getContentValues());
-				break;
+					break;
 
-			case MESSAGE_LOAD_STOCK_BY_ID:
-				mStockDatabaseManager.getStockById(mStock);
-				mDeal.setSE(mStock.getSE());
-				mDeal.setCode(mStock.getCode());
-				mDeal.setName(mStock.getName());
-				mDeal.setPrice(mStock.getPrice());
-				mDeal.setBuy(mStock.getPrice());
-				updateView();
-				break;
+				case MESSAGE_SAVE_DEAL:
+					if (ACTION_DEAL_INSERT.equals(mAction)) {
+						mDeal.setCreated(Utility.getCurrentDateTimeString());
+						RecordFile.writeDealFile(mStock, mDeal, Constant.DEAL_OPERATE_INSERT);
+						mStockDatabaseManager.insertStockDeal(mDeal);
+					} else if (ACTION_DEAL_EDIT.equals(mAction)) {
+						mDeal.setModified(Utility.getCurrentDateTimeString());
+						RecordFile.writeDealFile(mStock, mDeal, Constant.DEAL_OPERATE_EDIT);
+						mStockDatabaseManager.updateStockDealByID(mDeal);
+					}
+					mStockDatabaseManager.updateStockDeal(mStock);
+					mStockDatabaseManager.updateStock(mStock,
+							mStock.getContentValues());
+					break;
 
-			case MESSAGE_LOAD_STOCK_BY_SE_CODE:
-				mStockDatabaseManager.getStock(mStock);
-				mDeal.setSE(mStock.getSE());
-				mDeal.setCode(mStock.getCode());
-				mDeal.setName(mStock.getName());
-				mDeal.setPrice(mStock.getPrice());
-				mDeal.setBuy(mStock.getPrice());
-				updateView();
-				break;
+				case MESSAGE_LOAD_STOCK_BY_ID:
+					mStockDatabaseManager.getStockById(mStock);
+					mDeal.setSE(mStock.getSE());
+					mDeal.setCode(mStock.getCode());
+					mDeal.setName(mStock.getName());
+					mDeal.setPrice(mStock.getPrice());
+					mDeal.setBuy(mStock.getPrice());
+					updateView();
+					break;
 
-			default:
-				break;
+				case MESSAGE_LOAD_STOCK_BY_SE_CODE:
+					mStockDatabaseManager.getStock(mStock);
+					mDeal.setSE(mStock.getSE());
+					mDeal.setCode(mStock.getCode());
+					mDeal.setName(mStock.getName());
+					mDeal.setPrice(mStock.getPrice());
+					mDeal.setBuy(mStock.getPrice());
+					updateView();
+					break;
+
+				default:
+					break;
 			}
 		}
 	};
@@ -150,16 +150,16 @@ public class StockDealActivity extends DatabaseActivity implements
 	}
 
 	void initView() {
-		mSpinnerStockAccount = (Spinner) findViewById(R.id.spinner_stock_account);
-		mEditTextStockName = (EditText) findViewById(R.id.edittext_stock_name);
-		mEditTextStockCode = (EditText) findViewById(R.id.edittext_stock_code);
-		mEditTextDealProfit = (EditText) findViewById(R.id.edittext_deal_profit);
-		mEditTextBuyPrice = (EditText) findViewById(R.id.edittext_buy_price);
-		mEditTextSellPrice = (EditText) findViewById(R.id.edittext_sell_price);
-		mEditTextDealVolume = (EditText) findViewById(R.id.edittext_deal_volume);
-		mSpinnerStockOperate = (Spinner) findViewById(R.id.spinner_stock_operate);
-		mButtonOk = (Button) findViewById(R.id.button_ok);
-		mButtonCancel = (Button) findViewById(R.id.button_cancel);
+		mSpinnerStockAccount = findViewById(R.id.spinner_stock_account);
+		mEditTextStockName = findViewById(R.id.edittext_stock_name);
+		mEditTextStockCode = findViewById(R.id.edittext_stock_code);
+		mEditTextDealProfit = findViewById(R.id.edittext_deal_profit);
+		mEditTextBuyPrice = findViewById(R.id.edittext_buy_price);
+		mEditTextSellPrice = findViewById(R.id.edittext_sell_price);
+		mEditTextDealVolume = findViewById(R.id.edittext_deal_volume);
+		mSpinnerStockOperate = findViewById(R.id.spinner_stock_operate);
+		mButtonOk = findViewById(R.id.button_ok);
+		mButtonCancel = findViewById(R.id.button_cancel);
 
 		mEditTextStockName.setOnClickListener(this);
 		mEditTextStockCode.setOnClickListener(this);
@@ -215,19 +215,19 @@ public class StockDealActivity extends DatabaseActivity implements
 			setTitle(R.string.deal_edit);
 		}
 
-        mEditTextDealVolume.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+		mEditTextDealVolume.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
+			}
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-            }
+			}
 
-            @Override
-            public void afterTextChanged(Editable s) {
+			@Override
+			public void afterTextChanged(Editable s) {
 				String volumeString = s.toString();
 				long volume = 0;
 				if (!TextUtils.isEmpty(volumeString)) {
@@ -249,8 +249,8 @@ public class StockDealActivity extends DatabaseActivity implements
 				mDeal.setupValue();
 				mDeal.setupProfit();
 				mEditTextDealProfit.setText(String.valueOf(mDeal.getProfit()));
-            }
-        });
+			}
+		});
 	}
 
 	void updateView() {
@@ -286,9 +286,9 @@ public class StockDealActivity extends DatabaseActivity implements
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case android.R.id.home:
-			finish();
-			return true;
+			case android.R.id.home:
+				finish();
+				return true;
 		}
 
 		return super.onOptionsItemSelected(item);
@@ -299,61 +299,61 @@ public class StockDealActivity extends DatabaseActivity implements
 		int id = view.getId();
 
 		switch (id) {
-		case R.id.edittext_stock_name:
-		case R.id.edittext_stock_code:
-			if (ACTION_DEAL_INSERT.equals(mAction)) {
-				Intent intent = new Intent(this, StockFavoriteListActivity.class);
-				intent.setAction(StockFavoriteListActivity.ACTION_STOCK_ID);
-				startActivityForResult(intent, REQUEST_CODE_STOCK_ID);
-			}
-			break;
-		case R.id.button_ok:
-			String buyString = "";
-			String sellString = "";
-			String volumeString = "";
+			case R.id.edittext_stock_name:
+			case R.id.edittext_stock_code:
+				if (ACTION_DEAL_INSERT.equals(mAction)) {
+					Intent intent = new Intent(this, StockFavoriteListActivity.class);
+					intent.setAction(StockFavoriteListActivity.ACTION_STOCK_ID);
+					startActivityForResult(intent, REQUEST_CODE_STOCK_ID);
+				}
+				break;
+			case R.id.button_ok:
+				String buyString = "";
+				String sellString = "";
+				String volumeString = "";
 
-			String stockAccount = mSpinnerStockAccount.getSelectedItem().toString();
-			mDeal.setAccount(stockAccount);
+				String stockAccount = mSpinnerStockAccount.getSelectedItem().toString();
+				mDeal.setAccount(stockAccount);
 
-			String dealAction = mSpinnerStockOperate.getSelectedItem().toString();
-			mDeal.setAction(dealAction);
+				String dealAction = mSpinnerStockOperate.getSelectedItem().toString();
+				mDeal.setAction(dealAction);
 
-			buyString = mEditTextBuyPrice.getText().toString();
-			if (!TextUtils.isEmpty(buyString)) {
-				mDeal.setBuy(Double.valueOf(buyString));
-			} else {
-				mDeal.setBuy(0);
-			}
+				buyString = mEditTextBuyPrice.getText().toString();
+				if (!TextUtils.isEmpty(buyString)) {
+					mDeal.setBuy(Double.valueOf(buyString));
+				} else {
+					mDeal.setBuy(0);
+				}
 
-			sellString = mEditTextSellPrice.getText().toString();
-			if (!TextUtils.isEmpty(sellString)) {
-				mDeal.setSell(Double.valueOf(sellString));
-			} else {
-				mDeal.setSell(0);
-			}
+				sellString = mEditTextSellPrice.getText().toString();
+				if (!TextUtils.isEmpty(sellString)) {
+					mDeal.setSell(Double.valueOf(sellString));
+				} else {
+					mDeal.setSell(0);
+				}
 
-			volumeString = mEditTextDealVolume.getText().toString();
-			if (!TextUtils.isEmpty(volumeString)) {
-				mDeal.setVolume(Long.valueOf(volumeString));
-			} else {
-				mDeal.setVolume(0);
-			}
+				volumeString = mEditTextDealVolume.getText().toString();
+				if (!TextUtils.isEmpty(volumeString)) {
+					mDeal.setVolume(Long.valueOf(volumeString));
+				} else {
+					mDeal.setVolume(0);
+				}
 
-			mDeal.setupFee(mStock.getRDate(), mStock.getDividend());
-			mDeal.setupNet();
-			mDeal.setupValue();
-			mDeal.setupProfit();
-			mDeal.setupBonus(mStock.getDividend());
-			mDeal.setupYield(mStock.getDividend());
-			mHandler.sendEmptyMessage(MESSAGE_SAVE_DEAL);
-			setResult(RESULT_OK);
-			finish();
-			break;
-		case R.id.button_cancel:
-			finish();
-			break;
-		default:
-			break;
+				mDeal.setupFee(mStock.getRDate(), mStock.getDividend());
+				mDeal.setupNet();
+				mDeal.setupValue();
+				mDeal.setupProfit();
+				mDeal.setupBonus(mStock.getDividend());
+				mDeal.setupYield(mStock.getDividend());
+				mHandler.sendEmptyMessage(MESSAGE_SAVE_DEAL);
+				setResult(RESULT_OK);
+				finish();
+				break;
+			case R.id.button_cancel:
+				finish();
+				break;
+			default:
+				break;
 		}
 	}
 
@@ -363,16 +363,16 @@ public class StockDealActivity extends DatabaseActivity implements
 
 		if (resultCode == RESULT_OK) {
 			switch (requestCode) {
-			case REQUEST_CODE_STOCK_ID:
-				if (mStock != null) {
-					mStock.setId(data.getLongExtra(Constant.EXTRA_STOCK_ID,
-							Stock.INVALID_ID));
-					mHandler.sendEmptyMessage(MESSAGE_LOAD_STOCK_BY_ID);
-				}
-				break;
+				case REQUEST_CODE_STOCK_ID:
+					if (mStock != null) {
+						mStock.setId(data.getLongExtra(Constant.EXTRA_STOCK_ID,
+								Stock.INVALID_ID));
+						mHandler.sendEmptyMessage(MESSAGE_LOAD_STOCK_BY_ID);
+					}
+					break;
 
-			default:
-				break;
+				default:
+					break;
 			}
 		}
 	}

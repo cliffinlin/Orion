@@ -7,43 +7,43 @@ package com.android.orion.bean;
  */
 public class MessageBean {
 
-    private String time;
+	private String time;
 
-    private String stockName;
+	private String stockName;
 
-    private String type;
+	private String type;
 
-    private String message;
+	private String message;
 
-    public String getTime() {
-        return time;
-    }
+	public String getTime() {
+		return time;
+	}
 
-    public void setTime(String time) {
-        this.time = time;
-    }
+	public void setTime(String time) {
+		this.time = time;
+	}
 
-    public String getStockName() {
-        return stockName;
-    }
+	public String getStockName() {
+		return stockName;
+	}
 
-    public void setStockName(String stockName) {
-        this.stockName = stockName;
-    }
+	public void setStockName(String stockName) {
+		this.stockName = stockName;
+	}
 
-    public String getType() {
-        return type;
-    }
+	public String getType() {
+		return type;
+	}
 
-    public void setType(String type) {
-        this.type = type;
-    }
+	public void setType(String type) {
+		this.type = type;
+	}
 
-    public String getMessage() {
-        return message;
-    }
+	public String getMessage() {
+		return message;
+	}
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
+	public void setMessage(String message) {
+		this.message = message;
+	}
 }

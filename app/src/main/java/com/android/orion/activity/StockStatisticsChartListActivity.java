@@ -1,9 +1,5 @@
 package com.android.orion.activity;
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.LoaderManager;
 import android.content.Context;
 import android.content.CursorLoader;
@@ -24,10 +20,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.android.orion.setting.Constant;
 import com.android.orion.R;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
+import com.android.orion.setting.Constant;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -41,22 +37,25 @@ import com.github.mikephil.charting.listener.ChartTouchListener.ChartGesture;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.utils.Utils;
 
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
+
 public class StockStatisticsChartListActivity extends BaseActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnChartGestureListener {
-	static final String TAG = StockStatisticsChartListActivity.class.getSimpleName();
+	public static final String TAG = StockStatisticsChartListActivity.class.getSimpleName();
 
 	public static final int ITEM_VIEW_TYPE_MAIN = 0;
 	public static final int ITEM_VIEW_TYPE_SUB = 1;
 	public static final int LOADER_ID_STOCK_LIST = 0;
 	public static final int FLING_DISTANCE = 50;
 	public static final int FLING_VELOCITY = 100;
-
 	public static final int MESSAGE_REFRESH = 0;
 
 	int mStockListIndex = 0;
 
 	String mSortOrder = DatabaseContract.COLUMN_VALUATION
-					+ DatabaseContract.ORDER_DIRECTION_DESC;
+			+ DatabaseContract.ORDER_DIRECTION_DESC;
 
 	float mTotalBonus = 0;
 	String mDescription = "";
@@ -75,13 +74,13 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 			super.handleMessage(msg);
 
 			switch (msg.what) {
-			case MESSAGE_REFRESH:
-				mOrionService.download(mStock);
-				restartLoader();
-				break;
+				case MESSAGE_REFRESH:
+					mOrionService.download(mStock);
+					restartLoader();
+					break;
 
-			default:
-				break;
+				default:
+					break;
 			}
 		}
 	};
@@ -116,74 +115,74 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case android.R.id.home:
-			finish();
-			return true;
+			case android.R.id.home:
+				finish();
+				return true;
 
-		case R.id.action_refresh:
-			mHandler.sendEmptyMessage(MESSAGE_REFRESH);
-			return true;
+			case R.id.action_refresh:
+				mHandler.sendEmptyMessage(MESSAGE_REFRESH);
+				return true;
 
-		case R.id.action_settings:
-			return true;
+			case R.id.action_settings:
+				return true;
 
-		case R.id.action_order_by_roi:
-			mSortOrder = DatabaseContract.COLUMN_ROI
-					+ DatabaseContract.ORDER_DIRECTION_DESC;
-			restartLoader();
-			return true;
+			case R.id.action_order_by_roi:
+				mSortOrder = DatabaseContract.COLUMN_ROI
+						+ DatabaseContract.ORDER_DIRECTION_DESC;
+				restartLoader();
+				return true;
 
-		case R.id.action_order_by_roe:
-			mSortOrder = DatabaseContract.COLUMN_ROE
-					+ DatabaseContract.ORDER_DIRECTION_DESC;
-			restartLoader();
-			return true;
+			case R.id.action_order_by_roe:
+				mSortOrder = DatabaseContract.COLUMN_ROE
+						+ DatabaseContract.ORDER_DIRECTION_DESC;
+				restartLoader();
+				return true;
 
-		case R.id.action_order_by_rate:
-			mSortOrder = DatabaseContract.COLUMN_RATE
-					+ DatabaseContract.ORDER_DIRECTION_DESC;
-			restartLoader();
-			return true;
+			case R.id.action_order_by_rate:
+				mSortOrder = DatabaseContract.COLUMN_RATE
+						+ DatabaseContract.ORDER_DIRECTION_DESC;
+				restartLoader();
+				return true;
 
-		case R.id.action_order_by_pe:
-			mSortOrder = DatabaseContract.COLUMN_PE
-					+ DatabaseContract.ORDER_DIRECTION_DESC;
-			restartLoader();
-			return true;
+			case R.id.action_order_by_pe:
+				mSortOrder = DatabaseContract.COLUMN_PE
+						+ DatabaseContract.ORDER_DIRECTION_DESC;
+				restartLoader();
+				return true;
 
-		case R.id.action_order_by_yield:
-			mSortOrder = DatabaseContract.COLUMN_YIELD
-					+ DatabaseContract.ORDER_DIRECTION_DESC;
-			restartLoader();
-			return true;
+			case R.id.action_order_by_yield:
+				mSortOrder = DatabaseContract.COLUMN_YIELD
+						+ DatabaseContract.ORDER_DIRECTION_DESC;
+				restartLoader();
+				return true;
 
-		case R.id.action_order_by_dividend_ratio:
-			mSortOrder = DatabaseContract.COLUMN_DIVIDEND_RATIO
-					+ DatabaseContract.ORDER_DIRECTION_DESC;
-			restartLoader();
-			return true;
+			case R.id.action_order_by_dividend_ratio:
+				mSortOrder = DatabaseContract.COLUMN_DIVIDEND_RATIO
+						+ DatabaseContract.ORDER_DIRECTION_DESC;
+				restartLoader();
+				return true;
 
-		case R.id.action_order_by_valuation:
-			mSortOrder = DatabaseContract.COLUMN_VALUATION
-					+ DatabaseContract.ORDER_DIRECTION_DESC;
-			restartLoader();
-			return true;
+			case R.id.action_order_by_valuation:
+				mSortOrder = DatabaseContract.COLUMN_VALUATION
+						+ DatabaseContract.ORDER_DIRECTION_DESC;
+				restartLoader();
+				return true;
 
-		default:
-			return super.onOptionsItemSelected(item);
+			default:
+				return super.onOptionsItemSelected(item);
 		}
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode,
-			Intent intent) {
+									Intent intent) {
 		super.onActivityResult(requestCode, resultCode, intent);
 
 		if (resultCode == RESULT_OK) {
 			switch (requestCode) {
 
-			default:
-				break;
+				default:
+					break;
 			}
 		}
 	}
@@ -249,7 +248,7 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 	}
 
 	void initListView() {
-		mListView = (ListView) findViewById(R.id.listView);
+		mListView = findViewById(R.id.listView);
 
 		if (mStatisticsChartList == null) {
 			mStatisticsChartList = new ArrayList<StockStatisticsChart>();
@@ -335,7 +334,7 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 	}
 
 	public void swapStockCursor(StockStatisticsChart stockDataChart,
-			Cursor cursor) {
+								Cursor cursor) {
 		int index = 0;
 
 		mTotalBonus = 0;
@@ -415,6 +414,51 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 		}
 	}
 
+	@Override
+	public void onChartLongPressed(MotionEvent me) {
+	}
+
+	@Override
+	public void onChartDoubleTapped(MotionEvent me) {
+	}
+
+	@Override
+	public void onChartSingleTapped(MotionEvent me) {
+	}
+
+	@Override
+	public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX,
+							 float velocityY) {
+		int distance = FLING_DISTANCE;
+		int velocity = FLING_VELOCITY;
+
+		if (me1.getX() - me2.getX() > distance
+				&& Math.abs(velocityX) > velocity) {
+		}
+
+		if (me2.getX() - me1.getX() > distance
+				&& Math.abs(velocityX) > velocity) {
+		}
+	}
+
+	@Override
+	public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
+	}
+
+	@Override
+	public void onChartTranslate(MotionEvent me, float dX, float dY) {
+	}
+
+	@Override
+	public void onChartGestureStart(MotionEvent me,
+									ChartGesture lastPerformedGesture) {
+	}
+
+	@Override
+	public void onChartGestureEnd(MotionEvent me,
+								  ChartGesture lastPerformedGesture) {
+	}
+
 	static class MainHandler extends Handler {
 		private final WeakReference<StockStatisticsChartListActivity> mActivity;
 
@@ -441,7 +485,7 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 		}
 
 		public StatisticsChartItem(int itemViewType, int resource,
-				StockStatisticsChart stockDataChart) {
+								   StockStatisticsChart stockDataChart) {
 			mItemViewType = itemViewType;
 			mResource = resource;
 			mStatisticsChart = stockDataChart;
@@ -462,10 +506,10 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 			view = LayoutInflater.from(context).inflate(mResource, null);
 			viewHolder = new ViewHolder();
 			if (mItemViewType == ITEM_VIEW_TYPE_MAIN) {
-				viewHolder.mCombinedChart = (CombinedChart) view
+				viewHolder.mCombinedChart = view
 						.findViewById(R.id.chart);
 			} else {
-				viewHolder.mPieChart = (PieChart) view
+				viewHolder.mPieChart = view
 						.findViewById(R.id.pie_chart);
 			}
 			view.setTag(viewHolder);
@@ -536,7 +580,7 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 	class StatisticsChartArrayAdapter extends ArrayAdapter<StatisticsChartItem> {
 
 		public StatisticsChartArrayAdapter(Context context,
-				List<StatisticsChartItem> objects) {
+										   List<StatisticsChartItem> objects) {
 			super(context, 0, objects);
 		}
 
@@ -555,50 +599,5 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 		public int getViewTypeCount() {
 			return mStatisticsChartItemList.size();
 		}
-	}
-
-	@Override
-	public void onChartLongPressed(MotionEvent me) {
-	}
-
-	@Override
-	public void onChartDoubleTapped(MotionEvent me) {
-	}
-
-	@Override
-	public void onChartSingleTapped(MotionEvent me) {
-	}
-
-	@Override
-	public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX,
-			float velocityY) {
-		int distance = FLING_DISTANCE;
-		int velocity = FLING_VELOCITY;
-
-		if (me1.getX() - me2.getX() > distance
-				&& Math.abs(velocityX) > velocity) {
-		}
-
-		if (me2.getX() - me1.getX() > distance
-				&& Math.abs(velocityX) > velocity) {
-		}
-	}
-
-	@Override
-	public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
-	}
-
-	@Override
-	public void onChartTranslate(MotionEvent me, float dX, float dY) {
-	}
-
-	@Override
-	public void onChartGestureStart(MotionEvent me,
-			ChartGesture lastPerformedGesture) {
-	}
-
-	@Override
-	public void onChartGestureEnd(MotionEvent me,
-			ChartGesture lastPerformedGesture) {
 	}
 }

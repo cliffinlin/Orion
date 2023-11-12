@@ -1,19 +1,19 @@
 package com.android.orion.analyzer;
 
-import java.util.ArrayList;
-
 import android.util.Log;
 
-import com.android.orion.setting.Constant;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
+import com.android.orion.setting.Constant;
 import com.android.orion.utility.Utility;
 
+import java.util.ArrayList;
+
 public class StockVertexAnalyzer {
-	static final String TAG = StockVertexAnalyzer.class.getSimpleName();
+	public static final String TAG = StockVertexAnalyzer.class.getSimpleName();
 
 	void analyzeVertex(ArrayList<StockData> dataList,
-			ArrayList<StockData> vertexList) {
+					   ArrayList<StockData> vertexList) {
 		int i = 0;
 		int size = 0;
 		int direction = StockData.DIRECTION_NONE;
@@ -123,8 +123,8 @@ public class StockVertexAnalyzer {
 	}
 
 	void analyzeLine(ArrayList<StockData> stockDataList,
-			ArrayList<StockData> dataList, ArrayList<StockData> vertexList,
-			int vertexTypeTop, int vertexTypeBottom) {
+					 ArrayList<StockData> dataList, ArrayList<StockData> vertexList,
+					 int vertexTypeTop, int vertexTypeBottom) {
 		int i = 0;
 		int size = 0;
 		int direction = StockData.DIRECTION_NONE;
@@ -188,7 +188,7 @@ public class StockVertexAnalyzer {
 	}
 
 	void extendVertexList(int index, ArrayList<StockData> stockDataList,
-			ArrayList<StockData> vertexList) {
+						  ArrayList<StockData> vertexList) {
 		int i = 0;
 		int j = 0;
 		StockData stockData = null;
@@ -268,7 +268,7 @@ public class StockVertexAnalyzer {
 	}
 
 	void vertexListToDataList(ArrayList<StockData> stockDataList,
-			ArrayList<StockData> vertexList, ArrayList<StockData> dataList, int level) {
+							  ArrayList<StockData> vertexList, ArrayList<StockData> dataList, int level) {
 		int size = 0;
 		int direction = StockData.DIRECTION_NONE;
 
@@ -336,8 +336,8 @@ public class StockVertexAnalyzer {
 	}
 
 	void analyzeOverlap(ArrayList<StockData> stockDataList,
-			ArrayList<StockData> lineDataList,
-			ArrayList<StockData> overlapList) {
+						ArrayList<StockData> lineDataList,
+						ArrayList<StockData> overlapList) {
 		int size = 0;
 		double Zg = 0;
 		double Zd = 0;
@@ -410,7 +410,7 @@ public class StockVertexAnalyzer {
 	}
 
 	boolean checkStockDateVertex(ArrayList<StockData> stockDataList,
-			StockData stockData, int bottomVertexType, int topVertexType) {
+								 StockData stockData, int bottomVertexType, int topVertexType) {
 		StockData start = null;
 		StockData end = null;
 		boolean result = false;
@@ -636,7 +636,7 @@ public class StockVertexAnalyzer {
 	}
 
 	void testShowVertextNumber(ArrayList<StockData> stockDataList,
-			ArrayList<StockData> dataList) {
+							   ArrayList<StockData> dataList) {
 		int index = 0;
 		StockData data = null;
 		StockData stockData = null;

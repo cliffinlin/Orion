@@ -22,16 +22,16 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.android.orion.database.StockQuant;
-import com.android.orion.setting.Constant;
 import com.android.orion.R;
-import com.android.orion.setting.Setting;
 import com.android.orion.chart.StockDataChart;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockFinancial;
+import com.android.orion.database.StockQuant;
+import com.android.orion.setting.Constant;
+import com.android.orion.setting.Setting;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Search;
 import com.github.mikephil.charting.charts.CombinedChart;
@@ -54,17 +54,15 @@ import java.util.List;
 
 public class StockDataChartListActivity extends BaseActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnChartGestureListener {
-	static final String TAG = StockDataChartListActivity.class.getSimpleName();
+	public static final String TAG = StockDataChartListActivity.class.getSimpleName();
 
 	public static final int ITEM_VIEW_TYPE_MAIN = 0;
 	public static final int ITEM_VIEW_TYPE_SUB = 1;
 	public static final int LOADER_ID_STOCK_LIST = Setting.KEY_PERIODS.length + 1;
 	public static final int FLING_DISTANCE = 50;
 	public static final int FLING_VELOCITY = 100;
-
 	public static final int REQUEST_CODE_SETTINGS = 0;
 	public static final int REQUEST_CODE_SETTING_LOOPBACK = 1;
-
 	public static final int MESSAGE_REFRESH = 0;
 	public static final int MESSAGE_LOAD_STOCK_LIST = 1;
 
@@ -102,36 +100,36 @@ public class StockDataChartListActivity extends BaseActivity implements
 			super.handleMessage(msg);
 
 			switch (msg.what) {
-			case MESSAGE_REFRESH:
-				if (mOrionService != null) {
-					mStock.reset();
-					mStockDatabaseManager.updateStock(mStock,
-							mStock.getContentValues());
-					mStockDatabaseManager.deleteStockData(mStock.getId());
-					mStockDatabaseManager.deleteStockFinancial(mStock.getId());
-					mStockDatabaseManager.deleteShareBonus(mStock.getId());
-					mStockDatabaseManager.deleteStockQuant(mStock);
-					mOrionService.download(mStock);
-					restartLoader();
-				}
-				break;
-
-			case MESSAGE_LOAD_STOCK_LIST:
-				mStockList.clear();
-				for (int i = 0; i < mStockIDList.size(); i++) {
-					Stock stock = new Stock();
-					stock.setId(Long.valueOf(mStockIDList.get(i)));
-					mStockDatabaseManager.getStockById(stock);
-					if (mStock.getId() == stock.getId()) {
-						mStock.set(stock);
-						mStockListIndex = mStockList.size();
+				case MESSAGE_REFRESH:
+					if (mOrionService != null) {
+						mStock.reset();
+						mStockDatabaseManager.updateStock(mStock,
+								mStock.getContentValues());
+						mStockDatabaseManager.deleteStockData(mStock.getId());
+						mStockDatabaseManager.deleteStockFinancial(mStock.getId());
+						mStockDatabaseManager.deleteShareBonus(mStock.getId());
+						mStockDatabaseManager.deleteStockQuant(mStock);
+						mOrionService.download(mStock);
+						restartLoader();
 					}
-					mStockList.add(stock);
-				}
-				break;
+					break;
 
-			default:
-				break;
+				case MESSAGE_LOAD_STOCK_LIST:
+					mStockList.clear();
+					for (int i = 0; i < mStockIDList.size(); i++) {
+						Stock stock = new Stock();
+						stock.setId(Long.valueOf(mStockIDList.get(i)));
+						mStockDatabaseManager.getStockById(stock);
+						if (mStock.getId() == stock.getId()) {
+							mStock.set(stock);
+							mStockListIndex = mStockList.size();
+						}
+						mStockList.add(stock);
+					}
+					break;
+
+				default:
+					break;
 			}
 		}
 	};
@@ -164,7 +162,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 		mKeyDisplayCandle = Preferences.getBoolean(mContext, Setting.KEY_DISPLAY_CANDLE,
 				false);
 		mKeyDisplayOverlap = Preferences.getBoolean(mContext, Setting.KEY_DISPLAY_OVERLAP,
-                false);
+				false);
 		mKeyDisplayLatest = Preferences.getBoolean(mContext, Setting.KEY_DISPLAY_LATEST, true);
 		mKeyDisplayCost = Preferences.getBoolean(mContext, Setting.KEY_DISPLAY_COST, true);
 
@@ -242,94 +240,94 @@ public class StockDataChartListActivity extends BaseActivity implements
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case android.R.id.home:
-			finish();
-			return true;
+			case android.R.id.home:
+				finish();
+				return true;
 
-		case R.id.action_prev:
-			navigateStock(-1);
-			return true;
+			case R.id.action_prev:
+				navigateStock(-1);
+				return true;
 
-		case R.id.action_next:
-			navigateStock(1);
-			return true;
+			case R.id.action_next:
+				navigateStock(1);
+				return true;
 
-		case R.id.action_refresh:
-			mHandler.sendEmptyMessage(MESSAGE_REFRESH);
-			return true;
+			case R.id.action_refresh:
+				mHandler.sendEmptyMessage(MESSAGE_REFRESH);
+				return true;
 
-		case R.id.action_settings:
-			startActivityForResult(new Intent(this,
-					SettingActivity.class), REQUEST_CODE_SETTINGS);
-			return true;
+			case R.id.action_settings:
+				startActivityForResult(new Intent(this,
+						SettingActivity.class), REQUEST_CODE_SETTINGS);
+				return true;
 
-		case R.id.action_edit:
-			mIntent = new Intent(this, StockEditActivity.class);
-			mIntent.setAction(StockEditActivity.ACTION_STOCK_EDIT);
-			mIntent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
-			startActivity(mIntent);
-			return true;
+			case R.id.action_edit:
+				mIntent = new Intent(this, StockEditActivity.class);
+				mIntent.setAction(StockEditActivity.ACTION_STOCK_EDIT);
+				mIntent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
+				startActivity(mIntent);
+				return true;
 
-		case R.id.action_deal: {
-			Bundle bundle = new Bundle();
-			bundle.putString(Constant.EXTRA_STOCK_SE, mStock.getSE());
-			bundle.putString(Constant.EXTRA_STOCK_CODE, mStock.getCode());
-			Intent intent = new Intent(this, StockFavoriteDealListActivity.class);
-			intent.putExtras(bundle);
-			startActivity(intent);
-			return true;
-		}
+			case R.id.action_deal: {
+				Bundle bundle = new Bundle();
+				bundle.putString(Constant.EXTRA_STOCK_SE, mStock.getSE());
+				bundle.putString(Constant.EXTRA_STOCK_CODE, mStock.getCode());
+				Intent intent = new Intent(this, StockFavoriteDealListActivity.class);
+				intent.putExtras(bundle);
+				startActivity(intent);
+				return true;
+			}
 
-		case R.id.action_trend:
-			mIntent = new Intent(this, StockTrendListActivity.class);
-			mIntent.setAction(StockTrendListActivity.ACTION_STOCK_TREND_LIST);
-			mIntent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
-			startActivity(mIntent);
-			return true;
+			case R.id.action_trend:
+				mIntent = new Intent(this, StockTrendListActivity.class);
+				mIntent.setAction(StockTrendListActivity.ACTION_STOCK_TREND_LIST);
+				mIntent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
+				startActivity(mIntent);
+				return true;
 
-		case R.id.action_quant: {
-			Bundle bundle = new Bundle();
-			bundle.putString(Constant.EXTRA_STOCK_SE, mStock.getSE());
-			bundle.putString(Constant.EXTRA_STOCK_CODE, mStock.getCode());
-			Intent intent = new Intent(this, StockQuantListActivity.class);
-			intent.putExtras(bundle);
-			startActivity(intent);
-			return true;
-		}
+			case R.id.action_quant: {
+				Bundle bundle = new Bundle();
+				bundle.putString(Constant.EXTRA_STOCK_SE, mStock.getSE());
+				bundle.putString(Constant.EXTRA_STOCK_CODE, mStock.getCode());
+				Intent intent = new Intent(this, StockQuantListActivity.class);
+				intent.putExtras(bundle);
+				startActivity(intent);
+				return true;
+			}
 
-		case R.id.action_loopback: {
-			startActivityForResult(new Intent(this,
-					SettingLoopbackActivity.class), REQUEST_CODE_SETTING_LOOPBACK);
-			return true;
-		}
+			case R.id.action_loopback: {
+				startActivityForResult(new Intent(this,
+						SettingLoopbackActivity.class), REQUEST_CODE_SETTING_LOOPBACK);
+				return true;
+			}
 
-		default:
-			return super.onOptionsItemSelected(item);
+			default:
+				return super.onOptionsItemSelected(item);
 		}
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode,
-			Intent intent) {
+									Intent intent) {
 		super.onActivityResult(requestCode, resultCode, intent);
 
 		if (resultCode == RESULT_OK) {
 			switch (requestCode) {
-			case REQUEST_CODE_SETTINGS:
-				restartLoader();
-				break;
+				case REQUEST_CODE_SETTINGS:
+					restartLoader();
+					break;
 
-			case REQUEST_CODE_SETTING_LOOPBACK:
-				for (String period : Setting.KEY_PERIODS) {
-					if (Preferences.getBoolean(mContext, period, false)) {
-						mStockDatabaseManager.deleteStockData(mStock.getId(), period);
+				case REQUEST_CODE_SETTING_LOOPBACK:
+					for (String period : Setting.KEY_PERIODS) {
+						if (Preferences.getBoolean(mContext, period, false)) {
+							mStockDatabaseManager.deleteStockData(mStock.getId(), period);
+						}
 					}
-				}
-				mOrionService.download(mStock.getSE(), mStock.getCode());
-				break;
+					mOrionService.download(mStock.getSE(), mStock.getCode());
+					break;
 
-			default:
-				break;
+				default:
+					break;
 			}
 		}
 	}
@@ -395,7 +393,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 	}
 
 	void initListView() {
-		mListView = (ListView) findViewById(R.id.listView);
+		mListView = findViewById(R.id.listView);
 
 		if (mStockDataChartList == null) {
 			mStockDataChartList = new ArrayList<StockDataChart>();
@@ -600,13 +598,13 @@ public class StockDataChartListActivity extends BaseActivity implements
 
 					if (mStockData.getPeriod().equals(Setting.KEY_PERIOD_YEAR)
 							|| mStockData.getPeriod().equals(
-									Setting.KEY_PERIOD_QUARTER)
+							Setting.KEY_PERIOD_QUARTER)
 							|| mStockData.getPeriod().equals(
-									Setting.KEY_PERIOD_MONTH)
+							Setting.KEY_PERIOD_MONTH)
 							|| mStockData.getPeriod().equals(
-									Setting.KEY_PERIOD_WEEK)
+							Setting.KEY_PERIOD_WEEK)
 							|| mStockData.getPeriod().equals(
-									Setting.KEY_PERIOD_DAY)) {
+							Setting.KEY_PERIOD_DAY)) {
 						stockDataChart.mXValues.add(dateString);
 					} else {
 						stockDataChart.mXValues.add(dateString + " "
@@ -865,9 +863,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 			if (TextUtils.isEmpty(stockQuant.getModified())) {
 				stockquantMap.put(stockQuant.getCreated(), stockQuant);
 			} else {
-				if (stockquantMap.containsKey(stockQuant.getCreated())) {
-					stockquantMap.remove(stockQuant.getCreated());
-				}
+				stockquantMap.remove(stockQuant.getCreated());
 			}
 		}
 
@@ -920,6 +916,53 @@ public class StockDataChartListActivity extends BaseActivity implements
 		restartLoader();
 	}
 
+	@Override
+	public void onChartLongPressed(MotionEvent me) {
+	}
+
+	@Override
+	public void onChartDoubleTapped(MotionEvent me) {
+	}
+
+	@Override
+	public void onChartSingleTapped(MotionEvent me) {
+	}
+
+	@Override
+	public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX,
+							 float velocityY) {
+		int distance = FLING_DISTANCE;
+		int velocity = FLING_VELOCITY;
+
+		if (me1.getX() - me2.getX() > distance
+				&& Math.abs(velocityX) > velocity) {
+			navigateStock(-1);
+		}
+
+		if (me2.getX() - me1.getX() > distance
+				&& Math.abs(velocityX) > velocity) {
+			navigateStock(1);
+		}
+	}
+
+	@Override
+	public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
+	}
+
+	@Override
+	public void onChartTranslate(MotionEvent me, float dX, float dY) {
+	}
+
+	@Override
+	public void onChartGestureStart(MotionEvent me,
+									ChartGesture lastPerformedGesture) {
+	}
+
+	@Override
+	public void onChartGestureEnd(MotionEvent me,
+								  ChartGesture lastPerformedGesture) {
+	}
+
 	static class MainHandler extends Handler {
 		private final WeakReference<StockDataChartListActivity> mActivity;
 
@@ -946,7 +989,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 		}
 
 		public StockDataChartItem(int itemViewType, int resource,
-				StockDataChart stockDataChart) {
+								  StockDataChart stockDataChart) {
 			mItemViewType = itemViewType;
 			mResource = resource;
 			mStockDataChart = stockDataChart;
@@ -966,7 +1009,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 			// if (view == null) {
 			view = LayoutInflater.from(context).inflate(mResource, null);
 			viewHolder = new ViewHolder();
-			viewHolder.chart = (CombinedChart) view.findViewById(R.id.chart);
+			viewHolder.chart = view.findViewById(R.id.chart);
 			view.setTag(viewHolder);
 			// } else {
 			// viewHolder = (ViewHolder) view.getTag();
@@ -1036,7 +1079,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 	class StockDataChartArrayAdapter extends ArrayAdapter<StockDataChartItem> {
 
 		public StockDataChartArrayAdapter(Context context,
-				List<StockDataChartItem> objects) {
+										  List<StockDataChartItem> objects) {
 			super(context, 0, objects);
 		}
 
@@ -1055,52 +1098,5 @@ public class StockDataChartListActivity extends BaseActivity implements
 		public int getViewTypeCount() {
 			return mStockDataChartItemList.size();
 		}
-	}
-
-	@Override
-	public void onChartLongPressed(MotionEvent me) {
-	}
-
-	@Override
-	public void onChartDoubleTapped(MotionEvent me) {
-	}
-
-	@Override
-	public void onChartSingleTapped(MotionEvent me) {
-	}
-
-	@Override
-	public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX,
-			float velocityY) {
-		int distance = FLING_DISTANCE;
-		int velocity = FLING_VELOCITY;
-
-		if (me1.getX() - me2.getX() > distance
-				&& Math.abs(velocityX) > velocity) {
-			navigateStock(-1);
-		}
-
-		if (me2.getX() - me1.getX() > distance
-				&& Math.abs(velocityX) > velocity) {
-			navigateStock(1);
-		}
-	}
-
-	@Override
-	public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
-	}
-
-	@Override
-	public void onChartTranslate(MotionEvent me, float dX, float dY) {
-	}
-
-	@Override
-	public void onChartGestureStart(MotionEvent me,
-			ChartGesture lastPerformedGesture) {
-	}
-
-	@Override
-	public void onChartGestureEnd(MotionEvent me,
-			ChartGesture lastPerformedGesture) {
 	}
 }

@@ -1,5 +1,17 @@
 package com.android.orion.utility;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Environment;
+import android.text.TextUtils;
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -23,27 +35,14 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.Environment;
-import android.text.TextUtils;
-import android.util.Log;
-
-import androidx.annotation.NonNull;
-
-import com.android.orion.setting.Constant;
-
 public class Utility {
-	static final String TAG = Utility.class.getSimpleName();
+	public static final String TAG = Utility.class.getSimpleName();
 
 	public static final String CALENDAR_DATE_FORMAT = "yyyy-MM-dd";
 	public static final String CALENDAR_TIME_FORMAT = "HH:mm:ss";
 	public static final String CALENDAR_DATE_TIME_FORMAT = CALENDAR_DATE_FORMAT
 			+ " " + CALENDAR_TIME_FORMAT;
+
 
 	private Utility() {
 	}
@@ -538,93 +537,6 @@ public class Utility {
 		}
 	}
 
-	private void writeSdcard()  {
-		String text = "";
-		if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-			if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-				File storage = Environment.getExternalStorageDirectory();
-				File tmepfile = new File(storage.getPath());
-				if (! tmepfile.exists()) {
-					tmepfile.mkdirs();
-				}
-				File file1=new File(tmepfile,"test.txt");
-				if (!file1.exists()){
-					try {
-						file1.createNewFile();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-				FileOutputStream fileOutputStream = null;
-				try {
-					fileOutputStream = new FileOutputStream(file1);
-					fileOutputStream.write(text.getBytes());
-				} catch (Exception e) {
-					e.printStackTrace();
-				}finally {
-					if (fileOutputStream != null) {
-						try {
-							fileOutputStream.close();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					}
-				}
-			}
-		}
-	}
-
-
-	private void readSdcard() {
-		if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-			if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-				InputStream inputStream = null;
-				Reader reader = null;
-				BufferedReader bufferedReader = null;
-				try {
-					File storage = Environment.getExternalStorageDirectory();
-					File tmepfile = new File(storage.getPath());
-					File file=new File(tmepfile, "test.txt");
-					inputStream = new FileInputStream(file);
-					reader = new InputStreamReader(inputStream);
-					bufferedReader = new BufferedReader(reader);
-					StringBuilder result = new StringBuilder();
-					String temp;
-					while ((temp = bufferedReader.readLine()) != null) {
-						result.append(temp);
-					}
-					Log.i("MainActivity", "result:" + result);
-
-				} catch (Exception e) {
-					e.printStackTrace();
-				} finally {
-					if (reader != null) {
-						try {
-							reader.close();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					}
-					if (inputStream != null) {
-						try {
-							inputStream.close();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					}
-					if (bufferedReader != null) {
-						try {
-							bufferedReader.close();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					}
-
-				}
-			}
-		}
-	}
-
 	public static byte[] readFileByte(String fileName) {
 		byte[] bytes = null;
 		int length = 0;
@@ -720,8 +632,8 @@ public class Utility {
 		return "";
 	}
 
-	public static < E extends Enum < E >> boolean isInEnum(String value, Class < E > enumClass) {
-		for (E e: enumClass.getEnumConstants()) {
+	public static <E extends Enum<E>> boolean isInEnum(String value, Class<E> enumClass) {
+		for (E e : enumClass.getEnumConstants()) {
 			if (e.name().equals(value)) {
 				return true;
 			}
@@ -762,7 +674,7 @@ public class Utility {
 	}
 
 	public static String bytestoAsciiString(byte[] bytes, int offset,
-			int datalen) {
+											int datalen) {
 
 		if ((bytes == null) || (bytes.length == 0) || (offset < 0)
 				|| (datalen <= 0)) {
@@ -877,7 +789,7 @@ public class Utility {
 			}
 		}
 		sz--; // don't want to loop to the last char, check it afterwords
-				// for type qualifiers
+		// for type qualifiers
 		int i = start;
 		// loop to the next to last char or to the last char if we need another
 		// digit to
@@ -970,7 +882,7 @@ public class Utility {
 	}
 
 	public static String byteArrayToHexString(byte[] src, String seperater) {
-		StringBuilder stringBuilder = new StringBuilder("");
+		StringBuilder stringBuilder = new StringBuilder();
 
 		if (src == null || src.length <= 0) {
 			return null;
@@ -1008,11 +920,97 @@ public class Utility {
 		if (bytes <= 0)
 			return "0";
 
-		final String[] units = new String[] { "B", "KB", "MB", "GB", "TB" };
+		final String[] units = new String[]{"B", "KB", "MB", "GB", "TB"};
 		int digitGroups = (int) (Math.log10(bytes) / Math.log10(1024));
 
 		return new DecimalFormat("#,##0.##").format(bytes
 				/ Math.pow(1024, digitGroups))
 				+ " " + units[digitGroups];
+	}
+
+	private void writeSdcard() {
+		String text = "";
+		if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+			if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+				File storage = Environment.getExternalStorageDirectory();
+				File tmepfile = new File(storage.getPath());
+				if (!tmepfile.exists()) {
+					tmepfile.mkdirs();
+				}
+				File file1 = new File(tmepfile, "test.txt");
+				if (!file1.exists()) {
+					try {
+						file1.createNewFile();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				FileOutputStream fileOutputStream = null;
+				try {
+					fileOutputStream = new FileOutputStream(file1);
+					fileOutputStream.write(text.getBytes());
+				} catch (Exception e) {
+					e.printStackTrace();
+				} finally {
+					if (fileOutputStream != null) {
+						try {
+							fileOutputStream.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private void readSdcard() {
+		if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+			if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+				InputStream inputStream = null;
+				Reader reader = null;
+				BufferedReader bufferedReader = null;
+				try {
+					File storage = Environment.getExternalStorageDirectory();
+					File tmepfile = new File(storage.getPath());
+					File file = new File(tmepfile, "test.txt");
+					inputStream = new FileInputStream(file);
+					reader = new InputStreamReader(inputStream);
+					bufferedReader = new BufferedReader(reader);
+					StringBuilder result = new StringBuilder();
+					String temp;
+					while ((temp = bufferedReader.readLine()) != null) {
+						result.append(temp);
+					}
+					Log.i("MainActivity", "result:" + result);
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				} finally {
+					if (reader != null) {
+						try {
+							reader.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+					if (inputStream != null) {
+						try {
+							inputStream.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+					if (bufferedReader != null) {
+						try {
+							bufferedReader.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+
+				}
+			}
+		}
 	}
 }

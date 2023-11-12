@@ -21,12 +21,12 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
-import com.android.orion.setting.Constant;
 import com.android.orion.R;
-import com.android.orion.setting.Setting;
-import com.android.orion.database.IndexComponent;
 import com.android.orion.database.DatabaseContract;
+import com.android.orion.database.IndexComponent;
 import com.android.orion.database.Stock;
+import com.android.orion.setting.Constant;
+import com.android.orion.setting.Setting;
 import com.android.orion.utility.Preferences;
 import com.android.orion.view.SyncHorizontalScrollView;
 
@@ -42,7 +42,7 @@ public class IndexComponentListActivity extends ListActivity implements
 	public static final int LOADER_ID_INDEX_COMPONENT_LIST = 0;
 
 	public static final int REQUEST_CODE_INDEX_COMPONENT_INSERT = 0;
-    public static final int REQUEST_CODE_INDEX_COMPONENT_SELECT = 1;
+	public static final int REQUEST_CODE_INDEX_COMPONENT_SELECT = 1;
 
 	static final int mHeaderTextDefaultColor = Color.BLACK;
 	static final int mHeaderTextHighlightColor = Color.RED;
@@ -65,6 +65,7 @@ public class IndexComponentListActivity extends ListActivity implements
 	TextView mTextViewMin30 = null;
 	TextView mTextViewMin15 = null;
 	TextView mTextViewMin5 = null;
+	TextView mTextViewTrend = null;
 	TextView mTextViewOperate = null;
 	TextView mTextViewModified = null;
 
@@ -81,16 +82,16 @@ public class IndexComponentListActivity extends ListActivity implements
 			super.handleMessage(msg);
 
 			switch (msg.what) {
-			case MESSAGE_REFRESH:
-				if (mOrionService != null) {
-					mStockDatabaseManager.deleteStockData();
-					mOrionService.download();
-					restartLoader();
-				}
-				break;
+				case MESSAGE_REFRESH:
+					if (mOrionService != null) {
+						mStockDatabaseManager.deleteStockData();
+						mOrionService.download();
+						restartLoader();
+					}
+					break;
 
-			default:
-				break;
+				default:
+					break;
 			}
 		}
 	};
@@ -121,65 +122,65 @@ public class IndexComponentListActivity extends ListActivity implements
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 		switch (item.getItemId()) {
-		case android.R.id.home:
-			finish();
-			return true;
+			case android.R.id.home:
+				finish();
+				return true;
 
-		case R.id.action_new:
-			Intent intentNew = new Intent(this, StockEditActivity.class);
-			intentNew.setAction(StockEditActivity.ACTION_INDEX_COMPONENT_INSERT);
-			intentNew.putExtra(Constant.EXTRA_INDEX_CODE, mIntent.getStringExtra(Constant.EXTRA_INDEX_CODE));
-			startActivityForResult(intentNew, REQUEST_CODE_INDEX_COMPONENT_INSERT);
-			return true;
+			case R.id.action_new:
+				Intent intentNew = new Intent(this, StockEditActivity.class);
+				intentNew.setAction(StockEditActivity.ACTION_INDEX_COMPONENT_INSERT);
+				intentNew.putExtra(Constant.EXTRA_INDEX_CODE, mIntent.getStringExtra(Constant.EXTRA_INDEX_CODE));
+				startActivityForResult(intentNew, REQUEST_CODE_INDEX_COMPONENT_INSERT);
+				return true;
 
-		case R.id.action_search:
-			Intent intentSearch = new Intent(this, StockSearchActivity.class);
-			intentSearch.setAction(StockListEditActivity.ACTION_INDEX_COMPONENT_SELECT);
-			intentSearch.putExtra(Constant.EXTRA_INDEX_CODE, mIntent.getStringExtra(Constant.EXTRA_INDEX_CODE));
-			startActivityForResult(intentSearch, REQUEST_CODE_INDEX_COMPONENT_SELECT);
-			return true;
+			case R.id.action_search:
+				Intent intentSearch = new Intent(this, StockSearchActivity.class);
+				intentSearch.setAction(StockListEditActivity.ACTION_INDEX_COMPONENT_SELECT);
+				intentSearch.putExtra(Constant.EXTRA_INDEX_CODE, mIntent.getStringExtra(Constant.EXTRA_INDEX_CODE));
+				startActivityForResult(intentSearch, REQUEST_CODE_INDEX_COMPONENT_SELECT);
+				return true;
 
-		case R.id.action_refresh:
-			mHandler.sendEmptyMessage(MESSAGE_REFRESH);
-			return true;
+			case R.id.action_refresh:
+				mHandler.sendEmptyMessage(MESSAGE_REFRESH);
+				return true;
 
-		case R.id.action_settings:
-			startActivity(new Intent(this, SettingActivity.class));
-			return true;
+			case R.id.action_settings:
+				startActivity(new Intent(this, SettingActivity.class));
+				return true;
 
-		case R.id.action_load:
-			performLoadFromFile();
-			return true;
+			case R.id.action_load:
+				performLoadFromFile();
+				return true;
 
-		case R.id.action_save:
-			performSaveToFile();
-			return true;
+			case R.id.action_save:
+				performSaveToFile();
+				return true;
 
-		case R.id.action_deal:
-			startActivity(new Intent(this, StockFavoriteDealListActivity.class));
-			return true;
+			case R.id.action_deal:
+				startActivity(new Intent(this, StockFavoriteDealListActivity.class));
+				return true;
 
-		default:
-			return super.onMenuItemSelected(featureId, item);
+			default:
+				return super.onMenuItemSelected(featureId, item);
 		}
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode,
-			Intent intent) {
+									Intent intent) {
 		super.onActivityResult(requestCode, resultCode, intent);
 
 		if (resultCode == RESULT_OK) {
 			switch (requestCode) {
-			case REQUEST_CODE_INDEX_COMPONENT_INSERT:
-			case REQUEST_CODE_INDEX_COMPONENT_SELECT:
-				if (mOrionService != null) {
-					mOrionService.download();
-				}
-				break;
+				case REQUEST_CODE_INDEX_COMPONENT_INSERT:
+				case REQUEST_CODE_INDEX_COMPONENT_SELECT:
+					if (mOrionService != null) {
+						mOrionService.download();
+					}
+					break;
 
-			default:
-				break;
+				default:
+					break;
 			}
 		}
 	}
@@ -192,45 +193,48 @@ public class IndexComponentListActivity extends ListActivity implements
 		setHeaderTextColor(id, mHeaderTextHighlightColor);
 
 		switch (id) {
-		case R.id.stock_name_code:
-			mSortOrderColumn = DatabaseContract.COLUMN_CODE;
-			break;
-		case R.id.price:
-			mSortOrderColumn = DatabaseContract.COLUMN_PRICE;
-			break;
-		case R.id.net:
-			mSortOrderColumn = DatabaseContract.COLUMN_NET;
-			break;
-		case R.id.action_month:
-			mSortOrderColumn = DatabaseContract.COLUMN_MONTH;
-			break;
-		case R.id.action_week:
-			mSortOrderColumn = DatabaseContract.COLUMN_WEEK;
-			break;
-		case R.id.action_day:
-			mSortOrderColumn = DatabaseContract.COLUMN_DAY;
-			break;
-		case R.id.action_60min:
-			mSortOrderColumn = DatabaseContract.COLUMN_MIN60;
-			break;
-		case R.id.action_30min:
-			mSortOrderColumn = DatabaseContract.COLUMN_MIN30;
-			break;
-		case R.id.action_15min:
-			mSortOrderColumn = DatabaseContract.COLUMN_MIN15;
-			break;
-		case R.id.action_5min:
-			mSortOrderColumn = DatabaseContract.COLUMN_MIN5;
-			break;
-		case R.id.operate:
-			mSortOrderColumn = DatabaseContract.COLUMN_OPERATE;
-			break;
-		case R.id.modified:
-			mSortOrderColumn = DatabaseContract.COLUMN_MODIFIED;
-			break;
-		default:
-			mSortOrderColumn = DatabaseContract.COLUMN_NET;
-			break;
+			case R.id.stock_name_code:
+				mSortOrderColumn = DatabaseContract.COLUMN_CODE;
+				break;
+			case R.id.price:
+				mSortOrderColumn = DatabaseContract.COLUMN_PRICE;
+				break;
+			case R.id.net:
+				mSortOrderColumn = DatabaseContract.COLUMN_NET;
+				break;
+			case R.id.action_month:
+				mSortOrderColumn = DatabaseContract.COLUMN_MONTH;
+				break;
+			case R.id.action_week:
+				mSortOrderColumn = DatabaseContract.COLUMN_WEEK;
+				break;
+			case R.id.action_day:
+				mSortOrderColumn = DatabaseContract.COLUMN_DAY;
+				break;
+			case R.id.action_60min:
+				mSortOrderColumn = DatabaseContract.COLUMN_MIN60;
+				break;
+			case R.id.action_30min:
+				mSortOrderColumn = DatabaseContract.COLUMN_MIN30;
+				break;
+			case R.id.action_15min:
+				mSortOrderColumn = DatabaseContract.COLUMN_MIN15;
+				break;
+			case R.id.action_5min:
+				mSortOrderColumn = DatabaseContract.COLUMN_MIN5;
+				break;
+			case R.id.trend:
+				mSortOrderColumn = DatabaseContract.COLUMN_TREND;
+				break;
+			case R.id.operate:
+				mSortOrderColumn = DatabaseContract.COLUMN_OPERATE;
+				break;
+			case R.id.modified:
+				mSortOrderColumn = DatabaseContract.COLUMN_MODIFIED;
+				break;
+			default:
+				mSortOrderColumn = DatabaseContract.COLUMN_NET;
+				break;
 		}
 
 		if (mSortOrderDirection.equals(DatabaseContract.ORDER_DIRECTION_ASC)) {
@@ -247,7 +251,7 @@ public class IndexComponentListActivity extends ListActivity implements
 	}
 
 	void setHeaderTextColor(int id, int color) {
-		TextView textView = (TextView) findViewById(id);
+		TextView textView = findViewById(id);
 		setHeaderTextColor(textView, color);
 	}
 
@@ -268,6 +272,7 @@ public class IndexComponentListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewMin30, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewMin15, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewMin5, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewTrend, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewOperate, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewModified, mHeaderTextDefaultColor);
 	}
@@ -283,77 +288,83 @@ public class IndexComponentListActivity extends ListActivity implements
 	}
 
 	void initHeader() {
-		mTitleSHSV = (SyncHorizontalScrollView) findViewById(R.id.title_shsv);
-		mContentSHSV = (SyncHorizontalScrollView) findViewById(R.id.content_shsv);
+		mTitleSHSV = findViewById(R.id.title_shsv);
+		mContentSHSV = findViewById(R.id.content_shsv);
 
 		if (mTitleSHSV != null && mContentSHSV != null) {
 			mTitleSHSV.setScrollView(mContentSHSV);
 			mContentSHSV.setScrollView(mTitleSHSV);
 		}
 
-		mTextViewNameCode = (TextView) findViewById(R.id.stock_name_code);
+		mTextViewNameCode = findViewById(R.id.stock_name_code);
 		if (mTextViewNameCode != null) {
 			mTextViewNameCode.setOnClickListener(this);
 		}
 
-		mTextViewPrice = (TextView) findViewById(R.id.price);
+		mTextViewPrice = findViewById(R.id.price);
 		if (mTextViewPrice != null) {
 			mTextViewPrice.setOnClickListener(this);
 		}
 
-		mTextViewNet = (TextView) findViewById(R.id.net);
+		mTextViewNet = findViewById(R.id.net);
 		if (mTextViewNet != null) {
 			mTextViewNet.setOnClickListener(this);
+			setVisibility(Setting.KEY_DISPLAY_NET, mTextViewNet);
 		}
 
-		mTextViewMonth = (TextView) findViewById(R.id.action_month);
+		mTextViewMonth = findViewById(R.id.action_month);
 		if (mTextViewMonth != null) {
 			mTextViewMonth.setOnClickListener(this);
 			setVisibility(Setting.KEY_PERIOD_MONTH, mTextViewMonth);
 		}
 
-		mTextViewWeek = (TextView) findViewById(R.id.action_week);
+		mTextViewWeek = findViewById(R.id.action_week);
 		if (mTextViewWeek != null) {
 			mTextViewWeek.setOnClickListener(this);
 			setVisibility(Setting.KEY_PERIOD_WEEK, mTextViewWeek);
 		}
 
-		mTextViewDay = (TextView) findViewById(R.id.action_day);
+		mTextViewDay = findViewById(R.id.action_day);
 		if (mTextViewDay != null) {
 			mTextViewDay.setOnClickListener(this);
 			setVisibility(Setting.KEY_PERIOD_DAY, mTextViewDay);
 		}
 
-		mTextViewMin60 = (TextView) findViewById(R.id.action_60min);
+		mTextViewMin60 = findViewById(R.id.action_60min);
 		if (mTextViewMin60 != null) {
 			mTextViewMin60.setOnClickListener(this);
 			setVisibility(Setting.KEY_PERIOD_MIN60, mTextViewMin60);
 		}
 
-		mTextViewMin30 = (TextView) findViewById(R.id.action_30min);
+		mTextViewMin30 = findViewById(R.id.action_30min);
 		if (mTextViewMin30 != null) {
 			mTextViewMin30.setOnClickListener(this);
 			setVisibility(Setting.KEY_PERIOD_MIN30, mTextViewMin30);
 		}
 
-		mTextViewMin15 = (TextView) findViewById(R.id.action_15min);
+		mTextViewMin15 = findViewById(R.id.action_15min);
 		if (mTextViewMin15 != null) {
 			mTextViewMin15.setOnClickListener(this);
 			setVisibility(Setting.KEY_PERIOD_MIN15, mTextViewMin15);
 		}
 
-		mTextViewMin5 = (TextView) findViewById(R.id.action_5min);
+		mTextViewMin5 = findViewById(R.id.action_5min);
 		if (mTextViewMin5 != null) {
 			mTextViewMin5.setOnClickListener(this);
 			setVisibility(Setting.KEY_PERIOD_MIN5, mTextViewMin5);
 		}
 
-		mTextViewOperate = (TextView) findViewById(R.id.operate);
+		mTextViewTrend = findViewById(R.id.trend);
+		if (mTextViewTrend != null) {
+			mTextViewTrend.setOnClickListener(this);
+		}
+
+		mTextViewOperate = findViewById(R.id.operate);
 		if (mTextViewOperate != null) {
 			mTextViewOperate.setOnClickListener(this);
 		}
 
-		mTextViewModified = (TextView) findViewById(R.id.modified);
+		mTextViewModified = findViewById(R.id.modified);
 		if (mTextViewModified != null) {
 			mTextViewModified.setOnClickListener(this);
 		}
@@ -378,6 +389,8 @@ public class IndexComponentListActivity extends ListActivity implements
 			setHeaderTextColor(mTextViewMin15, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MIN5)) {
 			setHeaderTextColor(mTextViewMin5, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_TREND)) {
+			setHeaderTextColor(mTextViewTrend, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_OPERATE)) {
 			setHeaderTextColor(mTextViewOperate, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MODIFIED)) {
@@ -387,21 +400,38 @@ public class IndexComponentListActivity extends ListActivity implements
 	}
 
 	void initListView() {
-		String[] mLeftFrom = new String[] { DatabaseContract.COLUMN_NAME,
-				DatabaseContract.COLUMN_CODE };
-		int[] mLeftTo = new int[] { R.id.name, R.id.code };
+		String[] mLeftFrom = new String[]{DatabaseContract.COLUMN_NAME,
+				DatabaseContract.COLUMN_CODE};
+		int[] mLeftTo = new int[]{R.id.name, R.id.code};
 
-		String[] mRightFrom = new String[] { DatabaseContract.COLUMN_PRICE,
-				DatabaseContract.COLUMN_NET, DatabaseContract.COLUMN_MONTH,
-				DatabaseContract.COLUMN_WEEK, DatabaseContract.COLUMN_DAY,
-				DatabaseContract.COLUMN_MIN60, DatabaseContract.COLUMN_MIN30,
-				DatabaseContract.COLUMN_MIN15, DatabaseContract.COLUMN_MIN5,
-				DatabaseContract.COLUMN_OPERATE, DatabaseContract.COLUMN_MODIFIED };
-		int[] mRightTo = new int[] { R.id.price, R.id.net, R.id.type_month,
-				R.id.type_week, R.id.type_day, R.id.type_60min,
-				R.id.type_30min, R.id.type_15min, R.id.type_5min, R.id.operate, R.id.modified };
+		String[] mRightFrom = new String[]{
+				DatabaseContract.COLUMN_PRICE,
+				DatabaseContract.COLUMN_NET,
+				DatabaseContract.COLUMN_MONTH,
+				DatabaseContract.COLUMN_WEEK,
+				DatabaseContract.COLUMN_DAY,
+				DatabaseContract.COLUMN_MIN60,
+				DatabaseContract.COLUMN_MIN30,
+				DatabaseContract.COLUMN_MIN15,
+				DatabaseContract.COLUMN_MIN5,
+				DatabaseContract.COLUMN_TREND,
+				DatabaseContract.COLUMN_OPERATE,
+				DatabaseContract.COLUMN_MODIFIED};
+		int[] mRightTo = new int[]{
+				R.id.price,
+				R.id.net,
+				R.id.month,
+				R.id.week,
+				R.id.day,
+				R.id.min60,
+				R.id.min30,
+				R.id.min15,
+				R.id.min5,
+				R.id.trend,
+				R.id.operate,
+				R.id.modified};
 
-		mLeftListView = (ListView) findViewById(R.id.left_listview);
+		mLeftListView = findViewById(R.id.left_listview);
 		mLeftAdapter = new SimpleCursorAdapter(this,
 				R.layout.activity_stock_list_left_item, null, mLeftFrom,
 				mLeftTo, 0);
@@ -411,7 +441,7 @@ public class IndexComponentListActivity extends ListActivity implements
 			mLeftListView.setOnItemLongClickListener(this);
 		}
 
-		mRightListView = (ListView) findViewById(R.id.right_listview);
+		mRightListView = findViewById(R.id.right_listview);
 		mRightAdapter = new SimpleCursorAdapter(this,
 				R.layout.activity_stock_list_right_item, null, mRightFrom,
 				mRightTo, 0);
@@ -455,41 +485,41 @@ public class IndexComponentListActivity extends ListActivity implements
 		CursorLoader loader = null;
 
 		switch (id) {
-		case LOADER_ID_INDEX_COMPONENT_LIST:
-			ArrayList<IndexComponent> indexComponentList = new ArrayList<>();
-			String componentSelection = "";
-			StringBuilder placeHolder = new StringBuilder();
-			StringBuilder indexIds = new StringBuilder();
+			case LOADER_ID_INDEX_COMPONENT_LIST:
+				ArrayList<IndexComponent> indexComponentList = new ArrayList<>();
+				String componentSelection = "";
+				StringBuilder placeHolder = new StringBuilder();
+				StringBuilder indexIds = new StringBuilder();
 
-			componentSelection += DatabaseContract.COLUMN_INDEX_CODE + " = " + mIntent.getStringExtra(Constant.EXTRA_INDEX_CODE);
+				componentSelection += DatabaseContract.COLUMN_INDEX_CODE + " = " + mIntent.getStringExtra(Constant.EXTRA_INDEX_CODE);
 
-			mStockDatabaseManager.getIndexComponentList(indexComponentList, componentSelection, null);
+				mStockDatabaseManager.getIndexComponentList(indexComponentList, componentSelection, null);
 
-			if (indexComponentList.size() > 0) {
-				placeHolder.append("?");
-				indexIds.append(indexComponentList.get(0).getCode());
-				for (int i = 1; i < indexComponentList.size(); i++) {
-					placeHolder.append("," + "?");
-					indexIds.append("," + indexComponentList.get(i).getCode());
+				if (indexComponentList.size() > 0) {
+					placeHolder.append("?");
+					indexIds.append(indexComponentList.get(0).getCode());
+					for (int i = 1; i < indexComponentList.size(); i++) {
+						placeHolder.append("," + "?");
+						indexIds.append("," + indexComponentList.get(i).getCode());
+					}
+
+					selection = DatabaseContract.COLUMN_CODE + " in (" + placeHolder.toString() + " ) AND " + DatabaseContract.COLUMN_FLAG + " >= "
+							+ Stock.FLAG_FAVORITE;
+					selectionArgs = indexIds.toString().split(",");
+				} else {
+					selection = DatabaseContract.COLUMN_ID + " = " + Stock.INVALID_ID;
+					selectionArgs = null;
 				}
 
-				selection = DatabaseContract.COLUMN_CODE + " in (" + placeHolder.toString() + " ) AND " + DatabaseContract.COLUMN_FLAG + " >= "
-						+ Stock.FLAG_FAVORITE;
-				selectionArgs = indexIds.toString().split(",");
-			} else {
-				selection = DatabaseContract.COLUMN_ID + " = " + Stock.INVALID_ID;
-				selectionArgs = null;
-			}
+				loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
+						DatabaseContract.Stock.PROJECTION_ALL, selection, selectionArgs,
+						mSortOrder);
 
-			loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
-					DatabaseContract.Stock.PROJECTION_ALL, selection, selectionArgs,
-					mSortOrder);
+				mStockList.clear();
+				break;
 
-			mStockList.clear();
-			break;
-
-		default:
-			break;
+			default:
+				break;
 		}
 
 		return loader;
@@ -502,22 +532,22 @@ public class IndexComponentListActivity extends ListActivity implements
 		}
 
 		switch (loader.getId()) {
-		case LOADER_ID_INDEX_COMPONENT_LIST:
-			mLeftAdapter.swapCursor(cursor);
-			mRightAdapter.swapCursor(cursor);
+			case LOADER_ID_INDEX_COMPONENT_LIST:
+				mLeftAdapter.swapCursor(cursor);
+				mRightAdapter.swapCursor(cursor);
 
-			if ((cursor != null) && cursor.getCount() > 0) {
-				cursor.moveToPosition(-1);
-				while (cursor.moveToNext()) {
-					Stock stock = new Stock();
-					stock.set(cursor);
-					mStockList.add(stock);
+				if ((cursor != null) && cursor.getCount() > 0) {
+					cursor.moveToPosition(-1);
+					while (cursor.moveToNext()) {
+						Stock stock = new Stock();
+						stock.set(cursor);
+						mStockList.add(stock);
+					}
 				}
-			}
-			break;
+				break;
 
-		default:
-			break;
+			default:
+				break;
 		}
 
 		setListViewHeightBasedOnChildren(mLeftListView);
@@ -534,7 +564,7 @@ public class IndexComponentListActivity extends ListActivity implements
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
-			long id) {
+							long id) {
 
 		if (id <= Stock.INVALID_ID) {
 			return;
@@ -571,13 +601,13 @@ public class IndexComponentListActivity extends ListActivity implements
 
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
-			int position, long id) {
-        Intent intentSearch = new Intent(this, StockSearchActivity.class);
-        intentSearch.setAction(StockListEditActivity.ACTION_INDEX_COMPONENT_SELECT);
-        intentSearch.putExtra(Constant.EXTRA_INDEX_CODE, mIntent.getStringExtra(Constant.EXTRA_INDEX_CODE));
+								   int position, long id) {
+		Intent intentSearch = new Intent(this, StockSearchActivity.class);
+		intentSearch.setAction(StockListEditActivity.ACTION_INDEX_COMPONENT_SELECT);
+		intentSearch.putExtra(Constant.EXTRA_INDEX_CODE, mIntent.getStringExtra(Constant.EXTRA_INDEX_CODE));
 		intentSearch.putExtra(Constant.EXTRA_INDEX_NAME, mIntent.getStringExtra(Constant.EXTRA_INDEX_NAME));
 		intentSearch.putExtra(Constant.EXTRA_INDEX_SE, mIntent.getStringExtra(Constant.EXTRA_INDEX_SE));
-        startActivityForResult(intentSearch, REQUEST_CODE_INDEX_COMPONENT_SELECT);
+		startActivityForResult(intentSearch, REQUEST_CODE_INDEX_COMPONENT_SELECT);
 		return true;
 	}
 
@@ -604,6 +634,9 @@ public class IndexComponentListActivity extends ListActivity implements
 			}
 
 			if (columnIndex == cursor
+					.getColumnIndex(DatabaseContract.COLUMN_NET)) {
+				return setRightTextViewVisibility(Setting.KEY_DISPLAY_NET, view);
+			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MONTH)) {
 				return setRightTextViewVisibility(Setting.KEY_PERIOD_MONTH, view);
 			} else if (columnIndex == cursor

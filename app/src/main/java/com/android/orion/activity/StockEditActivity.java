@@ -18,11 +18,11 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.android.orion.setting.Constant;
 import com.android.orion.R;
-import com.android.orion.setting.Setting;
 import com.android.orion.database.IndexComponent;
 import com.android.orion.database.Stock;
+import com.android.orion.setting.Constant;
+import com.android.orion.setting.Setting;
 import com.android.orion.utility.Utility;
 
 import java.util.ArrayList;
@@ -80,16 +80,16 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 	}
 
 	void initView() {
-		mCheckBoxFavorite = (CheckBox) findViewById(R.id.checkbox_favorite);
-		mRadioGroupClass = (RadioGroup) findViewById(R.id.radio_group_class);
-		mRadioGroupSE = (RadioGroup) findViewById(R.id.radio_group_se);
-		mEditTextStockName = (EditText) findViewById(R.id.edittext_stock_name);
-		mEditTextStockCode = (EditText) findViewById(R.id.edittext_stock_code);
-		mEditTextStockQuantVolume = (EditText) findViewById(R.id.edittext_stock_quant_volume);
-		mEditTextStockThreshold = (EditText) findViewById(R.id.edittext_threshold);
-		mSpinnerStockAcion = (Spinner) findViewById(R.id.spinner_stock_operate);
-		mButtonOk = (Button) findViewById(R.id.button_ok);
-		mButtonCancel = (Button) findViewById(R.id.button_cancel);
+		mCheckBoxFavorite = findViewById(R.id.checkbox_favorite);
+		mRadioGroupClass = findViewById(R.id.radio_group_class);
+		mRadioGroupSE = findViewById(R.id.radio_group_se);
+		mEditTextStockName = findViewById(R.id.edittext_stock_name);
+		mEditTextStockCode = findViewById(R.id.edittext_stock_code);
+		mEditTextStockQuantVolume = findViewById(R.id.edittext_stock_quant_volume);
+		mEditTextStockThreshold = findViewById(R.id.edittext_threshold);
+		mSpinnerStockAcion = findViewById(R.id.spinner_stock_operate);
+		mButtonOk = findViewById(R.id.button_ok);
+		mButtonCancel = findViewById(R.id.button_cancel);
 
 		mCheckBoxFavorite.setOnClickListener(this);
 		mRadioGroupClass.setOnClickListener(this);
@@ -127,13 +127,13 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 
 			@Override
 			public void beforeTextChanged(CharSequence arg0, int arg1,
-					int arg2, int arg3) {
+										  int arg2, int arg3) {
 
 			}
 
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
-					int count) {
+									  int count) {
 				if (ACTION_STOCK_EDIT.equals(mAction)) {
 					return;
 				}
@@ -190,12 +190,12 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 	}
 
 	void onCheckBoxFavoriteChanged() {
-        if (mCheckBoxFavorite.isChecked()) {
-            mStock.addFlag(Stock.FLAG_FAVORITE);
-        } else {
-            mStock.removeFlag(Stock.FLAG_FAVORITE);
-        }
-    }
+		if (mCheckBoxFavorite.isChecked()) {
+			mStock.addFlag(Stock.FLAG_FAVORITE);
+		} else {
+			mStock.removeFlag(Stock.FLAG_FAVORITE);
+		}
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -207,9 +207,9 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case android.R.id.home:
-			finish();
-			return true;
+			case android.R.id.home:
+				finish();
+				return true;
 		}
 
 		return super.onOptionsItemSelected(item);
@@ -217,117 +217,117 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 
 	@Override
 	public void onClick(View view) {
-        String operate;
+		String operate;
 		int viewId = view.getId();
 
 		switch (viewId) {
-		case R.id.checkbox_favorite:
-            onCheckBoxFavoriteChanged();
-			break;
+			case R.id.checkbox_favorite:
+				onCheckBoxFavoriteChanged();
+				break;
 
-		case R.id.button_ok:
-			int id = 0;
+			case R.id.button_ok:
+				int id = 0;
 
-            onCheckBoxFavoriteChanged();
+				onCheckBoxFavoriteChanged();
 
-			operate = mSpinnerStockAcion.getSelectedItem().toString();
-			if (!operate.equals(mStockOperate)) {
-				mStockOperate = operate;
-				mStock.setOperate(mStockOperate);
-				mStockDatabaseManager.deleteStockQuant(mStock);
-			}
+				operate = mSpinnerStockAcion.getSelectedItem().toString();
+				if (!operate.equals(mStockOperate)) {
+					mStockOperate = operate;
+					mStock.setOperate(mStockOperate);
+					mStockDatabaseManager.deleteStockQuant(mStock);
+				}
 
-			id = mRadioGroupClass.getCheckedRadioButtonId();
-			if (id == R.id.radio_class_hsa) {
-				mStock.setClasses(Stock.CLASS_A);
-			} else if (id == R.id.radio_class_index) {
-				mStock.setClasses(Stock.CLASS_INDEX);
-			}
+				id = mRadioGroupClass.getCheckedRadioButtonId();
+				if (id == R.id.radio_class_hsa) {
+					mStock.setClasses(Stock.CLASS_A);
+				} else if (id == R.id.radio_class_index) {
+					mStock.setClasses(Stock.CLASS_INDEX);
+				}
 
-			id = mRadioGroupSE.getCheckedRadioButtonId();
-			if (id == R.id.radio_se_sh) {
-				mStock.setSE(Stock.SE_SH);
-			} else if (id == R.id.radio_se_sz) {
-				mStock.setSE(Stock.SE_SZ);
-			}
+				id = mRadioGroupSE.getCheckedRadioButtonId();
+				if (id == R.id.radio_se_sh) {
+					mStock.setSE(Stock.SE_SH);
+				} else if (id == R.id.radio_se_sz) {
+					mStock.setSE(Stock.SE_SZ);
+				}
 
-			String name = mEditTextStockName.getText().toString();
-			String code = mEditTextStockCode.getText().toString();
+				String name = mEditTextStockName.getText().toString();
+				String code = mEditTextStockCode.getText().toString();
 
-			if (!TextUtils.isEmpty(name)) {
-				mStock.setName(name);
-			}
+				if (!TextUtils.isEmpty(name)) {
+					mStock.setName(name);
+				}
 
-			if (!TextUtils.isEmpty(code)) {
-				mStock.setCode(code);
-			} else {
-				Toast.makeText(mContext, R.string.stock_code_empty,
-						Toast.LENGTH_LONG).show();
-			}
-
-			String quantVolume = mEditTextStockQuantVolume.getText().toString();
-			long quantVolumeValue = TextUtils.isEmpty(quantVolume) ? 0 : Long.valueOf(quantVolume);
-			if (quantVolumeValue != mStockQuantVolume) {
-				mStockQuantVolume = quantVolumeValue;
-				mStock.setQuantVolume(mStockQuantVolume);
-				mStockDatabaseManager.deleteStockQuant(mStock);
-			}
-
-			String threshold = mEditTextStockThreshold.getText().toString();
-			double thresholdValue = TextUtils.isEmpty(threshold) ? 0 : Double.valueOf(threshold);
-			if (thresholdValue != mStockThreshold) {
-				mStockThreshold = thresholdValue;
-				mStock.setThreshold(mStockThreshold);
-				mStockDatabaseManager.deleteStockQuant(mStock);
-			}
-
-			if (ACTION_FAVORITE_STOCK_INSERT.equals(mAction) || ACTION_INDEX_COMPONENT_INSERT.equals(mAction)) {
-				if (!mStockDatabaseManager.isStockExist(mStock)) {
-					mStock.setCreated(Utility.getCurrentDateTimeString());
-					Uri uri = mStockDatabaseManager.insertStock(mStock);
-
-                    mStockDatabaseManager.getStock(uri, mStock);
-
-					if (ACTION_INDEX_COMPONENT_INSERT.equals(mAction)) {
-						IndexComponent indexComponent = new IndexComponent();
-
-						indexComponent.setSE(mStock.getSE());
-						indexComponent.setCode(mStock.getCode());
-						indexComponent.setName(mStock.getName());
-
-						if (!mStockDatabaseManager.isIndexComponentExist(indexComponent)) {
-							indexComponent.setCreated(Utility.getCurrentDateTimeString());
-							mStockDatabaseManager.insertIndexComponent(indexComponent);
-						} else {
-							Toast.makeText(mContext, R.string.stock_exist,
-									Toast.LENGTH_LONG).show();
-						}
-					}
+				if (!TextUtils.isEmpty(code)) {
+					mStock.setCode(code);
 				} else {
-					Toast.makeText(mContext, R.string.stock_exist,
+					Toast.makeText(mContext, R.string.stock_code_empty,
 							Toast.LENGTH_LONG).show();
 				}
-			} else if (ACTION_STOCK_EDIT.equals(mAction)) {
-				mStock.setModified(Utility.getCurrentDateTimeString());
-				mStockDatabaseManager.updateStock(mStock,
-						mStock.getContentValuesForEdit());
-			}
 
-			getIntent().putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
+				String quantVolume = mEditTextStockQuantVolume.getText().toString();
+				long quantVolumeValue = TextUtils.isEmpty(quantVolume) ? 0 : Long.valueOf(quantVolume);
+				if (quantVolumeValue != mStockQuantVolume) {
+					mStockQuantVolume = quantVolumeValue;
+					mStock.setQuantVolume(mStockQuantVolume);
+					mStockDatabaseManager.deleteStockQuant(mStock);
+				}
 
-			setResult(RESULT_OK, getIntent());
+				String threshold = mEditTextStockThreshold.getText().toString();
+				double thresholdValue = TextUtils.isEmpty(threshold) ? 0 : Double.valueOf(threshold);
+				if (thresholdValue != mStockThreshold) {
+					mStockThreshold = thresholdValue;
+					mStock.setThreshold(mStockThreshold);
+					mStockDatabaseManager.deleteStockQuant(mStock);
+				}
 
-			mOrionService.download(mStock.getSE(), mStock.getCode());
+				if (ACTION_FAVORITE_STOCK_INSERT.equals(mAction) || ACTION_INDEX_COMPONENT_INSERT.equals(mAction)) {
+					if (!mStockDatabaseManager.isStockExist(mStock)) {
+						mStock.setCreated(Utility.getCurrentDateTimeString());
+						Uri uri = mStockDatabaseManager.insertStock(mStock);
 
-			finish();
-			break;
+						mStockDatabaseManager.getStock(uri, mStock);
 
-		case R.id.button_cancel:
-			finish();
-			break;
+						if (ACTION_INDEX_COMPONENT_INSERT.equals(mAction)) {
+							IndexComponent indexComponent = new IndexComponent();
 
-		default:
-			break;
+							indexComponent.setSE(mStock.getSE());
+							indexComponent.setCode(mStock.getCode());
+							indexComponent.setName(mStock.getName());
+
+							if (!mStockDatabaseManager.isIndexComponentExist(indexComponent)) {
+								indexComponent.setCreated(Utility.getCurrentDateTimeString());
+								mStockDatabaseManager.insertIndexComponent(indexComponent);
+							} else {
+								Toast.makeText(mContext, R.string.stock_exist,
+										Toast.LENGTH_LONG).show();
+							}
+						}
+					} else {
+						Toast.makeText(mContext, R.string.stock_exist,
+								Toast.LENGTH_LONG).show();
+					}
+				} else if (ACTION_STOCK_EDIT.equals(mAction)) {
+					mStock.setModified(Utility.getCurrentDateTimeString());
+					mStockDatabaseManager.updateStock(mStock,
+							mStock.getContentValuesForEdit());
+				}
+
+				getIntent().putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
+
+				setResult(RESULT_OK, getIntent());
+
+				mOrionService.download(mStock.getSE(), mStock.getCode());
+
+				finish();
+				break;
+
+			case R.id.button_cancel:
+				finish();
+				break;
+
+			default:
+				break;
 		}
 	}
 

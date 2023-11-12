@@ -1,10 +1,7 @@
 package com.android.orion.manager;
 
-import com.android.orion.setting.Constant;
-
-
 public class QuantManager {
-	static final String TAG = QuantManager.class.getSimpleName();
+	public static final String TAG = QuantManager.class.getSimpleName();
 
 	private static QuantManager mInstance;
 

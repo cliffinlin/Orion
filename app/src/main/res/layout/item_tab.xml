@@ -7,11 +7,11 @@
 
 
     <TextView
-        android:textSize="16dp"
-        android:textColor="#CCC"
-        android:gravity="center"
         android:id="@+id/tabView"
         android:layout_width="80dp"
-        android:layout_height="50dp" />
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:textColor="#CCC"
+        android:textSize="16dp" />
 
 </LinearLayout>

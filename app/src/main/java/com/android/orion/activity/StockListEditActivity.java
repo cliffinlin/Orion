@@ -22,18 +22,18 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
-import com.android.orion.setting.Constant;
 import com.android.orion.R;
-import com.android.orion.database.IndexComponent;
 import com.android.orion.database.DatabaseContract;
+import com.android.orion.database.IndexComponent;
 import com.android.orion.database.Stock;
+import com.android.orion.setting.Constant;
 import com.android.orion.utility.Utility;
 
 public class StockListEditActivity extends DatabaseActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
 		OnClickListener {
 
-    public static final String ACTION_INDEX_COMPONENT_SELECT = "orion.intent.action.ACTION_INDEX_COMPONENT_SELECT";
+	public static final String ACTION_INDEX_COMPONENT_SELECT = "orion.intent.action.ACTION_INDEX_COMPONENT_SELECT";
 
 	static final int LOADER_ID_STOCK_LIST = 0;
 
@@ -54,10 +54,10 @@ public class StockListEditActivity extends DatabaseActivity implements
 	TextView mTextViewFavorite = null;
 	TextView mTextViewComponent = null;
 
-	String[] mFrom = new String[] { DatabaseContract.COLUMN_NAME,
+	String[] mFrom = new String[]{DatabaseContract.COLUMN_NAME,
 			DatabaseContract.COLUMN_CODE, DatabaseContract.COLUMN_PRICE,
-			DatabaseContract.COLUMN_HOLD };
-	int[] mTo = new int[] { R.id.name, R.id.code, R.id.price, R.id.hold };
+			DatabaseContract.COLUMN_HOLD};
+	int[] mTo = new int[]{R.id.name, R.id.code, R.id.price, R.id.hold};
 
 	String getSelection() {
 		return null;
@@ -77,7 +77,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 
 		initHeader();
 
-		mListView = (ListView) findViewById(R.id.stock_list_edit_view);
+		mListView = findViewById(R.id.stock_list_edit_view);
 
 		mAdapter = new CustomSimpleCursorAdapter(this,
 				R.layout.activity_stock_list_edit_item, null, mFrom, mTo, 0);
@@ -99,11 +99,11 @@ public class StockListEditActivity extends DatabaseActivity implements
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case android.R.id.home:
-			finish();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
+			case android.R.id.home:
+				finish();
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
 		}
 	}
 
@@ -152,22 +152,22 @@ public class StockListEditActivity extends DatabaseActivity implements
 		setHeaderTextColor(id, mHeaderTextHighlightColor);
 
 		switch (id) {
-		case R.id.stock_name_code:
-			mSortOrderColumn = DatabaseContract.COLUMN_NAME;
-			break;
-		case R.id.price:
-			mSortOrderColumn = DatabaseContract.COLUMN_PRICE;
-			break;
-		case R.id.hold:
-			mSortOrderColumn = DatabaseContract.COLUMN_HOLD;
-			break;
-		case R.id.favorite:
-			mSortOrderColumn = DatabaseContract.COLUMN_FLAG;
-			break;
+			case R.id.stock_name_code:
+				mSortOrderColumn = DatabaseContract.COLUMN_NAME;
+				break;
+			case R.id.price:
+				mSortOrderColumn = DatabaseContract.COLUMN_PRICE;
+				break;
+			case R.id.hold:
+				mSortOrderColumn = DatabaseContract.COLUMN_HOLD;
+				break;
+			case R.id.favorite:
+				mSortOrderColumn = DatabaseContract.COLUMN_FLAG;
+				break;
 
-		default:
-			mSortOrderColumn = DatabaseContract.COLUMN_CODE;
-			break;
+			default:
+				mSortOrderColumn = DatabaseContract.COLUMN_CODE;
+				break;
 		}
 
 		if (mSortOrderDirection.equals(DatabaseContract.ORDER_DIRECTION_ASC)) {
@@ -182,7 +182,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 	}
 
 	void setHeaderTextColor(int id, int color) {
-		TextView textView = (TextView) findViewById(id);
+		TextView textView = findViewById(id);
 		setHeaderTextColor(textView, color);
 	}
 
@@ -201,27 +201,27 @@ public class StockListEditActivity extends DatabaseActivity implements
 	}
 
 	void initHeader() {
-		mTextViewNameCode = (TextView) findViewById(R.id.stock_name_code);
+		mTextViewNameCode = findViewById(R.id.stock_name_code);
 		if (mTextViewNameCode != null) {
 			mTextViewNameCode.setOnClickListener(this);
 		}
 
-		mTextViewPrice = (TextView) findViewById(R.id.price);
+		mTextViewPrice = findViewById(R.id.price);
 		if (mTextViewPrice != null) {
 			mTextViewPrice.setOnClickListener(this);
 		}
 
-		mTextViewHold = (TextView) findViewById(R.id.hold);
+		mTextViewHold = findViewById(R.id.hold);
 		if (mTextViewHold != null) {
 			mTextViewHold.setOnClickListener(this);
 		}
 
-		mTextViewFavorite = (TextView) findViewById(R.id.favorite);
+		mTextViewFavorite = findViewById(R.id.favorite);
 		if (mTextViewFavorite != null) {
 			mTextViewFavorite.setOnClickListener(this);
 		}
 
-		mTextViewComponent = (TextView) findViewById(R.id.component);
+		mTextViewComponent = findViewById(R.id.component);
 		if (ACTION_INDEX_COMPONENT_SELECT.equals(mAction)) {
 			mTextViewComponent.setVisibility(View.VISIBLE);
 		} else {
@@ -242,7 +242,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
-			long id) {
+							long id) {
 		if (id <= Stock.INVALID_ID) {
 			return;
 		}
@@ -257,7 +257,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 			implements OnClickListener {
 
 		public CustomSimpleCursorAdapter(Context context, int layout, Cursor c,
-				String[] from, int[] to, int flags) {
+										 String[] from, int[] to, int flags) {
 			super(context, layout, c, from, to, flags);
 		}
 
@@ -325,15 +325,15 @@ public class StockListEditActivity extends DatabaseActivity implements
 
 			ViewHolder holder = new ViewHolder();
 
-			holder.mTextViewName = (TextView) view.findViewById(R.id.name);
-			holder.mTextViewCode = (TextView) view.findViewById(R.id.code);
-			holder.mTextViewPrice = (TextView) view.findViewById(R.id.price);
-			holder.mTextViewHold = (TextView) view.findViewById(R.id.hold);
-			holder.mImageViewFavorite = (ImageView) view
+			holder.mTextViewName = view.findViewById(R.id.name);
+			holder.mTextViewCode = view.findViewById(R.id.code);
+			holder.mTextViewPrice = view.findViewById(R.id.price);
+			holder.mTextViewHold = view.findViewById(R.id.hold);
+			holder.mImageViewFavorite = view
 					.findViewById(R.id.favorite);
-			holder.mImageViewDelete = (ImageView) view
+			holder.mImageViewDelete = view
 					.findViewById(R.id.delete);
-			holder.mImageViewgComponent = (ImageView) view.findViewById(R.id.component);
+			holder.mImageViewgComponent = view.findViewById(R.id.component);
 
 			if (ACTION_INDEX_COMPONENT_SELECT.equals(mAction)) {
 				holder.mImageViewgComponent.setVisibility(View.VISIBLE);
@@ -353,72 +353,72 @@ public class StockListEditActivity extends DatabaseActivity implements
 			}
 
 			long stockId = (Long) view.getTag();
-            Stock stock = new Stock();
+			Stock stock = new Stock();
 
-            stock.setId(stockId);
-            mStockDatabaseManager.getStockById(stock);
+			stock.setId(stockId);
+			mStockDatabaseManager.getStockById(stock);
 
 			try {
 				switch (view.getId()) {
-				case R.id.favorite:
-					if (!stock.hasFlag(Stock.FLAG_FAVORITE)) {
-						stock.addFlag(Stock.FLAG_FAVORITE);
-						mStockDatabaseManager.updateStock(stock, stock.getContentValuesForEdit());
-					} else {
-						stock.setFlag(Stock.FLAG_NONE);
-						mStockDatabaseManager.updateStock(stock, stock.getContentValuesForEdit());
-						mStockDatabaseManager.deleteStockQuant(stock);
-					}
-					break;
-
-				case R.id.delete:
-					if (stock.getHold() == 0) {
-						final long stock_id = stock.getId();
-						final String stock_code = stock.getCode();
-						new AlertDialog.Builder(mContext)
-								.setTitle(R.string.delete)
-								.setMessage(R.string.delete_confirm)
-								.setPositiveButton(R.string.ok,
-										new DialogInterface.OnClickListener() {
-											public void onClick(DialogInterface dialog,
-																int which) {
-												mStockDatabaseManager.deleteStock(stock_id);
-											}
-										})
-								.setNegativeButton(R.string.cancel,
-										new DialogInterface.OnClickListener() {
-											public void onClick(DialogInterface dialog,
-																int which) {
-											}
-										}).setIcon(android.R.drawable.ic_dialog_alert)
-								.show();
-					}
-					break;
-
-				case R.id.component:
-					if (ACTION_INDEX_COMPONENT_SELECT.equals(mAction)) {
-						mStock.setId(stock.getId());
-						mStockDatabaseManager.getStockById(mStock);
-
-						IndexComponent indexComponent = new IndexComponent();
-						indexComponent.setIndexCode(mIntent.getStringExtra(Constant.EXTRA_INDEX_CODE));
-						indexComponent.setIndexName(mIntent.getStringExtra(Constant.EXTRA_INDEX_NAME));
-						indexComponent.setIndexSE(mIntent.getStringExtra(Constant.EXTRA_INDEX_SE));
-						indexComponent.setCode(mStock.getCode());
-						indexComponent.setName(mStock.getName());
-						indexComponent.setSE(mStock.getSE());
-
-						if (mStockDatabaseManager.isIndexComponentExist(indexComponent)) {
-							mStockDatabaseManager.deleteIndexComponent(indexComponent);
+					case R.id.favorite:
+						if (!stock.hasFlag(Stock.FLAG_FAVORITE)) {
+							stock.addFlag(Stock.FLAG_FAVORITE);
+							mStockDatabaseManager.updateStock(stock, stock.getContentValuesForEdit());
 						} else {
-							indexComponent.setCreated(Utility.getCurrentDateTimeString());
-							mStockDatabaseManager.insertIndexComponent(indexComponent);
+							stock.setFlag(Stock.FLAG_NONE);
+							mStockDatabaseManager.updateStock(stock, stock.getContentValuesForEdit());
+							mStockDatabaseManager.deleteStockQuant(stock);
 						}
-					}
-					break;
+						break;
 
-				default:
-					break;
+					case R.id.delete:
+						if (stock.getHold() == 0) {
+							final long stock_id = stock.getId();
+							final String stock_code = stock.getCode();
+							new AlertDialog.Builder(mContext)
+									.setTitle(R.string.delete)
+									.setMessage(R.string.delete_confirm)
+									.setPositiveButton(R.string.ok,
+											new DialogInterface.OnClickListener() {
+												public void onClick(DialogInterface dialog,
+																	int which) {
+													mStockDatabaseManager.deleteStock(stock_id);
+												}
+											})
+									.setNegativeButton(R.string.cancel,
+											new DialogInterface.OnClickListener() {
+												public void onClick(DialogInterface dialog,
+																	int which) {
+												}
+											}).setIcon(android.R.drawable.ic_dialog_alert)
+									.show();
+						}
+						break;
+
+					case R.id.component:
+						if (ACTION_INDEX_COMPONENT_SELECT.equals(mAction)) {
+							mStock.setId(stock.getId());
+							mStockDatabaseManager.getStockById(mStock);
+
+							IndexComponent indexComponent = new IndexComponent();
+							indexComponent.setIndexCode(mIntent.getStringExtra(Constant.EXTRA_INDEX_CODE));
+							indexComponent.setIndexName(mIntent.getStringExtra(Constant.EXTRA_INDEX_NAME));
+							indexComponent.setIndexSE(mIntent.getStringExtra(Constant.EXTRA_INDEX_SE));
+							indexComponent.setCode(mStock.getCode());
+							indexComponent.setName(mStock.getName());
+							indexComponent.setSE(mStock.getSE());
+
+							if (mStockDatabaseManager.isIndexComponentExist(indexComponent)) {
+								mStockDatabaseManager.deleteIndexComponent(indexComponent);
+							} else {
+								indexComponent.setCreated(Utility.getCurrentDateTimeString());
+								mStockDatabaseManager.insertIndexComponent(indexComponent);
+							}
+						}
+						break;
+
+					default:
+						break;
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

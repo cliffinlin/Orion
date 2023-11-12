@@ -47,6 +47,9 @@ public class DatabaseActivity extends BaseActivity {
 		saveAsyncTask.execute(params);
 	}
 
+	void onDatabaseChanged(boolean selfChange, Uri uri) {
+	}
+
 	class LoadAsyncTask extends AsyncTask<Object, Integer, Long> {
 
 		@Override
@@ -75,9 +78,6 @@ public class DatabaseActivity extends BaseActivity {
 
 			onPostExecuteSave(result);
 		}
-	}
-
-	void onDatabaseChanged(boolean selfChange, Uri uri) {
 	}
 
 	class DatabaseContentObserver extends ContentObserver {

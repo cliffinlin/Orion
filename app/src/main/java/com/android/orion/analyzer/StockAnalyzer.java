@@ -17,19 +17,19 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import com.android.orion.setting.Constant;
 import com.android.orion.R;
-import com.android.orion.setting.Setting;
 import com.android.orion.activity.StockFavoriteListActivity;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
-import com.android.orion.manager.StockDatabaseManager;
 import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockFinancial;
 import com.android.orion.database.TotalShare;
 import com.android.orion.indicator.MACD;
+import com.android.orion.manager.StockDatabaseManager;
+import com.android.orion.setting.Constant;
+import com.android.orion.setting.Setting;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.RecordFile;
 import com.android.orion.utility.StopWatch;
@@ -40,16 +40,14 @@ import java.util.Calendar;
 
 
 public class StockAnalyzer {
-	static final String TAG = StockAnalyzer.class.getSimpleName();
+	public static final String TAG = StockAnalyzer.class.getSimpleName();
 
 	public Context mContext;
-
+	public LocalBroadcastManager mLocalBroadcastManager;
+	public StockDatabaseManager mStockDatabaseManager;
 	PowerManager mPowerManager;
 	WakeLock mWakeLock;
-
-	public LocalBroadcastManager mLocalBroadcastManager;
 	NotificationManager mNotificationManager;
-	public StockDatabaseManager mStockDatabaseManager;
 
 	public StockAnalyzer(@NonNull Context context) {
 		mContext = context;
@@ -68,7 +66,7 @@ public class StockAnalyzer {
 		Log.d(TAG, "acquireWakeLock");
 
 		if (!mWakeLock.isHeld()) {
-			mWakeLock.acquire(10*60*1000L /*10 minutes*/);
+			mWakeLock.acquire(10 * 60 * 1000L /*10 minutes*/);
 			Log.d(TAG, "acquireWakeLock, mWakeLock acquired.");
 		}
 	}
@@ -105,7 +103,7 @@ public class StockAnalyzer {
 	}
 
 	public void loadStockDataList(Stock stock, String period,
-			ArrayList<StockData> stockDataList) {
+								  ArrayList<StockData> stockDataList) {
 		boolean loopback = false;
 		int index = 0;
 
@@ -174,16 +172,16 @@ public class StockAnalyzer {
 		stopWatch.start();
 
 		ArrayList<StockData> stockDataList = null;
-		ArrayList<StockData> drawVertexList =  null;
-		ArrayList<StockData> drawDataList =  null;
-		ArrayList<StockData> strokeVertexList =  null;
-		ArrayList<StockData> strokeDataList =  null;
-		ArrayList<StockData> segmentVertexList =  null;
-		ArrayList<StockData> segmentDataList =  null;
-		ArrayList<StockData> lineVertexList =  null;
-		ArrayList<StockData> lineDataList =  null;
-		ArrayList<StockData> outlineVertexList =  null;
-		ArrayList<StockData> outlineDataList =  null;
+		ArrayList<StockData> drawVertexList = null;
+		ArrayList<StockData> drawDataList = null;
+		ArrayList<StockData> strokeVertexList = null;
+		ArrayList<StockData> strokeDataList = null;
+		ArrayList<StockData> segmentVertexList = null;
+		ArrayList<StockData> segmentDataList = null;
+		ArrayList<StockData> lineVertexList = null;
+		ArrayList<StockData> lineDataList = null;
+		ArrayList<StockData> outlineVertexList = null;
+		ArrayList<StockData> outlineDataList = null;
 
 		if (stock == null) {
 			return;
@@ -232,11 +230,11 @@ public class StockAnalyzer {
 		}
 
 		try {
-            if (!Stock.CLASS_INDEX.equals(stock.getClasses())) {
-                analyzeStockFinancial(stock);
-                setupStockFinancial(stock);
-                setupStockShareBonus(stock);
-            }
+			if (!Stock.CLASS_INDEX.equals(stock.getClasses())) {
+				analyzeStockFinancial(stock);
+				setupStockFinancial(stock);
+				setupStockShareBonus(stock);
+			}
 
 			updateDatabase(stock);
 
@@ -258,8 +256,8 @@ public class StockAnalyzer {
 		String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
 
 		if (Stock.CLASS_INDEX.equals(stock.getClasses())) {
-		    return;
-        }
+			return;
+		}
 
 		mStockDatabaseManager.getStockFinancialList(stock, stockFinancialList,
 				sortOrder);
@@ -275,7 +273,7 @@ public class StockAnalyzer {
 		setupNetProfitPerShare(stockFinancialList);
 		setupRate(stockFinancialList);
 		setupRoe(stockFinancialList);
-        setupRoi(stockDataList, stockFinancialList);
+		setupRoi(stockDataList, stockFinancialList);
 
 		for (StockFinancial stockFinancial : stockFinancialList) {
 			stockFinancial.setModified(Utility.getCurrentDateTimeString());
@@ -403,7 +401,7 @@ public class StockAnalyzer {
 			}
 
 			rate = Utility.Round(stockFinancial.getNetProfitPerShareInYear()
-					/ prev.getNetProfitPerShareInYear(),
+							/ prev.getNetProfitPerShareInYear(),
 					Constant.DOUBLE_FIXED_DECIMAL);
 
 			stockFinancial.setRate(rate);
@@ -444,7 +442,7 @@ public class StockAnalyzer {
 	}
 
 	private void setupRoi(ArrayList<StockData> stockDataList,
-			ArrayList<StockFinancial> stockFinancialList) {
+						  ArrayList<StockFinancial> stockFinancialList) {
 		double price = 0;
 		double pe = 0;
 		double pb = 0;
@@ -478,7 +476,7 @@ public class StockAnalyzer {
 					}
 
 					roi = Utility.Round(stockFinancial.getRoe() * pe
-							* Constant.ROI_COEFFICIENT,
+									* Constant.ROI_COEFFICIENT,
 							Constant.DOUBLE_FIXED_DECIMAL);
 					if (roi < 0) {
 						roi = 0;
@@ -500,9 +498,9 @@ public class StockAnalyzer {
 		StockFinancial stockFinancial = new StockFinancial();
 		ArrayList<StockFinancial> stockFinancialList = new ArrayList<StockFinancial>();
 
-        if (Stock.CLASS_INDEX.equals(stock.getClasses())) {
-            return;
-        }
+		if (Stock.CLASS_INDEX.equals(stock.getClasses())) {
+			return;
+		}
 
 		stockFinancial.setStockId(stock.getId());
 
@@ -539,9 +537,9 @@ public class StockAnalyzer {
 		String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
 		ArrayList<ShareBonus> shareBonusList = new ArrayList<ShareBonus>();
 
-        if (Stock.CLASS_INDEX.equals(stock.getClasses())) {
-            return;
-        }
+		if (Stock.CLASS_INDEX.equals(stock.getClasses())) {
+			return;
+		}
 
 		mStockDatabaseManager.getShareBonusList(stock, shareBonusList,
 				sortOrder);
@@ -589,8 +587,8 @@ public class StockAnalyzer {
 		MACD macd = new MACD();
 
 		if (stockDataList == null) {
-		    return;
-        }
+			return;
+		}
 
 		size = stockDataList.size();
 		if (size < StockData.VERTEX_TYPING_SIZE) {
@@ -622,12 +620,12 @@ public class StockAnalyzer {
 	}
 
 	private void analyzeStockData(Stock stock, String period, ArrayList<StockData> stockDataList,
-						  ArrayList<StockData> drawVertexList, ArrayList<StockData> drawDataList,
-						  ArrayList<StockData> strokeVertexList, ArrayList<StockData> strokeDataList,
-						  ArrayList<StockData> segmentVertexList, ArrayList<StockData> segmentDataList,
-						  ArrayList<StockData> lineVertexList, ArrayList<StockData> lineDataList,
-						  ArrayList<StockData> outlineVertexList, ArrayList<StockData> outlineDataList) {
-        StockKeyAnalyzer stockKeyAnalyzer = new StockKeyAnalyzer();
+								  ArrayList<StockData> drawVertexList, ArrayList<StockData> drawDataList,
+								  ArrayList<StockData> strokeVertexList, ArrayList<StockData> strokeDataList,
+								  ArrayList<StockData> segmentVertexList, ArrayList<StockData> segmentDataList,
+								  ArrayList<StockData> lineVertexList, ArrayList<StockData> lineDataList,
+								  ArrayList<StockData> outlineVertexList, ArrayList<StockData> outlineDataList) {
+		StockKeyAnalyzer stockKeyAnalyzer = new StockKeyAnalyzer();
 		StockVertexAnalyzer stockVertexAnalyzer = new StockVertexAnalyzer();
 		StockQuantAnalyzer stockQuantAnalyzer = new StockQuantAnalyzer();
 		ArrayList<StockData> overlapList = new ArrayList<StockData>();
@@ -679,26 +677,26 @@ public class StockAnalyzer {
 		//stockVertexAnalyzer.analyzeOverlap(stockDataList, segmentDataList, overlapList);
 		//stockVertexAnalyzer.testShowVertextNumber(stockDataList, stockDataList);
 
-		if (Preferences.getBoolean(mContext, Setting.KEY_LOOPBACK,false)) {
-			if (Preferences.getBoolean(mContext, Setting.KEY_DISPLAY_DIRECT,false)) {
+		if (Preferences.getBoolean(mContext, Setting.KEY_LOOPBACK, false)) {
+			if (Preferences.getBoolean(mContext, Setting.KEY_DISPLAY_DIRECT, false)) {
 				stockVertexAnalyzer.debugShow(stockDataList, stockDataList);
 			}
 
-			if (Preferences.getBoolean(mContext, Setting.KEY_DISPLAY_DRAW,false)) {
+			if (Preferences.getBoolean(mContext, Setting.KEY_DISPLAY_DRAW, false)) {
 				stockVertexAnalyzer.debugShow(stockDataList, drawDataList);
 			}
 
-			if (Preferences.getBoolean(mContext, Setting.KEY_DISPLAY_STROKE,false)) {
+			if (Preferences.getBoolean(mContext, Setting.KEY_DISPLAY_STROKE, false)) {
 				stockVertexAnalyzer.debugShow(stockDataList, strokeDataList);
 			}
 
-			if (Preferences.getBoolean(mContext, Setting.KEY_DISPLAY_SEGMENT,false)) {
+			if (Preferences.getBoolean(mContext, Setting.KEY_DISPLAY_SEGMENT, false)) {
 				stockVertexAnalyzer.debugShow(stockDataList, segmentDataList);
 			}
 
-            if (Preferences.getBoolean(mContext, Setting.KEY_DISPLAY_LINE,false)) {
-                stockVertexAnalyzer.debugShow(stockDataList, lineDataList);
-            }
+			if (Preferences.getBoolean(mContext, Setting.KEY_DISPLAY_LINE, false)) {
+				stockVertexAnalyzer.debugShow(stockDataList, lineDataList);
+			}
 		}
 
 		stockVertexAnalyzer.analyzeDivergence(stock, stockDataList, segmentDataList);
@@ -781,8 +779,8 @@ public class StockAnalyzer {
 				&& (stock.getPrice() < firstTopVertex.getVertexHigh())
 		) {
 			if ((stock.getPrice() > 0) && (brokenStockData.getVertexHigh() > 0)) {
-				numerator = (int)(100 * (stock.getPrice() - brokenStockData.getVertexHigh())/brokenStockData.getVertexHigh());
-				denominator = (int)(brokenStockData.getNet());
+				numerator = (int) (100 * (stock.getPrice() - brokenStockData.getVertexHigh()) / brokenStockData.getVertexHigh());
+				denominator = (int) (brokenStockData.getNet());
 			}
 
 			divergence = brokenStockData.divergenceTo(baseStockData);
@@ -865,8 +863,8 @@ public class StockAnalyzer {
 				&& (stock.getPrice() > firstBottomVertex.getVertexLow())
 		) {
 			if ((stock.getPrice() > 0) && (brokenStockData.getVertexLow() > 0)) {
-				numerator = (int)(100 * (stock.getPrice() - brokenStockData.getVertexLow())/brokenStockData.getVertexLow());
-				denominator = (int)(brokenStockData.getNet());
+				numerator = (int) (100 * (stock.getPrice() - brokenStockData.getVertexLow()) / brokenStockData.getVertexLow());
+				denominator = (int) (brokenStockData.getNet());
 			}
 
 			divergence = brokenStockData.divergenceTo(baseStockData);
@@ -885,7 +883,7 @@ public class StockAnalyzer {
 		return result;
 	}
 
-    private int getLastNet(ArrayList<StockData> stockDataList) {
+	private int getLastNet(ArrayList<StockData> stockDataList) {
 		int result = 0;
 		StockData stockData;
 
@@ -910,18 +908,18 @@ public class StockAnalyzer {
 
 		stockData = stockDataList.get(stockDataList.size() - 1);
 
-		result = (int) stockData.getDivergence();
+		result = stockData.getDivergence();
 
 		return result;
 	}
 
 	private void analyzeAction(Stock stock, String period,
-			ArrayList<StockData> stockDataList,
-			ArrayList<StockData> drawVertexList,
-			ArrayList<StockData> overlapList,
-			ArrayList<StockData> drawDataList,
-			ArrayList<StockData> strokeDataList,
-			ArrayList<StockData> segmentDataList) {
+							   ArrayList<StockData> stockDataList,
+							   ArrayList<StockData> drawVertexList,
+							   ArrayList<StockData> overlapList,
+							   ArrayList<StockData> drawDataList,
+							   ArrayList<StockData> strokeDataList,
+							   ArrayList<StockData> segmentDataList) {
 		String action = StockData.ACTION_NONE;
 		String trendString = "";
 		StockData prev = null;
@@ -1073,9 +1071,9 @@ public class StockAnalyzer {
 		stock.setDateTime(stockData.getDate(), stockData.getTime());
 		stock.setAction(period, action + stockData.getAction());
 
-        if (Setting.KEY_PERIOD_DAY.equals(period)) {
-            stock.setTrend(trendString);
-        }
+		if (Setting.KEY_PERIOD_DAY.equals(period)) {
+			stock.setTrend(trendString);
+		}
 	}
 
 	private void updateDatabase(Stock stock) {
@@ -1098,7 +1096,7 @@ public class StockAnalyzer {
 			return;
 		}
 
-		ContentValues contentValues[] = new ContentValues[stockDataList.size()];
+		ContentValues[] contentValues = new ContentValues[stockDataList.size()];
 
 		for (int i = 0; i < stockDataList.size(); i++) {
 			StockData stockData = stockDataList.get(i);
@@ -1129,9 +1127,9 @@ public class StockAnalyzer {
 	}
 
 	private void updateDatabase(Stock stock, String period, ArrayList<StockData> stockDataList,
-						ArrayList<StockData> drawDataList,
-						ArrayList<StockData> strokeDataList,
-						ArrayList<StockData> segmentDataList) {
+								ArrayList<StockData> drawDataList,
+								ArrayList<StockData> strokeDataList,
+								ArrayList<StockData> segmentDataList) {
 		if (mStockDatabaseManager == null) {
 			Log.d(TAG, "updateDatabase return " + " mStockDatabaseManager = "
 					+ mStockDatabaseManager);
@@ -1192,7 +1190,7 @@ public class StockAnalyzer {
 		boolean notifyToSell1;
 		boolean notifyToBuy2;
 		boolean notifyToSell2;
-	    double toBuyProfit = 0;
+		double toBuyProfit = 0;
 		double toSellProfit = 0;
 		StringBuilder actionString = new StringBuilder();
 		StringBuilder contentTitle = new StringBuilder();
@@ -1243,7 +1241,7 @@ public class StockAnalyzer {
 
 		if (notifyToBuy1) {
 			if (toBuyProfit > 0) {
-				actionString.append(StockData.ACTION_D + " " + (int)toBuyProfit + " ");
+				actionString.append(StockData.ACTION_D + " " + (int) toBuyProfit + " ");
 			} else {
 				actionString.append(StockData.ACTION_D + " ");
 			}
@@ -1251,7 +1249,7 @@ public class StockAnalyzer {
 
 		if (notifyToSell1) {
 			if (toSellProfit > 0) {
-				actionString.append(StockData.ACTION_G + " " + (int)toSellProfit + " ");
+				actionString.append(StockData.ACTION_G + " " + (int) toSellProfit + " ");
 			} else {
 				actionString.append(StockData.ACTION_G + " ");
 			}

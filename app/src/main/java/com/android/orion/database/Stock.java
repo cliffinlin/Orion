@@ -1,8 +1,5 @@
 package com.android.orion.database;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.text.TextUtils;
@@ -10,6 +7,9 @@ import android.text.TextUtils;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Utility;
+
+import java.util.ArrayList;
+import java.util.Calendar;
 
 public class Stock extends DatabaseTable {
 
@@ -88,8 +88,8 @@ public class Stock extends DatabaseTable {
 	private double mDividendRatio;
 	private String mRDate;
 	private String mStatus;
-    private String mRealTimeModified;
-    private String mInformationModified;
+	private String mRealTimeModified;
+	private String mInformationModified;
 
 	private ArrayList<StockData> mStockDataListMin1 = new ArrayList<StockData>();
 	private ArrayList<StockData> mStockDataListMin5 = new ArrayList<StockData>();
@@ -244,13 +244,13 @@ public class Stock extends DatabaseTable {
 
 	public void reset() {
 		super.reset();
-		
+
 		mPrice = 0;
 		mChange = 0;
 		mNet = 0;
 		mVolume = 0;
 		mValue = 0;
-		
+
 		mDate = "";
 		mTime = "";
 		mActionMin1 = "";
@@ -265,7 +265,7 @@ public class Stock extends DatabaseTable {
 		mActionYear = "";
 		mTrend = "";
 
-	    mThreshold = 0;
+		mThreshold = 0;
 		mQuantVolume = 0;
 		mQuantProfit = 0;
 		mQuantProfitMargin = 0;
@@ -346,9 +346,9 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_TOTAL_ASSETS, mTotalAssets);
 		contentValues.put(DatabaseContract.COLUMN_TOTAL_LONG_TERM_LIABILITIES, mTotalLongTermLiabilities);
 		contentValues.put(DatabaseContract.COLUMN_MAIN_BUSINESS_INCOME, mMainBusinessIncome);
-		contentValues.put(DatabaseContract.COLUMN_MAIN_BUSINESS_INCOME_IN_YEAR,	mMainBusinessIncomeInYear);
-		contentValues.put(DatabaseContract.COLUMN_DEBT_TO_NET_ASSETS_RATIO,	mDebtToNetAssetsRatio);
-		contentValues.put(DatabaseContract.COLUMN_BOOK_VALUE_PER_SHARE,	mBookValuePerShare);
+		contentValues.put(DatabaseContract.COLUMN_MAIN_BUSINESS_INCOME_IN_YEAR, mMainBusinessIncomeInYear);
+		contentValues.put(DatabaseContract.COLUMN_DEBT_TO_NET_ASSETS_RATIO, mDebtToNetAssetsRatio);
+		contentValues.put(DatabaseContract.COLUMN_BOOK_VALUE_PER_SHARE, mBookValuePerShare);
 		contentValues.put(DatabaseContract.COLUMN_CASH_FLOW_PER_SHARE, mCashFlowPerShare);
 		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT, mNetProfit);
 		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_IN_YEAR, mNetProfitInYear);
@@ -1531,58 +1531,58 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_R_DATE)));
 	}
 
-    public String getStatus() {
-        return mStatus;
-    }
+	public String getStatus() {
+		return mStatus;
+	}
 
-    public void setStatus(String status) {
-        mStatus = status;
-    }
+	public void setStatus(String status) {
+		mStatus = status;
+	}
 
-    void setStatus(Cursor cursor) {
-        if (cursor == null) {
-            return;
-        }
+	void setStatus(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
 
-        setStatus(cursor.getString(cursor
-                .getColumnIndex(DatabaseContract.COLUMN_STATUS)));
-    }
+		setStatus(cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_STATUS)));
+	}
 
-    public String getRealTimeModified() {
-        return mRealTimeModified;
-    }
+	public String getRealTimeModified() {
+		return mRealTimeModified;
+	}
 
-    public void setRealTimeModified(String realtimeModified) {
-        mRealTimeModified = realtimeModified;
-    }
+	public void setRealTimeModified(String realtimeModified) {
+		mRealTimeModified = realtimeModified;
+	}
 
-    void setRealTimeModified(Cursor cursor) {
-        if (cursor == null) {
-            return;
-        }
+	void setRealTimeModified(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
 
-        setRealTimeModified(cursor.getString(cursor
-                .getColumnIndex(DatabaseContract.COLUMN_REALTIME_MODIFIED)));
-    }
+		setRealTimeModified(cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_REALTIME_MODIFIED)));
+	}
 
-    public String getInformationModified() {
-        return mInformationModified;
-    }
+	public String getInformationModified() {
+		return mInformationModified;
+	}
 
-    public void setInformationModified(String informationModified) {
-        mInformationModified = informationModified;
-    }
+	public void setInformationModified(String informationModified) {
+		mInformationModified = informationModified;
+	}
 
-    void setInformationModified(Cursor cursor) {
-        if (cursor == null) {
-            return;
-        }
+	void setInformationModified(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
 
-        setInformationModified(cursor.getString(cursor
-                .getColumnIndex(DatabaseContract.COLUMN_INFORMATION_MODIFIED)));
-    }
+		setInformationModified(cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_INFORMATION_MODIFIED)));
+	}
 
-    public void addFlag(int flag) {
+	public void addFlag(int flag) {
 		mFlag |= flag;
 	}
 
@@ -1590,17 +1590,17 @@ public class Stock extends DatabaseTable {
 		mFlag &= ~flag;
 	}
 
-    public boolean hasFlag(int flag) {
-        boolean result = false;
+	public boolean hasFlag(int flag) {
+		boolean result = false;
 
-        if ((mFlag & flag) == flag) {
-            result = true;
-        }
+		if ((mFlag & flag) == flag) {
+			result = true;
+		}
 
-        return result;
-    }
+		return result;
+	}
 
-    public ArrayList<StockData> getStockDataList(String period) {
+	public ArrayList<StockData> getStockDataList(String period) {
 		ArrayList<StockData> result = null;
 
 		if (period.equals(Setting.KEY_PERIOD_MIN1)) {
@@ -2066,7 +2066,7 @@ public class Stock extends DatabaseTable {
 				netProfit = stockFinancial.getNetProfit();
 				netProfitPerShare = stockFinancial.getNetProfit() / mTotalShare;
 			} else {
-				mainBusinessIncome = stockFinancial.getMainBusinessIncome()  - prev.getMainBusinessIncome();
+				mainBusinessIncome = stockFinancial.getMainBusinessIncome() - prev.getMainBusinessIncome();
 				netProfit = stockFinancial.getNetProfit() - prev.getNetProfit();
 				netProfitPerShare = (stockFinancial.getNetProfit() - prev
 						.getNetProfit()) / mTotalShare;
@@ -2081,7 +2081,7 @@ public class Stock extends DatabaseTable {
 	public void setupRate(
 			ArrayList<StockFinancial> stockFinancialList) {
 		double netProfitPerShare = 0;
-        double netProfitPerShareLastYear = 0;
+		double netProfitPerShareLastYear = 0;
 
 		if (mTotalShare == 0) {
 			return;
@@ -2092,7 +2092,7 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-        netProfitPerShareLastYear = 0;
+		netProfitPerShareLastYear = 0;
 
 		for (int i = Constant.SEASONS_IN_A_YEAR; i < 2 * Constant.SEASONS_IN_A_YEAR; i++) {
 			StockFinancial stockFinancial = stockFinancialList.get(i);
@@ -2105,16 +2105,16 @@ public class Stock extends DatabaseTable {
 						.getNetProfit()) / mTotalShare;
 			}
 
-            netProfitPerShareLastYear += netProfitPerShare;
+			netProfitPerShareLastYear += netProfitPerShare;
 		}
 
-        if (netProfitPerShareLastYear == 0) {
-            return;
-        }
+		if (netProfitPerShareLastYear == 0) {
+			return;
+		}
 
-        mRate = mNetProfitPerShareInYear / netProfitPerShareLastYear;
+		mRate = mNetProfitPerShareInYear / netProfitPerShareLastYear;
 
-        mRate = Utility.Round(mRate, Constant.DOUBLE_FIXED_DECIMAL);
+		mRate = Utility.Round(mRate, Constant.DOUBLE_FIXED_DECIMAL);
 	}
 
 	public void setupDebtToNetAssetsRatio(ArrayList<StockFinancial> stockFinancialList) {

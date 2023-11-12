@@ -1,8 +1,8 @@
 package com.android.orion.utility;
 
-import java.util.Calendar;
-
 import android.text.TextUtils;
+
+import java.util.Calendar;
 
 public class Market {
 
@@ -136,7 +136,7 @@ public class Market {
 
 		return result;
 	}
-	
+
 	public static boolean inSecondHalf(Calendar calendar) {
 		boolean result = false;
 		Calendar currentCalendar;
@@ -158,7 +158,7 @@ public class Market {
 
 		return result;
 	}
-	
+
 	public static boolean afterClosed(Calendar calendar) {
 		boolean result = false;
 		Calendar currentCalendar;
@@ -177,9 +177,9 @@ public class Market {
 
 		return result;
 	}
-	
+
 	public static Calendar getMarketCalendar(Calendar calendar,
-			String timeString) {
+											 String timeString) {
 		Calendar result;
 		String dateTimeString = Utility.getCalendarDateString(calendar) + " "
 				+ timeString;

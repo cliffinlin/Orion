@@ -12,7 +12,7 @@ public class Preferences {
 	}
 
 	public static boolean getBoolean(Context context, String key,
-			boolean defValue) {
+									 boolean defValue) {
 		return getPreferences(context).getBoolean(key, defValue);
 	}
 

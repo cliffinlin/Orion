@@ -7,7 +7,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.android.orion.R;
-import com.android.orion.activity.SettingActivity;
 
 public class AboutActivity extends Activity {
 
@@ -28,16 +27,16 @@ public class AboutActivity extends Activity {
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 		switch (item.getItemId()) {
-		case android.R.id.home:
-			finish();
-			return true;
+			case android.R.id.home:
+				finish();
+				return true;
 
-		case R.id.action_settings:
-			startActivity(new Intent(this, SettingActivity.class));
-			return true;
+			case R.id.action_settings:
+				startActivity(new Intent(this, SettingActivity.class));
+				return true;
 
-		default:
-			return super.onMenuItemSelected(featureId, item);
+			default:
+				return super.onMenuItemSelected(featureId, item);
 		}
 	}
 }

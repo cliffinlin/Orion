@@ -1,7 +1,5 @@
 package com.android.orion.activity;
 
-import java.util.ArrayList;
-
 import android.Manifest;
 import android.app.Activity;
 import android.app.LoaderManager;
@@ -25,43 +23,41 @@ import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import com.android.orion.database.StockQuant;
-import com.android.orion.setting.Constant;
-import com.android.orion.service.OrionService;
-import com.android.orion.service.OrionService.OrionBinder;
 import com.android.orion.R;
-import com.android.orion.database.StockFinancial;
 import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
-import com.android.orion.manager.StockDatabaseManager;
 import com.android.orion.database.StockDeal;
+import com.android.orion.database.StockFinancial;
+import com.android.orion.database.StockQuant;
 import com.android.orion.database.TotalShare;
+import com.android.orion.manager.StockDatabaseManager;
+import com.android.orion.service.OrionService;
+import com.android.orion.service.OrionService.OrionBinder;
+import com.android.orion.setting.Constant;
 import com.android.orion.utility.Utility;
 
+import java.util.ArrayList;
+
 public class BaseActivity extends Activity {
-	static final String TAG = BaseActivity.class.getSimpleName();
+	public static final String TAG = BaseActivity.class.getSimpleName();
 
+	private static final int REQUEST_EXTERNAL_STORAGE = 1;
+	private static String[] PERMISSIONS_STORAGE = {"android.permission.READ_EXTERNAL_STORAGE",
+			"android.permission.WRITE_EXTERNAL_STORAGE"};
 	boolean mResumed = false;
-
 	Context mContext = null;
-
 	Bundle mBundle = null;
 	String mAction = null;
 	Intent mIntent = null;
-
 	PowerManager mPowerManager;
 	WakeLock mWakeLock;
-
 	ProgressDialog mProgressDialog = null;
-
 	ContentResolver mContentResolver = null;
 	LoaderManager mLoaderManager = null;
-
 	Stock mStock = null;
 	StockData mStockData = null;
 	StockFinancial mStockFinancial = null;
-
 	ArrayList<Stock> mStockList = null;
 	ArrayList<StockData> mStockDataList = null;
 	ArrayList<StockDeal> mStockDealList = null;
@@ -69,13 +65,9 @@ public class BaseActivity extends Activity {
 	ArrayList<StockFinancial> mStockFinancialList = null;
 	ArrayList<ShareBonus> mShareBonusList = null;
 	ArrayList<TotalShare> mTotalShareList = null;
-
 	ArrayMap<String, Stock> mStockDealArrayMap = null;
-
 	StockDatabaseManager mStockDatabaseManager;
-
 	OrionService mOrionService = null;
-
 	ServiceConnection mServiceConnection = new ServiceConnection() {
 
 		@Override
@@ -96,7 +88,6 @@ public class BaseActivity extends Activity {
 			mOrionService = null;
 		}
 	};
-
 	BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -170,8 +161,8 @@ public class BaseActivity extends Activity {
 		}
 
 		if (mStockQuantList == null) {
-            mStockQuantList = new ArrayList<StockQuant>();
-        }
+			mStockQuantList = new ArrayList<StockQuant>();
+		}
 
 		if (mStockFinancialList == null) {
 			mStockFinancialList = new ArrayList<StockFinancial>();
@@ -277,10 +268,6 @@ public class BaseActivity extends Activity {
 	void restartLoader(Intent intent) {
 	}
 
-	private static final int REQUEST_EXTERNAL_STORAGE = 1;
-	private static String[] PERMISSIONS_STORAGE = {"android.permission.READ_EXTERNAL_STORAGE",
-			"android.permission.WRITE_EXTERNAL_STORAGE"};
-
 	private void checkPermission() {
 		if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
 				!= PackageManager.PERMISSION_GRANTED) {
@@ -296,7 +283,7 @@ public class BaseActivity extends Activity {
 
 	@Override
 	public void onRequestPermissionsResult(int requestCode,
-										   String permissions[], int[] grantResults) {
+										   String[] permissions, int[] grantResults) {
 		switch (requestCode) {
 			case REQUEST_EXTERNAL_STORAGE: {
 				if (grantResults.length > 0

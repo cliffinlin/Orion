@@ -49,21 +49,21 @@ public class StockFilterActivity extends DatabaseActivity implements
 	}
 
 	void initView() {
-		mCheckBoxEnabled = (CheckBox) findViewById(R.id.checkbox_enabled);
-		mCheckBoxFavorite = (CheckBox) findViewById(R.id.checkbox_favorite);
+		mCheckBoxEnabled = findViewById(R.id.checkbox_enabled);
+		mCheckBoxFavorite = findViewById(R.id.checkbox_favorite);
 
-		mEditTextHold = (EditText) findViewById(R.id.edittext_hold);
-		mEditTextRoi = (EditText) findViewById(R.id.edittext_roi);
-		mEditTextRate = (EditText) findViewById(R.id.edittext_rate);
-		mEditTextRoe = (EditText) findViewById(R.id.edittext_roe);
-		mEditTextPE = (EditText) findViewById(R.id.edittext_pe);
-		mEditTextPB = (EditText) findViewById(R.id.edittext_pb);
-		mEditTextDividend = (EditText) findViewById(R.id.edittext_dividend);
-		mEditTextYield = (EditText) findViewById(R.id.edittext_yield);
-		mEditTextDividendRatio = (EditText) findViewById(R.id.edittext_dividend_ratio);
+		mEditTextHold = findViewById(R.id.edittext_hold);
+		mEditTextRoi = findViewById(R.id.edittext_roi);
+		mEditTextRate = findViewById(R.id.edittext_rate);
+		mEditTextRoe = findViewById(R.id.edittext_roe);
+		mEditTextPE = findViewById(R.id.edittext_pe);
+		mEditTextPB = findViewById(R.id.edittext_pb);
+		mEditTextDividend = findViewById(R.id.edittext_dividend);
+		mEditTextYield = findViewById(R.id.edittext_yield);
+		mEditTextDividendRatio = findViewById(R.id.edittext_dividend_ratio);
 
-		mButtonOk = (Button) findViewById(R.id.button_ok);
-		mButtonCancel = (Button) findViewById(R.id.button_cancel);
+		mButtonOk = findViewById(R.id.button_ok);
+		mButtonCancel = findViewById(R.id.button_cancel);
 
 		mCheckBoxEnabled.setOnClickListener(this);
 		mCheckBoxFavorite.setOnClickListener(this);
@@ -121,9 +121,9 @@ public class StockFilterActivity extends DatabaseActivity implements
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case android.R.id.home:
-			finish();
-			return true;
+			case android.R.id.home:
+				finish();
+				return true;
 		}
 
 		return super.onOptionsItemSelected(item);
@@ -134,46 +134,46 @@ public class StockFilterActivity extends DatabaseActivity implements
 		int id = view.getId();
 
 		switch (id) {
-		case R.id.checkbox_enabled:
-			mStockFilter.setEnabled(mCheckBoxEnabled.isChecked());
-			update();
-			break;
+			case R.id.checkbox_enabled:
+				mStockFilter.setEnabled(mCheckBoxEnabled.isChecked());
+				update();
+				break;
 
-		case R.id.checkbox_favorite:
-			mStockFilter.setFavorite(mCheckBoxFavorite.isChecked());
-			update();
-			break;
+			case R.id.checkbox_favorite:
+				mStockFilter.setFavorite(mCheckBoxFavorite.isChecked());
+				update();
+				break;
 
-		case R.id.button_ok:
-			mStockFilter.setEnabled(mCheckBoxEnabled.isChecked());
-			mStockFilter.setFavorite(mCheckBoxFavorite.isChecked());
+			case R.id.button_ok:
+				mStockFilter.setEnabled(mCheckBoxEnabled.isChecked());
+				mStockFilter.setFavorite(mCheckBoxFavorite.isChecked());
 
-			mStockFilter.setHold(mEditTextHold.getText().toString());
-			mStockFilter.setRoi(mEditTextRoi.getText().toString());
-			mStockFilter.setRate(mEditTextRate.getText().toString());
-			mStockFilter.setRoe(mEditTextRoe.getText().toString());
-			mStockFilter.setPe(mEditTextPE.getText().toString());
-			mStockFilter.setPb(mEditTextPB.getText().toString());
-			mStockFilter.setDividend(mEditTextDividend.getText().toString());
-			mStockFilter.setYield(mEditTextYield.getText().toString());
-			mStockFilter.setDividendRatio(mEditTextDividendRatio.getText()
-					.toString());
+				mStockFilter.setHold(mEditTextHold.getText().toString());
+				mStockFilter.setRoi(mEditTextRoi.getText().toString());
+				mStockFilter.setRate(mEditTextRate.getText().toString());
+				mStockFilter.setRoe(mEditTextRoe.getText().toString());
+				mStockFilter.setPe(mEditTextPE.getText().toString());
+				mStockFilter.setPb(mEditTextPB.getText().toString());
+				mStockFilter.setDividend(mEditTextDividend.getText().toString());
+				mStockFilter.setYield(mEditTextYield.getText().toString());
+				mStockFilter.setDividendRatio(mEditTextDividendRatio.getText()
+						.toString());
 
-			mStockFilter.write();
+				mStockFilter.write();
 
-			Bundle bundle = new Bundle();
-			mStockFilter.put(bundle);
-			mIntent.putExtras(bundle);
-			setResult(RESULT_OK, mIntent);
-			finish();
-			break;
+				Bundle bundle = new Bundle();
+				mStockFilter.put(bundle);
+				mIntent.putExtras(bundle);
+				setResult(RESULT_OK, mIntent);
+				finish();
+				break;
 
-		case R.id.button_cancel:
-			finish();
-			break;
+			case R.id.button_cancel:
+				finish();
+				break;
 
-		default:
-			break;
+			default:
+				break;
 		}
 	}
 
@@ -183,12 +183,12 @@ public class StockFilterActivity extends DatabaseActivity implements
 		int execute = (Integer) params[0];
 
 		switch (execute) {
-		case EXECUTE_STOCK_FILTER_LOAD:
-			mStockFilter.read();
-			break;
+			case EXECUTE_STOCK_FILTER_LOAD:
+				mStockFilter.read();
+				break;
 
-		default:
-			break;
+			default:
+				break;
 		}
 
 		return RESULT_SUCCESS;
@@ -207,12 +207,12 @@ public class StockFilterActivity extends DatabaseActivity implements
 		int execute = (Integer) params[0];
 
 		switch (execute) {
-		case EXECUTE_STOCK_FILTER_SAVE:
-			mStockFilter.write();
-			break;
+			case EXECUTE_STOCK_FILTER_SAVE:
+				mStockFilter.write();
+				break;
 
-		default:
-			break;
+			default:
+				break;
 		}
 
 		return RESULT_SUCCESS;

@@ -22,49 +22,30 @@ import android.telephony.TelephonyManager;
 
 import androidx.core.app.NotificationCompat;
 
-import com.android.orion.application.OrionApplication;
-import com.android.orion.setting.Constant;
-import com.android.orion.receiver.DownloadBroadcastReceiver;
-import com.android.orion.sina.SinaFinance;
 import com.android.orion.database.Stock;
+import com.android.orion.receiver.DownloadBroadcastReceiver;
+import com.android.orion.setting.Constant;
+import com.android.orion.sina.SinaFinance;
 
 public class OrionService extends Service {
+	public static OrionService mInstance;
 	boolean mRedelivery = true;
 	String mName = "OrionService";
-
 	AlarmManager mAlarmManager;
 	AudioManager mAudioManager;
-
 	IntentFilter mIntentFilter;
 	DownloadBroadcastReceiver mDownloadBroadcastReceiver;
-
 	NotificationManager mNotificationManager;
 	TelephonyManager mTelephonyManager;
 	Vibrator mVibrator;
-
 	HandlerThread mHandlerThread;
-
 	IBinder mBinder;
-
 	volatile Looper mLooper;
 	volatile ServiceHandler mHandler;
-
 	SinaFinance mSinaFinance;
-
-	public static OrionService mInstance;
 
 	public static OrionService getInstance() {
 		return mInstance;
-	}
-
-	private final class ServiceHandler extends Handler {
-		public ServiceHandler(Looper looper) {
-			super(looper);
-		}
-
-		@Override
-		public void handleMessage(Message msg) {
-		}
 	}
 
 	@Override
@@ -168,6 +149,16 @@ public class OrionService extends Service {
 		}
 
 		mSinaFinance.download(stock);
+	}
+
+	private final class ServiceHandler extends Handler {
+		public ServiceHandler(Looper looper) {
+			super(looper);
+		}
+
+		@Override
+		public void handleMessage(Message msg) {
+		}
 	}
 
 	public class OrionBinder extends Binder {

@@ -9,8 +9,8 @@ import android.preference.PreferenceFragment;
 
 import com.android.orion.R;
 import com.android.orion.activity.SettingLoopbackActivity;
-import com.android.orion.setting.Setting;
 import com.android.orion.service.OrionService;
+import com.android.orion.setting.Setting;
 
 public class SettingFragment extends PreferenceFragment implements
 		OnSharedPreferenceChangeListener {
@@ -44,7 +44,7 @@ public class SettingFragment extends PreferenceFragment implements
 
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-			String key) {
+										  String key) {
 
 		if (!sharedPreferences.getBoolean(key, true)) {
 			return;

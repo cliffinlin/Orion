@@ -15,14 +15,14 @@ import java.util.Comparator;
 
 public class StockData extends StockDatabaseTable {
 
-    public static final String ACTION_NONE = "";
+	public static final String ACTION_NONE = "";
 
 	public static final String ACTION_BUY = "B";
 	public static final String ACTION_SELL = "S";
 	public static final String ACTION_BUY1 = "B1";
 	public static final String ACTION_BUY2 = "B2";
-    public static final String ACTION_SELL1 = "S1";
-    public static final String ACTION_SELL2 = "S2";
+	public static final String ACTION_SELL1 = "S1";
+	public static final String ACTION_SELL2 = "S2";
 
 	public static final String ACTION_G = "G";
 	public static final String ACTION_D = "D";
@@ -30,10 +30,10 @@ public class StockData extends StockDatabaseTable {
 //    public static final String ACTION_HIGH = "H";
 //    public static final String ACTION_LOW = "L";
 
-    public static final char ACTION_ADD = '+';
-    public static final char ACTION_MINUS = '-';
+	public static final char ACTION_ADD = '+';
+	public static final char ACTION_MINUS = '-';
 
-    public static final String ACTION_STAR = "*";
+	public static final String ACTION_STAR = "*";
 
 	public static final String ACTION_NATURAL_RALLY = "NG";
 	public static final String ACTION_UPWARD_TREND = "GG";
@@ -79,7 +79,7 @@ public class StockData extends StockDatabaseTable {
 	public static final int VERTEX_TOP_OUTLINE = 1 << 8;
 	public static final int VERTEX_BOTTOM_OUTLINE = 1 << 9;
 
-    public static final int VERTEX_TYPING_SIZE = 3;
+	public static final int VERTEX_TYPING_SIZE = 3;
 	public static final int OVERLAP_TYPING_SIZE = 6;
 
 	public static final int POSITION_ABOVE = 1;
@@ -90,8 +90,27 @@ public class StockData extends StockDatabaseTable {
 	public static final int THRESHOLD_NATURAL_RALLY = 1;
 	public static final int THRESHOLD_NONE = 0;
 	public static final int THRESHOLD_NATURAL_REACTION = -1;
-    public static final int THRESHOLD_DOWNWARD_TREND = -2;
+	public static final int THRESHOLD_DOWNWARD_TREND = -2;
+	public static Comparator<StockData> comparator = new Comparator<StockData>() {
 
+		@Override
+		public int compare(StockData arg0, StockData arg1) {
+			Calendar calendar0;
+			Calendar calendar1;
+
+			calendar0 = Utility.getCalendar(arg0.getDateTime(),
+					Utility.CALENDAR_DATE_TIME_FORMAT);
+			calendar1 = Utility.getCalendar(arg1.getDateTime(),
+					Utility.CALENDAR_DATE_TIME_FORMAT);
+			if (calendar0.before(calendar1)) {
+				return -1;
+			} else if (calendar0.after(calendar1)) {
+				return 1;
+			} else {
+				return 0;
+			}
+		}
+	};
 	private long mStockId;
 	private String mSE;
 	private String mCode;
@@ -119,17 +138,14 @@ public class StockData extends StockDatabaseTable {
 	private double mVelocity;
 	private int mDivergence;
 	private String mAction;
-
 	private double mRoi;
 	private double mPe;
 	private double mPb;
 	private double mYield;
-
 	private double mNaturalRally;
 	private double mUpwardTrend;
 	private double mDownwardTrend;
 	private double mNaturalReaction;
-
 	private int mIndex;
 	private int mIndexStart;
 	private int mIndexEnd;
@@ -149,6 +165,55 @@ public class StockData extends StockDatabaseTable {
 
 	public StockData(Cursor cursor) {
 		set(cursor);
+	}
+
+	public static ArrayList<String> getDatetimeMin15List() {
+		ArrayList<String> datetimeList = new ArrayList<>();
+
+		datetimeList.add("09:45:00");
+		datetimeList.add("10:00:00");
+		datetimeList.add("10:15:00");
+		datetimeList.add("10:30:00");
+		datetimeList.add("10:45:00");
+		datetimeList.add("11:00:00");
+		datetimeList.add("11:15:00");
+		datetimeList.add("11:30:00");
+		datetimeList.add("13:15:00");
+		datetimeList.add("13:30:00");
+		datetimeList.add("13:45:00");
+		datetimeList.add("14:00:00");
+		datetimeList.add("14:15:00");
+		datetimeList.add("14:30:00");
+		datetimeList.add("14:45:00");
+		datetimeList.add("15:00:00");
+
+		return datetimeList;
+	}
+
+	public static ArrayList<String> getDatetimeMinL30ist() {
+		ArrayList<String> datetimeList = new ArrayList<>();
+
+		datetimeList.add("10:00:00");
+		datetimeList.add("10:30:00");
+		datetimeList.add("11:00:00");
+		datetimeList.add("11:30:00");
+		datetimeList.add("13:30:00");
+		datetimeList.add("14:00:00");
+		datetimeList.add("14:30:00");
+		datetimeList.add("15:00:00");
+
+		return datetimeList;
+	}
+
+	public static ArrayList<String> getDatetimeMin60List() {
+		ArrayList<String> datetimeList = new ArrayList<>();
+
+		datetimeList.add("10:30:00");
+		datetimeList.add("11:30:00");
+		datetimeList.add("14:00:00");
+		datetimeList.add("15:00:00");
+
+		return datetimeList;
 	}
 
 	public boolean isEmpty() {
@@ -570,39 +635,39 @@ public class StockData extends StockDatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_CLOSE)));
 	}
 
-    public double getChange() {
-        return mChange;
-    }
+	public double getChange() {
+		return mChange;
+	}
 
-    public void setChange(double change) {
-        mChange = change;
-    }
+	public void setChange(double change) {
+		mChange = change;
+	}
 
-    void setChange(Cursor cursor) {
-        if (cursor == null) {
-            return;
-        }
+	void setChange(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
 
-        setChange(cursor.getDouble(cursor
-                .getColumnIndex(DatabaseContract.COLUMN_CHANGE)));
-    }
+		setChange(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_CHANGE)));
+	}
 
-    public double getNet() {
-        return mNet;
-    }
+	public double getNet() {
+		return mNet;
+	}
 
-    public void setNet(double net) {
-        mNet = net;
-    }
+	public void setNet(double net) {
+		mNet = net;
+	}
 
-    void setNet(Cursor cursor) {
-        if (cursor == null) {
-            return;
-        }
+	void setNet(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
 
-        setNet(cursor.getDouble(cursor
-                .getColumnIndex(DatabaseContract.COLUMN_NET)));
-    }
+		setNet(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_NET)));
+	}
 
 	public int getDirection() {
 		return mDirection;
@@ -1024,8 +1089,8 @@ public class StockData extends StockDatabaseTable {
 	}
 
 	String getOHLCString() {
-		return String.valueOf(getOpen()) + String.valueOf(getHigh())
-				+ String.valueOf(getLow()) + String.valueOf(getClose());
+		return String.valueOf(getOpen()) + getHigh()
+				+ getLow() + getClose();
 	}
 
 	public boolean include(StockData stockData) {
@@ -1050,27 +1115,27 @@ public class StockData extends StockDatabaseTable {
 		return result;
 	}
 
-    public int vertexTo(StockData prev, StockData next) {
-        int vertex = StockData.VERTEX_NONE;
+	public int vertexTo(StockData prev, StockData next) {
+		int vertex = StockData.VERTEX_NONE;
 
-        if ((getVertexHigh() > prev.getVertexHigh())
-                && (getVertexLow() > prev.getVertexLow())) {
-            if ((getVertexHigh() > next.getVertexHigh())
-                    && (getVertexLow() > next.getVertexLow())) {
-                vertex = StockData.VERTEX_TOP;
-            }
-        } else if ((getVertexHigh() < prev.getVertexHigh())
-                && (getVertexLow() < prev.getVertexLow())) {
-            if ((getVertexHigh() < next.getVertexHigh())
-                    && (getVertexLow() < next.getVertexLow())) {
-                vertex = StockData.VERTEX_BOTTOM;
-            }
-        } else {
-            vertex = StockData.VERTEX_NONE;
-        }
+		if ((getVertexHigh() > prev.getVertexHigh())
+				&& (getVertexLow() > prev.getVertexLow())) {
+			if ((getVertexHigh() > next.getVertexHigh())
+					&& (getVertexLow() > next.getVertexLow())) {
+				vertex = StockData.VERTEX_TOP;
+			}
+		} else if ((getVertexHigh() < prev.getVertexHigh())
+				&& (getVertexLow() < prev.getVertexLow())) {
+			if ((getVertexHigh() < next.getVertexHigh())
+					&& (getVertexLow() < next.getVertexLow())) {
+				vertex = StockData.VERTEX_BOTTOM;
+			}
+		} else {
+			vertex = StockData.VERTEX_NONE;
+		}
 
-        return vertex;
-    }
+		return vertex;
+	}
 
 	public int directionTo(StockData stockData) {
 		int result = DIRECTION_NONE;
@@ -1090,7 +1155,7 @@ public class StockData extends StockDatabaseTable {
 
 	public int positionTo(StockData overlap) {
 		int position = POSITION_NONE;
-		
+
 		if (overlap == null) {
 			return position;
 		}
@@ -1106,31 +1171,31 @@ public class StockData extends StockDatabaseTable {
 		return position;
 	}
 
-    public int divergenceTo(StockData stockData) {
-        int result = DIVERGENCE_NONE;
+	public int divergenceTo(StockData stockData) {
+		int result = DIVERGENCE_NONE;
 
-        if (mDirection == DIRECTION_UP) {
-            if ((getVertexHigh() > stockData.getVertexHigh())
-                    && (getVertexLow() > stockData.getVertexLow())) {
-                if (Math.abs(getSigmaHistogram()) < Math.abs(stockData.getSigmaHistogram())) {
-                    if (Math.abs(getVelocity()) < Math.abs(stockData.getVelocity())) {
-                        result = DIVERGENCE_UP;
-                    }
-                }
-            }
-        } else if (mDirection == DIRECTION_DOWN) {
-            if ((getVertexHigh() < stockData.getVertexHigh())
-                    && (getVertexLow() < stockData.getVertexLow())) {
-                if (Math.abs(getSigmaHistogram()) < Math.abs(stockData.getSigmaHistogram())) {
-                    if (Math.abs(getVelocity()) < Math.abs(stockData.getVelocity())) {
-                        result = DIVERGENCE_DOWN;
-                    }
-                }
-            }
-        }
+		if (mDirection == DIRECTION_UP) {
+			if ((getVertexHigh() > stockData.getVertexHigh())
+					&& (getVertexLow() > stockData.getVertexLow())) {
+				if (Math.abs(getSigmaHistogram()) < Math.abs(stockData.getSigmaHistogram())) {
+					if (Math.abs(getVelocity()) < Math.abs(stockData.getVelocity())) {
+						result = DIVERGENCE_UP;
+					}
+				}
+			}
+		} else if (mDirection == DIRECTION_DOWN) {
+			if ((getVertexHigh() < stockData.getVertexHigh())
+					&& (getVertexLow() < stockData.getVertexLow())) {
+				if (Math.abs(getSigmaHistogram()) < Math.abs(stockData.getSigmaHistogram())) {
+					if (Math.abs(getVelocity()) < Math.abs(stockData.getVelocity())) {
+						result = DIVERGENCE_DOWN;
+					}
+				}
+			}
+		}
 
-        return result;
-    }
+		return result;
+	}
 
 	public void merge(int directionType, StockData stockData) {
 		if (directionType == DIRECTION_UP) {
@@ -1189,7 +1254,7 @@ public class StockData extends StockDatabaseTable {
 		mNet = Utility.Round(mNet, Constant.DOUBLE_FIXED_DECIMAL);
 	}
 
-    public void setupVelocity() {
+	public void setupVelocity() {
 		mVelocity = 0;
 		int dt = 0;
 
@@ -1255,75 +1320,5 @@ public class StockData extends StockDatabaseTable {
 		stockDataString.append("\r\n");
 
 		return stockDataString.toString();
-	}
-
-	public static Comparator<StockData> comparator = new Comparator<StockData>() {
-
-		@Override
-		public int compare(StockData arg0, StockData arg1) {
-			Calendar calendar0;
-			Calendar calendar1;
-
-			calendar0 = Utility.getCalendar(arg0.getDateTime(),
-					Utility.CALENDAR_DATE_TIME_FORMAT);
-			calendar1 = Utility.getCalendar(arg1.getDateTime(),
-					Utility.CALENDAR_DATE_TIME_FORMAT);
-			if (calendar0.before(calendar1)) {
-				return -1;
-			} else if (calendar0.after(calendar1)) {
-				return 1;
-			} else {
-				return 0;
-			}
-		}
-	};
-
-	public  static ArrayList<String> getDatetimeMin15List() {
-		ArrayList<String> datetimeList = new ArrayList<>();
-
-		datetimeList.add("09:45:00");
-		datetimeList.add("10:00:00");
-		datetimeList.add("10:15:00");
-		datetimeList.add("10:30:00");
-		datetimeList.add("10:45:00");
-		datetimeList.add("11:00:00");
-		datetimeList.add("11:15:00");
-		datetimeList.add("11:30:00");
-		datetimeList.add("13:15:00");
-		datetimeList.add("13:30:00");
-		datetimeList.add("13:45:00");
-		datetimeList.add("14:00:00");
-		datetimeList.add("14:15:00");
-		datetimeList.add("14:30:00");
-		datetimeList.add("14:45:00");
-		datetimeList.add("15:00:00");
-
-		return datetimeList;
-	}
-
-	public  static ArrayList<String> getDatetimeMinL30ist() {
-		ArrayList<String> datetimeList = new ArrayList<>();
-
-		datetimeList.add("10:00:00");
-		datetimeList.add("10:30:00");
-		datetimeList.add("11:00:00");
-		datetimeList.add("11:30:00");
-		datetimeList.add("13:30:00");
-		datetimeList.add("14:00:00");
-		datetimeList.add("14:30:00");
-		datetimeList.add("15:00:00");
-
-		return datetimeList;
-	}
-
-	public  static ArrayList<String> getDatetimeMin60List() {
-		ArrayList<String> datetimeList = new ArrayList<>();
-
-		datetimeList.add("10:30:00");
-		datetimeList.add("11:30:00");
-		datetimeList.add("14:00:00");
-		datetimeList.add("15:00:00");
-
-		return datetimeList;
 	}
 }
