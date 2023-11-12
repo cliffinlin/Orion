@@ -255,7 +255,7 @@ public class StockQuant extends StockDeal {
 		stringBuilder.append("mHold=" + mHold + ",  ");
 		stringBuilder.append("mValuation=" + mValuation + ",  ");
 		stringBuilder.append("mQuantProfit=" + mQuantProfit + ",  ");
-		stringBuilder.append("mQuantProfitMargin=" + mQuantProfitMargin);
+		stringBuilder.append("mQuantProfitMargin=" + mQuantProfitMargin + ",  ");
 		stringBuilder.append("mThreshold=" + mThreshold);
 
 		return stringBuilder.toString();

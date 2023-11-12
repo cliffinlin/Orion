@@ -818,7 +818,9 @@ public class StockDataChartListActivity extends BaseActivity implements
 				loadStockDealList();
 			}
 
-			if (mKeyDisplayQuant) {
+
+			mStockQuantList.clear();
+			if (mKeyDisplayQuant && !TextUtils.isEmpty(mStock.getOperate()) && mStock.getOperate().equals(mStockData.getPeriod())) {
 				loadStockQuantList();
 			}
 
@@ -867,8 +869,9 @@ public class StockDataChartListActivity extends BaseActivity implements
 			}
 		}
 
-		mStockQuantList.clear();
-		if (stockquantMap.size() > 0) {
+		if (stockquantMap.size() == 0) {
+			mStockQuantList.clear();
+		} else {
 			mStockQuantList = new ArrayList<StockQuant>(stockquantMap.values());
 		}
 	}

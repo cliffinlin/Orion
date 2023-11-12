@@ -720,7 +720,7 @@ public class StockDataChart {
 					+ "  " + stockQuant.getVolume()
 					+ "  " + (int) stockQuant.getProfit()
 					+ "  " + stockQuant.getNet() + "%"
-					+ "  " + stockQuant.getAccount();
+					+ "  " + stockQuant.getCreated();
 
 			limitLineQuant = createLimitLine(limit, color, label);
 
