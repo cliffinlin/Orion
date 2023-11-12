@@ -29,7 +29,7 @@ import com.android.orion.database.Stock;
 import com.android.orion.utility.Preferences;
 import com.android.orion.view.SyncHorizontalScrollView;
 
-public class StockListActivity extends ListActivity implements
+public class StockFavoriteListActivity extends ListActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
 		OnItemLongClickListener, OnClickListener {
 

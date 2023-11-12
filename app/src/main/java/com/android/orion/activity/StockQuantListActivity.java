@@ -74,7 +74,7 @@ public class StockQuantListActivity extends ListActivity implements
     SyncHorizontalScrollView mTitleSHSV = null;
     SyncHorizontalScrollView mContentSHSV = null;
 
-    TextView mTextViewStockNameCode = null;
+    TextView mTextViewNameCode = null;
     TextView mTextViewId = null;
     TextView mTextViewPrice = null;
     TextView mTextViewNet = null;
@@ -436,7 +436,7 @@ public class StockQuantListActivity extends ListActivity implements
     }
 
     void resetHeaderTextColor() {
-        setHeaderTextColor(mTextViewStockNameCode, mHeaderTextDefaultColor);
+        setHeaderTextColor(mTextViewNameCode, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewId, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewPrice, mHeaderTextDefaultColor);
         setHeaderTextColor(mTextViewNet, mHeaderTextDefaultColor);
@@ -476,66 +476,103 @@ public class StockQuantListActivity extends ListActivity implements
             mContentSHSV.setScrollView(mTitleSHSV);
         }
 
-        mTextViewStockNameCode = (TextView) findViewById(R.id.stock_name_code);
-        mTextViewStockNameCode.setOnClickListener(this);
+        mTextViewNameCode = (TextView) findViewById(R.id.stock_name_code);
+        if (mTextViewNameCode != null) {
+        	mTextViewNameCode.setOnClickListener(this);
+		}
 
         mTextViewId = (TextView) findViewById(R.id.id);
-        mTextViewId.setOnClickListener(this);
+        if (mTextViewId != null) {
+			mTextViewId.setOnClickListener(this);
+		}
 
         mTextViewPrice = (TextView) findViewById(R.id.price);
-        mTextViewPrice.setOnClickListener(this);
+        if (mTextViewPrice != null) {
+			mTextViewPrice.setOnClickListener(this);
+		}
 
         mTextViewNet = (TextView) findViewById(R.id.net);
-        mTextViewNet.setOnClickListener(this);
+        if (mTextViewPrice != null) {
+			mTextViewNet.setOnClickListener(this);
+		}
 
         mTextViewBuy = (TextView) findViewById(R.id.buy);
-        mTextViewBuy.setOnClickListener(this);
+        if (mTextViewBuy != null) {
+        	mTextViewBuy.setOnClickListener(this);
+		}
 
         mTextViewSell = (TextView) findViewById(R.id.sell);
-        mTextViewSell.setOnClickListener(this);
+        if (mTextViewSell != null) {
+        	mTextViewSell.setOnClickListener(this);
+		}
 
         mTextViewVolume = (TextView) findViewById(R.id.volume);
-        mTextViewVolume.setOnClickListener(this);
+        if (mTextViewVolume != null) {
+        	mTextViewVolume.setOnClickListener(this);
+		}
 
         mTextViewValue = (TextView) findViewById(R.id.value);
-        mTextViewValue.setOnClickListener(this);
+        if (mTextViewValue != null) {
+        	mTextViewValue.setOnClickListener(this);
+		}
 
         mTextViewFee = (TextView) findViewById(R.id.fee);
-        mTextViewFee.setOnClickListener(this);
+        if (mTextViewFee != null) {
+        	mTextViewFee.setOnClickListener(this);
+		}
 
         mTextViewProfit = (TextView) findViewById(R.id.profit);
-        mTextViewProfit.setOnClickListener(this);
+        if (mTextViewProfit != null) {
+        	mTextViewProfit.setOnClickListener(this);
+		}
 
         mTextViewAction = (TextView) findViewById(R.id.action);
-        mTextViewAction.setOnClickListener(this);
+        if (mTextViewAction != null) {
+        	mTextViewAction.setOnClickListener(this);
+		}
 
         mTextViewHold = (TextView) findViewById(R.id.hold);
-        mTextViewHold.setOnClickListener(this);
+        if (mTextViewHold != null) {
+        	mTextViewHold.setOnClickListener(this);
+		}
 
         mTextViewValuation = (TextView) findViewById(R.id.valuation);
-        mTextViewValuation.setOnClickListener(this);
+        if (mTextViewValuation != null) {
+			mTextViewValuation.setOnClickListener(this);
+		}
 
         mTextViewQuantProfit = (TextView) findViewById(R.id.quant_profit);
-        mTextViewQuantProfit.setOnClickListener(this);
+        if (mTextViewQuantProfit != null) {
+        	mTextViewQuantProfit.setOnClickListener(this);
+		}
 
         mTextViewQuantProfitMargin = (TextView) findViewById(R.id.quant_profit_margin);
-        mTextViewQuantProfitMargin.setOnClickListener(this);
+        if (mTextViewQuantProfitMargin != null) {
+        	mTextViewQuantProfitMargin.setOnClickListener(this);
+		}
 
         mTextViewQuantX = (TextView) findViewById(R.id.quant_x);
-        mTextViewQuantX.setOnClickListener(this);
+        if (mTextViewQuantX != null) {
+        	mTextViewQuantX.setOnClickListener(this);
+		}
 
         mTextViewThreshold = (TextView) findViewById(R.id.threshold);
-        mTextViewThreshold.setOnClickListener(this);
+        if (mTextViewThreshold != null) {
+        	mTextViewThreshold.setOnClickListener(this);
+		}
 
         mTextViewCreated = (TextView) findViewById(R.id.created);
-        mTextViewCreated.setOnClickListener(this);
+        if (mTextViewCreated != null) {
+        	mTextViewCreated.setOnClickListener(this);
+		}
 
         mTextViewModified = (TextView) findViewById(R.id.modified);
-        mTextViewModified.setOnClickListener(this);
+        if (mTextViewModified != null) {
+        	mTextViewModified.setOnClickListener(this);
+		}
 
         if (mSortOrder.contains(DatabaseContract.COLUMN_CODE)) {
-            setHeaderTextColor(mTextViewStockNameCode,
-                    mHeaderTextHighlightColor);
+            setHeaderTextColor(mTextViewNameCode, mHeaderTextHighlightColor);
         } else if (mSortOrder.contains(BaseColumns._ID)) {
             setHeaderTextColor(mTextViewId, mHeaderTextHighlightColor);
         } else if (mSortOrder.contains(DatabaseContract.COLUMN_PRICE)) {
