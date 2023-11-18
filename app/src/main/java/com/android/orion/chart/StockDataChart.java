@@ -60,7 +60,7 @@ public class StockDataChart {
 	public ArrayList<Entry> mSubChartSegmentEntryList = null;
 	public ArrayList<LimitLine> mXLimitLineList = null;
 	public List<Entry>[] mLineList = new List[StockData.LEVEL_MAX];
-	public int[] mLineColors = {Color.GRAY, Color.YELLOW, Color.BLACK, Color.MAGENTA, Color.RED};
+	public int[] mLineColors = {Color.GRAY, Color.YELLOW, Color.BLACK, Color.RED, Color.MAGENTA};
 	public CombinedData mCombinedDataMain = null;
 	public CombinedData mCombinedDataSub = null;
 	String mPeriod;

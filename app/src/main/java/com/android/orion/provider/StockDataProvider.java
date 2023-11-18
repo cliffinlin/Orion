@@ -35,6 +35,9 @@ import com.android.orion.utility.Utility;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -914,6 +917,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		String selection = DatabaseContract.COLUMN_INDEX_CODE + " = " + index.getCode();
 		mStockDatabaseManager.getIndexComponentList(indexComponentList, selection, null);
 
+		stockList.clear();
 		for (IndexComponent indexComponent : indexComponentList) {
 			if (stockArrayMap.containsKey(indexComponent.getCode())) {
 				stockList.add(stockArrayMap.get(indexComponent.getCode()));
@@ -921,142 +925,110 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		}
 	}
 
+	int getDealVolume(@NonNull Stock stock) {
+		int result = 0;
+		ArrayList<StockDeal> stockDealList = new ArrayList<>();
+
+		String selection = DatabaseContract.COLUMN_SE + " = " + "\'" + stock.getSE()
+				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
+				+ stock.getCode() + "\'";
+		String sortOrder = DatabaseContract.COLUMN_BUY + " DESC ";
+
+		mStockDatabaseManager.getStockDealList(stockDealList, selection, sortOrder);
+		for (StockDeal stockDeal : stockDealList) {
+			result += stockDeal.getVolume();
+		}
+
+		return result;
+	}
+
 	private void setupIndex(@NonNull Stock index) {
 		ArrayList<Stock> stockList = new ArrayList<>();
-		ArrayList<StockDeal> stockDealList = new ArrayList<>();
-		ArrayList<StockData> stockDataList = null;
-		ArrayList<StockData> indexStockDataList = null;
-		Stock baseStock = null;
-
-		double totalPrice = 0;
-		double totalNet = 0;
+		ArrayList<StockData> stockDataList;
+		ArrayList<StockData> indexStockDataList;
+		Map<String, StockData> indexStockDataMap = new HashMap<>();
+		StockData indexStockData = null;
 
 		try {
 			loadIndexComponentStockList(index, stockList);
 
 			for (String period : Setting.KEY_PERIODS) {
-				if (Preferences.getBoolean(mContext, period, false)) {
-					int maxSize = 0;
-					Calendar begin = null;
-					indexStockDataList = index.getStockDataList(period);
-
-					for (Stock stock : stockList) {
-						stockDataList = stock.getStockDataList(period);
-						loadStockDataList(stock, period, stockDataList);
-						if ((stockDataList == null) || (stockDataList.size() == 0)) {
-							continue;
-						}
-
-						if (stockDataList.size() > maxSize) {
-							maxSize = stockDataList.size();
-						}
-					}
-
-					for (Stock stock : stockList) {
-						stockDataList = stock.getStockDataList(period);
-						if ((stockDataList == null) || (stockDataList.size() == 0)) {
-							continue;
-						}
-
-						if (stockDataList.size() == maxSize) {
-							if (begin == null) {
-								begin = stockDataList.get(0).getCalendar();
-								baseStock = stock;
-							} else {
-								if (stockDataList.get(0).getCalendar().after(begin)) {
-									begin = stockDataList.get(0).getCalendar();
-									baseStock = stock;
-								}
-							}
-						}
-					}
-
-					indexStockDataList.clear();
-					if (baseStock != null) {
-						stockDataList = baseStock.getStockDataList(period);
-					}
-					if (stockDataList != null) {
-						for (StockData stockData : stockDataList) {
-							StockData indexStockData = new StockData(period);
-
-							indexStockData.setStockId(index.getId());
-
-							indexStockData.setDate(stockData.getDate());
-							indexStockData.setTime(stockData.getTime());
-							indexStockData.setOpen(stockData.getOpen() / stockList.size());
-							indexStockData.setClose(stockData.getClose() / stockList.size());
-							indexStockData.setHigh(stockData.getHigh() / stockList.size());
-							indexStockData.setLow(stockData.getLow() / stockList.size());
-
-							indexStockData.setVertexHigh(indexStockData.getHigh());
-							indexStockData.setVertexLow(indexStockData.getLow());
-
-							indexStockDataList.add(indexStockData);
-						}
-					}
-
-					for (Stock stock : stockList) {
-						stockDataList = stock.getStockDataList(period);
-						if ((stockDataList == null) || (stockDataList.size() == 0)) {
-							continue;
-						}
-
-						if (stock == baseStock) {
-							continue;
-						}
-
-						StockData stockDataLastMatched = null;
-						int lastMatched = 0;
-						for (int i = 0; i < indexStockDataList.size(); i++) {
-							StockData indexStockData = indexStockDataList.get(i);
-							Calendar indexStockDataCalendar = indexStockDataList.get(i).getCalendar();
-							for (int j = lastMatched; j < stockDataList.size(); j++) {
-								StockData stockData = stockDataList.get(j);
-								Calendar stockDataCalendar = stockDataList.get(j).getCalendar();
-								if (stockDataCalendar.before(indexStockDataCalendar)) {
-//                                        continue;
-								} else if (stockDataCalendar.equals(indexStockDataCalendar)) {
-									lastMatched = j;
-									stockDataLastMatched = stockData;
-									indexStockData.setOpen(indexStockData.getOpen() + stockData.getOpen() / stockList.size());
-									indexStockData.setClose(indexStockData.getClose() + stockData.getClose() / stockList.size());
-									indexStockData.setHigh(indexStockData.getHigh() + stockData.getHigh() / stockList.size());
-									indexStockData.setLow(indexStockData.getLow() + stockData.getLow() / stockList.size());
-
-									indexStockData.setVertexHigh(indexStockData.getHigh());
-									indexStockData.setVertexLow(indexStockData.getLow());
-									break;
-								} else if (stockDataCalendar.after(indexStockDataCalendar)) {
-									if (stockDataLastMatched != null) {
-										indexStockData.setOpen(indexStockData.getOpen() + stockDataLastMatched.getOpen() / stockList.size());
-										indexStockData.setClose(indexStockData.getClose() + stockDataLastMatched.getClose() / stockList.size());
-										indexStockData.setHigh(indexStockData.getHigh() + stockDataLastMatched.getHigh() / stockList.size());
-										indexStockData.setLow(indexStockData.getLow() + stockDataLastMatched.getLow() / stockList.size());
-
-										indexStockData.setVertexHigh(indexStockData.getHigh());
-										indexStockData.setVertexLow(indexStockData.getLow());
-									}
-									break;
-								}
-							}
-						}
-					}
-
-					updateDatabase(index, period, indexStockDataList);
-				}
-			}
-
-			for (Stock stock : stockList) {
-				if ((stockDataList == null) || (stockDataList.size() == 0)) {
+				if (!Preferences.getBoolean(mContext, period, false)) {
 					continue;
 				}
 
-				totalPrice += stock.getPrice();
-				totalNet += stock.getNet();
-			}
+				indexStockDataMap.clear();
 
-			index.setPrice(Utility.Round(totalPrice / stockList.size(), Constant.DOUBLE_FIXED_DECIMAL));
-			index.setNet(Utility.Round(totalNet / stockList.size(), Constant.DOUBLE_FIXED_DECIMAL));
+				for (Stock stock : stockList) {
+					stockDataList = stock.getStockDataList(period);
+					loadStockDataList(stock, period, stockDataList);
+					if ((stockDataList == null) || (stockDataList.size() == 0)) {
+						continue;
+					}
+
+					int dealVolume = getDealVolume(stock);
+					if (dealVolume == 0) {
+						dealVolume = 1;
+					}
+
+					for (StockData stockData : stockDataList) {
+						String keyString = stockData.getDateTime();
+						double open = stockData.getOpen() * dealVolume;
+						double close = stockData.getClose() * dealVolume;
+						double high = stockData.getHigh() * dealVolume;
+						double low = stockData.getLow() * dealVolume;
+
+						if (indexStockDataMap.containsKey(keyString)) {
+							indexStockData = indexStockDataMap.get(keyString);
+
+							indexStockData.setOpen(indexStockData.getOpen() + open);
+							indexStockData.setClose(indexStockData.getClose() + close);
+							indexStockData.setHigh(indexStockData.getHigh() + high);
+							indexStockData.setLow(indexStockData.getLow() + low);
+
+							indexStockData.setVertexHigh(indexStockData.getHigh());
+							indexStockData.setVertexLow(indexStockData.getLow());
+						} else {
+							indexStockData = new StockData(period);
+							indexStockData.setStockId(index.getId());
+							indexStockData.setDate(stockData.getDate());
+							indexStockData.setTime(stockData.getTime());
+
+							indexStockData.setOpen(open);
+							indexStockData.setClose(close);
+							indexStockData.setHigh(high);
+							indexStockData.setLow(low);
+
+							indexStockData.setVertexHigh(indexStockData.getHigh());
+							indexStockData.setVertexLow(indexStockData.getLow());
+						}
+
+						indexStockDataMap.put(keyString, indexStockData);
+					}
+				}
+
+				if (indexStockDataMap.size() > 0) {
+					indexStockDataList = new ArrayList<>(indexStockDataMap.values());
+
+					Collections.sort(indexStockDataList, StockData.comparator);
+					updateDatabase(index, period, indexStockDataList);
+
+					if (period.equals(Setting.KEY_PERIOD_DAY)) {
+						double prevPrice = 0;
+						double price = 0;
+						double net = 0;
+						price = indexStockData.getClose();
+						if (price > 0 && indexStockDataList.size() > 1) {
+							prevPrice = indexStockDataList.get(indexStockDataList.size() - 2).getClose();
+							if (prevPrice > 0) {
+								net = (price - prevPrice) / prevPrice;
+							}
+						}
+						index.setPrice(Utility.Round(price, Constant.DOUBLE_FIXED_DECIMAL));
+						index.setNet(Utility.Round(net, Constant.DOUBLE_FIXED_DECIMAL));
+					}
+				}
+			}
 
 			index.setModified(Utility.getCurrentDateTimeString());
 			mStockDatabaseManager.updateStock(index,
