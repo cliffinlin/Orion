@@ -925,23 +925,6 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		}
 	}
 
-	int getDealVolume(@NonNull Stock stock) {
-		int result = 0;
-		ArrayList<StockDeal> stockDealList = new ArrayList<>();
-
-		String selection = DatabaseContract.COLUMN_SE + " = " + "\'" + stock.getSE()
-				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
-				+ stock.getCode() + "\'";
-		String sortOrder = DatabaseContract.COLUMN_BUY + " DESC ";
-
-		mStockDatabaseManager.getStockDealList(stockDealList, selection, sortOrder);
-		for (StockDeal stockDeal : stockDealList) {
-			result += stockDeal.getVolume();
-		}
-
-		return result;
-	}
-
 	private void setupIndex(@NonNull Stock index) {
 		ArrayList<Stock> stockList = new ArrayList<>();
 		ArrayList<StockData> stockDataList;
@@ -966,17 +949,17 @@ public abstract class StockDataProvider extends StockAnalyzer {
 						continue;
 					}
 
-					int dealVolume = getDealVolume(stock);
-					if (dealVolume == 0) {
-						dealVolume = 1;
+					long hold = stock.getHold();
+					if (hold == 0) {
+						hold = 1;
 					}
 
 					for (StockData stockData : stockDataList) {
 						String keyString = stockData.getDateTime();
-						double open = stockData.getOpen() * dealVolume;
-						double close = stockData.getClose() * dealVolume;
-						double high = stockData.getHigh() * dealVolume;
-						double low = stockData.getLow() * dealVolume;
+						double open = stockData.getOpen() * hold;
+						double close = stockData.getClose() * hold;
+						double high = stockData.getHigh() * hold;
+						double low = stockData.getLow() * hold;
 
 						if (indexStockDataMap.containsKey(keyString)) {
 							indexStockData = indexStockDataMap.get(keyString);
