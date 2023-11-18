@@ -56,8 +56,6 @@ public class BaseActivity extends Activity {
 	ContentResolver mContentResolver = null;
 	LoaderManager mLoaderManager = null;
 	Stock mStock = null;
-	StockData mStockData = null;
-	StockFinancial mStockFinancial = null;
 	ArrayList<Stock> mStockList = null;
 	ArrayList<StockData> mStockDataList = null;
 	ArrayList<StockDeal> mStockDealList = null;
@@ -140,13 +138,6 @@ public class BaseActivity extends Activity {
 			mStock = new Stock();
 		}
 
-		if (mStockData == null) {
-			mStockData = new StockData();
-		}
-
-		if (mStockFinancial == null) {
-			mStockFinancial = new StockFinancial();
-		}
 
 		if (mStockList == null) {
 			mStockList = new ArrayList<Stock>();

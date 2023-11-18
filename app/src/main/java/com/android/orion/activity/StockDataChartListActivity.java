@@ -85,6 +85,8 @@ public class StockDataChartListActivity extends BaseActivity implements
 
 	ArrayList<String> mStockIDList = new ArrayList<String>();
 
+	StockData mStockData = new StockData();
+
 	Menu mMenu = null;
 	ListView mListView = null;
 	StockDataChartArrayAdapter mStockDataChartArrayAdapter = null;
@@ -123,6 +125,8 @@ public class StockDataChartListActivity extends BaseActivity implements
 						if (mStock.getId() == stock.getId()) {
 							mStock.set(stock);
 							mStockListIndex = mStockList.size();
+
+							loadStockFinancialList();
 						}
 						mStockList.add(stock);
 					}
@@ -540,8 +544,9 @@ public class StockDataChartListActivity extends BaseActivity implements
 					if (stock != null) {
 						if (mStock.getId() == stock.getId()) {
 							mStock.set(cursor);
-
 							mStockListIndex = mStockList.size();
+
+							loadStockFinancialList();
 
 							if (mMainHandler != null) {
 								mMainHandler.sendEmptyMessage(0);
@@ -569,7 +574,6 @@ public class StockDataChartListActivity extends BaseActivity implements
 		float roe = 0;
 		float roi = 0;
 		float dividend = 0;
-		String sortOrder = DatabaseContract.COLUMN_DATE + " ASC ";
 		StockFinancial stockFinancial = null;
 		ShareBonus shareBonus = null;
 
@@ -583,11 +587,6 @@ public class StockDataChartListActivity extends BaseActivity implements
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				String dateString = "";
 				String timeString = "";
-
-				mStockDatabaseManager.getStockFinancialList(mStock, mStockFinancialList,
-						sortOrder);
-				mStockDatabaseManager.getShareBonusList(mStock, mShareBonusList,
-						sortOrder);
 
 				while (cursor.moveToNext()) {
 					index = stockDataChart.mXValues.size();
@@ -835,6 +834,15 @@ public class StockDataChartListActivity extends BaseActivity implements
 		} finally {
 			mStockDatabaseManager.closeCursor(cursor);
 		}
+	}
+
+	void loadStockFinancialList() {
+		String sortOrder = DatabaseContract.COLUMN_DATE + " ASC ";
+
+		mStockDatabaseManager.getStockFinancialList(mStock, mStockFinancialList,
+				sortOrder);
+		mStockDatabaseManager.getShareBonusList(mStock, mShareBonusList,
+				sortOrder);
 	}
 
 	void loadStockDealList() {

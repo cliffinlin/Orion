@@ -64,6 +64,8 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 
 	String mSortOrder = null;
 
+	StockFinancial mStockFinancial = new StockFinancial();
+
 	ListView mListView = null;
 	StockFinancialChartArrayAdapter mStockFinancialChartArrayAdapter = null;
 	ArrayList<StockFinancialChartItem> mStockFinancialChartItemList = null;
