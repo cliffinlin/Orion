@@ -851,7 +851,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 				+ mStock.getCode() + "\'";
 		String sortOrder = DatabaseContract.COLUMN_BUY + " DESC ";
 
-		mStockDatabaseManager.getStockDealList(mStock, mStockDealList, selection, sortOrder);
+		mStockDatabaseManager.getStockDealList(mStockDealList, selection, sortOrder);
 	}
 
 	void loadStockQuantList() {

@@ -1153,15 +1153,22 @@ public class StockAnalyzer {
 		}
 	}
 
-	double getToBuyProfit(Stock stock) {
-		ArrayList<StockDeal> stockDealList = new ArrayList<StockDeal>();
+	double getToBuyProfit(@NonNull Stock stock) {
 		double result = 0;
+		ArrayList<StockDeal> stockDealList = new ArrayList<StockDeal>();
+		String sortOrder = DatabaseContract.COLUMN_NET + DatabaseContract.ORDER_DIRECTION_ASC;
+		String selection = DatabaseContract.COLUMN_SE + " = " + "\'" + stock.getSE()
+				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
+				+ stock.getCode() + "\'";
 
-		if (stock == null) {
-			return result;
-		}
+		selection += " AND " + DatabaseContract.COLUMN_ACTION + " != ''";
+		selection += " AND " + DatabaseContract.COLUMN_VOLUME + " < " + 0;
+		selection += " AND " + DatabaseContract.COLUMN_BUY + " = " + 0;
+		selection += " AND " + DatabaseContract.COLUMN_SELL + " > " + 0;
+		selection += " AND " + DatabaseContract.COLUMN_PROFIT + " > " + DatabaseContract.COLUMN_BONUS;
+		selection += " AND " + DatabaseContract.COLUMN_NET + " > " + 0;
 
-		mStockDatabaseManager.getStockDealListToBuy(stock, stockDealList);
+		mStockDatabaseManager.getStockDealList(stockDealList, selection, sortOrder);
 		for (StockDeal stockDeal : stockDealList) {
 			result += stockDeal.getProfit();
 		}
@@ -1169,15 +1176,22 @@ public class StockAnalyzer {
 		return result;
 	}
 
-	double getToSellProfit(Stock stock) {
-		ArrayList<StockDeal> stockDealList = new ArrayList<StockDeal>();
+	double getToSellProfit(@NonNull Stock stock) {
 		double result = 0;
+		ArrayList<StockDeal> stockDealList = new ArrayList<StockDeal>();
+		String sortOrder = DatabaseContract.COLUMN_NET + DatabaseContract.ORDER_DIRECTION_ASC;
+		String selection = DatabaseContract.COLUMN_SE + " = " + "\'" + stock.getSE()
+				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
+				+ stock.getCode() + "\'";
 
-		if (stock == null) {
-			return result;
-		}
+		selection += " AND " + DatabaseContract.COLUMN_ACTION + " != ''";
+		selection += " AND " + DatabaseContract.COLUMN_VOLUME + " > " + 0;
+		selection += " AND " + DatabaseContract.COLUMN_BUY + " > " + 0;
+		selection += " AND " + DatabaseContract.COLUMN_SELL + " = " + 0;
+		selection += " AND " + DatabaseContract.COLUMN_PROFIT + " > " + DatabaseContract.COLUMN_BONUS;
+		selection += " AND " + DatabaseContract.COLUMN_NET + " > " + 0;
 
-		mStockDatabaseManager.getStockDealListToSell(stock, stockDealList);
+		mStockDatabaseManager.getStockDealList(stockDealList, selection, sortOrder);
 		for (StockDeal stockDeal : stockDealList) {
 			result += stockDeal.getProfit();
 		}

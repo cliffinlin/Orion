@@ -24,6 +24,7 @@ import com.android.orion.database.IndexComponent;
 import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
+import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockFinancial;
 import com.android.orion.database.TotalShare;
 import com.android.orion.setting.Constant;
@@ -909,6 +910,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		ArrayList<IndexComponent> indexComponentList = new ArrayList<>();
 		ArrayList<StockData> indexStockDataList = null;
 		ArrayList<StockData> stockDataList = null;
+		ArrayList<StockDeal> stockDealList = new ArrayList<>();
 		Stock stock = null;
 		Stock baseStock = null;
 		String selection = "";
