@@ -1209,7 +1209,7 @@ public class StockAnalyzer {
 		StringBuilder actionString = new StringBuilder();
 		StringBuilder contentTitle = new StringBuilder();
 
-		if (!Preferences.getBoolean(mContext, Setting.KEY_NOTIFICATION_OPERATE,
+		if (!Preferences.getBoolean(mContext, Setting.KEY_NOTIFICATION,
 				true)) {
 			return;
 		}

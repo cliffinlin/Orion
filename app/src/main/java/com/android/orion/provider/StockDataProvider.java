@@ -931,9 +931,13 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		ArrayList<StockData> indexStockDataList;
 		Map<String, StockData> indexStockDataMap = new HashMap<>();
 		StockData indexStockData = null;
+		boolean weightOn;
+		long weight;
 
 		try {
 			loadIndexComponentStockList(index, stockList);
+
+			weightOn = Preferences.getBoolean(mContext, Setting.KEY_INDEXES_WEIGHT, false);
 
 			for (String period : Setting.KEY_PERIODS) {
 				if (!Preferences.getBoolean(mContext, period, false)) {
@@ -949,17 +953,18 @@ public abstract class StockDataProvider extends StockAnalyzer {
 						continue;
 					}
 
-					long hold = stock.getHold();
-					if (hold == 0) {
-						hold = 1;
+					if (weightOn) {
+						weight = stock.getHold();
+					} else {
+						weight = 1;
 					}
 
 					for (StockData stockData : stockDataList) {
 						String keyString = stockData.getDateTime();
-						double open = stockData.getOpen() * hold;
-						double close = stockData.getClose() * hold;
-						double high = stockData.getHigh() * hold;
-						double low = stockData.getLow() * hold;
+						double open = stockData.getOpen() * weight;
+						double close = stockData.getClose() * weight;
+						double high = stockData.getHigh() * weight;
+						double low = stockData.getLow() * weight;
 
 						if (indexStockDataMap.containsKey(keyString)) {
 							indexStockData = indexStockDataMap.get(keyString);

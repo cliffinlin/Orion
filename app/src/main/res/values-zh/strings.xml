@@ -116,36 +116,43 @@
     <string name="modified">Modified</string>
     <string name="next">next</string>
     <string name="net">Net</string>
+
+    //Tip
     <string name="network_unavailable">Mobile Data Network not Available</string>
-    <string name="no_file_found">No File Found!</string>
-    <string name="no_sd_card_found">No SD Card Found!</string>
+    <string name="notification_is_off">Notification is off</string>
+    <string name="loopback_is_on">Loopback is on</string>
+
+    //Settings
+    <string name="settings">Settings</string>
+
+    <string name="general">General</string>
     <string name="notification">Notification</string>
-    <string name="notification_message">Message</string>
-    <string name="notification_operate">Operate</string>
+
+    <string name="period">Period</string>
+    <string name="period_year">Year</string>
+    <string name="period_quarter">Quarter</string>
+    <string name="period_month">Month</string>
+    <string name="period_week">Week</string>
+    <string name="period_day">Day</string>
+    <string name="period_60min">60Min</string>
+    <string name="period_30min">30Min</string>
+    <string name="period_15min">15Min</string>
+    <string name="period_5min">5Min</string>
+    <string name="period_1min">1Min</string>
+
+    <string name="indexes">Indexes</string>
+    <string name="weight">Weight</string>
+
     <string name="test">Test</string>
     <string name="loopback">Loopback</string>
     <string name="loopback_date_time">Loopback date time</string>
-    <string name="notification_lights">Lights</string>
-    <string name="notification_vibrate">Vibrate</string>
-    <string name="notification_sound">Sound</string>
-    <string name="notification_is_off">Notification is off</string>
-    <string name="loopback_is_on">Loopback is on</string>
+
     <string name="ok">OK</string>
     <string name="overlap">Overlap</string>
     <string name="password_hint">Password</string>
     <string name="pb">Pb</string>
     <string name="pe">Pe</string>
     <string name="percent">Percent</string>
-    <string name="period_1min">1Min</string>
-    <string name="period_5min">5Min</string>
-    <string name="period_15min">15Min</string>
-    <string name="period_30min">30Min</string>
-    <string name="period_60min">60Min</string>
-    <string name="period_day">Day</string>
-    <string name="period_week">Week</string>
-    <string name="period_month">Month</string>
-    <string name="period_quarter">Quarter</string>
-    <string name="period_year">Year</string>
     <string name="position">Position</string>
     <string name="prev">prev</string>
     <string name="id">ID</string>
@@ -247,7 +254,6 @@
     <string name="display">Display</string>
     <string name="wake">Wake</string>
     <string name="system">System</string>
-    <string name="settings">Settings</string>
     <string name="press_again_to_exit">Press again to exit!</string>
     <string name="handlerthread_not_running">HandlerThread not running, force stop then start!</string>
     <string name="yuan">元</string>
@@ -263,5 +269,4 @@
     <string name="ten_thousand_shares">万股</string>
     <string name="securities_code">证券代码</string>
     <string name="securities_abbreviation">证券简称</string>
-
 </resources>

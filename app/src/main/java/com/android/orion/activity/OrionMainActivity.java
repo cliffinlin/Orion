@@ -103,12 +103,10 @@ public class OrionMainActivity extends PreferenceActivity {
 		SharedPreferences settings = PreferenceManager
 				.getDefaultSharedPreferences(this);
 
-		if (!Preferences.getBoolean(this, Setting.KEY_SHARED_PREFERENCES_INIT, false)) {
-			Preferences.putBoolean(this, Setting.KEY_SHARED_PREFERENCES_INIT, true);
+		if (!Preferences.getBoolean(this, Setting.KEY_PREFERENCES_INIT, false)) {
+			Preferences.putBoolean(this, Setting.KEY_PREFERENCES_INIT, true);
 
-			Preferences.putBoolean(this, Setting.KEY_NOTIFICATION_OPERATE, true);
-
-			Preferences.putBoolean(this, Setting.KEY_DISPLAY_NET, true);
+			Preferences.putBoolean(this, Setting.KEY_NOTIFICATION, true);
 
 			Preferences.putBoolean(this, Setting.KEY_PERIOD_DAY, true);
 			Preferences.putBoolean(this, Setting.KEY_PERIOD_MIN60, true);
@@ -116,6 +114,7 @@ public class OrionMainActivity extends PreferenceActivity {
 			Preferences.putBoolean(this, Setting.KEY_PERIOD_MIN15, true);
 			Preferences.putBoolean(this, Setting.KEY_PERIOD_MIN5, true);
 
+			Preferences.putBoolean(this, Setting.KEY_DISPLAY_NET, true);
 			Preferences.putBoolean(this, Setting.KEY_DISPLAY_THRESHOLD, true);
 			Preferences.putBoolean(this, Setting.KEY_DISPLAY_DRAW, true);
 			Preferences.putBoolean(this, Setting.KEY_DISPLAY_STROKE, true);
@@ -123,6 +122,8 @@ public class OrionMainActivity extends PreferenceActivity {
 			Preferences.putBoolean(this, Setting.KEY_DISPLAY_LINE, true);
 			Preferences.putBoolean(this, Setting.KEY_DISPLAY_LATEST, true);
 			Preferences.putBoolean(this, Setting.KEY_DISPLAY_COST, true);
+
+			Preferences.putBoolean(this, Setting.KEY_INDEXES_WEIGHT, true);
 
 			Preferences.putBoolean(this, Setting.KEY_LOOPBACK, false);
 		}

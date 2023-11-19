@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="@string/notification">
+    <PreferenceCategory android:title="@string/general">
         <com.android.orion.preference.CustomSwitchPreference
             android:defaultValue="true"
-            android:key="notification_operate"
-            android:title="@string/notification_operate" />
+            android:key="notification"
+            android:title="@string/notification" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/download">
+    <PreferenceCategory android:title="@string/period">
         <com.android.orion.preference.CustomSwitchPreference
             android:key="month"
             android:title="@string/period_month" />
@@ -85,6 +85,12 @@
         <com.android.orion.preference.CustomSwitchPreference
             android:key="display_roi"
             android:title="@string/roi" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/indexes">
+        <com.android.orion.preference.CustomSwitchPreference
+            android:defaultValue="true"
+            android:key="indexes_weight"
+            android:title="@string/weight" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/test">
         <com.android.orion.preference.CustomSwitchPreference

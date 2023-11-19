@@ -45,26 +45,11 @@ public class SettingFragment extends PreferenceFragment implements
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 										  String key) {
-
-		if (!sharedPreferences.getBoolean(key, true)) {
-			return;
-		}
-
-		if (key.equals(Setting.KEY_NOTIFICATION_OPERATE)
-				|| key.equals(Setting.KEY_PERIOD_MIN1)
-				|| key.equals(Setting.KEY_PERIOD_MIN5)
-				|| key.equals(Setting.KEY_PERIOD_MIN15)
-				|| key.equals(Setting.KEY_PERIOD_MIN30)
-				|| key.equals(Setting.KEY_PERIOD_MIN60)
-				|| key.equals(Setting.KEY_PERIOD_DAY)
-				|| key.equals(Setting.KEY_PERIOD_WEEK)
-				|| key.equals(Setting.KEY_PERIOD_MONTH)
-				|| key.equals(Setting.KEY_PERIOD_QUARTER)
-				|| key.equals(Setting.KEY_PERIOD_YEAR)) {
-			OrionService.getInstance().download();
-		} else if (key.equals(Setting.KEY_LOOPBACK)) {
+		if (key.equals(Setting.KEY_LOOPBACK)) {
 			Intent intent = new Intent(mContext, SettingLoopbackActivity.class);
 			mContext.startActivity(intent);
+		} else {
+			OrionService.getInstance().download();
 		}
 	}
 }

@@ -3,20 +3,21 @@ package com.android.orion.setting;
 import com.android.orion.database.DatabaseContract;
 
 public class Setting {
-	public static final String KEY_SHARED_PREFERENCES_INIT = "shared_preferences_init";
+	public static final String KEY_PREFERENCES_INIT = "preferences_init";
 
-	public static final String KEY_NOTIFICATION_OPERATE = "notification_operate";
+	public static final String KEY_NOTIFICATION = "notification";
 
-	public static final String KEY_PERIOD_MIN1 = DatabaseContract.COLUMN_MIN1;
-	public static final String KEY_PERIOD_MIN5 = DatabaseContract.COLUMN_MIN5;
-	public static final String KEY_PERIOD_MIN15 = DatabaseContract.COLUMN_MIN15;
-	public static final String KEY_PERIOD_MIN30 = DatabaseContract.COLUMN_MIN30;
-	public static final String KEY_PERIOD_MIN60 = DatabaseContract.COLUMN_MIN60;
-	public static final String KEY_PERIOD_DAY = DatabaseContract.COLUMN_DAY;
-	public static final String KEY_PERIOD_WEEK = DatabaseContract.COLUMN_WEEK;
-	public static final String KEY_PERIOD_MONTH = DatabaseContract.COLUMN_MONTH;
-	public static final String KEY_PERIOD_QUARTER = DatabaseContract.COLUMN_QUARTER;
 	public static final String KEY_PERIOD_YEAR = DatabaseContract.COLUMN_YEAR;
+	public static final String KEY_PERIOD_QUARTER = DatabaseContract.COLUMN_QUARTER;
+	public static final String KEY_PERIOD_MONTH = DatabaseContract.COLUMN_MONTH;
+	public static final String KEY_PERIOD_WEEK = DatabaseContract.COLUMN_WEEK;
+	public static final String KEY_PERIOD_DAY = DatabaseContract.COLUMN_DAY;
+	public static final String KEY_PERIOD_MIN60 = DatabaseContract.COLUMN_MIN60;
+	public static final String KEY_PERIOD_MIN30 = DatabaseContract.COLUMN_MIN30;
+	public static final String KEY_PERIOD_MIN15 = DatabaseContract.COLUMN_MIN15;
+	public static final String KEY_PERIOD_MIN5 = DatabaseContract.COLUMN_MIN5;
+	public static final String KEY_PERIOD_MIN1 = DatabaseContract.COLUMN_MIN1;
+
 	public static final String[] KEY_PERIODS = {KEY_PERIOD_YEAR, KEY_PERIOD_QUARTER,
 			KEY_PERIOD_MONTH, KEY_PERIOD_WEEK, KEY_PERIOD_DAY, KEY_PERIOD_MIN60, KEY_PERIOD_MIN30,
 			KEY_PERIOD_MIN15, KEY_PERIOD_MIN5, KEY_PERIOD_MIN1};
@@ -39,6 +40,8 @@ public class Setting {
 	public static final String KEY_DISPLAY_NPS = "display_nps";
 	public static final String KEY_DISPLAY_ROE = "display_roe";
 	public static final String KEY_DISPLAY_ROI = "display_roi";
+
+	public static final String KEY_INDEXES_WEIGHT = "indexes_weight";
 
 	public static final String KEY_LOOPBACK = "loopback";
 	public static final String KEY_LOOPBACK_DATE_TIME = "loopback_date_time";

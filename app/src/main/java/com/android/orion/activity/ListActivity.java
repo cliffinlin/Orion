@@ -18,7 +18,7 @@ public class ListActivity extends StorageActivity {
 		super.onCreate(savedInstanceState);
 
 		if (!Preferences.getBoolean(mContext,
-				Setting.KEY_NOTIFICATION_OPERATE, false)) {
+				Setting.KEY_NOTIFICATION, false)) {
 			Toast.makeText(
 					this,
 					getResources().getString(R.string.notification_is_off),
