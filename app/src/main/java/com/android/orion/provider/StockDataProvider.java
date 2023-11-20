@@ -930,7 +930,6 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		ArrayList<StockData> stockDataList;
 		ArrayList<StockData> indexStockDataList;
 		Map<String, StockData> indexStockDataMap = new HashMap<>();
-		StockData indexStockData = null;
 		boolean weightOn;
 		long weight;
 
@@ -946,11 +945,30 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 				indexStockDataMap.clear();
 
+				Calendar begin = null;
+				Calendar end = null;
+
 				for (Stock stock : stockList) {
 					stockDataList = stock.getStockDataList(period);
 					loadStockDataList(stock, period, stockDataList);
 					if ((stockDataList == null) || (stockDataList.size() == 0)) {
 						continue;
+					}
+
+					StockData first = stockDataList.get(0);
+					if (begin == null) {
+						begin = first.getCalendar();
+					} else if (begin.before(first.getCalendar())) {
+						indexStockDataMap.remove(Utility.getCalendarDateTimeString(begin));
+						begin = first.getCalendar();
+					}
+
+					StockData last = stockDataList.get(stockDataList.size() - 1);
+					if (end == null) {
+						end = last.getCalendar();
+					} else if (end.after(last.getCalendar())) {
+						indexStockDataMap.remove(Utility.getCalendarDateTimeString(end));
+						end = last.getCalendar();
 					}
 
 					if (weightOn) {
@@ -960,11 +978,16 @@ public abstract class StockDataProvider extends StockAnalyzer {
 					}
 
 					for (StockData stockData : stockDataList) {
+						StockData indexStockData;
 						String keyString = stockData.getDateTime();
 						double open = stockData.getOpen() * weight;
 						double close = stockData.getClose() * weight;
 						double high = stockData.getHigh() * weight;
 						double low = stockData.getLow() * weight;
+
+						if (stockData.getCalendar().before(begin) || stockData.getCalendar().after(end)) {
+							continue;
+						}
 
 						if (indexStockDataMap.containsKey(keyString)) {
 							indexStockData = indexStockDataMap.get(keyString);
@@ -979,6 +1002,9 @@ public abstract class StockDataProvider extends StockAnalyzer {
 						} else {
 							indexStockData = new StockData(period);
 							indexStockData.setStockId(index.getId());
+							indexStockData.setSE(index.getSE());
+							indexStockData.setCode(index.getCode());
+							indexStockData.setName(index.getName());
 							indexStockData.setDate(stockData.getDate());
 							indexStockData.setTime(stockData.getTime());
 
@@ -1001,16 +1027,12 @@ public abstract class StockDataProvider extends StockAnalyzer {
 					Collections.sort(indexStockDataList, StockData.comparator);
 					updateDatabase(index, period, indexStockDataList);
 
-					if (period.equals(Setting.KEY_PERIOD_DAY)) {
-						double prevPrice = 0;
-						double price = 0;
+					if (period.equals(Setting.KEY_PERIOD_DAY) && (indexStockDataList.size() > 1)) {
+						double prevPrice = indexStockDataList.get(indexStockDataList.size() - 2).getClose();
+						double price = indexStockDataList.get(indexStockDataList.size() - 1).getClose();
 						double net = 0;
-						price = indexStockData.getClose();
-						if (price > 0 && indexStockDataList.size() > 1) {
-							prevPrice = indexStockDataList.get(indexStockDataList.size() - 2).getClose();
-							if (prevPrice > 0) {
-								net = (price - prevPrice) / prevPrice;
-							}
+						if (prevPrice > 0) {
+							net = (price - prevPrice) / prevPrice;
 						}
 						index.setPrice(Utility.Round(price, Constant.DOUBLE_FIXED_DECIMAL));
 						index.setNet(Utility.Round(net, Constant.DOUBLE_FIXED_DECIMAL));

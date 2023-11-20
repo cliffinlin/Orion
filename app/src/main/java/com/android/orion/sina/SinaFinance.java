@@ -568,7 +568,9 @@ public class SinaFinance extends StockDataProvider {
 								break;
 							case 2:
 								stockData.setDate(dateTime[0]);
-								stockData.setTime(dateTime[1]);
+								if (isMinutePeriod(stockData)) {
+									stockData.setTime(dateTime[1]);
+								}
 								break;
 							default:
 								break;
@@ -1021,7 +1023,9 @@ public class SinaFinance extends StockDataProvider {
 			stockData.setVertexLow(stockData.getLow());
 
 			stockData.setDate(stockInfo[30]);
-			stockData.setTime(stockInfo[31]);
+			if (isMinutePeriod(stockData)) {
+				stockData.setTime(stockInfo[31]);
+			}
 
 			if (!TextUtils.isEmpty(stockInfo[32])) {
 				if (stockInfo[32].startsWith("00")) {
