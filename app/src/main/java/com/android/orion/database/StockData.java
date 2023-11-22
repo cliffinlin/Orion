@@ -1222,6 +1222,16 @@ public class StockData extends StockDatabaseTable {
 		setVertexHigh(Math.max(prev.getVertexHigh(), getVertexHigh()));
 	}
 
+	public void add(@NonNull StockData stockData, long weight) {
+		mOpen += stockData.getOpen() * weight;
+		mClose += stockData.getClose() * weight;
+		mHigh += stockData.getHigh() * weight;
+		mLow += stockData.getLow() * weight;
+
+		mVertexHigh = mHigh;
+		mVertexLow = mLow;
+	}
+
 	public void setupChange() {
 		mChange = 0;
 
