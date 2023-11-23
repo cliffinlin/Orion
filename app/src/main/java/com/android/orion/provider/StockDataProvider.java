@@ -928,7 +928,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 	private void setupIndex(@NonNull Stock index) {
 		ArrayList<Stock> stockList = new ArrayList<>();
 		ArrayList<StockData> stockDataList;
-		ArrayList<StockData> lastStockDataList = new ArrayList<>();
+//		ArrayList<StockData> lastStockDataList = new ArrayList<>();
 		ArrayList<StockData> indexStockDataList;
 		Map<String, StockData> indexStockDataMap = new HashMap<>();
 		boolean weightOn;
@@ -944,7 +944,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 					continue;
 				}
 
-				lastStockDataList.clear();
+//				lastStockDataList.clear();
 				indexStockDataMap.clear();
 
 				Calendar begin = null;
@@ -971,10 +971,10 @@ public abstract class StockDataProvider extends StockAnalyzer {
 					}
 
 					StockData last = stockDataList.get(stockDataList.size() - 1);
-					lastStockDataList.add(last);
+//					lastStockDataList.add(last);
 					if (end == null) {
 						end = last.getCalendar();
-					} else if (last.getCalendar().after(end)) {
+					} else if (last.getCalendar().before(end)) {
 						end = last.getCalendar();
 					}
 
@@ -1002,12 +1002,12 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 							indexStockData.add(stockData, weight);
 
-							for (int i = 0; i < lastStockDataList.size(); i++) {
-								StockData lastStockData = lastStockDataList.get(i);
-								if (lastStockData.getCalendar().before(stockData)) {
-									indexStockData.add(lastStockData, weight);
-								}
-							}
+//							for (int i = 0; i < lastStockDataList.size(); i++) {
+//								StockData lastStockData = lastStockDataList.get(i);
+//								if (lastStockData.getCalendar().before(stockData)) {
+//									indexStockData.add(lastStockData, weight);
+//								}
+//							}
 						}
 
 						indexStockDataMap.put(keyString, indexStockData);
@@ -1020,14 +1020,19 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 				indexStockDataList = new ArrayList<>(indexStockDataMap.values());
 				Collections.sort(indexStockDataList, StockData.comparator);
+
 				while (indexStockDataList.size() > 0) {
-					StockData indexStockData = indexStockDataList.get(0);
-					if (indexStockData.getCalendar().before(begin)) {
-						indexStockDataList.remove(0);
+					StockData indexStockDataBegin = indexStockDataList.get(0);
+					StockData indexStockDataEnd = indexStockDataList.get(indexStockDataList.size()-1);
+					if (indexStockDataBegin.getCalendar().before(begin)) {
+						indexStockDataList.remove(indexStockDataBegin);
+					} else if (indexStockDataEnd.getCalendar().after(end)) {
+						indexStockDataList.remove(indexStockDataEnd);
 					} else {
 						break;
 					}
 				}
+
 				updateDatabase(index, period, indexStockDataList);
 
 				if (period.equals(Setting.KEY_PERIOD_DAY) && (indexStockDataList.size() > 1)) {
