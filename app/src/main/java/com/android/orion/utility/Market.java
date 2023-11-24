@@ -9,10 +9,10 @@ public class Market {
 	public static final int OPEN_TIME_IN_MINUTES = 9 * 60 + 30;
 	public static final int LUNCH_TIME_IN_MINUTES = 1 * 60 + 30;
 
-	public static final String OPEN_TIME = "09:30:00";
-	public static final String LUNCH_BEGIN_TIME = "11:30:00";
-	public static final String LUNCH_END_TIME = "13:00:00";
-	public static final String CLOSE_TIME = "15:00:00";
+	public static final String OPEN_TIME = "09:25:00";
+	public static final String LUNCH_BEGIN_TIME = "11:35:00";
+	public static final String LUNCH_END_TIME = "12:55:00";
+	public static final String CLOSE_TIME = "15:05:00";
 
 	private Market() {
 	}
@@ -24,14 +24,12 @@ public class Market {
 
 	public static int getScheduleMinutes() {
 		int result = 0;
-		int start = 0;
+		int start = OPEN_TIME_IN_MINUTES;
 
 		Calendar calendar = Calendar.getInstance();
 		if (!isWeekday(calendar)) {
 			return result;
 		}
-
-		start = OPEN_TIME_IN_MINUTES;
 
 		if (inFirstHalf(calendar)) {
 			result = Market.getMinutesOfToday(calendar) - start;

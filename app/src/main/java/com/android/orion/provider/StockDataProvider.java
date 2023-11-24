@@ -379,19 +379,23 @@ public abstract class StockDataProvider extends StockAnalyzer {
 					switch (period) {
 						case Setting.KEY_PERIOD_MIN60:
 							result += scheduleMinutes
-									/ Constant.SCHEDULE_INTERVAL_MIN60;
+									/ Constant.INTERVAL_MIN60;
 							break;
 						case Setting.KEY_PERIOD_MIN30:
 							result += scheduleMinutes
-									/ Constant.SCHEDULE_INTERVAL_MIN30;
+									/ Constant.INTERVAL_MIN30;
 							break;
 						case Setting.KEY_PERIOD_MIN15:
 							result += scheduleMinutes
-									/ Constant.SCHEDULE_INTERVAL_MIN15;
+									/ Constant.INTERVAL_MIN15;
 							break;
 						case Setting.KEY_PERIOD_MIN5:
 							result += scheduleMinutes
-									/ Constant.SCHEDULE_INTERVAL_MIN5;
+									/ Constant.INTERVAL_MIN5;
+							break;
+						case Setting.KEY_PERIOD_MIN1:
+							result += scheduleMinutes
+									/ Constant.INTERVAL_MIN1;
 							break;
 					}
 				}
@@ -1177,12 +1181,6 @@ public abstract class StockDataProvider extends StockAnalyzer {
 					analyze(stock);
 					sendBroadcast(Constant.ACTION_RESTART_LOADER, stock.getId());
 				}
-
-//                if (downloadIPO() == DOWNLOAD_RESULT_FAILED) {
-//                    return;
-//                }
-//                sendBroadcast(Constant.ACTION_RESTART_LOADER,
-//                        Stock.INVALID_ID);
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {
