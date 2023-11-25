@@ -180,7 +180,7 @@ public class StockDataChart {
 	public void setMainChartData(Context context) {
 		mCombinedDataMain = new CombinedData(mXValues);
 
-		if (Preferences.getBoolean(context, Setting.KEY_DISPLAY_THRESHOLD,
+		if (Preferences.getBoolean(Setting.KEY_DISPLAY_THRESHOLD,
 				true)) {
 			BubbleData bubbleData = new BubbleData(mXValues);
 			if (mNaturalRallyList.size() > 0) {
@@ -250,7 +250,7 @@ public class StockDataChart {
 			}
 		}
 
-		if (Preferences.getBoolean(context, Setting.KEY_DISPLAY_DRAW,
+		if (Preferences.getBoolean(Setting.KEY_DISPLAY_DRAW,
 				true)) {
 			if (mLineList[0].size() > 0) {
 				LineDataSet lineDataSet = new LineDataSet(mLineList[0], "Draw");
@@ -262,7 +262,7 @@ public class StockDataChart {
 			}
 		}
 
-		if (Preferences.getBoolean(context, Setting.KEY_DISPLAY_STROKE,
+		if (Preferences.getBoolean(Setting.KEY_DISPLAY_STROKE,
 				false)) {
 			if (mLineList[1].size() > 0) {
 				LineDataSet lineDataSet = new LineDataSet(mLineList[1], "Stroke");
@@ -274,7 +274,7 @@ public class StockDataChart {
 			}
 		}
 
-		if (Preferences.getBoolean(context, Setting.KEY_DISPLAY_SEGMENT,
+		if (Preferences.getBoolean(Setting.KEY_DISPLAY_SEGMENT,
 				false)) {
 			if (mLineList[2].size() > 0) {
 				LineDataSet lineDataSet = new LineDataSet(mLineList[2],
@@ -287,7 +287,7 @@ public class StockDataChart {
 			}
 		}
 
-		if (Preferences.getBoolean(context, Setting.KEY_DISPLAY_LINE,
+		if (Preferences.getBoolean(Setting.KEY_DISPLAY_LINE,
 				false)) {
 			if (mLineList[3].size() > 0) {
 				LineDataSet lineDataSet = new LineDataSet(mLineList[3],
@@ -409,7 +409,7 @@ public class StockDataChart {
 		deaDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(deaDataSet);
 
-		if (Preferences.getBoolean(context, Setting.KEY_DISPLAY_DRAW,
+		if (Preferences.getBoolean(Setting.KEY_DISPLAY_DRAW,
 				true)) {
 			transferMainChartDataToSubChartData(mLineList[0], mSubChartDrawEntryList);
 			LineDataSet drawDataSet = new LineDataSet(mSubChartDrawEntryList, "Draw");
@@ -420,7 +420,7 @@ public class StockDataChart {
 			lineData.addDataSet(drawDataSet);
 		}
 
-		if (Preferences.getBoolean(context, Setting.KEY_DISPLAY_STROKE,
+		if (Preferences.getBoolean(Setting.KEY_DISPLAY_STROKE,
 				false)) {
 			transferMainChartDataToSubChartData(mLineList[1], mSubChartStrokeEntryList);
 			LineDataSet strokeDataSet = new LineDataSet(mSubChartStrokeEntryList, "Stroke");
@@ -431,7 +431,7 @@ public class StockDataChart {
 			lineData.addDataSet(strokeDataSet);
 		}
 
-		if (Preferences.getBoolean(context, Setting.KEY_DISPLAY_SEGMENT,
+		if (Preferences.getBoolean(Setting.KEY_DISPLAY_SEGMENT,
 				false)) {
 			transferMainChartDataToSubChartData(mLineList[2], mSubChartSegmentEntryList);
 			LineDataSet segmentDataSet = new LineDataSet(mSubChartSegmentEntryList,

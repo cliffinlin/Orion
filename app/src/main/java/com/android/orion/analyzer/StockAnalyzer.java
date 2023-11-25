@@ -118,10 +118,10 @@ public class StockAnalyzer {
 			return;
 		}
 
-		loopback = Preferences.getBoolean(mContext, Setting.KEY_LOOPBACK,
+		loopback = Preferences.getBoolean(Setting.KEY_LOOPBACK,
 				false);
 		if (loopback) {
-			String dateTime = Preferences.getString(mContext, Setting.KEY_LOOPBACK_DATE_TIME, "");
+			String dateTime = Preferences.getString(Setting.KEY_LOOPBACK_DATE_TIME, "");
 			if (!TextUtils.isEmpty(dateTime)) {
 				calendar = Utility.getCalendar(dateTime, Utility.CALENDAR_DATE_TIME_FORMAT);
 			} else {
@@ -673,24 +673,24 @@ public class StockAnalyzer {
 		//stockVertexAnalyzer.analyzeOverlap(stockDataList, segmentDataList, overlapList);
 		//stockVertexAnalyzer.testShowVertextNumber(stockDataList, stockDataList);
 
-		if (Preferences.getBoolean(mContext, Setting.KEY_LOOPBACK, false)) {
-			if (Preferences.getBoolean(mContext, Setting.KEY_DISPLAY_DIRECT, false)) {
+		if (Preferences.getBoolean(Setting.KEY_LOOPBACK, false)) {
+			if (Preferences.getBoolean(Setting.KEY_DISPLAY_DIRECT, false)) {
 				stockVertexAnalyzer.debugShow(stockDataList, stockDataList);
 			}
 
-			if (Preferences.getBoolean(mContext, Setting.KEY_DISPLAY_DRAW, false)) {
+			if (Preferences.getBoolean(Setting.KEY_DISPLAY_DRAW, false)) {
 				stockVertexAnalyzer.debugShow(stockDataList, drawDataList);
 			}
 
-			if (Preferences.getBoolean(mContext, Setting.KEY_DISPLAY_STROKE, false)) {
+			if (Preferences.getBoolean(Setting.KEY_DISPLAY_STROKE, false)) {
 				stockVertexAnalyzer.debugShow(stockDataList, strokeDataList);
 			}
 
-			if (Preferences.getBoolean(mContext, Setting.KEY_DISPLAY_SEGMENT, false)) {
+			if (Preferences.getBoolean(Setting.KEY_DISPLAY_SEGMENT, false)) {
 				stockVertexAnalyzer.debugShow(stockDataList, segmentDataList);
 			}
 
-			if (Preferences.getBoolean(mContext, Setting.KEY_DISPLAY_LINE, false)) {
+			if (Preferences.getBoolean(Setting.KEY_DISPLAY_LINE, false)) {
 				stockVertexAnalyzer.debugShow(stockDataList, lineDataList);
 			}
 		}
@@ -1205,7 +1205,7 @@ public class StockAnalyzer {
 		StringBuilder actionString = new StringBuilder();
 		StringBuilder contentTitle = new StringBuilder();
 
-		if (!Preferences.getBoolean(mContext, Setting.KEY_NOTIFICATION,
+		if (!Preferences.getBoolean(Setting.KEY_NOTIFICATION,
 				true)) {
 			return;
 		}
@@ -1225,7 +1225,7 @@ public class StockAnalyzer {
 		notifyToSell1 = true;
 
 		for (String period : Setting.KEY_PERIODS) {
-			if (Preferences.getBoolean(mContext, period, false)) {
+			if (Preferences.getBoolean(period, false)) {
 				String action = stock.getAction(period);
 
 				notifyToBuy2 = false;

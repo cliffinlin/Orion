@@ -212,7 +212,7 @@ public class StockQuantDealListActivity extends ListActivity implements
 
 		mFilterType = FILTER_TYPE_ALL;
 
-		mSortOrder = Preferences.getString(mContext, Setting.KEY_SORT_ORDER_QUANT_LIST,
+		mSortOrder = Preferences.getString(Setting.KEY_SORT_ORDER_QUANT_LIST,
 				mSortOrderDefault);
 
 		initHeader();
@@ -392,7 +392,7 @@ public class StockQuantDealListActivity extends ListActivity implements
 
 		mSortOrder = mSortOrderColumn + mSortOrderDirection;
 
-		Preferences.putString(mContext, Setting.KEY_SORT_ORDER_QUANT_LIST, mSortOrder);
+		Preferences.putString(Setting.KEY_SORT_ORDER_QUANT_LIST, mSortOrder);
 
 		restartLoader();
 	}
@@ -432,7 +432,7 @@ public class StockQuantDealListActivity extends ListActivity implements
 
 	void setVisibility(String key, TextView textView) {
 		if (textView != null) {
-			if (Preferences.getBoolean(this, key, false)) {
+			if (Preferences.getBoolean(key, false)) {
 				textView.setVisibility(View.VISIBLE);
 			} else {
 				textView.setVisibility(View.GONE);
@@ -798,7 +798,7 @@ public class StockQuantDealListActivity extends ListActivity implements
 
 	boolean setTextViewValue(String key, View textView) {
 		if (textView != null) {
-			if (Preferences.getBoolean(this, key, false)) {
+			if (Preferences.getBoolean(key, false)) {
 				textView.setVisibility(View.VISIBLE);
 				return false;
 			} else {

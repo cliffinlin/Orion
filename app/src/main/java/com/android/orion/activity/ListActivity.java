@@ -17,7 +17,7 @@ public class ListActivity extends StorageActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		if (!Preferences.getBoolean(mContext,
+		if (!Preferences.getBoolean(
 				Setting.KEY_NOTIFICATION, false)) {
 			Toast.makeText(
 					this,
@@ -25,7 +25,7 @@ public class ListActivity extends StorageActivity {
 					Toast.LENGTH_LONG).show();
 		}
 
-		if (Preferences.getBoolean(mContext,
+		if (Preferences.getBoolean(
 				Setting.KEY_LOOPBACK, false)) {
 			Toast.makeText(
 					this,

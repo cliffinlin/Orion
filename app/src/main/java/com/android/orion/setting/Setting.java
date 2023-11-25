@@ -1,8 +1,13 @@
 package com.android.orion.setting;
 
+import android.content.Context;
+
+import com.android.orion.application.OrionApplication;
 import com.android.orion.database.DatabaseContract;
+import com.android.orion.utility.Preferences;
 
 public class Setting {
+
 	public static final String KEY_PREFERENCES_INIT = "preferences_init";
 
 	public static final String KEY_NOTIFICATION = "notification";
@@ -71,8 +76,17 @@ public class Setting {
 
 	public static final String KEY_STOCK_HSA_UPDATED = "stock_hsa_updated";
 
-	public static final String KEY_DEBUG_LOG = "KEY_DEBUG_LOG";
+	private static final String SETTING_DEBUG = "SETTING_DEBUG";
+	public static final String SETTING_DEBUG_LOG = "SETTING_DEBUG_LOG";
 
 	private Setting() {
+	}
+
+	public static boolean getDebugLog() {
+		return Preferences.getBoolean(SETTING_DEBUG_LOG, false);
+	}
+
+	public static void setDebugLog(boolean log) {
+		Preferences.putBoolean(SETTING_DEBUG_LOG, log);
 	}
 }

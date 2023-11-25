@@ -5,56 +5,61 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 
+import com.android.orion.application.OrionApplication;
+
 public class Preferences {
+	public static final Context mContext = OrionApplication.getContext();
 
 	public static void putBoolean(Context context, String key, boolean value) {
-		getEditor(context).putBoolean(key, value).commit();
+		getEditor().putBoolean(key, value).commit();
 	}
 
-	public static boolean getBoolean(Context context, String key,
-									 boolean defValue) {
-		return getPreferences(context).getBoolean(key, defValue);
+	public static boolean getBoolean(String key, boolean defValue) {
+		return getPreferences().getBoolean(key, defValue);
 	}
 
-	public static void putInt(Context context, String key, int value) {
-		getEditor(context).putInt(key, value).commit();
-
+	public static void putBoolean(String key, boolean value) {
+		getEditor().putBoolean(key, value).commit();
 	}
 
-	public static int getInt(Context context, String key, int defValue) {
-		return getPreferences(context).getInt(key, defValue);
-	}
-
-	public static void putString(Context context, String key, String value) {
-		getEditor(context).putString(key, value).commit();
+	public static void putInt(String key, int value) {
+		getEditor().putInt(key, value).commit();
 
 	}
 
-	public static String getString(Context context, String key, String defValue) {
-		return getPreferences(context).getString(key, defValue);
+	public static int getInt(String key, int defValue) {
+		return getPreferences().getInt(key, defValue);
 	}
 
-	public static void putFloat(Context context, String key, float value) {
-		getEditor(context).putFloat(key, value).commit();
+	public static void putString(String key, String value) {
+		getEditor().putString(key, value).commit();
 	}
 
-	public static float getFloat(Context context, String key, float defValue) {
-		return getPreferences(context).getFloat(key, defValue);
+	public static String getString(String key, String defValue) {
+		return getPreferences().getString(key, defValue);
 	}
 
-	public static void putLong(Context context, String key, long value) {
-		getEditor(context).putLong(key, value).commit();
+	public static void putFloat(String key, float value) {
+		getEditor().putFloat(key, value).commit();
 	}
 
-	public static long getLong(Context context, String key, long defValue) {
-		return getPreferences(context).getLong(key, defValue);
+	public static float getFloat(String key, float defValue) {
+		return getPreferences().getFloat(key, defValue);
 	}
 
-	public static SharedPreferences getPreferences(Context context) {
-		return PreferenceManager.getDefaultSharedPreferences(context);
+	public static void putLong(String key, long value) {
+		getEditor().putLong(key, value).commit();
 	}
 
-	public static Editor getEditor(Context context) {
-		return getPreferences(context).edit();
+	public static long getLong(String key, long defValue) {
+		return getPreferences().getLong(key, defValue);
+	}
+
+	public static SharedPreferences getPreferences() {
+		return PreferenceManager.getDefaultSharedPreferences(mContext);
+	}
+
+	public static Editor getEditor() {
+		return getPreferences().edit();
 	}
 }

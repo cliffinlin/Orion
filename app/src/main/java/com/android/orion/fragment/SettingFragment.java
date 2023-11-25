@@ -46,8 +46,8 @@ public class SettingFragment extends PreferenceFragment implements
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 										  String key) {
-		if (key.equals(Setting.KEY_DEBUG_LOG)) {
-			Logger.setDebug(sharedPreferences.getBoolean(Setting.KEY_DEBUG_LOG, false));
+		if (key.equals(Setting.SETTING_DEBUG_LOG)) {
+			Logger.setDebug(Setting.getDebugLog());
 		} else if (key.equals(Setting.KEY_LOOPBACK)) {
 			Intent intent = new Intent(mContext, SettingLoopbackActivity.class);
 			mContext.startActivity(intent);

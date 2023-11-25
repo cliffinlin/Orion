@@ -113,7 +113,7 @@ public class StockFinancialListActivity extends ListActivity implements
 
 		setContentView(R.layout.activity_stock_financial_list);
 
-		mSortOrder = Preferences.getString(mContext, Setting.KEY_SORT_ORDER_FINANCIAL_LIST,
+		mSortOrder = Preferences.getString(Setting.KEY_SORT_ORDER_FINANCIAL_LIST,
 				mSortOrderDefault);
 
 		initHeader();
@@ -297,7 +297,7 @@ public class StockFinancialListActivity extends ListActivity implements
 
 		mSortOrder = mSortOrderColumn + mSortOrderDirection;
 
-		Preferences.putString(mContext, Setting.KEY_SORT_ORDER_FINANCIAL_LIST, mSortOrder);
+		Preferences.putString(Setting.KEY_SORT_ORDER_FINANCIAL_LIST, mSortOrder);
 
 		restartLoader();
 	}
@@ -347,7 +347,7 @@ public class StockFinancialListActivity extends ListActivity implements
 
 	void setVisibility(String key, TextView textView) {
 		if (textView != null) {
-			if (Preferences.getBoolean(this, key, false)) {
+			if (Preferences.getBoolean(key, false)) {
 				textView.setVisibility(View.VISIBLE);
 			} else {
 				textView.setVisibility(View.GONE);
@@ -792,7 +792,7 @@ public class StockFinancialListActivity extends ListActivity implements
 
 	boolean setRightTextViewVisibility(String key, View textView) {
 		if (textView != null) {
-			if (Preferences.getBoolean(this, key, false)) {
+			if (Preferences.getBoolean(key, false)) {
 				textView.setVisibility(View.VISIBLE);
 				return false;
 			} else {

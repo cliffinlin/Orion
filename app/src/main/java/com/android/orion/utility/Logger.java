@@ -19,7 +19,7 @@ public class Logger {
 	private String tag = Constant.TAG;//"Logger";//application name
 
 	private Logger() {
-		debug = Preferences.getBoolean(OrionApplication.getContext(), Setting.KEY_DEBUG_LOG, false);
+		debug = Setting.getDebugLog();
 	}
 
 	public static Logger getLogger() {

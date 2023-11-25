@@ -92,10 +92,10 @@
             android:key="indexes_weight"
             android:title="@string/weight" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/debug">
+    <PreferenceCategory android:title="@string/setting_debug">
         <com.android.orion.preference.CustomSwitchPreference
-            android:key="KEY_DEBUG_LOG"
-            android:title="@string/log" />
+            android:key="SETTING_DEBUG_LOG"
+            android:title="@string/setting_debug_log" />
         <com.android.orion.preference.CustomSwitchPreference
             android:key="loopback"
             android:title="@string/loopback" />

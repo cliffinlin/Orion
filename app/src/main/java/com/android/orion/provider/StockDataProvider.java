@@ -773,7 +773,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		}
 
 		for (String period : Setting.KEY_PERIODS) {
-			if (Preferences.getBoolean(mContext, period, false)) {
+			if (Preferences.getBoolean(period, false)) {
 				result = downloadStockDataHistory(stock, period);
 			}
 		}
@@ -841,7 +841,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		}
 
 		for (String period : Setting.KEY_PERIODS) {
-			if (Preferences.getBoolean(mContext, period, false)) {
+			if (Preferences.getBoolean(period, false)) {
 				if (Setting.KEY_PERIOD_DAY.equals(period)) {
 					result = downloadStockDataRealTime(stock, period);
 				}
@@ -934,10 +934,10 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		try {
 			loadIndexComponentStockList(index, stockList);
 
-			weightOn = Preferences.getBoolean(mContext, Setting.KEY_INDEXES_WEIGHT, false);
+			weightOn = Preferences.getBoolean(Setting.KEY_INDEXES_WEIGHT, false);
 
 			for (String period : Setting.KEY_PERIODS) {
-				if (!Preferences.getBoolean(mContext, period, false)) {
+				if (!Preferences.getBoolean(period, false)) {
 					continue;
 				}
 
@@ -1166,7 +1166,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 				if (true) {
 					for (String period : Setting.KEY_PERIODS) {
-						if (Preferences.getBoolean(mContext, period, false)) {
+						if (Preferences.getBoolean(period, false)) {
 							analyze(stock, period);
 						}
 					}
