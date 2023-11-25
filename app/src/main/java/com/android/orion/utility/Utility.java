@@ -5,7 +5,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
 import android.text.TextUtils;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -17,7 +16,6 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -36,13 +34,13 @@ import java.util.Locale;
 import java.util.Random;
 
 public class Utility {
-	public static final String TAG = Utility.class.getSimpleName();
 
 	public static final String CALENDAR_DATE_FORMAT = "yyyy-MM-dd";
 	public static final String CALENDAR_TIME_FORMAT = "HH:mm:ss";
 	public static final String CALENDAR_DATE_TIME_FORMAT = CALENDAR_DATE_FORMAT
 			+ " " + CALENDAR_TIME_FORMAT;
 
+	public Logger Log = Logger.getLogger();
 
 	private Utility() {
 	}
@@ -291,9 +289,6 @@ public class Utility {
 			if (randomAccessFile != null) {
 				length = randomAccessFile.length();
 			}
-		} catch (FileNotFoundException e) {
-			Log.d(TAG, fileName + " not found.");
-			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -401,9 +396,6 @@ public class Utility {
 					bufferedOutputStream.flush();
 				}
 			}
-		} catch (FileNotFoundException e) {
-			Log.d(TAG, path + " not found.");
-			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -464,9 +456,6 @@ public class Utility {
 					bufferedWriter.flush();
 				}
 			}
-		} catch (FileNotFoundException e) {
-			Log.d(TAG, fileName + " not found.");
-			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -513,9 +502,6 @@ public class Utility {
 					bufferedWriter.flush();
 				}
 			}
-		} catch (FileNotFoundException e) {
-			Log.d(TAG, fileName + " not found.");
-			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -555,9 +541,6 @@ public class Utility {
 					randomAccessFile.readFully(bytes);
 				}
 			}
-		} catch (FileNotFoundException e) {
-			Log.d(TAG, fileName + " not found.");
-			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -598,9 +581,6 @@ public class Utility {
 					}
 				}
 			}
-		} catch (FileNotFoundException e) {
-			Log.d(TAG, fileName + " not found.");
-			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -982,7 +962,7 @@ public class Utility {
 					while ((temp = bufferedReader.readLine()) != null) {
 						result.append(temp);
 					}
-					Log.i("MainActivity", "result:" + result);
+					Log.d("result:" + result);
 
 				} catch (Exception e) {
 					e.printStackTrace();

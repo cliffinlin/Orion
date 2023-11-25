@@ -3,19 +3,18 @@ package com.android.orion.manager;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.util.Log;
 
 import com.android.orion.setting.Constant;
+import com.android.orion.utility.Logger;
 import com.android.orion.utility.Market;
 import com.android.orion.utility.Utility;
 
 import java.util.Calendar;
 
 public class OrionAlarmManager {
-	public static final String TAG = OrionAlarmManager.class.getSimpleName();
 
+	public Logger Log = Logger.getLogger();
 	Context mContext = null;
-
 	private long mIntervalMillis = 0;
 	private AlarmManager mAlarmManager = null;
 	private PendingIntent mPendingIntent = null;
@@ -39,7 +38,7 @@ public class OrionAlarmManager {
 			mIntervalMillis = intervalMillis;
 		}
 
-		Log.d(TAG, "mIntervalMillis = "
+		Log.d("mIntervalMillis = "
 				+ mIntervalMillis);
 	}
 
@@ -53,7 +52,7 @@ public class OrionAlarmManager {
 
 			if ((mAlarmManager == null) || (mPendingIntent == null)
 					|| (mIntervalMillis <= 0)) {
-				Log.d(TAG, "return, mAlarmManager = "
+				Log.d("return, mAlarmManager = "
 						+ mAlarmManager + " mPendingIntent = " + mPendingIntent
 						+ " mIntervalMillis = " + mIntervalMillis);
 				return;
@@ -71,7 +70,7 @@ public class OrionAlarmManager {
 
 		if ((mAlarmManager == null) || (mPendingIntent == null)
 				|| (mIntervalMillis <= 0)) {
-			Log.d(TAG, "startAlarm return " + "mAlarmManager = "
+			Log.d("return, mAlarmManager = "
 					+ mAlarmManager + " mPendingIntent = " + mPendingIntent
 					+ " mIntervalMillis = " + mIntervalMillis);
 			return;
@@ -109,7 +108,7 @@ public class OrionAlarmManager {
 
 		triggerMillis = calendar.getTimeInMillis();
 
-		Log.d(TAG, "startAlarm will arrive at "
+		Log.d("will arrive at "
 				+ Utility.getCalendarDateTimeString(calendar)
 				+ " triggerMillis=" + triggerMillis
 				+ " intervalMillis=" + mIntervalMillis);
@@ -120,7 +119,7 @@ public class OrionAlarmManager {
 
 	public void stopAlarm() {
 		if ((mAlarmManager == null) || (mPendingIntent == null)) {
-			Log.d(TAG, "stopAlarm return " + "mAlarmManager = " + mAlarmManager
+			Log.d("return, mAlarmManager = " + mAlarmManager
 					+ " mPendingIntent = " + mPendingIntent);
 			return;
 		}

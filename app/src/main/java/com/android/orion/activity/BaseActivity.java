@@ -17,7 +17,6 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.util.ArrayMap;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
@@ -35,16 +34,17 @@ import com.android.orion.manager.StockDatabaseManager;
 import com.android.orion.service.OrionService;
 import com.android.orion.service.OrionService.OrionBinder;
 import com.android.orion.setting.Constant;
+import com.android.orion.utility.Logger;
 import com.android.orion.utility.Utility;
 
 import java.util.ArrayList;
 
 public class BaseActivity extends Activity {
-	public static final String TAG = BaseActivity.class.getSimpleName();
 
 	private static final int REQUEST_EXTERNAL_STORAGE = 1;
 	private static String[] PERMISSIONS_STORAGE = {"android.permission.READ_EXTERNAL_STORAGE",
 			"android.permission.WRITE_EXTERNAL_STORAGE"};
+	public Logger Log = Logger.getLogger();
 	boolean mResumed = false;
 	Context mContext = null;
 	Bundle mBundle = null;
@@ -225,18 +225,16 @@ public class BaseActivity extends Activity {
 	}
 
 	void acquireWakeLock() {
-		Log.d(TAG, "acquireWakeLock");
 		if (!mWakeLock.isHeld()) {
 			mWakeLock.acquire();
-			Log.d(TAG, "acquireWakeLock, mWakeLock acquired.");
+			Log.d("mWakeLock acquired.");
 		}
 	}
 
 	void releaseWakeLock() {
-		Log.d(TAG, "releaseWakeLock");
 		if (mWakeLock.isHeld()) {
 			mWakeLock.release();
-			Log.d(TAG, "releaseWakeLock, mWakeLock released.");
+			Log.d("mWakeLock released.");
 		}
 	}
 

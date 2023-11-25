@@ -5,12 +5,14 @@ import android.util.Log;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.setting.Constant;
+import com.android.orion.utility.Logger;
 import com.android.orion.utility.Utility;
 
 import java.util.ArrayList;
 
 public class StockVertexAnalyzer {
-	public static final String TAG = StockVertexAnalyzer.class.getSimpleName();
+
+	public Logger Log = Logger.getLogger();
 
 	void analyzeVertex(ArrayList<StockData> dataList,
 					   ArrayList<StockData> vertexList) {
@@ -178,7 +180,7 @@ public class StockVertexAnalyzer {
 				} else if (direction == StockData.DIRECTION_DOWN) {
 					vertex = vertexTypeBottom;
 				} else {
-					Log.d(TAG, "analyzeLine: directionType = " + direction);
+					Log.d("directionType = " + direction);
 				}
 				stockData.setVertex(stockData.getVertex() | vertex);
 				vertexList.add(stockData);

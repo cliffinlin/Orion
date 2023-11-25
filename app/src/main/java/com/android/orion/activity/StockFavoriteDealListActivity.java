@@ -43,7 +43,6 @@ import java.util.ArrayList;
 public class StockFavoriteDealListActivity extends ListActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
 		OnItemLongClickListener, OnClickListener {
-	public static final String TAG = StockFavoriteDealListActivity.class.getSimpleName();
 
 	static final int LOADER_ID_DEAL_LIST = 0;
 

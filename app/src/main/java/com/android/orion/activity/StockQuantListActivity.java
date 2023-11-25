@@ -40,7 +40,6 @@ import java.util.ArrayList;
 public class StockQuantListActivity extends ListActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
 		OnItemLongClickListener, OnClickListener {
-	public static final String TAG = StockQuantListActivity.class.getSimpleName();
 
 	static final int LOADER_ID_QUANT_LIST = 0;
 

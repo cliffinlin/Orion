@@ -6,16 +6,18 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.android.orion.service.OrionService;
+import com.android.orion.utility.Logger;
 import com.android.orion.utility.Market;
 
 import java.util.Calendar;
 
 public class DownloadBroadcastReceiver extends BroadcastReceiver {
-	public static final String TAG = DownloadBroadcastReceiver.class.getSimpleName();
+
+	Logger Log = Logger.getLogger();
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		Log.d(TAG, "onReceive intent:" + intent);
+		Log.d("intent:" + intent);
 
 		if (Market.isTradingHours(Calendar.getInstance())) {
 			OrionService.getInstance().download();
