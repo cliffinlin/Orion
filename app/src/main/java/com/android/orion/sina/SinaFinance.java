@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.util.ArrayMap;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -38,7 +37,6 @@ import java.util.Collections;
 import java.util.Locale;
 
 public class SinaFinance extends StockDataProvider {
-	public static final String TAG = SinaFinance.class.getSimpleName();
 
 	public static final String SINA_FINANCE_URL_HQ_NODE_DATA = "http://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/Market_Center.getHQNodeData?";
 	public static final String SINA_FINANCE_URL_HQ_KLINE_DATA = "http://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData?";
@@ -220,7 +218,7 @@ public class SinaFinance extends StockDataProvider {
 		String[] stockInfo = null;
 //var hq_str_sh600036_i="A,zsyh,4.6100,5.2827,4.1500,31.6900,4255.813,2521984.5601,2062894.4429,2062894.4429,0,CNY,1199.2200,1332.2900,7.3000,1,13.6650,2648.3300,1069.2200,51.939,26.3,0.1,招商银行,X|O|0|0|0,39.71|32.49,20220930|35640666666.67,697.4600|89.7750,|,,1/1,EQA,,4.17,46.678|34.960|34.390,股份制银行Ⅱ,,1,344676000000";
 		if ((stock == null) || TextUtils.isEmpty(response)) {
-			Log.d(TAG, "handleResponseStockInformation return " + " stock = "
+			Log.d("return, stock = "
 					+ stock + " response = " + response);
 			return;
 		}
@@ -229,34 +227,30 @@ public class SinaFinance extends StockDataProvider {
 			keyValue = response.trim().split("=");
 
 			if (keyValue == null || keyValue.length != 2) {
-				Log.d(TAG,
-						"handleResponseStockInformation return keyValue == null || keyValue.length != 2");
+				Log.d("return, keyValue == null || keyValue.length != 2");
 				return;
 			}
 
 			if (keyValue[0] == null) {
-				Log.d(TAG,
-						"handleResponseStockInformation return keyValue[0] == null");
+				Log.d("return, keyValue[0] == null");
 				return;
 			}
 
 			codeInfo = keyValue[0].trim().split("_");
 
 			if (codeInfo == null || codeInfo.length != 4) {
-				Log.d(TAG,
-						"handleResponseStockInformation return codeInfo == null || codeInfo.length != 4");
+				Log.d("return, codeInfo == null || codeInfo.length != 4");
 				return;
 			}
 
 			if (!stock.getSE().equals(codeInfo[2].substring(0, 2))
 					|| !stock.getCode().equals(codeInfo[2].substring(2, 8))) {
-				Log.d(TAG, "handleResponseStockInformation return");
+				Log.d("return, ...");
 				return;
 			}
 
 			if (keyValue[1] == null) {
-				Log.d(TAG,
-						"handleResponseStockInformation return keyValue[1] == null");
+				Log.d("return, keyValue[1] == null");
 				return;
 			}
 
@@ -264,7 +258,7 @@ public class SinaFinance extends StockDataProvider {
 					.split(",");
 
 			if (stockInfo == null || stockInfo.length < 8) {
-				Log.d(TAG, "handleResponseStockInformation return stockInfo == null || stockInfo.length < 8");
+				Log.d("return, stockInfo == null || stockInfo.length < 8");
 				return;
 			}
 
@@ -286,11 +280,10 @@ public class SinaFinance extends StockDataProvider {
 					stock.getContentValuesInformation());
 
 			stopWatch.stop();
-			Log.d(TAG,
-					"handleResponseStockInformation:" + stock.getName() + " "
-							+ stock.getClasses() + " " + stock.getPinyin() + " "
-							+ stock.getTotalShare() + " " + stopWatch.getInterval()
-							+ "s");
+			Log.d(stock.getName() + " "
+					+ stock.getClasses() + " " + stock.getPinyin() + " "
+					+ stock.getTotalShare() + " " + stopWatch.getInterval()
+					+ "s");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -307,7 +300,7 @@ public class SinaFinance extends StockDataProvider {
 		//var hq_str_s_sh600048="保利发展,17.690,0.140,0.80,645118,115512";
 
 		if ((stock == null) || TextUtils.isEmpty(response)) {
-			Log.d(TAG, "handleResponseStockRealTime return " + " stock = "
+			Log.d("return, stock = "
 					+ stock + " response = " + response);
 			return;
 		}
@@ -316,30 +309,30 @@ public class SinaFinance extends StockDataProvider {
 			keyValue = response.trim().split("=");
 
 			if (keyValue == null || keyValue.length != 2) {
-				Log.d(TAG, "handleResponseStockRealTime return (keyValue == null) || (keyValue.length != 2)");
+				Log.d("return, (keyValue == null) || (keyValue.length != 2)");
 				return;
 			}
 
 			if (keyValue[0] == null) {
-				Log.d(TAG, "handleResponseStockRealTime return keyValue[0] == null");
+				Log.d("return, keyValue[0] == null");
 				return;
 			}
 
 			codeInfo = keyValue[0].trim().split("_");
 
 			if (codeInfo == null || codeInfo.length != 4) {
-				Log.d(TAG, "handleResponseStockRealTime return (codeInfo == null) || (codeInfo.length != 4) ");
+				Log.d("return, (codeInfo == null) || (codeInfo.length != 4) ");
 				return;
 			}
 
 			if (!stock.getSE().equals(codeInfo[3].substring(0, 2))
 					|| !stock.getCode().equals(codeInfo[3].substring(2, 8))) {
-				Log.d(TAG, "handleResponseStockRealTime return");
+				Log.d("return, ...");
 				return;
 			}
 
 			if (keyValue[1] == null) {
-				Log.d(TAG, "handleResponseStockRealTime return keyValue[1] == null");
+				Log.d("return, keyValue[1] == null");
 				return;
 			}
 
@@ -347,7 +340,7 @@ public class SinaFinance extends StockDataProvider {
 					.split(",");
 
 			if (stockInfo == null || stockInfo.length != 6) {
-				Log.d(TAG, "handleResponseStockRealTime return stockInfo = "
+				Log.d("return, stockInfo = "
 						+ stockInfo);
 				return;
 			}
@@ -385,12 +378,11 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		stopWatch.stop();
-		Log.d(TAG,
-				"handleResponseStockRealTime:" + stock.getName() + " "
-						+ stock.getPrice() + " " + stock.getChange() + " "
-						+ stock.getNet() + " " + stock.getVolume() + " "
-						+ stock.getValue() + " " + stopWatch.getInterval()
-						+ "s");
+		Log.d(stock.getName() + " "
+				+ stock.getPrice() + " " + stock.getChange() + " "
+				+ stock.getNet() + " " + stock.getVolume() + " "
+				+ stock.getValue() + " " + stopWatch.getInterval()
+				+ "s");
 	}
 
 	@Override
@@ -406,27 +398,27 @@ public class SinaFinance extends StockDataProvider {
 		JSONArray jsonArray = null;
 
 		if (TextUtils.isEmpty(response)) {
-			Log.d(TAG, "handleResponseStockHSA return response = " + response);
+			Log.d("return, response = " + response);
 			return;
 		}
 
 		if (mStockDatabaseManager.getStockCount(DatabaseContract.COLUMN_CLASSES
 				+ " = '" + Stock.CLASS_A + "'", null, null) == 0) {
 			bulkInsert = true;
-			Log.d(TAG, "handleResponseStockHSA bulkInsert = " + bulkInsert);
+			Log.d("bulkInsert = " + bulkInsert);
 		}
 
 		try {
 			jsonArray = JSON.parseArray(response);
 
 			if (jsonArray == null) {
-				Log.d(TAG, "handleResponseStockHSA return jsonArray = "
+				Log.d("return, jsonArray = "
 						+ jsonArray);
 				return;
 			}
 
 			if (jsonArray.size() == 0) {
-				Log.d(TAG, "handleResponseStockHSA return jsonArray.size() = "
+				Log.d("return, jsonArray.size() = "
 						+ jsonArray.size());
 				return;
 			}
@@ -494,7 +486,7 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		stopWatch.stop();
-		Log.d(TAG, "handleResponseStockHSA:" + " " + "size:" + jsonArray.size()
+		Log.d("size:" + jsonArray.size()
 				+ " " + stopWatch.getInterval() + "s");
 	}
 
@@ -515,7 +507,7 @@ public class SinaFinance extends StockDataProvider {
 		Calendar importCalendar = Utility.getCalendar("1998-01-01 00:00:00", Utility.CALENDAR_DATE_TIME_FORMAT);
 
 		if (TextUtils.isEmpty(response)) {
-			Log.d(TAG, "handleResponseStockDataHistory return " + " stock = "
+			Log.d("return, stock = "
 					+ stock + " stockData = " + stockData + " response = "
 					+ response);
 			return;
@@ -525,15 +517,14 @@ public class SinaFinance extends StockDataProvider {
 			jsonArray = JSON.parseArray(response);
 
 			if (jsonArray == null) {
-				Log.d(TAG, "handleResponseStockDataHistory return jsonArray = "
+				Log.d("return, jsonArray = "
 						+ jsonArray);
 				return;
 			}
 
 			if (jsonArray.size() == 0) {
-				Log.d(TAG,
-						"handleResponseStockDataHistory return jsonArray.size() = "
-								+ jsonArray.size());
+				Log.d("return, jsonArray.size() = "
+						+ jsonArray.size());
 				return;
 			}
 
@@ -638,7 +629,7 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		stopWatch.stop();
-		Log.d(TAG, "handleResponseStockDataHistory:" + stock.getName() + " "
+		Log.d(stock.getName() + " "
 				+ stockData.getPeriod() + " " + stopWatch.getInterval() + "s");
 	}
 
@@ -831,6 +822,101 @@ public class SinaFinance extends StockDataProvider {
 		}
 	}
 
+	/*
+	void setupStockDataRealtime(Stock stock, StockData stockData) {
+		int minutes = 0;
+		boolean result = false;
+
+		if (!Market.isTradingHours(Calendar.getInstance())) {
+			Log.d("setupStockDataRealtime return, not in isTradingHours");
+			return;
+		}
+
+		switch (stockData.getPeriod()) {
+			case Setting.KEY_PERIOD_MIN1:
+				minutes = Constant.SCHEDULE_INTERVAL_MIN1;
+				break;
+			case Setting.KEY_PERIOD_MIN5:
+				minutes = Constant.SCHEDULE_INTERVAL_MIN5;
+				break;
+			case Setting.KEY_PERIOD_MIN15:
+				minutes = Constant.SCHEDULE_INTERVAL_MIN15;
+				break;
+			case Setting.KEY_PERIOD_MIN30:
+				minutes = Constant.SCHEDULE_INTERVAL_MIN30;
+				break;
+			case Setting.KEY_PERIOD_MIN60:
+				minutes = Constant.SCHEDULE_INTERVAL_MIN60;
+				break;
+			case Setting.KEY_PERIOD_DAY:
+			case Setting.KEY_PERIOD_WEEK:
+			case Setting.KEY_PERIOD_MONTH:
+			case Setting.KEY_PERIOD_QUARTER:
+			case Setting.KEY_PERIOD_YEAR:
+			default:
+				break;
+		}
+
+		if (minutes > 0) {
+			Calendar stockMarketLunchBeginCalendar = Market
+					.getMarketLunchBeginCalendar(Calendar
+							.getInstance());
+			Calendar stockMarketCloseCalendar = Market
+					.getMarketCloseCalendar(Calendar.getInstance());
+
+			Calendar datetimeCalendar = Utility.getCalendar(stockData.getDateTime(),
+					Utility.CALENDAR_DATE_TIME_FORMAT);
+			datetimeCalendar.add(Calendar.MINUTE, minutes);
+
+			if (Market.inFirstHalf(Calendar.getInstance()) && datetimeCalendar.after(stockMarketLunchBeginCalendar)) {
+				Log.d("setupStockDataRealtime return, inFirstHalf datetimeCalendar.after(stockMarketLunchBeginCalendar)");
+				return;
+			}
+
+			if (Market.inSecondHalf(Calendar.getInstance()) && datetimeCalendar.after(stockMarketCloseCalendar)) {
+				Log.d("setupStockDataRealtime return, inSecondHalf datetimeCalendar.after(stockMarketCloseCalendar)");
+				return;
+			}
+
+			stockData.setDate(Utility.getCalendarDateString(datetimeCalendar));
+			stockData.setTime(Utility.getCalendarTimeString(datetimeCalendar));
+
+			if (!mStockDatabaseManager.isStockDataExist(stockData)) {
+				stockData.setOpen(stock.getPrice());
+				stockData.setClose(stock.getPrice());
+
+				stockData.setHigh(stock.getPrice());
+				stockData.setLow(stock.getPrice());
+
+				stockData.setVertexHigh(stockData.getHigh());
+				stockData.setVertexLow(stockData.getLow());
+
+				stockData.setCreated(Utility
+						.getCurrentDateTimeString());
+				stockData.setModified(Utility
+						.getCurrentDateTimeString());
+				mStockDatabaseManager.insertStockData(stockData);
+			} else {
+				stockData.setClose(stock.getPrice());
+
+				if (stock.getPrice() > stockData.getHigh()) {
+					stockData.setHigh(stock.getPrice());
+				}
+				if (stock.getPrice() < stockData.getLow()) {
+					stockData.setLow(stock.getPrice());
+				}
+
+				stockData.setVertexHigh(stockData.getHigh());
+				stockData.setVertexLow(stockData.getLow());
+
+				stockData.setModified(Utility
+						.getCurrentDateTimeString());
+				mStockDatabaseManager.updateStockData(stockData,
+						stockData.getContentValues());
+			}
+		}
+	}
+*/
 	@Override
 	public void handleResponseStockDataRealTime(Stock stock, StockData stockData,
 												String response) {
@@ -842,7 +928,7 @@ public class SinaFinance extends StockDataProvider {
 
 		if ((stock == null) || (stockData == null)
 				|| TextUtils.isEmpty(response)) {
-			Log.d(TAG, "handleResponseStockDataRealTime return " + " stock = "
+			Log.d("return, stock = "
 					+ stock + " stockData = " + stockData + " response = "
 					+ response);
 			return;
@@ -852,69 +938,58 @@ public class SinaFinance extends StockDataProvider {
 			keyValue = response.trim().split("=");
 
 			if (keyValue == null) {
-				Log.d(TAG, "handleResponseStockDataRealTime return "
-						+ " keyValue = " + keyValue);
+				Log.d("return, keyValue = " + keyValue);
 				return;
 			}
 
 			if (keyValue.length < 2) {
-				Log.d(TAG, "handleResponseStockDataRealTime return "
-						+ " keyValue.length = " + keyValue.length);
+				Log.d("return, keyValue.length = " + keyValue.length);
 				return;
 			}
 
 			if (keyValue[0] == null) {
-				Log.d(TAG, "handleResponseStockDataRealTime return "
-						+ " keyValue[0] = " + keyValue[0]);
+				Log.d("return, keyValue[0] = " + keyValue[0]);
 				return;
 			}
 
 			codeInfo = keyValue[0].trim().split("_");
 
 			if (codeInfo == null) {
-				Log.d(TAG, "handleResponseStockDataRealTime return "
-						+ " codeInfo = " + codeInfo);
+				Log.d("return, codeInfo = " + codeInfo);
 				return;
 			}
 
 			if (codeInfo.length < 3) {
-				Log.d(TAG, "handleResponseStockDataRealTime return "
-						+ " codeInfo.length = " + codeInfo.length);
+				Log.d("return, codeInfo.length = " + codeInfo.length);
 				return;
 			}
 
 			if (codeInfo[2] == null) {
-				Log.d(TAG, "handleResponseStockDataRealTime return "
-						+ " codeInfo[2] = " + codeInfo[2]);
+				Log.d("return, codeInfo[2] = " + codeInfo[2]);
 				return;
 			}
 
 			if (keyValue[1] == null) {
-				Log.d(TAG, "handleResponseStockDataRealTime return "
-						+ " keyValue[1] = " + keyValue[1]);
+				Log.d("return, keyValue[1] = " + keyValue[1]);
 				return;
 			}
 
 			stockInfo = keyValue[1].trim().split(",");
 
 			if (stockInfo == null) {
-				Log.d(TAG, "handleResponseStockDataRealTime return "
-						+ " stockInfo = " + stockInfo);
+				Log.d("return, stockInfo = " + stockInfo);
 				return;
 			}
 
 			if (stockInfo.length < 32) {
-				Log.d(TAG, "handleResponseStockDataRealTime return "
-						+ " stockInfo.length = " + stockInfo.length);
+				Log.d("return, stockInfo.length = " + stockInfo.length);
 				return;
 			}
 
 			for (int i = 1; i < 6; i++) {
 				if (Float.valueOf(stockInfo[i]) <= 0) {
-					Log.d(TAG,
-							"handleResponseStockDataRealTime return "
-									+ " Float.valueOf(stockInfo[" + i + "]) = "
-									+ Float.valueOf(stockInfo[i]));
+					Log.d("return, Float.valueOf(stockInfo[" + i + "]) = "
+							+ Float.valueOf(stockInfo[i]));
 					return;
 				}
 			}
@@ -953,7 +1028,7 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		stopWatch.stop();
-		Log.d(TAG, "handleResponseStockDataRealTime:" + stock.getName() + " "
+		Log.d(stock.getName() + " "
 				+ stockData.getDate() + " " + stockData.getTime() + " "
 				+ stockData.getOpen() + " " + stockData.getClose() + " "
 				+ stockData.getHigh() + " " + stockData.getLow() + " "
@@ -972,7 +1047,7 @@ public class SinaFinance extends StockDataProvider {
 		ArrayList<ContentValues> contentValuesList = new ArrayList<ContentValues>();
 
 		if ((stock == null) || TextUtils.isEmpty(response)) {
-			Log.d(TAG, "handleResponseStockFinancial return " + " stock = "
+			Log.d("return, stock = "
 					+ stock + " response = " + response);
 			return;
 		}
@@ -986,35 +1061,35 @@ public class SinaFinance extends StockDataProvider {
 		try {
 			JSONObject responseJSONObject = JSON.parseObject(response);
 			if (responseJSONObject == null) {
-				Log.d(TAG, "handleResponseStockFinancial return responseJSONObject = "
+				Log.d("return, responseJSONObject = "
 						+ responseJSONObject);
 				return;
 			}
 
 			JSONObject resultJSONObject = responseJSONObject.getJSONObject("result");
 			if (resultJSONObject == null) {
-				Log.d(TAG, "handleResponseStockFinancial return resultJSONObject = "
+				Log.d("return, resultJSONObject = "
 						+ resultJSONObject);
 				return;
 			}
 
 			JSONObject dataJSONObject = resultJSONObject.getJSONObject("data");
 			if (dataJSONObject == null) {
-				Log.d(TAG, "handleResponseStockFinancial return dataJSONObject = "
+				Log.d("return, dataJSONObject = "
 						+ dataJSONObject);
 				return;
 			}
 
 			JSONObject reportListJSONObject = dataJSONObject.getJSONObject("report_list");
 			if (reportListJSONObject == null) {
-				Log.d(TAG, "handleResponseStockFinancial return reportListJSONObject = "
+				Log.d("return, reportListJSONObject = "
 						+ reportListJSONObject);
 				return;
 			}
 
 			JSONArray reportDateJSONArray = dataJSONObject.getJSONArray("report_date");
 			if (reportDateJSONArray == null) {
-				Log.d(TAG, "handleResponseStockFinancial return reportDateJSONArray = "
+				Log.d("return, reportDateJSONArray = "
 						+ reportDateJSONArray);
 				return;
 			}
@@ -1135,7 +1210,7 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		stopWatch.stop();
-		Log.d(TAG, "handleResponseStockFinancial:" + stock.getName() + " "
+		Log.d(stock.getName() + " "
 				+ stopWatch.getInterval() + "s");
 	}
 
@@ -1152,7 +1227,7 @@ public class SinaFinance extends StockDataProvider {
 		ArrayList<ContentValues> contentValuesList = new ArrayList<ContentValues>();
 
 		if ((stock == null) || TextUtils.isEmpty(response)) {
-			Log.d(TAG, "handleResponseShareBonus return " + " stock = " + stock
+			Log.d("return, stock = " + stock
 					+ " response = " + response);
 			return;
 		}
@@ -1167,55 +1242,48 @@ public class SinaFinance extends StockDataProvider {
 
 			Document doc = Jsoup.parse(response);
 			if (doc == null) {
-				Log.d(TAG, "handleResponseShareBonus return " + " doc = " + doc);
+				Log.d("return, doc = " + doc);
 				return;
 			}
 
 			Elements tableElements = doc.select("table#sharebonus_1");
 			if (tableElements == null) {
-				Log.d(TAG, "handleResponseShareBonus return "
-						+ " tableElements = " + tableElements);
+				Log.d("return, tableElements = " + tableElements);
 				return;
 			}
 
 			Elements tbodyElements = tableElements.select("tbody");
 			if (tbodyElements == null) {
-				Log.d(TAG, "handleResponseShareBonus return "
-						+ " tbodyElements = " + tbodyElements);
+				Log.d("return, tbodyElements = " + tbodyElements);
 				return;
 			}
 
 			for (Element tbodyElement : tbodyElements) {
 				if (tbodyElement == null) {
-					Log.d(TAG, "handleResponseShareBonus return "
-							+ " tbodyElement = " + tbodyElement);
+					Log.d("return, tbodyElement = " + tbodyElement);
 					return;
 				}
 
 				Elements trElements = tbodyElement.select("tr");
 				if (trElements == null) {
-					Log.d(TAG, "handleResponseShareBonus return "
-							+ " trElements = " + trElements);
+					Log.d("return, trElements = " + trElements);
 					return;
 				}
 
 				for (Element trElement : trElements) {
 					if (trElement == null) {
-						Log.d(TAG, "handleResponseShareBonus continue "
-								+ " trElement = " + trElement);
+						Log.d("continue, trElement = " + trElement);
 						continue;
 					}
 
 					Elements tdElements = trElement.select("td");
 					if (tdElements == null) {
-						Log.d(TAG, "handleResponseShareBonus continue "
-								+ " tdElements = " + tdElements);
+						Log.d("continue, tdElements = " + tdElements);
 						continue;
 					}
 
 					if (tdElements.size() < 9) {
-						Log.d(TAG, "handleResponseShareBonus continue "
-								+ " tdElements.size() = " + tdElements.size());
+						Log.d("continue, tdElements.size() = " + tdElements.size());
 						continue;
 					}
 
@@ -1279,7 +1347,7 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		stopWatch.stop();
-		Log.d(TAG, "handleResponseShareBonus:" + stock.getName() + " "
+		Log.d(stock.getName() + " "
 				+ stopWatch.getInterval() + "s");
 	}
 
@@ -1295,7 +1363,7 @@ public class SinaFinance extends StockDataProvider {
 		ArrayList<ContentValues> contentValuesList = new ArrayList<ContentValues>();
 
 		if ((stock == null) || TextUtils.isEmpty(response)) {
-			Log.d(TAG, "handleResponseTotalShare return " + " stock = " + stock
+			Log.d("return, stock = " + stock
 					+ " response = " + response);
 			return;
 		}
@@ -1310,55 +1378,48 @@ public class SinaFinance extends StockDataProvider {
 
 			Document doc = Jsoup.parse(response);
 			if (doc == null) {
-				Log.d(TAG, "handleResponseTotalShare return " + " doc = " + doc);
+				Log.d("return, doc = " + doc);
 				return;
 			}
 
 			Elements tableElements = doc.select("table[id^=historyTable]");
 			if (tableElements == null) {
-				Log.d(TAG, "handleResponseTotalShare return "
-						+ " tableElements = " + tableElements);
+				Log.d("return, tableElements = " + tableElements);
 				return;
 			}
 
 			Elements tbodyElements = tableElements.select("tbody");
 			if (tbodyElements == null) {
-				Log.d(TAG, "handleResponseTotalShare return "
-						+ " tbodyElements = " + tbodyElements);
+				Log.d("return, tbodyElements = " + tbodyElements);
 				return;
 			}
 
 			for (Element tbodyElement : tbodyElements) {
 				if (tbodyElement == null) {
-					Log.d(TAG, "handleResponseTotalShare return "
-							+ " tbodyElement = " + tbodyElement);
+					Log.d("return, tbodyElement = " + tbodyElement);
 					return;
 				}
 
 				Elements trElements = tbodyElement.select("tr");
 				if (trElements == null) {
-					Log.d(TAG, "handleResponseTotalShare return "
-							+ " trElements = " + trElements);
+					Log.d("return, trElements = " + trElements);
 					return;
 				}
 
 				for (Element trElement : trElements) {
 					if (trElement == null) {
-						Log.d(TAG, "handleResponseTotalShare continue "
-								+ " trElement = " + trElement);
+						Log.d("continue, trElement = " + trElement);
 						continue;
 					}
 
 					Elements tdElements = trElement.select("td");
 					if (tdElements == null) {
-						Log.d(TAG, "handleResponseTotalShare continue "
-								+ " tdElements = " + tdElements);
+						Log.d("continue, tdElements = " + tdElements);
 						continue;
 					}
 
 					if (tdElements.size() < 2) {
-						Log.d(TAG, "handleResponseTotalShare continue "
-								+ " tdElements.size() = " + tdElements.size());
+						Log.d("continue, tdElements.size() = " + tdElements.size());
 						continue;
 					}
 
@@ -1423,7 +1484,7 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		stopWatch.stop();
-		Log.d(TAG, "handleResponseTotalShare:" + stock.getName() + " "
+		Log.d(stock.getName() + " "
 				+ stopWatch.getInterval() + "s");
 	}
 
@@ -1449,7 +1510,7 @@ public class SinaFinance extends StockDataProvider {
 		ArrayList<ContentValues> contentValuesList = new ArrayList<ContentValues>();
 
 		if (TextUtils.isEmpty(response)) {
-			Log.d(TAG, "handleResponseIPO return " + " response = " + response);
+			Log.d("return, response = " + response);
 			return;
 		}
 
@@ -1465,55 +1526,52 @@ public class SinaFinance extends StockDataProvider {
 
 			Document doc = Jsoup.parse(response);
 			if (doc == null) {
-				Log.d(TAG, "handleResponseIPO return " + " doc = " + doc);
+				Log.d("return, doc = " + doc);
 				return;
 			}
 
 			Elements tableElements = doc.select("table#NewStockTable");
 			if (tableElements == null) {
-				Log.d(TAG, "handleResponseIPO return " + " tableElements = "
+				Log.d("return, tableElements = "
 						+ tableElements);
 				return;
 			}
 
 			Elements tbodyElements = tableElements.select("tbody");
 			if (tbodyElements == null) {
-				Log.d(TAG, "handleResponseIPO return " + " tbodyElements = "
+				Log.d("return, tbodyElements = "
 						+ tbodyElements);
 				return;
 			}
 
 			for (Element tbodyElement : tbodyElements) {
 				if (tbodyElement == null) {
-					Log.d(TAG, "handleResponseIPO return " + " tbodyElement = "
+					Log.d("return, tbodyElement = "
 							+ tbodyElement);
 					return;
 				}
 
 				Elements trElements = tbodyElement.select("tr");
 				if (trElements == null) {
-					Log.d(TAG, "handleResponseIPO return " + " trElements = "
+					Log.d("return, trElements = "
 							+ trElements);
 					return;
 				}
 
 				for (Element trElement : trElements) {
 					if (trElement == null) {
-						Log.d(TAG, "handleResponseIPO continue "
-								+ " trElement = " + trElement);
+						Log.d("continue, trElement = " + trElement);
 						continue;
 					}
 
 					Elements tdElements = trElement.select("td");
 					if (tdElements == null) {
-						Log.d(TAG, "handleResponseIPO continue "
-								+ " tdElements = " + tdElements);
+						Log.d("continue, tdElements = " + tdElements);
 						continue;
 					}
 
 					if (tdElements.size() < 9) {
-						Log.d(TAG, "handleResponseIPO continue "
-								+ " tdElements.size() = " + tdElements.size());
+						Log.d("continue, tdElements.size() = " + tdElements.size());
 						continue;
 					}
 
@@ -1604,7 +1662,7 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		stopWatch.stop();
-		Log.d(TAG, "handleResponseIPO:" + contentValuesList.size() + " "
+		Log.d(contentValuesList.size() + " "
 				+ stopWatch.getInterval() + "s");
 	}
 

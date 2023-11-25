@@ -39,7 +39,7 @@ public class OrionAlarmManager {
 			mIntervalMillis = intervalMillis;
 		}
 
-		Log.d(TAG, "setIntervalMillis: " + "mIntervalMillis = "
+		Log.d(TAG, "mIntervalMillis = "
 				+ mIntervalMillis);
 	}
 
@@ -53,7 +53,7 @@ public class OrionAlarmManager {
 
 			if ((mAlarmManager == null) || (mPendingIntent == null)
 					|| (mIntervalMillis <= 0)) {
-				Log.d(TAG, "startAlarm return " + "mAlarmManager = "
+				Log.d(TAG, "return, mAlarmManager = "
 						+ mAlarmManager + " mPendingIntent = " + mPendingIntent
 						+ " mIntervalMillis = " + mIntervalMillis);
 				return;

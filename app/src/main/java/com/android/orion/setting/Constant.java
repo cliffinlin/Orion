@@ -50,11 +50,11 @@ public class Constant {
 	public static final String EXTRA_INDEX_NAME = "index_name";
 	public static final String EXTRA_INDEX_SE = "index_se";
 
-	public static final int INTERVAL_MIN60 = 60;
-	public static final int INTERVAL_MIN30 = 30;
-	public static final int INTERVAL_MIN15 = 15;
-	public static final int INTERVAL_MIN5 = 5;
-	public static final int INTERVAL_MIN1 = 1;
+	public static final int SCHEDULE_INTERVAL_MIN1 = 1;
+	public static final int SCHEDULE_INTERVAL_MIN5 = 5;
+	public static final int SCHEDULE_INTERVAL_MIN15 = 15;
+	public static final int SCHEDULE_INTERVAL_MIN30 = 30;
+	public static final int SCHEDULE_INTERVAL_MIN60 = 60;
 
 	public static final int SEASONS_IN_A_YEAR = 4;
 

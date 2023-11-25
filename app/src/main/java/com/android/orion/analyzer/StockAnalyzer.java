@@ -12,7 +12,6 @@ import android.os.Build;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.text.TextUtils;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -30,6 +29,7 @@ import com.android.orion.indicator.MACD;
 import com.android.orion.manager.StockDatabaseManager;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
+import com.android.orion.utility.Logger;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.RecordFile;
 import com.android.orion.utility.StopWatch;
@@ -40,11 +40,11 @@ import java.util.Calendar;
 
 
 public class StockAnalyzer {
-	public static final String TAG = StockAnalyzer.class.getSimpleName();
 
 	public Context mContext;
 	public LocalBroadcastManager mLocalBroadcastManager;
 	public StockDatabaseManager mStockDatabaseManager;
+	public Logger Log = Logger.getLogger();
 	PowerManager mPowerManager;
 	WakeLock mWakeLock;
 	NotificationManager mNotificationManager;
@@ -63,19 +63,16 @@ public class StockAnalyzer {
 	}
 
 	public void acquireWakeLock() {
-		Log.d(TAG, "acquireWakeLock");
-
 		if (!mWakeLock.isHeld()) {
 			mWakeLock.acquire(10 * 60 * 1000L /*10 minutes*/);
-			Log.d(TAG, "acquireWakeLock, mWakeLock acquired.");
+			Log.d("mWakeLock acquired.");
 		}
 	}
 
 	public void releaseWakeLock() {
-		Log.d(TAG, "releaseWakeLock");
 		if (mWakeLock.isHeld()) {
 			mWakeLock.release();
-			Log.d(TAG, "releaseWakeLock, mWakeLock released.");
+			Log.d("mWakeLock released.");
 		}
 	}
 
@@ -217,7 +214,7 @@ public class StockAnalyzer {
 		}
 
 		stopWatch.stop();
-		Log.d(TAG, "analyze:" + stock.getName() + " " + period + " "
+		Log.d(stock.getName() + " " + period + " "
 				+ stopWatch.getInterval() + "s");
 	}
 
@@ -244,8 +241,7 @@ public class StockAnalyzer {
 		}
 
 		stopWatch.stop();
-		Log.d(TAG, "analyze:" + stock.getName() + " " + stopWatch.getInterval()
-				+ "s");
+		Log.d(stock.getName() + " " + stopWatch.getInterval() + "s");
 	}
 
 	private void analyzeStockFinancial(Stock stock) {
@@ -932,7 +928,7 @@ public class StockAnalyzer {
 		int segmentDivergence = 0;
 
 		if (stockDataList == null) {
-			Log.d(TAG, "analyzeAction return" + " stockDataList = " + stockDataList);
+			Log.d("return, stockDataList = " + stockDataList);
 			return;
 		}
 
@@ -1078,7 +1074,7 @@ public class StockAnalyzer {
 
 	private void updateDatabase(Stock stock) {
 		if (mStockDatabaseManager == null) {
-			Log.d(TAG, "updateDatabase return " + " mStockDatabaseManager = "
+			Log.d("return, mStockDatabaseManager = "
 					+ mStockDatabaseManager);
 			return;
 		}
@@ -1108,7 +1104,7 @@ public class StockAnalyzer {
 
 	public void updateDatabase(Stock stock, String period, ArrayList<StockData> stockDataList) {
 		if (mStockDatabaseManager == null) {
-			Log.d(TAG, "updateDatabase return " + " mStockDatabaseManager = "
+			Log.d("return, mStockDatabaseManager = "
 					+ mStockDatabaseManager);
 			return;
 		}
@@ -1131,7 +1127,7 @@ public class StockAnalyzer {
 								ArrayList<StockData> strokeDataList,
 								ArrayList<StockData> segmentDataList) {
 		if (mStockDatabaseManager == null) {
-			Log.d(TAG, "updateDatabase return " + " mStockDatabaseManager = "
+			Log.d("return, mStockDatabaseManager = "
 					+ mStockDatabaseManager);
 			return;
 		}

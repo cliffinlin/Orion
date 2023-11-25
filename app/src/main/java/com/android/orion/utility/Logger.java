@@ -7,15 +7,14 @@ import com.android.orion.setting.Constant;
 
 public class Logger {
 	/**
-	 * log tag
-	 */
-	private String tag = Constant.TAG;//"Logger";//application name
-	/**
 	 * debug or not
 	 */
 	private static boolean debug = true;
-
 	private static Logger instance = new Logger();
+	/**
+	 * log tag
+	 */
+	private String tag = Constant.TAG;//"Logger";//application name
 
 	private Logger() {
 
@@ -23,6 +22,13 @@ public class Logger {
 
 	public static Logger getLogger() {
 		return instance;
+	}
+
+	/**
+	 * set debug
+	 */
+	public static void setDebug(boolean d) {
+		debug = d;
 	}
 
 	private String getFunctionName() {
@@ -46,7 +52,7 @@ public class Logger {
 			}
 
 			return "[" + Thread.currentThread().getName() + "(" + Thread.currentThread().getId()
-					+ "): " + st.getFileName() + ":" + st.getLineNumber() + "]";
+					+ "): " + st.getFileName() + ":" + st.getLineNumber() + "]" + " " + st.getMethodName();
 		}
 
 		return null;
@@ -54,7 +60,7 @@ public class Logger {
 
 	private String createMessage(String msg) {
 		String functionName = getFunctionName();
-		String message = (functionName == null ? msg : (functionName + " - " + msg));
+		String message = (functionName == null ? msg : (functionName + " " + msg));
 		return message;
 	}
 
@@ -97,30 +103,32 @@ public class Logger {
 			Log.e(tag, message);
 		}
 	}
+
 	/**
 	 * log.error
 	 */
-	public void error(Exception e){
-		if(debug){
+	public void error(Exception e) {
+		if (debug) {
 			StringBuffer sb = new StringBuffer();
 			String name = getFunctionName();
 			StackTraceElement[] sts = e.getStackTrace();
 
 			if (name != null) {
-				sb.append(name+" - "+e+"\r\n");
+				sb.append(name + " - " + e + "\r\n");
 			} else {
-				sb.append(e+"\r\n");
+				sb.append(e + "\r\n");
 			}
 			if (sts != null && sts.length > 0) {
-				for (StackTraceElement st:sts) {
+				for (StackTraceElement st : sts) {
 					if (st != null) {
-						sb.append("[ "+st.getFileName()+":"+st.getLineNumber()+" ]\r\n");
+						sb.append("[ " + st.getFileName() + ":" + st.getLineNumber() + " ]\r\n");
 					}
 				}
 			}
-			Log.e(tag,sb.toString());
+			Log.e(tag, sb.toString());
 		}
 	}
+
 	/**
 	 * log.d
 	 */
@@ -133,12 +141,5 @@ public class Logger {
 
 	public void setTag(String tag) {
 		this.tag = tag;
-	}
-
-	/**
-	 * set debug
-	 */
-	public static void setDebug(boolean d) {
-		debug = d;
 	}
 }

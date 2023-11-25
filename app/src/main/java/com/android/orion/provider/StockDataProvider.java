@@ -12,7 +12,6 @@ import android.os.Message;
 import android.os.Process;
 import android.text.TextUtils;
 import android.util.ArrayMap;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -24,7 +23,6 @@ import com.android.orion.database.IndexComponent;
 import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
-import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockFinancial;
 import com.android.orion.database.TotalShare;
 import com.android.orion.setting.Constant;
@@ -44,7 +42,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public abstract class StockDataProvider extends StockAnalyzer {
-	public static final String TAG = StockDataProvider.class.getSimpleName();
 
 	public static final int PERIOD_MINUTES_MIN1 = 1;
 	public static final int PERIOD_MINUTES_MIN5 = 5;
@@ -251,11 +248,11 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 			for (Stock current : stockArrayMap.values()) {
 				if (mHandler.hasMessages(Integer.valueOf(current.getCode()))) {
-					Log.d(TAG, "mHandler.hasMessages " + Integer.valueOf(current.getCode()) + ", skip!");
+					Log.d("mHandler.hasMessages " + Integer.valueOf(current.getCode()) + ", skip!");
 				} else {
 					Message msg = mHandler.obtainMessage(Integer.valueOf(current.getCode()), current);
 					mHandler.sendMessage(msg);
-					Log.d(TAG, "mHandler.sendMessage " + msg);
+					Log.d("mHandler.sendMessage " + msg);
 				}
 			}
 		} else {
@@ -275,26 +272,26 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 				if (mHandler.hasMessages(Integer.valueOf(current.getCode()))) {
 					mHandler.removeMessages(Integer.valueOf(current.getCode()));
-					Log.d(TAG, "mHandler.hasMessages " + Integer.valueOf(current.getCode()) + ", removed!");
+					Log.d("mHandler.hasMessages " + Integer.valueOf(current.getCode()) + ", removed!");
 					removedArrayMap.put(current.getCode(), current);
 				}
 			}
 
 			if (mHandler.hasMessages(Integer.valueOf(stock.getCode()))) {
-				Log.d(TAG, "mHandler.hasMessages " + Integer.valueOf(stock.getCode()) + ", skip!");
+				Log.d("mHandler.hasMessages " + Integer.valueOf(stock.getCode()) + ", skip!");
 			} else {
 				Message msg = mHandler.obtainMessage(Integer.valueOf(stock.getCode()), stock);
 				mHandler.sendMessage(msg);
-				Log.d(TAG, "mHandler.sendMessage" + msg);
+				Log.d("mHandler.sendMessage" + msg);
 			}
 
 			for (Stock current : removedArrayMap.values()) {
 				if (mHandler.hasMessages(Integer.valueOf(current.getCode()))) {
-					Log.d(TAG, "mHandler.hasMessages " + Integer.valueOf(current.getCode()) + ", skip!");
+					Log.d("mHandler.hasMessages " + Integer.valueOf(current.getCode()) + ", skip!");
 				} else {
 					Message msg = mHandler.obtainMessage(Integer.valueOf(current.getCode()), current);
 					mHandler.sendMessage(msg);
-					Log.d(TAG, "mHandler.sendMessage " + msg);
+					Log.d("mHandler.sendMessage " + msg);
 				}
 			}
 		}
@@ -379,23 +376,19 @@ public abstract class StockDataProvider extends StockAnalyzer {
 					switch (period) {
 						case Setting.KEY_PERIOD_MIN60:
 							result += scheduleMinutes
-									/ Constant.INTERVAL_MIN60;
+									/ Constant.SCHEDULE_INTERVAL_MIN60;
 							break;
 						case Setting.KEY_PERIOD_MIN30:
 							result += scheduleMinutes
-									/ Constant.INTERVAL_MIN30;
+									/ Constant.SCHEDULE_INTERVAL_MIN30;
 							break;
 						case Setting.KEY_PERIOD_MIN15:
 							result += scheduleMinutes
-									/ Constant.INTERVAL_MIN15;
+									/ Constant.SCHEDULE_INTERVAL_MIN15;
 							break;
 						case Setting.KEY_PERIOD_MIN5:
 							result += scheduleMinutes
-									/ Constant.INTERVAL_MIN5;
-							break;
-						case Setting.KEY_PERIOD_MIN1:
-							result += scheduleMinutes
-									/ Constant.INTERVAL_MIN1;
+									/ Constant.SCHEDULE_INTERVAL_MIN5;
 							break;
 					}
 				}
@@ -481,7 +474,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 	private int downloadStockInformation(Stock stock, ArrayMap<String, String> requestHeaderArray, String urlString) {
 		int result = DOWNLOAD_RESULT_NONE;
 
-		Log.d(TAG, "downloadStockInformation:" + urlString);
+		Log.d(urlString);
 
 		Request.Builder builder = new Request.Builder();
 		for (int i = 0; i < requestHeaderArray.size(); i++) {
@@ -530,7 +523,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 	private int downloadStockRealTime(Stock stock, ArrayMap<String, String> requestHeaderArray, String urlString) {
 		int result = DOWNLOAD_RESULT_NONE;
 
-		Log.d(TAG, "downloadStockRealTime:" + urlString);
+		Log.d(urlString);
 
 		Request.Builder builder = new Request.Builder();
 		for (int i = 0; i < requestHeaderArray.size(); i++) {
@@ -587,7 +580,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 	private int downloadStockFinancial(Stock stock, StockFinancial stockFinancial, String urlString) {
 		int result = DOWNLOAD_RESULT_NONE;
 
-		Log.d(TAG, "downloadStockFinancial:" + urlString);
+		Log.d(urlString);
 
 		Request.Builder builder = new Request.Builder();
 		builder.url(urlString);
@@ -642,7 +635,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 	private int downloadIPO(String urlString) {
 		int result = DOWNLOAD_RESULT_NONE;
 
-		Log.d(TAG, "downloadIPO:" + urlString);
+		Log.d(urlString);
 
 		Request.Builder builder = new Request.Builder();
 		builder.url(urlString);
@@ -694,7 +687,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 	private int downloadShareBonus(Stock stock, ShareBonus shareBonus, String urlString) {
 		int result = DOWNLOAD_RESULT_NONE;
 
-		Log.d(TAG, "downloadShareBonus:" + urlString);
+		Log.d(urlString);
 
 		Request.Builder builder = new Request.Builder();
 		builder.url(urlString);
@@ -746,7 +739,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 	private int downloadTotalShare(Stock stock, TotalShare totalShare, String urlString) {
 		int result = DOWNLOAD_RESULT_NONE;
 
-		Log.d(TAG, "downloadTotalShare:" + urlString);
+		Log.d(urlString);
 
 		Request.Builder builder = new Request.Builder();
 		builder.url(urlString);
@@ -814,7 +807,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 	private int downloadStockDataHistory(Stock stock, StockData stockData, String urlString) {
 		int result = DOWNLOAD_RESULT_NONE;
 
-		Log.d(TAG, "downloadStockDataHistory:" + urlString);
+		Log.d(urlString);
 
 		Request.Builder builder = new Request.Builder();
 		builder.url(urlString);
@@ -883,7 +876,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 	private int downloadStockDataRealTime(Stock stock, StockData stockData, ArrayMap<String, String> requestHeaderArray, String urlString) {
 		int result = DOWNLOAD_RESULT_NONE;
 
-		Log.d(TAG, "downloadStockDataRealTime:" + urlString);
+		Log.d(urlString);
 
 		Request.Builder builder = new Request.Builder();
 		for (int i = 0; i < requestHeaderArray.size(); i++) {
@@ -1027,7 +1020,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 				while (indexStockDataList.size() > 0) {
 					StockData indexStockDataBegin = indexStockDataList.get(0);
-					StockData indexStockDataEnd = indexStockDataList.get(indexStockDataList.size()-1);
+					StockData indexStockDataEnd = indexStockDataList.get(indexStockDataList.size() - 1);
 					if (indexStockDataBegin.getCalendar().before(begin)) {
 						indexStockDataList.remove(indexStockDataBegin);
 					} else if (indexStockDataEnd.getCalendar().after(end)) {
@@ -1181,6 +1174,12 @@ public abstract class StockDataProvider extends StockAnalyzer {
 					analyze(stock);
 					sendBroadcast(Constant.ACTION_RESTART_LOADER, stock.getId());
 				}
+
+//                if (downloadIPO() == DOWNLOAD_RESULT_FAILED) {
+//                    return;
+//                }
+//                sendBroadcast(Constant.ACTION_RESTART_LOADER,
+//                        Stock.INVALID_ID);
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {
