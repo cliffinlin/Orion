@@ -3,13 +3,15 @@ package com.android.orion.utility;
 
 import android.util.Log;
 
+import com.android.orion.application.OrionApplication;
 import com.android.orion.setting.Constant;
+import com.android.orion.setting.Setting;
 
 public class Logger {
 	/**
 	 * debug or not
 	 */
-	private static boolean debug = true;
+	private static boolean debug = false;
 	private static Logger instance = new Logger();
 	/**
 	 * log tag
@@ -17,7 +19,7 @@ public class Logger {
 	private String tag = Constant.TAG;//"Logger";//application name
 
 	private Logger() {
-
+		debug = Preferences.getBoolean(OrionApplication.getContext(), Setting.KEY_DEBUG_LOG, false);
 	}
 
 	public static Logger getLogger() {

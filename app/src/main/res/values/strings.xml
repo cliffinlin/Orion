@@ -144,6 +144,8 @@
     <string name="weight">Weight</string>
 
     <string name="test">Test</string>
+    <string name="debug">Debug</string>
+    <string name="log">Log</string>
     <string name="loopback">Loopback</string>
     <string name="loopback_date_time">Loopback date time</string>
 

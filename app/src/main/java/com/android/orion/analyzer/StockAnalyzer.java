@@ -1274,7 +1274,7 @@ public class StockAnalyzer {
 
 		RecordFile.writeNotificationFile(contentTitle.toString());
 
-		notify((int) stock.getId(), Constant.MESSAGE_CHANNEL_ID, Constant.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
+		notify(Integer.valueOf(stock.getCode()), Constant.MESSAGE_CHANNEL_ID, Constant.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
 				contentTitle.toString(), "");
 	}
 

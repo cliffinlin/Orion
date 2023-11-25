@@ -71,6 +71,8 @@ public class Setting {
 
 	public static final String KEY_STOCK_HSA_UPDATED = "stock_hsa_updated";
 
+	public static final String KEY_DEBUG_LOG = "KEY_DEBUG_LOG";
+
 	private Setting() {
 	}
 }
