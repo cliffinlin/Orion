@@ -19,4 +19,11 @@
     <color name="colorBlue">#6f99ff</color>
     <color name="colorYellow">#FFD54F</color>
 
+    <!-- SettingView -->
+    <color name="setting_view_item_bg_pressed">#FFF0F0F0</color>
+    <color name="setting_view_item_bg_normal">#FFFFFFFF</color>
+   
+    <color name="setting_view_item_title_text">#FF000000</color>
+    <color name="setting_view_item_subtitle_text">#FFCCCCCC</color>
+    <!-- SettingView -->
 </resources>

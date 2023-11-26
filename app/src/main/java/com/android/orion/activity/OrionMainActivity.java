@@ -1,5 +1,6 @@
 package com.android.orion.activity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
@@ -53,6 +54,11 @@ public class OrionMainActivity extends PreferenceActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+			case R.id.action_settings: {
+				Intent it = new Intent(this, SettingMoreActivity.class);
+				startActivity(it);
+				return true;
+			}
 			case R.id.action_exit: {
 				onActionExit();
 				return true;

@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.android.orion"
     android:versionCode="518"
-    android:versionName="1.1.36.20231125">
+    android:versionName="1.1.36.20231126">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -128,6 +128,13 @@
         <activity
             android:name="com.android.orion.activity.AboutActivity"
             android:label="@string/activity_title_about"
+            android:launchMode="singleTask"></activity>
+
+        <activity android:name=".activity.SettingMoreActivity"
+            android:label="@string/activity_title_setting_more"
+            android:launchMode="singleTask"></activity>
+        <activity android:name=".activity.SettingDebugActivity"
+            android:label="@string/activity_title_setting_debug"
             android:launchMode="singleTask"></activity>
 
         <provider
