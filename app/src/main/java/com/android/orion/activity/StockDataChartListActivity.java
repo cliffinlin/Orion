@@ -66,7 +66,6 @@ public class StockDataChartListActivity extends BaseActivity implements
 	public static final int MESSAGE_LOAD_STOCK_LIST = 1;
 
 	boolean mKeyDisplayThreshold = true;
-	boolean mKeyDisplayCandle = false;
 	boolean mKeyDisplayOverlap = false;
 	boolean mKeyDisplayLatest = true;
 	boolean mKeyDisplayCost = true;
@@ -161,8 +160,6 @@ public class StockDataChartListActivity extends BaseActivity implements
 				Constant.EXTRA_STOCK_LIST_SORT_ORDER);
 
 		mKeyDisplayThreshold = Preferences.getBoolean(Setting.KEY_DISPLAY_THRESHOLD,
-				false);
-		mKeyDisplayCandle = Preferences.getBoolean(Setting.KEY_DISPLAY_CANDLE,
 				false);
 		mKeyDisplayOverlap = Preferences.getBoolean(Setting.KEY_DISPLAY_OVERLAP,
 				false);
@@ -631,7 +628,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 						}
 					}
 
-					if (mKeyDisplayCandle) {
+					if (Setting.getDisplayCandle()) {
 						CandleEntry candleEntry = new CandleEntry(index,
 								(float) mStockData.getHigh(),
 								(float) mStockData.getLow(),
@@ -782,7 +779,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 						}
 					}
 
-					if (mKeyDisplayCandle) {
+					if (Setting.getDisplayCandle()) {
 						Entry average5Entry = new Entry(
 								(float) mStockData.getAverage5(), index);
 						stockDataChart.mAverage5EntryList.add(average5Entry);

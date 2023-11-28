@@ -307,7 +307,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 		mTextViewNet = findViewById(R.id.net);
 		if (mTextViewNet != null) {
 			mTextViewNet.setOnClickListener(this);
-			setVisibility(Setting.KEY_DISPLAY_NET, mTextViewNet);
+			setVisibility(Setting.SETTING_DISPLAY_NET, mTextViewNet);
 		}
 
 		mTextViewMonth = findViewById(R.id.action_month);
@@ -615,7 +615,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 
 			if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_NET)) {
-				return setRightTextViewVisibility(Setting.KEY_DISPLAY_NET, view);
+				return setRightTextViewVisibility(Setting.SETTING_DISPLAY_NET, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MONTH)) {
 				return setRightTextViewVisibility(Setting.KEY_PERIOD_MONTH, view);

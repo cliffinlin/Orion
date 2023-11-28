@@ -27,10 +27,10 @@ public class Setting {
 			KEY_PERIOD_MONTH, KEY_PERIOD_WEEK, KEY_PERIOD_DAY, KEY_PERIOD_MIN60, KEY_PERIOD_MIN30,
 			KEY_PERIOD_MIN15, KEY_PERIOD_MIN5, KEY_PERIOD_MIN1};
 
-	public static final String KEY_DISPLAY_NET = "display_net";
+//	public static final String KEY_DISPLAY_NET = "display_net";
 	public static final String KEY_DISPLAY_THRESHOLD = "display_threshold";
-	public static final String KEY_DISPLAY_CANDLE = "display_candle";
-	public static final String KEY_DISPLAY_DRAW = "display_draw";
+//	public static final String KEY_DISPLAY_CANDLE = "display_candle";
+//	public static final String KEY_DISPLAY_DRAW = "display_draw";
 	public static final String KEY_DISPLAY_STROKE = "display_stroke";
 	public static final String KEY_DISPLAY_SEGMENT = "display_segment";
 	public static final String KEY_DISPLAY_LINE = "display_line";
@@ -76,10 +76,38 @@ public class Setting {
 
 	public static final String KEY_STOCK_HSA_UPDATED = "stock_hsa_updated";
 
+	public static final String SETTING_DISPLAY_NET = "SETTING_DISPLAY_NET";
+	public static final String SETTING_DISPLAY_CANDLE = "SETTING_DISPLAY_CANDLE";
+	public static final String SETTING_DISPLAY_DRAW = "SETTING_DISPLAY_DRAW";
+
 	private static final String SETTING_DEBUG = "SETTING_DEBUG";
 	public static final String SETTING_DEBUG_LOG = "SETTING_DEBUG_LOG";
 
 	private Setting() {
+	}
+
+	public static boolean getDisplayNet() {
+		return Preferences.getBoolean(SETTING_DISPLAY_NET, false);
+	}
+
+	public static void setDisplayNet(boolean net) {
+		Preferences.putBoolean(SETTING_DISPLAY_NET, net);
+	}
+
+	public static boolean getDisplayCandle() {
+		return Preferences.getBoolean(SETTING_DISPLAY_CANDLE, false);
+	}
+
+	public static void setDisplayCandle(boolean candle) {
+		Preferences.putBoolean(SETTING_DISPLAY_CANDLE, candle);
+	}
+
+	public static boolean getDisplayDraw() {
+		return Preferences.getBoolean(SETTING_DISPLAY_DRAW, true);
+	}
+
+	public static void setDisplayDraw(boolean draw) {
+		Preferences.putBoolean(SETTING_DISPLAY_DRAW, draw);
 	}
 
 	public static boolean getDebugLog() {

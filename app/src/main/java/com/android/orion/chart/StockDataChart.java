@@ -250,8 +250,7 @@ public class StockDataChart {
 			}
 		}
 
-		if (Preferences.getBoolean(Setting.KEY_DISPLAY_DRAW,
-				true)) {
+		if (Setting.getDisplayDraw()) {
 			if (mLineList[0].size() > 0) {
 				LineDataSet lineDataSet = new LineDataSet(mLineList[0], "Draw");
 				lineDataSet.setColor(mLineColors[0]);
@@ -409,8 +408,7 @@ public class StockDataChart {
 		deaDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(deaDataSet);
 
-		if (Preferences.getBoolean(Setting.KEY_DISPLAY_DRAW,
-				true)) {
+		if (Setting.getDisplayDraw()) {
 			transferMainChartDataToSubChartData(mLineList[0], mSubChartDrawEntryList);
 			LineDataSet drawDataSet = new LineDataSet(mSubChartDrawEntryList, "Draw");
 			drawDataSet.setColor(mLineColors[0]);

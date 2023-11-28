@@ -3,6 +3,7 @@ package com.android.orion.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.ArrayMap;
+import android.view.Menu;
 
 import com.android.orion.R;
 import com.android.orion.setting.Setting;
@@ -25,6 +26,7 @@ public class SettingMoreActivity extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		setContentView(R.layout.activity_setting_more);
 
 
@@ -41,10 +43,17 @@ public class SettingMoreActivity extends BaseActivity {
 	}
 
 	private void initView() {
+		mActivityMap.put(mListData.size(), SettingDisplayActivity.class);
+		mItemData = new SettingData();
+		mItemData.setTitle(getString(R.string.activity_title_setting_display));
+		mItemViewData = new SettingViewItemData();
+		mItemViewData.setData(mItemData);
+		mItemViewData.setItemView(new BasicItemViewH(SettingMoreActivity.this));
+		mListData.add(mItemViewData);
+
 		mActivityMap.put(mListData.size(), SettingDebugActivity.class);
 		mItemData = new SettingData();
 		mItemData.setTitle(getString(R.string.activity_title_setting_debug));
-		mItemData.setChecked(Setting.getDebugLog());
 		mItemViewData = new SettingViewItemData();
 		mItemViewData.setData(mItemData);
 		mItemViewData.setItemView(new BasicItemViewH(SettingMoreActivity.this));

@@ -17,6 +17,8 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.util.ArrayMap;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
@@ -86,6 +88,7 @@ public class BaseActivity extends Activity {
 			mOrionService = null;
 		}
 	};
+
 	BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -182,6 +185,18 @@ public class BaseActivity extends Activity {
 	}
 
 	@Override
+	protected void onPause() {
+		super.onPause();
+		mResumed = false;
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		mResumed = true;
+	}
+
+	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 
@@ -192,15 +207,22 @@ public class BaseActivity extends Activity {
 	}
 
 	@Override
-	protected void onPause() {
-		super.onPause();
-		mResumed = false;
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
-	protected void onResume() {
-		super.onResume();
-		mResumed = true;
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				finish();
+				return true;
+
+			default:
+				return super.onMenuItemSelected(featureId, item);
+		}
 	}
 
 	@Override
@@ -266,7 +288,6 @@ public class BaseActivity extends Activity {
 			}
 
 			ActivityCompat.requestPermissions(this, PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
-
 		}
 	}
 
@@ -283,7 +304,6 @@ public class BaseActivity extends Activity {
 				}
 				return;
 			}
-
 		}
 	}
 }

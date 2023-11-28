@@ -35,16 +35,16 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/display">
         <com.android.orion.preference.CustomSwitchPreference
-            android:key="display_net"
+            android:key="SETTING_DISPLAY_NET"
             android:title="@string/net" />
         <com.android.orion.preference.CustomSwitchPreference
             android:key="display_threshold"
             android:title="@string/stock_threshold" />
         <com.android.orion.preference.CustomSwitchPreference
-            android:key="display_candle"
+            android:key="SETTING_DISPLAY_CANDLE"
             android:title="@string/candle" />
         <com.android.orion.preference.CustomSwitchPreference
-            android:key="display_draw"
+            android:key="SETTING_DISPLAY_DRAW"
             android:title="@string/draw" />
         <com.android.orion.preference.CustomSwitchPreference
             android:key="display_stroke"

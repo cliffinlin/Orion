@@ -678,7 +678,7 @@ public class StockAnalyzer {
 				stockVertexAnalyzer.debugShow(stockDataList, stockDataList);
 			}
 
-			if (Preferences.getBoolean(Setting.KEY_DISPLAY_DRAW, false)) {
+			if (Setting.getDisplayDraw()) {
 				stockVertexAnalyzer.debugShow(stockDataList, drawDataList);
 			}
 
