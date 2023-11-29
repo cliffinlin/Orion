@@ -31,9 +31,9 @@ public class Setting {
 	public static final String KEY_DISPLAY_THRESHOLD = "display_threshold";
 //	public static final String KEY_DISPLAY_CANDLE = "display_candle";
 //	public static final String KEY_DISPLAY_DRAW = "display_draw";
-	public static final String KEY_DISPLAY_STROKE = "display_stroke";
-	public static final String KEY_DISPLAY_SEGMENT = "display_segment";
-	public static final String KEY_DISPLAY_LINE = "display_line";
+//	public static final String KEY_DISPLAY_STROKE = "display_stroke";
+//	public static final String KEY_DISPLAY_SEGMENT = "display_segment";
+//	public static final String KEY_DISPLAY_LINE = "display_line";
 	public static final String KEY_DISPLAY_OVERLAP = "display_overlap";
 	public static final String KEY_DISPLAY_LATEST = "display_latest";
 	public static final String KEY_DISPLAY_COST = "display_cost";
@@ -79,6 +79,9 @@ public class Setting {
 	public static final String SETTING_DISPLAY_NET = "SETTING_DISPLAY_NET";
 	public static final String SETTING_DISPLAY_CANDLE = "SETTING_DISPLAY_CANDLE";
 	public static final String SETTING_DISPLAY_DRAW = "SETTING_DISPLAY_DRAW";
+	public static final String SETTING_DISPLAY_STROKE = "SETTING_DISPLAY_STROKE";
+	public static final String SETTING_DISPLAY_SEGMENT = "SETTING_DISPLAY_SEGMENT";
+	public static final String SETTING_DISPLAY_LINE = "SETTING_DISPLAY_LINE";
 
 	private static final String SETTING_DEBUG = "SETTING_DEBUG";
 	public static final String SETTING_DEBUG_LOG = "SETTING_DEBUG_LOG";
@@ -108,6 +111,30 @@ public class Setting {
 
 	public static void setDisplayDraw(boolean draw) {
 		Preferences.putBoolean(SETTING_DISPLAY_DRAW, draw);
+	}
+
+	public static boolean getDisplayStroke() {
+		return Preferences.getBoolean(SETTING_DISPLAY_STROKE, true);
+	}
+
+	public static void setDisplayStroke(boolean stroke) {
+		Preferences.putBoolean(SETTING_DISPLAY_STROKE, stroke);
+	}
+
+	public static boolean getDisplaySegment() {
+		return Preferences.getBoolean(SETTING_DISPLAY_SEGMENT, true);
+	}
+
+	public static void setDisplaySegment(boolean segment) {
+		Preferences.putBoolean(SETTING_DISPLAY_SEGMENT, segment);
+	}
+
+	public static boolean getDisplayLine() {
+		return Preferences.getBoolean(SETTING_DISPLAY_LINE, true);
+	}
+
+	public static void setDisplayLine(boolean line) {
+		Preferences.putBoolean(SETTING_DISPLAY_LINE, line);
 	}
 
 	public static boolean getDebugLog() {

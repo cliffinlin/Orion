@@ -261,8 +261,7 @@ public class StockDataChart {
 			}
 		}
 
-		if (Preferences.getBoolean(Setting.KEY_DISPLAY_STROKE,
-				false)) {
+		if (Setting.getDisplayStroke()) {
 			if (mLineList[1].size() > 0) {
 				LineDataSet lineDataSet = new LineDataSet(mLineList[1], "Stroke");
 				lineDataSet.setColor(mLineColors[1]);
@@ -273,8 +272,7 @@ public class StockDataChart {
 			}
 		}
 
-		if (Preferences.getBoolean(Setting.KEY_DISPLAY_SEGMENT,
-				false)) {
+		if (Setting.getDisplaySegment()) {
 			if (mLineList[2].size() > 0) {
 				LineDataSet lineDataSet = new LineDataSet(mLineList[2],
 						"Segment");
@@ -286,8 +284,7 @@ public class StockDataChart {
 			}
 		}
 
-		if (Preferences.getBoolean(Setting.KEY_DISPLAY_LINE,
-				false)) {
+		if (Setting.getDisplayLine()) {
 			if (mLineList[3].size() > 0) {
 				LineDataSet lineDataSet = new LineDataSet(mLineList[3],
 						"Line");
@@ -418,8 +415,7 @@ public class StockDataChart {
 			lineData.addDataSet(drawDataSet);
 		}
 
-		if (Preferences.getBoolean(Setting.KEY_DISPLAY_STROKE,
-				false)) {
+		if (Setting.getDisplayStroke()) {
 			transferMainChartDataToSubChartData(mLineList[1], mSubChartStrokeEntryList);
 			LineDataSet strokeDataSet = new LineDataSet(mSubChartStrokeEntryList, "Stroke");
 			strokeDataSet.setColor(mLineColors[1]);
@@ -429,8 +425,7 @@ public class StockDataChart {
 			lineData.addDataSet(strokeDataSet);
 		}
 
-		if (Preferences.getBoolean(Setting.KEY_DISPLAY_SEGMENT,
-				false)) {
+		if (Setting.getDisplaySegment()) {
 			transferMainChartDataToSubChartData(mLineList[2], mSubChartSegmentEntryList);
 			LineDataSet segmentDataSet = new LineDataSet(mSubChartSegmentEntryList,
 					"Segment");

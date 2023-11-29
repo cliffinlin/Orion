@@ -47,13 +47,13 @@
             android:key="SETTING_DISPLAY_DRAW"
             android:title="@string/draw" />
         <com.android.orion.preference.CustomSwitchPreference
-            android:key="display_stroke"
+            android:key="SETTING_DISPLAY_STROKE"
             android:title="@string/stroke" />
         <com.android.orion.preference.CustomSwitchPreference
-            android:key="display_segment"
+            android:key="SETTING_DISPLAY_SEGMENT"
             android:title="@string/segment" />
         <com.android.orion.preference.CustomSwitchPreference
-            android:key="display_line"
+            android:key="SETTING_DISPLAY_LINE"
             android:title="@string/line" />
         <com.android.orion.preference.CustomSwitchPreference
             android:key="display_overlap"

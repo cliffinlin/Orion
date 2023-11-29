@@ -126,9 +126,9 @@ public class OrionMainActivity extends PreferenceActivity {
 			Preferences.putBoolean(Setting.KEY_DISPLAY_THRESHOLD, true);
 //			Preferences.putBoolean(Setting.KEY_DISPLAY_DRAW, true);
 			Setting.setDisplayDraw(true);
-			Preferences.putBoolean(Setting.KEY_DISPLAY_STROKE, true);
-			Preferences.putBoolean(Setting.KEY_DISPLAY_SEGMENT, true);
-			Preferences.putBoolean(Setting.KEY_DISPLAY_LINE, true);
+			Setting.setDisplayStroke(true);
+			Setting.setDisplaySegment(true);
+			Setting.setDisplayLine(true);
 			Preferences.putBoolean(Setting.KEY_DISPLAY_LATEST, true);
 			Preferences.putBoolean(Setting.KEY_DISPLAY_COST, true);
 

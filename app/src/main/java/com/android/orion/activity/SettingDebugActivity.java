@@ -9,12 +9,8 @@ import com.android.orion.R;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Logger;
 import com.dtr.settingview.lib.SettingButton;
-import com.dtr.settingview.lib.SettingView;
 import com.dtr.settingview.lib.entity.SettingData;
 import com.dtr.settingview.lib.entity.SettingViewItemData;
-import com.dtr.settingview.lib.item.BasicItemViewH;
-import com.dtr.settingview.lib.item.CheckItemViewV;
-import com.dtr.settingview.lib.item.ImageItemView;
 import com.dtr.settingview.lib.item.SwitchItemView;
 
 import java.util.ArrayList;

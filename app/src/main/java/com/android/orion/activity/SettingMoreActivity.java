@@ -6,7 +6,6 @@ import android.util.ArrayMap;
 import android.view.Menu;
 
 import com.android.orion.R;
-import com.android.orion.setting.Setting;
 import com.dtr.settingview.lib.SettingView;
 import com.dtr.settingview.lib.entity.SettingData;
 import com.dtr.settingview.lib.entity.SettingViewItemData;
@@ -17,10 +16,10 @@ import java.util.List;
 
 public class SettingMoreActivity extends BaseActivity {
 
-	private SettingView mSettingView = null;
 	private SettingData mItemData = null;
 	private SettingViewItemData mItemViewData = null;
 	private List<SettingViewItemData> mListData = new ArrayList<SettingViewItemData>();
+	private SettingView mSettingView = null;
 	private ArrayMap<Integer, Class<?>> mActivityMap = new ArrayMap();
 
 	@Override
@@ -29,7 +28,10 @@ public class SettingMoreActivity extends BaseActivity {
 
 		setContentView(R.layout.activity_setting_more);
 
+		initView();
+	}
 
+	private void initView() {
 		mSettingView = (SettingView) findViewById(R.id.more_setting_view);
 		mSettingView.setOnSettingViewItemClickListener(new SettingView.onSettingViewItemClickListener() {
 
@@ -39,11 +41,8 @@ public class SettingMoreActivity extends BaseActivity {
 			}
 		});
 
-		initView();
-	}
-
-	private void initView() {
 		mActivityMap.put(mListData.size(), SettingDisplayActivity.class);
+
 		mItemData = new SettingData();
 		mItemData.setTitle(getString(R.string.activity_title_setting_display));
 		mItemViewData = new SettingViewItemData();
@@ -52,6 +51,7 @@ public class SettingMoreActivity extends BaseActivity {
 		mListData.add(mItemViewData);
 
 		mActivityMap.put(mListData.size(), SettingDebugActivity.class);
+
 		mItemData = new SettingData();
 		mItemData.setTitle(getString(R.string.activity_title_setting_debug));
 		mItemViewData = new SettingViewItemData();

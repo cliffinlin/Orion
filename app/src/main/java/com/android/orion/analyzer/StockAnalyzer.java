@@ -682,15 +682,15 @@ public class StockAnalyzer {
 				stockVertexAnalyzer.debugShow(stockDataList, drawDataList);
 			}
 
-			if (Preferences.getBoolean(Setting.KEY_DISPLAY_STROKE, false)) {
+			if (Setting.getDisplayStroke()) {
 				stockVertexAnalyzer.debugShow(stockDataList, strokeDataList);
 			}
 
-			if (Preferences.getBoolean(Setting.KEY_DISPLAY_SEGMENT, false)) {
+			if (Setting.getDisplaySegment()) {
 				stockVertexAnalyzer.debugShow(stockDataList, segmentDataList);
 			}
 
-			if (Preferences.getBoolean(Setting.KEY_DISPLAY_LINE, false)) {
+			if (Setting.getDisplayLine()) {
 				stockVertexAnalyzer.debugShow(stockDataList, lineDataList);
 			}
 		}

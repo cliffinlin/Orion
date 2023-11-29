@@ -11,23 +11,13 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
-        <com.dtr.settingview.lib.SettingButton
-            android:id="@+id/setting_button_display_net"
+        <com.dtr.settingview.lib.SettingView
+            android:id="@+id/display_setting_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp" />
+            android:layout_marginTop="20dp"
+            app:iOSStyle="false" />
 
-        <com.dtr.settingview.lib.SettingButton
-            android:id="@+id/setting_button_display_candle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp" />
-
-        <com.dtr.settingview.lib.SettingButton
-            android:id="@+id/setting_button_display_draw"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp" />
     </LinearLayout>
 
 </ScrollView>
