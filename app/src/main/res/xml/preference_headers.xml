@@ -3,7 +3,7 @@
 
     <header
         android:icon="@drawable/ic_service"
-        android:title="@string/settings">
+        android:title="@string/setting">
         <intent
             android:targetClass="com.android.orion.activity.SettingActivity"
             android:targetPackage="com.android.orion" />

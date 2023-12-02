@@ -560,11 +560,11 @@ public class StockDatabaseManager extends DatabaseManager {
 
 		period = stockData.getPeriod();
 
-		if (period.equals(Setting.KEY_PERIOD_MIN1)
-				|| period.equals(Setting.KEY_PERIOD_MIN5)
-				|| period.equals(Setting.KEY_PERIOD_MIN15)
-				|| period.equals(Setting.KEY_PERIOD_MIN30)
-				|| period.equals(Setting.KEY_PERIOD_MIN60)) {
+		if (period.equals(DatabaseContract.COLUMN_MIN1)
+				|| period.equals(DatabaseContract.COLUMN_MIN5)
+				|| period.equals(DatabaseContract.COLUMN_MIN15)
+				|| period.equals(DatabaseContract.COLUMN_MIN30)
+				|| period.equals(DatabaseContract.COLUMN_MIN60)) {
 			selection += " AND " + DatabaseContract.COLUMN_TIME + " = " + "\'"
 					+ stockData.getTime() + "\'";
 		}

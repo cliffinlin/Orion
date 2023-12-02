@@ -125,25 +125,25 @@
     <string name="loopback_is_on">Loopback is on</string>
 
     //Settings
-    <string name="settings">Settings</string>
+    <string name="setting">Setting</string>
 
-    <string name="general">General</string>
-    <string name="notification">Notification</string>
+    <string name="setting_general">General</string>
+    <string name="setting_notification">Notification</string>
 
-    <string name="period">Period</string>
-    <string name="period_year">Year</string>
-    <string name="period_quarter">Quarter</string>
-    <string name="period_month">Month</string>
-    <string name="period_week">Week</string>
-    <string name="period_day">Day</string>
-    <string name="period_60min">60Min</string>
-    <string name="period_30min">30Min</string>
-    <string name="period_15min">15Min</string>
-    <string name="period_5min">5Min</string>
-    <string name="period_1min">1Min</string>
+    <string name="setting_indexes">Indexes</string>
+    <string name="setting_indexes_weight">Indexes Weight</string>
 
-    <string name="indexes">Indexes</string>
-    <string name="weight">Weight</string>
+    <string name="setting_period">Period</string>
+    <string name="setting_period_year">Year</string>
+    <string name="setting_period_quarter">Quarter</string>
+    <string name="setting_period_month">Month</string>
+    <string name="setting_period_week">Week</string>
+    <string name="setting_period_day">Day</string>
+    <string name="setting_period_min60">60Min</string>
+    <string name="setting_period_min30">30Min</string>
+    <string name="setting_period_min15">15Min</string>
+    <string name="setting_period_min5">5Min</string>
+    <string name="setting_period_min1">1Min</string>
 
     <string name="setting_display">Display</string>
     <string name="setting_display_net">Net</string>
@@ -162,13 +162,13 @@
     <string name="setting_display_roe">Roe</string>
     <string name="setting_display_roi">Roi</string>
     <string name="setting_display_threshold">Threshold</string>
-    <string name="setting_display_direct">Direct</string>
     <string name="setting_display_quant">Quant</string>
 
     <string name="setting_debug">Debug</string>
     <string name="setting_debug_log">Log</string>
-    <string name="loopback">Loopback</string>
-    <string name="loopback_date_time">Loopback date time</string>
+    <string name="setting_debug_direct">Direct</string>
+    <string name="setting_debug_loopback">Loopback</string>
+    <string name="setting_debug_loopback_date_time">Loopback date time</string>
 
     <string name="ok">OK</string>
     <string name="overlap">Overlap</string>
@@ -254,8 +254,10 @@
     <string name="activity_title_operate">Operate</string>
     <string name="activity_title_setting">Setting</string>
     <string name="activity_title_setting_more">Setting More</string>
-    <string name="activity_title_setting_debug">Debug</string>
+    <string name="activity_title_setting_general">General</string>
     <string name="activity_title_setting_display">Display</string>
+    <string name="activity_title_setting_period">Period</string>
+    <string name="activity_title_setting_debug">Debug</string>
     <string name="activity_title_setting_loopback">Setting Loopback</string>
     <string name="title_save_to_sd_card">Save to SD Card</string>
     <string name="title_delete">Delete</string>

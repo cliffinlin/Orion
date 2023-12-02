@@ -41,6 +41,8 @@ public class SettingMoreActivity extends BaseActivity {
 			}
 		});
 
+		initView(SettingGeneralActivity.class, R.string.activity_title_setting_general);
+		initView(SettingPeriodActivity.class, R.string.activity_title_setting_period);
 		initView(SettingDisplayActivity.class, R.string.activity_title_setting_display);
 		initView(SettingDebugActivity.class, R.string.activity_title_setting_debug);
 

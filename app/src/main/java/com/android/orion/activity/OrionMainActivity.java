@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.android.orion.R;
+import com.android.orion.database.DatabaseContract;
 import com.android.orion.manager.DownloadAlarmManager;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Preferences;
@@ -109,16 +110,16 @@ public class OrionMainActivity extends PreferenceActivity {
 		SharedPreferences settings = PreferenceManager
 				.getDefaultSharedPreferences(this);
 
-		if (!Preferences.getBoolean(Setting.KEY_PREFERENCES_INIT, false)) {
-			Preferences.putBoolean(Setting.KEY_PREFERENCES_INIT, true);
+		if (!Preferences.getBoolean(Setting.SETTING_PREFERENCES_INIT, false)) {
+			Preferences.putBoolean(Setting.SETTING_PREFERENCES_INIT, true);
 
-			Preferences.putBoolean(Setting.KEY_NOTIFICATION, true);
+			Preferences.putBoolean(Setting.SETTING_NOTIFICATION, true);
 
-			Preferences.putBoolean(Setting.KEY_PERIOD_DAY, true);
-			Preferences.putBoolean(Setting.KEY_PERIOD_MIN60, true);
-			Preferences.putBoolean(Setting.KEY_PERIOD_MIN30, true);
-			Preferences.putBoolean(Setting.KEY_PERIOD_MIN15, true);
-			Preferences.putBoolean(Setting.KEY_PERIOD_MIN5, true);
+			Preferences.putBoolean(DatabaseContract.COLUMN_DAY, true);
+			Preferences.putBoolean(DatabaseContract.COLUMN_MIN60, true);
+			Preferences.putBoolean(DatabaseContract.COLUMN_MIN30, true);
+			Preferences.putBoolean(DatabaseContract.COLUMN_MIN15, true);
+			Preferences.putBoolean(DatabaseContract.COLUMN_MIN5, true);
 
 //			Preferences.putBoolean(Setting.KEY_DISPLAY_NET, true);
 			Setting.setDisplayNet(true);
@@ -129,12 +130,12 @@ public class OrionMainActivity extends PreferenceActivity {
 			Setting.setDisplayStroke(true);
 			Setting.setDisplaySegment(true);
 			Setting.setDisplayLine(true);
-			Preferences.putBoolean(Setting.SETTING_DISPLAY_LATEST, true);
-			Preferences.putBoolean(Setting.SETTING_DISPLAY_COST, true);
+			Setting.setDisplayLatest(true);
+			Setting.setDisplayCost(true);
 
-			Preferences.putBoolean(Setting.KEY_INDEXES_WEIGHT, true);
+			Preferences.putBoolean(Setting.SETTING_INDEXES_WEIGHT, true);
 
-			Preferences.putBoolean(Setting.KEY_LOOPBACK, false);
+			Setting.setDebugLoopback(false);
 		}
 	}
 }

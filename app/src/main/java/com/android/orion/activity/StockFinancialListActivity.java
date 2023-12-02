@@ -113,7 +113,7 @@ public class StockFinancialListActivity extends ListActivity implements
 
 		setContentView(R.layout.activity_stock_financial_list);
 
-		mSortOrder = Preferences.getString(Setting.KEY_SORT_ORDER_FINANCIAL_LIST,
+		mSortOrder = Preferences.getString(Setting.SETTING_SORT_ORDER_FINANCIAL_LIST,
 				mSortOrderDefault);
 
 		initHeader();
@@ -297,7 +297,7 @@ public class StockFinancialListActivity extends ListActivity implements
 
 		mSortOrder = mSortOrderColumn + mSortOrderDirection;
 
-		Preferences.putString(Setting.KEY_SORT_ORDER_FINANCIAL_LIST, mSortOrder);
+		Preferences.putString(Setting.SETTING_SORT_ORDER_FINANCIAL_LIST, mSortOrder);
 
 		restartLoader();
 	}
@@ -817,25 +817,25 @@ public class StockFinancialListActivity extends ListActivity implements
 				return setRightTextViewVisibility(Setting.SETTING_DISPLAY_NET, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MONTH)) {
-				return setRightTextViewVisibility(Setting.KEY_PERIOD_MONTH, view);
+				return setRightTextViewVisibility(DatabaseContract.COLUMN_MONTH, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_WEEK)) {
-				return setRightTextViewVisibility(Setting.KEY_PERIOD_WEEK, view);
+				return setRightTextViewVisibility(DatabaseContract.COLUMN_WEEK, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_DAY)) {
-				return setRightTextViewVisibility(Setting.KEY_PERIOD_DAY, view);
+				return setRightTextViewVisibility(DatabaseContract.COLUMN_DAY, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MIN60)) {
-				return setRightTextViewVisibility(Setting.KEY_PERIOD_MIN60, view);
+				return setRightTextViewVisibility(DatabaseContract.COLUMN_MIN60, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MIN30)) {
-				return setRightTextViewVisibility(Setting.KEY_PERIOD_MIN30, view);
+				return setRightTextViewVisibility(DatabaseContract.COLUMN_MIN30, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MIN15)) {
-				return setRightTextViewVisibility(Setting.KEY_PERIOD_MIN15, view);
+				return setRightTextViewVisibility(DatabaseContract.COLUMN_MIN15, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MIN5)) {
-				return setRightTextViewVisibility(Setting.KEY_PERIOD_MIN5, view);
+				return setRightTextViewVisibility(DatabaseContract.COLUMN_MIN5, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MODIFIED)) {
 			}

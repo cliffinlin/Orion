@@ -48,7 +48,7 @@ public class SettingFragment extends PreferenceFragment implements
 										  String key) {
 		if (key.equals(Setting.SETTING_DEBUG_LOG)) {
 			Logger.setDebug(Setting.getDebugLog());
-		} else if (key.equals(Setting.KEY_LOOPBACK)) {
+		} else if (key.equals(Setting.SETTING_DEBUG_LOOPBACK)) {
 			Intent intent = new Intent(mContext, SettingLoopbackActivity.class);
 			mContext.startActivity(intent);
 		} else {

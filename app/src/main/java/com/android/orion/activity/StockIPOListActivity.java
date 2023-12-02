@@ -59,7 +59,7 @@ public class StockIPOListActivity extends ListActivity implements
 
 		setContentView(R.layout.activity_stock_ipo_list);
 
-		mSortOrder = Preferences.getString(Setting.KEY_SORT_ORDER_IPO_LIST,
+		mSortOrder = Preferences.getString(Setting.SETTING_SORT_ORDER_IPO_LIST,
 				mSortOrderDefault);
 
 		initHeader();
@@ -144,7 +144,7 @@ public class StockIPOListActivity extends ListActivity implements
 
 		mSortOrder = mSortOrderColumn + mSortOrderDirection;
 
-		Preferences.putString(Setting.KEY_SORT_ORDER_IPO_LIST, mSortOrder);
+		Preferences.putString(Setting.SETTING_SORT_ORDER_IPO_LIST, mSortOrder);
 
 		restartLoader();
 	}
@@ -370,25 +370,25 @@ public class StockIPOListActivity extends ListActivity implements
 
 			if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MIN5)) {
-				return setTextViewValue(Setting.KEY_PERIOD_MIN5, view);
+				return setTextViewValue(DatabaseContract.COLUMN_MIN5, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MIN15)) {
-				return setTextViewValue(Setting.KEY_PERIOD_MIN15, view);
+				return setTextViewValue(DatabaseContract.COLUMN_MIN15, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MIN30)) {
-				return setTextViewValue(Setting.KEY_PERIOD_MIN30, view);
+				return setTextViewValue(DatabaseContract.COLUMN_MIN30, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MIN60)) {
-				return setTextViewValue(Setting.KEY_PERIOD_MIN60, view);
+				return setTextViewValue(DatabaseContract.COLUMN_MIN60, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_DAY)) {
-				return setTextViewValue(Setting.KEY_PERIOD_DAY, view);
+				return setTextViewValue(DatabaseContract.COLUMN_DAY, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_WEEK)) {
-				return setTextViewValue(Setting.KEY_PERIOD_WEEK, view);
+				return setTextViewValue(DatabaseContract.COLUMN_WEEK, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MONTH)) {
-				return setTextViewValue(Setting.KEY_PERIOD_MONTH, view);
+				return setTextViewValue(DatabaseContract.COLUMN_MONTH, view);
 			}
 
 			return false;

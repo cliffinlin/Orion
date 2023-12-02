@@ -80,18 +80,18 @@ public class StockAnalyzer {
 		boolean result = false;
 
 		switch (stockData.getPeriod()) {
-			case Setting.KEY_PERIOD_MIN1:
-			case Setting.KEY_PERIOD_MIN5:
-			case Setting.KEY_PERIOD_MIN15:
-			case Setting.KEY_PERIOD_MIN30:
-			case Setting.KEY_PERIOD_MIN60:
+			case DatabaseContract.COLUMN_MIN1:
+			case DatabaseContract.COLUMN_MIN5:
+			case DatabaseContract.COLUMN_MIN15:
+			case DatabaseContract.COLUMN_MIN30:
+			case DatabaseContract.COLUMN_MIN60:
 				result = true;
 				break;
-			case Setting.KEY_PERIOD_DAY:
-			case Setting.KEY_PERIOD_WEEK:
-			case Setting.KEY_PERIOD_MONTH:
-			case Setting.KEY_PERIOD_QUARTER:
-			case Setting.KEY_PERIOD_YEAR:
+			case DatabaseContract.COLUMN_DAY:
+			case DatabaseContract.COLUMN_WEEK:
+			case DatabaseContract.COLUMN_MONTH:
+			case DatabaseContract.COLUMN_QUARTER:
+			case DatabaseContract.COLUMN_YEAR:
 			default:
 				break;
 		}
@@ -118,10 +118,10 @@ public class StockAnalyzer {
 			return;
 		}
 
-		loopback = Preferences.getBoolean(Setting.KEY_LOOPBACK,
+		loopback = Preferences.getBoolean(Setting.SETTING_DEBUG_LOOPBACK,
 				false);
 		if (loopback) {
-			String dateTime = Preferences.getString(Setting.KEY_LOOPBACK_DATE_TIME, "");
+			String dateTime = Preferences.getString(Setting.SETTING_DEBUG_LOOPBACK_DATE_TIME, "");
 			if (!TextUtils.isEmpty(dateTime)) {
 				calendar = Utility.getCalendar(dateTime, Utility.CALENDAR_DATE_TIME_FORMAT);
 			} else {
@@ -261,7 +261,7 @@ public class StockAnalyzer {
 				sortOrder);
 		mStockDatabaseManager.getShareBonusList(stock, shareBonusList,
 				sortOrder);
-		mStockDatabaseManager.getStockDataList(stock, Setting.KEY_PERIOD_MONTH,
+		mStockDatabaseManager.getStockDataList(stock, DatabaseContract.COLUMN_MONTH,
 				stockDataList, sortOrder);
 
 		setupTotalShare(stockFinancialList, totalShareList);
@@ -673,8 +673,8 @@ public class StockAnalyzer {
 		//stockVertexAnalyzer.analyzeOverlap(stockDataList, segmentDataList, overlapList);
 		//stockVertexAnalyzer.testShowVertextNumber(stockDataList, stockDataList);
 
-		if (Preferences.getBoolean(Setting.KEY_LOOPBACK, false)) {
-			if (Preferences.getBoolean(Setting.SETTING_DISPLAY_DIRECT, false)) {
+		if (Preferences.getBoolean(Setting.SETTING_DEBUG_LOOPBACK, false)) {
+			if (Preferences.getBoolean(Setting.SETTING_DEBUG_DIRECT, false)) {
 				stockVertexAnalyzer.debugShow(stockDataList, stockDataList);
 			}
 
@@ -1067,7 +1067,7 @@ public class StockAnalyzer {
 		stock.setDateTime(stockData.getDate(), stockData.getTime());
 		stock.setAction(period, action + stockData.getAction());
 
-		if (Setting.KEY_PERIOD_DAY.equals(period)) {
+		if (DatabaseContract.COLUMN_DAY.equals(period)) {
 			stock.setTrend(trendString);
 		}
 	}
@@ -1205,7 +1205,7 @@ public class StockAnalyzer {
 		StringBuilder actionString = new StringBuilder();
 		StringBuilder contentTitle = new StringBuilder();
 
-		if (!Preferences.getBoolean(Setting.KEY_NOTIFICATION,
+		if (!Preferences.getBoolean(Setting.SETTING_NOTIFICATION,
 				true)) {
 			return;
 		}
@@ -1224,7 +1224,7 @@ public class StockAnalyzer {
 		notifyToBuy1 = true;
 		notifyToSell1 = true;
 
-		for (String period : Setting.KEY_PERIODS) {
+		for (String period : DatabaseContract.PERIODS) {
 			if (Preferences.getBoolean(period, false)) {
 				String action = stock.getAction(period);
 

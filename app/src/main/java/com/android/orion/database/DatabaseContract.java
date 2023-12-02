@@ -115,6 +115,9 @@ public final class DatabaseContract {
 	public static final String COLUMN_R_DATE = "r_date";
 	public static final String COLUMN_TIME_TO_MARKET = "time_to_market";
 
+	public static final String[] PERIODS = {COLUMN_YEAR, COLUMN_QUARTER,
+			COLUMN_MONTH, COLUMN_WEEK, COLUMN_DAY, COLUMN_MIN60, COLUMN_MIN30,
+			COLUMN_MIN15, COLUMN_MIN5, COLUMN_MIN1};
 
 	public static final String ORDER_BY = " ORDER BY ";
 	public static final String ORDER_DIRECTION_ASC = " ASC ";

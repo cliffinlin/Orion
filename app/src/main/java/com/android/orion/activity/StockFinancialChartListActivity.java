@@ -274,7 +274,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 
 		int i = 0;
 		mStockFinancialChartList.add(new StockFinancialChart(
-				Setting.KEY_PERIODS[i]));
+				DatabaseContract.PERIODS[i]));
 		mStockFinancialChartItemMainList.add(new StockFinancialChartItemMain(
 				mStockFinancialChartList.get(i)));
 		mStockFinancialChartItemSubList.add(new StockFinancialChartItemSub(

@@ -12,7 +12,7 @@
         android:orientation="vertical" >
 
         <com.dtr.settingview.lib.SettingView
-            android:id="@+id/display_setting_view"
+            android:id="@+id/setting_view_display"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="0dp" />

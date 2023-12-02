@@ -57,11 +57,11 @@ public class StockDataChartListActivity extends BaseActivity implements
 
 	public static final int ITEM_VIEW_TYPE_MAIN = 0;
 	public static final int ITEM_VIEW_TYPE_SUB = 1;
-	public static final int LOADER_ID_STOCK_LIST = Setting.KEY_PERIODS.length + 1;
+	public static final int LOADER_ID_STOCK_LIST = DatabaseContract.PERIODS.length + 1;
 	public static final int FLING_DISTANCE = 50;
 	public static final int FLING_VELOCITY = 100;
 	public static final int REQUEST_CODE_SETTINGS = 0;
-	public static final int REQUEST_CODE_SETTING_LOOPBACK = 1;
+	public static final int REQUEST_CODE_SETTING_DEBUG_LOOPBACK = 1;
 	public static final int MESSAGE_REFRESH = 0;
 	public static final int MESSAGE_LOAD_STOCK_LIST = 1;
 
@@ -228,7 +228,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		MenuItem menuLoopback = menu.findItem(R.id.action_loopback);
-		if (Preferences.getBoolean(Setting.KEY_LOOPBACK, false)) {
+		if (Preferences.getBoolean(Setting.SETTING_DEBUG_LOOPBACK, false)) {
 			menuLoopback.setVisible(true);
 		} else {
 			menuLoopback.setVisible(false);
@@ -297,7 +297,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 
 			case R.id.action_loopback: {
 				startActivityForResult(new Intent(this,
-						SettingLoopbackActivity.class), REQUEST_CODE_SETTING_LOOPBACK);
+						SettingLoopbackActivity.class), REQUEST_CODE_SETTING_DEBUG_LOOPBACK);
 				return true;
 			}
 
@@ -317,8 +317,8 @@ public class StockDataChartListActivity extends BaseActivity implements
 					restartLoader();
 					break;
 
-				case REQUEST_CODE_SETTING_LOOPBACK:
-					for (String period : Setting.KEY_PERIODS) {
+				case REQUEST_CODE_SETTING_DEBUG_LOOPBACK:
+					for (String period : DatabaseContract.PERIODS) {
 						if (Preferences.getBoolean(period, false)) {
 							mStockDatabaseManager.deleteStockData(mStock.getId(), period);
 						}
@@ -352,7 +352,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 		if (id == LOADER_ID_STOCK_LIST) {
 			loader = getStockCursorLoader();
 		} else {
-			loader = getStockDataCursorLoader(Setting.KEY_PERIODS[id]);
+			loader = getStockDataCursorLoader(DatabaseContract.PERIODS[id]);
 		}
 
 		return loader;
@@ -411,8 +411,8 @@ public class StockDataChartListActivity extends BaseActivity implements
 			mStockDataChartItemSubList = new ArrayList<StockDataChartItemSub>();
 		}
 
-		for (int i = 0; i < Setting.KEY_PERIODS.length; i++) {
-			mStockDataChartList.add(new StockDataChart(Setting.KEY_PERIODS[i]));
+		for (int i = 0; i < DatabaseContract.PERIODS.length; i++) {
+			mStockDataChartList.add(new StockDataChart(DatabaseContract.PERIODS[i]));
 			mStockDataChartItemMainList.add(new StockDataChartItemMain(
 					mStockDataChartList.get(i)));
 			mStockDataChartItemSubList.add(new StockDataChartItemSub(
@@ -432,8 +432,8 @@ public class StockDataChartListActivity extends BaseActivity implements
 		}
 
 		mStockDatabaseManager.getStockById(mStock);
-		for (int i = 0; i < Setting.KEY_PERIODS.length; i++) {
-			if (Preferences.getBoolean(Setting.KEY_PERIODS[i], false)) {
+		for (int i = 0; i < DatabaseContract.PERIODS.length; i++) {
+			if (Preferences.getBoolean(DatabaseContract.PERIODS[i], false)) {
 				mLoaderManager.initLoader(i, null, this);
 			}
 		}
@@ -452,8 +452,8 @@ public class StockDataChartListActivity extends BaseActivity implements
 		}
 
 		mStockDatabaseManager.getStockById(mStock);
-		for (int i = 0; i < Setting.KEY_PERIODS.length; i++) {
-			if (Preferences.getBoolean(Setting.KEY_PERIODS[i], false)) {
+		for (int i = 0; i < DatabaseContract.PERIODS.length; i++) {
+			if (Preferences.getBoolean(DatabaseContract.PERIODS[i], false)) {
 				mLoaderManager.restartLoader(i, null, this);
 			}
 		}
@@ -591,15 +591,15 @@ public class StockDataChartListActivity extends BaseActivity implements
 					dateString = mStockData.getDate();
 					timeString = mStockData.getTime();
 
-					if (mStockData.getPeriod().equals(Setting.KEY_PERIOD_YEAR)
+					if (mStockData.getPeriod().equals(DatabaseContract.COLUMN_YEAR)
 							|| mStockData.getPeriod().equals(
-							Setting.KEY_PERIOD_QUARTER)
+							DatabaseContract.COLUMN_QUARTER)
 							|| mStockData.getPeriod().equals(
-							Setting.KEY_PERIOD_MONTH)
+							DatabaseContract.COLUMN_MONTH)
 							|| mStockData.getPeriod().equals(
-							Setting.KEY_PERIOD_WEEK)
+							DatabaseContract.COLUMN_WEEK)
 							|| mStockData.getPeriod().equals(
-							Setting.KEY_PERIOD_DAY)) {
+							DatabaseContract.COLUMN_DAY)) {
 						stockDataChart.mXValues.add(dateString);
 					} else {
 						stockDataChart.mXValues.add(dateString + " "
@@ -884,8 +884,8 @@ public class StockDataChartListActivity extends BaseActivity implements
 		mStockDataChartItemList.clear();
 
 		mStockDatabaseManager.getStockById(mStock);
-		for (int i = 0; i < Setting.KEY_PERIODS.length; i++) {
-			if (Preferences.getBoolean(Setting.KEY_PERIODS[i], false)) {
+		for (int i = 0; i < DatabaseContract.PERIODS.length; i++) {
+			if (Preferences.getBoolean(DatabaseContract.PERIODS[i], false)) {
 				mStockDataChartItemList.add(mStockDataChartItemMainList.get(i));
 				mStockDataChartItemList.add(mStockDataChartItemSubList.get(i));
 			}

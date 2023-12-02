@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="@string/general">
+    <PreferenceCategory android:title="@string/setting_general">
         <com.android.orion.preference.CustomSwitchPreference
             android:defaultValue="true"
-            android:key="notification"
-            android:title="@string/notification" />
+            android:key="SETTING_NOTIFICATION"
+            android:title="@string/setting_notification" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/period">
+    <PreferenceCategory android:title="@string/setting_period">
         <com.android.orion.preference.CustomSwitchPreference
             android:key="month"
-            android:title="@string/period_month" />
+            android:title="@string/setting_period_month" />
         <com.android.orion.preference.CustomSwitchPreference
             android:key="week"
-            android:title="@string/period_week" />
+            android:title="@string/setting_period_week" />
         <com.android.orion.preference.CustomSwitchPreference
             android:defaultValue="true"
             android:key="day"
-            android:title="@string/period_day" />
+            android:title="@string/setting_period_day" />
         <com.android.orion.preference.CustomSwitchPreference
             android:defaultValue="true"
             android:key="min60"
-            android:title="@string/period_60min" />
+            android:title="@string/setting_period_min60" />
         <com.android.orion.preference.CustomSwitchPreference
             android:defaultValue="true"
             android:key="min30"
-            android:title="@string/period_30min" />
+            android:title="@string/setting_period_min30" />
         <com.android.orion.preference.CustomSwitchPreference
             android:key="min15"
-            android:title="@string/period_15min" />
+            android:title="@string/setting_period_min15" />
         <com.android.orion.preference.CustomSwitchPreference
             android:key="min5"
-            android:title="@string/period_5min" />
+            android:title="@string/setting_period_min5" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/display">
         <com.android.orion.preference.CustomSwitchPreference
@@ -86,21 +86,21 @@
             android:key="SETTING_DISPLAY_ROI"
             android:title="@string/roi" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/indexes">
+    <PreferenceCategory android:title="@string/setting_indexes">
         <com.android.orion.preference.CustomSwitchPreference
             android:defaultValue="true"
-            android:key="indexes_weight"
-            android:title="@string/weight" />
+            android:key="SETTING_INDEXES_WEIGHT"
+            android:title="@string/setting_indexes_weight" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/setting_debug">
         <com.android.orion.preference.CustomSwitchPreference
             android:key="SETTING_DEBUG_LOG"
             android:title="@string/setting_debug_log" />
         <com.android.orion.preference.CustomSwitchPreference
-            android:key="loopback"
-            android:title="@string/loopback" />
+            android:key="SETTING_DEBUG_LOOPBACK"
+            android:title="@string/setting_debug_loopback" />
         <com.android.orion.preference.CustomSwitchPreference
-            android:key="SETTING_DISPLAY_DIRECT"
+            android:key="SETTING_DEBUG_DIRECT"
             android:title="@string/direct" />
     </PreferenceCategory>
 

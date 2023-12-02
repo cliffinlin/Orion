@@ -61,25 +61,25 @@ public class SinaFinance extends StockDataProvider {
 
 	@Override
 	public int getAvailableHistoryLength(String period) {
-		if (period.equals(Setting.KEY_PERIOD_MIN1)) {
+		if (period.equals(DatabaseContract.COLUMN_MIN1)) {
 			return Constant.DOWNLOAD_HISTORY_LENGTH_NONE;
-		} else if (period.equals(Setting.KEY_PERIOD_MIN5)) {
+		} else if (period.equals(DatabaseContract.COLUMN_MIN5)) {
 			return DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN5;
-		} else if (period.equals(Setting.KEY_PERIOD_MIN15)) {
+		} else if (period.equals(DatabaseContract.COLUMN_MIN15)) {
 			return DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN15;
-		} else if (period.equals(Setting.KEY_PERIOD_MIN30)) {
+		} else if (period.equals(DatabaseContract.COLUMN_MIN30)) {
 			return DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN30;
-		} else if (period.equals(Setting.KEY_PERIOD_MIN60)) {
+		} else if (period.equals(DatabaseContract.COLUMN_MIN60)) {
 			return DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN60;
-		} else if (period.equals(Setting.KEY_PERIOD_DAY)) {
+		} else if (period.equals(DatabaseContract.COLUMN_DAY)) {
 			return Constant.DOWNLOAD_HISTORY_LENGTH_UNLIMITED;
-		} else if (period.equals(Setting.KEY_PERIOD_WEEK)) {
+		} else if (period.equals(DatabaseContract.COLUMN_WEEK)) {
 			return Constant.DOWNLOAD_HISTORY_LENGTH_UNLIMITED;
-		} else if (period.equals(Setting.KEY_PERIOD_MONTH)) {
+		} else if (period.equals(DatabaseContract.COLUMN_MONTH)) {
 			return Constant.DOWNLOAD_HISTORY_LENGTH_UNLIMITED;
-		} else if (period.equals(Setting.KEY_PERIOD_QUARTER)) {
+		} else if (period.equals(DatabaseContract.COLUMN_QUARTER)) {
 			return Constant.DOWNLOAD_HISTORY_LENGTH_NONE;
-		} else if (period.equals(Setting.KEY_PERIOD_YEAR)) {
+		} else if (period.equals(DatabaseContract.COLUMN_YEAR)) {
 			return Constant.DOWNLOAD_HISTORY_LENGTH_NONE;
 		} else {
 		}
@@ -549,7 +549,7 @@ public class SinaFinance extends StockDataProvider {
 				JSONObject jsonObject = jsonArray.getJSONObject(i);
 
 				if (jsonObject != null) {
-					dateTimeString = jsonObject.getString("day");
+					dateTimeString = jsonObject.getString(DatabaseContract.COLUMN_DAY);
 					if (!TextUtils.isEmpty(dateTimeString)) {
 						dateTime = dateTimeString.trim().split(" ");
 						switch (dateTime.length) {
@@ -771,10 +771,10 @@ public class SinaFinance extends StockDataProvider {
 				}
 			}
 
-			exportStockDataFile(stock, Setting.KEY_PERIOD_MIN5, StockDataMin5List);
-			exportStockDataFile(stock, Setting.KEY_PERIOD_MIN15, StockDataMin15List);
-			exportStockDataFile(stock, Setting.KEY_PERIOD_MIN30, StockDataMin30List);
-			exportStockDataFile(stock, Setting.KEY_PERIOD_MIN60, StockDataMin60List);
+			exportStockDataFile(stock, DatabaseContract.COLUMN_MIN5, StockDataMin5List);
+			exportStockDataFile(stock, DatabaseContract.COLUMN_MIN15, StockDataMin15List);
+			exportStockDataFile(stock, DatabaseContract.COLUMN_MIN30, StockDataMin30List);
+			exportStockDataFile(stock, DatabaseContract.COLUMN_MIN60, StockDataMin60List);
 			Utility.deleteFile(fileName);
 		} catch (Exception e) {
 			e.printStackTrace();

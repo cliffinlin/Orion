@@ -36,7 +36,6 @@ import com.android.orion.view.SyncHorizontalScrollView;
 
 import java.util.ArrayList;
 
-import static com.android.orion.setting.Setting.KEY_PERIOD_DAY;
 
 public class StockTrendListActivity extends ListActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
@@ -132,7 +131,7 @@ public class StockTrendListActivity extends ListActivity implements
 
 		setContentView(R.layout.activity_stock_trend_list);
 
-		mSortOrder = Preferences.getString(Setting.KEY_SORT_ORDER_STOCK_TREND_LIST,
+		mSortOrder = Preferences.getString(Setting.SETTING_SORT_ORDER_STOCK_TREND_LIST,
 				mSortOrderDefault);
 
 		initHeader();
@@ -267,7 +266,7 @@ public class StockTrendListActivity extends ListActivity implements
 
 		mSortOrder = mSortOrderColumn + mSortOrderDirection;
 
-		Preferences.putString(Setting.KEY_SORT_ORDER_STOCK_TREND_LIST, mSortOrder);
+		Preferences.putString(Setting.SETTING_SORT_ORDER_STOCK_TREND_LIST, mSortOrder);
 
 		restartLoader();
 	}
@@ -441,7 +440,7 @@ public class StockTrendListActivity extends ListActivity implements
 							Stock.INVALID_ID);
 					selection = "(" + DatabaseContract.COLUMN_STOCK_ID + " = " + stockId + ") "
 							+ " AND "
-							+ "(" + DatabaseContract.COLUMN_PERIOD + " = \'" + KEY_PERIOD_DAY + "\') ";
+							+ "(" + DatabaseContract.COLUMN_PERIOD + " = \'" + DatabaseContract.COLUMN_DAY + "\') ";
 					selectionArgs = null;
 					mStock.setId(stockId);
 				} else {

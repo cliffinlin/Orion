@@ -18,7 +18,7 @@ public class ListActivity extends StorageActivity {
 		super.onCreate(savedInstanceState);
 
 		if (!Preferences.getBoolean(
-				Setting.KEY_NOTIFICATION, false)) {
+				Setting.SETTING_NOTIFICATION, false)) {
 			Toast.makeText(
 					this,
 					getResources().getString(R.string.notification_is_off),
@@ -26,7 +26,7 @@ public class ListActivity extends StorageActivity {
 		}
 
 		if (Preferences.getBoolean(
-				Setting.KEY_LOOPBACK, false)) {
+				Setting.SETTING_DEBUG_LOOPBACK, false)) {
 			Toast.makeText(
 					this,
 					getResources().getString(R.string.loopback_is_on),

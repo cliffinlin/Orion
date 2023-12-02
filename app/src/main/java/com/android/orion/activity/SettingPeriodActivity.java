@@ -1,15 +1,11 @@
 package com.android.orion.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.ArrayMap;
-import android.widget.Toast;
 
 import com.android.orion.R;
 import com.android.orion.setting.Setting;
-import com.android.orion.utility.Logger;
 import com.android.orion.utility.Preferences;
-import com.dtr.settingview.lib.SettingButton;
 import com.dtr.settingview.lib.SettingView;
 import com.dtr.settingview.lib.entity.SettingData;
 import com.dtr.settingview.lib.entity.SettingViewItemData;
@@ -18,7 +14,7 @@ import com.dtr.settingview.lib.item.SwitchItemView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SettingDebugActivity extends BaseActivity {
+public class SettingPeriodActivity extends BaseActivity {
 
 	SettingData mItemData;
 	SettingViewItemData mItemViewData;
@@ -31,38 +27,30 @@ public class SettingDebugActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_setting_debug);
+		setContentView(R.layout.activity_setting_period);
 		initView();
 	}
 
 	private void initView() {
-
-		mSettingView = findViewById(R.id.setting_view_debug);
+		mSettingView = findViewById(R.id.setting_view_period);
 		mSettingView.setOnSettingViewItemSwitchListener(new SettingView.onSettingViewItemSwitchListener() {
 
 			@Override
 			public void onSwitchChanged(int index, boolean isChecked) {
 				Preferences.putBoolean(mKeyMap.get(index), isChecked);
-
-				if (mKeyMap.get(index).equals(Setting.SETTING_DEBUG_LOG)) {
-					Logger.setDebug(isChecked);
-					if (isChecked) {
-						Toast.makeText(SettingDebugActivity.this, getString(R.string.log_is_on), Toast.LENGTH_SHORT).show();
-					} else {
-						Toast.makeText(SettingDebugActivity.this, getString(R.string.log_is_off), Toast.LENGTH_SHORT).show();
-					}
-				} else if (mKeyMap.get(index).equals(Setting.SETTING_DEBUG_LOOPBACK)) {
-					if (isChecked) {
-						Intent intent = new Intent(mContext, SettingLoopbackActivity.class);
-						mContext.startActivity(intent);
-					}
-				}
 			}
 		});
 
-		initView(Setting.SETTING_DEBUG_LOG, R.string.setting_debug_log);
-		initView(Setting.SETTING_DEBUG_DIRECT, R.string.setting_debug_direct);
-		initView(Setting.SETTING_DEBUG_LOOPBACK, R.string.setting_debug_loopback);
+//		initView(Setting.SETTING_PERIOD_YEAR, R.string.setting_period_year);
+//		initView(Setting.SETTING_PERIOD_QUARTER, R.string.setting_period_quarter);
+		initView(Setting.SETTING_PERIOD_MONTH, R.string.setting_period_month);
+		initView(Setting.SETTING_PERIOD_WEEK, R.string.setting_period_week);
+		initView(Setting.SETTING_PERIOD_DAY, R.string.setting_period_day);
+		initView(Setting.SETTING_PERIOD_MIN60, R.string.setting_period_min60);
+		initView(Setting.SETTING_PERIOD_MIN30, R.string.setting_period_min30);
+		initView(Setting.SETTING_PERIOD_MIN15, R.string.setting_period_min15);
+		initView(Setting.SETTING_PERIOD_MIN5, R.string.setting_period_min5);
+//		initView(Setting.SETTING_PERIOD_MIN1, R.string.setting_period_min1);
 
 		mSettingView.setAdapter(mListData);
 	}
@@ -74,7 +62,7 @@ public class SettingDebugActivity extends BaseActivity {
 		mItemData.setChecked(Preferences.getBoolean(settingKey, false));
 		mItemViewData = new SettingViewItemData();
 		mItemViewData.setData(mItemData);
-		mItemViewData.setItemView(new SwitchItemView(SettingDebugActivity.this));
+		mItemViewData.setItemView(new SwitchItemView(SettingPeriodActivity.this));
 		mListData.add(mItemViewData);
 	}
 }

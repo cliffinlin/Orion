@@ -245,7 +245,7 @@ public class StockFavoriteDealListActivity extends ListActivity implements
 			mFilterType = FILTER_TYPE_ALL;
 		}
 
-		mSortOrder = Preferences.getString(Setting.KEY_SORT_ORDER_DEAL_LIST,
+		mSortOrder = Preferences.getString(Setting.SETTING_SORT_ORDER_DEAL_LIST,
 				mSortOrderDefault);
 
 		initHeader();
@@ -419,7 +419,7 @@ public class StockFavoriteDealListActivity extends ListActivity implements
 
 		mSortOrder = mSortOrderColumn + mSortOrderDirection;
 
-		Preferences.putString(Setting.KEY_SORT_ORDER_DEAL_LIST, mSortOrder);
+		Preferences.putString(Setting.SETTING_SORT_ORDER_DEAL_LIST, mSortOrder);
 
 		restartLoader();
 	}

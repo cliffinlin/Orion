@@ -132,25 +132,25 @@ public abstract class StockDataProvider extends StockAnalyzer {
 	public int getPeriodMinutes(String period) {
 		int result = 0;
 
-		if (period.equals(Setting.KEY_PERIOD_MIN1)) {
+		if (period.equals(DatabaseContract.COLUMN_MIN1)) {
 			result = PERIOD_MINUTES_MIN1;
-		} else if (period.equals(Setting.KEY_PERIOD_MIN5)) {
+		} else if (period.equals(DatabaseContract.COLUMN_MIN5)) {
 			result = PERIOD_MINUTES_MIN5;
-		} else if (period.equals(Setting.KEY_PERIOD_MIN15)) {
+		} else if (period.equals(DatabaseContract.COLUMN_MIN15)) {
 			result = PERIOD_MINUTES_MIN15;
-		} else if (period.equals(Setting.KEY_PERIOD_MIN30)) {
+		} else if (period.equals(DatabaseContract.COLUMN_MIN30)) {
 			result = PERIOD_MINUTES_MIN30;
-		} else if (period.equals(Setting.KEY_PERIOD_MIN60)) {
+		} else if (period.equals(DatabaseContract.COLUMN_MIN60)) {
 			result = PERIOD_MINUTES_MIN60;
-		} else if (period.equals(Setting.KEY_PERIOD_DAY)) {
+		} else if (period.equals(DatabaseContract.COLUMN_DAY)) {
 			result = PERIOD_MINUTES_DAY;
-		} else if (period.equals(Setting.KEY_PERIOD_WEEK)) {
+		} else if (period.equals(DatabaseContract.COLUMN_WEEK)) {
 			result = PERIOD_MINUTES_WEEK;
-		} else if (period.equals(Setting.KEY_PERIOD_MONTH)) {
+		} else if (period.equals(DatabaseContract.COLUMN_MONTH)) {
 			result = PERIOD_MINUTES_MONTH;
-		} else if (period.equals(Setting.KEY_PERIOD_QUARTER)) {
+		} else if (period.equals(DatabaseContract.COLUMN_QUARTER)) {
 			result = PERIOD_MINUTES_QUARTER;
-		} else if (period.equals(Setting.KEY_PERIOD_YEAR)) {
+		} else if (period.equals(DatabaseContract.COLUMN_YEAR)) {
 			result = PERIOD_MINUTES_YEAR;
 		} else {
 		}
@@ -163,18 +163,18 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		int n = 0;
 
 		switch (stockData.getPeriod()) {
-			case Setting.KEY_PERIOD_MIN1:
+			case DatabaseContract.COLUMN_MIN1:
 				break;
-			case Setting.KEY_PERIOD_MIN5:
+			case DatabaseContract.COLUMN_MIN5:
 				n = size - MAX_CONTENT_LENGTH_MIN5;
 				break;
-			case Setting.KEY_PERIOD_MIN15:
+			case DatabaseContract.COLUMN_MIN15:
 				n = size - MAX_CONTENT_LENGTH_MIN15;
 				break;
-			case Setting.KEY_PERIOD_MIN30:
+			case DatabaseContract.COLUMN_MIN30:
 				n = size - MAX_CONTENT_LENGTH_MIN30;
 				break;
-			case Setting.KEY_PERIOD_MIN60:
+			case DatabaseContract.COLUMN_MIN60:
 				n = size - MAX_CONTENT_LENGTH_MIN60;
 				break;
 			default:
@@ -374,28 +374,28 @@ public abstract class StockDataProvider extends StockAnalyzer {
 					result = 1;
 
 					switch (period) {
-						case Setting.KEY_PERIOD_MIN60:
+						case DatabaseContract.COLUMN_MIN60:
 							result += scheduleMinutes
 									/ Constant.SCHEDULE_INTERVAL_MIN60;
 							break;
-						case Setting.KEY_PERIOD_MIN30:
+						case DatabaseContract.COLUMN_MIN30:
 							result += scheduleMinutes
 									/ Constant.SCHEDULE_INTERVAL_MIN30;
 							break;
-						case Setting.KEY_PERIOD_MIN15:
+						case DatabaseContract.COLUMN_MIN15:
 							result += scheduleMinutes
 									/ Constant.SCHEDULE_INTERVAL_MIN15;
 							break;
-						case Setting.KEY_PERIOD_MIN5:
+						case DatabaseContract.COLUMN_MIN5:
 							result += scheduleMinutes
 									/ Constant.SCHEDULE_INTERVAL_MIN5;
 							break;
 					}
 				}
 			} else if (Market.isLunchTime(Calendar.getInstance())) {
-				if (period.equals(Setting.KEY_PERIOD_MONTH)
-						|| period.equals(Setting.KEY_PERIOD_WEEK)
-						|| period.equals(Setting.KEY_PERIOD_DAY)) {
+				if (period.equals(DatabaseContract.COLUMN_MONTH)
+						|| period.equals(DatabaseContract.COLUMN_WEEK)
+						|| period.equals(DatabaseContract.COLUMN_DAY)) {
 					if (Market.isOutOfDateToday(stockData.getDate())) {
 						result = 1;
 					}
@@ -407,16 +407,16 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				}
 
 				switch (period) {
-					case Setting.KEY_PERIOD_MIN60:
+					case DatabaseContract.COLUMN_MIN60:
 						result = 2;
 						break;
-					case Setting.KEY_PERIOD_MIN30:
+					case DatabaseContract.COLUMN_MIN30:
 						result = 4;
 						break;
-					case Setting.KEY_PERIOD_MIN15:
+					case DatabaseContract.COLUMN_MIN15:
 						result = 8;
 						break;
-					case Setting.KEY_PERIOD_MIN5:
+					case DatabaseContract.COLUMN_MIN5:
 						result = 24;
 						break;
 				}
@@ -426,21 +426,21 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				}
 
 				switch (period) {
-					case Setting.KEY_PERIOD_MONTH:
-					case Setting.KEY_PERIOD_WEEK:
-					case Setting.KEY_PERIOD_DAY:
+					case DatabaseContract.COLUMN_MONTH:
+					case DatabaseContract.COLUMN_WEEK:
+					case DatabaseContract.COLUMN_DAY:
 						result = 1;
 						break;
-					case Setting.KEY_PERIOD_MIN60:
+					case DatabaseContract.COLUMN_MIN60:
 						result = 4;
 						break;
-					case Setting.KEY_PERIOD_MIN30:
+					case DatabaseContract.COLUMN_MIN30:
 						result = 8;
 						break;
-					case Setting.KEY_PERIOD_MIN15:
+					case DatabaseContract.COLUMN_MIN15:
 						result = 16;
 						break;
-					case Setting.KEY_PERIOD_MIN5:
+					case DatabaseContract.COLUMN_MIN5:
 						result = 48;
 						break;
 				}
@@ -772,7 +772,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			return result;
 		}
 
-		for (String period : Setting.KEY_PERIODS) {
+		for (String period : DatabaseContract.PERIODS) {
 			if (Preferences.getBoolean(period, false)) {
 				result = downloadStockDataHistory(stock, period);
 			}
@@ -840,9 +840,9 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			return result;
 		}
 
-		for (String period : Setting.KEY_PERIODS) {
+		for (String period : DatabaseContract.PERIODS) {
 			if (Preferences.getBoolean(period, false)) {
-				if (Setting.KEY_PERIOD_DAY.equals(period)) {
+				if (DatabaseContract.COLUMN_DAY.equals(period)) {
 					result = downloadStockDataRealTime(stock, period);
 				}
 			}
@@ -934,9 +934,9 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		try {
 			loadIndexComponentStockList(index, stockList);
 
-			weightOn = Preferences.getBoolean(Setting.KEY_INDEXES_WEIGHT, false);
+			weightOn = Preferences.getBoolean(Setting.SETTING_INDEXES_WEIGHT, false);
 
-			for (String period : Setting.KEY_PERIODS) {
+			for (String period : DatabaseContract.PERIODS) {
 				if (!Preferences.getBoolean(period, false)) {
 					continue;
 				}
@@ -1032,7 +1032,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 				updateDatabase(index, period, indexStockDataList);
 
-				if (period.equals(Setting.KEY_PERIOD_DAY) && (indexStockDataList.size() > 1)) {
+				if (period.equals(DatabaseContract.COLUMN_DAY) && (indexStockDataList.size() > 1)) {
 					double prevPrice = indexStockDataList.get(indexStockDataList.size() - 2).getClose();
 					double price = indexStockDataList.get(indexStockDataList.size() - 1).getClose();
 					double net = 0;
@@ -1165,7 +1165,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				}
 
 				if (true) {
-					for (String period : Setting.KEY_PERIODS) {
+					for (String period : DatabaseContract.PERIODS) {
 						if (Preferences.getBoolean(period, false)) {
 							analyze(stock, period);
 						}

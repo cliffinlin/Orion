@@ -46,6 +46,6 @@
         android:id="@+id/action_loopback"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="@string/loopback" />
+        android:title="@string/setting_debug_loopback" />
 
 </menu>

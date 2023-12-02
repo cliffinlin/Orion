@@ -5,47 +5,46 @@ import com.android.orion.utility.Preferences;
 
 public class Setting {
 
-	public static final String KEY_PREFERENCES_INIT = "preferences_init";
+	public static final String SETTING_PREFERENCES_INIT = "SETTING_PREFERENCES_INIT";
 
-	public static final String KEY_NOTIFICATION = "notification";
+	public static final String SETTING_NOTIFICATION = "SETTING_NOTIFICATION";
 
-	public static final String KEY_PERIOD_YEAR = DatabaseContract.COLUMN_YEAR;
-	public static final String KEY_PERIOD_QUARTER = DatabaseContract.COLUMN_QUARTER;
-	public static final String KEY_PERIOD_MONTH = DatabaseContract.COLUMN_MONTH;
-	public static final String KEY_PERIOD_WEEK = DatabaseContract.COLUMN_WEEK;
-	public static final String KEY_PERIOD_DAY = DatabaseContract.COLUMN_DAY;
-	public static final String KEY_PERIOD_MIN60 = DatabaseContract.COLUMN_MIN60;
-	public static final String KEY_PERIOD_MIN30 = DatabaseContract.COLUMN_MIN30;
-	public static final String KEY_PERIOD_MIN15 = DatabaseContract.COLUMN_MIN15;
-	public static final String KEY_PERIOD_MIN5 = DatabaseContract.COLUMN_MIN5;
-	public static final String KEY_PERIOD_MIN1 = DatabaseContract.COLUMN_MIN1;
+	public static final String SETTING_PERIOD_YEAR = DatabaseContract.COLUMN_YEAR;
+	public static final String SETTING_PERIOD_QUARTER = DatabaseContract.COLUMN_QUARTER;
+	public static final String SETTING_PERIOD_MONTH = DatabaseContract.COLUMN_MONTH;
+	public static final String SETTING_PERIOD_WEEK = DatabaseContract.COLUMN_WEEK;
+	public static final String SETTING_PERIOD_DAY = DatabaseContract.COLUMN_DAY;
+	public static final String SETTING_PERIOD_MIN60 = DatabaseContract.COLUMN_MIN60;
+	public static final String SETTING_PERIOD_MIN30 = DatabaseContract.COLUMN_MIN30;
+	public static final String SETTING_PERIOD_MIN15 = DatabaseContract.COLUMN_MIN15;
+	public static final String SETTING_PERIOD_MIN5 = DatabaseContract.COLUMN_MIN5;
+	public static final String SETTING_PERIOD_MIN1 = DatabaseContract.COLUMN_MIN1;
 
-	public static final String[] KEY_PERIODS = {KEY_PERIOD_YEAR, KEY_PERIOD_QUARTER,
-			KEY_PERIOD_MONTH, KEY_PERIOD_WEEK, KEY_PERIOD_DAY, KEY_PERIOD_MIN60, KEY_PERIOD_MIN30,
-			KEY_PERIOD_MIN15, KEY_PERIOD_MIN5, KEY_PERIOD_MIN1};
+	public static final String SETTING_INDEXES_WEIGHT = "SETTING_INDEXES_WEIGHT";
 
-	public static final String KEY_INDEXES_WEIGHT = "indexes_weight";
+	public static final String SETTING_SORT_ORDER = "SETTING_SORT_ORDER";
+	public static final String SETTING_SORT_ORDER_IPO_LIST = "SETTING_SORT_ORDER_IPO_LIST";
+	public static final String SETTING_SORT_ORDER_COMPONENT_LIST = "SETTING_SORT_ORDER_COMPONENT_LIST";
+	public static final String SETTING_SORT_ORDER_STOCK_LIST = "SETTING_SORT_ORDER_STOCK_LIST";
+	public static final String SETTING_SORT_ORDER_STOCK_TREND_LIST = "SETTING_SORT_ORDER_STOCK_TREND_LIST";
+	public static final String SETTING_SORT_ORDER_FINANCIAL_LIST = "SETTING_SORT_ORDER_FINANCIAL_LIST";
+	public static final String SETTING_SORT_ORDER_DEAL_LIST = "SETTING_SORT_ORDER_DEAL_LIST";
+	public static final String SETTING_SORT_ORDER_QUANT_LIST = "SETTING_SORT_ORDER_QUANT_LIST";
 
-	public static final String KEY_SORT_ORDER_IPO_LIST = "sort_order_ipo_list";
-	public static final String KEY_SORT_ORDER_COMPONENT_LIST = "sort_order_component_list";
-	public static final String KEY_SORT_ORDER_STOCK_LIST = "sort_order_stock_list";
-	public static final String KEY_SORT_ORDER_STOCK_TREND_LIST = "sort_order_stock_trend_list";
-	public static final String KEY_SORT_ORDER_FINANCIAL_LIST = "sort_order_financial_list";
-	public static final String KEY_SORT_ORDER_DEAL_LIST = "sort_order_deal_list";
-	public static final String KEY_SORT_ORDER_QUANT_LIST = "sort_order_quant_list";
+	public static final String SETTING_STOCK_FILTER = "SETTING_STOCK_FILTER";
+	public static final String SETTING_STOCK_FILTER_ENABLED = "SETTING_STOCK_FILTER_ENABLED";
+	public static final String SETTING_STOCK_FILTER_FAVORITE = "SETTING_STOCK_FILTER_FAVORITE";
+	public static final String SETTING_STOCK_FILTER_HOLD = "SETTING_STOCK_FILTER_HOLD";
+	public static final String SETTING_STOCK_FILTER_ROI = "SETTING_STOCK_FILTER_ROI";
+	public static final String SETTING_STOCK_FILTER_RATE = "SETTING_STOCK_FILTER_RATE";
+	public static final String SETTING_STOCK_FILTER_ROE = "SETTING_STOCK_FILTER_ROE";
+	public static final String SETTING_STOCK_FILTER_PE = "SETTING_STOCK_FILTER_PE";
+	public static final String SETTING_STOCK_FILTER_PB = "SETTING_STOCK_FILTER_PB";
+	public static final String SETTING_STOCK_FILTER_DIVIDEND = "SETTING_STOCK_FILTER_DIVIDEND";
+	public static final String SETTING_STOCK_FILTER_YIELD = "SETTING_STOCK_FILTER_YIELD";
+	public static final String SETTING_STOCK_FILTER_DIVIDEND_RATIO = "SETTING_STOCK_FILTER_DIVIDEND_RATIO";
 
-	public static final String KEY_STOCK_FILTER_ENABLED = "stock_filter_enabled";
-	public static final String KEY_STOCK_FILTER_FAVORITE = "stock_filter_favorite";
-	public static final String KEY_STOCK_FILTER_HOLD = "stock_filter_hold";
-	public static final String KEY_STOCK_FILTER_ROI = "stock_filter_roi";
-	public static final String KEY_STOCK_FILTER_RATE = "stock_filter_rate";
-	public static final String KEY_STOCK_FILTER_ROE = "stock_filter_roe";
-	public static final String KEY_STOCK_FILTER_PE = "stock_filter_pe";
-	public static final String KEY_STOCK_FILTER_PB = "stock_filter_pb";
-	public static final String KEY_STOCK_FILTER_DIVIDEND = "stock_filter_dividend";
-	public static final String KEY_STOCK_FILTER_YIELD = "stock_filter_yield";
-	public static final String KEY_STOCK_FILTER_DIVIDEND_RATIO = "stock_filter_dividend_ratio";
-
+	public static final String SETTING_DISPLAY = "SETTING_DISPLAY";
 	public static final String SETTING_DISPLAY_NET = "SETTING_DISPLAY_NET";
 	public static final String SETTING_DISPLAY_CANDLE = "SETTING_DISPLAY_CANDLE";
 	public static final String SETTING_DISPLAY_DRAW = "SETTING_DISPLAY_DRAW";
@@ -63,14 +62,13 @@ public class Setting {
 	public static final String SETTING_DISPLAY_ROI = "SETTING_DISPLAY_ROI";
 
 	public static final String SETTING_DISPLAY_THRESHOLD = "SETTING_DISPLAY_THRESHOLD";
-	public static final String SETTING_DISPLAY_DIRECT = "SETTING_DISPLAY_DIRECT";
 	public static final String SETTING_DISPLAY_QUANT = "SETTING_DISPLAY_QUANT";
 
 	private static final String SETTING_DEBUG = "SETTING_DEBUG";
 	public static final String SETTING_DEBUG_LOG = "SETTING_DEBUG_LOG";
-
-	public static final String KEY_LOOPBACK = "loopback";
-	public static final String KEY_LOOPBACK_DATE_TIME = "loopback_date_time";
+	public static final String SETTING_DEBUG_DIRECT = "SETTING_DEBUG_DIRECT";
+	public static final String SETTING_DEBUG_LOOPBACK = "SETTING_DEBUG_LOOPBACK";
+	public static final String SETTING_DEBUG_LOOPBACK_DATE_TIME = "SETTING_DEBUG_LOOPBACK_DATE_TIME";
 
 	private Setting() {
 	}
@@ -211,14 +209,6 @@ public class Setting {
 		Preferences.putBoolean(SETTING_DISPLAY_THRESHOLD, value);
 	}
 
-	public static boolean getDisplayDirect() {
-		return Preferences.getBoolean(SETTING_DISPLAY_DIRECT, true);
-	}
-
-	public static void setDisplayDirect(boolean value) {
-		Preferences.putBoolean(SETTING_DISPLAY_DIRECT, value);
-	}
-
 	public static boolean getDisplayQuant() {
 		return Preferences.getBoolean(SETTING_DISPLAY_QUANT, true);
 	}
@@ -231,7 +221,31 @@ public class Setting {
 		return Preferences.getBoolean(SETTING_DEBUG_LOG, false);
 	}
 
-	public static void setDebugLog(boolean log) {
-		Preferences.putBoolean(SETTING_DEBUG_LOG, log);
+	public static void setDebugLog(boolean value) {
+		Preferences.putBoolean(SETTING_DEBUG_LOG, value);
+	}
+
+	public static boolean getDebugDirect() {
+		return Preferences.getBoolean(SETTING_DEBUG_DIRECT, true);
+	}
+
+	public static void setDebugDirect(boolean value) {
+		Preferences.putBoolean(SETTING_DEBUG_DIRECT, value);
+	}
+
+	public static boolean getDebugLoopback() {
+		return Preferences.getBoolean(SETTING_DEBUG_LOOPBACK, false);
+	}
+
+	public static void setDebugLoopback(boolean value) {
+		Preferences.putBoolean(SETTING_DEBUG_LOOPBACK, value);
+	}
+
+	public static String getDebugLoopbackDateTime() {
+		return Preferences.getString(SETTING_DEBUG_LOOPBACK_DATE_TIME, "");
+	}
+
+	public static void setDebugLoopbackDateTime(String value) {
+		Preferences.putString(SETTING_DEBUG_LOOPBACK_DATE_TIME, value);
 	}
 }
