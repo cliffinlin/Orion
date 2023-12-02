@@ -38,7 +38,7 @@
             android:key="SETTING_DISPLAY_NET"
             android:title="@string/net" />
         <com.android.orion.preference.CustomSwitchPreference
-            android:key="display_threshold"
+            android:key="SETTING_DISPLAY_THRESHOLD"
             android:title="@string/stock_threshold" />
         <com.android.orion.preference.CustomSwitchPreference
             android:key="SETTING_DISPLAY_CANDLE"
@@ -56,34 +56,34 @@
             android:key="SETTING_DISPLAY_LINE"
             android:title="@string/line" />
         <com.android.orion.preference.CustomSwitchPreference
-            android:key="display_overlap"
+            android:key="SETTING_DISPLAY_OVERLAP"
             android:title="@string/overlap" />
         <com.android.orion.preference.CustomSwitchPreference
-            android:key="display_latest"
+            android:key="SETTING_DISPLAY_LATEST"
             android:title="@string/latest" />
         <com.android.orion.preference.CustomSwitchPreference
-            android:key="display_cost"
+            android:key="SETTING_DISPLAY_COST"
             android:title="@string/cost" />
         <com.android.orion.preference.CustomSwitchPreference
-            android:key="display_deal"
+            android:key="SETTING_DISPLAY_DEAL"
             android:title="@string/deal" />
         <com.android.orion.preference.CustomSwitchPreference
-            android:key="display_quant"
+            android:key="SETTING_DISPLAY_QUANT"
             android:title="@string/quant" />
         <com.android.orion.preference.CustomSwitchPreference
-            android:key="display_bonus"
+            android:key="SETTING_DISPLAY_BONUS"
             android:title="@string/bonus" />
         <com.android.orion.preference.CustomSwitchPreference
-            android:key="display_bps"
+            android:key="SETTING_DISPLAY_BPS"
             android:title="@string/book_value_per_share" />
         <com.android.orion.preference.CustomSwitchPreference
-            android:key="display_nps"
+            android:key="SETTING_DISPLAY_NPS"
             android:title="@string/net_profit_per_share" />
         <com.android.orion.preference.CustomSwitchPreference
-            android:key="display_roe"
+            android:key="SETTING_DISPLAY_ROE"
             android:title="@string/roe" />
         <com.android.orion.preference.CustomSwitchPreference
-            android:key="display_roi"
+            android:key="SETTING_DISPLAY_ROI"
             android:title="@string/roi" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/indexes">
@@ -100,7 +100,7 @@
             android:key="loopback"
             android:title="@string/loopback" />
         <com.android.orion.preference.CustomSwitchPreference
-            android:key="display_direct"
+            android:key="SETTING_DISPLAY_DIRECT"
             android:title="@string/direct" />
     </PreferenceCategory>
 

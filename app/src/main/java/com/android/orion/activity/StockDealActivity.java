@@ -183,8 +183,8 @@ public class StockDealActivity extends DatabaseActivity implements
 
 		mListStockAccount = new ArrayList<String>();
 		mListStockAccount.add("");
-		mListStockAccount.add(Setting.KEY_STOCK_ACCOUNT_A);
-		mListStockAccount.add(Setting.KEY_STOCK_ACCOUNT_B);
+		mListStockAccount.add(StockDeal.ACCOUNT_A);
+		mListStockAccount.add(StockDeal.ACCOUNT_B);
 
 		mArrayAdapterStockAccount = new ArrayAdapter<String>(this,
 				android.R.layout.simple_spinner_item, mListStockAccount);

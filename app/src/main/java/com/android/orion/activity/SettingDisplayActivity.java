@@ -2,6 +2,7 @@ package com.android.orion.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.ArrayMap;
 import android.widget.Toast;
 
 import com.android.orion.R;
@@ -23,13 +24,8 @@ public class SettingDisplayActivity extends BaseActivity {
 	SettingViewItemData mItemViewData;
 	List<SettingViewItemData> mListData = new ArrayList<>();
 	SettingView mSettingView;
-
-	int mDisplayNetIndex;
-	int mDisplayCandleIndex;
-	int mDisplayDrawIndex;
-	int mDisplayStrokeIndex;
-	int mDisplaySegmentIndex;
-	int mDisplayLineIndex;
+	String mSettingKey;
+	ArrayMap<Integer, String> mKeyMap = new ArrayMap();
 
 	public SettingDisplayActivity() {
 	}
@@ -47,76 +43,42 @@ public class SettingDisplayActivity extends BaseActivity {
 		mSettingView.setOnSettingViewItemSwitchListener(new SettingView.onSettingViewItemSwitchListener() {
 			@Override
 			public void onSwitchChanged(int index, boolean isChecked) {
-				if (index == mDisplayNetIndex) {
-					Setting.setDisplayNet(isChecked);
-				} else if (index == mDisplayCandleIndex) {
-					Setting.setDisplayCandle(isChecked);
-				} else if (index == mDisplayDrawIndex) {
-					Setting.setDisplayDraw(isChecked);
-				} else if (index == mDisplayStrokeIndex) {
-					Setting.setDisplayStroke(isChecked);
-				} else if (index == mDisplaySegmentIndex) {
-					Setting.setDisplaySegment(isChecked);
-				} else if (index == mDisplayLineIndex) {
-					Setting.setDisplayLine(isChecked);
-				}
+				Setting.setBoolean(mKeyMap.get(index), isChecked);
 			}
 		});
 
-		mDisplayNetIndex = mListData.size();
-		mItemData = new SettingData();
-		mItemData.setTitle(getString(R.string.setting_display_net));
-		mItemData.setChecked(Setting.getDisplayNet());
-		mItemViewData = new SettingViewItemData();
-		mItemViewData.setData(mItemData);
-		mItemViewData.setItemView(new SwitchItemView(SettingDisplayActivity.this));
-		mListData.add(mItemViewData);
+		initView(Setting.SETTING_DISPLAY_NET, R.string.setting_display_net);
+		initView(Setting.SETTING_DISPLAY_CANDLE, R.string.setting_display_candle);
+		initView(Setting.SETTING_DISPLAY_DRAW, R.string.setting_display_draw);
+		initView(Setting.SETTING_DISPLAY_STROKE, R.string.setting_display_stroke);
+		initView(Setting.SETTING_DISPLAY_SEGMENT, R.string.setting_display_segment);
+		initView(Setting.SETTING_DISPLAY_LINE, R.string.setting_display_line);
+		initView(Setting.SETTING_DISPLAY_OVERLAP, R.string.setting_display_overlap);
+		initView(Setting.SETTING_DISPLAY_LATEST, R.string.setting_display_latest);
+		initView(Setting.SETTING_DISPLAY_COST, R.string.setting_display_cost);
+		initView(Setting.SETTING_DISPLAY_DEAL, R.string.setting_display_deal);
+		initView(Setting.SETTING_DISPLAY_BONUS, R.string.setting_display_bonus);
+		initView(Setting.SETTING_DISPLAY_BPS, R.string.setting_display_bonus);
+		initView(Setting.SETTING_DISPLAY_NPS, R.string.setting_display_nps);
+		initView(Setting.SETTING_DISPLAY_ROE, R.string.setting_display_roe);
+		initView(Setting.SETTING_DISPLAY_ROI, R.string.setting_display_roi);
 
-		mDisplayCandleIndex = mListData.size();
-		mItemData = new SettingData();
-		mItemData.setTitle(getString(R.string.setting_display_candle));
-		mItemData.setChecked(Setting.getDisplayCandle());
-		mItemViewData = new SettingViewItemData();
-		mItemViewData.setData(mItemData);
-		mItemViewData.setItemView(new SwitchItemView(SettingDisplayActivity.this));
-		mListData.add(mItemViewData);
-
-		mDisplayDrawIndex = mListData.size();
-		mItemData = new SettingData();
-		mItemData.setTitle(getString(R.string.setting_display_draw));
-		mItemData.setChecked(Setting.getDisplayDraw());
-		mItemViewData = new SettingViewItemData();
-		mItemViewData.setData(mItemData);
-		mItemViewData.setItemView(new SwitchItemView(SettingDisplayActivity.this));
-		mListData.add(mItemViewData);
-
-		mDisplayStrokeIndex = mListData.size();
-		mItemData = new SettingData();
-		mItemData.setTitle(getString(R.string.setting_display_stroke));
-		mItemData.setChecked(Setting.getDisplayStroke());
-		mItemViewData = new SettingViewItemData();
-		mItemViewData.setData(mItemData);
-		mItemViewData.setItemView(new SwitchItemView(SettingDisplayActivity.this));
-		mListData.add(mItemViewData);
-
-		mDisplaySegmentIndex = mListData.size();
-		mItemData = new SettingData();
-		mItemData.setTitle(getString(R.string.setting_display_segment));
-		mItemData.setChecked(Setting.getDisplaySegment());
-		mItemViewData = new SettingViewItemData();
-		mItemViewData.setData(mItemData);
-		mItemViewData.setItemView(new SwitchItemView(SettingDisplayActivity.this));
-		mListData.add(mItemViewData);
-
-		mDisplayLineIndex = mListData.size();
-		mItemData = new SettingData();
-		mItemData.setTitle(getString(R.string.setting_display_line));
-		mItemData.setChecked(Setting.getDisplayLine());
-		mItemViewData = new SettingViewItemData();
-		mItemViewData.setData(mItemData);
-		mItemViewData.setItemView(new SwitchItemView(SettingDisplayActivity.this));
-		mListData.add(mItemViewData);
+		initView(Setting.SETTING_DISPLAY_THRESHOLD, R.string.setting_display_threshold);
+		initView(Setting.SETTING_DISPLAY_DIRECT, R.string.setting_display_direct);
+		initView(Setting.SETTING_DISPLAY_QUANT, R.string.setting_display_quant);
 
 		mSettingView.setAdapter(mListData);
+	}
+
+	void initView(String settingKey, int titleResId) {
+		mSettingKey = settingKey;
+		mKeyMap.put(mListData.size(), mSettingKey);
+		mItemData = new SettingData();
+		mItemData.setTitle(getString(titleResId));
+		mItemData.setChecked(Setting.getBoolean(mSettingKey));
+		mItemViewData = new SettingViewItemData();
+		mItemViewData.setData(mItemData);
+		mItemViewData.setItemView(new SwitchItemView(SettingDisplayActivity.this));
+		mListData.add(mItemViewData);
 	}
 }

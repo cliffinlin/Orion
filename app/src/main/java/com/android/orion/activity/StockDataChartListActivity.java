@@ -159,31 +159,31 @@ public class StockDataChartListActivity extends BaseActivity implements
 		mSortOrder = getIntent().getStringExtra(
 				Constant.EXTRA_STOCK_LIST_SORT_ORDER);
 
-		mKeyDisplayThreshold = Preferences.getBoolean(Setting.KEY_DISPLAY_THRESHOLD,
+		mKeyDisplayThreshold = Preferences.getBoolean(Setting.SETTING_DISPLAY_THRESHOLD,
 				false);
-		mKeyDisplayOverlap = Preferences.getBoolean(Setting.KEY_DISPLAY_OVERLAP,
+		mKeyDisplayOverlap = Preferences.getBoolean(Setting.SETTING_DISPLAY_OVERLAP,
 				false);
-		mKeyDisplayLatest = Preferences.getBoolean(Setting.KEY_DISPLAY_LATEST, true);
-		mKeyDisplayCost = Preferences.getBoolean(Setting.KEY_DISPLAY_COST, true);
+		mKeyDisplayLatest = Preferences.getBoolean(Setting.SETTING_DISPLAY_LATEST, true);
+		mKeyDisplayCost = Preferences.getBoolean(Setting.SETTING_DISPLAY_COST, true);
 
 		if (getIntent().getBooleanExtra(Constant.EXTRA_STOCK_DEAL, false)) {
 			mKeyDisplayDeal = true;
 		} else {
-			mKeyDisplayDeal = Preferences.getBoolean(Setting.KEY_DISPLAY_DEAL, false);
+			mKeyDisplayDeal = Preferences.getBoolean(Setting.SETTING_DISPLAY_DEAL, false);
 		}
 
 		if (getIntent().getBooleanExtra(Constant.EXTRA_STOCK_QUANT, false)) {
 			mKeyDisplayQuant = true;
 		} else {
-			mKeyDisplayQuant = Preferences.getBoolean(Setting.KEY_DISPLAY_QUANT, false);
+			mKeyDisplayQuant = Preferences.getBoolean(Setting.SETTING_DISPLAY_QUANT, false);
 		}
 
 		mKeyDisplayBonus = Preferences
-				.getBoolean(Setting.KEY_DISPLAY_BONUS, false);
-		mKeyDisplayBPS = Preferences.getBoolean(Setting.KEY_DISPLAY_BPS, false);
-		mKeyDisplayNPS = Preferences.getBoolean(Setting.KEY_DISPLAY_NPS, false);
-		mKeyDisplayRoe = Preferences.getBoolean(Setting.KEY_DISPLAY_ROE, false);
-		mKeyDisplayRoi = Preferences.getBoolean(Setting.KEY_DISPLAY_ROI, false);
+				.getBoolean(Setting.SETTING_DISPLAY_BONUS, false);
+		mKeyDisplayBPS = Preferences.getBoolean(Setting.SETTING_DISPLAY_BPS, false);
+		mKeyDisplayNPS = Preferences.getBoolean(Setting.SETTING_DISPLAY_NPS, false);
+		mKeyDisplayRoe = Preferences.getBoolean(Setting.SETTING_DISPLAY_ROE, false);
+		mKeyDisplayRoi = Preferences.getBoolean(Setting.SETTING_DISPLAY_ROI, false);
 
 		if (getIntent().getBooleanExtra(Constant.EXTRA_STOCK_BONUS, false)) {
 			mKeyDisplayBonus = true;
@@ -209,13 +209,13 @@ public class StockDataChartListActivity extends BaseActivity implements
 		if (getIntent().getBooleanExtra(Constant.EXTRA_STOCK_DEAL, false)) {
 			mKeyDisplayDeal = true;
 		} else {
-			mKeyDisplayDeal = Preferences.getBoolean(Setting.KEY_DISPLAY_DEAL, false);
+			mKeyDisplayDeal = Preferences.getBoolean(Setting.SETTING_DISPLAY_DEAL, false);
 		}
 
 		if (getIntent().getBooleanExtra(Constant.EXTRA_STOCK_QUANT, false)) {
 			mKeyDisplayQuant = true;
 		} else {
-			mKeyDisplayQuant = Preferences.getBoolean(Setting.KEY_DISPLAY_QUANT, false);
+			mKeyDisplayQuant = Preferences.getBoolean(Setting.SETTING_DISPLAY_QUANT, false);
 		}
 
 		restartLoader();

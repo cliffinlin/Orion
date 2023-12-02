@@ -674,7 +674,7 @@ public class StockAnalyzer {
 		//stockVertexAnalyzer.testShowVertextNumber(stockDataList, stockDataList);
 
 		if (Preferences.getBoolean(Setting.KEY_LOOPBACK, false)) {
-			if (Preferences.getBoolean(Setting.KEY_DISPLAY_DIRECT, false)) {
+			if (Preferences.getBoolean(Setting.SETTING_DISPLAY_DIRECT, false)) {
 				stockVertexAnalyzer.debugShow(stockDataList, stockDataList);
 			}
 

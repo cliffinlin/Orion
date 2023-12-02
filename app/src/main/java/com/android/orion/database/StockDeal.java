@@ -12,6 +12,9 @@ import java.util.Calendar;
 
 public class StockDeal extends DatabaseTable {
 
+	public static final String ACCOUNT_A = "A";
+	public static final String ACCOUNT_B = "B";
+
 	public static final double BUY_STAMP_DUTY_RATE = 0;
 	public static final double SELL_STAMP_DUTY_RATE = 1.0 / 1000.0;
 
