@@ -41,22 +41,19 @@ public class SettingMoreActivity extends BaseActivity {
 			}
 		});
 
-		mActivityMap.put(mListData.size(), SettingDisplayActivity.class);
-		mItemData = new SettingData();
-		mItemData.setTitle(getString(R.string.activity_title_setting_display));
-		mItemViewData = new SettingViewItemData();
-		mItemViewData.setData(mItemData);
-		mItemViewData.setItemView(new BasicItemViewH(SettingMoreActivity.this));
-		mListData.add(mItemViewData);
-
-		mActivityMap.put(mListData.size(), SettingDebugActivity.class);
-		mItemData = new SettingData();
-		mItemData.setTitle(getString(R.string.activity_title_setting_debug));
-		mItemViewData = new SettingViewItemData();
-		mItemViewData.setData(mItemData);
-		mItemViewData.setItemView(new BasicItemViewH(SettingMoreActivity.this));
-		mListData.add(mItemViewData);
+		initView(SettingDisplayActivity.class, R.string.activity_title_setting_display);
+		initView(SettingDebugActivity.class, R.string.activity_title_setting_debug);
 
 		mSettingView.setAdapter(mListData);
+	}
+
+	void initView(Class<?> cls, int titleResId) {
+		mActivityMap.put(mListData.size(), cls);
+		mItemData = new SettingData();
+		mItemData.setTitle(getString(titleResId));
+		mItemViewData = new SettingViewItemData();
+		mItemViewData.setData(mItemData);
+		mItemViewData.setItemView(new BasicItemViewH(SettingMoreActivity.this));
+		mListData.add(mItemViewData);
 	}
 }
