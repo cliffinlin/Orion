@@ -892,14 +892,14 @@ public class StockDataChartListActivity extends BaseActivity implements
 		}
 	}
 
-	void navigateStock(int direction) {
+	void navigateStock(int step) {
 		boolean loop = true;
 
 		if ((mStockList == null) || (mStockList.size() == 0)) {
 			return;
 		}
 
-		mStockListIndex += direction;
+		mStockListIndex += step;
 
 		if (mStockListIndex > mStockList.size() - 1) {
 			if (loop) {

@@ -6,6 +6,10 @@
             android:defaultValue="true"
             android:key="SETTING_NOTIFICATION"
             android:title="@string/setting_notification" />
+        <com.android.orion.preference.CustomSwitchPreference
+            android:defaultValue="true"
+            android:key="SETTING_INDEXES_WEIGHT"
+            android:title="@string/setting_indexes_weight" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/setting_period">
         <com.android.orion.preference.CustomSwitchPreference
@@ -85,12 +89,6 @@
         <com.android.orion.preference.CustomSwitchPreference
             android:key="SETTING_DISPLAY_ROI"
             android:title="@string/roi" />
-    </PreferenceCategory>
-    <PreferenceCategory android:title="@string/setting_indexes">
-        <com.android.orion.preference.CustomSwitchPreference
-            android:defaultValue="true"
-            android:key="SETTING_INDEXES_WEIGHT"
-            android:title="@string/setting_indexes_weight" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/setting_debug">
         <com.android.orion.preference.CustomSwitchPreference
