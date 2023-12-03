@@ -58,8 +58,6 @@ public class StockDataChartListActivity extends BaseActivity implements
 	public static final int ITEM_VIEW_TYPE_MAIN = 0;
 	public static final int ITEM_VIEW_TYPE_SUB = 1;
 	public static final int LOADER_ID_STOCK_LIST = DatabaseContract.PERIODS.length + 1;
-	public static final int FLING_DISTANCE = 50;
-	public static final int FLING_VELOCITY = 100;
 	public static final int REQUEST_CODE_SETTINGS = 0;
 	public static final int REQUEST_CODE_SETTING_DEBUG_LOOPBACK = 1;
 	public static final int MESSAGE_REFRESH = 0;
@@ -938,17 +936,10 @@ public class StockDataChartListActivity extends BaseActivity implements
 	@Override
 	public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX,
 							 float velocityY) {
-		int distance = FLING_DISTANCE;
-		int velocity = FLING_VELOCITY;
-
-		if (me1.getX() - me2.getX() > distance
-				&& Math.abs(velocityX) > velocity) {
-			navigateStock(-1);
-		}
-
-		if (me2.getX() - me1.getX() > distance
-				&& Math.abs(velocityX) > velocity) {
+		if (me2.getX() > me1.getX() ) {
 			navigateStock(1);
+		} else {
+			navigateStock(-1);
 		}
 	}
 
@@ -1058,6 +1049,8 @@ public class StockDataChartListActivity extends BaseActivity implements
 			} else {
 				viewHolder.chart.setData(mStockDataChart.mCombinedDataSub);
 			}
+
+			viewHolder.chart.setOnChartGestureListener(StockDataChartListActivity.this);
 
 			return view;
 		}
