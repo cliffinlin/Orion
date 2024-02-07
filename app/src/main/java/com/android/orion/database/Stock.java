@@ -2163,7 +2163,9 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-		mRoi = Utility.Round(mRoe * (100.0 * 1.0 / mPe + mYield) * mNetProfitMargin * mRate * Constant.ROI_COEFFICIENT,
+//		mRoi = Utility.Round(mRoe * (100.0 * 1.0 / mPe + mYield) * mNetProfitMargin * mRate * Constant.ROI_COEFFICIENT,
+//				Constant.DOUBLE_FIXED_DECIMAL);
+		mRoi = Utility.Round(1.0 / mPe * mNetProfitMargin * Constant.ROI_COEFFICIENT,
 				Constant.DOUBLE_FIXED_DECIMAL);
 	}
 
