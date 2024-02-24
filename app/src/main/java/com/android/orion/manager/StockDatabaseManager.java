@@ -659,7 +659,7 @@ public class StockDatabaseManager extends DatabaseManager {
 		int result = 0;
 		long hold = 0;
 		double profit = 0;
-		double valuation = 0;
+		double cost = 0;
 
 		Cursor cursor = null;
 		StockDeal stockDeal = null;
@@ -692,7 +692,7 @@ public class StockDatabaseManager extends DatabaseManager {
 					if (stockDeal.getVolume() > 0) {
 						hold += stockDeal.getVolume();
 						profit += stockDeal.getProfit();
-						valuation += stockDeal.getValue();
+						cost += stockDeal.getValue();
 					}
 
 					result += updateStockDealByID(stockDeal);
@@ -702,7 +702,7 @@ public class StockDatabaseManager extends DatabaseManager {
 			stock.setHold(hold);
 			stock.setProfit(profit);
 			if (hold > 0) {
-				stock.setCost(Utility.Round(valuation / hold));
+				stock.setCost(Utility.Round(cost));
 			}
 			stock.setValuation(hold * stock.getPrice());
 		} catch (Exception e) {
@@ -941,65 +941,6 @@ public class StockDatabaseManager extends DatabaseManager {
 		result = mContentResolver.update(
 				DatabaseContract.StockQuant.CONTENT_URI,
 				StockQuant.getContentValues(), where, null);
-
-		return result;
-	}
-
-	public int updateStockQuant(Stock stock) {
-		int result = 0;
-		long hold = 0;
-		double profit = 0;
-		double valuation = 0;
-
-		Cursor cursor = null;
-		StockQuant StockQuant = null;
-
-		if ((stock == null) || (mContentResolver == null)) {
-			return result;
-		}
-
-		StockQuant = new StockQuant();
-
-		String selection = DatabaseContract.COLUMN_SE + " = " + "\'"
-				+ stock.getSE() + "\'" + " AND " + DatabaseContract.COLUMN_CODE
-				+ " = " + "\'" + stock.getCode() + "\'";
-		String sortOrder = DatabaseContract.COLUMN_BUY + " ASC ";
-
-		try {
-			cursor = queryStockQuant(selection, null, sortOrder);
-			if ((cursor != null) && (cursor.getCount() > 0)) {
-				while (cursor.moveToNext()) {
-					StockQuant.set(cursor);
-
-					StockQuant.setPrice(stock.getPrice());
-					StockQuant.setupFee(stock.getRDate(), stock.getDividend());
-					StockQuant.setupNet();
-					StockQuant.setupValue();
-					StockQuant.setupProfit();
-					StockQuant.setupBonus(stock.getDividend());
-					StockQuant.setupYield(stock.getDividend());
-
-					if (StockQuant.getVolume() > 0) {
-						hold += StockQuant.getVolume();
-						profit += StockQuant.getProfit();
-						valuation += StockQuant.getValue();
-					}
-
-					result += updateStockQuantById(StockQuant);
-				}
-			}
-
-			stock.setHold(hold);
-			stock.setProfit(profit);
-			if (hold > 0) {
-				stock.setCost(Utility.Round(valuation / hold));
-			}
-			stock.setValuation(hold * stock.getPrice());
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			closeCursor(cursor);
-		}
 
 		return result;
 	}

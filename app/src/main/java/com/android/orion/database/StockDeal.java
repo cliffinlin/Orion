@@ -437,11 +437,7 @@ public class StockDeal extends DatabaseTable {
 			return;
 		}
 
-		if (mVolume > 0) {
-			mValue = Utility.Round(mBuy * Math.abs(mVolume));
-		} else {
-			mValue = Utility.Round(mPrice * Math.abs(mVolume));
-		}
+		mValue = Utility.Round(mBuy * Math.abs(mVolume));
 	}
 
 	public void setupBuyFee() {
