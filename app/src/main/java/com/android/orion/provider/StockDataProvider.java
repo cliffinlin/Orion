@@ -925,23 +925,18 @@ public abstract class StockDataProvider extends StockAnalyzer {
 	private void setupIndex(@NonNull Stock index) {
 		ArrayList<Stock> stockList = new ArrayList<>();
 		ArrayList<StockData> stockDataList;
-//		ArrayList<StockData> lastStockDataList = new ArrayList<>();
 		ArrayList<StockData> indexStockDataList;
 		Map<String, StockData> indexStockDataMap = new HashMap<>();
-		boolean weightOn;
 		long weight;
 
 		try {
 			loadIndexComponentStockList(index, stockList);
-
-			weightOn = Preferences.getBoolean(Setting.SETTING_INDEXES_WEIGHT, false);
 
 			for (String period : DatabaseContract.PERIODS) {
 				if (!Preferences.getBoolean(period, false)) {
 					continue;
 				}
 
-//				lastStockDataList.clear();
 				indexStockDataMap.clear();
 
 				Calendar begin = null;
@@ -954,11 +949,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 						continue;
 					}
 
-					if (weightOn) {
-						weight = stock.getHold();
-					} else {
-						weight = 1;
-					}
+					weight = stock.getHold();
 
 					StockData first = stockDataList.get(0);
 					if (begin == null) {
@@ -968,7 +959,6 @@ public abstract class StockDataProvider extends StockAnalyzer {
 					}
 
 					StockData last = stockDataList.get(stockDataList.size() - 1);
-//					lastStockDataList.add(last);
 					if (end == null) {
 						end = last.getCalendar();
 					} else if (last.getCalendar().before(end)) {
@@ -998,13 +988,6 @@ public abstract class StockDataProvider extends StockAnalyzer {
 							indexStockData.setTime(stockData.getTime());
 
 							indexStockData.add(stockData, weight);
-
-//							for (int i = 0; i < lastStockDataList.size(); i++) {
-//								StockData lastStockData = lastStockDataList.get(i);
-//								if (lastStockData.getCalendar().before(stockData)) {
-//									indexStockData.add(lastStockData, weight);
-//								}
-//							}
 						}
 
 						indexStockDataMap.put(keyString, indexStockData);
@@ -1039,8 +1022,8 @@ public abstract class StockDataProvider extends StockAnalyzer {
 					if (prevPrice > 0) {
 						net = 100.0 * (price - prevPrice) / prevPrice;
 					}
-					index.setPrice(Utility.Round(price, Constant.DOUBLE_FIXED_DECIMAL));
-					index.setNet(Utility.Round(net, Constant.DOUBLE_FIXED_DECIMAL));
+					index.setPrice(Utility.Round(price));
+					index.setNet(Utility.Round(net));
 				}
 			}
 

@@ -56,8 +56,6 @@ public class OrionMainActivity extends PreferenceActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_settings: {
-				Intent it = new Intent(this, SettingMoreActivity.class);
-				startActivity(it);
 				return true;
 			}
 			case R.id.action_exit: {
@@ -132,8 +130,6 @@ public class OrionMainActivity extends PreferenceActivity {
 			Setting.setDisplayLine(true);
 			Setting.setDisplayLatest(true);
 			Setting.setDisplayCost(true);
-
-			Preferences.putBoolean(Setting.SETTING_INDEXES_WEIGHT, true);
 
 			Setting.setDebugLoopback(false);
 		}

@@ -397,8 +397,7 @@ public class StockAnalyzer {
 			}
 
 			rate = Utility.Round(stockFinancial.getNetProfitPerShareInYear()
-							/ prev.getNetProfitPerShareInYear(),
-					Constant.DOUBLE_FIXED_DECIMAL);
+							/ prev.getNetProfitPerShareInYear());
 
 			stockFinancial.setRate(rate);
 		}
@@ -427,8 +426,7 @@ public class StockAnalyzer {
 
 			roe = Utility.Round(
 					100.0 * stockFinancial.getNetProfitPerShareInYear()
-							/ prev.getBookValuePerShare(),
-					Constant.DOUBLE_FIXED_DECIMAL);
+							/ prev.getBookValuePerShare());
 			if (roe < 0) {
 				roe = 0;
 			}
@@ -463,17 +461,15 @@ public class StockAnalyzer {
 								Utility.CALENDAR_DATE_FORMAT))) {
 					pe = Utility.Round(
 							100.0 * stockFinancial.getNetProfitPerShareInYear()
-									/ price, Constant.DOUBLE_FIXED_DECIMAL);
+									/ price);
 
 					if (stockFinancial.getBookValuePerShare() != 0) {
 						pb = Utility.Round(
-								price / stockFinancial.getBookValuePerShare(),
-								Constant.DOUBLE_FIXED_DECIMAL);
+								price / stockFinancial.getBookValuePerShare());
 					}
 
 					roi = Utility.Round(stockFinancial.getRoe() * pe
-									* Constant.ROI_COEFFICIENT,
-							Constant.DOUBLE_FIXED_DECIMAL);
+									* Constant.ROI_COEFFICIENT);
 					if (roi < 0) {
 						roi = 0;
 					}
@@ -561,8 +557,7 @@ public class StockAnalyzer {
 			if (i == 0) {
 				stock.setRDate(shareBonus.getRDate());
 			}
-			stock.setDividend(Utility.Round(totalDivident,
-					Constant.DOUBLE_FIXED_DECIMAL));
+			stock.setDividend(Utility.Round(totalDivident));
 			stock.setupBonus();
 			stock.setupYield();
 			stock.setupDividendRatio();

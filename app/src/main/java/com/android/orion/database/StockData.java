@@ -1243,7 +1243,7 @@ public class StockData extends StockDatabaseTable {
 			mChange = mVertexHigh - mVertexLow;
 		}
 
-		mChange = Utility.Round(mChange, Constant.DOUBLE_FIXED_DECIMAL);
+		mChange = Utility.Round(mChange);
 	}
 
 	public void setupNet() {
@@ -1261,7 +1261,7 @@ public class StockData extends StockDatabaseTable {
 			mNet = 100.0 * mChange / mVertexLow;
 		}
 
-		mNet = Utility.Round(mNet, Constant.DOUBLE_FIXED_DECIMAL);
+		mNet = Utility.Round(mNet);
 	}
 
 	public void setupVelocity() {
@@ -1275,7 +1275,7 @@ public class StockData extends StockDatabaseTable {
 
 		mVelocity = mChange / dt;
 
-		mVelocity = Utility.Round(mVelocity, Constant.DOUBLE_FIXED_DECIMAL);
+		mVelocity = Utility.Round(mVelocity);
 	}
 
 	public StockData fromString(@NonNull String string) {

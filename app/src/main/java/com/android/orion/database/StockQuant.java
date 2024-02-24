@@ -227,8 +227,7 @@ public class StockQuant extends StockDeal {
 
 	public void setupQuantProfitMargin() {
 		if (mValuation != 0) {
-			mQuantProfitMargin = Utility.Round(100 * mQuantProfit / mValuation,
-					Constant.DOUBLE_FIXED_DECIMAL);
+			mQuantProfitMargin = Utility.Round(100 * mQuantProfit / mValuation);
 		} else {
 			mQuantProfitMargin = 0;
 		}
@@ -236,8 +235,7 @@ public class StockQuant extends StockDeal {
 
 	public void setupQuantProfitMargin(double valuation) {
 		if (valuation != 0) {
-			mQuantProfitMargin = Utility.Round(100 * mQuantProfit / valuation,
-					Constant.DOUBLE_FIXED_DECIMAL);
+			mQuantProfitMargin = Utility.Round(100 * mQuantProfit / valuation);
 		} else {
 			mQuantProfitMargin = 0;
 		}

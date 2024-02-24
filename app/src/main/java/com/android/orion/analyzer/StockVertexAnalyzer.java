@@ -628,9 +628,9 @@ public class StockVertexAnalyzer {
 			actionString = String.valueOf(i);
 
 			if (data.getNet() > 0) {
-				actionString += " +" + data.getNet() + " " + Utility.Round(data.getVelocity(), Constant.DOUBLE_FIXED_DECIMAL);
+				actionString += " +" + data.getNet() + " " + Utility.Round(data.getVelocity());
 			} else if (data.getNet() < 0) {
-				actionString += " " + data.getNet() + " " + Utility.Round(data.getVelocity(), Constant.DOUBLE_FIXED_DECIMAL);
+				actionString += " " + data.getNet() + " " + Utility.Round(data.getVelocity());
 			}
 
 			stockData.setAction(actionString);

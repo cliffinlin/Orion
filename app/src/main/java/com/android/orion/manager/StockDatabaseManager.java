@@ -702,7 +702,7 @@ public class StockDatabaseManager extends DatabaseManager {
 			stock.setHold(hold);
 			stock.setProfit(profit);
 			if (hold > 0) {
-				stock.setCost(Utility.Round(valuation / hold, Constant.DOUBLE_FIXED_DECIMAL));
+				stock.setCost(Utility.Round(valuation / hold));
 			}
 			stock.setValuation(hold * stock.getPrice());
 		} catch (Exception e) {
@@ -992,7 +992,7 @@ public class StockDatabaseManager extends DatabaseManager {
 			stock.setHold(hold);
 			stock.setProfit(profit);
 			if (hold > 0) {
-				stock.setCost(Utility.Round(valuation / hold, Constant.DOUBLE_FIXED_DECIMAL));
+				stock.setCost(Utility.Round(valuation / hold));
 			}
 			stock.setValuation(hold * stock.getPrice());
 		} catch (Exception e) {

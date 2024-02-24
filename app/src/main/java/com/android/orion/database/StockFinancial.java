@@ -208,8 +208,7 @@ public class StockFinancial extends DatabaseTable {
 	}
 
 	public void setBookValuePerShare(double bookValuePerShare) {
-		mBookValuePerShare = Utility.Round(bookValuePerShare,
-				Constant.DOUBLE_FIXED_DECIMAL);
+		mBookValuePerShare = Utility.Round(bookValuePerShare);
 	}
 
 	void setBookValuePerShare(Cursor cursor) {
@@ -519,7 +518,7 @@ public class StockFinancial extends DatabaseTable {
 		}
 
 		mDebtToNetAssetsRatio = Utility.Round(mTotalLongTermLiabilities / mTotalShare
-				/ mBookValuePerShare, Constant.DOUBLE_FIXED_DECIMAL);
+				/ mBookValuePerShare);
 	}
 
 	public void setupNetProfitMargin() {
@@ -527,8 +526,7 @@ public class StockFinancial extends DatabaseTable {
 			return;
 		}
 
-		mNetProfitMargin = Utility.Round(mNetProfitInYear / mMainBusinessIncomeInYear,
-				Constant.DOUBLE_FIXED_DECIMAL);
+		mNetProfitMargin = Utility.Round(mNetProfitInYear / mMainBusinessIncomeInYear);
 	}
 
 	public void setupNetProfitPerShare() {
@@ -536,8 +534,7 @@ public class StockFinancial extends DatabaseTable {
 			return;
 		}
 
-		mNetProfitPerShare = Utility.Round(mNetProfit / mTotalShare,
-				Constant.DOUBLE_FIXED_DECIMAL);
+		mNetProfitPerShare = Utility.Round(mNetProfit / mTotalShare);
 	}
 
 	public void setupNetProfitPerShare(double totalShare) {
@@ -545,7 +542,6 @@ public class StockFinancial extends DatabaseTable {
 			return;
 		}
 
-		mNetProfitPerShare = Utility.Round(mNetProfit / totalShare,
-				Constant.DOUBLE_FIXED_DECIMAL);
+		mNetProfitPerShare = Utility.Round(mNetProfit / totalShare);
 	}
 }

@@ -37,7 +37,6 @@ public class IndexComponentListActivity extends ListActivity implements
 		OnItemLongClickListener, OnClickListener {
 
 	public static final String ACTION_STOCK_ID = "orion.intent.action.ACTION_STOCK_ID";
-	public static final String ACTION_INDEX_COMPONENT_LIST = "orion.intent.action.ACTION_INDEX_COMPONENT_LIST";
 
 	public static final int LOADER_ID_INDEX_COMPONENT_LIST = 0;
 
@@ -65,7 +64,6 @@ public class IndexComponentListActivity extends ListActivity implements
 	TextView mTextViewMin30 = null;
 	TextView mTextViewMin15 = null;
 	TextView mTextViewMin5 = null;
-	TextView mTextViewTrend = null;
 	TextView mTextViewOperate = null;
 	TextView mTextViewModified = null;
 
@@ -223,9 +221,6 @@ public class IndexComponentListActivity extends ListActivity implements
 			case R.id.action_5min:
 				mSortOrderColumn = DatabaseContract.COLUMN_MIN5;
 				break;
-			case R.id.trend:
-				mSortOrderColumn = DatabaseContract.COLUMN_TREND;
-				break;
 			case R.id.operate:
 				mSortOrderColumn = DatabaseContract.COLUMN_OPERATE;
 				break;
@@ -272,7 +267,6 @@ public class IndexComponentListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewMin30, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewMin15, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewMin5, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewTrend, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewOperate, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewModified, mHeaderTextDefaultColor);
 	}
@@ -354,11 +348,6 @@ public class IndexComponentListActivity extends ListActivity implements
 			setVisibility(DatabaseContract.COLUMN_MIN5, mTextViewMin5);
 		}
 
-		mTextViewTrend = findViewById(R.id.trend);
-		if (mTextViewTrend != null) {
-			mTextViewTrend.setOnClickListener(this);
-		}
-
 		mTextViewOperate = findViewById(R.id.operate);
 		if (mTextViewOperate != null) {
 			mTextViewOperate.setOnClickListener(this);
@@ -389,8 +378,6 @@ public class IndexComponentListActivity extends ListActivity implements
 			setHeaderTextColor(mTextViewMin15, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MIN5)) {
 			setHeaderTextColor(mTextViewMin5, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_TREND)) {
-			setHeaderTextColor(mTextViewTrend, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_OPERATE)) {
 			setHeaderTextColor(mTextViewOperate, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MODIFIED)) {
@@ -414,7 +401,6 @@ public class IndexComponentListActivity extends ListActivity implements
 				DatabaseContract.COLUMN_MIN30,
 				DatabaseContract.COLUMN_MIN15,
 				DatabaseContract.COLUMN_MIN5,
-				DatabaseContract.COLUMN_TREND,
 				DatabaseContract.COLUMN_OPERATE,
 				DatabaseContract.COLUMN_MODIFIED};
 		int[] mRightTo = new int[]{
@@ -427,7 +413,6 @@ public class IndexComponentListActivity extends ListActivity implements
 				R.id.min30,
 				R.id.min15,
 				R.id.min5,
-				R.id.trend,
 				R.id.operate,
 				R.id.modified};
 

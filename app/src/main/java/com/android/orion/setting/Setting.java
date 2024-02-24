@@ -20,8 +20,6 @@ public class Setting {
 	public static final String SETTING_PERIOD_MIN5 = DatabaseContract.COLUMN_MIN5;
 	public static final String SETTING_PERIOD_MIN1 = DatabaseContract.COLUMN_MIN1;
 
-	public static final String SETTING_INDEXES_WEIGHT = "SETTING_INDEXES_WEIGHT";
-
 	public static final String SETTING_SORT_ORDER = "SETTING_SORT_ORDER";
 	public static final String SETTING_SORT_ORDER_IPO_LIST = "SETTING_SORT_ORDER_IPO_LIST";
 	public static final String SETTING_SORT_ORDER_COMPONENT_LIST = "SETTING_SORT_ORDER_COMPONENT_LIST";

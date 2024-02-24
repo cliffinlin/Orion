@@ -2016,8 +2016,7 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-		mMarketValue = Utility.Round(mPrice * mTotalShare,
-				Constant.DOUBLE_FIXED_DECIMAL);
+		mMarketValue = Utility.Round(mPrice * mTotalShare);
 	}
 
 	public void setupNetProfitMargin() {
@@ -2025,8 +2024,7 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-		mNetProfitMargin = Utility.Round(100.0 * mNetProfitInYear / mMainBusinessIncomeInYear,
-				Constant.DOUBLE_FIXED_DECIMAL);
+		mNetProfitMargin = Utility.Round(100.0 * mNetProfitInYear / mMainBusinessIncomeInYear);
 	}
 
 	public void setupNetProfitPerShare() {
@@ -2034,8 +2032,7 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-		mNetProfitPerShare = Utility.Round(mNetProfit / mTotalShare,
-				Constant.DOUBLE_FIXED_DECIMAL);
+		mNetProfitPerShare = Utility.Round(mNetProfit / mTotalShare);
 	}
 
 	public void setupNetProfitPerShareInYear(
@@ -2076,6 +2073,8 @@ public class Stock extends DatabaseTable {
 			mNetProfitInYear += netProfit;
 			mNetProfitPerShareInYear += netProfitPerShare;
 		}
+
+		mNetProfitPerShareInYear = Utility.Round(mNetProfitPerShareInYear);
 	}
 
 	public void setupRate(
@@ -2114,7 +2113,7 @@ public class Stock extends DatabaseTable {
 
 		mRate = mNetProfitPerShareInYear / netProfitPerShareLastYear;
 
-		mRate = Utility.Round(mRate, Constant.DOUBLE_FIXED_DECIMAL);
+		mRate = Utility.Round(mRate);
 	}
 
 	public void setupDebtToNetAssetsRatio(ArrayList<StockFinancial> stockFinancialList) {
@@ -2123,7 +2122,7 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-		mDebtToNetAssetsRatio = stockFinancialList.get(0).getDebtToNetAssetsRatio();
+		mDebtToNetAssetsRatio = Utility.Round(stockFinancialList.get(0).getDebtToNetAssetsRatio());
 	}
 
 	public void setupRoe(ArrayList<StockFinancial> stockFinancialList) {
@@ -2142,7 +2141,7 @@ public class Stock extends DatabaseTable {
 		}
 
 		mRoe = Utility.Round(100.0 * mNetProfitPerShareInYear
-				/ bookValuePerShare, Constant.DOUBLE_FIXED_DECIMAL);
+				/ bookValuePerShare);
 	}
 
 	public void setupPe() {
@@ -2154,8 +2153,7 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-		mPe = Utility.Round(mPrice / mNetProfitPerShareInYear,
-				Constant.DOUBLE_FIXED_DECIMAL);
+		mPe = Utility.Round(mPrice / mNetProfitPerShareInYear);
 	}
 
 	public void setupRoi() {
@@ -2165,8 +2163,7 @@ public class Stock extends DatabaseTable {
 
 //		mRoi = Utility.Round(mRoe * (100.0 * 1.0 / mPe + mYield) * mNetProfitMargin * mRate * Constant.ROI_COEFFICIENT,
 //				Constant.DOUBLE_FIXED_DECIMAL);
-		mRoi = Utility.Round(1.0 / mPe * mNetProfitMargin * Constant.ROI_COEFFICIENT,
-				Constant.DOUBLE_FIXED_DECIMAL);
+		mRoi = Utility.Round(1.0 / mPe * mNetProfitMargin * Constant.ROI_COEFFICIENT);
 	}
 
 	public void setupPb() {
@@ -2174,8 +2171,7 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-		mPb = Utility.Round(mPrice / mBookValuePerShare,
-				Constant.DOUBLE_FIXED_DECIMAL);
+		mPb = Utility.Round(mPrice / mBookValuePerShare);
 	}
 
 	public void setupBonus() {
@@ -2197,8 +2193,7 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-		mYield = Utility.Round(100.0 * mDividend / 10.0 / mPrice,
-				Constant.DOUBLE_FIXED_DECIMAL);
+		mYield = Utility.Round(100.0 * mDividend / 10.0 / mPrice);
 	}
 
 	public void setupDividendRatio() {
@@ -2212,7 +2207,6 @@ public class Stock extends DatabaseTable {
 
 		mDividendRatio = (mDividend / 10.0) / mNetProfitPerShareInYear;
 
-		mDividendRatio = Utility.Round(mDividendRatio,
-				Constant.DOUBLE_FIXED_DECIMAL);
+		mDividendRatio = Utility.Round(mDividendRatio);
 	}
 }
