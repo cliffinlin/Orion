@@ -56,6 +56,7 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 	String mSortOrder = DatabaseContract.COLUMN_VALUATION
 			+ DatabaseContract.ORDER_DIRECTION_DESC;
 
+	float mTotalProfit = 0;
 	float mTotalBonus = 0;
 	String mDescription = "";
 	Menu mMenu = null;
@@ -228,7 +229,7 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 			swapStockCursor(mStatisticsChartList.get(0), cursor);
 		}
 
-		mDescription = "Total bonus=" + Float.valueOf(mTotalBonus);
+		mDescription = "Profit=" + Float.valueOf(mTotalProfit) + ",  Bonus=" + Float.valueOf(mTotalBonus);
 	}
 
 	@Override
@@ -336,6 +337,7 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 								Cursor cursor) {
 		int index = 0;
 
+		mTotalProfit = 0;
 		mTotalBonus = 0;
 
 		if (mStockList == null) {
@@ -381,6 +383,7 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 							(float) stock.getValuation(), index);
 					stockDataChart.mValuationEntryList.add(valuationEntry);
 
+					mTotalProfit += (float) stock.getProfit();
 					mTotalBonus += (float) stock.getBonus();
 
 					if (stock != null) {

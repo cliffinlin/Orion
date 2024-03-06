@@ -658,7 +658,6 @@ public class StockDatabaseManager extends DatabaseManager {
 	public int updateStockDeal(Stock stock) {
 		int result = 0;
 		long hold = 0;
-		double profit = 0;
 		double cost = 0;
 
 		Cursor cursor = null;
@@ -691,7 +690,6 @@ public class StockDatabaseManager extends DatabaseManager {
 
 					if (stockDeal.getVolume() > 0) {
 						hold += stockDeal.getVolume();
-						profit += stockDeal.getProfit();
 						cost += stockDeal.getValue();
 					}
 
@@ -700,11 +698,11 @@ public class StockDatabaseManager extends DatabaseManager {
 			}
 
 			stock.setHold(hold);
-			stock.setProfit(profit);
 			if (hold > 0) {
 				stock.setCost(Utility.Round(cost));
+				stock.setProfit(Utility.Round(hold * stock.getNetProfitPerShareInYear()));
+				stock.setValuation(hold * stock.getPrice());
 			}
-			stock.setValuation(hold * stock.getPrice());
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

@@ -54,7 +54,7 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/cost"
+        android:id="@+id/hold"
         android:layout_width="80dp"
         android:layout_height="50dp"
         android:layout_weight="1"
@@ -62,7 +62,7 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/hold"
+        android:id="@+id/profit"
         android:layout_width="80dp"
         android:layout_height="50dp"
         android:layout_weight="1"

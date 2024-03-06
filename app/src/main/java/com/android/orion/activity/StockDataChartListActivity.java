@@ -937,9 +937,9 @@ public class StockDataChartListActivity extends BaseActivity implements
 	public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX,
 							 float velocityY) {
 		if (me2.getX() > me1.getX() ) {
-			navigateStock(1);
+//			navigateStock(1);
 		} else {
-			navigateStock(-1);
+//			navigateStock(-1);
 		}
 	}
 
@@ -1050,7 +1050,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 				viewHolder.chart.setData(mStockDataChart.mCombinedDataSub);
 			}
 
-			viewHolder.chart.setOnChartGestureListener(StockDataChartListActivity.this);
+//			viewHolder.chart.setOnChartGestureListener(StockDataChartListActivity.this);
 
 			return view;
 		}

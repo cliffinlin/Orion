@@ -55,9 +55,6 @@ public class StockDataChart {
 	public ArrayList<Entry> mDIFEntryList = null;
 	public ArrayList<Entry> mDEAEntryList = null;
 	public ArrayList<BarEntry> mHistogramEntryList = null;
-	public ArrayList<Entry> mSubChartDrawEntryList = null;
-	public ArrayList<Entry> mSubChartStrokeEntryList = null;
-	public ArrayList<Entry> mSubChartSegmentEntryList = null;
 	public ArrayList<LimitLine> mXLimitLineList = null;
 	public List<Entry>[] mLineList = new List[StockData.LEVEL_MAX];
 	public int[] mLineColors = {Color.GRAY, Color.YELLOW, Color.BLACK, Color.RED, Color.MAGENTA};
@@ -140,18 +137,6 @@ public class StockDataChart {
 
 		if (mHistogramEntryList == null) {
 			mHistogramEntryList = new ArrayList<BarEntry>();
-		}
-
-		if (mSubChartDrawEntryList == null) {
-			mSubChartDrawEntryList = new ArrayList<Entry>();
-		}
-
-		if (mSubChartStrokeEntryList == null) {
-			mSubChartStrokeEntryList = new ArrayList<Entry>();
-		}
-
-		if (mSubChartSegmentEntryList == null) {
-			mSubChartSegmentEntryList = new ArrayList<Entry>();
 		}
 
 		if (mCombinedDataMain == null) {
@@ -405,37 +390,6 @@ public class StockDataChart {
 		deaDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(deaDataSet);
 
-		if (Setting.getDisplayDraw()) {
-			transferMainChartDataToSubChartData(mLineList[0], mSubChartDrawEntryList);
-			LineDataSet drawDataSet = new LineDataSet(mSubChartDrawEntryList, "Draw");
-			drawDataSet.setColor(mLineColors[0]);
-			drawDataSet.setCircleColor(mLineColors[0]);
-			drawDataSet.setCircleSize(0);
-			drawDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-			lineData.addDataSet(drawDataSet);
-		}
-
-		if (Setting.getDisplayStroke()) {
-			transferMainChartDataToSubChartData(mLineList[1], mSubChartStrokeEntryList);
-			LineDataSet strokeDataSet = new LineDataSet(mSubChartStrokeEntryList, "Stroke");
-			strokeDataSet.setColor(mLineColors[1]);
-			strokeDataSet.setCircleColor(mLineColors[1]);
-			strokeDataSet.setCircleSize(0);
-			strokeDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-			lineData.addDataSet(strokeDataSet);
-		}
-
-		if (Setting.getDisplaySegment()) {
-			transferMainChartDataToSubChartData(mLineList[2], mSubChartSegmentEntryList);
-			LineDataSet segmentDataSet = new LineDataSet(mSubChartSegmentEntryList,
-					"Segment");
-			segmentDataSet.setColor(mLineColors[2]);
-			segmentDataSet.setCircleColor(mLineColors[2]);
-			segmentDataSet.setCircleSize(0);
-			segmentDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-			lineData.addDataSet(segmentDataSet);
-		}
-
 		mCombinedDataSub.setData(barData);
 		mCombinedDataSub.setData(lineData);
 	}
@@ -491,28 +445,6 @@ public class StockDataChart {
 		} else {
 			mSubChartYMin = Math.min(Math.min(dif, dea), mSubChartYMin);
 			mSubChartYMax = Math.max(Math.max(dif, dea), mSubChartYMax);
-		}
-	}
-
-	void transferMainChartDataToSubChartData(List<Entry> mainChartEntryList, List<Entry> subChartEntryList) {
-		if ((mainChartEntryList == null) || (subChartEntryList == null)) {
-			return;
-		}
-
-		if (((mMainChartYMax - mMainChartYMin) == 0) || (mSubChartYMax - mSubChartYMin) == 0) {
-			return;
-		}
-
-		subChartEntryList.clear();
-
-		for (int i = 0; i < mainChartEntryList.size(); i++) {
-			Entry mainChartEntry = mainChartEntryList.get(i);
-			if (mainChartEntry != null) {
-				Entry subChartEntry = new Entry((float) ((mainChartEntry.getVal() - mMainChartYMin) / (mMainChartYMax - mMainChartYMin)
-						* (mSubChartYMax - mSubChartYMin) + mSubChartYMin),
-						mainChartEntry.getXIndex());
-				subChartEntryList.add(subChartEntry);
-			}
 		}
 	}
 
@@ -740,9 +672,6 @@ public class StockDataChart {
 		mDIFEntryList.clear();
 		mDEAEntryList.clear();
 		mHistogramEntryList.clear();
-		mSubChartDrawEntryList.clear();
-		mSubChartStrokeEntryList.clear();
-		mSubChartSegmentEntryList.clear();
 
 		for (int i = 0; i < StockData.LEVEL_MAX; i++) {
 			mLineList[i].clear();

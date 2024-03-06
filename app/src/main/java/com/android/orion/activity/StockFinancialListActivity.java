@@ -57,8 +57,8 @@ public class StockFinancialListActivity extends ListActivity implements
 	TextView mTextViewRoe = null;
 	TextView mTextViewPE = null;
 	TextView mTextViewPB = null;
-	TextView mTextViewCost = null;
 	TextView mTextViewHold = null;
+	TextView mTextViewProfit = null;
 	TextView mTextViewBonus = null;
 	TextView mTextViewValuation = null;
 	TextView mTextViewTotalShare = null;
@@ -229,8 +229,8 @@ public class StockFinancialListActivity extends ListActivity implements
 			case R.id.hold:
 				mSortOrderColumn = DatabaseContract.COLUMN_HOLD;
 				break;
-			case R.id.cost:
-				mSortOrderColumn = DatabaseContract.COLUMN_COST;
+			case R.id.profit:
+				mSortOrderColumn = DatabaseContract.COLUMN_PROFIT;
 				break;
 			case R.id.bonus:
 				mSortOrderColumn = DatabaseContract.COLUMN_BONUS;
@@ -321,8 +321,8 @@ public class StockFinancialListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewRoe, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewPE, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewPB, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewCost, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewHold, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewProfit, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewBonus, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewValuation, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewTotalShare, mHeaderTextDefaultColor);
@@ -400,14 +400,14 @@ public class StockFinancialListActivity extends ListActivity implements
 			mTextViewPB.setOnClickListener(this);
 		}
 
-		mTextViewCost = findViewById(R.id.cost);
-		if (mTextViewCost != null) {
-			mTextViewCost.setOnClickListener(this);
-		}
-
 		mTextViewHold = findViewById(R.id.hold);
 		if (mTextViewHold != null) {
 			mTextViewHold.setOnClickListener(this);
+		}
+
+		mTextViewProfit = findViewById(R.id.profit);
+		if (mTextViewProfit != null) {
+			mTextViewProfit.setOnClickListener(this);
 		}
 
 		mTextViewBonus = findViewById(R.id.bonus);
@@ -519,10 +519,10 @@ public class StockFinancialListActivity extends ListActivity implements
 			setHeaderTextColor(mTextViewPE, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PB)) {
 			setHeaderTextColor(mTextViewPB, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_COST)) {
-			setHeaderTextColor(mTextViewCost, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_HOLD)) {
 			setHeaderTextColor(mTextViewHold, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PROFIT)) {
+			setHeaderTextColor(mTextViewProfit, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_BONUS)) {
 			setHeaderTextColor(mTextViewBonus, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_VALUATION)) {
@@ -587,8 +587,8 @@ public class StockFinancialListActivity extends ListActivity implements
 				DatabaseContract.COLUMN_ROE,
 				DatabaseContract.COLUMN_PE,
 				DatabaseContract.COLUMN_PB,
-				DatabaseContract.COLUMN_COST,
 				DatabaseContract.COLUMN_HOLD,
+				DatabaseContract.COLUMN_PROFIT,
 				DatabaseContract.COLUMN_BONUS,
 				DatabaseContract.COLUMN_VALUATION,
 				DatabaseContract.COLUMN_TOTAL_SHARE,
@@ -615,8 +615,8 @@ public class StockFinancialListActivity extends ListActivity implements
 				R.id.roe,
 				R.id.pe,
 				R.id.pb,
-				R.id.cost,
 				R.id.hold,
+				R.id.profit,
 				R.id.bonus,
 				R.id.valuation,
 				R.id.total_share,

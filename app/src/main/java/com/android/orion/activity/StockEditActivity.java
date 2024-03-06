@@ -228,11 +228,15 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 
 			case R.id.button_ok:
 				int id = 0;
+				boolean operateChanged = false;
+				boolean quantVolumeChanged = false;
+				boolean thresholdChanged = false;
 
 				onCheckBoxFavoriteChanged();
 
 				operate = mSpinnerStockAcion.getSelectedItem().toString();
 				if (!operate.equals(mStockOperate)) {
+					operateChanged = true;
 					mStockOperate = operate;
 					mStock.setOperate(mStockOperate);
 					mStockDatabaseManager.deleteStockQuant(mStock);
@@ -269,6 +273,7 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 				String quantVolume = mEditTextStockQuantVolume.getText().toString();
 				long quantVolumeValue = TextUtils.isEmpty(quantVolume) ? 0 : Long.valueOf(quantVolume);
 				if (quantVolumeValue != mStockQuantVolume) {
+					quantVolumeChanged = true;
 					mStockQuantVolume = quantVolumeValue;
 					mStock.setQuantVolume(mStockQuantVolume);
 					mStockDatabaseManager.deleteStockQuant(mStock);
@@ -277,8 +282,14 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 				String threshold = mEditTextStockThreshold.getText().toString();
 				double thresholdValue = TextUtils.isEmpty(threshold) ? 0 : Double.valueOf(threshold);
 				if (thresholdValue != mStockThreshold) {
+					thresholdChanged = true;
 					mStockThreshold = thresholdValue;
 					mStock.setThreshold(mStockThreshold);
+
+				}
+
+				if (TextUtils.isEmpty(operate) || TextUtils.isEmpty(quantVolume) || TextUtils.isEmpty(threshold)
+						|| operateChanged || quantVolumeChanged || thresholdChanged) {
 					mStockDatabaseManager.deleteStockQuant(mStock);
 				}
 
