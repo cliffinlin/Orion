@@ -49,7 +49,6 @@ public class Setting {
 	public static final String SETTING_DISPLAY_STROKE = "SETTING_DISPLAY_STROKE";
 	public static final String SETTING_DISPLAY_SEGMENT = "SETTING_DISPLAY_SEGMENT";
 	public static final String SETTING_DISPLAY_LINE = "SETTING_DISPLAY_LINE";
-	public static final String SETTING_DISPLAY_OVERLAP = "SETTING_DISPLAY_OVERLAP";
 	public static final String SETTING_DISPLAY_LATEST = "SETTING_DISPLAY_LATEST";
 	public static final String SETTING_DISPLAY_COST = "SETTING_DISPLAY_COST";
 	public static final String SETTING_DISPLAY_DEAL = "SETTING_DISPLAY_DEAL";
@@ -61,12 +60,11 @@ public class Setting {
 
 	public static final String SETTING_DISPLAY_THRESHOLD = "SETTING_DISPLAY_THRESHOLD";
 	public static final String SETTING_DISPLAY_QUANT = "SETTING_DISPLAY_QUANT";
-
-	private static final String SETTING_DEBUG = "SETTING_DEBUG";
 	public static final String SETTING_DEBUG_LOG = "SETTING_DEBUG_LOG";
 	public static final String SETTING_DEBUG_DIRECT = "SETTING_DEBUG_DIRECT";
 	public static final String SETTING_DEBUG_LOOPBACK = "SETTING_DEBUG_LOOPBACK";
 	public static final String SETTING_DEBUG_LOOPBACK_DATE_TIME = "SETTING_DEBUG_LOOPBACK_DATE_TIME";
+	private static final String SETTING_DEBUG = "SETTING_DEBUG";
 
 	private Setting() {
 	}
@@ -125,14 +123,6 @@ public class Setting {
 
 	public static void setDisplayLine(boolean value) {
 		Preferences.putBoolean(SETTING_DISPLAY_LINE, value);
-	}
-
-	public static boolean getDisplayOverlap() {
-		return Preferences.getBoolean(SETTING_DISPLAY_OVERLAP, true);
-	}
-
-	public static void setDisplayOverlap(boolean value) {
-		Preferences.putBoolean(SETTING_DISPLAY_OVERLAP, value);
 	}
 
 	public static boolean getDisplayLatest() {

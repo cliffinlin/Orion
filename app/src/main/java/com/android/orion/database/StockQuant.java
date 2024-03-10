@@ -3,7 +3,6 @@ package com.android.orion.database;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import com.android.orion.setting.Constant;
 import com.android.orion.utility.Utility;
 
 import java.util.Calendar;

@@ -46,22 +46,6 @@ public class OrionAlarmManager {
 		mPendingIntent = pendingIntent;
 	}
 
-	/*
-		void startAlarm() {
-			stopAlarm();
-
-			if ((mAlarmManager == null) || (mPendingIntent == null)
-					|| (mIntervalMillis <= 0)) {
-				Log.d("return, mAlarmManager = "
-						+ mAlarmManager + " mPendingIntent = " + mPendingIntent
-						+ " mIntervalMillis = " + mIntervalMillis);
-				return;
-			}
-
-			mAlarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-					System.currentTimeMillis(), mIntervalMillis, mPendingIntent);
-		}
-	*/
 	void startAlarm() {
 		int dayOfWeek = Calendar.SUNDAY;
 		long triggerMillis = 0;

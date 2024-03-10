@@ -23,7 +23,6 @@ public final class DatabaseContract {
 	public static final String COLUMN_NET = "net";
 	public static final String COLUMN_VOLUME = "volume";
 	public static final String COLUMN_VALUE = "value";
-	public static final String COLUMN_OVERLAP = "overlap";
 	public static final String COLUMN_MIN1 = "min1";
 	public static final String COLUMN_MIN5 = "min5";
 	public static final String COLUMN_MIN15 = "min15";
@@ -79,8 +78,6 @@ public final class DatabaseContract {
 	public static final String COLUMN_VERTEX = "vertex";
 	public static final String COLUMN_VERTEX_LOW = "vertex_low";
 	public static final String COLUMN_VERTEX_HIGH = "vertex_high";
-	public static final String COLUMN_OVERLAP_LOW = "overlap_low";
-	public static final String COLUMN_OVERLAP_HIGH = "overlap_high";
 	public static final String COLUMN_AVERAGE5 = "average5";
 	public static final String COLUMN_AVERAGE10 = "average10";
 	public static final String COLUMN_DIF = "dif";
@@ -245,7 +242,6 @@ public final class DatabaseContract {
 				COLUMN_HIGH, COLUMN_LOW, COLUMN_CLOSE,
 				COLUMN_CHANGE, COLUMN_NET, COLUMN_DIRECTION,
 				COLUMN_VERTEX, COLUMN_VERTEX_LOW, COLUMN_VERTEX_HIGH,
-				COLUMN_OVERLAP, COLUMN_OVERLAP_LOW, COLUMN_OVERLAP_HIGH,
 				COLUMN_AVERAGE5, COLUMN_AVERAGE10, COLUMN_DIF, COLUMN_DEA,
 				COLUMN_HISTOGRAM, COLUMN_SIGMA_HISTOGRAM, COLUMN_VELOCITY, COLUMN_DIVERGENCE,
 				COLUMN_ACTION, COLUMN_ROI, COLUMN_PE, COLUMN_PB, COLUMN_YIELD,
@@ -271,9 +267,7 @@ public final class DatabaseContract {
 				+ COLUMN_DIRECTION + INTEGER_TYPE + COMMA_SEP + COLUMN_VERTEX
 				+ INTEGER_TYPE + COMMA_SEP + COLUMN_VERTEX_LOW + DOUBLE_TYPE
 				+ COMMA_SEP + COLUMN_VERTEX_HIGH + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_OVERLAP + DOUBLE_TYPE + COMMA_SEP + COLUMN_OVERLAP_LOW
-				+ DOUBLE_TYPE + COMMA_SEP + COLUMN_OVERLAP_HIGH + DOUBLE_TYPE
-				+ COMMA_SEP + COLUMN_AVERAGE5 + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_AVERAGE5 + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_AVERAGE10 + DOUBLE_TYPE + COMMA_SEP + COLUMN_DIF
 				+ DOUBLE_TYPE + COMMA_SEP + COLUMN_DEA + DOUBLE_TYPE
 				+ COMMA_SEP + COLUMN_HISTOGRAM + DOUBLE_TYPE + COMMA_SEP

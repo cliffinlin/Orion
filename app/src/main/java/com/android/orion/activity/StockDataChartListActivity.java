@@ -64,7 +64,6 @@ public class StockDataChartListActivity extends BaseActivity implements
 	public static final int MESSAGE_LOAD_STOCK_LIST = 1;
 
 	boolean mKeyDisplayThreshold = true;
-	boolean mKeyDisplayOverlap = false;
 	boolean mKeyDisplayLatest = true;
 	boolean mKeyDisplayCost = true;
 	boolean mKeyDisplayDeal = false;
@@ -158,8 +157,6 @@ public class StockDataChartListActivity extends BaseActivity implements
 				Constant.EXTRA_STOCK_LIST_SORT_ORDER);
 
 		mKeyDisplayThreshold = Preferences.getBoolean(Setting.SETTING_DISPLAY_THRESHOLD,
-				false);
-		mKeyDisplayOverlap = Preferences.getBoolean(Setting.SETTING_DISPLAY_OVERLAP,
 				false);
 		mKeyDisplayLatest = Preferences.getBoolean(Setting.SETTING_DISPLAY_LATEST, true);
 		mKeyDisplayCost = Preferences.getBoolean(Setting.SETTING_DISPLAY_COST, true);
@@ -704,21 +701,6 @@ public class StockDataChartListActivity extends BaseActivity implements
 						stockDataChart.mLineList[4].add(outlineEntry);
 					}
 
-					if (mKeyDisplayOverlap) {
-						if ((mStockData.getOverlapHigh() > 0)
-								&& (mStockData.getOverlapLow() > 0)) {
-							Entry overlayHighEntry = new Entry(
-									(float) mStockData.getOverlapHigh(), index);
-							stockDataChart.mOverlapHighEntryList
-									.add(overlayHighEntry);
-
-							Entry overlapLowEntry = new Entry(
-									(float) mStockData.getOverlapLow(), index);
-							stockDataChart.mOverlapLowEntryList
-									.add(overlapLowEntry);
-						}
-					}
-
 					if (mKeyDisplayRoi) {
 						roi = (float) mStockData.getRoi();
 						Entry roiEntry = new Entry(roi, index);
@@ -936,7 +918,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 	@Override
 	public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX,
 							 float velocityY) {
-		if (me2.getX() > me1.getX() ) {
+		if (me2.getX() > me1.getX()) {
 //			navigateStock(1);
 		} else {
 //			navigateStock(-1);

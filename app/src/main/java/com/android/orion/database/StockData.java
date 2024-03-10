@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 
-public class StockData extends StockDatabaseTable {
+public class StockData extends DatabaseTable {
 
 	public static final String ACTION_NONE = "";
 
@@ -80,7 +80,6 @@ public class StockData extends StockDatabaseTable {
 	public static final int VERTEX_BOTTOM_OUTLINE = 1 << 9;
 
 	public static final int VERTEX_TYPING_SIZE = 3;
-	public static final int OVERLAP_TYPING_SIZE = 6;
 
 	public static final int POSITION_ABOVE = 1;
 	public static final int POSITION_NONE = 0;
@@ -297,7 +296,6 @@ public class StockData extends StockDatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_VERTEX, mVertex);
 		contentValues.put(DatabaseContract.COLUMN_VERTEX_LOW, mVertexLow);
 		contentValues.put(DatabaseContract.COLUMN_VERTEX_HIGH, mVertexHigh);
-		contentValues.put(DatabaseContract.COLUMN_OVERLAP, mOverlap);
 		contentValues.put(DatabaseContract.COLUMN_AVERAGE5, mAverage5);
 		contentValues.put(DatabaseContract.COLUMN_AVERAGE10, mAverage10);
 		contentValues.put(DatabaseContract.COLUMN_DIF, mDIF);
@@ -1151,24 +1149,6 @@ public class StockData extends StockDatabaseTable {
 		}
 
 		return result;
-	}
-
-	public int positionTo(StockData overlap) {
-		int position = POSITION_NONE;
-
-		if (overlap == null) {
-			return position;
-		}
-
-		if (getVertexLow() > overlap.getOverlapHigh()) {
-			position = POSITION_ABOVE;
-		} else if (getVertexHigh() < overlap.getOverlapLow()) {
-			position = POSITION_BELOW;
-		} else {
-			position = POSITION_NONE;
-		}
-
-		return position;
 	}
 
 	public int divergenceTo(StockData stockData) {

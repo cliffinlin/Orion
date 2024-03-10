@@ -3,7 +3,6 @@ package com.android.orion.utility;
 
 import android.util.Log;
 
-import com.android.orion.application.OrionApplication;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 

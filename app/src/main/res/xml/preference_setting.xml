@@ -56,9 +56,6 @@
             android:key="SETTING_DISPLAY_LINE"
             android:title="@string/line" />
         <com.android.orion.preference.CustomSwitchPreference
-            android:key="SETTING_DISPLAY_OVERLAP"
-            android:title="@string/overlap" />
-        <com.android.orion.preference.CustomSwitchPreference
             android:key="SETTING_DISPLAY_LATEST"
             android:title="@string/latest" />
         <com.android.orion.preference.CustomSwitchPreference

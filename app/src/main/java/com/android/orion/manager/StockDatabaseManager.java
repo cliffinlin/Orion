@@ -18,8 +18,6 @@ import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockFinancial;
 import com.android.orion.database.StockQuant;
 import com.android.orion.database.TotalShare;
-import com.android.orion.setting.Constant;
-import com.android.orion.setting.Setting;
 import com.android.orion.utility.Utility;
 
 import java.util.ArrayList;

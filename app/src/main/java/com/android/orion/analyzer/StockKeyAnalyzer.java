@@ -1,7 +1,5 @@
 package com.android.orion.analyzer;
 
-import android.util.Log;
-
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.utility.Logger;
@@ -11,18 +9,14 @@ import java.util.ArrayList;
 public class StockKeyAnalyzer {
 
 	static final boolean LOG = false;
-
+	public Logger Log = Logger.getLogger();
 	int mThresholdType = StockData.THRESHOLD_NONE;
-
 	double mNaturalRally;
 	double mUpwardTrend;
 	double mDownwardTrend;
 	double mNaturalReaction;
-
 	double mPrevHigh;
 	double mPrevLow;
-
-	public Logger Log = Logger.getLogger();
 
 	public StockKeyAnalyzer() {
 		init();

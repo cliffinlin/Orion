@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.text.TextUtils;
 
-import com.android.orion.setting.Constant;
 import com.android.orion.utility.Utility;
 
 import java.util.ArrayList;
@@ -638,9 +637,9 @@ public class StockDeal extends DatabaseTable {
 		}
 
 		mFee = Utility.Round(buyStampDuty + sellStampDuty
-						+ buyTransferFee + sellTransferFee
-						+ buyCommissionFee + sellCommissionFee
-						+ dividendIncomeTax);
+				+ buyTransferFee + sellTransferFee
+				+ buyCommissionFee + sellCommissionFee
+				+ dividendIncomeTax);
 	}
 
 	public void setupProfit() {

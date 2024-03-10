@@ -3,7 +3,6 @@ package com.android.orion.receiver;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import com.android.orion.service.OrionService;
 import com.android.orion.utility.Logger;

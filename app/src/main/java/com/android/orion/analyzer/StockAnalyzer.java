@@ -397,7 +397,7 @@ public class StockAnalyzer {
 			}
 
 			rate = Utility.Round(stockFinancial.getNetProfitPerShareInYear()
-							/ prev.getNetProfitPerShareInYear());
+					/ prev.getNetProfitPerShareInYear());
 
 			stockFinancial.setRate(rate);
 		}
@@ -469,7 +469,7 @@ public class StockAnalyzer {
 					}
 
 					roi = Utility.Round(stockFinancial.getRoe() * pe
-									* Constant.ROI_COEFFICIENT);
+							* Constant.ROI_COEFFICIENT);
 					if (roi < 0) {
 						roi = 0;
 					}
@@ -619,7 +619,6 @@ public class StockAnalyzer {
 		StockKeyAnalyzer stockKeyAnalyzer = new StockKeyAnalyzer();
 		StockVertexAnalyzer stockVertexAnalyzer = new StockVertexAnalyzer();
 		StockQuantAnalyzer stockQuantAnalyzer = new StockQuantAnalyzer();
-		ArrayList<StockData> overlapList = new ArrayList<StockData>();
 		ArrayList<ShareBonus> shareBonusList = new ArrayList<ShareBonus>();
 
 		stockKeyAnalyzer.analyze(stock, period, stockDataList);
@@ -654,18 +653,6 @@ public class StockAnalyzer {
 		stockVertexAnalyzer.vertexListToDataList(stockDataList, outlineVertexList,
 				outlineDataList, StockData.LEVEL_OUTLINE);
 
-		if (segmentDataList.size() > StockData.OVERLAP_TYPING_SIZE) {
-			stockVertexAnalyzer.analyzeOverlap(stockDataList, segmentDataList,
-					overlapList);
-		} else if (strokeDataList.size() > StockData.OVERLAP_TYPING_SIZE) {
-			stockVertexAnalyzer.analyzeOverlap(stockDataList, strokeDataList,
-					overlapList);
-		} else {
-			stockVertexAnalyzer.analyzeOverlap(stockDataList, drawDataList,
-					overlapList);
-		}
-
-		//stockVertexAnalyzer.analyzeOverlap(stockDataList, segmentDataList, overlapList);
 		//stockVertexAnalyzer.testShowVertextNumber(stockDataList, stockDataList);
 
 		if (Preferences.getBoolean(Setting.SETTING_DEBUG_LOOPBACK, false)) {
@@ -696,7 +683,7 @@ public class StockAnalyzer {
 
 		stockVertexAnalyzer.analyzeDirection(stockDataList);
 
-		analyzeAction(stock, period, stockDataList, drawVertexList, overlapList, drawDataList, strokeDataList, segmentDataList);
+		analyzeAction(stock, period, stockDataList, drawVertexList, drawDataList, strokeDataList, segmentDataList);
 
 		mStockDatabaseManager.getShareBonusList(stock, shareBonusList,
 				DatabaseContract.COLUMN_DATE + " DESC ");
@@ -907,7 +894,6 @@ public class StockAnalyzer {
 	private void analyzeAction(Stock stock, String period,
 							   ArrayList<StockData> stockDataList,
 							   ArrayList<StockData> drawVertexList,
-							   ArrayList<StockData> overlapList,
 							   ArrayList<StockData> drawDataList,
 							   ArrayList<StockData> strokeDataList,
 							   ArrayList<StockData> segmentDataList) {
@@ -1131,10 +1117,6 @@ public class StockAnalyzer {
 			mStockDatabaseManager.deleteStockData(stock.getId(), period);
 
 			updateDatabase(stockDataList);
-
-//			updateDatabase(drawDataList);
-//			updateDatabase(strokeDataList);
-//			updateDatabase(segmentDataList);
 
 			stock.setModified(Utility.getCurrentDateTimeString());
 			mStockDatabaseManager.updateStock(stock,

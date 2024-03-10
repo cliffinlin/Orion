@@ -10,7 +10,6 @@ import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockQuant;
-import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Utility;
@@ -45,8 +44,6 @@ public class StockDataChart {
 	public ArrayList<CandleEntry> mCandleEntryList = null;
 	public ArrayList<Entry> mAverage5EntryList = null;
 	public ArrayList<Entry> mAverage10EntryList = null;
-	public ArrayList<Entry> mOverlapHighEntryList = null;
-	public ArrayList<Entry> mOverlapLowEntryList = null;
 	public ArrayList<Entry> mBookValuePerShareList = null;
 	public ArrayList<Entry> mNetProfitPerShareList = null;
 	public ArrayList<Entry> mRoeList = null;
@@ -97,14 +94,6 @@ public class StockDataChart {
 
 		if (mAverage10EntryList == null) {
 			mAverage10EntryList = new ArrayList<Entry>();
-		}
-
-		if (mOverlapHighEntryList == null) {
-			mOverlapHighEntryList = new ArrayList<Entry>();
-		}
-
-		if (mOverlapLowEntryList == null) {
-			mOverlapLowEntryList = new ArrayList<Entry>();
 		}
 
 		if (mBookValuePerShareList == null) {
@@ -286,27 +275,6 @@ public class StockDataChart {
 				lineDataSet.setColor(mLineColors[4]);
 				lineDataSet.setCircleColor(mLineColors[4]);
 				lineDataSet.setCircleSize(0);
-				lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-				lineData.addDataSet(lineDataSet);
-			}
-		}
-
-		if ((mOverlapHighEntryList.size() > 0)
-				&& (mOverlapLowEntryList.size() > 0)) {
-			{
-				LineDataSet lineDataSet = new LineDataSet(
-						mOverlapHighEntryList, "OverHigh");
-				lineDataSet.setColor(Color.MAGENTA);
-				lineDataSet.setDrawCircles(false);
-				lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-				lineData.addDataSet(lineDataSet);
-			}
-
-			{
-				LineDataSet lineDataSet = new LineDataSet(
-						mOverlapLowEntryList, "OverLow");
-				lineDataSet.setColor(Color.BLUE);
-				lineDataSet.setDrawCircles(false);
 				lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 				lineData.addDataSet(lineDataSet);
 			}
@@ -662,8 +630,6 @@ public class StockDataChart {
 		mCandleEntryList.clear();
 		mAverage5EntryList.clear();
 		mAverage10EntryList.clear();
-		mOverlapHighEntryList.clear();
-		mOverlapLowEntryList.clear();
 		mBookValuePerShareList.clear();
 		mNetProfitPerShareList.clear();
 		mRoeList.clear();

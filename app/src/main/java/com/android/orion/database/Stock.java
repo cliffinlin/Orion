@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.text.TextUtils;
 
 import com.android.orion.setting.Constant;
-import com.android.orion.setting.Setting;
 import com.android.orion.utility.Utility;
 
 import java.util.ArrayList;

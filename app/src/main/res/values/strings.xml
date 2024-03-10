@@ -151,7 +151,6 @@
     <string name="setting_display_stroke">Stroke</string>
     <string name="setting_display_segment">Segment</string>
     <string name="setting_display_line">Line</string>
-    <string name="setting_display_overlap">Overlap</string>
     <string name="setting_display_latest">Latest</string>
     <string name="setting_display_cost">Cost</string>
     <string name="setting_display_deal">Deal</string>
@@ -170,7 +169,6 @@
     <string name="setting_debug_loopback_date_time">Loopback date time</string>
 
     <string name="ok">OK</string>
-    <string name="overlap">Overlap</string>
     <string name="password_hint">Password</string>
     <string name="pb">Pb</string>
     <string name="pe">Pe</string>

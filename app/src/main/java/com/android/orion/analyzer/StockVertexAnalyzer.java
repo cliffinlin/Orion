@@ -1,10 +1,7 @@
 package com.android.orion.analyzer;
 
-import android.util.Log;
-
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
-import com.android.orion.setting.Constant;
 import com.android.orion.utility.Logger;
 import com.android.orion.utility.Utility;
 
@@ -334,80 +331,6 @@ public class StockVertexAnalyzer {
 			stockData.setLevel(level);
 
 			dataList.add(stockData);
-		}
-	}
-
-	void analyzeOverlap(ArrayList<StockData> stockDataList,
-						ArrayList<StockData> lineDataList,
-						ArrayList<StockData> overlapList) {
-		int size = 0;
-		double Zg = 0;
-		double Zd = 0;
-
-		StockData prev = null;
-		StockData current = null;
-		StockData next = null;
-
-		StockData stockData = null;
-		StockData lineData = null;
-		StockData overlap = null;
-
-		if ((stockDataList == null) || (lineDataList == null)
-				|| (overlapList == null)) {
-			return;
-		}
-
-		overlapList.clear();
-
-		size = lineDataList.size();
-
-		if (size < StockData.VERTEX_TYPING_SIZE) {
-			return;
-		}
-
-		for (int i = 2; i < size - 1; i++) {
-			prev = lineDataList.get(i - 1);
-			current = lineDataList.get(i);
-			next = lineDataList.get(i + 1);
-
-			if ((prev == null) || (current == null) || (next == null)) {
-				continue;
-			}
-
-			if ((overlap == null)
-					|| (current.positionTo(overlap) != StockData.POSITION_NONE)) {
-				overlap = new StockData();
-
-				overlap.set(current);
-				overlap.setIndex(i - 2);
-				overlap.setIndexStart(i - 2);
-
-				Zg = Math
-						.min(Math.min(prev.getVertexHigh(),
-								current.getVertexHigh()), next.getVertexHigh());
-				Zd = Math.max(
-						Math.max(prev.getVertexLow(), current.getVertexLow()),
-						next.getVertexLow());
-
-				overlap.setOverlapHigh(Zg);
-				overlap.setOverlapLow(Zd);
-				overlapList.add(overlap);
-			}
-
-			overlap.setIndexEnd(i);
-		}
-
-		for (int i = 0; i < overlapList.size(); i++) {
-			overlap = overlapList.get(i);
-			for (int j = overlap.getIndexStart(); j <= overlap.getIndexEnd(); j++) {
-				lineData = lineDataList.get(j);
-				for (int k = lineData.getIndexStart(); k <= lineData
-						.getIndexEnd(); k++) {
-					stockData = stockDataList.get(k);
-					stockData.setOverlapHigh(overlap.getOverlapHigh());
-					stockData.setOverlapLow(overlap.getOverlapLow());
-				}
-			}
 		}
 	}
 
