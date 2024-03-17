@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 
 import com.android.orion.R;
 import com.android.orion.analyzer.StockAnalyzer;
+import com.android.orion.config.Config;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.IPO;
 import com.android.orion.database.IndexComponent;
@@ -26,6 +27,7 @@ import com.android.orion.database.StockData;
 import com.android.orion.database.StockFinancial;
 import com.android.orion.database.TotalShare;
 import com.android.orion.setting.Constant;
+import com.android.orion.setting.Setting;
 import com.android.orion.utility.Market;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Utility;
@@ -563,15 +565,10 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 		mStockDatabaseManager.getStockFinancial(stock, stockFinancial);
 
-		if (stockFinancial.getCreated().contains(
-				Utility.getCurrentDateString())
-				|| stockFinancial.getModified().contains(
-				Utility.getCurrentDateString())) {
-			if ((stockFinancial.getBookValuePerShare() != 0)
-					&& (stockFinancial.getNetProfit() != 0)) {
-				return result;
-			}
+		if (System.currentTimeMillis() - Setting.getDownloadStockFinancialTimemillis() < Config.downloadStockFinancialInterval) {
+			return result;
 		}
+		Setting.setDownloadStockFinancialTimemillis(System.currentTimeMillis());
 
 		return downloadStockFinancial(stock, stockFinancial, getStockFinancialURLString(stock));
 	}
@@ -671,14 +668,11 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		shareBonus.setStockId(stock.getId());
 
 		mStockDatabaseManager.getShareBonus(stock.getId(), shareBonus);
-		if (shareBonus.getCreated().contains(
-				Utility.getCurrentDateString())
-				|| shareBonus.getModified().contains(
-				Utility.getCurrentDateString())) {
-			if (!TextUtils.isEmpty(shareBonus.getDate())) {
-				return result;
-			}
+
+		if (System.currentTimeMillis() - Setting.getDownloadShareBonusTimemillis() < Config.downloadShareBonusInterval) {
+			return result;
 		}
+		Setting.setDownloadShareBonusTimemillis(System.currentTimeMillis());
 
 		return downloadShareBonus(stock, shareBonus, getShareBonusURLString(stock));
 	}
@@ -723,14 +717,11 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		totalShare.setStockId(stock.getId());
 
 		mStockDatabaseManager.getTotalShare(stock.getId(), totalShare);
-		if (totalShare.getCreated().contains(
-				Utility.getCurrentDateString())
-				|| totalShare.getModified().contains(
-				Utility.getCurrentDateString())) {
-			if (totalShare.getTotalShare() > 0) {
-				return result;
-			}
+
+		if (System.currentTimeMillis() - Setting.getDownloadTotalShareTimemillis() < Config.downloadTotalShareInterval) {
+			return result;
 		}
+		Setting.setDownloadTotalShareTimemillis(System.currentTimeMillis());
 
 		return downloadTotalShare(stock, totalShare, getTotalShareURLString(stock));
 	}
@@ -1071,8 +1062,6 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 		@Override
 		public void handleMessage(Message msg) {
-			boolean dataChanged = false;
-
 			if (msg == null) {
 				return;
 			}
@@ -1092,76 +1081,44 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 				if (Stock.CLASS_INDEX.equals(stock.getClasses())) {
 					setupIndex(stock);
-					dataChanged = true;
 				} else {
-					int result = DOWNLOAD_RESULT_NONE;
-
-					result = downloadStockInformation(stock);
-					if (result == DOWNLOAD_RESULT_FAILED) {
+					if (downloadStockInformation(stock) == DOWNLOAD_RESULT_FAILED) {
 						return;
-					} else if (result == DOWNLOAD_RESULT_SUCCESS) {
-						dataChanged = true;
 					}
 
-					result = downloadStockRealTime(stock);
-					if (result == DOWNLOAD_RESULT_FAILED) {
+					if (downloadStockRealTime(stock) == DOWNLOAD_RESULT_FAILED) {
 						return;
-					} else if (result == DOWNLOAD_RESULT_SUCCESS) {
-						dataChanged = true;
 					}
 
-					result = downloadStockFinancial(stock);
-					if (result == DOWNLOAD_RESULT_FAILED) {
+					if (downloadStockFinancial(stock) == DOWNLOAD_RESULT_FAILED) {
 						return;
-					} else if (result == DOWNLOAD_RESULT_SUCCESS) {
-						dataChanged = true;
 					}
 
-					result = downloadShareBonus(stock);
-					if (result == DOWNLOAD_RESULT_FAILED) {
+					if (downloadShareBonus(stock) == DOWNLOAD_RESULT_FAILED) {
 						return;
-					} else if (result == DOWNLOAD_RESULT_SUCCESS) {
-						dataChanged = true;
 					}
 
-					result = downloadTotalShare(stock);
-					if (result == DOWNLOAD_RESULT_FAILED) {
+					if (downloadTotalShare(stock) == DOWNLOAD_RESULT_FAILED) {
 						return;
-					} else if (result == DOWNLOAD_RESULT_SUCCESS) {
-						dataChanged = true;
 					}
 
-					result = downloadStockDataHistory(stock);
-					if (result == DOWNLOAD_RESULT_FAILED) {
+					if (downloadStockDataHistory(stock) == DOWNLOAD_RESULT_FAILED) {
 						return;
-					} else if (result == DOWNLOAD_RESULT_SUCCESS) {
-						dataChanged = true;
 					}
 
-					result = downloadStockDataRealTime(stock);
-					if (result == DOWNLOAD_RESULT_FAILED) {
+					if (downloadStockDataRealTime(stock) == DOWNLOAD_RESULT_FAILED) {
 						return;
-					} else if (result == DOWNLOAD_RESULT_SUCCESS) {
-						dataChanged = true;
 					}
 				}
 
-				if (true) {
-					for (String period : DatabaseContract.PERIODS) {
-						if (Preferences.getBoolean(period, false)) {
-							analyze(stock, period);
-						}
+				for (String period : DatabaseContract.PERIODS) {
+					if (Preferences.getBoolean(period, false)) {
+						analyze(stock, period);
 					}
-
-					analyze(stock);
-					sendBroadcast(Constant.ACTION_RESTART_LOADER, stock.getId());
 				}
 
-//                if (downloadIPO() == DOWNLOAD_RESULT_FAILED) {
-//                    return;
-//                }
-//                sendBroadcast(Constant.ACTION_RESTART_LOADER,
-//                        Stock.INVALID_ID);
+				analyze(stock);
+				sendBroadcast(Constant.ACTION_RESTART_LOADER, stock.getId());
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {

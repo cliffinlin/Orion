@@ -57,14 +57,17 @@ public class Setting {
 	public static final String SETTING_DISPLAY_NPS = "SETTING_DISPLAY_NPS";
 	public static final String SETTING_DISPLAY_ROE = "SETTING_DISPLAY_ROE";
 	public static final String SETTING_DISPLAY_ROI = "SETTING_DISPLAY_ROI";
-
 	public static final String SETTING_DISPLAY_THRESHOLD = "SETTING_DISPLAY_THRESHOLD";
 	public static final String SETTING_DISPLAY_QUANT = "SETTING_DISPLAY_QUANT";
+
 	public static final String SETTING_DEBUG_LOG = "SETTING_DEBUG_LOG";
 	public static final String SETTING_DEBUG_DIRECT = "SETTING_DEBUG_DIRECT";
 	public static final String SETTING_DEBUG_LOOPBACK = "SETTING_DEBUG_LOOPBACK";
 	public static final String SETTING_DEBUG_LOOPBACK_DATE_TIME = "SETTING_DEBUG_LOOPBACK_DATE_TIME";
-	private static final String SETTING_DEBUG = "SETTING_DEBUG";
+
+	public static final String SETTING_DOWNLOAD_STOCK_FINANCIAL_TIMEMILLIS = "SETTING_DOWNLOAD_STOCK_FINANCIAL_TIMEMILLIS";
+	public static final String SETTING_DOWNLOAD_SHARE_BONUS_TIMEMILLIS = "SETTING_DOWNLOAD_SHARE_BONUS_TIMEMILLIS";
+	public static final String SETTING_DOWNLOAD_TOTAL_SHARE_TIMEMILLIS = "SETTING_DOWNLOAD_TOTAL_SHARE_TIMEMILLIS";
 
 	private Setting() {
 	}
@@ -235,5 +238,29 @@ public class Setting {
 
 	public static void setDebugLoopbackDateTime(String value) {
 		Preferences.putString(SETTING_DEBUG_LOOPBACK_DATE_TIME, value);
+	}
+
+	public static long getDownloadStockFinancialTimemillis() {
+		return Preferences.getLong(SETTING_DOWNLOAD_STOCK_FINANCIAL_TIMEMILLIS, 0);
+	}
+
+	public static void setDownloadStockFinancialTimemillis(long timemillis) {
+		Preferences.putLong(SETTING_DOWNLOAD_STOCK_FINANCIAL_TIMEMILLIS, timemillis);
+	}
+
+	public static long getDownloadShareBonusTimemillis() {
+		return Preferences.getLong(SETTING_DOWNLOAD_SHARE_BONUS_TIMEMILLIS, 0);
+	}
+
+	public static void setDownloadShareBonusTimemillis(long timemillis) {
+		Preferences.putLong(SETTING_DOWNLOAD_SHARE_BONUS_TIMEMILLIS, timemillis);
+	}
+
+	public static long getDownloadTotalShareTimemillis() {
+		return Preferences.getLong(SETTING_DOWNLOAD_TOTAL_SHARE_TIMEMILLIS, 0);
+	}
+
+	public static void setDownloadTotalShareTimemillis(long timemillis) {
+		Preferences.putLong(SETTING_DOWNLOAD_TOTAL_SHARE_TIMEMILLIS, timemillis);
 	}
 }
