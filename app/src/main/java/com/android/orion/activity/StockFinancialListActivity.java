@@ -93,9 +93,13 @@ public class StockFinancialListActivity extends ListActivity implements
 
 			switch (msg.what) {
 				case MESSAGE_REFRESH:
-					Setting.setDownloadStockFinancialTimemillis(0);
-					Setting.setDownloadShareBonusTimemillis(0);
-					Setting.setDownloadTotalShareTimemillis(0);
+					for (Stock stock : mStockList) {
+						if (stock != null) {
+							Setting.setDownloadStockFinancialTimemillis(stock.getSE(), stock.getCode(),0);
+							Setting.setDownloadShareBonusTimemillis(stock.getSE(), stock.getCode(),0);
+							Setting.setDownloadTotalShareTimemillis(stock.getSE(), stock.getCode(),0);
+						}
+					}
 					if (mOrionService != null) {
 						mStockDatabaseManager.deleteStockFinancial();
 						mStockDatabaseManager.deleteShareBonus();

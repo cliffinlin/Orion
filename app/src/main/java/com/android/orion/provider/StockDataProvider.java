@@ -565,10 +565,10 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 		mStockDatabaseManager.getStockFinancial(stock, stockFinancial);
 
-		if (System.currentTimeMillis() - Setting.getDownloadStockFinancialTimemillis() < Config.downloadStockFinancialInterval) {
+		if (System.currentTimeMillis() - Setting.getDownloadStockFinancialTimemillis(stock.getSE(), stock.getCode()) < Config.downloadStockFinancialInterval) {
 			return result;
 		}
-		Setting.setDownloadStockFinancialTimemillis(System.currentTimeMillis());
+		Setting.setDownloadStockFinancialTimemillis(stock.getSE(), stock.getCode(), System.currentTimeMillis());
 
 		return downloadStockFinancial(stock, stockFinancial, getStockFinancialURLString(stock));
 	}
@@ -669,10 +669,10 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 		mStockDatabaseManager.getShareBonus(stock.getId(), shareBonus);
 
-		if (System.currentTimeMillis() - Setting.getDownloadShareBonusTimemillis() < Config.downloadShareBonusInterval) {
+		if (System.currentTimeMillis() - Setting.getDownloadShareBonusTimemillis(stock.getSE(), stock.getCode()) < Config.downloadShareBonusInterval) {
 			return result;
 		}
-		Setting.setDownloadShareBonusTimemillis(System.currentTimeMillis());
+		Setting.setDownloadShareBonusTimemillis(stock.getSE(), stock.getCode(), System.currentTimeMillis());
 
 		return downloadShareBonus(stock, shareBonus, getShareBonusURLString(stock));
 	}
@@ -718,10 +718,10 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 		mStockDatabaseManager.getTotalShare(stock.getId(), totalShare);
 
-		if (System.currentTimeMillis() - Setting.getDownloadTotalShareTimemillis() < Config.downloadTotalShareInterval) {
+		if (System.currentTimeMillis() - Setting.getDownloadTotalShareTimemillis(stock.getSE(), stock.getCode()) < Config.downloadTotalShareInterval) {
 			return result;
 		}
-		Setting.setDownloadTotalShareTimemillis(System.currentTimeMillis());
+		Setting.setDownloadTotalShareTimemillis(stock.getSE(), stock.getCode(), System.currentTimeMillis());
 
 		return downloadTotalShare(stock, totalShare, getTotalShareURLString(stock));
 	}
@@ -1079,9 +1079,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 					return;
 				}
 
-				if (Stock.CLASS_INDEX.equals(stock.getClasses())) {
-					setupIndex(stock);
-				} else {
+				if (Stock.CLASS_A.equals(stock.getClasses())) {
 					if (downloadStockInformation(stock) == DOWNLOAD_RESULT_FAILED) {
 						return;
 					}
@@ -1109,6 +1107,9 @@ public abstract class StockDataProvider extends StockAnalyzer {
 					if (downloadStockDataRealTime(stock) == DOWNLOAD_RESULT_FAILED) {
 						return;
 					}
+				} else if (Stock.CLASS_INDEX.equals(stock.getClasses())) {
+					setupIndex(stock);
+				} else {
 				}
 
 				for (String period : DatabaseContract.PERIODS) {

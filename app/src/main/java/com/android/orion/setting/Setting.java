@@ -240,27 +240,27 @@ public class Setting {
 		Preferences.putString(SETTING_DEBUG_LOOPBACK_DATE_TIME, value);
 	}
 
-	public static long getDownloadStockFinancialTimemillis() {
-		return Preferences.getLong(SETTING_DOWNLOAD_STOCK_FINANCIAL_TIMEMILLIS, 0);
+	public static long getDownloadStockFinancialTimemillis(String se, String code) {
+		return Preferences.getLong(SETTING_DOWNLOAD_STOCK_FINANCIAL_TIMEMILLIS + "_" + se + "_" + code, 0);
 	}
 
-	public static void setDownloadStockFinancialTimemillis(long timemillis) {
-		Preferences.putLong(SETTING_DOWNLOAD_STOCK_FINANCIAL_TIMEMILLIS, timemillis);
+	public static void setDownloadStockFinancialTimemillis(String se, String code, long timemillis) {
+		Preferences.putLong(SETTING_DOWNLOAD_STOCK_FINANCIAL_TIMEMILLIS + "_" + se + "_" + code, timemillis);
 	}
 
-	public static long getDownloadShareBonusTimemillis() {
-		return Preferences.getLong(SETTING_DOWNLOAD_SHARE_BONUS_TIMEMILLIS, 0);
+	public static long getDownloadShareBonusTimemillis(String se, String code) {
+		return Preferences.getLong(SETTING_DOWNLOAD_SHARE_BONUS_TIMEMILLIS + "_" + se + "_" + code, 0);
 	}
 
-	public static void setDownloadShareBonusTimemillis(long timemillis) {
-		Preferences.putLong(SETTING_DOWNLOAD_SHARE_BONUS_TIMEMILLIS, timemillis);
+	public static void setDownloadShareBonusTimemillis(String se, String code, long timemillis) {
+		Preferences.putLong(SETTING_DOWNLOAD_SHARE_BONUS_TIMEMILLIS + "_" + se + "_" + code, timemillis);
 	}
 
-	public static long getDownloadTotalShareTimemillis() {
-		return Preferences.getLong(SETTING_DOWNLOAD_TOTAL_SHARE_TIMEMILLIS, 0);
+	public static long getDownloadTotalShareTimemillis(String se, String code) {
+		return Preferences.getLong(SETTING_DOWNLOAD_TOTAL_SHARE_TIMEMILLIS + "_" + se + "_" + code, 0);
 	}
 
-	public static void setDownloadTotalShareTimemillis(long timemillis) {
-		Preferences.putLong(SETTING_DOWNLOAD_TOTAL_SHARE_TIMEMILLIS, timemillis);
+	public static void setDownloadTotalShareTimemillis(String se, String code, long timemillis) {
+		Preferences.putLong(SETTING_DOWNLOAD_TOTAL_SHARE_TIMEMILLIS + "_" + se + "_" + code, timemillis);
 	}
 }
