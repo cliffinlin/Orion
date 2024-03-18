@@ -27,6 +27,7 @@ import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockFinancial;
 import com.android.orion.setting.Constant;
+import com.android.orion.setting.Setting;
 import com.android.orion.utility.Utility;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -79,6 +80,12 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 
 			switch (msg.what) {
 				case MESSAGE_REFRESH:
+					if (mStock != null) {
+						Setting.setDownloadStockFinancialTimemillis(mStock.getSE(), mStock.getCode(),0);
+						Setting.setDownloadShareBonusTimemillis(mStock.getSE(), mStock.getCode(),0);
+						Setting.setDownloadTotalShareTimemillis(mStock.getSE(), mStock.getCode(),0);
+					}
+
 					if (mOrionService != null) {
 						mOrionService.download(mStock);
 					}
