@@ -999,25 +999,25 @@ public class SinaFinance extends StockDataProvider {
 			}
 
 			for (int i = 0; i < reportDateJSONArray.size(); i++) {
-				JSONObject reportDatejsonObject = reportDateJSONArray.getJSONObject(i);
-				if (reportDatejsonObject == null) {
-					continue;
-				}
-
-				String reportDate = reportDatejsonObject.getString("date_value");
-				if (TextUtils.isEmpty(reportDate) || reportDate.length() < 8) {
-					continue;
-				}
-
-				valueString = reportDate.substring(0, 4) + "-" + reportDate.substring(4, 6) + "-" + reportDate.substring(6);
-				stockFinancial.setDate(valueString);
-
-				JSONObject reportDateJSONObject = reportListJSONObject.getJSONObject(reportDate);
+				JSONObject reportDateJSONObject = reportDateJSONArray.getJSONObject(i);
 				if (reportDateJSONObject == null) {
 					continue;
 				}
 
-				JSONArray dataJSONArray = reportDateJSONObject.getJSONArray("data");
+				String dateValue = reportDateJSONObject.getString("date_value");
+				if (TextUtils.isEmpty(dateValue) || dateValue.length() < 8) {
+					continue;
+				}
+
+				valueString = dateValue.substring(0, 4) + "-" + dateValue.substring(4, 6) + "-" + dateValue.substring(6);
+				stockFinancial.setDate(valueString);
+
+				JSONObject reportJSONObject = reportListJSONObject.getJSONObject(dateValue);
+				if (reportJSONObject == null) {
+					continue;
+				}
+
+				JSONArray dataJSONArray = reportJSONObject.getJSONArray("data");
 				if (dataJSONArray == null) {
 					continue;
 				}
@@ -1059,10 +1059,10 @@ public class SinaFinance extends StockDataProvider {
 					} else if (keyString.equals(mContext.getResources().getString(R.string.key_total_assets))) {
 						stockFinancial.setTotalAssets(Double
 								.valueOf(valueString));
-					} else if (keyString.equals("ASSLIABRT")) {
+					} else if (keyString.equals("ASSLIABRT")) {//资产负债率
 						stockFinancial
 								.setDebtToNetAssetsRatio(Double
-										.valueOf(valueString));//资产负债率
+										.valueOf(valueString));
 
 						stockFinancial.setupNetProfitPerShare(stock
 								.getTotalShare());
