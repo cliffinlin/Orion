@@ -246,36 +246,6 @@ public class BaseActivity extends Activity {
 		}
 	}
 
-	void acquireWakeLock() {
-		if (!mWakeLock.isHeld()) {
-			mWakeLock.acquire();
-			Log.d("mWakeLock acquired.");
-		}
-	}
-
-	void releaseWakeLock() {
-		if (mWakeLock.isHeld()) {
-			mWakeLock.release();
-			Log.d("mWakeLock released.");
-		}
-	}
-
-	public void showProgressDialog(String content) {
-		if (mProgressDialog != null) {
-			mProgressDialog.setMessage(content);
-			mProgressDialog.setCancelable(false);
-			mProgressDialog.show();
-		}
-	}
-
-	public void hideProgressDialog() {
-		if (mProgressDialog != null) {
-			if (mProgressDialog.isShowing()) {
-				mProgressDialog.dismiss();
-			}
-		}
-	}
-
 	void restartLoader(Intent intent) {
 	}
 

@@ -58,6 +58,7 @@ public class Constant {
 
 	public static final int SEASONS_IN_A_YEAR = 4;
 
+	public static final long WAKELOCK_TIMEOUT = 10 * 60 * 1000L; /*10 minutes*/
 	public static final long DEFAULT_ALARM_INTERVAL = 5 * 60 * 1000;
 	public static final long DEFAULT_DOWNLOAD_SLEEP_INTERVAL = 1 * 1000;
 

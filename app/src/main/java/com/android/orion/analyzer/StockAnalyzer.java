@@ -64,7 +64,7 @@ public class StockAnalyzer {
 
 	public void acquireWakeLock() {
 		if (!mWakeLock.isHeld()) {
-			mWakeLock.acquire(10 * 60 * 1000L /*10 minutes*/);
+			mWakeLock.acquire(Constant.WAKELOCK_TIMEOUT);
 			Log.d("mWakeLock acquired.");
 		}
 	}
@@ -704,7 +704,6 @@ public class StockAnalyzer {
 
 		StockData baseStockData = null;
 		StockData brokenStockData = null;
-		int divergence = 0;
 		int numerator = 0;
 		int denominator = 0;
 
@@ -761,13 +760,6 @@ public class StockAnalyzer {
 				denominator = (int) (brokenStockData.getNet());
 			}
 
-			divergence = brokenStockData.divergenceTo(baseStockData);
-			if (divergence == StockData.DIVERGENCE_UP) {
-//				result += StockData.ACTION_HIGH;
-			} else if (divergence == StockData.DIVERGENCE_DOWN) {
-//				result += StockData.ACTION_LOW;
-			}
-
 			result += StockData.ACTION_BUY2;
 			result += StockData.ACTION_BUY2;
 			result += " " + numerator;
@@ -788,7 +780,6 @@ public class StockAnalyzer {
 
 		StockData baseStockData = null;
 		StockData brokenStockData = null;
-		int divergence = 0;
 		int numerator = 0;
 		int denominator = 0;
 
@@ -845,13 +836,6 @@ public class StockAnalyzer {
 				denominator = (int) (brokenStockData.getNet());
 			}
 
-			divergence = brokenStockData.divergenceTo(baseStockData);
-			if (divergence == StockData.DIVERGENCE_UP) {
-//				result += StockData.ACTION_HIGH;
-			} else if (divergence == StockData.DIVERGENCE_DOWN) {
-//				result += StockData.ACTION_LOW;
-			}
-
 			result += StockData.ACTION_SELL2;
 			result += StockData.ACTION_SELL2;
 			result += " " + numerator;
@@ -876,21 +860,6 @@ public class StockAnalyzer {
 		return result;
 	}
 
-	private int getLastDivergence(ArrayList<StockData> stockDataList) {
-		int result = 0;
-		StockData stockData;
-
-		if (stockDataList == null || stockDataList.size() == 0) {
-			return result;
-		}
-
-		stockData = stockDataList.get(stockDataList.size() - 1);
-
-		result = stockData.getDivergence();
-
-		return result;
-	}
-
 	private void analyzeAction(Stock stock, String period,
 							   ArrayList<StockData> stockDataList,
 							   ArrayList<StockData> drawVertexList,
@@ -901,12 +870,7 @@ public class StockAnalyzer {
 		String trendString = "";
 		StockData prev = null;
 		StockData stockData = null;
-		int drawNet = 0;
-		int strokeNet = 0;
 		int segmentNet = 0;
-		int drawDivergence = 0;
-		int strokeDivergence = 0;
-		int segmentDivergence = 0;
 
 		if (stockDataList == null) {
 			Log.d("return, stockDataList = " + stockDataList);
@@ -917,13 +881,7 @@ public class StockAnalyzer {
 			return;
 		}
 
-		drawNet = getLastNet(drawDataList);
-		strokeNet = getLastNet(strokeDataList);
 		segmentNet = getLastNet(segmentDataList);
-
-		drawDivergence = getLastDivergence(drawDataList);
-		strokeDivergence = getLastDivergence(strokeDataList);
-		segmentDivergence = getLastDivergence(segmentDataList);
 
 		prev = stockDataList.get(stockDataList.size() - 2);
 		stockData = stockDataList.get(stockDataList.size() - 1);
@@ -937,11 +895,6 @@ public class StockAnalyzer {
 				}
 				action += segmentNet;
 			}
-
-			if (segmentDivergence == StockData.DIVERGENCE_UP) {
-//				action += StockData.ACTION_HIGH;
-			}
-
 			trendString = StockData.NAME_UPWARD_TREND;
 		} else if (stockData
 				.directionOf(StockData.DIRECTION_DOWN_SEGMENT)) {
@@ -953,73 +906,22 @@ public class StockAnalyzer {
 				}
 				action += segmentNet;
 			}
-
-			if (segmentDivergence == StockData.DIVERGENCE_DOWN) {
-//				action += StockData.ACTION_LOW;
-			}
-
 			trendString = StockData.NAME_DOWNWARD_TREND;
-		}
-
-		if (stockData.directionOf(StockData.DIRECTION_UP_STROKE)) {
-			if (prev.vertexOf(StockData.VERTEX_BOTTOM_STROKE)) {
-//				action += StockData.ACTION_D;
-			} else {
-//				if (strokeNet >= 0) {
-//					action += StockData.ACTION_ADD;
-//				}
-//				action += strokeNet;
-			}
-
-			if (strokeDivergence == StockData.DIVERGENCE_UP) {
-//				action += StockData.ACTION_HIGH;
-			}
-		} else if (stockData.directionOf(StockData.DIRECTION_DOWN_STROKE)) {
-			if (prev.vertexOf(StockData.VERTEX_TOP_STROKE)) {
-//				action += StockData.ACTION_G;
-			} else {
-//				if (strokeNet >= 0) {
-//					action += StockData.ACTION_ADD;
-//				}
-//				action += strokeNet;
-			}
-
-			if (strokeDivergence == StockData.DIVERGENCE_DOWN) {
-//				action += StockData.ACTION_LOW;
-			}
 		}
 
 		if (stockData.directionOf(StockData.DIRECTION_UP)) {
 			if (prev.vertexOf(StockData.VERTEX_BOTTOM)) {
-				String result2 = getSecondBottomAction(stock, drawVertexList, strokeDataList, segmentDataList);
-				if (!TextUtils.isEmpty(result2)) {
-					action = result2;
+				String result = getSecondBottomAction(stock, drawVertexList, strokeDataList, segmentDataList);
+				if (!TextUtils.isEmpty(result)) {
+					action = result;
 				}
-			} else {
-//				if (drawNet >= 0) {
-//					action += StockData.ACTION_ADD;
-//				}
-//				action += drawNet;
-			}
-
-			if (drawDivergence == StockData.DIVERGENCE_UP) {
-//				action += StockData.ACTION_HIGH;
 			}
 		} else if (stockData.directionOf(StockData.DIRECTION_DOWN)) {
 			if (prev.vertexOf(StockData.VERTEX_TOP)) {
-				String result2 = getSecondTopAction(stock, drawVertexList, strokeDataList, segmentDataList);
-				if (!TextUtils.isEmpty(result2)) {
-					action = result2;
+				String result = getSecondTopAction(stock, drawVertexList, strokeDataList, segmentDataList);
+				if (!TextUtils.isEmpty(result)) {
+					action = result;
 				}
-			} else {
-//				if (drawNet >= 0) {
-//					action += StockData.ACTION_ADD;
-//				}
-//				action += drawNet;
-			}
-
-			if (drawDivergence == StockData.DIVERGENCE_DOWN) {
-//				action += StockData.ACTION_LOW;
 			}
 		}
 
