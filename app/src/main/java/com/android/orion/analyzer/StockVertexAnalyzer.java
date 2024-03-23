@@ -9,7 +9,19 @@ import java.util.ArrayList;
 
 public class StockVertexAnalyzer {
 
-	public Logger Log = Logger.getLogger();
+	private static StockVertexAnalyzer mInstance;
+	Logger Log = Logger.getLogger();
+
+	public static StockVertexAnalyzer getInstance() {
+		synchronized (StockVertexAnalyzer.class) {
+			if (mInstance == null) {
+				mInstance = new StockVertexAnalyzer();
+			}
+			return mInstance;
+		}
+	}
+
+	private StockVertexAnalyzer() {}
 
 	void analyzeVertex(ArrayList<StockData> dataList,
 					   ArrayList<StockData> vertexList) {

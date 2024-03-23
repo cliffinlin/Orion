@@ -9,7 +9,10 @@ import java.util.ArrayList;
 public class StockKeyAnalyzer {
 
 	static final boolean LOG = false;
-	public Logger Log = Logger.getLogger();
+
+	private static StockKeyAnalyzer mInstance;
+	Logger Log = Logger.getLogger();
+
 	int mThresholdType = StockData.THRESHOLD_NONE;
 	double mNaturalRally;
 	double mUpwardTrend;
@@ -18,8 +21,16 @@ public class StockKeyAnalyzer {
 	double mPrevHigh;
 	double mPrevLow;
 
-	public StockKeyAnalyzer() {
-		init();
+	public static StockKeyAnalyzer getInstance() {
+		synchronized (StockKeyAnalyzer.class) {
+			if (mInstance == null) {
+				mInstance = new StockKeyAnalyzer();
+			}
+			return mInstance;
+		}
+	}
+
+	private StockKeyAnalyzer() {
 	}
 
 	void init() {
@@ -34,7 +45,9 @@ public class StockKeyAnalyzer {
 		mPrevLow = 0;
 	}
 
-	void analyze(Stock stock, String period, ArrayList<StockData> dataList) {
+	void analyze(Stock stock, ArrayList<StockData> dataList) {
+		init();
+
 		int i = 0;
 		int size = 0;
 		double threshold = 0;
@@ -42,11 +55,7 @@ public class StockKeyAnalyzer {
 		StockData prev = null;
 		StockData current = null;
 
-		if (stock == null) {
-			return;
-		}
-
-		if (dataList == null) {
+		if (stock == null || dataList == null) {
 			return;
 		}
 

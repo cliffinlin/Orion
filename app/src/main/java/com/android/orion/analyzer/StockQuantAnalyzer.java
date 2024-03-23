@@ -17,6 +17,8 @@ import java.util.Comparator;
 
 public class StockQuantAnalyzer {
 
+	private static StockQuantAnalyzer mInstance;
+
 	boolean mBulkInsert;
 
 	long mHold;
@@ -49,7 +51,16 @@ public class StockQuantAnalyzer {
 		}
 	};
 
-	public StockQuantAnalyzer() {
+	public static StockQuantAnalyzer getInstance() {
+		synchronized (StockQuantAnalyzer.class) {
+			if (mInstance == null) {
+				mInstance = new StockQuantAnalyzer();
+			}
+			return mInstance;
+		}
+	}
+
+	private StockQuantAnalyzer() {
 	}
 
 	void init() {

@@ -201,6 +201,7 @@ public class StockAnalyzer {
 			setupStockFinancial(stock);
 
 			loadStockDataList(stock, period, stockDataList);
+			setupMACD(stockDataList);
 			analyzeStockData(stock, period, stockDataList,
 					drawVertexList, drawDataList,
 					strokeVertexList, strokeDataList,
@@ -567,7 +568,7 @@ public class StockAnalyzer {
 		}
 	}
 
-	private void setMACD(ArrayList<StockData> stockDataList) {
+	private void setupMACD(ArrayList<StockData> stockDataList) {
 		int size = 0;
 
 		double average5 = 0;
@@ -616,80 +617,73 @@ public class StockAnalyzer {
 								  ArrayList<StockData> segmentVertexList, ArrayList<StockData> segmentDataList,
 								  ArrayList<StockData> lineVertexList, ArrayList<StockData> lineDataList,
 								  ArrayList<StockData> outlineVertexList, ArrayList<StockData> outlineDataList) {
-		StockKeyAnalyzer stockKeyAnalyzer = new StockKeyAnalyzer();
-		StockVertexAnalyzer stockVertexAnalyzer = new StockVertexAnalyzer();
-		StockQuantAnalyzer stockQuantAnalyzer = new StockQuantAnalyzer();
-		ArrayList<ShareBonus> shareBonusList = new ArrayList<ShareBonus>();
+		StockKeyAnalyzer.getInstance().analyze(stock, stockDataList);
 
-		stockKeyAnalyzer.analyze(stock, period, stockDataList);
-
-		setMACD(stockDataList);
-
-		stockVertexAnalyzer.analyzeVertex(stockDataList, drawVertexList);
-		stockVertexAnalyzer.vertexListToDataList(stockDataList, drawVertexList,
+		StockVertexAnalyzer.getInstance().analyzeVertex(stockDataList, drawVertexList);
+		StockVertexAnalyzer.getInstance().vertexListToDataList(stockDataList, drawVertexList,
 				drawDataList, StockData.LEVEL_DRAW);
 
-		stockVertexAnalyzer.analyzeLine(stockDataList, drawDataList,
+		StockVertexAnalyzer.getInstance().analyzeLine(stockDataList, drawDataList,
 				strokeVertexList, StockData.VERTEX_TOP_STROKE,
 				StockData.VERTEX_BOTTOM_STROKE);
-		stockVertexAnalyzer.vertexListToDataList(stockDataList, strokeVertexList,
+		StockVertexAnalyzer.getInstance().vertexListToDataList(stockDataList, strokeVertexList,
 				strokeDataList, StockData.LEVEL_STROKE);
 
-		stockVertexAnalyzer.analyzeLine(stockDataList, strokeDataList,
+		StockVertexAnalyzer.getInstance().analyzeLine(stockDataList, strokeDataList,
 				segmentVertexList, StockData.VERTEX_TOP_SEGMENT,
 				StockData.VERTEX_BOTTOM_SEGMENT);
-		stockVertexAnalyzer.vertexListToDataList(stockDataList, segmentVertexList,
+		StockVertexAnalyzer.getInstance().vertexListToDataList(stockDataList, segmentVertexList,
 				segmentDataList, StockData.LEVEL_SEGMENT);
 
-		stockVertexAnalyzer.analyzeLine(stockDataList, segmentDataList,
+		StockVertexAnalyzer.getInstance().analyzeLine(stockDataList, segmentDataList,
 				lineVertexList, StockData.VERTEX_TOP_LINE,
 				StockData.VERTEX_BOTTOM_LINE);
-		stockVertexAnalyzer.vertexListToDataList(stockDataList, lineVertexList,
+		StockVertexAnalyzer.getInstance().vertexListToDataList(stockDataList, lineVertexList,
 				lineDataList, StockData.LEVEL_LINE);
 
-		stockVertexAnalyzer.analyzeLine(stockDataList, lineDataList,
+		StockVertexAnalyzer.getInstance().analyzeLine(stockDataList, lineDataList,
 				outlineVertexList, StockData.VERTEX_TOP_OUTLINE,
 				StockData.VERTEX_BOTTOM_OUTLINE);
-		stockVertexAnalyzer.vertexListToDataList(stockDataList, outlineVertexList,
+		StockVertexAnalyzer.getInstance().vertexListToDataList(stockDataList, outlineVertexList,
 				outlineDataList, StockData.LEVEL_OUTLINE);
 
 		//stockVertexAnalyzer.testShowVertextNumber(stockDataList, stockDataList);
 
 		if (Preferences.getBoolean(Setting.SETTING_DEBUG_LOOPBACK, false)) {
 			if (Preferences.getBoolean(Setting.SETTING_DEBUG_DIRECT, false)) {
-				stockVertexAnalyzer.debugShow(stockDataList, stockDataList);
+				StockVertexAnalyzer.getInstance().debugShow(stockDataList, stockDataList);
 			}
 
 			if (Setting.getDisplayDraw()) {
-				stockVertexAnalyzer.debugShow(stockDataList, drawDataList);
+				StockVertexAnalyzer.getInstance().debugShow(stockDataList, drawDataList);
 			}
 
 			if (Setting.getDisplayStroke()) {
-				stockVertexAnalyzer.debugShow(stockDataList, strokeDataList);
+				StockVertexAnalyzer.getInstance().debugShow(stockDataList, strokeDataList);
 			}
 
 			if (Setting.getDisplaySegment()) {
-				stockVertexAnalyzer.debugShow(stockDataList, segmentDataList);
+				StockVertexAnalyzer.getInstance().debugShow(stockDataList, segmentDataList);
 			}
 
 			if (Setting.getDisplayLine()) {
-				stockVertexAnalyzer.debugShow(stockDataList, lineDataList);
+				StockVertexAnalyzer.getInstance().debugShow(stockDataList, lineDataList);
 			}
 		}
 
-		stockVertexAnalyzer.analyzeDivergence(stock, stockDataList, segmentDataList);
-		stockVertexAnalyzer.analyzeDivergence(stock, stockDataList, strokeDataList);
-		stockVertexAnalyzer.analyzeDivergence(stock, stockDataList, drawDataList);
+		StockVertexAnalyzer.getInstance().analyzeDivergence(stock, stockDataList, segmentDataList);
+		StockVertexAnalyzer.getInstance().analyzeDivergence(stock, stockDataList, strokeDataList);
+		StockVertexAnalyzer.getInstance().analyzeDivergence(stock, stockDataList, drawDataList);
 
-		stockVertexAnalyzer.analyzeDirection(stockDataList);
+		StockVertexAnalyzer.getInstance().analyzeDirection(stockDataList);
 
 		analyzeAction(stock, period, stockDataList, drawVertexList, drawDataList, strokeDataList, segmentDataList);
 
-		mStockDatabaseManager.getShareBonusList(stock, shareBonusList,
-				DatabaseContract.COLUMN_DATE + " DESC ");
-
 		if (period.equals(stock.getOperate())) {
-			stockQuantAnalyzer.analyze(mContext, stock, stockDataList, shareBonusList);
+			ArrayList<ShareBonus> shareBonusList = new ArrayList<ShareBonus>();
+			mStockDatabaseManager.getShareBonusList(stock, shareBonusList,
+					DatabaseContract.COLUMN_DATE + " DESC ");
+			StockQuantAnalyzer.getInstance().analyze(mContext, stock, stockDataList, shareBonusList);
 		}
 	}
 
