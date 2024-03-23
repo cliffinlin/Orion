@@ -1311,4 +1311,27 @@ public class StockData extends DatabaseTable {
 
 		return stockDataString.toString();
 	}
+
+	public boolean isMinutePeriod() {
+		boolean result = false;
+
+		switch (getPeriod()) {
+			case DatabaseContract.COLUMN_MIN1:
+			case DatabaseContract.COLUMN_MIN5:
+			case DatabaseContract.COLUMN_MIN15:
+			case DatabaseContract.COLUMN_MIN30:
+			case DatabaseContract.COLUMN_MIN60:
+				result = true;
+				break;
+			case DatabaseContract.COLUMN_DAY:
+			case DatabaseContract.COLUMN_WEEK:
+			case DatabaseContract.COLUMN_MONTH:
+			case DatabaseContract.COLUMN_QUARTER:
+			case DatabaseContract.COLUMN_YEAR:
+			default:
+				break;
+		}
+
+		return result;
+	}
 }

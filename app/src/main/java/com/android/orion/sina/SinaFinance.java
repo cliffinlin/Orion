@@ -21,6 +21,7 @@ import com.android.orion.database.StockFinancial;
 import com.android.orion.database.TotalShare;
 import com.android.orion.provider.StockDataProvider;
 import com.android.orion.setting.Constant;
+import com.android.orion.utility.Logger;
 import com.android.orion.utility.StopWatch;
 import com.android.orion.utility.Utility;
 
@@ -53,6 +54,7 @@ public class SinaFinance extends StockDataProvider {
 	public static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN30 = 192;
 	public static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN60 = 192;
 
+	Logger Log = Logger.getLogger();
 
 	public SinaFinance(Context context) {
 		super(context);
@@ -539,7 +541,7 @@ public class SinaFinance extends StockDataProvider {
 			if (bulkInsert) {
 				setupStockDataFile(stock);
 
-				if (isMinutePeriod(stockData)) {
+				if (stockData.isMinutePeriod()) {
 					importStockDataFile(stock, stockData, contentValuesList, stockDataMap);
 				}
 			}
@@ -558,7 +560,7 @@ public class SinaFinance extends StockDataProvider {
 								break;
 							case 2:
 								stockData.setDate(dateTime[0]);
-								if (isMinutePeriod(stockData)) {
+								if (stockData.isMinutePeriod()) {
 									stockData.setTime(dateTime[1]);
 								}
 								break;
@@ -579,7 +581,7 @@ public class SinaFinance extends StockDataProvider {
 						stockData.setCreated(Utility.getCurrentDateTimeString());
 						stockData.setModified(Utility.getCurrentDateTimeString());
 
-						if (isMinutePeriod(stockData)) {
+						if (stockData.isMinutePeriod()) {
 							if (!stockDataMap.containsKey(stockData.getDateTime())) {
 								stockDataMap.put(stockData.getDateTime(), new StockData(stockData));
 								contentValuesList.add(stockData.getContentValues());
@@ -605,7 +607,7 @@ public class SinaFinance extends StockDataProvider {
 			}
 
 			if (bulkInsert) {
-				if (isMinutePeriod(stockData)) {
+				if (stockData.isMinutePeriod()) {
 					if (stockDataMap.size() > 0) {
 						ArrayList<StockData> stockDataList = new ArrayList<>(stockDataMap.values());
 						Collections.sort(stockDataList, StockData.comparator);
@@ -907,7 +909,7 @@ public class SinaFinance extends StockDataProvider {
 			stockData.setVertexLow(stockData.getLow());
 
 			stockData.setDate(stockInfo[30]);
-			if (isMinutePeriod(stockData)) {
+			if (stockData.isMinutePeriod()) {
 				stockData.setTime(stockInfo[31]);
 			}
 

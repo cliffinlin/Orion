@@ -8,7 +8,7 @@ import com.android.orion.receiver.DownloadBroadcastReceiver;
 import com.android.orion.setting.Constant;
 
 public class DownloadAlarmManager extends OrionAlarmManager {
-	private static DownloadAlarmManager mInstance = null;
+	private static DownloadAlarmManager mInstance;
 
 	private DownloadAlarmManager(Context context) {
 		super(context);
@@ -18,7 +18,6 @@ public class DownloadAlarmManager extends OrionAlarmManager {
 		if (mInstance == null) {
 			mInstance = new DownloadAlarmManager(context);
 		}
-
 		return mInstance;
 	}
 

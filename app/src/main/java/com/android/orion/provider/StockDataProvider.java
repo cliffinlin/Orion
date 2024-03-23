@@ -9,14 +9,17 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
+import android.os.PowerManager;
 import android.os.Process;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 
 import androidx.annotation.NonNull;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.android.orion.R;
 import com.android.orion.analyzer.StockAnalyzer;
+import com.android.orion.application.OrionApplication;
 import com.android.orion.config.Config;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.IPO;
@@ -26,8 +29,10 @@ import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockFinancial;
 import com.android.orion.database.TotalShare;
+import com.android.orion.manager.StockDatabaseManager;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
+import com.android.orion.utility.Logger;
 import com.android.orion.utility.Market;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Utility;
@@ -42,7 +47,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public abstract class StockDataProvider extends StockAnalyzer {
+public abstract class StockDataProvider {
 
 	public static final int PERIOD_MINUTES_MIN1 = 1;
 	public static final int PERIOD_MINUTES_MIN5 = 5;
@@ -62,13 +67,37 @@ public abstract class StockDataProvider extends StockAnalyzer {
 	private static int DOWNLOAD_RESULT_SUCCESS = 1;
 	private static int DOWNLOAD_RESULT_NONE = 0;
 	private static int DOWNLOAD_RESULT_FAILED = -1;
-	private HandlerThread mHandlerThread;
-	private ServiceHandler mHandler;
-	private OkHttpClient mOkHttpClient = new OkHttpClient();
-	private ArrayList<String> mAccessDeniedStringArray = new ArrayList<>();
+
+	public Context mContext;
+	PowerManager mPowerManager;
+	PowerManager.WakeLock mWakeLock;
+	LocalBroadcastManager mLocalBroadcastManager;
+
+	StockAnalyzer mStockAnalyzer;
+	public StockDatabaseManager mStockDatabaseManager;
+	Logger Log = Logger.getLogger();
+
+	HandlerThread mHandlerThread;
+	ServiceHandler mHandler;
+	OkHttpClient mOkHttpClient = new OkHttpClient();
+	ArrayList<String> mAccessDeniedStringArray = new ArrayList<>();
 
 	public StockDataProvider(@NonNull Context context) {
-		super(context);
+		mContext = OrionApplication.getContext();
+
+		mPowerManager = (PowerManager) mContext
+				.getSystemService(Context.POWER_SERVICE);
+		mWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+				Constant.TAG + ":" + StockDataProvider.class.getSimpleName());
+		mLocalBroadcastManager = LocalBroadcastManager.getInstance(mContext);
+
+		mStockAnalyzer = StockAnalyzer.getInstance();
+		mStockDatabaseManager = StockDatabaseManager.getInstance(mContext);
+
+		mHandlerThread = new HandlerThread("StockDataProvider",
+				Process.THREAD_PRIORITY_BACKGROUND);
+		mHandlerThread.start();
+		mHandler = new ServiceHandler(mHandlerThread.getLooper());
 
 		mAccessDeniedStringArray.add(mContext.getResources().getString(
 				R.string.access_denied_jp));
@@ -76,12 +105,20 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				R.string.access_denied_zh));
 		mAccessDeniedStringArray.add(mContext.getResources().getString(
 				R.string.access_denied_default));
+	}
 
-		mHandlerThread = new HandlerThread("StockDataProvider",
-				Process.THREAD_PRIORITY_BACKGROUND);
-		mHandlerThread.start();
+	public void acquireWakeLock() {
+		if (!mWakeLock.isHeld()) {
+			mWakeLock.acquire(Constant.WAKELOCK_TIMEOUT);
+			Log.d("mWakeLock acquired.");
+		}
+	}
 
-		mHandler = new ServiceHandler(mHandlerThread.getLooper());
+	public void releaseWakeLock() {
+		if (mWakeLock.isHeld()) {
+			mWakeLock.release();
+			Log.d("mWakeLock released.");
+		}
 	}
 
 	public abstract int getAvailableHistoryLength(String period);
@@ -194,35 +231,6 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		mLocalBroadcastManager.sendBroadcast(intent);
 	}
 
-	private void loadStockArrayMap(ArrayMap<String, Stock> stockArrayMap) {
-		String selection = "";
-		Cursor cursor = null;
-
-		if ((mStockDatabaseManager == null) || (stockArrayMap == null)) {
-			return;
-		}
-
-		selection += DatabaseContract.COLUMN_FLAG + " >= "
-				+ Stock.FLAG_FAVORITE;
-
-		try {
-			stockArrayMap.clear();
-			cursor = mStockDatabaseManager.queryStock(selection, null, null);
-			if ((cursor != null) && (cursor.getCount() > 0)) {
-				while (cursor.moveToNext()) {
-					Stock stock = new Stock();
-					stock.set(cursor);
-
-					stockArrayMap.put(stock.getCode(), stock);
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			mStockDatabaseManager.closeCursor(cursor);
-		}
-	}
-
 	public void download(String se, String code) {
 		Stock stock = null;
 
@@ -245,7 +253,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		if (stock == null) {
 			ArrayMap<String, Stock> stockArrayMap = new ArrayMap<String, Stock>();
 
-			loadStockArrayMap(stockArrayMap);
+			mStockDatabaseManager.loadStockArrayMap(stockArrayMap);
 
 			for (Stock current : stockArrayMap.values()) {
 				if (mHandler.hasMessages(Integer.valueOf(current.getCode()))) {
@@ -264,7 +272,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 			ArrayMap<String, Stock> stockArrayMap = new ArrayMap<String, Stock>();
 			ArrayMap<String, Stock> removedArrayMap = new ArrayMap<String, Stock>();
 
-			loadStockArrayMap(stockArrayMap);
+			mStockDatabaseManager.loadStockArrayMap(stockArrayMap);
 
 			for (Stock current : stockArrayMap.values()) {
 				if (current.getCode().equals(stock.getCode())) {
@@ -899,7 +907,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 		ArrayList<IndexComponent> indexComponentList = new ArrayList<>();
 		ArrayMap<String, Stock> stockArrayMap = new ArrayMap<String, Stock>();
 
-		loadStockArrayMap(stockArrayMap);
+		mStockDatabaseManager.loadStockArrayMap(stockArrayMap);
 
 		String selection = DatabaseContract.COLUMN_INDEX_CODE + " = " + index.getCode();
 		mStockDatabaseManager.getIndexComponentList(indexComponentList, selection, null);
@@ -934,7 +942,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 				for (Stock stock : stockList) {
 					stockDataList = stock.getStockDataList(period);
-					loadStockDataList(stock, period, stockDataList);
+					mStockDatabaseManager.loadStockDataList(stock, period, stockDataList);
 					if ((stockDataList == null) || (stockDataList.size() == 0)) {
 						continue;
 					}
@@ -1003,7 +1011,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 					}
 				}
 
-				updateDatabase(index, period, indexStockDataList);
+				mStockDatabaseManager.updateDatabase(index, period, indexStockDataList);
 
 				if (period.equals(DatabaseContract.COLUMN_DAY) && (indexStockDataList.size() > 1)) {
 					double prevPrice = indexStockDataList.get(indexStockDataList.size() - 2).getClose();
@@ -1042,7 +1050,7 @@ public abstract class StockDataProvider extends StockAnalyzer {
 				contentTitle.append(" ");
 				contentTitle.append(accessDeniedString);
 
-				notify(Constant.SERVICE_NOTIFICATION_ID, Constant.MESSAGE_CHANNEL_ID, Constant.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
+				mStockAnalyzer.notify(Constant.SERVICE_NOTIFICATION_ID, Constant.MESSAGE_CHANNEL_ID, Constant.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
 						contentTitle.toString(), "");
 
 				mHandlerThread.quit();
@@ -1114,11 +1122,11 @@ public abstract class StockDataProvider extends StockAnalyzer {
 
 				for (String period : DatabaseContract.PERIODS) {
 					if (Preferences.getBoolean(period, false)) {
-						analyze(stock, period);
+						mStockAnalyzer.analyze(stock, period);
 					}
 				}
 
-				analyze(stock);
+				mStockAnalyzer.analyze(stock);
 				sendBroadcast(Constant.ACTION_RESTART_LOADER, stock.getId());
 			} catch (Exception e) {
 				e.printStackTrace();

@@ -5,6 +5,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.text.TextUtils;
+import android.util.ArrayMap;
 
 import androidx.annotation.NonNull;
 
@@ -18,13 +20,15 @@ import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockFinancial;
 import com.android.orion.database.StockQuant;
 import com.android.orion.database.TotalShare;
+import com.android.orion.setting.Setting;
+import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Utility;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class StockDatabaseManager extends DatabaseManager {
-
 	private static StockDatabaseManager mInstance;
 
 	private StockDatabaseManager(Context context) {
@@ -153,6 +157,35 @@ public class StockDatabaseManager extends DatabaseManager {
 				+ Stock.FLAG_FAVORITE;
 
 		getStockList(selection, stockList);
+	}
+
+	public void loadStockArrayMap(ArrayMap<String, Stock> stockArrayMap) {
+		String selection = "";
+		Cursor cursor = null;
+
+		if (stockArrayMap == null) {
+			return;
+		}
+
+		selection += DatabaseContract.COLUMN_FLAG + " >= "
+				+ Stock.FLAG_FAVORITE;
+
+		try {
+			stockArrayMap.clear();
+			cursor = queryStock(selection, null, null);
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				while (cursor.moveToNext()) {
+					Stock stock = new Stock();
+					stock.set(cursor);
+
+					stockArrayMap.put(stock.getCode(), stock);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
 	}
 
 	public void getStockById(Stock stock) {
@@ -443,6 +476,67 @@ public class StockDatabaseManager extends DatabaseManager {
 				while (cursor.moveToNext()) {
 					StockData stockData = new StockData();
 					stockData.set(cursor);
+					stockDataList.add(stockData);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
+	public void loadStockDataList(Stock stock, String period,
+								  ArrayList<StockData> stockDataList) {
+		boolean loopback = false;
+		int index = 0;
+
+		Calendar calendar = Calendar.getInstance();
+		Cursor cursor = null;
+		String selection = null;
+		String sortOrder = null;
+
+		if ((stock == null) || TextUtils.isEmpty(period)
+				|| (stockDataList == null)) {
+			return;
+		}
+
+		loopback = Preferences.getBoolean(Setting.SETTING_DEBUG_LOOPBACK,
+				false);
+		if (loopback) {
+			String dateTime = Preferences.getString(Setting.SETTING_DEBUG_LOOPBACK_DATE_TIME, "");
+			if (!TextUtils.isEmpty(dateTime)) {
+				calendar = Utility.getCalendar(dateTime, Utility.CALENDAR_DATE_TIME_FORMAT);
+			} else {
+				calendar = Calendar.getInstance();
+			}
+		}
+
+		try {
+			stockDataList.clear();
+
+			selection = getStockDataSelection(
+					stock.getId(), period, StockData.LEVEL_NONE);
+			sortOrder = getStockDataOrder();
+			cursor = queryStockData(selection, null,
+					sortOrder);
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				while (cursor.moveToNext()) {
+					StockData stockData = new StockData(period);
+					stockData.set(cursor);
+					index = stockDataList.size();
+					stockData.setIndex(index);
+					stockData.setIndexStart(index);
+					stockData.setIndexEnd(index);
+					stockData.setAction(StockData.ACTION_NONE);
+
+					if (loopback) {
+						if (stockData.getCalendar().after(calendar)) {
+							stock.setPrice(stockData.getClose());
+							break;
+						}
+					}
+
 					stockDataList.add(stockData);
 				}
 			}
@@ -2332,5 +2426,61 @@ public class StockDatabaseManager extends DatabaseManager {
 
 	public String getIndexComponentOrder() {
 		return DatabaseContract.IndexComponent.SORT_ORDER_DEFAULT;
+	}
+
+
+	public void updateDatabase(Stock stock) {
+		try {
+			updateStock(stock,
+					stock.getContentValues());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void updateDatabase(ArrayList<StockData> stockDataList) {
+		if ((stockDataList == null) || (stockDataList.size() == 0)) {
+			return;
+		}
+
+		ContentValues[] contentValues = new ContentValues[stockDataList.size()];
+
+		for (int i = 0; i < stockDataList.size(); i++) {
+			StockData stockData = stockDataList.get(i);
+			contentValues[i] = stockData.getContentValues();
+		}
+
+		bulkInsertStockData(contentValues);
+	}
+
+	public void updateDatabase(Stock stock, String period, ArrayList<StockData> stockDataList) {
+		try {
+			deleteStockData(stock.getId(), period);
+
+			updateDatabase(stockDataList);
+
+			stock.setModified(Utility.getCurrentDateTimeString());
+			updateStock(stock,
+					stock.getContentValues());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void updateDatabase(Stock stock, String period, ArrayList<StockData> stockDataList,
+						ArrayList<StockData> drawDataList,
+						ArrayList<StockData> strokeDataList,
+						ArrayList<StockData> segmentDataList) {
+		try {
+			deleteStockData(stock.getId(), period);
+
+			updateDatabase(stockDataList);
+
+			stock.setModified(Utility.getCurrentDateTimeString());
+			updateStock(stock,
+					stock.getContentValues());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

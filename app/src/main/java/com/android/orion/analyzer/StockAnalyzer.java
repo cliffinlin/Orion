@@ -4,20 +4,16 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Build;
-import android.os.PowerManager;
-import android.os.PowerManager.WakeLock;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.android.orion.R;
 import com.android.orion.activity.StockFavoriteListActivity;
+import com.android.orion.application.OrionApplication;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
@@ -36,131 +32,29 @@ import com.android.orion.utility.StopWatch;
 import com.android.orion.utility.Utility;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 
 public class StockAnalyzer {
+	private static StockAnalyzer mInstance;
 
-	public Context mContext;
-	public LocalBroadcastManager mLocalBroadcastManager;
-	public StockDatabaseManager mStockDatabaseManager;
-	public Logger Log = Logger.getLogger();
-	PowerManager mPowerManager;
-	WakeLock mWakeLock;
+	Context mContext;
 	NotificationManager mNotificationManager;
+	StockDatabaseManager mStockDatabaseManager;
+	Logger Log = Logger.getLogger();
 
-	public StockAnalyzer(@NonNull Context context) {
-		mContext = context;
+	private StockAnalyzer() {
+		mContext = OrionApplication.getContext();
 
-		mPowerManager = (PowerManager) mContext
-				.getSystemService(Context.POWER_SERVICE);
-		mWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-				Constant.TAG + ":" + StockAnalyzer.class.getSimpleName());
-
-		mLocalBroadcastManager = LocalBroadcastManager.getInstance(mContext);
 		mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
 		mStockDatabaseManager = StockDatabaseManager.getInstance(mContext);
 	}
 
-	public void acquireWakeLock() {
-		if (!mWakeLock.isHeld()) {
-			mWakeLock.acquire(Constant.WAKELOCK_TIMEOUT);
-			Log.d("mWakeLock acquired.");
-		}
-	}
-
-	public void releaseWakeLock() {
-		if (mWakeLock.isHeld()) {
-			mWakeLock.release();
-			Log.d("mWakeLock released.");
-		}
-	}
-
-	public boolean isMinutePeriod(@NonNull StockData stockData) {
-		boolean result = false;
-
-		switch (stockData.getPeriod()) {
-			case DatabaseContract.COLUMN_MIN1:
-			case DatabaseContract.COLUMN_MIN5:
-			case DatabaseContract.COLUMN_MIN15:
-			case DatabaseContract.COLUMN_MIN30:
-			case DatabaseContract.COLUMN_MIN60:
-				result = true;
-				break;
-			case DatabaseContract.COLUMN_DAY:
-			case DatabaseContract.COLUMN_WEEK:
-			case DatabaseContract.COLUMN_MONTH:
-			case DatabaseContract.COLUMN_QUARTER:
-			case DatabaseContract.COLUMN_YEAR:
-			default:
-				break;
-		}
-
-		return result;
-	}
-
-	public void loadStockDataList(Stock stock, String period,
-								  ArrayList<StockData> stockDataList) {
-		boolean loopback = false;
-		int index = 0;
-
-		Calendar calendar = Calendar.getInstance();
-		Cursor cursor = null;
-		String selection = null;
-		String sortOrder = null;
-
-		if ((stock == null) || TextUtils.isEmpty(period)
-				|| (stockDataList == null)) {
-			return;
-		}
-
-		if (mStockDatabaseManager == null) {
-			return;
-		}
-
-		loopback = Preferences.getBoolean(Setting.SETTING_DEBUG_LOOPBACK,
-				false);
-		if (loopback) {
-			String dateTime = Preferences.getString(Setting.SETTING_DEBUG_LOOPBACK_DATE_TIME, "");
-			if (!TextUtils.isEmpty(dateTime)) {
-				calendar = Utility.getCalendar(dateTime, Utility.CALENDAR_DATE_TIME_FORMAT);
-			} else {
-				calendar = Calendar.getInstance();
+	public static StockAnalyzer getInstance() {
+		synchronized (StockAnalyzer.class) {
+			if (mInstance == null) {
+				mInstance = new StockAnalyzer();
 			}
-		}
-
-		try {
-			stockDataList.clear();
-
-			selection = mStockDatabaseManager.getStockDataSelection(
-					stock.getId(), period, StockData.LEVEL_NONE);
-			sortOrder = mStockDatabaseManager.getStockDataOrder();
-			cursor = mStockDatabaseManager.queryStockData(selection, null,
-					sortOrder);
-			if ((cursor != null) && (cursor.getCount() > 0)) {
-				while (cursor.moveToNext()) {
-					StockData stockData = new StockData(period);
-					stockData.set(cursor);
-					index = stockDataList.size();
-					stockData.setIndex(index);
-					stockData.setIndexStart(index);
-					stockData.setIndexEnd(index);
-					stockData.setAction(StockData.ACTION_NONE);
-
-					if (loopback) {
-						if (stockData.getCalendar().after(calendar)) {
-							stock.setPrice(stockData.getClose());
-							break;
-						}
-					}
-
-					stockDataList.add(stockData);
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			mStockDatabaseManager.closeCursor(cursor);
+			return mInstance;
 		}
 	}
 
@@ -200,7 +94,7 @@ public class StockAnalyzer {
 			setupStockShareBonus(stock);
 			setupStockFinancial(stock);
 
-			loadStockDataList(stock, period, stockDataList);
+			mStockDatabaseManager.loadStockDataList(stock, period, stockDataList);
 			setupMACD(stockDataList);
 			analyzeStockData(stock, period, stockDataList,
 					drawVertexList, drawDataList,
@@ -208,7 +102,7 @@ public class StockAnalyzer {
 					segmentVertexList, segmentDataList,
 					lineVertexList, lineDataList,
 					outlineVertexList, outlineDataList);
-			updateDatabase(stock, period, stockDataList,
+			mStockDatabaseManager.updateDatabase(stock, period, stockDataList,
 					drawDataList, strokeDataList, segmentDataList);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -234,7 +128,7 @@ public class StockAnalyzer {
 				setupStockShareBonus(stock);
 			}
 
-			updateDatabase(stock);
+			mStockDatabaseManager.updateDatabase(stock);
 
 			updateNotification(stock);
 		} catch (Exception e) {
@@ -617,65 +511,68 @@ public class StockAnalyzer {
 								  ArrayList<StockData> segmentVertexList, ArrayList<StockData> segmentDataList,
 								  ArrayList<StockData> lineVertexList, ArrayList<StockData> lineDataList,
 								  ArrayList<StockData> outlineVertexList, ArrayList<StockData> outlineDataList) {
-		StockKeyAnalyzer.getInstance().analyze(stock, stockDataList);
+		StockKeyAnalyzer stockKeyAnalyzer = StockKeyAnalyzer.getInstance();
+		StockVertexAnalyzer stockVertexAnalyzer = StockVertexAnalyzer.getInstance();
+		StockQuantAnalyzer stockQuantAnalyzer = StockQuantAnalyzer.getInstance();
+		stockKeyAnalyzer.analyze(stock, stockDataList);
 
-		StockVertexAnalyzer.getInstance().analyzeVertex(stockDataList, drawVertexList);
-		StockVertexAnalyzer.getInstance().vertexListToDataList(stockDataList, drawVertexList,
+		stockVertexAnalyzer.analyzeVertex(stockDataList, drawVertexList);
+		stockVertexAnalyzer.vertexListToDataList(stockDataList, drawVertexList,
 				drawDataList, StockData.LEVEL_DRAW);
 
-		StockVertexAnalyzer.getInstance().analyzeLine(stockDataList, drawDataList,
+		stockVertexAnalyzer.analyzeLine(stockDataList, drawDataList,
 				strokeVertexList, StockData.VERTEX_TOP_STROKE,
 				StockData.VERTEX_BOTTOM_STROKE);
-		StockVertexAnalyzer.getInstance().vertexListToDataList(stockDataList, strokeVertexList,
+		stockVertexAnalyzer.vertexListToDataList(stockDataList, strokeVertexList,
 				strokeDataList, StockData.LEVEL_STROKE);
 
-		StockVertexAnalyzer.getInstance().analyzeLine(stockDataList, strokeDataList,
+		stockVertexAnalyzer.analyzeLine(stockDataList, strokeDataList,
 				segmentVertexList, StockData.VERTEX_TOP_SEGMENT,
 				StockData.VERTEX_BOTTOM_SEGMENT);
-		StockVertexAnalyzer.getInstance().vertexListToDataList(stockDataList, segmentVertexList,
+		stockVertexAnalyzer.vertexListToDataList(stockDataList, segmentVertexList,
 				segmentDataList, StockData.LEVEL_SEGMENT);
 
-		StockVertexAnalyzer.getInstance().analyzeLine(stockDataList, segmentDataList,
+		stockVertexAnalyzer.analyzeLine(stockDataList, segmentDataList,
 				lineVertexList, StockData.VERTEX_TOP_LINE,
 				StockData.VERTEX_BOTTOM_LINE);
-		StockVertexAnalyzer.getInstance().vertexListToDataList(stockDataList, lineVertexList,
+		stockVertexAnalyzer.vertexListToDataList(stockDataList, lineVertexList,
 				lineDataList, StockData.LEVEL_LINE);
 
-		StockVertexAnalyzer.getInstance().analyzeLine(stockDataList, lineDataList,
+		stockVertexAnalyzer.analyzeLine(stockDataList, lineDataList,
 				outlineVertexList, StockData.VERTEX_TOP_OUTLINE,
 				StockData.VERTEX_BOTTOM_OUTLINE);
-		StockVertexAnalyzer.getInstance().vertexListToDataList(stockDataList, outlineVertexList,
+		stockVertexAnalyzer.vertexListToDataList(stockDataList, outlineVertexList,
 				outlineDataList, StockData.LEVEL_OUTLINE);
 
 		//stockVertexAnalyzer.testShowVertextNumber(stockDataList, stockDataList);
 
 		if (Preferences.getBoolean(Setting.SETTING_DEBUG_LOOPBACK, false)) {
 			if (Preferences.getBoolean(Setting.SETTING_DEBUG_DIRECT, false)) {
-				StockVertexAnalyzer.getInstance().debugShow(stockDataList, stockDataList);
+				stockVertexAnalyzer.debugShow(stockDataList, stockDataList);
 			}
 
 			if (Setting.getDisplayDraw()) {
-				StockVertexAnalyzer.getInstance().debugShow(stockDataList, drawDataList);
+				stockVertexAnalyzer.debugShow(stockDataList, drawDataList);
 			}
 
 			if (Setting.getDisplayStroke()) {
-				StockVertexAnalyzer.getInstance().debugShow(stockDataList, strokeDataList);
+				stockVertexAnalyzer.debugShow(stockDataList, strokeDataList);
 			}
 
 			if (Setting.getDisplaySegment()) {
-				StockVertexAnalyzer.getInstance().debugShow(stockDataList, segmentDataList);
+				stockVertexAnalyzer.debugShow(stockDataList, segmentDataList);
 			}
 
 			if (Setting.getDisplayLine()) {
-				StockVertexAnalyzer.getInstance().debugShow(stockDataList, lineDataList);
+				stockVertexAnalyzer.debugShow(stockDataList, lineDataList);
 			}
 		}
 
-		StockVertexAnalyzer.getInstance().analyzeDivergence(stock, stockDataList, segmentDataList);
-		StockVertexAnalyzer.getInstance().analyzeDivergence(stock, stockDataList, strokeDataList);
-		StockVertexAnalyzer.getInstance().analyzeDivergence(stock, stockDataList, drawDataList);
+		stockVertexAnalyzer.analyzeDivergence(stock, stockDataList, segmentDataList);
+		stockVertexAnalyzer.analyzeDivergence(stock, stockDataList, strokeDataList);
+		stockVertexAnalyzer.analyzeDivergence(stock, stockDataList, drawDataList);
 
-		StockVertexAnalyzer.getInstance().analyzeDirection(stockDataList);
+		stockVertexAnalyzer.analyzeDirection(stockDataList);
 
 		analyzeAction(stock, period, stockDataList, drawVertexList, drawDataList, strokeDataList, segmentDataList);
 
@@ -683,7 +580,7 @@ public class StockAnalyzer {
 			ArrayList<ShareBonus> shareBonusList = new ArrayList<ShareBonus>();
 			mStockDatabaseManager.getShareBonusList(stock, shareBonusList,
 					DatabaseContract.COLUMN_DATE + " DESC ");
-			StockQuantAnalyzer.getInstance().analyze(mContext, stock, stockDataList, shareBonusList);
+			stockQuantAnalyzer.analyze(mContext, stock, stockDataList, shareBonusList);
 		}
 	}
 
@@ -919,7 +816,7 @@ public class StockAnalyzer {
 			}
 		}
 
-		if (isMinutePeriod(stockData)) {
+		if (stockData.isMinutePeriod()) {
 			if (stockData.getNaturalRally() > 0) {
 				action += StockData.ACTION_NATURAL_RALLY;
 			}
@@ -946,79 +843,6 @@ public class StockAnalyzer {
 
 		if (DatabaseContract.COLUMN_DAY.equals(period)) {
 			stock.setTrend(trendString);
-		}
-	}
-
-	private void updateDatabase(Stock stock) {
-		if (mStockDatabaseManager == null) {
-			Log.d("return, mStockDatabaseManager = "
-					+ mStockDatabaseManager);
-			return;
-		}
-
-		try {
-			mStockDatabaseManager.updateStock(stock,
-					stock.getContentValues());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void updateDatabase(ArrayList<StockData> stockDataList) {
-		if ((stockDataList == null) || (stockDataList.size() == 0)) {
-			return;
-		}
-
-		ContentValues[] contentValues = new ContentValues[stockDataList.size()];
-
-		for (int i = 0; i < stockDataList.size(); i++) {
-			StockData stockData = stockDataList.get(i);
-			contentValues[i] = stockData.getContentValues();
-		}
-
-		mStockDatabaseManager.bulkInsertStockData(contentValues);
-	}
-
-	public void updateDatabase(Stock stock, String period, ArrayList<StockData> stockDataList) {
-		if (mStockDatabaseManager == null) {
-			Log.d("return, mStockDatabaseManager = "
-					+ mStockDatabaseManager);
-			return;
-		}
-
-		try {
-			mStockDatabaseManager.deleteStockData(stock.getId(), period);
-
-			updateDatabase(stockDataList);
-
-			stock.setModified(Utility.getCurrentDateTimeString());
-			mStockDatabaseManager.updateStock(stock,
-					stock.getContentValues());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void updateDatabase(Stock stock, String period, ArrayList<StockData> stockDataList,
-								ArrayList<StockData> drawDataList,
-								ArrayList<StockData> strokeDataList,
-								ArrayList<StockData> segmentDataList) {
-		if (mStockDatabaseManager == null) {
-			Log.d("return, mStockDatabaseManager = "
-					+ mStockDatabaseManager);
-			return;
-		}
-
-		try {
-			mStockDatabaseManager.deleteStockData(stock.getId(), period);
-
-			updateDatabase(stockDataList);
-
-			stock.setModified(Utility.getCurrentDateTimeString());
-			mStockDatabaseManager.updateStock(stock,
-					stock.getContentValues());
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 

@@ -10,15 +10,14 @@ import androidx.annotation.NonNull;
 import com.android.orion.database.DatabaseOpenHelper;
 
 public class DatabaseManager {
-
-
 	private static DatabaseManager mInstance;
+
 	public ContentResolver mContentResolver;
 	public SQLiteDatabase mDatabase = null;
 	public DatabaseOpenHelper mDatabaseHelper;
 	Context mContext;
 
-	DatabaseManager(@NonNull Context context) {
+	protected DatabaseManager(@NonNull Context context) {
 		mContext = context;
 
 		mContentResolver = mContext.getContentResolver();

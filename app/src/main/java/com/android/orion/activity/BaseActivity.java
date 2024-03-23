@@ -46,7 +46,7 @@ public class BaseActivity extends Activity {
 	private static final int REQUEST_EXTERNAL_STORAGE = 1;
 	private static String[] PERMISSIONS_STORAGE = {"android.permission.READ_EXTERNAL_STORAGE",
 			"android.permission.WRITE_EXTERNAL_STORAGE"};
-	public Logger Log = Logger.getLogger();
+	Logger Log = Logger.getLogger();
 	boolean mResumed = false;
 	Context mContext = null;
 	Bundle mBundle = null;

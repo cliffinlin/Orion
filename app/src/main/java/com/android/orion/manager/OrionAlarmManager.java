@@ -13,7 +13,7 @@ import java.util.Calendar;
 
 public class OrionAlarmManager {
 
-	public Logger Log = Logger.getLogger();
+	Logger Log = Logger.getLogger();
 	Context mContext = null;
 	private long mIntervalMillis = 0;
 	private AlarmManager mAlarmManager = null;

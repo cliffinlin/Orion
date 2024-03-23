@@ -42,7 +42,7 @@ public class Utility {
 	public static final String CALENDAR_DATE_TIME_FORMAT = CALENDAR_DATE_FORMAT
 			+ " " + CALENDAR_TIME_FORMAT;
 
-	public Logger Log = Logger.getLogger();
+	Logger Log = Logger.getLogger();
 
 	private Utility() {
 	}
