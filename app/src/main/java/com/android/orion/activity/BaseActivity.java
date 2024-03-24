@@ -239,7 +239,11 @@ public class BaseActivity extends Activity {
 	}
 
 	void onServiceConnected() {
-		if (!Utility.isNetworkConnected(this)) {
+		if (Utility.isNetworkConnected(this)) {
+			if (mOrionService != null) {
+				mOrionService.download();
+			}
+		} else {
 			Toast.makeText(this,
 					getResources().getString(R.string.network_unavailable),
 					Toast.LENGTH_SHORT).show();

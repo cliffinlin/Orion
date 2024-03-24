@@ -64,9 +64,9 @@ public abstract class StockDataProvider {
 	public static final int MAX_CONTENT_LENGTH_MIN15 = 20 * 16;
 	public static final int MAX_CONTENT_LENGTH_MIN5 = 20 * 48;
 
-	private static int DOWNLOAD_RESULT_SUCCESS = 1;
-	private static int DOWNLOAD_RESULT_NONE = 0;
-	private static int DOWNLOAD_RESULT_FAILED = -1;
+	private static int RESULT_SUCCESS = 1;
+	private static int RESULT_NONE = 0;
+	private static int RESULT_FAILED = -1;
 
 	public Context mContext;
 	PowerManager mPowerManager;
@@ -465,7 +465,7 @@ public abstract class StockDataProvider {
 
 	private int downloadStockInformation(Stock stock) {
 		String modified = "";
-		int result = DOWNLOAD_RESULT_NONE;
+		int result = RESULT_NONE;
 
 		if (stock == null) {
 			return result;
@@ -481,7 +481,7 @@ public abstract class StockDataProvider {
 	}
 
 	private int downloadStockInformation(Stock stock, ArrayMap<String, String> requestHeaderArray, String urlString) {
-		int result = DOWNLOAD_RESULT_NONE;
+		int result = RESULT_NONE;
 
 		Log.d(urlString);
 
@@ -497,9 +497,9 @@ public abstract class StockDataProvider {
 			if ((response != null) && (response.body() != null)) {
 				String resultString = response.body().string();
 				if (isAccessDenied(resultString)) {
-					return DOWNLOAD_RESULT_FAILED;
+					return RESULT_FAILED;
 				} else {
-					result = DOWNLOAD_RESULT_SUCCESS;
+					result = RESULT_SUCCESS;
 				}
 
 				handleResponseStockInformation(stock, resultString);
@@ -514,7 +514,7 @@ public abstract class StockDataProvider {
 
 	private int downloadStockRealTime(Stock stock) {
 		String modified = "";
-		int result = DOWNLOAD_RESULT_NONE;
+		int result = RESULT_NONE;
 
 		if (stock == null) {
 			return result;
@@ -530,7 +530,7 @@ public abstract class StockDataProvider {
 	}
 
 	private int downloadStockRealTime(Stock stock, ArrayMap<String, String> requestHeaderArray, String urlString) {
-		int result = DOWNLOAD_RESULT_NONE;
+		int result = RESULT_NONE;
 
 		Log.d(urlString);
 
@@ -546,9 +546,9 @@ public abstract class StockDataProvider {
 			if ((response != null) && (response.body() != null)) {
 				String resultString = response.body().string();
 				if (isAccessDenied(resultString)) {
-					return DOWNLOAD_RESULT_FAILED;
+					return RESULT_FAILED;
 				} else {
-					result = DOWNLOAD_RESULT_SUCCESS;
+					result = RESULT_SUCCESS;
 				}
 
 				handleResponseStockRealTime(stock, resultString);
@@ -562,7 +562,7 @@ public abstract class StockDataProvider {
 	}
 
 	private int downloadStockFinancial(Stock stock) {
-		int result = DOWNLOAD_RESULT_NONE;
+		int result = RESULT_NONE;
 
 		if (stock == null) {
 			return result;
@@ -582,7 +582,7 @@ public abstract class StockDataProvider {
 	}
 
 	private int downloadStockFinancial(Stock stock, StockFinancial stockFinancial, String urlString) {
-		int result = DOWNLOAD_RESULT_NONE;
+		int result = RESULT_NONE;
 
 		Log.d(urlString);
 
@@ -595,9 +595,9 @@ public abstract class StockDataProvider {
 			if ((response != null) && (response.body() != null)) {
 				String resultString = response.body().string();
 				if (isAccessDenied(resultString)) {
-					return DOWNLOAD_RESULT_FAILED;
+					return RESULT_FAILED;
 				} else {
-					result = DOWNLOAD_RESULT_SUCCESS;
+					result = RESULT_SUCCESS;
 				}
 
 				handleResponseStockFinancial(stock, stockFinancial, resultString);
@@ -611,7 +611,7 @@ public abstract class StockDataProvider {
 	}
 
 	private int downloadIPO() {
-		int result = DOWNLOAD_RESULT_NONE;
+		int result = RESULT_NONE;
 
 		ArrayList<IPO> ipoList = new ArrayList<IPO>();
 		boolean needDownload = false;
@@ -637,7 +637,7 @@ public abstract class StockDataProvider {
 	}
 
 	private int downloadIPO(String urlString) {
-		int result = DOWNLOAD_RESULT_NONE;
+		int result = RESULT_NONE;
 
 		Log.d(urlString);
 
@@ -650,9 +650,9 @@ public abstract class StockDataProvider {
 			if ((response != null) && (response.body() != null)) {
 				String resultString = response.body().string();
 				if (isAccessDenied(resultString)) {
-					return DOWNLOAD_RESULT_FAILED;
+					return RESULT_FAILED;
 				} else {
-					result = DOWNLOAD_RESULT_SUCCESS;
+					result = RESULT_SUCCESS;
 				}
 
 				handleResponseIPO(resultString);
@@ -666,7 +666,7 @@ public abstract class StockDataProvider {
 	}
 
 	private int downloadShareBonus(Stock stock) {
-		int result = DOWNLOAD_RESULT_NONE;
+		int result = RESULT_NONE;
 
 		if (stock == null) {
 			return result;
@@ -686,7 +686,7 @@ public abstract class StockDataProvider {
 	}
 
 	private int downloadShareBonus(Stock stock, ShareBonus shareBonus, String urlString) {
-		int result = DOWNLOAD_RESULT_NONE;
+		int result = RESULT_NONE;
 
 		Log.d(urlString);
 
@@ -699,9 +699,9 @@ public abstract class StockDataProvider {
 			if ((response != null) && (response.body() != null)) {
 				String resultString = response.body().string();
 				if (isAccessDenied(resultString)) {
-					return DOWNLOAD_RESULT_FAILED;
+					return RESULT_FAILED;
 				} else {
-					result = DOWNLOAD_RESULT_SUCCESS;
+					result = RESULT_SUCCESS;
 				}
 
 				handleResponseShareBonus(stock, shareBonus, resultString);
@@ -715,7 +715,7 @@ public abstract class StockDataProvider {
 	}
 
 	private int downloadTotalShare(Stock stock) {
-		int result = DOWNLOAD_RESULT_NONE;
+		int result = RESULT_NONE;
 
 		if (stock == null) {
 			return result;
@@ -735,7 +735,7 @@ public abstract class StockDataProvider {
 	}
 
 	private int downloadTotalShare(Stock stock, TotalShare totalShare, String urlString) {
-		int result = DOWNLOAD_RESULT_NONE;
+		int result = RESULT_NONE;
 
 		Log.d(urlString);
 
@@ -748,9 +748,9 @@ public abstract class StockDataProvider {
 			if ((response != null) && (response.body() != null)) {
 				String resultString = response.body().string();
 				if (isAccessDenied(resultString)) {
-					return DOWNLOAD_RESULT_FAILED;
+					return RESULT_FAILED;
 				} else {
-					result = DOWNLOAD_RESULT_SUCCESS;
+					result = RESULT_SUCCESS;
 				}
 
 				handleResponseTotalShare(stock, totalShare, resultString);
@@ -764,7 +764,7 @@ public abstract class StockDataProvider {
 	}
 
 	private int downloadStockDataHistory(Stock stock) {
-		int result = DOWNLOAD_RESULT_NONE;
+		int result = RESULT_NONE;
 
 		if (stock == null) {
 			return result;
@@ -780,7 +780,7 @@ public abstract class StockDataProvider {
 	}
 
 	private int downloadStockDataHistory(Stock stock, String period) {
-		int result = DOWNLOAD_RESULT_NONE;
+		int result = RESULT_NONE;
 
 		if (stock == null) {
 			return result;
@@ -803,7 +803,7 @@ public abstract class StockDataProvider {
 	}
 
 	private int downloadStockDataHistory(Stock stock, StockData stockData, String urlString) {
-		int result = DOWNLOAD_RESULT_NONE;
+		int result = RESULT_NONE;
 
 		Log.d(urlString);
 
@@ -816,9 +816,9 @@ public abstract class StockDataProvider {
 			if ((response != null) && (response.body() != null)) {
 				String resultString = response.body().string();
 				if (isAccessDenied(resultString)) {
-					return DOWNLOAD_RESULT_FAILED;
+					return RESULT_FAILED;
 				} else {
-					result = DOWNLOAD_RESULT_SUCCESS;
+					result = RESULT_SUCCESS;
 				}
 
 				handleResponseStockDataHistory(stock, stockData, resultString);
@@ -832,7 +832,7 @@ public abstract class StockDataProvider {
 	}
 
 	private int downloadStockDataRealTime(Stock stock) {
-		int result = DOWNLOAD_RESULT_NONE;
+		int result = RESULT_NONE;
 
 		if (stock == null) {
 			return result;
@@ -850,7 +850,7 @@ public abstract class StockDataProvider {
 	}
 
 	private int downloadStockDataRealTime(Stock stock, String period) {
-		int result = DOWNLOAD_RESULT_NONE;
+		int result = RESULT_NONE;
 
 		if (stock == null) {
 			return result;
@@ -872,7 +872,7 @@ public abstract class StockDataProvider {
 	}
 
 	private int downloadStockDataRealTime(Stock stock, StockData stockData, ArrayMap<String, String> requestHeaderArray, String urlString) {
-		int result = DOWNLOAD_RESULT_NONE;
+		int result = RESULT_NONE;
 
 		Log.d(urlString);
 
@@ -888,9 +888,9 @@ public abstract class StockDataProvider {
 			if ((response != null) && (response.body() != null)) {
 				String resultString = response.body().string();
 				if (isAccessDenied(resultString)) {
-					return DOWNLOAD_RESULT_FAILED;
+					return RESULT_FAILED;
 				} else {
-					result = DOWNLOAD_RESULT_SUCCESS;
+					result = RESULT_SUCCESS;
 				}
 
 				handleResponseStockDataRealTime(stock, stockData, resultString);
@@ -1088,31 +1088,31 @@ public abstract class StockDataProvider {
 				}
 
 				if (Stock.CLASS_A.equals(stock.getClasses())) {
-					if (downloadStockInformation(stock) == DOWNLOAD_RESULT_FAILED) {
+					if (downloadStockInformation(stock) == RESULT_FAILED) {
 						return;
 					}
 
-					if (downloadStockRealTime(stock) == DOWNLOAD_RESULT_FAILED) {
+					if (downloadStockRealTime(stock) == RESULT_FAILED) {
 						return;
 					}
 
-					if (downloadStockFinancial(stock) == DOWNLOAD_RESULT_FAILED) {
+					if (downloadStockFinancial(stock) == RESULT_FAILED) {
 						return;
 					}
 
-					if (downloadShareBonus(stock) == DOWNLOAD_RESULT_FAILED) {
+					if (downloadShareBonus(stock) == RESULT_FAILED) {
 						return;
 					}
 
-					if (downloadTotalShare(stock) == DOWNLOAD_RESULT_FAILED) {
+					if (downloadTotalShare(stock) == RESULT_FAILED) {
 						return;
 					}
 
-					if (downloadStockDataHistory(stock) == DOWNLOAD_RESULT_FAILED) {
+					if (downloadStockDataHistory(stock) == RESULT_FAILED) {
 						return;
 					}
 
-					if (downloadStockDataRealTime(stock) == DOWNLOAD_RESULT_FAILED) {
+					if (downloadStockDataRealTime(stock) == RESULT_FAILED) {
 						return;
 					}
 				} else if (Stock.CLASS_INDEX.equals(stock.getClasses())) {
