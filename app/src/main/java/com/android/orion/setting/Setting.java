@@ -65,6 +65,7 @@ public class Setting {
 	public static final String SETTING_DEBUG_LOOPBACK = "SETTING_DEBUG_LOOPBACK";
 	public static final String SETTING_DEBUG_LOOPBACK_DATE_TIME = "SETTING_DEBUG_LOOPBACK_DATE_TIME";
 
+	public static final String SETTING_DOWNLOAD_STOCK_INFORMATION_TIMEMILLIS = "SETTING_DOWNLOAD_STOCK_INFORMATION_TIMEMILLIS";
 	public static final String SETTING_DOWNLOAD_STOCK_FINANCIAL_TIMEMILLIS = "SETTING_DOWNLOAD_STOCK_FINANCIAL_TIMEMILLIS";
 	public static final String SETTING_DOWNLOAD_SHARE_BONUS_TIMEMILLIS = "SETTING_DOWNLOAD_SHARE_BONUS_TIMEMILLIS";
 	public static final String SETTING_DOWNLOAD_TOTAL_SHARE_TIMEMILLIS = "SETTING_DOWNLOAD_TOTAL_SHARE_TIMEMILLIS";
@@ -238,6 +239,14 @@ public class Setting {
 
 	public static void setDebugLoopbackDateTime(String value) {
 		Preferences.putString(SETTING_DEBUG_LOOPBACK_DATE_TIME, value);
+	}
+
+	public static long getDownloadStockInformationTimemillis(String se, String code) {
+		return Preferences.getLong(SETTING_DOWNLOAD_STOCK_INFORMATION_TIMEMILLIS + "_" + se + "_" + code, 0);
+	}
+
+	public static void setDownloadStockInformationTimemillis(String se, String code, long timemillis) {
+		Preferences.putLong(SETTING_DOWNLOAD_STOCK_INFORMATION_TIMEMILLIS + "_" + se + "_" + code, timemillis);
 	}
 
 	public static long getDownloadStockFinancialTimemillis(String se, String code) {

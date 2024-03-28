@@ -4,8 +4,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
+import com.android.orion.config.Config;
 import com.android.orion.receiver.DownloadBroadcastReceiver;
-import com.android.orion.setting.Constant;
 
 public class DownloadAlarmManager extends OrionAlarmManager {
 	private static DownloadAlarmManager mInstance;
@@ -23,7 +23,7 @@ public class DownloadAlarmManager extends OrionAlarmManager {
 
 	@Override
 	public void startAlarm() {
-		setIntervalMillis(Constant.DEFAULT_ALARM_INTERVAL);
+		setIntervalMillis(Config.alarmInterval);
 		setPendingIntent(PendingIntent.getBroadcast(mContext, 0, new Intent(
 				mContext, DownloadBroadcastReceiver.class), 0));
 

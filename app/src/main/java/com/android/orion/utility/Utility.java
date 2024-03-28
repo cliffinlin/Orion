@@ -8,7 +8,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
-import com.android.orion.setting.Constant;
+import com.android.orion.config.Config;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -233,7 +233,7 @@ public class Utility {
 	}
 
 	public static double Round(double v) {
-		double p = Math.pow(10, Constant.DOUBLE_FIXED_DECIMAL);
+		double p = Math.pow(10, Config.DOUBLE_FIXED_DECIMAL);
 		return (Math.round(v * p)) / p;
 	}
 

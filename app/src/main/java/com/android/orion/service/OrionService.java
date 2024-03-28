@@ -22,9 +22,9 @@ import android.telephony.TelephonyManager;
 
 import androidx.core.app.NotificationCompat;
 
+import com.android.orion.config.Config;
 import com.android.orion.database.Stock;
 import com.android.orion.receiver.DownloadBroadcastReceiver;
-import com.android.orion.setting.Constant;
 import com.android.orion.sina.SinaFinance;
 
 public class OrionService extends Service {
@@ -70,18 +70,18 @@ public class OrionService extends Service {
 		mHandler = new ServiceHandler(mLooper);
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			NotificationChannel channel = new NotificationChannel(Constant.SERVICE_CHANNEL_ID,
-					Constant.SERVICE_CHANNEL_NAME, NotificationManager.IMPORTANCE_LOW);
+			NotificationChannel channel = new NotificationChannel(Config.SERVICE_CHANNEL_ID,
+					Config.SERVICE_CHANNEL_NAME, NotificationManager.IMPORTANCE_LOW);
 			if (mNotificationManager != null) {
 				mNotificationManager.createNotificationChannel(channel);
 			}
-			Notification notification = new NotificationCompat.Builder(this, Constant.SERVICE_CHANNEL_ID)
+			Notification notification = new NotificationCompat.Builder(this, Config.SERVICE_CHANNEL_ID)
 					.setAutoCancel(true)
 					.setCategory(NotificationCompat.CATEGORY_SERVICE)
 					.setOngoing(true)
 					.setPriority(NotificationManager.IMPORTANCE_LOW)
 					.build();
-			startForeground(Constant.SERVICE_NOTIFICATION_ID, notification);
+			startForeground(Config.SERVICE_NOTIFICATION_ID, notification);
 		}
 
 		mDownloadBroadcastReceiver = new DownloadBroadcastReceiver();

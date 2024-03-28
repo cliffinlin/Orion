@@ -59,8 +59,8 @@ public final class DatabaseContract {
 	public static final String COLUMN_YIELD = "yield";
 	public static final String COLUMN_DIVIDEND_RATIO = "dividend_ratio";
 	public static final String COLUMN_CREATED = "created";
-	public static final String COLUMN_REALTIME_MODIFIED = "realtime_modified";
-	public static final String COLUMN_INFORMATION_MODIFIED = "information_modified";
+	public static final String COLUMN_REALTIME_MODIFIED = "realtime_modified"; //TODO
+	public static final String COLUMN_INFORMATION_MODIFIED = "information_modified"; //TODO
 	public static final String COLUMN_MODIFIED = "modified";
 	public static final String COLUMN_INDEX_SE = "index_se";
 	public static final String COLUMN_INDEX_CODE = "index_code";

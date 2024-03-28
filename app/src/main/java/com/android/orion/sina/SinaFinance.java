@@ -58,20 +58,33 @@ public class SinaFinance extends StockDataProvider {
 	public static final String SINA_FINANCE_URL_NEWSTOCK_ISSUE = "https://vip.stock.finance.sina.com.cn/corp/go.php/vRPD_NewStockIssue/page/1.phtml";
 	public static final String SINA_FINANCE_HEAD_REFERER_KEY = "Referer";
 	public static final String SINA_FINANCE_HEAD_REFERER_VALUE = "http://vip.stock.finance.sina.com.cn/";
+
+	public static final int DOWNLOAD_HISTORY_LENGTH_DEFAULT = 120;
+	public static final int DOWNLOAD_HISTORY_LENGTH_NONE = 0;
+	public static final int DOWNLOAD_HISTORY_LENGTH_UNLIMITED = -1;
+
 	public static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN5 = 242;
 	public static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN15 = 192;
 	public static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN30 = 192;
 	public static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN60 = 192;
 
+	public ArrayList<String> mAccessDeniedStringArray = new ArrayList<>();
 	Logger Log = Logger.getLogger();
 
 	public SinaFinance(Context context) {
 		super(context);
+
+		mAccessDeniedStringArray.add(mContext.getResources().getString(
+				R.string.access_denied_jp));
+		mAccessDeniedStringArray.add(mContext.getResources().getString(
+				R.string.access_denied_zh));
+		mAccessDeniedStringArray.add(mContext.getResources().getString(
+				R.string.access_denied_default));
 	}
 
 	public int getAvailableHistoryLength(String period) {
 		if (period.equals(DatabaseContract.COLUMN_MIN1)) {
-			return Constant.DOWNLOAD_HISTORY_LENGTH_NONE;
+			return DOWNLOAD_HISTORY_LENGTH_NONE;
 		} else if (period.equals(DatabaseContract.COLUMN_MIN5)) {
 			return DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN5;
 		} else if (period.equals(DatabaseContract.COLUMN_MIN15)) {
@@ -81,15 +94,15 @@ public class SinaFinance extends StockDataProvider {
 		} else if (period.equals(DatabaseContract.COLUMN_MIN60)) {
 			return DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN60;
 		} else if (period.equals(DatabaseContract.COLUMN_DAY)) {
-			return Constant.DOWNLOAD_HISTORY_LENGTH_UNLIMITED;
+			return DOWNLOAD_HISTORY_LENGTH_UNLIMITED;
 		} else if (period.equals(DatabaseContract.COLUMN_WEEK)) {
-			return Constant.DOWNLOAD_HISTORY_LENGTH_UNLIMITED;
+			return DOWNLOAD_HISTORY_LENGTH_UNLIMITED;
 		} else if (period.equals(DatabaseContract.COLUMN_MONTH)) {
-			return Constant.DOWNLOAD_HISTORY_LENGTH_UNLIMITED;
+			return DOWNLOAD_HISTORY_LENGTH_UNLIMITED;
 		} else if (period.equals(DatabaseContract.COLUMN_QUARTER)) {
-			return Constant.DOWNLOAD_HISTORY_LENGTH_NONE;
+			return DOWNLOAD_HISTORY_LENGTH_NONE;
 		} else if (period.equals(DatabaseContract.COLUMN_YEAR)) {
-			return Constant.DOWNLOAD_HISTORY_LENGTH_NONE;
+			return DOWNLOAD_HISTORY_LENGTH_NONE;
 		} else {
 		}
 
@@ -216,8 +229,8 @@ public class SinaFinance extends StockDataProvider {
 
 		if (availableHistoryLength > 0) {
 			result = availableHistoryLength;
-		} else if (availableHistoryLength == Constant.DOWNLOAD_HISTORY_LENGTH_UNLIMITED) {
-			result = Constant.DOWNLOAD_HISTORY_LENGTH_DEFAULT;
+		} else if (availableHistoryLength == DOWNLOAD_HISTORY_LENGTH_UNLIMITED) {
+			result = DOWNLOAD_HISTORY_LENGTH_DEFAULT;
 		}
 
 		return result;
@@ -287,19 +300,19 @@ public class SinaFinance extends StockDataProvider {
 					switch (period) {
 						case DatabaseContract.COLUMN_MIN60:
 							result += scheduleMinutes
-									/ Constant.SCHEDULE_INTERVAL_MIN60;
+									/ Constant.MIN60;
 							break;
 						case DatabaseContract.COLUMN_MIN30:
 							result += scheduleMinutes
-									/ Constant.SCHEDULE_INTERVAL_MIN30;
+									/ Constant.MIN30;
 							break;
 						case DatabaseContract.COLUMN_MIN15:
 							result += scheduleMinutes
-									/ Constant.SCHEDULE_INTERVAL_MIN15;
+									/ Constant.MIN15;
 							break;
 						case DatabaseContract.COLUMN_MIN5:
 							result += scheduleMinutes
-									/ Constant.SCHEDULE_INTERVAL_MIN5;
+									/ Constant.MIN5;
 							break;
 					}
 				}
@@ -366,20 +379,18 @@ public class SinaFinance extends StockDataProvider {
 	}
 
 	public int downloadStockInformation(Stock stock) {
-		String modified = "";
 		int result = RESULT_NONE;
 
 		if (stock == null) {
 			return result;
 		}
 
-		modified = stock.getInformationModified();
-
-		if (Market.isOutOfDateToday(modified)) {
-			return downloadStockInformation(stock, getRequestHeader(), getStockInformationURLString(stock));
+		if (System.currentTimeMillis() - Setting.getDownloadStockInformationTimemillis(stock.getSE(), stock.getCode()) < Config.downloadStockInformationInterval) {
+			return result;
 		}
+		Setting.setDownloadStockInformationTimemillis(stock.getSE(), stock.getCode(), System.currentTimeMillis());
 
-		return result;
+		return downloadStockInformation(stock, getRequestHeader(), getStockInformationURLString(stock));
 	}
 
 	private int downloadStockInformation(Stock stock, ArrayMap<String, String> requestHeaderArray, String urlString) {
@@ -405,7 +416,7 @@ public class SinaFinance extends StockDataProvider {
 				}
 
 				handleResponseStockInformation(stock, resultString);
-				Thread.sleep(Constant.DEFAULT_DOWNLOAD_SLEEP_INTERVAL);
+				Thread.sleep(Config.downloadSleepInterval);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -479,7 +490,6 @@ public class SinaFinance extends StockDataProvider {
 						* Constant.DOUBLE_CONSTANT_WAN);
 			}
 
-			stock.setInformationModified(Utility.getCurrentDateTimeString());
 			mStockDatabaseManager.updateStock(stock,
 					stock.getContentValuesInformation());
 
@@ -533,7 +543,7 @@ public class SinaFinance extends StockDataProvider {
 				}
 
 				handleResponseStockRealTime(stock, resultString);
-				Thread.sleep(Constant.DEFAULT_DOWNLOAD_SLEEP_INTERVAL);
+				Thread.sleep(Config.downloadSleepInterval);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -800,7 +810,7 @@ public class SinaFinance extends StockDataProvider {
 				}
 
 				handleResponseStockDataHistory(stock, stockData, resultString);
-				Thread.sleep(Constant.DEFAULT_DOWNLOAD_SLEEP_INTERVAL);
+				Thread.sleep(Config.downloadSleepInterval);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1201,7 +1211,7 @@ public class SinaFinance extends StockDataProvider {
 				}
 
 				handleResponseStockDataRealTime(stock, stockData, resultString);
-				Thread.sleep(Constant.DEFAULT_DOWNLOAD_SLEEP_INTERVAL);
+				Thread.sleep(Config.downloadSleepInterval);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1367,7 +1377,7 @@ public class SinaFinance extends StockDataProvider {
 				}
 
 				handleResponseStockFinancial(stock, stockFinancial, resultString);
-				Thread.sleep(Constant.DEFAULT_DOWNLOAD_SLEEP_INTERVAL);
+				Thread.sleep(Config.downloadSleepInterval);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1594,7 +1604,7 @@ public class SinaFinance extends StockDataProvider {
 				}
 
 				handleResponseShareBonus(stock, shareBonus, resultString);
-				Thread.sleep(Constant.DEFAULT_DOWNLOAD_SLEEP_INTERVAL);
+				Thread.sleep(Config.downloadSleepInterval);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1780,7 +1790,7 @@ public class SinaFinance extends StockDataProvider {
 				}
 
 				handleResponseTotalShare(stock, totalShare, resultString);
-				Thread.sleep(Constant.DEFAULT_DOWNLOAD_SLEEP_INTERVAL);
+				Thread.sleep(Config.downloadSleepInterval);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1971,7 +1981,7 @@ public class SinaFinance extends StockDataProvider {
 				}
 
 				handleResponseIPO(resultString);
-				Thread.sleep(Constant.DEFAULT_DOWNLOAD_SLEEP_INTERVAL);
+				Thread.sleep(Config.downloadSleepInterval);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2157,6 +2167,36 @@ public class SinaFinance extends StockDataProvider {
 				+ stopWatch.getInterval() + "s");
 	}
 
+	private boolean isAccessDenied(String string) {
+		StringBuilder contentTitle = new StringBuilder();
+		boolean result = false;
+
+		if (TextUtils.isEmpty(string)) {
+			return result;
+		}
+
+		String accessDeniedString;
+		for (int i = 0; i < mAccessDeniedStringArray.size(); i++) {
+			accessDeniedString = mAccessDeniedStringArray.get(i);
+
+			if (string.contains(accessDeniedString)) {
+				contentTitle.append(mContext.getResources().getString(R.string.action_download));
+				contentTitle.append(" ");
+				contentTitle.append(accessDeniedString);
+
+				mStockAnalyzer.notify(Config.SERVICE_NOTIFICATION_ID, Config.MESSAGE_CHANNEL_ID, Config.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
+						contentTitle.toString(), "");
+
+				mHandlerThread.quit();
+
+				result = true;
+				break;
+			}
+		}
+
+		return result;
+	}
+
 	public class StockInfo {
 		public String code;
 
@@ -2196,35 +2236,5 @@ public class SinaFinance extends StockDataProvider {
 	}
 
 	public class StockInfo_i {
-	}
-
-	private boolean isAccessDenied(String string) {
-		StringBuilder contentTitle = new StringBuilder();
-		boolean result = false;
-
-		if (TextUtils.isEmpty(string)) {
-			return result;
-		}
-
-		String accessDeniedString;
-		for (int i = 0; i < mAccessDeniedStringArray.size(); i++) {
-			accessDeniedString = mAccessDeniedStringArray.get(i);
-
-			if (string.contains(accessDeniedString)) {
-				contentTitle.append(mContext.getResources().getString(R.string.action_download));
-				contentTitle.append(" ");
-				contentTitle.append(accessDeniedString);
-
-				mStockAnalyzer.notify(Constant.SERVICE_NOTIFICATION_ID, Constant.MESSAGE_CHANNEL_ID, Constant.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
-						contentTitle.toString(), "");
-
-				mHandlerThread.quit();
-
-				result = true;
-				break;
-			}
-		}
-
-		return result;
 	}
 }

@@ -25,6 +25,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.android.orion.R;
+import com.android.orion.config.Config;
 import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
@@ -117,7 +118,7 @@ public class BaseActivity extends Activity {
 
 		mPowerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		mWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-				Constant.TAG + ":" + BaseActivity.class.getSimpleName());
+				Config.TAG + ":" + BaseActivity.class.getSimpleName());
 
 		LocalBroadcastManager.getInstance(this).registerReceiver(
 				mBroadcastReceiver,
@@ -180,8 +181,6 @@ public class BaseActivity extends Activity {
 			mProgressDialog = new ProgressDialog(mContext,
 					ProgressDialog.THEME_HOLO_LIGHT);
 		}
-
-		checkPermission();
 	}
 
 	@Override
@@ -193,6 +192,8 @@ public class BaseActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+
+		checkPermission();
 		mResumed = true;
 	}
 

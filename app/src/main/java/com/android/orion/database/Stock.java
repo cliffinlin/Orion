@@ -20,10 +20,12 @@ public class Stock extends DatabaseTable {
 
 	public static final String STATUS_SUSPENSION = "--";
 
-	public static final long INVALID_ID = 0;
-
 	public static final int FLAG_NONE = 0;
 	public static final int FLAG_FAVORITE = 1 << 0;
+
+	public static final long INVALID_ID = 0;
+
+	public static final double ROI_COEFFICIENT = 10.0;
 
 	private int mFlag;
 	private String mClasses;
@@ -88,7 +90,6 @@ public class Stock extends DatabaseTable {
 	private String mRDate;
 	private String mStatus;
 	private String mRealTimeModified;
-	private String mInformationModified;
 
 	private ArrayList<StockData> mStockDataListMin1 = new ArrayList<StockData>();
 	private ArrayList<StockData> mStockDataListMin5 = new ArrayList<StockData>();
@@ -298,7 +299,6 @@ public class Stock extends DatabaseTable {
 		mRDate = "";
 		mStatus = "";
 		mRealTimeModified = "";
-		mInformationModified = "";
 	}
 
 	@Override
@@ -364,7 +364,6 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND_RATIO, mDividendRatio);
 		contentValues.put(DatabaseContract.COLUMN_R_DATE, mRDate);
 		contentValues.put(DatabaseContract.COLUMN_STATUS, mStatus);
-		contentValues.put(DatabaseContract.COLUMN_INFORMATION_MODIFIED, mInformationModified);
 		contentValues.put(DatabaseContract.COLUMN_REALTIME_MODIFIED, mRealTimeModified);
 
 		return contentValues;
@@ -376,7 +375,6 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_CLASSES, mClasses);
 		contentValues.put(DatabaseContract.COLUMN_PINYIN, mPinyin);
 		contentValues.put(DatabaseContract.COLUMN_TOTAL_SHARE, mTotalShare);
-		contentValues.put(DatabaseContract.COLUMN_INFORMATION_MODIFIED, mInformationModified);
 
 		return contentValues;
 	}
@@ -483,7 +481,6 @@ public class Stock extends DatabaseTable {
 		setRDate(stock.mRDate);
 		setStatus(stock.mStatus);
 		setRealTimeModified(mRealTimeModified);
-		setInformationModified(mInformationModified);
 	}
 
 	@Override
@@ -555,7 +552,6 @@ public class Stock extends DatabaseTable {
 		setRDate(cursor);
 		setStatus(cursor);
 		setRealTimeModified(cursor);
-		setInformationModified(cursor);
 	}
 
 	public String getClasses() {
@@ -1564,23 +1560,6 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_REALTIME_MODIFIED)));
 	}
 
-	public String getInformationModified() {
-		return mInformationModified;
-	}
-
-	public void setInformationModified(String informationModified) {
-		mInformationModified = informationModified;
-	}
-
-	void setInformationModified(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setInformationModified(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_INFORMATION_MODIFIED)));
-	}
-
 	public void addFlag(int flag) {
 		mFlag |= flag;
 	}
@@ -2160,9 +2139,9 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-//		mRoi = Utility.Round(mRoe * (100.0 * 1.0 / mPe + mYield) * mNetProfitMargin * mRate * Constant.ROI_COEFFICIENT,
+//		mRoi = Utility.Round(mRoe * (100.0 * 1.0 / mPe + mYield) * mNetProfitMargin * mRate * ROI_COEFFICIENT,
 //				Constant.DOUBLE_FIXED_DECIMAL);
-		mRoi = Utility.Round(1.0 / mPe * mNetProfitMargin * Constant.ROI_COEFFICIENT);
+		mRoi = Utility.Round(1.0 / mPe * mNetProfitMargin * ROI_COEFFICIENT);
 	}
 
 	public void setupPb() {

@@ -81,9 +81,10 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 			switch (msg.what) {
 				case MESSAGE_REFRESH:
 					if (mStock != null) {
-						Setting.setDownloadStockFinancialTimemillis(mStock.getSE(), mStock.getCode(),0);
-						Setting.setDownloadShareBonusTimemillis(mStock.getSE(), mStock.getCode(),0);
-						Setting.setDownloadTotalShareTimemillis(mStock.getSE(), mStock.getCode(),0);
+						Setting.setDownloadStockInformationTimemillis(mStock.getSE(), mStock.getCode(), 0);
+						Setting.setDownloadStockFinancialTimemillis(mStock.getSE(), mStock.getCode(), 0);
+						Setting.setDownloadShareBonusTimemillis(mStock.getSE(), mStock.getCode(), 0);
+						Setting.setDownloadTotalShareTimemillis(mStock.getSE(), mStock.getCode(), 0);
 					}
 
 					if (mOrionService != null) {

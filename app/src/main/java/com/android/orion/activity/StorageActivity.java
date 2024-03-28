@@ -12,6 +12,7 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.Xml;
 
+import com.android.orion.config.Config;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.IndexComponent;
 import com.android.orion.database.Stock;
@@ -29,7 +30,7 @@ import java.util.ArrayList;
 
 public class StorageActivity extends DatabaseActivity {
 
-	static final String XML_DIR_NAME = Constant.APP_NAME;
+	static final String XML_DIR_NAME = Config.APP_NAME;
 	static final String XML_TAG_ROOT = "root";
 	static final String XML_TAG_STOCK = "stock";
 	static final String XML_TAG_STOCK_DEAL = "stock_deal";
@@ -103,10 +104,6 @@ public class StorageActivity extends DatabaseActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-	}
-
-	void onMessageRefresh() {
-		mOrionService.download();
 	}
 
 	void performLoadFromFile() {

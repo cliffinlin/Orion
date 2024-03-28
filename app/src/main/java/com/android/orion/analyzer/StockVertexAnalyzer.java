@@ -12,7 +12,8 @@ public class StockVertexAnalyzer {
 	private static StockVertexAnalyzer mInstance;
 	Logger Log = Logger.getLogger();
 
-	private StockVertexAnalyzer() {}
+	private StockVertexAnalyzer() {
+	}
 
 	public static StockVertexAnalyzer getInstance() {
 		synchronized (StockVertexAnalyzer.class) {

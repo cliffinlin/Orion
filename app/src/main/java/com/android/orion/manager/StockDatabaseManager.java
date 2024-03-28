@@ -2468,9 +2468,9 @@ public class StockDatabaseManager extends DatabaseManager {
 	}
 
 	public void updateDatabase(Stock stock, String period, ArrayList<StockData> stockDataList,
-						ArrayList<StockData> drawDataList,
-						ArrayList<StockData> strokeDataList,
-						ArrayList<StockData> segmentDataList) {
+							   ArrayList<StockData> drawDataList,
+							   ArrayList<StockData> strokeDataList,
+							   ArrayList<StockData> segmentDataList) {
 		try {
 			deleteStockData(stock.getId(), period);
 

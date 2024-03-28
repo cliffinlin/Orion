@@ -95,9 +95,10 @@ public class StockFinancialListActivity extends ListActivity implements
 				case MESSAGE_REFRESH:
 					for (Stock stock : mStockList) {
 						if (stock != null) {
-							Setting.setDownloadStockFinancialTimemillis(stock.getSE(), stock.getCode(),0);
-							Setting.setDownloadShareBonusTimemillis(stock.getSE(), stock.getCode(),0);
-							Setting.setDownloadTotalShareTimemillis(stock.getSE(), stock.getCode(),0);
+							Setting.setDownloadStockInformationTimemillis(mStock.getSE(), mStock.getCode(), 0);
+							Setting.setDownloadStockFinancialTimemillis(stock.getSE(), stock.getCode(), 0);
+							Setting.setDownloadShareBonusTimemillis(stock.getSE(), stock.getCode(), 0);
+							Setting.setDownloadTotalShareTimemillis(stock.getSE(), stock.getCode(), 0);
 						}
 					}
 					if (mOrionService != null) {

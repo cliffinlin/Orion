@@ -4,7 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 
-import com.android.orion.setting.Constant;
+import com.android.orion.config.Config;
 import com.android.orion.utility.Logger;
 import com.android.orion.utility.Market;
 import com.android.orion.utility.Utility;
@@ -33,7 +33,7 @@ public class OrionAlarmManager {
 
 	void setIntervalMillis(long intervalMillis) {
 		if (intervalMillis <= 0) {
-			mIntervalMillis = Constant.DEFAULT_ALARM_INTERVAL;
+			mIntervalMillis = Config.alarmInterval;
 		} else {
 			mIntervalMillis = intervalMillis;
 		}

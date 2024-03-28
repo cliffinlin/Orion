@@ -1,10 +1,8 @@
 package com.android.orion.provider;
 
-import android.app.NotificationManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
@@ -22,18 +20,12 @@ import com.android.orion.analyzer.StockAnalyzer;
 import com.android.orion.application.OrionApplication;
 import com.android.orion.config.Config;
 import com.android.orion.database.DatabaseContract;
-import com.android.orion.database.IPO;
 import com.android.orion.database.IndexComponent;
-import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
-import com.android.orion.database.StockFinancial;
-import com.android.orion.database.TotalShare;
 import com.android.orion.manager.StockDatabaseManager;
 import com.android.orion.setting.Constant;
-import com.android.orion.setting.Setting;
 import com.android.orion.utility.Logger;
-import com.android.orion.utility.Market;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Utility;
 
@@ -44,8 +36,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 public abstract class StockDataProvider {
 
@@ -69,18 +59,16 @@ public abstract class StockDataProvider {
 	public static int RESULT_FAILED = -1;
 
 	public Context mContext;
-	PowerManager mPowerManager;
-	PowerManager.WakeLock mWakeLock;
-	LocalBroadcastManager mLocalBroadcastManager;
-
 	public StockAnalyzer mStockAnalyzer;
 	public StockDatabaseManager mStockDatabaseManager;
-	Logger Log = Logger.getLogger();
-
 	public HandlerThread mHandlerThread;
 	public ServiceHandler mHandler;
 	public OkHttpClient mOkHttpClient = new OkHttpClient();
-	public ArrayList<String> mAccessDeniedStringArray = new ArrayList<>();
+
+	PowerManager mPowerManager;
+	PowerManager.WakeLock mWakeLock;
+	LocalBroadcastManager mLocalBroadcastManager;
+	Logger Log = Logger.getLogger();
 
 	public StockDataProvider(@NonNull Context context) {
 		mContext = OrionApplication.getContext();
@@ -88,7 +76,7 @@ public abstract class StockDataProvider {
 		mPowerManager = (PowerManager) mContext
 				.getSystemService(Context.POWER_SERVICE);
 		mWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-				Constant.TAG + ":" + StockDataProvider.class.getSimpleName());
+				Config.TAG + ":" + StockDataProvider.class.getSimpleName());
 		mLocalBroadcastManager = LocalBroadcastManager.getInstance(mContext);
 
 		mStockAnalyzer = StockAnalyzer.getInstance();
@@ -98,18 +86,11 @@ public abstract class StockDataProvider {
 				Process.THREAD_PRIORITY_BACKGROUND);
 		mHandlerThread.start();
 		mHandler = new ServiceHandler(mHandlerThread.getLooper());
-
-		mAccessDeniedStringArray.add(mContext.getResources().getString(
-				R.string.access_denied_jp));
-		mAccessDeniedStringArray.add(mContext.getResources().getString(
-				R.string.access_denied_zh));
-		mAccessDeniedStringArray.add(mContext.getResources().getString(
-				R.string.access_denied_default));
 	}
 
 	public void acquireWakeLock() {
 		if (!mWakeLock.isHeld()) {
-			mWakeLock.acquire(Constant.WAKELOCK_TIMEOUT);
+			mWakeLock.acquire(Config.wakelockTimeout);
 			Log.d("mWakeLock acquired.");
 		}
 	}

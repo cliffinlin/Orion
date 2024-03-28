@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import com.android.orion.R;
 import com.android.orion.activity.StockFavoriteListActivity;
 import com.android.orion.application.OrionApplication;
+import com.android.orion.config.Config;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
@@ -363,8 +364,9 @@ public class StockAnalyzer {
 								price / stockFinancial.getBookValuePerShare());
 					}
 
+					//TODO
 					roi = Utility.Round(stockFinancial.getRoe() * pe
-							* Constant.ROI_COEFFICIENT);
+							* Stock.ROI_COEFFICIENT);
 					if (roi < 0) {
 						roi = 0;
 					}
@@ -971,7 +973,7 @@ public class StockAnalyzer {
 
 		RecordFile.writeNotificationFile(contentTitle.toString());
 
-		notify(Integer.valueOf(stock.getCode()), Constant.MESSAGE_CHANNEL_ID, Constant.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
+		notify(Integer.valueOf(stock.getCode()), Config.MESSAGE_CHANNEL_ID, Config.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
 				contentTitle.toString(), "");
 	}
 

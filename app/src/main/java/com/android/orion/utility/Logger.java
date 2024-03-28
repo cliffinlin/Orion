@@ -3,7 +3,7 @@ package com.android.orion.utility;
 
 import android.util.Log;
 
-import com.android.orion.setting.Constant;
+import com.android.orion.config.Config;
 import com.android.orion.setting.Setting;
 
 public class Logger {
@@ -15,7 +15,7 @@ public class Logger {
 	/**
 	 * log tag
 	 */
-	private String tag = Constant.TAG;//"Logger";//application name
+	private String tag = Config.TAG;//"Logger";//application name
 
 	private Logger() {
 		debug = Setting.getDebugLog();
