@@ -38,14 +38,11 @@ public class OrionContentProvider extends ContentProvider {
 	private static final int TOTAL_SHARE = 600;
 	private static final int TOTAL_SHARE_ID = 601;
 
-	private static final int IPO = 700;
-	private static final int IPO_ID = 701;
+	private static final int INDEX_COMPONENT = 700;
+	private static final int INDEX_COMPONENT_ID = 701;
 
-	private static final int INDEX_COMPONENT = 800;
-	private static final int INDEX_COMPONENT_ID = 801;
-
-	private static final int STOCK_QUANT = 900;
-	private static final int STOCK_QUANT_ID = 901;
+	private static final int STOCK_QUANT = 800;
+	private static final int STOCK_QUANT_ID = 801;
 
 	private static final UriMatcher mUriMatcher = new UriMatcher(
 			UriMatcher.NO_MATCH);
@@ -81,11 +78,6 @@ public class OrionContentProvider extends ContentProvider {
 				DatabaseContract.TotalShare.TABLE_NAME, TOTAL_SHARE);
 		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
 				DatabaseContract.TotalShare.TABLE_NAME + "/#", TOTAL_SHARE_ID);
-
-		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
-				DatabaseContract.IPO.TABLE_NAME, IPO);
-		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
-				DatabaseContract.IPO.TABLE_NAME + "/#", IPO_ID);
 
 		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
 				DatabaseContract.IndexComponent.TABLE_NAME, INDEX_COMPONENT);
@@ -156,13 +148,6 @@ public class OrionContentProvider extends ContentProvider {
 				break;
 			case TOTAL_SHARE_ID:
 				type = DatabaseContract.TotalShare.CONTENT_ITEM_TYPE;
-				break;
-
-			case IPO:
-				type = DatabaseContract.IPO.CONTENT_TYPE;
-				break;
-			case IPO_ID:
-				type = DatabaseContract.IPO.CONTENT_ITEM_TYPE;
 				break;
 
 			case INDEX_COMPONENT:
@@ -255,15 +240,6 @@ public class OrionContentProvider extends ContentProvider {
 						+ uri.getLastPathSegment());
 				break;
 
-			case IPO:
-				builder.setTables(DatabaseContract.IPO.TABLE_NAME);
-				break;
-			case IPO_ID:
-				builder.setTables(DatabaseContract.IPO.TABLE_NAME);
-				builder.appendWhere(BaseColumns._ID + " = "
-						+ uri.getLastPathSegment());
-				break;
-
 			case INDEX_COMPONENT:
 				builder.setTables(DatabaseContract.IndexComponent.TABLE_NAME);
 				break;
@@ -339,11 +315,6 @@ public class OrionContentProvider extends ContentProvider {
 				id = mDatabaseManager.mDatabase
 						.insert(DatabaseContract.TotalShare.TABLE_NAME, null,
 								contentValues);
-				break;
-
-			case IPO:
-				id = mDatabaseManager.mDatabase.insert(
-						DatabaseContract.IPO.TABLE_NAME, null, contentValues);
 				break;
 
 			case INDEX_COMPONENT:
@@ -515,21 +486,6 @@ public class OrionContentProvider extends ContentProvider {
 						whereClause, selectionArgs);
 				break;
 
-			case IPO:
-				result = mDatabaseManager.mDatabase.update(
-						DatabaseContract.IPO.TABLE_NAME, values, selection,
-						selectionArgs);
-				break;
-			case IPO_ID:
-				whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
-				if (!TextUtils.isEmpty(selection)) {
-					whereClause += " AND " + whereClause;
-				}
-				result = mDatabaseManager.mDatabase.update(
-						DatabaseContract.IPO.TABLE_NAME, values, whereClause,
-						selectionArgs);
-				break;
-
 			case INDEX_COMPONENT:
 				result = mDatabaseManager.mDatabase.update(
 						DatabaseContract.IndexComponent.TABLE_NAME, values, selection,
@@ -678,21 +634,6 @@ public class OrionContentProvider extends ContentProvider {
 				result = mDatabaseManager.mDatabase.delete(
 						DatabaseContract.TotalShare.TABLE_NAME, whereClause,
 						selectionArgs);
-				break;
-
-			case IPO:
-				result = mDatabaseManager.mDatabase.delete(
-						DatabaseContract.IPO.TABLE_NAME, selection, selectionArgs);
-				break;
-
-			case IPO_ID:
-				whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
-				if (!TextUtils.isEmpty(selection)) {
-					whereClause += " AND " + whereClause;
-				}
-				result = mDatabaseManager.mDatabase
-						.delete(DatabaseContract.IPO.TABLE_NAME, whereClause,
-								selectionArgs);
 				break;
 
 			case INDEX_COMPONENT:

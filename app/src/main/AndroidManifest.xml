@@ -98,10 +98,6 @@
             android:label="@string/stock_financial_chart"
             android:launchMode="singleTask"></activity>
         <activity
-            android:name="com.android.orion.activity.StockIPOListActivity"
-            android:label="@string/ipo_list"
-            android:launchMode="singleTask"></activity>
-        <activity
             android:name="com.android.orion.activity.StockQuantListActivity"
             android:label="@string/activity_title_stock_quant_list"
             android:launchMode="singleTask"></activity>

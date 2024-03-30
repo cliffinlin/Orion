@@ -20,7 +20,6 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 		db.execSQL(DatabaseContract.StockFinancial.CREATE_TABLE);
 		db.execSQL(DatabaseContract.ShareBonus.CREATE_TABLE);
 		db.execSQL(DatabaseContract.TotalShare.CREATE_TABLE);
-		db.execSQL(DatabaseContract.IPO.CREATE_TABLE);
 		db.execSQL(DatabaseContract.IndexComponent.CREATE_TABLE);
 	}
 
@@ -33,7 +32,6 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 		db.execSQL(DatabaseContract.StockFinancial.DELETE_TABLE);
 		db.execSQL(DatabaseContract.ShareBonus.DELETE_TABLE);
 		db.execSQL(DatabaseContract.TotalShare.DELETE_TABLE);
-		db.execSQL(DatabaseContract.IPO.DELETE_TABLE);
 		db.execSQL(DatabaseContract.IndexComponent.DELETE_TABLE);
 		onCreate(db);
 	}

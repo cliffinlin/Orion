@@ -109,8 +109,6 @@ public abstract class StockDataProvider {
 
 	public abstract int downloadStockFinancial(Stock stock);
 
-	public abstract int downloadIPO();
-
 	public abstract int downloadShareBonus(Stock stock);
 
 	public abstract int downloadTotalShare(Stock stock);
