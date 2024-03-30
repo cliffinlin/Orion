@@ -67,6 +67,7 @@ public class Setting {
 	public static final String SETTING_DOWNLOAD_STOCK_FINANCIAL_TIMEMILLIS = "SETTING_DOWNLOAD_STOCK_FINANCIAL_TIMEMILLIS";
 	public static final String SETTING_DOWNLOAD_SHARE_BONUS_TIMEMILLIS = "SETTING_DOWNLOAD_SHARE_BONUS_TIMEMILLIS";
 	public static final String SETTING_DOWNLOAD_TOTAL_SHARE_TIMEMILLIS = "SETTING_DOWNLOAD_TOTAL_SHARE_TIMEMILLIS";
+	public static final String SETTING_DOWNLOAD_STOCK_REALTIME_TIMEMILLIS = "SETTING_DOWNLOAD_STOCK_REALTIME_TIMEMILLIS";
 
 	private Setting() {
 	}
@@ -269,5 +270,13 @@ public class Setting {
 
 	public static void setDownloadTotalShareTimemillis(String se, String code, long timemillis) {
 		Preferences.putLong(SETTING_DOWNLOAD_TOTAL_SHARE_TIMEMILLIS + "_" + se + "_" + code, timemillis);
+	}
+
+	public static long getDownloadStockRealTimeTimemillis(String se, String code) {
+		return Preferences.getLong(SETTING_DOWNLOAD_STOCK_REALTIME_TIMEMILLIS + "_" + se + "_" + code, 0);
+	}
+
+	public static void setDownloadStockRealTimeTimemillis(String se, String code, long timemillis) {
+		Preferences.putLong(SETTING_DOWNLOAD_STOCK_REALTIME_TIMEMILLIS + "_" + se + "_" + code, timemillis);
 	}
 }

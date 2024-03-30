@@ -89,7 +89,6 @@ public class Stock extends DatabaseTable {
 	private double mDividendRatio;
 	private String mRDate;
 	private String mStatus;
-	private String mRealTimeModified;
 
 	private ArrayList<StockData> mStockDataListMin1 = new ArrayList<StockData>();
 	private ArrayList<StockData> mStockDataListMin5 = new ArrayList<StockData>();
@@ -298,7 +297,6 @@ public class Stock extends DatabaseTable {
 		mDividendRatio = 0;
 		mRDate = "";
 		mStatus = "";
-		mRealTimeModified = "";
 	}
 
 	@Override
@@ -364,7 +362,6 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND_RATIO, mDividendRatio);
 		contentValues.put(DatabaseContract.COLUMN_R_DATE, mRDate);
 		contentValues.put(DatabaseContract.COLUMN_STATUS, mStatus);
-		contentValues.put(DatabaseContract.COLUMN_REALTIME_MODIFIED, mRealTimeModified);
 
 		return contentValues;
 	}
@@ -388,7 +385,6 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_NET, mNet);
 		contentValues.put(DatabaseContract.COLUMN_VOLUME, mVolume);
 		contentValues.put(DatabaseContract.COLUMN_VALUE, mValue);
-		contentValues.put(DatabaseContract.COLUMN_REALTIME_MODIFIED, mRealTimeModified);
 
 		return contentValues;
 	}
@@ -480,7 +476,6 @@ public class Stock extends DatabaseTable {
 		setDividendRatio(stock.mDividendRatio);
 		setRDate(stock.mRDate);
 		setStatus(stock.mStatus);
-		setRealTimeModified(mRealTimeModified);
 	}
 
 	@Override
@@ -551,7 +546,6 @@ public class Stock extends DatabaseTable {
 		setDividendRatio(cursor);
 		setRDate(cursor);
 		setStatus(cursor);
-		setRealTimeModified(cursor);
 	}
 
 	public String getClasses() {
@@ -1541,23 +1535,6 @@ public class Stock extends DatabaseTable {
 
 		setStatus(cursor.getString(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_STATUS)));
-	}
-
-	public String getRealTimeModified() {
-		return mRealTimeModified;
-	}
-
-	public void setRealTimeModified(String realtimeModified) {
-		mRealTimeModified = realtimeModified;
-	}
-
-	void setRealTimeModified(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setRealTimeModified(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_REALTIME_MODIFIED)));
 	}
 
 	public void addFlag(int flag) {

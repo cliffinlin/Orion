@@ -24,4 +24,5 @@ public class Config {
 	public static long downloadStockFinancialInterval = 8 * Constant.HOUR_INTERVAL;
 	public static long downloadShareBonusInterval = 8 * Constant.HOUR_INTERVAL;
 	public static long downloadTotalShareInterval = 8 * Constant.HOUR_INTERVAL;
+	public static long downloadStockRealTimeInterval = 8 * Constant.HOUR_INTERVAL;
 }

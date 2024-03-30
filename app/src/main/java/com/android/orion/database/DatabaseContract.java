@@ -59,8 +59,6 @@ public final class DatabaseContract {
 	public static final String COLUMN_YIELD = "yield";
 	public static final String COLUMN_DIVIDEND_RATIO = "dividend_ratio";
 	public static final String COLUMN_CREATED = "created";
-	public static final String COLUMN_REALTIME_MODIFIED = "realtime_modified"; //TODO
-	public static final String COLUMN_INFORMATION_MODIFIED = "information_modified"; //TODO
 	public static final String COLUMN_MODIFIED = "modified";
 	public static final String COLUMN_INDEX_SE = "index_se";
 	public static final String COLUMN_INDEX_CODE = "index_code";
@@ -161,7 +159,6 @@ public final class DatabaseContract {
 				COLUMN_RATE, COLUMN_ROI,
 				COLUMN_ROE, COLUMN_PE, COLUMN_PB, COLUMN_DIVIDEND,
 				COLUMN_YIELD, COLUMN_DIVIDEND_RATIO, COLUMN_R_DATE, COLUMN_STATUS,
-				COLUMN_REALTIME_MODIFIED, COLUMN_INFORMATION_MODIFIED,
 				COLUMN_CREATED, COLUMN_MODIFIED};
 		static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
 				+ TABLE_NAME;
@@ -216,8 +213,6 @@ public final class DatabaseContract {
 				+ COLUMN_DIVIDEND_RATIO + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_R_DATE + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_STATUS + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_REALTIME_MODIFIED + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_INFORMATION_MODIFIED + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_CREATED + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_MODIFIED + TEXT_TYPE + " )";
 		static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME

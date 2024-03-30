@@ -99,6 +99,7 @@ public class StockFinancialListActivity extends ListActivity implements
 							Setting.setDownloadStockFinancialTimemillis(stock.getSE(), stock.getCode(), 0);
 							Setting.setDownloadShareBonusTimemillis(stock.getSE(), stock.getCode(), 0);
 							Setting.setDownloadTotalShareTimemillis(stock.getSE(), stock.getCode(), 0);
+							Setting.setDownloadStockRealTimeTimemillis(stock.getSE(), stock.getCode(), 0);
 						}
 					}
 					if (mOrionService != null) {

@@ -85,6 +85,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 						Setting.setDownloadStockFinancialTimemillis(mStock.getSE(), mStock.getCode(), 0);
 						Setting.setDownloadShareBonusTimemillis(mStock.getSE(), mStock.getCode(), 0);
 						Setting.setDownloadTotalShareTimemillis(mStock.getSE(), mStock.getCode(), 0);
+						Setting.setDownloadStockRealTimeTimemillis(mStock.getSE(), mStock.getCode(), 0);
 					}
 
 					if (mOrionService != null) {
