@@ -175,7 +175,7 @@ public class BaseActivity extends Activity {
 			mStockDealArrayMap = new ArrayMap<String, Stock>();
 		}
 
-		mStockDatabaseManager = StockDatabaseManager.getInstance(this);
+		mStockDatabaseManager = StockDatabaseManager.getInstance();
 
 		if (mProgressDialog == null) {
 			mProgressDialog = new ProgressDialog(mContext,

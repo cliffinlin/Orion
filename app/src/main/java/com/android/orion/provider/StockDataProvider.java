@@ -70,7 +70,22 @@ public abstract class StockDataProvider {
 	LocalBroadcastManager mLocalBroadcastManager;
 	Logger Log = Logger.getLogger();
 
-	public StockDataProvider(@NonNull Context context) {
+	public abstract int downloadStockInformation(Stock stock);
+
+	public abstract int downloadStockFinancial(Stock stock);
+
+	public abstract int downloadShareBonus(Stock stock);
+
+	public abstract int downloadTotalShare(Stock stock);
+
+	public abstract int downloadStockDataHistory(Stock stock);
+
+	public abstract int downloadStockRealTime(Stock stock);
+
+	public abstract int downloadStockDataRealTime(Stock stock);
+
+
+	public StockDataProvider() {
 		mContext = OrionApplication.getContext();
 
 		mPowerManager = (PowerManager) mContext
@@ -80,7 +95,7 @@ public abstract class StockDataProvider {
 		mLocalBroadcastManager = LocalBroadcastManager.getInstance(mContext);
 
 		mStockAnalyzer = StockAnalyzer.getInstance();
-		mStockDatabaseManager = StockDatabaseManager.getInstance(mContext);
+		mStockDatabaseManager = StockDatabaseManager.getInstance();
 
 		mHandlerThread = new HandlerThread("StockDataProvider",
 				Process.THREAD_PRIORITY_BACKGROUND);
@@ -101,22 +116,6 @@ public abstract class StockDataProvider {
 			Log.d("mWakeLock released.");
 		}
 	}
-
-
-	public abstract int downloadStockInformation(Stock stock);
-
-	public abstract int downloadStockRealTime(Stock stock);
-
-	public abstract int downloadStockFinancial(Stock stock);
-
-	public abstract int downloadShareBonus(Stock stock);
-
-	public abstract int downloadTotalShare(Stock stock);
-
-	public abstract int downloadStockDataHistory(Stock stock);
-
-	public abstract int downloadStockDataRealTime(Stock stock);
-
 
 	public int getPeriodMinutes(String period) {
 		int result = 0;

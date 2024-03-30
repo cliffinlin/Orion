@@ -10,6 +10,7 @@ import android.util.ArrayMap;
 
 import androidx.annotation.NonNull;
 
+import com.android.orion.application.OrionApplication;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.IndexComponent;
 import com.android.orion.database.ShareBonus;
@@ -30,18 +31,18 @@ import java.util.List;
 public class StockDatabaseManager extends DatabaseManager {
 	private static StockDatabaseManager mInstance;
 
-	private StockDatabaseManager(Context context) {
-		super(context);
-	}
-
 	@NonNull
-	public static StockDatabaseManager getInstance(@NonNull Context context) {
+	public static StockDatabaseManager getInstance() {
 		synchronized (StockDatabaseManager.class) {
 			if (mInstance == null) {
-				mInstance = new StockDatabaseManager(context.getApplicationContext());
+				mInstance = new StockDatabaseManager();
 			}
 			return mInstance;
 		}
+	}
+
+	private StockDatabaseManager() {
+		super(OrionApplication.getContext());
 	}
 
 	public int delete(Uri uri) {

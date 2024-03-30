@@ -51,9 +51,6 @@ public class StockQuantAnalyzer {
 		}
 	};
 
-	private StockQuantAnalyzer() {
-	}
-
 	public static StockQuantAnalyzer getInstance() {
 		synchronized (StockQuantAnalyzer.class) {
 			if (mInstance == null) {
@@ -61,6 +58,9 @@ public class StockQuantAnalyzer {
 			}
 			return mInstance;
 		}
+	}
+
+	private StockQuantAnalyzer() {
 	}
 
 	void init() {
@@ -210,7 +210,7 @@ public class StockQuantAnalyzer {
 		init();
 
 		mContext = context;
-		mStockDatabaseManager = StockDatabaseManager.getInstance(context);
+		mStockDatabaseManager = StockDatabaseManager.getInstance();
 
 		if (stock.getThreshold() == 0 || stock.getQuantVolume() == 0) {
 			return;

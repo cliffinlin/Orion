@@ -27,11 +27,8 @@ public class OrionMainActivity extends PreferenceActivity {
 
 		initSharepreference();
 
-		mStockDownloadAlarmManager = DownloadAlarmManager.getInstance(this);
-
-		if (mStockDownloadAlarmManager != null) {
-			mStockDownloadAlarmManager.startAlarm();
-		}
+		mStockDownloadAlarmManager = DownloadAlarmManager.getInstance();
+		mStockDownloadAlarmManager.startAlarm();
 	}
 
 	@Override

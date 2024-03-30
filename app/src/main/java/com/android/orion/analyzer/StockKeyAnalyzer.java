@@ -21,9 +21,6 @@ public class StockKeyAnalyzer {
 	double mPrevHigh;
 	double mPrevLow;
 
-	private StockKeyAnalyzer() {
-	}
-
 	public static StockKeyAnalyzer getInstance() {
 		synchronized (StockKeyAnalyzer.class) {
 			if (mInstance == null) {
@@ -31,6 +28,9 @@ public class StockKeyAnalyzer {
 			}
 			return mInstance;
 		}
+	}
+
+	private StockKeyAnalyzer() {
 	}
 
 	void init() {

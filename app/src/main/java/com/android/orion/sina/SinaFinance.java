@@ -71,7 +71,7 @@ public class SinaFinance extends StockDataProvider {
 	Logger Log = Logger.getLogger();
 
 	public SinaFinance(Context context) {
-		super(context);
+		super();
 
 		mAccessDeniedStringArray.add(mContext.getResources().getString(
 				R.string.access_denied_jp));

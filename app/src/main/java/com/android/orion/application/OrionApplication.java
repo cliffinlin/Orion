@@ -10,7 +10,7 @@ import com.android.orion.service.OrionService;
 public class OrionApplication extends Application {
 
 	public static Context mContext;
-	public static OrionApplication mInstance;
+	private static OrionApplication mInstance;
 
 	public static Context getContext() {
 		return mContext;

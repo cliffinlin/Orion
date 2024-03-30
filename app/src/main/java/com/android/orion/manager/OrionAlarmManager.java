@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 
+import com.android.orion.application.OrionApplication;
 import com.android.orion.config.Config;
 import com.android.orion.utility.Logger;
 import com.android.orion.utility.Market;
@@ -14,20 +15,16 @@ import java.util.Calendar;
 public class OrionAlarmManager {
 
 	Logger Log = Logger.getLogger();
-	Context mContext = null;
+	Context mContext;
 	private long mIntervalMillis = 0;
 	private AlarmManager mAlarmManager = null;
 	private PendingIntent mPendingIntent = null;
 
-	private OrionAlarmManager() {
-	}
-
-	public OrionAlarmManager(Context context) {
-		mContext = context;
+	OrionAlarmManager() {
+		mContext = OrionApplication.getContext();
 
 		if (mAlarmManager == null) {
-			mAlarmManager = (AlarmManager) context
-					.getSystemService(Context.ALARM_SERVICE);
+			mAlarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
 		}
 	}
 

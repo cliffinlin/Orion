@@ -9,11 +9,8 @@ import java.util.ArrayList;
 
 public class StockVertexAnalyzer {
 
-	private static StockVertexAnalyzer mInstance;
 	Logger Log = Logger.getLogger();
-
-	private StockVertexAnalyzer() {
-	}
+	private static StockVertexAnalyzer mInstance;
 
 	public static StockVertexAnalyzer getInstance() {
 		synchronized (StockVertexAnalyzer.class) {
@@ -22,6 +19,9 @@ public class StockVertexAnalyzer {
 			}
 			return mInstance;
 		}
+	}
+
+	private StockVertexAnalyzer() {
 	}
 
 	void analyzeVertex(ArrayList<StockData> dataList,

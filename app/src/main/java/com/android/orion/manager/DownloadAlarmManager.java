@@ -10,15 +10,15 @@ import com.android.orion.receiver.DownloadBroadcastReceiver;
 public class DownloadAlarmManager extends OrionAlarmManager {
 	private static DownloadAlarmManager mInstance;
 
-	private DownloadAlarmManager(Context context) {
-		super(context);
-	}
-
-	public static synchronized DownloadAlarmManager getInstance(Context context) {
+	public static synchronized DownloadAlarmManager getInstance() {
 		if (mInstance == null) {
-			mInstance = new DownloadAlarmManager(context);
+			mInstance = new DownloadAlarmManager();
 		}
 		return mInstance;
+	}
+
+	private DownloadAlarmManager() {
+		super();
 	}
 
 	@Override
