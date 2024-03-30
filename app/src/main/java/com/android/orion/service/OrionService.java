@@ -84,7 +84,7 @@ public class OrionService extends Service {
 		mIntentFilter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
 		registerReceiver(mDownloadBroadcastReceiver, mIntentFilter);
 
-		mSinaFinance = new SinaFinance(this);
+		mSinaFinance = SinaFinance.getInstance();
 	}
 
 	@Override

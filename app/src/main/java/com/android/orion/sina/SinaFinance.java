@@ -70,7 +70,18 @@ public class SinaFinance extends StockDataProvider {
 	ArrayList<String> mAccessDeniedStringArray = new ArrayList<>();
 	Logger Log = Logger.getLogger();
 
-	public SinaFinance(Context context) {
+	private static SinaFinance mInstance;
+
+	public static SinaFinance getInstance() {
+		synchronized (SinaFinance.class) {
+			if (mInstance == null) {
+				mInstance = new SinaFinance();
+			}
+		}
+		return mInstance;
+	}
+
+	private SinaFinance() {
 		super();
 
 		mAccessDeniedStringArray.add(mContext.getResources().getString(
