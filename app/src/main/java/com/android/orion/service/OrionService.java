@@ -28,18 +28,14 @@ import com.android.orion.receiver.DownloadBroadcastReceiver;
 import com.android.orion.sina.SinaFinance;
 
 public class OrionService extends Service {
-	public static OrionService mInstance;
+	private static OrionService mInstance;
+
 	boolean mRedelivery = true;
-	String mName = "OrionService";
-	AlarmManager mAlarmManager;
-	AudioManager mAudioManager;
 	IntentFilter mIntentFilter;
-	DownloadBroadcastReceiver mDownloadBroadcastReceiver;
 	NotificationManager mNotificationManager;
-	TelephonyManager mTelephonyManager;
-	Vibrator mVibrator;
+	DownloadBroadcastReceiver mDownloadBroadcastReceiver;
 	HandlerThread mHandlerThread;
-	IBinder mBinder;
+	IBinder mServiceBinder;
 	volatile Looper mLooper;
 	volatile ServiceHandler mHandler;
 	SinaFinance mSinaFinance;
@@ -54,15 +50,11 @@ public class OrionService extends Service {
 
 		mInstance = this;
 
-		mBinder = new OrionBinder();
+		mServiceBinder = new OrionServiceBinder();
 
-		mAlarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 		mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-		mTelephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-		mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
-		mHandlerThread = new HandlerThread(mName,
+		mHandlerThread = new HandlerThread(OrionService.class.getSimpleName(),
 				Process.THREAD_PRIORITY_BACKGROUND);
 		mHandlerThread.start();
 
@@ -124,7 +116,7 @@ public class OrionService extends Service {
 
 	@Override
 	public IBinder onBind(Intent intent) {
-		return mBinder;
+		return mServiceBinder;
 	}
 
 	public void download(String se, String code) {
@@ -161,7 +153,7 @@ public class OrionService extends Service {
 		}
 	}
 
-	public class OrionBinder extends Binder {
+	public class OrionServiceBinder extends Binder {
 
 		public OrionService getService() {
 			return OrionService.this;

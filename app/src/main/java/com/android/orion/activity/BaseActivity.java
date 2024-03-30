@@ -35,7 +35,7 @@ import com.android.orion.database.StockQuant;
 import com.android.orion.database.TotalShare;
 import com.android.orion.manager.StockDatabaseManager;
 import com.android.orion.service.OrionService;
-import com.android.orion.service.OrionService.OrionBinder;
+import com.android.orion.service.OrionService.OrionServiceBinder;
 import com.android.orion.setting.Constant;
 import com.android.orion.utility.Logger;
 import com.android.orion.utility.Utility;
@@ -77,9 +77,9 @@ public class BaseActivity extends Activity {
 				return;
 			}
 
-			OrionBinder mOrionBinder = (OrionBinder) binder;
+			OrionServiceBinder mOrionServiceBinder = (OrionServiceBinder) binder;
 
-			mOrionService = mOrionBinder.getService();
+			mOrionService = mOrionServiceBinder.getService();
 
 			BaseActivity.this.onServiceConnected();
 		}
