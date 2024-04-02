@@ -69,10 +69,6 @@ public class StockDataChartListActivity extends BaseActivity implements
 	boolean mKeyDisplayDeal = false;
 	boolean mKeyDisplayQuant = false;
 	boolean mKeyDisplayBonus = false;
-	boolean mKeyDisplayBPS = false;
-	boolean mKeyDisplayNPS = false;
-	boolean mKeyDisplayRoe = false;
-	boolean mKeyDisplayRoi = false;
 
 	int mStockListIndex = 0;
 
@@ -183,21 +179,9 @@ public class StockDataChartListActivity extends BaseActivity implements
 
 		mKeyDisplayBonus = Preferences
 				.getBoolean(Setting.SETTING_DISPLAY_BONUS, false);
-		mKeyDisplayBPS = Preferences.getBoolean(Setting.SETTING_DISPLAY_BPS, false);
-		mKeyDisplayNPS = Preferences.getBoolean(Setting.SETTING_DISPLAY_NPS, false);
-		mKeyDisplayRoe = Preferences.getBoolean(Setting.SETTING_DISPLAY_ROE, false);
-		mKeyDisplayRoi = Preferences.getBoolean(Setting.SETTING_DISPLAY_ROI, false);
 
 		if (getIntent().getBooleanExtra(Constant.EXTRA_STOCK_BONUS, false)) {
 			mKeyDisplayBonus = true;
-		}
-
-		if (getIntent().getBooleanExtra(Constant.EXTRA_STOCK_BPS, false)) {
-			mKeyDisplayBPS = true;
-		}
-
-		if (getIntent().getBooleanExtra(Constant.EXTRA_STOCK_NPS, false)) {
-			mKeyDisplayNPS = true;
 		}
 
 		initLoader();
@@ -707,47 +691,6 @@ public class StockDataChartListActivity extends BaseActivity implements
 						Entry outlineEntry = new Entry(
 								(float) mStockData.getVertexLow(), index);
 						stockDataChart.mLineList[4].add(outlineEntry);
-					}
-
-					if (mKeyDisplayRoi) {
-						roi = (float) mStockData.getRoi();
-						Entry roiEntry = new Entry(roi, index);
-						stockDataChart.mRoiList.add(roiEntry);
-					}
-
-					if (mStockFinancialList.size() > 0) {
-						bookValuePerShare = 0;
-						netProfitPerShare = 0;
-						roe = 0;
-
-						stockFinancial = Search.getStockFinancialByDate(dateString,
-								mStockFinancialList);
-						if (stockFinancial != null) {
-							bookValuePerShare = (float) stockFinancial
-									.getBookValuePerShare();
-							netProfitPerShare = (float) stockFinancial
-									.getNetProfitPerShare() * 10;
-							roe = (float) stockFinancial.getRoe();
-						}
-
-						if (mKeyDisplayBPS) {
-							Entry bookValuePerShareEntry = new Entry(
-									bookValuePerShare, index);
-							stockDataChart.mBookValuePerShareList
-									.add(bookValuePerShareEntry);
-						}
-
-						if (mKeyDisplayNPS) {
-							Entry netProfitPerShareEntry = new Entry(
-									netProfitPerShare, index);
-							stockDataChart.mNetProfitPerShareList
-									.add(netProfitPerShareEntry);
-						}
-
-						if (mKeyDisplayRoe) {
-							Entry roeEntry = new Entry(roe, index);
-							stockDataChart.mRoeList.add(roeEntry);
-						}
 					}
 
 					if (mShareBonusList.size() > 0) {

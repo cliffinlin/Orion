@@ -17,14 +17,6 @@ public class ListActivity extends StorageActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		if (!Preferences.getBoolean(
-				Setting.SETTING_NOTIFICATION, false)) {
-			Toast.makeText(
-					this,
-					getResources().getString(R.string.notification_is_off),
-					Toast.LENGTH_LONG).show();
-		}
-
 		if (Preferences.getBoolean(
 				Setting.SETTING_DEBUG_LOOPBACK, false)) {
 			Toast.makeText(

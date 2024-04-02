@@ -127,9 +127,6 @@
     //Settings
     <string name="setting">Setting</string>
 
-    <string name="setting_general">General</string>
-    <string name="setting_notification">Notification</string>
-
     <string name="setting_indexes">Indexes</string>
 
     <string name="setting_period">Period</string>
@@ -155,10 +152,6 @@
     <string name="setting_display_cost">Cost</string>
     <string name="setting_display_deal">Deal</string>
     <string name="setting_display_bonus">Bonus</string>
-    <string name="setting_display_bps">Bps</string>
-    <string name="setting_display_nps">Nps</string>
-    <string name="setting_display_roe">Roe</string>
-    <string name="setting_display_roi">Roi</string>
     <string name="setting_display_threshold">Threshold</string>
     <string name="setting_display_quant">Quant</string>
 
@@ -250,11 +243,6 @@
     <string name="activity_title_deal">Deal</string>
     <string name="activity_title_operate">Operate</string>
     <string name="activity_title_setting">Setting</string>
-    <string name="activity_title_setting_more">Setting More</string>
-    <string name="activity_title_setting_general">General</string>
-    <string name="activity_title_setting_display">Display</string>
-    <string name="activity_title_setting_period">Period</string>
-    <string name="activity_title_setting_debug">Debug</string>
     <string name="activity_title_setting_loopback">Setting Loopback</string>
     <string name="title_save_to_sd_card">Save to SD Card</string>
     <string name="title_delete">Delete</string>

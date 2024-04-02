@@ -904,11 +904,6 @@ public class StockAnalyzer {
 		StringBuilder actionString = new StringBuilder();
 		StringBuilder contentTitle = new StringBuilder();
 
-		if (!Preferences.getBoolean(Setting.SETTING_NOTIFICATION,
-				true)) {
-			return;
-		}
-
 		if (TextUtils.isEmpty(stock.getOperate())) {
 			return;
 		}

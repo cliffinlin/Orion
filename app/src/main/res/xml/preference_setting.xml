@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="@string/setting_general">
-        <com.android.orion.preference.CustomSwitchPreference
-            android:defaultValue="true"
-            android:key="SETTING_NOTIFICATION"
-            android:title="@string/setting_notification" />
-    </PreferenceCategory>
     <PreferenceCategory android:title="@string/setting_period">
         <com.android.orion.preference.CustomSwitchPreference
             android:key="month"
@@ -70,18 +64,6 @@
         <com.android.orion.preference.CustomSwitchPreference
             android:key="SETTING_DISPLAY_BONUS"
             android:title="@string/bonus" />
-        <com.android.orion.preference.CustomSwitchPreference
-            android:key="SETTING_DISPLAY_BPS"
-            android:title="@string/book_value_per_share" />
-        <com.android.orion.preference.CustomSwitchPreference
-            android:key="SETTING_DISPLAY_NPS"
-            android:title="@string/net_profit_per_share" />
-        <com.android.orion.preference.CustomSwitchPreference
-            android:key="SETTING_DISPLAY_ROE"
-            android:title="@string/roe" />
-        <com.android.orion.preference.CustomSwitchPreference
-            android:key="SETTING_DISPLAY_ROI"
-            android:title="@string/roi" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/setting_debug">
         <com.android.orion.preference.CustomSwitchPreference

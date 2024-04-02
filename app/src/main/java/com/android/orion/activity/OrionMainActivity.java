@@ -107,8 +107,6 @@ public class OrionMainActivity extends PreferenceActivity {
 		if (!Preferences.getBoolean(Setting.SETTING_PREFERENCES_INIT, false)) {
 			Preferences.putBoolean(Setting.SETTING_PREFERENCES_INIT, true);
 
-			Preferences.putBoolean(Setting.SETTING_NOTIFICATION, true);
-
 			Preferences.putBoolean(DatabaseContract.COLUMN_DAY, true);
 			Preferences.putBoolean(DatabaseContract.COLUMN_MIN60, true);
 			Preferences.putBoolean(DatabaseContract.COLUMN_MIN30, true);

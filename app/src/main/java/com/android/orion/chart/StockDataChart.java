@@ -46,8 +46,6 @@ public class StockDataChart {
 	public ArrayList<Entry> mAverage10EntryList = null;
 	public ArrayList<Entry> mBookValuePerShareList = null;
 	public ArrayList<Entry> mNetProfitPerShareList = null;
-	public ArrayList<Entry> mRoeList = null;
-	public ArrayList<Entry> mRoiList = null;
 	public ArrayList<BarEntry> mDividendEntryList = null;
 	public ArrayList<Entry> mDIFEntryList = null;
 	public ArrayList<Entry> mDEAEntryList = null;
@@ -102,14 +100,6 @@ public class StockDataChart {
 
 		if (mNetProfitPerShareList == null) {
 			mNetProfitPerShareList = new ArrayList<Entry>();
-		}
-
-		if (mRoeList == null) {
-			mRoeList = new ArrayList<Entry>();
-		}
-
-		if (mRoiList == null) {
-			mRoiList = new ArrayList<Entry>();
 		}
 
 		if (mDividendEntryList == null) {
@@ -293,22 +283,6 @@ public class StockDataChart {
 			LineDataSet lineDataSet = new LineDataSet(
 					mNetProfitPerShareList, "NPS");
 			lineDataSet.setColor(Color.YELLOW);
-			lineDataSet.setDrawCircles(false);
-			lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-			lineData.addDataSet(lineDataSet);
-		}
-
-		if (mRoeList.size() > 0) {
-			LineDataSet lineDataSet = new LineDataSet(mRoeList, "ROE");
-			lineDataSet.setColor(Color.DKGRAY);
-			lineDataSet.setDrawCircles(false);
-			lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-			lineData.addDataSet(lineDataSet);
-		}
-
-		if (mRoiList.size() > 0) {
-			LineDataSet lineDataSet = new LineDataSet(mRoiList, "ROI");
-			lineDataSet.setColor(Color.RED);
 			lineDataSet.setDrawCircles(false);
 			lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 			lineData.addDataSet(lineDataSet);
@@ -632,8 +606,6 @@ public class StockDataChart {
 		mAverage10EntryList.clear();
 		mBookValuePerShareList.clear();
 		mNetProfitPerShareList.clear();
-		mRoeList.clear();
-		mRoiList.clear();
 		mDividendEntryList.clear();
 		mDIFEntryList.clear();
 		mDEAEntryList.clear();

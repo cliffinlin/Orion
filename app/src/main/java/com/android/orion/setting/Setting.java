@@ -7,7 +7,6 @@ public class Setting {
 
 	public static final String SETTING_PREFERENCES_INIT = "SETTING_PREFERENCES_INIT";
 
-	public static final String SETTING_NOTIFICATION = "SETTING_NOTIFICATION";
 
 	public static final String SETTING_PERIOD_YEAR = DatabaseContract.COLUMN_YEAR;
 	public static final String SETTING_PERIOD_QUARTER = DatabaseContract.COLUMN_QUARTER;
@@ -27,7 +26,6 @@ public class Setting {
 	public static final String SETTING_SORT_ORDER_DEAL_LIST = "SETTING_SORT_ORDER_DEAL_LIST";
 	public static final String SETTING_SORT_ORDER_QUANT_LIST = "SETTING_SORT_ORDER_QUANT_LIST";
 
-	public static final String SETTING_STOCK_FILTER = "SETTING_STOCK_FILTER";
 	public static final String SETTING_STOCK_FILTER_ENABLED = "SETTING_STOCK_FILTER_ENABLED";
 	public static final String SETTING_STOCK_FILTER_FAVORITE = "SETTING_STOCK_FILTER_FAVORITE";
 	public static final String SETTING_STOCK_FILTER_HOLD = "SETTING_STOCK_FILTER_HOLD";
@@ -40,7 +38,6 @@ public class Setting {
 	public static final String SETTING_STOCK_FILTER_YIELD = "SETTING_STOCK_FILTER_YIELD";
 	public static final String SETTING_STOCK_FILTER_DIVIDEND_RATIO = "SETTING_STOCK_FILTER_DIVIDEND_RATIO";
 
-	public static final String SETTING_DISPLAY = "SETTING_DISPLAY";
 	public static final String SETTING_DISPLAY_NET = "SETTING_DISPLAY_NET";
 	public static final String SETTING_DISPLAY_CANDLE = "SETTING_DISPLAY_CANDLE";
 	public static final String SETTING_DISPLAY_DRAW = "SETTING_DISPLAY_DRAW";
@@ -51,10 +48,6 @@ public class Setting {
 	public static final String SETTING_DISPLAY_COST = "SETTING_DISPLAY_COST";
 	public static final String SETTING_DISPLAY_DEAL = "SETTING_DISPLAY_DEAL";
 	public static final String SETTING_DISPLAY_BONUS = "SETTING_DISPLAY_BONUS";
-	public static final String SETTING_DISPLAY_BPS = "SETTING_DISPLAY_BPS";
-	public static final String SETTING_DISPLAY_NPS = "SETTING_DISPLAY_NPS";
-	public static final String SETTING_DISPLAY_ROE = "SETTING_DISPLAY_ROE";
-	public static final String SETTING_DISPLAY_ROI = "SETTING_DISPLAY_ROI";
 	public static final String SETTING_DISPLAY_THRESHOLD = "SETTING_DISPLAY_THRESHOLD";
 	public static final String SETTING_DISPLAY_QUANT = "SETTING_DISPLAY_QUANT";
 
@@ -158,38 +151,6 @@ public class Setting {
 
 	public static void setDisplayBonus(boolean value) {
 		Preferences.putBoolean(SETTING_DISPLAY_BONUS, value);
-	}
-
-	public static boolean getDisplayBps() {
-		return Preferences.getBoolean(SETTING_DISPLAY_BPS, true);
-	}
-
-	public static void setDisplayBps(boolean value) {
-		Preferences.putBoolean(SETTING_DISPLAY_BPS, value);
-	}
-
-	public static boolean getDisplayNps() {
-		return Preferences.getBoolean(SETTING_DISPLAY_NPS, true);
-	}
-
-	public static void setDisplayNps(boolean value) {
-		Preferences.putBoolean(SETTING_DISPLAY_NPS, value);
-	}
-
-	public static boolean getDisplayRoe() {
-		return Preferences.getBoolean(SETTING_DISPLAY_ROE, true);
-	}
-
-	public static void setDisplayRoe(boolean value) {
-		Preferences.putBoolean(SETTING_DISPLAY_ROE, value);
-	}
-
-	public static boolean getDisplayRoi() {
-		return Preferences.getBoolean(SETTING_DISPLAY_ROI, true);
-	}
-
-	public static void setDisplayRoi(boolean value) {
-		Preferences.putBoolean(SETTING_DISPLAY_ROI, value);
 	}
 
 	public static boolean getDisplayThreshold() {

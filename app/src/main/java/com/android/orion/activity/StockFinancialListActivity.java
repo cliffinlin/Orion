@@ -784,8 +784,6 @@ public class StockFinancialListActivity extends ListActivity implements
 						mSortOrder);
 				intent.putExtra(Constant.EXTRA_STOCK_ID, id);
 				intent.putExtra(Constant.EXTRA_STOCK_BONUS, true);
-				intent.putExtra(Constant.EXTRA_STOCK_BPS, true);
-				intent.putExtra(Constant.EXTRA_STOCK_NPS, true);
 				startActivity(intent);
 			}
 		}
