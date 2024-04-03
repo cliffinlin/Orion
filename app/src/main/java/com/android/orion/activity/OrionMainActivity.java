@@ -25,7 +25,7 @@ public class OrionMainActivity extends PreferenceActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		initSharepreference();
+		initSharedPreferences();
 
 		mStockDownloadAlarmManager = DownloadAlarmManager.getInstance();
 		mStockDownloadAlarmManager.startAlarm();
@@ -100,7 +100,7 @@ public class OrionMainActivity extends PreferenceActivity {
 		finish();
 	}
 
-	void initSharepreference() {
+	void initSharedPreferences() {
 		SharedPreferences settings = PreferenceManager
 				.getDefaultSharedPreferences(this);
 
@@ -113,17 +113,12 @@ public class OrionMainActivity extends PreferenceActivity {
 			Preferences.putBoolean(DatabaseContract.COLUMN_MIN15, true);
 			Preferences.putBoolean(DatabaseContract.COLUMN_MIN5, true);
 
-//			Preferences.putBoolean(Setting.KEY_DISPLAY_NET, true);
 			Setting.setDisplayNet(true);
 
-			Preferences.putBoolean(Setting.SETTING_DISPLAY_THRESHOLD, true);
-//			Preferences.putBoolean(Setting.KEY_DISPLAY_DRAW, true);
 			Setting.setDisplayDraw(true);
 			Setting.setDisplayStroke(true);
 			Setting.setDisplaySegment(true);
 			Setting.setDisplayLine(true);
-			Setting.setDisplayLatest(true);
-			Setting.setDisplayCost(true);
 
 			Setting.setDebugLoopback(false);
 		}

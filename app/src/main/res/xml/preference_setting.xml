@@ -29,12 +29,6 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/display">
         <com.android.orion.preference.CustomSwitchPreference
-            android:key="SETTING_DISPLAY_NET"
-            android:title="@string/net" />
-        <com.android.orion.preference.CustomSwitchPreference
-            android:key="SETTING_DISPLAY_THRESHOLD"
-            android:title="@string/stock_threshold" />
-        <com.android.orion.preference.CustomSwitchPreference
             android:key="SETTING_DISPLAY_CANDLE"
             android:title="@string/candle" />
         <com.android.orion.preference.CustomSwitchPreference
@@ -49,21 +43,6 @@
         <com.android.orion.preference.CustomSwitchPreference
             android:key="SETTING_DISPLAY_LINE"
             android:title="@string/line" />
-        <com.android.orion.preference.CustomSwitchPreference
-            android:key="SETTING_DISPLAY_LATEST"
-            android:title="@string/latest" />
-        <com.android.orion.preference.CustomSwitchPreference
-            android:key="SETTING_DISPLAY_COST"
-            android:title="@string/cost" />
-        <com.android.orion.preference.CustomSwitchPreference
-            android:key="SETTING_DISPLAY_DEAL"
-            android:title="@string/deal" />
-        <com.android.orion.preference.CustomSwitchPreference
-            android:key="SETTING_DISPLAY_QUANT"
-            android:title="@string/quant" />
-        <com.android.orion.preference.CustomSwitchPreference
-            android:key="SETTING_DISPLAY_BONUS"
-            android:title="@string/bonus" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/setting_debug">
         <com.android.orion.preference.CustomSwitchPreference

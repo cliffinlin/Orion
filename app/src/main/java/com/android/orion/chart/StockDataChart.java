@@ -144,8 +144,7 @@ public class StockDataChart {
 	public void setMainChartData(Context context) {
 		mCombinedDataMain = new CombinedData(mXValues);
 
-		if (Preferences.getBoolean(Setting.SETTING_DISPLAY_THRESHOLD,
-				true)) {
+		if (true) {
 			BubbleData bubbleData = new BubbleData(mXValues);
 			if (mNaturalRallyList.size() > 0) {
 				BubbleDataSet bubbleDataSet = new BubbleDataSet(mNaturalRallyList, "NUp");

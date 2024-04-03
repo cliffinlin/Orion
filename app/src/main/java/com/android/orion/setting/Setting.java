@@ -44,12 +44,6 @@ public class Setting {
 	public static final String SETTING_DISPLAY_STROKE = "SETTING_DISPLAY_STROKE";
 	public static final String SETTING_DISPLAY_SEGMENT = "SETTING_DISPLAY_SEGMENT";
 	public static final String SETTING_DISPLAY_LINE = "SETTING_DISPLAY_LINE";
-	public static final String SETTING_DISPLAY_LATEST = "SETTING_DISPLAY_LATEST";
-	public static final String SETTING_DISPLAY_COST = "SETTING_DISPLAY_COST";
-	public static final String SETTING_DISPLAY_DEAL = "SETTING_DISPLAY_DEAL";
-	public static final String SETTING_DISPLAY_BONUS = "SETTING_DISPLAY_BONUS";
-	public static final String SETTING_DISPLAY_THRESHOLD = "SETTING_DISPLAY_THRESHOLD";
-	public static final String SETTING_DISPLAY_QUANT = "SETTING_DISPLAY_QUANT";
 
 	public static final String SETTING_DEBUG_LOG = "SETTING_DEBUG_LOG";
 	public static final String SETTING_DEBUG_DIRECT = "SETTING_DEBUG_DIRECT";
@@ -119,54 +113,6 @@ public class Setting {
 
 	public static void setDisplayLine(boolean value) {
 		Preferences.putBoolean(SETTING_DISPLAY_LINE, value);
-	}
-
-	public static boolean getDisplayLatest() {
-		return Preferences.getBoolean(SETTING_DISPLAY_LATEST, true);
-	}
-
-	public static void setDisplayLatest(boolean value) {
-		Preferences.putBoolean(SETTING_DISPLAY_LATEST, value);
-	}
-
-	public static boolean getDisplayCost() {
-		return Preferences.getBoolean(SETTING_DISPLAY_COST, true);
-	}
-
-	public static void setDisplayCost(boolean value) {
-		Preferences.putBoolean(SETTING_DISPLAY_COST, value);
-	}
-
-	public static boolean getDisplayDeal() {
-		return Preferences.getBoolean(SETTING_DISPLAY_DEAL, true);
-	}
-
-	public static void setDisplayDeal(boolean value) {
-		Preferences.putBoolean(SETTING_DISPLAY_DEAL, value);
-	}
-
-	public static boolean getDisplayBonus() {
-		return Preferences.getBoolean(SETTING_DISPLAY_BONUS, true);
-	}
-
-	public static void setDisplayBonus(boolean value) {
-		Preferences.putBoolean(SETTING_DISPLAY_BONUS, value);
-	}
-
-	public static boolean getDisplayThreshold() {
-		return Preferences.getBoolean(SETTING_DISPLAY_THRESHOLD, true);
-	}
-
-	public static void setDisplayThreshold(boolean value) {
-		Preferences.putBoolean(SETTING_DISPLAY_THRESHOLD, value);
-	}
-
-	public static boolean getDisplayQuant() {
-		return Preferences.getBoolean(SETTING_DISPLAY_QUANT, true);
-	}
-
-	public static void setDisplayQuant(boolean value) {
-		Preferences.putBoolean(SETTING_DISPLAY_QUANT, value);
 	}
 
 	public static boolean getDebugLog() {
