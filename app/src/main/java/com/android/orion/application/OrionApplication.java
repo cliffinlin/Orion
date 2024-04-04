@@ -39,4 +39,12 @@ public class OrionApplication extends Application {
 			startService(serviceIntent);
 		}
 	}
+
+	@Override
+	public void onTerminate() {
+		super.onTerminate();
+
+		OrionService.getInstance().stopSelf();
+		System.exit(0);
+	}
 }

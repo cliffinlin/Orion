@@ -10,10 +10,14 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.android.orion.R;
+import com.android.orion.application.OrionApplication;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.manager.DownloadAlarmManager;
+import com.android.orion.service.OrionService;
 import com.android.orion.setting.Setting;
+import com.android.orion.utility.Market;
 import com.android.orion.utility.Preferences;
+import com.android.orion.utility.Utility;
 
 import java.util.List;
 
@@ -98,6 +102,10 @@ public class OrionMainActivity extends PreferenceActivity {
 		}
 
 		finish();
+
+		if (!Market.isTradingHours()) {
+			OrionApplication.getInstance().onTerminate();
+		}
 	}
 
 	void initSharedPreferences() {

@@ -22,6 +22,7 @@ import android.telephony.TelephonyManager;
 
 import androidx.core.app.NotificationCompat;
 
+import com.android.orion.application.OrionApplication;
 import com.android.orion.config.Config;
 import com.android.orion.database.Stock;
 import com.android.orion.receiver.DownloadBroadcastReceiver;
@@ -106,6 +107,8 @@ public class OrionService extends Service {
 		super.onDestroy();
 
 		mLooper.quit();
+
+		mSinaFinance.stopDownload();
 
 		try {
 			unregisterReceiver(mDownloadBroadcastReceiver);

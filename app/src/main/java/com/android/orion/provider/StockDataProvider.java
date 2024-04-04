@@ -58,11 +58,13 @@ public abstract class StockDataProvider {
 	public static int RESULT_NONE = 0;
 	public static int RESULT_FAILED = -1;
 
+	public static ArrayMap<String, Stock> stockArrayMap = new ArrayMap<String, Stock>();
+
 	public Context mContext;
 	public StockAnalyzer mStockAnalyzer;
 	public StockDatabaseManager mStockDatabaseManager;
 	public HandlerThread mHandlerThread;
-	public ServiceHandler mHandler;
+	ServiceHandler mHandler;
 	public OkHttpClient mOkHttpClient = new OkHttpClient();
 
 	PowerManager mPowerManager;
@@ -181,6 +183,16 @@ public abstract class StockDataProvider {
 		mLocalBroadcastManager.sendBroadcast(intent);
 	}
 
+	public void stopDownload() {
+		mStockDatabaseManager.loadStockArrayMap(stockArrayMap);
+
+		for (Stock current : stockArrayMap.values()) {
+			if (mHandler.hasMessages(Integer.valueOf(current.getCode()))) {
+				mHandler.removeMessages(Integer.valueOf(current.getCode()));
+			}
+		}
+	}
+
 	public void download(String se, String code) {
 		Stock stock = null;
 
@@ -201,8 +213,6 @@ public abstract class StockDataProvider {
 		}
 
 		if (stock == null) {
-			ArrayMap<String, Stock> stockArrayMap = new ArrayMap<String, Stock>();
-
 			mStockDatabaseManager.loadStockArrayMap(stockArrayMap);
 
 			for (Stock current : stockArrayMap.values()) {
@@ -219,10 +229,9 @@ public abstract class StockDataProvider {
 				return;
 			}
 
-			ArrayMap<String, Stock> stockArrayMap = new ArrayMap<String, Stock>();
-			ArrayMap<String, Stock> removedArrayMap = new ArrayMap<String, Stock>();
-
 			mStockDatabaseManager.loadStockArrayMap(stockArrayMap);
+
+			ArrayMap<String, Stock> removedArrayMap = new ArrayMap<String, Stock>();
 
 			for (Stock current : stockArrayMap.values()) {
 				if (current.getCode().equals(stock.getCode())) {
@@ -258,7 +267,6 @@ public abstract class StockDataProvider {
 
 	void loadIndexComponentStockList(@NonNull Stock index, @NonNull ArrayList<Stock> stockList) {
 		ArrayList<IndexComponent> indexComponentList = new ArrayList<>();
-		ArrayMap<String, Stock> stockArrayMap = new ArrayMap<String, Stock>();
 
 		mStockDatabaseManager.loadStockArrayMap(stockArrayMap);
 
