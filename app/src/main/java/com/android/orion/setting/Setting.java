@@ -51,11 +51,16 @@ public class Setting {
 	public static final String SETTING_DEBUG_LOOPBACK_DATE_TIME = "SETTING_DEBUG_LOOPBACK_DATE_TIME";
 
 	public static final String SETTING_DOWNLOAD_STOCK_HSA_TIMEMILLIS = "SETTING_DOWNLOAD_STOCK_HSA_TIMEMILLIS";
+
 	public static final String SETTING_DOWNLOAD_STOCK_INFORMATION_TIMEMILLIS = "SETTING_DOWNLOAD_STOCK_INFORMATION_TIMEMILLIS";
 	public static final String SETTING_DOWNLOAD_STOCK_FINANCIAL_TIMEMILLIS = "SETTING_DOWNLOAD_STOCK_FINANCIAL_TIMEMILLIS";
 	public static final String SETTING_DOWNLOAD_SHARE_BONUS_TIMEMILLIS = "SETTING_DOWNLOAD_SHARE_BONUS_TIMEMILLIS";
 	public static final String SETTING_DOWNLOAD_TOTAL_SHARE_TIMEMILLIS = "SETTING_DOWNLOAD_TOTAL_SHARE_TIMEMILLIS";
+	public static final String SETTING_DOWNLOAD_STOCK_DATA_HISTORY_TIMEMILLIS = "SETTING_DOWNLOAD_STOCK_DATA_HISTORY_TIMEMILLIS";
+	public static final String SETTING_DOWNLOAD_STOCK_DATA_REALTIME_TIMEMILLIS = "SETTING_DOWNLOAD_STOCK_DATA_REALTIME_TIMEMILLIS";
 	public static final String SETTING_DOWNLOAD_STOCK_REALTIME_TIMEMILLIS = "SETTING_DOWNLOAD_STOCK_REALTIME_TIMEMILLIS";
+
+	public static final String SETTING_STOCK_DATA_CHANGED = "SETTING_STOCK_DATA_CHANGED";
 
 	private Setting() {
 	}
@@ -188,11 +193,35 @@ public class Setting {
 		Preferences.putLong(SETTING_DOWNLOAD_TOTAL_SHARE_TIMEMILLIS + "_" + se + "_" + code, timemillis);
 	}
 
+	public static long getDownloadStockDataHistoryTimemillis(String se, String code) {
+		return Preferences.getLong(SETTING_DOWNLOAD_STOCK_DATA_HISTORY_TIMEMILLIS + "_" + se + "_" + code, 0);
+	}
+
+	public static void setDownloadStockDataHistoryTimemillis(String se, String code, long timemillis) {
+		Preferences.putLong(SETTING_DOWNLOAD_STOCK_DATA_HISTORY_TIMEMILLIS + "_" + se + "_" + code, timemillis);
+	}
+
+	public static long getDownloadStockDataRealTimeTimemillis(String se, String code) {
+		return Preferences.getLong(SETTING_DOWNLOAD_STOCK_DATA_REALTIME_TIMEMILLIS + "_" + se + "_" + code, 0);
+	}
+
+	public static void setDownloadStockDataRealTimeTimemillis(String se, String code, long timemillis) {
+		Preferences.putLong(SETTING_DOWNLOAD_STOCK_DATA_REALTIME_TIMEMILLIS + "_" + se + "_" + code, timemillis);
+	}
+
 	public static long getDownloadStockRealTimeTimemillis(String se, String code) {
 		return Preferences.getLong(SETTING_DOWNLOAD_STOCK_REALTIME_TIMEMILLIS + "_" + se + "_" + code, 0);
 	}
 
 	public static void setDownloadStockRealTimeTimemillis(String se, String code, long timemillis) {
 		Preferences.putLong(SETTING_DOWNLOAD_STOCK_REALTIME_TIMEMILLIS + "_" + se + "_" + code, timemillis);
+	}
+
+	public static boolean getStockDataChanged(String se, String code) {
+		return Preferences.getBoolean(SETTING_STOCK_DATA_CHANGED + "_" + se + "_" + code, false);
+	}
+
+	public static void setStockDataChanged(String se, String code, boolean value) {
+		Preferences.putBoolean(SETTING_STOCK_DATA_CHANGED + "_" + se + "_" + code, value);
 	}
 }

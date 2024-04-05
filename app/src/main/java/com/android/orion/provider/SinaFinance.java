@@ -643,6 +643,7 @@ public class SinaFinance extends StockDataProvider {
 					stock.getContentValuesInformation());
 
 			Setting.setDownloadStockInformationTimemillis(stock.getSE(), stock.getCode(), System.currentTimeMillis());
+			Setting.setStockDataChanged(stock.getSE(), stock.getCode(), true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -785,6 +786,7 @@ public class SinaFinance extends StockDataProvider {
 					stock.getContentValuesRealTime());
 
 			Setting.setDownloadStockRealTimeTimemillis(stock.getSE(), stock.getCode(), System.currentTimeMillis());
+			Setting.setStockDataChanged(stock.getSE(), stock.getCode(), true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -998,6 +1000,9 @@ public class SinaFinance extends StockDataProvider {
 					mStockDatabaseManager.bulkInsertStockData(contentValuesArray);
 				}
 			}
+
+			Setting.setDownloadStockDataHistoryTimemillis(stock.getSE(), stock.getCode(), System.currentTimeMillis());
+			Setting.setStockDataChanged(stock.getSE(), stock.getCode(), true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1371,6 +1376,9 @@ public class SinaFinance extends StockDataProvider {
 				mStockDatabaseManager.updateStockData(stockData,
 						stockData.getContentValues());
 			}
+
+			Setting.setDownloadStockDataRealTimeTimemillis(stock.getSE(), stock.getCode(), System.currentTimeMillis());
+			Setting.setStockDataChanged(stock.getSE(), stock.getCode(), true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1602,6 +1610,7 @@ public class SinaFinance extends StockDataProvider {
 			}
 
 			Setting.setDownloadStockFinancialTimemillis(stock.getSE(), stock.getCode(), System.currentTimeMillis());
+			Setting.setStockDataChanged(stock.getSE(), stock.getCode(), true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1788,6 +1797,7 @@ public class SinaFinance extends StockDataProvider {
 			}
 
 			Setting.setDownloadShareBonusTimemillis(stock.getSE(), stock.getCode(), System.currentTimeMillis());
+			Setting.setStockDataChanged(stock.getSE(), stock.getCode(), true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1975,6 +1985,7 @@ public class SinaFinance extends StockDataProvider {
 			}
 
 			Setting.setDownloadTotalShareTimemillis(stock.getSE(), stock.getCode(), System.currentTimeMillis());
+			Setting.setStockDataChanged(stock.getSE(), stock.getCode(), true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -24,6 +24,7 @@ import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.manager.StockDatabaseManager;
 import com.android.orion.setting.Constant;
+import com.android.orion.setting.Setting;
 import com.android.orion.utility.Logger;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Utility;
@@ -93,6 +94,8 @@ public abstract class StockDataProvider {
 		mHandlerThread.start();
 		mHandler = new ServiceHandler(mHandlerThread.getLooper());
 	}
+
+	public abstract int downloadStockHSA();
 
 	public abstract int downloadStockInformation(Stock stock);
 
@@ -197,19 +200,38 @@ public abstract class StockDataProvider {
 			return;
 		}
 
-		mStockDatabaseManager.loadStockArrayMap(mStockArrayMap);
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				mStockDatabaseManager.loadStockArrayMap(mStockArrayMap);
+				synchronized (StockDataProvider.class) {
+					if (mStockArrayMap.size() == 0) {
+						downloadStockHSA();
+						mStockDatabaseManager.loadStockArrayMap(mStockArrayMap);
+					}
 
-		synchronized (StockDataProvider.class) {
-			for (Stock current : mStockArrayMap.values()) {
-				if (mHandler.hasMessages(Integer.valueOf(current.getCode()))) {
-					Log.d("mHandler.hasMessages " + Integer.valueOf(current.getCode()) + ", skip!");
-				} else {
-					Message msg = mHandler.obtainMessage(Integer.valueOf(current.getCode()), current);
-					mHandler.sendMessage(msg);
-					Log.d("mHandler.sendMessage " + msg);
+					int count = 0;
+					for (Stock current : mStockArrayMap.values()) {
+						count++;
+						if (mHandler.hasMessages(Integer.valueOf(current.getCode()))) {
+							Log.d("mHandler.hasMessages " + Integer.valueOf(current.getCode()) + ", skip!");
+						} else {
+							Message msg = mHandler.obtainMessage(Integer.valueOf(current.getCode()), current);
+							mHandler.sendMessage(msg);
+							Log.d("mHandler.sendMessage " + msg);
+						}
+
+						if (count % 2 == 0) {
+							try {
+								Thread.sleep(1 * Constant.SECOND_INTERVAL);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+						}
+					}
 				}
 			}
-		}
+		}).start();
 	}
 
 	public void download(Stock stock) {
@@ -455,14 +477,17 @@ public abstract class StockDataProvider {
 				} else {
 				}
 
-				for (String period : DatabaseContract.PERIODS) {
-					if (Preferences.getBoolean(period, false)) {
-						mStockAnalyzer.analyze(stock, period);
+				if (Setting.getStockDataChanged(stock.getSE(), stock.getCode())) {
+					Setting.setStockDataChanged(stock.getSE(), stock.getCode(), false);
+					for (String period : DatabaseContract.PERIODS) {
+						if (Preferences.getBoolean(period, false)) {
+							mStockAnalyzer.analyze(stock, period);
+						}
 					}
-				}
 
-				mStockAnalyzer.analyze(stock);
-				sendBroadcast(Constant.ACTION_RESTART_LOADER, stock.getId());
+					mStockAnalyzer.analyze(stock);
+					sendBroadcast(Constant.ACTION_RESTART_LOADER, stock.getId());
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {
