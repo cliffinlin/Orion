@@ -21,7 +21,7 @@ import androidx.core.app.NotificationCompat;
 import com.android.orion.config.Config;
 import com.android.orion.database.Stock;
 import com.android.orion.receiver.DownloadBroadcastReceiver;
-import com.android.orion.sina.SinaFinance;
+import com.android.orion.provider.SinaFinance;
 
 public class OrionService extends Service {
 	private static OrionService mInstance;

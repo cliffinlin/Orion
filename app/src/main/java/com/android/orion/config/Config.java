@@ -20,6 +20,8 @@ public class Config {
 	public static long wakelockTimeout = 10 * Constant.MINUTE_INTERVAL;
 
 	public static long downloadSleepInterval = 1 * Constant.SECOND_INTERVAL;
+
+	public static long downloadStockHSAInterval = 24 * Constant.HOUR_INTERVAL;
 	public static long downloadStockInformationInterval = 8 * Constant.HOUR_INTERVAL;
 	public static long downloadStockFinancialInterval = 8 * Constant.HOUR_INTERVAL;
 	public static long downloadShareBonusInterval = 8 * Constant.HOUR_INTERVAL;

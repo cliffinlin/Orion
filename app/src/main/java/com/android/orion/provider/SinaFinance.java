@@ -1,4 +1,4 @@
-package com.android.orion.sina;
+package com.android.orion.provider;
 
 import android.app.NotificationManager;
 import android.content.ContentValues;
@@ -20,7 +20,6 @@ import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockFinancial;
 import com.android.orion.database.TotalShare;
-import com.android.orion.provider.StockDataProvider;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Logger;
@@ -144,14 +143,12 @@ public class SinaFinance extends StockDataProvider {
 		return urlString;
 	}
 
-	public String getStockHSAURLString() {
-		String page = "&page=1";
-		String num = "&num=1000000";
-		String sort = "&sort=symbol";
-		String asc = "&asc=1";
-		String node = "&node=hs_a";
-		String urlString = SINA_FINANCE_URL_HQ_NODE_DATA + page + num + sort
-				+ asc + node;
+	public String getStockHSAURLString(int page) {
+		String urlString = SINA_FINANCE_URL_HQ_NODE_DATA;
+
+		urlString += "page=" + page;
+		urlString += "&num=100";
+		urlString += "&sort=symbol&asc=1&node=hs_a&symbol=&_s_r_a=init";
 		return urlString;
 	}
 
@@ -371,6 +368,164 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		return result;
+	}
+
+	public int downloadStockHSA() {
+		int result = RESULT_NONE;
+
+		if (System.currentTimeMillis() - Setting.getDownloadStockHSATimemillis() < Config.downloadStockHSAInterval) {
+			return result;
+		}
+
+		int page = 1;
+		while (true) {
+			result = downloadStockHSA(getRequestHeader(), getStockHSAURLString(page));
+			if (result != RESULT_SUCCESS) {
+				break;
+			}
+			page++;
+		}
+
+		return result;
+	}
+
+	private int downloadStockHSA(ArrayMap<String, String> requestHeaderArray, String urlString) {
+		int result = RESULT_NONE;
+
+		Log.d(urlString);
+
+		Request.Builder builder = new Request.Builder();
+		for (int i = 0; i < requestHeaderArray.size(); i++) {
+			builder.addHeader(requestHeaderArray.keyAt(i), requestHeaderArray.valueAt(i));
+		}
+		builder.url(urlString);
+		Request request = builder.build();
+
+		try {
+			Response response = mOkHttpClient.newCall(request).execute();
+			if ((response != null) && (response.body() != null)) {
+				String resultString = response.body().string();
+				if (isAccessDenied(resultString)) {
+					return RESULT_FAILED;
+				} else if (TextUtils.isEmpty(resultString) || resultString.equals("[]")) {
+					return RESULT_NONE;
+				} else {
+					result = RESULT_SUCCESS;
+				}
+
+				handleResponseStockHSA(resultString);
+				Thread.sleep(Config.downloadSleepInterval);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+
+	public void handleResponseStockHSA(String response) {
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start();
+		boolean nameChanged = false;
+		boolean bulkInsert = false;
+		ContentValues[] contentValuesArray = null;
+		String symbol = "";
+		String se = "";
+		Stock stock = new Stock();
+		JSONArray jsonArray = null;
+
+		if (TextUtils.isEmpty(response)) {
+			Log.d("return, response = " + response);
+			return;
+		}
+
+		if (mStockDatabaseManager.getStockCount(DatabaseContract.COLUMN_CLASSES
+				+ " = '" + Stock.CLASS_A + "'", null, null) == 0) {
+			bulkInsert = true;
+			Log.d("bulkInsert = " + bulkInsert);
+		}
+
+		try {
+			jsonArray = JSON.parseArray(response);
+
+			if (jsonArray == null) {
+				Log.d("return, jsonArray = "
+						+ jsonArray);
+				return;
+			}
+
+			if (jsonArray.size() == 0) {
+				Log.d("return, jsonArray.size() = "
+						+ jsonArray.size());
+				return;
+			}
+
+			if (bulkInsert) {
+				if (contentValuesArray == null) {
+					contentValuesArray = new ContentValues[jsonArray.size()];
+				}
+			}
+
+			for (int i = 0; i < jsonArray.size(); i++) {
+				JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+				if (jsonObject != null) {
+					symbol = jsonObject.getString("symbol");
+					if (!TextUtils.isEmpty(symbol)) {
+						se = symbol.substring(0, 2);
+						stock.setSE(se);
+					}
+					stock.setCode(jsonObject.getString("code"));
+
+					mStockDatabaseManager.getStock(stock);
+
+					stock.setClasses(Stock.CLASS_A);
+
+					nameChanged = false;
+					if (!stock.getName().equals(jsonObject.getString("name"))) {
+						nameChanged = true;
+						stock.setName(jsonObject.getString("name"));
+					}
+
+					stock.setPrice(jsonObject.getDouble("trade"));
+					stock.setChange(jsonObject.getDouble("pricechange"));
+					stock.setNet(jsonObject.getDouble("changepercent"));
+					stock.setVolume(jsonObject.getLong("volume"));
+					stock.setValue(jsonObject.getLong("amount"));
+
+					if (bulkInsert) {
+						stock.setCreated(Utility.getCurrentDateTimeString());
+						stock.setModified(Utility.getCurrentDateTimeString());
+						contentValuesArray[i] = stock.getContentValues();
+					} else {
+						if (!mStockDatabaseManager.isStockExist(stock)) {
+							stock.setCreated(Utility.getCurrentDateTimeString());
+							stock.setModified(Utility
+									.getCurrentDateTimeString());
+							mStockDatabaseManager.insertStock(stock);
+						} else {
+							stock.setModified(Utility
+									.getCurrentDateTimeString());
+							if (nameChanged) {
+								mStockDatabaseManager.updateStock(stock,
+										stock.getContentValues());
+							}
+						}
+					}
+				}
+			}
+
+			if (bulkInsert) {
+				mStockDatabaseManager.bulkInsertStock(contentValuesArray);
+			}
+			Setting.setDownloadStockHSATimemillis(System.currentTimeMillis());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		stopWatch.stop();
+		Log.d("size:" + jsonArray.size()
+				+ " " + stopWatch.getInterval() + "s");
 	}
 
 	public int downloadStockInformation(Stock stock) {
@@ -640,110 +795,6 @@ public class SinaFinance extends StockDataProvider {
 				+ stock.getNet() + " " + stock.getVolume() + " "
 				+ stock.getValue() + " " + stopWatch.getInterval()
 				+ "s");
-	}
-
-	public void handleResponseStockHSA(String response) {
-		StopWatch stopWatch = new StopWatch();
-		stopWatch.start();
-		boolean nameChanged = false;
-		boolean bulkInsert = false;
-		ContentValues[] contentValuesArray = null;
-		String symbol = "";
-		String se = "";
-		Stock stock = new Stock();
-		JSONArray jsonArray = null;
-
-		if (TextUtils.isEmpty(response)) {
-			Log.d("return, response = " + response);
-			return;
-		}
-
-		if (mStockDatabaseManager.getStockCount(DatabaseContract.COLUMN_CLASSES
-				+ " = '" + Stock.CLASS_A + "'", null, null) == 0) {
-			bulkInsert = true;
-			Log.d("bulkInsert = " + bulkInsert);
-		}
-
-		try {
-			jsonArray = JSON.parseArray(response);
-
-			if (jsonArray == null) {
-				Log.d("return, jsonArray = "
-						+ jsonArray);
-				return;
-			}
-
-			if (jsonArray.size() == 0) {
-				Log.d("return, jsonArray.size() = "
-						+ jsonArray.size());
-				return;
-			}
-
-			if (bulkInsert) {
-				if (contentValuesArray == null) {
-					contentValuesArray = new ContentValues[jsonArray.size()];
-				}
-			}
-
-			for (int i = 0; i < jsonArray.size(); i++) {
-				JSONObject jsonObject = jsonArray.getJSONObject(i);
-
-				if (jsonObject != null) {
-					symbol = jsonObject.getString("symbol");
-					if (!TextUtils.isEmpty(symbol)) {
-						se = symbol.substring(0, 2);
-						stock.setSE(se);
-					}
-					stock.setCode(jsonObject.getString("code"));
-
-					mStockDatabaseManager.getStock(stock);
-
-					stock.setClasses(Stock.CLASS_A);
-
-					nameChanged = false;
-					if (!stock.getName().equals(jsonObject.getString("name"))) {
-						nameChanged = true;
-						stock.setName(jsonObject.getString("name"));
-					}
-
-					stock.setPrice(jsonObject.getDouble("trade"));
-					stock.setChange(jsonObject.getDouble("pricechange"));
-					stock.setNet(jsonObject.getDouble("changepercent"));
-					stock.setVolume(jsonObject.getLong("volume"));
-					stock.setValue(jsonObject.getLong("amount"));
-
-					if (bulkInsert) {
-						stock.setCreated(Utility.getCurrentDateTimeString());
-						stock.setModified(Utility.getCurrentDateTimeString());
-						contentValuesArray[i] = stock.getContentValues();
-					} else {
-						if (!mStockDatabaseManager.isStockExist(stock)) {
-							stock.setCreated(Utility.getCurrentDateTimeString());
-							stock.setModified(Utility
-									.getCurrentDateTimeString());
-							mStockDatabaseManager.insertStock(stock);
-						} else {
-							stock.setModified(Utility
-									.getCurrentDateTimeString());
-							if (nameChanged) {
-								mStockDatabaseManager.updateStock(stock,
-										stock.getContentValues());
-							}
-						}
-					}
-				}
-			}
-
-			if (bulkInsert) {
-				mStockDatabaseManager.bulkInsertStock(contentValuesArray);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		stopWatch.stop();
-		Log.d("size:" + jsonArray.size()
-				+ " " + stopWatch.getInterval() + "s");
 	}
 
 	public int downloadStockDataHistory(Stock stock) {

@@ -116,7 +116,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.stock_list, menu);
+		getMenuInflater().inflate(R.menu.stock_favorite_list, menu);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		return true;
 	}
@@ -156,6 +156,10 @@ public class StockFavoriteListActivity extends ListActivity implements
 
 			case R.id.action_deal:
 				startActivity(new Intent(this, StockFavoriteDealListActivity.class));
+				return true;
+
+			case R.id.action_edit:
+				startActivity(new Intent(this, StockListEditActivity.class));
 				return true;
 
 			default:

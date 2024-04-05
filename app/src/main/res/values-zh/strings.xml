@@ -22,6 +22,7 @@
     <string name="action_new">New Note</string>
     <string name="action_interval">Interval</string>
     <string name="action_refresh">Refresh</string>
+    <string name="action_add_favorite">Add Favorite</string>
     <string name="action_remove_favorite">Remove Favorite</string>
     <string name="action_load">Load</string>
     <string name="action_save">Save</string>

@@ -134,7 +134,7 @@ public class StockFinancialListActivity extends ListActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.stock_list, menu);
+		getMenuInflater().inflate(R.menu.stock_favorite_list, menu);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		return true;
 	}

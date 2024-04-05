@@ -29,6 +29,8 @@ import com.android.orion.database.Stock;
 import com.android.orion.setting.Constant;
 import com.android.orion.utility.Utility;
 
+import java.util.ArrayList;
+
 public class StockListEditActivity extends DatabaseActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
 		OnClickListener {
@@ -92,6 +94,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.stock_list, menu);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		return super.onCreateOptionsMenu(menu);
 	}
@@ -99,6 +102,21 @@ public class StockListEditActivity extends DatabaseActivity implements
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+			case R.id.action_favorite:
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						ArrayList<Stock> stockList = new ArrayList();
+						mStockDatabaseManager.getStockList(null, stockList);
+						for (Stock stock : stockList) {
+							if (!stock.hasFlag(Stock.FLAG_FAVORITE)) {
+								mStockDatabaseManager.updateStockFlag(stock.getId(), Stock.FLAG_FAVORITE);
+								Log.d(stock.getName() + stock.getCode() + " updateStockFlag(Stock.FLAG_FAVORITE)");
+							}
+						}
+					}
+				}).start();
+				return true;
 			case android.R.id.home:
 				finish();
 				return true;
