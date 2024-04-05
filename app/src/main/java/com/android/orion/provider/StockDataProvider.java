@@ -77,6 +77,8 @@ public abstract class StockDataProvider {
 
 	Logger Log = Logger.getLogger();
 
+	boolean mMessageHandled = false;
+
 	public StockDataProvider() {
 		mContext = OrionApplication.getContext();
 
@@ -204,15 +206,13 @@ public abstract class StockDataProvider {
 			@Override
 			public void run() {
 				mStockDatabaseManager.loadStockArrayMap(mStockArrayMap);
-				synchronized (StockDataProvider.class) {
 					if (mStockArrayMap.size() == 0) {
 						downloadStockHSA();
 						mStockDatabaseManager.loadStockArrayMap(mStockArrayMap);
 					}
 
-					int count = 0;
 					for (Stock current : mStockArrayMap.values()) {
-						count++;
+						mMessageHandled = false;
 						if (mHandler.hasMessages(Integer.valueOf(current.getCode()))) {
 							Log.d("mHandler.hasMessages " + Integer.valueOf(current.getCode()) + ", skip!");
 						} else {
@@ -221,15 +221,14 @@ public abstract class StockDataProvider {
 							Log.d("mHandler.sendMessage " + msg);
 						}
 
-						if (count % 2 == 0) {
+						while (!mMessageHandled) {
 							try {
-								Thread.sleep(1 * Constant.SECOND_INTERVAL);
+								Thread.sleep(100);
 							} catch (InterruptedException e) {
 								e.printStackTrace();
 							}
 						}
 					}
-				}
 			}
 		}).start();
 	}
@@ -488,6 +487,7 @@ public abstract class StockDataProvider {
 					mStockAnalyzer.analyze(stock);
 					sendBroadcast(Constant.ACTION_RESTART_LOADER, stock.getId());
 				}
+				mMessageHandled = true;
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {
