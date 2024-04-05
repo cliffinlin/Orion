@@ -1,6 +1,5 @@
 package com.android.orion.service;
 
-import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -8,7 +7,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.media.AudioManager;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
@@ -17,12 +15,9 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
-import android.os.Vibrator;
-import android.telephony.TelephonyManager;
 
 import androidx.core.app.NotificationCompat;
 
-import com.android.orion.application.OrionApplication;
 import com.android.orion.config.Config;
 import com.android.orion.database.Stock;
 import com.android.orion.receiver.DownloadBroadcastReceiver;
@@ -37,7 +32,6 @@ public class OrionService extends Service {
 	DownloadBroadcastReceiver mDownloadBroadcastReceiver;
 	HandlerThread mHandlerThread;
 	IBinder mServiceBinder;
-	volatile Looper mLooper;
 	volatile ServiceHandler mHandler;
 	SinaFinance mSinaFinance;
 
@@ -58,9 +52,7 @@ public class OrionService extends Service {
 		mHandlerThread = new HandlerThread(OrionService.class.getSimpleName(),
 				Process.THREAD_PRIORITY_BACKGROUND);
 		mHandlerThread.start();
-
-		mLooper = mHandlerThread.getLooper();
-		mHandler = new ServiceHandler(mLooper);
+		mHandler = new ServiceHandler(mHandlerThread.getLooper());
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 			NotificationChannel channel = new NotificationChannel(Config.SERVICE_CHANNEL_ID,
@@ -106,14 +98,14 @@ public class OrionService extends Service {
 	public void onDestroy() {
 		super.onDestroy();
 
-		mLooper.quit();
-
-		mSinaFinance.stopDownload();
-
 		try {
+			mHandlerThread.quit();
+			mSinaFinance.onDestroy();
 			unregisterReceiver(mDownloadBroadcastReceiver);
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			System.exit(0);
 		}
 	}
 
@@ -135,7 +127,7 @@ public class OrionService extends Service {
 			return;
 		}
 
-		mSinaFinance.download(null);
+		mSinaFinance.download();
 	}
 
 	public void download(Stock stock) {

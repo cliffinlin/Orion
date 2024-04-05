@@ -51,6 +51,9 @@ public class StockQuantAnalyzer {
 		}
 	};
 
+	private StockQuantAnalyzer() {
+	}
+
 	public static StockQuantAnalyzer getInstance() {
 		synchronized (StockQuantAnalyzer.class) {
 			if (mInstance == null) {
@@ -58,9 +61,6 @@ public class StockQuantAnalyzer {
 			}
 			return mInstance;
 		}
-	}
-
-	private StockQuantAnalyzer() {
 	}
 
 	void init() {

@@ -2,7 +2,6 @@ package com.android.orion.sina;
 
 import android.app.NotificationManager;
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.os.Environment;
 import android.text.TextUtils;
@@ -66,20 +65,9 @@ public class SinaFinance extends StockDataProvider {
 	public static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN15 = 192;
 	public static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN30 = 192;
 	public static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN60 = 192;
-
+	private static SinaFinance mInstance;
 	ArrayList<String> mAccessDeniedStringArray = new ArrayList<>();
 	Logger Log = Logger.getLogger();
-
-	private static SinaFinance mInstance;
-
-	public static SinaFinance getInstance() {
-		synchronized (SinaFinance.class) {
-			if (mInstance == null) {
-				mInstance = new SinaFinance();
-			}
-		}
-		return mInstance;
-	}
 
 	private SinaFinance() {
 		super();
@@ -90,6 +78,15 @@ public class SinaFinance extends StockDataProvider {
 				R.string.access_denied_zh));
 		mAccessDeniedStringArray.add(mContext.getResources().getString(
 				R.string.access_denied_default));
+	}
+
+	public static SinaFinance getInstance() {
+		synchronized (SinaFinance.class) {
+			if (mInstance == null) {
+				mInstance = new SinaFinance();
+			}
+		}
+		return mInstance;
 	}
 
 	public int getAvailableHistoryLength(String period) {
@@ -1955,8 +1952,7 @@ public class SinaFinance extends StockDataProvider {
 
 				mStockAnalyzer.notify(Config.SERVICE_NOTIFICATION_ID, Config.MESSAGE_CHANNEL_ID, Config.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
 						contentTitle.toString(), "");
-
-				mHandlerThread.quit();
+				onDestroy();
 
 				result = true;
 				break;

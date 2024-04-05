@@ -15,7 +15,6 @@ import android.util.ArrayMap;
 import androidx.annotation.NonNull;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import com.android.orion.R;
 import com.android.orion.analyzer.StockAnalyzer;
 import com.android.orion.application.OrionApplication;
 import com.android.orion.config.Config;
@@ -54,23 +53,46 @@ public abstract class StockDataProvider {
 	public static final int MAX_CONTENT_LENGTH_MIN15 = 20 * 16;
 	public static final int MAX_CONTENT_LENGTH_MIN5 = 20 * 48;
 
-	public static int RESULT_SUCCESS = 1;
-	public static int RESULT_NONE = 0;
-	public static int RESULT_FAILED = -1;
+	public static final int RESULT_SUCCESS = 1;
+	public static final int RESULT_NONE = 0;
+	public static final int RESULT_FAILED = -1;
 
-	public static ArrayMap<String, Stock> stockArrayMap = new ArrayMap<String, Stock>();
+	static ArrayMap<String, Stock> mStockArrayMap = new ArrayMap<String, Stock>();
+	static ArrayMap<String, Stock> mRemovedArrayMap = new ArrayMap<String, Stock>();
+	static ArrayList<IndexComponent> mIndexComponentList = new ArrayList<>();
+	static Map<String, StockData> mIndexStockDataMap = new HashMap<>();
 
-	public Context mContext;
-	public StockAnalyzer mStockAnalyzer;
-	public StockDatabaseManager mStockDatabaseManager;
-	public HandlerThread mHandlerThread;
-	ServiceHandler mHandler;
-	public OkHttpClient mOkHttpClient = new OkHttpClient();
+	protected Context mContext;
+	protected StockAnalyzer mStockAnalyzer;
+	protected StockDatabaseManager mStockDatabaseManager;
+	protected OkHttpClient mOkHttpClient = new OkHttpClient();
 
 	PowerManager mPowerManager;
 	PowerManager.WakeLock mWakeLock;
 	LocalBroadcastManager mLocalBroadcastManager;
+
+	HandlerThread mHandlerThread;
+	ServiceHandler mHandler;
+
 	Logger Log = Logger.getLogger();
+
+	public StockDataProvider() {
+		mContext = OrionApplication.getContext();
+
+		mPowerManager = (PowerManager) mContext
+				.getSystemService(Context.POWER_SERVICE);
+		mWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+				Config.TAG + ":" + StockDataProvider.class.getSimpleName());
+		mLocalBroadcastManager = LocalBroadcastManager.getInstance(mContext);
+
+		mStockAnalyzer = StockAnalyzer.getInstance();
+		mStockDatabaseManager = StockDatabaseManager.getInstance();
+
+		mHandlerThread = new HandlerThread(StockDataProvider.class.getSimpleName(),
+				Process.THREAD_PRIORITY_BACKGROUND);
+		mHandlerThread.start();
+		mHandler = new ServiceHandler(mHandlerThread.getLooper());
+	}
 
 	public abstract int downloadStockInformation(Stock stock);
 
@@ -85,25 +107,6 @@ public abstract class StockDataProvider {
 	public abstract int downloadStockRealTime(Stock stock);
 
 	public abstract int downloadStockDataRealTime(Stock stock);
-
-
-	public StockDataProvider() {
-		mContext = OrionApplication.getContext();
-
-		mPowerManager = (PowerManager) mContext
-				.getSystemService(Context.POWER_SERVICE);
-		mWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-				Config.TAG + ":" + StockDataProvider.class.getSimpleName());
-		mLocalBroadcastManager = LocalBroadcastManager.getInstance(mContext);
-
-		mStockAnalyzer = StockAnalyzer.getInstance();
-		mStockDatabaseManager = StockDatabaseManager.getInstance();
-
-		mHandlerThread = new HandlerThread("StockDataProvider",
-				Process.THREAD_PRIORITY_BACKGROUND);
-		mHandlerThread.start();
-		mHandler = new ServiceHandler(mHandlerThread.getLooper());
-	}
 
 	public void acquireWakeLock() {
 		if (!mWakeLock.isHeld()) {
@@ -183,39 +186,21 @@ public abstract class StockDataProvider {
 		mLocalBroadcastManager.sendBroadcast(intent);
 	}
 
-	public void stopDownload() {
-		mStockDatabaseManager.loadStockArrayMap(stockArrayMap);
+	public void onDestroy() {
+		mHandlerThread.quit();
 
-		for (Stock current : stockArrayMap.values()) {
-			if (mHandler.hasMessages(Integer.valueOf(current.getCode()))) {
-				mHandler.removeMessages(Integer.valueOf(current.getCode()));
-			}
-		}
+		releaseWakeLock();
 	}
 
-	public void download(String se, String code) {
-		Stock stock = null;
-
-		if (!TextUtils.isEmpty(se) && !TextUtils.isEmpty(code)) {
-			stock = new Stock();
-			stock.setSE(se);
-			stock.setCode(code);
-
-			mStockDatabaseManager.getStock(stock);
-		}
-
-		download(stock);
-	}
-
-	public void download(Stock stock) {
+	public void download() {
 		if (!Utility.isNetworkConnected(mContext)) {
 			return;
 		}
 
-		if (stock == null) {
-			mStockDatabaseManager.loadStockArrayMap(stockArrayMap);
+		mStockDatabaseManager.loadStockArrayMap(mStockArrayMap);
 
-			for (Stock current : stockArrayMap.values()) {
+		synchronized (StockDataProvider.class) {
+			for (Stock current : mStockArrayMap.values()) {
 				if (mHandler.hasMessages(Integer.valueOf(current.getCode()))) {
 					Log.d("mHandler.hasMessages " + Integer.valueOf(current.getCode()) + ", skip!");
 				} else {
@@ -224,16 +209,22 @@ public abstract class StockDataProvider {
 					Log.d("mHandler.sendMessage " + msg);
 				}
 			}
-		} else {
-			if (TextUtils.isEmpty(stock.getCode())) {
-				return;
-			}
+		}
+	}
 
-			mStockDatabaseManager.loadStockArrayMap(stockArrayMap);
+	public void download(Stock stock) {
+		if (!Utility.isNetworkConnected(mContext)) {
+			return;
+		}
 
-			ArrayMap<String, Stock> removedArrayMap = new ArrayMap<String, Stock>();
+		if (stock == null || TextUtils.isEmpty(stock.getCode())) {
+			return;
+		}
 
-			for (Stock current : stockArrayMap.values()) {
+		mStockDatabaseManager.loadStockArrayMap(mStockArrayMap);
+
+		synchronized (StockDataProvider.class) {
+			for (Stock current : mStockArrayMap.values()) {
 				if (current.getCode().equals(stock.getCode())) {
 					continue;
 				}
@@ -241,7 +232,7 @@ public abstract class StockDataProvider {
 				if (mHandler.hasMessages(Integer.valueOf(current.getCode()))) {
 					mHandler.removeMessages(Integer.valueOf(current.getCode()));
 					Log.d("mHandler.hasMessages " + Integer.valueOf(current.getCode()) + ", removed!");
-					removedArrayMap.put(current.getCode(), current);
+					mRemovedArrayMap.put(current.getCode(), current);
 				}
 			}
 
@@ -253,7 +244,7 @@ public abstract class StockDataProvider {
 				Log.d("mHandler.sendMessage" + msg);
 			}
 
-			for (Stock current : removedArrayMap.values()) {
+			for (Stock current : mRemovedArrayMap.values()) {
 				if (mHandler.hasMessages(Integer.valueOf(current.getCode()))) {
 					Log.d("mHandler.hasMessages " + Integer.valueOf(current.getCode()) + ", skip!");
 				} else {
@@ -265,18 +256,31 @@ public abstract class StockDataProvider {
 		}
 	}
 
+	public void download(String se, String code) {
+		if (TextUtils.isEmpty(se) || TextUtils.isEmpty(code)) {
+			return;
+		}
+
+		Stock stock = new Stock();
+		stock.setSE(se);
+		stock.setCode(code);
+		mStockDatabaseManager.getStock(stock);
+
+		download(stock);
+	}
+
 	void loadIndexComponentStockList(@NonNull Stock index, @NonNull ArrayList<Stock> stockList) {
-		ArrayList<IndexComponent> indexComponentList = new ArrayList<>();
+		mStockDatabaseManager.loadStockArrayMap(mStockArrayMap);
 
-		mStockDatabaseManager.loadStockArrayMap(stockArrayMap);
+		synchronized (StockDataProvider.class) {
+			String selection = DatabaseContract.COLUMN_INDEX_CODE + " = " + index.getCode();
+			mStockDatabaseManager.getIndexComponentList(mIndexComponentList, selection, null);
 
-		String selection = DatabaseContract.COLUMN_INDEX_CODE + " = " + index.getCode();
-		mStockDatabaseManager.getIndexComponentList(indexComponentList, selection, null);
-
-		stockList.clear();
-		for (IndexComponent indexComponent : indexComponentList) {
-			if (stockArrayMap.containsKey(indexComponent.getCode())) {
-				stockList.add(stockArrayMap.get(indexComponent.getCode()));
+			stockList.clear();
+			for (IndexComponent indexComponent : mIndexComponentList) {
+				if (mStockArrayMap.containsKey(indexComponent.getCode())) {
+					stockList.add(mStockArrayMap.get(indexComponent.getCode()));
+				}
 			}
 		}
 	}
@@ -285,7 +289,6 @@ public abstract class StockDataProvider {
 		ArrayList<Stock> stockList = new ArrayList<>();
 		ArrayList<StockData> stockDataList;
 		ArrayList<StockData> indexStockDataList;
-		Map<String, StockData> indexStockDataMap = new HashMap<>();
 		long weight;
 
 		try {
@@ -296,7 +299,7 @@ public abstract class StockDataProvider {
 					continue;
 				}
 
-				indexStockDataMap.clear();
+				mIndexStockDataMap.clear();
 
 				Calendar begin = null;
 				Calendar end = null;
@@ -332,8 +335,8 @@ public abstract class StockDataProvider {
 							continue;
 						}
 
-						if (indexStockDataMap.containsKey(keyString)) {
-							indexStockData = indexStockDataMap.get(keyString);
+						if (mIndexStockDataMap.containsKey(keyString)) {
+							indexStockData = mIndexStockDataMap.get(keyString);
 
 							indexStockData.add(stockData, weight);
 						} else {
@@ -349,15 +352,15 @@ public abstract class StockDataProvider {
 							indexStockData.add(stockData, weight);
 						}
 
-						indexStockDataMap.put(keyString, indexStockData);
+						mIndexStockDataMap.put(keyString, indexStockData);
 					}
 				}
 
-				if (indexStockDataMap.size() == 0) {
+				if (mIndexStockDataMap.size() == 0) {
 					continue;
 				}
 
-				indexStockDataList = new ArrayList<>(indexStockDataMap.values());
+				indexStockDataList = new ArrayList<>(mIndexStockDataMap.values());
 				Collections.sort(indexStockDataList, StockData.comparator);
 
 				while (indexStockDataList.size() > 0) {

@@ -43,6 +43,13 @@ public class StockAnalyzer {
 	StockDatabaseManager mStockDatabaseManager;
 	Logger Log = Logger.getLogger();
 
+	private StockAnalyzer() {
+		mContext = OrionApplication.getContext();
+
+		mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+		mStockDatabaseManager = StockDatabaseManager.getInstance();
+	}
+
 	public static StockAnalyzer getInstance() {
 		synchronized (StockAnalyzer.class) {
 			if (mInstance == null) {
@@ -50,13 +57,6 @@ public class StockAnalyzer {
 			}
 			return mInstance;
 		}
-	}
-
-	private StockAnalyzer() {
-		mContext = OrionApplication.getContext();
-
-		mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-		mStockDatabaseManager = StockDatabaseManager.getInstance();
 	}
 
 	public void analyze(Stock stock, String period) {

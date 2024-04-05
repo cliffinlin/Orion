@@ -2,7 +2,6 @@ package com.android.orion.manager;
 
 import android.content.ContentUris;
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.text.TextUtils;
@@ -31,6 +30,10 @@ import java.util.List;
 public class StockDatabaseManager extends DatabaseManager {
 	private static StockDatabaseManager mInstance;
 
+	private StockDatabaseManager() {
+		super(OrionApplication.getContext());
+	}
+
 	@NonNull
 	public static StockDatabaseManager getInstance() {
 		synchronized (StockDatabaseManager.class) {
@@ -39,10 +42,6 @@ public class StockDatabaseManager extends DatabaseManager {
 			}
 			return mInstance;
 		}
-	}
-
-	private StockDatabaseManager() {
-		super(OrionApplication.getContext());
 	}
 
 	public int delete(Uri uri) {

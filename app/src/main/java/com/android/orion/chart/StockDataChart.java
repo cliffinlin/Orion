@@ -11,7 +11,6 @@ import com.android.orion.database.StockData;
 import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockQuant;
 import com.android.orion.setting.Setting;
-import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Utility;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.LimitLine.LimitLabelPosition;

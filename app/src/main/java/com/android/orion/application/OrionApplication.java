@@ -45,6 +45,5 @@ public class OrionApplication extends Application {
 		super.onTerminate();
 
 		OrionService.getInstance().stopSelf();
-		System.exit(0);
 	}
 }

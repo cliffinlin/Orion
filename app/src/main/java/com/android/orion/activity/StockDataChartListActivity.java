@@ -160,20 +160,11 @@ public class StockDataChartListActivity extends BaseActivity implements
 		mSortOrder = getIntent().getStringExtra(
 				Constant.EXTRA_STOCK_LIST_SORT_ORDER);
 
-		mKeyDisplayDeal = false;
-		if (getIntent().getBooleanExtra(Constant.EXTRA_STOCK_DEAL, false)) {
-			mKeyDisplayDeal = true;
-		}
+		mKeyDisplayDeal = getIntent().getBooleanExtra(Constant.EXTRA_STOCK_DEAL, false);
 
-		mKeyDisplayQuant = false;
-		if (getIntent().getBooleanExtra(Constant.EXTRA_STOCK_QUANT, false)) {
-			mKeyDisplayQuant = true;
-		}
+		mKeyDisplayQuant = getIntent().getBooleanExtra(Constant.EXTRA_STOCK_QUANT, false);
 
-		mKeyDisplayBonus = false;
-		if (getIntent().getBooleanExtra(Constant.EXTRA_STOCK_BONUS, false)) {
-			mKeyDisplayBonus = true;
-		}
+		mKeyDisplayBonus = getIntent().getBooleanExtra(Constant.EXTRA_STOCK_BONUS, false);
 
 		initLoader();
 
@@ -184,20 +175,11 @@ public class StockDataChartListActivity extends BaseActivity implements
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 
-		mKeyDisplayDeal = false;
-		if (getIntent().getBooleanExtra(Constant.EXTRA_STOCK_DEAL, false)) {
-			mKeyDisplayDeal = true;
-		}
+		mKeyDisplayDeal = getIntent().getBooleanExtra(Constant.EXTRA_STOCK_DEAL, false);
 
-		mKeyDisplayQuant = false;
-		if (getIntent().getBooleanExtra(Constant.EXTRA_STOCK_QUANT, false)) {
-			mKeyDisplayQuant = true;
-		}
+		mKeyDisplayQuant = getIntent().getBooleanExtra(Constant.EXTRA_STOCK_QUANT, false);
 
-		mKeyDisplayBonus = false;
-		if (getIntent().getBooleanExtra(Constant.EXTRA_STOCK_BONUS, false)) {
-			mKeyDisplayBonus = true;
-		}
+		mKeyDisplayBonus = getIntent().getBooleanExtra(Constant.EXTRA_STOCK_BONUS, false);
 
 		restartLoader();
 	}
