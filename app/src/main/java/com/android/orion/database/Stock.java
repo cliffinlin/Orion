@@ -1975,7 +1975,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	public void setupNetProfitMargin() {
-		if ((mNetProfitInYear == 0) || (mMainBusinessIncomeInYear == 0)) {
+		if ((mNetProfitInYear <= 0) || (mMainBusinessIncomeInYear <= 0)) {
 			return;
 		}
 
@@ -2100,11 +2100,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	public void setupPe() {
-		if (mPrice == 0) {
-			return;
-		}
-
-		if (mNetProfitPerShareInYear == 0) {
+		if (mPrice == 0 || mNetProfitPerShareInYear <= 0) {
 			return;
 		}
 
@@ -2112,13 +2108,13 @@ public class Stock extends DatabaseTable {
 	}
 
 	public void setupRoi() {
-		if (mPe == 0) {
+		if ((mNetProfitPerShareInYear <= 0 || mPrice == 0 || mNetProfitInYear <= 0) || (mMainBusinessIncomeInYear <= 0)) {
 			return;
 		}
 
 //		mRoi = Utility.Round(mRoe * (100.0 * 1.0 / mPe + mYield) * mNetProfitMargin * mRate * ROI_COEFFICIENT,
 //				Constant.DOUBLE_FIXED_DECIMAL);
-		mRoi = Utility.Round(1.0 / mPe * mNetProfitMargin * ROI_COEFFICIENT);
+		mRoi = Utility.Round((mNetProfitPerShareInYear / mPrice) * (mNetProfitInYear / mMainBusinessIncomeInYear) * ROI_COEFFICIENT);
 	}
 
 	public void setupPb() {

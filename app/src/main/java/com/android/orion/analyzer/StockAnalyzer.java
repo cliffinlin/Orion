@@ -43,6 +43,12 @@ public class StockAnalyzer {
 	StockDatabaseManager mStockDatabaseManager;
 	Logger Log = Logger.getLogger();
 
+	static ArrayList<StockFinancial> mStockFinancialList = new ArrayList<StockFinancial>();
+	static ArrayList<TotalShare> mTotalShareList = new ArrayList<TotalShare>();
+	static ArrayList<ShareBonus> mShareBonusList = new ArrayList<ShareBonus>();
+	static ArrayList<StockData> mStockDataList = new ArrayList<StockData>();
+	static ArrayList<StockDeal> mStockDealList = new ArrayList<StockDeal>();
+
 	private StockAnalyzer() {
 		mContext = OrionApplication.getContext();
 
@@ -141,39 +147,35 @@ public class StockAnalyzer {
 	}
 
 	private void analyzeStockFinancial(Stock stock) {
-		ArrayList<StockFinancial> stockFinancialList = new ArrayList<StockFinancial>();
-		ArrayList<TotalShare> totalShareList = new ArrayList<TotalShare>();
-		ArrayList<ShareBonus> shareBonusList = new ArrayList<ShareBonus>();
-		ArrayList<StockData> stockDataList = new ArrayList<StockData>();
 		String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
 
 		if (Stock.CLASS_INDEX.equals(stock.getClasses())) {
 			return;
 		}
 
-		mStockDatabaseManager.getStockFinancialList(stock, stockFinancialList,
+		mStockDatabaseManager.getStockFinancialList(stock, mStockFinancialList,
 				sortOrder);
-		mStockDatabaseManager.getTotalShareList(stock, totalShareList,
+		mStockDatabaseManager.getTotalShareList(stock, mTotalShareList,
 				sortOrder);
-		mStockDatabaseManager.getShareBonusList(stock, shareBonusList,
+		mStockDatabaseManager.getShareBonusList(stock, mShareBonusList,
 				sortOrder);
 		mStockDatabaseManager.getStockDataList(stock, DatabaseContract.COLUMN_MONTH,
-				stockDataList, sortOrder);
+				mStockDataList, sortOrder);
 
-		setupTotalShare(stockFinancialList, totalShareList);
-		setupNetProfitPerShareInYear(stockFinancialList);
-		setupNetProfitPerShare(stockFinancialList);
-		setupRate(stockFinancialList);
-		setupRoe(stockFinancialList);
-		setupRoi(stockDataList, stockFinancialList);
+		setupTotalShare(mStockFinancialList, mTotalShareList);
+		setupNetProfitPerShareInYear(mStockFinancialList);
+		setupNetProfitPerShare(mStockFinancialList);
+		setupRate(mStockFinancialList);
+		setupRoe(mStockFinancialList);
+		setupRoi(mStockDataList, mStockFinancialList);
 
-		for (StockFinancial stockFinancial : stockFinancialList) {
+		for (StockFinancial stockFinancial : mStockFinancialList) {
 			stockFinancial.setModified(Utility.getCurrentDateTimeString());
 			mStockDatabaseManager.updateStockFinancial(stockFinancial,
 					stockFinancial.getContentValues());
 		}
 
-		for (StockData stockData : stockDataList) {
+		for (StockData stockData : mStockDataList) {
 			stockData.setModified(Utility.getCurrentDateTimeString());
 			mStockDatabaseManager.updateStockData(stockData,
 					stockData.getContentValues());
@@ -385,7 +387,6 @@ public class StockAnalyzer {
 	private void setupStockFinancial(Stock stock) {
 		String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
 		StockFinancial stockFinancial = new StockFinancial();
-		ArrayList<StockFinancial> stockFinancialList = new ArrayList<StockFinancial>();
 
 		if (Stock.CLASS_INDEX.equals(stock.getClasses())) {
 			return;
@@ -394,7 +395,7 @@ public class StockAnalyzer {
 		stockFinancial.setStockId(stock.getId());
 
 		mStockDatabaseManager.getStockFinancial(stock, stockFinancial);
-		mStockDatabaseManager.getStockFinancialList(stock, stockFinancialList,
+		mStockDatabaseManager.getStockFinancialList(stock, mStockFinancialList,
 				sortOrder);
 		mStockDatabaseManager.updateStockDeal(stock);
 
@@ -408,11 +409,11 @@ public class StockAnalyzer {
 
 		stock.setupMarketValue();
 		stock.setupNetProfitPerShare();
-		stock.setupNetProfitPerShareInYear(stockFinancialList);
+		stock.setupNetProfitPerShareInYear(mStockFinancialList);
 		stock.setupNetProfitMargin();
-		stock.setupRate(stockFinancialList);
-		stock.setupDebtToNetAssetsRatio(stockFinancialList);
-		stock.setupRoe(stockFinancialList);
+		stock.setupRate(mStockFinancialList);
+		stock.setupDebtToNetAssetsRatio(mStockFinancialList);
+		stock.setupRoe(mStockFinancialList);
 		stock.setupPe();
 		stock.setupPb();
 		stock.setupRoi();
@@ -424,17 +425,16 @@ public class StockAnalyzer {
 		String yearString = "";
 		String prevYearString = "";
 		String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
-		ArrayList<ShareBonus> shareBonusList = new ArrayList<ShareBonus>();
 
 		if (Stock.CLASS_INDEX.equals(stock.getClasses())) {
 			return;
 		}
 
-		mStockDatabaseManager.getShareBonusList(stock, shareBonusList,
+		mStockDatabaseManager.getShareBonusList(stock, mShareBonusList,
 				sortOrder);
 
 		int i = 0;
-		for (ShareBonus shareBonus : shareBonusList) {
+		for (ShareBonus shareBonus : mShareBonusList) {
 			String dateString = shareBonus.getDate();
 			if (!TextUtils.isEmpty(dateString)) {
 				String[] strings = dateString.split("-");
@@ -579,10 +579,9 @@ public class StockAnalyzer {
 		analyzeAction(stock, period, stockDataList, drawVertexList, drawDataList, strokeDataList, segmentDataList);
 
 		if (period.equals(stock.getOperate())) {
-			ArrayList<ShareBonus> shareBonusList = new ArrayList<ShareBonus>();
-			mStockDatabaseManager.getShareBonusList(stock, shareBonusList,
+			mStockDatabaseManager.getShareBonusList(stock, mShareBonusList,
 					DatabaseContract.COLUMN_DATE + " DESC ");
-			stockQuantAnalyzer.analyze(mContext, stock, stockDataList, shareBonusList);
+			stockQuantAnalyzer.analyze(mContext, stock, stockDataList, mShareBonusList);
 		}
 	}
 
@@ -850,7 +849,7 @@ public class StockAnalyzer {
 
 	double getToBuyProfit(@NonNull Stock stock) {
 		double result = 0;
-		ArrayList<StockDeal> stockDealList = new ArrayList<StockDeal>();
+
 		String sortOrder = DatabaseContract.COLUMN_NET + DatabaseContract.ORDER_DIRECTION_ASC;
 		String selection = DatabaseContract.COLUMN_SE + " = " + "\'" + stock.getSE()
 				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
@@ -863,8 +862,8 @@ public class StockAnalyzer {
 		selection += " AND " + DatabaseContract.COLUMN_PROFIT + " > " + DatabaseContract.COLUMN_BONUS;
 		selection += " AND " + DatabaseContract.COLUMN_NET + " > " + 0;
 
-		mStockDatabaseManager.getStockDealList(stockDealList, selection, sortOrder);
-		for (StockDeal stockDeal : stockDealList) {
+		mStockDatabaseManager.getStockDealList(mStockDealList, selection, sortOrder);
+		for (StockDeal stockDeal : mStockDealList) {
 			result += stockDeal.getProfit();
 		}
 
@@ -873,7 +872,7 @@ public class StockAnalyzer {
 
 	double getToSellProfit(@NonNull Stock stock) {
 		double result = 0;
-		ArrayList<StockDeal> stockDealList = new ArrayList<StockDeal>();
+
 		String sortOrder = DatabaseContract.COLUMN_NET + DatabaseContract.ORDER_DIRECTION_ASC;
 		String selection = DatabaseContract.COLUMN_SE + " = " + "\'" + stock.getSE()
 				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
@@ -886,8 +885,8 @@ public class StockAnalyzer {
 		selection += " AND " + DatabaseContract.COLUMN_PROFIT + " > " + DatabaseContract.COLUMN_BONUS;
 		selection += " AND " + DatabaseContract.COLUMN_NET + " > " + 0;
 
-		mStockDatabaseManager.getStockDealList(stockDealList, selection, sortOrder);
-		for (StockDeal stockDeal : stockDealList) {
+		mStockDatabaseManager.getStockDealList(mStockDealList, selection, sortOrder);
+		for (StockDeal stockDeal : mStockDealList) {
 			result += stockDeal.getProfit();
 		}
 
