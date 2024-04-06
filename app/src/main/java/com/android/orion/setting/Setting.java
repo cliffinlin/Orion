@@ -62,19 +62,13 @@ public class Setting {
 
 	public static final String SETTING_STOCK_DATA_CHANGED = "SETTING_STOCK_DATA_CHANGED";
 
+	public static final String SETTING_STOCK_ARRAY_MAP_INDEX = "SETTING_STOCK_ARRAY_MAP_INDEX";
+
 	private Setting() {
 	}
 
-	public static boolean getBoolean(String key) {
-		return Preferences.getBoolean(key, false);
-	}
-
-	public static void setBoolean(String key, boolean value) {
-		Preferences.putBoolean(key, value);
-	}
-
 	public static boolean getDisplayNet() {
-		return Preferences.getBoolean(SETTING_DISPLAY_NET, false);
+		return Preferences.getBoolean(SETTING_DISPLAY_NET, true);
 	}
 
 	public static void setDisplayNet(boolean value) {
@@ -130,7 +124,7 @@ public class Setting {
 	}
 
 	public static boolean getDebugDirect() {
-		return Preferences.getBoolean(SETTING_DEBUG_DIRECT, true);
+		return Preferences.getBoolean(SETTING_DEBUG_DIRECT, false);
 	}
 
 	public static void setDebugDirect(boolean value) {
@@ -157,64 +151,64 @@ public class Setting {
 		return Preferences.getLong(SETTING_DOWNLOAD_STOCK_HSA_TIMEMILLIS, 0);
 	}
 
-	public static void setDownloadStockHSATimemillis(long timemillis) {
-		Preferences.putLong(SETTING_DOWNLOAD_STOCK_HSA_TIMEMILLIS, timemillis);
+	public static void setDownloadStockHSATimemillis(long value) {
+		Preferences.putLong(SETTING_DOWNLOAD_STOCK_HSA_TIMEMILLIS, value);
 	}
 
 	public static long getDownloadStockInformationTimemillis(String se, String code) {
 		return Preferences.getLong(SETTING_DOWNLOAD_STOCK_INFORMATION_TIMEMILLIS + "_" + se + "_" + code, 0);
 	}
 
-	public static void setDownloadStockInformationTimemillis(String se, String code, long timemillis) {
-		Preferences.putLong(SETTING_DOWNLOAD_STOCK_INFORMATION_TIMEMILLIS + "_" + se + "_" + code, timemillis);
+	public static void setDownloadStockInformationTimemillis(String se, String code, long value) {
+		Preferences.putLong(SETTING_DOWNLOAD_STOCK_INFORMATION_TIMEMILLIS + "_" + se + "_" + code, value);
 	}
 
 	public static long getDownloadStockFinancialTimemillis(String se, String code) {
 		return Preferences.getLong(SETTING_DOWNLOAD_STOCK_FINANCIAL_TIMEMILLIS + "_" + se + "_" + code, 0);
 	}
 
-	public static void setDownloadStockFinancialTimemillis(String se, String code, long timemillis) {
-		Preferences.putLong(SETTING_DOWNLOAD_STOCK_FINANCIAL_TIMEMILLIS + "_" + se + "_" + code, timemillis);
+	public static void setDownloadStockFinancialTimemillis(String se, String code, long value) {
+		Preferences.putLong(SETTING_DOWNLOAD_STOCK_FINANCIAL_TIMEMILLIS + "_" + se + "_" + code, value);
 	}
 
 	public static long getDownloadShareBonusTimemillis(String se, String code) {
 		return Preferences.getLong(SETTING_DOWNLOAD_SHARE_BONUS_TIMEMILLIS + "_" + se + "_" + code, 0);
 	}
 
-	public static void setDownloadShareBonusTimemillis(String se, String code, long timemillis) {
-		Preferences.putLong(SETTING_DOWNLOAD_SHARE_BONUS_TIMEMILLIS + "_" + se + "_" + code, timemillis);
+	public static void setDownloadShareBonusTimemillis(String se, String code, long value) {
+		Preferences.putLong(SETTING_DOWNLOAD_SHARE_BONUS_TIMEMILLIS + "_" + se + "_" + code, value);
 	}
 
 	public static long getDownloadTotalShareTimemillis(String se, String code) {
 		return Preferences.getLong(SETTING_DOWNLOAD_TOTAL_SHARE_TIMEMILLIS + "_" + se + "_" + code, 0);
 	}
 
-	public static void setDownloadTotalShareTimemillis(String se, String code, long timemillis) {
-		Preferences.putLong(SETTING_DOWNLOAD_TOTAL_SHARE_TIMEMILLIS + "_" + se + "_" + code, timemillis);
+	public static void setDownloadTotalShareTimemillis(String se, String code, long value) {
+		Preferences.putLong(SETTING_DOWNLOAD_TOTAL_SHARE_TIMEMILLIS + "_" + se + "_" + code, value);
 	}
 
 	public static long getDownloadStockDataHistoryTimemillis(String se, String code) {
 		return Preferences.getLong(SETTING_DOWNLOAD_STOCK_DATA_HISTORY_TIMEMILLIS + "_" + se + "_" + code, 0);
 	}
 
-	public static void setDownloadStockDataHistoryTimemillis(String se, String code, long timemillis) {
-		Preferences.putLong(SETTING_DOWNLOAD_STOCK_DATA_HISTORY_TIMEMILLIS + "_" + se + "_" + code, timemillis);
+	public static void setDownloadStockDataHistoryTimemillis(String se, String code, long value) {
+		Preferences.putLong(SETTING_DOWNLOAD_STOCK_DATA_HISTORY_TIMEMILLIS + "_" + se + "_" + code, value);
 	}
 
 	public static long getDownloadStockDataRealTimeTimemillis(String se, String code) {
 		return Preferences.getLong(SETTING_DOWNLOAD_STOCK_DATA_REALTIME_TIMEMILLIS + "_" + se + "_" + code, 0);
 	}
 
-	public static void setDownloadStockDataRealTimeTimemillis(String se, String code, long timemillis) {
-		Preferences.putLong(SETTING_DOWNLOAD_STOCK_DATA_REALTIME_TIMEMILLIS + "_" + se + "_" + code, timemillis);
+	public static void setDownloadStockDataRealTimeTimemillis(String se, String code, long value) {
+		Preferences.putLong(SETTING_DOWNLOAD_STOCK_DATA_REALTIME_TIMEMILLIS + "_" + se + "_" + code, value);
 	}
 
 	public static long getDownloadStockRealTimeTimemillis(String se, String code) {
 		return Preferences.getLong(SETTING_DOWNLOAD_STOCK_REALTIME_TIMEMILLIS + "_" + se + "_" + code, 0);
 	}
 
-	public static void setDownloadStockRealTimeTimemillis(String se, String code, long timemillis) {
-		Preferences.putLong(SETTING_DOWNLOAD_STOCK_REALTIME_TIMEMILLIS + "_" + se + "_" + code, timemillis);
+	public static void setDownloadStockRealTimeTimemillis(String se, String code, long value) {
+		Preferences.putLong(SETTING_DOWNLOAD_STOCK_REALTIME_TIMEMILLIS + "_" + se + "_" + code, value);
 	}
 
 	public static boolean getStockDataChanged(String se, String code) {
@@ -223,5 +217,13 @@ public class Setting {
 
 	public static void setStockDataChanged(String se, String code, boolean value) {
 		Preferences.putBoolean(SETTING_STOCK_DATA_CHANGED + "_" + se + "_" + code, value);
+	}
+
+	public static long getStockArrayMapIndex() {
+		return Preferences.getLong(SETTING_STOCK_ARRAY_MAP_INDEX, 0);
+	}
+
+	public static void setStockArrayMapIndex(long value) {
+		Preferences.putLong(SETTING_STOCK_ARRAY_MAP_INDEX, value);
 	}
 }

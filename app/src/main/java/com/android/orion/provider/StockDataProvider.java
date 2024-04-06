@@ -205,14 +205,23 @@ public abstract class StockDataProvider {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				mStockDatabaseManager.loadStockArrayMap(mStockArrayMap);
+				synchronized (StockDataProvider.class) {
+					mStockDatabaseManager.loadStockArrayMap(mStockArrayMap);
+
 					if (mStockArrayMap.size() == 0) {
 						downloadStockHSA();
 						mStockDatabaseManager.loadStockArrayMap(mStockArrayMap);
 					}
 
+					int index = -1;
 					for (Stock current : mStockArrayMap.values()) {
-						mMessageHandled = false;
+						index++;
+						Log.d("index=" + index);
+						if (index < Setting.getStockArrayMapIndex()) {
+							Log.d("index < " + Setting.getStockArrayMapIndex() + " continue");
+							continue;
+						}
+
 						if (mHandler.hasMessages(Integer.valueOf(current.getCode()))) {
 							Log.d("mHandler.hasMessages " + Integer.valueOf(current.getCode()) + ", skip!");
 						} else {
@@ -221,6 +230,7 @@ public abstract class StockDataProvider {
 							Log.d("mHandler.sendMessage " + msg);
 						}
 
+						mMessageHandled = false;
 						while (!mMessageHandled) {
 							try {
 								Thread.sleep(100);
@@ -228,7 +238,11 @@ public abstract class StockDataProvider {
 								e.printStackTrace();
 							}
 						}
+
+						Setting.setStockArrayMapIndex(index);
 					}
+					Setting.setStockArrayMapIndex(0);
+				}
 			}
 		}).start();
 	}

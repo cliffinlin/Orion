@@ -779,7 +779,7 @@ public class SinaFinance extends StockDataProvider {
 			}
 
 			if (!TextUtils.isEmpty(stockInfo[5])) {
-				stock.setValue(Long.valueOf(stockInfo[5]));
+				stock.setValue(Double.valueOf(stockInfo[5]).longValue());
 			}
 
 			mStockDatabaseManager.updateStock(stock,
