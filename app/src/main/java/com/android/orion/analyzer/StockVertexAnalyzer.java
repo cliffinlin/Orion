@@ -126,11 +126,13 @@ public class StockVertexAnalyzer {
 
 		dataList.get(i).setDirection(direction);
 
-		i = 0;
-		if (vertexList.get(0).vertexOf(StockData.VERTEX_TOP)) {
-			dataList.get(i).setVertex(StockData.VERTEX_BOTTOM);
-		} else if (vertexList.get(0).vertexOf(StockData.VERTEX_BOTTOM)) {
-			dataList.get(i).setVertex(StockData.VERTEX_TOP);
+		if (vertexList.size() > 0) {
+			i = 0;
+			if (vertexList.get(0).vertexOf(StockData.VERTEX_TOP)) {
+				dataList.get(i).setVertex(StockData.VERTEX_BOTTOM);
+			} else if (vertexList.get(0).vertexOf(StockData.VERTEX_BOTTOM)) {
+				dataList.get(i).setVertex(StockData.VERTEX_TOP);
+			}
 		}
 	}
 

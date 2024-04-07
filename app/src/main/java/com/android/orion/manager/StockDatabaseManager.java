@@ -2197,59 +2197,46 @@ public class StockDatabaseManager extends DatabaseManager {
 		return DatabaseContract.IndexComponent.SORT_ORDER_DEFAULT;
 	}
 
-
-	public void updateDatabase(Stock stock) {
-		try {
-			updateStock(stock,
-					stock.getContentValues());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void updateDatabase(ArrayList<StockData> stockDataList) {
+	public void updateStockData(Stock stock, String period, ArrayList<StockData> stockDataList) {
 		if ((stockDataList == null) || (stockDataList.size() == 0)) {
 			return;
 		}
 
-		ContentValues[] contentValues = new ContentValues[stockDataList.size()];
-
-		for (int i = 0; i < stockDataList.size(); i++) {
-			StockData stockData = stockDataList.get(i);
-			contentValues[i] = stockData.getContentValues();
-		}
-
-		bulkInsertStockData(contentValues);
-	}
-
-	public void updateDatabase(Stock stock, String period, ArrayList<StockData> stockDataList) {
 		try {
 			deleteStockData(stock.getId(), period);
 
-			updateDatabase(stockDataList);
+			ContentValues[] contentValues = new ContentValues[stockDataList.size()];
+			for (int i = 0; i < stockDataList.size(); i++) {
+				StockData stockData = stockDataList.get(i);
+				stockData.setModified(Utility.getCurrentDateTimeString());
+				contentValues[i] = stockData.getContentValues();
+			}
 
-			stock.setModified(Utility.getCurrentDateTimeString());
-			updateStock(stock,
-					stock.getContentValues());
+			bulkInsertStockData(contentValues);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void updateDatabase(Stock stock, String period, ArrayList<StockData> stockDataList,
-							   ArrayList<StockData> drawDataList,
-							   ArrayList<StockData> strokeDataList,
-							   ArrayList<StockData> segmentDataList) {
+	public void updateStockFinancial(Stock stock, ArrayList<StockFinancial> stockFinancialList) {
+		if ((stockFinancialList == null) || (stockFinancialList.size() == 0)) {
+			return;
+		}
+
 		try {
-			deleteStockData(stock.getId(), period);
+			deleteStockFinancial(stock.getId());
 
-			updateDatabase(stockDataList);
+			ContentValues[] contentValues = new ContentValues[stockFinancialList.size()];
+			for (int i = 0; i < stockFinancialList.size(); i++) {
+				StockFinancial stockFinancial = stockFinancialList.get(i);
+				stockFinancial.setModified(Utility.getCurrentDateTimeString());
+				contentValues[i] = stockFinancial.getContentValues();
+			}
 
-			stock.setModified(Utility.getCurrentDateTimeString());
-			updateStock(stock,
-					stock.getContentValues());
+			bulkInsertStockFinancial(contentValues);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+
 }

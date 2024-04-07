@@ -109,8 +109,9 @@ public class StockAnalyzer {
 					segmentVertexList, segmentDataList,
 					lineVertexList, lineDataList,
 					outlineVertexList, outlineDataList);
-			mStockDatabaseManager.updateDatabase(stock, period, stockDataList,
-					drawDataList, strokeDataList, segmentDataList);
+			mStockDatabaseManager.updateStockData(stock, period, stockDataList);
+			stock.setModified(Utility.getCurrentDateTimeString());
+			mStockDatabaseManager.updateStock(stock, stock.getContentValues());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -129,13 +130,12 @@ public class StockAnalyzer {
 		}
 
 		try {
-			if (!Stock.CLASS_INDEX.equals(stock.getClasses())) {
-				analyzeStockFinancial(stock);
-				setupStockFinancial(stock);
-				setupStockShareBonus(stock);
-			}
+			analyzeStockFinancial(stock);
+			setupStockFinancial(stock);
+			setupStockShareBonus(stock);
 
-			mStockDatabaseManager.updateDatabase(stock);
+			stock.setModified(Utility.getCurrentDateTimeString());
+			mStockDatabaseManager.updateStock(stock, stock.getContentValues());
 
 			updateNotification(stock);
 		} catch (Exception e) {
@@ -169,17 +169,8 @@ public class StockAnalyzer {
 		setupRoe(mStockFinancialList);
 		setupRoi(mStockDataList, mStockFinancialList);
 
-		for (StockFinancial stockFinancial : mStockFinancialList) {
-			stockFinancial.setModified(Utility.getCurrentDateTimeString());
-			mStockDatabaseManager.updateStockFinancial(stockFinancial,
-					stockFinancial.getContentValues());
-		}
-
-		for (StockData stockData : mStockDataList) {
-			stockData.setModified(Utility.getCurrentDateTimeString());
-			mStockDatabaseManager.updateStockData(stockData,
-					stockData.getContentValues());
-		}
+		mStockDatabaseManager.updateStockFinancial(stock, mStockFinancialList);
+		mStockDatabaseManager.updateStockData(stock, DatabaseContract.COLUMN_MONTH, mStockDataList);
 	}
 
 	private void setupTotalShare(ArrayList<StockFinancial> stockFinancialList,
