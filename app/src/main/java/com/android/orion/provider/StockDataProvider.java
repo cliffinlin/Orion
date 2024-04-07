@@ -208,10 +208,10 @@ public abstract class StockDataProvider {
 				synchronized (StockDataProvider.class) {
 					mStockDatabaseManager.loadStockArrayMap(mStockArrayMap);
 
-					if (mStockArrayMap.size() == 0) {
-						downloadStockHSA();
-						mStockDatabaseManager.loadStockArrayMap(mStockArrayMap);
-					}
+//					if (mStockArrayMap.size() == 0) {
+//						downloadStockHSA();
+//						mStockDatabaseManager.loadStockArrayMap(mStockArrayMap);
+//					}
 
 					int index = -1;
 					for (Stock current : mStockArrayMap.values()) {
@@ -492,7 +492,7 @@ public abstract class StockDataProvider {
 				} else {
 				}
 
-//				if (Setting.getStockDataChanged(stock.getSE(), stock.getCode())) {
+				if (Setting.getStockDataChanged(stock.getSE(), stock.getCode())) {
 					Setting.setStockDataChanged(stock.getSE(), stock.getCode(), false);
 					for (String period : DatabaseContract.PERIODS) {
 						if (Preferences.getBoolean(period, false)) {
@@ -502,7 +502,7 @@ public abstract class StockDataProvider {
 
 					mStockAnalyzer.analyze(stock);
 					sendBroadcast(Constant.ACTION_RESTART_LOADER, stock.getId());
-//				}
+				}
 				mMessageHandled = true;
 			} catch (Exception e) {
 				e.printStackTrace();
