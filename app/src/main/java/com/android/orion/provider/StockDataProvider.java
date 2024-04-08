@@ -72,6 +72,7 @@ public abstract class StockDataProvider {
 	PowerManager.WakeLock mWakeLock;
 	LocalBroadcastManager mLocalBroadcastManager;
 
+	Thread mDownloadThread = null;
 	HandlerThread mHandlerThread;
 	ServiceHandler mHandler;
 
@@ -202,49 +203,54 @@ public abstract class StockDataProvider {
 			return;
 		}
 
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				synchronized (StockDataProvider.class) {
-					mStockDatabaseManager.loadStockArrayMap(mStockArrayMap);
+		if (mDownloadThread == null) {
+			mDownloadThread = new Thread(new Runnable() {
+				@Override
+				public void run() {
+					synchronized (StockDataProvider.class) {
+						mStockDatabaseManager.loadStockArrayMap(mStockArrayMap);
 
 //					if (mStockArrayMap.size() == 0) {
 //						downloadStockHSA();
 //						mStockDatabaseManager.loadStockArrayMap(mStockArrayMap);
 //					}
 
-					int index = -1;
-					for (Stock current : mStockArrayMap.values()) {
-						index++;
-						Log.d("index=" + index);
-						if (index < Setting.getStockArrayMapIndex()) {
-							Log.d("index < " + Setting.getStockArrayMapIndex() + " continue");
-							continue;
-						}
-
-						if (mHandler.hasMessages(Integer.valueOf(current.getCode()))) {
-							Log.d("mHandler.hasMessages " + Integer.valueOf(current.getCode()) + ", skip!");
-						} else {
-							Message msg = mHandler.obtainMessage(Integer.valueOf(current.getCode()), current);
-							mHandler.sendMessage(msg);
-							Log.d("mHandler.sendMessage " + msg);
-						}
-
-						mMessageHandled = false;
-						while (!mMessageHandled) {
-							try {
-								Thread.sleep(100);
-							} catch (InterruptedException e) {
-								e.printStackTrace();
+						int index = -1;
+						for (Stock current : mStockArrayMap.values()) {
+							index++;
+							Log.d("index=" + index);
+							if (index < Setting.getStockArrayMapIndex()) {
+								Log.d("index < " + Setting.getStockArrayMapIndex() + " continue");
+								continue;
 							}
+
+							if (mHandler.hasMessages(Integer.valueOf(current.getCode()))) {
+								Log.d("mHandler.hasMessages " + Integer.valueOf(current.getCode()) + ", skip!");
+							} else {
+								Message msg = mHandler.obtainMessage(Integer.valueOf(current.getCode()), current);
+								mHandler.sendMessage(msg);
+								Log.d("mHandler.sendMessage " + msg);
+							}
+
+							mMessageHandled = false;
+							while (!mMessageHandled) {
+								try {
+									Thread.sleep(100);
+								} catch (InterruptedException e) {
+									e.printStackTrace();
+								}
+							}
+
+							Setting.setStockArrayMapIndex(index);
 						}
 
-						Setting.setStockArrayMapIndex(index);
+						Setting.setStockArrayMapIndex(0);
+						mDownloadThread = null;
 					}
-					Setting.setStockArrayMapIndex(0);
 				}
-			}
-		}).start();
+			});
+			mDownloadThread.start();
+		}
 	}
 
 	public void download(Stock stock) {
