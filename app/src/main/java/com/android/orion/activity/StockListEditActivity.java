@@ -265,10 +265,10 @@ public class StockListEditActivity extends DatabaseActivity implements
 			return;
 		}
 
-		Intent intent = new Intent(StockListEditActivity.this,
-				StockDataChartListActivity.class);
-		intent.putExtra(Constant.EXTRA_STOCK_ID, id);
-		startActivity(intent);
+//		Intent intent = new Intent(StockListEditActivity.this,
+//				StockDataChartListActivity.class);
+//		intent.putExtra(Constant.EXTRA_STOCK_ID, id);
+//		startActivity(intent);
 	}
 
 	public class CustomSimpleCursorAdapter extends SimpleCursorAdapter

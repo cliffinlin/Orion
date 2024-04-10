@@ -25,7 +25,7 @@ public class Stock extends DatabaseTable {
 
 	public static final long INVALID_ID = 0;
 
-	public static final double ROI_COEFFICIENT = 100.0;
+	public static final double ROI_COEFFICIENT = 10.0;
 
 	private int mFlag;
 	private String mClasses;
@@ -2125,7 +2125,8 @@ public class Stock extends DatabaseTable {
 
 //		mRoi = Utility.Round(mRoe * (100.0 * 1.0 / mPe + mYield) * mNetProfitMargin * mRate * ROI_COEFFICIENT,
 //				Constant.DOUBLE_FIXED_DECIMAL);
-		mRoi = Utility.Round(mRoe * ( mNetProfitPerShareInYear / mPrice) * (mNetProfitInYear / mMainBusinessIncomeInYear) * ROI_COEFFICIENT);
+//		mRoi = Utility.Round(mRoe * ( mNetProfitPerShareInYear / mPrice) * (mNetProfitInYear / mMainBusinessIncomeInYear) * ROI_COEFFICIENT);
+		mRoi = Utility.Round(mRoe * ( mNetProfitPerShareInYear / mPrice) * (mNetProfitInYear / mMainBusinessIncomeInYear) * mYield * ROI_COEFFICIENT);
 	}
 
 	public void setupPb() {

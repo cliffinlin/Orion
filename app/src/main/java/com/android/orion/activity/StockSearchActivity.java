@@ -50,10 +50,12 @@ public class StockSearchActivity extends StockListEditActivity implements
 		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 		SearchView searchView = (SearchView) menu.findItem(R.id.action_search)
 				.getActionView();
-		searchView.setSearchableInfo(searchManager
-				.getSearchableInfo(getComponentName()));
-		searchView.setIconifiedByDefault(false);
-		searchView.setOnQueryTextListener(this);
+		if (searchView != null) {
+			searchView.setSearchableInfo(searchManager
+					.getSearchableInfo(getComponentName()));
+			searchView.setIconifiedByDefault(false);
+			searchView.setOnQueryTextListener(this);
+		}
 
 		return true;
 	}

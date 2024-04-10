@@ -67,11 +67,6 @@ public class Market {
 		return result;
 	}
 
-	public static boolean isTradingHours() {
-		Calendar calendar = Calendar.getInstance();
-		return inFirstHalf(calendar) || inSecondHalf(calendar);
-	}
-
 	public static boolean isTradingHours(Calendar calendar) {
 		return inFirstHalf(calendar) || inSecondHalf(calendar);
 	}

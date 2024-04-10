@@ -662,7 +662,7 @@ public class SinaFinance extends StockDataProvider {
 			return result;
 		}
 
-		if (!Market.isTradingHours(Calendar.getInstance())) {
+		if (!Market.isTradingHours(Calendar.getInstance()) && !Market.isLunchTime(Calendar.getInstance())) {
 			if (System.currentTimeMillis() - Setting.getDownloadStockRealTimeTimemillis(stock.getSE(), stock.getCode()) < Config.downloadStockRealTimeInterval) {
 				return result;
 			}

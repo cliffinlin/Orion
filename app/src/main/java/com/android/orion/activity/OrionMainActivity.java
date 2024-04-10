@@ -17,6 +17,7 @@ import com.android.orion.setting.Setting;
 import com.android.orion.utility.Market;
 import com.android.orion.utility.Preferences;
 
+import java.util.Calendar;
 import java.util.List;
 
 public class OrionMainActivity extends PreferenceActivity {
@@ -101,7 +102,7 @@ public class OrionMainActivity extends PreferenceActivity {
 
 		finish();
 
-		if (!Market.isTradingHours()) {
+		if (!Market.isTradingHours(Calendar.getInstance())) {
 			OrionApplication.getInstance().onTerminate();
 		}
 	}
