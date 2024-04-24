@@ -1544,6 +1544,7 @@ public class SinaFinance extends StockDataProvider {
 						stockFinancial.setFinancialExpenses(Double
 								.valueOf(valueString));
 					} else if (keyString.equals("NETPROFIT")) {//净利润
+//					} else if (keyString.equals("NETPARECOMPPROF") || keyString.equals("NETPARESHARPROF") || keyString.equals("PARENETP")) {//归母净利润
 						stockFinancial.setNetProfit(Double
 								.valueOf(valueString));
 					} else if (keyString.equals("NAPS")) {//每股净资产

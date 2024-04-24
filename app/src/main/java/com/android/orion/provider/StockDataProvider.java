@@ -209,11 +209,14 @@ public abstract class StockDataProvider {
 				public void run() {
 					synchronized (StockDataProvider.class) {
 						mStockDatabaseManager.loadStockArrayMap(mStockArrayMap);
+//						if (mStockArrayMap.size() == 0) {
+//							downloadStockHSA();
+//							mStockDatabaseManager.loadStockArrayMap(mStockArrayMap);
+//						}
 
-//					if (mStockArrayMap.size() == 0) {
-//						downloadStockHSA();
-//						mStockDatabaseManager.loadStockArrayMap(mStockArrayMap);
-//					}
+						if (Setting.getStockArrayMapIndex() > mStockArrayMap.size() - 1) {
+							Setting.setStockArrayMapIndex(0);
+						}
 
 						int index = -1;
 						for (Stock current : mStockArrayMap.values()) {
@@ -240,7 +243,6 @@ public abstract class StockDataProvider {
 									e.printStackTrace();
 								}
 							}
-
 							Setting.setStockArrayMapIndex(index);
 						}
 

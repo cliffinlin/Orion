@@ -7,8 +7,23 @@ android {
         applicationId "com.android.orion"
         minSdkVersion 19
         targetSdkVersion 29
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
+    signingConfigs {
+        release {
+            storeFile file("../orion_key.jks")
+            storePassword "123456"
+            keyAlias "orion_key"
+            keyPassword "123456"
+        }
+        debug {
+            storeFile file("../orion_key.jks")
+            storePassword "123456"
+            keyAlias "orion_key"
+            keyPassword "123456"
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
