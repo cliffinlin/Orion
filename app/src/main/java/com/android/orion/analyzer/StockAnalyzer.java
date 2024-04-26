@@ -36,18 +36,16 @@ import java.util.ArrayList;
 
 
 public class StockAnalyzer {
-	private static StockAnalyzer mInstance;
-
-	Context mContext;
-	NotificationManager mNotificationManager;
-	StockDatabaseManager mStockDatabaseManager;
-	Logger Log = Logger.getLogger();
-
 	static ArrayList<StockFinancial> mStockFinancialList = new ArrayList<StockFinancial>();
 	static ArrayList<TotalShare> mTotalShareList = new ArrayList<TotalShare>();
 	static ArrayList<ShareBonus> mShareBonusList = new ArrayList<ShareBonus>();
 	static ArrayList<StockData> mStockDataList = new ArrayList<StockData>();
 	static ArrayList<StockDeal> mStockDealList = new ArrayList<StockDeal>();
+	private static StockAnalyzer mInstance;
+	Context mContext;
+	NotificationManager mNotificationManager;
+	StockDatabaseManager mStockDatabaseManager;
+	Logger Log = Logger.getLogger();
 
 	private StockAnalyzer() {
 		mContext = OrionApplication.getContext();

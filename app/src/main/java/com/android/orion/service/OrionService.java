@@ -18,15 +18,21 @@ import android.os.Process;
 
 import androidx.core.app.NotificationCompat;
 
+import com.android.orion.application.OrionApplication;
 import com.android.orion.config.Config;
 import com.android.orion.database.Stock;
-import com.android.orion.receiver.DownloadBroadcastReceiver;
 import com.android.orion.provider.SinaFinance;
+import com.android.orion.receiver.DownloadBroadcastReceiver;
+import com.android.orion.utility.Logger;
 
 public class OrionService extends Service {
+	static final int MESSAGE_CHECK_BACKGROUND = 0;
+	static final int MAX_CHECK_BACKGROUND = 1;
+
 	private static OrionService mInstance;
 
 	boolean mRedelivery = true;
+	int mCheckBackgroundCounter = 0;
 	IntentFilter mIntentFilter;
 	NotificationManager mNotificationManager;
 	DownloadBroadcastReceiver mDownloadBroadcastReceiver;
@@ -34,6 +40,7 @@ public class OrionService extends Service {
 	IBinder mServiceBinder;
 	volatile ServiceHandler mHandler;
 	SinaFinance mSinaFinance;
+	Logger Log = Logger.getLogger();
 
 	public static OrionService getInstance() {
 		return mInstance;
@@ -78,14 +85,6 @@ public class OrionService extends Service {
 		registerReceiver(mDownloadBroadcastReceiver, mIntentFilter);
 
 		mSinaFinance = SinaFinance.getInstance();
-	}
-
-	@Override
-	public void onStart(Intent intent, int startId) {
-		Message msg = mHandler.obtainMessage();
-		msg.arg1 = startId;
-		msg.obj = intent;
-		mHandler.sendMessage(msg);
 	}
 
 	@Override
@@ -138,6 +137,10 @@ public class OrionService extends Service {
 		mSinaFinance.download(stock);
 	}
 
+	public void checkBackground() {
+		mHandler.sendEmptyMessage(MESSAGE_CHECK_BACKGROUND);
+	}
+
 	private final class ServiceHandler extends Handler {
 		public ServiceHandler(Looper looper) {
 			super(looper);
@@ -145,6 +148,17 @@ public class OrionService extends Service {
 
 		@Override
 		public void handleMessage(Message msg) {
+			switch (msg.what) {
+				case MESSAGE_CHECK_BACKGROUND:
+					mCheckBackgroundCounter++;
+					if (mCheckBackgroundCounter > MAX_CHECK_BACKGROUND) {
+						if (OrionApplication.getInstance().getActivityStartedCounter() == 0) {
+							Log.d("onTerminate mCheckBackgroundCounter=" + mCheckBackgroundCounter);
+							OrionApplication.getInstance().onTerminate();
+						}
+					}
+					break;
+			}
 		}
 	}
 

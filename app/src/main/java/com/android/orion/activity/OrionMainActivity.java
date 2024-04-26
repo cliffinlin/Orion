@@ -12,7 +12,6 @@ import android.widget.Toast;
 import com.android.orion.R;
 import com.android.orion.application.OrionApplication;
 import com.android.orion.database.DatabaseContract;
-import com.android.orion.manager.DownloadAlarmManager;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Market;
 import com.android.orion.utility.Preferences;
@@ -21,17 +20,13 @@ import java.util.Calendar;
 import java.util.List;
 
 public class OrionMainActivity extends PreferenceActivity {
-	DownloadAlarmManager mStockDownloadAlarmManager = null;
+
 	private long mExitTime;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		initSharedPreferences();
-
-		mStockDownloadAlarmManager = DownloadAlarmManager.getInstance();
-		mStockDownloadAlarmManager.startAlarm();
 	}
 
 	@Override
@@ -96,10 +91,6 @@ public class OrionMainActivity extends PreferenceActivity {
 	}
 
 	void onActionExit() {
-		if (mStockDownloadAlarmManager != null) {
-			mStockDownloadAlarmManager.stopAlarm();
-		}
-
 		finish();
 
 		if (!Market.isTradingHours(Calendar.getInstance())) {
