@@ -20,8 +20,6 @@ public class DownloadBroadcastReceiver extends BroadcastReceiver {
 
 		if (Market.isTradingHours(Calendar.getInstance())) {
 			OrionService.getInstance().download();
-		} else {
-			OrionService.getInstance().checkBackground();
 		}
 	}
 }
