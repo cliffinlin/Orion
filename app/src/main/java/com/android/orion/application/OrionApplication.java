@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -70,6 +71,7 @@ public class OrionApplication extends Application {
 				mActivityStartedCounter--;
 				if (mActivityStartedCounter == 0) {
 					if (!Market.isTradingHours(Calendar.getInstance())) {
+						Toast.makeText(mContext, "后台退出", Toast.LENGTH_LONG).show();
 						onTerminate();
 					}
 				}

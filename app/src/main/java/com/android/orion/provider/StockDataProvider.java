@@ -235,14 +235,6 @@ public abstract class StockDataProvider {
 								Log.d("mHandler.sendMessage " + msg);
 							}
 
-							mMessageHandled = false;
-							while (!mMessageHandled) {
-								try {
-									Thread.sleep(100);
-								} catch (InterruptedException e) {
-									e.printStackTrace();
-								}
-							}
 							Setting.setStockArrayMapIndex(index);
 						}
 
@@ -472,10 +464,6 @@ public abstract class StockDataProvider {
 						return;
 					}
 
-					if (downloadStockRealTime(stock) == RESULT_FAILED) {
-						return;
-					}
-
 					if (downloadStockFinancial(stock) == RESULT_FAILED) {
 						return;
 					}
@@ -495,6 +483,10 @@ public abstract class StockDataProvider {
 					if (downloadStockDataRealTime(stock) == RESULT_FAILED) {
 						return;
 					}
+
+					if (downloadStockRealTime(stock) == RESULT_FAILED) {
+						return;
+					}
 				} else if (Stock.CLASS_INDEX.equals(stock.getClasses())) {
 					setupIndex(stock);
 				} else {
@@ -511,7 +503,6 @@ public abstract class StockDataProvider {
 					mStockAnalyzer.analyze(stock);
 					sendBroadcast(Constant.ACTION_RESTART_LOADER, stock.getId());
 				}
-				mMessageHandled = true;
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {
