@@ -72,7 +72,6 @@ public abstract class StockDataProvider {
 	PowerManager.WakeLock mWakeLock;
 	LocalBroadcastManager mLocalBroadcastManager;
 
-	Thread mDownloadThread = null;
 	HandlerThread mHandlerThread;
 	ServiceHandler mHandler;
 
@@ -203,47 +202,20 @@ public abstract class StockDataProvider {
 			return;
 		}
 
-		if (mDownloadThread == null) {
-			mDownloadThread = new Thread(new Runnable() {
-				@Override
-				public void run() {
-					synchronized (StockDataProvider.class) {
-						mStockDatabaseManager.loadStockArrayMap(mStockArrayMap);
-//						if (mStockArrayMap.size() == 0) {
-//							downloadStockHSA();
-//							mStockDatabaseManager.loadStockArrayMap(mStockArrayMap);
-//						}
+		mStockDatabaseManager.loadStockArrayMap(mStockArrayMap);
 
-						if (Setting.getStockArrayMapIndex() > mStockArrayMap.size() - 1) {
-							Setting.setStockArrayMapIndex(0);
-						}
+		int index = -1;
+		for (Stock current : mStockArrayMap.values()) {
+			index++;
+			Log.d("index=" + index);
 
-						int index = -1;
-						for (Stock current : mStockArrayMap.values()) {
-							index++;
-							Log.d("index=" + index);
-							if (index < Setting.getStockArrayMapIndex()) {
-								Log.d("index < " + Setting.getStockArrayMapIndex() + " continue");
-								continue;
-							}
-
-							if (mHandler.hasMessages(Integer.valueOf(current.getCode()))) {
-								Log.d("mHandler.hasMessages " + Integer.valueOf(current.getCode()) + ", skip!");
-							} else {
-								Message msg = mHandler.obtainMessage(Integer.valueOf(current.getCode()), current);
-								mHandler.sendMessage(msg);
-								Log.d("mHandler.sendMessage " + msg);
-							}
-
-							Setting.setStockArrayMapIndex(index);
-						}
-
-						Setting.setStockArrayMapIndex(0);
-						mDownloadThread = null;
-					}
-				}
-			});
-			mDownloadThread.start();
+			if (mHandler.hasMessages(Integer.valueOf(current.getCode()))) {
+				Log.d("mHandler.hasMessages " + Integer.valueOf(current.getCode()) + ", skip!");
+			} else {
+				Message msg = mHandler.obtainMessage(Integer.valueOf(current.getCode()), current);
+				mHandler.sendMessage(msg);
+				Log.d("mHandler.sendMessage " + msg);
+			}
 		}
 	}
 
@@ -258,35 +230,33 @@ public abstract class StockDataProvider {
 
 		mStockDatabaseManager.loadStockArrayMap(mStockArrayMap);
 
-		synchronized (StockDataProvider.class) {
-			for (Stock current : mStockArrayMap.values()) {
-				if (current.getCode().equals(stock.getCode())) {
-					continue;
-				}
-
-				if (mHandler.hasMessages(Integer.valueOf(current.getCode()))) {
-					mHandler.removeMessages(Integer.valueOf(current.getCode()));
-					Log.d("mHandler.hasMessages " + Integer.valueOf(current.getCode()) + ", removed!");
-					mRemovedArrayMap.put(current.getCode(), current);
-				}
+		for (Stock current : mStockArrayMap.values()) {
+			if (current.getCode().equals(stock.getCode())) {
+				continue;
 			}
 
-			if (mHandler.hasMessages(Integer.valueOf(stock.getCode()))) {
-				Log.d("mHandler.hasMessages " + Integer.valueOf(stock.getCode()) + ", skip!");
+			if (mHandler.hasMessages(Integer.valueOf(current.getCode()))) {
+				mHandler.removeMessages(Integer.valueOf(current.getCode()));
+				Log.d("mHandler.hasMessages " + Integer.valueOf(current.getCode()) + ", removed!");
+				mRemovedArrayMap.put(current.getCode(), current);
+			}
+		}
+
+		if (mHandler.hasMessages(Integer.valueOf(stock.getCode()))) {
+			Log.d("mHandler.hasMessages " + Integer.valueOf(stock.getCode()) + ", skip!");
+		} else {
+			Message msg = mHandler.obtainMessage(Integer.valueOf(stock.getCode()), stock);
+			mHandler.sendMessage(msg);
+			Log.d("mHandler.sendMessage" + msg);
+		}
+
+		for (Stock current : mRemovedArrayMap.values()) {
+			if (mHandler.hasMessages(Integer.valueOf(current.getCode()))) {
+				Log.d("mHandler.hasMessages " + Integer.valueOf(current.getCode()) + ", skip!");
 			} else {
-				Message msg = mHandler.obtainMessage(Integer.valueOf(stock.getCode()), stock);
+				Message msg = mHandler.obtainMessage(Integer.valueOf(current.getCode()), current);
 				mHandler.sendMessage(msg);
-				Log.d("mHandler.sendMessage" + msg);
-			}
-
-			for (Stock current : mRemovedArrayMap.values()) {
-				if (mHandler.hasMessages(Integer.valueOf(current.getCode()))) {
-					Log.d("mHandler.hasMessages " + Integer.valueOf(current.getCode()) + ", skip!");
-				} else {
-					Message msg = mHandler.obtainMessage(Integer.valueOf(current.getCode()), current);
-					mHandler.sendMessage(msg);
-					Log.d("mHandler.sendMessage " + msg);
-				}
+				Log.d("mHandler.sendMessage " + msg);
 			}
 		}
 	}
@@ -307,15 +277,13 @@ public abstract class StockDataProvider {
 	void loadIndexComponentStockList(@NonNull Stock index, @NonNull ArrayList<Stock> stockList) {
 		mStockDatabaseManager.loadStockArrayMap(mStockArrayMap);
 
-		synchronized (StockDataProvider.class) {
-			String selection = DatabaseContract.COLUMN_INDEX_CODE + " = " + index.getCode();
-			mStockDatabaseManager.getIndexComponentList(mIndexComponentList, selection, null);
+		String selection = DatabaseContract.COLUMN_INDEX_CODE + " = " + index.getCode();
+		mStockDatabaseManager.getIndexComponentList(mIndexComponentList, selection, null);
 
-			stockList.clear();
-			for (IndexComponent indexComponent : mIndexComponentList) {
-				if (mStockArrayMap.containsKey(indexComponent.getCode())) {
-					stockList.add(mStockArrayMap.get(indexComponent.getCode()));
-				}
+		stockList.clear();
+		for (IndexComponent indexComponent : mIndexComponentList) {
+			if (mStockArrayMap.containsKey(indexComponent.getCode())) {
+				stockList.add(mStockArrayMap.get(indexComponent.getCode()));
 			}
 		}
 	}
