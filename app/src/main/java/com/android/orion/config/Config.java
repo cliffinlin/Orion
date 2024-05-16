@@ -17,6 +17,7 @@ public class Config {
 	public static final int SERVICE_NOTIFICATION_ID = 600000;
 
 	public static long alarmInterval = 5 * Constant.MINUTE_INTERVAL;
+	public static long backgroundTerminate = 1 * Constant.MINUTE_INTERVAL;
 	public static long wakelockTimeout = 10 * Constant.MINUTE_INTERVAL;
 
 	public static long downloadSleepInterval = 1 * Constant.SECOND_INTERVAL;
