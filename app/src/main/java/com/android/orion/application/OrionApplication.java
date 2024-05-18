@@ -58,7 +58,6 @@ public class OrionApplication extends Application {
 				Log.d("mActivityStartedCounter=" + mActivityStartedCounter);
 				if (mActivityStartedCounter > 0) {
 					mBackgroundTimeMillis = 0;
-					Log.d("mBackgroundTimeMillis=" + mBackgroundTimeMillis);
 				}
 			}
 
@@ -78,7 +77,6 @@ public class OrionApplication extends Application {
 				Log.d("mActivityStartedCounter=" + mActivityStartedCounter);
 				if (mActivityStartedCounter == 0) {
 					mBackgroundTimeMillis = System.currentTimeMillis();
-					Log.d("mBackgroundTimeMillis=" + mBackgroundTimeMillis);
 				}
 			}
 
@@ -125,10 +123,7 @@ public class OrionApplication extends Application {
 	public void onBackground() {
 		if (mActivityStartedCounter == 0) {
 			Log.d("mActivityStartedCounter=" + mActivityStartedCounter);
-			if (System.currentTimeMillis() - mBackgroundTimeMillis > Config.backgroundTerminate) {
-				Log.d("System.currentTimeMillis() - mBackgroundTimeMillis > " + Config.backgroundTerminate);
-				onTerminate();
-			}
+			onTerminate();
 		}
 	}
 }
