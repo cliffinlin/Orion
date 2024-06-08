@@ -3,6 +3,7 @@ package com.android.orion.receiver;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 
 import com.android.orion.application.OrionApplication;
 import com.android.orion.service.OrionService;
@@ -22,7 +23,7 @@ public class DownloadBroadcastReceiver extends BroadcastReceiver {
 		if (Market.isTradingHours(Calendar.getInstance())) {
 			OrionService.getInstance().download();
 		} else {
-			if (intent.getAction().equals(Intent.ACTION_TIME_TICK)) {
+			if (TextUtils.equals(intent.getAction(), Intent.ACTION_TIME_TICK)) {
 				OrionApplication.getInstance().onBackground();
 			}
 		}
