@@ -258,7 +258,7 @@ public class StockTrendListActivity extends ListActivity implements
 				break;
 		}
 
-		if (mSortOrderDirection.equals(DatabaseContract.ORDER_DIRECTION_ASC)) {
+		if (TextUtils.equals(mSortOrderDirection, DatabaseContract.ORDER_DIRECTION_ASC)) {
 			mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_DESC;
 		} else {
 			mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_ASC;
@@ -435,7 +435,7 @@ public class StockTrendListActivity extends ListActivity implements
 
 		switch (id) {
 			case LOADER_ID_STOCK_TREND_LIST:
-				if (ACTION_STOCK_TREND_LIST.equals(mIntent.getAction())) {
+				if (TextUtils.equals(mIntent.getAction(), ACTION_STOCK_TREND_LIST)) {
 					long stockId = getIntent().getLongExtra(Constant.EXTRA_STOCK_ID,
 							Stock.INVALID_ID);
 					selection = "(" + DatabaseContract.COLUMN_STOCK_ID + " = " + stockId + ") "
@@ -514,7 +514,7 @@ public class StockTrendListActivity extends ListActivity implements
 			return;
 		}
 
-		if (ACTION_STOCK_ID.equals(mAction)) {
+		if (TextUtils.equals(mAction, ACTION_STOCK_ID)) {
 			if (mIntent != null) {
 				mIntent.putExtra(Constant.EXTRA_STOCK_ID, id);
 				setResult(RESULT_OK, mIntent);
@@ -560,17 +560,17 @@ public class StockTrendListActivity extends ListActivity implements
 
 		TextView textView = (TextView) view;
 		String text = textView.getText().toString();
-		if (TextUtils.isEmpty(text) || text.equals("0")) {
+		if (TextUtils.isEmpty(text) || TextUtils.equals(text, "0")) {
 			return false;
 		}
 
-		if (key.equals(DatabaseContract.COLUMN_NATURAL_RALLY)) {
+		if (TextUtils.equals(key, DatabaseContract.COLUMN_NATURAL_RALLY)) {
 			textView.setTextColor(Color.BLUE);
-		} else if (key.equals(DatabaseContract.COLUMN_UPWARD_TREND)) {
+		} else if (TextUtils.equals(key, DatabaseContract.COLUMN_UPWARD_TREND)) {
 			textView.setTextColor(Color.RED);
-		} else if (key.equals(DatabaseContract.COLUMN_DOWNWARD_TREND)) {
+		} else if (TextUtils.equals(key, DatabaseContract.COLUMN_DOWNWARD_TREND)) {
 			textView.setTextColor(Color.GREEN);
-		} else if (key.equals(DatabaseContract.COLUMN_NATURAL_REACTION)) {
+		} else if (TextUtils.equals(key, DatabaseContract.COLUMN_NATURAL_REACTION)) {
 			textView.setTextColor(Color.YELLOW);
 		}
 

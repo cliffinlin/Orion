@@ -105,12 +105,12 @@ public class Search {
 			return stockData;
 		}
 
-		if (dateTimeString.equals(stockDataList
+		if (TextUtils.equals(dateTimeString, stockDataList
 				.get(0).getDateTime())) {
 			return stockDataList.get(0);
 		}
 
-		if (dateTimeString.equals(stockDataList
+		if (TextUtils.equals(dateTimeString, stockDataList
 				.get(stockDataList.size() - 1).getDateTime())) {
 			return stockDataList.get(stockDataList.size() - 1);
 		}

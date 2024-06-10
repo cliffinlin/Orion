@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -298,7 +299,7 @@ public class StockFinancialListActivity extends ListActivity implements
 				break;
 		}
 
-		if (mSortOrderDirection.equals(DatabaseContract.ORDER_DIRECTION_ASC)) {
+		if (TextUtils.equals(mSortOrderDirection, DatabaseContract.ORDER_DIRECTION_ASC)) {
 			mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_DESC;
 		} else {
 			mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_ASC;
@@ -763,7 +764,7 @@ public class StockFinancialListActivity extends ListActivity implements
 			return;
 		}
 
-		if (ACTION_STOCK_ID.equals(mAction)) {
+		if (TextUtils.equals(mAction, ACTION_STOCK_ID)) {
 			if (mIntent != null) {
 				mIntent.putExtra(Constant.EXTRA_STOCK_ID, id);
 				setResult(RESULT_OK, mIntent);

@@ -1,6 +1,7 @@
 package com.android.orion.utility;
 
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.android.orion.config.Config;
@@ -44,11 +45,11 @@ public class Logger {
 				continue;
 			}
 
-			if (st.getClassName().equals(Thread.class.getName())) {
+			if (TextUtils.equals(st.getClassName(), Thread.class.getName())) {
 				continue;
 			}
 
-			if (st.getClassName().equals(this.getClass().getName())) {
+			if (TextUtils.equals(st.getClassName(), this.getClass().getName())) {
 				continue;
 			}
 

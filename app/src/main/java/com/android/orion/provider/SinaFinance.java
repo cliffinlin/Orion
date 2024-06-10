@@ -89,25 +89,25 @@ public class SinaFinance extends StockDataProvider {
 	}
 
 	public int getAvailableHistoryLength(String period) {
-		if (period.equals(DatabaseContract.COLUMN_MIN1)) {
+		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN1)) {
 			return DOWNLOAD_HISTORY_LENGTH_NONE;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN5)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
 			return DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN5;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN15)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
 			return DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN15;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN30)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN30)) {
 			return DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN30;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN60)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN60)) {
 			return DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN60;
-		} else if (period.equals(DatabaseContract.COLUMN_DAY)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_DAY)) {
 			return DOWNLOAD_HISTORY_LENGTH_UNLIMITED;
-		} else if (period.equals(DatabaseContract.COLUMN_WEEK)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_WEEK)) {
 			return DOWNLOAD_HISTORY_LENGTH_UNLIMITED;
-		} else if (period.equals(DatabaseContract.COLUMN_MONTH)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
 			return DOWNLOAD_HISTORY_LENGTH_UNLIMITED;
-		} else if (period.equals(DatabaseContract.COLUMN_QUARTER)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_QUARTER)) {
 			return DOWNLOAD_HISTORY_LENGTH_NONE;
-		} else if (period.equals(DatabaseContract.COLUMN_YEAR)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_YEAR)) {
 			return DOWNLOAD_HISTORY_LENGTH_NONE;
 		} else {
 		}
@@ -309,9 +309,9 @@ public class SinaFinance extends StockDataProvider {
 					}
 				}
 			} else if (Market.isLunchTime(Calendar.getInstance())) {
-				if (period.equals(DatabaseContract.COLUMN_MONTH)
-						|| period.equals(DatabaseContract.COLUMN_WEEK)
-						|| period.equals(DatabaseContract.COLUMN_DAY)) {
+				if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)
+						|| TextUtils.equals(period, DatabaseContract.COLUMN_WEEK)
+						|| TextUtils.equals(period, DatabaseContract.COLUMN_DAY)) {
 					if (Market.isOutOfDateToday(stockData.getDate())) {
 						result = 1;
 					}
@@ -407,7 +407,7 @@ public class SinaFinance extends StockDataProvider {
 				String resultString = response.body().string();
 				if (isAccessDenied(resultString)) {
 					return RESULT_FAILED;
-				} else if (TextUtils.isEmpty(resultString) || resultString.equals("[]")) {
+				} else if (TextUtils.isEmpty(resultString) || TextUtils.equals(resultString, "[]")) {
 					return RESULT_NONE;
 				} else {
 					result = RESULT_SUCCESS;
@@ -482,7 +482,7 @@ public class SinaFinance extends StockDataProvider {
 					stock.setClasses(Stock.CLASS_A);
 
 					nameChanged = false;
-					if (!stock.getName().equals(jsonObject.getString("name"))) {
+					if (!TextUtils.equals(stock.getName(), jsonObject.getString("name"))) {
 						nameChanged = true;
 						stock.setName(jsonObject.getString("name"));
 					}
@@ -607,8 +607,8 @@ public class SinaFinance extends StockDataProvider {
 				return;
 			}
 
-			if (!stock.getSE().equals(codeInfo[2].substring(0, 2))
-					|| !stock.getCode().equals(codeInfo[2].substring(2, 8))) {
+			if (!TextUtils.equals(stock.getSE(), codeInfo[2].substring(0, 2))
+					|| !TextUtils.equals(stock.getCode(), codeInfo[2].substring(2, 8))) {
 				Log.d("return, ...");
 				return;
 			}
@@ -738,8 +738,8 @@ public class SinaFinance extends StockDataProvider {
 				return;
 			}
 
-			if (!stock.getSE().equals(codeInfo[3].substring(0, 2))
-					|| !stock.getCode().equals(codeInfo[3].substring(2, 8))) {
+			if (!TextUtils.equals(stock.getSE(), codeInfo[3].substring(0, 2))
+					|| !TextUtils.equals(stock.getCode(), codeInfo[3].substring(2, 8))) {
 				Log.d("return, ...");
 				return;
 			}
@@ -758,7 +758,7 @@ public class SinaFinance extends StockDataProvider {
 				return;
 			}
 
-			if (!stock.getName().equals(stockInfo[0])) {
+			if (!TextUtils.equals(stock.getName(), stockInfo[0])) {
 				stock.setName(stockInfo[0]);
 			}
 
@@ -1208,7 +1208,7 @@ public class SinaFinance extends StockDataProvider {
 
 		for (String period : DatabaseContract.PERIODS) {
 			if (Preferences.getBoolean(period, false)) {
-				if (DatabaseContract.COLUMN_DAY.equals(period)) {
+				if (TextUtils.equals(period, DatabaseContract.COLUMN_DAY)) {
 					result = downloadStockDataRealTime(stock, period);
 				}
 			}
@@ -1537,29 +1537,29 @@ public class SinaFinance extends StockDataProvider {
 						continue;
 					}
 
-					if (keyString.equals("BIZINCO") || keyString.equals("BIZTOTINCO")) {//营业总收入
+					if (TextUtils.equals(keyString, "BIZINCO") || TextUtils.equals(keyString, "BIZTOTINCO")) {//营业总收入
 						stockFinancial.setMainBusinessIncome(Double
 								.valueOf(valueString));
-					} else if (keyString.equals("BIZEXPE") || keyString.equals("BIZTOTCOST")) {//营业成本
+					} else if (TextUtils.equals(keyString, "BIZEXPE") || TextUtils.equals(keyString, "BIZTOTCOST")) {//营业成本
 						stockFinancial.setFinancialExpenses(Double
 								.valueOf(valueString));
-					} else if (keyString.equals("NETPROFIT")) {//净利润
-//					} else if (keyString.equals("NETPARECOMPPROF") || keyString.equals("NETPARESHARPROF") || keyString.equals("PARENETP")) {//归母净利润
+					} else if (TextUtils.equals(keyString, "NETPROFIT")) {//净利润
+//					} else if (TextUtils.equals(keyString, "NETPARECOMPPROF") || TextUtils.equals(keyString, "NETPARESHARPROF") || TextUtils.equals(keyString, "PARENETP")) {//归母净利润
 						stockFinancial.setNetProfit(Double
 								.valueOf(valueString));
-					} else if (keyString.equals("NAPS")) {//每股净资产
+					} else if (TextUtils.equals(keyString, "NAPS")) {//每股净资产
 						stockFinancial.setBookValuePerShare(Double
 								.valueOf(valueString));
-					} else if (keyString.equals("OPNCFPS")) {//每股现金流
+					} else if (TextUtils.equals(keyString, "OPNCFPS")) {//每股现金流
 						stockFinancial.setCashFlowPerShare(Double
 								.valueOf(valueString));
-					} else if (keyString.equals(mContext.getResources().getString(R.string.key_total_current_assets))) {
+					} else if (TextUtils.equals(keyString, mContext.getResources().getString(R.string.key_total_current_assets))) {
 						stockFinancial.setTotalCurrentAssets(Double
 								.valueOf(valueString));
-					} else if (keyString.equals(mContext.getResources().getString(R.string.key_total_assets))) {
+					} else if (TextUtils.equals(keyString, mContext.getResources().getString(R.string.key_total_assets))) {
 						stockFinancial.setTotalAssets(Double
 								.valueOf(valueString));
-					} else if (keyString.equals("ASSLIABRT")) {//资产负债率
+					} else if (TextUtils.equals(keyString, "ASSLIABRT")) {//资产负债率
 						stockFinancial
 								.setDebtToNetAssetsRatio(Double
 										.valueOf(valueString));

@@ -64,7 +64,7 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 
 		initView();
 
-		if (ACTION_STOCK_EDIT.equals(mAction)) {
+		if (TextUtils.equals(mAction, ACTION_STOCK_EDIT)) {
 			mRadioGroupClass.setEnabled(false);
 			mRadioGroupSE.setEnabled(false);
 			mEditTextStockCode.setEnabled(false);
@@ -134,7 +134,7 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
 									  int count) {
-				if (ACTION_STOCK_EDIT.equals(mAction)) {
+				if (TextUtils.equals(mAction, ACTION_STOCK_EDIT)) {
 					return;
 				}
 
@@ -153,9 +153,9 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 			}
 		});
 
-		if (ACTION_INDEX_COMPONENT_INSERT.equals(mAction) || ACTION_FAVORITE_STOCK_INSERT.equals(mAction)) {
+		if (TextUtils.equals(mAction, ACTION_INDEX_COMPONENT_INSERT) || TextUtils.equals(mAction, ACTION_FAVORITE_STOCK_INSERT)) {
 			setTitle(R.string.stock_insert);
-		} else if (ACTION_STOCK_EDIT.equals(mAction)) {
+		} else if (TextUtils.equals(mAction, ACTION_STOCK_EDIT)) {
 			setTitle(R.string.stock_edit);
 		}
 	}
@@ -163,13 +163,13 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 	void updateView() {
 		mCheckBoxFavorite.setChecked(mStock.hasFlag(Stock.FLAG_FAVORITE));
 
-		if (mStock.getClasses().equals(Stock.CLASS_A)) {
+		if (TextUtils.equals(mStock.getClasses(), Stock.CLASS_A)) {
 			mRadioGroupClass.check(R.id.radio_class_hsa);
 		} else {
 			mRadioGroupClass.check(R.id.radio_class_index);
 		}
 
-		if (mStock.getSE().equals(Stock.SE_SH)) {
+		if (TextUtils.equals(mStock.getSE(), Stock.SE_SH)) {
 			mRadioGroupSE.check(R.id.radio_se_sh);
 		} else {
 			mRadioGroupSE.check(R.id.radio_se_sz);
@@ -182,7 +182,7 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 
 		String operate = mStock.getOperate();
 		for (int i = 0; i < mListStockOperate.size(); i++) {
-			if (mListStockOperate.get(i).equals(operate)) {
+			if (TextUtils.equals(mListStockOperate.get(i), operate)) {
 				mSpinnerStockAcion.setSelection(i);
 				break;
 			}
@@ -234,7 +234,7 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 				onCheckBoxFavoriteChanged();
 
 				operate = mSpinnerStockAcion.getSelectedItem().toString();
-				if (!operate.equals(mStockOperate)) {
+				if (!TextUtils.equals(operate, mStockOperate)) {
 					operateChanged = true;
 					mStockOperate = operate;
 					mStock.setOperate(mStockOperate);
@@ -292,14 +292,14 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 					mStockDatabaseManager.deleteStockQuant(mStock);
 				}
 
-				if (ACTION_FAVORITE_STOCK_INSERT.equals(mAction) || ACTION_INDEX_COMPONENT_INSERT.equals(mAction)) {
+				if (TextUtils.equals(mAction, ACTION_FAVORITE_STOCK_INSERT) || TextUtils.equals(mAction, ACTION_INDEX_COMPONENT_INSERT)) {
 					if (!mStockDatabaseManager.isStockExist(mStock)) {
 						mStock.setCreated(Utility.getCurrentDateTimeString());
 						Uri uri = mStockDatabaseManager.insertStock(mStock);
 
 						mStockDatabaseManager.getStock(uri, mStock);
 
-						if (ACTION_INDEX_COMPONENT_INSERT.equals(mAction)) {
+						if (TextUtils.equals(mAction, ACTION_INDEX_COMPONENT_INSERT)) {
 							IndexComponent indexComponent = new IndexComponent();
 
 							indexComponent.setSE(mStock.getSE());
@@ -318,7 +318,7 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 						Toast.makeText(mContext, R.string.stock_exist,
 								Toast.LENGTH_LONG).show();
 					}
-				} else if (ACTION_STOCK_EDIT.equals(mAction)) {
+				} else if (TextUtils.equals(mAction, ACTION_STOCK_EDIT)) {
 					mStock.setModified(Utility.getCurrentDateTimeString());
 					mStockDatabaseManager.updateStock(mStock,
 							mStock.getContentValuesForEdit());
@@ -348,7 +348,7 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 
 		operate = mSpinnerStockAcion.getSelectedItem().toString();
 		if (!TextUtils.isEmpty(operate)) {
-			if (!operate.equals(mStock.getOperate())) {
+			if (!TextUtils.equals(operate, mStock.getOperate())) {
 				mStock.setOperate(operate);
 			}
 		}

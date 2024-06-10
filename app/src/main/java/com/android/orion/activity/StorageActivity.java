@@ -228,21 +228,21 @@ public class StorageActivity extends DatabaseActivity {
 				switch (eventType) {
 					case XmlPullParser.START_TAG:
 						tagName = parser.getName();
-						if (XML_TAG_STOCK.equals(tagName)) {
+						if (TextUtils.equals(tagName, XML_TAG_STOCK)) {
 							parseType = XML_PARSE_TYPE_STOCK;
 
 							stock = new Stock();
 
 							indexComponentArrayList.clear();
 							stockDealArrayList.clear();
-						} else if (XML_TAG_STOCK_DEAL.equals(tagName)) {
+						} else if (TextUtils.equals(tagName, XML_TAG_STOCK_DEAL)) {
 							parseType = XML_PARSE_TYPE_STOCK_DEAL;
 
 							stockDeal = new StockDeal();
 							stockDeal.setSE(stock.getSE());
 							stockDeal.setCode(stock.getCode());
 							stockDeal.setName(stock.getName());
-						} else if (XML_TAG_INDEX_COMPONENT.equals(tagName)) {
+						} else if (TextUtils.equals(tagName, XML_TAG_INDEX_COMPONENT)) {
 							parseType = XML_PARSE_TYPE_INDEX_COMPONENT;
 
 							indexComponent = new IndexComponent();
@@ -250,52 +250,52 @@ public class StorageActivity extends DatabaseActivity {
 							indexComponent.setIndexCode(stock.getCode());
 							indexComponent.setIndexName(stock.getName());
 						} else if (parseType == XML_PARSE_TYPE_STOCK) {
-							if (DatabaseContract.COLUMN_CLASSES.equals(tagName)) {
+							if (TextUtils.equals(tagName, DatabaseContract.COLUMN_CLASSES)) {
 								stock.setClasses(parser.nextText());
-							} else if (DatabaseContract.COLUMN_SE.equals(tagName)) {
+							} else if (TextUtils.equals(tagName, DatabaseContract.COLUMN_SE)) {
 								stock.setSE(parser.nextText());
-							} else if (DatabaseContract.COLUMN_CODE.equals(tagName)) {
+							} else if (TextUtils.equals(tagName, DatabaseContract.COLUMN_CODE)) {
 								stock.setCode(parser.nextText());
-							} else if (DatabaseContract.COLUMN_NAME.equals(tagName)) {
+							} else if (TextUtils.equals(tagName, DatabaseContract.COLUMN_NAME)) {
 								stock.setName(parser.nextText());
-							} else if (DatabaseContract.COLUMN_FLAG.equals(tagName)) {
+							} else if (TextUtils.equals(tagName, DatabaseContract.COLUMN_FLAG)) {
 								stock.setFlag(Integer.valueOf(parser.nextText()));
-							} else if (DatabaseContract.COLUMN_OPERATE.equals(tagName)) {
+							} else if (TextUtils.equals(tagName, DatabaseContract.COLUMN_OPERATE)) {
 								stock.setOperate(parser.nextText());
-							} else if (DatabaseContract.COLUMN_THRESHOLD.equals(tagName)) {
+							} else if (TextUtils.equals(tagName, DatabaseContract.COLUMN_THRESHOLD)) {
 								stock.setThreshold(Double.valueOf(parser.nextText()));
-							} else if (DatabaseContract.COLUMN_QUANT_VOLUME.equals(tagName)) {
+							} else if (TextUtils.equals(tagName, DatabaseContract.COLUMN_QUANT_VOLUME)) {
 								stock.setQuantVolume(Long.valueOf(parser.nextText()));
 							}
 						} else if (parseType == XML_PARSE_TYPE_STOCK_DEAL) {
-							if (DatabaseContract.COLUMN_BUY.equals(tagName)) {
+							if (TextUtils.equals(tagName, DatabaseContract.COLUMN_BUY)) {
 								stockDeal.setBuy(Double.valueOf(parser.nextText()));
-							} else if (DatabaseContract.COLUMN_SELL.equals(tagName)) {
+							} else if (TextUtils.equals(tagName, DatabaseContract.COLUMN_SELL)) {
 								stockDeal.setSell(Double.valueOf(parser.nextText()));
-							} else if (DatabaseContract.COLUMN_VOLUME.equals(tagName)) {
+							} else if (TextUtils.equals(tagName, DatabaseContract.COLUMN_VOLUME)) {
 								stockDeal.setVolume(Long.valueOf(parser.nextText()));
-							} else if (DatabaseContract.COLUMN_ACCOUNT.equals(tagName)) {
+							} else if (TextUtils.equals(tagName, DatabaseContract.COLUMN_ACCOUNT)) {
 								stockDeal.setAccount(parser.nextText());
-							} else if (DatabaseContract.COLUMN_ACTION.equals(tagName)) {
+							} else if (TextUtils.equals(tagName, DatabaseContract.COLUMN_ACTION)) {
 								stockDeal.setAction(parser.nextText());
-							} else if (DatabaseContract.COLUMN_CREATED.equals(tagName)) {
+							} else if (TextUtils.equals(tagName, DatabaseContract.COLUMN_CREATED)) {
 								stockDeal.setCreated(parser.nextText());
-							} else if (DatabaseContract.COLUMN_MODIFIED.equals(tagName)) {
+							} else if (TextUtils.equals(tagName, DatabaseContract.COLUMN_MODIFIED)) {
 								stockDeal.setModified(parser.nextText());
 							}
 						} else if (parseType == XML_PARSE_TYPE_INDEX_COMPONENT) {
-							if (DatabaseContract.COLUMN_SE.equals(tagName)) {
+							if (TextUtils.equals(tagName, DatabaseContract.COLUMN_SE)) {
 								indexComponent.setSE(parser.nextText());
-							} else if (DatabaseContract.COLUMN_CODE.equals(tagName)) {
+							} else if (TextUtils.equals(tagName, DatabaseContract.COLUMN_CODE)) {
 								indexComponent.setCode(parser.nextText());
-							} else if (DatabaseContract.COLUMN_NAME.equals(tagName)) {
+							} else if (TextUtils.equals(tagName, DatabaseContract.COLUMN_NAME)) {
 								indexComponent.setName(parser.nextText());
 							}
 						}
 						break;
 					case XmlPullParser.END_TAG:
 						tagName = parser.getName();
-						if (XML_TAG_STOCK.equals(tagName)) {
+						if (TextUtils.equals(tagName, XML_TAG_STOCK)) {
 							parseType = XML_PARSE_TYPE_NONE;
 
 							mStockDatabaseManager.getStock(stock);
@@ -331,11 +331,11 @@ public class StorageActivity extends DatabaseActivity {
 
 								mStockDatabaseManager.bulkInsertIndexComponent(contentValues);
 							}
-						} else if (XML_TAG_STOCK_DEAL.equals(tagName)) {
+						} else if (TextUtils.equals(tagName, XML_TAG_STOCK_DEAL)) {
 							parseType = XML_PARSE_TYPE_NONE;
 
 							stockDealArrayList.add(stockDeal);
-						} else if (XML_TAG_INDEX_COMPONENT.equals(tagName)) {
+						} else if (TextUtils.equals(tagName, XML_TAG_INDEX_COMPONENT)) {
 							parseType = XML_PARSE_TYPE_NONE;
 
 							indexComponentArrayList.add(indexComponent);

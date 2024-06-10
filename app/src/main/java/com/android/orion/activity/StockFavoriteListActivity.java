@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -235,7 +236,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 				break;
 		}
 
-		if (mSortOrderDirection.equals(DatabaseContract.ORDER_DIRECTION_ASC)) {
+		if (TextUtils.equals(mSortOrderDirection, DatabaseContract.ORDER_DIRECTION_ASC)) {
 			mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_DESC;
 		} else {
 			mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_ASC;
@@ -535,7 +536,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 			return;
 		}
 
-		if (ACTION_STOCK_ID.equals(mAction)) {
+		if (TextUtils.equals(mAction, ACTION_STOCK_ID)) {
 			if (mIntent != null) {
 				mIntent.putExtra(Constant.EXTRA_STOCK_ID, id);
 				setResult(RESULT_OK, mIntent);
@@ -546,7 +547,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 				mStock.setId(id);
 				mStockDatabaseManager.getStockById(mStock);
 
-				if (Stock.CLASS_INDEX.equals(mStock.getClasses())) {
+				if (TextUtils.equals(mStock.getClasses(), Stock.CLASS_INDEX)) {
 					Intent intent = new Intent(mContext,
 							IndexComponentListActivity.class);
 					intent.putExtra(Constant.EXTRA_INDEX_CODE, String.valueOf(mStock.getCode()));

@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
+import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -100,7 +101,7 @@ public class BaseActivity extends Activity {
 			if (mResumed) {
 				String action = intent.getAction();
 
-				if (Constant.ACTION_RESTART_LOADER.equals(action)) {
+				if (TextUtils.equals(action, Constant.ACTION_RESTART_LOADER)) {
 					restartLoader(intent);
 				}
 			}

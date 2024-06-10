@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.provider.BaseColumns;
+import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.view.ActionMode;
 import android.view.Menu;
@@ -384,7 +385,7 @@ public class StockQuantDealListActivity extends ListActivity implements
 				break;
 		}
 
-		if (mSortOrderDirection.equals(DatabaseContract.ORDER_DIRECTION_ASC)) {
+		if (TextUtils.equals(mSortOrderDirection, DatabaseContract.ORDER_DIRECTION_ASC)) {
 			mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_DESC;
 		} else {
 			mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_ASC;

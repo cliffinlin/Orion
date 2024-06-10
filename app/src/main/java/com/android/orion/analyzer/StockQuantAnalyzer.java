@@ -2,6 +2,7 @@ package com.android.orion.analyzer;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
@@ -77,7 +78,7 @@ public class StockQuantAnalyzer {
 	}
 
 	void setupStockQuantBuy(Stock stock, StockData stockData, double price) {
-		if (stockData.getDate().equals(mBuyDate)) {
+		if (TextUtils.equals(stockData.getDate(), mBuyDate)) {
 			return;
 		}
 
@@ -139,7 +140,7 @@ public class StockQuantAnalyzer {
 	void setupStockQuantSell(Stock stock, StockData stockData, double price) {
 		StockQuant stockQuant;
 
-		if (stockData.getDate().equals(mSellDate)) {
+		if (TextUtils.equals(mSellDate, stockData.getDate())) {
 			return;
 		}
 
@@ -147,7 +148,7 @@ public class StockQuantAnalyzer {
 			stockQuant = mBuyList.get(0);
 
 			if (mHold == stock.getQuantVolume()) {
-				if (stockData.getDate().equals(stockQuant.getCreated().split(" ")[0])) {
+				if (TextUtils.equals(stockData.getDate(), stockQuant.getCreated().split(" ")[0])) {
 					return;
 				}
 			}

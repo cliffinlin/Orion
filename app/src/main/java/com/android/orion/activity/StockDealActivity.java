@@ -81,11 +81,11 @@ public class StockDealActivity extends DatabaseActivity implements
 					break;
 
 				case MESSAGE_SAVE_DEAL:
-					if (ACTION_DEAL_INSERT.equals(mAction)) {
+					if (TextUtils.equals(mAction, ACTION_DEAL_INSERT)) {
 						mDeal.setCreated(Utility.getCurrentDateTimeString());
 						RecordFile.writeDealFile(mStock, mDeal, Constant.DEAL_OPERATE_INSERT);
 						mStockDatabaseManager.insertStockDeal(mDeal);
-					} else if (ACTION_DEAL_EDIT.equals(mAction)) {
+					} else if (TextUtils.equals(mAction, ACTION_DEAL_EDIT)) {
 						mDeal.setModified(Utility.getCurrentDateTimeString());
 						RecordFile.writeDealFile(mStock, mDeal, Constant.DEAL_OPERATE_EDIT);
 						mStockDatabaseManager.updateStockDealByID(mDeal);
@@ -137,13 +137,13 @@ public class StockDealActivity extends DatabaseActivity implements
 
 		initView();
 
-		if (ACTION_DEAL_INSERT.equals(mAction)) {
+		if (TextUtils.equals(mAction, ACTION_DEAL_INSERT)) {
 			if (mBundle != null) {
 				mStock.setSE(mBundle.getString(Constant.EXTRA_STOCK_SE));
 				mStock.setCode(mBundle.getString(Constant.EXTRA_STOCK_CODE));
 				mHandler.sendEmptyMessage(MESSAGE_LOAD_STOCK_BY_SE_CODE);
 			}
-		} else if (ACTION_DEAL_EDIT.equals(mAction)) {
+		} else if (TextUtils.equals(mAction, ACTION_DEAL_EDIT)) {
 			mDeal.setId(mIntent.getLongExtra(EXTRA_DEAL_ID, 0));
 			mHandler.sendEmptyMessage(MESSAGE_LOAD_DEAL);
 		}
@@ -208,10 +208,10 @@ public class StockDealActivity extends DatabaseActivity implements
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		mSpinnerStockOperate.setAdapter(mArrayAdapterStockOperate);
 
-		if (ACTION_DEAL_INSERT.equals(mAction)) {
+		if (TextUtils.equals(mAction, ACTION_DEAL_INSERT)) {
 			setTitle(R.string.deal_insert);
 			mDeal.setAction(DatabaseContract.COLUMN_DAY);
-		} else if (ACTION_DEAL_EDIT.equals(mAction)) {
+		} else if (TextUtils.equals(mAction, ACTION_DEAL_EDIT)) {
 			setTitle(R.string.deal_edit);
 		}
 
@@ -231,7 +231,7 @@ public class StockDealActivity extends DatabaseActivity implements
 				String volumeString = s.toString();
 				long volume = 0;
 				if (!TextUtils.isEmpty(volumeString)) {
-					if (volumeString.equals("+") || volumeString.equals("-")) {
+					if (TextUtils.equals(volumeString, "+") || TextUtils.equals(volumeString, "-")) {
 						return;
 					}
 
@@ -256,7 +256,7 @@ public class StockDealActivity extends DatabaseActivity implements
 	void updateView() {
 		String stockAccount = mDeal.getAccount();
 		for (int i = 0; i < mListStockAccount.size(); i++) {
-			if (mListStockAccount.get(i).equals(stockAccount)) {
+			if (TextUtils.equals(mListStockAccount.get(i), stockAccount)) {
 				mSpinnerStockAccount.setSelection(i);
 				break;
 			}
@@ -269,7 +269,7 @@ public class StockDealActivity extends DatabaseActivity implements
 		mEditTextDealVolume.setText(String.valueOf(mDeal.getVolume()));
 		String dealAction = mDeal.getAction();
 		for (int i = 0; i < mListStockOperate.size(); i++) {
-			if (mListStockOperate.get(i).equals(dealAction)) {
+			if (TextUtils.equals(mListStockOperate.get(i), dealAction)) {
 				mSpinnerStockOperate.setSelection(i);
 				break;
 			}
@@ -301,7 +301,7 @@ public class StockDealActivity extends DatabaseActivity implements
 		switch (id) {
 			case R.id.edittext_stock_name:
 			case R.id.edittext_stock_code:
-				if (ACTION_DEAL_INSERT.equals(mAction)) {
+				if (TextUtils.equals(ACTION_DEAL_INSERT, mAction)) {
 					Intent intent = new Intent(this, StockFavoriteListActivity.class);
 					intent.setAction(StockFavoriteListActivity.ACTION_STOCK_ID);
 					startActivityForResult(intent, REQUEST_CODE_STOCK_ID);

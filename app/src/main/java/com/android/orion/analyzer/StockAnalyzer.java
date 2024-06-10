@@ -147,7 +147,7 @@ public class StockAnalyzer {
 	private void analyzeStockFinancial(Stock stock) {
 		String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
 
-		if (Stock.CLASS_INDEX.equals(stock.getClasses())) {
+		if (TextUtils.equals(stock.getClasses(), Stock.CLASS_INDEX)) {
 			return;
 		}
 
@@ -377,7 +377,7 @@ public class StockAnalyzer {
 		String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
 		StockFinancial stockFinancial = new StockFinancial();
 
-		if (Stock.CLASS_INDEX.equals(stock.getClasses())) {
+		if (TextUtils.equals(stock.getClasses(), Stock.CLASS_INDEX)) {
 			return;
 		}
 
@@ -415,7 +415,7 @@ public class StockAnalyzer {
 		String prevYearString = "";
 		String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
 
-		if (Stock.CLASS_INDEX.equals(stock.getClasses())) {
+		if (TextUtils.equals(stock.getClasses(), Stock.CLASS_INDEX)) {
 			return;
 		}
 
@@ -567,7 +567,7 @@ public class StockAnalyzer {
 
 		analyzeAction(stock, period, stockDataList, drawVertexList, drawDataList, strokeDataList, segmentDataList);
 
-		if (period.equals(stock.getOperate())) {
+		if (TextUtils.equals(period, stock.getOperate())) {
 			mStockDatabaseManager.getShareBonusList(stock, mShareBonusList,
 					DatabaseContract.COLUMN_DATE + " DESC ");
 			stockQuantAnalyzer.analyze(mContext, stock, stockDataList, mShareBonusList);
@@ -824,14 +824,14 @@ public class StockAnalyzer {
 			}
 		}
 
-		if (period.equals(stock.getOperate())) {
+		if (TextUtils.equals(period, stock.getOperate())) {
 			action += StockData.ACTION_STAR;
 		}
 
 		stock.setDateTime(stockData.getDate(), stockData.getTime());
 		stock.setAction(period, action + stockData.getAction());
 
-		if (DatabaseContract.COLUMN_DAY.equals(period)) {
+		if (TextUtils.equals(period, DatabaseContract.COLUMN_DAY)) {
 			stock.setTrend(trendString);
 		}
 	}

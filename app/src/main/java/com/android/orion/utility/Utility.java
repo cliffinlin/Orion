@@ -621,7 +621,7 @@ public class Utility {
 
 	public static <E extends Enum<E>> boolean isInEnum(String value, Class<E> enumClass) {
 		for (E e : enumClass.getEnumConstants()) {
-			if (e.name().equals(value)) {
+			if (TextUtils.equals(e.name(), value)) {
 				return true;
 			}
 		}
@@ -640,7 +640,7 @@ public class Utility {
 		}
 
 		for (int i = 0; i < strings.length; i++) {
-			if (value.equals(strings[i])) {
+			if (TextUtils.equals(value, strings[i])) {
 				result = i;
 				break;
 			}
@@ -917,8 +917,8 @@ public class Utility {
 
 	private void writeSdcard() {
 		String text = "";
-		if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-			if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+		if (TextUtils.equals(Environment.getExternalStorageState(), Environment.MEDIA_MOUNTED)) {
+			if (TextUtils.equals(Environment.getExternalStorageState(), Environment.MEDIA_MOUNTED)) {
 				File storage = Environment.getExternalStorageDirectory();
 				File tmepfile = new File(storage.getPath());
 				if (!tmepfile.exists()) {
@@ -952,8 +952,8 @@ public class Utility {
 	}
 
 	private void readSdcard() {
-		if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-			if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+		if (TextUtils.equals(Environment.getExternalStorageState(), Environment.MEDIA_MOUNTED)) {
+			if (TextUtils.equals(Environment.getExternalStorageState(), Environment.MEDIA_MOUNTED)) {
 				InputStream inputStream = null;
 				Reader reader = null;
 				BufferedReader bufferedReader = null;

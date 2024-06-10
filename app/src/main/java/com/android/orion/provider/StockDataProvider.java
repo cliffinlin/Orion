@@ -130,25 +130,25 @@ public abstract class StockDataProvider {
 	public int getPeriodMinutes(String period) {
 		int result = 0;
 
-		if (period.equals(DatabaseContract.COLUMN_MIN1)) {
+		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN1)) {
 			result = PERIOD_MINUTES_MIN1;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN5)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
 			result = PERIOD_MINUTES_MIN5;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN15)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
 			result = PERIOD_MINUTES_MIN15;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN30)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN30)) {
 			result = PERIOD_MINUTES_MIN30;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN60)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN60)) {
 			result = PERIOD_MINUTES_MIN60;
-		} else if (period.equals(DatabaseContract.COLUMN_DAY)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_DAY)) {
 			result = PERIOD_MINUTES_DAY;
-		} else if (period.equals(DatabaseContract.COLUMN_WEEK)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_WEEK)) {
 			result = PERIOD_MINUTES_WEEK;
-		} else if (period.equals(DatabaseContract.COLUMN_MONTH)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
 			result = PERIOD_MINUTES_MONTH;
-		} else if (period.equals(DatabaseContract.COLUMN_QUARTER)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_QUARTER)) {
 			result = PERIOD_MINUTES_QUARTER;
-		} else if (period.equals(DatabaseContract.COLUMN_YEAR)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_YEAR)) {
 			result = PERIOD_MINUTES_YEAR;
 		} else {
 		}
@@ -231,7 +231,7 @@ public abstract class StockDataProvider {
 		mStockDatabaseManager.loadStockArrayMap(mStockArrayMap);
 
 		for (Stock current : mStockArrayMap.values()) {
-			if (current.getCode().equals(stock.getCode())) {
+			if (TextUtils.equals(current.getCode(), stock.getCode())) {
 				continue;
 			}
 
@@ -382,7 +382,7 @@ public abstract class StockDataProvider {
 				index.setModified(Utility.getCurrentDateTimeString());
 				mStockDatabaseManager.updateStock(index, index.getContentValues());
 
-				if (period.equals(DatabaseContract.COLUMN_DAY) && (indexStockDataList.size() > 1)) {
+				if (TextUtils.equals(period, DatabaseContract.COLUMN_DAY) && (indexStockDataList.size() > 1)) {
 					double prevPrice = indexStockDataList.get(indexStockDataList.size() - 2).getClose();
 					double price = indexStockDataList.get(indexStockDataList.size() - 1).getClose();
 					double net = 0;
@@ -427,7 +427,7 @@ public abstract class StockDataProvider {
 					return;
 				}
 
-				if (Stock.CLASS_A.equals(stock.getClasses())) {
+				if (TextUtils.equals(stock.getClasses(), Stock.CLASS_A)) {
 					if (downloadStockInformation(stock) == RESULT_FAILED) {
 						return;
 					}
@@ -455,7 +455,7 @@ public abstract class StockDataProvider {
 					if (downloadStockRealTime(stock) == RESULT_FAILED) {
 						return;
 					}
-				} else if (Stock.CLASS_INDEX.equals(stock.getClasses())) {
+				} else if (TextUtils.equals(stock.getClasses(), Stock.CLASS_INDEX)) {
 					setupIndex(stock);
 				} else {
 				}

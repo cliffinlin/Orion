@@ -1558,25 +1558,25 @@ public class Stock extends DatabaseTable {
 	public ArrayList<StockData> getStockDataList(String period) {
 		ArrayList<StockData> result = null;
 
-		if (period.equals(DatabaseContract.COLUMN_MIN1)) {
+		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN1)) {
 			result = mStockDataListMin1;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN5)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
 			result = mStockDataListMin5;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN15)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
 			result = mStockDataListMin15;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN30)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN30)) {
 			result = mStockDataListMin30;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN60)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN60)) {
 			result = mStockDataListMin60;
-		} else if (period.equals(DatabaseContract.COLUMN_DAY)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_DAY)) {
 			result = mStockDataListDay;
-		} else if (period.equals(DatabaseContract.COLUMN_WEEK)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_WEEK)) {
 			result = mStockDataListWeek;
-		} else if (period.equals(DatabaseContract.COLUMN_MONTH)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
 			result = mStockDataListMonth;
-		} else if (period.equals(DatabaseContract.COLUMN_QUARTER)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_QUARTER)) {
 			result = mStockDataListQuarter;
-		} else if (period.equals(DatabaseContract.COLUMN_YEAR)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_YEAR)) {
 			result = mStockDataListYear;
 		}
 
@@ -1586,25 +1586,25 @@ public class Stock extends DatabaseTable {
 	public ArrayList<StockData> getDrawVertexList(String period) {
 		ArrayList<StockData> result = null;
 
-		if (period.equals(DatabaseContract.COLUMN_MIN1)) {
+		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN1)) {
 			result = mDrawVertexListMin1;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN5)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
 			result = mDrawVertexListMin5;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN15)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
 			result = mDrawVertexListMin15;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN30)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN30)) {
 			result = mDrawVertexListMin30;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN60)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN60)) {
 			result = mDrawVertexListMin60;
-		} else if (period.equals(DatabaseContract.COLUMN_DAY)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_DAY)) {
 			result = mDrawVertexListDay;
-		} else if (period.equals(DatabaseContract.COLUMN_WEEK)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_WEEK)) {
 			result = mDrawVertexListWeek;
-		} else if (period.equals(DatabaseContract.COLUMN_MONTH)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
 			result = mDrawVertexListMonth;
-		} else if (period.equals(DatabaseContract.COLUMN_QUARTER)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_QUARTER)) {
 			result = mDrawVertexListQuarter;
-		} else if (period.equals(DatabaseContract.COLUMN_YEAR)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_YEAR)) {
 			result = mDrawVertexListYear;
 		}
 
@@ -1614,25 +1614,25 @@ public class Stock extends DatabaseTable {
 	public ArrayList<StockData> getDrawDataList(String period) {
 		ArrayList<StockData> result = null;
 
-		if (period.equals(DatabaseContract.COLUMN_MIN1)) {
+		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN1)) {
 			result = mDrawDataListMin1;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN5)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
 			result = mDrawDataListMin5;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN15)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
 			result = mDrawDataListMin15;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN30)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN30)) {
 			result = mDrawDataListMin30;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN60)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN60)) {
 			result = mDrawDataListMin60;
-		} else if (period.equals(DatabaseContract.COLUMN_DAY)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_DAY)) {
 			result = mDrawDataListDay;
-		} else if (period.equals(DatabaseContract.COLUMN_WEEK)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_WEEK)) {
 			result = mDrawDataListWeek;
-		} else if (period.equals(DatabaseContract.COLUMN_MONTH)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
 			result = mDrawDataListMonth;
-		} else if (period.equals(DatabaseContract.COLUMN_QUARTER)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_QUARTER)) {
 			result = mDrawDataListQuarter;
-		} else if (period.equals(DatabaseContract.COLUMN_YEAR)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_YEAR)) {
 			result = mDrawDataListYear;
 		}
 
@@ -1642,25 +1642,25 @@ public class Stock extends DatabaseTable {
 	public ArrayList<StockData> getStrokeVertexList(String period) {
 		ArrayList<StockData> result = null;
 
-		if (period.equals(DatabaseContract.COLUMN_MIN1)) {
+		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN1)) {
 			result = mStrokeVertexListMin1;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN5)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
 			result = mStrokeVertexListMin5;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN15)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
 			result = mStrokeVertexListMin15;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN30)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN30)) {
 			result = mStrokeVertexListMin30;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN60)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN60)) {
 			result = mStrokeVertexListMin60;
-		} else if (period.equals(DatabaseContract.COLUMN_DAY)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_DAY)) {
 			result = mStrokeVertexListDay;
-		} else if (period.equals(DatabaseContract.COLUMN_WEEK)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_WEEK)) {
 			result = mStrokeVertexListWeek;
-		} else if (period.equals(DatabaseContract.COLUMN_MONTH)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
 			result = mStrokeVertexListMonth;
-		} else if (period.equals(DatabaseContract.COLUMN_QUARTER)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_QUARTER)) {
 			result = mStrokeVertexListQuarter;
-		} else if (period.equals(DatabaseContract.COLUMN_YEAR)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_YEAR)) {
 			result = mStrokeVertexListYear;
 		}
 
@@ -1670,25 +1670,25 @@ public class Stock extends DatabaseTable {
 	public ArrayList<StockData> getStrokeDataList(String period) {
 		ArrayList<StockData> result = null;
 
-		if (period.equals(DatabaseContract.COLUMN_MIN1)) {
+		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN1)) {
 			result = mStrokeDataListMin1;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN5)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
 			result = mStrokeDataListMin5;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN15)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
 			result = mStrokeDataListMin15;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN30)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN30)) {
 			result = mStrokeDataListMin30;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN60)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN60)) {
 			result = mStrokeDataListMin60;
-		} else if (period.equals(DatabaseContract.COLUMN_DAY)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_DAY)) {
 			result = mStrokeDataListDay;
-		} else if (period.equals(DatabaseContract.COLUMN_WEEK)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_WEEK)) {
 			result = mStrokeDataListWeek;
-		} else if (period.equals(DatabaseContract.COLUMN_MONTH)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
 			result = mStrokeDataListMonth;
-		} else if (period.equals(DatabaseContract.COLUMN_QUARTER)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_QUARTER)) {
 			result = mStrokeDataListQuarter;
-		} else if (period.equals(DatabaseContract.COLUMN_YEAR)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_YEAR)) {
 			result = mStrokeDataListYear;
 		}
 
@@ -1698,25 +1698,25 @@ public class Stock extends DatabaseTable {
 	public ArrayList<StockData> getSegmentVertexList(String period) {
 		ArrayList<StockData> result = null;
 
-		if (period.equals(DatabaseContract.COLUMN_MIN1)) {
+		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN1)) {
 			result = mSegmentVertexListMin1;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN5)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
 			result = mSegmentVertexListMin5;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN15)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
 			result = mSegmentVertexListMin15;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN30)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN30)) {
 			result = mSegmentVertexListMin30;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN60)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN60)) {
 			result = mSegmentVertexListMin60;
-		} else if (period.equals(DatabaseContract.COLUMN_DAY)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_DAY)) {
 			result = mSegmentVertexListDay;
-		} else if (period.equals(DatabaseContract.COLUMN_WEEK)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_WEEK)) {
 			result = mSegmentVertexListWeek;
-		} else if (period.equals(DatabaseContract.COLUMN_MONTH)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
 			result = mSegmentVertexListMonth;
-		} else if (period.equals(DatabaseContract.COLUMN_QUARTER)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_QUARTER)) {
 			result = mSegmentVertexListQuarter;
-		} else if (period.equals(DatabaseContract.COLUMN_YEAR)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_YEAR)) {
 			result = mSegmentVertexListYear;
 		}
 
@@ -1726,25 +1726,25 @@ public class Stock extends DatabaseTable {
 	public ArrayList<StockData> getSegmentDataList(String period) {
 		ArrayList<StockData> result = null;
 
-		if (period.equals(DatabaseContract.COLUMN_MIN1)) {
+		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN1)) {
 			result = mSegmentDataListMin1;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN5)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
 			result = mSegmentDataListMin5;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN15)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
 			result = mSegmentDataListMin15;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN30)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN30)) {
 			result = mSegmentDataListMin30;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN60)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN60)) {
 			result = mSegmentDataListMin60;
-		} else if (period.equals(DatabaseContract.COLUMN_DAY)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_DAY)) {
 			result = mSegmentDataListDay;
-		} else if (period.equals(DatabaseContract.COLUMN_WEEK)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_WEEK)) {
 			result = mSegmentDataListWeek;
-		} else if (period.equals(DatabaseContract.COLUMN_MONTH)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
 			result = mSegmentDataListMonth;
-		} else if (period.equals(DatabaseContract.COLUMN_QUARTER)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_QUARTER)) {
 			result = mSegmentDataListQuarter;
-		} else if (period.equals(DatabaseContract.COLUMN_YEAR)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_YEAR)) {
 			result = mSegmentDataListYear;
 		}
 
@@ -1754,25 +1754,25 @@ public class Stock extends DatabaseTable {
 	public ArrayList<StockData> getLineVertexList(String period) {
 		ArrayList<StockData> result = null;
 
-		if (period.equals(DatabaseContract.COLUMN_MIN1)) {
+		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN1)) {
 			result = mLineVertexListMin1;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN5)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
 			result = mLineVertexListMin5;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN15)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
 			result = mLineVertexListMin15;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN30)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN30)) {
 			result = mLineVertexListMin30;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN60)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN60)) {
 			result = mLineVertexListMin60;
-		} else if (period.equals(DatabaseContract.COLUMN_DAY)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_DAY)) {
 			result = mLineVertexListDay;
-		} else if (period.equals(DatabaseContract.COLUMN_WEEK)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_WEEK)) {
 			result = mLineVertexListWeek;
-		} else if (period.equals(DatabaseContract.COLUMN_MONTH)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
 			result = mLineVertexListMonth;
-		} else if (period.equals(DatabaseContract.COLUMN_QUARTER)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_QUARTER)) {
 			result = mLineVertexListQuarter;
-		} else if (period.equals(DatabaseContract.COLUMN_YEAR)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_YEAR)) {
 			result = mLineVertexListYear;
 		}
 
@@ -1782,25 +1782,25 @@ public class Stock extends DatabaseTable {
 	public ArrayList<StockData> getLineDataList(String period) {
 		ArrayList<StockData> result = null;
 
-		if (period.equals(DatabaseContract.COLUMN_MIN1)) {
+		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN1)) {
 			result = mLineDataListMin1;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN5)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
 			result = mLineDataListMin5;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN15)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
 			result = mLineDataListMin15;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN30)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN30)) {
 			result = mLineDataListMin30;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN60)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN60)) {
 			result = mLineDataListMin60;
-		} else if (period.equals(DatabaseContract.COLUMN_DAY)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_DAY)) {
 			result = mLineDataListDay;
-		} else if (period.equals(DatabaseContract.COLUMN_WEEK)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_WEEK)) {
 			result = mLineDataListWeek;
-		} else if (period.equals(DatabaseContract.COLUMN_MONTH)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
 			result = mLineDataListMonth;
-		} else if (period.equals(DatabaseContract.COLUMN_QUARTER)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_QUARTER)) {
 			result = mLineDataListQuarter;
-		} else if (period.equals(DatabaseContract.COLUMN_YEAR)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_YEAR)) {
 			result = mLineDataListYear;
 		}
 
@@ -1810,25 +1810,25 @@ public class Stock extends DatabaseTable {
 	public ArrayList<StockData> getOutlineVertexList(String period) {
 		ArrayList<StockData> result = null;
 
-		if (period.equals(DatabaseContract.COLUMN_MIN1)) {
+		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN1)) {
 			result = mOutlineVertexListMin1;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN5)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
 			result = mOutlineVertexListMin5;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN15)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
 			result = mOutlineVertexListMin15;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN30)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN30)) {
 			result = mOutlineVertexListMin30;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN60)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN60)) {
 			result = mOutlineVertexListMin60;
-		} else if (period.equals(DatabaseContract.COLUMN_DAY)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_DAY)) {
 			result = mOutlineVertexListDay;
-		} else if (period.equals(DatabaseContract.COLUMN_WEEK)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_WEEK)) {
 			result = mOutlineVertexListWeek;
-		} else if (period.equals(DatabaseContract.COLUMN_MONTH)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
 			result = mOutlineVertexListMonth;
-		} else if (period.equals(DatabaseContract.COLUMN_QUARTER)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_QUARTER)) {
 			result = mOutlineVertexListQuarter;
-		} else if (period.equals(DatabaseContract.COLUMN_YEAR)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_YEAR)) {
 			result = mOutlineVertexListYear;
 		}
 
@@ -1838,25 +1838,25 @@ public class Stock extends DatabaseTable {
 	public ArrayList<StockData> getOutlineDataList(String period) {
 		ArrayList<StockData> result = null;
 
-		if (period.equals(DatabaseContract.COLUMN_MIN1)) {
+		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN1)) {
 			result = mOutlineDataListMin1;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN5)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
 			result = mOutlineDataListMin5;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN15)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
 			result = mOutlineDataListMin15;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN30)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN30)) {
 			result = mOutlineDataListMin30;
-		} else if (period.equals(DatabaseContract.COLUMN_MIN60)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN60)) {
 			result = mOutlineDataListMin60;
-		} else if (period.equals(DatabaseContract.COLUMN_DAY)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_DAY)) {
 			result = mOutlineDataListDay;
-		} else if (period.equals(DatabaseContract.COLUMN_WEEK)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_WEEK)) {
 			result = mOutlineDataListWeek;
-		} else if (period.equals(DatabaseContract.COLUMN_MONTH)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
 			result = mOutlineDataListMonth;
-		} else if (period.equals(DatabaseContract.COLUMN_QUARTER)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_QUARTER)) {
 			result = mOutlineDataListQuarter;
-		} else if (period.equals(DatabaseContract.COLUMN_YEAR)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_YEAR)) {
 			result = mOutlineDataListYear;
 		}
 
@@ -1913,25 +1913,25 @@ public class Stock extends DatabaseTable {
 	public String getAction(String period) {
 		String action = "";
 
-		if (period.equals(DatabaseContract.COLUMN_MIN1)) {
+		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN1)) {
 			action = getActionMin1();
-		} else if (period.equals(DatabaseContract.COLUMN_MIN5)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
 			action = getActionMin5();
-		} else if (period.equals(DatabaseContract.COLUMN_MIN15)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
 			action = getActionMin15();
-		} else if (period.equals(DatabaseContract.COLUMN_MIN30)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN30)) {
 			action = getActionMin30();
-		} else if (period.equals(DatabaseContract.COLUMN_MIN60)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN60)) {
 			action = getActionMin60();
-		} else if (period.equals(DatabaseContract.COLUMN_DAY)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_DAY)) {
 			action = getActionDay();
-		} else if (period.equals(DatabaseContract.COLUMN_WEEK)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_WEEK)) {
 			action = getActionWeek();
-		} else if (period.equals(DatabaseContract.COLUMN_MONTH)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
 			action = getActionMonth();
-		} else if (period.equals(DatabaseContract.COLUMN_QUARTER)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_QUARTER)) {
 			action = getActionQuarter();
-		} else if (period.equals(DatabaseContract.COLUMN_YEAR)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_YEAR)) {
 			action = getActionYear();
 		}
 
@@ -1939,25 +1939,25 @@ public class Stock extends DatabaseTable {
 	}
 
 	public void setAction(String period, String action) {
-		if (period.equals(DatabaseContract.COLUMN_MIN1)) {
+		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN1)) {
 			setActionMin1(action);
-		} else if (period.equals(DatabaseContract.COLUMN_MIN5)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
 			setActionMin5(action);
-		} else if (period.equals(DatabaseContract.COLUMN_MIN15)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
 			setActionMin15(action);
-		} else if (period.equals(DatabaseContract.COLUMN_MIN30)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN30)) {
 			setActionMin30(action);
-		} else if (period.equals(DatabaseContract.COLUMN_MIN60)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN60)) {
 			setActionMin60(action);
-		} else if (period.equals(DatabaseContract.COLUMN_DAY)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_DAY)) {
 			setActionDay(action);
-		} else if (period.equals(DatabaseContract.COLUMN_WEEK)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_WEEK)) {
 			setActionWeek(action);
-		} else if (period.equals(DatabaseContract.COLUMN_MONTH)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
 			setActionMonth(action);
-		} else if (period.equals(DatabaseContract.COLUMN_QUARTER)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_QUARTER)) {
 			setActionQuarter(action);
-		} else if (period.equals(DatabaseContract.COLUMN_YEAR)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_YEAR)) {
 			setActionYear(action);
 		}
 	}

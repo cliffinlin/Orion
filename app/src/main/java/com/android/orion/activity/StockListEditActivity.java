@@ -10,6 +10,7 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -188,7 +189,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 				break;
 		}
 
-		if (mSortOrderDirection.equals(DatabaseContract.ORDER_DIRECTION_ASC)) {
+		if (TextUtils.equals(mSortOrderDirection, DatabaseContract.ORDER_DIRECTION_ASC)) {
 			mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_DESC;
 		} else {
 			mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_ASC;
@@ -240,7 +241,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 		}
 
 		mTextViewComponent = findViewById(R.id.component);
-		if (ACTION_INDEX_COMPONENT_SELECT.equals(mAction)) {
+		if (TextUtils.equals(mAction, ACTION_INDEX_COMPONENT_SELECT)) {
 			mTextViewComponent.setVisibility(View.VISIBLE);
 		} else {
 			mTextViewComponent.setVisibility(View.GONE);
@@ -315,7 +316,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 			holder.mImageViewgComponent.setTag(stock.getId());
 			holder.mImageViewgComponent.setOnClickListener(this);
 
-			if (ACTION_INDEX_COMPONENT_SELECT.equals(mAction)) {
+			if (TextUtils.equals(mAction, ACTION_INDEX_COMPONENT_SELECT)) {
 				mStock.setId(stock.getId());
 				mStockDatabaseManager.getStockById(mStock);
 
@@ -353,7 +354,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 					.findViewById(R.id.delete);
 			holder.mImageViewgComponent = view.findViewById(R.id.component);
 
-			if (ACTION_INDEX_COMPONENT_SELECT.equals(mAction)) {
+			if (TextUtils.equals(mAction, ACTION_INDEX_COMPONENT_SELECT)) {
 				holder.mImageViewgComponent.setVisibility(View.VISIBLE);
 			} else {
 				holder.mImageViewgComponent.setVisibility(View.GONE);
@@ -414,7 +415,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 						break;
 
 					case R.id.component:
-						if (ACTION_INDEX_COMPONENT_SELECT.equals(mAction)) {
+						if (TextUtils.equals(mAction, ACTION_INDEX_COMPONENT_SELECT)) {
 							mStock.setId(stock.getId());
 							mStockDatabaseManager.getStockById(mStock);
 

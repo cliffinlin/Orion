@@ -61,7 +61,7 @@ public class StockSearchActivity extends StockListEditActivity implements
 	}
 
 	void handleIntent(Intent intent) {
-		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+		if (TextUtils.equals(intent.getAction(), Intent.ACTION_SEARCH)) {
 			String query = intent.getStringExtra(SearchManager.QUERY);
 
 			if (mSearchRecentSuggestions != null) {

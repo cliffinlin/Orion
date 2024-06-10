@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
+import android.text.TextUtils;
 
 import com.android.orion.R;
 import com.android.orion.activity.SettingLoopbackActivity;
@@ -46,9 +47,9 @@ public class SettingFragment extends PreferenceFragment implements
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 										  String key) {
-		if (key.equals(Setting.SETTING_DEBUG_LOG)) {
+		if (TextUtils.equals(key, Setting.SETTING_DEBUG_LOG)) {
 			Logger.setDebug(Setting.getDebugLog());
-		} else if (key.equals(Setting.SETTING_DEBUG_LOOPBACK)) {
+		} else if (TextUtils.equals(key, Setting.SETTING_DEBUG_LOOPBACK)) {
 			Intent intent = new Intent(mContext, SettingLoopbackActivity.class);
 			mContext.startActivity(intent);
 		} else {

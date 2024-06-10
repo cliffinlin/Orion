@@ -554,15 +554,11 @@ public class StockDataChartListActivity extends BaseActivity implements
 					dateString = mStockData.getDate();
 					timeString = mStockData.getTime();
 
-					if (mStockData.getPeriod().equals(DatabaseContract.COLUMN_YEAR)
-							|| mStockData.getPeriod().equals(
-							DatabaseContract.COLUMN_QUARTER)
-							|| mStockData.getPeriod().equals(
-							DatabaseContract.COLUMN_MONTH)
-							|| mStockData.getPeriod().equals(
-							DatabaseContract.COLUMN_WEEK)
-							|| mStockData.getPeriod().equals(
-							DatabaseContract.COLUMN_DAY)) {
+					if (TextUtils.equals(mStockData.getPeriod(), DatabaseContract.COLUMN_YEAR)
+							|| TextUtils.equals(mStockData.getPeriod(), DatabaseContract.COLUMN_QUARTER)
+							|| TextUtils.equals(mStockData.getPeriod(), DatabaseContract.COLUMN_MONTH)
+							|| TextUtils.equals(mStockData.getPeriod(), DatabaseContract.COLUMN_WEEK)
+							|| TextUtils.equals(mStockData.getPeriod(), DatabaseContract.COLUMN_DAY)) {
 						stockDataChart.mXValues.add(dateString);
 					} else {
 						stockDataChart.mXValues.add(dateString + " "
