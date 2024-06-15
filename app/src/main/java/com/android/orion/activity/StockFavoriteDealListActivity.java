@@ -130,7 +130,7 @@ public class StockFavoriteDealListActivity extends ListActivity implements
 					getStock();
 
 					intent = new Intent(mContext, StockEditActivity.class);
-					intent.setAction(StockEditActivity.ACTION_STOCK_EDIT);
+					intent.setAction(Constant.ACTION_STOCK_EDIT);
 					intent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
 					startActivity(intent);
 					break;
@@ -155,7 +155,7 @@ public class StockFavoriteDealListActivity extends ListActivity implements
 					mStockDatabaseManager.getStock(mStock);
 
 					mIntent = new Intent(mContext, StockTrendListActivity.class);
-					mIntent.setAction(StockTrendListActivity.ACTION_STOCK_TREND_LIST);
+					mIntent.setAction(Constant.ACTION_STOCK_TREND_LIST);
 					mIntent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
 					startActivity(mIntent);
 					break;
@@ -197,8 +197,8 @@ public class StockFavoriteDealListActivity extends ListActivity implements
 			switch (item.getItemId()) {
 				case R.id.menu_edit:
 					mIntent = new Intent(mContext, StockDealActivity.class);
-					mIntent.setAction(StockDealActivity.ACTION_DEAL_EDIT);
-					mIntent.putExtra(StockDealActivity.EXTRA_DEAL_ID,
+					mIntent.setAction(Constant.ACTION_DEAL_EDIT);
+					mIntent.putExtra(Constant.EXTRA_DEAL_ID,
 							mStockDeal.getId());
 					startActivityForResult(mIntent, REQUEST_CODE_DEAL_EDIT);
 					mode.finish();
@@ -274,7 +274,7 @@ public class StockFavoriteDealListActivity extends ListActivity implements
 
 			case R.id.action_new:
 				mIntent = new Intent(this, StockDealActivity.class);
-				mIntent.setAction(StockDealActivity.ACTION_DEAL_INSERT);
+				mIntent.setAction(Constant.ACTION_DEAL_INSERT);
 				if (mBundle != null) {
 					mIntent.putExtras(mBundle);
 				}

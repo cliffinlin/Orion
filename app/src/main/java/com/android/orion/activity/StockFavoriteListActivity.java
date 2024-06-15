@@ -34,8 +34,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
 		OnItemLongClickListener, OnClickListener {
 
-	public static final String ACTION_STOCK_ID = "orion.intent.action.ACTION_STOCK_ID";
-
 	public static final int LOADER_ID_STOCK_LIST = 0;
 
 	public static final int REQUEST_CODE_STOCK_INSERT = 0;
@@ -78,19 +76,13 @@ public class StockFavoriteListActivity extends ListActivity implements
 
 			switch (msg.what) {
 				case MESSAGE_REFRESH:
-					if (mOrionService != null) {
-						for (int i = 0; i < mStockList.size(); i++) {
-							Stock stock = mStockList.get(i);
-							stock.reset();
-							mStockDatabaseManager.updateStock(stock, stock.getContentValues());
+					for (int i = 0; i < mStockList.size(); i++) {
+						Stock stock = mStockList.get(i);
+						if (stock != null && stock.hasFlag(Stock.FLAG_FAVORITE)) {
+							onMessageRefresh(stock);
 						}
-						mStockDatabaseManager.deleteStockData();
-						mStockDatabaseManager.deleteStockFinancial();
-						mStockDatabaseManager.deleteShareBonus();
-						mStockDatabaseManager.deleteStockQuant();
-						mOrionService.download();
-						restartLoader();
 					}
+					restartLoader();
 					break;
 
 				default:
@@ -131,7 +123,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 
 			case R.id.action_new:
 				Intent intent = new Intent(this, StockEditActivity.class);
-				intent.setAction(StockEditActivity.ACTION_FAVORITE_STOCK_INSERT);
+				intent.setAction(Constant.ACTION_FAVORITE_STOCK_INSERT);
 				startActivityForResult(intent, REQUEST_CODE_STOCK_INSERT);
 				return true;
 
@@ -536,7 +528,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 			return;
 		}
 
-		if (TextUtils.equals(mAction, ACTION_STOCK_ID)) {
+		if (TextUtils.equals(mAction, Constant.ACTION_STOCK_ID)) {
 			if (mIntent != null) {
 				mIntent.putExtra(Constant.EXTRA_STOCK_ID, id);
 				setResult(RESULT_OK, mIntent);

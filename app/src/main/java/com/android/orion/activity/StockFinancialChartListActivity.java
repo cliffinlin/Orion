@@ -80,17 +80,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 
 			switch (msg.what) {
 				case MESSAGE_REFRESH:
-					if (mStock != null) {
-						Setting.setDownloadStockInformationTimemillis(mStock.getSE(), mStock.getCode(), 0);
-						Setting.setDownloadStockFinancialTimemillis(mStock.getSE(), mStock.getCode(), 0);
-						Setting.setDownloadShareBonusTimemillis(mStock.getSE(), mStock.getCode(), 0);
-						Setting.setDownloadTotalShareTimemillis(mStock.getSE(), mStock.getCode(), 0);
-						Setting.setDownloadStockRealTimeTimemillis(mStock.getSE(), mStock.getCode(), 0);
-					}
-
-					if (mOrionService != null) {
-						mOrionService.download(mStock);
-					}
+					onMessageRefresh(mStock);
 					restartLoader();
 					break;
 
@@ -169,7 +159,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 			}
 			case R.id.action_edit: {
 				mIntent = new Intent(this, StockEditActivity.class);
-				mIntent.setAction(StockEditActivity.ACTION_STOCK_EDIT);
+				mIntent.setAction(Constant.ACTION_STOCK_EDIT);
 				mIntent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
 				startActivity(mIntent);
 				return true;

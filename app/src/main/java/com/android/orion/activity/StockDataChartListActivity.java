@@ -94,25 +94,8 @@ public class StockDataChartListActivity extends BaseActivity implements
 
 			switch (msg.what) {
 				case MESSAGE_REFRESH:
-					if (mStock != null) {
-						Setting.setDownloadStockInformationTimemillis(mStock.getSE(), mStock.getCode(), 0);
-						Setting.setDownloadStockFinancialTimemillis(mStock.getSE(), mStock.getCode(), 0);
-						Setting.setDownloadShareBonusTimemillis(mStock.getSE(), mStock.getCode(), 0);
-						Setting.setDownloadTotalShareTimemillis(mStock.getSE(), mStock.getCode(), 0);
-						Setting.setDownloadStockRealTimeTimemillis(mStock.getSE(), mStock.getCode(), 0);
-					}
-
-					if (mOrionService != null) {
-						mStock.reset();
-						mStockDatabaseManager.updateStock(mStock,
-								mStock.getContentValues());
-						mStockDatabaseManager.deleteStockData(mStock.getId());
-						mStockDatabaseManager.deleteStockFinancial(mStock.getId());
-						mStockDatabaseManager.deleteShareBonus(mStock.getId());
-						mStockDatabaseManager.deleteStockQuant(mStock);
-						mOrionService.download(mStock);
-						restartLoader();
-					}
+					onMessageRefresh(mStock);
+					restartLoader();
 					break;
 
 				case MESSAGE_LOAD_STOCK_LIST:
@@ -226,7 +209,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 
 			case R.id.action_edit:
 				mIntent = new Intent(this, StockEditActivity.class);
-				mIntent.setAction(StockEditActivity.ACTION_STOCK_EDIT);
+				mIntent.setAction(Constant.ACTION_STOCK_EDIT);
 				mIntent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
 				startActivity(mIntent);
 				return true;
@@ -243,7 +226,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 
 			case R.id.action_trend:
 				mIntent = new Intent(this, StockTrendListActivity.class);
-				mIntent.setAction(StockTrendListActivity.ACTION_STOCK_TREND_LIST);
+				mIntent.setAction(Constant.ACTION_STOCK_TREND_LIST);
 				mIntent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
 				startActivity(mIntent);
 				return true;

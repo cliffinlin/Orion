@@ -641,8 +641,8 @@ public class StockAnalyzer {
 				denominator = (int) (brokenStockData.getNet());
 			}
 
-			result += StockData.ACTION_BUY2;
-			result += StockData.ACTION_BUY2;
+			result += StockData.MARK_BUY2;
+			result += StockData.MARK_BUY2;
 			result += " " + numerator;
 			result += "/" + denominator;
 		}
@@ -717,8 +717,8 @@ public class StockAnalyzer {
 				denominator = (int) (brokenStockData.getNet());
 			}
 
-			result += StockData.ACTION_SELL2;
-			result += StockData.ACTION_SELL2;
+			result += StockData.MARK_SELL2;
+			result += StockData.MARK_SELL2;
 			result += " " + numerator;
 			result += "/" + denominator;
 		}
@@ -747,7 +747,7 @@ public class StockAnalyzer {
 							   ArrayList<StockData> drawDataList,
 							   ArrayList<StockData> strokeDataList,
 							   ArrayList<StockData> segmentDataList) {
-		String action = StockData.ACTION_NONE;
+		String action = StockData.MARK_NONE;
 		String trendString = "";
 		StockData prev = null;
 		StockData stockData = null;
@@ -769,10 +769,10 @@ public class StockAnalyzer {
 
 		if (stockData.directionOf(StockData.DIRECTION_UP_SEGMENT)) {
 			if (prev.vertexOf(StockData.VERTEX_BOTTOM_SEGMENT)) {
-//				action += StockData.ACTION_D;
+//				action += StockData.MARK_D;
 			} else {
 				if (segmentNet > 0) {
-					action += StockData.ACTION_ADD;
+					action += StockData.MARK_ADD;
 				}
 				action += segmentNet;
 			}
@@ -780,10 +780,10 @@ public class StockAnalyzer {
 		} else if (stockData
 				.directionOf(StockData.DIRECTION_DOWN_SEGMENT)) {
 			if (prev.vertexOf(StockData.VERTEX_TOP_SEGMENT)) {
-//				action += StockData.ACTION_G;
+//				action += StockData.MARK_G;
 			} else {
 				if (segmentNet > 0) {
-					action += StockData.ACTION_ADD;
+					action += StockData.MARK_ADD;
 				}
 				action += segmentNet;
 			}
@@ -808,24 +808,24 @@ public class StockAnalyzer {
 
 		if (stockData.isMinutePeriod()) {
 			if (stockData.getNaturalRally() > 0) {
-				action += StockData.ACTION_NATURAL_RALLY;
+				action += StockData.MARK_NATURAL_RALLY;
 			}
 
 			if (stockData.getUpwardTrend() > 0) {
-				action += StockData.ACTION_UPWARD_TREND;
+				action += StockData.MARK_UPWARD_TREND;
 			}
 
 			if (stockData.getDownwardTrend() > 0) {
-				action += StockData.ACTION_DOWNWARD_TREND;
+				action += StockData.MARK_DOWNWARD_TREND;
 			}
 
 			if (stockData.getNaturalReaction() > 0) {
-				action += StockData.ACTION_NATURAL_REACTION;
+				action += StockData.MARK_NATURAL_REACTION;
 			}
 		}
 
 		if (TextUtils.equals(period, stock.getOperate())) {
-			action += StockData.ACTION_STAR;
+			action += StockData.MARK_STAR;
 		}
 
 		stock.setDateTime(stockData.getDate(), stockData.getTime());
@@ -913,15 +913,15 @@ public class StockAnalyzer {
 				notifyToBuy2 = false;
 				notifyToSell2 = false;
 
-				if (action.contains(StockData.ACTION_BUY2 + StockData.ACTION_BUY2)) {
+				if (action.contains(StockData.MARK_BUY2 + StockData.MARK_BUY2)) {
 					notifyToBuy2 = true;
-				} else if (!action.contains(StockData.ACTION_D)) {
+				} else if (!action.contains(StockData.MARK_D)) {
 					notifyToBuy1 &= false;
 				}
 
-				if (action.contains(StockData.ACTION_SELL2 + StockData.ACTION_SELL2)) {
+				if (action.contains(StockData.MARK_SELL2 + StockData.MARK_SELL2)) {
 					notifyToSell2 = true;
-				} else if (!action.contains(StockData.ACTION_G)) {
+				} else if (!action.contains(StockData.MARK_G)) {
 					notifyToSell1 &= false;
 				}
 
@@ -933,17 +933,17 @@ public class StockAnalyzer {
 
 		if (notifyToBuy1) {
 			if (toBuyProfit > 0) {
-				actionString.append(StockData.ACTION_D + " " + (int) toBuyProfit + " ");
+				actionString.append(StockData.MARK_D + " " + (int) toBuyProfit + " ");
 			} else {
-				actionString.append(StockData.ACTION_D + " ");
+				actionString.append(StockData.MARK_D + " ");
 			}
 		}
 
 		if (notifyToSell1) {
 			if (toSellProfit > 0) {
-				actionString.append(StockData.ACTION_G + " " + (int) toSellProfit + " ");
+				actionString.append(StockData.MARK_G + " " + (int) toSellProfit + " ");
 			} else {
-				actionString.append(StockData.ACTION_G + " ");
+				actionString.append(StockData.MARK_G + " ");
 			}
 		}
 

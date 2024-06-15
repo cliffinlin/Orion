@@ -37,8 +37,6 @@ public class IndexComponentListActivity extends ListActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
 		OnItemLongClickListener, OnClickListener {
 
-	public static final String ACTION_STOCK_ID = "orion.intent.action.ACTION_STOCK_ID";
-
 	public static final int LOADER_ID_INDEX_COMPONENT_LIST = 0;
 
 	public static final int REQUEST_CODE_INDEX_COMPONENT_INSERT = 0;
@@ -82,11 +80,13 @@ public class IndexComponentListActivity extends ListActivity implements
 
 			switch (msg.what) {
 				case MESSAGE_REFRESH:
-					if (mOrionService != null) {
-						mStockDatabaseManager.deleteStockData();
-						mOrionService.download();
-						restartLoader();
+					for (int i = 0; i < mStockList.size(); i++) {
+						Stock stock = mStockList.get(i);
+						if (stock != null && stock.hasFlag(Stock.FLAG_FAVORITE)) {
+							onMessageRefresh(stock);
+						}
 					}
+					restartLoader();
 					break;
 
 				default:
@@ -127,14 +127,14 @@ public class IndexComponentListActivity extends ListActivity implements
 
 			case R.id.action_new:
 				Intent intentNew = new Intent(this, StockEditActivity.class);
-				intentNew.setAction(StockEditActivity.ACTION_INDEX_COMPONENT_INSERT);
+				intentNew.setAction(Constant.ACTION_INDEX_COMPONENT_INSERT);
 				intentNew.putExtra(Constant.EXTRA_INDEX_CODE, mIntent.getStringExtra(Constant.EXTRA_INDEX_CODE));
 				startActivityForResult(intentNew, REQUEST_CODE_INDEX_COMPONENT_INSERT);
 				return true;
 
 			case R.id.action_search:
 				Intent intentSearch = new Intent(this, StockSearchActivity.class);
-				intentSearch.setAction(StockListEditActivity.ACTION_INDEX_COMPONENT_SELECT);
+				intentSearch.setAction(Constant.ACTION_INDEX_COMPONENT_SELECT);
 				intentSearch.putExtra(Constant.EXTRA_INDEX_CODE, mIntent.getStringExtra(Constant.EXTRA_INDEX_CODE));
 				startActivityForResult(intentSearch, REQUEST_CODE_INDEX_COMPONENT_SELECT);
 				return true;
@@ -556,7 +556,7 @@ public class IndexComponentListActivity extends ListActivity implements
 			return;
 		}
 
-		if (TextUtils.equals(mAction, ACTION_STOCK_ID)) {
+		if (TextUtils.equals(mAction, Constant.ACTION_STOCK_ID)) {
 			if (mIntent != null) {
 				mIntent.putExtra(Constant.EXTRA_STOCK_ID, id);
 				setResult(RESULT_OK, mIntent);
@@ -589,7 +589,7 @@ public class IndexComponentListActivity extends ListActivity implements
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
 								   int position, long id) {
 		Intent intentSearch = new Intent(this, StockSearchActivity.class);
-		intentSearch.setAction(StockListEditActivity.ACTION_INDEX_COMPONENT_SELECT);
+		intentSearch.setAction(Constant.ACTION_INDEX_COMPONENT_SELECT);
 		intentSearch.putExtra(Constant.EXTRA_INDEX_CODE, mIntent.getStringExtra(Constant.EXTRA_INDEX_CODE));
 		intentSearch.putExtra(Constant.EXTRA_INDEX_NAME, mIntent.getStringExtra(Constant.EXTRA_INDEX_NAME));
 		intentSearch.putExtra(Constant.EXTRA_INDEX_SE, mIntent.getStringExtra(Constant.EXTRA_INDEX_SE));

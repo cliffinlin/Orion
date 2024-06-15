@@ -119,11 +119,4 @@ public class OrionApplication extends Application {
 		Intent serviceIntent = new Intent(mContext, OrionService.class);
 		stopService(serviceIntent);
 	}
-
-	public void onBackground() {
-		if (mActivityStartedCounter == 0) {
-			Log.d("mActivityStartedCounter=" + mActivityStartedCounter);
-			onTerminate();
-		}
-	}
 }

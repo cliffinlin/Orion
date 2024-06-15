@@ -6,7 +6,15 @@ public class Constant {
 	public static final String FILE_EXT_TEXT = ".txt";
 	public static final String FILE_EXT_XML = ".xml";
 
+	public static final String ACTION_DEAL_EDIT = "orion.intent.action.ACTION_DEAL_EDIT";
+	public static final String ACTION_DEAL_INSERT = "orion.intent.action.ACTION_DEAL_INSERT";
+	public static final String ACTION_FAVORITE_STOCK_INSERT = "orion.intent.action.ACTION_FAVORITE_STOCK_INSERT";
+	public static final String ACTION_INDEX_COMPONENT_INSERT = "orion.intent.action.ACTION_INDEX_COMPONENT_INSERT";
+	public static final String ACTION_INDEX_COMPONENT_SELECT = "orion.intent.action.ACTION_INDEX_COMPONENT_SELECT";
 	public static final String ACTION_RESTART_LOADER = "orion.intent.action.RESTART_LOADER";
+	public static final String ACTION_STOCK_EDIT = "orion.intent.action.ACTION_STOCK_EDIT";
+	public static final String ACTION_STOCK_ID = "orion.intent.action.ACTION_STOCK_ID";
+	public static final String ACTION_STOCK_TREND_LIST = "orion.intent.action.ACTION_STOCK_TREND_LIST";
 
 	public static final String DEAL = "deal";
 	public static final String DEAL_OPERATE_INSERT = "insert";
@@ -15,18 +23,18 @@ public class Constant {
 	public static final String FAVORITE = "favorite";
 	public static final String NOTIFICATION = "notification";
 
-	public static final String EXTRA_STOCK_ID = "stock_id";
-	public static final String EXTRA_STOCK_SE = "stock_se";
-	public static final String EXTRA_STOCK_CODE = "stock_code";
-	public static final String EXTRA_STOCK_DEAL = "stock_deal";
-	public static final String EXTRA_STOCK_QUANT = "stock_quant";
-	public static final String EXTRA_STOCK_BONUS = "stock_bonus";
-	public static final String EXTRA_STOCK_ID_LIST = "stock_id_list";
-	public static final String EXTRA_STOCK_LIST_SORT_ORDER = "stock_list_sort_order";
-
+	public static final String EXTRA_DEAL_ID = "deal_id";
 	public static final String EXTRA_INDEX_CODE = "index_code";
 	public static final String EXTRA_INDEX_NAME = "index_name";
 	public static final String EXTRA_INDEX_SE = "index_se";
+	public static final String EXTRA_STOCK_BONUS = "stock_bonus";
+	public static final String EXTRA_STOCK_CODE = "stock_code";
+	public static final String EXTRA_STOCK_DEAL = "stock_deal";
+	public static final String EXTRA_STOCK_ID = "stock_id";
+	public static final String EXTRA_STOCK_ID_LIST = "stock_id_list";
+	public static final String EXTRA_STOCK_LIST_SORT_ORDER = "stock_list_sort_order";
+	public static final String EXTRA_STOCK_QUANT = "stock_quant";
+	public static final String EXTRA_STOCK_SE = "stock_se";
 
 	public static final int SEASONS_IN_A_YEAR = 4;
 

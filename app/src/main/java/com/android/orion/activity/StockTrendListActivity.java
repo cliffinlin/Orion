@@ -41,9 +41,6 @@ public class StockTrendListActivity extends ListActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
 		OnItemLongClickListener, OnClickListener {
 
-	public static final String ACTION_STOCK_ID = "orion.intent.action.ACTION_STOCK_ID";
-	public static final String ACTION_STOCK_TREND_LIST = "orion.intent.action.ACTION_STOCK_TREND_LIST";
-
 	public static final int LOADER_ID_STOCK_TREND_LIST = 0;
 
 	public static final int REQUEST_CODE_STOCK_TREND_INSERT = 0;
@@ -91,8 +88,8 @@ public class StockTrendListActivity extends ListActivity implements
 
 			switch (msg.what) {
 				case MESSAGE_REFRESH:
+					//TODO
 					if (mOrionService != null) {
-						mStockDatabaseManager.deleteStockData();
 						mOrionService.download();
 						restartLoader();
 					}
@@ -100,7 +97,7 @@ public class StockTrendListActivity extends ListActivity implements
 
 				case MESSAGE_VIEW_STOCK_DEAL:
 					intent = new Intent(mContext, StockEditActivity.class);
-					intent.setAction(StockEditActivity.ACTION_STOCK_EDIT);
+					intent.setAction(Constant.ACTION_STOCK_EDIT);
 					intent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
 					startActivity(intent);
 					break;
@@ -435,7 +432,7 @@ public class StockTrendListActivity extends ListActivity implements
 
 		switch (id) {
 			case LOADER_ID_STOCK_TREND_LIST:
-				if (TextUtils.equals(mIntent.getAction(), ACTION_STOCK_TREND_LIST)) {
+				if (TextUtils.equals(mIntent.getAction(), Constant.ACTION_STOCK_TREND_LIST)) {
 					long stockId = getIntent().getLongExtra(Constant.EXTRA_STOCK_ID,
 							Stock.INVALID_ID);
 					selection = "(" + DatabaseContract.COLUMN_STOCK_ID + " = " + stockId + ") "
@@ -514,7 +511,7 @@ public class StockTrendListActivity extends ListActivity implements
 			return;
 		}
 
-		if (TextUtils.equals(mAction, ACTION_STOCK_ID)) {
+		if (TextUtils.equals(mAction, Constant.ACTION_STOCK_ID)) {
 			if (mIntent != null) {
 				mIntent.putExtra(Constant.EXTRA_STOCK_ID, id);
 				setResult(RESULT_OK, mIntent);

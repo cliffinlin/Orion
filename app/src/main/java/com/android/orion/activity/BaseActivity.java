@@ -38,6 +38,7 @@ import com.android.orion.manager.StockDatabaseManager;
 import com.android.orion.service.OrionService;
 import com.android.orion.service.OrionService.OrionServiceBinder;
 import com.android.orion.setting.Constant;
+import com.android.orion.setting.Setting;
 import com.android.orion.utility.Logger;
 import com.android.orion.utility.Utility;
 
@@ -60,7 +61,7 @@ public class BaseActivity extends Activity {
 	ContentResolver mContentResolver = null;
 	LoaderManager mLoaderManager = null;
 	Stock mStock = null;
-	ArrayList<Stock> mStockList = null;
+	ArrayList<Stock> mStockList = new ArrayList<Stock>();
 	ArrayList<StockData> mStockDataList = null;
 	ArrayList<StockDeal> mStockDealList = null;
 	ArrayList<StockQuant> mStockQuantList = null;
@@ -141,11 +142,6 @@ public class BaseActivity extends Activity {
 
 		if (mStock == null) {
 			mStock = new Stock();
-		}
-
-
-		if (mStockList == null) {
-			mStockList = new ArrayList<Stock>();
 		}
 
 		if (mStockDataList == null) {
@@ -253,6 +249,26 @@ public class BaseActivity extends Activity {
 	}
 
 	void restartLoader(Intent intent) {
+	}
+
+	void onMessageRefresh(Stock stock) {
+		if (stock == null) {
+			return;
+		}
+
+		Setting.setDownloadTimemillis(stock.getSE(), stock.getCode(), 0);
+
+		stock.reset();
+		mStockDatabaseManager.updateStock(stock, stock.getContentValues());
+
+		mStockDatabaseManager.deleteStockData(stock.getId());
+		mStockDatabaseManager.deleteStockFinancial(stock.getId());
+		mStockDatabaseManager.deleteShareBonus(stock.getId());
+		mStockDatabaseManager.deleteStockQuant(stock);
+
+		if (mOrionService != null) {
+			mOrionService.download(stock);
+		}
 	}
 
 	private void checkPermission() {

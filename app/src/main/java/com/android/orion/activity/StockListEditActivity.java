@@ -36,8 +36,6 @@ public class StockListEditActivity extends DatabaseActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
 		OnClickListener {
 
-	public static final String ACTION_INDEX_COMPONENT_SELECT = "orion.intent.action.ACTION_INDEX_COMPONENT_SELECT";
-
 	static final int LOADER_ID_STOCK_LIST = 0;
 
 	static final int mHeaderTextDefaultColor = Color.BLACK;
@@ -241,7 +239,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 		}
 
 		mTextViewComponent = findViewById(R.id.component);
-		if (TextUtils.equals(mAction, ACTION_INDEX_COMPONENT_SELECT)) {
+		if (TextUtils.equals(mAction, Constant.ACTION_INDEX_COMPONENT_SELECT)) {
 			mTextViewComponent.setVisibility(View.VISIBLE);
 		} else {
 			mTextViewComponent.setVisibility(View.GONE);
@@ -316,7 +314,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 			holder.mImageViewgComponent.setTag(stock.getId());
 			holder.mImageViewgComponent.setOnClickListener(this);
 
-			if (TextUtils.equals(mAction, ACTION_INDEX_COMPONENT_SELECT)) {
+			if (TextUtils.equals(mAction, Constant.ACTION_INDEX_COMPONENT_SELECT)) {
 				mStock.setId(stock.getId());
 				mStockDatabaseManager.getStockById(mStock);
 
@@ -354,7 +352,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 					.findViewById(R.id.delete);
 			holder.mImageViewgComponent = view.findViewById(R.id.component);
 
-			if (TextUtils.equals(mAction, ACTION_INDEX_COMPONENT_SELECT)) {
+			if (TextUtils.equals(mAction, Constant.ACTION_INDEX_COMPONENT_SELECT)) {
 				holder.mImageViewgComponent.setVisibility(View.VISIBLE);
 			} else {
 				holder.mImageViewgComponent.setVisibility(View.GONE);
@@ -415,7 +413,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 						break;
 
 					case R.id.component:
-						if (TextUtils.equals(mAction, ACTION_INDEX_COMPONENT_SELECT)) {
+						if (TextUtils.equals(mAction, Constant.ACTION_INDEX_COMPONENT_SELECT)) {
 							mStock.setId(stock.getId());
 							mStockDatabaseManager.getStockById(mStock);
 

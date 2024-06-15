@@ -30,10 +30,6 @@ import java.util.List;
 
 public class StockEditActivity extends DatabaseActivity implements OnClickListener, AdapterView.OnItemSelectedListener {
 
-	public static final String ACTION_INDEX_COMPONENT_INSERT = "orion.intent.action.ACTION_INDEX_COMPONENT_INSERT";
-	public static final String ACTION_FAVORITE_STOCK_INSERT = "orion.intent.action.ACTION_FAVORITE_STOCK_INSERT";
-	public static final String ACTION_STOCK_EDIT = "orion.intent.action.ACTION_STOCK_EDIT";
-
 	CheckBox mCheckBoxFavorite;
 	RadioGroup mRadioGroupClass;
 	RadioGroup mRadioGroupSE;
@@ -64,7 +60,7 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 
 		initView();
 
-		if (TextUtils.equals(mAction, ACTION_STOCK_EDIT)) {
+		if (TextUtils.equals(mAction, Constant.ACTION_STOCK_EDIT)) {
 			mRadioGroupClass.setEnabled(false);
 			mRadioGroupSE.setEnabled(false);
 			mEditTextStockCode.setEnabled(false);
@@ -134,7 +130,7 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
 									  int count) {
-				if (TextUtils.equals(mAction, ACTION_STOCK_EDIT)) {
+				if (TextUtils.equals(mAction, Constant.ACTION_STOCK_EDIT)) {
 					return;
 				}
 
@@ -153,9 +149,9 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 			}
 		});
 
-		if (TextUtils.equals(mAction, ACTION_INDEX_COMPONENT_INSERT) || TextUtils.equals(mAction, ACTION_FAVORITE_STOCK_INSERT)) {
+		if (TextUtils.equals(mAction, Constant.ACTION_INDEX_COMPONENT_INSERT) || TextUtils.equals(mAction, Constant.ACTION_FAVORITE_STOCK_INSERT)) {
 			setTitle(R.string.stock_insert);
-		} else if (TextUtils.equals(mAction, ACTION_STOCK_EDIT)) {
+		} else if (TextUtils.equals(mAction, Constant.ACTION_STOCK_EDIT)) {
 			setTitle(R.string.stock_edit);
 		}
 	}
@@ -292,14 +288,14 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 					mStockDatabaseManager.deleteStockQuant(mStock);
 				}
 
-				if (TextUtils.equals(mAction, ACTION_FAVORITE_STOCK_INSERT) || TextUtils.equals(mAction, ACTION_INDEX_COMPONENT_INSERT)) {
+				if (TextUtils.equals(mAction, Constant.ACTION_FAVORITE_STOCK_INSERT) || TextUtils.equals(mAction, Constant.ACTION_INDEX_COMPONENT_INSERT)) {
 					if (!mStockDatabaseManager.isStockExist(mStock)) {
 						mStock.setCreated(Utility.getCurrentDateTimeString());
 						Uri uri = mStockDatabaseManager.insertStock(mStock);
 
 						mStockDatabaseManager.getStock(uri, mStock);
 
-						if (TextUtils.equals(mAction, ACTION_INDEX_COMPONENT_INSERT)) {
+						if (TextUtils.equals(mAction, Constant.ACTION_INDEX_COMPONENT_INSERT)) {
 							IndexComponent indexComponent = new IndexComponent();
 
 							indexComponent.setSE(mStock.getSE());
@@ -318,7 +314,7 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 						Toast.makeText(mContext, R.string.stock_exist,
 								Toast.LENGTH_LONG).show();
 					}
-				} else if (TextUtils.equals(mAction, ACTION_STOCK_EDIT)) {
+				} else if (TextUtils.equals(mAction, Constant.ACTION_STOCK_EDIT)) {
 					mStock.setModified(Utility.getCurrentDateTimeString());
 					mStockDatabaseManager.updateStock(mStock,
 							mStock.getContentValuesForEdit());

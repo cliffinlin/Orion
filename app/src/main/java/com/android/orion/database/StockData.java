@@ -15,32 +15,32 @@ import java.util.Comparator;
 
 public class StockData extends DatabaseTable {
 
-	public static final String ACTION_NONE = "";
+	public static final String MARK_NONE = "";
 
-	public static final String ACTION_BUY = "B";
-	public static final String ACTION_SELL = "S";
-	public static final String ACTION_BUY1 = "B1";
-	public static final String ACTION_BUY2 = "B2";
-	public static final String ACTION_SELL1 = "S1";
-	public static final String ACTION_SELL2 = "S2";
+	public static final String MARK_BUY = "B";
+	public static final String MARK_SELL = "S";
+	public static final String MARK_BUY1 = "B1";
+	public static final String MARK_BUY2 = "B2";
+	public static final String MARK_SELL1 = "S1";
+	public static final String MARK_SELL2 = "S2";
 
-	public static final String ACTION_G = "G";
-	public static final String ACTION_D = "D";
+	public static final String MARK_G = "G";
+	public static final String MARK_D = "D";
 
-//    public static final String ACTION_HIGH = "H";
-//    public static final String ACTION_LOW = "L";
+//    public static final String MARK_HIGH = "H";
+//    public static final String MARK_LOW = "L";
 
-	public static final char ACTION_ADD = '+';
-	public static final char ACTION_MINUS = '-';
+	public static final char MARK_ADD = '+';
+	public static final char MARK_MINUS = '-';
 
-	public static final String ACTION_STAR = "*";
+	public static final String MARK_STAR = "*";
 
-	public static final String ACTION_NATURAL_RALLY = "NG";
-	public static final String ACTION_UPWARD_TREND = "GG";
-	public static final String ACTION_DOWNWARD_TREND = "DD";
-	public static final String ACTION_NATURAL_REACTION = "ND";
+	public static final String MARK_NATURAL_RALLY = "NG";
+	public static final String MARK_UPWARD_TREND = "GG";
+	public static final String MARK_DOWNWARD_TREND = "DD";
+	public static final String MARK_NATURAL_REACTION = "ND";
 
-	public static final String ACTION_QUANT = "Q";
+	public static final String MARK_QUANT = "Q";
 
 	public static final String NAME_NATURAL_RALLY = "Rally";
 	public static final String NAME_UPWARD_TREND = "Up";

@@ -154,7 +154,7 @@ public class StockQuantListActivity extends ListActivity implements
 					mStockDatabaseManager.getStock(mStock);
 
 					mIntent = new Intent(mContext, StockTrendListActivity.class);
-					mIntent.setAction(StockTrendListActivity.ACTION_STOCK_TREND_LIST);
+					mIntent.setAction(Constant.ACTION_STOCK_TREND_LIST);
 					mIntent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
 					startActivity(mIntent);
 					break;

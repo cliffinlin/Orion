@@ -527,7 +527,7 @@ public class StockDatabaseManager extends DatabaseManager {
 					stockData.setIndex(index);
 					stockData.setIndexStart(index);
 					stockData.setIndexEnd(index);
-					stockData.setAction(StockData.ACTION_NONE);
+					stockData.setAction(StockData.MARK_NONE);
 
 					if (loopback) {
 						if (stockData.getCalendar().after(calendar)) {

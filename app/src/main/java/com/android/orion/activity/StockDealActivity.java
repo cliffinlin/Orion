@@ -32,11 +32,6 @@ import java.util.List;
 public class StockDealActivity extends DatabaseActivity implements
 		OnClickListener {
 
-	public static final String ACTION_DEAL_INSERT = "orion.intent.action.ACTION_DEAL_INSERT";
-	public static final String ACTION_DEAL_EDIT = "orion.intent.action.ACTION_DEAL_EDIT";
-
-	public static final String EXTRA_DEAL_ID = "deal_id";
-
 	static final int MESSAGE_LOAD_DEAL = 0;
 	static final int MESSAGE_SAVE_DEAL = 1;
 	static final int MESSAGE_LOAD_STOCK_BY_ID = 2;
@@ -81,11 +76,11 @@ public class StockDealActivity extends DatabaseActivity implements
 					break;
 
 				case MESSAGE_SAVE_DEAL:
-					if (TextUtils.equals(mAction, ACTION_DEAL_INSERT)) {
+					if (TextUtils.equals(mAction, Constant.ACTION_DEAL_INSERT)) {
 						mDeal.setCreated(Utility.getCurrentDateTimeString());
 						RecordFile.writeDealFile(mStock, mDeal, Constant.DEAL_OPERATE_INSERT);
 						mStockDatabaseManager.insertStockDeal(mDeal);
-					} else if (TextUtils.equals(mAction, ACTION_DEAL_EDIT)) {
+					} else if (TextUtils.equals(mAction, Constant.ACTION_DEAL_EDIT)) {
 						mDeal.setModified(Utility.getCurrentDateTimeString());
 						RecordFile.writeDealFile(mStock, mDeal, Constant.DEAL_OPERATE_EDIT);
 						mStockDatabaseManager.updateStockDealByID(mDeal);
@@ -137,14 +132,14 @@ public class StockDealActivity extends DatabaseActivity implements
 
 		initView();
 
-		if (TextUtils.equals(mAction, ACTION_DEAL_INSERT)) {
+		if (TextUtils.equals(mAction, Constant.ACTION_DEAL_INSERT)) {
 			if (mBundle != null) {
 				mStock.setSE(mBundle.getString(Constant.EXTRA_STOCK_SE));
 				mStock.setCode(mBundle.getString(Constant.EXTRA_STOCK_CODE));
 				mHandler.sendEmptyMessage(MESSAGE_LOAD_STOCK_BY_SE_CODE);
 			}
-		} else if (TextUtils.equals(mAction, ACTION_DEAL_EDIT)) {
-			mDeal.setId(mIntent.getLongExtra(EXTRA_DEAL_ID, 0));
+		} else if (TextUtils.equals(mAction, Constant.ACTION_DEAL_EDIT)) {
+			mDeal.setId(mIntent.getLongExtra(Constant.EXTRA_DEAL_ID, 0));
 			mHandler.sendEmptyMessage(MESSAGE_LOAD_DEAL);
 		}
 	}
@@ -208,10 +203,10 @@ public class StockDealActivity extends DatabaseActivity implements
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		mSpinnerStockOperate.setAdapter(mArrayAdapterStockOperate);
 
-		if (TextUtils.equals(mAction, ACTION_DEAL_INSERT)) {
+		if (TextUtils.equals(mAction, Constant.ACTION_DEAL_INSERT)) {
 			setTitle(R.string.deal_insert);
 			mDeal.setAction(DatabaseContract.COLUMN_DAY);
-		} else if (TextUtils.equals(mAction, ACTION_DEAL_EDIT)) {
+		} else if (TextUtils.equals(mAction, Constant.ACTION_DEAL_EDIT)) {
 			setTitle(R.string.deal_edit);
 		}
 
@@ -301,9 +296,9 @@ public class StockDealActivity extends DatabaseActivity implements
 		switch (id) {
 			case R.id.edittext_stock_name:
 			case R.id.edittext_stock_code:
-				if (TextUtils.equals(ACTION_DEAL_INSERT, mAction)) {
+				if (TextUtils.equals(Constant.ACTION_DEAL_INSERT, mAction)) {
 					Intent intent = new Intent(this, StockFavoriteListActivity.class);
-					intent.setAction(StockFavoriteListActivity.ACTION_STOCK_ID);
+					intent.setAction(Constant.ACTION_STOCK_ID);
 					startActivityForResult(intent, REQUEST_CODE_STOCK_ID);
 				}
 				break;

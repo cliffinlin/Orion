@@ -75,8 +75,6 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 
 			switch (msg.what) {
 				case MESSAGE_REFRESH:
-					mOrionService.download(mStock);
-					restartLoader();
 					break;
 
 				default:

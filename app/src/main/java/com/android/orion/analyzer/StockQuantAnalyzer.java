@@ -88,7 +88,7 @@ public class StockQuantAnalyzer {
 
 		StockQuant stockQuant = new StockQuant();
 
-		stockQuant.setAction(StockData.ACTION_BUY);
+		stockQuant.setAction(StockData.MARK_BUY);
 
 		stockQuant.setSE(stock.getSE());
 		stockQuant.setCode(stock.getCode());
@@ -153,7 +153,7 @@ public class StockQuantAnalyzer {
 				}
 			}
 
-			stockQuant.setAction(StockData.ACTION_SELL);
+			stockQuant.setAction(StockData.MARK_SELL);
 
 			stockQuant.setSE(stock.getSE());
 			stockQuant.setCode(stock.getCode());

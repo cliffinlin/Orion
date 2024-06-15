@@ -34,7 +34,6 @@ public class StockFinancialListActivity extends ListActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
 		OnItemLongClickListener, OnClickListener {
 
-	public static final String ACTION_STOCK_ID = "orion.intent.action.ACTION_STOCK_ID";
 	public static final int LOADER_ID_STOCK_FINANCIAL_LIST = 0;
 	public static final int EXECUTE_STOCK_FINANCIAL_LOAD = 1;
 
@@ -94,21 +93,13 @@ public class StockFinancialListActivity extends ListActivity implements
 
 			switch (msg.what) {
 				case MESSAGE_REFRESH:
-					for (Stock stock : mStockList) {
-						if (stock != null) {
-							Setting.setDownloadStockInformationTimemillis(mStock.getSE(), mStock.getCode(), 0);
-							Setting.setDownloadStockFinancialTimemillis(stock.getSE(), stock.getCode(), 0);
-							Setting.setDownloadShareBonusTimemillis(stock.getSE(), stock.getCode(), 0);
-							Setting.setDownloadTotalShareTimemillis(stock.getSE(), stock.getCode(), 0);
-							Setting.setDownloadStockRealTimeTimemillis(stock.getSE(), stock.getCode(), 0);
+					for (int i = 0; i < mStockList.size(); i++) {
+						Stock stock = mStockList.get(i);
+						if (stock != null && stock.hasFlag(Stock.FLAG_FAVORITE)) {
+							onMessageRefresh(stock);
 						}
 					}
-					if (mOrionService != null) {
-						mStockDatabaseManager.deleteStockFinancial();
-						mStockDatabaseManager.deleteShareBonus();
-						mOrionService.download();
-						restartLoader();
-					}
+					restartLoader();
 					break;
 
 				default:
@@ -149,7 +140,7 @@ public class StockFinancialListActivity extends ListActivity implements
 
 			case R.id.action_new:
 				Intent intent = new Intent(this, StockEditActivity.class);
-				intent.setAction(StockEditActivity.ACTION_FAVORITE_STOCK_INSERT);
+				intent.setAction(Constant.ACTION_FAVORITE_STOCK_INSERT);
 				startActivityForResult(intent, REQUEST_CODE_STOCK_INSERT);
 				return true;
 
@@ -764,7 +755,7 @@ public class StockFinancialListActivity extends ListActivity implements
 			return;
 		}
 
-		if (TextUtils.equals(mAction, ACTION_STOCK_ID)) {
+		if (TextUtils.equals(mAction, Constant.ACTION_STOCK_ID)) {
 			if (mIntent != null) {
 				mIntent.putExtra(Constant.EXTRA_STOCK_ID, id);
 				setResult(RESULT_OK, mIntent);

@@ -126,7 +126,7 @@ public class StockQuantDealListActivity extends ListActivity implements
 					getStock();
 
 					intent = new Intent(mContext, StockEditActivity.class);
-					intent.setAction(StockEditActivity.ACTION_STOCK_EDIT);
+					intent.setAction(Constant.ACTION_STOCK_EDIT);
 					intent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
 					startActivity(intent);
 					break;
@@ -151,7 +151,7 @@ public class StockQuantDealListActivity extends ListActivity implements
 					mStockDatabaseManager.getStock(mStock);
 
 					mIntent = new Intent(mContext, StockTrendListActivity.class);
-					mIntent.setAction(StockTrendListActivity.ACTION_STOCK_TREND_LIST);
+					mIntent.setAction(Constant.ACTION_STOCK_TREND_LIST);
 					mIntent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
 					startActivity(mIntent);
 					break;

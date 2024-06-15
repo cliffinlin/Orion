@@ -7,7 +7,6 @@ public class Setting {
 
 	public static final String SETTING_PREFERENCES_INIT = "SETTING_PREFERENCES_INIT";
 
-
 	public static final String SETTING_PERIOD_YEAR = DatabaseContract.COLUMN_YEAR;
 	public static final String SETTING_PERIOD_QUARTER = DatabaseContract.COLUMN_QUARTER;
 	public static final String SETTING_PERIOD_MONTH = DatabaseContract.COLUMN_MONTH;
@@ -209,6 +208,16 @@ public class Setting {
 
 	public static void setDownloadStockRealTimeTimemillis(String se, String code, long value) {
 		Preferences.putLong(SETTING_DOWNLOAD_STOCK_REALTIME_TIMEMILLIS + "_" + se + "_" + code, value);
+	}
+
+	public static void setDownloadTimemillis(String se, String code, long value) {
+		setDownloadStockInformationTimemillis(se, code, 0);
+		setDownloadStockFinancialTimemillis(se, code, 0);
+		setDownloadShareBonusTimemillis(se, code, 0);
+		setDownloadTotalShareTimemillis(se, code, 0);
+		setDownloadStockDataHistoryTimemillis(se, code, 0);
+		setDownloadStockDataRealTimeTimemillis(se, code, 0);
+		setDownloadStockRealTimeTimemillis(se, code, 0);
 	}
 
 	public static boolean getStockDataChanged(String se, String code) {
