@@ -48,6 +48,7 @@ public class Setting {
 	public static final String SETTING_DEBUG_DIRECT = "SETTING_DEBUG_DIRECT";
 	public static final String SETTING_DEBUG_LOOPBACK = "SETTING_DEBUG_LOOPBACK";
 	public static final String SETTING_DEBUG_LOOPBACK_DATE_TIME = "SETTING_DEBUG_LOOPBACK_DATE_TIME";
+	public static final String SETTING_DEBUG_WIFI = "SETTING_DEBUG_WIFI";
 
 	public static final String SETTING_DOWNLOAD_STOCK_HSA_TIMEMILLIS = "SETTING_DOWNLOAD_STOCK_HSA_TIMEMILLIS";
 
@@ -144,6 +145,14 @@ public class Setting {
 
 	public static void setDebugLoopbackDateTime(String value) {
 		Preferences.putString(SETTING_DEBUG_LOOPBACK_DATE_TIME, value);
+	}
+
+	public static boolean getDebugWifi() {
+		return Preferences.getBoolean(SETTING_DEBUG_WIFI, false);
+	}
+
+	public static void setDebugWifi(boolean value) {
+		Preferences.putBoolean(SETTING_DEBUG_WIFI, value);
 	}
 
 	public static long getDownloadStockHSATimemillis() {

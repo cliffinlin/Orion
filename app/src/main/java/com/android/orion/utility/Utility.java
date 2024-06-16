@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 
 import com.android.orion.config.Config;
+import com.android.orion.setting.Setting;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -60,12 +61,14 @@ public class Utility {
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
 
 		if (connectivityManager != null) {
-//			networkInfo = connectivityManager
-//					.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+			if (Setting.getDebugWifi()) {
+				networkInfo = connectivityManager
+						.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 
-//			if (networkInfo != null && networkInfo.isConnected()) {
-//				return true;
-//			}
+				if (networkInfo != null && networkInfo.isConnected()) {
+					return true;
+				}
+			}
 
 			networkInfo = connectivityManager
 					.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);

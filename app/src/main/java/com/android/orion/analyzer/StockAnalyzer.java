@@ -804,7 +804,8 @@ public class StockAnalyzer {
 			}
 		}
 
-		if (stockData.isMinutePeriod()) {
+		if (TextUtils.equals(period, stock.getOperate())) {
+//		if (stockData.isMinutePeriod()) {
 			if (stockData.getNaturalRally() > 0) {
 				action += StockData.MARK_NATURAL_RALLY;
 			}
@@ -820,10 +821,8 @@ public class StockAnalyzer {
 			if (stockData.getNaturalReaction() > 0) {
 				action += StockData.MARK_NATURAL_REACTION;
 			}
-		}
-
-		if (TextUtils.equals(period, stock.getOperate())) {
-			action += StockData.MARK_STAR;
+//		}
+//			action += StockData.MARK_STAR;
 		}
 
 		stock.setDateTime(stockData.getDate(), stockData.getTime());
@@ -885,8 +884,6 @@ public class StockAnalyzer {
 		boolean notifyToSell1;
 		boolean notifyToBuy2;
 		boolean notifyToSell2;
-		double toBuyProfit = 0;
-		double toSellProfit = 0;
 		StringBuilder actionString = new StringBuilder();
 		StringBuilder contentTitle = new StringBuilder();
 
@@ -898,50 +895,31 @@ public class StockAnalyzer {
 			return;
 		}
 
-		toBuyProfit = getToBuyProfit(stock);
-		toSellProfit = getToSellProfit(stock);
-
-		notifyToBuy1 = true;
-		notifyToSell1 = true;
-
 		for (String period : DatabaseContract.PERIODS) {
 			if (Preferences.getBoolean(period, false)) {
 				String action = stock.getAction(period);
+
+				notifyToBuy1 = false;
+				notifyToSell1 = false;
 
 				notifyToBuy2 = false;
 				notifyToSell2 = false;
 
 				if (action.contains(StockData.MARK_BUY2 + StockData.MARK_BUY2)) {
 					notifyToBuy2 = true;
-				} else if (!action.contains(StockData.MARK_D)) {
-					notifyToBuy1 &= false;
+				} else if (action.contains(StockData.MARK_D)) {
+					notifyToBuy1 = true;
 				}
 
 				if (action.contains(StockData.MARK_SELL2 + StockData.MARK_SELL2)) {
 					notifyToSell2 = true;
-				} else if (!action.contains(StockData.MARK_G)) {
-					notifyToSell1 &= false;
+				} else if (action.contains(StockData.MARK_G)) {
+					notifyToSell1 = true;
 				}
 
-				if (notifyToBuy2 || notifyToSell2) {
+				if (notifyToBuy1 || notifyToSell1 || notifyToBuy2 || notifyToSell2) {
 					actionString.append(period + " " + action + " ");
 				}
-			}
-		}
-
-		if (notifyToBuy1) {
-			if (toBuyProfit > 0) {
-				actionString.append(StockData.MARK_D + " " + (int) toBuyProfit + " ");
-			} else {
-				actionString.append(StockData.MARK_D + " ");
-			}
-		}
-
-		if (notifyToSell1) {
-			if (toSellProfit > 0) {
-				actionString.append(StockData.MARK_G + " " + (int) toSellProfit + " ");
-			} else {
-				actionString.append(StockData.MARK_G + " ");
 			}
 		}
 

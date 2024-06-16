@@ -154,6 +154,7 @@
     <string name="setting_debug_direct">Direct</string>
     <string name="setting_debug_loopback">Loopback</string>
     <string name="setting_debug_loopback_date_time">Loopback date time</string>
+    <string name="setting_debug_wifi">Wifi</string>
 
     <string name="ok">OK</string>
     <string name="password_hint">Password</string>

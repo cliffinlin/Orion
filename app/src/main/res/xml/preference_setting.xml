@@ -54,6 +54,9 @@
         <com.android.orion.preference.CustomSwitchPreference
             android:key="SETTING_DEBUG_DIRECT"
             android:title="@string/direct" />
+        <com.android.orion.preference.CustomSwitchPreference
+            android:key="SETTING_DEBUG_WIFI"
+            android:title="@string/setting_debug_wifi" />
     </PreferenceCategory>
 
 </PreferenceScreen>
