@@ -15,13 +15,11 @@ public class StockVertexAnalyzer {
 	private StockVertexAnalyzer() {
 	}
 
-	public static StockVertexAnalyzer getInstance() {
-		synchronized (StockVertexAnalyzer.class) {
-			if (mInstance == null) {
-				mInstance = new StockVertexAnalyzer();
-			}
-			return mInstance;
+	public static synchronized StockVertexAnalyzer getInstance() {
+		if (mInstance == null) {
+			mInstance = new StockVertexAnalyzer();
 		}
+		return mInstance;
 	}
 
 	void analyzeVertex(ArrayList<StockData> dataList,

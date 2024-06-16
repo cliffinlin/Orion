@@ -25,13 +25,11 @@ public class DatabaseManager {
 	}
 
 	@NonNull
-	public static DatabaseManager getInstance(@NonNull Context context) {
-		synchronized (DatabaseManager.class) {
-			if (mInstance == null) {
-				mInstance = new DatabaseManager(context.getApplicationContext());
-			}
-			return mInstance;
+	public static synchronized DatabaseManager getInstance(@NonNull Context context) {
+		if (mInstance == null) {
+			mInstance = new DatabaseManager(context.getApplicationContext());
 		}
+		return mInstance;
 	}
 
 	public void openDatabase() {

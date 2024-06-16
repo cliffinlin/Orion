@@ -13,7 +13,7 @@ public class StockKeyAnalyzer {
 	private static StockKeyAnalyzer mInstance;
 	Logger Log = Logger.getLogger();
 
-	int mThresholdType = StockData.THRESHOLD_NONE;
+	int mThresholdType;
 	double mNaturalRally;
 	double mUpwardTrend;
 	double mDownwardTrend;
@@ -24,23 +24,19 @@ public class StockKeyAnalyzer {
 	private StockKeyAnalyzer() {
 	}
 
-	public static StockKeyAnalyzer getInstance() {
-		synchronized (StockKeyAnalyzer.class) {
-			if (mInstance == null) {
-				mInstance = new StockKeyAnalyzer();
-			}
-			return mInstance;
+	public static synchronized StockKeyAnalyzer getInstance() {
+		if (mInstance == null) {
+			mInstance = new StockKeyAnalyzer();
 		}
+		return mInstance;
 	}
 
 	void init() {
 		mThresholdType = StockData.THRESHOLD_NONE;
-
 		mNaturalRally = 0;
 		mUpwardTrend = 0;
 		mDownwardTrend = 0;
 		mNaturalReaction = 0;
-
 		mPrevHigh = 0;
 		mPrevLow = 0;
 	}

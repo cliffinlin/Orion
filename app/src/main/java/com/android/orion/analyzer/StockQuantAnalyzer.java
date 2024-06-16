@@ -21,13 +21,10 @@ public class StockQuantAnalyzer {
 	private static StockQuantAnalyzer mInstance;
 
 	boolean mBulkInsert;
-
 	long mHold;
-
 	double mQuantProfit;
 	double mValuation;
 	double mFirstBuy;
-
 	String mBuyDate = "";
 	String mSellDate = "";
 
@@ -55,26 +52,25 @@ public class StockQuantAnalyzer {
 	private StockQuantAnalyzer() {
 	}
 
-	public static StockQuantAnalyzer getInstance() {
-		synchronized (StockQuantAnalyzer.class) {
-			if (mInstance == null) {
-				mInstance = new StockQuantAnalyzer();
-			}
-			return mInstance;
+	public static synchronized StockQuantAnalyzer getInstance() {
+		if (mInstance == null) {
+			mInstance = new StockQuantAnalyzer();
 		}
+		return mInstance;
 	}
 
 	void init() {
 		mBulkInsert = false;
-
 		mHold = 0;
-
 		mQuantProfit = 0;
 		mValuation = 0;
 		mFirstBuy = 0;
-
 		mBuyDate = "";
 		mSellDate = "";
+		mShareBonusList.clear();
+		mBuyList.clear();
+		mStockQuantList.clear();
+		mContentValuesList.clear();
 	}
 
 	void setupStockQuantBuy(Stock stock, StockData stockData, double price) {
@@ -222,7 +218,7 @@ public class StockQuantAnalyzer {
 		}
 
 		if (shareBonusList == null || shareBonusList.size() < StockData.VERTEX_TYPING_SIZE) {
-			return;
+//			return;
 		}
 
 		mShareBonusList = shareBonusList;

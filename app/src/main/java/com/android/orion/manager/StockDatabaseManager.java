@@ -35,13 +35,11 @@ public class StockDatabaseManager extends DatabaseManager {
 	}
 
 	@NonNull
-	public static StockDatabaseManager getInstance() {
-		synchronized (StockDatabaseManager.class) {
-			if (mInstance == null) {
-				mInstance = new StockDatabaseManager();
-			}
-			return mInstance;
+	public static synchronized StockDatabaseManager getInstance() {
+		if (mInstance == null) {
+			mInstance = new StockDatabaseManager();
 		}
+		return mInstance;
 	}
 
 	public int delete(Uri uri) {

@@ -584,7 +584,8 @@ public class StockDataChart {
 					+ "  " + stockQuant.getVolume()
 					+ "  " + (int) stockQuant.getProfit()
 					+ "  " + stockQuant.getNet() + "%"
-					+ "  " + stockQuant.getCreated();
+					+ "  " + stockQuant.getCreated()
+					+ "  " + StockData.MARK_QUANT;
 
 			limitLineQuant = createLimitLine(limit, color, label);
 

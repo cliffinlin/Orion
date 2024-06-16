@@ -79,11 +79,9 @@ public class SinaFinance extends StockDataProvider {
 				R.string.access_denied_default));
 	}
 
-	public static SinaFinance getInstance() {
-		synchronized (SinaFinance.class) {
-			if (mInstance == null) {
-				mInstance = new SinaFinance();
-			}
+	public static synchronized SinaFinance getInstance() {
+		if (mInstance == null) {
+			mInstance = new SinaFinance();
 		}
 		return mInstance;
 	}

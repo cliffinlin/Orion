@@ -54,13 +54,11 @@ public class StockAnalyzer {
 		mStockDatabaseManager = StockDatabaseManager.getInstance();
 	}
 
-	public static StockAnalyzer getInstance() {
-		synchronized (StockAnalyzer.class) {
-			if (mInstance == null) {
-				mInstance = new StockAnalyzer();
-			}
-			return mInstance;
+	public static synchronized StockAnalyzer getInstance() {
+		if (mInstance == null) {
+			mInstance = new StockAnalyzer();
 		}
+		return mInstance;
 	}
 
 	public void analyze(Stock stock, String period) {
