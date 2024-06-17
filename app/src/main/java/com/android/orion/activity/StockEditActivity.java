@@ -23,6 +23,7 @@ import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.IndexComponent;
 import com.android.orion.database.Stock;
 import com.android.orion.setting.Constant;
+import com.android.orion.setting.Setting;
 import com.android.orion.utility.Utility;
 
 import java.util.ArrayList;
@@ -324,6 +325,7 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 
 				setResult(RESULT_OK, getIntent());
 
+				Setting.setStockDataChanged(mStock.getSE(), mStock.getCode(), true);
 				mOrionService.download(mStock.getSE(), mStock.getCode());
 
 				finish();

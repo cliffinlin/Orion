@@ -767,7 +767,11 @@ public class StockQuantListActivity extends ListActivity implements
 						stock.setSE(stockQuant.getSE());
 						stock.setCode(stockQuant.getCode());
 						mStockDatabaseManager.getStock(stock);
-						stockMap.put(stockQuant.getSE() + stockQuant.getCode(), stock);
+						if (TextUtils.isEmpty(stock.getOperate())) {
+							mStockDatabaseManager.deleteStockQuant(stock);
+						} else {
+							stockMap.put(stockQuant.getSE() + stockQuant.getCode(), stock);
+						}
 					}
 				}
 				cursor.moveToFirst();
