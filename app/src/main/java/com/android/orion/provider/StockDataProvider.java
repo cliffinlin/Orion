@@ -22,7 +22,10 @@ import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.IndexComponent;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
+import com.android.orion.interfaces.StockFavoriteListener;
+import com.android.orion.interfaces.StockListListener;
 import com.android.orion.manager.StockDatabaseManager;
+import com.android.orion.manager.StockManager;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Logger;
@@ -37,7 +40,7 @@ import java.util.Map;
 
 import okhttp3.OkHttpClient;
 
-public abstract class StockDataProvider {
+public abstract class StockDataProvider implements StockListListener, StockFavoriteListener {
 
 	public static final int PERIOD_MINUTES_MIN1 = 1;
 	public static final int PERIOD_MINUTES_MIN5 = 5;
@@ -95,6 +98,8 @@ public abstract class StockDataProvider {
 				Process.THREAD_PRIORITY_BACKGROUND);
 		mHandlerThread.start();
 		mHandler = new ServiceHandler(mHandlerThread.getLooper());
+		StockManager.getInstance().registerStockListListener(this);
+		StockManager.getInstance().registerStockFavoriteListener(this);
 	}
 
 	public abstract int downloadStockHSA();
@@ -402,6 +407,34 @@ public abstract class StockDataProvider {
 		}
 	}
 
+	@Override
+	public void onStockFavoriteAdd(Stock stock) {
+		if (stock == null) {
+			return;
+		}
+		download(stock);
+	}
+
+	@Override
+	public void onStockFavoriteRemove(Stock stock) {
+		if (stock == null) {
+			return;
+		}
+	}
+
+	@Override
+	public void onStockAdd(Stock stock) {
+		if (stock == null) {
+			return;
+		}
+	}
+
+	@Override
+	public void onStockRemove(Stock stock) {
+		if (stock == null) {
+			return;
+		}
+	}
 
 	private final class ServiceHandler extends Handler {
 		ServiceHandler(Looper looper) {

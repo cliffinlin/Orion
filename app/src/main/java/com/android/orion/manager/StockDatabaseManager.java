@@ -19,6 +19,8 @@ import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockFinancial;
 import com.android.orion.database.StockQuant;
 import com.android.orion.database.TotalShare;
+import com.android.orion.interfaces.StockFavoriteListener;
+import com.android.orion.interfaces.StockListListener;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Utility;
@@ -27,11 +29,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class StockDatabaseManager extends DatabaseManager {
+public class StockDatabaseManager extends DatabaseManager implements StockListListener, StockFavoriteListener {
 	private static StockDatabaseManager mInstance;
 
 	private StockDatabaseManager() {
 		super(OrionApplication.getContext());
+		StockManager.getInstance().registerStockListListener(this);
+		StockManager.getInstance().registerStockFavoriteListener(this);
 	}
 
 	@NonNull
@@ -114,9 +118,9 @@ public class StockDatabaseManager extends DatabaseManager {
 			return cursor;
 		}
 
-		String selection = DatabaseContract.COLUMN_SE + " = " + "\'"
-				+ stock.getSE() + "\'" + " AND " + DatabaseContract.COLUMN_CODE
-				+ " = " + "\'" + stock.getCode() + "\'";
+		String selection = DatabaseContract.COLUMN_SE + " = " + "'"
+				+ stock.getSE() + "'" + " AND " + DatabaseContract.COLUMN_CODE
+				+ " = " + "'" + stock.getCode() + "'";
 
 		cursor = queryStock(selection, null, null);
 
@@ -324,9 +328,9 @@ public class StockDatabaseManager extends DatabaseManager {
 			return result;
 		}
 
-		String where = DatabaseContract.COLUMN_SE + " = " + "\'"
-				+ stock.getSE() + "\'" + " AND " + DatabaseContract.COLUMN_CODE
-				+ " = " + "\'" + stock.getCode() + "\'";
+		String where = DatabaseContract.COLUMN_SE + " = " + "'"
+				+ stock.getSE() + "'" + " AND " + DatabaseContract.COLUMN_CODE
+				+ " = " + "'" + stock.getCode() + "'";
 
 		result = mContentResolver.update(DatabaseContract.Stock.CONTENT_URI,
 				contentValues, where, null);
@@ -433,8 +437,8 @@ public class StockDatabaseManager extends DatabaseManager {
 		try {
 			String selection = DatabaseContract.COLUMN_STOCK_ID + " = "
 					+ stockData.getStockId() + " AND "
-					+ DatabaseContract.COLUMN_PERIOD + " = " + "\'"
-					+ stockData.getPeriod() + "\'";
+					+ DatabaseContract.COLUMN_PERIOD + " = " + "'"
+					+ stockData.getPeriod() + "'";
 			String sortOrder = DatabaseContract.COLUMN_DATE + " DESC " + ","
 					+ DatabaseContract.COLUMN_TIME + " DESC ";
 
@@ -642,10 +646,10 @@ public class StockDatabaseManager extends DatabaseManager {
 
 		selection = DatabaseContract.COLUMN_STOCK_ID + " = "
 				+ stockData.getStockId() + " AND "
-				+ DatabaseContract.COLUMN_PERIOD + " = " + "\'"
-				+ stockData.getPeriod() + "\'" + " AND "
-				+ DatabaseContract.COLUMN_DATE + " = " + "\'"
-				+ stockData.getDate() + "\'";
+				+ DatabaseContract.COLUMN_PERIOD + " = " + "'"
+				+ stockData.getPeriod() + "'" + " AND "
+				+ DatabaseContract.COLUMN_DATE + " = " + "'"
+				+ stockData.getDate() + "'";
 
 		period = stockData.getPeriod();
 
@@ -654,8 +658,8 @@ public class StockDatabaseManager extends DatabaseManager {
 				|| TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)
 				|| TextUtils.equals(period, DatabaseContract.COLUMN_MIN30)
 				|| TextUtils.equals(period, DatabaseContract.COLUMN_MIN60)) {
-			selection += " AND " + DatabaseContract.COLUMN_TIME + " = " + "\'"
-					+ stockData.getTime() + "\'";
+			selection += " AND " + DatabaseContract.COLUMN_TIME + " = " + "'"
+					+ stockData.getTime() + "'";
 		}
 
 		return selection;
@@ -758,9 +762,9 @@ public class StockDatabaseManager extends DatabaseManager {
 
 		stockDeal = new StockDeal();
 
-		String selection = DatabaseContract.COLUMN_SE + " = " + "\'"
-				+ stock.getSE() + "\'" + " AND " + DatabaseContract.COLUMN_CODE
-				+ " = " + "\'" + stock.getCode() + "\'";
+		String selection = DatabaseContract.COLUMN_SE + " = " + "'"
+				+ stock.getSE() + "'" + " AND " + DatabaseContract.COLUMN_CODE
+				+ " = " + "'" + stock.getCode() + "'";
 		String sortOrder = DatabaseContract.COLUMN_BUY + " ASC ";
 
 		try {
@@ -827,10 +831,10 @@ public class StockDatabaseManager extends DatabaseManager {
 			return cursor;
 		}
 
-		String selection = DatabaseContract.COLUMN_SE + " = " + "\'"
-				+ stockDeal.getSE() + "\'" + " AND "
-				+ DatabaseContract.COLUMN_CODE + " = " + "\'"
-				+ stockDeal.getCode() + "\'" + " AND "
+		String selection = DatabaseContract.COLUMN_SE + " = " + "'"
+				+ stockDeal.getSE() + "'" + " AND "
+				+ DatabaseContract.COLUMN_CODE + " = " + "'"
+				+ stockDeal.getCode() + "'" + " AND "
 				+ DatabaseContract.COLUMN_BUY + " = " + stockDeal.getBuy()
 				+ " AND " + DatabaseContract.COLUMN_VOLUME + " = "
 				+ stockDeal.getVolume();
@@ -1041,9 +1045,9 @@ public class StockDatabaseManager extends DatabaseManager {
 			return;
 		}
 
-		String selection = DatabaseContract.COLUMN_SE + " = " + "\'"
-				+ stock.getSE() + "\'" + " AND " + DatabaseContract.COLUMN_CODE
-				+ " = " + "\'" + stock.getCode() + "\'";
+		String selection = DatabaseContract.COLUMN_SE + " = " + "'"
+				+ stock.getSE() + "'" + " AND " + DatabaseContract.COLUMN_CODE
+				+ " = " + "'" + stock.getCode() + "'";
 
 		try {
 			mContentResolver.delete(DatabaseContract.StockQuant.CONTENT_URI,
@@ -1075,10 +1079,10 @@ public class StockDatabaseManager extends DatabaseManager {
 			return cursor;
 		}
 
-		String selection = DatabaseContract.COLUMN_SE + " = " + "\'" + StockQuant.getSE() + "\'"
-				+ " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'" + StockQuant.getCode() + "\'"
-				+ " AND " + DatabaseContract.COLUMN_CREATED + " = " + "\'" + StockQuant.getCreated() + "\'"
-				+ " AND " + DatabaseContract.COLUMN_MODIFIED + " = " + "\'" + StockQuant.getModified() + "\'";
+		String selection = DatabaseContract.COLUMN_SE + " = " + "'" + StockQuant.getSE() + "'"
+				+ " AND " + DatabaseContract.COLUMN_CODE + " = " + "'" + StockQuant.getCode() + "'"
+				+ " AND " + DatabaseContract.COLUMN_CREATED + " = " + "'" + StockQuant.getCreated() + "'"
+				+ " AND " + DatabaseContract.COLUMN_MODIFIED + " = " + "'" + StockQuant.getModified() + "'";
 
 		cursor = queryStockQuant(selection, null, null);
 
@@ -1214,9 +1218,9 @@ public class StockDatabaseManager extends DatabaseManager {
 	public void getStockQuantList(@NonNull Stock stock, @NonNull ArrayList<StockQuant> StockQuantList) {
 		String sortOrder = DatabaseContract.COLUMN_ID + DatabaseContract.ORDER_DIRECTION_ASC;
 
-		String selection = DatabaseContract.COLUMN_SE + " = " + "\'" + stock.getSE()
-				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
-				+ stock.getCode() + "\'";
+		String selection = DatabaseContract.COLUMN_SE + " = " + "'" + stock.getSE()
+				+ "'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "'"
+				+ stock.getCode() + "'";
 
 		getStockQuantList(stock, StockQuantList, selection, sortOrder);
 	}
@@ -2186,9 +2190,9 @@ public class StockDatabaseManager extends DatabaseManager {
 	}
 
 	public String getIndexComponentSelection(String indexCode, String stockCode) {
-		return DatabaseContract.COLUMN_INDEX_CODE + " = " + "\'" + indexCode + "\'"
+		return DatabaseContract.COLUMN_INDEX_CODE + " = " + "'" + indexCode + "'"
 				+ " AND "
-				+ DatabaseContract.COLUMN_CODE + " = " + "\'" + stockCode + "\'";
+				+ DatabaseContract.COLUMN_CODE + " = " + "'" + stockCode + "'";
 	}
 
 	public String getIndexComponentOrder() {
@@ -2237,4 +2241,35 @@ public class StockDatabaseManager extends DatabaseManager {
 		}
 	}
 
+	@Override
+	public void onStockFavoriteAdd(Stock stock) {
+		if (stock == null) {
+			return;
+		}
+		updateStock(stock, stock.getContentValuesForEdit());
+		deleteStockQuant(stock);
+	}
+
+	@Override
+	public void onStockFavoriteRemove(Stock stock) {
+		if (stock == null) {
+			return;
+		}
+		updateStock(stock, stock.getContentValuesForEdit());
+		deleteStockQuant(stock);
+	}
+
+	@Override
+	public void onStockAdd(Stock stock) {
+		if (stock == null) {
+			return;
+		}
+	}
+
+	@Override
+	public void onStockRemove(Stock stock) {
+		if (stock == null) {
+			return;
+		}
+	}
 }

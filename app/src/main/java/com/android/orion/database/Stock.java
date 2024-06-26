@@ -26,7 +26,116 @@ public class Stock extends DatabaseTable {
 	public static final long INVALID_ID = 0;
 
 	public static final double ROI_COEFFICIENT = 10.0;
-
+	private final ArrayList<StockData> mStockDataListMin1 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mStockDataListMin5 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mStockDataListMin15 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mStockDataListMin30 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mStockDataListMin60 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mStockDataListDay = new ArrayList<StockData>();
+	private final ArrayList<StockData> mStockDataListWeek = new ArrayList<StockData>();
+	private final ArrayList<StockData> mStockDataListMonth = new ArrayList<StockData>();
+	private final ArrayList<StockData> mStockDataListQuarter = new ArrayList<StockData>();
+	private final ArrayList<StockData> mStockDataListYear = new ArrayList<StockData>();
+	private final ArrayList<StockData> mDrawVertexListMin1 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mDrawVertexListMin5 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mDrawVertexListMin15 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mDrawVertexListMin30 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mDrawVertexListMin60 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mDrawVertexListDay = new ArrayList<StockData>();
+	private final ArrayList<StockData> mDrawVertexListWeek = new ArrayList<StockData>();
+	private final ArrayList<StockData> mDrawVertexListMonth = new ArrayList<StockData>();
+	private final ArrayList<StockData> mDrawVertexListQuarter = new ArrayList<StockData>();
+	private final ArrayList<StockData> mDrawVertexListYear = new ArrayList<StockData>();
+	private final ArrayList<StockData> mDrawDataListMin1 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mDrawDataListMin5 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mDrawDataListMin15 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mDrawDataListMin30 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mDrawDataListMin60 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mDrawDataListDay = new ArrayList<StockData>();
+	private final ArrayList<StockData> mDrawDataListWeek = new ArrayList<StockData>();
+	private final ArrayList<StockData> mDrawDataListMonth = new ArrayList<StockData>();
+	private final ArrayList<StockData> mDrawDataListQuarter = new ArrayList<StockData>();
+	private final ArrayList<StockData> mDrawDataListYear = new ArrayList<StockData>();
+	private final ArrayList<StockData> mStrokeVertexListMin1 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mStrokeVertexListMin5 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mStrokeVertexListMin15 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mStrokeVertexListMin30 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mStrokeVertexListMin60 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mStrokeVertexListDay = new ArrayList<StockData>();
+	private final ArrayList<StockData> mStrokeVertexListWeek = new ArrayList<StockData>();
+	private final ArrayList<StockData> mStrokeVertexListMonth = new ArrayList<StockData>();
+	private final ArrayList<StockData> mStrokeVertexListQuarter = new ArrayList<StockData>();
+	private final ArrayList<StockData> mStrokeVertexListYear = new ArrayList<StockData>();
+	private final ArrayList<StockData> mStrokeDataListMin1 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mStrokeDataListMin5 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mStrokeDataListMin15 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mStrokeDataListMin30 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mStrokeDataListMin60 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mStrokeDataListDay = new ArrayList<StockData>();
+	private final ArrayList<StockData> mStrokeDataListWeek = new ArrayList<StockData>();
+	private final ArrayList<StockData> mStrokeDataListMonth = new ArrayList<StockData>();
+	private final ArrayList<StockData> mStrokeDataListQuarter = new ArrayList<StockData>();
+	private final ArrayList<StockData> mStrokeDataListYear = new ArrayList<StockData>();
+	private final ArrayList<StockData> mSegmentVertexListMin1 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mSegmentVertexListMin5 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mSegmentVertexListMin15 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mSegmentVertexListMin30 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mSegmentVertexListMin60 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mSegmentVertexListDay = new ArrayList<StockData>();
+	private final ArrayList<StockData> mSegmentVertexListWeek = new ArrayList<StockData>();
+	private final ArrayList<StockData> mSegmentVertexListMonth = new ArrayList<StockData>();
+	private final ArrayList<StockData> mSegmentVertexListQuarter = new ArrayList<StockData>();
+	private final ArrayList<StockData> mSegmentVertexListYear = new ArrayList<StockData>();
+	private final ArrayList<StockData> mSegmentDataListMin1 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mSegmentDataListMin5 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mSegmentDataListMin15 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mSegmentDataListMin30 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mSegmentDataListMin60 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mSegmentDataListDay = new ArrayList<StockData>();
+	private final ArrayList<StockData> mSegmentDataListWeek = new ArrayList<StockData>();
+	private final ArrayList<StockData> mSegmentDataListMonth = new ArrayList<StockData>();
+	private final ArrayList<StockData> mSegmentDataListQuarter = new ArrayList<StockData>();
+	private final ArrayList<StockData> mSegmentDataListYear = new ArrayList<StockData>();
+	private final ArrayList<StockData> mLineVertexListMin1 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mLineVertexListMin5 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mLineVertexListMin15 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mLineVertexListMin30 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mLineVertexListMin60 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mLineVertexListDay = new ArrayList<StockData>();
+	private final ArrayList<StockData> mLineVertexListWeek = new ArrayList<StockData>();
+	private final ArrayList<StockData> mLineVertexListMonth = new ArrayList<StockData>();
+	private final ArrayList<StockData> mLineVertexListQuarter = new ArrayList<StockData>();
+	private final ArrayList<StockData> mLineVertexListYear = new ArrayList<StockData>();
+	private final ArrayList<StockData> mLineDataListMin1 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mLineDataListMin5 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mLineDataListMin15 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mLineDataListMin30 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mLineDataListMin60 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mLineDataListDay = new ArrayList<StockData>();
+	private final ArrayList<StockData> mLineDataListWeek = new ArrayList<StockData>();
+	private final ArrayList<StockData> mLineDataListMonth = new ArrayList<StockData>();
+	private final ArrayList<StockData> mLineDataListQuarter = new ArrayList<StockData>();
+	private final ArrayList<StockData> mLineDataListYear = new ArrayList<StockData>();
+	private final ArrayList<StockData> mOutlineVertexListMin1 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mOutlineVertexListMin5 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mOutlineVertexListMin15 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mOutlineVertexListMin30 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mOutlineVertexListMin60 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mOutlineVertexListDay = new ArrayList<StockData>();
+	private final ArrayList<StockData> mOutlineVertexListWeek = new ArrayList<StockData>();
+	private final ArrayList<StockData> mOutlineVertexListMonth = new ArrayList<StockData>();
+	private final ArrayList<StockData> mOutlineVertexListQuarter = new ArrayList<StockData>();
+	private final ArrayList<StockData> mOutlineVertexListYear = new ArrayList<StockData>();
+	private final ArrayList<StockData> mOutlineDataListMin1 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mOutlineDataListMin5 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mOutlineDataListMin15 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mOutlineDataListMin30 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mOutlineDataListMin60 = new ArrayList<StockData>();
+	private final ArrayList<StockData> mOutlineDataListDay = new ArrayList<StockData>();
+	private final ArrayList<StockData> mOutlineDataListWeek = new ArrayList<StockData>();
+	private final ArrayList<StockData> mOutlineDataListMonth = new ArrayList<StockData>();
+	private final ArrayList<StockData> mOutlineDataListQuarter = new ArrayList<StockData>();
+	private final ArrayList<StockData> mOutlineDataListYear = new ArrayList<StockData>();
 	private int mFlag;
 	private String mClasses;
 	private String mSE;
@@ -89,127 +198,6 @@ public class Stock extends DatabaseTable {
 	private double mDividendRatio;
 	private String mRDate;
 	private String mStatus;
-
-	private ArrayList<StockData> mStockDataListMin1 = new ArrayList<StockData>();
-	private ArrayList<StockData> mStockDataListMin5 = new ArrayList<StockData>();
-	private ArrayList<StockData> mStockDataListMin15 = new ArrayList<StockData>();
-	private ArrayList<StockData> mStockDataListMin30 = new ArrayList<StockData>();
-	private ArrayList<StockData> mStockDataListMin60 = new ArrayList<StockData>();
-	private ArrayList<StockData> mStockDataListDay = new ArrayList<StockData>();
-	private ArrayList<StockData> mStockDataListWeek = new ArrayList<StockData>();
-	private ArrayList<StockData> mStockDataListMonth = new ArrayList<StockData>();
-	private ArrayList<StockData> mStockDataListQuarter = new ArrayList<StockData>();
-	private ArrayList<StockData> mStockDataListYear = new ArrayList<StockData>();
-
-	private ArrayList<StockData> mDrawVertexListMin1 = new ArrayList<StockData>();
-	private ArrayList<StockData> mDrawVertexListMin5 = new ArrayList<StockData>();
-	private ArrayList<StockData> mDrawVertexListMin15 = new ArrayList<StockData>();
-	private ArrayList<StockData> mDrawVertexListMin30 = new ArrayList<StockData>();
-	private ArrayList<StockData> mDrawVertexListMin60 = new ArrayList<StockData>();
-	private ArrayList<StockData> mDrawVertexListDay = new ArrayList<StockData>();
-	private ArrayList<StockData> mDrawVertexListWeek = new ArrayList<StockData>();
-	private ArrayList<StockData> mDrawVertexListMonth = new ArrayList<StockData>();
-	private ArrayList<StockData> mDrawVertexListQuarter = new ArrayList<StockData>();
-	private ArrayList<StockData> mDrawVertexListYear = new ArrayList<StockData>();
-
-	private ArrayList<StockData> mDrawDataListMin1 = new ArrayList<StockData>();
-	private ArrayList<StockData> mDrawDataListMin5 = new ArrayList<StockData>();
-	private ArrayList<StockData> mDrawDataListMin15 = new ArrayList<StockData>();
-	private ArrayList<StockData> mDrawDataListMin30 = new ArrayList<StockData>();
-	private ArrayList<StockData> mDrawDataListMin60 = new ArrayList<StockData>();
-	private ArrayList<StockData> mDrawDataListDay = new ArrayList<StockData>();
-	private ArrayList<StockData> mDrawDataListWeek = new ArrayList<StockData>();
-	private ArrayList<StockData> mDrawDataListMonth = new ArrayList<StockData>();
-	private ArrayList<StockData> mDrawDataListQuarter = new ArrayList<StockData>();
-	private ArrayList<StockData> mDrawDataListYear = new ArrayList<StockData>();
-
-	private ArrayList<StockData> mStrokeVertexListMin1 = new ArrayList<StockData>();
-	private ArrayList<StockData> mStrokeVertexListMin5 = new ArrayList<StockData>();
-	private ArrayList<StockData> mStrokeVertexListMin15 = new ArrayList<StockData>();
-	private ArrayList<StockData> mStrokeVertexListMin30 = new ArrayList<StockData>();
-	private ArrayList<StockData> mStrokeVertexListMin60 = new ArrayList<StockData>();
-	private ArrayList<StockData> mStrokeVertexListDay = new ArrayList<StockData>();
-	private ArrayList<StockData> mStrokeVertexListWeek = new ArrayList<StockData>();
-	private ArrayList<StockData> mStrokeVertexListMonth = new ArrayList<StockData>();
-	private ArrayList<StockData> mStrokeVertexListQuarter = new ArrayList<StockData>();
-	private ArrayList<StockData> mStrokeVertexListYear = new ArrayList<StockData>();
-
-	private ArrayList<StockData> mStrokeDataListMin1 = new ArrayList<StockData>();
-	private ArrayList<StockData> mStrokeDataListMin5 = new ArrayList<StockData>();
-	private ArrayList<StockData> mStrokeDataListMin15 = new ArrayList<StockData>();
-	private ArrayList<StockData> mStrokeDataListMin30 = new ArrayList<StockData>();
-	private ArrayList<StockData> mStrokeDataListMin60 = new ArrayList<StockData>();
-	private ArrayList<StockData> mStrokeDataListDay = new ArrayList<StockData>();
-	private ArrayList<StockData> mStrokeDataListWeek = new ArrayList<StockData>();
-	private ArrayList<StockData> mStrokeDataListMonth = new ArrayList<StockData>();
-	private ArrayList<StockData> mStrokeDataListQuarter = new ArrayList<StockData>();
-	private ArrayList<StockData> mStrokeDataListYear = new ArrayList<StockData>();
-
-	private ArrayList<StockData> mSegmentVertexListMin1 = new ArrayList<StockData>();
-	private ArrayList<StockData> mSegmentVertexListMin5 = new ArrayList<StockData>();
-	private ArrayList<StockData> mSegmentVertexListMin15 = new ArrayList<StockData>();
-	private ArrayList<StockData> mSegmentVertexListMin30 = new ArrayList<StockData>();
-	private ArrayList<StockData> mSegmentVertexListMin60 = new ArrayList<StockData>();
-	private ArrayList<StockData> mSegmentVertexListDay = new ArrayList<StockData>();
-	private ArrayList<StockData> mSegmentVertexListWeek = new ArrayList<StockData>();
-	private ArrayList<StockData> mSegmentVertexListMonth = new ArrayList<StockData>();
-	private ArrayList<StockData> mSegmentVertexListQuarter = new ArrayList<StockData>();
-	private ArrayList<StockData> mSegmentVertexListYear = new ArrayList<StockData>();
-
-	private ArrayList<StockData> mSegmentDataListMin1 = new ArrayList<StockData>();
-	private ArrayList<StockData> mSegmentDataListMin5 = new ArrayList<StockData>();
-	private ArrayList<StockData> mSegmentDataListMin15 = new ArrayList<StockData>();
-	private ArrayList<StockData> mSegmentDataListMin30 = new ArrayList<StockData>();
-	private ArrayList<StockData> mSegmentDataListMin60 = new ArrayList<StockData>();
-	private ArrayList<StockData> mSegmentDataListDay = new ArrayList<StockData>();
-	private ArrayList<StockData> mSegmentDataListWeek = new ArrayList<StockData>();
-	private ArrayList<StockData> mSegmentDataListMonth = new ArrayList<StockData>();
-	private ArrayList<StockData> mSegmentDataListQuarter = new ArrayList<StockData>();
-	private ArrayList<StockData> mSegmentDataListYear = new ArrayList<StockData>();
-
-	private ArrayList<StockData> mLineVertexListMin1 = new ArrayList<StockData>();
-	private ArrayList<StockData> mLineVertexListMin5 = new ArrayList<StockData>();
-	private ArrayList<StockData> mLineVertexListMin15 = new ArrayList<StockData>();
-	private ArrayList<StockData> mLineVertexListMin30 = new ArrayList<StockData>();
-	private ArrayList<StockData> mLineVertexListMin60 = new ArrayList<StockData>();
-	private ArrayList<StockData> mLineVertexListDay = new ArrayList<StockData>();
-	private ArrayList<StockData> mLineVertexListWeek = new ArrayList<StockData>();
-	private ArrayList<StockData> mLineVertexListMonth = new ArrayList<StockData>();
-	private ArrayList<StockData> mLineVertexListQuarter = new ArrayList<StockData>();
-	private ArrayList<StockData> mLineVertexListYear = new ArrayList<StockData>();
-
-	private ArrayList<StockData> mLineDataListMin1 = new ArrayList<StockData>();
-	private ArrayList<StockData> mLineDataListMin5 = new ArrayList<StockData>();
-	private ArrayList<StockData> mLineDataListMin15 = new ArrayList<StockData>();
-	private ArrayList<StockData> mLineDataListMin30 = new ArrayList<StockData>();
-	private ArrayList<StockData> mLineDataListMin60 = new ArrayList<StockData>();
-	private ArrayList<StockData> mLineDataListDay = new ArrayList<StockData>();
-	private ArrayList<StockData> mLineDataListWeek = new ArrayList<StockData>();
-	private ArrayList<StockData> mLineDataListMonth = new ArrayList<StockData>();
-	private ArrayList<StockData> mLineDataListQuarter = new ArrayList<StockData>();
-	private ArrayList<StockData> mLineDataListYear = new ArrayList<StockData>();
-
-	private ArrayList<StockData> mOutlineVertexListMin1 = new ArrayList<StockData>();
-	private ArrayList<StockData> mOutlineVertexListMin5 = new ArrayList<StockData>();
-	private ArrayList<StockData> mOutlineVertexListMin15 = new ArrayList<StockData>();
-	private ArrayList<StockData> mOutlineVertexListMin30 = new ArrayList<StockData>();
-	private ArrayList<StockData> mOutlineVertexListMin60 = new ArrayList<StockData>();
-	private ArrayList<StockData> mOutlineVertexListDay = new ArrayList<StockData>();
-	private ArrayList<StockData> mOutlineVertexListWeek = new ArrayList<StockData>();
-	private ArrayList<StockData> mOutlineVertexListMonth = new ArrayList<StockData>();
-	private ArrayList<StockData> mOutlineVertexListQuarter = new ArrayList<StockData>();
-	private ArrayList<StockData> mOutlineVertexListYear = new ArrayList<StockData>();
-
-	private ArrayList<StockData> mOutlineDataListMin1 = new ArrayList<StockData>();
-	private ArrayList<StockData> mOutlineDataListMin5 = new ArrayList<StockData>();
-	private ArrayList<StockData> mOutlineDataListMin15 = new ArrayList<StockData>();
-	private ArrayList<StockData> mOutlineDataListMin30 = new ArrayList<StockData>();
-	private ArrayList<StockData> mOutlineDataListMin60 = new ArrayList<StockData>();
-	private ArrayList<StockData> mOutlineDataListDay = new ArrayList<StockData>();
-	private ArrayList<StockData> mOutlineDataListWeek = new ArrayList<StockData>();
-	private ArrayList<StockData> mOutlineDataListMonth = new ArrayList<StockData>();
-	private ArrayList<StockData> mOutlineDataListQuarter = new ArrayList<StockData>();
-	private ArrayList<StockData> mOutlineDataListYear = new ArrayList<StockData>();
 
 	public Stock() {
 		init();
@@ -1546,11 +1534,8 @@ public class Stock extends DatabaseTable {
 	}
 
 	public boolean hasFlag(int flag) {
-		boolean result = false;
+		boolean result = (mFlag & flag) == flag;
 
-		if ((mFlag & flag) == flag) {
-			result = true;
-		}
 
 		return result;
 	}

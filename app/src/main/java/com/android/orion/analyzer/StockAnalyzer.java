@@ -837,9 +837,9 @@ public class StockAnalyzer {
 		double result = 0;
 
 		String sortOrder = DatabaseContract.COLUMN_NET + DatabaseContract.ORDER_DIRECTION_ASC;
-		String selection = DatabaseContract.COLUMN_SE + " = " + "\'" + stock.getSE()
-				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
-				+ stock.getCode() + "\'";
+		String selection = DatabaseContract.COLUMN_SE + " = " + "'" + stock.getSE()
+				+ "'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "'"
+				+ stock.getCode() + "'";
 
 		selection += " AND " + DatabaseContract.COLUMN_ACTION + " != ''";
 		selection += " AND " + DatabaseContract.COLUMN_VOLUME + " < " + 0;
@@ -860,9 +860,9 @@ public class StockAnalyzer {
 		double result = 0;
 
 		String sortOrder = DatabaseContract.COLUMN_NET + DatabaseContract.ORDER_DIRECTION_ASC;
-		String selection = DatabaseContract.COLUMN_SE + " = " + "\'" + stock.getSE()
-				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
-				+ stock.getCode() + "\'";
+		String selection = DatabaseContract.COLUMN_SE + " = " + "'" + stock.getSE()
+				+ "'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "'"
+				+ stock.getCode() + "'";
 
 		selection += " AND " + DatabaseContract.COLUMN_ACTION + " != ''";
 		selection += " AND " + DatabaseContract.COLUMN_VOLUME + " > " + 0;

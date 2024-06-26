@@ -27,7 +27,6 @@ import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockFinancial;
 import com.android.orion.setting.Constant;
-import com.android.orion.setting.Setting;
 import com.android.orion.utility.Utility;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -346,19 +345,11 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 		size = mStockList.size();
 
 		if (actionPrev != null) {
-			if (size > 1) {
-				actionPrev.setEnabled(true);
-			} else {
-				actionPrev.setEnabled(false);
-			}
+			actionPrev.setEnabled(size > 1);
 		}
 
 		if (actionNext != null) {
-			if (size > 1) {
-				actionNext.setEnabled(true);
-			} else {
-				actionNext.setEnabled(false);
-			}
+			actionNext.setEnabled(size > 1);
 		}
 	}
 

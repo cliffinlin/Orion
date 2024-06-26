@@ -44,11 +44,8 @@ public class Market {
 
 	public static boolean isWeekday(Calendar calendar) {
 		int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-		boolean result = false;
 
-		if (dayOfWeek > Calendar.SUNDAY && dayOfWeek < Calendar.SATURDAY) {
-			result = true;
-		}
+		boolean result = dayOfWeek > Calendar.SUNDAY && dayOfWeek < Calendar.SATURDAY;
 
 		return result;
 	}

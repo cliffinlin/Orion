@@ -60,10 +60,6 @@ public class StockListEditActivity extends DatabaseActivity implements
 			DatabaseContract.COLUMN_HOLD};
 	int[] mTo = new int[]{R.id.name, R.id.code, R.id.price, R.id.hold};
 
-	String getSelection() {
-		return null;
-	}
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -129,6 +125,10 @@ public class StockListEditActivity extends DatabaseActivity implements
 		super.onDestroy();
 
 		mOrionService.download();
+	}
+
+	String getSelection() {
+		return null;
 	}
 
 	void restartLoader(Intent intent) {
@@ -380,11 +380,10 @@ public class StockListEditActivity extends DatabaseActivity implements
 					case R.id.favorite:
 						if (!stock.hasFlag(Stock.FLAG_FAVORITE)) {
 							stock.addFlag(Stock.FLAG_FAVORITE);
-							mStockDatabaseManager.updateStock(stock, stock.getContentValuesForEdit());
+							mStockManager.onStockFavoriteAdd(stock);
 						} else {
 							stock.setFlag(Stock.FLAG_NONE);
-							mStockDatabaseManager.updateStock(stock, stock.getContentValuesForEdit());
-							mStockDatabaseManager.deleteStockQuant(stock);
+							mStockManager.onStockFavoriteRemove(stock);
 						}
 						break;
 

@@ -443,10 +443,10 @@ public class StorageActivity extends DatabaseActivity {
 			}
 
 			try {
-				selection = DatabaseContract.COLUMN_SE + " = " + "\'"
-						+ stock.getSE() + "\'" + " AND "
-						+ DatabaseContract.COLUMN_CODE + " = " + "\'"
-						+ stock.getCode() + "\'";
+				selection = DatabaseContract.COLUMN_SE + " = " + "'"
+						+ stock.getSE() + "'" + " AND "
+						+ DatabaseContract.COLUMN_CODE + " = " + "'"
+						+ stock.getCode() + "'";
 
 				cursor = mStockDatabaseManager.queryStockDeal(selection, null,
 						null);
@@ -488,8 +488,8 @@ public class StorageActivity extends DatabaseActivity {
 			}
 
 			try {
-				selection = DatabaseContract.COLUMN_INDEX_CODE + " = " + "\'"
-						+ stock.getCode() + "\'";
+				selection = DatabaseContract.COLUMN_INDEX_CODE + " = " + "'"
+						+ stock.getCode() + "'";
 
 				cursor = mStockDatabaseManager.queryIndexComponent(selection, null,
 						null);

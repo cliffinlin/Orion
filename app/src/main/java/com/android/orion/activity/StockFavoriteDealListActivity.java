@@ -165,21 +165,7 @@ public class StockFavoriteDealListActivity extends ListActivity implements
 			}
 		}
 	};
-
-	ContentObserver mContentObserver = new ContentObserver(new Handler()) {
-		@Override
-		public void onChange(boolean selfChange, Uri uri) {
-			super.onChange(selfChange, uri);
-			// restartLoader();
-		}
-
-		@Override
-		public void onChange(boolean selfChange) {
-			super.onChange(selfChange);
-		}
-	};
-
-	private ActionMode.Callback mModeCallBack = new ActionMode.Callback() {
+	private final ActionMode.Callback mModeCallBack = new ActionMode.Callback() {
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 			mode.setTitle("Actions");
@@ -232,6 +218,18 @@ public class StockFavoriteDealListActivity extends ListActivity implements
 		@Override
 		public void onDestroyActionMode(ActionMode mode) {
 			mCurrentActionMode = null;
+		}
+	};
+	ContentObserver mContentObserver = new ContentObserver(new Handler()) {
+		@Override
+		public void onChange(boolean selfChange, Uri uri) {
+			super.onChange(selfChange, uri);
+			// restartLoader();
+		}
+
+		@Override
+		public void onChange(boolean selfChange) {
+			super.onChange(selfChange);
 		}
 	};
 
@@ -709,9 +707,9 @@ public class StockFavoriteDealListActivity extends ListActivity implements
 			mStock.setSE(se);
 			mStock.setCode(code);
 
-			mSelection = DatabaseContract.COLUMN_SE + " = " + "\'" + se + "\'"
-					+ " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
-					+ code + "\'";
+			mSelection = DatabaseContract.COLUMN_SE + " = " + "'" + se + "'"
+					+ " AND " + DatabaseContract.COLUMN_CODE + " = " + "'"
+					+ code + "'";
 
 			if (!TextUtils.isEmpty(typeSelection)) {
 				mSelection += " AND " + typeSelection;

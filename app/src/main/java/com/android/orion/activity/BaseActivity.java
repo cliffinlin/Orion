@@ -35,6 +35,7 @@ import com.android.orion.database.StockFinancial;
 import com.android.orion.database.StockQuant;
 import com.android.orion.database.TotalShare;
 import com.android.orion.manager.StockDatabaseManager;
+import com.android.orion.manager.StockManager;
 import com.android.orion.service.OrionService;
 import com.android.orion.service.OrionService.OrionServiceBinder;
 import com.android.orion.setting.Constant;
@@ -47,7 +48,7 @@ import java.util.ArrayList;
 public class BaseActivity extends Activity {
 
 	private static final int REQUEST_EXTERNAL_STORAGE = 1;
-	private static String[] PERMISSIONS_STORAGE = {"android.permission.READ_EXTERNAL_STORAGE",
+	private static final String[] PERMISSIONS_STORAGE = {"android.permission.READ_EXTERNAL_STORAGE",
 			"android.permission.WRITE_EXTERNAL_STORAGE"};
 	Logger Log = Logger.getLogger();
 	boolean mResumed = false;
@@ -69,6 +70,7 @@ public class BaseActivity extends Activity {
 	ArrayList<ShareBonus> mShareBonusList = null;
 	ArrayList<TotalShare> mTotalShareList = null;
 	ArrayMap<String, Stock> mStockDealArrayMap = null;
+	StockManager mStockManager = StockManager.getInstance();
 	StockDatabaseManager mStockDatabaseManager;
 	OrionService mOrionService = null;
 	ServiceConnection mServiceConnection = new ServiceConnection() {

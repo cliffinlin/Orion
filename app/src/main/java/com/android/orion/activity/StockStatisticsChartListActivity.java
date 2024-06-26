@@ -315,19 +315,11 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 		size = mStockList.size();
 
 		if (actionPrev != null) {
-			if (size > 1) {
-				actionPrev.setEnabled(true);
-			} else {
-				actionPrev.setEnabled(false);
-			}
+			actionPrev.setEnabled(size > 1);
 		}
 
 		if (actionNext != null) {
-			if (size > 1) {
-				actionNext.setEnabled(true);
-			} else {
-				actionNext.setEnabled(false);
-			}
+			actionNext.setEnabled(size > 1);
 		}
 	}
 

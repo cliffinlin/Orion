@@ -23,15 +23,15 @@ public class CustomizeMarqueeView extends ViewFlipper implements MarquessViewAda
 	/**
 	 * 是否单行显示
 	 */
-	private boolean isSingleLine;
 	/**
 	 * 轮播间隔
 	 */
-	private int interval = 3000;
+	private final int interval = 3000;
 	/**
 	 * 动画时间
 	 */
-	private int animDuration = 1000;
+	private final int animDuration = 1000;
+	private boolean isSingleLine;
 	/**
 	 * 一次性显示item数目
 	 */

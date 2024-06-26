@@ -693,9 +693,9 @@ public class StockQuantListActivity extends ListActivity implements
 			mStock.setSE(se);
 			mStock.setCode(code);
 
-			mSelection = DatabaseContract.COLUMN_SE + " = " + "\'" + se + "\'"
-					+ " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
-					+ code + "\'";
+			mSelection = DatabaseContract.COLUMN_SE + " = " + "'" + se + "'"
+					+ " AND " + DatabaseContract.COLUMN_CODE + " = " + "'"
+					+ code + "'";
 			mGroupBy = "";
 		} else {
 			mSelection = "1";

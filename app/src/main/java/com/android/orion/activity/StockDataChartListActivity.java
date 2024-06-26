@@ -174,11 +174,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		MenuItem menuLoopback = menu.findItem(R.id.action_loopback);
-		if (Preferences.getBoolean(Setting.SETTING_DEBUG_LOOPBACK, false)) {
-			menuLoopback.setVisible(true);
-		} else {
-			menuLoopback.setVisible(false);
-		}
+		menuLoopback.setVisible(Preferences.getBoolean(Setting.SETTING_DEBUG_LOOPBACK, false));
 
 		return true;
 	}
@@ -448,19 +444,11 @@ public class StockDataChartListActivity extends BaseActivity implements
 		size = mStockList.size();
 
 		if (actionPrev != null) {
-			if (size > 1) {
-				actionPrev.setEnabled(true);
-			} else {
-				actionPrev.setEnabled(false);
-			}
+			actionPrev.setEnabled(size > 1);
 		}
 
 		if (actionNext != null) {
-			if (size > 1) {
-				actionNext.setEnabled(true);
-			} else {
-				actionNext.setEnabled(false);
-			}
+			actionNext.setEnabled(size > 1);
 		}
 	}
 
@@ -728,9 +716,9 @@ public class StockDataChartListActivity extends BaseActivity implements
 	}
 
 	void loadStockDealList() {
-		String selection = DatabaseContract.COLUMN_SE + " = " + "\'" + mStock.getSE()
-				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
-				+ mStock.getCode() + "\'";
+		String selection = DatabaseContract.COLUMN_SE + " = " + "'" + mStock.getSE()
+				+ "'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "'"
+				+ mStock.getCode() + "'";
 		String sortOrder = DatabaseContract.COLUMN_BUY + " DESC ";
 
 		mStockDatabaseManager.getStockDealList(mStockDealList, selection, sortOrder);
@@ -739,9 +727,9 @@ public class StockDataChartListActivity extends BaseActivity implements
 	void loadStockQuantList() {
 		ArrayMap<String, StockQuant> stockquantMap = new ArrayMap<>();
 
-		String selection = DatabaseContract.COLUMN_SE + " = " + "\'" + mStock.getSE()
-				+ "\'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "\'"
-				+ mStock.getCode() + "\'";
+		String selection = DatabaseContract.COLUMN_SE + " = " + "'" + mStock.getSE()
+				+ "'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "'"
+				+ mStock.getCode() + "'";
 		String sortOrder = DatabaseContract.COLUMN_CREATED + DatabaseContract.ORDER_DIRECTION_ASC;
 
 		mStockDatabaseManager.getStockQuantList(mStock, mStockQuantList, selection, sortOrder);

@@ -189,8 +189,10 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 	void onCheckBoxFavoriteChanged() {
 		if (mCheckBoxFavorite.isChecked()) {
 			mStock.addFlag(Stock.FLAG_FAVORITE);
+			mStockManager.onStockFavoriteAdd(mStock);
 		} else {
 			mStock.removeFlag(Stock.FLAG_FAVORITE);
+			mStockManager.onStockFavoriteRemove(mStock);
 		}
 	}
 

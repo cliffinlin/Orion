@@ -216,12 +216,9 @@ public class StockData extends DatabaseTable {
 	}
 
 	public boolean isEmpty() {
-		boolean result = false;
 
-		if ((mStockId == 0) && TextUtils.isEmpty(mDate)
-				&& TextUtils.isEmpty(mTime)) {
-			result = true;
-		}
+		boolean result = (mStockId == 0) && TextUtils.isEmpty(mDate)
+				&& TextUtils.isEmpty(mTime);
 
 		return result;
 	}
@@ -1025,21 +1022,15 @@ public class StockData extends DatabaseTable {
 	}
 
 	public boolean directionOf(int direction) {
-		boolean result = false;
 
-		if ((mDirection & direction) == direction) {
-			result = true;
-		}
+		boolean result = (mDirection & direction) == direction;
 
 		return result;
 	}
 
 	public boolean vertexOf(int vertex) {
-		boolean result = false;
 
-		if ((mVertex & vertex) == vertex) {
-			result = true;
-		}
+		boolean result = (mVertex & vertex) == vertex;
 
 		return result;
 	}
@@ -1092,23 +1083,17 @@ public class StockData extends DatabaseTable {
 	}
 
 	public boolean include(StockData stockData) {
-		boolean result = false;
 
-		if ((getVertexHigh() >= stockData.getVertexHigh())
-				&& (getVertexLow() <= stockData.getVertexLow())) {
-			result = true;
-		}
+		boolean result = (getVertexHigh() >= stockData.getVertexHigh())
+				&& (getVertexLow() <= stockData.getVertexLow());
 
 		return result;
 	}
 
 	public boolean includedBy(StockData stockData) {
-		boolean result = false;
 
-		if ((getVertexHigh() <= stockData.getVertexHigh())
-				&& (getVertexLow() >= stockData.getVertexLow())) {
-			result = true;
-		}
+		boolean result = (getVertexHigh() <= stockData.getVertexHigh())
+				&& (getVertexLow() >= stockData.getVertexLow());
 
 		return result;
 	}

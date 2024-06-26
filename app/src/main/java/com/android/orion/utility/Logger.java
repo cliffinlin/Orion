@@ -8,11 +8,11 @@ import com.android.orion.config.Config;
 import com.android.orion.setting.Setting;
 
 public class Logger {
+	private static final Logger instance = new Logger();
 	/**
 	 * debug or not
 	 */
 	private static boolean debug = false;
-	private static Logger instance = new Logger();
 	/**
 	 * log tag
 	 */

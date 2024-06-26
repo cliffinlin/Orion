@@ -10,7 +10,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.android.orion.config.Config;
 import com.android.orion.manager.DownloadAlarmManager;
 import com.android.orion.service.OrionService;
 import com.android.orion.utility.Logger;

@@ -437,7 +437,7 @@ public class StockTrendListActivity extends ListActivity implements
 							Stock.INVALID_ID);
 					selection = "(" + DatabaseContract.COLUMN_STOCK_ID + " = " + stockId + ") "
 							+ " AND "
-							+ "(" + DatabaseContract.COLUMN_PERIOD + " = \'" + DatabaseContract.COLUMN_DAY + "\') ";
+							+ "(" + DatabaseContract.COLUMN_PERIOD + " = '" + DatabaseContract.COLUMN_DAY + "') ";
 					selectionArgs = null;
 					mStock.setId(stockId);
 				} else {
@@ -454,7 +454,7 @@ public class StockTrendListActivity extends ListActivity implements
 							stockIds.append("," + stockList.get(i).getId());
 						}
 
-						selection = DatabaseContract.COLUMN_STOCK_ID + " in (" + placeHolder.toString() + " )";
+						selection = DatabaseContract.COLUMN_STOCK_ID + " in (" + placeHolder + " )";
 						selectionArgs = stockIds.toString().split(",");
 					}
 				}
