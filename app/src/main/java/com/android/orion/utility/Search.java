@@ -2,6 +2,8 @@ package com.android.orion.utility;
 
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+
 import com.android.orion.database.ShareBonus;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockFinancial;
@@ -15,7 +17,7 @@ public class Search {
 	Comparator<StockFinancial> comparator = new Comparator<StockFinancial>() {
 
 		@Override
-		public int compare(StockFinancial arg0, StockFinancial arg1) {
+		public int compare(@NonNull StockFinancial arg0, @NonNull StockFinancial arg1) {
 			Calendar calendar0;
 			Calendar calendar1;
 
@@ -93,7 +95,7 @@ public class Search {
 	}
 
 	public static StockData getStockDataByDateTime(String dateTimeString,
-												   ArrayList<StockData> stockDataList) {
+	                                               @NonNull ArrayList<StockData> stockDataList) {
 		int index = 0;
 		StockData stockData = null;
 
@@ -175,7 +177,7 @@ public class Search {
 	}
 
 	public static StockFinancial getStockFinancialByDate(String dateString,
-														 ArrayList<StockFinancial> stockFinancialList) {
+	                                                     @NonNull ArrayList<StockFinancial> stockFinancialList) {
 		int index = 0;
 		StockFinancial stockFinancial = null;
 
@@ -247,7 +249,7 @@ public class Search {
 	}
 
 	public static ShareBonus getShareBonusByDate(String dateString,
-												 ArrayList<ShareBonus> shareBonusList) {
+	                                             @NonNull ArrayList<ShareBonus> shareBonusList) {
 		int index = 0;
 		ShareBonus shareBonus = null;
 

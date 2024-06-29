@@ -83,7 +83,7 @@ public class StockDatabaseManager extends DatabaseManager implements StockListLi
 		return uri;
 	}
 
-	public int bulkInsertStock(ContentValues[] contentValuesArray) {
+	public int bulkInsertStock(@NonNull ContentValues[] contentValuesArray) {
 		int result = 0;
 
 		if ((contentValuesArray.length == 0) || (mContentResolver == null)) {
@@ -368,7 +368,7 @@ public class StockDatabaseManager extends DatabaseManager implements StockListLi
 		return uri;
 	}
 
-	public int bulkInsertStockData(ContentValues[] contentValuesArray) {
+	public int bulkInsertStockData(@NonNull ContentValues[] contentValuesArray) {
 		int result = 0;
 
 		if ((contentValuesArray.length == 0) || (mContentResolver == null)) {
@@ -694,7 +694,7 @@ public class StockDatabaseManager extends DatabaseManager implements StockListLi
 		return uri;
 	}
 
-	public int bulkInsertStockDeal(ContentValues[] contentValuesArray) {
+	public int bulkInsertStockDeal(@NonNull ContentValues[] contentValuesArray) {
 		int result = 0;
 
 		if ((contentValuesArray.length == 0) || (mContentResolver == null)) {
@@ -982,7 +982,7 @@ public class StockDatabaseManager extends DatabaseManager implements StockListLi
 		return uri;
 	}
 
-	public int bulkInsertStockQuant(ContentValues[] contentValuesArray) {
+	public int bulkInsertStockQuant(@NonNull ContentValues[] contentValuesArray) {
 		int result = 0;
 
 		if ((contentValuesArray.length == 0) || (mContentResolver == null)) {
@@ -1239,7 +1239,7 @@ public class StockDatabaseManager extends DatabaseManager implements StockListLi
 		return uri;
 	}
 
-	public int bulkInsertStockFinancial(ContentValues[] contentValuesArray) {
+	public int bulkInsertStockFinancial(@NonNull ContentValues[] contentValuesArray) {
 		int result = 0;
 
 		if ((contentValuesArray.length == 0) || (mContentResolver == null)) {
@@ -1497,7 +1497,7 @@ public class StockDatabaseManager extends DatabaseManager implements StockListLi
 		return uri;
 	}
 
-	public int bulkInsertShareBonus(ContentValues[] contentValuesArray) {
+	public int bulkInsertShareBonus(@NonNull ContentValues[] contentValuesArray) {
 		int result = 0;
 
 		if ((contentValuesArray.length == 0) || (mContentResolver == null)) {
@@ -1755,7 +1755,7 @@ public class StockDatabaseManager extends DatabaseManager implements StockListLi
 		return uri;
 	}
 
-	public int bulkInsertTotalShare(ContentValues[] contentValuesArray) {
+	public int bulkInsertTotalShare(@NonNull ContentValues[] contentValuesArray) {
 		int result = 0;
 
 		if ((contentValuesArray.length == 0) || (mContentResolver == null)) {
@@ -2013,7 +2013,7 @@ public class StockDatabaseManager extends DatabaseManager implements StockListLi
 		return uri;
 	}
 
-	public int bulkInsertIndexComponent(ContentValues[] contentValuesArray) {
+	public int bulkInsertIndexComponent(@NonNull ContentValues[] contentValuesArray) {
 		int result = 0;
 
 		if ((contentValuesArray.length == 0) || (mContentResolver == null)) {
@@ -2185,7 +2185,7 @@ public class StockDatabaseManager extends DatabaseManager implements StockListLi
 		return result;
 	}
 
-	public String getIndexComponentSelection(IndexComponent indexComponent) {
+	public String getIndexComponentSelection(@NonNull IndexComponent indexComponent) {
 		return getIndexComponentSelection(indexComponent.getIndexCode(), indexComponent.getCode());
 	}
 

@@ -3,6 +3,8 @@ package com.android.orion.utility;
 import android.content.Context;
 import android.content.res.AssetManager;
 
+import androidx.annotation.NonNull;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -19,7 +21,7 @@ public class AssetsUtils {
 	 * @param context
 	 * @return
 	 */
-	public static String getJson(String fileName, Context context) {
+	public static String getJson(String fileName, @NonNull Context context) {
 		//将json数据变成字符串
 		StringBuilder stringBuilder = new StringBuilder();
 		try {

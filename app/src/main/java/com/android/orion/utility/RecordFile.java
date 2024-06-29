@@ -2,13 +2,15 @@ package com.android.orion.utility;
 
 import android.os.Environment;
 
+import androidx.annotation.NonNull;
+
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;
 import com.android.orion.setting.Constant;
 
 public class RecordFile {
 
-	public static void writeDealFile(Stock stock, StockDeal deal, String action) {
+	public static void writeDealFile(@NonNull Stock stock, @NonNull StockDeal deal, String action) {
 		String fileName;
 		StringBuilder logString = new StringBuilder();
 

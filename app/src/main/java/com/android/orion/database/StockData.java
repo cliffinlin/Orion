@@ -93,7 +93,7 @@ public class StockData extends DatabaseTable {
 	public static Comparator<StockData> comparator = new Comparator<StockData>() {
 
 		@Override
-		public int compare(StockData arg0, StockData arg1) {
+		public int compare(@NonNull StockData arg0, @NonNull StockData arg1) {
 			Calendar calendar0;
 			Calendar calendar1;
 
@@ -166,6 +166,7 @@ public class StockData extends DatabaseTable {
 		set(cursor);
 	}
 
+	@NonNull
 	public static ArrayList<String> getDatetimeMin15List() {
 		ArrayList<String> datetimeList = new ArrayList<>();
 
@@ -189,6 +190,7 @@ public class StockData extends DatabaseTable {
 		return datetimeList;
 	}
 
+	@NonNull
 	public static ArrayList<String> getDatetimeMinL30ist() {
 		ArrayList<String> datetimeList = new ArrayList<>();
 
@@ -204,6 +206,7 @@ public class StockData extends DatabaseTable {
 		return datetimeList;
 	}
 
+	@NonNull
 	public static ArrayList<String> getDatetimeMin60List() {
 		ArrayList<String> datetimeList = new ArrayList<>();
 
@@ -1082,7 +1085,7 @@ public class StockData extends DatabaseTable {
 				+ getLow() + getClose();
 	}
 
-	public boolean include(StockData stockData) {
+	public boolean include(@NonNull StockData stockData) {
 
 		boolean result = (getVertexHigh() >= stockData.getVertexHigh())
 				&& (getVertexLow() <= stockData.getVertexLow());
@@ -1090,7 +1093,7 @@ public class StockData extends DatabaseTable {
 		return result;
 	}
 
-	public boolean includedBy(StockData stockData) {
+	public boolean includedBy(@NonNull StockData stockData) {
 
 		boolean result = (getVertexHigh() <= stockData.getVertexHigh())
 				&& (getVertexLow() >= stockData.getVertexLow());
@@ -1098,7 +1101,7 @@ public class StockData extends DatabaseTable {
 		return result;
 	}
 
-	public int vertexTo(StockData prev, StockData next) {
+	public int vertexTo(@NonNull StockData prev, StockData next) {
 		int vertex = StockData.VERTEX_NONE;
 
 		if ((getVertexHigh() > prev.getVertexHigh())
@@ -1120,7 +1123,7 @@ public class StockData extends DatabaseTable {
 		return vertex;
 	}
 
-	public int directionTo(StockData stockData) {
+	public int directionTo(@NonNull StockData stockData) {
 		int result = DIRECTION_NONE;
 
 		if ((getVertexHigh() >= stockData.getVertexHigh())

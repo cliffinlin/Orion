@@ -10,6 +10,8 @@ import android.view.Menu;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 
+import androidx.annotation.NonNull;
+
 import com.android.orion.R;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.provider.StockSearchRecentSuggestionsProvider;
@@ -60,7 +62,7 @@ public class StockSearchActivity extends StockListEditActivity implements
 		return true;
 	}
 
-	void handleIntent(Intent intent) {
+	void handleIntent(@NonNull Intent intent) {
 		if (TextUtils.equals(intent.getAction(), Intent.ACTION_SEARCH)) {
 			String query = intent.getStringExtra(SearchManager.QUERY);
 

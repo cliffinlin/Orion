@@ -18,6 +18,8 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.android.orion.R;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.IndexComponent;
@@ -204,7 +206,7 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home:
 				finish();
@@ -215,7 +217,7 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 	}
 
 	@Override
-	public void onClick(View view) {
+	public void onClick(@NonNull View view) {
 		String operate;
 		int viewId = view.getId();
 

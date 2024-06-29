@@ -2,6 +2,8 @@ package com.android.orion.utility;
 
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+
 import java.util.Calendar;
 
 public class Market {
@@ -17,7 +19,7 @@ public class Market {
 	private Market() {
 	}
 
-	public static int getMinutesOfToday(Calendar calendar) {
+	public static int getMinutesOfToday(@NonNull Calendar calendar) {
 		return calendar.get(Calendar.HOUR_OF_DAY) * 60
 				+ calendar.get(Calendar.MINUTE);
 	}
@@ -42,7 +44,7 @@ public class Market {
 		return result;
 	}
 
-	public static boolean isWeekday(Calendar calendar) {
+	public static boolean isWeekday(@NonNull Calendar calendar) {
 		int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 
 		boolean result = dayOfWeek > Calendar.SUNDAY && dayOfWeek < Calendar.SATURDAY;
@@ -172,8 +174,9 @@ public class Market {
 		return result;
 	}
 
+	@NonNull
 	public static Calendar getMarketCalendar(Calendar calendar,
-											 String timeString) {
+	                                         String timeString) {
 		Calendar result;
 		String dateTimeString = Utility.getCalendarDateString(calendar) + " "
 				+ timeString;
@@ -182,21 +185,25 @@ public class Market {
 		return result;
 	}
 
+	@NonNull
 	public static Calendar getMarketOpenCalendar(Calendar calendar) {
 		return getMarketCalendar(calendar,
 				OPEN_TIME);
 	}
 
+	@NonNull
 	public static Calendar getMarketLunchBeginCalendar(Calendar calendar) {
 		return getMarketCalendar(calendar,
 				LUNCH_BEGIN_TIME);
 	}
 
+	@NonNull
 	public static Calendar getMarketLunchEndCalendar(Calendar calendar) {
 		return getMarketCalendar(calendar,
 				LUNCH_END_TIME);
 	}
 
+	@NonNull
 	public static Calendar getMarketCloseCalendar(Calendar calendar) {
 		return getMarketCalendar(calendar,
 				CLOSE_TIME);

@@ -387,7 +387,7 @@ public class SinaFinance extends StockDataProvider {
 		return result;
 	}
 
-	private int downloadStockHSA(ArrayMap<String, String> requestHeaderArray, String urlString) {
+	private int downloadStockHSA(@NonNull ArrayMap<String, String> requestHeaderArray, String urlString) {
 		int result = RESULT_NONE;
 
 		Log.d(urlString);
@@ -540,7 +540,7 @@ public class SinaFinance extends StockDataProvider {
 		return downloadStockInformation(stock, getRequestHeader(), getStockInformationURLString(stock));
 	}
 
-	private int downloadStockInformation(Stock stock, ArrayMap<String, String> requestHeaderArray, String urlString) {
+	private int downloadStockInformation(Stock stock, @NonNull ArrayMap<String, String> requestHeaderArray, String urlString) {
 		int result = RESULT_NONE;
 
 		Log.d(urlString);
@@ -669,7 +669,7 @@ public class SinaFinance extends StockDataProvider {
 		return downloadStockRealTime(stock, getRequestHeader(), getStockRealTimeURLString(stock));
 	}
 
-	private int downloadStockRealTime(Stock stock, ArrayMap<String, String> requestHeaderArray, String urlString) {
+	private int downloadStockRealTime(Stock stock, @NonNull ArrayMap<String, String> requestHeaderArray, String urlString) {
 		int result = RESULT_NONE;
 
 		Log.d(urlString);
@@ -1237,7 +1237,7 @@ public class SinaFinance extends StockDataProvider {
 		return downloadStockDataRealTime(stock, stockData, getRequestHeader(), getStockDataRealTimeURLString(stock));
 	}
 
-	private int downloadStockDataRealTime(Stock stock, StockData stockData, ArrayMap<String, String> requestHeaderArray, String urlString) {
+	private int downloadStockDataRealTime(Stock stock, StockData stockData, @NonNull ArrayMap<String, String> requestHeaderArray, String urlString) {
 		int result = RESULT_NONE;
 
 		Log.d(urlString);

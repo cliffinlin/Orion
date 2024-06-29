@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import androidx.annotation.NonNull;
+
 public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
 	public DatabaseOpenHelper(Context context) {
@@ -12,7 +14,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 	}
 
 	@Override
-	public void onCreate(SQLiteDatabase db) {
+	public void onCreate(@NonNull SQLiteDatabase db) {
 		db.execSQL(DatabaseContract.Stock.CREATE_TABLE);
 		db.execSQL(DatabaseContract.StockData.CREATE_TABLE);
 		db.execSQL(DatabaseContract.StockDeal.CREATE_TABLE);
@@ -24,7 +26,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 	}
 
 	@Override
-	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+	public void onUpgrade(@NonNull SQLiteDatabase db, int oldVersion, int newVersion) {
 		db.execSQL(DatabaseContract.Stock.DELETE_TABLE);
 		db.execSQL(DatabaseContract.StockData.DELETE_TABLE);
 		db.execSQL(DatabaseContract.StockDeal.DELETE_TABLE);

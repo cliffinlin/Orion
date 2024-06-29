@@ -21,6 +21,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import androidx.annotation.NonNull;
+
 import com.android.orion.R;
 import com.android.orion.chart.StockFinancialChart;
 import com.android.orion.database.DatabaseContract;
@@ -93,7 +95,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 	Comparator<StockFinancial> comparator = new Comparator<StockFinancial>() {
 
 		@Override
-		public int compare(StockFinancial arg0, StockFinancial arg1) {
+		public int compare(@NonNull StockFinancial arg0, @NonNull StockFinancial arg1) {
 			Calendar calendar0;
 			Calendar calendar1;
 
@@ -142,7 +144,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home: {
 				finish();
@@ -289,7 +291,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 		mLoaderManager.initLoader(LOADER_ID_STOCK_FINANCIAL_LIST, null, this);
 	}
 
-	void restartLoader(Intent intent) {
+	void restartLoader(@NonNull Intent intent) {
 		if (intent.getLongExtra(Constant.EXTRA_STOCK_ID,
 				Stock.INVALID_ID) == mStock.getId()) {
 			restartLoader();
@@ -635,8 +637,8 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 	}
 
 	@Override
-	public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX,
-							 float velocityY) {
+	public void onChartFling(@NonNull MotionEvent me1, @NonNull MotionEvent me2, float velocityX,
+	                         float velocityY) {
 		int distance = FLING_DISTANCE;
 		int velocity = FLING_VELOCITY;
 

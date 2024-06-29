@@ -406,7 +406,7 @@ public class StockAnalyzer {
 		stock.setupRoi();
 	}
 
-	private void setupStockShareBonus(Stock stock) {
+	private void setupStockShareBonus(@NonNull Stock stock) {
 		double totalDivident = 0;
 
 		String yearString = "";

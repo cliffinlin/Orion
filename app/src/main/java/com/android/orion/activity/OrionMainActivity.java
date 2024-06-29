@@ -9,6 +9,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.android.orion.R;
 import com.android.orion.application.OrionApplication;
 import com.android.orion.database.DatabaseContract;
@@ -47,7 +49,7 @@ public class OrionMainActivity extends PreferenceActivity {
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_settings: {
 				return true;

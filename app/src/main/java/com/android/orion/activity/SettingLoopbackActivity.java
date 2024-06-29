@@ -12,6 +12,8 @@ import android.view.MenuItem;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
+import androidx.annotation.NonNull;
+
 import com.android.orion.R;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Preferences;
@@ -102,7 +104,7 @@ public class SettingLoopbackActivity extends BaseActivity {
 	}
 
 	@Override
-	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+	public boolean onMenuItemSelected(int featureId, @NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home:
 				setResult(RESULT_OK, mIntent);
