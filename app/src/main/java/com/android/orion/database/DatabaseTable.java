@@ -4,8 +4,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.text.TextUtils;
 
-import androidx.annotation.NonNull;
-
 public class DatabaseTable {
 	private String mTableName;
 	private long mId;
@@ -61,9 +59,11 @@ public class DatabaseTable {
 		return contentValues;
 	}
 
-	ContentValues getContentValues(@NonNull ContentValues contentValues) {
-		contentValues.put(DatabaseContract.COLUMN_CREATED, mCreated);
-		contentValues.put(DatabaseContract.COLUMN_MODIFIED, mModified);
+	ContentValues getContentValues(ContentValues contentValues) {
+		if (contentValues != null) {
+			contentValues.put(DatabaseContract.COLUMN_CREATED, mCreated);
+			contentValues.put(DatabaseContract.COLUMN_MODIFIED, mModified);
+		}
 
 		return contentValues;
 	}

@@ -83,8 +83,12 @@ public class StockDatabaseManager extends DatabaseManager implements StockListLi
 		return uri;
 	}
 
-	public int bulkInsertStock(@NonNull ContentValues[] contentValuesArray) {
+	public int bulkInsertStock(ContentValues[] contentValuesArray) {
 		int result = 0;
+
+		if (contentValuesArray == null) {
+			return result;
+		}
 
 		if ((contentValuesArray.length == 0) || (mContentResolver == null)) {
 			return result;
@@ -368,8 +372,12 @@ public class StockDatabaseManager extends DatabaseManager implements StockListLi
 		return uri;
 	}
 
-	public int bulkInsertStockData(@NonNull ContentValues[] contentValuesArray) {
+	public int bulkInsertStockData(ContentValues[] contentValuesArray) {
 		int result = 0;
+
+		if (contentValuesArray == null) {
+			return result;
+		}
 
 		if ((contentValuesArray.length == 0) || (mContentResolver == null)) {
 			return result;
@@ -694,8 +702,12 @@ public class StockDatabaseManager extends DatabaseManager implements StockListLi
 		return uri;
 	}
 
-	public int bulkInsertStockDeal(@NonNull ContentValues[] contentValuesArray) {
+	public int bulkInsertStockDeal(ContentValues[] contentValuesArray) {
 		int result = 0;
+
+		if (contentValuesArray == null) {
+			return result;
+		}
 
 		if ((contentValuesArray.length == 0) || (mContentResolver == null)) {
 			return result;
@@ -982,8 +994,12 @@ public class StockDatabaseManager extends DatabaseManager implements StockListLi
 		return uri;
 	}
 
-	public int bulkInsertStockQuant(@NonNull ContentValues[] contentValuesArray) {
+	public int bulkInsertStockQuant(ContentValues[] contentValuesArray) {
 		int result = 0;
+
+		if (contentValuesArray == null) {
+			return result;
+		}
 
 		if ((contentValuesArray.length == 0) || (mContentResolver == null)) {
 			return result;
@@ -1215,8 +1231,12 @@ public class StockDatabaseManager extends DatabaseManager implements StockListLi
 		}
 	}
 
-	public void getStockQuantList(@NonNull Stock stock, @NonNull ArrayList<StockQuant> StockQuantList) {
+	public void getStockQuantList(Stock stock, ArrayList<StockQuant> StockQuantList) {
 		String sortOrder = DatabaseContract.COLUMN_ID + DatabaseContract.ORDER_DIRECTION_ASC;
+
+		if (stock == null || StockQuantList == null) {
+			return;
+		}
 
 		String selection = DatabaseContract.COLUMN_SE + " = " + "'" + stock.getSE()
 				+ "'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "'"
@@ -1239,8 +1259,12 @@ public class StockDatabaseManager extends DatabaseManager implements StockListLi
 		return uri;
 	}
 
-	public int bulkInsertStockFinancial(@NonNull ContentValues[] contentValuesArray) {
+	public int bulkInsertStockFinancial(ContentValues[] contentValuesArray) {
 		int result = 0;
+
+		if (contentValuesArray == null) {
+			return result;
+		}
 
 		if ((contentValuesArray.length == 0) || (mContentResolver == null)) {
 			return result;
@@ -1497,8 +1521,12 @@ public class StockDatabaseManager extends DatabaseManager implements StockListLi
 		return uri;
 	}
 
-	public int bulkInsertShareBonus(@NonNull ContentValues[] contentValuesArray) {
+	public int bulkInsertShareBonus(ContentValues[] contentValuesArray) {
 		int result = 0;
+
+		if (contentValuesArray == null) {
+			return result;
+		}
 
 		if ((contentValuesArray.length == 0) || (mContentResolver == null)) {
 			return result;
@@ -1755,8 +1783,12 @@ public class StockDatabaseManager extends DatabaseManager implements StockListLi
 		return uri;
 	}
 
-	public int bulkInsertTotalShare(@NonNull ContentValues[] contentValuesArray) {
+	public int bulkInsertTotalShare(ContentValues[] contentValuesArray) {
 		int result = 0;
+
+		if (contentValuesArray == null) {
+			return result;
+		}
 
 		if ((contentValuesArray.length == 0) || (mContentResolver == null)) {
 			return result;
@@ -2013,8 +2045,12 @@ public class StockDatabaseManager extends DatabaseManager implements StockListLi
 		return uri;
 	}
 
-	public int bulkInsertIndexComponent(@NonNull ContentValues[] contentValuesArray) {
+	public int bulkInsertIndexComponent(ContentValues[] contentValuesArray) {
 		int result = 0;
+
+		if (contentValuesArray == null) {
+			return result;
+		}
 
 		if ((contentValuesArray.length == 0) || (mContentResolver == null)) {
 			return result;
@@ -2185,7 +2221,10 @@ public class StockDatabaseManager extends DatabaseManager implements StockListLi
 		return result;
 	}
 
-	public String getIndexComponentSelection(@NonNull IndexComponent indexComponent) {
+	public String getIndexComponentSelection(IndexComponent indexComponent) {
+		if (indexComponent == null) {
+			return "";
+		}
 		return getIndexComponentSelection(indexComponent.getIndexCode(), indexComponent.getCode());
 	}
 

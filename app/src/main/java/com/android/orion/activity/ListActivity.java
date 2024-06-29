@@ -7,8 +7,6 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-
 import com.android.orion.R;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Preferences;
@@ -28,7 +26,11 @@ public class ListActivity extends StorageActivity {
 		}
 	}
 
-	public void setListViewHeightBasedOnChildren(@NonNull ListView listView) {
+	public void setListViewHeightBasedOnChildren(ListView listView) {
+		if (listView == null) {
+			return;
+		}
+
 		ListAdapter listAdapter = listView.getAdapter();
 		if (listAdapter == null) {
 			return;

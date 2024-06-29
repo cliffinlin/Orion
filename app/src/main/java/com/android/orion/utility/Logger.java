@@ -4,8 +4,6 @@ package com.android.orion.utility;
 import android.text.TextUtils;
 import android.util.Log;
 
-import androidx.annotation.Nullable;
-
 import com.android.orion.config.Config;
 import com.android.orion.setting.Setting;
 
@@ -35,7 +33,6 @@ public class Logger {
 		debug = d;
 	}
 
-	@Nullable
 	private String getFunctionName() {
 		StackTraceElement[] sts = Thread.currentThread().getStackTrace();
 

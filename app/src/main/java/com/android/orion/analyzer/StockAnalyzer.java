@@ -142,7 +142,11 @@ public class StockAnalyzer {
 		Log.d(stock.getName() + " " + stopWatch.getInterval() + "s");
 	}
 
-	private void analyzeStockFinancial(@NonNull Stock stock) {
+	private void analyzeStockFinancial(Stock stock) {
+		if (stock == null) {
+			return;
+		}
+
 		String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
 
 		if (TextUtils.equals(stock.getClasses(), Stock.CLASS_INDEX)) {
@@ -371,7 +375,11 @@ public class StockAnalyzer {
 		}
 	}
 
-	private void setupStockFinancial(@NonNull Stock stock) {
+	private void setupStockFinancial(Stock stock) {
+		if (stock == null) {
+			return;
+		}
+
 		String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
 		StockFinancial stockFinancial = new StockFinancial();
 
@@ -406,7 +414,11 @@ public class StockAnalyzer {
 		stock.setupRoi();
 	}
 
-	private void setupStockShareBonus(@NonNull Stock stock) {
+	private void setupStockShareBonus(Stock stock) {
+		if (stock == null) {
+			return;
+		}
+
 		double totalDivident = 0;
 
 		String yearString = "";
@@ -833,8 +845,12 @@ public class StockAnalyzer {
 		}
 	}
 
-	double getToBuyProfit(@NonNull Stock stock) {
+	double getToBuyProfit(Stock stock) {
 		double result = 0;
+
+		if (stock == null) {
+			return result;
+		}
 
 		String sortOrder = DatabaseContract.COLUMN_NET + DatabaseContract.ORDER_DIRECTION_ASC;
 		String selection = DatabaseContract.COLUMN_SE + " = " + "'" + stock.getSE()
@@ -856,8 +872,12 @@ public class StockAnalyzer {
 		return result;
 	}
 
-	double getToSellProfit(@NonNull Stock stock) {
+	double getToSellProfit(Stock stock) {
 		double result = 0;
+
+		if (stock == null) {
+			return result;
+		}
 
 		String sortOrder = DatabaseContract.COLUMN_NET + DatabaseContract.ORDER_DIRECTION_ASC;
 		String selection = DatabaseContract.COLUMN_SE + " = " + "'" + stock.getSE()
@@ -879,13 +899,17 @@ public class StockAnalyzer {
 		return result;
 	}
 
-	protected void updateNotification(@NonNull Stock stock) {
+	protected void updateNotification(Stock stock) {
 		boolean notifyToBuy1;
 		boolean notifyToSell1;
 		boolean notifyToBuy2;
 		boolean notifyToSell2;
 		StringBuilder actionString = new StringBuilder();
 		StringBuilder contentTitle = new StringBuilder();
+
+		if (stock == null) {
+			return;
+		}
 
 		if (TextUtils.isEmpty(stock.getOperate())) {
 			return;

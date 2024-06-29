@@ -387,8 +387,12 @@ public class SinaFinance extends StockDataProvider {
 		return result;
 	}
 
-	private int downloadStockHSA(@NonNull ArrayMap<String, String> requestHeaderArray, String urlString) {
+	private int downloadStockHSA(ArrayMap<String, String> requestHeaderArray, String urlString) {
 		int result = RESULT_NONE;
+
+		if (requestHeaderArray == null) {
+			return result;
+		}
 
 		Log.d(urlString);
 
@@ -540,8 +544,12 @@ public class SinaFinance extends StockDataProvider {
 		return downloadStockInformation(stock, getRequestHeader(), getStockInformationURLString(stock));
 	}
 
-	private int downloadStockInformation(Stock stock, @NonNull ArrayMap<String, String> requestHeaderArray, String urlString) {
+	private int downloadStockInformation(Stock stock, ArrayMap<String, String> requestHeaderArray, String urlString) {
 		int result = RESULT_NONE;
+
+		if (requestHeaderArray == null) {
+			return result;
+		}
 
 		Log.d(urlString);
 
@@ -669,8 +677,12 @@ public class SinaFinance extends StockDataProvider {
 		return downloadStockRealTime(stock, getRequestHeader(), getStockRealTimeURLString(stock));
 	}
 
-	private int downloadStockRealTime(Stock stock, @NonNull ArrayMap<String, String> requestHeaderArray, String urlString) {
+	private int downloadStockRealTime(Stock stock, ArrayMap<String, String> requestHeaderArray, String urlString) {
 		int result = RESULT_NONE;
+
+		if (requestHeaderArray == null) {
+			return result;
+		}
 
 		Log.d(urlString);
 
@@ -865,7 +877,7 @@ public class SinaFinance extends StockDataProvider {
 		return result;
 	}
 
-	public void handleResponseStockDataHistory(@NonNull Stock stock, @NonNull StockData stockData,
+	public void handleResponseStockDataHistory(Stock stock, StockData stockData,
 											   String response) {
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
@@ -879,6 +891,10 @@ public class SinaFinance extends StockDataProvider {
 		ArrayMap<String, StockData> stockDataMap = new ArrayMap<>();
 
 		Calendar importCalendar = Utility.getCalendar("1998-01-01 00:00:00", Utility.CALENDAR_DATE_TIME_FORMAT);
+
+		if (stock == null || stockData == null) {
+			return;
+		}
 
 		if (TextUtils.isEmpty(response)) {
 			Log.d("return, stock = "
@@ -1010,8 +1026,12 @@ public class SinaFinance extends StockDataProvider {
 				+ stockData.getPeriod() + " " + stopWatch.getInterval() + "s");
 	}
 
-	String getStockDataFileName(@NonNull Stock stock) {
+	String getStockDataFileName(Stock stock) {
 		String fileName = "";
+
+		if (stock == null) {
+			return fileName;
+		}
 
 		try {
 			fileName = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Orion/"
@@ -1023,8 +1043,12 @@ public class SinaFinance extends StockDataProvider {
 		return fileName;
 	}
 
-	String getStockDataFileName(@NonNull Stock stock, String period) {
+	String getStockDataFileName(Stock stock, String period) {
 		String fileName = "";
+
+		if (stock == null) {
+			return fileName;
+		}
 
 		try {
 			fileName = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Orion/"
@@ -1040,11 +1064,11 @@ public class SinaFinance extends StockDataProvider {
 	//					日期	    时间	    开盘	    最高	    最低	    收盘	    成交量	    成交额
 	//					2023/01/03	0935	37.08	37.08	36.72	36.81	6066500	223727792.00
 
-	StockData mergeStockData(@NonNull ArrayList<StockData> stockDataList, int size) {
+	StockData mergeStockData(ArrayList<StockData> stockDataList, int size) {
 		double high = 0;
 		double low = 0;
 
-		if (stockDataList.size() == 0 || size <= 0) {
+		if (stockDataList == null || stockDataList.size() == 0 || size <= 0) {
 			return null;
 		}
 
@@ -1085,7 +1109,7 @@ public class SinaFinance extends StockDataProvider {
 		return result;
 	}
 
-	void setupStockDataFile(@NonNull Stock stock) {
+	void setupStockDataFile(Stock stock) {
 		String fileName;
 		ArrayList<String> lineList = new ArrayList<>();
 
@@ -1098,6 +1122,10 @@ public class SinaFinance extends StockDataProvider {
 		ArrayList<StockData> StockDataMin15List = new ArrayList<>();
 		ArrayList<StockData> StockDataMin30List = new ArrayList<>();
 		ArrayList<StockData> StockDataMin60List = new ArrayList<>();
+
+		if (stock == null) {
+			return;
+		}
 
 		try {
 			fileName = getStockDataFileName(stock);//same as min5
@@ -1156,11 +1184,15 @@ public class SinaFinance extends StockDataProvider {
 		}
 	}
 
-	void importStockDataFile(@NonNull Stock stock, @NonNull StockData stockData,
-							 @NonNull ArrayList<ContentValues> contentValuesList,
-							 @NonNull ArrayMap<String, StockData> stockDataMap) {
+	void importStockDataFile(Stock stock, StockData stockData,
+							 ArrayList<ContentValues> contentValuesList,
+							 ArrayMap<String, StockData> stockDataMap) {
 		String fileName = "";
 		ArrayList<String> lineList = new ArrayList<>();
+
+		if (stock == null || stockData == null || contentValuesList == null || stockDataMap == null) {
+			return;
+		}
 
 		try {
 			fileName = getStockDataFileName(stock, stockData.getPeriod());
@@ -1182,9 +1214,13 @@ public class SinaFinance extends StockDataProvider {
 		}
 	}
 
-	void exportStockDataFile(@NonNull Stock stock, String period, @NonNull ArrayList<StockData> stockDataList) {
+	void exportStockDataFile(Stock stock, String period, ArrayList<StockData> stockDataList) {
 		String fileName = "";
 		ArrayList<String> lineList = new ArrayList<>();
+
+		if (stock == null || stockDataList == null) {
+			return;
+		}
 
 		try {
 			fileName = getStockDataFileName(stock, period);
@@ -1237,7 +1273,7 @@ public class SinaFinance extends StockDataProvider {
 		return downloadStockDataRealTime(stock, stockData, getRequestHeader(), getStockDataRealTimeURLString(stock));
 	}
 
-	private int downloadStockDataRealTime(Stock stock, StockData stockData, @NonNull ArrayMap<String, String> requestHeaderArray, String urlString) {
+	private int downloadStockDataRealTime(Stock stock, StockData stockData, ArrayMap<String, String> requestHeaderArray, String urlString) {
 		int result = RESULT_NONE;
 
 		Log.d(urlString);

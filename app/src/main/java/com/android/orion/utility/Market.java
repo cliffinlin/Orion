@@ -19,7 +19,11 @@ public class Market {
 	private Market() {
 	}
 
-	public static int getMinutesOfToday(@NonNull Calendar calendar) {
+	public static int getMinutesOfToday(Calendar calendar) {
+		if (calendar == null) {
+			return 0;
+		}
+
 		return calendar.get(Calendar.HOUR_OF_DAY) * 60
 				+ calendar.get(Calendar.MINUTE);
 	}
@@ -44,11 +48,13 @@ public class Market {
 		return result;
 	}
 
-	public static boolean isWeekday(@NonNull Calendar calendar) {
+	public static boolean isWeekday(Calendar calendar) {
+		if (calendar == null) {
+			return false;
+		}
+
 		int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-
 		boolean result = dayOfWeek > Calendar.SUNDAY && dayOfWeek < Calendar.SATURDAY;
-
 		return result;
 	}
 
@@ -174,7 +180,6 @@ public class Market {
 		return result;
 	}
 
-	@NonNull
 	public static Calendar getMarketCalendar(Calendar calendar,
 	                                         String timeString) {
 		Calendar result;
@@ -185,25 +190,21 @@ public class Market {
 		return result;
 	}
 
-	@NonNull
 	public static Calendar getMarketOpenCalendar(Calendar calendar) {
 		return getMarketCalendar(calendar,
 				OPEN_TIME);
 	}
 
-	@NonNull
 	public static Calendar getMarketLunchBeginCalendar(Calendar calendar) {
 		return getMarketCalendar(calendar,
 				LUNCH_BEGIN_TIME);
 	}
 
-	@NonNull
 	public static Calendar getMarketLunchEndCalendar(Calendar calendar) {
 		return getMarketCalendar(calendar,
 				LUNCH_END_TIME);
 	}
 
-	@NonNull
 	public static Calendar getMarketCloseCalendar(Calendar calendar) {
 		return getMarketCalendar(calendar,
 				CLOSE_TIME);

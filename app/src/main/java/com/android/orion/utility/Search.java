@@ -2,8 +2,6 @@ package com.android.orion.utility;
 
 import android.text.TextUtils;
 
-import androidx.annotation.NonNull;
-
 import com.android.orion.database.ShareBonus;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockFinancial;
@@ -17,9 +15,13 @@ public class Search {
 	Comparator<StockFinancial> comparator = new Comparator<StockFinancial>() {
 
 		@Override
-		public int compare(@NonNull StockFinancial arg0, @NonNull StockFinancial arg1) {
+		public int compare(StockFinancial arg0, StockFinancial arg1) {
 			Calendar calendar0;
 			Calendar calendar1;
+
+			if (arg0 == null || arg1 == null) {
+				return 0;
+			}
 
 			calendar0 = Utility.getCalendar(arg0.getDate(),
 					Utility.CALENDAR_DATE_TIME_FORMAT);
@@ -95,11 +97,11 @@ public class Search {
 	}
 
 	public static StockData getStockDataByDateTime(String dateTimeString,
-	                                               @NonNull ArrayList<StockData> stockDataList) {
+	                                               ArrayList<StockData> stockDataList) {
 		int index = 0;
 		StockData stockData = null;
 
-		if (stockDataList.size() < 1) {
+		if (stockDataList == null || stockDataList.size() < 1) {
 			return stockData;
 		}
 
@@ -177,11 +179,11 @@ public class Search {
 	}
 
 	public static StockFinancial getStockFinancialByDate(String dateString,
-	                                                     @NonNull ArrayList<StockFinancial> stockFinancialList) {
+	                                                     ArrayList<StockFinancial> stockFinancialList) {
 		int index = 0;
 		StockFinancial stockFinancial = null;
 
-		if (stockFinancialList.size() < 1) {
+		if (stockFinancialList == null || stockFinancialList.size() < 1) {
 			return stockFinancial;
 		}
 
@@ -249,11 +251,11 @@ public class Search {
 	}
 
 	public static ShareBonus getShareBonusByDate(String dateString,
-	                                             @NonNull ArrayList<ShareBonus> shareBonusList) {
+	                                             ArrayList<ShareBonus> shareBonusList) {
 		int index = 0;
 		ShareBonus shareBonus = null;
 
-		if (shareBonusList.size() < 1) {
+		if (shareBonusList == null || shareBonusList.size() < 1) {
 			return shareBonus;
 		}
 

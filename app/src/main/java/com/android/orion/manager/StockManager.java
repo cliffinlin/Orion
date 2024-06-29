@@ -26,49 +26,73 @@ public class StockManager {
         return mInstance;
     }
 
-    public void registerStockListListener(@NonNull StockListListener listener) {
+    public void registerStockListListener(StockListListener listener) {
+        if (listener == null) {
+            return;
+        }
         if (!mStockListListener.contains(listener)) {
             mStockListListener.add(listener);
         }
     }
 
-    public void unregisterStockListListener(@NonNull StockListListener listener) {
+    public void unregisterStockListListener(StockListListener listener) {
+        if (listener == null) {
+            return;
+        }
         if (mStockListListener.contains(listener)) {
             mStockListListener.remove(listener);
         }
     }
 
-    public void registerStockFavoriteListener(@NonNull StockFavoriteListener listener) {
+    public void registerStockFavoriteListener(StockFavoriteListener listener) {
+        if (listener == null) {
+            return;
+        }
         if (!mStockFavoriteListener.contains(listener)) {
             mStockFavoriteListener.add(listener);
         }
     }
 
-    public void unregisterStockFavoriteListener(@NonNull StockFavoriteListener listener) {
+    public void unregisterStockFavoriteListener(StockFavoriteListener listener) {
+        if (listener == null) {
+            return;
+        }
         if (mStockFavoriteListener.contains(listener)) {
             mStockFavoriteListener.remove(listener);
         }
     }
 
     public void onStockAdd(Stock stock) {
+        if (stock == null) {
+            return;
+        }
         for (StockListListener listener: mStockListListener) {
             listener.onStockAdd(stock);
         }
     }
 
     public void onStockRemove(Stock stock) {
+        if (stock == null) {
+            return;
+        }
         for (StockListListener listener: mStockListListener) {
             listener.onStockRemove(stock);
         }
     }
 
     public void onStockFavoriteAdd(Stock stock) {
+        if (stock == null) {
+            return;
+        }
         for (StockFavoriteListener listener: mStockFavoriteListener) {
             listener.onStockFavoriteAdd(stock);
         }
     }
 
     public void onStockFavoriteRemove(Stock stock) {
+        if (stock == null) {
+            return;
+        }
         for (StockFavoriteListener listener: mStockFavoriteListener) {
             listener.onStockFavoriteRemove(stock);
         }

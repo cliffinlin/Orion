@@ -161,7 +161,11 @@ public abstract class StockDataProvider implements StockListListener, StockFavor
 		return result;
 	}
 
-	public void fixContentValuesList(@NonNull StockData stockData, @NonNull ArrayList<ContentValues> contentValuesList) {
+	public void fixContentValuesList(StockData stockData, ArrayList<ContentValues> contentValuesList) {
+		if (stockData == null || contentValuesList == null) {
+			return;
+		}
+
 		int size = contentValuesList.size();
 		int n = 0;
 
@@ -279,7 +283,11 @@ public abstract class StockDataProvider implements StockListListener, StockFavor
 		download(stock);
 	}
 
-	void loadIndexComponentStockList(@NonNull Stock index, @NonNull ArrayList<Stock> stockList) {
+	void loadIndexComponentStockList(Stock index, ArrayList<Stock> stockList) {
+		if (index == null || stockList == null) {
+			return;
+		}
+
 		mStockDatabaseManager.loadStockArrayMap(mStockArrayMap);
 
 		String selection = DatabaseContract.COLUMN_INDEX_CODE + " = " + index.getCode();
@@ -293,11 +301,15 @@ public abstract class StockDataProvider implements StockListListener, StockFavor
 		}
 	}
 
-	private void setupIndex(@NonNull Stock index) {
+	private void setupIndex(Stock index) {
 		ArrayList<Stock> stockList = new ArrayList<>();
 		ArrayList<StockData> stockDataList;
 		ArrayList<StockData> indexStockDataList;
 		long weight;
+
+		if (index == null) {
+			return;
+		}
 
 		try {
 			loadIndexComponentStockList(index, stockList);

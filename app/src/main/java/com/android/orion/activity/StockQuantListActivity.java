@@ -786,7 +786,7 @@ public class StockQuantListActivity extends ListActivity implements
 
 	@Override
 	public void onItemClick(@NonNull AdapterView<?> parent, View view, int position,
-	                        long id) {
+							long id) {
 
 		if (parent.getId() == R.id.left_listview) {
 			mStockQuant.setId(id);

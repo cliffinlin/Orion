@@ -93,9 +93,13 @@ public class StockData extends DatabaseTable {
 	public static Comparator<StockData> comparator = new Comparator<StockData>() {
 
 		@Override
-		public int compare(@NonNull StockData arg0, @NonNull StockData arg1) {
+		public int compare(StockData arg0, StockData arg1) {
 			Calendar calendar0;
 			Calendar calendar1;
+
+			if (arg0 == null ||arg1 == null) {
+				return 0;
+			}
 
 			calendar0 = Utility.getCalendar(arg0.getDateTime(),
 					Utility.CALENDAR_DATE_TIME_FORMAT);
@@ -166,7 +170,6 @@ public class StockData extends DatabaseTable {
 		set(cursor);
 	}
 
-	@NonNull
 	public static ArrayList<String> getDatetimeMin15List() {
 		ArrayList<String> datetimeList = new ArrayList<>();
 
@@ -190,7 +193,6 @@ public class StockData extends DatabaseTable {
 		return datetimeList;
 	}
 
-	@NonNull
 	public static ArrayList<String> getDatetimeMinL30ist() {
 		ArrayList<String> datetimeList = new ArrayList<>();
 
@@ -206,7 +208,6 @@ public class StockData extends DatabaseTable {
 		return datetimeList;
 	}
 
-	@NonNull
 	public static ArrayList<String> getDatetimeMin60List() {
 		ArrayList<String> datetimeList = new ArrayList<>();
 
@@ -1085,7 +1086,10 @@ public class StockData extends DatabaseTable {
 				+ getLow() + getClose();
 	}
 
-	public boolean include(@NonNull StockData stockData) {
+	public boolean include(StockData stockData) {
+		if (stockData == null) {
+			return false;
+		}
 
 		boolean result = (getVertexHigh() >= stockData.getVertexHigh())
 				&& (getVertexLow() <= stockData.getVertexLow());
@@ -1093,7 +1097,10 @@ public class StockData extends DatabaseTable {
 		return result;
 	}
 
-	public boolean includedBy(@NonNull StockData stockData) {
+	public boolean includedBy(StockData stockData) {
+		if (stockData == null) {
+			return false;
+		}
 
 		boolean result = (getVertexHigh() <= stockData.getVertexHigh())
 				&& (getVertexLow() >= stockData.getVertexLow());
@@ -1101,8 +1108,12 @@ public class StockData extends DatabaseTable {
 		return result;
 	}
 
-	public int vertexTo(@NonNull StockData prev, StockData next) {
+	public int vertexTo(StockData prev, StockData next) {
 		int vertex = StockData.VERTEX_NONE;
+
+		if (prev == null || next == null) {
+			return vertex;
+		}
 
 		if ((getVertexHigh() > prev.getVertexHigh())
 				&& (getVertexLow() > prev.getVertexLow())) {
@@ -1123,8 +1134,12 @@ public class StockData extends DatabaseTable {
 		return vertex;
 	}
 
-	public int directionTo(@NonNull StockData stockData) {
+	public int directionTo(StockData stockData) {
 		int result = DIRECTION_NONE;
+
+		if (stockData == null) {
+			return result;
+		}
 
 		if ((getVertexHigh() >= stockData.getVertexHigh())
 				&& (getVertexLow() > stockData.getVertexLow())) {
@@ -1190,7 +1205,11 @@ public class StockData extends DatabaseTable {
 		setVertexHigh(Math.max(prev.getVertexHigh(), getVertexHigh()));
 	}
 
-	public void add(@NonNull StockData stockData, long weight) {
+	public void add(StockData stockData, long weight) {
+		if (stockData == null) {
+			return;
+		}
+
 		mOpen += stockData.getOpen() * weight;
 		mClose += stockData.getClose() * weight;
 		mHigh += stockData.getHigh() * weight;
@@ -1246,7 +1265,7 @@ public class StockData extends DatabaseTable {
 		mVelocity = Utility.Round(mVelocity);
 	}
 
-	public StockData fromString(@NonNull String string) {
+	public StockData fromString(String string) {
 		String dateString = "";
 		String timeString = "";
 

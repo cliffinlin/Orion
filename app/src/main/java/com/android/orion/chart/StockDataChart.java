@@ -428,8 +428,12 @@ public class StockDataChart {
 		return limitLine;
 	}
 
-	public void updateLimitLines(@NonNull Stock stock, @NonNull ArrayList<StockDeal> stockDealList, @NonNull ArrayList<StockQuant> stockQuantList,
+	public void updateLimitLines(Stock stock, ArrayList<StockDeal> stockDealList, ArrayList<StockQuant> stockQuantList,
 								 boolean keyDisplayLatest, boolean keyDisplayCost, boolean keyDisplayDeal, boolean keyDisplayQuant) {
+		if (stock == null || stockDealList == null || stockQuantList == null) {
+			return;
+		}
+
 		if (mXLimitLineList == null) {
 			return;
 		}
@@ -442,7 +446,11 @@ public class StockDataChart {
 		updateQuantLimitLine(stock, stockQuantList, keyDisplayQuant);
 	}
 
-	void updateLatestLimitLine(@NonNull Stock stock, @NonNull ArrayList<StockDeal> stockDealList, boolean keyDisplayLatest) {
+	void updateLatestLimitLine(Stock stock, ArrayList<StockDeal> stockDealList, boolean keyDisplayLatest) {
+		if (stock == null || stockDealList == null) {
+			return;
+		}
+
 		int color = Color.WHITE;
 		String action = "";
 		String label = "";
@@ -470,12 +478,16 @@ public class StockDataChart {
 		mXLimitLineList.add(limitLine);
 	}
 
-	void updateCostLimitLine(@NonNull Stock stock, @NonNull ArrayList<StockDeal> stockDealList, boolean keyDisplayCost) {
+	void updateCostLimitLine(Stock stock, ArrayList<StockDeal> stockDealList, boolean keyDisplayCost) {
 		int color = Color.WHITE;
 		double cost = 0;
 		double net = 0;
 		String label = "";
 		LimitLine limitLine;
+
+		if (stock == null || stockDealList == null) {
+			return;
+		}
 
 		if (mXLimitLineList == null) {
 			return;
@@ -498,12 +510,16 @@ public class StockDataChart {
 		}
 	}
 
-	void updateDealLimitLine(@NonNull Stock stock, @NonNull ArrayList<StockDeal> stockDealList,
+	void updateDealLimitLine(Stock stock, ArrayList<StockDeal> stockDealList,
 							 boolean keyDisplayDeal) {
 		double limit = 0;
 		int color = Color.WHITE;
 		String label = "";
 		LimitLine limitLineDeal = new LimitLine(0);
+
+		if (stock == null || stockDealList == null) {
+			return;
+		}
 
 		if (mXLimitLineList == null) {
 			return;
@@ -545,12 +561,16 @@ public class StockDataChart {
 		}
 	}
 
-	void updateQuantLimitLine(@NonNull Stock stock, @NonNull ArrayList<StockQuant> stockQuantList,
+	void updateQuantLimitLine(Stock stock, ArrayList<StockQuant> stockQuantList,
 							  boolean keyDisplayDeal) {
 		double limit = 0;
 		int color = Color.WHITE;
 		String label = "";
 		LimitLine limitLineQuant = new LimitLine(0);
+
+		if (stock == null || stockQuantList == null) {
+			return;
+		}
 
 		if (mXLimitLineList == null) {
 			return;

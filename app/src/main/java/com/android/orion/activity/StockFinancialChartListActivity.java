@@ -95,7 +95,11 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 	Comparator<StockFinancial> comparator = new Comparator<StockFinancial>() {
 
 		@Override
-		public int compare(@NonNull StockFinancial arg0, @NonNull StockFinancial arg1) {
+		public int compare(StockFinancial arg0, StockFinancial arg1) {
+			if ((arg0 == null) || (arg1 == null)) {
+				return 0;
+			}
+
 			Calendar calendar0;
 			Calendar calendar1;
 
@@ -291,7 +295,11 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 		mLoaderManager.initLoader(LOADER_ID_STOCK_FINANCIAL_LIST, null, this);
 	}
 
-	void restartLoader(@NonNull Intent intent) {
+	void restartLoader(Intent intent) {
+		if (intent == null) {
+			return;
+		}
+
 		if (intent.getLongExtra(Constant.EXTRA_STOCK_ID,
 				Stock.INVALID_ID) == mStock.getId()) {
 			restartLoader();

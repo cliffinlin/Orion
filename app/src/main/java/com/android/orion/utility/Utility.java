@@ -7,7 +7,6 @@ import android.os.Environment;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.android.orion.config.Config;
 import com.android.orion.setting.Setting;
@@ -82,9 +81,12 @@ public class Utility {
 		return result;
 	}
 
-	@NonNull
-	public static String getCalendarString(@NonNull Calendar calendar, String format) {
+	public static String getCalendarString(Calendar calendar, String format) {
 		String result = "";
+
+		if (calendar == null) {
+			return result;
+		}
 
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format,
 				Locale.getDefault());
@@ -94,38 +96,31 @@ public class Utility {
 		return result;
 	}
 
-	@NonNull
 	public static String getCalendarDateString(Calendar calendar) {
 		return getCalendarString(calendar, CALENDAR_DATE_FORMAT);
 	}
 
-	@NonNull
 	public static String getCalendarTimeString(Calendar calendar) {
 		return getCalendarString(calendar, CALENDAR_TIME_FORMAT);
 	}
 
-	@NonNull
 	public static String getCalendarDateTimeString(Calendar calendar) {
 		return getCalendarString(calendar, CALENDAR_DATE_TIME_FORMAT);
 	}
 
-	@NonNull
 	public static String getCurrentDateString() {
 		return getCalendarString(Calendar.getInstance(), CALENDAR_DATE_FORMAT);
 	}
 
-	@NonNull
 	public static String getCurrentTimeString() {
 		return getCalendarString(Calendar.getInstance(), CALENDAR_TIME_FORMAT);
 	}
 
-	@NonNull
 	public static String getCurrentDateTimeString() {
 		return getCalendarString(Calendar.getInstance(),
 				CALENDAR_DATE_TIME_FORMAT);
 	}
 
-	@NonNull
 	public static Calendar getCalendar(String string, String format) {
 		Calendar calendar = Calendar.getInstance();
 
@@ -496,11 +491,11 @@ public class Utility {
 		}
 	}
 
-	public static void writeFile(@NonNull String fileName, @NonNull ArrayList<String> lineList, boolean append) {
+	public static void writeFile(String fileName, ArrayList<String> lineList, boolean append) {
 		FileWriter fileWriter = null;
 		BufferedWriter bufferedWriter = null;
 
-		if (TextUtils.isEmpty(fileName) || lineList.size() == 0) {
+		if (TextUtils.isEmpty(fileName) || lineList == null || lineList.size() == 0) {
 			return;
 		}
 
@@ -575,10 +570,14 @@ public class Utility {
 		return bytes;
 	}
 
-	public static void readFile(String fileName, @NonNull ArrayList<String> lineList) {
+	public static void readFile(String fileName, ArrayList<String> lineList) {
 		FileReader fileReader = null;
 		BufferedReader bufferedReader = null;
 		String strLine;
+
+		if (lineList == null) {
+			return;
+		}
 
 		if (TextUtils.isEmpty(fileName)) {
 			return;
@@ -631,7 +630,11 @@ public class Utility {
 		return "";
 	}
 
-	public static <E extends Enum<E>> boolean isInEnum(String value, @NonNull Class<E> enumClass) {
+	public static <E extends Enum<E>> boolean isInEnum(String value, Class<E> enumClass) {
+		if (enumClass == null) {
+			return false;
+		}
+
 		for (E e : enumClass.getEnumConstants()) {
 			if (TextUtils.equals(e.name(), value)) {
 				return true;
@@ -661,7 +664,6 @@ public class Utility {
 		return result;
 	}
 
-	@Nullable
 	public static ArrayList<String> stringToArrayList(String string) {
 		if (TextUtils.isEmpty(string)) {
 			return null;
@@ -861,7 +863,6 @@ public class Utility {
 		return bLocalArr;
 	}
 
-	@NonNull
 	public static byte[] byteMerger(byte[] a, byte[] b) {
 		byte[] data = new byte[a.length + b.length];
 		System.arraycopy(a, 0, data, 0, a.length);
@@ -870,7 +871,6 @@ public class Utility {
 		return data;
 	}
 
-	@NonNull
 	public static byte[] byteMerger(byte[] a, byte[] b, byte[] c) {
 		byte[] data = new byte[a.length + b.length + c.length];
 		System.arraycopy(a, 0, data, 0, a.length);
@@ -883,7 +883,6 @@ public class Utility {
 		return byteArrayToHexString(src, " ");
 	}
 
-	@Nullable
 	public static String byteArrayToHexString(byte[] src, String seperater) {
 		StringBuilder stringBuilder = new StringBuilder();
 
@@ -919,7 +918,6 @@ public class Utility {
 				bytes / Math.pow(unit, exp), pre);
 	}
 
-	@NonNull
 	public static String getByteWhitUnit(long bytes) {
 		if (bytes <= 0)
 			return "0";

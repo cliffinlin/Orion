@@ -38,7 +38,11 @@ public class StockQuantAnalyzer {
 	Comparator<StockQuant> mComparator = new Comparator<StockQuant>() {
 
 		@Override
-		public int compare(@NonNull StockQuant arg0, @NonNull StockQuant arg1) {
+		public int compare(StockQuant arg0, StockQuant arg1) {
+			if (arg0 == null || arg1 == null) {
+				return 0;
+			}
+
 			if (arg0.getBuy() < arg1.getBuy()) {
 				return -1;
 			} else if (arg0.getBuy() > arg1.getBuy()) {
@@ -73,7 +77,11 @@ public class StockQuantAnalyzer {
 		mContentValuesList.clear();
 	}
 
-	void setupStockQuantBuy(Stock stock, @NonNull StockData stockData, double price) {
+	void setupStockQuantBuy(Stock stock, StockData stockData, double price) {
+		if (stockData == null) {
+			return;
+		}
+
 		if (TextUtils.equals(stockData.getDate(), mBuyDate)) {
 			return;
 		}
@@ -133,7 +141,11 @@ public class StockQuantAnalyzer {
 		}
 	}
 
-	void setupStockQuantSell(Stock stock, @NonNull StockData stockData, double price) {
+	void setupStockQuantSell(Stock stock, StockData stockData, double price) {
+		if (stockData == null) {
+			return;
+		}
+
 		StockQuant stockQuant;
 
 		if (TextUtils.equals(mSellDate, stockData.getDate())) {
@@ -203,7 +215,11 @@ public class StockQuantAnalyzer {
 		}
 	}
 
-	public void analyze(@NonNull Context context, @NonNull Stock stock, @NonNull ArrayList<StockData> stockDataList, @NonNull ArrayList<ShareBonus> shareBonusList) {
+	public void analyze(Context context, Stock stock, ArrayList<StockData> stockDataList, ArrayList<ShareBonus> shareBonusList) {
+		if (context == null || stock == null || stockDataList == null || shareBonusList == null) {
+			return;
+		}
+
 		init();
 
 		mContext = context;

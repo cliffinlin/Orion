@@ -62,7 +62,11 @@ public class StockSearchActivity extends StockListEditActivity implements
 		return true;
 	}
 
-	void handleIntent(@NonNull Intent intent) {
+	void handleIntent(Intent intent) {
+		if (intent == null) {
+			return;
+		}
+
 		if (TextUtils.equals(intent.getAction(), Intent.ACTION_SEARCH)) {
 			String query = intent.getStringExtra(SearchManager.QUERY);
 

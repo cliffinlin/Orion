@@ -422,7 +422,7 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 
 	@Override
 	public void onChartFling(@NonNull MotionEvent me1, @NonNull MotionEvent me2, float velocityX,
-	                         float velocityY) {
+							 float velocityY) {
 		int distance = FLING_DISTANCE;
 		int velocity = FLING_VELOCITY;
 

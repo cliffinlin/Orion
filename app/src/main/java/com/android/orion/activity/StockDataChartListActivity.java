@@ -383,7 +383,11 @@ public class StockDataChartListActivity extends BaseActivity implements
 		}
 	}
 
-	void restartLoader(@NonNull Intent intent) {
+	void restartLoader(Intent intent) {
+		if (intent == null) {
+			return;
+		}
+
 		if (intent.getLongExtra(Constant.EXTRA_STOCK_ID,
 				Stock.INVALID_ID) == mStock.getId()) {
 			restartLoader();
