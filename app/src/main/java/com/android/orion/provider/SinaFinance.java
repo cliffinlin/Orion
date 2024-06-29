@@ -1535,33 +1535,25 @@ public class SinaFinance extends StockDataProvider {
 						continue;
 					}
 
+					double valueDouble = Double.parseDouble(valueString);
 					if (TextUtils.equals(keyString, "BIZINCO") || TextUtils.equals(keyString, "BIZTOTINCO")) {//营业总收入
-						stockFinancial.setMainBusinessIncome(Double
-								.valueOf(valueString));
+						stockFinancial.setMainBusinessIncome(valueDouble);
 					} else if (TextUtils.equals(keyString, "BIZEXPE") || TextUtils.equals(keyString, "BIZTOTCOST")) {//营业成本
-						stockFinancial.setFinancialExpenses(Double
-								.valueOf(valueString));
+						stockFinancial.setFinancialExpenses(valueDouble);
 					} else if (TextUtils.equals(keyString, "NETPROFIT")) {//净利润
 //					} else if (TextUtils.equals(keyString, "NETPARECOMPPROF") || TextUtils.equals(keyString, "NETPARESHARPROF") || TextUtils.equals(keyString, "PARENETP")) {//归母净利润
-						stockFinancial.setNetProfit(Double
-								.valueOf(valueString));
+						stockFinancial.setNetProfit(valueDouble);
 					} else if (TextUtils.equals(keyString, "NAPS")) {//每股净资产
-						stockFinancial.setBookValuePerShare(Double
-								.valueOf(valueString));
+						stockFinancial.setBookValuePerShare(valueDouble);
 					} else if (TextUtils.equals(keyString, "OPNCFPS")) {//每股现金流
-						stockFinancial.setCashFlowPerShare(Double
-								.valueOf(valueString));
+						stockFinancial.setCashFlowPerShare(valueDouble);
 					} else if (TextUtils.equals(keyString, mContext.getResources().getString(R.string.key_total_current_assets))) {
-						stockFinancial.setTotalCurrentAssets(Double
-								.valueOf(valueString));
+						stockFinancial.setTotalCurrentAssets(valueDouble);
 					} else if (TextUtils.equals(keyString, mContext.getResources().getString(R.string.key_total_assets))) {
-						stockFinancial.setTotalAssets(Double
-								.valueOf(valueString));
+						stockFinancial.setTotalAssets(valueDouble);
 					} else if (TextUtils.equals(keyString, "ASSLIABRT")) {//资产负债率
 						stockFinancial
-								.setDebtToNetAssetsRatio(Double
-										.valueOf(valueString));
-
+								.setDebtToNetAssetsRatio(valueDouble);
 						stockFinancial.setupNetProfitPerShare(stock
 								.getTotalShare());
 
