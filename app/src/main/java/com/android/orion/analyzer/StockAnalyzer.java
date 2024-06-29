@@ -142,7 +142,7 @@ public class StockAnalyzer {
 		Log.d(stock.getName() + " " + stopWatch.getInterval() + "s");
 	}
 
-	private void analyzeStockFinancial(Stock stock) {
+	private void analyzeStockFinancial(@NonNull Stock stock) {
 		String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
 
 		if (TextUtils.equals(stock.getClasses(), Stock.CLASS_INDEX)) {
@@ -371,7 +371,7 @@ public class StockAnalyzer {
 		}
 	}
 
-	private void setupStockFinancial(Stock stock) {
+	private void setupStockFinancial(@NonNull Stock stock) {
 		String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
 		StockFinancial stockFinancial = new StockFinancial();
 

@@ -2,13 +2,6 @@
 <preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
 
     <header
-        android:icon="@drawable/ic_service"
-        android:title="@string/setting">
-        <intent
-            android:targetClass="com.android.orion.activity.SettingActivity"
-            android:targetPackage="com.android.orion" />
-    </header>
-    <header
         android:icon="@drawable/ic_list"
         android:title="@string/favorite">
         <intent
@@ -24,13 +17,6 @@
     </header>
     <header
         android:icon="@drawable/ic_list"
-        android:title="@string/quant">
-        <intent
-            android:targetClass="com.android.orion.activity.StockQuantListActivity"
-            android:targetPackage="com.android.orion" />
-    </header>
-    <header
-        android:icon="@drawable/ic_list"
         android:title="@string/deal">
         <intent
             android:targetClass="com.android.orion.activity.StockFavoriteDealListActivity"
@@ -38,9 +24,23 @@
     </header>
     <header
         android:icon="@drawable/ic_list"
+        android:title="@string/quant">
+        <intent
+            android:targetClass="com.android.orion.activity.StockQuantListActivity"
+            android:targetPackage="com.android.orion" />
+    </header>
+    <header
+        android:icon="@drawable/ic_list"
         android:title="@string/stock_statistics">
         <intent
             android:targetClass="com.android.orion.activity.StockStatisticsChartListActivity"
+            android:targetPackage="com.android.orion" />
+    </header>
+    <header
+        android:icon="@drawable/ic_service"
+        android:title="@string/setting">
+        <intent
+            android:targetClass="com.android.orion.activity.SettingActivity"
             android:targetPackage="com.android.orion" />
     </header>
     <header
