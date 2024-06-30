@@ -28,8 +28,6 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-
 import com.android.orion.R;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
@@ -169,7 +167,7 @@ public class StockFavoriteDealListActivity extends ListActivity implements
 	};
 	private final ActionMode.Callback mModeCallBack = new ActionMode.Callback() {
 		@Override
-		public boolean onCreateActionMode(@NonNull ActionMode mode, Menu menu) {
+		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 			mode.setTitle("Actions");
 			mode.getMenuInflater().inflate(R.menu.stock_deal_list_action, menu);
 			return true;
@@ -181,7 +179,7 @@ public class StockFavoriteDealListActivity extends ListActivity implements
 		}
 
 		@Override
-		public boolean onActionItemClicked(final ActionMode mode, @NonNull MenuItem item) {
+		public boolean onActionItemClicked(final ActionMode mode, MenuItem item) {
 			switch (item.getItemId()) {
 				case R.id.menu_edit:
 					mIntent = new Intent(mContext, StockDealActivity.class);
@@ -266,7 +264,7 @@ public class StockFavoriteDealListActivity extends ListActivity implements
 	}
 
 	@Override
-	public boolean onMenuItemSelected(int featureId, @NonNull MenuItem item) {
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home:
 				finish();
@@ -360,7 +358,7 @@ public class StockFavoriteDealListActivity extends ListActivity implements
 	}
 
 	@Override
-	public void onClick(@NonNull View view) {
+	public void onClick(View view) {
 		int id = view.getId();
 
 		resetHeaderTextColor();
@@ -794,8 +792,8 @@ public class StockFavoriteDealListActivity extends ListActivity implements
 	}
 
 	@Override
-	public void onItemClick(@NonNull AdapterView<?> parent, View view, int position,
-	                        long id) {
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+							long id) {
 
 		if (parent.getId() == R.id.left_listview) {
 			mStockDeal.setId(id);

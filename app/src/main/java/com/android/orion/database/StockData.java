@@ -4,8 +4,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.text.TextUtils;
 
-import androidx.annotation.NonNull;
-
 import com.android.orion.setting.Constant;
 import com.android.orion.utility.Utility;
 

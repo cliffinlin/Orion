@@ -7,8 +7,6 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 
-import androidx.annotation.NonNull;
-
 import com.android.orion.application.OrionApplication;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.IndexComponent;
@@ -38,7 +36,6 @@ public class StockDatabaseManager extends DatabaseManager implements StockListLi
 		StockManager.getInstance().registerStockFavoriteListener(this);
 	}
 
-	@NonNull
 	public static synchronized StockDatabaseManager getInstance() {
 		if (mInstance == null) {
 			mInstance = new StockDatabaseManager();

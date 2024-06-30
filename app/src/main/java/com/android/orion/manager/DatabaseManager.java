@@ -5,8 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import androidx.annotation.NonNull;
-
 import com.android.orion.database.DatabaseOpenHelper;
 
 public class DatabaseManager {
@@ -17,15 +15,14 @@ public class DatabaseManager {
 	public DatabaseOpenHelper mDatabaseHelper;
 	Context mContext;
 
-	protected DatabaseManager(@NonNull Context context) {
+	protected DatabaseManager(Context context) {
 		mContext = context;
 
 		mContentResolver = mContext.getContentResolver();
 		mDatabaseHelper = new DatabaseOpenHelper(mContext);
 	}
 
-	@NonNull
-	public static synchronized DatabaseManager getInstance(@NonNull Context context) {
+	public static synchronized DatabaseManager getInstance(Context context) {
 		if (mInstance == null) {
 			mInstance = new DatabaseManager(context.getApplicationContext());
 		}

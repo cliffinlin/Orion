@@ -2,8 +2,6 @@ package com.android.orion.manager;
 
 import android.content.Context;
 
-import androidx.annotation.NonNull;
-
 import com.android.orion.application.OrionApplication;
 import com.android.orion.database.Stock;
 import com.android.orion.interfaces.StockFavoriteListener;

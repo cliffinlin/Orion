@@ -7,8 +7,6 @@ import android.os.Environment;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 
-import androidx.annotation.NonNull;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;

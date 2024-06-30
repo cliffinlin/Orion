@@ -12,7 +12,7 @@ public class Logger {
 	/**
 	 * debug or not
 	 */
-	private static boolean debug = false;
+	private static boolean debug;
 	/**
 	 * log tag
 	 */

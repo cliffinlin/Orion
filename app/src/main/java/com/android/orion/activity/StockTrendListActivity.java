@@ -25,8 +25,6 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-
 import com.android.orion.R;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
@@ -148,7 +146,7 @@ public class StockTrendListActivity extends ListActivity implements
 	}
 
 	@Override
-	public boolean onMenuItemSelected(int featureId, @NonNull MenuItem item) {
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home:
 				finish();
@@ -224,7 +222,7 @@ public class StockTrendListActivity extends ListActivity implements
 	}
 
 	@Override
-	public void onClick(@NonNull View view) {
+	public void onClick(View view) {
 		int id = view.getId();
 
 		resetHeaderTextColor();

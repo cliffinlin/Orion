@@ -12,7 +12,6 @@ import android.os.Process;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 
-import androidx.annotation.NonNull;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.android.orion.analyzer.StockAnalyzer;

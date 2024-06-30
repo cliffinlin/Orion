@@ -10,8 +10,6 @@ import android.view.Menu;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 
-import androidx.annotation.NonNull;
-
 import com.android.orion.R;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.provider.StockSearchRecentSuggestionsProvider;

@@ -2,8 +2,6 @@ package com.android.orion.utility;
 
 import android.text.TextUtils;
 
-import androidx.annotation.NonNull;
-
 import java.util.Calendar;
 
 public class Market {

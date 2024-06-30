@@ -9,8 +9,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.text.TextUtils;
 
-import androidx.annotation.NonNull;
-
 import com.android.orion.R;
 import com.android.orion.activity.StockFavoriteListActivity;
 import com.android.orion.application.OrionApplication;

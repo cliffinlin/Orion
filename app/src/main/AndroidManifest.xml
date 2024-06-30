@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.android.orion"
     android:versionCode="518"
-    android:versionName="1.1.36.20240626">
+    android:versionName="1.1.36.20240630">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -34,7 +34,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.android.orion.activity.MainActivity"></activity>
         <activity android:name="com.android.orion.activity.BaseActivity"></activity>
         <activity android:name="com.android.orion.activity.DatabaseActivity"></activity>
         <activity

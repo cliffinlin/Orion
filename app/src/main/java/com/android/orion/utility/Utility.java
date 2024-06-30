@@ -6,8 +6,6 @@ import android.net.NetworkInfo;
 import android.os.Environment;
 import android.text.TextUtils;
 
-import androidx.annotation.NonNull;
-
 import com.android.orion.config.Config;
 import com.android.orion.setting.Setting;
 
