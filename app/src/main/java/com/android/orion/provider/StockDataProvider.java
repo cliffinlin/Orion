@@ -269,19 +269,6 @@ public abstract class StockDataProvider implements StockListListener, StockFavor
 		}
 	}
 
-	public void download(String se, String code) {
-		if (TextUtils.isEmpty(se) || TextUtils.isEmpty(code)) {
-			return;
-		}
-
-		Stock stock = new Stock();
-		stock.setSE(se);
-		stock.setCode(code);
-		mStockDatabaseManager.getStock(stock);
-
-		download(stock);
-	}
-
 	void loadIndexComponentStockList(Stock index, ArrayList<Stock> stockList) {
 		if (index == null || stockList == null) {
 			return;

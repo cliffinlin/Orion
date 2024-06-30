@@ -265,7 +265,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 							mStockDatabaseManager.deleteStockData(mStock.getId(), period);
 						}
 					}
-					mOrionService.download(mStock.getSE(), mStock.getCode());
+					mOrionService.download(mStock);
 					break;
 
 				default:

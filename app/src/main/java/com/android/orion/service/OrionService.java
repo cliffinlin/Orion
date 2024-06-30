@@ -109,14 +109,6 @@ public class OrionService extends Service {
 		return mServiceBinder;
 	}
 
-	public void download(String se, String code) {
-		if (mSinaFinance == null) {
-			return;
-		}
-
-		mSinaFinance.download(se, code);
-	}
-
 	public void download() {
 		if (mSinaFinance == null) {
 			return;
