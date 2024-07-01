@@ -380,10 +380,10 @@ public class StockListEditActivity extends DatabaseActivity implements
 					case R.id.favorite:
 						if (!stock.hasFlag(Stock.FLAG_FAVORITE)) {
 							stock.addFlag(Stock.FLAG_FAVORITE);
-							mStockManager.onStockFavoriteAdd(stock);
+							mStockManager.onStockAddFavorite(stock);
 						} else {
 							stock.setFlag(Stock.FLAG_NONE);
-							mStockManager.onStockFavoriteRemove(stock);
+							mStockManager.onStockRemoveFavorite(stock);
 						}
 						break;
 

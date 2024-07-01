@@ -17,8 +17,8 @@ import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockFinancial;
 import com.android.orion.database.StockQuant;
 import com.android.orion.database.TotalShare;
-import com.android.orion.interfaces.StockFavoriteListener;
-import com.android.orion.interfaces.StockListListener;
+import com.android.orion.interfaces.StockEditListener;
+import com.android.orion.interfaces.StockListChangedListener;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Utility;
@@ -27,13 +27,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class StockDatabaseManager extends DatabaseManager implements StockListListener, StockFavoriteListener {
+public class StockDatabaseManager extends DatabaseManager implements StockListChangedListener, StockEditListener {
 	private static StockDatabaseManager mInstance;
 
 	private StockDatabaseManager() {
 		super(OrionApplication.getContext());
-		StockManager.getInstance().registerStockListListener(this);
-		StockManager.getInstance().registerStockFavoriteListener(this);
+
+		StockManager.getInstance().registerStockEditListener(this);
+		StockManager.getInstance().registerStockListChangedListener(this);
 	}
 
 	public static synchronized StockDatabaseManager getInstance() {
@@ -2278,7 +2279,7 @@ public class StockDatabaseManager extends DatabaseManager implements StockListLi
 	}
 
 	@Override
-	public void onStockFavoriteAdd(Stock stock) {
+	public void onStockAddFavorite(Stock stock) {
 		if (stock == null) {
 			return;
 		}
@@ -2287,7 +2288,7 @@ public class StockDatabaseManager extends DatabaseManager implements StockListLi
 	}
 
 	@Override
-	public void onStockFavoriteRemove(Stock stock) {
+	public void onStockRemoveFavorite(Stock stock) {
 		if (stock == null) {
 			return;
 		}
