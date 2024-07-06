@@ -7,6 +7,7 @@ import android.os.Environment;
 import android.text.TextUtils;
 
 import com.android.orion.config.Config;
+import com.android.orion.database.Stock;
 import com.android.orion.setting.Setting;
 
 import org.json.JSONException;
@@ -127,7 +128,7 @@ public class Utility {
 
 		Date data = null;
 
-		if (TextUtils.isEmpty(string) || string.contains("--")) {
+		if (TextUtils.isEmpty(string) || string.contains(Stock.STATUS_SUSPENSION)) {
 			return calendar;
 		}
 

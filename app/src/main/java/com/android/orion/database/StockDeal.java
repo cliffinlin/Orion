@@ -520,14 +520,14 @@ public class StockDeal extends DatabaseTable {
 		for (int i = 0; i < 2; i++) {
 			shareBonus = shareBonusList.get(i);
 			rDate = shareBonus.getRDate();
-			if (TextUtils.isEmpty(rDate) || rDate.contains("--")) {
+			if (TextUtils.isEmpty(rDate) || rDate.contains(Stock.STATUS_SUSPENSION)) {
 				continue;
 			} else {
 				break;
 			}
 		}
 
-		if (TextUtils.isEmpty(rDate) || rDate.contains("--")) {
+		if (TextUtils.isEmpty(rDate) || rDate.contains(Stock.STATUS_SUSPENSION)) {
 			return result;
 		}
 

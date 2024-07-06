@@ -1767,13 +1767,13 @@ public class SinaFinance extends StockDataProvider {
 
 					dateString = tdElements.get(0).text();
 					if (TextUtils.isEmpty(dateString)
-							|| dateString.contains("--")) {
+							|| dateString.contains(Stock.STATUS_SUSPENSION)) {
 						continue;
 					}
 
 					dividendString = tdElements.get(3).text();
 					if (TextUtils.isEmpty(dividendString)
-							|| dividendString.contains("--")) {
+							|| dividendString.contains(Stock.STATUS_SUSPENSION)) {
 						continue;
 					}
 
@@ -1785,6 +1785,9 @@ public class SinaFinance extends StockDataProvider {
 					shareBonus.setDate(dateString);
 					shareBonus.setDividend(Double.valueOf(dividendString));
 					shareBonus.setRDate(rDateString);
+					if (!rDateString.equals(Stock.STATUS_SUSPENSION)) {
+						shareBonus.setDate(rDateString);
+					}
 
 					if (bulkInsert) {
 						shareBonus.setCreated(Utility
@@ -1954,13 +1957,13 @@ public class SinaFinance extends StockDataProvider {
 
 					dateString = tdElements.get(0).text();
 					if (TextUtils.isEmpty(dateString)
-							|| dateString.contains("--")) {
+							|| dateString.contains(Stock.STATUS_SUSPENSION)) {
 						continue;
 					}
 
 					totalShareString = tdElements.get(1).text();
 					if (TextUtils.isEmpty(totalShareString)
-							|| totalShareString.contains("--")) {
+							|| totalShareString.contains(Stock.STATUS_SUSPENSION)) {
 						continue;
 					}
 
