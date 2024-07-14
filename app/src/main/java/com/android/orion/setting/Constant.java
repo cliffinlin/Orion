@@ -38,11 +38,15 @@ public class Constant {
 
 	public static final int SEASONS_IN_A_YEAR = 4;
 
-	public static final int MIN1 = 1;
 	public static final int MIN5 = 5;
 	public static final int MIN15 = 15;
 	public static final int MIN30 = 30;
 	public static final int MIN60 = 60;
+
+	public static final int MIN60_PER_TRADE_DAY = 4;
+	public static final int MIN30_PER_TRADE_DAY = 2 * MIN60_PER_TRADE_DAY;
+	public static final int MIN15_PER_TRADE_DAY = 2 * MIN30_PER_TRADE_DAY;
+	public static final int MIN5_PER_TRADE_DAY = 3 * MIN15_PER_TRADE_DAY;
 
 	public static final long SECOND_INTERVAL = 1 * 1000L; //in millis
 	public static final long MINUTE_INTERVAL = 60 * SECOND_INTERVAL;

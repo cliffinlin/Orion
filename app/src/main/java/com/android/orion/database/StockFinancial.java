@@ -224,7 +224,7 @@ public class StockFinancial extends DatabaseTable {
 	}
 
 	public void setCashFlowPerShare(double cashFlowPerShare) {
-		mCashFlowPerShare = cashFlowPerShare;
+		mCashFlowPerShare = Utility.Round(cashFlowPerShare);
 	}
 
 	void setCashFlowPerShare(Cursor cursor) {

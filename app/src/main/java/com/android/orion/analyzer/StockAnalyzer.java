@@ -96,7 +96,7 @@ public class StockAnalyzer {
 			setupStockFinancial(stock);
 
 			mStockDatabaseManager.loadStockDataList(stock, period, stockDataList);
-			setupMACD(stockDataList);
+			setupMACD(period, stockDataList);
 			analyzeStockData(stock, period, stockDataList,
 					drawVertexList, drawDataList,
 					strokeVertexList, strokeDataList,
@@ -461,7 +461,7 @@ public class StockAnalyzer {
 		}
 	}
 
-	private void setupMACD(ArrayList<StockData> stockDataList) {
+	private void setupMACD(String period, ArrayList<StockData> stockDataList) {
 		int size = 0;
 
 		double average5 = 0;
@@ -469,7 +469,6 @@ public class StockAnalyzer {
 		double dif = 0;
 		double dea = 0;
 		double histogram = 0;
-		MACD macd = new MACD();
 
 		if (stockDataList == null) {
 			return;
@@ -480,21 +479,14 @@ public class StockAnalyzer {
 			return;
 		}
 
-		macd.mPriceList.clear();
+		MACD.getInstance().calculate(period, stockDataList);
 
 		for (int i = 0; i < size; i++) {
-			macd.mPriceList
-					.add(stockDataList.get(i).getClose());
-		}
-
-		macd.calculate();
-
-		for (int i = 0; i < size; i++) {
-			average5 = macd.mEMAAverage5List.get(i);
-			average10 = macd.mEMAAverage10List.get(i);
-			dif = macd.mDIFList.get(i);
-			dea = macd.mDEAList.get(i);
-			histogram = macd.mHistogramList.get(i);
+			average5 = MACD.getInstance().getEMAAverage5List().get(i);
+			average10 = MACD.getInstance().getEMAAverage10List().get(i);
+			dif = MACD.getInstance().getDIFList().get(i);
+			dea = MACD.getInstance().getDEAList().get(i);
+			histogram = MACD.getInstance().getHistogramList().get(i);
 
 			stockDataList.get(i).setAverage5(average5);
 			stockDataList.get(i).setAverage10(average10);
