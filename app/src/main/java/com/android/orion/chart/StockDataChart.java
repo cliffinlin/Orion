@@ -33,25 +33,25 @@ import java.util.List;
 
 public class StockDataChart {
 	public String mDescription;
-	public ArrayList<String> mXValues = null;
-	public ArrayList<BubbleEntry> mNaturalRallyList = null;
-	public ArrayList<BubbleEntry> mUpwardTrendList = null;
-	public ArrayList<BubbleEntry> mDownwardTrendList = null;
-	public ArrayList<BubbleEntry> mNaturalReactionList = null;
-	public ArrayList<CandleEntry> mCandleEntryList = null;
-	public ArrayList<Entry> mAverage5EntryList = null;
-	public ArrayList<Entry> mAverage10EntryList = null;
-	public ArrayList<Entry> mBookValuePerShareList = null;
-	public ArrayList<Entry> mNetProfitPerShareList = null;
-	public ArrayList<BarEntry> mDividendEntryList = null;
-	public ArrayList<Entry> mDIFEntryList = null;
-	public ArrayList<Entry> mDEAEntryList = null;
-	public ArrayList<BarEntry> mHistogramEntryList = null;
-	public ArrayList<LimitLine> mXLimitLineList = null;
+	public ArrayList<String> mXValues = new ArrayList<>();
+	public ArrayList<BubbleEntry> mNaturalRallyList = new ArrayList<>();
+	public ArrayList<BubbleEntry> mUpwardTrendList = new ArrayList<>();
+	public ArrayList<BubbleEntry> mDownwardTrendList = new ArrayList<>();
+	public ArrayList<BubbleEntry> mNaturalReactionList = new ArrayList<>();
+	public ArrayList<CandleEntry> mCandleEntryList = new ArrayList<>();
+	public ArrayList<Entry> mAverage5EntryList = new ArrayList<>();
+	public ArrayList<Entry> mAverage10EntryList = new ArrayList<>();
+	public ArrayList<Entry> mBookValuePerShareList = new ArrayList<>();
+	public ArrayList<Entry> mNetProfitPerShareList = new ArrayList<>();
+	public ArrayList<BarEntry> mDividendEntryList = new ArrayList<>();
+	public ArrayList<Entry> mDIFEntryList = new ArrayList<>();
+	public ArrayList<Entry> mDEAEntryList = new ArrayList<>();
+	public ArrayList<BarEntry> mHistogramEntryList = new ArrayList<>();
+	public ArrayList<LimitLine> mXLimitLineList = new ArrayList<>();
 	public List<Entry>[] mLineList = new List[StockData.LEVEL_MAX];
 	public int[] mLineColors = {Color.GRAY, Color.YELLOW, Color.BLACK, Color.RED, Color.MAGENTA};
-	public CombinedData mCombinedDataMain = null;
-	public CombinedData mCombinedDataSub = null;
+	public CombinedData mCombinedDataMain = new CombinedData(mXValues);
+	public CombinedData mCombinedDataSub = new CombinedData(mXValues);
 	String mPeriod;
 	double mMainChartYMin = 0;
 	double mMainChartYMax = 0;
@@ -59,83 +59,11 @@ public class StockDataChart {
 	double mSubChartYMax = 0;
 
 	public StockDataChart(String period) {
-		if (mXValues == null) {
-			mXValues = new ArrayList<String>();
-		}
-
-		if (mNaturalRallyList == null) {
-			mNaturalRallyList = new ArrayList<BubbleEntry>();
-		}
-
-		if (mUpwardTrendList == null) {
-			mUpwardTrendList = new ArrayList<BubbleEntry>();
-		}
-
-		if (mDownwardTrendList == null) {
-			mDownwardTrendList = new ArrayList<BubbleEntry>();
-		}
-
-		if (mNaturalReactionList == null) {
-			mNaturalReactionList = new ArrayList<BubbleEntry>();
-		}
-
-		if (mCandleEntryList == null) {
-			mCandleEntryList = new ArrayList<CandleEntry>();
-		}
-
-		if (mAverage5EntryList == null) {
-			mAverage5EntryList = new ArrayList<Entry>();
-		}
-
-		if (mAverage10EntryList == null) {
-			mAverage10EntryList = new ArrayList<Entry>();
-		}
-
-		if (mBookValuePerShareList == null) {
-			mBookValuePerShareList = new ArrayList<Entry>();
-		}
-
-		if (mNetProfitPerShareList == null) {
-			mNetProfitPerShareList = new ArrayList<Entry>();
-		}
-
-		if (mDividendEntryList == null) {
-			mDividendEntryList = new ArrayList<BarEntry>();
-		}
-
-		if (mDIFEntryList == null) {
-			mDIFEntryList = new ArrayList<Entry>();
-		}
-
-		if (mDEAEntryList == null) {
-			mDEAEntryList = new ArrayList<Entry>();
-		}
-
-		if (mHistogramEntryList == null) {
-			mHistogramEntryList = new ArrayList<BarEntry>();
-		}
-
-		if (mCombinedDataMain == null) {
-			mCombinedDataMain = new CombinedData(mXValues);
-		}
-
-		if (mCombinedDataSub == null) {
-			mCombinedDataSub = new CombinedData(mXValues);
-		}
-
-		if (mXLimitLineList == null) {
-			mXLimitLineList = new ArrayList<LimitLine>();
-		}
-
 		for (int i = 0; i < StockData.LEVEL_MAX; i++) {
-			mLineList[i] = new ArrayList<Entry>();
+			mLineList[i] = new ArrayList<>();
 		}
-
 		mPeriod = period;
 		mDescription = mPeriod;
-
-//		setMainChartData();
-//		setSubChartData();
 	}
 
 	public void setMainChartData(Context context) {

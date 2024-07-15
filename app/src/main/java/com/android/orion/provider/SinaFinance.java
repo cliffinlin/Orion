@@ -62,8 +62,12 @@ public class SinaFinance extends StockDataProvider {
 	public static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN15 = 192;
 	public static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN30 = 192;
 	public static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN60 = 192;
+
 	private static SinaFinance mInstance;
+
+	ArrayList<ContentValues> ContentValuesList = new ArrayList<>();
 	ArrayList<String> mAccessDeniedStringArray = new ArrayList<>();
+	ArrayMap<String, String> mRequestHeader = new ArrayMap<>();
 	Logger Log = Logger.getLogger();
 
 	private SinaFinance() {
@@ -75,6 +79,8 @@ public class SinaFinance extends StockDataProvider {
 				R.string.access_denied_zh));
 		mAccessDeniedStringArray.add(mContext.getResources().getString(
 				R.string.access_denied_default));
+
+		mRequestHeader.put(SINA_FINANCE_HEAD_REFERER_KEY, SINA_FINANCE_HEAD_REFERER_VALUE);
 	}
 
 	public static synchronized SinaFinance getInstance() {
@@ -109,14 +115,6 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		return 0;
-	}
-
-	public ArrayMap<String, String> getRequestHeader() {
-		ArrayMap<String, String> result = new ArrayMap<>();
-
-		result.put(SINA_FINANCE_HEAD_REFERER_KEY, SINA_FINANCE_HEAD_REFERER_VALUE);
-
-		return result;
 	}
 
 	public String getStockInformationURLString(Stock stock) {
@@ -375,7 +373,7 @@ public class SinaFinance extends StockDataProvider {
 
 		int page = 1;
 		while (true) {
-			result = downloadStockHSA(getRequestHeader(), getStockHSAURLString(page));
+			result = downloadStockHSA(mRequestHeader, getStockHSAURLString(page));
 			if (result != RESULT_SUCCESS) {
 				break;
 			}
@@ -424,8 +422,7 @@ public class SinaFinance extends StockDataProvider {
 	}
 
 	public void handleResponseStockHSA(String response) {
-		StopWatch stopWatch = new StopWatch();
-		stopWatch.start();
+		StopWatch.getInstance().start();
 		boolean nameChanged = false;
 		boolean bulkInsert = false;
 		ContentValues[] contentValuesArray = null;
@@ -523,9 +520,9 @@ public class SinaFinance extends StockDataProvider {
 			e.printStackTrace();
 		}
 
-		stopWatch.stop();
+		StopWatch.getInstance().stop();
 		Log.d("size:" + jsonArray.size()
-				+ " " + stopWatch.getInterval() + "s");
+				+ " " + StopWatch.getInstance().getInterval() + "s");
 	}
 
 	public int downloadStockInformation(Stock stock) {
@@ -539,7 +536,7 @@ public class SinaFinance extends StockDataProvider {
 			return result;
 		}
 
-		return downloadStockInformation(stock, getRequestHeader(), getStockInformationURLString(stock));
+		return downloadStockInformation(stock, mRequestHeader, getStockInformationURLString(stock));
 	}
 
 	private int downloadStockInformation(Stock stock, ArrayMap<String, String> requestHeaderArray, String urlString) {
@@ -579,8 +576,7 @@ public class SinaFinance extends StockDataProvider {
 	}
 
 	public void handleResponseStockInformation(Stock stock, String response) {
-		StopWatch stopWatch = new StopWatch();
-		stopWatch.start();
+		StopWatch.getInstance().start();
 		String[] keyValue = null;
 		String[] codeInfo = null;
 		String[] stockInfo = null;
@@ -652,10 +648,10 @@ public class SinaFinance extends StockDataProvider {
 			e.printStackTrace();
 		}
 
-		stopWatch.stop();
+		StopWatch.getInstance().stop();
 		Log.d(stock.getName() + " "
 				+ stock.getClasses() + " " + stock.getPinyin() + " "
-				+ stock.getTotalShare() + " " + stopWatch.getInterval()
+				+ stock.getTotalShare() + " " + StopWatch.getInstance().getInterval()
 				+ "s");
 	}
 
@@ -672,7 +668,7 @@ public class SinaFinance extends StockDataProvider {
 			}
 		}
 
-		return downloadStockRealTime(stock, getRequestHeader(), getStockRealTimeURLString(stock));
+		return downloadStockRealTime(stock, mRequestHeader, getStockRealTimeURLString(stock));
 	}
 
 	private int downloadStockRealTime(Stock stock, ArrayMap<String, String> requestHeaderArray, String urlString) {
@@ -712,8 +708,7 @@ public class SinaFinance extends StockDataProvider {
 	}
 
 	public void handleResponseStockRealTime(Stock stock, String response) {
-		StopWatch stopWatch = new StopWatch();
-		stopWatch.start();
+		StopWatch.getInstance().start();
 		String[] keyValue = null;
 		String[] codeInfo = null;
 		String[] stockInfo = null;
@@ -799,11 +794,11 @@ public class SinaFinance extends StockDataProvider {
 			e.printStackTrace();
 		}
 
-		stopWatch.stop();
+		StopWatch.getInstance().stop();
 		Log.d(stock.getName() + " "
 				+ stock.getPrice() + " " + stock.getChange() + " "
 				+ stock.getNet() + " " + stock.getVolume() + " "
-				+ stock.getValue() + " " + stopWatch.getInterval()
+				+ stock.getValue() + " " + StopWatch.getInstance().getInterval()
 				+ "s");
 	}
 
@@ -877,15 +872,13 @@ public class SinaFinance extends StockDataProvider {
 
 	public void handleResponseStockDataHistory(Stock stock, StockData stockData,
 											   String response) {
-		StopWatch stopWatch = new StopWatch();
-		stopWatch.start();
+		StopWatch.getInstance().start();
 		boolean bulkInsert = false;
 		int defaultValue = 0;
 		String dateTimeString = "";
 		String[] dateTime = null;
 		JSONArray jsonArray = null;
-
-		ArrayList<ContentValues> contentValuesList = new ArrayList<ContentValues>();
+		ContentValuesList.clear();
 		ArrayMap<String, StockData> stockDataMap = new ArrayMap<>();
 
 		Calendar importCalendar = Utility.getCalendar("1998-01-01 00:00:00", Utility.CALENDAR_DATE_TIME_FORMAT);
@@ -929,7 +922,7 @@ public class SinaFinance extends StockDataProvider {
 				setupStockDataFile(stock);
 
 				if (stockData.isMinutePeriod()) {
-					importStockDataFile(stock, stockData, contentValuesList, stockDataMap);
+					importStockDataFile(stock, stockData, ContentValuesList, stockDataMap);
 				}
 			}
 
@@ -971,10 +964,10 @@ public class SinaFinance extends StockDataProvider {
 						if (stockData.isMinutePeriod()) {
 							if (!stockDataMap.containsKey(stockData.getDateTime())) {
 								stockDataMap.put(stockData.getDateTime(), new StockData(stockData));
-								contentValuesList.add(stockData.getContentValues());
+								ContentValuesList.add(stockData.getContentValues());
 							}
 						} else {
-							contentValuesList.add(stockData.getContentValues());
+							ContentValuesList.add(stockData.getContentValues());
 						}
 					} else {
 						if (!mStockDatabaseManager.isStockDataExist(stockData)) {
@@ -1002,12 +995,12 @@ public class SinaFinance extends StockDataProvider {
 					}
 				}
 
-				if (contentValuesList.size() > 0) {
-					fixContentValuesList(stockData, contentValuesList);
+				if (ContentValuesList.size() > 0) {
+					fixContentValuesList(stockData, ContentValuesList);
 
-					ContentValues[] contentValuesArray = new ContentValues[contentValuesList
+					ContentValues[] contentValuesArray = new ContentValues[ContentValuesList
 							.size()];
-					contentValuesArray = contentValuesList
+					contentValuesArray = ContentValuesList
 							.toArray(contentValuesArray);
 					mStockDatabaseManager.bulkInsertStockData(contentValuesArray);
 				}
@@ -1019,9 +1012,9 @@ public class SinaFinance extends StockDataProvider {
 			e.printStackTrace();
 		}
 
-		stopWatch.stop();
+		StopWatch.getInstance().stop();
 		Log.d(stock.getName() + " "
-				+ stockData.getPeriod() + " " + stopWatch.getInterval() + "s");
+				+ stockData.getPeriod() + " " + StopWatch.getInstance().getInterval() + "s");
 	}
 
 	String getStockDataFileName(Stock stock) {
@@ -1268,7 +1261,7 @@ public class SinaFinance extends StockDataProvider {
 			return result;
 		}
 
-		return downloadStockDataRealTime(stock, stockData, getRequestHeader(), getStockDataRealTimeURLString(stock));
+		return downloadStockDataRealTime(stock, stockData, mRequestHeader, getStockDataRealTimeURLString(stock));
 	}
 
 	private int downloadStockDataRealTime(Stock stock, StockData stockData, ArrayMap<String, String> requestHeaderArray, String urlString) {
@@ -1305,8 +1298,7 @@ public class SinaFinance extends StockDataProvider {
 
 	public void handleResponseStockDataRealTime(Stock stock, StockData stockData,
 												String response) {
-		StopWatch stopWatch = new StopWatch();
-		stopWatch.start();
+		StopWatch.getInstance().start();
 		String[] keyValue = null;
 		String[] codeInfo = null;
 		String[] stockInfo = null;
@@ -1415,12 +1407,12 @@ public class SinaFinance extends StockDataProvider {
 			e.printStackTrace();
 		}
 
-		stopWatch.stop();
+		StopWatch.getInstance().stop();
 		Log.d(stock.getName() + " "
 				+ stockData.getDate() + " " + stockData.getTime() + " "
 				+ stockData.getOpen() + " " + stockData.getClose() + " "
 				+ stockData.getHigh() + " " + stockData.getLow() + " "
-				+ stopWatch.getInterval() + "s");
+				+ StopWatch.getInstance().getInterval() + "s");
 	}
 
 	public int downloadStockFinancial(Stock stock) {
@@ -1473,13 +1465,11 @@ public class SinaFinance extends StockDataProvider {
 
 	public void handleResponseStockFinancial(Stock stock, StockFinancial stockFinancial,
 											 String response) {
-		StopWatch stopWatch = new StopWatch();
-		stopWatch.start();
-
+		StopWatch.getInstance().start();
 		boolean bulkInsert = false;
 		String keyString = "";
 		String valueString = "";
-		ArrayList<ContentValues> contentValuesList = new ArrayList<ContentValues>();
+		ContentValuesList.clear();
 
 		if ((stock == null) || TextUtils.isEmpty(response)) {
 			Log.d("return, stock = "
@@ -1596,7 +1586,7 @@ public class SinaFinance extends StockDataProvider {
 									.getCurrentDateTimeString());
 							stockFinancial.setModified(Utility
 									.getCurrentDateTimeString());
-							contentValuesList.add(stockFinancial
+							ContentValuesList.add(stockFinancial
 									.getContentValues());
 						} else {
 							if (!mStockDatabaseManager
@@ -1624,10 +1614,10 @@ public class SinaFinance extends StockDataProvider {
 			}
 
 			if (bulkInsert) {
-				if (contentValuesList.size() > 0) {
-					ContentValues[] contentValuesArray = new ContentValues[contentValuesList
+				if (ContentValuesList.size() > 0) {
+					ContentValues[] contentValuesArray = new ContentValues[ContentValuesList
 							.size()];
-					contentValuesArray = contentValuesList
+					contentValuesArray = ContentValuesList
 							.toArray(contentValuesArray);
 					mStockDatabaseManager
 							.bulkInsertStockFinancial(contentValuesArray);
@@ -1640,9 +1630,9 @@ public class SinaFinance extends StockDataProvider {
 			e.printStackTrace();
 		}
 
-		stopWatch.stop();
+		StopWatch.getInstance().stop();
 		Log.d(stock.getName() + " "
-				+ stopWatch.getInterval() + "s");
+				+ StopWatch.getInstance().getInterval() + "s");
 	}
 
 	public int downloadShareBonus(Stock stock) {
@@ -1695,14 +1685,12 @@ public class SinaFinance extends StockDataProvider {
 
 	public void handleResponseShareBonus(Stock stock, ShareBonus shareBonus,
 										 String response) {
-		StopWatch stopWatch = new StopWatch();
-		stopWatch.start();
-
+		StopWatch.getInstance().start();
 		boolean bulkInsert = false;
 		String dateString = "";
 		String dividendString = "";
 		String rDateString = "";
-		ArrayList<ContentValues> contentValuesList = new ArrayList<ContentValues>();
+		ContentValuesList.clear();
 
 		if ((stock == null) || TextUtils.isEmpty(response)) {
 			Log.d("return, stock = " + stock
@@ -1794,7 +1782,7 @@ public class SinaFinance extends StockDataProvider {
 								.getCurrentDateTimeString());
 						shareBonus.setModified(Utility
 								.getCurrentDateTimeString());
-						contentValuesList.add(shareBonus.getContentValues());
+						ContentValuesList.add(shareBonus.getContentValues());
 					} else {
 						if (!mStockDatabaseManager
 								.isShareBonusExist(shareBonus)) {
@@ -1814,10 +1802,10 @@ public class SinaFinance extends StockDataProvider {
 			}
 
 			if (bulkInsert) {
-				if (contentValuesList.size() > 0) {
-					ContentValues[] contentValuesArray = new ContentValues[contentValuesList
+				if (ContentValuesList.size() > 0) {
+					ContentValues[] contentValuesArray = new ContentValues[ContentValuesList
 							.size()];
-					contentValuesArray = contentValuesList
+					contentValuesArray = ContentValuesList
 							.toArray(contentValuesArray);
 					mStockDatabaseManager
 							.bulkInsertShareBonus(contentValuesArray);
@@ -1830,9 +1818,9 @@ public class SinaFinance extends StockDataProvider {
 			e.printStackTrace();
 		}
 
-		stopWatch.stop();
+		StopWatch.getInstance().stop();
 		Log.d(stock.getName() + " "
-				+ stopWatch.getInterval() + "s");
+				+ StopWatch.getInstance().getInterval() + "s");
 	}
 
 
@@ -1886,13 +1874,11 @@ public class SinaFinance extends StockDataProvider {
 
 	public void handleResponseTotalShare(Stock stock, TotalShare totalShare,
 										 String response) {
-		StopWatch stopWatch = new StopWatch();
-		stopWatch.start();
-
+		StopWatch.getInstance().start();
 		boolean bulkInsert = false;
 		String dateString = "";
 		String totalShareString = "";
-		ArrayList<ContentValues> contentValuesList = new ArrayList<ContentValues>();
+		ContentValuesList.clear();
 
 		if ((stock == null) || TextUtils.isEmpty(response)) {
 			Log.d("return, stock = " + stock
@@ -1982,7 +1968,7 @@ public class SinaFinance extends StockDataProvider {
 								.getCurrentDateTimeString());
 						totalShare.setModified(Utility
 								.getCurrentDateTimeString());
-						contentValuesList.add(totalShare.getContentValues());
+						ContentValuesList.add(totalShare.getContentValues());
 					} else {
 						if (!mStockDatabaseManager
 								.isTotalShareExist(totalShare)) {
@@ -2002,10 +1988,10 @@ public class SinaFinance extends StockDataProvider {
 			}
 
 			if (bulkInsert) {
-				if (contentValuesList.size() > 0) {
-					ContentValues[] contentValuesArray = new ContentValues[contentValuesList
+				if (ContentValuesList.size() > 0) {
+					ContentValues[] contentValuesArray = new ContentValues[ContentValuesList
 							.size()];
-					contentValuesArray = contentValuesList
+					contentValuesArray = ContentValuesList
 							.toArray(contentValuesArray);
 					mStockDatabaseManager
 							.bulkInsertTotalShare(contentValuesArray);
@@ -2018,9 +2004,9 @@ public class SinaFinance extends StockDataProvider {
 			e.printStackTrace();
 		}
 
-		stopWatch.stop();
+		StopWatch.getInstance().stop();
 		Log.d(stock.getName() + " "
-				+ stopWatch.getInterval() + "s");
+				+ StopWatch.getInstance().getInterval() + "s");
 	}
 
 	private boolean isAccessDenied(String string) {

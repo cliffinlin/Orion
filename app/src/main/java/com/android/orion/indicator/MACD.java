@@ -15,11 +15,11 @@ public class MACD {
 	static final int SIGNAL = 8;//9;
 
 	static String mPeriod;
-	static int mAVERAGE5;
-	static int mVERAGE10;
-	static int mFAST;
-	static int mSLOW;
-	static int mSIGNAL;
+	static int mAverage5;
+	static int mAverage10;
+	static int mFast;
+	static int mSlow;
+	static int mSignal;
 
 	static List<Double> mPriceList = new ArrayList<>();
 	static List<Double> mEMAAverage5List = new ArrayList<>();
@@ -65,38 +65,48 @@ public class MACD {
 	static void init(String period, ArrayList<StockData> stockDataList) {
 		mPeriod = period;
 
-		if (mPeriod.equals(Setting.SETTING_PERIOD_MONTH)
-				|| mPeriod.equals(Setting.SETTING_PERIOD_WEEK)
-				|| mPeriod.equals(Setting.SETTING_PERIOD_DAY)) {
-			mAVERAGE5 = AVERAGE5;
-			mVERAGE10 = AVERAGE10;
-			mFAST = FAST;
-			mSLOW = SLOW;
-			mSIGNAL = SIGNAL;
+		if (mPeriod.equals(Setting.SETTING_PERIOD_MONTH)) {
+			mAverage5 = AVERAGE5;
+			mAverage10 = AVERAGE10;
+			mFast = 2 * FAST;
+			mSlow = 2 * SLOW;
+			mSignal = 2 * SIGNAL;
+		} else if (mPeriod.equals(Setting.SETTING_PERIOD_WEEK)) {
+			mAverage5 = AVERAGE5;
+			mAverage10 = AVERAGE10;
+			mFast = 2 * FAST;
+			mSlow = 2 * SLOW;
+			mSignal = 2 * SIGNAL;
+		} else if (mPeriod.equals(Setting.SETTING_PERIOD_DAY)) {
+			mAverage5 = AVERAGE5;
+			mAverage10 = AVERAGE10;
+			mFast = FAST;
+			mSlow = SLOW;
+			mSignal = SIGNAL;
 		} else if (mPeriod.equals(Setting.SETTING_PERIOD_MIN60)) {
-			mAVERAGE5 = Constant.MIN60_PER_TRADE_DAY * AVERAGE5;
-			mVERAGE10 = Constant.MIN60_PER_TRADE_DAY * AVERAGE10;
-			mFAST = Constant.MIN60_PER_TRADE_DAY * FAST;
-			mSLOW = Constant.MIN60_PER_TRADE_DAY * SLOW;
-			mSIGNAL = Constant.MIN60_PER_TRADE_DAY * SIGNAL;
+			mAverage5 = Constant.MIN60_PER_TRADE_DAY * AVERAGE5;
+			mAverage10 = Constant.MIN60_PER_TRADE_DAY * AVERAGE10;
+			mFast = Constant.MIN60_PER_TRADE_DAY * FAST;
+			mSlow = Constant.MIN60_PER_TRADE_DAY * SLOW;
+			mSignal = Constant.MIN60_PER_TRADE_DAY * SIGNAL;
 		} else if (mPeriod.equals(Setting.SETTING_PERIOD_MIN30)) {
-			mAVERAGE5 = Constant.MIN30_PER_TRADE_DAY * AVERAGE5;
-			mVERAGE10 = Constant.MIN30_PER_TRADE_DAY * AVERAGE10;
-			mFAST = Constant.MIN30_PER_TRADE_DAY * FAST;
-			mSLOW = Constant.MIN30_PER_TRADE_DAY * SLOW;
-			mSIGNAL = Constant.MIN30_PER_TRADE_DAY * SIGNAL;
+			mAverage5 = Constant.MIN30_PER_TRADE_DAY * AVERAGE5;
+			mAverage10 = Constant.MIN30_PER_TRADE_DAY * AVERAGE10;
+			mFast = Constant.MIN30_PER_TRADE_DAY * FAST;
+			mSlow = Constant.MIN30_PER_TRADE_DAY * SLOW;
+			mSignal = Constant.MIN30_PER_TRADE_DAY * SIGNAL;
 		} else if (mPeriod.equals(Setting.SETTING_PERIOD_MIN15)) {
-			mAVERAGE5 = Constant.MIN15_PER_TRADE_DAY * AVERAGE5;
-			mVERAGE10 = Constant.MIN15_PER_TRADE_DAY * AVERAGE10;
-			mFAST = Constant.MIN15_PER_TRADE_DAY * FAST;
-			mSLOW = Constant.MIN15_PER_TRADE_DAY * SLOW;
-			mSIGNAL = Constant.MIN15_PER_TRADE_DAY * SIGNAL;
+			mAverage5 = Constant.MIN15_PER_TRADE_DAY * AVERAGE5;
+			mAverage10 = Constant.MIN15_PER_TRADE_DAY * AVERAGE10;
+			mFast = Constant.MIN15_PER_TRADE_DAY * FAST;
+			mSlow = Constant.MIN15_PER_TRADE_DAY * SLOW;
+			mSignal = Constant.MIN15_PER_TRADE_DAY * SIGNAL;
 		} else if (mPeriod.equals(Setting.SETTING_PERIOD_MIN5)) {
-			mAVERAGE5 = Constant.MIN5_PER_TRADE_DAY * AVERAGE5;
-			mVERAGE10 = Constant.MIN5_PER_TRADE_DAY * AVERAGE10;
-			mFAST = Constant.MIN5_PER_TRADE_DAY * FAST;
-			mSLOW = Constant.MIN5_PER_TRADE_DAY * SLOW;
-			mSIGNAL = Constant.MIN5_PER_TRADE_DAY * SIGNAL;
+			mAverage5 = Constant.MIN5_PER_TRADE_DAY * AVERAGE5;
+			mAverage10 = Constant.MIN5_PER_TRADE_DAY * AVERAGE10;
+			mFast = Constant.MIN5_PER_TRADE_DAY * FAST;
+			mSlow = Constant.MIN5_PER_TRADE_DAY * SLOW;
+			mSignal = Constant.MIN5_PER_TRADE_DAY * SIGNAL;
 		}
 
 		mPriceList.clear();
@@ -178,17 +188,17 @@ public class MACD {
 		mDIFList.clear();
 		mHistogramList.clear();
 
-		EMA(mAVERAGE5, mPriceList, mEMAAverage5List);
-		EMA(mVERAGE10, mPriceList, mEMAAverage10List);
-		EMA(mFAST, mPriceList, mEMAFastList);
-		EMA(mSLOW, mPriceList, mEMASlowList);
+		EMA(mAverage5, mPriceList, mEMAAverage5List);
+		EMA(mAverage10, mPriceList, mEMAAverage10List);
+		EMA(mFast, mPriceList, mEMAFastList);
+		EMA(mSlow, mPriceList, mEMASlowList);
 
 		for (i = 0; i < size; i++) {
 			dif = mEMAFastList.get(i) - mEMASlowList.get(i);
 			mDIFList.add(dif);
 		}
 
-		EMA(mSIGNAL, mDIFList, mDEAList);
+		EMA(mSignal, mDIFList, mDEAList);
 
 		for (i = 0; i < size; i++) {
 			histogram = mDIFList.get(i) - mDEAList.get(i);

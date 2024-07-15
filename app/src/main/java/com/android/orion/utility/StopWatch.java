@@ -5,7 +5,16 @@ public class StopWatch {
 	private long mStop = 0;
 	private double mInterval = 0;
 
-	public StopWatch() {
+	private static StopWatch mInstance;
+
+	public static synchronized StopWatch getInstance() {
+		if (mInstance == null) {
+			mInstance = new StopWatch();
+		}
+		return mInstance;
+	}
+
+	private StopWatch() {
 	}
 
 	public void start() {

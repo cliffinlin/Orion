@@ -60,8 +60,7 @@ public class StockAnalyzer {
 	}
 
 	public void analyze(Stock stock, String period) {
-		StopWatch stopWatch = new StopWatch();
-		stopWatch.start();
+		StopWatch.getInstance().start();
 
 		ArrayList<StockData> stockDataList = null;
 		ArrayList<StockData> drawVertexList = null;
@@ -110,14 +109,13 @@ public class StockAnalyzer {
 			e.printStackTrace();
 		}
 
-		stopWatch.stop();
+		StopWatch.getInstance().stop();
 		Log.d(stock.getName() + " " + period + " "
-				+ stopWatch.getInterval() + "s");
+				+ StopWatch.getInstance().getInterval() + "s");
 	}
 
 	public void analyze(Stock stock) {
-		StopWatch stopWatch = new StopWatch();
-		stopWatch.start();
+		StopWatch.getInstance().start();
 
 		if (stock == null) {
 			return;
@@ -136,8 +134,8 @@ public class StockAnalyzer {
 			e.printStackTrace();
 		}
 
-		stopWatch.stop();
-		Log.d(stock.getName() + " " + stopWatch.getInterval() + "s");
+		StopWatch.getInstance().stop();
+		Log.d(stock.getName() + " " + StopWatch.getInstance().getInterval() + "s");
 	}
 
 	private void analyzeStockFinancial(Stock stock) {
