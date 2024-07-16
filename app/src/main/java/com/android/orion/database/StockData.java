@@ -1334,6 +1334,7 @@ public class StockData extends DatabaseTable {
 			case DatabaseContract.COLUMN_QUARTER:
 			case DatabaseContract.COLUMN_YEAR:
 			default:
+				result = false;
 				break;
 		}
 

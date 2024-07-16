@@ -749,7 +749,7 @@ public class StockAnalyzer {
 		String trendString = "";
 		StockData prev = null;
 		StockData stockData = null;
-		int segmentNet = 0;
+//		int segmentNet = 0;
 
 		if (stockDataList == null) {
 			Log.d("return, stockDataList = " + stockDataList);
@@ -760,7 +760,7 @@ public class StockAnalyzer {
 			return;
 		}
 
-		segmentNet = getLastNet(segmentDataList);
+//		segmentNet = getLastNet(segmentDataList);
 
 		prev = stockDataList.get(stockDataList.size() - 2);
 		stockData = stockDataList.get(stockDataList.size() - 1);
@@ -769,10 +769,10 @@ public class StockAnalyzer {
 			if (prev.vertexOf(StockData.VERTEX_BOTTOM_SEGMENT)) {
 //				action += StockData.MARK_D;
 			} else {
-				if (segmentNet > 0) {
-					action += StockData.MARK_ADD;
-				}
-				action += segmentNet;
+//				if (segmentNet > 0) {
+//					action += StockData.MARK_ADD;
+//				}
+//				action += segmentNet;
 			}
 			trendString = StockData.NAME_UPWARD_TREND;
 		} else if (stockData
@@ -780,10 +780,10 @@ public class StockAnalyzer {
 			if (prev.vertexOf(StockData.VERTEX_TOP_SEGMENT)) {
 //				action += StockData.MARK_G;
 			} else {
-				if (segmentNet > 0) {
-					action += StockData.MARK_ADD;
-				}
-				action += segmentNet;
+//				if (segmentNet > 0) {
+//					action += StockData.MARK_ADD;
+//				}
+//				action += segmentNet;
 			}
 			trendString = StockData.NAME_DOWNWARD_TREND;
 		}
@@ -804,8 +804,7 @@ public class StockAnalyzer {
 			}
 		}
 
-		if (TextUtils.equals(period, stock.getOperate())) {
-//		if (stockData.isMinutePeriod()) {
+		if (!TextUtils.isEmpty(stock.getOperate())) {
 			if (stockData.getNaturalRally() > 0) {
 				action += StockData.MARK_NATURAL_RALLY;
 			}
@@ -821,7 +820,13 @@ public class StockAnalyzer {
 			if (stockData.getNaturalReaction() > 0) {
 				action += StockData.MARK_NATURAL_REACTION;
 			}
-//		}
+
+			if (stockData.getHistogram() > prev.getHistogram()) {
+				action += StockData.NAME_UPWARD_TREND;
+			} else if (stockData.getHistogram() < prev.getHistogram()) {
+				action += StockData.NAME_DOWNWARD_TREND;
+			}
+
 //			action += StockData.MARK_STAR;
 		}
 
