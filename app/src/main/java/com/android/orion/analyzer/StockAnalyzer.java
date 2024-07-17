@@ -804,7 +804,8 @@ public class StockAnalyzer {
 			}
 		}
 
-		if (!TextUtils.isEmpty(stock.getOperate())) {
+		if (TextUtils.equals(period, stock.getOperate())) {
+//		if (stockData.isMinutePeriod()) {
 			if (stockData.getNaturalRally() > 0) {
 				action += StockData.MARK_NATURAL_RALLY;
 			}
@@ -820,14 +821,16 @@ public class StockAnalyzer {
 			if (stockData.getNaturalReaction() > 0) {
 				action += StockData.MARK_NATURAL_REACTION;
 			}
-
-			if (stockData.getHistogram() > prev.getHistogram()) {
-				action += StockData.NAME_UPWARD_TREND;
-			} else if (stockData.getHistogram() < prev.getHistogram()) {
-				action += StockData.NAME_DOWNWARD_TREND;
-			}
-
+//		}
 //			action += StockData.MARK_STAR;
+		}
+
+		if (!TextUtils.isEmpty(stock.getOperate())) {
+			if (stockData.getHistogram() > prev.getHistogram()) {
+				action += StockData.MARK_ADD;
+			} else if (stockData.getHistogram() < prev.getHistogram()) {
+				action += StockData.MARK_MINUS;
+			}
 		}
 
 		stock.setDateTime(stockData.getDate(), stockData.getTime());
