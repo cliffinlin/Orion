@@ -60,12 +60,11 @@ public class StockKeyAnalyzer {
 			return;
 		}
 
-		threshold = stock.getThreshold();
-		if (threshold == 0) {
+		if (stock.getThreshold() == 0) {
 			return;
 		}
 
-		threshold = threshold / 100.0;
+		threshold = stock.getThreshold() / 100.0;
 
 		i = 0;
 		current = dataList.get(i);
@@ -84,8 +83,8 @@ public class StockKeyAnalyzer {
 					if (current.getHigh() > mNaturalRally) {
 						DEBUG("case StockData.THRESHOLD_NATURAL_RALLY: current.getHigh()=" + current.getHigh() + " > mNaturalRally=" + mNaturalRally);
 						setNaturalRally(current);
-						if (current.getHigh() > mPrevLow * (1.0 + threshold / 1.0)) {
-							DEBUG("case StockData.THRESHOLD_NATURAL_RALLY: current.getHigh()=" + current.getHigh() + " > mPrevLow * (1.0 + threshold / 1.0)=" + mPrevLow * (1.0 + threshold / 1.0));
+						if (current.getHigh() > mPrevLow * (1.0 + threshold)) {
+							DEBUG("case StockData.THRESHOLD_NATURAL_RALLY: current.getHigh()=" + current.getHigh() + " > mPrevLow * (1.0 + threshold)=" + mPrevLow * (1.0 + threshold));
 							mThresholdType = StockData.THRESHOLD_UPWARD_TREND;
 							DEBUG("case StockData.THRESHOLD_NATURAL_RALLY: mThresholdType = StockData.THRESHOLD_UPWARD_TREND");
 							setUpwardTrend(current);
