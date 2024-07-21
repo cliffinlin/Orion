@@ -478,6 +478,7 @@ public class StockAnalyzer {
 		}
 
 		MACD.getInstance().calculate(period, stockDataList);
+		Macd.getInstance().calculate(period, stockDataList);
 
 		for (int i = 0; i < size; i++) {
 			average5 = MACD.getInstance().getEMAAverage5List().get(i);
