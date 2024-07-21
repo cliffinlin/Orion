@@ -20,7 +20,7 @@ import com.android.orion.database.StockData;
 import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockFinancial;
 import com.android.orion.database.TotalShare;
-import com.android.orion.indicator.MACD;
+import com.android.orion.indicator.Macd;
 import com.android.orion.manager.StockDatabaseManager;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
@@ -62,33 +62,21 @@ public class StockAnalyzer {
 	public void analyze(Stock stock, String period) {
 		StopWatch.getInstance().start();
 
-		ArrayList<StockData> stockDataList = null;
-		ArrayList<StockData> drawVertexList = null;
-		ArrayList<StockData> drawDataList = null;
-		ArrayList<StockData> strokeVertexList = null;
-		ArrayList<StockData> strokeDataList = null;
-		ArrayList<StockData> segmentVertexList = null;
-		ArrayList<StockData> segmentDataList = null;
-		ArrayList<StockData> lineVertexList = null;
-		ArrayList<StockData> lineDataList = null;
-		ArrayList<StockData> outlineVertexList = null;
-		ArrayList<StockData> outlineDataList = null;
-
 		if (stock == null) {
 			return;
 		}
 
-		stockDataList = stock.getStockDataList(period);
-		drawVertexList = stock.getDrawVertexList(period);
-		drawDataList = stock.getDrawDataList(period);
-		strokeVertexList = stock.getStrokeVertexList(period);
-		strokeDataList = stock.getStrokeDataList(period);
-		segmentVertexList = stock.getSegmentVertexList(period);
-		segmentDataList = stock.getSegmentDataList(period);
-		lineVertexList = stock.getLineVertexList(period);
-		lineDataList = stock.getLineDataList(period);
-		outlineVertexList = stock.getOutlineVertexList(period);
-		outlineDataList = stock.getOutlineDataList(period);
+		ArrayList<StockData> stockDataList = stock.getStockDataList(period);
+		ArrayList<StockData> drawVertexList = stock.getDrawVertexList(period);
+		ArrayList<StockData> drawDataList = stock.getDrawDataList(period);
+		ArrayList<StockData> strokeVertexList = stock.getStrokeVertexList(period);
+		ArrayList<StockData> strokeDataList = stock.getStrokeDataList(period);
+		ArrayList<StockData> segmentVertexList = stock.getSegmentVertexList(period);
+		ArrayList<StockData> segmentDataList = stock.getSegmentDataList(period);
+		ArrayList<StockData> lineVertexList = stock.getLineVertexList(period);
+		ArrayList<StockData> lineDataList = stock.getLineDataList(period);
+		ArrayList<StockData> outlineVertexList = stock.getOutlineVertexList(period);
+		ArrayList<StockData> outlineDataList = stock.getOutlineDataList(period);
 
 		try {
 			setupStockShareBonus(stock);
@@ -477,15 +465,14 @@ public class StockAnalyzer {
 			return;
 		}
 
-		MACD.getInstance().calculate(period, stockDataList);
 		Macd.getInstance().calculate(period, stockDataList);
 
 		for (int i = 0; i < size; i++) {
-			average5 = MACD.getInstance().getEMAAverage5List().get(i);
-			average10 = MACD.getInstance().getEMAAverage10List().get(i);
-			dif = MACD.getInstance().getDIFList().get(i);
-			dea = MACD.getInstance().getDEAList().get(i);
-			histogram = MACD.getInstance().getHistogramList().get(i);
+			average5 = Macd.getInstance().getEMAAverage5List().get(i);
+			average10 = Macd.getInstance().getEMAAverage10List().get(i);
+			dif = Macd.getInstance().getDIFList().get(i);
+			dea = Macd.getInstance().getDEAList().get(i);
+			histogram = Macd.getInstance().getHistogramList().get(i);
 
 			stockDataList.get(i).setAverage5(average5);
 			stockDataList.get(i).setAverage10(average10);

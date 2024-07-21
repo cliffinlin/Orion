@@ -1541,7 +1541,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	public ArrayList<StockData> getStockDataList(String period) {
-		ArrayList<StockData> result = null;
+		ArrayList<StockData> result;
 
 		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN1)) {
 			result = mStockDataListMin1;
@@ -1563,6 +1563,8 @@ public class Stock extends DatabaseTable {
 			result = mStockDataListQuarter;
 		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_YEAR)) {
 			result = mStockDataListYear;
+		} else {
+			result = new ArrayList<>();
 		}
 
 		return result;

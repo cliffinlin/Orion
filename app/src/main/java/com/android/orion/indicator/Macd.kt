@@ -3,15 +3,8 @@ package com.android.orion.indicator
 import com.android.orion.database.StockData
 import com.android.orion.setting.Constant
 import com.android.orion.setting.Setting
-import java.util.*
 
 class Macd {
-    private val AVERAGE5 = 5
-    private val AVERAGE10 = 10
-
-    private val FAST = 10 //12;
-    private val SLOW = 20 //26;
-    private val SIGNAL = 8 //9;
 
     private var mPeriod = ""
     private var mAverage5 = 0
@@ -30,14 +23,17 @@ class Macd {
     private var mHistogramList: MutableList<Double> = ArrayList()
 
     companion object {
+        private const val AVERAGE5 = 5
+        private const val AVERAGE10 = 10
 
-        private var mInstance: Macd? = null
+        private const val FAST = 10 //12;
+        private const val SLOW = 20 //26;
+        private const val SIGNAL = 8 //9;
+
+        private var mInstance = Macd()
 
         @JvmStatic
-        fun getInstance(): Macd? {
-            if (mInstance == null) {
-                mInstance = Macd()
-            }
+        fun getInstance(): Macd {
             return mInstance
         }
     }
@@ -123,8 +119,7 @@ class Macd {
         mDEAList.clear()
         mDIFList.clear()
         mHistogramList.clear()
-
-        for (i in 0..stockDataList.size) {
+        for (i in 0 until stockDataList.size) {
             mPriceList.add(stockDataList[i].close)
         }
     }
@@ -137,36 +132,30 @@ class Macd {
         return result
     }
 
-    private fun EMA(N: Int, dataList: List<Double>?, emaList: MutableList<Double>?): Double {
+    private fun EMA(N: Int, dataList: List<Double>, emaList: MutableList<Double>): Double {
         var result = 0.0
         val alpha = getAlpha(N)
-        if (dataList == null || dataList.isEmpty() || emaList == null) {
+
+        if (dataList.isEmpty()) {
             return result
         }
-        for (i in 0..dataList.size) {
-            if (i == 0) {
-                result = dataList[0]
+
+        for (i in 0 until dataList.size) {
+            result = if (i == 0) {
+                dataList[0]
             } else {
-                result = alpha * dataList[i] + (1.0 - alpha) * emaList[i - 1]
+                alpha * dataList[i] + (1.0 - alpha) * emaList[i - 1]
             }
             emaList.add(result)
         }
+
         return result
     }
 
-    fun calculate(period: String, stockDataList: ArrayList<StockData>?) {
-        var size = 0
-        var dif = 0.0
-        var histogram = 0.0
-
-        if (stockDataList == null) {
-            return
-        }
-
+    fun calculate(period: String, stockDataList: ArrayList<StockData>) {
         init(period, stockDataList)
 
-        size = mPriceList.size
-        if (size < 1) {
+        if (mPriceList.size < 1) {
             return
         }
 
@@ -177,21 +166,22 @@ class Macd {
         mDEAList.clear()
         mDIFList.clear()
         mHistogramList.clear()
+
         EMA(mAverage5, mPriceList, mEMAAverage5List)
         EMA(mAverage10, mPriceList, mEMAAverage10List)
         EMA(mFast, mPriceList, mEMAFastList)
         EMA(mSlow, mPriceList, mEMASlowList)
-        var i: Int = 0
-        while (i < size) {
-            dif = mEMAFastList[i] - mEMASlowList[i]
-            mDIFList.add(dif)
+
+        var i = 0
+        while (i < mPriceList.size) {
+            mDIFList.add(mEMAFastList[i] - mEMASlowList[i])
             i++
         }
         EMA(mSignal, mDIFList, mDEAList)
+
         i = 0
-        while (i < size) {
-            histogram = mDIFList[i] - mDEAList[i]
-            mHistogramList.add(histogram)
+        while (i < mPriceList.size) {
+            mHistogramList.add(mDIFList[i] - mDEAList[i])
             i++
         }
     }
