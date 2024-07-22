@@ -364,6 +364,7 @@ public class SinaFinance extends StockDataProvider {
 		return result;
 	}
 
+	@Override
 	public int downloadStockHSA() {
 		int result = RESULT_NONE;
 
@@ -525,6 +526,7 @@ public class SinaFinance extends StockDataProvider {
 				+ " " + StopWatch.getInstance().getInterval() + "s");
 	}
 
+	@Override
 	public int downloadStockInformation(Stock stock) {
 		int result = RESULT_NONE;
 
@@ -655,6 +657,7 @@ public class SinaFinance extends StockDataProvider {
 				+ "s");
 	}
 
+	@Override
 	public int downloadStockRealTime(Stock stock) {
 		int result = RESULT_NONE;
 
@@ -802,6 +805,7 @@ public class SinaFinance extends StockDataProvider {
 				+ "s");
 	}
 
+	@Override
 	public int downloadStockDataHistory(Stock stock) {
 		int result = RESULT_NONE;
 
@@ -1224,6 +1228,7 @@ public class SinaFinance extends StockDataProvider {
 		}
 	}
 
+	@Override
 	public int downloadStockDataRealTime(Stock stock) {
 		int result = RESULT_NONE;
 
@@ -1415,6 +1420,7 @@ public class SinaFinance extends StockDataProvider {
 				+ StopWatch.getInstance().getInterval() + "s");
 	}
 
+	@Override
 	public int downloadStockFinancial(Stock stock) {
 		int result = RESULT_NONE;
 
@@ -1635,6 +1641,7 @@ public class SinaFinance extends StockDataProvider {
 				+ StopWatch.getInstance().getInterval() + "s");
 	}
 
+	@Override
 	public int downloadShareBonus(Stock stock) {
 		int result = RESULT_NONE;
 
@@ -1823,7 +1830,7 @@ public class SinaFinance extends StockDataProvider {
 				+ StopWatch.getInstance().getInterval() + "s");
 	}
 
-
+	@Override
 	public int downloadTotalShare(Stock stock) {
 		int result = RESULT_NONE;
 

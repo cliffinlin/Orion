@@ -39,7 +39,7 @@ import java.util.Map;
 
 import okhttp3.OkHttpClient;
 
-public abstract class StockDataProvider implements StockListChangedListener, StockEditListener {
+public class StockDataProvider implements StockListChangedListener, StockEditListener, IStockDataProvider {
 
 	public static final int PERIOD_MINUTES_MIN1 = 1;
 	public static final int PERIOD_MINUTES_MIN5 = 5;
@@ -79,8 +79,6 @@ public abstract class StockDataProvider implements StockListChangedListener, Sto
 
 	Logger Log = Logger.getLogger();
 
-	boolean mMessageHandled = false;
-
 	public StockDataProvider() {
 		mContext = OrionApplication.getContext();
 
@@ -101,22 +99,6 @@ public abstract class StockDataProvider implements StockListChangedListener, Sto
 		StockManager.getInstance().registerStockEditListener(this);
 		StockManager.getInstance().registerStockListChangedListener(this);
 	}
-
-	public abstract int downloadStockHSA();
-
-	public abstract int downloadStockInformation(Stock stock);
-
-	public abstract int downloadStockFinancial(Stock stock);
-
-	public abstract int downloadShareBonus(Stock stock);
-
-	public abstract int downloadTotalShare(Stock stock);
-
-	public abstract int downloadStockDataHistory(Stock stock);
-
-	public abstract int downloadStockRealTime(Stock stock);
-
-	public abstract int downloadStockDataRealTime(Stock stock);
 
 	public void acquireWakeLock() {
 		if (!mWakeLock.isHeld()) {
@@ -433,6 +415,46 @@ public abstract class StockDataProvider implements StockListChangedListener, Sto
 		if (stock == null) {
 			return;
 		}
+	}
+
+	@Override
+	public int downloadStockHSA() {
+		return 0;
+	}
+
+	@Override
+	public int downloadStockInformation(Stock stock) {
+		return 0;
+	}
+
+	@Override
+	public int downloadStockFinancial(Stock stock) {
+		return 0;
+	}
+
+	@Override
+	public int downloadShareBonus(Stock stock) {
+		return 0;
+	}
+
+	@Override
+	public int downloadTotalShare(Stock stock) {
+		return 0;
+	}
+
+	@Override
+	public int downloadStockDataHistory(Stock stock) {
+		return 0;
+	}
+
+	@Override
+	public int downloadStockRealTime(Stock stock) {
+		return 0;
+	}
+
+	@Override
+	public int downloadStockDataRealTime(Stock stock) {
+		return 0;
 	}
 
 	private final class ServiceHandler extends Handler {
