@@ -34,7 +34,7 @@ import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockFinancial;
 import com.android.orion.database.StockQuant;
 import com.android.orion.database.TotalShare;
-import com.android.orion.manager.StockDatabaseManager;
+import com.android.orion.manager.DatabaseManager;
 import com.android.orion.manager.StockManager;
 import com.android.orion.service.OrionService;
 import com.android.orion.service.OrionService.OrionServiceBinder;
@@ -71,7 +71,7 @@ public class BaseActivity extends Activity {
 	ArrayList<TotalShare> mTotalShareList = null;
 	ArrayMap<String, Stock> mStockDealArrayMap = null;
 	StockManager mStockManager = StockManager.getInstance();
-	StockDatabaseManager mStockDatabaseManager;
+	DatabaseManager mDatabaseManager;
 	OrionService mOrionService = null;
 	ServiceConnection mServiceConnection = new ServiceConnection() {
 
@@ -174,7 +174,7 @@ public class BaseActivity extends Activity {
 			mStockDealArrayMap = new ArrayMap<String, Stock>();
 		}
 
-		mStockDatabaseManager = StockDatabaseManager.getInstance();
+		mDatabaseManager = DatabaseManager.getInstance();
 
 		if (mProgressDialog == null) {
 			mProgressDialog = new ProgressDialog(mContext,
@@ -261,12 +261,12 @@ public class BaseActivity extends Activity {
 		Setting.setDownloadTimemillis(stock.getSE(), stock.getCode(), 0);
 
 		stock.reset();
-		mStockDatabaseManager.updateStock(stock, stock.getContentValues());
+		mDatabaseManager.updateStock(stock, stock.getContentValues());
 
-		mStockDatabaseManager.deleteStockData(stock.getId());
-		mStockDatabaseManager.deleteStockFinancial(stock.getId());
-		mStockDatabaseManager.deleteShareBonus(stock.getId());
-		mStockDatabaseManager.deleteStockQuant(stock);
+		mDatabaseManager.deleteStockData(stock.getId());
+		mDatabaseManager.deleteStockFinancial(stock.getId());
+		mDatabaseManager.deleteShareBonus(stock.getId());
+		mDatabaseManager.deleteStockQuant(stock);
 
 		if (mOrionService != null) {
 			mOrionService.download(stock);

@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
-import com.android.orion.manager.DownloadAlarmManager;
+import com.android.orion.manager.StockAlarmManager;
 import com.android.orion.service.OrionService;
 import com.android.orion.utility.Logger;
 
@@ -16,7 +16,6 @@ public class OrionApplication extends Application {
 	public static Context mContext;
 	private static OrionApplication mInstance;
 	Logger Log;
-	DownloadAlarmManager mStockDownloadAlarmManager = null;
 	int mActivityStartedCounter = 0;
 	long mBackgroundTimeMillis = 0;
 
@@ -37,8 +36,7 @@ public class OrionApplication extends Application {
 
 		Log = Logger.getLogger();
 
-		mStockDownloadAlarmManager = DownloadAlarmManager.getInstance();
-		mStockDownloadAlarmManager.startAlarm();
+		StockAlarmManager.getInstance().startAlarm();
 
 		startService();
 
@@ -91,9 +89,7 @@ public class OrionApplication extends Application {
 	@Override
 	public void onTerminate() {
 		Log.d("onTerminate");
-		if (mStockDownloadAlarmManager != null) {
-			mStockDownloadAlarmManager.stopAlarm();
-		}
+		StockAlarmManager.getInstance().stopAlarm();
 		stopService();
 
 		super.onTerminate();

@@ -393,7 +393,7 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			mStockDatabaseManager.closeCursor(cursor);
+			mDatabaseManager.closeCursor(cursor);
 		}
 
 		stockDataChart.setMainChartData();

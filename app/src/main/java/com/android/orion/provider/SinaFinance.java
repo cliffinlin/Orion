@@ -247,10 +247,10 @@ public class SinaFinance extends StockDataProvider {
 
 			defaultValue = getDownloadHistoryLengthDefault(period);
 
-			selection = mStockDatabaseManager.getStockDataSelection(stockId,
+			selection = mDatabaseManager.getStockDataSelection(stockId,
 					period, StockData.LEVEL_NONE);
-			sortOrder = mStockDatabaseManager.getStockDataOrder();
-			cursor = mStockDatabaseManager.queryStockData(selection, null,
+			sortOrder = mDatabaseManager.getStockDataOrder();
+			cursor = mDatabaseManager.queryStockData(selection, null,
 					sortOrder);
 
 			if ((cursor == null) || (cursor.getCount() == 0)) {
@@ -262,7 +262,7 @@ public class SinaFinance extends StockDataProvider {
 
 			modified = stockData.getModified();
 			if (Market.isOutOfDateToday(modified)) {
-				mStockDatabaseManager.deleteStockData(stockId, period);
+				mDatabaseManager.deleteStockData(stockId, period);
 				return defaultValue;
 			}
 
@@ -358,7 +358,7 @@ public class SinaFinance extends StockDataProvider {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			mStockDatabaseManager.closeCursor(cursor);
+			mDatabaseManager.closeCursor(cursor);
 		}
 
 		return result;
@@ -437,7 +437,7 @@ public class SinaFinance extends StockDataProvider {
 			return;
 		}
 
-		if (mStockDatabaseManager.getStockCount(DatabaseContract.COLUMN_CLASSES
+		if (mDatabaseManager.getStockCount(DatabaseContract.COLUMN_CLASSES
 				+ " = '" + Stock.CLASS_A + "'", null, null) == 0) {
 			bulkInsert = true;
 			Log.d("bulkInsert = " + bulkInsert);
@@ -475,7 +475,7 @@ public class SinaFinance extends StockDataProvider {
 					}
 					stock.setCode(jsonObject.getString("code"));
 
-					mStockDatabaseManager.getStock(stock);
+					mDatabaseManager.getStock(stock);
 
 					stock.setClasses(Stock.CLASS_A);
 
@@ -496,16 +496,16 @@ public class SinaFinance extends StockDataProvider {
 						stock.setModified(Utility.getCurrentDateTimeString());
 						contentValuesArray[i] = stock.getContentValues();
 					} else {
-						if (!mStockDatabaseManager.isStockExist(stock)) {
+						if (!mDatabaseManager.isStockExist(stock)) {
 							stock.setCreated(Utility.getCurrentDateTimeString());
 							stock.setModified(Utility
 									.getCurrentDateTimeString());
-							mStockDatabaseManager.insertStock(stock);
+							mDatabaseManager.insertStock(stock);
 						} else {
 							stock.setModified(Utility
 									.getCurrentDateTimeString());
 							if (nameChanged) {
-								mStockDatabaseManager.updateStock(stock,
+								mDatabaseManager.updateStock(stock,
 										stock.getContentValues());
 							}
 						}
@@ -514,7 +514,7 @@ public class SinaFinance extends StockDataProvider {
 			}
 
 			if (bulkInsert) {
-				mStockDatabaseManager.bulkInsertStock(contentValuesArray);
+				mDatabaseManager.bulkInsertStock(contentValuesArray);
 			}
 			Setting.setDownloadStockHSATimemillis(System.currentTimeMillis());
 		} catch (Exception e) {
@@ -641,7 +641,7 @@ public class SinaFinance extends StockDataProvider {
 						* Constant.DOUBLE_CONSTANT_WAN);
 			}
 
-			mStockDatabaseManager.updateStock(stock,
+			mDatabaseManager.updateStock(stock,
 					stock.getContentValuesInformation());
 
 			Setting.setDownloadStockInformationTimemillis(stock.getSE(), stock.getCode(), System.currentTimeMillis());
@@ -788,7 +788,7 @@ public class SinaFinance extends StockDataProvider {
 				stock.setValue(Double.valueOf(stockInfo[5]).longValue());
 			}
 
-			mStockDatabaseManager.updateStock(stock,
+			mDatabaseManager.updateStock(stock,
 					stock.getContentValuesRealTime());
 
 			Setting.setDownloadStockRealTimeTimemillis(stock.getSE(), stock.getCode(), System.currentTimeMillis());
@@ -831,7 +831,7 @@ public class SinaFinance extends StockDataProvider {
 
 		StockData stockData = new StockData(period);
 		stockData.setStockId(stock.getId());
-		mStockDatabaseManager.getStockData(stockData);
+		mDatabaseManager.getStockData(stockData);
 		stockData.setSE(stock.getSE());
 		stockData.setCode(stock.getCode());
 		stockData.setName(stock.getName());
@@ -917,7 +917,7 @@ public class SinaFinance extends StockDataProvider {
 					.getPeriod());
 			if (TextUtils.isEmpty(stockData.getCreated())
 					|| (defaultValue == jsonArray.size())) {
-				mStockDatabaseManager.deleteStockData(stockData.getStockId(),
+				mDatabaseManager.deleteStockData(stockData.getStockId(),
 						stockData.getPeriod());
 				bulkInsert = true;
 			}
@@ -974,16 +974,16 @@ public class SinaFinance extends StockDataProvider {
 							ContentValuesList.add(stockData.getContentValues());
 						}
 					} else {
-						if (!mStockDatabaseManager.isStockDataExist(stockData)) {
+						if (!mDatabaseManager.isStockDataExist(stockData)) {
 							stockData.setCreated(Utility
 									.getCurrentDateTimeString());
 							stockData.setModified(Utility
 									.getCurrentDateTimeString());
-							mStockDatabaseManager.insertStockData(stockData);
+							mDatabaseManager.insertStockData(stockData);
 						} else {
 							stockData.setModified(Utility
 									.getCurrentDateTimeString());
-							mStockDatabaseManager.updateStockData(stockData,
+							mDatabaseManager.updateStockData(stockData,
 									stockData.getContentValues());
 						}
 					}
@@ -1006,7 +1006,7 @@ public class SinaFinance extends StockDataProvider {
 							.size()];
 					contentValuesArray = ContentValuesList
 							.toArray(contentValuesArray);
-					mStockDatabaseManager.bulkInsertStockData(contentValuesArray);
+					mDatabaseManager.bulkInsertStockData(contentValuesArray);
 				}
 			}
 
@@ -1256,7 +1256,7 @@ public class SinaFinance extends StockDataProvider {
 
 		StockData stockData = new StockData(period);
 		stockData.setStockId(stock.getId());
-		mStockDatabaseManager.getStockData(stockData);
+		mDatabaseManager.getStockData(stockData);
 		stockData.setSE(stock.getSE());
 		stockData.setCode(stock.getCode());
 		stockData.setName(stock.getName());
@@ -1397,12 +1397,12 @@ public class SinaFinance extends StockDataProvider {
 				}
 			}
 
-			if (!mStockDatabaseManager.isStockDataExist(stockData)) {
+			if (!mDatabaseManager.isStockDataExist(stockData)) {
 				stockData.setCreated(Utility.getCurrentDateTimeString());
-				mStockDatabaseManager.insertStockData(stockData);
+				mDatabaseManager.insertStockData(stockData);
 			} else {
 				stockData.setModified(Utility.getCurrentDateTimeString());
-				mStockDatabaseManager.updateStockData(stockData,
+				mDatabaseManager.updateStockData(stockData,
 						stockData.getContentValues());
 			}
 
@@ -1431,7 +1431,7 @@ public class SinaFinance extends StockDataProvider {
 		StockFinancial stockFinancial = new StockFinancial();
 		stockFinancial.setStockId(stock.getId());
 
-		mStockDatabaseManager.getStockFinancial(stock, stockFinancial);
+		mDatabaseManager.getStockFinancial(stock, stockFinancial);
 
 		if (System.currentTimeMillis() - Setting.getDownloadStockFinancialTimemillis(stock.getSE(), stock.getCode()) < Config.downloadStockFinancialInterval) {
 			return result;
@@ -1484,7 +1484,7 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		if (TextUtils.isEmpty(stockFinancial.getCreated())) {
-			mStockDatabaseManager.deleteStockFinancial(stockFinancial
+			mDatabaseManager.deleteStockFinancial(stockFinancial
 					.getStockId());
 			bulkInsert = true;
 		}
@@ -1595,18 +1595,18 @@ public class SinaFinance extends StockDataProvider {
 							ContentValuesList.add(stockFinancial
 									.getContentValues());
 						} else {
-							if (!mStockDatabaseManager
+							if (!mDatabaseManager
 									.isStockFinancialExist(stockFinancial)) {
 								stockFinancial.setCreated(Utility
 										.getCurrentDateTimeString());
 								stockFinancial.setModified(Utility
 										.getCurrentDateTimeString());
-								mStockDatabaseManager
+								mDatabaseManager
 										.insertStockFinancial(stockFinancial);
 							} else {
 								stockFinancial.setModified(Utility
 										.getCurrentDateTimeString());
-								mStockDatabaseManager
+								mDatabaseManager
 										.updateStockFinancial(
 												stockFinancial,
 												stockFinancial
@@ -1625,7 +1625,7 @@ public class SinaFinance extends StockDataProvider {
 							.size()];
 					contentValuesArray = ContentValuesList
 							.toArray(contentValuesArray);
-					mStockDatabaseManager
+					mDatabaseManager
 							.bulkInsertStockFinancial(contentValuesArray);
 				}
 			}
@@ -1652,7 +1652,7 @@ public class SinaFinance extends StockDataProvider {
 		ShareBonus shareBonus = new ShareBonus();
 		shareBonus.setStockId(stock.getId());
 
-		mStockDatabaseManager.getShareBonus(stock.getId(), shareBonus);
+		mDatabaseManager.getShareBonus(stock.getId(), shareBonus);
 
 		if (System.currentTimeMillis() - Setting.getDownloadShareBonusTimemillis(stock.getSE(), stock.getCode()) < Config.downloadShareBonusInterval) {
 			return result;
@@ -1705,7 +1705,7 @@ public class SinaFinance extends StockDataProvider {
 			return;
 		}
 
-		mStockDatabaseManager.deleteShareBonus(shareBonus.getStockId());
+		mDatabaseManager.deleteShareBonus(shareBonus.getStockId());
 		bulkInsert = true;
 
 		try {
@@ -1791,17 +1791,17 @@ public class SinaFinance extends StockDataProvider {
 								.getCurrentDateTimeString());
 						ContentValuesList.add(shareBonus.getContentValues());
 					} else {
-						if (!mStockDatabaseManager
+						if (!mDatabaseManager
 								.isShareBonusExist(shareBonus)) {
 							shareBonus.setCreated(Utility
 									.getCurrentDateTimeString());
 							shareBonus.setModified(Utility
 									.getCurrentDateTimeString());
-							mStockDatabaseManager.insertShareBonus(shareBonus);
+							mDatabaseManager.insertShareBonus(shareBonus);
 						} else {
 							shareBonus.setModified(Utility
 									.getCurrentDateTimeString());
-							mStockDatabaseManager.updateShareBonus(shareBonus,
+							mDatabaseManager.updateShareBonus(shareBonus,
 									shareBonus.getContentValues());
 						}
 					}
@@ -1814,7 +1814,7 @@ public class SinaFinance extends StockDataProvider {
 							.size()];
 					contentValuesArray = ContentValuesList
 							.toArray(contentValuesArray);
-					mStockDatabaseManager
+					mDatabaseManager
 							.bulkInsertShareBonus(contentValuesArray);
 				}
 			}
@@ -1841,7 +1841,7 @@ public class SinaFinance extends StockDataProvider {
 		TotalShare totalShare = new TotalShare();
 		totalShare.setStockId(stock.getId());
 
-		mStockDatabaseManager.getTotalShare(stock.getId(), totalShare);
+		mDatabaseManager.getTotalShare(stock.getId(), totalShare);
 
 		if (System.currentTimeMillis() - Setting.getDownloadTotalShareTimemillis(stock.getSE(), stock.getCode()) < Config.downloadTotalShareInterval) {
 			return result;
@@ -1893,7 +1893,7 @@ public class SinaFinance extends StockDataProvider {
 			return;
 		}
 
-		mStockDatabaseManager.deleteTotalShare(totalShare.getStockId());
+		mDatabaseManager.deleteTotalShare(totalShare.getStockId());
 		bulkInsert = true;
 
 		try {
@@ -1977,17 +1977,17 @@ public class SinaFinance extends StockDataProvider {
 								.getCurrentDateTimeString());
 						ContentValuesList.add(totalShare.getContentValues());
 					} else {
-						if (!mStockDatabaseManager
+						if (!mDatabaseManager
 								.isTotalShareExist(totalShare)) {
 							totalShare.setCreated(Utility
 									.getCurrentDateTimeString());
 							totalShare.setModified(Utility
 									.getCurrentDateTimeString());
-							mStockDatabaseManager.insertTotalShare(totalShare);
+							mDatabaseManager.insertTotalShare(totalShare);
 						} else {
 							totalShare.setModified(Utility
 									.getCurrentDateTimeString());
-							mStockDatabaseManager.updateTotalShare(totalShare,
+							mDatabaseManager.updateTotalShare(totalShare,
 									totalShare.getContentValues());
 						}
 					}
@@ -2000,7 +2000,7 @@ public class SinaFinance extends StockDataProvider {
 							.size()];
 					contentValuesArray = ContentValuesList
 							.toArray(contentValuesArray);
-					mStockDatabaseManager
+					mDatabaseManager
 							.bulkInsertTotalShare(contentValuesArray);
 				}
 			}

@@ -214,12 +214,12 @@ public class StorageActivity extends DatabaseActivity {
 		ContentValues[] contentValues = null;
 		int parseType = XML_PARSE_TYPE_NONE;
 
-		if (mStockDatabaseManager == null) {
+		if (mDatabaseManager == null) {
 			return count;
 		}
 
-		mStockDatabaseManager.deleteIndexComponent();
-		mStockDatabaseManager.deleteStockDeal();
+		mDatabaseManager.deleteIndexComponent();
+		mDatabaseManager.deleteStockDeal();
 
 		try {
 			eventType = parser.getEventType();
@@ -297,14 +297,14 @@ public class StorageActivity extends DatabaseActivity {
 						if (TextUtils.equals(tagName, XML_TAG_STOCK)) {
 							parseType = XML_PARSE_TYPE_NONE;
 
-							mStockDatabaseManager.getStock(stock);
-							if (!mStockDatabaseManager.isStockExist(stock)) {
+							mDatabaseManager.getStock(stock);
+							if (!mDatabaseManager.isStockExist(stock)) {
 								stock.setCreated(now);
 								stock.setModified(now);
-								mStockDatabaseManager.insertStock(stock);
+								mDatabaseManager.insertStock(stock);
 							} else {
 								stock.setModified(now);
-								mStockDatabaseManager.updateStock(stock,
+								mDatabaseManager.updateStock(stock,
 										stock.getContentValues());
 							}
 							stockList.add(stock);
@@ -317,7 +317,7 @@ public class StorageActivity extends DatabaseActivity {
 									contentValues[i] = stockDeal.getContentValues();
 								}
 
-								mStockDatabaseManager.bulkInsertStockDeal(contentValues);
+								mDatabaseManager.bulkInsertStockDeal(contentValues);
 							}
 
 							if (indexComponentArrayList.size() > 0) {
@@ -328,7 +328,7 @@ public class StorageActivity extends DatabaseActivity {
 									contentValues[i] = indexComponent.getContentValues();
 								}
 
-								mStockDatabaseManager.bulkInsertIndexComponent(contentValues);
+								mDatabaseManager.bulkInsertIndexComponent(contentValues);
 							}
 						} else if (TextUtils.equals(tagName, XML_TAG_STOCK_DEAL)) {
 							parseType = XML_PARSE_TYPE_NONE;
@@ -348,8 +348,8 @@ public class StorageActivity extends DatabaseActivity {
 			}
 
 			for (Stock stock2 : stockList) {
-				mStockDatabaseManager.updateStockDeal(stock2);
-				mStockDatabaseManager.updateStock(stock2,
+				mDatabaseManager.updateStockDeal(stock2);
+				mDatabaseManager.updateStock(stock2,
 						stock2.getContentValuesForEdit());
 			}
 		} catch (Exception e) {
@@ -396,12 +396,12 @@ public class StorageActivity extends DatabaseActivity {
 		Cursor cursor = null;
 		String selection = "";
 
-		if (mStockDatabaseManager == null) {
+		if (mDatabaseManager == null) {
 			return count;
 		}
 
 		try {
-			cursor = mStockDatabaseManager.queryStock(selection, null, null);
+			cursor = mDatabaseManager.queryStock(selection, null, null);
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				while (cursor.moveToNext()) {
 					Stock stock = new Stock();
@@ -412,7 +412,7 @@ public class StorageActivity extends DatabaseActivity {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			mStockDatabaseManager.closeCursor(cursor);
+			mDatabaseManager.closeCursor(cursor);
 		}
 
 		if (stockList.size() == 0) {
@@ -448,7 +448,7 @@ public class StorageActivity extends DatabaseActivity {
 						+ DatabaseContract.COLUMN_CODE + " = " + "'"
 						+ stock.getCode() + "'";
 
-				cursor = mStockDatabaseManager.queryStockDeal(selection, null,
+				cursor = mDatabaseManager.queryStockDeal(selection, null,
 						null);
 				if ((cursor != null) && (cursor.getCount() > 0)) {
 					while (cursor.moveToNext()) {
@@ -484,14 +484,14 @@ public class StorageActivity extends DatabaseActivity {
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {
-				mStockDatabaseManager.closeCursor(cursor);
+				mDatabaseManager.closeCursor(cursor);
 			}
 
 			try {
 				selection = DatabaseContract.COLUMN_INDEX_CODE + " = " + "'"
 						+ stock.getCode() + "'";
 
-				cursor = mStockDatabaseManager.queryIndexComponent(selection, null,
+				cursor = mDatabaseManager.queryIndexComponent(selection, null,
 						null);
 				if ((cursor != null) && (cursor.getCount() > 0)) {
 					while (cursor.moveToNext()) {
@@ -515,7 +515,7 @@ public class StorageActivity extends DatabaseActivity {
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {
-				mStockDatabaseManager.closeCursor(cursor);
+				mDatabaseManager.closeCursor(cursor);
 			}
 
 			try {

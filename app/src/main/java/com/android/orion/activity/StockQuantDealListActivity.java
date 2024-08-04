@@ -148,7 +148,7 @@ public class StockQuantDealListActivity extends ListActivity implements
 					break;
 
 				case MESSAGE_VIEW_STOCK_TREND:
-					mStockDatabaseManager.getStock(mStock);
+					mDatabaseManager.getStock(mStock);
 
 					mIntent = new Intent(mContext, StockTrendListActivity.class);
 					mIntent.setAction(Constant.ACTION_STOCK_TREND_LIST);
@@ -763,7 +763,7 @@ public class StockQuantDealListActivity extends ListActivity implements
 						Stock stock = new Stock();
 						stock.setSE(stockQuant.getSE());
 						stock.setCode(stockQuant.getCode());
-						mStockDatabaseManager.getStock(stock);
+						mDatabaseManager.getStock(stock);
 						stockMap.put(stockQuant.getSE() + stockQuant.getCode(), stock);
 					}
 				}
@@ -812,12 +812,12 @@ public class StockQuantDealListActivity extends ListActivity implements
 	}
 
 	void getStock() {
-		mStockDatabaseManager.getStockQuantById(mStockQuant);
+		mDatabaseManager.getStockQuantById(mStockQuant);
 
 		mStock.setSE(mStockQuant.getSE());
 		mStock.setCode(mStockQuant.getCode());
 
-		mStockDatabaseManager.getStock(mStock);
+		mDatabaseManager.getStock(mStock);
 	}
 
 	private class CustomViewBinder implements SimpleCursorAdapter.ViewBinder {

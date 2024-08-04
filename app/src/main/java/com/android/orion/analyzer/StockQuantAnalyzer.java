@@ -8,7 +8,7 @@ import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockQuant;
-import com.android.orion.manager.StockDatabaseManager;
+import com.android.orion.manager.DatabaseManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,7 +32,7 @@ public class StockQuantAnalyzer {
 	ArrayList<ContentValues> mContentValuesList = new ArrayList<ContentValues>();
 
 	Context mContext;
-	StockDatabaseManager mStockDatabaseManager;
+	DatabaseManager mDatabaseManager;
 	Comparator<StockQuant> mComparator = new Comparator<StockQuant>() {
 
 		@Override
@@ -131,10 +131,10 @@ public class StockQuantAnalyzer {
 		if (mBulkInsert) {
 			mContentValuesList.add(stockQuant.getContentValues());
 		} else {
-			if (!mStockDatabaseManager.isStockQuantExist(stockQuant)) {
-				mStockDatabaseManager.insertStockQuant(stockQuant);
+			if (!mDatabaseManager.isStockQuantExist(stockQuant)) {
+				mDatabaseManager.insertStockQuant(stockQuant);
 			} else {
-				mStockDatabaseManager.updateStockQuantById(stockQuant);
+				mDatabaseManager.updateStockQuantById(stockQuant);
 			}
 		}
 	}
@@ -204,10 +204,10 @@ public class StockQuantAnalyzer {
 			if (mBulkInsert) {
 				mContentValuesList.add(stockQuant.getContentValues());
 			} else {
-				if (!mStockDatabaseManager.isStockQuantExist(stockQuant)) {
-					mStockDatabaseManager.insertStockQuant(stockQuant);
+				if (!mDatabaseManager.isStockQuantExist(stockQuant)) {
+					mDatabaseManager.insertStockQuant(stockQuant);
 				} else {
-					mStockDatabaseManager.updateStockQuantById(stockQuant);
+					mDatabaseManager.updateStockQuantById(stockQuant);
 				}
 			}
 		}
@@ -221,7 +221,7 @@ public class StockQuantAnalyzer {
 		init();
 
 		mContext = context;
-		mStockDatabaseManager = StockDatabaseManager.getInstance();
+		mDatabaseManager = DatabaseManager.getInstance();
 
 		if (stock.getThreshold() == 0 || stock.getQuantVolume() == 0) {
 			return;
@@ -238,7 +238,7 @@ public class StockQuantAnalyzer {
 		mShareBonusList = shareBonusList;
 		mBuyList.clear();
 
-		mStockDatabaseManager.getStockQuantList(stock, mStockQuantList);
+		mDatabaseManager.getStockQuantList(stock, mStockQuantList);
 		if (mStockQuantList.size() == 0) {
 			mBulkInsert = true;
 		}
@@ -266,7 +266,7 @@ public class StockQuantAnalyzer {
 						.size()];
 				contentValuesArray = mContentValuesList
 						.toArray(contentValuesArray);
-				mStockDatabaseManager.bulkInsertStockQuant(contentValuesArray);
+				mDatabaseManager.bulkInsertStockQuant(contentValuesArray);
 			}
 		}
 	}

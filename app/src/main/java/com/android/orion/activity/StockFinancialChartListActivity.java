@@ -328,10 +328,10 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 		String sortOrder = "";
 		CursorLoader loader = null;
 
-		selection = mStockDatabaseManager.getStockFinancialSelection(mStock
+		selection = mDatabaseManager.getStockFinancialSelection(mStock
 				.getId());
 
-		sortOrder = mStockDatabaseManager.getStockFinancialOrder();
+		sortOrder = mDatabaseManager.getStockFinancialOrder();
 
 		loader = new CursorLoader(this,
 				DatabaseContract.StockFinancial.CONTENT_URI,
@@ -397,7 +397,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			mStockDatabaseManager.closeCursor(cursor);
+			mDatabaseManager.closeCursor(cursor);
 		}
 
 		if (mMainHandler != null) {
@@ -414,7 +414,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 			return;
 		}
 
-		// mStockDatabaseManager.getStockFinancialList(mStock,
+		// mDatabaseManager.getStockFinancialList(mStock,
 		// mStockFinancialList);
 
 		stockFinancialChart.clear();
@@ -496,7 +496,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			mStockDatabaseManager.closeCursor(cursor);
+			mDatabaseManager.closeCursor(cursor);
 		}
 
 		updateTitle();

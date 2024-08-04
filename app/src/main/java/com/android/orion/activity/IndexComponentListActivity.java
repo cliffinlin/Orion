@@ -479,7 +479,7 @@ public class IndexComponentListActivity extends ListActivity implements
 
 				componentSelection += DatabaseContract.COLUMN_INDEX_CODE + " = " + mIntent.getStringExtra(Constant.EXTRA_INDEX_CODE);
 
-				mStockDatabaseManager.getIndexComponentList(indexComponentList, componentSelection, null);
+				mDatabaseManager.getIndexComponentList(indexComponentList, componentSelection, null);
 
 				if (indexComponentList.size() > 0) {
 					placeHolder.append("?");
@@ -565,7 +565,7 @@ public class IndexComponentListActivity extends ListActivity implements
 		} else {
 			if (parent.getId() == R.id.left_listview) {
 				mStock.setId(id);
-				mStockDatabaseManager.getStockById(mStock);
+				mDatabaseManager.getStockById(mStock);
 
 				Intent intent = new Intent(mContext,
 						StockFavoriteDealListActivity.class);

@@ -3,47 +3,45 @@ package com.android.orion.manager;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 
 import com.android.orion.application.OrionApplication;
 import com.android.orion.config.Config;
+import com.android.orion.receiver.DownloadBroadcastReceiver;
 import com.android.orion.utility.Logger;
 import com.android.orion.utility.Market;
 import com.android.orion.utility.Utility;
 
 import java.util.Calendar;
 
-public class OrionAlarmManager {
+public class StockAlarmManager {
 
 	Logger Log = Logger.getLogger();
 	Context mContext;
-	private long mIntervalMillis = 0;
+	private long mIntervalMillis = Config.alarmInterval;
 	private AlarmManager mAlarmManager = null;
-	private PendingIntent mPendingIntent = null;
+	private PendingIntent mPendingIntent;
+	private static StockAlarmManager mInstance;
 
-	OrionAlarmManager() {
+	public static synchronized StockAlarmManager getInstance() {
+		if (mInstance == null) {
+			mInstance = new StockAlarmManager();
+		}
+		return mInstance;
+	}
+
+	StockAlarmManager() {
 		mContext = OrionApplication.getContext();
 
 		if (mAlarmManager == null) {
 			mAlarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
 		}
+
+		mPendingIntent = PendingIntent.getBroadcast(mContext, 0, new Intent(
+				mContext, DownloadBroadcastReceiver.class), 0);
 	}
 
-	void setIntervalMillis(long intervalMillis) {
-		if (intervalMillis <= 0) {
-			mIntervalMillis = Config.alarmInterval;
-		} else {
-			mIntervalMillis = intervalMillis;
-		}
-
-		Log.d("mIntervalMillis = "
-				+ mIntervalMillis);
-	}
-
-	void setPendingIntent(PendingIntent pendingIntent) {
-		mPendingIntent = pendingIntent;
-	}
-
-	void startAlarm() {
+	public void startAlarm() {
 		int dayOfWeek = Calendar.SUNDAY;
 		long triggerMillis = 0;
 

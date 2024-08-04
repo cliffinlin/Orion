@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.android.orion"
     android:versionCode="518"
-    android:versionName="V1.1.36_R202407022">
+    android:versionName="V1.1.36_R20240804">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -34,16 +34,16 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.android.orion.activity.BaseActivity"></activity>
-        <activity android:name="com.android.orion.activity.DatabaseActivity"></activity>
+        <activity android:name="com.android.orion.activity.BaseActivity" />
+        <activity android:name="com.android.orion.activity.DatabaseActivity" />
         <activity
             android:name="com.android.orion.activity.SettingActivity"
             android:label="@string/activity_title_setting"
-            android:launchMode="singleTask"></activity>
+            android:launchMode="singleTask" />
         <activity
             android:name="com.android.orion.activity.SettingLoopbackActivity"
             android:label="@string/activity_title_setting_loopback"
-            android:launchMode="singleTask"></activity>
+            android:launchMode="singleTask" />
         <activity
             android:name="com.android.orion.activity.StockSearchActivity"
             android:label="@string/search"
@@ -59,74 +59,74 @@
         <activity
             android:name="com.android.orion.activity.StockEditActivity"
             android:label="@string/stock_edit"
-            android:launchMode="singleTask"></activity>
+            android:launchMode="singleTask" />
         <activity
             android:name="com.android.orion.activity.StockFavoriteListActivity"
             android:label="@string/activity_title_stock_favorite_list"
-            android:launchMode="singleTask"></activity>
+            android:launchMode="singleTask" />
         <activity
             android:name="com.android.orion.activity.StockListEditActivity"
             android:label="@string/list"
-            android:launchMode="singleTask"></activity>
+            android:launchMode="singleTask" />
         <activity
             android:name="com.android.orion.activity.StockFavoriteDealListActivity"
             android:label="@string/activity_title_stock_deal_list"
-            android:launchMode="singleTask"></activity>
+            android:launchMode="singleTask" />
         <activity
             android:name="com.android.orion.activity.StockDealActivity"
             android:label="@string/activity_title_deal"
-            android:launchMode="singleTask"></activity>
+            android:launchMode="singleTask" />
         <activity
             android:name="com.android.orion.activity.IndexComponentListActivity"
             android:label="@string/component_list"
-            android:launchMode="singleTask"></activity>
+            android:launchMode="singleTask" />
         <activity
             android:name="com.android.orion.activity.StockDataChartListActivity"
             android:label="@string/stock_data_chart"
-            android:launchMode="singleTask"></activity>
+            android:launchMode="singleTask" />
         <activity
             android:name="com.android.orion.activity.StockTrendListActivity"
             android:label="@string/trend_list"
-            android:launchMode="singleTask"></activity>
+            android:launchMode="singleTask" />
         <activity
             android:name="com.android.orion.activity.StockFinancialListActivity"
             android:label="@string/activity_title_stock_financial_list"
-            android:launchMode="singleTask"></activity>
+            android:launchMode="singleTask" />
         <activity
             android:name="com.android.orion.activity.StockFinancialChartListActivity"
             android:label="@string/stock_financial_chart"
-            android:launchMode="singleTask"></activity>
+            android:launchMode="singleTask" />
         <activity
             android:name="com.android.orion.activity.StockQuantListActivity"
             android:label="@string/activity_title_stock_quant_list"
-            android:launchMode="singleTask"></activity>
+            android:launchMode="singleTask" />
         <activity
             android:name="com.android.orion.activity.StockQuantDealListActivity"
             android:label="@string/activity_title_stock_quant_list"
-            android:launchMode="singleTask"></activity>
+            android:launchMode="singleTask" />
         <activity
             android:name="com.android.orion.activity.StockStatisticsChartListActivity"
             android:label="@string/stock_statistics_chart"
-            android:launchMode="singleTask"></activity>
+            android:launchMode="singleTask" />
         <activity
             android:name="com.android.orion.activity.StockFilterActivity"
             android:label="@string/filter"
-            android:launchMode="singleTask"></activity>
+            android:launchMode="singleTask" />
         <activity
             android:name="com.android.orion.activity.AboutActivity"
             android:label="@string/activity_title_about"
-            android:launchMode="singleTask"></activity>
+            android:launchMode="singleTask" />
 
         <provider
             android:name="com.android.orion.provider.OrionContentProvider"
             android:authorities="com.android.orion"
-            android:exported="false"></provider>
+            android:exported="false" />
         <provider
             android:name="com.android.orion.provider.StockSearchRecentSuggestionsProvider"
             android:authorities="com.android.orion.OrionSearchRecentSuggestionsProvider"
-            android:exported="false"></provider>
+            android:exported="false" />
 
-        <receiver android:name="com.android.orion.receiver.DownloadBroadcastReceiver"></receiver>
+        <receiver android:name="com.android.orion.receiver.DownloadBroadcastReceiver" />
 
         <service
             android:name="com.android.orion.service.OrionService"

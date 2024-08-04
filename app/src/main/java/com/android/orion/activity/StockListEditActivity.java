@@ -102,10 +102,10 @@ public class StockListEditActivity extends DatabaseActivity implements
 					@Override
 					public void run() {
 						ArrayList<Stock> stockList = new ArrayList();
-						mStockDatabaseManager.getStockList(null, stockList);
+						mDatabaseManager.getStockList(null, stockList);
 						for (Stock stock : stockList) {
 							if (!stock.hasFlag(Stock.FLAG_FAVORITE)) {
-								mStockDatabaseManager.updateStockFlag(stock.getId(), Stock.FLAG_FAVORITE);
+								mDatabaseManager.updateStockFlag(stock.getId(), Stock.FLAG_FAVORITE);
 								Log.d(stock.getName() + stock.getCode() + " updateStockFlag(Stock.FLAG_FAVORITE)");
 							}
 						}
@@ -316,7 +316,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 
 			if (TextUtils.equals(mAction, Constant.ACTION_INDEX_COMPONENT_SELECT)) {
 				mStock.setId(stock.getId());
-				mStockDatabaseManager.getStockById(mStock);
+				mDatabaseManager.getStockById(mStock);
 
 				IndexComponent indexComponent = new IndexComponent();
 				indexComponent.setIndexCode(mIntent.getStringExtra(Constant.EXTRA_INDEX_CODE));
@@ -326,7 +326,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 				indexComponent.setName(mStock.getName());
 				indexComponent.setSE(mStock.getSE());
 
-				if (mStockDatabaseManager.isIndexComponentExist(indexComponent)) {
+				if (mDatabaseManager.isIndexComponentExist(indexComponent)) {
 					holder.mImageViewgComponent.setImageResource(R.drawable.ic_checked);
 				} else {
 					holder.mImageViewgComponent.setImageResource(R.drawable.ic_unchecked);
@@ -373,7 +373,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 			Stock stock = new Stock();
 
 			stock.setId(stockId);
-			mStockDatabaseManager.getStockById(stock);
+			mDatabaseManager.getStockById(stock);
 
 			try {
 				switch (view.getId()) {
@@ -398,7 +398,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 											new DialogInterface.OnClickListener() {
 												public void onClick(DialogInterface dialog,
 																	int which) {
-													mStockDatabaseManager.deleteStock(stock_id);
+													mDatabaseManager.deleteStock(stock_id);
 												}
 											})
 									.setNegativeButton(R.string.cancel,
@@ -414,7 +414,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 					case R.id.component:
 						if (TextUtils.equals(mAction, Constant.ACTION_INDEX_COMPONENT_SELECT)) {
 							mStock.setId(stock.getId());
-							mStockDatabaseManager.getStockById(mStock);
+							mDatabaseManager.getStockById(mStock);
 
 							IndexComponent indexComponent = new IndexComponent();
 							indexComponent.setIndexCode(mIntent.getStringExtra(Constant.EXTRA_INDEX_CODE));
@@ -424,11 +424,11 @@ public class StockListEditActivity extends DatabaseActivity implements
 							indexComponent.setName(mStock.getName());
 							indexComponent.setSE(mStock.getSE());
 
-							if (mStockDatabaseManager.isIndexComponentExist(indexComponent)) {
-								mStockDatabaseManager.deleteIndexComponent(indexComponent);
+							if (mDatabaseManager.isIndexComponentExist(indexComponent)) {
+								mDatabaseManager.deleteIndexComponent(indexComponent);
 							} else {
 								indexComponent.setCreated(Utility.getCurrentDateTimeString());
-								mStockDatabaseManager.insertIndexComponent(indexComponent);
+								mDatabaseManager.insertIndexComponent(indexComponent);
 							}
 						}
 						break;

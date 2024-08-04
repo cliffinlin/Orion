@@ -537,7 +537,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 		} else {
 			if (parent.getId() == R.id.left_listview) {
 				mStock.setId(id);
-				mStockDatabaseManager.getStockById(mStock);
+				mDatabaseManager.getStockById(mStock);
 
 				if (TextUtils.equals(mStock.getClasses(), Stock.CLASS_INDEX)) {
 					Intent intent = new Intent(mContext,

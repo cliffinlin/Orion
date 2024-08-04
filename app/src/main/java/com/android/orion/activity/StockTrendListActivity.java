@@ -164,7 +164,7 @@ public class StockTrendListActivity extends ListActivity implements
 										long stockId = getIntent().getLongExtra(Constant.EXTRA_STOCK_ID,
 												Stock.INVALID_ID);
 										stockData.setStockId(stockId);
-										mStockDatabaseManager.deleteStockData(stockData);
+										mDatabaseManager.deleteStockData(stockData);
 									}
 								})
 						.setNegativeButton(R.string.cancel,
@@ -184,7 +184,7 @@ public class StockTrendListActivity extends ListActivity implements
 								new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog,
 														int which) {
-										mStockDatabaseManager.deleteStockData();
+										mDatabaseManager.deleteStockData();
 									}
 								})
 						.setNegativeButton(R.string.cancel,
@@ -445,7 +445,7 @@ public class StockTrendListActivity extends ListActivity implements
 					StringBuilder placeHolder = new StringBuilder();
 					StringBuilder stockIds = new StringBuilder();
 
-					mStockDatabaseManager.getFavoriteStockList(stockList);
+					mDatabaseManager.getFavoriteStockList(stockList);
 					if (stockList.size() > 0) {
 						placeHolder.append("?");
 						stockIds.append(stockList.get(0).getId());

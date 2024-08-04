@@ -117,9 +117,9 @@ public class StockFavoriteDealListActivity extends ListActivity implements
 				case MESSAGE_DELETE_DEAL:
 					getStock();
 					RecordFile.writeDealFile(mStock, mStockDeal, Constant.DEAL_OPERATE_DELETE);
-					mStockDatabaseManager.deleteStockDeal(mStockDeal);
-					mStockDatabaseManager.updateStockDeal(mStock);
-					mStockDatabaseManager.updateStock(mStock,
+					mDatabaseManager.deleteStockDeal(mStockDeal);
+					mDatabaseManager.updateStockDeal(mStock);
+					mDatabaseManager.updateStock(mStock,
 							mStock.getContentValues());
 					break;
 
@@ -152,7 +152,7 @@ public class StockFavoriteDealListActivity extends ListActivity implements
 					break;
 
 				case MESSAGE_VIEW_STOCK_TREND:
-					mStockDatabaseManager.getStock(mStock);
+					mDatabaseManager.getStock(mStock);
 
 					mIntent = new Intent(mContext, StockTrendListActivity.class);
 					mIntent.setAction(Constant.ACTION_STOCK_TREND_LIST);
@@ -779,7 +779,7 @@ public class StockFavoriteDealListActivity extends ListActivity implements
 						Stock stock = new Stock();
 						stock.setSE(stockDeal.getSE());
 						stock.setCode(stockDeal.getCode());
-						mStockDatabaseManager.getStock(stock);
+						mDatabaseManager.getStock(stock);
 						stockMap.put(stockDeal.getSE() + stockDeal.getCode(), stock);
 					}
 				}
@@ -835,12 +835,12 @@ public class StockFavoriteDealListActivity extends ListActivity implements
 	}
 
 	void getStock() {
-		mStockDatabaseManager.getStockDealById(mStockDeal);
+		mDatabaseManager.getStockDealById(mStockDeal);
 
 		mStock.setSE(mStockDeal.getSE());
 		mStock.setCode(mStockDeal.getCode());
 
-		mStockDatabaseManager.getStock(mStock);
+		mDatabaseManager.getStock(mStock);
 	}
 
 	private class CustomViewBinder implements SimpleCursorAdapter.ViewBinder {

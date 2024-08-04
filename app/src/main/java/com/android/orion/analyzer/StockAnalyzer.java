@@ -21,7 +21,7 @@ import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockFinancial;
 import com.android.orion.database.TotalShare;
 import com.android.orion.indicator.Macd;
-import com.android.orion.manager.StockDatabaseManager;
+import com.android.orion.manager.DatabaseManager;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Logger;
@@ -42,14 +42,14 @@ public class StockAnalyzer {
 	private static StockAnalyzer mInstance;
 	Context mContext;
 	NotificationManager mNotificationManager;
-	StockDatabaseManager mStockDatabaseManager;
+	DatabaseManager mDatabaseManager;
 	Logger Log = Logger.getLogger();
 
 	private StockAnalyzer() {
 		mContext = OrionApplication.getContext();
 
 		mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-		mStockDatabaseManager = StockDatabaseManager.getInstance();
+		mDatabaseManager = DatabaseManager.getInstance();
 	}
 
 	public static synchronized StockAnalyzer getInstance() {
@@ -82,7 +82,7 @@ public class StockAnalyzer {
 			setupStockShareBonus(stock);
 			setupStockFinancial(stock);
 
-			mStockDatabaseManager.loadStockDataList(stock, period, stockDataList);
+			mDatabaseManager.loadStockDataList(stock, period, stockDataList);
 			setupMACD(period, stockDataList);
 			analyzeStockData(stock, period, stockDataList,
 					drawVertexList, drawDataList,
@@ -90,9 +90,9 @@ public class StockAnalyzer {
 					segmentVertexList, segmentDataList,
 					lineVertexList, lineDataList,
 					outlineVertexList, outlineDataList);
-			mStockDatabaseManager.updateStockData(stock, period, stockDataList);
+			mDatabaseManager.updateStockData(stock, period, stockDataList);
 			stock.setModified(Utility.getCurrentDateTimeString());
-			mStockDatabaseManager.updateStock(stock, stock.getContentValues());
+			mDatabaseManager.updateStock(stock, stock.getContentValues());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -115,7 +115,7 @@ public class StockAnalyzer {
 			setupStockShareBonus(stock);
 
 			stock.setModified(Utility.getCurrentDateTimeString());
-			mStockDatabaseManager.updateStock(stock, stock.getContentValues());
+			mDatabaseManager.updateStock(stock, stock.getContentValues());
 
 			updateNotification(stock);
 		} catch (Exception e) {
@@ -137,13 +137,13 @@ public class StockAnalyzer {
 			return;
 		}
 
-		mStockDatabaseManager.getStockFinancialList(stock, mStockFinancialList,
+		mDatabaseManager.getStockFinancialList(stock, mStockFinancialList,
 				sortOrder);
-		mStockDatabaseManager.getTotalShareList(stock, mTotalShareList,
+		mDatabaseManager.getTotalShareList(stock, mTotalShareList,
 				sortOrder);
-		mStockDatabaseManager.getShareBonusList(stock, mShareBonusList,
+		mDatabaseManager.getShareBonusList(stock, mShareBonusList,
 				sortOrder);
-		mStockDatabaseManager.getStockDataList(stock, DatabaseContract.COLUMN_MONTH,
+		mDatabaseManager.getStockDataList(stock, DatabaseContract.COLUMN_MONTH,
 				mStockDataList, sortOrder);
 
 		setupTotalShare(mStockFinancialList, mTotalShareList);
@@ -153,8 +153,8 @@ public class StockAnalyzer {
 		setupRoe(mStockFinancialList);
 		setupRoi(mStockDataList, mStockFinancialList);
 
-		mStockDatabaseManager.updateStockFinancial(stock, mStockFinancialList);
-		mStockDatabaseManager.updateStockData(stock, DatabaseContract.COLUMN_MONTH, mStockDataList);
+		mDatabaseManager.updateStockFinancial(stock, mStockFinancialList);
+		mDatabaseManager.updateStockData(stock, DatabaseContract.COLUMN_MONTH, mStockDataList);
 	}
 
 	private void setupTotalShare(ArrayList<StockFinancial> stockFinancialList,
@@ -373,10 +373,10 @@ public class StockAnalyzer {
 
 		stockFinancial.setStockId(stock.getId());
 
-		mStockDatabaseManager.getStockFinancial(stock, stockFinancial);
-		mStockDatabaseManager.getStockFinancialList(stock, mStockFinancialList,
+		mDatabaseManager.getStockFinancial(stock, stockFinancial);
+		mDatabaseManager.getStockFinancialList(stock, mStockFinancialList,
 				sortOrder);
-		mStockDatabaseManager.updateStockDeal(stock);
+		mDatabaseManager.updateStockDeal(stock);
 
 		stock.setBookValuePerShare(stockFinancial.getBookValuePerShare());
 		stock.setTotalAssets(stockFinancial.getTotalAssets());
@@ -413,7 +413,7 @@ public class StockAnalyzer {
 			return;
 		}
 
-		mStockDatabaseManager.getShareBonusList(stock, mShareBonusList,
+		mDatabaseManager.getShareBonusList(stock, mShareBonusList,
 				sortOrder);
 
 		int i = 0;
@@ -554,7 +554,7 @@ public class StockAnalyzer {
 		analyzeAction(stock, period, stockDataList, drawVertexList, drawDataList, strokeDataList, segmentDataList);
 
 		if (TextUtils.equals(period, stock.getOperate())) {
-			mStockDatabaseManager.getShareBonusList(stock, mShareBonusList,
+			mDatabaseManager.getShareBonusList(stock, mShareBonusList,
 					DatabaseContract.COLUMN_DATE + " DESC ");
 			stockQuantAnalyzer.analyze(mContext, stock, stockDataList, mShareBonusList);
 		}
@@ -848,7 +848,7 @@ public class StockAnalyzer {
 		selection += " AND " + DatabaseContract.COLUMN_PROFIT + " > " + DatabaseContract.COLUMN_BONUS;
 		selection += " AND " + DatabaseContract.COLUMN_NET + " > " + 0;
 
-		mStockDatabaseManager.getStockDealList(mStockDealList, selection, sortOrder);
+		mDatabaseManager.getStockDealList(mStockDealList, selection, sortOrder);
 		for (StockDeal stockDeal : mStockDealList) {
 			result += stockDeal.getProfit();
 		}
@@ -875,7 +875,7 @@ public class StockAnalyzer {
 		selection += " AND " + DatabaseContract.COLUMN_PROFIT + " > " + DatabaseContract.COLUMN_BONUS;
 		selection += " AND " + DatabaseContract.COLUMN_NET + " > " + 0;
 
-		mStockDatabaseManager.getStockDealList(mStockDealList, selection, sortOrder);
+		mDatabaseManager.getStockDealList(mStockDealList, selection, sortOrder);
 		for (StockDeal stockDeal : mStockDealList) {
 			result += stockDeal.getProfit();
 		}

@@ -67,10 +67,10 @@ public class StockDealActivity extends DatabaseActivity implements
 
 			switch (msg.what) {
 				case MESSAGE_LOAD_DEAL:
-					mStockDatabaseManager.getStockDealById(mDeal);
+					mDatabaseManager.getStockDealById(mDeal);
 					mStock.setSE(mDeal.getSE());
 					mStock.setCode(mDeal.getCode());
-					mStockDatabaseManager.getStock(mStock);
+					mDatabaseManager.getStock(mStock);
 					updateView();
 					RecordFile.writeDealFile(mStock, mDeal, Constant.DEAL_OPERATE_EDIT);
 					break;
@@ -79,19 +79,19 @@ public class StockDealActivity extends DatabaseActivity implements
 					if (TextUtils.equals(mAction, Constant.ACTION_DEAL_INSERT)) {
 						mDeal.setCreated(Utility.getCurrentDateTimeString());
 						RecordFile.writeDealFile(mStock, mDeal, Constant.DEAL_OPERATE_INSERT);
-						mStockDatabaseManager.insertStockDeal(mDeal);
+						mDatabaseManager.insertStockDeal(mDeal);
 					} else if (TextUtils.equals(mAction, Constant.ACTION_DEAL_EDIT)) {
 						mDeal.setModified(Utility.getCurrentDateTimeString());
 						RecordFile.writeDealFile(mStock, mDeal, Constant.DEAL_OPERATE_EDIT);
-						mStockDatabaseManager.updateStockDealByID(mDeal);
+						mDatabaseManager.updateStockDealByID(mDeal);
 					}
-					mStockDatabaseManager.updateStockDeal(mStock);
-					mStockDatabaseManager.updateStock(mStock,
+					mDatabaseManager.updateStockDeal(mStock);
+					mDatabaseManager.updateStock(mStock,
 							mStock.getContentValues());
 					break;
 
 				case MESSAGE_LOAD_STOCK_BY_ID:
-					mStockDatabaseManager.getStockById(mStock);
+					mDatabaseManager.getStockById(mStock);
 					mDeal.setSE(mStock.getSE());
 					mDeal.setCode(mStock.getCode());
 					mDeal.setName(mStock.getName());
@@ -101,7 +101,7 @@ public class StockDealActivity extends DatabaseActivity implements
 					break;
 
 				case MESSAGE_LOAD_STOCK_BY_SE_CODE:
-					mStockDatabaseManager.getStock(mStock);
+					mDatabaseManager.getStock(mStock);
 					mDeal.setSE(mStock.getSE());
 					mDeal.setCode(mStock.getCode());
 					mDeal.setName(mStock.getName());

@@ -103,7 +103,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 					for (int i = 0; i < mStockIDList.size(); i++) {
 						Stock stock = new Stock();
 						stock.setId(Long.valueOf(mStockIDList.get(i)));
-						mStockDatabaseManager.getStockById(stock);
+						mDatabaseManager.getStockById(stock);
 						if (mStock.getId() == stock.getId()) {
 							mStock.set(stock);
 							mStockListIndex = mStockList.size();
@@ -262,7 +262,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 				case REQUEST_CODE_SETTING_DEBUG_LOOPBACK:
 					for (String period : DatabaseContract.PERIODS) {
 						if (Preferences.getBoolean(period, false)) {
-							mStockDatabaseManager.deleteStockData(mStock.getId(), period);
+							mDatabaseManager.deleteStockData(mStock.getId(), period);
 						}
 					}
 					mOrionService.download(mStock);
@@ -373,7 +373,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 			mLoaderManager.initLoader(LOADER_ID_STOCK_LIST, null, this);
 		}
 
-		mStockDatabaseManager.getStockById(mStock);
+		mDatabaseManager.getStockById(mStock);
 		for (int i = 0; i < DatabaseContract.PERIODS.length; i++) {
 			if (Preferences.getBoolean(DatabaseContract.PERIODS[i], false)) {
 				mLoaderManager.initLoader(i, null, this);
@@ -397,7 +397,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 			mLoaderManager.restartLoader(LOADER_ID_STOCK_LIST, null, this);
 		}
 
-		mStockDatabaseManager.getStockById(mStock);
+		mDatabaseManager.getStockById(mStock);
 		for (int i = 0; i < DatabaseContract.PERIODS.length; i++) {
 			if (Preferences.getBoolean(DatabaseContract.PERIODS[i], false)) {
 				mLoaderManager.restartLoader(i, null, this);
@@ -424,10 +424,10 @@ public class StockDataChartListActivity extends BaseActivity implements
 		String sortOrder = "";
 		CursorLoader loader = null;
 
-		selection = mStockDatabaseManager.getStockDataSelection(mStock.getId(),
+		selection = mDatabaseManager.getStockDataSelection(mStock.getId(),
 				period, StockData.LEVEL_NONE);
 
-		sortOrder = mStockDatabaseManager.getStockDataOrder();
+		sortOrder = mDatabaseManager.getStockDataOrder();
 
 		loader = new CursorLoader(this, DatabaseContract.StockData.CONTENT_URI,
 				DatabaseContract.StockData.PROJECTION_ALL, selection, null,
@@ -493,7 +493,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			mStockDatabaseManager.closeCursor(cursor);
+			mDatabaseManager.closeCursor(cursor);
 		}
 
 		if (mMainHandler != null) {
@@ -706,16 +706,16 @@ public class StockDataChartListActivity extends BaseActivity implements
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			mStockDatabaseManager.closeCursor(cursor);
+			mDatabaseManager.closeCursor(cursor);
 		}
 	}
 
 	void loadStockFinancialList() {
 		String sortOrder = DatabaseContract.COLUMN_DATE + " ASC ";
 
-		mStockDatabaseManager.getStockFinancialList(mStock, mStockFinancialList,
+		mDatabaseManager.getStockFinancialList(mStock, mStockFinancialList,
 				sortOrder);
-		mStockDatabaseManager.getShareBonusList(mStock, mShareBonusList,
+		mDatabaseManager.getShareBonusList(mStock, mShareBonusList,
 				sortOrder);
 	}
 
@@ -725,7 +725,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 				+ mStock.getCode() + "'";
 		String sortOrder = DatabaseContract.COLUMN_BUY + " DESC ";
 
-		mStockDatabaseManager.getStockDealList(mStockDealList, selection, sortOrder);
+		mDatabaseManager.getStockDealList(mStockDealList, selection, sortOrder);
 	}
 
 	void loadStockQuantList() {
@@ -736,7 +736,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 				+ mStock.getCode() + "'";
 		String sortOrder = DatabaseContract.COLUMN_CREATED + DatabaseContract.ORDER_DIRECTION_ASC;
 
-		mStockDatabaseManager.getStockQuantList(mStock, mStockQuantList, selection, sortOrder);
+		mDatabaseManager.getStockQuantList(mStock, mStockQuantList, selection, sortOrder);
 
 		for (int i = 0; i < mStockQuantList.size(); i++) {
 			StockQuant stockQuant = mStockQuantList.get(i);
@@ -761,7 +761,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 	void updateStockDataChartItemList() {
 		mStockDataChartItemList.clear();
 
-		mStockDatabaseManager.getStockById(mStock);
+		mDatabaseManager.getStockById(mStock);
 		for (int i = 0; i < DatabaseContract.PERIODS.length; i++) {
 			if (Preferences.getBoolean(DatabaseContract.PERIODS[i], false)) {
 				mStockDataChartItemList.add(mStockDataChartItemMainList.get(i));

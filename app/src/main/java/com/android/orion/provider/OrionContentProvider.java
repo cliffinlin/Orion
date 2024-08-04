@@ -96,7 +96,7 @@ public class OrionContentProvider extends ContentProvider {
 	@Override
 	public boolean onCreate() {
 		mContentResolver = getContext().getContentResolver();
-
+		//before Application onCreate
 		mDatabaseManager = DatabaseManager.getInstance(getContext());
 		mDatabaseManager.openDatabase();
 

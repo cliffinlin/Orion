@@ -23,7 +23,7 @@ import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.interfaces.StockEditListener;
 import com.android.orion.interfaces.StockListChangedListener;
-import com.android.orion.manager.StockDatabaseManager;
+import com.android.orion.manager.DatabaseManager;
 import com.android.orion.manager.StockManager;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
@@ -67,7 +67,7 @@ public class StockDataProvider implements StockListChangedListener, StockEditLis
 
 	protected Context mContext;
 	protected StockAnalyzer mStockAnalyzer;
-	protected StockDatabaseManager mStockDatabaseManager;
+	protected DatabaseManager mDatabaseManager;
 	protected OkHttpClient mOkHttpClient = new OkHttpClient();
 
 	PowerManager mPowerManager;
@@ -89,7 +89,7 @@ public class StockDataProvider implements StockListChangedListener, StockEditLis
 		mLocalBroadcastManager = LocalBroadcastManager.getInstance(mContext);
 
 		mStockAnalyzer = StockAnalyzer.getInstance();
-		mStockDatabaseManager = StockDatabaseManager.getInstance();
+		mDatabaseManager = DatabaseManager.getInstance();
 
 		mHandlerThread = new HandlerThread(StockDataProvider.class.getSimpleName(),
 				Process.THREAD_PRIORITY_BACKGROUND);
@@ -193,7 +193,7 @@ public class StockDataProvider implements StockListChangedListener, StockEditLis
 			return;
 		}
 
-		mStockDatabaseManager.loadStockArrayMap(mStockArrayMap);
+		mDatabaseManager.loadStockArrayMap(mStockArrayMap);
 
 		int index = -1;
 		for (Stock current : mStockArrayMap.values()) {
@@ -219,7 +219,7 @@ public class StockDataProvider implements StockListChangedListener, StockEditLis
 			return;
 		}
 
-		mStockDatabaseManager.loadStockArrayMap(mStockArrayMap);
+		mDatabaseManager.loadStockArrayMap(mStockArrayMap);
 
 		for (Stock current : mStockArrayMap.values()) {
 			if (TextUtils.equals(current.getCode(), stock.getCode())) {
@@ -257,10 +257,10 @@ public class StockDataProvider implements StockListChangedListener, StockEditLis
 			return;
 		}
 
-		mStockDatabaseManager.loadStockArrayMap(mStockArrayMap);
+		mDatabaseManager.loadStockArrayMap(mStockArrayMap);
 
 		String selection = DatabaseContract.COLUMN_INDEX_CODE + " = " + index.getCode();
-		mStockDatabaseManager.getIndexComponentList(mIndexComponentList, selection, null);
+		mDatabaseManager.getIndexComponentList(mIndexComponentList, selection, null);
 
 		stockList.clear();
 		for (IndexComponent indexComponent : mIndexComponentList) {
@@ -295,7 +295,7 @@ public class StockDataProvider implements StockListChangedListener, StockEditLis
 
 				for (Stock stock : stockList) {
 					stockDataList = stock.getStockDataList(period);
-					mStockDatabaseManager.loadStockDataList(stock, period, stockDataList);
+					mDatabaseManager.loadStockDataList(stock, period, stockDataList);
 					if ((stockDataList == null) || (stockDataList.size() == 0)) {
 						continue;
 					}
@@ -364,9 +364,9 @@ public class StockDataProvider implements StockListChangedListener, StockEditLis
 					}
 				}
 
-				mStockDatabaseManager.updateStockData(index, period, indexStockDataList);
+				mDatabaseManager.updateStockData(index, period, indexStockDataList);
 				index.setModified(Utility.getCurrentDateTimeString());
-				mStockDatabaseManager.updateStock(index, index.getContentValues());
+				mDatabaseManager.updateStock(index, index.getContentValues());
 
 				if (TextUtils.equals(period, DatabaseContract.COLUMN_DAY) && (indexStockDataList.size() > 1)) {
 					double prevPrice = indexStockDataList.get(indexStockDataList.size() - 2).getClose();
@@ -381,7 +381,7 @@ public class StockDataProvider implements StockListChangedListener, StockEditLis
 			}
 
 			index.setModified(Utility.getCurrentDateTimeString());
-			mStockDatabaseManager.updateStock(index,
+			mDatabaseManager.updateStock(index,
 					index.getContentValues());
 		} catch (Exception e) {
 			e.printStackTrace();
