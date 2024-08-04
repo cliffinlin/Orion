@@ -14,7 +14,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
-        android:name=".application.OrionApplication"
+        android:name=".application.MainApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_orion"
         android:label="@string/app_name"
@@ -24,7 +24,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name="com.android.orion.activity.OrionMainActivity"
+            android:name="com.android.orion.activity.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask">
             <intent-filter>
@@ -118,7 +118,7 @@
             android:launchMode="singleTask" />
 
         <provider
-            android:name="com.android.orion.provider.OrionContentProvider"
+            android:name="com.android.orion.provider.StockContentProvider"
             android:authorities="com.android.orion"
             android:exported="false" />
         <provider
@@ -129,7 +129,7 @@
         <receiver android:name="com.android.orion.receiver.DownloadBroadcastReceiver" />
 
         <service
-            android:name="com.android.orion.service.OrionService"
+            android:name="com.android.orion.service.StockService"
             android:exported="false" />
     </application>
 

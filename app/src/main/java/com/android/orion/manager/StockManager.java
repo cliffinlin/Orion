@@ -2,7 +2,7 @@ package com.android.orion.manager;
 
 import android.content.Context;
 
-import com.android.orion.application.OrionApplication;
+import com.android.orion.application.MainApplication;
 import com.android.orion.database.Stock;
 import com.android.orion.interfaces.StockEditListener;
 import com.android.orion.interfaces.StockListChangedListener;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class StockManager {
 
-    private static Context mContext = OrionApplication.getContext();
+    private static Context mContext = MainApplication.getContext();
     private static StockManager mInstance;
 
     ArrayList<StockEditListener> mStockEditListener = new ArrayList<>();

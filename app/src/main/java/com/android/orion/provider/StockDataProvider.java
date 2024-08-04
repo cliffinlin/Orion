@@ -15,7 +15,7 @@ import android.util.ArrayMap;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.android.orion.analyzer.StockAnalyzer;
-import com.android.orion.application.OrionApplication;
+import com.android.orion.application.MainApplication;
 import com.android.orion.config.Config;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.IndexComponent;
@@ -80,7 +80,7 @@ public class StockDataProvider implements StockListChangedListener, StockEditLis
 	Logger Log = Logger.getLogger();
 
 	public StockDataProvider() {
-		mContext = OrionApplication.getContext();
+		mContext = MainApplication.getContext();
 
 		mPowerManager = (PowerManager) mContext
 				.getSystemService(Context.POWER_SERVICE);

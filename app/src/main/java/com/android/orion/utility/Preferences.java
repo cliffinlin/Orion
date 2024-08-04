@@ -5,10 +5,10 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 
-import com.android.orion.application.OrionApplication;
+import com.android.orion.application.MainApplication;
 
 public class Preferences {
-	public static final Context mContext = OrionApplication.getContext();
+	public static final Context mContext = MainApplication.getContext();
 
 	public static void putBoolean(Context context, String key, boolean value) {
 		getEditor().putBoolean(key, value).commit();

@@ -10,7 +10,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.android.orion.R;
-import com.android.orion.application.OrionApplication;
+import com.android.orion.application.MainApplication;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Market;
@@ -19,7 +19,7 @@ import com.android.orion.utility.Preferences;
 import java.util.Calendar;
 import java.util.List;
 
-public class OrionMainActivity extends PreferenceActivity {
+public class MainActivity extends PreferenceActivity {
 
 	private long mExitTime;
 
@@ -94,7 +94,7 @@ public class OrionMainActivity extends PreferenceActivity {
 		finish();
 
 		if (!Market.isTradingHours(Calendar.getInstance())) {
-			OrionApplication.getInstance().onTerminate();
+			MainApplication.getInstance().onTerminate();
 		}
 	}
 

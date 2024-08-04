@@ -5,7 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
-import com.android.orion.application.OrionApplication;
+import com.android.orion.application.MainApplication;
 import com.android.orion.config.Config;
 import com.android.orion.receiver.DownloadBroadcastReceiver;
 import com.android.orion.utility.Logger;
@@ -31,7 +31,7 @@ public class StockAlarmManager {
 	}
 
 	StockAlarmManager() {
-		mContext = OrionApplication.getContext();
+		mContext = MainApplication.getContext();
 
 		if (mAlarmManager == null) {
 			mAlarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);

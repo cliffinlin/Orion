@@ -124,7 +124,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 	public void onDestroy() {
 		super.onDestroy();
 
-		mOrionService.download();
+		mStockService.download();
 	}
 
 	String getSelection() {

@@ -11,7 +11,7 @@ import android.text.TextUtils;
 
 import com.android.orion.R;
 import com.android.orion.activity.StockFavoriteListActivity;
-import com.android.orion.application.OrionApplication;
+import com.android.orion.application.MainApplication;
 import com.android.orion.config.Config;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.ShareBonus;
@@ -46,7 +46,7 @@ public class StockAnalyzer {
 	Logger Log = Logger.getLogger();
 
 	private StockAnalyzer() {
-		mContext = OrionApplication.getContext();
+		mContext = MainApplication.getContext();
 
 		mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
 		mDatabaseManager = DatabaseManager.getInstance();

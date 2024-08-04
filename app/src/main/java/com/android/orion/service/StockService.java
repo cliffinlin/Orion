@@ -23,8 +23,8 @@ import com.android.orion.database.Stock;
 import com.android.orion.provider.SinaFinance;
 import com.android.orion.receiver.DownloadBroadcastReceiver;
 
-public class OrionService extends Service {
-	private static OrionService mInstance;
+public class StockService extends Service {
+	private static StockService mInstance;
 
 	boolean mRedelivery = true;
 	IntentFilter mIntentFilter;
@@ -35,7 +35,7 @@ public class OrionService extends Service {
 	volatile ServiceHandler mHandler;
 	SinaFinance mSinaFinance;
 
-	public static OrionService getInstance() {
+	public static StockService getInstance() {
 		return mInstance;
 	}
 
@@ -45,11 +45,11 @@ public class OrionService extends Service {
 
 		mInstance = this;
 
-		mServiceBinder = new OrionServiceBinder();
+		mServiceBinder = new StockServiceBinder();
 
 		mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-		mHandlerThread = new HandlerThread(OrionService.class.getSimpleName(),
+		mHandlerThread = new HandlerThread(StockService.class.getSimpleName(),
 				Process.THREAD_PRIORITY_BACKGROUND);
 		mHandlerThread.start();
 		mHandler = new ServiceHandler(mHandlerThread.getLooper());
@@ -135,10 +135,10 @@ public class OrionService extends Service {
 		}
 	}
 
-	public class OrionServiceBinder extends Binder {
+	public class StockServiceBinder extends Binder {
 
-		public OrionService getService() {
-			return OrionService.this;
+		public StockService getService() {
+			return StockService.this;
 		}
 	}
 }

@@ -8,13 +8,13 @@ import android.os.Build;
 import android.os.Bundle;
 
 import com.android.orion.manager.StockAlarmManager;
-import com.android.orion.service.OrionService;
+import com.android.orion.service.StockService;
 import com.android.orion.utility.Logger;
 
-public class OrionApplication extends Application {
+public class MainApplication extends Application {
 
 	public static Context mContext;
-	private static OrionApplication mInstance;
+	private static MainApplication mInstance;
 	Logger Log;
 	int mActivityStartedCounter = 0;
 	long mBackgroundTimeMillis = 0;
@@ -23,7 +23,7 @@ public class OrionApplication extends Application {
 		return mContext;
 	}
 
-	public static OrionApplication getInstance() {
+	public static MainApplication getInstance() {
 		return mInstance;
 	}
 
@@ -97,7 +97,7 @@ public class OrionApplication extends Application {
 
 	public void startService() {
 		Log.d("startService");
-		Intent serviceIntent = new Intent(mContext, OrionService.class);
+		Intent serviceIntent = new Intent(mContext, StockService.class);
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 			startForegroundService(serviceIntent);
@@ -108,7 +108,7 @@ public class OrionApplication extends Application {
 
 	public void stopService() {
 		Log.d("stopService");
-		Intent serviceIntent = new Intent(mContext, OrionService.class);
+		Intent serviceIntent = new Intent(mContext, StockService.class);
 		stopService(serviceIntent);
 	}
 }

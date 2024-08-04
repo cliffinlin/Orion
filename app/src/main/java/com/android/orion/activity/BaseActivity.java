@@ -36,8 +36,8 @@ import com.android.orion.database.StockQuant;
 import com.android.orion.database.TotalShare;
 import com.android.orion.manager.DatabaseManager;
 import com.android.orion.manager.StockManager;
-import com.android.orion.service.OrionService;
-import com.android.orion.service.OrionService.OrionServiceBinder;
+import com.android.orion.service.StockService;
+import com.android.orion.service.StockService.StockServiceBinder;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Logger;
@@ -72,7 +72,7 @@ public class BaseActivity extends Activity {
 	ArrayMap<String, Stock> mStockDealArrayMap = null;
 	StockManager mStockManager = StockManager.getInstance();
 	DatabaseManager mDatabaseManager;
-	OrionService mOrionService = null;
+	StockService mStockService = null;
 	ServiceConnection mServiceConnection = new ServiceConnection() {
 
 		@Override
@@ -81,16 +81,16 @@ public class BaseActivity extends Activity {
 				return;
 			}
 
-			OrionServiceBinder mOrionServiceBinder = (OrionServiceBinder) binder;
+			StockServiceBinder mStockServiceBinder = (StockServiceBinder) binder;
 
-			mOrionService = mOrionServiceBinder.getService();
+			mStockService = mStockServiceBinder.getService();
 
 			BaseActivity.this.onServiceConnected();
 		}
 
 		@Override
 		public void onServiceDisconnected(ComponentName name) {
-			mOrionService = null;
+			mStockService = null;
 		}
 	};
 
@@ -117,7 +117,7 @@ public class BaseActivity extends Activity {
 
 		mContext = this;
 
-		bindService(new Intent(this, OrionService.class), mServiceConnection,
+		bindService(new Intent(this, StockService.class), mServiceConnection,
 				Context.BIND_AUTO_CREATE);
 
 		mPowerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
@@ -240,8 +240,8 @@ public class BaseActivity extends Activity {
 
 	void onServiceConnected() {
 		if (Utility.isNetworkConnected(this)) {
-			if (mOrionService != null) {
-				mOrionService.download();
+			if (mStockService != null) {
+				mStockService.download();
 			}
 		} else {
 			Toast.makeText(this,
@@ -268,8 +268,8 @@ public class BaseActivity extends Activity {
 		mDatabaseManager.deleteShareBonus(stock.getId());
 		mDatabaseManager.deleteStockQuant(stock);
 
-		if (mOrionService != null) {
-			mOrionService.download(stock);
+		if (mStockService != null) {
+			mStockService.download(stock);
 		}
 	}
 

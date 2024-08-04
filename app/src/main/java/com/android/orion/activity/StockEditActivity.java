@@ -328,7 +328,7 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 				setResult(RESULT_OK, getIntent());
 
 				Setting.setStockDataChanged(mStock.getSE(), mStock.getCode(), true);
-				mOrionService.download(mStock);
+				mStockService.download(mStock);
 
 				finish();
 				break;

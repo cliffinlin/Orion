@@ -168,8 +168,8 @@ public class StockFavoriteListActivity extends ListActivity implements
 		if (resultCode == RESULT_OK) {
 			switch (requestCode) {
 				case REQUEST_CODE_STOCK_INSERT:
-					if (mOrionService != null) {
-						mOrionService.download(mStock);
+					if (mStockService != null) {
+						mStockService.download(mStock);
 					}
 					break;
 

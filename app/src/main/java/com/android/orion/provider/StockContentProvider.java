@@ -19,7 +19,7 @@ import com.android.orion.manager.DatabaseManager;
 
 import java.util.ArrayList;
 
-public class OrionContentProvider extends ContentProvider {
+public class StockContentProvider extends ContentProvider {
 	private static final int STOCK = 100;
 	private static final int STOCK_ID = 101;
 

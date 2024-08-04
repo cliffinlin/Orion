@@ -338,7 +338,7 @@ public class StockFavoriteDealListActivity extends ListActivity implements
 
 	void onPostExecuteLoad(Long result) {
 		super.onPostExecuteLoad(result);
-		mOrionService.download();
+		mStockService.download();
 	}
 
 	@Override
