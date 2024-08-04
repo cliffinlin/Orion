@@ -173,9 +173,7 @@ public class IndexComponentListActivity extends ListActivity implements
 			switch (requestCode) {
 				case REQUEST_CODE_INDEX_COMPONENT_INSERT:
 				case REQUEST_CODE_INDEX_COMPONENT_SELECT:
-					if (mStockService != null) {
-						mStockService.download();
-					}
+					mStockDataProvider.download();
 					break;
 
 				default:

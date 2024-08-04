@@ -295,7 +295,7 @@ public class StockQuantListActivity extends ListActivity implements
 
 	void onPostExecuteLoad(Long result) {
 		super.onPostExecuteLoad(result);
-		mStockService.download();
+		mStockDataProvider.download();
 	}
 
 	@Override

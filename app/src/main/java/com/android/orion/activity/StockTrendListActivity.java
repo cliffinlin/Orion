@@ -89,10 +89,8 @@ public class StockTrendListActivity extends ListActivity implements
 			switch (msg.what) {
 				case MESSAGE_REFRESH:
 					//TODO
-					if (mStockService != null) {
-						mStockService.download();
-						restartLoader();
-					}
+					mStockDataProvider.download();
+					restartLoader();
 					break;
 
 				case MESSAGE_VIEW_STOCK_DEAL:
@@ -210,9 +208,7 @@ public class StockTrendListActivity extends ListActivity implements
 			switch (requestCode) {
 				case REQUEST_CODE_STOCK_TREND_INSERT:
 				case REQUEST_CODE_STOCK_TREND_SELECT:
-					if (mStockService != null) {
-						mStockService.download(mStock);
-					}
+					mStockDataProvider.download(mStock);
 					break;
 
 				default:

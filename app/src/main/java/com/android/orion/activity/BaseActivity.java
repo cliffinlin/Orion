@@ -36,6 +36,8 @@ import com.android.orion.database.StockQuant;
 import com.android.orion.database.TotalShare;
 import com.android.orion.manager.DatabaseManager;
 import com.android.orion.manager.StockManager;
+import com.android.orion.provider.IStockDataProvider;
+import com.android.orion.provider.StockDataProvider;
 import com.android.orion.service.StockService;
 import com.android.orion.service.StockService.StockServiceBinder;
 import com.android.orion.setting.Constant;
@@ -72,6 +74,7 @@ public class BaseActivity extends Activity {
 	ArrayMap<String, Stock> mStockDealArrayMap = null;
 	StockManager mStockManager = StockManager.getInstance();
 	DatabaseManager mDatabaseManager;
+	IStockDataProvider mStockDataProvider;
 	StockService mStockService = null;
 	ServiceConnection mServiceConnection = new ServiceConnection() {
 
@@ -175,6 +178,7 @@ public class BaseActivity extends Activity {
 		}
 
 		mDatabaseManager = DatabaseManager.getInstance();
+		mStockDataProvider = StockDataProvider.getInstance();
 
 		if (mProgressDialog == null) {
 			mProgressDialog = new ProgressDialog(mContext,
@@ -240,9 +244,7 @@ public class BaseActivity extends Activity {
 
 	void onServiceConnected() {
 		if (Utility.isNetworkConnected(this)) {
-			if (mStockService != null) {
-				mStockService.download();
-			}
+			mStockDataProvider.download();
 		} else {
 			Toast.makeText(this,
 					getResources().getString(R.string.network_unavailable),
@@ -268,9 +270,7 @@ public class BaseActivity extends Activity {
 		mDatabaseManager.deleteShareBonus(stock.getId());
 		mDatabaseManager.deleteStockQuant(stock);
 
-		if (mStockService != null) {
-			mStockService.download(stock);
-		}
+		mStockDataProvider.download(stock);
 	}
 
 	private void checkPermission() {

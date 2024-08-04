@@ -20,7 +20,7 @@ import androidx.core.app.NotificationCompat;
 
 import com.android.orion.config.Config;
 import com.android.orion.database.Stock;
-import com.android.orion.provider.SinaFinance;
+import com.android.orion.provider.StockDataProvider;
 import com.android.orion.receiver.DownloadBroadcastReceiver;
 
 public class StockService extends Service {
@@ -33,7 +33,6 @@ public class StockService extends Service {
 	HandlerThread mHandlerThread;
 	IBinder mServiceBinder;
 	volatile ServiceHandler mHandler;
-	SinaFinance mSinaFinance;
 
 	public static StockService getInstance() {
 		return mInstance;
@@ -76,8 +75,6 @@ public class StockService extends Service {
 		mIntentFilter.addAction(Intent.ACTION_DATE_CHANGED);
 		mIntentFilter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
 		registerReceiver(mDownloadBroadcastReceiver, mIntentFilter);
-
-		mSinaFinance = SinaFinance.getInstance();
 	}
 
 	@Override
@@ -95,7 +92,7 @@ public class StockService extends Service {
 				mNotificationManager.cancel(Config.SERVICE_NOTIFICATION_ID);
 			}
 			mHandlerThread.quit();
-			mSinaFinance.onDestroy();
+			StockDataProvider.getInstance().onDestroy();
 			unregisterReceiver(mDownloadBroadcastReceiver);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -107,22 +104,6 @@ public class StockService extends Service {
 	@Override
 	public IBinder onBind(Intent intent) {
 		return mServiceBinder;
-	}
-
-	public void download() {
-		if (mSinaFinance == null) {
-			return;
-		}
-
-		mSinaFinance.download();
-	}
-
-	public void download(Stock stock) {
-		if (mSinaFinance == null) {
-			return;
-		}
-
-		mSinaFinance.download(stock);
 	}
 
 	private final class ServiceHandler extends Handler {

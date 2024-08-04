@@ -181,9 +181,7 @@ public class StockFinancialListActivity extends ListActivity implements
 		if (resultCode == RESULT_OK) {
 			switch (requestCode) {
 				case REQUEST_CODE_STOCK_INSERT:
-					if (mStockService != null) {
-						mStockService.download(mStock);
-					}
+					mStockDataProvider.download(mStock);
 					break;
 
 				default:

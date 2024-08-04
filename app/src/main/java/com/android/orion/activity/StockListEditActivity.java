@@ -123,8 +123,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-
-		mStockService.download();
+		mStockDataProvider.download();
 	}
 
 	String getSelection() {

@@ -123,7 +123,7 @@
             android:exported="false" />
         <provider
             android:name="com.android.orion.provider.StockSearchRecentSuggestionsProvider"
-            android:authorities="com.android.orion.OrionSearchRecentSuggestionsProvider"
+            android:authorities="com.android.orion.StockSearchRecentSuggestionsProvider"
             android:exported="false" />
 
         <receiver android:name="com.android.orion.receiver.DownloadBroadcastReceiver" />

@@ -65,6 +65,8 @@ public class StockDataProvider implements StockListChangedListener, StockEditLis
 	static ArrayList<IndexComponent> mIndexComponentList = new ArrayList<>();
 	static Map<String, StockData> mIndexStockDataMap = new HashMap<>();
 
+	protected static IStockDataProvider mInstance;
+
 	protected Context mContext;
 	protected StockAnalyzer mStockAnalyzer;
 	protected DatabaseManager mDatabaseManager;
@@ -78,6 +80,17 @@ public class StockDataProvider implements StockListChangedListener, StockEditLis
 	ServiceHandler mHandler;
 
 	Logger Log = Logger.getLogger();
+
+	public static synchronized IStockDataProvider getInstance() {
+		if (TextUtils.equals(Config.stockDataProvider, SinaFinance.PROVIDER_NAME)) {
+			mInstance = SinaFinance.getInstance();
+		} else {
+			if (mInstance == null) {
+				mInstance = new StockDataProvider();
+			}
+		}
+		return mInstance;
+	}
 
 	public StockDataProvider() {
 		mContext = MainApplication.getContext();
@@ -182,12 +195,14 @@ public class StockDataProvider implements StockListChangedListener, StockEditLis
 		mLocalBroadcastManager.sendBroadcast(intent);
 	}
 
+	@Override
 	public void onDestroy() {
 		mHandlerThread.quit();
 
 		releaseWakeLock();
 	}
 
+	@Override
 	public void download() {
 		if (!Utility.isNetworkConnected(mContext)) {
 			return;
@@ -210,6 +225,7 @@ public class StockDataProvider implements StockListChangedListener, StockEditLis
 		}
 	}
 
+	@Override
 	public void download(Stock stock) {
 		if (!Utility.isNetworkConnected(mContext)) {
 			return;

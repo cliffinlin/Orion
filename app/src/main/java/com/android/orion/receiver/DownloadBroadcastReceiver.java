@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import com.android.orion.provider.StockDataProvider;
 import com.android.orion.service.StockService;
 import com.android.orion.utility.Logger;
 import com.android.orion.utility.Market;
@@ -19,7 +20,7 @@ public class DownloadBroadcastReceiver extends BroadcastReceiver {
 		Log.d("intent:" + intent);
 
 		if (Market.isTradingHours(Calendar.getInstance())) {
-			StockService.getInstance().download();
+			StockDataProvider.getInstance().download();
 		}
 	}
 }

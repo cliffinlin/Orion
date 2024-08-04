@@ -265,7 +265,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 							mDatabaseManager.deleteStockData(mStock.getId(), period);
 						}
 					}
-					mStockService.download(mStock);
+					mStockDataProvider.download(mStock);
 					break;
 
 				default:

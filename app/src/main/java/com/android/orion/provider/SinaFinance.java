@@ -42,6 +42,8 @@ import okhttp3.Response;
 
 public class SinaFinance extends StockDataProvider {
 
+	public static final String PROVIDER_NAME = "SinaFinance";
+
 	public static final String SINA_FINANCE_URL_HQ_NODE_DATA = "http://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/Market_Center.getHQNodeData?";
 	public static final String SINA_FINANCE_URL_HQ_KLINE_DATA = "http://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData?";
 	public static final String SINA_FINANCE_URL_HQ_JS_LIST = "http://hq.sinajs.cn/list=";
@@ -63,12 +65,9 @@ public class SinaFinance extends StockDataProvider {
 	public static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN30 = 192;
 	public static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN60 = 192;
 
-	private static SinaFinance mInstance;
-
 	ArrayList<ContentValues> ContentValuesList = new ArrayList<>();
 	ArrayList<String> mAccessDeniedStringArray = new ArrayList<>();
 	ArrayMap<String, String> mRequestHeader = new ArrayMap<>();
-	Logger Log = Logger.getLogger();
 
 	private SinaFinance() {
 		super();
@@ -83,7 +82,7 @@ public class SinaFinance extends StockDataProvider {
 		mRequestHeader.put(SINA_FINANCE_HEAD_REFERER_KEY, SINA_FINANCE_HEAD_REFERER_VALUE);
 	}
 
-	public static synchronized SinaFinance getInstance() {
+	public static synchronized IStockDataProvider getInstance() {
 		if (mInstance == null) {
 			mInstance = new SinaFinance();
 		}

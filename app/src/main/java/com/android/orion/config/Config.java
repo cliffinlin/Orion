@@ -1,5 +1,6 @@
 package com.android.orion.config;
 
+import com.android.orion.provider.SinaFinance;
 import com.android.orion.setting.Constant;
 
 public class Config {
@@ -13,8 +14,9 @@ public class Config {
 	public static final String MESSAGE_CHANNEL_NAME = "Message Channel";
 
 	public static final int DOUBLE_FIXED_DECIMAL = 2;
-
 	public static final int SERVICE_NOTIFICATION_ID = 600000;
+
+	public static String stockDataProvider = SinaFinance.PROVIDER_NAME;
 
 	public static long alarmInterval = 5 * Constant.MINUTE_INTERVAL;
 	public static long backgroundTerminate = 1 * Constant.MINUTE_INTERVAL;

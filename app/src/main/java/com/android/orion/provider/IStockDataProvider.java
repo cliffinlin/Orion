@@ -4,6 +4,10 @@ import com.android.orion.database.Stock;
 
 public interface IStockDataProvider {
 
+	void download();
+
+	void download(Stock stock);
+
 	int downloadStockHSA();
 
 	int downloadStockInformation(Stock stock);
@@ -19,4 +23,6 @@ public interface IStockDataProvider {
 	int downloadStockRealTime(Stock stock);
 
 	int downloadStockDataRealTime(Stock stock);
+
+	void onDestroy();
 }
