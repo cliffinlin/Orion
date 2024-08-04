@@ -1368,6 +1368,14 @@ public class SinaFinance extends StockDataProvider {
 				return;
 			}
 
+			if (!TextUtils.isEmpty(stockInfo[32])) {
+				if (stockInfo[32].startsWith("00")) {
+					stock.setStatus("");
+				} else {
+					stock.setStatus(Stock.STATUS_SUSPENSION);
+				}
+			}
+
 			for (int i = 1; i < 6; i++) {
 				if (Float.valueOf(stockInfo[i]) <= 0) {
 					Log.d("return, Float.valueOf(stockInfo[" + i + "]) = "
@@ -1387,14 +1395,6 @@ public class SinaFinance extends StockDataProvider {
 			stockData.setDate(stockInfo[30]);
 			if (stockData.isMinutePeriod()) {
 				stockData.setTime(stockInfo[31]);
-			}
-
-			if (!TextUtils.isEmpty(stockInfo[32])) {
-				if (stockInfo[32].startsWith("00")) {
-					stock.setStatus("");
-				} else {
-					stock.setStatus(Stock.STATUS_SUSPENSION);
-				}
 			}
 
 			if (!mDatabaseManager.isStockDataExist(stockData)) {

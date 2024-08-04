@@ -417,6 +417,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 				R.layout.activity_stock_list_left_item, null, mLeftFrom,
 				mLeftTo, 0);
 		if ((mLeftListView != null) && (mLeftAdapter != null)) {
+			mLeftAdapter.setViewBinder(new LeftViewBinder());
 			mLeftListView.setAdapter(mLeftAdapter);
 			mLeftListView.setOnItemClickListener(this);
 			mLeftListView.setOnItemLongClickListener(this);
@@ -586,6 +587,18 @@ public class StockFavoriteListActivity extends ListActivity implements
 		}
 
 		return false;
+	}
+
+	private class LeftViewBinder implements SimpleCursorAdapter.ViewBinder {
+
+		@Override
+		public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+			if ((view == null) || (cursor == null) || (columnIndex == -1)) {
+				return false;
+			}
+
+			return false;
+		}
 	}
 
 	private class RightViewBinder implements SimpleCursorAdapter.ViewBinder {
