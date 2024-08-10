@@ -165,7 +165,7 @@ public class StockFinancialListActivity extends ListActivity implements
 				return true;
 
 			case R.id.action_deal:
-				startActivity(new Intent(this, StockFavoriteDealListActivity.class));
+				startActivity(new Intent(this, StockDealListActivity.class));
 				return true;
 
 			default:
@@ -769,7 +769,7 @@ public class StockFinancialListActivity extends ListActivity implements
 				startActivity(intent);
 			} else {
 				Intent intent = new Intent(this,
-						StockDataChartListActivity.class);
+						StockChartListActivity.class);
 				intent.putExtra(Constant.EXTRA_STOCK_LIST_SORT_ORDER,
 						mSortOrder);
 				intent.putExtra(Constant.EXTRA_STOCK_ID, id);

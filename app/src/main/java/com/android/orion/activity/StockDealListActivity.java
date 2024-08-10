@@ -40,7 +40,7 @@ import com.android.orion.view.SyncHorizontalScrollView;
 
 import java.util.ArrayList;
 
-public class StockFavoriteDealListActivity extends ListActivity implements
+public class StockDealListActivity extends ListActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
 		OnItemLongClickListener, OnClickListener {
 
@@ -143,7 +143,7 @@ public class StockFavoriteDealListActivity extends ListActivity implements
 						stockIDList.add(String.valueOf(stock.getId()));
 					}
 
-					intent = new Intent(mContext, StockDataChartListActivity.class);
+					intent = new Intent(mContext, StockChartListActivity.class);
 					intent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
 					intent.putStringArrayListExtra(Constant.EXTRA_STOCK_ID_LIST,
 							stockIDList);

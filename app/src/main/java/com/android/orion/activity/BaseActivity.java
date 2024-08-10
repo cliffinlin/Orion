@@ -3,10 +3,8 @@ package com.android.orion.activity;
 import android.Manifest;
 import android.app.Activity;
 import android.app.LoaderManager;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -14,10 +12,7 @@ import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.os.PowerManager;
-import android.os.PowerManager.WakeLock;
 import android.text.TextUtils;
-import android.util.ArrayMap;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -26,14 +21,11 @@ import androidx.core.app.ActivityCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.android.orion.R;
-import com.android.orion.config.Config;
 import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
-import com.android.orion.database.StockData;
 import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockFinancial;
 import com.android.orion.database.StockQuant;
-import com.android.orion.database.TotalShare;
 import com.android.orion.manager.DatabaseManager;
 import com.android.orion.manager.StockManager;
 import com.android.orion.provider.IStockDataProvider;
@@ -52,29 +44,27 @@ public class BaseActivity extends Activity {
 	private static final int REQUEST_EXTERNAL_STORAGE = 1;
 	private static final String[] PERMISSIONS_STORAGE = {"android.permission.READ_EXTERNAL_STORAGE",
 			"android.permission.WRITE_EXTERNAL_STORAGE"};
+
 	Logger Log = Logger.getLogger();
+
 	boolean mResumed = false;
 	Context mContext = null;
 	Bundle mBundle = null;
 	String mAction = null;
 	Intent mIntent = null;
-	PowerManager mPowerManager;
-	WakeLock mWakeLock;
-	ProgressDialog mProgressDialog = null;
-	ContentResolver mContentResolver = null;
-	LoaderManager mLoaderManager = null;
-	Stock mStock = null;
-	ArrayList<Stock> mStockList = new ArrayList<Stock>();
-	ArrayList<StockData> mStockDataList = null;
-	ArrayList<StockDeal> mStockDealList = null;
-	ArrayList<StockQuant> mStockQuantList = null;
-	ArrayList<StockFinancial> mStockFinancialList = null;
-	ArrayList<ShareBonus> mShareBonusList = null;
-	ArrayList<TotalShare> mTotalShareList = null;
-	ArrayMap<String, Stock> mStockDealArrayMap = null;
+
+	Stock mStock = new Stock();
+	ArrayList<Stock> mStockList = new ArrayList<>();
+	ArrayList<StockDeal> mStockDealList = new ArrayList<>();
+	ArrayList<StockQuant> mStockQuantList = new ArrayList<>();
+	ArrayList<StockFinancial> mStockFinancialList = new ArrayList<>();
+	ArrayList<ShareBonus> mShareBonusList = new ArrayList<>();
+
+	LoaderManager mLoaderManager = getLoaderManager();
 	StockManager mStockManager = StockManager.getInstance();
-	DatabaseManager mDatabaseManager;
-	IStockDataProvider mStockDataProvider;
+	DatabaseManager mDatabaseManager = DatabaseManager.getInstance();
+	IStockDataProvider mStockDataProvider = StockDataProvider.getInstance();
+
 	StockService mStockService = null;
 	ServiceConnection mServiceConnection = new ServiceConnection() {
 
@@ -123,10 +113,6 @@ public class BaseActivity extends Activity {
 		bindService(new Intent(this, StockService.class), mServiceConnection,
 				Context.BIND_AUTO_CREATE);
 
-		mPowerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
-		mWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-				Config.TAG + ":" + BaseActivity.class.getSimpleName());
-
 		LocalBroadcastManager.getInstance(this).registerReceiver(
 				mBroadcastReceiver,
 				new IntentFilter(Constant.ACTION_RESTART_LOADER));
@@ -135,54 +121,6 @@ public class BaseActivity extends Activity {
 		if (mIntent != null) {
 			mAction = mIntent.getAction();
 			mBundle = mIntent.getExtras();
-		}
-
-		if (mContentResolver == null) {
-			mContentResolver = getContentResolver();
-		}
-
-		if (mLoaderManager == null) {
-			mLoaderManager = getLoaderManager();
-		}
-
-		if (mStock == null) {
-			mStock = new Stock();
-		}
-
-		if (mStockDataList == null) {
-			mStockDataList = new ArrayList<StockData>();
-		}
-
-		if (mStockDealList == null) {
-			mStockDealList = new ArrayList<StockDeal>();
-		}
-
-		if (mStockQuantList == null) {
-			mStockQuantList = new ArrayList<StockQuant>();
-		}
-
-		if (mStockFinancialList == null) {
-			mStockFinancialList = new ArrayList<StockFinancial>();
-		}
-
-		if (mShareBonusList == null) {
-			mShareBonusList = new ArrayList<ShareBonus>();
-		}
-
-		if (mTotalShareList == null) {
-			mTotalShareList = new ArrayList<TotalShare>();
-		}
-
-		if (mStockDealArrayMap == null) {
-			mStockDealArrayMap = new ArrayMap<String, Stock>();
-		}
-
-		mDatabaseManager = DatabaseManager.getInstance();
-		mStockDataProvider = StockDataProvider.getInstance();
-
-		if (mProgressDialog == null) {
-			mProgressDialog = new ProgressDialog(mContext,
-					ProgressDialog.THEME_HOLO_LIGHT);
 		}
 	}
 

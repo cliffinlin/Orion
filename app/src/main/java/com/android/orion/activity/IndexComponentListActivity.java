@@ -156,7 +156,7 @@ public class IndexComponentListActivity extends ListActivity implements
 				return true;
 
 			case R.id.action_deal:
-				startActivity(new Intent(this, StockFavoriteDealListActivity.class));
+				startActivity(new Intent(this, StockDealListActivity.class));
 				return true;
 
 			default:
@@ -566,7 +566,7 @@ public class IndexComponentListActivity extends ListActivity implements
 				mDatabaseManager.getStockById(mStock);
 
 				Intent intent = new Intent(mContext,
-						StockFavoriteDealListActivity.class);
+						StockDealListActivity.class);
 				Bundle bundle = new Bundle();
 				bundle.putString(Constant.EXTRA_STOCK_SE, mStock.getSE());
 				bundle.putString(Constant.EXTRA_STOCK_CODE, mStock.getCode());
@@ -574,7 +574,7 @@ public class IndexComponentListActivity extends ListActivity implements
 				startActivity(intent);
 			} else {
 				Intent intent = new Intent(this,
-						StockDataChartListActivity.class);
+						StockChartListActivity.class);
 				intent.putExtra(Constant.EXTRA_STOCK_LIST_SORT_ORDER,
 						mSortOrder);
 				intent.putExtra(Constant.EXTRA_STOCK_ID, id);

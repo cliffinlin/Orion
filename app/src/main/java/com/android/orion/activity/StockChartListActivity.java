@@ -52,7 +52,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StockDataChartListActivity extends BaseActivity implements
+public class StockChartListActivity extends BaseActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnChartGestureListener {
 
 	public static final int ITEM_VIEW_TYPE_MAIN = 0;
@@ -214,7 +214,7 @@ public class StockDataChartListActivity extends BaseActivity implements
 				Bundle bundle = new Bundle();
 				bundle.putString(Constant.EXTRA_STOCK_SE, mStock.getSE());
 				bundle.putString(Constant.EXTRA_STOCK_CODE, mStock.getCode());
-				Intent intent = new Intent(this, StockFavoriteDealListActivity.class);
+				Intent intent = new Intent(this, StockDealListActivity.class);
 				intent.putExtras(bundle);
 				startActivity(intent);
 				return true;
@@ -842,17 +842,17 @@ public class StockDataChartListActivity extends BaseActivity implements
 	}
 
 	static class MainHandler extends Handler {
-		private final WeakReference<StockDataChartListActivity> mActivity;
+		private final WeakReference<StockChartListActivity> mActivity;
 
-		MainHandler(StockDataChartListActivity activity) {
-			mActivity = new WeakReference<StockDataChartListActivity>(activity);
+		MainHandler(StockChartListActivity activity) {
+			mActivity = new WeakReference<StockChartListActivity>(activity);
 		}
 
 		@Override
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
 
-			StockDataChartListActivity activity = mActivity.get();
+			StockChartListActivity activity = mActivity.get();
 			activity.updateTitle();
 			activity.updateMenuAction();
 		}

@@ -139,7 +139,7 @@ public class StockQuantDealListActivity extends ListActivity implements
 						stockIDList.add(String.valueOf(stock.getId()));
 					}
 
-					intent = new Intent(mContext, StockDataChartListActivity.class);
+					intent = new Intent(mContext, StockChartListActivity.class);
 					intent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
 					intent.putStringArrayListExtra(Constant.EXTRA_STOCK_ID_LIST,
 							stockIDList);

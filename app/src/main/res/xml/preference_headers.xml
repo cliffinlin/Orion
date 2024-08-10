@@ -5,7 +5,7 @@
         android:icon="@drawable/ic_list"
         android:title="@string/favorite">
         <intent
-            android:targetClass="com.android.orion.activity.StockFavoriteListActivity"
+            android:targetClass="com.android.orion.activity.StockListActivity"
             android:targetPackage="com.android.orion" />
     </header>
     <header
@@ -19,7 +19,7 @@
         android:icon="@drawable/ic_list"
         android:title="@string/deal">
         <intent
-            android:targetClass="com.android.orion.activity.StockFavoriteDealListActivity"
+            android:targetClass="com.android.orion.activity.StockDealListActivity"
             android:targetPackage="com.android.orion" />
     </header>
     <header

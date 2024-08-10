@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.android.orion"
     android:versionCode="518"
-    android:versionName="V1.1.36_R20240804">
+    android:versionName="V1.1.36_R20240810">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -61,7 +61,7 @@
             android:label="@string/stock_edit"
             android:launchMode="singleTask" />
         <activity
-            android:name="com.android.orion.activity.StockFavoriteListActivity"
+            android:name="com.android.orion.activity.StockListActivity"
             android:label="@string/activity_title_stock_favorite_list"
             android:launchMode="singleTask" />
         <activity
@@ -69,7 +69,7 @@
             android:label="@string/list"
             android:launchMode="singleTask" />
         <activity
-            android:name="com.android.orion.activity.StockFavoriteDealListActivity"
+            android:name="com.android.orion.activity.StockDealListActivity"
             android:label="@string/activity_title_stock_deal_list"
             android:launchMode="singleTask" />
         <activity
@@ -81,7 +81,7 @@
             android:label="@string/component_list"
             android:launchMode="singleTask" />
         <activity
-            android:name="com.android.orion.activity.StockDataChartListActivity"
+            android:name="com.android.orion.activity.StockChartListActivity"
             android:label="@string/stock_data_chart"
             android:launchMode="singleTask" />
         <activity

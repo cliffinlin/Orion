@@ -30,7 +30,7 @@ import com.android.orion.setting.Setting;
 import com.android.orion.utility.Preferences;
 import com.android.orion.view.SyncHorizontalScrollView;
 
-public class StockFavoriteListActivity extends ListActivity implements
+public class StockListActivity extends ListActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
 		OnItemLongClickListener, OnClickListener {
 
@@ -148,7 +148,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 				return true;
 
 			case R.id.action_deal:
-				startActivity(new Intent(this, StockFavoriteDealListActivity.class));
+				startActivity(new Intent(this, StockDealListActivity.class));
 				return true;
 
 			case R.id.action_edit:
@@ -547,7 +547,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 					startActivity(intent);
 				} else {
 					Intent intent = new Intent(mContext,
-							StockFavoriteDealListActivity.class);
+							StockDealListActivity.class);
 					Bundle bundle = new Bundle();
 					bundle.putString(Constant.EXTRA_STOCK_SE, mStock.getSE());
 					bundle.putString(Constant.EXTRA_STOCK_CODE, mStock.getCode());
@@ -556,7 +556,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 				}
 			} else {
 				Intent intent = new Intent(this,
-						StockDataChartListActivity.class);
+						StockChartListActivity.class);
 				intent.putExtra(Constant.EXTRA_STOCK_LIST_SORT_ORDER,
 						mSortOrder);
 				intent.putExtra(Constant.EXTRA_STOCK_ID, id);

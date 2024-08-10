@@ -171,7 +171,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 				Bundle bundle = new Bundle();
 				bundle.putString(Constant.EXTRA_STOCK_SE, mStock.getSE());
 				bundle.putString(Constant.EXTRA_STOCK_CODE, mStock.getCode());
-				Intent intent = new Intent(this, StockFavoriteDealListActivity.class);
+				Intent intent = new Intent(this, StockDealListActivity.class);
 				intent.putExtras(bundle);
 				startActivity(intent);
 				return true;
