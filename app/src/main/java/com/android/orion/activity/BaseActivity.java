@@ -65,28 +65,6 @@ public class BaseActivity extends Activity {
 	DatabaseManager mDatabaseManager = DatabaseManager.getInstance();
 	IStockDataProvider mStockDataProvider = StockDataProvider.getInstance();
 
-	StockService mStockService = null;
-	ServiceConnection mServiceConnection = new ServiceConnection() {
-
-		@Override
-		public void onServiceConnected(ComponentName name, IBinder binder) {
-			if (binder == null) {
-				return;
-			}
-
-			StockServiceBinder mStockServiceBinder = (StockServiceBinder) binder;
-
-			mStockService = mStockServiceBinder.getService();
-
-			BaseActivity.this.onServiceConnected();
-		}
-
-		@Override
-		public void onServiceDisconnected(ComponentName name) {
-			mStockService = null;
-		}
-	};
-
 	BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -107,12 +85,7 @@ public class BaseActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		mContext = this;
-
-		bindService(new Intent(this, StockService.class), mServiceConnection,
-				Context.BIND_AUTO_CREATE);
-
 		LocalBroadcastManager.getInstance(this).registerReceiver(
 				mBroadcastReceiver,
 				new IntentFilter(Constant.ACTION_RESTART_LOADER));
@@ -133,7 +106,6 @@ public class BaseActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-
 		checkPermission();
 		mResumed = true;
 	}
@@ -141,11 +113,8 @@ public class BaseActivity extends Activity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-
 		LocalBroadcastManager.getInstance(this).unregisterReceiver(
 				mBroadcastReceiver);
-
-		unbindService(mServiceConnection);
 	}
 
 	@Override
@@ -177,16 +146,6 @@ public class BaseActivity extends Activity {
 		if (mIntent != null) {
 			mAction = mIntent.getAction();
 			mBundle = mIntent.getExtras();
-		}
-	}
-
-	void onServiceConnected() {
-		if (Utility.isNetworkConnected(this)) {
-			mStockDataProvider.download();
-		} else {
-			Toast.makeText(this,
-					getResources().getString(R.string.network_unavailable),
-					Toast.LENGTH_SHORT).show();
 		}
 	}
 

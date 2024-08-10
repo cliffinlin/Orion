@@ -127,7 +127,9 @@
             android:exported="false" />
 
         <receiver android:name="com.android.orion.receiver.DownloadBroadcastReceiver" />
-
+        <receiver
+            android:name=".receiver.ReceiverConnection"
+            android:exported="false" />
         <service
             android:name="com.android.orion.service.StockService"
             android:exported="false" />

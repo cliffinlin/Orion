@@ -15,15 +15,20 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
+import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 
+import com.android.orion.R;
 import com.android.orion.config.Config;
 import com.android.orion.database.Stock;
+import com.android.orion.manager.ConnectionManager;
 import com.android.orion.provider.StockDataProvider;
 import com.android.orion.receiver.DownloadBroadcastReceiver;
+import com.android.orion.receiver.ReceiverConnection;
+import com.android.orion.utility.Utility;
 
-public class StockService extends Service {
+public class StockService extends Service implements ConnectionManager.OnConnectionChangeListener {
 	private static StockService mInstance;
 
 	boolean mRedelivery = true;
@@ -69,12 +74,13 @@ public class StockService extends Service {
 		}
 
 		mDownloadBroadcastReceiver = new DownloadBroadcastReceiver();
-
 		mIntentFilter = new IntentFilter();
 		mIntentFilter.addAction(Intent.ACTION_TIME_TICK);
 		mIntentFilter.addAction(Intent.ACTION_DATE_CHANGED);
 		mIntentFilter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
 		registerReceiver(mDownloadBroadcastReceiver, mIntentFilter);
+		ReceiverConnection.getInstance().registerReceiver(this);
+		ConnectionManager.getInstance().registerListener(this);
 	}
 
 	@Override
@@ -92,18 +98,34 @@ public class StockService extends Service {
 				mNotificationManager.cancel(Config.SERVICE_NOTIFICATION_ID);
 			}
 			mHandlerThread.quit();
-			StockDataProvider.getInstance().onDestroy();
+
 			unregisterReceiver(mDownloadBroadcastReceiver);
+			ReceiverConnection.getInstance().unregisterReceiver(this);
+			ConnectionManager.getInstance().unregisterListener(this);
+
+			StockDataProvider.getInstance().onDestroy();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			System.exit(0);
+//			System.exit(0);
 		}
 	}
 
 	@Override
 	public IBinder onBind(Intent intent) {
 		return mServiceBinder;
+	}
+
+	@Override
+	public void onConnected() {
+		StockDataProvider.getInstance().download();
+	}
+
+	@Override
+	public void onDisconnected() {
+		Toast.makeText(this,
+				getResources().getString(R.string.network_unavailable),
+				Toast.LENGTH_SHORT).show();
 	}
 
 	private final class ServiceHandler extends Handler {

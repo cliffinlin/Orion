@@ -16,6 +16,8 @@ public class Config {
 	public static final int DOUBLE_FIXED_DECIMAL = 2;
 	public static final int SERVICE_NOTIFICATION_ID = 600000;
 
+	public static boolean funcCheckNetwork = true;
+
 	public static String stockDataProvider = SinaFinance.PROVIDER_NAME;
 
 	public static long alarmInterval = 5 * Constant.MINUTE_INTERVAL;
