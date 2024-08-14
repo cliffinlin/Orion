@@ -60,16 +60,16 @@ public class StockDataProvider implements StockListChangedListener, StockEditLis
 	public static final int RESULT_NONE = 0;
 	public static final int RESULT_FAILED = -1;
 
-	static ArrayMap<String, Stock> mStockArrayMap = new ArrayMap<String, Stock>();
-	static ArrayMap<String, Stock> mRemovedArrayMap = new ArrayMap<String, Stock>();
+	static ArrayMap<String, Stock> mStockArrayMap = new ArrayMap<>();
+	static ArrayMap<String, Stock> mRemovedArrayMap = new ArrayMap<>();
 	static ArrayList<IndexComponent> mIndexComponentList = new ArrayList<>();
 	static Map<String, StockData> mIndexStockDataMap = new HashMap<>();
 
 	protected static IStockDataProvider mInstance;
 
 	protected Context mContext;
-	protected StockAnalyzer mStockAnalyzer;
-	protected DatabaseManager mDatabaseManager;
+	protected StockAnalyzer mStockAnalyzer = StockAnalyzer.getInstance();
+	protected DatabaseManager mDatabaseManager = DatabaseManager.getInstance();
 	protected OkHttpClient mOkHttpClient = new OkHttpClient();
 
 	PowerManager mPowerManager;
@@ -100,9 +100,6 @@ public class StockDataProvider implements StockListChangedListener, StockEditLis
 		mWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
 				Config.TAG + ":" + StockDataProvider.class.getSimpleName());
 		mLocalBroadcastManager = LocalBroadcastManager.getInstance(mContext);
-
-		mStockAnalyzer = StockAnalyzer.getInstance();
-		mDatabaseManager = DatabaseManager.getInstance();
 
 		mHandlerThread = new HandlerThread(StockDataProvider.class.getSimpleName(),
 				Process.THREAD_PRIORITY_BACKGROUND);

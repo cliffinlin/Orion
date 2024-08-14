@@ -20,7 +20,6 @@ import com.android.orion.database.StockFinancial;
 import com.android.orion.database.TotalShare;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
-import com.android.orion.utility.Logger;
 import com.android.orion.utility.Market;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.StopWatch;
@@ -69,6 +68,13 @@ public class SinaFinance extends StockDataProvider {
 	ArrayList<String> mAccessDeniedStringArray = new ArrayList<>();
 	ArrayMap<String, String> mRequestHeader = new ArrayMap<>();
 
+	public static synchronized IStockDataProvider getInstance() {
+		if (mInstance == null) {
+			mInstance = new SinaFinance();
+		}
+		return mInstance;
+	}
+
 	private SinaFinance() {
 		super();
 
@@ -80,13 +86,6 @@ public class SinaFinance extends StockDataProvider {
 				R.string.access_denied_default));
 
 		mRequestHeader.put(SINA_FINANCE_HEAD_REFERER_KEY, SINA_FINANCE_HEAD_REFERER_VALUE);
-	}
-
-	public static synchronized IStockDataProvider getInstance() {
-		if (mInstance == null) {
-			mInstance = new SinaFinance();
-		}
-		return mInstance;
 	}
 
 	public int getAvailableHistoryLength(String period) {
@@ -145,22 +144,17 @@ public class SinaFinance extends StockDataProvider {
 		return urlString;
 	}
 
-	public String getStockDataHistoryURLString(Stock stock, StockData stockData,
-											   int len) {
-		String symbol = "";
-		String scale = "";
-		String ma = "";
-		String datalen = "";
+	public String getStockDataHistoryURLString(Stock stock, StockData stockData, int len) {
 		String urlString = "";
 
 		if ((stock == null) || (stockData == null)) {
 			return urlString;
 		}
 
-		symbol = "&symbol=" + stock.getSE() + stock.getCode();
-		scale = "&scale=" + getPeriodMinutes(stockData.getPeriod());
-		ma = "&ma=" + "no";
-		datalen = "&datalen=" + len;
+		String symbol = "&symbol=" + stock.getSE() + stock.getCode();
+		String scale = "&scale=" + getPeriodMinutes(stockData.getPeriod());
+		String ma = "&ma=" + "no";
+		String datalen = "&datalen=" + len;
 
 		urlString = SINA_FINANCE_URL_HQ_KLINE_DATA + symbol + scale + ma
 				+ datalen;
@@ -212,9 +206,7 @@ public class SinaFinance extends StockDataProvider {
 
 	public int getDownloadHistoryLengthDefault(String period) {
 		int result = 0;
-		int availableHistoryLength = 0;
-
-		availableHistoryLength = getAvailableHistoryLength(period);
+		int availableHistoryLength = getAvailableHistoryLength(period);
 
 		if (availableHistoryLength > 0) {
 			result = availableHistoryLength;
@@ -227,13 +219,6 @@ public class SinaFinance extends StockDataProvider {
 
 	private int getDownloadStockDataLength(StockData stockData) {
 		int result = 0;
-		int defaultValue = 0;
-		int scheduleMinutes = 0;
-		long stockId = 0;
-		String period = "";
-		String modified = "";
-		String selection = null;
-		String sortOrder = null;
 		Cursor cursor = null;
 
 		try {
@@ -241,14 +226,14 @@ public class SinaFinance extends StockDataProvider {
 				return result;
 			}
 
-			stockId = stockData.getStockId();
-			period = stockData.getPeriod();
+			long stockId = stockData.getStockId();
+			String period = stockData.getPeriod();
 
-			defaultValue = getDownloadHistoryLengthDefault(period);
+			int defaultValue = getDownloadHistoryLengthDefault(period);
 
-			selection = mDatabaseManager.getStockDataSelection(stockId,
+			String selection = mDatabaseManager.getStockDataSelection(stockId,
 					period, StockData.LEVEL_NONE);
-			sortOrder = mDatabaseManager.getStockDataOrder();
+			String sortOrder = mDatabaseManager.getStockDataOrder();
 			cursor = mDatabaseManager.queryStockData(selection, null,
 					sortOrder);
 
@@ -259,7 +244,7 @@ public class SinaFinance extends StockDataProvider {
 			cursor.moveToLast();
 			stockData.set(cursor);
 
-			modified = stockData.getModified();
+			String modified = stockData.getModified();
 			if (Market.isOutOfDateToday(modified)) {
 				mDatabaseManager.deleteStockData(stockId, period);
 				return defaultValue;
@@ -278,7 +263,7 @@ public class SinaFinance extends StockDataProvider {
 					.getMarketCloseCalendar(Calendar.getInstance());
 
 			if (Market.isTradingHours(Calendar.getInstance())) {
-				scheduleMinutes = Market.getScheduleMinutes();
+				int scheduleMinutes = Market.getScheduleMinutes();
 				if (scheduleMinutes != 0) {
 					result = 1;
 
