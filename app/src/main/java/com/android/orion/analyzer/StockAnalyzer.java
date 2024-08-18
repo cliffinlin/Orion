@@ -38,7 +38,8 @@ public class StockAnalyzer {
 	static ArrayList<TotalShare> mTotalShareList = new ArrayList<TotalShare>();
 	static ArrayList<ShareBonus> mShareBonusList = new ArrayList<ShareBonus>();
 	static ArrayList<StockData> mStockDataList = new ArrayList<StockData>();
-	static ArrayList<StockDeal> mStockDealList = new ArrayList<StockDeal>();
+	static StringBuffer mContentTitle = new StringBuffer();
+	static StringBuffer mContentText = new StringBuffer();
 	private static StockAnalyzer mInstance;
 	Context mContext;
 	NotificationManager mNotificationManager;
@@ -712,21 +713,6 @@ public class StockAnalyzer {
 		return result;
 	}
 
-	private int getLastNet(ArrayList<StockData> stockDataList) {
-		int result = 0;
-		StockData stockData;
-
-		if (stockDataList == null || stockDataList.size() == 0) {
-			return result;
-		}
-
-		stockData = stockDataList.get(stockDataList.size() - 1);
-
-		result = (int) stockData.getNet();
-
-		return result;
-	}
-
 	private void analyzeAction(Stock stock, String period,
 							   ArrayList<StockData> stockDataList,
 							   ArrayList<StockData> drawVertexList,
@@ -829,80 +815,18 @@ public class StockAnalyzer {
 		}
 	}
 
-	double getToBuyProfit(Stock stock) {
-		double result = 0;
-
-		if (stock == null) {
-			return result;
-		}
-
-		String sortOrder = DatabaseContract.COLUMN_NET + DatabaseContract.ORDER_DIRECTION_ASC;
-		String selection = DatabaseContract.COLUMN_SE + " = " + "'" + stock.getSE()
-				+ "'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "'"
-				+ stock.getCode() + "'";
-
-		selection += " AND " + DatabaseContract.COLUMN_ACTION + " != ''";
-		selection += " AND " + DatabaseContract.COLUMN_VOLUME + " < " + 0;
-		selection += " AND " + DatabaseContract.COLUMN_BUY + " = " + 0;
-		selection += " AND " + DatabaseContract.COLUMN_SELL + " > " + 0;
-		selection += " AND " + DatabaseContract.COLUMN_PROFIT + " > " + DatabaseContract.COLUMN_BONUS;
-		selection += " AND " + DatabaseContract.COLUMN_NET + " > " + 0;
-
-		mDatabaseManager.getStockDealList(mStockDealList, selection, sortOrder);
-		for (StockDeal stockDeal : mStockDealList) {
-			result += stockDeal.getProfit();
-		}
-
-		return result;
-	}
-
-	double getToSellProfit(Stock stock) {
-		double result = 0;
-
-		if (stock == null) {
-			return result;
-		}
-
-		String sortOrder = DatabaseContract.COLUMN_NET + DatabaseContract.ORDER_DIRECTION_ASC;
-		String selection = DatabaseContract.COLUMN_SE + " = " + "'" + stock.getSE()
-				+ "'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "'"
-				+ stock.getCode() + "'";
-
-		selection += " AND " + DatabaseContract.COLUMN_ACTION + " != ''";
-		selection += " AND " + DatabaseContract.COLUMN_VOLUME + " > " + 0;
-		selection += " AND " + DatabaseContract.COLUMN_BUY + " > " + 0;
-		selection += " AND " + DatabaseContract.COLUMN_SELL + " = " + 0;
-		selection += " AND " + DatabaseContract.COLUMN_PROFIT + " > " + DatabaseContract.COLUMN_BONUS;
-		selection += " AND " + DatabaseContract.COLUMN_NET + " > " + 0;
-
-		mDatabaseManager.getStockDealList(mStockDealList, selection, sortOrder);
-		for (StockDeal stockDeal : mStockDealList) {
-			result += stockDeal.getProfit();
-		}
-
-		return result;
-	}
-
 	protected void updateNotification(Stock stock) {
 		boolean notifyToBuy1;
 		boolean notifyToSell1;
 		boolean notifyToBuy2;
 		boolean notifyToSell2;
-		StringBuilder actionString = new StringBuilder();
-		StringBuilder contentTitle = new StringBuilder();
 
-		if (stock == null) {
+		if (stock == null || stock.getPrice() == 0 || TextUtils.isEmpty(stock.getOperate())) {
 			return;
 		}
 
-		if (TextUtils.isEmpty(stock.getOperate())) {
-			return;
-		}
-
-		if (stock.getPrice() == 0) {
-			return;
-		}
-
+		mContentTitle.setLength(0);
+		mContentText.setLength(0);
 		for (String period : DatabaseContract.PERIODS) {
 			if (Preferences.getBoolean(period, false)) {
 				String action = stock.getAction(period);
@@ -926,22 +850,19 @@ public class StockAnalyzer {
 				}
 
 				if (notifyToBuy1 || notifyToSell1 || notifyToBuy2 || notifyToSell2) {
-					actionString.append(period + " " + action + " ");
+					mContentTitle.append(period + " " + action + " ");
 				}
 			}
 		}
 
-		if (TextUtils.isEmpty(actionString)) {
+		if (TextUtils.isEmpty(mContentTitle)) {
 			return;
 		}
 
-		contentTitle.append(stock.getName() + " " + stock.getPrice() + " "
-				+ stock.getNet() + " " + actionString);
-
-		RecordFile.writeNotificationFile(contentTitle.toString());
-
+		mContentTitle.insert(0, stock.getName() + " " + stock.getPrice() + " " + stock.getNet() + " ");
+		RecordFile.writeNotificationFile(mContentTitle.toString());
 		notify(Integer.valueOf(stock.getCode()), Config.MESSAGE_CHANNEL_ID, Config.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
-				contentTitle.toString(), "");
+				mContentTitle.toString(), mContentText.toString());
 	}
 
 	public void notify(int id, String channelID, String channelName, int importance, String contentTitle, String contentText) {

@@ -922,7 +922,7 @@ public class StockChartListActivity extends BaseActivity implements
 				rightYAxis.setEnabled(false);
 			}
 
-			viewHolder.chart.setDescription(mStockDataChart.mDescription);
+			viewHolder.chart.setDescription(mStockDataChart.mDescription.toString());
 
 			if (mItemViewType == ITEM_VIEW_TYPE_MAIN) {
 				viewHolder.chart.setData(mStockDataChart.mCombinedDataMain);

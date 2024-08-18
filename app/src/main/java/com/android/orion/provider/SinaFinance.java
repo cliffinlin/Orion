@@ -67,6 +67,7 @@ public class SinaFinance extends StockDataProvider {
 	ArrayList<ContentValues> ContentValuesList = new ArrayList<>();
 	ArrayList<String> mAccessDeniedStringArray = new ArrayList<>();
 	ArrayMap<String, String> mRequestHeader = new ArrayMap<>();
+	static StringBuffer mContentTitle = new StringBuffer();
 
 	public static synchronized IStockDataProvider getInstance() {
 		if (mInstance == null) {
@@ -518,7 +519,9 @@ public class SinaFinance extends StockDataProvider {
 			return result;
 		}
 
-		if (System.currentTimeMillis() - Setting.getDownloadStockInformationTimemillis(stock.getSE(), stock.getCode()) < Config.downloadStockInformationInterval) {
+		long interval = System.currentTimeMillis() - Setting.getDownloadStockInformationTimemillis(stock.getSE(), stock.getCode());
+		if (interval < Config.downloadStockInformationInterval) {
+			Log.d(stock.getName() + " return, interval<" + Config.downloadStockInformationInterval);
 			return result;
 		}
 
@@ -822,6 +825,7 @@ public class SinaFinance extends StockDataProvider {
 
 		int len = getDownloadStockDataLength(stockData);
 		if (len <= 0) {
+			Log.d("return len=" + len);
 			return result;
 		}
 
@@ -1417,7 +1421,9 @@ public class SinaFinance extends StockDataProvider {
 
 		mDatabaseManager.getStockFinancial(stock, stockFinancial);
 
-		if (System.currentTimeMillis() - Setting.getDownloadStockFinancialTimemillis(stock.getSE(), stock.getCode()) < Config.downloadStockFinancialInterval) {
+		long interval = System.currentTimeMillis() - Setting.getDownloadStockFinancialTimemillis(stock.getSE(), stock.getCode());
+		if (interval < Config.downloadStockFinancialInterval) {
+			Log.d(stock.getName() + " return, interval<" + Config.downloadStockInformationInterval);
 			return result;
 		}
 
@@ -2001,24 +2007,24 @@ public class SinaFinance extends StockDataProvider {
 	}
 
 	private boolean isAccessDenied(String string) {
-		StringBuilder contentTitle = new StringBuilder();
 		boolean result = false;
 
 		if (TextUtils.isEmpty(string)) {
 			return result;
 		}
 
+		mContentTitle.setLength(0);
 		String accessDeniedString;
 		for (int i = 0; i < mAccessDeniedStringArray.size(); i++) {
 			accessDeniedString = mAccessDeniedStringArray.get(i);
 
 			if (string.contains(accessDeniedString)) {
-				contentTitle.append(mContext.getResources().getString(R.string.action_download));
-				contentTitle.append(" ");
-				contentTitle.append(accessDeniedString);
+				mContentTitle.append(mContext.getResources().getString(R.string.action_download));
+				mContentTitle.append(" ");
+				mContentTitle.append(accessDeniedString);
 
 				mStockAnalyzer.notify(Config.SERVICE_NOTIFICATION_ID, Config.MESSAGE_CHANNEL_ID, Config.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
-						contentTitle.toString(), "");
+						mContentTitle.toString(), "");
 				onDestroy();
 
 				result = true;

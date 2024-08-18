@@ -7,18 +7,16 @@ import com.android.orion.database.StockDeal;
 import com.android.orion.setting.Constant;
 
 public class RecordFile {
+	static StringBuffer stringBuffer = new StringBuffer();
 
 	public static void writeDealFile(Stock stock, StockDeal deal, String action) {
-		String fileName;
-		StringBuilder logString = new StringBuilder();
-
 		if (stock == null || deal == null) {
 			return;
 		}
 
-		logString.append(Utility.getCurrentDateTimeString() + " ");
-
-		logString.append(stock.getName() + " "
+		stringBuffer.setLength(0);
+		stringBuffer.append(Utility.getCurrentDateTimeString() + " ");
+		stringBuffer.append(stock.getName() + " "
 				+ deal.getPrice() + " "
 				+ deal.getNet() + " "
 				+ deal.getBuy() + " "
@@ -32,26 +30,24 @@ public class RecordFile {
 				+ action + " "
 				+ deal.getCreated() + " "
 				+ deal.getModified() + " ");
-		logString.append("\r\n");
+		stringBuffer.append("\r\n");
 
 		try {
-			fileName = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Android/" + Constant.DEAL + Constant.FILE_EXT_TEXT;
-			Utility.writeFile(fileName, logString.toString(), true);
+			String fileName = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Android/" + Constant.DEAL + Constant.FILE_EXT_TEXT;
+			Utility.writeFile(fileName, stringBuffer.toString(), true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	public static void writeNotificationFile(String content) {
-		String fileName;
-		StringBuilder logString = new StringBuilder();
-
-		logString.append(content);
-		logString.append(" " + Utility.getCurrentDateTimeString() + "\r\n");
+		stringBuffer.setLength(0);
+		stringBuffer.append(content);
+		stringBuffer.append(" " + Utility.getCurrentDateTimeString() + "\r\n");
 
 		try {
-			fileName = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Android/" + Constant.NOTIFICATION + Constant.FILE_EXT_TEXT;
-			Utility.writeFile(fileName, logString.toString(), true);
+			String fileName = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Android/" + Constant.NOTIFICATION + Constant.FILE_EXT_TEXT;
+			Utility.writeFile(fileName, stringBuffer.toString(), true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

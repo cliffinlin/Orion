@@ -37,7 +37,7 @@ public class XAxisRenderer extends AxisRenderer {
         mAxisLabelPaint.setTypeface(mXAxis.getTypeface());
         mAxisLabelPaint.setTextSize(mXAxis.getTextSize());
 
-        StringBuilder widthText = new StringBuilder();
+        StringBuffer widthText = new StringBuffer();
 
         int max = Math.round(xValAverageLength
                 + mXAxis.getSpaceBetweenLabels());

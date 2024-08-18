@@ -8,7 +8,6 @@ import com.android.orion.utility.Utility;
 import java.util.Calendar;
 
 public class StockQuant extends StockDeal {
-
 	long mHold;
 	double mValuation;
 	double mQuantProfit;
@@ -241,20 +240,20 @@ public class StockQuant extends StockDeal {
 	}
 
 	public String toString() {
-		StringBuilder stringBuilder = new StringBuilder();
+		StringBuffer stringBuffer = new StringBuffer();
 
-		stringBuilder.append(mName + " ");
-		stringBuilder.append(mAction + " ");
-		stringBuilder.append("mBuy=" + mBuy + ", ");
-		stringBuilder.append("mSell=" + mSell + ",  ");
-		stringBuilder.append("mNet=" + mNet + ",  ");
-		stringBuilder.append("mProfit=" + mProfit + ",  ");
-		stringBuilder.append("mHold=" + mHold + ",  ");
-		stringBuilder.append("mValuation=" + mValuation + ",  ");
-		stringBuilder.append("mQuantProfit=" + mQuantProfit + ",  ");
-		stringBuilder.append("mQuantProfitMargin=" + mQuantProfitMargin + ",  ");
-		stringBuilder.append("mThreshold=" + mThreshold);
+		stringBuffer.append(mName + " ");
+		stringBuffer.append(mAction + " ");
+		stringBuffer.append("mBuy=" + mBuy + ", ");
+		stringBuffer.append("mSell=" + mSell + ",  ");
+		stringBuffer.append("mNet=" + mNet + ",  ");
+		stringBuffer.append("mProfit=" + mProfit + ",  ");
+		stringBuffer.append("mHold=" + mHold + ",  ");
+		stringBuffer.append("mValuation=" + mValuation + ",  ");
+		stringBuffer.append("mQuantProfit=" + mQuantProfit + ",  ");
+		stringBuffer.append("mQuantProfitMargin=" + mQuantProfitMargin + ",  ");
+		stringBuffer.append("mThreshold=" + mThreshold);
 
-		return stringBuilder.toString();
+		return stringBuffer.toString();
 	}
 }

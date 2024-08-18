@@ -1297,13 +1297,13 @@ public class StockData extends DatabaseTable {
 	}
 
 	public String toString() {
-		StringBuilder stockDataString = new StringBuilder();
+		StringBuffer stringBuffer = new StringBuffer();
 
 		//TDX
 		String dateString = getDate().replace("-", "/");
 		String timeString = getTime().substring(0, 5).replace(":", "");
 
-		stockDataString.append(dateString + Constant.TAB
+		stringBuffer.append(dateString + Constant.TAB
 				+ timeString + Constant.TAB
 				+ getOpen() + Constant.TAB
 				+ getHigh() + Constant.TAB
@@ -1312,9 +1312,9 @@ public class StockData extends DatabaseTable {
 				+ 0 + Constant.TAB
 				+ 0);
 
-		stockDataString.append("\r\n");
+		stringBuffer.append("\r\n");
 
-		return stockDataString.toString();
+		return stringBuffer.toString();
 	}
 
 	public boolean isMinutePeriod() {

@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StockDataChart {
-	public String mDescription;
+	public StringBuffer mDescription = new StringBuffer();
 	public ArrayList<String> mXValues = new ArrayList<>();
 	public ArrayList<BubbleEntry> mNaturalRallyList = new ArrayList<>();
 	public ArrayList<BubbleEntry> mUpwardTrendList = new ArrayList<>();
@@ -63,7 +63,6 @@ public class StockDataChart {
 			mLineList[i] = new ArrayList<>();
 		}
 		mPeriod = period;
-		mDescription = mPeriod;
 	}
 
 	public void setMainChartData(Context context) {
@@ -315,29 +314,22 @@ public class StockDataChart {
 	}
 
 	public void updateDescription(Stock stock) {
-		mDescription = "";
+		mDescription.setLength(0);
 
 		if (stock == null) {
 			return;
 		}
 
-		mDescription += mPeriod;
-		mDescription += " ";
-
-		mDescription += stock.getName();
-		mDescription += " ";
-
-		mDescription += stock.getPrice() + "  ";
-
+		mDescription.append(stock.getName() + " ");
+		mDescription.append(stock.getPrice() + "  ");
 		if (stock.getNet() > 0) {
-			mDescription += "+";
+			mDescription.append("+");
 		} else if (stock.getNet() < 0) {
-			mDescription += "-";
+			mDescription.append("-");
 		}
-
-		mDescription += stock.getNet() + "%" + "  ";
-
-		mDescription += stock.getAction(mPeriod);
+		mDescription.append(stock.getNet() + "%" + "  ");
+		mDescription.append(mPeriod);
+		mDescription.append(stock.getAction(mPeriod));
 	}
 
 	LimitLine createLimitLine(double limit, int color, String label) {
@@ -476,9 +468,9 @@ public class StockDataChart {
 
 			label = "               "
 					+ "  " + limit
+					+ "  " + stockDeal.getNet() + "%"
 					+ "  " + stockDeal.getVolume()
 					+ "  " + (int) stockDeal.getProfit()
-					+ "  " + stockDeal.getNet() + "%"
 					+ "  " + stockDeal.getAccount();
 
 			limitLineDeal = createLimitLine(limit, color, label);
