@@ -720,10 +720,8 @@ public class StockAnalyzer {
 							   ArrayList<StockData> strokeDataList,
 							   ArrayList<StockData> segmentDataList) {
 		String action = StockData.MARK_NONE;
-		String trendString = "";
 		StockData prev = null;
 		StockData stockData = null;
-//		int segmentNet = 0;
 
 		if (stockDataList == null) {
 			Log.d("return, stockDataList = " + stockDataList);
@@ -734,33 +732,8 @@ public class StockAnalyzer {
 			return;
 		}
 
-//		segmentNet = getLastNet(segmentDataList);
-
 		prev = stockDataList.get(stockDataList.size() - 2);
 		stockData = stockDataList.get(stockDataList.size() - 1);
-
-		if (stockData.directionOf(StockData.DIRECTION_UP_SEGMENT)) {
-			if (prev.vertexOf(StockData.VERTEX_BOTTOM_SEGMENT)) {
-//				action += StockData.MARK_D;
-			} else {
-//				if (segmentNet > 0) {
-//					action += StockData.MARK_ADD;
-//				}
-//				action += segmentNet;
-			}
-			trendString = StockData.NAME_UPWARD_TREND;
-		} else if (stockData
-				.directionOf(StockData.DIRECTION_DOWN_SEGMENT)) {
-			if (prev.vertexOf(StockData.VERTEX_TOP_SEGMENT)) {
-//				action += StockData.MARK_G;
-			} else {
-//				if (segmentNet > 0) {
-//					action += StockData.MARK_ADD;
-//				}
-//				action += segmentNet;
-			}
-			trendString = StockData.NAME_DOWNWARD_TREND;
-		}
 
 		if (stockData.directionOf(StockData.DIRECTION_UP)) {
 			if (prev.vertexOf(StockData.VERTEX_BOTTOM)) {
@@ -779,7 +752,6 @@ public class StockAnalyzer {
 		}
 
 		if (TextUtils.equals(period, stock.getOperate())) {
-//		if (stockData.isMinutePeriod()) {
 			if (stockData.getNaturalRally() > 0) {
 				action += StockData.MARK_NATURAL_RALLY;
 			}
@@ -795,8 +767,6 @@ public class StockAnalyzer {
 			if (stockData.getNaturalReaction() > 0) {
 				action += StockData.MARK_NATURAL_REACTION;
 			}
-//		}
-//			action += StockData.MARK_STAR;
 		}
 
 		if (!TextUtils.isEmpty(stock.getOperate())) {
@@ -809,10 +779,6 @@ public class StockAnalyzer {
 
 		stock.setDateTime(stockData.getDate(), stockData.getTime());
 		stock.setAction(period, action + stockData.getAction());
-
-		if (TextUtils.equals(period, DatabaseContract.COLUMN_DAY)) {
-			stock.setTrend(trendString);
-		}
 	}
 
 	protected void updateNotification(Stock stock) {

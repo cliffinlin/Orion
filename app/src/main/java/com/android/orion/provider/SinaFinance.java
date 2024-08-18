@@ -521,7 +521,7 @@ public class SinaFinance extends StockDataProvider {
 
 		long interval = System.currentTimeMillis() - Setting.getDownloadStockInformationTimemillis(stock.getSE(), stock.getCode());
 		if (interval < Config.downloadStockInformationInterval) {
-			Log.d(stock.getName() + " return, interval<" + Config.downloadStockInformationInterval);
+			Log.d(stock.getName() + " return, interval:" + interval + "<" + Config.downloadStockInformationInterval);
 			return result;
 		}
 
@@ -653,7 +653,9 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		if (!Market.isTradingHours(Calendar.getInstance()) && !Market.isLunchTime(Calendar.getInstance())) {
-			if (System.currentTimeMillis() - Setting.getDownloadStockRealTimeTimemillis(stock.getSE(), stock.getCode()) < Config.downloadStockRealTimeInterval) {
+			long interval = System.currentTimeMillis() - Setting.getDownloadStockRealTimeTimemillis(stock.getSE(), stock.getCode());
+			if (interval < Config.downloadStockRealTimeInterval) {
+				Log.d(stock.getName() + " return, interval:" + interval + "<" + Config.downloadStockRealTimeInterval);
 				return result;
 			}
 		}
@@ -825,7 +827,7 @@ public class SinaFinance extends StockDataProvider {
 
 		int len = getDownloadStockDataLength(stockData);
 		if (len <= 0) {
-			Log.d("return len=" + len);
+			Log.d(stock.getName() + " return, period=" + period + " len=" + len);
 			return result;
 		}
 
@@ -1251,6 +1253,7 @@ public class SinaFinance extends StockDataProvider {
 
 		int len = getDownloadStockDataLength(stockData);
 		if (len <= 0) {
+			Log.d(stock.getName() + " return, period=" + period + " len=" + len);
 			return result;
 		}
 
@@ -1423,7 +1426,7 @@ public class SinaFinance extends StockDataProvider {
 
 		long interval = System.currentTimeMillis() - Setting.getDownloadStockFinancialTimemillis(stock.getSE(), stock.getCode());
 		if (interval < Config.downloadStockFinancialInterval) {
-			Log.d(stock.getName() + " return, interval<" + Config.downloadStockInformationInterval);
+			Log.d(stock.getName() + " return, interval:" + interval + "<" + Config.downloadStockFinancialInterval);
 			return result;
 		}
 
@@ -1644,7 +1647,9 @@ public class SinaFinance extends StockDataProvider {
 
 		mDatabaseManager.getShareBonus(stock.getId(), shareBonus);
 
-		if (System.currentTimeMillis() - Setting.getDownloadShareBonusTimemillis(stock.getSE(), stock.getCode()) < Config.downloadShareBonusInterval) {
+		long interval = System.currentTimeMillis() - Setting.getDownloadShareBonusTimemillis(stock.getSE(), stock.getCode());
+		if (interval < Config.downloadShareBonusInterval) {
+			Log.d(stock.getName() + " return, interval:" + interval + "<" + Config.downloadShareBonusInterval);
 			return result;
 		}
 
@@ -1833,7 +1838,9 @@ public class SinaFinance extends StockDataProvider {
 
 		mDatabaseManager.getTotalShare(stock.getId(), totalShare);
 
-		if (System.currentTimeMillis() - Setting.getDownloadTotalShareTimemillis(stock.getSE(), stock.getCode()) < Config.downloadTotalShareInterval) {
+		long interval = System.currentTimeMillis() - Setting.getDownloadTotalShareTimemillis(stock.getSE(), stock.getCode());
+		if (interval < Config.downloadTotalShareInterval) {
+			Log.d(stock.getName() + " return, interval:" + interval + "<" + Config.downloadTotalShareInterval);
 			return result;
 		}
 
