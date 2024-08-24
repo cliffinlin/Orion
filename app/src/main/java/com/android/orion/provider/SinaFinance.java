@@ -246,24 +246,19 @@ public class SinaFinance extends StockDataProvider {
 			stockData.set(cursor);
 
 			String modified = stockData.getModified();
-			if (Market.isOutOfDateToday(modified)) {
+			if (Market.isOutofDate(modified)) {
 				mDatabaseManager.deleteStockData(stockId, period);
 				return defaultValue;
 			}
 
-			if (!Market.isWeekday(Calendar.getInstance())) {
+			if (!Market.isWeekday()) {
 				return result;
 			}
 
 			Calendar modifiedCalendar = Utility.getCalendar(modified,
 					Utility.CALENDAR_DATE_TIME_FORMAT);
-			Calendar stockMarketLunchBeginCalendar = Market
-					.getMarketLunchBeginCalendar(Calendar
-							.getInstance());
-			Calendar stockMarketCloseCalendar = Market
-					.getMarketCloseCalendar(Calendar.getInstance());
 
-			if (Market.isTradingHours(Calendar.getInstance())) {
+			if (Market.isTradingHours()) {
 				int scheduleMinutes = Market.getScheduleMinutes();
 				if (scheduleMinutes != 0) {
 					result = 1;
@@ -287,17 +282,17 @@ public class SinaFinance extends StockDataProvider {
 							break;
 					}
 				}
-			} else if (Market.isLunchTime(Calendar.getInstance())) {
+			} else if (Market.isLunchTime()) {
 				if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)
 						|| TextUtils.equals(period, DatabaseContract.COLUMN_WEEK)
 						|| TextUtils.equals(period, DatabaseContract.COLUMN_DAY)) {
-					if (Market.isOutOfDateToday(stockData.getDate())) {
+					if (Market.isOutofDate(stockData.getDate())) {
 						result = 1;
 					}
 					return result;
 				}
 
-				if (modifiedCalendar.after(stockMarketLunchBeginCalendar)) {
+				if (modifiedCalendar.after(Market.getFirstHalfEndCalendar())) {
 					return result;
 				}
 
@@ -315,8 +310,8 @@ public class SinaFinance extends StockDataProvider {
 						result = 24;
 						break;
 				}
-			} else if (Market.afterClosed(Calendar.getInstance())) {
-				if (modifiedCalendar.after(stockMarketCloseCalendar)) {
+			} else if (Market.afterClosed()) {
+				if (modifiedCalendar.after(Market.getSecondHalfEndCalendar())) {
 					return result;
 				}
 
@@ -652,7 +647,7 @@ public class SinaFinance extends StockDataProvider {
 			return result;
 		}
 
-		if (!Market.isTradingHours(Calendar.getInstance()) && !Market.isLunchTime(Calendar.getInstance())) {
+		if (!Market.isTradingHours() && !Market.isLunchTime()) {
 			long interval = System.currentTimeMillis() - Setting.getDownloadStockRealTimeTimemillis(stock.getSE(), stock.getCode());
 			if (interval < Config.downloadStockRealTimeInterval) {
 				Log.d(stock.getName() + " return, interval:" + interval + "<" + Config.downloadStockRealTimeInterval);

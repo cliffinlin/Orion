@@ -15,7 +15,6 @@ import com.android.orion.utility.Utility;
 import java.util.Calendar;
 
 public class StockAlarmManager {
-
 	Logger Log = Logger.getLogger();
 	Context mContext;
 	private long mIntervalMillis = Config.alarmInterval;
@@ -42,9 +41,6 @@ public class StockAlarmManager {
 	}
 
 	public void startAlarm() {
-		int dayOfWeek = Calendar.SUNDAY;
-		long triggerMillis = 0;
-
 		stopAlarm();
 
 		if ((mAlarmManager == null) || (mPendingIntent == null)
@@ -56,25 +52,24 @@ public class StockAlarmManager {
 		}
 
 		Calendar calendar = Calendar.getInstance();
+		int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 
-		dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-
-		if (Market.isWeekday(calendar)) {
-			if (Market.beforeOpen(calendar)) {
-				calendar = Market.getMarketOpenCalendar(calendar);
-			} else if (Market.inFirstHalf(calendar)) {
+		if (Market.isWeekday()) {
+			if (Market.beforeOpen()) {
+				calendar = Market.getFirstHalfStartCalendar();
+			} else if (Market.isFirstHalf()) {
 				calendar = Calendar.getInstance();
-			} else if (Market.isLunchTime(calendar)) {
-				calendar = Market.getMarketLunchEndCalendar(calendar);
-			} else if (Market.inSecondHalf(calendar)) {
+			} else if (Market.isLunchTime()) {
+				calendar = Market.getSecondHalfStartCalendar();
+			} else if (Market.isSecondHalf()) {
 				calendar = Calendar.getInstance();
-			} else if (Market.afterClosed(calendar)) {
+			} else if (Market.afterClosed()) {
 				if (dayOfWeek < Calendar.FRIDAY) {
 					calendar.add(Calendar.DAY_OF_WEEK, 1);
 				} else {
 					calendar.add(Calendar.DAY_OF_WEEK, 3);
 				}
-				calendar = Market.getMarketOpenCalendar(calendar);
+				calendar = Market.getFirstHalfStartCalendar();
 			}
 		} else {
 			if (dayOfWeek == Calendar.SATURDAY) {
@@ -82,10 +77,10 @@ public class StockAlarmManager {
 			} else if (dayOfWeek == Calendar.SUNDAY) {
 				calendar.add(Calendar.DAY_OF_WEEK, 1);
 			}
-			calendar = Market.getMarketOpenCalendar(calendar);
+			calendar = Market.getFirstHalfStartCalendar();
 		}
 
-		triggerMillis = calendar.getTimeInMillis();
+		long triggerMillis = calendar.getTimeInMillis();
 
 		Log.d("will arrive at "
 				+ Utility.getCalendarDateTimeString(calendar)
