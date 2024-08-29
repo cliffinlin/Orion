@@ -21,11 +21,9 @@ object Market {
 
     @JvmStatic
     fun getScheduleMinutes(): Int {
-        var result = 0
-        if (!isWeekday()) {
-            return result
-        }
-        result = if (isFirstHalf()) {
+        return if (!isWeekday()) {
+            0
+        } else if (isFirstHalf()) {
             getMinutesOfToday() - START_IN_MINUTES
         } else if (isSecondHalf()) {
             getMinutesOfToday() - (START_IN_MINUTES
@@ -33,7 +31,6 @@ object Market {
         } else {
             0
         }
-        return result
     }
 
     @JvmStatic
@@ -62,73 +59,45 @@ object Market {
 
     @JvmStatic
     fun beforeOpen(): Boolean {
-        var result = false
-        if (!isWeekday()) {
-            return result
-        }
         val calendar: Calendar = Calendar.getInstance()
-        if (calendar.before(getFirstHalfStartCalendar())) {
-            result = true
-        }
-        return result
+        return if (!isWeekday()) {
+            false
+        } else calendar.before(getFirstHalfStartCalendar())
     }
 
     @JvmStatic
     fun isFirstHalf(): Boolean {
-        var result = false
-        if (!isWeekday()) {
-            return result
-        }
         val calendar: Calendar = Calendar.getInstance()
-        if (calendar.after(getFirstHalfStartCalendar())
-            && calendar.before(getFirstHalfEndCalendar())
-        ) {
-            result = true
-        }
-        return result
+        return if (!isWeekday()) {
+            false
+        } else calendar.after(getFirstHalfStartCalendar())
+                && calendar.before(getFirstHalfEndCalendar())
     }
 
     @JvmStatic
     fun isLunchTime(): Boolean {
-        var result = false
-        if (!isWeekday()) {
-            return result
-        }
         val calendar: Calendar = Calendar.getInstance()
-        if (calendar.after(getFirstHalfEndCalendar())
-            && calendar.before(getSecondHalfStartCalendar())
-        ) {
-            result = true
-        }
-        return result
+        return if (!isWeekday()) {
+            false
+        } else calendar.after(getFirstHalfEndCalendar())
+                && calendar.before(getSecondHalfStartCalendar())
     }
 
     @JvmStatic
     fun isSecondHalf(): Boolean {
-        var result = false
-        if (!isWeekday()) {
-            return result
-        }
         val calendar: Calendar = Calendar.getInstance()
-        if (calendar.after(getSecondHalfStartCalendar())
-            && calendar.before(getSecondHalfEndCalendar())
-        ) {
-            result = true
-        }
-        return result
+        return if (!isWeekday()) {
+            false
+        } else calendar.after(getSecondHalfStartCalendar())
+                && calendar.before(getSecondHalfEndCalendar())
     }
 
     @JvmStatic
     fun afterClosed(): Boolean {
-        var result = false
-        if (!isWeekday()) {
-            return result
-        }
         val calendar: Calendar = Calendar.getInstance()
-        if (calendar.after(getSecondHalfEndCalendar())) {
-            result = true
-        }
-        return result
+        return if (!isWeekday()) {
+            return false
+        } else calendar.after(getSecondHalfEndCalendar())
     }
 
     fun getCalendar(timeString: String): Calendar {

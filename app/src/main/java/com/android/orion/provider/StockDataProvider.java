@@ -523,6 +523,7 @@ public class StockDataProvider implements StockListChangedListener, StockEditLis
 					}
 				} else if (TextUtils.equals(stock.getClasses(), Stock.CLASS_INDEX)) {
 					setupIndex(stock);
+					Setting.setStockDataChanged(stock.getSE(), stock.getCode(), true);
 				} else {
 				}
 
