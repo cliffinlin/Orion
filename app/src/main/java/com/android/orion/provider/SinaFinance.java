@@ -403,7 +403,7 @@ public class SinaFinance extends StockDataProvider {
 	}
 
 	public void handleResponseStockHSA(String response) {
-		StopWatch.getInstance().start();
+		StopWatch.start();
 		boolean nameChanged = false;
 		boolean bulkInsert = false;
 		ContentValues[] contentValuesArray = null;
@@ -501,9 +501,9 @@ public class SinaFinance extends StockDataProvider {
 			e.printStackTrace();
 		}
 
-		StopWatch.getInstance().stop();
+		StopWatch.stop();
 		Log.d("size:" + jsonArray.size()
-				+ " " + StopWatch.getInstance().getInterval() + "s");
+				+ " " + StopWatch.getInterval() + "s");
 	}
 
 	@Override
@@ -560,7 +560,7 @@ public class SinaFinance extends StockDataProvider {
 	}
 
 	public void handleResponseStockInformation(Stock stock, String response) {
-		StopWatch.getInstance().start();
+		StopWatch.start();
 		String[] keyValue = null;
 		String[] codeInfo = null;
 		String[] stockInfo = null;
@@ -632,10 +632,10 @@ public class SinaFinance extends StockDataProvider {
 			e.printStackTrace();
 		}
 
-		StopWatch.getInstance().stop();
+		StopWatch.stop();
 		Log.d(stock.getName() + " "
 				+ stock.getClasses() + " " + stock.getPinyin() + " "
-				+ stock.getTotalShare() + " " + StopWatch.getInstance().getInterval()
+				+ stock.getTotalShare() + " " + StopWatch.getInterval()
 				+ "s");
 	}
 
@@ -695,7 +695,7 @@ public class SinaFinance extends StockDataProvider {
 	}
 
 	public void handleResponseStockRealTime(Stock stock, String response) {
-		StopWatch.getInstance().start();
+		StopWatch.start();
 		String[] keyValue = null;
 		String[] codeInfo = null;
 		String[] stockInfo = null;
@@ -781,11 +781,11 @@ public class SinaFinance extends StockDataProvider {
 			e.printStackTrace();
 		}
 
-		StopWatch.getInstance().stop();
+		StopWatch.stop();
 		Log.d(stock.getName() + " "
 				+ stock.getPrice() + " " + stock.getChange() + " "
 				+ stock.getNet() + " " + stock.getVolume() + " "
-				+ stock.getValue() + " " + StopWatch.getInstance().getInterval()
+				+ stock.getValue() + " " + StopWatch.getInterval()
 				+ "s");
 	}
 
@@ -861,7 +861,7 @@ public class SinaFinance extends StockDataProvider {
 
 	public void handleResponseStockDataHistory(Stock stock, StockData stockData,
 											   String response) {
-		StopWatch.getInstance().start();
+		StopWatch.start();
 		boolean bulkInsert = false;
 		int defaultValue = 0;
 		String dateTimeString = "";
@@ -1001,9 +1001,9 @@ public class SinaFinance extends StockDataProvider {
 			e.printStackTrace();
 		}
 
-		StopWatch.getInstance().stop();
+		StopWatch.stop();
 		Log.d(stock.getName() + " "
-				+ stockData.getPeriod() + " " + StopWatch.getInstance().getInterval() + "s");
+				+ stockData.getPeriod() + " " + StopWatch.getInterval() + "s");
 	}
 
 	String getStockDataFileName(Stock stock) {
@@ -1289,7 +1289,7 @@ public class SinaFinance extends StockDataProvider {
 
 	public void handleResponseStockDataRealTime(Stock stock, StockData stockData,
 												String response) {
-		StopWatch.getInstance().start();
+		StopWatch.start();
 		String[] keyValue = null;
 		String[] codeInfo = null;
 		String[] stockInfo = null;
@@ -1398,12 +1398,12 @@ public class SinaFinance extends StockDataProvider {
 			e.printStackTrace();
 		}
 
-		StopWatch.getInstance().stop();
+		StopWatch.stop();
 		Log.d(stock.getName() + " "
 				+ stockData.getDate() + " " + stockData.getTime() + " "
 				+ stockData.getOpen() + " " + stockData.getClose() + " "
 				+ stockData.getHigh() + " " + stockData.getLow() + " "
-				+ StopWatch.getInstance().getInterval() + "s");
+				+ StopWatch.getInterval() + "s");
 	}
 
 	@Override
@@ -1459,7 +1459,7 @@ public class SinaFinance extends StockDataProvider {
 
 	public void handleResponseStockFinancial(Stock stock, StockFinancial stockFinancial,
 											 String response) {
-		StopWatch.getInstance().start();
+		StopWatch.start();
 		boolean bulkInsert = false;
 		String keyString = "";
 		String valueString = "";
@@ -1624,9 +1624,9 @@ public class SinaFinance extends StockDataProvider {
 			e.printStackTrace();
 		}
 
-		StopWatch.getInstance().stop();
+		StopWatch.stop();
 		Log.d(stock.getName() + " "
-				+ StopWatch.getInstance().getInterval() + "s");
+				+ StopWatch.getInterval() + "s");
 	}
 
 	@Override
@@ -1682,7 +1682,7 @@ public class SinaFinance extends StockDataProvider {
 
 	public void handleResponseShareBonus(Stock stock, ShareBonus shareBonus,
 										 String response) {
-		StopWatch.getInstance().start();
+		StopWatch.start();
 		boolean bulkInsert = false;
 		String dateString = "";
 		String dividendString = "";
@@ -1815,9 +1815,9 @@ public class SinaFinance extends StockDataProvider {
 			e.printStackTrace();
 		}
 
-		StopWatch.getInstance().stop();
+		StopWatch.stop();
 		Log.d(stock.getName() + " "
-				+ StopWatch.getInstance().getInterval() + "s");
+				+ StopWatch.getInterval() + "s");
 	}
 
 	@Override
@@ -1873,7 +1873,7 @@ public class SinaFinance extends StockDataProvider {
 
 	public void handleResponseTotalShare(Stock stock, TotalShare totalShare,
 										 String response) {
-		StopWatch.getInstance().start();
+		StopWatch.start();
 		boolean bulkInsert = false;
 		String dateString = "";
 		String totalShareString = "";
@@ -2003,9 +2003,9 @@ public class SinaFinance extends StockDataProvider {
 			e.printStackTrace();
 		}
 
-		StopWatch.getInstance().stop();
+		StopWatch.stop();
 		Log.d(stock.getName() + " "
-				+ StopWatch.getInstance().getInterval() + "s");
+				+ StopWatch.getInterval() + "s");
 	}
 
 	private boolean isAccessDenied(String string) {
