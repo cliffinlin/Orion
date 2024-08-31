@@ -4,7 +4,7 @@ import com.android.orion.database.StockData
 import com.android.orion.setting.Constant
 import com.android.orion.setting.Setting
 
-class Macd {
+object Macd {
 
     private var mPeriod = ""
     private var mAverage5 = 0
@@ -22,38 +22,34 @@ class Macd {
     private var mDIFList: MutableList<Double> = ArrayList()
     private var mHistogramList: MutableList<Double> = ArrayList()
 
-    companion object {
-        private const val AVERAGE5 = 5
-        private const val AVERAGE10 = 10
+    private const val AVERAGE5 = 5
+    private const val AVERAGE10 = 10
 
-        private const val FAST = 10 //12;
-        private const val SLOW = 20 //26;
-        private const val SIGNAL = 8 //9;
+    private const val FAST = 10 //12;
+    private const val SLOW = 20 //26;
+    private const val SIGNAL = 8 //9;
 
-        private var mInstance = Macd()
-
-        @JvmStatic
-        fun getInstance(): Macd {
-            return mInstance
-        }
-    }
-
+    @JvmStatic
     fun getEMAAverage5List(): List<Double> {
         return mEMAAverage5List
     }
 
+    @JvmStatic
     fun getEMAAverage10List(): List<Double> {
         return mEMAAverage10List
     }
 
+    @JvmStatic
     fun getDEAList(): List<Double> {
         return mDEAList
     }
 
+    @JvmStatic
     fun getDIFList(): List<Double> {
         return mDIFList
     }
 
+    @JvmStatic
     fun getHistogramList(): List<Double> {
         return mHistogramList
     }
@@ -152,6 +148,7 @@ class Macd {
         return result
     }
 
+    @JvmStatic
     fun calculate(period: String, stockDataList: ArrayList<StockData>) {
         init(period, stockDataList)
 

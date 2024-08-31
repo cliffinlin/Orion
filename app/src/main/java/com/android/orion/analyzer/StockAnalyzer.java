@@ -466,14 +466,14 @@ public class StockAnalyzer {
 			return;
 		}
 
-		Macd.getInstance().calculate(period, stockDataList);
+		Macd.calculate(period, stockDataList);
 
 		for (int i = 0; i < size; i++) {
-			average5 = Macd.getInstance().getEMAAverage5List().get(i);
-			average10 = Macd.getInstance().getEMAAverage10List().get(i);
-			dif = Macd.getInstance().getDIFList().get(i);
-			dea = Macd.getInstance().getDEAList().get(i);
-			histogram = Macd.getInstance().getHistogramList().get(i);
+			average5 = Macd.getEMAAverage5List().get(i);
+			average10 = Macd.getEMAAverage10List().get(i);
+			dif = Macd.getDIFList().get(i);
+			dea = Macd.getDEAList().get(i);
+			histogram = Macd.getHistogramList().get(i);
 
 			stockDataList.get(i).setAverage5(average5);
 			stockDataList.get(i).setAverage10(average10);
