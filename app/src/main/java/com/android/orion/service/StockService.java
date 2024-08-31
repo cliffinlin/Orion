@@ -97,7 +97,6 @@ public class StockService extends Service implements ConnectionManager.OnConnect
 			if (mNotificationManager != null) {
 				mNotificationManager.cancel(Config.SERVICE_NOTIFICATION_ID);
 			}
-			mHandlerThread.quit();
 
 			unregisterReceiver(mDownloadBroadcastReceiver);
 			ReceiverConnection.getInstance().unregisterReceiver(this);

@@ -194,7 +194,6 @@ public class StockDataProvider implements StockListChangedListener, StockEditLis
 
 	@Override
 	public void onDestroy() {
-		mHandlerThread.quit();
 		releaseWakeLock();
 	}
 
