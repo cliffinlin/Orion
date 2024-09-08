@@ -159,11 +159,8 @@ public class StockChartListActivity extends BaseActivity implements
 		super.onNewIntent(intent);
 
 		mKeyDisplayDeal = getIntent().getBooleanExtra(Constant.EXTRA_STOCK_DEAL, false);
-
 		mKeyDisplayQuant = getIntent().getBooleanExtra(Constant.EXTRA_STOCK_QUANT, false);
-
 		mKeyDisplayBonus = getIntent().getBooleanExtra(Constant.EXTRA_STOCK_BONUS, false);
-
 		restartLoader();
 	}
 
@@ -172,10 +169,8 @@ public class StockChartListActivity extends BaseActivity implements
 		mMenu = menu;
 		getMenuInflater().inflate(R.menu.stock_data_chart, menu);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-
 		MenuItem menuLoopback = menu.findItem(R.id.action_loopback);
 		menuLoopback.setVisible(Preferences.getBoolean(Setting.SETTING_DEBUG_LOOPBACK, false));
-
 		return true;
 	}
 
@@ -289,7 +284,7 @@ public class StockChartListActivity extends BaseActivity implements
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle arg1) {
-		CursorLoader loader = null;
+		CursorLoader loader;
 
 		if (id == LOADER_ID_STOCK_LIST) {
 			loader = getStockCursorLoader();
@@ -302,14 +297,11 @@ public class StockChartListActivity extends BaseActivity implements
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-		int id = 0;
-
 		if (loader == null) {
 			return;
 		}
 
-		id = loader.getId();
-
+		int id = loader.getId();
 		if (id == LOADER_ID_STOCK_LIST) {
 			swapStockCursor(cursor);
 		} else {
@@ -319,14 +311,11 @@ public class StockChartListActivity extends BaseActivity implements
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> loader) {
-		int id = 0;
-
 		if (loader == null) {
 			return;
 		}
 
-		id = loader.getId();
-
+		int id = loader.getId();
 		if (id == LOADER_ID_STOCK_LIST) {
 			swapStockCursor(null);
 		} else {
@@ -406,30 +395,19 @@ public class StockChartListActivity extends BaseActivity implements
 	}
 
 	CursorLoader getStockCursorLoader() {
-		String selection = "";
-		CursorLoader loader = null;
-
-		selection += DatabaseContract.COLUMN_FLAG + " >= "
-				+ Stock.FLAG_FAVORITE;
-
-		loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
+		String selection = "" + (DatabaseContract.COLUMN_FLAG + " >= "
+				+ Stock.FLAG_FAVORITE);
+		CursorLoader loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
 				DatabaseContract.Stock.PROJECTION_ALL, selection, null,
 				mSortOrder);
-
 		return loader;
 	}
 
 	CursorLoader getStockDataCursorLoader(String period) {
-		String selection = "";
-		String sortOrder = "";
-		CursorLoader loader = null;
-
-		selection = mDatabaseManager.getStockDataSelection(mStock.getId(),
+		String selection = mDatabaseManager.getStockDataSelection(mStock.getId(),
 				period, StockData.LEVEL_NONE);
-
-		sortOrder = mDatabaseManager.getStockDataOrder();
-
-		loader = new CursorLoader(this, DatabaseContract.StockData.CONTENT_URI,
+		String sortOrder = mDatabaseManager.getStockDataOrder();
+		CursorLoader loader = new CursorLoader(this, DatabaseContract.StockData.CONTENT_URI,
 				DatabaseContract.StockData.PROJECTION_ALL, selection, null,
 				sortOrder);
 
@@ -437,7 +415,6 @@ public class StockChartListActivity extends BaseActivity implements
 	}
 
 	void updateMenuAction() {
-		int size = 0;
 		if (mMenu == null) {
 			return;
 		}
@@ -445,8 +422,7 @@ public class StockChartListActivity extends BaseActivity implements
 		MenuItem actionPrev = mMenu.findItem(R.id.action_prev);
 		MenuItem actionNext = mMenu.findItem(R.id.action_next);
 
-		size = mStockList.size();
-
+		int size = mStockList.size();
 		if (actionPrev != null) {
 			actionPrev.setEnabled(size > 1);
 		}
@@ -502,28 +478,18 @@ public class StockChartListActivity extends BaseActivity implements
 	}
 
 	public void swapStockDataCursor(StockDataChart stockDataChart, Cursor cursor) {
-		int index = 0;
-		float bookValuePerShare = 0;
-		float netProfitPerShare = 0;
-		float roe = 0;
-		float roi = 0;
-		float dividend = 0;
-		StockFinancial stockFinancial = null;
-		ShareBonus shareBonus = null;
-
-		if (mStockData == null) {
+		if (mStockData == null || stockDataChart == null) {
 			return;
 		}
 
-		stockDataChart.clear();
-
 		try {
+			stockDataChart.clear();
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				String dateString = "";
 				String timeString = "";
 
 				while (cursor.moveToNext()) {
-					index = stockDataChart.mXValues.size();
+					int index = stockDataChart.mXValues.size();
 					mStockData.set(cursor);
 
 					dateString = mStockData.getDate();
@@ -641,10 +607,10 @@ public class StockChartListActivity extends BaseActivity implements
 					}
 
 					if (mShareBonusList.size() > 0) {
-						dividend = 0;
+						float dividend = 0;
 
 						if (mKeyDisplayBonus) {
-							shareBonus = Search.getShareBonusByDate(dateString,
+							ShareBonus shareBonus = Search.getShareBonusByDate(dateString,
 									mShareBonusList);
 							if (shareBonus != null) {
 								dividend = (float) (shareBonus.getDividend());
@@ -771,14 +737,13 @@ public class StockChartListActivity extends BaseActivity implements
 	}
 
 	void navigateStock(int step) {
-		boolean loop = true;
-
 		if ((mStockList == null) || (mStockList.size() == 0)) {
 			return;
 		}
 
 		mStockListIndex += step;
 
+		boolean loop = true;
 		if (mStockListIndex > mStockList.size() - 1) {
 			if (loop) {
 				mStockListIndex = 0;
