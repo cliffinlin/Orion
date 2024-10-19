@@ -647,6 +647,15 @@ public class StockChartListActivity extends BaseActivity implements
 							(float) mStockData.getHistogram(), index);
 					stockDataChart.mHistogramEntryList.add(histogramBarEntry);
 
+					if (TextUtils.equals(mStockData.getPeriod(), Setting.SETTING_PERIOD_MIN60)
+							|| TextUtils.equals(mStockData.getPeriod(), Setting.SETTING_PERIOD_MIN30)
+							|| TextUtils.equals(mStockData.getPeriod(), Setting.SETTING_PERIOD_MIN15)
+							|| TextUtils.equals(mStockData.getPeriod(), Setting.SETTING_PERIOD_MIN5)) {
+						Entry velocityEntry = new Entry(
+								(float) mStockData.getVelocity(), index);
+						stockDataChart.mVelocityEntryList.add(velocityEntry);
+					}
+
 					stockDataChart.setSubChartYMinMax(index, stockDataChart.mDIFEntryList, stockDataChart.mDEAEntryList);
 				}
 			}

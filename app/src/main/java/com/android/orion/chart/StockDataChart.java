@@ -3,6 +3,7 @@ package com.android.orion.chart;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.text.TextUtils;
 
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
@@ -47,6 +48,7 @@ public class StockDataChart {
 	public ArrayList<Entry> mDIFEntryList = new ArrayList<>();
 	public ArrayList<Entry> mDEAEntryList = new ArrayList<>();
 	public ArrayList<BarEntry> mHistogramEntryList = new ArrayList<>();
+	public ArrayList<Entry> mVelocityEntryList = new ArrayList<>();
 	public ArrayList<LimitLine> mXLimitLineList = new ArrayList<>();
 	public List<Entry>[] mLineList = new List[StockData.LEVEL_MAX];
 	public int[] mLineColors = {Color.GRAY, Color.YELLOW, Color.BLACK, Color.RED, Color.MAGENTA};
@@ -191,6 +193,17 @@ public class StockDataChart {
 				lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 				lineData.addDataSet(lineDataSet);
 			}
+		}
+
+		if (TextUtils.equals(mPeriod, Setting.SETTING_PERIOD_MIN60)
+				|| TextUtils.equals(mPeriod, Setting.SETTING_PERIOD_MIN30)
+				|| TextUtils.equals(mPeriod, Setting.SETTING_PERIOD_MIN15)
+				|| TextUtils.equals(mPeriod, Setting.SETTING_PERIOD_MIN5)) {
+			LineDataSet velocityDataSet = new LineDataSet(mVelocityEntryList, "Velocity");
+			velocityDataSet.setColor(Color.BLUE);
+			velocityDataSet.setDrawCircles(false);
+			velocityDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+			lineData.addDataSet(velocityDataSet);
 		}
 
 		if (mBookValuePerShareList.size() > 0) {
@@ -547,6 +560,7 @@ public class StockDataChart {
 		mDIFEntryList.clear();
 		mDEAEntryList.clear();
 		mHistogramEntryList.clear();
+		mVelocityEntryList.clear();
 
 		for (int i = 0; i < StockData.LEVEL_MAX; i++) {
 			mLineList[i].clear();
