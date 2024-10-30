@@ -195,10 +195,7 @@ public class StockDataChart {
 			}
 		}
 
-		if (TextUtils.equals(mPeriod, Setting.SETTING_PERIOD_MIN60)
-				|| TextUtils.equals(mPeriod, Setting.SETTING_PERIOD_MIN30)
-				|| TextUtils.equals(mPeriod, Setting.SETTING_PERIOD_MIN15)
-				|| TextUtils.equals(mPeriod, Setting.SETTING_PERIOD_MIN5)) {
+		if (mVelocityEntryList.size() > 0) {
 			LineDataSet velocityDataSet = new LineDataSet(mVelocityEntryList, "Velocity");
 			velocityDataSet.setColor(Color.BLUE);
 			velocityDataSet.setDrawCircles(false);
@@ -334,6 +331,7 @@ public class StockDataChart {
 		}
 
 		mDescription.append(stock.getName() + " ");
+		mDescription.append(mPeriod + " ");
 		mDescription.append(stock.getPrice() + "  ");
 		if (stock.getNet() > 0) {
 			mDescription.append("+");
@@ -341,7 +339,6 @@ public class StockDataChart {
 			mDescription.append("-");
 		}
 		mDescription.append(stock.getNet() + "%" + "  ");
-		mDescription.append(mPeriod);
 		mDescription.append(stock.getAction(mPeriod));
 	}
 

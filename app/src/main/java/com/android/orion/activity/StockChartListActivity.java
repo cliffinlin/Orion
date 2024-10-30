@@ -434,7 +434,7 @@ public class StockChartListActivity extends BaseActivity implements
 
 	void updateTitle() {
 		if (mStock != null) {
-			setTitle(mStock.getName() + " " + mStock.getCode());
+			setTitle(mStock.getName());
 		}
 	}
 
@@ -647,10 +647,7 @@ public class StockChartListActivity extends BaseActivity implements
 							(float) mStockData.getHistogram(), index);
 					stockDataChart.mHistogramEntryList.add(histogramBarEntry);
 
-					if (TextUtils.equals(mStockData.getPeriod(), Setting.SETTING_PERIOD_MIN60)
-							|| TextUtils.equals(mStockData.getPeriod(), Setting.SETTING_PERIOD_MIN30)
-							|| TextUtils.equals(mStockData.getPeriod(), Setting.SETTING_PERIOD_MIN15)
-							|| TextUtils.equals(mStockData.getPeriod(), Setting.SETTING_PERIOD_MIN5)) {
+					if (!TextUtils.isEmpty(mStock.getOperate()) && mStockData.isMinutePeriod()) {
 						Entry velocityEntry = new Entry(
 								(float) mStockData.getVelocity(), index);
 						stockDataChart.mVelocityEntryList.add(velocityEntry);
