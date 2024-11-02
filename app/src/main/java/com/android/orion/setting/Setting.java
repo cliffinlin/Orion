@@ -7,8 +7,6 @@ public class Setting {
 
 	public static final String SETTING_PREFERENCES_INIT = "SETTING_PREFERENCES_INIT";
 
-	public static final String SETTING_PERIOD_YEAR = DatabaseContract.COLUMN_YEAR;
-	public static final String SETTING_PERIOD_QUARTER = DatabaseContract.COLUMN_QUARTER;
 	public static final String SETTING_PERIOD_MONTH = DatabaseContract.COLUMN_MONTH;
 	public static final String SETTING_PERIOD_WEEK = DatabaseContract.COLUMN_WEEK;
 	public static final String SETTING_PERIOD_DAY = DatabaseContract.COLUMN_DAY;
@@ -16,7 +14,6 @@ public class Setting {
 	public static final String SETTING_PERIOD_MIN30 = DatabaseContract.COLUMN_MIN30;
 	public static final String SETTING_PERIOD_MIN15 = DatabaseContract.COLUMN_MIN15;
 	public static final String SETTING_PERIOD_MIN5 = DatabaseContract.COLUMN_MIN5;
-	public static final String SETTING_PERIOD_MIN1 = DatabaseContract.COLUMN_MIN1;
 
 	public static final String SETTING_SORT_ORDER_COMPONENT_LIST = "SETTING_SORT_ORDER_COMPONENT_LIST";
 	public static final String SETTING_SORT_ORDER_STOCK_LIST = "SETTING_SORT_ORDER_STOCK_LIST";

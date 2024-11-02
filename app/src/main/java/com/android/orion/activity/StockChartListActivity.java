@@ -28,7 +28,6 @@ import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
-import com.android.orion.database.StockFinancial;
 import com.android.orion.database.StockQuant;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
@@ -495,15 +494,11 @@ public class StockChartListActivity extends BaseActivity implements
 					dateString = mStockData.getDate();
 					timeString = mStockData.getTime();
 
-					if (TextUtils.equals(mStockData.getPeriod(), DatabaseContract.COLUMN_YEAR)
-							|| TextUtils.equals(mStockData.getPeriod(), DatabaseContract.COLUMN_QUARTER)
-							|| TextUtils.equals(mStockData.getPeriod(), DatabaseContract.COLUMN_MONTH)
-							|| TextUtils.equals(mStockData.getPeriod(), DatabaseContract.COLUMN_WEEK)
-							|| TextUtils.equals(mStockData.getPeriod(), DatabaseContract.COLUMN_DAY)) {
-						stockDataChart.mXValues.add(dateString);
-					} else {
+					if (mStockData.isMinutePeriod()) {
 						stockDataChart.mXValues.add(dateString + " "
 								+ timeString);
+					} else {
+						stockDataChart.mXValues.add(dateString);
 					}
 
 					if (mKeyDisplayThreshold) {
@@ -706,7 +701,7 @@ public class StockChartListActivity extends BaseActivity implements
 		String selection = DatabaseContract.COLUMN_SE + " = " + "'" + mStock.getSE()
 				+ "'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "'"
 				+ mStock.getCode() + "'";
-		String sortOrder = DatabaseContract.COLUMN_CREATED + DatabaseContract.ORDER_DIRECTION_ASC;
+		String sortOrder = DatabaseContract.COLUMN_CREATED + DatabaseContract.ORDER_ASC;
 
 		mDatabaseManager.getStockQuantList(mStock, mStockQuantList, selection, sortOrder);
 

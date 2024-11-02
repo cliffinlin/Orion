@@ -54,7 +54,7 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 	int mStockListIndex = 0;
 
 	String mSortOrder = DatabaseContract.COLUMN_VALUATION
-			+ DatabaseContract.ORDER_DIRECTION_DESC;
+			+ DatabaseContract.ORDER_DESC;
 
 	float mTotalProfit = 0;
 	float mTotalBonus = 0;
@@ -126,43 +126,43 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 
 			case R.id.action_order_by_roi:
 				mSortOrder = DatabaseContract.COLUMN_ROI
-						+ DatabaseContract.ORDER_DIRECTION_DESC;
+						+ DatabaseContract.ORDER_DESC;
 				restartLoader();
 				return true;
 
 			case R.id.action_order_by_roe:
 				mSortOrder = DatabaseContract.COLUMN_ROE
-						+ DatabaseContract.ORDER_DIRECTION_DESC;
+						+ DatabaseContract.ORDER_DESC;
 				restartLoader();
 				return true;
 
 			case R.id.action_order_by_rate:
 				mSortOrder = DatabaseContract.COLUMN_RATE
-						+ DatabaseContract.ORDER_DIRECTION_DESC;
+						+ DatabaseContract.ORDER_DESC;
 				restartLoader();
 				return true;
 
 			case R.id.action_order_by_pe:
 				mSortOrder = DatabaseContract.COLUMN_PE
-						+ DatabaseContract.ORDER_DIRECTION_DESC;
+						+ DatabaseContract.ORDER_DESC;
 				restartLoader();
 				return true;
 
 			case R.id.action_order_by_yield:
 				mSortOrder = DatabaseContract.COLUMN_YIELD
-						+ DatabaseContract.ORDER_DIRECTION_DESC;
+						+ DatabaseContract.ORDER_DESC;
 				restartLoader();
 				return true;
 
 			case R.id.action_order_by_dividend_ratio:
 				mSortOrder = DatabaseContract.COLUMN_DIVIDEND_RATIO
-						+ DatabaseContract.ORDER_DIRECTION_DESC;
+						+ DatabaseContract.ORDER_DESC;
 				restartLoader();
 				return true;
 
 			case R.id.action_order_by_valuation:
 				mSortOrder = DatabaseContract.COLUMN_VALUATION
-						+ DatabaseContract.ORDER_DIRECTION_DESC;
+						+ DatabaseContract.ORDER_DESC;
 				restartLoader();
 				return true;
 

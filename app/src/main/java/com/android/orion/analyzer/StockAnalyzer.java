@@ -811,6 +811,14 @@ public class StockAnalyzer {
 
 		mContentTitle.setLength(0);
 		mContentText.setLength(0);
+
+		String minPeriod = "";
+		for (int i = 0; i < DatabaseContract.PERIODS.length; i++) {
+			if (Preferences.getBoolean(DatabaseContract.PERIODS[i], false)) {
+				minPeriod = DatabaseContract.PERIODS[i];
+			}
+		}
+
 		for (String period : DatabaseContract.PERIODS) {
 			if (Preferences.getBoolean(period, false)) {
 				String action = stock.getAction(period);
@@ -824,13 +832,17 @@ public class StockAnalyzer {
 				if (action.contains(StockData.MARK_BUY2 + StockData.MARK_BUY2)) {
 					notifyToBuy2 = true;
 				} else if (action.contains(StockData.MARK_D)) {
-					notifyToBuy1 = true;
+					if (TextUtils.equals(period, minPeriod)) {
+						notifyToBuy1 = true;
+					}
 				}
 
 				if (action.contains(StockData.MARK_SELL2 + StockData.MARK_SELL2)) {
 					notifyToSell2 = true;
 				} else if (action.contains(StockData.MARK_G)) {
-					notifyToSell1 = true;
+					if (TextUtils.equals(period, minPeriod)) {
+						notifyToSell1 = true;
+					}
 				}
 
 				if (notifyToBuy1 || notifyToSell1 || notifyToBuy2 || notifyToSell2) {

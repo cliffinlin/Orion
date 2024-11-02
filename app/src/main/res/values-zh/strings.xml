@@ -79,7 +79,7 @@
     <string name="deal_volume_prompt">Volume:</string>
     <string name="deal_profit">Deal Profit</string>
     <string name="delete">Delete</string>
-    <string name="delete_confirm">Do You Want to Delete?</string>
+    <string name="delete_confirm">Do You Want to Delete %s?</string>
     <string name="discount">Discount</string>
     <string name="dividend">Dividend</string>
     <string name="enabled">Enabled</string>
@@ -131,16 +131,13 @@
     <string name="setting_indexes">Indexes</string>
 
     <string name="setting_period">Period</string>
-    <string name="setting_period_year">Year</string>
-    <string name="setting_period_quarter">Quarter</string>
     <string name="setting_period_month">Month</string>
     <string name="setting_period_week">Week</string>
     <string name="setting_period_day">Day</string>
-    <string name="setting_period_min60">60Min</string>
-    <string name="setting_period_min30">30Min</string>
-    <string name="setting_period_min15">15Min</string>
-    <string name="setting_period_min5">5Min</string>
-    <string name="setting_period_min1">1Min</string>
+    <string name="setting_period_min60">Min60</string>
+    <string name="setting_period_min30">Min30</string>
+    <string name="setting_period_min15">Min15</string>
+    <string name="setting_period_min5">Min5</string>
 
     <string name="setting_display">Display</string>
     <string name="setting_display_candle">Candle</string>
@@ -185,10 +182,10 @@
     <string name="start_service">Start</string>
     <string name="stop_service">Stop</string>
     <string name="stock">Stock</string>
-    <string name="action_5min">5M</string>
-    <string name="action_15min">15M</string>
-    <string name="action_30min">30M</string>
-    <string name="action_60min">60M</string>
+    <string name="action_min5">M5</string>
+    <string name="action_min15">M15</string>
+    <string name="action_min30">M30</string>
+    <string name="action_min60">M60</string>
     <string name="action_day">Day</string>
     <string name="action_week">W</string>
     <string name="action_month">M</string>

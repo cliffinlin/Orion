@@ -65,7 +65,7 @@ public class StockQuantDealListActivity extends ListActivity implements
 
 	String mSelection = null;
 	String mSortOrderColumn = DatabaseContract.COLUMN_ID;
-	String mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_ASC;
+	String mSortOrderDirection = DatabaseContract.ORDER_ASC;
 	String mSortOrderDefault = mSortOrderColumn + mSortOrderDirection;
 	String mSortOrder = mSortOrderDefault;
 	String mGroupBy = "";
@@ -385,10 +385,10 @@ public class StockQuantDealListActivity extends ListActivity implements
 				break;
 		}
 
-		if (TextUtils.equals(mSortOrderDirection, DatabaseContract.ORDER_DIRECTION_ASC)) {
-			mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_DESC;
+		if (TextUtils.equals(mSortOrderDirection, DatabaseContract.ORDER_ASC)) {
+			mSortOrderDirection = DatabaseContract.ORDER_DESC;
 		} else {
-			mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_ASC;
+			mSortOrderDirection = DatabaseContract.ORDER_ASC;
 		}
 
 		mSortOrder = mSortOrderColumn + mSortOrderDirection;

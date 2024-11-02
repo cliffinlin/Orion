@@ -42,7 +42,7 @@ public class StockListActivity extends ListActivity implements
 	static final int mHeaderTextHighlightColor = Color.RED;
 
 	String mSortOrderColumn = DatabaseContract.COLUMN_CODE;
-	String mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_ASC;
+	String mSortOrderDirection = DatabaseContract.ORDER_ASC;
 	String mSortOrderDefault = mSortOrderColumn + mSortOrderDirection;
 	String mSortOrder = mSortOrderDefault;
 
@@ -203,16 +203,16 @@ public class StockListActivity extends ListActivity implements
 			case R.id.action_day:
 				mSortOrderColumn = DatabaseContract.COLUMN_DAY;
 				break;
-			case R.id.action_60min:
+			case R.id.action_min60:
 				mSortOrderColumn = DatabaseContract.COLUMN_MIN60;
 				break;
-			case R.id.action_30min:
+			case R.id.action_min30:
 				mSortOrderColumn = DatabaseContract.COLUMN_MIN30;
 				break;
-			case R.id.action_15min:
+			case R.id.action_min15:
 				mSortOrderColumn = DatabaseContract.COLUMN_MIN15;
 				break;
-			case R.id.action_5min:
+			case R.id.action_min5:
 				mSortOrderColumn = DatabaseContract.COLUMN_MIN5;
 				break;
 			case R.id.operate:
@@ -226,10 +226,10 @@ public class StockListActivity extends ListActivity implements
 				break;
 		}
 
-		if (TextUtils.equals(mSortOrderDirection, DatabaseContract.ORDER_DIRECTION_ASC)) {
-			mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_DESC;
+		if (TextUtils.equals(mSortOrderDirection, DatabaseContract.ORDER_ASC)) {
+			mSortOrderDirection = DatabaseContract.ORDER_DESC;
 		} else {
-			mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_ASC;
+			mSortOrderDirection = DatabaseContract.ORDER_ASC;
 		}
 
 		mSortOrder = mSortOrderColumn + mSortOrderDirection;
@@ -318,25 +318,25 @@ public class StockListActivity extends ListActivity implements
 			setVisibility(DatabaseContract.COLUMN_DAY, mTextViewDay);
 		}
 
-		mTextViewMin60 = findViewById(R.id.action_60min);
+		mTextViewMin60 = findViewById(R.id.action_min60);
 		if (mTextViewMin60 != null) {
 			mTextViewMin60.setOnClickListener(this);
 			setVisibility(DatabaseContract.COLUMN_MIN60, mTextViewMin60);
 		}
 
-		mTextViewMin30 = findViewById(R.id.action_30min);
+		mTextViewMin30 = findViewById(R.id.action_min30);
 		if (mTextViewMin30 != null) {
 			mTextViewMin30.setOnClickListener(this);
 			setVisibility(DatabaseContract.COLUMN_MIN30, mTextViewMin30);
 		}
 
-		mTextViewMin15 = findViewById(R.id.action_15min);
+		mTextViewMin15 = findViewById(R.id.action_min15);
 		if (mTextViewMin15 != null) {
 			mTextViewMin15.setOnClickListener(this);
 			setVisibility(DatabaseContract.COLUMN_MIN15, mTextViewMin15);
 		}
 
-		mTextViewMin5 = findViewById(R.id.action_5min);
+		mTextViewMin5 = findViewById(R.id.action_min5);
 		if (mTextViewMin5 != null) {
 			mTextViewMin5.setOnClickListener(this);
 			setVisibility(DatabaseContract.COLUMN_MIN5, mTextViewMin5);

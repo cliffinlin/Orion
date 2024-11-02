@@ -44,11 +44,9 @@ public class StockDeal extends DatabaseTable {
 	protected long mVolume;
 	protected double mValue;
 	protected double mProfit;
-
-
-	private double mFee;
-	private double mBonus;
-	private double mYield;
+	protected double mFee;
+	protected double mBonus;
+	protected double mYield;
 
 	public StockDeal() {
 		init();
@@ -677,5 +675,23 @@ public class StockDeal extends DatabaseTable {
 		} else {
 			mYield = Utility.Round(100.0 * dividend / 10.0 / mPrice);
 		}
+	}
+
+	public String toString() {
+		StringBuffer stringBuffer = new StringBuffer();
+
+		stringBuffer.append(mName + " ");
+		stringBuffer.append(mAccount + " ");
+		stringBuffer.append(mAction + " ");
+		stringBuffer.append("mBuy=" + mBuy + ", ");
+		stringBuffer.append("mSell=" + mSell + ",  ");
+		stringBuffer.append("mVolume=" + mVolume + ",  ");
+		stringBuffer.append("mValue=" + mValue + ",  ");
+		stringBuffer.append("mProfit=" + mProfit + ",  ");
+		stringBuffer.append("mFee=" + mFee + ",  ");
+		stringBuffer.append("mBonus=" + mBonus + ",  ");
+		stringBuffer.append("mYield=" + mYield);
+
+		return stringBuffer.toString();
 	}
 }

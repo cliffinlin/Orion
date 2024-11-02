@@ -42,7 +42,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 	static final int mHeaderTextHighlightColor = Color.RED;
 
 	String mSortOrderColumn = DatabaseContract.COLUMN_HOLD;
-	String mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_DESC;
+	String mSortOrderDirection = DatabaseContract.ORDER_DESC;
 	String mSortOrderDefault = mSortOrderColumn + mSortOrderDirection;
 	String mSortOrder = mSortOrderDefault;
 
@@ -186,10 +186,10 @@ public class StockListEditActivity extends DatabaseActivity implements
 				break;
 		}
 
-		if (TextUtils.equals(mSortOrderDirection, DatabaseContract.ORDER_DIRECTION_ASC)) {
-			mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_DESC;
+		if (TextUtils.equals(mSortOrderDirection, DatabaseContract.ORDER_ASC)) {
+			mSortOrderDirection = DatabaseContract.ORDER_DESC;
 		} else {
-			mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_ASC;
+			mSortOrderDirection = DatabaseContract.ORDER_ASC;
 		}
 
 		mSortOrder = mSortOrderColumn + mSortOrderDirection;
@@ -389,10 +389,10 @@ public class StockListEditActivity extends DatabaseActivity implements
 					case R.id.delete:
 						if (stock.getHold() == 0) {
 							final long stock_id = stock.getId();
-							final String stock_code = stock.getCode();
+							final String stock_name = stock.getName();
 							new AlertDialog.Builder(mContext)
 									.setTitle(R.string.delete)
-									.setMessage(R.string.delete_confirm)
+									.setMessage(getString(R.string.delete_confirm, stock_name))
 									.setPositiveButton(R.string.ok,
 											new DialogInterface.OnClickListener() {
 												public void onClick(DialogInterface dialog,

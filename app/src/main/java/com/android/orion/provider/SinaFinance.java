@@ -55,9 +55,9 @@ public class SinaFinance extends StockDataProvider {
 	public static final String SINA_FINANCE_HEAD_REFERER_KEY = "Referer";
 	public static final String SINA_FINANCE_HEAD_REFERER_VALUE = "http://vip.stock.finance.sina.com.cn/";
 
-	public static final int DOWNLOAD_HISTORY_LENGTH_DEFAULT = 120;
-	public static final int DOWNLOAD_HISTORY_LENGTH_NONE = 0;
 	public static final int DOWNLOAD_HISTORY_LENGTH_UNLIMITED = -1;
+	public static final int DOWNLOAD_HISTORY_LENGTH_NONE = 0;
+	public static final int DOWNLOAD_HISTORY_LENGTH_DEFAULT = 120;
 
 	public static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN5 = 242;
 	public static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN15 = 192;
@@ -90,9 +90,7 @@ public class SinaFinance extends StockDataProvider {
 	}
 
 	public int getAvailableHistoryLength(String period) {
-		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN1)) {
-			return DOWNLOAD_HISTORY_LENGTH_NONE;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
+		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
 			return DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN5;
 		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
 			return DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN15;
@@ -106,11 +104,6 @@ public class SinaFinance extends StockDataProvider {
 			return DOWNLOAD_HISTORY_LENGTH_UNLIMITED;
 		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
 			return DOWNLOAD_HISTORY_LENGTH_UNLIMITED;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_QUARTER)) {
-			return DOWNLOAD_HISTORY_LENGTH_NONE;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_YEAR)) {
-			return DOWNLOAD_HISTORY_LENGTH_NONE;
-		} else {
 		}
 
 		return 0;

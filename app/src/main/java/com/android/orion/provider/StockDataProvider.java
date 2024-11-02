@@ -41,7 +41,6 @@ import okhttp3.OkHttpClient;
 
 public class StockDataProvider implements StockListChangedListener, StockEditListener, IStockDataProvider {
 
-	public static final int PERIOD_MINUTES_MIN1 = 1;
 	public static final int PERIOD_MINUTES_MIN5 = 5;
 	public static final int PERIOD_MINUTES_MIN15 = 15;
 	public static final int PERIOD_MINUTES_MIN30 = 30;
@@ -49,8 +48,6 @@ public class StockDataProvider implements StockListChangedListener, StockEditLis
 	public static final int PERIOD_MINUTES_DAY = 240;
 	public static final int PERIOD_MINUTES_WEEK = 1680;
 	public static final int PERIOD_MINUTES_MONTH = 7200;
-	public static final int PERIOD_MINUTES_QUARTER = 28800;
-	public static final int PERIOD_MINUTES_YEAR = 115200;
 	public static final int MAX_CONTENT_LENGTH_MIN60 = 60 * 4;
 	public static final int MAX_CONTENT_LENGTH_MIN30 = 30 * 8;
 	public static final int MAX_CONTENT_LENGTH_MIN15 = 20 * 16;
@@ -127,9 +124,7 @@ public class StockDataProvider implements StockListChangedListener, StockEditLis
 	public int getPeriodMinutes(String period) {
 		int result = 0;
 
-		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN1)) {
-			result = PERIOD_MINUTES_MIN1;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
+		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
 			result = PERIOD_MINUTES_MIN5;
 		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
 			result = PERIOD_MINUTES_MIN15;
@@ -143,11 +138,6 @@ public class StockDataProvider implements StockListChangedListener, StockEditLis
 			result = PERIOD_MINUTES_WEEK;
 		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
 			result = PERIOD_MINUTES_MONTH;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_QUARTER)) {
-			result = PERIOD_MINUTES_QUARTER;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_YEAR)) {
-			result = PERIOD_MINUTES_YEAR;
-		} else {
 		}
 
 		return result;
@@ -162,8 +152,6 @@ public class StockDataProvider implements StockListChangedListener, StockEditLis
 		int n = 0;
 
 		switch (stockData.getPeriod()) {
-			case DatabaseContract.COLUMN_MIN1:
-				break;
 			case DatabaseContract.COLUMN_MIN5:
 				n = size - MAX_CONTENT_LENGTH_MIN5;
 				break;

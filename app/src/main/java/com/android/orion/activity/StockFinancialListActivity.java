@@ -43,7 +43,7 @@ public class StockFinancialListActivity extends ListActivity implements
 	static final int mHeaderTextHighlightColor = Color.RED;
 
 	String mSortOrderColumn = DatabaseContract.COLUMN_CODE;
-	String mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_ASC;
+	String mSortOrderDirection = DatabaseContract.ORDER_ASC;
 	String mSortOrderDefault = mSortOrderColumn + mSortOrderDirection;
 	String mSortOrder = mSortOrderDefault;
 
@@ -288,10 +288,10 @@ public class StockFinancialListActivity extends ListActivity implements
 				break;
 		}
 
-		if (TextUtils.equals(mSortOrderDirection, DatabaseContract.ORDER_DIRECTION_ASC)) {
-			mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_DESC;
+		if (TextUtils.equals(mSortOrderDirection, DatabaseContract.ORDER_ASC)) {
+			mSortOrderDirection = DatabaseContract.ORDER_DESC;
 		} else {
-			mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_ASC;
+			mSortOrderDirection = DatabaseContract.ORDER_ASC;
 		}
 
 		mSortOrder = mSortOrderColumn + mSortOrderDirection;

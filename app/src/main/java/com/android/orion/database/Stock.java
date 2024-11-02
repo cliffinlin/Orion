@@ -26,7 +26,6 @@ public class Stock extends DatabaseTable {
 	public static final long INVALID_ID = 0;
 
 	public static final double ROI_COEFFICIENT = 10.0;
-	private final ArrayList<StockData> mStockDataListMin1 = new ArrayList<StockData>();
 	private final ArrayList<StockData> mStockDataListMin5 = new ArrayList<StockData>();
 	private final ArrayList<StockData> mStockDataListMin15 = new ArrayList<StockData>();
 	private final ArrayList<StockData> mStockDataListMin30 = new ArrayList<StockData>();
@@ -34,9 +33,6 @@ public class Stock extends DatabaseTable {
 	private final ArrayList<StockData> mStockDataListDay = new ArrayList<StockData>();
 	private final ArrayList<StockData> mStockDataListWeek = new ArrayList<StockData>();
 	private final ArrayList<StockData> mStockDataListMonth = new ArrayList<StockData>();
-	private final ArrayList<StockData> mStockDataListQuarter = new ArrayList<StockData>();
-	private final ArrayList<StockData> mStockDataListYear = new ArrayList<StockData>();
-	private final ArrayList<StockData> mDrawVertexListMin1 = new ArrayList<StockData>();
 	private final ArrayList<StockData> mDrawVertexListMin5 = new ArrayList<StockData>();
 	private final ArrayList<StockData> mDrawVertexListMin15 = new ArrayList<StockData>();
 	private final ArrayList<StockData> mDrawVertexListMin30 = new ArrayList<StockData>();
@@ -44,9 +40,6 @@ public class Stock extends DatabaseTable {
 	private final ArrayList<StockData> mDrawVertexListDay = new ArrayList<StockData>();
 	private final ArrayList<StockData> mDrawVertexListWeek = new ArrayList<StockData>();
 	private final ArrayList<StockData> mDrawVertexListMonth = new ArrayList<StockData>();
-	private final ArrayList<StockData> mDrawVertexListQuarter = new ArrayList<StockData>();
-	private final ArrayList<StockData> mDrawVertexListYear = new ArrayList<StockData>();
-	private final ArrayList<StockData> mDrawDataListMin1 = new ArrayList<StockData>();
 	private final ArrayList<StockData> mDrawDataListMin5 = new ArrayList<StockData>();
 	private final ArrayList<StockData> mDrawDataListMin15 = new ArrayList<StockData>();
 	private final ArrayList<StockData> mDrawDataListMin30 = new ArrayList<StockData>();
@@ -54,9 +47,6 @@ public class Stock extends DatabaseTable {
 	private final ArrayList<StockData> mDrawDataListDay = new ArrayList<StockData>();
 	private final ArrayList<StockData> mDrawDataListWeek = new ArrayList<StockData>();
 	private final ArrayList<StockData> mDrawDataListMonth = new ArrayList<StockData>();
-	private final ArrayList<StockData> mDrawDataListQuarter = new ArrayList<StockData>();
-	private final ArrayList<StockData> mDrawDataListYear = new ArrayList<StockData>();
-	private final ArrayList<StockData> mStrokeVertexListMin1 = new ArrayList<StockData>();
 	private final ArrayList<StockData> mStrokeVertexListMin5 = new ArrayList<StockData>();
 	private final ArrayList<StockData> mStrokeVertexListMin15 = new ArrayList<StockData>();
 	private final ArrayList<StockData> mStrokeVertexListMin30 = new ArrayList<StockData>();
@@ -64,9 +54,6 @@ public class Stock extends DatabaseTable {
 	private final ArrayList<StockData> mStrokeVertexListDay = new ArrayList<StockData>();
 	private final ArrayList<StockData> mStrokeVertexListWeek = new ArrayList<StockData>();
 	private final ArrayList<StockData> mStrokeVertexListMonth = new ArrayList<StockData>();
-	private final ArrayList<StockData> mStrokeVertexListQuarter = new ArrayList<StockData>();
-	private final ArrayList<StockData> mStrokeVertexListYear = new ArrayList<StockData>();
-	private final ArrayList<StockData> mStrokeDataListMin1 = new ArrayList<StockData>();
 	private final ArrayList<StockData> mStrokeDataListMin5 = new ArrayList<StockData>();
 	private final ArrayList<StockData> mStrokeDataListMin15 = new ArrayList<StockData>();
 	private final ArrayList<StockData> mStrokeDataListMin30 = new ArrayList<StockData>();
@@ -74,9 +61,6 @@ public class Stock extends DatabaseTable {
 	private final ArrayList<StockData> mStrokeDataListDay = new ArrayList<StockData>();
 	private final ArrayList<StockData> mStrokeDataListWeek = new ArrayList<StockData>();
 	private final ArrayList<StockData> mStrokeDataListMonth = new ArrayList<StockData>();
-	private final ArrayList<StockData> mStrokeDataListQuarter = new ArrayList<StockData>();
-	private final ArrayList<StockData> mStrokeDataListYear = new ArrayList<StockData>();
-	private final ArrayList<StockData> mSegmentVertexListMin1 = new ArrayList<StockData>();
 	private final ArrayList<StockData> mSegmentVertexListMin5 = new ArrayList<StockData>();
 	private final ArrayList<StockData> mSegmentVertexListMin15 = new ArrayList<StockData>();
 	private final ArrayList<StockData> mSegmentVertexListMin30 = new ArrayList<StockData>();
@@ -84,9 +68,6 @@ public class Stock extends DatabaseTable {
 	private final ArrayList<StockData> mSegmentVertexListDay = new ArrayList<StockData>();
 	private final ArrayList<StockData> mSegmentVertexListWeek = new ArrayList<StockData>();
 	private final ArrayList<StockData> mSegmentVertexListMonth = new ArrayList<StockData>();
-	private final ArrayList<StockData> mSegmentVertexListQuarter = new ArrayList<StockData>();
-	private final ArrayList<StockData> mSegmentVertexListYear = new ArrayList<StockData>();
-	private final ArrayList<StockData> mSegmentDataListMin1 = new ArrayList<StockData>();
 	private final ArrayList<StockData> mSegmentDataListMin5 = new ArrayList<StockData>();
 	private final ArrayList<StockData> mSegmentDataListMin15 = new ArrayList<StockData>();
 	private final ArrayList<StockData> mSegmentDataListMin30 = new ArrayList<StockData>();
@@ -94,9 +75,6 @@ public class Stock extends DatabaseTable {
 	private final ArrayList<StockData> mSegmentDataListDay = new ArrayList<StockData>();
 	private final ArrayList<StockData> mSegmentDataListWeek = new ArrayList<StockData>();
 	private final ArrayList<StockData> mSegmentDataListMonth = new ArrayList<StockData>();
-	private final ArrayList<StockData> mSegmentDataListQuarter = new ArrayList<StockData>();
-	private final ArrayList<StockData> mSegmentDataListYear = new ArrayList<StockData>();
-	private final ArrayList<StockData> mLineVertexListMin1 = new ArrayList<StockData>();
 	private final ArrayList<StockData> mLineVertexListMin5 = new ArrayList<StockData>();
 	private final ArrayList<StockData> mLineVertexListMin15 = new ArrayList<StockData>();
 	private final ArrayList<StockData> mLineVertexListMin30 = new ArrayList<StockData>();
@@ -104,9 +82,6 @@ public class Stock extends DatabaseTable {
 	private final ArrayList<StockData> mLineVertexListDay = new ArrayList<StockData>();
 	private final ArrayList<StockData> mLineVertexListWeek = new ArrayList<StockData>();
 	private final ArrayList<StockData> mLineVertexListMonth = new ArrayList<StockData>();
-	private final ArrayList<StockData> mLineVertexListQuarter = new ArrayList<StockData>();
-	private final ArrayList<StockData> mLineVertexListYear = new ArrayList<StockData>();
-	private final ArrayList<StockData> mLineDataListMin1 = new ArrayList<StockData>();
 	private final ArrayList<StockData> mLineDataListMin5 = new ArrayList<StockData>();
 	private final ArrayList<StockData> mLineDataListMin15 = new ArrayList<StockData>();
 	private final ArrayList<StockData> mLineDataListMin30 = new ArrayList<StockData>();
@@ -114,9 +89,6 @@ public class Stock extends DatabaseTable {
 	private final ArrayList<StockData> mLineDataListDay = new ArrayList<StockData>();
 	private final ArrayList<StockData> mLineDataListWeek = new ArrayList<StockData>();
 	private final ArrayList<StockData> mLineDataListMonth = new ArrayList<StockData>();
-	private final ArrayList<StockData> mLineDataListQuarter = new ArrayList<StockData>();
-	private final ArrayList<StockData> mLineDataListYear = new ArrayList<StockData>();
-	private final ArrayList<StockData> mOutlineVertexListMin1 = new ArrayList<StockData>();
 	private final ArrayList<StockData> mOutlineVertexListMin5 = new ArrayList<StockData>();
 	private final ArrayList<StockData> mOutlineVertexListMin15 = new ArrayList<StockData>();
 	private final ArrayList<StockData> mOutlineVertexListMin30 = new ArrayList<StockData>();
@@ -124,9 +96,6 @@ public class Stock extends DatabaseTable {
 	private final ArrayList<StockData> mOutlineVertexListDay = new ArrayList<StockData>();
 	private final ArrayList<StockData> mOutlineVertexListWeek = new ArrayList<StockData>();
 	private final ArrayList<StockData> mOutlineVertexListMonth = new ArrayList<StockData>();
-	private final ArrayList<StockData> mOutlineVertexListQuarter = new ArrayList<StockData>();
-	private final ArrayList<StockData> mOutlineVertexListYear = new ArrayList<StockData>();
-	private final ArrayList<StockData> mOutlineDataListMin1 = new ArrayList<StockData>();
 	private final ArrayList<StockData> mOutlineDataListMin5 = new ArrayList<StockData>();
 	private final ArrayList<StockData> mOutlineDataListMin15 = new ArrayList<StockData>();
 	private final ArrayList<StockData> mOutlineDataListMin30 = new ArrayList<StockData>();
@@ -134,8 +103,6 @@ public class Stock extends DatabaseTable {
 	private final ArrayList<StockData> mOutlineDataListDay = new ArrayList<StockData>();
 	private final ArrayList<StockData> mOutlineDataListWeek = new ArrayList<StockData>();
 	private final ArrayList<StockData> mOutlineDataListMonth = new ArrayList<StockData>();
-	private final ArrayList<StockData> mOutlineDataListQuarter = new ArrayList<StockData>();
-	private final ArrayList<StockData> mOutlineDataListYear = new ArrayList<StockData>();
 	private int mFlag;
 	private String mClasses;
 	private String mSE;
@@ -151,7 +118,6 @@ public class Stock extends DatabaseTable {
 
 	private String mDate;
 	private String mTime;
-	private String mActionMin1;
 	private String mActionMin5;
 	private String mActionMin15;
 	private String mActionMin30;
@@ -159,8 +125,6 @@ public class Stock extends DatabaseTable {
 	private String mActionDay;
 	private String mActionWeek;
 	private String mActionMonth;
-	private String mActionQuarter;
-	private String mActionYear;
 	private String mTrend;
 
 	private double mThreshold;
@@ -240,7 +204,6 @@ public class Stock extends DatabaseTable {
 
 		mDate = "";
 		mTime = "";
-		mActionMin1 = "";
 		mActionMin5 = "";
 		mActionMin15 = "";
 		mActionMin30 = "";
@@ -248,8 +211,6 @@ public class Stock extends DatabaseTable {
 		mActionDay = "";
 		mActionWeek = "";
 		mActionMonth = "";
-		mActionQuarter = "";
-		mActionYear = "";
 		mTrend = "";
 
 		mThreshold = 0;
@@ -307,7 +268,6 @@ public class Stock extends DatabaseTable {
 
 		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);
 		contentValues.put(DatabaseContract.COLUMN_TIME, mTime);
-		contentValues.put(DatabaseContract.COLUMN_MIN1, mActionMin1);
 		contentValues.put(DatabaseContract.COLUMN_MIN5, mActionMin5);
 		contentValues.put(DatabaseContract.COLUMN_MIN15, mActionMin15);
 		contentValues.put(DatabaseContract.COLUMN_MIN30, mActionMin30);
@@ -315,8 +275,6 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_DAY, mActionDay);
 		contentValues.put(DatabaseContract.COLUMN_WEEK, mActionWeek);
 		contentValues.put(DatabaseContract.COLUMN_MONTH, mActionMonth);
-		contentValues.put(DatabaseContract.COLUMN_QUARTER, mActionQuarter);
-		contentValues.put(DatabaseContract.COLUMN_YEAR, mActionYear);
 		contentValues.put(DatabaseContract.COLUMN_TREND, mTrend);
 		contentValues.put(DatabaseContract.COLUMN_QUANT_PROFIT, mQuantProfit);
 		contentValues.put(DatabaseContract.COLUMN_QUANT_PROFIT_MARGIN, mQuantProfitMargin);
@@ -417,7 +375,6 @@ public class Stock extends DatabaseTable {
 
 		setDate(stock.mDate);
 		setTime(stock.mTime);
-		setActionMin1(stock.mActionMin1);
 		setActionMin5(stock.mActionMin5);
 		setActionMin15(stock.mActionMin15);
 		setActionMin30(stock.mActionMin30);
@@ -425,8 +382,6 @@ public class Stock extends DatabaseTable {
 		setActionDay(stock.mActionDay);
 		setActionWeek(stock.mActionWeek);
 		setActionMonth(stock.mActionMonth);
-		setActionQuarter(stock.mActionQuarter);
-		setActionYear(stock.mActionYear);
 		setTrend(stock.mTrend);
 
 		setThreshold(stock.mThreshold);
@@ -489,7 +444,6 @@ public class Stock extends DatabaseTable {
 		setValue(cursor);
 		setDate(cursor);
 		setTime(cursor);
-		setActionMin1(cursor);
 		setActionMin5(cursor);
 		setActionMin15(cursor);
 		setActionMin30(cursor);
@@ -497,8 +451,6 @@ public class Stock extends DatabaseTable {
 		setActionDay(cursor);
 		setActionWeek(cursor);
 		setActionMonth(cursor);
-		setActionQuarter(cursor);
-		setActionYear(cursor);
 		setTrend(cursor);
 		setThreshold(cursor);
 		setQuantVolume(cursor);
@@ -757,23 +709,6 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_TIME)));
 	}
 
-	String getActionMin1() {
-		return mActionMin1;
-	}
-
-	void setActionMin1(String action) {
-		mActionMin1 = action;
-	}
-
-	void setActionMin1(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setActionMin1(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_MIN1)));
-	}
-
 	String getActionMin5() {
 		return mActionMin5;
 	}
@@ -891,40 +826,6 @@ public class Stock extends DatabaseTable {
 
 		setActionMonth(cursor.getString(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_MONTH)));
-	}
-
-	String getActionQuarter() {
-		return mActionQuarter;
-	}
-
-	void setActionQuarter(String action) {
-		mActionQuarter = action;
-	}
-
-	void setActionQuarter(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setActionQuarter(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_QUARTER)));
-	}
-
-	String getActionYear() {
-		return mActionYear;
-	}
-
-	void setActionYear(String action) {
-		mActionYear = action;
-	}
-
-	void setActionYear(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setActionYear(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_YEAR)));
 	}
 
 	String getTrend() {
@@ -1543,9 +1444,7 @@ public class Stock extends DatabaseTable {
 	public ArrayList<StockData> getStockDataList(String period) {
 		ArrayList<StockData> result;
 
-		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN1)) {
-			result = mStockDataListMin1;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
+		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
 			result = mStockDataListMin5;
 		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
 			result = mStockDataListMin15;
@@ -1559,10 +1458,6 @@ public class Stock extends DatabaseTable {
 			result = mStockDataListWeek;
 		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
 			result = mStockDataListMonth;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_QUARTER)) {
-			result = mStockDataListQuarter;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_YEAR)) {
-			result = mStockDataListYear;
 		} else {
 			result = new ArrayList<>();
 		}
@@ -1573,9 +1468,7 @@ public class Stock extends DatabaseTable {
 	public ArrayList<StockData> getDrawVertexList(String period) {
 		ArrayList<StockData> result = null;
 
-		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN1)) {
-			result = mDrawVertexListMin1;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
+		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
 			result = mDrawVertexListMin5;
 		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
 			result = mDrawVertexListMin15;
@@ -1589,10 +1482,8 @@ public class Stock extends DatabaseTable {
 			result = mDrawVertexListWeek;
 		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
 			result = mDrawVertexListMonth;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_QUARTER)) {
-			result = mDrawVertexListQuarter;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_YEAR)) {
-			result = mDrawVertexListYear;
+		} else {
+			result = new ArrayList<>();
 		}
 
 		return result;
@@ -1601,9 +1492,7 @@ public class Stock extends DatabaseTable {
 	public ArrayList<StockData> getDrawDataList(String period) {
 		ArrayList<StockData> result = null;
 
-		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN1)) {
-			result = mDrawDataListMin1;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
+		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
 			result = mDrawDataListMin5;
 		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
 			result = mDrawDataListMin15;
@@ -1617,10 +1506,8 @@ public class Stock extends DatabaseTable {
 			result = mDrawDataListWeek;
 		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
 			result = mDrawDataListMonth;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_QUARTER)) {
-			result = mDrawDataListQuarter;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_YEAR)) {
-			result = mDrawDataListYear;
+		} else {
+			result = new ArrayList<>();
 		}
 
 		return result;
@@ -1629,9 +1516,7 @@ public class Stock extends DatabaseTable {
 	public ArrayList<StockData> getStrokeVertexList(String period) {
 		ArrayList<StockData> result = null;
 
-		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN1)) {
-			result = mStrokeVertexListMin1;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
+		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
 			result = mStrokeVertexListMin5;
 		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
 			result = mStrokeVertexListMin15;
@@ -1645,10 +1530,8 @@ public class Stock extends DatabaseTable {
 			result = mStrokeVertexListWeek;
 		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
 			result = mStrokeVertexListMonth;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_QUARTER)) {
-			result = mStrokeVertexListQuarter;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_YEAR)) {
-			result = mStrokeVertexListYear;
+		} else {
+			result = new ArrayList<>();
 		}
 
 		return result;
@@ -1657,9 +1540,7 @@ public class Stock extends DatabaseTable {
 	public ArrayList<StockData> getStrokeDataList(String period) {
 		ArrayList<StockData> result = null;
 
-		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN1)) {
-			result = mStrokeDataListMin1;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
+		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
 			result = mStrokeDataListMin5;
 		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
 			result = mStrokeDataListMin15;
@@ -1673,10 +1554,8 @@ public class Stock extends DatabaseTable {
 			result = mStrokeDataListWeek;
 		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
 			result = mStrokeDataListMonth;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_QUARTER)) {
-			result = mStrokeDataListQuarter;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_YEAR)) {
-			result = mStrokeDataListYear;
+		} else {
+			result = new ArrayList<>();
 		}
 
 		return result;
@@ -1685,9 +1564,7 @@ public class Stock extends DatabaseTable {
 	public ArrayList<StockData> getSegmentVertexList(String period) {
 		ArrayList<StockData> result = null;
 
-		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN1)) {
-			result = mSegmentVertexListMin1;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
+		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
 			result = mSegmentVertexListMin5;
 		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
 			result = mSegmentVertexListMin15;
@@ -1701,10 +1578,8 @@ public class Stock extends DatabaseTable {
 			result = mSegmentVertexListWeek;
 		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
 			result = mSegmentVertexListMonth;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_QUARTER)) {
-			result = mSegmentVertexListQuarter;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_YEAR)) {
-			result = mSegmentVertexListYear;
+		} else {
+			result = new ArrayList<>();
 		}
 
 		return result;
@@ -1713,9 +1588,7 @@ public class Stock extends DatabaseTable {
 	public ArrayList<StockData> getSegmentDataList(String period) {
 		ArrayList<StockData> result = null;
 
-		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN1)) {
-			result = mSegmentDataListMin1;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
+		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
 			result = mSegmentDataListMin5;
 		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
 			result = mSegmentDataListMin15;
@@ -1729,10 +1602,8 @@ public class Stock extends DatabaseTable {
 			result = mSegmentDataListWeek;
 		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
 			result = mSegmentDataListMonth;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_QUARTER)) {
-			result = mSegmentDataListQuarter;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_YEAR)) {
-			result = mSegmentDataListYear;
+		} else {
+			result = new ArrayList<>();
 		}
 
 		return result;
@@ -1741,9 +1612,7 @@ public class Stock extends DatabaseTable {
 	public ArrayList<StockData> getLineVertexList(String period) {
 		ArrayList<StockData> result = null;
 
-		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN1)) {
-			result = mLineVertexListMin1;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
+		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
 			result = mLineVertexListMin5;
 		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
 			result = mLineVertexListMin15;
@@ -1757,10 +1626,8 @@ public class Stock extends DatabaseTable {
 			result = mLineVertexListWeek;
 		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
 			result = mLineVertexListMonth;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_QUARTER)) {
-			result = mLineVertexListQuarter;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_YEAR)) {
-			result = mLineVertexListYear;
+		} else {
+			result = new ArrayList<>();
 		}
 
 		return result;
@@ -1769,9 +1636,7 @@ public class Stock extends DatabaseTable {
 	public ArrayList<StockData> getLineDataList(String period) {
 		ArrayList<StockData> result = null;
 
-		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN1)) {
-			result = mLineDataListMin1;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
+		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
 			result = mLineDataListMin5;
 		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
 			result = mLineDataListMin15;
@@ -1785,10 +1650,8 @@ public class Stock extends DatabaseTable {
 			result = mLineDataListWeek;
 		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
 			result = mLineDataListMonth;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_QUARTER)) {
-			result = mLineDataListQuarter;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_YEAR)) {
-			result = mLineDataListYear;
+		} else {
+			result = new ArrayList<>();
 		}
 
 		return result;
@@ -1797,9 +1660,7 @@ public class Stock extends DatabaseTable {
 	public ArrayList<StockData> getOutlineVertexList(String period) {
 		ArrayList<StockData> result = null;
 
-		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN1)) {
-			result = mOutlineVertexListMin1;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
+		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
 			result = mOutlineVertexListMin5;
 		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
 			result = mOutlineVertexListMin15;
@@ -1813,10 +1674,8 @@ public class Stock extends DatabaseTable {
 			result = mOutlineVertexListWeek;
 		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
 			result = mOutlineVertexListMonth;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_QUARTER)) {
-			result = mOutlineVertexListQuarter;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_YEAR)) {
-			result = mOutlineVertexListYear;
+		} else {
+			result = new ArrayList<>();
 		}
 
 		return result;
@@ -1825,9 +1684,7 @@ public class Stock extends DatabaseTable {
 	public ArrayList<StockData> getOutlineDataList(String period) {
 		ArrayList<StockData> result = null;
 
-		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN1)) {
-			result = mOutlineDataListMin1;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
+		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
 			result = mOutlineDataListMin5;
 		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
 			result = mOutlineDataListMin15;
@@ -1841,10 +1698,8 @@ public class Stock extends DatabaseTable {
 			result = mOutlineDataListWeek;
 		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
 			result = mOutlineDataListMonth;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_QUARTER)) {
-			result = mOutlineDataListQuarter;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_YEAR)) {
-			result = mOutlineDataListYear;
+		} else {
+			result = new ArrayList<>();
 		}
 
 		return result;
@@ -1900,9 +1755,7 @@ public class Stock extends DatabaseTable {
 	public String getAction(String period) {
 		String action = "";
 
-		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN1)) {
-			action = getActionMin1();
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
+		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
 			action = getActionMin5();
 		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
 			action = getActionMin15();
@@ -1916,19 +1769,13 @@ public class Stock extends DatabaseTable {
 			action = getActionWeek();
 		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
 			action = getActionMonth();
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_QUARTER)) {
-			action = getActionQuarter();
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_YEAR)) {
-			action = getActionYear();
 		}
 
 		return action;
 	}
 
 	public void setAction(String period, String action) {
-		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN1)) {
-			setActionMin1(action);
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
+		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
 			setActionMin5(action);
 		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
 			setActionMin15(action);
@@ -1942,10 +1789,6 @@ public class Stock extends DatabaseTable {
 			setActionWeek(action);
 		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
 			setActionMonth(action);
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_QUARTER)) {
-			setActionQuarter(action);
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_YEAR)) {
-			setActionYear(action);
 		}
 	}
 

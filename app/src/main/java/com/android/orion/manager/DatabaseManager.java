@@ -693,11 +693,7 @@ public class DatabaseManager implements StockListChangedListener, StockEditListe
 
 		period = stockData.getPeriod();
 
-		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN1)
-				|| TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)
-				|| TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)
-				|| TextUtils.equals(period, DatabaseContract.COLUMN_MIN30)
-				|| TextUtils.equals(period, DatabaseContract.COLUMN_MIN60)) {
+		if (StockData.isMinutePeriod(period)) {
 			selection += " AND " + DatabaseContract.COLUMN_TIME + " = " + "'"
 					+ stockData.getTime() + "'";
 		}
@@ -1264,7 +1260,7 @@ public class DatabaseManager implements StockListChangedListener, StockEditListe
 	}
 
 	public void getStockQuantList(Stock stock, ArrayList<StockQuant> StockQuantList) {
-		String sortOrder = DatabaseContract.COLUMN_ID + DatabaseContract.ORDER_DIRECTION_ASC;
+		String sortOrder = DatabaseContract.COLUMN_ID + DatabaseContract.ORDER_ASC;
 
 		if (stock == null || StockQuantList == null) {
 			return;

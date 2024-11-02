@@ -4,6 +4,8 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+
 import com.android.orion.setting.Constant;
 import com.android.orion.utility.Utility;
 
@@ -1317,11 +1319,10 @@ public class StockData extends DatabaseTable {
 		return stringBuffer.toString();
 	}
 
-	public boolean isMinutePeriod() {
-		boolean result = false;
+	public static boolean isMinutePeriod(@NonNull String period) {
+		boolean result;
 
-		switch (getPeriod()) {
-			case DatabaseContract.COLUMN_MIN1:
+		switch (period) {
 			case DatabaseContract.COLUMN_MIN5:
 			case DatabaseContract.COLUMN_MIN15:
 			case DatabaseContract.COLUMN_MIN30:
@@ -1331,13 +1332,15 @@ public class StockData extends DatabaseTable {
 			case DatabaseContract.COLUMN_DAY:
 			case DatabaseContract.COLUMN_WEEK:
 			case DatabaseContract.COLUMN_MONTH:
-			case DatabaseContract.COLUMN_QUARTER:
-			case DatabaseContract.COLUMN_YEAR:
 			default:
 				result = false;
 				break;
 		}
 
 		return result;
+	}
+
+	public boolean isMinutePeriod() {
+		return isMinutePeriod(getPeriod());
 	}
 }

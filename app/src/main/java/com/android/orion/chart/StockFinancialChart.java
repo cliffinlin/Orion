@@ -21,7 +21,6 @@ public class StockFinancialChart {
 	public ArrayList<Entry> mTotalAssetsEntryList = null;
 	public ArrayList<Entry> mTotalLongTermLiabilitiesEntryList = null;
 	public ArrayList<Entry> mMainBusinessIncomeEntryList = null;
-	public ArrayList<Entry> mFinancialExpensesEntryList = null;
 	public ArrayList<Entry> mNetProfitEntryList = null;
 	public ArrayList<Entry> mTotalShareEntryList = null;
 
@@ -57,10 +56,6 @@ public class StockFinancialChart {
 
 		if (mMainBusinessIncomeEntryList == null) {
 			mMainBusinessIncomeEntryList = new ArrayList<Entry>();
-		}
-
-		if (mFinancialExpensesEntryList == null) {
-			mFinancialExpensesEntryList = new ArrayList<Entry>();
 		}
 
 		if (mNetProfitEntryList == null) {
@@ -140,18 +135,11 @@ public class StockFinancialChart {
 		mainBusinessIncomeDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(mainBusinessIncomeDataSet);
 
-		// LineDataSet financialExpensesDataSet = new LineDataSet(
-		// mFinancialExpensesEntryList, "FinancialExpenses");
-		// financialExpensesDataSet.setColor(Color.BLACK);
-		// financialExpensesDataSet.setCircleColor(Color.BLACK);
-		// financialExpensesDataSet.setCircleSize(3f);
-		// financialExpensesDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		// lineData.addDataSet(financialExpensesDataSet);
-
 		LineDataSet netProfitDataSet = new LineDataSet(mNetProfitEntryList,
 				"NetProfit");
 		netProfitDataSet.setColor(Color.YELLOW);
-		netProfitDataSet.setDrawCircles(false);
+		netProfitDataSet.setCircleColor(Color.YELLOW);
+		netProfitDataSet.setCircleSize(3f);
 		netProfitDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(netProfitDataSet);
 
@@ -204,7 +192,6 @@ public class StockFinancialChart {
 		mTotalAssetsEntryList.clear();
 		mTotalLongTermLiabilitiesEntryList.clear();
 		mMainBusinessIncomeEntryList.clear();
-		mFinancialExpensesEntryList.clear();
 		mNetProfitEntryList.clear();
 		mTotalShareEntryList.clear();
 		mBookValuePerShareEntryList.clear();

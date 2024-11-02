@@ -67,7 +67,7 @@ public class StockDealListActivity extends ListActivity implements
 
 	String mSelection = null;
 	String mSortOrderColumn = DatabaseContract.COLUMN_NET;
-	String mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_ASC;
+	String mSortOrderDirection = DatabaseContract.ORDER_ASC;
 	String mSortOrderDefault = mSortOrderColumn + mSortOrderDirection;
 	String mSortOrder = mSortOrderDefault;
 	String mGroupBy = "";
@@ -115,6 +115,7 @@ public class StockDealListActivity extends ListActivity implements
 
 			switch (msg.what) {
 				case MESSAGE_DELETE_DEAL:
+					mDatabaseManager.getStockDealById(mStockDeal);
 					getStock();
 					RecordFile.writeDealFile(mStock, mStockDeal, Constant.DEAL_OPERATE_DELETE);
 					mDatabaseManager.deleteStockDeal(mStockDeal);
@@ -127,6 +128,7 @@ public class StockDealListActivity extends ListActivity implements
 					break;
 
 				case MESSAGE_VIEW_STOCK_DEAL:
+					mDatabaseManager.getStockDealById(mStockDeal);
 					getStock();
 
 					intent = new Intent(mContext, StockEditActivity.class);
@@ -136,6 +138,7 @@ public class StockDealListActivity extends ListActivity implements
 					break;
 
 				case MESSAGE_VIEW_STOCK_CHAT:
+					mDatabaseManager.getStockDealById(mStockDeal);
 					getStock();
 
 					ArrayList<String> stockIDList = new ArrayList<String>();
@@ -190,9 +193,10 @@ public class StockDealListActivity extends ListActivity implements
 					mode.finish();
 					return true;
 				case R.id.menu_delete:
+					mDatabaseManager.getStockDealById(mStockDeal);
 					new AlertDialog.Builder(mContext)
 							.setTitle(R.string.delete)
-							.setMessage(R.string.delete_confirm)
+							.setMessage(getString(R.string.delete_confirm, mStockDeal.toString()))
 							.setPositiveButton(R.string.ok,
 									new DialogInterface.OnClickListener() {
 										public void onClick(DialogInterface dialog,
@@ -409,10 +413,10 @@ public class StockDealListActivity extends ListActivity implements
 				break;
 		}
 
-		if (TextUtils.equals(mSortOrderDirection, DatabaseContract.ORDER_DIRECTION_ASC)) {
-			mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_DESC;
+		if (TextUtils.equals(mSortOrderDirection, DatabaseContract.ORDER_ASC)) {
+			mSortOrderDirection = DatabaseContract.ORDER_DESC;
 		} else {
-			mSortOrderDirection = DatabaseContract.ORDER_DIRECTION_ASC;
+			mSortOrderDirection = DatabaseContract.ORDER_ASC;
 		}
 
 		mSortOrder = mSortOrderColumn + mSortOrderDirection;
@@ -835,11 +839,8 @@ public class StockDealListActivity extends ListActivity implements
 	}
 
 	void getStock() {
-		mDatabaseManager.getStockDealById(mStockDeal);
-
 		mStock.setSE(mStockDeal.getSE());
 		mStock.setCode(mStockDeal.getCode());
-
 		mDatabaseManager.getStock(mStock);
 	}
 

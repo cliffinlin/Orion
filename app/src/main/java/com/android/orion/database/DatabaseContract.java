@@ -23,7 +23,6 @@ public final class DatabaseContract {
 	public static final String COLUMN_NET = "net";
 	public static final String COLUMN_VOLUME = "volume";
 	public static final String COLUMN_VALUE = "value";
-	public static final String COLUMN_MIN1 = "min1";
 	public static final String COLUMN_MIN5 = "min5";
 	public static final String COLUMN_MIN15 = "min15";
 	public static final String COLUMN_MIN30 = "min30";
@@ -31,8 +30,6 @@ public final class DatabaseContract {
 	public static final String COLUMN_DAY = "day";
 	public static final String COLUMN_WEEK = "week";
 	public static final String COLUMN_MONTH = "month";
-	public static final String COLUMN_QUARTER = "quarter";
-	public static final String COLUMN_YEAR = "year";
 	public static final String COLUMN_THRESHOLD = "threshold";
 	public static final String COLUMN_QUANT_VOLUME = "quant_volume";
 	public static final String COLUMN_QUANT_PROFIT = "quant_profit";
@@ -110,20 +107,19 @@ public final class DatabaseContract {
 	public static final String COLUMN_R_DATE = "r_date";
 	public static final String COLUMN_TIME_TO_MARKET = "time_to_market";
 
-	public static final String[] PERIODS = {COLUMN_YEAR, COLUMN_QUARTER,
-			COLUMN_MONTH, COLUMN_WEEK, COLUMN_DAY, COLUMN_MIN60, COLUMN_MIN30,
-			COLUMN_MIN15, COLUMN_MIN5, COLUMN_MIN1};
+	public static final String[] PERIODS = {COLUMN_MONTH, COLUMN_WEEK, COLUMN_DAY,
+			COLUMN_MIN60, COLUMN_MIN30, COLUMN_MIN15, COLUMN_MIN5};
 
 	public static final String ORDER_BY = " ORDER BY ";
-	public static final String ORDER_DIRECTION_ASC = " ASC ";
-	public static final String ORDER_DIRECTION_DESC = " DESC ";
-	private static final String TEXT_TYPE = " TEXT";
-	private static final String INTEGER_TYPE = " INTEGER";
-	private static final String DOUBLE_TYPE = " DOUBLE";
-	// private static final String BLOB_TYPE = " BLOB";
-	// private static final String UNIQUE_TYPE = " UNIQUE";
-	private static final String COMMA_SEP = ",";
-	private static final String DROP_TABLE_IF_EXISTS = "DROP TABLE IF EXISTS ";
+	public static final String ORDER_ASC = " ASC ";
+	public static final String ORDER_DESC = " DESC ";
+	public static final String TEXT_TYPE = " TEXT";
+	public static final String INTEGER_TYPE = " INTEGER";
+	public static final String DOUBLE_TYPE = " DOUBLE";
+	public static final String BLOB_TYPE = " BLOB";
+	public static final String UNIQUE_TYPE = " UNIQUE";
+	public static final String COMMA_SEP = ",";
+	public static final String DROP_TABLE_IF_EXISTS = "DROP TABLE IF EXISTS ";
 
 	// To prevent someone from accidentally instantiating the contract class,
 	// give it an empty constructor.
@@ -143,9 +139,9 @@ public final class DatabaseContract {
 		public static final String[] PROJECTION_ALL = {_ID, COLUMN_CLASSES,
 				COLUMN_SE, COLUMN_CODE, COLUMN_NAME, COLUMN_PINYIN,
 				COLUMN_FLAG, COLUMN_PRICE, COLUMN_CHANGE, COLUMN_NET,
-				COLUMN_VOLUME, COLUMN_VALUE, COLUMN_DATE, COLUMN_TIME, COLUMN_MIN1, COLUMN_MIN5,
+				COLUMN_VOLUME, COLUMN_VALUE, COLUMN_DATE, COLUMN_TIME, COLUMN_MIN5,
 				COLUMN_MIN15, COLUMN_MIN30, COLUMN_MIN60, COLUMN_DAY,
-				COLUMN_WEEK, COLUMN_MONTH, COLUMN_QUARTER, COLUMN_YEAR,
+				COLUMN_WEEK, COLUMN_MONTH,
 				COLUMN_THRESHOLD, COLUMN_QUANT_VOLUME, COLUMN_QUANT_PROFIT, COLUMN_QUANT_PROFIT_MARGIN, COLUMN_TREND,
 				COLUMN_OPERATE, COLUMN_HOLD, COLUMN_COST, COLUMN_PROFIT,
 				COLUMN_BONUS, COLUMN_VALUATION, COLUMN_TOTAL_SHARE,
@@ -172,14 +168,11 @@ public final class DatabaseContract {
 				+ COMMA_SEP + COLUMN_NET + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_VOLUME + INTEGER_TYPE + COMMA_SEP + COLUMN_VALUE
 				+ INTEGER_TYPE + COMMA_SEP + COLUMN_DATE + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_TIME + TEXT_TYPE + COMMA_SEP + COLUMN_MIN1 + TEXT_TYPE
-				+ COMMA_SEP + COLUMN_MIN5 + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_TIME + TEXT_TYPE + COMMA_SEP + COLUMN_MIN5 + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_MIN15 + TEXT_TYPE + COMMA_SEP + COLUMN_MIN30
 				+ TEXT_TYPE + COMMA_SEP + COLUMN_MIN60 + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_DAY + TEXT_TYPE + COMMA_SEP + COLUMN_WEEK + TEXT_TYPE
 				+ COMMA_SEP + COLUMN_MONTH + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_QUARTER + TEXT_TYPE + COMMA_SEP + COLUMN_YEAR
-				+ TEXT_TYPE + COMMA_SEP
 				+ COLUMN_THRESHOLD + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_QUANT_VOLUME + INTEGER_TYPE + COMMA_SEP
 				+ COLUMN_QUANT_PROFIT + DOUBLE_TYPE + COMMA_SEP

@@ -454,12 +454,6 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 					stockFinancialChart.mMainBusinessIncomeEntryList
 							.add(mainBusinessIncomeEntry);
 
-					Entry financialExpensesEntry = new Entry(
-							(float) mStockFinancial.getFinancialExpenses()
-									/ (float) unit, index);
-					stockFinancialChart.mFinancialExpensesEntryList
-							.add(financialExpensesEntry);
-
 					Entry netProfittEntry = new Entry(
 							(float) mStockFinancial.getNetProfit()
 									/ (float) unit, index);
