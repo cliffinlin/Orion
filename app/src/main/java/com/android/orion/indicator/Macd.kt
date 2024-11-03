@@ -202,7 +202,7 @@ object Macd {
         mVelocityList.add(0.0)
         i++
         while (i < mPriceList.size) {
-            mVelocityList.add(mHistogramList[i] - mHistogramList[i - 1])
+            mVelocityList.add((mHistogramList[i] - mHistogramList[i - 1]) * mSignal / SIGNAL)
             i++
         }
 

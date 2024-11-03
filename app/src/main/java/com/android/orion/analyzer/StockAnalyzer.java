@@ -490,7 +490,7 @@ public class StockAnalyzer {
 			dif = Macd.getDIFList().get(i);
 			dea = Macd.getDEAList().get(i);
 			histogram = Macd.getHistogramList().get(i);
-			velocity = stock.getPrice() + stock.getPrice() * Macd.getVelocityList().get(i) * coefficient;
+			velocity = Macd.getVelocityList().get(i);
 
 			stockDataList.get(i).setAverage5(average5);
 			stockDataList.get(i).setAverage10(average10);
@@ -563,10 +563,6 @@ public class StockAnalyzer {
 				stockVertexAnalyzer.debugShow(stockDataList, lineDataList);
 			}
 		}
-
-		stockVertexAnalyzer.analyzeDivergence(stock, stockDataList, segmentDataList);
-		stockVertexAnalyzer.analyzeDivergence(stock, stockDataList, strokeDataList);
-		stockVertexAnalyzer.analyzeDivergence(stock, stockDataList, drawDataList);
 
 		stockVertexAnalyzer.analyzeDirection(stockDataList);
 

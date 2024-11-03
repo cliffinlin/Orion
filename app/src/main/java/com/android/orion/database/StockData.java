@@ -55,10 +55,6 @@ public class StockData extends DatabaseTable {
 	public static final int LEVEL_OUTLINE = 5;
 	public static final int LEVEL_MAX = LEVEL_OUTLINE;
 
-	public static final int DIVERGENCE_UP = 1;
-	public static final int DIVERGENCE_NONE = 0;
-	public static final int DIVERGENCE_DOWN = -1;
-
 	public static final int DIRECTION_NONE = 0;
 	public static final int DIRECTION_UP = 1 << 0;
 	public static final int DIRECTION_DOWN = 1 << 1;
@@ -137,9 +133,7 @@ public class StockData extends DatabaseTable {
 	private double mDIF;
 	private double mDEA;
 	private double mHistogram;
-	private double mSigmaHistogram;
 	private double mVelocity;
-	private int mDivergence;
 	private String mAction;
 	private double mRoi;
 	private double mPe;
@@ -255,9 +249,7 @@ public class StockData extends DatabaseTable {
 		mDIF = 0;
 		mDEA = 0;
 		mHistogram = 0;
-		mSigmaHistogram = 0;
 		mVelocity = 0;
-		mDivergence = DIVERGENCE_NONE;
 		mAction = "";
 
 		mRoi = 0;
@@ -302,10 +294,7 @@ public class StockData extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_DIF, mDIF);
 		contentValues.put(DatabaseContract.COLUMN_DEA, mDEA);
 		contentValues.put(DatabaseContract.COLUMN_HISTOGRAM, mHistogram);
-		contentValues.put(DatabaseContract.COLUMN_SIGMA_HISTOGRAM,
-				mSigmaHistogram);
 		contentValues.put(DatabaseContract.COLUMN_VELOCITY, mVelocity);
-		contentValues.put(DatabaseContract.COLUMN_DIVERGENCE, mDivergence);
 		contentValues.put(DatabaseContract.COLUMN_ACTION, mAction);
 
 		contentValues.put(DatabaseContract.COLUMN_ROI, mRoi);
@@ -353,9 +342,7 @@ public class StockData extends DatabaseTable {
 		setDIF(stockData.mDIF);
 		setDEA(stockData.mDEA);
 		setHistogram(stockData.mHistogram);
-		setSigmaHistogram(stockData.mSigmaHistogram);
 		setVelocity(stockData.mVelocity);
-		setDivergence(stockData.mDivergence);
 		setAction(stockData.mAction);
 
 		setRoi(stockData.mRoi);
@@ -406,9 +393,7 @@ public class StockData extends DatabaseTable {
 		setDIF(cursor);
 		setDEA(cursor);
 		setHistogram(cursor);
-		setSigmaHistogram(cursor);
 		setVelocity(cursor);
-		setDivergence(cursor);
 		setAction(cursor);
 
 		setRoi(cursor);
@@ -821,23 +806,6 @@ public class StockData extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_HISTOGRAM)));
 	}
 
-	double getSigmaHistogram() {
-		return mSigmaHistogram;
-	}
-
-	public void setSigmaHistogram(double sigmaHistogram) {
-		mSigmaHistogram = sigmaHistogram;
-	}
-
-	void setSigmaHistogram(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setSigmaHistogram(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_SIGMA_HISTOGRAM)));
-	}
-
 	public double getVelocity() {
 		return mVelocity;
 	}
@@ -853,23 +821,6 @@ public class StockData extends DatabaseTable {
 
 		setVelocity(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_VELOCITY)));
-	}
-
-	public int getDivergence() {
-		return mDivergence;
-	}
-
-	public void setDivergence(int divergence) {
-		mDivergence = divergence;
-	}
-
-	void setDivergence(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setDivergence(cursor.getInt(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_DIVERGENCE)));
 	}
 
 	public String getAction() {
@@ -1149,32 +1100,6 @@ public class StockData extends DatabaseTable {
 			result = DIRECTION_DOWN;
 		} else {
 			result = DIRECTION_NONE;
-		}
-
-		return result;
-	}
-
-	public int divergenceTo(StockData stockData) {
-		int result = DIVERGENCE_NONE;
-
-		if (mDirection == DIRECTION_UP) {
-			if ((getVertexHigh() > stockData.getVertexHigh())
-					&& (getVertexLow() > stockData.getVertexLow())) {
-				if (Math.abs(getSigmaHistogram()) < Math.abs(stockData.getSigmaHistogram())) {
-					if (Math.abs(getVelocity()) < Math.abs(stockData.getVelocity())) {
-						result = DIVERGENCE_UP;
-					}
-				}
-			}
-		} else if (mDirection == DIRECTION_DOWN) {
-			if ((getVertexHigh() < stockData.getVertexHigh())
-					&& (getVertexLow() < stockData.getVertexLow())) {
-				if (Math.abs(getSigmaHistogram()) < Math.abs(stockData.getSigmaHistogram())) {
-					if (Math.abs(getVelocity()) < Math.abs(stockData.getVelocity())) {
-						result = DIVERGENCE_DOWN;
-					}
-				}
-			}
 		}
 
 		return result;

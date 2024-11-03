@@ -237,48 +237,6 @@ public class StockVertexAnalyzer {
 		}
 	}
 
-	void sigmaHistogram(StockData stockData, ArrayList<StockData> stockDataList) {
-		double histogram = 0;
-		double sigmaHistogram = 0;
-
-		StockData current = null;
-
-		if ((stockData == null) || (stockDataList == null)) {
-			return;
-		}
-
-		for (int i = stockData.getIndexStart() + 1; i <= stockData
-				.getIndexEnd(); i++) {
-			current = stockDataList.get(i);
-			if (current == null) {
-				return;
-			}
-
-			histogram = current.getHistogram();
-
-			if (stockData.getDirection() == StockData.DIRECTION_UP) {
-//				if (histogram > 0) {
-//					sigmaHistogram += Math.abs(histogram);
-//				}
-
-				sigmaHistogram += Math.abs(histogram);
-			} else if (stockData.getDirection() == StockData.DIRECTION_DOWN) {
-//				if (histogram < 0) {
-//					sigmaHistogram += Math.abs(histogram);
-//				}
-
-				sigmaHistogram += Math.abs(histogram);
-			}
-
-			if (i == stockData.getIndexEnd()) {
-				stockData.setDIF(current.getDIF());
-				stockData.setDEA(current.getDEA());
-				stockData.setHistogram(current.getHistogram());
-				stockData.setSigmaHistogram(sigmaHistogram);
-			}
-		}
-	}
-
 	void vertexListToDataList(ArrayList<StockData> stockDataList,
 							  ArrayList<StockData> vertexList, ArrayList<StockData> dataList, int level) {
 		int size = 0;
@@ -339,8 +297,6 @@ public class StockVertexAnalyzer {
 			stockData.setupChange();
 			stockData.setupNet();
 			stockData.setupVelocity();
-			sigmaHistogram(stockData, stockDataList);
-
 			stockData.setLevel(level);
 
 			dataList.add(stockData);
@@ -381,41 +337,6 @@ public class StockVertexAnalyzer {
 		result = true;
 
 		return result;
-	}
-
-	void analyzeDivergence(Stock stock, ArrayList<StockData> stockDataList,
-						   ArrayList<StockData> lineDataList) {
-		StockData stockData = null;
-		StockData current = null;
-		StockData base = null;
-		int divergence = StockData.DIVERGENCE_NONE;
-
-		if ((stock == null) || (stockDataList == null) || (lineDataList == null)) {
-			return;
-		}
-
-		if (stockDataList.size() < StockData.VERTEX_TYPING_SIZE) {
-			return;
-		}
-
-		if (lineDataList.size() < StockData.VERTEX_TYPING_SIZE) {
-			return;
-		}
-
-		stockData = stockDataList.get(stockDataList.size() - 1);
-
-		current = lineDataList.get(lineDataList.size() - 1);
-		base = lineDataList.get(lineDataList.size() - 3);
-
-		if ((stockData == null) || (current == null) || (base == null)) {
-			return;
-		}
-
-		if (stock.getPrice() > base.getVertexHigh() || stock.getPrice() < base.getVertexLow()) {
-			divergence = current.divergenceTo(base);
-		}
-
-		current.setDivergence(divergence);
 	}
 
 	void analyzeDirection(ArrayList<StockData> stockDataList) {

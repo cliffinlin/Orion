@@ -195,13 +195,6 @@ public class StockDataChart {
 			}
 		}
 
-		if (mVelocityEntryList.size() > 0) {
-			LineDataSet velocityDataSet = new LineDataSet(mVelocityEntryList, "Velocity");
-			velocityDataSet.setColor(Color.BLUE);
-			velocityDataSet.setDrawCircles(false);
-			velocityDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-			lineData.addDataSet(velocityDataSet);
-		}
 
 		if (mBookValuePerShareList.size() > 0) {
 			LineDataSet lineDataSet = new LineDataSet(
@@ -253,17 +246,23 @@ public class StockDataChart {
 
 		LineDataSet difDataSet = new LineDataSet(mDIFEntryList, "DIF");
 		difDataSet.setColor(Color.YELLOW);
-		// difDataSet.setCircleColor(Color.YELLOW);
 		difDataSet.setDrawCircles(false);
 		difDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(difDataSet);
 
 		LineDataSet deaDataSet = new LineDataSet(mDEAEntryList, "DEA");
 		deaDataSet.setColor(Color.WHITE);
-		// deaDataSet.setCircleColor(Color.WHITE);
 		deaDataSet.setDrawCircles(false);
 		deaDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(deaDataSet);
+
+		if (mVelocityEntryList.size() > 0) {
+			LineDataSet velocityDataSet = new LineDataSet(mVelocityEntryList, "Velocity");
+			velocityDataSet.setColor(Color.BLUE);
+			velocityDataSet.setDrawCircles(false);
+			velocityDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+			lineData.addDataSet(velocityDataSet);
+		}
 
 		mCombinedDataSub.setData(barData);
 		mCombinedDataSub.setData(lineData);
