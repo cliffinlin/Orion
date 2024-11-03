@@ -41,7 +41,6 @@ public class StockAlarmManager {
 	}
 
 	public void startAlarm() {
-		stopAlarm();
 
 		if ((mAlarmManager == null) || (mPendingIntent == null)
 				|| (mIntervalMillis <= 0)) {
@@ -59,30 +58,29 @@ public class StockAlarmManager {
 				calendar = Market.getFirstHalfStartCalendar();
 			} else if (Market.isFirstHalf()) {
 				calendar = Calendar.getInstance();
+				calendar.add(Calendar.MILLISECOND, (int) mIntervalMillis);
 			} else if (Market.isLunchTime()) {
 				calendar = Market.getSecondHalfStartCalendar();
 			} else if (Market.isSecondHalf()) {
 				calendar = Calendar.getInstance();
+				calendar.add(Calendar.MILLISECOND, (int) mIntervalMillis);
 			} else if (Market.afterClosed()) {
-				if (dayOfWeek < Calendar.FRIDAY) {
-					calendar.add(Calendar.DAY_OF_WEEK, 1);
+				if (dayOfWeek == Calendar.FRIDAY) {
+					//TODO
+					return;
 				} else {
-					calendar.add(Calendar.DAY_OF_WEEK, 3);
+					//TODO
+					return;
 				}
-				calendar = Market.getFirstHalfStartCalendar();
 			}
 		} else {
-			if (dayOfWeek == Calendar.SATURDAY) {
-				calendar.add(Calendar.DAY_OF_WEEK, 2);
-			} else if (dayOfWeek == Calendar.SUNDAY) {
-				calendar.add(Calendar.DAY_OF_WEEK, 1);
-			}
-			calendar = Market.getFirstHalfStartCalendar();
+			//TODO
+			return;
 		}
 
 		long triggerMillis = calendar.getTimeInMillis();
 
-		Log.d("will arrive at "
+		Log.d("Alarm will arrive at "
 				+ Utility.getCalendarDateTimeString(calendar)
 				+ " triggerMillis=" + triggerMillis
 				+ " intervalMillis=" + mIntervalMillis);
@@ -92,6 +90,8 @@ public class StockAlarmManager {
 	}
 
 	public void stopAlarm() {
+		Log.d("cancel");
+
 		if ((mAlarmManager == null) || (mPendingIntent == null)) {
 			Log.d("return, mAlarmManager = " + mAlarmManager
 					+ " mPendingIntent = " + mPendingIntent);

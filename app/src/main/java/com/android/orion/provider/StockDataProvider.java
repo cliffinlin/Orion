@@ -392,6 +392,7 @@ public class StockDataProvider implements StockListChangedListener, StockEditLis
 		if (stock == null) {
 			return;
 		}
+
 		download(stock);
 	}
 
@@ -399,6 +400,10 @@ public class StockDataProvider implements StockListChangedListener, StockEditLis
 	public void onStockRemoveFavorite(Stock stock) {
 		if (stock == null) {
 			return;
+		}
+
+		if (mHandler.hasMessages(Integer.valueOf(stock.getCode()))) {
+			mHandler.removeMessages(Integer.valueOf(stock.getCode()));
 		}
 	}
 
@@ -413,6 +418,10 @@ public class StockDataProvider implements StockListChangedListener, StockEditLis
 	public void onStockRemove(Stock stock) {
 		if (stock == null) {
 			return;
+		}
+
+		if (mHandler.hasMessages(Integer.valueOf(stock.getCode()))) {
+			mHandler.removeMessages(Integer.valueOf(stock.getCode()));
 		}
 	}
 
