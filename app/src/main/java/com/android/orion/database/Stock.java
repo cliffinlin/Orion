@@ -128,9 +128,6 @@ public class Stock extends DatabaseTable {
 	private String mTrend;
 
 	private double mThreshold;
-	private long mQuantVolume;
-	private double mQuantProfit;
-	private double mQuantProfitMargin;
 
 	private String mOperate;
 	private long mHold;
@@ -214,9 +211,6 @@ public class Stock extends DatabaseTable {
 		mTrend = "";
 
 		mThreshold = 0;
-		mQuantVolume = 0;
-		mQuantProfit = 0;
-		mQuantProfitMargin = 0;
 
 		mCost = 0;
 		mProfit = 0;
@@ -276,8 +270,6 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_WEEK, mActionWeek);
 		contentValues.put(DatabaseContract.COLUMN_MONTH, mActionMonth);
 		contentValues.put(DatabaseContract.COLUMN_TREND, mTrend);
-		contentValues.put(DatabaseContract.COLUMN_QUANT_PROFIT, mQuantProfit);
-		contentValues.put(DatabaseContract.COLUMN_QUANT_PROFIT_MARGIN, mQuantProfitMargin);
 
 		contentValues.put(DatabaseContract.COLUMN_HOLD, mHold);
 		contentValues.put(DatabaseContract.COLUMN_COST, mCost);
@@ -345,7 +337,6 @@ public class Stock extends DatabaseTable {
 
 		contentValues.put(DatabaseContract.COLUMN_FLAG, mFlag);
 		contentValues.put(DatabaseContract.COLUMN_THRESHOLD, mThreshold);
-		contentValues.put(DatabaseContract.COLUMN_QUANT_VOLUME, mQuantVolume);
 		contentValues.put(DatabaseContract.COLUMN_OPERATE, mOperate);
 
 		return contentValues;
@@ -385,9 +376,6 @@ public class Stock extends DatabaseTable {
 		setTrend(stock.mTrend);
 
 		setThreshold(stock.mThreshold);
-		setQuantVolume(stock.mQuantVolume);
-		setQuantProfit(stock.mQuantProfit);
-		setQuantProfitMargin(stock.mQuantProfitMargin);
 
 		setOperate(stock.mOperate);
 		setHold(stock.mHold);
@@ -453,9 +441,6 @@ public class Stock extends DatabaseTable {
 		setActionMonth(cursor);
 		setTrend(cursor);
 		setThreshold(cursor);
-		setQuantVolume(cursor);
-		setQuantProfit(cursor);
-		setQuantProfitMargin(cursor);
 		setOperate(cursor);
 		setHold(cursor);
 		setCost(cursor);
@@ -860,57 +845,6 @@ public class Stock extends DatabaseTable {
 
 		setThreshold(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_THRESHOLD)));
-	}
-
-	public long getQuantVolume() {
-		return mQuantVolume;
-	}
-
-	public void setQuantVolume(long quantVolume) {
-		mQuantVolume = quantVolume;
-	}
-
-	void setQuantVolume(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setQuantVolume(cursor.getLong(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_QUANT_VOLUME)));
-	}
-
-	public double getQuantProfit() {
-		return mQuantProfit;
-	}
-
-	public void setQuantProfit(double quantProfit) {
-		mQuantProfit = quantProfit;
-	}
-
-	void setQuantProfit(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setQuantProfit(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_QUANT_PROFIT)));
-	}
-
-	public double getQuantProfitMargin() {
-		return mQuantProfitMargin;
-	}
-
-	public void setQuantProfitMargin(double quantProfitMargin) {
-		mQuantProfitMargin = quantProfitMargin;
-	}
-
-	void setQuantProfitMargin(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setQuantProfitMargin(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_QUANT_PROFIT_MARGIN)));
 	}
 
 	public String getOperate() {

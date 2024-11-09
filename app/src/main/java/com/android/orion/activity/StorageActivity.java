@@ -59,6 +59,7 @@ public class StorageActivity extends DatabaseActivity {
 
 			switch (msg.what) {
 				case MESSAGE_REFRESH:
+					mStockDataProvider.download();
 					break;
 
 				case MESSAGE_SAVE_TO_FILE:
@@ -263,8 +264,6 @@ public class StorageActivity extends DatabaseActivity {
 								stock.setOperate(parser.nextText());
 							} else if (TextUtils.equals(tagName, DatabaseContract.COLUMN_THRESHOLD)) {
 								stock.setThreshold(Double.valueOf(parser.nextText()));
-							} else if (TextUtils.equals(tagName, DatabaseContract.COLUMN_QUANT_VOLUME)) {
-								stock.setQuantVolume(Long.valueOf(parser.nextText()));
 							}
 						} else if (parseType == XML_PARSE_TYPE_STOCK_DEAL) {
 							if (TextUtils.equals(tagName, DatabaseContract.COLUMN_BUY)) {
@@ -436,8 +435,6 @@ public class StorageActivity extends DatabaseActivity {
 						stock.getOperate());
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_THRESHOLD,
 						String.valueOf(stock.getThreshold()));
-				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_QUANT_VOLUME,
-						String.valueOf(stock.getQuantVolume()));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

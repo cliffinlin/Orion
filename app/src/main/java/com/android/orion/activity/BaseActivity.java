@@ -4,14 +4,11 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.LoaderManager;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,22 +17,17 @@ import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import com.android.orion.R;
 import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockFinancial;
-import com.android.orion.database.StockQuant;
 import com.android.orion.manager.DatabaseManager;
 import com.android.orion.manager.StockManager;
 import com.android.orion.provider.IStockDataProvider;
 import com.android.orion.provider.StockDataProvider;
-import com.android.orion.service.StockService;
-import com.android.orion.service.StockService.StockServiceBinder;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Logger;
-import com.android.orion.utility.Utility;
 
 import java.util.ArrayList;
 
@@ -56,7 +48,6 @@ public class BaseActivity extends Activity {
 	Stock mStock = new Stock();
 	ArrayList<Stock> mStockList = new ArrayList<>();
 	ArrayList<StockDeal> mStockDealList = new ArrayList<>();
-	ArrayList<StockQuant> mStockQuantList = new ArrayList<>();
 	ArrayList<StockFinancial> mStockFinancialList = new ArrayList<>();
 	ArrayList<ShareBonus> mShareBonusList = new ArrayList<>();
 
@@ -165,7 +156,6 @@ public class BaseActivity extends Activity {
 		mDatabaseManager.deleteStockData(stock.getId());
 		mDatabaseManager.deleteStockFinancial(stock.getId());
 		mDatabaseManager.deleteShareBonus(stock.getId());
-		mDatabaseManager.deleteStockQuant(stock);
 
 		mStockDataProvider.download(stock);
 	}

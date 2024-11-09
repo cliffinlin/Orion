@@ -202,16 +202,17 @@
             android:layout_weight="1">
 
             <TextView
-                android:id="@+id/textView_stock_quant_volume"
+                android:id="@+id/textView_stock_hold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="14dp"
                 android:layout_marginRight="14dp"
-                android:labelFor="@+id/edittext_stock_quant_volume"
-                android:text="@string/stock_quant_volume" />
+                android:labelFor="@+id/edittext_stock_hold"
+                android:text="@string/stock_hold" />
 
             <EditText
-                android:id="@+id/edittext_stock_quant_volume"
+                android:id="@+id/edittext_stock_hold"
+                android:enabled="false"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="18dp"

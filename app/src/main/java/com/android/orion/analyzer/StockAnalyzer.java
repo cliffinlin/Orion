@@ -509,7 +509,6 @@ public class StockAnalyzer {
 								  ArrayList<StockData> outlineVertexList, ArrayList<StockData> outlineDataList) {
 		StockKeyAnalyzer stockKeyAnalyzer = StockKeyAnalyzer.getInstance();
 		StockVertexAnalyzer stockVertexAnalyzer = StockVertexAnalyzer.getInstance();
-		StockQuantAnalyzer stockQuantAnalyzer = StockQuantAnalyzer.getInstance();
 		stockKeyAnalyzer.analyze(stock, stockDataList);
 
 		stockVertexAnalyzer.analyzeVertex(stockDataList, drawVertexList);
@@ -565,14 +564,7 @@ public class StockAnalyzer {
 		}
 
 		stockVertexAnalyzer.analyzeDirection(stockDataList);
-
 		analyzeAction(stock, period, stockDataList, drawVertexList, drawDataList, strokeDataList, segmentDataList);
-
-		if (TextUtils.equals(period, stock.getOperate())) {
-			mDatabaseManager.getShareBonusList(stock, mShareBonusList,
-					DatabaseContract.COLUMN_DATE + " DESC ");
-			stockQuantAnalyzer.analyze(mContext, stock, stockDataList, mShareBonusList);
-		}
 	}
 
 	private String getSecondBottomAction(Stock stock, ArrayList<StockData> vertexList,

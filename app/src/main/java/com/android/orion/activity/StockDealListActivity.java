@@ -312,16 +312,6 @@ public class StockDealListActivity extends ListActivity implements
 				mHandler.sendEmptyMessage(MESSAGE_VIEW_STOCK_TREND);
 				return true;
 
-			case R.id.action_quant: {
-				Bundle bundle = new Bundle();
-				bundle.putString(Constant.EXTRA_STOCK_SE, mStock.getSE());
-				bundle.putString(Constant.EXTRA_STOCK_CODE, mStock.getCode());
-				Intent intent = new Intent(this, StockQuantListActivity.class);
-				intent.putExtras(bundle);
-				startActivity(intent);
-				return true;
-			}
-
 			default:
 				return super.onMenuItemSelected(featureId, item);
 		}

@@ -28,7 +28,6 @@ import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
-import com.android.orion.database.StockQuant;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Preferences;
@@ -66,7 +65,6 @@ public class StockChartListActivity extends BaseActivity implements
 	boolean mKeyDisplayLatest = true;
 	boolean mKeyDisplayCost = true;
 	boolean mKeyDisplayDeal = false;
-	boolean mKeyDisplayQuant = false;
 	boolean mKeyDisplayBonus = false;
 
 	int mStockListIndex = 0;
@@ -143,9 +141,6 @@ public class StockChartListActivity extends BaseActivity implements
 				Constant.EXTRA_STOCK_LIST_SORT_ORDER);
 
 		mKeyDisplayDeal = getIntent().getBooleanExtra(Constant.EXTRA_STOCK_DEAL, false);
-
-		mKeyDisplayQuant = getIntent().getBooleanExtra(Constant.EXTRA_STOCK_QUANT, false);
-
 		mKeyDisplayBonus = getIntent().getBooleanExtra(Constant.EXTRA_STOCK_BONUS, false);
 
 		initLoader();
@@ -158,7 +153,6 @@ public class StockChartListActivity extends BaseActivity implements
 		super.onNewIntent(intent);
 
 		mKeyDisplayDeal = getIntent().getBooleanExtra(Constant.EXTRA_STOCK_DEAL, false);
-		mKeyDisplayQuant = getIntent().getBooleanExtra(Constant.EXTRA_STOCK_QUANT, false);
 		mKeyDisplayBonus = getIntent().getBooleanExtra(Constant.EXTRA_STOCK_BONUS, false);
 		restartLoader();
 	}
@@ -220,16 +214,6 @@ public class StockChartListActivity extends BaseActivity implements
 				mIntent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
 				startActivity(mIntent);
 				return true;
-
-			case R.id.action_quant: {
-				Bundle bundle = new Bundle();
-				bundle.putString(Constant.EXTRA_STOCK_SE, mStock.getSE());
-				bundle.putString(Constant.EXTRA_STOCK_CODE, mStock.getCode());
-				Intent intent = new Intent(this, StockQuantListActivity.class);
-				intent.putExtras(bundle);
-				startActivity(intent);
-				return true;
-			}
 
 			case R.id.action_loopback: {
 				startActivityForResult(new Intent(this,
@@ -658,14 +642,8 @@ public class StockChartListActivity extends BaseActivity implements
 				loadStockDealList();
 			}
 
-
-			mStockQuantList.clear();
-			if (mKeyDisplayQuant && !TextUtils.isEmpty(mStock.getOperate()) && mStock.getOperate().equals(mStockData.getPeriod())) {
-				loadStockQuantList();
-			}
-
 			stockDataChart.updateDescription(mStock);
-			stockDataChart.updateLimitLines(mStock, mStockDealList, mStockQuantList, mKeyDisplayLatest, mKeyDisplayCost, mKeyDisplayDeal, mKeyDisplayQuant);
+			stockDataChart.updateLimitLines(mStock, mStockDealList, mKeyDisplayLatest, mKeyDisplayCost, mKeyDisplayDeal);
 			stockDataChart.setMainChartData(mContext);
 			stockDataChart.setSubChartData(mContext);
 
@@ -693,36 +671,6 @@ public class StockChartListActivity extends BaseActivity implements
 		String sortOrder = DatabaseContract.COLUMN_BUY + " DESC ";
 
 		mDatabaseManager.getStockDealList(mStockDealList, selection, sortOrder);
-	}
-
-	void loadStockQuantList() {
-		ArrayMap<String, StockQuant> stockquantMap = new ArrayMap<>();
-
-		String selection = DatabaseContract.COLUMN_SE + " = " + "'" + mStock.getSE()
-				+ "'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "'"
-				+ mStock.getCode() + "'";
-		String sortOrder = DatabaseContract.COLUMN_CREATED + DatabaseContract.ORDER_ASC;
-
-		mDatabaseManager.getStockQuantList(mStock, mStockQuantList, selection, sortOrder);
-
-		for (int i = 0; i < mStockQuantList.size(); i++) {
-			StockQuant stockQuant = mStockQuantList.get(i);
-			if (TextUtils.isEmpty(stockQuant.getCreated())) {
-				continue;
-			}
-
-			if (TextUtils.isEmpty(stockQuant.getModified())) {
-				stockquantMap.put(stockQuant.getCreated(), stockQuant);
-			} else {
-				stockquantMap.remove(stockQuant.getCreated());
-			}
-		}
-
-		if (stockquantMap.size() == 0) {
-			mStockQuantList.clear();
-		} else {
-			mStockQuantList = new ArrayList<StockQuant>(stockquantMap.values());
-		}
 	}
 
 	void updateStockDataChartItemList() {
