@@ -23,7 +23,7 @@ import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockFinancial;
 import com.android.orion.manager.DatabaseManager;
 import com.android.orion.manager.StockManager;
-import com.android.orion.provider.IStockDataProvider;
+import com.android.orion.interfaces.IStockDataProvider;
 import com.android.orion.provider.StockDataProvider;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;

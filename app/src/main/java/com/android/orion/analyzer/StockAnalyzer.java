@@ -25,6 +25,7 @@ import com.android.orion.manager.DatabaseManager;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Logger;
+import com.android.orion.utility.Market;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.RecordFile;
 import com.android.orion.utility.StopWatch;
@@ -792,6 +793,10 @@ public class StockAnalyzer {
 		boolean notifyToSell1;
 		boolean notifyToBuy2;
 		boolean notifyToSell2;
+
+		if (!Market.isTradingHours()) {
+			return;
+		}
 
 		if (stock == null || stock.getPrice() == 0 || TextUtils.isEmpty(stock.getOperate())) {
 			return;

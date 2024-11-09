@@ -21,6 +21,7 @@ import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.IndexComponent;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
+import com.android.orion.interfaces.IStockDataProvider;
 import com.android.orion.interfaces.StockEditListener;
 import com.android.orion.interfaces.StockListChangedListener;
 import com.android.orion.manager.DatabaseManager;
