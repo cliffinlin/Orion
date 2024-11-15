@@ -390,6 +390,7 @@ public class SinaFinance extends StockDataProvider {
 				Thread.sleep(Config.downloadSleepInterval);
 			}
 		} catch (Exception e) {
+			result = RESULT_FAILED;
 			e.printStackTrace();
 		}
 
@@ -547,6 +548,7 @@ public class SinaFinance extends StockDataProvider {
 				Thread.sleep(Config.downloadSleepInterval);
 			}
 		} catch (Exception e) {
+			result = RESULT_FAILED;
 			e.printStackTrace();
 		}
 
@@ -682,6 +684,7 @@ public class SinaFinance extends StockDataProvider {
 				Thread.sleep(Config.downloadSleepInterval);
 			}
 		} catch (Exception e) {
+			result = RESULT_FAILED;
 			e.printStackTrace();
 		}
 
@@ -847,6 +850,7 @@ public class SinaFinance extends StockDataProvider {
 				Thread.sleep(Config.downloadSleepInterval);
 			}
 		} catch (Exception e) {
+			result = RESULT_FAILED;
 			e.printStackTrace();
 		}
 
@@ -1275,6 +1279,7 @@ public class SinaFinance extends StockDataProvider {
 				Thread.sleep(Config.downloadSleepInterval);
 			}
 		} catch (Exception e) {
+			result = RESULT_FAILED;
 			e.printStackTrace();
 		}
 
@@ -1445,6 +1450,7 @@ public class SinaFinance extends StockDataProvider {
 				Thread.sleep(Config.downloadSleepInterval);
 			}
 		} catch (Exception e) {
+			result = RESULT_FAILED;
 			e.printStackTrace();
 		}
 
@@ -1668,6 +1674,7 @@ public class SinaFinance extends StockDataProvider {
 				Thread.sleep(Config.downloadSleepInterval);
 			}
 		} catch (Exception e) {
+			result = RESULT_FAILED;
 			e.printStackTrace();
 		}
 
@@ -1859,6 +1866,7 @@ public class SinaFinance extends StockDataProvider {
 				Thread.sleep(Config.downloadSleepInterval);
 			}
 		} catch (Exception e) {
+			result = RESULT_FAILED;
 			e.printStackTrace();
 		}
 

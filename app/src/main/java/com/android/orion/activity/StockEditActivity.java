@@ -146,6 +146,7 @@ public class StockEditActivity extends DatabaseActivity implements OnClickListen
 						mRadioGroupClass.check(R.id.radio_class_index);
 						mRadioGroupSE.check(R.id.radio_se_sh);
 					}
+					mStock.setCode(s.toString());
 				}
 			}
 		});

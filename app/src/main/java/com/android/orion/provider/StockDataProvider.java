@@ -26,6 +26,7 @@ import com.android.orion.interfaces.StockEditListener;
 import com.android.orion.interfaces.StockListChangedListener;
 import com.android.orion.manager.DatabaseManager;
 import com.android.orion.manager.StockManager;
+import com.android.orion.service.StockService;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Logger;
@@ -492,30 +493,37 @@ public class StockDataProvider implements StockListChangedListener, StockEditLis
 
 				if (TextUtils.equals(stock.getClasses(), Stock.CLASS_A)) {
 					if (downloadStockInformation(stock) == RESULT_FAILED) {
+						StockService.getInstance().onDisconnected();
 						return;
 					}
 
 					if (downloadStockFinancial(stock) == RESULT_FAILED) {
+						StockService.getInstance().onDisconnected();
 						return;
 					}
 
 					if (downloadShareBonus(stock) == RESULT_FAILED) {
+						StockService.getInstance().onDisconnected();
 						return;
 					}
 
 					if (downloadTotalShare(stock) == RESULT_FAILED) {
+						StockService.getInstance().onDisconnected();
 						return;
 					}
 
 					if (downloadStockDataHistory(stock) == RESULT_FAILED) {
+						StockService.getInstance().onDisconnected();
 						return;
 					}
 
 					if (downloadStockDataRealTime(stock) == RESULT_FAILED) {
+						StockService.getInstance().onDisconnected();
 						return;
 					}
 
 					if (downloadStockRealTime(stock) == RESULT_FAILED) {
+						StockService.getInstance().onDisconnected();
 						return;
 					}
 				} else if (TextUtils.equals(stock.getClasses(), Stock.CLASS_INDEX)) {

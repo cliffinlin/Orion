@@ -776,12 +776,10 @@ public class StockAnalyzer {
 			}
 		}
 
-		if (!TextUtils.isEmpty(stock.getOperate())) {
-			if (stockData.getHistogram() > prev.getHistogram()) {
-				action += StockData.MARK_ADD;
-			} else if (stockData.getHistogram() < prev.getHistogram()) {
-				action += StockData.MARK_MINUS;
-			}
+		if (stockData.getVelocity() > 0) {
+			action += StockData.MARK_ADD;
+		} else if (stockData.getVelocity() < 0) {
+			action += StockData.MARK_MINUS;
 		}
 
 		stock.setDateTime(stockData.getDate(), stockData.getTime());
