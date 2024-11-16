@@ -99,6 +99,16 @@ public class StockListEditActivity extends DatabaseActivity implements
 	@Override
 	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
+			case R.id.action_new:
+				Intent intent = new Intent(this, StockEditActivity.class);
+				intent.setAction(Constant.ACTION_FAVORITE_STOCK_INSERT);
+				startActivity(intent);
+				return true;
+
+			case R.id.action_search:
+				startActivity(new Intent(this, StockSearchActivity.class));
+				return true;
+
 			case R.id.action_favorite:
 				new Thread(new Runnable() {
 					@Override
@@ -125,7 +135,6 @@ public class StockListEditActivity extends DatabaseActivity implements
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		mStockDataProvider.download();
 	}
 
 	String getSelection() {
@@ -390,7 +399,6 @@ public class StockListEditActivity extends DatabaseActivity implements
 
 					case R.id.delete:
 						if (stock.getHold() == 0) {
-							final long stock_id = stock.getId();
 							final String stock_name = stock.getName();
 							new AlertDialog.Builder(mContext)
 									.setTitle(R.string.delete)
@@ -399,7 +407,11 @@ public class StockListEditActivity extends DatabaseActivity implements
 											new DialogInterface.OnClickListener() {
 												public void onClick(DialogInterface dialog,
 																	int which) {
-													mDatabaseManager.deleteStock(stock_id);
+													mDatabaseManager.deleteStock(stockId);
+													mDatabaseManager.deleteStockData(stockId);
+													mDatabaseManager.deleteStockFinancial(stockId);
+													mDatabaseManager.deleteShareBonus(stockId);
+													mDatabaseManager.deleteTotalShare(stockId);
 												}
 											})
 									.setNegativeButton(R.string.cancel,

@@ -92,7 +92,7 @@ public class StockData extends DatabaseTable {
 			Calendar calendar0;
 			Calendar calendar1;
 
-			if (arg0 == null ||arg1 == null) {
+			if (arg0 == null || arg1 == null) {
 				return 0;
 			}
 
@@ -1217,5 +1217,24 @@ public class StockData extends DatabaseTable {
 
 	public boolean isMinutePeriod() {
 		return isMinutePeriod(getPeriod());
+	}
+
+	public static int getPeriodIndex(String period) {
+		int index = 0;
+		if (TextUtils.isEmpty(period)) {
+			return index;
+		}
+
+		for (int i = 0; i < DatabaseContract.PERIODS.length; i++) {
+			if (TextUtils.equals(period, DatabaseContract.PERIODS[i])) {
+				index = i;
+				break;
+			}
+		}
+		return index;
+	}
+
+	public int getPeriodIndex() {
+		return getPeriodIndex(getPeriod());
 	}
 }
