@@ -48,7 +48,7 @@ public class MainActivity extends PreferenceActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.action_settings: {
+			case R.id.action_setting: {
 				return true;
 			}
 			case R.id.action_exit: {
@@ -67,9 +67,11 @@ public class MainActivity extends PreferenceActivity {
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			if ((System.currentTimeMillis() - mExitTime) > 2000) {
-				Toast.makeText(this,
-						getResources().getString(R.string.press_again_to_exit),
-						Toast.LENGTH_SHORT).show();
+				if (!Market.isTradingHours()) {
+					Toast.makeText(this,
+							getResources().getString(R.string.press_again_to_exit),
+							Toast.LENGTH_SHORT).show();
+				}
 				mExitTime = System.currentTimeMillis();
 			} else {
 				onActionExit();
@@ -98,14 +100,14 @@ public class MainActivity extends PreferenceActivity {
 	}
 
 	void initSharedPreferences() {
-		SharedPreferences settings = PreferenceManager
+		SharedPreferences setting = PreferenceManager
 				.getDefaultSharedPreferences(this);
 
 		if (!Preferences.getBoolean(Setting.SETTING_PREFERENCES_INIT, false)) {
 			Preferences.putBoolean(Setting.SETTING_PREFERENCES_INIT, true);
 
-			Preferences.putBoolean(DatabaseContract.COLUMN_MONTH, false);
-			Preferences.putBoolean(DatabaseContract.COLUMN_WEEK, false);
+			Preferences.putBoolean(DatabaseContract.COLUMN_MONTH, true);
+			Preferences.putBoolean(DatabaseContract.COLUMN_WEEK, true);
 			Preferences.putBoolean(DatabaseContract.COLUMN_DAY, true);
 			Preferences.putBoolean(DatabaseContract.COLUMN_MIN60, true);
 			Preferences.putBoolean(DatabaseContract.COLUMN_MIN30, true);

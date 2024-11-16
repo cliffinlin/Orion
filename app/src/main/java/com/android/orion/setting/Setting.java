@@ -7,13 +7,13 @@ public class Setting {
 
 	public static final String SETTING_PREFERENCES_INIT = "SETTING_PREFERENCES_INIT";
 
-	public static final String SETTING_PERIOD_MONTH = DatabaseContract.COLUMN_MONTH;
-	public static final String SETTING_PERIOD_WEEK = DatabaseContract.COLUMN_WEEK;
-	public static final String SETTING_PERIOD_DAY = DatabaseContract.COLUMN_DAY;
-	public static final String SETTING_PERIOD_MIN60 = DatabaseContract.COLUMN_MIN60;
-	public static final String SETTING_PERIOD_MIN30 = DatabaseContract.COLUMN_MIN30;
-	public static final String SETTING_PERIOD_MIN15 = DatabaseContract.COLUMN_MIN15;
-	public static final String SETTING_PERIOD_MIN5 = DatabaseContract.COLUMN_MIN5;
+	public static final String SETTING_PERIOD_MONTH = "SETTING_PERIOD_MONTH";
+	public static final String SETTING_PERIOD_WEEK = "SETTING_PERIOD_WEEK";
+	public static final String SETTING_PERIOD_DAY = "SETTING_PERIOD_DAY";
+	public static final String SETTING_PERIOD_MIN60 = "SETTING_PERIOD_MIN60";
+	public static final String SETTING_PERIOD_MIN30 = "SETTING_PERIOD_MIN30";
+	public static final String SETTING_PERIOD_MIN15 = "SETTING_PERIOD_MIN15";
+	public static final String SETTING_PERIOD_MIN5 = "SETTING_PERIOD_MIN5";
 
 	public static final String SETTING_SORT_ORDER_COMPONENT_LIST = "SETTING_SORT_ORDER_COMPONENT_LIST";
 	public static final String SETTING_SORT_ORDER_STOCK_LIST = "SETTING_SORT_ORDER_STOCK_LIST";
@@ -45,6 +45,7 @@ public class Setting {
 	public static final String SETTING_DEBUG_LOOPBACK = "SETTING_DEBUG_LOOPBACK";
 	public static final String SETTING_DEBUG_LOOPBACK_DATE_TIME = "SETTING_DEBUG_LOOPBACK_DATE_TIME";
 	public static final String SETTING_DEBUG_WIFI = "SETTING_DEBUG_WIFI";
+	public static final String SETTING_DEBUG_DATAFILE = "SETTING_DEBUG_DATAFILE";
 
 	public static final String SETTING_DOWNLOAD_STOCK_HSA_TIMEMILLIS = "SETTING_DOWNLOAD_STOCK_HSA_TIMEMILLIS";
 
@@ -149,6 +150,14 @@ public class Setting {
 
 	public static void setDebugWifi(boolean value) {
 		Preferences.putBoolean(SETTING_DEBUG_WIFI, value);
+	}
+
+	public static boolean getDebugDataFile() {
+		return Preferences.getBoolean(SETTING_DEBUG_DATAFILE, false);
+	}
+
+	public static void setDebugDataFile(boolean value) {
+		Preferences.putBoolean(SETTING_DEBUG_DATAFILE, value);
 	}
 
 	public static long getDownloadStockHSATimemillis() {

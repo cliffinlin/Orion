@@ -152,7 +152,7 @@ public class StockFinancialListActivity extends ListActivity implements
 				mHandler.sendEmptyMessage(MESSAGE_REFRESH);
 				return true;
 
-			case R.id.action_settings:
+			case R.id.action_setting:
 				startActivity(new Intent(this, SettingActivity.class));
 				return true;
 
@@ -814,25 +814,25 @@ public class StockFinancialListActivity extends ListActivity implements
 				return setRightTextViewVisibility(Setting.SETTING_DISPLAY_NET, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MONTH)) {
-				return setRightTextViewVisibility(DatabaseContract.COLUMN_MONTH, view);
+				return setRightTextViewVisibility(Setting.SETTING_PERIOD_MONTH, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_WEEK)) {
-				return setRightTextViewVisibility(DatabaseContract.COLUMN_WEEK, view);
+				return setRightTextViewVisibility(Setting.SETTING_PERIOD_WEEK, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_DAY)) {
-				return setRightTextViewVisibility(DatabaseContract.COLUMN_DAY, view);
+				return setRightTextViewVisibility(Setting.SETTING_PERIOD_DAY, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MIN60)) {
-				return setRightTextViewVisibility(DatabaseContract.COLUMN_MIN60, view);
+				return setRightTextViewVisibility(Setting.SETTING_PERIOD_MIN60, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MIN30)) {
-				return setRightTextViewVisibility(DatabaseContract.COLUMN_MIN30, view);
+				return setRightTextViewVisibility(Setting.SETTING_PERIOD_MIN30, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MIN15)) {
-				return setRightTextViewVisibility(DatabaseContract.COLUMN_MIN15, view);
+				return setRightTextViewVisibility(Setting.SETTING_PERIOD_MIN15, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MIN5)) {
-				return setRightTextViewVisibility(DatabaseContract.COLUMN_MIN5, view);
+				return setRightTextViewVisibility(Setting.SETTING_PERIOD_MIN5, view);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MODIFIED)) {
 			}

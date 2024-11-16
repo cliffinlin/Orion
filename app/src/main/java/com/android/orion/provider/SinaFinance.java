@@ -868,8 +868,6 @@ public class SinaFinance extends StockDataProvider {
 		ContentValuesList.clear();
 		ArrayMap<String, StockData> stockDataMap = new ArrayMap<>();
 
-		Calendar importCalendar = Utility.getCalendar("1998-01-01 00:00:00", Utility.CALENDAR_DATE_TIME_FORMAT);
-
 		if (stock == null || stockData == null) {
 			return;
 		}
@@ -906,9 +904,7 @@ public class SinaFinance extends StockDataProvider {
 			}
 
 			if (bulkInsert) {
-				setupStockDataFile(stock);
-
-				if (stockData.isMinutePeriod()) {
+				if (Setting.getDebugDataFile()) {
 					importStockDataFile(stock, stockData, ContentValuesList, stockDataMap);
 				}
 			}
@@ -974,12 +970,8 @@ public class SinaFinance extends StockDataProvider {
 			}
 
 			if (bulkInsert) {
-				if (stockData.isMinutePeriod()) {
-					if (stockDataMap.size() > 0) {
-						ArrayList<StockData> stockDataList = new ArrayList<>(stockDataMap.values());
-						Collections.sort(stockDataList, StockData.comparator);
-						exportStockDataFile(stock, stockData.getPeriod(), stockDataList);
-					}
+				if (Setting.getDebugDataFile()) {
+					exportStockDataFile(stock, stockData, stockDataMap);
 				}
 
 				if (ContentValuesList.size() > 0) {
@@ -1002,213 +994,6 @@ public class SinaFinance extends StockDataProvider {
 		StopWatch.stop();
 		Log.d(stock.getName() + " "
 				+ stockData.getPeriod() + " " + StopWatch.getInterval() + "s");
-	}
-
-	String getStockDataFileName(Stock stock) {
-		String fileName = "";
-
-		if (stock == null) {
-			return fileName;
-		}
-
-		try {
-			fileName = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Orion/"
-					+ stock.getSE().toUpperCase(Locale.getDefault()) + "#" + stock.getCode() + Constant.FILE_EXT_TEXT;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return fileName;
-	}
-
-	String getStockDataFileName(Stock stock, String period) {
-		String fileName = "";
-
-		if (stock == null) {
-			return fileName;
-		}
-
-		try {
-			fileName = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Orion/"
-					+ stock.getSE().toUpperCase(Locale.getDefault()) + "#" + stock.getCode() + "#" + period + Constant.FILE_EXT_TEXT;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return fileName;
-	}
-
-	//					SH#600938.txt
-	//					日期	    时间	    开盘	    最高	    最低	    收盘	    成交量	    成交额
-	//					2023/01/03	0935	37.08	37.08	36.72	36.81	6066500	223727792.00
-
-	StockData mergeStockData(ArrayList<StockData> stockDataList, int size) {
-		double high = 0;
-		double low = 0;
-
-		if (stockDataList == null || stockDataList.size() == 0 || size <= 0) {
-			return null;
-		}
-
-		int j = 0;
-		StockData result = new StockData();
-		for (int i = stockDataList.size() - 1; i >= 0; i--, j++) {
-			if (j >= size) {
-				break;
-			}
-
-			StockData stockData = stockDataList.get(i);
-
-			if (i == stockDataList.size() - 1) {
-				high = stockData.getHigh();
-				low = stockData.getLow();
-
-				result.setDate(stockData.getDate());
-				result.setTime(stockData.getTime());
-			}
-
-			result.setOpen(stockData.getOpen());
-
-			if (stockData.getHigh() > high) {
-				high = stockData.getHigh();
-			}
-			result.setHigh(high);
-
-			if (stockData.getLow() < low) {
-				low = stockData.getLow();
-			}
-			result.setLow(low);
-
-			if (i == stockDataList.size() - 1) {
-				result.setClose(stockData.getClose());
-			}
-		}
-
-		return result;
-	}
-
-	void setupStockDataFile(Stock stock) {
-		String fileName;
-		ArrayList<String> lineList = new ArrayList<>();
-
-//		ArrayList<String> datetimeMin5List = new ArrayList<>();//based on min5
-		ArrayList<String> datetimeMin15List = new ArrayList<>();
-		ArrayList<String> datetimeMin30List = new ArrayList<>();
-		ArrayList<String> datetimeMin60List = new ArrayList<>();
-
-		ArrayList<StockData> StockDataMin5List = new ArrayList<>();
-		ArrayList<StockData> StockDataMin15List = new ArrayList<>();
-		ArrayList<StockData> StockDataMin30List = new ArrayList<>();
-		ArrayList<StockData> StockDataMin60List = new ArrayList<>();
-
-		if (stock == null) {
-			return;
-		}
-
-		try {
-			fileName = getStockDataFileName(stock);//same as min5
-			Utility.readFile(fileName, lineList);
-
-			if (lineList.size() == 0) {
-				return;
-			}
-
-			datetimeMin15List = StockData.getDatetimeMin15List();
-			datetimeMin30List = StockData.getDatetimeMinL30ist();
-			datetimeMin60List = StockData.getDatetimeMin60List();
-
-			for (int i = 0; i < lineList.size(); i++) {
-				String line = lineList.get(i);
-				if (TextUtils.isEmpty(line)) {
-					continue;
-				}
-
-				StockData stockDataMin5 = new StockData();
-				if (stockDataMin5.fromString(line) == null) {
-					continue;
-				}
-
-				StockDataMin5List.add(stockDataMin5);
-
-				if (datetimeMin15List.contains(stockDataMin5.getTime())) {
-					StockData stockData15 = mergeStockData(StockDataMin5List, 15 / 5);
-					if (stockData15 != null) {
-						StockDataMin15List.add(stockData15);
-					}
-				}
-
-				if (datetimeMin30List.contains(stockDataMin5.getTime())) {
-					StockData stockData30 = mergeStockData(StockDataMin15List, 30 / 15);
-					if (stockData30 != null) {
-						StockDataMin30List.add(stockData30);
-					}
-				}
-
-				if (datetimeMin60List.contains(stockDataMin5.getTime())) {
-					StockData stockData60 = mergeStockData(StockDataMin30List, 60 / 30);
-					if (stockData60 != null) {
-						StockDataMin60List.add(stockData60);
-					}
-				}
-			}
-
-			exportStockDataFile(stock, DatabaseContract.COLUMN_MIN5, StockDataMin5List);
-			exportStockDataFile(stock, DatabaseContract.COLUMN_MIN15, StockDataMin15List);
-			exportStockDataFile(stock, DatabaseContract.COLUMN_MIN30, StockDataMin30List);
-			exportStockDataFile(stock, DatabaseContract.COLUMN_MIN60, StockDataMin60List);
-			Utility.deleteFile(fileName);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	void importStockDataFile(Stock stock, StockData stockData,
-							 ArrayList<ContentValues> contentValuesList,
-							 ArrayMap<String, StockData> stockDataMap) {
-		String fileName = "";
-		ArrayList<String> lineList = new ArrayList<>();
-
-		if (stock == null || stockData == null || contentValuesList == null || stockDataMap == null) {
-			return;
-		}
-
-		try {
-			fileName = getStockDataFileName(stock, stockData.getPeriod());
-			Utility.readFile(fileName, lineList);
-
-			for (int i = 0; i < lineList.size(); i++) {
-				String line = lineList.get(i);
-				if (TextUtils.isEmpty(line)) {
-					continue;
-				}
-
-				if (stockData.fromString(line) != null) {
-					contentValuesList.add(stockData.getContentValues());
-					stockDataMap.put(stockData.getDateTime(), new StockData(stockData));
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	void exportStockDataFile(Stock stock, String period, ArrayList<StockData> stockDataList) {
-		String fileName = "";
-		ArrayList<String> lineList = new ArrayList<>();
-
-		if (stock == null || stockDataList == null) {
-			return;
-		}
-
-		try {
-			fileName = getStockDataFileName(stock, period);
-			for (int i = 0; i < stockDataList.size(); i++) {
-				lineList.add(stockDataList.get(i).toString());
-			}
-			Utility.writeFile(fileName, lineList, false);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	@Override

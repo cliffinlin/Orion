@@ -56,7 +56,7 @@ public class StockChartListActivity extends BaseActivity implements
 	public static final int ITEM_VIEW_TYPE_MAIN = 0;
 	public static final int ITEM_VIEW_TYPE_SUB = 1;
 	public static final int LOADER_ID_STOCK_LIST = DatabaseContract.PERIODS.length + 1;
-	public static final int REQUEST_CODE_SETTINGS = 0;
+	public static final int REQUEST_CODE_SETTING = 0;
 	public static final int REQUEST_CODE_SETTING_DEBUG_LOOPBACK = 1;
 	public static final int MESSAGE_REFRESH = 0;
 	public static final int MESSAGE_LOAD_STOCK_LIST = 1;
@@ -186,9 +186,9 @@ public class StockChartListActivity extends BaseActivity implements
 				mHandler.sendEmptyMessage(MESSAGE_REFRESH);
 				return true;
 
-			case R.id.action_settings:
+			case R.id.action_setting:
 				startActivityForResult(new Intent(this,
-						SettingActivity.class), REQUEST_CODE_SETTINGS);
+						SettingActivity.class), REQUEST_CODE_SETTING);
 				return true;
 
 			case R.id.action_edit:
@@ -233,7 +233,7 @@ public class StockChartListActivity extends BaseActivity implements
 
 		if (resultCode == RESULT_OK) {
 			switch (requestCode) {
-				case REQUEST_CODE_SETTINGS:
+				case REQUEST_CODE_SETTING:
 					restartLoader();
 					break;
 

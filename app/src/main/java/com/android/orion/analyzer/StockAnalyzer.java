@@ -475,13 +475,13 @@ public class StockAnalyzer {
 
 		Macd.calculate(period, stockDataList);
 
-		if (TextUtils.equals(period, Setting.SETTING_PERIOD_MIN60)) {
+		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN60)) {
 			coefficient = 1;
-		} else if (TextUtils.equals(period, Setting.SETTING_PERIOD_MIN30)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN30)) {
 			coefficient = 2;
-		} else if (TextUtils.equals(period, Setting.SETTING_PERIOD_MIN15)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
 			coefficient = 4;
-		} else if (TextUtils.equals(period, Setting.SETTING_PERIOD_MIN5)) {
+		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
 			coefficient = 8;
 		}
 

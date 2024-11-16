@@ -77,7 +77,6 @@ public class StockSearchActivity extends StockListEditActivity implements
 	}
 
 	void doSearch(String query) {
-		String column = DatabaseContract.COLUMN_NAME;
 
 		mSelection = DatabaseContract.COLUMN_NAME + " !='' ";
 
@@ -88,6 +87,7 @@ public class StockSearchActivity extends StockListEditActivity implements
 				query = query.replaceAll("\"", "\"\"");
 			}
 
+			String column = DatabaseContract.COLUMN_NAME;
 			if (query.matches("[0-9]+")) {
 				column = DatabaseContract.COLUMN_CODE;
 			} else if (query.matches("[a-zA-Z]+")) {

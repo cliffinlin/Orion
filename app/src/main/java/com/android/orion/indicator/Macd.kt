@@ -1,5 +1,6 @@
 package com.android.orion.indicator
 
+import com.android.orion.database.DatabaseContract
 import com.android.orion.database.StockData
 import com.android.orion.setting.Constant
 import com.android.orion.setting.Setting
@@ -69,49 +70,49 @@ object Macd {
     fun init(period: String, stockDataList: ArrayList<StockData>) {
         mPeriod = period
         when (mPeriod) {
-            Setting.SETTING_PERIOD_MONTH -> {
-                mAverage5 = AVERAGE5
-                mAverage10 = AVERAGE10
-                mFast = 2 * FAST
-                mSlow = 2 * SLOW
-                mSignal = 2 * SIGNAL
-            }
-            Setting.SETTING_PERIOD_WEEK -> {
-                mAverage5 = AVERAGE5
-                mAverage10 = AVERAGE10
-                mFast = 2 * FAST
-                mSlow = 2 * SLOW
-                mSignal = 2 * SIGNAL
-            }
-            Setting.SETTING_PERIOD_DAY -> {
+            DatabaseContract.COLUMN_MONTH -> {
                 mAverage5 = AVERAGE5
                 mAverage10 = AVERAGE10
                 mFast = FAST
                 mSlow = SLOW
                 mSignal = SIGNAL
             }
-            Setting.SETTING_PERIOD_MIN60 -> {
+            DatabaseContract.COLUMN_WEEK -> {
+                mAverage5 = AVERAGE5
+                mAverage10 = AVERAGE10
+                mFast = FAST
+                mSlow = SLOW
+                mSignal = SIGNAL
+            }
+            DatabaseContract.COLUMN_DAY -> {
+                mAverage5 = AVERAGE5
+                mAverage10 = AVERAGE10
+                mFast = FAST
+                mSlow = SLOW
+                mSignal = SIGNAL
+            }
+            DatabaseContract.COLUMN_MIN60 -> {
                 mAverage5 = Constant.MIN60_PER_TRADE_DAY * AVERAGE5
                 mAverage10 = Constant.MIN60_PER_TRADE_DAY * AVERAGE10
                 mFast = Constant.MIN60_PER_TRADE_DAY * FAST
                 mSlow = Constant.MIN60_PER_TRADE_DAY * SLOW
                 mSignal = Constant.MIN60_PER_TRADE_DAY * SIGNAL
             }
-            Setting.SETTING_PERIOD_MIN30 -> {
+            DatabaseContract.COLUMN_MIN30 -> {
                 mAverage5 = Constant.MIN30_PER_TRADE_DAY * AVERAGE5
                 mAverage10 = Constant.MIN30_PER_TRADE_DAY * AVERAGE10
                 mFast = Constant.MIN30_PER_TRADE_DAY * FAST
                 mSlow = Constant.MIN30_PER_TRADE_DAY * SLOW
                 mSignal = Constant.MIN30_PER_TRADE_DAY * SIGNAL
             }
-            Setting.SETTING_PERIOD_MIN15 -> {
+            DatabaseContract.COLUMN_MIN15 -> {
                 mAverage5 = Constant.MIN15_PER_TRADE_DAY * AVERAGE5
                 mAverage10 = Constant.MIN15_PER_TRADE_DAY * AVERAGE10
                 mFast = Constant.MIN15_PER_TRADE_DAY * FAST
                 mSlow = Constant.MIN15_PER_TRADE_DAY * SLOW
                 mSignal = Constant.MIN15_PER_TRADE_DAY * SIGNAL
             }
-            Setting.SETTING_PERIOD_MIN5 -> {
+            DatabaseContract.COLUMN_MIN5 -> {
                 mAverage5 = Constant.MIN5_PER_TRADE_DAY * AVERAGE5
                 mAverage10 = Constant.MIN5_PER_TRADE_DAY * AVERAGE10
                 mFast = Constant.MIN5_PER_TRADE_DAY * FAST

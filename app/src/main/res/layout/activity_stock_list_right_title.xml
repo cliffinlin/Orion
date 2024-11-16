@@ -23,66 +23,66 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/action_month"
+        android:id="@+id/period_month"
         android:layout_width="@dimen/action_layout_width"
         android:layout_height="40dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="@string/action_month"
+        android:text="@string/period_month"
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/action_week"
+        android:id="@+id/period_week"
         android:layout_width="@dimen/action_layout_width"
         android:layout_height="40dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="@string/action_week"
+        android:text="@string/period_week"
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/action_day"
+        android:id="@+id/period_day"
         android:layout_width="@dimen/action_layout_width"
         android:layout_height="40dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="@string/action_day"
+        android:text="@string/period_day"
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/action_min60"
+        android:id="@+id/period_min60"
         android:layout_width="@dimen/action_layout_width"
         android:layout_height="40dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="@string/action_min60"
+        android:text="@string/period_min60"
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/action_min30"
+        android:id="@+id/period_min30"
         android:layout_width="@dimen/action_layout_width"
         android:layout_height="40dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="@string/action_min30"
+        android:text="@string/period_min30"
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/action_min15"
+        android:id="@+id/period_min15"
         android:layout_width="@dimen/action_layout_width"
         android:layout_height="40dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="@string/action_min15"
+        android:text="@string/period_min15"
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/action_min5"
+        android:id="@+id/period_min5"
         android:layout_width="@dimen/action_layout_width"
         android:layout_height="40dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="@string/action_min5"
+        android:text="@string/period_min5"
         android:textSize="18sp" />
 
     <TextView

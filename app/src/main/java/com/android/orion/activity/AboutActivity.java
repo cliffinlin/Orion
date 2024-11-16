@@ -31,7 +31,7 @@ public class AboutActivity extends Activity {
 				finish();
 				return true;
 
-			case R.id.action_settings:
+			case R.id.action_setting:
 				startActivity(new Intent(this, SettingActivity.class));
 				return true;
 

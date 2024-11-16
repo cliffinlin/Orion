@@ -3,6 +3,7 @@ package com.android.orion.provider;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
@@ -12,6 +13,7 @@ import android.os.Process;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 
+import androidx.annotation.NonNull;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.android.orion.analyzer.StockAnalyzer;
@@ -33,10 +35,12 @@ import com.android.orion.utility.Logger;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Utility;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import okhttp3.OkHttpClient;
@@ -384,6 +388,275 @@ public class StockDataProvider implements StockListChangedListener, StockEditLis
 			index.setModified(Utility.getCurrentDateTimeString());
 			mDatabaseManager.updateStock(index,
 					index.getContentValues());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@NonNull
+	public static ArrayList<String> getDatetimeMin15List() {
+		ArrayList<String> datetimeList = new ArrayList<>();
+		datetimeList.add("09:45:00");
+		datetimeList.add("10:00:00");
+		datetimeList.add("10:15:00");
+		datetimeList.add("10:30:00");
+		datetimeList.add("10:45:00");
+		datetimeList.add("11:00:00");
+		datetimeList.add("11:15:00");
+		datetimeList.add("11:30:00");
+		datetimeList.add("13:15:00");
+		datetimeList.add("13:30:00");
+		datetimeList.add("13:45:00");
+		datetimeList.add("14:00:00");
+		datetimeList.add("14:15:00");
+		datetimeList.add("14:30:00");
+		datetimeList.add("14:45:00");
+		datetimeList.add("15:00:00");
+		return datetimeList;
+	}
+
+	@NonNull
+	public static ArrayList<String> getDatetimeMinL30ist() {
+		ArrayList<String> datetimeList = new ArrayList<>();
+		datetimeList.add("10:00:00");
+		datetimeList.add("10:30:00");
+		datetimeList.add("11:00:00");
+		datetimeList.add("11:30:00");
+		datetimeList.add("13:30:00");
+		datetimeList.add("14:00:00");
+		datetimeList.add("14:30:00");
+		datetimeList.add("15:00:00");
+		return datetimeList;
+	}
+
+	@NonNull
+	public static ArrayList<String> getDatetimeMin60List() {
+		ArrayList<String> datetimeList = new ArrayList<>();
+		datetimeList.add("10:30:00");
+		datetimeList.add("11:30:00");
+		datetimeList.add("14:00:00");
+		datetimeList.add("15:00:00");
+		return datetimeList;
+	}
+
+	String getStockDataFileName(Stock stock) {
+		String result = "";
+
+		if (stock == null) {
+			return result;
+		}
+
+		try {
+			result = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Orion/"
+					+ stock.getSE().toUpperCase(Locale.getDefault()) + "#" + stock.getCode() + Constant.FILE_EXT_TEXT;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+
+	String getStockDataFileName(Stock stock, String period) {
+		String result = "";
+
+		if (stock == null) {
+			return result;
+		}
+
+		try {
+			result = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Orion/"
+					+ stock.getSE().toUpperCase(Locale.getDefault()) + "#" + stock.getCode() + "#" + period + Constant.FILE_EXT_TEXT;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+
+	//					SH#600938.txt
+	//					日期	    时间	    开盘	    最高	    最低	    收盘	    成交量	    成交额
+	//					2023/01/03	0935	37.08	37.08	36.72	36.81	6066500	223727792.00
+
+	StockData mergeStockData(ArrayList<StockData> stockDataList, int size) {
+		if (stockDataList == null || stockDataList.size() == 0 || size <= 0) {
+			return null;
+		}
+
+		StockData result = new StockData();
+		double high = 0;
+		double low = 0;
+		int j = 0;
+		for (int i = stockDataList.size() - 1; i >= 0; i--, j++) {
+			if (j >= size) {
+				break;
+			}
+
+			StockData stockData = stockDataList.get(i);
+
+			if (i == stockDataList.size() - 1) {
+				high = stockData.getHigh();
+				low = stockData.getLow();
+
+				result.setDate(stockData.getDate());
+				result.setTime(stockData.getTime());
+			}
+
+			result.setOpen(stockData.getOpen());
+
+			if (stockData.getHigh() > high) {
+				high = stockData.getHigh();
+			}
+			result.setHigh(high);
+
+			if (stockData.getLow() < low) {
+				low = stockData.getLow();
+			}
+			result.setLow(low);
+
+			if (i == stockDataList.size() - 1) {
+				result.setClose(stockData.getClose());
+			}
+		}
+
+		return result;
+	}
+
+	void setupStockDataFile(Stock stock) {
+		if (stock == null) {
+			return;
+		}
+
+		try {
+			//same as min5
+			String fileName = getStockDataFileName(stock);
+			ArrayList<String> lineList = new ArrayList<>();
+			Utility.readFile(fileName, lineList);
+			if (lineList.size() == 0) {
+				return;
+			}
+
+//			ArrayList<String> datetimeMin5List = new ArrayList<>();//based on min5
+			ArrayList<String> datetimeMin15List = getDatetimeMin15List();
+			ArrayList<String> datetimeMin30List = getDatetimeMinL30ist();
+			ArrayList<String> datetimeMin60List = getDatetimeMin60List();
+
+			ArrayList<StockData> StockDataMin5List = new ArrayList<>();
+			ArrayList<StockData> StockDataMin15List = new ArrayList<>();
+			ArrayList<StockData> StockDataMin30List = new ArrayList<>();
+			ArrayList<StockData> StockDataMin60List = new ArrayList<>();
+			for (int i = 0; i < lineList.size(); i++) {
+				String line = lineList.get(i);
+				if (TextUtils.isEmpty(line)) {
+					continue;
+				}
+
+				StockData stockDataMin5 = new StockData();
+				if (stockDataMin5.fromString(line) == null) {
+					continue;
+				}
+
+				StockDataMin5List.add(stockDataMin5);
+
+				if (datetimeMin15List.contains(stockDataMin5.getTime())) {
+					StockData stockData15 = mergeStockData(StockDataMin5List, 15 / 5);
+					if (stockData15 != null) {
+						StockDataMin15List.add(stockData15);
+					}
+				}
+
+				if (datetimeMin30List.contains(stockDataMin5.getTime())) {
+					StockData stockData30 = mergeStockData(StockDataMin15List, 30 / 15);
+					if (stockData30 != null) {
+						StockDataMin30List.add(stockData30);
+					}
+				}
+
+				if (datetimeMin60List.contains(stockDataMin5.getTime())) {
+					StockData stockData60 = mergeStockData(StockDataMin30List, 60 / 30);
+					if (stockData60 != null) {
+						StockDataMin60List.add(stockData60);
+					}
+				}
+			}
+
+			exportStockDataFile(stock, DatabaseContract.COLUMN_MIN5, StockDataMin5List);
+			exportStockDataFile(stock, DatabaseContract.COLUMN_MIN15, StockDataMin15List);
+			exportStockDataFile(stock, DatabaseContract.COLUMN_MIN30, StockDataMin30List);
+			exportStockDataFile(stock, DatabaseContract.COLUMN_MIN60, StockDataMin60List);
+			Utility.deleteFile(fileName);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	void importStockDataFile(Stock stock, StockData stockData,
+	                         ArrayList<ContentValues> contentValuesList,
+	                         ArrayMap<String, StockData> stockDataMap) {
+		if (stock == null || stockData == null || contentValuesList == null || stockDataMap == null) {
+			return;
+		}
+
+		if (!stockData.isMinutePeriod()) {
+			return;
+		}
+
+		setupStockDataFile(stock);
+
+		try {
+			String fileName = getStockDataFileName(stock, stockData.getPeriod());
+			ArrayList<String> lineList = new ArrayList<>();
+			Utility.readFile(fileName, lineList);
+
+			for (int i = 0; i < lineList.size(); i++) {
+				String line = lineList.get(i);
+				if (TextUtils.isEmpty(line)) {
+					continue;
+				}
+
+				if (stockData.fromString(line) != null) {
+					contentValuesList.add(stockData.getContentValues());
+					stockDataMap.put(stockData.getDateTime(), new StockData(stockData));
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	void exportStockDataFile(Stock stock, StockData stockData, ArrayMap<String, StockData> stockDataMap) {
+		if (stock == null || stockData == null || stockDataMap == null) {
+			return;
+		}
+
+		if (!stockData.isMinutePeriod()) {
+			return;
+		}
+
+		if (stockDataMap.size() == 0) {
+			return;
+		}
+		
+		ArrayList<StockData> stockDataList = new ArrayList<>(stockDataMap.values());
+		Collections.sort(stockDataList, StockData.comparator);
+		exportStockDataFile(stock, stockData.getPeriod(), stockDataList);
+	}
+
+	void exportStockDataFile(Stock stock, String period, ArrayList<StockData> stockDataList) {
+		if (stock == null || stockDataList == null) {
+			return;
+		}
+
+		if (!StockData.isMinutePeriod(period)) {
+			return;
+		}
+
+		try {
+			String fileName = getStockDataFileName(stock, period);
+			ArrayList<String> lineList = new ArrayList<>();
+			for (int i = 0; i < stockDataList.size(); i++) {
+				lineList.add(stockDataList.get(i).toString());
+			}
+			Utility.writeFile(fileName, lineList, false);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

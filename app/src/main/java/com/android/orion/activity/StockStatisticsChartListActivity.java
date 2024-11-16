@@ -121,7 +121,7 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 				mHandler.sendEmptyMessage(MESSAGE_REFRESH);
 				return true;
 
-			case R.id.action_settings:
+			case R.id.action_setting:
 				return true;
 
 			case R.id.action_order_by_roi:

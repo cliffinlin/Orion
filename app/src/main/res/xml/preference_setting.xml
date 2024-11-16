@@ -3,28 +3,28 @@
 
     <PreferenceCategory android:title="@string/setting_period">
         <com.android.orion.preference.CustomSwitchPreference
-            android:key="month"
+            android:key="SETTING_PERIOD_MONTH"
             android:title="@string/setting_period_month" />
         <com.android.orion.preference.CustomSwitchPreference
-            android:key="week"
+            android:key="SETTING_PERIOD_WEEK"
             android:title="@string/setting_period_week" />
         <com.android.orion.preference.CustomSwitchPreference
             android:defaultValue="true"
-            android:key="day"
+            android:key="SETTING_PERIOD_DAY"
             android:title="@string/setting_period_day" />
         <com.android.orion.preference.CustomSwitchPreference
             android:defaultValue="true"
-            android:key="min60"
+            android:key="SETTING_PERIOD_MIN60"
             android:title="@string/setting_period_min60" />
         <com.android.orion.preference.CustomSwitchPreference
             android:defaultValue="true"
-            android:key="min30"
+            android:key="SETTING_PERIOD_MIN30"
             android:title="@string/setting_period_min30" />
         <com.android.orion.preference.CustomSwitchPreference
-            android:key="min15"
+            android:key="SETTING_PERIOD_MIN15"
             android:title="@string/setting_period_min15" />
         <com.android.orion.preference.CustomSwitchPreference
-            android:key="min5"
+            android:key="SETTING_PERIOD_MIN5"
             android:title="@string/setting_period_min5" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/display">
@@ -57,6 +57,9 @@
         <com.android.orion.preference.CustomSwitchPreference
             android:key="SETTING_DEBUG_WIFI"
             android:title="@string/setting_debug_wifi" />
+        <com.android.orion.preference.CustomSwitchPreference
+            android:key="SETTING_DEBUG_DATAFILE"
+            android:title="@string/setting_debug_datafile" />
     </PreferenceCategory>
 
 </PreferenceScreen>
