@@ -3,6 +3,7 @@ package com.android.orion.chart;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.text.TextUtils;
 
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
@@ -52,13 +53,15 @@ public class StockDataChart {
 	public int[] mLineColors = {Color.GRAY, Color.YELLOW, Color.BLACK, Color.RED, Color.MAGENTA};
 	public CombinedData mCombinedDataMain = new CombinedData(mXValues);
 	public CombinedData mCombinedDataSub = new CombinedData(mXValues);
+	Stock mStock;
 	String mPeriod;
 	double mMainChartYMin = 0;
 	double mMainChartYMax = 0;
 	double mSubChartYMin = 0;
 	double mSubChartYMax = 0;
 
-	public StockDataChart(String period) {
+	public StockDataChart(Stock stock, String period) {
+		mStock = stock;
 		for (int i = 0; i < StockData.LEVEL_MAX; i++) {
 			mLineList[i] = new ArrayList<>();
 		}
@@ -163,6 +166,10 @@ public class StockDataChart {
 			if (mLineList[2].size() > 0) {
 				LineDataSet lineDataSet = new LineDataSet(mLineList[2],
 						"Segment");
+//				if (TextUtils.equals(mPeriod, mStock.getOperate())) {
+				if (!TextUtils.isEmpty(mStock.getOperate())) {
+					lineDataSet.setDrawFilled(true);
+				}
 				lineDataSet.setColor(mLineColors[2]);
 				lineDataSet.setCircleColor(mLineColors[2]);
 				lineDataSet.setCircleSize(0);

@@ -542,8 +542,8 @@ public class StockAnalyzer {
 
 		//stockVertexAnalyzer.testShowVertextNumber(stockDataList, stockDataList);
 
-		if (Preferences.getBoolean(Setting.SETTING_DEBUG_LOOPBACK, false)) {
-			if (Preferences.getBoolean(Setting.SETTING_DEBUG_DIRECT, false)) {
+		if (Setting.getDebugLoopback()) {
+			if (Setting.getDebugDirect()) {
 				stockVertexAnalyzer.debugShow(stockDataList, stockDataList);
 			}
 
@@ -726,12 +726,8 @@ public class StockAnalyzer {
 							   ArrayList<StockData> drawDataList,
 							   ArrayList<StockData> strokeDataList,
 							   ArrayList<StockData> segmentDataList) {
-		String action = StockData.MARK_NONE;
-		StockData prev = null;
-		StockData stockData = null;
 
-		if (stockDataList == null) {
-			Log.d("return, stockDataList = " + stockDataList);
+		if (stock == null || stockDataList == null) {
 			return;
 		}
 
@@ -739,26 +735,13 @@ public class StockAnalyzer {
 			return;
 		}
 
-		prev = stockDataList.get(stockDataList.size() - 2);
-		stockData = stockDataList.get(stockDataList.size() - 1);
-
-		if (stockData.directionOf(StockData.DIRECTION_UP)) {
-			if (prev.vertexOf(StockData.VERTEX_BOTTOM)) {
-				String result = getSecondBottomAction(stock, drawVertexList, strokeDataList, segmentDataList);
-				if (!TextUtils.isEmpty(result)) {
-					action = result;
-				}
-			}
-		} else if (stockData.directionOf(StockData.DIRECTION_DOWN)) {
-			if (prev.vertexOf(StockData.VERTEX_TOP)) {
-				String result = getSecondTopAction(stock, drawVertexList, strokeDataList, segmentDataList);
-				if (!TextUtils.isEmpty(result)) {
-					action = result;
-				}
-			}
-		}
+		StockData prev = stockDataList.get(stockDataList.size() - 2);
+		StockData stockData = stockDataList.get(stockDataList.size() - 1);
+		String action = StockData.MARK_NONE;
 
 		if (TextUtils.equals(period, stock.getOperate())) {
+			action += StockData.MARK_X;
+
 			if (stockData.getNaturalRally() > 0) {
 				action += StockData.MARK_NATURAL_RALLY;
 			}
@@ -773,6 +756,18 @@ public class StockAnalyzer {
 
 			if (stockData.getNaturalReaction() > 0) {
 				action += StockData.MARK_NATURAL_REACTION;
+			}
+		}
+
+		if (stockData.directionOf(StockData.DIRECTION_UP)) {
+			if (prev.vertexOf(StockData.VERTEX_BOTTOM)) {
+				String result = getSecondBottomAction(stock, drawVertexList, strokeDataList, segmentDataList);
+				action += result;
+			}
+		} else if (stockData.directionOf(StockData.DIRECTION_DOWN)) {
+			if (prev.vertexOf(StockData.VERTEX_TOP)) {
+				String result = getSecondTopAction(stock, drawVertexList, strokeDataList, segmentDataList);
+				action += result;
 			}
 		}
 
@@ -805,13 +800,13 @@ public class StockAnalyzer {
 
 		String minPeriod = "";
 		for (int i = 0; i < DatabaseContract.PERIODS.length; i++) {
-			if (Preferences.getBoolean(DatabaseContract.PERIODS[i], false)) {
+			if (Setting.getPeriod(DatabaseContract.PERIODS[i])) {
 				minPeriod = DatabaseContract.PERIODS[i];
 			}
 		}
 
 		for (String period : DatabaseContract.PERIODS) {
-			if (Preferences.getBoolean(period, false)) {
+			if (Setting.getPeriod(period)) {
 				String action = stock.getAction(period);
 
 				notifyToBuy1 = false;

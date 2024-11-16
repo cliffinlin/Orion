@@ -353,6 +353,10 @@ public class StockVertexAnalyzer {
 		StockData segmentTop = null;
 		StockData segmentBottom = null;
 
+		if (stockDataList == null) {
+			return;
+		}
+
 		if (stockDataList.size() < StockData.VERTEX_TYPING_SIZE) {
 			return;
 		}

@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.orion.R;
@@ -16,9 +17,7 @@ public class ListActivity extends StorageActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		if (Preferences.getBoolean(
-				Setting.SETTING_DEBUG_LOOPBACK, false)) {
+		if (Setting.getDebugLoopback()) {
 			Toast.makeText(
 					this,
 					getResources().getString(R.string.loopback_is_on),
@@ -49,5 +48,33 @@ public class ListActivity extends StorageActivity {
 				+ (listView.getDividerHeight() * (listAdapter.getCount() - 1));
 
 		listView.setLayoutParams(params);
+	}
+
+	boolean setVisibility(View view, boolean visibility) {
+		if (view == null) {
+			return true;
+		}
+
+		if (visibility) {
+			view.setVisibility(View.VISIBLE);
+			return false;
+		} else {
+			view.setVisibility(View.GONE);
+			return true;
+		}
+	}
+
+	boolean setVisibility(TextView textView, boolean visibility) {
+		if (textView == null) {
+			return true;
+		}
+
+		if (visibility) {
+			textView.setVisibility(View.VISIBLE);
+			return false;
+		} else {
+			textView.setVisibility(View.GONE);
+			return true;
+		}
 	}
 }

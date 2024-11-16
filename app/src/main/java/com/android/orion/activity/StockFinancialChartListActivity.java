@@ -21,6 +21,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import androidx.annotation.NonNull;
+
 import com.android.orion.R;
 import com.android.orion.chart.StockFinancialChart;
 import com.android.orion.database.DatabaseContract;
@@ -146,7 +148,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home: {
 				finish();
@@ -637,8 +639,8 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 	}
 
 	@Override
-	public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX,
-							 float velocityY) {
+	public void onChartFling(@NonNull MotionEvent me1, @NonNull MotionEvent me2, float velocityX,
+	                         float velocityY) {
 		int distance = FLING_DISTANCE;
 		int velocity = FLING_VELOCITY;
 

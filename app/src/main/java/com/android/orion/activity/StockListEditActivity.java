@@ -23,6 +23,8 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import com.android.orion.R;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.IndexComponent;
@@ -95,7 +97,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_favorite:
 				new Thread(new Runnable() {
@@ -160,7 +162,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 	}
 
 	@Override
-	public void onClick(View view) {
+	public void onClick(@NonNull View view) {
 
 		int id = view.getId();
 
@@ -278,7 +280,7 @@ public class StockListEditActivity extends DatabaseActivity implements
 		}
 
 		@Override
-		public void bindView(View view, Context context, Cursor cursor) {
+		public void bindView(@NonNull View view, Context context, Cursor cursor) {
 			ViewHolder holder = (ViewHolder) view.getTag();
 			Stock stock = new Stock();
 

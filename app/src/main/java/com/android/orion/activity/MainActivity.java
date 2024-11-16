@@ -9,6 +9,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.android.orion.R;
 import com.android.orion.application.MainApplication;
 import com.android.orion.database.DatabaseContract;
@@ -46,7 +48,7 @@ public class MainActivity extends PreferenceActivity {
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_setting: {
 				return true;
@@ -100,28 +102,21 @@ public class MainActivity extends PreferenceActivity {
 	}
 
 	void initSharedPreferences() {
-		SharedPreferences setting = PreferenceManager
-				.getDefaultSharedPreferences(this);
-
-		if (!Preferences.getBoolean(Setting.SETTING_PREFERENCES_INIT, false)) {
-			Preferences.putBoolean(Setting.SETTING_PREFERENCES_INIT, true);
-
-			Preferences.putBoolean(DatabaseContract.COLUMN_MONTH, true);
-			Preferences.putBoolean(DatabaseContract.COLUMN_WEEK, true);
-			Preferences.putBoolean(DatabaseContract.COLUMN_DAY, true);
-			Preferences.putBoolean(DatabaseContract.COLUMN_MIN60, true);
-			Preferences.putBoolean(DatabaseContract.COLUMN_MIN30, true);
-			Preferences.putBoolean(DatabaseContract.COLUMN_MIN15, true);
-			Preferences.putBoolean(DatabaseContract.COLUMN_MIN5, true);
-
+		PreferenceManager.getDefaultSharedPreferences(this);
+		if (!Setting.getPreferenceInit()) {
+			Setting.setPreferenceInit(true);
+			Setting.setPeriod(DatabaseContract.COLUMN_MONTH, true);
+			Setting.setPeriod(DatabaseContract.COLUMN_WEEK, true);
+			Setting.setPeriod(DatabaseContract.COLUMN_DAY, true);
+			Setting.setPeriod(DatabaseContract.COLUMN_MIN60, true);
+			Setting.setPeriod(DatabaseContract.COLUMN_MIN30, true);
+			Setting.setPeriod(DatabaseContract.COLUMN_MIN15, true);
+			Setting.setPeriod(DatabaseContract.COLUMN_MIN5, true);
 			Setting.setDisplayNet(true);
-
 			Setting.setDisplayDraw(true);
 			Setting.setDisplayStroke(true);
 			Setting.setDisplaySegment(true);
 			Setting.setDisplayLine(true);
-
-			Setting.setDebugLoopback(false);
 		}
 	}
 }

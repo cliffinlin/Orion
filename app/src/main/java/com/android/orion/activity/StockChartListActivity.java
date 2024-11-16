@@ -22,6 +22,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import androidx.annotation.NonNull;
+
 import com.android.orion.R;
 import com.android.orion.chart.StockDataChart;
 import com.android.orion.database.DatabaseContract;
@@ -163,7 +165,7 @@ public class StockChartListActivity extends BaseActivity implements
 		getMenuInflater().inflate(R.menu.stock_data_chart, menu);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		MenuItem menuLoopback = menu.findItem(R.id.action_loopback);
-		menuLoopback.setVisible(Preferences.getBoolean(Setting.SETTING_DEBUG_LOOPBACK, false));
+		menuLoopback.setVisible(Setting.getDebugLoopback());
 		return true;
 	}
 
@@ -239,7 +241,7 @@ public class StockChartListActivity extends BaseActivity implements
 
 				case REQUEST_CODE_SETTING_DEBUG_LOOPBACK:
 					for (String period : DatabaseContract.PERIODS) {
-						if (Preferences.getBoolean(period, false)) {
+						if (Setting.getPeriod(period)) {
 							mDatabaseManager.deleteStockData(mStock.getId(), period);
 						}
 					}
@@ -326,7 +328,7 @@ public class StockChartListActivity extends BaseActivity implements
 		}
 
 		for (int i = 0; i < DatabaseContract.PERIODS.length; i++) {
-			mStockDataChartList.add(new StockDataChart(DatabaseContract.PERIODS[i]));
+			mStockDataChartList.add(new StockDataChart(mStock, DatabaseContract.PERIODS[i]));
 			mStockDataChartItemMainList.add(new StockDataChartItemMain(
 					mStockDataChartList.get(i)));
 			mStockDataChartItemSubList.add(new StockDataChartItemSub(
@@ -347,7 +349,7 @@ public class StockChartListActivity extends BaseActivity implements
 
 		mDatabaseManager.getStockById(mStock);
 		for (int i = 0; i < DatabaseContract.PERIODS.length; i++) {
-			if (Preferences.getBoolean(DatabaseContract.PERIODS[i], false)) {
+			if (Setting.getPeriod(DatabaseContract.PERIODS[i])) {
 				mLoaderManager.initLoader(i, null, this);
 			}
 		}
@@ -371,7 +373,7 @@ public class StockChartListActivity extends BaseActivity implements
 
 		mDatabaseManager.getStockById(mStock);
 		for (int i = 0; i < DatabaseContract.PERIODS.length; i++) {
-			if (Preferences.getBoolean(DatabaseContract.PERIODS[i], false)) {
+			if (Setting.getPeriod(DatabaseContract.PERIODS[i])) {
 				mLoaderManager.restartLoader(i, null, this);
 			}
 		}
@@ -678,7 +680,7 @@ public class StockChartListActivity extends BaseActivity implements
 
 		mDatabaseManager.getStockById(mStock);
 		for (int i = 0; i < DatabaseContract.PERIODS.length; i++) {
-			if (Preferences.getBoolean(DatabaseContract.PERIODS[i], false)) {
+			if (Setting.getPeriod(DatabaseContract.PERIODS[i])) {
 				mStockDataChartItemList.add(mStockDataChartItemMainList.get(i));
 				mStockDataChartItemList.add(mStockDataChartItemSubList.get(i));
 			}
@@ -728,8 +730,8 @@ public class StockChartListActivity extends BaseActivity implements
 	}
 
 	@Override
-	public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX,
-							 float velocityY) {
+	public void onChartFling(@NonNull MotionEvent me1, @NonNull MotionEvent me2, float velocityX,
+	                         float velocityY) {
 		if (me2.getX() > me1.getX()) {
 //			navigateStock(1);
 		} else {

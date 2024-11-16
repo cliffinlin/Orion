@@ -528,9 +528,6 @@ public class DatabaseManager implements StockListChangedListener, StockEditListe
 
 	public void loadStockDataList(Stock stock, String period,
 								  ArrayList<StockData> stockDataList) {
-		boolean loopback = false;
-		int index = 0;
-
 		Calendar calendar = Calendar.getInstance();
 		Cursor cursor = null;
 		String selection = null;
@@ -541,8 +538,7 @@ public class DatabaseManager implements StockListChangedListener, StockEditListe
 			return;
 		}
 
-		loopback = Preferences.getBoolean(Setting.SETTING_DEBUG_LOOPBACK,
-				false);
+		boolean loopback = Setting.getDebugLoopback();
 		if (loopback) {
 			String dateTime = Preferences.getString(Setting.SETTING_DEBUG_LOOPBACK_DATE_TIME, "");
 			if (!TextUtils.isEmpty(dateTime)) {
@@ -561,6 +557,7 @@ public class DatabaseManager implements StockListChangedListener, StockEditListe
 			cursor = queryStockData(selection, null,
 					sortOrder);
 			if ((cursor != null) && (cursor.getCount() > 0)) {
+				int index = 0;
 				while (cursor.moveToNext()) {
 					StockData stockData = new StockData(period);
 					stockData.set(cursor);

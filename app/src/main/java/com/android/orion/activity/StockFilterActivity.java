@@ -10,6 +10,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.android.orion.R;
 import com.android.orion.setting.StockFilter;
 
@@ -119,7 +121,7 @@ public class StockFilterActivity extends DatabaseActivity implements
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home:
 				finish();
@@ -130,7 +132,7 @@ public class StockFilterActivity extends DatabaseActivity implements
 	}
 
 	@Override
-	public void onClick(View view) {
+	public void onClick(@NonNull View view) {
 		int id = view.getId();
 
 		switch (id) {

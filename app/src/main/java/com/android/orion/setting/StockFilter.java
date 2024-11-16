@@ -169,9 +169,7 @@ public class StockFilter {
 
 	public void read() {
 		mEnabled = Preferences.getBoolean(Setting.SETTING_STOCK_FILTER_ENABLED, true);
-
 		mFavorite = Preferences.getBoolean(Setting.SETTING_STOCK_FILTER_FAVORITE, true);
-
 		mHold = Preferences.getString(Setting.SETTING_STOCK_FILTER_HOLD,
 				"");
 		mRoi = Preferences.getString(Setting.SETTING_STOCK_FILTER_ROI,
@@ -221,7 +219,6 @@ public class StockFilter {
 
 		mEnabled = bundle.getBoolean(Setting.SETTING_STOCK_FILTER_ENABLED, true);
 		mFavorite = bundle.getBoolean(Setting.SETTING_STOCK_FILTER_FAVORITE, true);
-
 		mHold = bundle.getString(Setting.SETTING_STOCK_FILTER_HOLD);
 		mRoi = bundle.getString(Setting.SETTING_STOCK_FILTER_ROI);
 		mRate = bundle.getString(Setting.SETTING_STOCK_FILTER_RATE);
@@ -241,7 +238,6 @@ public class StockFilter {
 
 		bundle.putBoolean(Setting.SETTING_STOCK_FILTER_ENABLED, mEnabled);
 		bundle.putBoolean(Setting.SETTING_STOCK_FILTER_FAVORITE, mFavorite);
-
 		bundle.putString(Setting.SETTING_STOCK_FILTER_HOLD, mHold);
 		bundle.putString(Setting.SETTING_STOCK_FILTER_ROI, mRoi);
 		bundle.putString(Setting.SETTING_STOCK_FILTER_RATE, mRate);

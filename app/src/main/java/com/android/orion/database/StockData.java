@@ -34,6 +34,7 @@ public class StockData extends DatabaseTable {
 	public static final char MARK_MINUS = '-';
 
 	public static final String MARK_STAR = "*";
+	public static final String MARK_X = "X";
 
 	public static final String MARK_NATURAL_RALLY = "NG";
 	public static final String MARK_UPWARD_TREND = "GG";

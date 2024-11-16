@@ -289,7 +289,7 @@ public class StockDataProvider implements StockListChangedListener, StockEditLis
 			loadIndexComponentStockList(index, stockList);
 
 			for (String period : DatabaseContract.PERIODS) {
-				if (!Preferences.getBoolean(period, false)) {
+				if (!Setting.getPeriod(period)) {
 					continue;
 				}
 
@@ -808,7 +808,7 @@ public class StockDataProvider implements StockListChangedListener, StockEditLis
 				if (Setting.getStockDataChanged(stock.getSE(), stock.getCode())) {
 					Setting.setStockDataChanged(stock.getSE(), stock.getCode(), false);
 					for (String period : DatabaseContract.PERIODS) {
-						if (Preferences.getBoolean(period, false)) {
+						if (Setting.getPeriod(period)) {
 							mStockAnalyzer.analyze(stock, period);
 						}
 					}

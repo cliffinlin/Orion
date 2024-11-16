@@ -795,7 +795,7 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		for (String period : DatabaseContract.PERIODS) {
-			if (Preferences.getBoolean(period, false)) {
+			if (Setting.getPeriod(period)) {
 				result = downloadStockDataHistory(stock, period);
 			}
 		}
@@ -1005,7 +1005,7 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		for (String period : DatabaseContract.PERIODS) {
-			if (Preferences.getBoolean(period, false)) {
+			if (Setting.getPeriod(period)) {
 				if (TextUtils.equals(period, DatabaseContract.COLUMN_DAY)) {
 					result = downloadStockDataRealTime(stock, period);
 				}

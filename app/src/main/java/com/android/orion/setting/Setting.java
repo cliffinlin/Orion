@@ -1,19 +1,22 @@
 package com.android.orion.setting;
 
+import androidx.annotation.NonNull;
+
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.utility.Preferences;
 
 public class Setting {
 
-	public static final String SETTING_PREFERENCES_INIT = "SETTING_PREFERENCES_INIT";
+	static final String SETTING_PREFERENCE_INIT = "SETTING_PREFERENCE_INIT";
 
-	public static final String SETTING_PERIOD_MONTH = "SETTING_PERIOD_MONTH";
-	public static final String SETTING_PERIOD_WEEK = "SETTING_PERIOD_WEEK";
-	public static final String SETTING_PERIOD_DAY = "SETTING_PERIOD_DAY";
-	public static final String SETTING_PERIOD_MIN60 = "SETTING_PERIOD_MIN60";
-	public static final String SETTING_PERIOD_MIN30 = "SETTING_PERIOD_MIN30";
-	public static final String SETTING_PERIOD_MIN15 = "SETTING_PERIOD_MIN15";
-	public static final String SETTING_PERIOD_MIN5 = "SETTING_PERIOD_MIN5";
+	static final String SETTING_PERIOD_ = "SETTING_PERIOD_";
+	static final String SETTING_PERIOD_MONTH = "SETTING_PERIOD_MONTH";
+	static final String SETTING_PERIOD_WEEK = "SETTING_PERIOD_WEEK";
+	static final String SETTING_PERIOD_DAY = "SETTING_PERIOD_DAY";
+	static final String SETTING_PERIOD_MIN60 = "SETTING_PERIOD_MIN60";
+	static final String SETTING_PERIOD_MIN30 = "SETTING_PERIOD_MIN30";
+	static final String SETTING_PERIOD_MIN15 = "SETTING_PERIOD_MIN15";
+	static final String SETTING_PERIOD_MIN5 = "SETTING_PERIOD_MIN5";
 
 	public static final String SETTING_SORT_ORDER_COMPONENT_LIST = "SETTING_SORT_ORDER_COMPONENT_LIST";
 	public static final String SETTING_SORT_ORDER_STOCK_LIST = "SETTING_SORT_ORDER_STOCK_LIST";
@@ -33,7 +36,7 @@ public class Setting {
 	public static final String SETTING_STOCK_FILTER_YIELD = "SETTING_STOCK_FILTER_YIELD";
 	public static final String SETTING_STOCK_FILTER_DIVIDEND_RATIO = "SETTING_STOCK_FILTER_DIVIDEND_RATIO";
 
-	public static final String SETTING_DISPLAY_NET = "SETTING_DISPLAY_NET";
+	static final String SETTING_DISPLAY_NET = "SETTING_DISPLAY_NET";
 	public static final String SETTING_DISPLAY_CANDLE = "SETTING_DISPLAY_CANDLE";
 	public static final String SETTING_DISPLAY_DRAW = "SETTING_DISPLAY_DRAW";
 	public static final String SETTING_DISPLAY_STROKE = "SETTING_DISPLAY_STROKE";
@@ -62,6 +65,28 @@ public class Setting {
 	public static final String SETTING_STOCK_ARRAY_MAP_INDEX = "SETTING_STOCK_ARRAY_MAP_INDEX";
 
 	private Setting() {
+	}
+
+	public static boolean getPreferenceInit() {
+		return Preferences.getBoolean(Setting.SETTING_PREFERENCE_INIT, false);
+	}
+
+	public static void setPreferenceInit(boolean value) {
+		Preferences.getBoolean(Setting.SETTING_PREFERENCE_INIT, value);
+	}
+
+	public static boolean getPeriod(@NonNull String period) {
+		if (period == null) {
+			return false;
+		}
+		return Preferences.getBoolean(SETTING_PERIOD_ + period.toUpperCase(), false);
+	}
+
+	public static void setPeriod(@NonNull String period, boolean value) {
+		if (period == null) {
+			return;
+		}
+		Preferences.putBoolean(SETTING_PERIOD_ + period.toUpperCase(), value);
 	}
 
 	public static boolean getDisplayNet() {

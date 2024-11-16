@@ -25,6 +25,8 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import com.android.orion.R;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
@@ -144,7 +146,7 @@ public class StockTrendListActivity extends ListActivity implements
 	}
 
 	@Override
-	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+	public boolean onMenuItemSelected(int featureId, @NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home:
 				finish();
@@ -218,7 +220,7 @@ public class StockTrendListActivity extends ListActivity implements
 	}
 
 	@Override
-	public void onClick(View view) {
+	public void onClick(@NonNull View view) {
 		int id = view.getId();
 
 		resetHeaderTextColor();
@@ -283,16 +285,6 @@ public class StockTrendListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewNaturalReaction, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewDate, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewTime, mHeaderTextDefaultColor);
-	}
-
-	void setVisibility(String key, TextView textView) {
-		if (textView != null) {
-			if (Preferences.getBoolean(key, false)) {
-				textView.setVisibility(View.VISIBLE);
-			} else {
-				textView.setVisibility(View.GONE);
-			}
-		}
 	}
 
 	void initHeader() {
@@ -530,20 +522,6 @@ public class StockTrendListActivity extends ListActivity implements
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
 								   int position, long id) {
 		return true;
-	}
-
-	boolean setRightTextViewVisibility(String key, View textView) {
-		if (textView != null) {
-			if (Preferences.getBoolean(key, false)) {
-				textView.setVisibility(View.VISIBLE);
-				return false;
-			} else {
-				textView.setVisibility(View.GONE);
-				return true;
-			}
-		}
-
-		return false;
 	}
 
 	boolean setRightTextView(String key, View view) {
