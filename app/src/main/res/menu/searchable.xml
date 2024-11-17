@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/action_search"
+        android:id="@+id/action_searching"
         android:actionViewClass="android.widget.SearchView"
         android:showAsAction="always"
         android:title="@string/search" />

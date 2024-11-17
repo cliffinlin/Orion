@@ -48,7 +48,7 @@ public class StockSearchActivity extends StockListActivity implements
 		getMenuInflater().inflate(R.menu.searchable, menu);
 
 		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-		SearchView searchView = (SearchView) menu.findItem(R.id.action_search)
+		SearchView searchView = (SearchView) menu.findItem(R.id.action_searching)
 				.getActionView();
 		if (searchView != null) {
 			searchView.setSearchableInfo(searchManager
