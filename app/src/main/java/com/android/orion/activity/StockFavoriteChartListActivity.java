@@ -325,7 +325,11 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 			mStockDataChartItemSubList = new ArrayList<StockDataChartItemSub>();
 		}
 
+		int selection = 0;
 		for (int i = 0; i < DatabaseContract.PERIODS.length; i++) {
+			if (TextUtils.equals(DatabaseContract.PERIODS[i], DatabaseContract.COLUMN_DAY)) {
+				selection = i * 2;
+			}
 			mStockDataChartList.add(new StockDataChart(mStock, DatabaseContract.PERIODS[i]));
 			mStockDataChartItemMainList.add(new StockDataChartItemMain(
 					mStockDataChartList.get(i)));
@@ -338,6 +342,7 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 		mStockDataChartArrayAdapter = new StockDataChartArrayAdapter(this,
 				mStockDataChartItemList);
 		mListView.setAdapter(mStockDataChartArrayAdapter);
+		mListView.setSelection(selection);
 	}
 
 	void initLoader() {
@@ -679,6 +684,7 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 		mDatabaseManager.getStockById(mStock);
 		for (int i = 0; i < DatabaseContract.PERIODS.length; i++) {
 			if (Setting.getPeriod(DatabaseContract.PERIODS[i])) {
+				mStockDataChartItemMainList.get(i).mStockDataChart.setStock(mStock);
 				mStockDataChartItemList.add(mStockDataChartItemMainList.get(i));
 				mStockDataChartItemList.add(mStockDataChartItemSubList.get(i));
 			}

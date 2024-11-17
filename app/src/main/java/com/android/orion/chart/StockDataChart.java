@@ -68,6 +68,10 @@ public class StockDataChart {
 		mPeriod = period;
 	}
 
+	public void setStock(Stock stock) {
+		mStock = stock;
+	}
+
 	public void setMainChartData(Context context) {
 		mCombinedDataMain = new CombinedData(mXValues);
 
