@@ -738,8 +738,6 @@ public class StockAnalyzer {
 		String action = StockData.MARK_NONE;
 
 		if (TextUtils.equals(period, stock.getOperate())) {
-			action += StockData.MARK_X;
-
 			if (stockData.getNaturalRally() > 0) {
 				action += StockData.MARK_NATURAL_RALLY;
 			}
