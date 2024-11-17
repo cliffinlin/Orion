@@ -297,7 +297,7 @@ public class StockDealActivity extends DatabaseActivity implements
 			case R.id.edittext_stock_name:
 			case R.id.edittext_stock_code:
 				if (TextUtils.equals(Constant.ACTION_DEAL_INSERT, mAction)) {
-					Intent intent = new Intent(this, StockListActivity.class);
+					Intent intent = new Intent(this, StockFavoriteListActivity.class);
 					intent.setAction(Constant.ACTION_STOCK_ID);
 					startActivityForResult(intent, REQUEST_CODE_STOCK_ID);
 				}

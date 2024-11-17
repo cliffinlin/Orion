@@ -1,6 +1,5 @@
 package com.android.orion.activity;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -31,7 +30,7 @@ import com.android.orion.utility.Utility;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StockEditActivity extends DatabaseActivity implements OnClickListener, AdapterView.OnItemSelectedListener {
+public class StockActivity extends DatabaseActivity implements OnClickListener, AdapterView.OnItemSelectedListener {
 
 	CheckBox mCheckBoxFavorite;
 	RadioGroup mRadioGroupClass;

@@ -1,4 +1,4 @@
-package com.android.orion.activity;
+package com.android.orion.chart;
 
 import android.graphics.Color;
 
@@ -19,24 +19,24 @@ import java.util.Random;
 
 public class StockStatisticsChart {
 
-	ArrayList<String> mXValues = null;
+	public ArrayList<String> mXValues = null;
 
-	ArrayList<BarEntry> mPeEntryList = null;
-	ArrayList<Entry> mRoiEntryList = null;
-	ArrayList<Entry> mRoeEntryList = null;
-	ArrayList<Entry> mRateEntryList = null;
-	ArrayList<Entry> mYieldEntryList = null;
-	ArrayList<Entry> mDividendRatioEntryList = null;
+	public ArrayList<BarEntry> mPeEntryList = null;
+	public ArrayList<Entry> mRoiEntryList = null;
+	public ArrayList<Entry> mRoeEntryList = null;
+	public ArrayList<Entry> mRateEntryList = null;
+	public ArrayList<Entry> mYieldEntryList = null;
+	public ArrayList<Entry> mDividendRatioEntryList = null;
 
 	ArrayList<Entry> mDIFEntryList = null;
 	ArrayList<Entry> mDEAEntryList = null;
 	ArrayList<BarEntry> mHistogramEntryList = null;
 
-	ArrayList<Entry> mValuationEntryList = null;
+	public ArrayList<Entry> mValuationEntryList = null;
 
-	CombinedData mCombinedDataMain = null;
+	public CombinedData mCombinedDataMain = null;
 	CombinedData mCombinedDataSub = null;
-	PieData mPieData = null;
+	public PieData mPieData = null;
 
 	public StockStatisticsChart() {
 		if (mXValues == null) {
@@ -99,7 +99,7 @@ public class StockStatisticsChart {
 		setSubChartData();
 	}
 
-	void setMainChartData() {
+	public void setMainChartData() {
 		LineData lineData = new LineData(mXValues);
 		BarData barData = new BarData(mXValues);
 
@@ -150,7 +150,7 @@ public class StockStatisticsChart {
 		mCombinedDataMain.setData(barData);
 	}
 
-	void setSubChartData() {
+	public void setSubChartData() {
 		mPieData = new PieData(mXValues);
 		PieDataSet pieDataSet = new PieDataSet(mValuationEntryList, "Valuation");
 
@@ -197,7 +197,7 @@ public class StockStatisticsChart {
 		 */
 	}
 
-	void clear() {
+	public void clear() {
 		mXValues.clear();
 
 		mPeEntryList.clear();

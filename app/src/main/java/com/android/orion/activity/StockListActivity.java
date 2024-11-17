@@ -1,23 +1,24 @@
 package com.android.orion.activity;
 
+import android.app.AlertDialog;
 import android.app.LoaderManager;
+import android.content.Context;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -26,161 +27,152 @@ import androidx.annotation.NonNull;
 
 import com.android.orion.R;
 import com.android.orion.database.DatabaseContract;
+import com.android.orion.database.IndexComponent;
 import com.android.orion.database.Stock;
 import com.android.orion.setting.Constant;
-import com.android.orion.setting.Setting;
-import com.android.orion.utility.Preferences;
-import com.android.orion.view.SyncHorizontalScrollView;
+import com.android.orion.utility.Utility;
 
-public class StockListActivity extends ListActivity implements
+import java.util.ArrayList;
+
+public class StockListActivity extends DatabaseActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
-		OnItemLongClickListener, OnClickListener {
+		OnClickListener {
 
-	public static final int LOADER_ID_STOCK_LIST = 0;
-
-	public static final int REQUEST_CODE_STOCK_INSERT = 0;
+	static final int LOADER_ID_STOCK_LIST = 0;
 
 	static final int mHeaderTextDefaultColor = Color.BLACK;
 	static final int mHeaderTextHighlightColor = Color.RED;
 
-	String mSortOrderColumn = DatabaseContract.COLUMN_CODE;
-	String mSortOrderDirection = DatabaseContract.ORDER_ASC;
+	String mSortOrderColumn = DatabaseContract.COLUMN_HOLD;
+	String mSortOrderDirection = DatabaseContract.ORDER_DESC;
 	String mSortOrderDefault = mSortOrderColumn + mSortOrderDirection;
 	String mSortOrder = mSortOrderDefault;
 
-	SyncHorizontalScrollView mTitleSHSV = null;
-	SyncHorizontalScrollView mContentSHSV = null;
+	ListView mListView = null;
+	CustomSimpleCursorAdapter mAdapter = null;
 
 	TextView mTextViewNameCode = null;
 	TextView mTextViewPrice = null;
-	TextView mTextViewNet = null;
-	TextView mTextViewMonth = null;
-	TextView mTextViewWeek = null;
-	TextView mTextViewDay = null;
-	TextView mTextViewMin60 = null;
-	TextView mTextViewMin30 = null;
-	TextView mTextViewMin15 = null;
-	TextView mTextViewMin5 = null;
-	TextView mTextViewOperate = null;
-	TextView mTextViewModified = null;
+	TextView mTextViewHold = null;
+	TextView mTextViewFavorite = null;
+	TextView mTextViewComponent = null;
 
-	ListView mLeftListView = null;
-	ListView mRightListView = null;
-
-	SimpleCursorAdapter mLeftAdapter = null;
-	SimpleCursorAdapter mRightAdapter = null;
-
-	Handler mHandler = new Handler(Looper.getMainLooper()) {
-
-		@Override
-		public void handleMessage(Message msg) {
-			super.handleMessage(msg);
-
-			switch (msg.what) {
-				case MESSAGE_REFRESH:
-					for (int i = 0; i < mStockList.size(); i++) {
-						Stock stock = mStockList.get(i);
-						if (stock != null && stock.hasFlag(Stock.FLAG_FAVORITE)) {
-							onMessageRefresh(stock);
-						}
-					}
-					restartLoader();
-					break;
-
-				default:
-					break;
-			}
-		}
-	};
+	String[] mFrom = new String[]{DatabaseContract.COLUMN_NAME,
+			DatabaseContract.COLUMN_CODE, DatabaseContract.COLUMN_PRICE,
+			DatabaseContract.COLUMN_HOLD};
+	int[] mTo = new int[]{R.id.name, R.id.code, R.id.price, R.id.hold};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_stock_list);
+		setContentView(R.layout.activity_stock_list_edit);
 
-		mSortOrder = Preferences.getString(Setting.SETTING_SORT_ORDER_STOCK_LIST,
-				mSortOrderDefault);
+		mSortOrder = getIntent().getStringExtra(
+				Constant.EXTRA_STOCK_LIST_SORT_ORDER);
+		if (mSortOrder == null) {
+			mSortOrder = mSortOrderDefault;
+		}
 
 		initHeader();
 
-		initListView();
+		mListView = findViewById(R.id.stock_list_edit_view);
+
+		mAdapter = new CustomSimpleCursorAdapter(this,
+				R.layout.activity_stock_list_edit_item, null, mFrom, mTo, 0);
+
+		if ((mListView != null) && (mAdapter != null)) {
+			mListView.setAdapter(mAdapter);
+			mListView.setOnItemClickListener(this);
+		}
 
 		mLoaderManager.initLoader(LOADER_ID_STOCK_LIST, null, this);
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.stock_favorite_list, menu);
+		getMenuInflater().inflate(R.menu.stock_list, menu);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-		return true;
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
-	public boolean onMenuItemSelected(int featureId, @NonNull MenuItem item) {
+	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
-			case android.R.id.home:
-				finish();
-				return true;
-
 			case R.id.action_new:
-				Intent intent = new Intent(this, StockEditActivity.class);
+				Intent intent = new Intent(this, StockActivity.class);
 				intent.setAction(Constant.ACTION_FAVORITE_STOCK_INSERT);
-				startActivityForResult(intent, REQUEST_CODE_STOCK_INSERT);
+				startActivity(intent);
 				return true;
 
 			case R.id.action_search:
 				startActivity(new Intent(this, StockSearchActivity.class));
 				return true;
 
-			case R.id.action_refresh:
-				mHandler.sendEmptyMessage(MESSAGE_REFRESH);
+			case R.id.action_favorite:
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						ArrayList<Stock> stockList = new ArrayList();
+						mDatabaseManager.getStockList(null, stockList);
+						for (Stock stock : stockList) {
+							if (!stock.hasFlag(Stock.FLAG_FAVORITE)) {
+								mDatabaseManager.updateStockFlag(stock.getId(), Stock.FLAG_FAVORITE);
+								Log.d(stock.getName() + stock.getCode() + " updateStockFlag(Stock.FLAG_FAVORITE)");
+							}
+						}
+					}
+				}).start();
 				return true;
-
-			case R.id.action_setting:
-				startActivity(new Intent(this, SettingActivity.class));
+			case android.R.id.home:
+				finish();
 				return true;
-
-			case R.id.action_load:
-				performLoadFromFile();
-				return true;
-
-			case R.id.action_save:
-				performSaveToFile();
-				return true;
-
-			case R.id.action_deal:
-				startActivity(new Intent(this, StockDealListActivity.class));
-				return true;
-
-			case R.id.action_edit:
-				startActivity(new Intent(this, StockListEditActivity.class));
-				return true;
-
 			default:
-				return super.onMenuItemSelected(featureId, item);
+				return super.onOptionsItemSelected(item);
 		}
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode,
-									Intent intent) {
-		super.onActivityResult(requestCode, resultCode, intent);
+	public void onDestroy() {
+		super.onDestroy();
+	}
 
-		if (resultCode == RESULT_OK) {
-			switch (requestCode) {
-				case REQUEST_CODE_STOCK_INSERT:
-//					mStockDataProvider.download(mStock);
-					break;
+	String getSelection() {
+		return null;
+	}
 
-				default:
-					break;
-			}
-		}
+	void restartLoader(Intent intent) {
+		restartLoader();
+	}
+
+	void restartLoader() {
+		mLoaderManager.restartLoader(LOADER_ID_STOCK_LIST, null, this);
+	}
+
+	@Override
+	public Loader<Cursor> onCreateLoader(int id, Bundle arg1) {
+		CursorLoader loader = null;
+
+		loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
+				DatabaseContract.Stock.PROJECTION_ALL, getSelection(), null,
+				mSortOrder);
+
+		return loader;
+	}
+
+	@Override
+	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+		mAdapter.swapCursor(cursor);
+	}
+
+	@Override
+	public void onLoaderReset(Loader<Cursor> loader) {
+		mAdapter.swapCursor(null);
 	}
 
 	@Override
 	public void onClick(@NonNull View view) {
+
 		int id = view.getId();
 
 		resetHeaderTextColor();
@@ -188,43 +180,20 @@ public class StockListActivity extends ListActivity implements
 
 		switch (id) {
 			case R.id.stock_name_code:
-				mSortOrderColumn = DatabaseContract.COLUMN_CODE;
+				mSortOrderColumn = DatabaseContract.COLUMN_NAME;
 				break;
 			case R.id.price:
 				mSortOrderColumn = DatabaseContract.COLUMN_PRICE;
 				break;
-			case R.id.net:
-				mSortOrderColumn = DatabaseContract.COLUMN_NET;
+			case R.id.hold:
+				mSortOrderColumn = DatabaseContract.COLUMN_HOLD;
 				break;
-			case R.id.period_month:
-				mSortOrderColumn = DatabaseContract.COLUMN_MONTH;
+			case R.id.favorite:
+				mSortOrderColumn = DatabaseContract.COLUMN_FLAG;
 				break;
-			case R.id.period_week:
-				mSortOrderColumn = DatabaseContract.COLUMN_WEEK;
-				break;
-			case R.id.period_day:
-				mSortOrderColumn = DatabaseContract.COLUMN_DAY;
-				break;
-			case R.id.period_min60:
-				mSortOrderColumn = DatabaseContract.COLUMN_MIN60;
-				break;
-			case R.id.period_min30:
-				mSortOrderColumn = DatabaseContract.COLUMN_MIN30;
-				break;
-			case R.id.period_min15:
-				mSortOrderColumn = DatabaseContract.COLUMN_MIN15;
-				break;
-			case R.id.period_min5:
-				mSortOrderColumn = DatabaseContract.COLUMN_MIN5;
-				break;
-			case R.id.operate:
-				mSortOrderColumn = DatabaseContract.COLUMN_OPERATE;
-				break;
-			case R.id.modified:
-				mSortOrderColumn = DatabaseContract.COLUMN_MODIFIED;
-				break;
+
 			default:
-				mSortOrderColumn = DatabaseContract.COLUMN_NET;
+				mSortOrderColumn = DatabaseContract.COLUMN_CODE;
 				break;
 		}
 
@@ -235,8 +204,6 @@ public class StockListActivity extends ListActivity implements
 		}
 
 		mSortOrder = mSortOrderColumn + mSortOrderDirection;
-
-		Preferences.putString(Setting.SETTING_SORT_ORDER_STOCK_LIST, mSortOrder);
 
 		restartLoader();
 	}
@@ -255,27 +222,12 @@ public class StockListActivity extends ListActivity implements
 	void resetHeaderTextColor() {
 		setHeaderTextColor(mTextViewNameCode, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewPrice, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewNet, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewMonth, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewWeek, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewDay, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewMin60, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewMin30, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewMin15, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewMin5, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewOperate, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewModified, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewHold, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewFavorite, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewComponent, mHeaderTextDefaultColor);
 	}
 
 	void initHeader() {
-		mTitleSHSV = findViewById(R.id.title_shsv);
-		mContentSHSV = findViewById(R.id.content_shsv);
-
-		if (mTitleSHSV != null && mContentSHSV != null) {
-			mTitleSHSV.setScrollView(mContentSHSV);
-			mContentSHSV.setScrollView(mTitleSHSV);
-		}
-
 		mTextViewNameCode = findViewById(R.id.stock_name_code);
 		if (mTextViewNameCode != null) {
 			mTextViewNameCode.setOnClickListener(this);
@@ -286,334 +238,232 @@ public class StockListActivity extends ListActivity implements
 			mTextViewPrice.setOnClickListener(this);
 		}
 
-		mTextViewNet = findViewById(R.id.net);
-		if (mTextViewNet != null) {
-			mTextViewNet.setOnClickListener(this);
-			setVisibility(mTextViewNet, Setting.getDisplayNet());
+		mTextViewHold = findViewById(R.id.hold);
+		if (mTextViewHold != null) {
+			mTextViewHold.setOnClickListener(this);
 		}
 
-		mTextViewMonth = findViewById(R.id.period_month);
-		if (mTextViewMonth != null) {
-			mTextViewMonth.setOnClickListener(this);
-			setVisibility(mTextViewMonth, Setting.getPeriod(DatabaseContract.COLUMN_MONTH));
+		mTextViewFavorite = findViewById(R.id.favorite);
+		if (mTextViewFavorite != null) {
+			mTextViewFavorite.setOnClickListener(this);
 		}
 
-		mTextViewWeek = findViewById(R.id.period_week);
-		if (mTextViewWeek != null) {
-			mTextViewWeek.setOnClickListener(this);
-			setVisibility(mTextViewWeek, Setting.getPeriod(DatabaseContract.COLUMN_WEEK));
+		mTextViewComponent = findViewById(R.id.component);
+		if (TextUtils.equals(mAction, Constant.ACTION_INDEX_COMPONENT_SELECT)) {
+			mTextViewComponent.setVisibility(View.VISIBLE);
+		} else {
+			mTextViewComponent.setVisibility(View.GONE);
 		}
 
-		mTextViewDay = findViewById(R.id.period_day);
-		if (mTextViewDay != null) {
-			mTextViewDay.setOnClickListener(this);
-			setVisibility(mTextViewDay, Setting.getPeriod(DatabaseContract.COLUMN_DAY));
-		}
-
-		mTextViewMin60 = findViewById(R.id.period_min60);
-		if (mTextViewMin60 != null) {
-			mTextViewMin60.setOnClickListener(this);
-			setVisibility(mTextViewMin60, Setting.getPeriod(DatabaseContract.COLUMN_MIN60));
-		}
-
-		mTextViewMin30 = findViewById(R.id.period_min30);
-		if (mTextViewMin30 != null) {
-			mTextViewMin30.setOnClickListener(this);
-			setVisibility(mTextViewMin30, Setting.getPeriod(DatabaseContract.COLUMN_MIN30));
-		}
-
-		mTextViewMin15 = findViewById(R.id.period_min15);
-		if (mTextViewMin15 != null) {
-			mTextViewMin15.setOnClickListener(this);
-			setVisibility(mTextViewMin15, Setting.getPeriod(DatabaseContract.COLUMN_MIN15));
-		}
-
-		mTextViewMin5 = findViewById(R.id.period_min5);
-		if (mTextViewMin5 != null) {
-			mTextViewMin5.setOnClickListener(this);
-			setVisibility(mTextViewMin5, Setting.getPeriod(DatabaseContract.COLUMN_MIN5));
-		}
-
-		mTextViewOperate = findViewById(R.id.operate);
-		if (mTextViewOperate != null) {
-			mTextViewOperate.setOnClickListener(this);
-		}
-
-		mTextViewModified = findViewById(R.id.modified);
-		if (mTextViewModified != null) {
-			mTextViewModified.setOnClickListener(this);
-		}
-
-		if (mSortOrder.contains(DatabaseContract.COLUMN_CODE)) {
+		if (mSortOrder.contains(DatabaseContract.COLUMN_NAME)) {
 			setHeaderTextColor(mTextViewNameCode, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PRICE)) {
 			setHeaderTextColor(mTextViewPrice, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_NET)) {
-			setHeaderTextColor(mTextViewNet, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MONTH)) {
-			setHeaderTextColor(mTextViewMonth, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_WEEK)) {
-			setHeaderTextColor(mTextViewWeek, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_DAY)) {
-			setHeaderTextColor(mTextViewDay, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MIN60)) {
-			setHeaderTextColor(mTextViewMin60, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MIN30)) {
-			setHeaderTextColor(mTextViewMin30, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MIN15)) {
-			setHeaderTextColor(mTextViewMin15, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MIN5)) {
-			setHeaderTextColor(mTextViewMin5, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_OPERATE)) {
-			setHeaderTextColor(mTextViewOperate, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MODIFIED)) {
-			setHeaderTextColor(mTextViewModified, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_HOLD)) {
+			setHeaderTextColor(mTextViewHold, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_FLAG)) {
+			setHeaderTextColor(mTextViewFavorite, mHeaderTextHighlightColor);
 		} else {
 		}
-	}
-
-	void initListView() {
-		String[] mLeftFrom = new String[]{DatabaseContract.COLUMN_NAME,
-				DatabaseContract.COLUMN_CODE};
-		int[] mLeftTo = new int[]{R.id.name, R.id.code};
-
-		String[] mRightFrom = new String[]{
-				DatabaseContract.COLUMN_PRICE,
-				DatabaseContract.COLUMN_NET,
-				DatabaseContract.COLUMN_MONTH,
-				DatabaseContract.COLUMN_WEEK,
-				DatabaseContract.COLUMN_DAY,
-				DatabaseContract.COLUMN_MIN60,
-				DatabaseContract.COLUMN_MIN30,
-				DatabaseContract.COLUMN_MIN15,
-				DatabaseContract.COLUMN_MIN5,
-				DatabaseContract.COLUMN_OPERATE,
-				DatabaseContract.COLUMN_MODIFIED};
-		int[] mRightTo = new int[]{
-				R.id.price,
-				R.id.net,
-				R.id.month,
-				R.id.week,
-				R.id.day,
-				R.id.min60,
-				R.id.min30,
-				R.id.min15,
-				R.id.min5,
-				R.id.operate,
-				R.id.modified};
-
-		mLeftListView = findViewById(R.id.left_listview);
-		mLeftAdapter = new SimpleCursorAdapter(this,
-				R.layout.activity_stock_list_left_item, null, mLeftFrom,
-				mLeftTo, 0);
-		if ((mLeftListView != null) && (mLeftAdapter != null)) {
-			mLeftAdapter.setViewBinder(new LeftViewBinder());
-			mLeftListView.setAdapter(mLeftAdapter);
-			mLeftListView.setOnItemClickListener(this);
-			mLeftListView.setOnItemLongClickListener(this);
-		}
-
-		mRightListView = findViewById(R.id.right_listview);
-		mRightAdapter = new SimpleCursorAdapter(this,
-				R.layout.activity_stock_list_right_item, null, mRightFrom,
-				mRightTo, 0);
-		if ((mRightListView != null) && (mRightAdapter != null)) {
-			mRightAdapter.setViewBinder(new RightViewBinder());
-			mRightListView.setAdapter(mRightAdapter);
-			mRightListView.setOnItemClickListener(this);
-			mRightListView.setOnItemLongClickListener(this);
-		}
-	}
-
-	void restartLoader(Intent intent) {
-		restartLoader();
-	}
-
-	void restartLoader() {
-		mLoaderManager.restartLoader(LOADER_ID_STOCK_LIST, null, this);
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-
-		restartLoader();
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-	}
-
-	@Override
-	public Loader<Cursor> onCreateLoader(int id, Bundle arg1) {
-		String selection = "";
-		CursorLoader loader = null;
-
-		switch (id) {
-			case LOADER_ID_STOCK_LIST:
-				selection += DatabaseContract.COLUMN_FLAG + " >= "
-						+ Stock.FLAG_FAVORITE;
-
-				loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
-						DatabaseContract.Stock.PROJECTION_ALL, selection, null,
-						mSortOrder);
-
-				mStockList.clear();
-				break;
-
-			default:
-				break;
-		}
-
-		return loader;
-	}
-
-	@Override
-	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-		if (loader == null) {
-			return;
-		}
-
-		switch (loader.getId()) {
-			case LOADER_ID_STOCK_LIST:
-				mLeftAdapter.swapCursor(cursor);
-				mRightAdapter.swapCursor(cursor);
-
-				if ((cursor != null) && cursor.getCount() > 0) {
-					cursor.moveToPosition(-1);
-					while (cursor.moveToNext()) {
-						Stock stock = new Stock();
-						stock.set(cursor);
-						mStockList.add(stock);
-					}
-				}
-				break;
-
-			default:
-				break;
-		}
-
-		setListViewHeightBasedOnChildren(mLeftListView);
-		setListViewHeightBasedOnChildren(mRightListView);
-	}
-
-	@Override
-	public void onLoaderReset(Loader<Cursor> loader) {
-		mLeftAdapter.swapCursor(null);
-		mRightAdapter.swapCursor(null);
-
-		mStockList.clear();
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 							long id) {
-
 		if (id <= Stock.INVALID_ID) {
 			return;
 		}
 
-		if (TextUtils.equals(mAction, Constant.ACTION_STOCK_ID)) {
-			if (mIntent != null) {
-				mIntent.putExtra(Constant.EXTRA_STOCK_ID, id);
-				setResult(RESULT_OK, mIntent);
-				finish();
+//		Intent intent = new Intent(StockListEditActivity.this,
+//				StockDataChartListActivity.class);
+//		intent.putExtra(Constant.EXTRA_STOCK_ID, id);
+//		startActivity(intent);
+	}
+
+	public class CustomSimpleCursorAdapter extends SimpleCursorAdapter
+			implements OnClickListener {
+
+		public CustomSimpleCursorAdapter(Context context, int layout, Cursor c,
+										 String[] from, int[] to, int flags) {
+			super(context, layout, c, from, to, flags);
+		}
+
+		@Override
+		public void bindView(@NonNull View view, Context context, Cursor cursor) {
+			ViewHolder holder = (ViewHolder) view.getTag();
+			Stock stock = new Stock();
+
+			stock.set(cursor);
+
+			setViewText(holder.mTextViewName, stock.getName());
+			setViewText(holder.mTextViewCode, stock.getCode());
+			setViewText(holder.mTextViewPrice, String.valueOf(stock.getPrice()));
+			setViewText(holder.mTextViewHold, String.valueOf(stock.getHold()));
+
+			if (stock.hasFlag(Stock.FLAG_FAVORITE)) {
+				holder.mImageViewFavorite
+						.setImageResource(R.drawable.ic_favorite);
+			} else {
+				holder.mImageViewFavorite
+						.setImageResource(R.drawable.ic_none_favorite);
 			}
-		} else {
-			if (parent.getId() == R.id.left_listview) {
-				mStock.setId(id);
+
+			if (stock.getHold() == 0) {
+				holder.mImageViewDelete.setImageResource(R.drawable.ic_delete);
+			} else {
+				holder.mImageViewDelete
+						.setImageResource(R.drawable.ic_undeletable);
+			}
+
+			holder.mImageViewFavorite.setTag(stock.getId());
+			holder.mImageViewFavorite.setOnClickListener(this);
+
+			holder.mImageViewDelete.setTag(stock.getId());
+			holder.mImageViewDelete.setOnClickListener(this);
+
+			holder.mImageViewgComponent.setTag(stock.getId());
+			holder.mImageViewgComponent.setOnClickListener(this);
+
+			if (TextUtils.equals(mAction, Constant.ACTION_INDEX_COMPONENT_SELECT)) {
+				mStock.setId(stock.getId());
 				mDatabaseManager.getStockById(mStock);
 
-				if (TextUtils.equals(mStock.getClasses(), Stock.CLASS_INDEX)) {
-					Intent intent = new Intent(mContext,
-							IndexComponentListActivity.class);
-					intent.putExtra(Constant.EXTRA_INDEX_CODE, String.valueOf(mStock.getCode()));
-					intent.putExtra(Constant.EXTRA_INDEX_NAME, String.valueOf(mStock.getName()));
-					intent.putExtra(Constant.EXTRA_INDEX_SE, String.valueOf(mStock.getSE()));
-					startActivity(intent);
+				IndexComponent indexComponent = new IndexComponent();
+				indexComponent.setIndexCode(mIntent.getStringExtra(Constant.EXTRA_INDEX_CODE));
+				indexComponent.setIndexName(mIntent.getStringExtra(Constant.EXTRA_INDEX_NAME));
+				indexComponent.setIndexSE(mIntent.getStringExtra(Constant.EXTRA_INDEX_SE));
+				indexComponent.setCode(mStock.getCode());
+				indexComponent.setName(mStock.getName());
+				indexComponent.setSE(mStock.getSE());
+
+				if (mDatabaseManager.isIndexComponentExist(indexComponent)) {
+					holder.mImageViewgComponent.setImageResource(R.drawable.ic_checked);
 				} else {
-					Intent intent = new Intent(mContext,
-							StockDealListActivity.class);
-					Bundle bundle = new Bundle();
-					bundle.putString(Constant.EXTRA_STOCK_SE, mStock.getSE());
-					bundle.putString(Constant.EXTRA_STOCK_CODE, mStock.getCode());
-					intent.putExtras(bundle);
-					startActivity(intent);
+					holder.mImageViewgComponent.setImageResource(R.drawable.ic_unchecked);
 				}
+			}
+
+			super.bindView(view, context, cursor);
+		}
+
+		@Override
+		public View newView(Context context, Cursor cursor, ViewGroup parent) {
+			View view = super.newView(context, cursor, parent);
+
+			ViewHolder holder = new ViewHolder();
+
+			holder.mTextViewName = view.findViewById(R.id.name);
+			holder.mTextViewCode = view.findViewById(R.id.code);
+			holder.mTextViewPrice = view.findViewById(R.id.price);
+			holder.mTextViewHold = view.findViewById(R.id.hold);
+			holder.mImageViewFavorite = view
+					.findViewById(R.id.favorite);
+			holder.mImageViewDelete = view
+					.findViewById(R.id.delete);
+			holder.mImageViewgComponent = view.findViewById(R.id.component);
+
+			if (TextUtils.equals(mAction, Constant.ACTION_INDEX_COMPONENT_SELECT)) {
+				holder.mImageViewgComponent.setVisibility(View.VISIBLE);
 			} else {
-				Intent intent = new Intent(this,
-						StockChartListActivity.class);
-				intent.putExtra(Constant.EXTRA_STOCK_LIST_SORT_ORDER,
-						mSortOrder);
-				intent.putExtra(Constant.EXTRA_STOCK_ID, id);
-				startActivity(intent);
+				holder.mImageViewgComponent.setVisibility(View.GONE);
 			}
+
+			view.setTag(holder);
+
+			return view;
 		}
-	}
-
-	@Override
-	public boolean onItemLongClick(AdapterView<?> parent, View view,
-								   int position, long id) {
-		Intent intent = new Intent(this, StockListEditActivity.class);
-		startActivity(intent);
-		return true;
-	}
-
-	private class LeftViewBinder implements SimpleCursorAdapter.ViewBinder {
 
 		@Override
-		public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-			if ((view == null) || (cursor == null) || (columnIndex == -1)) {
-				return false;
+		public void onClick(View view) {
+			if (view == null) {
+				return;
 			}
 
-			return false;
+			long stockId = (Long) view.getTag();
+			Stock stock = new Stock();
+
+			stock.setId(stockId);
+			mDatabaseManager.getStockById(stock);
+
+			try {
+				switch (view.getId()) {
+					case R.id.favorite:
+						if (!stock.hasFlag(Stock.FLAG_FAVORITE)) {
+							stock.addFlag(Stock.FLAG_FAVORITE);
+							mStockManager.onStockAddFavorite(stock);
+						} else {
+							stock.setFlag(Stock.FLAG_NONE);
+							mStockManager.onStockRemoveFavorite(stock);
+						}
+						break;
+
+					case R.id.delete:
+						if (stock.getHold() == 0) {
+							final String stock_name = stock.getName();
+							new AlertDialog.Builder(mContext)
+									.setTitle(R.string.delete)
+									.setMessage(getString(R.string.delete_confirm, stock_name))
+									.setPositiveButton(R.string.ok,
+											new DialogInterface.OnClickListener() {
+												public void onClick(DialogInterface dialog,
+																	int which) {
+													mDatabaseManager.deleteStock(stockId);
+													mDatabaseManager.deleteStockData(stockId);
+													mDatabaseManager.deleteStockFinancial(stockId);
+													mDatabaseManager.deleteShareBonus(stockId);
+													mDatabaseManager.deleteTotalShare(stockId);
+												}
+											})
+									.setNegativeButton(R.string.cancel,
+											new DialogInterface.OnClickListener() {
+												public void onClick(DialogInterface dialog,
+																	int which) {
+												}
+											}).setIcon(android.R.drawable.ic_dialog_alert)
+									.show();
+						}
+						break;
+
+					case R.id.component:
+						if (TextUtils.equals(mAction, Constant.ACTION_INDEX_COMPONENT_SELECT)) {
+							mStock.setId(stock.getId());
+							mDatabaseManager.getStockById(mStock);
+
+							IndexComponent indexComponent = new IndexComponent();
+							indexComponent.setIndexCode(mIntent.getStringExtra(Constant.EXTRA_INDEX_CODE));
+							indexComponent.setIndexName(mIntent.getStringExtra(Constant.EXTRA_INDEX_NAME));
+							indexComponent.setIndexSE(mIntent.getStringExtra(Constant.EXTRA_INDEX_SE));
+							indexComponent.setCode(mStock.getCode());
+							indexComponent.setName(mStock.getName());
+							indexComponent.setSE(mStock.getSE());
+
+							if (mDatabaseManager.isIndexComponentExist(indexComponent)) {
+								mDatabaseManager.deleteIndexComponent(indexComponent);
+							} else {
+								indexComponent.setCreated(Utility.getCurrentDateTimeString());
+								mDatabaseManager.insertIndexComponent(indexComponent);
+							}
+						}
+						break;
+
+					default:
+						break;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			restartLoader();
 		}
 	}
 
-	private class RightViewBinder implements SimpleCursorAdapter.ViewBinder {
-
-		@Override
-		public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-			if ((view == null) || (cursor == null) || (columnIndex == -1)) {
-				return false;
-			}
-
-			if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_NET)) {
-				return setVisibility(view, Setting.getDisplayNet());
-			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_MONTH)) {
-				return setVisibility(view, Setting.getPeriod(DatabaseContract.COLUMN_MONTH));
-			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_WEEK)) {
-				return setVisibility(view, Setting.getPeriod(DatabaseContract.COLUMN_WEEK));
-			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_DAY)) {
-				return setVisibility(view, Setting.getPeriod(DatabaseContract.COLUMN_DAY));
-			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_MIN60)) {
-				return setVisibility(view, Setting.getPeriod(DatabaseContract.COLUMN_MIN60));
-			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_MIN30)) {
-				return setVisibility(view, Setting.getPeriod(DatabaseContract.COLUMN_MIN30));
-			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_MIN15)) {
-				return setVisibility(view, Setting.getPeriod(DatabaseContract.COLUMN_MIN15));
-			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_MIN5)) {
-				return setVisibility(view, Setting.getPeriod(DatabaseContract.COLUMN_MIN5));
-			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_MODIFIED)) {
-			}
-
-			return false;
-		}
+	class ViewHolder {
+		public TextView mTextViewName;
+		public TextView mTextViewCode;
+		public TextView mTextViewPrice;
+		public TextView mTextViewHold;
+		public ImageView mImageViewFavorite;
+		public ImageView mImageViewDelete;
+		public ImageView mImageViewgComponent;
 	}
 }

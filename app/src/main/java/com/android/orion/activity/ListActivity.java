@@ -65,16 +65,6 @@ public class ListActivity extends StorageActivity {
 	}
 
 	boolean setVisibility(TextView textView, boolean visibility) {
-		if (textView == null) {
-			return true;
-		}
-
-		if (visibility) {
-			textView.setVisibility(View.VISIBLE);
-			return false;
-		} else {
-			textView.setVisibility(View.GONE);
-			return true;
-		}
+		return setVisibility((View) textView, visibility);
 	}
 }

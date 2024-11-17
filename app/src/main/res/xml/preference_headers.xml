@@ -5,7 +5,7 @@
         android:icon="@drawable/ic_list"
         android:title="@string/favorite">
         <intent
-            android:targetClass="com.android.orion.activity.StockListActivity"
+            android:targetClass="com.android.orion.activity.StockFavoriteListActivity"
             android:targetPackage="com.android.orion" />
     </header>
     <header

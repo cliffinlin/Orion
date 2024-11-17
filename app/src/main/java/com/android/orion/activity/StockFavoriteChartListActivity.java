@@ -12,7 +12,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.ArrayMap;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,7 +31,6 @@ import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
-import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Search;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -52,7 +50,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StockChartListActivity extends BaseActivity implements
+public class StockFavoriteChartListActivity extends BaseActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnChartGestureListener {
 
 	public static final int ITEM_VIEW_TYPE_MAIN = 0;
@@ -194,7 +192,7 @@ public class StockChartListActivity extends BaseActivity implements
 				return true;
 
 			case R.id.action_edit:
-				mIntent = new Intent(this, StockEditActivity.class);
+				mIntent = new Intent(this, StockActivity.class);
 				mIntent.setAction(Constant.ACTION_STOCK_EDIT);
 				mIntent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
 				startActivity(mIntent);
@@ -758,17 +756,17 @@ public class StockChartListActivity extends BaseActivity implements
 	}
 
 	static class MainHandler extends Handler {
-		private final WeakReference<StockChartListActivity> mActivity;
+		private final WeakReference<StockFavoriteChartListActivity> mActivity;
 
-		MainHandler(StockChartListActivity activity) {
-			mActivity = new WeakReference<StockChartListActivity>(activity);
+		MainHandler(StockFavoriteChartListActivity activity) {
+			mActivity = new WeakReference<StockFavoriteChartListActivity>(activity);
 		}
 
 		@Override
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
 
-			StockChartListActivity activity = mActivity.get();
+			StockFavoriteChartListActivity activity = mActivity.get();
 			activity.updateTitle();
 			activity.updateMenuAction();
 		}

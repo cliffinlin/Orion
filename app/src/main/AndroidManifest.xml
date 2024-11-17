@@ -57,15 +57,15 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:name="com.android.orion.activity.StockEditActivity"
+            android:name="com.android.orion.activity.StockActivity"
             android:label="@string/stock_edit"
             android:launchMode="singleTask" />
         <activity
-            android:name="com.android.orion.activity.StockListActivity"
+            android:name="com.android.orion.activity.StockFavoriteListActivity"
             android:label="@string/activity_title_stock_favorite_list"
             android:launchMode="singleTask" />
         <activity
-            android:name="com.android.orion.activity.StockListEditActivity"
+            android:name="com.android.orion.activity.StockListActivity"
             android:label="@string/list"
             android:launchMode="singleTask" />
         <activity
@@ -81,7 +81,7 @@
             android:label="@string/component_list"
             android:launchMode="singleTask" />
         <activity
-            android:name="com.android.orion.activity.StockChartListActivity"
+            android:name="com.android.orion.activity.StockFavoriteChartListActivity"
             android:label="@string/stock_data_chart"
             android:launchMode="singleTask" />
         <activity

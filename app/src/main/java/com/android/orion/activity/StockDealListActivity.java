@@ -133,7 +133,7 @@ public class StockDealListActivity extends ListActivity implements
 					mDatabaseManager.getStockDealById(mStockDeal);
 					getStock();
 
-					intent = new Intent(mContext, StockEditActivity.class);
+					intent = new Intent(mContext, StockActivity.class);
 					intent.setAction(Constant.ACTION_STOCK_EDIT);
 					intent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
 					startActivity(intent);
@@ -148,7 +148,7 @@ public class StockDealListActivity extends ListActivity implements
 						stockIDList.add(String.valueOf(stock.getId()));
 					}
 
-					intent = new Intent(mContext, StockChartListActivity.class);
+					intent = new Intent(mContext, StockFavoriteChartListActivity.class);
 					intent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
 					intent.putStringArrayListExtra(Constant.EXTRA_STOCK_ID_LIST,
 							stockIDList);

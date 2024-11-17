@@ -16,7 +16,7 @@ import com.android.orion.provider.StockSearchRecentSuggestionsProvider;
 
 import java.util.Locale;
 
-public class StockSearchActivity extends StockListEditActivity implements
+public class StockSearchActivity extends StockListActivity implements
 		OnQueryTextListener {
 
 	String mSelection = "";
@@ -77,7 +77,6 @@ public class StockSearchActivity extends StockListEditActivity implements
 	}
 
 	void doSearch(String query) {
-
 		mSelection = DatabaseContract.COLUMN_NAME + " !='' ";
 
 		if (!TextUtils.isEmpty(query)) {

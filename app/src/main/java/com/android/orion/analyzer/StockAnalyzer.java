@@ -10,14 +10,13 @@ import android.os.Build;
 import android.text.TextUtils;
 
 import com.android.orion.R;
-import com.android.orion.activity.StockListActivity;
+import com.android.orion.activity.StockFavoriteListActivity;
 import com.android.orion.application.MainApplication;
 import com.android.orion.config.Config;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
-import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockFinancial;
 import com.android.orion.database.TotalShare;
 import com.android.orion.indicator.Macd;
@@ -26,7 +25,6 @@ import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Logger;
 import com.android.orion.utility.Market;
-import com.android.orion.utility.Preferences;
 import com.android.orion.utility.RecordFile;
 import com.android.orion.utility.StopWatch;
 import com.android.orion.utility.Utility;
@@ -856,7 +854,7 @@ public class StockAnalyzer {
 
 		mNotificationManager.cancel(id);
 
-		Intent intent = new Intent(mContext, StockListActivity.class);
+		Intent intent = new Intent(mContext, StockFavoriteListActivity.class);
 		intent.setType("vnd.android-dir/mms-sms");
 		PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0,
 				intent, 0);

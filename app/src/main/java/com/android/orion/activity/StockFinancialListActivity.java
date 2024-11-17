@@ -141,7 +141,7 @@ public class StockFinancialListActivity extends ListActivity implements
 				return true;
 
 			case R.id.action_new:
-				Intent intent = new Intent(this, StockEditActivity.class);
+				Intent intent = new Intent(this, StockActivity.class);
 				intent.setAction(Constant.ACTION_FAVORITE_STOCK_INSERT);
 				startActivityForResult(intent, REQUEST_CODE_STOCK_INSERT);
 				return true;
@@ -761,7 +761,7 @@ public class StockFinancialListActivity extends ListActivity implements
 				startActivity(intent);
 			} else {
 				Intent intent = new Intent(this,
-						StockChartListActivity.class);
+						StockFavoriteChartListActivity.class);
 				intent.putExtra(Constant.EXTRA_STOCK_LIST_SORT_ORDER,
 						mSortOrder);
 				intent.putExtra(Constant.EXTRA_STOCK_ID, id);
@@ -774,7 +774,7 @@ public class StockFinancialListActivity extends ListActivity implements
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
 								   int position, long id) {
-		Intent intent = new Intent(this, StockListEditActivity.class);
+		Intent intent = new Intent(this, StockListActivity.class);
 		startActivity(intent);
 		return true;
 	}

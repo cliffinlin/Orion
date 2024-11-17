@@ -23,6 +23,7 @@ import android.widget.ListView;
 import androidx.annotation.NonNull;
 
 import com.android.orion.R;
+import com.android.orion.chart.StockStatisticsChart;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.setting.Constant;

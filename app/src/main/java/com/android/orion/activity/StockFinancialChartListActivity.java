@@ -163,7 +163,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 				return true;
 			}
 			case R.id.action_edit: {
-				mIntent = new Intent(this, StockEditActivity.class);
+				mIntent = new Intent(this, StockActivity.class);
 				mIntent.setAction(Constant.ACTION_STOCK_EDIT);
 				mIntent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
 				startActivity(mIntent);
