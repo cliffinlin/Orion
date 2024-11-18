@@ -2,7 +2,6 @@ package com.android.orion.setting;
 
 import androidx.annotation.NonNull;
 
-import com.android.orion.database.DatabaseContract;
 import com.android.orion.utility.Preferences;
 
 public class Setting {
@@ -10,13 +9,13 @@ public class Setting {
 	static final String SETTING_PREFERENCE_INIT = "SETTING_PREFERENCE_INIT";
 
 	static final String SETTING_PERIOD_ = "SETTING_PERIOD_";
-	static final String SETTING_PERIOD_MONTH = "SETTING_PERIOD_MONTH";
-	static final String SETTING_PERIOD_WEEK = "SETTING_PERIOD_WEEK";
-	static final String SETTING_PERIOD_DAY = "SETTING_PERIOD_DAY";
-	static final String SETTING_PERIOD_MIN60 = "SETTING_PERIOD_MIN60";
-	static final String SETTING_PERIOD_MIN30 = "SETTING_PERIOD_MIN30";
-	static final String SETTING_PERIOD_MIN15 = "SETTING_PERIOD_MIN15";
-	static final String SETTING_PERIOD_MIN5 = "SETTING_PERIOD_MIN5";
+	public static final boolean SETTING_PERIOD_MONTH_DEFAULT = true;
+	public static final boolean SETTING_PERIOD_WEEK_DEFAULT = true;
+	public static final boolean SETTING_PERIOD_DAY_DEFAULT = true;
+	public static final boolean SETTING_PERIOD_MIN60_DEFAULT = true;
+	public static final boolean SETTING_PERIOD_MIN30_DEFAULT = true;
+	public static final boolean SETTING_PERIOD_MIN15_DEFAULT = true;
+	public static final boolean SETTING_PERIOD_MIN5_DEFAULT = true;
 
 	public static final String SETTING_SORT_ORDER_COMPONENT_LIST = "SETTING_SORT_ORDER_COMPONENT_LIST";
 	public static final String SETTING_SORT_ORDER_STOCK_LIST = "SETTING_SORT_ORDER_STOCK_LIST";
@@ -37,11 +36,17 @@ public class Setting {
 	public static final String SETTING_STOCK_FILTER_DIVIDEND_RATIO = "SETTING_STOCK_FILTER_DIVIDEND_RATIO";
 
 	static final String SETTING_DISPLAY_NET = "SETTING_DISPLAY_NET";
-	public static final String SETTING_DISPLAY_CANDLE = "SETTING_DISPLAY_CANDLE";
-	public static final String SETTING_DISPLAY_DRAW = "SETTING_DISPLAY_DRAW";
-	public static final String SETTING_DISPLAY_STROKE = "SETTING_DISPLAY_STROKE";
-	public static final String SETTING_DISPLAY_SEGMENT = "SETTING_DISPLAY_SEGMENT";
-	public static final String SETTING_DISPLAY_LINE = "SETTING_DISPLAY_LINE";
+	public static final boolean SETTING_DISPLAY_NET_DEFAULT = true;
+	static final String SETTING_DISPLAY_CANDLE = "SETTING_DISPLAY_CANDLE";
+	public static final boolean SETTING_DISPLAY_CANDLE_DEFAULT = false;
+	static final String SETTING_DISPLAY_DRAW = "SETTING_DISPLAY_DRAW";
+	public static final boolean SETTING_DISPLAY_DRAW_DEFAULT = true;
+	static final String SETTING_DISPLAY_STROKE = "SETTING_DISPLAY_STROKE";
+	public static final boolean SETTING_DISPLAY_STROKE_DEFAULT = true;
+	static final String SETTING_DISPLAY_SEGMENT = "SETTING_DISPLAY_SEGMENT";
+	public static final boolean SETTING_DISPLAY_SEGMENT_DEFAULT = true;
+	static final String SETTING_DISPLAY_LINE = "SETTING_DISPLAY_LINE";
+	public static final boolean SETTING_DISPLAY_LINE_DEFAULT = true;
 
 	public static final String SETTING_DEBUG_LOG = "SETTING_DEBUG_LOG";
 	public static final String SETTING_DEBUG_DIRECT = "SETTING_DEBUG_DIRECT";
@@ -68,24 +73,18 @@ public class Setting {
 	}
 
 	public static boolean getPreferenceInit() {
-		return Preferences.getBoolean(Setting.SETTING_PREFERENCE_INIT, false);
+		return Preferences.getBoolean(SETTING_PREFERENCE_INIT, false);
 	}
 
 	public static void setPreferenceInit(boolean value) {
-		Preferences.getBoolean(Setting.SETTING_PREFERENCE_INIT, value);
+		Preferences.putBoolean(SETTING_PREFERENCE_INIT, value);
 	}
 
 	public static boolean getPeriod(@NonNull String period) {
-		if (period == null) {
-			return false;
-		}
 		return Preferences.getBoolean(SETTING_PERIOD_ + period.toUpperCase(), false);
 	}
 
 	public static void setPeriod(@NonNull String period, boolean value) {
-		if (period == null) {
-			return;
-		}
 		Preferences.putBoolean(SETTING_PERIOD_ + period.toUpperCase(), value);
 	}
 
@@ -250,6 +249,7 @@ public class Setting {
 	}
 
 	public static void setDownloadTimemillis(String se, String code, long value) {
+		setDownloadStockHSATimemillis(0);
 		setDownloadStockInformationTimemillis(se, code, 0);
 		setDownloadStockFinancialTimemillis(se, code, 0);
 		setDownloadShareBonusTimemillis(se, code, 0);

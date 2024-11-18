@@ -109,14 +109,14 @@ public class StockListActivity extends DatabaseActivity implements
 				startActivity(new Intent(this, StockSearchActivity.class));
 				return true;
 
-			case R.id.action_favorite:
+			case R.id.action_favorite_all:
 				new Thread(new Runnable() {
 					@Override
 					public void run() {
 						ArrayList<Stock> stockList = new ArrayList();
 						mDatabaseManager.getStockList(null, stockList);
 						for (Stock stock : stockList) {
-							if (!stock.hasFlag(Stock.FLAG_FAVORITE)) {
+							if (TextUtils.equals(stock.getClasses(), stock.CLASS_A) && !stock.hasFlag(Stock.FLAG_FAVORITE)) {
 								mDatabaseManager.updateStockFlag(stock.getId(), Stock.FLAG_FAVORITE);
 								Log.d(stock.getName() + stock.getCode() + " updateStockFlag(Stock.FLAG_FAVORITE)");
 							}
@@ -124,9 +124,27 @@ public class StockListActivity extends DatabaseActivity implements
 					}
 				}).start();
 				return true;
+
+			case R.id.action_favorite_none:
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						ArrayList<Stock> stockList = new ArrayList();
+						mDatabaseManager.getStockList(null, stockList);
+						for (Stock stock : stockList) {
+							if (TextUtils.equals(stock.getClasses(), stock.CLASS_A) && stock.hasFlag(Stock.FLAG_FAVORITE)) {
+								mDatabaseManager.updateStockFlag(stock.getId(), Stock.FLAG_NONE);
+								Log.d(stock.getName() + stock.getCode() + " updateStockFlag(Stock.FLAG_NONE)");
+							}
+						}
+					}
+				}).start();
+				return true;
+
 			case android.R.id.home:
 				finish();
 				return true;
+
 			default:
 				return super.onOptionsItemSelected(item);
 		}

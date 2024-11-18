@@ -36,15 +36,14 @@
         android:showAsAction="never"
         android:title="@string/action_deal" />
     <item
-        android:id="@+id/action_edit"
+        android:id="@+id/action_favorite_all"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="@string/action_edit" />
+        android:title="@string/action_favorite_all" />
     <item
-        android:id="@+id/action_favorite"
+        android:id="@+id/action_favorite_none"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="@string/action_add_favorite" />
-
+        android:title="@string/action_favorite_none" />
 
 </menu>

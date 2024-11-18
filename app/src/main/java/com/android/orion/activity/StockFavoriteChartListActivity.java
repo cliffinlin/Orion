@@ -327,8 +327,10 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 
 		int selection = 0;
 		for (int i = 0; i < DatabaseContract.PERIODS.length; i++) {
-			if (TextUtils.equals(DatabaseContract.PERIODS[i], DatabaseContract.COLUMN_DAY)) {
-				selection = i * 2;
+			if (StockData.getPeriodIndex(DatabaseContract.PERIODS[i]) < StockData.getPeriodIndex(DatabaseContract.COLUMN_DAY)) {
+				if (Setting.getPeriod(DatabaseContract.PERIODS[i])) {
+					selection += 2;
+				}
 			}
 			mStockDataChartList.add(new StockDataChart(mStock, DatabaseContract.PERIODS[i]));
 			mStockDataChartItemMainList.add(new StockDataChartItemMain(

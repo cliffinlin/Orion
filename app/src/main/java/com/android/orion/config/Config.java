@@ -20,7 +20,7 @@ public class Config {
 
 	public static String stockDataProvider = SinaFinance.PROVIDER_NAME;
 
-	public static long alarmInterval = 5 * Constant.MINUTE_INTERVAL;
+	public static long alarmInterval = 2 * Constant.MINUTE_INTERVAL;
 	public static long backgroundTerminate = 1 * Constant.MINUTE_INTERVAL;
 	public static long wakelockTimeout = 10 * Constant.MINUTE_INTERVAL;
 

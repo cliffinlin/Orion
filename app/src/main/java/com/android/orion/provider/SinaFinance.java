@@ -223,8 +223,11 @@ public class SinaFinance extends StockDataProvider {
 
 			long stockId = stockData.getStockId();
 			String period = stockData.getPeriod();
-
 			int defaultValue = getDownloadHistoryLengthDefault(period);
+
+			if (stockId == 0) {
+				return defaultValue;
+			}
 
 			String selection = mDatabaseManager.getStockDataSelection(stockId,
 					period, StockData.LEVEL_NONE);

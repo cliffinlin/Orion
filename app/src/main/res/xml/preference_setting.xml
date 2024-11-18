@@ -9,15 +9,12 @@
             android:key="SETTING_PERIOD_WEEK"
             android:title="@string/setting_period_week" />
         <com.android.orion.preference.CustomSwitchPreference
-            android:defaultValue="true"
             android:key="SETTING_PERIOD_DAY"
             android:title="@string/setting_period_day" />
         <com.android.orion.preference.CustomSwitchPreference
-            android:defaultValue="true"
             android:key="SETTING_PERIOD_MIN60"
             android:title="@string/setting_period_min60" />
         <com.android.orion.preference.CustomSwitchPreference
-            android:defaultValue="true"
             android:key="SETTING_PERIOD_MIN30"
             android:title="@string/setting_period_min30" />
         <com.android.orion.preference.CustomSwitchPreference

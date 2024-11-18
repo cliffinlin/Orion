@@ -105,18 +105,20 @@ public class MainActivity extends PreferenceActivity {
 		PreferenceManager.getDefaultSharedPreferences(this);
 		if (!Setting.getPreferenceInit()) {
 			Setting.setPreferenceInit(true);
-			Setting.setPeriod(DatabaseContract.COLUMN_MONTH, true);
-			Setting.setPeriod(DatabaseContract.COLUMN_WEEK, true);
-			Setting.setPeriod(DatabaseContract.COLUMN_DAY, true);
-			Setting.setPeriod(DatabaseContract.COLUMN_MIN60, true);
-			Setting.setPeriod(DatabaseContract.COLUMN_MIN30, true);
-			Setting.setPeriod(DatabaseContract.COLUMN_MIN15, true);
-			Setting.setPeriod(DatabaseContract.COLUMN_MIN5, true);
-			Setting.setDisplayNet(true);
-			Setting.setDisplayDraw(true);
-			Setting.setDisplayStroke(true);
-			Setting.setDisplaySegment(true);
-			Setting.setDisplayLine(true);
+
+			Setting.setPeriod(DatabaseContract.COLUMN_MONTH, Setting.SETTING_PERIOD_MONTH_DEFAULT);
+			Setting.setPeriod(DatabaseContract.COLUMN_WEEK, Setting.SETTING_PERIOD_WEEK_DEFAULT);
+			Setting.setPeriod(DatabaseContract.COLUMN_DAY, Setting.SETTING_PERIOD_DAY_DEFAULT);
+			Setting.setPeriod(DatabaseContract.COLUMN_MIN60, Setting.SETTING_PERIOD_MIN60_DEFAULT);
+			Setting.setPeriod(DatabaseContract.COLUMN_MIN30, Setting.SETTING_PERIOD_MIN30_DEFAULT);
+			Setting.setPeriod(DatabaseContract.COLUMN_MIN15, Setting.SETTING_PERIOD_MIN15_DEFAULT);
+			Setting.setPeriod(DatabaseContract.COLUMN_MIN5, Setting.SETTING_PERIOD_MIN5_DEFAULT);
+
+			Setting.setDisplayNet(Setting.SETTING_DISPLAY_NET_DEFAULT);
+			Setting.setDisplayDraw(Setting.SETTING_DISPLAY_DRAW_DEFAULT);
+			Setting.setDisplayStroke(Setting.SETTING_DISPLAY_STROKE_DEFAULT);
+			Setting.setDisplaySegment(Setting.SETTING_DISPLAY_SEGMENT_DEFAULT);
+			Setting.setDisplayLine(Setting.SETTING_DISPLAY_LINE_DEFAULT);
 		}
 	}
 }

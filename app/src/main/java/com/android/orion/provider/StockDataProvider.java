@@ -677,6 +677,10 @@ public class StockDataProvider implements StockListChangedListener, StockEditLis
 			return;
 		}
 
+		if (mStockArrayMap.containsKey(stock.getCode())) {
+			mStockArrayMap.remove(stock.getCode());
+		}
+
 		if (mHandler.hasMessages(Integer.valueOf(stock.getCode()))) {
 			mHandler.removeMessages(Integer.valueOf(stock.getCode()));
 		}
