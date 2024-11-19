@@ -1,5 +1,6 @@
 package com.android.orion.activity;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -262,7 +263,8 @@ public class StockActivity extends DatabaseActivity implements OnClickListener, 
 				if (TextUtils.equals(mAction, Constant.ACTION_FAVORITE_STOCK_INSERT) || TextUtils.equals(mAction, Constant.ACTION_INDEX_COMPONENT_INSERT)) {
 					if (!mDatabaseManager.isStockExist(mStock)) {
 						mStock.setCreated(Utility.getCurrentDateTimeString());
-						mDatabaseManager.insertStock(mStock);
+						Uri uri= mDatabaseManager.insertStock(mStock);
+						mDatabaseManager.getStock(uri, mStock);
 						mDatabaseManager.updateStock(mStock, mStock.getContentValuesForEdit());
 
 						if (TextUtils.equals(mAction, Constant.ACTION_INDEX_COMPONENT_INSERT)) {

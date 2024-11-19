@@ -737,23 +737,23 @@ public class StockAnalyzer {
 		StockData stockData = stockDataList.get(stockDataList.size() - 1);
 		String action = StockData.MARK_NONE;
 
-		if (TextUtils.equals(period, stock.getOperate())) {
-			if (stockData.getNaturalRally() > 0) {
-				action += StockData.MARK_NATURAL_RALLY;
-			}
-
-			if (stockData.getUpwardTrend() > 0) {
-				action += StockData.MARK_UPWARD_TREND;
-			}
-
-			if (stockData.getDownwardTrend() > 0) {
-				action += StockData.MARK_DOWNWARD_TREND;
-			}
-
-			if (stockData.getNaturalReaction() > 0) {
-				action += StockData.MARK_NATURAL_REACTION;
-			}
-		}
+//		if (TextUtils.equals(period, stock.getOperate())) {
+//			if (stockData.getNaturalRally() > 0) {
+//				action += StockData.MARK_NATURAL_RALLY;
+//			}
+//
+//			if (stockData.getUpwardTrend() > 0) {
+//				action += StockData.MARK_UPWARD_TREND;
+//			}
+//
+//			if (stockData.getDownwardTrend() > 0) {
+//				action += StockData.MARK_DOWNWARD_TREND;
+//			}
+//
+//			if (stockData.getNaturalReaction() > 0) {
+//				action += StockData.MARK_NATURAL_REACTION;
+//			}
+//		}
 
 		if (stockData.directionOf(StockData.DIRECTION_UP)) {
 			if (prev.vertexOf(StockData.VERTEX_BOTTOM)) {

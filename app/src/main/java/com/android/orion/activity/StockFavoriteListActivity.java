@@ -173,7 +173,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 		if (resultCode == RESULT_OK) {
 			switch (requestCode) {
 				case REQUEST_CODE_STOCK_INSERT:
-//					mStockDataProvider.download(mStock);
+					mStockDataProvider.download(mStock);
 					break;
 
 				default:

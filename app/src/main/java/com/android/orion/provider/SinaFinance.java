@@ -3,7 +3,6 @@ package com.android.orion.provider;
 import android.app.NotificationManager;
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.os.Environment;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 
@@ -22,7 +21,6 @@ import com.android.orion.interfaces.IStockDataProvider;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Market;
-import com.android.orion.utility.Preferences;
 import com.android.orion.utility.StopWatch;
 import com.android.orion.utility.Utility;
 
@@ -31,11 +29,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Locale;
 
 import okhttp3.Request;
 import okhttp3.Response;
@@ -214,27 +209,21 @@ public class SinaFinance extends StockDataProvider {
 
 	private int getDownloadStockDataLength(StockData stockData) {
 		int result = 0;
+
+		if (stockData == null) {
+			return result;
+		}
+
 		Cursor cursor = null;
-
 		try {
-			if (stockData == null) {
-				return result;
-			}
-
 			long stockId = stockData.getStockId();
 			String period = stockData.getPeriod();
 			int defaultValue = getDownloadHistoryLengthDefault(period);
-
-			if (stockId == 0) {
-				return defaultValue;
-			}
-
 			String selection = mDatabaseManager.getStockDataSelection(stockId,
 					period, StockData.LEVEL_NONE);
 			String sortOrder = mDatabaseManager.getStockDataOrder();
 			cursor = mDatabaseManager.queryStockData(selection, null,
 					sortOrder);
-
 			if ((cursor == null) || (cursor.getCount() == 0)) {
 				return defaultValue;
 			}
@@ -390,7 +379,7 @@ public class SinaFinance extends StockDataProvider {
 				}
 
 				handleResponseStockHSA(resultString);
-				Thread.sleep(Config.downloadSleepInterval);
+				Thread.sleep(Config.downloadSleep);
 			}
 		} catch (Exception e) {
 			result = RESULT_FAILED;
@@ -548,7 +537,7 @@ public class SinaFinance extends StockDataProvider {
 				}
 
 				handleResponseStockInformation(stock, resultString);
-				Thread.sleep(Config.downloadSleepInterval);
+				Thread.sleep(Config.downloadSleep);
 			}
 		} catch (Exception e) {
 			result = RESULT_FAILED;
@@ -684,7 +673,7 @@ public class SinaFinance extends StockDataProvider {
 				}
 
 				handleResponseStockRealTime(stock, resultString);
-				Thread.sleep(Config.downloadSleepInterval);
+				Thread.sleep(Config.downloadSleep);
 			}
 		} catch (Exception e) {
 			result = RESULT_FAILED;
@@ -850,7 +839,7 @@ public class SinaFinance extends StockDataProvider {
 				}
 
 				handleResponseStockDataHistory(stock, stockData, resultString);
-				Thread.sleep(Config.downloadSleepInterval);
+				Thread.sleep(Config.downloadSleep);
 			}
 		} catch (Exception e) {
 			result = RESULT_FAILED;
@@ -1064,7 +1053,7 @@ public class SinaFinance extends StockDataProvider {
 				}
 
 				handleResponseStockDataRealTime(stock, stockData, resultString);
-				Thread.sleep(Config.downloadSleepInterval);
+				Thread.sleep(Config.downloadSleep);
 			}
 		} catch (Exception e) {
 			result = RESULT_FAILED;
@@ -1235,7 +1224,7 @@ public class SinaFinance extends StockDataProvider {
 				}
 
 				handleResponseStockFinancial(stock, stockFinancial, resultString);
-				Thread.sleep(Config.downloadSleepInterval);
+				Thread.sleep(Config.downloadSleep);
 			}
 		} catch (Exception e) {
 			result = RESULT_FAILED;
@@ -1459,7 +1448,7 @@ public class SinaFinance extends StockDataProvider {
 				}
 
 				handleResponseShareBonus(stock, shareBonus, resultString);
-				Thread.sleep(Config.downloadSleepInterval);
+				Thread.sleep(Config.downloadSleep);
 			}
 		} catch (Exception e) {
 			result = RESULT_FAILED;
@@ -1651,7 +1640,7 @@ public class SinaFinance extends StockDataProvider {
 				}
 
 				handleResponseTotalShare(stock, totalShare, resultString);
-				Thread.sleep(Config.downloadSleepInterval);
+				Thread.sleep(Config.downloadSleep);
 			}
 		} catch (Exception e) {
 			result = RESULT_FAILED;

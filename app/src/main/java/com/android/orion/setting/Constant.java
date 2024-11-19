@@ -47,9 +47,9 @@ public class Constant {
 	public static final int MIN15_PER_TRADE_DAY = 2 * MIN30_PER_TRADE_DAY;
 	public static final int MIN5_PER_TRADE_DAY = 3 * MIN15_PER_TRADE_DAY;
 
-	public static final long SECOND_INTERVAL = 1 * 1000L; //in millis
-	public static final long MINUTE_INTERVAL = 60 * SECOND_INTERVAL;
-	public static final long HOUR_INTERVAL = 60 * MINUTE_INTERVAL;
+	public static final long SECOND_IN_MILLIS = 1 * 1000L; //in millis
+	public static final long MINUTE_IN_MILLIS = 60 * SECOND_IN_MILLIS;
+	public static final long HOUR_IN_MILLIS = 60 * MINUTE_IN_MILLIS;
 
 	public static final long DOUBLE_CONSTANT_WAN = 10000;
 	public static final long DOUBLE_CONSTANT_YI = (DOUBLE_CONSTANT_WAN * DOUBLE_CONSTANT_WAN);
