@@ -21,14 +21,10 @@ public class Config {
 	public static String stockDataProvider = SinaFinance.PROVIDER_NAME;
 
 	public static long alarmInterval = 2 * Constant.MINUTE_IN_MILLIS;
-	public static long backgroundTerminate = 1 * Constant.MINUTE_IN_MILLIS;
 	public static long downloadSleep = 1 * Constant.SECOND_IN_MILLIS;
 	public static long wakelockTimeout = 10 * Constant.MINUTE_IN_MILLIS;
 
 	public static long downloadStockHSAInterval = 24 * Constant.HOUR_IN_MILLIS;
-	public static long downloadStockInformationInterval = 8 * Constant.HOUR_IN_MILLIS;
-	public static long downloadStockFinancialInterval = 8 * Constant.HOUR_IN_MILLIS;
-	public static long downloadShareBonusInterval = 8 * Constant.HOUR_IN_MILLIS;
-	public static long downloadTotalShareInterval = 8 * Constant.HOUR_IN_MILLIS;
-	public static long downloadStockRealTimeInterval = 8 * Constant.HOUR_IN_MILLIS;
+	public static long downloadStockInterval = 8 * Constant.HOUR_IN_MILLIS;
+	public static long downloadStockDataInterval = 8 * Constant.HOUR_IN_MILLIS;
 }

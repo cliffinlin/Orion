@@ -36,10 +36,10 @@
         android:showAsAction="never"
         android:title="@string/action_deal" />
     <item
-        android:id="@+id/action_edit"
+        android:id="@+id/action_list"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="@string/action_edit" />
+        android:title="@string/action_list" />
 
 
 </menu>

@@ -36,7 +36,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
 		OnItemLongClickListener, OnClickListener {
 
-	public static final int LOADER_ID_STOCK_LIST = 0;
+	public static final int LOADER_ID_STOCK_FAVORITE_LIST = 0;
 
 	public static final int REQUEST_CODE_STOCK_INSERT = 0;
 
@@ -105,7 +105,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 		initHeader();
 		setupListView();
 
-		mLoaderManager.initLoader(LOADER_ID_STOCK_LIST, null, this);
+		mLoaderManager.initLoader(LOADER_ID_STOCK_FAVORITE_LIST, null, this);
 	}
 
 	@Override
@@ -129,12 +129,9 @@ public class StockFavoriteListActivity extends ListActivity implements
 				return true;
 			}
 
-			case R.id.action_search: {
-				Intent intent = new Intent(this, StockSearchActivity.class);
-				intent.setAction(Intent.ACTION_SEARCH);
-				startActivity(intent);
+			case R.id.action_search:
+				startActivity(new Intent(this, StockSearchActivity.class));
 				return true;
-			}
 
 			case R.id.action_refresh:
 				mHandler.sendEmptyMessage(MESSAGE_REFRESH);
@@ -156,7 +153,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 				startActivity(new Intent(this, StockDealListActivity.class));
 				return true;
 
-			case R.id.action_edit:
+			case R.id.action_list:
 				startActivity(new Intent(this, StockListActivity.class));
 				return true;
 
@@ -433,7 +430,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 	}
 
 	void restartLoader() {
-		mLoaderManager.restartLoader(LOADER_ID_STOCK_LIST, null, this);
+		mLoaderManager.restartLoader(LOADER_ID_STOCK_FAVORITE_LIST, null, this);
 	}
 
 	@Override
@@ -460,7 +457,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 		CursorLoader loader = null;
 
 		switch (id) {
-			case LOADER_ID_STOCK_LIST:
+			case LOADER_ID_STOCK_FAVORITE_LIST:
 				selection += DatabaseContract.COLUMN_FLAG + " >= "
 						+ Stock.FLAG_FAVORITE;
 
@@ -485,7 +482,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 		}
 
 		switch (loader.getId()) {
-			case LOADER_ID_STOCK_LIST:
+			case LOADER_ID_STOCK_FAVORITE_LIST:
 				mLeftAdapter.swapCursor(cursor);
 				mRightAdapter.swapCursor(cursor);
 

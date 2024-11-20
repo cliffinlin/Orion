@@ -231,20 +231,7 @@ public class SinaFinance extends StockDataProvider {
 			cursor.moveToLast();
 			stockData.set(cursor);
 
-			String modified = stockData.getModified();
-			if (Market.isOutofDate(modified)) {
-				mDatabaseManager.deleteStockData(stockId, period);
-				return defaultValue;
-			}
-
-			if (!Market.isWeekday()) {
-				return result;
-			}
-
-			Calendar modifiedCalendar = Utility.getCalendar(modified,
-					Utility.CALENDAR_DATE_TIME_FORMAT);
-
-			if (Market.isTradingHours()) {
+			if (Market.isTradingHours() || Market.isLunchTime()) {
 				int scheduleMinutes = Market.getScheduleMinutes();
 				if (scheduleMinutes != 0) {
 					result = 1;
@@ -268,58 +255,8 @@ public class SinaFinance extends StockDataProvider {
 							break;
 					}
 				}
-			} else if (Market.isLunchTime()) {
-				if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)
-						|| TextUtils.equals(period, DatabaseContract.COLUMN_WEEK)
-						|| TextUtils.equals(period, DatabaseContract.COLUMN_DAY)) {
-					if (Market.isOutofDate(stockData.getDate())) {
-						result = 1;
-					}
-					return result;
-				}
-
-				if (modifiedCalendar.after(Market.getFirstHalfEndCalendar())) {
-					return result;
-				}
-
-				switch (period) {
-					case DatabaseContract.COLUMN_MIN60:
-						result = 2;
-						break;
-					case DatabaseContract.COLUMN_MIN30:
-						result = 4;
-						break;
-					case DatabaseContract.COLUMN_MIN15:
-						result = 8;
-						break;
-					case DatabaseContract.COLUMN_MIN5:
-						result = 24;
-						break;
-				}
-			} else if (Market.afterClosed()) {
-				if (modifiedCalendar.after(Market.getSecondHalfEndCalendar())) {
-					return result;
-				}
-
-				switch (period) {
-					case DatabaseContract.COLUMN_MONTH:
-					case DatabaseContract.COLUMN_WEEK:
-					case DatabaseContract.COLUMN_DAY:
-						result = 1;
-						break;
-					case DatabaseContract.COLUMN_MIN60:
-						result = 4;
-						break;
-					case DatabaseContract.COLUMN_MIN30:
-						result = 8;
-						break;
-					case DatabaseContract.COLUMN_MIN15:
-						result = 16;
-						break;
-					case DatabaseContract.COLUMN_MIN5:
-						result = 48;
-						break;
-				}
+			} else {
+				result = defaultValue;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -501,9 +438,9 @@ public class SinaFinance extends StockDataProvider {
 			return result;
 		}
 
-		long interval = System.currentTimeMillis() - Setting.getDownloadStockInformationTimemillis(stock.getSE(), stock.getCode());
-		if (interval < Config.downloadStockInformationInterval) {
-			Log.d(stock.getName() + " return, interval:" + interval + "<" + Config.downloadStockInformationInterval);
+		long interval = System.currentTimeMillis() - Setting.getDownloadStockTimemillis(stock.getSE(), stock.getCode());
+		if (interval < Config.downloadStockInterval) {
+			Log.d(stock.getName() + " return, interval:" + interval + "<" + Config.downloadStockInterval);
 			return result;
 		}
 
@@ -614,7 +551,6 @@ public class SinaFinance extends StockDataProvider {
 			mDatabaseManager.updateStock(stock,
 					stock.getContentValuesInformation());
 
-			Setting.setDownloadStockInformationTimemillis(stock.getSE(), stock.getCode(), System.currentTimeMillis());
 			Setting.setStockDataChanged(stock.getSE(), stock.getCode(), true);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -635,10 +571,11 @@ public class SinaFinance extends StockDataProvider {
 			return result;
 		}
 
-		if (!Market.isTradingHours() && !Market.isLunchTime()) {
-			long interval = System.currentTimeMillis() - Setting.getDownloadStockRealTimeTimemillis(stock.getSE(), stock.getCode());
-			if (interval < Config.downloadStockRealTimeInterval) {
-				Log.d(stock.getName() + " return, interval:" + interval + "<" + Config.downloadStockRealTimeInterval);
+		if (Market.isTradingHours() || Market.isLunchTime()) {
+		} else {
+			long interval = System.currentTimeMillis() - Setting.getDownloadStockDataTimemillis(stock.getSE(), stock.getCode());
+			if (interval < Config.downloadStockDataInterval) {
+				Log.d(stock.getName() + " return, interval:" + interval + "<" + Config.downloadStockDataInterval);
 				return result;
 			}
 		}
@@ -764,7 +701,6 @@ public class SinaFinance extends StockDataProvider {
 			mDatabaseManager.updateStock(stock,
 					stock.getContentValuesRealTime());
 
-			Setting.setDownloadStockRealTimeTimemillis(stock.getSE(), stock.getCode(), System.currentTimeMillis());
 			Setting.setStockDataChanged(stock.getSE(), stock.getCode(), true);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -784,6 +720,15 @@ public class SinaFinance extends StockDataProvider {
 
 		if (stock == null) {
 			return result;
+		}
+
+		if (Market.isTradingHours() || Market.isLunchTime()) {
+		} else {
+			long interval = System.currentTimeMillis() - Setting.getDownloadStockDataTimemillis(stock.getSE(), stock.getCode());
+			if (interval < Config.downloadStockDataInterval) {
+				Log.d(stock.getName() + " return, interval:" + interval + "<" + Config.downloadStockDataInterval);
+				return result;
+			}
 		}
 
 		for (String period : DatabaseContract.PERIODS) {
@@ -977,7 +922,6 @@ public class SinaFinance extends StockDataProvider {
 				}
 			}
 
-			Setting.setDownloadStockDataHistoryTimemillis(stock.getSE(), stock.getCode(), System.currentTimeMillis());
 			Setting.setStockDataChanged(stock.getSE(), stock.getCode(), true);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -994,6 +938,15 @@ public class SinaFinance extends StockDataProvider {
 
 		if (stock == null) {
 			return result;
+		}
+
+		if (Market.isTradingHours() || Market.isLunchTime()) {
+		} else {
+			long interval = System.currentTimeMillis() - Setting.getDownloadStockDataTimemillis(stock.getSE(), stock.getCode());
+			if (interval < Config.downloadStockDataInterval) {
+				Log.d(stock.getName() + " return, interval:" + interval + "<" + Config.downloadStockDataInterval);
+				return result;
+			}
 		}
 
 		for (String period : DatabaseContract.PERIODS) {
@@ -1021,17 +974,15 @@ public class SinaFinance extends StockDataProvider {
 		stockData.setCode(stock.getCode());
 		stockData.setName(stock.getName());
 
-		int len = getDownloadStockDataLength(stockData);
-		if (len <= 0) {
-			Log.d(stock.getName() + " return, period=" + period + " len=" + len);
-			return result;
-		}
-
 		return downloadStockDataRealTime(stock, stockData, mRequestHeader, getStockDataRealTimeURLString(stock));
 	}
 
 	private int downloadStockDataRealTime(Stock stock, StockData stockData, ArrayMap<String, String> requestHeaderArray, String urlString) {
 		int result = RESULT_NONE;
+
+		if (requestHeaderArray == null) {
+			return result;
+		}
 
 		Log.d(urlString);
 
@@ -1168,7 +1119,6 @@ public class SinaFinance extends StockDataProvider {
 						stockData.getContentValues());
 			}
 
-			Setting.setDownloadStockDataRealTimeTimemillis(stock.getSE(), stock.getCode(), System.currentTimeMillis());
 			Setting.setStockDataChanged(stock.getSE(), stock.getCode(), true);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1195,9 +1145,9 @@ public class SinaFinance extends StockDataProvider {
 
 		mDatabaseManager.getStockFinancial(stock, stockFinancial);
 
-		long interval = System.currentTimeMillis() - Setting.getDownloadStockFinancialTimemillis(stock.getSE(), stock.getCode());
-		if (interval < Config.downloadStockFinancialInterval) {
-			Log.d(stock.getName() + " return, interval:" + interval + "<" + Config.downloadStockFinancialInterval);
+		long interval = System.currentTimeMillis() - Setting.getDownloadStockTimemillis(stock.getSE(), stock.getCode());
+		if (interval < Config.downloadStockInterval) {
+			Log.d(stock.getName() + " return, interval:" + interval + "<" + Config.downloadStockInterval);
 			return result;
 		}
 
@@ -1395,7 +1345,6 @@ public class SinaFinance extends StockDataProvider {
 				}
 			}
 
-			Setting.setDownloadStockFinancialTimemillis(stock.getSE(), stock.getCode(), System.currentTimeMillis());
 			Setting.setStockDataChanged(stock.getSE(), stock.getCode(), true);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1419,9 +1368,9 @@ public class SinaFinance extends StockDataProvider {
 
 		mDatabaseManager.getShareBonus(stock.getId(), shareBonus);
 
-		long interval = System.currentTimeMillis() - Setting.getDownloadShareBonusTimemillis(stock.getSE(), stock.getCode());
-		if (interval < Config.downloadShareBonusInterval) {
-			Log.d(stock.getName() + " return, interval:" + interval + "<" + Config.downloadShareBonusInterval);
+		long interval = System.currentTimeMillis() - Setting.getDownloadStockTimemillis(stock.getSE(), stock.getCode());
+		if (interval < Config.downloadStockInterval) {
+			Log.d(stock.getName() + " return, interval:" + interval + "<" + Config.downloadStockInterval);
 			return result;
 		}
 
@@ -1587,7 +1536,6 @@ public class SinaFinance extends StockDataProvider {
 				}
 			}
 
-			Setting.setDownloadShareBonusTimemillis(stock.getSE(), stock.getCode(), System.currentTimeMillis());
 			Setting.setStockDataChanged(stock.getSE(), stock.getCode(), true);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1611,9 +1559,9 @@ public class SinaFinance extends StockDataProvider {
 
 		mDatabaseManager.getTotalShare(stock.getId(), totalShare);
 
-		long interval = System.currentTimeMillis() - Setting.getDownloadTotalShareTimemillis(stock.getSE(), stock.getCode());
-		if (interval < Config.downloadTotalShareInterval) {
-			Log.d(stock.getName() + " return, interval:" + interval + "<" + Config.downloadTotalShareInterval);
+		long interval = System.currentTimeMillis() - Setting.getDownloadStockTimemillis(stock.getSE(), stock.getCode());
+		if (interval < Config.downloadStockInterval) {
+			Log.d(stock.getName() + " return, interval:" + interval + "<" + Config.downloadStockInterval);
 			return result;
 		}
 
@@ -1776,7 +1724,6 @@ public class SinaFinance extends StockDataProvider {
 				}
 			}
 
-			Setting.setDownloadTotalShareTimemillis(stock.getSE(), stock.getCode(), System.currentTimeMillis());
 			Setting.setStockDataChanged(stock.getSE(), stock.getCode(), true);
 		} catch (Exception e) {
 			e.printStackTrace();

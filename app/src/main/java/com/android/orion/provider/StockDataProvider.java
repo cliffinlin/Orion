@@ -803,6 +803,9 @@ public class StockDataProvider implements StockListChangedListener, StockEditLis
 						StockService.getInstance().onDisconnected();
 						return;
 					}
+
+					Setting.setDownloadStockTimemillis(stock.getSE(), stock.getCode(), System.currentTimeMillis());
+					Setting.setDownloadStockDataTimemillis(stock.getSE(), stock.getCode(), System.currentTimeMillis());
 				} else if (TextUtils.equals(stock.getClasses(), Stock.CLASS_INDEX)) {
 					setupIndex(stock);
 					Setting.setStockDataChanged(stock.getSE(), stock.getCode(), true);

@@ -37,7 +37,6 @@ public class StockFinancialListActivity extends ListActivity implements
 		OnItemLongClickListener, OnClickListener {
 
 	public static final int LOADER_ID_STOCK_FINANCIAL_LIST = 0;
-	public static final int EXECUTE_STOCK_FINANCIAL_LOAD = 1;
 
 	public static final int REQUEST_CODE_STOCK_INSERT = 0;
 
@@ -120,8 +119,7 @@ public class StockFinancialListActivity extends ListActivity implements
 				mSortOrderDefault);
 
 		initHeader();
-
-		initListView();
+		setupListView();
 
 		mLoaderManager.initLoader(LOADER_ID_STOCK_FINANCIAL_LIST, null, this);
 	}
@@ -140,11 +138,12 @@ public class StockFinancialListActivity extends ListActivity implements
 				finish();
 				return true;
 
-			case R.id.action_new:
+			case R.id.action_new: {
 				Intent intent = new Intent(this, StockActivity.class);
 				intent.setAction(Constant.ACTION_FAVORITE_STOCK_INSERT);
 				startActivityForResult(intent, REQUEST_CODE_STOCK_INSERT);
 				return true;
+			}
 
 			case R.id.action_search:
 				startActivity(new Intent(this, StockSearchActivity.class));
@@ -168,6 +167,10 @@ public class StockFinancialListActivity extends ListActivity implements
 
 			case R.id.action_deal:
 				startActivity(new Intent(this, StockDealListActivity.class));
+				return true;
+
+			case R.id.action_list:
+				startActivity(new Intent(this, StockListActivity.class));
 				return true;
 
 			default:
@@ -566,7 +569,7 @@ public class StockFinancialListActivity extends ListActivity implements
 		}
 	}
 
-	void initListView() {
+	void setupListView() {
 		String[] mLeftFrom = new String[]{DatabaseContract.COLUMN_NAME,
 				DatabaseContract.COLUMN_CODE};
 		int[] mLeftTo = new int[]{R.id.name, R.id.code};
