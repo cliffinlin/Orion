@@ -55,13 +55,10 @@ public class Setting {
 	public static final String SETTING_DEBUG_WIFI = "SETTING_DEBUG_WIFI";
 	public static final String SETTING_DEBUG_DATAFILE = "SETTING_DEBUG_DATAFILE";
 
-	public static final String SETTING_DOWNLOAD_STOCK_HSA_TIMEMILLIS = "SETTING_DOWNLOAD_STOCK_HSA_TIMEMILLIS";
-
+	static final String SETTING_DOWNLOAD_STOCK_HSA_TIMEMILLIS = "SETTING_DOWNLOAD_STOCK_HSA_TIMEMILLIS";
 	static final String SETTING_DOWNLOAD_STOCK_TIMEMILLIS = "SETTING_DOWNLOAD_STOCK_TIMEMILLIS";
-	static final String SETTING_DOWNLOAD_STOCK_DATA_TIMEMILLIS = "SETTING_DOWNLOAD_STOCK_DATA_TIMEMILLIS";
 
 	public static final String SETTING_STOCK_DATA_CHANGED = "SETTING_STOCK_DATA_CHANGED";
-
 	public static final String SETTING_STOCK_ARRAY_MAP_INDEX = "SETTING_STOCK_ARRAY_MAP_INDEX";
 
 	private Setting() {
@@ -195,18 +192,9 @@ public class Setting {
 		Preferences.putLong(SETTING_DOWNLOAD_STOCK_TIMEMILLIS + "_" + se + "_" + code, value);
 	}
 
-	public static long getDownloadStockDataTimemillis(String se, String code) {
-		return Preferences.getLong(SETTING_DOWNLOAD_STOCK_DATA_TIMEMILLIS + "_" + se + "_" + code, 0);
-	}
-
-	public static void setDownloadStockDataTimemillis(String se, String code, long value) {
-		Preferences.putLong(SETTING_DOWNLOAD_STOCK_DATA_TIMEMILLIS + "_" + se + "_" + code, value);
-	}
-
 	public static void setDownloadTimemillis(String se, String code, long value) {
 		setDownloadStockHSATimemillis(0);
 		setDownloadStockTimemillis(se, code, 0);
-		setDownloadStockDataTimemillis(se, code, 0);
 	}
 
 	public static boolean getStockDataChanged(String se, String code) {

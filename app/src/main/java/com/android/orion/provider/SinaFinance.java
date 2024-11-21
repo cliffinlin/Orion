@@ -572,8 +572,9 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		if (Market.isTradingHours() || Market.isLunchTime()) {
+			//continue
 		} else {
-			long interval = System.currentTimeMillis() - Setting.getDownloadStockDataTimemillis(stock.getSE(), stock.getCode());
+			long interval = System.currentTimeMillis() - Setting.getDownloadStockTimemillis(stock.getSE(), stock.getCode());
 			if (interval < Config.downloadStockDataInterval) {
 				Log.d(stock.getName() + " return, interval:" + interval + "<" + Config.downloadStockDataInterval);
 				return result;
@@ -723,8 +724,9 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		if (Market.isTradingHours() || Market.isLunchTime()) {
+			//continue
 		} else {
-			long interval = System.currentTimeMillis() - Setting.getDownloadStockDataTimemillis(stock.getSE(), stock.getCode());
+			long interval = System.currentTimeMillis() - Setting.getDownloadStockTimemillis(stock.getSE(), stock.getCode());
 			if (interval < Config.downloadStockDataInterval) {
 				Log.d(stock.getName() + " return, interval:" + interval + "<" + Config.downloadStockDataInterval);
 				return result;
@@ -941,8 +943,9 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		if (Market.isTradingHours() || Market.isLunchTime()) {
+			//continue
 		} else {
-			long interval = System.currentTimeMillis() - Setting.getDownloadStockDataTimemillis(stock.getSE(), stock.getCode());
+			long interval = System.currentTimeMillis() - Setting.getDownloadStockTimemillis(stock.getSE(), stock.getCode());
 			if (interval < Config.downloadStockDataInterval) {
 				Log.d(stock.getName() + " return, interval:" + interval + "<" + Config.downloadStockDataInterval);
 				return result;

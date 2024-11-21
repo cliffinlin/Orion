@@ -566,6 +566,100 @@ public class StockAnalyzer {
 		analyzeAction(stock, period, stockDataList, drawVertexList, drawDataList, strokeDataList, segmentDataList);
 	}
 
+	private String getFirstAction(ArrayList<StockData> strokeDataList, ArrayList<StockData> segmentDataList) {
+		String result = "";
+
+		if ((strokeDataList == null) || (strokeDataList.size() == 0)) {
+			return result;
+		}
+
+		if ((segmentDataList == null) || (segmentDataList.size() == 0)) {
+			return result;
+		}
+
+		StockData strokeData = strokeDataList.get(strokeDataList.size() - 1);
+		if (strokeData == null) {
+			return result;
+		}
+
+		StockData segmentData = segmentDataList.get(segmentDataList.size() - 1);
+		if (segmentData == null) {
+			return result;
+		}
+
+		if (strokeData.getIndexStart() != segmentData.getIndexStart()) {
+			return result;
+		}
+
+		if ((strokeData.getDirection() == StockData.DIRECTION_UP) && (segmentData.getDirection() == StockData.DIRECTION_UP)) {
+			result += StockData.MARK_BUY1;
+			result += StockData.MARK_BUY1;
+		} else if ((strokeData.getDirection() == StockData.DIRECTION_DOWN) && (segmentData.getDirection() == StockData.DIRECTION_DOWN)) {
+			result += StockData.MARK_SELL1;
+			result += StockData.MARK_SELL1;
+		}
+
+		return result;
+	}
+
+	private String getSecondAction(Stock stock, ArrayList<StockData> stockDataList, ArrayList<StockData> drawDataList) {
+		String result = "";
+		StockData stockData;
+		StockData drawData;
+		StockData prevData;
+		StockData prevPrev;
+
+		if ((stockDataList == null) || (stockDataList.size() < 2 * StockData.VERTEX_TYPING_SIZE)) {
+			return result;
+		}
+
+		if ((drawDataList == null) || (drawDataList.size() < 2 * StockData.VERTEX_TYPING_SIZE)) {
+			return result;
+		}
+
+		drawData = drawDataList.get(drawDataList.size() - 1);
+		if (drawData == null) {
+			return result;
+		}
+
+		prevData = drawDataList.get(drawDataList.size() - 2);
+		if (prevData == null) {
+			return result;
+		}
+
+		prevPrev = drawDataList.get(drawDataList.size() - 3);
+		if (prevPrev == null) {
+			return result;
+		}
+
+		if (drawData.include(prevPrev) || drawData.includedBy(prevPrev)) {
+			return result;
+		}
+
+		if (stock.getPrice() < prevData.getVertexLow() || stock.getPrice() > prevData.getVertexHigh()) {
+			return result;
+		}
+
+		stockData = stockDataList.get(prevPrev.getIndexStart());
+		if (stockData == null) {
+			return result;
+		}
+
+		if (stockData.vertexOf(StockData.VERTEX_BOTTOM_STROKE)) {
+			result += StockData.MARK_BUY2;
+			if (stockData.vertexOf(StockData.VERTEX_BOTTOM_SEGMENT)) {
+				result += StockData.MARK_BUY2;
+			}
+		} else if (stockData.vertexOf(StockData.VERTEX_TOP_STROKE)) {
+			result += StockData.MARK_SELL2;
+			if (stockData.vertexOf(StockData.VERTEX_TOP_SEGMENT)) {
+				result += StockData.MARK_SELL2;
+			}
+		}
+
+		return result;
+	}
+
 	private String getSecondBottomAction(Stock stock, ArrayList<StockData> vertexList,
 										 ArrayList<StockData> strokeDataList,
 										 ArrayList<StockData> segmentDataList) {
@@ -755,17 +849,27 @@ public class StockAnalyzer {
 //			}
 //		}
 
-		if (stockData.directionOf(StockData.DIRECTION_UP)) {
-			if (prev.vertexOf(StockData.VERTEX_BOTTOM)) {
-				String result = getSecondBottomAction(stock, drawVertexList, strokeDataList, segmentDataList);
-				action += result;
-			}
-		} else if (stockData.directionOf(StockData.DIRECTION_DOWN)) {
-			if (prev.vertexOf(StockData.VERTEX_TOP)) {
-				String result = getSecondTopAction(stock, drawVertexList, strokeDataList, segmentDataList);
-				action += result;
-			}
+		{
+			String result = getFirstAction(strokeDataList, segmentDataList);
+			action += result;
 		}
+
+		{
+			String result = getSecondAction(stock, stockDataList, drawDataList);
+			action += result;
+		}
+
+//		if (stockData.directionOf(StockData.DIRECTION_UP)) {
+//			if (prev.vertexOf(StockData.VERTEX_BOTTOM)) {
+//				String result = getSecondBottomAction(stock, drawVertexList, strokeDataList, segmentDataList);
+//				action += result;
+//			}
+//		} else if (stockData.directionOf(StockData.DIRECTION_DOWN)) {
+//			if (prev.vertexOf(StockData.VERTEX_TOP)) {
+//				String result = getSecondTopAction(stock, drawVertexList, strokeDataList, segmentDataList);
+//				action += result;
+//			}
+//		}
 
 		if (stockData.getVelocity() > 0) {
 			action += StockData.MARK_ADD;
@@ -794,13 +898,6 @@ public class StockAnalyzer {
 		mContentTitle.setLength(0);
 		mContentText.setLength(0);
 
-		String minPeriod = "";
-		for (int i = 0; i < DatabaseContract.PERIODS.length; i++) {
-			if (Setting.getPeriod(DatabaseContract.PERIODS[i])) {
-				minPeriod = DatabaseContract.PERIODS[i];
-			}
-		}
-
 		for (String period : DatabaseContract.PERIODS) {
 			if (Setting.getPeriod(period)) {
 				String action = stock.getAction(period);
@@ -811,20 +908,16 @@ public class StockAnalyzer {
 				notifyToBuy2 = false;
 				notifyToSell2 = false;
 
-				if (action.contains(StockData.MARK_BUY2 + StockData.MARK_BUY2)) {
+				if (action.contains(StockData.MARK_BUY1)) {
+					notifyToBuy1 = true;
+				} else if (action.contains(StockData.MARK_BUY2)) {
 					notifyToBuy2 = true;
-				} else if (action.contains(StockData.MARK_D)) {
-					if (TextUtils.equals(period, minPeriod)) {
-						notifyToBuy1 = true;
-					}
 				}
 
-				if (action.contains(StockData.MARK_SELL2 + StockData.MARK_SELL2)) {
+				if (action.contains(StockData.MARK_SELL1)) {
+					notifyToSell1 = true;
+				} else if (action.contains(StockData.MARK_SELL2)) {
 					notifyToSell2 = true;
-				} else if (action.contains(StockData.MARK_G)) {
-					if (TextUtils.equals(period, minPeriod)) {
-						notifyToSell1 = true;
-					}
 				}
 
 				if (notifyToBuy1 || notifyToSell1 || notifyToBuy2 || notifyToSell2) {
