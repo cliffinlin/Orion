@@ -298,8 +298,8 @@ public class StockActivity extends DatabaseActivity implements OnClickListener, 
 
 				getIntent().putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
 				setResult(RESULT_OK, getIntent());
-				Setting.setDownloadTimemillis(mStock.getSE(), mStock.getCode(), 0);
-				Setting.setStockDataChanged(mStock.getSE(), mStock.getCode(), true);
+				Setting.setDownloadStock(mStock.getSE(), mStock.getCode(), 0);
+				Setting.setDownloadStockData(mStock.getSE(), mStock.getCode(), 0);
 				mStockDataProvider.download(mStock);
 				finish();
 				break;

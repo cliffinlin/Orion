@@ -3,6 +3,7 @@ package com.android.orion.provider;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -32,7 +33,7 @@ import com.android.orion.service.StockService;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Logger;
-import com.android.orion.utility.Preferences;
+import com.android.orion.utility.Market;
 import com.android.orion.utility.Utility;
 
 import java.io.IOException;
@@ -189,6 +190,21 @@ public class StockDataProvider implements StockListChangedListener, StockEditLis
 	@Override
 	public void onDestroy() {
 		releaseWakeLock();
+	}
+
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
+	                                      @NonNull String key) {
+		if (key.contains(Setting.SETTING_PERIOD_)) {
+			if (!sharedPreferences.getBoolean(key, false)) {
+				return;
+			}
+
+			mDatabaseManager.loadStockArrayMap(mStockArrayMap);
+			for (Stock current : mStockArrayMap.values()) {
+				Setting.setDownloadStockData(current.getSE(), current.getCode(), 0);
+				download(current);
+			}
+		}
 	}
 
 	@Override
@@ -668,6 +684,8 @@ public class StockDataProvider implements StockListChangedListener, StockEditLis
 			return;
 		}
 
+		Setting.setDownloadStock(stock.getSE(), stock.getCode(), 0);
+		Setting.setDownloadStockData(stock.getSE(), stock.getCode(), 0);
 		download(stock);
 	}
 
@@ -769,42 +787,48 @@ public class StockDataProvider implements StockListChangedListener, StockEditLis
 				}
 
 				if (TextUtils.equals(stock.getClasses(), Stock.CLASS_A)) {
-					if (downloadStockInformation(stock) == RESULT_FAILED) {
-						StockService.getInstance().onDisconnected();
-						return;
+					long interval = System.currentTimeMillis() - Setting.getDownloadStock(stock.getSE(), stock.getCode());
+					if (interval > Config.downloadStockInterval) {
+						if (downloadStockInformation(stock) == RESULT_FAILED) {
+							StockService.getInstance().onDisconnected();
+							return;
+						}
+
+						if (downloadStockFinancial(stock) == RESULT_FAILED) {
+							StockService.getInstance().onDisconnected();
+							return;
+						}
+
+						if (downloadShareBonus(stock) == RESULT_FAILED) {
+							StockService.getInstance().onDisconnected();
+							return;
+						}
+
+						if (downloadTotalShare(stock) == RESULT_FAILED) {
+							StockService.getInstance().onDisconnected();
+							return;
+						}
+						Setting.setDownloadStock(stock.getSE(), stock.getCode(), System.currentTimeMillis());
 					}
 
-					if (downloadStockFinancial(stock) == RESULT_FAILED) {
-						StockService.getInstance().onDisconnected();
-						return;
-					}
+					interval = System.currentTimeMillis() - Setting.getDownloadStockData(stock.getSE(), stock.getCode());
+					if (Market.isTradingHours() || Market.isLunchTime() || (interval > Config.downloadStockDataInterval)) {
+						if (downloadStockDataHistory(stock) == RESULT_FAILED) {
+							StockService.getInstance().onDisconnected();
+							return;
+						}
 
-					if (downloadShareBonus(stock) == RESULT_FAILED) {
-						StockService.getInstance().onDisconnected();
-						return;
-					}
+						if (downloadStockDataRealTime(stock) == RESULT_FAILED) {
+							StockService.getInstance().onDisconnected();
+							return;
+						}
 
-					if (downloadTotalShare(stock) == RESULT_FAILED) {
-						StockService.getInstance().onDisconnected();
-						return;
+						if (downloadStockRealTime(stock) == RESULT_FAILED) {
+							StockService.getInstance().onDisconnected();
+							return;
+						}
+						Setting.setDownloadStockData(stock.getSE(), stock.getCode(), System.currentTimeMillis());
 					}
-
-					if (downloadStockDataHistory(stock) == RESULT_FAILED) {
-						StockService.getInstance().onDisconnected();
-						return;
-					}
-
-					if (downloadStockDataRealTime(stock) == RESULT_FAILED) {
-						StockService.getInstance().onDisconnected();
-						return;
-					}
-
-					if (downloadStockRealTime(stock) == RESULT_FAILED) {
-						StockService.getInstance().onDisconnected();
-						return;
-					}
-
-					Setting.setDownloadStockTimemillis(stock.getSE(), stock.getCode(), System.currentTimeMillis());
 				} else if (TextUtils.equals(stock.getClasses(), Stock.CLASS_INDEX)) {
 					setupIndex(stock);
 					Setting.setStockDataChanged(stock.getSE(), stock.getCode(), true);

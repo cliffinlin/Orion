@@ -849,27 +849,27 @@ public class StockAnalyzer {
 //			}
 //		}
 
-		{
-			String result = getFirstAction(strokeDataList, segmentDataList);
-			action += result;
-		}
-
-		{
-			String result = getSecondAction(stock, stockDataList, drawDataList);
-			action += result;
-		}
-
-//		if (stockData.directionOf(StockData.DIRECTION_UP)) {
-//			if (prev.vertexOf(StockData.VERTEX_BOTTOM)) {
-//				String result = getSecondBottomAction(stock, drawVertexList, strokeDataList, segmentDataList);
-//				action += result;
-//			}
-//		} else if (stockData.directionOf(StockData.DIRECTION_DOWN)) {
-//			if (prev.vertexOf(StockData.VERTEX_TOP)) {
-//				String result = getSecondTopAction(stock, drawVertexList, strokeDataList, segmentDataList);
-//				action += result;
-//			}
+//		{
+//			String result = getFirstAction(strokeDataList, segmentDataList);
+//			action += result;
 //		}
+
+//		{
+//			String result = getSecondAction(stock, stockDataList, drawDataList);
+//			action += result;
+//		}
+
+		if (stockData.directionOf(StockData.DIRECTION_UP)) {
+			if (prev.vertexOf(StockData.VERTEX_BOTTOM)) {
+				String result = getSecondBottomAction(stock, drawVertexList, strokeDataList, segmentDataList);
+				action += result;
+			}
+		} else if (stockData.directionOf(StockData.DIRECTION_DOWN)) {
+			if (prev.vertexOf(StockData.VERTEX_TOP)) {
+				String result = getSecondTopAction(stock, drawVertexList, strokeDataList, segmentDataList);
+				action += result;
+			}
+		}
 
 		if (stockData.getVelocity() > 0) {
 			action += StockData.MARK_ADD;

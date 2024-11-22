@@ -6,9 +6,9 @@ import com.android.orion.utility.Preferences;
 
 public class Setting {
 
-	static final String SETTING_PREFERENCE_INIT = "SETTING_PREFERENCE_INIT";
+	public static final String SETTING_PREFERENCE_INIT = "SETTING_PREFERENCE_INIT";
 
-	static final String SETTING_PERIOD_ = "SETTING_PERIOD_";
+	public static final String SETTING_PERIOD_ = "SETTING_PERIOD_";
 	public static final boolean SETTING_PERIOD_MONTH_DEFAULT = true;
 	public static final boolean SETTING_PERIOD_WEEK_DEFAULT = true;
 	public static final boolean SETTING_PERIOD_DAY_DEFAULT = true;
@@ -35,17 +35,22 @@ public class Setting {
 	public static final String SETTING_STOCK_FILTER_YIELD = "SETTING_STOCK_FILTER_YIELD";
 	public static final String SETTING_STOCK_FILTER_DIVIDEND_RATIO = "SETTING_STOCK_FILTER_DIVIDEND_RATIO";
 
-	static final String SETTING_DISPLAY_NET = "SETTING_DISPLAY_NET";
+	public static final String SETTING_DISPLAY_NET = "SETTING_DISPLAY_NET";
 	public static final boolean SETTING_DISPLAY_NET_DEFAULT = true;
-	static final String SETTING_DISPLAY_CANDLE = "SETTING_DISPLAY_CANDLE";
+
+	public static final String SETTING_DISPLAY_CANDLE = "SETTING_DISPLAY_CANDLE";
 	public static final boolean SETTING_DISPLAY_CANDLE_DEFAULT = false;
-	static final String SETTING_DISPLAY_DRAW = "SETTING_DISPLAY_DRAW";
+
+	public static final String SETTING_DISPLAY_DRAW = "SETTING_DISPLAY_DRAW";
 	public static final boolean SETTING_DISPLAY_DRAW_DEFAULT = true;
-	static final String SETTING_DISPLAY_STROKE = "SETTING_DISPLAY_STROKE";
+
+	public static final String SETTING_DISPLAY_STROKE = "SETTING_DISPLAY_STROKE";
 	public static final boolean SETTING_DISPLAY_STROKE_DEFAULT = true;
-	static final String SETTING_DISPLAY_SEGMENT = "SETTING_DISPLAY_SEGMENT";
+
+	public static final String SETTING_DISPLAY_SEGMENT = "SETTING_DISPLAY_SEGMENT";
 	public static final boolean SETTING_DISPLAY_SEGMENT_DEFAULT = true;
-	static final String SETTING_DISPLAY_LINE = "SETTING_DISPLAY_LINE";
+
+	public static final String SETTING_DISPLAY_LINE = "SETTING_DISPLAY_LINE";
 	public static final boolean SETTING_DISPLAY_LINE_DEFAULT = true;
 
 	public static final String SETTING_DEBUG_LOG = "SETTING_DEBUG_LOG";
@@ -55,8 +60,9 @@ public class Setting {
 	public static final String SETTING_DEBUG_WIFI = "SETTING_DEBUG_WIFI";
 	public static final String SETTING_DEBUG_DATAFILE = "SETTING_DEBUG_DATAFILE";
 
-	static final String SETTING_DOWNLOAD_STOCK_HSA_TIMEMILLIS = "SETTING_DOWNLOAD_STOCK_HSA_TIMEMILLIS";
-	static final String SETTING_DOWNLOAD_STOCK_TIMEMILLIS = "SETTING_DOWNLOAD_STOCK_TIMEMILLIS";
+	public static final String SETTING_DOWNLOAD_STOCK_HSA = "SETTING_DOWNLOAD_STOCK_HSA";
+	public static final String SETTING_DOWNLOAD_STOCK_ = "SETTING_DOWNLOAD_STOCK_";
+	public static final String SETTING_DOWNLOAD_STOCK_DATA_ = "SETTING_DOWNLOAD_STOCK_DATA_";
 
 	public static final String SETTING_STOCK_DATA_CHANGED = "SETTING_STOCK_DATA_CHANGED";
 	public static final String SETTING_STOCK_ARRAY_MAP_INDEX = "SETTING_STOCK_ARRAY_MAP_INDEX";
@@ -176,25 +182,28 @@ public class Setting {
 		Preferences.putBoolean(SETTING_DEBUG_DATAFILE, value);
 	}
 
-	public static long getDownloadStockHSATimemillis() {
-		return Preferences.getLong(SETTING_DOWNLOAD_STOCK_HSA_TIMEMILLIS, 0);
+	public static long getDownloadStockHSA() {
+		return Preferences.getLong(SETTING_DOWNLOAD_STOCK_HSA, 0);
 	}
 
-	public static void setDownloadStockHSATimemillis(long value) {
-		Preferences.putLong(SETTING_DOWNLOAD_STOCK_HSA_TIMEMILLIS, value);
+	public static void setDownloadStockHSA(long value) {
+		Preferences.putLong(SETTING_DOWNLOAD_STOCK_HSA, value);
 	}
 
-	public static long getDownloadStockTimemillis(String se, String code) {
-		return Preferences.getLong(SETTING_DOWNLOAD_STOCK_TIMEMILLIS + "_" + se + "_" + code, 0);
+	public static long getDownloadStock(@NonNull String se, String code) {
+		return Preferences.getLong(SETTING_DOWNLOAD_STOCK_ + se.toUpperCase() + "_" + code, 0);
 	}
 
-	public static void setDownloadStockTimemillis(String se, String code, long value) {
-		Preferences.putLong(SETTING_DOWNLOAD_STOCK_TIMEMILLIS + "_" + se + "_" + code, value);
+	public static void setDownloadStock(@NonNull String se, String code, long value) {
+		Preferences.putLong(SETTING_DOWNLOAD_STOCK_ + se.toUpperCase() + "_" + code, value);
 	}
 
-	public static void setDownloadTimemillis(String se, String code, long value) {
-		setDownloadStockHSATimemillis(0);
-		setDownloadStockTimemillis(se, code, 0);
+	public static long getDownloadStockData(@NonNull String se, String code) {
+		return Preferences.getLong(SETTING_DOWNLOAD_STOCK_DATA_ + se.toUpperCase() + "_" + code, 0);
+	}
+
+	public static void setDownloadStockData(@NonNull String se, String code, long value) {
+		Preferences.putLong(SETTING_DOWNLOAD_STOCK_DATA_ + se.toUpperCase() + "_" + code, value);
 	}
 
 	public static boolean getStockDataChanged(String se, String code) {

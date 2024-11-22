@@ -54,7 +54,7 @@ public class SettingFragment extends PreferenceFragment implements
 			Intent intent = new Intent(mContext, SettingLoopbackActivity.class);
 			mContext.startActivity(intent);
 		} else {
-			StockDataProvider.getInstance().download();
+			StockDataProvider.getInstance().onSharedPreferenceChanged(sharedPreferences, key);
 		}
 	}
 }

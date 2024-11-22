@@ -1,5 +1,7 @@
 package com.android.orion.interfaces;
 
+import android.content.SharedPreferences;
+
 import com.android.orion.database.Stock;
 
 public interface IStockDataProvider {
@@ -25,4 +27,6 @@ public interface IStockDataProvider {
 	int downloadStockDataRealTime(Stock stock);
 
 	void onDestroy();
+
+	void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key);
 }

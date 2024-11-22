@@ -143,23 +143,6 @@ public class BaseActivity extends Activity {
 	void restartLoader(Intent intent) {
 	}
 
-	void onMessageRefresh(Stock stock) {
-		if (stock == null) {
-			return;
-		}
-
-		Setting.setDownloadTimemillis(stock.getSE(), stock.getCode(), 0);
-
-		stock.reset();
-		mDatabaseManager.updateStock(stock, stock.getContentValues());
-
-		mDatabaseManager.deleteStockData(stock.getId());
-		mDatabaseManager.deleteStockFinancial(stock.getId());
-		mDatabaseManager.deleteShareBonus(stock.getId());
-
-		mStockDataProvider.download(stock);
-	}
-
 	private void checkPermission() {
 		if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
 				!= PackageManager.PERMISSION_GRANTED) {

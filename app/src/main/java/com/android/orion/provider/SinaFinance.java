@@ -30,7 +30,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import okhttp3.Request;
 import okhttp3.Response;
@@ -271,7 +270,7 @@ public class SinaFinance extends StockDataProvider {
 	public int downloadStockHSA() {
 		int result = RESULT_NONE;
 
-		if (System.currentTimeMillis() - Setting.getDownloadStockHSATimemillis() < Config.downloadStockHSAInterval) {
+		if (System.currentTimeMillis() - Setting.getDownloadStockHSA() < Config.downloadStockHSAInterval) {
 			return result;
 		}
 
@@ -420,7 +419,7 @@ public class SinaFinance extends StockDataProvider {
 			if (bulkInsert) {
 				mDatabaseManager.bulkInsertStock(contentValuesArray);
 			}
-			Setting.setDownloadStockHSATimemillis(System.currentTimeMillis());
+			Setting.setDownloadStockHSA(System.currentTimeMillis());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -435,12 +434,6 @@ public class SinaFinance extends StockDataProvider {
 		int result = RESULT_NONE;
 
 		if (stock == null) {
-			return result;
-		}
-
-		long interval = System.currentTimeMillis() - Setting.getDownloadStockTimemillis(stock.getSE(), stock.getCode());
-		if (interval < Config.downloadStockInterval) {
-			Log.d(stock.getName() + " return, interval:" + interval + "<" + Config.downloadStockInterval);
 			return result;
 		}
 
@@ -569,16 +562,6 @@ public class SinaFinance extends StockDataProvider {
 
 		if (stock == null) {
 			return result;
-		}
-
-		if (Market.isTradingHours() || Market.isLunchTime()) {
-			//continue
-		} else {
-			long interval = System.currentTimeMillis() - Setting.getDownloadStockTimemillis(stock.getSE(), stock.getCode());
-			if (interval < Config.downloadStockDataInterval) {
-				Log.d(stock.getName() + " return, interval:" + interval + "<" + Config.downloadStockDataInterval);
-				return result;
-			}
 		}
 
 		return downloadStockRealTime(stock, mRequestHeader, getStockRealTimeURLString(stock));
@@ -721,16 +704,6 @@ public class SinaFinance extends StockDataProvider {
 
 		if (stock == null) {
 			return result;
-		}
-
-		if (Market.isTradingHours() || Market.isLunchTime()) {
-			//continue
-		} else {
-			long interval = System.currentTimeMillis() - Setting.getDownloadStockTimemillis(stock.getSE(), stock.getCode());
-			if (interval < Config.downloadStockDataInterval) {
-				Log.d(stock.getName() + " return, interval:" + interval + "<" + Config.downloadStockDataInterval);
-				return result;
-			}
 		}
 
 		for (String period : DatabaseContract.PERIODS) {
@@ -942,16 +915,6 @@ public class SinaFinance extends StockDataProvider {
 			return result;
 		}
 
-		if (Market.isTradingHours() || Market.isLunchTime()) {
-			//continue
-		} else {
-			long interval = System.currentTimeMillis() - Setting.getDownloadStockTimemillis(stock.getSE(), stock.getCode());
-			if (interval < Config.downloadStockDataInterval) {
-				Log.d(stock.getName() + " return, interval:" + interval + "<" + Config.downloadStockDataInterval);
-				return result;
-			}
-		}
-
 		for (String period : DatabaseContract.PERIODS) {
 			if (Setting.getPeriod(period)) {
 				if (TextUtils.equals(period, DatabaseContract.COLUMN_DAY)) {
@@ -1145,14 +1108,7 @@ public class SinaFinance extends StockDataProvider {
 
 		StockFinancial stockFinancial = new StockFinancial();
 		stockFinancial.setStockId(stock.getId());
-
 		mDatabaseManager.getStockFinancial(stock, stockFinancial);
-
-		long interval = System.currentTimeMillis() - Setting.getDownloadStockTimemillis(stock.getSE(), stock.getCode());
-		if (interval < Config.downloadStockInterval) {
-			Log.d(stock.getName() + " return, interval:" + interval + "<" + Config.downloadStockInterval);
-			return result;
-		}
 
 		return downloadStockFinancial(stock, stockFinancial, getStockFinancialURLString(stock));
 	}
@@ -1368,14 +1324,7 @@ public class SinaFinance extends StockDataProvider {
 
 		ShareBonus shareBonus = new ShareBonus();
 		shareBonus.setStockId(stock.getId());
-
 		mDatabaseManager.getShareBonus(stock.getId(), shareBonus);
-
-		long interval = System.currentTimeMillis() - Setting.getDownloadStockTimemillis(stock.getSE(), stock.getCode());
-		if (interval < Config.downloadStockInterval) {
-			Log.d(stock.getName() + " return, interval:" + interval + "<" + Config.downloadStockInterval);
-			return result;
-		}
 
 		return downloadShareBonus(stock, shareBonus, getShareBonusURLString(stock));
 	}
@@ -1559,14 +1508,7 @@ public class SinaFinance extends StockDataProvider {
 
 		TotalShare totalShare = new TotalShare();
 		totalShare.setStockId(stock.getId());
-
 		mDatabaseManager.getTotalShare(stock.getId(), totalShare);
-
-		long interval = System.currentTimeMillis() - Setting.getDownloadStockTimemillis(stock.getSE(), stock.getCode());
-		if (interval < Config.downloadStockInterval) {
-			Log.d(stock.getName() + " return, interval:" + interval + "<" + Config.downloadStockInterval);
-			return result;
-		}
 
 		return downloadTotalShare(stock, totalShare, getTotalShareURLString(stock));
 	}

@@ -91,7 +91,9 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 
 			switch (msg.what) {
 				case MESSAGE_REFRESH:
-					onMessageRefresh(mStock);
+					Setting.setDownloadStockData(mStock.getSE(), mStock.getCode(), 0);
+					mDatabaseManager.deleteStockData(mStock.getId());
+					mStockDataProvider.download(mStock);
 					restartLoader();
 					break;
 

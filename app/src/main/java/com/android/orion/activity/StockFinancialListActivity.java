@@ -97,7 +97,10 @@ public class StockFinancialListActivity extends ListActivity implements
 					for (int i = 0; i < mStockList.size(); i++) {
 						Stock stock = mStockList.get(i);
 						if (stock != null && stock.hasFlag(Stock.FLAG_FAVORITE)) {
-							onMessageRefresh(stock);
+							Setting.setDownloadStock(stock.getSE(), stock.getCode(), 0);
+							mDatabaseManager.deleteStockFinancial(stock.getId());
+							mDatabaseManager.deleteShareBonus(stock.getId());
+							mStockDataProvider.download(stock);
 						}
 					}
 					restartLoader();
