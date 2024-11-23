@@ -19,8 +19,7 @@ import com.android.orion.database.StockData;
 import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockFinancial;
 import com.android.orion.database.TotalShare;
-import com.android.orion.interfaces.StockEditListener;
-import com.android.orion.interfaces.StockListChangedListener;
+import com.android.orion.interfaces.StockListener;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Utility;
@@ -29,7 +28,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class DatabaseManager implements StockListChangedListener, StockEditListener {
+public class DatabaseManager implements StockListener {
 	private static DatabaseManager mInstance;
 	private static Context mContext;
 
@@ -41,9 +40,7 @@ public class DatabaseManager implements StockListChangedListener, StockEditListe
 		mContext = context; //ContentProvider getContext()
 		mContentResolver = mContext.getContentResolver();
 		mDatabaseHelper = new DatabaseOpenHelper(mContext);
-
-		StockManager.getInstance().registerStockEditListener(this);
-		StockManager.getInstance().registerStockListChangedListener(this);
+		StockManager.getInstance().registerStockListener(this);
 	}
 
 	public static synchronized DatabaseManager getInstance() {
@@ -336,25 +333,6 @@ public class DatabaseManager implements StockListChangedListener, StockEditListe
 		return result;
 	}
 
-	public void updateStockFlag(long stockId, long flag) {
-		Uri uri;
-
-		if ((stockId == 0) || (mContentResolver == null)) {
-			return;
-		}
-
-		uri = ContentUris.withAppendedId(
-				DatabaseContract.Stock.CONTENT_URI, stockId);
-
-		try {
-			ContentValues contentValues = new ContentValues();
-			contentValues.put(DatabaseContract.COLUMN_FLAG, flag);
-			mContentResolver.update(uri, contentValues, null, null);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	public int updateStock(Stock stock, ContentValues contentValues) {
 		int result = 0;
 
@@ -371,6 +349,25 @@ public class DatabaseManager implements StockListChangedListener, StockEditListe
 				contentValues, where, null);
 
 		return result;
+	}
+
+	public void updateStockFlag(Stock stock) {
+		Uri uri;
+
+		if ((stock == null) || (mContentResolver == null)) {
+			return;
+		}
+
+		uri = ContentUris.withAppendedId(
+				DatabaseContract.Stock.CONTENT_URI, stock.getId());
+
+		try {
+			ContentValues contentValues = new ContentValues();
+			contentValues.put(DatabaseContract.COLUMN_FLAG, stock.getFlag());
+			mContentResolver.update(uri, contentValues, null, null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public int deleteStock() {
@@ -2041,30 +2038,30 @@ public class DatabaseManager implements StockListChangedListener, StockEditListe
 	}
 
 	@Override
-	public void onStockAddFavorite(Stock stock) {
+	public void onAddFavorite(Stock stock) {
 		if (stock == null) {
 			return;
 		}
-		updateStock(stock, stock.getContentValuesForEdit());
+		updateStockFlag(stock);
 	}
 
 	@Override
-	public void onStockRemoveFavorite(Stock stock) {
+	public void onRemoveFavorite(Stock stock) {
 		if (stock == null) {
 			return;
 		}
-		updateStock(stock, stock.getContentValuesForEdit());
+		updateStockFlag(stock);
 	}
 
 	@Override
-	public void onStockAdd(Stock stock) {
+	public void onAddStock(Stock stock) {
 		if (stock == null) {
 			return;
 		}
 	}
 
 	@Override
-	public void onStockRemove(Stock stock) {
+	public void onRemoveStock(Stock stock) {
 		if (stock == null) {
 			return;
 		}

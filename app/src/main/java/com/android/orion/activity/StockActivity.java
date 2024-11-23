@@ -207,10 +207,10 @@ public class StockActivity extends DatabaseActivity implements OnClickListener, 
 			case R.id.checkbox_favorite:
 				if (mCheckBoxFavorite.isChecked()) {
 					mStock.addFlag(Stock.FLAG_FAVORITE);
-					mStockManager.onStockAddFavorite(mStock);
+					mStockManager.onAddFavorite(mStock);
 				} else {
 					mStock.removeFlag(Stock.FLAG_FAVORITE);
-					mStockManager.onStockRemoveFavorite(mStock);
+					mStockManager.onRemoveFavorite(mStock);
 				}
 				break;
 

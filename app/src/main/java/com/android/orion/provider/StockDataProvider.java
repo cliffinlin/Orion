@@ -25,8 +25,7 @@ import com.android.orion.database.IndexComponent;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.interfaces.IStockDataProvider;
-import com.android.orion.interfaces.StockEditListener;
-import com.android.orion.interfaces.StockListChangedListener;
+import com.android.orion.interfaces.StockListener;
 import com.android.orion.manager.DatabaseManager;
 import com.android.orion.manager.StockManager;
 import com.android.orion.service.StockService;
@@ -46,7 +45,7 @@ import java.util.Map;
 
 import okhttp3.OkHttpClient;
 
-public class StockDataProvider implements StockListChangedListener, StockEditListener, IStockDataProvider {
+public class StockDataProvider implements StockListener, IStockDataProvider {
 
 	public static final int PERIOD_MINUTES_MIN5 = 5;
 	public static final int PERIOD_MINUTES_MIN15 = 15;
@@ -110,8 +109,7 @@ public class StockDataProvider implements StockListChangedListener, StockEditLis
 		mHandlerThread.start();
 		mHandler = new ServiceHandler(mHandlerThread.getLooper());
 
-		StockManager.getInstance().registerStockEditListener(this);
-		StockManager.getInstance().registerStockListChangedListener(this);
+		StockManager.getInstance().registerStockListener(this);
 	}
 
 	public void acquireWakeLock() {
@@ -679,17 +677,18 @@ public class StockDataProvider implements StockListChangedListener, StockEditLis
 	}
 
 	@Override
-	public void onStockAddFavorite(Stock stock) {
+	public void onAddFavorite(Stock stock) {
 		if (stock == null) {
 			return;
 		}
 
 		Setting.setDownloadStock(stock.getSE(), stock.getCode(), 0);
 		Setting.setDownloadStockData(stock.getSE(), stock.getCode(), 0);
+		download(stock);
 	}
 
 	@Override
-	public void onStockRemoveFavorite(Stock stock) {
+	public void onRemoveFavorite(Stock stock) {
 		if (stock == null) {
 			return;
 		}
@@ -704,14 +703,14 @@ public class StockDataProvider implements StockListChangedListener, StockEditLis
 	}
 
 	@Override
-	public void onStockAdd(Stock stock) {
+	public void onAddStock(Stock stock) {
 		if (stock == null) {
 			return;
 		}
 	}
 
 	@Override
-	public void onStockRemove(Stock stock) {
+	public void onRemoveStock(Stock stock) {
 		if (stock == null) {
 			return;
 		}

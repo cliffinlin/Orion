@@ -4,8 +4,7 @@ import android.content.Context;
 
 import com.android.orion.application.MainApplication;
 import com.android.orion.database.Stock;
-import com.android.orion.interfaces.StockEditListener;
-import com.android.orion.interfaces.StockListChangedListener;
+import com.android.orion.interfaces.StockListener;
 
 import java.util.ArrayList;
 
@@ -14,8 +13,7 @@ public class StockManager {
     private static Context mContext = MainApplication.getContext();
     private static StockManager mInstance;
 
-    ArrayList<StockEditListener> mStockEditListener = new ArrayList<>();
-    ArrayList<StockListChangedListener> mStockListChangedListener = new ArrayList<>();
+    ArrayList<StockListener> mStockListener = new ArrayList<>();
 
     public static synchronized StockManager getInstance() {
         if (mInstance == null) {
@@ -24,75 +22,57 @@ public class StockManager {
         return mInstance;
     }
 
-    public void registerStockEditListener(StockEditListener listener) {
+    public void registerStockListener(StockListener listener) {
         if (listener == null) {
             return;
         }
-        if (!mStockEditListener.contains(listener)) {
-            mStockEditListener.add(listener);
+        if (!mStockListener.contains(listener)) {
+            mStockListener.add(listener);
         }
     }
 
-    public void onStockAddFavorite(Stock stock) {
+    public void onAddFavorite(Stock stock) {
         if (stock == null) {
             return;
         }
-        for (StockEditListener listener: mStockEditListener) {
-            listener.onStockAddFavorite(stock);
+        for (StockListener listener: mStockListener) {
+            listener.onAddFavorite(stock);
         }
     }
 
-    public void onStockRemoveFavorite(Stock stock) {
+    public void onRemoveFavorite(Stock stock) {
         if (stock == null) {
             return;
         }
-        for (StockEditListener listener: mStockEditListener) {
-            listener.onStockRemoveFavorite(stock);
+        for (StockListener listener: mStockListener) {
+            listener.onRemoveFavorite(stock);
         }
     }
 
-    public void unregisterStockEditListener(StockEditListener listener) {
+    public void onAddStock(Stock stock) {
+        if (stock == null) {
+            return;
+        }
+        for (StockListener listener: mStockListener) {
+            listener.onAddStock(stock);
+        }
+    }
+
+    public void onRemoveStock(Stock stock) {
+        if (stock == null) {
+            return;
+        }
+        for (StockListener listener: mStockListener) {
+            listener.onRemoveStock(stock);
+        }
+    }
+
+    public void unregisterStockListener(StockListener listener) {
         if (listener == null) {
             return;
         }
-        if (mStockEditListener.contains(listener)) {
-            mStockEditListener.remove(listener);
-        }
-    }
-
-    public void registerStockListChangedListener(StockListChangedListener listener) {
-        if (listener == null) {
-            return;
-        }
-        if (!mStockListChangedListener.contains(listener)) {
-            mStockListChangedListener.add(listener);
-        }
-    }
-
-    public void onStockAdd(Stock stock) {
-        if (stock == null) {
-            return;
-        }
-        for (StockListChangedListener listener: mStockListChangedListener) {
-            listener.onStockAdd(stock);
-        }
-    }
-
-    public void onStockRemove(Stock stock) {
-        if (stock == null) {
-            return;
-        }
-        for (StockListChangedListener listener: mStockListChangedListener) {
-            listener.onStockRemove(stock);
-        }
-    }
-
-    public void unregisterStockListChangedListener(StockListChangedListener listener) {
-        if (listener == null) {
-            return;
-        }
-        if (mStockListChangedListener.contains(listener)) {
-            mStockListChangedListener.remove(listener);
+        if (mStockListener.contains(listener)) {
+            mStockListener.remove(listener);
         }
     }
 }

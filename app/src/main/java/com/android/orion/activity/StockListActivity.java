@@ -117,8 +117,8 @@ public class StockListActivity extends DatabaseActivity implements
 						mDatabaseManager.getStockList(null, stockList);
 						for (Stock stock : stockList) {
 							if (TextUtils.equals(stock.getClasses(), stock.CLASS_A) && !stock.hasFlag(Stock.FLAG_FAVORITE)) {
-								mDatabaseManager.updateStockFlag(stock.getId(), Stock.FLAG_FAVORITE);
-								Log.d(stock.getName() + stock.getCode() + " updateStockFlag(Stock.FLAG_FAVORITE)");
+								stock.addFlag(Stock.FLAG_FAVORITE);
+								mStockManager.onAddFavorite(stock);
 							}
 						}
 					}
@@ -133,8 +133,8 @@ public class StockListActivity extends DatabaseActivity implements
 						mDatabaseManager.getStockList(null, stockList);
 						for (Stock stock : stockList) {
 							if (TextUtils.equals(stock.getClasses(), stock.CLASS_A) && stock.hasFlag(Stock.FLAG_FAVORITE)) {
-								mDatabaseManager.updateStockFlag(stock.getId(), Stock.FLAG_NONE);
-								Log.d(stock.getName() + stock.getCode() + " updateStockFlag(Stock.FLAG_NONE)");
+								stock.removeFlag(Stock.FLAG_FAVORITE);
+								mStockManager.onRemoveFavorite(stock);
 							}
 						}
 					}
@@ -408,10 +408,10 @@ public class StockListActivity extends DatabaseActivity implements
 					case R.id.favorite:
 						if (!stock.hasFlag(Stock.FLAG_FAVORITE)) {
 							stock.addFlag(Stock.FLAG_FAVORITE);
-							mStockManager.onStockAddFavorite(stock);
+							mStockManager.onAddFavorite(stock);
 						} else {
-							stock.setFlag(Stock.FLAG_NONE);
-							mStockManager.onStockRemoveFavorite(stock);
+							stock.removeFlag(Stock.FLAG_FAVORITE);
+							mStockManager.onRemoveFavorite(stock);
 						}
 						break;
 
