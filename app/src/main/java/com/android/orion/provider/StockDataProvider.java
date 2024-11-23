@@ -218,10 +218,10 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			index++;
 			Log.d("index=" + index);
 
-			if (mHandler.hasMessages(Integer.valueOf(current.getCode()))) {
-				Log.d("mHandler.hasMessages " + Integer.valueOf(current.getCode()) + ", skip!");
+			if (mHandler.hasMessages(Integer.parseInt(current.getCode()))) {
+				Log.d("mHandler.hasMessages " + Integer.parseInt(current.getCode()) + ", skip!");
 			} else {
-				Message msg = mHandler.obtainMessage(Integer.valueOf(current.getCode()), current);
+				Message msg = mHandler.obtainMessage(Integer.parseInt(current.getCode()), current);
 				mHandler.sendMessage(msg);
 				Log.d("mHandler.sendMessage " + msg);
 			}
@@ -245,26 +245,26 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 				continue;
 			}
 
-			if (mHandler.hasMessages(Integer.valueOf(current.getCode()))) {
-				mHandler.removeMessages(Integer.valueOf(current.getCode()));
-				Log.d("mHandler.hasMessages " + Integer.valueOf(current.getCode()) + ", removed!");
+			if (mHandler.hasMessages(Integer.parseInt(current.getCode()))) {
+				mHandler.removeMessages(Integer.parseInt(current.getCode()));
+				Log.d("mHandler.hasMessages " + Integer.parseInt(current.getCode()) + ", removed!");
 				mRemovedArrayMap.put(current.getCode(), current);
 			}
 		}
 
-		if (mHandler.hasMessages(Integer.valueOf(stock.getCode()))) {
-			Log.d("mHandler.hasMessages " + Integer.valueOf(stock.getCode()) + ", skip!");
+		if (mHandler.hasMessages(Integer.parseInt(stock.getCode()))) {
+			Log.d("mHandler.hasMessages " + Integer.parseInt(stock.getCode()) + ", skip!");
 		} else {
-			Message msg = mHandler.obtainMessage(Integer.valueOf(stock.getCode()), stock);
+			Message msg = mHandler.obtainMessage(Integer.parseInt(stock.getCode()), stock);
 			mHandler.sendMessage(msg);
 			Log.d("mHandler.sendMessage" + msg);
 		}
 
 		for (Stock current : mRemovedArrayMap.values()) {
-			if (mHandler.hasMessages(Integer.valueOf(current.getCode()))) {
+			if (mHandler.hasMessages(Integer.parseInt(current.getCode()))) {
 				Log.d("mHandler.hasMessages " + Integer.valueOf(current.getCode()) + ", skip!");
 			} else {
-				Message msg = mHandler.obtainMessage(Integer.valueOf(current.getCode()), current);
+				Message msg = mHandler.obtainMessage(Integer.parseInt(current.getCode()), current);
 				mHandler.sendMessage(msg);
 				Log.d("mHandler.sendMessage " + msg);
 			}
@@ -697,8 +697,8 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			mStockArrayMap.remove(stock.getCode());
 		}
 
-		if (mHandler.hasMessages(Integer.valueOf(stock.getCode()))) {
-			mHandler.removeMessages(Integer.valueOf(stock.getCode()));
+		if (mHandler.hasMessages(Integer.parseInt(stock.getCode()))) {
+			mHandler.removeMessages(Integer.parseInt(stock.getCode()));
 		}
 	}
 
@@ -715,8 +715,8 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			return;
 		}
 
-		if (mHandler.hasMessages(Integer.valueOf(stock.getCode()))) {
-			mHandler.removeMessages(Integer.valueOf(stock.getCode()));
+		if (mHandler.hasMessages(Integer.parseInt(stock.getCode()))) {
+			mHandler.removeMessages(Integer.parseInt(stock.getCode()));
 		}
 	}
 

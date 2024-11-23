@@ -39,47 +39,47 @@ public class StockFinancialChart {
 
 	public StockFinancialChart(String period) {
 		if (mXValues == null) {
-			mXValues = new ArrayList<String>();
+			mXValues = new ArrayList<>();
 		}
 
 		if (mTotalCurrentAssetsEntryList == null) {
-			mTotalCurrentAssetsEntryList = new ArrayList<Entry>();
+			mTotalCurrentAssetsEntryList = new ArrayList<>();
 		}
 
 		if (mTotalAssetsEntryList == null) {
-			mTotalAssetsEntryList = new ArrayList<Entry>();
+			mTotalAssetsEntryList = new ArrayList<>();
 		}
 
 		if (mTotalLongTermLiabilitiesEntryList == null) {
-			mTotalLongTermLiabilitiesEntryList = new ArrayList<Entry>();
+			mTotalLongTermLiabilitiesEntryList = new ArrayList<>();
 		}
 
 		if (mMainBusinessIncomeEntryList == null) {
-			mMainBusinessIncomeEntryList = new ArrayList<Entry>();
+			mMainBusinessIncomeEntryList = new ArrayList<>();
 		}
 
 		if (mNetProfitEntryList == null) {
-			mNetProfitEntryList = new ArrayList<Entry>();
+			mNetProfitEntryList = new ArrayList<>();
 		}
 
 		if (mTotalShareEntryList == null) {
-			mTotalShareEntryList = new ArrayList<Entry>();
+			mTotalShareEntryList = new ArrayList<>();
 		}
 
 		if (mBookValuePerShareEntryList == null) {
-			mBookValuePerShareEntryList = new ArrayList<Entry>();
+			mBookValuePerShareEntryList = new ArrayList<>();
 		}
 
 		if (mCashFlowPerShareEntryList == null) {
-			mCashFlowPerShareEntryList = new ArrayList<Entry>();
+			mCashFlowPerShareEntryList = new ArrayList<>();
 		}
 
 		if (mNetProfitPerShareEntryList == null) {
-			mNetProfitPerShareEntryList = new ArrayList<Entry>();
+			mNetProfitPerShareEntryList = new ArrayList<>();
 		}
 
 		if (mRoeEntryList == null) {
-			mRoeEntryList = new ArrayList<Entry>();
+			mRoeEntryList = new ArrayList<>();
 		}
 
 		if (mCombinedDataMain == null) {
@@ -91,7 +91,7 @@ public class StockFinancialChart {
 		}
 
 		if (mLimitLineList == null) {
-			mLimitLineList = new ArrayList<LimitLine>();
+			mLimitLineList = new ArrayList<>();
 		}
 
 		mPeriod = period;

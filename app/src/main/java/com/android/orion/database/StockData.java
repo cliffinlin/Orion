@@ -1158,10 +1158,10 @@ public class StockData extends DatabaseTable {
 		timeString = strings[1].substring(0, 2) + ":" + strings[1].substring(2, 4) + ":" + "00";
 		setTime(timeString);
 
-		setOpen(Double.valueOf(strings[2]));
-		setHigh(Double.valueOf(strings[3]));
-		setLow(Double.valueOf(strings[4]));
-		setClose(Double.valueOf(strings[5]));
+		setOpen(Double.parseDouble(strings[2]));
+		setHigh(Double.parseDouble(strings[3]));
+		setLow(Double.parseDouble(strings[4]));
+		setClose(Double.parseDouble(strings[5]));
 
 		setVertexHigh(getHigh());
 		setVertexLow(getLow());

@@ -143,7 +143,7 @@ public class StockDealListActivity extends ListActivity implements
 					mDatabaseManager.getStockDealById(mStockDeal);
 					getStock();
 
-					ArrayList<String> stockIDList = new ArrayList<String>();
+					ArrayList<String> stockIDList = new ArrayList<>();
 					for (Stock stock : mStockList) {
 						stockIDList.add(String.valueOf(stock.getId()));
 					}

@@ -537,7 +537,7 @@ public class SinaFinance extends StockDataProvider {
 			}
 
 			if (!TextUtils.isEmpty(stockInfo[7])) {
-				stock.setTotalShare(Double.valueOf(stockInfo[7])
+				stock.setTotalShare(Double.parseDouble(stockInfo[7])
 						* Constant.DOUBLE_CONSTANT_WAN);
 			}
 
@@ -663,19 +663,19 @@ public class SinaFinance extends StockDataProvider {
 			}
 
 			if (!TextUtils.isEmpty(stockInfo[1])) {
-				stock.setPrice(Double.valueOf(stockInfo[1]));
+				stock.setPrice(Double.parseDouble(stockInfo[1]));
 			}
 
 			if (!TextUtils.isEmpty(stockInfo[2])) {
-				stock.setChange(Double.valueOf(stockInfo[2]));
+				stock.setChange(Double.parseDouble(stockInfo[2]));
 			}
 
 			if (!TextUtils.isEmpty(stockInfo[3])) {
-				stock.setNet(Double.valueOf(stockInfo[3]));
+				stock.setNet(Double.parseDouble(stockInfo[3]));
 			}
 
 			if (!TextUtils.isEmpty(stockInfo[4])) {
-				stock.setVolume(Long.valueOf(stockInfo[4]));
+				stock.setVolume(Long.parseLong(stockInfo[4]));
 			}
 
 			if (!TextUtils.isEmpty(stockInfo[5])) {
@@ -1056,17 +1056,17 @@ public class SinaFinance extends StockDataProvider {
 			}
 
 			for (int i = 1; i < 6; i++) {
-				if (Float.valueOf(stockInfo[i]) <= 0) {
-					Log.d("return, Float.valueOf(stockInfo[" + i + "]) = "
+				if (Float.parseFloat(stockInfo[i]) <= 0) {
+					Log.d("return, Float.parseFloat(stockInfo[" + i + "]) = "
 							+ Float.valueOf(stockInfo[i]));
 					return;
 				}
 			}
 
-			stockData.setOpen(Double.valueOf(stockInfo[1]));
-			stockData.setClose(Double.valueOf(stockInfo[3]));
-			stockData.setHigh(Double.valueOf(stockInfo[4]));
-			stockData.setLow(Double.valueOf(stockInfo[5]));
+			stockData.setOpen(Double.parseDouble(stockInfo[1]));
+			stockData.setClose(Double.parseDouble(stockInfo[3]));
+			stockData.setHigh(Double.parseDouble(stockInfo[4]));
+			stockData.setLow(Double.parseDouble(stockInfo[5]));
 
 			stockData.setVertexHigh(stockData.getHigh());
 			stockData.setVertexLow(stockData.getLow());
@@ -1447,7 +1447,7 @@ public class SinaFinance extends StockDataProvider {
 					}
 
 					shareBonus.setDate(dateString);
-					shareBonus.setDividend(Double.valueOf(dividendString));
+					shareBonus.setDividend(Double.parseDouble(dividendString));
 					shareBonus.setRDate(rDateString);
 					if (!rDateString.equals(Stock.STATUS_SUSPENSION)) {
 						shareBonus.setDate(rDateString);
@@ -1628,7 +1628,7 @@ public class SinaFinance extends StockDataProvider {
 						totalShareString = totalShareString.replace(mContext.getResources().getString(R.string.ten_thousand_shares), "");
 						totalShare.setDate(dateString);
 						totalShare.setTotalShare(Double
-								.valueOf(totalShareString)
+								.parseDouble(totalShareString)
 								* Constant.DOUBLE_CONSTANT_WAN);
 					} else {
 						continue;

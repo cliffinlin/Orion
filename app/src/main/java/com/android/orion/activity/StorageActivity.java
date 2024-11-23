@@ -209,7 +209,7 @@ public class StorageActivity extends DatabaseActivity {
 		Stock stock = new Stock();
 		IndexComponent indexComponent = new IndexComponent();
 		StockDeal stockDeal = new StockDeal();
-		ArrayList<Stock> stockList = new ArrayList<Stock>();
+		ArrayList<Stock> stockList = new ArrayList<>();
 		ArrayList<IndexComponent> indexComponentArrayList = new ArrayList<>();
 		ArrayList<StockDeal> stockDealArrayList = new ArrayList<>();
 		ContentValues[] contentValues = null;
@@ -259,19 +259,19 @@ public class StorageActivity extends DatabaseActivity {
 							} else if (TextUtils.equals(tagName, DatabaseContract.COLUMN_NAME)) {
 								stock.setName(parser.nextText());
 							} else if (TextUtils.equals(tagName, DatabaseContract.COLUMN_FLAG)) {
-								stock.setFlag(Integer.valueOf(parser.nextText()));
+								stock.setFlag(Integer.parseInt(parser.nextText()));
 							} else if (TextUtils.equals(tagName, DatabaseContract.COLUMN_OPERATE)) {
 								stock.setOperate(parser.nextText());
 							} else if (TextUtils.equals(tagName, DatabaseContract.COLUMN_THRESHOLD)) {
-								stock.setThreshold(Double.valueOf(parser.nextText()));
+								stock.setThreshold(Double.parseDouble(parser.nextText()));
 							}
 						} else if (parseType == XML_PARSE_TYPE_STOCK_DEAL) {
 							if (TextUtils.equals(tagName, DatabaseContract.COLUMN_BUY)) {
-								stockDeal.setBuy(Double.valueOf(parser.nextText()));
+								stockDeal.setBuy(Double.parseDouble(parser.nextText()));
 							} else if (TextUtils.equals(tagName, DatabaseContract.COLUMN_SELL)) {
-								stockDeal.setSell(Double.valueOf(parser.nextText()));
+								stockDeal.setSell(Double.parseDouble(parser.nextText()));
 							} else if (TextUtils.equals(tagName, DatabaseContract.COLUMN_VOLUME)) {
-								stockDeal.setVolume(Long.valueOf(parser.nextText()));
+								stockDeal.setVolume(Long.parseLong(parser.nextText()));
 							} else if (TextUtils.equals(tagName, DatabaseContract.COLUMN_ACCOUNT)) {
 								stockDeal.setAccount(parser.nextText());
 							} else if (TextUtils.equals(tagName, DatabaseContract.COLUMN_ACTION)) {
@@ -388,7 +388,7 @@ public class StorageActivity extends DatabaseActivity {
 	int xmlSerialize(XmlSerializer xmlSerializer) {
 		int count = 0;
 
-		ArrayList<Stock> stockList = new ArrayList<Stock>();
+		ArrayList<Stock> stockList = new ArrayList<>();
 		IndexComponent indexComponent = new IndexComponent();
 		StockDeal stockDeal = new StockDeal();
 

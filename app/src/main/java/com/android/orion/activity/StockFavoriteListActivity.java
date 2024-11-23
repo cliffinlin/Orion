@@ -40,8 +40,8 @@ public class StockFavoriteListActivity extends ListActivity implements
 
 	public static final int REQUEST_CODE_STOCK_INSERT = 0;
 
-	static final int mHeaderTextDefaultColor = Color.BLACK;
-	static final int mHeaderTextHighlightColor = Color.RED;
+	public static final int mHeaderTextDefaultColor = Color.BLACK;
+	public static final int mHeaderTextHighlightColor = Color.RED;
 
 	String mSortOrderColumn = DatabaseContract.COLUMN_CODE;
 	String mSortOrderDirection = DatabaseContract.ORDER_ASC;

@@ -620,7 +620,7 @@ public class Utility {
 	}
 
 	public static String readFile(String path) {
-		ArrayList<String> result = new ArrayList<String>();
+		ArrayList<String> result = new ArrayList<>();
 		readFile(path, result);
 		if (result.size() > 0) {
 			String value = result.get(0);
@@ -668,7 +668,7 @@ public class Utility {
 			return null;
 		}
 
-		ArrayList<String> result = new ArrayList<String>(Arrays.asList(string
+		ArrayList<String> result = new ArrayList<>(Arrays.asList(string
 				.split(",")));
 
 		return result;

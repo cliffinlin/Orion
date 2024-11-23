@@ -71,7 +71,7 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 
 	String mSortOrder = null;
 
-	ArrayList<String> mStockIDList = new ArrayList<String>();
+	ArrayList<String> mStockIDList = new ArrayList<>();
 
 	StockData mStockData = new StockData();
 
@@ -101,7 +101,7 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 					mStockList.clear();
 					for (int i = 0; i < mStockIDList.size(); i++) {
 						Stock stock = new Stock();
-						stock.setId(Long.valueOf(mStockIDList.get(i)));
+						stock.setId(Long.parseLong(mStockIDList.get(i)));
 						mDatabaseManager.getStockById(stock);
 						if (mStock.getId() == stock.getId()) {
 							mStock.set(stock);
@@ -313,19 +313,19 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 		mListView = findViewById(R.id.listView);
 
 		if (mStockDataChartList == null) {
-			mStockDataChartList = new ArrayList<StockDataChart>();
+			mStockDataChartList = new ArrayList<>();
 		}
 
 		if (mStockDataChartItemList == null) {
-			mStockDataChartItemList = new ArrayList<StockDataChartItem>();
+			mStockDataChartItemList = new ArrayList<>();
 		}
 
 		if (mStockDataChartItemMainList == null) {
-			mStockDataChartItemMainList = new ArrayList<StockDataChartItemMain>();
+			mStockDataChartItemMainList = new ArrayList<>();
 		}
 
 		if (mStockDataChartItemSubList == null) {
-			mStockDataChartItemSubList = new ArrayList<StockDataChartItemSub>();
+			mStockDataChartItemSubList = new ArrayList<>();
 		}
 
 		int selection = 0;

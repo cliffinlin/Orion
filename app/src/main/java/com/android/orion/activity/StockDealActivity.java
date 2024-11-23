@@ -176,7 +176,7 @@ public class StockDealActivity extends DatabaseActivity implements
 		mEditTextStockCode.setEnabled(false);
 		mEditTextDealProfit.setEnabled(false);
 
-		mListStockAccount = new ArrayList<String>();
+		mListStockAccount = new ArrayList<>();
 		mListStockAccount.add("");
 		mListStockAccount.add(StockDeal.ACCOUNT_A);
 		mListStockAccount.add(StockDeal.ACCOUNT_B);
@@ -187,7 +187,7 @@ public class StockDealActivity extends DatabaseActivity implements
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		mSpinnerStockAccount.setAdapter(mArrayAdapterStockAccount);
 
-		mListStockOperate = new ArrayList<String>();
+		mListStockOperate = new ArrayList<>();
 		mListStockOperate.add("");
 		mListStockOperate.add(DatabaseContract.COLUMN_MONTH);
 		mListStockOperate.add(DatabaseContract.COLUMN_WEEK);
@@ -230,7 +230,7 @@ public class StockDealActivity extends DatabaseActivity implements
 						return;
 					}
 
-					volume = Long.valueOf(volumeString);
+					volume = Long.parseLong(volumeString);
 				}
 
 				if (volume == 0) {
@@ -315,21 +315,21 @@ public class StockDealActivity extends DatabaseActivity implements
 
 				buyString = mEditTextBuyPrice.getText().toString();
 				if (!TextUtils.isEmpty(buyString)) {
-					mDeal.setBuy(Double.valueOf(buyString));
+					mDeal.setBuy(Double.parseDouble(buyString));
 				} else {
 					mDeal.setBuy(0);
 				}
 
 				sellString = mEditTextSellPrice.getText().toString();
 				if (!TextUtils.isEmpty(sellString)) {
-					mDeal.setSell(Double.valueOf(sellString));
+					mDeal.setSell(Double.parseDouble(sellString));
 				} else {
 					mDeal.setSell(0);
 				}
 
 				volumeString = mEditTextDealVolume.getText().toString();
 				if (!TextUtils.isEmpty(volumeString)) {
-					mDeal.setVolume(Long.valueOf(volumeString));
+					mDeal.setVolume(Long.parseLong(volumeString));
 				} else {
 					mDeal.setVolume(0);
 				}

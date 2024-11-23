@@ -85,7 +85,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener, 
 		mButtonOk.setOnClickListener(this);
 		mButtonCancel.setOnClickListener(this);
 
-		mListStockOperate = new ArrayList<String>();
+		mListStockOperate = new ArrayList<>();
 		mListStockOperate.add("");
 		mListStockOperate.add(DatabaseContract.COLUMN_MONTH);
 		mListStockOperate.add(DatabaseContract.COLUMN_WEEK);
@@ -95,7 +95,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener, 
 		mListStockOperate.add(DatabaseContract.COLUMN_MIN15);
 		mListStockOperate.add(DatabaseContract.COLUMN_MIN5);
 
-		mArrayAdapter = new ArrayAdapter<String>(this,
+		mArrayAdapter = new ArrayAdapter<>(this,
 				android.R.layout.simple_spinner_item, mListStockOperate);
 		mArrayAdapter
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -254,7 +254,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener, 
 
 				try {
 					String threshold = mEditTextStockThreshold.getText().toString();
-					double thresholdValue = TextUtils.isEmpty(threshold) ? 0 : Double.valueOf(threshold);
+					double thresholdValue = TextUtils.isEmpty(threshold) ? 0 : Double.parseDouble(threshold);
 					mStock.setThreshold(thresholdValue);
 				} catch (NumberFormatException e) {
 					e.printStackTrace();

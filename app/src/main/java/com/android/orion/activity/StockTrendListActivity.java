@@ -48,11 +48,11 @@ public class StockTrendListActivity extends ListActivity implements
 	public static final int REQUEST_CODE_STOCK_TREND_INSERT = 0;
 	public static final int REQUEST_CODE_STOCK_TREND_SELECT = 1;
 
-	static final int MESSAGE_VIEW_STOCK_DEAL = 4;
-	static final int MESSAGE_VIEW_STOCK_CHAT = 5;
+	public static final int MESSAGE_VIEW_STOCK_DEAL = 4;
+	public static final int MESSAGE_VIEW_STOCK_CHAT = 5;
 
-	static final int mHeaderTextDefaultColor = Color.BLACK;
-	static final int mHeaderTextHighlightColor = Color.RED;
+	public static final int mHeaderTextDefaultColor = Color.BLACK;
+	public static final int mHeaderTextHighlightColor = Color.RED;
 
 	String mSortOrderColumn = DatabaseContract.COLUMN_MODIFIED;
 	String mSortOrderDirection = DatabaseContract.ORDER_ASC;
@@ -102,7 +102,7 @@ public class StockTrendListActivity extends ListActivity implements
 					break;
 
 				case MESSAGE_VIEW_STOCK_CHAT:
-					ArrayList<String> stockIDList = new ArrayList<String>();
+					ArrayList<String> stockIDList = new ArrayList<>();
 					for (Stock stock : mStockList) {
 						stockIDList.add(String.valueOf(stock.getId()));
 					}

@@ -230,7 +230,7 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 			swapStockCursor(mStatisticsChartList.get(0), cursor);
 		}
 
-		mDescription = "Profit=" + Float.valueOf(mTotalProfit) + ",  Bonus=" + Float.valueOf(mTotalBonus);
+		mDescription = "Profit=" + mTotalProfit + ",  Bonus=" + mTotalBonus;
 	}
 
 	@Override
@@ -252,19 +252,19 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 		mListView = findViewById(R.id.listView);
 
 		if (mStatisticsChartList == null) {
-			mStatisticsChartList = new ArrayList<StockStatisticsChart>();
+			mStatisticsChartList = new ArrayList<>();
 		}
 
 		if (mStatisticsChartItemList == null) {
-			mStatisticsChartItemList = new ArrayList<StatisticsChartItem>();
+			mStatisticsChartItemList = new ArrayList<>();
 		}
 
 		if (mStatisticsChartItemMainList == null) {
-			mStatisticsChartItemMainList = new ArrayList<StatisticsChartItemMain>();
+			mStatisticsChartItemMainList = new ArrayList<>();
 		}
 
 		if (mStatisticsChartItemSubList == null) {
-			mStatisticsChartItemSubList = new ArrayList<StatisticsChartItemSub>();
+			mStatisticsChartItemSubList = new ArrayList<>();
 		}
 
 		mStatisticsChartList.add(new StockStatisticsChart());

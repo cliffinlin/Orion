@@ -33,10 +33,10 @@ import java.util.ArrayList;
 
 
 public class StockAnalyzer {
-	static ArrayList<StockFinancial> mStockFinancialList = new ArrayList<StockFinancial>();
-	static ArrayList<TotalShare> mTotalShareList = new ArrayList<TotalShare>();
-	static ArrayList<ShareBonus> mShareBonusList = new ArrayList<ShareBonus>();
-	static ArrayList<StockData> mStockDataList = new ArrayList<StockData>();
+	static ArrayList<StockFinancial> mStockFinancialList = new ArrayList<>();
+	static ArrayList<TotalShare> mTotalShareList = new ArrayList<>();
+	static ArrayList<ShareBonus> mShareBonusList = new ArrayList<>();
+	static ArrayList<StockData> mStockDataList = new ArrayList<>();
 	static StringBuffer mContentTitle = new StringBuffer();
 	static StringBuffer mContentText = new StringBuffer();
 	private static StockAnalyzer mInstance;
@@ -772,7 +772,7 @@ public class StockAnalyzer {
 
 		mContentTitle.insert(0, stock.getName() + " " + stock.getPrice() + " " + stock.getNet() + " ");
 		RecordFile.writeNotificationFile(mContentTitle.toString());
-		notify(Integer.valueOf(stock.getCode()), Config.MESSAGE_CHANNEL_ID, Config.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
+		notify(Integer.parseInt(stock.getCode()), Config.MESSAGE_CHANNEL_ID, Config.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
 				mContentTitle.toString(), mContentText.toString());
 	}
 

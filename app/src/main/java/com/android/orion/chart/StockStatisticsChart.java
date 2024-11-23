@@ -40,47 +40,47 @@ public class StockStatisticsChart {
 
 	public StockStatisticsChart() {
 		if (mXValues == null) {
-			mXValues = new ArrayList<String>();
+			mXValues = new ArrayList<>();
 		}
 
 		if (mPeEntryList == null) {
-			mPeEntryList = new ArrayList<BarEntry>();
+			mPeEntryList = new ArrayList<>();
 		}
 
 		if (mRoiEntryList == null) {
-			mRoiEntryList = new ArrayList<Entry>();
+			mRoiEntryList = new ArrayList<>();
 		}
 
 		if (mRoeEntryList == null) {
-			mRoeEntryList = new ArrayList<Entry>();
+			mRoeEntryList = new ArrayList<>();
 		}
 
 		if (mRateEntryList == null) {
-			mRateEntryList = new ArrayList<Entry>();
+			mRateEntryList = new ArrayList<>();
 		}
 
 		if (mYieldEntryList == null) {
-			mYieldEntryList = new ArrayList<Entry>();
+			mYieldEntryList = new ArrayList<>();
 		}
 
 		if (mDividendRatioEntryList == null) {
-			mDividendRatioEntryList = new ArrayList<Entry>();
+			mDividendRatioEntryList = new ArrayList<>();
 		}
 
 		if (mDIFEntryList == null) {
-			mDIFEntryList = new ArrayList<Entry>();
+			mDIFEntryList = new ArrayList<>();
 		}
 
 		if (mDEAEntryList == null) {
-			mDEAEntryList = new ArrayList<Entry>();
+			mDEAEntryList = new ArrayList<>();
 		}
 
 		if (mHistogramEntryList == null) {
-			mHistogramEntryList = new ArrayList<BarEntry>();
+			mHistogramEntryList = new ArrayList<>();
 		}
 
 		if (mValuationEntryList == null) {
-			mValuationEntryList = new ArrayList<Entry>();
+			mValuationEntryList = new ArrayList<>();
 		}
 
 		if (mCombinedDataMain == null) {

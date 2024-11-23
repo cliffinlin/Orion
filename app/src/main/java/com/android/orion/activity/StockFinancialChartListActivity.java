@@ -264,19 +264,19 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 		mListView = findViewById(R.id.listView);
 
 		if (mStockFinancialChartList == null) {
-			mStockFinancialChartList = new ArrayList<StockFinancialChart>();
+			mStockFinancialChartList = new ArrayList<>();
 		}
 
 		if (mStockFinancialChartItemList == null) {
-			mStockFinancialChartItemList = new ArrayList<StockFinancialChartItem>();
+			mStockFinancialChartItemList = new ArrayList<>();
 		}
 
 		if (mStockFinancialChartItemMainList == null) {
-			mStockFinancialChartItemMainList = new ArrayList<StockFinancialChartItemMain>();
+			mStockFinancialChartItemMainList = new ArrayList<>();
 		}
 
 		if (mStockFinancialChartItemSubList == null) {
-			mStockFinancialChartItemSubList = new ArrayList<StockFinancialChartItemSub>();
+			mStockFinancialChartItemSubList = new ArrayList<>();
 		}
 
 		int i = 0;
