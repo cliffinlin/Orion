@@ -90,7 +90,6 @@ public class StockTrendListActivity extends ListActivity implements
 
 			switch (msg.what) {
 				case MESSAGE_REFRESH:
-					//TODO
 					mStockDataProvider.download();
 					restartLoader();
 					break;
@@ -210,6 +209,7 @@ public class StockTrendListActivity extends ListActivity implements
 			switch (requestCode) {
 				case REQUEST_CODE_STOCK_TREND_INSERT:
 				case REQUEST_CODE_STOCK_TREND_SELECT:
+					Setting.setDownloadStockData(mStock.getSE(), mStock.getCode(), 0);
 					mStockDataProvider.download(mStock);
 					break;
 

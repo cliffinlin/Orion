@@ -202,8 +202,8 @@ public class StockDataProvider implements StockListChangedListener, StockEditLis
 			mDatabaseManager.loadStockArrayMap(mStockArrayMap);
 			for (Stock current : mStockArrayMap.values()) {
 				Setting.setDownloadStockData(current.getSE(), current.getCode(), 0);
-				download(current);
 			}
+			download();
 		}
 	}
 
@@ -686,7 +686,6 @@ public class StockDataProvider implements StockListChangedListener, StockEditLis
 
 		Setting.setDownloadStock(stock.getSE(), stock.getCode(), 0);
 		Setting.setDownloadStockData(stock.getSE(), stock.getCode(), 0);
-		download(stock);
 	}
 
 	@Override

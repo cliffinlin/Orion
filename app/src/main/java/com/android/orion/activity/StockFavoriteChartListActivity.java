@@ -91,8 +91,8 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 
 			switch (msg.what) {
 				case MESSAGE_REFRESH:
-					Setting.setDownloadStockData(mStock.getSE(), mStock.getCode(), 0);
 					mDatabaseManager.deleteStockData(mStock.getId());
+					Setting.setDownloadStockData(mStock.getSE(), mStock.getCode(), 0);
 					mStockDataProvider.download(mStock);
 					restartLoader();
 					break;
@@ -245,6 +245,7 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 							mDatabaseManager.deleteStockData(mStock.getId(), period);
 						}
 					}
+					Setting.setDownloadStockData(mStock.getSE(), mStock.getCode(), 0);
 					mStockDataProvider.download(mStock);
 					break;
 
