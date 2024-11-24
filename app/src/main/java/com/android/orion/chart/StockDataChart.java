@@ -41,8 +41,6 @@ public class StockDataChart {
 	public ArrayList<CandleEntry> mCandleEntryList = new ArrayList<>();
 	public ArrayList<Entry> mAverage5EntryList = new ArrayList<>();
 	public ArrayList<Entry> mAverage10EntryList = new ArrayList<>();
-	public ArrayList<Entry> mBookValuePerShareList = new ArrayList<>();
-	public ArrayList<Entry> mNetProfitPerShareList = new ArrayList<>();
 	public ArrayList<BarEntry> mDividendEntryList = new ArrayList<>();
 	public ArrayList<Entry> mDIFEntryList = new ArrayList<>();
 	public ArrayList<Entry> mDEAEntryList = new ArrayList<>();
@@ -202,26 +200,6 @@ public class StockDataChart {
 				lineData.addDataSet(lineDataSet);
 			}
 		}
-
-
-		if (mBookValuePerShareList.size() > 0) {
-			LineDataSet lineDataSet = new LineDataSet(
-					mBookValuePerShareList, "BPS");
-			lineDataSet.setColor(Color.BLUE);
-			lineDataSet.setDrawCircles(false);
-			lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-			lineData.addDataSet(lineDataSet);
-		}
-
-		if (mNetProfitPerShareList.size() > 0) {
-			LineDataSet lineDataSet = new LineDataSet(
-					mNetProfitPerShareList, "NPS");
-			lineDataSet.setColor(Color.YELLOW);
-			lineDataSet.setDrawCircles(false);
-			lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-			lineData.addDataSet(lineDataSet);
-		}
-
 		mCombinedDataMain.setData(lineData);
 
 		if (mDividendEntryList.size() > 0) {
@@ -505,8 +483,6 @@ public class StockDataChart {
 		mCandleEntryList.clear();
 		mAverage5EntryList.clear();
 		mAverage10EntryList.clear();
-		mBookValuePerShareList.clear();
-		mNetProfitPerShareList.clear();
 		mDividendEntryList.clear();
 		mDIFEntryList.clear();
 		mDEAEntryList.clear();

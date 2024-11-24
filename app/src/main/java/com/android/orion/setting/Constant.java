@@ -2,6 +2,7 @@ package com.android.orion.setting;
 
 public class Constant {
 	public static final String TAB = "\t";
+	public static final String NEW_LINE = "\n";
 
 	public static final String FILE_EXT_TEXT = ".txt";
 	public static final String FILE_EXT_XML = ".xml";

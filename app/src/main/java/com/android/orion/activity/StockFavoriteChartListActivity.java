@@ -29,6 +29,7 @@ import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
+import com.android.orion.database.StockDeal;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Search;
@@ -82,6 +83,8 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 	ArrayList<StockDataChartItemMain> mStockDataChartItemMainList = null;
 	ArrayList<StockDataChartItemSub> mStockDataChartItemSubList = null;
 	ArrayList<StockDataChart> mStockDataChartList = null;
+	ArrayList<ShareBonus> mShareBonusList = new ArrayList<>();
+	ArrayList<StockDeal> mStockDealList = new ArrayList<>();
 
 	Handler mHandler = new Handler(Looper.getMainLooper()) {
 
@@ -667,9 +670,6 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 
 	void loadStockFinancialList() {
 		String sortOrder = DatabaseContract.COLUMN_DATE + " ASC ";
-
-		mDatabaseManager.getStockFinancialList(mStock, mStockFinancialList,
-				sortOrder);
 		mDatabaseManager.getShareBonusList(mStock, mShareBonusList,
 				sortOrder);
 	}

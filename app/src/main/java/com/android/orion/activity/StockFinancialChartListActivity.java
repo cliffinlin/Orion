@@ -64,10 +64,10 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 	Menu mMenu = null;
 
 	String mSortOrder = null;
-
 	StockFinancial mStockFinancial = new StockFinancial();
 
 	ListView mListView = null;
+	ArrayList<StockFinancial> mStockFinancialList = new ArrayList<>();
 	StockFinancialChartArrayAdapter mStockFinancialChartArrayAdapter = null;
 	ArrayList<StockFinancialChartItem> mStockFinancialChartItemList = null;
 	ArrayList<StockFinancialChartItemMain> mStockFinancialChartItemMainList = null;

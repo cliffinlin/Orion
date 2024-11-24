@@ -577,10 +577,13 @@ public class StockFavoriteListActivity extends ListActivity implements
 				.getColumnIndex(DatabaseContract.COLUMN_OPERATE));
 
 		if (TextUtils.equals(operate, period)) {
-			view.setBackgroundColor(Color.rgb(240,240, 240));
+			view.setBackgroundColor(Color.rgb(240, 240, 240));
 //			TextView textView = (TextView)view;
 //			textView.setTextColor(Color.RED);
 		}
+
+		TextView textView = (TextView) view;
+		textView.setTextSize(16f);
 	}
 
 	private class LeftViewBinder implements SimpleCursorAdapter.ViewBinder {

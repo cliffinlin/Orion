@@ -18,16 +18,12 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
-import com.android.orion.database.StockDeal;
-import com.android.orion.database.StockFinancial;
+import com.android.orion.interfaces.IStockDataProvider;
 import com.android.orion.manager.DatabaseManager;
 import com.android.orion.manager.StockManager;
-import com.android.orion.interfaces.IStockDataProvider;
 import com.android.orion.provider.StockDataProvider;
 import com.android.orion.setting.Constant;
-import com.android.orion.setting.Setting;
 import com.android.orion.utility.Logger;
 
 import java.util.ArrayList;
@@ -48,9 +44,6 @@ public class BaseActivity extends Activity {
 
 	Stock mStock = new Stock();
 	ArrayList<Stock> mStockList = new ArrayList<>();
-	ArrayList<StockDeal> mStockDealList = new ArrayList<>();
-	ArrayList<StockFinancial> mStockFinancialList = new ArrayList<>();
-	ArrayList<ShareBonus> mShareBonusList = new ArrayList<>();
 
 	LoaderManager mLoaderManager = getLoaderManager();
 	StockManager mStockManager = StockManager.getInstance();

@@ -563,17 +563,17 @@ public class StockAnalyzer {
 		}
 
 		stockVertexAnalyzer.analyzeDirection(stockDataList);
-		analyzeAction(stock, period, stockDataList, drawVertexList, drawDataList, strokeDataList, segmentDataList);
+		analyzeAction(stock, period, stockDataList, drawDataList, strokeDataList, segmentDataList);
 	}
 
 	private void analyzeAction(Stock stock, String period,
 							   ArrayList<StockData> stockDataList,
-							   ArrayList<StockData> drawVertexList,
 							   ArrayList<StockData> drawDataList,
 							   ArrayList<StockData> strokeDataList,
 							   ArrayList<StockData> segmentDataList) {
+		String action = StockData.MARK_NONE;
 
-		if (stock == null || stockDataList == null) {
+		if (stock == null || stockDataList == null || drawDataList == null || strokeDataList == null || segmentDataList == null) {
 			return;
 		}
 
@@ -581,9 +581,42 @@ public class StockAnalyzer {
 			return;
 		}
 
-		StockData prev = stockDataList.get(stockDataList.size() - 2);
+		if (drawDataList.size() < StockData.VERTEX_TYPING_SIZE) {
+			return;
+		}
+
+		if (strokeDataList.size() < StockData.VERTEX_TYPING_SIZE) {
+			return;
+		}
+
+		if (segmentDataList.size() < StockData.VERTEX_TYPING_SIZE) {
+			return;
+		}
+
+		StockData segmentData = segmentDataList.get(segmentDataList.size() - 1);
+		StockData strokeData = strokeDataList.get(strokeDataList.size() - 1);
+		StockData drawData = drawDataList.get(drawDataList.size() - 1);
 		StockData stockData = stockDataList.get(stockDataList.size() - 1);
-		String action = StockData.MARK_NONE;
+
+		if (segmentData.directionOf(StockData.DIRECTION_UP)) {
+			action += StockData.MARK_ADD;
+		} else if (segmentData.directionOf(StockData.DIRECTION_DOWN)) {
+			action += StockData.MARK_MINUS;
+		}
+
+		if (strokeData.directionOf(StockData.DIRECTION_UP)) {
+			action += StockData.MARK_ADD;
+		} else if (strokeData.directionOf(StockData.DIRECTION_DOWN)) {
+			action += StockData.MARK_MINUS;
+		}
+
+		if (drawData.directionOf(StockData.DIRECTION_UP)) {
+			action += StockData.MARK_ADD;
+		} else if (drawData.directionOf(StockData.DIRECTION_DOWN)) {
+			action += StockData.MARK_MINUS;
+		}
+
+		action += Constant.NEW_LINE;
 
 		if (TextUtils.equals(period, stock.getOperate())) {
 			if (stockData.getNaturalRally() > 0) {
@@ -611,20 +644,6 @@ public class StockAnalyzer {
 		{
 			String result = getSecondAction(stock, stockDataList, drawDataList);
 			action += result;
-		}
-
-		if (stockData.directionOf(StockData.DIRECTION_UP)) {
-			action += StockData.MARK_ADD;
-			if (prev.vertexOf(StockData.VERTEX_BOTTOM)) {
-//				result = StockData.MARK_D;
-//				action += result;
-			}
-		} else if (stockData.directionOf(StockData.DIRECTION_DOWN)) {
-			action += StockData.MARK_MINUS;
-			if (prev.vertexOf(StockData.VERTEX_TOP)) {
-//				result = StockData.MARK_G;
-//				action += result;
-			}
 		}
 
 		if (stockData.getVelocity() > 0) {
