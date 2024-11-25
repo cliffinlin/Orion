@@ -26,16 +26,19 @@ import androidx.annotation.NonNull;
 import com.android.orion.R;
 import com.android.orion.chart.StockFinancialChart;
 import com.android.orion.database.DatabaseContract;
+import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockFinancial;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
+import com.android.orion.utility.Search;
 import com.android.orion.utility.Utility;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.XAxis.XAxisPosition;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.components.YAxis.YAxisLabelPosition;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.DefaultYAxisValueFormatter;
 import com.github.mikephil.charting.listener.ChartTouchListener.ChartGesture;
@@ -73,6 +76,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 	ArrayList<StockFinancialChartItemMain> mStockFinancialChartItemMainList = null;
 	ArrayList<StockFinancialChartItemSub> mStockFinancialChartItemSubList = null;
 	ArrayList<StockFinancialChart> mStockFinancialChartList = null;
+	ArrayList<ShareBonus> mShareBonusList = new ArrayList<>();
 
 	Handler mHandler = new Handler(Looper.getMainLooper()) {
 
@@ -389,9 +393,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 					if (stock != null) {
 						if (mStock.getId() == stock.getId()) {
 							mStock.set(cursor);
-
 							mStockListIndex = mStockList.size();
-
 							if (mMainHandler != null) {
 								mMainHandler.sendEmptyMessage(0);
 							}
@@ -420,8 +422,9 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 			return;
 		}
 
-		// mDatabaseManager.getStockFinancialList(mStock,
-		// mStockFinancialList);
+		String sortOrder = DatabaseContract.COLUMN_DATE + " ASC ";
+		mDatabaseManager.getShareBonusList(mStock, mShareBonusList,
+				sortOrder);
 
 		stockFinancialChart.clear();
 
@@ -491,6 +494,19 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 					Entry roeEntry = new Entry((float) mStockFinancial.getRoe(),
 							index);
 					stockFinancialChart.mRoeEntryList.add(roeEntry);
+
+					if (mShareBonusList.size() > 0) {
+						float dividend = 0;
+						ShareBonus shareBonus = Search.getShareBonusByDate(dateString,
+								mShareBonusList);
+						if (shareBonus != null) {
+							dividend = (float) (shareBonus.getDividend());
+						}
+						BarEntry shareBonusEntry = new BarEntry(dividend,
+								index);
+						stockFinancialChart.mDividendEntryList
+								.add(shareBonusEntry);
+					}
 				}
 			}
 		} catch (Exception e) {

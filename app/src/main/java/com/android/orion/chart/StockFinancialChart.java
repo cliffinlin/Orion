@@ -4,6 +4,9 @@ import android.graphics.Color;
 
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.CombinedData;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -15,87 +18,28 @@ public class StockFinancialChart {
 	public String mPeriod;
 	public String mDescription;
 
-	public ArrayList<String> mXValues = null;
+	public ArrayList<String> mXValues = new ArrayList<>();
 
-	public ArrayList<Entry> mTotalCurrentAssetsEntryList = null;
-	public ArrayList<Entry> mTotalAssetsEntryList = null;
-	public ArrayList<Entry> mTotalLongTermLiabilitiesEntryList = null;
-	public ArrayList<Entry> mMainBusinessIncomeEntryList = null;
-	public ArrayList<Entry> mNetProfitEntryList = null;
-	public ArrayList<Entry> mTotalShareEntryList = null;
+	public ArrayList<Entry> mTotalCurrentAssetsEntryList = new ArrayList<>();
+	public ArrayList<Entry> mTotalAssetsEntryList = new ArrayList<>();
+	public ArrayList<Entry> mTotalLongTermLiabilitiesEntryList = new ArrayList<>();
+	public ArrayList<Entry> mMainBusinessIncomeEntryList = new ArrayList<>();
+	public ArrayList<Entry> mNetProfitEntryList = new ArrayList<>();
+	public ArrayList<Entry> mTotalShareEntryList = new ArrayList<>();
 
-	public ArrayList<Entry> mBookValuePerShareEntryList = null;
-	public ArrayList<Entry> mCashFlowPerShareEntryList = null;
-	public ArrayList<Entry> mNetProfitPerShareEntryList = null;
-	public ArrayList<Entry> mRoeEntryList = null;
+	public ArrayList<Entry> mBookValuePerShareEntryList = new ArrayList<>();
+	public ArrayList<Entry> mCashFlowPerShareEntryList = new ArrayList<>();
+	public ArrayList<Entry> mNetProfitPerShareEntryList = new ArrayList<>();
+	public ArrayList<BarEntry> mDividendEntryList = new ArrayList<>();
+	public ArrayList<Entry> mRoeEntryList = new ArrayList<>();
 
-	public ArrayList<LimitLine> mLimitLineList = null;
-
-	public CombinedData mCombinedDataMain = null;
-	public CombinedData mCombinedDataSub = null;
-
-	public StockFinancialChart() {
-	}
+	public ArrayList<LimitLine> mLimitLineList = new ArrayList<>();
+	
+	public CombinedData mCombinedDataMain = new CombinedData(mXValues);
+	public CombinedData mCombinedDataSub = new CombinedData(mXValues);
 
 	public StockFinancialChart(String period) {
-		if (mXValues == null) {
-			mXValues = new ArrayList<>();
-		}
-
-		if (mTotalCurrentAssetsEntryList == null) {
-			mTotalCurrentAssetsEntryList = new ArrayList<>();
-		}
-
-		if (mTotalAssetsEntryList == null) {
-			mTotalAssetsEntryList = new ArrayList<>();
-		}
-
-		if (mTotalLongTermLiabilitiesEntryList == null) {
-			mTotalLongTermLiabilitiesEntryList = new ArrayList<>();
-		}
-
-		if (mMainBusinessIncomeEntryList == null) {
-			mMainBusinessIncomeEntryList = new ArrayList<>();
-		}
-
-		if (mNetProfitEntryList == null) {
-			mNetProfitEntryList = new ArrayList<>();
-		}
-
-		if (mTotalShareEntryList == null) {
-			mTotalShareEntryList = new ArrayList<>();
-		}
-
-		if (mBookValuePerShareEntryList == null) {
-			mBookValuePerShareEntryList = new ArrayList<>();
-		}
-
-		if (mCashFlowPerShareEntryList == null) {
-			mCashFlowPerShareEntryList = new ArrayList<>();
-		}
-
-		if (mNetProfitPerShareEntryList == null) {
-			mNetProfitPerShareEntryList = new ArrayList<>();
-		}
-
-		if (mRoeEntryList == null) {
-			mRoeEntryList = new ArrayList<>();
-		}
-
-		if (mCombinedDataMain == null) {
-			mCombinedDataMain = new CombinedData(mXValues);
-		}
-
-		if (mCombinedDataSub == null) {
-			mCombinedDataSub = new CombinedData(mXValues);
-		}
-
-		if (mLimitLineList == null) {
-			mLimitLineList = new ArrayList<>();
-		}
-
 		mPeriod = period;
-		mDescription = mPeriod;
 
 		setMainChartData();
 		setSubChartData();
@@ -184,6 +128,19 @@ public class StockFinancialChart {
 		lineData.addDataSet(cashFlowPerShareDataSet);
 
 		mCombinedDataSub.setData(lineData);
+
+		if (mDividendEntryList.size() > 0) {
+			BarData barData = new BarData(mXValues);
+			BarDataSet dividendDataSet = new BarDataSet(mDividendEntryList,
+					"Dividend");
+			dividendDataSet.setBarSpacePercent(40f);
+			dividendDataSet.setIncreasingColor(Color.rgb(255, 50, 50));
+			dividendDataSet.setDecreasingColor(Color.rgb(50, 128, 50));
+			dividendDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+			barData.addDataSet(dividendDataSet);
+
+			mCombinedDataSub.setData(barData);
+		}
 	}
 
 	public void clear() {
@@ -197,6 +154,7 @@ public class StockFinancialChart {
 		mBookValuePerShareEntryList.clear();
 		mCashFlowPerShareEntryList.clear();
 		mNetProfitPerShareEntryList.clear();
+		mDividendEntryList.clear();
 		mRoeEntryList.clear();
 	}
 }

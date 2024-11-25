@@ -758,22 +758,12 @@ public class StockFinancialListActivity extends ListActivity implements
 				finish();
 			}
 		} else {
-			if (parent.getId() == R.id.left_listview) {
-				Intent intent = new Intent(this,
-						StockFinancialChartListActivity.class);
-				intent.putExtra(Constant.EXTRA_STOCK_LIST_SORT_ORDER,
-						mSortOrder);
-				intent.putExtra(Constant.EXTRA_STOCK_ID, id);
-				startActivity(intent);
-			} else {
-				Intent intent = new Intent(this,
-						StockFavoriteChartListActivity.class);
-				intent.putExtra(Constant.EXTRA_STOCK_LIST_SORT_ORDER,
-						mSortOrder);
-				intent.putExtra(Constant.EXTRA_STOCK_ID, id);
-				intent.putExtra(Constant.EXTRA_STOCK_BONUS, true);
-				startActivity(intent);
-			}
+			Intent intent = new Intent(this,
+					StockFinancialChartListActivity.class);
+			intent.putExtra(Constant.EXTRA_STOCK_LIST_SORT_ORDER,
+					mSortOrder);
+			intent.putExtra(Constant.EXTRA_STOCK_ID, id);
+			startActivity(intent);
 		}
 	}
 

@@ -83,7 +83,6 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 	ArrayList<StockDataChartItemMain> mStockDataChartItemMainList = null;
 	ArrayList<StockDataChartItemSub> mStockDataChartItemSubList = null;
 	ArrayList<StockDataChart> mStockDataChartList = null;
-	ArrayList<ShareBonus> mShareBonusList = new ArrayList<>();
 	ArrayList<StockDeal> mStockDealList = new ArrayList<>();
 
 	Handler mHandler = new Handler(Looper.getMainLooper()) {
@@ -109,8 +108,6 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 						if (mStock.getId() == stock.getId()) {
 							mStock.set(stock);
 							mStockListIndex = mStockList.size();
-
-							loadStockFinancialList();
 						}
 						mStockList.add(stock);
 					}
@@ -451,9 +448,6 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 						if (mStock.getId() == stock.getId()) {
 							mStock.set(cursor);
 							mStockListIndex = mStockList.size();
-
-							loadStockFinancialList();
-
 							if (mMainHandler != null) {
 								mMainHandler.sendEmptyMessage(0);
 							}
@@ -598,23 +592,6 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 						stockDataChart.mLineList[4].add(outlineEntry);
 					}
 
-					if (mShareBonusList.size() > 0) {
-						float dividend = 0;
-
-						if (mKeyDisplayBonus) {
-							ShareBonus shareBonus = Search.getShareBonusByDate(dateString,
-									mShareBonusList);
-							if (shareBonus != null) {
-								dividend = (float) (shareBonus.getDividend());
-							}
-
-							BarEntry shareBonusEntry = new BarEntry(dividend,
-									index);
-							stockDataChart.mDividendEntryList
-									.add(shareBonusEntry);
-						}
-					}
-
 					if (Setting.getDisplayCandle()) {
 						Entry average5Entry = new Entry(
 								(float) mStockData.getAverage5(), index);
@@ -666,12 +643,6 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 		} finally {
 			mDatabaseManager.closeCursor(cursor);
 		}
-	}
-
-	void loadStockFinancialList() {
-		String sortOrder = DatabaseContract.COLUMN_DATE + " ASC ";
-		mDatabaseManager.getShareBonusList(mStock, mShareBonusList,
-				sortOrder);
 	}
 
 	void loadStockDealList() {
