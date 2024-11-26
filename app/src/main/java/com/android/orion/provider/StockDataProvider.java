@@ -20,6 +20,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.android.orion.analyzer.StockAnalyzer;
 import com.android.orion.application.MainApplication;
 import com.android.orion.config.Config;
+import com.android.orion.data.Period;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.IndexComponent;
 import com.android.orion.database.Stock;
@@ -313,7 +314,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 				Calendar end = null;
 
 				for (Stock stock : stockList) {
-					stockDataList = stock.getStockDataList(period);
+					stockDataList = stock.getArrayList(period, Period.TYPE_STOCK_DATA);
 					mDatabaseManager.loadStockDataList(stock, period, stockDataList);
 					if ((stockDataList == null) || (stockDataList.size() == 0)) {
 						continue;

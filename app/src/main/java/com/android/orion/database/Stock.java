@@ -4,6 +4,9 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+
+import com.android.orion.data.Period;
 import com.android.orion.setting.Constant;
 import com.android.orion.utility.Utility;
 
@@ -24,85 +27,8 @@ public class Stock extends DatabaseTable {
 	public static final int FLAG_FAVORITE = 1 << 0;
 
 	public static final long INVALID_ID = 0;
-
 	public static final double ROI_COEFFICIENT = 10.0;
-	private final ArrayList<StockData> mStockDataListMin5 = new ArrayList<>();
-	private final ArrayList<StockData> mStockDataListMin15 = new ArrayList<>();
-	private final ArrayList<StockData> mStockDataListMin30 = new ArrayList<>();
-	private final ArrayList<StockData> mStockDataListMin60 = new ArrayList<>();
-	private final ArrayList<StockData> mStockDataListDay = new ArrayList<>();
-	private final ArrayList<StockData> mStockDataListWeek = new ArrayList<>();
-	private final ArrayList<StockData> mStockDataListMonth = new ArrayList<>();
-	private final ArrayList<StockData> mDrawVertexListMin5 = new ArrayList<>();
-	private final ArrayList<StockData> mDrawVertexListMin15 = new ArrayList<>();
-	private final ArrayList<StockData> mDrawVertexListMin30 = new ArrayList<>();
-	private final ArrayList<StockData> mDrawVertexListMin60 = new ArrayList<>();
-	private final ArrayList<StockData> mDrawVertexListDay = new ArrayList<>();
-	private final ArrayList<StockData> mDrawVertexListWeek = new ArrayList<>();
-	private final ArrayList<StockData> mDrawVertexListMonth = new ArrayList<>();
-	private final ArrayList<StockData> mDrawDataListMin5 = new ArrayList<>();
-	private final ArrayList<StockData> mDrawDataListMin15 = new ArrayList<>();
-	private final ArrayList<StockData> mDrawDataListMin30 = new ArrayList<>();
-	private final ArrayList<StockData> mDrawDataListMin60 = new ArrayList<>();
-	private final ArrayList<StockData> mDrawDataListDay = new ArrayList<>();
-	private final ArrayList<StockData> mDrawDataListWeek = new ArrayList<>();
-	private final ArrayList<StockData> mDrawDataListMonth = new ArrayList<>();
-	private final ArrayList<StockData> mStrokeVertexListMin5 = new ArrayList<>();
-	private final ArrayList<StockData> mStrokeVertexListMin15 = new ArrayList<>();
-	private final ArrayList<StockData> mStrokeVertexListMin30 = new ArrayList<>();
-	private final ArrayList<StockData> mStrokeVertexListMin60 = new ArrayList<>();
-	private final ArrayList<StockData> mStrokeVertexListDay = new ArrayList<>();
-	private final ArrayList<StockData> mStrokeVertexListWeek = new ArrayList<>();
-	private final ArrayList<StockData> mStrokeVertexListMonth = new ArrayList<>();
-	private final ArrayList<StockData> mStrokeDataListMin5 = new ArrayList<>();
-	private final ArrayList<StockData> mStrokeDataListMin15 = new ArrayList<>();
-	private final ArrayList<StockData> mStrokeDataListMin30 = new ArrayList<>();
-	private final ArrayList<StockData> mStrokeDataListMin60 = new ArrayList<>();
-	private final ArrayList<StockData> mStrokeDataListDay = new ArrayList<>();
-	private final ArrayList<StockData> mStrokeDataListWeek = new ArrayList<>();
-	private final ArrayList<StockData> mStrokeDataListMonth = new ArrayList<>();
-	private final ArrayList<StockData> mSegmentVertexListMin5 = new ArrayList<>();
-	private final ArrayList<StockData> mSegmentVertexListMin15 = new ArrayList<>();
-	private final ArrayList<StockData> mSegmentVertexListMin30 = new ArrayList<>();
-	private final ArrayList<StockData> mSegmentVertexListMin60 = new ArrayList<>();
-	private final ArrayList<StockData> mSegmentVertexListDay = new ArrayList<>();
-	private final ArrayList<StockData> mSegmentVertexListWeek = new ArrayList<>();
-	private final ArrayList<StockData> mSegmentVertexListMonth = new ArrayList<>();
-	private final ArrayList<StockData> mSegmentDataListMin5 = new ArrayList<>();
-	private final ArrayList<StockData> mSegmentDataListMin15 = new ArrayList<>();
-	private final ArrayList<StockData> mSegmentDataListMin30 = new ArrayList<>();
-	private final ArrayList<StockData> mSegmentDataListMin60 = new ArrayList<>();
-	private final ArrayList<StockData> mSegmentDataListDay = new ArrayList<>();
-	private final ArrayList<StockData> mSegmentDataListWeek = new ArrayList<>();
-	private final ArrayList<StockData> mSegmentDataListMonth = new ArrayList<>();
-	private final ArrayList<StockData> mLineVertexListMin5 = new ArrayList<>();
-	private final ArrayList<StockData> mLineVertexListMin15 = new ArrayList<>();
-	private final ArrayList<StockData> mLineVertexListMin30 = new ArrayList<>();
-	private final ArrayList<StockData> mLineVertexListMin60 = new ArrayList<>();
-	private final ArrayList<StockData> mLineVertexListDay = new ArrayList<>();
-	private final ArrayList<StockData> mLineVertexListWeek = new ArrayList<>();
-	private final ArrayList<StockData> mLineVertexListMonth = new ArrayList<>();
-	private final ArrayList<StockData> mLineDataListMin5 = new ArrayList<>();
-	private final ArrayList<StockData> mLineDataListMin15 = new ArrayList<>();
-	private final ArrayList<StockData> mLineDataListMin30 = new ArrayList<>();
-	private final ArrayList<StockData> mLineDataListMin60 = new ArrayList<>();
-	private final ArrayList<StockData> mLineDataListDay = new ArrayList<>();
-	private final ArrayList<StockData> mLineDataListWeek = new ArrayList<>();
-	private final ArrayList<StockData> mLineDataListMonth = new ArrayList<>();
-	private final ArrayList<StockData> mOutlineVertexListMin5 = new ArrayList<>();
-	private final ArrayList<StockData> mOutlineVertexListMin15 = new ArrayList<>();
-	private final ArrayList<StockData> mOutlineVertexListMin30 = new ArrayList<>();
-	private final ArrayList<StockData> mOutlineVertexListMin60 = new ArrayList<>();
-	private final ArrayList<StockData> mOutlineVertexListDay = new ArrayList<>();
-	private final ArrayList<StockData> mOutlineVertexListWeek = new ArrayList<>();
-	private final ArrayList<StockData> mOutlineVertexListMonth = new ArrayList<>();
-	private final ArrayList<StockData> mOutlineDataListMin5 = new ArrayList<>();
-	private final ArrayList<StockData> mOutlineDataListMin15 = new ArrayList<>();
-	private final ArrayList<StockData> mOutlineDataListMin30 = new ArrayList<>();
-	private final ArrayList<StockData> mOutlineDataListMin60 = new ArrayList<>();
-	private final ArrayList<StockData> mOutlineDataListDay = new ArrayList<>();
-	private final ArrayList<StockData> mOutlineDataListWeek = new ArrayList<>();
-	private final ArrayList<StockData> mOutlineDataListMonth = new ArrayList<>();
+
 	private int mFlag;
 	private String mClasses;
 	private String mSE;
@@ -118,6 +44,7 @@ public class Stock extends DatabaseTable {
 
 	private String mDate;
 	private String mTime;
+
 	private String mActionMin5;
 	private String mActionMin15;
 	private String mActionMin30;
@@ -159,6 +86,14 @@ public class Stock extends DatabaseTable {
 	private double mDividendRatio;
 	private String mRDate;
 	private String mStatus;
+
+	private Period mPeriodMin5 = new Period(DatabaseContract.COLUMN_MIN5);
+	private Period mPeriodMin15 = new Period(DatabaseContract.COLUMN_MIN15);
+	private Period mPeriodMin30 = new Period(DatabaseContract.COLUMN_MIN30);
+	private Period mPeriodMin60 = new Period(DatabaseContract.COLUMN_MIN60);
+	private Period mPeriodDay = new Period(DatabaseContract.COLUMN_DAY);
+	private Period mPeriodWeek = new Period(DatabaseContract.COLUMN_WEEK);
+	private Period mPeriodMonth = new Period(DatabaseContract.COLUMN_MONTH);
 
 	public Stock() {
 		init();
@@ -1375,267 +1310,34 @@ public class Stock extends DatabaseTable {
 		return result;
 	}
 
-	public ArrayList<StockData> getStockDataList(String period) {
+	public ArrayList<StockData> getArrayList(@NonNull String period, int type) {
 		ArrayList<StockData> result;
-
-		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
-			result = mStockDataListMin5;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
-			result = mStockDataListMin15;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN30)) {
-			result = mStockDataListMin30;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN60)) {
-			result = mStockDataListMin60;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_DAY)) {
-			result = mStockDataListDay;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_WEEK)) {
-			result = mStockDataListWeek;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
-			result = mStockDataListMonth;
-		} else {
-			result = new ArrayList<>();
+		switch (period) {
+			case DatabaseContract.COLUMN_MIN5:
+				result = mPeriodMin5.getArrayList(period, type);
+				break;
+			case DatabaseContract.COLUMN_MIN15:
+				result = mPeriodMin15.getArrayList(period, type);
+				break;
+			case DatabaseContract.COLUMN_MIN30:
+				result = mPeriodMin30.getArrayList(period, type);
+				break;
+			case DatabaseContract.COLUMN_MIN60:
+				result = mPeriodMin60.getArrayList(period, type);
+				break;
+			case DatabaseContract.COLUMN_DAY:
+				result = mPeriodDay.getArrayList(period, type);
+				break;
+			case DatabaseContract.COLUMN_WEEK:
+				result = mPeriodWeek.getArrayList(period, type);
+				break;
+			case DatabaseContract.COLUMN_MONTH:
+				result = mPeriodMonth.getArrayList(period, type);
+				break;
+			default:
+				result = new ArrayList<>();
+				break;
 		}
-
-		return result;
-	}
-
-	public ArrayList<StockData> getDrawVertexList(String period) {
-		ArrayList<StockData> result = null;
-
-		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
-			result = mDrawVertexListMin5;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
-			result = mDrawVertexListMin15;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN30)) {
-			result = mDrawVertexListMin30;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN60)) {
-			result = mDrawVertexListMin60;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_DAY)) {
-			result = mDrawVertexListDay;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_WEEK)) {
-			result = mDrawVertexListWeek;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
-			result = mDrawVertexListMonth;
-		} else {
-			result = new ArrayList<>();
-		}
-
-		return result;
-	}
-
-	public ArrayList<StockData> getDrawDataList(String period) {
-		ArrayList<StockData> result = null;
-
-		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
-			result = mDrawDataListMin5;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
-			result = mDrawDataListMin15;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN30)) {
-			result = mDrawDataListMin30;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN60)) {
-			result = mDrawDataListMin60;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_DAY)) {
-			result = mDrawDataListDay;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_WEEK)) {
-			result = mDrawDataListWeek;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
-			result = mDrawDataListMonth;
-		} else {
-			result = new ArrayList<>();
-		}
-
-		return result;
-	}
-
-	public ArrayList<StockData> getStrokeVertexList(String period) {
-		ArrayList<StockData> result = null;
-
-		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
-			result = mStrokeVertexListMin5;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
-			result = mStrokeVertexListMin15;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN30)) {
-			result = mStrokeVertexListMin30;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN60)) {
-			result = mStrokeVertexListMin60;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_DAY)) {
-			result = mStrokeVertexListDay;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_WEEK)) {
-			result = mStrokeVertexListWeek;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
-			result = mStrokeVertexListMonth;
-		} else {
-			result = new ArrayList<>();
-		}
-
-		return result;
-	}
-
-	public ArrayList<StockData> getStrokeDataList(String period) {
-		ArrayList<StockData> result = null;
-
-		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
-			result = mStrokeDataListMin5;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
-			result = mStrokeDataListMin15;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN30)) {
-			result = mStrokeDataListMin30;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN60)) {
-			result = mStrokeDataListMin60;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_DAY)) {
-			result = mStrokeDataListDay;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_WEEK)) {
-			result = mStrokeDataListWeek;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
-			result = mStrokeDataListMonth;
-		} else {
-			result = new ArrayList<>();
-		}
-
-		return result;
-	}
-
-	public ArrayList<StockData> getSegmentVertexList(String period) {
-		ArrayList<StockData> result = null;
-
-		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
-			result = mSegmentVertexListMin5;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
-			result = mSegmentVertexListMin15;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN30)) {
-			result = mSegmentVertexListMin30;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN60)) {
-			result = mSegmentVertexListMin60;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_DAY)) {
-			result = mSegmentVertexListDay;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_WEEK)) {
-			result = mSegmentVertexListWeek;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
-			result = mSegmentVertexListMonth;
-		} else {
-			result = new ArrayList<>();
-		}
-
-		return result;
-	}
-
-	public ArrayList<StockData> getSegmentDataList(String period) {
-		ArrayList<StockData> result = null;
-
-		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
-			result = mSegmentDataListMin5;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
-			result = mSegmentDataListMin15;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN30)) {
-			result = mSegmentDataListMin30;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN60)) {
-			result = mSegmentDataListMin60;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_DAY)) {
-			result = mSegmentDataListDay;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_WEEK)) {
-			result = mSegmentDataListWeek;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
-			result = mSegmentDataListMonth;
-		} else {
-			result = new ArrayList<>();
-		}
-
-		return result;
-	}
-
-	public ArrayList<StockData> getLineVertexList(String period) {
-		ArrayList<StockData> result = null;
-
-		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
-			result = mLineVertexListMin5;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
-			result = mLineVertexListMin15;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN30)) {
-			result = mLineVertexListMin30;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN60)) {
-			result = mLineVertexListMin60;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_DAY)) {
-			result = mLineVertexListDay;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_WEEK)) {
-			result = mLineVertexListWeek;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
-			result = mLineVertexListMonth;
-		} else {
-			result = new ArrayList<>();
-		}
-
-		return result;
-	}
-
-	public ArrayList<StockData> getLineDataList(String period) {
-		ArrayList<StockData> result = null;
-
-		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
-			result = mLineDataListMin5;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
-			result = mLineDataListMin15;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN30)) {
-			result = mLineDataListMin30;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN60)) {
-			result = mLineDataListMin60;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_DAY)) {
-			result = mLineDataListDay;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_WEEK)) {
-			result = mLineDataListWeek;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
-			result = mLineDataListMonth;
-		} else {
-			result = new ArrayList<>();
-		}
-
-		return result;
-	}
-
-	public ArrayList<StockData> getOutlineVertexList(String period) {
-		ArrayList<StockData> result = null;
-
-		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
-			result = mOutlineVertexListMin5;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
-			result = mOutlineVertexListMin15;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN30)) {
-			result = mOutlineVertexListMin30;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN60)) {
-			result = mOutlineVertexListMin60;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_DAY)) {
-			result = mOutlineVertexListDay;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_WEEK)) {
-			result = mOutlineVertexListWeek;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
-			result = mOutlineVertexListMonth;
-		} else {
-			result = new ArrayList<>();
-		}
-
-		return result;
-	}
-
-	public ArrayList<StockData> getOutlineDataList(String period) {
-		ArrayList<StockData> result = null;
-
-		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
-			result = mOutlineDataListMin5;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
-			result = mOutlineDataListMin15;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN30)) {
-			result = mOutlineDataListMin30;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN60)) {
-			result = mOutlineDataListMin60;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_DAY)) {
-			result = mOutlineDataListDay;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_WEEK)) {
-			result = mOutlineDataListWeek;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
-			result = mOutlineDataListMonth;
-		} else {
-			result = new ArrayList<>();
-		}
-
 		return result;
 	}
 
