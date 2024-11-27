@@ -457,7 +457,6 @@ public class StockAnalyzer {
 		double dea = 0;
 		double histogram = 0;
 		double velocity = 0;
-		double coefficient = 0;
 
 		if (stock == null) {
 			return;
@@ -473,17 +472,6 @@ public class StockAnalyzer {
 		}
 
 		Macd.calculate(period, stockDataList);
-
-		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN60)) {
-			coefficient = 1;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN30)) {
-			coefficient = 2;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
-			coefficient = 4;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
-			coefficient = 8;
-		}
-
 		for (int i = 0; i < size; i++) {
 			average5 = Macd.getEMAAverage5List().get(i);
 			average10 = Macd.getEMAAverage10List().get(i);
@@ -573,6 +561,7 @@ public class StockAnalyzer {
 							   ArrayList<StockData> strokeDataList,
 							   ArrayList<StockData> segmentDataList) {
 		String action = StockData.MARK_NONE;
+		String trend = StockData.MARK_NONE;
 
 		if (stock == null || stockDataList == null || drawDataList == null || strokeDataList == null || segmentDataList == null) {
 			return;
@@ -601,23 +590,24 @@ public class StockAnalyzer {
 		StockData prev = stockDataList.get(stockDataList.size() - 2);
 
 		if (segmentData.directionOf(StockData.DIRECTION_UP)) {
-			action += StockData.MARK_ADD;
+			trend += StockData.MARK_ADD;
 		} else if (segmentData.directionOf(StockData.DIRECTION_DOWN)) {
-			action += StockData.MARK_MINUS;
+			trend += StockData.MARK_MINUS;
 		}
 
 		if (strokeData.directionOf(StockData.DIRECTION_UP)) {
-			action += StockData.MARK_ADD;
+			trend += StockData.MARK_ADD;
 		} else if (strokeData.directionOf(StockData.DIRECTION_DOWN)) {
-			action += StockData.MARK_MINUS;
+			trend += StockData.MARK_MINUS;
 		}
 
 		if (drawData.directionOf(StockData.DIRECTION_UP)) {
-			action += StockData.MARK_ADD;
+			trend += StockData.MARK_ADD;
 		} else if (drawData.directionOf(StockData.DIRECTION_DOWN)) {
-			action += StockData.MARK_MINUS;
+			trend += StockData.MARK_MINUS;
 		}
 
+		action += trend;
 		action += Constant.NEW_LINE;
 
 		if (TextUtils.equals(period, stock.getOperate())) {
@@ -758,15 +748,13 @@ public class StockAnalyzer {
 										 ArrayList<StockData> strokeDataList,
 										 ArrayList<StockData> segmentDataList) {
 		String result = "";
-		StockData firstBottomVertex = null;
-		StockData firstTopVertex = null;
-		StockData secondBottomVertex = null;
-		StockData secondTopVertex = null;
+		StockData firstBottomVertex;
+		StockData firstTopVertex;
+		StockData secondBottomVertex;
+		StockData secondTopVertex;
 
-		StockData baseStockData = null;
-		StockData brokenStockData = null;
-		int numerator = 0;
-		int denominator = 0;
+		StockData baseStockData;
+		StockData brokenStockData;
 
 		if ((vertexList == null)
 				|| (vertexList.size() < 2 * StockData.VERTEX_TYPING_SIZE + 1)) {
@@ -816,15 +804,8 @@ public class StockAnalyzer {
 				&& (secondBottomVertex.getVertexLow() < stock.getPrice())
 				&& (stock.getPrice() < firstTopVertex.getVertexHigh())
 		) {
-			if ((stock.getPrice() > 0) && (brokenStockData.getVertexHigh() > 0)) {
-				numerator = (int) (100 * (stock.getPrice() - brokenStockData.getVertexHigh()) / brokenStockData.getVertexHigh());
-				denominator = (int) (brokenStockData.getNet());
-			}
-
 			result += StockData.MARK_BUY2;
 			result += StockData.MARK_BUY2;
-			result += " " + numerator;
-			result += "/" + denominator;
 		}
 
 		return result;
@@ -834,15 +815,13 @@ public class StockAnalyzer {
 									  ArrayList<StockData> strokeDataList,
 									  ArrayList<StockData> segmentDataList) {
 		String result = "";
-		StockData firstBottomVertex = null;
-		StockData firstTopVertex = null;
-		StockData secondBottomVertex = null;
-		StockData secondTopVertex = null;
+		StockData firstBottomVertex;
+		StockData firstTopVertex;
+		StockData secondBottomVertex;
+		StockData secondTopVertex;
 
-		StockData baseStockData = null;
-		StockData brokenStockData = null;
-		int numerator = 0;
-		int denominator = 0;
+		StockData baseStockData;
+		StockData brokenStockData;
 
 		if ((vertexList == null)
 				|| (vertexList.size() < 2 * StockData.VERTEX_TYPING_SIZE + 1)) {
@@ -892,21 +871,16 @@ public class StockAnalyzer {
 				&& (secondTopVertex.getVertexHigh() > stock.getPrice())
 				&& (stock.getPrice() > firstBottomVertex.getVertexLow())
 		) {
-			if ((stock.getPrice() > 0) && (brokenStockData.getVertexLow() > 0)) {
-				numerator = (int) (100 * (stock.getPrice() - brokenStockData.getVertexLow()) / brokenStockData.getVertexLow());
-				denominator = (int) (brokenStockData.getNet());
-			}
-
 			result += StockData.MARK_SELL2;
 			result += StockData.MARK_SELL2;
-			result += " " + numerator;
-			result += "/" + denominator;
 		}
 
 		return result;
 	}
 
 	protected void updateNotification(Stock stock) {
+		boolean notifyToBuy;
+		boolean notifyToSell;
 		boolean notifyToBuy1;
 		boolean notifyToSell1;
 		boolean notifyToBuy2;
@@ -923,9 +897,11 @@ public class StockAnalyzer {
 		mContentTitle.setLength(0);
 		mContentText.setLength(0);
 
-		for (String period : DatabaseContract.PERIODS) {
+		for (String period : Period.PERIODS) {
 			if (Setting.getPeriod(period)) {
 				String action = stock.getAction(period);
+				notifyToBuy = false;
+				notifyToSell = false;
 
 				notifyToBuy1 = false;
 				notifyToSell1 = false;
@@ -933,19 +909,23 @@ public class StockAnalyzer {
 				notifyToBuy2 = false;
 				notifyToSell2 = false;
 
-				if (action.contains(StockData.MARK_BUY1)) {
+				if (action.contains(StockData.MARK_BUY)) {
+					notifyToBuy = true;
+				} else if (action.contains(StockData.MARK_BUY1)) {
 					notifyToBuy1 = true;
 				} else if (action.contains(StockData.MARK_BUY2)) {
 					notifyToBuy2 = true;
 				}
 
-				if (action.contains(StockData.MARK_SELL1)) {
+				if (action.contains(StockData.MARK_SELL)) {
+					notifyToSell = true;
+				} else if (action.contains(StockData.MARK_SELL1)) {
 					notifyToSell1 = true;
 				} else if (action.contains(StockData.MARK_SELL2)) {
 					notifyToSell2 = true;
 				}
 
-				if (notifyToBuy1 || notifyToSell1 || notifyToBuy2 || notifyToSell2) {
+				if (notifyToBuy || notifyToSell || notifyToBuy1 || notifyToSell1 || notifyToBuy2 || notifyToSell2) {
 					mContentTitle.append(period + " " + action + " ");
 				}
 			}

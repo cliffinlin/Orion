@@ -13,10 +13,12 @@ import androidx.annotation.NonNull;
 
 import com.android.orion.R;
 import com.android.orion.application.MainApplication;
+import com.android.orion.data.Period;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Market;
 import com.android.orion.utility.Preferences;
+import com.android.orion.utility.Utility;
 
 import java.util.List;
 
@@ -86,6 +88,11 @@ public class MainActivity extends PreferenceActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		if (!Utility.isNetworkConnected(this)) {
+			Toast.makeText(this,
+					getResources().getString(R.string.network_unavailable),
+					Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	@Override
@@ -106,13 +113,13 @@ public class MainActivity extends PreferenceActivity {
 		if (!Setting.getPreferenceInit()) {
 			Setting.setPreferenceInit(true);
 
-			Setting.setPeriod(DatabaseContract.COLUMN_MONTH, Setting.SETTING_PERIOD_MONTH_DEFAULT);
-			Setting.setPeriod(DatabaseContract.COLUMN_WEEK, Setting.SETTING_PERIOD_WEEK_DEFAULT);
-			Setting.setPeriod(DatabaseContract.COLUMN_DAY, Setting.SETTING_PERIOD_DAY_DEFAULT);
-			Setting.setPeriod(DatabaseContract.COLUMN_MIN60, Setting.SETTING_PERIOD_MIN60_DEFAULT);
-			Setting.setPeriod(DatabaseContract.COLUMN_MIN30, Setting.SETTING_PERIOD_MIN30_DEFAULT);
-			Setting.setPeriod(DatabaseContract.COLUMN_MIN15, Setting.SETTING_PERIOD_MIN15_DEFAULT);
-			Setting.setPeriod(DatabaseContract.COLUMN_MIN5, Setting.SETTING_PERIOD_MIN5_DEFAULT);
+			Setting.setPeriod(Period.MONTH, Setting.SETTING_PERIOD_MONTH_DEFAULT);
+			Setting.setPeriod(Period.WEEK, Setting.SETTING_PERIOD_WEEK_DEFAULT);
+			Setting.setPeriod(Period.DAY, Setting.SETTING_PERIOD_DAY_DEFAULT);
+			Setting.setPeriod(Period.MIN60, Setting.SETTING_PERIOD_MIN60_DEFAULT);
+			Setting.setPeriod(Period.MIN30, Setting.SETTING_PERIOD_MIN30_DEFAULT);
+			Setting.setPeriod(Period.MIN15, Setting.SETTING_PERIOD_MIN15_DEFAULT);
+			Setting.setPeriod(Period.MIN5, Setting.SETTING_PERIOD_MIN5_DEFAULT);
 
 			Setting.setDisplayNet(Setting.SETTING_DISPLAY_NET_DEFAULT);
 			Setting.setDisplayDraw(Setting.SETTING_DISPLAY_DRAW_DEFAULT);

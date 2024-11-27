@@ -200,9 +200,6 @@ public class IndexComponentListActivity extends ListActivity implements
 			case R.id.price:
 				mSortOrderColumn = DatabaseContract.COLUMN_PRICE;
 				break;
-			case R.id.net:
-				mSortOrderColumn = DatabaseContract.COLUMN_NET;
-				break;
 			case R.id.period_month:
 				mSortOrderColumn = DatabaseContract.COLUMN_MONTH;
 				break;

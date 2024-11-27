@@ -11,6 +11,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.android.orion.R;
 import com.android.orion.config.Config;
+import com.android.orion.data.Period;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
@@ -85,19 +86,19 @@ public class SinaFinance extends StockDataProvider {
 	}
 
 	public int getAvailableHistoryLength(String period) {
-		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
+		if (TextUtils.equals(period, Period.MIN5)) {
 			return DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN5;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
+		} else if (TextUtils.equals(period, Period.MIN15)) {
 			return DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN15;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN30)) {
+		} else if (TextUtils.equals(period, Period.MIN30)) {
 			return DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN30;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN60)) {
+		} else if (TextUtils.equals(period, Period.MIN60)) {
 			return DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN60;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_DAY)) {
+		} else if (TextUtils.equals(period, Period.DAY)) {
 			return DOWNLOAD_HISTORY_LENGTH_UNLIMITED;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_WEEK)) {
+		} else if (TextUtils.equals(period, Period.WEEK)) {
 			return DOWNLOAD_HISTORY_LENGTH_UNLIMITED;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
+		} else if (TextUtils.equals(period, Period.MONTH)) {
 			return DOWNLOAD_HISTORY_LENGTH_UNLIMITED;
 		}
 
@@ -236,19 +237,19 @@ public class SinaFinance extends StockDataProvider {
 					result = 1;
 
 					switch (period) {
-						case DatabaseContract.COLUMN_MIN60:
+						case Period.MIN60:
 							result += scheduleMinutes
 									/ Constant.MIN60;
 							break;
-						case DatabaseContract.COLUMN_MIN30:
+						case Period.MIN30:
 							result += scheduleMinutes
 									/ Constant.MIN30;
 							break;
-						case DatabaseContract.COLUMN_MIN15:
+						case Period.MIN15:
 							result += scheduleMinutes
 									/ Constant.MIN15;
 							break;
-						case DatabaseContract.COLUMN_MIN5:
+						case Period.MIN5:
 							result += scheduleMinutes
 									/ Constant.MIN5;
 							break;
@@ -706,7 +707,7 @@ public class SinaFinance extends StockDataProvider {
 			return result;
 		}
 
-		for (String period : DatabaseContract.PERIODS) {
+		for (String period : Period.PERIODS) {
 			if (Setting.getPeriod(period)) {
 				result = downloadStockDataHistory(stock, period);
 			}
@@ -825,7 +826,7 @@ public class SinaFinance extends StockDataProvider {
 				JSONObject jsonObject = jsonArray.getJSONObject(i);
 
 				if (jsonObject != null) {
-					dateTimeString = jsonObject.getString(DatabaseContract.COLUMN_DAY);
+					dateTimeString = jsonObject.getString(Period.DAY);
 					if (!TextUtils.isEmpty(dateTimeString)) {
 						dateTime = dateTimeString.trim().split(" ");
 						switch (dateTime.length) {
@@ -915,9 +916,9 @@ public class SinaFinance extends StockDataProvider {
 			return result;
 		}
 
-		for (String period : DatabaseContract.PERIODS) {
+		for (String period : Period.PERIODS) {
 			if (Setting.getPeriod(period)) {
-				if (TextUtils.equals(period, DatabaseContract.COLUMN_DAY)) {
+				if (TextUtils.equals(period, Period.DAY)) {
 					result = downloadStockDataRealTime(stock, period);
 				}
 			}

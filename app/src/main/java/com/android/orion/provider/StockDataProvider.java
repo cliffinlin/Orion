@@ -130,19 +130,19 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 	public int getPeriodMinutes(String period) {
 		int result = 0;
 
-		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
+		if (TextUtils.equals(period, Period.MIN5)) {
 			result = PERIOD_MINUTES_MIN5;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
+		} else if (TextUtils.equals(period, Period.MIN15)) {
 			result = PERIOD_MINUTES_MIN15;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN30)) {
+		} else if (TextUtils.equals(period, Period.MIN30)) {
 			result = PERIOD_MINUTES_MIN30;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN60)) {
+		} else if (TextUtils.equals(period, Period.MIN60)) {
 			result = PERIOD_MINUTES_MIN60;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_DAY)) {
+		} else if (TextUtils.equals(period, Period.DAY)) {
 			result = PERIOD_MINUTES_DAY;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_WEEK)) {
+		} else if (TextUtils.equals(period, Period.WEEK)) {
 			result = PERIOD_MINUTES_WEEK;
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
+		} else if (TextUtils.equals(period, Period.MONTH)) {
 			result = PERIOD_MINUTES_MONTH;
 		}
 
@@ -158,16 +158,16 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		int n = 0;
 
 		switch (stockData.getPeriod()) {
-			case DatabaseContract.COLUMN_MIN5:
+			case Period.MIN5:
 				n = size - MAX_CONTENT_LENGTH_MIN5;
 				break;
-			case DatabaseContract.COLUMN_MIN15:
+			case Period.MIN15:
 				n = size - MAX_CONTENT_LENGTH_MIN15;
 				break;
-			case DatabaseContract.COLUMN_MIN30:
+			case Period.MIN30:
 				n = size - MAX_CONTENT_LENGTH_MIN30;
 				break;
-			case DatabaseContract.COLUMN_MIN60:
+			case Period.MIN60:
 				n = size - MAX_CONTENT_LENGTH_MIN60;
 				break;
 			default:
@@ -209,6 +209,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 	@Override
 	public void download() {
 		if (!Utility.isNetworkConnected(mContext)) {
+			Log.d("return, isNetworkConnected=" + Utility.isNetworkConnected(mContext));
 			return;
 		}
 
@@ -232,6 +233,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 	@Override
 	public void download(Stock stock) {
 		if (!Utility.isNetworkConnected(mContext)) {
+			Log.d("return, isNetworkConnected=" + Utility.isNetworkConnected(mContext));
 			return;
 		}
 
@@ -303,7 +305,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		try {
 			loadIndexComponentStockList(index, stockList);
 
-			for (String period : DatabaseContract.PERIODS) {
+			for (String period : Period.PERIODS) {
 				if (!Setting.getPeriod(period)) {
 					continue;
 				}
@@ -388,7 +390,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 				index.setModified(Utility.getCurrentDateTimeString());
 				mDatabaseManager.updateStock(index, index.getContentValues());
 
-				if (TextUtils.equals(period, DatabaseContract.COLUMN_DAY) && (indexStockDataList.size() > 1)) {
+				if (TextUtils.equals(period, Period.DAY) && (indexStockDataList.size() > 1)) {
 					double prevPrice = indexStockDataList.get(indexStockDataList.size() - 2).getClose();
 					double price = indexStockDataList.get(indexStockDataList.size() - 1).getClose();
 					double net = 0;
@@ -594,10 +596,10 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 				}
 			}
 
-			exportStockDataFile(stock, DatabaseContract.COLUMN_MIN5, StockDataMin5List);
-			exportStockDataFile(stock, DatabaseContract.COLUMN_MIN15, StockDataMin15List);
-			exportStockDataFile(stock, DatabaseContract.COLUMN_MIN30, StockDataMin30List);
-			exportStockDataFile(stock, DatabaseContract.COLUMN_MIN60, StockDataMin60List);
+			exportStockDataFile(stock, Period.MIN5, StockDataMin5List);
+			exportStockDataFile(stock, Period.MIN15, StockDataMin15List);
+			exportStockDataFile(stock, Period.MIN30, StockDataMin30List);
+			exportStockDataFile(stock, Period.MIN60, StockDataMin60List);
 			Utility.deleteFile(fileName);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -836,7 +838,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 
 				if (Setting.getStockDataChanged(stock.getSE(), stock.getCode())) {
 					Setting.setStockDataChanged(stock.getSE(), stock.getCode(), false);
-					for (String period : DatabaseContract.PERIODS) {
+					for (String period : Period.PERIODS) {
 						if (Setting.getPeriod(period)) {
 							mStockAnalyzer.analyze(stock, period);
 						}

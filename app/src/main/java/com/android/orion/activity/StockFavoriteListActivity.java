@@ -195,9 +195,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 			case R.id.price:
 				mSortOrderColumn = DatabaseContract.COLUMN_PRICE;
 				break;
-			case R.id.net:
-				mSortOrderColumn = DatabaseContract.COLUMN_NET;
-				break;
 			case R.id.period_month:
 				mSortOrderColumn = DatabaseContract.COLUMN_MONTH;
 				break;
@@ -576,7 +573,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 		String operate = cursor.getString(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_OPERATE));
 
-		if (TextUtils.equals(operate, period)) {
+		if (!TextUtils.isEmpty(operate)) {
 			view.setBackgroundColor(Color.rgb(240, 240, 240));
 //			TextView textView = (TextView)view;
 //			textView.setTextColor(Color.RED);

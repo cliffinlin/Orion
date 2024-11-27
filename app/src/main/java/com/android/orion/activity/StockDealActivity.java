@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.android.orion.R;
+import com.android.orion.data.Period;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;
@@ -189,13 +190,13 @@ public class StockDealActivity extends DatabaseActivity implements
 
 		mListStockOperate = new ArrayList<>();
 		mListStockOperate.add("");
-		mListStockOperate.add(DatabaseContract.COLUMN_MONTH);
-		mListStockOperate.add(DatabaseContract.COLUMN_WEEK);
-		mListStockOperate.add(DatabaseContract.COLUMN_DAY);
-		mListStockOperate.add(DatabaseContract.COLUMN_MIN60);
-		mListStockOperate.add(DatabaseContract.COLUMN_MIN30);
-		mListStockOperate.add(DatabaseContract.COLUMN_MIN15);
-		mListStockOperate.add(DatabaseContract.COLUMN_MIN5);
+		mListStockOperate.add(Period.MONTH);
+		mListStockOperate.add(Period.WEEK);
+		mListStockOperate.add(Period.DAY);
+		mListStockOperate.add(Period.MIN60);
+		mListStockOperate.add(Period.MIN30);
+		mListStockOperate.add(Period.MIN15);
+		mListStockOperate.add(Period.MIN5);
 
 		mArrayAdapterStockOperate = new ArrayAdapter<String>(this,
 				android.R.layout.simple_spinner_item, mListStockOperate);
@@ -205,7 +206,7 @@ public class StockDealActivity extends DatabaseActivity implements
 
 		if (TextUtils.equals(mAction, Constant.ACTION_DEAL_INSERT)) {
 			setTitle(R.string.deal_insert);
-			mDeal.setAction(DatabaseContract.COLUMN_DAY);
+			mDeal.setAction(Period.DAY);
 		} else if (TextUtils.equals(mAction, Constant.ACTION_DEAL_EDIT)) {
 			setTitle(R.string.deal_edit);
 		}

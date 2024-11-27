@@ -45,13 +45,6 @@ public class Stock extends DatabaseTable {
 	private String mDate;
 	private String mTime;
 
-	private String mActionMin5;
-	private String mActionMin15;
-	private String mActionMin30;
-	private String mActionMin60;
-	private String mActionDay;
-	private String mActionWeek;
-	private String mActionMonth;
 	private String mTrend;
 
 	private double mThreshold;
@@ -87,13 +80,13 @@ public class Stock extends DatabaseTable {
 	private String mRDate;
 	private String mStatus;
 
-	private Period mPeriodMin5 = new Period(DatabaseContract.COLUMN_MIN5);
-	private Period mPeriodMin15 = new Period(DatabaseContract.COLUMN_MIN15);
-	private Period mPeriodMin30 = new Period(DatabaseContract.COLUMN_MIN30);
-	private Period mPeriodMin60 = new Period(DatabaseContract.COLUMN_MIN60);
-	private Period mPeriodDay = new Period(DatabaseContract.COLUMN_DAY);
-	private Period mPeriodWeek = new Period(DatabaseContract.COLUMN_WEEK);
-	private Period mPeriodMonth = new Period(DatabaseContract.COLUMN_MONTH);
+	private Period mMin5 = new Period(Period.MIN5);
+	private Period mMin15 = new Period(Period.MIN15);
+	private Period mMin30 = new Period(Period.MIN30);
+	private Period mMin60 = new Period(Period.MIN60);
+	private Period mDay = new Period(Period.DAY);
+	private Period mWeek = new Period(Period.WEEK);
+	private Period mMonth = new Period(Period.MONTH);
 
 	public Stock() {
 		init();
@@ -136,13 +129,6 @@ public class Stock extends DatabaseTable {
 
 		mDate = "";
 		mTime = "";
-		mActionMin5 = "";
-		mActionMin15 = "";
-		mActionMin30 = "";
-		mActionMin60 = "";
-		mActionDay = "";
-		mActionWeek = "";
-		mActionMonth = "";
 		mTrend = "";
 
 		mThreshold = 0;
@@ -197,13 +183,13 @@ public class Stock extends DatabaseTable {
 
 		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);
 		contentValues.put(DatabaseContract.COLUMN_TIME, mTime);
-		contentValues.put(DatabaseContract.COLUMN_MIN5, mActionMin5);
-		contentValues.put(DatabaseContract.COLUMN_MIN15, mActionMin15);
-		contentValues.put(DatabaseContract.COLUMN_MIN30, mActionMin30);
-		contentValues.put(DatabaseContract.COLUMN_MIN60, mActionMin60);
-		contentValues.put(DatabaseContract.COLUMN_DAY, mActionDay);
-		contentValues.put(DatabaseContract.COLUMN_WEEK, mActionWeek);
-		contentValues.put(DatabaseContract.COLUMN_MONTH, mActionMonth);
+		contentValues.put(DatabaseContract.COLUMN_MIN5, mMin5.getAction());
+		contentValues.put(DatabaseContract.COLUMN_MIN15, mMin15.getAction());
+		contentValues.put(DatabaseContract.COLUMN_MIN30, mMin30.getAction());
+		contentValues.put(DatabaseContract.COLUMN_MIN60, mMin60.getAction());
+		contentValues.put(DatabaseContract.COLUMN_DAY, mDay.getAction());
+		contentValues.put(DatabaseContract.COLUMN_WEEK, mWeek.getAction());
+		contentValues.put(DatabaseContract.COLUMN_MONTH, mMonth.getAction());
 		contentValues.put(DatabaseContract.COLUMN_TREND, mTrend);
 
 		contentValues.put(DatabaseContract.COLUMN_HOLD, mHold);
@@ -301,13 +287,13 @@ public class Stock extends DatabaseTable {
 
 		setDate(stock.mDate);
 		setTime(stock.mTime);
-		setActionMin5(stock.mActionMin5);
-		setActionMin15(stock.mActionMin15);
-		setActionMin30(stock.mActionMin30);
-		setActionMin60(stock.mActionMin60);
-		setActionDay(stock.mActionDay);
-		setActionWeek(stock.mActionWeek);
-		setActionMonth(stock.mActionMonth);
+		mMin5.setAction(stock.mMin5.getAction());
+		mMin15.setAction(stock.mMin15.getAction());
+		mMin30.setAction(stock.mMin30.getAction());
+		mMin60.setAction(stock.mMin60.getAction());
+		mDay.setAction(stock.mDay.getAction());
+		mWeek.setAction(stock.mWeek.getAction());
+		mMonth.setAction(stock.mMonth.getAction());
 		setTrend(stock.mTrend);
 
 		setThreshold(stock.mThreshold);
@@ -367,13 +353,13 @@ public class Stock extends DatabaseTable {
 		setValue(cursor);
 		setDate(cursor);
 		setTime(cursor);
-		setActionMin5(cursor);
-		setActionMin15(cursor);
-		setActionMin30(cursor);
-		setActionMin60(cursor);
-		setActionDay(cursor);
-		setActionWeek(cursor);
-		setActionMonth(cursor);
+		mMin5.setAction(cursor);
+		mMin15.setAction(cursor);
+		mMin30.setAction(cursor);
+		mMin60.setAction(cursor);
+		mDay.setAction(cursor);
+		mWeek.setAction(cursor);
+		mMonth.setAction(cursor);
 		setTrend(cursor);
 		setThreshold(cursor);
 		setOperate(cursor);
@@ -627,125 +613,6 @@ public class Stock extends DatabaseTable {
 
 		setTime(cursor.getString(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_TIME)));
-	}
-
-	String getActionMin5() {
-		return mActionMin5;
-	}
-
-	void setActionMin5(String action) {
-		mActionMin5 = action;
-	}
-
-	void setActionMin5(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setActionMin5(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_MIN5)));
-	}
-
-	String getActionMin15() {
-		return mActionMin15;
-	}
-
-	void setActionMin15(String action) {
-		mActionMin15 = action;
-	}
-
-	void setActionMin15(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setActionMin15(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_MIN15)));
-	}
-
-	String getActionMin30() {
-		return mActionMin30;
-	}
-
-	void setActionMin30(String action) {
-		mActionMin30 = action;
-	}
-
-	void setActionMin30(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setActionMin30(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_MIN30)));
-	}
-
-	String getActionMin60() {
-		return mActionMin60;
-	}
-
-	void setActionMin60(String action) {
-		mActionMin60 = action;
-	}
-
-	void setActionMin60(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setActionMin60(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_MIN60)));
-	}
-
-	String getActionDay() {
-		return mActionDay;
-	}
-
-	void setActionDay(String action) {
-		mActionDay = action;
-	}
-
-	void setActionDay(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setActionDay(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_DAY)));
-	}
-
-	String getActionWeek() {
-		return mActionWeek;
-	}
-
-	void setActionWeek(String action) {
-		mActionWeek = action;
-	}
-
-	void setActionWeek(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setActionWeek(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_WEEK)));
-	}
-
-	String getActionMonth() {
-		return mActionMonth;
-	}
-
-	void setActionMonth(String action) {
-		mActionMonth = action;
-	}
-
-	void setActionMonth(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setActionMonth(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_MONTH)));
 	}
 
 	String getTrend() {
@@ -1304,39 +1171,28 @@ public class Stock extends DatabaseTable {
 	}
 
 	public boolean hasFlag(int flag) {
-		boolean result = (mFlag & flag) == flag;
-
-
-		return result;
+		return (mFlag & flag) == flag;
 	}
 
-	public ArrayList<StockData> getArrayList(@NonNull String period, int type) {
+	public ArrayList<StockData> getArrayList(String period, int type) {
 		ArrayList<StockData> result;
-		switch (period) {
-			case DatabaseContract.COLUMN_MIN5:
-				result = mPeriodMin5.getArrayList(period, type);
-				break;
-			case DatabaseContract.COLUMN_MIN15:
-				result = mPeriodMin15.getArrayList(period, type);
-				break;
-			case DatabaseContract.COLUMN_MIN30:
-				result = mPeriodMin30.getArrayList(period, type);
-				break;
-			case DatabaseContract.COLUMN_MIN60:
-				result = mPeriodMin60.getArrayList(period, type);
-				break;
-			case DatabaseContract.COLUMN_DAY:
-				result = mPeriodDay.getArrayList(period, type);
-				break;
-			case DatabaseContract.COLUMN_WEEK:
-				result = mPeriodWeek.getArrayList(period, type);
-				break;
-			case DatabaseContract.COLUMN_MONTH:
-				result = mPeriodMonth.getArrayList(period, type);
-				break;
-			default:
-				result = new ArrayList<>();
-				break;
+
+		if (TextUtils.equals(period, Period.MIN5)) {
+			result = mMin5.getArrayList(period, type);
+		} else if (TextUtils.equals(period, Period.MIN15)) {
+			result = mMin15.getArrayList(period, type);
+		} else if (TextUtils.equals(period, Period.MIN30)) {
+			result = mMin30.getArrayList(period, type);
+		} else if (TextUtils.equals(period, Period.MIN60)) {
+			result = mMin60.getArrayList(period, type);
+		} else if (TextUtils.equals(period, Period.DAY)) {
+			result = mDay.getArrayList(period, type);
+		} else if (TextUtils.equals(period, Period.WEEK)) {
+			result = mWeek.getArrayList(period, type);
+		} else if (TextUtils.equals(period, Period.MONTH)) {
+			result = mMonth.getArrayList(period, type);
+		} else {
+			result = new ArrayList<>();
 		}
 		return result;
 	}
@@ -1390,41 +1246,39 @@ public class Stock extends DatabaseTable {
 
 	public String getAction(String period) {
 		String action = "";
-
-		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
-			action = getActionMin5();
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
-			action = getActionMin15();
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN30)) {
-			action = getActionMin30();
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN60)) {
-			action = getActionMin60();
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_DAY)) {
-			action = getActionDay();
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_WEEK)) {
-			action = getActionWeek();
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
-			action = getActionMonth();
+		if (TextUtils.equals(period, Period.MIN5)) {
+			action = mMin5.getAction();
+		} else if (TextUtils.equals(period, Period.MIN15)) {
+			action = mMin15.getAction();
+		} else if (TextUtils.equals(period, Period.MIN30)) {
+			action = mMin30.getAction();
+		} else if (TextUtils.equals(period, Period.MIN60)) {
+			action = mMin60.getAction();
+		} else if (TextUtils.equals(period, Period.DAY)) {
+			action = mDay.getAction();
+		} else if (TextUtils.equals(period, Period.WEEK)) {
+			action = mWeek.getAction();
+		} else if (TextUtils.equals(period, Period.MONTH)) {
+			action = mMonth.getAction();
 		}
-
 		return action;
 	}
 
 	public void setAction(String period, String action) {
-		if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN5)) {
-			setActionMin5(action);
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN15)) {
-			setActionMin15(action);
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN30)) {
-			setActionMin30(action);
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MIN60)) {
-			setActionMin60(action);
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_DAY)) {
-			setActionDay(action);
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_WEEK)) {
-			setActionWeek(action);
-		} else if (TextUtils.equals(period, DatabaseContract.COLUMN_MONTH)) {
-			setActionMonth(action);
+		if (TextUtils.equals(period, Period.MIN5)) {
+			mMin5.setAction(action);
+		} else if (TextUtils.equals(period, Period.MIN15)) {
+			mMin15.setAction(action);
+		} else if (TextUtils.equals(period, Period.MIN30)) {
+			mMin30.setAction(action);
+		} else if (TextUtils.equals(period, Period.MIN60)) {
+			mMin60.setAction(action);
+		} else if (TextUtils.equals(period, Period.DAY)) {
+			mDay.setAction(action);
+		} else if (TextUtils.equals(period, Period.WEEK)) {
+			mWeek.setAction(action);
+		} else if (TextUtils.equals(period, Period.MONTH)) {
+			mMonth.setAction(action);
 		}
 	}
 

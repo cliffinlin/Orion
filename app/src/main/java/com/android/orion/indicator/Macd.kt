@@ -1,5 +1,6 @@
 package com.android.orion.indicator
 
+import com.android.orion.data.Period
 import com.android.orion.database.DatabaseContract
 import com.android.orion.database.StockData
 import com.android.orion.setting.Constant
@@ -70,49 +71,49 @@ object Macd {
     fun init(period: String, stockDataList: ArrayList<StockData>) {
         mPeriod = period
         when (mPeriod) {
-            DatabaseContract.COLUMN_MONTH -> {
+            Period.MONTH -> {
                 mAverage5 = AVERAGE5
                 mAverage10 = AVERAGE10
                 mFast = FAST
                 mSlow = SLOW
                 mSignal = SIGNAL
             }
-            DatabaseContract.COLUMN_WEEK -> {
+            Period.WEEK -> {
                 mAverage5 = AVERAGE5
                 mAverage10 = AVERAGE10
                 mFast = FAST
                 mSlow = SLOW
                 mSignal = SIGNAL
             }
-            DatabaseContract.COLUMN_DAY -> {
+            Period.DAY -> {
                 mAverage5 = AVERAGE5
                 mAverage10 = AVERAGE10
                 mFast = FAST
                 mSlow = SLOW
                 mSignal = SIGNAL
             }
-            DatabaseContract.COLUMN_MIN60 -> {
+            Period.MIN60 -> {
                 mAverage5 = Constant.MIN60_PER_TRADE_DAY * AVERAGE5
                 mAverage10 = Constant.MIN60_PER_TRADE_DAY * AVERAGE10
                 mFast = Constant.MIN60_PER_TRADE_DAY * FAST
                 mSlow = Constant.MIN60_PER_TRADE_DAY * SLOW
                 mSignal = Constant.MIN60_PER_TRADE_DAY * SIGNAL
             }
-            DatabaseContract.COLUMN_MIN30 -> {
+            Period.MIN30 -> {
                 mAverage5 = Constant.MIN30_PER_TRADE_DAY * AVERAGE5
                 mAverage10 = Constant.MIN30_PER_TRADE_DAY * AVERAGE10
                 mFast = Constant.MIN30_PER_TRADE_DAY * FAST
                 mSlow = Constant.MIN30_PER_TRADE_DAY * SLOW
                 mSignal = Constant.MIN30_PER_TRADE_DAY * SIGNAL
             }
-            DatabaseContract.COLUMN_MIN15 -> {
+            Period.MIN15 -> {
                 mAverage5 = Constant.MIN15_PER_TRADE_DAY * AVERAGE5
                 mAverage10 = Constant.MIN15_PER_TRADE_DAY * AVERAGE10
                 mFast = Constant.MIN15_PER_TRADE_DAY * FAST
                 mSlow = Constant.MIN15_PER_TRADE_DAY * SLOW
                 mSignal = Constant.MIN15_PER_TRADE_DAY * SIGNAL
             }
-            DatabaseContract.COLUMN_MIN5 -> {
+            Period.MIN5 -> {
                 mAverage5 = Constant.MIN5_PER_TRADE_DAY * AVERAGE5
                 mAverage10 = Constant.MIN5_PER_TRADE_DAY * AVERAGE10
                 mFast = Constant.MIN5_PER_TRADE_DAY * FAST

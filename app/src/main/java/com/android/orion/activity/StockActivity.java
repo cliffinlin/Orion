@@ -21,6 +21,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.android.orion.R;
+import com.android.orion.data.Period;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.IndexComponent;
 import com.android.orion.database.Stock;
@@ -87,13 +88,13 @@ public class StockActivity extends DatabaseActivity implements OnClickListener, 
 
 		mListStockOperate = new ArrayList<>();
 		mListStockOperate.add("");
-		mListStockOperate.add(DatabaseContract.COLUMN_MONTH);
-		mListStockOperate.add(DatabaseContract.COLUMN_WEEK);
-		mListStockOperate.add(DatabaseContract.COLUMN_DAY);
-		mListStockOperate.add(DatabaseContract.COLUMN_MIN60);
-		mListStockOperate.add(DatabaseContract.COLUMN_MIN30);
-		mListStockOperate.add(DatabaseContract.COLUMN_MIN15);
-		mListStockOperate.add(DatabaseContract.COLUMN_MIN5);
+		mListStockOperate.add(Period.MONTH);
+		mListStockOperate.add(Period.WEEK);
+		mListStockOperate.add(Period.DAY);
+		mListStockOperate.add(Period.MIN60);
+		mListStockOperate.add(Period.MIN30);
+		mListStockOperate.add(Period.MIN15);
+		mListStockOperate.add(Period.MIN5);
 
 		mArrayAdapter = new ArrayAdapter<>(this,
 				android.R.layout.simple_spinner_item, mListStockOperate);

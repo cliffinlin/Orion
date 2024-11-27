@@ -1,5 +1,7 @@
 package com.android.orion.data;
 
+import android.database.Cursor;
+
 import androidx.annotation.NonNull;
 
 import com.android.orion.database.DatabaseContract;
@@ -20,19 +22,32 @@ public class Period {
 	public static final int TYPE_OUTLINE_VERTEX = 9;
 	public static final int TYPE_OUTLINE_DATA = 10;
 
+	public static final String MIN5 = "min5";
+	public static final String MIN15 = "min15";
+	public static final String MIN30 = "min30";
+	public static final String MIN60 = "min60";
+	public static final String DAY = "day";
+	public static final String WEEK = "week";
+	public static final String MONTH = "month";
+
+	public static final String[] PERIODS = {MONTH, WEEK, DAY,
+			MIN60, MIN30, MIN15, MIN5};
+
 	public final String mName;
 
-	public final ArrayList<StockData> mStockDataList = new ArrayList<>();
-	public final ArrayList<StockData> mDrawVertexList = new ArrayList<>();
-	public final ArrayList<StockData> mDrawDataList = new ArrayList<>();
-	public final ArrayList<StockData> mStrokeVertexList = new ArrayList<>();
-	public final ArrayList<StockData> mStrokeDataList = new ArrayList<>();
-	public final ArrayList<StockData> mSegmentVertexList = new ArrayList<>();
-	public final ArrayList<StockData> mSegmentDataList = new ArrayList<>();
-	public final ArrayList<StockData> mLineVertexList = new ArrayList<>();
-	public final ArrayList<StockData> mLineDataList = new ArrayList<>();
-	public final ArrayList<StockData> mOutlineVertexList = new ArrayList<>();
-	public final ArrayList<StockData> mOutlineDataList = new ArrayList<>();
+	public ArrayList<StockData> mStockDataList = new ArrayList<>();
+	public ArrayList<StockData> mDrawVertexList = new ArrayList<>();
+	public ArrayList<StockData> mDrawDataList = new ArrayList<>();
+	public ArrayList<StockData> mStrokeVertexList = new ArrayList<>();
+	public ArrayList<StockData> mStrokeDataList = new ArrayList<>();
+	public ArrayList<StockData> mSegmentVertexList = new ArrayList<>();
+	public ArrayList<StockData> mSegmentDataList = new ArrayList<>();
+	public ArrayList<StockData> mLineVertexList = new ArrayList<>();
+	public ArrayList<StockData> mLineDataList = new ArrayList<>();
+	public ArrayList<StockData> mOutlineVertexList = new ArrayList<>();
+	public ArrayList<StockData> mOutlineDataList = new ArrayList<>();
+
+	private String mAction = "";
 
 	public Period(String name) {
 		mName = name;
@@ -79,5 +94,21 @@ public class Period {
 				break;
 		}
 		return result;
+	}
+
+	public String getAction() {
+		return mAction;
+	}
+
+	public void setAction(String action) {
+		mAction = action;
+	}
+
+	public void setAction(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+		setAction(cursor.getString(cursor
+				.getColumnIndex(mName)));
 	}
 }

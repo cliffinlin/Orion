@@ -25,6 +25,7 @@ import androidx.annotation.NonNull;
 
 import com.android.orion.R;
 import com.android.orion.chart.StockDataChart;
+import com.android.orion.data.Period;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
@@ -56,7 +57,7 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 
 	public static final int ITEM_VIEW_TYPE_MAIN = 0;
 	public static final int ITEM_VIEW_TYPE_SUB = 1;
-	public static final int LOADER_ID_STOCK_LIST = DatabaseContract.PERIODS.length + 1;
+	public static final int LOADER_ID_STOCK_LIST = Period.PERIODS.length + 1;
 	public static final int REQUEST_CODE_SETTING = 0;
 	public static final int REQUEST_CODE_SETTING_DEBUG_LOOPBACK = 1;
 	public static final int MESSAGE_REFRESH = 0;
@@ -240,7 +241,7 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 					break;
 
 				case REQUEST_CODE_SETTING_DEBUG_LOOPBACK:
-					for (String period : DatabaseContract.PERIODS) {
+					for (String period : Period.PERIODS) {
 						if (Setting.getPeriod(period)) {
 							mDatabaseManager.deleteStockData(mStock.getId(), period);
 						}
@@ -275,7 +276,7 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 		if (id == LOADER_ID_STOCK_LIST) {
 			loader = getStockCursorLoader();
 		} else {
-			loader = getStockDataCursorLoader(DatabaseContract.PERIODS[id]);
+			loader = getStockDataCursorLoader(Period.PERIODS[id]);
 		}
 
 		return loader;
@@ -329,13 +330,13 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 		}
 
 		int selection = 0;
-		for (int i = 0; i < DatabaseContract.PERIODS.length; i++) {
-			if (StockData.getPeriodIndex(DatabaseContract.PERIODS[i]) < StockData.getPeriodIndex(DatabaseContract.COLUMN_DAY)) {
-				if (Setting.getPeriod(DatabaseContract.PERIODS[i])) {
+		for (int i = 0; i < Period.PERIODS.length; i++) {
+			if (StockData.getPeriodIndex(Period.PERIODS[i]) < StockData.getPeriodIndex(DatabaseContract.COLUMN_DAY)) {
+				if (Setting.getPeriod(Period.PERIODS[i])) {
 					selection += 2;
 				}
 			}
-			mStockDataChartList.add(new StockDataChart(mStock, DatabaseContract.PERIODS[i]));
+			mStockDataChartList.add(new StockDataChart(mStock, Period.PERIODS[i]));
 			mStockDataChartItemMainList.add(new StockDataChartItemMain(
 					mStockDataChartList.get(i)));
 			mStockDataChartItemSubList.add(new StockDataChartItemSub(
@@ -356,8 +357,8 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 		}
 
 		mDatabaseManager.getStockById(mStock);
-		for (int i = 0; i < DatabaseContract.PERIODS.length; i++) {
-			if (Setting.getPeriod(DatabaseContract.PERIODS[i])) {
+		for (int i = 0; i < Period.PERIODS.length; i++) {
+			if (Setting.getPeriod(Period.PERIODS[i])) {
 				mLoaderManager.initLoader(i, null, this);
 			}
 		}
@@ -380,8 +381,8 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 		}
 
 		mDatabaseManager.getStockById(mStock);
-		for (int i = 0; i < DatabaseContract.PERIODS.length; i++) {
-			if (Setting.getPeriod(DatabaseContract.PERIODS[i])) {
+		for (int i = 0; i < Period.PERIODS.length; i++) {
+			if (Setting.getPeriod(Period.PERIODS[i])) {
 				mLoaderManager.restartLoader(i, null, this);
 			}
 		}
@@ -658,8 +659,8 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 		mStockDataChartItemList.clear();
 
 		mDatabaseManager.getStockById(mStock);
-		for (int i = 0; i < DatabaseContract.PERIODS.length; i++) {
-			if (Setting.getPeriod(DatabaseContract.PERIODS[i])) {
+		for (int i = 0; i < Period.PERIODS.length; i++) {
+			if (Setting.getPeriod(Period.PERIODS[i])) {
 				mStockDataChartItemMainList.get(i).mStockDataChart.setStock(mStock);
 				mStockDataChartItemList.add(mStockDataChartItemMainList.get(i));
 				mStockDataChartItemList.add(mStockDataChartItemSubList.get(i));

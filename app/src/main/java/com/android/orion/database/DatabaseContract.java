@@ -4,6 +4,8 @@ import android.content.ContentResolver;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
+import com.android.orion.data.Period;
+
 public final class DatabaseContract {
 	public static final String AUTHORITY = "com.android.orion";
 	public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY);
@@ -23,13 +25,13 @@ public final class DatabaseContract {
 	public static final String COLUMN_NET = "net";
 	public static final String COLUMN_VOLUME = "volume";
 	public static final String COLUMN_VALUE = "value";
-	public static final String COLUMN_MIN5 = "min5";
-	public static final String COLUMN_MIN15 = "min15";
-	public static final String COLUMN_MIN30 = "min30";
-	public static final String COLUMN_MIN60 = "min60";
-	public static final String COLUMN_DAY = "day";
-	public static final String COLUMN_WEEK = "week";
-	public static final String COLUMN_MONTH = "month";
+	public static final String COLUMN_MIN5 = Period.MIN5;
+	public static final String COLUMN_MIN15 = Period.MIN15;
+	public static final String COLUMN_MIN30 = Period.MIN30;
+	public static final String COLUMN_MIN60 = Period.MIN60;
+	public static final String COLUMN_DAY = Period.DAY;
+	public static final String COLUMN_WEEK = Period.WEEK;
+	public static final String COLUMN_MONTH = Period.MONTH;
 	public static final String COLUMN_THRESHOLD = "threshold";
 	public static final String COLUMN_STATUS = "status";
 	public static final String COLUMN_OPERATE = "operate";
@@ -100,9 +102,6 @@ public final class DatabaseContract {
 	// http://vip.stock.finance.sina.com.cn/corp/go.php/vISSUE_ShareBonus/stockid/600028.phtml
 	public static final String COLUMN_R_DATE = "r_date";
 	public static final String COLUMN_TIME_TO_MARKET = "time_to_market";
-
-	public static final String[] PERIODS = {COLUMN_MONTH, COLUMN_WEEK, COLUMN_DAY,
-			COLUMN_MIN60, COLUMN_MIN30, COLUMN_MIN15, COLUMN_MIN5};
 
 	public static final String ORDER_BY = " ORDER BY ";
 	public static final String ORDER_ASC = " ASC ";

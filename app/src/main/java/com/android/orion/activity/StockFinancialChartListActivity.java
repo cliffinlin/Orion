@@ -25,6 +25,7 @@ import androidx.annotation.NonNull;
 
 import com.android.orion.R;
 import com.android.orion.chart.StockFinancialChart;
+import com.android.orion.data.Period;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
@@ -285,7 +286,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 
 		int i = 0;
 		mStockFinancialChartList.add(new StockFinancialChart(
-				DatabaseContract.PERIODS[i]));
+				Period.PERIODS[i]));
 		mStockFinancialChartItemMainList.add(new StockFinancialChartItemMain(
 				mStockFinancialChartList.get(i)));
 		mStockFinancialChartItemSubList.add(new StockFinancialChartItemSub(

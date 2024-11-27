@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
+import com.android.orion.data.Period;
 import com.android.orion.setting.Constant;
 import com.android.orion.utility.Utility;
 
@@ -1197,15 +1198,15 @@ public class StockData extends DatabaseTable {
 		boolean result;
 
 		switch (period) {
-			case DatabaseContract.COLUMN_MIN5:
-			case DatabaseContract.COLUMN_MIN15:
-			case DatabaseContract.COLUMN_MIN30:
-			case DatabaseContract.COLUMN_MIN60:
+			case Period.MIN5:
+			case Period.MIN15:
+			case Period.MIN30:
+			case Period.MIN60:
 				result = true;
 				break;
-			case DatabaseContract.COLUMN_DAY:
-			case DatabaseContract.COLUMN_WEEK:
-			case DatabaseContract.COLUMN_MONTH:
+			case Period.DAY:
+			case Period.WEEK:
+			case Period.MONTH:
 			default:
 				result = false;
 				break;
@@ -1224,8 +1225,8 @@ public class StockData extends DatabaseTable {
 			return index;
 		}
 
-		for (int i = 0; i < DatabaseContract.PERIODS.length; i++) {
-			if (TextUtils.equals(period, DatabaseContract.PERIODS[i])) {
+		for (int i = 0; i < Period.PERIODS.length; i++) {
+			if (TextUtils.equals(period, Period.PERIODS[i])) {
 				index = i;
 				break;
 			}
