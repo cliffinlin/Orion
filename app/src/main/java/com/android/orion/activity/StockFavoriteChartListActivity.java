@@ -27,13 +27,11 @@ import com.android.orion.R;
 import com.android.orion.chart.StockDataChart;
 import com.android.orion.data.Period;
 import com.android.orion.database.DatabaseContract;
-import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockDeal;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
-import com.android.orion.utility.Search;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.XAxis.XAxisPosition;
@@ -525,12 +523,12 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 						stockDataChart.mCandleEntryList.add(candleEntry);
 					}
 
-					if (mStockData.vertexOf(StockData.VERTEX_TOP)) {
+					if (mStockData.vertexOf(StockData.VERTEX_TOP_LEVEL_1)) {
 						Entry drawEntry = new Entry(
 								(float) mStockData.getVertexHigh(), index);
 						stockDataChart.mLineList[0].add(drawEntry);
 					} else if (mStockData
-							.vertexOf(StockData.VERTEX_BOTTOM)) {
+							.vertexOf(StockData.VERTEX_BOTTOM_LEVEL_1)) {
 						Entry drawEntry = new Entry(
 								(float) mStockData.getVertexLow(), index);
 						stockDataChart.mLineList[0].add(drawEntry);
@@ -539,55 +537,55 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 					if (index == cursor.getCount() - 1) {
 						float val = 0;
 						if (mStockData
-								.directionOf(StockData.DIRECTION_UP)) {
+								.directionOf(StockData.DIRECTION_UP_LEVEL_1)) {
 							val = (float) mStockData.getHigh();
 						} else if (mStockData
-								.directionOf(StockData.DIRECTION_DOWN)) {
+								.directionOf(StockData.DIRECTION_DOWN_LEVEL_1)) {
 							val = (float) mStockData.getLow();
 						}
 						Entry drawEntry = new Entry(val, index);
 						stockDataChart.mLineList[0].add(drawEntry);
 					}
 
-					if (mStockData.vertexOf(StockData.VERTEX_TOP_STROKE)) {
+					if (mStockData.vertexOf(StockData.VERTEX_TOP_LEVEL_2)) {
 						Entry strokeEntry = new Entry(
 								(float) mStockData.getVertexHigh(), index);
 						stockDataChart.mLineList[1].add(strokeEntry);
 					} else if (mStockData
-							.vertexOf(StockData.VERTEX_BOTTOM_STROKE)) {
+							.vertexOf(StockData.VERTEX_BOTTOM_LEVEL_2)) {
 						Entry strokeEntry = new Entry(
 								(float) mStockData.getVertexLow(), index);
 						stockDataChart.mLineList[1].add(strokeEntry);
 					}
 
-					if (mStockData.vertexOf(StockData.VERTEX_TOP_SEGMENT)) {
+					if (mStockData.vertexOf(StockData.VERTEX_TOP_LEVEL_3)) {
 						Entry segmentEntry = new Entry(
 								(float) mStockData.getVertexHigh(), index);
 						stockDataChart.mLineList[2].add(segmentEntry);
 					} else if (mStockData
-							.vertexOf(StockData.VERTEX_BOTTOM_SEGMENT)) {
+							.vertexOf(StockData.VERTEX_BOTTOM_LEVEL_3)) {
 						Entry segmentEntry = new Entry(
 								(float) mStockData.getVertexLow(), index);
 						stockDataChart.mLineList[2].add(segmentEntry);
 					}
 
-					if (mStockData.vertexOf(StockData.VERTEX_TOP_LINE)) {
+					if (mStockData.vertexOf(StockData.VERTEX_TOP_LEVEL_4)) {
 						Entry lineEntry = new Entry(
 								(float) mStockData.getVertexHigh(), index);
 						stockDataChart.mLineList[3].add(lineEntry);
 					} else if (mStockData
-							.vertexOf(StockData.VERTEX_BOTTOM_LINE)) {
+							.vertexOf(StockData.VERTEX_BOTTOM_LEVEL_4)) {
 						Entry lineEntry = new Entry(
 								(float) mStockData.getVertexLow(), index);
 						stockDataChart.mLineList[3].add(lineEntry);
 					}
 
-					if (mStockData.vertexOf(StockData.VERTEX_TOP_OUTLINE)) {
+					if (mStockData.vertexOf(StockData.VERTEX_TOP_LEVEL_5)) {
 						Entry outlineEntry = new Entry(
 								(float) mStockData.getVertexHigh(), index);
 						stockDataChart.mLineList[4].add(outlineEntry);
 					} else if (mStockData
-							.vertexOf(StockData.VERTEX_BOTTOM_OUTLINE)) {
+							.vertexOf(StockData.VERTEX_BOTTOM_LEVEL_5)) {
 						Entry outlineEntry = new Entry(
 								(float) mStockData.getVertexLow(), index);
 						stockDataChart.mLineList[4].add(outlineEntry);

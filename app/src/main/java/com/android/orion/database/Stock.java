@@ -4,8 +4,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.text.TextUtils;
 
-import androidx.annotation.NonNull;
-
 import com.android.orion.data.Period;
 import com.android.orion.setting.Constant;
 import com.android.orion.utility.Utility;
@@ -1178,19 +1176,19 @@ public class Stock extends DatabaseTable {
 		ArrayList<StockData> result;
 
 		if (TextUtils.equals(period, Period.MIN5)) {
-			result = mMin5.getArrayList(period, type);
+			result = mMin5.getArrayList(type);
 		} else if (TextUtils.equals(period, Period.MIN15)) {
-			result = mMin15.getArrayList(period, type);
+			result = mMin15.getArrayList(type);
 		} else if (TextUtils.equals(period, Period.MIN30)) {
-			result = mMin30.getArrayList(period, type);
+			result = mMin30.getArrayList(type);
 		} else if (TextUtils.equals(period, Period.MIN60)) {
-			result = mMin60.getArrayList(period, type);
+			result = mMin60.getArrayList(type);
 		} else if (TextUtils.equals(period, Period.DAY)) {
-			result = mDay.getArrayList(period, type);
+			result = mDay.getArrayList(type);
 		} else if (TextUtils.equals(period, Period.WEEK)) {
-			result = mWeek.getArrayList(period, type);
+			result = mWeek.getArrayList(type);
 		} else if (TextUtils.equals(period, Period.MONTH)) {
-			result = mMonth.getArrayList(period, type);
+			result = mMonth.getArrayList(type);
 		} else {
 			result = new ArrayList<>();
 		}

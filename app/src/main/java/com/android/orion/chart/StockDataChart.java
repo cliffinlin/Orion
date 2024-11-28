@@ -60,10 +60,10 @@ public class StockDataChart {
 
 	public StockDataChart(Stock stock, String period) {
 		mStock = stock;
+		mPeriod = period;
 		for (int i = 0; i < StockData.LEVEL_MAX; i++) {
 			mLineList[i] = new ArrayList<>();
 		}
-		mPeriod = period;
 	}
 
 	public void setStock(Stock stock) {

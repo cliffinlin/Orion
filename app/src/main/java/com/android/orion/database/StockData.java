@@ -10,7 +10,6 @@ import com.android.orion.data.Period;
 import com.android.orion.setting.Constant;
 import com.android.orion.utility.Utility;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 
@@ -28,8 +27,8 @@ public class StockData extends DatabaseTable {
 	public static final String MARK_G = "G";
 	public static final String MARK_D = "D";
 
-//    public static final String MARK_HIGH = "H";
-//    public static final String MARK_LOW = "L";
+	public static final String MARK_HIGH = "H";
+	public static final String MARK_LOW = "L";
 
 	public static final char MARK_ADD = '+';
 	public static final char MARK_MINUS = '-';
@@ -47,68 +46,71 @@ public class StockData extends DatabaseTable {
 	public static final String NAME_NATURAL_REACTION = "React";
 
 	public static final int LEVEL_NONE = 0;
-	public static final int LEVEL_DRAW = 1;
-	public static final int LEVEL_STROKE = 2;
-	public static final int LEVEL_SEGMENT = 3;
-	public static final int LEVEL_LINE = 4;
-	public static final int LEVEL_OUTLINE = 5;
-	public static final int LEVEL_MAX = LEVEL_OUTLINE;
+	public static final int LEVEL_1 = 1;//DRAW
+	public static final int LEVEL_2 = 2;//STROKE
+	public static final int LEVEL_3 = 3;//SEGMENT
+	public static final int LEVEL_4 = 4;//LINE
+	public static final int LEVEL_5 = 5;//OUTLINE
+	public static final int LEVEL_6 = 6;//
+	public static final int LEVEL_MAX = LEVEL_6;
 
 	public static final int DIRECTION_NONE = 0;
-	public static final int DIRECTION_UP = 1 << 0;
-	public static final int DIRECTION_DOWN = 1 << 1;
-	public static final int DIRECTION_UP_STROKE = 1 << 2;
-	public static final int DIRECTION_DOWN_STROKE = 1 << 3;
-	public static final int DIRECTION_UP_SEGMENT = 1 << 4;
-	public static final int DIRECTION_DOWN_SEGMENT = 1 << 5;
+	public static final int DIRECTION_UP_LEVEL_1 = 1 << 0;
+	public static final int DIRECTION_DOWN_LEVEL_1 = 1 << 1;
+	public static final int DIRECTION_UP_LEVEL_2 = 1 << 2;
+	public static final int DIRECTION_DOWN_LEVEL_2 = 1 << 3;
+	public static final int DIRECTION_UP_LEVEL_3 = 1 << 4;
+	public static final int DIRECTION_DOWN_LEVEL_3 = 1 << 5;
+	public static final int DIRECTION_UP_LEVEL_4 = 1 << 6;
+	public static final int DIRECTION_DOWN_LEVEL_4 = 1 << 7;
+	public static final int DIRECTION_UP_LEVEL_5 = 1 << 8;
+	public static final int DIRECTION_DOWN_LEVEL_5 = 1 << 9;
+	public static final int DIRECTION_UP_LEVEL_6 = 1 << 10;
+	public static final int DIRECTION_DOWN_LEVEL_6 = 1 << 11;
 
 	public static final int VERTEX_NONE = 0;
-	public static final int VERTEX_TOP = 1 << 0;
-	public static final int VERTEX_BOTTOM = 1 << 1;
-	public static final int VERTEX_TOP_STROKE = 1 << 2;
-	public static final int VERTEX_BOTTOM_STROKE = 1 << 3;
-	public static final int VERTEX_TOP_SEGMENT = 1 << 4;
-	public static final int VERTEX_BOTTOM_SEGMENT = 1 << 5;
-	public static final int VERTEX_TOP_LINE = 1 << 6;
-	public static final int VERTEX_BOTTOM_LINE = 1 << 7;
-	public static final int VERTEX_TOP_OUTLINE = 1 << 8;
-	public static final int VERTEX_BOTTOM_OUTLINE = 1 << 9;
+	public static final int VERTEX_TOP_LEVEL_1 = 1 << 0;
+	public static final int VERTEX_BOTTOM_LEVEL_1 = 1 << 1;
+	public static final int VERTEX_TOP_LEVEL_2 = 1 << 2;
+	public static final int VERTEX_BOTTOM_LEVEL_2 = 1 << 3;
+	public static final int VERTEX_TOP_LEVEL_3 = 1 << 4;
+	public static final int VERTEX_BOTTOM_LEVEL_3 = 1 << 5;
+	public static final int VERTEX_TOP_LEVEL_4 = 1 << 6;
+	public static final int VERTEX_BOTTOM_LEVEL_4 = 1 << 7;
+	public static final int VERTEX_TOP_LEVEL_5 = 1 << 8;
+	public static final int VERTEX_BOTTOM_LEVEL_5 = 1 << 9;
+	public static final int VERTEX_TOP_LEVEL_6 = 1 << 10;
+	public static final int VERTEX_BOTTOM_LEVEL_6 = 1 << 11;
 
 	public static final int VERTEX_TYPING_SIZE = 3;
-
-	public static final int POSITION_ABOVE = 1;
-	public static final int POSITION_NONE = 0;
-	public static final int POSITION_BELOW = -1;
 
 	public static final int THRESHOLD_UPWARD_TREND = 2;
 	public static final int THRESHOLD_NATURAL_RALLY = 1;
 	public static final int THRESHOLD_NONE = 0;
 	public static final int THRESHOLD_NATURAL_REACTION = -1;
 	public static final int THRESHOLD_DOWNWARD_TREND = -2;
-	public static Comparator<StockData> comparator = new Comparator<StockData>() {
 
-		@Override
-		public int compare(StockData arg0, StockData arg1) {
-			Calendar calendar0;
-			Calendar calendar1;
+	public static Comparator<StockData> comparator = (arg0, arg1) -> {
+		Calendar calendar0;
+		Calendar calendar1;
 
-			if (arg0 == null || arg1 == null) {
-				return 0;
-			}
+		if (arg0 == null || arg1 == null) {
+			return 0;
+		}
 
-			calendar0 = Utility.getCalendar(arg0.getDateTime(),
-					Utility.CALENDAR_DATE_TIME_FORMAT);
-			calendar1 = Utility.getCalendar(arg1.getDateTime(),
-					Utility.CALENDAR_DATE_TIME_FORMAT);
-			if (calendar0.before(calendar1)) {
-				return -1;
-			} else if (calendar0.after(calendar1)) {
-				return 1;
-			} else {
-				return 0;
-			}
+		calendar0 = Utility.getCalendar(arg0.getDateTime(),
+				Utility.CALENDAR_DATE_TIME_FORMAT);
+		calendar1 = Utility.getCalendar(arg1.getDateTime(),
+				Utility.CALENDAR_DATE_TIME_FORMAT);
+		if (calendar0.before(calendar1)) {
+			return -1;
+		} else if (calendar0.after(calendar1)) {
+			return 1;
+		} else {
+			return 0;
 		}
 	};
+
 	private long mStockId;
 	private String mSE;
 	private String mCode;
@@ -1020,13 +1022,13 @@ public class StockData extends DatabaseTable {
 				&& (getVertexLow() > prev.getVertexLow())) {
 			if ((getVertexHigh() > next.getVertexHigh())
 					&& (getVertexLow() > next.getVertexLow())) {
-				vertex = StockData.VERTEX_TOP;
+				vertex = StockData.VERTEX_TOP_LEVEL_1;
 			}
 		} else if ((getVertexHigh() < prev.getVertexHigh())
 				&& (getVertexLow() < prev.getVertexLow())) {
 			if ((getVertexHigh() < next.getVertexHigh())
 					&& (getVertexLow() < next.getVertexLow())) {
-				vertex = StockData.VERTEX_BOTTOM;
+				vertex = StockData.VERTEX_BOTTOM_LEVEL_1;
 			}
 		} else {
 			vertex = StockData.VERTEX_NONE;
@@ -1044,10 +1046,10 @@ public class StockData extends DatabaseTable {
 
 		if ((getVertexHigh() >= stockData.getVertexHigh())
 				&& (getVertexLow() > stockData.getVertexLow())) {
-			result = DIRECTION_UP;
+			result = DIRECTION_UP_LEVEL_1;
 		} else if ((getVertexHigh() < stockData.getVertexHigh())
 				&& (getVertexLow() <= stockData.getVertexLow())) {
-			result = DIRECTION_DOWN;
+			result = DIRECTION_DOWN_LEVEL_1;
 		} else {
 			result = DIRECTION_NONE;
 		}
@@ -1056,10 +1058,10 @@ public class StockData extends DatabaseTable {
 	}
 
 	public void merge(int directionType, StockData stockData) {
-		if (directionType == DIRECTION_UP) {
+		if (directionType == DIRECTION_UP_LEVEL_1) {
 			setVertexHigh(Math.max(getVertexHigh(), stockData.getVertexHigh()));
 			setVertexLow(Math.max(getVertexLow(), stockData.getVertexLow()));
-		} else if (directionType == DIRECTION_DOWN) {
+		} else if (directionType == DIRECTION_DOWN_LEVEL_1) {
 			setVertexHigh(Math.min(getVertexHigh(), stockData.getVertexHigh()));
 			setVertexLow(Math.min(getVertexLow(), stockData.getVertexLow()));
 		} else {
@@ -1097,9 +1099,9 @@ public class StockData extends DatabaseTable {
 	public void setupChange() {
 		mChange = 0;
 
-		if (directionOf(DIRECTION_UP)) {
+		if (directionOf(DIRECTION_UP_LEVEL_1)) {
 			mChange = mVertexHigh - mVertexLow;
-		} else if (directionOf(DIRECTION_DOWN)) {
+		} else if (directionOf(DIRECTION_DOWN_LEVEL_1)) {
 			mChange = mVertexLow - mVertexHigh;
 		} else {
 			mChange = mVertexHigh - mVertexLow;
@@ -1115,9 +1117,9 @@ public class StockData extends DatabaseTable {
 			return;
 		}
 
-		if (directionOf(DIRECTION_UP)) {
+		if (directionOf(DIRECTION_UP_LEVEL_1)) {
 			mNet = 100.0 * mChange / mVertexLow;
-		} else if (directionOf(DIRECTION_DOWN)) {
+		} else if (directionOf(DIRECTION_DOWN_LEVEL_1)) {
 			mNet = 100.0 * mChange / mVertexHigh;
 		} else {
 			mNet = 100.0 * mChange / mVertexLow;
