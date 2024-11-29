@@ -2,7 +2,6 @@ package com.android.orion.analyzer;
 
 import com.android.orion.database.StockData;
 import com.android.orion.utility.Logger;
-import com.android.orion.utility.Utility;
 
 import java.util.ArrayList;
 
@@ -37,7 +36,7 @@ public class StockVertexAnalyzer {
 		}
 
 		size = dataList.size();
-		if (size < StockData.VERTEX_TYPING_SIZE) {
+		if (size < StockData.VERTEX_SIZE) {
 			return;
 		}
 
@@ -149,7 +148,7 @@ public class StockVertexAnalyzer {
 		}
 
 		size = dataList.size();
-		if (size < StockData.VERTEX_TYPING_SIZE) {
+		if (size < StockData.VERTEX_SIZE) {
 			return;
 		}
 
@@ -250,7 +249,7 @@ public class StockVertexAnalyzer {
 			return;
 		}
 
-		if (stockDataList.size() < StockData.VERTEX_TYPING_SIZE) {
+		if (stockDataList.size() < StockData.VERTEX_SIZE) {
 			return;
 		}
 
@@ -295,7 +294,6 @@ public class StockVertexAnalyzer {
 			stockData.setDirection(direction);
 			stockData.setupChange();
 			stockData.setupNet();
-			stockData.setupVelocity();
 			stockData.setLevel(level);
 
 			dataList.add(stockData);
@@ -356,7 +354,7 @@ public class StockVertexAnalyzer {
 			return;
 		}
 
-		if (stockDataList.size() < StockData.VERTEX_TYPING_SIZE) {
+		if (stockDataList.size() < StockData.VERTEX_SIZE) {
 			return;
 		}
 
@@ -488,9 +486,9 @@ public class StockVertexAnalyzer {
 			actionString = String.valueOf(i);
 
 			if (data.getNet() > 0) {
-				actionString += " +" + data.getNet() + " " + Utility.Round(data.getVelocity());
+				actionString += " +" + data.getNet();
 			} else if (data.getNet() < 0) {
-				actionString += " " + data.getNet() + " " + Utility.Round(data.getVelocity());
+				actionString += " " + data.getNet();
 			}
 
 			stockData.setAction(actionString);

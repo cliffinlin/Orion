@@ -1,12 +1,10 @@
-package com.android.orion.indicator
+package com.android.orion.analyzer
 
 import com.android.orion.data.Period
-import com.android.orion.database.DatabaseContract
 import com.android.orion.database.StockData
 import com.android.orion.setting.Constant
-import com.android.orion.setting.Setting
 
-object Macd {
+object MacdAnalyzer {
 
     private var mPeriod = ""
     private var mAverage5 = 0
@@ -168,7 +166,7 @@ object Macd {
     fun calculate(period: String, stockDataList: ArrayList<StockData>) {
         init(period, stockDataList)
 
-        if (mPriceList.size < 1) {
+        if (mPriceList.size < StockData.VERTEX_SIZE) {
             return
         }
 

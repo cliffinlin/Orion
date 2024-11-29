@@ -54,7 +54,7 @@ public class StockKeyAnalyzer {
 		}
 
 		size = dataList.size();
-		if (size < StockData.VERTEX_TYPING_SIZE) {
+		if (size < StockData.VERTEX_SIZE) {
 			return;
 		}
 

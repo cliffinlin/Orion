@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.android.orion"
     android:versionCode="518"
-    android:versionName="V1.1.36_R20241128">
+    android:versionName="V1.1.36_R20241129">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />

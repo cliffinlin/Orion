@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
+import com.android.orion.data.Macd;
 import com.android.orion.data.Period;
 import com.android.orion.setting.Constant;
 import com.android.orion.utility.Utility;
@@ -82,7 +83,7 @@ public class StockData extends DatabaseTable {
 	public static final int VERTEX_TOP_LEVEL_6 = 1 << 10;
 	public static final int VERTEX_BOTTOM_LEVEL_6 = 1 << 11;
 
-	public static final int VERTEX_TYPING_SIZE = 3;
+	public static final int VERTEX_SIZE = 3;
 
 	public static final int THRESHOLD_UPWARD_TREND = 2;
 	public static final int THRESHOLD_NATURAL_RALLY = 1;
@@ -129,12 +130,7 @@ public class StockData extends DatabaseTable {
 	private int mVertex;
 	private double mVertexLow;
 	private double mVertexHigh;
-	private double mAverage5;
-	private double mAverage10;
-	private double mDIF;
-	private double mDEA;
-	private double mHistogram;
-	private double mVelocity;
+	private final Macd mMacd = new Macd();
 	private String mAction;
 	private double mRoi;
 	private double mPe;
@@ -196,12 +192,6 @@ public class StockData extends DatabaseTable {
 		mVertex = VERTEX_NONE;
 		mVertexLow = 0;
 		mVertexHigh = 0;
-		mAverage5 = 0;
-		mAverage10 = 0;
-		mDIF = 0;
-		mDEA = 0;
-		mHistogram = 0;
-		mVelocity = 0;
 		mAction = "";
 
 		mRoi = 0;
@@ -241,12 +231,12 @@ public class StockData extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_VERTEX, mVertex);
 		contentValues.put(DatabaseContract.COLUMN_VERTEX_LOW, mVertexLow);
 		contentValues.put(DatabaseContract.COLUMN_VERTEX_HIGH, mVertexHigh);
-		contentValues.put(DatabaseContract.COLUMN_AVERAGE5, mAverage5);
-		contentValues.put(DatabaseContract.COLUMN_AVERAGE10, mAverage10);
-		contentValues.put(DatabaseContract.COLUMN_DIF, mDIF);
-		contentValues.put(DatabaseContract.COLUMN_DEA, mDEA);
-		contentValues.put(DatabaseContract.COLUMN_HISTOGRAM, mHistogram);
-		contentValues.put(DatabaseContract.COLUMN_VELOCITY, mVelocity);
+		contentValues.put(DatabaseContract.COLUMN_AVERAGE5, mMacd.getAverage5());
+		contentValues.put(DatabaseContract.COLUMN_AVERAGE10, mMacd.getAverage10());
+		contentValues.put(DatabaseContract.COLUMN_DIF, mMacd.getDIF());
+		contentValues.put(DatabaseContract.COLUMN_DEA, mMacd.getDEA());
+		contentValues.put(DatabaseContract.COLUMN_HISTOGRAM, mMacd.getHistogram());
+		contentValues.put(DatabaseContract.COLUMN_VELOCITY, mMacd.getVelocity());
 		contentValues.put(DatabaseContract.COLUMN_ACTION, mAction);
 
 		contentValues.put(DatabaseContract.COLUMN_ROI, mRoi);
@@ -289,12 +279,7 @@ public class StockData extends DatabaseTable {
 		setVertex(stockData.mVertex);
 		setVertexLow(stockData.mVertexLow);
 		setVertexHigh(stockData.mVertexHigh);
-		setAverage5(stockData.mAverage5);
-		setAverage10(stockData.mAverage10);
-		setDIF(stockData.mDIF);
-		setDEA(stockData.mDEA);
-		setHistogram(stockData.mHistogram);
-		setVelocity(stockData.mVelocity);
+		mMacd.set(stockData.mMacd);
 		setAction(stockData.mAction);
 
 		setRoi(stockData.mRoi);
@@ -340,12 +325,7 @@ public class StockData extends DatabaseTable {
 		setVertex(cursor);
 		setVertexLow(cursor);
 		setVertexHigh(cursor);
-		setAverage5(cursor);
-		setAverage10(cursor);
-		setDIF(cursor);
-		setDEA(cursor);
-		setHistogram(cursor);
-		setVelocity(cursor);
+		mMacd.set(cursor);
 		setAction(cursor);
 
 		setRoi(cursor);
@@ -673,106 +653,8 @@ public class StockData extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_VERTEX_HIGH)));
 	}
 
-	public double getAverage5() {
-		return mAverage5;
-	}
-
-	public void setAverage5(double average) {
-		mAverage5 = average;
-	}
-
-	void setAverage5(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setAverage5(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_AVERAGE5)));
-	}
-
-	public double getAverage10() {
-		return mAverage10;
-	}
-
-	public void setAverage10(double average) {
-		mAverage10 = average;
-	}
-
-	void setAverage10(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setAverage10(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_AVERAGE10)));
-	}
-
-	public double getDIF() {
-		return mDIF;
-	}
-
-	public void setDIF(double dif) {
-		mDIF = dif;
-	}
-
-	void setDIF(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setDIF(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_DIF)));
-	}
-
-	public double getDEA() {
-		return mDEA;
-	}
-
-	public void setDEA(double dea) {
-		mDEA = dea;
-	}
-
-	void setDEA(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setDEA(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_DEA)));
-	}
-
-	public double getHistogram() {
-		return mHistogram;
-	}
-
-	public void setHistogram(double histogram) {
-		mHistogram = histogram;
-	}
-
-	void setHistogram(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setHistogram(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_HISTOGRAM)));
-	}
-
-	public double getVelocity() {
-		return mVelocity;
-	}
-
-	public void setVelocity(double velocity) {
-		mVelocity = velocity;
-	}
-
-	void setVelocity(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setVelocity(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_VELOCITY)));
+	public Macd getMacd() {
+		return mMacd;
 	}
 
 	public String getAction() {
@@ -1126,20 +1008,6 @@ public class StockData extends DatabaseTable {
 		}
 
 		mNet = Utility.Round(mNet);
-	}
-
-	public void setupVelocity() {
-		mVelocity = 0;
-		int dt = 0;
-
-		dt = getIndexEnd() - getIndexStart();
-		if (dt == 0) {
-			return;
-		}
-
-		mVelocity = mChange / dt;
-
-		mVelocity = Utility.Round(mVelocity);
 	}
 
 	public StockData fromString(String string) {

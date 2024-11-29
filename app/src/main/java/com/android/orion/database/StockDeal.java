@@ -507,7 +507,7 @@ public class StockDeal extends DatabaseTable {
 		double dividend = 0;
 		double result = 0;
 
-		if (shareBonusList == null || shareBonusList.size() < StockData.VERTEX_TYPING_SIZE) {
+		if (shareBonusList == null || shareBonusList.size() < StockData.VERTEX_SIZE) {
 			return result;
 		}
 

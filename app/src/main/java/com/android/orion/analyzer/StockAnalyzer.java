@@ -20,7 +20,6 @@ import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockFinancial;
 import com.android.orion.database.TotalShare;
-import com.android.orion.indicator.Macd;
 import com.android.orion.manager.DatabaseManager;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
@@ -82,9 +81,8 @@ public class StockAnalyzer {
 		try {
 			setupStockShareBonus(stock);
 			setupStockFinancial(stock);
-
 			mDatabaseManager.loadStockDataList(stock, period, stockDataList);
-			setupMACD(stock, period, stockDataList);
+			analyzeMacd(period, stockDataList);
 			analyzeStockData(stock, period, stockDataList,
 					drawVertexList, drawDataList,
 					strokeVertexList, strokeDataList,
@@ -448,44 +446,19 @@ public class StockAnalyzer {
 		}
 	}
 
-	private void setupMACD(Stock stock, String period, ArrayList<StockData> stockDataList) {
-		int size = 0;
-
-		double average5 = 0;
-		double average10 = 0;
-		double dif = 0;
-		double dea = 0;
-		double histogram = 0;
-		double velocity = 0;
-
-		if (stock == null) {
+	private void analyzeMacd(String period, ArrayList<StockData> stockDataList) {
+		if (stockDataList == null || stockDataList.size() < StockData.VERTEX_SIZE) {
 			return;
 		}
-
-		if (stockDataList == null) {
-			return;
-		}
-
-		size = stockDataList.size();
-		if (size < StockData.VERTEX_TYPING_SIZE) {
-			return;
-		}
-
-		Macd.calculate(period, stockDataList);
-		for (int i = 0; i < size; i++) {
-			average5 = Macd.getEMAAverage5List().get(i);
-			average10 = Macd.getEMAAverage10List().get(i);
-			dif = Macd.getDIFList().get(i);
-			dea = Macd.getDEAList().get(i);
-			histogram = Macd.getHistogramList().get(i);
-			velocity = Macd.getVelocityList().get(i);
-
-			stockDataList.get(i).setAverage5(average5);
-			stockDataList.get(i).setAverage10(average10);
-			stockDataList.get(i).setDIF(dif);
-			stockDataList.get(i).setDEA(dea);
-			stockDataList.get(i).setHistogram(histogram);
-			stockDataList.get(i).setVelocity(velocity);
+		MacdAnalyzer.calculate(period, stockDataList);
+		for (int i = 0; i < stockDataList.size(); i++) {
+			stockDataList.get(i).getMacd().set(
+					MacdAnalyzer.getEMAAverage5List().get(i),
+					MacdAnalyzer.getEMAAverage10List().get(i),
+					MacdAnalyzer.getDIFList().get(i),
+					MacdAnalyzer.getDEAList().get(i),
+					MacdAnalyzer.getHistogramList().get(i),
+					MacdAnalyzer.getVelocityList().get(i));
 		}
 	}
 
@@ -567,19 +540,19 @@ public class StockAnalyzer {
 			return;
 		}
 
-		if (stockDataList.size() < StockData.VERTEX_TYPING_SIZE) {
+		if (stockDataList.size() < StockData.VERTEX_SIZE) {
 			return;
 		}
 
-		if (drawDataList.size() < StockData.VERTEX_TYPING_SIZE) {
+		if (drawDataList.size() < StockData.VERTEX_SIZE) {
 			return;
 		}
 
-		if (strokeDataList.size() < StockData.VERTEX_TYPING_SIZE) {
+		if (strokeDataList.size() < StockData.VERTEX_SIZE) {
 			return;
 		}
 
-		if (segmentDataList.size() < StockData.VERTEX_TYPING_SIZE) {
+		if (segmentDataList.size() < StockData.VERTEX_SIZE) {
 			return;
 		}
 
@@ -650,9 +623,9 @@ public class StockAnalyzer {
 			}
 		}
 
-		if (stockData.getVelocity() > 0) {
+		if (stockData.getMacd().getVelocity() > 0) {
 			action += StockData.MARK_ADD;
-		} else if (stockData.getVelocity() < 0) {
+		} else if (stockData.getMacd().getVelocity() < 0) {
 			action += StockData.MARK_MINUS;
 		}
 
@@ -703,11 +676,11 @@ public class StockAnalyzer {
 		StockData drawData1;
 		StockData drawData2;
 
-		if ((stockDataList == null) || (stockDataList.size() < 2 * StockData.VERTEX_TYPING_SIZE)) {
+		if ((stockDataList == null) || (stockDataList.size() < 2 * StockData.VERTEX_SIZE)) {
 			return result;
 		}
 
-		if ((drawDataList == null) || (drawDataList.size() < 2 * StockData.VERTEX_TYPING_SIZE)) {
+		if ((drawDataList == null) || (drawDataList.size() < 2 * StockData.VERTEX_SIZE)) {
 			return result;
 		}
 
@@ -757,15 +730,15 @@ public class StockAnalyzer {
 		StockData brokenStockData;
 
 		if ((vertexList == null)
-				|| (vertexList.size() < 2 * StockData.VERTEX_TYPING_SIZE + 1)) {
+				|| (vertexList.size() < 2 * StockData.VERTEX_SIZE + 1)) {
 			return result;
 		}
 
-		if ((strokeDataList == null) || (strokeDataList.size() < 2 * StockData.VERTEX_TYPING_SIZE)) {
+		if ((strokeDataList == null) || (strokeDataList.size() < 2 * StockData.VERTEX_SIZE)) {
 			return result;
 		}
 
-		if ((segmentDataList == null) || (segmentDataList.size() < 2 * StockData.VERTEX_TYPING_SIZE)) {
+		if ((segmentDataList == null) || (segmentDataList.size() < 2 * StockData.VERTEX_SIZE)) {
 			return result;
 		}
 
@@ -824,15 +797,15 @@ public class StockAnalyzer {
 		StockData brokenStockData;
 
 		if ((vertexList == null)
-				|| (vertexList.size() < 2 * StockData.VERTEX_TYPING_SIZE + 1)) {
+				|| (vertexList.size() < 2 * StockData.VERTEX_SIZE + 1)) {
 			return result;
 		}
 
-		if ((strokeDataList == null) || (strokeDataList.size() < 2 * StockData.VERTEX_TYPING_SIZE)) {
+		if ((strokeDataList == null) || (strokeDataList.size() < 2 * StockData.VERTEX_SIZE)) {
 			return result;
 		}
 
-		if ((segmentDataList == null) || (segmentDataList.size() < 2 * StockData.VERTEX_TYPING_SIZE)) {
+		if ((segmentDataList == null) || (segmentDataList.size() < 2 * StockData.VERTEX_SIZE)) {
 			return result;
 		}
 

@@ -593,31 +593,31 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 
 					if (Setting.getDisplayCandle()) {
 						Entry average5Entry = new Entry(
-								(float) mStockData.getAverage5(), index);
+								(float) mStockData.getMacd().getAverage5(), index);
 						stockDataChart.mAverage5EntryList.add(average5Entry);
 
 						Entry average10Entry = new Entry(
-								(float) mStockData.getAverage10(), index);
+								(float) mStockData.getMacd().getAverage10(), index);
 						stockDataChart.mAverage10EntryList.add(average10Entry);
 					}
 
 					stockDataChart.setMainChartYMinMax(index, stockDataChart.mLineList[0], stockDataChart.mLineList[1], stockDataChart.mLineList[2]);
 
-					Entry difEntry = new Entry((float) mStockData.getDIF(),
+					Entry difEntry = new Entry((float) mStockData.getMacd().getDIF(),
 							index);
 					stockDataChart.mDIFEntryList.add(difEntry);
 
-					Entry deaEntry = new Entry((float) mStockData.getDEA(),
+					Entry deaEntry = new Entry((float) mStockData.getMacd().getDEA(),
 							index);
 					stockDataChart.mDEAEntryList.add(deaEntry);
 
 					BarEntry histogramBarEntry = new BarEntry(
-							(float) mStockData.getHistogram(), index);
+							(float) mStockData.getMacd().getHistogram(), index);
 					stockDataChart.mHistogramEntryList.add(histogramBarEntry);
 
 					if (!TextUtils.isEmpty(mStock.getOperate()) && mStockData.isMinutePeriod()) {
 						Entry velocityEntry = new Entry(
-								(float) mStockData.getVelocity(), index);
+								(float) mStockData.getMacd().getVelocity(), index);
 						stockDataChart.mVelocityEntryList.add(velocityEntry);
 					}
 
