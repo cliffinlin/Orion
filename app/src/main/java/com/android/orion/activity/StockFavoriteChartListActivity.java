@@ -515,10 +515,10 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 
 					if (Setting.getDisplayCandle()) {
 						CandleEntry candleEntry = new CandleEntry(index,
-								(float) mStockData.getHigh(),
-								(float) mStockData.getLow(),
-								(float) mStockData.getOpen(),
-								(float) mStockData.getClose(),
+								(float) mStockData.getCandlestickChart().getHigh(),
+								(float) mStockData.getCandlestickChart().getLow(),
+								(float) mStockData.getCandlestickChart().getOpen(),
+								(float) mStockData.getCandlestickChart().getClose(),
 								mStockData.getAction());
 						stockDataChart.mCandleEntryList.add(candleEntry);
 					}
@@ -538,10 +538,10 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 						float val = 0;
 						if (mStockData
 								.directionOf(StockData.DIRECTION_UP_LEVEL_1)) {
-							val = (float) mStockData.getHigh();
+							val = (float) mStockData.getCandlestickChart().getHigh();
 						} else if (mStockData
 								.directionOf(StockData.DIRECTION_DOWN_LEVEL_1)) {
-							val = (float) mStockData.getLow();
+							val = (float) mStockData.getCandlestickChart().getLow();
 						}
 						Entry drawEntry = new Entry(val, index);
 						stockDataChart.mLineList[0].add(drawEntry);

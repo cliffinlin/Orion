@@ -391,8 +391,8 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 				mDatabaseManager.updateStock(index, index.getContentValues());
 
 				if (TextUtils.equals(period, Period.DAY) && (indexStockDataList.size() > 1)) {
-					double prevPrice = indexStockDataList.get(indexStockDataList.size() - 2).getClose();
-					double price = indexStockDataList.get(indexStockDataList.size() - 1).getClose();
+					double prevPrice = indexStockDataList.get(indexStockDataList.size() - 2).getCandlestickChart().getClose();
+					double price = indexStockDataList.get(indexStockDataList.size() - 1).getCandlestickChart().getClose();
 					double net = 0;
 					if (prevPrice > 0) {
 						net = 100.0 * (price - prevPrice) / prevPrice;
@@ -511,27 +511,27 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			StockData stockData = stockDataList.get(i);
 
 			if (i == stockDataList.size() - 1) {
-				high = stockData.getHigh();
-				low = stockData.getLow();
+				high = stockData.getCandlestickChart().getHigh();
+				low = stockData.getCandlestickChart().getLow();
 
 				result.setDate(stockData.getDate());
 				result.setTime(stockData.getTime());
 			}
 
-			result.setOpen(stockData.getOpen());
+			result.getCandlestickChart().setOpen(stockData.getCandlestickChart().getOpen());
 
-			if (stockData.getHigh() > high) {
-				high = stockData.getHigh();
+			if (stockData.getCandlestickChart().getHigh() > high) {
+				high = stockData.getCandlestickChart().getHigh();
 			}
-			result.setHigh(high);
+			result.getCandlestickChart().setHigh(high);
 
-			if (stockData.getLow() < low) {
-				low = stockData.getLow();
+			if (stockData.getCandlestickChart().getLow() < low) {
+				low = stockData.getCandlestickChart().getLow();
 			}
-			result.setLow(low);
+			result.getCandlestickChart().setLow(low);
 
 			if (i == stockDataList.size() - 1) {
-				result.setClose(stockData.getClose());
+				result.getCandlestickChart().setClose(stockData.getCandlestickChart().getClose());
 			}
 		}
 

@@ -130,7 +130,7 @@ object MacdAnalyzer {
         mVelocityList.clear()
         mAccelerationList.clear()
         for (i in 0 until stockDataList.size) {
-            mPriceList.add(stockDataList[i].close)
+            mPriceList.add(stockDataList[i].getCandlestickChart().close)
         }
     }
 

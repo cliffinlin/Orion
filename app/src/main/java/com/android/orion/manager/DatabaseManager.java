@@ -566,7 +566,7 @@ public class DatabaseManager implements StockListener {
 
 					if (loopback) {
 						if (stockData.getCalendar().after(calendar)) {
-							stock.setPrice(stockData.getClose());
+							stock.setPrice(stockData.getCandlestickChart().getClose());
 							break;
 						}
 					}

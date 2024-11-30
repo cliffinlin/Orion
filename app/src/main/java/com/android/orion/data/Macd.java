@@ -12,9 +12,6 @@ public class Macd {
 	private double mHistogram;
 	private double mVelocity;
 
-	public Macd() {
-	}
-
 	public void set(Macd macd) {
 		if (macd == null) {
 			return;

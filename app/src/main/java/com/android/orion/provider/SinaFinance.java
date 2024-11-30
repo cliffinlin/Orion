@@ -845,13 +845,13 @@ public class SinaFinance extends StockDataProvider {
 						}
 					}
 
-					stockData.setOpen(jsonObject.getDouble("open"));
-					stockData.setClose(jsonObject.getDouble("close"));
-					stockData.setHigh(jsonObject.getDouble("high"));
-					stockData.setLow(jsonObject.getDouble("low"));
+					stockData.getCandlestickChart().setOpen(jsonObject.getDouble("open"));
+					stockData.getCandlestickChart().setClose(jsonObject.getDouble("close"));
+					stockData.getCandlestickChart().setHigh(jsonObject.getDouble("high"));
+					stockData.getCandlestickChart().setLow(jsonObject.getDouble("low"));
 
-					stockData.setVertexHigh(stockData.getHigh());
-					stockData.setVertexLow(stockData.getLow());
+					stockData.setVertexHigh(stockData.getCandlestickChart().getHigh());
+					stockData.setVertexLow(stockData.getCandlestickChart().getLow());
 
 					if (bulkInsert) {
 						stockData.setCreated(Utility.getCurrentDateTimeString());
@@ -1064,13 +1064,13 @@ public class SinaFinance extends StockDataProvider {
 				}
 			}
 
-			stockData.setOpen(Double.parseDouble(stockInfo[1]));
-			stockData.setClose(Double.parseDouble(stockInfo[3]));
-			stockData.setHigh(Double.parseDouble(stockInfo[4]));
-			stockData.setLow(Double.parseDouble(stockInfo[5]));
+			stockData.getCandlestickChart().setOpen(Double.parseDouble(stockInfo[1]));
+			stockData.getCandlestickChart().setClose(Double.parseDouble(stockInfo[3]));
+			stockData.getCandlestickChart().setHigh(Double.parseDouble(stockInfo[4]));
+			stockData.getCandlestickChart().setLow(Double.parseDouble(stockInfo[5]));
 
-			stockData.setVertexHigh(stockData.getHigh());
-			stockData.setVertexLow(stockData.getLow());
+			stockData.setVertexHigh(stockData.getCandlestickChart().getHigh());
+			stockData.setVertexLow(stockData.getCandlestickChart().getLow());
 
 			stockData.setDate(stockInfo[30]);
 			if (stockData.isMinutePeriod()) {
@@ -1092,10 +1092,9 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		StopWatch.stop();
-		Log.d(stock.getName() + " "
-				+ stockData.getDate() + " " + stockData.getTime() + " "
-				+ stockData.getOpen() + " " + stockData.getClose() + " "
-				+ stockData.getHigh() + " " + stockData.getLow() + " "
+		Log.d(stock.getName() + Constant.TAB
+				+ stockData.getDate() + Constant.TAB + stockData.getTime() + Constant.TAB
+				+ stockData.getCandlestickChart().toString()
 				+ StopWatch.getInterval() + "s");
 	}
 

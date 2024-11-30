@@ -386,13 +386,13 @@ public class StockVertexAnalyzer {
 			}
 
 			if (strokeTop != null) {
-				if (stockData.getHigh() > strokeTop.getHigh()) {
+				if (stockData.getCandlestickChart().getHigh() > strokeTop.getCandlestickChart().getHigh()) {
 					directionStroke = StockData.DIRECTION_UP_LEVEL_2;
 				}
 			}
 
 			if (strokeBottom != null) {
-				if (stockData.getLow() < strokeBottom.getLow()) {
+				if (stockData.getCandlestickChart().getLow() < strokeBottom.getCandlestickChart().getLow()) {
 					directionStroke = StockData.DIRECTION_DOWN_LEVEL_2;
 				}
 			}
@@ -411,13 +411,13 @@ public class StockVertexAnalyzer {
 			}
 
 			if (segmentTop != null) {
-				if (stockData.getHigh() > segmentTop.getHigh()) {
+				if (stockData.getCandlestickChart().getHigh() > segmentTop.getCandlestickChart().getHigh()) {
 					directionSegment = StockData.DIRECTION_UP_LEVEL_3;
 				}
 			}
 
 			if (segmentBottom != null) {
-				if (stockData.getLow() < segmentBottom.getLow()) {
+				if (stockData.getCandlestickChart().getLow() < segmentBottom.getCandlestickChart().getLow()) {
 					directionSegment = StockData.DIRECTION_DOWN_LEVEL_3;
 				}
 			}
@@ -473,15 +473,15 @@ public class StockVertexAnalyzer {
 			}
 
 			if (data.getDirection() == StockData.DIRECTION_UP_LEVEL_1) {
-				stockData.setOpen(data.getVertexLow());
-				stockData.setClose(data.getVertexHigh());
+				stockData.getCandlestickChart().setOpen(data.getVertexLow());
+				stockData.getCandlestickChart().setClose(data.getVertexHigh());
 			} else if (data.getDirection() == StockData.DIRECTION_DOWN_LEVEL_1) {
-				stockData.setOpen(data.getVertexHigh());
-				stockData.setClose(data.getVertexLow());
+				stockData.getCandlestickChart().setOpen(data.getVertexHigh());
+				stockData.getCandlestickChart().setClose(data.getVertexLow());
 			}
 
-			stockData.setHigh(data.getVertexHigh());
-			stockData.setLow(data.getVertexLow());
+			stockData.getCandlestickChart().setHigh(data.getVertexHigh());
+			stockData.getCandlestickChart().setLow(data.getVertexLow());
 
 			actionString = String.valueOf(i);
 

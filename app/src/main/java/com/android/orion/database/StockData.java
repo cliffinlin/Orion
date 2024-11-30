@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
+import com.android.orion.chart.CandlestickChart;
 import com.android.orion.data.Macd;
 import com.android.orion.data.Period;
 import com.android.orion.setting.Constant;
@@ -120,10 +121,7 @@ public class StockData extends DatabaseTable {
 	private String mDate;
 	private String mTime;
 	private String mPeriod;
-	private double mOpen;
-	private double mHigh;
-	private double mLow;
-	private double mClose;
+	private CandlestickChart mCandlestickChart = new CandlestickChart();
 	private double mChange;
 	private double mNet;
 	private int mDirection;
@@ -182,10 +180,6 @@ public class StockData extends DatabaseTable {
 		mDate = "";
 		mTime = "";
 		mPeriod = "";
-		mOpen = 0;
-		mHigh = 0;
-		mLow = 0;
-		mClose = 0;
 		mChange = 0;
 		mNet = 0;
 		mDirection = DIRECTION_NONE;
@@ -221,10 +215,10 @@ public class StockData extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);
 		contentValues.put(DatabaseContract.COLUMN_TIME, mTime);
 		contentValues.put(DatabaseContract.COLUMN_PERIOD, mPeriod);
-		contentValues.put(DatabaseContract.COLUMN_OPEN, mOpen);
-		contentValues.put(DatabaseContract.COLUMN_HIGH, mHigh);
-		contentValues.put(DatabaseContract.COLUMN_LOW, mLow);
-		contentValues.put(DatabaseContract.COLUMN_CLOSE, mClose);
+		contentValues.put(DatabaseContract.COLUMN_OPEN, mCandlestickChart.getOpen());
+		contentValues.put(DatabaseContract.COLUMN_HIGH, mCandlestickChart.getHigh());
+		contentValues.put(DatabaseContract.COLUMN_LOW, mCandlestickChart.getLow());
+		contentValues.put(DatabaseContract.COLUMN_CLOSE, mCandlestickChart.getClose());
 		contentValues.put(DatabaseContract.COLUMN_CHANGE, mChange);
 		contentValues.put(DatabaseContract.COLUMN_NET, mNet);
 		contentValues.put(DatabaseContract.COLUMN_DIRECTION, mDirection);
@@ -269,10 +263,7 @@ public class StockData extends DatabaseTable {
 		setDate(stockData.mDate);
 		setTime(stockData.mTime);
 		setPeriod(stockData.mPeriod);
-		setOpen(stockData.mOpen);
-		setHigh(stockData.mHigh);
-		setLow(stockData.mLow);
-		setClose(stockData.mClose);
+		mCandlestickChart.set(stockData.mCandlestickChart);
 		setChange(stockData.mChange);
 		setNet(stockData.mNet);
 		setDirection(stockData.mDirection);
@@ -315,10 +306,7 @@ public class StockData extends DatabaseTable {
 		setDate(cursor);
 		setTime(cursor);
 		setPeriod(cursor);
-		setOpen(cursor);
-		setHigh(cursor);
-		setLow(cursor);
-		setClose(cursor);
+		mCandlestickChart.set(cursor);
 		setChange(cursor);
 		setNet(cursor);
 		setDirection(cursor);
@@ -483,74 +471,6 @@ public class StockData extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_PERIOD)));
 	}
 
-	public double getOpen() {
-		return mOpen;
-	}
-
-	public void setOpen(double open) {
-		mOpen = open;
-	}
-
-	public void setOpen(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setOpen(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_OPEN)));
-	}
-
-	public double getHigh() {
-		return mHigh;
-	}
-
-	public void setHigh(double high) {
-		mHigh = high;
-	}
-
-	public void setHigh(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setHigh(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_HIGH)));
-	}
-
-	public double getLow() {
-		return mLow;
-	}
-
-	public void setLow(double low) {
-		mLow = low;
-	}
-
-	public void setLow(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setLow(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_LOW)));
-	}
-
-	public double getClose() {
-		return mClose;
-	}
-
-	public void setClose(double close) {
-		mClose = close;
-	}
-
-	public void setClose(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setClose(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_CLOSE)));
-	}
-
 	public double getChange() {
 		return mChange;
 	}
@@ -655,6 +575,10 @@ public class StockData extends DatabaseTable {
 
 	public Macd getMacd() {
 		return mMacd;
+	}
+
+	public CandlestickChart getCandlestickChart() {
+		return mCandlestickChart;
 	}
 
 	public String getAction() {
@@ -866,11 +790,6 @@ public class StockData extends DatabaseTable {
 		return result;
 	}
 
-	String getOHLCString() {
-		return String.valueOf(getOpen()) + getHigh()
-				+ getLow() + getClose();
-	}
-
 	public boolean include(StockData stockData) {
 		if (stockData == null) {
 			return false;
@@ -968,14 +887,9 @@ public class StockData extends DatabaseTable {
 		if (stockData == null) {
 			return;
 		}
-
-		mOpen += stockData.getOpen() * weight;
-		mClose += stockData.getClose() * weight;
-		mHigh += stockData.getHigh() * weight;
-		mLow += stockData.getLow() * weight;
-
-		mVertexHigh = mHigh;
-		mVertexLow = mLow;
+		mCandlestickChart.add(stockData.mCandlestickChart, weight);
+		mVertexHigh = mCandlestickChart.getHigh();
+		mVertexLow = mCandlestickChart.getLow();
 	}
 
 	public void setupChange() {
@@ -1018,7 +932,8 @@ public class StockData extends DatabaseTable {
 			return null;
 		}
 
-		//TDX
+		//TDX output format
+		//date  time    open    high    low close   volume  value
 		String[] strings = string.split(Constant.TAB);
 		if (strings == null || strings.length < 6) {
 			return null;
@@ -1029,13 +944,13 @@ public class StockData extends DatabaseTable {
 		timeString = strings[1].substring(0, 2) + ":" + strings[1].substring(2, 4) + ":" + "00";
 		setTime(timeString);
 
-		setOpen(Double.parseDouble(strings[2]));
-		setHigh(Double.parseDouble(strings[3]));
-		setLow(Double.parseDouble(strings[4]));
-		setClose(Double.parseDouble(strings[5]));
+		mCandlestickChart.setOpen(Double.parseDouble(strings[2]));
+		mCandlestickChart.setHigh(Double.parseDouble(strings[3]));
+		mCandlestickChart.setLow(Double.parseDouble(strings[4]));
+		mCandlestickChart.setClose(Double.parseDouble(strings[5]));
 
-		setVertexHigh(getHigh());
-		setVertexLow(getLow());
+		setVertexHigh(mCandlestickChart.getHigh());
+		setVertexLow(mCandlestickChart.getLow());
 
 		setCreated(Utility.getCurrentDateTimeString());
 		setModified(Utility.getCurrentDateTimeString());
@@ -1045,22 +960,16 @@ public class StockData extends DatabaseTable {
 
 	public String toString() {
 		StringBuffer stringBuffer = new StringBuffer();
-
-		//TDX
+		//TDX output format
+			//date  time    open    high    low close   volume  value
 		String dateString = getDate().replace("-", "/");
 		String timeString = getTime().substring(0, 5).replace(":", "");
-
 		stringBuffer.append(dateString + Constant.TAB
 				+ timeString + Constant.TAB
-				+ getOpen() + Constant.TAB
-				+ getHigh() + Constant.TAB
-				+ getLow() + Constant.TAB
-				+ getClose() + Constant.TAB
+				+ mCandlestickChart.toString()
 				+ 0 + Constant.TAB
 				+ 0);
-
 		stringBuffer.append("\r\n");
-
 		return stringBuffer.toString();
 	}
 

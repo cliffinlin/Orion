@@ -320,7 +320,7 @@ public class StockAnalyzer {
 
 		int j = 0;
 		for (StockData stockData : stockDataList) {
-			price = stockData.getClose();
+			price = stockData.getCandlestickChart().getClose();
 			if (price == 0) {
 				continue;
 			}
