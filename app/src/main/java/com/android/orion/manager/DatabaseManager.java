@@ -560,8 +560,8 @@ public class DatabaseManager implements StockListener {
 					stockData.set(cursor);
 					index = stockDataList.size();
 					stockData.setIndex(index);
-					stockData.setIndexStart(index);
-					stockData.setIndexEnd(index);
+					stockData.getTrend().setIndexStart(index);
+					stockData.getTrend().setIndexEnd(index);
 					stockData.setAction(StockData.MARK_NONE);
 
 					if (loopback) {

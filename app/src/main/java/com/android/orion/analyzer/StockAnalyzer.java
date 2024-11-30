@@ -558,21 +558,21 @@ public class StockAnalyzer {
 		StockData stockData = stockDataList.get(stockDataList.size() - 1);
 		StockData prev = stockDataList.get(stockDataList.size() - 2);
 
-		if (segmentData.directionOf(StockData.DIRECTION_UP_LEVEL_1)) {
+		if (segmentData.getTrend().directionOf(StockData.DIRECTION_UP_LEVEL_1)) {
 			trend += StockData.MARK_ADD;
-		} else if (segmentData.directionOf(StockData.DIRECTION_DOWN_LEVEL_1)) {
+		} else if (segmentData.getTrend().directionOf(StockData.DIRECTION_DOWN_LEVEL_1)) {
 			trend += StockData.MARK_MINUS;
 		}
 
-		if (strokeData.directionOf(StockData.DIRECTION_UP_LEVEL_1)) {
+		if (strokeData.getTrend().directionOf(StockData.DIRECTION_UP_LEVEL_1)) {
 			trend += StockData.MARK_ADD;
-		} else if (strokeData.directionOf(StockData.DIRECTION_DOWN_LEVEL_1)) {
+		} else if (strokeData.getTrend().directionOf(StockData.DIRECTION_DOWN_LEVEL_1)) {
 			trend += StockData.MARK_MINUS;
 		}
 
-		if (drawData.directionOf(StockData.DIRECTION_UP_LEVEL_1)) {
+		if (drawData.getTrend().directionOf(StockData.DIRECTION_UP_LEVEL_1)) {
 			trend += StockData.MARK_ADD;
-		} else if (drawData.directionOf(StockData.DIRECTION_DOWN_LEVEL_1)) {
+		} else if (drawData.getTrend().directionOf(StockData.DIRECTION_DOWN_LEVEL_1)) {
 			trend += StockData.MARK_MINUS;
 		}
 
@@ -607,13 +607,13 @@ public class StockAnalyzer {
 //			action += result;
 //		}
 
-		if (stockData.directionOf(StockData.DIRECTION_UP_LEVEL_1)) {
-			if (prev.vertexOf(StockData.VERTEX_BOTTOM_LEVEL_1)) {
+		if (stockData.getTrend().directionOf(StockData.DIRECTION_UP_LEVEL_1)) {
+			if (prev.getTrend().vertexOf(StockData.VERTEX_BOTTOM_LEVEL_1)) {
 				String result = getSecondBottomAction(stock, drawVertexList, strokeDataList, segmentDataList);
 				action += result;
 			}
-		} else if (stockData.directionOf(StockData.DIRECTION_DOWN_LEVEL_1)) {
-			if (prev.vertexOf(StockData.VERTEX_TOP_LEVEL_1)) {
+		} else if (stockData.getTrend().directionOf(StockData.DIRECTION_DOWN_LEVEL_1)) {
+			if (prev.getTrend().vertexOf(StockData.VERTEX_TOP_LEVEL_1)) {
 				String result = getSecondTopAction(stock, drawVertexList, strokeDataList, segmentDataList);
 				action += result;
 			}
@@ -650,14 +650,14 @@ public class StockAnalyzer {
 			return result;
 		}
 
-		if (strokeData.getIndexStart() != segmentData.getIndexStart()) {
+		if (strokeData.getTrend().getIndexStart() != segmentData.getTrend().getIndexStart()) {
 			return result;
 		}
 
-		if ((strokeData.getDirection() == StockData.DIRECTION_UP_LEVEL_1) && (segmentData.getDirection() == StockData.DIRECTION_UP_LEVEL_1)) {
+		if ((strokeData.getTrend().getDirection() == StockData.DIRECTION_UP_LEVEL_1) && (segmentData.getTrend().getDirection() == StockData.DIRECTION_UP_LEVEL_1)) {
 			result += StockData.MARK_BUY1;
 			result += StockData.MARK_BUY1;
-		} else if ((strokeData.getDirection() == StockData.DIRECTION_DOWN_LEVEL_1) && (segmentData.getDirection() == StockData.DIRECTION_DOWN_LEVEL_1)) {
+		} else if ((strokeData.getTrend().getDirection() == StockData.DIRECTION_DOWN_LEVEL_1) && (segmentData.getTrend().getDirection() == StockData.DIRECTION_DOWN_LEVEL_1)) {
 			result += StockData.MARK_SELL1;
 			result += StockData.MARK_SELL1;
 		}
@@ -685,27 +685,27 @@ public class StockAnalyzer {
 		drawData1 = drawDataList.get(drawDataIndex0 - 1);
 		drawData2 = drawDataList.get(drawDataIndex0 - 2);
 
-		if (drawData0.include(drawData2) || drawData0.includedBy(drawData2)) {
+		if (drawData0.getTrend().include(drawData2.getTrend()) || drawData0.getTrend().includedBy(drawData2.getTrend())) {
 			return result;
 		}
 
-		if (stock.getPrice() < drawData1.getVertexLow() || stock.getPrice() > drawData1.getVertexHigh()) {
+		if (stock.getPrice() < drawData1.getTrend().getVertexLow() || stock.getPrice() > drawData1.getTrend().getVertexHigh()) {
 			return result;
 		}
 
-		stockData = stockDataList.get(drawData2.getIndexStart());
+		stockData = stockDataList.get(drawData2.getTrend().getIndexStart());
 		if (stockData == null) {
 			return result;
 		}
 
-		if (stockData.vertexOf(StockData.VERTEX_BOTTOM_LEVEL_2)) {
+		if (stockData.getTrend().vertexOf(StockData.VERTEX_BOTTOM_LEVEL_2)) {
 			result += StockData.MARK_BUY2;
-			if (stockData.vertexOf(StockData.VERTEX_BOTTOM_LEVEL_3)) {
+			if (stockData.getTrend().vertexOf(StockData.VERTEX_BOTTOM_LEVEL_3)) {
 				result += StockData.MARK_BUY2;
 			}
-		} else if (stockData.vertexOf(StockData.VERTEX_TOP_LEVEL_2)) {
+		} else if (stockData.getTrend().vertexOf(StockData.VERTEX_TOP_LEVEL_2)) {
 			result += StockData.MARK_SELL2;
-			if (stockData.vertexOf(StockData.VERTEX_TOP_LEVEL_3)) {
+			if (stockData.getTrend().vertexOf(StockData.VERTEX_TOP_LEVEL_3)) {
 				result += StockData.MARK_SELL2;
 			}
 		}
@@ -758,7 +758,7 @@ public class StockAnalyzer {
 			return result;
 		}
 
-		if (firstBottomVertex.vertexOf(StockData.VERTEX_BOTTOM_LEVEL_3)) {
+		if (firstBottomVertex.getTrend().vertexOf(StockData.VERTEX_BOTTOM_LEVEL_3)) {
 			baseStockData = segmentDataList.get(segmentDataList.size() - 4);
 			brokenStockData = segmentDataList.get(segmentDataList.size() - 2);
 		} else {
@@ -769,9 +769,9 @@ public class StockAnalyzer {
 			return result;
 		}
 
-		if ((firstBottomVertex.getVertexLow() < secondBottomVertex.getVertexLow())
-				&& (secondBottomVertex.getVertexLow() < stock.getPrice())
-				&& (stock.getPrice() < firstTopVertex.getVertexHigh())
+		if ((firstBottomVertex.getTrend().getVertexLow() < secondBottomVertex.getTrend().getVertexLow())
+				&& (secondBottomVertex.getTrend().getVertexLow() < stock.getPrice())
+				&& (stock.getPrice() < firstTopVertex.getTrend().getVertexHigh())
 		) {
 			result += StockData.MARK_BUY2;
 			result += StockData.MARK_BUY2;
@@ -825,7 +825,7 @@ public class StockAnalyzer {
 			return result;
 		}
 
-		if (firstTopVertex.vertexOf(StockData.VERTEX_TOP_LEVEL_3)) {
+		if (firstTopVertex.getTrend().vertexOf(StockData.VERTEX_TOP_LEVEL_3)) {
 			baseStockData = segmentDataList.get(segmentDataList.size() - 4);
 			brokenStockData = segmentDataList.get(segmentDataList.size() - 2);
 		} else {
@@ -836,9 +836,9 @@ public class StockAnalyzer {
 			return result;
 		}
 
-		if ((firstTopVertex.getVertexHigh() > secondTopVertex.getVertexHigh())
-				&& (secondTopVertex.getVertexHigh() > stock.getPrice())
-				&& (stock.getPrice() > firstBottomVertex.getVertexLow())
+		if ((firstTopVertex.getTrend().getVertexHigh() > secondTopVertex.getTrend().getVertexHigh())
+				&& (secondTopVertex.getTrend().getVertexHigh() > stock.getPrice())
+				&& (stock.getPrice() > firstBottomVertex.getTrend().getVertexLow())
 		) {
 			result += StockData.MARK_SELL2;
 			result += StockData.MARK_SELL2;
