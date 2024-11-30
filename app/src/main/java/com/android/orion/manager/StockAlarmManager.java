@@ -15,19 +15,12 @@ import com.android.orion.utility.Utility;
 import java.util.Calendar;
 
 public class StockAlarmManager {
+	private static StockAlarmManager mInstance;
 	Logger Log = Logger.getLogger();
 	Context mContext;
-	private long mIntervalMillis = Config.alarmInterval;
+	private final long mIntervalMillis = Config.alarmInterval;
 	private AlarmManager mAlarmManager = null;
-	private PendingIntent mPendingIntent;
-	private static StockAlarmManager mInstance;
-
-	public static synchronized StockAlarmManager getInstance() {
-		if (mInstance == null) {
-			mInstance = new StockAlarmManager();
-		}
-		return mInstance;
-	}
+	private final PendingIntent mPendingIntent;
 
 	StockAlarmManager() {
 		mContext = MainApplication.getContext();
@@ -38,6 +31,13 @@ public class StockAlarmManager {
 
 		mPendingIntent = PendingIntent.getBroadcast(mContext, 0, new Intent(
 				mContext, DownloadBroadcastReceiver.class), 0);
+	}
+
+	public static synchronized StockAlarmManager getInstance() {
+		if (mInstance == null) {
+			mInstance = new StockAlarmManager();
+		}
+		return mInstance;
 	}
 
 	public void startAlarm() {

@@ -170,7 +170,7 @@ public class IndexComponentListActivity extends ListActivity implements
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode,
-									Intent intent) {
+	                                Intent intent) {
 		super.onActivityResult(requestCode, resultCode, intent);
 
 		if (resultCode == RESULT_OK) {
@@ -478,7 +478,7 @@ public class IndexComponentListActivity extends ListActivity implements
 						indexIds.append("," + indexComponentList.get(i).getCode());
 					}
 
-					selection = DatabaseContract.COLUMN_CODE + " in (" + placeHolder.toString() + " ) AND " + DatabaseContract.COLUMN_FLAG + " >= "
+					selection = DatabaseContract.COLUMN_CODE + " in (" + placeHolder + " ) AND " + DatabaseContract.COLUMN_FLAG + " >= "
 							+ Stock.FLAG_FAVORITE;
 					selectionArgs = indexIds.toString().split(",");
 				} else {
@@ -539,7 +539,7 @@ public class IndexComponentListActivity extends ListActivity implements
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
-							long id) {
+	                        long id) {
 
 		if (id <= Stock.INVALID_ID) {
 			return;
@@ -576,7 +576,7 @@ public class IndexComponentListActivity extends ListActivity implements
 
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
-								   int position, long id) {
+	                               int position, long id) {
 		Intent intentSearch = new Intent(this, StockSearchActivity.class);
 		intentSearch.setAction(Constant.ACTION_INDEX_COMPONENT_SELECT);
 		intentSearch.putExtra(Constant.EXTRA_INDEX_CODE, mIntent.getStringExtra(Constant.EXTRA_INDEX_CODE));

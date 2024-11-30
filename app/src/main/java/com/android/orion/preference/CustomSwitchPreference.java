@@ -17,7 +17,7 @@ public class CustomSwitchPreference extends SwitchPreference {
 	 * @param defStyle Theme attribute defining the default style options
 	 */
 	public CustomSwitchPreference(Context context, AttributeSet attrs,
-								  int defStyle) {
+	                              int defStyle) {
 		super(context, attrs, defStyle);
 	}
 

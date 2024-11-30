@@ -9,74 +9,68 @@ import android.os.Message;
 import androidx.annotation.NonNull;
 
 import com.android.orion.application.MainApplication;
-import com.android.orion.config.Config;
 
 import java.util.ArrayList;
 
 public class ConnectionManager {
-    public static final int MSG_CONNECTED = 0;
-    public static final int MSG_DISCONNECTED = 1;
+	public static final int MSG_CONNECTED = 0;
+	public static final int MSG_DISCONNECTED = 1;
+	private static final Context mContext = MainApplication.getContext();
+	private static ConnectionManager mInstance;
+	ArrayList<OnConnectionChangeListener> mListener = new ArrayList<>();
+	private final Handler mHandler = new Handler(Looper.getMainLooper()) {
 
-    private static ConnectionManager mInstance;
-    private static Context mContext = MainApplication.getContext();
+		@Override
+		public void handleMessage(@NonNull Message msg) {
+			super.handleMessage(msg);
 
-    ArrayList<OnConnectionChangeListener> mListener = new ArrayList<>();
+			switch (msg.what) {
+				case MSG_CONNECTED:
+					for (OnConnectionChangeListener listener : mListener) {
+						listener.onConnected();
+					}
+					break;
+				case MSG_DISCONNECTED:
+					for (OnConnectionChangeListener listener : mListener) {
+						listener.onDisconnected();
+					}
+					break;
+				default:
+					break;
+			}
+		}
+	};
 
-    public interface OnConnectionChangeListener {
-        public void onConnected();
+	public static ConnectionManager getInstance() {
+		synchronized (ConnectionManager.class) {
+			if (mInstance == null) {
+				mInstance = new ConnectionManager();
+			}
+		}
+		return mInstance;
+	}
 
-        public void onDisconnected();
-    }
+	public void registerListener(@NonNull OnConnectionChangeListener listener) {
+		if (!mListener.contains(listener)) {
+			mListener.add(listener);
+		}
+	}
 
-    public static ConnectionManager getInstance() {
-        synchronized (ConnectionManager.class) {
-            if (mInstance == null) {
-                mInstance = new ConnectionManager();
-            }
-        }
-        return mInstance;
-    }
+	public void unregisterListener(@NonNull OnConnectionChangeListener listener) {
+		mListener.remove(listener);
+	}
 
-    public void registerListener(@NonNull OnConnectionChangeListener listener) {
-        if (!mListener.contains(listener)) {
-            mListener.add(listener);
-        }
-    }
+	public void onConnected() {
+		mHandler.sendEmptyMessage(MSG_CONNECTED);
+	}
 
-    public void unregisterListener(@NonNull OnConnectionChangeListener listener) {
-        if (mListener.contains(listener)) {
-            mListener.remove(listener);
-        }
-    }
+	public void onDisconnected() {
+		mHandler.sendEmptyMessage(MSG_DISCONNECTED);
+	}
 
-    public void onConnected() {
-        mHandler.sendEmptyMessage(MSG_CONNECTED);
-    }
+	public interface OnConnectionChangeListener {
+		void onConnected();
 
-    public void onDisconnected() {
-        mHandler.sendEmptyMessage(MSG_DISCONNECTED);
-    }
-
-    private Handler mHandler = new Handler(Looper.getMainLooper()) {
-
-        @Override
-        public void handleMessage(@NonNull Message msg) {
-            super.handleMessage(msg);
-
-            switch (msg.what) {
-                case MSG_CONNECTED:
-                    for (OnConnectionChangeListener listener: mListener) {
-                        listener.onConnected();
-                    }
-                    break;
-                case MSG_DISCONNECTED:
-                    for (OnConnectionChangeListener listener: mListener) {
-                        listener.onDisconnected();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
+		void onDisconnected();
+	}
 }

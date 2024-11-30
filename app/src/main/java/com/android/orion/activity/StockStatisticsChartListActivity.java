@@ -176,7 +176,7 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode,
-									Intent intent) {
+	                                Intent intent) {
 		super.onActivityResult(requestCode, resultCode, intent);
 
 		if (resultCode == RESULT_OK) {
@@ -327,7 +327,7 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 	}
 
 	public void swapStockCursor(StockStatisticsChart stockDataChart,
-								Cursor cursor) {
+	                            Cursor cursor) {
 		int index = 0;
 
 		mTotalProfit = 0;
@@ -446,12 +446,12 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 
 	@Override
 	public void onChartGestureStart(MotionEvent me,
-									ChartGesture lastPerformedGesture) {
+	                                ChartGesture lastPerformedGesture) {
 	}
 
 	@Override
 	public void onChartGestureEnd(MotionEvent me,
-								  ChartGesture lastPerformedGesture) {
+	                              ChartGesture lastPerformedGesture) {
 	}
 
 	static class MainHandler extends Handler {
@@ -480,7 +480,7 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 		}
 
 		public StatisticsChartItem(int itemViewType, int resource,
-								   StockStatisticsChart stockDataChart) {
+		                           StockStatisticsChart stockDataChart) {
 			mItemViewType = itemViewType;
 			mResource = resource;
 			mStatisticsChart = stockDataChart;
@@ -575,7 +575,7 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 	class StatisticsChartArrayAdapter extends ArrayAdapter<StatisticsChartItem> {
 
 		public StatisticsChartArrayAdapter(Context context,
-										   List<StatisticsChartItem> objects) {
+		                                   List<StatisticsChartItem> objects) {
 			super(context, 0, objects);
 		}
 

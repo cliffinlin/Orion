@@ -158,7 +158,7 @@ public class StockTrendListActivity extends ListActivity implements
 						.setPositiveButton(R.string.ok,
 								new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog,
-														int which) {
+									                    int which) {
 										StockData stockData = new StockData();
 										long stockId = getIntent().getLongExtra(Constant.EXTRA_STOCK_ID,
 												Stock.INVALID_ID);
@@ -169,7 +169,7 @@ public class StockTrendListActivity extends ListActivity implements
 						.setNegativeButton(R.string.cancel,
 								new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog,
-														int which) {
+									                    int which) {
 									}
 								}).setIcon(android.R.drawable.ic_dialog_alert)
 						.show();
@@ -182,14 +182,14 @@ public class StockTrendListActivity extends ListActivity implements
 						.setPositiveButton(R.string.ok,
 								new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog,
-														int which) {
+									                    int which) {
 										mDatabaseManager.deleteStockData();
 									}
 								})
 						.setNegativeButton(R.string.cancel,
 								new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog,
-														int which) {
+									                    int which) {
 									}
 								}).setIcon(android.R.drawable.ic_dialog_alert)
 						.show();
@@ -202,7 +202,7 @@ public class StockTrendListActivity extends ListActivity implements
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode,
-									Intent intent) {
+	                                Intent intent) {
 		super.onActivityResult(requestCode, resultCode, intent);
 
 		if (resultCode == RESULT_OK) {
@@ -493,7 +493,7 @@ public class StockTrendListActivity extends ListActivity implements
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
-							long id) {
+	                        long id) {
 
 		if (id <= Stock.INVALID_ID) {
 			return;
@@ -520,7 +520,7 @@ public class StockTrendListActivity extends ListActivity implements
 
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
-								   int position, long id) {
+	                               int position, long id) {
 		return true;
 	}
 

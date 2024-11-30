@@ -157,7 +157,7 @@ public class StockContentProvider extends ContentProvider {
 
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection,
-						String[] selectionArgs, String sortOrder) {
+	                    String[] selectionArgs, String sortOrder) {
 		Cursor cursor = null;
 
 		if (mDatabaseManager == null) {
@@ -354,7 +354,7 @@ public class StockContentProvider extends ContentProvider {
 
 	@Override
 	public int update(Uri uri, ContentValues values, String selection,
-					  String[] selectionArgs) {
+	                  String[] selectionArgs) {
 		int result = 0;
 		String whereClause;
 

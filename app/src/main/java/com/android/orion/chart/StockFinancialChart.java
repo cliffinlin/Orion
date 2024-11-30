@@ -34,7 +34,7 @@ public class StockFinancialChart {
 	public ArrayList<Entry> mRoeEntryList = new ArrayList<>();
 
 	public ArrayList<LimitLine> mLimitLineList = new ArrayList<>();
-	
+
 	public CombinedData mCombinedDataMain = new CombinedData(mXValues);
 	public CombinedData mCombinedDataSub = new CombinedData(mXValues);
 

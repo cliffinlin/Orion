@@ -51,6 +51,11 @@ public class StorageActivity extends DatabaseActivity {
 
 	Uri mUri = null;
 
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+	}
+
 	Handler mHandler = new Handler(Looper.getMainLooper()) {
 
 		@Override
@@ -85,11 +90,6 @@ public class StorageActivity extends DatabaseActivity {
 			}
 		}
 	};
-
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-	}
 
 	@Override
 	protected void onDestroy() {
@@ -538,4 +538,6 @@ public class StorageActivity extends DatabaseActivity {
 			e.printStackTrace();
 		}
 	}
+
+
 }

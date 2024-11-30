@@ -10,7 +10,6 @@ import android.widget.Toast;
 
 import com.android.orion.R;
 import com.android.orion.setting.Setting;
-import com.android.orion.utility.Preferences;
 
 public class ListActivity extends StorageActivity {
 

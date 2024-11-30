@@ -27,16 +27,13 @@ public class StockStatisticsChart {
 	public ArrayList<Entry> mRateEntryList = null;
 	public ArrayList<Entry> mYieldEntryList = null;
 	public ArrayList<Entry> mDividendRatioEntryList = null;
-
+	public ArrayList<Entry> mValuationEntryList = null;
+	public CombinedData mCombinedDataMain = null;
+	public PieData mPieData = null;
 	ArrayList<Entry> mDIFEntryList = null;
 	ArrayList<Entry> mDEAEntryList = null;
 	ArrayList<BarEntry> mHistogramEntryList = null;
-
-	public ArrayList<Entry> mValuationEntryList = null;
-
-	public CombinedData mCombinedDataMain = null;
 	CombinedData mCombinedDataSub = null;
-	public PieData mPieData = null;
 
 	public StockStatisticsChart() {
 		if (mXValues == null) {

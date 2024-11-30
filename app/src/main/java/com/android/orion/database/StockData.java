@@ -77,7 +77,9 @@ public class StockData extends DatabaseTable {
 			}
 		}
 	};
-
+	private final Candlestick mCandlestick = new Candlestick();
+	private final Macd mMacd = new Macd();
+	private final Trend mTrend = new Trend();
 	private long mStockId;
 	private String mSE;
 	private String mCode;
@@ -86,9 +88,6 @@ public class StockData extends DatabaseTable {
 	private String mDate;
 	private String mTime;
 	private String mPeriod;
-	private final Candlestick mCandlestick = new Candlestick();
-	private final Macd mMacd = new Macd();
-	private final Trend mTrend = new Trend();
 	private String mAction;
 	private double mNaturalRally;
 	private double mUpwardTrend;
@@ -111,6 +110,42 @@ public class StockData extends DatabaseTable {
 
 	public StockData(Cursor cursor) {
 		set(cursor);
+	}
+
+	public static boolean isMinutePeriod(@NonNull String period) {
+		boolean result;
+
+		switch (period) {
+			case Period.MIN5:
+			case Period.MIN15:
+			case Period.MIN30:
+			case Period.MIN60:
+				result = true;
+				break;
+			case Period.DAY:
+			case Period.WEEK:
+			case Period.MONTH:
+			default:
+				result = false;
+				break;
+		}
+
+		return result;
+	}
+
+	public static int getPeriodIndex(String period) {
+		int index = 0;
+		if (TextUtils.isEmpty(period)) {
+			return index;
+		}
+
+		for (int i = 0; i < Period.PERIODS.length; i++) {
+			if (TextUtils.equals(period, Period.PERIODS[i])) {
+				index = i;
+				break;
+			}
+		}
+		return index;
 	}
 
 	public boolean isEmpty() {
@@ -386,12 +421,12 @@ public class StockData extends DatabaseTable {
 		return mCandlestick;
 	}
 
-	public Trend getTrend() {
-		return mTrend;
-	}
-
 	public Macd getMacd() {
 		return mMacd;
+	}
+
+	public Trend getTrend() {
+		return mTrend;
 	}
 
 	public String getAction() {
@@ -563,7 +598,7 @@ public class StockData extends DatabaseTable {
 	public String toString() {
 		StringBuffer stringBuffer = new StringBuffer();
 		//TDX output format
-			//date  time    open    high    low close   volume  value
+		//date  time    open    high    low close   volume  value
 		String dateString = getDate().replace("-", "/");
 		String timeString = getTime().substring(0, 5).replace(":", "");
 		stringBuffer.append(dateString + Constant.TAB
@@ -575,44 +610,8 @@ public class StockData extends DatabaseTable {
 		return stringBuffer.toString();
 	}
 
-	public static boolean isMinutePeriod(@NonNull String period) {
-		boolean result;
-
-		switch (period) {
-			case Period.MIN5:
-			case Period.MIN15:
-			case Period.MIN30:
-			case Period.MIN60:
-				result = true;
-				break;
-			case Period.DAY:
-			case Period.WEEK:
-			case Period.MONTH:
-			default:
-				result = false;
-				break;
-		}
-
-		return result;
-	}
-
 	public boolean isMinutePeriod() {
 		return isMinutePeriod(getPeriod());
-	}
-
-	public static int getPeriodIndex(String period) {
-		int index = 0;
-		if (TextUtils.isEmpty(period)) {
-			return index;
-		}
-
-		for (int i = 0; i < Period.PERIODS.length; i++) {
-			if (TextUtils.equals(period, Period.PERIODS[i])) {
-				index = i;
-				break;
-			}
-		}
-		return index;
 	}
 
 	public int getPeriodIndex() {

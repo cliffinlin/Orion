@@ -78,13 +78,13 @@ public class Stock extends DatabaseTable {
 	private String mRDate;
 	private String mStatus;
 
-	private Period mMin5 = new Period(Period.MIN5);
-	private Period mMin15 = new Period(Period.MIN15);
-	private Period mMin30 = new Period(Period.MIN30);
-	private Period mMin60 = new Period(Period.MIN60);
-	private Period mDay = new Period(Period.DAY);
-	private Period mWeek = new Period(Period.WEEK);
-	private Period mMonth = new Period(Period.MONTH);
+	private final Period mMin5 = new Period(Period.MIN5);
+	private final Period mMin15 = new Period(Period.MIN15);
+	private final Period mMin30 = new Period(Period.MIN30);
+	private final Period mMin60 = new Period(Period.MIN60);
+	private final Period mDay = new Period(Period.DAY);
+	private final Period mWeek = new Period(Period.WEEK);
+	private final Period mMonth = new Period(Period.MONTH);
 
 	public Stock() {
 		init();

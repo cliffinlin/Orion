@@ -7,7 +7,6 @@ import android.text.TextUtils;
 
 import com.android.orion.data.Trend;
 import com.android.orion.database.Stock;
-import com.android.orion.database.StockData;
 import com.android.orion.database.StockDeal;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Utility;
@@ -343,7 +342,7 @@ public class StockDataChart {
 	}
 
 	public void updateLimitLines(Stock stock, ArrayList<StockDeal> stockDealList,
-								 boolean keyDisplayLatest, boolean keyDisplayCost, boolean keyDisplayDeal) {
+	                             boolean keyDisplayLatest, boolean keyDisplayCost, boolean keyDisplayDeal) {
 		if (stock == null || stockDealList == null) {
 			return;
 		}
@@ -424,7 +423,7 @@ public class StockDataChart {
 	}
 
 	void updateDealLimitLine(Stock stock, ArrayList<StockDeal> stockDealList,
-							 boolean keyDisplayDeal) {
+	                         boolean keyDisplayDeal) {
 		double limit = 0;
 		int color = Color.WHITE;
 		String label = "";

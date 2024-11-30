@@ -183,7 +183,7 @@ public class StockFinancialListActivity extends ListActivity implements
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode,
-									Intent intent) {
+	                                Intent intent) {
 		super.onActivityResult(requestCode, resultCode, intent);
 
 		if (resultCode == RESULT_OK) {
@@ -690,7 +690,7 @@ public class StockFinancialListActivity extends ListActivity implements
 		switch (id) {
 			case LOADER_ID_STOCK_FINANCIAL_LIST:
 				selection += DatabaseContract.COLUMN_FLAG + " = " + Stock.FLAG_FAVORITE
-						+ " AND " +  DatabaseContract.COLUMN_CLASSES + " = '" + Stock.CLASS_A + "'";
+						+ " AND " + DatabaseContract.COLUMN_CLASSES + " = '" + Stock.CLASS_A + "'";
 
 				loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
 						DatabaseContract.Stock.PROJECTION_ALL, selection, null,
@@ -745,7 +745,7 @@ public class StockFinancialListActivity extends ListActivity implements
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
-							long id) {
+	                        long id) {
 
 		if (id <= Stock.INVALID_ID) {
 			return;
@@ -769,7 +769,7 @@ public class StockFinancialListActivity extends ListActivity implements
 
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
-								   int position, long id) {
+	                               int position, long id) {
 		Intent intent = new Intent(this, StockListActivity.class);
 		startActivity(intent);
 		return true;

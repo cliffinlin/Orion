@@ -1,6 +1,5 @@
 package com.android.orion.activity;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
@@ -14,10 +13,8 @@ import androidx.annotation.NonNull;
 import com.android.orion.R;
 import com.android.orion.application.MainApplication;
 import com.android.orion.data.Period;
-import com.android.orion.database.DatabaseContract;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Market;
-import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Utility;
 
 import java.util.List;

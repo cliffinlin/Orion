@@ -116,7 +116,7 @@ public class StockListActivity extends DatabaseActivity implements
 						ArrayList<Stock> stockList = new ArrayList();
 						mDatabaseManager.getStockList(null, stockList);
 						for (Stock stock : stockList) {
-							if (TextUtils.equals(stock.getClasses(), stock.CLASS_A) && !stock.hasFlag(Stock.FLAG_FAVORITE)) {
+							if (TextUtils.equals(stock.getClasses(), Stock.CLASS_A) && !stock.hasFlag(Stock.FLAG_FAVORITE)) {
 								stock.addFlag(Stock.FLAG_FAVORITE);
 								mStockManager.onAddFavorite(stock);
 							}
@@ -132,7 +132,7 @@ public class StockListActivity extends DatabaseActivity implements
 						ArrayList<Stock> stockList = new ArrayList();
 						mDatabaseManager.getStockList(null, stockList);
 						for (Stock stock : stockList) {
-							if (TextUtils.equals(stock.getClasses(), stock.CLASS_A) && stock.hasFlag(Stock.FLAG_FAVORITE)) {
+							if (TextUtils.equals(stock.getClasses(), Stock.CLASS_A) && stock.hasFlag(Stock.FLAG_FAVORITE)) {
 								stock.removeFlag(Stock.FLAG_FAVORITE);
 								mStockManager.onRemoveFavorite(stock);
 							}
@@ -287,7 +287,7 @@ public class StockListActivity extends DatabaseActivity implements
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
-							long id) {
+	                        long id) {
 		if (id <= Stock.INVALID_ID) {
 			return;
 		}
@@ -302,7 +302,7 @@ public class StockListActivity extends DatabaseActivity implements
 			implements OnClickListener {
 
 		public CustomSimpleCursorAdapter(Context context, int layout, Cursor c,
-										 String[] from, int[] to, int flags) {
+		                                 String[] from, int[] to, int flags) {
 			super(context, layout, c, from, to, flags);
 		}
 
@@ -424,7 +424,7 @@ public class StockListActivity extends DatabaseActivity implements
 									.setPositiveButton(R.string.ok,
 											new DialogInterface.OnClickListener() {
 												public void onClick(DialogInterface dialog,
-																	int which) {
+												                    int which) {
 													mDatabaseManager.deleteStock(stockId);
 													mDatabaseManager.deleteStockData(stockId);
 													mDatabaseManager.deleteStockFinancial(stockId);
@@ -435,7 +435,7 @@ public class StockListActivity extends DatabaseActivity implements
 									.setNegativeButton(R.string.cancel,
 											new DialogInterface.OnClickListener() {
 												public void onClick(DialogInterface dialog,
-																	int which) {
+												                    int which) {
 												}
 											}).setIcon(android.R.drawable.ic_dialog_alert)
 									.show();

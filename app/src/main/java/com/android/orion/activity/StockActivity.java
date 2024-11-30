@@ -22,7 +22,6 @@ import androidx.annotation.NonNull;
 
 import com.android.orion.R;
 import com.android.orion.data.Period;
-import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.IndexComponent;
 import com.android.orion.database.Stock;
 import com.android.orion.setting.Constant;
@@ -111,13 +110,13 @@ public class StockActivity extends DatabaseActivity implements OnClickListener, 
 
 			@Override
 			public void beforeTextChanged(CharSequence arg0, int arg1,
-										  int arg2, int arg3) {
+			                              int arg2, int arg3) {
 
 			}
 
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
-									  int count) {
+			                          int count) {
 				if (TextUtils.equals(mAction, Constant.ACTION_STOCK_EDIT)) {
 					return;
 				}
@@ -142,7 +141,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener, 
 			setTitle(R.string.stock_insert);
 			mStock.addFlag(Stock.FLAG_FAVORITE);
 		} else if (TextUtils.equals(mAction, Constant.ACTION_INDEX_COMPONENT_INSERT)) {
-				setTitle(R.string.stock_insert);
+			setTitle(R.string.stock_insert);
 		} else if (TextUtils.equals(mAction, Constant.ACTION_STOCK_EDIT)) {
 			setTitle(R.string.stock_edit);
 			mRadioGroupClass.setEnabled(false);
@@ -264,7 +263,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener, 
 				if (TextUtils.equals(mAction, Constant.ACTION_FAVORITE_STOCK_INSERT) || TextUtils.equals(mAction, Constant.ACTION_INDEX_COMPONENT_INSERT)) {
 					if (!mDatabaseManager.isStockExist(mStock)) {
 						mStock.setCreated(Utility.getCurrentDateTimeString());
-						Uri uri= mDatabaseManager.insertStock(mStock);
+						Uri uri = mDatabaseManager.insertStock(mStock);
 						mDatabaseManager.getStock(uri, mStock);
 						mDatabaseManager.updateStock(mStock, mStock.getContentValuesForEdit());
 

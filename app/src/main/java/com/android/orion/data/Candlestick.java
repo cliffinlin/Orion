@@ -107,7 +107,7 @@ public class Candlestick {
 	}
 
 	public String toString() {
-		return  mOpen + Constant.TAB
+		return mOpen + Constant.TAB
 				+ mHigh + Constant.TAB
 				+ mLow + Constant.TAB
 				+ mClose + Constant.TAB;

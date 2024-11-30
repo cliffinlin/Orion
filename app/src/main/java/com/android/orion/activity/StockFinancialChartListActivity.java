@@ -415,7 +415,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 	}
 
 	public void swapStockFinancialCursor(StockFinancialChart stockFinancialChart,
-										 Cursor cursor) {
+	                                     Cursor cursor) {
 		int index = 0;
 		double unit = 100000000.0;
 
@@ -686,12 +686,12 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 
 	@Override
 	public void onChartGestureStart(MotionEvent me,
-									ChartGesture lastPerformedGesture) {
+	                                ChartGesture lastPerformedGesture) {
 	}
 
 	@Override
 	public void onChartGestureEnd(MotionEvent me,
-								  ChartGesture lastPerformedGesture) {
+	                              ChartGesture lastPerformedGesture) {
 	}
 
 	static class MainHandler extends Handler {
@@ -721,7 +721,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 		}
 
 		public StockFinancialChartItem(int itemViewType, int resource,
-									   StockFinancialChart stockFinancialChart) {
+		                               StockFinancialChart stockFinancialChart) {
 			mItemViewType = itemViewType;
 			mResource = resource;
 			mStockFinancialChart = stockFinancialChart;
@@ -813,7 +813,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 			ArrayAdapter<StockFinancialChartItem> {
 
 		public StockFinancialChartArrayAdapter(Context context,
-											   List<StockFinancialChartItem> objects) {
+		                                       List<StockFinancialChartItem> objects) {
 			super(context, 0, objects);
 		}
 

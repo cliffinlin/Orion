@@ -158,7 +158,7 @@ public class StockAnalyzer {
 	}
 
 	private void setupTotalShare(ArrayList<StockFinancial> stockFinancialList,
-								 ArrayList<TotalShare> totalShareList) {
+	                             ArrayList<TotalShare> totalShareList) {
 		if (stockFinancialList == null || totalShareList == null) {
 			return;
 		}
@@ -309,7 +309,7 @@ public class StockAnalyzer {
 	}
 
 	private void setupRoi(ArrayList<StockData> stockDataList,
-						  ArrayList<StockFinancial> stockFinancialList) {
+	                      ArrayList<StockFinancial> stockFinancialList) {
 		double price = 0;
 		double pe = 0;
 		double pb = 0;
@@ -460,11 +460,11 @@ public class StockAnalyzer {
 	}
 
 	private void analyzeStockData(Stock stock, String period, ArrayList<StockData> stockDataList,
-								  ArrayList<StockData> drawVertexList, ArrayList<StockData> drawDataList,
-								  ArrayList<StockData> strokeVertexList, ArrayList<StockData> strokeDataList,
-								  ArrayList<StockData> segmentVertexList, ArrayList<StockData> segmentDataList,
-								  ArrayList<StockData> lineVertexList, ArrayList<StockData> lineDataList,
-								  ArrayList<StockData> outlineVertexList, ArrayList<StockData> outlineDataList) {
+	                              ArrayList<StockData> drawVertexList, ArrayList<StockData> drawDataList,
+	                              ArrayList<StockData> strokeVertexList, ArrayList<StockData> strokeDataList,
+	                              ArrayList<StockData> segmentVertexList, ArrayList<StockData> segmentDataList,
+	                              ArrayList<StockData> lineVertexList, ArrayList<StockData> lineDataList,
+	                              ArrayList<StockData> outlineVertexList, ArrayList<StockData> outlineDataList) {
 		StockKeyAnalyzer stockKeyAnalyzer = StockKeyAnalyzer.getInstance();
 		StockVertexAnalyzer stockVertexAnalyzer = StockVertexAnalyzer.getInstance();
 		stockKeyAnalyzer.analyze(stock, stockDataList);
@@ -526,10 +526,10 @@ public class StockAnalyzer {
 	}
 
 	private void analyzeAction(Stock stock, String period, ArrayList<StockData> drawVertexList,
-							   ArrayList<StockData> stockDataList,
-							   ArrayList<StockData> drawDataList,
-							   ArrayList<StockData> strokeDataList,
-							   ArrayList<StockData> segmentDataList) {
+	                           ArrayList<StockData> stockDataList,
+	                           ArrayList<StockData> drawDataList,
+	                           ArrayList<StockData> strokeDataList,
+	                           ArrayList<StockData> segmentDataList) {
 		String action = StockData.MARK_NONE;
 		String trend = StockData.MARK_NONE;
 
@@ -715,8 +715,8 @@ public class StockAnalyzer {
 	}
 
 	private String getSecondBottomAction(Stock stock, ArrayList<StockData> vertexList,
-										 ArrayList<StockData> strokeDataList,
-										 ArrayList<StockData> segmentDataList) {
+	                                     ArrayList<StockData> strokeDataList,
+	                                     ArrayList<StockData> segmentDataList) {
 		String result = "";
 		StockData firstBottomVertex;
 		StockData firstTopVertex;
@@ -782,8 +782,8 @@ public class StockAnalyzer {
 	}
 
 	private String getSecondTopAction(Stock stock, ArrayList<StockData> vertexList,
-									  ArrayList<StockData> strokeDataList,
-									  ArrayList<StockData> segmentDataList) {
+	                                  ArrayList<StockData> strokeDataList,
+	                                  ArrayList<StockData> segmentDataList) {
 		String result = "";
 		StockData firstBottomVertex;
 		StockData firstTopVertex;

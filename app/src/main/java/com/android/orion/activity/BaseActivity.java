@@ -151,7 +151,7 @@ public class BaseActivity extends Activity {
 
 	@Override
 	public void onRequestPermissionsResult(int requestCode,
-										   String[] permissions, int[] grantResults) {
+	                                       String[] permissions, int[] grantResults) {
 		switch (requestCode) {
 			case REQUEST_EXTERNAL_STORAGE: {
 				if (grantResults.length > 0

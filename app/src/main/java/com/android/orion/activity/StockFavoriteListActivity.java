@@ -166,7 +166,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode,
-									Intent intent) {
+	                                Intent intent) {
 		super.onActivityResult(requestCode, resultCode, intent);
 
 		if (resultCode == RESULT_OK) {
@@ -513,7 +513,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
-							long id) {
+	                        long id) {
 
 		if (id <= Stock.INVALID_ID) {
 			return;
@@ -559,7 +559,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
-								   int position, long id) {
+	                               int position, long id) {
 		Intent intent = new Intent(this, StockListActivity.class);
 		startActivity(intent);
 		return true;

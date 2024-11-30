@@ -62,7 +62,7 @@ public class Search {
 	}
 
 	static int binarySearchStockData(int l, int r, Calendar calendar,
-									 ArrayList<StockData> stockDataList) {
+	                                 ArrayList<StockData> stockDataList) {
 		if (r >= l) {
 			int mid = l + (r - l) / 2;
 
@@ -144,7 +144,7 @@ public class Search {
 	}
 
 	static int binarySearchStockFinancial(int l, int r, Calendar calendar,
-										  ArrayList<StockFinancial> stockFinancialList) {
+	                                      ArrayList<StockFinancial> stockFinancialList) {
 		if (r >= l) {
 			int mid = l + (r - l) / 2;
 
@@ -216,7 +216,7 @@ public class Search {
 	}
 
 	static int binarySearchShareBonus(int l, int r, Calendar calendar,
-									  ArrayList<ShareBonus> shareBonusList) {
+	                                  ArrayList<ShareBonus> shareBonusList) {
 		if (r >= l) {
 			int mid = l + (r - l) / 2;
 

@@ -51,14 +51,11 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 	public static final int RESULT_SUCCESS = 1;
 	public static final int RESULT_NONE = 0;
 	public static final int RESULT_FAILED = -1;
-
+	protected static IStockDataProvider mInstance;
 	static ArrayMap<String, Stock> mStockArrayMap = new ArrayMap<>();
 	static ArrayMap<String, Stock> mRemovedArrayMap = new ArrayMap<>();
 	static ArrayList<IndexComponent> mIndexComponentList = new ArrayList<>();
 	static Map<String, StockData> mIndexStockDataMap = new HashMap<>();
-
-	protected static IStockDataProvider mInstance;
-
 	protected Context mContext;
 	protected StockAnalyzer mStockAnalyzer = StockAnalyzer.getInstance();
 	protected DatabaseManager mDatabaseManager = DatabaseManager.getInstance();
@@ -72,17 +69,6 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 	ServiceHandler mHandler;
 
 	Logger Log = Logger.getLogger();
-
-	public static synchronized IStockDataProvider getInstance() {
-		if (TextUtils.equals(Config.stockDataProvider, SinaFinance.PROVIDER_NAME)) {
-			mInstance = SinaFinance.getInstance();
-		} else {
-			if (mInstance == null) {
-				mInstance = new StockDataProvider();
-			}
-		}
-		return mInstance;
-	}
 
 	public StockDataProvider() {
 		mContext = MainApplication.getContext();
@@ -99,6 +85,63 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		mHandler = new ServiceHandler(mHandlerThread.getLooper());
 
 		StockManager.getInstance().registerStockListener(this);
+	}
+
+	public static synchronized IStockDataProvider getInstance() {
+		if (TextUtils.equals(Config.stockDataProvider, SinaFinance.PROVIDER_NAME)) {
+			mInstance = SinaFinance.getInstance();
+		} else {
+			if (mInstance == null) {
+				mInstance = new StockDataProvider();
+			}
+		}
+		return mInstance;
+	}
+
+	@NonNull
+	public static ArrayList<String> getDatetimeMin15List() {
+		ArrayList<String> datetimeList = new ArrayList<>();
+		datetimeList.add("09:45:00");
+		datetimeList.add("10:00:00");
+		datetimeList.add("10:15:00");
+		datetimeList.add("10:30:00");
+		datetimeList.add("10:45:00");
+		datetimeList.add("11:00:00");
+		datetimeList.add("11:15:00");
+		datetimeList.add("11:30:00");
+		datetimeList.add("13:15:00");
+		datetimeList.add("13:30:00");
+		datetimeList.add("13:45:00");
+		datetimeList.add("14:00:00");
+		datetimeList.add("14:15:00");
+		datetimeList.add("14:30:00");
+		datetimeList.add("14:45:00");
+		datetimeList.add("15:00:00");
+		return datetimeList;
+	}
+
+	@NonNull
+	public static ArrayList<String> getDatetimeMinL30ist() {
+		ArrayList<String> datetimeList = new ArrayList<>();
+		datetimeList.add("10:00:00");
+		datetimeList.add("10:30:00");
+		datetimeList.add("11:00:00");
+		datetimeList.add("11:30:00");
+		datetimeList.add("13:30:00");
+		datetimeList.add("14:00:00");
+		datetimeList.add("14:30:00");
+		datetimeList.add("15:00:00");
+		return datetimeList;
+	}
+
+	@NonNull
+	public static ArrayList<String> getDatetimeMin60List() {
+		ArrayList<String> datetimeList = new ArrayList<>();
+		datetimeList.add("10:30:00");
+		datetimeList.add("11:30:00");
+		datetimeList.add("14:00:00");
+		datetimeList.add("15:00:00");
+		return datetimeList;
 	}
 
 	public void acquireWakeLock() {
@@ -376,52 +419,6 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		}
 	}
 
-	@NonNull
-	public static ArrayList<String> getDatetimeMin15List() {
-		ArrayList<String> datetimeList = new ArrayList<>();
-		datetimeList.add("09:45:00");
-		datetimeList.add("10:00:00");
-		datetimeList.add("10:15:00");
-		datetimeList.add("10:30:00");
-		datetimeList.add("10:45:00");
-		datetimeList.add("11:00:00");
-		datetimeList.add("11:15:00");
-		datetimeList.add("11:30:00");
-		datetimeList.add("13:15:00");
-		datetimeList.add("13:30:00");
-		datetimeList.add("13:45:00");
-		datetimeList.add("14:00:00");
-		datetimeList.add("14:15:00");
-		datetimeList.add("14:30:00");
-		datetimeList.add("14:45:00");
-		datetimeList.add("15:00:00");
-		return datetimeList;
-	}
-
-	@NonNull
-	public static ArrayList<String> getDatetimeMinL30ist() {
-		ArrayList<String> datetimeList = new ArrayList<>();
-		datetimeList.add("10:00:00");
-		datetimeList.add("10:30:00");
-		datetimeList.add("11:00:00");
-		datetimeList.add("11:30:00");
-		datetimeList.add("13:30:00");
-		datetimeList.add("14:00:00");
-		datetimeList.add("14:30:00");
-		datetimeList.add("15:00:00");
-		return datetimeList;
-	}
-
-	@NonNull
-	public static ArrayList<String> getDatetimeMin60List() {
-		ArrayList<String> datetimeList = new ArrayList<>();
-		datetimeList.add("10:30:00");
-		datetimeList.add("11:30:00");
-		datetimeList.add("14:00:00");
-		datetimeList.add("15:00:00");
-		return datetimeList;
-	}
-
 	String getStockDataFileName(Stock stock) {
 		String result = "";
 
@@ -618,7 +615,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		if (stockDataMap.size() == 0) {
 			return;
 		}
-		
+
 		ArrayList<StockData> stockDataList = new ArrayList<>(stockDataMap.values());
 		Collections.sort(stockDataList, StockData.comparator);
 		exportStockDataFile(stock, stockData.getPeriod(), stockDataList);
@@ -662,9 +659,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			return;
 		}
 
-		if (mStockArrayMap.containsKey(stock.getCode())) {
-			mStockArrayMap.remove(stock.getCode());
-		}
+		mStockArrayMap.remove(stock.getCode());
 
 		if (mHandler.hasMessages(Integer.parseInt(stock.getCode()))) {
 			mHandler.removeMessages(Integer.parseInt(stock.getCode()));

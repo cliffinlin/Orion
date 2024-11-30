@@ -3,7 +3,6 @@ package com.android.orion.utility;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Environment;
 import android.text.TextUtils;
 
 import com.android.orion.config.Config;
@@ -17,16 +16,11 @@ import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.RandomAccessFile;
-import java.io.Reader;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -675,7 +669,7 @@ public class Utility {
 	}
 
 	public static String bytestoAsciiString(byte[] bytes, int offset,
-											int datalen) {
+	                                        int datalen) {
 
 		if ((bytes == null) || (bytes.length == 0) || (offset < 0)
 				|| (datalen <= 0)) {

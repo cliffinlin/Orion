@@ -21,12 +21,10 @@ import androidx.core.app.NotificationCompat;
 
 import com.android.orion.R;
 import com.android.orion.config.Config;
-import com.android.orion.database.Stock;
 import com.android.orion.manager.ConnectionManager;
 import com.android.orion.provider.StockDataProvider;
 import com.android.orion.receiver.DownloadBroadcastReceiver;
 import com.android.orion.receiver.ReceiverConnection;
-import com.android.orion.utility.Utility;
 
 public class StockService extends Service implements ConnectionManager.OnConnectionChangeListener {
 	private static StockService mInstance;

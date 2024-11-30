@@ -22,7 +22,7 @@ public class StockVertexAnalyzer {
 	}
 
 	void analyzeVertex(ArrayList<StockData> dataList,
-					   ArrayList<StockData> vertexList) {
+	                   ArrayList<StockData> vertexList) {
 		int i;
 		int size;
 		int direction = Trend.DIRECTION_NONE;
@@ -130,8 +130,8 @@ public class StockVertexAnalyzer {
 	}
 
 	void analyzeLine(ArrayList<StockData> stockDataList,
-					 ArrayList<StockData> dataList, ArrayList<StockData> vertexList,
-					 int vertexTypeTop, int vertexTypeBottom) {
+	                 ArrayList<StockData> dataList, ArrayList<StockData> vertexList,
+	                 int vertexTypeTop, int vertexTypeBottom) {
 		int i;
 		int size;
 		int direction;
@@ -194,7 +194,7 @@ public class StockVertexAnalyzer {
 	}
 
 	void extendVertexList(int index, ArrayList<StockData> stockDataList,
-						  ArrayList<StockData> vertexList) {
+	                      ArrayList<StockData> vertexList) {
 		int i;
 		int j;
 		StockData stockData;
@@ -232,7 +232,7 @@ public class StockVertexAnalyzer {
 	}
 
 	void vertexListToDataList(ArrayList<StockData> stockDataList,
-							  ArrayList<StockData> vertexList, ArrayList<StockData> dataList) {
+	                          ArrayList<StockData> vertexList, ArrayList<StockData> dataList) {
 		int size;
 		int direction;
 
@@ -392,7 +392,7 @@ public class StockVertexAnalyzer {
 	}
 
 	void debugShow(ArrayList<StockData> stockDataList,
-				   ArrayList<StockData> dataList) {
+	               ArrayList<StockData> dataList) {
 		int index = 0;
 		StockData data = null;
 		StockData stockData = null;
@@ -443,7 +443,7 @@ public class StockVertexAnalyzer {
 	}
 
 	void testShowVertextNumber(ArrayList<StockData> stockDataList,
-							   ArrayList<StockData> dataList) {
+	                           ArrayList<StockData> dataList) {
 		int index = 0;
 		StockData data = null;
 		StockData stockData = null;

@@ -130,7 +130,7 @@ public class DatabaseManager implements StockListener {
 	}
 
 	public Cursor queryStock(String selection, String[] selectionArgs,
-							 String sortOrder) {
+	                         String sortOrder) {
 		Cursor cursor = null;
 
 		if (mContentResolver == null) {
@@ -247,7 +247,7 @@ public class DatabaseManager implements StockListener {
 	}
 
 	public int getStockCount(String selection, String[] selectionArgs,
-							 String sortOrder) {
+	                         String sortOrder) {
 		int result = 0;
 		Cursor cursor = null;
 
@@ -419,7 +419,7 @@ public class DatabaseManager implements StockListener {
 	}
 
 	public Cursor queryStockData(String[] projection, String selection,
-								 String[] selectionArgs, String sortOrder) {
+	                             String[] selectionArgs, String sortOrder) {
 		Cursor cursor = null;
 
 		if (mContentResolver == null) {
@@ -433,7 +433,7 @@ public class DatabaseManager implements StockListener {
 	}
 
 	public Cursor queryStockData(String selection, String[] selectionArgs,
-								 String sortOrder) {
+	                             String sortOrder) {
 		Cursor cursor = null;
 
 		if (mContentResolver == null) {
@@ -496,7 +496,7 @@ public class DatabaseManager implements StockListener {
 	}
 
 	public void getStockDataList(Stock stock, String period,
-								 ArrayList<StockData> stockDataList, String sortOrder) {
+	                             ArrayList<StockData> stockDataList, String sortOrder) {
 		Cursor cursor = null;
 
 		if ((stock == null) || (stockDataList == null)) {
@@ -525,7 +525,7 @@ public class DatabaseManager implements StockListener {
 	}
 
 	public void loadStockDataList(Stock stock, String period,
-								  ArrayList<StockData> stockDataList) {
+	                              ArrayList<StockData> stockDataList) {
 		Calendar calendar = Calendar.getInstance();
 		Cursor cursor = null;
 		String selection = null;
@@ -879,7 +879,7 @@ public class DatabaseManager implements StockListener {
 	}
 
 	public Cursor queryStockDeal(String selection, String[] selectionArgs,
-								 String sortOrder) {
+	                             String sortOrder) {
 		Cursor cursor = null;
 
 		if (mContentResolver == null) {
@@ -1035,7 +1035,7 @@ public class DatabaseManager implements StockListener {
 	}
 
 	public Cursor queryStockFinancial(String selection, String[] selectionArgs,
-									  String sortOrder) {
+	                                  String sortOrder) {
 		Cursor cursor = null;
 
 		if (mContentResolver == null) {
@@ -1123,7 +1123,7 @@ public class DatabaseManager implements StockListener {
 	}
 
 	public void getStockFinancialList(Stock stock,
-									  ArrayList<StockFinancial> stockFinancialList, String sortOrder) {
+	                                  ArrayList<StockFinancial> stockFinancialList, String sortOrder) {
 		Cursor cursor = null;
 
 		if ((stock == null) || (stockFinancialList == null)) {
@@ -1177,7 +1177,7 @@ public class DatabaseManager implements StockListener {
 	}
 
 	public int updateStockFinancial(StockFinancial stockFinancial,
-									ContentValues contentValues) {
+	                                ContentValues contentValues) {
 		int result = 0;
 
 		if ((stockFinancial == null) || (mContentResolver == null)) {
@@ -1297,7 +1297,7 @@ public class DatabaseManager implements StockListener {
 	}
 
 	public Cursor queryShareBonus(String selection, String[] selectionArgs,
-								  String sortOrder) {
+	                              String sortOrder) {
 		Cursor cursor = null;
 
 		if (mContentResolver == null) {
@@ -1385,7 +1385,7 @@ public class DatabaseManager implements StockListener {
 	}
 
 	public void getShareBonusList(Stock stock,
-								  ArrayList<ShareBonus> shareBonusList, String sortOrder) {
+	                              ArrayList<ShareBonus> shareBonusList, String sortOrder) {
 		Cursor cursor = null;
 
 		if ((stock == null) || (shareBonusList == null)) {
@@ -1439,7 +1439,7 @@ public class DatabaseManager implements StockListener {
 	}
 
 	public int updateShareBonus(ShareBonus shareBonus,
-								ContentValues contentValues) {
+	                            ContentValues contentValues) {
 		int result = 0;
 
 		if ((shareBonus == null) || (mContentResolver == null)) {
@@ -1559,7 +1559,7 @@ public class DatabaseManager implements StockListener {
 	}
 
 	public Cursor queryTotalShare(String selection, String[] selectionArgs,
-								  String sortOrder) {
+	                              String sortOrder) {
 		Cursor cursor = null;
 
 		if (mContentResolver == null) {
@@ -1647,7 +1647,7 @@ public class DatabaseManager implements StockListener {
 	}
 
 	public void getTotalShareList(Stock stock,
-								  ArrayList<TotalShare> totalShareList, String sortOrder) {
+	                              ArrayList<TotalShare> totalShareList, String sortOrder) {
 		Cursor cursor = null;
 
 		if ((stock == null) || (totalShareList == null)) {
@@ -1701,7 +1701,7 @@ public class DatabaseManager implements StockListener {
 	}
 
 	public int updateTotalShare(TotalShare totalShare,
-								ContentValues contentValues) {
+	                            ContentValues contentValues) {
 		int result = 0;
 
 		if ((totalShare == null) || (mContentResolver == null)) {
@@ -1821,7 +1821,7 @@ public class DatabaseManager implements StockListener {
 	}
 
 	public Cursor queryIndexComponent(String selection, String[] selectionArgs,
-									  String sortOrder) {
+	                                  String sortOrder) {
 		Cursor cursor = null;
 
 		if (mContentResolver == null) {

@@ -230,7 +230,7 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode,
-									Intent intent) {
+	                                Intent intent) {
 		super.onActivityResult(requestCode, resultCode, intent);
 
 		if (resultCode == RESULT_OK) {
@@ -729,12 +729,12 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 
 	@Override
 	public void onChartGestureStart(MotionEvent me,
-									ChartGesture lastPerformedGesture) {
+	                                ChartGesture lastPerformedGesture) {
 	}
 
 	@Override
 	public void onChartGestureEnd(MotionEvent me,
-								  ChartGesture lastPerformedGesture) {
+	                              ChartGesture lastPerformedGesture) {
 	}
 
 	static class MainHandler extends Handler {
@@ -763,7 +763,7 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 		}
 
 		public StockDataChartItem(int itemViewType, int resource,
-								  StockDataChart stockDataChart) {
+		                          StockDataChart stockDataChart) {
 			mItemViewType = itemViewType;
 			mResource = resource;
 			mStockDataChart = stockDataChart;
@@ -855,7 +855,7 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 	class StockDataChartArrayAdapter extends ArrayAdapter<StockDataChartItem> {
 
 		public StockDataChartArrayAdapter(Context context,
-										  List<StockDataChartItem> objects) {
+		                                  List<StockDataChartItem> objects) {
 			super(context, 0, objects);
 		}
 

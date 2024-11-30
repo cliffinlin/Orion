@@ -202,7 +202,7 @@ public class StockDealListActivity extends ListActivity implements
 							.setPositiveButton(R.string.ok,
 									new DialogInterface.OnClickListener() {
 										public void onClick(DialogInterface dialog,
-															int which) {
+										                    int which) {
 											mHandler.sendEmptyMessage(MESSAGE_DELETE_DEAL);
 											mode.finish();
 										}
@@ -210,7 +210,7 @@ public class StockDealListActivity extends ListActivity implements
 							.setNegativeButton(R.string.cancel,
 									new DialogInterface.OnClickListener() {
 										public void onClick(DialogInterface dialog,
-															int which) {
+										                    int which) {
 											mode.finish();
 										}
 									}).setIcon(android.R.drawable.ic_dialog_alert)
@@ -794,7 +794,7 @@ public class StockDealListActivity extends ListActivity implements
 
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
-								   int position, long id) {
+	                               int position, long id) {
 
 		if (mCurrentActionMode != null) {
 			return false;

@@ -60,18 +60,10 @@ public class SinaFinance extends StockDataProvider {
 	public static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN15 = 192;
 	public static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN30 = 192;
 	public static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN60 = 192;
-
+	static StringBuffer mContentTitle = new StringBuffer();
 	ArrayList<ContentValues> ContentValuesList = new ArrayList<>();
 	ArrayList<String> mAccessDeniedStringArray = new ArrayList<>();
 	ArrayMap<String, String> mRequestHeader = new ArrayMap<>();
-	static StringBuffer mContentTitle = new StringBuffer();
-
-	public static synchronized IStockDataProvider getInstance() {
-		if (mInstance == null) {
-			mInstance = new SinaFinance();
-		}
-		return mInstance;
-	}
 
 	private SinaFinance() {
 		super();
@@ -84,6 +76,13 @@ public class SinaFinance extends StockDataProvider {
 				R.string.access_denied_default));
 
 		mRequestHeader.put(SINA_FINANCE_HEAD_REFERER_KEY, SINA_FINANCE_HEAD_REFERER_VALUE);
+	}
+
+	public static synchronized IStockDataProvider getInstance() {
+		if (mInstance == null) {
+			mInstance = new SinaFinance();
+		}
+		return mInstance;
 	}
 
 	public int getAvailableHistoryLength(String period) {
@@ -772,7 +771,7 @@ public class SinaFinance extends StockDataProvider {
 	}
 
 	public void handleResponseStockDataHistory(Stock stock, StockData stockData,
-											   String response) {
+	                                           String response) {
 		StopWatch.start();
 		boolean bulkInsert = false;
 		int defaultValue = 0;
@@ -983,7 +982,7 @@ public class SinaFinance extends StockDataProvider {
 	}
 
 	public void handleResponseStockDataRealTime(Stock stock, StockData stockData,
-												String response) {
+	                                            String response) {
 		StopWatch.start();
 		String[] keyValue = null;
 		String[] codeInfo = null;
@@ -1145,7 +1144,7 @@ public class SinaFinance extends StockDataProvider {
 	}
 
 	public void handleResponseStockFinancial(Stock stock, StockFinancial stockFinancial,
-											 String response) {
+	                                         String response) {
 		StopWatch.start();
 		boolean bulkInsert = false;
 		String keyString = "";
@@ -1361,7 +1360,7 @@ public class SinaFinance extends StockDataProvider {
 	}
 
 	public void handleResponseShareBonus(Stock stock, ShareBonus shareBonus,
-										 String response) {
+	                                     String response) {
 		StopWatch.start();
 		boolean bulkInsert = false;
 		String dateString = "";
@@ -1545,7 +1544,7 @@ public class SinaFinance extends StockDataProvider {
 	}
 
 	public void handleResponseTotalShare(Stock stock, TotalShare totalShare,
-										 String response) {
+	                                     String response) {
 		StopWatch.start();
 		boolean bulkInsert = false;
 		String dateString = "";
