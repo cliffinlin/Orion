@@ -16,7 +16,14 @@ public class Config {
 	public static final int DOUBLE_FIXED_DECIMAL = 2;
 	public static final int SERVICE_NOTIFICATION_ID = 600000;
 
-	public static boolean funcCheckNetwork = true;
+	public static final int MAX_CONTENT_LENGTH_MIN60 = 60 * 4;
+	public static final int MAX_CONTENT_LENGTH_MIN30_LONG = 60 * 8;
+	public static final int MAX_CONTENT_LENGTH_MIN15_LONG = 60 * 16;
+	public static final int MAX_CONTENT_LENGTH_MIN5_LONG = 60 * 48;
+
+	public static final int MAX_CONTENT_LENGTH_MIN30_SHORT = 30 * 8;
+	public static final int MAX_CONTENT_LENGTH_MIN15_SHORT = 20 * 16;
+	public static final int MAX_CONTENT_LENGTH_MIN5_SHORT = 20 * 48;
 
 	public static String stockDataProvider = SinaFinance.PROVIDER_NAME;
 

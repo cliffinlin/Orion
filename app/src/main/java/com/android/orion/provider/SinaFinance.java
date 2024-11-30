@@ -143,7 +143,7 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		String symbol = "&symbol=" + stock.getSE() + stock.getCode();
-		String scale = "&scale=" + getPeriodMinutes(stockData.getPeriod());
+		String scale = "&scale=" + Period.getPeriodMinutes(stockData.getPeriod());
 		String ma = "&ma=" + "no";
 		String datalen = "&datalen=" + len;
 

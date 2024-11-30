@@ -48,18 +48,6 @@ import okhttp3.OkHttpClient;
 
 public class StockDataProvider implements StockListener, IStockDataProvider {
 
-	public static final int PERIOD_MINUTES_MIN5 = 5;
-	public static final int PERIOD_MINUTES_MIN15 = 15;
-	public static final int PERIOD_MINUTES_MIN30 = 30;
-	public static final int PERIOD_MINUTES_MIN60 = 60;
-	public static final int PERIOD_MINUTES_DAY = 240;
-	public static final int PERIOD_MINUTES_WEEK = 1680;
-	public static final int PERIOD_MINUTES_MONTH = 7200;
-	public static final int MAX_CONTENT_LENGTH_MIN60 = 60 * 4;
-	public static final int MAX_CONTENT_LENGTH_MIN30 = 60 * 8;
-	public static final int MAX_CONTENT_LENGTH_MIN15 = 60 * 16;
-	public static final int MAX_CONTENT_LENGTH_MIN5 = 60 * 48;
-
 	public static final int RESULT_SUCCESS = 1;
 	public static final int RESULT_NONE = 0;
 	public static final int RESULT_FAILED = -1;
@@ -127,28 +115,6 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		}
 	}
 
-	public int getPeriodMinutes(String period) {
-		int result = 0;
-
-		if (TextUtils.equals(period, Period.MIN5)) {
-			result = PERIOD_MINUTES_MIN5;
-		} else if (TextUtils.equals(period, Period.MIN15)) {
-			result = PERIOD_MINUTES_MIN15;
-		} else if (TextUtils.equals(period, Period.MIN30)) {
-			result = PERIOD_MINUTES_MIN30;
-		} else if (TextUtils.equals(period, Period.MIN60)) {
-			result = PERIOD_MINUTES_MIN60;
-		} else if (TextUtils.equals(period, Period.DAY)) {
-			result = PERIOD_MINUTES_DAY;
-		} else if (TextUtils.equals(period, Period.WEEK)) {
-			result = PERIOD_MINUTES_WEEK;
-		} else if (TextUtils.equals(period, Period.MONTH)) {
-			result = PERIOD_MINUTES_MONTH;
-		}
-
-		return result;
-	}
-
 	public void fixContentValuesList(StockData stockData, ArrayList<ContentValues> contentValuesList) {
 		if (stockData == null || contentValuesList == null) {
 			return;
@@ -159,16 +125,16 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 
 		switch (stockData.getPeriod()) {
 			case Period.MIN5:
-				n = size - MAX_CONTENT_LENGTH_MIN5;
+				n = size - (Setting.getDebugDataFile() ? Config.MAX_CONTENT_LENGTH_MIN5_LONG : Config.MAX_CONTENT_LENGTH_MIN5_SHORT);
 				break;
 			case Period.MIN15:
-				n = size - MAX_CONTENT_LENGTH_MIN15;
+				n = size - (Setting.getDebugDataFile() ? Config.MAX_CONTENT_LENGTH_MIN15_LONG : Config.MAX_CONTENT_LENGTH_MIN15_SHORT);
 				break;
 			case Period.MIN30:
-				n = size - MAX_CONTENT_LENGTH_MIN30;
+				n = size - (Setting.getDebugDataFile() ? Config.MAX_CONTENT_LENGTH_MIN30_LONG : Config.MAX_CONTENT_LENGTH_MIN30_SHORT);
 				break;
 			case Period.MIN60:
-				n = size - MAX_CONTENT_LENGTH_MIN60;
+				n = size - Config.MAX_CONTENT_LENGTH_MIN60;
 				break;
 			default:
 				break;

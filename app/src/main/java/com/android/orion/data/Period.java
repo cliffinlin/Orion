@@ -1,12 +1,21 @@
 package com.android.orion.data;
 
 import android.database.Cursor;
+import android.text.TextUtils;
 
 import com.android.orion.database.StockData;
 
 import java.util.ArrayList;
 
 public class Period {
+	public static final int PERIOD_MINUTES_MIN5 = 5;
+	public static final int PERIOD_MINUTES_MIN15 = 15;
+	public static final int PERIOD_MINUTES_MIN30 = 30;
+	public static final int PERIOD_MINUTES_MIN60 = 60;
+	public static final int PERIOD_MINUTES_DAY = 240;
+	public static final int PERIOD_MINUTES_WEEK = 1680;
+	public static final int PERIOD_MINUTES_MONTH = 7200;
+
 	public static final int TYPE_STOCK_DATA = 0;
 	public static final int TYPE_DRAW_VERTEX = 1;
 	public static final int TYPE_DRAW_DATA = 2;
@@ -52,6 +61,28 @@ public class Period {
 
 	public Period(String name) {
 		mName = name;
+	}
+
+	public static int getPeriodMinutes(String period) {
+		int result = 0;
+
+		if (TextUtils.equals(period, Period.MIN5)) {
+			result = PERIOD_MINUTES_MIN5;
+		} else if (TextUtils.equals(period, Period.MIN15)) {
+			result = PERIOD_MINUTES_MIN15;
+		} else if (TextUtils.equals(period, Period.MIN30)) {
+			result = PERIOD_MINUTES_MIN30;
+		} else if (TextUtils.equals(period, Period.MIN60)) {
+			result = PERIOD_MINUTES_MIN60;
+		} else if (TextUtils.equals(period, Period.DAY)) {
+			result = PERIOD_MINUTES_DAY;
+		} else if (TextUtils.equals(period, Period.WEEK)) {
+			result = PERIOD_MINUTES_WEEK;
+		} else if (TextUtils.equals(period, Period.MONTH)) {
+			result = PERIOD_MINUTES_MONTH;
+		}
+
+		return result;
 	}
 
 	public ArrayList<StockData> getArrayList(int type) {

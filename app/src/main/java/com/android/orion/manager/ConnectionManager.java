@@ -63,10 +63,6 @@ public class ConnectionManager {
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
 
-            if (!Config.funcCheckNetwork) {
-                return;
-            }
-
             switch (msg.what) {
                 case MSG_CONNECTED:
                     for (OnConnectionChangeListener listener: mListener) {
