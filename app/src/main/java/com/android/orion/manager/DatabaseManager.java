@@ -505,7 +505,7 @@ public class DatabaseManager implements StockListener {
 
 		stockDataList.clear();
 
-		String selection = getStockDataSelection(stock.getId(), period, Trend.LEVEL_0);
+		String selection = getStockDataSelection(stock.getId(), period, Trend.LEVEL_NONE);
 
 		try {
 			cursor = queryStockData(selection, null, sortOrder);
@@ -550,7 +550,7 @@ public class DatabaseManager implements StockListener {
 			stockDataList.clear();
 
 			selection = getStockDataSelection(
-					stock.getId(), period, Trend.LEVEL_0);
+					stock.getId(), period, Trend.LEVEL_NONE);
 			sortOrder = getStockDataOrder();
 			cursor = queryStockData(selection, null,
 					sortOrder);

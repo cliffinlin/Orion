@@ -221,7 +221,7 @@ public class SinaFinance extends StockDataProvider {
 			String period = stockData.getPeriod();
 			int defaultValue = getDownloadHistoryLengthDefault(period);
 			String selection = mDatabaseManager.getStockDataSelection(stockId,
-					period, Trend.LEVEL_0);
+					period, Trend.LEVEL_NONE);
 			String sortOrder = mDatabaseManager.getStockDataOrder();
 			cursor = mDatabaseManager.queryStockData(selection, null,
 					sortOrder);

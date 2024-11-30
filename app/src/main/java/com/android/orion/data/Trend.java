@@ -5,7 +5,7 @@ import android.database.Cursor;
 import com.android.orion.database.DatabaseContract;
 
 public class Trend {
-	public static final int LEVEL_0 = 0;//DATA
+	public static final int LEVEL_NONE = 0;//DATA
 	public static final int LEVEL_1 = 1;//DRAW
 	public static final int LEVEL_2 = 2;//STROKE
 	public static final int LEVEL_3 = 3;//SEGMENT
@@ -15,32 +15,32 @@ public class Trend {
 	public static final int LEVEL_MAX = LEVEL_6;
 
 	public static final int DIRECTION_NONE = 0;
-	public static final int DIRECTION_UP_LEVEL_1 = 1 << 0;
-	public static final int DIRECTION_DOWN_LEVEL_1 = 1 << 1;
-	public static final int DIRECTION_UP_LEVEL_2 = 1 << 2;
-	public static final int DIRECTION_DOWN_LEVEL_2 = 1 << 3;
-	public static final int DIRECTION_UP_LEVEL_3 = 1 << 4;
-	public static final int DIRECTION_DOWN_LEVEL_3 = 1 << 5;
-	public static final int DIRECTION_UP_LEVEL_4 = 1 << 6;
-	public static final int DIRECTION_DOWN_LEVEL_4 = 1 << 7;
-	public static final int DIRECTION_UP_LEVEL_5 = 1 << 8;
-	public static final int DIRECTION_DOWN_LEVEL_5 = 1 << 9;
-	public static final int DIRECTION_UP_LEVEL_6 = 1 << 10;
-	public static final int DIRECTION_DOWN_LEVEL_6 = 1 << 11;
+	public static final int DIRECTION_UP = 1 << 0;
+	public static final int DIRECTION_DOWN = -1 << 0;
+	public static final int DIRECTION_UP1 = 1 << 1;
+	public static final int DIRECTION_DOWN1 = -1 << 1;
+	public static final int DIRECTION_UP2 = 1 << 2;
+	public static final int DIRECTION_DOWN2 = -1 << 2;
+	public static final int DIRECTION_UP3 = 1 << 3;
+	public static final int DIRECTION_DOWN3 = -1 << 3;
+	public static final int DIRECTION_UP4 = 1 << 4;
+	public static final int DIRECTION_DOWN4 = -1 << 4;
+	public static final int DIRECTION_UP5 = 1 << 5;
+	public static final int DIRECTION_DOWN5 = -1 << 5;
 
 	public static final int VERTEX_NONE = 0;
-	public static final int VERTEX_TOP_LEVEL_1 = 1 << 0;
-	public static final int VERTEX_BOTTOM_LEVEL_1 = 1 << 1;
-	public static final int VERTEX_TOP_LEVEL_2 = 1 << 2;
-	public static final int VERTEX_BOTTOM_LEVEL_2 = 1 << 3;
-	public static final int VERTEX_TOP_LEVEL_3 = 1 << 4;
-	public static final int VERTEX_BOTTOM_LEVEL_3 = 1 << 5;
-	public static final int VERTEX_TOP_LEVEL_4 = 1 << 6;
-	public static final int VERTEX_BOTTOM_LEVEL_4 = 1 << 7;
-	public static final int VERTEX_TOP_LEVEL_5 = 1 << 8;
-	public static final int VERTEX_BOTTOM_LEVEL_5 = 1 << 9;
-	public static final int VERTEX_TOP_LEVEL_6 = 1 << 10;
-	public static final int VERTEX_BOTTOM_LEVEL_6 = 1 << 11;
+	public static final int VERTEX_TOP = 1 << 0;
+	public static final int VERTEX_BOTTOM = 1 << 1;
+	public static final int VERTEX_TOP1 = 1 << 2;
+	public static final int VERTEX_BOTTOM1 = 1 << 3;
+	public static final int VERTEX_TOP2 = 1 << 4;
+	public static final int VERTEX_BOTTOM2 = 1 << 5;
+	public static final int VERTEX_TOP3 = 1 << 6;
+	public static final int VERTEX_BOTTOM3 = 1 << 7;
+	public static final int VERTEX_TOP4 = 1 << 8;
+	public static final int VERTEX_BOTTOM4 = 1 << 9;
+	public static final int VERTEX_TOP5 = 1 << 10;
+	public static final int VERTEX_BOTTOM5 = 1 << 11;
 
 	public static final int VERTEX_SIZE = 3;
 
@@ -202,9 +202,9 @@ public class Trend {
 		}
 
 		if (upTo(prev) && upTo(next)) {
-			vertex = VERTEX_TOP_LEVEL_1;
+			vertex = VERTEX_TOP;
 		} else if (downTo(prev) && downTo(next)) {
-			vertex = VERTEX_BOTTOM_LEVEL_1;
+			vertex = VERTEX_BOTTOM;
 		}
 		return vertex;
 	}
@@ -215,18 +215,18 @@ public class Trend {
 			return result;
 		}
 		if (upTo(trend)) {
-			result = DIRECTION_UP_LEVEL_1;
+			result = DIRECTION_UP;
 		} else if (downTo(trend)) {
-			result = DIRECTION_DOWN_LEVEL_1;
+			result = DIRECTION_DOWN;
 		}
 		return result;
 	}
 
 	public void merge(int direction, Trend trend) {
-		if (direction == DIRECTION_UP_LEVEL_1) {
+		if (direction == DIRECTION_UP) {
 			setVertexHigh(Math.max(getVertexHigh(), trend.getVertexHigh()));
 			setVertexLow(Math.max(getVertexLow(), trend.getVertexLow()));
-		} else if (direction == DIRECTION_DOWN_LEVEL_1) {
+		} else if (direction == DIRECTION_DOWN) {
 			setVertexHigh(Math.min(getVertexHigh(), trend.getVertexHigh()));
 			setVertexLow(Math.min(getVertexLow(), trend.getVertexLow()));
 		} else {

@@ -124,7 +124,7 @@ public class StockData extends DatabaseTable {
 		mSE = "";
 		mCode = "";
 		mName = "";
-		mLevel = Trend.LEVEL_0;
+		mLevel = Trend.LEVEL_NONE;
 		mDate = "";
 		mTime = "";
 		mPeriod = "";
