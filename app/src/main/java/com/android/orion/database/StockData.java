@@ -87,8 +87,8 @@ public class StockData extends DatabaseTable {
 	private String mTime;
 	private String mPeriod;
 	private final Candlestick mCandlestick = new Candlestick();
-	private final Trend mTrend = new Trend();
 	private final Macd mMacd = new Macd();
+	private final Trend mTrend = new Trend();
 	private String mAction;
 	private double mNaturalRally;
 	private double mUpwardTrend;
@@ -157,16 +157,16 @@ public class StockData extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_HIGH, mCandlestick.getHigh());
 		contentValues.put(DatabaseContract.COLUMN_LOW, mCandlestick.getLow());
 		contentValues.put(DatabaseContract.COLUMN_CLOSE, mCandlestick.getClose());
-		contentValues.put(DatabaseContract.COLUMN_DIRECTION, mTrend.getDirection());
-		contentValues.put(DatabaseContract.COLUMN_VERTEX, mTrend.getVertex());
-		contentValues.put(DatabaseContract.COLUMN_VERTEX_LOW, mTrend.getVertexLow());
-		contentValues.put(DatabaseContract.COLUMN_VERTEX_HIGH, mTrend.getVertexHigh());
 		contentValues.put(DatabaseContract.COLUMN_AVERAGE5, mMacd.getAverage5());
 		contentValues.put(DatabaseContract.COLUMN_AVERAGE10, mMacd.getAverage10());
 		contentValues.put(DatabaseContract.COLUMN_DIF, mMacd.getDIF());
 		contentValues.put(DatabaseContract.COLUMN_DEA, mMacd.getDEA());
 		contentValues.put(DatabaseContract.COLUMN_HISTOGRAM, mMacd.getHistogram());
 		contentValues.put(DatabaseContract.COLUMN_VELOCITY, mMacd.getVelocity());
+		contentValues.put(DatabaseContract.COLUMN_DIRECTION, mTrend.getDirection());
+		contentValues.put(DatabaseContract.COLUMN_VERTEX, mTrend.getVertex());
+		contentValues.put(DatabaseContract.COLUMN_VERTEX_LOW, mTrend.getVertexLow());
+		contentValues.put(DatabaseContract.COLUMN_VERTEX_HIGH, mTrend.getVertexHigh());
 		contentValues.put(DatabaseContract.COLUMN_ACTION, mAction);
 
 		contentValues.put(DatabaseContract.COLUMN_NATURAL_RALLY, mNaturalRally);
@@ -195,8 +195,8 @@ public class StockData extends DatabaseTable {
 		setTime(stockData.mTime);
 		setPeriod(stockData.mPeriod);
 		mCandlestick.set(stockData.mCandlestick);
-		mTrend.set(stockData.mTrend);
 		mMacd.set(stockData.mMacd);
+		mTrend.set(stockData.mTrend);
 		setAction(stockData.mAction);
 
 		setNaturalRally(stockData.mNaturalRally);
@@ -228,8 +228,8 @@ public class StockData extends DatabaseTable {
 		setTime(cursor);
 		setPeriod(cursor);
 		mCandlestick.set(cursor);
-		mTrend.set(cursor);
 		mMacd.set(cursor);
+		mTrend.set(cursor);
 		setAction(cursor);
 
 		setNaturalRally(cursor);
@@ -382,16 +382,16 @@ public class StockData extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_PERIOD)));
 	}
 
+	public Candlestick getCandlestick() {
+		return mCandlestick;
+	}
+
 	public Trend getTrend() {
 		return mTrend;
 	}
 
 	public Macd getMacd() {
 		return mMacd;
-	}
-
-	public Candlestick getCandlestick() {
-		return mCandlestick;
 	}
 
 	public String getAction() {
