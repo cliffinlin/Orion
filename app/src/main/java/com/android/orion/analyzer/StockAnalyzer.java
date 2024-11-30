@@ -471,31 +471,31 @@ public class StockAnalyzer {
 
 		stockVertexAnalyzer.analyzeVertex(stockDataList, drawVertexList);
 		stockVertexAnalyzer.vertexListToDataList(stockDataList, drawVertexList,
-				drawDataList, Trend.LEVEL_1);
+				drawDataList);
 
 		stockVertexAnalyzer.analyzeLine(stockDataList, drawDataList,
 				strokeVertexList, Trend.VERTEX_TOP1,
 				Trend.VERTEX_BOTTOM1);
 		stockVertexAnalyzer.vertexListToDataList(stockDataList, strokeVertexList,
-				strokeDataList, Trend.LEVEL_2);
+				strokeDataList);
 
 		stockVertexAnalyzer.analyzeLine(stockDataList, strokeDataList,
 				segmentVertexList, Trend.VERTEX_TOP2,
 				Trend.VERTEX_BOTTOM2);
 		stockVertexAnalyzer.vertexListToDataList(stockDataList, segmentVertexList,
-				segmentDataList, Trend.LEVEL_3);
+				segmentDataList);
 
 		stockVertexAnalyzer.analyzeLine(stockDataList, segmentDataList,
 				lineVertexList, Trend.VERTEX_TOP3,
 				Trend.VERTEX_BOTTOM3);
 		stockVertexAnalyzer.vertexListToDataList(stockDataList, lineVertexList,
-				lineDataList, Trend.LEVEL_4);
+				lineDataList);
 
 		stockVertexAnalyzer.analyzeLine(stockDataList, lineDataList,
 				outlineVertexList, Trend.VERTEX_TOP4,
 				Trend.VERTEX_BOTTOM4);
 		stockVertexAnalyzer.vertexListToDataList(stockDataList, outlineVertexList,
-				outlineDataList, Trend.LEVEL_5);
+				outlineDataList);
 
 		//stockVertexAnalyzer.testShowVertextNumber(stockDataList, stockDataList);
 

@@ -23,14 +23,14 @@ public class StockVertexAnalyzer {
 
 	void analyzeVertex(ArrayList<StockData> dataList,
 					   ArrayList<StockData> vertexList) {
-		int i = 0;
-		int size = 0;
+		int i;
+		int size;
 		int direction = Trend.DIRECTION_NONE;
-		int vertex = Trend.VERTEX_NONE;
+		int vertex;
 
-		StockData prev = null;
-		StockData current = null;
-		StockData next = null;
+		StockData prev;
+		StockData current;
+		StockData next;
 
 		if ((dataList == null) || (vertexList == null)) {
 			return;
@@ -46,10 +46,6 @@ public class StockVertexAnalyzer {
 		prev = new StockData();
 		current = new StockData();
 		next = new StockData();
-
-		if ((prev == null) || (current == null) || (next == null)) {
-			return;
-		}
 
 		prev.init();
 		current.init();
@@ -113,35 +109,16 @@ public class StockVertexAnalyzer {
 
 			next.init();
 		}
-
-		i = size - 1;
-		if (vertex == Trend.VERTEX_TOP) {
-			direction = Trend.DIRECTION_DOWN;
-		} else if (vertex == Trend.VERTEX_BOTTOM) {
-			direction = Trend.DIRECTION_UP;
-		}
-
-		dataList.get(i).getTrend().setDirection(direction);
-
-		if (vertexList.size() > 0) {
-			i = 0;
-			if (vertexList.get(0).getTrend().vertexOf(Trend.VERTEX_TOP)) {
-				dataList.get(i).getTrend().setVertex(Trend.VERTEX_BOTTOM);
-			} else if (vertexList.get(0).getTrend().vertexOf(Trend.VERTEX_BOTTOM)) {
-				dataList.get(i).getTrend().setVertex(Trend.VERTEX_TOP);
-			}
-		}
 	}
 
 	void analyzeLine(ArrayList<StockData> stockDataList,
 					 ArrayList<StockData> dataList, ArrayList<StockData> vertexList,
 					 int vertexTypeTop, int vertexTypeBottom) {
-		int i = 0;
-		int size = 0;
-		int direction = Trend.DIRECTION_NONE;
+		int i;
+		int size;
+		int direction;
 		int vertex = Trend.VERTEX_NONE;
-
-		StockData stockData = null;
+		StockData stockData;
 
 		if ((stockDataList == null) || (dataList == null)
 				|| (vertexList == null)) {
@@ -200,9 +177,9 @@ public class StockVertexAnalyzer {
 
 	void extendVertexList(int index, ArrayList<StockData> stockDataList,
 						  ArrayList<StockData> vertexList) {
-		int i = 0;
-		int j = 0;
-		StockData stockData = null;
+		int i;
+		int j;
+		StockData stockData;
 
 		if (index == 0) {
 			i = 0;
@@ -237,15 +214,15 @@ public class StockVertexAnalyzer {
 	}
 
 	void vertexListToDataList(ArrayList<StockData> stockDataList,
-							  ArrayList<StockData> vertexList, ArrayList<StockData> dataList, int level) {
-		int size = 0;
-		int direction = Trend.DIRECTION_NONE;
+	                          ArrayList<StockData> vertexList, ArrayList<StockData> dataList) {
+		int size;
+		int direction;
 
-		StockData prev = null;
-		StockData current = null;
-		StockData stockData = null;
+		StockData prev;
+		StockData current;
+		StockData stockData;
 
-		if ((vertexList == null) || (stockDataList == null)
+		if ((stockDataList == null) || (vertexList == null)
 				|| (dataList == null)) {
 			return;
 		}
@@ -298,14 +275,14 @@ public class StockVertexAnalyzer {
 	}
 
 	void analyzeDirection(ArrayList<StockData> stockDataList) {
-		int i = 0;
-		int direction = Trend.DIRECTION_NONE;
+		int i;
+		int direction;
 		int directionBase = Trend.DIRECTION_NONE;
 		int directionStroke = Trend.DIRECTION_NONE;
 		int directionSegment = Trend.DIRECTION_NONE;
 
-		StockData prev = null;
-		StockData stockData = null;
+		StockData prev;
+		StockData stockData;
 		StockData strokeTop = null;
 		StockData strokeBottom = null;
 		StockData segmentTop = null;
