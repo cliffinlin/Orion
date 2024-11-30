@@ -320,7 +320,7 @@ public class StockAnalyzer {
 
 		int j = 0;
 		for (StockData stockData : stockDataList) {
-			price = stockData.getCandlestickChart().getClose();
+			price = stockData.getCandlestick().getClose();
 			if (price == 0) {
 				continue;
 			}
@@ -346,10 +346,6 @@ public class StockAnalyzer {
 					if (roi < 0) {
 						roi = 0;
 					}
-
-					stockData.setPe(pe);
-					stockData.setPb(pb);
-					stockData.setRoi(roi);
 					break;
 				} else {
 					j++;

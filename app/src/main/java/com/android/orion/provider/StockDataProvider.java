@@ -391,8 +391,8 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 				mDatabaseManager.updateStock(index, index.getContentValues());
 
 				if (TextUtils.equals(period, Period.DAY) && (indexStockDataList.size() > 1)) {
-					double prevPrice = indexStockDataList.get(indexStockDataList.size() - 2).getCandlestickChart().getClose();
-					double price = indexStockDataList.get(indexStockDataList.size() - 1).getCandlestickChart().getClose();
+					double prevPrice = indexStockDataList.get(indexStockDataList.size() - 2).getCandlestick().getClose();
+					double price = indexStockDataList.get(indexStockDataList.size() - 1).getCandlestick().getClose();
 					double net = 0;
 					if (prevPrice > 0) {
 						net = 100.0 * (price - prevPrice) / prevPrice;
@@ -511,27 +511,27 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			StockData stockData = stockDataList.get(i);
 
 			if (i == stockDataList.size() - 1) {
-				high = stockData.getCandlestickChart().getHigh();
-				low = stockData.getCandlestickChart().getLow();
+				high = stockData.getCandlestick().getHigh();
+				low = stockData.getCandlestick().getLow();
 
 				result.setDate(stockData.getDate());
 				result.setTime(stockData.getTime());
 			}
 
-			result.getCandlestickChart().setOpen(stockData.getCandlestickChart().getOpen());
+			result.getCandlestick().setOpen(stockData.getCandlestick().getOpen());
 
-			if (stockData.getCandlestickChart().getHigh() > high) {
-				high = stockData.getCandlestickChart().getHigh();
+			if (stockData.getCandlestick().getHigh() > high) {
+				high = stockData.getCandlestick().getHigh();
 			}
-			result.getCandlestickChart().setHigh(high);
+			result.getCandlestick().setHigh(high);
 
-			if (stockData.getCandlestickChart().getLow() < low) {
-				low = stockData.getCandlestickChart().getLow();
+			if (stockData.getCandlestick().getLow() < low) {
+				low = stockData.getCandlestick().getLow();
 			}
-			result.getCandlestickChart().setLow(low);
+			result.getCandlestick().setLow(low);
 
 			if (i == stockDataList.size() - 1) {
-				result.getCandlestickChart().setClose(stockData.getCandlestickChart().getClose());
+				result.getCandlestick().setClose(stockData.getCandlestick().getClose());
 			}
 		}
 

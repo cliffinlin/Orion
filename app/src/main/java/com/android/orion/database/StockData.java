@@ -6,9 +6,10 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
-import com.android.orion.chart.CandlestickChart;
+import com.android.orion.data.Candlestick;
 import com.android.orion.data.Macd;
 import com.android.orion.data.Period;
+import com.android.orion.data.Trend;
 import com.android.orion.setting.Constant;
 import com.android.orion.utility.Utility;
 
@@ -117,23 +118,17 @@ public class StockData extends DatabaseTable {
 	private String mSE;
 	private String mCode;
 	private String mName;
-	private int mLevel;
 	private String mDate;
 	private String mTime;
 	private String mPeriod;
-	private CandlestickChart mCandlestickChart = new CandlestickChart();
-	private double mChange;
-	private double mNet;
+	private Candlestick mCandlestick = new Candlestick();
+	private Trend mTrend = new Trend();
 	private int mDirection;
 	private int mVertex;
 	private double mVertexLow;
 	private double mVertexHigh;
 	private final Macd mMacd = new Macd();
 	private String mAction;
-	private double mRoi;
-	private double mPe;
-	private double mPb;
-	private double mYield;
 	private double mNaturalRally;
 	private double mUpwardTrend;
 	private double mDownwardTrend;
@@ -160,10 +155,8 @@ public class StockData extends DatabaseTable {
 	}
 
 	public boolean isEmpty() {
-
 		boolean result = (mStockId == 0) && TextUtils.isEmpty(mDate)
 				&& TextUtils.isEmpty(mTime);
-
 		return result;
 	}
 
@@ -176,22 +169,14 @@ public class StockData extends DatabaseTable {
 		mSE = "";
 		mCode = "";
 		mName = "";
-		mLevel = LEVEL_NONE;
 		mDate = "";
 		mTime = "";
 		mPeriod = "";
-		mChange = 0;
-		mNet = 0;
 		mDirection = DIRECTION_NONE;
 		mVertex = VERTEX_NONE;
 		mVertexLow = 0;
 		mVertexHigh = 0;
 		mAction = "";
-
-		mRoi = 0;
-		mPe = 0;
-		mPb = 0;
-		mYield = 0;
 
 		mIndex = 0;
 		mIndexStart = 0;
@@ -211,16 +196,13 @@ public class StockData extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_SE, mSE);
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
-		contentValues.put(DatabaseContract.COLUMN_LEVEL, mLevel);
 		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);
 		contentValues.put(DatabaseContract.COLUMN_TIME, mTime);
 		contentValues.put(DatabaseContract.COLUMN_PERIOD, mPeriod);
-		contentValues.put(DatabaseContract.COLUMN_OPEN, mCandlestickChart.getOpen());
-		contentValues.put(DatabaseContract.COLUMN_HIGH, mCandlestickChart.getHigh());
-		contentValues.put(DatabaseContract.COLUMN_LOW, mCandlestickChart.getLow());
-		contentValues.put(DatabaseContract.COLUMN_CLOSE, mCandlestickChart.getClose());
-		contentValues.put(DatabaseContract.COLUMN_CHANGE, mChange);
-		contentValues.put(DatabaseContract.COLUMN_NET, mNet);
+		contentValues.put(DatabaseContract.COLUMN_OPEN, mCandlestick.getOpen());
+		contentValues.put(DatabaseContract.COLUMN_HIGH, mCandlestick.getHigh());
+		contentValues.put(DatabaseContract.COLUMN_LOW, mCandlestick.getLow());
+		contentValues.put(DatabaseContract.COLUMN_CLOSE, mCandlestick.getClose());
 		contentValues.put(DatabaseContract.COLUMN_DIRECTION, mDirection);
 		contentValues.put(DatabaseContract.COLUMN_VERTEX, mVertex);
 		contentValues.put(DatabaseContract.COLUMN_VERTEX_LOW, mVertexLow);
@@ -232,11 +214,6 @@ public class StockData extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_HISTOGRAM, mMacd.getHistogram());
 		contentValues.put(DatabaseContract.COLUMN_VELOCITY, mMacd.getVelocity());
 		contentValues.put(DatabaseContract.COLUMN_ACTION, mAction);
-
-		contentValues.put(DatabaseContract.COLUMN_ROI, mRoi);
-		contentValues.put(DatabaseContract.COLUMN_PE, mPe);
-		contentValues.put(DatabaseContract.COLUMN_PB, mPb);
-		contentValues.put(DatabaseContract.COLUMN_YIELD, mYield);
 
 		contentValues.put(DatabaseContract.COLUMN_NATURAL_RALLY, mNaturalRally);
 		contentValues.put(DatabaseContract.COLUMN_UPWARD_TREND, mUpwardTrend);
@@ -259,24 +236,16 @@ public class StockData extends DatabaseTable {
 		setSE(stockData.mSE);
 		setCode(stockData.mCode);
 		setName(stockData.mName);
-		setLevel(stockData.mLevel);
 		setDate(stockData.mDate);
 		setTime(stockData.mTime);
 		setPeriod(stockData.mPeriod);
-		mCandlestickChart.set(stockData.mCandlestickChart);
-		setChange(stockData.mChange);
-		setNet(stockData.mNet);
+		mCandlestick.set(stockData.mCandlestick);
 		setDirection(stockData.mDirection);
 		setVertex(stockData.mVertex);
 		setVertexLow(stockData.mVertexLow);
 		setVertexHigh(stockData.mVertexHigh);
 		mMacd.set(stockData.mMacd);
 		setAction(stockData.mAction);
-
-		setRoi(stockData.mRoi);
-		setPe(stockData.mPe);
-		setPb(stockData.mPb);
-		setYield(stockData.mYield);
 
 		setNaturalRally(stockData.mNaturalRally);
 		setUpwardTrend(stockData.mUpwardTrend);
@@ -302,24 +271,16 @@ public class StockData extends DatabaseTable {
 		setSE(cursor);
 		setCode(cursor);
 		setName(cursor);
-		setLevel(cursor);
 		setDate(cursor);
 		setTime(cursor);
 		setPeriod(cursor);
-		mCandlestickChart.set(cursor);
-		setChange(cursor);
-		setNet(cursor);
+		mCandlestick.set(cursor);
 		setDirection(cursor);
 		setVertex(cursor);
 		setVertexLow(cursor);
 		setVertexHigh(cursor);
 		mMacd.set(cursor);
 		setAction(cursor);
-
-		setRoi(cursor);
-		setPe(cursor);
-		setPb(cursor);
-		setYield(cursor);
 
 		setNaturalRally(cursor);
 		setUpwardTrend(cursor);
@@ -395,23 +356,6 @@ public class StockData extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_NAME)));
 	}
 
-	public int getLevel() {
-		return mLevel;
-	}
-
-	public void setLevel(int level) {
-		mLevel = level;
-	}
-
-	void setLevel(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setLevel(cursor.getInt(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_LEVEL)));
-	}
-
 	public String getDate() {
 		return mDate;
 	}
@@ -469,40 +413,6 @@ public class StockData extends DatabaseTable {
 
 		setPeriod(cursor.getString(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_PERIOD)));
-	}
-
-	public double getChange() {
-		return mChange;
-	}
-
-	public void setChange(double change) {
-		mChange = change;
-	}
-
-	void setChange(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setChange(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_CHANGE)));
-	}
-
-	public double getNet() {
-		return mNet;
-	}
-
-	public void setNet(double net) {
-		mNet = net;
-	}
-
-	void setNet(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setNet(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_NET)));
 	}
 
 	public int getDirection() {
@@ -577,8 +487,8 @@ public class StockData extends DatabaseTable {
 		return mMacd;
 	}
 
-	public CandlestickChart getCandlestickChart() {
-		return mCandlestickChart;
+	public Candlestick getCandlestick() {
+		return mCandlestick;
 	}
 
 	public String getAction() {
@@ -596,74 +506,6 @@ public class StockData extends DatabaseTable {
 
 		setAction(cursor.getString(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_ACTION)));
-	}
-
-	public double getRoi() {
-		return mRoi;
-	}
-
-	public void setRoi(double roi) {
-		mRoi = roi;
-	}
-
-	void setRoi(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setRoi(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_ROI)));
-	}
-
-	public double getPe() {
-		return mPe;
-	}
-
-	public void setPe(double pe) {
-		mPe = pe;
-	}
-
-	void setPe(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setPe(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_PE)));
-	}
-
-	public double getPb() {
-		return mPb;
-	}
-
-	public void setPb(double pb) {
-		mPb = pb;
-	}
-
-	void setPb(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setPb(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_PB)));
-	}
-
-	public double getYield() {
-		return mYield;
-	}
-
-	public void setYield(double yield) {
-		mYield = yield;
-	}
-
-	void setYield(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setYield(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_YIELD)));
 	}
 
 	public double getNaturalRally() {
@@ -887,41 +729,9 @@ public class StockData extends DatabaseTable {
 		if (stockData == null) {
 			return;
 		}
-		mCandlestickChart.add(stockData.mCandlestickChart, weight);
-		mVertexHigh = mCandlestickChart.getHigh();
-		mVertexLow = mCandlestickChart.getLow();
-	}
-
-	public void setupChange() {
-		mChange = 0;
-
-		if (directionOf(DIRECTION_UP_LEVEL_1)) {
-			mChange = mVertexHigh - mVertexLow;
-		} else if (directionOf(DIRECTION_DOWN_LEVEL_1)) {
-			mChange = mVertexLow - mVertexHigh;
-		} else {
-			mChange = mVertexHigh - mVertexLow;
-		}
-
-		mChange = Utility.Round(mChange);
-	}
-
-	public void setupNet() {
-		mNet = 0;
-
-		if ((mVertexHigh == 0) || (mVertexLow == 0)) {
-			return;
-		}
-
-		if (directionOf(DIRECTION_UP_LEVEL_1)) {
-			mNet = 100.0 * mChange / mVertexLow;
-		} else if (directionOf(DIRECTION_DOWN_LEVEL_1)) {
-			mNet = 100.0 * mChange / mVertexHigh;
-		} else {
-			mNet = 100.0 * mChange / mVertexLow;
-		}
-
-		mNet = Utility.Round(mNet);
+		mCandlestick.add(stockData.mCandlestick, weight);
+		mVertexHigh = mCandlestick.getHigh();
+		mVertexLow = mCandlestick.getLow();
 	}
 
 	public StockData fromString(String string) {
@@ -944,13 +754,13 @@ public class StockData extends DatabaseTable {
 		timeString = strings[1].substring(0, 2) + ":" + strings[1].substring(2, 4) + ":" + "00";
 		setTime(timeString);
 
-		mCandlestickChart.setOpen(Double.parseDouble(strings[2]));
-		mCandlestickChart.setHigh(Double.parseDouble(strings[3]));
-		mCandlestickChart.setLow(Double.parseDouble(strings[4]));
-		mCandlestickChart.setClose(Double.parseDouble(strings[5]));
+		mCandlestick.setOpen(Double.parseDouble(strings[2]));
+		mCandlestick.setHigh(Double.parseDouble(strings[3]));
+		mCandlestick.setLow(Double.parseDouble(strings[4]));
+		mCandlestick.setClose(Double.parseDouble(strings[5]));
 
-		setVertexHigh(mCandlestickChart.getHigh());
-		setVertexLow(mCandlestickChart.getLow());
+		setVertexHigh(mCandlestick.getHigh());
+		setVertexLow(mCandlestick.getLow());
 
 		setCreated(Utility.getCurrentDateTimeString());
 		setModified(Utility.getCurrentDateTimeString());
@@ -966,7 +776,7 @@ public class StockData extends DatabaseTable {
 		String timeString = getTime().substring(0, 5).replace(":", "");
 		stringBuffer.append(dateString + Constant.TAB
 				+ timeString + Constant.TAB
-				+ mCandlestickChart.toString()
+				+ mCandlestick.toString()
 				+ 0 + Constant.TAB
 				+ 0);
 		stringBuffer.append("\r\n");

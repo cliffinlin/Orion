@@ -292,48 +292,8 @@ public class StockVertexAnalyzer {
 			}
 
 			stockData.setDirection(direction);
-			stockData.setupChange();
-			stockData.setupNet();
-			stockData.setLevel(level);
-
 			dataList.add(stockData);
 		}
-	}
-
-	boolean checkStockDateVertex(ArrayList<StockData> stockDataList,
-								 StockData stockData, int bottomVertexType, int topVertexType) {
-		StockData start = null;
-		StockData end = null;
-		boolean result = false;
-
-		if (stockDataList == null) {
-			return result;
-		}
-
-		if (stockData == null) {
-			return result;
-		}
-
-		start = stockDataList.get(stockData.getIndexStart());
-		if (start == null) {
-			return result;
-		}
-		if ((start.getVertex() != bottomVertexType)
-				|| (start.getVertex() != topVertexType)) {
-			return result;
-		}
-		end = stockDataList.get(stockData.getIndexEnd());
-		if (end == null) {
-			return result;
-		}
-		if ((end.getVertex() != bottomVertexType)
-				|| (end.getVertex() != topVertexType)) {
-			return result;
-		}
-
-		result = true;
-
-		return result;
 	}
 
 	void analyzeDirection(ArrayList<StockData> stockDataList) {
@@ -386,13 +346,13 @@ public class StockVertexAnalyzer {
 			}
 
 			if (strokeTop != null) {
-				if (stockData.getCandlestickChart().getHigh() > strokeTop.getCandlestickChart().getHigh()) {
+				if (stockData.getCandlestick().getHigh() > strokeTop.getCandlestick().getHigh()) {
 					directionStroke = StockData.DIRECTION_UP_LEVEL_2;
 				}
 			}
 
 			if (strokeBottom != null) {
-				if (stockData.getCandlestickChart().getLow() < strokeBottom.getCandlestickChart().getLow()) {
+				if (stockData.getCandlestick().getLow() < strokeBottom.getCandlestick().getLow()) {
 					directionStroke = StockData.DIRECTION_DOWN_LEVEL_2;
 				}
 			}
@@ -411,13 +371,13 @@ public class StockVertexAnalyzer {
 			}
 
 			if (segmentTop != null) {
-				if (stockData.getCandlestickChart().getHigh() > segmentTop.getCandlestickChart().getHigh()) {
+				if (stockData.getCandlestick().getHigh() > segmentTop.getCandlestick().getHigh()) {
 					directionSegment = StockData.DIRECTION_UP_LEVEL_3;
 				}
 			}
 
 			if (segmentBottom != null) {
-				if (stockData.getCandlestickChart().getLow() < segmentBottom.getCandlestickChart().getLow()) {
+				if (stockData.getCandlestick().getLow() < segmentBottom.getCandlestick().getLow()) {
 					directionSegment = StockData.DIRECTION_DOWN_LEVEL_3;
 				}
 			}
@@ -440,7 +400,6 @@ public class StockVertexAnalyzer {
 		int index = 0;
 		StockData data = null;
 		StockData stockData = null;
-		String actionString = "";
 
 		if ((stockDataList == null) || (dataList == null)) {
 			return;
@@ -473,25 +432,17 @@ public class StockVertexAnalyzer {
 			}
 
 			if (data.getDirection() == StockData.DIRECTION_UP_LEVEL_1) {
-				stockData.getCandlestickChart().setOpen(data.getVertexLow());
-				stockData.getCandlestickChart().setClose(data.getVertexHigh());
+				stockData.getCandlestick().setOpen(data.getVertexLow());
+				stockData.getCandlestick().setClose(data.getVertexHigh());
 			} else if (data.getDirection() == StockData.DIRECTION_DOWN_LEVEL_1) {
-				stockData.getCandlestickChart().setOpen(data.getVertexHigh());
-				stockData.getCandlestickChart().setClose(data.getVertexLow());
+				stockData.getCandlestick().setOpen(data.getVertexHigh());
+				stockData.getCandlestick().setClose(data.getVertexLow());
 			}
 
-			stockData.getCandlestickChart().setHigh(data.getVertexHigh());
-			stockData.getCandlestickChart().setLow(data.getVertexLow());
+			stockData.getCandlestick().setHigh(data.getVertexHigh());
+			stockData.getCandlestick().setLow(data.getVertexLow());
 
-			actionString = String.valueOf(i);
-
-			if (data.getNet() > 0) {
-				actionString += " +" + data.getNet();
-			} else if (data.getNet() < 0) {
-				actionString += " " + data.getNet();
-			}
-
-			stockData.setAction(actionString);
+			stockData.setAction(String.valueOf(i));
 		}
 	}
 

@@ -1,34 +1,34 @@
-package com.android.orion.chart;
+package com.android.orion.data;
 
 import android.database.Cursor;
 
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.setting.Constant;
 
-public class CandlestickChart {
+public class Candlestick {
 	private double mOpen;
 	private double mHigh;
 	private double mLow;
 	private double mClose;
 
-	public void add(CandlestickChart candlestickChart, long weight) {
-		if (candlestickChart == null) {
+	public void add(Candlestick candlestick, long weight) {
+		if (candlestick == null) {
 			return;
 		}
-		mOpen += candlestickChart.mOpen * weight;
-		mHigh += candlestickChart.mHigh * weight;
-		mLow += candlestickChart.mLow * weight;
-		mClose += candlestickChart.mClose * weight;
+		mOpen += candlestick.mOpen * weight;
+		mHigh += candlestick.mHigh * weight;
+		mLow += candlestick.mLow * weight;
+		mClose += candlestick.mClose * weight;
 	}
 
-	public void set(CandlestickChart candlestickChart) {
-		if (candlestickChart == null) {
+	public void set(Candlestick candlestick) {
+		if (candlestick == null) {
 			return;
 		}
-		setOpen(candlestickChart.mOpen);
-		setHigh(candlestickChart.mHigh);
-		setLow(candlestickChart.mLow);
-		setClose(candlestickChart.mClose);
+		setOpen(candlestick.mOpen);
+		setHigh(candlestick.mHigh);
+		setLow(candlestick.mLow);
+		setClose(candlestick.mClose);
 	}
 
 	public void set(Cursor cursor) {

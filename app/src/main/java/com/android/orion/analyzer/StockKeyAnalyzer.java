@@ -75,14 +75,14 @@ public class StockKeyAnalyzer {
 
 			switch (mThresholdType) {
 				case StockData.THRESHOLD_NATURAL_RALLY:
-					if (current.getCandlestickChart().getHigh() > mNaturalRally) {
+					if (current.getCandlestick().getHigh() > mNaturalRally) {
 						setNaturalRally(current);
-						if (current.getCandlestickChart().getHigh() > mPrevLow * (1.0 + threshold)) {
+						if (current.getCandlestick().getHigh() > mPrevLow * (1.0 + threshold)) {
 							mThresholdType = StockData.THRESHOLD_UPWARD_TREND;
 							setUpwardTrend(current);
 							current.setNaturalRally(0);
 						}
-					} else if (current.getCandlestickChart().getLow() < mNaturalRally * (1.0 - threshold)) {
+					} else if (current.getCandlestick().getLow() < mNaturalRally * (1.0 - threshold)) {
 						mPrevHigh = mNaturalRally;
 						mThresholdType = StockData.THRESHOLD_NATURAL_REACTION;
 						setNaturalReaction(current);
@@ -90,9 +90,9 @@ public class StockKeyAnalyzer {
 					break;
 
 				case StockData.THRESHOLD_UPWARD_TREND:
-					if (current.getCandlestickChart().getHigh() > mUpwardTrend) {
+					if (current.getCandlestick().getHigh() > mUpwardTrend) {
 						setUpwardTrend(current);
-					} else if (current.getCandlestickChart().getLow() < mUpwardTrend * (1.0 - threshold)) {
+					} else if (current.getCandlestick().getLow() < mUpwardTrend * (1.0 - threshold)) {
 						mPrevHigh = mUpwardTrend;
 						mThresholdType = StockData.THRESHOLD_NATURAL_REACTION;
 						setNaturalReaction(current);
@@ -100,9 +100,9 @@ public class StockKeyAnalyzer {
 					break;
 
 				case StockData.THRESHOLD_DOWNWARD_TREND:
-					if (current.getCandlestickChart().getLow() < mDownwardTrend) {
+					if (current.getCandlestick().getLow() < mDownwardTrend) {
 						setDownwardTrend(current);
-					} else if (current.getCandlestickChart().getHigh() > mDownwardTrend * (1.0 + threshold)) {
+					} else if (current.getCandlestick().getHigh() > mDownwardTrend * (1.0 + threshold)) {
 						mPrevLow = mDownwardTrend;
 						mThresholdType = StockData.THRESHOLD_NATURAL_RALLY;
 						setNaturalRally(current);
@@ -110,14 +110,14 @@ public class StockKeyAnalyzer {
 					break;
 
 				case StockData.THRESHOLD_NATURAL_REACTION:
-					if (current.getCandlestickChart().getLow() < mNaturalReaction) {
+					if (current.getCandlestick().getLow() < mNaturalReaction) {
 						setNaturalReaction(current);
-						if (current.getCandlestickChart().getLow() < mPrevHigh * (1.0 - threshold)) {
+						if (current.getCandlestick().getLow() < mPrevHigh * (1.0 - threshold)) {
 							mThresholdType = StockData.THRESHOLD_DOWNWARD_TREND;
 							setDownwardTrend(current);
 							current.setNaturalReaction(0);
 						}
-					} else if (current.getCandlestickChart().getHigh() > mNaturalReaction * (1.0 + threshold)) {
+					} else if (current.getCandlestick().getHigh() > mNaturalReaction * (1.0 + threshold)) {
 						mPrevLow = mNaturalReaction;
 						mThresholdType = StockData.THRESHOLD_NATURAL_RALLY;
 						setNaturalRally(current);
@@ -125,18 +125,18 @@ public class StockKeyAnalyzer {
 					break;
 
 				default:
-					if (current.getCandlestickChart().getHigh() > prev.getCandlestickChart().getHigh()) {
+					if (current.getCandlestick().getHigh() > prev.getCandlestick().getHigh()) {
 						mThresholdType = StockData.THRESHOLD_UPWARD_TREND;
-						mUpwardTrend = current.getCandlestickChart().getHigh();
-						mDownwardTrend = current.getCandlestickChart().getHigh();
-						mPrevHigh = current.getCandlestickChart().getHigh();
-						mPrevLow = current.getCandlestickChart().getHigh();
-					} else if (current.getCandlestickChart().getLow() < prev.getCandlestickChart().getLow()) {
+						mUpwardTrend = current.getCandlestick().getHigh();
+						mDownwardTrend = current.getCandlestick().getHigh();
+						mPrevHigh = current.getCandlestick().getHigh();
+						mPrevLow = current.getCandlestick().getHigh();
+					} else if (current.getCandlestick().getLow() < prev.getCandlestick().getLow()) {
 						mThresholdType = StockData.THRESHOLD_DOWNWARD_TREND;
-						mUpwardTrend = current.getCandlestickChart().getLow();
-						mDownwardTrend = current.getCandlestickChart().getLow();
-						mPrevHigh = current.getCandlestickChart().getLow();
-						mPrevLow = current.getCandlestickChart().getLow();
+						mUpwardTrend = current.getCandlestick().getLow();
+						mDownwardTrend = current.getCandlestick().getLow();
+						mPrevHigh = current.getCandlestick().getLow();
+						mPrevLow = current.getCandlestick().getLow();
 					}
 					break;
 			}
@@ -159,7 +159,7 @@ public class StockKeyAnalyzer {
 			return;
 		}
 
-		mNaturalRally = stockData.getCandlestickChart().getHigh();
+		mNaturalRally = stockData.getCandlestick().getHigh();
 		stockData.setNaturalRally(mNaturalRally);
 	}
 
@@ -169,7 +169,7 @@ public class StockKeyAnalyzer {
 			return;
 		}
 
-		mUpwardTrend = stockData.getCandlestickChart().getHigh();
+		mUpwardTrend = stockData.getCandlestick().getHigh();
 		stockData.setUpwardTrend(mUpwardTrend);
 	}
 
@@ -178,7 +178,7 @@ public class StockKeyAnalyzer {
 			return;
 		}
 
-		mDownwardTrend = stockData.getCandlestickChart().getLow();
+		mDownwardTrend = stockData.getCandlestick().getLow();
 		stockData.setDownwardTrend(mDownwardTrend);
 	}
 
@@ -188,7 +188,7 @@ public class StockKeyAnalyzer {
 			return;
 		}
 
-		mNaturalReaction = stockData.getCandlestickChart().getLow();
+		mNaturalReaction = stockData.getCandlestick().getLow();
 		stockData.setNaturalReaction(mNaturalReaction);
 	}
 }
