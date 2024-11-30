@@ -67,17 +67,17 @@ public class StockAnalyzer {
 			return;
 		}
 
-		ArrayList<StockData> stockDataList = stock.getArrayList(period, Period.TYPE_DATA_LEVEL_0);
-		ArrayList<StockData> drawVertexList = stock.getArrayList(period, Period.TYPE_VERTEX_LEVEL_1);
-		ArrayList<StockData> drawDataList = stock.getArrayList(period, Period.TYPE_DATA_LEVEL_1);
-		ArrayList<StockData> strokeVertexList = stock.getArrayList(period, Period.TYPE_VERTEX_LEVEL_2);
-		ArrayList<StockData> strokeDataList = stock.getArrayList(period, Period.TYPE_DATA_LEVEL_2);
-		ArrayList<StockData> segmentVertexList = stock.getArrayList(period, Period.TYPE_VERTEX_LEVEL_3);
-		ArrayList<StockData> segmentDataList = stock.getArrayList(period, Period.TYPE_DATA_LEVEL_3);
-		ArrayList<StockData> lineVertexList = stock.getArrayList(period, Period.TYPE_VERTEX_LEVEL_4);
-		ArrayList<StockData> lineDataList = stock.getArrayList(period, Period.TYPE_DATA_LEVEL_4);
-		ArrayList<StockData> outlineVertexList = stock.getArrayList(period, Period.TYPE_VERTEX_LEVEL_5);
-		ArrayList<StockData> outlineDataList = stock.getArrayList(period, Period.TYPE_DATA_LEVEL_5);
+		ArrayList<StockData> stockDataList = stock.getArrayList(period, Period.TYPE_STOCK_DATA);
+		ArrayList<StockData> drawVertexList = stock.getArrayList(period, Period.TYPE_DRAW_VERTEX);
+		ArrayList<StockData> drawDataList = stock.getArrayList(period, Period.TYPE_DRAW_DATA);
+		ArrayList<StockData> strokeVertexList = stock.getArrayList(period, Period.TYPE_STROKE_VERTEX);
+		ArrayList<StockData> strokeDataList = stock.getArrayList(period, Period.TYPE_STROKE_DATA);
+		ArrayList<StockData> segmentVertexList = stock.getArrayList(period, Period.TYPE_SEGMENT_VERTEX);
+		ArrayList<StockData> segmentDataList = stock.getArrayList(period, Period.TYPE_SEGMENT_DATA);
+		ArrayList<StockData> lineVertexList = stock.getArrayList(period, Period.TYPE_LINE_VERTEX);
+		ArrayList<StockData> lineDataList = stock.getArrayList(period, Period.TYPE_LINE_DATA);
+		ArrayList<StockData> outlineVertexList = stock.getArrayList(period, Period.TYPE_OUTLINE_VERTEX);
+		ArrayList<StockData> outlineDataList = stock.getArrayList(period, Period.TYPE_OUTLINE_DATA);
 
 		try {
 			setupStockShareBonus(stock);
@@ -474,26 +474,26 @@ public class StockAnalyzer {
 				drawDataList);
 
 		stockVertexAnalyzer.analyzeLine(stockDataList, drawDataList,
-				strokeVertexList, Trend.VERTEX_TOP1,
-				Trend.VERTEX_BOTTOM1);
+				strokeVertexList, Trend.VERTEX_TOP_STROKE,
+				Trend.VERTEX_BOTTOM_STROKE);
 		stockVertexAnalyzer.vertexListToDataList(stockDataList, strokeVertexList,
 				strokeDataList);
 
 		stockVertexAnalyzer.analyzeLine(stockDataList, strokeDataList,
-				segmentVertexList, Trend.VERTEX_TOP2,
-				Trend.VERTEX_BOTTOM2);
+				segmentVertexList, Trend.VERTEX_TOP_SEGMENT,
+				Trend.VERTEX_BOTTOM_SEGMENT);
 		stockVertexAnalyzer.vertexListToDataList(stockDataList, segmentVertexList,
 				segmentDataList);
 
 		stockVertexAnalyzer.analyzeLine(stockDataList, segmentDataList,
-				lineVertexList, Trend.VERTEX_TOP3,
-				Trend.VERTEX_BOTTOM3);
+				lineVertexList, Trend.VERTEX_TOP_LINE,
+				Trend.VERTEX_BOTTOM_LINE);
 		stockVertexAnalyzer.vertexListToDataList(stockDataList, lineVertexList,
 				lineDataList);
 
 		stockVertexAnalyzer.analyzeLine(stockDataList, lineDataList,
-				outlineVertexList, Trend.VERTEX_TOP4,
-				Trend.VERTEX_BOTTOM4);
+				outlineVertexList, Trend.VERTEX_TOP_OUTLINE,
+				Trend.VERTEX_BOTTOM_OUTLINE);
 		stockVertexAnalyzer.vertexListToDataList(stockDataList, outlineVertexList,
 				outlineDataList);
 
@@ -699,14 +699,14 @@ public class StockAnalyzer {
 			return result;
 		}
 
-		if (stockData.getTrend().vertexOf(Trend.VERTEX_BOTTOM1)) {
+		if (stockData.getTrend().vertexOf(Trend.VERTEX_BOTTOM_STROKE)) {
 			result += StockData.MARK_BUY2;
-			if (stockData.getTrend().vertexOf(Trend.VERTEX_BOTTOM2)) {
+			if (stockData.getTrend().vertexOf(Trend.VERTEX_BOTTOM_SEGMENT)) {
 				result += StockData.MARK_BUY2;
 			}
-		} else if (stockData.getTrend().vertexOf(Trend.VERTEX_TOP1)) {
+		} else if (stockData.getTrend().vertexOf(Trend.VERTEX_TOP_STROKE)) {
 			result += StockData.MARK_SELL2;
-			if (stockData.getTrend().vertexOf(Trend.VERTEX_TOP2)) {
+			if (stockData.getTrend().vertexOf(Trend.VERTEX_TOP_SEGMENT)) {
 				result += StockData.MARK_SELL2;
 			}
 		}
@@ -759,7 +759,7 @@ public class StockAnalyzer {
 			return result;
 		}
 
-		if (firstBottomVertex.getTrend().vertexOf(Trend.VERTEX_BOTTOM2)) {
+		if (firstBottomVertex.getTrend().vertexOf(Trend.VERTEX_BOTTOM_SEGMENT)) {
 			baseStockData = segmentDataList.get(segmentDataList.size() - 4);
 			brokenStockData = segmentDataList.get(segmentDataList.size() - 2);
 		} else {
@@ -826,7 +826,7 @@ public class StockAnalyzer {
 			return result;
 		}
 
-		if (firstTopVertex.getTrend().vertexOf(Trend.VERTEX_TOP2)) {
+		if (firstTopVertex.getTrend().vertexOf(Trend.VERTEX_TOP_SEGMENT)) {
 			baseStockData = segmentDataList.get(segmentDataList.size() - 4);
 			brokenStockData = segmentDataList.get(segmentDataList.size() - 2);
 		} else {

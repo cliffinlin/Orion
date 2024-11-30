@@ -55,10 +55,10 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 	public static final int PERIOD_MINUTES_DAY = 240;
 	public static final int PERIOD_MINUTES_WEEK = 1680;
 	public static final int PERIOD_MINUTES_MONTH = 7200;
-	public static final int MAX_CONTENT_LENGTH_MIN60 = 280;
-	public static final int MAX_CONTENT_LENGTH_MIN30 = 560;
-	public static final int MAX_CONTENT_LENGTH_MIN15 = 1120;
-	public static final int MAX_CONTENT_LENGTH_MIN5 = 3360;
+	public static final int MAX_CONTENT_LENGTH_MIN60 = 60 * 4;
+	public static final int MAX_CONTENT_LENGTH_MIN30 = 60 * 8;
+	public static final int MAX_CONTENT_LENGTH_MIN15 = 60 * 16;
+	public static final int MAX_CONTENT_LENGTH_MIN5 = 60 * 48;
 
 	public static final int RESULT_SUCCESS = 1;
 	public static final int RESULT_NONE = 0;
@@ -316,7 +316,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 				Calendar end = null;
 
 				for (Stock stock : stockList) {
-					stockDataList = stock.getArrayList(period, Period.TYPE_DATA_LEVEL_0);
+					stockDataList = stock.getArrayList(period, Period.TYPE_STOCK_DATA);
 					mDatabaseManager.loadStockDataList(stock, period, stockDataList);
 					if ((stockDataList == null) || (stockDataList.size() == 0)) {
 						continue;
@@ -838,8 +838,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 
 				if (Setting.getStockDataChanged(stock.getSE(), stock.getCode())) {
 					Setting.setStockDataChanged(stock.getSE(), stock.getCode(), false);
-					for (int i = Period.PERIODS.length - 1; i >= 0; i--) {
-						String period = Period.PERIODS[i];
+					for (String period : Period.PERIODS) {
 						if (Setting.getPeriod(period)) {
 							mStockAnalyzer.analyze(stock, period);
 						}

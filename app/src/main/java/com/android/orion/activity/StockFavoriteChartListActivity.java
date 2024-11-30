@@ -548,45 +548,45 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 						stockDataChart.mLineList[0].add(drawEntry);
 					}
 
-					if (mStockData.getTrend().vertexOf(Trend.VERTEX_TOP1)) {
+					if (mStockData.getTrend().vertexOf(Trend.VERTEX_TOP_STROKE)) {
 						Entry strokeEntry = new Entry(
 								(float) mStockData.getTrend().getVertexHigh(), index);
 						stockDataChart.mLineList[1].add(strokeEntry);
 					} else if (mStockData
-							.getTrend().vertexOf(Trend.VERTEX_BOTTOM1)) {
+							.getTrend().vertexOf(Trend.VERTEX_BOTTOM_STROKE)) {
 						Entry strokeEntry = new Entry(
 								(float) mStockData.getTrend().getVertexLow(), index);
 						stockDataChart.mLineList[1].add(strokeEntry);
 					}
 
-					if (mStockData.getTrend().vertexOf(Trend.VERTEX_TOP2)) {
+					if (mStockData.getTrend().vertexOf(Trend.VERTEX_TOP_SEGMENT)) {
 						Entry segmentEntry = new Entry(
 								(float) mStockData.getTrend().getVertexHigh(), index);
 						stockDataChart.mLineList[2].add(segmentEntry);
 					} else if (mStockData
-							.getTrend().vertexOf(Trend.VERTEX_BOTTOM2)) {
+							.getTrend().vertexOf(Trend.VERTEX_BOTTOM_SEGMENT)) {
 						Entry segmentEntry = new Entry(
 								(float) mStockData.getTrend().getVertexLow(), index);
 						stockDataChart.mLineList[2].add(segmentEntry);
 					}
 
-					if (mStockData.getTrend().vertexOf(Trend.VERTEX_TOP3)) {
+					if (mStockData.getTrend().vertexOf(Trend.VERTEX_TOP_LINE)) {
 						Entry lineEntry = new Entry(
 								(float) mStockData.getTrend().getVertexHigh(), index);
 						stockDataChart.mLineList[3].add(lineEntry);
 					} else if (mStockData
-							.getTrend().vertexOf(Trend.VERTEX_BOTTOM3)) {
+							.getTrend().vertexOf(Trend.VERTEX_BOTTOM_LINE)) {
 						Entry lineEntry = new Entry(
 								(float) mStockData.getTrend().getVertexLow(), index);
 						stockDataChart.mLineList[3].add(lineEntry);
 					}
 
-					if (mStockData.getTrend().vertexOf(Trend.VERTEX_TOP4)) {
+					if (mStockData.getTrend().vertexOf(Trend.VERTEX_TOP_OUTLINE)) {
 						Entry outlineEntry = new Entry(
 								(float) mStockData.getTrend().getVertexHigh(), index);
 						stockDataChart.mLineList[4].add(outlineEntry);
 					} else if (mStockData
-							.getTrend().vertexOf(Trend.VERTEX_BOTTOM4)) {
+							.getTrend().vertexOf(Trend.VERTEX_BOTTOM_OUTLINE)) {
 						Entry outlineEntry = new Entry(
 								(float) mStockData.getTrend().getVertexLow(), index);
 						stockDataChart.mLineList[4].add(outlineEntry);

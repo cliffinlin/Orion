@@ -53,25 +53,28 @@ public class StockData extends DatabaseTable {
 	public static final int THRESHOLD_NONE = 0;
 	public static final int THRESHOLD_NATURAL_REACTION = -1;
 	public static final int THRESHOLD_DOWNWARD_TREND = -2;
+	public static Comparator<StockData> comparator = new Comparator<StockData>() {
 
-	public static Comparator<StockData> comparator = (arg0, arg1) -> {
-		Calendar calendar0;
-		Calendar calendar1;
+		@Override
+		public int compare(StockData arg0, StockData arg1) {
+			Calendar calendar0;
+			Calendar calendar1;
 
-		if (arg0 == null || arg1 == null) {
-			return 0;
-		}
+			if (arg0 == null || arg1 == null) {
+				return 0;
+			}
 
-		calendar0 = Utility.getCalendar(arg0.getDateTime(),
-				Utility.CALENDAR_DATE_TIME_FORMAT);
-		calendar1 = Utility.getCalendar(arg1.getDateTime(),
-				Utility.CALENDAR_DATE_TIME_FORMAT);
-		if (calendar0.before(calendar1)) {
-			return -1;
-		} else if (calendar0.after(calendar1)) {
-			return 1;
-		} else {
-			return 0;
+			calendar0 = Utility.getCalendar(arg0.getDateTime(),
+					Utility.CALENDAR_DATE_TIME_FORMAT);
+			calendar1 = Utility.getCalendar(arg1.getDateTime(),
+					Utility.CALENDAR_DATE_TIME_FORMAT);
+			if (calendar0.before(calendar1)) {
+				return -1;
+			} else if (calendar0.after(calendar1)) {
+				return 1;
+			} else {
+				return 0;
+			}
 		}
 	};
 

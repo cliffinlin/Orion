@@ -5,42 +5,37 @@ import android.database.Cursor;
 import com.android.orion.database.DatabaseContract;
 
 public class Trend {
+
 	public static final int LEVEL_NONE = 0;//DATA
-	public static final int LEVEL_1 = 1;//DRAW
-	public static final int LEVEL_2 = 2;//STROKE
-	public static final int LEVEL_3 = 3;//SEGMENT
-	public static final int LEVEL_4 = 4;//LINE
-	public static final int LEVEL_5 = 5;//OUTLINE
-	public static final int LEVEL_6 = 6;//
-	public static final int LEVEL_MAX = LEVEL_6;
+	public static final int LEVEL_DRAW = 1;
+	public static final int LEVEL_STROKE = 2;
+	public static final int LEVEL_SEGMENT = 3;
+	public static final int LEVEL_LINE = 4;
+	public static final int LEVEL_OUTLINE = 5;
+	public static final int LEVEL_TREND = 6;
+	public static final int LEVEL_MAX = LEVEL_TREND;
 
 	public static final int DIRECTION_NONE = 0;
 	public static final int DIRECTION_UP = 1 << 0;
-	public static final int DIRECTION_DOWN = -1 << 0;
-	public static final int DIRECTION_UP1 = 1 << 1;
-	public static final int DIRECTION_DOWN1 = -1 << 1;
-	public static final int DIRECTION_UP2 = 1 << 2;
-	public static final int DIRECTION_DOWN2 = -1 << 2;
-	public static final int DIRECTION_UP3 = 1 << 3;
-	public static final int DIRECTION_DOWN3 = -1 << 3;
-	public static final int DIRECTION_UP4 = 1 << 4;
-	public static final int DIRECTION_DOWN4 = -1 << 4;
-	public static final int DIRECTION_UP5 = 1 << 5;
-	public static final int DIRECTION_DOWN5 = -1 << 5;
+	public static final int DIRECTION_DOWN = 1 << 1;
+	public static final int DIRECTION_UP_STROKE = 1 << 2;
+	public static final int DIRECTION_DOWN_STROKE = 1 << 3;
+	public static final int DIRECTION_UP_SEGMENT = 1 << 4;
+	public static final int DIRECTION_DOWN_SEGMENT = 1 << 5;
 
 	public static final int VERTEX_NONE = 0;
 	public static final int VERTEX_TOP = 1 << 0;
 	public static final int VERTEX_BOTTOM = 1 << 1;
-	public static final int VERTEX_TOP1 = 1 << 2;
-	public static final int VERTEX_BOTTOM1 = 1 << 3;
-	public static final int VERTEX_TOP2 = 1 << 4;
-	public static final int VERTEX_BOTTOM2 = 1 << 5;
-	public static final int VERTEX_TOP3 = 1 << 6;
-	public static final int VERTEX_BOTTOM3 = 1 << 7;
-	public static final int VERTEX_TOP4 = 1 << 8;
-	public static final int VERTEX_BOTTOM4 = 1 << 9;
-	public static final int VERTEX_TOP5 = 1 << 10;
-	public static final int VERTEX_BOTTOM5 = 1 << 11;
+	public static final int VERTEX_TOP_STROKE = 1 << 2;
+	public static final int VERTEX_BOTTOM_STROKE = 1 << 3;
+	public static final int VERTEX_TOP_SEGMENT = 1 << 4;
+	public static final int VERTEX_BOTTOM_SEGMENT = 1 << 5;
+	public static final int VERTEX_TOP_LINE = 1 << 6;
+	public static final int VERTEX_BOTTOM_LINE = 1 << 7;
+	public static final int VERTEX_TOP_OUTLINE = 1 << 8;
+	public static final int VERTEX_BOTTOM_OUTLINE = 1 << 9;
+	public static final int VERTEX_TOP_TREND = 1 << 10;
+	public static final int VERTEX_BOTTOM_TREND = 1 << 11;
 
 	public static final int VERTEX_SIZE = 3;
 
