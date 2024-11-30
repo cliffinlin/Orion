@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 
+import com.android.orion.data.Trend;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.DatabaseOpenHelper;
 import com.android.orion.database.IndexComponent;
@@ -504,7 +505,7 @@ public class DatabaseManager implements StockListener {
 
 		stockDataList.clear();
 
-		String selection = getStockDataSelection(stock.getId(), period, StockData.LEVEL_NONE);
+		String selection = getStockDataSelection(stock.getId(), period, Trend.LEVEL_0);
 
 		try {
 			cursor = queryStockData(selection, null, sortOrder);
@@ -549,7 +550,7 @@ public class DatabaseManager implements StockListener {
 			stockDataList.clear();
 
 			selection = getStockDataSelection(
-					stock.getId(), period, StockData.LEVEL_NONE);
+					stock.getId(), period, Trend.LEVEL_0);
 			sortOrder = getStockDataOrder();
 			cursor = queryStockData(selection, null,
 					sortOrder);

@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.text.TextUtils;
 
+import com.android.orion.data.Trend;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockDeal;
@@ -47,7 +48,7 @@ public class StockDataChart {
 	public ArrayList<BarEntry> mHistogramEntryList = new ArrayList<>();
 	public ArrayList<Entry> mVelocityEntryList = new ArrayList<>();
 	public ArrayList<LimitLine> mXLimitLineList = new ArrayList<>();
-	public List<Entry>[] mLineList = new List[StockData.LEVEL_MAX];
+	public List<Entry>[] mLineList = new List[Trend.LEVEL_MAX];
 	public int[] mLineColors = {Color.GRAY, Color.YELLOW, Color.BLACK, Color.RED, Color.MAGENTA};
 	public CombinedData mCombinedDataMain = new CombinedData(mXValues);
 	public CombinedData mCombinedDataSub = new CombinedData(mXValues);
@@ -61,7 +62,7 @@ public class StockDataChart {
 	public StockDataChart(Stock stock, String period) {
 		mStock = stock;
 		mPeriod = period;
-		for (int i = 0; i < StockData.LEVEL_MAX; i++) {
+		for (int i = 0; i < Trend.LEVEL_MAX; i++) {
 			mLineList[i] = new ArrayList<>();
 		}
 	}
@@ -489,7 +490,7 @@ public class StockDataChart {
 		mHistogramEntryList.clear();
 		mVelocityEntryList.clear();
 
-		for (int i = 0; i < StockData.LEVEL_MAX; i++) {
+		for (int i = 0; i < Trend.LEVEL_MAX; i++) {
 			mLineList[i].clear();
 		}
 	}

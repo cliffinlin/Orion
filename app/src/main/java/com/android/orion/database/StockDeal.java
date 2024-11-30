@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.text.TextUtils;
 
+import com.android.orion.data.Trend;
 import com.android.orion.utility.Utility;
 
 import java.util.ArrayList;
@@ -507,7 +508,7 @@ public class StockDeal extends DatabaseTable {
 		double dividend = 0;
 		double result = 0;
 
-		if (shareBonusList == null || shareBonusList.size() < StockData.VERTEX_SIZE) {
+		if (shareBonusList == null || shareBonusList.size() < Trend.VERTEX_SIZE) {
 			return result;
 		}
 

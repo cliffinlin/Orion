@@ -1,5 +1,6 @@
 package com.android.orion.analyzer;
 
+import com.android.orion.data.Trend;
 import com.android.orion.database.StockData;
 import com.android.orion.utility.Logger;
 
@@ -24,8 +25,8 @@ public class StockVertexAnalyzer {
 					   ArrayList<StockData> vertexList) {
 		int i = 0;
 		int size = 0;
-		int direction = StockData.DIRECTION_NONE;
-		int vertex = StockData.VERTEX_NONE;
+		int direction = Trend.DIRECTION_NONE;
+		int vertex = Trend.VERTEX_NONE;
 
 		StockData prev = null;
 		StockData current = null;
@@ -36,7 +37,7 @@ public class StockVertexAnalyzer {
 		}
 
 		size = dataList.size();
-		if (size < StockData.VERTEX_SIZE) {
+		if (size < Trend.VERTEX_SIZE) {
 			return;
 		}
 
@@ -87,8 +88,8 @@ public class StockVertexAnalyzer {
 			dataList.get(i).getTrend().setDirection(direction);
 			dataList.get(i).getTrend().setVertex(vertex);
 
-			if ((vertex == StockData.VERTEX_TOP_LEVEL_1)
-					|| (vertex == StockData.VERTEX_BOTTOM_LEVEL_1)) {
+			if ((vertex == Trend.VERTEX_TOP_LEVEL_1)
+					|| (vertex == Trend.VERTEX_BOTTOM_LEVEL_1)) {
 				vertexList.add(dataList.get(i));
 			}
 
@@ -114,20 +115,20 @@ public class StockVertexAnalyzer {
 		}
 
 		i = size - 1;
-		if (vertex == StockData.VERTEX_TOP_LEVEL_1) {
-			direction = StockData.DIRECTION_DOWN_LEVEL_1;
-		} else if (vertex == StockData.VERTEX_BOTTOM_LEVEL_1) {
-			direction = StockData.DIRECTION_UP_LEVEL_1;
+		if (vertex == Trend.VERTEX_TOP_LEVEL_1) {
+			direction = Trend.DIRECTION_DOWN_LEVEL_1;
+		} else if (vertex == Trend.VERTEX_BOTTOM_LEVEL_1) {
+			direction = Trend.DIRECTION_UP_LEVEL_1;
 		}
 
 		dataList.get(i).getTrend().setDirection(direction);
 
 		if (vertexList.size() > 0) {
 			i = 0;
-			if (vertexList.get(0).getTrend().vertexOf(StockData.VERTEX_TOP_LEVEL_1)) {
-				dataList.get(i).getTrend().setVertex(StockData.VERTEX_BOTTOM_LEVEL_1);
-			} else if (vertexList.get(0).getTrend().vertexOf(StockData.VERTEX_BOTTOM_LEVEL_1)) {
-				dataList.get(i).getTrend().setVertex(StockData.VERTEX_TOP_LEVEL_1);
+			if (vertexList.get(0).getTrend().vertexOf(Trend.VERTEX_TOP_LEVEL_1)) {
+				dataList.get(i).getTrend().setVertex(Trend.VERTEX_BOTTOM_LEVEL_1);
+			} else if (vertexList.get(0).getTrend().vertexOf(Trend.VERTEX_BOTTOM_LEVEL_1)) {
+				dataList.get(i).getTrend().setVertex(Trend.VERTEX_TOP_LEVEL_1);
 			}
 		}
 	}
@@ -137,8 +138,8 @@ public class StockVertexAnalyzer {
 					 int vertexTypeTop, int vertexTypeBottom) {
 		int i = 0;
 		int size = 0;
-		int direction = StockData.DIRECTION_NONE;
-		int vertex = StockData.VERTEX_NONE;
+		int direction = Trend.DIRECTION_NONE;
+		int vertex = Trend.VERTEX_NONE;
 
 		StockData stockData = null;
 
@@ -148,7 +149,7 @@ public class StockVertexAnalyzer {
 		}
 
 		size = dataList.size();
-		if (size < StockData.VERTEX_SIZE) {
+		if (size < Trend.VERTEX_SIZE) {
 			return;
 		}
 
@@ -164,14 +165,14 @@ public class StockVertexAnalyzer {
 				if (i == size - 1) {
 					stockData = stockDataList.get(dataList.get(i - 1)
 							.getTrend().getIndexEnd());
-					if (direction == StockData.DIRECTION_UP_LEVEL_1) {
+					if (direction == Trend.DIRECTION_UP_LEVEL_1) {
 						if (dataList.get(i).getTrend().getVertexLow() < dataList
 								.get(i - 1).getTrend().getVertexLow()) {
 							vertex = vertexTypeTop;
 							stockData.getTrend().setVertex(stockData.getTrend().getVertex() | vertex);
 							vertexList.add(stockData);
 						}
-					} else if (direction == StockData.DIRECTION_DOWN_LEVEL_1) {
+					} else if (direction == Trend.DIRECTION_DOWN_LEVEL_1) {
 						if (dataList.get(i).getTrend().getVertexHigh() > dataList.get(
 								i - 1).getTrend().getVertexHigh()) {
 							vertex = vertexTypeBottom;
@@ -183,9 +184,9 @@ public class StockVertexAnalyzer {
 			} else {
 				stockData = stockDataList
 						.get(dataList.get(i - 2).getTrend().getIndexEnd());
-				if (direction == StockData.DIRECTION_UP_LEVEL_1) {
+				if (direction == Trend.DIRECTION_UP_LEVEL_1) {
 					vertex = vertexTypeTop;
-				} else if (direction == StockData.DIRECTION_DOWN_LEVEL_1) {
+				} else if (direction == Trend.DIRECTION_DOWN_LEVEL_1) {
 					vertex = vertexTypeBottom;
 				} else {
 					Log.d("directionType = " + direction);
@@ -214,17 +215,17 @@ public class StockVertexAnalyzer {
 		stockData = new StockData();
 		stockData.set(stockDataList.get(i));
 
-		if (vertexList.get(j).getTrend().vertexOf(StockData.VERTEX_TOP_LEVEL_1)) {
+		if (vertexList.get(j).getTrend().vertexOf(Trend.VERTEX_TOP_LEVEL_1)) {
 			if (stockDataList.get(i).getTrend().getVertexHigh() > vertexList.get(j).getTrend().getVertexHigh()) {
-				stockData.getTrend().setVertex(StockData.VERTEX_TOP_LEVEL_1);
+				stockData.getTrend().setVertex(Trend.VERTEX_TOP_LEVEL_1);
 			} else {
-				stockData.getTrend().setVertex(StockData.VERTEX_BOTTOM_LEVEL_1);
+				stockData.getTrend().setVertex(Trend.VERTEX_BOTTOM_LEVEL_1);
 			}
-		} else if (vertexList.get(j).getTrend().vertexOf(StockData.VERTEX_BOTTOM_LEVEL_1)) {
+		} else if (vertexList.get(j).getTrend().vertexOf(Trend.VERTEX_BOTTOM_LEVEL_1)) {
 			if (stockDataList.get(i).getTrend().getVertexLow() < vertexList.get(j).getTrend().getVertexLow()) {
-				stockData.getTrend().setVertex(StockData.VERTEX_BOTTOM_LEVEL_1);
+				stockData.getTrend().setVertex(Trend.VERTEX_BOTTOM_LEVEL_1);
 			} else {
-				stockData.getTrend().setVertex(StockData.VERTEX_TOP_LEVEL_1);
+				stockData.getTrend().setVertex(Trend.VERTEX_TOP_LEVEL_1);
 			}
 		}
 
@@ -238,7 +239,7 @@ public class StockVertexAnalyzer {
 	void vertexListToDataList(ArrayList<StockData> stockDataList,
 							  ArrayList<StockData> vertexList, ArrayList<StockData> dataList, int level) {
 		int size = 0;
-		int direction = StockData.DIRECTION_NONE;
+		int direction = Trend.DIRECTION_NONE;
 
 		StockData prev = null;
 		StockData current = null;
@@ -249,7 +250,7 @@ public class StockVertexAnalyzer {
 			return;
 		}
 
-		if (stockDataList.size() < StockData.VERTEX_SIZE) {
+		if (stockDataList.size() < Trend.VERTEX_SIZE) {
 			return;
 		}
 
@@ -275,19 +276,19 @@ public class StockVertexAnalyzer {
 			stockData.set(current);
 			stockData.merge(prev);
 
-			direction = StockData.DIRECTION_NONE;
+			direction = Trend.DIRECTION_NONE;
 
-			if (prev.getTrend().vertexOf(StockData.VERTEX_TOP_LEVEL_1)) {
-				if (current.getTrend().vertexOf(StockData.VERTEX_BOTTOM_LEVEL_1)) {
-					direction = StockData.DIRECTION_DOWN_LEVEL_1;
+			if (prev.getTrend().vertexOf(Trend.VERTEX_TOP_LEVEL_1)) {
+				if (current.getTrend().vertexOf(Trend.VERTEX_BOTTOM_LEVEL_1)) {
+					direction = Trend.DIRECTION_DOWN_LEVEL_1;
 				} else {
-					direction = StockData.DIRECTION_UP_LEVEL_1;
+					direction = Trend.DIRECTION_UP_LEVEL_1;
 				}
-			} else if (prev.getTrend().vertexOf(StockData.VERTEX_BOTTOM_LEVEL_1)) {
-				if (current.getTrend().vertexOf(StockData.VERTEX_TOP_LEVEL_1)) {
-					direction = StockData.DIRECTION_UP_LEVEL_1;
+			} else if (prev.getTrend().vertexOf(Trend.VERTEX_BOTTOM_LEVEL_1)) {
+				if (current.getTrend().vertexOf(Trend.VERTEX_TOP_LEVEL_1)) {
+					direction = Trend.DIRECTION_UP_LEVEL_1;
 				} else {
-					direction = StockData.DIRECTION_DOWN_LEVEL_1;
+					direction = Trend.DIRECTION_DOWN_LEVEL_1;
 				}
 			}
 
@@ -298,10 +299,10 @@ public class StockVertexAnalyzer {
 
 	void analyzeDirection(ArrayList<StockData> stockDataList) {
 		int i = 0;
-		int direction = StockData.DIRECTION_NONE;
-		int directionBase = StockData.DIRECTION_NONE;
-		int directionStroke = StockData.DIRECTION_NONE;
-		int directionSegment = StockData.DIRECTION_NONE;
+		int direction = Trend.DIRECTION_NONE;
+		int directionBase = Trend.DIRECTION_NONE;
+		int directionStroke = Trend.DIRECTION_NONE;
+		int directionSegment = Trend.DIRECTION_NONE;
 
 		StockData prev = null;
 		StockData stockData = null;
@@ -314,7 +315,7 @@ public class StockVertexAnalyzer {
 			return;
 		}
 
-		if (stockDataList.size() < StockData.VERTEX_SIZE) {
+		if (stockDataList.size() < Trend.VERTEX_SIZE) {
 			return;
 		}
 
@@ -324,72 +325,72 @@ public class StockVertexAnalyzer {
 		for (i = 1; i < stockDataList.size(); i++) {
 			stockData = stockDataList.get(i);
 
-			direction = StockData.DIRECTION_NONE;
+			direction = Trend.DIRECTION_NONE;
 
-			if (prev.getTrend().vertexOf(StockData.VERTEX_TOP_LEVEL_1)) {
-				directionBase = StockData.DIRECTION_DOWN_LEVEL_1;
-			} else if (prev.getTrend().vertexOf(StockData.VERTEX_BOTTOM_LEVEL_1)) {
-				directionBase = StockData.DIRECTION_UP_LEVEL_1;
+			if (prev.getTrend().vertexOf(Trend.VERTEX_TOP_LEVEL_1)) {
+				directionBase = Trend.DIRECTION_DOWN_LEVEL_1;
+			} else if (prev.getTrend().vertexOf(Trend.VERTEX_BOTTOM_LEVEL_1)) {
+				directionBase = Trend.DIRECTION_UP_LEVEL_1;
 			}
 
-			if (!(stockData.getTrend().vertexOf(StockData.VERTEX_TOP_LEVEL_1) || stockData
-					.getTrend().vertexOf(StockData.VERTEX_BOTTOM_LEVEL_1))) {
+			if (!(stockData.getTrend().vertexOf(Trend.VERTEX_TOP_LEVEL_1) || stockData
+					.getTrend().vertexOf(Trend.VERTEX_BOTTOM_LEVEL_1))) {
 				direction |= directionBase;
 			}
 
-			if (prev.getTrend().vertexOf(StockData.VERTEX_TOP_LEVEL_2)) {
+			if (prev.getTrend().vertexOf(Trend.VERTEX_TOP_LEVEL_2)) {
 				strokeTop = new StockData(prev);
-				directionStroke = StockData.DIRECTION_DOWN_LEVEL_2;
-			} else if (prev.getTrend().vertexOf(StockData.VERTEX_BOTTOM_LEVEL_2)) {
+				directionStroke = Trend.DIRECTION_DOWN_LEVEL_2;
+			} else if (prev.getTrend().vertexOf(Trend.VERTEX_BOTTOM_LEVEL_2)) {
 				strokeBottom = new StockData(prev);
-				directionStroke = StockData.DIRECTION_UP_LEVEL_2;
+				directionStroke = Trend.DIRECTION_UP_LEVEL_2;
 			}
 
 			if (strokeTop != null) {
 				if (stockData.getCandlestick().getHigh() > strokeTop.getCandlestick().getHigh()) {
-					directionStroke = StockData.DIRECTION_UP_LEVEL_2;
+					directionStroke = Trend.DIRECTION_UP_LEVEL_2;
 				}
 			}
 
 			if (strokeBottom != null) {
 				if (stockData.getCandlestick().getLow() < strokeBottom.getCandlestick().getLow()) {
-					directionStroke = StockData.DIRECTION_DOWN_LEVEL_2;
+					directionStroke = Trend.DIRECTION_DOWN_LEVEL_2;
 				}
 			}
 
-			if (!(stockData.getTrend().vertexOf(StockData.VERTEX_TOP_LEVEL_2) || stockData
-					.getTrend().vertexOf(StockData.VERTEX_BOTTOM_LEVEL_2))) {
+			if (!(stockData.getTrend().vertexOf(Trend.VERTEX_TOP_LEVEL_2) || stockData
+					.getTrend().vertexOf(Trend.VERTEX_BOTTOM_LEVEL_2))) {
 				direction |= directionStroke;
 			}
 
-			if (prev.getTrend().vertexOf(StockData.VERTEX_TOP_LEVEL_3)) {
+			if (prev.getTrend().vertexOf(Trend.VERTEX_TOP_LEVEL_3)) {
 				segmentTop = new StockData(prev);
-				directionSegment = StockData.DIRECTION_DOWN_LEVEL_3;
-			} else if (prev.getTrend().vertexOf(StockData.VERTEX_BOTTOM_LEVEL_3)) {
+				directionSegment = Trend.DIRECTION_DOWN_LEVEL_3;
+			} else if (prev.getTrend().vertexOf(Trend.VERTEX_BOTTOM_LEVEL_3)) {
 				segmentBottom = new StockData(prev);
-				directionSegment = StockData.DIRECTION_UP_LEVEL_3;
+				directionSegment = Trend.DIRECTION_UP_LEVEL_3;
 			}
 
 			if (segmentTop != null) {
 				if (stockData.getCandlestick().getHigh() > segmentTop.getCandlestick().getHigh()) {
-					directionSegment = StockData.DIRECTION_UP_LEVEL_3;
+					directionSegment = Trend.DIRECTION_UP_LEVEL_3;
 				}
 			}
 
 			if (segmentBottom != null) {
 				if (stockData.getCandlestick().getLow() < segmentBottom.getCandlestick().getLow()) {
-					directionSegment = StockData.DIRECTION_DOWN_LEVEL_3;
+					directionSegment = Trend.DIRECTION_DOWN_LEVEL_3;
 				}
 			}
 
-			if (!(stockData.getTrend().vertexOf(StockData.VERTEX_TOP_LEVEL_3) || stockData
-					.getTrend().vertexOf(StockData.VERTEX_BOTTOM_LEVEL_3))) {
+			if (!(stockData.getTrend().vertexOf(Trend.VERTEX_TOP_LEVEL_3) || stockData
+					.getTrend().vertexOf(Trend.VERTEX_BOTTOM_LEVEL_3))) {
 				direction |= directionSegment;
 			}
 
 			stockData.getTrend().setDirection(direction);
 
-			if (stockData.getTrend().getVertex() != StockData.VERTEX_NONE) {
+			if (stockData.getTrend().getVertex() != Trend.VERTEX_NONE) {
 				prev = stockDataList.get(i);
 			}
 		}
@@ -431,10 +432,10 @@ public class StockVertexAnalyzer {
 				return;
 			}
 
-			if (data.getTrend().getDirection() == StockData.DIRECTION_UP_LEVEL_1) {
+			if (data.getTrend().getDirection() == Trend.DIRECTION_UP_LEVEL_1) {
 				stockData.getCandlestick().setOpen(data.getTrend().getVertexLow());
 				stockData.getCandlestick().setClose(data.getTrend().getVertexHigh());
-			} else if (data.getTrend().getDirection() == StockData.DIRECTION_DOWN_LEVEL_1) {
+			} else if (data.getTrend().getDirection() == Trend.DIRECTION_DOWN_LEVEL_1) {
 				stockData.getCandlestick().setOpen(data.getTrend().getVertexHigh());
 				stockData.getCandlestick().setClose(data.getTrend().getVertexLow());
 			}

@@ -1,6 +1,7 @@
 package com.android.orion.analyzer
 
 import com.android.orion.data.Period
+import com.android.orion.data.Trend
 import com.android.orion.database.StockData
 import com.android.orion.setting.Constant
 
@@ -166,7 +167,7 @@ object MacdAnalyzer {
     fun calculate(period: String, stockDataList: ArrayList<StockData>) {
         init(period, stockDataList)
 
-        if (mPriceList.size < StockData.VERTEX_SIZE) {
+        if (mPriceList.size < Trend.VERTEX_SIZE) {
             return
         }
 

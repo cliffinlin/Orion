@@ -12,6 +12,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.android.orion.R;
 import com.android.orion.config.Config;
 import com.android.orion.data.Period;
+import com.android.orion.data.Trend;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
@@ -220,7 +221,7 @@ public class SinaFinance extends StockDataProvider {
 			String period = stockData.getPeriod();
 			int defaultValue = getDownloadHistoryLengthDefault(period);
 			String selection = mDatabaseManager.getStockDataSelection(stockId,
-					period, StockData.LEVEL_NONE);
+					period, Trend.LEVEL_0);
 			String sortOrder = mDatabaseManager.getStockDataOrder();
 			cursor = mDatabaseManager.queryStockData(selection, null,
 					sortOrder);

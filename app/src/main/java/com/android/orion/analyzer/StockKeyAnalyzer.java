@@ -1,5 +1,6 @@
 package com.android.orion.analyzer;
 
+import com.android.orion.data.Trend;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 
@@ -54,7 +55,7 @@ public class StockKeyAnalyzer {
 		}
 
 		size = dataList.size();
-		if (size < StockData.VERTEX_SIZE) {
+		if (size < Trend.VERTEX_SIZE) {
 			return;
 		}
 
