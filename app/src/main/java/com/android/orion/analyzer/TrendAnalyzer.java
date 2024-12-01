@@ -6,17 +6,17 @@ import com.android.orion.utility.Logger;
 
 import java.util.ArrayList;
 
-public class StockVertexAnalyzer {
+public class TrendAnalyzer {
 
-	private static StockVertexAnalyzer mInstance;
+	private static TrendAnalyzer mInstance;
 	Logger Log = Logger.getLogger();
 
-	private StockVertexAnalyzer() {
+	private TrendAnalyzer() {
 	}
 
-	public static synchronized StockVertexAnalyzer getInstance() {
+	public static synchronized TrendAnalyzer getInstance() {
 		if (mInstance == null) {
-			mInstance = new StockVertexAnalyzer();
+			mInstance = new TrendAnalyzer();
 		}
 		return mInstance;
 	}
@@ -72,7 +72,6 @@ public class StockVertexAnalyzer {
 				dataList.get(i).set(current);
 
 				prev.set(current);
-
 				current.init();
 				next.init();
 				continue;
@@ -90,23 +89,21 @@ public class StockVertexAnalyzer {
 			}
 
 			if (current.getTrend().include(next.getTrend()) || current.getTrend().includedBy(next.getTrend())) {
-				if (i < size - 2) {
-					current.getTrend().merge(direction, next.getTrend());
-					next.getTrend().merge(direction, current.getTrend());
+				if (i < size - 2) {//TODO
+				current.getTrend().merge(direction, next.getTrend());
+				next.getTrend().merge(direction, current.getTrend());
 
-					dataList.get(i).set(current);
-					dataList.get(i + 1).set(next);
+				dataList.get(i).set(current);
+				dataList.get(i + 1).set(next);
 
-					current.set(next);
-
-					next.init();
-					continue;
+				current.set(next);
+				next.init();
+				continue;
 				}
 			}
 
 			prev.set(current);
 			current.set(next);
-
 			next.init();
 		}
 
