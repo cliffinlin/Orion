@@ -49,10 +49,9 @@ public class StockDealListActivity extends ListActivity implements
 	static final int LOADER_ID_DEAL_LIST = 0;
 
 	static final int FILTER_TYPE_NONE = 0;
-	static final int FILTER_TYPE_OPERATE = 1;
-	static final int FILTER_TYPE_BUY = 2;
-	static final int FILTER_TYPE_SELL = 3;
-	static final int FILTER_TYPE_ALL = 4;
+	static final int FILTER_TYPE_BUY = 1;
+	static final int FILTER_TYPE_SELL = 2;
+	static final int FILTER_TYPE_ALL = 3;
 
 	static final int MESSAGE_DELETE_DEAL = 0;
 	static final int MESSAGE_DELETE_DEAL_LIST = 1;
@@ -119,7 +118,7 @@ public class StockDealListActivity extends ListActivity implements
 				case MESSAGE_DELETE_DEAL:
 					mDatabaseManager.getStockDealById(mStockDeal);
 					getStock();
-					RecordFile.writeDealFile(mStock, mStockDeal, Constant.DEAL_OPERATE_DELETE);
+					RecordFile.writeDealFile(mStock, mStockDeal, Constant.DEAL_DELETE);
 					mDatabaseManager.deleteStockDeal(mStockDeal);
 					mDatabaseManager.updateStockDeal(mStock);
 					mDatabaseManager.updateStock(mStock,
@@ -287,11 +286,6 @@ public class StockDealListActivity extends ListActivity implements
 
 			case R.id.action_none:
 				mFilterType = FILTER_TYPE_NONE;
-				restartLoader();
-				return true;
-
-			case R.id.action_operate:
-				mFilterType = FILTER_TYPE_OPERATE;
 				restartLoader();
 				return true;
 
@@ -657,10 +651,6 @@ public class StockDealListActivity extends ListActivity implements
 		switch (mFilterType) {
 			case FILTER_TYPE_NONE:
 				typeSelection = DatabaseContract.COLUMN_ACTION + " = ''";
-				break;
-
-			case FILTER_TYPE_OPERATE:
-				typeSelection = DatabaseContract.COLUMN_ACTION + " != ''";
 				break;
 
 			case FILTER_TYPE_BUY:

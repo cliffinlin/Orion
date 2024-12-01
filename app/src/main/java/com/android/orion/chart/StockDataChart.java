@@ -168,7 +168,7 @@ public class StockDataChart {
 			if (mLineList[2].size() > 0) {
 				LineDataSet lineDataSet = new LineDataSet(mLineList[2],
 						"Segment");
-				if (!TextUtils.isEmpty(mStock.getOperate())) {
+				if (mStock.hasFlag(Stock.FLAG_NOTIFY)) {
 					lineDataSet.setDrawFilled(true);
 				}
 				lineDataSet.setColor(mLineColors[2]);

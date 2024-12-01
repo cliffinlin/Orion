@@ -18,9 +18,9 @@ public class Constant {
 	public static final String ACTION_STOCK_TREND_LIST = "orion.intent.action.ACTION_STOCK_TREND_LIST";
 
 	public static final String DEAL = "deal";
-	public static final String DEAL_OPERATE_INSERT = "insert";
-	public static final String DEAL_OPERATE_EDIT = "edit";
-	public static final String DEAL_OPERATE_DELETE = "delete";
+	public static final String DEAL_INSERT = "insert";
+	public static final String DEAL_EDIT = "edit";
+	public static final String DEAL_DELETE = "delete";
 	public static final String FAVORITE = "favorite";
 	public static final String NOTIFICATION = "notification";
 

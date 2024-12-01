@@ -50,10 +50,6 @@ public class StockDealActivity extends DatabaseActivity implements
 	EditText mEditTextSellPrice;
 	EditText mEditTextDealVolume;
 
-	List<String> mListStockOperate;
-	ArrayAdapter<String> mArrayAdapterStockOperate;
-	Spinner mSpinnerStockOperate;
-
 	Button mButtonOk;
 	Button mButtonCancel;
 
@@ -72,17 +68,17 @@ public class StockDealActivity extends DatabaseActivity implements
 					mStock.setCode(mDeal.getCode());
 					mDatabaseManager.getStock(mStock);
 					updateView();
-					RecordFile.writeDealFile(mStock, mDeal, Constant.DEAL_OPERATE_EDIT);
+					RecordFile.writeDealFile(mStock, mDeal, Constant.DEAL_EDIT);
 					break;
 
 				case MESSAGE_SAVE_DEAL:
 					if (TextUtils.equals(mAction, Constant.ACTION_DEAL_INSERT)) {
 						mDeal.setCreated(Utility.getCurrentDateTimeString());
-						RecordFile.writeDealFile(mStock, mDeal, Constant.DEAL_OPERATE_INSERT);
+						RecordFile.writeDealFile(mStock, mDeal, Constant.DEAL_INSERT);
 						mDatabaseManager.insertStockDeal(mDeal);
 					} else if (TextUtils.equals(mAction, Constant.ACTION_DEAL_EDIT)) {
 						mDeal.setModified(Utility.getCurrentDateTimeString());
-						RecordFile.writeDealFile(mStock, mDeal, Constant.DEAL_OPERATE_EDIT);
+						RecordFile.writeDealFile(mStock, mDeal, Constant.DEAL_EDIT);
 						mDatabaseManager.updateStockDealByID(mDeal);
 					}
 					mDatabaseManager.updateStockDeal(mStock);
@@ -152,7 +148,6 @@ public class StockDealActivity extends DatabaseActivity implements
 		mEditTextBuyPrice = findViewById(R.id.edittext_buy_price);
 		mEditTextSellPrice = findViewById(R.id.edittext_sell_price);
 		mEditTextDealVolume = findViewById(R.id.edittext_deal_volume);
-		mSpinnerStockOperate = findViewById(R.id.spinner_stock_operate);
 		mButtonOk = findViewById(R.id.button_ok);
 		mButtonCancel = findViewById(R.id.button_cancel);
 
@@ -186,22 +181,6 @@ public class StockDealActivity extends DatabaseActivity implements
 		mArrayAdapterStockAccount
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		mSpinnerStockAccount.setAdapter(mArrayAdapterStockAccount);
-
-		mListStockOperate = new ArrayList<>();
-		mListStockOperate.add("");
-		mListStockOperate.add(Period.MONTH);
-		mListStockOperate.add(Period.WEEK);
-		mListStockOperate.add(Period.DAY);
-		mListStockOperate.add(Period.MIN60);
-		mListStockOperate.add(Period.MIN30);
-		mListStockOperate.add(Period.MIN15);
-		mListStockOperate.add(Period.MIN5);
-
-		mArrayAdapterStockOperate = new ArrayAdapter<String>(this,
-				android.R.layout.simple_spinner_item, mListStockOperate);
-		mArrayAdapterStockOperate
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		mSpinnerStockOperate.setAdapter(mArrayAdapterStockOperate);
 
 		if (TextUtils.equals(mAction, Constant.ACTION_DEAL_INSERT)) {
 			setTitle(R.string.deal_insert);
@@ -262,13 +241,6 @@ public class StockDealActivity extends DatabaseActivity implements
 		mEditTextBuyPrice.setText(String.valueOf(mDeal.getBuy()));
 		mEditTextSellPrice.setText(String.valueOf(mDeal.getSell()));
 		mEditTextDealVolume.setText(String.valueOf(mDeal.getVolume()));
-		String dealAction = mDeal.getAction();
-		for (int i = 0; i < mListStockOperate.size(); i++) {
-			if (TextUtils.equals(mListStockOperate.get(i), dealAction)) {
-				mSpinnerStockOperate.setSelection(i);
-				break;
-			}
-		}
 	}
 
 	@Override
@@ -309,9 +281,6 @@ public class StockDealActivity extends DatabaseActivity implements
 
 				String stockAccount = mSpinnerStockAccount.getSelectedItem().toString();
 				mDeal.setAccount(stockAccount);
-
-				String dealAction = mSpinnerStockOperate.getSelectedItem().toString();
-				mDeal.setAction(dealAction);
 
 				buyString = mEditTextBuyPrice.getText().toString();
 				if (!TextUtils.isEmpty(buyString)) {

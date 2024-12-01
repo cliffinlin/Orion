@@ -31,19 +31,16 @@ import com.android.orion.utility.Utility;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StockActivity extends DatabaseActivity implements OnClickListener, AdapterView.OnItemSelectedListener {
+public class StockActivity extends DatabaseActivity implements OnClickListener {
 
 	CheckBox mCheckBoxFavorite;
+	CheckBox mCheckBoxNotify;
 	RadioGroup mRadioGroupClass;
 	RadioGroup mRadioGroupSE;
 	EditText mEditTextStockName;
 	EditText mEditTextStockCode;
 	EditText mEditTextStockHold;
 	EditText mEditTextStockThreshold;
-
-	List<String> mListStockOperate;
-	ArrayAdapter<String> mArrayAdapter;
-	Spinner mSpinnerStockAction;
 
 	Button mButtonOk;
 	Button mButtonCancel;
@@ -64,42 +61,26 @@ public class StockActivity extends DatabaseActivity implements OnClickListener, 
 
 	void initView() {
 		mCheckBoxFavorite = findViewById(R.id.checkbox_favorite);
+		mCheckBoxNotify = findViewById(R.id.checkbox_notify);
 		mRadioGroupClass = findViewById(R.id.radio_group_class);
 		mRadioGroupSE = findViewById(R.id.radio_group_se);
 		mEditTextStockName = findViewById(R.id.edittext_stock_name);
 		mEditTextStockCode = findViewById(R.id.edittext_stock_code);
 		mEditTextStockHold = findViewById(R.id.edittext_stock_hold);
 		mEditTextStockThreshold = findViewById(R.id.edittext_threshold);
-		mSpinnerStockAction = findViewById(R.id.spinner_stock_operate);
 		mButtonOk = findViewById(R.id.button_ok);
 		mButtonCancel = findViewById(R.id.button_cancel);
 
 		mCheckBoxFavorite.setOnClickListener(this);
+		mCheckBoxNotify.setOnClickListener(this);
 		mRadioGroupClass.setOnClickListener(this);
 		mRadioGroupSE.setOnClickListener(this);
 		mEditTextStockName.setOnClickListener(this);
 		mEditTextStockCode.setOnClickListener(this);
 		mEditTextStockHold.setOnClickListener(this);
 		mEditTextStockThreshold.setOnClickListener(this);
-		mSpinnerStockAction.setOnItemSelectedListener(this);
 		mButtonOk.setOnClickListener(this);
 		mButtonCancel.setOnClickListener(this);
-
-		mListStockOperate = new ArrayList<>();
-		mListStockOperate.add("");
-		mListStockOperate.add(Period.MONTH);
-		mListStockOperate.add(Period.WEEK);
-		mListStockOperate.add(Period.DAY);
-		mListStockOperate.add(Period.MIN60);
-		mListStockOperate.add(Period.MIN30);
-		mListStockOperate.add(Period.MIN15);
-		mListStockOperate.add(Period.MIN5);
-
-		mArrayAdapter = new ArrayAdapter<>(this,
-				android.R.layout.simple_spinner_item, mListStockOperate);
-		mArrayAdapter
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		mSpinnerStockAction.setAdapter(mArrayAdapter);
 
 		mEditTextStockCode.addTextChangedListener(new TextWatcher() {
 
@@ -155,6 +136,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener, 
 
 	void updateView() {
 		mCheckBoxFavorite.setChecked(mStock.hasFlag(Stock.FLAG_FAVORITE));
+		mCheckBoxNotify.setChecked(mStock.hasFlag(Stock.FLAG_NOTIFY));
 
 		if (TextUtils.equals(mStock.getClasses(), Stock.CLASS_A)) {
 			mRadioGroupClass.check(R.id.radio_class_hsa);
@@ -172,13 +154,6 @@ public class StockActivity extends DatabaseActivity implements OnClickListener, 
 		mEditTextStockCode.setText(mStock.getCode());
 		mEditTextStockHold.setText(String.valueOf(mStock.getHold()));
 		mEditTextStockThreshold.setText(String.valueOf(mStock.getThreshold()));
-
-		for (int i = 0; i < mListStockOperate.size(); i++) {
-			if (TextUtils.equals(mListStockOperate.get(i), mStock.getOperate())) {
-				mSpinnerStockAction.setSelection(i);
-				break;
-			}
-		}
 	}
 
 	@Override
@@ -214,6 +189,14 @@ public class StockActivity extends DatabaseActivity implements OnClickListener, 
 				}
 				break;
 
+			case R.id.checkbox_notify:
+				if (mCheckBoxNotify.isChecked()) {
+					mStock.addFlag(Stock.FLAG_NOTIFY);
+				} else {
+					mStock.removeFlag(Stock.FLAG_NOTIFY);
+				}
+				break;
+
 			case R.id.button_ok:
 				if (mCheckBoxFavorite.isChecked()) {
 					mStock.addFlag(Stock.FLAG_FAVORITE);
@@ -221,7 +204,11 @@ public class StockActivity extends DatabaseActivity implements OnClickListener, 
 					mStock.removeFlag(Stock.FLAG_FAVORITE);
 				}
 
-				mStock.setOperate(mSpinnerStockAction.getSelectedItem().toString());
+				if (mCheckBoxNotify.isChecked()) {
+					mStock.addFlag(Stock.FLAG_NOTIFY);
+				} else {
+					mStock.removeFlag(Stock.FLAG_NOTIFY);
+				}
 
 				String name = mEditTextStockName.getText().toString();
 				String code = mEditTextStockCode.getText().toString();
@@ -311,22 +298,5 @@ public class StockActivity extends DatabaseActivity implements OnClickListener, 
 			default:
 				break;
 		}
-	}
-
-	@Override
-	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-		String operate;
-
-		operate = mSpinnerStockAction.getSelectedItem().toString();
-		if (!TextUtils.isEmpty(operate)) {
-			if (!TextUtils.equals(operate, mStock.getOperate())) {
-				mStock.setOperate(operate);
-			}
-		}
-	}
-
-	@Override
-	public void onNothingSelected(AdapterView<?> parent) {
-
 	}
 }

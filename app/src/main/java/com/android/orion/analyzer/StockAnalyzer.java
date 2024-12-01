@@ -579,23 +579,23 @@ public class StockAnalyzer {
 		action += trend;
 		action += Constant.NEW_LINE;
 
-		if (TextUtils.equals(period, stock.getOperate())) {
-			if (stockData.getNaturalRally() > 0) {
-				action += StockData.MARK_NATURAL_RALLY;
-			}
-
-			if (stockData.getUpwardTrend() > 0) {
-				action += StockData.MARK_UPWARD_TREND;
-			}
-
-			if (stockData.getDownwardTrend() > 0) {
-				action += StockData.MARK_DOWNWARD_TREND;
-			}
-
-			if (stockData.getNaturalReaction() > 0) {
-				action += StockData.MARK_NATURAL_REACTION;
-			}
-		}
+//		if (TextUtils.equals(period, stock.getOperate())) {
+//			if (stockData.getNaturalRally() > 0) {
+//				action += StockData.MARK_NATURAL_RALLY;
+//			}
+//
+//			if (stockData.getUpwardTrend() > 0) {
+//				action += StockData.MARK_UPWARD_TREND;
+//			}
+//
+//			if (stockData.getDownwardTrend() > 0) {
+//				action += StockData.MARK_DOWNWARD_TREND;
+//			}
+//
+//			if (stockData.getNaturalReaction() > 0) {
+//				action += StockData.MARK_NATURAL_REACTION;
+//			}
+//		}
 
 //		{
 //			String result = getFirstAction(strokeDataList, segmentDataList);
@@ -859,7 +859,7 @@ public class StockAnalyzer {
 			return;
 		}
 
-		if (stock == null || stock.getPrice() == 0 || TextUtils.isEmpty(stock.getOperate())) {
+		if (stock == null || stock.getPrice() == 0 || !stock.hasFlag(Stock.FLAG_NOTIFY)) {
 			return;
 		}
 

@@ -753,4 +753,8 @@ public class Utility {
 
 		return result;
 	}
+
+	public static boolean hasFlag(int value, int flag) {
+		return (value & flag) == flag;
+	}
 }

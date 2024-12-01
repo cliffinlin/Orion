@@ -30,6 +30,7 @@ import com.android.orion.database.Stock;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Preferences;
+import com.android.orion.utility.Utility;
 import com.android.orion.view.SyncHorizontalScrollView;
 
 public class StockFavoriteListActivity extends ListActivity implements
@@ -61,7 +62,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 	TextView mTextViewMin30 = null;
 	TextView mTextViewMin15 = null;
 	TextView mTextViewMin5 = null;
-	TextView mTextViewOperate = null;
+	TextView mTextViewFlag = null;
 	TextView mTextViewModified = null;
 
 	ListView mLeftListView = null;
@@ -216,8 +217,8 @@ public class StockFavoriteListActivity extends ListActivity implements
 			case R.id.period_min5:
 				mSortOrderColumn = DatabaseContract.COLUMN_MIN5;
 				break;
-			case R.id.operate:
-				mSortOrderColumn = DatabaseContract.COLUMN_OPERATE;
+			case R.id.flag:
+				mSortOrderColumn = DatabaseContract.COLUMN_FLAG;
 				break;
 			case R.id.modified:
 				mSortOrderColumn = DatabaseContract.COLUMN_MODIFIED;
@@ -262,7 +263,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewMin30, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewMin15, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewMin5, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewOperate, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewFlag, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewModified, mHeaderTextDefaultColor);
 	}
 
@@ -333,9 +334,9 @@ public class StockFavoriteListActivity extends ListActivity implements
 			setVisibility(mTextViewMin5, Setting.getPeriod(DatabaseContract.COLUMN_MIN5));
 		}
 
-		mTextViewOperate = findViewById(R.id.operate);
-		if (mTextViewOperate != null) {
-			mTextViewOperate.setOnClickListener(this);
+		mTextViewFlag = findViewById(R.id.flag);
+		if (mTextViewFlag != null) {
+			mTextViewFlag.setOnClickListener(this);
 		}
 
 		mTextViewModified = findViewById(R.id.modified);
@@ -363,8 +364,8 @@ public class StockFavoriteListActivity extends ListActivity implements
 			setHeaderTextColor(mTextViewMin15, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MIN5)) {
 			setHeaderTextColor(mTextViewMin5, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_OPERATE)) {
-			setHeaderTextColor(mTextViewOperate, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_FLAG)) {
+			setHeaderTextColor(mTextViewFlag, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MODIFIED)) {
 			setHeaderTextColor(mTextViewModified, mHeaderTextHighlightColor);
 		} else {
@@ -386,7 +387,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 				DatabaseContract.COLUMN_MIN30,
 				DatabaseContract.COLUMN_MIN15,
 				DatabaseContract.COLUMN_MIN5,
-				DatabaseContract.COLUMN_OPERATE,
+				DatabaseContract.COLUMN_FLAG,
 				DatabaseContract.COLUMN_MODIFIED};
 		int[] mRightTo = new int[]{
 				R.id.price,
@@ -398,7 +399,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 				R.id.min30,
 				R.id.min15,
 				R.id.min5,
-				R.id.operate,
+				R.id.flag,
 				R.id.modified};
 
 		mLeftListView = findViewById(R.id.left_listview);
@@ -570,10 +571,10 @@ public class StockFavoriteListActivity extends ListActivity implements
 			return;
 		}
 
-		String operate = cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_OPERATE));
+		int flag = cursor.getInt(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_FLAG));
 
-		if (!TextUtils.isEmpty(operate)) {
+		if (Utility.hasFlag(flag, Stock.FLAG_NOTIFY)) {
 			view.setBackgroundColor(Color.rgb(240, 240, 240));
 //			TextView textView = (TextView)view;
 //			textView.setTextColor(Color.RED);
@@ -643,7 +644,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 				setColor(view, cursor, period);
 				return setVisibility(view, Setting.getPeriod(period));
 			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_OPERATE)) {
+					.getColumnIndex(DatabaseContract.COLUMN_FLAG)) {
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MODIFIED)) {
 			}

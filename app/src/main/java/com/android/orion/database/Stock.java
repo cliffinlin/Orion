@@ -23,6 +23,7 @@ public class Stock extends DatabaseTable {
 
 	public static final int FLAG_NONE = 0;
 	public static final int FLAG_FAVORITE = 1 << 0;
+	public static final int FLAG_NOTIFY = 1 << 1;
 
 	public static final long INVALID_ID = 0;
 	public static final double ROI_COEFFICIENT = 10.0;
@@ -43,11 +44,8 @@ public class Stock extends DatabaseTable {
 	private String mDate;
 	private String mTime;
 
-	private String mTrend;
-
 	private double mThreshold;
 
-	private String mOperate;
 	private long mHold;
 	private double mCost;
 	private double mProfit;
@@ -109,8 +107,6 @@ public class Stock extends DatabaseTable {
 		mCode = "";
 		mName = "";
 		mPinyin = "";
-
-		mOperate = "";
 		mHold = 0;
 
 		reset();
@@ -127,7 +123,6 @@ public class Stock extends DatabaseTable {
 
 		mDate = "";
 		mTime = "";
-		mTrend = "";
 
 		mThreshold = 0;
 
@@ -188,7 +183,6 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_DAY, mDay.getAction());
 		contentValues.put(DatabaseContract.COLUMN_WEEK, mWeek.getAction());
 		contentValues.put(DatabaseContract.COLUMN_MONTH, mMonth.getAction());
-		contentValues.put(DatabaseContract.COLUMN_TREND, mTrend);
 
 		contentValues.put(DatabaseContract.COLUMN_HOLD, mHold);
 		contentValues.put(DatabaseContract.COLUMN_COST, mCost);
@@ -256,7 +250,6 @@ public class Stock extends DatabaseTable {
 
 		contentValues.put(DatabaseContract.COLUMN_FLAG, mFlag);
 		contentValues.put(DatabaseContract.COLUMN_THRESHOLD, mThreshold);
-		contentValues.put(DatabaseContract.COLUMN_OPERATE, mOperate);
 
 		return contentValues;
 	}
@@ -292,11 +285,9 @@ public class Stock extends DatabaseTable {
 		mDay.setAction(stock.mDay.getAction());
 		mWeek.setAction(stock.mWeek.getAction());
 		mMonth.setAction(stock.mMonth.getAction());
-		setTrend(stock.mTrend);
 
 		setThreshold(stock.mThreshold);
 
-		setOperate(stock.mOperate);
 		setHold(stock.mHold);
 		setCost(stock.mCost);
 		setProfit(stock.mProfit);
@@ -358,9 +349,7 @@ public class Stock extends DatabaseTable {
 		mDay.setAction(cursor);
 		mWeek.setAction(cursor);
 		mMonth.setAction(cursor);
-		setTrend(cursor);
 		setThreshold(cursor);
-		setOperate(cursor);
 		setHold(cursor);
 		setCost(cursor);
 		setProfit(cursor);
@@ -613,23 +602,6 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_TIME)));
 	}
 
-	String getTrend() {
-		return mTrend;
-	}
-
-	public void setTrend(String trend) {
-		mTrend = trend;
-	}
-
-	void setTrend(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setTrend(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_TREND)));
-	}
-
 	public double getThreshold() {
 		return mThreshold;
 	}
@@ -645,23 +617,6 @@ public class Stock extends DatabaseTable {
 
 		setThreshold(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_THRESHOLD)));
-	}
-
-	public String getOperate() {
-		return mOperate;
-	}
-
-	public void setOperate(String operate) {
-		mOperate = operate;
-	}
-
-	void setOperate(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setOperate(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_OPERATE)));
 	}
 
 	public long getHold() {
