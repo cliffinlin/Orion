@@ -534,6 +534,4 @@ public class StorageActivity extends DatabaseActivity {
 			e.printStackTrace();
 		}
 	}
-
-
 }

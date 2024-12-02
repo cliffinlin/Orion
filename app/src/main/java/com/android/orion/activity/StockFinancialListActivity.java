@@ -689,7 +689,7 @@ public class StockFinancialListActivity extends ListActivity implements
 
 		switch (id) {
 			case LOADER_ID_STOCK_FINANCIAL_LIST:
-				selection += DatabaseContract.COLUMN_FLAG + " = " + Stock.FLAG_FAVORITE
+				selection += DatabaseContract.COLUMN_FLAG + " >= " + Stock.FLAG_FAVORITE
 						+ " AND " + DatabaseContract.COLUMN_CLASSES + " = '" + Stock.CLASS_A + "'";
 
 				loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
