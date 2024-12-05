@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.ArrayMap;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +25,7 @@ import android.widget.ListView;
 import androidx.annotation.NonNull;
 
 import com.android.orion.R;
+import com.android.orion.chart.ChartSyncHelper;
 import com.android.orion.chart.StockDataChart;
 import com.android.orion.data.Period;
 import com.android.orion.data.Trend;
@@ -44,7 +46,6 @@ import com.github.mikephil.charting.data.CandleEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.DefaultYAxisValueFormatter;
 import com.github.mikephil.charting.listener.ChartTouchListener.ChartGesture;
-import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.utils.Utils;
 
 import java.lang.ref.WeakReference;
@@ -52,7 +53,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StockFavoriteChartListActivity extends BaseActivity implements
-		LoaderManager.LoaderCallbacks<Cursor>, OnChartGestureListener {
+		LoaderManager.LoaderCallbacks<Cursor> {
 
 	public static final int ITEM_VIEW_TYPE_MAIN = 0;
 	public static final int ITEM_VIEW_TYPE_SUB = 1;
@@ -84,6 +85,7 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 	ArrayList<StockDataChartItemSub> mStockDataChartItemSubList = null;
 	ArrayList<StockDataChart> mStockDataChartList = null;
 	ArrayList<StockDeal> mStockDealList = new ArrayList<>();
+	ArrayMap<Integer, CombinedChart> mCombinedChartMap = new ArrayMap<>();
 
 	Handler mHandler = new Handler(Looper.getMainLooper()) {
 
@@ -697,46 +699,6 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 		restartLoader();
 	}
 
-	@Override
-	public void onChartLongPressed(MotionEvent me) {
-	}
-
-	@Override
-	public void onChartDoubleTapped(MotionEvent me) {
-	}
-
-	@Override
-	public void onChartSingleTapped(MotionEvent me) {
-	}
-
-	@Override
-	public void onChartFling(@NonNull MotionEvent me1, @NonNull MotionEvent me2, float velocityX,
-	                         float velocityY) {
-		if (me2.getX() > me1.getX()) {
-//			navigateStock(1);
-		} else {
-//			navigateStock(-1);
-		}
-	}
-
-	@Override
-	public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
-	}
-
-	@Override
-	public void onChartTranslate(MotionEvent me, float dX, float dY) {
-	}
-
-	@Override
-	public void onChartGestureStart(MotionEvent me,
-	                                ChartGesture lastPerformedGesture) {
-	}
-
-	@Override
-	public void onChartGestureEnd(MotionEvent me,
-	                              ChartGesture lastPerformedGesture) {
-	}
-
 	static class MainHandler extends Handler {
 		private final WeakReference<StockFavoriteChartListActivity> mActivity;
 
@@ -825,9 +787,8 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 			} else {
 				viewHolder.chart.setData(mStockDataChart.mCombinedDataSub);
 			}
-
-//			viewHolder.chart.setOnChartGestureListener(StockDataChartListActivity.this);
-
+			mCombinedChartMap.put(position, viewHolder.chart);
+			ChartSyncHelper.syncCharts(mCombinedChartMap);
 			return view;
 		}
 

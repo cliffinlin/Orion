@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.ArrayMap;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +25,7 @@ import android.widget.ListView;
 import androidx.annotation.NonNull;
 
 import com.android.orion.R;
+import com.android.orion.chart.ChartSyncHelper;
 import com.android.orion.chart.StockFinancialChart;
 import com.android.orion.data.Period;
 import com.android.orion.database.DatabaseContract;
@@ -78,6 +80,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 	ArrayList<StockFinancialChartItemSub> mStockFinancialChartItemSubList = null;
 	ArrayList<StockFinancialChart> mStockFinancialChartList = null;
 	ArrayList<ShareBonus> mShareBonusList = new ArrayList<>();
+	ArrayMap<Integer, CombinedChart> mCombinedChartMap = new ArrayMap<>();
 
 	Handler mHandler = new Handler(Looper.getMainLooper()) {
 
@@ -784,7 +787,8 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 			} else {
 				viewHolder.chart.setData(mStockFinancialChart.mCombinedDataSub);
 			}
-
+			mCombinedChartMap.put(position, viewHolder.chart);
+			ChartSyncHelper.syncCharts(mCombinedChartMap);
 			return view;
 		}
 
