@@ -47,6 +47,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.DefaultYAxisValueFormatter;
 import com.github.mikephil.charting.listener.ChartTouchListener.ChartGesture;
 import com.github.mikephil.charting.utils.Utils;
+import com.markupartist.android.widget.PullToRefreshListView;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -78,7 +79,7 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 	StockData mStockData = new StockData();
 
 	Menu mMenu = null;
-	ListView mListView = null;
+	PullToRefreshListView mListView = null;
 	StockDataChartArrayAdapter mStockDataChartArrayAdapter = null;
 	ArrayList<StockDataChartItem> mStockDataChartItemList = null;
 	ArrayList<StockDataChartItemMain> mStockDataChartItemMainList = null;
@@ -95,10 +96,11 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 
 			switch (msg.what) {
 				case MESSAGE_REFRESH:
-					mDatabaseManager.deleteStockData(mStock.getId());
+//					mDatabaseManager.deleteStockData(mStock.getId());
 					Setting.setDownloadStockData(mStock.getSE(), mStock.getCode(), 0);
 					mStockDataProvider.download(mStock);
 					restartLoader();
+					mListView.onRefreshComplete();
 					break;
 
 				case MESSAGE_LOAD_STOCK_LIST:
@@ -343,6 +345,12 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 				mStockDataChartItemList);
 		mListView.setAdapter(mStockDataChartArrayAdapter);
 		mListView.setSelection(selection);
+		mListView.setOnRefreshListener(new PullToRefreshListView.OnRefreshListener() {
+			@Override
+			public void onRefresh() {
+				mHandler.sendEmptyMessage(MESSAGE_REFRESH);
+			}
+		});
 	}
 
 	void initLoader() {
