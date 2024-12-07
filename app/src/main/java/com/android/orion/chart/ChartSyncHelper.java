@@ -52,6 +52,9 @@ public class ChartSyncHelper {
 
             @Override
             public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
+                if (scaleX == 1.0) {
+                    return;
+                }
                 syncZoom(chart1, chart2);
             }
 
@@ -83,6 +86,9 @@ public class ChartSyncHelper {
 
             @Override
             public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
+                if (scaleX == 1.0) {
+                    return;
+                }
                 syncZoom(chart2, chart1);
             }
 
