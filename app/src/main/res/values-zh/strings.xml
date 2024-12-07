@@ -29,7 +29,6 @@
     <string name="action_save">Save</string>
     <string name="action_setting">Setting</string>
     <string name="action_filter">Filter</string>
-    <string name="action_trend">Trend</string>
     <string name="action_threshold">Threshold</string>
     <string name="threshold">Threshold</string>
     <string name="action_download">Download</string>
@@ -204,7 +203,6 @@
     <string name="stock_edit">Stock edit</string>
     <string name="component">Component</string>
     <string name="component_list">Component list</string>
-    <string name="trend_list">Trend list</string>
     <string name="stock_account">Stock account</string>
     <string name="stock_action">Action</string>
     <string name="stock_se">SE</string>

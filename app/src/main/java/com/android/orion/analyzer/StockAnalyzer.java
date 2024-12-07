@@ -80,8 +80,6 @@ public class StockAnalyzer {
 		ArrayList<StockData> outlineDataList = stock.getArrayList(period, Period.TYPE_OUTLINE_DATA);
 
 		try {
-//			setupStockShareBonus(stock);
-//			setupStockFinancial(stock);
 			mDatabaseManager.loadStockDataList(stock, period, stockDataList);
 			analyzeMacd(period, stockDataList);
 			analyzeStockData(stock, period, stockDataList,
@@ -463,10 +461,7 @@ public class StockAnalyzer {
 	                              ArrayList<StockData> segmentVertexList, ArrayList<StockData> segmentDataList,
 	                              ArrayList<StockData> lineVertexList, ArrayList<StockData> lineDataList,
 	                              ArrayList<StockData> outlineVertexList, ArrayList<StockData> outlineDataList) {
-		StockKeyAnalyzer stockKeyAnalyzer = StockKeyAnalyzer.getInstance();
 		TrendAnalyzer trendAnalyzer = TrendAnalyzer.getInstance();
-
-		stockKeyAnalyzer.analyze(stock, stockDataList);
 
 		trendAnalyzer.analyzeVertex(stockDataList, drawVertexList);
 		trendAnalyzer.vertexListToDataList(stockDataList, drawVertexList,
@@ -520,7 +515,6 @@ public class StockAnalyzer {
 			}
 		}
 
-//		trendAnalyzer.analyzeDirection(stockDataList);
 		analyzeAction(stock, period, drawVertexList, stockDataList, drawDataList, strokeDataList, segmentDataList);
 	}
 
@@ -579,29 +573,6 @@ public class StockAnalyzer {
 		action += trend;
 		action += Constant.NEW_LINE;
 
-//		if (TextUtils.equals(period, stock.getOperate())) {
-//			if (stockData.getNaturalRally() > 0) {
-//				action += StockData.MARK_NATURAL_RALLY;
-//			}
-//
-//			if (stockData.getUpwardTrend() > 0) {
-//				action += StockData.MARK_UPWARD_TREND;
-//			}
-//
-//			if (stockData.getDownwardTrend() > 0) {
-//				action += StockData.MARK_DOWNWARD_TREND;
-//			}
-//
-//			if (stockData.getNaturalReaction() > 0) {
-//				action += StockData.MARK_NATURAL_REACTION;
-//			}
-//		}
-
-//		{
-//			String result = getFirstAction(strokeDataList, segmentDataList);
-//			action += result;
-//		}
-
 //		{
 //			String result = getSecondAction(stock, stockDataList, drawDataList);
 //			action += result;
@@ -609,11 +580,17 @@ public class StockAnalyzer {
 
 		if (stockData.getTrend().directionOf(Trend.DIRECTION_UP)) {
 			if (prev.getTrend().vertexOf(Trend.VERTEX_BOTTOM)) {
+				if (TextUtils.equals(period, Period.DAY)) {
+					action += StockData.MARK_D;
+				}
 				String result = getSecondBottomAction(stock, drawVertexList, strokeDataList, segmentDataList);
 				action += result;
 			}
 		} else if (stockData.getTrend().directionOf(Trend.DIRECTION_DOWN)) {
 			if (prev.getTrend().vertexOf(Trend.VERTEX_TOP)) {
+				if (TextUtils.equals(period, Period.DAY)) {
+					action += StockData.MARK_G;
+				}
 				String result = getSecondTopAction(stock, drawVertexList, strokeDataList, segmentDataList);
 				action += result;
 			}
@@ -627,42 +604,6 @@ public class StockAnalyzer {
 
 		stock.setDateTime(stockData.getDate(), stockData.getTime());
 		stock.setAction(period, action + stockData.getAction());
-	}
-
-	private String getFirstAction(ArrayList<StockData> strokeDataList, ArrayList<StockData> segmentDataList) {
-		String result = "";
-
-		if ((strokeDataList == null) || (strokeDataList.size() == 0)) {
-			return result;
-		}
-
-		if ((segmentDataList == null) || (segmentDataList.size() == 0)) {
-			return result;
-		}
-
-		StockData strokeData = strokeDataList.get(strokeDataList.size() - 1);
-		if (strokeData == null) {
-			return result;
-		}
-
-		StockData segmentData = segmentDataList.get(segmentDataList.size() - 1);
-		if (segmentData == null) {
-			return result;
-		}
-
-		if (strokeData.getTrend().getIndexStart() != segmentData.getTrend().getIndexStart()) {
-			return result;
-		}
-
-		if ((strokeData.getTrend().getDirection() == Trend.DIRECTION_UP) && (segmentData.getTrend().getDirection() == Trend.DIRECTION_UP)) {
-			result += StockData.MARK_BUY1;
-			result += StockData.MARK_BUY1;
-		} else if ((strokeData.getTrend().getDirection() == Trend.DIRECTION_DOWN) && (segmentData.getTrend().getDirection() == Trend.DIRECTION_DOWN)) {
-			result += StockData.MARK_SELL1;
-			result += StockData.MARK_SELL1;
-		}
-
-		return result;
 	}
 
 	private String getSecondAction(Stock stock, ArrayList<StockData> stockDataList, ArrayList<StockData> drawDataList) {
@@ -848,12 +789,7 @@ public class StockAnalyzer {
 	}
 
 	protected void updateNotification(Stock stock) {
-		boolean notifyToBuy;
-		boolean notifyToSell;
-		boolean notifyToBuy1;
-		boolean notifyToSell1;
-		boolean notifyToBuy2;
-		boolean notifyToSell2;
+		boolean notify;
 
 		if (!Market.isTradingHours()) {
 			return;
@@ -869,32 +805,29 @@ public class StockAnalyzer {
 		for (String period : Period.PERIODS) {
 			if (Setting.getPeriod(period)) {
 				String action = stock.getAction(period);
-				notifyToBuy = false;
-				notifyToSell = false;
-
-				notifyToBuy1 = false;
-				notifyToSell1 = false;
-
-				notifyToBuy2 = false;
-				notifyToSell2 = false;
+				notify = false;
 
 				if (action.contains(StockData.MARK_BUY)) {
-					notifyToBuy = true;
+					notify = true;
 				} else if (action.contains(StockData.MARK_BUY1)) {
-					notifyToBuy1 = true;
+					notify = true;
 				} else if (action.contains(StockData.MARK_BUY2)) {
-					notifyToBuy2 = true;
+					notify = true;
+				} else if (action.contains(StockData.MARK_D)) {
+					notify = true;
 				}
 
 				if (action.contains(StockData.MARK_SELL)) {
-					notifyToSell = true;
+					notify = true;
 				} else if (action.contains(StockData.MARK_SELL1)) {
-					notifyToSell1 = true;
+					notify = true;
 				} else if (action.contains(StockData.MARK_SELL2)) {
-					notifyToSell2 = true;
+					notify = true;
+				} else if (action.contains(StockData.MARK_G)) {
+					notify = true;
 				}
 
-				if (notifyToBuy || notifyToSell || notifyToBuy1 || notifyToSell1 || notifyToBuy2 || notifyToSell2) {
+				if (notify) {
 					mContentTitle.append(period + " " + action + " ");
 				}
 			}

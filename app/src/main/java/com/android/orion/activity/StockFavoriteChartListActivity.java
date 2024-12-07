@@ -63,7 +63,7 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 	public static final int MESSAGE_REFRESH = 0;
 	public static final int MESSAGE_LOAD_STOCK_LIST = 1;
 
-	boolean mKeyDisplayThreshold = true;
+	boolean mKeyDisplayThreshold = false;
 	boolean mKeyDisplayLatest = true;
 	boolean mKeyDisplayCost = true;
 	boolean mKeyDisplayDeal = false;
@@ -211,13 +211,6 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 				startActivity(intent);
 				return true;
 			}
-
-			case R.id.action_trend:
-				mIntent = new Intent(this, StockTrendListActivity.class);
-				mIntent.setAction(Constant.ACTION_STOCK_TREND_LIST);
-				mIntent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
-				startActivity(mIntent);
-				return true;
 
 			case R.id.action_loopback: {
 				startActivityForResult(new Intent(this,

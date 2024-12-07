@@ -85,10 +85,6 @@
             android:label="@string/stock_data_chart"
             android:launchMode="singleTask" />
         <activity
-            android:name="com.android.orion.activity.StockTrendListActivity"
-            android:label="@string/trend_list"
-            android:launchMode="singleTask" />
-        <activity
             android:name="com.android.orion.activity.StockFinancialListActivity"
             android:label="@string/activity_title_stock_financial_list"
             android:launchMode="singleTask" />

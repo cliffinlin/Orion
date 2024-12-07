@@ -45,7 +45,6 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.DefaultYAxisValueFormatter;
 import com.github.mikephil.charting.listener.ChartTouchListener.ChartGesture;
-import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.utils.Utils;
 
 import java.lang.ref.WeakReference;
@@ -55,7 +54,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class StockFinancialChartListActivity extends BaseActivity implements
-		LoaderManager.LoaderCallbacks<Cursor>, OnChartGestureListener {
+		LoaderManager.LoaderCallbacks<Cursor> {
 
 	static final int ITEM_VIEW_TYPE_MAIN = 0;
 	static final int ITEM_VIEW_TYPE_SUB = 1;
@@ -648,53 +647,6 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 		mStock = mStockList.get(mStockListIndex);
 
 		restartLoader();
-	}
-
-	@Override
-	public void onChartLongPressed(MotionEvent me) {
-	}
-
-	@Override
-	public void onChartDoubleTapped(MotionEvent me) {
-	}
-
-	@Override
-	public void onChartSingleTapped(MotionEvent me) {
-	}
-
-	@Override
-	public void onChartFling(@NonNull MotionEvent me1, @NonNull MotionEvent me2, float velocityX,
-	                         float velocityY) {
-		int distance = FLING_DISTANCE;
-		int velocity = FLING_VELOCITY;
-
-		if (me1.getX() - me2.getX() > distance
-				&& Math.abs(velocityX) > velocity) {
-			navigateStock(-1);
-		}
-
-		if (me2.getX() - me1.getX() > distance
-				&& Math.abs(velocityX) > velocity) {
-			navigateStock(1);
-		}
-	}
-
-	@Override
-	public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
-	}
-
-	@Override
-	public void onChartTranslate(MotionEvent me, float dX, float dY) {
-	}
-
-	@Override
-	public void onChartGestureStart(MotionEvent me,
-	                                ChartGesture lastPerformedGesture) {
-	}
-
-	@Override
-	public void onChartGestureEnd(MotionEvent me,
-	                              ChartGesture lastPerformedGesture) {
 	}
 
 	static class MainHandler extends Handler {
