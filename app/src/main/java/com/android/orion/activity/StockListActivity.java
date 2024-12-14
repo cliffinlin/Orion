@@ -141,6 +141,38 @@ public class StockListActivity extends DatabaseActivity implements
 				}).start();
 				return true;
 
+			case R.id.action_notify_all:
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						ArrayList<Stock> stockList = new ArrayList();
+						mDatabaseManager.getStockList(null, stockList);
+						for (Stock stock : stockList) {
+							if (TextUtils.equals(stock.getClasses(), Stock.CLASS_A) && !stock.hasFlag(Stock.FLAG_NOTIFY)) {
+								stock.addFlag(Stock.FLAG_NOTIFY);
+								mStockManager.onAddFavorite(stock);
+							}
+						}
+					}
+				}).start();
+				return true;
+
+			case R.id.action_notify_none:
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						ArrayList<Stock> stockList = new ArrayList();
+						mDatabaseManager.getStockList(null, stockList);
+						for (Stock stock : stockList) {
+							if (TextUtils.equals(stock.getClasses(), Stock.CLASS_A) && stock.hasFlag(Stock.FLAG_NOTIFY)) {
+								stock.removeFlag(Stock.FLAG_NOTIFY);
+								mStockManager.onRemoveFavorite(stock);
+							}
+						}
+					}
+				}).start();
+				return true;
+
 			case android.R.id.home:
 				finish();
 				return true;

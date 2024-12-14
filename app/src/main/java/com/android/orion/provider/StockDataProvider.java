@@ -667,10 +667,38 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 	}
 
 	@Override
+	public void onAddNotify(Stock stock) {
+		if (stock == null) {
+			return;
+		}
+
+		Setting.setDownloadStock(stock.getSE(), stock.getCode(), 0);
+		Setting.setDownloadStockData(stock.getSE(), stock.getCode(), 0);
+		download(stock);
+	}
+
+	@Override
+	public void onRemoveNotify(Stock stock) {
+		if (stock == null) {
+			return;
+		}
+
+		mStockArrayMap.remove(stock.getCode());
+
+		if (mHandler.hasMessages(Integer.parseInt(stock.getCode()))) {
+			mHandler.removeMessages(Integer.parseInt(stock.getCode()));
+		}
+	}
+
+	@Override
 	public void onAddStock(Stock stock) {
 		if (stock == null) {
 			return;
 		}
+
+		Setting.setDownloadStock(stock.getSE(), stock.getCode(), 0);
+		Setting.setDownloadStockData(stock.getSE(), stock.getCode(), 0);
+		download(stock);
 	}
 
 	@Override

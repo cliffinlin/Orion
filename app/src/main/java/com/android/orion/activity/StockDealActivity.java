@@ -63,7 +63,7 @@ public class StockDealActivity extends DatabaseActivity implements
 
 			switch (msg.what) {
 				case MESSAGE_LOAD_DEAL:
-					mDatabaseManager.getStockDealById(mDeal);
+					mDatabaseManager.getStockDeal(mDeal);
 					mStock.setSE(mDeal.getSE());
 					mStock.setCode(mDeal.getCode());
 					mDatabaseManager.getStock(mStock);

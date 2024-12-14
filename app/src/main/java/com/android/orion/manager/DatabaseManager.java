@@ -176,7 +176,6 @@ public class DatabaseManager implements StockListener {
 				while (cursor.moveToNext()) {
 					Stock stock = new Stock();
 					stock.set(cursor);
-
 					stockList.add(stock);
 				}
 			}
@@ -212,7 +211,6 @@ public class DatabaseManager implements StockListener {
 				while (cursor.moveToNext()) {
 					Stock stock = new Stock();
 					stock.set(cursor);
-
 					stockArrayMap.put(stock.getCode(), stock);
 				}
 			}
@@ -235,7 +233,6 @@ public class DatabaseManager implements StockListener {
 
 		try {
 			cursor = queryStock(selection, null, null);
-
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
 				stock.set(cursor);
@@ -254,7 +251,6 @@ public class DatabaseManager implements StockListener {
 
 		try {
 			cursor = queryStock(selection, selectionArgs, sortOrder);
-
 			if (cursor != null) {
 				result = cursor.getCount();
 			}
@@ -276,7 +272,6 @@ public class DatabaseManager implements StockListener {
 
 		try {
 			cursor = queryStock(stock);
-
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
 				stock.set(cursor);
@@ -320,7 +315,6 @@ public class DatabaseManager implements StockListener {
 
 		try {
 			cursor = queryStock(stock);
-
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
 				stock.setCreated(cursor);
@@ -484,7 +478,6 @@ public class DatabaseManager implements StockListener {
 					DatabaseContract.StockData.CONTENT_URI,
 					DatabaseContract.StockData.PROJECTION_ALL, selection, null,
 					sortOrder);
-
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
 				stockData.set(cursor);
@@ -510,7 +503,6 @@ public class DatabaseManager implements StockListener {
 
 		try {
 			cursor = queryStockData(selection, null, sortOrder);
-
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				while (cursor.moveToNext()) {
 					StockData stockData = new StockData();
@@ -593,7 +585,6 @@ public class DatabaseManager implements StockListener {
 
 		try {
 			cursor = queryStockData(stockData);
-
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
 				stockData.setCreated(cursor);
@@ -752,7 +743,6 @@ public class DatabaseManager implements StockListener {
 
 		try {
 			cursor = queryStockDeal(stockDeal);
-
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
 				stockDeal.setCreated(cursor);
@@ -894,21 +884,19 @@ public class DatabaseManager implements StockListener {
 		return cursor;
 	}
 
-	public Cursor queryStockDealById(StockDeal stockDeal) {
+	public Cursor queryStockDeal(long id) {
 		Cursor cursor = null;
 
-		if (stockDeal == null) {
+		if (id == 0) {
 			return cursor;
 		}
 
-		String selection = DatabaseContract.COLUMN_ID + "=" + stockDeal.getId();
-
+		String selection = DatabaseContract.COLUMN_ID + "=" + id;
 		cursor = queryStockDeal(selection, null, null);
-
 		return cursor;
 	}
 
-	public void getStockDealById(StockDeal stockDeal) {
+	public void getStockDeal(StockDeal stockDeal) {
 		Cursor cursor = null;
 
 		if (stockDeal == null) {
@@ -916,8 +904,7 @@ public class DatabaseManager implements StockListener {
 		}
 
 		try {
-			cursor = queryStockDealById(stockDeal);
-
+			cursor = queryStockDeal(stockDeal.getId());
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
 				stockDeal.set(cursor);
@@ -927,6 +914,32 @@ public class DatabaseManager implements StockListener {
 		} finally {
 			closeCursor(cursor);
 		}
+	}
+
+	public int getStockDealCount(Stock stock) {
+		int result = 0;
+		Cursor cursor = null;
+
+		if (stock == null) {
+			return result;
+		}
+
+		try {
+			String selection = DatabaseContract.COLUMN_STOCK_ID + "=" + stock.getId();
+			selection = DatabaseContract.COLUMN_SE + " = " + "'" + stock.getSE() + "'"
+					+ " AND " + DatabaseContract.COLUMN_CODE + " = " + "'"
+					+ stock.getCode() + "'";
+			cursor = queryStockDeal(selection, null, null);
+			if (cursor != null) {
+				result = cursor.getCount();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+
+		return result;
 	}
 
 	public void getStockDealList(ArrayList<StockDeal> stockDealList, String selection, String sortOrder) {
@@ -940,7 +953,6 @@ public class DatabaseManager implements StockListener {
 
 		try {
 			cursor = queryStockDeal(selection, null, sortOrder);
-
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				while (cursor.moveToNext()) {
 					StockDeal stockDeal = new StockDeal();
@@ -966,7 +978,6 @@ public class DatabaseManager implements StockListener {
 
 		try {
 			cursor = queryStockDeal(null, null, null);
-
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				while (cursor.moveToNext()) {
 					StockDeal stockDeal = new StockDeal();
@@ -990,7 +1001,6 @@ public class DatabaseManager implements StockListener {
 
 		try {
 			cursor = queryStockDeal(selection, null, sortOrder);
-
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				while (cursor.moveToNext()) {
 					stockDeal.set(cursor);
@@ -1084,7 +1094,6 @@ public class DatabaseManager implements StockListener {
 					DatabaseContract.StockFinancial.CONTENT_URI,
 					DatabaseContract.StockFinancial.PROJECTION_ALL, selection,
 					null, sortOrder);
-
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
 				stockFinancial.set(cursor);
@@ -1111,7 +1120,6 @@ public class DatabaseManager implements StockListener {
 					DatabaseContract.StockFinancial.CONTENT_URI,
 					DatabaseContract.StockFinancial.PROJECTION_ALL, selection,
 					null, sortOrder);
-
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
 				stockFinancial.set(cursor);
@@ -1137,7 +1145,6 @@ public class DatabaseManager implements StockListener {
 
 		try {
 			cursor = queryStockFinancial(selection, null, sortOrder);
-
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				while (cursor.moveToNext()) {
 					StockFinancial stockFinancial = new StockFinancial();
@@ -1162,7 +1169,6 @@ public class DatabaseManager implements StockListener {
 
 		try {
 			cursor = queryStockFinancial(stockFinancial);
-
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
 				stockFinancial.setCreated(cursor);
@@ -1346,7 +1352,6 @@ public class DatabaseManager implements StockListener {
 					DatabaseContract.ShareBonus.CONTENT_URI,
 					DatabaseContract.ShareBonus.PROJECTION_ALL, selection,
 					null, sortOrder);
-
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
 				shareBonus.set(cursor);
@@ -1373,7 +1378,6 @@ public class DatabaseManager implements StockListener {
 					DatabaseContract.ShareBonus.CONTENT_URI,
 					DatabaseContract.ShareBonus.PROJECTION_ALL, selection,
 					null, sortOrder);
-
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
 				shareBonus.set(cursor);
@@ -1394,12 +1398,10 @@ public class DatabaseManager implements StockListener {
 		}
 
 		shareBonusList.clear();
-
 		String selection = getShareBonusSelection(stock.getId());
 
 		try {
 			cursor = queryShareBonus(selection, null, sortOrder);
-
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				while (cursor.moveToNext()) {
 					ShareBonus shareBonus = new ShareBonus();
@@ -1424,7 +1426,6 @@ public class DatabaseManager implements StockListener {
 
 		try {
 			cursor = queryShareBonus(shareBonus);
-
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
 				shareBonus.setCreated(cursor);
@@ -1608,7 +1609,6 @@ public class DatabaseManager implements StockListener {
 					DatabaseContract.TotalShare.CONTENT_URI,
 					DatabaseContract.TotalShare.PROJECTION_ALL, selection,
 					null, sortOrder);
-
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
 				totalShare.set(cursor);
@@ -1635,7 +1635,6 @@ public class DatabaseManager implements StockListener {
 					DatabaseContract.TotalShare.CONTENT_URI,
 					DatabaseContract.TotalShare.PROJECTION_ALL, selection,
 					null, sortOrder);
-
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
 				totalShare.set(cursor);
@@ -1661,7 +1660,6 @@ public class DatabaseManager implements StockListener {
 
 		try {
 			cursor = queryTotalShare(selection, null, sortOrder);
-
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				while (cursor.moveToNext()) {
 					TotalShare totalShare = new TotalShare();
@@ -1686,7 +1684,6 @@ public class DatabaseManager implements StockListener {
 
 		try {
 			cursor = queryTotalShare(totalShare);
-
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
 				totalShare.setCreated(cursor);
@@ -1868,7 +1865,6 @@ public class DatabaseManager implements StockListener {
 			cursor = mContentResolver.query(DatabaseContract.IndexComponent.CONTENT_URI,
 					DatabaseContract.IndexComponent.PROJECTION_ALL, selection, null,
 					sortOrder);
-
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
 				indexComponent.set(cursor);
@@ -1891,7 +1887,6 @@ public class DatabaseManager implements StockListener {
 
 		try {
 			cursor = queryIndexComponent(selection, null, sortOrder);
-
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				while (cursor.moveToNext()) {
 					IndexComponent indexComponent = new IndexComponent();
@@ -1916,7 +1911,6 @@ public class DatabaseManager implements StockListener {
 
 		try {
 			cursor = queryIndexComponent(indexComponent);
-
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
 				indexComponent.setCreated(cursor);
@@ -2049,6 +2043,22 @@ public class DatabaseManager implements StockListener {
 
 	@Override
 	public void onRemoveFavorite(Stock stock) {
+		if (stock == null) {
+			return;
+		}
+		updateStockFlag(stock);
+	}
+
+	@Override
+	public void onAddNotify(Stock stock) {
+		if (stock == null) {
+			return;
+		}
+		updateStockFlag(stock);
+	}
+
+	@Override
+	public void onRemoveNotify(Stock stock) {
 		if (stock == null) {
 			return;
 		}

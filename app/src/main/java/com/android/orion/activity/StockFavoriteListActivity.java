@@ -538,7 +538,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 					intent.putExtra(Constant.EXTRA_INDEX_NAME, String.valueOf(mStock.getName()));
 					intent.putExtra(Constant.EXTRA_INDEX_SE, String.valueOf(mStock.getSE()));
 					startActivity(intent);
-				} else {
+				} else if (mDatabaseManager.getStockDealCount(mStock) > 0) {
 					Intent intent = new Intent(mContext,
 							StockDealListActivity.class);
 					Bundle bundle = new Bundle();
@@ -546,6 +546,11 @@ public class StockFavoriteListActivity extends ListActivity implements
 					bundle.putString(Constant.EXTRA_STOCK_CODE, mStock.getCode());
 					intent.putExtras(bundle);
 					startActivity(intent);
+				} else {
+					mIntent = new Intent(this, StockActivity.class);
+					mIntent.setAction(Constant.ACTION_STOCK_EDIT);
+					mIntent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
+					startActivity(mIntent);
 				}
 			} else {
 				Intent intent = new Intent(this,

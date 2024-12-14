@@ -7,6 +7,10 @@ public interface StockListener {
 
 	void onRemoveFavorite(Stock stock);
 
+	void onAddNotify(Stock stock);
+
+	void onRemoveNotify(Stock stock);
+
 	void onAddStock(Stock stock);
 
 	void onRemoveStock(Stock stock);
