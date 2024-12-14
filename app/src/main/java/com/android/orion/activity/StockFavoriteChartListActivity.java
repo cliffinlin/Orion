@@ -87,6 +87,7 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 	ArrayList<StockDataChart> mStockDataChartList = null;
 	ArrayList<StockDeal> mStockDealList = new ArrayList<>();
 	ArrayMap<Integer, CombinedChart> mCombinedChartMap = new ArrayMap<>();
+	ChartSyncHelper mChartSyncHelper = new ChartSyncHelper();
 
 	Handler mHandler = new Handler(Looper.getMainLooper()) {
 
@@ -349,6 +350,12 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 			@Override
 			public void onRefresh() {
 				mHandler.sendEmptyMessage(MESSAGE_REFRESH);
+			}
+		});
+		mChartSyncHelper.setOnSettingChangedListener(new ChartSyncHelper.OnSettingChangedListener() {
+			@Override
+			public void OnSettingChanged() {
+				restartLoader();
 			}
 		});
 	}
@@ -789,7 +796,7 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 				viewHolder.chart.setData(mStockDataChart.mCombinedDataSub);
 			}
 			mCombinedChartMap.put(position, viewHolder.chart);
-			ChartSyncHelper.syncCharts(mCombinedChartMap);
+			mChartSyncHelper.syncCharts(mCombinedChartMap);
 			return view;
 		}
 

@@ -80,6 +80,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 	ArrayList<StockFinancialChart> mStockFinancialChartList = null;
 	ArrayList<ShareBonus> mShareBonusList = new ArrayList<>();
 	ArrayMap<Integer, CombinedChart> mCombinedChartMap = new ArrayMap<>();
+	ChartSyncHelper mChartSyncHelper = new ChartSyncHelper();
 
 	Handler mHandler = new Handler(Looper.getMainLooper()) {
 
@@ -740,7 +741,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 				viewHolder.chart.setData(mStockFinancialChart.mCombinedDataSub);
 			}
 			mCombinedChartMap.put(position, viewHolder.chart);
-			ChartSyncHelper.syncCharts(mCombinedChartMap);
+			mChartSyncHelper.syncCharts(mCombinedChartMap);
 			return view;
 		}
 

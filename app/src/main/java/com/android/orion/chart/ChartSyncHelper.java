@@ -1,19 +1,29 @@
 package com.android.orion.chart;
 
 import com.android.orion.data.Period;
+import com.android.orion.setting.Setting;
 import com.android.orion.utility.Logger;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
+import com.markupartist.android.widget.PullToRefreshListView;
+
 import android.graphics.Matrix;
 import android.util.ArrayMap;
 import android.view.MotionEvent;
 
 public class ChartSyncHelper {
-    static Logger Log = Logger.getLogger();
+    Logger Log = Logger.getLogger();
+    private OnSettingChangedListener mOnSettingChangedListener;
 
-    public static void syncCharts(ArrayMap<Integer, CombinedChart> combinedChartArrayMap) {
+    public void setOnSettingChangedListener(OnSettingChangedListener listener) {
+        if (listener != null) {
+            mOnSettingChangedListener = listener;
+        }
+    }
+
+    public void syncCharts(ArrayMap<Integer, CombinedChart> combinedChartArrayMap) {
         if (combinedChartArrayMap == null) {
             return;
         }
@@ -26,7 +36,7 @@ public class ChartSyncHelper {
         }
     }
 
-    public static void syncCharts(CombinedChart chart1, CombinedChart chart2) {
+    public void syncCharts(CombinedChart chart1, CombinedChart chart2) {
         if (chart1 == null || chart2 == null) {
             return;
         }
@@ -42,7 +52,12 @@ public class ChartSyncHelper {
             public void onChartLongPressed(MotionEvent me) {}
 
             @Override
-            public void onChartDoubleTapped(MotionEvent me) {}
+            public void onChartDoubleTapped(MotionEvent me) {
+                Setting.setDisplayCandle(!Setting.getDisplayCandle());
+                if (mOnSettingChangedListener != null) {
+                    mOnSettingChangedListener.OnSettingChanged();
+                }
+            }
 
             @Override
             public void onChartSingleTapped(MotionEvent me) {}
@@ -99,7 +114,7 @@ public class ChartSyncHelper {
         });
     }
 
-    private static void syncZoom(CombinedChart source, CombinedChart target) {
+    private void syncZoom(CombinedChart source, CombinedChart target) {
         if (source == null || target == null) {
             return;
         }
@@ -109,7 +124,7 @@ public class ChartSyncHelper {
         target.getViewPortHandler().refresh(dstMatrix, target, true);  // 刷新目标图表
     }
 
-    private static void syncTranslation(CombinedChart source, CombinedChart target) {
+    private void syncTranslation(CombinedChart source, CombinedChart target) {
         if (source == null || target == null) {
             return;
         }
@@ -118,4 +133,9 @@ public class ChartSyncHelper {
         dstMatrix.set(srcMatrix);  // 将平移信息复制到目标图表
         target.getViewPortHandler().refresh(dstMatrix, target, true);  // 刷新目标图表
     }
+
+    public interface OnSettingChangedListener {
+        public void OnSettingChanged();
+    }
+
 }
