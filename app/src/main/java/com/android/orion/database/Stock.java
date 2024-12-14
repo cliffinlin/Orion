@@ -1120,7 +1120,9 @@ public class Stock extends DatabaseTable {
 	}
 
 	public void removeFlag(int flag) {
-		mFlag &= ~flag;
+		if (hasFlag(flag)) {
+			mFlag &= ~flag;
+		}
 	}
 
 	public boolean hasFlag(int flag) {

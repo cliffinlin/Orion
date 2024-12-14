@@ -161,14 +161,14 @@ public class TrendAnalyzer {
 						if (dataList.get(i).getTrend().getVertexLow() < dataList
 								.get(i - 1).getTrend().getVertexLow()) {
 							vertex = vertexTypeTop;
-							stockData.getTrend().setVertex(stockData.getTrend().getVertex() | vertex);
+							stockData.getTrend().addVertex(vertex);
 							vertexList.add(stockData);
 						}
 					} else if (direction == Trend.DIRECTION_DOWN) {
 						if (dataList.get(i).getTrend().getVertexHigh() > dataList.get(
 								i - 1).getTrend().getVertexHigh()) {
 							vertex = vertexTypeBottom;
-							stockData.getTrend().setVertex(stockData.getTrend().getVertex() | vertex);
+							stockData.getTrend().addVertex(vertex);
 							vertexList.add(stockData);
 						}
 					}
@@ -183,7 +183,7 @@ public class TrendAnalyzer {
 				} else {
 					Log.d("directionType = " + direction);
 				}
-				stockData.getTrend().setVertex(stockData.getTrend().getVertex() | vertex);
+				stockData.getTrend().addVertex(vertex);
 				vertexList.add(stockData);
 				direction = dataList.get(i - 1).getTrend().getDirection();
 			}

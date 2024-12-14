@@ -1,17 +1,15 @@
 package com.android.orion.chart;
 
+import android.graphics.Matrix;
+import android.util.ArrayMap;
+import android.view.MotionEvent;
+
 import com.android.orion.data.Period;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Logger;
 import com.github.mikephil.charting.charts.CombinedChart;
-import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
-import com.markupartist.android.widget.PullToRefreshListView;
-
-import android.graphics.Matrix;
-import android.util.ArrayMap;
-import android.view.MotionEvent;
 
 public class ChartSyncHelper {
     Logger Log = Logger.getLogger();
@@ -43,10 +41,12 @@ public class ChartSyncHelper {
         // 为第一个图表设置手势监听器
         chart1.setOnChartGestureListener(new OnChartGestureListener() {
             @Override
-            public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {}
+            public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+            }
 
             @Override
-            public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {}
+            public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+            }
 
             @Override
             public void onChartLongPressed(MotionEvent me) {}
@@ -135,7 +135,7 @@ public class ChartSyncHelper {
     }
 
     public interface OnSettingChangedListener {
-        public void OnSettingChanged();
+        void OnSettingChanged();
     }
 
 }

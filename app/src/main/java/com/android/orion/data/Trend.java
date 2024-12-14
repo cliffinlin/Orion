@@ -229,4 +229,18 @@ public class Trend {
 			setVertexLow(Math.min(getVertexLow(), trend.getVertexLow()));
 		}
 	}
+
+	public void addVertex(int flag) {
+		mVertex |= flag;
+	}
+
+	public void removeVertex(int flag) {
+		if (hasVertex(flag)) {
+			mVertex &= ~flag;
+		}
+	}
+
+	public boolean hasVertex(int flag) {
+		return (mVertex & flag) == flag;
+	}
 }
