@@ -580,7 +580,7 @@ public class StockAnalyzer {
 
 		if (stockData.getTrend().directionOf(Trend.DIRECTION_UP)) {
 			if (prev.getTrend().vertexOf(Trend.VERTEX_BOTTOM)) {
-				if (TextUtils.equals(period, Period.DAY)) {
+				if (!Period.isMinutePeriod(period)) {
 					action += StockData.MARK_D;
 				}
 				String result = getSecondBottomAction(stock, drawVertexList, strokeDataList, segmentDataList);
@@ -588,7 +588,7 @@ public class StockAnalyzer {
 			}
 		} else if (stockData.getTrend().directionOf(Trend.DIRECTION_DOWN)) {
 			if (prev.getTrend().vertexOf(Trend.VERTEX_TOP)) {
-				if (TextUtils.equals(period, Period.DAY)) {
+				if (!Period.isMinutePeriod(period)) {
 					action += StockData.MARK_G;
 				}
 				String result = getSecondTopAction(stock, drawVertexList, strokeDataList, segmentDataList);

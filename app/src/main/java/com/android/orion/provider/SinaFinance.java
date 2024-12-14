@@ -224,7 +224,7 @@ public class SinaFinance extends StockDataProvider {
 			String sortOrder = mDatabaseManager.getStockDataOrder();
 			cursor = mDatabaseManager.queryStockData(selection, null,
 					sortOrder);
-			if ((cursor == null) || (cursor.getCount() == 0)) {
+			if ((cursor == null) || (cursor.getCount() == 0) || (cursor.getCount() == 1)) {
 				return defaultValue;
 			}
 
@@ -836,7 +836,7 @@ public class SinaFinance extends StockDataProvider {
 								break;
 							case 2:
 								stockData.setDate(dateTime[0]);
-								if (stockData.isMinutePeriod()) {
+								if (Period.isMinutePeriod(stockData.getPeriod())) {
 									stockData.setTime(dateTime[1]);
 								}
 								break;
@@ -857,7 +857,7 @@ public class SinaFinance extends StockDataProvider {
 						stockData.setCreated(Utility.getCurrentDateTimeString());
 						stockData.setModified(Utility.getCurrentDateTimeString());
 
-						if (stockData.isMinutePeriod()) {
+						if (Period.isMinutePeriod(stockData.getPeriod())) {
 							if (!stockDataMap.containsKey(stockData.getDateTime())) {
 								stockDataMap.put(stockData.getDateTime(), new StockData(stockData));
 								ContentValuesList.add(stockData.getContentValues());
@@ -1073,7 +1073,7 @@ public class SinaFinance extends StockDataProvider {
 			stockData.getTrend().setVertexLow(stockData.getCandlestick().getLow());
 
 			stockData.setDate(stockInfo[30]);
-			if (stockData.isMinutePeriod()) {
+			if (Period.isMinutePeriod(stockData.getPeriod())) {
 				stockData.setTime(stockInfo[31]);
 			}
 

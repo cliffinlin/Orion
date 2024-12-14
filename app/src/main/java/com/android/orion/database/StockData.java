@@ -112,42 +112,6 @@ public class StockData extends DatabaseTable {
 		set(cursor);
 	}
 
-	public static boolean isMinutePeriod(@NonNull String period) {
-		boolean result;
-
-		switch (period) {
-			case Period.MIN5:
-			case Period.MIN15:
-			case Period.MIN30:
-			case Period.MIN60:
-				result = true;
-				break;
-			case Period.DAY:
-			case Period.WEEK:
-			case Period.MONTH:
-			default:
-				result = false;
-				break;
-		}
-
-		return result;
-	}
-
-	public static int getPeriodIndex(String period) {
-		int index = 0;
-		if (TextUtils.isEmpty(period)) {
-			return index;
-		}
-
-		for (int i = 0; i < Period.PERIODS.length; i++) {
-			if (TextUtils.equals(period, Period.PERIODS[i])) {
-				index = i;
-				break;
-			}
-		}
-		return index;
-	}
-
 	public boolean isEmpty() {
 		return (mStockId == 0) && TextUtils.isEmpty(mDate)
 				&& TextUtils.isEmpty(mTime);
@@ -608,13 +572,5 @@ public class StockData extends DatabaseTable {
 				+ 0);
 		stringBuffer.append("\r\n");
 		return stringBuffer.toString();
-	}
-
-	public boolean isMinutePeriod() {
-		return isMinutePeriod(getPeriod());
-	}
-
-	public int getPeriodIndex() {
-		return getPeriodIndex(getPeriod());
 	}
 }

@@ -576,7 +576,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			return;
 		}
 
-		if (!stockData.isMinutePeriod()) {
+		if (!Period.isMinutePeriod(stockData.getPeriod())) {
 			return;
 		}
 
@@ -608,7 +608,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			return;
 		}
 
-		if (!stockData.isMinutePeriod()) {
+		if (!Period.isMinutePeriod(stockData.getPeriod())) {
 			return;
 		}
 
@@ -626,7 +626,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			return;
 		}
 
-		if (!StockData.isMinutePeriod(period)) {
+		if (!Period.isMinutePeriod(period)) {
 			return;
 		}
 

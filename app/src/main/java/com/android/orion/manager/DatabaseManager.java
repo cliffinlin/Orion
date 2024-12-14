@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 
+import com.android.orion.data.Period;
 import com.android.orion.data.Trend;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.DatabaseOpenHelper;
@@ -687,7 +688,7 @@ public class DatabaseManager implements StockListener {
 
 		period = stockData.getPeriod();
 
-		if (StockData.isMinutePeriod(period)) {
+		if (Period.isMinutePeriod(period)) {
 			selection += " AND " + DatabaseContract.COLUMN_TIME + " = " + "'"
 					+ stockData.getTime() + "'";
 		}

@@ -482,7 +482,7 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 					dateString = mStockData.getDate();
 					timeString = mStockData.getTime();
 
-					if (mStockData.isMinutePeriod()) {
+					if (Period.isMinutePeriod(mStockData.getPeriod())) {
 						stockDataChart.mXValues.add(dateString + " "
 								+ timeString);
 					} else {
@@ -613,7 +613,7 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 							(float) mStockData.getMacd().getHistogram(), index);
 					stockDataChart.mHistogramEntryList.add(histogramBarEntry);
 
-					if (mStock.hasFlag(Stock.FLAG_NOTIFY) && mStockData.isMinutePeriod()) {
+					if (mStock.hasFlag(Stock.FLAG_NOTIFY) && Period.isMinutePeriod(mStockData.getPeriod())) {
 						Entry velocityEntry = new Entry(
 								(float) mStockData.getMacd().getVelocity(), index);
 						stockDataChart.mVelocityEntryList.add(velocityEntry);

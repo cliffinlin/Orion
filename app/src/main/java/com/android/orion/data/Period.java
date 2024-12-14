@@ -3,6 +3,8 @@ package com.android.orion.data;
 import android.database.Cursor;
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+
 import com.android.orion.database.StockData;
 
 import java.util.ArrayList;
@@ -148,5 +150,41 @@ public class Period {
 		}
 		setAction(cursor.getString(cursor
 				.getColumnIndex(mName)));
+	}
+
+	public static boolean isMinutePeriod(@NonNull String period) {
+		boolean result = false;
+
+		switch (period) {
+			case Period.MIN5:
+			case Period.MIN15:
+			case Period.MIN30:
+			case Period.MIN60:
+				result = true;
+				break;
+			case Period.DAY:
+			case Period.WEEK:
+			case Period.MONTH:
+			default:
+				result = false;
+				break;
+		}
+
+		return result;
+	}
+
+	public static int getPeriodIndex(String period) {
+		int index = 0;
+		if (TextUtils.isEmpty(period)) {
+			return index;
+		}
+
+		for (int i = 0; i < Period.PERIODS.length; i++) {
+			if (TextUtils.equals(period, Period.PERIODS[i])) {
+				index = i;
+				break;
+			}
+		}
+		return index;
 	}
 }

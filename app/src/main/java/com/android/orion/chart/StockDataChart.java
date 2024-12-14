@@ -41,7 +41,6 @@ public class StockDataChart {
 	public ArrayList<CandleEntry> mCandleEntryList = new ArrayList<>();
 	public ArrayList<Entry> mAverage5EntryList = new ArrayList<>();
 	public ArrayList<Entry> mAverage10EntryList = new ArrayList<>();
-	public ArrayList<BarEntry> mDividendEntryList = new ArrayList<>();
 	public ArrayList<Entry> mDIFEntryList = new ArrayList<>();
 	public ArrayList<Entry> mDEAEntryList = new ArrayList<>();
 	public ArrayList<BarEntry> mHistogramEntryList = new ArrayList<>();
@@ -156,6 +155,9 @@ public class StockDataChart {
 		if (Setting.getDisplayStroke()) {
 			if (mLineList[1].size() > 0) {
 				LineDataSet lineDataSet = new LineDataSet(mLineList[1], "Stroke");
+				if (mStock.hasFlag(Stock.FLAG_NOTIFY)) {
+					lineDataSet.setDrawFilled(true);
+				}
 				lineDataSet.setColor(mLineColors[1]);
 				lineDataSet.setCircleColor(mLineColors[1]);
 				lineDataSet.setCircleSize(0);
@@ -183,6 +185,9 @@ public class StockDataChart {
 			if (mLineList[3].size() > 0) {
 				LineDataSet lineDataSet = new LineDataSet(mLineList[3],
 						"Line");
+				if (mStock.hasFlag(Stock.FLAG_NOTIFY)) {
+					lineDataSet.setDrawFilled(true);
+				}
 				lineDataSet.setColor(mLineColors[3]);
 				lineDataSet.setCircleColor(mLineColors[3]);
 				lineDataSet.setCircleSize(0);
@@ -193,6 +198,9 @@ public class StockDataChart {
 			if (mLineList[4].size() > 0) {
 				LineDataSet lineDataSet = new LineDataSet(mLineList[4],
 						"Outline");
+				if (mStock.hasFlag(Stock.FLAG_NOTIFY)) {
+					lineDataSet.setDrawFilled(true);
+				}
 				lineDataSet.setColor(mLineColors[4]);
 				lineDataSet.setCircleColor(mLineColors[4]);
 				lineDataSet.setCircleSize(0);
@@ -201,19 +209,6 @@ public class StockDataChart {
 			}
 		}
 		mCombinedDataMain.setData(lineData);
-
-		if (mDividendEntryList.size() > 0) {
-			BarData barData = new BarData(mXValues);
-			BarDataSet dividendDataSet = new BarDataSet(mDividendEntryList,
-					"Dividend");
-			dividendDataSet.setBarSpacePercent(40f);
-			dividendDataSet.setIncreasingColor(Color.rgb(255, 50, 50));
-			dividendDataSet.setDecreasingColor(Color.rgb(50, 128, 50));
-			dividendDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-			barData.addDataSet(dividendDataSet);
-
-			mCombinedDataMain.setData(barData);
-		}
 	}
 
 	public void setSubChartData(Context context) {
@@ -483,7 +478,6 @@ public class StockDataChart {
 		mCandleEntryList.clear();
 		mAverage5EntryList.clear();
 		mAverage10EntryList.clear();
-		mDividendEntryList.clear();
 		mDIFEntryList.clear();
 		mDEAEntryList.clear();
 		mHistogramEntryList.clear();
