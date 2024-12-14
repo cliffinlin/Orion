@@ -5,20 +5,28 @@ import android.util.ArrayMap;
 import android.view.MotionEvent;
 
 import com.android.orion.data.Period;
-import com.android.orion.setting.Setting;
 import com.android.orion.utility.Logger;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 
+import java.util.ArrayList;
+
 public class ChartSyncHelper {
     Logger Log = Logger.getLogger();
-    private OnChartDoubleTappedListener mOnChartDoubleTappedListener;
+    private final ArrayList<OnChartGestureListener> mOnChartGestureListenerList = new ArrayList<>();
 
-    public void setOnChartDoubleTappedListener(OnChartDoubleTappedListener listener) {
-        if (listener != null) {
-            mOnChartDoubleTappedListener = listener;
+    public void registerOnChartGestureListener(OnChartGestureListener listener) {
+        if (listener == null) {
+            return;
         }
+        if (!mOnChartGestureListenerList.contains(listener)) {
+            mOnChartGestureListenerList.add(listener);
+        }
+    }
+
+    public void unregisterOnChartGestureListener(OnChartGestureListener listener) {
+        mOnChartGestureListenerList.remove(listener);
     }
 
     public void syncCharts(ArrayMap<Integer, CombinedChart> combinedChartArrayMap) {
@@ -49,12 +57,20 @@ public class ChartSyncHelper {
             }
 
             @Override
-            public void onChartLongPressed(MotionEvent me) {}
+            public void onChartLongPressed(MotionEvent me) {
+                for (OnChartGestureListener listener : mOnChartGestureListenerList) {
+                    if (listener != null) {
+                        listener.onChartLongPressed(me);
+                    }
+                }
+            }
 
             @Override
             public void onChartDoubleTapped(MotionEvent me) {
-                if (mOnChartDoubleTappedListener != null) {
-                    mOnChartDoubleTappedListener.onChartDoubleTapped(chart1);
+                for (OnChartGestureListener listener : mOnChartGestureListenerList) {
+                    if (listener != null) {
+                        listener.onChartDoubleTapped(me);
+                    }
                 }
             }
 
@@ -131,9 +147,5 @@ public class ChartSyncHelper {
         Matrix dstMatrix = target.getViewPortHandler().getMatrixTouch();
         dstMatrix.set(srcMatrix);  // 将平移信息复制到目标图表
         target.getViewPortHandler().refresh(dstMatrix, target, true);  // 刷新目标图表
-    }
-
-    public interface OnChartDoubleTappedListener {
-        void onChartDoubleTapped(CombinedChart chart);
     }
 }

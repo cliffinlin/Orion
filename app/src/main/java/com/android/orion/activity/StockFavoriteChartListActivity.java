@@ -15,6 +15,7 @@ import android.util.ArrayMap;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -40,6 +41,8 @@ import com.github.mikephil.charting.data.BubbleEntry;
 import com.github.mikephil.charting.data.CandleEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.DefaultYAxisValueFormatter;
+import com.github.mikephil.charting.listener.ChartTouchListener;
+import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.utils.Utils;
 import com.markupartist.android.widget.PullToRefreshListView;
 
@@ -48,7 +51,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StockFavoriteChartListActivity extends BaseActivity implements
-		LoaderManager.LoaderCallbacks<Cursor> {
+		LoaderManager.LoaderCallbacks<Cursor>, OnChartGestureListener {
 
 	public static final int ITEM_VIEW_TYPE_MAIN = 0;
 	public static final int ITEM_VIEW_TYPE_SUB = 1;
@@ -257,6 +260,7 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		mChartSyncHelper.unregisterOnChartGestureListener(this);
 	}
 
 	@Override
@@ -338,13 +342,7 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 				mHandler.sendEmptyMessage(MESSAGE_REFRESH);
 			}
 		});
-		mChartSyncHelper.setOnChartDoubleTappedListener(new ChartSyncHelper.OnChartDoubleTappedListener() {
-			@Override
-			public void onChartDoubleTapped(CombinedChart chart) {
-				Setting.setDisplayCandle(!Setting.getDisplayCandle());
-				restartLoader();
-			}
-		});
+		mChartSyncHelper.registerOnChartGestureListener(this);
 	}
 
 	void initLoader() {
@@ -692,6 +690,48 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 
 		updateStockDataChartItemList();
 		restartLoader();
+	}
+
+	@Override
+	public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+
+	}
+
+	@Override
+	public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+
+	}
+
+	@Override
+	public void onChartLongPressed(MotionEvent me) {
+		Setting.setDisplayFilled(!Setting.getDisplayFilled());
+		restartLoader();
+	}
+
+	@Override
+	public void onChartDoubleTapped(MotionEvent me) {
+		Setting.setDisplayCandle(!Setting.getDisplayCandle());
+		restartLoader();
+	}
+
+	@Override
+	public void onChartSingleTapped(MotionEvent me) {
+
+	}
+
+	@Override
+	public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
+
+	}
+
+	@Override
+	public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
+
+	}
+
+	@Override
+	public void onChartTranslate(MotionEvent me, float dX, float dY) {
+
 	}
 
 	static class MainHandler extends Handler {
