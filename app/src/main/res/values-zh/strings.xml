@@ -58,6 +58,7 @@
     <string name="cancel">Cancel</string>
     <string name="latest">Latest</string>
     <string name="candle">Candle</string>
+    <string name="filled">Filled</string>
     <string name="direct">Direct</string>
     <string name="draw">Draw</string>
     <string name="stroke">Stroke</string>

@@ -155,7 +155,7 @@ public class StockDataChart {
 		if (Setting.getDisplayStroke()) {
 			if (mLineList[1].size() > 0) {
 				LineDataSet lineDataSet = new LineDataSet(mLineList[1], "Stroke");
-				if (mStock.hasFlag(Stock.FLAG_NOTIFY)) {
+				if (Setting.getDisplayFilled()) {
 					lineDataSet.setDrawFilled(true);
 				}
 				lineDataSet.setColor(mLineColors[1]);
@@ -170,7 +170,7 @@ public class StockDataChart {
 			if (mLineList[2].size() > 0) {
 				LineDataSet lineDataSet = new LineDataSet(mLineList[2],
 						"Segment");
-				if (mStock.hasFlag(Stock.FLAG_NOTIFY)) {
+				if (Setting.getDisplayFilled()) {
 					lineDataSet.setDrawFilled(true);
 				}
 				lineDataSet.setColor(mLineColors[2]);
@@ -185,7 +185,7 @@ public class StockDataChart {
 			if (mLineList[3].size() > 0) {
 				LineDataSet lineDataSet = new LineDataSet(mLineList[3],
 						"Line");
-				if (mStock.hasFlag(Stock.FLAG_NOTIFY)) {
+				if (Setting.getDisplayFilled()) {
 					lineDataSet.setDrawFilled(true);
 				}
 				lineDataSet.setColor(mLineColors[3]);
@@ -198,7 +198,7 @@ public class StockDataChart {
 			if (mLineList[4].size() > 0) {
 				LineDataSet lineDataSet = new LineDataSet(mLineList[4],
 						"Outline");
-				if (mStock.hasFlag(Stock.FLAG_NOTIFY)) {
+				if (Setting.getDisplayFilled()) {
 					lineDataSet.setDrawFilled(true);
 				}
 				lineDataSet.setColor(mLineColors[4]);

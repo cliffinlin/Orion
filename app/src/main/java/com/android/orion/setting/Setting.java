@@ -40,6 +40,9 @@ public class Setting {
 	public static final String SETTING_DISPLAY_CANDLE = "SETTING_DISPLAY_CANDLE";
 	public static final boolean SETTING_DISPLAY_CANDLE_DEFAULT = false;
 
+	public static final String SETTING_DISPLAY_FILLED = "SETTING_DISPLAY_FILLED";
+	public static final boolean SETTING_DISPLAY_FILLED_DEFAULT = true;
+
 	public static final String SETTING_DISPLAY_DRAW = "SETTING_DISPLAY_DRAW";
 	public static final boolean SETTING_DISPLAY_DRAW_DEFAULT = true;
 
@@ -86,7 +89,7 @@ public class Setting {
 	}
 
 	public static boolean getDisplayNet() {
-		return Preferences.getBoolean(SETTING_DISPLAY_NET, true);
+		return Preferences.getBoolean(SETTING_DISPLAY_NET, SETTING_DISPLAY_NET_DEFAULT);
 	}
 
 	public static void setDisplayNet(boolean value) {
@@ -94,15 +97,23 @@ public class Setting {
 	}
 
 	public static boolean getDisplayCandle() {
-		return Preferences.getBoolean(SETTING_DISPLAY_CANDLE, false);
+		return Preferences.getBoolean(SETTING_DISPLAY_CANDLE, SETTING_DISPLAY_CANDLE_DEFAULT);
 	}
 
 	public static void setDisplayCandle(boolean value) {
 		Preferences.putBoolean(SETTING_DISPLAY_CANDLE, value);
 	}
 
+	public static boolean getDisplayFilled() {
+		return Preferences.getBoolean(SETTING_DISPLAY_FILLED, SETTING_DISPLAY_FILLED_DEFAULT);
+	}
+
+	public static void setDisplayFilled(boolean value) {
+		Preferences.putBoolean(SETTING_DISPLAY_FILLED, value);
+	}
+
 	public static boolean getDisplayDraw() {
-		return Preferences.getBoolean(SETTING_DISPLAY_DRAW, true);
+		return Preferences.getBoolean(SETTING_DISPLAY_DRAW, SETTING_DISPLAY_DRAW_DEFAULT);
 	}
 
 	public static void setDisplayDraw(boolean value) {
@@ -110,7 +121,7 @@ public class Setting {
 	}
 
 	public static boolean getDisplayStroke() {
-		return Preferences.getBoolean(SETTING_DISPLAY_STROKE, true);
+		return Preferences.getBoolean(SETTING_DISPLAY_STROKE, SETTING_DISPLAY_STROKE_DEFAULT);
 	}
 
 	public static void setDisplayStroke(boolean value) {
@@ -118,15 +129,15 @@ public class Setting {
 	}
 
 	public static boolean getDisplaySegment() {
-		return Preferences.getBoolean(SETTING_DISPLAY_SEGMENT, true);
+		return Preferences.getBoolean(SETTING_DISPLAY_SEGMENT, SETTING_DISPLAY_SEGMENT_DEFAULT);
 	}
 
 	public static void setDisplaySegment(boolean value) {
-		Preferences.putBoolean(SETTING_DISPLAY_SEGMENT, value);
+		Preferences.putBoolean(SETTING_DISPLAY_SEGMENT, SETTING_DISPLAY_SEGMENT_DEFAULT);
 	}
 
 	public static boolean getDisplayLine() {
-		return Preferences.getBoolean(SETTING_DISPLAY_LINE, true);
+		return Preferences.getBoolean(SETTING_DISPLAY_LINE, SETTING_DISPLAY_LINE_DEFAULT);
 	}
 
 	public static void setDisplayLine(boolean value) {
