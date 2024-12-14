@@ -13,11 +13,11 @@ import com.github.mikephil.charting.listener.OnChartGestureListener;
 
 public class ChartSyncHelper {
     Logger Log = Logger.getLogger();
-    private OnSettingChangedListener mOnSettingChangedListener;
+    private OnChartDoubleTappedListener mOnChartDoubleTappedListener;
 
-    public void setOnSettingChangedListener(OnSettingChangedListener listener) {
+    public void setOnChartDoubleTappedListener(OnChartDoubleTappedListener listener) {
         if (listener != null) {
-            mOnSettingChangedListener = listener;
+            mOnChartDoubleTappedListener = listener;
         }
     }
 
@@ -53,9 +53,8 @@ public class ChartSyncHelper {
 
             @Override
             public void onChartDoubleTapped(MotionEvent me) {
-                Setting.setDisplayCandle(!Setting.getDisplayCandle());
-                if (mOnSettingChangedListener != null) {
-                    mOnSettingChangedListener.OnSettingChanged();
+                if (mOnChartDoubleTappedListener != null) {
+                    mOnChartDoubleTappedListener.onChartDoubleTapped(chart1);
                 }
             }
 
@@ -134,8 +133,7 @@ public class ChartSyncHelper {
         target.getViewPortHandler().refresh(dstMatrix, target, true);  // 刷新目标图表
     }
 
-    public interface OnSettingChangedListener {
-        void OnSettingChanged();
+    public interface OnChartDoubleTappedListener {
+        void onChartDoubleTapped(CombinedChart chart);
     }
-
 }

@@ -91,7 +91,6 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 
 			switch (msg.what) {
 				case MESSAGE_REFRESH:
-//					mDatabaseManager.deleteStockData(mStock.getId());
 					Setting.setDownloadStockData(mStock.getSE(), mStock.getCode(), 0);
 					mStockDataProvider.download(mStock);
 					restartLoader();
@@ -320,13 +319,7 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 			mStockDataChartItemSubList = new ArrayList<>();
 		}
 
-		int selection = 0;
 		for (int i = 0; i < Period.PERIODS.length; i++) {
-			if (StockData.getPeriodIndex(Period.PERIODS[i]) < StockData.getPeriodIndex(DatabaseContract.COLUMN_DAY)) {
-				if (Setting.getPeriod(Period.PERIODS[i])) {
-					selection += 2;
-				}
-			}
 			mStockDataChartList.add(new StockDataChart(mStock, Period.PERIODS[i]));
 			mStockDataChartItemMainList.add(new StockDataChartItemMain(
 					mStockDataChartList.get(i)));
@@ -339,16 +332,16 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 		mStockDataChartArrayAdapter = new StockDataChartArrayAdapter(this,
 				mStockDataChartItemList);
 		mListView.setAdapter(mStockDataChartArrayAdapter);
-		mListView.setSelection(selection);
 		mListView.setOnRefreshListener(new PullToRefreshListView.OnRefreshListener() {
 			@Override
 			public void onRefresh() {
 				mHandler.sendEmptyMessage(MESSAGE_REFRESH);
 			}
 		});
-		mChartSyncHelper.setOnSettingChangedListener(new ChartSyncHelper.OnSettingChangedListener() {
+		mChartSyncHelper.setOnChartDoubleTappedListener(new ChartSyncHelper.OnChartDoubleTappedListener() {
 			@Override
-			public void OnSettingChanged() {
+			public void onChartDoubleTapped(CombinedChart chart) {
+				Setting.setDisplayCandle(!Setting.getDisplayCandle());
 				restartLoader();
 			}
 		});
