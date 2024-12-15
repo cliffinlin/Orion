@@ -704,8 +704,7 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 
 	@Override
 	public void onChartLongPressed(MotionEvent me) {
-		Setting.setDisplayFilled(!Setting.getDisplayFilled());
-		restartLoader();
+
 	}
 
 	@Override
