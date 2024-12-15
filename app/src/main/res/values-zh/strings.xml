@@ -124,6 +124,7 @@
 
     //Tip
     <string name="network_unavailable">Mobile data network not available</string>
+    <string name="out_of_trading_hours">Out of trading hours</string>
     <string name="notification_is_off">Notification is off</string>
     <string name="log_is_on">Log is on</string>
     <string name="log_is_off">Log is off</string>

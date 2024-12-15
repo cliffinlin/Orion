@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import com.android.orion.R;
 import com.android.orion.activity.StockFavoriteListActivity;
@@ -621,18 +622,34 @@ public class StockAnalyzer {
 			return result;
 		}
 
-		int drawDataIndex0 = drawDataList.size() - 1;
-		drawData0 = drawDataList.get(drawDataIndex0);
-		drawData1 = drawDataList.get(drawDataIndex0 - 1);
-		drawData2 = drawDataList.get(drawDataIndex0 - 2);
+		int index = drawDataList.size() - 1;
+		drawData0 = drawDataList.get(index);
+		drawData1 = drawDataList.get(index - 1);
+		drawData2 = drawDataList.get(index - 2);
 
 		if (drawData0.getTrend().include(drawData2.getTrend()) || drawData0.getTrend().includedBy(drawData2.getTrend())) {
 			return result;
 		}
 
-		if (stock.getPrice() < drawData1.getTrend().getVertexLow() || stock.getPrice() > drawData1.getTrend().getVertexHigh()) {
+		stockData = stockDataList.get(drawData1.getTrend().getIndexStart());
+		if (stockData == null) {
 			return result;
 		}
+		if (!(stockData.getTrend().getVertex() == Trend.VERTEX_BOTTOM || stockData.getTrend().getVertex() == Trend.VERTEX_TOP)) {
+			return result;
+		}
+
+		stockData = stockDataList.get(drawData1.getTrend().getIndexEnd());
+		if (stockData == null) {
+			return result;
+		}
+		if (!(stockData.getTrend().getVertex() == Trend.VERTEX_BOTTOM || stockData.getTrend().getVertex() == Trend.VERTEX_TOP)) {
+			return result;
+		}
+
+//		if (stock.getPrice() < drawData1.getTrend().getVertexLow() || stock.getPrice() > drawData1.getTrend().getVertexHigh()) {
+//			return result;
+//		}
 
 		stockData = stockDataList.get(drawData2.getTrend().getIndexStart());
 		if (stockData == null) {
@@ -792,6 +809,9 @@ public class StockAnalyzer {
 		boolean notify;
 
 		if (!Market.isTradingHours()) {
+			Toast.makeText(mContext,
+					mContext.getResources().getString(R.string.out_of_trading_hours),
+					Toast.LENGTH_SHORT).show();
 			return;
 		}
 
