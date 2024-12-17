@@ -465,30 +465,33 @@ public class StockAnalyzer {
 		TrendAnalyzer trendAnalyzer = TrendAnalyzer.getInstance();
 
 		trendAnalyzer.analyzeVertex(stockDataList, drawVertexList);
-		trendAnalyzer.vertexListToDataList(stockDataList, drawVertexList,
-				drawDataList);
+		trendAnalyzer.vertexListToDataList(stockDataList, drawVertexList, drawDataList);
 
-		trendAnalyzer.analyzeLine(stockDataList, drawDataList,
-				strokeVertexList, Trend.VERTEX_TOP_STROKE,
-				Trend.VERTEX_BOTTOM_STROKE);
+//		trendAnalyzer.analyzeLine(stockDataList, drawDataList,
+//				strokeVertexList, Trend.VERTEX_TOP_STROKE,
+//				Trend.VERTEX_BOTTOM_STROKE);
+		trendAnalyzer.analyzeVertex(stockDataList, drawDataList, strokeVertexList, Trend.VERTEX_TOP_STROKE, Trend.VERTEX_BOTTOM_STROKE);
 		trendAnalyzer.vertexListToDataList(stockDataList, strokeVertexList,
 				strokeDataList);
 
-		trendAnalyzer.analyzeLine(stockDataList, strokeDataList,
-				segmentVertexList, Trend.VERTEX_TOP_SEGMENT,
-				Trend.VERTEX_BOTTOM_SEGMENT);
+//		trendAnalyzer.analyzeLine(stockDataList, strokeDataList,
+//				segmentVertexList, Trend.VERTEX_TOP_SEGMENT,
+//				Trend.VERTEX_BOTTOM_SEGMENT);
+		trendAnalyzer.analyzeVertex(stockDataList, strokeDataList, segmentVertexList, Trend.VERTEX_TOP_SEGMENT, Trend.VERTEX_BOTTOM_SEGMENT);
 		trendAnalyzer.vertexListToDataList(stockDataList, segmentVertexList,
 				segmentDataList);
 
-		trendAnalyzer.analyzeLine(stockDataList, segmentDataList,
-				lineVertexList, Trend.VERTEX_TOP_LINE,
-				Trend.VERTEX_BOTTOM_LINE);
+//		trendAnalyzer.analyzeLine(stockDataList, segmentDataList,
+//				lineVertexList, Trend.VERTEX_TOP_LINE,
+//				Trend.VERTEX_BOTTOM_LINE);
+		trendAnalyzer.analyzeVertex(stockDataList, segmentDataList, lineVertexList, Trend.VERTEX_TOP_LINE, Trend.VERTEX_BOTTOM_LINE);
 		trendAnalyzer.vertexListToDataList(stockDataList, lineVertexList,
 				lineDataList);
 
-		trendAnalyzer.analyzeLine(stockDataList, lineDataList,
-				outlineVertexList, Trend.VERTEX_TOP_OUTLINE,
-				Trend.VERTEX_BOTTOM_OUTLINE);
+//		trendAnalyzer.analyzeLine(stockDataList, lineDataList,
+//				outlineVertexList, Trend.VERTEX_TOP_OUTLINE,
+//				Trend.VERTEX_BOTTOM_OUTLINE);
+		trendAnalyzer.analyzeVertex(stockDataList, lineDataList, outlineVertexList, Trend.VERTEX_TOP_OUTLINE, Trend.VERTEX_BOTTOM_OUTLINE);
 		trendAnalyzer.vertexListToDataList(stockDataList, outlineVertexList,
 				outlineDataList);
 
