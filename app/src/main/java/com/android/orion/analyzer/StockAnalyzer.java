@@ -471,8 +471,7 @@ public class StockAnalyzer {
 //				strokeVertexList, Trend.VERTEX_TOP_STROKE,
 //				Trend.VERTEX_BOTTOM_STROKE);
 		trendAnalyzer.analyzeVertex(stockDataList, drawDataList, strokeVertexList, Trend.VERTEX_TOP_STROKE, Trend.VERTEX_BOTTOM_STROKE);
-		trendAnalyzer.vertexListToDataList(stockDataList, strokeVertexList,
-				strokeDataList);
+		trendAnalyzer.vertexListToDataList(stockDataList, strokeVertexList,	strokeDataList);
 
 //		trendAnalyzer.analyzeLine(stockDataList, strokeDataList,
 //				segmentVertexList, Trend.VERTEX_TOP_SEGMENT,
@@ -519,18 +518,17 @@ public class StockAnalyzer {
 			}
 		}
 
-		analyzeAction(stock, period, drawVertexList, stockDataList, drawDataList, strokeDataList, segmentDataList);
+		analyzeAction(stock, period, stockDataList, drawDataList, strokeDataList);
 	}
 
-	private void analyzeAction(Stock stock, String period, ArrayList<StockData> drawVertexList,
+	private void analyzeAction(Stock stock, String period,
 	                           ArrayList<StockData> stockDataList,
 	                           ArrayList<StockData> drawDataList,
-	                           ArrayList<StockData> strokeDataList,
-	                           ArrayList<StockData> segmentDataList) {
+	                           ArrayList<StockData> strokeDataList) {
 		String action = StockData.MARK_NONE;
 		String trend = StockData.MARK_NONE;
 
-		if (stock == null || stockDataList == null || drawDataList == null || strokeDataList == null || segmentDataList == null) {
+		if (stock == null || stockDataList == null || drawDataList == null || strokeDataList == null) {
 			return;
 		}
 
@@ -546,21 +544,10 @@ public class StockAnalyzer {
 			return;
 		}
 
-		if (segmentDataList.size() < Trend.VERTEX_SIZE) {
-			return;
-		}
-
-		StockData segmentData = segmentDataList.get(segmentDataList.size() - 1);
 		StockData strokeData = strokeDataList.get(strokeDataList.size() - 1);
 		StockData drawData = drawDataList.get(drawDataList.size() - 1);
 		StockData stockData = stockDataList.get(stockDataList.size() - 1);
 		StockData prev = stockDataList.get(stockDataList.size() - 2);
-
-		if (segmentData.getTrend().directionOf(Trend.DIRECTION_UP)) {
-			trend += StockData.MARK_ADD;
-		} else if (segmentData.getTrend().directionOf(Trend.DIRECTION_DOWN)) {
-			trend += StockData.MARK_MINUS;
-		}
 
 		if (strokeData.getTrend().directionOf(Trend.DIRECTION_UP)) {
 			trend += StockData.MARK_ADD;
@@ -577,17 +564,12 @@ public class StockAnalyzer {
 		action += trend;
 		action += Constant.NEW_LINE;
 
-//		{
-//			String result = getSecondAction(stock, stockDataList, drawDataList);
-//			action += result;
-//		}
-
 		if (stockData.getTrend().directionOf(Trend.DIRECTION_UP)) {
 			if (prev.getTrend().vertexOf(Trend.VERTEX_BOTTOM)) {
 				if (!Period.isMinutePeriod(period)) {
 					action += StockData.MARK_D;
 				}
-				String result = getSecondBottomAction(stock, drawVertexList, strokeDataList, segmentDataList);
+				String result = getSecondAction(stock, stockDataList, drawDataList);
 				action += result;
 			}
 		} else if (stockData.getTrend().directionOf(Trend.DIRECTION_DOWN)) {
@@ -595,7 +577,7 @@ public class StockAnalyzer {
 				if (!Period.isMinutePeriod(period)) {
 					action += StockData.MARK_G;
 				}
-				String result = getSecondTopAction(stock, drawVertexList, strokeDataList, segmentDataList);
+				String result = getSecondAction(stock, stockDataList, drawDataList);
 				action += result;
 			}
 		}
@@ -836,8 +818,6 @@ public class StockAnalyzer {
 					notify = true;
 				} else if (action.contains(StockData.MARK_BUY2)) {
 					notify = true;
-				} else if (action.contains(StockData.MARK_D)) {
-					notify = true;
 				}
 
 				if (action.contains(StockData.MARK_SELL)) {
@@ -845,8 +825,6 @@ public class StockAnalyzer {
 				} else if (action.contains(StockData.MARK_SELL1)) {
 					notify = true;
 				} else if (action.contains(StockData.MARK_SELL2)) {
-					notify = true;
-				} else if (action.contains(StockData.MARK_G)) {
 					notify = true;
 				}
 

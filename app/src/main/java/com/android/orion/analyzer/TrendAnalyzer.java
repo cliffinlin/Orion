@@ -130,7 +130,7 @@ public class TrendAnalyzer {
 		int i;
 		int size;
 		int direction = Trend.DIRECTION_NONE;
-		int vertex = Trend.VERTEX_NONE;
+		int vertex;
 		StockData stockDataTop;
 		StockData stockDataBottom;
 
@@ -219,24 +219,6 @@ public class TrendAnalyzer {
 			prev.set(current);
 			current.set(next);
 			next.init();
-		}
-
-		i = size - 1;
-		if (vertex == Trend.VERTEX_TOP) {
-			direction = Trend.DIRECTION_DOWN;
-		} else if (vertex == Trend.VERTEX_BOTTOM) {
-			direction = Trend.DIRECTION_UP;
-		}
-
-		dataList.get(i).getTrend().setDirection(direction);
-
-		if (vertexList.size() > 0) {
-			i = 0;
-			if (vertexList.get(0).getTrend().vertexOf(Trend.VERTEX_TOP)) {
-				dataList.get(i).getTrend().setVertex(Trend.VERTEX_BOTTOM);
-			} else if (vertexList.get(0).getTrend().vertexOf(Trend.VERTEX_BOTTOM)) {
-				dataList.get(i).getTrend().setVertex(Trend.VERTEX_TOP);
-			}
 		}
 	}
 
