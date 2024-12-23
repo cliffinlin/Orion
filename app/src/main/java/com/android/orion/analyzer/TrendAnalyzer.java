@@ -208,13 +208,13 @@ public class TrendAnalyzer {
 		stockData.set(stockDataList.get(i));
 
 		if (vertexList.get(j).getTrend().vertexOf(Trend.VERTEX_TOP)) {
-			if (stockDataList.get(i).getTrend().getVertexHigh() > vertexList.get(j).getTrend().getVertexHigh()) {
+			if (stockData.getTrend().getVertexHigh() > vertexList.get(j).getTrend().getVertexHigh()) {
 				stockData.getTrend().setVertex(Trend.VERTEX_TOP);
 			} else {
 				stockData.getTrend().setVertex(Trend.VERTEX_BOTTOM);
 			}
 		} else if (vertexList.get(j).getTrend().vertexOf(Trend.VERTEX_BOTTOM)) {
-			if (stockDataList.get(i).getTrend().getVertexLow() < vertexList.get(j).getTrend().getVertexLow()) {
+			if (stockData.getTrend().getVertexLow() < vertexList.get(j).getTrend().getVertexLow()) {
 				stockData.getTrend().setVertex(Trend.VERTEX_BOTTOM);
 			} else {
 				stockData.getTrend().setVertex(Trend.VERTEX_TOP);
