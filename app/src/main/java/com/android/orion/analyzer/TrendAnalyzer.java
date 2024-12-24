@@ -124,6 +124,58 @@ public class TrendAnalyzer {
 				stockDataList.get(i).getTrend().setVertex(Trend.VERTEX_TOP);
 			}
 		}
+
+//		extendVertexList(stockDataList, vertexList);
+	}
+
+	void extendVertexList(ArrayList<StockData> stockDataList, ArrayList<StockData> vertexList) {
+		StockData stockData;
+		StockData vertex;
+		if (stockDataList == null || stockDataList.size() < Trend.VERTEX_SIZE) {
+			return;
+		}
+
+		if (vertexList == null || vertexList.size() == 0) {
+			return;
+		}
+
+		stockData = stockDataList.get(0);
+		vertex = new StockData();
+		vertex.set(stockData);
+		for (int i = vertexList.get(0).getTrend().getIndexStart(); i >= 0; i--) {
+			vertex.merge(stockDataList.get(i));
+		}
+		if (vertexList.get(0).getTrend().vertexOf(Trend.VERTEX_TOP)) {
+			vertex.getTrend().setVertex(Trend.VERTEX_BOTTOM);
+
+			stockData.getTrend().setVertex(Trend.VERTEX_BOTTOM);
+			stockData.getTrend().setDirection(Trend.DIRECTION_UP);
+		} else if (vertexList.get(0).getTrend().vertexOf(Trend.VERTEX_BOTTOM)) {
+			vertex.getTrend().setVertex(Trend.VERTEX_TOP);
+
+			stockData.getTrend().setVertex(Trend.VERTEX_TOP);
+			stockData.getTrend().setDirection(Trend.DIRECTION_DOWN);
+		}
+		vertexList.add(0, vertex);
+
+		stockData = stockDataList.get(stockDataList.size() - 1);
+		vertex = new StockData();
+		vertex.set(stockData);
+		for (int i = vertexList.get(vertexList.size() - 1).getTrend().getIndexEnd(); i < stockDataList.size(); i++) {
+			vertex.merge(stockDataList.get(i));
+		}
+		if (vertexList.get(0).getTrend().vertexOf(Trend.VERTEX_TOP)) {
+			vertex.getTrend().setVertex(Trend.VERTEX_BOTTOM);
+
+			stockData.getTrend().setVertex(Trend.VERTEX_BOTTOM);
+			stockData.getTrend().setDirection(Trend.DIRECTION_UP);
+		} else if (vertexList.get(0).getTrend().vertexOf(Trend.VERTEX_BOTTOM)) {
+			vertex.getTrend().setVertex(Trend.VERTEX_TOP);
+
+			stockData.getTrend().setVertex(Trend.VERTEX_TOP);
+			stockData.getTrend().setDirection(Trend.DIRECTION_DOWN);
+		}
+		vertexList.add(vertex);
 	}
 
 	void analyzeLine(ArrayList<StockData> stockDataList,
