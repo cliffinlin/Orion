@@ -186,6 +186,7 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 				return true;
 
 			case R.id.action_refresh:
+				mDatabaseManager.deleteStockData(mStock.getId());
 				mHandler.sendEmptyMessage(MESSAGE_REFRESH);
 				return true;
 
