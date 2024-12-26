@@ -531,19 +531,6 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 						stockDataChart.mLineList[0].add(drawEntry);
 					}
 
-					if (index == cursor.getCount() - 1) {
-						float val = 0;
-						if (mStockData
-								.getTrend().directionOf(Trend.DIRECTION_UP)) {
-							val = (float) mStockData.getCandlestick().getHigh();
-						} else if (mStockData
-								.getTrend().directionOf(Trend.DIRECTION_DOWN)) {
-							val = (float) mStockData.getCandlestick().getLow();
-						}
-						Entry drawEntry = new Entry(val, index);
-						stockDataChart.mLineList[0].add(drawEntry);
-					}
-
 					if (mStockData.getTrend().vertexOf(Trend.VERTEX_TOP_STROKE)) {
 						Entry strokeEntry = new Entry(
 								(float) mStockData.getTrend().getVertexHigh(), index);
