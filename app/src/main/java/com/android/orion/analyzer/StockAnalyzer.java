@@ -14,6 +14,7 @@ import com.android.orion.R;
 import com.android.orion.activity.StockFavoriteListActivity;
 import com.android.orion.application.MainApplication;
 import com.android.orion.config.Config;
+import com.android.orion.data.Macd;
 import com.android.orion.data.Period;
 import com.android.orion.data.Trend;
 import com.android.orion.database.DatabaseContract;
@@ -32,6 +33,10 @@ import com.android.orion.utility.StopWatch;
 import com.android.orion.utility.Utility;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 
 public class StockAnalyzer {
@@ -45,6 +50,9 @@ public class StockAnalyzer {
 	NotificationManager mNotificationManager;
 	DatabaseManager mDatabaseManager;
 	Logger Log = Logger.getLogger();
+	static Set<String> mNotifyActions = new HashSet<>(Arrays.asList(
+			StockData.MARK_BUY, StockData.MARK_BUY1, StockData.MARK_BUY2,
+			StockData.MARK_SELL, StockData.MARK_SELL1, StockData.MARK_SELL2));
 
 	private StockAnalyzer() {
 		mContext = MainApplication.getContext();
@@ -444,15 +452,38 @@ public class StockAnalyzer {
 		if (stockDataList == null || stockDataList.size() < Trend.VERTEX_SIZE) {
 			return;
 		}
-		MacdAnalyzer.calculate(period, stockDataList);
-		for (int i = 0; i < stockDataList.size(); i++) {
-			stockDataList.get(i).getMacd().set(
-					MacdAnalyzer.getEMAAverage5List().get(i),
-					MacdAnalyzer.getEMAAverage10List().get(i),
-					MacdAnalyzer.getDIFList().get(i),
-					MacdAnalyzer.getDEAList().get(i),
-					MacdAnalyzer.getHistogramList().get(i),
-					MacdAnalyzer.getVelocityList().get(i));
+
+		try {
+			MacdAnalyzer.calculate(period, stockDataList);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		List<Double> average5List = MacdAnalyzer.getEMAAverage5List();
+		List<Double> average10List = MacdAnalyzer.getEMAAverage10List();
+		List<Double> difList = MacdAnalyzer.getDIFList();
+		List<Double> deaList = MacdAnalyzer.getDEAList();
+		List<Double> histogramList = MacdAnalyzer.getHistogramList();
+		List<Double> velocityList = MacdAnalyzer.getVelocityList();
+
+		int size = stockDataList.size();
+		if (average5List.size() != size || average10List.size() != size || difList.size() != size || deaList.size() != size || histogramList.size() != size || velocityList.size() != size) {
+			return;
+		}
+
+		for (int i = 0; i < size; i++) {
+			StockData stockData = stockDataList.get(i);
+			Macd macd = stockData.getMacd();
+			if (macd != null) {
+				macd.set(
+						average5List.get(i),
+						average10List.get(i),
+						difList.get(i),
+						deaList.get(i),
+						histogramList.get(i),
+						velocityList.get(i)
+				);
+			}
 		}
 	}
 
@@ -793,7 +824,13 @@ public class StockAnalyzer {
 	}
 
 	protected void updateNotification(Stock stock) {
-		boolean notify;
+		if (stock == null || mContext == null || mContentTitle == null || mContentText == null) {
+			return;
+		}
+
+		if (stock.getPrice() == 0 || !stock.hasFlag(Stock.FLAG_NOTIFY)) {
+			return;
+		}
 
 		if (!Market.isTradingHours()) {
 			Toast.makeText(mContext,
@@ -802,38 +839,16 @@ public class StockAnalyzer {
 			return;
 		}
 
-		if (stock == null || stock.getPrice() == 0 || !stock.hasFlag(Stock.FLAG_NOTIFY)) {
-			return;
-		}
-
 		mContentTitle.setLength(0);
 		mContentText.setLength(0);
 
 		for (String period : Period.PERIODS) {
-			if (Setting.getPeriod(period)) {
-				String action = stock.getAction(period);
-				notify = false;
-
-				if (action.contains(StockData.MARK_BUY)) {
-					notify = true;
-				} else if (action.contains(StockData.MARK_BUY1)) {
-					notify = true;
-				} else if (action.contains(StockData.MARK_BUY2)) {
-					notify = true;
-				}
-
-				if (action.contains(StockData.MARK_SELL)) {
-					notify = true;
-				} else if (action.contains(StockData.MARK_SELL1)) {
-					notify = true;
-				} else if (action.contains(StockData.MARK_SELL2)) {
-					notify = true;
-				}
-
-				if (notify) {
-					mContentTitle.append(period + " " + action + " ");
-				}
+			if (!Setting.getPeriod(period)) {
+				continue;
 			}
+
+			String action = stock.getAction(period);
+			setContentTitle(period, action);
 		}
 
 		if (TextUtils.isEmpty(mContentTitle)) {
@@ -842,14 +857,48 @@ public class StockAnalyzer {
 
 		mContentTitle.insert(0, stock.getName() + " " + stock.getPrice() + " " + stock.getNet() + " ");
 		RecordFile.writeNotificationFile(mContentTitle.toString());
-		notify(Integer.parseInt(stock.getCode()), Config.MESSAGE_CHANNEL_ID, Config.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
-				mContentTitle.toString(), mContentText.toString());
+		try {
+			int code = Integer.parseInt(stock.getCode());
+			notify(code, Config.MESSAGE_CHANNEL_ID, Config.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
+					mContentTitle.toString(), mContentText.toString());
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
+	}
+
+	void setContentTitle(String period, String action) {
+		if (mNotifyActions == null || mContentTitle == null) {
+			return;
+		}
+
+		if (period == null || action == null || period.isEmpty() || action.isEmpty()) {
+			return;
+		}
+
+		boolean containsAction = false;
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+			containsAction = mNotifyActions.stream().anyMatch(action::contains);
+		} else {
+			for (String notifyAction : mNotifyActions) {
+				if (action.contains(notifyAction)) {
+					containsAction = true;
+					break;
+				}
+			}
+		}
+
+		if (containsAction) {
+			appendContentTitle(period, action);
+		}
+	}
+
+	private void appendContentTitle(String period, String action) {
+		mContentTitle.append(period).append(" ").append(action).append(" ");
 	}
 
 	public void notify(int id, String channelID, String channelName, int importance, String contentTitle, String contentText) {
-		Notification.Builder notification;
-
-		if (mNotificationManager == null) {
+		if (mNotificationManager == null || mContext == null) {
 			return;
 		}
 
@@ -857,33 +906,34 @@ public class StockAnalyzer {
 
 		Intent intent = new Intent(mContext, StockFavoriteListActivity.class);
 		intent.setType("vnd.android-dir/mms-sms");
-		PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0,
-				intent, 0);
+		PendingIntent pendingIntent = PendingIntent.getActivity(
+				mContext,
+				id,
+				intent,
+				PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+		);
+
+		Notification.Builder notificationBuilder = new Notification.Builder(mContext)
+				.setContentTitle(contentTitle)
+				.setContentText(contentText)
+				.setSmallIcon(R.drawable.ic_dialog_email)
+				.setAutoCancel(true)
+				.setContentIntent(pendingIntent);
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			NotificationChannel notificationChannel = new NotificationChannel(channelID,
-					channelName, importance);
-			notificationChannel.enableVibration(true);
-			notificationChannel.setVibrationPattern(new long[]{500, 500, 500, 500, 500});
-			notificationChannel.enableLights(true);
-			notificationChannel.setLightColor(0xFF0000FF);
-			mNotificationManager.createNotificationChannel(notificationChannel);
-
-			notification = new Notification.Builder(
-					mContext, channelID).setContentTitle(contentTitle)
-					.setContentText(contentText)
-					.setSmallIcon(R.drawable.ic_dialog_email)
-					.setAutoCancel(true)
-					.setContentIntent(pendingIntent);
+			if (mNotificationManager.getNotificationChannel(channelID) == null) {
+				NotificationChannel notificationChannel = new NotificationChannel(channelID, channelName, importance);
+				notificationChannel.enableVibration(true);
+				notificationChannel.setVibrationPattern(new long[]{500, 500, 500, 500, 500});
+				notificationChannel.enableLights(true);
+				notificationChannel.setLightColor(0xFF0000FF);
+				mNotificationManager.createNotificationChannel(notificationChannel);
+			}
+			notificationBuilder.setChannelId(channelID);
 		} else {
-			notification = new Notification.Builder(
-					mContext).setContentTitle(contentTitle)
-					.setContentText(contentText)
-					.setSmallIcon(R.drawable.ic_dialog_email).setAutoCancel(true)
-					.setLights(0xFF0000FF, 100, 300)
-					.setContentIntent(pendingIntent);
+			notificationBuilder.setLights(0xFF0000FF, 100, 300);
 		}
 
-		mNotificationManager.notify(id, notification.build());
+		mNotificationManager.notify(id, notificationBuilder.build());
 	}
 }
