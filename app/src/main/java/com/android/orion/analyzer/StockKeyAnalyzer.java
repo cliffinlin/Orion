@@ -10,8 +10,6 @@ public class StockKeyAnalyzer {
 
 	static final boolean LOG = false;
 
-	private static StockKeyAnalyzer mInstance;
-
 	int mThresholdType;
 	double mNaturalRally;
 	double mUpwardTrend;
@@ -23,11 +21,12 @@ public class StockKeyAnalyzer {
 	private StockKeyAnalyzer() {
 	}
 
-	public static synchronized StockKeyAnalyzer getInstance() {
-		if (mInstance == null) {
-			mInstance = new StockKeyAnalyzer();
-		}
-		return mInstance;
+	private static class SingletonHelper {
+		private static final StockKeyAnalyzer INSTANCE = new StockKeyAnalyzer();
+	}
+
+	public static StockKeyAnalyzer getInstance() {
+		return SingletonHelper.INSTANCE;
 	}
 
 	void init() {

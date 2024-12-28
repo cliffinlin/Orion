@@ -11,15 +11,17 @@ import java.util.ArrayList;
 public class StockManager {
 
 	private static final Context mContext = MainApplication.getContext();
-	private static StockManager mInstance;
-
 	ArrayList<StockListener> mStockListener = new ArrayList<>();
 
-	public static synchronized StockManager getInstance() {
-		if (mInstance == null) {
-			mInstance = new StockManager();
-		}
-		return mInstance;
+	private StockManager() {
+	}
+
+	private static class SingletonHolder {
+		private static final StockManager INSTANCE = new StockManager();
+	}
+
+	public static StockManager getInstance() {
+		return SingletonHolder.INSTANCE;
 	}
 
 	public void registerStockListener(StockListener listener) {

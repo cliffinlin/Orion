@@ -14,18 +14,19 @@ import com.android.orion.utility.Utility;
 public class ReceiverConnection extends BroadcastReceiver {
 	public static final String ACTION_CONNECTIVITY_CHANGE = "android.net.conn.CONNECTIVITY_CHANGE";
 
-	private static ReceiverConnection mInstance;
 	private static boolean mRegistered = false;
 
 	Logger Log = Logger.getLogger();
 
+	private ReceiverConnection() {
+	}
+
+	private static class SingletonHelper {
+		private static final ReceiverConnection INSTANCE = new ReceiverConnection();
+	}
+
 	public static ReceiverConnection getInstance() {
-		synchronized (ReceiverConnection.class) {
-			if (mInstance == null) {
-				mInstance = new ReceiverConnection();
-			}
-		}
-		return mInstance;
+		return SingletonHelper.INSTANCE;
 	}
 
 	public void registerReceiver(@NonNull Context context) {

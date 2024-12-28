@@ -78,11 +78,12 @@ public class SinaFinance extends StockDataProvider {
 		mRequestHeader.put(SINA_FINANCE_HEAD_REFERER_KEY, SINA_FINANCE_HEAD_REFERER_VALUE);
 	}
 
-	public static synchronized IStockDataProvider getInstance() {
-		if (mInstance == null) {
-			mInstance = new SinaFinance();
-		}
-		return mInstance;
+	private static class InstanceHolder {
+		private static final IStockDataProvider INSTANCE = new SinaFinance();
+	}
+
+	public static IStockDataProvider getInstance() {
+		return InstanceHolder.INSTANCE;
 	}
 
 	public int getAvailableHistoryLength(String period) {

@@ -51,7 +51,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 	public static final int RESULT_SUCCESS = 1;
 	public static final int RESULT_NONE = 0;
 	public static final int RESULT_FAILED = -1;
-	protected static IStockDataProvider mInstance;
+	protected static volatile IStockDataProvider mInstance;
 	static ArrayMap<String, Stock> mStockArrayMap = new ArrayMap<>();
 	static ArrayMap<String, Stock> mRemovedArrayMap = new ArrayMap<>();
 	static ArrayList<IndexComponent> mIndexComponentList = new ArrayList<>();
@@ -87,12 +87,16 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		StockManager.getInstance().registerStockListener(this);
 	}
 
-	public static synchronized IStockDataProvider getInstance() {
+	public static IStockDataProvider getInstance() {
 		if (TextUtils.equals(Config.stockDataProvider, SinaFinance.PROVIDER_NAME)) {
 			mInstance = SinaFinance.getInstance();
 		} else {
 			if (mInstance == null) {
-				mInstance = new StockDataProvider();
+				synchronized (StockDataProvider.class) {
+					if (mInstance == null) {
+						mInstance = new StockDataProvider();
+					}
+				}
 			}
 		}
 		return mInstance;

@@ -41,7 +41,6 @@ public class StockAnalyzer {
 	static ArrayList<StockData> mStockDataList = new ArrayList<>();
 	static StringBuffer mContentTitle = new StringBuffer();
 	static StringBuffer mContentText = new StringBuffer();
-	private static StockAnalyzer mInstance;
 	Context mContext;
 	NotificationManager mNotificationManager;
 	DatabaseManager mDatabaseManager;
@@ -54,11 +53,12 @@ public class StockAnalyzer {
 		mDatabaseManager = DatabaseManager.getInstance();
 	}
 
-	public static synchronized StockAnalyzer getInstance() {
-		if (mInstance == null) {
-			mInstance = new StockAnalyzer();
-		}
-		return mInstance;
+	private static class SingletonHolder {
+		private static final StockAnalyzer INSTANCE = new StockAnalyzer();
+	}
+
+	public static StockAnalyzer getInstance() {
+		return SingletonHolder.INSTANCE;
 	}
 
 	public void analyze(Stock stock, String period) {

@@ -31,7 +31,7 @@ import java.util.Calendar;
 import java.util.List;
 
 public class DatabaseManager implements StockListener {
-	private static DatabaseManager mInstance;
+	private static volatile DatabaseManager mInstance;
 	private static Context mContext;
 
 	public ContentResolver mContentResolver;

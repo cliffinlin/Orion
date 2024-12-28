@@ -7,18 +7,17 @@ import com.android.orion.utility.Logger;
 import java.util.ArrayList;
 
 public class TrendAnalyzer {
-
-	private static TrendAnalyzer mInstance;
 	Logger Log = Logger.getLogger();
 
 	private TrendAnalyzer() {
 	}
 
-	public static synchronized TrendAnalyzer getInstance() {
-		if (mInstance == null) {
-			mInstance = new TrendAnalyzer();
-		}
-		return mInstance;
+	private static class Holder {
+		private static final TrendAnalyzer INSTANCE = new TrendAnalyzer();
+	}
+
+	public static TrendAnalyzer getInstance() {
+		return Holder.INSTANCE;
 	}
 
 	void analyzeVertex(ArrayList<StockData> stockDataList,

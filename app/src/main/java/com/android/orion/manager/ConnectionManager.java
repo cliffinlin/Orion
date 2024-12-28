@@ -16,7 +16,6 @@ public class ConnectionManager {
 	public static final int MSG_CONNECTED = 0;
 	public static final int MSG_DISCONNECTED = 1;
 	private static final Context mContext = MainApplication.getContext();
-	private static ConnectionManager mInstance;
 	ArrayList<OnConnectionChangeListener> mListener = new ArrayList<>();
 	private final Handler mHandler = new Handler(Looper.getMainLooper()) {
 
@@ -41,13 +40,15 @@ public class ConnectionManager {
 		}
 	};
 
+	private ConnectionManager() {
+	}
+
+	private static class SingletonHolder {
+		private static final ConnectionManager INSTANCE = new ConnectionManager();
+	}
+
 	public static ConnectionManager getInstance() {
-		synchronized (ConnectionManager.class) {
-			if (mInstance == null) {
-				mInstance = new ConnectionManager();
-			}
-		}
-		return mInstance;
+		return SingletonHolder.INSTANCE;
 	}
 
 	public void registerListener(@NonNull OnConnectionChangeListener listener) {
