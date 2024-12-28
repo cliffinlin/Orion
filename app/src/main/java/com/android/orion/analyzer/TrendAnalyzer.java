@@ -23,94 +23,79 @@ public class TrendAnalyzer {
 
 	void analyzeVertex(ArrayList<StockData> stockDataList,
 	                   ArrayList<StockData> vertexList) {
-		int i;
-		int size;
-		int direction = Trend.DIRECTION_NONE;
-		int vertex = Trend.VERTEX_NONE;
-
-		StockData prev;
-		StockData current;
-		StockData next;
-
 		if ((stockDataList == null) || (vertexList == null)) {
 			return;
 		}
 
-		size = stockDataList.size();
+		int size = stockDataList.size();
 		if (size < Trend.VERTEX_SIZE) {
 			return;
 		}
 
 		vertexList.clear();
+		StockData prev = new StockData();
+		StockData current = new StockData();
+		StockData next = new StockData();
 
-		prev = new StockData();
-		current = new StockData();
-		next = new StockData();
+		int direction = Trend.DIRECTION_NONE;
+		int vertex;
+		try {
+			for (int i = 1; i < size - 1; i++) {
+				if (prev.isEmpty()) {
+					prev.set(stockDataList.get(i - 1));
+				}
 
-		prev.init();
-		current.init();
-		next.init();
+				if (current.isEmpty()) {
+					current.set(stockDataList.get(i));
+				}
 
-		for (i = 1; i < size - 1; i++) {
-			if (prev.isEmpty()) {
-				prev.set(stockDataList.get(i - 1));
-			}
+				if (next.isEmpty()) {
+					next.set(stockDataList.get(i + 1));
+				}
 
-			if (current.isEmpty()) {
-				current.set(stockDataList.get(i));
-			}
+				if (current.getTrend().include(prev.getTrend()) || current.getTrend().includedBy(prev.getTrend())) {
+					prev.getTrend().merge(direction, current.getTrend());
+					current.getTrend().merge(direction, prev.getTrend());
 
-			if (next.isEmpty()) {
-				next.set(stockDataList.get(i + 1));
-			}
+					stockDataList.get(i - 1).set(prev);
+					stockDataList.get(i).set(current);
 
-			if (current.getTrend().include(prev.getTrend()) || current.getTrend().includedBy(prev.getTrend())) {
-				prev.getTrend().merge(direction, current.getTrend());
-				current.getTrend().merge(direction, prev.getTrend());
+					prev.set(current);
+					current.init();
+					next.init();
+					continue;
+				}
 
-				stockDataList.get(i - 1).set(prev);
-				stockDataList.get(i).set(current);
+				direction = current.getTrend().directionTo(prev.getTrend());
+				vertex = current.getTrend().vertexTo(prev.getTrend(), next.getTrend());
+
+				stockDataList.get(i).getTrend().setDirection(direction);
+				stockDataList.get(i).getTrend().setVertex(vertex);
+
+				if ((vertex == Trend.VERTEX_TOP)
+						|| (vertex == Trend.VERTEX_BOTTOM)) {
+					vertexList.add(stockDataList.get(i));
+				}
+
+				if (current.getTrend().include(next.getTrend()) || current.getTrend().includedBy(next.getTrend())) {
+					current.getTrend().merge(direction, next.getTrend());
+					next.getTrend().merge(direction, current.getTrend());
+
+					stockDataList.get(i).set(current);
+					stockDataList.get(i + 1).set(next);
+
+					current.set(next);
+					next.init();
+					continue;
+				}
 
 				prev.set(current);
-				current.init();
-				next.init();
-				continue;
-			}
-
-			direction = current.getTrend().directionTo(prev.getTrend());
-			vertex = current.getTrend().vertexTo(prev.getTrend(), next.getTrend());
-
-			stockDataList.get(i).getTrend().setDirection(direction);
-			stockDataList.get(i).getTrend().setVertex(vertex);
-
-			if ((vertex == Trend.VERTEX_TOP)
-					|| (vertex == Trend.VERTEX_BOTTOM)) {
-				vertexList.add(stockDataList.get(i));
-			}
-
-			if (current.getTrend().include(next.getTrend()) || current.getTrend().includedBy(next.getTrend())) {
-				if (i < size - 2) {//TODO
-				current.getTrend().merge(direction, next.getTrend());
-				next.getTrend().merge(direction, current.getTrend());
-
-				stockDataList.get(i).set(current);
-				stockDataList.get(i + 1).set(next);
-
 				current.set(next);
 				next.init();
-				continue;
-				}
 			}
-
-			prev.set(current);
-			current.set(next);
-			next.init();
-		}
-
-		extendVertexList(stockDataList, vertexList);
-
-		for (int j = 0; j < stockDataList.size(); j++) {
-			Log.d(j + "->" + stockDataList.get(j).getTrend().getVertex() + " " + stockDataList.get(j).getTrend().getDirection());
+			extendVertexList(stockDataList, vertexList);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -125,8 +110,17 @@ public class TrendAnalyzer {
 
 	private void addVertex(ArrayList<StockData> dataList, ArrayList<StockData> vertexList, int index, boolean isStart) {
 		try {
+			if (index < 0 || index >= dataList.size()) {
+				return;
+			}
+
+			if (vertexList == null || vertexList.isEmpty()) {
+				return;
+			}
+
 			StockData stockData = dataList.get(index);
 			StockData vertex = new StockData(stockData);
+
 			Trend trend = isStart ? vertexList.get(0).getTrend() : vertexList.get(vertexList.size() - 1).getTrend();
 			int direction = Trend.DIRECTION_NONE;
 
@@ -140,6 +134,7 @@ public class TrendAnalyzer {
 
 			int start = isStart ? 0 : trend.getIndexEnd() + 1;
 			int end = isStart ? trend.getIndexStart() : dataList.size();
+
 			for (int i = start; i < end; i++) {
 				if (i >= dataList.size()) {
 					return;
@@ -161,66 +156,43 @@ public class TrendAnalyzer {
 	void analyzeLine(ArrayList<StockData> stockDataList,
 	                 ArrayList<StockData> dataList, ArrayList<StockData> vertexList,
 	                 int vertexTypeTop, int vertexTypeBottom) {
-		int i;
-		int size;
-		int direction;
-		int vertex = Trend.VERTEX_NONE;
-		StockData stockData;
-
-		if ((stockDataList == null) || (dataList == null)
-				|| (vertexList == null)) {
+		if ((stockDataList == null) || (dataList == null) || (vertexList == null)) {
 			return;
 		}
 
-		size = dataList.size();
+		int size = dataList.size();
 		if (size < Trend.VERTEX_SIZE) {
 			return;
 		}
 
 		vertexList.clear();
 
-		i = 0;
-		direction = dataList.get(i).getTrend().getDirection();
+		int i = 0;
+		int direction = dataList.get(i).getTrend().getDirection();
 
-		for (i = 2; i < size; i++) {
-			if (dataList.get(i).getTrend().directionTo(dataList.get(i - 2).getTrend()) == direction) {
-				i++;
-
-				if (i == size - 1) {
-					stockData = stockDataList.get(dataList.get(i - 1)
-							.getTrend().getIndexEnd());
-					if (direction == Trend.DIRECTION_UP) {
-						if (dataList.get(i).getTrend().getVertexLow() < dataList
-								.get(i - 1).getTrend().getVertexLow()) {
-							vertex = vertexTypeTop;
-							stockData.getTrend().addVertex(vertex);
-							vertexList.add(stockData);
-						}
-					} else if (direction == Trend.DIRECTION_DOWN) {
-						if (dataList.get(i).getTrend().getVertexHigh() > dataList.get(
-								i - 1).getTrend().getVertexHigh()) {
-							vertex = vertexTypeBottom;
-							stockData.getTrend().addVertex(vertex);
-							vertexList.add(stockData);
-						}
-					}
-				}
-			} else {
-				stockData = stockDataList
-						.get(dataList.get(i - 2).getTrend().getIndexEnd());
-				if (direction == Trend.DIRECTION_UP) {
-					vertex = vertexTypeTop;
-				} else if (direction == Trend.DIRECTION_DOWN) {
-					vertex = vertexTypeBottom;
+		int vertex = Trend.VERTEX_NONE;
+		try {
+			for (i = 2; i < size; i++) {
+				if (dataList.get(i).getTrend().directionTo(dataList.get(i - 2).getTrend()) == direction) {
+					i++;
 				} else {
-					Log.d("directionType = " + direction);
+					StockData stockData = stockDataList
+							.get(dataList.get(i - 2).getTrend().getIndexEnd());
+					if (direction == Trend.DIRECTION_UP) {
+						vertex = vertexTypeTop;
+					} else if (direction == Trend.DIRECTION_DOWN) {
+						vertex = vertexTypeBottom;
+					} else {
+						Log.d("directionType = " + direction);
+					}
+					stockData.getTrend().addVertex(vertex);
+					vertexList.add(stockData);
+					direction = dataList.get(i - 1).getTrend().getDirection();
 				}
-				stockData.getTrend().addVertex(vertex);
-				vertexList.add(stockData);
-				direction = dataList.get(i - 1).getTrend().getDirection();
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-
 		extendVertexList(dataList, vertexList);
 	}
 
