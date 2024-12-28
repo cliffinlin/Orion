@@ -520,15 +520,32 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 						stockDataChart.mCandleEntryList.add(candleEntry);
 					}
 
-					if (mStockData.getTrend().vertexOf(Trend.VERTEX_TOP)) {
-						Entry drawEntry = new Entry(
-								(float) mStockData.getTrend().getVertexHigh(), index);
-						stockDataChart.mLineList[0].add(drawEntry);
-					} else if (mStockData
-							.getTrend().vertexOf(Trend.VERTEX_BOTTOM)) {
-						Entry drawEntry = new Entry(
-								(float) mStockData.getTrend().getVertexLow(), index);
-						stockDataChart.mLineList[0].add(drawEntry);
+					if (index == 0 || index == cursor.getCount() - 1) {
+						if (mStockData.getTrend().directionOf(Trend.DIRECTION_UP)) {
+							Entry drawEntry = new Entry(
+									(float) mStockData.getTrend().getVertexHigh(), index);
+							stockDataChart.mLineList[0].add(drawEntry);
+						} else if (mStockData
+								.getTrend().directionOf(Trend.DIRECTION_DOWN)) {
+							Entry drawEntry = new Entry(
+									(float) mStockData.getTrend().getVertexLow(), index);
+							stockDataChart.mLineList[0].add(drawEntry);
+						} else {
+							Entry drawEntry = new Entry(
+									(float) mStockData.getCandlestick().getClose(), index);
+							stockDataChart.mLineList[0].add(drawEntry);
+						}
+					} else {
+						if (mStockData.getTrend().vertexOf(Trend.VERTEX_TOP)) {
+							Entry drawEntry = new Entry(
+									(float) mStockData.getTrend().getVertexHigh(), index);
+							stockDataChart.mLineList[0].add(drawEntry);
+						} else if (mStockData
+								.getTrend().vertexOf(Trend.VERTEX_BOTTOM)) {
+							Entry drawEntry = new Entry(
+									(float) mStockData.getTrend().getVertexLow(), index);
+							stockDataChart.mLineList[0].add(drawEntry);
+						}
 					}
 
 					if (mStockData.getTrend().vertexOf(Trend.VERTEX_TOP_STROKE)) {

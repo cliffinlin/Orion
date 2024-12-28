@@ -108,26 +108,9 @@ public class TrendAnalyzer {
 		}
 
 		extendVertexList(stockDataList, vertexList);
-		setVertexAndDirection(stockDataList, vertexList);
-	}
 
-	void setVertexAndDirection(ArrayList<StockData> stockDataList, ArrayList<StockData> vertexList) {
-		if (stockDataList == null || stockDataList.size() < Trend.VERTEX_SIZE
-				|| vertexList == null || vertexList.size() < Trend.VERTEX_SIZE) {
-			return;
-		}
-
-		setVertexAndDirection(stockDataList.get(0), vertexList.get(0), true);
-		setVertexAndDirection(stockDataList.get(stockDataList.size() - 1), vertexList.get(vertexList.size() - 1), false);
-	}
-
-	private void setVertexAndDirection(StockData stockData, StockData vertex, boolean isFirst) {
-		stockData.getTrend().setVertex(vertex.getTrend().getVertex());
-
-		if (vertex.getTrend().vertexOf(Trend.VERTEX_TOP)) {
-			stockData.getTrend().setDirection(isFirst ? Trend.DIRECTION_DOWN : Trend.DIRECTION_UP);
-		} else if (vertex.getTrend().vertexOf(Trend.VERTEX_BOTTOM)) {
-			stockData.getTrend().setDirection(isFirst ? Trend.DIRECTION_UP : Trend.DIRECTION_DOWN);
+		for (int j = 0; j < stockDataList.size(); j++) {
+			Log.d(j + "->" + stockDataList.get(j).getTrend().getVertex() + " " + stockDataList.get(j).getTrend().getDirection());
 		}
 	}
 
@@ -143,9 +126,17 @@ public class TrendAnalyzer {
 	private void addVertex(ArrayList<StockData> dataList, ArrayList<StockData> vertexList, int index, boolean isStart) {
 		try {
 			StockData stockData = dataList.get(index);
-			StockData vertex = new StockData();
-			vertex.set(stockData);
+			StockData vertex = new StockData(stockData);
 			Trend trend = isStart ? vertexList.get(0).getTrend() : vertexList.get(vertexList.size() - 1).getTrend();
+			int direction = Trend.DIRECTION_NONE;
+
+			if (trend.vertexOf(Trend.VERTEX_TOP)) {
+				vertex.getTrend().setVertex(Trend.VERTEX_BOTTOM);
+				direction = isStart ? Trend.DIRECTION_UP : Trend.DIRECTION_DOWN;
+			} else if (trend.vertexOf(Trend.VERTEX_BOTTOM)) {
+				vertex.getTrend().setVertex(Trend.VERTEX_TOP);
+				direction = isStart ? Trend.DIRECTION_DOWN : Trend.DIRECTION_UP;
+			}
 
 			int start = isStart ? 0 : trend.getIndexEnd() + 1;
 			int end = isStart ? trend.getIndexStart() : dataList.size();
@@ -153,13 +144,8 @@ public class TrendAnalyzer {
 				if (i >= dataList.size()) {
 					return;
 				}
-				vertex.getTrend().merge(Trend.DIRECTION_NONE, dataList.get(i).getTrend());
-			}
-
-			if (trend.vertexOf(Trend.VERTEX_TOP)) {
-				vertex.getTrend().setVertex(Trend.VERTEX_BOTTOM);
-			} else if (trend.vertexOf(Trend.VERTEX_BOTTOM)) {
-				vertex.getTrend().setVertex(Trend.VERTEX_TOP);
+				dataList.get(i).getTrend().setDirection(direction);
+				vertex.getTrend().merge(direction, dataList.get(i).getTrend());
 			}
 
 			if (isStart) {
@@ -271,12 +257,9 @@ public class TrendAnalyzer {
 				return;
 			}
 
-			stockData = new StockData();
-			stockData.set(current);
-
+			stockData = new StockData(current);
 			stockData.getTrend().setIndexStart(prev.getTrend().getIndexStart());
 			stockData.getTrend().setIndexEnd(current.getTrend().getIndexEnd());
-
 			stockData.getTrend().merge(Trend.DIRECTION_NONE, prev.getTrend());
 
 			direction = Trend.DIRECTION_NONE;
