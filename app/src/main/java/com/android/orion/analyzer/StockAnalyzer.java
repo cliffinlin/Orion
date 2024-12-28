@@ -495,7 +495,12 @@ public class StockAnalyzer {
 	                              ArrayList<StockData> outlineVertexList, ArrayList<StockData> outlineDataList) {
 		TrendAnalyzer trendAnalyzer = TrendAnalyzer.getInstance();
 
-		trendAnalyzer.analyzeVertex(stockDataList, drawVertexList);
+		ArrayList<StockData> dataList = new ArrayList<>();
+		for (StockData stockData : stockDataList) {
+			dataList.add(new StockData(stockData));
+		}
+
+		trendAnalyzer.analyzeVertex(stockDataList, dataList, drawVertexList);
 		trendAnalyzer.vertexListToDataList(stockDataList, drawVertexList, drawDataList);
 
 		trendAnalyzer.analyzeLine(stockDataList, drawDataList, strokeVertexList, Trend.VERTEX_TOP_STROKE, Trend.VERTEX_BOTTOM_STROKE);
@@ -545,23 +550,15 @@ public class StockAnalyzer {
 		String action = StockData.MARK_NONE;
 		String trend = StockData.MARK_NONE;
 
-		if (stock == null || stockDataList == null || drawDataList == null || strokeDataList == null || segmentDataList == null) {
+		if (stock == null || stockDataList == null || drawDataList == null || strokeDataList == null ||
+				segmentDataList == null || drawVertexList == null) {
 			return;
 		}
 
-		if (stockDataList.size() < Trend.VERTEX_SIZE) {
-			return;
-		}
-
-		if (drawDataList.size() < Trend.VERTEX_SIZE) {
-			return;
-		}
-
-		if (strokeDataList.size() < Trend.VERTEX_SIZE) {
-			return;
-		}
-
-		if (segmentDataList.size() < Trend.VERTEX_SIZE) {
+		if (stockDataList.size() < Trend.VERTEX_SIZE
+				|| drawDataList.size() < Trend.VERTEX_SIZE
+				|| strokeDataList.size() < Trend.VERTEX_SIZE
+				|| segmentDataList.size() < Trend.VERTEX_SIZE) {
 			return;
 		}
 
@@ -689,135 +686,75 @@ public class StockAnalyzer {
 		return result;
 	}
 
+	private static final int MIN_VERTEX_LIST_SIZE = 2 * Trend.VERTEX_SIZE + 1;
+	private static final int MIN_STROKE_DATA_LIST_SIZE = 2 * Trend.VERTEX_SIZE;
+	private static final int MIN_SEGMENT_DATA_LIST_SIZE = 2 * Trend.VERTEX_SIZE;
+
 	private String getSecondBottomAction(Stock stock, ArrayList<StockData> vertexList,
 	                                     ArrayList<StockData> strokeDataList,
 	                                     ArrayList<StockData> segmentDataList) {
-		String result = "";
-		StockData firstBottomVertex;
-		StockData firstTopVertex;
-		StockData secondBottomVertex;
-		StockData secondTopVertex;
-
-		StockData baseStockData;
-		StockData brokenStockData;
-
-		if ((vertexList == null)
-				|| (vertexList.size() < 2 * Trend.VERTEX_SIZE + 1)) {
-			return result;
-		}
-
-		if ((strokeDataList == null) || (strokeDataList.size() < 2 * Trend.VERTEX_SIZE)) {
-			return result;
-		}
-
-		if ((segmentDataList == null) || (segmentDataList.size() < 2 * Trend.VERTEX_SIZE)) {
-			return result;
-		}
-
-		firstBottomVertex = vertexList.get(vertexList.size() - 4);
-		if (firstBottomVertex == null) {
-			return result;
-		}
-
-		firstTopVertex = vertexList.get(vertexList.size() - 3);
-		if (firstTopVertex == null) {
-			return result;
-		}
-
-		secondBottomVertex = vertexList.get(vertexList.size() - 2);
-		if (secondBottomVertex == null) {
-			return result;
-		}
-
-		secondTopVertex = vertexList.get(vertexList.size() - 1);
-		if (secondTopVertex == null) {
-			return result;
-		}
-
-		if (firstBottomVertex.getTrend().vertexOf(Trend.VERTEX_BOTTOM_SEGMENT)) {
-			baseStockData = segmentDataList.get(segmentDataList.size() - 4);
-			brokenStockData = segmentDataList.get(segmentDataList.size() - 2);
-		} else {
-			return result;
-		}
-
-		if ((baseStockData == null) || (brokenStockData == null)) {
-			return result;
-		}
-
-		if ((firstBottomVertex.getTrend().getVertexLow() < secondBottomVertex.getTrend().getVertexLow())
-				&& (secondBottomVertex.getTrend().getVertexLow() < stock.getPrice())
-				&& (stock.getPrice() < firstTopVertex.getTrend().getVertexHigh())
-		) {
-			result += StockData.MARK_BUY2;
-			result += StockData.MARK_BUY2;
-		}
-
-		return result;
+		return getAction(stock, vertexList, strokeDataList, segmentDataList, true);
 	}
 
 	private String getSecondTopAction(Stock stock, ArrayList<StockData> vertexList,
 	                                  ArrayList<StockData> strokeDataList,
 	                                  ArrayList<StockData> segmentDataList) {
+		return getAction(stock, vertexList, strokeDataList, segmentDataList, false);
+	}
+
+	private String getAction(Stock stock, ArrayList<StockData> vertexList,
+	                         ArrayList<StockData> strokeDataList,
+	                         ArrayList<StockData> segmentDataList, boolean isBottom) {
 		String result = "";
-		StockData firstBottomVertex;
-		StockData firstTopVertex;
-		StockData secondBottomVertex;
-		StockData secondTopVertex;
 
-		StockData baseStockData;
-		StockData brokenStockData;
-
-		if ((vertexList == null)
-				|| (vertexList.size() < 2 * Trend.VERTEX_SIZE + 1)) {
+		if (vertexList == null || vertexList.size() < MIN_VERTEX_LIST_SIZE ||
+				strokeDataList == null || strokeDataList.size() < MIN_STROKE_DATA_LIST_SIZE ||
+				segmentDataList == null || segmentDataList.size() < MIN_SEGMENT_DATA_LIST_SIZE) {
 			return result;
 		}
 
-		if ((strokeDataList == null) || (strokeDataList.size() < 2 * Trend.VERTEX_SIZE)) {
-			return result;
-		}
+		try {
+			StockData firstVertex = vertexList.get(vertexList.size() - 4);
+			StockData secondVertex = vertexList.get(vertexList.size() - 3);
+			StockData thirdVertex = vertexList.get(vertexList.size() - 2);
+			StockData fourthVertex = vertexList.get(vertexList.size() - 1);
 
-		if ((segmentDataList == null) || (segmentDataList.size() < 2 * Trend.VERTEX_SIZE)) {
-			return result;
-		}
+			if (firstVertex == null || secondVertex == null || thirdVertex == null || fourthVertex == null) {
+				return result;
+			}
 
-		firstTopVertex = vertexList.get(vertexList.size() - 4);
-		if (firstTopVertex == null) {
-			return result;
-		}
+			StockData baseStockData = segmentDataList.get(segmentDataList.size() - 4);
+			StockData brokenStockData = segmentDataList.get(segmentDataList.size() - 2);
 
-		firstBottomVertex = vertexList.get(vertexList.size() - 3);
-		if (firstBottomVertex == null) {
-			return result;
-		}
+			if (baseStockData == null || brokenStockData == null) {
+				return result;
+			}
 
-		secondTopVertex = vertexList.get(vertexList.size() - 2);
-		if (secondTopVertex == null) {
-			return result;
-		}
+			if (isBottom) {
+				if (!firstVertex.getTrend().vertexOf(Trend.VERTEX_BOTTOM_SEGMENT)) {
+					return result;
+				}
 
-		secondBottomVertex = vertexList.get(vertexList.size() - 1);
-		if (secondBottomVertex == null) {
-			return result;
-		}
+				if (firstVertex.getTrend().getVertexLow() < thirdVertex.getTrend().getVertexLow() &&
+						thirdVertex.getTrend().getVertexLow() < stock.getPrice() &&
+						stock.getPrice() < secondVertex.getTrend().getVertexHigh()) {
+					result += StockData.MARK_BUY2;
+					result += StockData.MARK_BUY2;
+				}
+			} else {
+				if (!firstVertex.getTrend().vertexOf(Trend.VERTEX_TOP_SEGMENT)) {
+					return result;
+				}
 
-		if (firstTopVertex.getTrend().vertexOf(Trend.VERTEX_TOP_SEGMENT)) {
-			baseStockData = segmentDataList.get(segmentDataList.size() - 4);
-			brokenStockData = segmentDataList.get(segmentDataList.size() - 2);
-		} else {
-			return result;
-		}
-
-		if ((baseStockData == null) || (brokenStockData == null)) {
-			return result;
-		}
-
-		if ((firstTopVertex.getTrend().getVertexHigh() > secondTopVertex.getTrend().getVertexHigh())
-				&& (secondTopVertex.getTrend().getVertexHigh() > stock.getPrice())
-				&& (stock.getPrice() > firstBottomVertex.getTrend().getVertexLow())
-		) {
-			result += StockData.MARK_SELL2;
-			result += StockData.MARK_SELL2;
+				if (firstVertex.getTrend().getVertexHigh() > thirdVertex.getTrend().getVertexHigh() &&
+						thirdVertex.getTrend().getVertexHigh() > stock.getPrice() &&
+						stock.getPrice() > secondVertex.getTrend().getVertexLow()) {
+					result += StockData.MARK_SELL2;
+					result += StockData.MARK_SELL2;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 		return result;
@@ -829,13 +766,6 @@ public class StockAnalyzer {
 		}
 
 		if (stock.getPrice() == 0 || !stock.hasFlag(Stock.FLAG_NOTIFY)) {
-			return;
-		}
-
-		if (!Market.isTradingHours()) {
-			Toast.makeText(mContext,
-					mContext.getResources().getString(R.string.out_of_trading_hours),
-					Toast.LENGTH_SHORT).show();
 			return;
 		}
 
@@ -852,6 +782,13 @@ public class StockAnalyzer {
 		}
 
 		if (TextUtils.isEmpty(mContentTitle)) {
+			return;
+		}
+
+		if (!Market.isTradingHours()) {
+			Toast.makeText(mContext,
+					mContext.getResources().getString(R.string.out_of_trading_hours),
+					Toast.LENGTH_SHORT).show();
 			return;
 		}
 

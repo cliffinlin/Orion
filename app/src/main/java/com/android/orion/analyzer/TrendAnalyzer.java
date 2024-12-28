@@ -20,13 +20,12 @@ public class TrendAnalyzer {
 		return Holder.INSTANCE;
 	}
 
-	void analyzeVertex(ArrayList<StockData> stockDataList,
-	                   ArrayList<StockData> vertexList) {
-		if ((stockDataList == null) || (vertexList == null)) {
+	void analyzeVertex(ArrayList<StockData> stockDataList, ArrayList<StockData> dataList, ArrayList<StockData> vertexList) {
+		if ((stockDataList == null) || (dataList == null) || (vertexList == null)) {
 			return;
 		}
 
-		int size = stockDataList.size();
+		int size = dataList.size();
 		if (size < Trend.VERTEX_SIZE) {
 			return;
 		}
@@ -41,23 +40,23 @@ public class TrendAnalyzer {
 		try {
 			for (int i = 1; i < size - 1; i++) {
 				if (prev.isEmpty()) {
-					prev.set(stockDataList.get(i - 1));
+					prev.set(dataList.get(i - 1));
 				}
 
 				if (current.isEmpty()) {
-					current.set(stockDataList.get(i));
+					current.set(dataList.get(i));
 				}
 
 				if (next.isEmpty()) {
-					next.set(stockDataList.get(i + 1));
+					next.set(dataList.get(i + 1));
 				}
 
 				if (current.getTrend().include(prev.getTrend()) || current.getTrend().includedBy(prev.getTrend())) {
 					prev.getTrend().merge(direction, current.getTrend());
 					current.getTrend().merge(direction, prev.getTrend());
 
-					stockDataList.get(i - 1).set(prev);
-					stockDataList.get(i).set(current);
+					dataList.get(i - 1).set(prev);
+					dataList.get(i).set(current);
 
 					prev.set(current);
 					current.init();
@@ -68,20 +67,28 @@ public class TrendAnalyzer {
 				direction = current.getTrend().directionTo(prev.getTrend());
 				vertex = current.getTrend().vertexTo(prev.getTrend(), next.getTrend());
 
+				dataList.get(i).getTrend().setDirection(direction);
+				dataList.get(i).getTrend().setVertex(vertex);
+
 				stockDataList.get(i).getTrend().setDirection(direction);
 				stockDataList.get(i).getTrend().setVertex(vertex);
+				stockDataList.get(i).getTrend().setVertexHigh(current.getTrend().getVertexHigh());
+				stockDataList.get(i).getTrend().setVertexLow(current.getTrend().getVertexLow());
 
 				if ((vertex == Trend.VERTEX_TOP)
 						|| (vertex == Trend.VERTEX_BOTTOM)) {
-					vertexList.add(stockDataList.get(i));
+					vertexList.add(dataList.get(i));
+
+					dataList.get(i).getTrend().setDirection(Trend.DIRECTION_NONE);
+					stockDataList.get(i).getTrend().setDirection(Trend.DIRECTION_NONE);
 				}
 
 				if (current.getTrend().include(next.getTrend()) || current.getTrend().includedBy(next.getTrend())) {
 					current.getTrend().merge(direction, next.getTrend());
 					next.getTrend().merge(direction, current.getTrend());
 
-					stockDataList.get(i).set(current);
-					stockDataList.get(i + 1).set(next);
+					dataList.get(i).set(current);
+					dataList.get(i + 1).set(next);
 
 					current.set(next);
 					next.init();
@@ -315,6 +322,16 @@ public class TrendAnalyzer {
 			}
 
 			stockData.setAction(String.valueOf(i));
+		}
+	}
+
+	void logStockDataList(ArrayList<StockData> stockDataList) {
+		if (stockDataList == null) {
+			return;
+		}
+		for (int i = 0; i < stockDataList.size(); i++) {
+			StockData stockData = stockDataList.get(i);
+			Log.d(i + "-->" + stockData.getTrend().getVertex() + " " + stockData.getTrend().getDirection() + " " + stockData.getDateTime());
 		}
 	}
 }

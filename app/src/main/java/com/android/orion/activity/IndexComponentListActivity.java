@@ -84,7 +84,7 @@ public class IndexComponentListActivity extends ListActivity implements
 				case MESSAGE_REFRESH:
 					for (int i = 0; i < mStockList.size(); i++) {
 						Stock stock = mStockList.get(i);
-						if (stock != null && stock.hasFlag(Stock.FLAG_FAVORITE)) {
+						if (stock != null && (stock.getFlag() >= Stock.FLAG_FAVORITE)) {
 							mDatabaseManager.deleteStockData(stock.getId());
 							Setting.setDownloadStockData(stock.getSE(), stock.getCode(), 0);
 							mStockDataProvider.download(stock);
