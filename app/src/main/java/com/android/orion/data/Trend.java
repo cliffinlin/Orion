@@ -37,13 +37,13 @@ public class Trend {
 	public static final int VERTEX_TOP_TREND = 1 << 10;
 	public static final int VERTEX_BOTTOM_TREND = 1 << 11;
 
-	public static final int TREND_UP_NONE_UP = 3;
-	public static final int TREND_UP_NONE_DOWN = 2;
-	public static final int TREND_UP_DOWN = 1;
-	public static final int TREND_NONE = 0;
-	public static final int TREND_DOWN_UP = -1;
-	public static final int TREND_DOWN_NONE_UP = -2;
-	public static final int TREND_DOWN_NONE_DOWN = -3;
+	public static final String TREND_TYPE_UP_NONE_UP = "UU";
+	public static final String TREND_TYPE_UP_NONE_DOWN = "UND";
+	public static final String TREND_TYPE_UP_DOWN = "UD";
+	public static final String TREND_TYPE_NONE = "";
+	public static final String TREND_TYPE_DOWN_UP = "DU";
+	public static final String TREND_TYPE_DOWN_NONE_UP = "DNU";
+	public static final String TREND_TYPE_DOWN_NONE_DOWN = "DND";
 
 
 	public static final int VERTEX_SIZE = 3;

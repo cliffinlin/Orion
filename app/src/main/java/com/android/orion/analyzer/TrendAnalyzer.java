@@ -235,6 +235,50 @@ public class TrendAnalyzer {
 		}
 	}
 
+	private void updateStockDataAction(int i, int size, ArrayList<StockData> stockDataList, int baseTrend, int trend, int directionTo) {
+		if (stockDataList == null || stockDataList.isEmpty()) {
+			return;
+		}
+
+		if (i != size - 1) {
+			return;
+		}
+
+		StockData stockData = stockDataList.get(stockDataList.size() - 1);
+		if (stockData == null) {
+			return;
+		}
+
+		try {
+			String trendType = determineTrendType(baseTrend, trend, directionTo);
+			stockData.setAction(trendType);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private String determineTrendType(int baseTrend, int trend, int directionTo) {
+		switch (directionTo) {
+			case Trend.DIRECTION_UP:
+				if (trend == Trend.DIRECTION_DOWN) {
+					return Trend.TREND_TYPE_DOWN_UP;
+				} else if (trend == Trend.DIRECTION_NONE) {
+					return baseTrend == Trend.DIRECTION_DOWN ? Trend.TREND_TYPE_DOWN_NONE_UP : Trend.TREND_TYPE_UP_NONE_UP;
+				}
+				break;
+			case Trend.DIRECTION_DOWN:
+				if (trend == Trend.DIRECTION_UP) {
+					return Trend.TREND_TYPE_UP_DOWN;
+				} else if (trend == Trend.DIRECTION_NONE) {
+					return baseTrend == Trend.DIRECTION_DOWN ? Trend.TREND_TYPE_DOWN_NONE_DOWN : Trend.TREND_TYPE_UP_NONE_DOWN;
+				}
+				break;
+			default:
+				return Trend.TREND_TYPE_NONE;
+		}
+		return Trend.TREND_TYPE_NONE;
+	}
+
 	private StockData chooseVertex(StockData start, StockData end, int vertexType) {
 		if (start == null || end == null) {
 			return null;
