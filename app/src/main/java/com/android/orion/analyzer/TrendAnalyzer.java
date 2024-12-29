@@ -153,50 +153,7 @@ public class TrendAnalyzer {
 			e.printStackTrace();
 		}
 	}
-/*
-	void analyzeLine(ArrayList<StockData> stockDataList,
-	                 ArrayList<StockData> dataList, ArrayList<StockData> vertexList,
-	                 int vertexTypeTop, int vertexTypeBottom) {
-		if ((stockDataList == null) || (dataList == null) || (vertexList == null)) {
-			return;
-		}
 
-		int size = dataList.size();
-		if (size < Trend.VERTEX_SIZE) {
-			return;
-		}
-
-		vertexList.clear();
-
-		int i = 0;
-		int direction = dataList.get(i).getTrend().getDirection();
-
-		int vertex = Trend.VERTEX_NONE;
-		try {
-			for (i = 2; i < size; i++) {
-				if (dataList.get(i).getTrend().directionTo(dataList.get(i - 2).getTrend()) == direction) {
-					i++;
-				} else {
-					StockData stockData = stockDataList
-							.get(dataList.get(i - 2).getTrend().getIndexEnd());
-					if (direction == Trend.DIRECTION_UP) {
-						vertex = vertexTypeTop;
-					} else if (direction == Trend.DIRECTION_DOWN) {
-						vertex = vertexTypeBottom;
-					} else {
-						Log.d("Unexpected directionType = " + direction);
-					}
-					stockData.getTrend().addVertex(vertex);
-					vertexList.add(stockData);
-					direction = dataList.get(i - 1).getTrend().getDirection();
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		extendVertexList(dataList, vertexList);
-	}
-*/
 	void analyzeLine(ArrayList<StockData> stockDataList,
 	                 ArrayList<StockData> dataList, ArrayList<StockData> vertexList,
 	                 int vertexTypeTop, int vertexTypeBottom) {
@@ -217,81 +174,83 @@ public class TrendAnalyzer {
 
 		try {
 			for (i = 2; i < size; i++) {
-				StockData start_1 = stockDataList
-						.get(dataList.get(i - 1).getTrend().getIndexStart());
-				StockData end_1 = stockDataList
-						.get(dataList.get(i - 1).getTrend().getIndexEnd());
-				StockData start_2 = stockDataList
-						.get(dataList.get(i - 2).getTrend().getIndexStart());
-				StockData end_2 = stockDataList
-						.get(dataList.get(i - 2).getTrend().getIndexEnd());
-				int directionTo = dataList.get(i).getTrend().directionTo(dataList.get(i - 2).getTrend());
+				StockData current = dataList.get(i);
+				StockData prev = dataList.get(i - 1);
+				StockData prevPrev = dataList.get(i - 2);
+				if (current == null || prev == null || prevPrev == null) {
+					continue;
+				}
+
+				Trend currentTrend = current.getTrend();
+				Trend prevTrend = prev.getTrend();
+				Trend prevPrevTrend = prevPrev.getTrend();
+				if (currentTrend == null || prevTrend == null || prevPrevTrend == null) {
+					continue;
+				}
+
+				StockData start_1 = stockDataList.get(prevTrend.getIndexStart());
+				StockData end_1 = stockDataList.get(prevTrend.getIndexEnd());
+				StockData start_2 = stockDataList.get(prevPrevTrend.getIndexStart());
+				StockData end_2 = stockDataList.get(prevPrevTrend.getIndexEnd());
+				if (start_1 == null || end_1 == null || start_2 == null || end_2 == null) {
+					continue;
+				}
+
+				int directionTo = currentTrend.directionTo(prevPrevTrend);
 				if (directionTo == Trend.DIRECTION_UP) {
 					if (trend == Trend.DIRECTION_DOWN) {
-						end_2.getTrend().addVertex(vertexTypeBottom);
-						vertexList.add(end_2);
-						trend = directionTo;
+						addVertex(end_2, vertexTypeBottom, vertexList);
 					} else if (trend == Trend.DIRECTION_NONE) {
-						StockData stockData;
-						if (start_2.getTrend().vertexOf(Trend.VERTEX_BOTTOM)) {
-							stockData = start_2;
-						} else {
-							stockData = end_2;
-						}
+						StockData stockData = chooseVertex(start_2, end_2, Trend.VERTEX_BOTTOM);
 						if (baseTrend != Trend.DIRECTION_DOWN) {
-							stockData.getTrend().addVertex(vertexTypeBottom);
-							vertexList.add(stockData);
+							addVertex(stockData, vertexTypeBottom, vertexList);
 						}
-						trend = directionTo;
 					}
 				} else if (directionTo == Trend.DIRECTION_DOWN) {
 					if (trend == Trend.DIRECTION_UP) {
-						end_2.getTrend().addVertex(vertexTypeTop);
-						vertexList.add(end_2);
-						trend = directionTo;
+						addVertex(end_2, vertexTypeTop, vertexList);
 					} else if (trend == Trend.DIRECTION_NONE) {
-						StockData stockData;
-						if (start_2.getTrend().vertexOf(Trend.VERTEX_TOP)) {
-							stockData = start_2;
-						} else {
-							stockData = end_2;
-						}
+						StockData stockData = chooseVertex(start_2, end_2, Trend.VERTEX_TOP);
 						if (baseTrend != Trend.DIRECTION_UP) {
-							stockData.getTrend().addVertex(vertexTypeTop);
-							vertexList.add(stockData);
+							addVertex(stockData, vertexTypeTop, vertexList);
 						}
-						trend = directionTo;
 					}
 				} else if (directionTo == Trend.DIRECTION_NONE) {
 					if (trend == Trend.DIRECTION_UP) {
-						StockData stockData;
-						if (start_1.getTrend().vertexOf(Trend.VERTEX_TOP)) {
-							stockData = start_1;
-						} else {
-							stockData = end_1;
-						}
-						stockData.getTrend().addVertex(vertexTypeTop);
-						vertexList.add(stockData);
-						trend = directionTo;
+						StockData stockData = chooseVertex(start_1, end_1, Trend.VERTEX_TOP);
+						addVertex(stockData, vertexTypeTop, vertexList);
 						baseTrend = Trend.DIRECTION_UP;
 					} else if (trend == Trend.DIRECTION_DOWN) {
-						StockData stockData;
-						if (start_1.getTrend().vertexOf(Trend.VERTEX_BOTTOM)) {
-							stockData = start_1;
-						} else {
-							stockData = end_1;
-						}
-						stockData.getTrend().addVertex(vertexTypeBottom);
-						vertexList.add(stockData);
-						trend = directionTo;
+						StockData stockData = chooseVertex(start_1, end_1, Trend.VERTEX_BOTTOM);
+						addVertex(stockData, vertexTypeBottom, vertexList);
 						baseTrend = Trend.DIRECTION_DOWN;
+					} else if (trend == Trend.DIRECTION_NONE) {
 					}
 				}
+				trend = directionTo;
 			}
 			extendVertexList(dataList, vertexList);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private StockData chooseVertex(StockData start, StockData end, int vertexType) {
+		if (start == null || end == null) {
+			return null;
+		}
+		return start.getTrend().vertexOf(vertexType) ? start : end;
+	}
+
+	private void addVertex(StockData stockData, int vertexType, ArrayList<StockData> vertexList) {
+		if (stockData == null || vertexList == null) {
+			return;
+		}
+		if (stockData.getTrend() == null) {
+			return;
+		}
+		stockData.getTrend().addVertex(vertexType);
+		vertexList.add(stockData);
 	}
 
 	void vertexListToDataList(ArrayList<StockData> stockDataList, ArrayList<StockData> vertexList, ArrayList<StockData> dataList) {

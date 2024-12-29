@@ -37,6 +37,15 @@ public class Trend {
 	public static final int VERTEX_TOP_TREND = 1 << 10;
 	public static final int VERTEX_BOTTOM_TREND = 1 << 11;
 
+	public static final int TREND_UP_NONE_UP = 3;
+	public static final int TREND_UP_NONE_DOWN = 2;
+	public static final int TREND_UP_DOWN = 1;
+	public static final int TREND_NONE = 0;
+	public static final int TREND_DOWN_UP = -1;
+	public static final int TREND_DOWN_NONE_UP = -2;
+	public static final int TREND_DOWN_NONE_DOWN = -3;
+
+
 	public static final int VERTEX_SIZE = 3;
 
 	private int mIndex;
