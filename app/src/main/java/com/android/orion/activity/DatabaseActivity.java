@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.widget.Toast;
 
 import com.android.orion.config.Config;
 import com.android.orion.database.DatabaseContract;
