@@ -6,10 +6,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 
+import com.android.orion.config.Config;
+import com.android.orion.database.DatabaseContract;
 import com.android.orion.manager.StockAlarmManager;
 import com.android.orion.service.StockService;
 import com.android.orion.utility.Logger;
+import com.android.orion.utility.Utility;
 
 public class MainApplication extends Application {
 
@@ -33,8 +37,9 @@ public class MainApplication extends Application {
 
 		mContext = getApplicationContext();
 		mInstance = this;
-
 		Log = Logger.getLogger();
+
+		Utility.createDirectory(Environment.getExternalStorageDirectory() + "/" + Config.APP_NAME);
 
 		StockAlarmManager.getInstance().startAlarm();
 

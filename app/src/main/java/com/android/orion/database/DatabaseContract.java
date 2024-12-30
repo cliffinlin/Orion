@@ -12,7 +12,8 @@ public final class DatabaseContract {
 
 	public static final int DATABASE_VERSION = 1;
 	public static final String DATABASE_NAME = "orion";
-	public static final String DATABASE_FILE = DATABASE_NAME + ".db";
+	public static final String DATABASE_EXT = ".db";
+	public static final String DATABASE_FILE_NAME = DATABASE_NAME + DATABASE_EXT;
 	public static final String COLUMN_ID = BaseColumns._ID;
 	public static final String COLUMN_SE = "se";
 	public static final String COLUMN_CODE = "code";

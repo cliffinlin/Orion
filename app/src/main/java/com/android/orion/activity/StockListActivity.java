@@ -10,6 +10,9 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -30,6 +34,7 @@ import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.IndexComponent;
 import com.android.orion.database.Stock;
 import com.android.orion.setting.Constant;
+import com.android.orion.setting.Setting;
 import com.android.orion.utility.Utility;
 
 import java.util.ArrayList;
@@ -39,6 +44,7 @@ public class StockListActivity extends DatabaseActivity implements
 		OnClickListener {
 
 	static final int LOADER_ID_STOCK_LIST = 0;
+	static final int MESSAGE_BACKUP_DATABASE = 0;
 
 	static final int mHeaderTextDefaultColor = Color.BLACK;
 	static final int mHeaderTextHighlightColor = Color.RED;
@@ -61,6 +67,25 @@ public class StockListActivity extends DatabaseActivity implements
 			DatabaseContract.COLUMN_CODE, DatabaseContract.COLUMN_PRICE,
 			DatabaseContract.COLUMN_HOLD};
 	int[] mTo = new int[]{R.id.name, R.id.code, R.id.price, R.id.hold};
+
+	Handler mHandler = new Handler(Looper.getMainLooper()) {
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+
+			switch (msg.what) {
+				case MESSAGE_BACKUP_DATABASE:
+					String result = backupDatabase();
+					if (!TextUtils.isEmpty(result)) {
+						Toast.makeText(StockListActivity.this, "backup database:" + result, Toast.LENGTH_LONG).show();
+					}
+					break;
+
+				default:
+					break;
+			}
+		}
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -171,6 +196,9 @@ public class StockListActivity extends DatabaseActivity implements
 						}
 					}
 				}).start();
+				return true;
+			case R.id.action_backup_database:
+				mHandler.sendEmptyMessage(MESSAGE_BACKUP_DATABASE);
 				return true;
 
 			case android.R.id.home:
