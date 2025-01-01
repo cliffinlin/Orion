@@ -586,7 +586,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 		}
 
 		TextView textView = (TextView) view;
-		textView.setTextSize(16f);
+		textView.setTextSize(14f);
 	}
 
 	private class LeftViewBinder implements SimpleCursorAdapter.ViewBinder {

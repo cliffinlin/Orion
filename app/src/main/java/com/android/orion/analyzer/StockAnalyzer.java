@@ -495,12 +495,7 @@ public class StockAnalyzer {
 	                              ArrayList<StockData> outlineVertexList, ArrayList<StockData> outlineDataList) {
 		TrendAnalyzer trendAnalyzer = TrendAnalyzer.getInstance();
 
-		ArrayList<StockData> dataList = new ArrayList<>();
-		for (StockData stockData : stockDataList) {
-			dataList.add(new StockData(stockData));
-		}
-
-		trendAnalyzer.analyzeVertex(stockDataList, dataList, drawVertexList);
+		trendAnalyzer.analyzeVertex(stockDataList, drawVertexList);
 		trendAnalyzer.vertexListToDataList(stockDataList, drawVertexList, drawDataList);
 
 		trendAnalyzer.analyzeLine(stockDataList, drawDataList, strokeVertexList, Trend.VERTEX_TOP_STROKE, Trend.VERTEX_BOTTOM_STROKE);
@@ -514,30 +509,6 @@ public class StockAnalyzer {
 
 		trendAnalyzer.analyzeLine(stockDataList, lineDataList, outlineVertexList, Trend.VERTEX_TOP_OUTLINE, Trend.VERTEX_BOTTOM_OUTLINE);
 		trendAnalyzer.vertexListToDataList(stockDataList, outlineVertexList, outlineDataList);
-
-		//trendAnalyzer.testShowVertextNumber(stockDataList, stockDataList);
-
-		if (Setting.getDebugLoopback()) {
-			if (Setting.getDebugDirect()) {
-				trendAnalyzer.debugShow(stockDataList, stockDataList);
-			}
-
-			if (Setting.getDisplayDraw()) {
-				trendAnalyzer.debugShow(stockDataList, drawDataList);
-			}
-
-			if (Setting.getDisplayStroke()) {
-				trendAnalyzer.debugShow(stockDataList, strokeDataList);
-			}
-
-			if (Setting.getDisplaySegment()) {
-				trendAnalyzer.debugShow(stockDataList, segmentDataList);
-			}
-
-			if (Setting.getDisplayLine()) {
-				trendAnalyzer.debugShow(stockDataList, lineDataList);
-			}
-		}
 
 		analyzeAction(stock, period, drawVertexList, stockDataList, drawDataList, strokeDataList, segmentDataList);
 	}
@@ -564,7 +535,11 @@ public class StockAnalyzer {
 			return;
 		}
 
-		action += getDirectionAction(segmentDataList.get(segmentDataList.size() - 1), strokeDataList.get(strokeDataList.size() - 1), drawDataList.get(drawDataList.size() - 1));
+		if (stock.hasFlag(Stock.FLAG_NOTIFY)) {
+			action += getTrendAction(stock, stockDataList, drawDataList, strokeDataList, segmentDataList);
+		} else {
+			action += getDirectionAction(segmentDataList.get(segmentDataList.size() - 1), strokeDataList.get(strokeDataList.size() - 1), drawDataList.get(drawDataList.size() - 1));
+		}
 		action += Constant.NEW_LINE;
 
 //		{
@@ -631,6 +606,49 @@ public class StockAnalyzer {
 		} else if (trend.directionOf(Trend.DIRECTION_DOWN)) {
 			builder.append(StockData.MARK_MINUS);
 		}
+	}
+
+	String getTrendAction(Stock stock, ArrayList<StockData> stockDataList , ArrayList<StockData> drawDataList, ArrayList<StockData> strokeDataList, ArrayList<StockData> segmentDataList) {
+		String result = "";
+
+		if (stock == null || stockDataList == null || drawDataList == null || strokeDataList == null || segmentDataList == null) {
+			return result;
+		}
+
+		if (stockDataList.isEmpty() || drawDataList.isEmpty() || strokeDataList.isEmpty() || segmentDataList.isEmpty()) {
+			return result;
+		}
+
+		int indexStart = segmentDataList.get(segmentDataList.size() - 1).getTrend().getIndexStart();
+		if (indexStart > stockDataList.size() - 1) {
+			return result;
+		}
+		StockData stockData = stockDataList.get(indexStart);
+		if (stockData == null) {
+			return result;
+		}
+		result += stockData.getAction();
+		result +=  Constant.NEW_LINE;
+
+		indexStart = strokeDataList.get(strokeDataList.size() - 1).getTrend().getIndexStart();
+		if (indexStart > stockDataList.size() - 1) {
+			return result;
+		}
+		stockData = stockDataList.get(indexStart);
+		if (stockData == null) {
+			return result;
+		}
+		result += stockData.getAction();
+		result +=  Constant.NEW_LINE;
+
+		for (int i = indexStart + 1; i < stockDataList.size(); i++) {
+			stockData = stockDataList.get(i);
+			if (!TextUtils.isEmpty(stockData.getAction())) {
+				result += stockData.getAction();
+			}
+		}
+
+		return result;
 	}
 
 	private String getSecondAction(Stock stock, ArrayList<StockData> stockDataList, ArrayList<StockData> drawDataList) {
@@ -884,4 +902,31 @@ public class StockAnalyzer {
 
 		mNotificationManager.notify(id, notificationBuilder.build());
 	}
+//
+//	void debugTest() {
+//		TrendAnalyzer trendAnalyzer = TrendAnalyzer.getInstance();
+//		if (Setting.getDebugLoopback()) {
+//			trendAnalyzer.testShowVertextNumber(stockDataList, stockDataList);
+//
+//			if (Setting.getDebugDirect()) {
+//				trendAnalyzer.debugShow(stockDataList, stockDataList);
+//			}
+//
+//			if (Setting.getDisplayDraw()) {
+//				trendAnalyzer.debugShow(stockDataList, drawDataList);
+//			}
+//
+//			if (Setting.getDisplayStroke()) {
+//				trendAnalyzer.debugShow(stockDataList, strokeDataList);
+//			}
+//
+//			if (Setting.getDisplaySegment()) {
+//				trendAnalyzer.debugShow(stockDataList, segmentDataList);
+//			}
+//
+//			if (Setting.getDisplayLine()) {
+//				trendAnalyzer.debugShow(stockDataList, lineDataList);
+//			}
+//		}
+//	}
 }

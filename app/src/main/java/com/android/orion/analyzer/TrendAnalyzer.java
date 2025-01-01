@@ -20,9 +20,14 @@ public class TrendAnalyzer {
 		return Holder.INSTANCE;
 	}
 
-	void analyzeVertex(ArrayList<StockData> stockDataList, ArrayList<StockData> dataList, ArrayList<StockData> vertexList) {
-		if ((stockDataList == null) || (dataList == null) || (vertexList == null)) {
+	void analyzeVertex(ArrayList<StockData> stockDataList, ArrayList<StockData> vertexList) {
+		if ((stockDataList == null) || (vertexList == null)) {
 			return;
+		}
+
+		ArrayList<StockData> dataList = new ArrayList<>();
+		for (StockData stockData : stockDataList) {
+			dataList.add(new StockData(stockData));
 		}
 
 		int size = dataList.size();
@@ -197,35 +202,49 @@ public class TrendAnalyzer {
 				}
 
 				int directionTo = currentTrend.directionTo(prevPrevTrend);
-				if (directionTo == Trend.DIRECTION_UP) {
-					if (trend == Trend.DIRECTION_DOWN) {
-						addVertex(end_2, vertexTypeBottom, vertexList);
-					} else if (trend == Trend.DIRECTION_NONE) {
-						StockData stockData = chooseVertex(start_2, end_2, Trend.VERTEX_BOTTOM);
-						if (baseTrend != Trend.DIRECTION_DOWN) {
-							addVertex(stockData, vertexTypeBottom, vertexList);
+				switch (directionTo) {
+					case Trend.DIRECTION_UP:
+						if (trend == Trend.DIRECTION_DOWN) {
+							addVertex(end_2, vertexTypeBottom, vertexList);
+							end_2.setAction(Trend.TREND_TYPE_DOWN_UP);
+						} else if (trend == Trend.DIRECTION_NONE) {
+							StockData vertexData = chooseVertex(start_2, end_2, Trend.VERTEX_BOTTOM);
+							if (baseTrend == Trend.DIRECTION_UP) {
+								addVertex(vertexData, vertexTypeBottom, vertexList);
+								vertexData.setAction(Trend.TREND_TYPE_UP_NONE_UP);
+							} else if (baseTrend == Trend.DIRECTION_DOWN) {
+								vertexData.setAction(Trend.TREND_TYPE_DOWN_NONE_UP);
+							}
 						}
-					}
-				} else if (directionTo == Trend.DIRECTION_DOWN) {
-					if (trend == Trend.DIRECTION_UP) {
-						addVertex(end_2, vertexTypeTop, vertexList);
-					} else if (trend == Trend.DIRECTION_NONE) {
-						StockData stockData = chooseVertex(start_2, end_2, Trend.VERTEX_TOP);
-						if (baseTrend != Trend.DIRECTION_UP) {
-							addVertex(stockData, vertexTypeTop, vertexList);
+						break;
+					case Trend.DIRECTION_DOWN:
+						if (trend == Trend.DIRECTION_UP) {
+							addVertex(end_2, vertexTypeTop, vertexList);
+							end_2.setAction(Trend.TREND_TYPE_UP_DOWN);
+						} else if (trend == Trend.DIRECTION_NONE) {
+							StockData vertexData = chooseVertex(start_2, end_2, Trend.VERTEX_TOP);
+							if (baseTrend == Trend.DIRECTION_UP) {
+								vertexData.setAction(Trend.TREND_TYPE_UP_NONE_DOWN);
+							} else if (baseTrend == Trend.DIRECTION_DOWN) {
+								addVertex(vertexData, vertexTypeTop, vertexList);
+								vertexData.setAction(Trend.TREND_TYPE_DOWN_NONE_DOWN);
+							}
 						}
-					}
-				} else if (directionTo == Trend.DIRECTION_NONE) {
-					if (trend == Trend.DIRECTION_UP) {
-						StockData stockData = chooseVertex(start_1, end_1, Trend.VERTEX_TOP);
-						addVertex(stockData, vertexTypeTop, vertexList);
-						baseTrend = Trend.DIRECTION_UP;
-					} else if (trend == Trend.DIRECTION_DOWN) {
-						StockData stockData = chooseVertex(start_1, end_1, Trend.VERTEX_BOTTOM);
-						addVertex(stockData, vertexTypeBottom, vertexList);
-						baseTrend = Trend.DIRECTION_DOWN;
-					} else if (trend == Trend.DIRECTION_NONE) {
-					}
+						break;
+					case Trend.DIRECTION_NONE:
+						if (trend == Trend.DIRECTION_UP) {
+							StockData vertexData = chooseVertex(start_1, end_1, Trend.VERTEX_TOP);
+							addVertex(vertexData, vertexTypeTop, vertexList);
+							baseTrend = Trend.DIRECTION_UP;
+							vertexData.setAction(Trend.TREND_TYPE_UP_NONE);
+						} else if (trend == Trend.DIRECTION_DOWN) {
+							StockData vertexData = chooseVertex(start_1, end_1, Trend.VERTEX_BOTTOM);
+							addVertex(vertexData, vertexTypeBottom, vertexList);
+							baseTrend = Trend.DIRECTION_DOWN;
+							vertexData.setAction(Trend.TREND_TYPE_DOWN_NONE);
+						} else if (trend == Trend.DIRECTION_NONE) {
+						}
+						break;
 				}
 				trend = directionTo;
 			}
@@ -233,50 +252,6 @@ public class TrendAnalyzer {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	private void updateStockDataAction(int i, int size, ArrayList<StockData> stockDataList, int baseTrend, int trend, int directionTo) {
-		if (stockDataList == null || stockDataList.isEmpty()) {
-			return;
-		}
-
-		if (i != size - 1) {
-			return;
-		}
-
-		StockData stockData = stockDataList.get(stockDataList.size() - 1);
-		if (stockData == null) {
-			return;
-		}
-
-		try {
-			String trendType = determineTrendType(baseTrend, trend, directionTo);
-			stockData.setAction(trendType);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	private String determineTrendType(int baseTrend, int trend, int directionTo) {
-		switch (directionTo) {
-			case Trend.DIRECTION_UP:
-				if (trend == Trend.DIRECTION_DOWN) {
-					return Trend.TREND_TYPE_DOWN_UP;
-				} else if (trend == Trend.DIRECTION_NONE) {
-					return baseTrend == Trend.DIRECTION_DOWN ? Trend.TREND_TYPE_DOWN_NONE_UP : Trend.TREND_TYPE_UP_NONE_UP;
-				}
-				break;
-			case Trend.DIRECTION_DOWN:
-				if (trend == Trend.DIRECTION_UP) {
-					return Trend.TREND_TYPE_UP_DOWN;
-				} else if (trend == Trend.DIRECTION_NONE) {
-					return baseTrend == Trend.DIRECTION_DOWN ? Trend.TREND_TYPE_DOWN_NONE_DOWN : Trend.TREND_TYPE_UP_NONE_DOWN;
-				}
-				break;
-			default:
-				return Trend.TREND_TYPE_NONE;
-		}
-		return Trend.TREND_TYPE_NONE;
 	}
 
 	private StockData chooseVertex(StockData start, StockData end, int vertexType) {
