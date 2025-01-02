@@ -510,7 +510,7 @@ public class StockAnalyzer {
 		trendAnalyzer.analyzeLine(stockDataList, lineDataList, outlineVertexList, Trend.VERTEX_TOP_OUTLINE, Trend.VERTEX_BOTTOM_OUTLINE);
 		trendAnalyzer.vertexListToDataList(stockDataList, outlineVertexList, outlineDataList);
 
-		analyzeAction(stock, period, drawVertexList, stockDataList, drawDataList, strokeDataList, segmentDataList);
+		analyzeAction(stock, period, drawVertexList, stockDataList, drawDataList, strokeDataList, segmentDataList, lineDataList);
 	}
 
 	private void analyzeAction(Stock stock, String period,
@@ -518,12 +518,13 @@ public class StockAnalyzer {
 	                           ArrayList<StockData> stockDataList,
 	                           ArrayList<StockData> drawDataList,
 	                           ArrayList<StockData> strokeDataList,
-	                           ArrayList<StockData> segmentDataList) {
+	                           ArrayList<StockData> segmentDataList,
+	                           ArrayList<StockData> lineDataList) {
 		String action = StockData.MARK_NONE;
 		String trend = StockData.MARK_NONE;
 
 		if (stock == null || stockDataList == null || drawDataList == null || strokeDataList == null ||
-				segmentDataList == null || drawVertexList == null) {
+				segmentDataList == null || lineDataList == null || drawVertexList == null) {
 			return;
 		}
 
@@ -536,7 +537,7 @@ public class StockAnalyzer {
 		}
 
 		if (stock.hasFlag(Stock.FLAG_NOTIFY)) {
-			action += getTrendAction(stock, stockDataList, drawDataList, strokeDataList, segmentDataList);
+			action += getTrendAction(stock, stockDataList, drawDataList, strokeDataList, segmentDataList, lineDataList);
 		} else {
 			action += getDirectionAction(segmentDataList.get(segmentDataList.size() - 1), strokeDataList.get(strokeDataList.size() - 1), drawDataList.get(drawDataList.size() - 1));
 		}
@@ -608,22 +609,37 @@ public class StockAnalyzer {
 		}
 	}
 
-	String getTrendAction(Stock stock, ArrayList<StockData> stockDataList , ArrayList<StockData> drawDataList, ArrayList<StockData> strokeDataList, ArrayList<StockData> segmentDataList) {
+	String getTrendAction(Stock stock, ArrayList<StockData> stockDataList,
+						  ArrayList<StockData> drawDataList,
+						  ArrayList<StockData> strokeDataList,
+						  ArrayList<StockData> segmentDataList,
+						  ArrayList<StockData> lineDataList) {
 		String result = "";
 
-		if (stock == null || stockDataList == null || drawDataList == null || strokeDataList == null || segmentDataList == null) {
+		if (stock == null || stockDataList == null || drawDataList == null || strokeDataList == null || segmentDataList == null || lineDataList == null) {
 			return result;
 		}
 
-		if (stockDataList.isEmpty() || drawDataList.isEmpty() || strokeDataList.isEmpty() || segmentDataList.isEmpty()) {
+		if (stockDataList.isEmpty() || drawDataList.isEmpty() || strokeDataList.isEmpty() || segmentDataList.isEmpty() || lineDataList.isEmpty()) {
 			return result;
 		}
 
-		int indexStart = segmentDataList.get(segmentDataList.size() - 1).getTrend().getIndexStart();
+		int indexStart = lineDataList.get(lineDataList.size() - 1).getTrend().getIndexStart();
 		if (indexStart > stockDataList.size() - 1) {
 			return result;
 		}
 		StockData stockData = stockDataList.get(indexStart);
+		if (stockData == null) {
+			return result;
+		}
+		result += stockData.getAction();
+		result +=  Constant.NEW_LINE;
+
+		indexStart = segmentDataList.get(segmentDataList.size() - 1).getTrend().getIndexStart();
+		if (indexStart > stockDataList.size() - 1) {
+			return result;
+		}
+		stockData = stockDataList.get(indexStart);
 		if (stockData == null) {
 			return result;
 		}
