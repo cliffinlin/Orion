@@ -437,6 +437,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 	protected void onResume() {
 		super.onResume();
 
+		initHeader();
 		setupListView();
 		restartLoader();
 	}

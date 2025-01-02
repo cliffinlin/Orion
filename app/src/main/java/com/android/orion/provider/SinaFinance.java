@@ -660,7 +660,7 @@ public class SinaFinance extends StockDataProvider {
 				return;
 			}
 
-			if (!TextUtils.equals(stock.getName(), stockInfo[0])) {
+			if (!TextUtils.isEmpty(stockInfo[0])) {
 				stock.setName(stockInfo[0]);
 			}
 

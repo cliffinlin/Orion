@@ -254,6 +254,8 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			return;
 		}
 
+		mRemovedArrayMap.clear();
+
 		mDatabaseManager.loadStockArrayMap(mStockArrayMap);
 
 		for (Stock current : mStockArrayMap.values()) {
