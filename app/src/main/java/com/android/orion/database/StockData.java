@@ -18,26 +18,6 @@ import java.util.Comparator;
 
 public class StockData extends DatabaseTable {
 
-	public static final String MARK_NONE = "";
-
-	public static final String MARK_BUY = "B";
-	public static final String MARK_SELL = "S";
-	public static final String MARK_BUY1 = "B1";
-	public static final String MARK_BUY2 = "B2";
-	public static final String MARK_SELL1 = "S1";
-	public static final String MARK_SELL2 = "S2";
-
-	public static final String MARK_G = "G";
-	public static final String MARK_D = "D";
-
-	public static final String MARK_HIGH = "H";
-	public static final String MARK_LOW = "L";
-
-	public static final char MARK_ADD = '+';
-	public static final char MARK_MINUS = '-';
-
-	public static final String MARK_STAR = "*";
-
 	public static final String MARK_NATURAL_RALLY = "NG";
 	public static final String MARK_UPWARD_TREND = "GG";
 	public static final String MARK_DOWNWARD_TREND = "DD";

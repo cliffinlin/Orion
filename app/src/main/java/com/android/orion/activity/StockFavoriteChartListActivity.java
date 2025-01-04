@@ -516,7 +516,7 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 								(float) mStockData.getCandlestick().getLow(),
 								(float) mStockData.getCandlestick().getOpen(),
 								(float) mStockData.getCandlestick().getClose(),
-								Setting.getDebugLoopback() ? mStockData.getAction() : "");//TODO
+								Setting.getDebugLog() ? mStockData.getAction() : "");//TODO
 						stockDataChart.mCandleEntryList.add(candleEntry);
 					}
 

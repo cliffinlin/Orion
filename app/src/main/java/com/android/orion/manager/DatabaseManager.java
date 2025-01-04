@@ -556,7 +556,7 @@ public class DatabaseManager implements StockListener {
 					stockData.setIndex(index);
 					stockData.getTrend().setIndexStart(index);
 					stockData.getTrend().setIndexEnd(index);
-					stockData.setAction(StockData.MARK_NONE);
+					stockData.setAction(Trend.MARK_NONE);
 
 					if (loopback) {
 						if (stockData.getCalendar().after(calendar)) {
