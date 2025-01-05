@@ -15,6 +15,7 @@ import com.android.orion.utility.Utility;
 
 import java.util.Calendar;
 import java.util.Comparator;
+import java.util.List;
 
 public class StockData extends DatabaseTable {
 
@@ -552,5 +553,12 @@ public class StockData extends DatabaseTable {
 				+ 0);
 		stringBuffer.append("\r\n");
 		return stringBuffer.toString();
+	}
+
+	public static StockData getLastElement(List<StockData> list) {
+		if (list == null || list.isEmpty()) {
+			return null;
+		}
+		return list.get(list.size() - 1);
 	}
 }
