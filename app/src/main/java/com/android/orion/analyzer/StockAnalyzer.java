@@ -488,20 +488,13 @@ public class StockAnalyzer {
 			return;
 		}
 
-		if (mStockDataList == null || mDrawDataList == null || mStrokeDataList == null || mSegmentDataList == null
-				|| mStockDataList.size() < Trend.VERTEX_SIZE
-				|| mDrawDataList.size() < Trend.VERTEX_SIZE
-				|| mStrokeDataList.size() < Trend.VERTEX_SIZE
-				|| mSegmentDataList.size() < Trend.VERTEX_SIZE) {
-			return;
-		}
-
 		StringBuilder actionBuilder = new StringBuilder();
 		appendActionIfPresent(actionBuilder, getDirectionAction());
 		if (stock.hasFlag(Stock.FLAG_NOTIFY)) {
 			String trendAction = getTrendAction();
 			appendActionIfPresent(actionBuilder, trendAction);
 			String operateAction = getOperateAction(trendAction);
+			appendActionIfPresent(actionBuilder, operateAction);
 		}
 
 		StockData stockData = mStockDataList.get(mStockDataList.size() - 1);
@@ -516,30 +509,6 @@ public class StockAnalyzer {
 		stock.setAction(period, actionBuilder.toString() + stockData.getAction());
 	}
 
-	String getOperateAction(String trendAction) {
-		if (trendAction == null || trendAction.isEmpty()) {
-			return "";
-		}
-
-		if (TextUtils.equals(trendAction, Trend.TREND_TYPE_DOWN_NONE_UP)) {
-			return Trend.MARK_BUY2;
-		}
-
-//		if (TextUtils.equals(result, Trend.TREND_TYPE_DOWN_NONE_UP)) {
-//		indexStart = mDrawDataList.get(mDrawDataList.size() - 3).getTrend().getIndexStart();
-//		if (indexStart > mStockDataList.size() - 1) {
-//			return result;
-//		}
-//		stockData = mStockDataList.get(indexStart);
-//		if (stockData == null) {
-//			return result;
-//		}
-//		if (stockData.getTrend().vertexOf(Trend.VERTEX_BOTTOM_STROKE)) {
-//			result += Trend.MARK_BUY2;
-//		}
-		return "";
-	}
-
 	private void appendActionIfPresent(StringBuilder builder, String action) {
 		if (action != null && !action.isEmpty()) {
 			builder.append(action).append(Constant.NEW_LINE);
@@ -547,22 +516,22 @@ public class StockAnalyzer {
 	}
 
 	String getDirectionAction() {
-		StockData drawData = StockData.getLastElement(mDrawDataList);
-		StockData strokeData = StockData.getLastElement(mStrokeDataList);
-		StockData segmentData = StockData.getLastElement(mSegmentDataList);
-		if (drawData == null || strokeData == null ||  segmentData== null) {
+		StockData drawVertex = StockData.getLastSecondElement(mDrawVertexList);
+		StockData strokeVertex = StockData.getLastSecondElement(mStrokeVertexList);
+		StockData segmentVertex = StockData.getLastSecondElement(mSegmentVertexList);
+		if (drawVertex == null || strokeVertex == null || segmentVertex == null) {
 			return "";
 		}
 
 		StringBuilder builder = new StringBuilder();
-		appendDirection(builder, segmentData);
-		appendDirection(builder, strokeData);
-		appendDirection(builder, drawData);
+		appendDirection(builder, segmentVertex);
+		appendDirection(builder, strokeVertex);
+		appendDirection(builder, drawVertex);
 		return builder.toString();
 	}
 
 	private void appendDirection(StringBuilder builder, StockData data) {
-		if (builder == null || data == null || mStockDataList == null || mStockDataList.isEmpty()) {
+		if (builder == null || data == null) {
 			return;
 		}
 
@@ -571,50 +540,87 @@ public class StockAnalyzer {
 			return;
 		}
 
-		int indexStart = trend.getIndexStart();
-		if (indexStart < 0 || indexStart >= mStockDataList.size()) {
-			return;
-		}
-
-		StockData stockData = mStockDataList.get(indexStart);
-		if (stockData == null) {
-			return;
-		}
-
-		Trend stockTrend = stockData.getTrend();
-		if (stockTrend == null) {
-			return;
-		}
-
-		if (stockTrend.vertexOf(Trend.VERTEX_BOTTOM)) {
+		if (trend.vertexOf(Trend.VERTEX_BOTTOM)) {
 			builder.append(Trend.MARK_ADD);
-		} else if (stockTrend.vertexOf(Trend.VERTEX_TOP)) {
+		} else if (trend.vertexOf(Trend.VERTEX_TOP)) {
 			builder.append(Trend.MARK_MINUS);
 		}
 	}
 
 	String getTrendAction() {
-		if (mStockDataList == null || mStockDataList.isEmpty() ||
-			mDrawDataList == null || mDrawDataList.isEmpty() ||
-			mStrokeDataList == null || mStrokeDataList.isEmpty()) {
-			return "";
-		}
-
-		int indexStart = mStrokeDataList.get(mStrokeDataList.size() - 1).getTrend().getIndexStart();
+		int indexStart = mDrawDataList.get(mDrawDataList.size() - 3).getTrend().getIndexStart();
 		if (indexStart > mStockDataList.size() - 1) {
 			return "";
 		}
 
-		for (int i = indexStart + 1; i < mStockDataList.size(); i++) {
-			StockData stockData = mStockDataList.get(i);
-			String action = stockData.getAction();
-			if (!TextUtils.isEmpty(action)) {
-				return action;
-			}
+		StockData stockData = mStockDataList.get(indexStart);
+		if (stockData == null) {
+			return "";
+		}
+		String action = stockData.getAction();
+		if (!TextUtils.isEmpty(action)) {
+			return action;
 		}
 
-		StockData startStockData = mStockDataList.get(indexStart);
-		return startStockData != null ? startStockData.getAction() : "";
+		indexStart = mStrokeDataList.get(mStrokeDataList.size() - 1).getTrend().getIndexStart();
+		if (indexStart > mStockDataList.size() - 1) {
+			return "";
+		}
+
+		stockData = mStockDataList.get(indexStart);
+		return stockData != null ? stockData.getAction() : "";
+	}
+
+	String getOperateAction(String trendAction) {
+		if (TextUtils.isEmpty(trendAction)) {
+			return "";
+		}
+
+		String result = Trend.MARK_NONE;
+		if (TextUtils.equals(trendAction, Trend.TREND_TYPE_DOWN_NONE_UP)) {
+			int indexStart = mDrawDataList.get(mDrawDataList.size() - 3).getTrend().getIndexStart();
+			if (indexStart > mStockDataList.size() - 1) {
+				return result;
+			}
+			StockData stockData = mStockDataList.get(indexStart);
+			if (stockData == null) {
+				return result;
+			}
+			if (stockData.getTrend().vertexOf(Trend.VERTEX_BOTTOM_STROKE)) {
+				result += Trend.MARK_BUY2;
+			}
+			StockData segmentVertex = StockData.getLastSecondElement(mSegmentVertexList);
+			if (segmentVertex != null) {
+				Trend trend = segmentVertex.getTrend();
+				if (trend != null) {
+					if (trend.vertexOf(Trend.VERTEX_BOTTOM)) {
+						result += Trend.MARK_BUY2;
+					}
+				}
+			}
+		} else if (TextUtils.equals(trendAction, Trend.TREND_TYPE_UP_NONE_DOWN)) {
+			int indexStart = mDrawDataList.get(mDrawDataList.size() - 3).getTrend().getIndexStart();
+			if (indexStart > mStockDataList.size() - 1) {
+				return result;
+			}
+			StockData stockData = mStockDataList.get(indexStart);
+			if (stockData == null) {
+				return result;
+			}
+			if (stockData.getTrend().vertexOf(Trend.VERTEX_BOTTOM_STROKE)) {
+				result += Trend.MARK_SELL2;
+			}
+			StockData segmentVertex = StockData.getLastSecondElement(mSegmentVertexList);
+			if (segmentVertex != null) {
+				Trend trend = segmentVertex.getTrend();
+				if (trend != null) {
+					if (trend.vertexOf(Trend.VERTEX_TOP)) {
+						result += Trend.MARK_SELL2;
+					}
+				}
+			}
+		}
+		return result;
 	}
 
 	protected void updateNotification(Stock stock) {

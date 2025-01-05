@@ -561,4 +561,11 @@ public class StockData extends DatabaseTable {
 		}
 		return list.get(list.size() - 1);
 	}
+
+	public static StockData getLastSecondElement(List<StockData> list) {
+		if (list == null || list.size() < 2) {
+			return null;
+		}
+		return list.get(list.size() - 2);
+	}
 }
