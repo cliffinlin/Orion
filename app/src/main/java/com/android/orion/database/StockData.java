@@ -559,23 +559,27 @@ public class StockData extends DatabaseTable {
 		if (list == null) {
 			return null;
 		}
-		int i = list.size() - 1 - index;
-		if (i < 0 || i >= list.size()) {
+
+		int size = list.size();
+		if (index < 0 || index >= size) {
 			return null;
 		}
+
+		int i = size - 1 - index;
 		return list.get(i);
 	}
 
 	public static Trend getLastTrend(List<StockData> list, int index) {
-		StockData data = getLast(list, index);
-		if (data == null) {
+		if (list == null || index < 0 || index >= list.size()) {
 			return null;
 		}
-		return data.getTrend();
+
+		StockData data = getLast(list, index);
+		return data != null ? data.getTrend() : null;
 	}
 
 	public static StockData getLast(List<StockData> list, int index, List<StockData> stockDataList) {
-		if (stockDataList == null || stockDataList.isEmpty()) {
+		if (list == null || stockDataList == null || stockDataList.isEmpty()) {
 			return null;
 		}
 
@@ -584,14 +588,18 @@ public class StockData extends DatabaseTable {
 			return null;
 		}
 
-		int i = trend.getIndexStart();
-		if (i > stockDataList.size() - 1) {
+		int startIndex = trend.getIndexStart();
+		if (startIndex < 0 || startIndex >= stockDataList.size()) {
 			return null;
 		}
-		return stockDataList.get(i);
+		return stockDataList.get(startIndex);
 	}
 
 	public static String getLastAction(List<StockData> list, int index, List<StockData> stockDataList) {
+		if (list == null || stockDataList == null || index < 0 || index >= list.size()) {
+			return "";
+		}
+
 		StockData stockData = getLast(list, index, stockDataList);
 		return stockData != null ? stockData.getAction() : "";
 	}

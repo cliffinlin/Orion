@@ -552,43 +552,43 @@ public class StockAnalyzer {
 			return "";
 		}
 
-		Trend prev = StockData.getLastTrend(mStockDataList, 1);
-		if (prev != null && prev.getVertex() == Trend.VERTEX_NONE) {
+		Trend prevTrend = StockData.getLastTrend(mStockDataList, 1);
+		if (prevTrend != null && prevTrend.getVertex() == Trend.VERTEX_NONE) {
 			return "";
 		}
 
 		StockData stockData = StockData.getLast(mDrawDataList, 2, mStockDataList);
-		if (stockData == null) {
+		if (stockData == null || TextUtils.isEmpty(stockData.getAction())) {
 			return "";
 		}
 
-		if (TextUtils.isEmpty(stockData.getAction())) {
+		Trend strokeTrend = stockData.getTrend();
+		if (strokeTrend == null) {
 			return "";
 		}
 
-		String result = Trend.MARK_NONE;
+		Trend segmentTrend = StockData.getLastTrend(mSegmentVertexList, 1);
+		if (segmentTrend == null) {
+			return "";
+		}
+
+		StringBuilder builder = new StringBuilder();
 		if (TextUtils.equals(trendAction, Trend.TREND_TYPE_DOWN_NONE_UP)) {
-			if (stockData.getTrend().vertexOf(Trend.VERTEX_BOTTOM_STROKE)) {
-				result += Trend.MARK_BUY2;
-			}
-			Trend trend = StockData.getLastTrend(mSegmentVertexList, 1);
-			if (trend != null) {
-				if (trend.vertexOf(Trend.VERTEX_BOTTOM)) {
-					result += Trend.MARK_BUY2;
+			if (strokeTrend.vertexOf(Trend.VERTEX_BOTTOM_STROKE)) {
+				builder.append(Trend.MARK_BUY2);
+				if (segmentTrend.vertexOf(Trend.VERTEX_BOTTOM)) {
+					builder.append(Trend.MARK_BUY2);
 				}
 			}
 		} else if (TextUtils.equals(trendAction, Trend.TREND_TYPE_UP_NONE_DOWN)) {
-			if (stockData.getTrend().vertexOf(Trend.VERTEX_TOP_STROKE)) {
-				result += Trend.MARK_SELL2;
-			}
-			Trend trend = StockData.getLastTrend(mSegmentVertexList, 1);
-			if (trend != null) {
-				if (trend.vertexOf(Trend.VERTEX_TOP)) {
-					result += Trend.MARK_SELL2;
+			if (strokeTrend.vertexOf(Trend.VERTEX_TOP_STROKE)) {
+				builder.append(Trend.MARK_SELL2);
+				if (segmentTrend.vertexOf(Trend.VERTEX_TOP)) {
+					builder.append(Trend.MARK_SELL2);
 				}
 			}
 		}
-		return result;
+		return builder.toString();
 	}
 
 	protected void updateNotification(Stock stock) {
