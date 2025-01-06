@@ -555,17 +555,44 @@ public class StockData extends DatabaseTable {
 		return stringBuffer.toString();
 	}
 
-	public static StockData getLastElement(List<StockData> list) {
-		if (list == null || list.isEmpty()) {
+	public static StockData getLast(List<StockData> list, int index) {
+		if (list == null) {
 			return null;
 		}
-		return list.get(list.size() - 1);
+		int i = list.size() - 1 - index;
+		if (i < 0 || i >= list.size()) {
+			return null;
+		}
+		return list.get(i);
 	}
 
-	public static StockData getLastSecondElement(List<StockData> list) {
-		if (list == null || list.size() < 2) {
+	public static Trend getLastTrend(List<StockData> list, int index) {
+		StockData data = getLast(list, index);
+		if (data == null) {
 			return null;
 		}
-		return list.get(list.size() - 2);
+		return data.getTrend();
+	}
+
+	public static StockData getLast(List<StockData> list, int index, List<StockData> stockDataList) {
+		if (stockDataList == null || stockDataList.isEmpty()) {
+			return null;
+		}
+
+		Trend trend = getLastTrend(list, index);
+		if (trend == null) {
+			return null;
+		}
+
+		int i = trend.getIndexStart();
+		if (i > stockDataList.size() - 1) {
+			return null;
+		}
+		return stockDataList.get(i);
+	}
+
+	public static String getLastAction(List<StockData> list, int index, List<StockData> stockDataList) {
+		StockData stockData = getLast(list, index, stockDataList);
+		return stockData != null ? stockData.getAction() : "";
 	}
 }
