@@ -497,6 +497,9 @@ public class StockAnalyzer {
 			appendActionIfPresent(actionBuilder, operateAction);
 		}
 
+		if (mStockDataList.isEmpty()) {
+			return;
+		}
 		StockData stockData = mStockDataList.get(mStockDataList.size() - 1);
 		double velocity = stockData.getMacd().getVelocity();
 		if (velocity > 0) {
