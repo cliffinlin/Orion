@@ -214,16 +214,16 @@
             android:layout_weight="1">
 
             <TextView
-                android:id="@+id/textView_threshold"
+                android:id="@+id/textview_stock_yield"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="14dp"
                 android:layout_marginRight="14dp"
-                android:labelFor="@+id/edittext_threshold"
-                android:text="@string/stock_threshold" />
+                android:labelFor="@+id/edittext_stock_yield"
+                android:text="@string/stock_yield" />
 
             <EditText
-                android:id="@+id/edittext_threshold"
+                android:id="@+id/edittext_stock_yield"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="18dp"

@@ -131,32 +131,37 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 
 		setContentView(R.layout.activity_stock_data_chart_list);
 
+		onNewIntent();
 		initListView();
+		initLoader();
+		updateTitle();
+	}
 
-		mStock.setId(getIntent().getLongExtra(Constant.EXTRA_STOCK_ID,
-				Stock.INVALID_ID));
-		mStockIDList = getIntent().getStringArrayListExtra(
-				Constant.EXTRA_STOCK_ID_LIST);
-		if ((mStockIDList != null) && (mStockIDList.size() > 0)) {
+	void onNewIntent() {
+		Intent intent = getIntent();
+		if (intent == null) {
+			return;
+		}
+
+		mStock.setId(intent.getLongExtra(Constant.EXTRA_STOCK_ID, Stock.INVALID_ID));
+		mStockIDList = intent.getStringArrayListExtra(Constant.EXTRA_STOCK_ID_LIST);
+
+		if (mStockIDList != null && !mStockIDList.isEmpty()) {
 			mHandler.sendEmptyMessage(MESSAGE_LOAD_STOCK_LIST);
 		}
-		mSortOrder = getIntent().getStringExtra(
-				Constant.EXTRA_STOCK_LIST_SORT_ORDER);
 
-		mKeyDisplayDeal = getIntent().getBooleanExtra(Constant.EXTRA_STOCK_DEAL, false);
-		mKeyDisplayBonus = getIntent().getBooleanExtra(Constant.EXTRA_STOCK_BONUS, false);
+		mSortOrder = intent.getStringExtra(Constant.EXTRA_STOCK_LIST_SORT_ORDER);
 
-		initLoader();
-
-		updateTitle();
+		mKeyDisplayDeal = intent.getBooleanExtra(Constant.EXTRA_STOCK_DEAL, false);
+		mKeyDisplayBonus = intent.getBooleanExtra(Constant.EXTRA_STOCK_BONUS, false);
 	}
 
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 
-		mKeyDisplayDeal = getIntent().getBooleanExtra(Constant.EXTRA_STOCK_DEAL, false);
-		mKeyDisplayBonus = getIntent().getBooleanExtra(Constant.EXTRA_STOCK_BONUS, false);
+		onNewIntent();
+		initListView();
 		restartLoader();
 	}
 
@@ -254,6 +259,8 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 	protected void onResume() {
 		super.onResume();
 
+		onNewIntent();
+		initListView();
 		updateStockDataChartItemList();
 		restartLoader();
 	}

@@ -463,7 +463,7 @@ public class StockAnalyzer {
 	}
 
 	private void analyzeStockData(Stock stock, String period) {
-		TrendAnalyzer trendAnalyzer = TrendAnalyzer.getInstance();
+		StockTrendAnalyzer trendAnalyzer = StockTrendAnalyzer.getInstance();
 
 		trendAnalyzer.analyzeVertex(mStockDataList, mDrawVertexList);
 		trendAnalyzer.vertexListToDataList(mStockDataList, mDrawVertexList, mDrawDataList);

@@ -6,17 +6,17 @@ import com.android.orion.utility.Logger;
 
 import java.util.ArrayList;
 
-public class TrendAnalyzer {
+public class StockTrendAnalyzer {
 	Logger Log = Logger.getLogger();
 
-	private TrendAnalyzer() {
+	private StockTrendAnalyzer() {
 	}
 
 	private static class Holder {
-		private static final TrendAnalyzer INSTANCE = new TrendAnalyzer();
+		private static final StockTrendAnalyzer INSTANCE = new StockTrendAnalyzer();
 	}
 
-	public static TrendAnalyzer getInstance() {
+	public static StockTrendAnalyzer getInstance() {
 		return Holder.INSTANCE;
 	}
 
@@ -233,14 +233,14 @@ public class TrendAnalyzer {
 						break;
 					case Trend.DIRECTION_NONE:
 						if (trend == Trend.DIRECTION_UP) {
+							baseTrend = Trend.DIRECTION_UP;
 							StockData vertexData = chooseVertex(start_1, end_1, Trend.VERTEX_TOP);
 							addVertex(vertexData, vertexTypeTop, vertexList);
-							baseTrend = Trend.DIRECTION_UP;
 							vertexData.setAction(Trend.TREND_TYPE_UP_NONE);
 						} else if (trend == Trend.DIRECTION_DOWN) {
+							baseTrend = Trend.DIRECTION_DOWN;
 							StockData vertexData = chooseVertex(start_1, end_1, Trend.VERTEX_BOTTOM);
 							addVertex(vertexData, vertexTypeBottom, vertexList);
-							baseTrend = Trend.DIRECTION_DOWN;
 							vertexData.setAction(Trend.TREND_TYPE_DOWN_NONE);
 						} else if (trend == Trend.DIRECTION_NONE) {
 						}

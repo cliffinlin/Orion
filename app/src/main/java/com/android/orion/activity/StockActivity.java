@@ -40,7 +40,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 	EditText mEditTextStockName;
 	EditText mEditTextStockCode;
 	EditText mEditTextStockHold;
-	EditText mEditTextStockThreshold;
+	EditText mEditTextStockYield;
 
 	Button mButtonOk;
 	Button mButtonCancel;
@@ -67,7 +67,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mEditTextStockName = findViewById(R.id.edittext_stock_name);
 		mEditTextStockCode = findViewById(R.id.edittext_stock_code);
 		mEditTextStockHold = findViewById(R.id.edittext_stock_hold);
-		mEditTextStockThreshold = findViewById(R.id.edittext_threshold);
+		mEditTextStockYield = findViewById(R.id.edittext_stock_yield);
 		mButtonOk = findViewById(R.id.button_ok);
 		mButtonCancel = findViewById(R.id.button_cancel);
 
@@ -78,7 +78,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mEditTextStockName.setOnClickListener(this);
 		mEditTextStockCode.setOnClickListener(this);
 		mEditTextStockHold.setOnClickListener(this);
-		mEditTextStockThreshold.setOnClickListener(this);
+		mEditTextStockYield.setOnClickListener(this);
 		mButtonOk.setOnClickListener(this);
 		mButtonCancel.setOnClickListener(this);
 
@@ -128,6 +128,8 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 			mRadioGroupClass.setEnabled(false);
 			mRadioGroupSE.setEnabled(false);
 			mEditTextStockCode.setEnabled(false);
+			mEditTextStockHold.setEnabled(false);
+			mEditTextStockYield.setEnabled(false);
 			mStock.setId(mIntent.getLongExtra(Constant.EXTRA_STOCK_ID,
 					Stock.INVALID_ID));
 			mDatabaseManager.getStockById(mStock);
@@ -153,7 +155,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mEditTextStockName.setText(mStock.getName());
 		mEditTextStockCode.setText(mStock.getCode());
 		mEditTextStockHold.setText(String.valueOf(mStock.getHold()));
-		mEditTextStockThreshold.setText(String.valueOf(mStock.getThreshold()));
+		mEditTextStockYield.setText(String.valueOf(mStock.getYield()));
 	}
 
 	@Override
@@ -237,14 +239,6 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 					mStock.setSE(Stock.SE_SH);
 				} else if (id == R.id.radio_se_sz) {
 					mStock.setSE(Stock.SE_SZ);
-				}
-
-				try {
-					String threshold = mEditTextStockThreshold.getText().toString();
-					double thresholdValue = TextUtils.isEmpty(threshold) ? 0 : Double.parseDouble(threshold);
-					mStock.setThreshold(thresholdValue);
-				} catch (NumberFormatException e) {
-					e.printStackTrace();
 				}
 
 				if (TextUtils.equals(mAction, Constant.ACTION_FAVORITE_STOCK_INSERT) || TextUtils.equals(mAction, Constant.ACTION_INDEX_COMPONENT_INSERT)) {
