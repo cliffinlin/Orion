@@ -490,12 +490,10 @@ public class StockAnalyzer {
 
 		StringBuilder actionBuilder = new StringBuilder();
 		appendActionIfPresent(actionBuilder, getDirectionAction());
-		if (stock.hasFlag(Stock.FLAG_NOTIFY)) {
-			String trendAction = getTrendAction();
-			appendActionIfPresent(actionBuilder, trendAction);
-			String operateAction = getOperateAction(trendAction);
-			appendActionIfPresent(actionBuilder, operateAction);
-		}
+		String trendAction = getTrendAction();
+		appendActionIfPresent(actionBuilder, trendAction);
+		String operateAction = getOperateAction(trendAction);
+		appendActionIfPresent(actionBuilder, operateAction);
 
 		if (mStockDataList.isEmpty()) {
 			return;
@@ -565,7 +563,7 @@ public class StockAnalyzer {
 			return "";
 		}
 
-		Trend strokeTrend = stockData.getTrend();
+		Trend strokeTrend = StockData.getLastTrend(mStrokeVertexList, 1);
 		if (strokeTrend == null) {
 			return "";
 		}

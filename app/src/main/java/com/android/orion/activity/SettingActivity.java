@@ -18,7 +18,7 @@ public class SettingActivity extends BaseActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.service_setting, menu);
+//		getMenuInflater().inflate(R.menu.service_setting, menu);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		return true;
 	}

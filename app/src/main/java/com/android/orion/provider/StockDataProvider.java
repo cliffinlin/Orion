@@ -222,6 +222,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 	@Override
 	public void download() {
 		if (!Utility.isNetworkConnected(mContext)) {
+			mHandler.removeMessages(0);
 			Log.d("return, isNetworkConnected=" + Utility.isNetworkConnected(mContext));
 			return;
 		}
@@ -246,6 +247,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 	@Override
 	public void download(Stock stock) {
 		if (!Utility.isNetworkConnected(mContext)) {
+			mHandler.removeMessages(0);
 			Log.d("return, isNetworkConnected=" + Utility.isNetworkConnected(mContext));
 			return;
 		}
@@ -765,12 +767,12 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 
 		@Override
 		public void handleMessage(Message msg) {
-			if (msg == null) {
-				return;
-			}
-
 			try {
 				acquireWakeLock();
+
+				if (msg == null) {
+					return;
+				}
 
 				Stock stock = (Stock) msg.obj;
 
@@ -779,6 +781,12 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 				}
 
 				if (TextUtils.isEmpty(stock.getSE()) || TextUtils.isEmpty(stock.getCode())) {
+					return;
+				}
+
+				if (!Utility.isNetworkConnected(mContext)) {
+					removeMessages(0);
+					Log.d("return, isNetworkConnected=" + Utility.isNetworkConnected(mContext));
 					return;
 				}
 
