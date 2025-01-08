@@ -468,16 +468,16 @@ public class StockAnalyzer {
 		trendAnalyzer.analyzeVertex(mStockDataList, mDrawVertexList);
 		trendAnalyzer.vertexListToDataList(mStockDataList, mDrawVertexList, mDrawDataList);
 
-		trendAnalyzer.analyzeLine(mStockDataList, mDrawDataList, mStrokeVertexList, Trend.VERTEX_TOP_STROKE, Trend.VERTEX_BOTTOM_STROKE);
+		trendAnalyzer.analyzeLine(mStockDataList, mDrawDataList, mStrokeVertexList, Trend.VERTEX_TOP_STROKE, Trend.VERTEX_BOTTOM_STROKE, true);
 		trendAnalyzer.vertexListToDataList(mStockDataList, mStrokeVertexList, mStrokeDataList);
 
-		trendAnalyzer.analyzeLine(mStockDataList, mStrokeDataList, mSegmentVertexList, Trend.VERTEX_TOP_SEGMENT, Trend.VERTEX_BOTTOM_SEGMENT);
+		trendAnalyzer.analyzeLine(mStockDataList, mStrokeDataList, mSegmentVertexList, Trend.VERTEX_TOP_SEGMENT, Trend.VERTEX_BOTTOM_SEGMENT, false);
 		trendAnalyzer.vertexListToDataList(mStockDataList, mSegmentVertexList, mSegmentDataList);
 
-		trendAnalyzer.analyzeLine(mStockDataList, mSegmentDataList, mLineVertexList, Trend.VERTEX_TOP_LINE, Trend.VERTEX_BOTTOM_LINE);
+		trendAnalyzer.analyzeLine(mStockDataList, mSegmentDataList, mLineVertexList, Trend.VERTEX_TOP_LINE, Trend.VERTEX_BOTTOM_LINE, false);
 		trendAnalyzer.vertexListToDataList(mStockDataList, mLineVertexList, mLineDataList);
 
-		trendAnalyzer.analyzeLine(mStockDataList, mLineDataList, mOutlineVertexList, Trend.VERTEX_TOP_OUTLINE, Trend.VERTEX_BOTTOM_OUTLINE);
+		trendAnalyzer.analyzeLine(mStockDataList, mLineDataList, mOutlineVertexList, Trend.VERTEX_TOP_OUTLINE, Trend.VERTEX_BOTTOM_OUTLINE, false);
 		trendAnalyzer.vertexListToDataList(mStockDataList, mOutlineVertexList, mOutlineDataList);
 
 		analyzeAction(stock, period);
@@ -541,11 +541,17 @@ public class StockAnalyzer {
 	}
 
 	String getTrendAction() {
-		String action = StockData.getLastAction(mDrawDataList, 2, mStockDataList);
-		if (!TextUtils.isEmpty(action)) {
-			return action;
+		String result = "";
+		if (mDrawDataList == null || mDrawDataList.isEmpty()) {
+			return "";
 		}
-		return StockData.getLastAction(mStrokeDataList, 0, mStockDataList);
+		for (int i = 0; i < mDrawDataList.size(); i++) {
+			result = StockData.getLastAction(mDrawDataList, i, mStockDataList);
+			if (!TextUtils.isEmpty(result)) {
+				break;
+			}
+		}
+		return result;
 	}
 
 	String getOperateAction(String trendAction) {
