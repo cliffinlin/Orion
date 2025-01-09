@@ -46,7 +46,7 @@ public class SettingFragment extends PreferenceFragment implements
 
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-	                                      String key) {
+										  String key) {
 		if (TextUtils.equals(key, Setting.SETTING_DEBUG_LOG)) {
 			Logger.setDebug(Setting.getDebugLog());
 		} else if (TextUtils.equals(key, Setting.SETTING_DEBUG_LOOPBACK)) {

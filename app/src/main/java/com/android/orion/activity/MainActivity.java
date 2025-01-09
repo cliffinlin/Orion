@@ -47,7 +47,7 @@ public class MainActivity extends PreferenceActivity {
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_exit: {
 				onActionExit();

@@ -4,8 +4,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import androidx.annotation.NonNull;
-
 import com.android.orion.R;
 
 public class SettingActivity extends BaseActivity {
@@ -24,7 +22,7 @@ public class SettingActivity extends BaseActivity {
 	}
 
 	@Override
-	public boolean onMenuItemSelected(int featureId, @NonNull MenuItem item) {
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home:
 				setResult(RESULT_OK, mIntent);
