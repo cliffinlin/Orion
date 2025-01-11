@@ -6,7 +6,7 @@ import com.android.orion.database.StockData;
 
 import java.util.ArrayList;
 
-public class StockKeyAnalyzer {
+public class KeyAnalyzer {
 
 	static final boolean LOG = false;
 
@@ -18,14 +18,14 @@ public class StockKeyAnalyzer {
 	double mPrevHigh;
 	double mPrevLow;
 
-	private StockKeyAnalyzer() {
+	private KeyAnalyzer() {
 	}
 
 	private static class SingletonHelper {
-		private static final StockKeyAnalyzer INSTANCE = new StockKeyAnalyzer();
+		private static final KeyAnalyzer INSTANCE = new KeyAnalyzer();
 	}
 
-	public static StockKeyAnalyzer getInstance() {
+	public static KeyAnalyzer getInstance() {
 		return SingletonHelper.INSTANCE;
 	}
 

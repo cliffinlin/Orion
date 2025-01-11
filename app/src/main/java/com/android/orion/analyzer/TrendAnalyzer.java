@@ -6,17 +6,17 @@ import com.android.orion.utility.Logger;
 
 import java.util.ArrayList;
 
-public class StockTrendAnalyzer {
+public class TrendAnalyzer {
 	Logger Log = Logger.getLogger();
 
-	private StockTrendAnalyzer() {
+	private TrendAnalyzer() {
 	}
 
 	private static class Holder {
-		private static final StockTrendAnalyzer INSTANCE = new StockTrendAnalyzer();
+		private static final TrendAnalyzer INSTANCE = new TrendAnalyzer();
 	}
 
-	public static StockTrendAnalyzer getInstance() {
+	public static TrendAnalyzer getInstance() {
 		return Holder.INSTANCE;
 	}
 
