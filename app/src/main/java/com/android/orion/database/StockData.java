@@ -24,8 +24,6 @@ public class StockData extends DatabaseTable {
 	public static final String MARK_DOWNWARD_TREND = "DD";
 	public static final String MARK_NATURAL_REACTION = "ND";
 
-	public static final String MARK_QUANT = "Q";
-
 	public static final String NAME_NATURAL_RALLY = "Rally";
 	public static final String NAME_UPWARD_TREND = "Up";
 	public static final String NAME_DOWNWARD_TREND = "Down";

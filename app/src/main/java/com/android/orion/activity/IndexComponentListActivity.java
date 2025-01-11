@@ -47,7 +47,7 @@ public class IndexComponentListActivity extends ListActivity implements
 	static final int mHeaderTextDefaultColor = Color.BLACK;
 	static final int mHeaderTextHighlightColor = Color.RED;
 
-	String mSortOrderColumn = DatabaseContract.COLUMN_CODE;
+	String mSortOrderColumn = DatabaseContract.COLUMN_NET;
 	String mSortOrderDirection = DatabaseContract.ORDER_ASC;
 	String mSortOrderDefault = mSortOrderColumn + mSortOrderDirection;
 	String mSortOrder = mSortOrderDefault;

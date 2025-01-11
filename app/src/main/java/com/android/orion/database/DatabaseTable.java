@@ -26,28 +26,28 @@ public class DatabaseTable {
 	}
 
 	public void contentValuesPut(ContentValues contentValues, String key,
-								 int value) {
+	                             int value) {
 		if (value != 0) {
 			contentValues.put(key, value);
 		}
 	}
 
 	public void contentValuesPut(ContentValues contentValues, String key,
-								 long value) {
+	                             long value) {
 		if (value != 0) {
 			contentValues.put(key, value);
 		}
 	}
 
 	public void contentValuesPut(ContentValues contentValues, String key,
-								 double value) {
+	                             double value) {
 		if (value != 0) {
 			contentValues.put(key, value);
 		}
 	}
 
 	public void contentValuesPut(ContentValues contentValues, String key,
-								 String value) {
+	                             String value) {
 		if (!TextUtils.isEmpty(value)) {
 			contentValues.put(key, value);
 		}

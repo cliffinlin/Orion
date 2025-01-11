@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,7 +29,6 @@ import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockDeal;
-import com.android.orion.database.StockQuant;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.github.mikephil.charting.charts.CombinedChart;
@@ -67,7 +65,6 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 	boolean mKeyDisplayLatest = true;
 	boolean mKeyDisplayCost = true;
 	boolean mKeyDisplayDeal = false;
-	boolean mKeyDisplayQuant = false;
 	boolean mKeyDisplayBonus = false;
 
 	int mStockListIndex = 0;
@@ -86,7 +83,6 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 	ArrayList<StockDataChartItemSub> mStockDataChartItemSubList = null;
 	ArrayList<StockDataChart> mStockDataChartList = null;
 	ArrayList<StockDeal> mStockDealList = new ArrayList<>();
-	ArrayList<StockQuant> mStockQuantList = new ArrayList<>();
 	ArrayMap<Integer, CombinedChart> mCombinedChartMap = new ArrayMap<>();
 	ChartSyncHelper mChartSyncHelper = new ChartSyncHelper();
 
@@ -157,7 +153,6 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 		mSortOrder = intent.getStringExtra(Constant.EXTRA_STOCK_LIST_SORT_ORDER);
 
 		mKeyDisplayDeal = intent.getBooleanExtra(Constant.EXTRA_STOCK_DEAL, false);
-		mKeyDisplayQuant = intent.getBooleanExtra(Constant.EXTRA_STOCK_QUANT, false);
 		mKeyDisplayBonus = intent.getBooleanExtra(Constant.EXTRA_STOCK_BONUS, false);
 	}
 
@@ -645,7 +640,7 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 			}
 
 			stockDataChart.updateDescription(mStock);
-			stockDataChart.updateLimitLines(mStock, mStockDealList, mStockQuantList, mKeyDisplayLatest, mKeyDisplayCost, mKeyDisplayDeal, mKeyDisplayQuant);
+			stockDataChart.updateLimitLines(mStock, mStockDealList, mKeyDisplayLatest, mKeyDisplayCost, mKeyDisplayDeal);
 			stockDataChart.setMainChartData(mContext);
 			stockDataChart.setSubChartData(mContext);
 
@@ -664,36 +659,6 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 		String sortOrder = DatabaseContract.COLUMN_BUY + " DESC ";
 
 		mDatabaseManager.getStockDealList(mStockDealList, selection, sortOrder);
-	}
-
-	void loadStockQuantList() {
-		ArrayMap<String, StockQuant> stockquantMap = new ArrayMap<>();
-
-		String selection = DatabaseContract.COLUMN_SE + " = " + "'" + mStock.getSE()
-				+ "'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "'"
-				+ mStock.getCode() + "'";
-		String sortOrder = DatabaseContract.COLUMN_CREATED + DatabaseContract.ORDER_ASC;
-
-		mDatabaseManager.getStockQuantList(mStock, mStockQuantList, selection, sortOrder);
-
-		for (int i = 0; i < mStockQuantList.size(); i++) {
-			StockQuant stockQuant = mStockQuantList.get(i);
-			if (TextUtils.isEmpty(stockQuant.getCreated())) {
-				continue;
-			}
-
-			if (TextUtils.isEmpty(stockQuant.getModified())) {
-				stockquantMap.put(stockQuant.getCreated(), stockQuant);
-			} else {
-				stockquantMap.remove(stockQuant.getCreated());
-			}
-		}
-
-		if (stockquantMap.size() == 0) {
-			mStockQuantList.clear();
-		} else {
-			mStockQuantList = new ArrayList<StockQuant>(stockquantMap.values());
-		}
 	}
 
 	void updateStockDataChartItemList() {

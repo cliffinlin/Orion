@@ -43,7 +43,7 @@ public class StockFinancialListActivity extends ListActivity implements
 	public static final int mHeaderTextDefaultColor = Color.BLACK;
 	public static final int mHeaderTextHighlightColor = Color.RED;
 
-	String mSortOrderColumn = DatabaseContract.COLUMN_CODE;
+	String mSortOrderColumn = DatabaseContract.COLUMN_NET;
 	String mSortOrderDirection = DatabaseContract.ORDER_ASC;
 	String mSortOrderDefault = mSortOrderColumn + mSortOrderDirection;
 	String mSortOrder = mSortOrderDefault;

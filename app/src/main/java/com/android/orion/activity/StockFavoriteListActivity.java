@@ -45,7 +45,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 	public static final int mHeaderTextHighlightColor = Color.RED;
 
 	String mLoadingStockCode = "";
-	String mSortOrderColumn = DatabaseContract.COLUMN_CODE;
+	String mSortOrderColumn = DatabaseContract.COLUMN_NET;
 	String mSortOrderDirection = DatabaseContract.ORDER_ASC;
 	String mSortOrderDefault = mSortOrderColumn + mSortOrderDirection;
 	String mSortOrder = mSortOrderDefault;

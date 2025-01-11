@@ -21,7 +21,6 @@ public class Setting {
 	public static final String SETTING_SORT_ORDER_STOCK_LIST = "SETTING_SORT_ORDER_STOCK_LIST";
 	public static final String SETTING_SORT_ORDER_FINANCIAL_LIST = "SETTING_SORT_ORDER_FINANCIAL_LIST";
 	public static final String SETTING_SORT_ORDER_DEAL_LIST = "SETTING_SORT_ORDER_DEAL_LIST";
-	public static final String SETTING_SORT_ORDER_QUANT_LIST = "SETTING_SORT_ORDER_QUANT_LIST";
 
 	public static final String SETTING_STOCK_FILTER_ENABLED = "SETTING_STOCK_FILTER_ENABLED";
 	public static final String SETTING_STOCK_FILTER_FAVORITE = "SETTING_STOCK_FILTER_FAVORITE";
@@ -42,7 +41,7 @@ public class Setting {
 	public static final boolean SETTING_DISPLAY_CANDLE_DEFAULT = false;
 
 	public static final String SETTING_DISPLAY_FILLED = "SETTING_DISPLAY_FILLED";
-	public static final boolean SETTING_DISPLAY_FILLED_DEFAULT = true;
+	public static final boolean SETTING_DISPLAY_FILLED_DEFAULT = false;
 
 	public static final String SETTING_DISPLAY_DRAW = "SETTING_DISPLAY_DRAW";
 	public static final boolean SETTING_DISPLAY_DRAW_DEFAULT = true;
@@ -57,6 +56,7 @@ public class Setting {
 	public static final boolean SETTING_DISPLAY_LINE_DEFAULT = true;
 
 	public static final String SETTING_DEBUG_LOG = "SETTING_DEBUG_LOG";
+	public static final boolean SETTING_DEBUG_LOG_DEFAULT = true;
 	public static final String SETTING_DEBUG_DIRECT = "SETTING_DEBUG_DIRECT";
 	public static final String SETTING_DEBUG_LOOPBACK = "SETTING_DEBUG_LOOPBACK";
 	public static final String SETTING_DEBUG_LOOPBACK_DATE_TIME = "SETTING_DEBUG_LOOPBACK_DATE_TIME";
@@ -146,7 +146,7 @@ public class Setting {
 	}
 
 	public static boolean getDebugLog() {
-		return Preferences.getBoolean(SETTING_DEBUG_LOG, false);
+		return Preferences.getBoolean(SETTING_DEBUG_LOG, SETTING_DEBUG_LOG_DEFAULT);
 	}
 
 	public static void setDebugLog(boolean value) {
