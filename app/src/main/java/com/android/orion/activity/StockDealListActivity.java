@@ -603,9 +603,9 @@ public class StockDealListActivity extends ListActivity implements
 		}
 	}
 
-	void restartLoader(Intent intent) {
-		restartLoader();
-	}
+//	void restartLoader(Intent intent) {
+//		restartLoader();
+//	}
 
 	void restartLoader() {
 		mLoaderManager.restartLoader(LOADER_ID_DEAL_LIST, null, this);

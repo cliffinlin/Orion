@@ -219,9 +219,9 @@ public class StockListActivity extends DatabaseActivity implements
 		return null;
 	}
 
-	void restartLoader(Intent intent) {
-		restartLoader();
-	}
+//	void restartLoader(Intent intent) {
+//		restartLoader();
+//	}
 
 	void restartLoader() {
 		mLoaderManager.restartLoader(LOADER_ID_STOCK_LIST, null, this);

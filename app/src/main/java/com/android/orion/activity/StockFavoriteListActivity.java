@@ -38,7 +38,7 @@ import com.android.orion.view.SyncHorizontalScrollView;
 
 public class StockFavoriteListActivity extends ListActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
-		OnItemLongClickListener, OnClickListener, AnalyzeListener, DownloadListener {
+		OnItemLongClickListener, OnClickListener {
 
 	public static final int LOADER_ID_STOCK_FAVORITE_LIST = 0;
 
@@ -47,7 +47,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 	public static final int mHeaderTextDefaultColor = Color.BLACK;
 	public static final int mHeaderTextHighlightColor = Color.RED;
 
-	String mLoadingStockCode = "";
 	String mSortOrderColumn = DatabaseContract.COLUMN_NET;
 	String mSortOrderDirection = DatabaseContract.ORDER_ASC;
 	String mSortOrderDefault = mSortOrderColumn + mSortOrderDirection;
@@ -111,8 +110,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 
 		initHeader();
 		setupListView();
-		StockDataProvider.getInstance().registerAnalyzeListener(this);
-		StockDataProvider.getInstance().registerDownloadListener(this);
 
 		mLoaderManager.initLoader(LOADER_ID_STOCK_FAVORITE_LIST, null, this);
 	}
@@ -452,8 +449,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		StockDataProvider.getInstance().unRegisterAnalyzeListener(this);
-		StockDataProvider.getInstance().unRegisterDownloadListener(this);
 	}
 
 	@Override
@@ -606,30 +601,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 
 		TextView textView = (TextView) view;
 		textView.setTextSize(14f);
-	}
-
-	@Override
-	public void onAnalyzeStart(String stockCode) {
-		mLoadingStockCode = stockCode;
-		restartLoader();
-	}
-
-	@Override
-	public void onAnalyzeFinish(String stockCode) {
-		mLoadingStockCode = "";
-		restartLoader();
-	}
-
-	@Override
-	public void onDownloadStart(String stockCode) {
-		mLoadingStockCode = stockCode;
-		restartLoader();
-	}
-
-	@Override
-	public void onDownloadComplete(String stockCode) {
-		mLoadingStockCode = "";
-		restartLoader();
 	}
 
 	private class LeftViewBinder implements SimpleCursorAdapter.ViewBinder {

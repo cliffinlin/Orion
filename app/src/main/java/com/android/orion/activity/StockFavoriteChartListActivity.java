@@ -54,7 +54,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StockFavoriteChartListActivity extends BaseActivity implements
-		LoaderManager.LoaderCallbacks<Cursor>, OnChartGestureListener, AnalyzeListener, DownloadListener {
+		LoaderManager.LoaderCallbacks<Cursor>, OnChartGestureListener {
 
 	public static final int ITEM_VIEW_TYPE_MAIN = 0;
 	public static final int ITEM_VIEW_TYPE_SUB = 1;
@@ -138,8 +138,6 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 		initListView();
 		initLoader();
 		updateTitle();
-		StockDataProvider.getInstance().registerAnalyzeListener(this);
-		StockDataProvider.getInstance().registerDownloadListener(this);
 	}
 
 	void onNewIntent() {
@@ -273,8 +271,6 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		StockDataProvider.getInstance().unRegisterAnalyzeListener(this);
-		StockDataProvider.getInstance().unRegisterDownloadListener(this);
 		mChartSyncHelper.unregisterOnChartGestureListener(this);
 	}
 
@@ -739,28 +735,6 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 	@Override
 	public void onChartTranslate(MotionEvent me, float dX, float dY) {
 
-	}
-
-	@Override
-	public void onAnalyzeStart(String stockCode) {
-	}
-
-	@Override
-	public void onAnalyzeFinish(String stockCode) {
-		if (mStock.getCode().equals(stockCode)) {
-			restartLoader();
-		}
-	}
-
-	@Override
-	public void onDownloadStart(String stockCode) {
-	}
-
-	@Override
-	public void onDownloadComplete(String stockCode) {
-		if (mStock.getCode().equals(stockCode)) {
-			restartLoader();
-		}
 	}
 
 	static class MainHandler extends Handler {

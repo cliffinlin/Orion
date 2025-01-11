@@ -656,9 +656,9 @@ public class StockFinancialListActivity extends ListActivity implements
 		}
 	}
 
-	void restartLoader(Intent intent) {
-		restartLoader();
-	}
+//	void restartLoader(Intent intent) {
+//		restartLoader();
+//	}
 
 	void restartLoader() {
 		mLoaderManager

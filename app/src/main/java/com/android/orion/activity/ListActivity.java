@@ -12,6 +12,7 @@ import com.android.orion.R;
 import com.android.orion.setting.Setting;
 
 public class ListActivity extends StorageActivity {
+	String mLoadingStockCode = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -66,4 +67,29 @@ public class ListActivity extends StorageActivity {
 	boolean setVisibility(TextView textView, boolean visibility) {
 		return setVisibility((View) textView, visibility);
 	}
+
+	@Override
+	public void onAnalyzeStart(String stockCode) {
+		mLoadingStockCode = stockCode;
+		restartLoader();
+	}
+
+	@Override
+	public void onAnalyzeFinish(String stockCode) {
+		mLoadingStockCode = "";
+		restartLoader();
+	}
+
+	@Override
+	public void onDownloadStart(String stockCode) {
+		mLoadingStockCode = stockCode;
+		restartLoader();
+	}
+
+	@Override
+	public void onDownloadComplete(String stockCode) {
+		mLoadingStockCode = "";
+		restartLoader();
+	}
+
 }

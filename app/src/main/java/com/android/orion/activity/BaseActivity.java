@@ -19,6 +19,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.android.orion.database.Stock;
+import com.android.orion.interfaces.AnalyzeListener;
+import com.android.orion.interfaces.DownloadListener;
 import com.android.orion.interfaces.IStockDataProvider;
 import com.android.orion.manager.DatabaseManager;
 import com.android.orion.manager.StockManager;
@@ -28,7 +30,7 @@ import com.android.orion.utility.Logger;
 
 import java.util.ArrayList;
 
-public class BaseActivity extends Activity {
+public class BaseActivity extends Activity implements AnalyzeListener, DownloadListener {
 
 	private static final int REQUEST_EXTERNAL_STORAGE = 1;
 	private static final String[] PERMISSIONS_STORAGE = {"android.permission.READ_EXTERNAL_STORAGE",
@@ -49,37 +51,40 @@ public class BaseActivity extends Activity {
 	StockManager mStockManager = StockManager.getInstance();
 	DatabaseManager mDatabaseManager = DatabaseManager.getInstance();
 	IStockDataProvider mStockDataProvider = StockDataProvider.getInstance();
-
-	BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			if (intent == null) {
-				return;
-			}
-
-			if (mResumed) {
-				String action = intent.getAction();
-
-				if (TextUtils.equals(action, Constant.ACTION_RESTART_LOADER)) {
-					restartLoader(intent);
-				}
-			}
-		}
-	};
+//
+//	BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+//		@Override
+//		public void onReceive(Context context, Intent intent) {
+//			if (intent == null) {
+//				return;
+//			}
+//
+//			if (mResumed) {
+//				String action = intent.getAction();
+//
+//				if (TextUtils.equals(action, Constant.ACTION_RESTART_LOADER)) {
+//					restartLoader(intent);
+//				}
+//			}
+//		}
+//	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mContext = this;
-		LocalBroadcastManager.getInstance(this).registerReceiver(
-				mBroadcastReceiver,
-				new IntentFilter(Constant.ACTION_RESTART_LOADER));
+//		LocalBroadcastManager.getInstance(this).registerReceiver(
+//				mBroadcastReceiver,
+//				new IntentFilter(Constant.ACTION_RESTART_LOADER));
 
 		mIntent = getIntent();
 		if (mIntent != null) {
 			mAction = mIntent.getAction();
 			mBundle = mIntent.getExtras();
 		}
+
+		mStockDataProvider.registerAnalyzeListener(this);
+		mStockDataProvider.registerDownloadListener(this);
 	}
 
 	@Override
@@ -98,8 +103,11 @@ public class BaseActivity extends Activity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		LocalBroadcastManager.getInstance(this).unregisterReceiver(
-				mBroadcastReceiver);
+		mStockDataProvider.unRegisterAnalyzeListener(this);
+		mStockDataProvider.unRegisterDownloadListener(this);
+//
+//		LocalBroadcastManager.getInstance(this).unregisterReceiver(
+//				mBroadcastReceiver);
 	}
 
 	@Override
@@ -134,7 +142,10 @@ public class BaseActivity extends Activity {
 		}
 	}
 
-	void restartLoader(Intent intent) {
+//	void restartLoader(Intent intent) {
+//	}
+
+	void restartLoader() {
 	}
 
 	private void checkPermission() {
@@ -162,6 +173,28 @@ public class BaseActivity extends Activity {
 				}
 				return;
 			}
+		}
+	}
+
+	@Override
+	public void onAnalyzeStart(String stockCode) {
+	}
+
+	@Override
+	public void onAnalyzeFinish(String stockCode) {
+		if (mStock.getCode().equals(stockCode)) {
+			restartLoader();
+		}
+	}
+
+	@Override
+	public void onDownloadStart(String stockCode) {
+	}
+
+	@Override
+	public void onDownloadComplete(String stockCode) {
+		if (mStock.getCode().equals(stockCode)) {
+			restartLoader();
 		}
 	}
 }

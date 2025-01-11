@@ -283,9 +283,9 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 		mLoaderManager.initLoader(LOADER_ID_STOCK_LIST, null, this);
 	}
 
-	void restartLoader(Intent intent) {
-		restartLoader();
-	}
+//	void restartLoader(Intent intent) {
+//		restartLoader();
+//	}
 
 	void restartLoader() {
 		mLoaderManager.restartLoader(LOADER_ID_STOCK_LIST, null, this);

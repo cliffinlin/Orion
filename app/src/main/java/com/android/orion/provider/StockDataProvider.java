@@ -251,12 +251,12 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		}
 	}
 
-	private void sendBroadcast(String action, String stockCode) {
-		Intent intent = new Intent(action);
-		intent.putExtra(Constant.EXTRA_STOCK_CODE, stockCode);
-
-		mLocalBroadcastManager.sendBroadcast(intent);
-	}
+//	private void sendBroadcast(String action, String stockCode) {
+//		Intent intent = new Intent(action);
+//		intent.putExtra(Constant.EXTRA_STOCK_CODE, stockCode);
+//
+//		mLocalBroadcastManager.sendBroadcast(intent);
+//	}
 
 	@Override
 	public void onDestroy() {
@@ -849,7 +849,8 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 					return;
 				}
 
-				sendBroadcast(Constant.ACTION_RESTART_LOADER, stock.getCode());
+//				sendBroadcast(Constant.ACTION_RESTART_LOADER, stock.getCode());
+
 				onDownloadStart(stock.getCode());
 				if (TextUtils.equals(stock.getClasses(), Stock.CLASS_A)) {
 					long interval = System.currentTimeMillis() - Setting.getDownloadStock(stock.getSE(), stock.getCode());
@@ -916,7 +917,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {
-				sendBroadcast(Constant.ACTION_RESTART_LOADER, "");
+//				sendBroadcast(Constant.ACTION_RESTART_LOADER, "");
 				releaseWakeLock();
 			}
 		}

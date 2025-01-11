@@ -53,7 +53,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class StockFinancialChartListActivity extends BaseActivity implements
-		LoaderManager.LoaderCallbacks<Cursor>, AnalyzeListener, DownloadListener  {
+		LoaderManager.LoaderCallbacks<Cursor>  {
 
 	static final int ITEM_VIEW_TYPE_MAIN = 0;
 	static final int ITEM_VIEW_TYPE_SUB = 1;
@@ -139,8 +139,6 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 		initListView();
 		initLoader();
 		updateTitle();
-		StockDataProvider.getInstance().registerAnalyzeListener(this);
-		StockDataProvider.getInstance().registerDownloadListener(this);
 	}
 
 	@Override
@@ -210,8 +208,6 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		StockDataProvider.getInstance().unRegisterAnalyzeListener(this);
-		StockDataProvider.getInstance().unRegisterDownloadListener(this);
 	}
 
 	@Override
@@ -637,28 +633,6 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 		mStock = mStockList.get(mStockListIndex);
 
 		restartLoader();
-	}
-
-	@Override
-	public void onAnalyzeStart(String stockCode) {
-	}
-
-	@Override
-	public void onAnalyzeFinish(String stockCode) {
-		if (mStock.getCode().equals(stockCode)) {
-			restartLoader();
-		}
-	}
-
-	@Override
-	public void onDownloadStart(String stockCode) {
-	}
-
-	@Override
-	public void onDownloadComplete(String stockCode) {
-		if (mStock.getCode().equals(stockCode)) {
-			restartLoader();
-		}
 	}
 
 	static class MainHandler extends Handler {
