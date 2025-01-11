@@ -29,4 +29,13 @@ public interface IStockDataProvider {
 	void onDestroy();
 
 	void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key);
+
+	void registerAnalyzeListener(AnalyzeListener listener);
+
+	void unRegisterAnalyzeListener(AnalyzeListener listener);
+
+	void registerDownloadListener(DownloadListener listener);
+
+	void unRegisterDownloadListener(DownloadListener listener);
+
 }

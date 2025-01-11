@@ -76,6 +76,10 @@ public class Stock extends DatabaseTable {
 	private String mRDate;
 	private String mStatus;
 
+	static ArrayList<StockFinancial> mStockFinancialList = new ArrayList<>();
+	static ArrayList<TotalShare> mTotalShareList = new ArrayList<>();
+	static ArrayList<ShareBonus> mShareBonusList = new ArrayList<>();
+
 	private final Period mMin5 = new Period(Period.MIN5);
 	private final Period mMin15 = new Period(Period.MIN15);
 	private final Period mMin30 = new Period(Period.MIN30);
@@ -1127,6 +1131,18 @@ public class Stock extends DatabaseTable {
 
 	public boolean hasFlag(int flag) {
 		return (mFlag & flag) == flag;
+	}
+
+	public ArrayList<StockFinancial> getFinancialList() {
+		return mStockFinancialList;
+	}
+
+	public ArrayList<TotalShare> getTotalShareList() {
+		return mTotalShareList;
+	}
+
+	public ArrayList<ShareBonus> getShareBonusList() {
+		return mShareBonusList;
 	}
 
 	public ArrayList<StockData> getArrayList(String period, int type) {

@@ -29,6 +29,9 @@ import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockDeal;
+import com.android.orion.interfaces.AnalyzeListener;
+import com.android.orion.interfaces.DownloadListener;
+import com.android.orion.provider.StockDataProvider;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.github.mikephil.charting.charts.CombinedChart;
@@ -51,7 +54,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StockFavoriteChartListActivity extends BaseActivity implements
-		LoaderManager.LoaderCallbacks<Cursor>, OnChartGestureListener {
+		LoaderManager.LoaderCallbacks<Cursor>, OnChartGestureListener, AnalyzeListener, DownloadListener {
 
 	public static final int ITEM_VIEW_TYPE_MAIN = 0;
 	public static final int ITEM_VIEW_TYPE_SUB = 1;
@@ -135,6 +138,8 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 		initListView();
 		initLoader();
 		updateTitle();
+		StockDataProvider.getInstance().registerAnalyzeListener(this);
+		StockDataProvider.getInstance().registerDownloadListener(this);
 	}
 
 	void onNewIntent() {
@@ -178,35 +183,35 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case android.R.id.home:
+			case android.R.id.home: {
 				finish();
 				return true;
-
-			case R.id.action_prev:
+			}
+			case R.id.action_prev: {
 				navigateStock(-1);
 				return true;
-
-			case R.id.action_next:
+			}
+			case R.id.action_next: {
 				navigateStock(1);
 				return true;
-
-			case R.id.action_refresh:
+			}
+			case R.id.action_refresh: {
 				mDatabaseManager.deleteStockData(mStock.getId());
 				mHandler.sendEmptyMessage(MESSAGE_REFRESH);
 				return true;
-
-			case R.id.action_setting:
+			}
+			case R.id.action_setting: {
 				startActivityForResult(new Intent(this,
 						SettingActivity.class), REQUEST_CODE_SETTING);
 				return true;
-
-			case R.id.action_edit:
+			}
+			case R.id.action_edit: {
 				mIntent = new Intent(this, StockActivity.class);
 				mIntent.setAction(Constant.ACTION_STOCK_EDIT);
 				mIntent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
 				startActivity(mIntent);
 				return true;
-
+			}
 			case R.id.action_deal: {
 				Bundle bundle = new Bundle();
 				bundle.putString(Constant.EXTRA_STOCK_SE, mStock.getSE());
@@ -268,6 +273,8 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		StockDataProvider.getInstance().unRegisterAnalyzeListener(this);
+		StockDataProvider.getInstance().unRegisterDownloadListener(this);
 		mChartSyncHelper.unregisterOnChartGestureListener(this);
 	}
 
@@ -363,17 +370,6 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 			if (Setting.getPeriod(Period.PERIODS[i])) {
 				mLoaderManager.initLoader(i, null, this);
 			}
-		}
-	}
-
-	void restartLoader(Intent intent) {
-		if (intent == null) {
-			return;
-		}
-
-		if (intent.getLongExtra(Constant.EXTRA_STOCK_ID,
-				Stock.INVALID_ID) == mStock.getId()) {
-			restartLoader();
 		}
 	}
 
@@ -743,6 +739,28 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 	@Override
 	public void onChartTranslate(MotionEvent me, float dX, float dY) {
 
+	}
+
+	@Override
+	public void onAnalyzeStart(String stockCode) {
+	}
+
+	@Override
+	public void onAnalyzeFinish(String stockCode) {
+		if (mStock.getCode().equals(stockCode)) {
+			restartLoader();
+		}
+	}
+
+	@Override
+	public void onDownloadStart(String stockCode) {
+	}
+
+	@Override
+	public void onDownloadComplete(String stockCode) {
+		if (mStock.getCode().equals(stockCode)) {
+			restartLoader();
+		}
 	}
 
 	static class MainHandler extends Handler {

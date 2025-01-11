@@ -9,6 +9,7 @@ import android.os.Message;
 import androidx.annotation.NonNull;
 
 import com.android.orion.application.MainApplication;
+import com.android.orion.interfaces.NetworkChangedListener;
 
 import java.util.ArrayList;
 
@@ -16,7 +17,7 @@ public class ConnectionManager {
 	public static final int MSG_CONNECTED = 0;
 	public static final int MSG_DISCONNECTED = 1;
 	private static final Context mContext = MainApplication.getContext();
-	ArrayList<OnConnectionChangeListener> mListener = new ArrayList<>();
+	ArrayList<NetworkChangedListener> mListener = new ArrayList<>();
 	private final Handler mHandler = new Handler(Looper.getMainLooper()) {
 
 		@Override
@@ -25,12 +26,12 @@ public class ConnectionManager {
 
 			switch (msg.what) {
 				case MSG_CONNECTED:
-					for (OnConnectionChangeListener listener : mListener) {
+					for (NetworkChangedListener listener : mListener) {
 						listener.onConnected();
 					}
 					break;
 				case MSG_DISCONNECTED:
-					for (OnConnectionChangeListener listener : mListener) {
+					for (NetworkChangedListener listener : mListener) {
 						listener.onDisconnected();
 					}
 					break;
@@ -51,13 +52,16 @@ public class ConnectionManager {
 		return SingletonHolder.INSTANCE;
 	}
 
-	public void registerListener(@NonNull OnConnectionChangeListener listener) {
+	public void registerListener(NetworkChangedListener listener) {
+		if (listener == null) {
+			return;
+		}
 		if (!mListener.contains(listener)) {
 			mListener.add(listener);
 		}
 	}
 
-	public void unregisterListener(@NonNull OnConnectionChangeListener listener) {
+	public void unregisterListener(@NonNull NetworkChangedListener listener) {
 		mListener.remove(listener);
 	}
 
@@ -67,11 +71,5 @@ public class ConnectionManager {
 
 	public void onDisconnected() {
 		mHandler.sendEmptyMessage(MSG_DISCONNECTED);
-	}
-
-	public interface OnConnectionChangeListener {
-		void onConnected();
-
-		void onDisconnected();
 	}
 }

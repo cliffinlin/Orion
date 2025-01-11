@@ -25,6 +25,8 @@ import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.IndexComponent;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
+import com.android.orion.interfaces.AnalyzeListener;
+import com.android.orion.interfaces.DownloadListener;
 import com.android.orion.interfaces.IStockDataProvider;
 import com.android.orion.interfaces.StockListener;
 import com.android.orion.manager.DatabaseManager;
@@ -68,6 +70,9 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 	HandlerThread mHandlerThread;
 	ServiceHandler mHandler;
 
+	ArrayList<AnalyzeListener> mAnalyzeListenerList = new ArrayList<>();
+	ArrayList<DownloadListener> mDownloadListenerList = new ArrayList<>();
+
 	Logger Log = Logger.getLogger();
 
 	public StockDataProvider() {
@@ -100,6 +105,60 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			}
 		}
 		return mInstance;
+	}
+
+	@Override
+	public void registerAnalyzeListener(AnalyzeListener listener) {
+		if (listener == null) {
+			return;
+		}
+		if (!mAnalyzeListenerList.contains(listener)) {
+			mAnalyzeListenerList.add(listener);
+		}
+	}
+
+	@Override
+	public void unRegisterAnalyzeListener(AnalyzeListener listener) {
+		mAnalyzeListenerList.remove(listener);
+	}
+
+	@Override
+	public void registerDownloadListener(DownloadListener listener) {
+		if (listener == null) {
+			return;
+		}
+		if (!mDownloadListenerList.contains(listener)) {
+			mDownloadListenerList.add(listener);
+		}
+	}
+
+	@Override
+	public void unRegisterDownloadListener(DownloadListener listener) {
+		mDownloadListenerList.remove(listener);
+	}
+
+	void onAnalyzeStart(String stockCode) {
+		for (AnalyzeListener listener : mAnalyzeListenerList) {
+			listener.onAnalyzeStart(stockCode);
+		}
+	}
+
+	void onAnalyzeFinish(String stockCode) {
+		for (AnalyzeListener listener : mAnalyzeListenerList) {
+			listener.onAnalyzeFinish(stockCode);
+		}
+	}
+
+	void onDownloadStart(String stockCode) {
+		for (DownloadListener listener : mDownloadListenerList) {
+			listener.onDownloadStart(stockCode);
+		}
+	}
+
+	void onDownloadComplete(String stockCode) {
+		for (DownloadListener listener : mDownloadListenerList) {
+			listener.onDownloadComplete(stockCode);
+		}
 	}
 
 	@NonNull
@@ -791,7 +850,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 				}
 
 				sendBroadcast(Constant.ACTION_RESTART_LOADER, stock.getCode());
-
+				onDownloadStart(stock.getCode());
 				if (TextUtils.equals(stock.getClasses(), Stock.CLASS_A)) {
 					long interval = System.currentTimeMillis() - Setting.getDownloadStock(stock.getSE(), stock.getCode());
 					if (interval > Config.downloadStockInterval) {
@@ -840,9 +899,11 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 					Setting.setStockDataChanged(stock.getSE(), stock.getCode(), true);
 				} else {
 				}
+				onDownloadComplete(stock.getCode());
 
 				if (Setting.getStockDataChanged(stock.getSE(), stock.getCode())) {
 					Setting.setStockDataChanged(stock.getSE(), stock.getCode(), false);
+					onAnalyzeStart(stock.getCode());
 					for (String period : Period.PERIODS) {
 						if (Setting.getPeriod(period)) {
 							mStockAnalyzer.analyze(stock, period);
@@ -850,6 +911,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 					}
 
 					mStockAnalyzer.analyze(stock);
+					onAnalyzeFinish(stock.getCode());
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

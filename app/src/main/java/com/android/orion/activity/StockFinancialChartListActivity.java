@@ -19,9 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
-
-import androidx.annotation.NonNull;
 
 import com.android.orion.R;
 import com.android.orion.chart.ChartSyncHelper;
@@ -31,6 +28,9 @@ import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockFinancial;
+import com.android.orion.interfaces.AnalyzeListener;
+import com.android.orion.interfaces.DownloadListener;
+import com.android.orion.provider.StockDataProvider;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Search;
@@ -44,6 +44,7 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.DefaultYAxisValueFormatter;
 import com.github.mikephil.charting.utils.Utils;
+import com.markupartist.android.widget.PullToRefreshListView;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -52,15 +53,12 @@ import java.util.Comparator;
 import java.util.List;
 
 public class StockFinancialChartListActivity extends BaseActivity implements
-		LoaderManager.LoaderCallbacks<Cursor> {
+		LoaderManager.LoaderCallbacks<Cursor>, AnalyzeListener, DownloadListener  {
 
 	static final int ITEM_VIEW_TYPE_MAIN = 0;
 	static final int ITEM_VIEW_TYPE_SUB = 1;
 	static final int LOADER_ID_STOCK_LIST = 0;
 	static final int LOADER_ID_STOCK_FINANCIAL_LIST = 1;
-	static final int FLING_DISTANCE = 50;
-	static final int FLING_VELOCITY = 100;
-
 	static final int MESSAGE_REFRESH = 0;
 
 	int mStockListIndex = 0;
@@ -69,7 +67,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 	String mSortOrder = null;
 	StockFinancial mStockFinancial = new StockFinancial();
 
-	ListView mListView = null;
+	PullToRefreshListView mListView = null;
 	ArrayList<StockFinancial> mStockFinancialList = new ArrayList<>();
 	StockFinancialChartArrayAdapter mStockFinancialChartArrayAdapter = null;
 	ArrayList<StockFinancialChartItem> mStockFinancialChartItemList = null;
@@ -88,11 +86,10 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 
 			switch (msg.what) {
 				case MESSAGE_REFRESH:
-					mDatabaseManager.deleteStockFinancial(mStock.getId());
-					mDatabaseManager.deleteShareBonus(mStock.getId());
 					Setting.setDownloadStock(mStock.getSE(), mStock.getCode(), 0);
 					mStockDataProvider.download(mStock);
 					restartLoader();
+					mListView.onRefreshComplete();
 					break;
 
 				default:
@@ -136,17 +133,14 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 
 		setContentView(R.layout.activity_stock_financial_chart_list);
 
+		mStock.setId(getIntent().getLongExtra(Constant.EXTRA_STOCK_ID, Stock.INVALID_ID));
+		mSortOrder = getIntent().getStringExtra(Constant.EXTRA_STOCK_LIST_SORT_ORDER);
+
 		initListView();
-
-		mStock.setId(getIntent().getLongExtra(Constant.EXTRA_STOCK_ID,
-				Stock.INVALID_ID));
-
-		mSortOrder = getIntent().getStringExtra(
-				Constant.EXTRA_STOCK_LIST_SORT_ORDER);
-
 		initLoader();
-
 		updateTitle();
+		StockDataProvider.getInstance().registerAnalyzeListener(this);
+		StockDataProvider.getInstance().registerDownloadListener(this);
 	}
 
 	@Override
@@ -158,7 +152,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home: {
 				finish();
@@ -170,6 +164,12 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 			}
 			case R.id.action_next: {
 				navigateStock(1);
+				return true;
+			}
+			case R.id.action_refresh: {
+				mDatabaseManager.deleteStockFinancial(mStock.getId());
+				mDatabaseManager.deleteShareBonus(mStock.getId());
+				mHandler.sendEmptyMessage(MESSAGE_REFRESH);
 				return true;
 			}
 			case R.id.action_edit: {
@@ -186,10 +186,6 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 				Intent intent = new Intent(this, StockDealListActivity.class);
 				intent.putExtras(bundle);
 				startActivity(intent);
-				return true;
-			}
-			case R.id.action_refresh: {
-				mHandler.sendEmptyMessage(MESSAGE_REFRESH);
 				return true;
 			}
 
@@ -214,6 +210,8 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		StockDataProvider.getInstance().unRegisterAnalyzeListener(this);
+		StockDataProvider.getInstance().unRegisterDownloadListener(this);
 	}
 
 	@Override
@@ -298,22 +296,17 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 		mStockFinancialChartArrayAdapter = new StockFinancialChartArrayAdapter(
 				this, mStockFinancialChartItemList);
 		mListView.setAdapter(mStockFinancialChartArrayAdapter);
+		mListView.setOnRefreshListener(new PullToRefreshListView.OnRefreshListener() {
+			@Override
+			public void onRefresh() {
+				mHandler.sendEmptyMessage(MESSAGE_REFRESH);
+			}
+		});
 	}
 
 	void initLoader() {
 		mLoaderManager.initLoader(LOADER_ID_STOCK_LIST, null, this);
 		mLoaderManager.initLoader(LOADER_ID_STOCK_FINANCIAL_LIST, null, this);
-	}
-
-	void restartLoader(Intent intent) {
-		if (intent == null) {
-			return;
-		}
-
-		if (intent.getLongExtra(Constant.EXTRA_STOCK_ID,
-				Stock.INVALID_ID) == mStock.getId()) {
-			restartLoader();
-		}
 	}
 
 	void restartLoader() {
@@ -354,7 +347,6 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 	}
 
 	void updateMenuAction() {
-		int size = 0;
 		if (mMenu == null) {
 			return;
 		}
@@ -362,8 +354,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 		MenuItem actionPrev = mMenu.findItem(R.id.action_prev);
 		MenuItem actionNext = mMenu.findItem(R.id.action_next);
 
-		size = mStockList.size();
-
+		int size = mStockList.size();
 		if (actionPrev != null) {
 			actionPrev.setEnabled(size > 1);
 		}
@@ -646,6 +637,28 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 		mStock = mStockList.get(mStockListIndex);
 
 		restartLoader();
+	}
+
+	@Override
+	public void onAnalyzeStart(String stockCode) {
+	}
+
+	@Override
+	public void onAnalyzeFinish(String stockCode) {
+		if (mStock.getCode().equals(stockCode)) {
+			restartLoader();
+		}
+	}
+
+	@Override
+	public void onDownloadStart(String stockCode) {
+	}
+
+	@Override
+	public void onDownloadComplete(String stockCode) {
+		if (mStock.getCode().equals(stockCode)) {
+			restartLoader();
+		}
 	}
 
 	static class MainHandler extends Handler {
