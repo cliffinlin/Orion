@@ -91,5 +91,4 @@ public class ListActivity extends StorageActivity {
 		mLoadingStockCode = "";
 		restartLoader();
 	}
-
 }

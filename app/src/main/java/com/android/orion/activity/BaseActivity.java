@@ -3,20 +3,16 @@ package com.android.orion.activity;
 import android.Manifest;
 import android.app.Activity;
 import android.app.LoaderManager;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.android.orion.database.Stock;
 import com.android.orion.interfaces.AnalyzeListener;
@@ -25,7 +21,6 @@ import com.android.orion.interfaces.IStockDataProvider;
 import com.android.orion.manager.DatabaseManager;
 import com.android.orion.manager.StockManager;
 import com.android.orion.provider.StockDataProvider;
-import com.android.orion.setting.Constant;
 import com.android.orion.utility.Logger;
 
 import java.util.ArrayList;
@@ -51,32 +46,11 @@ public class BaseActivity extends Activity implements AnalyzeListener, DownloadL
 	StockManager mStockManager = StockManager.getInstance();
 	DatabaseManager mDatabaseManager = DatabaseManager.getInstance();
 	IStockDataProvider mStockDataProvider = StockDataProvider.getInstance();
-//
-//	BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
-//		@Override
-//		public void onReceive(Context context, Intent intent) {
-//			if (intent == null) {
-//				return;
-//			}
-//
-//			if (mResumed) {
-//				String action = intent.getAction();
-//
-//				if (TextUtils.equals(action, Constant.ACTION_RESTART_LOADER)) {
-//					restartLoader(intent);
-//				}
-//			}
-//		}
-//	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mContext = this;
-//		LocalBroadcastManager.getInstance(this).registerReceiver(
-//				mBroadcastReceiver,
-//				new IntentFilter(Constant.ACTION_RESTART_LOADER));
-
 		mIntent = getIntent();
 		if (mIntent != null) {
 			mAction = mIntent.getAction();
@@ -105,9 +79,6 @@ public class BaseActivity extends Activity implements AnalyzeListener, DownloadL
 		super.onDestroy();
 		mStockDataProvider.unRegisterAnalyzeListener(this);
 		mStockDataProvider.unRegisterDownloadListener(this);
-//
-//		LocalBroadcastManager.getInstance(this).unregisterReceiver(
-//				mBroadcastReceiver);
 	}
 
 	@Override
@@ -141,9 +112,6 @@ public class BaseActivity extends Activity implements AnalyzeListener, DownloadL
 			mBundle = mIntent.getExtras();
 		}
 	}
-
-//	void restartLoader(Intent intent) {
-//	}
 
 	void restartLoader() {
 	}

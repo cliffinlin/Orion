@@ -2,7 +2,6 @@ package com.android.orion.activity;
 
 import android.database.ContentObserver;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -72,63 +71,6 @@ public class DatabaseActivity extends BaseActivity {
 		}
 	}
 
-	Long doInBackgroundLoad(Object... params) {
-		return RESULT_SUCCESS;
-	}
-
-	void onPostExecuteLoad(Long result) {
-	}
-
-	Long doInBackgroundSave(Object... params) {
-		return RESULT_SUCCESS;
-	}
-
-	void onPostExecuteSave(Long result) {
-	}
-
-	void startLoadTask(Object... params) {
-		LoadAsyncTask loadAsyncTask = new LoadAsyncTask();
-		loadAsyncTask.execute(params);
-	}
-
-	void startSaveTask(Object... params) {
-		SaveAsyncTask saveAsyncTask = new SaveAsyncTask();
-		saveAsyncTask.execute(params);
-	}
-
-	void onDatabaseChanged(boolean selfChange, Uri uri) {
-	}
-
-	class LoadAsyncTask extends AsyncTask<Object, Integer, Long> {
-
-		@Override
-		protected Long doInBackground(Object... params) {
-			return doInBackgroundLoad(params);
-		}
-
-		@Override
-		protected void onPostExecute(Long result) {
-			super.onPostExecute(result);
-
-			onPostExecuteLoad(result);
-		}
-	}
-
-	class SaveAsyncTask extends AsyncTask<Object, Integer, Long> {
-
-		@Override
-		protected Long doInBackground(Object... params) {
-			return doInBackgroundSave(params);
-		}
-
-		@Override
-		protected void onPostExecute(Long result) {
-			super.onPostExecute(result);
-
-			onPostExecuteSave(result);
-		}
-	}
-
 	class DatabaseContentObserver extends ContentObserver {
 
 		public DatabaseContentObserver(Handler handler) {
@@ -138,8 +80,6 @@ public class DatabaseActivity extends BaseActivity {
 		@Override
 		public void onChange(boolean selfChange, Uri uri) {
 			super.onChange(selfChange, uri);
-
-			onDatabaseChanged(selfChange, uri);
 		}
 	}
 }

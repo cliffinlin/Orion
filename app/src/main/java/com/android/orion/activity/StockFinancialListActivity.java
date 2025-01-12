@@ -30,6 +30,7 @@ import com.android.orion.database.Stock;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Preferences;
+import com.android.orion.utility.Utility;
 import com.android.orion.view.SyncHorizontalScrollView;
 
 public class StockFinancialListActivity extends ListActivity implements
@@ -638,7 +639,8 @@ public class StockFinancialListActivity extends ListActivity implements
 		mLeftAdapter = new SimpleCursorAdapter(this,
 				R.layout.activity_stock_list_left_item, null, mLeftFrom,
 				mLeftTo, 0);
-		if ((mLeftListView != null) && (mLeftAdapter != null)) {
+		if (mLeftListView != null) {
+			mLeftAdapter.setViewBinder(new LeftViewBinder());
 			mLeftListView.setAdapter(mLeftAdapter);
 			mLeftListView.setOnItemClickListener(this);
 			mLeftListView.setOnItemLongClickListener(this);
@@ -646,23 +648,17 @@ public class StockFinancialListActivity extends ListActivity implements
 
 		mRightListView = findViewById(R.id.right_listview);
 		mRightAdapter = new SimpleCursorAdapter(this,
-				R.layout.activity_stock_financial_list_right_item, null,
-				mRightFrom, mRightTo, 0);
-		if ((mRightListView != null) && (mRightAdapter != null)) {
-			mRightAdapter.setViewBinder(new CustomViewBinder());
+				R.layout.activity_stock_financial_list_right_item, null, mRightFrom, mRightTo, 0);
+		if (mRightListView != null) {
+			mRightAdapter.setViewBinder(new RightViewBinder());
 			mRightListView.setAdapter(mRightAdapter);
 			mRightListView.setOnItemClickListener(this);
 			mRightListView.setOnItemLongClickListener(this);
 		}
 	}
 
-//	void restartLoader(Intent intent) {
-//		restartLoader();
-//	}
-
 	void restartLoader() {
-		mLoaderManager
-				.restartLoader(LOADER_ID_STOCK_FINANCIAL_LIST, null, this);
+		mLoaderManager.restartLoader(LOADER_ID_STOCK_FINANCIAL_LIST, null, this);
 	}
 
 	@Override
@@ -775,7 +771,59 @@ public class StockFinancialListActivity extends ListActivity implements
 		return true;
 	}
 
-	private class CustomViewBinder implements SimpleCursorAdapter.ViewBinder {
+	void setLeftViewColor(View view, Cursor cursor) {
+		if ((view == null) || (cursor == null)) {
+			return;
+		}
+
+		String code = cursor.getString(cursor.getColumnIndex(DatabaseContract.COLUMN_CODE));
+		TextView textView = (TextView)view;
+		if (TextUtils.equals(mLoadingStockCode, code)) {
+			textView.setTextColor(Color.RED);
+		} else {
+			textView.setTextColor(Color.GRAY);
+		}
+	}
+
+	void setRightViewColor(View view, Cursor cursor) {
+		if ((view == null) || (cursor == null)) {
+			return;
+		}
+
+		int flag = cursor.getInt(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_FLAG));
+
+		if (Utility.hasFlag(flag, Stock.FLAG_NOTIFY)) {
+			view.setBackgroundColor(Color.rgb(240, 240, 240));
+//			TextView textView = (TextView)view;
+//			textView.setTextColor(Color.RED);
+		}
+
+		TextView textView = (TextView) view;
+		textView.setTextSize(14f);
+	}
+
+	private class LeftViewBinder implements SimpleCursorAdapter.ViewBinder {
+
+		@Override
+		public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+			if ((view == null) || (cursor == null) || (columnIndex == -1)) {
+				return false;
+			}
+
+			if (columnIndex == cursor
+					.getColumnIndex(DatabaseContract.COLUMN_CODE)) {
+				setLeftViewColor(view, cursor);
+			} else if (columnIndex == cursor
+					.getColumnIndex(DatabaseContract.COLUMN_NAME)) {
+				setLeftViewColor(view, cursor);
+			}
+
+			return false;
+		}
+	}
+
+	private class RightViewBinder implements SimpleCursorAdapter.ViewBinder {
 
 		@Override
 		public boolean setViewValue(View view, Cursor cursor, int columnIndex) {

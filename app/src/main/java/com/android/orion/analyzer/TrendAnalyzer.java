@@ -269,11 +269,14 @@ public class TrendAnalyzer {
 	}
 
 	private String updateAction(boolean needUpdate, StockData stockData, String action) {
-		if (!needUpdate || stockData == null) {
+		if (needUpdate) {
+			if (stockData != null) {
+				stockData.setAction(action);
+			}
+			return action;
+		} else {
 			return "";
 		}
-		stockData.setAction(action);
-		return action;
 	}
 
 	private StockData chooseVertex(StockData start, StockData end, int vertexType) {

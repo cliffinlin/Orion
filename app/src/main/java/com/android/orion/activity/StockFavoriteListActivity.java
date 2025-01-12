@@ -418,8 +418,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 
 		mRightListView = findViewById(R.id.right_listview);
 		mRightAdapter = new SimpleCursorAdapter(this,
-				R.layout.activity_stock_list_right_item, null, mRightFrom,
-				mRightTo, 0);
+				R.layout.activity_stock_list_right_item, null, mRightFrom, mRightTo, 0);
 		if (mRightListView != null) {
 			mRightAdapter.setViewBinder(new RightViewBinder());
 			mRightListView.setAdapter(mRightAdapter);

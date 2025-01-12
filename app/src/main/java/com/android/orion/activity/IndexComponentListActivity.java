@@ -428,10 +428,6 @@ public class IndexComponentListActivity extends ListActivity implements
 		}
 	}
 
-//	void restartLoader(Intent intent) {
-//		restartLoader();
-//	}
-
 	void restartLoader() {
 		mLoaderManager.restartLoader(LOADER_ID_INDEX_COMPONENT_LIST, null, this);
 	}

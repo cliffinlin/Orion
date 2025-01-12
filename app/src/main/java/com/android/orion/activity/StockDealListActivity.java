@@ -298,24 +298,6 @@ public class StockDealListActivity extends ListActivity implements
 		}
 	}
 
-	Long doInBackgroundLoad(Object... params) {
-		super.doInBackgroundLoad(params);
-		int execute = (Integer) params[0];
-
-		switch (execute) {
-
-			default:
-				break;
-		}
-
-		return RESULT_SUCCESS;
-	}
-
-	void onPostExecuteLoad(Long result) {
-		super.onPostExecuteLoad(result);
-		mStockDataProvider.download();
-	}
-
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -602,10 +584,6 @@ public class StockDealListActivity extends ListActivity implements
 			mRightListView.setOnItemLongClickListener(this);
 		}
 	}
-
-//	void restartLoader(Intent intent) {
-//		restartLoader();
-//	}
 
 	void restartLoader() {
 		mLoaderManager.restartLoader(LOADER_ID_DEAL_LIST, null, this);

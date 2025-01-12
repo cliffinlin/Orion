@@ -34,7 +34,6 @@ import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.IndexComponent;
 import com.android.orion.database.Stock;
 import com.android.orion.setting.Constant;
-import com.android.orion.setting.Setting;
 import com.android.orion.utility.Utility;
 
 import java.util.ArrayList;
@@ -218,10 +217,6 @@ public class StockListActivity extends DatabaseActivity implements
 	String getSelection() {
 		return null;
 	}
-
-//	void restartLoader(Intent intent) {
-//		restartLoader();
-//	}
 
 	void restartLoader() {
 		mLoaderManager.restartLoader(LOADER_ID_STOCK_LIST, null, this);

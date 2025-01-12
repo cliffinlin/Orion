@@ -14,7 +14,6 @@ import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -36,7 +35,6 @@ import com.github.mikephil.charting.components.YAxis.YAxisLabelPosition;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.DefaultYAxisValueFormatter;
-import com.github.mikephil.charting.listener.ChartTouchListener.ChartGesture;
 import com.github.mikephil.charting.utils.Utils;
 
 import java.lang.ref.WeakReference;
@@ -49,8 +47,6 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 	public static final int ITEM_VIEW_TYPE_MAIN = 0;
 	public static final int ITEM_VIEW_TYPE_SUB = 1;
 	public static final int LOADER_ID_STOCK_LIST = 0;
-	public static final int FLING_DISTANCE = 50;
-	public static final int FLING_VELOCITY = 100;
 	public static final int MESSAGE_REFRESH = 0;
 
 	int mStockListIndex = 0;
@@ -283,10 +279,6 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 		mLoaderManager.initLoader(LOADER_ID_STOCK_LIST, null, this);
 	}
 
-//	void restartLoader(Intent intent) {
-//		restartLoader();
-//	}
-
 	void restartLoader() {
 		mLoaderManager.restartLoader(LOADER_ID_STOCK_LIST, null, this);
 	}
@@ -294,9 +286,6 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 	CursorLoader getStockCursorLoader() {
 		String selection = "";
 		CursorLoader loader = null;
-
-		selection += DatabaseContract.COLUMN_FLAG + " >= "
-				+ Stock.FLAG_FAVORITE;
 
 		loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
 				DatabaseContract.Stock.PROJECTION_ALL, selection, null,
@@ -406,6 +395,26 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 		if (mMainHandler != null) {
 			mMainHandler.sendEmptyMessage(0);
 		}
+	}
+
+	@Override
+	public void onAnalyzeStart(String stockCode) {
+		restartLoader();
+	}
+
+	@Override
+	public void onAnalyzeFinish(String stockCode) {
+		restartLoader();
+	}
+
+	@Override
+	public void onDownloadStart(String stockCode) {
+		restartLoader();
+	}
+
+	@Override
+	public void onDownloadComplete(String stockCode) {
+		restartLoader();
 	}
 
 	static class MainHandler extends Handler {

@@ -2,7 +2,6 @@ package com.android.orion.provider;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Environment;
 import android.os.Handler;
@@ -15,7 +14,6 @@ import android.text.TextUtils;
 import android.util.ArrayMap;
 
 import androidx.annotation.NonNull;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.android.orion.analyzer.StockAnalyzer;
 import com.android.orion.application.MainApplication;
@@ -65,8 +63,6 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 
 	PowerManager mPowerManager;
 	PowerManager.WakeLock mWakeLock;
-	LocalBroadcastManager mLocalBroadcastManager;
-
 	HandlerThread mHandlerThread;
 	ServiceHandler mHandler;
 
@@ -82,8 +78,6 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 				.getSystemService(Context.POWER_SERVICE);
 		mWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
 				Config.TAG + ":" + StockDataProvider.class.getSimpleName());
-		mLocalBroadcastManager = LocalBroadcastManager.getInstance(mContext);
-
 		mHandlerThread = new HandlerThread(StockDataProvider.class.getSimpleName(),
 				Process.THREAD_PRIORITY_BACKGROUND);
 		mHandlerThread.start();
@@ -250,13 +244,6 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			contentValuesList.remove(0);
 		}
 	}
-
-//	private void sendBroadcast(String action, String stockCode) {
-//		Intent intent = new Intent(action);
-//		intent.putExtra(Constant.EXTRA_STOCK_CODE, stockCode);
-//
-//		mLocalBroadcastManager.sendBroadcast(intent);
-//	}
 
 	@Override
 	public void onDestroy() {
