@@ -191,7 +191,7 @@ public class StockData extends DatabaseTable {
 
 	@Override
 	public void set(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -227,7 +227,7 @@ public class StockData extends DatabaseTable {
 	}
 
 	void setStockID(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -244,7 +244,7 @@ public class StockData extends DatabaseTable {
 	}
 
 	void setSE(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -261,7 +261,7 @@ public class StockData extends DatabaseTable {
 	}
 
 	void setCode(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -278,7 +278,7 @@ public class StockData extends DatabaseTable {
 	}
 
 	void setName(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -295,7 +295,7 @@ public class StockData extends DatabaseTable {
 	}
 
 	void setLevel(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -312,7 +312,7 @@ public class StockData extends DatabaseTable {
 	}
 
 	public void setDate(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -329,7 +329,7 @@ public class StockData extends DatabaseTable {
 	}
 
 	void setTime(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -354,7 +354,7 @@ public class StockData extends DatabaseTable {
 	}
 
 	void setPeriod(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -383,7 +383,7 @@ public class StockData extends DatabaseTable {
 	}
 
 	void setAction(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -400,7 +400,7 @@ public class StockData extends DatabaseTable {
 	}
 
 	public void setNaturalRally(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -417,7 +417,7 @@ public class StockData extends DatabaseTable {
 	}
 
 	public void setUpwardTrend(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -434,7 +434,7 @@ public class StockData extends DatabaseTable {
 	}
 
 	public void setDownwardTrend(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -451,7 +451,7 @@ public class StockData extends DatabaseTable {
 	}
 
 	void setNaturalReaction(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 

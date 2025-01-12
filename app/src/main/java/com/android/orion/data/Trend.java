@@ -137,7 +137,7 @@ public class Trend {
 	}
 
 	void setDirection(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 		setDirection(cursor.getInt(cursor
@@ -153,7 +153,7 @@ public class Trend {
 	}
 
 	void setVertex(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 		setVertex(cursor.getInt(cursor
@@ -169,7 +169,7 @@ public class Trend {
 	}
 
 	void setVertexLow(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -186,7 +186,7 @@ public class Trend {
 	}
 
 	void setVertexHigh(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 

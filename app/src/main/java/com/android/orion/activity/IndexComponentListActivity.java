@@ -90,7 +90,6 @@ public class IndexComponentListActivity extends ListActivity implements
 							mStockDataProvider.download(stock);
 						}
 					}
-					restartLoader();
 					break;
 
 				default:
@@ -435,7 +434,6 @@ public class IndexComponentListActivity extends ListActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-
 		restartLoader();
 	}
 

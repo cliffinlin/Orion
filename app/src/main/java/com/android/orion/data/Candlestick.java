@@ -47,7 +47,7 @@ public class Candlestick {
 	}
 
 	public void setOpen(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -64,7 +64,7 @@ public class Candlestick {
 	}
 
 	public void setHigh(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -81,7 +81,7 @@ public class Candlestick {
 	}
 
 	public void setLow(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -98,7 +98,7 @@ public class Candlestick {
 	}
 
 	public void setClose(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 

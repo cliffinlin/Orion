@@ -325,7 +325,7 @@ public class Stock extends DatabaseTable {
 
 	@Override
 	public void set(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -394,7 +394,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	void setClasses(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -411,7 +411,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	public void setSE(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -428,7 +428,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	public void setCode(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -445,7 +445,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	public void setName(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -462,7 +462,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	void setPinyin(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -479,7 +479,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	void setFlag(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -496,7 +496,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	void setPrice(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -513,7 +513,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	void setChange(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -530,7 +530,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	void setNet(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -547,7 +547,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	void setVolume(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -564,7 +564,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	void setValue(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -581,7 +581,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	void setDate(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -598,7 +598,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	void setTime(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -615,7 +615,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	void setThreshold(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -632,7 +632,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	void setHold(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -649,7 +649,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	void setCost(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -666,7 +666,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	void setProfit(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -683,7 +683,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	void setBonus(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -700,7 +700,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	void setValuation(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -717,7 +717,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	void setTotalShare(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -734,7 +734,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	void setMarketValue(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -751,7 +751,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	void setTotalAssets(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -768,7 +768,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	void setTotalLongTermLiabilities(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -786,7 +786,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	void setMainBusinessIncome(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -803,7 +803,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	void setMainBusinessIncomeInYear(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -820,7 +820,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	void setDebtToNetAssetsRatio(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -838,7 +838,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	void setBookValuePerShare(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -855,7 +855,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	void setCashFlowPerShare(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -872,7 +872,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	void setNetProfit(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -889,7 +889,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	void setNetProfitInYear(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -906,7 +906,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	void setNetProfitMargin(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -923,7 +923,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	void setNetProfitPerShare(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -940,7 +940,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	void setNetProfitPerShareInYear(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -958,7 +958,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	void setRate(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -975,7 +975,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	void setRoi(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -992,7 +992,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	void setRoe(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -1009,7 +1009,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	void setPe(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -1026,7 +1026,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	void setPb(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -1043,7 +1043,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	void setDividend(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -1060,7 +1060,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	void setYield(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -1077,7 +1077,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	void setDividendRatio(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -1094,7 +1094,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	void setRDate(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -1111,7 +1111,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	void setStatus(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 

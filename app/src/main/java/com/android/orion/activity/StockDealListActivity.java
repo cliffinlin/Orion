@@ -219,7 +219,6 @@ public class StockDealListActivity extends ListActivity implements
 		@Override
 		public void onChange(boolean selfChange, Uri uri) {
 			super.onChange(selfChange, uri);
-			// restartLoader();
 		}
 
 		@Override
@@ -592,7 +591,6 @@ public class StockDealListActivity extends ListActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-
 		restartLoader();
 	}
 

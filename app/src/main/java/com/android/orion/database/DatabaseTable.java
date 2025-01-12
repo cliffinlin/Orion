@@ -81,7 +81,7 @@ public class DatabaseTable {
 	}
 
 	void set(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -109,7 +109,7 @@ public class DatabaseTable {
 	}
 
 	void setId(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -125,7 +125,7 @@ public class DatabaseTable {
 	}
 
 	public void setCreated(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -142,7 +142,7 @@ public class DatabaseTable {
 	}
 
 	void setModified(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 

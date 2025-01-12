@@ -145,7 +145,7 @@ public class Period {
 	}
 
 	public void setAction(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 		setAction(cursor.getString(cursor

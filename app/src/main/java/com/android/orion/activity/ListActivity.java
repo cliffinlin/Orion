@@ -71,24 +71,20 @@ public class ListActivity extends StorageActivity {
 	@Override
 	public void onAnalyzeStart(String stockCode) {
 		mLoadingStockCode = stockCode;
-		restartLoader();
 	}
 
 	@Override
 	public void onAnalyzeFinish(String stockCode) {
 		mLoadingStockCode = "";
-		restartLoader();
 	}
 
 	@Override
 	public void onDownloadStart(String stockCode) {
 		mLoadingStockCode = stockCode;
-		restartLoader();
 	}
 
 	@Override
 	public void onDownloadComplete(String stockCode) {
 		mLoadingStockCode = "";
-		restartLoader();
 	}
 }

@@ -82,17 +82,17 @@ public class StockFavoriteListActivity extends ListActivity implements
 
 			switch (msg.what) {
 				case MESSAGE_REFRESH:
-					for (int i = 0; i < mStockList.size(); i++) {
-						Stock stock = mStockList.get(i);
-						if (stock != null && (stock.getFlag() >= Stock.FLAG_FAVORITE)) {
+					try {
+						mDatabaseManager.loadStockArrayMap(mStockArrayMap);
+						for (Stock stock : mStockArrayMap.values()) {
 							mDatabaseManager.deleteStockData(stock.getId());
 							Setting.setDownloadStockData(stock.getSE(), stock.getCode(), 0);
 							mStockDataProvider.download(stock);
 						}
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
-					restartLoader();
 					break;
-
 				default:
 					break;
 			}
@@ -463,10 +463,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 				loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
 						DatabaseContract.Stock.PROJECTION_ALL, selection, null,
 						mSortOrder);
-
-				mStockList.clear();
 				break;
-
 			default:
 				break;
 		}
@@ -484,17 +481,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 			case LOADER_ID_STOCK_FAVORITE_LIST:
 				mLeftAdapter.swapCursor(cursor);
 				mRightAdapter.swapCursor(cursor);
-
-				if ((cursor != null) && cursor.getCount() > 0) {
-					cursor.moveToPosition(-1);
-					while (cursor.moveToNext()) {
-						Stock stock = new Stock();
-						stock.set(cursor);
-						mStockList.add(stock);
-					}
-				}
 				break;
-
 			default:
 				break;
 		}
@@ -507,8 +494,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 	public void onLoaderReset(Loader<Cursor> loader) {
 		mLeftAdapter.swapCursor(null);
 		mRightAdapter.swapCursor(null);
-
-		mStockList.clear();
 	}
 
 	@Override

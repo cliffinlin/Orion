@@ -88,7 +88,6 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 				case MESSAGE_REFRESH:
 					Setting.setDownloadStock(mStock.getSE(), mStock.getCode(), 0);
 					mStockDataProvider.download(mStock);
-					restartLoader();
 					mListView.onRefreshComplete();
 					break;
 

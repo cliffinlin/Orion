@@ -134,7 +134,7 @@ public class StockDeal extends DatabaseTable {
 
 	@Override
 	public void set(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -168,7 +168,7 @@ public class StockDeal extends DatabaseTable {
 	}
 
 	void setSE(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -185,7 +185,7 @@ public class StockDeal extends DatabaseTable {
 	}
 
 	void setCode(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -202,7 +202,7 @@ public class StockDeal extends DatabaseTable {
 	}
 
 	void setName(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -219,7 +219,7 @@ public class StockDeal extends DatabaseTable {
 	}
 
 	void setAccount(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -236,7 +236,7 @@ public class StockDeal extends DatabaseTable {
 	}
 
 	void setAction(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -253,7 +253,7 @@ public class StockDeal extends DatabaseTable {
 	}
 
 	void setPrice(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -270,7 +270,7 @@ public class StockDeal extends DatabaseTable {
 	}
 
 	void setNet(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -287,7 +287,7 @@ public class StockDeal extends DatabaseTable {
 	}
 
 	void setBuy(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -304,7 +304,7 @@ public class StockDeal extends DatabaseTable {
 	}
 
 	void setSell(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -321,7 +321,7 @@ public class StockDeal extends DatabaseTable {
 	}
 
 	void setVolume(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -338,7 +338,7 @@ public class StockDeal extends DatabaseTable {
 	}
 
 	void setValue(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -355,7 +355,7 @@ public class StockDeal extends DatabaseTable {
 	}
 
 	void setProfit(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -372,7 +372,7 @@ public class StockDeal extends DatabaseTable {
 	}
 
 	void setFee(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -389,7 +389,7 @@ public class StockDeal extends DatabaseTable {
 	}
 
 	void setBonus(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -406,7 +406,7 @@ public class StockDeal extends DatabaseTable {
 	}
 
 	void setYield(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 

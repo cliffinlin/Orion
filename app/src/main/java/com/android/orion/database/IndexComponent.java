@@ -69,7 +69,7 @@ public class IndexComponent extends DatabaseTable {
 
 	@Override
 	public void set(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -94,7 +94,7 @@ public class IndexComponent extends DatabaseTable {
 	}
 
 	public void setIndexSE(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -111,7 +111,7 @@ public class IndexComponent extends DatabaseTable {
 	}
 
 	public void setIndexCode(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -128,7 +128,7 @@ public class IndexComponent extends DatabaseTable {
 	}
 
 	public void setIndexName(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -145,7 +145,7 @@ public class IndexComponent extends DatabaseTable {
 	}
 
 	public void setSE(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -162,7 +162,7 @@ public class IndexComponent extends DatabaseTable {
 	}
 
 	public void setCode(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -179,7 +179,7 @@ public class IndexComponent extends DatabaseTable {
 	}
 
 	public void setName(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 

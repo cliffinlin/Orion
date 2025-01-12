@@ -61,7 +61,7 @@ public class ShareBonus extends DatabaseTable {
 
 	@Override
 	public void set(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -84,7 +84,7 @@ public class ShareBonus extends DatabaseTable {
 	}
 
 	void setStockID(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -101,7 +101,7 @@ public class ShareBonus extends DatabaseTable {
 	}
 
 	void setDate(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -118,7 +118,7 @@ public class ShareBonus extends DatabaseTable {
 	}
 
 	void setDividend(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -135,7 +135,7 @@ public class ShareBonus extends DatabaseTable {
 	}
 
 	void setRDate(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 

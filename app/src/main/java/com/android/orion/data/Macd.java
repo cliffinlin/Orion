@@ -51,7 +51,7 @@ public class Macd {
 	}
 
 	void setAverage5(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -68,7 +68,7 @@ public class Macd {
 	}
 
 	void setAverage10(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -85,7 +85,7 @@ public class Macd {
 	}
 
 	void setDIF(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -102,7 +102,7 @@ public class Macd {
 	}
 
 	void setDEA(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -119,7 +119,7 @@ public class Macd {
 	}
 
 	void setHistogram(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -136,7 +136,7 @@ public class Macd {
 	}
 
 	void setVelocity(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 

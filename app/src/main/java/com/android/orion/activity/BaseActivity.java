@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.ArrayMap;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -41,6 +42,7 @@ public class BaseActivity extends Activity implements AnalyzeListener, DownloadL
 
 	Stock mStock = new Stock();
 	ArrayList<Stock> mStockList = new ArrayList<>();
+	static ArrayMap<String, Stock> mStockArrayMap = new ArrayMap<>();
 
 	LoaderManager mLoaderManager = getLoaderManager();
 	StockManager mStockManager = StockManager.getInstance();

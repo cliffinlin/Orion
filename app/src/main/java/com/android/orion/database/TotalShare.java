@@ -57,7 +57,7 @@ public class TotalShare extends DatabaseTable {
 
 	@Override
 	public void set(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -79,7 +79,7 @@ public class TotalShare extends DatabaseTable {
 	}
 
 	void setStockID(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -96,7 +96,7 @@ public class TotalShare extends DatabaseTable {
 	}
 
 	void setDate(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -113,7 +113,7 @@ public class TotalShare extends DatabaseTable {
 	}
 
 	void setTotalShare(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 

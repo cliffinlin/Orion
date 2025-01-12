@@ -138,7 +138,7 @@ public class StockFinancial extends DatabaseTable {
 
 	@Override
 	public void set(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -177,7 +177,7 @@ public class StockFinancial extends DatabaseTable {
 	}
 
 	void setStockID(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -194,7 +194,7 @@ public class StockFinancial extends DatabaseTable {
 	}
 
 	void setDate(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -211,7 +211,7 @@ public class StockFinancial extends DatabaseTable {
 	}
 
 	void setBookValuePerShare(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -228,7 +228,7 @@ public class StockFinancial extends DatabaseTable {
 	}
 
 	void setCashFlowPerShare(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -245,7 +245,7 @@ public class StockFinancial extends DatabaseTable {
 	}
 
 	void setTotalCurrentAssets(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -262,7 +262,7 @@ public class StockFinancial extends DatabaseTable {
 	}
 
 	void setTotalAssets(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -279,7 +279,7 @@ public class StockFinancial extends DatabaseTable {
 	}
 
 	void setTotalLongTermLiabilities(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -297,7 +297,7 @@ public class StockFinancial extends DatabaseTable {
 	}
 
 	void setMainBusinessIncome(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -314,7 +314,7 @@ public class StockFinancial extends DatabaseTable {
 	}
 
 	void setMainBusinessIncomeInYear(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -331,7 +331,7 @@ public class StockFinancial extends DatabaseTable {
 	}
 
 	void setFinancialExpenses(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -348,7 +348,7 @@ public class StockFinancial extends DatabaseTable {
 	}
 
 	void setNetProfit(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -365,7 +365,7 @@ public class StockFinancial extends DatabaseTable {
 	}
 
 	void setNetProfitInYear(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -382,7 +382,7 @@ public class StockFinancial extends DatabaseTable {
 	}
 
 	void setNetProfitMargin(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -399,7 +399,7 @@ public class StockFinancial extends DatabaseTable {
 	}
 
 	void setTotalShare(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -416,7 +416,7 @@ public class StockFinancial extends DatabaseTable {
 	}
 
 	void setDebtToNetAssetsRatio(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -434,7 +434,7 @@ public class StockFinancial extends DatabaseTable {
 	}
 
 	void setNetProfitPerShare(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -451,7 +451,7 @@ public class StockFinancial extends DatabaseTable {
 	}
 
 	void setNetProfitPerShareInYear(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -469,7 +469,7 @@ public class StockFinancial extends DatabaseTable {
 	}
 
 	void setRate(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -486,7 +486,7 @@ public class StockFinancial extends DatabaseTable {
 	}
 
 	void setRoe(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
@@ -503,7 +503,7 @@ public class StockFinancial extends DatabaseTable {
 	}
 
 	void setDividendRatio(Cursor cursor) {
-		if (cursor == null) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
