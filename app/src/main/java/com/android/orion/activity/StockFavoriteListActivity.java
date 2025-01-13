@@ -27,9 +27,6 @@ import androidx.annotation.NonNull;
 import com.android.orion.R;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
-import com.android.orion.interfaces.AnalyzeListener;
-import com.android.orion.interfaces.DownloadListener;
-import com.android.orion.provider.StockDataProvider;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Preferences;
@@ -561,7 +558,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 		}
 
 		String code = cursor.getString(cursor.getColumnIndex(DatabaseContract.COLUMN_CODE));
-		TextView textView = (TextView)view;
+		TextView textView = (TextView) view;
 		if (TextUtils.equals(mLoadingStockCode, code)) {
 			textView.setTextColor(Color.RED);
 		} else {

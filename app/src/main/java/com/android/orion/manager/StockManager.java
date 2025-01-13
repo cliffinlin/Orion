@@ -16,10 +16,6 @@ public class StockManager {
 	private StockManager() {
 	}
 
-	private static class SingletonHolder {
-		private static final StockManager INSTANCE = new StockManager();
-	}
-
 	public static StockManager getInstance() {
 		return SingletonHolder.INSTANCE;
 	}
@@ -74,5 +70,9 @@ public class StockManager {
 			return;
 		}
 		mStockListener.remove(listener);
+	}
+
+	private static class SingletonHolder {
+		private static final StockManager INSTANCE = new StockManager();
 	}
 }

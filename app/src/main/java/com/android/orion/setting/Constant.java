@@ -12,7 +12,7 @@ public class Constant {
 	public static final String ACTION_FAVORITE_STOCK_INSERT = "orion.intent.action.ACTION_FAVORITE_STOCK_INSERT";
 	public static final String ACTION_INDEX_COMPONENT_INSERT = "orion.intent.action.ACTION_INDEX_COMPONENT_INSERT";
 	public static final String ACTION_INDEX_COMPONENT_SELECT = "orion.intent.action.ACTION_INDEX_COMPONENT_SELECT";
-//	public static final String ACTION_RESTART_LOADER = "orion.intent.action.RESTART_LOADER";
+	//	public static final String ACTION_RESTART_LOADER = "orion.intent.action.RESTART_LOADER";
 	public static final String ACTION_STOCK_EDIT = "orion.intent.action.ACTION_STOCK_EDIT";
 	public static final String ACTION_STOCK_ID = "orion.intent.action.ACTION_STOCK_ID";
 

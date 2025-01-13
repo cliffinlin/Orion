@@ -761,7 +761,7 @@ public class StockFinancialListActivity extends ListActivity implements
 		}
 
 		String code = cursor.getString(cursor.getColumnIndex(DatabaseContract.COLUMN_CODE));
-		TextView textView = (TextView)view;
+		TextView textView = (TextView) view;
 		if (TextUtils.equals(mLoadingStockCode, code)) {
 			textView.setTextColor(Color.RED);
 		} else {

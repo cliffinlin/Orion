@@ -21,10 +21,6 @@ public class KeyAnalyzer {
 	private KeyAnalyzer() {
 	}
 
-	private static class SingletonHelper {
-		private static final KeyAnalyzer INSTANCE = new KeyAnalyzer();
-	}
-
 	public static KeyAnalyzer getInstance() {
 		return SingletonHelper.INSTANCE;
 	}
@@ -163,7 +159,6 @@ public class KeyAnalyzer {
 		stockData.setNaturalRally(mNaturalRally);
 	}
 
-
 	void setUpwardTrend(StockData stockData) {
 		if (stockData == null) {
 			return;
@@ -182,7 +177,6 @@ public class KeyAnalyzer {
 		stockData.setDownwardTrend(mDownwardTrend);
 	}
 
-
 	void setNaturalReaction(StockData stockData) {
 		if (stockData == null) {
 			return;
@@ -190,5 +184,9 @@ public class KeyAnalyzer {
 
 		mNaturalReaction = stockData.getCandlestick().getLow();
 		stockData.setNaturalReaction(mNaturalReaction);
+	}
+
+	private static class SingletonHelper {
+		private static final KeyAnalyzer INSTANCE = new KeyAnalyzer();
 	}
 }

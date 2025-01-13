@@ -44,10 +44,6 @@ public class ConnectionManager {
 	private ConnectionManager() {
 	}
 
-	private static class SingletonHolder {
-		private static final ConnectionManager INSTANCE = new ConnectionManager();
-	}
-
 	public static ConnectionManager getInstance() {
 		return SingletonHolder.INSTANCE;
 	}
@@ -71,5 +67,9 @@ public class ConnectionManager {
 
 	public void onDisconnected() {
 		mHandler.sendEmptyMessage(MSG_DISCONNECTED);
+	}
+
+	private static class SingletonHolder {
+		private static final ConnectionManager INSTANCE = new ConnectionManager();
 	}
 }

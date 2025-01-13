@@ -21,10 +21,6 @@ public class ReceiverConnection extends BroadcastReceiver {
 	private ReceiverConnection() {
 	}
 
-	private static class SingletonHelper {
-		private static final ReceiverConnection INSTANCE = new ReceiverConnection();
-	}
-
 	public static ReceiverConnection getInstance() {
 		return SingletonHelper.INSTANCE;
 	}
@@ -54,5 +50,9 @@ public class ReceiverConnection extends BroadcastReceiver {
 				ConnectionManager.getInstance().onDisconnected();
 			}
 		}
+	}
+
+	private static class SingletonHelper {
+		private static final ReceiverConnection INSTANCE = new ReceiverConnection();
 	}
 }

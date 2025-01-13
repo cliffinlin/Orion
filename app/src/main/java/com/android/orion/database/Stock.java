@@ -27,25 +27,30 @@ public class Stock extends DatabaseTable {
 
 	public static final long INVALID_ID = 0;
 	public static final double ROI_COEFFICIENT = 10.0;
-
+	static ArrayList<StockFinancial> mStockFinancialList = new ArrayList<>();
+	static ArrayList<TotalShare> mTotalShareList = new ArrayList<>();
+	static ArrayList<ShareBonus> mShareBonusList = new ArrayList<>();
+	private final Period mMin5 = new Period(Period.MIN5);
+	private final Period mMin15 = new Period(Period.MIN15);
+	private final Period mMin30 = new Period(Period.MIN30);
+	private final Period mMin60 = new Period(Period.MIN60);
+	private final Period mDay = new Period(Period.DAY);
+	private final Period mWeek = new Period(Period.WEEK);
+	private final Period mMonth = new Period(Period.MONTH);
 	private int mFlag;
 	private String mClasses;
 	private String mSE;
 	private String mCode;
 	private String mName;
 	private String mPinyin;
-
 	private double mPrice;
 	private double mChange;
 	private double mNet;
 	private long mVolume;
 	private long mValue;
-
 	private String mDate;
 	private String mTime;
-
 	private double mThreshold;
-
 	private long mHold;
 	private double mCost;
 	private double mProfit;
@@ -75,18 +80,6 @@ public class Stock extends DatabaseTable {
 	private double mDividendRatio;
 	private String mRDate;
 	private String mStatus;
-
-	static ArrayList<StockFinancial> mStockFinancialList = new ArrayList<>();
-	static ArrayList<TotalShare> mTotalShareList = new ArrayList<>();
-	static ArrayList<ShareBonus> mShareBonusList = new ArrayList<>();
-
-	private final Period mMin5 = new Period(Period.MIN5);
-	private final Period mMin15 = new Period(Period.MIN15);
-	private final Period mMin30 = new Period(Period.MIN30);
-	private final Period mMin60 = new Period(Period.MIN60);
-	private final Period mDay = new Period(Period.DAY);
-	private final Period mWeek = new Period(Period.WEEK);
-	private final Period mMonth = new Period(Period.MONTH);
 
 	public Stock() {
 		init();

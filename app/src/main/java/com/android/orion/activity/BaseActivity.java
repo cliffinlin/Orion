@@ -31,19 +31,15 @@ public class BaseActivity extends Activity implements AnalyzeListener, DownloadL
 	private static final int REQUEST_EXTERNAL_STORAGE = 1;
 	private static final String[] PERMISSIONS_STORAGE = {"android.permission.READ_EXTERNAL_STORAGE",
 			"android.permission.WRITE_EXTERNAL_STORAGE"};
-
+	static ArrayMap<String, Stock> mStockArrayMap = new ArrayMap<>();
 	Logger Log = Logger.getLogger();
-
 	boolean mResumed = false;
 	Context mContext = null;
 	Bundle mBundle = null;
 	String mAction = null;
 	Intent mIntent = null;
-
 	Stock mStock = new Stock();
 	ArrayList<Stock> mStockList = new ArrayList<>();
-	static ArrayMap<String, Stock> mStockArrayMap = new ArrayMap<>();
-
 	LoaderManager mLoaderManager = getLoaderManager();
 	StockManager mStockManager = StockManager.getInstance();
 	DatabaseManager mDatabaseManager = DatabaseManager.getInstance();

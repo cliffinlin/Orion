@@ -101,6 +101,52 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		return mInstance;
 	}
 
+	@NonNull
+	public static ArrayList<String> getDatetimeMin15List() {
+		ArrayList<String> datetimeList = new ArrayList<>();
+		datetimeList.add("09:45:00");
+		datetimeList.add("10:00:00");
+		datetimeList.add("10:15:00");
+		datetimeList.add("10:30:00");
+		datetimeList.add("10:45:00");
+		datetimeList.add("11:00:00");
+		datetimeList.add("11:15:00");
+		datetimeList.add("11:30:00");
+		datetimeList.add("13:15:00");
+		datetimeList.add("13:30:00");
+		datetimeList.add("13:45:00");
+		datetimeList.add("14:00:00");
+		datetimeList.add("14:15:00");
+		datetimeList.add("14:30:00");
+		datetimeList.add("14:45:00");
+		datetimeList.add("15:00:00");
+		return datetimeList;
+	}
+
+	@NonNull
+	public static ArrayList<String> getDatetimeMinL30ist() {
+		ArrayList<String> datetimeList = new ArrayList<>();
+		datetimeList.add("10:00:00");
+		datetimeList.add("10:30:00");
+		datetimeList.add("11:00:00");
+		datetimeList.add("11:30:00");
+		datetimeList.add("13:30:00");
+		datetimeList.add("14:00:00");
+		datetimeList.add("14:30:00");
+		datetimeList.add("15:00:00");
+		return datetimeList;
+	}
+
+	@NonNull
+	public static ArrayList<String> getDatetimeMin60List() {
+		ArrayList<String> datetimeList = new ArrayList<>();
+		datetimeList.add("10:30:00");
+		datetimeList.add("11:30:00");
+		datetimeList.add("14:00:00");
+		datetimeList.add("15:00:00");
+		return datetimeList;
+	}
+
 	@Override
 	public void registerAnalyzeListener(AnalyzeListener listener) {
 		if (listener == null) {
@@ -153,52 +199,6 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		for (DownloadListener listener : mDownloadListenerList) {
 			listener.onDownloadComplete(stockCode);
 		}
-	}
-
-	@NonNull
-	public static ArrayList<String> getDatetimeMin15List() {
-		ArrayList<String> datetimeList = new ArrayList<>();
-		datetimeList.add("09:45:00");
-		datetimeList.add("10:00:00");
-		datetimeList.add("10:15:00");
-		datetimeList.add("10:30:00");
-		datetimeList.add("10:45:00");
-		datetimeList.add("11:00:00");
-		datetimeList.add("11:15:00");
-		datetimeList.add("11:30:00");
-		datetimeList.add("13:15:00");
-		datetimeList.add("13:30:00");
-		datetimeList.add("13:45:00");
-		datetimeList.add("14:00:00");
-		datetimeList.add("14:15:00");
-		datetimeList.add("14:30:00");
-		datetimeList.add("14:45:00");
-		datetimeList.add("15:00:00");
-		return datetimeList;
-	}
-
-	@NonNull
-	public static ArrayList<String> getDatetimeMinL30ist() {
-		ArrayList<String> datetimeList = new ArrayList<>();
-		datetimeList.add("10:00:00");
-		datetimeList.add("10:30:00");
-		datetimeList.add("11:00:00");
-		datetimeList.add("11:30:00");
-		datetimeList.add("13:30:00");
-		datetimeList.add("14:00:00");
-		datetimeList.add("14:30:00");
-		datetimeList.add("15:00:00");
-		return datetimeList;
-	}
-
-	@NonNull
-	public static ArrayList<String> getDatetimeMin60List() {
-		ArrayList<String> datetimeList = new ArrayList<>();
-		datetimeList.add("10:30:00");
-		datetimeList.add("11:30:00");
-		datetimeList.add("14:00:00");
-		datetimeList.add("15:00:00");
-		return datetimeList;
 	}
 
 	public void acquireWakeLock() {

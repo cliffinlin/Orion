@@ -3,7 +3,6 @@ package com.android.orion.chart;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.text.TextUtils;
 
 import com.android.orion.data.Trend;
 import com.android.orion.database.Stock;

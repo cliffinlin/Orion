@@ -78,10 +78,6 @@ public class SinaFinance extends StockDataProvider {
 		mRequestHeader.put(SINA_FINANCE_HEAD_REFERER_KEY, SINA_FINANCE_HEAD_REFERER_VALUE);
 	}
 
-	private static class InstanceHolder {
-		private static final IStockDataProvider INSTANCE = new SinaFinance();
-	}
-
 	public static IStockDataProvider getInstance() {
 		return InstanceHolder.INSTANCE;
 	}
@@ -1707,6 +1703,10 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		return result;
+	}
+
+	private static class InstanceHolder {
+		private static final IStockDataProvider INSTANCE = new SinaFinance();
 	}
 
 	public class StockInfo {

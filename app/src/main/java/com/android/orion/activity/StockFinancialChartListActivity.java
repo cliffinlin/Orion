@@ -28,9 +28,6 @@ import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockFinancial;
-import com.android.orion.interfaces.AnalyzeListener;
-import com.android.orion.interfaces.DownloadListener;
-import com.android.orion.provider.StockDataProvider;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Search;
@@ -53,7 +50,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class StockFinancialChartListActivity extends BaseActivity implements
-		LoaderManager.LoaderCallbacks<Cursor>  {
+		LoaderManager.LoaderCallbacks<Cursor> {
 
 	static final int ITEM_VIEW_TYPE_MAIN = 0;
 	static final int ITEM_VIEW_TYPE_SUB = 1;

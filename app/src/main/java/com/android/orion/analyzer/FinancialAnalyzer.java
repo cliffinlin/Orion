@@ -7,7 +7,6 @@ import com.android.orion.application.MainApplication;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
-import com.android.orion.database.StockData;
 import com.android.orion.database.StockFinancial;
 import com.android.orion.database.TotalShare;
 import com.android.orion.manager.DatabaseManager;
@@ -29,10 +28,6 @@ public class FinancialAnalyzer {
 	private FinancialAnalyzer() {
 		mContext = MainApplication.getContext();
 		mDatabaseManager = DatabaseManager.getInstance();
-	}
-
-	private static class Holder {
-		private static final FinancialAnalyzer INSTANCE = new FinancialAnalyzer();
 	}
 
 	public static FinancialAnalyzer getInstance() {
@@ -286,5 +281,9 @@ public class FinancialAnalyzer {
 			prevYearString = yearString;
 			i++;
 		}
+	}
+
+	private static class Holder {
+		private static final FinancialAnalyzer INSTANCE = new FinancialAnalyzer();
 	}
 }

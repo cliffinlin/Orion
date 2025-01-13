@@ -17,12 +17,8 @@ import com.android.orion.config.Config;
 import com.android.orion.data.Macd;
 import com.android.orion.data.Period;
 import com.android.orion.data.Trend;
-import com.android.orion.database.DatabaseContract;
-import com.android.orion.database.ShareBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
-import com.android.orion.database.StockFinancial;
-import com.android.orion.database.TotalShare;
 import com.android.orion.manager.DatabaseManager;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
@@ -255,11 +251,6 @@ public class StockAnalyzer {
 	}
 
 	String getOperateAction() {
-		Trend dataTrend = StockData.getLastTrend(mStockDataList, 1);
-		if (dataTrend == null || dataTrend.vertexOf(Trend.VERTEX_NONE)) {
-			return "";
-		}
-
 		Trend drawTrend = StockData.getLastTrend(mDrawVertexList, 1);
 		if (drawTrend == null) {
 			return "";
@@ -278,20 +269,90 @@ public class StockAnalyzer {
 		StringBuilder builder = new StringBuilder();
 		if (drawTrend.vertexOf(Trend.VERTEX_BOTTOM)) {
 			if (strokeTrend.vertexOf(Trend.VERTEX_BOTTOM_STROKE)) {
-				builder.append(Trend.MARK_BUY2);
 				if (segmentTrend.vertexOf(Trend.VERTEX_BOTTOM_SEGMENT)) {
-					builder.append(Trend.MARK_BUY2);
+					if (isOperateType1()) {
+						builder.append(Trend.MARK_BUY1);
+						builder.append(Trend.MARK_BUY1);
+					} else if (isOperateType2()){
+						builder.append(Trend.MARK_BUY2);
+						builder.append(Trend.MARK_BUY2);
+					}
 				}
 			}
 		} else if (drawTrend.vertexOf(Trend.VERTEX_TOP)) {
 			if (strokeTrend.vertexOf(Trend.VERTEX_TOP_STROKE)) {
-				builder.append(Trend.MARK_SELL2);
 				if (segmentTrend.vertexOf(Trend.VERTEX_TOP_SEGMENT)) {
-					builder.append(Trend.MARK_SELL2);
+					if (isOperateType1()) {
+						builder.append(Trend.MARK_SELL1);
+						builder.append(Trend.MARK_SELL1);
+					} else if (isOperateType2()){
+						builder.append(Trend.MARK_SELL2);
+						builder.append(Trend.MARK_SELL2);
+					}
 				}
 			}
 		}
 		return builder.toString();
+	}
+
+	boolean isOperateType1() {
+		boolean result = false;
+
+		Trend drawTrend = StockData.getLastTrend(mDrawVertexList, 1);
+		if (drawTrend == null) {
+			return result;
+		}
+
+		Trend strokeTrend = StockData.getLastTrend(mStrokeVertexList, 1);
+		if (strokeTrend == null) {
+			return result;
+		}
+
+		Trend segmentTrend = StockData.getLastTrend(mSegmentVertexList, 1);
+		if (segmentTrend == null) {
+			return result;
+		}
+
+		if (strokeTrend.getIndexStart() == segmentTrend.getIndexStart()) {
+			result = true;
+		}
+
+		return result;
+	}
+
+	boolean isOperateType2() {
+		boolean result = false;
+
+		Trend drawTrend1 = StockData.getLastTrend(mDrawVertexList, 1);
+		if (drawTrend1 == null) {
+			return result;
+		}
+
+		Trend drawTrend3 = StockData.getLastTrend(mDrawVertexList, 3);
+		if (drawTrend3 == null) {
+			return result;
+		}
+
+		Trend strokeTrend1 = StockData.getLastTrend(mStrokeVertexList, 1);
+		if (strokeTrend1 == null) {
+			return result;
+		}
+
+		Trend strokeTrend3 = StockData.getLastTrend(mStrokeVertexList, 3);
+		if (strokeTrend3 == null) {
+			return result;
+		}
+
+		Trend segmentTrend = StockData.getLastTrend(mSegmentVertexList, 1);
+		if (segmentTrend == null) {
+			return result;
+		}
+
+		if (drawTrend1.getIndexStart() == strokeTrend1.getIndexStart() || drawTrend3.getIndexStart() == strokeTrend1.getIndexStart()) {
+			result = true;
+		}
+
+		return result;
 	}
 
 	protected void updateNotification(Stock stock) {

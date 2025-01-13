@@ -12,10 +12,6 @@ public class TrendAnalyzer {
 	private TrendAnalyzer() {
 	}
 
-	private static class Holder {
-		private static final TrendAnalyzer INSTANCE = new TrendAnalyzer();
-	}
-
 	public static TrendAnalyzer getInstance() {
 		return Holder.INSTANCE;
 	}
@@ -432,5 +428,9 @@ public class TrendAnalyzer {
 			StockData stockData = stockDataList.get(i);
 			Log.d(i + "-->" + stockData.getTrend().getVertex() + " " + stockData.getTrend().getDirection() + " " + stockData.getDateTime());
 		}
+	}
+
+	private static class Holder {
+		private static final TrendAnalyzer INSTANCE = new TrendAnalyzer();
 	}
 }
