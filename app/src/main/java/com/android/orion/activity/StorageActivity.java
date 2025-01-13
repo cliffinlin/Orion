@@ -61,6 +61,11 @@ public class StorageActivity extends DatabaseActivity {
 		super.onDestroy();
 	}
 
+	@Override
+	protected void onPause() {
+		super.onPause();
+	}
+
 	Handler mHandler = new Handler(Looper.getMainLooper()) {
 
 		@Override
@@ -95,11 +100,6 @@ public class StorageActivity extends DatabaseActivity {
 			}
 		}
 	};
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-	}
 
 	@Override
 	protected void onResume() {
@@ -534,6 +534,8 @@ public class StorageActivity extends DatabaseActivity {
 			e.printStackTrace();
 		}
 	}
+
+
 
 
 }

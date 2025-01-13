@@ -61,10 +61,6 @@ public class StockAnalyzer {
 		mFinancialAnalyzer = FinancialAnalyzer.getInstance();
 	}
 
-	private static class SingletonHolder {
-		private static final StockAnalyzer INSTANCE = new StockAnalyzer();
-	}
-
 	public static StockAnalyzer getInstance() {
 		return SingletonHolder.INSTANCE;
 	}
@@ -273,7 +269,7 @@ public class StockAnalyzer {
 					if (isOperateType1()) {
 						builder.append(Trend.MARK_BUY1);
 						builder.append(Trend.MARK_BUY1);
-					} else if (isOperateType2()){
+					} else if (isOperateType2()) {
 						builder.append(Trend.MARK_BUY2);
 						builder.append(Trend.MARK_BUY2);
 					}
@@ -285,7 +281,7 @@ public class StockAnalyzer {
 					if (isOperateType1()) {
 						builder.append(Trend.MARK_SELL1);
 						builder.append(Trend.MARK_SELL1);
-					} else if (isOperateType2()){
+					} else if (isOperateType2()) {
 						builder.append(Trend.MARK_SELL2);
 						builder.append(Trend.MARK_SELL2);
 					}
@@ -463,5 +459,9 @@ public class StockAnalyzer {
 		}
 
 		mNotificationManager.notify(id, notificationBuilder.build());
+	}
+
+	private static class SingletonHolder {
+		private static final StockAnalyzer INSTANCE = new StockAnalyzer();
 	}
 }
