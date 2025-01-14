@@ -248,44 +248,33 @@ public class StockAnalyzer {
 
 	String getOperateAction() {
 		Trend drawTrend = StockData.getLastTrend(mDrawVertexList, 1);
-		if (drawTrend == null) {
-			return "";
-		}
-
 		Trend strokeTrend = StockData.getLastTrend(mStrokeVertexList, 1);
-		if (strokeTrend == null) {
-			return "";
-		}
-
 		Trend segmentTrend = StockData.getLastTrend(mSegmentVertexList, 1);
-		if (segmentTrend == null) {
+
+		if (drawTrend == null || strokeTrend == null || segmentTrend == null) {
 			return "";
 		}
 
 		StringBuilder builder = new StringBuilder();
-		if (drawTrend.vertexOf(Trend.VERTEX_BOTTOM)) {
-			if (strokeTrend.vertexOf(Trend.VERTEX_BOTTOM_STROKE)) {
-				if (segmentTrend.vertexOf(Trend.VERTEX_BOTTOM_SEGMENT)) {
-					if (isOperateType1()) {
-						builder.append(Trend.MARK_BUY1);
-						builder.append(Trend.MARK_BUY1);
-					} else if (isOperateType2()) {
-						builder.append(Trend.MARK_BUY2);
-						builder.append(Trend.MARK_BUY2);
-					}
-				}
+		if (drawTrend.vertexOf(Trend.VERTEX_BOTTOM)
+				&& strokeTrend.vertexOf(Trend.VERTEX_BOTTOM_STROKE)
+				&& segmentTrend.vertexOf(Trend.VERTEX_BOTTOM_SEGMENT)) {
+			if (isOperateType1()) {
+				builder.append(Trend.MARK_BUY1);
+				builder.append(Trend.MARK_BUY1);
+			} else if (isOperateType2()) {
+				builder.append(Trend.MARK_BUY2);
+				builder.append(Trend.MARK_BUY2);
 			}
-		} else if (drawTrend.vertexOf(Trend.VERTEX_TOP)) {
-			if (strokeTrend.vertexOf(Trend.VERTEX_TOP_STROKE)) {
-				if (segmentTrend.vertexOf(Trend.VERTEX_TOP_SEGMENT)) {
-					if (isOperateType1()) {
-						builder.append(Trend.MARK_SELL1);
-						builder.append(Trend.MARK_SELL1);
-					} else if (isOperateType2()) {
-						builder.append(Trend.MARK_SELL2);
-						builder.append(Trend.MARK_SELL2);
-					}
-				}
+		} else if (drawTrend.vertexOf(Trend.VERTEX_TOP)
+				&& strokeTrend.vertexOf(Trend.VERTEX_TOP_STROKE)
+				&& segmentTrend.vertexOf(Trend.VERTEX_TOP_SEGMENT)) {
+			if (isOperateType1()) {
+				builder.append(Trend.MARK_SELL1);
+				builder.append(Trend.MARK_SELL1);
+			} else if (isOperateType2()) {
+				builder.append(Trend.MARK_SELL2);
+				builder.append(Trend.MARK_SELL2);
 			}
 		}
 		return builder.toString();
@@ -294,23 +283,22 @@ public class StockAnalyzer {
 	boolean isOperateType1() {
 		boolean result = false;
 
+		StockData stockData = StockData.getLast(mStockDataList, 0);
 		Trend drawTrend = StockData.getLastTrend(mDrawVertexList, 1);
-		if (drawTrend == null) {
-			return result;
-		}
-
 		Trend strokeTrend = StockData.getLastTrend(mStrokeVertexList, 1);
-		if (strokeTrend == null) {
-			return result;
-		}
-
 		Trend segmentTrend = StockData.getLastTrend(mSegmentVertexList, 1);
-		if (segmentTrend == null) {
+
+		if (stockData == null || drawTrend == null || strokeTrend == null || segmentTrend == null) {
 			return result;
 		}
 
 		if (strokeTrend.getIndexStart() == segmentTrend.getIndexStart()) {
-			result = true;
+			if (TextUtils.equals(stockData.getAction(), Trend.TREND_TYPE_DOWN_NONE_UP) || TextUtils.equals(stockData.getAction(), Trend.TREND_TYPE_UP_NONE_DOWN)) {
+				result = true;
+			}
+			if (drawTrend.getIndexStart() == strokeTrend.getIndexStart()) {
+				result = true;
+			}
 		}
 
 		return result;
@@ -319,33 +307,24 @@ public class StockAnalyzer {
 	boolean isOperateType2() {
 		boolean result = false;
 
+		StockData stockData = StockData.getLast(mStockDataList, 0);
 		Trend drawTrend1 = StockData.getLastTrend(mDrawVertexList, 1);
-		if (drawTrend1 == null) {
-			return result;
-		}
-
 		Trend drawTrend3 = StockData.getLastTrend(mDrawVertexList, 3);
-		if (drawTrend3 == null) {
-			return result;
-		}
-
 		Trend strokeTrend1 = StockData.getLastTrend(mStrokeVertexList, 1);
-		if (strokeTrend1 == null) {
-			return result;
-		}
-
 		Trend strokeTrend3 = StockData.getLastTrend(mStrokeVertexList, 3);
-		if (strokeTrend3 == null) {
-			return result;
-		}
-
 		Trend segmentTrend = StockData.getLastTrend(mSegmentVertexList, 1);
-		if (segmentTrend == null) {
+
+		if (stockData == null || drawTrend1 == null || drawTrend3 == null || strokeTrend1 == null || strokeTrend3 == null || segmentTrend == null) {
 			return result;
 		}
 
-		if (drawTrend1.getIndexStart() == strokeTrend1.getIndexStart() || drawTrend3.getIndexStart() == strokeTrend1.getIndexStart()) {
-			result = true;
+		if (strokeTrend3.getIndexStart() == segmentTrend.getIndexStart()) {
+			if (TextUtils.equals(stockData.getAction(), Trend.TREND_TYPE_DOWN_NONE_UP) || TextUtils.equals(stockData.getAction(), Trend.TREND_TYPE_UP_NONE_DOWN)) {
+				result = true;
+			}
+			if (drawTrend1.getIndexStart() == strokeTrend1.getIndexStart()) {
+				result = true;
+			}
 		}
 
 		return result;
