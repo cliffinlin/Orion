@@ -836,7 +836,6 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 					return;
 				}
 
-//				sendBroadcast(Constant.ACTION_RESTART_LOADER, stock.getCode());
 
 				onDownloadStart(stock.getCode());
 				if (TextUtils.equals(stock.getClasses(), Stock.CLASS_A)) {
@@ -904,7 +903,6 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {
-//				sendBroadcast(Constant.ACTION_RESTART_LOADER, "");
 				releaseWakeLock();
 			}
 		}

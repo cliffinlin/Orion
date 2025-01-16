@@ -3,10 +3,13 @@ package com.android.orion.chart;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.text.TextUtils;
 
 import com.android.orion.data.Trend;
 import com.android.orion.database.Stock;
+import com.android.orion.database.StockData;
 import com.android.orion.database.StockDeal;
+import com.android.orion.database.StockQuant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Utility;
 import com.github.mikephil.charting.components.LimitLine;
@@ -335,9 +338,9 @@ public class StockDataChart {
 		return limitLine;
 	}
 
-	public void updateLimitLines(Stock stock, ArrayList<StockDeal> stockDealList,
-	                             boolean keyDisplayLatest, boolean keyDisplayCost, boolean keyDisplayDeal) {
-		if (stock == null || stockDealList == null) {
+	public void updateLimitLines(Stock stock, ArrayList<StockDeal> stockDealList, ArrayList<StockQuant> stockQuantList,
+								 boolean keyDisplayLatest, boolean keyDisplayCost, boolean keyDisplayDeal, boolean keyDisplayQuant) {
+		if (stock == null || stockDealList == null || stockQuantList == null) {
 			return;
 		}
 
@@ -350,6 +353,7 @@ public class StockDataChart {
 		updateLatestLimitLine(stock, stockDealList, keyDisplayLatest);
 		updateCostLimitLine(stock, stockDealList, keyDisplayCost);
 		updateDealLimitLine(stock, stockDealList, keyDisplayDeal);
+		updateQuantLimitLine(stock, stockQuantList, keyDisplayQuant);
 	}
 
 	void updateLatestLimitLine(Stock stock, ArrayList<StockDeal> stockDealList, boolean keyDisplayLatest) {
@@ -417,7 +421,7 @@ public class StockDataChart {
 	}
 
 	void updateDealLimitLine(Stock stock, ArrayList<StockDeal> stockDealList,
-	                         boolean keyDisplayDeal) {
+							 boolean keyDisplayDeal) {
 		double limit = 0;
 		int color = Color.WHITE;
 		String label = "";
@@ -467,6 +471,57 @@ public class StockDataChart {
 		}
 	}
 
+	void updateQuantLimitLine(Stock stock, ArrayList<StockQuant> stockQuantList,
+							  boolean keyDisplayDeal) {
+		double limit = 0;
+		int color = Color.WHITE;
+		String label = "";
+		LimitLine limitLineQuant = new LimitLine(0);
+
+		if (stock == null || stockQuantList == null) {
+			return;
+		}
+
+		if (mXLimitLineList == null) {
+			return;
+		}
+
+		if (!keyDisplayDeal) {
+			return;
+		}
+
+		for (StockQuant stockQuant : stockQuantList) {
+			if ((stockQuant.getBuy() > 0) && (stockQuant.getSell() > 0)) {
+				limit = stockQuant.getBuy();
+			} else if (stockQuant.getBuy() > 0) {
+				limit = stockQuant.getBuy();
+			} else if (stockQuant.getSell() > 0) {
+				limit = stockQuant.getSell();
+			}
+
+			if (stockQuant.getProfit() > 0) {
+				color = Color.RED;
+			} else {
+				color = Color.GREEN;
+			}
+
+			if (stockQuant.getVolume() <= 0) {
+				color = Color.YELLOW;
+			}
+
+			label = "               "
+					+ "  " + limit
+					+ "  " + stockQuant.getVolume()
+					+ "  " + (int) stockQuant.getProfit()
+					+ "  " + stockQuant.getNet() + "%"
+					+ "  " + stockQuant.getCreated()
+					+ "  " + StockData.MARK_QUANT;
+
+			limitLineQuant = createLimitLine(limit, color, label);
+
+			mXLimitLineList.add(limitLineQuant);
+		}
+	}
 	public void clear() {
 		mXValues.clear();
 

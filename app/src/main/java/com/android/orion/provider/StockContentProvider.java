@@ -41,6 +41,9 @@ public class StockContentProvider extends ContentProvider {
 	private static final int INDEX_COMPONENT = 700;
 	private static final int INDEX_COMPONENT_ID = 701;
 
+	private static final int STOCK_QUANT = 800;
+	private static final int STOCK_QUANT_ID = 801;
+
 	private static final UriMatcher mUriMatcher = new UriMatcher(
 			UriMatcher.NO_MATCH);
 
@@ -80,6 +83,11 @@ public class StockContentProvider extends ContentProvider {
 				DatabaseContract.IndexComponent.TABLE_NAME, INDEX_COMPONENT);
 		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
 				DatabaseContract.IndexComponent.TABLE_NAME + "/#", INDEX_COMPONENT_ID);
+
+		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
+				DatabaseContract.StockQuant.TABLE_NAME, STOCK_QUANT);
+		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
+				DatabaseContract.StockQuant.TABLE_NAME + "/#", STOCK_QUANT_ID);
 	}
 
 	ContentResolver mContentResolver;
@@ -148,6 +156,13 @@ public class StockContentProvider extends ContentProvider {
 			case INDEX_COMPONENT_ID:
 				type = DatabaseContract.IndexComponent.CONTENT_ITEM_TYPE;
 				break;
+
+			case STOCK_QUANT:
+				type = DatabaseContract.StockQuant.CONTENT_TYPE;
+				break;
+			case STOCK_QUANT_ID:
+				type = DatabaseContract.StockQuant.CONTENT_ITEM_TYPE;
+				break;
 			default:
 				break;
 		}
@@ -157,7 +172,7 @@ public class StockContentProvider extends ContentProvider {
 
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection,
-	                    String[] selectionArgs, String sortOrder) {
+						String[] selectionArgs, String sortOrder) {
 		Cursor cursor = null;
 
 		if (mDatabaseManager == null) {
@@ -233,6 +248,15 @@ public class StockContentProvider extends ContentProvider {
 				builder.appendWhere(BaseColumns._ID + " = "
 						+ uri.getLastPathSegment());
 				break;
+
+			case STOCK_QUANT:
+				builder.setTables(DatabaseContract.StockQuant.TABLE_NAME);
+				break;
+			case STOCK_QUANT_ID:
+				builder.setTables(DatabaseContract.StockQuant.TABLE_NAME);
+				builder.appendWhere(BaseColumns._ID + " = "
+						+ uri.getLastPathSegment());
+				break;
 			default:
 				break;
 		}
@@ -297,6 +321,11 @@ public class StockContentProvider extends ContentProvider {
 				id = mDatabaseManager.mDatabase.insert(
 						DatabaseContract.IndexComponent.TABLE_NAME, null, contentValues);
 				break;
+
+			case STOCK_QUANT:
+				id = mDatabaseManager.mDatabase.insert(
+						DatabaseContract.StockQuant.TABLE_NAME, null, contentValues);
+				break;
 			default:
 				break;
 		}
@@ -354,7 +383,7 @@ public class StockContentProvider extends ContentProvider {
 
 	@Override
 	public int update(Uri uri, ContentValues values, String selection,
-	                  String[] selectionArgs) {
+					  String[] selectionArgs) {
 		int result = 0;
 		String whereClause;
 
@@ -469,6 +498,21 @@ public class StockContentProvider extends ContentProvider {
 				}
 				result = mDatabaseManager.mDatabase.update(
 						DatabaseContract.IndexComponent.TABLE_NAME, values, whereClause,
+						selectionArgs);
+				break;
+
+			case STOCK_QUANT:
+				result = mDatabaseManager.mDatabase.update(
+						DatabaseContract.StockQuant.TABLE_NAME, values, selection,
+						selectionArgs);
+				break;
+			case STOCK_QUANT_ID:
+				whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
+				if (!TextUtils.isEmpty(selection)) {
+					whereClause += " AND " + whereClause;
+				}
+				result = mDatabaseManager.mDatabase.update(
+						DatabaseContract.StockQuant.TABLE_NAME, values, whereClause,
 						selectionArgs);
 				break;
 			default:
@@ -605,6 +649,22 @@ public class StockContentProvider extends ContentProvider {
 				result = mDatabaseManager.mDatabase
 						.delete(DatabaseContract.IndexComponent.TABLE_NAME, whereClause,
 								selectionArgs);
+				break;
+
+			case STOCK_QUANT:
+				result = mDatabaseManager.mDatabase.delete(
+						DatabaseContract.StockQuant.TABLE_NAME, selection,
+						selectionArgs);
+				break;
+
+			case STOCK_QUANT_ID:
+				whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
+				if (!TextUtils.isEmpty(selection)) {
+					whereClause += " AND " + whereClause;
+				}
+				result = mDatabaseManager.mDatabase.delete(
+						DatabaseContract.StockQuant.TABLE_NAME, whereClause,
+						selectionArgs);
 				break;
 			default:
 				break;
