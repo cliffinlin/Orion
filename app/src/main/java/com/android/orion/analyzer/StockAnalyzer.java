@@ -284,19 +284,20 @@ public class StockAnalyzer {
 		boolean result = false;
 
 		StockData stockData = StockData.getLast(mStockDataList, 0);
-		Trend drawTrend = StockData.getLastTrend(mDrawVertexList, 1);
+		Trend drawTrend1 = StockData.getLastTrend(mDrawVertexList, 1);
+		Trend drawTrend3 = StockData.getLastTrend(mDrawVertexList, 3);
 		Trend strokeTrend = StockData.getLastTrend(mStrokeVertexList, 1);
 		Trend segmentTrend = StockData.getLastTrend(mSegmentVertexList, 1);
 
-		if (stockData == null || drawTrend == null || strokeTrend == null || segmentTrend == null) {
+		if (stockData == null || drawTrend1 == null || drawTrend3 == null || strokeTrend == null || segmentTrend == null) {
 			return result;
 		}
 
 		if (strokeTrend.getIndexStart() == segmentTrend.getIndexStart()) {
-			if (TextUtils.equals(stockData.getAction(), Trend.TREND_TYPE_DOWN_NONE_UP) || TextUtils.equals(stockData.getAction(), Trend.TREND_TYPE_UP_NONE_DOWN)) {
+			if (drawTrend1.getIndexStart() == strokeTrend.getIndexStart()) {
 				result = true;
 			}
-			if (drawTrend.getIndexStart() == strokeTrend.getIndexStart()) {
+			if (drawTrend3.getIndexStart() == strokeTrend.getIndexStart()) {
 				result = true;
 			}
 		}
@@ -319,10 +320,10 @@ public class StockAnalyzer {
 		}
 
 		if (strokeTrend3.getIndexStart() == segmentTrend.getIndexStart()) {
-			if (TextUtils.equals(stockData.getAction(), Trend.TREND_TYPE_DOWN_NONE_UP) || TextUtils.equals(stockData.getAction(), Trend.TREND_TYPE_UP_NONE_DOWN)) {
+			if (drawTrend1.getIndexStart() == strokeTrend1.getIndexStart()) {
 				result = true;
 			}
-			if (drawTrend1.getIndexStart() == strokeTrend1.getIndexStart()) {
+			if (drawTrend3.getIndexStart() == strokeTrend1.getIndexStart()) {
 				result = true;
 			}
 		}
