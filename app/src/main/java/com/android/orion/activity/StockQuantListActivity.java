@@ -8,6 +8,7 @@ import android.database.ContentObserver;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -28,6 +29,7 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import com.android.orion.R;
+import com.android.orion.ai.ml.PatternClassification;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockQuant;
@@ -157,6 +159,9 @@ public class StockQuantListActivity extends ListActivity implements
 //					mIntent.setAction(Constant.ACTION_STOCK_TREND_LIST);
 //					mIntent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
 //					startActivity(mIntent);
+
+					TestAsyncTask task = new TestAsyncTask();
+					task.execute();
 					break;
 
 				default:
@@ -164,6 +169,16 @@ public class StockQuantListActivity extends ListActivity implements
 			}
 		}
 	};
+
+	class TestAsyncTask extends AsyncTask<String, String, String> {
+
+		@Override
+		protected String doInBackground(String... strings) {
+			PatternClassification patternClassification = new PatternClassification();
+			patternClassification.test();
+			return null;
+		}
+	}
 
 	ContentObserver mContentObserver = new ContentObserver(new Handler()) {
 		@Override
