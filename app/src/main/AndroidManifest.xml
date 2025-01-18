@@ -106,6 +106,10 @@
             android:label="@string/stock_statistics_chart"
             android:launchMode="singleTask" />
         <activity
+            android:name="com.android.orion.activity.MachineLearningChartListActivity"
+            android:label="@string/machine_learning_chart"
+            android:launchMode="singleTask" />
+        <activity
             android:name="com.android.orion.activity.StockFilterActivity"
             android:label="@string/filter"
             android:launchMode="singleTask" />

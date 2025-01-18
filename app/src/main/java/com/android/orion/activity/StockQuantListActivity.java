@@ -161,6 +161,9 @@ public class StockQuantListActivity extends ListActivity implements
 //					mIntent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
 //					startActivity(mIntent);
 
+					intent = new Intent(mContext, MachineLearningChartListActivity.class);
+					startActivity(intent);
+
 					TestAsyncTask task = new TestAsyncTask();
 					task.execute();
 					break;
@@ -175,8 +178,6 @@ public class StockQuantListActivity extends ListActivity implements
 
 		@Override
 		protected String doInBackground(String... strings) {
-//			PatternClassification patternClassification = new PatternClassification();
-//			patternClassification.test();
 			HousePrices housePrices = new HousePrices();
 			housePrices.test();
 			return null;
