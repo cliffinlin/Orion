@@ -24,6 +24,7 @@ import android.widget.ArrayAdapter;
 import com.android.orion.R;
 import com.android.orion.chart.ChartSyncHelper;
 import com.android.orion.chart.StockDataChart;
+import com.android.orion.config.Config;
 import com.android.orion.data.Period;
 import com.android.orion.data.Trend;
 import com.android.orion.database.DatabaseContract;
@@ -34,6 +35,9 @@ import com.android.orion.database.StockQuant;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.github.mikephil.charting.charts.CombinedChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.XAxis.XAxisPosition;
 import com.github.mikephil.charting.components.YAxis;
@@ -42,7 +46,8 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.BubbleEntry;
 import com.github.mikephil.charting.data.CandleEntry;
 import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.formatter.DefaultYAxisValueFormatter;
+import com.github.mikephil.charting.formatter.DefaultAxisValueFormatter;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.utils.Utils;
@@ -71,6 +76,7 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 	boolean mKeyDisplayBonus = false;
 
 	int mStockListIndex = 0;
+	Menu mMenu = null;
 
 	String mSortOrder = null;
 
@@ -78,7 +84,8 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 
 	StockData mStockData = new StockData();
 
-	Menu mMenu = null;
+	Description mDescription = new Description();
+
 	PullToRefreshListView mListView = null;
 	StockDataChartArrayAdapter mStockDataChartArrayAdapter = null;
 	ArrayList<StockDataChartItem> mStockDataChartItemList = null;
@@ -384,8 +391,8 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 	}
 
 	CursorLoader getStockCursorLoader() {
-		String selection = "" + (DatabaseContract.COLUMN_FLAG + " >= "
-				+ Stock.FLAG_FAVORITE);
+		String selection = DatabaseContract.COLUMN_FLAG + " >= "
+				+ Stock.FLAG_FAVORITE;
 		CursorLoader loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
 				DatabaseContract.Stock.PROJECTION_ALL, selection, null,
 				mSortOrder);
@@ -522,103 +529,90 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 
 					if (index == 0 || index == cursor.getCount() - 1) {
 						if (mStockData.getTrend().directionOf(Trend.DIRECTION_UP)) {
-							Entry drawEntry = new Entry(
-									(float) mStockData.getTrend().getVertexHigh(), index);
+							Entry drawEntry = new Entry(index, (float) mStockData.getTrend().getVertexHigh());
 							stockDataChart.mLineList[0].add(drawEntry);
 						} else if (mStockData
 								.getTrend().directionOf(Trend.DIRECTION_DOWN)) {
-							Entry drawEntry = new Entry(
-									(float) mStockData.getTrend().getVertexLow(), index);
+							Entry drawEntry = new Entry(index, (float) mStockData.getTrend().getVertexLow());
 							stockDataChart.mLineList[0].add(drawEntry);
 						} else {
-							Entry drawEntry = new Entry(
-									(float) mStockData.getCandlestick().getClose(), index);
+							Entry drawEntry = new Entry(index, (float) mStockData.getCandlestick().getClose());
 							stockDataChart.mLineList[0].add(drawEntry);
 						}
 					} else {
 						if (mStockData.getTrend().vertexOf(Trend.VERTEX_TOP)) {
-							Entry drawEntry = new Entry(
-									(float) mStockData.getTrend().getVertexHigh(), index);
+							Entry drawEntry = new Entry(index, (float) mStockData.getTrend().getVertexHigh());
 							stockDataChart.mLineList[0].add(drawEntry);
 						} else if (mStockData
 								.getTrend().vertexOf(Trend.VERTEX_BOTTOM)) {
-							Entry drawEntry = new Entry(
-									(float) mStockData.getTrend().getVertexLow(), index);
+							Entry drawEntry = new Entry(index, (float) mStockData.getTrend().getVertexLow());
 							stockDataChart.mLineList[0].add(drawEntry);
 						}
 					}
 
 					if (mStockData.getTrend().vertexOf(Trend.VERTEX_TOP_STROKE)) {
-						Entry strokeEntry = new Entry(
-								(float) mStockData.getTrend().getVertexHigh(), index);
+						Entry strokeEntry = new Entry(index, (float) mStockData.getTrend().getVertexHigh());
 						stockDataChart.mLineList[1].add(strokeEntry);
 					} else if (mStockData
 							.getTrend().vertexOf(Trend.VERTEX_BOTTOM_STROKE)) {
-						Entry strokeEntry = new Entry(
-								(float) mStockData.getTrend().getVertexLow(), index);
+						Entry strokeEntry = new Entry(index, (float) mStockData.getTrend().getVertexLow());
 						stockDataChart.mLineList[1].add(strokeEntry);
 					}
 
 					if (mStockData.getTrend().vertexOf(Trend.VERTEX_TOP_SEGMENT)) {
-						Entry segmentEntry = new Entry(
-								(float) mStockData.getTrend().getVertexHigh(), index);
+						Entry segmentEntry = new Entry(index, (float) mStockData.getTrend().getVertexHigh());
 						stockDataChart.mLineList[2].add(segmentEntry);
 					} else if (mStockData
 							.getTrend().vertexOf(Trend.VERTEX_BOTTOM_SEGMENT)) {
-						Entry segmentEntry = new Entry(
-								(float) mStockData.getTrend().getVertexLow(), index);
+						Entry segmentEntry = new Entry(index, (float) mStockData.getTrend().getVertexLow());
 						stockDataChart.mLineList[2].add(segmentEntry);
 					}
 
 					if (mStockData.getTrend().vertexOf(Trend.VERTEX_TOP_LINE)) {
-						Entry lineEntry = new Entry(
-								(float) mStockData.getTrend().getVertexHigh(), index);
+						Entry lineEntry = new Entry(index, (float) mStockData.getTrend().getVertexHigh());
 						stockDataChart.mLineList[3].add(lineEntry);
 					} else if (mStockData
 							.getTrend().vertexOf(Trend.VERTEX_BOTTOM_LINE)) {
-						Entry lineEntry = new Entry(
-								(float) mStockData.getTrend().getVertexLow(), index);
+						Entry lineEntry = new Entry(index, (float) mStockData.getTrend().getVertexLow());
 						stockDataChart.mLineList[3].add(lineEntry);
 					}
 
 					if (mStockData.getTrend().vertexOf(Trend.VERTEX_TOP_OUTLINE)) {
-						Entry outlineEntry = new Entry(
-								(float) mStockData.getTrend().getVertexHigh(), index);
+						Entry outlineEntry = new Entry(index, (float) mStockData.getTrend().getVertexHigh());
 						stockDataChart.mLineList[4].add(outlineEntry);
 					} else if (mStockData
 							.getTrend().vertexOf(Trend.VERTEX_BOTTOM_OUTLINE)) {
-						Entry outlineEntry = new Entry(
-								(float) mStockData.getTrend().getVertexLow(), index);
+						Entry outlineEntry = new Entry(index, (float) mStockData.getTrend().getVertexLow());
 						stockDataChart.mLineList[4].add(outlineEntry);
 					}
 
 					if (Setting.getDisplayCandle()) {
-						Entry average5Entry = new Entry(
-								(float) mStockData.getMacd().getAverage5(), index);
+						Entry average5Entry = new Entry(index, (float) mStockData.getMacd().getAverage5());
 						stockDataChart.mAverage5EntryList.add(average5Entry);
 
-						Entry average10Entry = new Entry(
-								(float) mStockData.getMacd().getAverage10(), index);
+						Entry average10Entry = new Entry(index, (float) mStockData.getMacd().getAverage10());
 						stockDataChart.mAverage10EntryList.add(average10Entry);
 					}
 
 					stockDataChart.setMainChartYMinMax(index, stockDataChart.mLineList[0], stockDataChart.mLineList[1], stockDataChart.mLineList[2]);
 
-					Entry difEntry = new Entry((float) mStockData.getMacd().getDIF(),
-							index);
+					Entry difEntry = new Entry(index, (float) mStockData.getMacd().getDIF());
 					stockDataChart.mDIFEntryList.add(difEntry);
 
-					Entry deaEntry = new Entry((float) mStockData.getMacd().getDEA(),
-							index);
+					Entry deaEntry = new Entry(index, (float) mStockData.getMacd().getDEA());
 					stockDataChart.mDEAEntryList.add(deaEntry);
 
-					BarEntry histogramBarEntry = new BarEntry(
-							(float) mStockData.getMacd().getHistogram(), index);
+					BarEntry histogramBarEntry = new BarEntry(index, (float) mStockData.getMacd().getHistogram());
 					stockDataChart.mHistogramEntryList.add(histogramBarEntry);
 
+					if (mStockData.getMacd().getHistogram() > 0) {
+						stockDataChart.mHistogramColorList.add(Config.COLOR_RGB_RED);
+					} else {
+						stockDataChart.mHistogramColorList.add(Config.COLOR_RGB_GREEN);
+					}
+
 					if (mStock.hasFlag(Stock.FLAG_NOTIFY) && Period.isMinutePeriod(mStockData.getPeriod())) {
-						Entry velocityEntry = new Entry(
-								(float) mStockData.getMacd().getVelocity(), index);
+						Entry velocityEntry = new Entry(index, (float) mStockData.getMacd().getVelocity());
 						stockDataChart.mVelocityEntryList.add(velocityEntry);
 					}
 
@@ -828,13 +822,23 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 			xAxis = viewHolder.chart.getXAxis();
 			if (xAxis != null) {
 				xAxis.setPosition(XAxisPosition.BOTTOM);
+				if (Period.isMinutePeriod(mStockDataChart.mPeriod)) {
+					xAxis.setLabelCount(Config.DATE_TIME_LABEL_COUNT);
+				} else {
+					xAxis.setLabelCount(Config.DATE_LABEL_COUNT);
+				}
+				xAxis.setValueFormatter(new IAxisValueFormatter() {
+					public String getFormattedValue(float value, AxisBase axis) {
+						return mStockDataChart.mXValues.get((int) value);
+					}
+				});
 			}
 
 			leftYAxis = viewHolder.chart.getAxisLeft();
 			if (leftYAxis != null) {
 				leftYAxis.setPosition(YAxisLabelPosition.INSIDE_CHART);
 				leftYAxis.setStartAtZero(false);
-				leftYAxis.setValueFormatter(new DefaultYAxisValueFormatter(2));
+				leftYAxis.setValueFormatter(new DefaultAxisValueFormatter(2));
 				leftYAxis.removeAllLimitLines();
 				if (mItemViewType == ITEM_VIEW_TYPE_MAIN) {
 					for (int i = 0; i < mStockDataChart.mXLimitLineList.size(); i++) {
@@ -849,12 +853,16 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 				rightYAxis.setEnabled(false);
 			}
 
-			viewHolder.chart.setDescription(mStockDataChart.mDescription.toString());
+			mDescription.setText(mStockDataChart.mDescription.toString());
+			mDescription.setTextSize(Config.DESCRIPTION_TEXT_SIZE);
+			viewHolder.chart.setDescription(mDescription);
 
 			if (mItemViewType == ITEM_VIEW_TYPE_MAIN) {
 				viewHolder.chart.setData(mStockDataChart.mCombinedDataMain);
 			} else {
 				viewHolder.chart.setData(mStockDataChart.mCombinedDataSub);
+				Legend legend = viewHolder.chart.getLegend();
+				legend.setEnabled(false);
 			}
 			mCombinedChartMap.put(position, viewHolder.chart);
 			mChartSyncHelper.syncCharts(mCombinedChartMap);

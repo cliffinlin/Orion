@@ -3,42 +3,54 @@ package com.github.mikephil.charting.jobs;
 
 import android.view.View;
 
+import com.github.mikephil.charting.utils.ObjectPool;
 import com.github.mikephil.charting.utils.Transformer;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
 /**
- * Runnable that is used for viewport modifications since they cannot be
- * executed at any time. This can be used to delay the execution of viewport
- * modifications until the onSizeChanged(...) method of the chartview is called.
- * 
- * @author Philipp Jahoda
+ * Created by Philipp Jahoda on 19/02/16.
  */
-public class MoveViewJob implements Runnable {
+public class MoveViewJob extends ViewPortJob {
 
-    protected ViewPortHandler mViewPortHandler;
-    protected float xIndex = 0f;
-    protected float yValue = 0f;
-    protected Transformer mTrans;
-    protected View view;
+    private static ObjectPool<MoveViewJob> pool;
 
-    public MoveViewJob(ViewPortHandler viewPortHandler, float xIndex, float yValue,
-            Transformer trans, View v) {
+    static {
+        pool = ObjectPool.create(2, new MoveViewJob(null,0,0,null,null));
+        pool.setReplenishPercentage(0.5f);
+    }
 
-        this.mViewPortHandler = viewPortHandler;
-        this.xIndex = xIndex;
-        this.yValue = yValue;
-        this.mTrans = trans;
-        this.view = v;
+    public static MoveViewJob getInstance(ViewPortHandler viewPortHandler, float xValue, float yValue, Transformer trans, View v){
+        MoveViewJob result = pool.get();
+        result.mViewPortHandler = viewPortHandler;
+        result.xValue = xValue;
+        result.yValue = yValue;
+        result.mTrans = trans;
+        result.view = v;
+        return result;
+    }
+
+    public static void recycleInstance(MoveViewJob instance){
+        pool.recycle(instance);
+    }
+
+    public MoveViewJob(ViewPortHandler viewPortHandler, float xValue, float yValue, Transformer trans, View v) {
+        super(viewPortHandler, xValue, yValue, trans, v);
     }
 
     @Override
     public void run() {
 
-        float[] pts = new float[] {
-                xIndex, yValue
-        };
+        pts[0] = xValue;
+        pts[1] = yValue;
 
         mTrans.pointValuesToPixel(pts);
         mViewPortHandler.centerViewPort(pts, view);
+
+        this.recycleInstance(this);
+    }
+
+    @Override
+    protected ObjectPool.Poolable instantiate() {
+        return new MoveViewJob(mViewPortHandler, xValue, yValue, mTrans, view);
     }
 }

@@ -5,243 +5,254 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
 
-import com.github.mikephil.charting.components.YAxis.AxisDependency;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.DataSet;
-import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.BarHighlighter;
 import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.interfaces.BarDataProvider;
+import com.github.mikephil.charting.interfaces.dataprovider.BarDataProvider;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.renderer.BarChartRenderer;
-import com.github.mikephil.charting.renderer.XAxisRendererBarChart;
 
 /**
  * Chart that draws bars.
- * 
+ *
  * @author Philipp Jahoda
  */
 public class BarChart extends BarLineChartBase<BarData> implements BarDataProvider {
 
-	/** flag that enables or disables the highlighting arrow */
-	private boolean mDrawHighlightArrow = false;
+    /**
+     * flag that indicates whether the highlight should be full-bar oriented, or single-value?
+     */
+    protected boolean mHighlightFullBarEnabled = false;
 
-	/**
-	 * if set to true, all values are drawn above their bars, instead of below their top
-	 */
-	private boolean mDrawValueAboveBar = true;
+    /**
+     * if set to true, all values are drawn above their bars, instead of below their top
+     */
+    private boolean mDrawValueAboveBar = true;
 
-	/**
-	 * if set to true, all values of a stack are drawn individually, and not just their sum
-	 */
-	// private boolean mDrawValuesForWholeStack = true;
+    /**
+     * if set to true, a grey area is drawn behind each bar that indicates the maximum value
+     */
+    private boolean mDrawBarShadow = false;
 
-	/**
-	 * if set to true, a grey area is drawn behind each bar that indicates the maximum value
-	 */
-	private boolean mDrawBarShadow = false;
+    private boolean mFitBars = false;
 
-	public BarChart(Context context) {
-		super(context);
-	}
+    public BarChart(Context context) {
+        super(context);
+    }
 
-	public BarChart(Context context, AttributeSet attrs) {
-		super(context, attrs);
-	}
+    public BarChart(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
 
-	public BarChart(Context context, AttributeSet attrs, int defStyle) {
-		super(context, attrs, defStyle);
-	}
+    public BarChart(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+    }
 
-	@Override
-	protected void init() {
-		super.init();
+    @Override
+    protected void init() {
+        super.init();
 
-		mRenderer = new BarChartRenderer(this, mAnimator, mViewPortHandler);
-		mXAxisRenderer = new XAxisRendererBarChart(mViewPortHandler, mXAxis, mLeftAxisTransformer, this);
+        mRenderer = new BarChartRenderer(this, mAnimator, mViewPortHandler);
 
-		mHighlighter = new BarHighlighter(this);
+        setHighlighter(new BarHighlighter(this));
 
-		mXChartMin = -0.5f;
-	}
+        getXAxis().setSpaceMin(0.5f);
+        getXAxis().setSpaceMax(0.5f);
+    }
 
-	@Override
-	protected void calcMinMax() {
-		super.calcMinMax();
+    @Override
+    protected void calcMinMax() {
 
-		// increase deltax by 1 because the bars have a width of 1
-		mDeltaX += 0.5f;
+        if (mFitBars) {
+            mXAxis.calculate(mData.getXMin() - mData.getBarWidth() / 2f, mData.getXMax() + mData.getBarWidth() / 2f);
+        } else {
+            mXAxis.calculate(mData.getXMin(), mData.getXMax());
+        }
 
-		// extend xDelta to make space for multiple datasets (if ther are one)
-		mDeltaX *= mData.getDataSetCount();
+        // calculate axis range (min / max) according to provided data
+        mAxisLeft.calculate(mData.getYMin(YAxis.AxisDependency.LEFT), mData.getYMax(YAxis.AxisDependency.LEFT));
+        mAxisRight.calculate(mData.getYMin(YAxis.AxisDependency.RIGHT), mData.getYMax(YAxis.AxisDependency
+                .RIGHT));
+    }
 
-		float groupSpace = mData.getGroupSpace();
-		mDeltaX += mData.getXValCount() * groupSpace;
-		mXChartMax = mDeltaX - mXChartMin;
-	}
+    /**
+     * Returns the Highlight object (contains x-index and DataSet index) of the selected value at the given touch
+     * point
+     * inside the BarChart.
+     *
+     * @param x
+     * @param y
+     * @return
+     */
+    @Override
+    public Highlight getHighlightByTouchPoint(float x, float y) {
 
-	/**
-	 * Returns the Highlight object (contains x-index and DataSet index) of the selected value at the given touch point
-	 * inside the BarChart.
-	 * 
-	 * @param x
-	 * @param y
-	 * @return
-	 */
-	@Override
-	public Highlight getHighlightByTouchPoint(float x, float y) {
+        if (mData == null) {
+            Log.e(LOG_TAG, "Can't select by touch. No data set.");
+            return null;
+        } else {
+            Highlight h = getHighlighter().getHighlight(x, y);
+            if (h == null || !isHighlightFullBarEnabled()) return h;
 
-		if (mDataNotSet || mData == null) {
-			Log.e(LOG_TAG, "Can't select by touch. No data set.");
-			return null;
-		} else
-			return mHighlighter.getHighlight(x, y);
-	}
+            // For isHighlightFullBarEnabled, remove stackIndex
+            return new Highlight(h.getX(), h.getY(),
+                    h.getXPx(), h.getYPx(),
+                    h.getDataSetIndex(), -1, h.getAxis());
+        }
+    }
 
-	/**
-	 * Returns the bounding box of the specified Entry in the specified DataSet. Returns null if the Entry could not be
-	 * found in the charts data.
-	 * 
-	 * @param e
-	 * @return
-	 */
-	public RectF getBarBounds(BarEntry e) {
+    /**
+     * Returns the bounding box of the specified Entry in the specified DataSet. Returns null if the Entry could not be
+     * found in the charts data.  Performance-intensive code should use void getBarBounds(BarEntry, RectF) instead.
+     *
+     * @param e
+     * @return
+     */
+    public RectF getBarBounds(BarEntry e) {
 
-		BarDataSet set = mData.getDataSetForEntry(e);
+        RectF bounds = new RectF();
+        getBarBounds(e, bounds);
 
-		if (set == null)
-			return null;
+        return bounds;
+    }
 
-		float barspace = set.getBarSpace();
-		float y = e.getVal();
-		float x = e.getXIndex();
+    /**
+     * The passed outputRect will be assigned the values of the bounding box of the specified Entry in the specified DataSet.
+     * The rect will be assigned Float.MIN_VALUE in all locations if the Entry could not be found in the charts data.
+     *
+     * @param e
+     * @return
+     */
+    public void getBarBounds(BarEntry e, RectF outputRect) {
 
-		float barWidth = 0.5f;
+        RectF bounds = outputRect;
 
-		float spaceHalf = barspace / 2f;
-		float left = x - barWidth + spaceHalf;
-		float right = x + barWidth - spaceHalf;
-		float top = y >= 0 ? y : 0;
-		float bottom = y <= 0 ? y : 0;
+        IBarDataSet set = mData.getDataSetForEntry(e);
 
-		RectF bounds = new RectF(left, top, right, bottom);
+        if (set == null) {
+            bounds.set(Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE);
+            return;
+        }
 
-		getTransformer(set.getAxisDependency()).rectValueToPixel(bounds);
+        float y = e.getY();
+        float x = e.getX();
 
-		return bounds;
-	}
+        float barWidth = mData.getBarWidth();
 
-	/**
-	 * set this to true to draw the highlightning arrow
-	 * 
-	 * @param enabled
-	 */
-	public void setDrawHighlightArrow(boolean enabled) {
-		mDrawHighlightArrow = enabled;
-	}
+        float left = x - barWidth / 2f;
+        float right = x + barWidth / 2f;
+        float top = y >= 0 ? y : 0;
+        float bottom = y <= 0 ? y : 0;
 
-	/**
-	 * returns true if drawing the highlighting arrow is enabled, false if not
-	 * 
-	 * @return
-	 */
-	public boolean isDrawHighlightArrowEnabled() {
-		return mDrawHighlightArrow;
-	}
+        bounds.set(left, top, right, bottom);
 
-	/**
-	 * If set to true, all values are drawn above their bars, instead of below their top.
-	 * 
-	 * @param enabled
-	 */
-	public void setDrawValueAboveBar(boolean enabled) {
-		mDrawValueAboveBar = enabled;
-	}
+        getTransformer(set.getAxisDependency()).rectValueToPixel(outputRect);
+    }
 
-	/**
-	 * returns true if drawing values above bars is enabled, false if not
-	 * 
-	 * @return
-	 */
-	public boolean isDrawValueAboveBarEnabled() {
-		return mDrawValueAboveBar;
-	}
+    /**
+     * If set to true, all values are drawn above their bars, instead of below their top.
+     *
+     * @param enabled
+     */
+    public void setDrawValueAboveBar(boolean enabled) {
+        mDrawValueAboveBar = enabled;
+    }
 
-	// /**
-	// * if set to true, all values of a stack are drawn individually, and not
-	// * just their sum
-	// *
-	// * @param enabled
-	// */
-	// public void setDrawValuesForWholeStack(boolean enabled) {
-	// mDrawValuesForWholeStack = enabled;
-	// }
-	//
-	// /**
-	// * returns true if all values of a stack are drawn, and not just their sum
-	// *
-	// * @return
-	// */
-	// public boolean isDrawValuesForWholeStackEnabled() {
-	// return mDrawValuesForWholeStack;
-	// }
+    /**
+     * returns true if drawing values above bars is enabled, false if not
+     *
+     * @return
+     */
+    public boolean isDrawValueAboveBarEnabled() {
+        return mDrawValueAboveBar;
+    }
 
-	/**
-	 * If set to true, a grey area is drawn behind each bar that indicates the maximum value. Enabling his will reduce
-	 * performance by about 50%.
-	 * 
-	 * @param enabled
-	 */
-	public void setDrawBarShadow(boolean enabled) {
-		mDrawBarShadow = enabled;
-	}
+    /**
+     * If set to true, a grey area is drawn behind each bar that indicates the maximum value. Enabling his will reduce
+     * performance by about 50%.
+     *
+     * @param enabled
+     */
+    public void setDrawBarShadow(boolean enabled) {
+        mDrawBarShadow = enabled;
+    }
 
-	/**
-	 * returns true if drawing shadows (maxvalue) for each bar is enabled, false if not
-	 * 
-	 * @return
-	 */
-	public boolean isDrawBarShadowEnabled() {
-		return mDrawBarShadow;
-	}
+    /**
+     * returns true if drawing shadows (maxvalue) for each bar is enabled, false if not
+     *
+     * @return
+     */
+    public boolean isDrawBarShadowEnabled() {
+        return mDrawBarShadow;
+    }
 
-	@Override
-	public BarData getBarData() {
-		return mData;
-	}
+    /**
+     * Set this to true to make the highlight operation full-bar oriented, false to make it highlight single values (relevant
+     * only for stacked). If enabled, highlighting operations will highlight the whole bar, even if only a single stack entry
+     * was tapped.
+     * Default: false
+     *
+     * @param enabled
+     */
+    public void setHighlightFullBarEnabled(boolean enabled) {
+        mHighlightFullBarEnabled = enabled;
+    }
 
-	/**
-	 * Returns the lowest x-index (value on the x-axis) that is still visible on the chart.
-	 * 
-	 * @return
-	 */
-	@Override
-	public int getLowestVisibleXIndex() {
+    /**
+     * @return true the highlight operation is be full-bar oriented, false if single-value
+     */
+    @Override
+    public boolean isHighlightFullBarEnabled() {
+        return mHighlightFullBarEnabled;
+    }
 
-		float step = mData.getDataSetCount();
-		float div = (step <= 1) ? 1 : step + mData.getGroupSpace();
+    /**
+     * Highlights the value at the given x-value in the given DataSet. Provide
+     * -1 as the dataSetIndex to undo all highlighting.
+     *
+     * @param x
+     * @param dataSetIndex
+     * @param stackIndex   the index inside the stack - only relevant for stacked entries
+     */
+    public void highlightValue(float x, int dataSetIndex, int stackIndex) {
+        highlightValue(new Highlight(x, dataSetIndex, stackIndex), false);
+    }
 
-		float[] pts = new float[] { mViewPortHandler.contentLeft(), mViewPortHandler.contentBottom() };
+    @Override
+    public BarData getBarData() {
+        return mData;
+    }
 
-		getTransformer(AxisDependency.LEFT).pixelsToValue(pts);
-		return (int) ((pts[0] <= getXChartMin()) ? 0 : (pts[0] / div) + 1);
-	}
+    /**
+     * Adds half of the bar width to each side of the x-axis range in order to allow the bars of the barchart to be
+     * fully displayed.
+     * Default: false
+     *
+     * @param enabled
+     */
+    public void setFitBars(boolean enabled) {
+        mFitBars = enabled;
+    }
 
-	/**
-	 * Returns the highest x-index (value on the x-axis) that is still visible on the chart.
-	 * 
-	 * @return
-	 */
-	@Override
-	public int getHighestVisibleXIndex() {
+    /**
+     * Groups all BarDataSet objects this data object holds together by modifying the x-value of their entries.
+     * Previously set x-values of entries will be overwritten. Leaves space between bars and groups as specified
+     * by the parameters.
+     * Calls notifyDataSetChanged() afterwards.
+     *
+     * @param fromX      the starting point on the x-axis where the grouping should begin
+     * @param groupSpace the space between groups of bars in values (not pixels) e.g. 0.8f for bar width 1f
+     * @param barSpace   the space between individual bars in values (not pixels) e.g. 0.1f for bar width 1f
+     */
+    public void groupBars(float fromX, float groupSpace, float barSpace) {
 
-		float step = mData.getDataSetCount();
-		float div = (step <= 1) ? 1 : step + mData.getGroupSpace();
-
-		float[] pts = new float[] { mViewPortHandler.contentRight(), mViewPortHandler.contentBottom() };
-
-		getTransformer(AxisDependency.LEFT).pixelsToValue(pts);
-		return (int) ((pts[0] >= getXChartMax()) ? getXChartMax() / div : (pts[0] / div));
-	}
+        if (getBarData() == null) {
+            throw new RuntimeException("You need to set data for the chart before grouping bars.");
+        } else {
+            getBarData().groupBars(fromX, groupSpace, barSpace);
+            notifyDataSetChanged();
+        }
+    }
 }

@@ -1,11 +1,15 @@
 
 package com.github.mikephil.charting.data;
 
+import android.annotation.SuppressLint;
+import android.graphics.drawable.Drawable;
+
 /**
  * Subclass of Entry that holds all values for one entry in a CandleStickChart.
  * 
  * @author Philipp Jahoda
  */
+@SuppressLint("ParcelCreator")
 public class CandleEntry extends Entry {
 
     /** shadow-high value */
@@ -19,53 +23,84 @@ public class CandleEntry extends Entry {
 
     /** open value */
     private float mOpen = 0f;
-//Modify for stock    
-    private String mTag = "";
-//Modify for stock
+
     /**
      * Constructor.
      * 
-     * @param xIndex The index on the x-axis.
-     * @param shadowH The (shadow) high value.
-     * @param shadowL The (shadow) low value.
-     * @param open The open value.
-     * @param close The close value.
+     * @param x The value on the x-axis
+     * @param shadowH The (shadow) high value
+     * @param shadowL The (shadow) low value
+     * @param open The open value
+     * @param close The close value
      */
-//Modify for stock     
-    public CandleEntry(int xIndex, float shadowH, float shadowL, float open, float close, String tag) {
-//Modify for stock     	
-        super((shadowH + shadowL) / 2f, xIndex);
+    public CandleEntry(float x, float shadowH, float shadowL, float open, float close) {
+        super(x, (shadowH + shadowL) / 2f);
 
         this.mShadowHigh = shadowH;
         this.mShadowLow = shadowL;
         this.mOpen = open;
         this.mClose = close;
-      //Modify for stock        
-        this.mTag = tag;
-      //Modify for stock
     }
 
     /**
      * Constructor.
-     * 
-     * @param xIndex The index on the x-axis.
-     * @param shadowH The (shadow) high value.
-     * @param shadowL The (shadow) low value.
+     *
+     * @param x The value on the x-axis
+     * @param shadowH The (shadow) high value
+     * @param shadowL The (shadow) low value
      * @param open
      * @param close
-     * @param data Spot for additional data this Entry represents.
+     * @param data Spot for additional data this Entry represents
      */
-//Modify for stock    
-    public CandleEntry(int xIndex, float shadowH, float shadowL, float open, float close,
-            Object data, String tag) {
-//Modify for stock    	
-        super((shadowH + shadowL) / 2f, xIndex, data);
+    public CandleEntry(float x, float shadowH, float shadowL, float open, float close,
+                       Object data) {
+        super(x, (shadowH + shadowL) / 2f, data);
 
         this.mShadowHigh = shadowH;
         this.mShadowLow = shadowL;
         this.mOpen = open;
         this.mClose = close;
-        this.mTag = tag;        
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param x The value on the x-axis
+     * @param shadowH The (shadow) high value
+     * @param shadowL The (shadow) low value
+     * @param open
+     * @param close
+     * @param icon Icon image
+     */
+    public CandleEntry(float x, float shadowH, float shadowL, float open, float close,
+                       Drawable icon) {
+        super(x, (shadowH + shadowL) / 2f, icon);
+
+        this.mShadowHigh = shadowH;
+        this.mShadowLow = shadowL;
+        this.mOpen = open;
+        this.mClose = close;
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param x The value on the x-axis
+     * @param shadowH The (shadow) high value
+     * @param shadowL The (shadow) low value
+     * @param open
+     * @param close
+     * @param icon Icon image
+     * @param data Spot for additional data this Entry represents
+     */
+    public CandleEntry(float x, float shadowH, float shadowL, float open, float close,
+                       Drawable icon, Object data) {
+        super(x, (shadowH + shadowL) / 2f, icon, data);
+
+        this.mShadowHigh = shadowH;
+        this.mShadowLow = shadowL;
+        this.mOpen = open;
+        this.mClose = close;
     }
 
     /**
@@ -92,15 +127,15 @@ public class CandleEntry extends Entry {
      * low)
      */
     @Override
-    public float getVal() {
-        return super.getVal();
+    public float getY() {
+        return super.getY();
     }
 
     public CandleEntry copy() {
-//Modify for stock
-        CandleEntry c = new CandleEntry(getXIndex(), mShadowHigh, mShadowLow, mOpen,
-                mClose, getData(), mTag);
-//Modify for stock
+
+        CandleEntry c = new CandleEntry(getX(), mShadowHigh, mShadowLow, mOpen,
+                mClose, getData());
+
         return c;
     }
 
@@ -155,14 +190,4 @@ public class CandleEntry extends Entry {
     public void setOpen(float mOpen) {
         this.mOpen = mOpen;
     }
-    
-//Modify for stock    
-    public String getTag() {
-        return mTag;
-    }
-
-    public void setTag(String mTag) {
-        this.mTag = mTag;
-    }
-//Modify for stock
 }

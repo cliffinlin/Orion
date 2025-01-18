@@ -1,41 +1,21 @@
 package com.github.mikephil.charting.data;
 
+import com.github.mikephil.charting.interfaces.datasets.ICandleDataSet;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class CandleData extends BarLineScatterCandleBubbleData<CandleDataSet> {
+public class CandleData extends BarLineScatterCandleBubbleData<ICandleDataSet> {
 
     public CandleData() {
         super();
     }
-    
-    public CandleData(List<String> xVals) {
-        super(xVals);
-    }
-    
-    public CandleData(String[] xVals) {
-        super(xVals);
-    }
-    
-    public CandleData(List<String> xVals, List<CandleDataSet> dataSets) {
-        super(xVals, dataSets);
+
+    public CandleData(List<ICandleDataSet> dataSets) {
+        super(dataSets);
     }
 
-    public CandleData(String[] xVals, List<CandleDataSet> dataSets) {
-        super(xVals, dataSets);
-    }
-    
-    public CandleData(List<String> xVals, CandleDataSet dataSet) {
-        super(xVals, toList(dataSet));        
-    }
-    
-    public CandleData(String[] xVals, CandleDataSet dataSet) {
-        super(xVals, toList(dataSet));
-    }
-    
-    private static List<CandleDataSet> toList(CandleDataSet dataSet) {
-        List<CandleDataSet> sets = new ArrayList<CandleDataSet>();
-        sets.add(dataSet);
-        return sets;
+    public CandleData(ICandleDataSet... dataSets) {
+        super(dataSets);
     }
 }

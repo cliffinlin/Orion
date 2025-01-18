@@ -23,18 +23,24 @@ import androidx.annotation.NonNull;
 
 import com.android.orion.R;
 import com.android.orion.chart.StockStatisticsChart;
+import com.android.orion.config.Config;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.setting.Constant;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.XAxis.XAxisPosition;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.components.YAxis.YAxisLabelPosition;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.formatter.DefaultYAxisValueFormatter;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.DefaultAxisValueFormatter;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.utils.Utils;
 
 import java.lang.ref.WeakReference;
@@ -56,8 +62,9 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 
 	float mTotalProfit = 0;
 	float mTotalBonus = 0;
-	String mDescription = "";
 	Menu mMenu = null;
+
+	Description mDescription = new Description();
 	ListView mListView = null;
 	StatisticsChartArrayAdapter mStatisticsChartArrayAdapter = null;
 	ArrayList<StatisticsChartItem> mStatisticsChartItemList = null;
@@ -213,30 +220,25 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-		int id = 0;
-
 		if (loader == null) {
 			return;
 		}
 
-		id = loader.getId();
-
+		int id = loader.getId();
 		if (id == LOADER_ID_STOCK_LIST) {
 			swapStockCursor(mStatisticsChartList.get(0), cursor);
 		}
 
-		mDescription = "Profit=" + mTotalProfit + ",  Bonus=" + mTotalBonus;
+		mDescription.setText("Profit=" + mTotalProfit + ",  Bonus=" + mTotalBonus);
 	}
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> loader) {
-		int id = 0;
-
 		if (loader == null) {
 			return;
 		}
 
-		id = loader.getId();
+		int id = loader.getId();
 
 		if (id == LOADER_ID_STOCK_LIST) {
 			swapStockCursor(mStatisticsChartList.get(0), null);
@@ -284,10 +286,9 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 	}
 
 	CursorLoader getStockCursorLoader() {
-		String selection = "";
-		CursorLoader loader = null;
+		String selection = DatabaseContract.COLUMN_CLASSES + " = '" + Stock.CLASS_A + "'";
 
-		loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
+		CursorLoader loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
 				DatabaseContract.Stock.PROJECTION_ALL, selection, null,
 				mSortOrder);
 
@@ -295,7 +296,6 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 	}
 
 	void updateMenuAction() {
-		int size = 0;
 		if (mMenu == null) {
 			return;
 		}
@@ -303,8 +303,7 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 		MenuItem actionPrev = mMenu.findItem(R.id.action_prev);
 		MenuItem actionNext = mMenu.findItem(R.id.action_next);
 
-		size = mStockList.size();
-
+		int size = mStockList.size();
 		if (actionPrev != null) {
 			actionPrev.setEnabled(size > 1);
 		}
@@ -338,30 +337,26 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 					index = stockDataChart.mXValues.size();
 					stockDataChart.mXValues.add(stock.getName());
 
-					Entry roiEntry = new Entry((float) stock.getRoi(), index);
+					Entry roiEntry = new Entry(index, (float) stock.getRoi());
 					stockDataChart.mRoiEntryList.add(roiEntry);
 
-					Entry roeEntry = new Entry((float) stock.getRoe(), index);
+					Entry roeEntry = new Entry(index, (float) stock.getRoe());
 					stockDataChart.mRoeEntryList.add(roeEntry);
 
-					Entry rateEntry = new Entry((float) stock.getRate(), index);
+					Entry rateEntry = new Entry(index, (float) stock.getRate());
 					stockDataChart.mRateEntryList.add(rateEntry);
 
-					BarEntry peEntry = new BarEntry((float) stock.getPe(),
-							index);
+					BarEntry peEntry = new BarEntry(index, (float) stock.getPe());
 					stockDataChart.mPeEntryList.add(peEntry);
 
-					Entry yieldEntry = new Entry((float) stock.getYield(),
-							index);
+					Entry yieldEntry = new Entry(index, (float) stock.getYield());
 					stockDataChart.mYieldEntryList.add(yieldEntry);
 
-					Entry dividendRatioEntry = new Entry(
-							(float) stock.getDividendRatio(), index);
+					Entry dividendRatioEntry = new Entry(index, (float) stock.getDividendRatio());
 					stockDataChart.mDividendRatioEntryList
 							.add(dividendRatioEntry);
 
-					Entry valuationEntry = new Entry(
-							(float) stock.getValuation(), index);
+					PieEntry valuationEntry = new PieEntry((float) stock.getValuation(), stock.getName());
 					stockDataChart.mValuationEntryList.add(valuationEntry);
 
 					mTotalProfit += (float) stock.getProfit();
@@ -370,9 +365,7 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 					if (stock != null) {
 						if (mStock.getId() == stock.getId()) {
 							mStock.set(cursor);
-
 							mStockListIndex = mStockList.size();
-
 							if (mMainHandler != null) {
 								mMainHandler.sendEmptyMessage(0);
 							}
@@ -484,14 +477,18 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 				xAxis = viewHolder.mCombinedChart.getXAxis();
 				if (xAxis != null) {
 					xAxis.setPosition(XAxisPosition.BOTTOM);
+					xAxis.setValueFormatter(new IAxisValueFormatter() {
+						public String getFormattedValue(float value, AxisBase axis) {
+							return mStatisticsChart.mXValues.get((int) value);
+						}
+					});
 				}
 
 				leftYAxis = viewHolder.mCombinedChart.getAxisLeft();
 				if (leftYAxis != null) {
 					leftYAxis.setPosition(YAxisLabelPosition.INSIDE_CHART);
 					leftYAxis.setStartAtZero(false);
-					leftYAxis.setValueFormatter(new DefaultYAxisValueFormatter(
-							2));
+					leftYAxis.setValueFormatter(new DefaultAxisValueFormatter(2));
 					leftYAxis.removeAllLimitLines();
 				}
 
@@ -502,12 +499,13 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 
 				viewHolder.mCombinedChart
 						.setData(mStatisticsChart.mCombinedDataMain);
-				viewHolder.mCombinedChart.setDescription(mDescription);
 			} else {
 				viewHolder.mPieChart.setData(mStatisticsChart.mPieData);
 				viewHolder.mPieChart.setRotationEnabled(false);
 				viewHolder.mPieChart.setUsePercentValues(true);
+				mDescription.setTextSize(Config.DESCRIPTION_TEXT_SIZE);
 				viewHolder.mPieChart.setDescription(mDescription);
+				viewHolder.mPieChart.setEntryLabelColor(Color.BLACK);
 			}
 
 			return view;

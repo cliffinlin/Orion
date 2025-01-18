@@ -1,263 +1,346 @@
 package com.github.mikephil.charting.charts;
 
 import android.content.Context;
-import android.graphics.Matrix;
-import android.graphics.PointF;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
 
-import com.github.mikephil.charting.components.Legend.LegendPosition;
 import com.github.mikephil.charting.components.XAxis.XAxisPosition;
 import com.github.mikephil.charting.components.YAxis.AxisDependency;
-import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.highlight.HorizontalBarHighlighter;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.renderer.HorizontalBarChartRenderer;
 import com.github.mikephil.charting.renderer.XAxisRendererHorizontalBarChart;
 import com.github.mikephil.charting.renderer.YAxisRendererHorizontalBarChart;
+import com.github.mikephil.charting.utils.HorizontalViewPortHandler;
+import com.github.mikephil.charting.utils.MPPointF;
 import com.github.mikephil.charting.utils.TransformerHorizontalBarChart;
 import com.github.mikephil.charting.utils.Utils;
 
 /**
  * BarChart with horizontal bar orientation. In this implementation, x- and y-axis are switched, meaning the YAxis class
  * represents the horizontal values and the XAxis class represents the vertical values.
- * 
+ *
  * @author Philipp Jahoda
  */
 public class HorizontalBarChart extends BarChart {
 
-	public HorizontalBarChart(Context context) {
-		super(context);
-	}
+    public HorizontalBarChart(Context context) {
+        super(context);
+    }
 
-	public HorizontalBarChart(Context context, AttributeSet attrs) {
-		super(context, attrs);
-	}
+    public HorizontalBarChart(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
 
-	public HorizontalBarChart(Context context, AttributeSet attrs, int defStyle) {
-		super(context, attrs, defStyle);
-	}
+    public HorizontalBarChart(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+    }
 
-	@Override
-	protected void init() {
-		super.init();
+    @Override
+    protected void init() {
 
-		mLeftAxisTransformer = new TransformerHorizontalBarChart(mViewPortHandler);
-		mRightAxisTransformer = new TransformerHorizontalBarChart(mViewPortHandler);
+        mViewPortHandler = new HorizontalViewPortHandler();
 
-		mRenderer = new HorizontalBarChartRenderer(this, mAnimator, mViewPortHandler);
-		mHighlighter = new HorizontalBarHighlighter(this);
+        super.init();
 
-		mAxisRendererLeft = new YAxisRendererHorizontalBarChart(mViewPortHandler, mAxisLeft, mLeftAxisTransformer);
-		mAxisRendererRight = new YAxisRendererHorizontalBarChart(mViewPortHandler, mAxisRight, mRightAxisTransformer);
-		mXAxisRenderer = new XAxisRendererHorizontalBarChart(mViewPortHandler, mXAxis, mLeftAxisTransformer, this);
-	}
+        mLeftAxisTransformer = new TransformerHorizontalBarChart(mViewPortHandler);
+        mRightAxisTransformer = new TransformerHorizontalBarChart(mViewPortHandler);
 
-	@Override
-	public void calculateOffsets() {
+        mRenderer = new HorizontalBarChartRenderer(this, mAnimator, mViewPortHandler);
+        setHighlighter(new HorizontalBarHighlighter(this));
 
-		float offsetLeft = 0f, offsetRight = 0f, offsetTop = 0f, offsetBottom = 0f;
+        mAxisRendererLeft = new YAxisRendererHorizontalBarChart(mViewPortHandler, mAxisLeft, mLeftAxisTransformer);
+        mAxisRendererRight = new YAxisRendererHorizontalBarChart(mViewPortHandler, mAxisRight, mRightAxisTransformer);
+        mXAxisRenderer = new XAxisRendererHorizontalBarChart(mViewPortHandler, mXAxis, mLeftAxisTransformer, this);
+    }
 
-		// setup offsets for legend
-		if (mLegend != null && mLegend.isEnabled()) {
+    private RectF mOffsetsBuffer = new RectF();
 
-			if (mLegend.getPosition() == LegendPosition.RIGHT_OF_CHART || mLegend.getPosition() == LegendPosition.RIGHT_OF_CHART_CENTER) {
+    protected void calculateLegendOffsets(RectF offsets) {
 
-				offsetRight += Math.min(mLegend.mNeededWidth, mViewPortHandler.getChartWidth() * mLegend.getMaxSizePercent())
-						+ mLegend.getXOffset() * 2f;
+        offsets.left = 0.f;
+        offsets.right = 0.f;
+        offsets.top = 0.f;
+        offsets.bottom = 0.f;
 
-			} else if (mLegend.getPosition() == LegendPosition.LEFT_OF_CHART
-					|| mLegend.getPosition() == LegendPosition.LEFT_OF_CHART_CENTER) {
+        if (mLegend == null || !mLegend.isEnabled() || mLegend.isDrawInsideEnabled())
+            return;
 
-				offsetLeft += Math.min(mLegend.mNeededWidth, mViewPortHandler.getChartWidth() * mLegend.getMaxSizePercent())
-						+ mLegend.getXOffset() * 2f;
+        switch (mLegend.getOrientation()) {
+            case VERTICAL:
 
-			} else if (mLegend.getPosition() == LegendPosition.BELOW_CHART_LEFT
-					|| mLegend.getPosition() == LegendPosition.BELOW_CHART_RIGHT
-					|| mLegend.getPosition() == LegendPosition.BELOW_CHART_CENTER) {
+                switch (mLegend.getHorizontalAlignment()) {
+                    case LEFT:
+                        offsets.left += Math.min(mLegend.mNeededWidth,
+                                mViewPortHandler.getChartWidth() * mLegend.getMaxSizePercent())
+                                + mLegend.getXOffset();
+                        break;
 
-				// It's possible that we do not need this offset anymore as it
-				//   is available through the extraOffsets, but changing it can mean
-				//   changing default visibility for existing apps.
-				float yOffset = mLegend.mTextHeightMax * 2.f;
+                    case RIGHT:
+                        offsets.right += Math.min(mLegend.mNeededWidth,
+                                mViewPortHandler.getChartWidth() * mLegend.getMaxSizePercent())
+                                + mLegend.getXOffset();
+                        break;
 
-				offsetBottom += Math.min(mLegend.mNeededHeight + yOffset, mViewPortHandler.getChartHeight() * mLegend.getMaxSizePercent());
+                    case CENTER:
 
-			} else if (mLegend.getPosition() == LegendPosition.ABOVE_CHART_LEFT
-					|| mLegend.getPosition() == LegendPosition.ABOVE_CHART_RIGHT
-					|| mLegend.getPosition() == LegendPosition.ABOVE_CHART_CENTER) {
+                        switch (mLegend.getVerticalAlignment()) {
+                            case TOP:
+                                offsets.top += Math.min(mLegend.mNeededHeight,
+                                        mViewPortHandler.getChartHeight() * mLegend.getMaxSizePercent())
+                                        + mLegend.getYOffset();
+                                break;
 
-				// It's possible that we do not need this offset anymore as it
-				//   is available through the extraOffsets, but changing it can mean
-				//   changing default visibility for existing apps.
-				float yOffset = mLegend.mTextHeightMax * 2.f;
+                            case BOTTOM:
+                                offsets.bottom += Math.min(mLegend.mNeededHeight,
+                                        mViewPortHandler.getChartHeight() * mLegend.getMaxSizePercent())
+                                        + mLegend.getYOffset();
+                                break;
 
-				offsetTop += Math.min(mLegend.mNeededHeight + yOffset, mViewPortHandler.getChartHeight() * mLegend.getMaxSizePercent());
-			}
-		}
+                            default:
+                                break;
+                        }
+                }
 
-		// offsets for y-labels
-		if (mAxisLeft.needsOffset()) {
-			offsetTop += mAxisLeft.getRequiredHeightSpace(mAxisRendererLeft.getPaintAxisLabels());
-		}
+                break;
 
-		if (mAxisRight.needsOffset()) {
-			offsetBottom += mAxisRight.getRequiredHeightSpace(mAxisRendererRight.getPaintAxisLabels());
-		}
+            case HORIZONTAL:
 
-		float xlabelwidth = mXAxis.mLabelRotatedWidth;
+                switch (mLegend.getVerticalAlignment()) {
+                    case TOP:
+                        offsets.top += Math.min(mLegend.mNeededHeight,
+                                mViewPortHandler.getChartHeight() * mLegend.getMaxSizePercent())
+                                + mLegend.getYOffset();
 
-		if (mXAxis.isEnabled()) {
+                        if (mAxisLeft.isEnabled() && mAxisLeft.isDrawLabelsEnabled())
+                            offsets.top += mAxisLeft.getRequiredHeightSpace(
+                                    mAxisRendererLeft.getPaintAxisLabels());
+                        break;
 
-			// offsets for x-labels
-			if (mXAxis.getPosition() == XAxisPosition.BOTTOM) {
+                    case BOTTOM:
+                        offsets.bottom += Math.min(mLegend.mNeededHeight,
+                                mViewPortHandler.getChartHeight() * mLegend.getMaxSizePercent())
+                                + mLegend.getYOffset();
 
-				offsetLeft += xlabelwidth;
+                        if (mAxisRight.isEnabled() && mAxisRight.isDrawLabelsEnabled())
+                            offsets.bottom += mAxisRight.getRequiredHeightSpace(
+                                    mAxisRendererRight.getPaintAxisLabels());
+                        break;
 
-			} else if (mXAxis.getPosition() == XAxisPosition.TOP) {
+                    default:
+                        break;
+                }
+                break;
+        }
+    }
 
-				offsetRight += xlabelwidth;
+    @Override
+    public void calculateOffsets() {
 
-			} else if (mXAxis.getPosition() == XAxisPosition.BOTH_SIDED) {
+        float offsetLeft = 0f, offsetRight = 0f, offsetTop = 0f, offsetBottom = 0f;
 
-				offsetLeft += xlabelwidth;
-				offsetRight += xlabelwidth;
-			}
-		}
+        calculateLegendOffsets(mOffsetsBuffer);
 
-		offsetTop += getExtraTopOffset();
-		offsetRight += getExtraRightOffset();
-		offsetBottom += getExtraBottomOffset();
-		offsetLeft += getExtraLeftOffset();
+        offsetLeft += mOffsetsBuffer.left;
+        offsetTop += mOffsetsBuffer.top;
+        offsetRight += mOffsetsBuffer.right;
+        offsetBottom += mOffsetsBuffer.bottom;
 
-		float minOffset = Utils.convertDpToPixel(mMinOffset);
+        // offsets for y-labels
+        if (mAxisLeft.needsOffset()) {
+            offsetTop += mAxisLeft.getRequiredHeightSpace(mAxisRendererLeft.getPaintAxisLabels());
+        }
 
-		mViewPortHandler.restrainViewPort(
-				Math.max(minOffset, offsetLeft),
-				Math.max(minOffset, offsetTop),
-				Math.max(minOffset, offsetRight),
-				Math.max(minOffset, offsetBottom));
+        if (mAxisRight.needsOffset()) {
+            offsetBottom += mAxisRight.getRequiredHeightSpace(mAxisRendererRight.getPaintAxisLabels());
+        }
 
-		if (mLogEnabled) {
-			Log.i(LOG_TAG, "offsetLeft: " + offsetLeft + ", offsetTop: " + offsetTop + ", offsetRight: " + offsetRight + ", offsetBottom: "
-					+ offsetBottom);
-			Log.i(LOG_TAG, "Content: " + mViewPortHandler.getContentRect().toString());
-		}
+        float xlabelwidth = mXAxis.mLabelRotatedWidth;
 
-		prepareOffsetMatrix();
-		prepareValuePxMatrix();
-	}
+        if (mXAxis.isEnabled()) {
 
-	@Override
-	protected void prepareValuePxMatrix() {
-		mRightAxisTransformer.prepareMatrixValuePx(mAxisRight.mAxisMinimum, mAxisRight.mAxisRange, mDeltaX, mXChartMin);
-		mLeftAxisTransformer.prepareMatrixValuePx(mAxisLeft.mAxisMinimum, mAxisLeft.mAxisRange, mDeltaX, mXChartMin);
-	}
+            // offsets for x-labels
+            if (mXAxis.getPosition() == XAxisPosition.BOTTOM) {
 
-	@Override
-	protected void calcModulus() {
-		float[] values = new float[9];
-		mViewPortHandler.getMatrixTouch().getValues(values);
+                offsetLeft += xlabelwidth;
 
-		mXAxis.mAxisLabelModulus =
-				(int) Math.ceil((mData.getXValCount() * mXAxis.mLabelRotatedHeight)
-				/ (mViewPortHandler.contentHeight() * values[Matrix.MSCALE_Y]));
+            } else if (mXAxis.getPosition() == XAxisPosition.TOP) {
 
-		if (mXAxis.mAxisLabelModulus < 1)
-			mXAxis.mAxisLabelModulus = 1;
-	}
+                offsetRight += xlabelwidth;
 
-	@Override
-	public RectF getBarBounds(BarEntry e) {
+            } else if (mXAxis.getPosition() == XAxisPosition.BOTH_SIDED) {
 
-		BarDataSet set = mData.getDataSetForEntry(e);
+                offsetLeft += xlabelwidth;
+                offsetRight += xlabelwidth;
+            }
+        }
 
-		if (set == null)
-			return null;
+        offsetTop += getExtraTopOffset();
+        offsetRight += getExtraRightOffset();
+        offsetBottom += getExtraBottomOffset();
+        offsetLeft += getExtraLeftOffset();
 
-		float barspace = set.getBarSpace();
-		float y = e.getVal();
-		float x = e.getXIndex();
+        float minOffset = Utils.convertDpToPixel(mMinOffset);
 
-		float spaceHalf = barspace / 2f;
+        mViewPortHandler.restrainViewPort(
+                Math.max(minOffset, offsetLeft),
+                Math.max(minOffset, offsetTop),
+                Math.max(minOffset, offsetRight),
+                Math.max(minOffset, offsetBottom));
 
-		float top = x - 0.5f + spaceHalf;
-		float bottom = x + 0.5f - spaceHalf;
-		float left = y >= 0 ? y : 0;
-		float right = y <= 0 ? y : 0;
+        if (mLogEnabled) {
+            Log.i(LOG_TAG, "offsetLeft: " + offsetLeft + ", offsetTop: " + offsetTop + ", offsetRight: " +
+                    offsetRight + ", offsetBottom: "
+                    + offsetBottom);
+            Log.i(LOG_TAG, "Content: " + mViewPortHandler.getContentRect().toString());
+        }
 
-		RectF bounds = new RectF(left, top, right, bottom);
+        prepareOffsetMatrix();
+        prepareValuePxMatrix();
+    }
 
-		getTransformer(set.getAxisDependency()).rectValueToPixel(bounds);
+    @Override
+    protected void prepareValuePxMatrix() {
+        mRightAxisTransformer.prepareMatrixValuePx(mAxisRight.mAxisMinimum, mAxisRight.mAxisRange, mXAxis.mAxisRange,
+                mXAxis.mAxisMinimum);
+        mLeftAxisTransformer.prepareMatrixValuePx(mAxisLeft.mAxisMinimum, mAxisLeft.mAxisRange, mXAxis.mAxisRange,
+                mXAxis.mAxisMinimum);
+    }
 
-		return bounds;
-	}
+    @Override
+    protected float[] getMarkerPosition(Highlight high) {
+        return new float[]{high.getDrawY(), high.getDrawX()};
+    }
 
-	@Override
-	public PointF getPosition(Entry e, AxisDependency axis) {
+    @Override
+    public void getBarBounds(BarEntry e, RectF outputRect) {
 
-		if (e == null)
-			return null;
+        RectF bounds = outputRect;
+        IBarDataSet set = mData.getDataSetForEntry(e);
 
-		float[] vals = new float[] { e.getVal(), e.getXIndex() };
+        if (set == null) {
+            outputRect.set(Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE);
+            return;
+        }
 
-		getTransformer(axis).pointValuesToPixel(vals);
+        float y = e.getY();
+        float x = e.getX();
 
-		return new PointF(vals[0], vals[1]);
-	}
+        float barWidth = mData.getBarWidth();
 
-	/**
-	 * Returns the Highlight object (contains x-index and DataSet index) of the selected value at the given touch point
-	 * inside the BarChart.
-	 * 
-	 * @param x
-	 * @param y
-	 * @return
-	 */
-	@Override
-	public Highlight getHighlightByTouchPoint(float x, float y) {
+        float top = x - barWidth / 2f;
+        float bottom = x + barWidth / 2f;
+        float left = y >= 0 ? y : 0;
+        float right = y <= 0 ? y : 0;
 
-		if (mDataNotSet || mData == null) {
-			Log.e(LOG_TAG, "Can't select by touch. No data set.");
-			return null;
-		} else
-			return mHighlighter.getHighlight(y, x); // switch x and y
-	}
+        bounds.set(left, top, right, bottom);
 
-	/**
-	 * Returns the lowest x-index (value on the x-axis) that is still visible on the chart.
-	 * 
-	 * @return
-	 */
-	@Override
-	public int getLowestVisibleXIndex() {
+        getTransformer(set.getAxisDependency()).rectValueToPixel(bounds);
 
-		float step = mData.getDataSetCount();
-		float div = (step <= 1) ? 1 : step + mData.getGroupSpace();
+    }
 
-		float[] pts = new float[] { mViewPortHandler.contentLeft(), mViewPortHandler.contentBottom() };
+    protected float[] mGetPositionBuffer = new float[2];
 
-		getTransformer(AxisDependency.LEFT).pixelsToValue(pts);
-		return (int) (((pts[1] <= 0) ? 0 : ((pts[1])) / div) + 1);
-	}
+    /**
+     * Returns a recyclable MPPointF instance.
+     *
+     * @param e
+     * @param axis
+     * @return
+     */
+    @Override
+    public MPPointF getPosition(Entry e, AxisDependency axis) {
 
-	/**
-	 * Returns the highest x-index (value on the x-axis) that is still visible on the chart.
-	 * 
-	 * @return
-	 */
-	@Override
-	public int getHighestVisibleXIndex() {
+        if (e == null)
+            return null;
 
-		float step = mData.getDataSetCount();
-		float div = (step <= 1) ? 1 : step + mData.getGroupSpace();
+        float[] vals = mGetPositionBuffer;
+        vals[0] = e.getY();
+        vals[1] = e.getX();
 
-		float[] pts = new float[] { mViewPortHandler.contentLeft(), mViewPortHandler.contentTop() };
+        getTransformer(axis).pointValuesToPixel(vals);
 
-		getTransformer(AxisDependency.LEFT).pixelsToValue(pts);
-		return (int) ((pts[1] >= getXChartMax()) ? getXChartMax() / div : (pts[1] / div));
-	}
+        return MPPointF.getInstance(vals[0], vals[1]);
+    }
+
+    /**
+     * Returns the Highlight object (contains x-index and DataSet index) of the selected value at the given touch point
+     * inside the BarChart.
+     *
+     * @param x
+     * @param y
+     * @return
+     */
+    @Override
+    public Highlight getHighlightByTouchPoint(float x, float y) {
+
+        if (mData == null) {
+            if (mLogEnabled)
+                Log.e(LOG_TAG, "Can't select by touch. No data set.");
+            return null;
+        } else
+            return getHighlighter().getHighlight(y, x); // switch x and y
+    }
+
+    @Override
+    public float getLowestVisibleX() {
+        getTransformer(AxisDependency.LEFT).getValuesByTouchPoint(mViewPortHandler.contentLeft(),
+                mViewPortHandler.contentBottom(), posForGetLowestVisibleX);
+        float result = (float) Math.max(mXAxis.mAxisMinimum, posForGetLowestVisibleX.y);
+        return result;
+    }
+
+    @Override
+    public float getHighestVisibleX() {
+        getTransformer(AxisDependency.LEFT).getValuesByTouchPoint(mViewPortHandler.contentLeft(),
+                mViewPortHandler.contentTop(), posForGetHighestVisibleX);
+        float result = (float) Math.min(mXAxis.mAxisMaximum, posForGetHighestVisibleX.y);
+        return result;
+    }
+
+    /**
+     * ###### VIEWPORT METHODS BELOW THIS ######
+     */
+
+    @Override
+    public void setVisibleXRangeMaximum(float maxXRange) {
+        float xScale = mXAxis.mAxisRange / (maxXRange);
+        mViewPortHandler.setMinimumScaleY(xScale);
+    }
+
+    @Override
+    public void setVisibleXRangeMinimum(float minXRange) {
+        float xScale = mXAxis.mAxisRange / (minXRange);
+        mViewPortHandler.setMaximumScaleY(xScale);
+    }
+
+    @Override
+    public void setVisibleXRange(float minXRange, float maxXRange) {
+        float minScale = mXAxis.mAxisRange / minXRange;
+        float maxScale = mXAxis.mAxisRange / maxXRange;
+        mViewPortHandler.setMinMaxScaleY(minScale, maxScale);
+    }
+
+    @Override
+    public void setVisibleYRangeMaximum(float maxYRange, AxisDependency axis) {
+        float yScale = getAxisRange(axis) / maxYRange;
+        mViewPortHandler.setMinimumScaleX(yScale);
+    }
+
+    @Override
+    public void setVisibleYRangeMinimum(float minYRange, AxisDependency axis) {
+        float yScale = getAxisRange(axis) / minYRange;
+        mViewPortHandler.setMaximumScaleX(yScale);
+    }
+
+    @Override
+    public void setVisibleYRange(float minYRange, float maxYRange, AxisDependency axis) {
+        float minScale = getAxisRange(axis) / minYRange;
+        float maxScale = getAxisRange(axis) / maxYRange;
+        mViewPortHandler.setMinMaxScaleX(minScale, maxScale);
+    }
 }

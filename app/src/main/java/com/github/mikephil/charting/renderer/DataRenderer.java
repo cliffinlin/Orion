@@ -6,13 +6,16 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Paint.Style;
+import android.graphics.drawable.Drawable;
 
 import com.github.mikephil.charting.animation.ChartAnimator;
-import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.interfaces.dataprovider.ChartInterface;
+import com.github.mikephil.charting.interfaces.datasets.IDataSet;
+import com.github.mikephil.charting.utils.MPPointF;
 import com.github.mikephil.charting.utils.Utils;
-import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
 /**
@@ -44,10 +47,7 @@ public abstract class DataRenderer extends Renderer {
      * entries)
      */
     protected Paint mValuePaint;
-  //Modify for stock    
-    protected Paint mTagPaint;
-  //Modify for stock
-    
+
     public DataRenderer(ChartAnimator animator, ViewPortHandler viewPortHandler) {
         super(viewPortHandler);
         this.mAnimator = animator;
@@ -60,19 +60,17 @@ public abstract class DataRenderer extends Renderer {
         mValuePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mValuePaint.setColor(Color.rgb(63, 63, 63));
         mValuePaint.setTextAlign(Align.CENTER);
-        //Modify for stock
-        mValuePaint.setTextSize(Utils.convertDpToPixel(12f));
+        mValuePaint.setTextSize(Utils.convertDpToPixel(9f));
 
-        mTagPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mTagPaint.setColor(Color.rgb(63, 63, 63));
-        mTagPaint.setTextAlign(Align.CENTER);
-        mTagPaint.setTextSize(Utils.convertDpToPixel(12f));
-        //Modify for stock
-        
         mHighlightPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mHighlightPaint.setStyle(Paint.Style.STROKE);
         mHighlightPaint.setStrokeWidth(2f);
         mHighlightPaint.setColor(Color.rgb(255, 187, 115));
+    }
+
+    protected boolean isDrawingValuesAllowed(ChartInterface chart) {
+        return chart.getData().getEntryCount() < chart.getMaxVisibleCount()
+                * mViewPortHandler.getScaleX();
     }
 
     /**
@@ -84,13 +82,7 @@ public abstract class DataRenderer extends Renderer {
     public Paint getPaintValues() {
         return mValuePaint;
     }
-    
-  //Modify for stock
-    public Paint getPaintTags() {
-        return mTagPaint;
-    }
-  //Modify for stock
-    
+
     /**
      * Returns the Paint object this renderer uses for drawing highlight
      * indicators.
@@ -116,21 +108,12 @@ public abstract class DataRenderer extends Renderer {
      *
      * @param set
      */
-    protected void applyValueTextStyle(DataSet<?> set) {
+    protected void applyValueTextStyle(IDataSet set) {
 
-        mValuePaint.setColor(set.getValueTextColor());
         mValuePaint.setTypeface(set.getValueTypeface());
         mValuePaint.setTextSize(set.getValueTextSize());
     }
-    
-    //Modify for stock
-    protected void applyTagTextStyle(DataSet<?> set) {
-    	mTagPaint.setColor(set.getValueTextColor());
-    	mTagPaint.setTypeface(set.getValueTypeface());
-    	mTagPaint.setTextSize(set.getValueTextSize());
-    }
-    //Modify for stock
-    
+
     /**
      * Initializes the buffers used for rendering with a new size. Since this
      * method performs memory allocations, it should only be called if
@@ -151,15 +134,9 @@ public abstract class DataRenderer extends Renderer {
      * @param c
      */
     public abstract void drawValues(Canvas c);
-    
-//Modify for stock
-    public void drawTags(Canvas c)
-    {
-    }
-//Modify for stock
-    
+
     /**
-     * Draws the value of the given entry by using the provided ValueFormatter.
+     * Draws the value of the given entry by using the provided IValueFormatter.
      *
      * @param c            canvas
      * @param formatter    formatter for custom value-formatting
@@ -168,17 +145,13 @@ public abstract class DataRenderer extends Renderer {
      * @param dataSetIndex the index of the DataSet the drawn Entry belongs to
      * @param x            position
      * @param y            position
+     * @param color
      */
-    public void drawValue(Canvas c, ValueFormatter formatter, float value, Entry entry, int dataSetIndex, float x, float y) {
+    public void drawValue(Canvas c, IValueFormatter formatter, float value, Entry entry, int dataSetIndex, float x, float y, int color) {
+        mValuePaint.setColor(color);
         c.drawText(formatter.getFormattedValue(value, entry, dataSetIndex, mViewPortHandler), x, y, mValuePaint);
     }
-    
-//Modify for stock    
-    public void drawTag(Canvas c, String tag, float x, float y) {
-        c.drawText(tag, x, y, mTagPaint);
-    }
-//Modify for stock 
-    
+
     /**
      * Draws any kind of additional information (e.g. line-circles).
      *

@@ -29,14 +29,18 @@ import com.android.orion.database.Stock;
 import com.android.orion.setting.Constant;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.XAxis.XAxisPosition;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.components.YAxis.YAxisLabelPosition;
-import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.BubbleEntry;
 import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.formatter.DefaultYAxisValueFormatter;
+import com.github.mikephil.charting.formatter.DefaultAxisValueFormatter;
+import com.github.mikephil.charting.formatter.DefaultValueFormatter;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.utils.Utils;
 
 import java.lang.ref.WeakReference;
@@ -54,7 +58,7 @@ public class MachineLearningChartListActivity extends BaseActivity implements
 	String mSortOrder = DatabaseContract.COLUMN_VALUATION
 			+ DatabaseContract.ORDER_DESC;
 
-	String mDescription = "";
+	Description mDescription = new Description();
 	Menu mMenu = null;
 	ListView mListView = null;
 	MachineLearningChartArrayAdapter mMachineLearningChartArrayAdapter = null;
@@ -175,7 +179,7 @@ public class MachineLearningChartListActivity extends BaseActivity implements
 			swapCursor(mMachineLearningChartList.get(0), cursor);
 		}
 
-		mDescription = "Profit";
+		mDescription.setText("Profit");
 	}
 
 	@Override
@@ -227,10 +231,9 @@ public class MachineLearningChartListActivity extends BaseActivity implements
 	}
 
 	CursorLoader getStockCursorLoader() {
-		String selection = "";
-		CursorLoader loader = null;
+		String selection = DatabaseContract.COLUMN_CLASSES + " = '" + Stock.CLASS_A + "'";
 
-		loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
+		CursorLoader loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
 				DatabaseContract.Stock.PROJECTION_ALL, selection, null,
 				mSortOrder);
 
@@ -256,10 +259,10 @@ public class MachineLearningChartListActivity extends BaseActivity implements
 					BubbleEntry pointEntry = new BubbleEntry(index, (float) stock.getRoi(), 0);
 					chart.mPointEntryList.add(pointEntry);
 
-//					Entry pointEntry = new Entry((float) stock.getRoi(), index);
+					Entry pointEntry = new Entry(index, (float) stock.getRoi());
 //					chart.mPointEntryList.add(pointEntry);
 
-					Entry lineEntry = new Entry((float) stock.getRoe(), index);
+					Entry lineEntry = new Entry(index, (float) stock.getRoe());
 					chart.mLineEntryList.add(lineEntry);
 				}
 			}
@@ -271,13 +274,10 @@ public class MachineLearningChartListActivity extends BaseActivity implements
 				index = chart.mXValues.size();
 				chart.mXValues.add(String.valueOf(housePrices.xArray[i]));
 
-				BubbleEntry pointEntry = new BubbleEntry(index, (float) housePrices.yArray[i], 0);
+				Entry pointEntry = new Entry((float) housePrices.xArray[i], (float) housePrices.yArray[i]);
 				chart.mPointEntryList.add(pointEntry);
 
-//					Entry pointEntry = new Entry((float) stock.getRoi(), index);
-//					chart.mPointEntryList.add(pointEntry);
-
-				Entry lineEntry = new Entry((float) housePrices.yArray[i], index);
+				Entry lineEntry = new Entry((float) housePrices.xArray[i], (float) housePrices.trainer.predict(housePrices.xArray[i]));
 				chart.mLineEntryList.add(lineEntry);
 			}
 		} catch (Exception e) {
@@ -377,15 +377,13 @@ public class MachineLearningChartListActivity extends BaseActivity implements
 				xAxis = viewHolder.mCombinedChart.getXAxis();
 				if (xAxis != null) {
 					xAxis.setPosition(XAxisPosition.BOTTOM);
+					xAxis.setAxisMinimum(0);
 				}
 
 				leftYAxis = viewHolder.mCombinedChart.getAxisLeft();
 				if (leftYAxis != null) {
-					leftYAxis.setPosition(YAxisLabelPosition.INSIDE_CHART);
-					leftYAxis.setStartAtZero(false);
-					leftYAxis.setValueFormatter(new DefaultYAxisValueFormatter(
-							2));
-					leftYAxis.removeAllLimitLines();
+					leftYAxis.setAxisMinimum(0);
+					leftYAxis.setValueFormatter(new DefaultAxisValueFormatter(2));
 				}
 
 				rightYAxis = viewHolder.mCombinedChart.getAxisRight();

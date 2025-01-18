@@ -163,9 +163,6 @@ public class StockQuantListActivity extends ListActivity implements
 
 					intent = new Intent(mContext, MachineLearningChartListActivity.class);
 					startActivity(intent);
-
-					TestAsyncTask task = new TestAsyncTask();
-					task.execute();
 					break;
 
 				default:
@@ -173,16 +170,6 @@ public class StockQuantListActivity extends ListActivity implements
 			}
 		}
 	};
-
-	class TestAsyncTask extends AsyncTask<String, String, String> {
-
-		@Override
-		protected String doInBackground(String... strings) {
-			HousePrices housePrices = new HousePrices();
-			housePrices.test();
-			return null;
-		}
-	}
 
 	ContentObserver mContentObserver = new ContentObserver(new Handler()) {
 		@Override

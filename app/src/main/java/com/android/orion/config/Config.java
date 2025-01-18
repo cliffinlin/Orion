@@ -1,5 +1,7 @@
 package com.android.orion.config;
 
+import android.graphics.Color;
+
 import com.android.orion.provider.SinaFinance;
 import com.android.orion.setting.Constant;
 
@@ -12,6 +14,14 @@ public class Config {
 
 	public static final String MESSAGE_CHANNEL_ID = "message_channel";
 	public static final String MESSAGE_CHANNEL_NAME = "Message Channel";
+
+	public static final int DATE_LABEL_COUNT = 5;
+	public static final int DATE_TIME_LABEL_COUNT = 3;
+
+	public static final int DESCRIPTION_TEXT_SIZE = 12;
+
+	public static final int COLOR_RGB_RED = Color.rgb(255, 50, 50);
+	public static final int COLOR_RGB_GREEN = Color.rgb(50, 128, 50);
 
 	public static final int DOUBLE_FIXED_DECIMAL = 2;
 	public static final int SERVICE_NOTIFICATION_ID = 600000;

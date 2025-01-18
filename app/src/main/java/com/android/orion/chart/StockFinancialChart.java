@@ -2,6 +2,7 @@ package com.android.orion.chart;
 
 import android.graphics.Color;
 
+import com.android.orion.config.Config;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -16,7 +17,7 @@ import java.util.ArrayList;
 
 public class StockFinancialChart {
 	public String mPeriod;
-	public String mDescription;
+	public String mDescription = "";
 
 	public ArrayList<String> mXValues = new ArrayList<>();
 
@@ -35,8 +36,8 @@ public class StockFinancialChart {
 
 	public ArrayList<LimitLine> mLimitLineList = new ArrayList<>();
 
-	public CombinedData mCombinedDataMain = new CombinedData(mXValues);
-	public CombinedData mCombinedDataSub = new CombinedData(mXValues);
+	public CombinedData mCombinedDataMain = new CombinedData();
+	public CombinedData mCombinedDataSub = new CombinedData();
 
 	public StockFinancialChart(String period) {
 		mPeriod = period;
@@ -46,7 +47,7 @@ public class StockFinancialChart {
 	}
 
 	public void setMainChartData() {
-		LineData lineData = new LineData(mXValues);
+		LineData lineData = new LineData();
 
 		LineDataSet totalAssetsDataSet = new LineDataSet(mTotalAssetsEntryList,
 				"Assets");
@@ -98,7 +99,7 @@ public class StockFinancialChart {
 	}
 
 	public void setSubChartData() {
-		LineData lineData = new LineData(mXValues);
+		LineData lineData = new LineData();
 
 		LineDataSet roeDataSet = new LineDataSet(mRoeEntryList, "Roe");
 		roeDataSet.setColor(Color.DKGRAY);
@@ -130,12 +131,11 @@ public class StockFinancialChart {
 		mCombinedDataSub.setData(lineData);
 
 		if (mDividendEntryList.size() > 0) {
-			BarData barData = new BarData(mXValues);
+			BarData barData = new BarData();
+			barData.setBarWidth(0.5f);
 			BarDataSet dividendDataSet = new BarDataSet(mDividendEntryList,
 					"Dividend");
-			dividendDataSet.setBarSpacePercent(40f);
-			dividendDataSet.setIncreasingColor(Color.rgb(255, 50, 50));
-			dividendDataSet.setDecreasingColor(Color.rgb(50, 128, 50));
+			dividendDataSet.setColor(Config.COLOR_RGB_RED);
 			dividendDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 			barData.addDataSet(dividendDataSet);
 

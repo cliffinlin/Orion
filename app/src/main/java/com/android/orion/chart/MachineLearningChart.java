@@ -2,6 +2,7 @@ package com.android.orion.chart;
 
 import android.graphics.Color;
 
+import com.github.mikephil.charting.charts.ScatterChart;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
@@ -27,26 +28,25 @@ public class MachineLearningChart {
 
 	public ArrayList<String> mXValues = new ArrayList<>();
 
-	public ArrayList<BubbleEntry> mPointEntryList = new ArrayList<>();
-//	public ArrayList<Entry> mPointEntryList = new ArrayList<>();
+	public ArrayList<Entry> mPointEntryList = new ArrayList<>();
 	public ArrayList<Entry> mLineEntryList = new ArrayList<>();
-
-	public CombinedData mCombinedDataMain = new CombinedData(mXValues);
+	public CombinedData mCombinedDataMain;
 
 	public MachineLearningChart() {
 		setMainChartData();
 	}
 
 	public void setMainChartData() {
-		mCombinedDataMain = new CombinedData(mXValues);
+		mCombinedDataMain = new CombinedData();
 
-		BubbleData bubbleData = new BubbleData(mXValues);
-		BubbleDataSet bubbleDataSet = new BubbleDataSet(mPointEntryList, "NUp");
-		bubbleDataSet.setColor(Color.BLUE);
-		bubbleData.addDataSet(bubbleDataSet);
-		mCombinedDataMain.setData(bubbleData);
+		ScatterData scatterData = new ScatterData();
+		ScatterDataSet scatterDataSet = new ScatterDataSet(mPointEntryList, "point");
+		scatterDataSet.setScatterShape(ScatterChart.ScatterShape.CIRCLE);
+		scatterDataSet.setColor(Color.BLUE);
+		scatterData.addDataSet(scatterDataSet);
+		mCombinedDataMain.setData(scatterData);
 
-		LineData lineData = new LineData(mXValues);
+		LineData lineData = new LineData();
 		LineDataSet lineDataSet = new LineDataSet(mLineEntryList, "line");
 		lineDataSet.setColor(Color.RED);
 		lineDataSet.setCircleColor(Color.RED);

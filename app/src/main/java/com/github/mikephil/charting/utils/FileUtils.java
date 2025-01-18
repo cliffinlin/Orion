@@ -61,7 +61,7 @@ public class FileUtils {
                         vals[i] = Float.parseFloat(split[i]);
                     }
 
-                    entries.add(new BarEntry(vals, Integer.parseInt(split[split.length - 1])));
+                    entries.add(new BarEntry(Integer.parseInt(split[split.length - 1]), vals));
                 }
             }
         } catch (IOException e) {
@@ -122,7 +122,7 @@ public class FileUtils {
                 String[] split = line.split("#");
 
                 if (split.length <= 2) {
-                    entries.add(new Entry(Float.parseFloat(split[0]), Integer.parseInt(split[1])));
+                    entries.add(new Entry(Float.parseFloat(split[1]), Float.parseFloat(split[0])));
                 } else {
 
                     float[] vals = new float[split.length - 1];
@@ -131,7 +131,7 @@ public class FileUtils {
                         vals[i] = Float.parseFloat(split[i]);
                     }
 
-                    entries.add(new BarEntry(vals, Integer.parseInt(split[split.length - 1])));
+                    entries.add(new BarEntry(Integer.parseInt(split[split.length - 1]), vals));
                 }
                 line = reader.readLine();
             }
@@ -191,7 +191,7 @@ public class FileUtils {
     /**
      * Saves an Array of Entries to the specified location on the sdcard
      * 
-     * @param ds
+     * @param entries
      * @param path
      */
     public static void saveToSdCard(List<Entry> entries, String path) {
@@ -216,7 +216,7 @@ public class FileUtils {
 
             for (Entry e : entries) {
 
-                buf.append(e.getVal() + "#" + e.getXIndex());
+                buf.append(e.getY() + "#" + e.getX());
                 buf.newLine();
             }
 
@@ -242,7 +242,7 @@ public class FileUtils {
                 // process line
                 String[] split = line.split("#");
 
-                entries.add(new BarEntry(Float.parseFloat(split[0]), Integer.parseInt(split[1])));
+                entries.add(new BarEntry(Float.parseFloat(split[1]), Float.parseFloat(split[0])));
 
                 line = reader.readLine();
             }

@@ -20,10 +20,14 @@ public class Trainer {
 		this.cost = 0;
 	}
 
+	public double predict(double x) {
+		return this.weight * x + this.bias;
+	}
+
 	public double costError() {
 		double total = 0;
 		for (int i = 0; i < this.points; i++) {
-			total += Math.pow((this.yArr[i] - (this.weight * this.xArr[i] + this.bias)), 2);
+			total += Math.pow((this.yArr[i] - predict(this.xArr[i])), 2);
 		}
 		return total / this.points;
 	}
@@ -33,7 +37,7 @@ public class Trainer {
 		double w_deriv = 0;
 		double b_deriv = 0;
 		for (int i = 0; i < this.points; i++) {
-			wx = this.yArr[i] - (this.weight * this.xArr[i] + this.bias);
+			wx = this.yArr[i] - predict(this.xArr[i]);
 			w_deriv += -2 * wx * this.xArr[i];
 			b_deriv += -2 * wx;
 		}

@@ -6,8 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.utils.FSize;
+import com.github.mikephil.charting.utils.MPPointF;
+
+import java.lang.ref.WeakReference;
 
 /**
  * View that can be displayed when selecting values in the chart. Extend this class to provide custom layouts for your
@@ -15,7 +20,11 @@ import com.github.mikephil.charting.highlight.Highlight;
  *
  * @author Philipp Jahoda
  */
-public abstract class MarkerView extends RelativeLayout {
+public class MarkerView extends RelativeLayout implements IMarker {
+
+    private MPPointF mOffset = new MPPointF();
+    private MPPointF mOffset2 = new MPPointF();
+    private WeakReference<Chart> mWeakChart;
 
     /**
      * Constructor. Sets up the MarkerView with a custom layout resource.
@@ -44,50 +53,77 @@ public abstract class MarkerView extends RelativeLayout {
         inflated.layout(0, 0, inflated.getMeasuredWidth(), inflated.getMeasuredHeight());
     }
 
-    /**
-     * Draws the MarkerView on the given position on the screen with the given Canvas object.
-     *
-     * @param canvas
-     * @param posx
-     * @param posy
-     */
-    public void draw(Canvas canvas, float posx, float posy) {
+    public void setOffset(MPPointF offset) {
+        mOffset = offset;
 
-        // take offsets into consideration
-        posx += getXOffset(posx);
-        posy += getYOffset(posy);
-
-        // translate to the correct position and draw
-        canvas.translate(posx, posy);
-        draw(canvas);
-        canvas.translate(-posx, -posy);
+        if (mOffset == null) {
+            mOffset = new MPPointF();
+        }
     }
 
-    /**
-     * This method enables a specified custom MarkerView to update it's content everytime the MarkerView is redrawn.
-     *
-     * @param e         The Entry the MarkerView belongs to. This can also be any subclass of Entry, like BarEntry or
-     *                  CandleEntry, simply cast it at runtime.
-     * @param highlight the highlight object contains information about the highlighted value such as it's dataset-index, the
-     *                  selected range or stack-index (only stacked bar entries).
-     */
-    public abstract void refreshContent(Entry e, Highlight highlight);
+    public void setOffset(float offsetX, float offsetY) {
+        mOffset.x = offsetX;
+        mOffset.y = offsetY;
+    }
 
-    /**
-     * Use this to return the desired offset you wish the MarkerView to have on the x-axis. By returning -(getWidth() /
-     * 2) you will center the MarkerView horizontally.
-     *
-     * @param xpos the position on the x-axis in pixels where the marker is drawn
-     * @return
-     */
-    public abstract int getXOffset(float xpos);
+    @Override
+    public MPPointF getOffset() {
+        return mOffset;
+    }
 
-    /**
-     * Use this to return the desired position offset you wish the MarkerView to have on the y-axis. By returning
-     * -getHeight() you will cause the MarkerView to be above the selected value.
-     *
-     * @param ypos the position on the y-axis in pixels where the marker is drawn
-     * @return
-     */
-    public abstract int getYOffset(float ypos);
+    public void setChartView(Chart chart) {
+        mWeakChart = new WeakReference<>(chart);
+    }
+
+    public Chart getChartView() {
+        return mWeakChart == null ? null : mWeakChart.get();
+    }
+
+    @Override
+    public MPPointF getOffsetForDrawingAtPoint(float posX, float posY) {
+
+        MPPointF offset = getOffset();
+        mOffset2.x = offset.x;
+        mOffset2.y = offset.y;
+
+        Chart chart = getChartView();
+
+        float width = getWidth();
+        float height = getHeight();
+
+        if (posX + mOffset2.x < 0) {
+            mOffset2.x = - posX;
+        } else if (chart != null && posX + width + mOffset2.x > chart.getWidth()) {
+            mOffset2.x = chart.getWidth() - posX - width;
+        }
+
+        if (posY + mOffset2.y < 0) {
+            mOffset2.y = - posY;
+        } else if (chart != null && posY + height + mOffset2.y > chart.getHeight()) {
+            mOffset2.y = chart.getHeight() - posY - height;
+        }
+
+        return mOffset2;
+    }
+
+    @Override
+    public void refreshContent(Entry e, Highlight highlight) {
+
+        measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
+                MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
+        layout(0, 0, getMeasuredWidth(), getMeasuredHeight());
+
+    }
+
+    @Override
+    public void draw(Canvas canvas, float posX, float posY) {
+
+        MPPointF offset = getOffsetForDrawingAtPoint(posX, posY);
+
+        int saveId = canvas.save();
+        // translate to the correct position and draw
+        canvas.translate(posX + offset.x, posY + offset.y);
+        draw(canvas);
+        canvas.restoreToCount(saveId);
+    }
 }

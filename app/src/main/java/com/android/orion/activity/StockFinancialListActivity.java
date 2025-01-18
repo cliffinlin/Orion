@@ -679,13 +679,11 @@ public class StockFinancialListActivity extends ListActivity implements
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle arg1) {
-		String selection = "";
 		CursorLoader loader = null;
 
 		switch (id) {
 			case LOADER_ID_STOCK_FINANCIAL_LIST:
-				selection += DatabaseContract.COLUMN_FLAG + " >= " + Stock.FLAG_FAVORITE
-						+ " AND " + DatabaseContract.COLUMN_CLASSES + " = '" + Stock.CLASS_A + "'";
+				String selection = DatabaseContract.COLUMN_CLASSES + " = '" + Stock.CLASS_A + "'";
 				loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
 						DatabaseContract.Stock.PROJECTION_ALL, selection, null,
 						mSortOrder);

@@ -23,6 +23,7 @@ import android.widget.ArrayAdapter;
 import com.android.orion.R;
 import com.android.orion.chart.ChartSyncHelper;
 import com.android.orion.chart.StockFinancialChart;
+import com.android.orion.config.Config;
 import com.android.orion.data.Period;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.ShareBonus;
@@ -33,13 +34,17 @@ import com.android.orion.setting.Setting;
 import com.android.orion.utility.Search;
 import com.android.orion.utility.Utility;
 import com.github.mikephil.charting.charts.CombinedChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.XAxis.XAxisPosition;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.components.YAxis.YAxisLabelPosition;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.formatter.DefaultYAxisValueFormatter;
+import com.github.mikephil.charting.formatter.DefaultAxisValueFormatter;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.utils.Utils;
 import com.markupartist.android.widget.PullToRefreshListView;
 
@@ -63,6 +68,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 
 	String mSortOrder = null;
 	StockFinancial mStockFinancial = new StockFinancial();
+	Description mDescription = new Description();
 
 	PullToRefreshListView mListView = null;
 	ArrayList<StockFinancial> mStockFinancialList = new ArrayList<>();
@@ -240,14 +246,11 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> loader) {
-		int id = 0;
-
 		if (loader == null) {
 			return;
 		}
 
-		id = loader.getId();
-
+		int id = loader.getId();
 		if (id == LOADER_ID_STOCK_LIST) {
 			swapStockCursor(null);
 		} else if (id == LOADER_ID_STOCK_FINANCIAL_LIST) {
@@ -307,13 +310,10 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 	}
 
 	CursorLoader getStockCursorLoader() {
-		String selection = "";
-		CursorLoader loader = null;
-
-		selection += DatabaseContract.COLUMN_FLAG + " >= "
+		String selection = DatabaseContract.COLUMN_FLAG + " >= "
 				+ Stock.FLAG_FAVORITE;
 
-		loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
+		CursorLoader loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
 				DatabaseContract.Stock.PROJECTION_ALL, selection, null,
 				mSortOrder);
 
@@ -424,60 +424,57 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 					dateString = mStockFinancial.getDate();
 					stockFinancialChart.mXValues.add(dateString);
 
-					Entry totalCurrentAssetsEntry = new Entry(
+					Entry totalCurrentAssetsEntry = new Entry(index,
 							(float) mStockFinancial.getTotalCurrentAssets()
-									/ (float) unit, index);
+									/ (float) unit);
 					stockFinancialChart.mTotalCurrentAssetsEntryList
 							.add(totalCurrentAssetsEntry);
 
-					Entry totalAssetsEntry = new Entry(
+					Entry totalAssetsEntry = new Entry(index,
 							(float) mStockFinancial.getTotalAssets()
-									/ (float) unit, index);
+									/ (float) unit);
 					stockFinancialChart.mTotalAssetsEntryList
 							.add(totalAssetsEntry);
 
-					Entry totalLongTermLiabilitiesEntry = new Entry(
+					Entry totalLongTermLiabilitiesEntry = new Entry(index,
 							(float) mStockFinancial.getTotalLongTermLiabilities()
-									/ (float) unit, index);
+									/ (float) unit);
 					stockFinancialChart.mTotalLongTermLiabilitiesEntryList
 							.add(totalLongTermLiabilitiesEntry);
 
-					Entry mainBusinessIncomeEntry = new Entry(
+					Entry mainBusinessIncomeEntry = new Entry(index,
 							(float) mStockFinancial.getMainBusinessIncome()
-									/ (float) unit, index);
+									/ (float) unit);
 					stockFinancialChart.mMainBusinessIncomeEntryList
 							.add(mainBusinessIncomeEntry);
 
-					Entry netProfittEntry = new Entry(
+					Entry netProfittEntry = new Entry(index,
 							(float) mStockFinancial.getNetProfit()
-									/ (float) unit, index);
+									/ (float) unit);
 					stockFinancialChart.mNetProfitEntryList.add(netProfittEntry);
 
-					Entry totalShareEntry = new Entry(
+					Entry totalShareEntry = new Entry(index,
 							(float) mStockFinancial.getTotalShare()
-									/ (float) unit, index);
+									/ (float) unit);
 					stockFinancialChart.mTotalShareEntryList
 							.add(totalShareEntry);
 
-					Entry bookValuePerShareEntry = new Entry(
-							(float) mStockFinancial.getBookValuePerShare(),
-							index);
+					Entry bookValuePerShareEntry = new Entry(index,
+							(float) mStockFinancial.getBookValuePerShare());
 					stockFinancialChart.mBookValuePerShareEntryList
 							.add(bookValuePerShareEntry);
 
-					Entry cashFlowPerShareEntry = new Entry(
-							(float) mStockFinancial.getCashFlowPerShare(), index);
+					Entry cashFlowPerShareEntry = new Entry(index,
+							(float) mStockFinancial.getCashFlowPerShare());
 					stockFinancialChart.mCashFlowPerShareEntryList
 							.add(cashFlowPerShareEntry);
 
-					Entry netProfitPerShareEntry = new Entry(
-							(float) mStockFinancial.getNetProfitPerShare(),
-							index);
+					Entry netProfitPerShareEntry = new Entry(index,
+							(float) mStockFinancial.getNetProfitPerShare());
 					stockFinancialChart.mNetProfitPerShareEntryList
 							.add(netProfitPerShareEntry);
 
-					Entry roeEntry = new Entry((float) mStockFinancial.getRoe(),
-							index);
+					Entry roeEntry = new Entry(index, (float) mStockFinancial.getRoe());
 					stockFinancialChart.mRoeEntryList.add(roeEntry);
 
 					if (mShareBonusList.size() > 0) {
@@ -487,8 +484,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 						if (shareBonus != null) {
 							dividend = (float) (shareBonus.getDividend());
 						}
-						BarEntry shareBonusEntry = new BarEntry(dividend,
-								index);
+						BarEntry shareBonusEntry = new BarEntry(index, dividend);
 						stockFinancialChart.mDividendEntryList
 								.add(shareBonusEntry);
 					}
@@ -502,6 +498,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 
 		updateTitle();
 
+		stockFinancialChart.mDescription = mStock.getName();
 		stockFinancialChart.setMainChartData();
 		stockFinancialChart.setSubChartData();
 
@@ -601,15 +598,14 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 		return stockFinancial;
 	}
 
-	void navigateStock(int direction) {
-		boolean loop = true;
-
+	void navigateStock(int step) {
 		if ((mStockList == null) || (mStockList.size() == 0)) {
 			return;
 		}
 
-		mStockListIndex += direction;
+		mStockListIndex += step;
 
+		boolean loop = true;
 		if (mStockListIndex > mStockList.size() - 1) {
 			if (loop) {
 				mStockListIndex = 0;
@@ -671,8 +667,8 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 		public View getView(int position, View view, Context context) {
 			ViewHolder viewHolder = null;
 			XAxis xAxis = null;
-			YAxis leftAxis = null;
-			YAxis rightAxis = null;
+			YAxis leftYAxis = null;
+			YAxis rightYAxis = null;
 
 			// For android 5 and above solution:
 			// if (view == null) {
@@ -692,29 +688,41 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 			xAxis = viewHolder.chart.getXAxis();
 			if (xAxis != null) {
 				xAxis.setPosition(XAxisPosition.BOTTOM);
+				if (Period.isMinutePeriod(mStockFinancialChart.mPeriod)) {
+					xAxis.setLabelCount(Config.DATE_TIME_LABEL_COUNT);
+				} else {
+					xAxis.setLabelCount(Config.DATE_LABEL_COUNT);
+				}
+				xAxis.setValueFormatter(new IAxisValueFormatter() {
+					public String getFormattedValue(float value, AxisBase axis) {
+						return mStockFinancialChart.mXValues.get((int) value);
+					}
+				});
 			}
 
-			leftAxis = viewHolder.chart.getAxisLeft();
-			if (leftAxis != null) {
-				leftAxis.setPosition(YAxisLabelPosition.INSIDE_CHART);
-				leftAxis.setStartAtZero(false);
-				leftAxis.setValueFormatter(new DefaultYAxisValueFormatter(2));
-				leftAxis.removeAllLimitLines();
+			leftYAxis = viewHolder.chart.getAxisLeft();
+			if (leftYAxis != null) {
+				leftYAxis.setPosition(YAxisLabelPosition.INSIDE_CHART);
+				leftYAxis.setStartAtZero(false);
+				leftYAxis.setValueFormatter(new DefaultAxisValueFormatter(2));
+				leftYAxis.removeAllLimitLines();
 				if (mItemViewType == ITEM_VIEW_TYPE_MAIN) {
 					for (int i = 0; i < mStockFinancialChart.mLimitLineList
 							.size(); i++) {
-						leftAxis.addLimitLine(mStockFinancialChart.mLimitLineList
+						leftYAxis.addLimitLine(mStockFinancialChart.mLimitLineList
 								.get(i));
 					}
 				}
 			}
 
-			rightAxis = viewHolder.chart.getAxisRight();
-			if (rightAxis != null) {
-				rightAxis.setEnabled(false);
+			rightYAxis = viewHolder.chart.getAxisRight();
+			if (rightYAxis != null) {
+				rightYAxis.setEnabled(false);
 			}
 
-			viewHolder.chart.setDescription(mStockFinancialChart.mDescription);
+			mDescription.setText(mStockFinancialChart.mDescription);
+			mDescription.setTextSize(Config.DESCRIPTION_TEXT_SIZE);
+			viewHolder.chart.setDescription(mDescription);
 
 			if (mItemViewType == ITEM_VIEW_TYPE_MAIN) {
 				viewHolder.chart.setData(mStockFinancialChart.mCombinedDataMain);

@@ -74,12 +74,6 @@ public class LimitLine extends ComponentBase {
         return mLimit;
     }
 
-//Modify for stock
-    public void setLimit(float limit) {
-        mLimit = limit;
-    }
-//Modify for stock
-
     /**
      * set the line width of the chart (min = 0.2f, max = 12f); default 2f NOTE:
      * thinner line == better performance, thicker line == worse performance

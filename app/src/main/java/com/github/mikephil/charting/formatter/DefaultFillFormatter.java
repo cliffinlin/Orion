@@ -2,18 +2,19 @@ package com.github.mikephil.charting.formatter;
 
 
 import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.interfaces.LineDataProvider;
+import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 /**
  * Default formatter that calculates the position of the filled line.
  *
  * @author Philipp Jahoda
  */
-public class DefaultFillFormatter implements FillFormatter {
+public class DefaultFillFormatter implements IFillFormatter
+{
 
     @Override
-    public float getFillLinePosition(LineDataSet dataSet, LineDataProvider dataProvider) {
+    public float getFillLinePosition(ILineDataSet dataSet, LineDataProvider dataProvider) {
 
         float fillMin = 0f;
         float chartMaxY = dataProvider.getYChartMax();
@@ -25,23 +26,18 @@ public class DefaultFillFormatter implements FillFormatter {
             fillMin = 0f;
         } else {
 
-            if (!dataProvider.getAxis(dataSet.getAxisDependency()).isStartAtZeroEnabled()) {
+            float max, min;
 
-                float max, min;
+            if (data.getYMax() > 0)
+                max = 0f;
+            else
+                max = chartMaxY;
+            if (data.getYMin() < 0)
+                min = 0f;
+            else
+                min = chartMinY;
 
-                if (data.getYMax() > 0)
-                    max = 0f;
-                else
-                    max = chartMaxY;
-                if (data.getYMin() < 0)
-                    min = 0f;
-                else
-                    min = chartMinY;
-
-                fillMin = dataSet.getYMin() >= 0 ? min : max;
-            } else {
-                fillMin = 0f;
-            }
+            fillMin = dataSet.getYMin() >= 0 ? min : max;
         }
 
         return fillMin;
