@@ -1,8 +1,6 @@
-package com.android.orion.ai.ml;
+package com.android.orion.ai.ml.training;
 
 import android.util.Log;
-
-import java.util.ArrayList;
 
 public class PatternClassification {
     public static String TAG = "AI ML " + PatternClassification.class.getSimpleName();

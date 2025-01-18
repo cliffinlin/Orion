@@ -29,7 +29,8 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import com.android.orion.R;
-import com.android.orion.ai.ml.PatternClassification;
+import com.android.orion.ai.ml.learning.HousePrices;
+import com.android.orion.ai.ml.training.PatternClassification;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockQuant;
@@ -174,8 +175,10 @@ public class StockQuantListActivity extends ListActivity implements
 
 		@Override
 		protected String doInBackground(String... strings) {
-			PatternClassification patternClassification = new PatternClassification();
-			patternClassification.test();
+//			PatternClassification patternClassification = new PatternClassification();
+//			patternClassification.test();
+			HousePrices housePrices = new HousePrices();
+			housePrices.test();
 			return null;
 		}
 	}
