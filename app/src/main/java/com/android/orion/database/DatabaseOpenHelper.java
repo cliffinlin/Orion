@@ -53,7 +53,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 			db.execSQL(DatabaseContract.IndexComponent.DELETE_TABLE);
 			db.setTransactionSuccessful();
 			onCreate(db);
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			db.endTransaction();
