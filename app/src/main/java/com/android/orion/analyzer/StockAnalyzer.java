@@ -171,21 +171,22 @@ public class StockAnalyzer {
 
 	private void analyzeStockData(String period) {
 		TrendAnalyzer trendAnalyzer = TrendAnalyzer.getInstance();
+		trendAnalyzer.setup(mStock, mStockDataList);
 
-		trendAnalyzer.analyzeVertex(mStockDataList, mDrawVertexList);
-		trendAnalyzer.vertexListToDataList(mStockDataList, mDrawVertexList, mDrawDataList);
+		trendAnalyzer.analyzeVertex(mDrawVertexList);
+		trendAnalyzer.vertexListToDataList(mDrawVertexList, mDrawDataList);
 
-		trendAnalyzer.analyzeLine(mStockDataList, mDrawDataList, mStrokeVertexList, Trend.VERTEX_TOP_STROKE, Trend.VERTEX_BOTTOM_STROKE);
-		trendAnalyzer.vertexListToDataList(mStockDataList, mStrokeVertexList, mStrokeDataList);
+		trendAnalyzer.analyzeLine(Trend.LEVEL_DRAW, mDrawDataList, mStrokeVertexList);
+		trendAnalyzer.vertexListToDataList(mStrokeVertexList, mStrokeDataList);
 
-		trendAnalyzer.analyzeLine(mStockDataList, mStrokeDataList, mSegmentVertexList, Trend.VERTEX_TOP_SEGMENT, Trend.VERTEX_BOTTOM_SEGMENT);
-		trendAnalyzer.vertexListToDataList(mStockDataList, mSegmentVertexList, mSegmentDataList);
+		trendAnalyzer.analyzeLine(Trend.LEVEL_STROKE, mStrokeDataList, mSegmentVertexList);
+		trendAnalyzer.vertexListToDataList(mSegmentVertexList, mSegmentDataList);
 
-		trendAnalyzer.analyzeLine(mStockDataList, mSegmentDataList, mLineVertexList, Trend.VERTEX_TOP_LINE, Trend.VERTEX_BOTTOM_LINE);
-		trendAnalyzer.vertexListToDataList(mStockDataList, mLineVertexList, mLineDataList);
+		trendAnalyzer.analyzeLine(Trend.LEVEL_SEGMENT, mSegmentDataList, mLineVertexList);
+		trendAnalyzer.vertexListToDataList(mLineVertexList, mLineDataList);
 
-		trendAnalyzer.analyzeLine(mStockDataList, mLineDataList, mOutlineVertexList, Trend.VERTEX_TOP_OUTLINE, Trend.VERTEX_BOTTOM_OUTLINE);
-		trendAnalyzer.vertexListToDataList(mStockDataList, mOutlineVertexList, mOutlineDataList);
+		trendAnalyzer.analyzeLine(Trend.LEVEL_LINE, mLineDataList, mOutlineVertexList);
+		trendAnalyzer.vertexListToDataList(mOutlineVertexList, mOutlineDataList);
 
 		analyzeAction(period);
 	}

@@ -1,12 +1,15 @@
 package com.android.orion.analyzer;
 
 import com.android.orion.data.Trend;
+import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.utility.Logger;
 
 import java.util.ArrayList;
 
 public class TrendAnalyzer {
+	Stock mStock;
+	ArrayList<StockData> mStockDataList;
 	Logger Log = Logger.getLogger();
 
 	private TrendAnalyzer() {
@@ -16,13 +19,18 @@ public class TrendAnalyzer {
 		return Holder.INSTANCE;
 	}
 
-	void analyzeVertex(ArrayList<StockData> stockDataList, ArrayList<StockData> vertexList) {
-		if ((stockDataList == null) || (vertexList == null)) {
+	void setup(Stock stock, ArrayList<StockData> stockDataList) {
+		mStock = stock;
+		mStockDataList = stockDataList;
+	}
+
+	void analyzeVertex(ArrayList<StockData> vertexList) {
+		if ((mStockDataList == null) || (vertexList == null)) {
 			return;
 		}
 
 		ArrayList<StockData> dataList = new ArrayList<>();
-		for (StockData stockData : stockDataList) {
+		for (StockData stockData : mStockDataList) {
 			dataList.add(new StockData(stockData));
 		}
 
@@ -71,17 +79,17 @@ public class TrendAnalyzer {
 				dataList.get(i).getTrend().setDirection(direction);
 				dataList.get(i).getTrend().setVertex(vertex);
 
-				stockDataList.get(i).getTrend().setDirection(direction);
-				stockDataList.get(i).getTrend().setVertex(vertex);
-				stockDataList.get(i).getTrend().setVertexHigh(current.getTrend().getVertexHigh());
-				stockDataList.get(i).getTrend().setVertexLow(current.getTrend().getVertexLow());
+				mStockDataList.get(i).getTrend().setDirection(direction);
+				mStockDataList.get(i).getTrend().setVertex(vertex);
+				mStockDataList.get(i).getTrend().setVertexHigh(current.getTrend().getVertexHigh());
+				mStockDataList.get(i).getTrend().setVertexLow(current.getTrend().getVertexLow());
 
 				if ((vertex == Trend.VERTEX_TOP)
 						|| (vertex == Trend.VERTEX_BOTTOM)) {
 					vertexList.add(dataList.get(i));
 
 					dataList.get(i).getTrend().setDirection(Trend.DIRECTION_NONE);
-					stockDataList.get(i).getTrend().setDirection(Trend.DIRECTION_NONE);
+					mStockDataList.get(i).getTrend().setDirection(Trend.DIRECTION_NONE);
 				}
 
 				if (current.getTrend().include(next.getTrend()) || current.getTrend().includedBy(next.getTrend())) {
@@ -100,7 +108,7 @@ public class TrendAnalyzer {
 				current.set(next);
 				next.init();
 			}
-			extendVertexList(stockDataList, vertexList);
+			extendVertexList(mStockDataList, vertexList);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -155,23 +163,37 @@ public class TrendAnalyzer {
 		}
 	}
 
-	StockData getStockDataSafely(ArrayList<StockData> stockDataList, int index) {
-		if (index < 0 || index >= stockDataList.size()) {
-			return null;
-		}
-		return stockDataList.get(index);
-	}
-
-	void analyzeLine(ArrayList<StockData> stockDataList,
-	                 ArrayList<StockData> dataList, ArrayList<StockData> vertexList,
-	                 int vertexTypeTop, int vertexTypeBottom) {
-		if ((stockDataList == null) || (dataList == null) || (vertexList == null)) {
+	void analyzeLine(int level, ArrayList<StockData> dataList, ArrayList<StockData> vertexList) {
+		if ((dataList == null) || (vertexList == null)) {
 			return;
 		}
 
 		int size = dataList.size();
 		if (size < Trend.VERTEX_SIZE) {
 			return;
+		}
+
+		int vertexTypeTop = Trend.VERTEX_TOP;
+		int vertexTypeBottom = Trend.VERTEX_BOTTOM;
+		switch (level) {
+			case Trend.LEVEL_DRAW:
+				vertexTypeTop = Trend.VERTEX_TOP_STROKE;
+				vertexTypeBottom = Trend.VERTEX_BOTTOM_STROKE;
+				break;
+			case Trend.LEVEL_STROKE:
+				vertexTypeTop = Trend.VERTEX_TOP_SEGMENT;
+				vertexTypeBottom = Trend.VERTEX_BOTTOM_SEGMENT;
+				break;
+			case Trend.LEVEL_SEGMENT:
+				vertexTypeTop = Trend.VERTEX_TOP_LINE;
+				vertexTypeBottom = Trend.VERTEX_BOTTOM_LINE;
+				break;
+			case Trend.LEVEL_LINE:
+				vertexTypeTop = Trend.VERTEX_TOP_OUTLINE;
+				vertexTypeBottom = Trend.VERTEX_BOTTOM_OUTLINE;
+				break;
+			default:
+				break;
 		}
 
 		vertexList.clear();
@@ -199,10 +221,10 @@ public class TrendAnalyzer {
 					continue;
 				}
 
-				StockData start_1 = getStockDataSafely(stockDataList, prevTrend.getIndexStart());
-				StockData end_1 = getStockDataSafely(stockDataList, prevTrend.getIndexEnd());
-				StockData start_2 = getStockDataSafely(stockDataList, prevPrevTrend.getIndexStart());
-				StockData end_2 = getStockDataSafely(stockDataList, prevPrevTrend.getIndexEnd());
+				StockData start_1 = StockData.getSafely(mStockDataList, prevTrend.getIndexStart());
+				StockData end_1 = StockData.getSafely(mStockDataList, prevTrend.getIndexEnd());
+				StockData start_2 = StockData.getSafely(mStockDataList, prevPrevTrend.getIndexStart());
+				StockData end_2 = StockData.getSafely(mStockDataList, prevPrevTrend.getIndexEnd());
 				if (start_1 == null || end_1 == null || start_2 == null || end_2 == null) {
 					continue;
 				}
@@ -260,7 +282,7 @@ public class TrendAnalyzer {
 			}
 			extendVertexList(dataList, vertexList);
 			if (needUpdate) {
-				StockData stockData = StockData.getLast(stockDataList, 0);
+				StockData stockData = StockData.getLast(mStockDataList, 0);
 				if (stockData != null) {
 					stockData.setAction(action);
 				}
@@ -299,12 +321,12 @@ public class TrendAnalyzer {
 		vertexList.add(stockData);
 	}
 
-	void vertexListToDataList(ArrayList<StockData> stockDataList, ArrayList<StockData> vertexList, ArrayList<StockData> dataList) {
-		if (stockDataList == null || vertexList == null || dataList == null) {
+	void vertexListToDataList(ArrayList<StockData> vertexList, ArrayList<StockData> dataList) {
+		if (vertexList == null || dataList == null) {
 			return;
 		}
 
-		if (stockDataList.size() < Trend.VERTEX_SIZE || vertexList.isEmpty()) {
+		if (vertexList.isEmpty()) {
 			return;
 		}
 

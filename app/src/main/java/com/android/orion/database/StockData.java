@@ -554,6 +554,16 @@ public class StockData extends DatabaseTable {
 		return stringBuffer.toString();
 	}
 
+	public static StockData getSafely(List<StockData> list, int index) {
+		if (list == null) {
+			return null;
+		}
+		if (index < 0 || index >= list.size()) {
+			return null;
+		}
+		return list.get(index);
+	}
+
 	public static StockData getLast(List<StockData> list, int index) {
 		if (list == null) {
 			return null;
@@ -592,14 +602,5 @@ public class StockData extends DatabaseTable {
 			return null;
 		}
 		return stockDataList.get(startIndex);
-	}
-
-	public static String getLastAction(List<StockData> list, int index, List<StockData> stockDataList) {
-		if (list == null || stockDataList == null || index < 0 || index >= list.size()) {
-			return "";
-		}
-
-		StockData stockData = getLast(list, index, stockDataList);
-		return stockData != null ? stockData.getAction() : "";
 	}
 }
