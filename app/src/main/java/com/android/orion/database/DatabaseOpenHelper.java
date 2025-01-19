@@ -16,14 +16,23 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 		if (db == null) {
 			return;
 		}
-		db.execSQL(DatabaseContract.Stock.CREATE_TABLE);
-		db.execSQL(DatabaseContract.StockData.CREATE_TABLE);
-		db.execSQL(DatabaseContract.StockDeal.CREATE_TABLE);
-		db.execSQL(DatabaseContract.StockQuant.CREATE_TABLE);
-		db.execSQL(DatabaseContract.StockFinancial.CREATE_TABLE);
-		db.execSQL(DatabaseContract.ShareBonus.CREATE_TABLE);
-		db.execSQL(DatabaseContract.TotalShare.CREATE_TABLE);
-		db.execSQL(DatabaseContract.IndexComponent.CREATE_TABLE);
+		try {
+			db.beginTransaction();
+			db.execSQL(DatabaseContract.Stock.CREATE_TABLE);
+			db.execSQL(DatabaseContract.StockData.CREATE_TABLE);
+			db.execSQL(DatabaseContract.StockTrend.CREATE_TABLE);
+			db.execSQL(DatabaseContract.StockDeal.CREATE_TABLE);
+			db.execSQL(DatabaseContract.StockQuant.CREATE_TABLE);
+			db.execSQL(DatabaseContract.StockFinancial.CREATE_TABLE);
+			db.execSQL(DatabaseContract.ShareBonus.CREATE_TABLE);
+			db.execSQL(DatabaseContract.TotalShare.CREATE_TABLE);
+			db.execSQL(DatabaseContract.IndexComponent.CREATE_TABLE);
+			db.setTransactionSuccessful();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			db.endTransaction();
+		}
 	}
 
 	@Override
@@ -31,15 +40,24 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 		if (db == null) {
 			return;
 		}
-		db.execSQL(DatabaseContract.Stock.DELETE_TABLE);
-		db.execSQL(DatabaseContract.StockData.DELETE_TABLE);
-		db.execSQL(DatabaseContract.StockDeal.DELETE_TABLE);
-		db.execSQL(DatabaseContract.StockQuant.DELETE_TABLE);
-		db.execSQL(DatabaseContract.StockFinancial.DELETE_TABLE);
-		db.execSQL(DatabaseContract.ShareBonus.DELETE_TABLE);
-		db.execSQL(DatabaseContract.TotalShare.DELETE_TABLE);
-		db.execSQL(DatabaseContract.IndexComponent.DELETE_TABLE);
-		onCreate(db);
+		try {
+			db.beginTransaction();
+			db.execSQL(DatabaseContract.Stock.DELETE_TABLE);
+			db.execSQL(DatabaseContract.StockData.DELETE_TABLE);
+			db.execSQL(DatabaseContract.StockTrend.DELETE_TABLE);
+			db.execSQL(DatabaseContract.StockDeal.DELETE_TABLE);
+			db.execSQL(DatabaseContract.StockQuant.DELETE_TABLE);
+			db.execSQL(DatabaseContract.StockFinancial.DELETE_TABLE);
+			db.execSQL(DatabaseContract.ShareBonus.DELETE_TABLE);
+			db.execSQL(DatabaseContract.TotalShare.DELETE_TABLE);
+			db.execSQL(DatabaseContract.IndexComponent.DELETE_TABLE);
+			db.setTransactionSuccessful();
+			onCreate(db);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			db.endTransaction();
+		}
 	}
 
 	@Override

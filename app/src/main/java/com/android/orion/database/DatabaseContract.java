@@ -272,6 +272,44 @@ public final class DatabaseContract {
 				+ CREATE_TABLE_CONTENT;
 	}
 
+	public static abstract class StockTrend implements BaseColumns {
+		public static final String TABLE_NAME = "stock_trend";
+
+		public static final Uri CONTENT_URI = Uri.withAppendedPath(
+				DatabaseContract.CONTENT_URI, TABLE_NAME);
+		public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
+				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
+		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
+				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
+		public static final String SORT_ORDER_DEFAULT = COLUMN_STOCK_ID
+				+ " ASC";
+
+		public static final String[] PROJECTION_ALL = {_ID, COLUMN_STOCK_ID,
+				COLUMN_SE, COLUMN_CODE, COLUMN_NAME,
+				COLUMN_PRICE, COLUMN_NET,
+				COLUMN_PERIOD, COLUMN_DATE, COLUMN_TIME,
+				COLUMN_LEVEL, COLUMN_TREND,
+				COLUMN_CREATED, COLUMN_MODIFIED};
+		static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
+				+ TABLE_NAME;
+		private static final String CREATE_TABLE_CONTENT = " (" + _ID
+				+ " INTEGER PRIMARY KEY," + COLUMN_STOCK_ID + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_SE + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_CODE + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_NAME + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_PRICE + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_NET + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_PERIOD + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_DATE + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_TIME + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_LEVEL + INTEGER_TYPE + COMMA_SEP
+				+ COLUMN_TREND + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_CREATED + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_MODIFIED + TEXT_TYPE + " )";
+		static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
+				+ CREATE_TABLE_CONTENT;
+	}
+
 	public static abstract class StockDeal implements BaseColumns {
 		public static final String TABLE_NAME = "stock_deal";
 
@@ -295,8 +333,8 @@ public final class DatabaseContract {
 				+ COLUMN_CODE + TEXT_TYPE + COMMA_SEP + COLUMN_NAME + TEXT_TYPE
 				+ COMMA_SEP + COLUMN_ACCOUNT + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_ACTION + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_PRICE + DOUBLE_TYPE + COMMA_SEP + COLUMN_NET
-				+ DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_PRICE + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_NET + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_BUY + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_SELL + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_VOLUME + INTEGER_TYPE + COMMA_SEP

@@ -44,6 +44,9 @@ public class StockContentProvider extends ContentProvider {
 	private static final int STOCK_QUANT = 800;
 	private static final int STOCK_QUANT_ID = 801;
 
+	private static final int STOCK_TREND = 900;
+	private static final int STOCK_TREND_ID = 901;
+
 	private static final UriMatcher mUriMatcher = new UriMatcher(
 			UriMatcher.NO_MATCH);
 
@@ -88,6 +91,11 @@ public class StockContentProvider extends ContentProvider {
 				DatabaseContract.StockQuant.TABLE_NAME, STOCK_QUANT);
 		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
 				DatabaseContract.StockQuant.TABLE_NAME + "/#", STOCK_QUANT_ID);
+
+		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
+				DatabaseContract.StockTrend.TABLE_NAME, STOCK_TREND);
+		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
+				DatabaseContract.StockTrend.TABLE_NAME + "/#", STOCK_TREND_ID);
 	}
 
 	ContentResolver mContentResolver;
@@ -162,6 +170,13 @@ public class StockContentProvider extends ContentProvider {
 				break;
 			case STOCK_QUANT_ID:
 				type = DatabaseContract.StockQuant.CONTENT_ITEM_TYPE;
+				break;
+
+			case STOCK_TREND:
+				type = DatabaseContract.StockTrend.CONTENT_TYPE;
+				break;
+			case STOCK_TREND_ID:
+				type = DatabaseContract.StockTrend.CONTENT_ITEM_TYPE;
 				break;
 			default:
 				break;
@@ -257,6 +272,15 @@ public class StockContentProvider extends ContentProvider {
 				builder.appendWhere(BaseColumns._ID + " = "
 						+ uri.getLastPathSegment());
 				break;
+
+			case STOCK_TREND:
+				builder.setTables(DatabaseContract.StockTrend.TABLE_NAME);
+				break;
+			case STOCK_TREND_ID:
+				builder.setTables(DatabaseContract.StockTrend.TABLE_NAME);
+				builder.appendWhere(BaseColumns._ID + " = "
+						+ uri.getLastPathSegment());
+				break;
 			default:
 				break;
 		}
@@ -325,6 +349,11 @@ public class StockContentProvider extends ContentProvider {
 			case STOCK_QUANT:
 				id = mDatabaseManager.mDatabase.insert(
 						DatabaseContract.StockQuant.TABLE_NAME, null, contentValues);
+				break;
+
+			case STOCK_TREND:
+				id = mDatabaseManager.mDatabase.insert(
+						DatabaseContract.StockTrend.TABLE_NAME, null, contentValues);
 				break;
 			default:
 				break;
@@ -515,6 +544,21 @@ public class StockContentProvider extends ContentProvider {
 						DatabaseContract.StockQuant.TABLE_NAME, values, whereClause,
 						selectionArgs);
 				break;
+
+			case STOCK_TREND:
+				result = mDatabaseManager.mDatabase.update(
+						DatabaseContract.StockTrend.TABLE_NAME, values, selection,
+						selectionArgs);
+				break;
+			case STOCK_TREND_ID:
+				whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
+				if (!TextUtils.isEmpty(selection)) {
+					whereClause += " AND " + whereClause;
+				}
+				result = mDatabaseManager.mDatabase.update(
+						DatabaseContract.StockTrend.TABLE_NAME, values, whereClause,
+						selectionArgs);
+				break;
 			default:
 				break;
 		}
@@ -545,7 +589,6 @@ public class StockContentProvider extends ContentProvider {
 						.delete(DatabaseContract.Stock.TABLE_NAME, selection,
 								selectionArgs);
 				break;
-
 			case STOCK_ID:
 				whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
 				if (!TextUtils.isEmpty(selection)) {
@@ -561,7 +604,6 @@ public class StockContentProvider extends ContentProvider {
 						DatabaseContract.StockData.TABLE_NAME, selection,
 						selectionArgs);
 				break;
-
 			case STOCK_DATA_ID:
 				whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
 				if (!TextUtils.isEmpty(selection)) {
@@ -577,7 +619,6 @@ public class StockContentProvider extends ContentProvider {
 						DatabaseContract.StockDeal.TABLE_NAME, selection,
 						selectionArgs);
 				break;
-
 			case STOCK_DEAL_ID:
 				whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
 				if (!TextUtils.isEmpty(selection)) {
@@ -593,7 +634,6 @@ public class StockContentProvider extends ContentProvider {
 						DatabaseContract.StockFinancial.TABLE_NAME, selection,
 						selectionArgs);
 				break;
-
 			case STOCK_FINANCIAL_ID:
 				whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
 				if (!TextUtils.isEmpty(selection)) {
@@ -609,7 +649,6 @@ public class StockContentProvider extends ContentProvider {
 						DatabaseContract.ShareBonus.TABLE_NAME, selection,
 						selectionArgs);
 				break;
-
 			case SHARE_BONUS_ID:
 				whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
 				if (!TextUtils.isEmpty(selection)) {
@@ -625,7 +664,6 @@ public class StockContentProvider extends ContentProvider {
 						DatabaseContract.TotalShare.TABLE_NAME, selection,
 						selectionArgs);
 				break;
-
 			case TOTAL_SHARE_ID:
 				whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
 				if (!TextUtils.isEmpty(selection)) {
@@ -640,7 +678,6 @@ public class StockContentProvider extends ContentProvider {
 				result = mDatabaseManager.mDatabase.delete(
 						DatabaseContract.IndexComponent.TABLE_NAME, selection, selectionArgs);
 				break;
-
 			case INDEX_COMPONENT_ID:
 				whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
 				if (!TextUtils.isEmpty(selection)) {
@@ -656,7 +693,6 @@ public class StockContentProvider extends ContentProvider {
 						DatabaseContract.StockQuant.TABLE_NAME, selection,
 						selectionArgs);
 				break;
-
 			case STOCK_QUANT_ID:
 				whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
 				if (!TextUtils.isEmpty(selection)) {
@@ -664,6 +700,21 @@ public class StockContentProvider extends ContentProvider {
 				}
 				result = mDatabaseManager.mDatabase.delete(
 						DatabaseContract.StockQuant.TABLE_NAME, whereClause,
+						selectionArgs);
+				break;
+
+			case STOCK_TREND:
+				result = mDatabaseManager.mDatabase.delete(
+						DatabaseContract.StockTrend.TABLE_NAME, selection,
+						selectionArgs);
+				break;
+			case STOCK_TREND_ID:
+				whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
+				if (!TextUtils.isEmpty(selection)) {
+					whereClause += " AND " + whereClause;
+				}
+				result = mDatabaseManager.mDatabase.delete(
+						DatabaseContract.StockTrend.TABLE_NAME, whereClause,
 						selectionArgs);
 				break;
 			default:
