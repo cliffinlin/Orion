@@ -155,6 +155,13 @@ public class TrendAnalyzer {
 		}
 	}
 
+	StockData getStockDataSafely(ArrayList<StockData> stockDataList, int index) {
+		if (index < 0 || index >= stockDataList.size()) {
+			return null;
+		}
+		return stockDataList.get(index);
+	}
+
 	void analyzeLine(ArrayList<StockData> stockDataList,
 	                 ArrayList<StockData> dataList, ArrayList<StockData> vertexList,
 	                 int vertexTypeTop, int vertexTypeBottom) {
@@ -192,11 +199,10 @@ public class TrendAnalyzer {
 					continue;
 				}
 
-				StockData start_1 = stockDataList.get(prevTrend.getIndexStart());
-				StockData end_1 = stockDataList.get(prevTrend.getIndexEnd());
-				StockData start_2 = stockDataList.get(prevPrevTrend.getIndexStart());
-				StockData end_2 = stockDataList.get(prevPrevTrend.getIndexEnd());
-
+				StockData start_1 = getStockDataSafely(stockDataList, prevTrend.getIndexStart());
+				StockData end_1 = getStockDataSafely(stockDataList, prevTrend.getIndexEnd());
+				StockData start_2 = getStockDataSafely(stockDataList, prevPrevTrend.getIndexStart());
+				StockData end_2 = getStockDataSafely(stockDataList, prevPrevTrend.getIndexEnd());
 				if (start_1 == null || end_1 == null || start_2 == null || end_2 == null) {
 					continue;
 				}

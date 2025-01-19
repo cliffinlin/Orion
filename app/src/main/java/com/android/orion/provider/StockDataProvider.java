@@ -890,13 +890,8 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 
 				if (Setting.getStockDataChanged(stock.getSE(), stock.getCode())) {
 					Setting.setStockDataChanged(stock.getSE(), stock.getCode(), false);
-					onAnalyzeStart(stock.getCode());
-					for (String period : Period.PERIODS) {
-						if (Setting.getPeriod(period)) {
-							mStockAnalyzer.analyze(stock, period);
-						}
-					}
 
+					onAnalyzeStart(stock.getCode());
 					mStockAnalyzer.analyze(stock);
 					onAnalyzeFinish(stock.getCode());
 				}

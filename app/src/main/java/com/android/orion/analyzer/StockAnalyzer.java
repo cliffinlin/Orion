@@ -33,19 +33,21 @@ import java.util.List;
 
 
 public class StockAnalyzer {
-	static ArrayList<StockData> mStockDataList;
-	static ArrayList<StockData> mDrawVertexList;
-	static ArrayList<StockData> mDrawDataList;
-	static ArrayList<StockData> mStrokeVertexList;
-	static ArrayList<StockData> mStrokeDataList;
-	static ArrayList<StockData> mSegmentVertexList;
-	static ArrayList<StockData> mSegmentDataList;
-	static ArrayList<StockData> mLineVertexList;
-	static ArrayList<StockData> mLineDataList;
-	static ArrayList<StockData> mOutlineVertexList;
-	static ArrayList<StockData> mOutlineDataList;
-	static StringBuffer mContentTitle = new StringBuffer();
-	static StringBuffer mContentText = new StringBuffer();
+	Stock mStock;
+	ArrayList<StockData> mStockDataList;
+	ArrayList<StockData> mDrawVertexList;
+	ArrayList<StockData> mDrawDataList;
+	ArrayList<StockData> mStrokeVertexList;
+	ArrayList<StockData> mStrokeDataList;
+	ArrayList<StockData> mSegmentVertexList;
+	ArrayList<StockData> mSegmentDataList;
+	ArrayList<StockData> mLineVertexList;
+	ArrayList<StockData> mLineDataList;
+	ArrayList<StockData> mOutlineVertexList;
+	ArrayList<StockData> mOutlineDataList;
+
+	StringBuffer mContentTitle = new StringBuffer();
+	StringBuffer mContentText = new StringBuffer();
 
 	Context mContext;
 	NotificationManager mNotificationManager;
@@ -65,55 +67,61 @@ public class StockAnalyzer {
 		return SingletonHolder.INSTANCE;
 	}
 
-	public void analyze(Stock stock, String period) {
+	void analyze(String period) {
 		StopWatch.start();
 
-		if (stock == null) {
+		if (mStock == null) {
 			return;
 		}
 
-		mStockDataList = stock.getArrayList(period, Period.TYPE_STOCK_DATA);
-		mDrawVertexList = stock.getArrayList(period, Period.TYPE_DRAW_VERTEX);
-		mDrawDataList = stock.getArrayList(period, Period.TYPE_DRAW_DATA);
-		mStrokeVertexList = stock.getArrayList(period, Period.TYPE_STROKE_VERTEX);
-		mStrokeDataList = stock.getArrayList(period, Period.TYPE_STROKE_DATA);
-		mSegmentVertexList = stock.getArrayList(period, Period.TYPE_SEGMENT_VERTEX);
-		mSegmentDataList = stock.getArrayList(period, Period.TYPE_SEGMENT_DATA);
-		mLineVertexList = stock.getArrayList(period, Period.TYPE_LINE_VERTEX);
-		mLineDataList = stock.getArrayList(period, Period.TYPE_LINE_DATA);
-		mOutlineVertexList = stock.getArrayList(period, Period.TYPE_OUTLINE_VERTEX);
-		mOutlineDataList = stock.getArrayList(period, Period.TYPE_OUTLINE_DATA);
+		mStockDataList = mStock.getArrayList(period, Period.TYPE_STOCK_DATA);
+		mDrawVertexList = mStock.getArrayList(period, Period.TYPE_DRAW_VERTEX);
+		mDrawDataList = mStock.getArrayList(period, Period.TYPE_DRAW_DATA);
+		mStrokeVertexList = mStock.getArrayList(period, Period.TYPE_STROKE_VERTEX);
+		mStrokeDataList = mStock.getArrayList(period, Period.TYPE_STROKE_DATA);
+		mSegmentVertexList = mStock.getArrayList(period, Period.TYPE_SEGMENT_VERTEX);
+		mSegmentDataList = mStock.getArrayList(period, Period.TYPE_SEGMENT_DATA);
+		mLineVertexList = mStock.getArrayList(period, Period.TYPE_LINE_VERTEX);
+		mLineDataList = mStock.getArrayList(period, Period.TYPE_LINE_DATA);
+		mOutlineVertexList = mStock.getArrayList(period, Period.TYPE_OUTLINE_VERTEX);
+		mOutlineDataList = mStock.getArrayList(period, Period.TYPE_OUTLINE_DATA);
 
 		try {
-			mDatabaseManager.loadStockDataList(stock, period, mStockDataList);
+			mDatabaseManager.loadStockDataList(mStock, period, mStockDataList);
 			analyzeMacd(period);
-			analyzeStockData(stock, period);
-			mDatabaseManager.updateStockData(stock, period, mStockDataList);
-			stock.setModified(Utility.getCurrentDateTimeString());
-			mDatabaseManager.updateStock(stock, stock.getContentValues());
+			analyzeStockData(period);
+			mDatabaseManager.updateStockData(mStock, period, mStockDataList);
+			mStock.setModified(Utility.getCurrentDateTimeString());
+			mDatabaseManager.updateStock(mStock, mStock.getContentValues());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		StopWatch.stop();
-		Log.d(stock.getName() + " " + period + " "
+		Log.d(mStock.getName() + " " + period + " "
 				+ StopWatch.getInterval() + "s");
 	}
 
 	public void analyze(Stock stock) {
 		StopWatch.start();
 
-		if (stock == null) {
+		mStock = stock;
+		if (mStock == null) {
 			return;
 		}
 
 		try {
-			mFinancialAnalyzer.analyzeFinancial(stock);
-			mFinancialAnalyzer.setupFinancial(stock);
-			mFinancialAnalyzer.setupShareBonus(stock);
+			for (String period : Period.PERIODS) {
+				if (Setting.getPeriod(period)) {
+					analyze(period);
+				}
+			}
+			mFinancialAnalyzer.analyzeFinancial(mStock);
+			mFinancialAnalyzer.setupFinancial(mStock);
+			mFinancialAnalyzer.setupShareBonus(mStock);
 			stock.setModified(Utility.getCurrentDateTimeString());
-			mDatabaseManager.updateStock(stock, stock.getContentValues());
-			updateNotification(stock);
+			mDatabaseManager.updateStock(mStock, mStock.getContentValues());
+			updateNotification();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -161,7 +169,7 @@ public class StockAnalyzer {
 		}
 	}
 
-	private void analyzeStockData(Stock stock, String period) {
+	private void analyzeStockData(String period) {
 		TrendAnalyzer trendAnalyzer = TrendAnalyzer.getInstance();
 
 		trendAnalyzer.analyzeVertex(mStockDataList, mDrawVertexList);
@@ -179,11 +187,11 @@ public class StockAnalyzer {
 		trendAnalyzer.analyzeLine(mStockDataList, mLineDataList, mOutlineVertexList, Trend.VERTEX_TOP_OUTLINE, Trend.VERTEX_BOTTOM_OUTLINE);
 		trendAnalyzer.vertexListToDataList(mStockDataList, mOutlineVertexList, mOutlineDataList);
 
-		analyzeAction(stock, period);
+		analyzeAction(period);
 	}
 
-	private void analyzeAction(Stock stock, String period) {
-		if (stock == null || mStockDataList == null || mStockDataList.isEmpty()) {
+	private void analyzeAction(String period) {
+		if (mStock == null || mStockDataList == null || mStockDataList.isEmpty()) {
 			return;
 		}
 
@@ -203,8 +211,8 @@ public class StockAnalyzer {
 			}
 		}
 
-		stock.setDateTime(stockData.getDate(), stockData.getTime());
-		stock.setAction(period, actionBuilder.toString());
+		mStock.setDateTime(stockData.getDate(), stockData.getTime());
+		mStock.setAction(period, actionBuilder.toString());
 	}
 
 	private void appendActionIfPresent(StringBuilder builder, String action) {
@@ -331,12 +339,12 @@ public class StockAnalyzer {
 		return result;
 	}
 
-	protected void updateNotification(Stock stock) {
-		if (stock == null || mContext == null) {
+	protected void updateNotification() {
+		if (mStock == null || mContext == null) {
 			return;
 		}
 
-		if (stock.getPrice() == 0 || !stock.hasFlag(Stock.FLAG_NOTIFY)) {
+		if (mStock.getPrice() == 0 || !mStock.hasFlag(Stock.FLAG_NOTIFY)) {
 			return;
 		}
 
@@ -348,7 +356,7 @@ public class StockAnalyzer {
 				continue;
 			}
 
-			String action = stock.getAction(period);
+			String action = mStock.getAction(period);
 			setContentTitle(period, action);
 		}
 
@@ -363,10 +371,10 @@ public class StockAnalyzer {
 			return;
 		}
 
-		mContentTitle.insert(0, stock.getName() + " " + stock.getPrice() + " " + stock.getNet() + " ");
+		mContentTitle.insert(0, mStock.getName() + " " + mStock.getPrice() + " " + mStock.getNet() + " ");
 		RecordFile.writeNotificationFile(mContentTitle.toString());
 		try {
-			int code = Integer.parseInt(stock.getCode());
+			int code = Integer.parseInt(mStock.getCode());
 			notify(code, Config.MESSAGE_CHANNEL_ID, Config.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
 					mContentTitle.toString(), mContentText.toString());
 		} catch (NumberFormatException e) {
