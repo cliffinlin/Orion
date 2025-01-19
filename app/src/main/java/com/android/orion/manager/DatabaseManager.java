@@ -810,10 +810,7 @@ public class DatabaseManager implements StockListener {
 		}
 
 		try {
-			String selection = DatabaseContract.COLUMN_STOCK_ID + " = "
-					+ stockTrend.getStockId() + " AND "
-					+ DatabaseContract.COLUMN_PERIOD + " = " + "'"
-					+ stockTrend.getPeriod() + "'";
+			String selection = getStockTrendSelection(stockTrend);
 			String sortOrder = DatabaseContract.COLUMN_DATE + " DESC " + ","
 					+ DatabaseContract.COLUMN_TIME + " DESC ";
 
@@ -1014,15 +1011,8 @@ public class DatabaseManager implements StockListener {
 				+ stockTrend.getStockId() + " AND "
 				+ DatabaseContract.COLUMN_PERIOD + " = " + "'"
 				+ stockTrend.getPeriod() + "'" + " AND "
-				+ DatabaseContract.COLUMN_DATE + " = " + "'"
-				+ stockTrend.getDate() + "'";
-
-		period = stockTrend.getPeriod();
-
-		if (Period.isMinutePeriod(period)) {
-			selection += " AND " + DatabaseContract.COLUMN_TIME + " = " + "'"
-					+ stockTrend.getTime() + "'";
-		}
+				+ DatabaseContract.COLUMN_LEVEL + " = " +
+				+ stockTrend.getLevel();
 
 		return selection;
 	}

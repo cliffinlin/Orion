@@ -171,7 +171,7 @@ public class StockAnalyzer {
 
 	private void analyzeStockData(String period) {
 		TrendAnalyzer trendAnalyzer = TrendAnalyzer.getInstance();
-		trendAnalyzer.setup(mStock, mStockDataList);
+		trendAnalyzer.setup(mStock, period, mStockDataList);
 
 		trendAnalyzer.analyzeVertex(mDrawVertexList);
 		trendAnalyzer.vertexListToDataList(mDrawVertexList, mDrawDataList);
