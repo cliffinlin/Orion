@@ -5,12 +5,12 @@ import android.content.Context;
 import android.util.AttributeSet;
 
 import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
+import com.github.mikephil.charting.interfaces.LineDataProvider;
 import com.github.mikephil.charting.renderer.LineChartRenderer;
 
 /**
  * Chart that draws lines, surfaces, circles, ...
- *
+ * 
  * @author Philipp Jahoda
  */
 public class LineChart extends BarLineChartBase<LineData> implements LineDataProvider {
@@ -35,6 +35,14 @@ public class LineChart extends BarLineChartBase<LineData> implements LineDataPro
     }
 
     @Override
+    protected void calcMinMax() {
+        super.calcMinMax();
+
+        if (mDeltaX == 0 && mData.getYValCount() > 0)
+            mDeltaX = 1;
+    }
+    
+    @Override
     public LineData getLineData() {
         return mData;
     }
@@ -42,7 +50,7 @@ public class LineChart extends BarLineChartBase<LineData> implements LineDataPro
     @Override
     protected void onDetachedFromWindow() {
         // releases the bitmap in the renderer to avoid oom error
-        if (mRenderer != null && mRenderer instanceof LineChartRenderer) {
+        if(mRenderer != null && mRenderer instanceof LineChartRenderer) {
             ((LineChartRenderer) mRenderer).releaseBitmap();
         }
         super.onDetachedFromWindow();

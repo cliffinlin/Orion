@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 public class StockFinancialChart {
 	public String mPeriod;
-	public String mDescription = "";
+	public String mDescription;
 
 	public ArrayList<String> mXValues = new ArrayList<>();
 
@@ -36,8 +36,8 @@ public class StockFinancialChart {
 
 	public ArrayList<LimitLine> mLimitLineList = new ArrayList<>();
 
-	public CombinedData mCombinedDataMain = new CombinedData();
-	public CombinedData mCombinedDataSub = new CombinedData();
+	public CombinedData mCombinedDataMain = new CombinedData(mXValues);
+	public CombinedData mCombinedDataSub = new CombinedData(mXValues);
 
 	public StockFinancialChart(String period) {
 		mPeriod = period;
@@ -47,7 +47,7 @@ public class StockFinancialChart {
 	}
 
 	public void setMainChartData() {
-		LineData lineData = new LineData();
+		LineData lineData = new LineData(mXValues);
 
 		LineDataSet totalAssetsDataSet = new LineDataSet(mTotalAssetsEntryList,
 				"Assets");
@@ -99,7 +99,7 @@ public class StockFinancialChart {
 	}
 
 	public void setSubChartData() {
-		LineData lineData = new LineData();
+		LineData lineData = new LineData(mXValues);
 
 		LineDataSet roeDataSet = new LineDataSet(mRoeEntryList, "Roe");
 		roeDataSet.setColor(Color.DKGRAY);
@@ -131,11 +131,12 @@ public class StockFinancialChart {
 		mCombinedDataSub.setData(lineData);
 
 		if (mDividendEntryList.size() > 0) {
-			BarData barData = new BarData();
-			barData.setBarWidth(0.5f);
+			BarData barData = new BarData(mXValues);
 			BarDataSet dividendDataSet = new BarDataSet(mDividendEntryList,
 					"Dividend");
-			dividendDataSet.setColor(Config.COLOR_RGB_RED);
+			dividendDataSet.setBarSpacePercent(40f);
+			dividendDataSet.setIncreasingColor(Config.COLOR_RGB_RED);
+			dividendDataSet.setDecreasingColor(Config.COLOR_RGB_GREEN);
 			dividendDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 			barData.addDataSet(dividendDataSet);
 

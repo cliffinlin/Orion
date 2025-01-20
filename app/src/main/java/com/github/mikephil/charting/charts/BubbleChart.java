@@ -5,7 +5,8 @@ import android.content.Context;
 import android.util.AttributeSet;
 
 import com.github.mikephil.charting.data.BubbleData;
-import com.github.mikephil.charting.interfaces.dataprovider.BubbleDataProvider;
+import com.github.mikephil.charting.data.BubbleDataSet;
+import com.github.mikephil.charting.interfaces.BubbleDataProvider;
 import com.github.mikephil.charting.renderer.BubbleChartRenderer;
 
 /**
@@ -35,6 +36,33 @@ public class BubbleChart extends BarLineChartBase<BubbleData> implements BubbleD
         super.init();
 
         mRenderer = new BubbleChartRenderer(this, mAnimator, mViewPortHandler);
+    }
+
+    @Override
+    protected void calcMinMax() {
+        super.calcMinMax();
+
+        if (mDeltaX == 0 && mData.getYValCount() > 0)
+            mDeltaX = 1;
+
+        mXChartMin = -0.5f;
+        mXChartMax = (float) mData.getXValCount() - 0.5f;
+
+        if (mRenderer != null) {
+            for (BubbleDataSet set : mData.getDataSets()) {
+
+                final float xmin = set.getXMin();
+                final float xmax = set.getXMax();
+
+                if (xmin < mXChartMin)
+                    mXChartMin = xmin;
+
+                if (xmax > mXChartMax)
+                    mXChartMax = xmax;
+            }
+        }
+
+        mDeltaX = Math.abs(mXChartMax - mXChartMin);
     }
 
     public BubbleData getBubbleData() {

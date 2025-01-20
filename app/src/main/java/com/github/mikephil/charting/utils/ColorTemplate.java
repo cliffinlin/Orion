@@ -11,7 +11,7 @@ import java.util.List;
  * Class that holds predefined color integer arrays (e.g.
  * ColorTemplate.VORDIPLOM_COLORS) and convenience methods for loading colors
  * from resources.
- *
+ * 
  * @author Philipp Jahoda
  */
 public class ColorTemplate {
@@ -19,13 +19,13 @@ public class ColorTemplate {
     /**
      * an "invalid" color that indicates that no color is set
      */
-    public static final int COLOR_NONE = 0x00112233;
+    public static final int COLOR_NONE = -1;
 
     /**
      * this "color" is used for the Legend creation and indicates that the next
      * form should be skipped
      */
-    public static final int COLOR_SKIP = 0x00112234;
+    public static final int COLOR_SKIP = -2;
 
     /**
      * THE COLOR THEMES ARE PREDEFINED (predefined color integer arrays), FEEL
@@ -51,27 +51,10 @@ public class ColorTemplate {
             Color.rgb(192, 255, 140), Color.rgb(255, 247, 140), Color.rgb(255, 208, 140),
             Color.rgb(140, 234, 255), Color.rgb(255, 140, 157)
     };
-    public static final int[] MATERIAL_COLORS = {
-            rgb("#2ecc71"), rgb("#f1c40f"), rgb("#e74c3c"), rgb("#3498db")
-    };
-
-    /**
-     * Converts the given hex-color-string to rgb.
-     *
-     * @param hex
-     * @return
-     */
-    public static int rgb(String hex) {
-        int color = (int) Long.parseLong(hex.replace("#", ""), 16);
-        int r = (color >> 16) & 0xFF;
-        int g = (color >> 8) & 0xFF;
-        int b = (color >> 0) & 0xFF;
-        return Color.rgb(r, g, b);
-    }
 
     /**
      * Returns the Android ICS holo blue light color.
-     *
+     * 
      * @return
      */
     public static int getHoloBlue() {
@@ -79,20 +62,9 @@ public class ColorTemplate {
     }
 
     /**
-     * Sets the alpha component of the given color.
-     *
-     * @param color
-     * @param alpha 0 - 255
-     * @return
-     */
-    public static int colorWithAlpha(int color, int alpha) {
-        return (color & 0xffffff) | ((alpha & 0xff) << 24);
-    }
-
-    /**
      * turn an array of resource-colors (contains resource-id integers) into an
      * array list of actual color integers
-     *
+     * 
      * @param r
      * @param colors an integer array of resource id's of colors
      * @return
@@ -111,7 +83,7 @@ public class ColorTemplate {
     /**
      * Turns an array of colors (integer color values) into an ArrayList of
      * colors.
-     *
+     * 
      * @param colors
      * @return
      */

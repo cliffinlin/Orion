@@ -1,246 +1,120 @@
 package com.github.mikephil.charting.highlight;
 
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.BarLineScatterCandleBubbleData;
-import com.github.mikephil.charting.data.DataSet;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.interfaces.dataprovider.BarLineScatterCandleBubbleDataProvider;
-import com.github.mikephil.charting.interfaces.datasets.IDataSet;
-import com.github.mikephil.charting.utils.MPPointD;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.DataSet;
+import com.github.mikephil.charting.interfaces.BarLineScatterCandleBubbleDataProvider;
+import com.github.mikephil.charting.utils.SelectionDetail;
+import com.github.mikephil.charting.utils.Utils;
 
 /**
  * Created by Philipp Jahoda on 21/07/15.
  */
-public class ChartHighlighter<T extends BarLineScatterCandleBubbleDataProvider> implements IHighlighter
-{
+public class ChartHighlighter<T extends BarLineScatterCandleBubbleDataProvider> {
 
-    /**
-     * instance of the data-provider
-     */
-    protected T mChart;
+	/** instance of the data-provider */
+	protected T mChart;
 
-    /**
-     * buffer for storing previously highlighted values
-     */
-    protected List<Highlight> mHighlightBuffer = new ArrayList<Highlight>();
+	public ChartHighlighter(T chart) {
+		this.mChart = chart;
+	}
 
-    public ChartHighlighter(T chart) {
-        this.mChart = chart;
-    }
+	/**
+	 * Returns a Highlight object corresponding to the given x- and y- touch positions in pixels.
+	 * 
+	 * @param x
+	 * @param y
+	 * @return
+	 */
+	public Highlight getHighlight(float x, float y) {
 
-    @Override
-    public Highlight getHighlight(float x, float y) {
+		int xIndex = getXIndex(x);
+		if (xIndex == -Integer.MAX_VALUE)
+			return null;
 
-        MPPointD pos = getValsForTouch(x, y);
-        float xVal = (float) pos.x;
-        MPPointD.recycleInstance(pos);
+		int dataSetIndex = getDataSetIndex(xIndex, x, y);
+		if (dataSetIndex == -Integer.MAX_VALUE)
+			return null;
 
-        Highlight high = getHighlightForX(xVal, x, y);
-        return high;
-    }
+		return new Highlight(xIndex, dataSetIndex);
+	}
 
-    /**
-     * Returns a recyclable MPPointD instance.
-     * Returns the corresponding xPos for a given touch-position in pixels.
-     *
-     * @param x
-     * @param y
-     * @return
-     */
-    protected MPPointD getValsForTouch(float x, float y) {
+	/**
+	 * Returns the corresponding x-index for a given touch-position in pixels.
+	 * 
+	 * @param x
+	 * @return
+	 */
+	protected int getXIndex(float x) {
 
-        // take any transformer to determine the x-axis value
-        MPPointD pos = mChart.getTransformer(YAxis.AxisDependency.LEFT).getValuesByTouchPoint(x, y);
-        return pos;
-    }
+		// create an array of the touch-point
+		float[] pts = new float[2];
+		pts[0] = x;
 
-    /**
-     * Returns the corresponding Highlight for a given xVal and x- and y-touch position in pixels.
-     *
-     * @param xVal
-     * @param x
-     * @param y
-     * @return
-     */
-    protected Highlight getHighlightForX(float xVal, float x, float y) {
+		// take any transformer to determine the x-axis value
+		mChart.getTransformer(YAxis.AxisDependency.LEFT).pixelsToValue(pts);
 
-        List<Highlight> closestValues = getHighlightsAtXValue(xVal, x, y);
+		return (int) Math.round(pts[0]);
+	}
 
-        if(closestValues.isEmpty()) {
-            return null;
-        }
+	/**
+	 * Returns the corresponding dataset-index for a given xIndex and xy-touch position in pixels.
+	 * 
+	 * @param xIndex
+	 * @param x
+	 * @param y
+	 * @return
+	 */
+	protected int getDataSetIndex(int xIndex, float x, float y) {
 
-        float leftAxisMinDist = getMinimumDistance(closestValues, y, YAxis.AxisDependency.LEFT);
-        float rightAxisMinDist = getMinimumDistance(closestValues, y, YAxis.AxisDependency.RIGHT);
+		List<SelectionDetail> valsAtIndex = getSelectionDetailsAtIndex(xIndex);
 
-        YAxis.AxisDependency axis = leftAxisMinDist < rightAxisMinDist ? YAxis.AxisDependency.LEFT : YAxis.AxisDependency.RIGHT;
+		float leftdist = Utils.getMinimumDistance(valsAtIndex, y, YAxis.AxisDependency.LEFT);
+		float rightdist = Utils.getMinimumDistance(valsAtIndex, y, YAxis.AxisDependency.RIGHT);
 
-        Highlight detail = getClosestHighlightByPixel(closestValues, x, y, axis, mChart.getMaxHighlightDistance());
+		YAxis.AxisDependency axis = leftdist < rightdist ? YAxis.AxisDependency.LEFT : YAxis.AxisDependency.RIGHT;
 
-        return detail;
-    }
+		int dataSetIndex = Utils.getClosestDataSetIndex(valsAtIndex, y, axis);
 
-    /**
-     * Returns the minimum distance from a touch value (in pixels) to the
-     * closest value (in pixels) that is displayed in the chart.
-     *
-     * @param closestValues
-     * @param pos
-     * @param axis
-     * @return
-     */
-    protected float getMinimumDistance(List<Highlight> closestValues, float pos, YAxis.AxisDependency axis) {
+		return dataSetIndex;
+	}
 
-        float distance = Float.MAX_VALUE;
+	/**
+	 * Returns a list of SelectionDetail object corresponding to the given xIndex.
+	 * 
+	 * @param xIndex
+	 * @return
+	 */
+	protected List<SelectionDetail> getSelectionDetailsAtIndex(int xIndex) {
 
-        for (int i = 0; i < closestValues.size(); i++) {
+		List<SelectionDetail> vals = new ArrayList<SelectionDetail>();
 
-            Highlight high = closestValues.get(i);
+		float[] pts = new float[2];
 
-            if (high.getAxis() == axis) {
+		for (int i = 0; i < mChart.getData().getDataSetCount(); i++) {
 
-                float tempDistance = Math.abs(getHighlightPos(high) - pos);
-                if (tempDistance < distance) {
-                    distance = tempDistance;
-                }
-            }
-        }
+			DataSet<?> dataSet = mChart.getData().getDataSetByIndex(i);
 
-        return distance;
-    }
+			// dont include datasets that cannot be highlighted
+			if (!dataSet.isHighlightEnabled())
+				continue;
 
-    protected float getHighlightPos(Highlight h) {
-        return h.getYPx();
-    }
+			// extract all y-values from all DataSets at the given x-index
+			final float yVal = dataSet.getYValForXIndex(xIndex);
+			if (yVal == Float.NaN)
+				continue;
 
-    /**
-     * Returns a list of Highlight objects representing the entries closest to the given xVal.
-     * The returned list contains two objects per DataSet (closest rounding up, closest rounding down).
-     *
-     * @param xVal the transformed x-value of the x-touch position
-     * @param x    touch position
-     * @param y    touch position
-     * @return
-     */
-    protected List<Highlight> getHighlightsAtXValue(float xVal, float x, float y) {
+			pts[1] = yVal;
 
-        mHighlightBuffer.clear();
+			mChart.getTransformer(dataSet.getAxisDependency()).pointValuesToPixel(pts);
 
-        BarLineScatterCandleBubbleData data = getData();
+			if (!Float.isNaN(pts[1])) {
+				vals.add(new SelectionDetail(pts[1], i, dataSet));
+			}
+		}
 
-        if (data == null)
-            return mHighlightBuffer;
-
-        for (int i = 0, dataSetCount = data.getDataSetCount(); i < dataSetCount; i++) {
-
-            IDataSet dataSet = data.getDataSetByIndex(i);
-
-            // don't include DataSets that cannot be highlighted
-            if (!dataSet.isHighlightEnabled())
-                continue;
-
-            mHighlightBuffer.addAll(buildHighlights(dataSet, i, xVal, DataSet.Rounding.CLOSEST));
-        }
-
-        return mHighlightBuffer;
-    }
-
-    /**
-     * An array of `Highlight` objects corresponding to the selected xValue and dataSetIndex.
-     *
-     * @param set
-     * @param dataSetIndex
-     * @param xVal
-     * @param rounding
-     * @return
-     */
-    protected List<Highlight> buildHighlights(IDataSet set, int dataSetIndex, float xVal, DataSet.Rounding rounding) {
-
-        ArrayList<Highlight> highlights = new ArrayList<>();
-
-        //noinspection unchecked
-        List<Entry> entries = set.getEntriesForXValue(xVal);
-        if (entries.size() == 0) {
-            // Try to find closest x-value and take all entries for that x-value
-            final Entry closest = set.getEntryForXValue(xVal, Float.NaN, rounding);
-            if (closest != null)
-            {
-                //noinspection unchecked
-                entries = set.getEntriesForXValue(closest.getX());
-            }
-        }
-
-        if (entries.size() == 0)
-            return highlights;
-
-        for (Entry e : entries) {
-            MPPointD pixels = mChart.getTransformer(
-                    set.getAxisDependency()).getPixelForValues(e.getX(), e.getY());
-
-            highlights.add(new Highlight(
-                    e.getX(), e.getY(),
-                    (float) pixels.x, (float) pixels.y,
-                    dataSetIndex, set.getAxisDependency()));
-        }
-
-        return highlights;
-    }
-
-    /**
-     * Returns the Highlight of the DataSet that contains the closest value on the
-     * y-axis.
-     *
-     * @param closestValues        contains two Highlight objects per DataSet closest to the selected x-position (determined by
-     *                             rounding up an down)
-     * @param x
-     * @param y
-     * @param axis                 the closest axis
-     * @param minSelectionDistance
-     * @return
-     */
-    public Highlight getClosestHighlightByPixel(List<Highlight> closestValues, float x, float y,
-                                                YAxis.AxisDependency axis, float minSelectionDistance) {
-
-        Highlight closest = null;
-        float distance = minSelectionDistance;
-
-        for (int i = 0; i < closestValues.size(); i++) {
-
-            Highlight high = closestValues.get(i);
-
-            if (axis == null || high.getAxis() == axis) {
-
-                float cDistance = getDistance(x, y, high.getXPx(), high.getYPx());
-
-                if (cDistance < distance) {
-                    closest = high;
-                    distance = cDistance;
-                }
-            }
-        }
-
-        return closest;
-    }
-
-    /**
-     * Calculates the distance between the two given points.
-     *
-     * @param x1
-     * @param y1
-     * @param x2
-     * @param y2
-     * @return
-     */
-    protected float getDistance(float x1, float y1, float x2, float y2) {
-        //return Math.abs(y1 - y2);
-        //return Math.abs(x1 - x2);
-        return (float) Math.hypot(x1 - x2, y1 - y2);
-    }
-
-    protected BarLineScatterCandleBubbleData getData() {
-        return mChart.getData();
-    }
+		return vals;
+	}
 }

@@ -2,7 +2,6 @@ package com.github.mikephil.charting.data;
 
 import android.graphics.DashPathEffect;
 
-import com.github.mikephil.charting.interfaces.datasets.ILineScatterCandleRadarDataSet;
 import com.github.mikephil.charting.utils.Utils;
 
 import java.util.List;
@@ -10,7 +9,7 @@ import java.util.List;
 /**
  * Created by Philipp Jahoda on 11/07/15.
  */
-public abstract class LineScatterCandleRadarDataSet<T extends Entry> extends BarLineScatterCandleBubbleDataSet<T> implements ILineScatterCandleRadarDataSet<T> {
+public abstract class LineScatterCandleRadarDataSet<T extends Entry> extends BarLineScatterCandleBubbleDataSet<T> {
 
     protected boolean mDrawVerticalHighlightIndicator = true;
     protected boolean mDrawHorizontalHighlightIndicator = true;
@@ -52,12 +51,10 @@ public abstract class LineScatterCandleRadarDataSet<T extends Entry> extends Bar
         setDrawHorizontalHighlightIndicator(enabled);
     }
 
-    @Override
     public boolean isVerticalHighlightIndicatorEnabled() {
         return mDrawVerticalHighlightIndicator;
     }
 
-    @Override
     public boolean isHorizontalHighlightIndicatorEnabled() {
         return mDrawHorizontalHighlightIndicator;
     }
@@ -70,7 +67,10 @@ public abstract class LineScatterCandleRadarDataSet<T extends Entry> extends Bar
         mHighlightLineWidth = Utils.convertDpToPixel(width);
     }
 
-    @Override
+    /**
+     * Returns the line-width in which highlight lines are to be drawn.
+     * @return
+     */
     public float getHighlightLineWidth() {
         return mHighlightLineWidth;
     }
@@ -105,16 +105,7 @@ public abstract class LineScatterCandleRadarDataSet<T extends Entry> extends Bar
         return mHighlightDashPathEffect == null ? false : true;
     }
 
-    @Override
     public DashPathEffect getDashPathEffectHighlight() {
         return mHighlightDashPathEffect;
-    }
-
-    protected void copy(LineScatterCandleRadarDataSet lineScatterCandleRadarDataSet) {
-        super.copy(lineScatterCandleRadarDataSet);
-        lineScatterCandleRadarDataSet.mDrawHorizontalHighlightIndicator = mDrawHorizontalHighlightIndicator;
-        lineScatterCandleRadarDataSet.mDrawVerticalHighlightIndicator = mDrawVerticalHighlightIndicator;
-        lineScatterCandleRadarDataSet.mHighlightLineWidth = mHighlightLineWidth;
-        lineScatterCandleRadarDataSet.mHighlightDashPathEffect = mHighlightDashPathEffect;
     }
 }

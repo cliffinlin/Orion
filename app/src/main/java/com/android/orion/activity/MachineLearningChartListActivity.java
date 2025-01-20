@@ -26,21 +26,13 @@ import com.android.orion.ai.ml.learning.HousePrices;
 import com.android.orion.chart.MachineLearningChart;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
-import com.android.orion.setting.Constant;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.AxisBase;
-import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.XAxis.XAxisPosition;
 import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.components.YAxis.YAxisLabelPosition;
-import com.github.mikephil.charting.data.BubbleEntry;
 import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.formatter.DefaultAxisValueFormatter;
-import com.github.mikephil.charting.formatter.DefaultValueFormatter;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
-import com.github.mikephil.charting.formatter.IValueFormatter;
+import com.github.mikephil.charting.formatter.DefaultYAxisValueFormatter;
 import com.github.mikephil.charting.utils.Utils;
 
 import java.lang.ref.WeakReference;
@@ -58,7 +50,7 @@ public class MachineLearningChartListActivity extends BaseActivity implements
 	String mSortOrder = DatabaseContract.COLUMN_VALUATION
 			+ DatabaseContract.ORDER_DESC;
 
-	Description mDescription = new Description();
+	String mDescription = "";
 	Menu mMenu = null;
 	ListView mListView = null;
 	MachineLearningChartArrayAdapter mMachineLearningChartArrayAdapter = null;
@@ -178,8 +170,6 @@ public class MachineLearningChartListActivity extends BaseActivity implements
 		if (id == LOADER_ID_LIST) {
 			swapCursor(mMachineLearningChartList.get(0), cursor);
 		}
-
-		mDescription.setText("Profit");
 	}
 
 	@Override
@@ -274,10 +264,10 @@ public class MachineLearningChartListActivity extends BaseActivity implements
 				index = chart.mXValues.size();
 				chart.mXValues.add(String.valueOf(housePrices.xArray[i]));
 
-				Entry pointEntry = new Entry((float) housePrices.xArray[i], (float) housePrices.yArray[i]);
+				Entry pointEntry = new Entry((float) housePrices.yArray[i], index);
 				chart.mPointEntryList.add(pointEntry);
 
-				Entry lineEntry = new Entry((float) housePrices.xArray[i], (float) housePrices.trainer.predict(housePrices.xArray[i]));
+				Entry lineEntry = new Entry((float) housePrices.trainer.predict(index), index);
 				chart.mLineEntryList.add(lineEntry);
 			}
 		} catch (Exception e) {
@@ -377,13 +367,13 @@ public class MachineLearningChartListActivity extends BaseActivity implements
 				xAxis = viewHolder.mCombinedChart.getXAxis();
 				if (xAxis != null) {
 					xAxis.setPosition(XAxisPosition.BOTTOM);
-					xAxis.setAxisMinimum(0);
+//					xAxis.setAxisMinimum(0);
 				}
 
 				leftYAxis = viewHolder.mCombinedChart.getAxisLeft();
 				if (leftYAxis != null) {
-					leftYAxis.setAxisMinimum(0);
-					leftYAxis.setValueFormatter(new DefaultAxisValueFormatter(2));
+//					leftYAxis.setAxisMinimum(0);
+					leftYAxis.setValueFormatter(new DefaultYAxisValueFormatter(2));
 				}
 
 				rightYAxis = viewHolder.mCombinedChart.getAxisRight();

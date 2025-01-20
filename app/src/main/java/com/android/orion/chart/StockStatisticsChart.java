@@ -3,7 +3,6 @@ package com.android.orion.chart;
 import android.graphics.Color;
 
 import com.android.orion.config.Config;
-import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
@@ -14,7 +13,6 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 
 import java.util.ArrayList;
@@ -30,7 +28,7 @@ public class StockStatisticsChart {
 	public ArrayList<Entry> mRateEntryList = null;
 	public ArrayList<Entry> mYieldEntryList = null;
 	public ArrayList<Entry> mDividendRatioEntryList = null;
-	public ArrayList<PieEntry> mValuationEntryList = null;
+	public ArrayList<Entry> mValuationEntryList = null;
 	public CombinedData mCombinedDataMain = null;
 	public PieData mPieData = null;
 	ArrayList<Entry> mDIFEntryList = null;
@@ -84,11 +82,11 @@ public class StockStatisticsChart {
 		}
 
 		if (mCombinedDataMain == null) {
-			mCombinedDataMain = new CombinedData();
+			mCombinedDataMain = new CombinedData(mXValues);
 		}
 
 		if (mCombinedDataSub == null) {
-			mCombinedDataSub = new CombinedData();
+			mCombinedDataSub = new CombinedData(mXValues);
 		}
 
 		if (mPieData == null) {
@@ -100,12 +98,13 @@ public class StockStatisticsChart {
 	}
 
 	public void setMainChartData() {
-		LineData lineData = new LineData();
+		LineData lineData = new LineData(mXValues);
 
-		BarData barData = new BarData();
-		barData.setBarWidth(0.5f);
+		BarData barData = new BarData(mXValues);
 		BarDataSet peDataSet = new BarDataSet(mPeEntryList, "pe");
-		peDataSet.setColor(Config.COLOR_RGB_RED);
+		peDataSet.setBarSpacePercent(40f);
+		peDataSet.setIncreasingColor(Config.COLOR_RGB_RED);
+		peDataSet.setDecreasingColor(Config.COLOR_RGB_GREEN);
 		peDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		barData.addDataSet(peDataSet);
 
@@ -150,7 +149,7 @@ public class StockStatisticsChart {
 	}
 
 	public void setSubChartData() {
-		mPieData = new PieData();
+		mPieData = new PieData(mXValues);
 		PieDataSet pieDataSet = new PieDataSet(mValuationEntryList, "Valuation");
 
 		int[] values = {0x00, 0x3f, 0x6f, 0x9f, 0xcf, 0xff};
@@ -163,7 +162,7 @@ public class StockStatisticsChart {
 		}
 
 		mPieData.addDataSet(pieDataSet);
-		mPieData.setValueTextSize(12f);
+		mPieData.setValueTextSize(9f);
 		mPieData.setValueFormatter(new PercentFormatter());
 
 		/*

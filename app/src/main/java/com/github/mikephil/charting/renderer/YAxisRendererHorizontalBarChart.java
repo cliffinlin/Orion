@@ -5,13 +5,13 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Path;
-import android.graphics.RectF;
 
 import com.github.mikephil.charting.components.LimitLine;
+import com.github.mikephil.charting.components.LimitLine.LimitLabelPosition;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.components.YAxis.AxisDependency;
 import com.github.mikephil.charting.components.YAxis.YAxisLabelPosition;
-import com.github.mikephil.charting.utils.MPPointD;
+import com.github.mikephil.charting.utils.PointD;
 import com.github.mikephil.charting.utils.Transformer;
 import com.github.mikephil.charting.utils.Utils;
 import com.github.mikephil.charting.utils.ViewPortHandler;
@@ -21,40 +21,36 @@ import java.util.List;
 public class YAxisRendererHorizontalBarChart extends YAxisRenderer {
 
     public YAxisRendererHorizontalBarChart(ViewPortHandler viewPortHandler, YAxis yAxis,
-                                           Transformer trans) {
+            Transformer trans) {
         super(viewPortHandler, yAxis, trans);
-
+        
         mLimitLinePaint.setTextAlign(Align.LEFT);
     }
 
     /**
      * Computes the axis values.
-     *
+     * 
      * @param yMin - the minimum y-value in the data object for this axis
      * @param yMax - the maximum y-value in the data object for this axis
      */
-    @Override
-    public void computeAxis(float yMin, float yMax, boolean inverted) {
+    public void computeAxis(float yMin, float yMax) {
 
         // calculate the starting and entry point of the y-labels (depending on
         // zoom / contentrect bounds)
         if (mViewPortHandler.contentHeight() > 10 && !mViewPortHandler.isFullyZoomedOutX()) {
 
-            MPPointD p1 = mTrans.getValuesByTouchPoint(mViewPortHandler.contentLeft(),
+            PointD p1 = mTrans.getValuesByTouchPoint(mViewPortHandler.contentLeft(),
                     mViewPortHandler.contentTop());
-            MPPointD p2 = mTrans.getValuesByTouchPoint(mViewPortHandler.contentRight(),
+            PointD p2 = mTrans.getValuesByTouchPoint(mViewPortHandler.contentRight(),
                     mViewPortHandler.contentTop());
 
-            if (!inverted) {
+            if (!mYAxis.isInverted()) {
                 yMin = (float) p1.x;
                 yMax = (float) p2.x;
             } else {
                 yMin = (float) p2.x;
                 yMax = (float) p1.x;
             }
-
-            MPPointD.recycleInstance(p1);
-            MPPointD.recycleInstance(p2);
         }
 
         computeAxisValues(yMin, yMax);
@@ -69,7 +65,16 @@ public class YAxisRendererHorizontalBarChart extends YAxisRenderer {
         if (!mYAxis.isEnabled() || !mYAxis.isDrawLabelsEnabled())
             return;
 
-        float[] positions = getTransformedPositions();
+        float[] positions = new float[mYAxis.mEntryCount * 2];
+
+        for (int i = 0; i < positions.length; i += 2) {
+            // only fill y values, x values are not needed since the y-labels
+            // are
+            // static on the x-axis
+            positions[i] = mYAxis.mEntries[i / 2];
+        }
+
+        mTrans.pointValuesToPixel(positions);
 
         mAxisLabelPaint.setTypeface(mYAxis.getTypeface());
         mAxisLabelPaint.setTextSize(mYAxis.getTextSize());
@@ -126,101 +131,55 @@ public class YAxisRendererHorizontalBarChart extends YAxisRenderer {
 
     /**
      * draws the y-labels on the specified x-position
-     *
+     * 
      * @param fixedPosition
      * @param positions
      */
     @Override
     protected void drawYLabels(Canvas c, float fixedPosition, float[] positions, float offset) {
-
+        
         mAxisLabelPaint.setTypeface(mYAxis.getTypeface());
         mAxisLabelPaint.setTextSize(mYAxis.getTextSize());
         mAxisLabelPaint.setColor(mYAxis.getTextColor());
 
-        final int from = mYAxis.isDrawBottomYLabelEntryEnabled() ? 0 : 1;
-        final int to = mYAxis.isDrawTopYLabelEntryEnabled()
-                ? mYAxis.mEntryCount
-                : (mYAxis.mEntryCount - 1);
-
-        float xOffset = mYAxis.getLabelXOffset();
-
-        for (int i = from; i < to; i++) {
+        for (int i = 0; i < mYAxis.mEntryCount; i++) {
 
             String text = mYAxis.getFormattedLabel(i);
 
-            c.drawText(text,
-                    positions[i * 2],
-                    fixedPosition - offset + xOffset,
-                    mAxisLabelPaint);
+            if (!mYAxis.isDrawTopYLabelEntryEnabled() && i >= mYAxis.mEntryCount - 1)
+                return;
+
+            c.drawText(text, positions[i * 2], fixedPosition - offset, mAxisLabelPaint);
         }
     }
 
     @Override
-    protected float[] getTransformedPositions() {
+    public void renderGridLines(Canvas c) {
 
-        if(mGetTransformedPositionsBuffer.length != mYAxis.mEntryCount * 2) {
-            mGetTransformedPositionsBuffer = new float[mYAxis.mEntryCount * 2];
+        if (!mYAxis.isDrawGridLinesEnabled() || !mYAxis.isEnabled())
+            return;
+
+        // pre alloc
+        float[] position = new float[2];
+
+        mGridPaint.setColor(mYAxis.getGridColor());
+        mGridPaint.setStrokeWidth(mYAxis.getGridLineWidth());
+
+        // draw the horizontal grid
+        for (int i = 0; i < mYAxis.mEntryCount; i++) {
+
+            position[0] = mYAxis.mEntries[i];
+            mTrans.pointValuesToPixel(position);
+
+            c.drawLine(position[0], mViewPortHandler.contentTop(), position[0],
+                    mViewPortHandler.contentBottom(),
+                    mGridPaint);
         }
-        float[] positions = mGetTransformedPositionsBuffer;
-
-        for (int i = 0; i < positions.length; i += 2) {
-            // only fill x values, y values are not needed for x-labels
-            positions[i] = mYAxis.mEntries[i / 2];
-        }
-
-        mTrans.pointValuesToPixel(positions);
-        return positions;
     }
-
-    @Override
-    public RectF getGridClippingRect() {
-        mGridClippingRect.set(mViewPortHandler.getContentRect());
-        mGridClippingRect.inset(-mAxis.getGridLineWidth(), 0.f);
-        return mGridClippingRect;
-    }
-
-    @Override
-    protected Path linePath(Path p, int i, float[] positions) {
-
-        p.moveTo(positions[i], mViewPortHandler.contentTop());
-        p.lineTo(positions[i], mViewPortHandler.contentBottom());
-
-        return p;
-    }
-
-    protected Path mDrawZeroLinePathBuffer = new Path();
-
-    @Override
-    protected void drawZeroLine(Canvas c) {
-
-        int clipRestoreCount = c.save();
-        mZeroLineClippingRect.set(mViewPortHandler.getContentRect());
-        mZeroLineClippingRect.inset(-mYAxis.getZeroLineWidth(), 0.f);
-        c.clipRect(mLimitLineClippingRect);
-
-        // draw zero line
-        MPPointD pos = mTrans.getPixelForValues(0f, 0f);
-
-        mZeroLinePaint.setColor(mYAxis.getZeroLineColor());
-        mZeroLinePaint.setStrokeWidth(mYAxis.getZeroLineWidth());
-
-        Path zeroLinePath = mDrawZeroLinePathBuffer;
-        zeroLinePath.reset();
-
-        zeroLinePath.moveTo((float) pos.x - 1, mViewPortHandler.contentTop());
-        zeroLinePath.lineTo((float) pos.x - 1, mViewPortHandler.contentBottom());
-
-        // draw a path because lines don't support dashing on lower android versions
-        c.drawPath(zeroLinePath, mZeroLinePaint);
-
-        c.restoreToCount(clipRestoreCount);
-    }
-
-    protected Path mRenderLimitLinesPathBuffer = new Path();
-    protected float[] mRenderLimitLinesBuffer = new float[4];
+    
     /**
      * Draws the LimitLines associated with this axis to the screen.
-     * This is the standard XAxis renderer using the YAxis limit lines.
+	 * This is the standard XAxis renderer using the YAxis limit lines.
      *
      * @param c
      */
@@ -232,26 +191,16 @@ public class YAxisRendererHorizontalBarChart extends YAxisRenderer {
         if (limitLines == null || limitLines.size() <= 0)
             return;
 
-        float[] pts = mRenderLimitLinesBuffer;
-        pts[0] = 0;
-        pts[1] = 0;
-        pts[2] = 0;
-        pts[3] = 0;
-        Path limitLinePath = mRenderLimitLinesPathBuffer;
-        limitLinePath.reset();
-
+        float[] pts = new float[4];
+        Path limitLinePath = new Path();
+               
         for (int i = 0; i < limitLines.size(); i++) {
 
             LimitLine l = limitLines.get(i);
 
-            if (!l.isEnabled())
+            if(!l.isEnabled())
                 continue;
-
-            int clipRestoreCount = c.save();
-            mLimitLineClippingRect.set(mViewPortHandler.getContentRect());
-            mLimitLineClippingRect.inset(-l.getLineWidth(), 0.f);
-            c.clipRect(mLimitLineClippingRect);
-
+            
             pts[0] = l.getLimit();
             pts[2] = l.getLimit();
 
@@ -259,11 +208,11 @@ public class YAxisRendererHorizontalBarChart extends YAxisRenderer {
 
             pts[1] = mViewPortHandler.contentTop();
             pts[3] = mViewPortHandler.contentBottom();
-
+            
             limitLinePath.moveTo(pts[0], pts[1]);
             limitLinePath.lineTo(pts[2], pts[3]);
 
-            mLimitLinePaint.setStyle(Paint.Style.STROKE);
+			mLimitLinePaint.setStyle(Paint.Style.STROKE);
             mLimitLinePaint.setColor(l.getLineColor());
             mLimitLinePaint.setPathEffect(l.getDashPathEffect());
             mLimitLinePaint.setStrokeWidth(l.getLineWidth());
@@ -276,7 +225,7 @@ public class YAxisRendererHorizontalBarChart extends YAxisRenderer {
             // if drawing the limit-value label is enabled
             if (label != null && !label.equals("")) {
 
-                mLimitLinePaint.setStyle(l.getTextStyle());
+				mLimitLinePaint.setStyle(l.getTextStyle());
                 mLimitLinePaint.setPathEffect(null);
                 mLimitLinePaint.setColor(l.getTextColor());
                 mLimitLinePaint.setTypeface(l.getTypeface());
@@ -307,9 +256,8 @@ public class YAxisRendererHorizontalBarChart extends YAxisRenderer {
                     mLimitLinePaint.setTextAlign(Align.RIGHT);
                     c.drawText(label, pts[0] - xOffset, mViewPortHandler.contentBottom() - yOffset, mLimitLinePaint);
                 }
-            }
 
-            c.restoreToCount(clipRestoreCount);
+            }
         }
     }
 }

@@ -12,34 +12,18 @@ import java.text.DecimalFormat;
  *
  * @author Philipp Jahoda
  */
-public class DefaultValueFormatter implements IValueFormatter
-{
+public class DefaultValueFormatter implements ValueFormatter {
 
-    /**
-     * DecimalFormat for formatting
-     */
-    protected DecimalFormat mFormat;
-
-    protected int mDecimalDigits;
+    /** decimalformat for formatting */
+    private DecimalFormat mFormat;
 
     /**
      * Constructor that specifies to how many digits the value should be
      * formatted.
-     *
+     * 
      * @param digits
      */
     public DefaultValueFormatter(int digits) {
-        setup(digits);
-    }
-
-    /**
-     * Sets up the formatter with a given number of decimal digits.
-     *
-     * @param digits
-     */
-    public void setup(int digits) {
-
-        this.mDecimalDigits = digits;
 
         StringBuffer b = new StringBuffer();
         for (int i = 0; i < digits; i++) {
@@ -58,14 +42,5 @@ public class DefaultValueFormatter implements IValueFormatter
         // avoid memory allocations here (for performance reasons)
 
         return mFormat.format(value);
-    }
-
-    /**
-     * Returns the number of decimal digits this formatter uses.
-     *
-     * @return
-     */
-    public int getDecimalDigits() {
-        return mDecimalDigits;
     }
 }

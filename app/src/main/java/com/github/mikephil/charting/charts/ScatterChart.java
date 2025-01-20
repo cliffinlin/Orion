@@ -5,17 +5,26 @@ import android.content.Context;
 import android.util.AttributeSet;
 
 import com.github.mikephil.charting.data.ScatterData;
-import com.github.mikephil.charting.interfaces.dataprovider.ScatterDataProvider;
+import com.github.mikephil.charting.interfaces.ScatterDataProvider;
 import com.github.mikephil.charting.renderer.ScatterChartRenderer;
 
 /**
  * The ScatterChart. Draws dots, triangles, squares and custom shapes into the
  * Chart-View. CIRCLE and SCQUARE offer the best performance, TRIANGLE has the
  * worst performance.
- *
+ * 
  * @author Philipp Jahoda
  */
 public class ScatterChart extends BarLineChartBase<ScatterData> implements ScatterDataProvider {
+
+    /**
+     * enum that defines the shape that is drawn where the values are, CIRCLE
+     * and SCQUARE offer the best performance, TRIANGLE has the worst
+     * performance.
+     */
+    public enum ScatterShape {
+        CROSS, TRIANGLE, CIRCLE, SQUARE
+    }
 
     public ScatterChart(Context context) {
         super(context);
@@ -29,49 +38,37 @@ public class ScatterChart extends BarLineChartBase<ScatterData> implements Scatt
         super(context, attrs, defStyle);
     }
 
-
     @Override
     protected void init() {
         super.init();
 
         mRenderer = new ScatterChartRenderer(this, mAnimator, mViewPortHandler);
-
-        getXAxis().setSpaceMin(0.5f);
-        getXAxis().setSpaceMax(0.5f);
+        mXChartMin = -0.5f;
     }
 
     @Override
-    public ScatterData getScatterData() {
-        return mData;
+    protected void calcMinMax() {
+        super.calcMinMax();
+
+        if (mDeltaX == 0 && mData.getYValCount() > 0)
+            mDeltaX = 1;
+
+        mXChartMax += 0.5f;
+        mDeltaX = Math.abs(mXChartMax - mXChartMin);
     }
 
     /**
-     * Predefined ScatterShapes that allow the specification of a shape a ScatterDataSet should be drawn with.
-     * If a ScatterShape is specified for a ScatterDataSet, the required renderer is set.
+     * Returns all possible predefined ScatterShapes.
+     * 
+     * @return
      */
-    public enum ScatterShape {
-
-        SQUARE("SQUARE"),
-        CIRCLE("CIRCLE"),
-        TRIANGLE("TRIANGLE"),
-        CROSS("CROSS"),
-        X("X"),
-        CHEVRON_UP("CHEVRON_UP"),
-        CHEVRON_DOWN("CHEVRON_DOWN");
-
-        private final String shapeIdentifier;
-
-        ScatterShape(final String shapeIdentifier) {
-            this.shapeIdentifier = shapeIdentifier;
-        }
-
-        @Override
-        public String toString() {
-            return shapeIdentifier;
-        }
-
-        public static ScatterShape[] getAllDefaultShapes() {
-            return new ScatterShape[]{SQUARE, CIRCLE, TRIANGLE, CROSS, X, CHEVRON_UP, CHEVRON_DOWN};
-        }
+    public static ScatterShape[] getAllPossibleShapes() {
+        return new ScatterShape[] {
+                ScatterShape.SQUARE, ScatterShape.CIRCLE, ScatterShape.TRIANGLE, ScatterShape.CROSS
+        };
     }
+
+    public ScatterData getScatterData() {
+        return mData;
+    };
 }

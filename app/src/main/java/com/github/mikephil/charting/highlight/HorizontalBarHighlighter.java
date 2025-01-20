@@ -1,15 +1,8 @@
 package com.github.mikephil.charting.highlight;
 
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.DataSet;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.interfaces.dataprovider.BarDataProvider;
-import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
-import com.github.mikephil.charting.interfaces.datasets.IDataSet;
-import com.github.mikephil.charting.utils.MPPointD;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.interfaces.BarDataProvider;
 
 /**
  * Created by Philipp Jahoda on 22/07/15.
@@ -23,63 +16,85 @@ public class HorizontalBarHighlighter extends BarHighlighter {
 	@Override
 	public Highlight getHighlight(float x, float y) {
 
-		BarData barData = mChart.getBarData();
+		Highlight h = super.getHighlight(x, y);
 
-		MPPointD pos = getValsForTouch(y, x);
+		if (h == null)
+			return h;
+		else {
 
-		Highlight high = getHighlightForX((float) pos.y, y, x);
-		if (high == null)
-			return null;
+			BarDataSet set = mChart.getBarData().getDataSetByIndex(h.getDataSetIndex());
 
-		IBarDataSet set = barData.getDataSetByIndex(high.getDataSetIndex());
-		if (set.isStacked()) {
+			if (set.isStacked()) {
 
-			return getStackedHighlight(high,
-					set,
-					(float) pos.y,
-					(float) pos.x);
+				// create an array of the touch-point
+				float[] pts = new float[2];
+				pts[0] = y;
+
+				// take any transformer to determine the x-axis value
+				mChart.getTransformer(set.getAxisDependency()).pixelsToValue(pts);
+
+				return getStackedHighlight(h, set, h.getXIndex(), h.getDataSetIndex(), pts[0]);
+			} else
+				return h;
 		}
-
-		MPPointD.recycleInstance(pos);
-
-		return high;
 	}
 
 	@Override
-	protected List<Highlight> buildHighlights(IDataSet set, int dataSetIndex, float xVal, DataSet.Rounding rounding) {
+	protected int getXIndex(float x) {
 
-		ArrayList<Highlight> highlights = new ArrayList<>();
+		if (!mChart.getBarData().isGrouped()) {
 
-		//noinspection unchecked
-		List<Entry> entries = set.getEntriesForXValue(xVal);
-		if (entries.size() == 0) {
-			// Try to find closest x-value and take all entries for that x-value
-			final Entry closest = set.getEntryForXValue(xVal, Float.NaN, rounding);
-			if (closest != null)
-			{
-				//noinspection unchecked
-				entries = set.getEntriesForXValue(closest.getX());
-			}
+			// create an array of the touch-point
+			float[] pts = new float[2];
+			pts[1] = x;
+
+			// take any transformer to determine the x-axis value
+			mChart.getTransformer(YAxis.AxisDependency.LEFT).pixelsToValue(pts);
+
+			return (int) Math.round(pts[1]);
+		} else {
+
+			float baseNoSpace = getBase(x);
+
+			int setCount = mChart.getBarData().getDataSetCount();
+			int xIndex = (int) baseNoSpace / setCount;
+
+			int valCount = mChart.getData().getXValCount();
+
+			if (xIndex < 0)
+				xIndex = 0;
+			else if (xIndex >= valCount)
+				xIndex = valCount - 1;
+
+			return xIndex;
 		}
-
-		if (entries.size() == 0)
-			return highlights;
-
-		for (Entry e : entries) {
-			MPPointD pixels = mChart.getTransformer(
-					set.getAxisDependency()).getPixelForValues(e.getY(), e.getX());
-
-			highlights.add(new Highlight(
-					e.getX(), e.getY(),
-					(float) pixels.x, (float) pixels.y,
-					dataSetIndex, set.getAxisDependency()));
-		}
-
-		return highlights;
 	}
 
+	/**
+	 * Returns the base y-value to the corresponding x-touch value in pixels.
+	 * 
+	 * @param y
+	 * @return
+	 */
 	@Override
-	protected float getDistance(float x1, float y1, float x2, float y2) {
-		return Math.abs(y1 - y2);
+	protected float getBase(float y) {
+
+		// create an array of the touch-point
+		float[] pts = new float[2];
+		pts[1] = y;
+
+		// take any transformer to determine the x-axis value
+		mChart.getTransformer(YAxis.AxisDependency.LEFT).pixelsToValue(pts);
+		float yVal = pts[1];
+
+		int setCount = mChart.getBarData().getDataSetCount();
+
+		// calculate how often the group-space appears
+		int steps = (int) ((float) yVal / ((float) setCount + mChart.getBarData().getGroupSpace()));
+
+		float groupSpaceSum = mChart.getBarData().getGroupSpace() * (float) steps;
+
+		float baseNoSpace = (float) yVal - groupSpaceSum;
+		return baseNoSpace;
 	}
 }

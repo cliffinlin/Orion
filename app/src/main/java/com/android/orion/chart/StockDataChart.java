@@ -47,15 +47,14 @@ public class StockDataChart {
 	public ArrayList<Entry> mDIFEntryList = new ArrayList<>();
 	public ArrayList<Entry> mDEAEntryList = new ArrayList<>();
 	public ArrayList<BarEntry> mHistogramEntryList = new ArrayList<>();
-	public ArrayList<Integer> mHistogramColorList = new ArrayList<>();
 	public ArrayList<Entry> mVelocityEntryList = new ArrayList<>();
 	public ArrayList<LimitLine> mXLimitLineList = new ArrayList<>();
 	public List<Entry>[] mLineList = new List[Trend.LEVEL_MAX];
 	public int[] mLineColors = {Color.GRAY, Color.YELLOW, Color.BLACK, Color.RED, Color.MAGENTA};
-	public CombinedData mCombinedDataMain = new CombinedData();
-	public CombinedData mCombinedDataSub = new CombinedData();
+	public CombinedData mCombinedDataMain = new CombinedData(mXValues);
+	public CombinedData mCombinedDataSub = new CombinedData(mXValues);
 	Stock mStock;
-	public String mPeriod;
+	String mPeriod;
 	double mMainChartYMin = 0;
 	double mMainChartYMax = 0;
 	double mSubChartYMin = 0;
@@ -74,10 +73,10 @@ public class StockDataChart {
 	}
 
 	public void setMainChartData(Context context) {
-		mCombinedDataMain = new CombinedData();
+		mCombinedDataMain = new CombinedData(mXValues);
 
 		if (true) {
-			BubbleData bubbleData = new BubbleData();
+			BubbleData bubbleData = new BubbleData(mXValues);
 			if (mNaturalRallyList.size() > 0) {
 				BubbleDataSet bubbleDataSet = new BubbleDataSet(mNaturalRallyList, "NUp");
 				bubbleDataSet.setColor(Color.BLUE);
@@ -105,7 +104,7 @@ public class StockDataChart {
 		}
 
 		if (mCandleEntryList.size() > 0) {
-			CandleData candleData = new CandleData();
+			CandleData candleData = new CandleData(mXValues);
 
 			CandleDataSet candleDataSet = new CandleDataSet(mCandleEntryList,
 					"K");
@@ -117,13 +116,13 @@ public class StockDataChart {
 			candleDataSet.setAxisDependency(AxisDependency.LEFT);
 			candleDataSet.setColor(Color.RED);
 			candleDataSet.setHighLightColor(Color.TRANSPARENT);
-//			candleDataSet.setDrawTags(true);
+			candleDataSet.setDrawTags(true);
 
 			candleData.addDataSet(candleDataSet);
 			mCombinedDataMain.setData(candleData);
 		}
 
-		LineData lineData = new LineData();
+		LineData lineData = new LineData(mXValues);
 
 		if (mCandleEntryList.size() > 0) {
 			{
@@ -149,7 +148,8 @@ public class StockDataChart {
 			if (mLineList[0].size() > 0) {
 				LineDataSet lineDataSet = new LineDataSet(mLineList[0], "Draw");
 				lineDataSet.setColor(mLineColors[0]);
-				lineDataSet.setDrawCircles(false);
+				lineDataSet.setCircleColor(mLineColors[0]);
+				lineDataSet.setCircleSize(0);
 				lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 				lineData.addDataSet(lineDataSet);
 			}
@@ -162,7 +162,8 @@ public class StockDataChart {
 					lineDataSet.setDrawFilled(true);
 				}
 				lineDataSet.setColor(mLineColors[1]);
-				lineDataSet.setDrawCircles(false);
+				lineDataSet.setCircleColor(mLineColors[1]);
+				lineDataSet.setCircleSize(0);
 				lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 				lineData.addDataSet(lineDataSet);
 			}
@@ -176,7 +177,8 @@ public class StockDataChart {
 					lineDataSet.setDrawFilled(true);
 				}
 				lineDataSet.setColor(mLineColors[2]);
-				lineDataSet.setDrawCircles(false);
+				lineDataSet.setCircleColor(mLineColors[2]);
+				lineDataSet.setCircleSize(0);
 				lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 				lineData.addDataSet(lineDataSet);
 			}
@@ -190,7 +192,8 @@ public class StockDataChart {
 					lineDataSet.setDrawFilled(true);
 				}
 				lineDataSet.setColor(mLineColors[3]);
-				lineDataSet.setDrawCircles(false);
+				lineDataSet.setCircleColor(mLineColors[3]);
+				lineDataSet.setCircleSize(0);
 				lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 				lineData.addDataSet(lineDataSet);
 			}
@@ -202,7 +205,8 @@ public class StockDataChart {
 					lineDataSet.setDrawFilled(true);
 				}
 				lineDataSet.setColor(mLineColors[4]);
-				lineDataSet.setDrawCircles(false);
+				lineDataSet.setCircleColor(mLineColors[4]);
+				lineDataSet.setCircleSize(0);
 				lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 				lineData.addDataSet(lineDataSet);
 			}
@@ -211,17 +215,18 @@ public class StockDataChart {
 	}
 
 	public void setSubChartData(Context context) {
-		mCombinedDataSub = new CombinedData();
+		mCombinedDataSub = new CombinedData(mXValues);
 
-		BarData barData = new BarData();
-		barData.setBarWidth(0.5f);
+		BarData barData = new BarData(mXValues);
 		BarDataSet histogramDataSet = new BarDataSet(mHistogramEntryList,
 				"Histogram");
-		histogramDataSet.setColors(mHistogramColorList);
+		histogramDataSet.setBarSpacePercent(40f);
+		histogramDataSet.setIncreasingColor(Config.COLOR_RGB_RED);
+		histogramDataSet.setDecreasingColor(Config.COLOR_RGB_GREEN);
 		histogramDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		barData.addDataSet(histogramDataSet);
 
-		LineData lineData = new LineData();
+		LineData lineData = new LineData(mXValues);
 
 		LineDataSet difDataSet = new LineDataSet(mDIFEntryList, "DIF");
 		difDataSet.setColor(Color.YELLOW);
@@ -264,9 +269,9 @@ public class StockDataChart {
 			return;
 		}
 
-		draw = drawEntryList.get(drawEntryList.size() - 1).getY();
-		stroke = strokeEntryList.get(strokeEntryList.size() - 1).getY();
-		segment = segmentEntryList.get(segmentEntryList.size() - 1).getY();
+		draw = drawEntryList.get(drawEntryList.size() - 1).getVal();
+		stroke = strokeEntryList.get(strokeEntryList.size() - 1).getVal();
+		segment = segmentEntryList.get(segmentEntryList.size() - 1).getVal();
 
 		if (index == 0) {
 			mMainChartYMin = Math.min(Math.min(draw, stroke), segment);
@@ -289,8 +294,8 @@ public class StockDataChart {
 			return;
 		}
 
-		dif = difEntryList.get(difEntryList.size() - 1).getY();
-		dea = deaEntryList.get(deaEntryList.size() - 1).getY();
+		dif = difEntryList.get(difEntryList.size() - 1).getVal();
+		dea = deaEntryList.get(deaEntryList.size() - 1).getVal();
 
 		if (index == 0) {
 			mSubChartYMin = Math.min(dif, dea);
@@ -321,12 +326,13 @@ public class StockDataChart {
 	}
 
 	LimitLine createLimitLine(double limit, int color, String label) {
-		LimitLine limitLine = new LimitLine((float) limit);
+		LimitLine limitLine = new LimitLine(0);
 
 		limitLine.enableDashedLine(10f, 10f, 0f);
 		limitLine.setLineWidth(3);
 		limitLine.setTextSize(10f);
 		limitLine.setLabelPosition(LimitLabelPosition.LEFT_TOP);
+		limitLine.setLimit((float) limit);
 		limitLine.setLineColor(color);
 		limitLine.setLabel(label);
 
@@ -530,7 +536,6 @@ public class StockDataChart {
 		mDIFEntryList.clear();
 		mDEAEntryList.clear();
 		mHistogramEntryList.clear();
-		mHistogramColorList.clear();
 		mVelocityEntryList.clear();
 
 		for (int i = 0; i < Trend.LEVEL_MAX; i++) {

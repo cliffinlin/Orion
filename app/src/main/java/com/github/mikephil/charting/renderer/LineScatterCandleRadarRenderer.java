@@ -4,13 +4,13 @@ import android.graphics.Canvas;
 import android.graphics.Path;
 
 import com.github.mikephil.charting.animation.ChartAnimator;
-import com.github.mikephil.charting.interfaces.datasets.ILineScatterCandleRadarDataSet;
+import com.github.mikephil.charting.data.LineScatterCandleRadarDataSet;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
 /**
  * Created by Philipp Jahoda on 11/07/15.
  */
-public abstract class LineScatterCandleRadarRenderer extends BarLineScatterCandleBubbleRenderer {
+public abstract class LineScatterCandleRadarRenderer extends DataRenderer {
 
     /**
      * path that is used for drawing highlight-lines (drawLines(...) cannot be used because of dashes)
@@ -25,11 +25,10 @@ public abstract class LineScatterCandleRadarRenderer extends BarLineScatterCandl
      * Draws vertical & horizontal highlight-lines if enabled.
      *
      * @param c
-     * @param x x-position of the highlight line intersection
-     * @param y y-position of the highlight line intersection
+     * @param pts the transformed x- and y-position of the lines
      * @param set the currently drawn dataset
      */
-    protected void drawHighlightLines(Canvas c, float x, float y, ILineScatterCandleRadarDataSet set) {
+    protected void drawHighlightLines(Canvas c, float[] pts, LineScatterCandleRadarDataSet set) {
 
         // set color and stroke-width
         mHighlightPaint.setColor(set.getHighLightColor());
@@ -43,8 +42,8 @@ public abstract class LineScatterCandleRadarRenderer extends BarLineScatterCandl
 
             // create vertical path
             mHighlightLinePath.reset();
-            mHighlightLinePath.moveTo(x, mViewPortHandler.contentTop());
-            mHighlightLinePath.lineTo(x, mViewPortHandler.contentBottom());
+            mHighlightLinePath.moveTo(pts[0], mViewPortHandler.contentTop());
+            mHighlightLinePath.lineTo(pts[0], mViewPortHandler.contentBottom());
 
             c.drawPath(mHighlightLinePath, mHighlightPaint);
         }
@@ -54,8 +53,8 @@ public abstract class LineScatterCandleRadarRenderer extends BarLineScatterCandl
 
             // create horizontal path
             mHighlightLinePath.reset();
-            mHighlightLinePath.moveTo(mViewPortHandler.contentLeft(), y);
-            mHighlightLinePath.lineTo(mViewPortHandler.contentRight(), y);
+            mHighlightLinePath.moveTo(mViewPortHandler.contentLeft(), pts[1]);
+            mHighlightLinePath.lineTo(mViewPortHandler.contentRight(), pts[1]);
 
             c.drawPath(mHighlightLinePath, mHighlightPaint);
         }
