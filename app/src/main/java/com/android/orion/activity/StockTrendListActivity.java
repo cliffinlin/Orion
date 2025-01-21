@@ -30,7 +30,6 @@ import android.widget.TextView;
 import com.android.orion.R;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
-import com.android.orion.database.StockQuant;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Preferences;
@@ -42,29 +41,14 @@ public class StockTrendListActivity extends ListActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
 		OnItemLongClickListener, OnClickListener {
 
-	static final int LOADER_ID_QUANT_LIST = 0;
-
-	static final int FILTER_TYPE_NONE = 0;
-	static final int FILTER_TYPE_OPERATE = 1;
-	static final int FILTER_TYPE_BUY = 2;
-	static final int FILTER_TYPE_SELL = 3;
-	static final int FILTER_TYPE_ALL = 4;
-
-	static final int MESSAGE_DELETE_DEAL = 0;
-	static final int MESSAGE_DELETE_DEAL_LIST = 1;
-
-	static final int MESSAGE_VIEW_QUANT_DEAL = 4;
-	static final int MESSAGE_VIEW_STOCK_CHAT = 5;
-	static final int MESSAGE_VIEW_STOCK_TREND = 6;
-
-	static final int REQUEST_CODE_DEAL_INSERT = 0;
-	static final int REQUEST_CODE_DEAL_EDIT = 1;
+	static final int LOADER_ID_TREND_LIST = 0;
+	static final int MESSAGE_VIEW_STOCK_TREND_CHAT = 1;
 
 	static final int mHeaderTextDefaultColor = Color.BLACK;
 	static final int mHeaderTextHighlightColor = Color.RED;
 
 	String mSelection = null;
-	String mSortOrderColumn = DatabaseContract.COLUMN_ID;
+	String mSortOrderColumn = DatabaseContract.COLUMN_PERIOD;
 	String mSortOrderDirection = DatabaseContract.ORDER_ASC;
 	String mSortOrderDefault = mSortOrderColumn + mSortOrderDirection;
 	String mSortOrder = mSortOrderDefault;
@@ -74,22 +58,16 @@ public class StockTrendListActivity extends ListActivity implements
 	SyncHorizontalScrollView mContentSHSV = null;
 
 	TextView mTextViewNameCode = null;
-	TextView mTextViewId = null;
 	TextView mTextViewPrice = null;
 	TextView mTextViewNet = null;
-	TextView mTextViewBuy = null;
-	TextView mTextViewSell = null;
-	TextView mTextViewVolume = null;
-	TextView mTextViewValue = null;
-	TextView mTextViewFee = null;
-	TextView mTextViewProfit = null;
-	TextView mTextViewAction = null;
-	TextView mTextViewHold = null;
-	TextView mTextViewValuation = null;
-	TextView mTextViewQuantProfit = null;
-	TextView mTextViewQuantProfitMargin = null;
-	TextView mTextViewQuantX = null;
-	TextView mTextViewThreshold = null;
+	TextView mTextViewPeriod = null;
+	TextView mTextViewDate = null;
+	TextView mTextViewTime = null;
+	TextView mTextViewLevel = null;
+	TextView mTextViewTrend = null;
+	TextView mTextViewWeight = null;
+	TextView mTextViewBias = null;
+	TextView mTextViewError = null;
 	TextView mTextViewCreated = null;
 	TextView mTextViewModified = null;
 
@@ -100,12 +78,7 @@ public class StockTrendListActivity extends ListActivity implements
 	SimpleCursorAdapter mRightAdapter = null;
 
 	ActionMode mCurrentActionMode = null;
-
-	StockQuant mStockQuant = new StockQuant();
-
 	Stock mStock = new Stock();
-
-	int mFilterType = FILTER_TYPE_NONE;
 
 	Handler mHandler = new Handler(Looper.getMainLooper()) {
 
@@ -116,48 +89,7 @@ public class StockTrendListActivity extends ListActivity implements
 			Intent intent = null;
 
 			switch (msg.what) {
-				case MESSAGE_DELETE_DEAL:
-					break;
-
-				case MESSAGE_DELETE_DEAL_LIST:
-					break;
-
-				case MESSAGE_VIEW_QUANT_DEAL:
-					getStock();
-
-					intent = new Intent(mContext,
-							StockQuantDealListActivity.class);
-					Bundle bundle = new Bundle();
-					bundle.putString(Constant.EXTRA_STOCK_SE, mStock.getSE());
-					bundle.putString(Constant.EXTRA_STOCK_CODE, mStock.getCode());
-					intent.putExtras(bundle);
-					startActivity(intent);
-					break;
-
-				case MESSAGE_VIEW_STOCK_CHAT:
-					getStock();
-
-					ArrayList<String> stockIDList = new ArrayList<String>();
-					for (Stock stock : mStockList) {
-						stockIDList.add(String.valueOf(stock.getId()));
-					}
-
-					intent = new Intent(mContext, StockFavoriteChartListActivity.class);
-					intent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
-					intent.putStringArrayListExtra(Constant.EXTRA_STOCK_ID_LIST,
-							stockIDList);
-					intent.putExtra(Constant.EXTRA_STOCK_QUANT, true);
-					startActivity(intent);
-					break;
-
-				case MESSAGE_VIEW_STOCK_TREND:
-//					mDatabaseManager.getStock(mStock);
-//
-//					mIntent = new Intent(mContext, StockTrendListActivity.class);
-//					mIntent.setAction(Constant.ACTION_STOCK_TREND_LIST);
-//					mIntent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
-//					startActivity(mIntent);
-
+				case MESSAGE_VIEW_STOCK_TREND_CHAT:
 					intent = new Intent(mContext, MachineLearningChartListActivity.class);
 					startActivity(intent);
 					break;
@@ -197,10 +129,6 @@ public class StockTrendListActivity extends ListActivity implements
 		@Override
 		public boolean onActionItemClicked(final ActionMode mode, MenuItem item) {
 			switch (item.getItemId()) {
-				case R.id.menu_edit:
-					return true;
-				case R.id.menu_delete:
-					return true;
 				default:
 					return false;
 			}
@@ -217,19 +145,17 @@ public class StockTrendListActivity extends ListActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_stock_trend_list);
 
-		mFilterType = FILTER_TYPE_ALL;
-
-		mSortOrder = Preferences.getString(Setting.SETTING_SORT_ORDER_QUANT_LIST,
+		mSortOrder = Preferences.getString(Setting.SETTING_SORT_ORDER_TREND_LIST,
 				mSortOrderDefault);
 
 		initHeader();
 
 		initListView();
 
-		mLoaderManager.initLoader(LOADER_ID_QUANT_LIST, null, this);
+		mLoaderManager.initLoader(LOADER_ID_TREND_LIST, null, this);
 
 		getContentResolver().registerContentObserver(
-				DatabaseContract.StockQuant.CONTENT_URI, true, mContentObserver);
+				DatabaseContract.StockTrend.CONTENT_URI, true, mContentObserver);
 	}
 
 	@Override
@@ -246,36 +172,8 @@ public class StockTrendListActivity extends ListActivity implements
 				finish();
 				return true;
 
-			case R.id.action_new:
-				return true;
-
-			case R.id.action_none:
-				mFilterType = FILTER_TYPE_NONE;
-				restartLoader();
-				return true;
-
-			case R.id.action_operate:
-				mFilterType = FILTER_TYPE_OPERATE;
-				restartLoader();
-				return true;
-
-			case R.id.action_buy:
-				mFilterType = FILTER_TYPE_BUY;
-				restartLoader();
-				return true;
-
-			case R.id.action_sell:
-				mFilterType = FILTER_TYPE_SELL;
-				restartLoader();
-				return true;
-
-			case R.id.action_all:
-				mFilterType = FILTER_TYPE_ALL;
-				restartLoader();
-				return true;
-
 			case R.id.action_trend:
-				mHandler.sendEmptyMessage(MESSAGE_VIEW_STOCK_TREND);
+				mHandler.sendEmptyMessage(MESSAGE_VIEW_STOCK_TREND_CHAT);
 				return true;
 
 			default:
@@ -289,10 +187,6 @@ public class StockTrendListActivity extends ListActivity implements
 
 		if (resultCode == RESULT_OK) {
 			switch (requestCode) {
-				case REQUEST_CODE_DEAL_INSERT:
-				case REQUEST_CODE_DEAL_EDIT:
-					break;
-
 				default:
 					break;
 			}
@@ -310,57 +204,35 @@ public class StockTrendListActivity extends ListActivity implements
 			case R.id.stock_name_code:
 				mSortOrderColumn = DatabaseContract.COLUMN_CODE;
 				break;
-			case R.id.account:
-				mSortOrderColumn = DatabaseContract.COLUMN_ACCOUNT;
-				break;
-
-			case R.id.id:
-				mSortOrderColumn = BaseColumns._ID;
-				break;
 			case R.id.price:
 				mSortOrderColumn = DatabaseContract.COLUMN_PRICE;
 				break;
 			case R.id.net:
 				mSortOrderColumn = DatabaseContract.COLUMN_NET;
 				break;
-			case R.id.buy:
-				mSortOrderColumn = DatabaseContract.COLUMN_BUY;
+			case R.id.period:
+				mSortOrderColumn = DatabaseContract.COLUMN_PERIOD;
 				break;
-			case R.id.sell:
-				mSortOrderColumn = DatabaseContract.COLUMN_SELL;
+			case R.id.date:
+				mSortOrderColumn = DatabaseContract.COLUMN_DATE;
 				break;
-			case R.id.volume:
-				mSortOrderColumn = DatabaseContract.COLUMN_VOLUME;
+			case R.id.time:
+				mSortOrderColumn = DatabaseContract.COLUMN_TIME;
 				break;
-			case R.id.value:
-				mSortOrderColumn = DatabaseContract.COLUMN_VALUE;
+			case R.id.level:
+				mSortOrderColumn = DatabaseContract.COLUMN_LEVEL;
 				break;
-			case R.id.fee:
-				mSortOrderColumn = DatabaseContract.COLUMN_FEE;
+			case R.id.trend:
+				mSortOrderColumn = DatabaseContract.COLUMN_TREND;
 				break;
-			case R.id.profit:
-				mSortOrderColumn = DatabaseContract.COLUMN_PROFIT;
+			case R.id.weight:
+				mSortOrderColumn = DatabaseContract.COLUMN_WEIGHT;
 				break;
-			case R.id.action:
-				mSortOrderColumn = DatabaseContract.COLUMN_ACTION;
+			case R.id.bias:
+				mSortOrderColumn = DatabaseContract.COLUMN_BIAS;
 				break;
-			case R.id.hold:
-				mSortOrderColumn = DatabaseContract.COLUMN_HOLD;
-				break;
-			case R.id.valuation:
-				mSortOrderColumn = DatabaseContract.COLUMN_VALUATION;
-				break;
-			case R.id.quant_profit:
-				mSortOrderColumn = DatabaseContract.COLUMN_QUANT_PROFIT;
-				break;
-			case R.id.quant_profit_margin:
-				mSortOrderColumn = DatabaseContract.COLUMN_QUANT_PROFIT_MARGIN;
-				break;
-			case R.id.quant_x:
-				mSortOrderColumn = DatabaseContract.COLUMN_QUANT_X;
-				break;
-			case R.id.threshold:
-				mSortOrderColumn = DatabaseContract.COLUMN_THRESHOLD;
+			case R.id.error:
+				mSortOrderColumn = DatabaseContract.COLUMN_ERROR;
 				break;
 			case R.id.created:
 				mSortOrderColumn = DatabaseContract.COLUMN_CREATED;
@@ -381,7 +253,7 @@ public class StockTrendListActivity extends ListActivity implements
 
 		mSortOrder = mSortOrderColumn + mSortOrderDirection;
 
-		Preferences.putString(Setting.SETTING_SORT_ORDER_QUANT_LIST, mSortOrder);
+		Preferences.putString(Setting.SETTING_SORT_ORDER_TREND_LIST, mSortOrder);
 
 		restartLoader();
 	}
@@ -399,22 +271,16 @@ public class StockTrendListActivity extends ListActivity implements
 
 	void resetHeaderTextColor() {
 		setHeaderTextColor(mTextViewNameCode, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewId, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewPrice, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewNet, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewBuy, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewSell, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewVolume, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewValue, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewFee, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewProfit, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewAction, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewHold, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewValuation, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewQuantProfit, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewQuantProfitMargin, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewQuantX, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewThreshold, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewPeriod, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewDate, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewTime, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewLevel, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewTrend, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewWeight, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewBias, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewError, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewCreated, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewModified, mHeaderTextDefaultColor);
 	}
@@ -443,11 +309,6 @@ public class StockTrendListActivity extends ListActivity implements
 			mTextViewNameCode.setOnClickListener(this);
 		}
 
-		mTextViewId = findViewById(R.id.id);
-		if (mTextViewId != null) {
-			mTextViewId.setOnClickListener(this);
-		}
-
 		mTextViewPrice = findViewById(R.id.price);
 		if (mTextViewPrice != null) {
 			mTextViewPrice.setOnClickListener(this);
@@ -458,69 +319,44 @@ public class StockTrendListActivity extends ListActivity implements
 			mTextViewNet.setOnClickListener(this);
 		}
 
-		mTextViewBuy = findViewById(R.id.buy);
-		if (mTextViewBuy != null) {
-			mTextViewBuy.setOnClickListener(this);
+		mTextViewPeriod = findViewById(R.id.period);
+		if (mTextViewPeriod != null) {
+			mTextViewPeriod.setOnClickListener(this);
 		}
 
-		mTextViewSell = findViewById(R.id.sell);
-		if (mTextViewSell != null) {
-			mTextViewSell.setOnClickListener(this);
+		mTextViewDate = findViewById(R.id.date);
+		if (mTextViewDate != null) {
+			mTextViewDate.setOnClickListener(this);
 		}
 
-		mTextViewVolume = findViewById(R.id.volume);
-		if (mTextViewVolume != null) {
-			mTextViewVolume.setOnClickListener(this);
+		mTextViewTime = findViewById(R.id.time);
+		if (mTextViewTime != null) {
+			mTextViewTime.setOnClickListener(this);
 		}
 
-		mTextViewValue = findViewById(R.id.value);
-		if (mTextViewValue != null) {
-			mTextViewValue.setOnClickListener(this);
+		mTextViewLevel = findViewById(R.id.level);
+		if (mTextViewLevel != null) {
+			mTextViewLevel.setOnClickListener(this);
 		}
 
-		mTextViewFee = findViewById(R.id.fee);
-		if (mTextViewFee != null) {
-			mTextViewFee.setOnClickListener(this);
+		mTextViewTrend = findViewById(R.id.trend);
+		if (mTextViewTrend != null) {
+			mTextViewTrend.setOnClickListener(this);
 		}
 
-		mTextViewProfit = findViewById(R.id.profit);
-		if (mTextViewProfit != null) {
-			mTextViewProfit.setOnClickListener(this);
+		mTextViewWeight = findViewById(R.id.weight);
+		if (mTextViewWeight != null) {
+			mTextViewWeight.setOnClickListener(this);
 		}
 
-		mTextViewAction = findViewById(R.id.action);
-		if (mTextViewAction != null) {
-			mTextViewAction.setOnClickListener(this);
+		mTextViewBias = findViewById(R.id.bias);
+		if (mTextViewBias != null) {
+			mTextViewBias.setOnClickListener(this);
 		}
 
-		mTextViewHold = findViewById(R.id.hold);
-		if (mTextViewHold != null) {
-			mTextViewHold.setOnClickListener(this);
-		}
-
-		mTextViewValuation = findViewById(R.id.valuation);
-		if (mTextViewValuation != null) {
-			mTextViewValuation.setOnClickListener(this);
-		}
-
-		mTextViewQuantProfit = findViewById(R.id.quant_profit);
-		if (mTextViewQuantProfit != null) {
-			mTextViewQuantProfit.setOnClickListener(this);
-		}
-
-		mTextViewQuantProfitMargin = findViewById(R.id.quant_profit_margin);
-		if (mTextViewQuantProfitMargin != null) {
-			mTextViewQuantProfitMargin.setOnClickListener(this);
-		}
-
-		mTextViewQuantX = findViewById(R.id.quant_x);
-		if (mTextViewQuantX != null) {
-			mTextViewQuantX.setOnClickListener(this);
-		}
-
-		mTextViewThreshold = findViewById(R.id.threshold);
-		if (mTextViewThreshold != null) {
-			mTextViewThreshold.setOnClickListener(this);
+		mTextViewError = findViewById(R.id.error);
+		if (mTextViewError != null) {
+			mTextViewError.setOnClickListener(this);
 		}
 
 		mTextViewCreated = findViewById(R.id.created);
@@ -535,38 +371,26 @@ public class StockTrendListActivity extends ListActivity implements
 
 		if (mSortOrder.contains(DatabaseContract.COLUMN_CODE)) {
 			setHeaderTextColor(mTextViewNameCode, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(BaseColumns._ID)) {
-			setHeaderTextColor(mTextViewId, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PRICE)) {
 			setHeaderTextColor(mTextViewPrice, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_NET)) {
 			setHeaderTextColor(mTextViewNet, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_BUY)) {
-			setHeaderTextColor(mTextViewBuy, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_SELL)) {
-			setHeaderTextColor(mTextViewSell, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_VOLUME)) {
-			setHeaderTextColor(mTextViewVolume, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_VALUE)) {
-			setHeaderTextColor(mTextViewValue, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_FEE)) {
-			setHeaderTextColor(mTextViewFee, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PROFIT)) {
-			setHeaderTextColor(mTextViewProfit, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_ACTION)) {
-			setHeaderTextColor(mTextViewAction, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_HOLD)) {
-			setHeaderTextColor(mTextViewHold, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_VALUATION)) {
-			setHeaderTextColor(mTextViewValuation, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_QUANT_PROFIT)) {
-			setHeaderTextColor(mTextViewQuantProfit, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_QUANT_PROFIT_MARGIN)) {
-			setHeaderTextColor(mTextViewQuantProfitMargin, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_QUANT_X)) {
-			setHeaderTextColor(mTextViewQuantX, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_THRESHOLD)) {
-			setHeaderTextColor(mTextViewThreshold, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PERIOD)) {
+			setHeaderTextColor(mTextViewPeriod, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_DATE)) {
+			setHeaderTextColor(mTextViewDate, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_TIME)) {
+			setHeaderTextColor(mTextViewTime, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_LEVEL)) {
+			setHeaderTextColor(mTextViewLevel, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_TREND)) {
+			setHeaderTextColor(mTextViewTrend, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_WEIGHT)) {
+			setHeaderTextColor(mTextViewWeight, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_BIAS)) {
+			setHeaderTextColor(mTextViewBias, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_ERROR)) {
+			setHeaderTextColor(mTextViewError, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_CREATED)) {
 			setHeaderTextColor(mTextViewCreated, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MODIFIED)) {
@@ -581,41 +405,29 @@ public class StockTrendListActivity extends ListActivity implements
 		int[] mLeftTo = new int[]{R.id.name, R.id.code};
 
 		String[] mRightFrom = new String[]{
-				BaseColumns._ID,
 				DatabaseContract.COLUMN_PRICE,
 				DatabaseContract.COLUMN_NET,
-				DatabaseContract.COLUMN_BUY,
-				DatabaseContract.COLUMN_SELL,
-				DatabaseContract.COLUMN_VOLUME,
-				DatabaseContract.COLUMN_VALUE,
-				DatabaseContract.COLUMN_FEE,
-				DatabaseContract.COLUMN_PROFIT,
-				DatabaseContract.COLUMN_ACTION,
-				DatabaseContract.COLUMN_HOLD,
-				DatabaseContract.COLUMN_VALUATION,
-				DatabaseContract.COLUMN_QUANT_PROFIT,
-				DatabaseContract.COLUMN_QUANT_PROFIT_MARGIN,
-				DatabaseContract.COLUMN_QUANT_X,
-				DatabaseContract.COLUMN_THRESHOLD,
+				DatabaseContract.COLUMN_PERIOD,
+				DatabaseContract.COLUMN_DATE,
+				DatabaseContract.COLUMN_TIME,
+				DatabaseContract.COLUMN_LEVEL,
+				DatabaseContract.COLUMN_TREND,
+				DatabaseContract.COLUMN_WEIGHT,
+				DatabaseContract.COLUMN_BIAS,
+				DatabaseContract.COLUMN_ERROR,
 				DatabaseContract.COLUMN_CREATED,
 				DatabaseContract.COLUMN_MODIFIED};
 		int[] mRightTo = new int[]{
-				R.id.id,
 				R.id.price,
 				R.id.net,
-				R.id.buy,
-				R.id.sell,
-				R.id.volume,
-				R.id.value,
-				R.id.fee,
-				R.id.profit,
-				R.id.action,
-				R.id.hold,
-				R.id.valuation,
-				R.id.quant_profit,
-				R.id.quant_profit_margin,
-				R.id.quant_x,
-				R.id.threshold,
+				R.id.period,
+				R.id.date,
+				R.id.time,
+				R.id.level,
+				R.id.trend,
+				R.id.weight,
+				R.id.bias,
+				R.id.error,
 				R.id.created,
 				R.id.modified};
 
@@ -646,13 +458,12 @@ public class StockTrendListActivity extends ListActivity implements
 	}
 
 	void restartLoader() {
-		mLoaderManager.restartLoader(LOADER_ID_QUANT_LIST, null, this);
+		mLoaderManager.restartLoader(LOADER_ID_TREND_LIST, null, this);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-
 		restartLoader();
 	}
 
@@ -664,7 +475,6 @@ public class StockTrendListActivity extends ListActivity implements
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-
 		getContentResolver().unregisterContentObserver(mContentObserver);
 	}
 
@@ -677,15 +487,14 @@ public class StockTrendListActivity extends ListActivity implements
 
 			mStock.setSE(se);
 			mStock.setCode(code);
-
+			//selection+") GROUP BY (coloum_name"
 			mSelection = DatabaseContract.COLUMN_SE + " = " + "'" + se + "'"
 					+ " AND " + DatabaseContract.COLUMN_CODE + " = " + "'"
 					+ code + "'";
 			mGroupBy = "";
 		} else {
 			mSelection = "1";
-			mGroupBy = ") GROUP BY (" + DatabaseContract.COLUMN_SE
-					+ " + " + DatabaseContract.COLUMN_CODE;
+			mGroupBy = ") GROUP BY (" + DatabaseContract.COLUMN_WEIGHT;
 		}
 	}
 
@@ -694,12 +503,11 @@ public class StockTrendListActivity extends ListActivity implements
 		CursorLoader loader = null;
 
 		switch (id) {
-			case LOADER_ID_QUANT_LIST:
+			case LOADER_ID_TREND_LIST:
 				setupSelection();
-				//selection+") GROUP BY (coloum_name"
 				loader = new CursorLoader(this,
-						DatabaseContract.StockQuant.CONTENT_URI,
-						DatabaseContract.StockQuant.PROJECTION_ALL, mSelection + mGroupBy,
+						DatabaseContract.StockTrend.CONTENT_URI,
+						DatabaseContract.StockTrend.PROJECTION_ALL, mSelection + mGroupBy,
 						null, mSortOrder);
 				break;
 
@@ -717,8 +525,8 @@ public class StockTrendListActivity extends ListActivity implements
 		}
 
 		switch (loader.getId()) {
-			case LOADER_ID_QUANT_LIST:
-				setStockList(cursor);
+			case LOADER_ID_TREND_LIST:
+//				setStockList(cursor);
 
 				mLeftAdapter.swapCursor(cursor);
 				mRightAdapter.swapCursor(cursor);
@@ -738,47 +546,17 @@ public class StockTrendListActivity extends ListActivity implements
 		mRightAdapter.swapCursor(null);
 	}
 
-	void setStockList(Cursor cursor) {
-		ArrayMap<String, Stock> stockMap = new ArrayMap<>();
-		StockQuant stockQuant = new StockQuant();
-
-		try {
-			mStockList.clear();
-			if ((cursor != null) && (cursor.getCount() > 0)) {
-				while (cursor.moveToNext()) {
-					stockQuant.set(cursor);
-					if (!stockMap.containsKey(stockQuant.getSE() + stockQuant.getCode())) {
-						Stock stock = new Stock();
-						stock.setSE(stockQuant.getSE());
-						stock.setCode(stockQuant.getCode());
-						mDatabaseManager.getStock(stock);
-						//TODO
-//						if (TextUtils.isEmpty(stock.getOperate())) {
-//							mDatabaseManager.deleteStockQuant(stock);
-//						} else {
-//							stockMap.put(stockQuant.getSE() + stockQuant.getCode(), stock);
-//						}
-					}
-				}
-				cursor.moveToFirst();
-				mStockList = new ArrayList<>(stockMap.values());
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 							long id) {
 
 		if (parent.getId() == R.id.left_listview) {
-			mStockQuant.setId(id);
-			mHandler.sendEmptyMessage(MESSAGE_VIEW_QUANT_DEAL);
+//			mStockQuant.setId(id);
+//			mHandler.sendEmptyMessage(MESSAGE_VIEW_QUANT_DEAL);
 		} else {
 			if (mCurrentActionMode == null) {
-				mStockQuant.setId(id);
-				mHandler.sendEmptyMessage(MESSAGE_VIEW_STOCK_CHAT);
+//				mStockQuant.setId(id);
+				mHandler.sendEmptyMessage(MESSAGE_VIEW_STOCK_TREND_CHAT);
 			}
 		}
 	}
@@ -805,12 +583,12 @@ public class StockTrendListActivity extends ListActivity implements
 	}
 
 	void getStock() {
-		mDatabaseManager.getStockQuantById(mStockQuant);
-
-		mStock.setSE(mStockQuant.getSE());
-		mStock.setCode(mStockQuant.getCode());
-
-		mDatabaseManager.getStock(mStock);
+//		mDatabaseManager.getStockQuantById(mStockQuant);
+//
+//		mStock.setSE(mStockQuant.getSE());
+//		mStock.setCode(mStockQuant.getCode());
+//
+//		mDatabaseManager.getStock(mStock);
 	}
 
 	private class CustomViewBinder implements SimpleCursorAdapter.ViewBinder {

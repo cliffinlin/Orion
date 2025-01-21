@@ -42,7 +42,11 @@
     <string name="action_trend">Trend</string>
     <string name="action_threshold">Threshold</string>
     <string name="threshold">Threshold</string>
+    <string name="period">Period</string>
+    <string name="level">Level</string>
     <string name="trend">Trend</string>
+    <string name="weight">Weight</string>
+    <string name="bias">Bias</string>
     <string name="quant">Quant</string>
     <string name="quant_volume">QVolume</string>
     <string name="quant_profit">QProfit</string>
@@ -268,7 +272,7 @@
     <string name="time_to_market">TTM</string>
     <string name="filter">Filter</string>
     <string name="saved">Saved</string>
-    <string name="error">Error!</string>
+    <string name="error">Error</string>
     <string name="display">Display</string>
     <string name="wake">Wake</string>
     <string name="system">System</string>
