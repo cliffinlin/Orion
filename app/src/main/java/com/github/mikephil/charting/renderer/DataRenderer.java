@@ -60,8 +60,7 @@ public abstract class DataRenderer extends Renderer {
         mValuePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mValuePaint.setColor(Color.rgb(63, 63, 63));
         mValuePaint.setTextAlign(Align.CENTER);
-        //Modify for stock
-        mValuePaint.setTextSize(Utils.convertDpToPixel(12f));
+        mValuePaint.setTextSize(Utils.convertDpToPixel(9f));
 
         mTagPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mTagPaint.setColor(Color.rgb(63, 63, 63));

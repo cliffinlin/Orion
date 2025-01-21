@@ -27,6 +27,9 @@ public class StockTrend extends DatabaseTable {
 	private String mTime;
 	private int mLevel;
 	private String mTrend;
+	private double mWeight;
+	private double mBias;
+	private double mError;
 
 	public StockTrend() {
 		init();
@@ -66,6 +69,9 @@ public class StockTrend extends DatabaseTable {
 		mTime = "";
 		mLevel = Trend.LEVEL_NONE;
 		mTrend = "";
+		mWeight = 0;
+		mBias = 0;
+		mError = 0;
 	}
 
 	@Override
@@ -82,6 +88,18 @@ public class StockTrend extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_TIME, mTime);
 		contentValues.put(DatabaseContract.COLUMN_LEVEL, mLevel);
 		contentValues.put(DatabaseContract.COLUMN_TREND, mTrend);
+		contentValues.put(DatabaseContract.COLUMN_WEIGHT, mWeight);
+		contentValues.put(DatabaseContract.COLUMN_BIAS, mBias);
+		contentValues.put(DatabaseContract.COLUMN_ERROR, mError);
+		return contentValues;
+	}
+
+	public ContentValues getContentValuesNet() {
+		ContentValues contentValues = getContentValues();
+		contentValues.put(DatabaseContract.COLUMN_NET, mNet);
+		contentValues.put(DatabaseContract.COLUMN_WEIGHT, mWeight);
+		contentValues.put(DatabaseContract.COLUMN_BIAS, mBias);
+		contentValues.put(DatabaseContract.COLUMN_ERROR, mError);
 		return contentValues;
 	}
 
@@ -105,6 +123,9 @@ public class StockTrend extends DatabaseTable {
 		setTime(stockTrend.mTime);
 		setLevel(stockTrend.mLevel);
 		setTrend(stockTrend.mTrend);
+		setWeight(stockTrend.mWeight);
+		setBias(stockTrend.mBias);
+		setError(stockTrend.mError);
 	}
 
 	@Override
@@ -128,6 +149,9 @@ public class StockTrend extends DatabaseTable {
 		setTime(cursor);
 		setLevel(cursor);
 		setTrend(cursor);
+		setWeight(cursor);
+		setBias(cursor);
+		setError(cursor);
 	}
 
 	public long getStockId() {
@@ -325,6 +349,65 @@ public class StockTrend extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_TREND)));
 	}
 
+	public double getWeight() {
+		return mWeight;
+	}
+
+	public void setWeight(double weight) {
+		mWeight = weight;
+	}
+
+	void setWeight(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setWeight(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_WEIGHT)));
+	}
+
+	public double getBias() {
+		return mBias;
+	}
+
+	public void setBias(double bias) {
+		mBias = bias;
+	}
+
+	void setBias(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setBias(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_BIAS)));
+	}
+
+	public double getError() {
+		return mError;
+	}
+
+	public void setError(double error) {
+		mError = error;
+	}
+
+	void setError(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setError(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_ERROR)));
+	}
+
+	public void setupNet(double current) {
+		if (mPrice == 0 || current == 0) {
+			mNet = 0;
+			return;
+		}
+		mNet = Utility.Round(100 * (current - mPrice) / mPrice);
+	}
+
 	public String toString() {
 		return  mStockId + Constant.TAB
 				+ mSE + Constant.TAB
@@ -336,6 +419,9 @@ public class StockTrend extends DatabaseTable {
 				+ mDate + Constant.TAB
 				+ mTime + Constant.TAB
 				+ mLevel + Constant.TAB
-				+ mTrend + Constant.TAB;
+				+ mTrend + Constant.TAB
+				+ mWeight + Constant.TAB
+				+ mBias + Constant.TAB
+				+ mError + Constant.TAB;
 	}
 }

@@ -38,6 +38,9 @@ public final class DatabaseContract {
 	public static final String COLUMN_QUANT_PROFIT = "quant_profit";
 	public static final String COLUMN_QUANT_PROFIT_MARGIN = "quant_profit_margin";
 	public static final String COLUMN_QUANT_X = "quant_x";
+	public static final String COLUMN_WEIGHT = "weight";
+	public static final String COLUMN_BIAS = "bias";
+	public static final String COLUMN_ERROR = "error";
 	public static final String COLUMN_STATUS = "status";
 	public static final String COLUMN_OPERATE = "operate";
 	public static final String COLUMN_BUY = "buy";
@@ -289,6 +292,7 @@ public final class DatabaseContract {
 				COLUMN_PRICE, COLUMN_NET,
 				COLUMN_PERIOD, COLUMN_DATE, COLUMN_TIME,
 				COLUMN_LEVEL, COLUMN_TREND,
+				COLUMN_WEIGHT, COLUMN_BIAS, COLUMN_ERROR,
 				COLUMN_CREATED, COLUMN_MODIFIED};
 		static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
 				+ TABLE_NAME;
@@ -304,6 +308,9 @@ public final class DatabaseContract {
 				+ COLUMN_TIME + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_LEVEL + INTEGER_TYPE + COMMA_SEP
 				+ COLUMN_TREND + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_WEIGHT + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_BIAS + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_ERROR + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_CREATED + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_MODIFIED + TEXT_TYPE + " )";
 		static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME

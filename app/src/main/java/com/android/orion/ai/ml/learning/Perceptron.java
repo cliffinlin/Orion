@@ -1,23 +1,28 @@
 package com.android.orion.ai.ml.learning;
 
-public class Trainer {
-	public static String TAG = "AI ML " + Trainer.class.getSimpleName();
-	public double[] xArr;
-	public double[] yArr;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+public class Perceptron {
+	public ArrayList<Double> xArr;
+	public ArrayList<Double> yArr;
 	public int points;
 	public double learnc;
 	public double weight;
 	public double bias;
-	public double cost;
+	public double error;
 
-	public Trainer(double[] xArray, double[] yArray) {
+	public Perceptron() {
+	}
+
+	public void init(ArrayList<Double> xArray, ArrayList<Double> yArray) {
 		this.xArr = xArray;
 		this.yArr = yArray;
-		this.points = this.xArr.length;
+		this.points = this.xArr.size();
 		this.learnc = 0.00001;
 		this.weight = 0;
 		this.bias = 1;
-		this.cost = 0;
+		this.error = 0;
 	}
 
 	public double predict(double x) {
@@ -27,7 +32,7 @@ public class Trainer {
 	public double costError() {
 		double total = 0;
 		for (int i = 0; i < this.points; i++) {
-			total += Math.pow((this.yArr[i] - predict(this.xArr[i])), 2);
+			total += Math.pow((this.yArr.get(i) - predict(this.xArr.get(i))), 2);
 		}
 		return total / this.points;
 	}
@@ -37,8 +42,8 @@ public class Trainer {
 		double w_deriv = 0;
 		double b_deriv = 0;
 		for (int i = 0; i < this.points; i++) {
-			wx = this.yArr[i] - predict(this.xArr[i]);
-			w_deriv += -2 * wx * this.xArr[i];
+			wx = this.yArr.get(i) - predict(this.xArr.get(i));
+			w_deriv += -2 * wx * this.xArr.get(i);
 			b_deriv += -2 * wx;
 		}
 		this.weight -= (w_deriv / this.points) * this.learnc;
@@ -49,10 +54,10 @@ public class Trainer {
 		for (int i = 0; i < iter; i++) {
 			this.updateWeights();
 		}
-		this.cost = this.costError();
+		this.error = this.costError();
 	}
 
 	public String toString() {
-		return "Cost: " + this.cost + " Weight: " + this.weight + " Bias: " + this.bias;
+		return " Weight: " + this.weight + " Bias: " + this.bias + " Error: " + this.error;
 	}
 }

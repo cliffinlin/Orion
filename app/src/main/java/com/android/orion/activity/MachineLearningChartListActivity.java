@@ -258,7 +258,7 @@ public class MachineLearningChartListActivity extends BaseActivity implements
 			}
 			 */
 			HousePrices housePrices = new HousePrices();
-			housePrices.test();
+			housePrices.train();
 
 			for (int i = 0; i < housePrices.xArray.length; i++) {
 				index = chart.mXValues.size();
@@ -267,7 +267,7 @@ public class MachineLearningChartListActivity extends BaseActivity implements
 				Entry pointEntry = new Entry((float) housePrices.yArray[i], index);
 				chart.mPointEntryList.add(pointEntry);
 
-				Entry lineEntry = new Entry((float) housePrices.trainer.predict(index), index);
+				Entry lineEntry = new Entry((float) housePrices.perceptron.predict(index), index);
 				chart.mLineEntryList.add(lineEntry);
 			}
 		} catch (Exception e) {

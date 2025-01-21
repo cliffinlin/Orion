@@ -829,6 +829,35 @@ public class DatabaseManager implements StockListener {
 		}
 	}
 
+	public void getStockTrendList(String period, int level, String trend,
+								  ArrayList<StockTrend> stockTrendList) {
+		if (stockTrendList == null) {
+			return;
+		}
+
+		String selection = DatabaseContract.COLUMN_PERIOD + " = '" + period + "'"
+				+ " AND " + DatabaseContract.COLUMN_LEVEL + " = " + level
+				+ " AND " + DatabaseContract.COLUMN_PERIOD + " = '" + period + "'";
+		String sortOrder = DatabaseContract.COLUMN_PRICE + DatabaseContract.ORDER_ASC;
+
+		stockTrendList.clear();
+		Cursor cursor = null;
+		try {
+			cursor = queryStockTrend(selection, null, sortOrder);
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				while (cursor.moveToNext()) {
+					StockTrend stockTrend = new StockTrend();
+					stockTrend.set(cursor);
+					stockTrendList.add(stockTrend);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
 	public void getStockTrendList(Stock stock, String period,
 	                             ArrayList<StockTrend> stockTrendList, String sortOrder) {
 		Cursor cursor = null;

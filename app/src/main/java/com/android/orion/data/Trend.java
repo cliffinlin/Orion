@@ -53,6 +53,12 @@ public class Trend {
 	public static final String TREND_TYPE_DOWN_NONE_UP = "DNU";
 	public static final String TREND_TYPE_DOWN_NONE_DOWN = "DND";
 
+	public static final String[] TRENDS = {
+			TREND_TYPE_UP_NONE_UP, TREND_TYPE_UP_NONE_DOWN, TREND_TYPE_UP_NONE,
+			TREND_TYPE_UP_DOWN, TREND_TYPE_UP_UP,
+			TREND_TYPE_DOWN_DOWN, TREND_TYPE_DOWN_UP,
+			TREND_TYPE_DOWN_NONE, TREND_TYPE_DOWN_NONE_UP, TREND_TYPE_DOWN_NONE_DOWN};
+
 	public static final String MARK_NONE = "";
 
 	public static final String MARK_BUY = "B";

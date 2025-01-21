@@ -42,6 +42,7 @@
     <string name="action_trend">Trend</string>
     <string name="action_threshold">Threshold</string>
     <string name="threshold">Threshold</string>
+    <string name="trend">Trend</string>
     <string name="quant">Quant</string>
     <string name="quant_volume">QVolume</string>
     <string name="quant_profit">QProfit</string>
@@ -243,6 +244,7 @@
     <string name="symbol_subtract">-</string>
     <string name="activity_title_stock_favorite_list">Favorite list</string>
     <string name="activity_title_stock_financial_list">Financial list</string>
+    <string name="activity_title_stock_trend_list">Trend List</string>
     <string name="activity_title_stock_quant_list">Quant List</string>
     <string name="activity_title_stock_deal_list">Deal list</string>
     <string name="activity_title_about">About</string>

@@ -1,14 +1,13 @@
 
 package com.github.mikephil.charting.renderer;
 
-import java.util.List;
-
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Path;
 import android.graphics.PointF;
+import android.util.Size;
 
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
@@ -17,6 +16,8 @@ import com.github.mikephil.charting.utils.FSize;
 import com.github.mikephil.charting.utils.Transformer;
 import com.github.mikephil.charting.utils.Utils;
 import com.github.mikephil.charting.utils.ViewPortHandler;
+
+import java.util.List;
 
 public class XAxisRenderer extends AxisRenderer {
 
@@ -37,7 +38,7 @@ public class XAxisRenderer extends AxisRenderer {
         mAxisLabelPaint.setTypeface(mXAxis.getTypeface());
         mAxisLabelPaint.setTextSize(mXAxis.getTextSize());
 
-        StringBuffer widthText = new StringBuffer();
+        StringBuilder widthText = new StringBuilder();
 
         int max = Math.round(xValAverageLength
                 + mXAxis.getSpaceBetweenLabels());
