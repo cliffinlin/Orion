@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.android.orion"
     android:versionCode="518"
-    android:versionName="V1.1.36_R20250121">
+    android:versionName="V1.1.36_R20250122">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -96,6 +96,10 @@
         <activity
             android:name="com.android.orion.activity.StockTrendListActivity"
             android:label="@string/activity_title_stock_trend_list"
+            android:launchMode="singleTask" />
+        <activity
+            android:name="com.android.orion.activity.StockTrendChartListActivity"
+            android:label="@string/stock_trend_chart"
             android:launchMode="singleTask" />
         <activity
             android:name="com.android.orion.activity.StockQuantListActivity"

@@ -10,6 +10,8 @@ public final class DatabaseContract {
 	public static final String AUTHORITY = "com.android.orion";
 	public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY);
 
+	public static final long INVALID_ID = 0;
+
 	public static final int DATABASE_VERSION = 1;
 	public static final String DATABASE_NAME = "orion";
 	public static final String DATABASE_EXT = ".db";

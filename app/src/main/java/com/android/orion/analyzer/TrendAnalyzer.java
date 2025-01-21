@@ -438,28 +438,32 @@ public class TrendAnalyzer {
 		}
 	}
 
+	void train(String period) {
+		mLevelMap = mPeriodMap.get(period);
+		for (int level : mLevelMap.keySet()) {
+			mTrendMap = mLevelMap.get(level);
+			for (String trend : mTrendMap.keySet()) {
+				mDatabaseManager.getStockTrendList(period, level, trend, mStockTrendList);
+				if (mStockTrendList.isEmpty()) {
+					continue;
+				}
+				mXArray.clear();
+				mYArray.clear();
+				for (StockTrend stockTrend : mStockTrendList) {
+					mXArray.add(stockTrend.getPrice());
+					mYArray.add(stockTrend.getNet());
+				}
+				mPerceptron = mTrendMap.get(trend);
+				mPerceptron.init(mXArray, mYArray);
+				mPerceptron.train(Config.MAX_ML_TRAIN_TIMES);
+//					Log.d("period=" + period + " level=" + level + " trend=" + trend + " mPerceptron=" + mPerceptron.toString());
+			}
+		}
+	}
+
 	void train() {
 		for (String period : mPeriodMap.keySet()) {
-			mLevelMap = mPeriodMap.get(period);
-			for (int level : mLevelMap.keySet()) {
-				mTrendMap = mLevelMap.get(level);
-				for (String trend : mTrendMap.keySet()) {
-					mDatabaseManager.getStockTrendList(period, level, trend, mStockTrendList);
-					if (mStockTrendList.isEmpty()) {
-						continue;
-					}
-					mXArray.clear();
-					mYArray.clear();
-					for (StockTrend stockTrend : mStockTrendList) {
-						mXArray.add(stockTrend.getPrice());
-						mYArray.add(stockTrend.getNet());
-					}
-					mPerceptron = mTrendMap.get(trend);
-					mPerceptron.init(mXArray, mYArray);
-					mPerceptron.train(Config.MAX_ML_TRAIN_TIMES);
-//					Log.d("period=" + period + " level=" + level + " trend=" + trend + " mPerceptron=" + mPerceptron.toString());
-				}
-			}
+			train(period);
 		}
 	}
 

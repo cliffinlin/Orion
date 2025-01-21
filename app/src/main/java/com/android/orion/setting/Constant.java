@@ -30,6 +30,7 @@ public class Constant {
 	public static final String EXTRA_STOCK_CODE = "stock_code";
 	public static final String EXTRA_STOCK_DEAL = "stock_deal";
 	public static final String EXTRA_STOCK_ID = "stock_id";
+	public static final String EXTRA_STOCK_TREND_ID = "stock_trend_id";
 	public static final String EXTRA_STOCK_ID_LIST = "stock_id_list";
 	public static final String EXTRA_STOCK_LIST_SORT_ORDER = "stock_list_sort_order";
 	public static final String EXTRA_STOCK_QUANT = "stock_quant";

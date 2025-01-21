@@ -29,6 +29,10 @@ public class Perceptron {
 		return this.weight * x + this.bias;
 	}
 
+	public static double predict(double weight, double x, double bias) {
+		return weight * x + bias;
+	}
+
 	public double costError() {
 		double total = 0;
 		for (int i = 0; i < this.points; i++) {

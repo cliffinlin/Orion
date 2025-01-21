@@ -121,6 +121,7 @@
     <string name="financial">Financial</string>
     <string name="notify">Notify</string>
     <string name="stock_financial_chart">Stock financial chart</string>
+    <string name="stock_trend_chart">Stock trend chart</string>
     <string name="high">High</string>
     <string name="hold">Hold</string>
     <string name="list">List</string>
@@ -272,7 +273,7 @@
     <string name="time_to_market">TTM</string>
     <string name="filter">Filter</string>
     <string name="saved">Saved</string>
-    <string name="error">Error!</string>
+    <string name="error">Error</string>
     <string name="display">Display</string>
     <string name="wake">Wake</string>
     <string name="system">System</string>

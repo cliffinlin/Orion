@@ -556,7 +556,10 @@ public class StockTrendListActivity extends ListActivity implements
 		} else {
 			if (mCurrentActionMode == null) {
 //				mStockQuant.setId(id);
-				mHandler.sendEmptyMessage(MESSAGE_VIEW_STOCK_TREND_CHAT);
+//				mHandler.sendEmptyMessage(MESSAGE_VIEW_STOCK_TREND_CHAT);
+				Intent intent = new Intent(mContext, StockTrendChartListActivity.class);
+				intent.putExtra(Constant.EXTRA_STOCK_TREND_ID, id);
+				startActivity(intent);
 			}
 		}
 	}

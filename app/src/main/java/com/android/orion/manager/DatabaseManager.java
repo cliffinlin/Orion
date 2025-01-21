@@ -829,6 +829,29 @@ public class DatabaseManager implements StockListener {
 		}
 	}
 
+	public void getStockTrendById(StockTrend stockTrend) {
+		Cursor cursor = null;
+		String selection = null;
+
+		if (stockTrend == null) {
+			return;
+		}
+
+		selection = DatabaseContract.COLUMN_ID + "=" + stockTrend.getId();
+
+		try {
+			cursor = queryStockTrend(selection, null, null);
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				cursor.moveToNext();
+				stockTrend.set(cursor);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
 	public void getStockTrendList(String period, int level, String trend,
 								  ArrayList<StockTrend> stockTrendList) {
 		if (stockTrendList == null) {
@@ -837,7 +860,7 @@ public class DatabaseManager implements StockListener {
 
 		String selection = DatabaseContract.COLUMN_PERIOD + " = '" + period + "'"
 				+ " AND " + DatabaseContract.COLUMN_LEVEL + " = " + level
-				+ " AND " + DatabaseContract.COLUMN_PERIOD + " = '" + period + "'";
+				+ " AND " + DatabaseContract.COLUMN_TREND + " = '" + trend + "'";
 		String sortOrder = DatabaseContract.COLUMN_PRICE + DatabaseContract.ORDER_ASC;
 
 		stockTrendList.clear();

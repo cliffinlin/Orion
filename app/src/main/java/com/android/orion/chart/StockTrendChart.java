@@ -13,15 +13,14 @@ import com.github.mikephil.charting.data.ScatterDataSet;
 
 import java.util.ArrayList;
 
-public class MachineLearningChart {
-
+public class StockTrendChart {
 	public ArrayList<String> mXValues = new ArrayList<>();
 
 	public ArrayList<Entry> mPointEntryList = new ArrayList<>();
 	public ArrayList<Entry> mLineEntryList = new ArrayList<>();
 	public CombinedData mCombinedDataMain = new CombinedData(mXValues);
 
-	public MachineLearningChart() {
+	public StockTrendChart() {
 		setMainChartData();
 	}
 
