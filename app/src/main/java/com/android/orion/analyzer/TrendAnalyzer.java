@@ -450,13 +450,15 @@ public class TrendAnalyzer {
 				mXArray.clear();
 				mYArray.clear();
 				for (StockTrend stockTrend : mStockTrendList) {
-					mXArray.add(stockTrend.getPrice());
-					mYArray.add(stockTrend.getNet());
+					if (stockTrend.getNet() != 0) {
+						mXArray.add(stockTrend.getPrice());
+						mYArray.add(stockTrend.getNet());
+					}
 				}
 				mPerceptron = mTrendMap.get(trend);
-				mPerceptron.init(mXArray, mYArray);
-				mPerceptron.train(Config.MAX_ML_TRAIN_TIMES);
-//					Log.d("period=" + period + " level=" + level + " trend=" + trend + " mPerceptron=" + mPerceptron.toString());
+				mPerceptron.init();
+				mPerceptron.train(mXArray, mYArray, Config.MAX_ML_TRAIN_TIMES);
+//				Log.d("period=" + period + " level=" + level + " trend=" + trend + " mPerceptron=" + mPerceptron.toString());
 			}
 		}
 	}

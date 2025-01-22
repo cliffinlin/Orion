@@ -1053,18 +1053,14 @@ public class DatabaseManager implements StockListener {
 
 	public String getStockTrendSelection(StockTrend stockTrend) {
 		String selection = "";
-		String period = "";
 
 		if (stockTrend == null) {
 			return selection;
 		}
 
-		selection = DatabaseContract.COLUMN_STOCK_ID + " = "
-				+ stockTrend.getStockId() + " AND "
-				+ DatabaseContract.COLUMN_PERIOD + " = " + "'"
-				+ stockTrend.getPeriod() + "'" + " AND "
-				+ DatabaseContract.COLUMN_LEVEL + " = " +
-				+ stockTrend.getLevel();
+		selection = DatabaseContract.COLUMN_STOCK_ID + " = " + stockTrend.getStockId()
+				+ " AND " + DatabaseContract.COLUMN_PERIOD + " = " + "'" + stockTrend.getPeriod() + "'"
+				+ " AND " + DatabaseContract.COLUMN_LEVEL + " = " + stockTrend.getLevel();
 
 		return selection;
 	}

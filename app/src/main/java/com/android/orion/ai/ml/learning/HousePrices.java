@@ -27,8 +27,8 @@ public class HousePrices {
 
 		int i = 100;
 		perceptron = new Perceptron();
-		perceptron.init(xList, yList);
-		perceptron.train(i);
+		perceptron.init();
+		perceptron.train(xList, yList, i);
 		Log.d(TAG, "------->training " + i + " times: " + perceptron.toString());
 	}
 }

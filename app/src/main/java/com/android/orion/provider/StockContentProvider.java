@@ -47,6 +47,8 @@ public class StockContentProvider extends ContentProvider {
 	private static final int STOCK_TREND = 900;
 	private static final int STOCK_TREND_ID = 901;
 
+	private static String mGroupBy = null;
+
 	private static final UriMatcher mUriMatcher = new UriMatcher(
 			UriMatcher.NO_MATCH);
 
@@ -109,6 +111,10 @@ public class StockContentProvider extends ContentProvider {
 		mDatabaseManager.openDatabase();
 
 		return true;
+	}
+
+	public static void setGroupBy(String groupBy) {
+		mGroupBy = groupBy;
 	}
 
 	@Override
@@ -286,7 +292,8 @@ public class StockContentProvider extends ContentProvider {
 		}
 
 		cursor = builder.query(mDatabaseManager.mDatabase, projection,
-				selection, selectionArgs, null, null, sortOrder);
+				selection, selectionArgs, mGroupBy, null, sortOrder);
+		mGroupBy = null;
 
 		if (cursor != null) {
 			cursor.setNotificationUri(mContentResolver, uri);

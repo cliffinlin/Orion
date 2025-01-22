@@ -690,13 +690,11 @@ public class StockQuantDealListActivity extends ListActivity implements
 		switch (id) {
 			case LOADER_ID_QUANT_LIST:
 				setupSelection();
-				//selection+") GROUP BY (coloum_name"
 				loader = new CursorLoader(this,
 						DatabaseContract.StockQuant.CONTENT_URI,
 						DatabaseContract.StockQuant.PROJECTION_ALL, mSelection + mGroupBy,
 						null, mSortOrder);
 				break;
-
 			default:
 				break;
 		}

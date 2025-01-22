@@ -30,6 +30,7 @@ import android.widget.TextView;
 import com.android.orion.R;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
+import com.android.orion.provider.StockContentProvider;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Preferences;
@@ -52,7 +53,6 @@ public class StockTrendListActivity extends ListActivity implements
 	String mSortOrderDirection = DatabaseContract.ORDER_ASC;
 	String mSortOrderDefault = mSortOrderColumn + mSortOrderDirection;
 	String mSortOrder = mSortOrderDefault;
-	String mGroupBy = "";
 
 	SyncHorizontalScrollView mTitleSHSV = null;
 	SyncHorizontalScrollView mContentSHSV = null;
@@ -487,14 +487,12 @@ public class StockTrendListActivity extends ListActivity implements
 
 			mStock.setSE(se);
 			mStock.setCode(code);
-			//selection+") GROUP BY (coloum_name"
 			mSelection = DatabaseContract.COLUMN_SE + " = " + "'" + se + "'"
 					+ " AND " + DatabaseContract.COLUMN_CODE + " = " + "'"
 					+ code + "'";
-			mGroupBy = "";
 		} else {
 			mSelection = "1";
-			mGroupBy = ") GROUP BY (" + DatabaseContract.COLUMN_WEIGHT;
+			StockContentProvider.setGroupBy(DatabaseContract.COLUMN_PERIOD + ", " + DatabaseContract.COLUMN_LEVEL);
 		}
 	}
 
@@ -507,7 +505,7 @@ public class StockTrendListActivity extends ListActivity implements
 				setupSelection();
 				loader = new CursorLoader(this,
 						DatabaseContract.StockTrend.CONTENT_URI,
-						DatabaseContract.StockTrend.PROJECTION_ALL, mSelection + mGroupBy,
+						DatabaseContract.StockTrend.PROJECTION_ALL, mSelection,
 						null, mSortOrder);
 				break;
 

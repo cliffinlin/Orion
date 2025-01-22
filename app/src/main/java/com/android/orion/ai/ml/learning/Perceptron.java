@@ -15,10 +15,7 @@ public class Perceptron {
 	public Perceptron() {
 	}
 
-	public void init(ArrayList<Double> xArray, ArrayList<Double> yArray) {
-		this.xArr = xArray;
-		this.yArr = yArray;
-		this.points = this.xArr.size();
+	public void init() {
 		this.learnc = 0.00001;
 		this.weight = 0;
 		this.bias = 1;
@@ -54,10 +51,23 @@ public class Perceptron {
 		this.bias -= (b_deriv / this.points) * this.learnc;
 	}
 
-	public void train(int iter) {
-		for (int i = 0; i < iter; i++) {
+	public void train(ArrayList<Double> xArray, ArrayList<Double> yArray, int times) {
+		if (xArray == null || xArray.size() < 2) {
+			return;
+		}
+
+		if (yArray == null || yArray.size() < 2) {
+			return;
+		}
+
+		this.xArr = xArray;
+		this.yArr = yArray;
+		this.points = this.xArr.size();
+
+		for (int i = 0; i < times; i++) {
 			this.updateWeights();
 		}
+
 		this.error = this.costError();
 	}
 
