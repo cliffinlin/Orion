@@ -346,11 +346,14 @@ public class TrendAnalyzer {
 					mDatabaseManager.getStockTrend(stockTrend);
 					if (TextUtils.equals(action, stockTrend.getTrend())) {
 						stockTrend.setupNet(mStock.getPrice());
+						mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValuesNet());
+
+						train(stockTrend.getPeriod(), stockTrend.getLevel(), stockTrend.getTrend());
 						mPerceptron = mPeriodMap.get(stockTrend.getPeriod()).get(stockTrend.getLevel()).get(stockTrend.getTrend());
 						stockTrend.setWeight(mPerceptron.weight);
 						stockTrend.setBias(mPerceptron.bias);
 						stockTrend.setError(mPerceptron.error);
-						mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValuesNet());
+						mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValuesPerceptron());
 					} else {
 						stockTrend.setPrice(mStock.getPrice());
 						stockTrend.setDate(stockData.getDate());
@@ -438,34 +441,34 @@ public class TrendAnalyzer {
 		}
 	}
 
-	void train(String period) {
-		mLevelMap = mPeriodMap.get(period);
-		for (int level : mLevelMap.keySet()) {
-			mTrendMap = mLevelMap.get(level);
-			for (String trend : mTrendMap.keySet()) {
-				mDatabaseManager.getStockTrendList(period, level, trend, mStockTrendList);
-				if (mStockTrendList.isEmpty()) {
-					continue;
-				}
-				mXArray.clear();
-				mYArray.clear();
-				for (StockTrend stockTrend : mStockTrendList) {
-					if (stockTrend.getNet() != 0) {
-						mXArray.add(stockTrend.getPrice());
-						mYArray.add(stockTrend.getNet());
-					}
-				}
-				mPerceptron = mTrendMap.get(trend);
-				mPerceptron.init();
-				mPerceptron.train(mXArray, mYArray, Config.MAX_ML_TRAIN_TIMES);
-//				Log.d("period=" + period + " level=" + level + " trend=" + trend + " mPerceptron=" + mPerceptron.toString());
+	void train(String period, int level, String trend) {
+		mDatabaseManager.getStockTrendList(period, level, trend, mStockTrendList);
+		if (mStockTrendList.isEmpty()) {
+			return;
+		}
+		mXArray.clear();
+		mYArray.clear();
+		for (StockTrend stockTrend : mStockTrendList) {
+			if (stockTrend.getNet() != 0) {
+				mXArray.add(stockTrend.getPrice());
+				mYArray.add(stockTrend.getNet());
 			}
 		}
+		mPerceptron = mPeriodMap.get(period).get(level).get(trend);
+		mPerceptron.init();
+		mPerceptron.train(mXArray, mYArray, Config.MAX_ML_TRAIN_TIMES);
+		Log.d("----->period=" + period + " level=" + level + " trend=" + trend + " mPerceptron=" + mPerceptron.toString());
 	}
 
 	void train() {
 		for (String period : mPeriodMap.keySet()) {
-			train(period);
+			mLevelMap = mPeriodMap.get(period);
+			for (int level : mLevelMap.keySet()) {
+				mTrendMap = mLevelMap.get(level);
+				for (String trend : mTrendMap.keySet()) {
+					train(period, level, trend);
+				}
+			}
 		}
 	}
 

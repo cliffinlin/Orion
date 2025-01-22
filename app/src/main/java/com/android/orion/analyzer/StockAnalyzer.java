@@ -188,8 +188,6 @@ public class StockAnalyzer {
 		trendAnalyzer.analyzeLine(Trend.LEVEL_LINE, mLineDataList, mOutlineVertexList);
 		trendAnalyzer.vertexListToDataList(mOutlineVertexList, mOutlineDataList);
 
-		trendAnalyzer.train(period);
-
 		analyzeAction(period);
 	}
 

@@ -30,7 +30,7 @@ public class Config {
 	public static final int MAX_CONTENT_LENGTH_MIN15_SHORT = 20 * 16;
 	public static final int MAX_CONTENT_LENGTH_MIN5_SHORT = 20 * 48;
 
-	public static final int MAX_ML_TRAIN_TIMES = 100;
+	public static final int MAX_ML_TRAIN_TIMES = 500;
 
 	public static String stockDataProvider = SinaFinance.PROVIDER_NAME;
 

@@ -97,6 +97,11 @@ public class StockTrend extends DatabaseTable {
 	public ContentValues getContentValuesNet() {
 		ContentValues contentValues = getContentValues();
 		contentValues.put(DatabaseContract.COLUMN_NET, mNet);
+		return contentValues;
+	}
+
+	public ContentValues getContentValuesPerceptron() {
+		ContentValues contentValues = getContentValues();
 		contentValues.put(DatabaseContract.COLUMN_WEIGHT, mWeight);
 		contentValues.put(DatabaseContract.COLUMN_BIAS, mBias);
 		contentValues.put(DatabaseContract.COLUMN_ERROR, mError);

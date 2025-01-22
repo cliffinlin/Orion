@@ -213,12 +213,12 @@ public class StockTrendListActivity extends ListActivity implements
 			case R.id.period:
 				mSortOrderColumn = DatabaseContract.COLUMN_PERIOD;
 				break;
-			case R.id.date:
-				mSortOrderColumn = DatabaseContract.COLUMN_DATE;
-				break;
-			case R.id.time:
-				mSortOrderColumn = DatabaseContract.COLUMN_TIME;
-				break;
+//			case R.id.date:
+//				mSortOrderColumn = DatabaseContract.COLUMN_DATE;
+//				break;
+//			case R.id.time:
+//				mSortOrderColumn = DatabaseContract.COLUMN_TIME;
+//				break;
 			case R.id.level:
 				mSortOrderColumn = DatabaseContract.COLUMN_LEVEL;
 				break;
@@ -323,16 +323,16 @@ public class StockTrendListActivity extends ListActivity implements
 		if (mTextViewPeriod != null) {
 			mTextViewPeriod.setOnClickListener(this);
 		}
-
-		mTextViewDate = findViewById(R.id.date);
-		if (mTextViewDate != null) {
-			mTextViewDate.setOnClickListener(this);
-		}
-
-		mTextViewTime = findViewById(R.id.time);
-		if (mTextViewTime != null) {
-			mTextViewTime.setOnClickListener(this);
-		}
+//
+//		mTextViewDate = findViewById(R.id.date);
+//		if (mTextViewDate != null) {
+//			mTextViewDate.setOnClickListener(this);
+//		}
+//
+//		mTextViewTime = findViewById(R.id.time);
+//		if (mTextViewTime != null) {
+//			mTextViewTime.setOnClickListener(this);
+//		}
 
 		mTextViewLevel = findViewById(R.id.level);
 		if (mTextViewLevel != null) {
@@ -408,8 +408,8 @@ public class StockTrendListActivity extends ListActivity implements
 				DatabaseContract.COLUMN_PRICE,
 				DatabaseContract.COLUMN_NET,
 				DatabaseContract.COLUMN_PERIOD,
-				DatabaseContract.COLUMN_DATE,
-				DatabaseContract.COLUMN_TIME,
+//				DatabaseContract.COLUMN_DATE,
+//				DatabaseContract.COLUMN_TIME,
 				DatabaseContract.COLUMN_LEVEL,
 				DatabaseContract.COLUMN_TREND,
 				DatabaseContract.COLUMN_WEIGHT,
@@ -421,8 +421,8 @@ public class StockTrendListActivity extends ListActivity implements
 				R.id.price,
 				R.id.net,
 				R.id.period,
-				R.id.date,
-				R.id.time,
+//				R.id.date,
+//				R.id.time,
 				R.id.level,
 				R.id.trend,
 				R.id.weight,

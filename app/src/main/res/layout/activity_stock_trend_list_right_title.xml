@@ -31,23 +31,23 @@
         android:text="@string/period"
         android:textSize="18sp" />
 
-    <TextView
-        android:id="@+id/date"
-        android:layout_width="100dp"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/date"
-        android:textSize="18sp" />
+<!--    <TextView-->
+<!--        android:id="@+id/date"-->
+<!--        android:layout_width="100dp"-->
+<!--        android:layout_height="40dp"-->
+<!--        android:layout_weight="1"-->
+<!--        android:gravity="center"-->
+<!--        android:text="@string/date"-->
+<!--        android:textSize="18sp" />-->
 
-    <TextView
-        android:id="@+id/time"
-        android:layout_width="80dp"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/time"
-        android:textSize="18sp" />
+<!--    <TextView-->
+<!--        android:id="@+id/time"-->
+<!--        android:layout_width="80dp"-->
+<!--        android:layout_height="40dp"-->
+<!--        android:layout_weight="1"-->
+<!--        android:gravity="center"-->
+<!--        android:text="@string/time"-->
+<!--        android:textSize="18sp" />-->
 
     <TextView
         android:id="@+id/level"
