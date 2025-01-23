@@ -29,8 +29,6 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import com.android.orion.R;
-import com.android.orion.ai.ml.learning.HousePrices;
-import com.android.orion.ai.ml.training.PatternClassification;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockQuant;
@@ -160,9 +158,6 @@ public class StockQuantListActivity extends ListActivity implements
 //					mIntent.setAction(Constant.ACTION_STOCK_TREND_LIST);
 //					mIntent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
 //					startActivity(mIntent);
-
-					intent = new Intent(mContext, MachineLearningChartListActivity.class);
-					startActivity(intent);
 					break;
 
 				default:

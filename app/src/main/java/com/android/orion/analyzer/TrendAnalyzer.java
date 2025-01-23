@@ -4,12 +4,12 @@ import android.content.ContentValues;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 
-import com.android.orion.ai.ml.learning.Perceptron;
 import com.android.orion.config.Config;
 import com.android.orion.data.Period;
 import com.android.orion.data.Trend;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
+import com.android.orion.database.StockPerceptron;
 import com.android.orion.database.StockTrend;
 import com.android.orion.manager.DatabaseManager;
 import com.android.orion.utility.Logger;
@@ -26,10 +26,10 @@ public class TrendAnalyzer {
 	ArrayList<Double> mYArray = new ArrayList<>();
 	ArrayList<StockData> mStockDataList;
 	DatabaseManager mDatabaseManager = DatabaseManager.getInstance();
-	Perceptron mPerceptron;
-	ArrayMap<String, Perceptron> mTrendMap;
-	ArrayMap<Integer, ArrayMap<String, Perceptron>> mLevelMap;
-	ArrayMap<String, ArrayMap<Integer, ArrayMap<String, Perceptron>>> mPeriodMap;
+	StockPerceptron mStockPerceptron;
+	ArrayMap<String, StockPerceptron> mTrendMap;
+	ArrayMap<Integer, ArrayMap<String, StockPerceptron>> mLevelMap;
+	ArrayMap<String, ArrayMap<Integer, ArrayMap<String, StockPerceptron>>> mPeriodMap;
 
 	private TrendAnalyzer() {
 		init();
@@ -43,13 +43,18 @@ public class TrendAnalyzer {
 		mPeriodMap = new ArrayMap<>();
 		for (String period : Period.PERIODS) {
 			mLevelMap = new ArrayMap<>();
-			for (int i = 1; i < Trend.LEVEL_MAX; i++) {
+			for (int level = 1; level < Trend.LEVEL_MAX; level++) {
 				mTrendMap = new ArrayMap<>();
 				for (String trend : Trend.TRENDS) {
-					Perceptron perceptron = new Perceptron();
-					mTrendMap.put(trend, perceptron);
+					StockPerceptron stockPerceptron = new StockPerceptron(period, level, trend);
+					if (!mDatabaseManager.isStockPerceptronExist(stockPerceptron)) {
+						mDatabaseManager.insertStockPerceptron(stockPerceptron);
+					} else {
+						mDatabaseManager.getStockPerceptron(stockPerceptron);
+					}
+					mTrendMap.put(trend, stockPerceptron);
 				}
-				mLevelMap.put(i, mTrendMap);
+				mLevelMap.put(level, mTrendMap);
 			}
 			mPeriodMap.put(period, mLevelMap);
 		}
@@ -270,40 +275,40 @@ public class TrendAnalyzer {
 					case Trend.DIRECTION_UP:
 						if (trend == Trend.DIRECTION_DOWN) {
 							addVertex(end_2, vertexTypeBottom, vertexList);
-							action = Trend.TREND_TYPE_DOWN_UP;
+							action = Trend.TREND_DOWN_UP;
 							updateAction(needUpdate, end_2, action);
 						} else if (trend == Trend.DIRECTION_NONE) {
 							StockData vertexData = chooseVertex(start_2, end_2, Trend.VERTEX_BOTTOM);
 							if (baseTrend == Trend.DIRECTION_UP) {
 								addVertex(vertexData, vertexTypeBottom, vertexList);
-								action = Trend.TREND_TYPE_UP_NONE_UP;
+								action = Trend.TREND_UP_NONE_UP;
 								updateAction(needUpdate, vertexData, action);
 							} else if (baseTrend == Trend.DIRECTION_DOWN) {
-								action = Trend.TREND_TYPE_DOWN_NONE_UP;
+								action = Trend.TREND_DOWN_NONE_UP;
 								updateAction(needUpdate, vertexData, action);
 							}
 						} else if (trend == Trend.DIRECTION_UP) {
-							action = Trend.TREND_TYPE_UP_UP;
+							action = Trend.TREND_UP_UP;
 							updateAction(needUpdate, null, action);
 						}
 						break;
 					case Trend.DIRECTION_DOWN:
 						if (trend == Trend.DIRECTION_UP) {
 							addVertex(end_2, vertexTypeTop, vertexList);
-							action = Trend.TREND_TYPE_UP_DOWN;
+							action = Trend.TREND_UP_DOWN;
 							updateAction(needUpdate, end_2, action);
 						} else if (trend == Trend.DIRECTION_NONE) {
 							StockData vertexData = chooseVertex(start_2, end_2, Trend.VERTEX_TOP);
 							if (baseTrend == Trend.DIRECTION_UP) {
-								action = Trend.TREND_TYPE_UP_NONE_DOWN;
+								action = Trend.TREND_UP_NONE_DOWN;
 								updateAction(needUpdate, vertexData, action);
 							} else if (baseTrend == Trend.DIRECTION_DOWN) {
 								addVertex(vertexData, vertexTypeTop, vertexList);
-								action = Trend.TREND_TYPE_DOWN_NONE_DOWN;
+								action = Trend.TREND_DOWN_NONE_DOWN;
 								updateAction(needUpdate, vertexData, action);
 							}
 						} else if (trend == Trend.DIRECTION_DOWN) {
-							action = Trend.TREND_TYPE_DOWN_DOWN;
+							action = Trend.TREND_DOWN_DOWN;
 							updateAction(needUpdate, null, action);
 						}
 						break;
@@ -312,13 +317,13 @@ public class TrendAnalyzer {
 							baseTrend = Trend.DIRECTION_UP;
 							StockData vertexData = chooseVertex(start_1, end_1, Trend.VERTEX_TOP);
 							addVertex(vertexData, vertexTypeTop, vertexList);
-							action = Trend.TREND_TYPE_UP_NONE;
+							action = Trend.TREND_UP_NONE;
 							updateAction(needUpdate, vertexData, action);
 						} else if (trend == Trend.DIRECTION_DOWN) {
 							baseTrend = Trend.DIRECTION_DOWN;
 							StockData vertexData = chooseVertex(start_1, end_1, Trend.VERTEX_BOTTOM);
 							addVertex(vertexData, vertexTypeBottom, vertexList);
-							action = Trend.TREND_TYPE_DOWN_NONE;
+							action = Trend.TREND_DOWN_NONE;
 							updateAction(needUpdate, vertexData, action);
 						} else if (trend == Trend.DIRECTION_NONE) {
 						}
@@ -347,13 +352,7 @@ public class TrendAnalyzer {
 					if (TextUtils.equals(action, stockTrend.getTrend())) {
 						stockTrend.setupNet(mStock.getPrice());
 						mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValuesNet());
-
 						train(stockTrend.getPeriod(), stockTrend.getLevel(), stockTrend.getTrend());
-						mPerceptron = mPeriodMap.get(stockTrend.getPeriod()).get(stockTrend.getLevel()).get(stockTrend.getTrend());
-						stockTrend.setWeight(mPerceptron.weight);
-						stockTrend.setBias(mPerceptron.bias);
-						stockTrend.setError(mPerceptron.error);
-						mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValuesPerceptron());
 					} else {
 						stockTrend.setPrice(mStock.getPrice());
 						stockTrend.setDate(stockData.getDate());
@@ -441,6 +440,10 @@ public class TrendAnalyzer {
 		}
 	}
 
+	public StockPerceptron getStockPerceptron(String period, int level, String trend) {
+		return mPeriodMap.get(period).get(level).get(trend);
+	}
+
 	void train(String period, int level, String trend) {
 		mDatabaseManager.getStockTrendList(period, level, trend, mStockTrendList);
 		if (mStockTrendList.isEmpty()) {
@@ -454,22 +457,10 @@ public class TrendAnalyzer {
 				mYArray.add(stockTrend.getNet());
 			}
 		}
-		mPerceptron = mPeriodMap.get(period).get(level).get(trend);
-		mPerceptron.init();
-		mPerceptron.train(mXArray, mYArray, Config.MAX_ML_TRAIN_TIMES);
-		Log.d("----->period=" + period + " level=" + level + " trend=" + trend + " mPerceptron=" + mPerceptron.toString());
-	}
-
-	void train() {
-		for (String period : mPeriodMap.keySet()) {
-			mLevelMap = mPeriodMap.get(period);
-			for (int level : mLevelMap.keySet()) {
-				mTrendMap = mLevelMap.get(level);
-				for (String trend : mTrendMap.keySet()) {
-					train(period, level, trend);
-				}
-			}
-		}
+		mStockPerceptron = getStockPerceptron(period, level, trend);
+		mStockPerceptron.train(mXArray, mYArray, Config.MAX_ML_TRAIN_TIMES);
+		mDatabaseManager.updateStockPerceptron(mStockPerceptron, mStockPerceptron.getContentValuesPerceptron());
+		Log.d("----->period=" + period + " level=" + level + " trend=" + trend + " " + mStockPerceptron.toString());
 	}
 
 	void debugShow(ArrayList<StockData> stockDataList,

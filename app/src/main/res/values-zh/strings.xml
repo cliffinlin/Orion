@@ -236,8 +236,6 @@
     <string name="stock_se_not_found">Stock SE not found!</string>
     <string name="stock_statistics">Statistics</string>
     <string name="stock_statistics_chart">Statistics chart</string>
-    <string name="machine_learning">Machine learning</string>
-    <string name="machine_learning_chart">Machine learning chart</string>
     <string name="stock_cost">Stock cost</string>
     <string name="stock_threshold">Threshold</string>
     <string name="stock_quant_volume">QVolume</string>

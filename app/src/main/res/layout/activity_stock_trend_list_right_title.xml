@@ -31,24 +31,6 @@
         android:text="@string/period"
         android:textSize="18sp" />
 
-<!--    <TextView-->
-<!--        android:id="@+id/date"-->
-<!--        android:layout_width="100dp"-->
-<!--        android:layout_height="40dp"-->
-<!--        android:layout_weight="1"-->
-<!--        android:gravity="center"-->
-<!--        android:text="@string/date"-->
-<!--        android:textSize="18sp" />-->
-
-<!--    <TextView-->
-<!--        android:id="@+id/time"-->
-<!--        android:layout_width="80dp"-->
-<!--        android:layout_height="40dp"-->
-<!--        android:layout_weight="1"-->
-<!--        android:gravity="center"-->
-<!--        android:text="@string/time"-->
-<!--        android:textSize="18sp" />-->
-
     <TextView
         android:id="@+id/level"
         android:layout_width="80dp"
@@ -65,33 +47,6 @@
         android:layout_weight="1"
         android:gravity="center"
         android:text="@string/trend"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/weight"
-        android:layout_width="100dp"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/weight"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/bias"
-        android:layout_width="100dp"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/bias"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/error"
-        android:layout_width="100dp"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/error"
         android:textSize="18sp" />
 
     <TextView

@@ -20,6 +20,7 @@ import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockFinancial;
+import com.android.orion.database.StockPerceptron;
 import com.android.orion.database.StockQuant;
 import com.android.orion.database.StockTrend;
 import com.android.orion.database.TotalShare;
@@ -1079,6 +1080,291 @@ public class DatabaseManager implements StockListener {
 	public String getStockTrendOrder() {
 		return DatabaseContract.COLUMN_DATE + " ASC " + ","
 				+ DatabaseContract.COLUMN_TIME + " ASC ";
+	}
+
+	public Uri insertStockPerceptron(StockPerceptron stockPerceptron) {
+		Uri uri = null;
+
+		if ((stockPerceptron == null) || (mContentResolver == null)) {
+			return uri;
+		}
+
+		uri = mContentResolver.insert(DatabaseContract.StockPerceptron.CONTENT_URI,
+				stockPerceptron.getContentValues());
+
+		return uri;
+	}
+
+	public int bulkInsertStockPerceptron(ContentValues[] contentValuesArray) {
+		int result = 0;
+
+		if (contentValuesArray == null) {
+			return result;
+		}
+
+		if ((contentValuesArray.length == 0) || (mContentResolver == null)) {
+			return result;
+		}
+
+		result = mContentResolver.bulkInsert(
+				DatabaseContract.StockPerceptron.CONTENT_URI, contentValuesArray);
+
+		return result;
+	}
+
+	public Cursor queryStockPerceptron(String[] projection, String selection,
+								  String[] selectionArgs, String sortOrder) {
+		Cursor cursor = null;
+
+		if (mContentResolver == null) {
+			return cursor;
+		}
+
+		cursor = mContentResolver.query(DatabaseContract.StockPerceptron.CONTENT_URI,
+				projection, selection, selectionArgs, sortOrder);
+
+		return cursor;
+	}
+
+	public Cursor queryStockPerceptron(String selection, String[] selectionArgs,
+								  String sortOrder) {
+		Cursor cursor = null;
+
+		if (mContentResolver == null) {
+			return cursor;
+		}
+
+		cursor = mContentResolver.query(DatabaseContract.StockPerceptron.CONTENT_URI,
+				DatabaseContract.StockPerceptron.PROJECTION_ALL, selection,
+				selectionArgs, sortOrder);
+
+		return cursor;
+	}
+
+	public Cursor queryStockPerceptron(StockPerceptron stockPerceptron) {
+		Cursor cursor = null;
+
+		if ((stockPerceptron == null) || (mContentResolver == null)) {
+			return cursor;
+		}
+
+		String selection = getStockPerceptronSelection(stockPerceptron);
+		String sortOrder = getStockPerceptronOrder();
+
+		cursor = mContentResolver.query(DatabaseContract.StockPerceptron.CONTENT_URI,
+				DatabaseContract.StockPerceptron.PROJECTION_ALL, selection, null,
+				sortOrder);
+
+		return cursor;
+	}
+
+	public void getStockPerceptron(StockPerceptron stockPerceptron) {
+		Cursor cursor = null;
+
+		if ((stockPerceptron == null) || (mContentResolver == null)) {
+			return;
+		}
+
+		try {
+			String selection = getStockPerceptronSelection(stockPerceptron);
+			String sortOrder = DatabaseContract.COLUMN_PERIOD + " DESC " + ","
+					+ DatabaseContract.COLUMN_LEVEL + " DESC ";
+
+			cursor = mContentResolver.query(
+					DatabaseContract.StockPerceptron.CONTENT_URI,
+					DatabaseContract.StockPerceptron.PROJECTION_ALL, selection, null,
+					sortOrder);
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				cursor.moveToNext();
+				stockPerceptron.set(cursor);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
+	public void getStockPerceptronById(StockPerceptron stockPerceptron) {
+		Cursor cursor = null;
+		String selection = null;
+
+		if (stockPerceptron == null) {
+			return;
+		}
+
+		selection = DatabaseContract.COLUMN_ID + "=" + stockPerceptron.getId();
+
+		try {
+			cursor = queryStockPerceptron(selection, null, null);
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				cursor.moveToNext();
+				stockPerceptron.set(cursor);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
+	public void getStockPerceptronList(String period, int level, String trend,
+								  ArrayList<StockPerceptron> stockPerceptronList) {
+		if (stockPerceptronList == null) {
+			return;
+		}
+
+		String selection = getStockPerceptronSelection(period, level, trend);
+		String sortOrder = DatabaseContract.COLUMN_PERIOD + DatabaseContract.ORDER_ASC;
+
+		stockPerceptronList.clear();
+		Cursor cursor = null;
+		try {
+			cursor = queryStockPerceptron(selection, null, sortOrder);
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				while (cursor.moveToNext()) {
+					StockPerceptron stockPerceptron = new StockPerceptron();
+					stockPerceptron.set(cursor);
+					stockPerceptronList.add(stockPerceptron);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
+	public void getStockPerceptronList(ArrayList<StockPerceptron> stockPerceptronList, String sortOrder) {
+		Cursor cursor = null;
+
+		if (stockPerceptronList == null) {
+			return;
+		}
+
+		stockPerceptronList.clear();
+
+		try {
+			cursor = queryStockPerceptron(null, null, sortOrder);
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				while (cursor.moveToNext()) {
+					StockPerceptron stockPerceptron = new StockPerceptron();
+					stockPerceptron.set(cursor);
+					stockPerceptronList.add(stockPerceptron);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
+	public boolean isStockPerceptronExist(StockPerceptron stockPerceptron) {
+		boolean result = false;
+		Cursor cursor = null;
+
+		if (stockPerceptron == null) {
+			return result;
+		}
+
+		try {
+			cursor = queryStockPerceptron(stockPerceptron);
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				cursor.moveToNext();
+				stockPerceptron.setCreated(cursor);
+				result = true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+
+		return result;
+	}
+
+	public int updateStockPerceptron(StockPerceptron stockPerceptron, ContentValues contentValues) {
+		int result = 0;
+
+		if ((stockPerceptron == null) || (mContentResolver == null)) {
+			return result;
+		}
+
+		String where = getStockPerceptronSelection(stockPerceptron);
+
+		result = mContentResolver.update(
+				DatabaseContract.StockPerceptron.CONTENT_URI, contentValues, where,
+				null);
+
+		return result;
+	}
+
+	public int deleteStockPerceptron() {
+		return delete(DatabaseContract.StockPerceptron.CONTENT_URI);
+	}
+
+	public int deleteStockPerceptron(StockPerceptron stockPerceptron) {
+		int result = 0;
+
+		if ((stockPerceptron == null) || (mContentResolver == null)) {
+			return result;
+		}
+
+		String where = getStockPerceptronSelection(stockPerceptron);
+
+		result = mContentResolver.delete(
+				DatabaseContract.StockPerceptron.CONTENT_URI, where, null);
+
+		return result;
+	}
+
+	public int deleteStockPerceptron(long id) {
+		int result = 0;
+		String where = DatabaseContract.COLUMN_ID + "=" + id;
+
+		try {
+			result = delete(DatabaseContract.StockPerceptron.CONTENT_URI, where);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+
+	public int deleteStockPerceptron(String period, int level, String trend) {
+		int result = 0;
+
+		if (mContentResolver == null) {
+			return result;
+		}
+
+		String where = getStockPerceptronSelection(period, level, trend);
+
+		result = mContentResolver.delete(
+				DatabaseContract.StockPerceptron.CONTENT_URI, where, null);
+
+		return result;
+	}
+
+	public String getStockPerceptronSelection(StockPerceptron stockPerceptron) {
+		String selection = "";
+		if (stockPerceptron == null) {
+			return selection;
+		}
+		selection = getStockPerceptronSelection(stockPerceptron.getPeriod(), stockPerceptron.getLevel(), stockPerceptron.getTrend());
+		return selection;
+	}
+
+	public String getStockPerceptronSelection(String period, int level, String trend) {
+		return DatabaseContract.COLUMN_PERIOD + " = " + "'" + period + "'"
+				+ " AND " + DatabaseContract.COLUMN_LEVEL + " = " + level
+				+ " AND " + DatabaseContract.COLUMN_TREND + " = " + "'" + trend + "'";
+	}
+
+	public String getStockPerceptronOrder() {
+		return DatabaseContract.COLUMN_PERIOD + " ASC " + ","
+				+ DatabaseContract.COLUMN_LEVEL + " ASC ";
 	}
 
 	public Uri insertStockDeal(StockDeal stockDeal) {

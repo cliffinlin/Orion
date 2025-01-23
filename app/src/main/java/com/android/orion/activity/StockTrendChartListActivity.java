@@ -22,11 +22,10 @@ import android.widget.ListView;
 import androidx.annotation.NonNull;
 
 import com.android.orion.R;
-import com.android.orion.ai.ml.learning.HousePrices;
-import com.android.orion.ai.ml.learning.Perceptron;
+import com.android.orion.analyzer.TrendAnalyzer;
 import com.android.orion.chart.StockTrendChart;
 import com.android.orion.database.DatabaseContract;
-import com.android.orion.database.Stock;
+import com.android.orion.database.StockPerceptron;
 import com.android.orion.database.StockTrend;
 import com.android.orion.setting.Constant;
 import com.github.mikephil.charting.charts.CombinedChart;
@@ -54,6 +53,7 @@ public class StockTrendChartListActivity extends BaseActivity implements
 			+ DatabaseContract.ORDER_ASC;
 
 	String mDescription = "";
+	StockPerceptron mStockPerceptron;
 	Menu mMenu = null;
 	ListView mListView = null;
 	StockTrend mStockTrend = new StockTrend();
@@ -92,7 +92,8 @@ public class StockTrendChartListActivity extends BaseActivity implements
 		mStockTrend.setId(mIntent.getLongExtra(Constant.EXTRA_STOCK_TREND_ID,
 				DatabaseContract.INVALID_ID));
 		mDatabaseManager.getStockTrendById(mStockTrend);
-		mDescription = mStockTrend.getPeriod() + "\t" + mStockTrend.getLevel() + "\t" + mStockTrend.getTrend();
+		mStockPerceptron = TrendAnalyzer.getInstance().getStockPerceptron(mStockTrend.getPeriod(), mStockTrend.getLevel(), mStockTrend.getTrend());
+		mDescription = mStockPerceptron.toString();
 
 		initListView();
 		initLoader();
@@ -253,29 +254,17 @@ public class StockTrendChartListActivity extends BaseActivity implements
 					stockTrend.set(cursor);
 
 					index = chart.mXValues.size();
-					chart.mXValues.add(String.valueOf(stockTrend.getPrice()));
+					chart.mXValues.add(String.valueOf(stockTrend.getName()));
 
 					Entry pointEntry = new Entry((float) stockTrend.getNet(), index);
 					chart.mPointEntryList.add(pointEntry);
 
-					Entry lineEntry = new Entry((float) Perceptron.predict(stockTrend.getWeight(), index, stockTrend.getBias()), index);
-					chart.mLineEntryList.add(lineEntry);
+					if (mStockPerceptron.isLearning()) {
+						Entry lineEntry = new Entry((float) mStockPerceptron.predict(index), index);
+						chart.mLineEntryList.add(lineEntry);
+					}
 				}
 			}
-//
-//			HousePrices housePrices = new HousePrices();
-//			housePrices.train();
-//
-//			for (int i = 0; i < housePrices.xArray.length; i++) {
-//				index = chart.mXValues.size();
-//				chart.mXValues.add(String.valueOf(housePrices.xArray[i]));
-//
-//				Entry pointEntry = new Entry((float) housePrices.yArray[i], index);
-//				chart.mPointEntryList.add(pointEntry);
-//
-//				Entry lineEntry = new Entry((float) housePrices.perceptron.predict(index), index);
-//				chart.mLineEntryList.add(lineEntry);
-//			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
