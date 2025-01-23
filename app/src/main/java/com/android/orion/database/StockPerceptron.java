@@ -15,12 +15,10 @@ public class StockPerceptron extends DatabaseTable {
 	public static final double DEFAULT_WEIGHT = 0.0;
 	public static final double DEFAULT_BIAS = 1.0;
 	public static final double DEFAULT_ERROR = 0.0;
+	public static final double DEFAULT_DELTA = 0.001;
 
 	private ArrayList<Double> mXArray;
 	private ArrayList<Double> mYArray;
-
-	private int mPoints;
-	private double mLearningRate;
 
 	private String mPeriod;
 	private int mLevel;
@@ -28,6 +26,11 @@ public class StockPerceptron extends DatabaseTable {
 	private double mWeight;
 	private double mBias;
 	private double mError;
+
+	private int mPoints;
+	private int mTimes;
+	private double mLastError;
+	private double mDelta;
 
 	public StockPerceptron() {
 		init();
@@ -62,8 +65,6 @@ public class StockPerceptron extends DatabaseTable {
 
 		setTableName(DatabaseContract.StockPerceptron.TABLE_NAME);
 
-		mPoints = 0;
-		mLearningRate = DEFAULT_LEARNING_RATE;
 		mPeriod = "";
 		mLevel = Trend.LEVEL_NONE;
 		mTrend = Trend.TREND_NONE;
@@ -238,6 +239,17 @@ public class StockPerceptron extends DatabaseTable {
 				+ mError + Constant.TAB;
 	}
 
+	public String toLogString() {
+		return  "mPeriod=" + mPeriod + Constant.TAB
+				+ "mLevel=" + mLevel + Constant.TAB
+				+ "mTrend=" + mTrend + Constant.TAB
+				+ "mWeight=" + mWeight + Constant.TAB
+				+ "mBias=" + mBias + Constant.TAB
+				+ "mError=" + mError + Constant.TAB
+				+ "mDelta=" + mDelta + Constant.TAB
+				+ "mTimes=" + mTimes + Constant.TAB;
+	}
+
 	public double predict(double x) {
 		return predict(mWeight, x, mBias);
 	}
@@ -246,7 +258,7 @@ public class StockPerceptron extends DatabaseTable {
 		return weight * x + bias;
 	}
 
-	public double costError() {
+	double costError() {
 		double total = 0;
 		for (int i = 0; i < mPoints; i++) {
 			total += Math.pow((mYArray.get(i) - predict(mXArray.get(i))), 2);
@@ -254,7 +266,7 @@ public class StockPerceptron extends DatabaseTable {
 		return total / mPoints;
 	}
 
-	public void updateWeights() {
+	void updateWeights() {
 		double wx;
 		double w_deriv = 0;
 		double b_deriv = 0;
@@ -263,21 +275,33 @@ public class StockPerceptron extends DatabaseTable {
 			w_deriv += -2 * wx * mXArray.get(i);
 			b_deriv += -2 * wx;
 		}
-		mWeight -= (w_deriv / mPoints) * mLearningRate;
-		mBias -= (b_deriv / mPoints) * mLearningRate;
+		mWeight -= (w_deriv / mPoints) * DEFAULT_LEARNING_RATE;
+		mBias -= (b_deriv / mPoints) * DEFAULT_LEARNING_RATE;
 	}
 
 	public void train(ArrayList<Double> xArray, ArrayList<Double> yArray, int times) {
-		if (xArray == null || xArray.size() < 2 || yArray == null || yArray.size() < 2) {
+		if (xArray == null || yArray == null || xArray.size() < 2 || yArray.size() < 2 || xArray.size() != yArray.size() || times <= 0) {
 			return;
 		}
 
-		mXArray = xArray;
-		mYArray = yArray;
+		mXArray = new ArrayList<>(xArray);
+		mYArray = new ArrayList<>(yArray);
 		mPoints = mXArray.size();
-		for (int i = 0; i < times; i++) {
-			updateWeights();
+		mTimes = times;
+
+		try {
+			for (int i = 0; i < times; i++) {
+				updateWeights();
+				mError = costError();
+				mDelta = Math.abs(mLastError - mError);
+				if (mDelta < DEFAULT_DELTA) {
+					mTimes = i;
+					break;
+				}
+				mLastError = mError;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		mError = costError();
 	}
 }

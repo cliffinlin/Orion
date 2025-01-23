@@ -143,13 +143,9 @@ public class StockTrendListActivity extends ListActivity implements
 				mSortOrderDefault);
 
 		initHeader();
-
 		initListView();
 
 		mLoaderManager.initLoader(LOADER_ID_TREND_LIST, null, this);
-
-		getContentResolver().registerContentObserver(
-				DatabaseContract.StockTrend.CONTENT_URI, true, mContentObserver);
 	}
 
 	@Override
@@ -382,10 +378,6 @@ public class StockTrendListActivity extends ListActivity implements
 		}
 	}
 
-	void restartLoader(Intent intent) {
-		restartLoader();
-	}
-
 	void restartLoader() {
 		mLoaderManager.restartLoader(LOADER_ID_TREND_LIST, null, this);
 	}
@@ -404,7 +396,11 @@ public class StockTrendListActivity extends ListActivity implements
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		getContentResolver().unregisterContentObserver(mContentObserver);
+	}
+
+	@Override
+	public void onAnalyzeFinish(String stockCode) {
+		restartLoader();
 	}
 
 	void setupSelection() {

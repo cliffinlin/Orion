@@ -145,8 +145,8 @@ public class StockDataChart {
 		}
 
 		if (Setting.getDisplayDraw()) {
-			if (mLineList[0].size() > 0) {
-				LineDataSet lineDataSet = new LineDataSet(mLineList[0], "Draw");
+			if (mLineList[Trend.LEVEL_NONE].size() > 0) {
+				LineDataSet lineDataSet = new LineDataSet(mLineList[Trend.LEVEL_NONE], "Draw");
 				lineDataSet.setColor(mLineColors[0]);
 				lineDataSet.setCircleColor(mLineColors[0]);
 				lineDataSet.setCircleSize(0);
@@ -156,8 +156,8 @@ public class StockDataChart {
 		}
 
 		if (Setting.getDisplayStroke()) {
-			if (mLineList[1].size() > 0) {
-				LineDataSet lineDataSet = new LineDataSet(mLineList[1], "Stroke");
+			if (mLineList[Trend.LEVEL_DRAW].size() > 0) {
+				LineDataSet lineDataSet = new LineDataSet(mLineList[Trend.LEVEL_DRAW], "Stroke");
 				if (Setting.getDisplayFilled()) {
 					lineDataSet.setDrawFilled(true);
 				}
@@ -170,8 +170,8 @@ public class StockDataChart {
 		}
 
 		if (Setting.getDisplaySegment()) {
-			if (mLineList[2].size() > 0) {
-				LineDataSet lineDataSet = new LineDataSet(mLineList[2],
+			if (mLineList[Trend.LEVEL_STROKE].size() > 0) {
+				LineDataSet lineDataSet = new LineDataSet(mLineList[Trend.LEVEL_STROKE],
 						"Segment");
 				if (Setting.getDisplayFilled()) {
 					lineDataSet.setDrawFilled(true);
@@ -185,8 +185,8 @@ public class StockDataChart {
 		}
 
 		if (Setting.getDisplayLine()) {
-			if (mLineList[3].size() > 0) {
-				LineDataSet lineDataSet = new LineDataSet(mLineList[3],
+			if (mLineList[Trend.LEVEL_SEGMENT].size() > 0) {
+				LineDataSet lineDataSet = new LineDataSet(mLineList[Trend.LEVEL_SEGMENT],
 						"Line");
 				if (Setting.getDisplayFilled()) {
 					lineDataSet.setDrawFilled(true);
@@ -198,8 +198,8 @@ public class StockDataChart {
 				lineData.addDataSet(lineDataSet);
 			}
 
-			if (mLineList[4].size() > 0) {
-				LineDataSet lineDataSet = new LineDataSet(mLineList[4],
+			if (mLineList[Trend.LEVEL_LINE].size() > 0) {
+				LineDataSet lineDataSet = new LineDataSet(mLineList[Trend.LEVEL_LINE],
 						"Outline");
 				if (Setting.getDisplayFilled()) {
 					lineDataSet.setDrawFilled(true);

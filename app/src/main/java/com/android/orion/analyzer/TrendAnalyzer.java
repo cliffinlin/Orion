@@ -460,7 +460,7 @@ public class TrendAnalyzer {
 		mStockPerceptron = getStockPerceptron(period, level, trend);
 		mStockPerceptron.train(mXArray, mYArray, Config.MAX_ML_TRAIN_TIMES);
 		mDatabaseManager.updateStockPerceptron(mStockPerceptron, mStockPerceptron.getContentValuesPerceptron());
-		Log.d("----->period=" + period + " level=" + level + " trend=" + trend + " " + mStockPerceptron.toString());
+		Log.d("----->" + mStockPerceptron.toLogString());
 	}
 
 	void debugShow(ArrayList<StockData> stockDataList,

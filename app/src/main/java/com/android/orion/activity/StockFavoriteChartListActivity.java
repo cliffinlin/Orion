@@ -525,72 +525,72 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 						if (mStockData.getTrend().directionOf(Trend.DIRECTION_UP)) {
 							Entry drawEntry = new Entry(
 									(float) mStockData.getTrend().getVertexHigh(), index);
-							stockDataChart.mLineList[0].add(drawEntry);
+							stockDataChart.mLineList[Trend.LEVEL_NONE].add(drawEntry);
 						} else if (mStockData
 								.getTrend().directionOf(Trend.DIRECTION_DOWN)) {
 							Entry drawEntry = new Entry(
 									(float) mStockData.getTrend().getVertexLow(), index);
-							stockDataChart.mLineList[0].add(drawEntry);
+							stockDataChart.mLineList[Trend.LEVEL_NONE].add(drawEntry);
 						} else {
 							Entry drawEntry = new Entry(
 									(float) mStockData.getCandlestick().getClose(), index);
-							stockDataChart.mLineList[0].add(drawEntry);
+							stockDataChart.mLineList[Trend.LEVEL_NONE].add(drawEntry);
 						}
 					} else {
 						if (mStockData.getTrend().vertexOf(Trend.VERTEX_TOP)) {
 							Entry drawEntry = new Entry(
 									(float) mStockData.getTrend().getVertexHigh(), index);
-							stockDataChart.mLineList[0].add(drawEntry);
+							stockDataChart.mLineList[Trend.LEVEL_NONE].add(drawEntry);
 						} else if (mStockData
 								.getTrend().vertexOf(Trend.VERTEX_BOTTOM)) {
 							Entry drawEntry = new Entry(
 									(float) mStockData.getTrend().getVertexLow(), index);
-							stockDataChart.mLineList[0].add(drawEntry);
+							stockDataChart.mLineList[Trend.LEVEL_NONE].add(drawEntry);
 						}
 					}
 
 					if (mStockData.getTrend().vertexOf(Trend.VERTEX_TOP_STROKE)) {
 						Entry strokeEntry = new Entry(
 								(float) mStockData.getTrend().getVertexHigh(), index);
-						stockDataChart.mLineList[1].add(strokeEntry);
+						stockDataChart.mLineList[Trend.LEVEL_DRAW].add(strokeEntry);
 					} else if (mStockData
 							.getTrend().vertexOf(Trend.VERTEX_BOTTOM_STROKE)) {
 						Entry strokeEntry = new Entry(
 								(float) mStockData.getTrend().getVertexLow(), index);
-						stockDataChart.mLineList[1].add(strokeEntry);
+						stockDataChart.mLineList[Trend.LEVEL_DRAW].add(strokeEntry);
 					}
 
 					if (mStockData.getTrend().vertexOf(Trend.VERTEX_TOP_SEGMENT)) {
 						Entry segmentEntry = new Entry(
 								(float) mStockData.getTrend().getVertexHigh(), index);
-						stockDataChart.mLineList[2].add(segmentEntry);
+						stockDataChart.mLineList[Trend.LEVEL_STROKE].add(segmentEntry);
 					} else if (mStockData
 							.getTrend().vertexOf(Trend.VERTEX_BOTTOM_SEGMENT)) {
 						Entry segmentEntry = new Entry(
 								(float) mStockData.getTrend().getVertexLow(), index);
-						stockDataChart.mLineList[2].add(segmentEntry);
+						stockDataChart.mLineList[Trend.LEVEL_STROKE].add(segmentEntry);
 					}
 
 					if (mStockData.getTrend().vertexOf(Trend.VERTEX_TOP_LINE)) {
 						Entry lineEntry = new Entry(
 								(float) mStockData.getTrend().getVertexHigh(), index);
-						stockDataChart.mLineList[3].add(lineEntry);
+						stockDataChart.mLineList[Trend.LEVEL_SEGMENT].add(lineEntry);
 					} else if (mStockData
 							.getTrend().vertexOf(Trend.VERTEX_BOTTOM_LINE)) {
 						Entry lineEntry = new Entry(
 								(float) mStockData.getTrend().getVertexLow(), index);
-						stockDataChart.mLineList[3].add(lineEntry);
+						stockDataChart.mLineList[Trend.LEVEL_SEGMENT].add(lineEntry);
 					}
 
 					if (mStockData.getTrend().vertexOf(Trend.VERTEX_TOP_OUTLINE)) {
 						Entry outlineEntry = new Entry(
 								(float) mStockData.getTrend().getVertexHigh(), index);
-						stockDataChart.mLineList[4].add(outlineEntry);
+						stockDataChart.mLineList[Trend.LEVEL_LINE].add(outlineEntry);
 					} else if (mStockData
 							.getTrend().vertexOf(Trend.VERTEX_BOTTOM_OUTLINE)) {
 						Entry outlineEntry = new Entry(
 								(float) mStockData.getTrend().getVertexLow(), index);
-						stockDataChart.mLineList[4].add(outlineEntry);
+						stockDataChart.mLineList[Trend.LEVEL_LINE].add(outlineEntry);
 					}
 
 					if (Setting.getDisplayCandle()) {
@@ -603,7 +603,10 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 						stockDataChart.mAverage10EntryList.add(average10Entry);
 					}
 
-					stockDataChart.setMainChartYMinMax(index, stockDataChart.mLineList[0], stockDataChart.mLineList[1], stockDataChart.mLineList[2]);
+					stockDataChart.setMainChartYMinMax(index,
+							stockDataChart.mLineList[Trend.LEVEL_NONE],
+							stockDataChart.mLineList[Trend.LEVEL_DRAW],
+							stockDataChart.mLineList[Trend.LEVEL_STROKE]);
 
 					Entry difEntry = new Entry((float) mStockData.getMacd().getDIF(),
 							index);
