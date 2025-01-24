@@ -319,4 +319,69 @@ public class StockPerceptron extends DatabaseTable {
 			e.printStackTrace();
 		}
 	}
+
+	void test() {
+
+				// 初始化数据
+				ArrayList<Double> xList = new ArrayList<>();
+				ArrayList<Double> yList = new ArrayList<>();
+				xList.add(32.0);
+				xList.add(53.0);
+				xList.add(6011.0);
+				xList.add(47.0);
+				xList.add(59.0);
+				xList.add(55.0);
+				xList.add(52.0);
+				xList.add(39.0);
+				xList.add(48.0);
+				xList.add(52.0);
+				xList.add(45.0);
+				xList.add(54.0);
+				xList.add(44.0);
+				xList.add(58.0);
+				xList.add(56.0);
+				xList.add(48.0);
+				xList.add(44.0);
+				xList.add(60.0);
+
+				yList.add(31.0);
+				yList.add(68.0);
+				yList.add(62.0);
+				yList.add(71.0);
+				yList.add(87.0);
+				yList.add(78.0);
+				yList.add(79.0);
+				yList.add(59.0);
+				yList.add(75.0);
+				yList.add(71.0);
+				yList.add(55.0);
+				yList.add(82.0);
+				yList.add(62.0);
+				yList.add(75.0);
+				yList.add(81.0);
+				yList.add(60.0);
+				yList.add(82.0);
+				yList.add(97.0);
+
+				// 创建线性回归对象
+				LinearRegression linearRegression = new LinearRegression(xList, yList);
+
+				// 训练模型
+				linearRegression.train(1000);
+
+				// 获取斜率和偏置
+				double slope = linearRegression.getSlope();
+				double bias = linearRegression.getBias();
+				System.out.println("Slope: " + slope);
+				System.out.println("Bias: " + bias);
+
+				// 计算均方误差
+				double error = linearRegression.calculateError();
+				System.out.println("Mean Squared Error: " + error);
+
+				// 预测新数据点
+				double x = 50.0;
+				double predictedY = linearRegression.predict(x);
+				System.out.println("Predicted value for x = " + x + ": " + predictedY);
+	}
 }

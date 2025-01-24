@@ -1,0 +1,122 @@
+package com.android.orion.database;
+
+
+import java.util.ArrayList;
+
+public class LinearRegression {
+	private ArrayList<Double> xList; // 输入特征
+	private ArrayList<Double> yList; // 目标值
+	private double slope; // 斜率
+	private double bias; // 偏置
+	private double learningRate = 0.01; // 学习率
+	private double xMin, xMax, yMin, yMax; // 归一化的最小值和最大值
+
+	// 构造函数
+	public LinearRegression(ArrayList<Double> xList, ArrayList<Double> yList) {
+		if (xList.size() != yList.size()) {
+			throw new IllegalArgumentException("xList and yList must have the same size");
+		}
+
+		// 归一化数据
+		this.xList = normalize(xList, true); // 归一化 x
+		this.yList = normalize(yList, false); // 归一化 y
+		this.slope = 0; // 初始化斜率为 0
+		this.bias = 0; // 初始化偏置为 0
+	}
+
+	// 归一化数据到 [0, 1] 范围
+	private ArrayList<Double> normalize(ArrayList<Double> data, boolean isX) {
+		double min = Double.MAX_VALUE;
+		double max = Double.MIN_VALUE;
+
+		// 找到最小值和最大值
+		for (double value : data) {
+			if (value < min) min = value;
+			if (value > max) max = value;
+		}
+
+		// 记录最小值和最大值
+		if (isX) {
+			this.xMin = min;
+			this.xMax = max;
+		} else {
+			this.yMin = min;
+			this.yMax = max;
+		}
+
+		// 归一化数据
+		ArrayList<Double> normalizedData = new ArrayList<>();
+		for (double value : data) {
+			normalizedData.add((value - min) / (max - min));
+		}
+		return normalizedData;
+	}
+
+	// 反归一化斜率
+	private double denormalizeSlope(double slope) {
+		return slope * (yMax - yMin) / (xMax - xMin);
+	}
+
+	// 反归一化偏置
+	private double denormalizeBias(double bias) {
+		return bias * (yMax - yMin) + yMin - denormalizeSlope(slope) * xMin;
+	}
+
+	// 使用梯度下降法训练模型
+	public void train(int iterations) {
+		for (int i = 0; i < iterations; i++) {
+			double[] gradients = calculateGradients();
+			slope -= learningRate * gradients[0]; // 更新斜率
+			bias -= learningRate * gradients[1]; // 更新偏置
+		}
+	}
+
+	// 计算斜率和偏置的梯度
+	private double[] calculateGradients() {
+		double slopeGradient = 0;
+		double biasGradient = 0;
+		int n = xList.size();
+
+		for (int i = 0; i < n; i++) {
+			double prediction = slope * xList.get(i) + bias; // 预测值
+			slopeGradient += (-2.0 / n) * xList.get(i) * (yList.get(i) - prediction); // 斜率梯度
+			biasGradient += (-2.0 / n) * (yList.get(i) - prediction); // 偏置梯度
+		}
+
+		return new double[]{slopeGradient, biasGradient};
+	}
+
+	// 获取反归一化后的斜率
+	public double getSlope() {
+		return denormalizeSlope(slope);
+	}
+
+	// 获取反归一化后的偏置
+	public double getBias() {
+		return denormalizeBias(bias);
+	}
+
+	// 预测新数据点的值
+	public double predict(double x) {
+		// 归一化输入
+		double normalizedX = (x - xMin) / (xMax - xMin);
+		// 计算预测值
+		double normalizedY = slope * normalizedX + bias;
+		// 反归一化输出
+		return normalizedY * (yMax - yMin) + yMin;
+	}
+
+	// 计算均方误差 (MSE)
+	public double calculateError() {
+		double error = 0;
+		int n = xList.size();
+
+		for (int i = 0; i < n; i++) {
+			double prediction = slope * xList.get(i) + bias; // 预测值
+			double actual = yList.get(i); // 实际值
+			error += Math.pow(prediction - actual, 2); // 平方误差
+		}
+
+		return error / n; // 返回均方误差
+	}
+}
