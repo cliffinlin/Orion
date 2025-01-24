@@ -16,9 +16,10 @@ public class StockPerceptron extends DatabaseTable {
 
 	public static final double DEFAULT_LEARNING_RATE = 0.00001;
 	public static final double DEFAULT_WEIGHT = 0.0;
-	public static final double DEFAULT_BIAS = 1.0;
+	public static final double DEFAULT_BIAS = 0.0;
 	public static final double DEFAULT_ERROR = 0.0;
 	public static final double DEFAULT_DELTA = 0.00001;
+	public static final double MAX_VALUE = 10000.0;
 	public static final int DESCRIPTION_ROUND_N = 5;
 
 	private ArrayList<Double> mXArray;
@@ -31,10 +32,10 @@ public class StockPerceptron extends DatabaseTable {
 	private double mBias;
 	private double mError;
 
-	private int mPoints;
 	private int mTimes;
 	private double mLastError;
 	private double mDelta;
+	private double mXMin, mXMax, mYMin, mYMax;
 
 	public StockPerceptron() {
 		init();
@@ -183,8 +184,9 @@ public class StockPerceptron extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_TREND)));
 	}
 
+	// 获取反归一化后的斜率
 	public double getWeight() {
-		return mWeight;
+		return denormalizeSlope(mWeight);
 	}
 
 	public void setWeight(double weight) {
@@ -200,8 +202,9 @@ public class StockPerceptron extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_WEIGHT)));
 	}
 
+	// 获取反归一化后的偏置
 	public double getBias() {
-		return mBias;
+		return denormalizeBias(mBias);
 	}
 
 	public void setBias(double bias) {
@@ -234,15 +237,6 @@ public class StockPerceptron extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_ERROR)));
 	}
 
-	void resetIfNeed() {
-//		if (Math.abs(mWeight) > MAX_VALUE || Math.abs(mBias) > MAX_VALUE || Math.abs(mError) > MAX_VALUE) {
-			mWeight = DEFAULT_WEIGHT;
-			mBias = DEFAULT_BIAS;
-			mError = DEFAULT_ERROR;
-			mLastError = DEFAULT_ERROR;
-//		}
-	}
-
 	public String toDescriptionString() {
 		return  mPeriod + Constant.TAB
 				+ mLevel + Constant.TAB
@@ -263,50 +257,72 @@ public class StockPerceptron extends DatabaseTable {
 				+ "mTimes=" + mTimes + Constant.TAB;
 	}
 
-	public double predict(double x) {
-		return predict(mWeight, x, mBias);
-	}
+	// 归一化数据到 [0, 1] 范围
+	private ArrayList<Double> normalize(ArrayList<Double> data, boolean isX) {
+		double min = Double.MAX_VALUE;
+		double max = Double.MIN_VALUE;
 
-	public static double predict(double weight, double x, double bias) {
-		return weight * x + bias;
-	}
-
-	double costError() {
-		double total = 0;
-		for (int i = 0; i < mPoints; i++) {
-			total += Math.pow((mYArray.get(i) - predict(mXArray.get(i))), 2);
+		// 找到最小值和最大值
+		for (double value : data) {
+			if (value < min) min = value;
+			if (value > max) max = value;
 		}
-		return total / mPoints;
-	}
 
-	void updateWeights() {
-		double wx;
-		double w_deriv = 0;
-		double b_deriv = 0;
-		for (int i = 0; i < mPoints; i++) {
-			wx = mYArray.get(i) - predict(mXArray.get(i));
-			w_deriv += -2 * wx * mXArray.get(i);
-			b_deriv += -2 * wx;
+		// 记录最小值和最大值
+		if (isX) {
+			this.mXMin = min;
+			this.mXMax = max;
+		} else {
+			this.mYMin = min;
+			this.mYMax = max;
 		}
-		mWeight -= (w_deriv / mPoints) * DEFAULT_LEARNING_RATE;
-		mBias -= (b_deriv / mPoints) * DEFAULT_LEARNING_RATE;
+
+		// 归一化数据
+		ArrayList<Double> normalizedData = new ArrayList<>();
+		for (double value : data) {
+			normalizedData.add((value - min) / (max - min));
+		}
+		return normalizedData;
 	}
 
-	public void train(ArrayList<Double> xArray, ArrayList<Double> yArray, int times) {
-		if (xArray == null || yArray == null || xArray.size() < 2 || yArray.size() < 2 || xArray.size() != yArray.size() || times <= 0) {
+	// 反归一化斜率
+	private double denormalizeSlope(double slope) {
+		return slope * (mYMax - mYMin) / (mXMax - mXMin);
+	}
+
+	// 反归一化偏置
+	private double denormalizeBias(double bias) {
+		return bias * (mYMax - mYMin) + mYMin - denormalizeSlope(mWeight) * mXMin;
+	}
+
+	void resetIfNeed() {
+		if (Math.abs(mWeight) > MAX_VALUE || Math.abs(mBias) > MAX_VALUE || Math.abs(mError) > MAX_VALUE) {
+			mWeight = DEFAULT_WEIGHT;
+			mBias = DEFAULT_BIAS;
+			mError = DEFAULT_ERROR;
+			mLastError = DEFAULT_ERROR;
+		}
+	}
+
+	// 使用梯度下降法训练模型
+	public void train(ArrayList<Double> xArray, ArrayList<Double> yArray, int iterations) {
+		if (xArray == null || yArray == null || xArray.size() < 2 || yArray.size() < 2 || xArray.size() != yArray.size() || iterations <= 0) {
 			return;
 		}
 
-		mXArray = new ArrayList<>(xArray);
-		mYArray = new ArrayList<>(yArray);
-		mPoints = mXArray.size();
-		mTimes = times;
-//		resetIfNeed();
+		if (xArray.size() != yArray.size()) {
+			return;
+		}
+
+		mXArray = normalize(xArray, true);
+		mYArray = normalize(yArray, false);
+		mTimes = iterations;
+		resetIfNeed();
 
 		try {
-			for (int i = 0; i < mTimes; i++) {
-				updateWeights();
-				mError = costError();
+			for (int i = 0; i < iterations; i++) {
+				calculateGradients();
+				mError = calculateError();
 				mDelta = Math.abs(mLastError - mError);
 				Log.d("=====> i=" + i + " " + toLogString());
 				if (mDelta < DEFAULT_DELTA) {
@@ -320,7 +336,51 @@ public class StockPerceptron extends DatabaseTable {
 		}
 	}
 
-	void test() {
+	// 计算斜率和偏置的梯度
+	private void calculateGradients() {
+		double slopeGradient = 0;
+		double biasGradient = 0;
+		int n = mXArray.size();
+
+		for (int i = 0; i < n; i++) {
+			double prediction = mWeight * mXArray.get(i) + mBias; // 预测值
+			slopeGradient += (-2.0 / n) * mXArray.get(i) * (mYArray.get(i) - prediction); // 斜率梯度
+			biasGradient += (-2.0 / n) * (mYArray.get(i) - prediction); // 偏置梯度
+		}
+
+		mWeight -= DEFAULT_LEARNING_RATE * slopeGradient; // 更新斜率
+		mBias -= DEFAULT_LEARNING_RATE * biasGradient; // 更新偏置
+	}
+
+	public static double predict(double weight, double x, double bias) {
+		return weight * x + bias;
+	}
+
+	// 预测新数据点的值
+	public double predict(double x) {
+		// 归一化输入
+		double normalizedX = (x - mXMin) / (mXMax - mXMin);
+		// 计算预测值
+		double normalizedY = mWeight * normalizedX + mBias;
+		// 反归一化输出
+		return normalizedY * (mYMax - mYMin) + mYMin;
+	}
+
+	// 计算均方误差 (MSE)
+	public double calculateError() {
+		double error = 0;
+		int n = mXArray.size();
+
+		for (int i = 0; i < n; i++) {
+			double prediction = mWeight * mXArray.get(i) + mBias; // 预测值
+			double actual = mYArray.get(i); // 实际值
+			error += Math.pow(prediction - actual, 2); // 平方误差
+		}
+
+		return error / n; // 返回均方误差
+	}
+
+	public static void test() {
 
 				// 初始化数据
 				ArrayList<Double> xList = new ArrayList<>();
@@ -364,13 +424,13 @@ public class StockPerceptron extends DatabaseTable {
 				yList.add(97.0);
 
 				// 创建线性回归对象
-				LinearRegression linearRegression = new LinearRegression(xList, yList);
+				StockPerceptron linearRegression = new StockPerceptron();
 
 				// 训练模型
-				linearRegression.train(1000);
+				linearRegression.train(xList, yList, 1000);
 
 				// 获取斜率和偏置
-				double slope = linearRegression.getSlope();
+				double slope = linearRegression.getWeight();
 				double bias = linearRegression.getBias();
 				System.out.println("Slope: " + slope);
 				System.out.println("Bias: " + bias);
