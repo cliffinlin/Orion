@@ -93,7 +93,7 @@ public class StockTrendChartListActivity extends BaseActivity implements
 				DatabaseContract.INVALID_ID));
 		mDatabaseManager.getStockTrendById(mStockTrend);
 		mStockPerceptron = TrendAnalyzer.getInstance().getStockPerceptron(mStockTrend.getPeriod(), mStockTrend.getLevel(), mStockTrend.getTrend());
-		mDescription = mStockPerceptron.toString();
+		mDescription = mStockPerceptron.toDescriptionString();
 
 		initListView();
 		initLoader();
@@ -260,7 +260,7 @@ public class StockTrendChartListActivity extends BaseActivity implements
 					chart.mPointEntryList.add(pointEntry);
 
 					if (mStockPerceptron.isLearning()) {
-						Entry lineEntry = new Entry((float) mStockPerceptron.predict(index), index);
+						Entry lineEntry = new Entry((float) mStockPerceptron.predict(stockTrend.getPrice()), index);
 						chart.mLineEntryList.add(lineEntry);
 					}
 				}
@@ -280,7 +280,7 @@ public class StockTrendChartListActivity extends BaseActivity implements
 
 	@Override
 	public void onAnalyzeStart(String stockCode) {
-		restartLoader();
+//		restartLoader();
 	}
 
 	@Override
@@ -290,12 +290,12 @@ public class StockTrendChartListActivity extends BaseActivity implements
 
 	@Override
 	public void onDownloadStart(String stockCode) {
-		restartLoader();
+//		restartLoader();
 	}
 
 	@Override
 	public void onDownloadComplete(String stockCode) {
-		restartLoader();
+//		restartLoader();
 	}
 
 	static class MainHandler extends Handler {

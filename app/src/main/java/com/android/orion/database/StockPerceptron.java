@@ -6,16 +6,20 @@ import android.text.TextUtils;
 
 import com.android.orion.data.Trend;
 import com.android.orion.setting.Constant;
+import com.android.orion.utility.Logger;
+import com.android.orion.utility.Utility;
 
 import java.util.ArrayList;
 
 public class StockPerceptron extends DatabaseTable {
+	Logger Log = Logger.getLogger();
 
 	public static final double DEFAULT_LEARNING_RATE = 0.00001;
 	public static final double DEFAULT_WEIGHT = 0.0;
 	public static final double DEFAULT_BIAS = 1.0;
 	public static final double DEFAULT_ERROR = 0.0;
-	public static final double DEFAULT_DELTA = 0.001;
+	public static final double DEFAULT_DELTA = 0.00001;
+	public static final int DESCRIPTION_ROUND_N = 5;
 
 	private ArrayList<Double> mXArray;
 	private ArrayList<Double> mYArray;
@@ -230,13 +234,22 @@ public class StockPerceptron extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_ERROR)));
 	}
 
-	public String toString() {
+	void resetIfNeed() {
+//		if (Math.abs(mWeight) > MAX_VALUE || Math.abs(mBias) > MAX_VALUE || Math.abs(mError) > MAX_VALUE) {
+			mWeight = DEFAULT_WEIGHT;
+			mBias = DEFAULT_BIAS;
+			mError = DEFAULT_ERROR;
+			mLastError = DEFAULT_ERROR;
+//		}
+	}
+
+	public String toDescriptionString() {
 		return  mPeriod + Constant.TAB
 				+ mLevel + Constant.TAB
 				+ mTrend + Constant.TAB
-				+ mWeight + Constant.TAB
-				+ mBias + Constant.TAB
-				+ mError + Constant.TAB;
+				+ Utility.Round(mWeight, DESCRIPTION_ROUND_N) + Constant.TAB
+				+ Utility.Round(mBias, DESCRIPTION_ROUND_N) + Constant.TAB
+				+ Utility.Round(mError, DESCRIPTION_ROUND_N) + Constant.TAB;
 	}
 
 	public String toLogString() {
@@ -288,12 +301,14 @@ public class StockPerceptron extends DatabaseTable {
 		mYArray = new ArrayList<>(yArray);
 		mPoints = mXArray.size();
 		mTimes = times;
+//		resetIfNeed();
 
 		try {
-			for (int i = 0; i < times; i++) {
+			for (int i = 0; i < mTimes; i++) {
 				updateWeights();
 				mError = costError();
 				mDelta = Math.abs(mLastError - mError);
+				Log.d("=====> i=" + i + " " + toLogString());
 				if (mDelta < DEFAULT_DELTA) {
 					mTimes = i;
 					break;

@@ -28,6 +28,7 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import com.android.orion.R;
+import com.android.orion.data.Period;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockTrend;
@@ -379,6 +380,7 @@ public class StockTrendListActivity extends ListActivity implements
 	}
 
 	void restartLoader() {
+		Log.d("restartLoader");
 		mLoaderManager.restartLoader(LOADER_ID_TREND_LIST, null, this);
 	}
 
@@ -404,7 +406,12 @@ public class StockTrendListActivity extends ListActivity implements
 	}
 
 	void setupSelection() {
-		mSelection = "1";
+		mSelection = "0";
+		for (String period : Period.PERIODS) {
+			if (Setting.getPeriod(period)) {
+				mSelection += " OR " + DatabaseContract.COLUMN_PERIOD + " = '" + period + "'";
+			}
+		}
 		StockContentProvider.setGroupBy(DatabaseContract.COLUMN_PERIOD + ", " + DatabaseContract.COLUMN_LEVEL);
 	}
 
@@ -430,6 +437,7 @@ public class StockTrendListActivity extends ListActivity implements
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+		Log.d("onLoadFinished");
 		if (loader == null) {
 			return;
 		}

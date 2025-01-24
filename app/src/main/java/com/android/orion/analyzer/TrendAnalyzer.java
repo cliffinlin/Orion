@@ -452,10 +452,8 @@ public class TrendAnalyzer {
 		mXArray.clear();
 		mYArray.clear();
 		for (StockTrend stockTrend : mStockTrendList) {
-			if (stockTrend.getNet() != 0) {
-				mXArray.add(stockTrend.getPrice());
-				mYArray.add(stockTrend.getNet());
-			}
+			mXArray.add(stockTrend.getPrice());
+			mYArray.add(stockTrend.getNet());
 		}
 		mStockPerceptron = getStockPerceptron(period, level, trend);
 		mStockPerceptron.train(mXArray, mYArray, Config.MAX_ML_TRAIN_TIMES);
