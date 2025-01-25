@@ -48,6 +48,7 @@ public class TrendAnalyzer {
 				for (String trend : Trend.TRENDS) {
 					StockPerceptron stockPerceptron = new StockPerceptron(period, level, trend);
 					if (!mDatabaseManager.isStockPerceptronExist(stockPerceptron)) {
+						stockPerceptron.setCreated(Utility.getCurrentDateTimeString());
 						mDatabaseManager.insertStockPerceptron(stockPerceptron);
 					} else {
 						mDatabaseManager.getStockPerceptron(stockPerceptron);
@@ -457,8 +458,8 @@ public class TrendAnalyzer {
 		}
 		mStockPerceptron = getStockPerceptron(period, level, trend);
 		mStockPerceptron.train(mXArray, mYArray, Config.MAX_ML_TRAIN_TIMES);
+		mStockPerceptron.setModified(Utility.getCurrentDateTimeString());
 		mDatabaseManager.updateStockPerceptron(mStockPerceptron, mStockPerceptron.getContentValuesPerceptron());
-		Log.d("----->" + mStockPerceptron.toLogString());
 	}
 
 	void debugShow(ArrayList<StockData> stockDataList,

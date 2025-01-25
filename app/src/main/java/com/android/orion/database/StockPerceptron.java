@@ -17,7 +17,6 @@ public class StockPerceptron extends DatabaseTable {
 	public static final double DEFAULT_LEARNING_RATE = 0.00001;
 	public static final double DEFAULT_WEIGHT = 0.0;
 	public static final double DEFAULT_BIAS = 0.0;
-	public static final double DEFAULT_ERROR = 0.0;
 	public static final double DEFAULT_DELTA = 0.00001;
 	public static final double MAX_VALUE = 10000.0;
 	public static final int DESCRIPTION_ROUND_N = 5;
@@ -31,11 +30,11 @@ public class StockPerceptron extends DatabaseTable {
 	private double mWeight;
 	private double mBias;
 	private double mError;
-
-	private int mTimes;
-	private double mLastError;
 	private double mDelta;
 	private double mXMin, mXMax, mYMin, mYMax;
+	private int mTimes;
+
+	private double mLastError;
 
 	public StockPerceptron() {
 		init();
@@ -61,10 +60,6 @@ public class StockPerceptron extends DatabaseTable {
 				&& TextUtils.isEmpty(mTrend);
 	}
 
-	public boolean isLearning() {
-		return (mWeight != DEFAULT_WEIGHT) && (mBias != DEFAULT_BIAS) && (mError != DEFAULT_ERROR);
-	}
-
 	void init() {
 		super.init();
 
@@ -75,7 +70,13 @@ public class StockPerceptron extends DatabaseTable {
 		mTrend = Trend.TREND_NONE;
 		mWeight = DEFAULT_WEIGHT;
 		mBias = DEFAULT_BIAS;
-		mError = DEFAULT_ERROR;
+		mError = 0.0;
+		mDelta = 0.0;
+		mXMin = 0.0;
+		mXMax = 0.0;
+		mYMin = 0.0;
+		mYMax = 0.0;
+		mTimes = 0;
 	}
 
 	@Override
@@ -87,6 +88,12 @@ public class StockPerceptron extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_WEIGHT, mWeight);
 		contentValues.put(DatabaseContract.COLUMN_BIAS, mBias);
 		contentValues.put(DatabaseContract.COLUMN_ERROR, mError);
+		contentValues.put(DatabaseContract.COLUMN_DELTA, mDelta);
+		contentValues.put(DatabaseContract.COLUMN_X_MIN, mXMin);
+		contentValues.put(DatabaseContract.COLUMN_X_MAX, mXMax);
+		contentValues.put(DatabaseContract.COLUMN_Y_MIN, mYMin);
+		contentValues.put(DatabaseContract.COLUMN_Y_MAX, mYMax);
+		contentValues.put(DatabaseContract.COLUMN_TIMES, mTimes);
 		return contentValues;
 	}
 
@@ -95,6 +102,12 @@ public class StockPerceptron extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_WEIGHT, mWeight);
 		contentValues.put(DatabaseContract.COLUMN_BIAS, mBias);
 		contentValues.put(DatabaseContract.COLUMN_ERROR, mError);
+		contentValues.put(DatabaseContract.COLUMN_DELTA, mDelta);
+		contentValues.put(DatabaseContract.COLUMN_X_MIN, mXMin);
+		contentValues.put(DatabaseContract.COLUMN_X_MAX, mXMax);
+		contentValues.put(DatabaseContract.COLUMN_Y_MIN, mYMin);
+		contentValues.put(DatabaseContract.COLUMN_Y_MAX, mYMax);
+		contentValues.put(DatabaseContract.COLUMN_TIMES, mTimes);
 		return contentValues;
 	}
 
@@ -113,6 +126,12 @@ public class StockPerceptron extends DatabaseTable {
 		setWeight(stockPerceptron.mWeight);
 		setBias(stockPerceptron.mBias);
 		setError(stockPerceptron.mError);
+		setDelta(stockPerceptron.mDelta);
+		setXMin(stockPerceptron.mXMin);
+		setXMax(stockPerceptron.mXMax);
+		setYMin(stockPerceptron.mYMin);
+		setYMax(stockPerceptron.mYMax);
+		setTimes(stockPerceptron.mTimes);
 	}
 
 	@Override
@@ -131,6 +150,12 @@ public class StockPerceptron extends DatabaseTable {
 		setWeight(cursor);
 		setBias(cursor);
 		setError(cursor);
+		setDelta(cursor);
+		setXMin(cursor);
+		setXMax(cursor);
+		setYMin(cursor);
+		setYMax(cursor);
+		setTimes(cursor);
 	}
 
 	public String getPeriod() {
@@ -237,13 +262,116 @@ public class StockPerceptron extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_ERROR)));
 	}
 
+	public double getDelta() {
+		return mDelta;
+	}
+
+	public void setDelta(double delta) {
+		mDelta = delta;
+	}
+
+	void setDelta(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setDelta(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_DELTA)));
+	}
+
+	public double getXMin() {
+		return mXMin;
+	}
+
+	public void setXMin(double xMin) {
+		mXMin = xMin;
+	}
+
+	void setXMin(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setXMin(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_X_MIN)));
+	}
+
+	public double getXMax() {
+		return mXMax;
+	}
+
+	public void setXMax(double xMax) {
+		mXMax = xMax;
+	}
+
+	void setXMax(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setXMax(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_X_MAX)));
+	}
+
+	public double getYMin() {
+		return mYMin;
+	}
+
+	public void setYMin(double yMin) {
+		mYMin = yMin;
+	}
+
+	void setYMin(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setYMin(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_Y_MIN)));
+	}
+
+	public double getYMax() {
+		return mYMax;
+	}
+
+	public void setYMax(double yMax) {
+		mYMax = yMax;
+	}
+
+	void setYMax(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setYMax(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_Y_MAX)));
+	}
+
+	public int getTimes() {
+		return mTimes;
+	}
+
+	public void setTimes(int times) {
+		mTimes = times;
+	}
+
+	void setTimes(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setTimes(cursor.getInt(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_TIMES)));
+	}
+
 	public String toDescriptionString() {
 		return  mPeriod + Constant.TAB
 				+ mLevel + Constant.TAB
 				+ mTrend + Constant.TAB
 				+ Utility.Round(mWeight, DESCRIPTION_ROUND_N) + Constant.TAB
 				+ Utility.Round(mBias, DESCRIPTION_ROUND_N) + Constant.TAB
-				+ Utility.Round(mError, DESCRIPTION_ROUND_N) + Constant.TAB;
+				+ Utility.Round(mError, DESCRIPTION_ROUND_N) + Constant.TAB
+				+ mTimes + Constant.TAB;
 	}
 
 	public String toLogString() {
@@ -299,8 +427,10 @@ public class StockPerceptron extends DatabaseTable {
 		if (Math.abs(mWeight) > MAX_VALUE || Math.abs(mBias) > MAX_VALUE || Math.abs(mError) > MAX_VALUE) {
 			mWeight = DEFAULT_WEIGHT;
 			mBias = DEFAULT_BIAS;
-			mError = DEFAULT_ERROR;
-			mLastError = DEFAULT_ERROR;
+			mError = 0.0;
+			mLastError = 0.0;
+			mDelta = 0.0;
+			mTimes = 0;
 		}
 	}
 
@@ -324,13 +454,13 @@ public class StockPerceptron extends DatabaseTable {
 				calculateGradients();
 				mError = calculateError();
 				mDelta = Math.abs(mLastError - mError);
-				Log.d("=====> i=" + i + " " + toLogString());
+				mLastError = mError;
 				if (mDelta < DEFAULT_DELTA) {
 					mTimes = i;
 					break;
 				}
-				mLastError = mError;
 			}
+			Log.d("......" + toLogString());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

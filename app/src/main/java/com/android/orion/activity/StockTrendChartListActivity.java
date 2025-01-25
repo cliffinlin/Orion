@@ -259,10 +259,8 @@ public class StockTrendChartListActivity extends BaseActivity implements
 					Entry pointEntry = new Entry((float) stockTrend.getNet(), index);
 					chart.mPointEntryList.add(pointEntry);
 
-					if (mStockPerceptron.isLearning()) {
-						Entry lineEntry = new Entry((float) mStockPerceptron.predict(stockTrend.getPrice()), index);
-						chart.mLineEntryList.add(lineEntry);
-					}
+					Entry lineEntry = new Entry((float) mStockPerceptron.predict(stockTrend.getPrice()), index);
+					chart.mLineEntryList.add(lineEntry);
 				}
 			}
 		} catch (Exception e) {

@@ -43,6 +43,12 @@ public final class DatabaseContract {
 	public static final String COLUMN_WEIGHT = "weight";
 	public static final String COLUMN_BIAS = "bias";
 	public static final String COLUMN_ERROR = "error";
+	public static final String COLUMN_DELTA = "delta";
+	public static final String COLUMN_TIMES = "times";
+	public static final String COLUMN_X_MIN = "x_min";
+	public static final String COLUMN_X_MAX = "x_max";
+	public static final String COLUMN_Y_MIN = "y_min";
+	public static final String COLUMN_Y_MAX = "y_max";
 	public static final String COLUMN_STATUS = "status";
 	public static final String COLUMN_OPERATE = "operate";
 	public static final String COLUMN_BUY = "buy";
@@ -329,7 +335,8 @@ public final class DatabaseContract {
 
 		public static final String[] PROJECTION_ALL = {_ID,
 				COLUMN_PERIOD, COLUMN_LEVEL, COLUMN_TREND,
-				COLUMN_WEIGHT, COLUMN_BIAS, COLUMN_ERROR,
+				COLUMN_WEIGHT, COLUMN_BIAS, COLUMN_ERROR, COLUMN_DELTA, COLUMN_TIMES,
+				COLUMN_X_MIN, COLUMN_X_MAX, COLUMN_Y_MIN, COLUMN_Y_MAX,
 				COLUMN_CREATED, COLUMN_MODIFIED};
 		static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
 				+ TABLE_NAME;
@@ -341,6 +348,12 @@ public final class DatabaseContract {
 				+ COLUMN_WEIGHT + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_BIAS + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_ERROR + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_DELTA + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_TIMES + INTEGER_TYPE + COMMA_SEP
+				+ COLUMN_X_MIN + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_X_MAX + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_Y_MIN + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_Y_MAX + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_CREATED + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_MODIFIED + TEXT_TYPE + " )";
 		static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
