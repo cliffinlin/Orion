@@ -79,7 +79,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		mWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
 				Config.TAG + ":" + StockDataProvider.class.getSimpleName());
 		mHandlerThread = new HandlerThread(StockDataProvider.class.getSimpleName(),
-				Process.THREAD_PRIORITY_BACKGROUND);
+				Process.THREAD_PRIORITY_LOWEST);
 		mHandlerThread.start();
 		mHandler = new ServiceHandler(mHandlerThread.getLooper());
 
