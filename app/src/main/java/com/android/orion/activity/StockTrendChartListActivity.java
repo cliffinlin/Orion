@@ -27,6 +27,7 @@ import com.android.orion.chart.StockTrendChart;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.StockPerceptron;
 import com.android.orion.database.StockTrend;
+import com.android.orion.provider.StockPerceptronProvider;
 import com.android.orion.setting.Constant;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -92,7 +93,7 @@ public class StockTrendChartListActivity extends BaseActivity implements
 		mStockTrend.setId(mIntent.getLongExtra(Constant.EXTRA_STOCK_TREND_ID,
 				DatabaseContract.INVALID_ID));
 		mDatabaseManager.getStockTrendById(mStockTrend);
-		mStockPerceptron = TrendAnalyzer.getInstance().getStockPerceptron(mStockTrend.getPeriod(), mStockTrend.getLevel(), mStockTrend.getTrend());
+		mStockPerceptron = StockPerceptronProvider.getInstance().getStockPerceptron(mStockTrend.getPeriod(), mStockTrend.getLevel(), mStockTrend.getTrend());
 		mDescription = mStockPerceptron.toDescriptionString();
 
 		initListView();

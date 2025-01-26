@@ -12,6 +12,7 @@ import com.android.orion.database.StockData;
 import com.android.orion.database.StockPerceptron;
 import com.android.orion.database.StockTrend;
 import com.android.orion.manager.DatabaseManager;
+import com.android.orion.provider.StockPerceptronProvider;
 import com.android.orion.utility.Logger;
 import com.android.orion.utility.Utility;
 
@@ -21,44 +22,15 @@ public class TrendAnalyzer {
 	Logger Log = Logger.getLogger();
 	Stock mStock;
 	String mPeriod;
-	ArrayList<StockTrend> mStockTrendList= new ArrayList<>();
-	ArrayList<Double> mXArray = new ArrayList<>();
-	ArrayList<Double> mYArray = new ArrayList<>();
 	ArrayList<StockData> mStockDataList;
 	DatabaseManager mDatabaseManager = DatabaseManager.getInstance();
-	StockPerceptron mStockPerceptron;
-	ArrayMap<String, StockPerceptron> mTrendMap;
-	ArrayMap<Integer, ArrayMap<String, StockPerceptron>> mLevelMap;
-	ArrayMap<String, ArrayMap<Integer, ArrayMap<String, StockPerceptron>>> mPeriodMap;
+	StockPerceptronProvider mStockPerceptronProvider = StockPerceptronProvider.getInstance();
 
 	private TrendAnalyzer() {
-		init();
 	}
 
 	public static TrendAnalyzer getInstance() {
 		return Holder.INSTANCE;
-	}
-
-	void init() {
-		mPeriodMap = new ArrayMap<>();
-		for (String period : Period.PERIODS) {
-			mLevelMap = new ArrayMap<>();
-			for (int level = 1; level < Trend.LEVEL_MAX; level++) {
-				mTrendMap = new ArrayMap<>();
-				for (String trend : Trend.TRENDS) {
-					StockPerceptron stockPerceptron = new StockPerceptron(period, level, trend);
-					if (!mDatabaseManager.isStockPerceptronExist(stockPerceptron)) {
-						stockPerceptron.setCreated(Utility.getCurrentDateTimeString());
-						mDatabaseManager.insertStockPerceptron(stockPerceptron);
-					} else {
-						mDatabaseManager.getStockPerceptron(stockPerceptron);
-					}
-					mTrendMap.put(trend, stockPerceptron);
-				}
-				mLevelMap.put(level, mTrendMap);
-			}
-			mPeriodMap.put(period, mLevelMap);
-		}
 	}
 
 	void setup(Stock stock, String period, ArrayList<StockData> stockDataList) {
@@ -353,7 +325,7 @@ public class TrendAnalyzer {
 					if (TextUtils.equals(action, stockTrend.getTrend())) {
 						stockTrend.setupNet(mStock.getPrice());
 						mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValuesNet());
-						train(stockTrend.getPeriod(), stockTrend.getLevel(), stockTrend.getTrend());
+						mStockPerceptronProvider.train(stockTrend.getPeriod(), stockTrend.getLevel(), stockTrend.getTrend());
 					} else {
 						stockTrend.setPrice(mStock.getPrice());
 						stockTrend.setDate(stockData.getDate());
@@ -439,27 +411,6 @@ public class TrendAnalyzer {
 			stockData.getTrend().setDirection(direction);
 			dataList.add(stockData);
 		}
-	}
-
-	public StockPerceptron getStockPerceptron(String period, int level, String trend) {
-		return mPeriodMap.get(period).get(level).get(trend);
-	}
-
-	void train(String period, int level, String trend) {
-		mDatabaseManager.getStockTrendList(period, level, trend, mStockTrendList);
-		if (mStockTrendList.isEmpty()) {
-			return;
-		}
-		mXArray.clear();
-		mYArray.clear();
-		for (StockTrend stockTrend : mStockTrendList) {
-			mXArray.add(stockTrend.getPrice());
-			mYArray.add(stockTrend.getNet());
-		}
-		mStockPerceptron = getStockPerceptron(period, level, trend);
-		mStockPerceptron.train(mXArray, mYArray, Config.MAX_ML_TRAIN_TIMES);
-		mStockPerceptron.setModified(Utility.getCurrentDateTimeString());
-		mDatabaseManager.updateStockPerceptron(mStockPerceptron, mStockPerceptron.getContentValuesPerceptron());
 	}
 
 	void debugShow(ArrayList<StockData> stockDataList,
