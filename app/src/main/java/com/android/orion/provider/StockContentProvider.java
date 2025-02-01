@@ -50,8 +50,6 @@ public class StockContentProvider extends ContentProvider {
 	private static final int STOCK_PERCEPTRON = 1000;
 	private static final int STOCK_PERCEPTRON_ID = 1001;
 
-	private static String mGroupBy = null;
-
 	private static final UriMatcher mUriMatcher = new UriMatcher(
 			UriMatcher.NO_MATCH);
 
@@ -119,10 +117,6 @@ public class StockContentProvider extends ContentProvider {
 		mDatabaseManager.openDatabase();
 
 		return true;
-	}
-
-	public static void setGroupBy(String groupBy) {
-		mGroupBy = groupBy;
 	}
 
 	@Override
@@ -316,8 +310,7 @@ public class StockContentProvider extends ContentProvider {
 		}
 
 		cursor = builder.query(mDatabaseManager.mDatabase, projection,
-				selection, selectionArgs, mGroupBy, null, sortOrder);
-		mGroupBy = null;
+				selection, selectionArgs, null, null, sortOrder);
 
 		if (cursor != null) {
 			cursor.setNotificationUri(mContentResolver, uri);

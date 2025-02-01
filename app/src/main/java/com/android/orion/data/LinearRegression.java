@@ -1,14 +1,31 @@
-package com.android.orion.database;
+package com.android.orion.data;
 
 import java.util.ArrayList;
 
 public class LinearRegression {
 	private ArrayList<Double> xList; // 输入特征
 	private ArrayList<Double> yList; // 目标值
-	private double slope; // 斜率
-	private double bias; // 偏置
-	private double learningRate = 0.01; // 学习率
-	private double xMin, xMax, yMin, yMax; // 归一化的最小值和最大值
+	public double slope; // 斜率
+	public double bias; // 偏置
+	public double learningRate = 0.01; // 学习率
+	public double xMin, xMax, yMin, yMax; // 归一化的最小值和最大值
+	public double mse; //Mean Squared Error
+
+	// 构造函数
+	public LinearRegression() {
+	}
+
+	public void init(ArrayList<Double> xList, ArrayList<Double> yList) {
+		if (xList.size() != yList.size()) {
+			throw new IllegalArgumentException("xList and yList must have the same size");
+		}
+
+		// 归一化数据
+		this.xList = normalize(xList, true); // 归一化 x
+		this.yList = normalize(yList, false); // 归一化 y
+		this.slope = 0; // 初始化斜率为 0
+		this.bias = 0; // 初始化偏置为 0
+	}
 
 	// 构造函数
 	public LinearRegression(ArrayList<Double> xList, ArrayList<Double> yList) {
@@ -25,8 +42,8 @@ public class LinearRegression {
 
 	// 归一化数据到 [0, 1] 范围
 	private ArrayList<Double> normalize(ArrayList<Double> data, boolean isX) {
-		double min = Double.MAX_VALUE;
-		double max = Double.MIN_VALUE;
+		double min = data.get(0);
+		double max = data.get(0);
 
 		// 找到最小值和最大值
 		for (double value : data) {
@@ -63,6 +80,16 @@ public class LinearRegression {
 
 	// 使用梯度下降法训练模型
 	public void train(int iterations) {
+		for (int i = 0; i < iterations; i++) {
+			double[] gradients = calculateGradients();
+			slope -= learningRate * gradients[0]; // 更新斜率
+			bias -= learningRate * gradients[1]; // 更新偏置
+		}
+	}
+
+	// 使用梯度下降法训练模型
+	public void train(ArrayList<Double> xList, ArrayList<Double> yList, int iterations) {
+		init(xList, yList);
 		for (int i = 0; i < iterations; i++) {
 			double[] gradients = calculateGradients();
 			slope -= learningRate * gradients[0]; // 更新斜率
@@ -115,6 +142,8 @@ public class LinearRegression {
 			double actual = yList.get(i); // 实际值
 			error += Math.pow(prediction - actual, 2); // 平方误差
 		}
+
+		mse = error / n;
 
 		return error / n; // 返回均方误差
 	}
@@ -182,4 +211,27 @@ public class LinearRegression {
 			double predictedY = linearRegression.predict(x);
 			System.out.println("Predicted value for x = " + x + ": " + predictedY);
 		}
+
+	public static void test(ArrayList<Double> xList, ArrayList<Double> yList) {
+		// 创建线性回归对象
+		LinearRegression linearRegression = new LinearRegression();
+
+		// 训练模型
+		linearRegression.train(xList, yList, 1000);
+
+		// 获取斜率和偏置
+		double slope = linearRegression.getSlope();
+		double bias = linearRegression.getBias();
+		System.out.println("Slope: " + slope);
+		System.out.println("Bias: " + bias);
+
+		// 计算均方误差
+		double error = linearRegression.calculateError();
+		System.out.println("Mean Squared Error: " + error);
+
+		// 预测新数据点
+		double x = xList.get(0);
+		double predictedY = linearRegression.predict(x);
+		System.out.println("Predicted value for x = " + x + ": " + predictedY);
+	}
 }

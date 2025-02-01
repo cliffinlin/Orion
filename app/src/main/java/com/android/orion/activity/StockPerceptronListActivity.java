@@ -12,9 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.provider.BaseColumns;
 import android.text.TextUtils;
-import android.util.ArrayMap;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,9 +36,7 @@ import com.android.orion.setting.Setting;
 import com.android.orion.utility.Preferences;
 import com.android.orion.view.SyncHorizontalScrollView;
 
-import java.util.ArrayList;
-
-public class StockTrendListActivity extends ListActivity implements
+public class StockPerceptronListActivity extends ListActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
 		OnItemLongClickListener, OnClickListener {
 
@@ -138,9 +134,9 @@ public class StockTrendListActivity extends ListActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_stock_trend_list);
+		setContentView(R.layout.activity_stock_perceptron_list);
 
-		mSortOrder = Preferences.getString(Setting.SETTING_SORT_ORDER_TREND_LIST,
+		mSortOrder = Preferences.getString(Setting.SETTING_SORT_ORDER_PERCEPTRON_LIST,
 				mSortOrderDefault);
 
 		initHeader();
@@ -193,7 +189,7 @@ public class StockTrendListActivity extends ListActivity implements
 
 		switch (id) {
 			case R.id.stock_name_code:
-				mSortOrderColumn = DatabaseContract.COLUMN_CODE;
+//				mSortOrderColumn = DatabaseContract.COLUMN_CODE;
 				break;
 			case R.id.price:
 				mSortOrderColumn = DatabaseContract.COLUMN_PRICE;
@@ -217,7 +213,7 @@ public class StockTrendListActivity extends ListActivity implements
 				mSortOrderColumn = DatabaseContract.COLUMN_MODIFIED;
 				break;
 			default:
-				mSortOrderColumn = DatabaseContract.COLUMN_CODE;
+//				mSortOrderColumn = DatabaseContract.COLUMN_CODE;
 				break;
 		}
 
@@ -229,7 +225,7 @@ public class StockTrendListActivity extends ListActivity implements
 
 		mSortOrder = mSortOrderColumn + mSortOrderDirection;
 
-		Preferences.putString(Setting.SETTING_SORT_ORDER_TREND_LIST, mSortOrder);
+		Preferences.putString(Setting.SETTING_SORT_ORDER_PERCEPTRON_LIST, mSortOrder);
 
 		restartLoader();
 	}
@@ -336,24 +332,36 @@ public class StockTrendListActivity extends ListActivity implements
 	}
 
 	void initListView() {
-		String[] mLeftFrom = new String[]{DatabaseContract.COLUMN_NAME,
-				DatabaseContract.COLUMN_CODE};
-		int[] mLeftTo = new int[]{R.id.name, R.id.code};
+		String[] mLeftFrom = new String[]{DatabaseContract.COLUMN_PERIOD,
+				DatabaseContract.COLUMN_PERIOD};
+		int[] mLeftTo = new int[]{R.id.period, R.id.code};
 
 		String[] mRightFrom = new String[]{
-				DatabaseContract.COLUMN_PRICE,
-				DatabaseContract.COLUMN_NET,
-				DatabaseContract.COLUMN_PERIOD,
 				DatabaseContract.COLUMN_LEVEL,
 				DatabaseContract.COLUMN_TREND,
+				DatabaseContract.COLUMN_WEIGHT,
+				DatabaseContract.COLUMN_BIAS,
+				DatabaseContract.COLUMN_ERROR,
+				DatabaseContract.COLUMN_DELTA,
+				DatabaseContract.COLUMN_TIMES,
+				DatabaseContract.COLUMN_X_MIN,
+				DatabaseContract.COLUMN_X_MAX,
+				DatabaseContract.COLUMN_Y_MIN,
+				DatabaseContract.COLUMN_Y_MAX,
 				DatabaseContract.COLUMN_CREATED,
 				DatabaseContract.COLUMN_MODIFIED};
 		int[] mRightTo = new int[]{
-				R.id.price,
-				R.id.net,
-				R.id.period,
 				R.id.level,
 				R.id.trend,
+				R.id.weight,
+				R.id.bias,
+				R.id.error,
+				R.id.delta,
+				R.id.times,
+				R.id.x_min,
+				R.id.x_max,
+				R.id.y_min,
+				R.id.y_max,
 				R.id.created,
 				R.id.modified};
 
@@ -369,7 +377,7 @@ public class StockTrendListActivity extends ListActivity implements
 
 		mRightListView = findViewById(R.id.right_listview);
 		mRightAdapter = new SimpleCursorAdapter(this,
-				R.layout.activity_stock_trend_list_right_item, null, mRightFrom,
+				R.layout.activity_stock_perceptron_list_right_item, null, mRightFrom,
 				mRightTo, 0);
 		if ((mRightListView != null) && (mRightAdapter != null)) {
 			mRightAdapter.setViewBinder(new CustomViewBinder());
@@ -421,10 +429,10 @@ public class StockTrendListActivity extends ListActivity implements
 
 		switch (id) {
 			case LOADER_ID_TREND_LIST:
-				setupSelection();
+//				setupSelection();
 				loader = new CursorLoader(this,
-						DatabaseContract.StockTrend.CONTENT_URI,
-						DatabaseContract.StockTrend.PROJECTION_ALL, mSelection,
+						DatabaseContract.StockPerceptron.CONTENT_URI,
+						DatabaseContract.StockPerceptron.PROJECTION_ALL, mSelection,
 						null, mSortOrder);
 				break;
 
@@ -476,7 +484,7 @@ public class StockTrendListActivity extends ListActivity implements
 //				mStockQuant.setId(id);
 //				mHandler.sendEmptyMessage(MESSAGE_VIEW_STOCK_TREND_CHAT);
 				Intent intent = new Intent(mContext, StockTrendChartListActivity.class);
-				intent.putExtra(Constant.EXTRA_STOCK_TREND_ID, id);
+				intent.putExtra(Constant.EXTRA_STOCK_PERCEPTRON_ID, id);
 				startActivity(intent);
 			}
 		}

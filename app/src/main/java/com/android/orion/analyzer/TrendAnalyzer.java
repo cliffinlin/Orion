@@ -331,8 +331,8 @@ public class TrendAnalyzer {
 						stockTrend.setDate(stockData.getDate());
 						stockTrend.setTime(stockData.getTime());
 						stockTrend.setTrend(action);
-						stockTrend.setCreated(Utility.getCurrentDateTimeString());
-						mDatabaseManager.insertStockTrend(stockTrend);
+						stockTrend.setModified(Utility.getCurrentDateTimeString());
+						mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValues());
 					}
 				} else {
 					stockTrend.setPrice(mStock.getPrice());

@@ -54,10 +54,9 @@ public class StockTrendChartListActivity extends BaseActivity implements
 			+ DatabaseContract.ORDER_ASC;
 
 	String mDescription = "";
-	StockPerceptron mStockPerceptron;
+	StockPerceptron mStockPerceptron = new StockPerceptron();
 	Menu mMenu = null;
 	ListView mListView = null;
-	StockTrend mStockTrend = new StockTrend();
 	StockTrendChartArrayAdapter mStockTrendChartArrayAdapter = null;
 	ArrayList<StockTrendChartItem> mStockTrendChartItemList = null;
 	ArrayList<StockTrendChartItemMain> mStockTrendChartItemMainList = null;
@@ -90,10 +89,10 @@ public class StockTrendChartListActivity extends BaseActivity implements
 
 		setContentView(R.layout.activity_stock_trend_chart_list);
 
-		mStockTrend.setId(mIntent.getLongExtra(Constant.EXTRA_STOCK_TREND_ID,
+		mStockPerceptron.setId(mIntent.getLongExtra(Constant.EXTRA_STOCK_PERCEPTRON_ID,
 				DatabaseContract.INVALID_ID));
-		mDatabaseManager.getStockTrendById(mStockTrend);
-		mStockPerceptron = StockPerceptronProvider.getInstance().getStockPerceptron(mStockTrend.getPeriod(), mStockTrend.getLevel(), mStockTrend.getTrend());
+		mDatabaseManager.getStockPerceptronById(mStockPerceptron);
+		mStockPerceptron = StockPerceptronProvider.getInstance().getStockPerceptron(mStockPerceptron.getPeriod(), mStockPerceptron.getLevel(), mStockPerceptron.getTrend());
 		mDescription = mStockPerceptron.toDescriptionString();
 
 		initListView();
@@ -232,9 +231,9 @@ public class StockTrendChartListActivity extends BaseActivity implements
 	}
 
 	CursorLoader getStockCursorLoader() {
-		String selection = DatabaseContract.COLUMN_PERIOD + " = '" + mStockTrend.getPeriod() + "'"
-				+ " AND " + DatabaseContract.COLUMN_LEVEL + " = " + mStockTrend.getLevel()
-				+ " AND " + DatabaseContract.COLUMN_TREND + " = '" + mStockTrend.getTrend() + "'";
+		String selection = DatabaseContract.COLUMN_PERIOD + " = '" + mStockPerceptron.getPeriod() + "'"
+				+ " AND " + DatabaseContract.COLUMN_LEVEL + " = " + mStockPerceptron.getLevel()
+				+ " AND " + DatabaseContract.COLUMN_TREND + " = '" + mStockPerceptron.getTrend() + "'";
 
 		CursorLoader loader = new CursorLoader(this, DatabaseContract.StockTrend.CONTENT_URI,
 				DatabaseContract.StockTrend.PROJECTION_ALL, selection, null,
