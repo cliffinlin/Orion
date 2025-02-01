@@ -44,10 +44,10 @@ public class StockContentProvider extends ContentProvider {
 	private static final int STOCK_QUANT = 800;
 	private static final int STOCK_QUANT_ID = 801;
 
-	private static final int STOCK_TREND = 900;
+	public static final int STOCK_TREND = 900;
 	private static final int STOCK_TREND_ID = 901;
 
-	private static final int STOCK_PERCEPTRON = 1000;
+	public static final int STOCK_PERCEPTRON = 1000;
 	private static final int STOCK_PERCEPTRON_ID = 1001;
 
 	private static final UriMatcher mUriMatcher = new UriMatcher(

@@ -31,6 +31,7 @@ import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockTrend;
 import com.android.orion.provider.StockContentProvider;
+import com.android.orion.provider.StockDataProvider;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Preferences;
@@ -40,8 +41,9 @@ public class StockPerceptronListActivity extends ListActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
 		OnItemLongClickListener, OnClickListener {
 
-	static final int LOADER_ID_TREND_LIST = 0;
-	static final int MESSAGE_VIEW_STOCK_TREND_CHAT = 1;
+	static final int LOADER_ID_PERCEPTRON_LIST = StockContentProvider.STOCK_PERCEPTRON;
+	static final int MESSAGE_INIT_LOADER = 100;
+	static final int MESSAGE_RESTART_LOADER = 110;
 
 	static final int mHeaderTextDefaultColor = Color.BLACK;
 	static final int mHeaderTextHighlightColor = Color.RED;
@@ -56,11 +58,18 @@ public class StockPerceptronListActivity extends ListActivity implements
 	SyncHorizontalScrollView mContentSHSV = null;
 
 	TextView mTextViewNameCode = null;
-	TextView mTextViewPrice = null;
-	TextView mTextViewNet = null;
 	TextView mTextViewPeriod = null;
 	TextView mTextViewLevel = null;
 	TextView mTextViewTrend = null;
+	TextView mTextViewWeight = null;
+	TextView mTextViewBias = null;
+	TextView mTextViewError = null;
+	TextView mTextViewDelta = null;
+	TextView mTextViewTimes = null;
+	TextView mTextViewXMin = null;
+	TextView mTextViewXMax = null;
+	TextView mTextViewYMin = null;
+	TextView mTextViewYMax = null;
 	TextView mTextViewCreated = null;
 	TextView mTextViewModified = null;
 
@@ -79,12 +88,15 @@ public class StockPerceptronListActivity extends ListActivity implements
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
 
-			Intent intent = null;
-
 			switch (msg.what) {
-				case MESSAGE_VIEW_STOCK_TREND_CHAT:
+				case MESSAGE_INIT_LOADER:
+					mSortOrder = Preferences.getString(Setting.SETTING_SORT_ORDER_PERCEPTRON_LIST,
+							mSortOrderDefault);
+					mLoaderManager.initLoader(LOADER_ID_PERCEPTRON_LIST, null, StockPerceptronListActivity.this);
 					break;
-
+				case MESSAGE_RESTART_LOADER:
+					mLoaderManager.restartLoader(LOADER_ID_PERCEPTRON_LIST, null, StockPerceptronListActivity.this);
+					break;
 				default:
 					break;
 			}
@@ -136,13 +148,9 @@ public class StockPerceptronListActivity extends ListActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_stock_perceptron_list);
 
-		mSortOrder = Preferences.getString(Setting.SETTING_SORT_ORDER_PERCEPTRON_LIST,
-				mSortOrderDefault);
-
 		initHeader();
 		initListView();
-
-		mLoaderManager.initLoader(LOADER_ID_TREND_LIST, null, this);
+		initLoader();
 	}
 
 	@Override
@@ -160,7 +168,6 @@ public class StockPerceptronListActivity extends ListActivity implements
 				return true;
 
 			case R.id.action_trend:
-				mHandler.sendEmptyMessage(MESSAGE_VIEW_STOCK_TREND_CHAT);
 				return true;
 
 			default:
@@ -189,13 +196,7 @@ public class StockPerceptronListActivity extends ListActivity implements
 
 		switch (id) {
 			case R.id.stock_name_code:
-//				mSortOrderColumn = DatabaseContract.COLUMN_CODE;
-				break;
-			case R.id.price:
-				mSortOrderColumn = DatabaseContract.COLUMN_PRICE;
-				break;
-			case R.id.net:
-				mSortOrderColumn = DatabaseContract.COLUMN_NET;
+				mSortOrderColumn = DatabaseContract.COLUMN_ID;
 				break;
 			case R.id.period:
 				mSortOrderColumn = DatabaseContract.COLUMN_PERIOD;
@@ -205,6 +206,39 @@ public class StockPerceptronListActivity extends ListActivity implements
 				break;
 			case R.id.trend:
 				mSortOrderColumn = DatabaseContract.COLUMN_TREND;
+				break;
+			case R.id.weight:
+				mSortOrderColumn = DatabaseContract.COLUMN_WEIGHT;
+				break;
+			case R.id.bias:
+				mSortOrderColumn = DatabaseContract.COLUMN_BIAS;
+				break;
+			case R.id.error:
+				mSortOrderColumn = DatabaseContract.COLUMN_ERROR;
+				break;
+			case R.id.delta:
+				mSortOrderColumn = DatabaseContract.COLUMN_DELTA;
+				break;
+			case R.id.times:
+				mSortOrderColumn = DatabaseContract.COLUMN_TIMES;
+				break;
+			case R.id.x_min:
+				mSortOrderColumn = DatabaseContract.COLUMN_X_MIN;
+				break;
+			case R.id.x_max:
+				mSortOrderColumn = DatabaseContract.COLUMN_X_MAX;
+				break;
+			case R.id.y_min:
+				mSortOrderColumn = DatabaseContract.COLUMN_Y_MIN;
+				break;
+			case R.id.y_max:
+				mSortOrderColumn = DatabaseContract.COLUMN_Y_MAX;
+				break;
+			case R.id.price:
+				mSortOrderColumn = DatabaseContract.COLUMN_PRICE;
+				break;
+			case R.id.net:
+				mSortOrderColumn = DatabaseContract.COLUMN_NET;
 				break;
 			case R.id.created:
 				mSortOrderColumn = DatabaseContract.COLUMN_CREATED;
@@ -243,11 +277,18 @@ public class StockPerceptronListActivity extends ListActivity implements
 
 	void resetHeaderTextColor() {
 		setHeaderTextColor(mTextViewNameCode, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewPrice, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewNet, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewPeriod, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewLevel, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewTrend, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewWeight, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewBias, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewError, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewDelta, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewTimes, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewXMin, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewXMax, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewYMin, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewYMax, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewCreated, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewModified, mHeaderTextDefaultColor);
 	}
@@ -276,16 +317,6 @@ public class StockPerceptronListActivity extends ListActivity implements
 			mTextViewNameCode.setOnClickListener(this);
 		}
 
-		mTextViewPrice = findViewById(R.id.price);
-		if (mTextViewPrice != null) {
-			mTextViewPrice.setOnClickListener(this);
-		}
-
-		mTextViewNet = findViewById(R.id.net);
-		if (mTextViewNet != null) {
-			mTextViewNet.setOnClickListener(this);
-		}
-
 		mTextViewPeriod = findViewById(R.id.period);
 		if (mTextViewPeriod != null) {
 			mTextViewPeriod.setOnClickListener(this);
@@ -301,6 +332,51 @@ public class StockPerceptronListActivity extends ListActivity implements
 			mTextViewTrend.setOnClickListener(this);
 		}
 
+		mTextViewWeight = findViewById(R.id.weight);
+		if (mTextViewWeight != null) {
+			mTextViewWeight.setOnClickListener(this);
+		}
+
+		mTextViewBias = findViewById(R.id.bias);
+		if (mTextViewBias != null) {
+			mTextViewBias.setOnClickListener(this);
+		}
+
+		mTextViewError = findViewById(R.id.error);
+		if (mTextViewError != null) {
+			mTextViewError.setOnClickListener(this);
+		}
+
+		mTextViewDelta = findViewById(R.id.delta);
+		if (mTextViewDelta != null) {
+			mTextViewDelta.setOnClickListener(this);
+		}
+
+		mTextViewTimes = findViewById(R.id.times);
+		if (mTextViewTimes != null) {
+			mTextViewTimes.setOnClickListener(this);
+		}
+
+		mTextViewXMin = findViewById(R.id.x_min);
+		if (mTextViewXMin != null) {
+			mTextViewXMin.setOnClickListener(this);
+		}
+
+		mTextViewXMax = findViewById(R.id.x_max);
+		if (mTextViewXMax != null) {
+			mTextViewXMax.setOnClickListener(this);
+		}
+
+		mTextViewYMin = findViewById(R.id.y_min);
+		if (mTextViewYMin != null) {
+			mTextViewYMin.setOnClickListener(this);
+		}
+
+		mTextViewYMax = findViewById(R.id.y_max);
+		if (mTextViewYMax != null) {
+			mTextViewYMax.setOnClickListener(this);
+		}
+
 		mTextViewCreated = findViewById(R.id.created);
 		if (mTextViewCreated != null) {
 			mTextViewCreated.setOnClickListener(this);
@@ -313,16 +389,30 @@ public class StockPerceptronListActivity extends ListActivity implements
 
 		if (mSortOrder.contains(DatabaseContract.COLUMN_CODE)) {
 			setHeaderTextColor(mTextViewNameCode, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PRICE)) {
-			setHeaderTextColor(mTextViewPrice, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_NET)) {
-			setHeaderTextColor(mTextViewNet, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PERIOD)) {
 			setHeaderTextColor(mTextViewPeriod, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_LEVEL)) {
 			setHeaderTextColor(mTextViewLevel, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_TREND)) {
 			setHeaderTextColor(mTextViewTrend, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_WEIGHT)) {
+			setHeaderTextColor(mTextViewWeight, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_BIAS)) {
+			setHeaderTextColor(mTextViewBias, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_ERROR)) {
+			setHeaderTextColor(mTextViewError, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_DELTA)) {
+			setHeaderTextColor(mTextViewDelta, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_TIMES)) {
+			setHeaderTextColor(mTextViewTimes, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_X_MIN)) {
+			setHeaderTextColor(mTextViewXMin, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_X_MAX)) {
+			setHeaderTextColor(mTextViewXMax, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_Y_MIN)) {
+			setHeaderTextColor(mTextViewYMin, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_Y_MAX)) {
+			setHeaderTextColor(mTextViewYMax, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_CREATED)) {
 			setHeaderTextColor(mTextViewCreated, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MODIFIED)) {
@@ -387,9 +477,14 @@ public class StockPerceptronListActivity extends ListActivity implements
 		}
 	}
 
+	void initLoader() {
+		Log.d("initLoader");
+		mHandler.sendEmptyMessage(MESSAGE_INIT_LOADER);
+	}
+
 	void restartLoader() {
 		Log.d("restartLoader");
-		mLoaderManager.restartLoader(LOADER_ID_TREND_LIST, null, this);
+		mHandler.sendEmptyMessage(MESSAGE_RESTART_LOADER);
 	}
 
 	@Override
@@ -414,13 +509,13 @@ public class StockPerceptronListActivity extends ListActivity implements
 	}
 
 	void setupSelection() {
-//		mSelection = "0";
-//		for (String period : Period.PERIODS) {
-//			if (Setting.getPeriod(period)) {
-//				mSelection += " OR " + DatabaseContract.COLUMN_PERIOD + " = '" + period + "'";
-//			}
-//		}
-//		StockContentProvider.setGroupBy(DatabaseContract.COLUMN_PERIOD + ", " + DatabaseContract.COLUMN_LEVEL);
+		mSelection = "(0";
+		for (String period : Period.PERIODS) {
+			if (Setting.getPeriod(period)) {
+				mSelection += " OR " + DatabaseContract.COLUMN_PERIOD + " = '" + period + "'";
+			}
+		}
+		mSelection += ") AND " + DatabaseContract.COLUMN_WEIGHT + " != 0";
 	}
 
 	@Override
@@ -428,8 +523,8 @@ public class StockPerceptronListActivity extends ListActivity implements
 		CursorLoader loader = null;
 
 		switch (id) {
-			case LOADER_ID_TREND_LIST:
-//				setupSelection();
+			case LOADER_ID_PERCEPTRON_LIST:
+				setupSelection();
 				loader = new CursorLoader(this,
 						DatabaseContract.StockPerceptron.CONTENT_URI,
 						DatabaseContract.StockPerceptron.PROJECTION_ALL, mSelection,
@@ -451,7 +546,7 @@ public class StockPerceptronListActivity extends ListActivity implements
 		}
 
 		switch (loader.getId()) {
-			case LOADER_ID_TREND_LIST:
+			case LOADER_ID_PERCEPTRON_LIST:
 //				setStockList(cursor);
 
 				mLeftAdapter.swapCursor(cursor);
@@ -481,13 +576,11 @@ public class StockPerceptronListActivity extends ListActivity implements
 //			mHandler.sendEmptyMessage(MESSAGE_VIEW_QUANT_DEAL);
 		} else {
 			if (mCurrentActionMode == null) {
-//				mStockQuant.setId(id);
-//				mHandler.sendEmptyMessage(MESSAGE_VIEW_STOCK_TREND_CHAT);
-				Intent intent = new Intent(mContext, StockTrendChartListActivity.class);
-				intent.putExtra(Constant.EXTRA_STOCK_PERCEPTRON_ID, id);
-				startActivity(intent);
 			}
 		}
+		Intent intent = new Intent(mContext, StockTrendChartListActivity.class);
+		intent.putExtra(Constant.EXTRA_STOCK_PERCEPTRON_ID, id);
+		startActivity(intent);
 	}
 
 	@Override
@@ -501,8 +594,8 @@ public class StockPerceptronListActivity extends ListActivity implements
 		stock.setId(stockId);
 		mDatabaseManager.getStockById(stock);
 		if (TextUtils.isEmpty(stock.getSE()) || TextUtils.isEmpty(stock.getCode())) {
-			mDatabaseManager.deleteStockTrend(stockId);
-			restartLoader();
+//			mDatabaseManager.deleteStockTrend(stockId);
+//			restartLoader();
 			return true;
 		}
 		return mCurrentActionMode == null;

@@ -22,11 +22,11 @@ import android.widget.ListView;
 import androidx.annotation.NonNull;
 
 import com.android.orion.R;
-import com.android.orion.analyzer.TrendAnalyzer;
 import com.android.orion.chart.StockTrendChart;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.StockPerceptron;
 import com.android.orion.database.StockTrend;
+import com.android.orion.provider.StockContentProvider;
 import com.android.orion.provider.StockPerceptronProvider;
 import com.android.orion.setting.Constant;
 import com.github.mikephil.charting.charts.CombinedChart;
@@ -45,10 +45,14 @@ import java.util.List;
 public class StockTrendChartListActivity extends BaseActivity implements
 		LoaderManager.LoaderCallbacks<Cursor> {
 
-	public static final int ITEM_VIEW_TYPE_MAIN = 0;
-	public static final int ITEM_VIEW_TYPE_SUB = 1;
-	public static final int LOADER_ID_LIST = 0;
-	public static final int MESSAGE_REFRESH = 0;
+	static final int LOADER_ID_TREND_LIST = StockContentProvider.STOCK_TREND;
+
+	static final int MESSAGE_INIT_LOADER = 100;
+	static final int MESSAGE_RESTART_LOADER = 110;
+	static final int MESSAGE_REFRESH = 200;
+
+	static final int ITEM_VIEW_TYPE_MAIN = 0;
+	static final int ITEM_VIEW_TYPE_SUB = 1;
 
 	String mSortOrder = DatabaseContract.COLUMN_PRICE
 			+ DatabaseContract.ORDER_ASC;
@@ -69,6 +73,17 @@ public class StockTrendChartListActivity extends BaseActivity implements
 			super.handleMessage(msg);
 
 			switch (msg.what) {
+				case MESSAGE_INIT_LOADER:
+					mStockPerceptron.setId(mIntent.getLongExtra(Constant.EXTRA_STOCK_PERCEPTRON_ID,
+							DatabaseContract.INVALID_ID));
+					mDatabaseManager.getStockPerceptronById(mStockPerceptron);
+					mStockPerceptron = StockPerceptronProvider.getInstance().getStockPerceptron(mStockPerceptron.getPeriod(), mStockPerceptron.getLevel(), mStockPerceptron.getTrend());
+					mDescription = mStockPerceptron.toDescriptionString();
+					mLoaderManager.initLoader(LOADER_ID_TREND_LIST, null, StockTrendChartListActivity.this);
+					break;
+				case MESSAGE_RESTART_LOADER:
+					mLoaderManager.restartLoader(LOADER_ID_TREND_LIST, null, StockTrendChartListActivity.this);
+					break;
 				case MESSAGE_REFRESH:
 					break;
 
@@ -83,17 +98,11 @@ public class StockTrendChartListActivity extends BaseActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_stock_trend_chart_list);
+
 		// For chart init only
 		Utils.init(this);
 		// For chart init only
-
-		setContentView(R.layout.activity_stock_trend_chart_list);
-
-		mStockPerceptron.setId(mIntent.getLongExtra(Constant.EXTRA_STOCK_PERCEPTRON_ID,
-				DatabaseContract.INVALID_ID));
-		mDatabaseManager.getStockPerceptronById(mStockPerceptron);
-		mStockPerceptron = StockPerceptronProvider.getInstance().getStockPerceptron(mStockPerceptron.getPeriod(), mStockPerceptron.getLevel(), mStockPerceptron.getTrend());
-		mDescription = mStockPerceptron.toDescriptionString();
 
 		initListView();
 		initLoader();
@@ -160,8 +169,8 @@ public class StockTrendChartListActivity extends BaseActivity implements
 	public Loader<Cursor> onCreateLoader(int id, Bundle arg1) {
 		CursorLoader loader = null;
 
-		if (id == LOADER_ID_LIST) {
-			loader = getStockCursorLoader();
+		if (id == LOADER_ID_TREND_LIST) {
+			loader = getCursorLoader();
 		}
 
 		return loader;
@@ -177,7 +186,7 @@ public class StockTrendChartListActivity extends BaseActivity implements
 
 		id = loader.getId();
 
-		if (id == LOADER_ID_LIST) {
+		if (id == LOADER_ID_TREND_LIST) {
 			swapCursor(mStockTrendChartList.get(0), cursor);
 		}
 	}
@@ -192,7 +201,7 @@ public class StockTrendChartListActivity extends BaseActivity implements
 
 		id = loader.getId();
 
-		if (id == LOADER_ID_LIST) {
+		if (id == LOADER_ID_TREND_LIST) {
 			swapCursor(mStockTrendChartList.get(0), null);
 		}
 	}
@@ -223,14 +232,16 @@ public class StockTrendChartListActivity extends BaseActivity implements
 	}
 
 	void initLoader() {
-		mLoaderManager.initLoader(LOADER_ID_LIST, null, this);
+		Log.d("initLoader");
+		mHandler.sendEmptyMessage(MESSAGE_INIT_LOADER);
 	}
 
 	void restartLoader() {
-		mLoaderManager.restartLoader(LOADER_ID_LIST, null, this);
+		Log.d("restartLoader");
+		mHandler.sendEmptyMessage(MESSAGE_RESTART_LOADER);
 	}
 
-	CursorLoader getStockCursorLoader() {
+	CursorLoader getCursorLoader() {
 		String selection = DatabaseContract.COLUMN_PERIOD + " = '" + mStockPerceptron.getPeriod() + "'"
 				+ " AND " + DatabaseContract.COLUMN_LEVEL + " = " + mStockPerceptron.getLevel()
 				+ " AND " + DatabaseContract.COLUMN_TREND + " = '" + mStockPerceptron.getTrend() + "'";
