@@ -83,14 +83,12 @@ public class StockPerceptronProvider {
 	public void acquireWakeLock() {
 		if (!mWakeLock.isHeld()) {
 			mWakeLock.acquire(Config.wakelockTimeout);
-//			Log.d("mWakeLock acquired.");
 		}
 	}
 
 	public void releaseWakeLock() {
 		if (mWakeLock.isHeld()) {
 			mWakeLock.release();
-//			Log.d("mWakeLock released.");
 		}
 	}
 
@@ -111,7 +109,7 @@ public class StockPerceptronProvider {
 		int what = keyString.hashCode();
 		StockPerceptron stockPerceptron = new StockPerceptron(period, level, trend);
 		if (mHandler.hasMessages(keyString.hashCode())) {
-			Log.d("mHandler.hasMessages " + what + ", skip!");
+//			Log.d("mHandler.hasMessages " + what + ", skip!");
 		} else {
 //			Log.d("mHandler.sendMessage " + what);
 			Message msg = mHandler.obtainMessage(what, stockPerceptron);

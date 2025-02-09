@@ -16,7 +16,7 @@ public class StockPerceptron extends DatabaseTable {
 	Logger Log = Logger.getLogger();
 
 	public static final double DEFAULT_DELTA = 0.00001;
-	public static final int DESCRIPTION_ROUND_N = 5;
+	public static final int DESCRIPTION_ROUND_N = 3;
 
 	LinearRegression mLinearRegression = new LinearRegression();
 
@@ -345,21 +345,16 @@ public class StockPerceptron extends DatabaseTable {
 			return;
 		}
 
-		if (xArray.size() != yArray.size()) {
-			return;
-		}
-
-		if (mDelta > 0 && mDelta < DEFAULT_DELTA) {
-			Log.e("return, mDelta= " + mDelta + " mTimes=" + mTimes);
-			return;
-		}
-
 		mTimes += iterations;
 		mLinearRegression.train(xArray, yArray, iterations);
 
 		double error = mLinearRegression.calculateError();
 		mDelta = Math.abs(error - mLastError);
 		mLastError = error;
+
+		if (mDelta > 0 && mDelta < DEFAULT_DELTA) {
+			Log.d(toLogString());
+		}
 	}
 
 	public double predict(double x) {

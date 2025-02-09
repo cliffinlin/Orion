@@ -23,8 +23,8 @@ public class LinearRegression {
 		// 归一化数据
 		this.xList = normalize(xList, true); // 归一化 x
 		this.yList = normalize(yList, false); // 归一化 y
-		this.slope = 0; // 初始化斜率为 0
-		this.bias = 0; // 初始化偏置为 0
+//		this.slope = 0; // 初始化斜率为 0
+//		this.bias = 0; // 初始化偏置为 0
 	}
 
 	// 构造函数
