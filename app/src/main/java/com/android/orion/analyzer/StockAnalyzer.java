@@ -19,6 +19,7 @@ import com.android.orion.data.Period;
 import com.android.orion.data.Trend;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
+import com.android.orion.database.StockTrend;
 import com.android.orion.manager.DatabaseManager;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
@@ -199,7 +200,7 @@ public class StockAnalyzer {
 		StringBuilder actionBuilder = new StringBuilder();
 		appendActionIfPresent(actionBuilder, getDirectionAction());
 		appendActionIfPresent(actionBuilder, getTrendAction());
-		appendActionIfPresent(actionBuilder, getOperateAction());
+//		appendActionIfPresent(actionBuilder, getOperateAction());
 
 		StockData stockData = mStockDataList.get(mStockDataList.size() - 1);
 		Macd macd = stockData.getMacd();
@@ -340,7 +341,51 @@ public class StockAnalyzer {
 		return result;
 	}
 
+
+	public void notifyStockTrend(StockTrend stockTrend) {
+		if (!Market.isTradingHours()) {
+			Toast.makeText(mContext,
+					mContext.getResources().getString(R.string.out_of_trading_hours),
+					Toast.LENGTH_SHORT).show();
+			return;
+		}
+
+		if (mStock == null || mContext == null || stockTrend == null) {
+			return;
+		}
+
+		if (mStock.getPrice() == 0 || !mStock.hasFlag(Stock.FLAG_NOTIFY)) {
+			return;
+		}
+
+		mContentTitle.setLength(0);
+		mContentText.setLength(0);
+
+		mContentTitle.append(stockTrend.getPeriod()).append(" ").append("Level" + stockTrend.getLevel()).append(" ").append(stockTrend.getTrend()).append(" ");
+
+		if (TextUtils.isEmpty(mContentTitle)) {
+			return;
+		}
+
+		mContentTitle.insert(0, stockTrend.getName() + " " + stockTrend.getPrice() + " ");
+		RecordFile.writeNotificationFile(mContentTitle.toString());
+		try {
+			int code = Integer.parseInt(mStock.getCode());
+			notify(code, Config.MESSAGE_CHANNEL_ID, Config.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
+					mContentTitle.toString(), mContentText.toString());
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
+	}
+
 	protected void updateNotification() {
+		if (!Market.isTradingHours()) {
+			Toast.makeText(mContext,
+					mContext.getResources().getString(R.string.out_of_trading_hours),
+					Toast.LENGTH_SHORT).show();
+			return;
+		}
+
 		if (mStock == null || mContext == null) {
 			return;
 		}
@@ -362,13 +407,6 @@ public class StockAnalyzer {
 		}
 
 		if (TextUtils.isEmpty(mContentTitle)) {
-			return;
-		}
-
-		if (!Market.isTradingHours()) {
-			Toast.makeText(mContext,
-					mContext.getResources().getString(R.string.out_of_trading_hours),
-					Toast.LENGTH_SHORT).show();
 			return;
 		}
 

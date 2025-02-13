@@ -493,7 +493,7 @@ public class StockTrendListActivity extends ListActivity implements
 		stock.setId(stockId);
 		mDatabaseManager.getStockById(stock);
 		if (TextUtils.isEmpty(stock.getSE()) || TextUtils.isEmpty(stock.getCode())) {
-			mDatabaseManager.deleteStockTrend(stockId);
+			mDatabaseManager.deleteStockTrend(stock);
 			restartLoader();
 			return true;
 		}

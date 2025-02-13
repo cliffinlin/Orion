@@ -324,18 +324,22 @@ public class TrendAnalyzer {
 					mDatabaseManager.getStockTrend(stockTrend);
 					if (TextUtils.equals(action, stockTrend.getTrend())) {
 						stockTrend.setupNet(mStock.getPrice());
+						stockTrend.setModified(Utility.getCurrentDateTimeString());
 						mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValuesNet());
 						mStockPerceptronProvider.train(stockTrend.getPeriod(), stockTrend.getLevel(), stockTrend.getTrend());
 					} else {
 						stockTrend.setPrice(mStock.getPrice());
+						stockTrend.setupNet(mStock.getPrice());
 						stockTrend.setDate(stockData.getDate());
 						stockTrend.setTime(stockData.getTime());
 						stockTrend.setTrend(action);
 						stockTrend.setModified(Utility.getCurrentDateTimeString());
 						mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValues());
+						StockAnalyzer.getInstance().notifyStockTrend(stockTrend);
 					}
 				} else {
 					stockTrend.setPrice(mStock.getPrice());
+					stockTrend.setupNet(mStock.getPrice());
 					stockTrend.setDate(stockData.getDate());
 					stockTrend.setTime(stockData.getTime());
 					stockTrend.setTrend(action);
