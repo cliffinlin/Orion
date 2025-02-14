@@ -354,7 +354,11 @@ public class StockAnalyzer {
 			return;
 		}
 
-		if (mStock.getPrice() == 0 || !mStock.hasFlag(Stock.FLAG_NOTIFY)) {
+		if (stockTrend.getPrice() == 0 || !mStock.hasFlag(Stock.FLAG_NOTIFY)) {
+			return;
+		}
+
+		if (stockTrend.getLevel() == Trend.LEVEL_DRAW) {
 			return;
 		}
 
@@ -370,7 +374,7 @@ public class StockAnalyzer {
 		mContentTitle.insert(0, stockTrend.getName() + " " + stockTrend.getPrice() + " ");
 		RecordFile.writeNotificationFile(mContentTitle.toString());
 		try {
-			int code = Integer.parseInt(mStock.getCode());
+			int code = Integer.parseInt(stockTrend.getCode());
 			notify(code, Config.MESSAGE_CHANNEL_ID, Config.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
 					mContentTitle.toString(), mContentText.toString());
 		} catch (NumberFormatException e) {
