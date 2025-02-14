@@ -1693,7 +1693,7 @@ public class SinaFinance extends StockDataProvider {
 				mContentTitle.append(" ");
 				mContentTitle.append(accessDeniedString);
 
-				mStockAnalyzer.notify(Config.SERVICE_NOTIFICATION_ID, Config.MESSAGE_CHANNEL_ID, Config.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
+				mStockAnalyzer.notify(Config.SERVICE_NOTIFICATION_ID, 0, Config.MESSAGE_CHANNEL_ID, Config.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
 						mContentTitle.toString(), "");
 				onDestroy();
 

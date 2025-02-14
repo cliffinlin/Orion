@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.android.orion.R;
+import com.android.orion.activity.StockFavoriteChartListActivity;
 import com.android.orion.activity.StockFavoriteListActivity;
 import com.android.orion.application.MainApplication;
 import com.android.orion.config.Config;
@@ -375,7 +376,8 @@ public class StockAnalyzer {
 		RecordFile.writeNotificationFile(mContentTitle.toString());
 		try {
 			int code = Integer.parseInt(stockTrend.getCode());
-			notify(code, Config.MESSAGE_CHANNEL_ID, Config.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
+			long stockID = stockTrend.getStockId();
+			notify(code, stockID, Config.MESSAGE_CHANNEL_ID, Config.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
 					mContentTitle.toString(), mContentText.toString());
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
@@ -418,7 +420,8 @@ public class StockAnalyzer {
 		RecordFile.writeNotificationFile(mContentTitle.toString());
 		try {
 			int code = Integer.parseInt(mStock.getCode());
-			notify(code, Config.MESSAGE_CHANNEL_ID, Config.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
+			long stockID = mStock.getId();
+			notify(code, stockID, Config.MESSAGE_CHANNEL_ID, Config.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
 					mContentTitle.toString(), mContentText.toString());
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
@@ -452,14 +455,20 @@ public class StockAnalyzer {
 		mContentTitle.append(period).append(" ").append(action).append(" ");
 	}
 
-	public void notify(int id, String channelID, String channelName, int importance, String contentTitle, String contentText) {
+	public void notify(int id, long stockID, String channelID, String channelName, int importance, String contentTitle, String contentText) {
 		if (mNotificationManager == null || mContext == null) {
 			return;
 		}
 
 		mNotificationManager.cancel(id);
 
-		Intent intent = new Intent(mContext, StockFavoriteListActivity.class);
+		Intent intent = new Intent();
+		if (stockID > 0) {
+			intent.setClass(mContext, StockFavoriteChartListActivity.class);
+			intent.putExtra(Constant.EXTRA_STOCK_ID, stockID);
+		} else {
+			intent.setClass(mContext, StockFavoriteListActivity.class);
+		}
 		intent.setType("vnd.android-dir/mms-sms");
 		PendingIntent pendingIntent = PendingIntent.getActivity(
 				mContext,
