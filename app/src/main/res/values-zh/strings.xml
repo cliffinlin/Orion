@@ -21,7 +21,6 @@
     <string name="action_sell">Sell</string>
     <string name="action_sold">Sold</string>
     <string name="action_deal">Deal</string>
-    <string name="action_quant">Quant</string>
     <string name="action_edit">Edit</string>
     <string name="action_list">List</string>
     <string name="action_exit">Exit</string>
@@ -40,18 +39,11 @@
     <string name="action_setting">Setting</string>
     <string name="action_filter">Filter</string>
     <string name="action_trend">Trend</string>
-    <string name="action_threshold">Threshold</string>
-    <string name="threshold">Threshold</string>
     <string name="period">Period</string>
     <string name="level">Level</string>
     <string name="trend">Trend</string>
     <string name="weight">Weight</string>
     <string name="bias">Bias</string>
-    <string name="quant">Quant</string>
-    <string name="quant_volume">QVolume</string>
-    <string name="quant_profit">QProfit</string>
-    <string name="quant_profit_margin">QMargin</string>
-    <string name="quant_x">QX</string>
     <string name="action_download">Download</string>
     <string name="action_delete">Delete</string>
     <string name="action_delete_all">Delete All</string>
@@ -178,6 +170,9 @@
     <string name="password_hint">Password</string>
     <string name="pb">Pb</string>
     <string name="pe">Pe</string>
+    <string name="ep">Ep</string>
+    <string name="ep5">Ep5</string>
+    <string name="ep10">Ep10</string>
     <string name="percent">Percent</string>
     <string name="position">Position</string>
     <string name="prev">prev</string>
@@ -237,8 +232,6 @@
     <string name="stock_statistics">Statistics</string>
     <string name="stock_statistics_chart">Statistics chart</string>
     <string name="stock_cost">Stock cost</string>
-    <string name="stock_threshold">Threshold</string>
-    <string name="stock_quant_volume">QVolume</string>
     <string name="stock_hold">Stock hold</string>
     <string name="stock_valuation">Stock valuation</string>
     <string name="stock_bonus">Stock bonus</string>
@@ -248,7 +241,6 @@
     <string name="activity_title_stock_favorite_list">Favorite list</string>
     <string name="activity_title_stock_financial_list">Financial list</string>
     <string name="activity_title_stock_trend_list">Trend List</string>
-    <string name="activity_title_stock_quant_list">Quant List</string>
     <string name="activity_title_stock_deal_list">Deal list</string>
     <string name="activity_title_about">About</string>
     <string name="activity_title_deal">Deal</string>

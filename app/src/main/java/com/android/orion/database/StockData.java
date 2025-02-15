@@ -16,23 +16,6 @@ import java.util.List;
 
 public class StockData extends DatabaseTable {
 
-	public static final String MARK_NATURAL_RALLY = "NG";
-	public static final String MARK_UPWARD_TREND = "GG";
-	public static final String MARK_DOWNWARD_TREND = "DD";
-	public static final String MARK_NATURAL_REACTION = "ND";
-
-	public static final String MARK_QUANT = "Q";
-
-	public static final String NAME_NATURAL_RALLY = "Rally";
-	public static final String NAME_UPWARD_TREND = "Up";
-	public static final String NAME_DOWNWARD_TREND = "Down";
-	public static final String NAME_NATURAL_REACTION = "React";
-
-	public static final int THRESHOLD_UPWARD_TREND = 2;
-	public static final int THRESHOLD_NATURAL_RALLY = 1;
-	public static final int THRESHOLD_NONE = 0;
-	public static final int THRESHOLD_NATURAL_REACTION = -1;
-	public static final int THRESHOLD_DOWNWARD_TREND = -2;
 	public static Comparator<StockData> comparator = new Comparator<StockData>() {
 
 		@Override
@@ -69,10 +52,6 @@ public class StockData extends DatabaseTable {
 	private String mTime;
 	private String mPeriod;
 	private String mAction;
-	private double mNaturalRally;
-	private double mUpwardTrend;
-	private double mDownwardTrend;
-	private double mNaturalReaction;
 	private int mIndex;
 
 	public StockData() {
@@ -113,11 +92,6 @@ public class StockData extends DatabaseTable {
 		mAction = "";
 
 		mIndex = 0;
-
-		mNaturalRally = 0;
-		mUpwardTrend = 0;
-		mDownwardTrend = 0;
-		mNaturalReaction = 0;
 	}
 
 	@Override
@@ -148,11 +122,6 @@ public class StockData extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_VERTEX_HIGH, mTrend.getVertexHigh());
 		contentValues.put(DatabaseContract.COLUMN_ACTION, mAction);
 
-		contentValues.put(DatabaseContract.COLUMN_NATURAL_RALLY, mNaturalRally);
-		contentValues.put(DatabaseContract.COLUMN_UPWARD_TREND, mUpwardTrend);
-		contentValues.put(DatabaseContract.COLUMN_DOWNWARD_TREND, mDownwardTrend);
-		contentValues.put(DatabaseContract.COLUMN_NATURAL_REACTION, mNaturalReaction);
-
 		return contentValues;
 	}
 
@@ -177,11 +146,6 @@ public class StockData extends DatabaseTable {
 		mMacd.set(stockData.mMacd);
 		mTrend.set(stockData.mTrend);
 		setAction(stockData.mAction);
-
-		setNaturalRally(stockData.mNaturalRally);
-		setUpwardTrend(stockData.mUpwardTrend);
-		setDownwardTrend(stockData.mDownwardTrend);
-		setNaturalReaction(stockData.mNaturalReaction);
 
 		setIndex(stockData.mIndex);
 		mTrend.setIndexStart(stockData.getTrend().getIndexStart());
@@ -210,11 +174,6 @@ public class StockData extends DatabaseTable {
 		mMacd.set(cursor);
 		mTrend.set(cursor);
 		setAction(cursor);
-
-		setNaturalRally(cursor);
-		setUpwardTrend(cursor);
-		setDownwardTrend(cursor);
-		setNaturalReaction(cursor);
 	}
 
 	public long getStockId() {
@@ -388,74 +347,6 @@ public class StockData extends DatabaseTable {
 
 		setAction(cursor.getString(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_ACTION)));
-	}
-
-	public double getNaturalRally() {
-		return mNaturalRally;
-	}
-
-	public void setNaturalRally(double naturalRally) {
-		mNaturalRally = naturalRally;
-	}
-
-	public void setNaturalRally(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setNaturalRally(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_NATURAL_RALLY)));
-	}
-
-	public double getUpwardTrend() {
-		return mUpwardTrend;
-	}
-
-	public void setUpwardTrend(double upwardTrend) {
-		mUpwardTrend = upwardTrend;
-	}
-
-	public void setUpwardTrend(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setUpwardTrend(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_UPWARD_TREND)));
-	}
-
-	public double getDownwardTrend() {
-		return mDownwardTrend;
-	}
-
-	public void setDownwardTrend(double downwardTrend) {
-		mDownwardTrend = downwardTrend;
-	}
-
-	public void setDownwardTrend(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setDownwardTrend(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_DOWNWARD_TREND)));
-	}
-
-	public double getNaturalReaction() {
-		return mNaturalReaction;
-	}
-
-	public void setNaturalReaction(double naturalReaction) {
-		mNaturalReaction = naturalReaction;
-	}
-
-	void setNaturalReaction(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setNaturalReaction(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_NATURAL_REACTION)));
 	}
 
 	public int getIndex() {

@@ -4,15 +4,9 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.text.TextUtils;
 
-import com.android.orion.data.Candlestick;
-import com.android.orion.data.Macd;
 import com.android.orion.data.Trend;
 import com.android.orion.setting.Constant;
 import com.android.orion.utility.Utility;
-
-import java.util.Calendar;
-import java.util.Comparator;
-import java.util.List;
 
 public class StockTrend extends DatabaseTable {
 
@@ -26,7 +20,7 @@ public class StockTrend extends DatabaseTable {
 	private String mDate;
 	private String mTime;
 	private int mLevel;
-	private String mTrend;
+	private String mType;
 
 	public StockTrend() {
 		init();
@@ -65,7 +59,7 @@ public class StockTrend extends DatabaseTable {
 		mDate = "";
 		mTime = "";
 		mLevel = Trend.LEVEL_NONE;
-		mTrend = "";
+		mType = Trend.TREND_NONE;
 	}
 
 	@Override
@@ -81,7 +75,7 @@ public class StockTrend extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);
 		contentValues.put(DatabaseContract.COLUMN_TIME, mTime);
 		contentValues.put(DatabaseContract.COLUMN_LEVEL, mLevel);
-		contentValues.put(DatabaseContract.COLUMN_TREND, mTrend);
+		contentValues.put(DatabaseContract.COLUMN_TYPE, mType);
 		return contentValues;
 	}
 
@@ -110,7 +104,7 @@ public class StockTrend extends DatabaseTable {
 		setDate(stockTrend.mDate);
 		setTime(stockTrend.mTime);
 		setLevel(stockTrend.mLevel);
-		setTrend(stockTrend.mTrend);
+		setType(stockTrend.mType);
 	}
 
 	@Override
@@ -133,7 +127,7 @@ public class StockTrend extends DatabaseTable {
 		setDate(cursor);
 		setTime(cursor);
 		setLevel(cursor);
-		setTrend(cursor);
+		setType(cursor);
 	}
 
 	public long getStockId() {
@@ -314,21 +308,21 @@ public class StockTrend extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_LEVEL)));
 	}
 
-	public String getTrend() {
-		return mTrend;
+	public String getType() {
+		return mType;
 	}
 
-	public void setTrend(String trend) {
-		mTrend = trend;
+	public void setType(String type) {
+		mType = type;
 	}
 
-	void setTrend(Cursor cursor) {
+	void setType(Cursor cursor) {
 		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
-		setTrend(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_TREND)));
+		setType(cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_TYPE)));
 	}
 
 	public void setupNet(double current) {
@@ -350,6 +344,6 @@ public class StockTrend extends DatabaseTable {
 				+ mDate + Constant.TAB
 				+ mTime + Constant.TAB
 				+ mLevel + Constant.TAB
-				+ mTrend + Constant.TAB;
+				+ mType + Constant.TAB;
 	}
 }

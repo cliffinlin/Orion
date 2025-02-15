@@ -31,7 +31,6 @@ import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockTrend;
 import com.android.orion.provider.StockContentProvider;
-import com.android.orion.provider.StockDataProvider;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Preferences;
@@ -60,7 +59,7 @@ public class StockPerceptronListActivity extends ListActivity implements
 	TextView mTextViewNameCode = null;
 	TextView mTextViewPeriod = null;
 	TextView mTextViewLevel = null;
-	TextView mTextViewTrend = null;
+	TextView mTextViewType = null;
 	TextView mTextViewWeight = null;
 	TextView mTextViewBias = null;
 	TextView mTextViewError = null;
@@ -204,8 +203,8 @@ public class StockPerceptronListActivity extends ListActivity implements
 			case R.id.level:
 				mSortOrderColumn = DatabaseContract.COLUMN_LEVEL;
 				break;
-			case R.id.trend:
-				mSortOrderColumn = DatabaseContract.COLUMN_TREND;
+			case R.id.type:
+				mSortOrderColumn = DatabaseContract.COLUMN_TYPE;
 				break;
 			case R.id.weight:
 				mSortOrderColumn = DatabaseContract.COLUMN_WEIGHT;
@@ -279,7 +278,7 @@ public class StockPerceptronListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewNameCode, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewPeriod, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewLevel, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewTrend, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewType, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewWeight, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewBias, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewError, mHeaderTextDefaultColor);
@@ -327,9 +326,9 @@ public class StockPerceptronListActivity extends ListActivity implements
 			mTextViewLevel.setOnClickListener(this);
 		}
 
-		mTextViewTrend = findViewById(R.id.trend);
-		if (mTextViewTrend != null) {
-			mTextViewTrend.setOnClickListener(this);
+		mTextViewType = findViewById(R.id.type);
+		if (mTextViewType != null) {
+			mTextViewType.setOnClickListener(this);
 		}
 
 		mTextViewWeight = findViewById(R.id.weight);
@@ -393,8 +392,8 @@ public class StockPerceptronListActivity extends ListActivity implements
 			setHeaderTextColor(mTextViewPeriod, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_LEVEL)) {
 			setHeaderTextColor(mTextViewLevel, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_TREND)) {
-			setHeaderTextColor(mTextViewTrend, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_TYPE)) {
+			setHeaderTextColor(mTextViewType, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_WEIGHT)) {
 			setHeaderTextColor(mTextViewWeight, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_BIAS)) {
@@ -428,7 +427,7 @@ public class StockPerceptronListActivity extends ListActivity implements
 
 		String[] mRightFrom = new String[]{
 				DatabaseContract.COLUMN_LEVEL,
-				DatabaseContract.COLUMN_TREND,
+				DatabaseContract.COLUMN_TYPE,
 				DatabaseContract.COLUMN_WEIGHT,
 				DatabaseContract.COLUMN_BIAS,
 				DatabaseContract.COLUMN_ERROR,
@@ -442,7 +441,7 @@ public class StockPerceptronListActivity extends ListActivity implements
 				DatabaseContract.COLUMN_MODIFIED};
 		int[] mRightTo = new int[]{
 				R.id.level,
-				R.id.trend,
+				R.id.type,
 				R.id.weight,
 				R.id.bias,
 				R.id.error,
@@ -572,8 +571,6 @@ public class StockPerceptronListActivity extends ListActivity implements
 							long id) {
 
 		if (parent.getId() == R.id.left_listview) {
-//			mStockQuant.setId(id);
-//			mHandler.sendEmptyMessage(MESSAGE_VIEW_QUANT_DEAL);
 		} else {
 			if (mCurrentActionMode == null) {
 			}
@@ -613,15 +610,6 @@ public class StockPerceptronListActivity extends ListActivity implements
 		}
 
 		return false;
-	}
-
-	void getStock() {
-//		mDatabaseManager.getStockQuantById(mStockQuant);
-//
-//		mStock.setSE(mStockQuant.getSE());
-//		mStock.setCode(mStockQuant.getCode());
-//
-//		mDatabaseManager.getStock(mStock);
 	}
 
 	private class CustomViewBinder implements SimpleCursorAdapter.ViewBinder {

@@ -44,7 +44,7 @@ public class StockFinancialListActivity extends ListActivity implements
 	public static final int mHeaderTextDefaultColor = Color.BLACK;
 	public static final int mHeaderTextHighlightColor = Color.RED;
 
-	String mSortOrderColumn = DatabaseContract.COLUMN_NET;
+	String mSortOrderColumn = DatabaseContract.COLUMN_ROI;
 	String mSortOrderDirection = DatabaseContract.ORDER_ASC;
 	String mSortOrderDefault = mSortOrderColumn + mSortOrderDirection;
 	String mSortOrder = mSortOrderDefault;
@@ -58,6 +58,9 @@ public class StockFinancialListActivity extends ListActivity implements
 	TextView mTextViewRoi = null;
 	TextView mTextViewRoe = null;
 	TextView mTextViewPE = null;
+	TextView mTextViewEP = null;
+	TextView mTextViewEP5 = null;
+	TextView mTextViewEP10 = null;
 	TextView mTextViewPB = null;
 	TextView mTextViewHold = null;
 	TextView mTextViewProfit = null;
@@ -225,6 +228,15 @@ public class StockFinancialListActivity extends ListActivity implements
 			case R.id.pe:
 				mSortOrderColumn = DatabaseContract.COLUMN_PE;
 				break;
+			case R.id.ep:
+				mSortOrderColumn = DatabaseContract.COLUMN_EP;
+				break;
+			case R.id.ep5:
+				mSortOrderColumn = DatabaseContract.COLUMN_EP5;
+				break;
+			case R.id.ep10:
+				mSortOrderColumn = DatabaseContract.COLUMN_EP10;
+				break;
 			case R.id.rate:
 				mSortOrderColumn = DatabaseContract.COLUMN_RATE;
 				break;
@@ -328,6 +340,9 @@ public class StockFinancialListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewRoi, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewRoe, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewPE, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewEP, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewEP, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewEP, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewPB, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewHold, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewProfit, mHeaderTextDefaultColor);
@@ -391,6 +406,21 @@ public class StockFinancialListActivity extends ListActivity implements
 		mTextViewPE = findViewById(R.id.pe);
 		if (mTextViewPE != null) {
 			mTextViewPE.setOnClickListener(this);
+		}
+
+		mTextViewEP = findViewById(R.id.ep);
+		if (mTextViewEP != null) {
+			mTextViewEP.setOnClickListener(this);
+		}
+
+		mTextViewEP5 = findViewById(R.id.ep5);
+		if (mTextViewEP5 != null) {
+			mTextViewEP5.setOnClickListener(this);
+		}
+
+		mTextViewEP10 = findViewById(R.id.ep10);
+		if (mTextViewEP10 != null) {
+			mTextViewEP10.setOnClickListener(this);
 		}
 
 		mTextViewPB = findViewById(R.id.pb);
@@ -515,6 +545,12 @@ public class StockFinancialListActivity extends ListActivity implements
 			setHeaderTextColor(mTextViewRoe, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PE)) {
 			setHeaderTextColor(mTextViewPE, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_EP)) {
+			setHeaderTextColor(mTextViewEP, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_EP5)) {
+			setHeaderTextColor(mTextViewEP5, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_EP10)) {
+			setHeaderTextColor(mTextViewEP10, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PB)) {
 			setHeaderTextColor(mTextViewPB, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_HOLD)) {
@@ -584,6 +620,9 @@ public class StockFinancialListActivity extends ListActivity implements
 				DatabaseContract.COLUMN_ROI,
 				DatabaseContract.COLUMN_ROE,
 				DatabaseContract.COLUMN_PE,
+				DatabaseContract.COLUMN_EP,
+				DatabaseContract.COLUMN_EP5,
+				DatabaseContract.COLUMN_EP10,
 				DatabaseContract.COLUMN_PB,
 				DatabaseContract.COLUMN_HOLD,
 				DatabaseContract.COLUMN_PROFIT,
@@ -612,6 +651,9 @@ public class StockFinancialListActivity extends ListActivity implements
 				R.id.roi,
 				R.id.roe,
 				R.id.pe,
+				R.id.ep,
+				R.id.ep5,
+				R.id.ep10,
 				R.id.pb,
 				R.id.hold,
 				R.id.profit,

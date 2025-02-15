@@ -60,15 +60,15 @@ public class StockPerceptronProvider {
 			mLevelMap = new ArrayMap<>();
 			for (int level = 1; level < Trend.LEVEL_MAX; level++) {
 				mTrendMap = new ArrayMap<>();
-				for (String trend : Trend.TRENDS) {
-					StockPerceptron stockPerceptron = new StockPerceptron(period, level, trend);
+				for (String type : Trend.TREND_TYPES) {
+					StockPerceptron stockPerceptron = new StockPerceptron(period, level, type);
 					if (!mDatabaseManager.isStockPerceptronExist(stockPerceptron)) {
 						stockPerceptron.setCreated(Utility.getCurrentDateTimeString());
 						mDatabaseManager.insertStockPerceptron(stockPerceptron);
 					} else {
 						mDatabaseManager.getStockPerceptron(stockPerceptron);
 					}
-					mTrendMap.put(trend, stockPerceptron);
+					mTrendMap.put(type, stockPerceptron);
 				}
 				mLevelMap.put(level, mTrendMap);
 			}
@@ -96,18 +96,18 @@ public class StockPerceptronProvider {
 		releaseWakeLock();
 	}
 
-	public StockPerceptron getStockPerceptron(String period, int level, String trend) {
-		return mPeriodMap.get(period).get(level).get(trend);
+	public StockPerceptron getStockPerceptron(String period, int level, String type) {
+		return mPeriodMap.get(period).get(level).get(type);
 	}
 
-	public void train(String period, int level, String trend) {
-		if (TextUtils.isEmpty(period) || level < 0 || TextUtils.isEmpty(trend)) {
+	public void train(String period, int level, String type) {
+		if (TextUtils.isEmpty(period) || level < 0 || TextUtils.isEmpty(type)) {
 			return;
 		}
 
-		String keyString = period + level + trend;
+		String keyString = period + level + type;
 		int what = keyString.hashCode();
-		StockPerceptron stockPerceptron = new StockPerceptron(period, level, trend);
+		StockPerceptron stockPerceptron = new StockPerceptron(period, level, type);
 		if (mHandler.hasMessages(keyString.hashCode())) {
 //			Log.d("mHandler.hasMessages " + what + ", skip!");
 		} else {
@@ -138,12 +138,12 @@ public class StockPerceptronProvider {
 
 				String period = stockPerceptron.getPeriod();
 				int level = stockPerceptron.getLevel();
-				String trend = stockPerceptron.getTrend();
-				if (TextUtils.isEmpty(period) || level < 0 || TextUtils.isEmpty(trend)) {
+				String type = stockPerceptron.getType();
+				if (TextUtils.isEmpty(period) || level < 0 || TextUtils.isEmpty(type)) {
 					return;
 				}
 
-				mDatabaseManager.getStockTrendList(period, level, trend, mStockTrendList);
+				mDatabaseManager.getStockTrendList(period, level, type, mStockTrendList);
 				if (mStockTrendList.isEmpty()) {
 					return;
 				}
@@ -153,7 +153,7 @@ public class StockPerceptronProvider {
 					mXArray.add(stockTrend.getPrice());
 					mYArray.add(stockTrend.getNet());
 				}
-				mStockPerceptron = getStockPerceptron(period, level, trend);
+				mStockPerceptron = getStockPerceptron(period, level, type);
 				mStockPerceptron.train(mXArray, mYArray, Config.MAX_ML_TRAIN_TIMES);
 				mStockPerceptron.setModified(Utility.getCurrentDateTimeString());
 				mDatabaseManager.updateStockPerceptron(mStockPerceptron, mStockPerceptron.getContentValuesPerceptron());

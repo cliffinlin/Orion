@@ -367,7 +367,7 @@ public class StockAnalyzer {
 		mContentTitle.setLength(0);
 		mContentText.setLength(0);
 
-		mContentTitle.append(stockTrend.getPeriod()).append(" ").append("Level" + stockTrend.getLevel()).append(" ").append(stockTrend.getTrend()).append(" ");
+		mContentTitle.append(stockTrend.getPeriod()).append(" ").append("Level" + stockTrend.getLevel()).append(" ").append(stockTrend.getType()).append(" ");
 
 		if (TextUtils.isEmpty(mContentTitle)) {
 			return;
@@ -472,7 +472,7 @@ public class StockAnalyzer {
 			intent.putExtra(Constant.EXTRA_STOCK_ID, stockID);
 			intent.putExtra(Constant.EXTRA_STOCK_TREND_PERIOD, mStockTrend.getPeriod());
 			intent.putExtra(Constant.EXTRA_STOCK_TREND_LEVEL, mStockTrend.getLevel());
-			intent.putExtra(Constant.EXTRA_STOCK_TREND_TYPE, mStockTrend.getTrend());
+			intent.putExtra(Constant.EXTRA_STOCK_TREND_TYPE, mStockTrend.getType());
 		}
 		intent.setType("vnd.android-dir/mms-sms");
 		PendingIntent pendingIntent = PendingIntent.getActivity(

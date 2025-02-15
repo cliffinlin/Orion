@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,7 +29,6 @@ import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockDeal;
-import com.android.orion.database.StockQuant;
 import com.android.orion.database.StockTrend;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
@@ -40,7 +38,6 @@ import com.github.mikephil.charting.components.XAxis.XAxisPosition;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.components.YAxis.YAxisLabelPosition;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.BubbleEntry;
 import com.github.mikephil.charting.data.CandleEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.DefaultYAxisValueFormatter;
@@ -148,7 +145,7 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 		mStockTrend.setStockId(intent.getLongExtra(Constant.EXTRA_STOCK_ID, Stock.INVALID_ID));
 		mStockTrend.setPeriod(intent.getStringExtra(Constant.EXTRA_STOCK_TREND_PERIOD));
 		mStockTrend.setLevel(intent.getIntExtra(Constant.EXTRA_STOCK_TREND_LEVEL, 0));
-		mStockTrend.setTrend(intent.getStringExtra(Constant.EXTRA_STOCK_TREND_TYPE));
+		mStockTrend.setType(intent.getStringExtra(Constant.EXTRA_STOCK_TREND_TYPE));
 
 		if (mStockIDList != null && !mStockIDList.isEmpty()) {
 			mHandler.sendEmptyMessage(MESSAGE_LOAD_STOCK_LIST);

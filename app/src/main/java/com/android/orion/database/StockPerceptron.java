@@ -22,7 +22,7 @@ public class StockPerceptron extends DatabaseTable {
 
 	private String mPeriod;
 	private int mLevel;
-	private String mTrend;
+	private String mType;
 
 	private double mDelta;
 	private int mTimes;
@@ -33,11 +33,11 @@ public class StockPerceptron extends DatabaseTable {
 		init();
 	}
 
-	public StockPerceptron(String period, int level, String trend) {
+	public StockPerceptron(String period, int level, String type) {
 		init();
 		setPeriod(period);
 		setLevel(level);
-		setTrend(trend);
+		setType(type);
 	}
 
 	public StockPerceptron(StockPerceptron stockPerceptron) {
@@ -49,8 +49,8 @@ public class StockPerceptron extends DatabaseTable {
 	}
 
 	public boolean isEmpty() {
-		return (mLevel == 0) && TextUtils.isEmpty(mPeriod)
-				&& TextUtils.isEmpty(mTrend);
+		return (mLevel == Trend.LEVEL_NONE) && TextUtils.isEmpty(mPeriod)
+				&& TextUtils.isEmpty(mType);
 	}
 
 	void init() {
@@ -60,7 +60,7 @@ public class StockPerceptron extends DatabaseTable {
 
 		mPeriod = "";
 		mLevel = Trend.LEVEL_NONE;
-		mTrend = Trend.TREND_NONE;
+		mType = Trend.TREND_NONE;
 		mDelta = 0.0;
 		mTimes = 0;
 	}
@@ -70,7 +70,7 @@ public class StockPerceptron extends DatabaseTable {
 		super.getContentValues(contentValues);
 		contentValues.put(DatabaseContract.COLUMN_PERIOD, mPeriod);
 		contentValues.put(DatabaseContract.COLUMN_LEVEL, mLevel);
-		contentValues.put(DatabaseContract.COLUMN_TREND, mTrend);
+		contentValues.put(DatabaseContract.COLUMN_TYPE, mType);
 		contentValues.put(DatabaseContract.COLUMN_WEIGHT, mLinearRegression.slope);
 		contentValues.put(DatabaseContract.COLUMN_BIAS, mLinearRegression.bias);
 		contentValues.put(DatabaseContract.COLUMN_ERROR, mLinearRegression.mse);
@@ -108,7 +108,7 @@ public class StockPerceptron extends DatabaseTable {
 
 		setPeriod(stockPerceptron.mPeriod);
 		setLevel(stockPerceptron.mLevel);
-		setTrend(stockPerceptron.mTrend);
+		setType(stockPerceptron.mType);
 		setWeight(stockPerceptron.mLinearRegression.slope);
 		setBias(stockPerceptron.mLinearRegression.bias);
 		setError(stockPerceptron.mLinearRegression.mse);
@@ -132,7 +132,7 @@ public class StockPerceptron extends DatabaseTable {
 
 		setPeriod(cursor);
 		setLevel(cursor);
-		setTrend(cursor);
+		setType(cursor);
 		setWeight(cursor);
 		setBias(cursor);
 		setError(cursor);
@@ -178,21 +178,21 @@ public class StockPerceptron extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_LEVEL)));
 	}
 
-	public String getTrend() {
-		return mTrend;
+	public String getType() {
+		return mType;
 	}
 
-	public void setTrend(String trend) {
-		mTrend = trend;
+	public void setType(String type) {
+		mType = type;
 	}
 
-	void setTrend(Cursor cursor) {
+	void setType(Cursor cursor) {
 		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
-		setTrend(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_TREND)));
+		setType(cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_TYPE)));
 	}
 
 	public void setWeight(double weight) {
@@ -364,7 +364,7 @@ public class StockPerceptron extends DatabaseTable {
 	public String toDescriptionString() {
 		return  mPeriod + Constant.TAB
 				+ mLevel + Constant.TAB
-				+ mTrend + Constant.TAB
+				+ mType + Constant.TAB
 				+ Utility.Round(mLinearRegression.slope, DESCRIPTION_ROUND_N) + Constant.TAB
 				+ Utility.Round(mLinearRegression.bias, DESCRIPTION_ROUND_N) + Constant.TAB
 				+ Utility.Round(mLinearRegression.mse, DESCRIPTION_ROUND_N) + Constant.TAB
@@ -374,7 +374,7 @@ public class StockPerceptron extends DatabaseTable {
 	public String toLogString() {
 		return  "mPeriod=" + mPeriod + Constant.TAB
 				+ "mLevel=" + mLevel + Constant.TAB
-				+ "mTrend=" + mTrend + Constant.TAB
+				+ "mType=" + mType + Constant.TAB
 				+ "mWeight=" + mLinearRegression.slope + Constant.TAB
 				+ "mBias=" + mLinearRegression.bias + Constant.TAB
 				+ "mError=" + mLinearRegression.mse + Constant.TAB

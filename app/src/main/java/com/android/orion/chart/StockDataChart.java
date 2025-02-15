@@ -8,9 +8,7 @@ import android.text.TextUtils;
 import com.android.orion.config.Config;
 import com.android.orion.data.Trend;
 import com.android.orion.database.Stock;
-import com.android.orion.database.StockData;
 import com.android.orion.database.StockDeal;
-import com.android.orion.database.StockQuant;
 import com.android.orion.database.StockTrend;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Utility;
@@ -376,7 +374,7 @@ public class StockDataChart {
 
 		label = "                                                     " + " ";
 		if (mNotifyTrend) {
-			label += "Trend:" + "\t\t" + "Level" + mStockTrend.getLevel() + "\t\t" + mStockTrend.getTrend();
+			label += "Trend:" + "\t\t" + "Level" + mStockTrend.getLevel() + "\t\t" + mStockTrend.getType();
 		} else {
 			label += "Action:" + "\t\t" + action;
 		}

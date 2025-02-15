@@ -77,7 +77,7 @@ public class StockTrendChartListActivity extends BaseActivity implements
 					mStockPerceptron.setId(mIntent.getLongExtra(Constant.EXTRA_STOCK_PERCEPTRON_ID,
 							DatabaseContract.INVALID_ID));
 					mDatabaseManager.getStockPerceptronById(mStockPerceptron);
-					mStockPerceptron = StockPerceptronProvider.getInstance().getStockPerceptron(mStockPerceptron.getPeriod(), mStockPerceptron.getLevel(), mStockPerceptron.getTrend());
+					mStockPerceptron = StockPerceptronProvider.getInstance().getStockPerceptron(mStockPerceptron.getPeriod(), mStockPerceptron.getLevel(), mStockPerceptron.getType());
 					mDescription = mStockPerceptron.toDescriptionString();
 					mLoaderManager.initLoader(LOADER_ID_TREND_LIST, null, StockTrendChartListActivity.this);
 					break;
@@ -244,7 +244,7 @@ public class StockTrendChartListActivity extends BaseActivity implements
 	CursorLoader getCursorLoader() {
 		String selection = DatabaseContract.COLUMN_PERIOD + " = '" + mStockPerceptron.getPeriod() + "'"
 				+ " AND " + DatabaseContract.COLUMN_LEVEL + " = " + mStockPerceptron.getLevel()
-				+ " AND " + DatabaseContract.COLUMN_TREND + " = '" + mStockPerceptron.getTrend() + "'";
+				+ " AND " + DatabaseContract.COLUMN_TYPE + " = '" + mStockPerceptron.getType() + "'";
 
 		CursorLoader loader = new CursorLoader(this, DatabaseContract.StockTrend.CONTENT_URI,
 				DatabaseContract.StockTrend.PROJECTION_ALL, selection, null,

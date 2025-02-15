@@ -55,11 +55,6 @@ public class Stock extends DatabaseTable {
 	private String mDate;
 	private String mTime;
 
-	private double mThreshold;
-	private long mQuantVolume;
-	private double mQuantProfit;
-	private double mQuantProfitMargin;
-
 	private long mHold;
 	private double mCost;
 	private double mProfit;
@@ -82,6 +77,9 @@ public class Stock extends DatabaseTable {
 	private double mRoi;
 	private double mRoe;
 	private double mPe;
+	private double mEp;
+	private double mEp5;
+	private double mEp10;
 	private double mPb;
 	private double mRate;
 	private double mDividend;
@@ -130,11 +128,6 @@ public class Stock extends DatabaseTable {
 		mDate = "";
 		mTime = "";
 
-		mThreshold = 0;
-		mQuantVolume = 0;
-		mQuantProfit = 0;
-		mQuantProfitMargin = 0;
-
 		mCost = 0;
 		mProfit = 0;
 		mBonus = 0;
@@ -156,6 +149,9 @@ public class Stock extends DatabaseTable {
 		mRoi = 0;
 		mRoe = 0;
 		mPe = 0;
+		mEp = 0;
+		mEp5 = 0;
+		mEp10 = 0;
 		mPb = 0;
 		mRate = 0;
 		mDividend = 0;
@@ -192,8 +188,6 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_DAY, mDay.getAction());
 		contentValues.put(DatabaseContract.COLUMN_WEEK, mWeek.getAction());
 		contentValues.put(DatabaseContract.COLUMN_MONTH, mMonth.getAction());
-		contentValues.put(DatabaseContract.COLUMN_QUANT_PROFIT, mQuantProfit);
-		contentValues.put(DatabaseContract.COLUMN_QUANT_PROFIT_MARGIN, mQuantProfitMargin);
 
 		contentValues.put(DatabaseContract.COLUMN_HOLD, mHold);
 		contentValues.put(DatabaseContract.COLUMN_COST, mCost);
@@ -217,6 +211,9 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_ROI, mRoi);
 		contentValues.put(DatabaseContract.COLUMN_ROE, mRoe);
 		contentValues.put(DatabaseContract.COLUMN_PE, mPe);
+		contentValues.put(DatabaseContract.COLUMN_EP, mEp);
+		contentValues.put(DatabaseContract.COLUMN_EP5, mEp5);
+		contentValues.put(DatabaseContract.COLUMN_EP10, mEp10);
 		contentValues.put(DatabaseContract.COLUMN_PB, mPb);
 		contentValues.put(DatabaseContract.COLUMN_RATE, mRate);
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND, mDividend);
@@ -260,8 +257,6 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
 
 		contentValues.put(DatabaseContract.COLUMN_FLAG, mFlag);
-		contentValues.put(DatabaseContract.COLUMN_THRESHOLD, mThreshold);
-		contentValues.put(DatabaseContract.COLUMN_QUANT_VOLUME, mQuantVolume);
 
 		return contentValues;
 	}
@@ -298,11 +293,6 @@ public class Stock extends DatabaseTable {
 		mWeek.setAction(stock.mWeek.getAction());
 		mMonth.setAction(stock.mMonth.getAction());
 
-		setThreshold(stock.mThreshold);
-		setQuantVolume(stock.mQuantVolume);
-		setQuantProfit(stock.mQuantProfit);
-		setQuantProfitMargin(stock.mQuantProfitMargin);
-
 		setHold(stock.mHold);
 		setCost(stock.mCost);
 		setProfit(stock.mProfit);
@@ -325,6 +315,9 @@ public class Stock extends DatabaseTable {
 		setRoi(stock.mRoi);
 		setRoe(stock.mRoe);
 		setPe(stock.mPe);
+		setEp(stock.mEp);
+		setEp5(stock.mEp5);
+		setEp10(stock.mEp10);
 		setPb(stock.mPb);
 		setRate(stock.mRate);
 		setDividend(stock.mDividend);
@@ -364,10 +357,6 @@ public class Stock extends DatabaseTable {
 		mDay.setAction(cursor);
 		mWeek.setAction(cursor);
 		mMonth.setAction(cursor);
-		setThreshold(cursor);
-		setQuantVolume(cursor);
-		setQuantProfit(cursor);
-		setQuantProfitMargin(cursor);
 		setHold(cursor);
 		setCost(cursor);
 		setProfit(cursor);
@@ -391,6 +380,9 @@ public class Stock extends DatabaseTable {
 		setRate(cursor);
 		setRoe(cursor);
 		setPe(cursor);
+		setEp(cursor);
+		setEp5(cursor);
+		setEp10(cursor);
 		setPb(cursor);
 		setDividend(cursor);
 		setYield(cursor);
@@ -618,74 +610,6 @@ public class Stock extends DatabaseTable {
 
 		setTime(cursor.getString(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_TIME)));
-	}
-
-	public double getThreshold() {
-		return mThreshold;
-	}
-
-	public void setThreshold(double threshold) {
-		mThreshold = threshold;
-	}
-
-	void setThreshold(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setThreshold(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_THRESHOLD)));
-	}
-
-	public long getQuantVolume() {
-		return mQuantVolume;
-	}
-
-	public void setQuantVolume(long quantVolume) {
-		mQuantVolume = quantVolume;
-	}
-
-	void setQuantVolume(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setQuantVolume(cursor.getLong(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_QUANT_VOLUME)));
-	}
-
-	public double getQuantProfit() {
-		return mQuantProfit;
-	}
-
-	public void setQuantProfit(double quantProfit) {
-		mQuantProfit = quantProfit;
-	}
-
-	void setQuantProfit(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setQuantProfit(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_QUANT_PROFIT)));
-	}
-
-	public double getQuantProfitMargin() {
-		return mQuantProfitMargin;
-	}
-
-	public void setQuantProfitMargin(double quantProfitMargin) {
-		mQuantProfitMargin = quantProfitMargin;
-	}
-
-	void setQuantProfitMargin(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setQuantProfitMargin(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_QUANT_PROFIT_MARGIN)));
 	}
 
 	public long getHold() {
@@ -1082,6 +1006,57 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_PE)));
 	}
 
+	public double getEp() {
+		return mEp;
+	}
+
+	public void setEp(double ep) {
+		mEp = ep;
+	}
+
+	void setEp(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setEp(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_EP)));
+	}
+
+	public double getEp5() {
+		return mEp5;
+	}
+
+	public void setEp5(double ep5) {
+		mEp5 = ep5;
+	}
+
+	void setEp5(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setEp5(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_EP5)));
+	}
+
+	public double getEp10() {
+		return mEp;
+	}
+
+	public void setEp10(double ep10) {
+		mEp10 = ep10;
+	}
+
+	void setEp10(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setEp10(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_EP10)));
+	}
+
 	public double getPb() {
 		return mPb;
 	}
@@ -1471,6 +1446,11 @@ public class Stock extends DatabaseTable {
 		}
 
 		mPe = Utility.Round(mPrice / mNetProfitPerShareInYear);
+
+		double ep = 1.0 + mRoe;
+		mEp = Utility.Round(ep);
+		mEp5 = Utility.Round(Math.pow(ep, 5));
+		mEp10 = Utility.Round(Math.pow(ep, 10));
 	}
 
 	public void setupRoi() {

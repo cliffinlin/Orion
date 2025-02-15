@@ -50,6 +50,33 @@
         android:textSize="18sp" />
 
     <TextView
+        android:id="@+id/ep"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/ep"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/ep5"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/ep5"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/ep10"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/ep10"
+        android:textSize="18sp" />
+
+    <TextView
         android:id="@+id/pb"
         android:layout_width="80dp"
         android:layout_height="40dp"
