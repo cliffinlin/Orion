@@ -38,6 +38,9 @@ public class Constant {
 	public static final String EXTRA_STOCK_ID_LIST = "stock_id_list";
 	public static final String EXTRA_STOCK_LIST_SORT_ORDER = "stock_list_sort_order";
 
+	public static final int DOUBLE_FIXED_DECIMAL_2 = 2;
+	public static final int DOUBLE_FIXED_DECIMAL_4 = 4;
+
 	public static final int SEASONS_IN_A_YEAR = 4;
 
 	public static final int MIN5 = 5;

@@ -18,7 +18,6 @@ public class Config {
 	public static final int COLOR_RGB_RED = Color.rgb(255, 50, 50);
 	public static final int COLOR_RGB_GREEN = Color.rgb(50, 128, 50);
 
-	public static final int DOUBLE_FIXED_DECIMAL = 2;
 	public static final int SERVICE_NOTIFICATION_ID = 600000;
 
 	public static final int MAX_CONTENT_LENGTH_MIN60 = 60 * 4;

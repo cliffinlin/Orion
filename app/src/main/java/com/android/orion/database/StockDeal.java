@@ -421,11 +421,11 @@ public class StockDeal extends DatabaseTable {
 		}
 
 		if ((mBuy > 0) && (mSell > 0)) {
-			mNet = Utility.Round(100 * ((mSell - mBuy) * Math.abs(mVolume) - mFee) / Math.abs(mVolume) / mBuy);
+			mNet = Utility.Round2(100 * ((mSell - mBuy) * Math.abs(mVolume) - mFee) / Math.abs(mVolume) / mBuy);
 		} else if (mBuy > 0) {
-			mNet = Utility.Round(100 * ((mPrice - mBuy) * Math.abs(mVolume) - mFee) / Math.abs(mVolume) / mBuy);
+			mNet = Utility.Round2(100 * ((mPrice - mBuy) * Math.abs(mVolume) - mFee) / Math.abs(mVolume) / mBuy);
 		} else if (mSell > 0) {
-			mNet = Utility.Round(100 * (mSell - mPrice) / mSell);
+			mNet = Utility.Round2(100 * (mSell - mPrice) / mSell);
 		}
 	}
 
@@ -435,7 +435,7 @@ public class StockDeal extends DatabaseTable {
 			return;
 		}
 
-		mValue = Utility.Round(mBuy * Math.abs(mVolume));
+		mValue = Utility.Round2(mBuy * Math.abs(mVolume));
 	}
 
 	public void setupBuyFee() {
@@ -459,7 +459,7 @@ public class StockDeal extends DatabaseTable {
 			buyCommissionFee = BUY_COMMISSION_FEE_MIN;
 		}
 
-		mFee = Utility.Round(buyStampDuty + buyTransferFee + buyCommissionFee);
+		mFee = Utility.Round2(buyStampDuty + buyTransferFee + buyCommissionFee);
 	}
 
 	public void setupSellFee(ArrayList<ShareBonus> shareBonusList) {
@@ -499,7 +499,7 @@ public class StockDeal extends DatabaseTable {
 
 		dividendIncomeTax = getDividendIncomeTax(shareBonusList);
 
-		mFee = Utility.Round(sellStampDuty + sellTransferFee + sellCommissionFee + dividendIncomeTax);
+		mFee = Utility.Round2(sellStampDuty + sellTransferFee + sellCommissionFee + dividendIncomeTax);
 	}
 
 	double getDividendIncomeTax(ArrayList<ShareBonus> shareBonusList) {
@@ -635,7 +635,7 @@ public class StockDeal extends DatabaseTable {
 			}
 		}
 
-		mFee = Utility.Round(buyStampDuty + sellStampDuty
+		mFee = Utility.Round2(buyStampDuty + sellStampDuty
 				+ buyTransferFee + sellTransferFee
 				+ buyCommissionFee + sellCommissionFee
 				+ dividendIncomeTax);
@@ -648,11 +648,11 @@ public class StockDeal extends DatabaseTable {
 		}
 
 		if ((mBuy > 0) && (mSell > 0)) {
-			mProfit = Utility.Round((mSell - mBuy) * Math.abs(mVolume) - mFee);
+			mProfit = Utility.Round2((mSell - mBuy) * Math.abs(mVolume) - mFee);
 		} else if (mBuy > 0) {
-			mProfit = Utility.Round((mPrice - mBuy) * Math.abs(mVolume) - mFee);
+			mProfit = Utility.Round2((mPrice - mBuy) * Math.abs(mVolume) - mFee);
 		} else if (mSell > 0) {
-			mProfit = Utility.Round((mPrice - mSell) * Math.abs(mVolume));
+			mProfit = Utility.Round2((mPrice - mSell) * Math.abs(mVolume));
 		}
 	}
 
@@ -662,7 +662,7 @@ public class StockDeal extends DatabaseTable {
 			return;
 		}
 
-		mBonus = Utility.Round(dividend / 10.0 * Math.abs(mVolume));
+		mBonus = Utility.Round2(dividend / 10.0 * Math.abs(mVolume));
 	}
 
 	public void setupYield(double dividend) {
@@ -672,9 +672,9 @@ public class StockDeal extends DatabaseTable {
 		}
 
 		if (mBuy > 0) {
-			mYield = Utility.Round(100.0 * dividend / 10.0 / mBuy);
+			mYield = Utility.Round2(100.0 * dividend / 10.0 / mBuy);
 		} else {
-			mYield = Utility.Round(100.0 * dividend / 10.0 / mPrice);
+			mYield = Utility.Round2(100.0 * dividend / 10.0 / mPrice);
 		}
 	}
 

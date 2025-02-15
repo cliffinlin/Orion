@@ -5,8 +5,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.text.TextUtils;
 
-import com.android.orion.config.Config;
 import com.android.orion.database.Stock;
+import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 
 import org.json.JSONException;
@@ -227,13 +227,18 @@ public class Utility {
 		return result;
 	}
 
-	public static double Round(double v, double n) {
+	public static double Round2(double v, double n) {
 		double p = Math.pow(10, n);
 		return (Math.round(v * p)) / p;
 	}
 
-	public static double Round(double v) {
-		double p = Math.pow(10, Config.DOUBLE_FIXED_DECIMAL);
+	public static double Round2(double v) {
+		double p = Math.pow(10, Constant.DOUBLE_FIXED_DECIMAL_2);
+		return (Math.round(v * p)) / p;
+	}
+
+	public static double Round4(double v) {
+		double p = Math.pow(10, Constant.DOUBLE_FIXED_DECIMAL_4);
 		return (Math.round(v * p)) / p;
 	}
 

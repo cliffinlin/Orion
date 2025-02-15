@@ -460,8 +460,8 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 					if (prevPrice > 0) {
 						net = 100.0 * (price - prevPrice) / prevPrice;
 					}
-					index.setPrice(Utility.Round(price));
-					index.setNet(Utility.Round(net));
+					index.setPrice(Utility.Round2(price));
+					index.setNet(Utility.Round2(net));
 				}
 			}
 

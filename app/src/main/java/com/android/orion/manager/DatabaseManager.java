@@ -1391,8 +1391,8 @@ public class DatabaseManager implements StockListener {
 
 			stock.setHold(hold);
 			if (hold > 0) {
-				stock.setCost(Utility.Round(cost));
-				stock.setProfit(Utility.Round(hold * stock.getNetProfitPerShareInYear()));
+				stock.setCost(Utility.Round2(cost));
+				stock.setProfit(Utility.Round2(hold * stock.getNetProfitPerShareInYear()));
 				stock.setValuation(hold * stock.getPrice());
 			}
 		} catch (Exception e) {

@@ -396,7 +396,7 @@ public class StockDataChart {
 		cost = stock.getCost();
 
 		if ((cost > 0) && (stock.getHold() > 0)) {
-			net = Utility.Round(100 * (stock.getPrice() - cost) / cost);
+			net = Utility.Round2(100 * (stock.getPrice() - cost) / cost);
 			color = Color.BLUE;
 			label = "                                                     "
 					+ " " + cost + " " + net + "%";

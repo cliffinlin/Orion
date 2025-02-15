@@ -330,7 +330,7 @@ public class StockTrend extends DatabaseTable {
 			mNet = 0;
 			return;
 		}
-		mNet = Utility.Round(100 * (current - mPrice) / mPrice);
+		mNet = Utility.Round2(100 * (current - mPrice) / mPrice);
 	}
 
 	public String toString() {

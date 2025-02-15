@@ -160,7 +160,7 @@ public class FinancialAnalyzer {
 				continue;
 			}
 
-			rate = Utility.Round(stockFinancial.getNetProfitPerShareInYear()
+			rate = Utility.Round2(stockFinancial.getNetProfitPerShareInYear()
 					/ prev.getNetProfitPerShareInYear());
 
 			stockFinancial.setRate(rate);
@@ -184,7 +184,7 @@ public class FinancialAnalyzer {
 				continue;
 			}
 
-			roe = Utility.Round(
+			roe = Utility.Round2(
 					100.0 * stockFinancial.getNetProfitPerShareInYear()
 							/ prev.getBookValuePerShare());
 			if (roe < 0) {
@@ -273,7 +273,7 @@ public class FinancialAnalyzer {
 			if (i == 0) {
 				stock.setRDate(shareBonus.getRDate());
 			}
-			stock.setDividend(Utility.Round(totalDivident));
+			stock.setDividend(Utility.Round2(totalDivident));
 			stock.setupBonus();
 			stock.setupYield();
 			stock.setupDividendRatio();

@@ -1304,7 +1304,7 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-		mMarketValue = Utility.Round(mPrice * mTotalShare);
+		mMarketValue = Utility.Round2(mPrice * mTotalShare);
 	}
 
 	public void setupNetProfitMargin() {
@@ -1313,7 +1313,7 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-		mNetProfitMargin = Utility.Round(100.0 * mNetProfitInYear / mMainBusinessIncomeInYear);
+		mNetProfitMargin = Utility.Round4(mNetProfitInYear / mMainBusinessIncomeInYear);
 	}
 
 	public void setupNetProfitPerShare() {
@@ -1322,7 +1322,7 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-		mNetProfitPerShare = Utility.Round(mNetProfit / mTotalShare);
+		mNetProfitPerShare = Utility.Round2(mNetProfit / mTotalShare);
 	}
 
 	public void setupNetProfitPerShareInYear(
@@ -1364,7 +1364,7 @@ public class Stock extends DatabaseTable {
 			mNetProfitPerShareInYear += netProfitPerShare;
 		}
 
-		mNetProfitPerShareInYear = Utility.Round(mNetProfitPerShareInYear);
+		mNetProfitPerShareInYear = Utility.Round2(mNetProfitPerShareInYear);
 	}
 
 	public void setupRate(
@@ -1405,7 +1405,7 @@ public class Stock extends DatabaseTable {
 		}
 
 		mRate = mNetProfitPerShareInYear / netProfitPerShareLastYear;
-		mRate = Utility.Round(mRate);
+		mRate = Utility.Round2(mRate);
 	}
 
 	public void setupDebtToNetAssetsRatio(ArrayList<StockFinancial> stockFinancialList) {
@@ -1415,7 +1415,7 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-		mDebtToNetAssetsRatio = Utility.Round(stockFinancialList.get(0).getDebtToNetAssetsRatio());
+		mDebtToNetAssetsRatio = Utility.Round2(stockFinancialList.get(0).getDebtToNetAssetsRatio());
 	}
 
 	public void setupRoe(ArrayList<StockFinancial> stockFinancialList) {
@@ -1435,7 +1435,7 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-		mRoe = Utility.Round(100.0 * mNetProfitPerShareInYear
+		mRoe = Utility.Round4(mNetProfitPerShareInYear
 				/ bookValuePerShare);
 	}
 
@@ -1445,12 +1445,12 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-		mPe = Utility.Round(mPrice / mNetProfitPerShareInYear);
+		mPe = Utility.Round2(mPrice / mNetProfitPerShareInYear);
 
 		double ep = 1.0 + mRoe;
-		mEp = Utility.Round(ep);
-		mEp5 = Utility.Round(Math.pow(ep, 5));
-		mEp10 = Utility.Round(Math.pow(ep, 10));
+		mEp = Utility.Round2(ep);
+		mEp5 = Utility.Round2(investmentReturn(5));
+		mEp10 = Utility.Round2(investmentReturn(10));
 	}
 
 	public void setupRoi() {
@@ -1462,7 +1462,7 @@ public class Stock extends DatabaseTable {
 //		mRoi = Utility.Round(mRoe * (100.0 * 1.0 / mPe + mYield) * mNetProfitMargin * mRate * ROI_COEFFICIENT,
 //				Constant.DOUBLE_FIXED_DECIMAL);
 //		mRoi = Utility.Round(mRoe * ( mNetProfitPerShareInYear / mPrice) * (mNetProfitInYear / mMainBusinessIncomeInYear) * ROI_COEFFICIENT);
-		mRoi = Utility.Round(mRoe * (mNetProfitPerShareInYear / mPrice) * (mNetProfitInYear / mMainBusinessIncomeInYear) * mRate * mYield * ROI_COEFFICIENT);
+		mRoi = Utility.Round2(mRoe * (mNetProfitPerShareInYear / mPrice) * (mNetProfitInYear / mMainBusinessIncomeInYear) * mRate * mYield * ROI_COEFFICIENT);
 	}
 
 	public void setupPb() {
@@ -1471,7 +1471,7 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-		mPb = Utility.Round(mPrice / mBookValuePerShare);
+		mPb = Utility.Round2(mPrice / mBookValuePerShare);
 	}
 
 	public void setupBonus() {
@@ -1494,7 +1494,7 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-		mYield = Utility.Round(100.0 * mDividend / 10.0 / mPrice);
+		mYield = Utility.Round2(100.0 * mDividend / 10.0 / mPrice);
 	}
 
 	public void setupDividendRatio() {
@@ -1504,6 +1504,68 @@ public class Stock extends DatabaseTable {
 		}
 
 		mDividendRatio = (mDividend / 10.0) / mNetProfitPerShareInYear;
-		mDividendRatio = Utility.Round(mDividendRatio);
+		mDividendRatio = Utility.Round2(mDividendRatio);
+	}
+
+	public double investmentReturn(int totalYears) {
+		// 初始参数设置
+		double pe = mPe;//21.61;
+		double roe = mRoe;//0.3936; // ROE 转换为小数形式
+		double dividendPayoutRatio = mDividendRatio;//0.8; // 分红股息率转换为小数形式
+		double initialStockPrice = mPrice;//1475;
+		int initialShares = 1000;
+//			int totalYears = 10;
+
+		// 初始投资
+		double initialInvestment = initialShares * initialStockPrice;
+
+		// 计算初始每股净资产（假设初始股价合理反映净资产）
+		double initialEPS = initialStockPrice / pe;
+		double initialBookValuePerShare = mBookValuePerShare;//initialEPS / roe;
+		double totalBookValue = initialBookValuePerShare * initialShares;
+		double currentShares = initialShares;
+
+		// 逐年模拟红利再投资
+		for (int year = 1; year <= totalYears; year++) {
+			// 根据 ROE 计算当年的净利润
+			double netProfit = totalBookValue * roe;
+
+			// 计算每股收益
+			double eps = netProfit / currentShares;
+
+			// 计算每股分红
+			double dividendPerShare = eps * dividendPayoutRatio;
+
+			// 计算当年的红利
+			double totalDividend = currentShares * dividendPerShare;
+
+			// 计算红利可以购买的股票数量
+			double additionalShares = totalDividend / initialStockPrice;
+
+			// 更新股票数量
+			currentShares += additionalShares;
+
+			// 更新总净资产，减去分红部分
+			totalBookValue = totalBookValue + netProfit - totalDividend;
+		}
+
+		// 计算最终的每股净资产
+		double finalBookValuePerShare = totalBookValue / currentShares;
+
+		// 计算最终的股价（基于 PE 保持不变）
+		double finalStockPrice = finalBookValuePerShare * roe * pe;
+
+		// 计算总价值
+		double finalValue = currentShares * finalStockPrice;
+
+		// 计算投资回报率
+		double returnRate = finalValue / initialInvestment;
+
+		// 计算年化投资回报率 (IRR)
+		double irr = Math.pow(finalValue / initialInvestment, 1.0 / totalYears) - 1;
+
+		System.out.printf("红利再投%d年的投资回报率为:%.2f%% 年化:%.2f%%\n", totalYears, returnRate * 100, irr * 100);
+
+		return returnRate;
 	}
 }
