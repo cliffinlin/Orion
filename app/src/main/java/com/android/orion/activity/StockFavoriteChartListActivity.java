@@ -24,7 +24,6 @@ import android.widget.ArrayAdapter;
 import com.android.orion.R;
 import com.android.orion.chart.ChartSyncHelper;
 import com.android.orion.chart.StockDataChart;
-import com.android.orion.config.Config;
 import com.android.orion.data.Period;
 import com.android.orion.data.Trend;
 import com.android.orion.database.DatabaseContract;
@@ -32,6 +31,7 @@ import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockQuant;
+import com.android.orion.database.StockTrend;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.github.mikephil.charting.charts.CombinedChart;
@@ -64,12 +64,7 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 	public static final int MESSAGE_REFRESH = 0;
 	public static final int MESSAGE_LOAD_STOCK_LIST = 1;
 
-	boolean mKeyDisplayThreshold = false;
-	boolean mKeyDisplayLatest = true;
-	boolean mKeyDisplayCost = true;
 	boolean mKeyDisplayDeal = false;
-	boolean mKeyDisplayQuant = false;
-	boolean mKeyDisplayBonus = false;
 
 	int mStockListIndex = 0;
 	Menu mMenu = null;
@@ -79,6 +74,7 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 	ArrayList<String> mStockIDList = new ArrayList<>();
 
 	StockData mStockData = new StockData();
+	StockTrend mStockTrend = new StockTrend();
 
 	PullToRefreshListView mListView = null;
 	StockDataChartArrayAdapter mStockDataChartArrayAdapter = null;
@@ -87,7 +83,6 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 	ArrayList<StockDataChartItemSub> mStockDataChartItemSubList = null;
 	ArrayList<StockDataChart> mStockDataChartList = null;
 	ArrayList<StockDeal> mStockDealList = new ArrayList<>();
-	ArrayList<StockQuant> mStockQuantList = new ArrayList<>();
 	ArrayMap<Integer, CombinedChart> mCombinedChartMap = new ArrayMap<>();
 	ChartSyncHelper mChartSyncHelper = new ChartSyncHelper();
 
@@ -150,16 +145,17 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 
 		mStock.setId(intent.getLongExtra(Constant.EXTRA_STOCK_ID, Stock.INVALID_ID));
 		mStockIDList = intent.getStringArrayListExtra(Constant.EXTRA_STOCK_ID_LIST);
+		mStockTrend.setStockId(intent.getLongExtra(Constant.EXTRA_STOCK_ID, Stock.INVALID_ID));
+		mStockTrend.setPeriod(intent.getStringExtra(Constant.EXTRA_STOCK_TREND_PERIOD));
+		mStockTrend.setLevel(intent.getIntExtra(Constant.EXTRA_STOCK_TREND_LEVEL, 0));
+		mStockTrend.setTrend(intent.getStringExtra(Constant.EXTRA_STOCK_TREND_TYPE));
 
 		if (mStockIDList != null && !mStockIDList.isEmpty()) {
 			mHandler.sendEmptyMessage(MESSAGE_LOAD_STOCK_LIST);
 		}
 
 		mSortOrder = intent.getStringExtra(Constant.EXTRA_STOCK_LIST_SORT_ORDER);
-
 		mKeyDisplayDeal = intent.getBooleanExtra(Constant.EXTRA_STOCK_DEAL, false);
-		mKeyDisplayQuant = intent.getBooleanExtra(Constant.EXTRA_STOCK_QUANT, false);
-		mKeyDisplayBonus = intent.getBooleanExtra(Constant.EXTRA_STOCK_BONUS, false);
 	}
 
 	@Override
@@ -338,7 +334,7 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 		}
 
 		for (int i = 0; i < Period.PERIODS.length; i++) {
-			mStockDataChartList.add(new StockDataChart(mStock, Period.PERIODS[i]));
+			mStockDataChartList.add(new StockDataChart(mStock, Period.PERIODS[i], mStockTrend));
 			mStockDataChartItemMainList.add(new StockDataChartItemMain(
 					mStockDataChartList.get(i)));
 			mStockDataChartItemSubList.add(new StockDataChartItemSub(
@@ -490,28 +486,6 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 						stockDataChart.mXValues.add(dateString);
 					}
 
-					if (mKeyDisplayThreshold) {
-						if (mStockData.getNaturalRally() > 0) {
-							BubbleEntry entry = new BubbleEntry(index, (float) mStockData.getNaturalRally(), 0);
-							stockDataChart.mNaturalRallyList.add(entry);
-						}
-
-						if (mStockData.getUpwardTrend() > 0) {
-							BubbleEntry entry = new BubbleEntry(index, (float) mStockData.getUpwardTrend(), 0);
-							stockDataChart.mUpwardTrendList.add(entry);
-						}
-
-						if (mStockData.getDownwardTrend() > 0) {
-							BubbleEntry entry = new BubbleEntry(index, (float) mStockData.getDownwardTrend(), 0);
-							stockDataChart.mDownwardTrendList.add(entry);
-						}
-
-						if (mStockData.getNaturalReaction() > 0) {
-							BubbleEntry entry = new BubbleEntry(index, (float) mStockData.getNaturalReaction(), 0);
-							stockDataChart.mNaturalReactionList.add(entry);
-						}
-					}
-
 					if (Setting.getDisplayCandle()) {
 						CandleEntry candleEntry = new CandleEntry(index,
 								(float) mStockData.getCandlestick().getHigh(),
@@ -635,10 +609,12 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 
 			if (mKeyDisplayDeal) {
 				loadStockDealList();
+			} else {
+				mStockDealList.clear();
 			}
 
 			stockDataChart.updateDescription(mStock);
-			stockDataChart.updateLimitLines(mStock, mStockDealList, mStockQuantList, mKeyDisplayLatest, mKeyDisplayCost, mKeyDisplayDeal, mKeyDisplayQuant);
+			stockDataChart.updateLimitLines(mStock, mStockDealList);
 			stockDataChart.setMainChartData(mContext);
 			stockDataChart.setSubChartData(mContext);
 
@@ -657,36 +633,6 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 		String sortOrder = DatabaseContract.COLUMN_BUY + " DESC ";
 
 		mDatabaseManager.getStockDealList(mStockDealList, selection, sortOrder);
-	}
-
-	void loadStockQuantList() {
-		ArrayMap<String, StockQuant> stockquantMap = new ArrayMap<>();
-
-		String selection = DatabaseContract.COLUMN_SE + " = " + "'" + mStock.getSE()
-				+ "'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "'"
-				+ mStock.getCode() + "'";
-		String sortOrder = DatabaseContract.COLUMN_CREATED + DatabaseContract.ORDER_ASC;
-
-		mDatabaseManager.getStockQuantList(mStock, mStockQuantList, selection, sortOrder);
-
-		for (int i = 0; i < mStockQuantList.size(); i++) {
-			StockQuant stockQuant = mStockQuantList.get(i);
-			if (TextUtils.isEmpty(stockQuant.getCreated())) {
-				continue;
-			}
-
-			if (TextUtils.isEmpty(stockQuant.getModified())) {
-				stockquantMap.put(stockQuant.getCreated(), stockQuant);
-			} else {
-				stockquantMap.remove(stockQuant.getCreated());
-			}
-		}
-
-		if (stockquantMap.size() == 0) {
-			mStockQuantList.clear();
-		} else {
-			mStockQuantList = new ArrayList<StockQuant>(stockquantMap.values());
-		}
 	}
 
 	void updateStockDataChartItemList() {
@@ -842,8 +788,8 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 				leftYAxis.setValueFormatter(new DefaultYAxisValueFormatter(2));
 				leftYAxis.removeAllLimitLines();
 				if (mItemViewType == ITEM_VIEW_TYPE_MAIN) {
-					for (int i = 0; i < mStockDataChart.mXLimitLineList.size(); i++) {
-						leftYAxis.addLimitLine(mStockDataChart.mXLimitLineList
+					for (int i = 0; i < mStockDataChart.mLimitLineList.size(); i++) {
+						leftYAxis.addLimitLine(mStockDataChart.mLimitLineList
 								.get(i));
 					}
 				}

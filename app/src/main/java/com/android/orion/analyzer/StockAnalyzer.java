@@ -48,6 +48,7 @@ public class StockAnalyzer {
 	ArrayList<StockData> mOutlineVertexList;
 	ArrayList<StockData> mOutlineDataList;
 
+	StockTrend mStockTrend = new StockTrend();
 	StringBuffer mContentTitle = new StringBuffer();
 	StringBuffer mContentText = new StringBuffer();
 
@@ -123,7 +124,7 @@ public class StockAnalyzer {
 			mFinancialAnalyzer.setupShareBonus(mStock);
 			stock.setModified(Utility.getCurrentDateTimeString());
 			mDatabaseManager.updateStock(mStock, mStock.getContentValues());
-			updateNotification();
+//			updateNotification();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -376,8 +377,8 @@ public class StockAnalyzer {
 		RecordFile.writeNotificationFile(mContentTitle.toString());
 		try {
 			int code = Integer.parseInt(stockTrend.getCode());
-			long stockID = stockTrend.getStockId();
-			notify(code, stockID, Config.MESSAGE_CHANNEL_ID, Config.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
+			mStockTrend.set(stockTrend);
+			notify(code, Config.MESSAGE_CHANNEL_ID, Config.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
 					mContentTitle.toString(), mContentText.toString());
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
@@ -420,8 +421,8 @@ public class StockAnalyzer {
 		RecordFile.writeNotificationFile(mContentTitle.toString());
 		try {
 			int code = Integer.parseInt(mStock.getCode());
-			long stockID = mStock.getId();
-			notify(code, stockID, Config.MESSAGE_CHANNEL_ID, Config.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
+			mStockTrend.init();
+			notify(code, Config.MESSAGE_CHANNEL_ID, Config.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
 					mContentTitle.toString(), mContentText.toString());
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
@@ -455,7 +456,7 @@ public class StockAnalyzer {
 		mContentTitle.append(period).append(" ").append(action).append(" ");
 	}
 
-	public void notify(int id, long stockID, String channelID, String channelName, int importance, String contentTitle, String contentText) {
+	public void notify(int id, String channelID, String channelName, int importance, String contentTitle, String contentText) {
 		if (mNotificationManager == null || mContext == null) {
 			return;
 		}
@@ -463,11 +464,15 @@ public class StockAnalyzer {
 		mNotificationManager.cancel(id);
 
 		Intent intent = new Intent();
-		if (stockID > 0) {
+		long stockID = mStockTrend.getStockId();
+		if (stockID == 0) {
+			intent.setClass(mContext, StockFavoriteListActivity.class);
+		} else {
 			intent.setClass(mContext, StockFavoriteChartListActivity.class);
 			intent.putExtra(Constant.EXTRA_STOCK_ID, stockID);
-		} else {
-			intent.setClass(mContext, StockFavoriteListActivity.class);
+			intent.putExtra(Constant.EXTRA_STOCK_TREND_PERIOD, mStockTrend.getPeriod());
+			intent.putExtra(Constant.EXTRA_STOCK_TREND_LEVEL, mStockTrend.getLevel());
+			intent.putExtra(Constant.EXTRA_STOCK_TREND_TYPE, mStockTrend.getTrend());
 		}
 		intent.setType("vnd.android-dir/mms-sms");
 		PendingIntent pendingIntent = PendingIntent.getActivity(

@@ -26,16 +26,18 @@ public class Constant {
 	public static final String EXTRA_INDEX_CODE = "index_code";
 	public static final String EXTRA_INDEX_NAME = "index_name";
 	public static final String EXTRA_INDEX_SE = "index_se";
-	public static final String EXTRA_STOCK_BONUS = "stock_bonus";
+	public static final String EXTRA_STOCK_ID = "stock_id";
+	public static final String EXTRA_STOCK_SE = "stock_se";
 	public static final String EXTRA_STOCK_CODE = "stock_code";
 	public static final String EXTRA_STOCK_DEAL = "stock_deal";
-	public static final String EXTRA_STOCK_ID = "stock_id";
 	public static final String EXTRA_STOCK_TREND_ID = "stock_trend_id";
+	public static final String EXTRA_STOCK_TREND_PERIOD = "stock_trend_period";
+	public static final String EXTRA_STOCK_TREND_LEVEL = "stock_trend_level";
+	public static final String EXTRA_STOCK_TREND_TYPE = "stock_trend_type";
 	public static final String EXTRA_STOCK_PERCEPTRON_ID = "stock_perceptron_id";
 	public static final String EXTRA_STOCK_ID_LIST = "stock_id_list";
 	public static final String EXTRA_STOCK_LIST_SORT_ORDER = "stock_list_sort_order";
 	public static final String EXTRA_STOCK_QUANT = "stock_quant";
-	public static final String EXTRA_STOCK_SE = "stock_se";
 
 	public static final int SEASONS_IN_A_YEAR = 4;
 
