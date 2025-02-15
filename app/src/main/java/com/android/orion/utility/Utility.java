@@ -227,7 +227,7 @@ public class Utility {
 		return result;
 	}
 
-	public static double Round2(double v, double n) {
+	public static double Round(double v, double n) {
 		double p = Math.pow(10, n);
 		return (Math.round(v * p)) / p;
 	}

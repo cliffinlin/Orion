@@ -365,9 +365,9 @@ public class StockPerceptron extends DatabaseTable {
 		return  mPeriod + Constant.TAB
 				+ mLevel + Constant.TAB
 				+ mType + Constant.TAB
-				+ Utility.Round2(mLinearRegression.slope, DESCRIPTION_ROUND_N) + Constant.TAB
-				+ Utility.Round2(mLinearRegression.bias, DESCRIPTION_ROUND_N) + Constant.TAB
-				+ Utility.Round2(mLinearRegression.mse, DESCRIPTION_ROUND_N) + Constant.TAB
+				+ Utility.Round(mLinearRegression.slope, DESCRIPTION_ROUND_N) + Constant.TAB
+				+ Utility.Round(mLinearRegression.bias, DESCRIPTION_ROUND_N) + Constant.TAB
+				+ Utility.Round(mLinearRegression.mse, DESCRIPTION_ROUND_N) + Constant.TAB
 				+ mTimes + Constant.TAB;
 	}
 

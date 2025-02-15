@@ -170,9 +170,8 @@
     <string name="password_hint">Password</string>
     <string name="pb">Pb</string>
     <string name="pe">Pe</string>
-    <string name="ep">Ep</string>
-    <string name="ep5">Ep5</string>
-    <string name="ep10">Ep10</string>
+    <string name="ir">IR</string>
+    <string name="irr">IRR</string>
     <string name="percent">Percent</string>
     <string name="position">Position</string>
     <string name="prev">prev</string>

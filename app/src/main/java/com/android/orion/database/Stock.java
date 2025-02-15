@@ -26,7 +26,7 @@ public class Stock extends DatabaseTable {
 	public static final int FLAG_NOTIFY = 1 << 1;
 
 	public static final long INVALID_ID = 0;
-	public static final double ROI_COEFFICIENT = 10.0;
+	public static final double ROI_COEFFICIENT = 1000.0;
 
 	static ArrayList<StockFinancial> mStockFinancialList = new ArrayList<>();
 	static ArrayList<TotalShare> mTotalShareList = new ArrayList<>();
@@ -75,11 +75,10 @@ public class Stock extends DatabaseTable {
 	private double mNetProfitPerShare;
 	private double mNetProfitPerShareInYear;
 	private double mRoi;
+	private double mIR;
+	private double mIRR;
 	private double mRoe;
 	private double mPe;
-	private double mEp;
-	private double mEp5;
-	private double mEp10;
 	private double mPb;
 	private double mRate;
 	private double mDividend;
@@ -147,11 +146,10 @@ public class Stock extends DatabaseTable {
 		mNetProfitPerShare = 0;
 		mNetProfitPerShareInYear = 0;
 		mRoi = 0;
+		mIR = 0;
+		mIRR = 0;
 		mRoe = 0;
 		mPe = 0;
-		mEp = 0;
-		mEp5 = 0;
-		mEp10 = 0;
 		mPb = 0;
 		mRate = 0;
 		mDividend = 0;
@@ -209,11 +207,10 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE, mNetProfitPerShare);
 		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE_IN_YEAR, mNetProfitPerShareInYear);
 		contentValues.put(DatabaseContract.COLUMN_ROI, mRoi);
+		contentValues.put(DatabaseContract.COLUMN_IR, mIR);
+		contentValues.put(DatabaseContract.COLUMN_IRR, mIRR);
 		contentValues.put(DatabaseContract.COLUMN_ROE, mRoe);
 		contentValues.put(DatabaseContract.COLUMN_PE, mPe);
-		contentValues.put(DatabaseContract.COLUMN_EP, mEp);
-		contentValues.put(DatabaseContract.COLUMN_EP5, mEp5);
-		contentValues.put(DatabaseContract.COLUMN_EP10, mEp10);
 		contentValues.put(DatabaseContract.COLUMN_PB, mPb);
 		contentValues.put(DatabaseContract.COLUMN_RATE, mRate);
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND, mDividend);
@@ -313,11 +310,10 @@ public class Stock extends DatabaseTable {
 		setNetProfitPerShare(stock.mNetProfitPerShare);
 		setNetProfitPerShareInYear(stock.mNetProfitPerShareInYear);
 		setRoi(stock.mRoi);
+		setIR(stock.mIR);
+		setIRR(stock.mIRR);
 		setRoe(stock.mRoe);
 		setPe(stock.mPe);
-		setEp(stock.mEp);
-		setEp5(stock.mEp5);
-		setEp10(stock.mEp10);
 		setPb(stock.mPb);
 		setRate(stock.mRate);
 		setDividend(stock.mDividend);
@@ -377,13 +373,12 @@ public class Stock extends DatabaseTable {
 		setBookValuePerShare(cursor);
 		setCashFlowPerShare(cursor);
 		setRoi(cursor);
-		setRate(cursor);
+		setIR(cursor);
+		setIRR(cursor);
 		setRoe(cursor);
 		setPe(cursor);
-		setEp(cursor);
-		setEp5(cursor);
-		setEp10(cursor);
 		setPb(cursor);
+		setRate(cursor);
 		setDividend(cursor);
 		setYield(cursor);
 		setDividendRatio(cursor);
@@ -972,6 +967,40 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_ROI)));
 	}
 
+	public double getIR() {
+		return mIR;
+	}
+
+	public void setIR(double ir) {
+		mIR = ir;
+	}
+
+	void setIR(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setIR(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_IR)));
+	}
+
+	public double getIRR() {
+		return mIRR;
+	}
+
+	public void setIRR(double irr) {
+		mIRR = irr;
+	}
+
+	void setIRR(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setIRR(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_IRR)));
+	}
+
 	public double getRoe() {
 		return mRoe;
 	}
@@ -1004,57 +1033,6 @@ public class Stock extends DatabaseTable {
 
 		setPe(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_PE)));
-	}
-
-	public double getEp() {
-		return mEp;
-	}
-
-	public void setEp(double ep) {
-		mEp = ep;
-	}
-
-	void setEp(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setEp(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_EP)));
-	}
-
-	public double getEp5() {
-		return mEp5;
-	}
-
-	public void setEp5(double ep5) {
-		mEp5 = ep5;
-	}
-
-	void setEp5(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setEp5(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_EP5)));
-	}
-
-	public double getEp10() {
-		return mEp;
-	}
-
-	public void setEp10(double ep10) {
-		mEp10 = ep10;
-	}
-
-	void setEp10(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setEp10(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_EP10)));
 	}
 
 	public double getPb() {
@@ -1447,10 +1425,7 @@ public class Stock extends DatabaseTable {
 
 		mPe = Utility.Round2(mPrice / mNetProfitPerShareInYear);
 
-		double ep = 1.0 + mRoe;
-		mEp = Utility.Round2(ep);
-		mEp5 = Utility.Round2(investmentReturn(5));
-		mEp10 = Utility.Round2(investmentReturn(10));
+		investmentReturn();
 	}
 
 	public void setupRoi() {
@@ -1507,21 +1482,21 @@ public class Stock extends DatabaseTable {
 		mDividendRatio = Utility.Round2(mDividendRatio);
 	}
 
-	public double investmentReturn(int totalYears) {
+	public void investmentReturn() {
 		// 初始参数设置
-		double pe = mPe;//21.61;
-		double roe = mRoe;//0.3936; // ROE 转换为小数形式
-		double dividendPayoutRatio = mDividendRatio;//0.8; // 分红股息率转换为小数形式
-		double initialStockPrice = mPrice;//1475;
+		double pe = mPe;
+		double roe = mRoe;
+		double dividendPayoutRatio = mDividendRatio;
+		double initialStockPrice = mPrice;
 		int initialShares = 1000;
-//			int totalYears = 10;
+		int totalYears = 10;
 
 		// 初始投资
 		double initialInvestment = initialShares * initialStockPrice;
 
 		// 计算初始每股净资产（假设初始股价合理反映净资产）
 		double initialEPS = initialStockPrice / pe;
-		double initialBookValuePerShare = mBookValuePerShare;//initialEPS / roe;
+		double initialBookValuePerShare = mBookValuePerShare;//initialEPS / roe;//mBookValuePerShare;
 		double totalBookValue = initialBookValuePerShare * initialShares;
 		double currentShares = initialShares;
 
@@ -1559,13 +1534,11 @@ public class Stock extends DatabaseTable {
 		double finalValue = currentShares * finalStockPrice;
 
 		// 计算投资回报率
-		double returnRate = finalValue / initialInvestment;
+		mIR = Utility.Round2(finalValue / initialInvestment);
 
 		// 计算年化投资回报率 (IRR)
-		double irr = Math.pow(finalValue / initialInvestment, 1.0 / totalYears) - 1;
+		mIRR = Utility.Round4(Math.pow(finalValue / initialInvestment, 1.0 / totalYears) - 1);
 
-		System.out.printf("红利再投%d年的投资回报率为:%.2f%% 年化:%.2f%%\n", totalYears, returnRate * 100, irr * 100);
-
-		return returnRate;
+//		System.out.printf("红利再投%d年的投资回报率为:%.2f%% 年化:%.2f%%\n", totalYears, returnRate * 100, irr * 100);
 	}
 }

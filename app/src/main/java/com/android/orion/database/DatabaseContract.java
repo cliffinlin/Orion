@@ -58,11 +58,10 @@ public final class DatabaseContract {
 	public static final String COLUMN_MARKET_VALUE = "market_value";
 	public static final String COLUMN_RATE = "rate";
 	public static final String COLUMN_ROI = "roi";
+	public static final String COLUMN_IR = "ir";
+	public static final String COLUMN_IRR = "irr";
 	public static final String COLUMN_ROE = "roe";
 	public static final String COLUMN_PE = "pe";
-	public static final String COLUMN_EP = "ep";
-	public static final String COLUMN_EP5 = "ep5";
-	public static final String COLUMN_EP10 = "ep10";
 	public static final String COLUMN_PB = "pb";
 	public static final String COLUMN_DIVIDEND = "dividend";
 	public static final String COLUMN_YIELD = "yield";
@@ -154,8 +153,8 @@ public final class DatabaseContract {
 				COLUMN_DEBT_TO_NET_ASSETS_RATIO, COLUMN_BOOK_VALUE_PER_SHARE,
 				COLUMN_CASH_FLOW_PER_SHARE, COLUMN_NET_PROFIT_PER_SHARE,
 				COLUMN_NET_PROFIT_PER_SHARE_IN_YEAR,
-				COLUMN_RATE, COLUMN_ROI,
-				COLUMN_ROE, COLUMN_PE, COLUMN_EP, COLUMN_EP5, COLUMN_EP10, COLUMN_PB, COLUMN_DIVIDEND,
+				COLUMN_RATE, COLUMN_ROI, COLUMN_IR, COLUMN_IRR,
+				COLUMN_ROE, COLUMN_PE, COLUMN_PB, COLUMN_DIVIDEND,
 				COLUMN_YIELD, COLUMN_DIVIDEND_RATIO, COLUMN_R_DATE, COLUMN_STATUS,
 				COLUMN_CREATED, COLUMN_MODIFIED};
 		static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
@@ -196,11 +195,10 @@ public final class DatabaseContract {
 				+ COLUMN_NET_PROFIT_PER_SHARE_IN_YEAR + DOUBLE_TYPE
 				+ COMMA_SEP + COLUMN_RATE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_ROI + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_IR + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_IRR + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_ROE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_PE + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_EP + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_EP5 + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_EP10 + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_PB + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_DIVIDEND + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_YIELD + DOUBLE_TYPE + COMMA_SEP

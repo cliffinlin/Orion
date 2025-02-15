@@ -346,15 +346,6 @@ public class TrendAnalyzer {
 					stockTrend.setCreated(Utility.getCurrentDateTimeString());
 					mDatabaseManager.insertStockTrend(stockTrend);
 				}
-				//__TEST_CASE__
-				stockTrend.setPeriod(Period.MIN15);
-				stockTrend.setPrice(mStock.getPrice());
-				stockTrend.setupNet(mStock.getPrice());
-				stockTrend.setDate(stockData.getDate());
-				stockTrend.setTime(stockData.getTime());
-				stockTrend.setType(trendType);
-				StockAnalyzer.getInstance().notifyStockTrend(stockTrend);
-				//__TEST_CASE__
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
