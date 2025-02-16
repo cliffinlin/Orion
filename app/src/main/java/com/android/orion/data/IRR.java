@@ -43,7 +43,7 @@ public class IRR {
 		return irr; // 返回最终的 IRR
 	}
 
-	public static void setup(double pe, double roe, double dividendPayoutRatio, double currentPrice) {
+	public static void calculate(double pe, double roe, double dividendPayoutRatio, double currentPrice) {
 		// 输入参数
 //		double pe = 21.61; // 市盈率
 //		double roe = 0.3936; // 净资产收益率

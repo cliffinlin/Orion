@@ -1426,7 +1426,7 @@ public class Stock extends DatabaseTable {
 
 		mPe = Utility.Round2(mPrice / mNetProfitPerShareInYear);
 
-		IRR.setup(mPe, mRoe, mDividendRatio, mPrice);
+		IRR.calculate(mPe, mRoe, mDividendRatio, mPrice);
 		mIR = IRR.getIR();
 		mIRR = IRR.getIRR();
 	}
