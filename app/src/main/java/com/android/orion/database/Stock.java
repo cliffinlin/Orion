@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.text.TextUtils;
 
+import com.android.orion.data.IRR;
 import com.android.orion.data.Period;
 import com.android.orion.setting.Constant;
 import com.android.orion.utility.Utility;
@@ -1425,7 +1426,9 @@ public class Stock extends DatabaseTable {
 
 		mPe = Utility.Round2(mPrice / mNetProfitPerShareInYear);
 
-		investmentReturn();
+		IRR.setup(mPe, mRoe, mDividendRatio, mPrice);
+		mIR = IRR.getIR();
+		mIRR = IRR.getIRR();
 	}
 
 	public void setupRoi() {
