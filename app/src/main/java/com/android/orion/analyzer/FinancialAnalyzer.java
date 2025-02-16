@@ -232,6 +232,7 @@ public class FinancialAnalyzer {
 		stock.setupPe();
 		stock.setupPb();
 		stock.setupRoi();
+		stock.setupIRR();
 	}
 
 	public void setupShareBonus(Stock stock) {

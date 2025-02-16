@@ -1425,22 +1425,6 @@ public class Stock extends DatabaseTable {
 		}
 
 		mPe = Utility.Round2(mPrice / mNetProfitPerShareInYear);
-
-		IRR.calculate(mPe, mRoe, mDividendRatio, mPrice);
-		mIR = IRR.getIR();
-		mIRR = IRR.getIRR();
-	}
-
-	public void setupRoi() {
-		if ((mNetProfitPerShareInYear <= 0 || mPrice == 0 || mNetProfitInYear <= 0) || (mMainBusinessIncomeInYear <= 0)) {
-			mRoi = 0;
-			return;
-		}
-
-//		mRoi = Utility.Round(mRoe * (100.0 * 1.0 / mPe + mYield) * mNetProfitMargin * mRate * ROI_COEFFICIENT,
-//				Constant.DOUBLE_FIXED_DECIMAL);
-//		mRoi = Utility.Round(mRoe * ( mNetProfitPerShareInYear / mPrice) * (mNetProfitInYear / mMainBusinessIncomeInYear) * ROI_COEFFICIENT);
-		mRoi = Utility.Round2(mRoe * (mNetProfitPerShareInYear / mPrice) * (mNetProfitInYear / mMainBusinessIncomeInYear) * mRate * mYield * ROI_COEFFICIENT);
 	}
 
 	public void setupPb() {
@@ -1485,63 +1469,27 @@ public class Stock extends DatabaseTable {
 		mDividendRatio = Utility.Round2(mDividendRatio);
 	}
 
-	public void investmentReturn() {
-		// 初始参数设置
-		double pe = mPe;
-		double roe = mRoe;
-		double dividendPayoutRatio = mDividendRatio;
-		double initialStockPrice = mPrice;
-		int initialShares = 1000;
-		int totalYears = 10;
-
-		// 初始投资
-		double initialInvestment = initialShares * initialStockPrice;
-
-		// 计算初始每股净资产（假设初始股价合理反映净资产）
-		double initialEPS = initialStockPrice / pe;
-		double initialBookValuePerShare = mBookValuePerShare;//initialEPS / roe;//mBookValuePerShare;
-		double totalBookValue = initialBookValuePerShare * initialShares;
-		double currentShares = initialShares;
-
-		// 逐年模拟红利再投资
-		for (int year = 1; year <= totalYears; year++) {
-			// 根据 ROE 计算当年的净利润
-			double netProfit = totalBookValue * roe;
-
-			// 计算每股收益
-			double eps = netProfit / currentShares;
-
-			// 计算每股分红
-			double dividendPerShare = eps * dividendPayoutRatio;
-
-			// 计算当年的红利
-			double totalDividend = currentShares * dividendPerShare;
-
-			// 计算红利可以购买的股票数量
-			double additionalShares = totalDividend / initialStockPrice;
-
-			// 更新股票数量
-			currentShares += additionalShares;
-
-			// 更新总净资产，减去分红部分
-			totalBookValue = totalBookValue + netProfit - totalDividend;
+	public void setupRoi() {
+		if ((mNetProfitPerShareInYear <= 0 || mPrice == 0 || mNetProfitInYear <= 0) || (mMainBusinessIncomeInYear <= 0)) {
+			mRoi = 0;
+			return;
 		}
 
-		// 计算最终的每股净资产
-		double finalBookValuePerShare = totalBookValue / currentShares;
+//		mRoi = Utility.Round(mRoe * (100.0 * 1.0 / mPe + mYield) * mNetProfitMargin * mRate * ROI_COEFFICIENT,
+//				Constant.DOUBLE_FIXED_DECIMAL);
+//		mRoi = Utility.Round(mRoe * ( mNetProfitPerShareInYear / mPrice) * (mNetProfitInYear / mMainBusinessIncomeInYear) * ROI_COEFFICIENT);
+		mRoi = Utility.Round2(mRoe * (mNetProfitPerShareInYear / mPrice) * (mNetProfitInYear / mMainBusinessIncomeInYear) * mRate * mYield * ROI_COEFFICIENT);
+	}
 
-		// 计算最终的股价（基于 PE 保持不变）
-		double finalStockPrice = finalBookValuePerShare * roe * pe;
+	public void setupIRR() {
+		if (mPe == 0 || mRoe == 0 || mPrice == 0) {
+			mIR = 0;
+			mIRR = 0;
+			return;
+		}
 
-		// 计算总价值
-		double finalValue = currentShares * finalStockPrice;
-
-		// 计算投资回报率
-		mIR = Utility.Round2(finalValue / initialInvestment);
-
-		// 计算年化投资回报率 (IRR)
-		mIRR = Utility.Round4(Math.pow(finalValue / initialInvestment, 1.0 / totalYears) - 1);
-
-//		System.out.printf("红利再投%d年的投资回报率为:%.2f%% 年化:%.2f%%\n", totalYears, returnRate * 100, irr * 100);
+		IRR.calculate(mPe, mRoe, mDividendRatio, mPrice);
+		mIR = Utility.Round2(IRR.getIR());
+		mIRR = Utility.Round4(IRR.getIRR());
 	}
 }
