@@ -2,6 +2,7 @@ package com.android.orion.setting;
 
 public class Constant {
 	public static final String TAB = "\t";
+	public static final String TAB2 = "\t\t";
 	public static final String NEW_LINE = "\n";
 
 	public static final String FILE_EXT_TEXT = ".txt";
@@ -31,9 +32,6 @@ public class Constant {
 	public static final String EXTRA_STOCK_CODE = "stock_code";
 	public static final String EXTRA_STOCK_DEAL = "stock_deal";
 	public static final String EXTRA_STOCK_TREND_ID = "stock_trend_id";
-	public static final String EXTRA_STOCK_TREND_PERIOD = "stock_trend_period";
-	public static final String EXTRA_STOCK_TREND_LEVEL = "stock_trend_level";
-	public static final String EXTRA_STOCK_TREND_TYPE = "stock_trend_type";
 	public static final String EXTRA_STOCK_PERCEPTRON_ID = "stock_perceptron_id";
 	public static final String EXTRA_STOCK_ID_LIST = "stock_id_list";
 	public static final String EXTRA_STOCK_LIST_SORT_ORDER = "stock_list_sort_order";

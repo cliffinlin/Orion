@@ -53,6 +53,9 @@ public class Trend {
 	public static final String TREND_DOWN_NONE_UP = "DNU";
 	public static final String TREND_DOWN_NONE_DOWN = "DND";
 
+	public static final int FLAG_NONE = 0;
+	public static final int FLAG_CHANGED = 1;
+
 	public static final String[] TREND_TYPES = {
 			TREND_UP_NONE_UP, TREND_UP_NONE_DOWN, TREND_UP_NONE,
 			TREND_UP_DOWN, TREND_UP_UP,

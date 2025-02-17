@@ -48,7 +48,6 @@ public class StockAnalyzer {
 	ArrayList<StockData> mOutlineVertexList;
 	ArrayList<StockData> mOutlineDataList;
 
-	StockTrend mStockTrend = new StockTrend();
 	StringBuffer mContentTitle = new StringBuffer();
 	StringBuffer mContentText = new StringBuffer();
 
@@ -360,25 +359,20 @@ public class StockAnalyzer {
 			return;
 		}
 
-		if (stockTrend.getLevel() == Trend.LEVEL_DRAW) {
-			return;
-		}
-
 		mContentTitle.setLength(0);
 		mContentText.setLength(0);
 
-		mContentTitle.append(stockTrend.getPeriod()).append(" ").append("Level" + stockTrend.getLevel()).append(" ").append(stockTrend.getType()).append(" ");
-
+		mContentTitle.append(stockTrend.getName() + Constant.TAB + stockTrend.getPrice() + Constant.TAB);
+		mContentTitle.append(stockTrend.getPeriod() + Constant.TAB + "Level" + stockTrend.getLevel() + Constant.TAB + stockTrend.getType());
 		if (TextUtils.isEmpty(mContentTitle)) {
 			return;
 		}
 
-		mContentTitle.insert(0, stockTrend.getName() + " " + stockTrend.getPrice() + " ");
 		RecordFile.writeNotificationFile(mContentTitle.toString());
 		try {
 			int code = Integer.parseInt(stockTrend.getCode());
-			mStockTrend.set(stockTrend);
-			notify(code, Config.MESSAGE_CHANNEL_ID, Config.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
+			long stockId = mStock.getId();
+			notify(code, stockId, Config.MESSAGE_CHANNEL_ID, Config.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
 					mContentTitle.toString(), mContentText.toString());
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
@@ -421,8 +415,8 @@ public class StockAnalyzer {
 		RecordFile.writeNotificationFile(mContentTitle.toString());
 		try {
 			int code = Integer.parseInt(mStock.getCode());
-			mStockTrend.init();
-			notify(code, Config.MESSAGE_CHANNEL_ID, Config.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
+			long stockId = mStock.getId();
+			notify(code, stockId, Config.MESSAGE_CHANNEL_ID, Config.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
 					mContentTitle.toString(), mContentText.toString());
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
@@ -457,6 +451,10 @@ public class StockAnalyzer {
 	}
 
 	public void notify(int id, String channelID, String channelName, int importance, String contentTitle, String contentText) {
+		notify(id, Stock.INVALID_ID, channelID, channelName, importance, contentTitle, contentText);
+	}
+
+	public void notify(int id, long stockID, String channelID, String channelName, int importance, String contentTitle, String contentText) {
 		if (mNotificationManager == null || mContext == null) {
 			return;
 		}
@@ -464,15 +462,11 @@ public class StockAnalyzer {
 		mNotificationManager.cancel(id);
 
 		Intent intent = new Intent();
-		long stockID = mStockTrend.getStockId();
 		if (stockID == 0) {
 			intent.setClass(mContext, StockFavoriteListActivity.class);
 		} else {
 			intent.setClass(mContext, StockFavoriteChartListActivity.class);
 			intent.putExtra(Constant.EXTRA_STOCK_ID, stockID);
-			intent.putExtra(Constant.EXTRA_STOCK_TREND_PERIOD, mStockTrend.getPeriod());
-			intent.putExtra(Constant.EXTRA_STOCK_TREND_LEVEL, mStockTrend.getLevel());
-			intent.putExtra(Constant.EXTRA_STOCK_TREND_TYPE, mStockTrend.getType());
 		}
 		intent.setType("vnd.android-dir/mms-sms");
 		PendingIntent pendingIntent = PendingIntent.getActivity(

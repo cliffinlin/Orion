@@ -188,12 +188,10 @@ public class TrendAnalyzer {
 			return;
 		}
 
-		boolean needUpdate = false;
 		int vertexTypeTop = Trend.VERTEX_TOP;
 		int vertexTypeBottom = Trend.VERTEX_BOTTOM;
 		switch (level) {
 			case Trend.LEVEL_DRAW:
-				needUpdate = true;
 				vertexTypeTop = Trend.VERTEX_TOP_STROKE;
 				vertexTypeBottom = Trend.VERTEX_BOTTOM_STROKE;
 				break;
@@ -249,40 +247,32 @@ public class TrendAnalyzer {
 						if (direction == Trend.DIRECTION_DOWN) {
 							addVertex(end_2, vertexTypeBottom, vertexList);
 							trendType = Trend.TREND_DOWN_UP;
-							updateAction(needUpdate, end_2, trendType);
 						} else if (direction == Trend.DIRECTION_NONE) {
 							StockData vertexData = chooseVertex(start_2, end_2, Trend.VERTEX_BOTTOM);
 							if (baseDirection == Trend.DIRECTION_UP) {
 								addVertex(vertexData, vertexTypeBottom, vertexList);
 								trendType = Trend.TREND_UP_NONE_UP;
-								updateAction(needUpdate, vertexData, trendType);
 							} else if (baseDirection == Trend.DIRECTION_DOWN) {
 								trendType = Trend.TREND_DOWN_NONE_UP;
-								updateAction(needUpdate, vertexData, trendType);
 							}
 						} else if (direction == Trend.DIRECTION_UP) {
 							trendType = Trend.TREND_UP_UP;
-							updateAction(needUpdate, null, trendType);
 						}
 						break;
 					case Trend.DIRECTION_DOWN:
 						if (direction == Trend.DIRECTION_UP) {
 							addVertex(end_2, vertexTypeTop, vertexList);
 							trendType = Trend.TREND_UP_DOWN;
-							updateAction(needUpdate, end_2, trendType);
 						} else if (direction == Trend.DIRECTION_NONE) {
 							StockData vertexData = chooseVertex(start_2, end_2, Trend.VERTEX_TOP);
 							if (baseDirection == Trend.DIRECTION_UP) {
 								trendType = Trend.TREND_UP_NONE_DOWN;
-								updateAction(needUpdate, vertexData, trendType);
 							} else if (baseDirection == Trend.DIRECTION_DOWN) {
 								addVertex(vertexData, vertexTypeTop, vertexList);
 								trendType = Trend.TREND_DOWN_NONE_DOWN;
-								updateAction(needUpdate, vertexData, trendType);
 							}
 						} else if (direction == Trend.DIRECTION_DOWN) {
 							trendType = Trend.TREND_DOWN_DOWN;
-							updateAction(needUpdate, null, trendType);
 						}
 						break;
 					case Trend.DIRECTION_NONE:
@@ -291,13 +281,11 @@ public class TrendAnalyzer {
 							StockData vertexData = chooseVertex(start_1, end_1, Trend.VERTEX_TOP);
 							addVertex(vertexData, vertexTypeTop, vertexList);
 							trendType = Trend.TREND_UP_NONE;
-							updateAction(needUpdate, vertexData, trendType);
 						} else if (direction == Trend.DIRECTION_DOWN) {
 							baseDirection = Trend.DIRECTION_DOWN;
 							StockData vertexData = chooseVertex(start_1, end_1, Trend.VERTEX_BOTTOM);
 							addVertex(vertexData, vertexTypeBottom, vertexList);
 							trendType = Trend.TREND_DOWN_NONE;
-							updateAction(needUpdate, vertexData, trendType);
 						} else if (direction == Trend.DIRECTION_NONE) {
 						}
 						break;
@@ -316,15 +304,12 @@ public class TrendAnalyzer {
 				stockTrend.setLevel(level);
 
 				StockData stockData = StockData.getLast(mStockDataList, 0);
-				if (needUpdate) {
-					stockData.setAction(trendType);
-				}
 
 				if (mDatabaseManager.isStockTrendExist(stockTrend)) {
 					mDatabaseManager.getStockTrend(stockTrend);
+					stockTrend.setModified(Utility.getCurrentDateTimeString());
 					if (TextUtils.equals(trendType, stockTrend.getType())) {
 						stockTrend.setupNet(mStock.getPrice());
-						stockTrend.setModified(Utility.getCurrentDateTimeString());
 						mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValuesNet());
 						mStockPerceptronProvider.train(stockTrend.getPeriod(), stockTrend.getLevel(), stockTrend.getType());
 					} else {
@@ -333,9 +318,14 @@ public class TrendAnalyzer {
 						stockTrend.setDate(stockData.getDate());
 						stockTrend.setTime(stockData.getTime());
 						stockTrend.setType(trendType);
-						stockTrend.setModified(Utility.getCurrentDateTimeString());
+						stockTrend.setFlag(Trend.FLAG_CHANGED);
 						mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValues());
-						StockAnalyzer.getInstance().notifyStockTrend(stockTrend);
+						if (stockData != null) {
+							if (level > Trend.LEVEL_DRAW) {
+								stockData.setAction(level + trendType);
+								StockAnalyzer.getInstance().notifyStockTrend(stockTrend);
+							}
+						}
 					}
 				} else {
 					stockTrend.setPrice(mStock.getPrice());
@@ -352,16 +342,6 @@ public class TrendAnalyzer {
 		}
 	}
 
-	private String updateAction(boolean needUpdate, StockData stockData, String action) {
-		if (needUpdate) {
-			if (stockData != null) {
-				stockData.setAction(action);
-			}
-			return action;
-		} else {
-			return "";
-		}
-	}
 
 	private StockData chooseVertex(StockData start, StockData end, int vertexType) {
 		if (start == null || end == null) {

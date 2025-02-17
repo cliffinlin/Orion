@@ -253,10 +253,6 @@
     <string name="version">Version</string>
     <string name="volume">Volume</string>
     <string name="value">Value</string>
-    <string name="natural_rally">Rally</string>
-    <string name="upward_trend">Up</string>
-    <string name="downward_trend">Down</string>
-    <string name="natural_reaction">React</string>
     <string name="date">Date</string>
     <string name="time">Time</string>
     <string name="time_to_market">TTM</string>

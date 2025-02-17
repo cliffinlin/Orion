@@ -21,6 +21,7 @@ public class StockTrend extends DatabaseTable {
 	private String mTime;
 	private int mLevel;
 	private String mType;
+	private int mFlag;
 
 	public StockTrend() {
 		init();
@@ -60,6 +61,7 @@ public class StockTrend extends DatabaseTable {
 		mTime = "";
 		mLevel = Trend.LEVEL_NONE;
 		mType = Trend.TREND_NONE;
+		mFlag = Trend.FLAG_NONE;
 	}
 
 	@Override
@@ -76,12 +78,19 @@ public class StockTrend extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_TIME, mTime);
 		contentValues.put(DatabaseContract.COLUMN_LEVEL, mLevel);
 		contentValues.put(DatabaseContract.COLUMN_TYPE, mType);
+		contentValues.put(DatabaseContract.COLUMN_FLAG, mFlag);
 		return contentValues;
 	}
 
 	public ContentValues getContentValuesNet() {
 		ContentValues contentValues = getContentValues();
 		contentValues.put(DatabaseContract.COLUMN_NET, mNet);
+		return contentValues;
+	}
+
+	public ContentValues getContentValuesFlag() {
+		ContentValues contentValues = getContentValues();
+		contentValues.put(DatabaseContract.COLUMN_FLAG, mFlag);
 		return contentValues;
 	}
 
@@ -105,6 +114,7 @@ public class StockTrend extends DatabaseTable {
 		setTime(stockTrend.mTime);
 		setLevel(stockTrend.mLevel);
 		setType(stockTrend.mType);
+		setFlag(stockTrend.mFlag);
 	}
 
 	@Override
@@ -128,6 +138,7 @@ public class StockTrend extends DatabaseTable {
 		setTime(cursor);
 		setLevel(cursor);
 		setType(cursor);
+		setFlag(cursor);
 	}
 
 	public long getStockId() {
@@ -325,6 +336,23 @@ public class StockTrend extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_TYPE)));
 	}
 
+	public int getFlag() {
+		return mFlag;
+	}
+
+	public void setFlag(int flag) {
+		mFlag = flag;
+	}
+
+	void setFlag(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setFlag(cursor.getInt(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_FLAG)));
+	}
+
 	public void setupNet(double current) {
 		if (mPrice == 0 || current == 0) {
 			mNet = 0;
@@ -344,6 +372,7 @@ public class StockTrend extends DatabaseTable {
 				+ mDate + Constant.TAB
 				+ mTime + Constant.TAB
 				+ mLevel + Constant.TAB
-				+ mType + Constant.TAB;
+				+ mType + Constant.TAB
+				+ mFlag + Constant.TAB;
 	}
 }
