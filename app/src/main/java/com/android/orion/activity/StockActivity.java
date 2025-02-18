@@ -9,22 +9,29 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.android.orion.R;
+import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.IndexComponent;
 import com.android.orion.database.Stock;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Utility;
 
-public class StockActivity extends DatabaseActivity implements OnClickListener {
+import java.util.ArrayList;
+import java.util.List;
+
+public class StockActivity extends DatabaseActivity implements OnClickListener, AdapterView.OnItemSelectedListener {
 
 	CheckBox mCheckBoxFavorite;
 	CheckBox mCheckBoxNotify;
@@ -35,8 +42,14 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 	EditText mEditTextStockHold;
 	EditText mEditTextStockYield;
 
+	List<String> mListStockOperate;
+	ArrayAdapter<String> mArrayAdapter;
+	Spinner mSpinnerStockAcion;
+
 	Button mButtonOk;
 	Button mButtonCancel;
+
+	String mStockOperate;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +74,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mEditTextStockCode = findViewById(R.id.edittext_stock_code);
 		mEditTextStockHold = findViewById(R.id.edittext_stock_hold);
 		mEditTextStockYield = findViewById(R.id.edittext_stock_yield);
+		mSpinnerStockAcion = findViewById(R.id.spinner_stock_operate);
 		mButtonOk = findViewById(R.id.button_ok);
 		mButtonCancel = findViewById(R.id.button_cancel);
 
@@ -72,8 +86,25 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mEditTextStockCode.setOnClickListener(this);
 		mEditTextStockHold.setOnClickListener(this);
 		mEditTextStockYield.setOnClickListener(this);
+		mSpinnerStockAcion.setOnItemSelectedListener(this);
 		mButtonOk.setOnClickListener(this);
 		mButtonCancel.setOnClickListener(this);
+
+		mListStockOperate = new ArrayList<String>();
+		mListStockOperate.add("");
+		mListStockOperate.add(DatabaseContract.COLUMN_MONTH);
+		mListStockOperate.add(DatabaseContract.COLUMN_WEEK);
+		mListStockOperate.add(DatabaseContract.COLUMN_DAY);
+		mListStockOperate.add(DatabaseContract.COLUMN_MIN60);
+		mListStockOperate.add(DatabaseContract.COLUMN_MIN30);
+		mListStockOperate.add(DatabaseContract.COLUMN_MIN15);
+		mListStockOperate.add(DatabaseContract.COLUMN_MIN5);
+
+		mArrayAdapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_spinner_item, mListStockOperate);
+		mArrayAdapter
+				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		mSpinnerStockAcion.setAdapter(mArrayAdapter);
 
 		mEditTextStockCode.addTextChangedListener(new TextWatcher() {
 
@@ -84,13 +115,13 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 
 			@Override
 			public void beforeTextChanged(CharSequence arg0, int arg1,
-			                              int arg2, int arg3) {
+										  int arg2, int arg3) {
 
 			}
 
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
-			                          int count) {
+									  int count) {
 				if (TextUtils.equals(mAction, Constant.ACTION_STOCK_EDIT)) {
 					return;
 				}
@@ -149,6 +180,14 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mEditTextStockCode.setText(mStock.getCode());
 		mEditTextStockHold.setText(String.valueOf(mStock.getHold()));
 		mEditTextStockYield.setText(String.valueOf(mStock.getYield()));
+
+		String operate = mStock.getOperate();
+		for (int i = 0; i < mListStockOperate.size(); i++) {
+			if (TextUtils.equals(mListStockOperate.get(i), operate)) {
+				mSpinnerStockAcion.setSelection(i);
+				break;
+			}
+		}
 	}
 
 	@Override
@@ -171,6 +210,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 
 	@Override
 	public void onClick(@NonNull View view) {
+		String operate;
 		int viewId = view.getId();
 
 		switch (viewId) {
@@ -203,6 +243,12 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 					mStock.addFlag(Stock.FLAG_NOTIFY);
 				} else {
 					mStock.removeFlag(Stock.FLAG_NOTIFY);
+				}
+
+				operate = mSpinnerStockAcion.getSelectedItem().toString();
+				if (!TextUtils.equals(operate, mStockOperate)) {
+					mStockOperate = operate;
+					mStock.setOperate(mStockOperate);
 				}
 
 				String name = mEditTextStockName.getText().toString();
@@ -285,5 +331,22 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 			default:
 				break;
 		}
+	}
+
+	@Override
+	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+		String operate;
+
+		operate = mSpinnerStockAcion.getSelectedItem().toString();
+		if (!TextUtils.isEmpty(operate)) {
+			if (!TextUtils.equals(operate, mStock.getOperate())) {
+				mStock.setOperate(operate);
+			}
+		}
+	}
+
+	@Override
+	public void onNothingSelected(AdapterView<?> parent) {
+
 	}
 }

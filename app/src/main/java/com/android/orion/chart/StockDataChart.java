@@ -70,6 +70,20 @@ public class StockDataChart {
 		mNotifyTrend = notifyTrend;
 	}
 
+	public boolean isOperate() {
+		boolean result = false;
+
+		if (mStock == null) {
+			return result;
+		}
+
+		if (!TextUtils.isEmpty(mStock.getOperate()) && TextUtils.equals(mPeriod, mStock.getOperate())) {
+			result = true;
+		}
+
+		return result;
+	}
+
 	public void setMainChartData(Context context) {
 		mCombinedDataMain = new CombinedData(mXValues);
 

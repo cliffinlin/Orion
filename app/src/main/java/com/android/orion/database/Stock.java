@@ -56,6 +56,7 @@ public class Stock extends DatabaseTable {
 	private String mDate;
 	private String mTime;
 
+	private String mOperate;
 	private long mHold;
 	private double mCost;
 	private double mProfit;
@@ -111,6 +112,8 @@ public class Stock extends DatabaseTable {
 		mCode = "";
 		mName = "";
 		mPinyin = "";
+
+		mOperate = "";
 		mHold = 0;
 
 		reset();
@@ -255,6 +258,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
 
 		contentValues.put(DatabaseContract.COLUMN_FLAG, mFlag);
+		contentValues.put(DatabaseContract.COLUMN_OPERATE, mOperate);
 
 		return contentValues;
 	}
@@ -291,6 +295,7 @@ public class Stock extends DatabaseTable {
 		mWeek.setAction(stock.mWeek.getAction());
 		mMonth.setAction(stock.mMonth.getAction());
 
+		setOperate(stock.mOperate);
 		setHold(stock.mHold);
 		setCost(stock.mCost);
 		setProfit(stock.mProfit);
@@ -354,6 +359,7 @@ public class Stock extends DatabaseTable {
 		mDay.setAction(cursor);
 		mWeek.setAction(cursor);
 		mMonth.setAction(cursor);
+		setOperate(cursor);
 		setHold(cursor);
 		setCost(cursor);
 		setProfit(cursor);
@@ -606,6 +612,23 @@ public class Stock extends DatabaseTable {
 
 		setTime(cursor.getString(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_TIME)));
+	}
+
+	public String getOperate() {
+		return mOperate;
+	}
+
+	public void setOperate(String operate) {
+		mOperate = operate;
+	}
+
+	void setOperate(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setOperate(cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_OPERATE)));
 	}
 
 	public long getHold() {
