@@ -71,16 +71,7 @@ public class Trend {
 	public static final String MARK_SELL1 = "S1";
 	public static final String MARK_SELL2 = "S2";
 
-	public static final String MARK_G = "G";
-	public static final String MARK_D = "D";
-
-	public static final String MARK_HIGH = "H";
-	public static final String MARK_LOW = "L";
-
-	public static final char MARK_ADD = '+';
-	public static final char MARK_MINUS = '-';
-
-	public static final String MARK_STAR = "*";
+	public static final String MARK_LEVEL = "L";
 
 	public static final int VERTEX_SIZE = 3;
 

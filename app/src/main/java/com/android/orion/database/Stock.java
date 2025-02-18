@@ -246,7 +246,7 @@ public class Stock extends DatabaseTable {
 		return contentValues;
 	}
 
-	public ContentValues getContentValuesForEdit() {
+	public ContentValues getContentValuesEdit() {
 		ContentValues contentValues = getContentValues();
 
 		contentValues.put(DatabaseContract.COLUMN_CLASSES, mClasses);

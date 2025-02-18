@@ -15,6 +15,7 @@ import android.widget.TimePicker;
 import androidx.annotation.NonNull;
 
 import com.android.orion.R;
+import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Utility;
@@ -69,7 +70,7 @@ public class SettingLoopbackActivity extends BaseActivity {
 								public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 									mHourOfDay = hourOfDay;
 									mMinute = minute;
-									String dateTime = mYear + "-" + String.format("%02d", mMonth + 1) + "-" + String.format("%02d", mDayOfMonth) + " " + String.format("%02d", hourOfDay) + ":" + String.format("%02d", minute) + ":00";
+									String dateTime = mYear + Constant.MARK_MINUS + String.format("%02d", mMonth + 1) + Constant.MARK_MINUS + String.format("%02d", mDayOfMonth) + " " + String.format("%02d", hourOfDay) + ":" + String.format("%02d", minute) + ":00";
 									Preferences.putString(Setting.SETTING_DEBUG_LOOPBACK_DATE_TIME, dateTime);
 									setResult(RESULT_OK, mIntent);
 									finish();

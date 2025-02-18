@@ -20,9 +20,6 @@ import com.github.mikephil.charting.components.YAxis.AxisDependency;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.BubbleData;
-import com.github.mikephil.charting.data.BubbleDataSet;
-import com.github.mikephil.charting.data.BubbleEntry;
 import com.github.mikephil.charting.data.CandleData;
 import com.github.mikephil.charting.data.CandleDataSet;
 import com.github.mikephil.charting.data.CandleEntry;
@@ -50,23 +47,16 @@ public class StockDataChart {
 	public CombinedData mCombinedDataMain = new CombinedData(mXValues);
 	public CombinedData mCombinedDataSub = new CombinedData(mXValues);
 	Stock mStock;
-	StockTrend mStockTrend = new StockTrend();
 	String mPeriod;
 	double mMainChartYMin = 0;
 	double mMainChartYMax = 0;
 	double mSubChartYMin = 0;
 	double mSubChartYMax = 0;
-	boolean mNotifyTrend;
+	boolean mNotifyTrend = false;
 
-	public StockDataChart(Stock stock, String period, StockTrend stockTrend) {
+	public StockDataChart(Stock stock, String period) {
 		mStock = stock;
 		mPeriod = period;
-		mStockTrend.set(stockTrend);
-		if (Setting.getDisplayFilled() || TextUtils.equals(mPeriod, mStockTrend.getPeriod())) {
-			mNotifyTrend = true;
-		} else {
-			mNotifyTrend = false;
-		}
 		for (int i = 0; i < Trend.LEVEL_MAX; i++) {
 			mLineList[i] = new ArrayList<>();
 		}
@@ -74,6 +64,10 @@ public class StockDataChart {
 
 	public void setStock(Stock stock) {
 		mStock = stock;
+	}
+
+	public void setNotifyTrend(boolean notifyTrend) {
+		mNotifyTrend = notifyTrend;
 	}
 
 	public void setMainChartData(Context context) {
@@ -285,9 +279,9 @@ public class StockDataChart {
 		mDescription.append(mPeriod + " ");
 		mDescription.append(stock.getPrice() + "  ");
 		if (stock.getNet() > 0) {
-			mDescription.append("+");
+			mDescription.append(Constant.MARK_ADD);
 		} else if (stock.getNet() < 0) {
-			mDescription.append("-");
+			mDescription.append(Constant.MARK_MINUS);
 		}
 		mDescription.append(stock.getNet() + "%" + "  ");
 		mDescription.append(stock.getAction(mPeriod));
@@ -335,16 +329,24 @@ public class StockDataChart {
 
 		action = stock.getAction(mPeriod);
 
-		if (action.contains("B")) {
+		if (action.contains(Trend.MARK_BUY)) {
 			color = Color.MAGENTA;
-		} else if (action.contains("S")) {
+		} else if (action.contains(Trend.MARK_SELL)) {
 			color = Color.CYAN;
+		} else if (action.contains(Trend.MARK_LEVEL)) {
+			try {
+				int index = action.indexOf(Trend.MARK_LEVEL);
+				String levelString = action.substring(index + 1, index + 2);
+				int level = Integer.parseInt(levelString);
+				color = mLineColors[level];
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+			}
 		}
 
 		label = "                                                     " + " ";
 		if (mNotifyTrend) {
-			color = mLineColors[mStockTrend.getLevel()];
-			label += "Trend:" + Constant.TAB2 + mStockTrend.getPeriod() + Constant.TAB2 + "Level" + mStockTrend.getLevel() + Constant.TAB2 + mStockTrend.getType();
+			label += "Trend:" + Constant.TAB2 + action;
 		} else {
 			label += "Action:" + Constant.TAB2 + action;
 		}

@@ -62,20 +62,13 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 	public static final int MESSAGE_LOAD_STOCK_LIST = 1;
 
 	boolean mKeyDisplayDeal = false;
-
 	int mStockListIndex = 0;
 	Menu mMenu = null;
-
 	String mSortOrder = null;
-
-	ArrayList<String> mStockIDList = new ArrayList<>();
-
 	StockData mStockData = new StockData();
-	ArrayList<StockTrend> mStockTrendList = new ArrayList<>();
-	ArrayMap<String, StockTrend> mStockTrendMap = new ArrayMap<>();
-
 	PullToRefreshListView mListView = null;
 	StockDataChartArrayAdapter mStockDataChartArrayAdapter = null;
+	ArrayList<String> mStockIDList = new ArrayList<>();
 	ArrayList<StockDataChartItem> mStockDataChartItemList = null;
 	ArrayList<StockDataChartItemMain> mStockDataChartItemMainList = null;
 	ArrayList<StockDataChartItemSub> mStockDataChartItemSubList = null;
@@ -143,14 +136,6 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 
 		long stockId = intent.getLongExtra(Constant.EXTRA_STOCK_ID, Stock.INVALID_ID);
 		mStock.setId(stockId);
-		mDatabaseManager.getStockTrendList(stockId, Trend.FLAG_CHANGED, mStockTrendList);
-		mStockTrendMap.clear();
-		for (StockTrend stockTrend: mStockTrendList) {
-			if (stockTrend != null) {
-				mStockTrendMap.put(stockTrend.getPeriod(), stockTrend);
-			}
-		}
-
 		mStockIDList = intent.getStringArrayListExtra(Constant.EXTRA_STOCK_ID_LIST);
 		if (mStockIDList != null && !mStockIDList.isEmpty()) {
 			mHandler.sendEmptyMessage(MESSAGE_LOAD_STOCK_LIST);
@@ -273,12 +258,6 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 	protected void onDestroy() {
 		super.onDestroy();
 		mChartSyncHelper.unregisterOnChartGestureListener(this);
-		for (StockTrend stockTrend: mStockTrendList) {
-			if (stockTrend != null) {
-				stockTrend.setFlag(Trend.FLAG_NONE);
-				mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValuesFlag());
-			}
-		}
 	}
 
 	@Override
@@ -342,7 +321,7 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 		}
 
 		for (int i = 0; i < Period.PERIODS.length; i++) {
-			mStockDataChartList.add(new StockDataChart(mStock, Period.PERIODS[i], mStockTrendMap.get(Period.PERIODS[i])));
+			mStockDataChartList.add(new StockDataChart(mStock, Period.PERIODS[i]));
 			mStockDataChartItemMainList.add(new StockDataChartItemMain(
 					mStockDataChartList.get(i)));
 			mStockDataChartItemSubList.add(new StockDataChartItemSub(
@@ -621,6 +600,7 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 				mStockDealList.clear();
 			}
 
+			stockDataChart.setNotifyTrend(mStockData.getAction().contains(Trend.MARK_LEVEL));
 			stockDataChart.updateDescription(mStock);
 			stockDataChart.updateLimitLines(mStock, mStockDealList);
 			stockDataChart.setMainChartData(mContext);

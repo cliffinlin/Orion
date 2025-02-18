@@ -208,9 +208,9 @@ public class StockAnalyzer {
 		if (macd != null) {
 			double velocity = macd.getVelocity();
 			if (velocity > 0) {
-				actionBuilder.append(Trend.MARK_ADD);
+				actionBuilder.append(Constant.MARK_ADD);
 			} else if (velocity < 0) {
-				actionBuilder.append(Trend.MARK_MINUS);
+				actionBuilder.append(Constant.MARK_MINUS);
 			}
 		}
 
@@ -242,9 +242,9 @@ public class StockAnalyzer {
 		}
 
 		if (trend.vertexOf(Trend.VERTEX_BOTTOM)) {
-			builder.append(Trend.MARK_ADD);
+			builder.append(Constant.MARK_ADD);
 		} else if (trend.vertexOf(Trend.VERTEX_TOP)) {
-			builder.append(Trend.MARK_MINUS);
+			builder.append(Constant.MARK_MINUS);
 		}
 	}
 

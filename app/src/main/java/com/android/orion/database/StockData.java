@@ -411,7 +411,7 @@ public class StockData extends DatabaseTable {
 			return null;
 		}
 
-		dateString = strings[0].replace("/", "-");
+		dateString = strings[0].replace("/", Constant.MARK_MINUS);
 		setDate(dateString);
 		timeString = strings[1].substring(0, 2) + ":" + strings[1].substring(2, 4) + ":" + "00";
 		setTime(timeString);
@@ -434,7 +434,7 @@ public class StockData extends DatabaseTable {
 		StringBuffer stringBuffer = new StringBuffer();
 		//TDX output format
 		//date  time    open    high    low close   volume  value
-		String dateString = getDate().replace("-", "/");
+		String dateString = getDate().replace(Constant.MARK_MINUS, "/");
 		String timeString = getTime().substring(0, 5).replace(":", "");
 		stringBuffer.append(dateString + Constant.TAB
 				+ timeString + Constant.TAB

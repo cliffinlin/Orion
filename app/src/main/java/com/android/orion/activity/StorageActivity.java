@@ -345,7 +345,7 @@ public class StorageActivity extends DatabaseActivity {
 			for (Stock stock2 : stockList) {
 				mDatabaseManager.updateStockDeal(stock2);
 				mDatabaseManager.updateStock(stock2,
-						stock2.getContentValuesForEdit());
+				stock2.getContentValuesEdit());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

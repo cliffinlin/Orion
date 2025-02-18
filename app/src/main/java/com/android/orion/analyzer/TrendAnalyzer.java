@@ -13,6 +13,8 @@ import com.android.orion.database.StockPerceptron;
 import com.android.orion.database.StockTrend;
 import com.android.orion.manager.DatabaseManager;
 import com.android.orion.provider.StockPerceptronProvider;
+import com.android.orion.setting.Constant;
+import com.android.orion.setting.Setting;
 import com.android.orion.utility.Logger;
 import com.android.orion.utility.Utility;
 
@@ -309,20 +311,21 @@ public class TrendAnalyzer {
 					mDatabaseManager.getStockTrend(stockTrend);
 					stockTrend.setModified(Utility.getCurrentDateTimeString());
 					if (TextUtils.equals(trendType, stockTrend.getType())) {
+						stockTrend.setFlag(Trend.FLAG_NONE);
 						stockTrend.setupNet(mStock.getPrice());
 						mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValuesNet());
 						mStockPerceptronProvider.train(stockTrend.getPeriod(), stockTrend.getLevel(), stockTrend.getType());
 					} else {
+						stockTrend.setFlag(Trend.FLAG_CHANGED);
 						stockTrend.setPrice(mStock.getPrice());
 						stockTrend.setupNet(mStock.getPrice());
 						stockTrend.setDate(stockData.getDate());
 						stockTrend.setTime(stockData.getTime());
 						stockTrend.setType(trendType);
-						stockTrend.setFlag(Trend.FLAG_CHANGED);
 						mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValues());
 						if (stockData != null) {
-							if (level > Trend.LEVEL_DRAW) {
-								stockData.setAction(level + trendType);
+							if (isNotifyTrendLevel(level)) {
+								stockData.setAction(Trend.MARK_LEVEL + level + trendType);
 								StockAnalyzer.getInstance().notifyStockTrend(stockTrend);
 							}
 						}
@@ -342,6 +345,28 @@ public class TrendAnalyzer {
 		}
 	}
 
+	boolean isNotifyTrendLevel(int level) {
+		boolean result = false;
+
+		switch (level) {
+			case Trend.LEVEL_DRAW:
+				result = Setting.getNotifyDraw();
+				break;
+			case Trend.LEVEL_STROKE:
+				result = Setting.getNotifyStroke();
+				break;
+			case Trend.LEVEL_SEGMENT:
+				result = Setting.getNotifySegment();
+				break;
+			case Trend.LEVEL_LINE:
+				result = Setting.getNotifyLine();
+				break;
+			default:
+				break;
+		}
+
+		return result;
+	}
 
 	private StockData chooseVertex(StockData start, StockData end, int vertexType) {
 		if (start == null || end == null) {

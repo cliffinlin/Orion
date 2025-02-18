@@ -239,7 +239,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 						mStock.setCreated(Utility.getCurrentDateTimeString());
 						Uri uri = mDatabaseManager.insertStock(mStock);
 						mDatabaseManager.getStock(uri, mStock);
-						mDatabaseManager.updateStock(mStock, mStock.getContentValuesForEdit());
+						mDatabaseManager.updateStock(mStock, mStock.getContentValuesEdit());
 
 						if (TextUtils.equals(mAction, Constant.ACTION_INDEX_COMPONENT_INSERT)) {
 							IndexComponent indexComponent = new IndexComponent();
@@ -267,7 +267,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 				} else if (TextUtils.equals(mAction, Constant.ACTION_STOCK_EDIT)) {
 					mStock.setModified(Utility.getCurrentDateTimeString());
 					mDatabaseManager.updateStock(mStock,
-							mStock.getContentValuesForEdit());
+					mStock.getContentValuesEdit());
 				}
 
 				getIntent().putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());

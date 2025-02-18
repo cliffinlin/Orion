@@ -1207,7 +1207,7 @@ public class SinaFinance extends StockDataProvider {
 					continue;
 				}
 
-				valueString = dateValue.substring(0, 4) + "-" + dateValue.substring(4, 6) + "-" + dateValue.substring(6);
+				valueString = dateValue.substring(0, 4) + Constant.MARK_MINUS + dateValue.substring(4, 6) + Constant.MARK_MINUS + dateValue.substring(6);
 				stockFinancial.setDate(valueString);
 
 				JSONObject reportJSONObject = reportListJSONObject.getJSONObject(dateValue);

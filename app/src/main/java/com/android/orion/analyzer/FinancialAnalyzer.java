@@ -257,7 +257,7 @@ public class FinancialAnalyzer {
 		for (ShareBonus shareBonus : mShareBonusList) {
 			String dateString = shareBonus.getDate();
 			if (!TextUtils.isEmpty(dateString)) {
-				String[] strings = dateString.split("-");
+				String[] strings = dateString.split(Constant.MARK_MINUS);
 				if (strings != null && strings.length > 0) {
 					yearString = strings[0];
 				}

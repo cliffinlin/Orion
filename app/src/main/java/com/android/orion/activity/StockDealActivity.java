@@ -205,7 +205,7 @@ public class StockDealActivity extends DatabaseActivity implements
 				String volumeString = s.toString();
 				long volume = 0;
 				if (!TextUtils.isEmpty(volumeString)) {
-					if (TextUtils.equals(volumeString, "+") || TextUtils.equals(volumeString, "-")) {
+					if (TextUtils.equals(volumeString, Constant.MARK_ADD) || TextUtils.equals(volumeString, Constant.MARK_MINUS)) {
 						return;
 					}
 

@@ -29,9 +29,6 @@
             android:key="SETTING_DISPLAY_CANDLE"
             android:title="@string/candle" />
         <com.android.orion.preference.CustomSwitchPreference
-            android:key="SETTING_DISPLAY_FILLED"
-            android:title="@string/filled" />
-        <com.android.orion.preference.CustomSwitchPreference
             android:key="SETTING_DISPLAY_DRAW"
             android:title="@string/draw" />
         <com.android.orion.preference.CustomSwitchPreference
@@ -42,6 +39,20 @@
             android:title="@string/segment" />
         <com.android.orion.preference.CustomSwitchPreference
             android:key="SETTING_DISPLAY_LINE"
+            android:title="@string/line" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/notify">
+        <com.android.orion.preference.CustomSwitchPreference
+            android:key="SETTING_NOTIFY_DRAW"
+            android:title="@string/draw" />
+        <com.android.orion.preference.CustomSwitchPreference
+            android:key="SETTING_NOTIFY_STROKE"
+            android:title="@string/stroke" />
+        <com.android.orion.preference.CustomSwitchPreference
+            android:key="SETTING_NOTIFY_SEGMENT"
+            android:title="@string/segment" />
+        <com.android.orion.preference.CustomSwitchPreference
+            android:key="SETTING_NOTIFY_LINE"
             android:title="@string/line" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/setting_debug">

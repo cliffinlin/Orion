@@ -1,9 +1,14 @@
 package com.android.orion.setting;
 
 public class Constant {
+
+	public static final String MARK_ADD = "+";
+	public static final String MARK_MINUS = "-";
+	public static final String MARK_STAR = "*";
+
+	public static final String NEW_LINE = "\n";
 	public static final String TAB = "\t";
 	public static final String TAB2 = "\t\t";
-	public static final String NEW_LINE = "\n";
 
 	public static final String FILE_EXT_TEXT = ".txt";
 	public static final String FILE_EXT_XML = ".xml";

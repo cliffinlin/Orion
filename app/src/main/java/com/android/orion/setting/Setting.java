@@ -42,9 +42,6 @@ public class Setting {
 	public static final String SETTING_DISPLAY_CANDLE = "SETTING_DISPLAY_CANDLE";
 	public static final boolean SETTING_DISPLAY_CANDLE_DEFAULT = false;
 
-	public static final String SETTING_DISPLAY_FILLED = "SETTING_DISPLAY_FILLED";
-	public static final boolean SETTING_DISPLAY_FILLED_DEFAULT = false;
-
 	public static final String SETTING_DISPLAY_DRAW = "SETTING_DISPLAY_DRAW";
 	public static final boolean SETTING_DISPLAY_DRAW_DEFAULT = true;
 
@@ -56,6 +53,18 @@ public class Setting {
 
 	public static final String SETTING_DISPLAY_LINE = "SETTING_DISPLAY_LINE";
 	public static final boolean SETTING_DISPLAY_LINE_DEFAULT = true;
+
+	public static final String SETTING_NOTIFY_DRAW = "SETTING_NOTIFY_DRAW";
+	public static final boolean SETTING_NOTIFY_DRAW_DEFAULT = false;
+
+	public static final String SETTING_NOTIFY_STROKE = "SETTING_NOTIFY_STROKE";
+	public static final boolean SETTING_NOTIFY_STROKE_DEFAULT = true;
+
+	public static final String SETTING_NOTIFY_SEGMENT = "SETTING_NOTIFY_SEGMENT";
+	public static final boolean SETTING_NOTIFY_SEGMENT_DEFAULT = true;
+
+	public static final String SETTING_NOTIFY_LINE = "SETTING_NOTIFY_LINE";
+	public static final boolean SETTING_NOTIFY_LINE_DEFAULT = true;
 
 	public static final String SETTING_DEBUG_LOG = "SETTING_DEBUG_LOG";
 	public static final boolean SETTING_DEBUG_LOG_DEFAULT = true;
@@ -107,14 +116,6 @@ public class Setting {
 		Preferences.putBoolean(SETTING_DISPLAY_CANDLE, value);
 	}
 
-	public static boolean getDisplayFilled() {
-		return Preferences.getBoolean(SETTING_DISPLAY_FILLED, SETTING_DISPLAY_FILLED_DEFAULT);
-	}
-
-	public static void setDisplayFilled(boolean value) {
-		Preferences.putBoolean(SETTING_DISPLAY_FILLED, value);
-	}
-
 	public static boolean getDisplayDraw() {
 		return Preferences.getBoolean(SETTING_DISPLAY_DRAW, SETTING_DISPLAY_DRAW_DEFAULT);
 	}
@@ -136,7 +137,7 @@ public class Setting {
 	}
 
 	public static void setDisplaySegment(boolean value) {
-		Preferences.putBoolean(SETTING_DISPLAY_SEGMENT, SETTING_DISPLAY_SEGMENT_DEFAULT);
+		Preferences.putBoolean(SETTING_DISPLAY_SEGMENT, value);
 	}
 
 	public static boolean getDisplayLine() {
@@ -145,6 +146,38 @@ public class Setting {
 
 	public static void setDisplayLine(boolean value) {
 		Preferences.putBoolean(SETTING_DISPLAY_LINE, value);
+	}
+
+	public static boolean getNotifyDraw() {
+		return Preferences.getBoolean(SETTING_NOTIFY_DRAW, SETTING_NOTIFY_DRAW_DEFAULT);
+	}
+
+	public static void setNotifyDraw(boolean value) {
+		Preferences.putBoolean(SETTING_NOTIFY_DRAW, value);
+	}
+
+	public static boolean getNotifyStroke() {
+		return Preferences.getBoolean(SETTING_NOTIFY_STROKE, SETTING_NOTIFY_STROKE_DEFAULT);
+	}
+
+	public static void setNotifyStroke(boolean value) {
+		Preferences.putBoolean(SETTING_NOTIFY_STROKE, value);
+	}
+
+	public static boolean getNotifySegment() {
+		return Preferences.getBoolean(SETTING_NOTIFY_SEGMENT, SETTING_NOTIFY_SEGMENT_DEFAULT);
+	}
+
+	public static void setNotifySegment(boolean value) {
+		Preferences.putBoolean(SETTING_NOTIFY_SEGMENT, value);
+	}
+
+	public static boolean getNotifyLine() {
+		return Preferences.getBoolean(SETTING_NOTIFY_LINE, SETTING_NOTIFY_LINE_DEFAULT);
+	}
+
+	public static void setNotifyLine(boolean value) {
+		Preferences.putBoolean(SETTING_NOTIFY_LINE, value);
 	}
 
 	public static boolean getDebugLog() {
