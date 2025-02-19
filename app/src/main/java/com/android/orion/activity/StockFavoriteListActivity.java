@@ -465,14 +465,11 @@ public class StockFavoriteListActivity extends ListActivity implements
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle arg1) {
-		String selection = "";
 		CursorLoader loader = null;
 
 		switch (id) {
 			case LOADER_ID_STOCK_FAVORITE_LIST:
-				selection += DatabaseContract.COLUMN_FLAG + " >= "
-						+ Stock.FLAG_FAVORITE;
-
+				String selection = DatabaseContract.COLUMN_FLAG + " >= " + Stock.FLAG_FAVORITE;
 				loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
 						DatabaseContract.Stock.PROJECTION_ALL, selection, null,
 						mSortOrder);
