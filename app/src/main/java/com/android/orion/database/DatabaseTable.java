@@ -64,7 +64,6 @@ public class DatabaseTable {
 			contentValues.put(DatabaseContract.COLUMN_CREATED, mCreated);
 			contentValues.put(DatabaseContract.COLUMN_MODIFIED, mModified);
 		}
-
 		return contentValues;
 	}
 

@@ -83,9 +83,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 					try {
 						mDatabaseManager.loadStockArrayMap(mStockArrayMap);
 						for (Stock stock : mStockArrayMap.values()) {
-							mDatabaseManager.deleteStockData(stock.getId());
-							mDatabaseManager.deleteStockTrend(stock);
-							mDatabaseManager.deleteStockPerceptron(stock.getId());
 							Setting.setDownloadStockData(stock.getSE(), stock.getCode(), 0);
 							mStockDataProvider.download(stock);
 						}
@@ -140,6 +137,16 @@ public class StockFavoriteListActivity extends ListActivity implements
 				return true;
 
 			case R.id.action_refresh:
+				try {
+					mDatabaseManager.loadStockArrayMap(mStockArrayMap);
+					for (Stock stock : mStockArrayMap.values()) {
+						mDatabaseManager.deleteStockData(stock.getId());
+						mDatabaseManager.deleteStockTrend(stock);
+						mDatabaseManager.deleteStockPerceptron(stock.getId());
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				mHandler.sendEmptyMessage(MESSAGE_REFRESH);
 				return true;
 

@@ -100,8 +100,6 @@ public class StockFinancialListActivity extends ListActivity implements
 					try {
 						mDatabaseManager.loadStockArrayMap(mStockArrayMap);
 						for (Stock stock : mStockArrayMap.values()) {
-							mDatabaseManager.deleteStockFinancial(stock.getId());
-							mDatabaseManager.deleteShareBonus(stock.getId());
 							Setting.setDownloadStock(stock.getSE(), stock.getCode(), 0);
 							mStockDataProvider.download(stock);
 						}
@@ -156,6 +154,15 @@ public class StockFinancialListActivity extends ListActivity implements
 				return true;
 
 			case R.id.action_refresh:
+				try {
+					mDatabaseManager.loadStockArrayMap(mStockArrayMap);
+					for (Stock stock : mStockArrayMap.values()) {
+						mDatabaseManager.deleteStockFinancial(stock.getId());
+						mDatabaseManager.deleteShareBonus(stock.getId());
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				mHandler.sendEmptyMessage(MESSAGE_REFRESH);
 				return true;
 

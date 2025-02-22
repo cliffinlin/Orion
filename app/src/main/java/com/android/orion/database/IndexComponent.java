@@ -37,8 +37,8 @@ public class IndexComponent extends DatabaseTable {
 	}
 
 	@Override
-	ContentValues getContentValues(ContentValues contentValues) {
-		super.getContentValues(contentValues);
+	public ContentValues getContentValues() {
+		ContentValues contentValues = super.getContentValues();
 
 		contentValues.put(DatabaseContract.COLUMN_INDEX_SE, mIndexSE);
 		contentValues.put(DatabaseContract.COLUMN_INDEX_CODE, mIndexCode);
@@ -46,7 +46,6 @@ public class IndexComponent extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_SE, mSE);
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
-
 		return contentValues;
 	}
 

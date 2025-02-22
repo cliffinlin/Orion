@@ -31,13 +31,12 @@ public class TotalShare extends DatabaseTable {
 	}
 
 	@Override
-	ContentValues getContentValues(ContentValues contentValues) {
-		super.getContentValues(contentValues);
+	public ContentValues getContentValues() {
+		ContentValues contentValues = super.getContentValues();
 
 		contentValues.put(DatabaseContract.COLUMN_STOCK_ID, mStockId);
 		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);
 		contentValues.put(DatabaseContract.COLUMN_TOTAL_SHARE, mTotalShare);
-
 		return contentValues;
 	}
 

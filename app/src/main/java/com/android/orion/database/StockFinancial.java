@@ -67,8 +67,8 @@ public class StockFinancial extends DatabaseTable {
 	}
 
 	@Override
-	ContentValues getContentValues(ContentValues contentValues) {
-		super.getContentValues(contentValues);
+	public ContentValues getContentValues() {
+		ContentValues contentValues = super.getContentValues();
 
 		contentValues.put(DatabaseContract.COLUMN_STOCK_ID, mStockId);
 		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);
@@ -101,7 +101,6 @@ public class StockFinancial extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_ROE, mRoe);
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND_RATIO,
 				mDividendRatio);
-
 		return contentValues;
 	}
 

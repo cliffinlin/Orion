@@ -85,7 +85,6 @@ public class IndexComponentListActivity extends ListActivity implements
 					for (int i = 0; i < mStockList.size(); i++) {
 						Stock stock = mStockList.get(i);
 						if (stock != null && (stock.getFlag() >= Stock.FLAG_FAVORITE)) {
-							mDatabaseManager.deleteStockData(stock.getId());
 							Setting.setDownloadStockData(stock.getSE(), stock.getCode(), 0);
 							mStockDataProvider.download(stock);
 						}
@@ -143,6 +142,12 @@ public class IndexComponentListActivity extends ListActivity implements
 				return true;
 
 			case R.id.action_refresh:
+				for (int i = 0; i < mStockList.size(); i++) {
+					Stock stock = mStockList.get(i);
+					if (stock != null && (stock.getFlag() >= Stock.FLAG_FAVORITE)) {
+						mDatabaseManager.deleteStockData(stock.getId());
+					}
+				}
 				mHandler.sendEmptyMessage(MESSAGE_REFRESH);
 				return true;
 

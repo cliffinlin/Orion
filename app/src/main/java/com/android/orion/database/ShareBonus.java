@@ -33,14 +33,13 @@ public class ShareBonus extends DatabaseTable {
 	}
 
 	@Override
-	ContentValues getContentValues(ContentValues contentValues) {
-		super.getContentValues(contentValues);
+	public ContentValues getContentValues() {
+		ContentValues contentValues = super.getContentValues();
 
 		contentValues.put(DatabaseContract.COLUMN_STOCK_ID, mStockId);
 		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND, mDividend);
 		contentValues.put(DatabaseContract.COLUMN_R_DATE, mRDate);
-
 		return contentValues;
 	}
 

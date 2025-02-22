@@ -66,8 +66,9 @@ public class StockPerceptron extends DatabaseTable {
 	}
 
 	@Override
-	ContentValues getContentValues(ContentValues contentValues) {
-		super.getContentValues(contentValues);
+	public ContentValues getContentValues() {
+		ContentValues contentValues = super.getContentValues();
+
 		contentValues.put(DatabaseContract.COLUMN_PERIOD, mPeriod);
 		contentValues.put(DatabaseContract.COLUMN_LEVEL, mLevel);
 		contentValues.put(DatabaseContract.COLUMN_TYPE, mType);
@@ -84,7 +85,8 @@ public class StockPerceptron extends DatabaseTable {
 	}
 
 	public ContentValues getContentValuesPerceptron() {
-		ContentValues contentValues = getContentValues();
+		ContentValues contentValues = super.getContentValues();
+
 		contentValues.put(DatabaseContract.COLUMN_WEIGHT, mLinearRegression.slope);
 		contentValues.put(DatabaseContract.COLUMN_BIAS, mLinearRegression.bias);
 		contentValues.put(DatabaseContract.COLUMN_ERROR, mLinearRegression.mse);

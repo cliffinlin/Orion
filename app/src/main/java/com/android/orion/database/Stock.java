@@ -164,8 +164,8 @@ public class Stock extends DatabaseTable {
 	}
 
 	@Override
-	public ContentValues getContentValues(ContentValues contentValues) {
-		super.getContentValues(contentValues);
+	public ContentValues getContentValues() {
+		ContentValues contentValues = super.getContentValues();
 
 //		contentValues.put(DatabaseContract.COLUMN_FLAG, mFlag);
 
@@ -227,17 +227,16 @@ public class Stock extends DatabaseTable {
 	}
 
 	public ContentValues getContentValuesInformation() {
-		ContentValues contentValues = getContentValues();
+		ContentValues contentValues = super.getContentValues();
 
 		contentValues.put(DatabaseContract.COLUMN_CLASSES, mClasses);
 		contentValues.put(DatabaseContract.COLUMN_PINYIN, mPinyin);
 		contentValues.put(DatabaseContract.COLUMN_TOTAL_SHARE, mTotalShare);
-
 		return contentValues;
 	}
 
 	public ContentValues getContentValuesRealTime() {
-		ContentValues contentValues = getContentValues();
+		ContentValues contentValues = super.getContentValues();
 
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
 		contentValues.put(DatabaseContract.COLUMN_PRICE, mPrice);
@@ -245,21 +244,18 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_NET, mNet);
 		contentValues.put(DatabaseContract.COLUMN_VOLUME, mVolume);
 		contentValues.put(DatabaseContract.COLUMN_VALUE, mValue);
-
 		return contentValues;
 	}
 
 	public ContentValues getContentValuesEdit() {
-		ContentValues contentValues = getContentValues();
+		ContentValues contentValues = super.getContentValues();
 
 		contentValues.put(DatabaseContract.COLUMN_CLASSES, mClasses);
 		contentValues.put(DatabaseContract.COLUMN_SE, mSE);
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
-
 		contentValues.put(DatabaseContract.COLUMN_FLAG, mFlag);
 		contentValues.put(DatabaseContract.COLUMN_OPERATE, mOperate);
-
 		return contentValues;
 	}
 
