@@ -120,7 +120,7 @@ public class StockAnalyzer {
 			}
 			mFinancialAnalyzer.analyzeFinancial(mStock);
 			mFinancialAnalyzer.setupFinancial(mStock);
-			mFinancialAnalyzer.setupShareBonus(mStock);
+			mFinancialAnalyzer.setupStockBonus(mStock);
 			stock.setModified(Utility.getCurrentDateTimeString());
 			mDatabaseManager.updateStock(mStock, mStock.getContentValues());
 //			updateNotification();

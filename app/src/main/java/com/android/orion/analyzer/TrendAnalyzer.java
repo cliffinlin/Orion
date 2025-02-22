@@ -298,7 +298,6 @@ public class TrendAnalyzer {
 
 			if (!TextUtils.isEmpty(trendType)) {
 				StockTrend stockTrend = new StockTrend();
-				stockTrend.setStockId(mStock.getId());
 				stockTrend.setSE(mStock.getSE());
 				stockTrend.setCode(mStock.getCode());
 				stockTrend.setName(mStock.getName());

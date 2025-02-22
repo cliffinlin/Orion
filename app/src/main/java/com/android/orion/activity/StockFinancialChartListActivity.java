@@ -25,7 +25,7 @@ import com.android.orion.chart.ChartSyncHelper;
 import com.android.orion.chart.StockFinancialChart;
 import com.android.orion.data.Period;
 import com.android.orion.database.DatabaseContract;
-import com.android.orion.database.ShareBonus;
+import com.android.orion.database.StockBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockFinancial;
 import com.android.orion.setting.Constant;
@@ -39,7 +39,6 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.components.YAxis.YAxisLabelPosition;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.formatter.DefaultYAxisValueFormatter;
 import com.github.mikephil.charting.utils.Utils;
 import com.markupartist.android.widget.PullToRefreshListView;
 
@@ -71,7 +70,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 	ArrayList<StockFinancialChartItemMain> mStockFinancialChartItemMainList = null;
 	ArrayList<StockFinancialChartItemSub> mStockFinancialChartItemSubList = null;
 	ArrayList<StockFinancialChart> mStockFinancialChartList = null;
-	ArrayList<ShareBonus> mShareBonusList = new ArrayList<>();
+	ArrayList<StockBonus> mStockBonusList = new ArrayList<>();
 	ArrayMap<Integer, CombinedChart> mCombinedChartMap = new ArrayMap<>();
 	ChartSyncHelper mChartSyncHelper = new ChartSyncHelper();
 
@@ -130,6 +129,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 		setContentView(R.layout.activity_stock_financial_chart_list);
 
 		mStock.setId(getIntent().getLongExtra(Constant.EXTRA_STOCK_ID, Stock.INVALID_ID));
+		mDatabaseManager.getStockById(mStock);
 		mSortOrder = getIntent().getStringExtra(Constant.EXTRA_STOCK_LIST_SORT_ORDER);
 
 		initListView();
@@ -161,8 +161,8 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 				return true;
 			}
 			case R.id.action_refresh: {
-				mDatabaseManager.deleteStockFinancial(mStock.getId());
-				mDatabaseManager.deleteShareBonus(mStock.getId());
+				mDatabaseManager.deleteStockFinancial(mStock);
+				mDatabaseManager.deleteStockBonus(mStock);
 				mHandler.sendEmptyMessage(MESSAGE_REFRESH);
 				return true;
 			}
@@ -294,11 +294,13 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 	}
 
 	void initLoader() {
+		mDatabaseManager.getStockById(mStock);
 		mLoaderManager.initLoader(LOADER_ID_STOCK_LIST, null, this);
 		mLoaderManager.initLoader(LOADER_ID_STOCK_FINANCIAL_LIST, null, this);
 	}
 
 	void restartLoader() {
+		mDatabaseManager.getStockById(mStock);
 		mLoaderManager.restartLoader(LOADER_ID_STOCK_LIST, null, this);
 		mLoaderManager.restartLoader(LOADER_ID_STOCK_FINANCIAL_LIST, null, this);
 	}
@@ -319,8 +321,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 		String sortOrder = "";
 		CursorLoader loader = null;
 
-		selection = mDatabaseManager.getStockFinancialSelection(mStock
-				.getId());
+		selection = mDatabaseManager.getStockSelection(mStock);
 
 		sortOrder = mDatabaseManager.getStockFinancialOrder();
 
@@ -402,7 +403,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 		}
 
 		String sortOrder = DatabaseContract.COLUMN_DATE + " ASC ";
-		mDatabaseManager.getShareBonusList(mStock, mShareBonusList,
+		mDatabaseManager.getStockBonusList(mStock, mStockBonusList,
 				sortOrder);
 
 		stockFinancialChart.clear();
@@ -447,11 +448,11 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 									/ (float) unit, index);
 					stockFinancialChart.mNetProfitEntryList.add(netProfittEntry);
 
-					Entry totalShareEntry = new Entry(
-							(float) mStockFinancial.getTotalShare()
+					Entry stockShareEntry = new Entry(
+							(float) mStockFinancial.getShare()
 									/ (float) unit, index);
-					stockFinancialChart.mTotalShareEntryList
-							.add(totalShareEntry);
+					stockFinancialChart.mStockShareEntryList
+							.add(stockShareEntry);
 
 					Entry bookValuePerShareEntry = new Entry(
 							(float) mStockFinancial.getBookValuePerShare(),
@@ -474,17 +475,17 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 							index);
 					stockFinancialChart.mRoeEntryList.add(roeEntry);
 
-					if (mShareBonusList.size() > 0) {
+					if (mStockBonusList.size() > 0) {
 						float dividend = 0;
-						ShareBonus shareBonus = Search.getShareBonusByDate(dateString,
-								mShareBonusList);
-						if (shareBonus != null) {
-							dividend = (float) (shareBonus.getDividend());
+						StockBonus stockBonus = Search.getStockBonusByDate(dateString,
+								mStockBonusList);
+						if (stockBonus != null) {
+							dividend = (float) (stockBonus.getDividend());
 						}
-						BarEntry shareBonusEntry = new BarEntry(dividend,
+						BarEntry stockBonusEntry = new BarEntry(dividend,
 								index);
 						stockFinancialChart.mDividendEntryList
-								.add(shareBonusEntry);
+								.add(stockBonusEntry);
 					}
 				}
 			}

@@ -179,7 +179,7 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 				return true;
 			}
 			case R.id.action_refresh: {
-				mDatabaseManager.deleteStockData(mStock.getId());
+				mDatabaseManager.deleteStockData(mStock);
 				mDatabaseManager.deleteStockTrend(mStock);
 				mHandler.sendEmptyMessage(MESSAGE_REFRESH);
 				return true;
@@ -231,7 +231,7 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 				case REQUEST_CODE_SETTING_DEBUG_LOOPBACK:
 					for (String period : Period.PERIODS) {
 						if (Setting.getPeriod(period)) {
-							mDatabaseManager.deleteStockData(mStock.getId(), period);
+							mDatabaseManager.deleteStockData(mStock.getSE(), mStock.getCode(), period);
 						}
 					}
 					Setting.setDownloadStockData(mStock.getSE(), mStock.getCode(), 0);
@@ -378,7 +378,7 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 	}
 
 	CursorLoader getStockDataCursorLoader(String period) {
-		String selection = mDatabaseManager.getStockDataSelection(mStock.getId(),
+		String selection = mDatabaseManager.getStockDataSelection(mStock.getSE(), mStock.getCode(),
 				period, Trend.LEVEL_NONE);
 		String sortOrder = mDatabaseManager.getStockDataOrder();
 		CursorLoader loader = new CursorLoader(this, DatabaseContract.StockData.CONTENT_URI,

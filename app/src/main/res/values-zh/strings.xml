@@ -95,7 +95,7 @@
     <string name="r_date">RDate</string>
     <string name="valuation">Valuation</string>
     <string name="yield">Yield</string>
-    <string name="total_share">Share</string>
+    <string name="share">Share</string>
     <string name="market_value">MValue</string>
     <string name="debt_to_net_assets_rato">D2B</string>
     <string name="net_profit">NP</string>

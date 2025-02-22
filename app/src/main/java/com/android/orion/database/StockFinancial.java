@@ -6,7 +6,10 @@ import android.database.Cursor;
 import com.android.orion.utility.Utility;
 
 public class StockFinancial extends DatabaseTable {
-	private long mStockId;
+
+	protected String mSE;
+	protected String mCode;
+	protected String mName;
 	private String mDate;
 	private double mBookValuePerShare;
 	private double mCashFlowPerShare;
@@ -19,7 +22,7 @@ public class StockFinancial extends DatabaseTable {
 	private double mNetProfit;
 	private double mNetProfitInYear;
 	private double mNetProfitMargin;
-	private double mTotalShare;
+	private double mShare;
 	private double mDebtToNetAssetsRatio;
 	private double mNetProfitPerShare;
 	private double mNetProfitPerShareInYear;
@@ -44,7 +47,9 @@ public class StockFinancial extends DatabaseTable {
 
 		setTableName(DatabaseContract.StockFinancial.TABLE_NAME);
 
-		mStockId = 0;
+		mSE = "";
+		mCode = "";
+		mName = "";
 		mDate = "";
 		mBookValuePerShare = 0;
 		mCashFlowPerShare = 0;
@@ -57,7 +62,7 @@ public class StockFinancial extends DatabaseTable {
 		mNetProfit = 0;
 		mNetProfitInYear = 0;
 		mNetProfitMargin = 0;
-		mTotalShare = 0;
+		mShare = 0;
 		mDebtToNetAssetsRatio = 0;
 		mNetProfitPerShare = 0;
 		mNetProfitPerShareInYear = 0;
@@ -70,7 +75,9 @@ public class StockFinancial extends DatabaseTable {
 	public ContentValues getContentValues() {
 		ContentValues contentValues = super.getContentValues();
 
-		contentValues.put(DatabaseContract.COLUMN_STOCK_ID, mStockId);
+		contentValues.put(DatabaseContract.COLUMN_SE, mSE);
+		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
+		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
 		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);
 		contentValues.put(DatabaseContract.COLUMN_BOOK_VALUE_PER_SHARE,
 				mBookValuePerShare);
@@ -90,7 +97,7 @@ public class StockFinancial extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT, mNetProfit);
 		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_IN_YEAR, mNetProfitInYear);
 		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_MARGIN, mNetProfitMargin);
-		contentValues.put(DatabaseContract.COLUMN_TOTAL_SHARE, mTotalShare);
+		contentValues.put(DatabaseContract.COLUMN_SHARE, mShare);
 		contentValues.put(DatabaseContract.COLUMN_DEBT_TO_NET_ASSETS_RATIO,
 				mDebtToNetAssetsRatio);
 		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE,
@@ -113,7 +120,9 @@ public class StockFinancial extends DatabaseTable {
 
 		super.set(stockFinancial);
 
-		setStockId(stockFinancial.mStockId);
+		setSE(stockFinancial.mSE);
+		setCode(stockFinancial.mCode);
+		setName(stockFinancial.mName);
 		setDate(stockFinancial.mDate);
 		setBookValuePerShare(stockFinancial.mBookValuePerShare);
 		setCashFlowPerShare(stockFinancial.mCashFlowPerShare);
@@ -126,7 +135,7 @@ public class StockFinancial extends DatabaseTable {
 		setNetProfit(stockFinancial.mNetProfit);
 		setNetProfitInYear(stockFinancial.mNetProfitInYear);
 		setNetProfitMargin(stockFinancial.mNetProfitMargin);
-		setTotalShare(stockFinancial.mTotalShare);
+		setShare(stockFinancial.mShare);
 		setDebtToNetAssetsRatio(stockFinancial.mDebtToNetAssetsRatio);
 		setNetProfitPerShare(stockFinancial.mNetProfitPerShare);
 		setNetProfitPerShareInYear(stockFinancial.mNetProfitPerShareInYear);
@@ -145,7 +154,9 @@ public class StockFinancial extends DatabaseTable {
 
 		super.set(cursor);
 
-		setStockID(cursor);
+		setSE(cursor);
+		setCode(cursor);
+		setName(cursor);
 		setDate(cursor);
 		setBookValuePerShare(cursor);
 		setCashFlowPerShare(cursor);
@@ -158,7 +169,7 @@ public class StockFinancial extends DatabaseTable {
 		setNetProfit(cursor);
 		setNetProfitInYear(cursor);
 		setNetProfitMargin(cursor);
-		setTotalShare(cursor);
+		setShare(cursor);
 		setDebtToNetAssetsRatio(cursor);
 		setNetProfitPerShare(cursor);
 		setNetProfitPerShareInYear(cursor);
@@ -167,21 +178,55 @@ public class StockFinancial extends DatabaseTable {
 		setDividendRatio(cursor);
 	}
 
-	public long getStockId() {
-		return mStockId;
+	public String getSE() {
+		return mSE;
 	}
 
-	public void setStockId(long stockId) {
-		mStockId = stockId;
+	public void setSE(String se) {
+		mSE = se;
 	}
 
-	void setStockID(Cursor cursor) {
+	void setSE(Cursor cursor) {
 		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
-		setStockId(cursor.getLong(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_STOCK_ID)));
+		setSE(cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_SE)));
+	}
+
+	public String getCode() {
+		return mCode;
+	}
+
+	public void setCode(String code) {
+		mCode = code;
+	}
+
+	void setCode(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setCode(cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_CODE)));
+	}
+
+	public String getName() {
+		return mName;
+	}
+
+	public void setName(String name) {
+		mName = name;
+	}
+
+	void setName(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setName(cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_NAME)));
 	}
 
 	public String getDate() {
@@ -389,21 +434,21 @@ public class StockFinancial extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_NET_PROFIT_MARGIN)));
 	}
 
-	public double getTotalShare() {
-		return mTotalShare;
+	public double getShare() {
+		return mShare;
 	}
 
-	public void setTotalShare(double totalShare) {
-		mTotalShare = totalShare;
+	public void setShare(double share) {
+		mShare = share;
 	}
 
-	void setTotalShare(Cursor cursor) {
+	void setShare(Cursor cursor) {
 		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
-		setTotalShare(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_TOTAL_SHARE)));
+		setShare(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_SHARE)));
 	}
 
 	public double getDebtToNetAssetsRatio() {
@@ -511,11 +556,11 @@ public class StockFinancial extends DatabaseTable {
 	}
 
 	public void setupDebtToNetAssetsRatio() {
-		if ((mBookValuePerShare == 0) || (mTotalShare == 0)) {
+		if ((mBookValuePerShare == 0) || (mShare == 0)) {
 			return;
 		}
 
-		mDebtToNetAssetsRatio = Utility.Round2(mTotalLongTermLiabilities / mTotalShare
+		mDebtToNetAssetsRatio = Utility.Round2(mTotalLongTermLiabilities / mShare
 				/ mBookValuePerShare);
 	}
 
@@ -528,18 +573,18 @@ public class StockFinancial extends DatabaseTable {
 	}
 
 	public void setupNetProfitPerShare() {
-		if ((mNetProfit == 0) || (mTotalShare == 0)) {
+		if ((mNetProfit == 0) || (mShare == 0)) {
 			return;
 		}
 
-		mNetProfitPerShare = Utility.Round2(mNetProfit / mTotalShare);
+		mNetProfitPerShare = Utility.Round2(mNetProfit / mShare);
 	}
 
-	public void setupNetProfitPerShare(double totalShare) {
-		if ((mNetProfit == 0) || (totalShare == 0)) {
+	public void setupNetProfitPerShare(double share) {
+		if ((mNetProfit == 0) || (share == 0)) {
 			return;
 		}
 
-		mNetProfitPerShare = Utility.Round2(mNetProfit / totalShare);
+		mNetProfitPerShare = Utility.Round2(mNetProfit / share);
 	}
 }

@@ -16,9 +16,9 @@ public interface IStockDataProvider {
 
 	int downloadStockFinancial(Stock stock);
 
-	int downloadShareBonus(Stock stock);
+	int downloadStockBonus(Stock stock);
 
-	int downloadTotalShare(Stock stock);
+	int downloadStockShare(Stock stock);
 
 	int downloadStockDataHistory(Stock stock);
 

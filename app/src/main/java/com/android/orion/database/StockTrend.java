@@ -10,7 +10,6 @@ import com.android.orion.utility.Utility;
 
 public class StockTrend extends DatabaseTable {
 
-	private long mStockId;
 	private String mSE;
 	private String mCode;
 	private String mName;
@@ -41,7 +40,7 @@ public class StockTrend extends DatabaseTable {
 	}
 
 	public boolean isEmpty() {
-		return (mStockId == 0) && TextUtils.isEmpty(mDate)
+		return TextUtils.isEmpty(mDate)
 				&& TextUtils.isEmpty(mTime);
 	}
 
@@ -50,7 +49,6 @@ public class StockTrend extends DatabaseTable {
 
 		setTableName(DatabaseContract.StockTrend.TABLE_NAME);
 
-		mStockId = 0;
 		mSE = "";
 		mCode = "";
 		mName = "";
@@ -68,7 +66,6 @@ public class StockTrend extends DatabaseTable {
 	public ContentValues getContentValues() {
 		ContentValues contentValues = super.getContentValues();
 
-		contentValues.put(DatabaseContract.COLUMN_STOCK_ID, mStockId);
 		contentValues.put(DatabaseContract.COLUMN_SE, mSE);
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
@@ -106,7 +103,6 @@ public class StockTrend extends DatabaseTable {
 
 		super.set(stockTrend);
 
-		setStockId(stockTrend.mStockId);
 		setSE(stockTrend.mSE);
 		setCode(stockTrend.mCode);
 		setName(stockTrend.mName);
@@ -130,7 +126,6 @@ public class StockTrend extends DatabaseTable {
 
 		super.set(cursor);
 
-		setStockID(cursor);
 		setSE(cursor);
 		setCode(cursor);
 		setName(cursor);
@@ -142,23 +137,6 @@ public class StockTrend extends DatabaseTable {
 		setLevel(cursor);
 		setType(cursor);
 		setFlag(cursor);
-	}
-
-	public long getStockId() {
-		return mStockId;
-	}
-
-	public void setStockId(long stockId) {
-		mStockId = stockId;
-	}
-
-	void setStockID(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setStockId(cursor.getLong(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_STOCK_ID)));
 	}
 
 	public String getSE() {
@@ -365,8 +343,7 @@ public class StockTrend extends DatabaseTable {
 	}
 
 	public String toString() {
-		return  mStockId + Constant.TAB
-				+ mSE + Constant.TAB
+		return  mSE + Constant.TAB
 				+ mCode + Constant.TAB
 				+ mName + Constant.TAB
 				+ mPrice + Constant.TAB

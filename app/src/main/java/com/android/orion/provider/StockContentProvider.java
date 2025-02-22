@@ -32,11 +32,11 @@ public class StockContentProvider extends ContentProvider {
 	private static final int STOCK_FINANCIAL = 400;
 	private static final int STOCK_FINANCIAL_ID = 401;
 
-	private static final int SHARE_BONUS = 500;
-	private static final int SHARE_BONUS_ID = 501;
+	private static final int STOCK_BONUS = 500;
+	private static final int STOCK_BONUS_ID = 501;
 
-	private static final int TOTAL_SHARE = 600;
-	private static final int TOTAL_SHARE_ID = 601;
+	private static final int STOCK_SHARE = 600;
+	private static final int STOCK_SHARE_ID = 601;
 
 	private static final int INDEX_COMPONENT = 700;
 	private static final int INDEX_COMPONENT_ID = 701;
@@ -73,14 +73,14 @@ public class StockContentProvider extends ContentProvider {
 				STOCK_FINANCIAL_ID);
 
 		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
-				DatabaseContract.ShareBonus.TABLE_NAME, SHARE_BONUS);
+				DatabaseContract.StockBonus.TABLE_NAME, STOCK_BONUS);
 		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
-				DatabaseContract.ShareBonus.TABLE_NAME + "/#", SHARE_BONUS_ID);
+				DatabaseContract.StockBonus.TABLE_NAME + "/#", STOCK_BONUS_ID);
 
 		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
-				DatabaseContract.TotalShare.TABLE_NAME, TOTAL_SHARE);
+				DatabaseContract.StockShare.TABLE_NAME, STOCK_SHARE);
 		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
-				DatabaseContract.TotalShare.TABLE_NAME + "/#", TOTAL_SHARE_ID);
+				DatabaseContract.StockShare.TABLE_NAME + "/#", STOCK_SHARE_ID);
 
 		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
 				DatabaseContract.IndexComponent.TABLE_NAME, INDEX_COMPONENT);
@@ -144,18 +144,18 @@ public class StockContentProvider extends ContentProvider {
 				type = DatabaseContract.StockFinancial.CONTENT_ITEM_TYPE;
 				break;
 
-			case SHARE_BONUS:
-				type = DatabaseContract.ShareBonus.CONTENT_TYPE;
+			case STOCK_BONUS:
+				type = DatabaseContract.StockBonus.CONTENT_TYPE;
 				break;
-			case SHARE_BONUS_ID:
-				type = DatabaseContract.ShareBonus.CONTENT_ITEM_TYPE;
+			case STOCK_BONUS_ID:
+				type = DatabaseContract.StockBonus.CONTENT_ITEM_TYPE;
 				break;
 
-			case TOTAL_SHARE:
-				type = DatabaseContract.TotalShare.CONTENT_TYPE;
+			case STOCK_SHARE:
+				type = DatabaseContract.StockShare.CONTENT_TYPE;
 				break;
-			case TOTAL_SHARE_ID:
-				type = DatabaseContract.TotalShare.CONTENT_ITEM_TYPE;
+			case STOCK_SHARE_ID:
+				type = DatabaseContract.StockShare.CONTENT_ITEM_TYPE;
 				break;
 
 			case INDEX_COMPONENT:
@@ -237,20 +237,20 @@ public class StockContentProvider extends ContentProvider {
 						+ uri.getLastPathSegment());
 				break;
 
-			case SHARE_BONUS:
-				builder.setTables(DatabaseContract.ShareBonus.TABLE_NAME);
+			case STOCK_BONUS:
+				builder.setTables(DatabaseContract.StockBonus.TABLE_NAME);
 				break;
-			case SHARE_BONUS_ID:
-				builder.setTables(DatabaseContract.ShareBonus.TABLE_NAME);
+			case STOCK_BONUS_ID:
+				builder.setTables(DatabaseContract.StockBonus.TABLE_NAME);
 				builder.appendWhere(BaseColumns._ID + " = "
 						+ uri.getLastPathSegment());
 				break;
 
-			case TOTAL_SHARE:
-				builder.setTables(DatabaseContract.TotalShare.TABLE_NAME);
+			case STOCK_SHARE:
+				builder.setTables(DatabaseContract.StockShare.TABLE_NAME);
 				break;
-			case TOTAL_SHARE_ID:
-				builder.setTables(DatabaseContract.TotalShare.TABLE_NAME);
+			case STOCK_SHARE_ID:
+				builder.setTables(DatabaseContract.StockShare.TABLE_NAME);
 				builder.appendWhere(BaseColumns._ID + " = "
 						+ uri.getLastPathSegment());
 				break;
@@ -329,15 +329,15 @@ public class StockContentProvider extends ContentProvider {
 						contentValues);
 				break;
 
-			case SHARE_BONUS:
+			case STOCK_BONUS:
 				id = mDatabaseManager.mDatabase
-						.insert(DatabaseContract.ShareBonus.TABLE_NAME, null,
+						.insert(DatabaseContract.StockBonus.TABLE_NAME, null,
 								contentValues);
 				break;
 
-			case TOTAL_SHARE:
+			case STOCK_SHARE:
 				id = mDatabaseManager.mDatabase
-						.insert(DatabaseContract.TotalShare.TABLE_NAME, null,
+						.insert(DatabaseContract.StockShare.TABLE_NAME, null,
 								contentValues);
 				break;
 
@@ -485,33 +485,33 @@ public class StockContentProvider extends ContentProvider {
 						whereClause, selectionArgs);
 				break;
 
-			case SHARE_BONUS:
+			case STOCK_BONUS:
 				result = mDatabaseManager.mDatabase.update(
-						DatabaseContract.ShareBonus.TABLE_NAME, values, selection,
+						DatabaseContract.StockBonus.TABLE_NAME, values, selection,
 						selectionArgs);
 				break;
-			case SHARE_BONUS_ID:
+			case STOCK_BONUS_ID:
 				whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
 				if (!TextUtils.isEmpty(selection)) {
 					whereClause += " AND " + whereClause;
 				}
 				result = mDatabaseManager.mDatabase.update(
-						DatabaseContract.ShareBonus.TABLE_NAME, values,
+						DatabaseContract.StockBonus.TABLE_NAME, values,
 						whereClause, selectionArgs);
 				break;
 
-			case TOTAL_SHARE:
+			case STOCK_SHARE:
 				result = mDatabaseManager.mDatabase.update(
-						DatabaseContract.TotalShare.TABLE_NAME, values, selection,
+						DatabaseContract.StockShare.TABLE_NAME, values, selection,
 						selectionArgs);
 				break;
-			case TOTAL_SHARE_ID:
+			case STOCK_SHARE_ID:
 				whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
 				if (!TextUtils.isEmpty(selection)) {
 					whereClause += " AND " + whereClause;
 				}
 				result = mDatabaseManager.mDatabase.update(
-						DatabaseContract.TotalShare.TABLE_NAME, values,
+						DatabaseContract.StockShare.TABLE_NAME, values,
 						whereClause, selectionArgs);
 				break;
 
@@ -644,33 +644,33 @@ public class StockContentProvider extends ContentProvider {
 						selectionArgs);
 				break;
 
-			case SHARE_BONUS:
+			case STOCK_BONUS:
 				result = mDatabaseManager.mDatabase.delete(
-						DatabaseContract.ShareBonus.TABLE_NAME, selection,
+						DatabaseContract.StockBonus.TABLE_NAME, selection,
 						selectionArgs);
 				break;
-			case SHARE_BONUS_ID:
+			case STOCK_BONUS_ID:
 				whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
 				if (!TextUtils.isEmpty(selection)) {
 					whereClause += " AND " + whereClause;
 				}
 				result = mDatabaseManager.mDatabase.delete(
-						DatabaseContract.ShareBonus.TABLE_NAME, whereClause,
+						DatabaseContract.StockBonus.TABLE_NAME, whereClause,
 						selectionArgs);
 				break;
 
-			case TOTAL_SHARE:
+			case STOCK_SHARE:
 				result = mDatabaseManager.mDatabase.delete(
-						DatabaseContract.TotalShare.TABLE_NAME, selection,
+						DatabaseContract.StockShare.TABLE_NAME, selection,
 						selectionArgs);
 				break;
-			case TOTAL_SHARE_ID:
+			case STOCK_SHARE_ID:
 				whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
 				if (!TextUtils.isEmpty(selection)) {
 					whereClause += " AND " + whereClause;
 				}
 				result = mDatabaseManager.mDatabase.delete(
-						DatabaseContract.TotalShare.TABLE_NAME, whereClause,
+						DatabaseContract.StockShare.TABLE_NAME, whereClause,
 						selectionArgs);
 				break;
 

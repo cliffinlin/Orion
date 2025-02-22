@@ -461,7 +461,7 @@ public class StockDeal extends DatabaseTable {
 		mFee = Utility.Round2(buyStampDuty + buyTransferFee + buyCommissionFee);
 	}
 
-	public void setupSellFee(ArrayList<ShareBonus> shareBonusList) {
+	public void setupSellFee(ArrayList<StockBonus> stockBonusList) {
 		double sellStampDuty = 0;
 		double sellTransferFee = 0;
 		double sellCommissionFee = 0;
@@ -496,18 +496,18 @@ public class StockDeal extends DatabaseTable {
 			sellCommissionFee = SELL_COMMISSION_FEE_MIN;
 		}
 
-		dividendIncomeTax = getDividendIncomeTax(shareBonusList);
+		dividendIncomeTax = getDividendIncomeTax(stockBonusList);
 
 		mFee = Utility.Round2(sellStampDuty + sellTransferFee + sellCommissionFee + dividendIncomeTax);
 	}
 
-	double getDividendIncomeTax(ArrayList<ShareBonus> shareBonusList) {
-		ShareBonus shareBonus = new ShareBonus();
+	double getDividendIncomeTax(ArrayList<StockBonus> stockBonusList) {
+		StockBonus stockBonus = new StockBonus();
 		String rDate = "";
 		double dividend = 0;
 		double result = 0;
 
-		if (shareBonusList == null || shareBonusList.size() < Trend.VERTEX_SIZE) {
+		if (stockBonusList == null || stockBonusList.size() < Trend.VERTEX_SIZE) {
 			return result;
 		}
 
@@ -516,8 +516,8 @@ public class StockDeal extends DatabaseTable {
 		}
 
 		for (int i = 0; i < 2; i++) {
-			shareBonus = shareBonusList.get(i);
-			rDate = shareBonus.getRDate();
+			stockBonus = stockBonusList.get(i);
+			rDate = stockBonus.getRDate();
 			if (TextUtils.isEmpty(rDate) || rDate.contains(Stock.STATUS_SUSPENSION)) {
 				continue;
 			} else {
@@ -529,7 +529,7 @@ public class StockDeal extends DatabaseTable {
 			return result;
 		}
 
-		dividend = shareBonus.getDividend();
+		dividend = stockBonus.getDividend();
 		if (dividend == 0) {
 			return result;
 		}

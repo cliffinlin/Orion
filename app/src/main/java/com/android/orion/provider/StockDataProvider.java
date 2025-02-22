@@ -416,7 +416,6 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 						} else {
 							indexStockData = new StockData(period);
 
-							indexStockData.setStockId(index.getId());
 							indexStockData.setSE(index.getSE());
 							indexStockData.setCode(index.getCode());
 							indexStockData.setName(index.getName());
@@ -782,12 +781,12 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 	}
 
 	@Override
-	public int downloadShareBonus(Stock stock) {
+	public int downloadStockBonus(Stock stock) {
 		return 0;
 	}
 
 	@Override
-	public int downloadTotalShare(Stock stock) {
+	public int downloadStockShare(Stock stock) {
 		return 0;
 	}
 
@@ -851,12 +850,12 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 							return;
 						}
 
-						if (downloadShareBonus(stock) == RESULT_FAILED) {
+						if (downloadStockBonus(stock) == RESULT_FAILED) {
 							StockService.getInstance().onDisconnected();
 							return;
 						}
 
-						if (downloadTotalShare(stock) == RESULT_FAILED) {
+						if (downloadStockShare(stock) == RESULT_FAILED) {
 							StockService.getInstance().onDisconnected();
 							return;
 						}

@@ -16,14 +16,14 @@ import com.android.orion.data.Trend;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.DatabaseOpenHelper;
 import com.android.orion.database.IndexComponent;
-import com.android.orion.database.ShareBonus;
+import com.android.orion.database.StockBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockFinancial;
 import com.android.orion.database.StockPerceptron;
 import com.android.orion.database.StockTrend;
-import com.android.orion.database.TotalShare;
+import com.android.orion.database.StockShare;
 import com.android.orion.interfaces.StockListener;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Preferences;
@@ -156,9 +156,7 @@ public class DatabaseManager implements StockListener {
 			return cursor;
 		}
 
-		String selection = DatabaseContract.COLUMN_SE + " = " + "'"
-				+ stock.getSE() + "'" + " AND " + DatabaseContract.COLUMN_CODE
-				+ " = " + "'" + stock.getCode() + "'";
+		String selection = getStockSelection(stock);
 
 		cursor = queryStock(selection, null, null);
 
@@ -340,9 +338,7 @@ public class DatabaseManager implements StockListener {
 			return result;
 		}
 
-		String where = DatabaseContract.COLUMN_SE + " = " + "'"
-				+ stock.getSE() + "'" + " AND " + DatabaseContract.COLUMN_CODE
-				+ " = " + "'" + stock.getCode() + "'";
+		String where = getStockSelection(stock);
 
 		result = mContentResolver.update(DatabaseContract.Stock.CONTENT_URI,
 				contentValues, where, null);
@@ -384,6 +380,19 @@ public class DatabaseManager implements StockListener {
 		}
 
 		return result;
+	}
+
+	public String getStockSelection(Stock stock) {
+		if (stock == null) {
+			return null;
+		}
+		return DatabaseContract.COLUMN_SE + " = " + "'"	+ stock.getSE() + "'"
+				+ " AND " + DatabaseContract.COLUMN_CODE + " = " + "'" + stock.getCode() + "'";
+	}
+
+	public String getStockSelection(String se, String code) {
+		return DatabaseContract.COLUMN_SE + " = " + "'"	+ se + "'"
+				+ " AND " + DatabaseContract.COLUMN_CODE + " = " + "'" + code + "'";
 	}
 
 	public Uri insertStockData(StockData stockData) {
@@ -470,10 +479,7 @@ public class DatabaseManager implements StockListener {
 		}
 
 		try {
-			String selection = DatabaseContract.COLUMN_STOCK_ID + " = "
-					+ stockData.getStockId() + " AND "
-					+ DatabaseContract.COLUMN_PERIOD + " = " + "'"
-					+ stockData.getPeriod() + "'";
+			String selection = getStockDataSelection(stockData.getSE(), stockData.getCode(), stockData.getPeriod());
 			String sortOrder = DatabaseContract.COLUMN_DATE + " DESC " + ","
 					+ DatabaseContract.COLUMN_TIME + " DESC ";
 
@@ -502,7 +508,7 @@ public class DatabaseManager implements StockListener {
 
 		stockDataList.clear();
 
-		String selection = getStockDataSelection(stock.getId(), period, Trend.LEVEL_NONE);
+		String selection = getStockDataSelection(stock.getSE(), stock.getCode(), period, Trend.LEVEL_NONE);
 
 		try {
 			cursor = queryStockData(selection, null, sortOrder);
@@ -545,8 +551,7 @@ public class DatabaseManager implements StockListener {
 		try {
 			stockDataList.clear();
 
-			selection = getStockDataSelection(
-					stock.getId(), period, Trend.LEVEL_NONE);
+			selection = getStockDataSelection(stock.getSE(), stock.getCode(), period, Trend.LEVEL_NONE);
 			sortOrder = getStockDataOrder();
 			cursor = queryStockData(selection, null,
 					sortOrder);
@@ -623,7 +628,7 @@ public class DatabaseManager implements StockListener {
 		}
 
 		try {
-			deleteStockData(stock.getId(), period);
+			deleteStockData(stock.getSE(), stock.getCode(), period);
 
 			ContentValues[] contentValues = new ContentValues[stockDataList.size()];
 			for (int i = 0; i < stockDataList.size(); i++) {
@@ -657,9 +662,9 @@ public class DatabaseManager implements StockListener {
 		return result;
 	}
 
-	public int deleteStockData(long stockId) {
+	public int deleteStockData(Stock stock) {
 		int result = 0;
-		String where = DatabaseContract.COLUMN_STOCK_ID + "=" + stockId;
+		String where = getStockSelection(stock);
 
 		try {
 			result = delete(DatabaseContract.StockData.CONTENT_URI, where);
@@ -670,19 +675,27 @@ public class DatabaseManager implements StockListener {
 		return result;
 	}
 
-	public int deleteStockData(long stockId, String period) {
+	public int deleteStockData(String se, String code, String period) {
 		int result = 0;
 
 		if (mContentResolver == null) {
 			return result;
 		}
 
-		String where = getStockDataSelection(stockId, period);
+		String where = getStockDataSelection(se, code, period);
 
 		result = mContentResolver.delete(
 				DatabaseContract.StockData.CONTENT_URI, where, null);
 
 		return result;
+	}
+
+	public String getStockSelection(StockData stockData) {
+		if (stockData == null) {
+			return null;
+		}
+		return DatabaseContract.COLUMN_SE + " = " + "'"	+ stockData.getSE() + "'"
+				+ " AND " + DatabaseContract.COLUMN_CODE + " = " + "'" + stockData.getCode() + "'";
 	}
 
 	public String getStockDataSelection(StockData stockData) {
@@ -693,8 +706,7 @@ public class DatabaseManager implements StockListener {
 			return selection;
 		}
 
-		selection = DatabaseContract.COLUMN_STOCK_ID + " = "
-				+ stockData.getStockId() + " AND "
+		selection = getStockSelection(stockData) + " AND "
 				+ DatabaseContract.COLUMN_PERIOD + " = " + "'"
 				+ stockData.getPeriod() + "'" + " AND "
 				+ DatabaseContract.COLUMN_DATE + " = " + "'"
@@ -710,13 +722,13 @@ public class DatabaseManager implements StockListener {
 		return selection;
 	}
 
-	public String getStockDataSelection(long stockId, String period) {
-		return DatabaseContract.COLUMN_STOCK_ID + " = " + stockId + " AND "
-				+ DatabaseContract.COLUMN_PERIOD + " = '" + period + "'";
+	public String getStockDataSelection(String se, String code, String period) {
+		return getStockSelection(se, code)
+				+ " AND " + DatabaseContract.COLUMN_PERIOD + " = '" + period + "'";
 	}
 
-	public String getStockDataSelection(long stockId, String period, int level) {
-		return DatabaseContract.COLUMN_STOCK_ID + " = " + stockId
+	public String getStockDataSelection(String se, String code, String period, int level) {
+		return getStockSelection(se, code)
 				+ " AND " + DatabaseContract.COLUMN_PERIOD + " = '" + period + "'"
 				+ " AND " + DatabaseContract.COLUMN_LEVEL + " = '" + level + "'";
 	}
@@ -865,35 +877,6 @@ public class DatabaseManager implements StockListener {
 				+ " AND " + DatabaseContract.COLUMN_LEVEL + " = " + level
 				+ " AND " + DatabaseContract.COLUMN_TYPE + " = '" + type + "'";
 		String sortOrder = DatabaseContract.COLUMN_PRICE + DatabaseContract.ORDER_ASC;
-
-		stockTrendList.clear();
-		Cursor cursor = null;
-		try {
-			cursor = queryStockTrend(selection, null, sortOrder);
-			if ((cursor != null) && (cursor.getCount() > 0)) {
-				while (cursor.moveToNext()) {
-					StockTrend stockTrend = new StockTrend();
-					stockTrend.set(cursor);
-					stockTrendList.add(stockTrend);
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			closeCursor(cursor);
-		}
-	}
-
-	public void getStockTrendList(long stockId, int flag,
-								  ArrayList<StockTrend> stockTrendList) {
-		if (stockTrendList == null) {
-			return;
-		}
-
-		String selection = DatabaseContract.COLUMN_STOCK_ID + " = " + stockId
-				+ " AND " + DatabaseContract.COLUMN_LEVEL + " > " + Trend.LEVEL_DRAW
-				+ " AND " + DatabaseContract.COLUMN_FLAG + " = " + flag;
-		String sortOrder = DatabaseContract.COLUMN_LEVEL + DatabaseContract.ORDER_ASC;
 
 		stockTrendList.clear();
 		Cursor cursor = null;
@@ -1523,8 +1506,7 @@ public class DatabaseManager implements StockListener {
 		}
 
 		try {
-			String selection = DatabaseContract.COLUMN_STOCK_ID + "=" + stock.getId();
-			selection = DatabaseContract.COLUMN_SE + " = " + "'" + stock.getSE() + "'"
+			String selection = DatabaseContract.COLUMN_SE + " = " + "'" + stock.getSE() + "'"
 					+ " AND " + DatabaseContract.COLUMN_CODE + " = " + "'"
 					+ stock.getCode() + "'";
 			cursor = queryStockDeal(selection, null, null);
@@ -1711,7 +1693,7 @@ public class DatabaseManager implements StockListener {
 		}
 
 		try {
-			String selection = getStockFinancialSelection(stock.getId());
+			String selection = getStockSelection(stock);
 			String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
 
 			cursor = mContentResolver.query(
@@ -1739,7 +1721,7 @@ public class DatabaseManager implements StockListener {
 
 		stockFinancialList.clear();
 
-		String selection = getStockFinancialSelection(stock.getId());
+		String selection = getStockSelection(stock);
 
 		try {
 			cursor = queryStockFinancial(selection, null, sortOrder);
@@ -1803,7 +1785,7 @@ public class DatabaseManager implements StockListener {
 		}
 
 		try {
-			deleteStockFinancial(stock.getId());
+			deleteStockFinancial(stock);
 
 			ContentValues[] contentValues = new ContentValues[stockFinancialList.size()];
 			for (int i = 0; i < stockFinancialList.size(); i++) {
@@ -1837,9 +1819,9 @@ public class DatabaseManager implements StockListener {
 		return result;
 	}
 
-	public int deleteStockFinancial(long stockId) {
+	public int deleteStockFinancial(Stock stock) {
 		int result = 0;
-		String where = DatabaseContract.COLUMN_STOCK_ID + "=" + stockId;
+		String where = getStockSelection(stock);
 
 		try {
 			result = delete(DatabaseContract.StockFinancial.CONTENT_URI, where);
@@ -1850,19 +1832,27 @@ public class DatabaseManager implements StockListener {
 		return result;
 	}
 
-	public int deleteStockFinancial(long stockId, String date) {
+	public int deleteStockFinancial(Stock stock, String date) {
 		int result = 0;
 
 		if (mContentResolver == null) {
 			return result;
 		}
 
-		String where = getStockFinancialSelection(stockId, date);
+		String where = getStockFinancialSelection(stock, date);
 
 		result = mContentResolver.delete(
 				DatabaseContract.StockFinancial.CONTENT_URI, where, null);
 
 		return result;
+	}
+
+	public String getStockSelection(StockFinancial stockFinancial) {
+		if (stockFinancial == null) {
+			return null;
+		}
+		return DatabaseContract.COLUMN_SE + " = " + "'"	+ stockFinancial.getSE() + "'"
+				+ " AND " + DatabaseContract.COLUMN_CODE + " = " + "'" + stockFinancial.getCode() + "'";
 	}
 
 	public String getStockFinancialSelection(StockFinancial stockFinancial) {
@@ -1872,39 +1862,39 @@ public class DatabaseManager implements StockListener {
 			return selection;
 		}
 
-		selection = getStockFinancialSelection(stockFinancial.getStockId(),
-				stockFinancial.getDate());
+		selection = getStockFinancialSelection(stockFinancial, stockFinancial.getDate());
 
 		return selection;
 	}
 
-	public String getStockFinancialSelection(long stockId) {
-		return DatabaseContract.COLUMN_STOCK_ID + " = " + stockId;
+	public String getStockFinancialSelection(StockFinancial stockFinancial, String date) {
+		return getStockSelection(stockFinancial)
+				+ " AND " + DatabaseContract.COLUMN_DATE + " = '" + date + "'";
 	}
 
-	public String getStockFinancialSelection(long stockId, String date) {
-		return DatabaseContract.COLUMN_STOCK_ID + " = " + stockId + " AND "
-				+ DatabaseContract.COLUMN_DATE + " = '" + date + "'";
+	public String getStockFinancialSelection(Stock stock, String date) {
+		return getStockSelection(stock)
+				+ " AND " + DatabaseContract.COLUMN_DATE + " = '" + date + "'";
 	}
 
 	public String getStockFinancialOrder() {
 		return DatabaseContract.COLUMN_DATE + " ASC ";
 	}
 
-	public Uri insertShareBonus(ShareBonus shareBonus) {
+	public Uri insertStockBonus(StockBonus stockBonus) {
 		Uri uri = null;
 
-		if ((shareBonus == null) || (mContentResolver == null)) {
+		if ((stockBonus == null) || (mContentResolver == null)) {
 			return uri;
 		}
 
-		uri = mContentResolver.insert(DatabaseContract.ShareBonus.CONTENT_URI,
-				shareBonus.getContentValues());
+		uri = mContentResolver.insert(DatabaseContract.StockBonus.CONTENT_URI,
+				stockBonus.getContentValues());
 
 		return uri;
 	}
 
-	public int bulkInsertShareBonus(ContentValues[] contentValuesArray) {
+	public int bulkInsertStockBonus(ContentValues[] contentValuesArray) {
 		int result = 0;
 
 		if (contentValuesArray == null) {
@@ -1916,13 +1906,13 @@ public class DatabaseManager implements StockListener {
 		}
 
 		result = mContentResolver.bulkInsert(
-				DatabaseContract.ShareBonus.CONTENT_URI, contentValuesArray);
+				DatabaseContract.StockBonus.CONTENT_URI, contentValuesArray);
 
 		return result;
 	}
 
-	public Cursor queryShareBonus(String selection, String[] selectionArgs,
-								  String sortOrder) {
+	public Cursor queryStockBonus(String selection, String[] selectionArgs,
+	                              String sortOrder) {
 		Cursor cursor = null;
 
 		if (mContentResolver == null) {
@@ -1930,49 +1920,49 @@ public class DatabaseManager implements StockListener {
 		}
 
 		cursor = mContentResolver.query(
-				DatabaseContract.ShareBonus.CONTENT_URI,
-				DatabaseContract.ShareBonus.PROJECTION_ALL, selection,
+				DatabaseContract.StockBonus.CONTENT_URI,
+				DatabaseContract.StockBonus.PROJECTION_ALL, selection,
 				selectionArgs, sortOrder);
 
 		return cursor;
 	}
 
-	public Cursor queryShareBonus(ShareBonus shareBonus) {
+	public Cursor queryStockBonus(StockBonus stockBonus) {
 		Cursor cursor = null;
 
-		if ((shareBonus == null) || (mContentResolver == null)) {
+		if ((stockBonus == null) || (mContentResolver == null)) {
 			return cursor;
 		}
 
-		String selection = getShareBonusSelection(shareBonus);
-		String sortOrder = getShareBonusOrder();
+		String selection = getStockBonusSelection(stockBonus);
+		String sortOrder = getStockBonusOrder();
 
 		cursor = mContentResolver.query(
-				DatabaseContract.ShareBonus.CONTENT_URI,
-				DatabaseContract.ShareBonus.PROJECTION_ALL, selection, null,
+				DatabaseContract.StockBonus.CONTENT_URI,
+				DatabaseContract.StockBonus.PROJECTION_ALL, selection, null,
 				sortOrder);
 
 		return cursor;
 	}
 
-	public void getShareBonus(ShareBonus shareBonus) {
+	public void getStockBonus(StockBonus stockBonus) {
 		Cursor cursor = null;
 
-		if ((shareBonus == null) || (mContentResolver == null)) {
+		if ((stockBonus == null) || (mContentResolver == null)) {
 			return;
 		}
 
 		try {
-			String selection = getShareBonusSelection(shareBonus);
-			String sortOrder = getShareBonusOrder();
+			String selection = getStockBonusSelection(stockBonus);
+			String sortOrder = getStockBonusOrder();
 
 			cursor = mContentResolver.query(
-					DatabaseContract.ShareBonus.CONTENT_URI,
-					DatabaseContract.ShareBonus.PROJECTION_ALL, selection,
+					DatabaseContract.StockBonus.CONTENT_URI,
+					DatabaseContract.StockBonus.PROJECTION_ALL, selection,
 					null, sortOrder);
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
-				shareBonus.set(cursor);
+				stockBonus.set(cursor);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1981,24 +1971,24 @@ public class DatabaseManager implements StockListener {
 		}
 	}
 
-	public void getShareBonus(long stockId, ShareBonus shareBonus) {
+	public void getStockBonus(Stock stock, StockBonus stockBonus) {
 		Cursor cursor = null;
 
-		if ((shareBonus == null) || (mContentResolver == null)) {
+		if ((stockBonus == null) || (mContentResolver == null)) {
 			return;
 		}
 
 		try {
-			String selection = getShareBonusSelection(stockId);
+			String selection = getStockSelection(stock);
 			String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
 
 			cursor = mContentResolver.query(
-					DatabaseContract.ShareBonus.CONTENT_URI,
-					DatabaseContract.ShareBonus.PROJECTION_ALL, selection,
+					DatabaseContract.StockBonus.CONTENT_URI,
+					DatabaseContract.StockBonus.PROJECTION_ALL, selection,
 					null, sortOrder);
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
-				shareBonus.set(cursor);
+				stockBonus.set(cursor);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2007,24 +1997,24 @@ public class DatabaseManager implements StockListener {
 		}
 	}
 
-	public void getShareBonusList(Stock stock,
-								  ArrayList<ShareBonus> shareBonusList, String sortOrder) {
+	public void getStockBonusList(Stock stock,
+	                              ArrayList<StockBonus> stockBonusList, String sortOrder) {
 		Cursor cursor = null;
 
-		if ((stock == null) || (shareBonusList == null)) {
+		if ((stock == null) || (stockBonusList == null)) {
 			return;
 		}
 
-		shareBonusList.clear();
-		String selection = getShareBonusSelection(stock.getId());
+		stockBonusList.clear();
+		String selection = getStockSelection(stock);
 
 		try {
-			cursor = queryShareBonus(selection, null, sortOrder);
+			cursor = queryStockBonus(selection, null, sortOrder);
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				while (cursor.moveToNext()) {
-					ShareBonus shareBonus = new ShareBonus();
-					shareBonus.set(cursor);
-					shareBonusList.add(shareBonus);
+					StockBonus stockBonus = new StockBonus();
+					stockBonus.set(cursor);
+					stockBonusList.add(stockBonus);
 				}
 			}
 		} catch (Exception e) {
@@ -2034,16 +2024,16 @@ public class DatabaseManager implements StockListener {
 		}
 	}
 
-	public boolean isShareBonusExist(ShareBonus shareBonus) {
+	public boolean isStockBonusExist(StockBonus stockBonus) {
 		boolean result = false;
 		Cursor cursor = null;
 
-		if (shareBonus == null) {
+		if (stockBonus == null) {
 			return result;
 		}
 
 		try {
-			cursor = queryShareBonus(shareBonus);
+			cursor = queryStockBonus(stockBonus);
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
 				result = true;
@@ -2057,48 +2047,48 @@ public class DatabaseManager implements StockListener {
 		return result;
 	}
 
-	public int updateShareBonus(ShareBonus shareBonus,
-								ContentValues contentValues) {
+	public int updateStockBonus(StockBonus stockBonus,
+	                            ContentValues contentValues) {
 		int result = 0;
 
-		if ((shareBonus == null) || (mContentResolver == null)) {
+		if ((stockBonus == null) || (mContentResolver == null)) {
 			return result;
 		}
 
-		String where = getShareBonusSelection(shareBonus);
+		String where = getStockBonusSelection(stockBonus);
 
 		result = mContentResolver.update(
-				DatabaseContract.ShareBonus.CONTENT_URI, contentValues, where,
+				DatabaseContract.StockBonus.CONTENT_URI, contentValues, where,
 				null);
 
 		return result;
 	}
 
-	public int deleteShareBonus() {
-		return delete(DatabaseContract.ShareBonus.CONTENT_URI);
+	public int deleteStockBonus() {
+		return delete(DatabaseContract.StockBonus.CONTENT_URI);
 	}
 
-	public int deleteShareBonus(ShareBonus shareBonus) {
+	public int deleteStockBonus(StockBonus stockBonus) {
 		int result = 0;
 
-		if ((shareBonus == null) || (mContentResolver == null)) {
+		if ((stockBonus == null) || (mContentResolver == null)) {
 			return result;
 		}
 
-		String where = getShareBonusSelection(shareBonus);
+		String where = getStockBonusSelection(stockBonus);
 
 		result = mContentResolver.delete(
-				DatabaseContract.ShareBonus.CONTENT_URI, where, null);
+				DatabaseContract.StockBonus.CONTENT_URI, where, null);
 
 		return result;
 	}
 
-	public int deleteShareBonus(long stockId) {
+	public int deleteStockBonus(Stock stock) {
 		int result = 0;
-		String where = DatabaseContract.COLUMN_STOCK_ID + "=" + stockId;
+		String where = getStockSelection(stock);
 
 		try {
-			result = delete(DatabaseContract.ShareBonus.CONTENT_URI, where);
+			result = delete(DatabaseContract.StockBonus.CONTENT_URI, where);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -2106,61 +2096,64 @@ public class DatabaseManager implements StockListener {
 		return result;
 	}
 
-	public int deleteShareBonus(long stockId, String date) {
+	public int deleteStockBonus(StockBonus stockBonus, String date) {
 		int result = 0;
 
 		if (mContentResolver == null) {
 			return result;
 		}
 
-		String where = getShareBonusSelection(stockId, date);
+		String where = getStockBonusSelection(stockBonus, date);
 
 		result = mContentResolver.delete(
-				DatabaseContract.ShareBonus.CONTENT_URI, where, null);
+				DatabaseContract.StockBonus.CONTENT_URI, where, null);
 
 		return result;
 	}
 
-	public String getShareBonusSelection(ShareBonus shareBonus) {
+	public String getStockBonusSelection(StockBonus stockBonus) {
 		String selection = "";
 
-		if (shareBonus == null) {
+		if (stockBonus == null) {
 			return selection;
 		}
 
-		selection = getShareBonusSelection(shareBonus.getStockId(),
-				shareBonus.getDate());
+		selection = getStockBonusSelection(stockBonus, stockBonus.getDate());
 
 		return selection;
 	}
 
-	public String getShareBonusSelection(long stockId) {
-		return DatabaseContract.COLUMN_STOCK_ID + " = " + stockId;
+	public String getStockSelection(StockBonus stockBonus) {
+		if (stockBonus == null) {
+			return null;
+		}
+		return DatabaseContract.COLUMN_SE + " = " + "'"	+ stockBonus.getSE() + "'"
+				+ " AND " + DatabaseContract.COLUMN_CODE + " = " + "'" + stockBonus.getCode() + "'";
 	}
 
-	public String getShareBonusSelection(long stockId, String date) {
-		return DatabaseContract.COLUMN_STOCK_ID + " = " + stockId + " AND "
-				+ DatabaseContract.COLUMN_DATE + " = '" + date + "'";
+	public String getStockBonusSelection(StockBonus stockBonus, String date) {
+		return getStockSelection(stockBonus)
+				+ " AND " + DatabaseContract.COLUMN_DATE + " = '" + date + "'";
 	}
 
-	public String getShareBonusOrder() {
+	public String getStockBonusOrder() {
 		return DatabaseContract.COLUMN_DATE + " ASC ";
 	}
 
-	public Uri insertTotalShare(TotalShare totalShare) {
+	public Uri insertStockShare(StockShare stockShare) {
 		Uri uri = null;
 
-		if ((totalShare == null) || (mContentResolver == null)) {
+		if ((stockShare == null) || (mContentResolver == null)) {
 			return uri;
 		}
 
-		uri = mContentResolver.insert(DatabaseContract.TotalShare.CONTENT_URI,
-				totalShare.getContentValues());
+		uri = mContentResolver.insert(DatabaseContract.StockShare.CONTENT_URI,
+				stockShare.getContentValues());
 
 		return uri;
 	}
 
-	public int bulkInsertTotalShare(ContentValues[] contentValuesArray) {
+	public int bulkInsertStockShare(ContentValues[] contentValuesArray) {
 		int result = 0;
 
 		if (contentValuesArray == null) {
@@ -2172,13 +2165,13 @@ public class DatabaseManager implements StockListener {
 		}
 
 		result = mContentResolver.bulkInsert(
-				DatabaseContract.TotalShare.CONTENT_URI, contentValuesArray);
+				DatabaseContract.StockShare.CONTENT_URI, contentValuesArray);
 
 		return result;
 	}
 
-	public Cursor queryTotalShare(String selection, String[] selectionArgs,
-								  String sortOrder) {
+	public Cursor queryStockShare(String selection, String[] selectionArgs,
+	                              String sortOrder) {
 		Cursor cursor = null;
 
 		if (mContentResolver == null) {
@@ -2186,49 +2179,49 @@ public class DatabaseManager implements StockListener {
 		}
 
 		cursor = mContentResolver.query(
-				DatabaseContract.TotalShare.CONTENT_URI,
-				DatabaseContract.TotalShare.PROJECTION_ALL, selection,
+				DatabaseContract.StockShare.CONTENT_URI,
+				DatabaseContract.StockShare.PROJECTION_ALL, selection,
 				selectionArgs, sortOrder);
 
 		return cursor;
 	}
 
-	public Cursor queryTotalShare(TotalShare totalShare) {
+	public Cursor queryStockShare(StockShare stockShare) {
 		Cursor cursor = null;
 
-		if ((totalShare == null) || (mContentResolver == null)) {
+		if ((stockShare == null) || (mContentResolver == null)) {
 			return cursor;
 		}
 
-		String selection = getTotalShareSelection(totalShare);
-		String sortOrder = getTotalShareOrder();
+		String selection = getStockShareSelection(stockShare);
+		String sortOrder = getStockShareOrder();
 
 		cursor = mContentResolver.query(
-				DatabaseContract.TotalShare.CONTENT_URI,
-				DatabaseContract.TotalShare.PROJECTION_ALL, selection, null,
+				DatabaseContract.StockShare.CONTENT_URI,
+				DatabaseContract.StockShare.PROJECTION_ALL, selection, null,
 				sortOrder);
 
 		return cursor;
 	}
 
-	public void getTotalShare(TotalShare totalShare) {
+	public void getStockShare(StockShare stockShare) {
 		Cursor cursor = null;
 
-		if ((totalShare == null) || (mContentResolver == null)) {
+		if ((stockShare == null) || (mContentResolver == null)) {
 			return;
 		}
 
 		try {
-			String selection = getTotalShareSelection(totalShare);
-			String sortOrder = getTotalShareOrder();
+			String selection = getStockShareSelection(stockShare);
+			String sortOrder = getStockShareOrder();
 
 			cursor = mContentResolver.query(
-					DatabaseContract.TotalShare.CONTENT_URI,
-					DatabaseContract.TotalShare.PROJECTION_ALL, selection,
+					DatabaseContract.StockShare.CONTENT_URI,
+					DatabaseContract.StockShare.PROJECTION_ALL, selection,
 					null, sortOrder);
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
-				totalShare.set(cursor);
+				stockShare.set(cursor);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2237,24 +2230,24 @@ public class DatabaseManager implements StockListener {
 		}
 	}
 
-	public void getTotalShare(long stockId, TotalShare totalShare) {
+	public void getStockShare(Stock stock, StockShare stockShare) {
 		Cursor cursor = null;
 
-		if ((totalShare == null) || (mContentResolver == null)) {
+		if ((stockShare == null) || (mContentResolver == null)) {
 			return;
 		}
 
 		try {
-			String selection = getTotalShareSelection(stockId);
+			String selection = getStockSelection(stock);
 			String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
 
 			cursor = mContentResolver.query(
-					DatabaseContract.TotalShare.CONTENT_URI,
-					DatabaseContract.TotalShare.PROJECTION_ALL, selection,
+					DatabaseContract.StockShare.CONTENT_URI,
+					DatabaseContract.StockShare.PROJECTION_ALL, selection,
 					null, sortOrder);
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
-				totalShare.set(cursor);
+				stockShare.set(cursor);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2263,25 +2256,25 @@ public class DatabaseManager implements StockListener {
 		}
 	}
 
-	public void getTotalShareList(Stock stock,
-								  ArrayList<TotalShare> totalShareList, String sortOrder) {
+	public void getStockShareList(Stock stock,
+	                              ArrayList<StockShare> stockShareList, String sortOrder) {
 		Cursor cursor = null;
 
-		if ((stock == null) || (totalShareList == null)) {
+		if ((stock == null) || (stockShareList == null)) {
 			return;
 		}
 
-		totalShareList.clear();
+		stockShareList.clear();
 
-		String selection = getTotalShareSelection(stock.getId());
+		String selection = getStockSelection(stock);
 
 		try {
-			cursor = queryTotalShare(selection, null, sortOrder);
+			cursor = queryStockShare(selection, null, sortOrder);
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				while (cursor.moveToNext()) {
-					TotalShare totalShare = new TotalShare();
-					totalShare.set(cursor);
-					totalShareList.add(totalShare);
+					StockShare stockShare = new StockShare();
+					stockShare.set(cursor);
+					stockShareList.add(stockShare);
 				}
 			}
 		} catch (Exception e) {
@@ -2291,16 +2284,16 @@ public class DatabaseManager implements StockListener {
 		}
 	}
 
-	public boolean isTotalShareExist(TotalShare totalShare) {
+	public boolean isStockShareExist(StockShare stockShare) {
 		boolean result = false;
 		Cursor cursor = null;
 
-		if (totalShare == null) {
+		if (stockShare == null) {
 			return result;
 		}
 
 		try {
-			cursor = queryTotalShare(totalShare);
+			cursor = queryStockShare(stockShare);
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
 				result = true;
@@ -2314,48 +2307,48 @@ public class DatabaseManager implements StockListener {
 		return result;
 	}
 
-	public int updateTotalShare(TotalShare totalShare,
-								ContentValues contentValues) {
+	public int updateStockShare(StockShare stockShare,
+	                            ContentValues contentValues) {
 		int result = 0;
 
-		if ((totalShare == null) || (mContentResolver == null)) {
+		if ((stockShare == null) || (mContentResolver == null)) {
 			return result;
 		}
 
-		String where = getTotalShareSelection(totalShare);
+		String where = getStockShareSelection(stockShare);
 
 		result = mContentResolver.update(
-				DatabaseContract.TotalShare.CONTENT_URI, contentValues, where,
+				DatabaseContract.StockShare.CONTENT_URI, contentValues, where,
 				null);
 
 		return result;
 	}
 
-	public int deleteTotalShare() {
-		return delete(DatabaseContract.TotalShare.CONTENT_URI);
+	public int deleteStockShare() {
+		return delete(DatabaseContract.StockShare.CONTENT_URI);
 	}
 
-	public int deleteTotalShare(TotalShare totalShare) {
+	public int deleteStockShare(StockShare stockShare) {
 		int result = 0;
 
-		if ((totalShare == null) || (mContentResolver == null)) {
+		if ((stockShare == null) || (mContentResolver == null)) {
 			return result;
 		}
 
-		String where = getTotalShareSelection(totalShare);
+		String where = getStockShareSelection(stockShare);
 
 		result = mContentResolver.delete(
-				DatabaseContract.TotalShare.CONTENT_URI, where, null);
+				DatabaseContract.StockShare.CONTENT_URI, where, null);
 
 		return result;
 	}
 
-	public int deleteTotalShare(long stockId) {
+	public int deleteStockShare(Stock stock) {
 		int result = 0;
-		String where = DatabaseContract.COLUMN_STOCK_ID + "=" + stockId;
+		String where = getStockSelection(stock);
 
 		try {
-			result = delete(DatabaseContract.TotalShare.CONTENT_URI, where);
+			result = delete(DatabaseContract.StockShare.CONTENT_URI, where);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -2363,44 +2356,47 @@ public class DatabaseManager implements StockListener {
 		return result;
 	}
 
-	public int deleteTotalShare(long stockId, String date) {
+	public int deleteStockShare(StockShare stockShare, String date) {
 		int result = 0;
 
 		if (mContentResolver == null) {
 			return result;
 		}
 
-		String where = getTotalShareSelection(stockId, date);
+		String where = getStockShareSelection(stockShare, date);
 
 		result = mContentResolver.delete(
-				DatabaseContract.TotalShare.CONTENT_URI, where, null);
+				DatabaseContract.StockShare.CONTENT_URI, where, null);
 
 		return result;
 	}
 
-	public String getTotalShareSelection(TotalShare totalShare) {
+	public String getStockShareSelection(StockShare stockShare) {
 		String selection = "";
 
-		if (totalShare == null) {
+		if (stockShare == null) {
 			return selection;
 		}
 
-		selection = getTotalShareSelection(totalShare.getStockId(),
-				totalShare.getDate());
+		selection = getStockShareSelection(stockShare, stockShare.getDate());
 
 		return selection;
 	}
 
-	public String getTotalShareSelection(long stockId) {
-		return DatabaseContract.COLUMN_STOCK_ID + " = " + stockId;
+	public String getStockSelection(StockShare stockShare) {
+		if (stockShare == null) {
+			return null;
+		}
+		return DatabaseContract.COLUMN_SE + " = " + "'"	+ stockShare.getSE() + "'"
+				+ " AND " + DatabaseContract.COLUMN_CODE + " = " + "'" + stockShare.getCode() + "'";
 	}
 
-	public String getTotalShareSelection(long stockId, String date) {
-		return DatabaseContract.COLUMN_STOCK_ID + " = " + stockId + " AND "
-				+ DatabaseContract.COLUMN_DATE + " = '" + date + "'";
+	public String getStockShareSelection(StockShare stockShare, String date) {
+		return getStockSelection(stockShare)
+				+ " AND " + DatabaseContract.COLUMN_DATE + " = '" + date + "'";
 	}
 
-	public String getTotalShareOrder() {
+	public String getStockShareOrder() {
 		return DatabaseContract.COLUMN_DATE + " ASC ";
 	}
 

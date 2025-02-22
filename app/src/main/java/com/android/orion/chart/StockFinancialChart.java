@@ -26,7 +26,7 @@ public class StockFinancialChart {
 	public ArrayList<Entry> mTotalLongTermLiabilitiesEntryList = new ArrayList<>();
 	public ArrayList<Entry> mMainBusinessIncomeEntryList = new ArrayList<>();
 	public ArrayList<Entry> mNetProfitEntryList = new ArrayList<>();
-	public ArrayList<Entry> mTotalShareEntryList = new ArrayList<>();
+	public ArrayList<Entry> mStockShareEntryList = new ArrayList<>();
 
 	public ArrayList<Entry> mBookValuePerShareEntryList = new ArrayList<>();
 	public ArrayList<Entry> mCashFlowPerShareEntryList = new ArrayList<>();
@@ -88,12 +88,12 @@ public class StockFinancialChart {
 		netProfitDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(netProfitDataSet);
 
-		LineDataSet totalShareDataSet = new LineDataSet(mTotalShareEntryList,
-				"TotalShare");
-		totalShareDataSet.setColor(Color.RED);
-		totalShareDataSet.setDrawCircles(false);
-		totalShareDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		lineData.addDataSet(totalShareDataSet);
+		LineDataSet stockShareDataSet = new LineDataSet(mStockShareEntryList,
+				"StockShare");
+		stockShareDataSet.setColor(Color.RED);
+		stockShareDataSet.setDrawCircles(false);
+		stockShareDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+		lineData.addDataSet(stockShareDataSet);
 
 		mCombinedDataMain.setData(lineData);
 	}
@@ -151,7 +151,7 @@ public class StockFinancialChart {
 		mTotalLongTermLiabilitiesEntryList.clear();
 		mMainBusinessIncomeEntryList.clear();
 		mNetProfitEntryList.clear();
-		mTotalShareEntryList.clear();
+		mStockShareEntryList.clear();
 		mBookValuePerShareEntryList.clear();
 		mCashFlowPerShareEntryList.clear();
 		mNetProfitPerShareEntryList.clear();

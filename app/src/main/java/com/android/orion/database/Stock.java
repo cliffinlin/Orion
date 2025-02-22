@@ -30,8 +30,8 @@ public class Stock extends DatabaseTable {
 	public static final double ROI_COEFFICIENT = 1000.0;
 
 	static ArrayList<StockFinancial> mStockFinancialList = new ArrayList<>();
-	static ArrayList<TotalShare> mTotalShareList = new ArrayList<>();
-	static ArrayList<ShareBonus> mShareBonusList = new ArrayList<>();
+	static ArrayList<StockShare> mStockShareList = new ArrayList<>();
+	static ArrayList<StockBonus> mStockBonusList = new ArrayList<>();
 	private final Period mMin5 = new Period(Period.MIN5);
 	private final Period mMin15 = new Period(Period.MIN15);
 	private final Period mMin30 = new Period(Period.MIN30);
@@ -62,7 +62,7 @@ public class Stock extends DatabaseTable {
 	private double mProfit;
 	private double mBonus;
 	private double mValuation;
-	private double mTotalShare;
+	private double mShare;
 	private double mMarketValue;
 	private double mTotalAssets;
 	private double mTotalLongTermLiabilities;
@@ -135,7 +135,7 @@ public class Stock extends DatabaseTable {
 		mProfit = 0;
 		mBonus = 0;
 		mValuation = 0;
-		mTotalShare = 0;
+		mShare = 0;
 		mMarketValue = 0;
 		mTotalAssets = 0;
 		mTotalLongTermLiabilities = 0;
@@ -196,7 +196,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_PROFIT, mProfit);
 		contentValues.put(DatabaseContract.COLUMN_BONUS, mBonus);
 		contentValues.put(DatabaseContract.COLUMN_VALUATION, mValuation);
-		contentValues.put(DatabaseContract.COLUMN_TOTAL_SHARE, mTotalShare);
+		contentValues.put(DatabaseContract.COLUMN_SHARE, mShare);
 		contentValues.put(DatabaseContract.COLUMN_MARKET_VALUE, mMarketValue);
 		contentValues.put(DatabaseContract.COLUMN_TOTAL_ASSETS, mTotalAssets);
 		contentValues.put(DatabaseContract.COLUMN_TOTAL_LONG_TERM_LIABILITIES, mTotalLongTermLiabilities);
@@ -231,7 +231,7 @@ public class Stock extends DatabaseTable {
 
 		contentValues.put(DatabaseContract.COLUMN_CLASSES, mClasses);
 		contentValues.put(DatabaseContract.COLUMN_PINYIN, mPinyin);
-		contentValues.put(DatabaseContract.COLUMN_TOTAL_SHARE, mTotalShare);
+		contentValues.put(DatabaseContract.COLUMN_SHARE, mShare);
 		return contentValues;
 	}
 
@@ -297,7 +297,7 @@ public class Stock extends DatabaseTable {
 		setProfit(stock.mProfit);
 		setBonus(stock.mBonus);
 		setValuation(stock.mValuation);
-		setTotalShare(stock.mTotalShare);
+		setShare(stock.mShare);
 		setMarketValue(stock.mMarketValue);
 		setTotalAssets(stock.mTotalAssets);
 		setTotalLongTermLiabilities(stock.mTotalLongTermLiabilities);
@@ -361,7 +361,7 @@ public class Stock extends DatabaseTable {
 		setProfit(cursor);
 		setBonus(cursor);
 		setValuation(cursor);
-		setTotalShare(cursor);
+		setShare(cursor);
 		setMarketValue(cursor);
 		setTotalAssets(cursor);
 		setTotalLongTermLiabilities(cursor);
@@ -712,21 +712,21 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_VALUATION)));
 	}
 
-	public double getTotalShare() {
-		return mTotalShare;
+	public double getShare() {
+		return mShare;
 	}
 
-	public void setTotalShare(double totalShare) {
-		mTotalShare = totalShare;
+	public void setShare(double share) {
+		mShare = share;
 	}
 
-	void setTotalShare(Cursor cursor) {
+	void setShare(Cursor cursor) {
 		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
-		setTotalShare(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_TOTAL_SHARE)));
+		setShare(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_SHARE)));
 	}
 
 	public double getMarkerValue() {
@@ -1175,12 +1175,12 @@ public class Stock extends DatabaseTable {
 		return mStockFinancialList;
 	}
 
-	public ArrayList<TotalShare> getTotalShareList() {
-		return mTotalShareList;
+	public ArrayList<StockShare> getStockShareList() {
+		return mStockShareList;
 	}
 
-	public ArrayList<ShareBonus> getShareBonusList() {
-		return mShareBonusList;
+	public ArrayList<StockBonus> getStockBonusList() {
+		return mStockBonusList;
 	}
 
 	public ArrayList<StockData> getArrayList(String period, int type) {
@@ -1297,12 +1297,12 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-		if (mTotalShare == 0) {
+		if (mShare == 0) {
 			mMarketValue = 0;
 			return;
 		}
 
-		mMarketValue = Utility.Round2(mPrice * mTotalShare);
+		mMarketValue = Utility.Round2(mPrice * mShare);
 	}
 
 	public void setupNetProfitMargin() {
@@ -1315,12 +1315,12 @@ public class Stock extends DatabaseTable {
 	}
 
 	public void setupNetProfitPerShare() {
-		if (mTotalShare == 0) {
+		if (mShare == 0) {
 			mNetProfitPerShare = 0;
 			return;
 		}
 
-		mNetProfitPerShare = Utility.Round2(mNetProfit / mTotalShare);
+		mNetProfitPerShare = Utility.Round2(mNetProfit / mShare);
 	}
 
 	public void setupNetProfitPerShareInYear(
@@ -1329,7 +1329,7 @@ public class Stock extends DatabaseTable {
 		double netProfit = 0;
 		double netProfitPerShare = 0;
 
-		if (mTotalShare == 0) {
+		if (mShare == 0) {
 			return;
 		}
 
@@ -1349,12 +1349,12 @@ public class Stock extends DatabaseTable {
 			if (stockFinancial.getDate().contains("03-31")) {
 				mainBusinessIncome = stockFinancial.getMainBusinessIncome();
 				netProfit = stockFinancial.getNetProfit();
-				netProfitPerShare = stockFinancial.getNetProfit() / mTotalShare;
+				netProfitPerShare = stockFinancial.getNetProfit() / mShare;
 			} else {
 				mainBusinessIncome = stockFinancial.getMainBusinessIncome() - prev.getMainBusinessIncome();
 				netProfit = stockFinancial.getNetProfit() - prev.getNetProfit();
 				netProfitPerShare = (stockFinancial.getNetProfit() - prev
-						.getNetProfit()) / mTotalShare;
+						.getNetProfit()) / mShare;
 			}
 
 			mMainBusinessIncomeInYear += mainBusinessIncome;
@@ -1370,7 +1370,7 @@ public class Stock extends DatabaseTable {
 		double netProfitPerShare = 0;
 		double netProfitPerShareLastYear = 0;
 
-		if (mTotalShare == 0) {
+		if (mShare == 0) {
 			mRate = 0;
 			return;
 		}
@@ -1388,10 +1388,10 @@ public class Stock extends DatabaseTable {
 			StockFinancial prev = stockFinancialList.get(i + 1);
 
 			if (stockFinancial.getDate().contains("03-31")) {
-				netProfitPerShare = stockFinancial.getNetProfit() / mTotalShare;
+				netProfitPerShare = stockFinancial.getNetProfit() / mShare;
 			} else {
 				netProfitPerShare = (stockFinancial.getNetProfit() - prev
-						.getNetProfit()) / mTotalShare;
+						.getNetProfit()) / mShare;
 			}
 
 			netProfitPerShareLastYear += netProfitPerShare;

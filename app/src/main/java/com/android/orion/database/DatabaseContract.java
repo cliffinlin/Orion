@@ -54,7 +54,7 @@ public final class DatabaseContract {
 	public static final String COLUMN_FEE = "fee";
 	public static final String COLUMN_BONUS = "bonus";
 	public static final String COLUMN_VALUATION = "valuation";
-	public static final String COLUMN_TOTAL_SHARE = "total_share";
+	public static final String COLUMN_SHARE = "share";
 	public static final String COLUMN_MARKET_VALUE = "market_value";
 	public static final String COLUMN_RATE = "rate";
 	public static final String COLUMN_ROI = "roi";
@@ -71,7 +71,6 @@ public final class DatabaseContract {
 	public static final String COLUMN_INDEX_SE = "index_se";
 	public static final String COLUMN_INDEX_CODE = "index_code";
 	public static final String COLUMN_INDEX_NAME = "index_name";
-	public static final String COLUMN_STOCK_ID = "stock_id";
 	public static final String COLUMN_LEVEL = "level";
 	public static final String COLUMN_DATE = "date";
 	public static final String COLUMN_TIME = "time";
@@ -145,7 +144,7 @@ public final class DatabaseContract {
 				COLUMN_MIN15, COLUMN_MIN30, COLUMN_MIN60, COLUMN_DAY,
 				COLUMN_WEEK, COLUMN_MONTH,
 				COLUMN_OPERATE, COLUMN_HOLD, COLUMN_COST, COLUMN_PROFIT,
-				COLUMN_BONUS, COLUMN_VALUATION, COLUMN_TOTAL_SHARE,
+				COLUMN_BONUS, COLUMN_VALUATION, COLUMN_SHARE,
 				COLUMN_MARKET_VALUE, COLUMN_TOTAL_ASSETS,
 				COLUMN_TOTAL_LONG_TERM_LIABILITIES, COLUMN_NET_PROFIT,
 				COLUMN_MAIN_BUSINESS_INCOME,
@@ -179,7 +178,7 @@ public final class DatabaseContract {
 				+ COLUMN_COST + DOUBLE_TYPE + COMMA_SEP + COLUMN_PROFIT
 				+ DOUBLE_TYPE + COMMA_SEP + COLUMN_BONUS + DOUBLE_TYPE
 				+ COMMA_SEP + COLUMN_VALUATION + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_TOTAL_SHARE + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_SHARE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_MARKET_VALUE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_TOTAL_ASSETS + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_TOTAL_LONG_TERM_LIABILITIES + DOUBLE_TYPE + COMMA_SEP
@@ -220,10 +219,10 @@ public final class DatabaseContract {
 				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
 		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
 				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
-		public static final String SORT_ORDER_DEFAULT = COLUMN_STOCK_ID
+		public static final String SORT_ORDER_DEFAULT = COLUMN_CODE
 				+ " ASC";
 
-		public static final String[] PROJECTION_ALL = {_ID, COLUMN_STOCK_ID,
+		public static final String[] PROJECTION_ALL = {_ID,
 				COLUMN_SE, COLUMN_CODE, COLUMN_NAME, COLUMN_LEVEL,
 				COLUMN_DATE, COLUMN_TIME, COLUMN_PERIOD, COLUMN_OPEN,
 				COLUMN_HIGH, COLUMN_LOW, COLUMN_CLOSE,
@@ -236,8 +235,7 @@ public final class DatabaseContract {
 		static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
 				+ TABLE_NAME;
 		private static final String CREATE_TABLE_CONTENT = " (" + _ID
-				+ " INTEGER PRIMARY KEY," + COLUMN_STOCK_ID + TEXT_TYPE
-				+ COMMA_SEP
+				+ " INTEGER PRIMARY KEY,"
 				+ COLUMN_SE + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_CODE + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_NAME + TEXT_TYPE + COMMA_SEP
@@ -276,10 +274,10 @@ public final class DatabaseContract {
 				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
 		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
 				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
-		public static final String SORT_ORDER_DEFAULT = COLUMN_STOCK_ID
+		public static final String SORT_ORDER_DEFAULT = COLUMN_CODE
 				+ " ASC";
 
-		public static final String[] PROJECTION_ALL = {_ID, COLUMN_STOCK_ID,
+		public static final String[] PROJECTION_ALL = {_ID,
 				COLUMN_SE, COLUMN_CODE, COLUMN_NAME,
 				COLUMN_PRICE, COLUMN_NET,
 				COLUMN_PERIOD, COLUMN_DATE, COLUMN_TIME,
@@ -288,7 +286,7 @@ public final class DatabaseContract {
 		static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
 				+ TABLE_NAME;
 		private static final String CREATE_TABLE_CONTENT = " (" + _ID
-				+ " INTEGER PRIMARY KEY," + COLUMN_STOCK_ID + TEXT_TYPE + COMMA_SEP
+				+ " INTEGER PRIMARY KEY,"
 				+ COLUMN_SE + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_CODE + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_NAME + TEXT_TYPE + COMMA_SEP
@@ -315,8 +313,7 @@ public final class DatabaseContract {
 				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
 		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
 				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
-		public static final String SORT_ORDER_DEFAULT = COLUMN_STOCK_ID
-				+ " ASC";
+		public static final String SORT_ORDER_DEFAULT = COLUMN_PERIOD + " ASC";
 
 		public static final String[] PROJECTION_ALL = {_ID,
 				COLUMN_PERIOD, COLUMN_LEVEL, COLUMN_TYPE,
@@ -356,17 +353,20 @@ public final class DatabaseContract {
 				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
 		public static final String SORT_ORDER_DEFAULT = COLUMN_CODE + " ASC";
 
-		public static final String[] PROJECTION_ALL = {_ID, COLUMN_SE,
-				COLUMN_CODE, COLUMN_NAME, COLUMN_ACCOUNT, COLUMN_ACTION, COLUMN_PRICE, COLUMN_NET,
+		public static final String[] PROJECTION_ALL = {_ID,
+				COLUMN_SE, COLUMN_CODE, COLUMN_NAME,
+				COLUMN_ACCOUNT, COLUMN_ACTION, COLUMN_PRICE, COLUMN_NET,
 				COLUMN_BUY, COLUMN_SELL, COLUMN_VOLUME, COLUMN_VALUE, COLUMN_PROFIT,
 				COLUMN_FEE, COLUMN_BONUS, COLUMN_YIELD,
 				COLUMN_CREATED, COLUMN_MODIFIED};
 		static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
 				+ TABLE_NAME;
 		private static final String CREATE_TABLE_CONTENT = " (" + _ID
-				+ " INTEGER PRIMARY KEY," + COLUMN_SE + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_CODE + TEXT_TYPE + COMMA_SEP + COLUMN_NAME + TEXT_TYPE
-				+ COMMA_SEP + COLUMN_ACCOUNT + TEXT_TYPE + COMMA_SEP
+				+ " INTEGER PRIMARY KEY,"
+				+ COLUMN_SE + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_CODE + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_NAME + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_ACCOUNT + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_ACTION + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_PRICE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_NET + DOUBLE_TYPE + COMMA_SEP
@@ -393,15 +393,15 @@ public final class DatabaseContract {
 				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
 		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
 				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
-		public static final String SORT_ORDER_DEFAULT = COLUMN_STOCK_ID
-				+ " ASC";
+		public static final String SORT_ORDER_DEFAULT = COLUMN_CODE + " ASC";
 
-		public static final String[] PROJECTION_ALL = {_ID, COLUMN_STOCK_ID,
+		public static final String[] PROJECTION_ALL = {_ID,
+				COLUMN_SE, COLUMN_CODE, COLUMN_NAME,
 				COLUMN_DATE, COLUMN_BOOK_VALUE_PER_SHARE,
 				COLUMN_CASH_FLOW_PER_SHARE, COLUMN_TOTAL_CURRENT_ASSETS,
 				COLUMN_TOTAL_ASSETS, COLUMN_TOTAL_LONG_TERM_LIABILITIES,
 				COLUMN_MAIN_BUSINESS_INCOME, COLUMN_FINANCIAL_EXPENSES,
-				COLUMN_NET_PROFIT, COLUMN_TOTAL_SHARE,
+				COLUMN_NET_PROFIT, COLUMN_SHARE,
 				COLUMN_MAIN_BUSINESS_INCOME_IN_YEAR, COLUMN_NET_PROFIT_IN_YEAR, COLUMN_NET_PROFIT_MARGIN,
 				COLUMN_DEBT_TO_NET_ASSETS_RATIO, COLUMN_NET_PROFIT_PER_SHARE,
 				COLUMN_NET_PROFIT_PER_SHARE_IN_YEAR, COLUMN_RATE, COLUMN_ROE,
@@ -409,8 +409,11 @@ public final class DatabaseContract {
 		static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
 				+ TABLE_NAME;
 		private static final String CREATE_TABLE_CONTENT = " (" + _ID
-				+ " INTEGER PRIMARY KEY," + COLUMN_STOCK_ID + TEXT_TYPE
-				+ COMMA_SEP + COLUMN_DATE + TEXT_TYPE + COMMA_SEP
+				+ " INTEGER PRIMARY KEY,"
+				+ COLUMN_SE + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_CODE + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_NAME + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_DATE + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_BOOK_VALUE_PER_SHARE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_CASH_FLOW_PER_SHARE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_TOTAL_CURRENT_ASSETS + DOUBLE_TYPE + COMMA_SEP
@@ -419,7 +422,7 @@ public final class DatabaseContract {
 				+ COLUMN_MAIN_BUSINESS_INCOME + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_FINANCIAL_EXPENSES + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_NET_PROFIT + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_TOTAL_SHARE + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_SHARE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_MAIN_BUSINESS_INCOME_IN_YEAR + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_NET_PROFIT_IN_YEAR + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_NET_PROFIT_MARGIN + DOUBLE_TYPE + COMMA_SEP
@@ -434,8 +437,8 @@ public final class DatabaseContract {
 				+ CREATE_TABLE_CONTENT;
 	}
 
-	public static abstract class ShareBonus implements BaseColumns {
-		public static final String TABLE_NAME = "share_bonus";
+	public static abstract class StockBonus implements BaseColumns {
+		public static final String TABLE_NAME = "stock_bonus";
 
 		public static final Uri CONTENT_URI = Uri.withAppendedPath(
 				DatabaseContract.CONTENT_URI, TABLE_NAME);
@@ -443,17 +446,20 @@ public final class DatabaseContract {
 				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
 		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
 				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
-		public static final String SORT_ORDER_DEFAULT = COLUMN_STOCK_ID
-				+ " ASC";
+		public static final String SORT_ORDER_DEFAULT = COLUMN_CODE + " ASC";
 
-		public static final String[] PROJECTION_ALL = {_ID, COLUMN_STOCK_ID,
+		public static final String[] PROJECTION_ALL = {_ID,
+				COLUMN_SE, COLUMN_CODE, COLUMN_NAME,
 				COLUMN_DATE, COLUMN_DIVIDEND, COLUMN_R_DATE, COLUMN_CREATED,
 				COLUMN_MODIFIED};
 		static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
 				+ TABLE_NAME;
 		private static final String CREATE_TABLE_CONTENT = " (" + _ID
-				+ " INTEGER PRIMARY KEY," + COLUMN_STOCK_ID + TEXT_TYPE
-				+ COMMA_SEP + COLUMN_DATE + TEXT_TYPE + COMMA_SEP
+				+ " INTEGER PRIMARY KEY,"
+				+ COLUMN_SE + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_CODE + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_NAME + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_DATE + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_DIVIDEND + DOUBLE_TYPE + COMMA_SEP + COLUMN_R_DATE
 				+ TEXT_TYPE + COMMA_SEP + COLUMN_CREATED + TEXT_TYPE
 				+ COMMA_SEP + COLUMN_MODIFIED + TEXT_TYPE + " )";
@@ -461,8 +467,8 @@ public final class DatabaseContract {
 				+ CREATE_TABLE_CONTENT;
 	}
 
-	public static abstract class TotalShare implements BaseColumns {
-		public static final String TABLE_NAME = "total_share";
+	public static abstract class StockShare implements BaseColumns {
+		public static final String TABLE_NAME = "stock_share";
 
 		public static final Uri CONTENT_URI = Uri.withAppendedPath(
 				DatabaseContract.CONTENT_URI, TABLE_NAME);
@@ -470,18 +476,21 @@ public final class DatabaseContract {
 				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
 		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
 				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
-		public static final String SORT_ORDER_DEFAULT = COLUMN_STOCK_ID
-				+ " ASC";
+		public static final String SORT_ORDER_DEFAULT = COLUMN_CODE + " ASC";
 
-		public static final String[] PROJECTION_ALL = {_ID, COLUMN_STOCK_ID,
-				COLUMN_DATE, COLUMN_TOTAL_SHARE, COLUMN_CREATED,
+		public static final String[] PROJECTION_ALL = {_ID,
+				COLUMN_SE, COLUMN_CODE, COLUMN_NAME,
+				COLUMN_DATE, COLUMN_SHARE, COLUMN_CREATED,
 				COLUMN_MODIFIED};
 		static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
 				+ TABLE_NAME;
 		private static final String CREATE_TABLE_CONTENT = " (" + _ID
-				+ " INTEGER PRIMARY KEY," + COLUMN_STOCK_ID + TEXT_TYPE
-				+ COMMA_SEP + COLUMN_DATE + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_TOTAL_SHARE + DOUBLE_TYPE + COMMA_SEP + COLUMN_CREATED
+				+ " INTEGER PRIMARY KEY,"
+				+ COLUMN_SE + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_CODE + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_NAME + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_DATE + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_SHARE + DOUBLE_TYPE + COMMA_SEP + COLUMN_CREATED
 				+ TEXT_TYPE + COMMA_SEP + COLUMN_MODIFIED + TEXT_TYPE + " )";
 		static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
 				+ CREATE_TABLE_CONTENT;

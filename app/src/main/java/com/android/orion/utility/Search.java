@@ -2,7 +2,7 @@ package com.android.orion.utility;
 
 import android.text.TextUtils;
 
-import com.android.orion.database.ShareBonus;
+import com.android.orion.database.StockBonus;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockFinancial;
 
@@ -215,13 +215,13 @@ public class Search {
 		return stockFinancial;
 	}
 
-	static int binarySearchShareBonus(int l, int r, Calendar calendar,
-	                                  ArrayList<ShareBonus> shareBonusList) {
+	static int binarySearchStockBonus(int l, int r, Calendar calendar,
+	                                  ArrayList<StockBonus> stockBonusArrayList) {
 		if (r >= l) {
 			int mid = l + (r - l) / 2;
 
 			Calendar calendarMid = Utility.getCalendar(
-					shareBonusList.get(mid).getDate(),
+					stockBonusArrayList.get(mid).getDate(),
 					Utility.CALENDAR_DATE_FORMAT);
 
 			// If the element is present at the
@@ -232,17 +232,17 @@ public class Search {
 			// If element is smaller than mid, then
 			// it can only be present in left subarray
 			if (calendar.before(calendarMid))
-				return binarySearchShareBonus(l, mid - 1, calendar,
-						shareBonusList);
+				return binarySearchStockBonus(l, mid - 1, calendar,
+						stockBonusArrayList);
 
-			Calendar calendarMid1 = Utility.getCalendar(shareBonusList
+			Calendar calendarMid1 = Utility.getCalendar(stockBonusArrayList
 					.get(mid + 1).getDate(), Utility.CALENDAR_DATE_FORMAT);
 			if (calendar.after(calendarMid) && (calendar.before(calendarMid1)))
 				return mid;
 
 			// Else the element can only be present
 			// in right subarray
-			return binarySearchShareBonus(mid + 1, r, calendar, shareBonusList);
+			return binarySearchStockBonus(mid + 1, r, calendar, stockBonusArrayList);
 		}
 
 		// We reach here when element is not present
@@ -250,40 +250,40 @@ public class Search {
 		return -1;
 	}
 
-	public static ShareBonus getShareBonusByDate(String dateString,
-	                                             ArrayList<ShareBonus> shareBonusList) {
+	public static StockBonus getStockBonusByDate(String dateString,
+	                                             ArrayList<StockBonus> stockBonusList) {
 		int index = 0;
-		ShareBonus shareBonus = null;
+		StockBonus stockBonus = null;
 
-		if (shareBonusList == null || shareBonusList.size() < 1) {
-			return shareBonus;
+		if (stockBonusList == null || stockBonusList.size() < 1) {
+			return stockBonus;
 		}
 
 		if (TextUtils.isEmpty(dateString)) {
-			return shareBonus;
+			return stockBonus;
 		}
 
 		Calendar calendar = Utility.getCalendar(dateString,
 				Utility.CALENDAR_DATE_FORMAT);
-		Calendar calendarMin = Utility.getCalendar(shareBonusList.get(0)
+		Calendar calendarMin = Utility.getCalendar(stockBonusList.get(0)
 				.getDate(), Utility.CALENDAR_DATE_FORMAT);
 		Calendar calendarMax = Utility.getCalendar(
-				shareBonusList.get(shareBonusList.size() - 1).getDate(),
+				stockBonusList.get(stockBonusList.size() - 1).getDate(),
 				Utility.CALENDAR_DATE_FORMAT);
 
 		if (calendar.before(calendarMin)) {
-			return shareBonus;
+			return stockBonus;
 		} else if (calendar.after(calendarMax)) {
-			return shareBonusList.get(shareBonusList.size() - 1);
+			return stockBonusList.get(stockBonusList.size() - 1);
 		} else {
-			index = binarySearchShareBonus(0, shareBonusList.size() - 1,
-					calendar, shareBonusList);
+			index = binarySearchStockBonus(0, stockBonusList.size() - 1,
+					calendar, stockBonusList);
 
-			if ((index > 0) && (index < shareBonusList.size())) {
-				shareBonus = shareBonusList.get(index);
+			if ((index > 0) && (index < stockBonusList.size())) {
+				stockBonus = stockBonusList.get(index);
 			}
 		}
 
-		return shareBonus;
+		return stockBonus;
 	}
 }

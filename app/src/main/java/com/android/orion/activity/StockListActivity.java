@@ -481,10 +481,10 @@ public class StockListActivity extends DatabaseActivity implements
 												public void onClick(DialogInterface dialog,
 												                    int which) {
 													mDatabaseManager.deleteStock(stockId);
-													mDatabaseManager.deleteStockData(stockId);
-													mDatabaseManager.deleteStockFinancial(stockId);
-													mDatabaseManager.deleteShareBonus(stockId);
-													mDatabaseManager.deleteTotalShare(stockId);
+													mDatabaseManager.deleteStockData(stock);
+													mDatabaseManager.deleteStockFinancial(stock);
+													mDatabaseManager.deleteStockBonus(stock);
+													mDatabaseManager.deleteStockShare(stock);
 													mDatabaseManager.deleteStockTrend(stock);
 												}
 											})

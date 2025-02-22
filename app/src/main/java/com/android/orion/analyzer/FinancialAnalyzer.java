@@ -5,10 +5,10 @@ import android.text.TextUtils;
 
 import com.android.orion.application.MainApplication;
 import com.android.orion.database.DatabaseContract;
-import com.android.orion.database.ShareBonus;
+import com.android.orion.database.StockBonus;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockFinancial;
-import com.android.orion.database.TotalShare;
+import com.android.orion.database.StockShare;
 import com.android.orion.manager.DatabaseManager;
 import com.android.orion.setting.Constant;
 import com.android.orion.utility.Logger;
@@ -18,8 +18,8 @@ import java.util.ArrayList;
 
 public class FinancialAnalyzer {
 	static ArrayList<StockFinancial> mStockFinancialList;
-	static ArrayList<TotalShare> mTotalShareList;
-	static ArrayList<ShareBonus> mShareBonusList;
+	static ArrayList<StockShare> mStockShareList;
+	static ArrayList<StockBonus> mStockBonusList;
 
 	Context mContext;
 	DatabaseManager mDatabaseManager;
@@ -40,8 +40,8 @@ public class FinancialAnalyzer {
 		}
 
 		mStockFinancialList = stock.getFinancialList();
-		mTotalShareList = stock.getTotalShareList();
-		mShareBonusList = stock.getShareBonusList();
+		mStockShareList = stock.getStockShareList();
+		mStockBonusList = stock.getStockBonusList();
 
 		String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
 
@@ -51,12 +51,12 @@ public class FinancialAnalyzer {
 
 		mDatabaseManager.getStockFinancialList(stock, mStockFinancialList,
 				sortOrder);
-		mDatabaseManager.getTotalShareList(stock, mTotalShareList,
+		mDatabaseManager.getStockShareList(stock, mStockShareList,
 				sortOrder);
-		mDatabaseManager.getShareBonusList(stock, mShareBonusList,
+		mDatabaseManager.getStockBonusList(stock, mStockBonusList,
 				sortOrder);
 
-		setupTotalShare(mTotalShareList);
+		setupStockShare(mStockShareList);
 		setupNetProfitPerShareInYear();
 		setupNetProfitPerShare();
 		setupRate();
@@ -65,16 +65,16 @@ public class FinancialAnalyzer {
 		mDatabaseManager.updateStockFinancial(stock, mStockFinancialList);
 	}
 
-	private void setupTotalShare(ArrayList<TotalShare> totalShareList) {
+	private void setupStockShare(ArrayList<StockShare> stockShareList) {
 		int j = 0;
 		for (StockFinancial stockFinancial : mStockFinancialList) {
-			while (j < totalShareList.size()) {
-				TotalShare totalShare = totalShareList.get(j);
+			while (j < stockShareList.size()) {
+				StockShare stockShare = stockShareList.get(j);
 				if (Utility.getCalendar(stockFinancial.getDate(),
 						Utility.CALENDAR_DATE_FORMAT).after(
-						Utility.getCalendar(totalShare.getDate(),
+						Utility.getCalendar(stockShare.getDate(),
 								Utility.CALENDAR_DATE_FORMAT))) {
-					stockFinancial.setTotalShare(totalShare.getTotalShare());
+					stockFinancial.setShare(stockShare.getStockShare());
 					break;
 				} else {
 					j++;
@@ -115,7 +115,7 @@ public class FinancialAnalyzer {
 					continue;
 				}
 
-				if (current.getTotalShare() == 0) {
+				if (current.getShare() == 0) {
 					continue;
 				}
 
@@ -123,12 +123,12 @@ public class FinancialAnalyzer {
 					mainBusinessIncome = current.getMainBusinessIncome();
 					netProfit = current.getNetProfit();
 					netProfitPerShare = current.getNetProfit()
-							/ current.getTotalShare();
+							/ current.getShare();
 				} else {
 					mainBusinessIncome = current.getMainBusinessIncome() - prev.getMainBusinessIncome();
 					netProfit = current.getNetProfit() - prev.getNetProfit();
 					netProfitPerShare = (current.getNetProfit() - prev
-							.getNetProfit()) / current.getTotalShare();
+							.getNetProfit()) / current.getShare();
 				}
 
 				mainBusinessIncomeInYear += mainBusinessIncome;
@@ -207,7 +207,8 @@ public class FinancialAnalyzer {
 			return;
 		}
 
-		stockFinancial.setStockId(stock.getId());
+		stockFinancial.setSE(stock.getSE());
+		stockFinancial.setCode(stock.getCode());
 
 		mDatabaseManager.getStockFinancial(stock, stockFinancial);
 		mDatabaseManager.getStockFinancialList(stock, mStockFinancialList,
@@ -235,7 +236,7 @@ public class FinancialAnalyzer {
 		stock.setupIRR();
 	}
 
-	public void setupShareBonus(Stock stock) {
+	public void setupStockBonus(Stock stock) {
 		if (stock == null) {
 			return;
 		}
@@ -250,12 +251,12 @@ public class FinancialAnalyzer {
 			return;
 		}
 
-		mDatabaseManager.getShareBonusList(stock, mShareBonusList,
+		mDatabaseManager.getStockBonusList(stock, mStockBonusList,
 				sortOrder);
 
 		int i = 0;
-		for (ShareBonus shareBonus : mShareBonusList) {
-			String dateString = shareBonus.getDate();
+		for (StockBonus stockBonus : mStockBonusList) {
+			String dateString = stockBonus.getDate();
 			if (!TextUtils.isEmpty(dateString)) {
 				String[] strings = dateString.split(Constant.MARK_MINUS);
 				if (strings != null && strings.length > 0) {
@@ -269,10 +270,10 @@ public class FinancialAnalyzer {
 				}
 			}
 
-			totalDivident += shareBonus.getDividend();
+			totalDivident += stockBonus.getDividend();
 
 			if (i == 0) {
-				stock.setRDate(shareBonus.getRDate());
+				stock.setRDate(stockBonus.getRDate());
 			}
 			stock.setDividend(Utility.Round2(totalDivident));
 			stock.setupBonus();

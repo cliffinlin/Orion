@@ -3,30 +3,35 @@ package com.android.orion.database;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-public class ShareBonus extends DatabaseTable {
-	private long mStockId;
+public class StockBonus extends DatabaseTable {
+
+	protected String mSE;
+	protected String mCode;
+	protected String mName;
 	private String mDate;
 	private double mDividend;
 	private String mRDate;
 
-	public ShareBonus() {
+	public StockBonus() {
 		init();
 	}
 
-	public ShareBonus(ShareBonus shareBonus) {
-		set(shareBonus);
+	public StockBonus(StockBonus stockBonus) {
+		set(stockBonus);
 	}
 
-	public ShareBonus(Cursor cursor) {
+	public StockBonus(Cursor cursor) {
 		set(cursor);
 	}
 
 	void init() {
 		super.init();
 
-		setTableName(DatabaseContract.ShareBonus.TABLE_NAME);
+		setTableName(DatabaseContract.StockBonus.TABLE_NAME);
 
-		mStockId = 0;
+		mSE = "";
+		mCode = "";
+		mName = "";
 		mDate = "";
 		mDividend = 0;
 		mRDate = "";
@@ -36,26 +41,30 @@ public class ShareBonus extends DatabaseTable {
 	public ContentValues getContentValues() {
 		ContentValues contentValues = super.getContentValues();
 
-		contentValues.put(DatabaseContract.COLUMN_STOCK_ID, mStockId);
+		contentValues.put(DatabaseContract.COLUMN_SE, mSE);
+		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
+		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
 		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND, mDividend);
 		contentValues.put(DatabaseContract.COLUMN_R_DATE, mRDate);
 		return contentValues;
 	}
 
-	public void set(ShareBonus shareBonus) {
-		if (shareBonus == null) {
+	public void set(StockBonus stockBonus) {
+		if (stockBonus == null) {
 			return;
 		}
 
 		init();
 
-		super.set(shareBonus);
+		super.set(stockBonus);
 
-		setStockId(shareBonus.mStockId);
-		setDate(shareBonus.mDate);
-		setDividend(shareBonus.mDividend);
-		setRDate(shareBonus.mRDate);
+		setSE(stockBonus.mSE);
+		setCode(stockBonus.mCode);
+		setName(stockBonus.mName);
+		setDate(stockBonus.mDate);
+		setDividend(stockBonus.mDividend);
+		setRDate(stockBonus.mRDate);
 	}
 
 	@Override
@@ -68,27 +77,63 @@ public class ShareBonus extends DatabaseTable {
 
 		super.set(cursor);
 
-		setStockID(cursor);
+		setSE(cursor);
+		setCode(cursor);
+		setName(cursor);
 		setDate(cursor);
 		setDividend(cursor);
 		setRDate(cursor);
 	}
 
-	public long getStockId() {
-		return mStockId;
+	public String getSE() {
+		return mSE;
 	}
 
-	public void setStockId(long stockId) {
-		mStockId = stockId;
+	public void setSE(String se) {
+		mSE = se;
 	}
 
-	void setStockID(Cursor cursor) {
+	void setSE(Cursor cursor) {
 		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
-		setStockId(cursor.getLong(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_STOCK_ID)));
+		setSE(cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_SE)));
+	}
+
+	public String getCode() {
+		return mCode;
+	}
+
+	public void setCode(String code) {
+		mCode = code;
+	}
+
+	void setCode(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setCode(cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_CODE)));
+	}
+
+	public String getName() {
+		return mName;
+	}
+
+	public void setName(String name) {
+		mName = name;
+	}
+
+	void setName(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setName(cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_NAME)));
 	}
 
 	public String getDate() {

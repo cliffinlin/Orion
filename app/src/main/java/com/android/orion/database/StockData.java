@@ -43,7 +43,6 @@ public class StockData extends DatabaseTable {
 	private final Candlestick mCandlestick = new Candlestick();
 	private final Macd mMacd = new Macd();
 	private final Trend mTrend = new Trend();
-	private long mStockId;
 	private String mSE;
 	private String mCode;
 	private String mName;
@@ -72,7 +71,7 @@ public class StockData extends DatabaseTable {
 	}
 
 	public boolean isEmpty() {
-		return (mStockId == 0) && TextUtils.isEmpty(mDate)
+		return TextUtils.isEmpty(mDate)
 				&& TextUtils.isEmpty(mTime);
 	}
 
@@ -81,7 +80,6 @@ public class StockData extends DatabaseTable {
 
 		setTableName(DatabaseContract.StockData.TABLE_NAME);
 
-		mStockId = 0;
 		mSE = "";
 		mCode = "";
 		mName = "";
@@ -90,7 +88,6 @@ public class StockData extends DatabaseTable {
 		mTime = "";
 		mPeriod = "";
 		mAction = "";
-
 		mIndex = 0;
 	}
 
@@ -98,7 +95,6 @@ public class StockData extends DatabaseTable {
 	public ContentValues getContentValues() {
 		ContentValues contentValues = super.getContentValues();
 
-		contentValues.put(DatabaseContract.COLUMN_STOCK_ID, mStockId);
 		contentValues.put(DatabaseContract.COLUMN_SE, mSE);
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
@@ -133,7 +129,6 @@ public class StockData extends DatabaseTable {
 
 		super.set(stockData);
 
-		setStockId(stockData.mStockId);
 		setSE(stockData.mSE);
 		setCode(stockData.mCode);
 		setName(stockData.mName);
@@ -161,7 +156,6 @@ public class StockData extends DatabaseTable {
 
 		super.set(cursor);
 
-		setStockID(cursor);
 		setSE(cursor);
 		setCode(cursor);
 		setName(cursor);
@@ -173,23 +167,6 @@ public class StockData extends DatabaseTable {
 		mMacd.set(cursor);
 		mTrend.set(cursor);
 		setAction(cursor);
-	}
-
-	public long getStockId() {
-		return mStockId;
-	}
-
-	public void setStockId(long stockId) {
-		mStockId = stockId;
-	}
-
-	void setStockID(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setStockId(cursor.getLong(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_STOCK_ID)));
 	}
 
 	public String getSE() {
@@ -379,7 +356,9 @@ public class StockData extends DatabaseTable {
 			return;
 		}
 
-		setStockId(prev.getStockId());
+		setSE(prev.getSE());
+		setCode(prev.getCode());
+		setName(prev.getName());
 		setIndex(prev.getIndex());
 		mTrend.setIndexStart(prev.mTrend.getIndexStart());
 		mTrend.setVertexLow(Math.min(prev.mTrend.getVertexLow(), mTrend.getVertexLow()));

@@ -145,7 +145,7 @@ public class IndexComponentListActivity extends ListActivity implements
 				for (int i = 0; i < mStockList.size(); i++) {
 					Stock stock = mStockList.get(i);
 					if (stock != null && (stock.getFlag() >= Stock.FLAG_FAVORITE)) {
-						mDatabaseManager.deleteStockData(stock.getId());
+						mDatabaseManager.deleteStockData(stock);
 					}
 				}
 				mHandler.sendEmptyMessage(MESSAGE_REFRESH);

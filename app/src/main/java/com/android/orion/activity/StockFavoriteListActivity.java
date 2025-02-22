@@ -140,7 +140,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 				try {
 					mDatabaseManager.loadStockArrayMap(mStockArrayMap);
 					for (Stock stock : mStockArrayMap.values()) {
-						mDatabaseManager.deleteStockData(stock.getId());
+						mDatabaseManager.deleteStockData(stock);
 						mDatabaseManager.deleteStockTrend(stock);
 						mDatabaseManager.deleteStockPerceptron(stock.getId());
 					}
