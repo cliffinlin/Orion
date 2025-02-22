@@ -321,7 +321,6 @@ public class DatabaseManager implements StockListener {
 			cursor = queryStock(stock);
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
-				stock.setCreated(cursor);
 				result = true;
 			}
 		} catch (Exception e) {
@@ -591,7 +590,6 @@ public class DatabaseManager implements StockListener {
 			cursor = queryStockData(stockData);
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
-				stockData.setCreated(cursor);
 				result = true;
 			}
 		} catch (Exception e) {
@@ -930,7 +928,6 @@ public class DatabaseManager implements StockListener {
 					Log.d(TAG, "isStockTrendExist cursor.getCount()=" + cursor.getCount());
 				}
 				cursor.moveToNext();
-				stockTrend.setCreated(cursor);
 				result = true;
 			}
 		} catch (Exception e) {
@@ -1211,7 +1208,6 @@ public class DatabaseManager implements StockListener {
 			cursor = queryStockPerceptron(stockPerceptron);
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
-				stockPerceptron.setCreated(cursor);
 				result = true;
 			}
 		} catch (Exception e) {
@@ -1348,7 +1344,6 @@ public class DatabaseManager implements StockListener {
 			cursor = queryStockDeal(stockDeal);
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
-				stockDeal.setCreated(cursor);
 				result = true;
 			}
 		} catch (Exception e) {
@@ -1774,7 +1769,6 @@ public class DatabaseManager implements StockListener {
 			cursor = queryStockFinancial(stockFinancial);
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
-				stockFinancial.setCreated(cursor);
 				result = true;
 			}
 		} catch (Exception e) {
@@ -2052,7 +2046,6 @@ public class DatabaseManager implements StockListener {
 			cursor = queryShareBonus(shareBonus);
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
-				shareBonus.setCreated(cursor);
 				result = true;
 			}
 		} catch (Exception e) {
@@ -2310,7 +2303,6 @@ public class DatabaseManager implements StockListener {
 			cursor = queryTotalShare(totalShare);
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
-				totalShare.setCreated(cursor);
 				result = true;
 			}
 		} catch (Exception e) {
@@ -2537,7 +2529,6 @@ public class DatabaseManager implements StockListener {
 			cursor = queryIndexComponent(indexComponent);
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
-				indexComponent.setCreated(cursor);
 				result = true;
 			}
 		} catch (Exception e) {

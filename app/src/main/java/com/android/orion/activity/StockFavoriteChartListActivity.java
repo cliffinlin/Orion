@@ -85,7 +85,6 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 
 			switch (msg.what) {
 				case MESSAGE_REFRESH:
-					mDatabaseManager.deleteStockTrend(mStock);
 					Setting.setDownloadStockData(mStock.getSE(), mStock.getCode(), 0);
 					mStockDataProvider.download(mStock);
 					mListView.onRefreshComplete();
@@ -181,6 +180,7 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 			}
 			case R.id.action_refresh: {
 				mDatabaseManager.deleteStockData(mStock.getId());
+				mDatabaseManager.deleteStockTrend(mStock);
 				mHandler.sendEmptyMessage(MESSAGE_REFRESH);
 				return true;
 			}

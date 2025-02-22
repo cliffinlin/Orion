@@ -65,8 +65,8 @@ public class StockTrend extends DatabaseTable {
 	}
 
 	@Override
-	ContentValues getContentValues(ContentValues contentValues) {
-		super.getContentValues(contentValues);
+	public ContentValues getContentValues() {
+		ContentValues contentValues = super.getContentValues();
 		contentValues.put(DatabaseContract.COLUMN_STOCK_ID, mStockId);
 		contentValues.put(DatabaseContract.COLUMN_SE, mSE);
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
@@ -83,13 +83,13 @@ public class StockTrend extends DatabaseTable {
 	}
 
 	public ContentValues getContentValuesNet() {
-		ContentValues contentValues = getContentValues();
+		ContentValues contentValues = super.getContentValues();
 		contentValues.put(DatabaseContract.COLUMN_NET, mNet);
 		return contentValues;
 	}
 
 	public ContentValues getContentValuesFlag() {
-		ContentValues contentValues = getContentValues();
+		ContentValues contentValues = super.getContentValues();
 		contentValues.put(DatabaseContract.COLUMN_FLAG, mFlag);
 		return contentValues;
 	}
