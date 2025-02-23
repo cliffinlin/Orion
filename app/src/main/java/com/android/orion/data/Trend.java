@@ -41,26 +41,26 @@ public class Trend {
 	public static final int VERTEX_TOP_TREND = 1 << 10;
 	public static final int VERTEX_BOTTOM_TREND = 1 << 11;
 
-	public static final String TREND_UP_NONE_UP = "UNU";
-	public static final String TREND_UP_NONE_DOWN = "UND";
-	public static final String TREND_UP_NONE = "UN";
-	public static final String TREND_UP_DOWN = "UD";
-	public static final String TREND_UP_UP = "UU";
-	public static final String TREND_NONE = "";
-	public static final String TREND_DOWN_DOWN = "DD";
-	public static final String TREND_DOWN_UP = "DU";
-	public static final String TREND_DOWN_NONE = "DN";
-	public static final String TREND_DOWN_NONE_UP = "DNU";
-	public static final String TREND_DOWN_NONE_DOWN = "DND";
+	public static final String TYPE_UP_NONE_UP = "UNU";
+	public static final String TYPE_UP_NONE_DOWN = "UND";
+	public static final String TYPE_UP_NONE = "UN";
+	public static final String TYPE_UP_DOWN = "UD";
+	public static final String TYPE_UP_UP = "UU";
+	public static final String TYPE_NONE = "";
+	public static final String TYPE_DOWN_DOWN = "DD";
+	public static final String TYPE_DOWN_UP = "DU";
+	public static final String TYPE_DOWN_NONE = "DN";
+	public static final String TYPE_DOWN_NONE_UP = "DNU";
+	public static final String TYPE_DOWN_NONE_DOWN = "DND";
 
 	public static final int FLAG_NONE = 0;
 	public static final int FLAG_CHANGED = 1;
 
 	public static final String[] TREND_TYPES = {
-			TREND_UP_NONE_UP, TREND_UP_NONE_DOWN, TREND_UP_NONE,
-			TREND_UP_DOWN, TREND_UP_UP,
-			TREND_DOWN_DOWN, TREND_DOWN_UP,
-			TREND_DOWN_NONE, TREND_DOWN_NONE_UP, TREND_DOWN_NONE_DOWN};
+			TYPE_UP_NONE_UP, TYPE_UP_NONE_DOWN, TYPE_UP_NONE,
+			TYPE_UP_DOWN, TYPE_UP_UP,
+			TYPE_DOWN_DOWN, TYPE_DOWN_UP,
+			TYPE_DOWN_NONE, TYPE_DOWN_NONE_UP, TYPE_DOWN_NONE_DOWN};
 
 	public static final String MARK_NONE = "";
 

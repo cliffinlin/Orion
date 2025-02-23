@@ -67,7 +67,7 @@ public class StockTrend extends DatabaseTable {
 		mDate = "";
 		mTime = "";
 		mLevel = Trend.LEVEL_NONE;
-		mType = Trend.TREND_NONE;
+		mType = Trend.TYPE_NONE;
 		mFlag = Trend.FLAG_NONE;
 		mDirection = Trend.DIRECTION_NONE;
 		mVertexLow = 0;
@@ -577,11 +577,19 @@ public class StockTrend extends DatabaseTable {
 				+ mName + Constant.TAB
 				+ mPrice + Constant.TAB
 				+ mNet + Constant.TAB
+				+ mProfit + Constant.TAB
 				+ mPeriod + Constant.TAB
 				+ mDate + Constant.TAB
 				+ mTime + Constant.TAB
 				+ mLevel + Constant.TAB
 				+ mType + Constant.TAB
-				+ mFlag + Constant.TAB;
+				+ mFlag + Constant.TAB
+				+ mDirection + Constant.TAB
+				+ mVertexLow + Constant.TAB
+				+ mVertexHigh + Constant.TAB
+				+ mVertexNet + Constant.TAB
+				+ mTurning + Constant.TAB
+				+ mTurningNet + Constant.TAB
+				+ mTurningRate + Constant.TAB;
 	}
 }

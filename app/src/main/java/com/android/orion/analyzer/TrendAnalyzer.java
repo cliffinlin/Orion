@@ -1,19 +1,13 @@
 package com.android.orion.analyzer;
 
-import android.content.ContentValues;
 import android.text.TextUtils;
-import android.util.ArrayMap;
 
-import com.android.orion.config.Config;
-import com.android.orion.data.Period;
 import com.android.orion.data.Trend;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
-import com.android.orion.database.StockPerceptron;
 import com.android.orion.database.StockTrend;
 import com.android.orion.manager.DatabaseManager;
 import com.android.orion.provider.StockPerceptronProvider;
-import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Logger;
 import com.android.orion.utility.Utility;
@@ -216,7 +210,7 @@ public class TrendAnalyzer {
 		try {
 			int direction = dataList.get(0).getTrend().getDirection();
 			int baseDirection = direction;
-			String trendType = Trend.TREND_NONE;
+			String type = Trend.TYPE_NONE;
 			vertexList.clear();
 			for (int i = 2; i < size; i++) {
 				StockData current = dataList.get(i);
@@ -248,33 +242,33 @@ public class TrendAnalyzer {
 					case Trend.DIRECTION_UP:
 						if (direction == Trend.DIRECTION_DOWN) {
 							addVertex(end_2, vertexTypeBottom, vertexList);
-							trendType = Trend.TREND_DOWN_UP;
+							type = Trend.TYPE_DOWN_UP;
 						} else if (direction == Trend.DIRECTION_NONE) {
 							StockData vertexData = chooseVertex(start_2, end_2, Trend.VERTEX_BOTTOM);
 							if (baseDirection == Trend.DIRECTION_UP) {
 								addVertex(vertexData, vertexTypeBottom, vertexList);
-								trendType = Trend.TREND_UP_NONE_UP;
+								type = Trend.TYPE_UP_NONE_UP;
 							} else if (baseDirection == Trend.DIRECTION_DOWN) {
-								trendType = Trend.TREND_DOWN_NONE_UP;
+								type = Trend.TYPE_DOWN_NONE_UP;
 							}
 						} else if (direction == Trend.DIRECTION_UP) {
-							trendType = Trend.TREND_UP_UP;
+							type = Trend.TYPE_UP_UP;
 						}
 						break;
 					case Trend.DIRECTION_DOWN:
 						if (direction == Trend.DIRECTION_UP) {
 							addVertex(end_2, vertexTypeTop, vertexList);
-							trendType = Trend.TREND_UP_DOWN;
+							type = Trend.TYPE_UP_DOWN;
 						} else if (direction == Trend.DIRECTION_NONE) {
 							StockData vertexData = chooseVertex(start_2, end_2, Trend.VERTEX_TOP);
 							if (baseDirection == Trend.DIRECTION_UP) {
-								trendType = Trend.TREND_UP_NONE_DOWN;
+								type = Trend.TYPE_UP_NONE_DOWN;
 							} else if (baseDirection == Trend.DIRECTION_DOWN) {
 								addVertex(vertexData, vertexTypeTop, vertexList);
-								trendType = Trend.TREND_DOWN_NONE_DOWN;
+								type = Trend.TYPE_DOWN_NONE_DOWN;
 							}
 						} else if (direction == Trend.DIRECTION_DOWN) {
-							trendType = Trend.TREND_DOWN_DOWN;
+							type = Trend.TYPE_DOWN_DOWN;
 						}
 						break;
 					case Trend.DIRECTION_NONE:
@@ -282,12 +276,12 @@ public class TrendAnalyzer {
 							baseDirection = Trend.DIRECTION_UP;
 							StockData vertexData = chooseVertex(start_1, end_1, Trend.VERTEX_TOP);
 							addVertex(vertexData, vertexTypeTop, vertexList);
-							trendType = Trend.TREND_UP_NONE;
+							type = Trend.TYPE_UP_NONE;
 						} else if (direction == Trend.DIRECTION_DOWN) {
 							baseDirection = Trend.DIRECTION_DOWN;
 							StockData vertexData = chooseVertex(start_1, end_1, Trend.VERTEX_BOTTOM);
 							addVertex(vertexData, vertexTypeBottom, vertexList);
-							trendType = Trend.TREND_DOWN_NONE;
+							type = Trend.TYPE_DOWN_NONE;
 						} else if (direction == Trend.DIRECTION_NONE) {
 						}
 						break;
@@ -296,7 +290,7 @@ public class TrendAnalyzer {
 			}
 			extendVertexList(dataList, vertexList);
 
-			if (!TextUtils.isEmpty(trendType)) {
+			if (!TextUtils.isEmpty(type)) {
 				StockData prevLineData = StockData.getLast(dataList, 1);
 				StockData stockData = StockData.getLast(mStockDataList, 0);
 
@@ -314,12 +308,12 @@ public class TrendAnalyzer {
 				if (mDatabaseManager.isStockTrendExist(stockTrend)) {
 					mDatabaseManager.getStockTrend(stockTrend);
 					stockTrend.setModified(Utility.getCurrentDateTimeString());
-					if (TextUtils.equals(trendType, stockTrend.getType())) {
+					if (TextUtils.equals(type, stockTrend.getType())) {
 						stockTrend.setFlag(Trend.FLAG_NONE);
 						stockTrend.setupNet();
 						stockTrend.setupProfit();
 						mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValuesNet());
-//						mStockPerceptronProvider.train(stockTrend.getPeriod(), stockTrend.getLevel(), stockTrend.getType());
+						mStockPerceptronProvider.train(stockTrend.getPeriod(), stockTrend.getLevel(), stockTrend.getType());
 					} else {
 						stockTrend.setFlag(Trend.FLAG_CHANGED);
 						stockTrend.setTurning(mStock.getPrice());
@@ -330,11 +324,11 @@ public class TrendAnalyzer {
 						stockTrend.setupProfit();
 						stockTrend.setDate(stockData.getDate());
 						stockTrend.setTime(stockData.getTime());
-						stockTrend.setType(trendType);
+						stockTrend.setType(type);
 						mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValues());
 						if (stockData != null) {
 							if (isNotifyTrendLevel(level)) {
-								stockData.setAction(Trend.MARK_LEVEL + level + trendType);
+								stockData.setAction(Trend.MARK_LEVEL + level + type);
 								StockAnalyzer.getInstance().notifyStockTrend(stockTrend);
 							}
 						}
@@ -348,7 +342,7 @@ public class TrendAnalyzer {
 					stockTrend.setupProfit();
 					stockTrend.setDate(stockData.getDate());
 					stockTrend.setTime(stockData.getTime());
-					stockTrend.setType(trendType);
+					stockTrend.setType(type);
 					stockTrend.setCreated(Utility.getCurrentDateTimeString());
 					mDatabaseManager.insertStockTrend(stockTrend);
 				}

@@ -60,7 +60,7 @@ public class StockPerceptron extends DatabaseTable {
 
 		mPeriod = "";
 		mLevel = Trend.LEVEL_NONE;
-		mType = Trend.TREND_NONE;
+		mType = Trend.TYPE_NONE;
 		mDelta = 0.0;
 		mTimes = 0;
 	}
