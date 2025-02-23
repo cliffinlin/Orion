@@ -15,7 +15,6 @@ public class StockTrend extends DatabaseTable {
 	private String mName;
 	private double mPrice;
 	private double mNet;
-	private double mProfit;
 	private String mPeriod;
 	private String mDate;
 	private String mTime;
@@ -29,6 +28,7 @@ public class StockTrend extends DatabaseTable {
 	private double mTurning;
 	private double mTurningNet;
 	private double mTurningRate;
+	private double mProfit;
 
 	public StockTrend() {
 		init();
@@ -62,7 +62,6 @@ public class StockTrend extends DatabaseTable {
 		mName = "";
 		mPrice = 0;
 		mNet = 0;
-		mProfit = 0;
 		mPeriod = "";
 		mDate = "";
 		mTime = "";
@@ -76,6 +75,7 @@ public class StockTrend extends DatabaseTable {
 		mTurning = 0;
 		mTurningNet = 0;
 		mTurningRate = 0;
+		mProfit = 0;
 	}
 
 	@Override
@@ -87,7 +87,6 @@ public class StockTrend extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
 		contentValues.put(DatabaseContract.COLUMN_PRICE, mPrice);
 		contentValues.put(DatabaseContract.COLUMN_NET, mNet);
-		contentValues.put(DatabaseContract.COLUMN_PROFIT, mProfit);
 		contentValues.put(DatabaseContract.COLUMN_PERIOD, mPeriod);
 		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);
 		contentValues.put(DatabaseContract.COLUMN_TIME, mTime);
@@ -101,6 +100,7 @@ public class StockTrend extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_TURNING, mTurning);
 		contentValues.put(DatabaseContract.COLUMN_TURNING_NET, mTurningNet);
 		contentValues.put(DatabaseContract.COLUMN_TURNING_RATE, mTurningRate);
+		contentValues.put(DatabaseContract.COLUMN_PROFIT, mProfit);
 		return contentValues;
 	}
 
@@ -132,7 +132,6 @@ public class StockTrend extends DatabaseTable {
 		setName(stockTrend.mName);
 		setPrice(stockTrend.mPrice);
 		setNet(stockTrend.mNet);
-		setProfit(stockTrend.mProfit);
 		setPeriod(stockTrend.mPeriod);
 		setDate(stockTrend.mDate);
 		setTime(stockTrend.mTime);
@@ -146,6 +145,7 @@ public class StockTrend extends DatabaseTable {
 		setTurning(stockTrend.mTurning);
 		setTurningNet(stockTrend.mTurningNet);
 		setTurningRate(stockTrend.mTurningRate);
+		setProfit(stockTrend.mProfit);
 	}
 
 	@Override
@@ -163,7 +163,6 @@ public class StockTrend extends DatabaseTable {
 		setName(cursor);
 		setPrice(cursor);
 		setNet(cursor);
-		setProfit(cursor);
 		setPeriod(cursor);
 		setDate(cursor);
 		setTime(cursor);
@@ -177,6 +176,7 @@ public class StockTrend extends DatabaseTable {
 		setTurning(cursor);
 		setTurningNet(cursor);
 		setTurningRate(cursor);
+		setProfit(cursor);
 	}
 
 	public String getSE() {
@@ -262,23 +262,6 @@ public class StockTrend extends DatabaseTable {
 
 		setNet(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_NET)));
-	}
-
-	public double getProfit() {
-		return mProfit;
-	}
-
-	public void setProfit(double profit) {
-		mProfit = profit;
-	}
-
-	void setProfit(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setProfit(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_PROFIT)));
 	}
 
 	public String getPeriod() {
@@ -510,6 +493,23 @@ public class StockTrend extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_TURNING_RATE)));
 	}
 
+	public double getProfit() {
+		return mProfit;
+	}
+
+	public void setProfit(double profit) {
+		mProfit = profit;
+	}
+
+	void setProfit(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setProfit(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_PROFIT)));
+	}
+
 	public void setupVertexNet() {
 		if (mDirection == Trend.DIRECTION_NONE || mVertexLow == 0 || mVertexHigh == 0) {
 			mVertexNet = 0;
@@ -577,7 +577,6 @@ public class StockTrend extends DatabaseTable {
 				+ mName + Constant.TAB
 				+ mPrice + Constant.TAB
 				+ mNet + Constant.TAB
-				+ mProfit + Constant.TAB
 				+ mPeriod + Constant.TAB
 				+ mDate + Constant.TAB
 				+ mTime + Constant.TAB
@@ -590,6 +589,7 @@ public class StockTrend extends DatabaseTable {
 				+ mVertexNet + Constant.TAB
 				+ mTurning + Constant.TAB
 				+ mTurningNet + Constant.TAB
-				+ mTurningRate + Constant.TAB;
+				+ mTurningRate + Constant.TAB
+				+ mProfit + Constant.TAB;
 	}
 }

@@ -41,6 +41,15 @@
     <string name="action_trend">Trend</string>
     <string name="period">Period</string>
     <string name="level">Level</string>
+    <string name="type">Type</string>
+    <string name="flag">Flag</string>
+    <string name="direction">Direction</string>
+    <string name="vertex_low">VertexLow</string>
+    <string name="vertex_high">VertexHigh</string>
+    <string name="vertex_net">VertexNet</string>
+    <string name="turning">Turning</string>
+    <string name="turning_net">TurningNet</string>
+    <string name="turning_rate">TurningRate</string>
     <string name="trend">Trend</string>
     <string name="weight">Weight</string>
     <string name="bias">Bias</string>

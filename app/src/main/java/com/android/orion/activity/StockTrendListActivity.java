@@ -57,8 +57,19 @@ public class StockTrendListActivity extends ListActivity implements
 	TextView mTextViewPrice = null;
 	TextView mTextViewNet = null;
 	TextView mTextViewPeriod = null;
+	TextView mTextViewDate = null;
+	TextView mTextViewTime = null;
 	TextView mTextViewLevel = null;
 	TextView mTextViewType = null;
+	TextView mTextViewFlag = null;
+	TextView mTextViewDirection = null;
+	TextView mTextViewVertexLow = null;
+	TextView mTextViewVertexHigh = null;
+	TextView mTextViewVertexNet = null;
+	TextView mTextViewTurning = null;
+	TextView mTextViewTurningNet = null;
+	TextView mTextViewTurningRate = null;
+	TextView mTextViewProfit = null;
 	TextView mTextViewCreated = null;
 	TextView mTextViewModified = null;
 
@@ -198,11 +209,44 @@ public class StockTrendListActivity extends ListActivity implements
 			case R.id.period:
 				mSortOrderColumn = DatabaseContract.COLUMN_PERIOD;
 				break;
+			case R.id.date:
+				mSortOrderColumn = DatabaseContract.COLUMN_DATE;
+				break;
+			case R.id.time:
+				mSortOrderColumn = DatabaseContract.COLUMN_TIME;
+				break;
 			case R.id.level:
 				mSortOrderColumn = DatabaseContract.COLUMN_LEVEL;
 				break;
 			case R.id.type:
 				mSortOrderColumn = DatabaseContract.COLUMN_TYPE;
+				break;
+			case R.id.flag:
+				mSortOrderColumn = DatabaseContract.COLUMN_FLAG;
+				break;
+			case R.id.direction:
+				mSortOrderColumn = DatabaseContract.COLUMN_DIRECTION;
+				break;
+			case R.id.vertex_low:
+				mSortOrderColumn = DatabaseContract.COLUMN_VERTEX_LOW;
+				break;
+			case R.id.vertex_high:
+				mSortOrderColumn = DatabaseContract.COLUMN_VERTEX_HIGH;
+				break;
+			case R.id.vertex_net:
+				mSortOrderColumn = DatabaseContract.COLUMN_VERTEX_NET;
+				break;
+			case R.id.turning:
+				mSortOrderColumn = DatabaseContract.COLUMN_TURNING;
+				break;
+			case R.id.turning_net:
+				mSortOrderColumn = DatabaseContract.COLUMN_TURNING_NET;
+				break;
+			case R.id.turning_rate:
+				mSortOrderColumn = DatabaseContract.COLUMN_TURNING_RATE;
+				break;
+			case R.id.profit:
+				mSortOrderColumn = DatabaseContract.COLUMN_PROFIT;
 				break;
 			case R.id.created:
 				mSortOrderColumn = DatabaseContract.COLUMN_CREATED;
@@ -244,8 +288,19 @@ public class StockTrendListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewPrice, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewNet, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewPeriod, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewDate, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewTime, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewLevel, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewType, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewFlag, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewDirection, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewVertexLow, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewVertexHigh, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewVertexNet, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewTurning, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewTurningNet, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewTurningRate, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewProfit, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewCreated, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewModified, mHeaderTextDefaultColor);
 	}
@@ -289,6 +344,16 @@ public class StockTrendListActivity extends ListActivity implements
 			mTextViewPeriod.setOnClickListener(this);
 		}
 
+		mTextViewDate = findViewById(R.id.date);
+		if (mTextViewDate != null) {
+			mTextViewDate.setOnClickListener(this);
+		}
+
+		mTextViewTime = findViewById(R.id.time);
+		if (mTextViewTime != null) {
+			mTextViewTime.setOnClickListener(this);
+		}
+
 		mTextViewLevel = findViewById(R.id.level);
 		if (mTextViewLevel != null) {
 			mTextViewLevel.setOnClickListener(this);
@@ -297,6 +362,51 @@ public class StockTrendListActivity extends ListActivity implements
 		mTextViewType = findViewById(R.id.type);
 		if (mTextViewType != null) {
 			mTextViewType.setOnClickListener(this);
+		}
+
+		mTextViewFlag = findViewById(R.id.flag);
+		if (mTextViewFlag != null) {
+			mTextViewFlag.setOnClickListener(this);
+		}
+
+		mTextViewDirection = findViewById(R.id.direction);
+		if (mTextViewDirection != null) {
+			mTextViewDirection.setOnClickListener(this);
+		}
+
+		mTextViewVertexLow = findViewById(R.id.vertex_low);
+		if (mTextViewVertexLow != null) {
+			mTextViewVertexLow.setOnClickListener(this);
+		}
+
+		mTextViewVertexHigh = findViewById(R.id.vertex_high);
+		if (mTextViewVertexHigh != null) {
+			mTextViewVertexHigh.setOnClickListener(this);
+		}
+
+		mTextViewVertexNet = findViewById(R.id.vertex_net);
+		if (mTextViewVertexNet != null) {
+			mTextViewVertexNet.setOnClickListener(this);
+		}
+
+		mTextViewTurning = findViewById(R.id.turning);
+		if (mTextViewTurning != null) {
+			mTextViewTurning.setOnClickListener(this);
+		}
+
+		mTextViewTurningNet = findViewById(R.id.turning_net);
+		if (mTextViewTurningNet != null) {
+			mTextViewTurningNet.setOnClickListener(this);
+		}
+
+		mTextViewTurningRate = findViewById(R.id.turning_rate);
+		if (mTextViewTurningRate != null) {
+			mTextViewTurningRate.setOnClickListener(this);
+		}
+
+		mTextViewProfit = findViewById(R.id.profit);
+		if (mTextViewProfit != null) {
+			mTextViewProfit.setOnClickListener(this);
 		}
 
 		mTextViewCreated = findViewById(R.id.created);
@@ -317,10 +427,32 @@ public class StockTrendListActivity extends ListActivity implements
 			setHeaderTextColor(mTextViewNet, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PERIOD)) {
 			setHeaderTextColor(mTextViewPeriod, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_DATE)) {
+			setHeaderTextColor(mTextViewDate, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_TIME)) {
+			setHeaderTextColor(mTextViewTime, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_LEVEL)) {
 			setHeaderTextColor(mTextViewLevel, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_TYPE)) {
 			setHeaderTextColor(mTextViewType, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_FLAG)) {
+			setHeaderTextColor(mTextViewFlag, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_DIRECTION)) {
+			setHeaderTextColor(mTextViewDirection, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_VERTEX_LOW)) {
+			setHeaderTextColor(mTextViewVertexLow, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_VERTEX_HIGH)) {
+			setHeaderTextColor(mTextViewVertexHigh, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_VERTEX_NET)) {
+			setHeaderTextColor(mTextViewVertexNet, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_TURNING)) {
+			setHeaderTextColor(mTextViewTurning, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_TURNING_NET)) {
+			setHeaderTextColor(mTextViewTurningNet, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_TURNING_RATE)) {
+			setHeaderTextColor(mTextViewTurningRate, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PROFIT)) {
+			setHeaderTextColor(mTextViewProfit, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_CREATED)) {
 			setHeaderTextColor(mTextViewCreated, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MODIFIED)) {
@@ -338,16 +470,38 @@ public class StockTrendListActivity extends ListActivity implements
 				DatabaseContract.COLUMN_PRICE,
 				DatabaseContract.COLUMN_NET,
 				DatabaseContract.COLUMN_PERIOD,
+				DatabaseContract.COLUMN_DATE,
+				DatabaseContract.COLUMN_TIME,
 				DatabaseContract.COLUMN_LEVEL,
 				DatabaseContract.COLUMN_TYPE,
+				DatabaseContract.COLUMN_FLAG,
+				DatabaseContract.COLUMN_DIRECTION,
+				DatabaseContract.COLUMN_VERTEX_LOW,
+				DatabaseContract.COLUMN_VERTEX_HIGH,
+				DatabaseContract.COLUMN_VERTEX_NET,
+				DatabaseContract.COLUMN_TURNING,
+				DatabaseContract.COLUMN_TURNING_NET,
+				DatabaseContract.COLUMN_TURNING_RATE,
+				DatabaseContract.COLUMN_PROFIT,
 				DatabaseContract.COLUMN_CREATED,
 				DatabaseContract.COLUMN_MODIFIED};
 		int[] mRightTo = new int[]{
 				R.id.price,
 				R.id.net,
 				R.id.period,
+				R.id.date,
+				R.id.time,
 				R.id.level,
 				R.id.type,
+				R.id.flag,
+				R.id.direction,
+				R.id.vertex_low,
+				R.id.vertex_high,
+				R.id.vertex_net,
+				R.id.turning,
+				R.id.turning_net,
+				R.id.turning_rate,
+				R.id.profit,
 				R.id.created,
 				R.id.modified};
 
@@ -458,6 +612,15 @@ public class StockTrendListActivity extends ListActivity implements
 		mRightAdapter.swapCursor(null);
 	}
 
+	void getStock(long id) {
+		StockTrend stockTrend = new StockTrend();
+		stockTrend.setId(id);
+		mDatabaseManager.getStockTrendById(stockTrend);
+		mStock.setSE(stockTrend.getSE());
+		mStock.setCode(stockTrend.getCode());
+		mDatabaseManager.getStock(mStock);
+	}
+
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 							long id) {
@@ -465,8 +628,9 @@ public class StockTrendListActivity extends ListActivity implements
 		if (parent.getId() == R.id.left_listview) {
 		} else {
 			if (mCurrentActionMode == null) {
-				Intent intent = new Intent(mContext, StockTrendChartListActivity.class);
-				intent.putExtra(Constant.EXTRA_STOCK_TREND_ID, id);
+				getStock(id);
+				Intent intent = new Intent(mContext, StockFavoriteChartListActivity.class);
+				intent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
 				startActivity(intent);
 			}
 		}
@@ -475,18 +639,11 @@ public class StockTrendListActivity extends ListActivity implements
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
 								   int position, long id) {
-		StockTrend stockTrend = new StockTrend();
-		stockTrend.setId(id);
-		mDatabaseManager.getStockTrendById(stockTrend);
-		Stock stock = new Stock();
-		stock.setSE(stockTrend.getSE());
-		stock.setCode(stockTrend.getCode());
-		mDatabaseManager.getStock(stock);
-		if (TextUtils.isEmpty(stock.getSE()) || TextUtils.isEmpty(stock.getCode())) {
-			mDatabaseManager.deleteStockTrend(stock);
-			restartLoader();
-			return true;
-		}
+//		if (TextUtils.isEmpty(stock.getSE()) || TextUtils.isEmpty(stock.getCode())) {
+//			mDatabaseManager.deleteStockTrend(stock);
+//			restartLoader();
+//			return true;
+//		}
 		return mCurrentActionMode == null;
 	}
 

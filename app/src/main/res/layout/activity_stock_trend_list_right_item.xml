@@ -22,6 +22,14 @@
         android:textSize="18sp" />
 
     <TextView
+        android:id="@+id/turning_rate"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="18sp" />
+
+    <TextView
         android:id="@+id/period"
         android:layout_width="80dp"
         android:layout_height="50dp"
@@ -39,6 +47,86 @@
 
     <TextView
         android:id="@+id/type"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/flag"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/direction"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/vertex_low"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/vertex_high"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/vertex_net"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/turning"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/turning_net"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/profit"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/time"
         android:layout_width="80dp"
         android:layout_height="50dp"
         android:layout_weight="1"

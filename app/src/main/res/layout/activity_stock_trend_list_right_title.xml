@@ -23,6 +23,15 @@
         android:textSize="18sp" />
 
     <TextView
+        android:id="@+id/turning_rate"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/turning_rate"
+        android:textSize="18sp" />
+
+    <TextView
         android:id="@+id/period"
         android:layout_width="80dp"
         android:layout_height="40dp"
@@ -46,7 +55,97 @@
         android:layout_height="40dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="@string/trend"
+        android:text="@string/type"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/flag"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/flag"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/direction"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/direction"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/vertex_low"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/vertex_low"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/vertex_high"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/vertex_high"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/vertex_net"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/vertex_net"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/turning"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/turning"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/turning_net"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/turning_net"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/profit"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/profit"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/date"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/time"
         android:textSize="18sp" />
 
     <TextView
