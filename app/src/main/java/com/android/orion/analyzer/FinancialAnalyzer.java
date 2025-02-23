@@ -162,7 +162,6 @@ public class FinancialAnalyzer {
 
 			rate = Utility.Round2(stockFinancial.getNetProfitPerShareInYear()
 					/ prev.getNetProfitPerShareInYear());
-
 			stockFinancial.setRate(rate);
 		}
 	}
@@ -184,8 +183,7 @@ public class FinancialAnalyzer {
 				continue;
 			}
 
-			roe = Utility.Round2(
-					100.0 * stockFinancial.getNetProfitPerShareInYear()
+			roe = Utility.Round2(100 * stockFinancial.getNetProfitPerShareInYear()
 							/ prev.getBookValuePerShare());
 			if (roe < 0) {
 				roe = 0;

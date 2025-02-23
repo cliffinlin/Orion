@@ -517,9 +517,9 @@ public class StockTrend extends DatabaseTable {
 		}
 
 		if (mDirection == Trend.DIRECTION_UP) {
-			mVertexNet = Utility.Round2((mVertexHigh - mVertexLow) / mVertexLow);
+			mVertexNet = Utility.Round2(100 * (mVertexHigh - mVertexLow) / mVertexLow);
 		} else if (mDirection == Trend.DIRECTION_DOWN) {
-			mVertexNet = Utility.Round2((mVertexLow - mVertexHigh) / mVertexHigh);
+			mVertexNet = Utility.Round2(100 * (mVertexLow - mVertexHigh) / mVertexHigh);
 		}
 	}
 
@@ -530,9 +530,9 @@ public class StockTrend extends DatabaseTable {
 		}
 
 		if (mDirection == Trend.DIRECTION_UP) {
-			mTurningNet = Utility.Round2((mTurning - mVertexHigh) / mVertexHigh);
+			mTurningNet = Utility.Round2(100 * (mTurning - mVertexHigh) / mVertexHigh);
 		} else if (mDirection == Trend.DIRECTION_DOWN) {
-			mTurningNet = Utility.Round2((mTurning - mVertexLow) / mVertexLow);
+			mTurningNet = Utility.Round2(100 * (mTurning - mVertexLow) / mVertexLow);
 		}
 	}
 
@@ -543,9 +543,9 @@ public class StockTrend extends DatabaseTable {
 		}
 
 		if (mDirection == Trend.DIRECTION_UP) {
-			mTurningRate = Utility.Round2(Math.abs(mTurning - mVertexHigh) / (mVertexHigh - mVertexLow));
+			mTurningRate = Utility.Round2(100 * Math.abs(mTurning - mVertexHigh) / (mVertexHigh - mVertexLow));
 		} else if (mDirection == Trend.DIRECTION_DOWN) {
-			mTurningRate = Utility.Round2(Math.abs(mTurning - mVertexLow) / (mVertexHigh - mVertexLow));
+			mTurningRate = Utility.Round2(100 * Math.abs(mTurning - mVertexLow) / (mVertexHigh - mVertexLow));
 		}
 	}
 
@@ -556,9 +556,9 @@ public class StockTrend extends DatabaseTable {
 		}
 
 		if (mDirection == Trend.DIRECTION_UP) {
-			mNet = Utility.Round2((mPrice - mVertexHigh) / mVertexHigh);
+			mNet = Utility.Round2(100 * (mPrice - mVertexHigh) / mVertexHigh);
  		} else if (mDirection == Trend.DIRECTION_DOWN) {
-			mNet = Utility.Round2((mPrice - mVertexLow) / mVertexLow);
+			mNet = Utility.Round2(100 * (mPrice - mVertexLow) / mVertexLow);
 		}
 	}
 
@@ -568,7 +568,7 @@ public class StockTrend extends DatabaseTable {
 			return;
 		}
 
-		mProfit = Utility.Round2((mPrice - mTurning) / mTurning);
+		mProfit = Utility.Round2(100 * (mPrice - mTurning) / mTurning);
 	}
 
 	public String toString() {
