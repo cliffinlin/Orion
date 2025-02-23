@@ -73,6 +73,7 @@ public class Setting {
 	public static final String SETTING_DEBUG_LOOPBACK_DATE_TIME = "SETTING_DEBUG_LOOPBACK_DATE_TIME";
 	public static final String SETTING_DEBUG_WIFI = "SETTING_DEBUG_WIFI";
 	public static final String SETTING_DEBUG_DATAFILE = "SETTING_DEBUG_DATAFILE";
+	public static final boolean SETTING_DEBUG_DATAFILE_DEFAULT = true;
 
 	public static final String SETTING_DOWNLOAD_STOCK_HSA = "SETTING_DOWNLOAD_STOCK_HSA";
 	public static final String SETTING_DOWNLOAD_STOCK_ = "SETTING_DOWNLOAD_STOCK_";
@@ -221,7 +222,7 @@ public class Setting {
 	}
 
 	public static boolean getDebugDataFile() {
-		return Preferences.getBoolean(SETTING_DEBUG_DATAFILE, false);
+		return Preferences.getBoolean(SETTING_DEBUG_DATAFILE, SETTING_DEBUG_DATAFILE_DEFAULT);
 	}
 
 	public static void setDebugDataFile(boolean value) {

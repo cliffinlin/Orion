@@ -127,6 +127,7 @@ public class MainActivity extends PreferenceActivity {
 			Setting.setNotifyLine(Setting.SETTING_NOTIFY_LINE_DEFAULT);
 
 			Setting.setDebugLog(Setting.SETTING_DEBUG_LOG_DEFAULT);
+			Setting.setDebugDataFile(Setting.SETTING_DEBUG_DATAFILE_DEFAULT);
 		}
 	}
 }

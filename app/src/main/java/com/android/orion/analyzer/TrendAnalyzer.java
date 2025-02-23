@@ -297,27 +297,37 @@ public class TrendAnalyzer {
 			extendVertexList(dataList, vertexList);
 
 			if (!TextUtils.isEmpty(trendType)) {
+				StockData prevLineData = StockData.getLast(dataList, 1);
+				StockData stockData = StockData.getLast(mStockDataList, 0);
+
 				StockTrend stockTrend = new StockTrend();
 				stockTrend.setSE(mStock.getSE());
 				stockTrend.setCode(mStock.getCode());
 				stockTrend.setName(mStock.getName());
+				stockTrend.setPrice(mStock.getPrice());
 				stockTrend.setPeriod(mPeriod);
 				stockTrend.setLevel(level);
-
-				StockData stockData = StockData.getLast(mStockDataList, 0);
+				stockTrend.setDirection(prevLineData.getTrend().getDirection());
+				stockTrend.setVertexLow(prevLineData.getTrend().getVertexLow());
+				stockTrend.setVertexHigh(prevLineData.getTrend().getVertexHigh());
 
 				if (mDatabaseManager.isStockTrendExist(stockTrend)) {
 					mDatabaseManager.getStockTrend(stockTrend);
 					stockTrend.setModified(Utility.getCurrentDateTimeString());
 					if (TextUtils.equals(trendType, stockTrend.getType())) {
 						stockTrend.setFlag(Trend.FLAG_NONE);
-						stockTrend.setupNet(mStock.getPrice());
+						stockTrend.setupNet();
+						stockTrend.setupProfit();
 						mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValuesNet());
-						mStockPerceptronProvider.train(stockTrend.getPeriod(), stockTrend.getLevel(), stockTrend.getType());
+//						mStockPerceptronProvider.train(stockTrend.getPeriod(), stockTrend.getLevel(), stockTrend.getType());
 					} else {
 						stockTrend.setFlag(Trend.FLAG_CHANGED);
-						stockTrend.setPrice(mStock.getPrice());
-						stockTrend.setupNet(mStock.getPrice());
+						stockTrend.setTurning(mStock.getPrice());
+						stockTrend.setupVertexNet();
+						stockTrend.setupTurningNet();
+						stockTrend.setupTurningRate();
+						stockTrend.setupNet();
+						stockTrend.setupProfit();
 						stockTrend.setDate(stockData.getDate());
 						stockTrend.setTime(stockData.getTime());
 						stockTrend.setType(trendType);
@@ -330,8 +340,12 @@ public class TrendAnalyzer {
 						}
 					}
 				} else {
-					stockTrend.setPrice(mStock.getPrice());
-					stockTrend.setupNet(mStock.getPrice());
+					stockTrend.setTurning(mStock.getPrice());
+					stockTrend.setupVertexNet();
+					stockTrend.setupTurningNet();
+					stockTrend.setupTurningRate();
+					stockTrend.setupNet();
+					stockTrend.setupProfit();
 					stockTrend.setDate(stockData.getDate());
 					stockTrend.setTime(stockData.getTime());
 					stockTrend.setType(trendType);
