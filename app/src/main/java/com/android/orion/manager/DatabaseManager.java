@@ -16,14 +16,14 @@ import com.android.orion.data.Trend;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.DatabaseOpenHelper;
 import com.android.orion.database.IndexComponent;
-import com.android.orion.database.StockBonus;
 import com.android.orion.database.Stock;
+import com.android.orion.database.StockBonus;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockFinancial;
 import com.android.orion.database.StockPerceptron;
-import com.android.orion.database.StockTrend;
 import com.android.orion.database.StockShare;
+import com.android.orion.database.StockTrend;
 import com.android.orion.interfaces.StockListener;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Preferences;
@@ -730,7 +730,7 @@ public class DatabaseManager implements StockListener {
 	public String getStockDataSelection(String se, String code, String period, int level) {
 		return getStockSelection(se, code)
 				+ " AND " + DatabaseContract.COLUMN_PERIOD + " = '" + period + "'"
-				+ " AND " + DatabaseContract.COLUMN_LEVEL + " = '" + level + "'";
+				+ " AND " + DatabaseContract.COLUMN_LEVEL + " = " + level;
 	}
 
 	public String getStockDataOrder() {
@@ -867,6 +867,61 @@ public class DatabaseManager implements StockListener {
 		}
 	}
 
+	public void getStockTrendList(Stock stock,
+								  ArrayList<StockTrend> stockTrendList) {
+		if (stock == null || stockTrendList == null) {
+			return;
+		}
+
+		String selection = getStockSelection(stock);
+		String sortOrder = DatabaseContract.COLUMN_PERIOD + DatabaseContract.ORDER_ASC;
+
+		stockTrendList.clear();
+		Cursor cursor = null;
+		try {
+			cursor = queryStockTrend(selection, null, sortOrder);
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				while (cursor.moveToNext()) {
+					StockTrend stockTrend = new StockTrend();
+					stockTrend.set(cursor);
+					stockTrendList.add(stockTrend);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
+	public void getStockTrendList(Stock stock, int groups,
+								  ArrayList<StockTrend> stockTrendList) {
+		if (stock == null || stockTrendList == null) {
+			return;
+		}
+
+		String selection = getStockSelection(stock)
+				+ " AND " + DatabaseContract.COLUMN_GROUPS + " = " + groups;
+		String sortOrder = DatabaseContract.COLUMN_PERIOD + DatabaseContract.ORDER_ASC;
+
+		stockTrendList.clear();
+		Cursor cursor = null;
+		try {
+			cursor = queryStockTrend(selection, null, sortOrder);
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				while (cursor.moveToNext()) {
+					StockTrend stockTrend = new StockTrend();
+					stockTrend.set(cursor);
+					stockTrendList.add(stockTrend);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
 	public void getStockTrendList(String period, int level, String type,
 								  ArrayList<StockTrend> stockTrendList) {
 		if (stockTrendList == null) {
@@ -959,7 +1014,7 @@ public class DatabaseManager implements StockListener {
 
 	public int deleteStockTrend(Stock stock) {
 		int result = 0;
-		String where = getStockTrendSelection(stock);
+		String where = getStockSelection(stock);
 
 		try {
 			result = delete(DatabaseContract.StockTrend.CONTENT_URI, where);
@@ -981,18 +1036,6 @@ public class DatabaseManager implements StockListener {
 				+ " AND " + DatabaseContract.COLUMN_CODE + " = " + "'" + stockTrend.getCode() + "'"
 				+ " AND " + DatabaseContract.COLUMN_PERIOD + " = " + "'" + stockTrend.getPeriod() + "'"
 				+ " AND " + DatabaseContract.COLUMN_LEVEL + " = " + stockTrend.getLevel();
-		return selection;
-	}
-
-	public String getStockTrendSelection(Stock stock) {
-		String selection = "";
-
-		if (stock == null) {
-			return selection;
-		}
-
-		selection = DatabaseContract.COLUMN_SE + " = " + "'" + stock.getSE() + "'"
-				+ " AND " + DatabaseContract.COLUMN_CODE + " = " + "'" + stock.getCode() + "'";
 		return selection;
 	}
 
@@ -1368,9 +1411,7 @@ public class DatabaseManager implements StockListener {
 
 		stockDeal = new StockDeal();
 
-		String selection = DatabaseContract.COLUMN_SE + " = " + "'"
-				+ stock.getSE() + "'" + " AND " + DatabaseContract.COLUMN_CODE
-				+ " = " + "'" + stock.getCode() + "'";
+		String selection = getStockSelection(stock);
 		String sortOrder = DatabaseContract.COLUMN_BUY + " ASC ";
 
 		try {
@@ -1506,9 +1547,7 @@ public class DatabaseManager implements StockListener {
 		}
 
 		try {
-			String selection = DatabaseContract.COLUMN_SE + " = " + "'" + stock.getSE() + "'"
-					+ " AND " + DatabaseContract.COLUMN_CODE + " = " + "'"
-					+ stock.getCode() + "'";
+			String selection = getStockSelection(stock);
 			cursor = queryStockDeal(selection, null, null);
 			if (cursor != null) {
 				result = cursor.getCount();

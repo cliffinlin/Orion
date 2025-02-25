@@ -1311,7 +1311,7 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-		mNetProfitMargin = Utility.Round4(mNetProfitInYear / mMainBusinessIncomeInYear);
+		mNetProfitMargin = Utility.Round2(100 * mNetProfitInYear / mMainBusinessIncomeInYear);
 	}
 
 	public void setupNetProfitPerShare() {
@@ -1402,8 +1402,7 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-		mRate = mNetProfitPerShareInYear / netProfitPerShareLastYear;
-		mRate = Utility.Round2(mRate);
+		mRate = Utility.Round2(100 * mNetProfitPerShareInYear / netProfitPerShareLastYear);
 	}
 
 	public void setupDebtToNetAssetsRatio(ArrayList<StockFinancial> stockFinancialList) {
@@ -1433,7 +1432,7 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-		mRoe = Utility.Round4(mNetProfitPerShareInYear
+		mRoe = Utility.Round2(100 * mNetProfitPerShareInYear
 				/ bookValuePerShare);
 	}
 
@@ -1484,8 +1483,7 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-		mDividendRatio = (mDividend / 10.0) / mNetProfitPerShareInYear;
-		mDividendRatio = Utility.Round2(mDividendRatio);
+		mDividendRatio = Utility.Round2((100 * mDividend / 10.0) / mNetProfitPerShareInYear);
 	}
 
 	public void setupRoi() {
@@ -1507,8 +1505,8 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-		IRR.calculate(mPe, mRoe, mDividendRatio, mPrice);
+		IRR.calculate(mPe, mRoe / 100, mDividendRatio / 100, mPrice);
 		mIR = Utility.Round2(IRR.getIR());
-		mIRR = Utility.Round4(IRR.getIRR());
+		mIRR = Utility.Round2(100 * IRR.getIRR());
 	}
 }

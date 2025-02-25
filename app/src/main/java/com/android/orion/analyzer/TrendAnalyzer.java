@@ -1,6 +1,7 @@
 package com.android.orion.analyzer;
 
 import android.text.TextUtils;
+import android.util.ArrayMap;
 
 import com.android.orion.data.Trend;
 import com.android.orion.database.Stock;
@@ -19,6 +20,8 @@ public class TrendAnalyzer {
 	Stock mStock;
 	String mPeriod;
 	ArrayList<StockData> mStockDataList;
+	ArrayList<StockTrend> mStockTrendList = new ArrayList<>();
+	ArrayMap<String, ArrayMap<Long, StockTrend>> mGroupMap = new ArrayMap<>();
 	DatabaseManager mDatabaseManager = DatabaseManager.getInstance();
 	StockPerceptronProvider mStockPerceptronProvider = StockPerceptronProvider.getInstance();
 
@@ -313,7 +316,7 @@ public class TrendAnalyzer {
 						stockTrend.setupNet();
 						stockTrend.setupProfit();
 						mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValuesNet());
-						mStockPerceptronProvider.train(stockTrend.getPeriod(), stockTrend.getLevel(), stockTrend.getType());
+//						mStockPerceptronProvider.train(stockTrend.getPeriod(), stockTrend.getLevel(), stockTrend.getType());
 					} else {
 						stockTrend.setFlag(Trend.FLAG_CHANGED);
 						stockTrend.setTurning(mStock.getPrice());
@@ -426,6 +429,59 @@ public class TrendAnalyzer {
 			}
 			stockData.getTrend().setDirection(direction);
 			dataList.add(stockData);
+		}
+	}
+
+	void analyzeGroups() {
+		mDatabaseManager.getStockTrendList(mStock, mStockTrendList);
+		if (mStockTrendList.isEmpty()) {
+			return;
+		}
+
+		mGroupMap.clear();
+		for (StockTrend stockTrend : mStockTrendList) {
+			if (stockTrend == null) {
+				continue;
+			}
+
+			stockTrend.setGroups(Trend.GROUPS_NONE);
+			String groupKey = stockTrend.getVertexNet() + "_" + stockTrend.getTurningNet() + "_" + stockTrend.getTurningRate();
+			ArrayMap<Long, StockTrend> memberMap;
+			if (mGroupMap.containsKey(groupKey)) {
+				memberMap = mGroupMap.get(groupKey);
+			} else {
+				memberMap = new ArrayMap<>();
+				mGroupMap.put(groupKey, memberMap);
+			}
+			memberMap.put(stockTrend.getId(), stockTrend);
+		}
+
+		if (mGroupMap.size() == 0) {
+			return;
+		}
+
+		int groups = Trend.GROUPS_NONE;
+		for (String groupKey : mGroupMap.keySet()) {
+			groups++;
+			ArrayMap<Long, StockTrend> memberMap = mGroupMap.get(groupKey);
+			if (memberMap == null) {
+				continue;
+			}
+
+			for (Long id : memberMap.keySet()) {
+				StockTrend stockTrend = memberMap.get(id);
+				if (stockTrend == null) {
+					continue;
+				}
+				stockTrend.setGroups(groups);
+			}
+		}
+
+		for (StockTrend stockTrend : mStockTrendList) {
+			if (stockTrend == null) {
+				continue;
+			}
+			mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValuesGroups());
 		}
 	}
 

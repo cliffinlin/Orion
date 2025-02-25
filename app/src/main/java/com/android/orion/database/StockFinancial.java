@@ -569,7 +569,7 @@ public class StockFinancial extends DatabaseTable {
 			return;
 		}
 
-		mNetProfitMargin = Utility.Round2(mNetProfitInYear / mMainBusinessIncomeInYear);
+		mNetProfitMargin = Utility.Round2(100 * mNetProfitInYear / mMainBusinessIncomeInYear);
 	}
 
 	public void setupNetProfitPerShare() {

@@ -190,6 +190,8 @@ public class StockAnalyzer {
 		trendAnalyzer.analyzeLine(Trend.LEVEL_LINE, mLineDataList, mOutlineVertexList);
 		trendAnalyzer.vertexListToDataList(mOutlineVertexList, mOutlineDataList);
 
+		trendAnalyzer.analyzeGroups();
+
 		analyzeAction(period);
 	}
 
@@ -363,9 +365,20 @@ public class StockAnalyzer {
 		mContentText.setLength(0);
 
 		mContentTitle.append(stockTrend.getName() + Constant.TAB + stockTrend.getPrice() + Constant.TAB);
-		mContentTitle.append(stockTrend.getPeriod() + Constant.TAB + "Level" + stockTrend.getLevel() + Constant.TAB + stockTrend.getType());
+		mContentTitle.append(stockTrend.getPeriod() + Constant.TAB + "Level" + stockTrend.getLevel() + Constant.TAB + stockTrend.getType() + Constant.TAB);
 		if (TextUtils.isEmpty(mContentTitle)) {
 			return;
+		}
+
+		ArrayList<StockTrend> stockTrendList = new ArrayList<>();
+		mDatabaseManager.getStockTrendList(mStock, stockTrend.getGroups(), stockTrendList);
+		if (stockTrendList.size() > 1) {
+			for (StockTrend groupMember : stockTrendList) {
+				if (groupMember.getId() == stockTrend.getId()) {
+					continue;
+				}
+				mContentTitle.append(Constant.TAB + groupMember.getPeriod() + Constant.TAB + "Level" + groupMember.getLevel() + Constant.TAB + groupMember.getType() + Constant.TAB);
+			}
 		}
 
 		RecordFile.writeNotificationFile(mContentTitle.toString());

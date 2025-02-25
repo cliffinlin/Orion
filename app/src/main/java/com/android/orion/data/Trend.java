@@ -16,8 +16,7 @@ public class Trend {
 	public static final int LEVEL_SEGMENT = 3;
 	public static final int LEVEL_LINE = 4;
 	public static final int LEVEL_OUTLINE = 5;
-	public static final int LEVEL_TREND = 6;
-	public static final int LEVEL_MAX = LEVEL_TREND;
+	public static final int LEVEL_MAX = LEVEL_OUTLINE + 1;
 
 	public static final int DIRECTION_NONE = 0;
 	public static final int DIRECTION_UP = 1 << 0;
@@ -53,8 +52,18 @@ public class Trend {
 	public static final String TYPE_DOWN_NONE_UP = "DNU";
 	public static final String TYPE_DOWN_NONE_DOWN = "DND";
 
+	public static final String LABEL_NONE = "";
+	public static final String LABEL_DRAW = "Draw";
+	public static final String LABEL_STROKE = "Stroke";
+	public static final String LABEL_SEGMENT = "Segment";
+	public static final String LABEL_LINE = "Line";
+	public static final String LABEL_OUTLINE = "Outline";
+	public static final String LABEL_GROUP = "Group";
+
 	public static final int FLAG_NONE = 0;
 	public static final int FLAG_CHANGED = 1;
+
+	public static final int GROUPS_NONE = 0;
 
 	public static final String[] TREND_TYPES = {
 			TYPE_UP_NONE_UP, TYPE_UP_NONE_DOWN, TYPE_UP_NONE,

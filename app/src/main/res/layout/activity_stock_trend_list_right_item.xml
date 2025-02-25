@@ -22,14 +22,6 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/turning_rate"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:textSize="18sp" />
-
-    <TextView
         android:id="@+id/period"
         android:layout_width="80dp"
         android:layout_height="50dp"
@@ -55,6 +47,14 @@
 
     <TextView
         android:id="@+id/flag"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/groups"
         android:layout_width="80dp"
         android:layout_height="50dp"
         android:layout_weight="1"
@@ -103,6 +103,14 @@
 
     <TextView
         android:id="@+id/turning_net"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/turning_rate"
         android:layout_width="100dp"
         android:layout_height="50dp"
         android:layout_weight="1"

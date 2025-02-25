@@ -21,6 +21,7 @@ public class StockTrend extends DatabaseTable {
 	private int mLevel;
 	private String mType;
 	private int mFlag;
+	private int mGroups;
 	private int mDirection;
 	private double mVertexLow;
 	private double mVertexHigh;
@@ -68,6 +69,7 @@ public class StockTrend extends DatabaseTable {
 		mLevel = Trend.LEVEL_NONE;
 		mType = Trend.TYPE_NONE;
 		mFlag = Trend.FLAG_NONE;
+		mGroups = Trend.GROUPS_NONE;
 		mDirection = Trend.DIRECTION_NONE;
 		mVertexLow = 0;
 		mVertexHigh = 0;
@@ -93,6 +95,7 @@ public class StockTrend extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_LEVEL, mLevel);
 		contentValues.put(DatabaseContract.COLUMN_TYPE, mType);
 		contentValues.put(DatabaseContract.COLUMN_FLAG, mFlag);
+		contentValues.put(DatabaseContract.COLUMN_GROUPS, mGroups);
 		contentValues.put(DatabaseContract.COLUMN_DIRECTION, mDirection);
 		contentValues.put(DatabaseContract.COLUMN_VERTEX_LOW, mVertexLow);
 		contentValues.put(DatabaseContract.COLUMN_VERTEX_HIGH, mVertexHigh);
@@ -118,6 +121,13 @@ public class StockTrend extends DatabaseTable {
 		return contentValues;
 	}
 
+	public ContentValues getContentValuesGroups() {
+		ContentValues contentValues = super.getContentValues();
+
+		contentValues.put(DatabaseContract.COLUMN_GROUPS, mGroups);
+		return contentValues;
+	}
+
 	public void set(StockTrend stockTrend) {
 		if (stockTrend == null) {
 			return;
@@ -138,6 +148,7 @@ public class StockTrend extends DatabaseTable {
 		setLevel(stockTrend.mLevel);
 		setType(stockTrend.mType);
 		setFlag(stockTrend.mFlag);
+		setGroups(stockTrend.mGroups);
 		setDirection(stockTrend.mDirection);
 		setVertexLow(stockTrend.mVertexLow);
 		setVertexHigh(stockTrend.mVertexHigh);
@@ -169,6 +180,7 @@ public class StockTrend extends DatabaseTable {
 		setLevel(cursor);
 		setType(cursor);
 		setFlag(cursor);
+		setGroup(cursor);
 		setDirection(cursor);
 		setVertexLow(cursor);
 		setVertexHigh(cursor);
@@ -372,6 +384,23 @@ public class StockTrend extends DatabaseTable {
 
 		setFlag(cursor.getInt(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_FLAG)));
+	}
+
+	public int getGroups() {
+		return mGroups;
+	}
+
+	public void setGroups(int groups) {
+		mGroups = groups;
+	}
+
+	void setGroup(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setGroups(cursor.getInt(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_GROUPS)));
 	}
 
 	public int getDirection() {

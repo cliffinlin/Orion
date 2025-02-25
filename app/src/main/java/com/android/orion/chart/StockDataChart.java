@@ -9,7 +9,6 @@ import com.android.orion.config.Config;
 import com.android.orion.data.Trend;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;
-import com.android.orion.database.StockTrend;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Utility;
@@ -32,9 +31,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StockDataChart {
+
+	public static final int LINE_CIRCLE_SIZE = 0;
+	public static final int GROUP_CIRCLE_SIZE = 5;
+
 	public StringBuffer mDescription = new StringBuffer();
 	public ArrayList<String> mXValues = new ArrayList<>();
 	public ArrayList<CandleEntry> mCandleEntryList = new ArrayList<>();
+	public List<Entry>[] mLineEntryList = new List[Trend.LEVEL_MAX];
+	public List<Entry>[] mGroupEntryList = new List[Trend.LEVEL_MAX];
 	public ArrayList<Entry> mAverage5EntryList = new ArrayList<>();
 	public ArrayList<Entry> mAverage10EntryList = new ArrayList<>();
 	public ArrayList<Entry> mDIFEntryList = new ArrayList<>();
@@ -42,7 +47,6 @@ public class StockDataChart {
 	public ArrayList<BarEntry> mHistogramEntryList = new ArrayList<>();
 	public ArrayList<Entry> mVelocityEntryList = new ArrayList<>();
 	public ArrayList<LimitLine> mLimitLineList = new ArrayList<>();
-	public List<Entry>[] mLineList = new List[Trend.LEVEL_MAX];
 	public int[] mLineColors = {Color.WHITE, Color.GRAY, Color.YELLOW, Color.BLACK, Color.RED, Color.MAGENTA, Color.BLUE};
 	public CombinedData mCombinedDataMain = new CombinedData(mXValues);
 	public CombinedData mCombinedDataSub = new CombinedData(mXValues);
@@ -58,7 +62,8 @@ public class StockDataChart {
 		mStock = stock;
 		mPeriod = period;
 		for (int i = 0; i < Trend.LEVEL_MAX; i++) {
-			mLineList[i] = new ArrayList<>();
+			mLineEntryList[i] = new ArrayList<>();
+			mGroupEntryList[i] = new ArrayList<>();
 		}
 	}
 
@@ -90,8 +95,7 @@ public class StockDataChart {
 		if (mCandleEntryList.size() > 0) {
 			CandleData candleData = new CandleData(mXValues);
 
-			CandleDataSet candleDataSet = new CandleDataSet(mCandleEntryList,
-					"K");
+			CandleDataSet candleDataSet = new CandleDataSet(mCandleEntryList, "K");
 			candleDataSet.setDecreasingColor(Config.COLOR_RGB_GREEN);
 			candleDataSet.setDecreasingPaintStyle(Paint.Style.FILL);
 			candleDataSet.setIncreasingColor(Config.COLOR_RGB_RED);
@@ -129,64 +133,27 @@ public class StockDataChart {
 		}
 
 		if (Setting.getDisplayDraw()) {
-			if (mLineList[Trend.LEVEL_DRAW].size() > 0) {
-				LineDataSet lineDataSet = new LineDataSet(mLineList[Trend.LEVEL_DRAW], "Draw");
-				lineDataSet.setColor(mLineColors[Trend.LEVEL_DRAW]);
-				lineDataSet.setCircleColor(mLineColors[Trend.LEVEL_DRAW]);
-				lineDataSet.setCircleSize(0);
-				lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-				lineData.addDataSet(lineDataSet);
-			}
+			addLineDataSet(mLineEntryList, Trend.LEVEL_DRAW, Trend.LABEL_DRAW, false, LINE_CIRCLE_SIZE, lineData);
 		}
 
 		if (Setting.getDisplayStroke()) {
-			if (mLineList[Trend.LEVEL_STROKE].size() > 0) {
-				LineDataSet lineDataSet = new LineDataSet(mLineList[Trend.LEVEL_STROKE], "Stroke");
-				lineDataSet.setDrawFilled(mNotifyTrend);
-				lineDataSet.setColor(mLineColors[Trend.LEVEL_STROKE]);
-				lineDataSet.setCircleColor(mLineColors[Trend.LEVEL_STROKE]);
-				lineDataSet.setCircleSize(0);
-				lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-				lineData.addDataSet(lineDataSet);
-			}
+			addLineDataSet(mLineEntryList, Trend.LEVEL_STROKE, Trend.LABEL_STROKE, mNotifyTrend, LINE_CIRCLE_SIZE, lineData);
+			addLineDataSet(mGroupEntryList, Trend.LEVEL_STROKE, Trend.LABEL_GROUP, false, GROUP_CIRCLE_SIZE, lineData);
 		}
 
 		if (Setting.getDisplaySegment()) {
-			if (mLineList[Trend.LEVEL_SEGMENT].size() > 0) {
-				LineDataSet lineDataSet = new LineDataSet(mLineList[Trend.LEVEL_SEGMENT],
-						"Segment");
-				lineDataSet.setDrawFilled(mNotifyTrend);
-				lineDataSet.setColor(mLineColors[Trend.LEVEL_SEGMENT]);
-				lineDataSet.setCircleColor(mLineColors[Trend.LEVEL_SEGMENT]);
-				lineDataSet.setCircleSize(0);
-				lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-				lineData.addDataSet(lineDataSet);
-			}
+			addLineDataSet(mLineEntryList, Trend.LEVEL_SEGMENT, Trend.LABEL_SEGMENT, mNotifyTrend, LINE_CIRCLE_SIZE, lineData);
+			addLineDataSet(mGroupEntryList, Trend.LEVEL_SEGMENT, Trend.LABEL_GROUP, false, GROUP_CIRCLE_SIZE, lineData);
 		}
 
 		if (Setting.getDisplayLine()) {
-			if (mLineList[Trend.LEVEL_LINE].size() > 0) {
-				LineDataSet lineDataSet = new LineDataSet(mLineList[Trend.LEVEL_LINE],
-						"Line");
-				lineDataSet.setDrawFilled(mNotifyTrend);
-				lineDataSet.setColor(mLineColors[Trend.LEVEL_LINE]);
-				lineDataSet.setCircleColor(mLineColors[Trend.LEVEL_LINE]);
-				lineDataSet.setCircleSize(0);
-				lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-				lineData.addDataSet(lineDataSet);
-			}
+			addLineDataSet(mLineEntryList, Trend.LEVEL_LINE, Trend.LABEL_LINE, mNotifyTrend, LINE_CIRCLE_SIZE, lineData);
+			addLineDataSet(mGroupEntryList, Trend.LEVEL_LINE, Trend.LABEL_GROUP, false, GROUP_CIRCLE_SIZE, lineData);
 
-			if (mLineList[Trend.LEVEL_OUTLINE].size() > 0) {
-				LineDataSet lineDataSet = new LineDataSet(mLineList[Trend.LEVEL_OUTLINE],
-						"Outline");
-				lineDataSet.setDrawFilled(mNotifyTrend);
-				lineDataSet.setColor(mLineColors[Trend.LEVEL_OUTLINE]);
-				lineDataSet.setCircleColor(mLineColors[Trend.LEVEL_OUTLINE]);
-				lineDataSet.setCircleSize(0);
-				lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-				lineData.addDataSet(lineDataSet);
-			}
+			addLineDataSet(mLineEntryList, Trend.LEVEL_OUTLINE, Trend.LABEL_OUTLINE, mNotifyTrend, LINE_CIRCLE_SIZE, lineData);
+			addLineDataSet(mGroupEntryList, Trend.LEVEL_OUTLINE, Trend.LABEL_GROUP, false, GROUP_CIRCLE_SIZE, lineData);
 		}
+
 		mCombinedDataMain.setData(lineData);
 	}
 
@@ -226,6 +193,19 @@ public class StockDataChart {
 
 		mCombinedDataSub.setData(barData);
 		mCombinedDataSub.setData(lineData);
+	}
+
+	void addLineDataSet(List<Entry>[]entryList, int level, String label, boolean drawFilled, int circleSize, LineData lineData) {
+		if (entryList != null && entryList[level].size() > 0) {
+			LineDataSet lineDataSet = new LineDataSet(entryList[level], label);
+			lineDataSet.setDrawFilled(drawFilled);
+			lineDataSet.setFillColor(mLineColors[level]);
+			lineDataSet.setColor(mLineColors[level]);
+			lineDataSet.setCircleColor(mLineColors[level]);
+			lineDataSet.setCircleSize(circleSize);
+			lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+			lineData.addDataSet(lineDataSet);
+		}
 	}
 
 	public void setMainChartYMinMax(int index, List<Entry> drawEntryList, List<Entry> strokeEntryList, List<Entry> segmentEntryList) {
@@ -445,7 +425,8 @@ public class StockDataChart {
 		mVelocityEntryList.clear();
 
 		for (int i = 0; i < Trend.LEVEL_MAX; i++) {
-			mLineList[i].clear();
+			mLineEntryList[i].clear();
+			mGroupEntryList[i].clear();
 		}
 	}
 }
