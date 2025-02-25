@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.util.Log;
 
+import com.android.orion.config.Config;
 import com.android.orion.data.Period;
 import com.android.orion.data.Trend;
 import com.android.orion.database.DatabaseContract;
@@ -34,7 +35,7 @@ import java.util.Calendar;
 import java.util.List;
 
 public class DatabaseManager implements StockListener {
-	public static String TAG = DatabaseManager.class.getSimpleName();
+	public static String TAG = Config.TAG + DatabaseManager.class.getSimpleName();
 	private static volatile DatabaseManager mInstance;
 	private static Context mContext;
 
@@ -78,6 +79,37 @@ public class DatabaseManager implements StockListener {
 				cursor.close();
 			}
 		}
+	}
+
+	public int queryStockTrendTopGroups(Stock stock) {
+		int result = 0;
+		if (mDatabase == null || stock == null) {
+			return result;
+		}
+
+		Cursor cursor = null;
+		try {
+			String query = "SELECT groups, COUNT(*) as count " +
+					"FROM stock_trend " +
+					"WHERE " + getStockSelection(stock) + " " +
+					"GROUP BY groups " +
+					"ORDER BY count DESC " +
+					"LIMIT 1";
+			cursor = mDatabase.rawQuery(query, null);
+			if (cursor != null && cursor.moveToFirst()) {
+				int grops = cursor.getInt(cursor.getColumnIndex("groups"));
+				int count = cursor.getInt(cursor.getColumnIndex("count"));
+				Log.d(TAG, "queryStockTrendTopGroups grops=" + grops + ", count: " + count);
+				if (count > 1) {
+					result = grops;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+		return result;
 	}
 
 	public int delete(Uri uri) {

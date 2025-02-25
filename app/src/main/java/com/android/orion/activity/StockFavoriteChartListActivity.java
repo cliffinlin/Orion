@@ -29,6 +29,7 @@ import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockDeal;
+import com.android.orion.database.StockTrend;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.github.mikephil.charting.charts.CombinedChart;
@@ -68,6 +69,7 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 	PullToRefreshListView mListView = null;
 	StockDataChartArrayAdapter mStockDataChartArrayAdapter = null;
 	ArrayList<String> mStockIDList = new ArrayList<>();
+	ArrayList<StockTrend> mStockTrendList = new ArrayList<>();
 	ArrayList<StockDataChartItem> mStockDataChartItemList = null;
 	ArrayList<StockDataChartItemMain> mStockDataChartItemMainList = null;
 	ArrayList<StockDataChartItemSub> mStockDataChartItemSubList = null;
@@ -134,6 +136,7 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 
 		long stockId = intent.getLongExtra(Constant.EXTRA_STOCK_ID, Stock.INVALID_ID);
 		mStock.setId(stockId);
+		mDatabaseManager.getStockById(mStock);
 		mStockIDList = intent.getStringArrayListExtra(Constant.EXTRA_STOCK_ID_LIST);
 		if (mStockIDList != null && !mStockIDList.isEmpty()) {
 			mHandler.sendEmptyMessage(MESSAGE_LOAD_STOCK_LIST);
@@ -141,6 +144,11 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 
 		mSortOrder = intent.getStringExtra(Constant.EXTRA_STOCK_LIST_SORT_ORDER);
 		mKeyDisplayDeal = intent.getBooleanExtra(Constant.EXTRA_STOCK_DEAL, false);
+
+		int groups = mDatabaseManager.queryStockTrendTopGroups(mStock);
+		if (groups > 0) {
+			mDatabaseManager.getStockTrendList(mStock, groups, mStockTrendList);
+		}
 	}
 
 	@Override
@@ -598,9 +606,16 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 			}
 
 			for (int level = Trend.LEVEL_DRAW; level < Trend.LEVEL_MAX; level++) {
-				if (stockDataChart.mLineEntryList[level].size() > 1) {
-					stockDataChart.mGroupEntryList[level].add(stockDataChart.mLineEntryList[level].get(stockDataChart.mLineEntryList[level].size() - 2));
-					stockDataChart.mGroupEntryList[level].add(stockDataChart.mLineEntryList[level].get(stockDataChart.mLineEntryList[level].size() - 1));
+				if (level == Trend.LEVEL_DRAW) {
+					if (stockDataChart.mLineEntryList[level].size() > 2) {
+						stockDataChart.mGroupEntryList[level].add(stockDataChart.mLineEntryList[level].get(stockDataChart.mLineEntryList[level].size() - 3));
+						stockDataChart.mGroupEntryList[level].add(stockDataChart.mLineEntryList[level].get(stockDataChart.mLineEntryList[level].size() - 2));
+					}
+				} else {
+					if (stockDataChart.mLineEntryList[level].size() > 1) {
+						stockDataChart.mGroupEntryList[level].add(stockDataChart.mLineEntryList[level].get(stockDataChart.mLineEntryList[level].size() - 2));
+						stockDataChart.mGroupEntryList[level].add(stockDataChart.mLineEntryList[level].get(stockDataChart.mLineEntryList[level].size() - 1));
+					}
 				}
 			}
 
@@ -642,6 +657,7 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 		for (int i = 0; i < Period.PERIODS.length; i++) {
 			if (Setting.getPeriod(Period.PERIODS[i])) {
 				mStockDataChartItemMainList.get(i).mStockDataChart.setStock(mStock);
+				mStockDataChartItemSubList.get(i).mStockDataChart.setStockTrendList(mStockTrendList);
 				mStockDataChartItemList.add(mStockDataChartItemMainList.get(i));
 				mStockDataChartItemList.add(mStockDataChartItemSubList.get(i));
 			}

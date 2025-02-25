@@ -4,11 +4,13 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.text.TextUtils;
+import android.util.ArrayMap;
 
 import com.android.orion.config.Config;
 import com.android.orion.data.Trend;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;
+import com.android.orion.database.StockTrend;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Utility;
@@ -33,7 +35,7 @@ import java.util.List;
 public class StockDataChart {
 
 	public static final int LINE_CIRCLE_SIZE = 0;
-	public static final int GROUP_CIRCLE_SIZE = 5;
+	public static final int GROUP_CIRCLE_SIZE = 3;
 
 	public StringBuffer mDescription = new StringBuffer();
 	public ArrayList<String> mXValues = new ArrayList<>();
@@ -52,6 +54,8 @@ public class StockDataChart {
 	public CombinedData mCombinedDataSub = new CombinedData(mXValues);
 	Stock mStock;
 	String mPeriod;
+	ArrayList<StockTrend> mStockTrendList = new ArrayList<>();
+	ArrayMap<String, StockTrend> mStockTrendMap = new ArrayMap<>();
 	double mMainChartYMin = 0;
 	double mMainChartYMax = 0;
 	double mSubChartYMin = 0;
@@ -69,6 +73,13 @@ public class StockDataChart {
 
 	public void setStock(Stock stock) {
 		mStock = stock;
+	}
+
+	public void setStockTrendList(ArrayList<StockTrend> stockTrendList) {
+		mStockTrendList = stockTrendList;
+		for (StockTrend stockTrend : mStockTrendList) {
+			mStockTrendMap.put(stockTrend.getPeriod() + Trend.MARK_LEVEL + stockTrend.getLevel(), stockTrend);
+		}
 	}
 
 	public void setNotifyTrend(boolean notifyTrend) {
@@ -134,24 +145,25 @@ public class StockDataChart {
 
 		if (Setting.getDisplayDraw()) {
 			addLineDataSet(mLineEntryList, Trend.LEVEL_DRAW, Trend.LABEL_DRAW, false, LINE_CIRCLE_SIZE, lineData);
+			addLineDataSet(mGroupEntryList, Trend.LEVEL_DRAW, Trend.LABEL_GROUP, groupFilled(Trend.LEVEL_DRAW), GROUP_CIRCLE_SIZE, lineData);
 		}
 
 		if (Setting.getDisplayStroke()) {
 			addLineDataSet(mLineEntryList, Trend.LEVEL_STROKE, Trend.LABEL_STROKE, mNotifyTrend, LINE_CIRCLE_SIZE, lineData);
-			addLineDataSet(mGroupEntryList, Trend.LEVEL_STROKE, Trend.LABEL_GROUP, false, GROUP_CIRCLE_SIZE, lineData);
+			addLineDataSet(mGroupEntryList, Trend.LEVEL_STROKE, Trend.LABEL_GROUP, groupFilled(Trend.LEVEL_STROKE), GROUP_CIRCLE_SIZE, lineData);
 		}
 
 		if (Setting.getDisplaySegment()) {
 			addLineDataSet(mLineEntryList, Trend.LEVEL_SEGMENT, Trend.LABEL_SEGMENT, mNotifyTrend, LINE_CIRCLE_SIZE, lineData);
-			addLineDataSet(mGroupEntryList, Trend.LEVEL_SEGMENT, Trend.LABEL_GROUP, false, GROUP_CIRCLE_SIZE, lineData);
+			addLineDataSet(mGroupEntryList, Trend.LEVEL_SEGMENT, Trend.LABEL_GROUP, groupFilled(Trend.LEVEL_SEGMENT), GROUP_CIRCLE_SIZE, lineData);
 		}
 
 		if (Setting.getDisplayLine()) {
 			addLineDataSet(mLineEntryList, Trend.LEVEL_LINE, Trend.LABEL_LINE, mNotifyTrend, LINE_CIRCLE_SIZE, lineData);
-			addLineDataSet(mGroupEntryList, Trend.LEVEL_LINE, Trend.LABEL_GROUP, false, GROUP_CIRCLE_SIZE, lineData);
+			addLineDataSet(mGroupEntryList, Trend.LEVEL_LINE, Trend.LABEL_GROUP, groupFilled(Trend.LEVEL_LINE), GROUP_CIRCLE_SIZE, lineData);
 
 			addLineDataSet(mLineEntryList, Trend.LEVEL_OUTLINE, Trend.LABEL_OUTLINE, mNotifyTrend, LINE_CIRCLE_SIZE, lineData);
-			addLineDataSet(mGroupEntryList, Trend.LEVEL_OUTLINE, Trend.LABEL_GROUP, false, GROUP_CIRCLE_SIZE, lineData);
+			addLineDataSet(mGroupEntryList, Trend.LEVEL_OUTLINE, Trend.LABEL_GROUP, groupFilled(Trend.LEVEL_OUTLINE), GROUP_CIRCLE_SIZE, lineData);
 		}
 
 		mCombinedDataMain.setData(lineData);
@@ -206,6 +218,14 @@ public class StockDataChart {
 			lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 			lineData.addDataSet(lineDataSet);
 		}
+	}
+
+	boolean groupFilled(int level) {
+		boolean result = false;
+		if (mStockTrendMap.containsKey(mPeriod + Trend.MARK_LEVEL + level)) {
+			result = true;
+		}
+		return result;
 	}
 
 	public void setMainChartYMinMax(int index, List<Entry> drawEntryList, List<Entry> strokeEntryList, List<Entry> segmentEntryList) {
