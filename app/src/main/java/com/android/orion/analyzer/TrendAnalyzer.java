@@ -187,24 +187,34 @@ public class TrendAnalyzer {
 			return;
 		}
 
+		boolean isNotifyTrendLevel = false;
 		int vertexTypeTop = Trend.VERTEX_TOP;
 		int vertexTypeBottom = Trend.VERTEX_BOTTOM;
 		switch (level) {
 			case Trend.LEVEL_DRAW:
+				isNotifyTrendLevel = Setting.getNotifyDraw();
 				vertexTypeTop = Trend.VERTEX_TOP_STROKE;
 				vertexTypeBottom = Trend.VERTEX_BOTTOM_STROKE;
 				break;
 			case Trend.LEVEL_STROKE:
+				isNotifyTrendLevel = Setting.getNotifyStroke();
 				vertexTypeTop = Trend.VERTEX_TOP_SEGMENT;
 				vertexTypeBottom = Trend.VERTEX_BOTTOM_SEGMENT;
 				break;
 			case Trend.LEVEL_SEGMENT:
+				isNotifyTrendLevel = Setting.getNotifySegment();
 				vertexTypeTop = Trend.VERTEX_TOP_LINE;
 				vertexTypeBottom = Trend.VERTEX_BOTTOM_LINE;
 				break;
 			case Trend.LEVEL_LINE:
+				isNotifyTrendLevel = Setting.getNotifyLine();
 				vertexTypeTop = Trend.VERTEX_TOP_OUTLINE;
 				vertexTypeBottom = Trend.VERTEX_BOTTOM_OUTLINE;
+				break;
+			case Trend.LEVEL_OUTLINE:
+				isNotifyTrendLevel = Setting.getNotifyLine();
+				vertexTypeTop = Trend.VERTEX_TOP_TREND;
+				vertexTypeBottom = Trend.VERTEX_BOTTOM_TREND;
 				break;
 			default:
 				break;
@@ -294,7 +304,7 @@ public class TrendAnalyzer {
 			extendVertexList(dataList, vertexList);
 
 			if (!TextUtils.isEmpty(type)) {
-				StockData prevLineData = StockData.getLast(dataList, 1);
+				StockData lineData = StockData.getLast(dataList, 1);
 				StockData stockData = StockData.getLast(mStockDataList, 0);
 
 				StockTrend stockTrend = new StockTrend();
@@ -304,9 +314,9 @@ public class TrendAnalyzer {
 				stockTrend.setPrice(mStock.getPrice());
 				stockTrend.setPeriod(mPeriod);
 				stockTrend.setLevel(level);
-				stockTrend.setDirection(prevLineData.getTrend().getDirection());
-				stockTrend.setVertexLow(prevLineData.getTrend().getVertexLow());
-				stockTrend.setVertexHigh(prevLineData.getTrend().getVertexHigh());
+				stockTrend.setDirection(lineData.getTrend().getDirection());
+				stockTrend.setVertexLow(lineData.getTrend().getVertexLow());
+				stockTrend.setVertexHigh(lineData.getTrend().getVertexHigh());
 
 				if (mDatabaseManager.isStockTrendExist(stockTrend)) {
 					mDatabaseManager.getStockTrend(stockTrend);
@@ -315,37 +325,37 @@ public class TrendAnalyzer {
 						stockTrend.setFlag(Trend.FLAG_NONE);
 						stockTrend.setupNet();
 						stockTrend.setupProfit();
-						mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValuesNet());
+						mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValuesUpdate());
 //						mStockPerceptronProvider.train(stockTrend.getPeriod(), stockTrend.getLevel(), stockTrend.getType());
 					} else {
 						stockTrend.setFlag(Trend.FLAG_CHANGED);
-						stockTrend.setTurning(mStock.getPrice());
+						stockTrend.setupNet();
+						stockTrend.setType(type);
 						stockTrend.setupVertexNet();
+						stockTrend.setTurning(mStock.getPrice());
 						stockTrend.setupTurningNet();
 						stockTrend.setupTurningRate();
-						stockTrend.setupNet();
 						stockTrend.setupProfit();
 						stockTrend.setDate(stockData.getDate());
 						stockTrend.setTime(stockData.getTime());
-						stockTrend.setType(type);
 						mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValues());
 						if (stockData != null) {
-							if (isNotifyTrendLevel(level)) {
+							if (isNotifyTrendLevel) {
 								stockData.setAction(Trend.MARK_LEVEL + level + type);
 								StockAnalyzer.getInstance().notifyStockTrend(stockTrend);
 							}
 						}
 					}
 				} else {
-					stockTrend.setTurning(mStock.getPrice());
+					stockTrend.setType(type);
 					stockTrend.setupVertexNet();
+					stockTrend.setTurning(mStock.getPrice());
 					stockTrend.setupTurningNet();
 					stockTrend.setupTurningRate();
 					stockTrend.setupNet();
 					stockTrend.setupProfit();
 					stockTrend.setDate(stockData.getDate());
 					stockTrend.setTime(stockData.getTime());
-					stockTrend.setType(type);
 					stockTrend.setCreated(Utility.getCurrentDateTimeString());
 					mDatabaseManager.insertStockTrend(stockTrend);
 				}
@@ -353,29 +363,6 @@ public class TrendAnalyzer {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	boolean isNotifyTrendLevel(int level) {
-		boolean result = false;
-
-		switch (level) {
-			case Trend.LEVEL_DRAW:
-				result = Setting.getNotifyDraw();
-				break;
-			case Trend.LEVEL_STROKE:
-				result = Setting.getNotifyStroke();
-				break;
-			case Trend.LEVEL_SEGMENT:
-				result = Setting.getNotifySegment();
-				break;
-			case Trend.LEVEL_LINE:
-				result = Setting.getNotifyLine();
-				break;
-			default:
-				break;
-		}
-
-		return result;
 	}
 
 	private StockData chooseVertex(StockData start, StockData end, int vertexType) {

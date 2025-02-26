@@ -107,17 +107,12 @@ public class StockTrend extends DatabaseTable {
 		return contentValues;
 	}
 
-	public ContentValues getContentValuesNet() {
-		ContentValues contentValues = super.getContentValues();
-
-		contentValues.put(DatabaseContract.COLUMN_NET, mNet);
-		return contentValues;
-	}
-
-	public ContentValues getContentValuesFlag() {
+	public ContentValues getContentValuesUpdate() {
 		ContentValues contentValues = super.getContentValues();
 
 		contentValues.put(DatabaseContract.COLUMN_FLAG, mFlag);
+		contentValues.put(DatabaseContract.COLUMN_NET, mNet);
+		contentValues.put(DatabaseContract.COLUMN_PROFIT, mProfit);
 		return contentValues;
 	}
 

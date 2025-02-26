@@ -606,16 +606,9 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 			}
 
 			for (int level = Trend.LEVEL_DRAW; level < Trend.LEVEL_MAX; level++) {
-				if (level == Trend.LEVEL_DRAW) {
-					if (stockDataChart.mLineEntryList[level].size() > 2) {
-						stockDataChart.mGroupEntryList[level].add(stockDataChart.mLineEntryList[level].get(stockDataChart.mLineEntryList[level].size() - 3));
-						stockDataChart.mGroupEntryList[level].add(stockDataChart.mLineEntryList[level].get(stockDataChart.mLineEntryList[level].size() - 2));
-					}
-				} else {
-					if (stockDataChart.mLineEntryList[level].size() > 1) {
-						stockDataChart.mGroupEntryList[level].add(stockDataChart.mLineEntryList[level].get(stockDataChart.mLineEntryList[level].size() - 2));
-						stockDataChart.mGroupEntryList[level].add(stockDataChart.mLineEntryList[level].get(stockDataChart.mLineEntryList[level].size() - 1));
-					}
+				if (stockDataChart.mLineEntryList[level].size() > 1) {
+					stockDataChart.mGroupEntryList[level].add(stockDataChart.mLineEntryList[level].get(stockDataChart.mLineEntryList[level].size() - 2));
+					stockDataChart.mGroupEntryList[level].add(stockDataChart.mLineEntryList[level].get(stockDataChart.mLineEntryList[level].size() - 1));
 				}
 			}
 

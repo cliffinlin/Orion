@@ -16,15 +16,12 @@ public class Trend {
 	public static final int LEVEL_SEGMENT = 3;
 	public static final int LEVEL_LINE = 4;
 	public static final int LEVEL_OUTLINE = 5;
-	public static final int LEVEL_MAX = LEVEL_OUTLINE + 1;
+	public static final int LEVEL_TREND = 6;
+	public static final int LEVEL_MAX = LEVEL_TREND;
 
 	public static final int DIRECTION_NONE = 0;
 	public static final int DIRECTION_UP = 1 << 0;
 	public static final int DIRECTION_DOWN = 1 << 1;
-	public static final int DIRECTION_UP_STROKE = 1 << 2;
-	public static final int DIRECTION_DOWN_STROKE = 1 << 3;
-	public static final int DIRECTION_UP_SEGMENT = 1 << 4;
-	public static final int DIRECTION_DOWN_SEGMENT = 1 << 5;
 
 	public static final int VERTEX_NONE = 0;
 	public static final int VERTEX_TOP = 1 << 0;

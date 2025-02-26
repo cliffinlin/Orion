@@ -47,6 +47,8 @@ public class StockAnalyzer {
 	ArrayList<StockData> mLineDataList;
 	ArrayList<StockData> mOutlineVertexList;
 	ArrayList<StockData> mOutlineDataList;
+	ArrayList<StockData> mTrendVertexList;
+	ArrayList<StockData> mTrendDataList;
 
 	StringBuffer mContentTitle = new StringBuffer();
 	StringBuffer mContentText = new StringBuffer();
@@ -87,6 +89,8 @@ public class StockAnalyzer {
 		mLineDataList = mStock.getArrayList(period, Period.TYPE_LINE_DATA);
 		mOutlineVertexList = mStock.getArrayList(period, Period.TYPE_OUTLINE_VERTEX);
 		mOutlineDataList = mStock.getArrayList(period, Period.TYPE_OUTLINE_DATA);
+		mTrendVertexList = mStock.getArrayList(period, Period.TYPE_TREND_VERTEX);
+		mTrendDataList = mStock.getArrayList(period, Period.TYPE_TREND_DATA);
 
 		try {
 			mDatabaseManager.loadStockDataList(mStock, period, mStockDataList);
@@ -189,6 +193,9 @@ public class StockAnalyzer {
 
 		trendAnalyzer.analyzeLine(Trend.LEVEL_LINE, mLineDataList, mOutlineVertexList);
 		trendAnalyzer.vertexListToDataList(mOutlineVertexList, mOutlineDataList);
+
+		trendAnalyzer.analyzeLine(Trend.LEVEL_OUTLINE, mOutlineDataList, mTrendVertexList);
+		trendAnalyzer.vertexListToDataList(mTrendVertexList, mTrendDataList);
 
 		trendAnalyzer.analyzeGroups();
 
