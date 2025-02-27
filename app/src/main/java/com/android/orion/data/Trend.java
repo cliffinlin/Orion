@@ -81,6 +81,8 @@ public class Trend {
 
 	public static final int VERTEX_SIZE = 3;
 
+	public static final double NOTIFY_TREND_THRESHOLD = 5.0;
+
 	public static Set<String> NOTIFYACTIONS = new HashSet<>(Arrays.asList(
 			MARK_BUY, MARK_BUY1, MARK_BUY2,
 			MARK_SELL, MARK_SELL1, MARK_SELL2));

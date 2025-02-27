@@ -107,15 +107,6 @@ public class StockTrend extends DatabaseTable {
 		return contentValues;
 	}
 
-	public ContentValues getContentValuesUpdate() {
-		ContentValues contentValues = super.getContentValues();
-
-		contentValues.put(DatabaseContract.COLUMN_FLAG, mFlag);
-		contentValues.put(DatabaseContract.COLUMN_NET, mNet);
-		contentValues.put(DatabaseContract.COLUMN_PROFIT, mProfit);
-		return contentValues;
-	}
-
 	public ContentValues getContentValuesGroups() {
 		ContentValues contentValues = super.getContentValues();
 
@@ -548,41 +539,28 @@ public class StockTrend extends DatabaseTable {
 	}
 
 	public void setupTurningNet() {
-		if (mDirection == Trend.DIRECTION_NONE || mVertexLow == 0 || mVertexHigh == 0 || mTurning == 0) {
+		if (mPrice == 0 || mDirection == Trend.DIRECTION_NONE || mVertexLow == 0 || mVertexHigh == 0) {
 			mTurningNet = 0;
 			return;
 		}
 
 		if (mDirection == Trend.DIRECTION_UP) {
-			mTurningNet = Utility.Round2(100 * (mTurning - mVertexHigh) / mVertexHigh);
+			mTurningNet = Utility.Round2(100 * (mPrice - mVertexHigh) / mVertexHigh);
 		} else if (mDirection == Trend.DIRECTION_DOWN) {
-			mTurningNet = Utility.Round2(100 * (mTurning - mVertexLow) / mVertexLow);
+			mTurningNet = Utility.Round2(100 * (mPrice - mVertexLow) / mVertexLow);
 		}
 	}
 
 	public void setupTurningRate() {
-		if (mDirection == Trend.DIRECTION_NONE || mVertexLow == 0 || mVertexHigh == 0 || mTurning == 0) {
+		if (mPrice == 0 || mDirection == Trend.DIRECTION_NONE || mVertexLow == 0 || mVertexHigh == 0) {
 			mTurningRate = 0;
 			return;
 		}
 
 		if (mDirection == Trend.DIRECTION_UP) {
-			mTurningRate = Utility.Round2(100 * Math.abs(mTurning - mVertexHigh) / (mVertexHigh - mVertexLow));
+			mTurningRate = Utility.Round2(100 * Math.abs(mPrice - mVertexHigh) / (mVertexHigh - mVertexLow));
 		} else if (mDirection == Trend.DIRECTION_DOWN) {
-			mTurningRate = Utility.Round2(100 * Math.abs(mTurning - mVertexLow) / (mVertexHigh - mVertexLow));
-		}
-	}
-
-	public void setupNet() {
-		if (mPrice == 0 || mVertexLow == 0 || mVertexHigh == 0) {
-			mNet = 0;
-			return;
-		}
-
-		if (mDirection == Trend.DIRECTION_UP) {
-			mNet = Utility.Round2(100 * (mPrice - mVertexHigh) / mVertexHigh);
- 		} else if (mDirection == Trend.DIRECTION_DOWN) {
-			mNet = Utility.Round2(100 * (mPrice - mVertexLow) / mVertexLow);
+			mTurningRate = Utility.Round2(100 * Math.abs(mPrice - mVertexLow) / (mVertexHigh - mVertexLow));
 		}
 	}
 

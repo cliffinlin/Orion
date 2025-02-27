@@ -364,15 +364,15 @@ public class StockAnalyzer {
 			return;
 		}
 
-		if (stockTrend.getPrice() == 0 || !mStock.hasFlag(Stock.FLAG_NOTIFY)) {
+		if (!mStock.hasFlag(Stock.FLAG_NOTIFY) || Math.abs(stockTrend.getVertexNet()) < Trend.NOTIFY_TREND_THRESHOLD) {
 			return;
 		}
 
 		mContentTitle.setLength(0);
 		mContentText.setLength(0);
 
-		mContentTitle.append(stockTrend.getName() + Constant.TAB + stockTrend.getPrice() + Constant.TAB);
-		mContentTitle.append(stockTrend.getPeriod() + Constant.TAB + "Level" + stockTrend.getLevel() + Constant.TAB + stockTrend.getType() + Constant.TAB);
+		mContentTitle.append(stockTrend.getName() + " " + stockTrend.getPrice() + " " + stockTrend.getNet() + " ");
+		mContentTitle.append(stockTrend.getPeriod() + " " + Trend.MARK_LEVEL + stockTrend.getLevel() + " " + stockTrend.getType() + " " + stockTrend.getTurningNet());
 		if (TextUtils.isEmpty(mContentTitle)) {
 			return;
 		}
@@ -384,7 +384,7 @@ public class StockAnalyzer {
 				if (groupMember.getId() == stockTrend.getId()) {
 					continue;
 				}
-				mContentTitle.append(Constant.TAB + groupMember.getPeriod() + Constant.TAB + "Level" + groupMember.getLevel() + Constant.TAB + groupMember.getType() + Constant.TAB);
+				mContentTitle.append(" " + groupMember.getPeriod() + " " + Trend.MARK_LEVEL + groupMember.getLevel() + " " + groupMember.getType() + " ");
 			}
 		}
 
