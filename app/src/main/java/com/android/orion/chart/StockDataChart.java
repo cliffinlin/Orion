@@ -49,7 +49,7 @@ public class StockDataChart {
 	public ArrayList<Entry> mVelocityEntryList = new ArrayList<>();
 	public ArrayList<Entry> mDrawFirstEntryList = new ArrayList<>();
 	public ArrayList<Entry> mDrawLastEntryList = new ArrayList<>();
-	public List<Entry>[] mLineEntryList = new List[Trend.LEVEL_MAX];
+	public List<Entry>[] mTrendEntryList = new List[Trend.LEVEL_MAX];
 	public List<Entry>[] mGroupEntryList = new List[Trend.LEVEL_MAX];
 	public int[] mLineColors = {Color.WHITE, Color.GRAY, Color.YELLOW, Color.BLACK, Color.RED, Color.MAGENTA, Color.BLUE};
 	public CombinedData mCombinedDataMain = new CombinedData(mXValues);
@@ -69,10 +69,10 @@ public class StockDataChart {
 		mStock = stock;
 		mPeriod = period;
 		for (int i = 0; i < Trend.LEVEL_MAX; i++) {
-			if (mLineEntryList[i] == null) {
-				mLineEntryList[i] = new ArrayList<>();
+			if (mTrendEntryList[i] == null) {
+				mTrendEntryList[i] = new ArrayList<>();
 			} else {
-				mLineEntryList[i].clear();
+				mTrendEntryList[i].clear();
 			}
 
 			if (mGroupEntryList[i] == null) {
@@ -159,25 +159,25 @@ public class StockDataChart {
 			addLineDataSet(mDrawFirstEntryList, "", false, mLineColors[Trend.LEVEL_DRAW], mLineColors[Trend.LEVEL_DRAW], lineData);
 			addLineDataSet(mDrawLastEntryList, "", false, mLineColors[Trend.LEVEL_DRAW], mLineColors[Trend.LEVEL_DRAW], lineData);
 
-			addLineDataSet(mLineEntryList, Trend.LEVEL_DRAW, Trend.LABEL_DRAW, false, lineData);
+			addLineDataSet(mTrendEntryList, Trend.LEVEL_DRAW, Trend.LABEL_DRAW, false, lineData);
 			addLineDataSet(mGroupEntryList, Trend.LEVEL_DRAW, Trend.LABEL_GROUP, groupFilled(Trend.LEVEL_DRAW), lineData);
 		}
 
 		if (Setting.getDisplayStroke()) {
-			addLineDataSet(mLineEntryList, Trend.LEVEL_STROKE, Trend.LABEL_STROKE, false, lineData);
+			addLineDataSet(mTrendEntryList, Trend.LEVEL_STROKE, Trend.LABEL_STROKE, false, lineData);
 			addLineDataSet(mGroupEntryList, Trend.LEVEL_STROKE, Trend.LABEL_GROUP, groupFilled(Trend.LEVEL_STROKE), lineData);
 		}
 
 		if (Setting.getDisplaySegment()) {
-			addLineDataSet(mLineEntryList, Trend.LEVEL_SEGMENT, Trend.LABEL_SEGMENT, false, lineData);
+			addLineDataSet(mTrendEntryList, Trend.LEVEL_SEGMENT, Trend.LABEL_SEGMENT, false, lineData);
 			addLineDataSet(mGroupEntryList, Trend.LEVEL_SEGMENT, Trend.LABEL_GROUP, groupFilled(Trend.LEVEL_SEGMENT), lineData);
 		}
 
 		if (Setting.getDisplayLine()) {
-			addLineDataSet(mLineEntryList, Trend.LEVEL_LINE, Trend.LABEL_LINE, false, lineData);
+			addLineDataSet(mTrendEntryList, Trend.LEVEL_LINE, Trend.LABEL_LINE, false, lineData);
 			addLineDataSet(mGroupEntryList, Trend.LEVEL_LINE, Trend.LABEL_GROUP, groupFilled(Trend.LEVEL_LINE), lineData);
 
-			addLineDataSet(mLineEntryList, Trend.LEVEL_OUTLINE, Trend.LABEL_OUTLINE, false, lineData);
+			addLineDataSet(mTrendEntryList, Trend.LEVEL_OUTLINE, Trend.LABEL_OUTLINE, false, lineData);
 			addLineDataSet(mGroupEntryList, Trend.LEVEL_OUTLINE, Trend.LABEL_GROUP, groupFilled(Trend.LEVEL_OUTLINE), lineData);
 		}
 
@@ -251,10 +251,14 @@ public class StockDataChart {
 		return result;
 	}
 
-	public void setMainChartYMinMax(int index, List<Entry> drawEntryList, List<Entry> strokeEntryList, List<Entry> segmentEntryList) {
+	public void setMainChartYMinMax(int index) {
 		double draw = 0;
 		double stroke = 0;
 		double segment = 0;
+
+		List<Entry> drawEntryList = mTrendEntryList[Trend.LEVEL_DRAW];
+		List<Entry> strokeEntryList = mTrendEntryList[Trend.LEVEL_STROKE];
+		List<Entry> segmentEntryList = mTrendEntryList[Trend.LEVEL_SEGMENT];
 
 		if (drawEntryList == null || drawEntryList.size() == 0) {
 			return;
@@ -281,20 +285,20 @@ public class StockDataChart {
 		}
 	}
 
-	public void setSubChartYMinMax(int index, List<Entry> difEntryList, List<Entry> deaEntryList) {
+	public void setupSubChartYMinMax(int index) {
 		double dif = 0;
 		double dea = 0;
 
-		if (difEntryList == null || difEntryList.size() == 0) {
+		if (mDIFEntryList == null || mDIFEntryList.size() == 0) {
 			return;
 		}
 
-		if (deaEntryList == null || deaEntryList.size() == 0) {
+		if (mDEAEntryList == null || mDEAEntryList.size() == 0) {
 			return;
 		}
 
-		dif = difEntryList.get(difEntryList.size() - 1).getVal();
-		dea = deaEntryList.get(deaEntryList.size() - 1).getVal();
+		dif = mDIFEntryList.get(mDIFEntryList.size() - 1).getVal();
+		dea = mDEAEntryList.get(mDEAEntryList.size() - 1).getVal();
 
 		if (index == 0) {
 			mSubChartYMin = Math.min(dif, dea);
@@ -459,13 +463,13 @@ public class StockDataChart {
 
 	public void updateGroupEntry() {
 		for (int level = Trend.LEVEL_DRAW; level < Trend.LEVEL_MAX; level++) {
-			if (mLineEntryList[level].size() > 2) {
+			if (mTrendEntryList[level].size() > 2) {
 				if (level == Trend.LEVEL_DRAW) {
-					mDrawFirstEntryList.add(mLineEntryList[level].get(0));
-					mDrawLastEntryList.add(0, mLineEntryList[level].get(mLineEntryList[level].size() - 1));
+					mDrawFirstEntryList.add(mTrendEntryList[level].get(0));
+					mDrawLastEntryList.add(0, mTrendEntryList[level].get(mTrendEntryList[level].size() - 1));
 				}
-				mGroupEntryList[level].add(mLineEntryList[level].get(mLineEntryList[level].size() - 2));
-				mGroupEntryList[level].add(mLineEntryList[level].get(mLineEntryList[level].size() - 1));
+				mGroupEntryList[level].add(mTrendEntryList[level].get(mTrendEntryList[level].size() - 2));
+				mGroupEntryList[level].add(mTrendEntryList[level].get(mTrendEntryList[level].size() - 1));
 			}
 		}
 	}
@@ -482,7 +486,7 @@ public class StockDataChart {
 		mDrawFirstEntryList.clear();
 		mDrawLastEntryList.clear();
 		for (int i = 0; i < Trend.LEVEL_MAX; i++) {
-			mLineEntryList[i].clear();
+			mTrendEntryList[i].clear();
 			mGroupEntryList[i].clear();
 		}
 	}

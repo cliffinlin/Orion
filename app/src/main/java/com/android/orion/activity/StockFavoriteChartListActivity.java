@@ -541,62 +541,59 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 					if (mStockData.getTrend().vertexOf(Trend.VERTEX_TOP)) {
 						Entry drawEntry = new Entry(
 								(float) mStockData.getTrend().getVertexHigh(), index);
-						stockDataChart.mLineEntryList[Trend.LEVEL_DRAW].add(drawEntry);
+						stockDataChart.mTrendEntryList[Trend.LEVEL_DRAW].add(drawEntry);
 					} else if (mStockData
 							.getTrend().vertexOf(Trend.VERTEX_BOTTOM)) {
 						Entry drawEntry = new Entry(
 								(float) mStockData.getTrend().getVertexLow(), index);
-						stockDataChart.mLineEntryList[Trend.LEVEL_DRAW].add(drawEntry);
+						stockDataChart.mTrendEntryList[Trend.LEVEL_DRAW].add(drawEntry);
 					}
 
 					if (mStockData.getTrend().vertexOf(Trend.VERTEX_TOP_STROKE)) {
 						Entry strokeEntry = new Entry(
 								(float) mStockData.getTrend().getVertexHigh(), index);
-						stockDataChart.mLineEntryList[Trend.LEVEL_STROKE].add(strokeEntry);
+						stockDataChart.mTrendEntryList[Trend.LEVEL_STROKE].add(strokeEntry);
 					} else if (mStockData
 							.getTrend().vertexOf(Trend.VERTEX_BOTTOM_STROKE)) {
 						Entry strokeEntry = new Entry(
 								(float) mStockData.getTrend().getVertexLow(), index);
-						stockDataChart.mLineEntryList[Trend.LEVEL_STROKE].add(strokeEntry);
+						stockDataChart.mTrendEntryList[Trend.LEVEL_STROKE].add(strokeEntry);
 					}
 
 					if (mStockData.getTrend().vertexOf(Trend.VERTEX_TOP_SEGMENT)) {
 						Entry segmentEntry = new Entry(
 								(float) mStockData.getTrend().getVertexHigh(), index);
-						stockDataChart.mLineEntryList[Trend.LEVEL_SEGMENT].add(segmentEntry);
+						stockDataChart.mTrendEntryList[Trend.LEVEL_SEGMENT].add(segmentEntry);
 					} else if (mStockData
 							.getTrend().vertexOf(Trend.VERTEX_BOTTOM_SEGMENT)) {
 						Entry segmentEntry = new Entry(
 								(float) mStockData.getTrend().getVertexLow(), index);
-						stockDataChart.mLineEntryList[Trend.LEVEL_SEGMENT].add(segmentEntry);
+						stockDataChart.mTrendEntryList[Trend.LEVEL_SEGMENT].add(segmentEntry);
 					}
 
 					if (mStockData.getTrend().vertexOf(Trend.VERTEX_TOP_LINE)) {
 						Entry lineEntry = new Entry(
 								(float) mStockData.getTrend().getVertexHigh(), index);
-						stockDataChart.mLineEntryList[Trend.LEVEL_LINE].add(lineEntry);
+						stockDataChart.mTrendEntryList[Trend.LEVEL_LINE].add(lineEntry);
 					} else if (mStockData
 							.getTrend().vertexOf(Trend.VERTEX_BOTTOM_LINE)) {
 						Entry lineEntry = new Entry(
 								(float) mStockData.getTrend().getVertexLow(), index);
-						stockDataChart.mLineEntryList[Trend.LEVEL_LINE].add(lineEntry);
+						stockDataChart.mTrendEntryList[Trend.LEVEL_LINE].add(lineEntry);
 					}
 
 					if (mStockData.getTrend().vertexOf(Trend.VERTEX_TOP_OUTLINE)) {
 						Entry outlineEntry = new Entry(
 								(float) mStockData.getTrend().getVertexHigh(), index);
-						stockDataChart.mLineEntryList[Trend.LEVEL_OUTLINE].add(outlineEntry);
+						stockDataChart.mTrendEntryList[Trend.LEVEL_OUTLINE].add(outlineEntry);
 					} else if (mStockData
 							.getTrend().vertexOf(Trend.VERTEX_BOTTOM_OUTLINE)) {
 						Entry outlineEntry = new Entry(
 								(float) mStockData.getTrend().getVertexLow(), index);
-						stockDataChart.mLineEntryList[Trend.LEVEL_OUTLINE].add(outlineEntry);
+						stockDataChart.mTrendEntryList[Trend.LEVEL_OUTLINE].add(outlineEntry);
 					}
 
-					stockDataChart.setMainChartYMinMax(index,
-							stockDataChart.mLineEntryList[Trend.LEVEL_DRAW],
-							stockDataChart.mLineEntryList[Trend.LEVEL_STROKE],
-							stockDataChart.mLineEntryList[Trend.LEVEL_SEGMENT]);
+					stockDataChart.setMainChartYMinMax(index);
 
 					Entry difEntry = new Entry((float) mStockData.getMacd().getDIF(),
 							index);
@@ -616,7 +613,7 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 						stockDataChart.mVelocityEntryList.add(velocityEntry);
 					}
 
-					stockDataChart.setSubChartYMinMax(index, stockDataChart.mDIFEntryList, stockDataChart.mDEAEntryList);
+					stockDataChart.setupSubChartYMinMax(index);
 				}
 			}
 
