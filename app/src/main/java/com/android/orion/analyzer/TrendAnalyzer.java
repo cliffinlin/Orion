@@ -147,24 +147,11 @@ public class TrendAnalyzer {
 			StockData vertex = new StockData(stockData);
 
 			Trend trend = isStart ? vertexList.get(0).getTrend() : vertexList.get(vertexList.size() - 1).getTrend();
-			int direction = Trend.DIRECTION_NONE;
 
 			if (trend.vertexOf(Trend.VERTEX_TOP)) {
 				vertex.getTrend().setVertex(Trend.VERTEX_BOTTOM);
-				direction = isStart ? Trend.DIRECTION_UP : Trend.DIRECTION_DOWN;
 			} else if (trend.vertexOf(Trend.VERTEX_BOTTOM)) {
 				vertex.getTrend().setVertex(Trend.VERTEX_TOP);
-				direction = isStart ? Trend.DIRECTION_DOWN : Trend.DIRECTION_UP;
-			}
-
-			int start = isStart ? 0 : trend.getIndexEnd() + 1;
-			int end = isStart ? trend.getIndexStart() : dataList.size();
-
-			for (int i = start; i < end; i++) {
-				if (i >= dataList.size()) {
-					return;
-				}
-				dataList.get(i).getTrend().setDirection(direction);
 			}
 
 			if (isStart) {
@@ -432,7 +419,7 @@ public class TrendAnalyzer {
 			}
 
 			stockTrend.setGroups(Trend.GROUPS_NONE);
-			String groupKey = stockTrend.getVertexNet() + "_" + stockTrend.getTurningNet() + "_" + stockTrend.getTurningRate();
+			String groupKey = stockTrend.getDirection() + "_" + stockTrend.getVertexLow() + "_" + stockTrend.getVertexHigh();
 			ArrayMap<Long, StockTrend> memberMap;
 			if (mGroupMap.containsKey(groupKey)) {
 				memberMap = mGroupMap.get(groupKey);
