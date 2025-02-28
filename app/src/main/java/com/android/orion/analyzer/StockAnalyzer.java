@@ -378,7 +378,7 @@ public class StockAnalyzer {
 		}
 
 		ArrayList<StockTrend> stockTrendList = new ArrayList<>();
-		mDatabaseManager.getStockTrendList(mStock, stockTrend.getGroups(), stockTrendList);
+		mDatabaseManager.getStockTrendGroupedList(mStock, stockTrend.getGroups(), stockTrendList);
 		if (stockTrendList.size() > 1) {
 			for (StockTrend groupMember : stockTrendList) {
 				if (groupMember.getId() == stockTrend.getId()) {

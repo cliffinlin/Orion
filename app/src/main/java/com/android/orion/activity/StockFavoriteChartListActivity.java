@@ -145,10 +145,6 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 		mSortOrder = intent.getStringExtra(Constant.EXTRA_STOCK_LIST_SORT_ORDER);
 		mKeyDisplayDeal = intent.getBooleanExtra(Constant.EXTRA_STOCK_DEAL, false);
 
-		int groups = mDatabaseManager.queryStockTrendTopGroups(mStock);
-		if (groups > 0) {
-			mDatabaseManager.getStockTrendList(mStock, groups, mStockTrendList);
-		}
 	}
 
 	@Override
@@ -649,7 +645,22 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 		mDatabaseManager.getStockDealList(mStockDealList, selection, sortOrder);
 	}
 
+	void getStockTrendChangedGroupList() {
+		mStockTrendList.clear();
+		ArrayList<StockTrend> changedList = new ArrayList<>();
+		mDatabaseManager.getStockTrendChangedList(mStock, changedList);
+		for (StockTrend changed : changedList) {
+			if (changed != null) {
+				ArrayList<StockTrend> groupedList = new ArrayList<>();
+				mDatabaseManager.getStockTrendGroupedList(mStock, changed.getGroups(), groupedList);
+				mStockTrendList.addAll(groupedList);
+			}
+		}
+	}
+
 	void updateStockDataChartItemList() {
+		getStockTrendChangedGroupList();
+
 		mStockDataChartItemList.clear();
 
 		mDatabaseManager.getStockById(mStock);
