@@ -81,37 +81,6 @@ public class DatabaseManager implements StockListener {
 		}
 	}
 
-	public int queryStockTrendTopGroups(Stock stock) {
-		int result = 0;
-		if (mDatabase == null || stock == null) {
-			return result;
-		}
-
-		Cursor cursor = null;
-		try {
-			String query = "SELECT groups, COUNT(*) as count " +
-					"FROM stock_trend " +
-					"WHERE " + getStockSelection(stock) + " " +
-					"GROUP BY groups " +
-					"ORDER BY count DESC " +
-					"LIMIT 1";
-			cursor = mDatabase.rawQuery(query, null);
-			if (cursor != null && cursor.moveToFirst()) {
-				int grops = cursor.getInt(cursor.getColumnIndex("groups"));
-				int count = cursor.getInt(cursor.getColumnIndex("count"));
-				Log.d(TAG, "queryStockTrendTopGroups grops=" + grops + ", count: " + count);
-				if (count > 1) {
-					result = grops;
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			closeCursor(cursor);
-		}
-		return result;
-	}
-
 	public int delete(Uri uri) {
 		return delete(uri, null);
 	}
