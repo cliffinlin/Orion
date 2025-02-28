@@ -1539,7 +1539,7 @@ public class DatabaseManager implements StockListener {
 	public Cursor queryStockDeal(long id) {
 		Cursor cursor = null;
 
-		if (id == 0) {
+		if (id == DatabaseContract.INVALID_ID) {
 			return cursor;
 		}
 

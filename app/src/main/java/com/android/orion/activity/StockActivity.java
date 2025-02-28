@@ -155,7 +155,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener, 
 			mEditTextStockHold.setEnabled(false);
 			mEditTextStockYield.setEnabled(false);
 			mStock.setId(mIntent.getLongExtra(Constant.EXTRA_STOCK_ID,
-					Stock.INVALID_ID));
+					DatabaseContract.INVALID_ID));
 			mDatabaseManager.getStockById(mStock);
 		}
 	}

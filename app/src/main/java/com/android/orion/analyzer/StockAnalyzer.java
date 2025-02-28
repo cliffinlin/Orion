@@ -18,6 +18,7 @@ import com.android.orion.config.Config;
 import com.android.orion.data.Macd;
 import com.android.orion.data.Period;
 import com.android.orion.data.Trend;
+import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockTrend;
@@ -471,7 +472,7 @@ public class StockAnalyzer {
 	}
 
 	public void notify(int id, String channelID, String channelName, int importance, String contentTitle, String contentText) {
-		notify(id, Stock.INVALID_ID, channelID, channelName, importance, contentTitle, contentText);
+		notify(id, DatabaseContract.INVALID_ID, channelID, channelName, importance, contentTitle, contentText);
 	}
 
 	public void notify(int id, long stockID, String channelID, String channelName, int importance, String contentTitle, String contentText) {
@@ -482,7 +483,7 @@ public class StockAnalyzer {
 		mNotificationManager.cancel(id);
 
 		Intent intent = new Intent();
-		if (stockID == 0) {
+		if (stockID == DatabaseContract.INVALID_ID) {
 			intent.setClass(mContext, StockFavoriteListActivity.class);
 		} else {
 			intent.setClass(mContext, StockFavoriteChartListActivity.class);

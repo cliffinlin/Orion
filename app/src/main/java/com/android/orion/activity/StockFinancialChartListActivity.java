@@ -128,7 +128,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 
 		setContentView(R.layout.activity_stock_financial_chart_list);
 
-		mStock.setId(getIntent().getLongExtra(Constant.EXTRA_STOCK_ID, Stock.INVALID_ID));
+		mStock.setId(getIntent().getLongExtra(Constant.EXTRA_STOCK_ID, DatabaseContract.INVALID_ID));
 		mDatabaseManager.getStockById(mStock);
 		mSortOrder = getIntent().getStringExtra(Constant.EXTRA_STOCK_LIST_SORT_ORDER);
 

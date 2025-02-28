@@ -343,7 +343,7 @@ public class StockListActivity extends DatabaseActivity implements
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 	                        long id) {
-		if (id <= Stock.INVALID_ID) {
+		if (id <= DatabaseContract.INVALID_ID) {
 			return;
 		}
 

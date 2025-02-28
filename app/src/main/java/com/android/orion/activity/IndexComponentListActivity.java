@@ -480,7 +480,7 @@ public class IndexComponentListActivity extends ListActivity implements
 					selection = DatabaseContract.COLUMN_CODE + " in (" + placeHolder + " ) AND " + mDatabaseManager.hasFlagSelection(Stock.FLAG_FAVORITE);;
 					selectionArgs = indexIds.toString().split(",");
 				} else {
-					selection = DatabaseContract.COLUMN_ID + " = " + Stock.INVALID_ID;
+					selection = DatabaseContract.COLUMN_ID + " = " + DatabaseContract.INVALID_ID;
 					selectionArgs = null;
 				}
 
@@ -539,7 +539,7 @@ public class IndexComponentListActivity extends ListActivity implements
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 	                        long id) {
 
-		if (id <= Stock.INVALID_ID) {
+		if (id <= DatabaseContract.INVALID_ID) {
 			return;
 		}
 

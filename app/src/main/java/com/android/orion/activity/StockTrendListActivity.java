@@ -81,7 +81,7 @@ public class StockTrendListActivity extends ListActivity implements
 	SimpleCursorAdapter mRightAdapter = null;
 
 	ActionMode mCurrentActionMode = null;
-	Stock mStock = new Stock();
+	StockTrend mStockTrend = new StockTrend();
 
 	Handler mHandler = new Handler(Looper.getMainLooper()) {
 
@@ -630,15 +630,6 @@ public class StockTrendListActivity extends ListActivity implements
 		mRightAdapter.swapCursor(null);
 	}
 
-	void getStock(long id) {
-		StockTrend stockTrend = new StockTrend();
-		stockTrend.setId(id);
-		mDatabaseManager.getStockTrendById(stockTrend);
-		mStock.setSE(stockTrend.getSE());
-		mStock.setCode(stockTrend.getCode());
-		mDatabaseManager.getStock(mStock);
-	}
-
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 							long id) {
@@ -646,9 +637,15 @@ public class StockTrendListActivity extends ListActivity implements
 		if (parent.getId() == R.id.left_listview) {
 		} else {
 			if (mCurrentActionMode == null) {
-				getStock(id);
+				mStockTrend.setId(id);
+				mDatabaseManager.getStockTrendById(mStockTrend);
+				mStock.setSE(mStockTrend.getSE());
+				mStock.setCode(mStockTrend.getCode());
+				mDatabaseManager.getStock(mStock);
+
 				Intent intent = new Intent(mContext, StockFavoriteChartListActivity.class);
 				intent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
+				intent.putExtra(Constant.EXTRA_STOCK_TREND_ID, mStockTrend.getId());
 				startActivity(intent);
 			}
 		}

@@ -20,6 +20,7 @@ import android.widget.Spinner;
 
 import com.android.orion.R;
 import com.android.orion.data.Period;
+import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;
 import com.android.orion.setting.Constant;
@@ -330,7 +331,7 @@ public class StockDealActivity extends DatabaseActivity implements
 				case REQUEST_CODE_STOCK_ID:
 					if (mStock != null) {
 						mStock.setId(data.getLongExtra(Constant.EXTRA_STOCK_ID,
-								Stock.INVALID_ID));
+								DatabaseContract.INVALID_ID));
 						mHandler.sendEmptyMessage(MESSAGE_LOAD_STOCK_BY_ID);
 					}
 					break;

@@ -517,7 +517,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 	                        long id) {
 
-		if (id <= Stock.INVALID_ID) {
+		if (id <= DatabaseContract.INVALID_ID) {
 			return;
 		}
 
