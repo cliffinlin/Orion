@@ -718,7 +718,7 @@ public class StockFinancialListActivity extends ListActivity implements
 
 		switch (id) {
 			case LOADER_ID_STOCK_FINANCIAL_LIST:
-				String selection = DatabaseContract.COLUMN_FLAG + " >= " + Stock.FLAG_FAVORITE;
+				String selection = mDatabaseManager.hasFlagSelection(Stock.FLAG_FAVORITE);
 				loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
 						DatabaseContract.Stock.PROJECTION_ALL, selection, null,
 						mSortOrder);

@@ -57,8 +57,9 @@ public class Trend {
 	public static final String LABEL_OUTLINE = "Outline";
 	public static final String LABEL_GROUP = "Group";
 
+	public static final int FLAG_UNUSED = -1;
 	public static final int FLAG_NONE = 0;
-	public static final int FLAG_CHANGED = 1;
+	public static final int FLAG_CHANGED = 1 << 0;
 
 	public static final int GROUPS_NONE = 0;
 

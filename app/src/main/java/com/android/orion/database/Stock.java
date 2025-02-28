@@ -27,7 +27,7 @@ public class Stock extends DatabaseTable {
 	public static final int FLAG_NOTIFY = 1 << 1;
 
 	public static final long INVALID_ID = 0;
-	public static final double ROI_COEFFICIENT = 1000.0;
+	public static final double ROI_COEFFICIENT = 0.1;
 
 	static ArrayList<StockFinancial> mStockFinancialList = new ArrayList<>();
 	static ArrayList<StockShare> mStockShareList = new ArrayList<>();
@@ -1402,7 +1402,7 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-		mRate = Utility.Round2(100 * mNetProfitPerShareInYear / netProfitPerShareLastYear);
+		mRate = Utility.Round2(mNetProfitPerShareInYear / netProfitPerShareLastYear);
 	}
 
 	public void setupDebtToNetAssetsRatio(ArrayList<StockFinancial> stockFinancialList) {

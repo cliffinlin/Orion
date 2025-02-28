@@ -81,6 +81,14 @@ public class DatabaseManager implements StockListener {
 		}
 	}
 
+	public String hasSelection(String key, int value) {
+		return " (" + key + " & " + value + ") = " + value;
+	}
+
+	public String hasFlagSelection(int flag) {
+		return hasSelection(DatabaseContract.COLUMN_FLAG, flag);
+	}
+
 	public int delete(Uri uri) {
 		return delete(uri, null);
 	}
@@ -190,23 +198,17 @@ public class DatabaseManager implements StockListener {
 	}
 
 	public void getFavoriteStockList(ArrayList<Stock> stockList) {
-		String selection = DatabaseContract.COLUMN_FLAG + " >= "
-				+ Stock.FLAG_FAVORITE;
-
+		String selection = hasFlagSelection(Stock.FLAG_FAVORITE);
 		getStockList(selection, stockList);
 	}
 
 	public void loadStockArrayMap(ArrayMap<String, Stock> stockArrayMap) {
-		String selection = "";
-		Cursor cursor = null;
-
 		if (stockArrayMap == null) {
 			return;
 		}
 
-		selection += DatabaseContract.COLUMN_FLAG + " >= "
-				+ Stock.FLAG_FAVORITE;
-
+		String selection = hasFlagSelection(Stock.FLAG_FAVORITE);
+		Cursor cursor = null;
 		try {
 			stockArrayMap.clear();
 			cursor = queryStock(selection, null, null);
@@ -901,7 +903,7 @@ public class DatabaseManager implements StockListener {
 		}
 
 		String selection = getStockSelection(stock)
-				+ " AND " + DatabaseContract.COLUMN_FLAG + " = " + Trend.FLAG_CHANGED;
+				+ " AND " + hasFlagSelection(Trend.FLAG_CHANGED);
 		String sortOrder = DatabaseContract.COLUMN_PERIOD + DatabaseContract.ORDER_ASC;
 
 		stockTrendList.clear();

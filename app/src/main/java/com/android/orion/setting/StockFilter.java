@@ -6,10 +6,12 @@ import android.text.TextUtils;
 
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
+import com.android.orion.manager.DatabaseManager;
 import com.android.orion.utility.Preferences;
 
 public class StockFilter {
 	Context mContext;
+	DatabaseManager mDatabaseManager = DatabaseManager.getInstance();
 
 	boolean mEnabled = true;
 	boolean mFavorite = true;
@@ -255,8 +257,7 @@ public class StockFilter {
 
 		if (mEnabled) {
 			if (mFavorite) {
-				selection += DatabaseContract.COLUMN_FLAG + " >= "
-						+ Stock.FLAG_FAVORITE;
+				selection += mDatabaseManager.hasFlagSelection(Stock.FLAG_FAVORITE);
 			} else {
 				selection += " 1 ";
 			}

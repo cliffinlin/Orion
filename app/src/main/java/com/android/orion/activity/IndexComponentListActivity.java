@@ -84,7 +84,7 @@ public class IndexComponentListActivity extends ListActivity implements
 				case MESSAGE_REFRESH:
 					for (int i = 0; i < mStockList.size(); i++) {
 						Stock stock = mStockList.get(i);
-						if (stock != null && (stock.getFlag() >= Stock.FLAG_FAVORITE)) {
+						if (stock != null && stock.hasFlag(Stock.FLAG_FAVORITE)) {
 							Setting.setDownloadStockData(stock.getSE(), stock.getCode(), 0);
 							mStockDataProvider.download(stock);
 						}
@@ -144,7 +144,7 @@ public class IndexComponentListActivity extends ListActivity implements
 			case R.id.action_refresh:
 				for (int i = 0; i < mStockList.size(); i++) {
 					Stock stock = mStockList.get(i);
-					if (stock != null && (stock.getFlag() >= Stock.FLAG_FAVORITE)) {
+					if (stock != null && stock.hasFlag(Stock.FLAG_FAVORITE)) {
 						mDatabaseManager.deleteStockData(stock);
 					}
 				}
@@ -477,8 +477,7 @@ public class IndexComponentListActivity extends ListActivity implements
 						indexIds.append("," + indexComponentList.get(i).getCode());
 					}
 
-					selection = DatabaseContract.COLUMN_CODE + " in (" + placeHolder + " ) AND " + DatabaseContract.COLUMN_FLAG + " >= "
-							+ Stock.FLAG_FAVORITE;
+					selection = DatabaseContract.COLUMN_CODE + " in (" + placeHolder + " ) AND " + mDatabaseManager.hasFlagSelection(Stock.FLAG_FAVORITE);;
 					selectionArgs = indexIds.toString().split(",");
 				} else {
 					selection = DatabaseContract.COLUMN_ID + " = " + Stock.INVALID_ID;

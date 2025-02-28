@@ -306,9 +306,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 	}
 
 	CursorLoader getStockCursorLoader() {
-		String selection = DatabaseContract.COLUMN_FLAG + " >= "
-				+ Stock.FLAG_FAVORITE;
-
+		String selection = mDatabaseManager.hasFlagSelection(Stock.FLAG_FAVORITE);
 		CursorLoader loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
 				DatabaseContract.Stock.PROJECTION_ALL, selection, null,
 				mSortOrder);
