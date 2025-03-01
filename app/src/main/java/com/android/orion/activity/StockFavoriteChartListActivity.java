@@ -652,13 +652,13 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 		ArrayList<StockTrend> changedList = new ArrayList<>();
 
 		mStockTrendList.clear();
-		mDatabaseManager.getStockTrendGroupedList(mStock, mStockTrend.getGroups(), mStockTrendList);
+		mDatabaseManager.getStockTrendGroupedList(mStock, mStockTrend.getGrouped(), mStockTrendList);
 
 		mDatabaseManager.getStockTrendChangedList(mStock, changedList);
 		for (StockTrend changed : changedList) {
 			if (changed != null) {
 				ArrayList<StockTrend> groupedList = new ArrayList<>();
-				mDatabaseManager.getStockTrendGroupedList(mStock, changed.getGroups(), groupedList);
+				mDatabaseManager.getStockTrendGroupedList(mStock, changed.getGrouped(), groupedList);
 				mStockTrendList.addAll(groupedList);
 			}
 		}

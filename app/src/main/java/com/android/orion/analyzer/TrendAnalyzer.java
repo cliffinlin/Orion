@@ -405,7 +405,7 @@ public class TrendAnalyzer {
 		}
 	}
 
-	void analyzeGroups() {
+	void analyzeGrouped() {
 		mDatabaseManager.getStockTrendList(mStock, mStockTrendList);
 		if (mStockTrendList.isEmpty()) {
 			return;
@@ -417,7 +417,7 @@ public class TrendAnalyzer {
 				continue;
 			}
 
-			stockTrend.setGroups(Trend.GROUPS_NONE);
+			stockTrend.setGrouped(Trend.GROUPED_NONE);
 			String groupKey = stockTrend.getDirection() + "_" + stockTrend.getVertexLow() + "_" + stockTrend.getVertexHigh();
 			ArrayMap<Long, StockTrend> memberMap;
 			if (mGroupMap.containsKey(groupKey)) {
@@ -433,9 +433,9 @@ public class TrendAnalyzer {
 			return;
 		}
 
-		int groups = Trend.GROUPS_NONE;
+		int grouped = Trend.GROUPED_NONE;
 		for (String groupKey : mGroupMap.keySet()) {
-			groups++;
+			grouped++;
 			ArrayMap<Long, StockTrend> memberMap = mGroupMap.get(groupKey);
 			if (memberMap == null) {
 				continue;
@@ -446,7 +446,7 @@ public class TrendAnalyzer {
 				if (stockTrend == null) {
 					continue;
 				}
-				stockTrend.setGroups(groups);
+				stockTrend.setGrouped(grouped);
 			}
 		}
 
@@ -454,7 +454,7 @@ public class TrendAnalyzer {
 			if (stockTrend == null) {
 				continue;
 			}
-			mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValuesGroups());
+			mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValuesGrouped());
 		}
 	}
 

@@ -198,7 +198,7 @@ public class StockAnalyzer {
 		trendAnalyzer.analyzeLine(Trend.LEVEL_OUTLINE, mOutlineDataList, mTrendVertexList);
 		trendAnalyzer.vertexListToDataList(mTrendVertexList, mTrendDataList);
 
-		trendAnalyzer.analyzeGroups();
+		trendAnalyzer.analyzeGrouped();
 
 		analyzeAction(period);
 	}
@@ -379,7 +379,7 @@ public class StockAnalyzer {
 		}
 
 		ArrayList<StockTrend> stockTrendList = new ArrayList<>();
-		mDatabaseManager.getStockTrendGroupedList(mStock, stockTrend.getGroups(), stockTrendList);
+		mDatabaseManager.getStockTrendGroupedList(mStock, stockTrend.getGrouped(), stockTrendList);
 		if (stockTrendList.size() > 1) {
 			for (StockTrend groupMember : stockTrendList) {
 				if (groupMember.getId() == stockTrend.getId()) {

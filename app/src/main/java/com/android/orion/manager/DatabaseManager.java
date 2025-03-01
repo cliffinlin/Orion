@@ -924,14 +924,14 @@ public class DatabaseManager implements StockListener {
 		}
 	}
 
-	public void getStockTrendGroupedList(Stock stock, int groups,
+	public void getStockTrendGroupedList(Stock stock, int grouped,
 								  ArrayList<StockTrend> stockTrendList) {
 		if (stock == null || stockTrendList == null) {
 			return;
 		}
 
 		String selection = getStockSelection(stock)
-				+ " AND " + DatabaseContract.COLUMN_GROUPS + " = " + groups;
+				+ " AND " + DatabaseContract.COLUMN_GROUPED + " = " + grouped;
 		String sortOrder = DatabaseContract.COLUMN_PERIOD + DatabaseContract.ORDER_ASC;
 
 		stockTrendList.clear();

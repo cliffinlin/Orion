@@ -61,7 +61,7 @@ public class Trend {
 	public static final int FLAG_NONE = 0;
 	public static final int FLAG_CHANGED = 1 << 0;
 
-	public static final int GROUPS_NONE = 0;
+	public static final int GROUPED_NONE = 0;
 
 	public static final String[] TREND_TYPES = {
 			TYPE_UP_NONE_UP, TYPE_UP_NONE_DOWN, TYPE_UP_NONE,

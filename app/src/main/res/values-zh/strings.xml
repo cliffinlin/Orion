@@ -43,7 +43,7 @@
     <string name="level">Level</string>
     <string name="type">Type</string>
     <string name="flag">Flag</string>
-    <string name="groups">Groups</string>
+    <string name="grouped">Grouped</string>
     <string name="direction">Direction</string>
     <string name="vertex_low">VertexLow</string>
     <string name="vertex_high">VertexHigh</string>
