@@ -275,11 +275,7 @@ public class StockDataChart {
 	}
 
 	public boolean displayAdaptive(int level) {
-		boolean result = false;
-		if (Setting.getDisplayAdaptive() && Config.DISPLAY_ADAPTIVE_LENGTH[level] > 0) {
-			result = mTrendEntryList[level].size() <= Config.DISPLAY_ADAPTIVE_LENGTH[level];
-		}
-		return result;
+		return true;
 	}
 
 	public void setMainChartYMinMax(int index) {

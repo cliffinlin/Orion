@@ -56,16 +56,14 @@ public class StockAnalyzer {
 
 	Context mContext;
 	NotificationManager mNotificationManager;
-	DatabaseManager mDatabaseManager;
-	FinancialAnalyzer mFinancialAnalyzer;
+	DatabaseManager mDatabaseManager = DatabaseManager.getInstance();
+	FinancialAnalyzer mFinancialAnalyzer = FinancialAnalyzer.getInstance();
+	TrendAnalyzer mTrendAnalyzer = TrendAnalyzer.getInstance();
 	Logger Log = Logger.getLogger();
 
 	private StockAnalyzer() {
 		mContext = MainApplication.getContext();
-
 		mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-		mDatabaseManager = DatabaseManager.getInstance();
-		mFinancialAnalyzer = FinancialAnalyzer.getInstance();
 	}
 
 	public static StockAnalyzer getInstance() {
@@ -123,6 +121,7 @@ public class StockAnalyzer {
 					analyze(period);
 				}
 			}
+			mTrendAnalyzer.analyzeGrouped(mStock);
 			mFinancialAnalyzer.analyzeFinancial(mStock);
 			mFinancialAnalyzer.setupFinancial(mStock);
 			mFinancialAnalyzer.setupStockBonus(mStock);
@@ -177,28 +176,25 @@ public class StockAnalyzer {
 	}
 
 	private void analyzeStockData(String period) {
-		TrendAnalyzer trendAnalyzer = TrendAnalyzer.getInstance();
-		trendAnalyzer.setup(mStock, period, mStockDataList);
+		mTrendAnalyzer.setup(mStock, period, mStockDataList);
 
-		trendAnalyzer.analyzeVertex(mDrawVertexList);
-		trendAnalyzer.vertexListToDataList(mDrawVertexList, mDrawDataList);
+		mTrendAnalyzer.analyzeVertex(mDrawVertexList);
+		mTrendAnalyzer.vertexListToDataList(mDrawVertexList, mDrawDataList);
 
-		trendAnalyzer.analyzeLine(Trend.LEVEL_DRAW, mDrawDataList, mStrokeVertexList);
-		trendAnalyzer.vertexListToDataList(mStrokeVertexList, mStrokeDataList);
+		mTrendAnalyzer.analyzeLine(Trend.LEVEL_DRAW, mDrawDataList, mStrokeVertexList);
+		mTrendAnalyzer.vertexListToDataList(mStrokeVertexList, mStrokeDataList);
 
-		trendAnalyzer.analyzeLine(Trend.LEVEL_STROKE, mStrokeDataList, mSegmentVertexList);
-		trendAnalyzer.vertexListToDataList(mSegmentVertexList, mSegmentDataList);
+		mTrendAnalyzer.analyzeLine(Trend.LEVEL_STROKE, mStrokeDataList, mSegmentVertexList);
+		mTrendAnalyzer.vertexListToDataList(mSegmentVertexList, mSegmentDataList);
 
-		trendAnalyzer.analyzeLine(Trend.LEVEL_SEGMENT, mSegmentDataList, mLineVertexList);
-		trendAnalyzer.vertexListToDataList(mLineVertexList, mLineDataList);
+		mTrendAnalyzer.analyzeLine(Trend.LEVEL_SEGMENT, mSegmentDataList, mLineVertexList);
+		mTrendAnalyzer.vertexListToDataList(mLineVertexList, mLineDataList);
 
-		trendAnalyzer.analyzeLine(Trend.LEVEL_LINE, mLineDataList, mOutlineVertexList);
-		trendAnalyzer.vertexListToDataList(mOutlineVertexList, mOutlineDataList);
+		mTrendAnalyzer.analyzeLine(Trend.LEVEL_LINE, mLineDataList, mOutlineVertexList);
+		mTrendAnalyzer.vertexListToDataList(mOutlineVertexList, mOutlineDataList);
 
-		trendAnalyzer.analyzeLine(Trend.LEVEL_OUTLINE, mOutlineDataList, mTrendVertexList);
-		trendAnalyzer.vertexListToDataList(mTrendVertexList, mTrendDataList);
-
-		trendAnalyzer.analyzeGrouped();
+		mTrendAnalyzer.analyzeLine(Trend.LEVEL_OUTLINE, mOutlineDataList, mTrendVertexList);
+		mTrendAnalyzer.vertexListToDataList(mTrendVertexList, mTrendDataList);
 
 		analyzeAction(period);
 	}

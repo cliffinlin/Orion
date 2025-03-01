@@ -410,8 +410,8 @@ public class TrendAnalyzer {
 		}
 	}
 
-	void analyzeGrouped() {
-		mDatabaseManager.getStockTrendList(mStock, mStockTrendList);
+	void analyzeGrouped(Stock stock) {
+		mDatabaseManager.getStockTrendList(stock, mStockTrendList);
 		if (mStockTrendList.isEmpty()) {
 			return;
 		}
