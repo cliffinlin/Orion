@@ -493,15 +493,15 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 								(float) mStockData.getCandlestick().getClose(),
 								Setting.getDebugLog() ? mStockData.getAction() : "");//TODO
 						stockDataChart.mCandleEntryList.add(candleEntry);
-
-						Entry average5Entry = new Entry(
-								(float) mStockData.getMacd().getAverage5(), index);
-						stockDataChart.mAverage5EntryList.add(average5Entry);
-
-						Entry average10Entry = new Entry(
-								(float) mStockData.getMacd().getAverage10(), index);
-						stockDataChart.mAverage10EntryList.add(average10Entry);
 					}
+
+					Entry average5Entry = new Entry(
+							(float) mStockData.getMacd().getAverage5(), index);
+					stockDataChart.mAverage5EntryList.add(average5Entry);
+
+					Entry average10Entry = new Entry(
+							(float) mStockData.getMacd().getAverage10(), index);
+					stockDataChart.mAverage10EntryList.add(average10Entry);
 
 					if (index == 0) {
 						if (mStockData.getTrend().directionOf(Trend.DIRECTION_UP)) {
