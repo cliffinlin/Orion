@@ -164,13 +164,6 @@
     <string name="setting_period_min5">Min5</string>
 
     <string name="setting_display">Display</string>
-    <string name="setting_display_candle">Candle</string>
-    <string name="setting_display_average">Average</string>
-    <string name="setting_display_draw">Draw</string>
-    <string name="setting_display_stroke">Stroke</string>
-    <string name="setting_display_segment">Segment</string>
-    <string name="setting_display_line">Line</string>
-    <string name="setting_display_outline">OutLine</string>
 
     <string name="setting_debug">Debug</string>
     <string name="setting_debug_log">Log</string>

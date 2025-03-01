@@ -451,8 +451,6 @@ public class TrendAnalyzer {
 						stockTrend.setGrouped(grouped);
 					}
 				}
-			} else {
-				break;
 			}
 		}
 
