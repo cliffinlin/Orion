@@ -14,6 +14,11 @@ import com.android.orion.utility.Logger;
 import com.android.orion.utility.Utility;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 
 public class TrendAnalyzer {
 	Logger Log = Logger.getLogger();
@@ -21,7 +26,7 @@ public class TrendAnalyzer {
 	String mPeriod;
 	ArrayList<StockData> mStockDataList;
 	ArrayList<StockTrend> mStockTrendList = new ArrayList<>();
-	ArrayMap<String, ArrayMap<Long, StockTrend>> mGroupMap = new ArrayMap<>();
+	ArrayMap<String, ArrayList<StockTrend>> mGroupMap = new ArrayMap<>();
 	DatabaseManager mDatabaseManager = DatabaseManager.getInstance();
 	StockPerceptronProvider mStockPerceptronProvider = StockPerceptronProvider.getInstance();
 
@@ -419,14 +424,14 @@ public class TrendAnalyzer {
 
 			stockTrend.setGrouped(Trend.GROUPED_NONE);
 			String groupKey = stockTrend.getDirection() + "_" + stockTrend.getVertexLow() + "_" + stockTrend.getVertexHigh();
-			ArrayMap<Long, StockTrend> memberMap;
+			ArrayList<StockTrend> memberList;
 			if (mGroupMap.containsKey(groupKey)) {
-				memberMap = mGroupMap.get(groupKey);
+				memberList = mGroupMap.get(groupKey);
 			} else {
-				memberMap = new ArrayMap<>();
-				mGroupMap.put(groupKey, memberMap);
+				memberList = new ArrayList<>();
+				mGroupMap.put(groupKey, memberList);
 			}
-			memberMap.put(stockTrend.getId(), stockTrend);
+			memberList.add(stockTrend);
 		}
 
 		if (mGroupMap.size() == 0) {
@@ -434,29 +439,49 @@ public class TrendAnalyzer {
 		}
 
 		int grouped = Trend.GROUPED_NONE;
-		for (String groupKey : mGroupMap.keySet()) {
-			grouped++;
-			ArrayMap<Long, StockTrend> memberMap = mGroupMap.get(groupKey);
-			if (memberMap == null) {
-				continue;
-			}
+		Collection<ArrayList<StockTrend>> valuesCollection = mGroupMap.values();
+		ArrayList<ArrayList<StockTrend>> valuesList = new ArrayList<>(valuesCollection);
+		Collections.sort(valuesList, sizeComparator);
 
-			for (Long id : memberMap.keySet()) {
-				StockTrend stockTrend = memberMap.get(id);
+		for (ArrayList<StockTrend> stockTrendlist : valuesList) {
+			grouped++;
+			if (stockTrendlist != null && stockTrendlist.size() > 1) {
+				for (StockTrend stockTrend : stockTrendlist) {
+					if (stockTrend != null) {
+						stockTrend.setGrouped(grouped);
+					}
+				}
+			} else {
+				break;
+			}
+		}
+
+		try {
+			mDatabaseManager.beginTransaction();
+			for (StockTrend stockTrend : mStockTrendList) {
 				if (stockTrend == null) {
 					continue;
 				}
-				stockTrend.setGrouped(grouped);
+				mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValuesGrouped());
 			}
-		}
-
-		for (StockTrend stockTrend : mStockTrendList) {
-			if (stockTrend == null) {
-				continue;
-			}
-			mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValuesGrouped());
+			mDatabaseManager.setTransactionSuccessful();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			mDatabaseManager.endTransaction();
 		}
 	}
+
+	Comparator<ArrayList<StockTrend>> sizeComparator = new Comparator<ArrayList<StockTrend>>() {
+		@Override
+		public int compare(ArrayList<StockTrend> list1, ArrayList<StockTrend> list2) {
+			int result = Integer.compare(list2.size(), list1.size());
+			if (result == 0) {
+				result = Double.compare(Math.abs(list2.get(0).getVertexNet()), Math.abs(list1.get(0).getVertexNet()));
+			}
+			return result;
+		}
+	};
 
 	void debugShow(ArrayList<StockData> stockDataList,
 	               ArrayList<StockData> dataList) {

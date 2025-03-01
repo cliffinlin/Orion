@@ -67,6 +67,24 @@ public class DatabaseManager implements StockListener {
 		}
 	}
 
+	public void beginTransaction() {
+		if (mDatabase != null) {
+			mDatabase.beginTransaction();
+		}
+	}
+
+	public void setTransactionSuccessful() {
+		if (mDatabase != null) {
+			mDatabase.setTransactionSuccessful();
+		}
+	}
+
+	public void endTransaction() {
+		if (mDatabase != null) {
+			mDatabase.endTransaction();
+		}
+	}
+
 	public void closeDatabase() {
 		if (mDatabaseHelper != null) {
 			mDatabaseHelper.close();
