@@ -77,6 +77,7 @@
     <string name="average">Average</string>
     <string name="filled">Filled</string>
     <string name="direct">Direct</string>
+    <string name="adaptive">Adaptive</string>
     <string name="draw">Draw</string>
     <string name="stroke">Stroke</string>
     <string name="segment">Segment</string>
