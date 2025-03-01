@@ -156,17 +156,17 @@ public class StockDataChart {
 		if (Setting.getDisplayDraw()) {
 			addLineDataSet(mTrendEntryList, Trend.LABEL_DRAW, Trend.LEVEL_DRAW, lineData);
 		}
-		addLineDataSet(mGroupEntryList, Trend.LABEL_GROUP, Trend.LEVEL_DRAW, lineData, groupFilled(Trend.LEVEL_DRAW), groupFilledColor(Trend.LEVEL_DRAW));
+		addLineDataSet(mGroupEntryList, Trend.LABEL_NONE, Trend.LEVEL_DRAW, lineData, groupFilled(Trend.LEVEL_DRAW), groupFilledColor(Trend.LEVEL_DRAW));
 
 		if (Setting.getDisplayStroke() && displayAdaptive(Trend.LEVEL_STROKE)) {
 			addLineDataSet(mTrendEntryList, Trend.LABEL_STROKE, Trend.LEVEL_STROKE, lineData);
 		}
-		addLineDataSet(mGroupEntryList, Trend.LABEL_GROUP, Trend.LEVEL_STROKE, lineData, groupFilled(Trend.LEVEL_STROKE), groupFilledColor(Trend.LEVEL_STROKE));
+		addLineDataSet(mGroupEntryList, Trend.LABEL_NONE, Trend.LEVEL_STROKE, lineData, groupFilled(Trend.LEVEL_STROKE), groupFilledColor(Trend.LEVEL_STROKE));
 
 		if (Setting.getDisplaySegment() && displayAdaptive(Trend.LEVEL_SEGMENT)) {
 			addLineDataSet(mTrendEntryList, Trend.LABEL_SEGMENT, Trend.LEVEL_SEGMENT, lineData);
 		}
-		addLineDataSet(mGroupEntryList, Trend.LABEL_GROUP, Trend.LEVEL_SEGMENT, lineData, groupFilled(Trend.LEVEL_SEGMENT), groupFilledColor(Trend.LEVEL_SEGMENT));
+		addLineDataSet(mGroupEntryList, Trend.LABEL_NONE, Trend.LEVEL_SEGMENT, lineData, groupFilled(Trend.LEVEL_SEGMENT), groupFilledColor(Trend.LEVEL_SEGMENT));
 
 		if (Setting.getDisplayLine() && displayAdaptive(Trend.LEVEL_LINE)) {
 			addLineDataSet(mTrendEntryList, Trend.LABEL_LINE, Trend.LEVEL_LINE, lineData);
@@ -175,8 +175,8 @@ public class StockDataChart {
 		if (Setting.getDisplayOutline() && displayAdaptive(Trend.LEVEL_OUTLINE)) {
 			addLineDataSet(mTrendEntryList, Trend.LABEL_OUTLINE, Trend.LEVEL_OUTLINE, lineData);
 		}
-		addLineDataSet(mGroupEntryList, Trend.LABEL_GROUP, Trend.LEVEL_LINE, lineData, groupFilled(Trend.LEVEL_LINE), groupFilledColor(Trend.LEVEL_LINE));
-		addLineDataSet(mGroupEntryList, Trend.LABEL_GROUP, Trend.LEVEL_OUTLINE, lineData, groupFilled(Trend.LEVEL_OUTLINE), groupFilledColor(Trend.LEVEL_OUTLINE));
+		addLineDataSet(mGroupEntryList, Trend.LABEL_NONE, Trend.LEVEL_LINE, lineData, groupFilled(Trend.LEVEL_LINE), groupFilledColor(Trend.LEVEL_LINE));
+		addLineDataSet(mGroupEntryList, Trend.LABEL_NONE, Trend.LEVEL_OUTLINE, lineData, groupFilled(Trend.LEVEL_OUTLINE), groupFilledColor(Trend.LEVEL_OUTLINE));
 
 		mCombinedDataMain.setData(lineData);
 	}
@@ -275,7 +275,17 @@ public class StockDataChart {
 	}
 
 	public boolean displayAdaptive(int level) {
-		return true;
+		boolean result = false;
+
+		if (!Setting.getDisplayAdaptive()) {
+			return true;
+		}
+
+		StockTrend stockTrend = getStockTrend(level);
+		if (stockTrend != null && stockTrend.hasFlag(Trend.FLAG_ADAPTIVE)) {
+			result = true;
+		}
+		return result;
 	}
 
 	public void setMainChartYMinMax(int index) {

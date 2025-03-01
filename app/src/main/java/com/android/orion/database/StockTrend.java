@@ -114,6 +114,13 @@ public class StockTrend extends DatabaseTable {
 		return contentValues;
 	}
 
+	public ContentValues getContentValuesFlag() {
+		ContentValues contentValues = super.getContentValues();
+
+		contentValues.put(DatabaseContract.COLUMN_FLAG, mFlag);
+		return contentValues;
+	}
+
 	public void set(StockTrend stockTrend) {
 		if (stockTrend == null) {
 			return;

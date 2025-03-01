@@ -55,11 +55,11 @@ public class Trend {
 	public static final String LABEL_SEGMENT = "Segment";
 	public static final String LABEL_LINE = "Line";
 	public static final String LABEL_OUTLINE = "Outline";
-	public static final String LABEL_GROUP = "";
 
 	public static final int FLAG_UNUSED = -1;
 	public static final int FLAG_NONE = 0;
 	public static final int FLAG_CHANGED = 1 << 0;
+	public static final int FLAG_ADAPTIVE = 1 << 1;
 
 	public static final int GROUPED_NONE = 0;
 
@@ -82,7 +82,8 @@ public class Trend {
 
 	public static final int VERTEX_SIZE = 3;
 
-	public static final double NOTIFY_TREND_THRESHOLD = 5.0;
+	public static final int ADAPTIVE_MIN_SIZE = 5;
+	public static final int ADAPTIVE_MAX_SIZE = 15;
 
 	public static Set<String> NOTIFYACTIONS = new HashSet<>(Arrays.asList(
 			MARK_BUY, MARK_BUY1, MARK_BUY2,
