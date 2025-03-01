@@ -942,6 +942,33 @@ public class DatabaseManager implements StockListener {
 		}
 	}
 
+	public void getStockTrendGroupedList(Stock stock, ArrayList<StockTrend> stockTrendList) {
+		if (stock == null || stockTrendList == null) {
+			return;
+		}
+
+		String selection = getStockSelection(stock)
+				+ " AND " + DatabaseContract.COLUMN_GROUPED + " > " + Trend.GROUPED_NONE;
+		String sortOrder = DatabaseContract.COLUMN_GROUPED + DatabaseContract.ORDER_ASC;
+
+		stockTrendList.clear();
+		Cursor cursor = null;
+		try {
+			cursor = queryStockTrend(selection, null, sortOrder);
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				while (cursor.moveToNext()) {
+					StockTrend stockTrend = new StockTrend();
+					stockTrend.set(cursor);
+					stockTrendList.add(stockTrend);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
 	public void getStockTrendGroupedList(Stock stock, int grouped,
 								  ArrayList<StockTrend> stockTrendList) {
 		if (stock == null || stockTrendList == null) {
@@ -950,7 +977,7 @@ public class DatabaseManager implements StockListener {
 
 		String selection = getStockSelection(stock)
 				+ " AND " + DatabaseContract.COLUMN_GROUPED + " = " + grouped;
-		String sortOrder = DatabaseContract.COLUMN_PERIOD + DatabaseContract.ORDER_ASC;
+		String sortOrder = DatabaseContract.COLUMN_GROUPED + DatabaseContract.ORDER_ASC;
 
 		stockTrendList.clear();
 		Cursor cursor = null;

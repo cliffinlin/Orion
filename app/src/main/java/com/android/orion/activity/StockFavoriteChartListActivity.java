@@ -362,7 +362,6 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 			mLoaderManager.initLoader(LOADER_ID_STOCK_LIST, null, this);
 		}
 
-//		mDatabaseManager.getStockById(mStock);
 		for (int i = 0; i < Period.PERIODS.length; i++) {
 			if (Setting.getPeriod(Period.PERIODS[i])) {
 				mLoaderManager.initLoader(i, null, this);
@@ -375,7 +374,6 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 			mLoaderManager.restartLoader(LOADER_ID_STOCK_LIST, null, this);
 		}
 
-//		mDatabaseManager.getStockById(mStock);
 		for (int i = 0; i < Period.PERIODS.length; i++) {
 			if (Setting.getPeriod(Period.PERIODS[i])) {
 				mLoaderManager.restartLoader(i, null, this);
@@ -648,6 +646,11 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 		mDatabaseManager.getStockDealList(mStockDealList, selection, sortOrder);
 	}
 
+	void getStockTrendGroupedList() {
+		mStockTrendList.clear();
+		mDatabaseManager.getStockTrendGroupedList(mStock, mStockTrendList);
+	}
+
 	void getStockTrendChangedGroupList() {
 		ArrayList<StockTrend> changedList = new ArrayList<>();
 
@@ -665,14 +668,12 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 	}
 
 	void updateStockDataChartItemList() {
-		getStockTrendChangedGroupList();
+		getStockTrendGroupedList();
 
 		mStockDataChartItemList.clear();
-//		mDatabaseManager.getStockById(mStock);
 		for (int i = 0; i < Period.PERIODS.length; i++) {
 			if (Setting.getPeriod(Period.PERIODS[i])) {
-				mStockDataChartItemMainList.get(i).mStockDataChart.setStock(mStock);
-				mStockDataChartItemMainList.get(i).mStockDataChart.setStockTrendList(mStockTrendList);
+				mStockDataChartItemMainList.get(i).mStockDataChart.setupStockTrendMap(mStock, mStockTrendList);
 				mStockDataChartItemList.add(mStockDataChartItemMainList.get(i));
 				mStockDataChartItemList.add(mStockDataChartItemSubList.get(i));
 			}

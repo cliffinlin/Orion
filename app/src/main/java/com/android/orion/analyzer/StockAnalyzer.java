@@ -352,7 +352,6 @@ public class StockAnalyzer {
 		return result;
 	}
 
-
 	public void notifyStockTrend(StockTrend stockTrend) {
 		if (!Market.isTradingHours()) {
 			Toast.makeText(mContext,
@@ -365,7 +364,7 @@ public class StockAnalyzer {
 			return;
 		}
 
-		if (!mStock.hasFlag(Stock.FLAG_NOTIFY) || Math.abs(stockTrend.getVertexNet()) < Trend.NOTIFY_TREND_THRESHOLD) {
+		if (!mStock.hasFlag(Stock.FLAG_NOTIFY)) {
 			return;
 		}
 
@@ -373,7 +372,7 @@ public class StockAnalyzer {
 		mContentText.setLength(0);
 
 		mContentTitle.append(stockTrend.getName() + " " + stockTrend.getPrice() + " " + stockTrend.getNet() + " ");
-		mContentTitle.append(stockTrend.getPeriod() + " " + Trend.MARK_LEVEL + stockTrend.getLevel() + " " + stockTrend.getType() + " " + stockTrend.getTurningNet());
+		mContentTitle.append(stockTrend.getPeriod() + " " + Trend.MARK_LEVEL + stockTrend.getLevel() + " " + stockTrend.getType() + " " + stockTrend.getTurningNet() + "% " + stockTrend.getTurningRate() + "%");
 		if (TextUtils.isEmpty(mContentTitle)) {
 			return;
 		}
@@ -381,12 +380,7 @@ public class StockAnalyzer {
 		ArrayList<StockTrend> stockTrendList = new ArrayList<>();
 		mDatabaseManager.getStockTrendGroupedList(mStock, stockTrend.getGrouped(), stockTrendList);
 		if (stockTrendList.size() > 1) {
-			for (StockTrend groupMember : stockTrendList) {
-				if (groupMember.getId() == stockTrend.getId()) {
-					continue;
-				}
-				mContentTitle.append(" " + groupMember.getPeriod() + " " + Trend.MARK_LEVEL + groupMember.getLevel() + " " + groupMember.getType() + " ");
-			}
+			mContentTitle.append(" " + stockTrendList.size() + "more...");
 		}
 
 		RecordFile.writeNotificationFile(mContentTitle.toString());

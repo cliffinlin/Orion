@@ -52,12 +52,12 @@ public class StockDataChart {
 	public List<Entry>[] mTrendEntryList = new List[Trend.LEVEL_MAX];
 	public List<Entry>[] mGroupEntryList = new List[Trend.LEVEL_MAX];
 	public int[] mLineColors = {Color.WHITE, Color.GRAY, Color.YELLOW, Color.BLACK, Color.RED, Color.MAGENTA, Color.BLUE};
+	public int[] mGroupColors = {Color.WHITE, Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW, Color.CYAN, Color.GRAY};
 	public CombinedData mCombinedDataMain = new CombinedData(mXValues);
 	public CombinedData mCombinedDataSub = new CombinedData(mXValues);
 
 	Stock mStock;
 	String mPeriod;
-	ArrayList<StockTrend> mStockTrendList = new ArrayList<>();
 	ArrayMap<String, StockTrend> mStockTrendMap = new ArrayMap<>();
 	double mMainChartYMin = 0;
 	double mMainChartYMax = 0;
@@ -83,14 +83,16 @@ public class StockDataChart {
 		}
 	}
 
-	public void setStock(Stock stock) {
+	public void setupStockTrendMap(Stock stock, ArrayList<StockTrend> stockTrendList) {
+		if (stock == null || stockTrendList == null) {
+			return;
+		}
 		mStock = stock;
-	}
-
-	public void setStockTrendList(ArrayList<StockTrend> stockTrendList) {
-		mStockTrendList = stockTrendList;
-		for (StockTrend stockTrend : mStockTrendList) {
-			mStockTrendMap.put(stockTrend.getPeriod() + Trend.MARK_LEVEL + stockTrend.getLevel(), stockTrend);
+		mStockTrendMap.clear();
+		for (StockTrend stockTrend : stockTrendList) {
+			if (stockTrend != null) {
+				mStockTrendMap.put(stockTrend.getPeriod() + Trend.MARK_LEVEL + stockTrend.getLevel(), stockTrend);
+			}
 		}
 	}
 
@@ -155,31 +157,29 @@ public class StockDataChart {
 			}
 		}
 
+		addLineDataSet(mDrawFirstEntryList, "", mLineColors[Trend.LEVEL_DRAW], lineData, false, mLineColors[Trend.LEVEL_DRAW]);
+		addLineDataSet(mDrawLastEntryList, "", mLineColors[Trend.LEVEL_DRAW], lineData, false, mLineColors[Trend.LEVEL_DRAW]);
 		if (Setting.getDisplayDraw()) {
-			addLineDataSet(mDrawFirstEntryList, "", false, mLineColors[Trend.LEVEL_DRAW], mLineColors[Trend.LEVEL_DRAW], lineData);
-			addLineDataSet(mDrawLastEntryList, "", false, mLineColors[Trend.LEVEL_DRAW], mLineColors[Trend.LEVEL_DRAW], lineData);
-
-			addLineDataSet(mTrendEntryList, Trend.LEVEL_DRAW, Trend.LABEL_DRAW, false, lineData);
-			addLineDataSet(mGroupEntryList, Trend.LEVEL_DRAW, Trend.LABEL_GROUP, groupFilled(Trend.LEVEL_DRAW), lineData);
+			addLineDataSet(mTrendEntryList, Trend.LABEL_DRAW, Trend.LEVEL_DRAW, lineData);
 		}
+		addLineDataSet(mGroupEntryList, Trend.LABEL_GROUP, Trend.LEVEL_DRAW, lineData, groupFilled(Trend.LEVEL_DRAW), groupFilledColor(Trend.LEVEL_DRAW));
 
 		if (Setting.getDisplayStroke()) {
-			addLineDataSet(mTrendEntryList, Trend.LEVEL_STROKE, Trend.LABEL_STROKE, false, lineData);
-			addLineDataSet(mGroupEntryList, Trend.LEVEL_STROKE, Trend.LABEL_GROUP, groupFilled(Trend.LEVEL_STROKE), lineData);
+			addLineDataSet(mTrendEntryList, Trend.LABEL_STROKE, Trend.LEVEL_STROKE, lineData);
 		}
+		addLineDataSet(mGroupEntryList, Trend.LABEL_GROUP, Trend.LEVEL_STROKE, lineData, groupFilled(Trend.LEVEL_STROKE), groupFilledColor(Trend.LEVEL_STROKE));
 
 		if (Setting.getDisplaySegment()) {
-			addLineDataSet(mTrendEntryList, Trend.LEVEL_SEGMENT, Trend.LABEL_SEGMENT, false, lineData);
-			addLineDataSet(mGroupEntryList, Trend.LEVEL_SEGMENT, Trend.LABEL_GROUP, groupFilled(Trend.LEVEL_SEGMENT), lineData);
+			addLineDataSet(mTrendEntryList, Trend.LABEL_SEGMENT, Trend.LEVEL_SEGMENT, lineData);
 		}
+		addLineDataSet(mGroupEntryList, Trend.LABEL_GROUP, Trend.LEVEL_SEGMENT, lineData, groupFilled(Trend.LEVEL_SEGMENT), groupFilledColor(Trend.LEVEL_SEGMENT));
 
 		if (Setting.getDisplayLine()) {
-			addLineDataSet(mTrendEntryList, Trend.LEVEL_LINE, Trend.LABEL_LINE, false, lineData);
-			addLineDataSet(mGroupEntryList, Trend.LEVEL_LINE, Trend.LABEL_GROUP, groupFilled(Trend.LEVEL_LINE), lineData);
-
-			addLineDataSet(mTrendEntryList, Trend.LEVEL_OUTLINE, Trend.LABEL_OUTLINE, false, lineData);
-			addLineDataSet(mGroupEntryList, Trend.LEVEL_OUTLINE, Trend.LABEL_GROUP, groupFilled(Trend.LEVEL_OUTLINE), lineData);
+			addLineDataSet(mTrendEntryList, Trend.LABEL_LINE, Trend.LEVEL_LINE, lineData);
+			addLineDataSet(mTrendEntryList, Trend.LABEL_OUTLINE, Trend.LEVEL_OUTLINE, lineData);
 		}
+		addLineDataSet(mGroupEntryList, Trend.LABEL_GROUP, Trend.LEVEL_LINE, lineData, groupFilled(Trend.LEVEL_LINE), groupFilledColor(Trend.LEVEL_LINE));
+		addLineDataSet(mGroupEntryList, Trend.LABEL_GROUP, Trend.LEVEL_OUTLINE, lineData, groupFilled(Trend.LEVEL_OUTLINE), groupFilledColor(Trend.LEVEL_OUTLINE));
 
 		mCombinedDataMain.setData(lineData);
 	}
@@ -222,11 +222,15 @@ public class StockDataChart {
 		mCombinedDataSub.setData(lineData);
 	}
 
-	void addLineDataSet(List<Entry>[]entryList, int level, String label, boolean drawFilled, LineData lineData) {
-		addLineDataSet(entryList[level], label, drawFilled, mLineColors[level], mLineColors[level], lineData);
+	void addLineDataSet(List<Entry>[]entryList, String label, int level, LineData lineData) {
+		addLineDataSet(entryList[level], label, mLineColors[level], lineData, false, 0);
 	}
 
-	void addLineDataSet(List<Entry>entryList, String label, boolean drawFilled, int fillColor, int lineColor, LineData lineData) {
+	void addLineDataSet(List<Entry>[]entryList, String label, int level, LineData lineData, boolean drawFilled, int fillColor) {
+		addLineDataSet(entryList[level], label, mLineColors[level], lineData, drawFilled, fillColor);
+	}
+
+	void addLineDataSet(List<Entry>entryList, String label, int lineColor, LineData lineData, boolean drawFilled, int fillColor) {
 		if (entryList != null && entryList.size() > 0) {
 			LineDataSet lineDataSet = new LineDataSet(entryList, label);
 			lineDataSet.setDrawFilled(drawFilled);
@@ -243,13 +247,38 @@ public class StockDataChart {
 		}
 	}
 
+	StockTrend getStockTrend(int level) {
+		StockTrend stockTrend = null;
+		String key = mPeriod + Trend.MARK_LEVEL + level;
+		if (mStockTrendMap.containsKey(key)) {
+			stockTrend = mStockTrendMap.get(key);
+		}
+		return stockTrend;
+	}
+
 	boolean groupFilled(int level) {
 		boolean result = false;
-		if (mStockTrendMap.containsKey(mPeriod + Trend.MARK_LEVEL + level)) {
+		StockTrend stockTrend = getStockTrend(level);
+		if (stockTrend != null) {
 			result = true;
 		}
 		return result;
 	}
+
+	int groupFilledColor(int level) {
+		StockTrend stockTrend = getStockTrend(level);
+		if (stockTrend == null) {
+			return mGroupColors[Trend.GROUPED_NONE];
+		}
+
+		int grouped = stockTrend.getGrouped();
+		if (grouped < Trend.GROUPED_NONE) {
+			return mGroupColors[Trend.GROUPED_NONE];
+		}
+
+		return grouped < mGroupColors.length ? mGroupColors[grouped] : mGroupColors[mGroupColors.length - 1];
+	}
+
 
 	public void setMainChartYMinMax(int index) {
 		double draw = 0;
