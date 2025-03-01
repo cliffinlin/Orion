@@ -646,11 +646,6 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 		mDatabaseManager.getStockDealList(mStockDealList, selection, sortOrder);
 	}
 
-	void getStockTrendGroupedList() {
-		mStockTrendList.clear();
-		mDatabaseManager.getStockTrendGroupedList(mStock, mStockTrendList);
-	}
-
 	void getStockTrendChangedGroupList() {
 		ArrayList<StockTrend> changedList = new ArrayList<>();
 
@@ -668,7 +663,8 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 	}
 
 	void updateStockDataChartItemList() {
-		getStockTrendGroupedList();
+		mStockTrendList.clear();
+		mDatabaseManager.getStockTrendList(mStock, mStockTrendList);
 
 		mStockDataChartItemList.clear();
 		for (int i = 0; i < Period.PERIODS.length; i++) {

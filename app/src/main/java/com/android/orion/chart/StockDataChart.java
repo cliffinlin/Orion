@@ -34,8 +34,8 @@ import java.util.List;
 
 public class StockDataChart {
 
-	public static final int LINE_CIRCLE_SIZE = 0;
-	public static final int GROUP_CIRCLE_SIZE = 3;
+	public static final int NONE_CIRCLE_SIZE = 0;
+	public static final int TREND_CIRCLE_SIZE = 3;
 
 	public StringBuffer mDescription = new StringBuffer();
 	public ArrayList<String> mXValues = new ArrayList<>();
@@ -155,8 +155,8 @@ public class StockDataChart {
 			lineData.addDataSet(lineDataSet);
 		}
 
-		addLineDataSet(mDrawFirstEntryList, "", mLineColors[Trend.LEVEL_DRAW], lineData, false, mLineColors[Trend.LEVEL_DRAW]);
-		addLineDataSet(mDrawLastEntryList, "", mLineColors[Trend.LEVEL_DRAW], lineData, false, mLineColors[Trend.LEVEL_DRAW]);
+		addLineDataSet(mDrawFirstEntryList, "", mLineColors[Trend.LEVEL_DRAW], false, lineData, false, mLineColors[Trend.LEVEL_DRAW]);
+		addLineDataSet(mDrawLastEntryList, "", mLineColors[Trend.LEVEL_DRAW], false, lineData, false, mLineColors[Trend.LEVEL_DRAW]);
 		if (Setting.getDisplayDraw()) {
 			addLineDataSet(mTrendEntryList, Trend.LABEL_DRAW, Trend.LEVEL_DRAW, lineData);
 		}
@@ -208,38 +208,36 @@ public class StockDataChart {
 		deaDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(deaDataSet);
 
-//		if (mVelocityEntryList.size() > 0) {
-			LineDataSet velocityDataSet = new LineDataSet(mVelocityEntryList, "Velocity");
-			velocityDataSet.setColor(Color.BLUE);
-			velocityDataSet.setDrawCircles(false);
-			velocityDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-			lineData.addDataSet(velocityDataSet);
-//		}
+		LineDataSet velocityDataSet = new LineDataSet(mVelocityEntryList, "Velocity");
+		velocityDataSet.setColor(Color.BLUE);
+		velocityDataSet.setDrawCircles(false);
+		velocityDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+		lineData.addDataSet(velocityDataSet);
 
 		mCombinedDataSub.setData(barData);
 		mCombinedDataSub.setData(lineData);
 	}
 
 	void addLineDataSet(List<Entry>[]entryList, String label, int level, LineData lineData) {
-		addLineDataSet(entryList[level], label, mLineColors[level], lineData, false, 0);
+		addLineDataSet(entryList[level], label, mLineColors[level], false, lineData, false, 0);
 	}
 
 	void addLineDataSet(List<Entry>[]entryList, String label, int level, LineData lineData, boolean drawFilled, int fillColor) {
-		addLineDataSet(entryList[level], label, mLineColors[level], lineData, drawFilled, fillColor);
+		addLineDataSet(entryList[level], label, mLineColors[level], true, lineData, drawFilled, fillColor);
 	}
 
-	void addLineDataSet(List<Entry>entryList, String label, int lineColor, LineData lineData, boolean drawFilled, int fillColor) {
+	void addLineDataSet(List<Entry>entryList, String label, int lineColor, boolean drawCircle, LineData lineData, boolean drawFilled, int fillColor) {
 		if (entryList != null && entryList.size() > 0) {
 			LineDataSet lineDataSet = new LineDataSet(entryList, label);
-			lineDataSet.setDrawFilled(drawFilled);
-			lineDataSet.setFillColor(fillColor);
 			lineDataSet.setColor(lineColor);
 			lineDataSet.setCircleColor(lineColor);
-			if (drawFilled) {
-				lineDataSet.setCircleSize(GROUP_CIRCLE_SIZE);
+			if (drawCircle) {
+				lineDataSet.setCircleSize(TREND_CIRCLE_SIZE);
 			} else {
-				lineDataSet.setCircleSize(LINE_CIRCLE_SIZE);
+				lineDataSet.setCircleSize(NONE_CIRCLE_SIZE);
 			}
+			lineDataSet.setDrawFilled(drawFilled);
+			lineDataSet.setFillColor(fillColor);
 			lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 			lineData.addDataSet(lineDataSet);
 		}
@@ -257,7 +255,7 @@ public class StockDataChart {
 	boolean groupFilled(int level) {
 		boolean result = false;
 		StockTrend stockTrend = getStockTrend(level);
-		if (stockTrend != null) {
+		if (stockTrend != null && stockTrend.getGrouped() > Trend.GROUPED_NONE) {
 			result = true;
 		}
 		return result;

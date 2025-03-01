@@ -525,6 +525,20 @@ public class StockTrend extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_PROFIT)));
 	}
 
+	public void addFlag(int flag) {
+		mFlag |= flag;
+	}
+
+	public void removeFlag(int flag) {
+		if (hasFlag(flag)) {
+			mFlag &= ~flag;
+		}
+	}
+
+	public boolean hasFlag(int flag) {
+		return (mFlag & flag) == flag;
+	}
+
 	public void setupVertexNet() {
 		if (mDirection == Trend.DIRECTION_NONE || mVertexLow == 0 || mVertexHigh == 0) {
 			mVertexNet = 0;
