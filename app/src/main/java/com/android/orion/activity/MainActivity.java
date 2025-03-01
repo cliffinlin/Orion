@@ -120,6 +120,7 @@ public class MainActivity extends PreferenceActivity {
 			Setting.setDisplayStroke(Setting.SETTING_DISPLAY_STROKE_DEFAULT);
 			Setting.setDisplaySegment(Setting.SETTING_DISPLAY_SEGMENT_DEFAULT);
 			Setting.setDisplayLine(Setting.SETTING_DISPLAY_LINE_DEFAULT);
+			Setting.setDisplayOutline(Setting.SETTING_DISPLAY_OUTLINE_DEFAULT);
 
 			Setting.setNotifyDraw(Setting.SETTING_NOTIFY_DRAW_DEFAULT);
 			Setting.setNotifyStroke(Setting.SETTING_NOTIFY_STROKE_DEFAULT);

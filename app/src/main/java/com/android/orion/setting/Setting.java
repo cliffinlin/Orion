@@ -42,6 +42,9 @@ public class Setting {
 	public static final String SETTING_DISPLAY_CANDLE = "SETTING_DISPLAY_CANDLE";
 	public static final boolean SETTING_DISPLAY_CANDLE_DEFAULT = false;
 
+	public static final String SETTING_DISPLAY_AVERAGE = "SETTING_DISPLAY_AVERAGE";
+	public static final boolean SETTING_DISPLAY_AVERAGE_DEFAULT = false;
+
 	public static final String SETTING_DISPLAY_DRAW = "SETTING_DISPLAY_DRAW";
 	public static final boolean SETTING_DISPLAY_DRAW_DEFAULT = true;
 
@@ -53,6 +56,9 @@ public class Setting {
 
 	public static final String SETTING_DISPLAY_LINE = "SETTING_DISPLAY_LINE";
 	public static final boolean SETTING_DISPLAY_LINE_DEFAULT = true;
+
+	public static final String SETTING_DISPLAY_OUTLINE = "SETTING_DISPLAY_OUTLINE";
+	public static final boolean SETTING_DISPLAY_OUTLINE_DEFAULT = true;
 
 	public static final String SETTING_NOTIFY_DRAW = "SETTING_NOTIFY_DRAW";
 	public static final boolean SETTING_NOTIFY_DRAW_DEFAULT = false;
@@ -117,6 +123,14 @@ public class Setting {
 		Preferences.putBoolean(SETTING_DISPLAY_CANDLE, value);
 	}
 
+	public static boolean getDisplayAverage() {
+		return Preferences.getBoolean(SETTING_DISPLAY_AVERAGE, SETTING_DISPLAY_AVERAGE_DEFAULT);
+	}
+
+	public static void setDisplayAverage(boolean value) {
+		Preferences.putBoolean(SETTING_DISPLAY_AVERAGE, value);
+	}
+
 	public static boolean getDisplayDraw() {
 		return Preferences.getBoolean(SETTING_DISPLAY_DRAW, SETTING_DISPLAY_DRAW_DEFAULT);
 	}
@@ -147,6 +161,14 @@ public class Setting {
 
 	public static void setDisplayLine(boolean value) {
 		Preferences.putBoolean(SETTING_DISPLAY_LINE, value);
+	}
+
+	public static boolean getDisplayOutline() {
+		return Preferences.getBoolean(SETTING_DISPLAY_OUTLINE, SETTING_DISPLAY_OUTLINE_DEFAULT);
+	}
+
+	public static void setDisplayOutline(boolean value) {
+		Preferences.putBoolean(SETTING_DISPLAY_OUTLINE, value);
 	}
 
 	public static boolean getNotifyDraw() {

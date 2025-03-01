@@ -485,14 +485,14 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 						stockDataChart.mXValues.add(dateString);
 					}
 
+					CandleEntry candleEntry = new CandleEntry(index,
+							(float) mStockData.getCandlestick().getHigh(),
+							(float) mStockData.getCandlestick().getLow(),
+							(float) mStockData.getCandlestick().getOpen(),
+							(float) mStockData.getCandlestick().getClose(),
+							Setting.getDebugLog() ? mStockData.getAction() : "");//TODO
+					stockDataChart.mCandleEntryList.add(candleEntry);
 					if (Setting.getDisplayCandle()) {
-						CandleEntry candleEntry = new CandleEntry(index,
-								(float) mStockData.getCandlestick().getHigh(),
-								(float) mStockData.getCandlestick().getLow(),
-								(float) mStockData.getCandlestick().getOpen(),
-								(float) mStockData.getCandlestick().getClose(),
-								Setting.getDebugLog() ? mStockData.getAction() : "");//TODO
-						stockDataChart.mCandleEntryList.add(candleEntry);
 					}
 
 					Entry average5Entry = new Entry(

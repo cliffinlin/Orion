@@ -51,7 +51,7 @@ public class StockDataChart {
 	public ArrayList<Entry> mDrawLastEntryList = new ArrayList<>();
 	public List<Entry>[] mTrendEntryList = new List[Trend.LEVEL_MAX];
 	public List<Entry>[] mGroupEntryList = new List[Trend.LEVEL_MAX];
-	public int[] mLineColors = {Color.WHITE, Color.GRAY, Color.YELLOW, Color.BLACK, Color.RED, Color.MAGENTA, Color.BLUE};
+	public int[] mLineColors = {Color.WHITE, Color.GRAY, Color.YELLOW, Color.BLACK, Color.BLUE, Color.RED, Color.MAGENTA};
 	public int[] mGroupColors = {Color.WHITE, Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW, Color.CYAN, Color.GRAY};
 	public CombinedData mCombinedDataMain = new CombinedData(mXValues);
 	public CombinedData mCombinedDataSub = new CombinedData(mXValues);
@@ -117,9 +117,8 @@ public class StockDataChart {
 	public void setMainChartData(Context context) {
 		mCombinedDataMain = new CombinedData(mXValues);
 
-		if (mCandleEntryList.size() > 0) {
+		if (Setting.getDisplayCandle()) {
 			CandleData candleData = new CandleData(mXValues);
-
 			CandleDataSet candleDataSet = new CandleDataSet(mCandleEntryList, "K");
 			candleDataSet.setDecreasingColor(Config.COLOR_RGB_GREEN);
 			candleDataSet.setDecreasingPaintStyle(Paint.Style.FILL);
@@ -130,29 +129,26 @@ public class StockDataChart {
 			candleDataSet.setColor(Color.RED);
 			candleDataSet.setHighLightColor(Color.TRANSPARENT);
 			candleDataSet.setDrawTags(true);
-
 			candleData.addDataSet(candleDataSet);
 			mCombinedDataMain.setData(candleData);
 		}
 
 		LineData lineData = new LineData(mXValues);
 
-		if (mAverage5EntryList.size() > 0) {
-			LineDataSet lineDataSet = new LineDataSet(mAverage5EntryList,
+		if (Setting.getDisplayAverage()) {
+			LineDataSet lineDataSet5 = new LineDataSet(mAverage5EntryList,
 					"MA5");
-			lineDataSet.setColor(Color.WHITE);
-			lineDataSet.setDrawCircles(false);
-			lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-			lineData.addDataSet(lineDataSet);
-		}
+			lineDataSet5.setColor(Color.WHITE);
+			lineDataSet5.setDrawCircles(false);
+			lineDataSet5.setAxisDependency(YAxis.AxisDependency.LEFT);
+			lineData.addDataSet(lineDataSet5);
 
-		if (mAverage10EntryList.size() > 0) {
-			LineDataSet lineDataSet = new LineDataSet(mAverage10EntryList,
+			LineDataSet lineDataSet10 = new LineDataSet(mAverage10EntryList,
 					"MA10");
-			lineDataSet.setColor(Color.CYAN);
-			lineDataSet.setDrawCircles(false);
-			lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-			lineData.addDataSet(lineDataSet);
+			lineDataSet10.setColor(Color.CYAN);
+			lineDataSet10.setDrawCircles(false);
+			lineDataSet10.setAxisDependency(YAxis.AxisDependency.LEFT);
+			lineData.addDataSet(lineDataSet10);
 		}
 
 		addLineDataSet(mDrawFirstEntryList, "", mLineColors[Trend.LEVEL_DRAW], false, lineData, false, mLineColors[Trend.LEVEL_DRAW]);
@@ -174,6 +170,9 @@ public class StockDataChart {
 
 		if (Setting.getDisplayLine()) {
 			addLineDataSet(mTrendEntryList, Trend.LABEL_LINE, Trend.LEVEL_LINE, lineData);
+		}
+
+		if (Setting.getDisplayOutline()) {
 			addLineDataSet(mTrendEntryList, Trend.LABEL_OUTLINE, Trend.LEVEL_OUTLINE, lineData);
 		}
 		addLineDataSet(mGroupEntryList, Trend.LABEL_GROUP, Trend.LEVEL_LINE, lineData, groupFilled(Trend.LEVEL_LINE), groupFilledColor(Trend.LEVEL_LINE));
