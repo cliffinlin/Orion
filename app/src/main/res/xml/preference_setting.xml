@@ -32,6 +32,9 @@
             android:key="SETTING_DISPLAY_AVERAGE"
             android:title="@string/average" />
         <com.android.orion.preference.CustomSwitchPreference
+            android:key="SETTING_DISPLAY_GROUPED"
+            android:title="@string/grouped" />
+        <com.android.orion.preference.CustomSwitchPreference
             android:key="SETTING_DISPLAY_ADAPTIVE"
             android:title="@string/adaptive" />
         <com.android.orion.preference.CustomSwitchPreference

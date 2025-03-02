@@ -157,21 +157,21 @@ public class StockDataChart {
 		}
 		addLineDataSet(mGroupEntryList, Trend.LABEL_NONE, Trend.LEVEL_DRAW, lineData, groupFilled(Trend.LEVEL_DRAW), groupFilledColor(Trend.LEVEL_DRAW));
 
-		if (Setting.getDisplayStroke() && displayAdaptive(Trend.LEVEL_STROKE)) {
+		if (displayTrend(Trend.LEVEL_STROKE)) {
 			addLineDataSet(mTrendEntryList, Trend.LABEL_STROKE, Trend.LEVEL_STROKE, lineData);
 		}
 		addLineDataSet(mGroupEntryList, Trend.LABEL_NONE, Trend.LEVEL_STROKE, lineData, groupFilled(Trend.LEVEL_STROKE), groupFilledColor(Trend.LEVEL_STROKE));
 
-		if (Setting.getDisplaySegment() && displayAdaptive(Trend.LEVEL_SEGMENT)) {
+		if (displayTrend(Trend.LEVEL_SEGMENT)) {
 			addLineDataSet(mTrendEntryList, Trend.LABEL_SEGMENT, Trend.LEVEL_SEGMENT, lineData);
 		}
 		addLineDataSet(mGroupEntryList, Trend.LABEL_NONE, Trend.LEVEL_SEGMENT, lineData, groupFilled(Trend.LEVEL_SEGMENT), groupFilledColor(Trend.LEVEL_SEGMENT));
 
-		if (Setting.getDisplayLine() && displayAdaptive(Trend.LEVEL_LINE)) {
+		if (displayTrend(Trend.LEVEL_LINE)) {
 			addLineDataSet(mTrendEntryList, Trend.LABEL_LINE, Trend.LEVEL_LINE, lineData);
 		}
 
-		if (Setting.getDisplayOutline() && displayAdaptive(Trend.LEVEL_OUTLINE)) {
+		if (displayTrend(Trend.LEVEL_OUTLINE)) {
 			addLineDataSet(mTrendEntryList, Trend.LABEL_OUTLINE, Trend.LEVEL_OUTLINE, lineData);
 		}
 		addLineDataSet(mGroupEntryList, Trend.LABEL_NONE, Trend.LEVEL_LINE, lineData, groupFilled(Trend.LEVEL_LINE), groupFilledColor(Trend.LEVEL_LINE));
@@ -246,6 +246,10 @@ public class StockDataChart {
 
 	boolean groupFilled(int level) {
 		boolean result = false;
+		if (!Setting.getDisplayGrouped()) {
+			return false;
+		}
+
 		StockTrend stockTrend = getStockTrend(level);
 		if (stockTrend != null && stockTrend.getGrouped() > Trend.GROUPED_NONE) {
 			result = true;
@@ -267,18 +271,35 @@ public class StockDataChart {
 		return grouped < mGroupColors.length ? mGroupColors[grouped] : mGroupColors[mGroupColors.length - 1];
 	}
 
-	public boolean displayAdaptive(int level) {
+	public boolean displayTrend(int level) {
 		boolean result = false;
 
+		switch (level) {
+		case Trend.LEVEL_DRAW:
+			result = Setting.getDisplayDraw();
+			break;
+		case Trend.LEVEL_STROKE:
+			result = Setting.getDisplayStroke();
+			break;
+		case Trend.LEVEL_SEGMENT:
+			result = Setting.getDisplaySegment();
+			break;
+		case Trend.LEVEL_LINE:
+			result = Setting.getDisplayLine();
+			break;
+		case Trend.LEVEL_OUTLINE:
+			result = Setting.getDisplayOutline();
+			break;
+		default:
+			break;
+		}
+
 		if (!Setting.getDisplayAdaptive()) {
-			return true;
+			return result;
 		}
 
 		StockTrend stockTrend = getStockTrend(level);
-		if (stockTrend != null && stockTrend.hasFlag(Trend.FLAG_ADAPTIVE)) {
-			result = true;
-		}
-		return result;
+		return stockTrend != null && stockTrend.hasFlag(Trend.FLAG_ADAPTIVE);
 	}
 
 	public void setMainChartYMinMax(int index) {

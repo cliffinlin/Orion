@@ -45,6 +45,9 @@ public class Setting {
 	public static final String SETTING_DISPLAY_AVERAGE = "SETTING_DISPLAY_AVERAGE";
 	public static final boolean SETTING_DISPLAY_AVERAGE_DEFAULT = false;
 
+	public static final String SETTING_DISPLAY_GROUPED = "SETTING_DISPLAY_GROUPED";
+	public static final boolean SETTING_DISPLAY_GROUPED_DEFAULT = false;
+
 	public static final String SETTING_DISPLAY_ADAPTIVE = "SETTING_DISPLAY_ADAPTIVE";
 	public static final boolean SETTING_DISPLAY_ADAPTIVE_DEFAULT = true;
 
@@ -132,6 +135,14 @@ public class Setting {
 
 	public static void setDisplayAverage(boolean value) {
 		Preferences.putBoolean(SETTING_DISPLAY_AVERAGE, value);
+	}
+
+	public static boolean getDisplayGrouped() {
+		return Preferences.getBoolean(SETTING_DISPLAY_GROUPED, SETTING_DISPLAY_GROUPED_DEFAULT);
+	}
+
+	public static void setDisplayGrouped(boolean value) {
+		Preferences.putBoolean(SETTING_DISPLAY_GROUPED, value);
 	}
 
 	public static boolean getDisplayAdaptive() {

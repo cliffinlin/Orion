@@ -116,6 +116,7 @@ public class MainActivity extends PreferenceActivity {
 			Setting.setPeriod(Period.MIN5, Setting.SETTING_PERIOD_MIN5_DEFAULT);
 
 			Setting.setDisplayNet(Setting.SETTING_DISPLAY_NET_DEFAULT);
+			Setting.setDisplayGrouped(Setting.SETTING_DISPLAY_GROUPED_DEFAULT);
 			Setting.setDisplayAdaptive(Setting.SETTING_DISPLAY_ADAPTIVE_DEFAULT);
 			Setting.setDisplayDraw(Setting.SETTING_DISPLAY_DRAW_DEFAULT);
 			Setting.setDisplayStroke(Setting.SETTING_DISPLAY_STROKE_DEFAULT);
