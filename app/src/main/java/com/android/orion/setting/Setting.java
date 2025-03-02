@@ -36,6 +36,12 @@ public class Setting {
 	public static final String SETTING_STOCK_FILTER_YIELD = "SETTING_STOCK_FILTER_YIELD";
 	public static final String SETTING_STOCK_FILTER_DIVIDEND_RATIO = "SETTING_STOCK_FILTER_DIVIDEND_RATIO";
 
+	public static final String SETTING_DISPLAY_ADAPTIVE = "SETTING_DISPLAY_ADAPTIVE";
+	public static final boolean SETTING_DISPLAY_ADAPTIVE_DEFAULT = true;
+
+	public static final String SETTING_DISPLAY_GROUPED = "SETTING_DISPLAY_GROUPED";
+	public static final boolean SETTING_DISPLAY_GROUPED_DEFAULT = true;
+
 	public static final String SETTING_DISPLAY_NET = "SETTING_DISPLAY_NET";
 	public static final boolean SETTING_DISPLAY_NET_DEFAULT = true;
 
@@ -44,12 +50,6 @@ public class Setting {
 
 	public static final String SETTING_DISPLAY_AVERAGE = "SETTING_DISPLAY_AVERAGE";
 	public static final boolean SETTING_DISPLAY_AVERAGE_DEFAULT = false;
-
-	public static final String SETTING_DISPLAY_GROUPED = "SETTING_DISPLAY_GROUPED";
-	public static final boolean SETTING_DISPLAY_GROUPED_DEFAULT = false;
-
-	public static final String SETTING_DISPLAY_ADAPTIVE = "SETTING_DISPLAY_ADAPTIVE";
-	public static final boolean SETTING_DISPLAY_ADAPTIVE_DEFAULT = true;
 
 	public static final String SETTING_DISPLAY_DRAW = "SETTING_DISPLAY_DRAW";
 	public static final boolean SETTING_DISPLAY_DRAW_DEFAULT = true;
@@ -101,6 +101,22 @@ public class Setting {
 		Preferences.putBoolean(SETTING_PERIOD_ + period.toUpperCase(), value);
 	}
 
+	public static boolean getDisplayAdaptive() {
+		return Preferences.getBoolean(SETTING_DISPLAY_ADAPTIVE, SETTING_DISPLAY_ADAPTIVE_DEFAULT);
+	}
+
+	public static void setDisplayAdaptive(boolean value) {
+		Preferences.putBoolean(SETTING_DISPLAY_ADAPTIVE, value);
+	}
+
+	public static boolean getDisplayGrouped() {
+		return Preferences.getBoolean(SETTING_DISPLAY_GROUPED, SETTING_DISPLAY_GROUPED_DEFAULT);
+	}
+
+	public static void setDisplayGrouped(boolean value) {
+		Preferences.putBoolean(SETTING_DISPLAY_GROUPED, value);
+	}
+
 	public static boolean getDisplayNet() {
 		return Preferences.getBoolean(SETTING_DISPLAY_NET, SETTING_DISPLAY_NET_DEFAULT);
 	}
@@ -123,22 +139,6 @@ public class Setting {
 
 	public static void setDisplayAverage(boolean value) {
 		Preferences.putBoolean(SETTING_DISPLAY_AVERAGE, value);
-	}
-
-	public static boolean getDisplayGrouped() {
-		return Preferences.getBoolean(SETTING_DISPLAY_GROUPED, SETTING_DISPLAY_GROUPED_DEFAULT);
-	}
-
-	public static void setDisplayGrouped(boolean value) {
-		Preferences.putBoolean(SETTING_DISPLAY_GROUPED, value);
-	}
-
-	public static boolean getDisplayAdaptive() {
-		return Preferences.getBoolean(SETTING_DISPLAY_ADAPTIVE, SETTING_DISPLAY_ADAPTIVE_DEFAULT);
-	}
-
-	public static void setDisplayAdaptive(boolean value) {
-		Preferences.putBoolean(SETTING_DISPLAY_ADAPTIVE, value);
 	}
 
 	public static boolean getDisplayDraw() {

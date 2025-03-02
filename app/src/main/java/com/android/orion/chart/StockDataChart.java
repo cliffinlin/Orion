@@ -57,15 +57,14 @@ public class StockDataChart {
 
 	Stock mStock;
 	String mPeriod;
+	int mAdaptiveLevel;
 	ArrayMap<String, StockTrend> mStockTrendMap = new ArrayMap<>();
 	double mMainChartYMin = 0;
 	double mMainChartYMax = 0;
 	double mSubChartYMin = 0;
 	double mSubChartYMax = 0;
-	boolean mNotifyTrend = false;
 
-	public StockDataChart(Stock stock, String period) {
-		mStock = stock;
+	public StockDataChart(String period) {
 		mPeriod = period;
 		for (int i = 0; i < Trend.LEVEL_MAX; i++) {
 			if (mTrendEntryList[i] == null) {
@@ -91,12 +90,11 @@ public class StockDataChart {
 		for (StockTrend stockTrend : stockTrendList) {
 			if (stockTrend != null) {
 				mStockTrendMap.put(stockTrend.getPeriod() + Trend.MARK_LEVEL + stockTrend.getLevel(), stockTrend);
+				if (TextUtils.equals(mPeriod, stockTrend.getPeriod()) && stockTrend.hasFlag(Trend.FLAG_ADAPTIVE)) {
+					mAdaptiveLevel = stockTrend.getLevel();
+				}
 			}
 		}
-	}
-
-	public void setNotifyTrend(boolean notifyTrend) {
-		mNotifyTrend = notifyTrend;
 	}
 
 	public boolean isOperate() {
@@ -420,25 +418,17 @@ public class StockDataChart {
 		LimitLine limitLine;
 
 		action = stock.getAction(mPeriod);
-
 		if (action.contains(Trend.MARK_BUY)) {
 			color = Color.MAGENTA;
 		} else if (action.contains(Trend.MARK_SELL)) {
 			color = Color.CYAN;
-		} else if (action.contains(Trend.MARK_LEVEL)) {
-			try {
-				int index = action.indexOf(Trend.MARK_LEVEL);
-				String levelString = action.substring(index + 1, index + 2);
-				int level = Integer.parseInt(levelString);
-				color = mLineColors[level];
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 		}
 
+		StockTrend stockTrend = getStockTrend(mAdaptiveLevel);
 		label = "                                                     " + " ";
-		if (mNotifyTrend) {
-			label += "Trend:" + Constant.TAB2 + action;
+		if (stockTrend != null && stockTrend.hasFlag(Trend.FLAG_CHANGED)) {
+			color = mLineColors[mAdaptiveLevel];
+			label += "Trend:" + Constant.TAB2 + stockTrend.toTrendString();
 		} else {
 			label += "Action:" + Constant.TAB2 + action;
 		}

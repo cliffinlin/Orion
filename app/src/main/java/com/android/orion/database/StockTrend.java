@@ -615,4 +615,12 @@ public class StockTrend extends DatabaseTable {
 				+ mTurningRate + Constant.TAB
 				+ mProfit + Constant.TAB;
 	}
+
+	public String toStockString() {
+		return getName() + " " + getPrice() + " " + getNet() + " ";
+	}
+
+	public String toTrendString() {
+		return getPeriod() + " " + Trend.MARK_LEVEL + getLevel() + " " + getType() + " " + getTurningNet() + "% ";
+	}
 }

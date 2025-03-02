@@ -336,7 +336,7 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 		}
 
 		for (int i = 0; i < Period.PERIODS.length; i++) {
-			mStockDataChartList.add(new StockDataChart(mStock, Period.PERIODS[i]));
+			mStockDataChartList.add(new StockDataChart(Period.PERIODS[i]));
 			mStockDataChartItemMainList.add(new StockDataChartItemMain(
 					mStockDataChartList.get(i)));
 			mStockDataChartItemSubList.add(new StockDataChartItemSub(
@@ -616,7 +616,6 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 				mStockDealList.clear();
 			}
 
-			stockDataChart.setNotifyTrend(mStockData.getAction().contains(Trend.MARK_LEVEL));
 			stockDataChart.updateDescription(mStock);
 			stockDataChart.updateLimitLines(mStock, mStockDealList);
 			stockDataChart.updateGroupEntry();
@@ -639,22 +638,6 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 
 		mDatabaseManager.getStockDealList(mStockDealList, selection, sortOrder);
 	}
-//
-//	void getStockTrendChangedGroupList() {
-//		ArrayList<StockTrend> changedList = new ArrayList<>();
-//
-//		mStockTrendList.clear();
-//		mDatabaseManager.getStockTrendGroupedList(mStock, mStockTrend.getGrouped(), mStockTrendList);
-//
-//		mDatabaseManager.getStockTrendChangedList(mStock, changedList);
-//		for (StockTrend changed : changedList) {
-//			if (changed != null) {
-//				ArrayList<StockTrend> groupedList = new ArrayList<>();
-//				mDatabaseManager.getStockTrendGroupedList(mStock, changed.getGrouped(), groupedList);
-//				mStockTrendList.addAll(groupedList);
-//			}
-//		}
-//	}
 
 	void updateStockDataChartItemList() {
 		mDatabaseManager.getStockTrendList(mStock, mStockTrendList);

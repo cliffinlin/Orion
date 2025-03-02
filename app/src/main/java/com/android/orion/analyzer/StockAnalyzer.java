@@ -367,35 +367,17 @@ public class StockAnalyzer {
 			return;
 		}
 
-		if (Setting.getDisplayAdaptive()) {
-			StockTrend adaptive = new StockTrend();
-			adaptive.set(stockTrend);
-			adaptive.addFlag(Trend.FLAG_ADAPTIVE);
-			mDatabaseManager.getStockTrendByAdaptive(adaptive);
-			int adaptiveLevel = adaptive.getLevel();
-			if (stockTrend.getLevel() < adaptiveLevel - 1) {
-				return;
-			}
-		}
-
 		mContentTitle.setLength(0);
 		mContentText.setLength(0);
 
-		mContentTitle.append(stockTrend.getName() + " " + stockTrend.getPrice() + " " + stockTrend.getNet() + " ");
-		mContentTitle.append(stockTrend.getPeriod() + " " + Trend.MARK_LEVEL + stockTrend.getLevel() + " " + stockTrend.getType() + " " + stockTrend.getTurningNet() + "% " + stockTrend.getTurningRate() + "%");
+		mContentTitle.append(stockTrend.toStockString() + stockTrend.toTrendString());
 		if (mContentTitle.length() == 0) {
 			return;
 		}
 
-		ArrayList<StockTrend> stockTrendList = new ArrayList<>();
-		mDatabaseManager.getStockTrendGroupedList(mStock, stockTrend.getGrouped(), stockTrendList);
-		if (stockTrendList.size() > 1) {
-			mContentTitle.append(" " + stockTrendList.size() + " more...");
-		}
-
 		RecordFile.writeNotificationFile(mContentTitle.toString());
 		try {
-			int code = Integer.parseInt(stockTrend.getCode());
+			int code = (int) stockTrend.getId();
 			long stockId = mStock.getId();
 			notify(code, stockId, Config.MESSAGE_CHANNEL_ID, Config.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
 					mContentTitle.toString(), mContentText.toString());

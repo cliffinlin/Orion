@@ -10,6 +10,7 @@ import com.android.orion.database.StockTrend;
 import com.android.orion.manager.DatabaseManager;
 import com.android.orion.provider.StockPerceptronProvider;
 import com.android.orion.setting.Constant;
+import com.android.orion.setting.Setting;
 import com.android.orion.utility.Logger;
 import com.android.orion.utility.Utility;
 
@@ -333,12 +334,10 @@ public class TrendAnalyzer {
 						stockTrend.setDate(stockData.getDate());
 						stockTrend.setTime(stockData.getTime());
 						mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValues());
-						if (stockTrend.hasFlag(Trend.FLAG_ADAPTIVE)) {
-							stockData.setAction(Trend.MARK_LEVEL + level + type + Constant.MARK_ASTERISK);
-						} else {
+						if (Setting.getDisplayAdaptive() && stockTrend.hasFlag(Trend.FLAG_ADAPTIVE)) {
 							stockData.setAction(Trend.MARK_LEVEL + level + type);
+							StockAnalyzer.getInstance().notifyStockTrend(stockTrend);
 						}
-						StockAnalyzer.getInstance().notifyStockTrend(stockTrend);
 					}
 				} else {
 					stockTrend.setType(type);
