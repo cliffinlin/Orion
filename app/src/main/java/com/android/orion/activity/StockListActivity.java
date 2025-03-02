@@ -156,9 +156,12 @@ public class StockListActivity extends DatabaseActivity implements
 						ArrayList<Stock> stockList = new ArrayList();
 						mDatabaseManager.getStockList(null, stockList);
 						for (Stock stock : stockList) {
-							if (TextUtils.equals(stock.getClasses(), Stock.CLASS_A) && stock.hasFlag(Stock.FLAG_FAVORITE)) {
-								stock.removeFlag(Stock.FLAG_FAVORITE);
-								mStockManager.onRemoveFavorite(stock);
+							if (TextUtils.equals(stock.getClasses(), Stock.CLASS_A)) {
+								if (stock.hasFlag(Stock.FLAG_FAVORITE)) {
+									stock.removeFlag(Stock.FLAG_FAVORITE);
+									stock.removeFlag(Stock.FLAG_NOTIFY);
+									mStockManager.onRemoveFavorite(stock);
+								}
 							}
 						}
 					}
@@ -466,6 +469,7 @@ public class StockListActivity extends DatabaseActivity implements
 							mStockManager.onAddFavorite(stock);
 						} else {
 							stock.removeFlag(Stock.FLAG_FAVORITE);
+							stock.removeFlag(Stock.FLAG_NOTIFY);
 							mStockManager.onRemoveFavorite(stock);
 						}
 						break;

@@ -220,6 +220,9 @@ public class StockActivity extends DatabaseActivity implements OnClickListener, 
 					mStockManager.onAddFavorite(mStock);
 				} else {
 					mStock.removeFlag(Stock.FLAG_FAVORITE);
+					mStock.removeFlag(Stock.FLAG_NOTIFY);
+					mCheckBoxNotify.setChecked(mStock.hasFlag(Stock.FLAG_NOTIFY));
+					mSpinnerStockAcion.setSelection(0);
 					mStockManager.onRemoveFavorite(mStock);
 				}
 				break;
