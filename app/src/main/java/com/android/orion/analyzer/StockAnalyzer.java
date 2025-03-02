@@ -196,15 +196,15 @@ public class StockAnalyzer {
 		mTrendAnalyzer.analyzeLine(Trend.LEVEL_OUTLINE, mOutlineDataList, mTrendVertexList);
 		mTrendAnalyzer.vertexListToDataList(mTrendVertexList, mTrendDataList);
 
-		int level = Trend.LEVEL_DRAW;
-		if (mDrawDataList.size() > Trend.ADAPTIVE_MAX_SIZE) {
-			level = Trend.LEVEL_STROKE;
-			if (mStrokeDataList.size() > Trend.ADAPTIVE_MAX_SIZE) {
+		int level = Trend.LEVEL_OUTLINE;
+		if (mOutlineDataList.size() < Trend.ADAPTIVE_SIZE) {
+			level = Trend.LEVEL_LINE;
+			if (mLineDataList.size() < Trend.ADAPTIVE_SIZE) {
 				level = Trend.LEVEL_SEGMENT;
-				if (mSegmentDataList.size() > Trend.ADAPTIVE_MAX_SIZE) {
-					level = Trend.LEVEL_LINE;
-					if (mLineDataList.size() > Trend.ADAPTIVE_MAX_SIZE) {
-						level = Trend.LEVEL_OUTLINE;
+				if (mSegmentDataList.size() < Trend.ADAPTIVE_SIZE) {
+					level = Trend.LEVEL_STROKE;
+					if (mStrokeDataList.size() < Trend.ADAPTIVE_SIZE) {
+						level = Trend.LEVEL_DRAW;
 					}
 				}
 			}

@@ -82,8 +82,7 @@ public class Trend {
 
 	public static final int VERTEX_SIZE = 3;
 
-	public static final int ADAPTIVE_MIN_SIZE = 5;
-	public static final int ADAPTIVE_MAX_SIZE = 15;
+	public static final int ADAPTIVE_SIZE = 8;
 
 	public static Set<String> NOTIFYACTIONS = new HashSet<>(Arrays.asList(
 			MARK_BUY, MARK_BUY1, MARK_BUY2,
