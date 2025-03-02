@@ -22,8 +22,6 @@ object MacdAnalyzer {
     private var mDEAList: MutableList<Double> = ArrayList()
     private var mDIFList: MutableList<Double> = ArrayList()
     private var mHistogramList: MutableList<Double> = ArrayList()
-    private var mVelocityList: MutableList<Double> = ArrayList()
-    private var mAccelerationList: MutableList<Double> = ArrayList()
 
     private const val AVERAGE5 = 5
     private const val AVERAGE10 = 10
@@ -55,16 +53,6 @@ object MacdAnalyzer {
     @JvmStatic
     fun getHistogramList(): List<Double> {
         return mHistogramList
-    }
-
-    @JvmStatic
-    fun getVelocityList(): List<Double> {
-        return mVelocityList
-    }
-
-    @JvmStatic
-    fun getAccelerationList(): List<Double> {
-        return mAccelerationList
     }
 
     fun init(period: String, stockDataList: ArrayList<StockData>) {
@@ -128,8 +116,6 @@ object MacdAnalyzer {
         mDEAList.clear()
         mDIFList.clear()
         mHistogramList.clear()
-        mVelocityList.clear()
-        mAccelerationList.clear()
         for (i in 0 until stockDataList.size) {
             mPriceList.add(stockDataList[i].candlestick.close)
         }
@@ -178,8 +164,6 @@ object MacdAnalyzer {
         mDEAList.clear()
         mDIFList.clear()
         mHistogramList.clear()
-        mVelocityList.clear()
-        mAccelerationList.clear()
 
         EMA(mAverage5, mPriceList, mEMAAverage5List)
         EMA(mAverage10, mPriceList, mEMAAverage10List)
@@ -196,22 +180,6 @@ object MacdAnalyzer {
         i = 0
         while (i < mPriceList.size) {
             mHistogramList.add(mDIFList[i] - mDEAList[i])
-            i++
-        }
-
-        i = 0
-        mVelocityList.add(0.0)
-        i++
-        while (i < mPriceList.size) {
-            mVelocityList.add((mHistogramList[i] - mHistogramList[i - 1]) * mSignal / SIGNAL)
-            i++
-        }
-
-        i = 0
-        mAccelerationList.add(0.0)
-        i++
-        while (i < mPriceList.size) {
-            mAccelerationList.add(mVelocityList[i] - mVelocityList[i - 1])
             i++
         }
     }

@@ -604,12 +604,6 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 							(float) mStockData.getMacd().getHistogram(), index);
 					stockDataChart.mHistogramEntryList.add(histogramBarEntry);
 
-					if (mStock.hasFlag(Stock.FLAG_NOTIFY) && Period.isMinutePeriod(mStockData.getPeriod())) {
-						Entry velocityEntry = new Entry(
-								(float) mStockData.getMacd().getVelocity(), index);
-						stockDataChart.mVelocityEntryList.add(velocityEntry);
-					}
-
 					stockDataChart.setupSubChartYMinMax(index);
 				}
 			}

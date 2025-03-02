@@ -152,10 +152,9 @@ public class StockAnalyzer {
 		List<Double> difList = MacdAnalyzer.getDIFList();
 		List<Double> deaList = MacdAnalyzer.getDEAList();
 		List<Double> histogramList = MacdAnalyzer.getHistogramList();
-		List<Double> velocityList = MacdAnalyzer.getVelocityList();
 
 		int size = mStockDataList.size();
-		if (average5List.size() != size || average10List.size() != size || difList.size() != size || deaList.size() != size || histogramList.size() != size || velocityList.size() != size) {
+		if (average5List.size() != size || average10List.size() != size || difList.size() != size || deaList.size() != size || histogramList.size() != size) {
 			return;
 		}
 
@@ -168,8 +167,7 @@ public class StockAnalyzer {
 						average10List.get(i),
 						difList.get(i),
 						deaList.get(i),
-						histogramList.get(i),
-						velocityList.get(i)
+						histogramList.get(i)
 				);
 			}
 		}
@@ -225,16 +223,6 @@ public class StockAnalyzer {
 //		appendActionIfPresent(actionBuilder, getOperateAction());
 
 		StockData stockData = mStockDataList.get(mStockDataList.size() - 1);
-		Macd macd = stockData.getMacd();
-		if (macd != null) {
-			double velocity = macd.getVelocity();
-			if (velocity > 0) {
-				actionBuilder.append(Constant.MARK_ADD);
-			} else if (velocity < 0) {
-				actionBuilder.append(Constant.MARK_MINUS);
-			}
-		}
-
 		mStock.setDateTime(stockData.getDate(), stockData.getTime());
 		mStock.setAction(period, actionBuilder.toString());
 	}
