@@ -352,6 +352,10 @@ public class StockAnalyzer {
 	}
 
 	public void notifyStockTrend(StockTrend stockTrend) {
+		if (mStock == null || mContext == null || stockTrend == null) {
+			return;
+		}
+
 		if (!Market.isTradingHours()) {
 			Toast.makeText(mContext,
 					mContext.getResources().getString(R.string.out_of_trading_hours),
@@ -359,12 +363,19 @@ public class StockAnalyzer {
 			return;
 		}
 
-		if (mStock == null || mContext == null || stockTrend == null) {
+		if (!mStock.hasFlag(Stock.FLAG_NOTIFY)) {
 			return;
 		}
 
-		if (!mStock.hasFlag(Stock.FLAG_NOTIFY)) {
-			return;
+		if (Setting.getDisplayAdaptive()) {
+			StockTrend adaptive = new StockTrend();
+			adaptive.set(stockTrend);
+			adaptive.addFlag(Trend.FLAG_ADAPTIVE);
+			mDatabaseManager.getStockTrendByAdaptive(adaptive);
+			int adaptiveLevel = adaptive.getLevel();
+			if (stockTrend.getLevel() < adaptiveLevel - 1) {
+				return;
+			}
 		}
 
 		mContentTitle.setLength(0);
@@ -372,7 +383,7 @@ public class StockAnalyzer {
 
 		mContentTitle.append(stockTrend.getName() + " " + stockTrend.getPrice() + " " + stockTrend.getNet() + " ");
 		mContentTitle.append(stockTrend.getPeriod() + " " + Trend.MARK_LEVEL + stockTrend.getLevel() + " " + stockTrend.getType() + " " + stockTrend.getTurningNet() + "% " + stockTrend.getTurningRate() + "%");
-		if (TextUtils.isEmpty(mContentTitle)) {
+		if (mContentTitle.length() == 0) {
 			return;
 		}
 
@@ -388,7 +399,7 @@ public class StockAnalyzer {
 			long stockId = mStock.getId();
 			notify(code, stockId, Config.MESSAGE_CHANNEL_ID, Config.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
 					mContentTitle.toString(), mContentText.toString());
-		} catch (NumberFormatException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -421,7 +432,7 @@ public class StockAnalyzer {
 			setContentTitle(period, action);
 		}
 
-		if (TextUtils.isEmpty(mContentTitle)) {
+		if (mContentTitle.length() == 0) {
 			return;
 		}
 
@@ -432,7 +443,7 @@ public class StockAnalyzer {
 			long stockId = mStock.getId();
 			notify(code, stockId, Config.MESSAGE_CHANNEL_ID, Config.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
 					mContentTitle.toString(), mContentText.toString());
-		} catch (NumberFormatException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

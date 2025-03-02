@@ -431,7 +431,7 @@ public class StockDataChart {
 				String levelString = action.substring(index + 1, index + 2);
 				int level = Integer.parseInt(levelString);
 				color = mLineColors[level];
-			} catch (NumberFormatException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}

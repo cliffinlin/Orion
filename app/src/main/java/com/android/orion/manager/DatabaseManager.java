@@ -865,6 +865,33 @@ public class DatabaseManager implements StockListener {
 		}
 	}
 
+	public void getStockTrendByAdaptive(StockTrend stockTrend) {
+		Cursor cursor = null;
+
+		if ((stockTrend == null) || (mContentResolver == null)) {
+			return;
+		}
+
+		try {
+			String selection = getStockTrendSelection(stockTrend.getSE(), stockTrend.getCode(), stockTrend.getPeriod())
+					+ " AND " + hasFlagSelection(Trend.FLAG_ADAPTIVE);
+			cursor = mContentResolver.query(
+					DatabaseContract.StockTrend.CONTENT_URI,
+					DatabaseContract.StockTrend.PROJECTION_ALL, selection, null,null);
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				if (cursor.getCount() > 1) {
+					Log.d(TAG, "getStockTrendByAdapter cursor.getCount()=" + cursor.getCount());
+				}
+				cursor.moveToNext();
+				stockTrend.set(cursor);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
 	public void getStockTrendById(StockTrend stockTrend) {
 		Cursor cursor = null;
 		String selection = null;
@@ -1100,6 +1127,14 @@ public class DatabaseManager implements StockListener {
 		return result;
 	}
 
+	public String getStockSelection(StockTrend stockTrend) {
+		if (stockTrend == null) {
+			return null;
+		}
+		return DatabaseContract.COLUMN_SE + " = " + "'" + stockTrend.getSE() + "'"
+				+ " AND " + DatabaseContract.COLUMN_CODE + " = " + "'" + stockTrend.getCode() + "'";
+	}
+
 	public String getStockTrendSelection(StockTrend stockTrend) {
 		String selection = "";
 
@@ -1107,10 +1142,15 @@ public class DatabaseManager implements StockListener {
 			return selection;
 		}
 
-		selection = DatabaseContract.COLUMN_SE + " = " + "'" + stockTrend.getSE() + "'"
-				+ " AND " + DatabaseContract.COLUMN_CODE + " = " + "'" + stockTrend.getCode() + "'"
+		selection = getStockSelection(stockTrend)
 				+ " AND " + DatabaseContract.COLUMN_PERIOD + " = " + "'" + stockTrend.getPeriod() + "'"
 				+ " AND " + DatabaseContract.COLUMN_LEVEL + " = " + stockTrend.getLevel();
+		return selection;
+	}
+
+	public String getStockTrendSelection(String se, String code, String period) {
+		String selection = getStockSelection(se, code)
+				+ " AND " + DatabaseContract.COLUMN_PERIOD + " = " + "'" + period + "'";
 		return selection;
 	}
 

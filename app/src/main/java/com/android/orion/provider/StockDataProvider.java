@@ -482,7 +482,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		try {
 			result = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Orion/"
 					+ stock.getSE().toUpperCase(Locale.getDefault()) + "#" + stock.getCode() + Constant.FILE_EXT_TEXT;
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
@@ -499,7 +499,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		try {
 			result = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Orion/"
 					+ stock.getSE().toUpperCase(Locale.getDefault()) + "#" + stock.getCode() + "#" + period + Constant.FILE_EXT_TEXT;
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 

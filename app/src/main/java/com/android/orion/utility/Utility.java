@@ -188,7 +188,7 @@ public class Utility {
 					result = jsonObject.getDouble(key);
 				}
 			}
-		} catch (JSONException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
@@ -204,7 +204,7 @@ public class Utility {
 					result = jsonObject.getInt(key);
 				}
 			}
-		} catch (JSONException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
@@ -220,7 +220,7 @@ public class Utility {
 					result = jsonObject.getString(key);
 				}
 			}
-		} catch (JSONException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
@@ -307,7 +307,7 @@ public class Utility {
 			if (randomAccessFile != null) {
 				try {
 					randomAccessFile.close();
-				} catch (IOException e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
@@ -341,7 +341,7 @@ public class Utility {
 					result = file.createNewFile();
 				}
 			}
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
@@ -392,7 +392,7 @@ public class Utility {
 		if (!file.exists()) {
 			try {
 				file.createNewFile();
-			} catch (IOException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
