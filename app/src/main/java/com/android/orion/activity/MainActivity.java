@@ -115,19 +115,14 @@ public class MainActivity extends PreferenceActivity {
 			Setting.setPeriod(Period.MIN15, Setting.SETTING_PERIOD_MIN15_DEFAULT);
 			Setting.setPeriod(Period.MIN5, Setting.SETTING_PERIOD_MIN5_DEFAULT);
 
-			Setting.setDisplayNet(Setting.SETTING_DISPLAY_NET_DEFAULT);
 			Setting.setDisplayGrouped(Setting.SETTING_DISPLAY_GROUPED_DEFAULT);
 			Setting.setDisplayAdaptive(Setting.SETTING_DISPLAY_ADAPTIVE_DEFAULT);
+			Setting.setDisplayNet(Setting.SETTING_DISPLAY_NET_DEFAULT);
 			Setting.setDisplayDraw(Setting.SETTING_DISPLAY_DRAW_DEFAULT);
 			Setting.setDisplayStroke(Setting.SETTING_DISPLAY_STROKE_DEFAULT);
 			Setting.setDisplaySegment(Setting.SETTING_DISPLAY_SEGMENT_DEFAULT);
 			Setting.setDisplayLine(Setting.SETTING_DISPLAY_LINE_DEFAULT);
 			Setting.setDisplayOutline(Setting.SETTING_DISPLAY_OUTLINE_DEFAULT);
-
-			Setting.setNotifyDraw(Setting.SETTING_NOTIFY_DRAW_DEFAULT);
-			Setting.setNotifyStroke(Setting.SETTING_NOTIFY_STROKE_DEFAULT);
-			Setting.setNotifySegment(Setting.SETTING_NOTIFY_SEGMENT_DEFAULT);
-			Setting.setNotifyLine(Setting.SETTING_NOTIFY_LINE_DEFAULT);
 
 			Setting.setDebugLog(Setting.SETTING_DEBUG_LOG_DEFAULT);
 			Setting.setDebugDataFile(Setting.SETTING_DEBUG_DATAFILE_DEFAULT);

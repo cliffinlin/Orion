@@ -4,7 +4,7 @@ public class Constant {
 
 	public static final String MARK_ADD = "+";
 	public static final String MARK_MINUS = "-";
-	public static final String MARK_STAR = "*";
+	public static final String MARK_ASTERISK = "*";
 
 	public static final String NEW_LINE = "\n";
 	public static final String TAB = "\t";

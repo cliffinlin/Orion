@@ -66,18 +66,6 @@ public class Setting {
 	public static final String SETTING_DISPLAY_OUTLINE = "SETTING_DISPLAY_OUTLINE";
 	public static final boolean SETTING_DISPLAY_OUTLINE_DEFAULT = true;
 
-	public static final String SETTING_NOTIFY_DRAW = "SETTING_NOTIFY_DRAW";
-	public static final boolean SETTING_NOTIFY_DRAW_DEFAULT = false;
-
-	public static final String SETTING_NOTIFY_STROKE = "SETTING_NOTIFY_STROKE";
-	public static final boolean SETTING_NOTIFY_STROKE_DEFAULT = true;
-
-	public static final String SETTING_NOTIFY_SEGMENT = "SETTING_NOTIFY_SEGMENT";
-	public static final boolean SETTING_NOTIFY_SEGMENT_DEFAULT = true;
-
-	public static final String SETTING_NOTIFY_LINE = "SETTING_NOTIFY_LINE";
-	public static final boolean SETTING_NOTIFY_LINE_DEFAULT = true;
-
 	public static final String SETTING_DEBUG_LOG = "SETTING_DEBUG_LOG";
 	public static final boolean SETTING_DEBUG_LOG_DEFAULT = true;
 	public static final String SETTING_DEBUG_DIRECT = "SETTING_DEBUG_DIRECT";
@@ -191,38 +179,6 @@ public class Setting {
 
 	public static void setDisplayOutline(boolean value) {
 		Preferences.putBoolean(SETTING_DISPLAY_OUTLINE, value);
-	}
-
-	public static boolean getNotifyDraw() {
-		return Preferences.getBoolean(SETTING_NOTIFY_DRAW, SETTING_NOTIFY_DRAW_DEFAULT);
-	}
-
-	public static void setNotifyDraw(boolean value) {
-		Preferences.putBoolean(SETTING_NOTIFY_DRAW, value);
-	}
-
-	public static boolean getNotifyStroke() {
-		return Preferences.getBoolean(SETTING_NOTIFY_STROKE, SETTING_NOTIFY_STROKE_DEFAULT);
-	}
-
-	public static void setNotifyStroke(boolean value) {
-		Preferences.putBoolean(SETTING_NOTIFY_STROKE, value);
-	}
-
-	public static boolean getNotifySegment() {
-		return Preferences.getBoolean(SETTING_NOTIFY_SEGMENT, SETTING_NOTIFY_SEGMENT_DEFAULT);
-	}
-
-	public static void setNotifySegment(boolean value) {
-		Preferences.putBoolean(SETTING_NOTIFY_SEGMENT, value);
-	}
-
-	public static boolean getNotifyLine() {
-		return Preferences.getBoolean(SETTING_NOTIFY_LINE, SETTING_NOTIFY_LINE_DEFAULT);
-	}
-
-	public static void setNotifyLine(boolean value) {
-		Preferences.putBoolean(SETTING_NOTIFY_LINE, value);
 	}
 
 	public static boolean getDebugLog() {

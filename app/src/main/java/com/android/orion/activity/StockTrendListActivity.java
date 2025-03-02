@@ -113,7 +113,7 @@ public class StockTrendListActivity extends ListActivity implements
 		}
 	};
 
-	private ActionMode.Callback mModeCallBack = new ActionMode.Callback() {
+	private final ActionMode.Callback mModeCallBack = new ActionMode.Callback() {
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 			mode.setTitle("Actions");
@@ -631,7 +631,7 @@ public class StockTrendListActivity extends ListActivity implements
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
-							long id) {
+	                        long id) {
 
 		if (parent.getId() == R.id.left_listview) {
 		} else {
@@ -652,7 +652,7 @@ public class StockTrendListActivity extends ListActivity implements
 
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
-								   int position, long id) {
+	                               int position, long id) {
 //		if (TextUtils.isEmpty(stock.getSE()) || TextUtils.isEmpty(stock.getCode())) {
 //			mDatabaseManager.deleteStockTrend(stock);
 //			restartLoader();

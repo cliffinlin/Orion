@@ -115,13 +115,13 @@ public class StockActivity extends DatabaseActivity implements OnClickListener, 
 
 			@Override
 			public void beforeTextChanged(CharSequence arg0, int arg1,
-										  int arg2, int arg3) {
+			                              int arg2, int arg3) {
 
 			}
 
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
-									  int count) {
+			                          int count) {
 				if (TextUtils.equals(mAction, Constant.ACTION_STOCK_EDIT)) {
 					return;
 				}
@@ -313,7 +313,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener, 
 				} else if (TextUtils.equals(mAction, Constant.ACTION_STOCK_EDIT)) {
 					mStock.setModified(Utility.getCurrentDateTimeString());
 					mDatabaseManager.updateStock(mStock,
-					mStock.getContentValuesEdit());
+							mStock.getContentValuesEdit());
 				}
 
 				getIntent().putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());

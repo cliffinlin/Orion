@@ -52,35 +52,6 @@ public class StockPerceptronListActivity extends ListActivity implements
 	String mSortOrderDirection = DatabaseContract.ORDER_ASC;
 	String mSortOrderDefault = mSortOrderColumn + mSortOrderDirection;
 	String mSortOrder = mSortOrderDefault;
-
-	SyncHorizontalScrollView mTitleSHSV = null;
-	SyncHorizontalScrollView mContentSHSV = null;
-
-	TextView mTextViewNameCode = null;
-	TextView mTextViewPeriod = null;
-	TextView mTextViewLevel = null;
-	TextView mTextViewType = null;
-	TextView mTextViewWeight = null;
-	TextView mTextViewBias = null;
-	TextView mTextViewError = null;
-	TextView mTextViewDelta = null;
-	TextView mTextViewTimes = null;
-	TextView mTextViewXMin = null;
-	TextView mTextViewXMax = null;
-	TextView mTextViewYMin = null;
-	TextView mTextViewYMax = null;
-	TextView mTextViewCreated = null;
-	TextView mTextViewModified = null;
-
-	ListView mLeftListView = null;
-	ListView mRightListView = null;
-
-	SimpleCursorAdapter mLeftAdapter = null;
-	SimpleCursorAdapter mRightAdapter = null;
-
-	ActionMode mCurrentActionMode = null;
-	Stock mStock = new Stock();
-
 	Handler mHandler = new Handler(Looper.getMainLooper()) {
 
 		@Override
@@ -101,7 +72,29 @@ public class StockPerceptronListActivity extends ListActivity implements
 			}
 		}
 	};
-
+	SyncHorizontalScrollView mTitleSHSV = null;
+	SyncHorizontalScrollView mContentSHSV = null;
+	TextView mTextViewNameCode = null;
+	TextView mTextViewPeriod = null;
+	TextView mTextViewLevel = null;
+	TextView mTextViewType = null;
+	TextView mTextViewWeight = null;
+	TextView mTextViewBias = null;
+	TextView mTextViewError = null;
+	TextView mTextViewDelta = null;
+	TextView mTextViewTimes = null;
+	TextView mTextViewXMin = null;
+	TextView mTextViewXMax = null;
+	TextView mTextViewYMin = null;
+	TextView mTextViewYMax = null;
+	TextView mTextViewCreated = null;
+	TextView mTextViewModified = null;
+	ListView mLeftListView = null;
+	ListView mRightListView = null;
+	SimpleCursorAdapter mLeftAdapter = null;
+	SimpleCursorAdapter mRightAdapter = null;
+	ActionMode mCurrentActionMode = null;
+	Stock mStock = new Stock();
 	ContentObserver mContentObserver = new ContentObserver(new Handler()) {
 		@Override
 		public void onChange(boolean selfChange, Uri uri) {
@@ -115,7 +108,7 @@ public class StockPerceptronListActivity extends ListActivity implements
 		}
 	};
 
-	private ActionMode.Callback mModeCallBack = new ActionMode.Callback() {
+	private final ActionMode.Callback mModeCallBack = new ActionMode.Callback() {
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 			mode.setTitle("Actions");
@@ -568,7 +561,7 @@ public class StockPerceptronListActivity extends ListActivity implements
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
-							long id) {
+	                        long id) {
 
 		if (parent.getId() == R.id.left_listview) {
 		} else {
@@ -582,7 +575,7 @@ public class StockPerceptronListActivity extends ListActivity implements
 
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
-								   int position, long id) {
+	                               int position, long id) {
 		StockTrend stockTrend = new StockTrend();
 		stockTrend.setId(id);
 		mDatabaseManager.getStockTrendById(stockTrend);

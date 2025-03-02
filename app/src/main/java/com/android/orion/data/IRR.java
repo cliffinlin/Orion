@@ -79,7 +79,7 @@ public class IRR {
 		// 第 years 年的现金流包括股票卖出价值
 //		cashFlows[years] += initialShares * priceYears;
 
-		mIR =  totalDividend / Math.abs(cashFlows[0]);
+		mIR = totalDividend / Math.abs(cashFlows[0]);
 
 		// 计算 IRR
 		mIRR = calculateIRR(cashFlows, 0.00001, 1000);

@@ -210,15 +210,15 @@ public class StockDataChart {
 		mCombinedDataSub.setData(lineData);
 	}
 
-	void addLineDataSet(List<Entry>[]entryList, String label, int level, LineData lineData) {
+	void addLineDataSet(List<Entry>[] entryList, String label, int level, LineData lineData) {
 		addLineDataSet(entryList[level], label, mLineColors[level], false, lineData, false, 0);
 	}
 
-	void addLineDataSet(List<Entry>[]entryList, String label, int level, LineData lineData, boolean drawFilled, int fillColor) {
+	void addLineDataSet(List<Entry>[] entryList, String label, int level, LineData lineData, boolean drawFilled, int fillColor) {
 		addLineDataSet(entryList[level], label, mLineColors[level], true, lineData, drawFilled, fillColor);
 	}
 
-	void addLineDataSet(List<Entry>entryList, String label, int lineColor, boolean drawCircle, LineData lineData, boolean drawFilled, int fillColor) {
+	void addLineDataSet(List<Entry> entryList, String label, int lineColor, boolean drawCircle, LineData lineData, boolean drawFilled, int fillColor) {
 		if (entryList != null && entryList.size() > 0) {
 			LineDataSet lineDataSet = new LineDataSet(entryList, label);
 			lineDataSet.setColor(lineColor);
@@ -275,23 +275,23 @@ public class StockDataChart {
 		boolean result = false;
 
 		switch (level) {
-		case Trend.LEVEL_DRAW:
-			result = Setting.getDisplayDraw();
-			break;
-		case Trend.LEVEL_STROKE:
-			result = Setting.getDisplayStroke();
-			break;
-		case Trend.LEVEL_SEGMENT:
-			result = Setting.getDisplaySegment();
-			break;
-		case Trend.LEVEL_LINE:
-			result = Setting.getDisplayLine();
-			break;
-		case Trend.LEVEL_OUTLINE:
-			result = Setting.getDisplayOutline();
-			break;
-		default:
-			break;
+			case Trend.LEVEL_DRAW:
+				result = Setting.getDisplayDraw();
+				break;
+			case Trend.LEVEL_STROKE:
+				result = Setting.getDisplayStroke();
+				break;
+			case Trend.LEVEL_SEGMENT:
+				result = Setting.getDisplaySegment();
+				break;
+			case Trend.LEVEL_LINE:
+				result = Setting.getDisplayLine();
+				break;
+			case Trend.LEVEL_OUTLINE:
+				result = Setting.getDisplayOutline();
+				break;
+			default:
+				break;
 		}
 
 		if (!Setting.getDisplayAdaptive()) {

@@ -26,17 +26,17 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/display">
         <com.android.orion.preference.CustomSwitchPreference
+            android:key="SETTING_DISPLAY_ADAPTIVE"
+            android:title="@string/adaptive" />
+        <com.android.orion.preference.CustomSwitchPreference
+            android:key="SETTING_DISPLAY_GROUPED"
+            android:title="@string/grouped" />
+        <com.android.orion.preference.CustomSwitchPreference
             android:key="SETTING_DISPLAY_CANDLE"
             android:title="@string/candle" />
         <com.android.orion.preference.CustomSwitchPreference
             android:key="SETTING_DISPLAY_AVERAGE"
             android:title="@string/average" />
-        <com.android.orion.preference.CustomSwitchPreference
-            android:key="SETTING_DISPLAY_GROUPED"
-            android:title="@string/grouped" />
-        <com.android.orion.preference.CustomSwitchPreference
-            android:key="SETTING_DISPLAY_ADAPTIVE"
-            android:title="@string/adaptive" />
         <com.android.orion.preference.CustomSwitchPreference
             android:key="SETTING_DISPLAY_DRAW"
             android:title="@string/draw" />
@@ -52,20 +52,6 @@
         <com.android.orion.preference.CustomSwitchPreference
             android:key="SETTING_DISPLAY_OUTLINE"
             android:title="@string/outline" />
-    </PreferenceCategory>
-    <PreferenceCategory android:title="@string/notify">
-        <com.android.orion.preference.CustomSwitchPreference
-            android:key="SETTING_NOTIFY_DRAW"
-            android:title="@string/draw" />
-        <com.android.orion.preference.CustomSwitchPreference
-            android:key="SETTING_NOTIFY_STROKE"
-            android:title="@string/stroke" />
-        <com.android.orion.preference.CustomSwitchPreference
-            android:key="SETTING_NOTIFY_SEGMENT"
-            android:title="@string/segment" />
-        <com.android.orion.preference.CustomSwitchPreference
-            android:key="SETTING_NOTIFY_LINE"
-            android:title="@string/line" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/setting_debug">
         <com.android.orion.preference.CustomSwitchPreference

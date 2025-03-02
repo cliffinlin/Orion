@@ -9,7 +9,7 @@ import com.android.orion.database.StockData;
 import com.android.orion.database.StockTrend;
 import com.android.orion.manager.DatabaseManager;
 import com.android.orion.provider.StockPerceptronProvider;
-import com.android.orion.setting.Setting;
+import com.android.orion.setting.Constant;
 import com.android.orion.utility.Logger;
 import com.android.orion.utility.Utility;
 
@@ -17,8 +17,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
 
 public class TrendAnalyzer {
 	Logger Log = Logger.getLogger();
@@ -29,6 +27,16 @@ public class TrendAnalyzer {
 	ArrayMap<String, ArrayList<StockTrend>> mGroupMap = new ArrayMap<>();
 	DatabaseManager mDatabaseManager = DatabaseManager.getInstance();
 	StockPerceptronProvider mStockPerceptronProvider = StockPerceptronProvider.getInstance();
+	Comparator<ArrayList<StockTrend>> sizeComparator = new Comparator<ArrayList<StockTrend>>() {
+		@Override
+		public int compare(ArrayList<StockTrend> list1, ArrayList<StockTrend> list2) {
+			int result = Integer.compare(list2.size(), list1.size());
+			if (result == 0) {
+				result = Double.compare(Math.abs(list2.get(0).getVertexNet()), Math.abs(list1.get(0).getVertexNet()));
+			}
+			return result;
+		}
+	};
 
 	private TrendAnalyzer() {
 	}
@@ -179,32 +187,26 @@ public class TrendAnalyzer {
 			return;
 		}
 
-		boolean isNotifyTrendLevel = false;
 		int vertexTypeTop = Trend.VERTEX_TOP;
 		int vertexTypeBottom = Trend.VERTEX_BOTTOM;
 		switch (level) {
 			case Trend.LEVEL_DRAW:
-				isNotifyTrendLevel = Setting.getNotifyDraw();
 				vertexTypeTop = Trend.VERTEX_TOP_STROKE;
 				vertexTypeBottom = Trend.VERTEX_BOTTOM_STROKE;
 				break;
 			case Trend.LEVEL_STROKE:
-				isNotifyTrendLevel = Setting.getNotifyStroke();
 				vertexTypeTop = Trend.VERTEX_TOP_SEGMENT;
 				vertexTypeBottom = Trend.VERTEX_BOTTOM_SEGMENT;
 				break;
 			case Trend.LEVEL_SEGMENT:
-				isNotifyTrendLevel = Setting.getNotifySegment();
 				vertexTypeTop = Trend.VERTEX_TOP_LINE;
 				vertexTypeBottom = Trend.VERTEX_BOTTOM_LINE;
 				break;
 			case Trend.LEVEL_LINE:
-				isNotifyTrendLevel = Setting.getNotifyLine();
 				vertexTypeTop = Trend.VERTEX_TOP_OUTLINE;
 				vertexTypeBottom = Trend.VERTEX_BOTTOM_OUTLINE;
 				break;
 			case Trend.LEVEL_OUTLINE:
-				isNotifyTrendLevel = Setting.getNotifyLine();
 				vertexTypeTop = Trend.VERTEX_TOP_TREND;
 				vertexTypeBottom = Trend.VERTEX_BOTTOM_TREND;
 				break;
@@ -331,12 +333,12 @@ public class TrendAnalyzer {
 						stockTrend.setDate(stockData.getDate());
 						stockTrend.setTime(stockData.getTime());
 						mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValues());
-						if (stockData != null) {
-							if (isNotifyTrendLevel) {
-								stockData.setAction(Trend.MARK_LEVEL + level + type);
-								StockAnalyzer.getInstance().notifyStockTrend(stockTrend);
-							}
+						if (stockTrend.hasFlag(Trend.FLAG_ADAPTIVE)) {
+							stockData.setAction(Trend.MARK_LEVEL + level + type + Constant.MARK_ASTERISK);
+						} else {
+							stockData.setAction(Trend.MARK_LEVEL + level + type);
 						}
+						StockAnalyzer.getInstance().notifyStockTrend(stockTrend);
 					}
 				} else {
 					stockTrend.setType(type);
@@ -469,17 +471,6 @@ public class TrendAnalyzer {
 			mDatabaseManager.endTransaction();
 		}
 	}
-
-	Comparator<ArrayList<StockTrend>> sizeComparator = new Comparator<ArrayList<StockTrend>>() {
-		@Override
-		public int compare(ArrayList<StockTrend> list1, ArrayList<StockTrend> list2) {
-			int result = Integer.compare(list2.size(), list1.size());
-			if (result == 0) {
-				result = Double.compare(Math.abs(list2.get(0).getVertexNet()), Math.abs(list1.get(0).getVertexNet()));
-			}
-			return result;
-		}
-	};
 
 	public void updateAdaptive(Stock stock, String period, int level) {
 		mDatabaseManager.getStockTrendList(stock, period, mStockTrendList);

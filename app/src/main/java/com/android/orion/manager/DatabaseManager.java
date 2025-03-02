@@ -407,12 +407,12 @@ public class DatabaseManager implements StockListener {
 		if (stock == null) {
 			return null;
 		}
-		return DatabaseContract.COLUMN_SE + " = " + "'"	+ stock.getSE() + "'"
+		return DatabaseContract.COLUMN_SE + " = " + "'" + stock.getSE() + "'"
 				+ " AND " + DatabaseContract.COLUMN_CODE + " = " + "'" + stock.getCode() + "'";
 	}
 
 	public String getStockSelection(String se, String code) {
-		return DatabaseContract.COLUMN_SE + " = " + "'"	+ se + "'"
+		return DatabaseContract.COLUMN_SE + " = " + "'" + se + "'"
 				+ " AND " + DatabaseContract.COLUMN_CODE + " = " + "'" + code + "'";
 	}
 
@@ -715,7 +715,7 @@ public class DatabaseManager implements StockListener {
 		if (stockData == null) {
 			return null;
 		}
-		return DatabaseContract.COLUMN_SE + " = " + "'"	+ stockData.getSE() + "'"
+		return DatabaseContract.COLUMN_SE + " = " + "'" + stockData.getSE() + "'"
 				+ " AND " + DatabaseContract.COLUMN_CODE + " = " + "'" + stockData.getCode() + "'";
 	}
 
@@ -790,7 +790,7 @@ public class DatabaseManager implements StockListener {
 	}
 
 	public Cursor queryStockTrend(String[] projection, String selection,
-	                             String[] selectionArgs, String sortOrder) {
+	                              String[] selectionArgs, String sortOrder) {
 		Cursor cursor = null;
 
 		if (mContentResolver == null) {
@@ -804,7 +804,7 @@ public class DatabaseManager implements StockListener {
 	}
 
 	public Cursor queryStockTrend(String selection, String[] selectionArgs,
-	                             String sortOrder) {
+	                              String sortOrder) {
 		Cursor cursor = null;
 
 		if (mContentResolver == null) {
@@ -917,7 +917,7 @@ public class DatabaseManager implements StockListener {
 //	}
 
 	public void getStockTrendGroupedList(Stock stock, int grouped,
-								  ArrayList<StockTrend> stockTrendList) {
+	                                     ArrayList<StockTrend> stockTrendList) {
 		if (stock == null || stockTrendList == null) {
 			return;
 		}
@@ -998,7 +998,7 @@ public class DatabaseManager implements StockListener {
 	}
 
 	public void getStockTrendList(String period, int level, String type,
-								  ArrayList<StockTrend> stockTrendList) {
+	                              ArrayList<StockTrend> stockTrendList) {
 		if (stockTrendList == null) {
 			return;
 		}
@@ -1150,7 +1150,7 @@ public class DatabaseManager implements StockListener {
 	}
 
 	public Cursor queryStockPerceptron(String[] projection, String selection,
-								  String[] selectionArgs, String sortOrder) {
+	                                   String[] selectionArgs, String sortOrder) {
 		Cursor cursor = null;
 
 		if (mContentResolver == null) {
@@ -1164,7 +1164,7 @@ public class DatabaseManager implements StockListener {
 	}
 
 	public Cursor queryStockPerceptron(String selection, String[] selectionArgs,
-								  String sortOrder) {
+	                                   String sortOrder) {
 		Cursor cursor = null;
 
 		if (mContentResolver == null) {
@@ -1246,7 +1246,7 @@ public class DatabaseManager implements StockListener {
 	}
 
 	public void getStockPerceptronList(String period, int level, String type,
-								  ArrayList<StockPerceptron> stockPerceptronList) {
+	                                   ArrayList<StockPerceptron> stockPerceptronList) {
 		if (stockPerceptronList == null) {
 			return;
 		}
@@ -1740,7 +1740,7 @@ public class DatabaseManager implements StockListener {
 	}
 
 	public Cursor queryStockFinancial(String selection, String[] selectionArgs,
-									  String sortOrder) {
+	                                  String sortOrder) {
 		Cursor cursor = null;
 
 		if (mContentResolver == null) {
@@ -1826,7 +1826,7 @@ public class DatabaseManager implements StockListener {
 	}
 
 	public void getStockFinancialList(Stock stock,
-									  ArrayList<StockFinancial> stockFinancialList, String sortOrder) {
+	                                  ArrayList<StockFinancial> stockFinancialList, String sortOrder) {
 		Cursor cursor = null;
 
 		if ((stock == null) || (stockFinancialList == null)) {
@@ -1877,7 +1877,7 @@ public class DatabaseManager implements StockListener {
 	}
 
 	public int updateStockFinancial(StockFinancial stockFinancial,
-									ContentValues contentValues) {
+	                                ContentValues contentValues) {
 		int result = 0;
 
 		if ((stockFinancial == null) || (mContentResolver == null)) {
@@ -1965,7 +1965,7 @@ public class DatabaseManager implements StockListener {
 		if (stockFinancial == null) {
 			return null;
 		}
-		return DatabaseContract.COLUMN_SE + " = " + "'"	+ stockFinancial.getSE() + "'"
+		return DatabaseContract.COLUMN_SE + " = " + "'" + stockFinancial.getSE() + "'"
 				+ " AND " + DatabaseContract.COLUMN_CODE + " = " + "'" + stockFinancial.getCode() + "'";
 	}
 
@@ -2241,7 +2241,7 @@ public class DatabaseManager implements StockListener {
 		if (stockBonus == null) {
 			return null;
 		}
-		return DatabaseContract.COLUMN_SE + " = " + "'"	+ stockBonus.getSE() + "'"
+		return DatabaseContract.COLUMN_SE + " = " + "'" + stockBonus.getSE() + "'"
 				+ " AND " + DatabaseContract.COLUMN_CODE + " = " + "'" + stockBonus.getCode() + "'";
 	}
 
@@ -2501,7 +2501,7 @@ public class DatabaseManager implements StockListener {
 		if (stockShare == null) {
 			return null;
 		}
-		return DatabaseContract.COLUMN_SE + " = " + "'"	+ stockShare.getSE() + "'"
+		return DatabaseContract.COLUMN_SE + " = " + "'" + stockShare.getSE() + "'"
 				+ " AND " + DatabaseContract.COLUMN_CODE + " = " + "'" + stockShare.getCode() + "'";
 	}
 
@@ -2545,7 +2545,7 @@ public class DatabaseManager implements StockListener {
 	}
 
 	public Cursor queryIndexComponent(String selection, String[] selectionArgs,
-									  String sortOrder) {
+	                                  String sortOrder) {
 		Cursor cursor = null;
 
 		if (mContentResolver == null) {

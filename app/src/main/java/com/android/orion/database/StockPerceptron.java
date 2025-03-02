@@ -13,11 +13,9 @@ import com.android.orion.utility.Utility;
 import java.util.ArrayList;
 
 public class StockPerceptron extends DatabaseTable {
-	Logger Log = Logger.getLogger();
-
 	public static final double DEFAULT_DELTA = 0.00001;
 	public static final int DESCRIPTION_ROUND_N = 3;
-
+	Logger Log = Logger.getLogger();
 	LinearRegression mLinearRegression = new LinearRegression();
 
 	private String mPeriod;
@@ -364,7 +362,7 @@ public class StockPerceptron extends DatabaseTable {
 	}
 
 	public String toDescriptionString() {
-		return  mPeriod + Constant.TAB
+		return mPeriod + Constant.TAB
 				+ mLevel + Constant.TAB
 				+ mType + Constant.TAB
 				+ Utility.Round(mLinearRegression.slope, DESCRIPTION_ROUND_N) + Constant.TAB
@@ -374,7 +372,7 @@ public class StockPerceptron extends DatabaseTable {
 	}
 
 	public String toLogString() {
-		return  "mPeriod=" + mPeriod + Constant.TAB
+		return "mPeriod=" + mPeriod + Constant.TAB
 				+ "mLevel=" + mLevel + Constant.TAB
 				+ "mType=" + mType + Constant.TAB
 				+ "mWeight=" + mLinearRegression.slope + Constant.TAB

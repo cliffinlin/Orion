@@ -1,9 +1,6 @@
 package com.android.orion.provider;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
@@ -12,8 +9,6 @@ import android.os.PowerManager;
 import android.os.Process;
 import android.text.TextUtils;
 import android.util.ArrayMap;
-
-import androidx.annotation.NonNull;
 
 import com.android.orion.application.MainApplication;
 import com.android.orion.config.Config;
@@ -35,7 +30,7 @@ public class StockPerceptronProvider {
 	PowerManager.WakeLock mWakeLock;
 	HandlerThread mHandlerThread;
 	ServiceHandler mHandler;
-	ArrayList<StockTrend> mStockTrendList= new ArrayList<>();
+	ArrayList<StockTrend> mStockTrendList = new ArrayList<>();
 	ArrayList<Double> mXArray = new ArrayList<>();
 	ArrayList<Double> mYArray = new ArrayList<>();
 	StockPerceptron mStockPerceptron;
@@ -117,6 +112,10 @@ public class StockPerceptronProvider {
 		}
 	}
 
+	private static class Holder {
+		private static final StockPerceptronProvider INSTANCE = new StockPerceptronProvider();
+	}
+
 	private final class ServiceHandler extends Handler {
 		ServiceHandler(Looper looper) {
 			super(looper);
@@ -163,9 +162,5 @@ public class StockPerceptronProvider {
 				releaseWakeLock();
 			}
 		}
-	}
-
-	private static class Holder {
-		private static final StockPerceptronProvider INSTANCE = new StockPerceptronProvider();
 	}
 }

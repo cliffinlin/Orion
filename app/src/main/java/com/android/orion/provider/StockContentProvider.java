@@ -20,30 +20,24 @@ import com.android.orion.manager.DatabaseManager;
 import java.util.ArrayList;
 
 public class StockContentProvider extends ContentProvider {
+
+
 	private static final int STOCK = 100;
 	private static final int STOCK_ID = 101;
-
 	private static final int STOCK_DATA = 200;
 	private static final int STOCK_DATA_ID = 201;
-
 	private static final int STOCK_DEAL = 300;
 	private static final int STOCK_DEAL_ID = 301;
-
 	private static final int STOCK_FINANCIAL = 400;
 	private static final int STOCK_FINANCIAL_ID = 401;
-
 	private static final int STOCK_BONUS = 500;
 	private static final int STOCK_BONUS_ID = 501;
-
 	private static final int STOCK_SHARE = 600;
 	private static final int STOCK_SHARE_ID = 601;
-
 	private static final int INDEX_COMPONENT = 700;
 	private static final int INDEX_COMPONENT_ID = 701;
-
 	public static final int STOCK_TREND = 800;
 	private static final int STOCK_TREND_ID = 801;
-
 	public static final int STOCK_PERCEPTRON = 900;
 	private static final int STOCK_PERCEPTRON_ID = 901;
 
@@ -187,7 +181,7 @@ public class StockContentProvider extends ContentProvider {
 
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection,
-						String[] selectionArgs, String sortOrder) {
+	                    String[] selectionArgs, String sortOrder) {
 		Cursor cursor = null;
 
 		if (mDatabaseManager == null) {
@@ -412,7 +406,7 @@ public class StockContentProvider extends ContentProvider {
 
 	@Override
 	public int update(Uri uri, ContentValues values, String selection,
-					  String[] selectionArgs) {
+	                  String[] selectionArgs) {
 		int result = 0;
 		String whereClause;
 

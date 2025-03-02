@@ -3,28 +3,16 @@ package com.android.orion.data;
 import java.util.ArrayList;
 
 public class LinearRegression {
-	private ArrayList<Double> xList; // 输入特征
-	private ArrayList<Double> yList; // 目标值
 	public double slope; // 斜率
 	public double bias; // 偏置
 	public double learningRate = 0.01; // 学习率
 	public double xMin, xMax, yMin, yMax; // 归一化的最小值和最大值
 	public double mse; //Mean Squared Error
+	private ArrayList<Double> xList; // 输入特征
+	private ArrayList<Double> yList; // 目标值
 
 	// 构造函数
 	public LinearRegression() {
-	}
-
-	public void init(ArrayList<Double> xList, ArrayList<Double> yList) {
-		if (xList.size() != yList.size()) {
-			throw new IllegalArgumentException("xList and yList must have the same size");
-		}
-
-		// 归一化数据
-		this.xList = normalize(xList, true); // 归一化 x
-		this.yList = normalize(yList, false); // 归一化 y
-//		this.slope = 0; // 初始化斜率为 0
-//		this.bias = 0; // 初始化偏置为 0
 	}
 
 	// 构造函数
@@ -38,6 +26,105 @@ public class LinearRegression {
 		this.yList = normalize(yList, false); // 归一化 y
 		this.slope = 0; // 初始化斜率为 0
 		this.bias = 0; // 初始化偏置为 0
+	}
+
+	public static void test() {
+		// 初始化数据
+		ArrayList<Double> xList = new ArrayList<>();
+		ArrayList<Double> yList = new ArrayList<>();
+		xList.add(32.0);
+		xList.add(53.0);
+		xList.add(6011.0);
+		xList.add(47.0);
+		xList.add(59.0);
+		xList.add(55.0);
+		xList.add(52.0);
+		xList.add(39.0);
+		xList.add(48.0);
+		xList.add(52.0);
+		xList.add(45.0);
+		xList.add(54.0);
+		xList.add(44.0);
+		xList.add(58.0);
+		xList.add(56.0);
+		xList.add(48.0);
+		xList.add(44.0);
+		xList.add(60.0);
+
+		yList.add(31.0);
+		yList.add(68.0);
+		yList.add(62.0);
+		yList.add(71.0);
+		yList.add(87.0);
+		yList.add(78.0);
+		yList.add(79.0);
+		yList.add(59.0);
+		yList.add(75.0);
+		yList.add(71.0);
+		yList.add(55.0);
+		yList.add(82.0);
+		yList.add(62.0);
+		yList.add(75.0);
+		yList.add(81.0);
+		yList.add(60.0);
+		yList.add(82.0);
+		yList.add(97.0);
+
+		// 创建线性回归对象
+		LinearRegression linearRegression = new LinearRegression(xList, yList);
+
+		// 训练模型
+		linearRegression.train(1000);
+
+		// 获取斜率和偏置
+		double slope = linearRegression.getSlope();
+		double bias = linearRegression.getBias();
+		System.out.println("Slope: " + slope);
+		System.out.println("Bias: " + bias);
+
+		// 计算均方误差
+		double error = linearRegression.calculateError();
+		System.out.println("Mean Squared Error: " + error);
+
+		// 预测新数据点
+		double x = 50.0;
+		double predictedY = linearRegression.predict(x);
+		System.out.println("Predicted value for x = " + x + ": " + predictedY);
+	}
+
+	public static void test(ArrayList<Double> xList, ArrayList<Double> yList) {
+		// 创建线性回归对象
+		LinearRegression linearRegression = new LinearRegression();
+
+		// 训练模型
+		linearRegression.train(xList, yList, 1000);
+
+		// 获取斜率和偏置
+		double slope = linearRegression.getSlope();
+		double bias = linearRegression.getBias();
+		System.out.println("Slope: " + slope);
+		System.out.println("Bias: " + bias);
+
+		// 计算均方误差
+		double error = linearRegression.calculateError();
+		System.out.println("Mean Squared Error: " + error);
+
+		// 预测新数据点
+		double x = xList.get(0);
+		double predictedY = linearRegression.predict(x);
+		System.out.println("Predicted value for x = " + x + ": " + predictedY);
+	}
+
+	public void init(ArrayList<Double> xList, ArrayList<Double> yList) {
+		if (xList.size() != yList.size()) {
+			throw new IllegalArgumentException("xList and yList must have the same size");
+		}
+
+		// 归一化数据
+		this.xList = normalize(xList, true); // 归一化 x
+		this.yList = normalize(yList, false); // 归一化 y
+//		this.slope = 0; // 初始化斜率为 0
+//		this.bias = 0; // 初始化偏置为 0
 	}
 
 	// 归一化数据到 [0, 1] 范围
@@ -146,92 +233,5 @@ public class LinearRegression {
 		mse = error / n;
 
 		return error / n; // 返回均方误差
-	}
-
-		public static void test() {
-			// 初始化数据
-			ArrayList<Double> xList = new ArrayList<>();
-			ArrayList<Double> yList = new ArrayList<>();
-			xList.add(32.0);
-			xList.add(53.0);
-			xList.add(6011.0);
-			xList.add(47.0);
-			xList.add(59.0);
-			xList.add(55.0);
-			xList.add(52.0);
-			xList.add(39.0);
-			xList.add(48.0);
-			xList.add(52.0);
-			xList.add(45.0);
-			xList.add(54.0);
-			xList.add(44.0);
-			xList.add(58.0);
-			xList.add(56.0);
-			xList.add(48.0);
-			xList.add(44.0);
-			xList.add(60.0);
-
-			yList.add(31.0);
-			yList.add(68.0);
-			yList.add(62.0);
-			yList.add(71.0);
-			yList.add(87.0);
-			yList.add(78.0);
-			yList.add(79.0);
-			yList.add(59.0);
-			yList.add(75.0);
-			yList.add(71.0);
-			yList.add(55.0);
-			yList.add(82.0);
-			yList.add(62.0);
-			yList.add(75.0);
-			yList.add(81.0);
-			yList.add(60.0);
-			yList.add(82.0);
-			yList.add(97.0);
-
-			// 创建线性回归对象
-			LinearRegression linearRegression = new LinearRegression(xList, yList);
-
-			// 训练模型
-			linearRegression.train(1000);
-
-			// 获取斜率和偏置
-			double slope = linearRegression.getSlope();
-			double bias = linearRegression.getBias();
-			System.out.println("Slope: " + slope);
-			System.out.println("Bias: " + bias);
-
-			// 计算均方误差
-			double error = linearRegression.calculateError();
-			System.out.println("Mean Squared Error: " + error);
-
-			// 预测新数据点
-			double x = 50.0;
-			double predictedY = linearRegression.predict(x);
-			System.out.println("Predicted value for x = " + x + ": " + predictedY);
-		}
-
-	public static void test(ArrayList<Double> xList, ArrayList<Double> yList) {
-		// 创建线性回归对象
-		LinearRegression linearRegression = new LinearRegression();
-
-		// 训练模型
-		linearRegression.train(xList, yList, 1000);
-
-		// 获取斜率和偏置
-		double slope = linearRegression.getSlope();
-		double bias = linearRegression.getBias();
-		System.out.println("Slope: " + slope);
-		System.out.println("Bias: " + bias);
-
-		// 计算均方误差
-		double error = linearRegression.calculateError();
-		System.out.println("Mean Squared Error: " + error);
-
-		// 预测新数据点
-		double x = xList.get(0);
-		double predictedY = linearRegression.predict(x);
-		System.out.println("Predicted value for x = " + x + ": " + predictedY);
 	}
 }

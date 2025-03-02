@@ -5,8 +5,8 @@ import android.text.TextUtils;
 
 import com.android.orion.application.MainApplication;
 import com.android.orion.database.DatabaseContract;
-import com.android.orion.database.StockBonus;
 import com.android.orion.database.Stock;
+import com.android.orion.database.StockBonus;
 import com.android.orion.database.StockFinancial;
 import com.android.orion.database.StockShare;
 import com.android.orion.manager.DatabaseManager;

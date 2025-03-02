@@ -56,6 +56,11 @@ public class StorageActivity extends DatabaseActivity {
 		super.onCreate(savedInstanceState);
 	}
 
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+	}
+
 	Handler mHandler = new Handler(Looper.getMainLooper()) {
 
 		@Override
@@ -90,11 +95,6 @@ public class StorageActivity extends DatabaseActivity {
 			}
 		}
 	};
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-	}
 
 	@Override
 	protected void onPause() {
@@ -346,7 +346,7 @@ public class StorageActivity extends DatabaseActivity {
 			for (Stock stock2 : stockList) {
 				mDatabaseManager.updateStockDeal(stock2);
 				mDatabaseManager.updateStock(stock2,
-				stock2.getContentValuesEdit());
+						stock2.getContentValuesEdit());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

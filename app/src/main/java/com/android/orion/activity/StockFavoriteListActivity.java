@@ -603,7 +603,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 		String operate = cursor.getString(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_OPERATE));
 		if (!TextUtils.isEmpty(operate) && TextUtils.equals(operate, period)) {
-			TextView textView = (TextView)view;
+			TextView textView = (TextView) view;
 			textView.setTextColor(Color.RED);
 		}
 

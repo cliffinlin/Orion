@@ -595,7 +595,7 @@ public class StockTrend extends DatabaseTable {
 	}
 
 	public String toString() {
-		return  mSE + Constant.TAB
+		return mSE + Constant.TAB
 				+ mCode + Constant.TAB
 				+ mName + Constant.TAB
 				+ mPrice + Constant.TAB
