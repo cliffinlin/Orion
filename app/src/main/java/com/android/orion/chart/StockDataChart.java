@@ -374,7 +374,13 @@ public class StockDataChart {
 			mDescription.append(Constant.MARK_MINUS);
 		}
 		mDescription.append(stock.getNet() + "%" + "  ");
-		mDescription.append(stock.getAction(mPeriod));
+
+		StockTrend stockTrend = getStockTrend(mAdaptiveLevel);
+		if (stockTrend != null && stockTrend.hasFlag(Trend.FLAG_CHANGED)) {
+			mDescription.append(stockTrend.toTrendString());
+		} else {
+			mDescription.append(stock.getAction(mPeriod));
+		}
 	}
 
 	LimitLine createLimitLine(double limit, int color, String label) {

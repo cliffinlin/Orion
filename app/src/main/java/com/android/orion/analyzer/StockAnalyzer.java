@@ -370,7 +370,7 @@ public class StockAnalyzer {
 		mContentTitle.setLength(0);
 		mContentText.setLength(0);
 
-		mContentTitle.append(stockTrend.toStockString() + stockTrend.toTrendString());
+		mContentTitle.append(mStock.getName() + " " + mStock.getPrice() + " " + mStock.getNet() + " " + stockTrend.toTrendString());
 		if (mContentTitle.length() == 0) {
 			return;
 		}

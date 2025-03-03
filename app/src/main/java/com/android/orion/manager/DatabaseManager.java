@@ -865,33 +865,6 @@ public class DatabaseManager implements StockListener {
 		}
 	}
 
-	public void getStockTrendByAdaptive(StockTrend stockTrend) {
-		Cursor cursor = null;
-
-		if ((stockTrend == null) || (mContentResolver == null)) {
-			return;
-		}
-
-		try {
-			String selection = getStockTrendSelection(stockTrend.getSE(), stockTrend.getCode(), stockTrend.getPeriod())
-					+ " AND " + hasFlagSelection(Trend.FLAG_ADAPTIVE);
-			cursor = mContentResolver.query(
-					DatabaseContract.StockTrend.CONTENT_URI,
-					DatabaseContract.StockTrend.PROJECTION_ALL, selection, null,null);
-			if ((cursor != null) && (cursor.getCount() > 0)) {
-				if (cursor.getCount() > 1) {
-					Log.d(TAG, "getStockTrendByAdapter cursor.getCount()=" + cursor.getCount());
-				}
-				cursor.moveToNext();
-				stockTrend.set(cursor);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			closeCursor(cursor);
-		}
-	}
-
 	public void getStockTrendById(StockTrend stockTrend) {
 		Cursor cursor = null;
 		String selection = null;
@@ -907,62 +880,6 @@ public class DatabaseManager implements StockListener {
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
 				stockTrend.set(cursor);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			closeCursor(cursor);
-		}
-	}
-
-//
-//	public void getStockTrendChangedList(Stock stock, ArrayList<StockTrend> stockTrendList) {
-//		if (stock == null || stockTrendList == null) {
-//			return;
-//		}
-//
-//		String selection = getStockSelection(stock)
-//				+ " AND " + hasFlagSelection(Trend.FLAG_CHANGED);
-//		String sortOrder = DatabaseContract.COLUMN_PERIOD + DatabaseContract.ORDER_ASC;
-//
-//		stockTrendList.clear();
-//		Cursor cursor = null;
-//		try {
-//			cursor = queryStockTrend(selection, null, sortOrder);
-//			if ((cursor != null) && (cursor.getCount() > 0)) {
-//				while (cursor.moveToNext()) {
-//					StockTrend stockTrend = new StockTrend();
-//					stockTrend.set(cursor);
-//					stockTrendList.add(stockTrend);
-//				}
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} finally {
-//			closeCursor(cursor);
-//		}
-//	}
-
-	public void getStockTrendGroupedList(Stock stock, int grouped,
-	                                     ArrayList<StockTrend> stockTrendList) {
-		if (stock == null || stockTrendList == null) {
-			return;
-		}
-
-		String selection = getStockSelection(stock)
-				+ " AND " + DatabaseContract.COLUMN_GROUPED + " = " + grouped;
-		String sortOrder = DatabaseContract.COLUMN_GROUPED + DatabaseContract.ORDER_ASC;
-
-		stockTrendList.clear();
-		Cursor cursor = null;
-		try {
-			cursor = queryStockTrend(selection, null, sortOrder);
-			if ((cursor != null) && (cursor.getCount() > 0)) {
-				while (cursor.moveToNext()) {
-					StockTrend stockTrend = new StockTrend();
-					stockTrend.set(cursor);
-					stockTrendList.add(stockTrend);
-				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

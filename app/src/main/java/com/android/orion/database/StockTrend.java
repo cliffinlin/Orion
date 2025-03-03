@@ -594,6 +594,39 @@ public class StockTrend extends DatabaseTable {
 		mProfit = Utility.Round2(100 * (mPrice - mTurning) / mTurning);
 	}
 
+	public void updateStock(Stock stock) {
+		if (stock == null) {
+			return;
+		}
+		setName(stock.getName());
+		setPrice(stock.getPrice());
+		setNet(stock.getNet());
+	}
+
+	public void updateTrend(Trend trend) {
+		if (trend == null) {
+			return;
+		}
+		setDirection(trend.getDirection());
+		setVertexLow(trend.getVertexLow());
+		setVertexHigh(trend.getVertexHigh());
+		setupVertexNet();
+	}
+
+	public void updateTurningProfit() {
+		setupTurningNet();
+		setupTurningRate();
+		setupProfit();
+	}
+
+	public void setDateTime(StockData stockData) {
+		if (stockData == null) {
+			return;
+		}
+		setDate(stockData.getDate());
+		setTime(stockData.getTime());
+	}
+
 	public String toString() {
 		return mSE + Constant.TAB
 				+ mCode + Constant.TAB
@@ -614,10 +647,6 @@ public class StockTrend extends DatabaseTable {
 				+ mTurningNet + Constant.TAB
 				+ mTurningRate + Constant.TAB
 				+ mProfit + Constant.TAB;
-	}
-
-	public String toStockString() {
-		return getName() + " " + getPrice() + " " + getNet() + " ";
 	}
 
 	public String toTrendString() {
