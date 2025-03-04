@@ -39,8 +39,8 @@ public class Setting {
 	public static final String SETTING_DISPLAY_ADAPTIVE = "SETTING_DISPLAY_ADAPTIVE";
 	public static final boolean SETTING_DISPLAY_ADAPTIVE_DEFAULT = true;
 
-	public static final String SETTING_DISPLAY_GROUPED = "SETTING_DISPLAY_GROUPED";
-	public static final boolean SETTING_DISPLAY_GROUPED_DEFAULT = true;
+	public static final String SETTING_DISPLAY_FILLED = "SETTING_DISPLAY_FILLED";
+	public static final boolean SETTING_DISPLAY_FILLED_DEFAULT = true;
 
 	public static final String SETTING_DISPLAY_NET = "SETTING_DISPLAY_NET";
 	public static final boolean SETTING_DISPLAY_NET_DEFAULT = true;
@@ -109,12 +109,12 @@ public class Setting {
 		Preferences.putBoolean(SETTING_DISPLAY_ADAPTIVE, value);
 	}
 
-	public static boolean getDisplayGrouped() {
-		return Preferences.getBoolean(SETTING_DISPLAY_GROUPED, SETTING_DISPLAY_GROUPED_DEFAULT);
+	public static boolean getDisplayFilled() {
+		return Preferences.getBoolean(SETTING_DISPLAY_FILLED, SETTING_DISPLAY_FILLED_DEFAULT);
 	}
 
-	public static void setDisplayGrouped(boolean value) {
-		Preferences.putBoolean(SETTING_DISPLAY_GROUPED, value);
+	public static void setDisplayFilled(boolean value) {
+		Preferences.putBoolean(SETTING_DISPLAY_FILLED, value);
 	}
 
 	public static boolean getDisplayNet() {

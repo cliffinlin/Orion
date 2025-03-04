@@ -51,7 +51,6 @@ public class StockDataChart {
 	public List<Entry>[] mTrendEntryList = new List[Trend.LEVEL_MAX];
 	public List<Entry>[] mGroupEntryList = new List[Trend.LEVEL_MAX];
 	public int[] mLineColors = {Color.WHITE, Color.GRAY, Color.YELLOW, Color.BLACK, Color.BLUE, Color.RED, Color.MAGENTA};
-	public int[] mGroupColors = {Color.WHITE, Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW, Color.CYAN, Color.GRAY};
 	public CombinedData mCombinedDataMain = new CombinedData(mXValues);
 	public CombinedData mCombinedDataSub = new CombinedData(mXValues);
 
@@ -148,8 +147,8 @@ public class StockDataChart {
 			lineData.addDataSet(lineDataSet10);
 		}
 
-		addLineDataSet(mDrawFirstEntryList, "", mLineColors[Trend.LEVEL_DRAW], false, lineData, false, mLineColors[Trend.LEVEL_DRAW]);
-		addLineDataSet(mDrawLastEntryList, "", mLineColors[Trend.LEVEL_DRAW], false, lineData, false, mLineColors[Trend.LEVEL_DRAW]);
+		addLineDataSet(mDrawFirstEntryList, Trend.LABEL_NONE, lineColor(Trend.LEVEL_DRAW), false, lineData, false, lineColor(Trend.LEVEL_DRAW));
+		addLineDataSet(mDrawLastEntryList, Trend.LABEL_NONE, lineColor(Trend.LEVEL_DRAW), false, lineData, false, lineColor(Trend.LEVEL_DRAW));
 		if (Setting.getDisplayDraw()) {
 			addLineDataSet(mTrendEntryList, Trend.LABEL_DRAW, Trend.LEVEL_DRAW, lineData);
 		}
@@ -209,11 +208,11 @@ public class StockDataChart {
 	}
 
 	void addLineDataSet(List<Entry>[] entryList, String label, int level, LineData lineData) {
-		addLineDataSet(entryList[level], label, mLineColors[level], false, lineData, false, 0);
+		addLineDataSet(entryList[level], label, lineColor(level), false, lineData, false, 0);
 	}
 
 	void addLineDataSet(List<Entry>[] entryList, String label, int level, LineData lineData, boolean drawFilled, int fillColor) {
-		addLineDataSet(entryList[level], label, mLineColors[level], true, lineData, drawFilled, fillColor);
+		addLineDataSet(entryList[level], label, lineColor(level), true, lineData, drawFilled, fillColor);
 	}
 
 	void addLineDataSet(List<Entry> entryList, String label, int lineColor, boolean drawCircle, LineData lineData, boolean drawFilled, int fillColor) {
@@ -244,7 +243,7 @@ public class StockDataChart {
 
 	boolean fillChanged(int level) {
 		boolean result = false;
-		if (!Setting.getDisplayGrouped()) {
+		if (!Setting.getDisplayFilled()) {
 			return false;
 		}
 
@@ -261,33 +260,13 @@ public class StockDataChart {
 		}
 		return mLineColors[0];
 	}
-//
-//	boolean groupFilled(int level) {
-//		boolean result = false;
-//		if (!Setting.getDisplayGrouped()) {
-//			return false;
-//		}
-//
-//		StockTrend stockTrend = getStockTrend(level);
-//		if (stockTrend != null && stockTrend.getGrouped() > Trend.GROUPED_NONE) {
-//			result = true;
-//		}
-//		return result;
-//	}
-//
-//	int groupFilledColor(int level) {
-//		StockTrend stockTrend = getStockTrend(level);
-//		if (stockTrend == null) {
-//			return mGroupColors[Trend.GROUPED_NONE];
-//		}
-//
-//		int grouped = stockTrend.getGrouped();
-//		if (grouped < Trend.GROUPED_NONE) {
-//			return mGroupColors[Trend.GROUPED_NONE];
-//		}
-//
-//		return grouped < mGroupColors.length ? mGroupColors[grouped] : mGroupColors[mGroupColors.length - 1];
-//	}
+
+	int lineColor(int level) {
+		if (level > 0 || level < mLineColors.length) {
+			return mLineColors[level];
+		}
+		return mLineColors[0];
+	}
 
 	public boolean displayTrend(int level) {
 		boolean result = false;
@@ -453,7 +432,7 @@ public class StockDataChart {
 		StockTrend stockTrend = getStockTrend(mAdaptiveLevel);
 		label = "                                                     " + " ";
 		if (stockTrend != null && stockTrend.hasFlag(Trend.FLAG_CHANGED)) {
-			color = mLineColors[mAdaptiveLevel];
+			color = lineColor(mAdaptiveLevel);
 			label += "Trend:" + Constant.TAB2 + stockTrend.toTrendString();
 		} else {
 			label += "Action:" + Constant.TAB2 + action;
