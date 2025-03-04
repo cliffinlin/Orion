@@ -650,6 +650,6 @@ public class StockTrend extends DatabaseTable {
 	}
 
 	public String toTrendString() {
-		return getPeriod() + " " + Trend.MARK_LEVEL + getLevel() + " " + getType() + " " + getTurningNet() + "% ";
+		return getPeriod() + " " + Trend.MARK_LEVEL + getLevel() + " " + getType() + " " + getVertexNet() + "/" + getTurningNet();
 	}
 }

@@ -153,17 +153,17 @@ public class StockDataChart {
 		if (Setting.getDisplayDraw()) {
 			addLineDataSet(mTrendEntryList, Trend.LABEL_DRAW, Trend.LEVEL_DRAW, lineData);
 		}
-		addLineDataSet(mGroupEntryList, Trend.LABEL_NONE, Trend.LEVEL_DRAW, lineData, groupFilled(Trend.LEVEL_DRAW), groupFilledColor(Trend.LEVEL_DRAW));
+		addLineDataSet(mGroupEntryList, Trend.LABEL_NONE, Trend.LEVEL_DRAW, lineData, fillChanged(Trend.LEVEL_DRAW), fillColor(Trend.LEVEL_DRAW));
 
 		if (displayTrend(Trend.LEVEL_STROKE)) {
 			addLineDataSet(mTrendEntryList, Trend.LABEL_STROKE, Trend.LEVEL_STROKE, lineData);
 		}
-		addLineDataSet(mGroupEntryList, Trend.LABEL_NONE, Trend.LEVEL_STROKE, lineData, groupFilled(Trend.LEVEL_STROKE), groupFilledColor(Trend.LEVEL_STROKE));
+		addLineDataSet(mGroupEntryList, Trend.LABEL_NONE, Trend.LEVEL_STROKE, lineData, fillChanged(Trend.LEVEL_STROKE), fillColor(Trend.LEVEL_STROKE));
 
 		if (displayTrend(Trend.LEVEL_SEGMENT)) {
 			addLineDataSet(mTrendEntryList, Trend.LABEL_SEGMENT, Trend.LEVEL_SEGMENT, lineData);
 		}
-		addLineDataSet(mGroupEntryList, Trend.LABEL_NONE, Trend.LEVEL_SEGMENT, lineData, groupFilled(Trend.LEVEL_SEGMENT), groupFilledColor(Trend.LEVEL_SEGMENT));
+		addLineDataSet(mGroupEntryList, Trend.LABEL_NONE, Trend.LEVEL_SEGMENT, lineData, fillChanged(Trend.LEVEL_SEGMENT), fillColor(Trend.LEVEL_SEGMENT));
 
 		if (displayTrend(Trend.LEVEL_LINE)) {
 			addLineDataSet(mTrendEntryList, Trend.LABEL_LINE, Trend.LEVEL_LINE, lineData);
@@ -172,8 +172,8 @@ public class StockDataChart {
 		if (displayTrend(Trend.LEVEL_OUTLINE)) {
 			addLineDataSet(mTrendEntryList, Trend.LABEL_OUTLINE, Trend.LEVEL_OUTLINE, lineData);
 		}
-		addLineDataSet(mGroupEntryList, Trend.LABEL_NONE, Trend.LEVEL_LINE, lineData, groupFilled(Trend.LEVEL_LINE), groupFilledColor(Trend.LEVEL_LINE));
-		addLineDataSet(mGroupEntryList, Trend.LABEL_NONE, Trend.LEVEL_OUTLINE, lineData, groupFilled(Trend.LEVEL_OUTLINE), groupFilledColor(Trend.LEVEL_OUTLINE));
+		addLineDataSet(mGroupEntryList, Trend.LABEL_NONE, Trend.LEVEL_LINE, lineData, fillChanged(Trend.LEVEL_LINE), fillColor(Trend.LEVEL_LINE));
+		addLineDataSet(mGroupEntryList, Trend.LABEL_NONE, Trend.LEVEL_OUTLINE, lineData, fillChanged(Trend.LEVEL_OUTLINE), fillColor(Trend.LEVEL_OUTLINE));
 
 		mCombinedDataMain.setData(lineData);
 	}
@@ -242,32 +242,52 @@ public class StockDataChart {
 		return stockTrend;
 	}
 
-	boolean groupFilled(int level) {
+	boolean fillChanged(int level) {
 		boolean result = false;
 		if (!Setting.getDisplayGrouped()) {
 			return false;
 		}
 
 		StockTrend stockTrend = getStockTrend(level);
-		if (stockTrend != null && stockTrend.getGrouped() > Trend.GROUPED_NONE) {
+		if (stockTrend != null && stockTrend.hasFlag(Trend.FLAG_CHANGED)) {
 			result = true;
 		}
 		return result;
 	}
 
-	int groupFilledColor(int level) {
-		StockTrend stockTrend = getStockTrend(level);
-		if (stockTrend == null) {
-			return mGroupColors[Trend.GROUPED_NONE];
+	int fillColor(int level) {
+		if (level > 0 || level < mLineColors.length) {
+			return mLineColors[level];
 		}
-
-		int grouped = stockTrend.getGrouped();
-		if (grouped < Trend.GROUPED_NONE) {
-			return mGroupColors[Trend.GROUPED_NONE];
-		}
-
-		return grouped < mGroupColors.length ? mGroupColors[grouped] : mGroupColors[mGroupColors.length - 1];
+		return mLineColors[0];
 	}
+//
+//	boolean groupFilled(int level) {
+//		boolean result = false;
+//		if (!Setting.getDisplayGrouped()) {
+//			return false;
+//		}
+//
+//		StockTrend stockTrend = getStockTrend(level);
+//		if (stockTrend != null && stockTrend.getGrouped() > Trend.GROUPED_NONE) {
+//			result = true;
+//		}
+//		return result;
+//	}
+//
+//	int groupFilledColor(int level) {
+//		StockTrend stockTrend = getStockTrend(level);
+//		if (stockTrend == null) {
+//			return mGroupColors[Trend.GROUPED_NONE];
+//		}
+//
+//		int grouped = stockTrend.getGrouped();
+//		if (grouped < Trend.GROUPED_NONE) {
+//			return mGroupColors[Trend.GROUPED_NONE];
+//		}
+//
+//		return grouped < mGroupColors.length ? mGroupColors[grouped] : mGroupColors[mGroupColors.length - 1];
+//	}
 
 	public boolean displayTrend(int level) {
 		boolean result = false;

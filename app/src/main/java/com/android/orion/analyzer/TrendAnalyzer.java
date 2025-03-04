@@ -443,17 +443,27 @@ public class TrendAnalyzer {
 			return;
 		}
 
-		int grouped = Trend.GROUPED_NONE;
 		Collection<ArrayList<StockTrend>> valuesCollection = mGroupMap.values();
 		ArrayList<ArrayList<StockTrend>> valuesList = new ArrayList<>(valuesCollection);
 		Collections.sort(valuesList, sizeComparator);
-
+		int grouped = Trend.GROUPED_NONE;
 		for (ArrayList<StockTrend> stockTrendlist : valuesList) {
 			grouped++;
 			if (stockTrendlist != null && stockTrendlist.size() > 1) {
+				boolean changed = false;
 				for (StockTrend stockTrend : stockTrendlist) {
 					if (stockTrend != null) {
 						stockTrend.setGrouped(grouped);
+						if (stockTrend.hasFlag(Trend.FLAG_CHANGED)) {
+							changed = true;
+						}
+					}
+				}
+				if (changed) {
+					for (StockTrend stockTrend : stockTrendlist) {
+						if (stockTrend != null) {
+							stockTrend.addFlag(Trend.FLAG_CHANGED);
+						}
 					}
 				}
 			}
@@ -488,7 +498,7 @@ public class TrendAnalyzer {
 					continue;
 				}
 				stockTrend.removeFlag(Trend.FLAG_ADAPTIVE);
-				if (stockTrend.getLevel() == level) {
+				if (stockTrend.getLevel() >= level) {
 					stockTrend.addFlag(Trend.FLAG_ADAPTIVE);
 				}
 				mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValuesFlag());
