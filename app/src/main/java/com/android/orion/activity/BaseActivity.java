@@ -19,7 +19,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
-import com.android.orion.application.MainApplication;
 import com.android.orion.database.Stock;
 import com.android.orion.interfaces.AnalyzeListener;
 import com.android.orion.interfaces.DownloadListener;
@@ -42,6 +41,10 @@ public class BaseActivity extends Activity implements AnalyzeListener, DownloadL
 	public static final int MESSAGE_ON_RESTART = 1006;
 	public static final int MESSAGE_ON_NEW_INTENT = 1007;
 
+	public static final int MESSAGE_ON_CREATE_OPTIONS_MENU = 1100;
+
+	public static final int MESSAGE_ON_MENU_ITEM_SELECTED = 1200;
+	public static final int MESSAGE_ON_MENU_ITEM_SELECTED_HOME = 1201;
 
 	private static final int REQUEST_EXTERNAL_STORAGE = 1;
 	private static final String[] PERMISSIONS_STORAGE = {"android.permission.READ_EXTERNAL_STORAGE",
@@ -61,44 +64,44 @@ public class BaseActivity extends Activity implements AnalyzeListener, DownloadL
 	IStockDataProvider mStockDataProvider = StockDataProvider.getInstance();
 
 	HandlerThread mHandlerThread;
-	ServiceHandler mServiceHandler;
+	BackgroundHandler mBackgroundHandler;
 	String TAG = getClass().getSimpleName();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		init();
-		mServiceHandler.sendEmptyMessage(MESSAGE_ON_CREATE);
+		initBackgroundHandler();
+		mBackgroundHandler.sendEmptyMessage(MESSAGE_ON_CREATE);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		mServiceHandler.sendEmptyMessage(MESSAGE_ON_RESUME);
+		mBackgroundHandler.sendEmptyMessage(MESSAGE_ON_RESUME);
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		mServiceHandler.sendEmptyMessage(MESSAGE_ON_PAUSE);
+		mBackgroundHandler.sendEmptyMessage(MESSAGE_ON_PAUSE);
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		mServiceHandler.sendEmptyMessage(MESSAGE_ON_DESTROY);
+		mBackgroundHandler.sendEmptyMessage(MESSAGE_ON_DESTROY);
 	}
 
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 		setIntent(intent);
-		mServiceHandler.sendEmptyMessage(MESSAGE_ON_NEW_INTENT);
+		mBackgroundHandler.sendEmptyMessage(MESSAGE_ON_NEW_INTENT);
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+		mBackgroundHandler.sendEmptyMessage(MESSAGE_ON_CREATE_OPTIONS_MENU);
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -106,11 +109,59 @@ public class BaseActivity extends Activity implements AnalyzeListener, DownloadL
 	public boolean onMenuItemSelected(int featureId, @NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home:
-				finish();
+				mBackgroundHandler.sendEmptyMessage(MESSAGE_ON_MENU_ITEM_SELECTED_HOME);
 				return true;
 			default:
 				return super.onMenuItemSelected(featureId, item);
 		}
+	}
+
+	void initBackgroundHandler() {
+		mHandlerThread = new HandlerThread(TAG);
+		mHandlerThread.start();
+		mBackgroundHandler = new BackgroundHandler(mHandlerThread.getLooper());
+	}
+
+	void onCreateHandler() {
+		mContext = this;
+		onNewIntentHandler();
+		mStockDataProvider.registerAnalyzeListener(this);
+		mStockDataProvider.registerDownloadListener(this);
+	}
+
+	void onResumeHandler() {
+		checkPermission();
+		mResumed = true;
+	}
+
+	void onPauseHandler() {
+		mResumed = false;
+	}
+
+	void onDestroyHandler() {
+		mStockDataProvider.unRegisterAnalyzeListener(this);
+		mStockDataProvider.unRegisterDownloadListener(this);
+
+		mHandlerThread.quitSafely();
+	}
+
+	void onNewIntentHandler() {
+		mIntent = getIntent();
+		if (mIntent != null) {
+			mAction = mIntent.getAction();
+			mBundle = mIntent.getExtras();
+		}
+	}
+
+	void onCreateOptionsMenuHandler() {
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+	}
+
+	void onMenuItemSelectedHandler() {
+	}
+
+	void onMenuItemSelectedHomeHandler() {
+		finish();
 	}
 
 	void restartLoader() {
@@ -166,15 +217,9 @@ public class BaseActivity extends Activity implements AnalyzeListener, DownloadL
 		}
 	}
 
-	void init() {
-		mHandlerThread = new HandlerThread(TAG);
-		mHandlerThread.start();
-		mServiceHandler = new ServiceHandler(mHandlerThread.getLooper());
-	}
+	class BackgroundHandler extends Handler {
 
-	class ServiceHandler extends Handler {
-
-		public ServiceHandler(Looper looper) {
+		public BackgroundHandler(Looper looper) {
 			super(looper);
 		}
 
@@ -205,38 +250,16 @@ public class BaseActivity extends Activity implements AnalyzeListener, DownloadL
 				case MESSAGE_ON_NEW_INTENT:
 					onNewIntentHandler();
 					break;
+				case MESSAGE_ON_CREATE_OPTIONS_MENU:
+					onCreateOptionsMenuHandler();
+					break;
+				case MESSAGE_ON_MENU_ITEM_SELECTED:
+					onMenuItemSelectedHandler();
+					break;
+				case MESSAGE_ON_MENU_ITEM_SELECTED_HOME:
+					onMenuItemSelectedHomeHandler();
+					break;
 			}
-		}
-	}
-
-	void onCreateHandler() {
-		mContext = this;
-		onNewIntentHandler();
-		mStockDataProvider.registerAnalyzeListener(this);
-		mStockDataProvider.registerDownloadListener(this);
-	}
-
-	void onResumeHandler() {
-		checkPermission();
-		mResumed = true;
-	}
-
-	void onPauseHandler() {
-		mResumed = false;
-	}
-
-	void onDestroyHandler() {
-		mStockDataProvider.unRegisterAnalyzeListener(this);
-		mStockDataProvider.unRegisterDownloadListener(this);
-
-		mHandlerThread.quitSafely();
-	}
-
-	void onNewIntentHandler() {
-		mIntent = getIntent();
-		if (mIntent != null) {
-			mAction = mIntent.getAction();
-			mBundle = mIntent.getExtras();
 		}
 	}
 }

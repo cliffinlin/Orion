@@ -80,8 +80,34 @@ public class StockTrendListActivity extends ListActivity implements
 	SimpleCursorAdapter mRightAdapter = null;
 
 	ActionMode mCurrentActionMode = null;
-	StockTrend mStockTrend = new StockTrend();
+	private final ActionMode.Callback mModeCallBack = new ActionMode.Callback() {
+		@Override
+		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+			mode.setTitle("Actions");
+			mode.getMenuInflater().inflate(R.menu.stock_trend_list_action, menu);
+			return true;
+		}
 
+		@Override
+		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+			return false;
+		}
+
+		@Override
+		public boolean onActionItemClicked(final ActionMode mode, MenuItem item) {
+			switch (item.getItemId()) {
+				default:
+					return false;
+			}
+		}
+
+		@Override
+		public void onDestroyActionMode(ActionMode mode) {
+			mCurrentActionMode = null;
+		}
+	};
+
+	StockTrend mStockTrend = new StockTrend();
 	Handler mHandler = new Handler(Looper.getMainLooper()) {
 
 		@Override
@@ -110,33 +136,6 @@ public class StockTrendListActivity extends ListActivity implements
 		@Override
 		public void onChange(boolean selfChange) {
 			super.onChange(selfChange);
-		}
-	};
-
-	private final ActionMode.Callback mModeCallBack = new ActionMode.Callback() {
-		@Override
-		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-			mode.setTitle("Actions");
-			mode.getMenuInflater().inflate(R.menu.stock_trend_list_action, menu);
-			return true;
-		}
-
-		@Override
-		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-			return false;
-		}
-
-		@Override
-		public boolean onActionItemClicked(final ActionMode mode, MenuItem item) {
-			switch (item.getItemId()) {
-				default:
-					return false;
-			}
-		}
-
-		@Override
-		public void onDestroyActionMode(ActionMode mode) {
-			mCurrentActionMode = null;
 		}
 	};
 

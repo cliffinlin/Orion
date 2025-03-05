@@ -94,20 +94,6 @@ public class StockPerceptronListActivity extends ListActivity implements
 	SimpleCursorAdapter mLeftAdapter = null;
 	SimpleCursorAdapter mRightAdapter = null;
 	ActionMode mCurrentActionMode = null;
-	Stock mStock = new Stock();
-	ContentObserver mContentObserver = new ContentObserver(new Handler()) {
-		@Override
-		public void onChange(boolean selfChange, Uri uri) {
-			super.onChange(selfChange, uri);
-			// restartLoader();
-		}
-
-		@Override
-		public void onChange(boolean selfChange) {
-			super.onChange(selfChange);
-		}
-	};
-
 	private final ActionMode.Callback mModeCallBack = new ActionMode.Callback() {
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
@@ -132,6 +118,20 @@ public class StockPerceptronListActivity extends ListActivity implements
 		@Override
 		public void onDestroyActionMode(ActionMode mode) {
 			mCurrentActionMode = null;
+		}
+	};
+
+	Stock mStock = new Stock();
+	ContentObserver mContentObserver = new ContentObserver(new Handler()) {
+		@Override
+		public void onChange(boolean selfChange, Uri uri) {
+			super.onChange(selfChange, uri);
+			// restartLoader();
+		}
+
+		@Override
+		public void onChange(boolean selfChange) {
+			super.onChange(selfChange);
 		}
 	};
 

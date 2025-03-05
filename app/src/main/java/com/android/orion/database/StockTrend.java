@@ -328,6 +328,14 @@ public class StockTrend extends DatabaseTable {
 		}
 	}
 
+	public void setDateTime(StockData stockData) {
+		if (stockData == null) {
+			return;
+		}
+		setDate(stockData.getDate());
+		setTime(stockData.getTime());
+	}
+
 	public int getLevel() {
 		return mLevel;
 	}
@@ -617,14 +625,6 @@ public class StockTrend extends DatabaseTable {
 		setupTurningNet();
 		setupTurningRate();
 		setupProfit();
-	}
-
-	public void setDateTime(StockData stockData) {
-		if (stockData == null) {
-			return;
-		}
-		setDate(stockData.getDate());
-		setTime(stockData.getTime());
 	}
 
 	public String toString() {
