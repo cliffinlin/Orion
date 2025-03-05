@@ -51,23 +51,7 @@ public class StorageActivity extends DatabaseActivity {
 
 	Uri mUri = null;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-	}
-
 	Handler mHandler = new Handler(Looper.getMainLooper()) {
-
 		@Override
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
@@ -100,11 +84,6 @@ public class StorageActivity extends DatabaseActivity {
 			}
 		}
 	};
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-	}
 
 	void performLoadFromFile() {
 		Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);

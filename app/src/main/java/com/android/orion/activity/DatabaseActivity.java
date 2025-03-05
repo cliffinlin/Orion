@@ -17,21 +17,6 @@ import java.nio.channels.FileChannel;
 
 public class DatabaseActivity extends BaseActivity {
 
-	public static final long RESULT_FAILURE = -1;
-	public static final long RESULT_SUCCESS = 0;
-
-	protected DatabaseContentObserver mDatabaseContentObserver = null;
-
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		if (mDatabaseContentObserver == null) {
-			mDatabaseContentObserver = new DatabaseContentObserver(
-					new Handler());
-		}
-	}
-
 	String backupDatabase() {
 		String result = "";
 		try {
@@ -68,18 +53,6 @@ public class DatabaseActivity extends BaseActivity {
 			dst.close();
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-	}
-
-	class DatabaseContentObserver extends ContentObserver {
-
-		public DatabaseContentObserver(Handler handler) {
-			super(handler);
-		}
-
-		@Override
-		public void onChange(boolean selfChange, Uri uri) {
-			super.onChange(selfChange, uri);
 		}
 	}
 }

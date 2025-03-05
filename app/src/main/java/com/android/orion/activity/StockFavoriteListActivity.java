@@ -112,6 +112,15 @@ public class StockFavoriteListActivity extends ListActivity implements
 	}
 
 	@Override
+	protected void onResume() {
+		super.onResume();
+
+		initHeader();
+		setupListView();
+		restartLoader();
+	}
+
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.stock_favorite_list, menu);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -121,10 +130,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 	@Override
 	public boolean onMenuItemSelected(int featureId, @NonNull MenuItem item) {
 		switch (item.getItemId()) {
-			case android.R.id.home:
-				finish();
-				return true;
-
 			case R.id.action_new: {
 				Intent intent = new Intent(this, StockActivity.class);
 				intent.setAction(Constant.ACTION_FAVORITE_STOCK_INSERT);
@@ -449,25 +454,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 
 	void restartLoader() {
 		mLoaderManager.restartLoader(LOADER_ID_STOCK_FAVORITE_LIST, null, this);
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-
-		initHeader();
-		setupListView();
-		restartLoader();
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
 	}
 
 	@Override

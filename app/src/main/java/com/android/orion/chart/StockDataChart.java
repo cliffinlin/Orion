@@ -50,7 +50,7 @@ public class StockDataChart {
 	public ArrayList<Entry> mDrawLastEntryList = new ArrayList<>();
 	public List<Entry>[] mTrendEntryList = new List[Trend.LEVEL_MAX];
 	public List<Entry>[] mGroupEntryList = new List[Trend.LEVEL_MAX];
-	public int[] mLineColors = {Color.WHITE, Color.GRAY, Color.YELLOW, Color.BLACK, Color.BLUE, Color.RED, Color.MAGENTA};
+	public int[] mLevelColors = {Color.WHITE, Color.GRAY, Color.YELLOW, Color.BLACK, Color.BLUE, Color.RED, Color.MAGENTA};
 	public CombinedData mCombinedDataMain = new CombinedData(mXValues);
 	public CombinedData mCombinedDataSub = new CombinedData(mXValues);
 
@@ -149,7 +149,7 @@ public class StockDataChart {
 
 		addLineDataSet(mDrawFirstEntryList, Trend.LABEL_NONE, lineColor(Trend.LEVEL_DRAW), false, lineData, false, lineColor(Trend.LEVEL_DRAW));
 		addLineDataSet(mDrawLastEntryList, Trend.LABEL_NONE, lineColor(Trend.LEVEL_DRAW), false, lineData, false, lineColor(Trend.LEVEL_DRAW));
-		if (Setting.getDisplayDraw()) {
+		if (displayTrend(Trend.LEVEL_DRAW)) {
 			addLineDataSet(mTrendEntryList, Trend.LABEL_DRAW, Trend.LEVEL_DRAW, lineData);
 		}
 		addLineDataSet(mGroupEntryList, Trend.LABEL_NONE, Trend.LEVEL_DRAW, lineData, fillChanged(Trend.LEVEL_DRAW), fillColor(Trend.LEVEL_DRAW));
@@ -255,17 +255,17 @@ public class StockDataChart {
 	}
 
 	int fillColor(int level) {
-		if (level > 0 || level < mLineColors.length) {
-			return mLineColors[level];
+		if (level > 0 || level < mLevelColors.length) {
+			return mLevelColors[level];
 		}
-		return mLineColors[0];
+		return mLevelColors[0];
 	}
 
 	int lineColor(int level) {
-		if (level > 0 || level < mLineColors.length) {
-			return mLineColors[level];
+		if (level > 0 || level < mLevelColors.length) {
+			return mLevelColors[level];
 		}
-		return mLineColors[0];
+		return mLevelColors[0];
 	}
 
 	public boolean displayTrend(int level) {
