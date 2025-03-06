@@ -39,8 +39,6 @@ public class StockFinancialListActivity extends ListActivity implements
 
 	public static final int LOADER_ID_STOCK_FINANCIAL_LIST = 0;
 
-	public static final int REQUEST_CODE_STOCK_INSERT = 0;
-
 	public static final int mHeaderTextDefaultColor = Color.BLACK;
 	public static final int mHeaderTextHighlightColor = Color.RED;
 
@@ -138,21 +136,6 @@ public class StockFinancialListActivity extends ListActivity implements
 	@Override
 	public boolean onMenuItemSelected(int featureId, @NonNull MenuItem item) {
 		switch (item.getItemId()) {
-			case android.R.id.home:
-				finish();
-				return true;
-
-			case R.id.action_new: {
-				Intent intent = new Intent(this, StockActivity.class);
-				intent.setAction(Constant.ACTION_FAVORITE_STOCK_INSERT);
-				startActivityForResult(intent, REQUEST_CODE_STOCK_INSERT);
-				return true;
-			}
-
-			case R.id.action_search:
-				startActivity(new Intent(this, StockSearchActivity.class));
-				return true;
-
 			case R.id.action_refresh:
 				try {
 					mDatabaseManager.loadStockArrayMap(mStockArrayMap);
@@ -164,10 +147,6 @@ public class StockFinancialListActivity extends ListActivity implements
 					e.printStackTrace();
 				}
 				mHandler.sendEmptyMessage(MESSAGE_REFRESH);
-				return true;
-
-			case R.id.action_setting:
-				startActivity(new Intent(this, SettingActivity.class));
 				return true;
 
 			case R.id.action_load:
@@ -188,23 +167,6 @@ public class StockFinancialListActivity extends ListActivity implements
 
 			default:
 				return super.onMenuItemSelected(featureId, item);
-		}
-	}
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode,
-	                                Intent intent) {
-		super.onActivityResult(requestCode, resultCode, intent);
-
-		if (resultCode == RESULT_OK) {
-			switch (requestCode) {
-				case REQUEST_CODE_STOCK_INSERT:
-					mStockDataProvider.download(mStock);
-					break;
-
-				default:
-					break;
-			}
 		}
 	}
 
@@ -323,6 +285,14 @@ public class StockFinancialListActivity extends ListActivity implements
 		Preferences.putString(Setting.SETTING_SORT_ORDER_FINANCIAL_LIST, mSortOrder);
 
 		restartLoader();
+	}
+
+	@Override
+	void onMenuItemSelectedNewHandler() {
+		super.onMenuItemSelectedNewHandler();
+		Intent intent = new Intent(this, StockActivity.class);
+		intent.setAction(Constant.ACTION_FAVORITE_STOCK_INSERT);
+		startActivity(intent);
 	}
 
 	void setHeaderTextColor(int id, int color) {

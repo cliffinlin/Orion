@@ -19,6 +19,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
+import com.android.orion.R;
 import com.android.orion.database.Stock;
 import com.android.orion.interfaces.AnalyzeListener;
 import com.android.orion.interfaces.DownloadListener;
@@ -45,6 +46,10 @@ public class BaseActivity extends Activity implements AnalyzeListener, DownloadL
 
 	public static final int MESSAGE_ON_MENU_ITEM_SELECTED = 1200;
 	public static final int MESSAGE_ON_MENU_ITEM_SELECTED_HOME = 1201;
+	public static final int MESSAGE_ON_MENU_ITEM_SELECTED_SEARCH = 1202;
+	public static final int MESSAGE_ON_MENU_ITEM_SELECTED_NEW = 1203;
+	public static final int MESSAGE_ON_MENU_ITEM_SELECTED_REFRESH = 1204;
+	public static final int MESSAGE_ON_MENU_ITEM_SELECTED_SETTINGS = 1205;
 
 	private static final int REQUEST_EXTERNAL_STORAGE = 1;
 	private static final String[] PERMISSIONS_STORAGE = {"android.permission.READ_EXTERNAL_STORAGE",
@@ -111,6 +116,18 @@ public class BaseActivity extends Activity implements AnalyzeListener, DownloadL
 			case android.R.id.home:
 				mBackgroundHandler.sendEmptyMessage(MESSAGE_ON_MENU_ITEM_SELECTED_HOME);
 				return true;
+			case R.id.action_search:
+				mBackgroundHandler.sendEmptyMessage(MESSAGE_ON_MENU_ITEM_SELECTED_SEARCH);
+				return true;
+			case R.id.action_new:
+				mBackgroundHandler.sendEmptyMessage(MESSAGE_ON_MENU_ITEM_SELECTED_NEW);
+				return true;
+			case R.id.action_refresh:
+				mBackgroundHandler.sendEmptyMessage(MESSAGE_ON_MENU_ITEM_SELECTED_REFRESH);
+				return true;
+			case R.id.action_setting:
+				mBackgroundHandler.sendEmptyMessage(MESSAGE_ON_MENU_ITEM_SELECTED_SETTINGS);
+				return true;
 			default:
 				return super.onMenuItemSelected(featureId, item);
 		}
@@ -162,6 +179,20 @@ public class BaseActivity extends Activity implements AnalyzeListener, DownloadL
 
 	void onMenuItemSelectedHomeHandler() {
 		finish();
+	}
+
+	void onMenuItemSelectedSearchHandler() {
+		startActivity(new Intent(this, StockSearchActivity.class));
+	}
+
+	void onMenuItemSelectedNewHandler() {
+	}
+
+	void onMenuItemSelectedRefreshHandler() {
+	}
+
+	void onMenuItemSelectedSettingsHandler() {
+		startActivity(new Intent(this, SettingActivity.class));
 	}
 
 	void restartLoader() {
@@ -258,6 +289,18 @@ public class BaseActivity extends Activity implements AnalyzeListener, DownloadL
 					break;
 				case MESSAGE_ON_MENU_ITEM_SELECTED_HOME:
 					onMenuItemSelectedHomeHandler();
+					break;
+				case MESSAGE_ON_MENU_ITEM_SELECTED_SEARCH:
+					onMenuItemSelectedSearchHandler();
+					break;
+				case MESSAGE_ON_MENU_ITEM_SELECTED_NEW:
+					onMenuItemSelectedNewHandler();
+					break;
+				case MESSAGE_ON_MENU_ITEM_SELECTED_REFRESH:
+					onMenuItemSelectedRefreshHandler();
+					break;
+				case MESSAGE_ON_MENU_ITEM_SELECTED_SETTINGS:
+					onMenuItemSelectedSettingsHandler();
 					break;
 			}
 		}

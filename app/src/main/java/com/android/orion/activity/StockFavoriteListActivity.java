@@ -39,8 +39,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 
 	public static final int LOADER_ID_STOCK_FAVORITE_LIST = 0;
 
-	public static final int REQUEST_CODE_STOCK_INSERT = 0;
-
 	public static final int mHeaderTextDefaultColor = Color.BLACK;
 	public static final int mHeaderTextHighlightColor = Color.RED;
 
@@ -99,25 +97,16 @@ public class StockFavoriteListActivity extends ListActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		setContentView(R.layout.activity_stock_list);
-
-		mSortOrder = Preferences.getString(Setting.SETTING_SORT_ORDER_STOCK_LIST,
-				mSortOrderDefault);
-
 		initHeader();
 		setupListView();
-
-		mLoaderManager.initLoader(LOADER_ID_STOCK_FAVORITE_LIST, null, this);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-
 		initHeader();
 		setupListView();
-		restartLoader();
 	}
 
 	@Override
@@ -130,17 +119,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 	@Override
 	public boolean onMenuItemSelected(int featureId, @NonNull MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.action_new: {
-				Intent intent = new Intent(this, StockActivity.class);
-				intent.setAction(Constant.ACTION_FAVORITE_STOCK_INSERT);
-				startActivityForResult(intent, REQUEST_CODE_STOCK_INSERT);
-				return true;
-			}
-
-			case R.id.action_search:
-				startActivity(new Intent(this, StockSearchActivity.class));
-				return true;
-
 			case R.id.action_refresh:
 				try {
 					mDatabaseManager.loadStockArrayMap(mStockArrayMap);
@@ -153,10 +131,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 					e.printStackTrace();
 				}
 				mHandler.sendEmptyMessage(MESSAGE_REFRESH);
-				return true;
-
-			case R.id.action_setting:
-				startActivity(new Intent(this, SettingActivity.class));
 				return true;
 
 			case R.id.action_load:
@@ -177,23 +151,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 
 			default:
 				return super.onMenuItemSelected(featureId, item);
-		}
-	}
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode,
-	                                Intent intent) {
-		super.onActivityResult(requestCode, resultCode, intent);
-
-		if (resultCode == RESULT_OK) {
-			switch (requestCode) {
-				case REQUEST_CODE_STOCK_INSERT:
-					mStockDataProvider.download(mStock);
-					break;
-
-				default:
-					break;
-			}
 		}
 	}
 
@@ -257,6 +214,28 @@ public class StockFavoriteListActivity extends ListActivity implements
 		Preferences.putString(Setting.SETTING_SORT_ORDER_STOCK_LIST, mSortOrder);
 
 		restartLoader();
+	}
+
+	@Override
+	void onCreateHandler() {
+		super.onCreateHandler();
+		mSortOrder = Preferences.getString(Setting.SETTING_SORT_ORDER_STOCK_LIST,
+				mSortOrderDefault);
+		initLoader();
+	}
+
+	@Override
+	void onResumeHandler() {
+		super.onResumeHandler();
+		restartLoader();
+	}
+
+	@Override
+	void onMenuItemSelectedNewHandler() {
+		super.onMenuItemSelectedNewHandler();
+		Intent intent = new Intent(this, StockActivity.class);
+		intent.setAction(Constant.ACTION_FAVORITE_STOCK_INSERT);
+		startActivity(intent);
 	}
 
 	void setHeaderTextColor(int id, int color) {
@@ -450,6 +429,10 @@ public class StockFavoriteListActivity extends ListActivity implements
 			mRightListView.setOnItemClickListener(this);
 			mRightListView.setOnItemLongClickListener(this);
 		}
+	}
+
+	void initLoader() {
+		mLoaderManager.initLoader(LOADER_ID_STOCK_FAVORITE_LIST, null, this);
 	}
 
 	void restartLoader() {
