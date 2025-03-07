@@ -288,7 +288,7 @@ public class StockFinancialListActivity extends ListActivity implements
 	}
 
 	@Override
-	void onMenuItemSelectedNewHandler() {
+	public void onMenuItemSelectedNewHandler() {
 		super.onMenuItemSelectedNewHandler();
 		Intent intent = new Intent(this, StockActivity.class);
 		intent.setAction(Constant.ACTION_FAVORITE_STOCK_INSERT);

@@ -70,30 +70,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 	SimpleCursorAdapter mLeftAdapter = null;
 	SimpleCursorAdapter mRightAdapter = null;
 
-	Handler mHandler = new Handler(Looper.getMainLooper()) {
-
-		@Override
-		public void handleMessage(Message msg) {
-			super.handleMessage(msg);
-
-			switch (msg.what) {
-				case MESSAGE_REFRESH:
-					try {
-						mDatabaseManager.loadStockArrayMap(mStockArrayMap);
-						for (Stock stock : mStockArrayMap.values()) {
-							Setting.setDownloadStockData(stock.getSE(), stock.getCode(), 0);
-							mStockDataProvider.download(stock);
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					break;
-				default:
-					break;
-			}
-		}
-	};
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -103,10 +79,24 @@ public class StockFavoriteListActivity extends ListActivity implements
 	}
 
 	@Override
+	public void onCreateHandler() {
+		super.onCreateHandler();
+		mSortOrder = Preferences.getString(Setting.SETTING_SORT_ORDER_STOCK_LIST,
+				mSortOrderDefault);
+		initLoader();
+	}
+
+	@Override
 	protected void onResume() {
 		super.onResume();
 		initHeader();
 		setupListView();
+	}
+
+	@Override
+	public void onResumeHandler() {
+		super.onResumeHandler();
+		restartLoader();
 	}
 
 	@Override
@@ -119,20 +109,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 	@Override
 	public boolean onMenuItemSelected(int featureId, @NonNull MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.action_refresh:
-				try {
-					mDatabaseManager.loadStockArrayMap(mStockArrayMap);
-					for (Stock stock : mStockArrayMap.values()) {
-						mDatabaseManager.deleteStockData(stock);
-						mDatabaseManager.deleteStockTrend(stock);
-						mDatabaseManager.deleteStockPerceptron(stock.getId());
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				mHandler.sendEmptyMessage(MESSAGE_REFRESH);
-				return true;
-
 			case R.id.action_load:
 				performLoadFromFile();
 				return true;
@@ -152,6 +128,30 @@ public class StockFavoriteListActivity extends ListActivity implements
 			default:
 				return super.onMenuItemSelected(featureId, item);
 		}
+	}
+
+	@Override
+	public void onMenuItemSelectedRefreshHandler() {
+		try {
+			mDatabaseManager.loadStockArrayMap(mStockArrayMap);
+			for (Stock stock : mStockArrayMap.values()) {
+				mDatabaseManager.deleteStockData(stock);
+				mDatabaseManager.deleteStockTrend(stock);
+				mDatabaseManager.deleteStockPerceptron(stock.getId());
+				Setting.setDownloadStockData(stock.getSE(), stock.getCode(), 0);
+				mStockDataProvider.download(stock);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void onMenuItemSelectedNewHandler() {
+		super.onMenuItemSelectedNewHandler();
+		Intent intent = new Intent(this, StockActivity.class);
+		intent.setAction(Constant.ACTION_FAVORITE_STOCK_INSERT);
+		startActivity(intent);
 	}
 
 	@Override
@@ -214,28 +214,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 		Preferences.putString(Setting.SETTING_SORT_ORDER_STOCK_LIST, mSortOrder);
 
 		restartLoader();
-	}
-
-	@Override
-	void onCreateHandler() {
-		super.onCreateHandler();
-		mSortOrder = Preferences.getString(Setting.SETTING_SORT_ORDER_STOCK_LIST,
-				mSortOrderDefault);
-		initLoader();
-	}
-
-	@Override
-	void onResumeHandler() {
-		super.onResumeHandler();
-		restartLoader();
-	}
-
-	@Override
-	void onMenuItemSelectedNewHandler() {
-		super.onMenuItemSelectedNewHandler();
-		Intent intent = new Intent(this, StockActivity.class);
-		intent.setAction(Constant.ACTION_FAVORITE_STOCK_INSERT);
-		startActivity(intent);
 	}
 
 	void setHeaderTextColor(int id, int color) {

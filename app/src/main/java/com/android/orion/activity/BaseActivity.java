@@ -21,8 +21,10 @@ import androidx.core.app.ActivityCompat;
 
 import com.android.orion.R;
 import com.android.orion.database.Stock;
+import com.android.orion.handler.BackgroundHandler;
 import com.android.orion.interfaces.AnalyzeListener;
 import com.android.orion.interfaces.DownloadListener;
+import com.android.orion.interfaces.IBackgroundHandler;
 import com.android.orion.interfaces.IStockDataProvider;
 import com.android.orion.manager.DatabaseManager;
 import com.android.orion.manager.StockManager;
@@ -31,7 +33,7 @@ import com.android.orion.utility.Logger;
 
 import java.util.ArrayList;
 
-public class BaseActivity extends Activity implements AnalyzeListener, DownloadListener {
+public class BaseActivity extends Activity implements IBackgroundHandler, AnalyzeListener, DownloadListener {
 
 	public static final int MESSAGE_ON_CREATE = 1000;
 	public static final int MESSAGE_ON_RESUME = 1001;
@@ -67,102 +69,62 @@ public class BaseActivity extends Activity implements AnalyzeListener, DownloadL
 	StockManager mStockManager = StockManager.getInstance();
 	DatabaseManager mDatabaseManager = DatabaseManager.getInstance();
 	IStockDataProvider mStockDataProvider = StockDataProvider.getInstance();
-
-	HandlerThread mHandlerThread;
 	BackgroundHandler mBackgroundHandler;
-	String TAG = getClass().getSimpleName();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		initBackgroundHandler();
-		mBackgroundHandler.sendEmptyMessage(MESSAGE_ON_CREATE);
+		mBackgroundHandler = BackgroundHandler.create(this, getClass().getSimpleName());
+		mBackgroundHandler.onCreate(savedInstanceState);
 	}
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		mBackgroundHandler.sendEmptyMessage(MESSAGE_ON_RESUME);
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-		mBackgroundHandler.sendEmptyMessage(MESSAGE_ON_PAUSE);
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		mBackgroundHandler.sendEmptyMessage(MESSAGE_ON_DESTROY);
-	}
-
-	@Override
-	protected void onNewIntent(Intent intent) {
-		super.onNewIntent(intent);
-		setIntent(intent);
-		mBackgroundHandler.sendEmptyMessage(MESSAGE_ON_NEW_INTENT);
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		mBackgroundHandler.sendEmptyMessage(MESSAGE_ON_CREATE_OPTIONS_MENU);
-		return super.onCreateOptionsMenu(menu);
-	}
-
-	@Override
-	public boolean onMenuItemSelected(int featureId, @NonNull MenuItem item) {
-		switch (item.getItemId()) {
-			case android.R.id.home:
-				mBackgroundHandler.sendEmptyMessage(MESSAGE_ON_MENU_ITEM_SELECTED_HOME);
-				return true;
-			case R.id.action_search:
-				mBackgroundHandler.sendEmptyMessage(MESSAGE_ON_MENU_ITEM_SELECTED_SEARCH);
-				return true;
-			case R.id.action_new:
-				mBackgroundHandler.sendEmptyMessage(MESSAGE_ON_MENU_ITEM_SELECTED_NEW);
-				return true;
-			case R.id.action_refresh:
-				mBackgroundHandler.sendEmptyMessage(MESSAGE_ON_MENU_ITEM_SELECTED_REFRESH);
-				return true;
-			case R.id.action_setting:
-				mBackgroundHandler.sendEmptyMessage(MESSAGE_ON_MENU_ITEM_SELECTED_SETTINGS);
-				return true;
-			default:
-				return super.onMenuItemSelected(featureId, item);
-		}
-	}
-
-	void initBackgroundHandler() {
-		mHandlerThread = new HandlerThread(TAG);
-		mHandlerThread.start();
-		mBackgroundHandler = new BackgroundHandler(mHandlerThread.getLooper());
-	}
-
-	void onCreateHandler() {
+	public void onCreateHandler() {
 		mContext = this;
 		onNewIntentHandler();
 		mStockDataProvider.registerAnalyzeListener(this);
 		mStockDataProvider.registerDownloadListener(this);
 	}
 
-	void onResumeHandler() {
+	@Override
+	protected void onResume() {
+		super.onResume();
+		mBackgroundHandler.onResume();
+	}
+
+	public void onResumeHandler() {
 		checkPermission();
 		mResumed = true;
 	}
 
-	void onPauseHandler() {
+	@Override
+	protected void onPause() {
+		super.onPause();
+		mBackgroundHandler.onPause();
+	}
+
+	public void onPauseHandler() {
 		mResumed = false;
 	}
 
-	void onDestroyHandler() {
-		mStockDataProvider.unRegisterAnalyzeListener(this);
-		mStockDataProvider.unRegisterDownloadListener(this);
-
-		mHandlerThread.quitSafely();
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		mBackgroundHandler.onDestroy();
 	}
 
-	void onNewIntentHandler() {
+	public void onDestroyHandler() {
+		mStockDataProvider.unRegisterAnalyzeListener(this);
+		mStockDataProvider.unRegisterDownloadListener(this);
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		setIntent(intent);
+		mBackgroundHandler.onNewIntent(intent);
+	}
+
+	public void onNewIntentHandler() {
 		mIntent = getIntent();
 		if (mIntent != null) {
 			mAction = mIntent.getAction();
@@ -170,28 +132,57 @@ public class BaseActivity extends Activity implements AnalyzeListener, DownloadL
 		}
 	}
 
-	void onCreateOptionsMenuHandler() {
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		mBackgroundHandler.onCreateOptionsMenu(menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	public void onCreateOptionsMenuHandler() {
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
-	void onMenuItemSelectedHandler() {
+	@Override
+	public boolean onMenuItemSelected(int featureId, @NonNull MenuItem item) {
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				mBackgroundHandler.onMenuItemSelectedHome();
+				return true;
+			case R.id.action_search:
+				mBackgroundHandler.onMenuItemSelectedSearch();
+				return true;
+			case R.id.action_new:
+				mBackgroundHandler.onMenuItemSelectedNew();
+				return true;
+			case R.id.action_refresh:
+				mBackgroundHandler.onMenuItemSelectedRefresh();
+				return true;
+			case R.id.action_setting:
+				mBackgroundHandler.onMenuItemSelectedSettings();
+				return true;
+			default:
+				return super.onMenuItemSelected(featureId, item);
+		}
 	}
 
-	void onMenuItemSelectedHomeHandler() {
+	public void onMenuItemSelectedHomeHandler() {
 		finish();
 	}
 
-	void onMenuItemSelectedSearchHandler() {
+	public void onMenuItemSelectedSearchHandler() {
 		startActivity(new Intent(this, StockSearchActivity.class));
 	}
 
-	void onMenuItemSelectedNewHandler() {
+	public void onMenuItemSelectedHandler() {
 	}
 
-	void onMenuItemSelectedRefreshHandler() {
+	public void onMenuItemSelectedNewHandler() {
 	}
 
-	void onMenuItemSelectedSettingsHandler() {
+	public void onMenuItemSelectedRefreshHandler() {
+	}
+
+	public void onMenuItemSelectedSettingsHandler() {
 		startActivity(new Intent(this, SettingActivity.class));
 	}
 
@@ -245,64 +236,6 @@ public class BaseActivity extends Activity implements AnalyzeListener, DownloadL
 	public void onDownloadComplete(String stockCode) {
 		if (mStock.getCode().equals(stockCode)) {
 			restartLoader();
-		}
-	}
-
-	class BackgroundHandler extends Handler {
-
-		public BackgroundHandler(Looper looper) {
-			super(looper);
-		}
-
-		public void handleMessage(Message msg) {
-			if (msg == null) {
-				return;
-			}
-
-			switch (msg.what) {
-				case MESSAGE_ON_CREATE:
-					onCreateHandler();
-					break;
-				case MESSAGE_ON_RESUME:
-					onResumeHandler();
-					break;
-				case MESSAGE_ON_PAUSE:
-					onPauseHandler();
-					break;
-				case MESSAGE_ON_DESTROY:
-					onDestroyHandler();
-					break;
-				case MESSAGE_ON_STOP:
-					break;
-				case MESSAGE_ON_START:
-					break;
-				case MESSAGE_ON_RESTART:
-					break;
-				case MESSAGE_ON_NEW_INTENT:
-					onNewIntentHandler();
-					break;
-				case MESSAGE_ON_CREATE_OPTIONS_MENU:
-					onCreateOptionsMenuHandler();
-					break;
-				case MESSAGE_ON_MENU_ITEM_SELECTED:
-					onMenuItemSelectedHandler();
-					break;
-				case MESSAGE_ON_MENU_ITEM_SELECTED_HOME:
-					onMenuItemSelectedHomeHandler();
-					break;
-				case MESSAGE_ON_MENU_ITEM_SELECTED_SEARCH:
-					onMenuItemSelectedSearchHandler();
-					break;
-				case MESSAGE_ON_MENU_ITEM_SELECTED_NEW:
-					onMenuItemSelectedNewHandler();
-					break;
-				case MESSAGE_ON_MENU_ITEM_SELECTED_REFRESH:
-					onMenuItemSelectedRefreshHandler();
-					break;
-				case MESSAGE_ON_MENU_ITEM_SELECTED_SETTINGS:
-					onMenuItemSelectedSettingsHandler();
-					break;
-			}
 		}
 	}
 }
