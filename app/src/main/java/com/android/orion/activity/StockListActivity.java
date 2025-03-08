@@ -121,17 +121,22 @@ public class StockListActivity extends DatabaseActivity implements
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+	public boolean onMenuItemSelected(int featureId, @NonNull MenuItem item) {
+		return super.onMenuItemSelected(featureId, item);
+	}
+
+	@Override
+	public void handleOnMenuItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_new:
 				Intent intent = new Intent(this, StockActivity.class);
 				intent.setAction(Constant.ACTION_FAVORITE_STOCK_INSERT);
 				startActivity(intent);
-				return true;
+				break;
 
 			case R.id.action_search:
 				startActivity(new Intent(this, StockSearchActivity.class));
-				return true;
+				break;
 
 			case R.id.action_favorite_all:
 				new Thread(new Runnable() {
@@ -147,7 +152,7 @@ public class StockListActivity extends DatabaseActivity implements
 						}
 					}
 				}).start();
-				return true;
+				break;
 
 			case R.id.action_favorite_none:
 				new Thread(new Runnable() {
@@ -166,7 +171,7 @@ public class StockListActivity extends DatabaseActivity implements
 						}
 					}
 				}).start();
-				return true;
+				break;
 
 			case R.id.action_notify_all:
 				new Thread(new Runnable() {
@@ -182,7 +187,7 @@ public class StockListActivity extends DatabaseActivity implements
 						}
 					}
 				}).start();
-				return true;
+				break;
 
 			case R.id.action_notify_none:
 				new Thread(new Runnable() {
@@ -198,17 +203,14 @@ public class StockListActivity extends DatabaseActivity implements
 						}
 					}
 				}).start();
-				return true;
+				break;
 			case R.id.action_backup_database:
 				mHandler.sendEmptyMessage(MESSAGE_BACKUP_DATABASE);
-				return true;
+				break;
 
 			case android.R.id.home:
 				finish();
-				return true;
-
-			default:
-				return super.onOptionsItemSelected(item);
+				break;
 		}
 	}
 

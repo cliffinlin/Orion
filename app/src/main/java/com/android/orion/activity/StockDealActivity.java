@@ -18,6 +18,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import androidx.annotation.NonNull;
+
 import com.android.orion.R;
 import com.android.orion.data.Period;
 import com.android.orion.database.DatabaseContract;
@@ -252,14 +254,8 @@ public class StockDealActivity extends DatabaseActivity implements
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case android.R.id.home:
-				finish();
-				return true;
-		}
-
-		return super.onOptionsItemSelected(item);
+	public boolean onMenuItemSelected(int featureId, @NonNull MenuItem item) {
+		return super.onMenuItemSelected(featureId, item);
 	}
 
 	@Override

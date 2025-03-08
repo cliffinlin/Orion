@@ -20,6 +20,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
+import androidx.annotation.NonNull;
+
 import com.android.orion.R;
 import com.android.orion.chart.ChartSyncHelper;
 import com.android.orion.chart.StockFinancialChart;
@@ -146,32 +148,33 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onMenuItemSelected(int featureId, @NonNull MenuItem item) {
+		return super.onMenuItemSelected(featureId, item);
+	}
+
+	@Override
+	public void handleOnMenuItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case android.R.id.home: {
-				finish();
-				return true;
-			}
 			case R.id.action_prev: {
 				navigateStock(-1);
-				return true;
+				break;
 			}
 			case R.id.action_next: {
 				navigateStock(1);
-				return true;
+				break;
 			}
 			case R.id.action_refresh: {
 				mDatabaseManager.deleteStockFinancial(mStock);
 				mDatabaseManager.deleteStockBonus(mStock);
 				mHandler.sendEmptyMessage(MESSAGE_REFRESH);
-				return true;
+				break;
 			}
 			case R.id.action_edit: {
 				mIntent = new Intent(this, StockActivity.class);
 				mIntent.setAction(Constant.ACTION_STOCK_EDIT);
 				mIntent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
 				startActivity(mIntent);
-				return true;
+				break;
 			}
 			case R.id.action_deal: {
 				Bundle bundle = new Bundle();
@@ -180,11 +183,8 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 				Intent intent = new Intent(this, StockDealListActivity.class);
 				intent.putExtras(bundle);
 				startActivity(intent);
-				return true;
+				break;
 			}
-
-			default:
-				return super.onOptionsItemSelected(item);
 		}
 	}
 

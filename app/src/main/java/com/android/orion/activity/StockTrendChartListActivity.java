@@ -117,21 +117,16 @@ public class StockTrendChartListActivity extends BaseActivity implements
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-		switch (item.getItemId()) {
-			case android.R.id.home:
-				finish();
-				return true;
+	public boolean onMenuItemSelected(int featureId, @NonNull MenuItem item) {
+		return super.onMenuItemSelected(featureId, item);
+	}
 
+	@Override
+	public void handleOnMenuItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
 			case R.id.action_refresh:
 				mHandler.sendEmptyMessage(MESSAGE_REFRESH);
-				return true;
-
-			case R.id.action_setting:
-				return true;
-
-			default:
-				return super.onOptionsItemSelected(item);
+				break;
 		}
 	}
 
