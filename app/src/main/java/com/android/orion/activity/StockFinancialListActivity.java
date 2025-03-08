@@ -7,9 +7,6 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -90,47 +87,40 @@ public class StockFinancialListActivity extends ListActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		setContentView(R.layout.activity_stock_financial_list);
-
-		mSortOrder = Preferences.getString(Setting.SETTING_SORT_ORDER_FINANCIAL_LIST,
-				mSortOrderDefault);
-
 		initHeader();
 		setupListView();
+	}
 
-		mLoaderManager.initLoader(LOADER_ID_STOCK_FINANCIAL_LIST, null, this);
+	@Override
+	public void handleOnCreate(Bundle savedInstanceState) {
+		super.handleOnCreate(savedInstanceState);
+		initLoader();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		initHeader();
+		setupListView();
+	}
+
+	@Override
+	public void handleOnResume() {
+		super.handleOnResume();
+		restartLoader();
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.stock_favorite_list, menu);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+		super.onCreateOptionsMenu(menu);
 		return true;
 	}
 
 	@Override
 	public boolean onMenuItemSelected(int featureId, @NonNull MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.action_load:
-				performLoadFromFile();
-				return true;
-
-			case R.id.action_save:
-				performSaveToFile();
-				return true;
-
-			case R.id.action_deal:
-				startActivity(new Intent(this, StockDealListActivity.class));
-				return true;
-
-			case R.id.action_list:
-				startActivity(new Intent(this, StockListActivity.class));
-				return true;
-
-			default:
-				return super.onMenuItemSelected(featureId, item);
-		}
+		return super.onMenuItemSelected(featureId, item);
 	}
 
 	@Override
@@ -153,6 +143,18 @@ public class StockFinancialListActivity extends ListActivity implements
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+				break;
+			case R.id.action_load:
+				performLoadFromFile();
+				break;
+			case R.id.action_save:
+				performSaveToFile();
+				break;
+			case R.id.action_deal:
+				startActivity(new Intent(this, StockDealListActivity.class));
+				break;
+			case R.id.action_list:
+				startActivity(new Intent(this, StockListActivity.class));
 				break;
 			default:
 				super.handleOnMenuItemSelected(item);
@@ -643,24 +645,14 @@ public class StockFinancialListActivity extends ListActivity implements
 		}
 	}
 
+	void initLoader() {
+		mSortOrder = Preferences.getString(Setting.SETTING_SORT_ORDER_FINANCIAL_LIST,
+				mSortOrderDefault);
+		mLoaderManager.initLoader(LOADER_ID_STOCK_FINANCIAL_LIST, null, this);
+	}
+
 	void restartLoader() {
 		mLoaderManager.restartLoader(LOADER_ID_STOCK_FINANCIAL_LIST, null, this);
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		restartLoader();
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
 	}
 
 	@Override
@@ -692,7 +684,6 @@ public class StockFinancialListActivity extends ListActivity implements
 				mLeftAdapter.swapCursor(cursor);
 				mRightAdapter.swapCursor(cursor);
 				break;
-
 			default:
 				break;
 		}

@@ -172,16 +172,7 @@ public class BaseActivity extends Activity implements IBackgroundHandler, Analyz
 
 	@Override
 	public boolean onMenuItemSelected(int featureId, @NonNull MenuItem item) {
-		switch (item.getItemId()) {
-			case android.R.id.home:
-			case R.id.action_search:
-			case R.id.action_setting:
-			case R.id.action_new:
-			case R.id.action_refresh:
-				return mBackgroundHandler.onMenuItemSelected(item);
-			default:
-				return super.onMenuItemSelected(featureId, item);
-		}
+		return mBackgroundHandler.onMenuItemSelected(item);
 	}
 
 	public void handleOnMenuItemSelected(MenuItem item) {

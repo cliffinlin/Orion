@@ -78,8 +78,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 	@Override
 	public void handleOnCreate(Bundle savedInstanceState) {
 		super.handleOnCreate(savedInstanceState);
-		mSortOrder = Preferences.getString(Setting.SETTING_SORT_ORDER_STOCK_LIST,
-				mSortOrderDefault);
 		initLoader();
 	}
 
@@ -99,32 +97,13 @@ public class StockFavoriteListActivity extends ListActivity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.stock_favorite_list, menu);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+		super.onCreateOptionsMenu(menu);
 		return true;
 	}
 
 	@Override
 	public boolean onMenuItemSelected(int featureId, @NonNull MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.action_load:
-				performLoadFromFile();
-				return true;
-
-			case R.id.action_save:
-				performSaveToFile();
-				return true;
-
-			case R.id.action_deal:
-				startActivity(new Intent(this, StockDealListActivity.class));
-				return true;
-
-			case R.id.action_list:
-				startActivity(new Intent(this, StockListActivity.class));
-				return true;
-
-			default:
-				return super.onMenuItemSelected(featureId, item);
-		}
+		return super.onMenuItemSelected(featureId, item);
 	}
 
 	@Override
@@ -148,6 +127,18 @@ public class StockFavoriteListActivity extends ListActivity implements
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+				break;
+			case R.id.action_load:
+				performLoadFromFile();
+				break;
+			case R.id.action_save:
+				performSaveToFile();
+				break;
+			case R.id.action_deal:
+				startActivity(new Intent(this, StockDealListActivity.class));
+				break;
+			case R.id.action_list:
+				startActivity(new Intent(this, StockListActivity.class));
 				break;
 			default:
 				super.handleOnMenuItemSelected(item);
@@ -410,6 +401,8 @@ public class StockFavoriteListActivity extends ListActivity implements
 	}
 
 	void initLoader() {
+		mSortOrder = Preferences.getString(Setting.SETTING_SORT_ORDER_STOCK_LIST,
+				mSortOrderDefault);
 		mLoaderManager.initLoader(LOADER_ID_STOCK_FAVORITE_LIST, null, this);
 	}
 
