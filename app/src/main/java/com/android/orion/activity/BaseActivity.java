@@ -31,24 +31,6 @@ import java.util.ArrayList;
 
 public class BaseActivity extends Activity implements IBackgroundHandler, AnalyzeListener, DownloadListener {
 
-	public static final int MESSAGE_ON_CREATE = 1000;
-	public static final int MESSAGE_ON_RESUME = 1001;
-	public static final int MESSAGE_ON_PAUSE = 1002;
-	public static final int MESSAGE_ON_DESTROY = 1003;
-	public static final int MESSAGE_ON_STOP = 1004;
-	public static final int MESSAGE_ON_START = 1005;
-	public static final int MESSAGE_ON_RESTART = 1006;
-	public static final int MESSAGE_ON_NEW_INTENT = 1007;
-
-	public static final int MESSAGE_ON_CREATE_OPTIONS_MENU = 1100;
-
-	public static final int MESSAGE_ON_MENU_ITEM_SELECTED = 1200;
-	public static final int MESSAGE_ON_MENU_ITEM_SELECTED_HOME = 1201;
-	public static final int MESSAGE_ON_MENU_ITEM_SELECTED_SEARCH = 1202;
-	public static final int MESSAGE_ON_MENU_ITEM_SELECTED_NEW = 1203;
-	public static final int MESSAGE_ON_MENU_ITEM_SELECTED_REFRESH = 1204;
-	public static final int MESSAGE_ON_MENU_ITEM_SELECTED_SETTINGS = 1205;
-
 	private static final int REQUEST_EXTERNAL_STORAGE = 1;
 	private static final String[] PERMISSIONS_STORAGE = {"android.permission.READ_EXTERNAL_STORAGE",
 			"android.permission.WRITE_EXTERNAL_STORAGE"};
@@ -187,10 +169,6 @@ public class BaseActivity extends Activity implements IBackgroundHandler, Analyz
 				startActivity(new Intent(this, SettingActivity.class));
 			break;
 		}
-	}
-
-	public void onMenuItemSelectedSettingsHandler() {
-		startActivity(new Intent(this, SettingActivity.class));
 	}
 
 	void restartLoader() {
