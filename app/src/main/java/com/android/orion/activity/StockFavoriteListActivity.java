@@ -7,9 +7,6 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -79,8 +76,8 @@ public class StockFavoriteListActivity extends ListActivity implements
 	}
 
 	@Override
-	public void onCreateHandler() {
-		super.onCreateHandler();
+	public void handleOnCreate(Bundle savedInstanceState) {
+		super.handleOnCreate(savedInstanceState);
 		mSortOrder = Preferences.getString(Setting.SETTING_SORT_ORDER_STOCK_LIST,
 				mSortOrderDefault);
 		initLoader();
@@ -94,8 +91,8 @@ public class StockFavoriteListActivity extends ListActivity implements
 	}
 
 	@Override
-	public void onResumeHandler() {
-		super.onResumeHandler();
+	public void handleOnResume() {
+		super.handleOnResume();
 		restartLoader();
 	}
 
@@ -131,27 +128,30 @@ public class StockFavoriteListActivity extends ListActivity implements
 	}
 
 	@Override
-	public void onMenuItemSelectedRefreshHandler() {
-		try {
-			mDatabaseManager.loadStockArrayMap(mStockArrayMap);
-			for (Stock stock : mStockArrayMap.values()) {
-				mDatabaseManager.deleteStockData(stock);
-				mDatabaseManager.deleteStockTrend(stock);
-				mDatabaseManager.deleteStockPerceptron(stock.getId());
-				Setting.setDownloadStockData(stock.getSE(), stock.getCode(), 0);
-				mStockDataProvider.download(stock);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+	public void handleOnMenuItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.action_new:
+				Intent intent = new Intent(this, StockActivity.class);
+				intent.setAction(Constant.ACTION_FAVORITE_STOCK_INSERT);
+				startActivity(intent);
+				break;
+			case R.id.action_refresh:
+				try {
+					mDatabaseManager.loadStockArrayMap(mStockArrayMap);
+					for (Stock stock : mStockArrayMap.values()) {
+						mDatabaseManager.deleteStockData(stock);
+						mDatabaseManager.deleteStockTrend(stock);
+						mDatabaseManager.deleteStockPerceptron(stock.getId());
+						Setting.setDownloadStockData(stock.getSE(), stock.getCode(), 0);
+						mStockDataProvider.download(stock);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				break;
+			default:
+				super.handleOnMenuItemSelected(item);
 		}
-	}
-
-	@Override
-	public void onMenuItemSelectedNewHandler() {
-		super.onMenuItemSelectedNewHandler();
-		Intent intent = new Intent(this, StockActivity.class);
-		intent.setAction(Constant.ACTION_FAVORITE_STOCK_INSERT);
-		startActivity(intent);
 	}
 
 	@Override

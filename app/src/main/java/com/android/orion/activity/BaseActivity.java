@@ -7,10 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.Looper;
-import android.os.Message;
 import android.util.ArrayMap;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -74,15 +70,19 @@ public class BaseActivity extends Activity implements IBackgroundHandler, Analyz
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mBackgroundHandler = BackgroundHandler.create(this, getClass().getSimpleName());
+		mBackgroundHandler = BackgroundHandler.create(this);
 		mBackgroundHandler.onCreate(savedInstanceState);
 	}
 
-	public void onCreateHandler() {
+	public void handleOnCreate(Bundle savedInstanceState) {
 		mContext = this;
-		onNewIntentHandler();
 		mStockDataProvider.registerAnalyzeListener(this);
 		mStockDataProvider.registerDownloadListener(this);
+		mIntent = getIntent();
+		if (mIntent != null) {
+			mAction = mIntent.getAction();
+			mBundle = mIntent.getExtras();
+		}
 	}
 
 	@Override
@@ -91,7 +91,7 @@ public class BaseActivity extends Activity implements IBackgroundHandler, Analyz
 		mBackgroundHandler.onResume();
 	}
 
-	public void onResumeHandler() {
+	public void handleOnResume() {
 		checkPermission();
 		mResumed = true;
 	}
@@ -102,7 +102,7 @@ public class BaseActivity extends Activity implements IBackgroundHandler, Analyz
 		mBackgroundHandler.onPause();
 	}
 
-	public void onPauseHandler() {
+	public void handleOnPause() {
 		mResumed = false;
 	}
 
@@ -112,19 +112,47 @@ public class BaseActivity extends Activity implements IBackgroundHandler, Analyz
 		mBackgroundHandler.onDestroy();
 	}
 
-	public void onDestroyHandler() {
+	public void handleOnDestroy() {
 		mStockDataProvider.unRegisterAnalyzeListener(this);
 		mStockDataProvider.unRegisterDownloadListener(this);
 	}
 
 	@Override
+	protected void onStart() {
+		super.onStart();
+		mBackgroundHandler.onStart();
+	}
+
+	@Override
+	public void handleOnStart() {
+	}
+
+	@Override
+	protected void onRestart() {
+		super.onRestart();
+		mBackgroundHandler.onRestart();
+	}
+
+	public void handleOnRestart() {
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		mBackgroundHandler.onStop();
+	}
+
+	public void handleOnStop() {
+	}
+
+	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
-		setIntent(intent);
 		mBackgroundHandler.onNewIntent(intent);
 	}
 
-	public void onNewIntentHandler() {
+	public void handleOnNewIntent(Intent intent) {
+		setIntent(intent);
 		mIntent = getIntent();
 		if (mIntent != null) {
 			mAction = mIntent.getAction();
@@ -138,7 +166,7 @@ public class BaseActivity extends Activity implements IBackgroundHandler, Analyz
 		return super.onCreateOptionsMenu(menu);
 	}
 
-	public void onCreateOptionsMenuHandler() {
+	public void handleOnCreateOptionsMenu(Menu menu) {
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
@@ -146,40 +174,28 @@ public class BaseActivity extends Activity implements IBackgroundHandler, Analyz
 	public boolean onMenuItemSelected(int featureId, @NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home:
-				mBackgroundHandler.onMenuItemSelectedHome();
-				return true;
 			case R.id.action_search:
-				mBackgroundHandler.onMenuItemSelectedSearch();
-				return true;
-			case R.id.action_new:
-				mBackgroundHandler.onMenuItemSelectedNew();
-				return true;
-			case R.id.action_refresh:
-				mBackgroundHandler.onMenuItemSelectedRefresh();
-				return true;
 			case R.id.action_setting:
-				mBackgroundHandler.onMenuItemSelectedSettings();
-				return true;
+			case R.id.action_new:
+			case R.id.action_refresh:
+				return mBackgroundHandler.onMenuItemSelected(item);
 			default:
 				return super.onMenuItemSelected(featureId, item);
 		}
 	}
 
-	public void onMenuItemSelectedHomeHandler() {
-		finish();
-	}
-
-	public void onMenuItemSelectedSearchHandler() {
-		startActivity(new Intent(this, StockSearchActivity.class));
-	}
-
-	public void onMenuItemSelectedHandler() {
-	}
-
-	public void onMenuItemSelectedNewHandler() {
-	}
-
-	public void onMenuItemSelectedRefreshHandler() {
+	public void handleOnMenuItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				finish();
+				break;
+			case R.id.action_search:
+				startActivity(new Intent(this, StockSearchActivity.class));
+				break;
+			case R.id.action_setting:
+				startActivity(new Intent(this, SettingActivity.class));
+			break;
+		}
 	}
 
 	public void onMenuItemSelectedSettingsHandler() {
