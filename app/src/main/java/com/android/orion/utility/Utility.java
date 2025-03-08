@@ -18,7 +18,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -413,7 +412,7 @@ public class Utility {
 			if (bufferedOutputStream != null) {
 				try {
 					bufferedOutputStream.close();
-				} catch (IOException e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
@@ -421,7 +420,7 @@ public class Utility {
 			if (fileOutputStream != null) {
 				try {
 					fileOutputStream.close();
-				} catch (IOException e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
@@ -473,7 +472,7 @@ public class Utility {
 			if (bufferedWriter != null) {
 				try {
 					bufferedWriter.close();
-				} catch (IOException e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
@@ -481,7 +480,7 @@ public class Utility {
 			if (fileWriter != null) {
 				try {
 					fileWriter.close();
-				} catch (IOException e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
@@ -519,7 +518,7 @@ public class Utility {
 			if (bufferedWriter != null) {
 				try {
 					bufferedWriter.close();
-				} catch (IOException e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
@@ -527,7 +526,7 @@ public class Utility {
 			if (fileWriter != null) {
 				try {
 					fileWriter.close();
-				} catch (IOException e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
@@ -558,7 +557,7 @@ public class Utility {
 			if (randomAccessFile != null) {
 				try {
 					randomAccessFile.close();
-				} catch (IOException e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
@@ -602,7 +601,7 @@ public class Utility {
 			if (bufferedReader != null) {
 				try {
 					bufferedReader.close();
-				} catch (IOException e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
@@ -610,7 +609,7 @@ public class Utility {
 			if (fileReader != null) {
 				try {
 					fileReader.close();
-				} catch (IOException e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
