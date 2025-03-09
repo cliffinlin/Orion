@@ -14,6 +14,7 @@ import android.util.Log;
 import com.android.orion.config.Config;
 import com.android.orion.data.Period;
 import com.android.orion.data.Trend;
+import com.android.orion.database.TDXData;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.DatabaseOpenHelper;
 import com.android.orion.database.IndexComponent;
@@ -755,6 +756,315 @@ public class DatabaseManager implements StockListener {
 	}
 
 	public String getStockDataOrder() {
+		return DatabaseContract.COLUMN_DATE + " ASC " + ","
+				+ DatabaseContract.COLUMN_TIME + " ASC ";
+	}
+
+	public Uri insertTDXData(TDXData tdxData) {
+		Uri uri = null;
+
+		if ((tdxData == null) || (mContentResolver == null)) {
+			return uri;
+		}
+
+		uri = mContentResolver.insert(DatabaseContract.TDXData.CONTENT_URI,
+				tdxData.getContentValues());
+
+		return uri;
+	}
+
+	public int bulkInsertTDXData(ContentValues[] contentValuesArray) {
+		int result = 0;
+
+		if (contentValuesArray == null) {
+			return result;
+		}
+
+		if ((contentValuesArray.length == 0) || (mContentResolver == null)) {
+			return result;
+		}
+
+		result = mContentResolver.bulkInsert(
+				DatabaseContract.TDXData.CONTENT_URI, contentValuesArray);
+
+		return result;
+	}
+
+	public Cursor queryTDXData(String[] projection, String selection,
+	                             String[] selectionArgs, String sortOrder) {
+		Cursor cursor = null;
+
+		if (mContentResolver == null) {
+			return cursor;
+		}
+
+		cursor = mContentResolver.query(DatabaseContract.TDXData.CONTENT_URI,
+				projection, selection, selectionArgs, sortOrder);
+
+		return cursor;
+	}
+
+	public Cursor queryTDXData(String selection, String[] selectionArgs,
+	                             String sortOrder) {
+		Cursor cursor = null;
+
+		if (mContentResolver == null) {
+			return cursor;
+		}
+
+		cursor = mContentResolver.query(DatabaseContract.TDXData.CONTENT_URI,
+				DatabaseContract.TDXData.PROJECTION_ALL, selection,
+				selectionArgs, sortOrder);
+
+		return cursor;
+	}
+
+	public Cursor queryTDXData(TDXData tdxData) {
+		Cursor cursor = null;
+
+		if ((tdxData == null) || (mContentResolver == null)) {
+			return cursor;
+		}
+
+		String selection = getTDXDataSelection(tdxData);
+		String sortOrder = getTDXDataOrder();
+
+		cursor = mContentResolver.query(DatabaseContract.TDXData.CONTENT_URI,
+				DatabaseContract.TDXData.PROJECTION_ALL, selection, null,
+				sortOrder);
+
+		return cursor;
+	}
+
+	public void getTDXData(TDXData tdxData) {
+		Cursor cursor = null;
+
+		if ((tdxData == null) || (mContentResolver == null)) {
+			return;
+		}
+
+		try {
+			String selection = getTDXDataSelection(tdxData.getSE(), tdxData.getCode(), tdxData.getPeriod());
+			String sortOrder = DatabaseContract.COLUMN_DATE + " DESC " + ","
+					+ DatabaseContract.COLUMN_TIME + " DESC ";
+
+			cursor = mContentResolver.query(
+					DatabaseContract.TDXData.CONTENT_URI,
+					DatabaseContract.TDXData.PROJECTION_ALL, selection, null,
+					sortOrder);
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				cursor.moveToNext();
+				tdxData.set(cursor);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
+	public void getTDXDataList(Stock stock, String period,
+	                             ArrayList<String> lineList, String sortOrder) {
+		Cursor cursor = null;
+
+		if ((stock == null) || (lineList == null)) {
+			return;
+		}
+
+		lineList.clear();
+
+		String selection = getTDXDataSelection(stock.getSE(), stock.getCode(), period);
+
+		try {
+			cursor = queryTDXData(selection, null, sortOrder);
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				while (cursor.moveToNext()) {
+					TDXData tdxData = new TDXData();
+					tdxData.set(cursor);
+					lineList.add(tdxData.getContent());
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
+	public void loadTDXDataList(Stock stock, String period,
+	                              ArrayList<TDXData> tdxDataList) {
+		Calendar calendar = Calendar.getInstance();
+		Cursor cursor = null;
+		String selection = null;
+		String sortOrder = null;
+
+		if ((stock == null) || TextUtils.isEmpty(period)
+				|| (tdxDataList == null)) {
+			return;
+		}
+
+		try {
+			tdxDataList.clear();
+
+			selection = getTDXDataSelection(stock.getSE(), stock.getCode(), period);
+			sortOrder = getTDXDataOrder();
+			cursor = queryTDXData(selection, null,
+					sortOrder);
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				int index = 0;
+				while (cursor.moveToNext()) {
+					TDXData tdxData = new TDXData(period);
+					tdxData.set(cursor);
+					index = tdxDataList.size();
+					tdxData.setContent(Trend.MARK_NONE);
+					tdxDataList.add(tdxData);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
+	public boolean isTDXDataExist(TDXData tdxData) {
+		boolean result = false;
+		Cursor cursor = null;
+
+		if (tdxData == null) {
+			return result;
+		}
+
+		try {
+			cursor = queryTDXData(tdxData);
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				cursor.moveToNext();
+				result = true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+
+		return result;
+	}
+
+	public int updateTDXData(TDXData tdxData, ContentValues contentValues) {
+		int result = 0;
+
+		if ((tdxData == null) || (mContentResolver == null)) {
+			return result;
+		}
+
+		String where = getTDXDataSelection(tdxData);
+
+		result = mContentResolver.update(
+				DatabaseContract.TDXData.CONTENT_URI, contentValues, where,
+				null);
+
+		return result;
+	}
+
+	public void updateTDXData(Stock stock, String period, ArrayList<TDXData> tdxDataList) {
+		if ((tdxDataList == null) || (tdxDataList.size() == 0)) {
+			return;
+		}
+
+		try {
+			deleteTDXData(stock.getSE(), stock.getCode(), period);
+
+			ContentValues[] contentValues = new ContentValues[tdxDataList.size()];
+			for (int i = 0; i < tdxDataList.size(); i++) {
+				TDXData tdxData = tdxDataList.get(i);
+				tdxData.setModified(Utility.getCurrentDateTimeString());
+				contentValues[i] = tdxData.getContentValues();
+			}
+
+			bulkInsertTDXData(contentValues);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public int deleteTDXData() {
+		return delete(DatabaseContract.TDXData.CONTENT_URI);
+	}
+
+	public int deleteTDXData(TDXData tdxData) {
+		int result = 0;
+
+		if ((tdxData == null) || (mContentResolver == null)) {
+			return result;
+		}
+
+		String where = getTDXDataSelection(tdxData);
+
+		result = mContentResolver.delete(
+				DatabaseContract.TDXData.CONTENT_URI, where, null);
+
+		return result;
+	}
+
+	public int deleteTDXData(Stock stock) {
+		int result = 0;
+		String where = getStockSelection(stock);
+
+		try {
+			result = delete(DatabaseContract.TDXData.CONTENT_URI, where);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+
+	public int deleteTDXData(String se, String code, String period) {
+		int result = 0;
+
+		if (mContentResolver == null) {
+			return result;
+		}
+
+		String where = getTDXDataSelection(se, code, period);
+
+		result = mContentResolver.delete(
+				DatabaseContract.TDXData.CONTENT_URI, where, null);
+
+		return result;
+	}
+
+	public String getStockSelection(TDXData tdxData) {
+		if (tdxData == null) {
+			return null;
+		}
+		return DatabaseContract.COLUMN_SE + " = " + "'" + tdxData.getSE() + "'"
+				+ " AND " + DatabaseContract.COLUMN_CODE + " = " + "'" + tdxData.getCode() + "'";
+	}
+
+	public String getTDXDataSelection(TDXData tdxData) {
+		String selection = "";
+		String period = "";
+
+		if (tdxData == null) {
+			return selection;
+		}
+
+		selection = getStockSelection(tdxData) + " AND "
+				+ DatabaseContract.COLUMN_PERIOD + " = " + "'"
+				+ tdxData.getPeriod();
+
+		period = tdxData.getPeriod();
+
+		return selection;
+	}
+
+	public String getTDXDataSelection(String se, String code, String period) {
+		return getStockSelection(se, code)
+				+ " AND " + DatabaseContract.COLUMN_PERIOD + " = '" + period + "'";
+	}
+
+	public String getTDXDataOrder() {
 		return DatabaseContract.COLUMN_DATE + " ASC " + ","
 				+ DatabaseContract.COLUMN_TIME + " ASC ";
 	}

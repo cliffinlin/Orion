@@ -812,7 +812,7 @@ public class SinaFinance extends StockDataProvider {
 
 			if (bulkInsert) {
 				if (Setting.getDebugDataFile()) {
-					importStockDataFile(stock, stockData, ContentValuesList, stockDataMap);
+					loadTDXData(stock, stockData, ContentValuesList, stockDataMap);
 				}
 			}
 
@@ -878,7 +878,7 @@ public class SinaFinance extends StockDataProvider {
 
 			if (bulkInsert) {
 				if (Setting.getDebugDataFile()) {
-					exportStockDataFile(stock, stockData, stockDataMap);
+					saveTDXData(stock, stockData, stockDataMap);
 				}
 
 				if (ContentValuesList.size() > 0) {

@@ -1,6 +1,7 @@
 package com.android.orion.handler;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -9,9 +10,11 @@ import android.os.Process;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import androidx.annotation.NonNull;
-
 import com.android.orion.interfaces.IBackgroundHandler;
+import com.android.orion.interfaces.IStockDataProvider;
+import com.android.orion.provider.StockDataProvider;
+
+import java.util.ArrayList;
 
 
 public class BackgroundHandler extends Handler {
@@ -29,8 +32,11 @@ public class BackgroundHandler extends Handler {
 
 	public static final int MESSAGE_ON_MENU_ITEM_SELECTED = 1200;
 
+	public static final int MESSAGE_IMPORT_TDX_DATA_FILE = 999999 + 1;
+
 	private HandlerThread mHandlerThread;
 	private IBackgroundHandler mHandler;
+	private IStockDataProvider mStockDataProvider = StockDataProvider.getInstance();
 
 	private BackgroundHandler(IBackgroundHandler handler, HandlerThread handlerThread) {
 		super(handlerThread.getLooper());
@@ -93,6 +99,10 @@ public class BackgroundHandler extends Handler {
 		return true;
 	}
 
+	public void importTDXDataFile(ArrayList<Uri> uriList) {
+		sendMessage(obtainMessage(MESSAGE_IMPORT_TDX_DATA_FILE, uriList));
+	}
+
 	public void handleMessage(Message msg) {
 		if (mHandler == null || msg == null) {
 			return;
@@ -133,6 +143,10 @@ public class BackgroundHandler extends Handler {
 			case MESSAGE_ON_MENU_ITEM_SELECTED:
 				MenuItem item = (MenuItem) msg.obj;
 				mHandler.handleOnMenuItemSelected(item);
+				break;
+			case MESSAGE_IMPORT_TDX_DATA_FILE:
+				ArrayList<Uri> uriList = (ArrayList<Uri>) msg.obj;
+				mStockDataProvider.importTDXDataFile(uriList);
 				break;
 		}
 	}

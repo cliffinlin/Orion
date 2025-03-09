@@ -156,7 +156,7 @@ public class IndexComponentListActivity extends ListActivity implements
 				return true;
 
 			case R.id.action_load:
-				performLoadFromFile();
+				performLoadFromFile(StorageActivity.FILE_TYPE_FAVORITE);
 				return true;
 
 			case R.id.action_save:

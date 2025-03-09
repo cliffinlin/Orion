@@ -40,6 +40,11 @@
         android:orderInCategory="100"
         android:showAsAction="never"
         android:title="@string/action_list" />
+    <item
+        android:id="@+id/action_data"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_data" />
 
 
 </menu>

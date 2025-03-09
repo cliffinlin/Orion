@@ -96,6 +96,7 @@ public final class DatabaseContract {
 	public static final String COLUMN_ACCOUNT = "account";
 	public static final String COLUMN_ACTION = "action";
 	public static final String COLUMN_TYPE = "type";
+	public static final String COLUMN_CONTENT = "content";
 	// http://money.finance.sina.com.cn/corp/go.php/vFD_FinanceSummary/stockid/600028.phtml
 	public static final String COLUMN_BOOK_VALUE_PER_SHARE = "book_value_per_share";
 	public static final String COLUMN_CASH_FLOW_PER_SHARE = "cash_flow_per_share";
@@ -535,6 +536,36 @@ public final class DatabaseContract {
 				+ COLUMN_NAME + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_CREATED + TEXT_TYPE
 				+ COMMA_SEP + COLUMN_MODIFIED + TEXT_TYPE + " )";
+		static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
+				+ CREATE_TABLE_CONTENT;
+	}
+
+	public static abstract class TDXData implements BaseColumns {
+		public static final String TABLE_NAME = "tdx_data";
+
+		public static final Uri CONTENT_URI = Uri.withAppendedPath(
+				DatabaseContract.CONTENT_URI, TABLE_NAME);
+		public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
+				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
+		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
+				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
+		public static final String SORT_ORDER_DEFAULT = COLUMN_CODE
+				+ " ASC";
+
+		public static final String[] PROJECTION_ALL = {_ID,
+				COLUMN_SE, COLUMN_CODE, COLUMN_NAME, COLUMN_PERIOD, COLUMN_CONTENT,
+				COLUMN_CREATED, COLUMN_MODIFIED};
+		static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
+				+ TABLE_NAME;
+		private static final String CREATE_TABLE_CONTENT = " (" + _ID
+				+ " INTEGER PRIMARY KEY,"
+				+ COLUMN_SE + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_CODE + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_NAME + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_PERIOD + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_CONTENT + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_CREATED + TEXT_TYPE + COMMA_SEP + COLUMN_MODIFIED
+				+ TEXT_TYPE + " )";
 		static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
 				+ CREATE_TABLE_CONTENT;
 	}

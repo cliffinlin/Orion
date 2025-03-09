@@ -1,5 +1,6 @@
 package com.android.orion.activity;
 
+import android.content.ClipData;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -11,7 +12,6 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.Xml;
 
-import com.android.orion.config.Config;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.IndexComponent;
 import com.android.orion.database.Stock;
@@ -29,7 +29,6 @@ import java.util.ArrayList;
 
 public class StorageActivity extends DatabaseActivity {
 
-	static final String XML_DIR_NAME = Config.APP_NAME;
 	static final String XML_TAG_ROOT = "root";
 	static final String XML_TAG_STOCK = "stock";
 	static final String XML_TAG_STOCK_DEAL = "stock_deal";
@@ -42,13 +41,24 @@ public class StorageActivity extends DatabaseActivity {
 	static final int XML_PARSE_TYPE_INDEX_COMPONENT = 3;
 
 	static final int MESSAGE_REFRESH = 0;
-	static final int MESSAGE_SAVE_TO_FILE = 1;
-	static final int MESSAGE_LOAD_FROM_FILE = 2;
+	static final int MESSAGE_LOAD_FAVORITE = 1;
+	static final int MESSAGE_SAVE_FAVORITE = 2;
+	static final int MESSAGE_SAVE_TDX_DATA = 3;
 
-	static final int REQUEST_CODE_READ = 42;
-	static final int REQUEST_CODE_WRITE = 43;
+	static final int REQUEST_CODE_READ = 40;
+	static final int REQUEST_CODE_READ_FAVORITE = 41;
+	static final int REQUEST_CODE_READ_TDX_DATA = 42;
+
+	static final int REQUEST_CODE_WRITE = 50;
+	static final int REQUEST_CODE_WRITE_FAVORITE = 51;
+	static final int REQUEST_CODE_WRITE_TDX_DATA = 52;
+
+	static final int FILE_TYPE_NONE = 0;
+	static final int FILE_TYPE_FAVORITE = 1;
+	static final int FILE_TYPE_TDX_DATA = 2;
 
 	Uri mUri = null;
+	ArrayList<Uri> mUriList = new ArrayList<>();
 
 	Handler mHandler = new Handler(Looper.getMainLooper()) {
 		@Override
@@ -60,20 +70,20 @@ public class StorageActivity extends DatabaseActivity {
 					mStockDataProvider.download();
 					break;
 
-				case MESSAGE_SAVE_TO_FILE:
-					new Thread(new Runnable() {
-						@Override
-						public void run() {
-							saveToFile();
-						}
-					}).start();
-					break;
-
-				case MESSAGE_LOAD_FROM_FILE:
+				case MESSAGE_LOAD_FAVORITE:
 					new Thread(new Runnable() {
 						@Override
 						public void run() {
 							loadFromFile();
+						}
+					}).start();
+					break;
+
+				case MESSAGE_SAVE_FAVORITE:
+					new Thread(new Runnable() {
+						@Override
+						public void run() {
+							saveToFile();
 						}
 					}).start();
 					break;
@@ -84,12 +94,20 @@ public class StorageActivity extends DatabaseActivity {
 		}
 	};
 
-	void performLoadFromFile() {
+	void performLoadFromFile(int type) {
 		Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
 		intent.addCategory(Intent.CATEGORY_OPENABLE);
 		intent.setType("*/*");
 
-		startActivityForResult(intent, REQUEST_CODE_READ);
+		int requestCode = REQUEST_CODE_READ;
+		if (type == FILE_TYPE_FAVORITE) {
+			requestCode = REQUEST_CODE_READ_FAVORITE;
+		} else if (type == FILE_TYPE_TDX_DATA) {
+			intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+			requestCode = REQUEST_CODE_READ_TDX_DATA;
+		}
+
+		startActivityForResult(intent, requestCode);
 	}
 
 	void performSaveToFile() {
@@ -101,25 +119,39 @@ public class StorageActivity extends DatabaseActivity {
 		intent.setType("xml/plain");
 		intent.putExtra(Intent.EXTRA_TITLE, fileNameString);
 
-		startActivityForResult(intent, REQUEST_CODE_WRITE);
+		startActivityForResult(intent, REQUEST_CODE_WRITE_FAVORITE);
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
 
 		if (resultCode == RESULT_OK) {
-			Uri uri = data != null ? data.getData() : null;
+			if (data != null) {
+				mUriList.clear();
+				if (data.getClipData() != null) {
+					ClipData clipData = data.getClipData();
+					int itemCount = clipData.getItemCount();
+					for (int i = 0; i < itemCount; i++) {
+						Uri uri = clipData.getItemAt(i).getUri();
+						mUriList.add(uri);
+					}
+				} else if (data.getData() != null) {
+					Uri uri = data.getData();
+					mUriList.add(uri);
+				}
+			}
 
-			if (uri == null) {
+			if (mUriList.size() == 0) {
 				return;
 			}
 
-			if (requestCode == REQUEST_CODE_READ) {
-				mUri = uri;
-				mHandler.sendEmptyMessage(MESSAGE_LOAD_FROM_FILE);
-			} else if (requestCode == REQUEST_CODE_WRITE) {
-				mUri = uri;
-				mHandler.sendEmptyMessage(MESSAGE_SAVE_TO_FILE);
+			if (requestCode == REQUEST_CODE_READ_FAVORITE) {
+				mHandler.sendEmptyMessage(MESSAGE_LOAD_FAVORITE);
+			} else if (requestCode == REQUEST_CODE_READ_TDX_DATA) {
+				mBackgroundHandler.importTDXDataFile(mUriList);
+			} else if (requestCode == REQUEST_CODE_WRITE_FAVORITE) {
+				mHandler.sendEmptyMessage(MESSAGE_SAVE_FAVORITE);
 			}
 		}
 	}
@@ -137,6 +169,11 @@ public class StorageActivity extends DatabaseActivity {
 	void saveToFile() {
 		final ContentResolver cr = getContentResolver();
 
+		if (mUriList.size() == 0) {
+			return;
+		}
+		mUri = mUriList.get(0);
+
 		OutputStream os = null;
 		try {
 			os = cr.openOutputStream(mUri);
@@ -150,6 +187,11 @@ public class StorageActivity extends DatabaseActivity {
 
 	void loadFromFile() {
 		final ContentResolver cr = getContentResolver();
+
+		if (mUriList.size() == 0) {
+			return;
+		}
+		mUri = mUriList.get(0);
 
 		InputStream is = null;
 		try {

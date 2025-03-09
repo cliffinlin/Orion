@@ -1,15 +1,18 @@
 package com.android.orion.provider;
 
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Environment;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.os.PowerManager;
 import android.os.Process;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 
@@ -19,6 +22,7 @@ import com.android.orion.analyzer.StockAnalyzer;
 import com.android.orion.application.MainApplication;
 import com.android.orion.config.Config;
 import com.android.orion.data.Period;
+import com.android.orion.database.TDXData;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.IndexComponent;
 import com.android.orion.database.Stock;
@@ -30,17 +34,18 @@ import com.android.orion.interfaces.StockListener;
 import com.android.orion.manager.DatabaseManager;
 import com.android.orion.manager.StockManager;
 import com.android.orion.service.StockService;
-import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Logger;
 import com.android.orion.utility.Market;
 import com.android.orion.utility.Utility;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 import okhttp3.OkHttpClient;
@@ -471,40 +476,6 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		}
 	}
 
-	String getStockDataFileName(Stock stock) {
-		String result = "";
-
-		if (stock == null) {
-			return result;
-		}
-
-		try {
-			result = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Orion/"
-					+ stock.getSE().toUpperCase(Locale.getDefault()) + "#" + stock.getCode() + Constant.FILE_EXT_TEXT;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return result;
-	}
-
-	String getStockDataFileName(Stock stock, String period) {
-		String result = "";
-
-		if (stock == null) {
-			return result;
-		}
-
-		try {
-			result = Environment.getExternalStorageDirectory().getCanonicalPath() + "/Orion/"
-					+ stock.getSE().toUpperCase(Locale.getDefault()) + "#" + stock.getCode() + "#" + period + Constant.FILE_EXT_TEXT;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return result;
-	}
-
 	//					SH#600938.txt
 	//					日期	    时间	    开盘	    最高	    最低	    收盘	    成交量	    成交额
 	//					2023/01/03	0935	37.08	37.08	36.72	36.81	6066500	223727792.00
@@ -553,18 +524,33 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		return result;
 	}
 
-	void setupStockDataFile(Stock stock) {
+	void setupStockDataFile(Stock stock, Uri uri) {
 		if (stock == null) {
 			return;
 		}
 
 		try {
-			//same as min5
-			String fileName = getStockDataFileName(stock);
+			String fileName = "";
 			ArrayList<String> lineList = new ArrayList<>();
-			Utility.readFile(fileName, lineList);
+			if (uri.getScheme().equals("file")) {
+				fileName = uri.getPath();
+				Utility.readFile(fileName, lineList);
+			} else if (uri.getScheme().equals("content")) {
+				InputStream inputStream = mContext.getContentResolver().openInputStream(uri);
+				if (inputStream != null) {
+					BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+					String strLine;
+					while ((strLine = bufferedReader.readLine()) != null) {
+						lineList.add(strLine);
+					}
+				}
+			}
 			if (lineList.size() == 0) {
 				return;
+			}
+
+			if (lineList.size() > Config.MAX_CONTENT_LENGTH_MIN5_LONG) {
+				lineList = new ArrayList<>(lineList.subList(lineList.size() - Config.MAX_CONTENT_LENGTH_MIN5_LONG, lineList.size()));
 			}
 
 //			ArrayList<String> datetimeMin5List = new ArrayList<>();//based on min5
@@ -610,20 +596,89 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 					}
 				}
 			}
-
-			exportStockDataFile(stock, Period.MIN5, StockDataMin5List);
-			exportStockDataFile(stock, Period.MIN15, StockDataMin15List);
-			exportStockDataFile(stock, Period.MIN30, StockDataMin30List);
-			exportStockDataFile(stock, Period.MIN60, StockDataMin60List);
-			Utility.deleteFile(fileName);
+			saveTDXData(stock, Period.MIN5, StockDataMin5List);
+			saveTDXData(stock, Period.MIN15, StockDataMin15List);
+			saveTDXData(stock, Period.MIN30, StockDataMin30List);
+			saveTDXData(stock, Period.MIN60, StockDataMin60List);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	void importStockDataFile(Stock stock, StockData stockData,
-	                         ArrayList<ContentValues> contentValuesList,
-	                         ArrayMap<String, StockData> stockDataMap) {
+	String getFileNameFromContentUri(Uri uri) {
+		if (uri == null) return null;
+
+		Cursor cursor = null;
+		String fileName = null;
+		try {
+			fileName = null;
+			String[] projection = {MediaStore.MediaColumns.DISPLAY_NAME};
+			ContentResolver contentResolver = mContext.getContentResolver();
+			cursor = contentResolver.query(uri, projection, null, null, null);
+
+			if (cursor != null) {
+				if (cursor.moveToFirst()) {
+					int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DISPLAY_NAME);
+					fileName = cursor.getString(columnIndex);
+				}
+				cursor.close();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (cursor != null) {
+				cursor.close();
+			}
+		}
+
+		return fileName;
+	}
+
+	public void importTDXDataFile(ArrayList<Uri> uriList) {
+		if (uriList == null || uriList.size() == 0) {
+			return;
+		}
+
+		try {
+			for (Uri uri : uriList) {
+				if (uri == null) {
+					continue;
+				}
+
+				String fileName = getFileNameFromContentUri(uri);
+				if (TextUtils.isEmpty(fileName)) {
+					continue;
+				}
+
+				Log.d("uri = " + uri + " fileName = " + fileName);
+				String[] stockInfo = fileName.split(("[#.]"));
+				if (stockInfo == null || stockInfo.length < 3) {
+					continue;
+				}
+
+				String se = stockInfo[0].toLowerCase();
+				String code = stockInfo[1].toLowerCase();
+
+				Stock stock = new Stock();
+				stock.setClasses(Stock.CLASS_A);
+				stock.setSE(se);
+				stock.setCode(code);
+				if (!mDatabaseManager.isStockExist(stock)) {
+					stock.setCreated(Utility.getCurrentDateTimeString());
+					mDatabaseManager.insertStock(stock);
+				} else {
+					mDatabaseManager.getStock(stock);
+				}
+				setupStockDataFile(stock, uri);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	void loadTDXData(Stock stock, StockData stockData,
+	                 ArrayList<ContentValues> contentValuesList,
+	                 ArrayMap<String, StockData> stockDataMap) {
 		if (stock == null || stockData == null || contentValuesList == null || stockDataMap == null) {
 			return;
 		}
@@ -632,19 +687,14 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			return;
 		}
 
-		setupStockDataFile(stock);
-
 		try {
-			String fileName = getStockDataFileName(stock, stockData.getPeriod());
 			ArrayList<String> lineList = new ArrayList<>();
-			Utility.readFile(fileName, lineList);
-
+			mDatabaseManager.getTDXDataList(stock, stockData.getPeriod(), lineList, null);
 			for (int i = 0; i < lineList.size(); i++) {
 				String line = lineList.get(i);
 				if (TextUtils.isEmpty(line)) {
 					continue;
 				}
-
 				if (stockData.fromString(line) != null) {
 					contentValuesList.add(stockData.getContentValues());
 					stockDataMap.put(stockData.getDateTime(), new StockData(stockData));
@@ -655,7 +705,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		}
 	}
 
-	void exportStockDataFile(Stock stock, StockData stockData, ArrayMap<String, StockData> stockDataMap) {
+	void saveTDXData(Stock stock, StockData stockData, ArrayMap<String, StockData> stockDataMap) {
 		if (stock == null || stockData == null || stockDataMap == null) {
 			return;
 		}
@@ -670,11 +720,11 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 
 		ArrayList<StockData> stockDataList = new ArrayList<>(stockDataMap.values());
 		Collections.sort(stockDataList, StockData.comparator);
-		exportStockDataFile(stock, stockData.getPeriod(), stockDataList);
+		saveTDXData(stock, stockData.getPeriod(), stockDataList);
 	}
 
-	void exportStockDataFile(Stock stock, String period, ArrayList<StockData> stockDataList) {
-		if (stock == null || stockDataList == null) {
+	void saveTDXData(Stock stock, String period, ArrayList<StockData> stockDataList) {
+		if (stock == null || stockDataList == null || stockDataList.size() == 0) {
 			return;
 		}
 
@@ -683,12 +733,24 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		}
 
 		try {
-			String fileName = getStockDataFileName(stock, period);
-			ArrayList<String> lineList = new ArrayList<>();
-			for (int i = 0; i < stockDataList.size(); i++) {
-				lineList.add(stockDataList.get(i).toString());
+			TDXData tdxData = new TDXData();
+			mDatabaseManager.deleteTDXData(stock.getSE(), stock.getCode(), period);
+			ContentValues[] contentValuesArray = new ContentValues[stockDataList.size()];
+			for (StockData stockData : stockDataList) {
+				if (stockData == null) {
+					continue;
+				}
+				tdxData.init();
+				tdxData.setSE(stock.getSE());
+				tdxData.setCode(stock.getCode());
+				tdxData.setName(stock.getName());
+				tdxData.setPeriod(period);
+				tdxData.setContent(stockData.toString());
+				tdxData.setCreated(Utility.getCurrentDateTimeString());
+				contentValuesArray[stockDataList.indexOf(stockData)] = tdxData.getContentValues();
 			}
-			Utility.writeFile(fileName, lineList, false);
+			mDatabaseManager.bulkInsertTDXData(contentValuesArray);
+			Log.d("bulkInsertTDXData " + stock.getName() + " " + stock.getSE() + stock.getCode() + " " + period);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -833,7 +895,6 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 					Log.d("return, isNetworkConnected=" + Utility.isNetworkConnected(mContext));
 					return;
 				}
-
 
 				onDownloadStart(stock.getCode());
 				if (TextUtils.equals(stock.getClasses(), Stock.CLASS_A)) {

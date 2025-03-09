@@ -145,7 +145,7 @@ public class StockFinancialListActivity extends ListActivity implements
 				}
 				break;
 			case R.id.action_load:
-				performLoadFromFile();
+				performLoadFromFile(StorageActivity.FILE_TYPE_FAVORITE);
 				break;
 			case R.id.action_save:
 				performSaveToFile();

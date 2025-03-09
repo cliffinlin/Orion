@@ -1,8 +1,11 @@
 package com.android.orion.interfaces;
 
 import android.content.SharedPreferences;
+import android.net.Uri;
 
 import com.android.orion.database.Stock;
+
+import java.util.ArrayList;
 
 public interface IStockDataProvider {
 
@@ -38,4 +41,5 @@ public interface IStockDataProvider {
 
 	void unRegisterDownloadListener(DownloadListener listener);
 
+	void importTDXDataFile(ArrayList<Uri> mUriList);
 }

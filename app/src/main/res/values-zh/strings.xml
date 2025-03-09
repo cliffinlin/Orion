@@ -22,6 +22,7 @@
     <string name="action_deal">Deal</string>
     <string name="action_edit">Edit</string>
     <string name="action_list">List</string>
+    <string name="action_data">Data</string>
     <string name="action_exit">Exit</string>
     <string name="action_from">From</string>
     <string name="action_new">New note</string>

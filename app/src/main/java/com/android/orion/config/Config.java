@@ -20,10 +20,11 @@ public class Config {
 
 	public static final int SERVICE_NOTIFICATION_ID = 600000;
 
-	public static final int MAX_CONTENT_LENGTH_MIN60 = 60 * 4;
-	public static final int MAX_CONTENT_LENGTH_MIN30_LONG = 60 * 8;
-	public static final int MAX_CONTENT_LENGTH_MIN15_LONG = 60 * 16;
-	public static final int MAX_CONTENT_LENGTH_MIN5_LONG = 60 * 48;
+	public static final int MAX_CONTENT_LENGTH_DAY = 60;
+	public static final int MAX_CONTENT_LENGTH_MIN60 = MAX_CONTENT_LENGTH_DAY * 4;
+	public static final int MAX_CONTENT_LENGTH_MIN30_LONG = MAX_CONTENT_LENGTH_DAY * 8;
+	public static final int MAX_CONTENT_LENGTH_MIN15_LONG = MAX_CONTENT_LENGTH_DAY * 16;
+	public static final int MAX_CONTENT_LENGTH_MIN5_LONG = MAX_CONTENT_LENGTH_DAY * 48;
 
 	public static final int MAX_CONTENT_LENGTH_MIN30_SHORT = 30 * 8;
 	public static final int MAX_CONTENT_LENGTH_MIN15_SHORT = 20 * 16;
