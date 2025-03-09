@@ -178,10 +178,6 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 	@Override
 	public void handleOnMenuItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case android.R.id.home: {
-				finish();
-				break;
-			}
 			case R.id.action_prev: {
 				navigateStock(-1);
 				break;
@@ -231,6 +227,8 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 						SettingLoopbackActivity.class), REQUEST_CODE_SETTING_DEBUG_LOOPBACK);
 				break;
 			}
+			default:
+				super.handleOnMenuItemSelected(item);
 		}
 	}
 

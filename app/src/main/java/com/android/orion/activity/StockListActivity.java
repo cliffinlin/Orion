@@ -133,11 +133,6 @@ public class StockListActivity extends DatabaseActivity implements
 				intent.setAction(Constant.ACTION_FAVORITE_STOCK_INSERT);
 				startActivity(intent);
 				break;
-
-			case R.id.action_search:
-				startActivity(new Intent(this, StockSearchActivity.class));
-				break;
-
 			case R.id.action_favorite_all:
 				new Thread(new Runnable() {
 					@Override
@@ -153,7 +148,6 @@ public class StockListActivity extends DatabaseActivity implements
 					}
 				}).start();
 				break;
-
 			case R.id.action_favorite_none:
 				new Thread(new Runnable() {
 					@Override
@@ -172,7 +166,6 @@ public class StockListActivity extends DatabaseActivity implements
 					}
 				}).start();
 				break;
-
 			case R.id.action_notify_all:
 				new Thread(new Runnable() {
 					@Override
@@ -188,7 +181,6 @@ public class StockListActivity extends DatabaseActivity implements
 					}
 				}).start();
 				break;
-
 			case R.id.action_notify_none:
 				new Thread(new Runnable() {
 					@Override
@@ -207,10 +199,8 @@ public class StockListActivity extends DatabaseActivity implements
 			case R.id.action_backup_database:
 				mHandler.sendEmptyMessage(MESSAGE_BACKUP_DATABASE);
 				break;
-
-			case android.R.id.home:
-				finish();
-				break;
+			default:
+				super.handleOnMenuItemSelected(item);
 		}
 	}
 

@@ -127,6 +127,8 @@ public class StockTrendChartListActivity extends BaseActivity implements
 			case R.id.action_refresh:
 				mHandler.sendEmptyMessage(MESSAGE_REFRESH);
 				break;
+			default:
+				super.handleOnMenuItemSelected(item);
 		}
 	}
 

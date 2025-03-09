@@ -185,6 +185,8 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 				startActivity(intent);
 				break;
 			}
+			default:
+				super.handleOnMenuItemSelected(item);
 		}
 	}
 

@@ -123,10 +123,6 @@ public class IndexComponentListActivity extends ListActivity implements
 	@Override
 	public boolean onMenuItemSelected(int featureId, @NonNull MenuItem item) {
 		switch (item.getItemId()) {
-			case android.R.id.home:
-				finish();
-				return true;
-
 			case R.id.action_new:
 				Intent intentNew = new Intent(this, StockActivity.class);
 				intentNew.setAction(Constant.ACTION_INDEX_COMPONENT_INSERT);
@@ -151,10 +147,6 @@ public class IndexComponentListActivity extends ListActivity implements
 				mHandler.sendEmptyMessage(MESSAGE_REFRESH);
 				return true;
 
-			case R.id.action_setting:
-				startActivity(new Intent(this, SettingActivity.class));
-				return true;
-
 			case R.id.action_load:
 				performLoadFromFile(StorageActivity.FILE_TYPE_FAVORITE);
 				return true;
@@ -166,7 +158,6 @@ public class IndexComponentListActivity extends ListActivity implements
 			case R.id.action_deal:
 				startActivity(new Intent(this, StockDealListActivity.class));
 				return true;
-
 			default:
 				return super.onMenuItemSelected(featureId, item);
 		}

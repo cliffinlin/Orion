@@ -120,9 +120,6 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 				mHandler.sendEmptyMessage(MESSAGE_REFRESH);
 				break;
 
-			case R.id.action_setting:
-				break;
-
 			case R.id.action_order_by_roi:
 				mSortOrder = DatabaseContract.COLUMN_ROI
 						+ DatabaseContract.ORDER_DESC;
@@ -164,6 +161,8 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 						+ DatabaseContract.ORDER_DESC;
 				restartLoader();
 				break;
+			default:
+				super.handleOnMenuItemSelected(item);
 		}
 	}
 
