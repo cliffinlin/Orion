@@ -40,8 +40,11 @@ import com.android.orion.utility.Market;
 import com.android.orion.utility.Utility;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -658,6 +661,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 
 				String se = stockInfo[0].toLowerCase();
 				String code = stockInfo[1].toLowerCase();
+				Setting.setUriTdxData(se, code, uri.toString());
 
 				Stock stock = new Stock();
 				stock.setClasses(Stock.CLASS_A);
@@ -688,14 +692,14 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		}
 
 		try {
-			ArrayList<String> lineList = new ArrayList<>();
-			mDatabaseManager.getTDXDataList(stock, stockData.getPeriod(), lineList, null);
-			for (int i = 0; i < lineList.size(); i++) {
-				String line = lineList.get(i);
-				if (TextUtils.isEmpty(line)) {
+			ArrayList<String> contentList = new ArrayList<>();
+			mDatabaseManager.getTDXDataContentList(stock, stockData.getPeriod(), contentList);
+			for (int i = 0; i < contentList.size(); i++) {
+				String content = contentList.get(i);
+				if (TextUtils.isEmpty(content)) {
 					continue;
 				}
-				if (stockData.fromString(line) != null) {
+				if (stockData.fromString(content) != null) {
 					contentValuesList.add(stockData.getContentValues());
 					stockDataMap.put(stockData.getDateTime(), new StockData(stockData));
 				}
@@ -721,6 +725,9 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		ArrayList<StockData> stockDataList = new ArrayList<>(stockDataMap.values());
 		Collections.sort(stockDataList, StockData.comparator);
 		saveTDXData(stock, stockData.getPeriod(), stockDataList);
+		if (stockData.getPeriod().equals(Period.MIN5)) {
+			exportTDXData(stock, stockData.getPeriod(), stockDataList);
+		}
 	}
 
 	void saveTDXData(Stock stock, String period, ArrayList<StockData> stockDataList) {
@@ -751,6 +758,35 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			}
 			mDatabaseManager.bulkInsertTDXData(contentValuesArray);
 			Log.d("bulkInsertTDXData " + stock.getName() + " " + stock.getSE() + stock.getCode() + " " + period);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	void exportTDXData(Stock stock, String period, ArrayList<StockData> stockDataList) {
+		if (stock == null || stockDataList == null || stockDataList.size() == 0) {
+			return;
+		}
+
+		try {
+			String uriString = Setting.getUriTdxData(stock.getSE(), stock.getCode());
+			if (TextUtils.isEmpty(uriString)) {
+				return;
+			}
+			Uri uri = Uri.parse(uriString);
+			OutputStream outputStream = mContext.getContentResolver().openOutputStream(uri);
+			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream));
+			ArrayList<String> contentList = new ArrayList<>();
+			mDatabaseManager.getTDXDataContentList(stock, period, contentList);
+			int index = 0;
+			if (writer != null) {
+				for (String content : contentList) {
+					writer.write(content);
+					index++;
+				}
+				writer.close();
+			}
+			Log.d("exportTDXData " + stock.getName() + " " + stock.getSE() + stock.getCode() + " " + period + " index=" + index);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

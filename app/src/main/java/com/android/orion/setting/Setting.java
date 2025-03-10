@@ -78,6 +78,7 @@ public class Setting {
 	public static final String SETTING_DOWNLOAD_STOCK_HSA = "SETTING_DOWNLOAD_STOCK_HSA";
 	public static final String SETTING_DOWNLOAD_STOCK_ = "SETTING_DOWNLOAD_STOCK_";
 	public static final String SETTING_DOWNLOAD_STOCK_DATA_ = "SETTING_DOWNLOAD_STOCK_DATA_";
+	public static final String SETTING_URI_TDX_DATA_ = "SETTING_URI_TDX_DATA_";
 
 	public static final String SETTING_STOCK_DATA_CHANGED = "SETTING_STOCK_DATA_CHANGED";
 	public static final String SETTING_STOCK_ARRAY_MAP_INDEX = "SETTING_STOCK_ARRAY_MAP_INDEX";
@@ -251,6 +252,14 @@ public class Setting {
 
 	public static void setDownloadStockData(@NonNull String se, String code, long value) {
 		Preferences.putLong(SETTING_DOWNLOAD_STOCK_DATA_ + se.toUpperCase() + "_" + code, value);
+	}
+
+	public static String getUriTdxData(@NonNull String se, String code) {
+		return Preferences.getString(SETTING_URI_TDX_DATA_ + se.toUpperCase() + "_" + code, "");
+	}
+
+	public static void setUriTdxData(@NonNull String se, String code, String value) {
+		Preferences.putString(SETTING_URI_TDX_DATA_ + se.toUpperCase() + "_" + code, value);
 	}
 
 	public static boolean getStockDataChanged(String se, String code) {

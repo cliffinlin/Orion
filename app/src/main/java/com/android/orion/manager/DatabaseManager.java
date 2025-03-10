@@ -863,25 +863,24 @@ public class DatabaseManager implements StockListener {
 		}
 	}
 
-	public void getTDXDataList(Stock stock, String period,
-	                             ArrayList<String> lineList, String sortOrder) {
+	public void getTDXDataContentList(Stock stock, String period, ArrayList<String> contentList) {
 		Cursor cursor = null;
 
-		if ((stock == null) || (lineList == null)) {
+		if ((stock == null) || (contentList == null)) {
 			return;
 		}
 
-		lineList.clear();
+		contentList.clear();
 
 		String selection = getTDXDataSelection(stock.getSE(), stock.getCode(), period);
 
 		try {
-			cursor = queryTDXData(selection, null, sortOrder);
+			cursor = queryTDXData(selection, null, null);
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				while (cursor.moveToNext()) {
 					TDXData tdxData = new TDXData();
 					tdxData.set(cursor);
-					lineList.add(tdxData.getContent());
+					contentList.add(tdxData.getContent());
 				}
 			}
 		} catch (Exception e) {
@@ -891,8 +890,7 @@ public class DatabaseManager implements StockListener {
 		}
 	}
 
-	public void loadTDXDataList(Stock stock, String period,
-	                              ArrayList<TDXData> tdxDataList) {
+	public void loadTDXDataList(Stock stock, String period, ArrayList<TDXData> tdxDataList) {
 		Calendar calendar = Calendar.getInstance();
 		Cursor cursor = null;
 		String selection = null;
@@ -911,12 +909,9 @@ public class DatabaseManager implements StockListener {
 			cursor = queryTDXData(selection, null,
 					sortOrder);
 			if ((cursor != null) && (cursor.getCount() > 0)) {
-				int index = 0;
 				while (cursor.moveToNext()) {
 					TDXData tdxData = new TDXData(period);
 					tdxData.set(cursor);
-					index = tdxDataList.size();
-					tdxData.setContent(Trend.MARK_NONE);
 					tdxDataList.add(tdxData);
 				}
 			}

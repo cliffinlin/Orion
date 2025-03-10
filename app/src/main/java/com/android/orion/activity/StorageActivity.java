@@ -97,7 +97,7 @@ public class StorageActivity extends DatabaseActivity {
 	void performLoadFromFile(int type) {
 		Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
 		intent.addCategory(Intent.CATEGORY_OPENABLE);
-		intent.setType("*/*");
+		intent.setType("text/plain");
 
 		int requestCode = REQUEST_CODE_READ;
 		if (type == FILE_TYPE_FAVORITE) {
@@ -128,6 +128,7 @@ public class StorageActivity extends DatabaseActivity {
 
 		if (resultCode == RESULT_OK) {
 			if (data != null) {
+				final int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
 				mUriList.clear();
 				if (data.getClipData() != null) {
 					ClipData clipData = data.getClipData();
@@ -135,10 +136,12 @@ public class StorageActivity extends DatabaseActivity {
 					for (int i = 0; i < itemCount; i++) {
 						Uri uri = clipData.getItemAt(i).getUri();
 						mUriList.add(uri);
+						getContentResolver().takePersistableUriPermission(uri, takeFlags);
 					}
 				} else if (data.getData() != null) {
 					Uri uri = data.getData();
 					mUriList.add(uri);
+					getContentResolver().takePersistableUriPermission(uri, takeFlags);
 				}
 			}
 
