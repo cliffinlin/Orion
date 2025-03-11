@@ -97,7 +97,7 @@ public class StorageActivity extends DatabaseActivity {
 	void performLoadFromFile(int type) {
 		Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
 		intent.addCategory(Intent.CATEGORY_OPENABLE);
-		intent.setType("text/plain");
+		intent.setType("*/*");
 
 		int requestCode = REQUEST_CODE_READ;
 		if (type == FILE_TYPE_FAVORITE) {
