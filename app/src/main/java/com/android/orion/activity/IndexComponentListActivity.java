@@ -148,11 +148,11 @@ public class IndexComponentListActivity extends ListActivity implements
 				return true;
 
 			case R.id.action_load:
-				performLoadFromFile(StorageActivity.FILE_TYPE_FAVORITE);
+				performLoadFromFile(FILE_TYPE_FAVORITE);
 				return true;
 
 			case R.id.action_save:
-				performSaveToFile();
+				performSaveToFile(FILE_TYPE_FAVORITE);
 				return true;
 
 			case R.id.action_deal:

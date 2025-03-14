@@ -14,6 +14,7 @@ import android.text.TextUtils;
 import android.util.Xml;
 import android.widget.Toast;
 
+import com.android.orion.data.Period;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.IndexComponent;
 import com.android.orion.database.Stock;
@@ -25,8 +26,10 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
 
+import java.io.BufferedWriter;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 public class StorageActivity extends DatabaseActivity {
@@ -85,7 +88,15 @@ public class StorageActivity extends DatabaseActivity {
 					new Thread(new Runnable() {
 						@Override
 						public void run() {
-							saveToFile();
+							saveToFile(FILE_TYPE_FAVORITE);
+						}
+					}).start();
+					break;
+				case MESSAGE_SAVE_TDX_DATA:
+					new Thread(new Runnable() {
+						@Override
+						public void run() {
+							saveToFile(FILE_TYPE_TDX_DATA);
 						}
 					}).start();
 					break;
@@ -100,7 +111,6 @@ public class StorageActivity extends DatabaseActivity {
 		Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
 		intent.addCategory(Intent.CATEGORY_OPENABLE);
 		intent.setType("*/*");
-
 		int requestCode = REQUEST_CODE_READ;
 		if (type == FILE_TYPE_FAVORITE) {
 			requestCode = REQUEST_CODE_READ_FAVORITE;
@@ -108,20 +118,26 @@ public class StorageActivity extends DatabaseActivity {
 			intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
 			requestCode = REQUEST_CODE_READ_TDX_DATA;
 		}
-
 		startActivityForResult(intent, requestCode);
 	}
 
-	void performSaveToFile() {
-		String fileNameString = Constant.FAVORITE
-				+ Utility.getCurrentDateString() + Constant.FILE_EXT_XML;
-
+	void performSaveToFile(int type) {
+		String fileNameString = "";
 		Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
 		intent.addCategory(Intent.CATEGORY_OPENABLE);
-		intent.setType("xml/plain");
+		int requestCode = REQUEST_CODE_WRITE;
+		if (type == FILE_TYPE_FAVORITE) {
+			intent.setType("text/xml");
+			fileNameString = Constant.FAVORITE
+					+ Utility.getCurrentDateString() + Constant.FILE_EXT_XML;
+			requestCode = REQUEST_CODE_WRITE_FAVORITE;
+		} else if (type == FILE_TYPE_TDX_DATA) {
+			fileNameString = mStock.getSE().toUpperCase() + "#" + mStock.getCode() + Constant.FILE_EXT_TEXT;
+			intent.setType("text/plain");
+			requestCode = REQUEST_CODE_WRITE_TDX_DATA;
+		}
 		intent.putExtra(Intent.EXTRA_TITLE, fileNameString);
-
-		startActivityForResult(intent, REQUEST_CODE_WRITE_FAVORITE);
+		startActivityForResult(intent, requestCode);
 	}
 
 	@Override
@@ -156,6 +172,8 @@ public class StorageActivity extends DatabaseActivity {
 				mBackgroundHandler.importTDXDataFile(mUriList);
 			} else if (requestCode == REQUEST_CODE_WRITE_FAVORITE) {
 				mHandler.sendEmptyMessage(MESSAGE_SAVE_FAVORITE);
+			} else if (requestCode == REQUEST_CODE_WRITE_TDX_DATA) {
+				mHandler.sendEmptyMessage(MESSAGE_SAVE_TDX_DATA);
 			}
 		}
 	}
@@ -165,25 +183,15 @@ public class StorageActivity extends DatabaseActivity {
 		getContentResolver().takePersistableUriPermission(uri, takeFlags);
 		String msg = Utility.getFileNameFromContentUri(mContext, uri);
 		if (Utility.isUriWritable(mContext, uri)) {
-			msg += " " + "Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION";
+			msg += " " + "READ | WRITE";
 		} else {
-			msg += " " + "Intent.FLAG_GRANT_READ_URI_PERMISSION";
+			msg += " " + "READ";
 		}
-		Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
 		Log.d(msg);
 	}
 
-	void closeQuietly(AutoCloseable closeable) {
-		if (closeable != null) {
-			try {
-				closeable.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	void saveToFile() {
+	void saveToFile(int type) {
 		final ContentResolver cr = getContentResolver();
 
 		if (mUriList.size() == 0) {
@@ -194,11 +202,25 @@ public class StorageActivity extends DatabaseActivity {
 		OutputStream os = null;
 		try {
 			os = cr.openOutputStream(mUri);
-			saveToXmlFile(os);
+			if (type == FILE_TYPE_FAVORITE) {
+				saveToXmlFile(os);
+			} else if (type == FILE_TYPE_TDX_DATA) {
+				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os));
+				ArrayList<String> contentList = new ArrayList<>();
+				mDatabaseManager.getTDXDataContentList(mStock, Period.MIN5, contentList);
+				int index = 0;
+				if (writer != null) {
+					for (String content : contentList) {
+						writer.write(content);
+						index++;
+					}
+					writer.close();
+				}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			closeQuietly(os);
+			Utility.closeQuietly(os);
 		}
 	}
 
@@ -217,7 +239,7 @@ public class StorageActivity extends DatabaseActivity {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			closeQuietly(is);
+			Utility.closeQuietly(is);
 		}
 
 		mHandler.sendEmptyMessage(MESSAGE_REFRESH);

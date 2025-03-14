@@ -288,6 +288,16 @@ public class Utility {
 		return false;
 	}
 
+	public static void closeQuietly(AutoCloseable closeable) {
+		if (closeable != null) {
+			try {
+				closeable.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	public static boolean isFileExist(String path) {
 		return isFileExist(path, false);
 	}

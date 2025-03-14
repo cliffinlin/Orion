@@ -370,18 +370,13 @@ public class StockAnalyzer {
 		mContentTitle.setLength(0);
 		mContentText.setLength(0);
 
-		mContentTitle.append(mStock.getName() + " " + mStock.getPrice() + " " + mStock.getNet() + " " + stockTrend.toTrendString() + " ");
-
 		StockDeal stockDeal = new StockDeal();
 		mDatabaseManager.getStockDeal(mStock, stockDeal);
 		double stockDealProfit = stockDeal.getProfit();
 		if (stockDealProfit > 0) {
-			mContentTitle.append(Constant.MARK_ASTERISK);
+			mContentTitle.append(Constant.MARK_DOLLAR);
 		}
-
-		if (mContentTitle.length() == 0) {
-			return;
-		}
+		mContentTitle.append(mStock.getName() + " " + mStock.getPrice() + " " + mStock.getNet() + " " + stockTrend.toTrendString() + " ");
 
 		RecordFile.writeNotificationFile(mContentTitle.toString());
 		try {

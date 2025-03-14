@@ -39,6 +39,7 @@
     <string name="action_setting">Setting</string>
     <string name="action_filter">Filter</string>
     <string name="action_trend">Trend</string>
+    <string name="action_backup">Backup</string>
     <string name="period">Period</string>
     <string name="level">Level</string>
     <string name="type">Type</string>

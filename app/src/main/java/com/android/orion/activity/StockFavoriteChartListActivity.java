@@ -50,7 +50,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StockFavoriteChartListActivity extends BaseActivity implements
+public class StockFavoriteChartListActivity extends ListActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnChartGestureListener {
 
 	public static final int ITEM_VIEW_TYPE_MAIN = 0;
@@ -222,6 +222,10 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 				Intent intent = new Intent(this, StockTrendListActivity.class);
 				intent.putExtras(bundle);
 				startActivity(intent);
+				break;
+			}
+			case R.id.action_backup: {
+				performSaveToFile(FILE_TYPE_TDX_DATA);
 				break;
 			}
 			case R.id.action_loopback: {
