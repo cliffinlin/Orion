@@ -94,15 +94,17 @@ public class StockFavoriteChartListActivity extends BaseActivity implements
 
 				case MESSAGE_LOAD_STOCK_LIST:
 					mStockList.clear();
-					for (int i = 0; i < mStockIDList.size(); i++) {
-						Stock stock = new Stock();
-						stock.setId(Long.parseLong(mStockIDList.get(i)));
-						mDatabaseManager.getStockById(stock);
-						if (mStock.getId() == stock.getId()) {
-							mStock.set(stock);
-							mStockListIndex = mStockList.size();
+					if (mStockIDList != null) {
+						for (int i = 0; i < mStockIDList.size(); i++) {
+							Stock stock = new Stock();
+							stock.setId(Long.parseLong(mStockIDList.get(i)));
+							mDatabaseManager.getStockById(stock);
+							if (mStock.getId() == stock.getId()) {
+								mStock.set(stock);
+								mStockListIndex = mStockList.size();
+							}
+							mStockList.add(stock);
 						}
-						mStockList.add(stock);
 					}
 					break;
 
