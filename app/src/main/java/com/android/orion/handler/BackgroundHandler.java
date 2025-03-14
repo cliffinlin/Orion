@@ -35,8 +35,8 @@ public class BackgroundHandler extends Handler {
 	public static final int MESSAGE_IMPORT_TDX_DATA_FILE = 999999 + 1;
 
 	private HandlerThread mHandlerThread;
-	private IBackgroundHandler mHandler;
-	private IStockDataProvider mStockDataProvider = StockDataProvider.getInstance();
+	private final IBackgroundHandler mHandler;
+	private final IStockDataProvider mStockDataProvider = StockDataProvider.getInstance();
 
 	private BackgroundHandler(IBackgroundHandler handler, HandlerThread handlerThread) {
 		super(handlerThread.getLooper());

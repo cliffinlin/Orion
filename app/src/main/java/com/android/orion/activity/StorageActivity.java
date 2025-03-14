@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.os.ParcelFileDescriptor;
 import android.text.TextUtils;
 import android.util.Xml;
 import android.widget.Toast;
@@ -65,6 +64,20 @@ public class StorageActivity extends DatabaseActivity {
 	Uri mUri = null;
 	ArrayList<Uri> mUriList = new ArrayList<>();
 
+	void performLoadFromFile(int type) {
+		Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+		intent.addCategory(Intent.CATEGORY_OPENABLE);
+		intent.setType("*/*");
+		int requestCode = REQUEST_CODE_READ;
+		if (type == FILE_TYPE_FAVORITE) {
+			requestCode = REQUEST_CODE_READ_FAVORITE;
+		} else if (type == FILE_TYPE_TDX_DATA) {
+			intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+			requestCode = REQUEST_CODE_READ_TDX_DATA;
+		}
+		startActivityForResult(intent, requestCode);
+	}
+
 	Handler mHandler = new Handler(Looper.getMainLooper()) {
 		@Override
 		public void handleMessage(Message msg) {
@@ -106,20 +119,6 @@ public class StorageActivity extends DatabaseActivity {
 			}
 		}
 	};
-
-	void performLoadFromFile(int type) {
-		Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-		intent.addCategory(Intent.CATEGORY_OPENABLE);
-		intent.setType("*/*");
-		int requestCode = REQUEST_CODE_READ;
-		if (type == FILE_TYPE_FAVORITE) {
-			requestCode = REQUEST_CODE_READ_FAVORITE;
-		} else if (type == FILE_TYPE_TDX_DATA) {
-			intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-			requestCode = REQUEST_CODE_READ_TDX_DATA;
-		}
-		startActivityForResult(intent, requestCode);
-	}
 
 	void performSaveToFile(int type) {
 		String fileNameString = "";
@@ -592,6 +591,8 @@ public class StorageActivity extends DatabaseActivity {
 			e.printStackTrace();
 		}
 	}
+
+
 
 
 }

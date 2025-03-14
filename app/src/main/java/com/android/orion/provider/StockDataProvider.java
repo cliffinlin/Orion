@@ -1,10 +1,8 @@
 package com.android.orion.provider;
 
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -12,7 +10,6 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.PowerManager;
 import android.os.Process;
-import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 
@@ -22,11 +19,11 @@ import com.android.orion.analyzer.StockAnalyzer;
 import com.android.orion.application.MainApplication;
 import com.android.orion.config.Config;
 import com.android.orion.data.Period;
-import com.android.orion.database.TDXData;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.IndexComponent;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
+import com.android.orion.database.TDXData;
 import com.android.orion.interfaces.AnalyzeListener;
 import com.android.orion.interfaces.DownloadListener;
 import com.android.orion.interfaces.IStockDataProvider;

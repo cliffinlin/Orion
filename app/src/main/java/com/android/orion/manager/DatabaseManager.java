@@ -14,7 +14,6 @@ import android.util.Log;
 import com.android.orion.config.Config;
 import com.android.orion.data.Period;
 import com.android.orion.data.Trend;
-import com.android.orion.database.TDXData;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.DatabaseOpenHelper;
 import com.android.orion.database.IndexComponent;
@@ -26,6 +25,7 @@ import com.android.orion.database.StockFinancial;
 import com.android.orion.database.StockPerceptron;
 import com.android.orion.database.StockShare;
 import com.android.orion.database.StockTrend;
+import com.android.orion.database.TDXData;
 import com.android.orion.interfaces.StockListener;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Preferences;
@@ -791,7 +791,7 @@ public class DatabaseManager implements StockListener {
 	}
 
 	public Cursor queryTDXData(String[] projection, String selection,
-	                             String[] selectionArgs, String sortOrder) {
+	                           String[] selectionArgs, String sortOrder) {
 		Cursor cursor = null;
 
 		if (mContentResolver == null) {
@@ -805,7 +805,7 @@ public class DatabaseManager implements StockListener {
 	}
 
 	public Cursor queryTDXData(String selection, String[] selectionArgs,
-	                             String sortOrder) {
+	                           String sortOrder) {
 		Cursor cursor = null;
 
 		if (mContentResolver == null) {

@@ -1,10 +1,6 @@
 package com.android.orion.activity;
 
-import android.database.ContentObserver;
-import android.net.Uri;
-import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 
 import com.android.orion.config.Config;
 import com.android.orion.database.DatabaseContract;

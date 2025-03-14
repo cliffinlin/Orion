@@ -167,7 +167,7 @@ public class BaseActivity extends Activity implements IBackgroundHandler, Analyz
 				break;
 			case R.id.action_setting:
 				startActivity(new Intent(this, SettingActivity.class));
-			break;
+				break;
 		}
 	}
 
