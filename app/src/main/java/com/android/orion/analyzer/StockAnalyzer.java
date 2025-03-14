@@ -20,6 +20,7 @@ import com.android.orion.data.Trend;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
+import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockTrend;
 import com.android.orion.manager.DatabaseManager;
 import com.android.orion.setting.Constant;
@@ -369,7 +370,15 @@ public class StockAnalyzer {
 		mContentTitle.setLength(0);
 		mContentText.setLength(0);
 
-		mContentTitle.append(mStock.getName() + " " + mStock.getPrice() + " " + mStock.getNet() + " " + stockTrend.toTrendString());
+		mContentTitle.append(mStock.getName() + " " + mStock.getPrice() + " " + mStock.getNet() + " " + stockTrend.toTrendString() + " ");
+
+		StockDeal stockDeal = new StockDeal();
+		mDatabaseManager.getStockDeal(mStock, stockDeal);
+		double stockDealProfit = stockDeal.getProfit();
+		if (stockDealProfit > 0) {
+			mContentTitle.append(Constant.MARK_ASTERISK);
+		}
+
 		if (mContentTitle.length() == 0) {
 			return;
 		}

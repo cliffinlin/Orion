@@ -1948,7 +1948,7 @@ public class DatabaseManager implements StockListener {
 		}
 	}
 
-	public void getStockDeal(Stock stock, StockDeal stockDeal, String selection, String sortOrder) {
+	public void getStockDeal(Stock stock, StockDeal stockDeal) {
 		Cursor cursor = null;
 
 		if ((stock == null) || (stockDeal == null)) {
@@ -1956,6 +1956,8 @@ public class DatabaseManager implements StockListener {
 		}
 
 		try {
+			String selection = getStockSelection(stock);
+			String sortOrder = DatabaseContract.COLUMN_PROFIT + DatabaseContract.ORDER_DESC;
 			cursor = queryStockDeal(selection, null, sortOrder);
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				while (cursor.moveToNext()) {
