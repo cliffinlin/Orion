@@ -1,8 +1,13 @@
 package com.android.orion.utility;
 
+import android.content.ContentResolver;
 import android.content.Context;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
+import android.os.ParcelFileDescriptor;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 
 import com.android.orion.database.Stock;
@@ -238,6 +243,49 @@ public class Utility {
 	public static double Round4(double v) {
 		double p = Math.pow(10, Constant.DOUBLE_FIXED_DECIMAL_4);
 		return (Math.round(v * p)) / p;
+	}
+
+	public static String getFileNameFromContentUri(Context context, Uri uri) {
+		if (uri == null) return null;
+
+		Cursor cursor = null;
+		String fileName = null;
+		try {
+			fileName = null;
+			String[] projection = {MediaStore.MediaColumns.DISPLAY_NAME};
+			ContentResolver contentResolver = context.getContentResolver();
+			cursor = contentResolver.query(uri, projection, null, null, null);
+
+			if (cursor != null) {
+				if (cursor.moveToFirst()) {
+					int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DISPLAY_NAME);
+					fileName = cursor.getString(columnIndex);
+				}
+				cursor.close();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (cursor != null) {
+				cursor.close();
+			}
+		}
+
+		return fileName;
+	}
+
+	public static boolean isUriWritable(Context context, Uri uri) {
+		try {
+			ContentResolver resolver = context.getContentResolver();
+			ParcelFileDescriptor pfd = resolver.openFileDescriptor(uri, "w");
+			if (pfd != null) {
+				pfd.close();
+				return true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 	public static boolean isFileExist(String path) {

@@ -608,35 +608,6 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		}
 	}
 
-	String getFileNameFromContentUri(Uri uri) {
-		if (uri == null) return null;
-
-		Cursor cursor = null;
-		String fileName = null;
-		try {
-			fileName = null;
-			String[] projection = {MediaStore.MediaColumns.DISPLAY_NAME};
-			ContentResolver contentResolver = mContext.getContentResolver();
-			cursor = contentResolver.query(uri, projection, null, null, null);
-
-			if (cursor != null) {
-				if (cursor.moveToFirst()) {
-					int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DISPLAY_NAME);
-					fileName = cursor.getString(columnIndex);
-				}
-				cursor.close();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (cursor != null) {
-				cursor.close();
-			}
-		}
-
-		return fileName;
-	}
-
 	public void importTDXDataFile(ArrayList<Uri> uriList) {
 		if (uriList == null || uriList.size() == 0) {
 			return;
@@ -648,7 +619,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 					continue;
 				}
 
-				String fileName = getFileNameFromContentUri(uri);
+				String fileName = Utility.getFileNameFromContentUri(mContext, uri);
 				if (TextUtils.isEmpty(fileName)) {
 					continue;
 				}

@@ -163,28 +163,14 @@ public class StorageActivity extends DatabaseActivity {
 	private void takePersistableUriPermission(Uri uri) {
 		final int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
 		getContentResolver().takePersistableUriPermission(uri, takeFlags);
-		String msg = uri.toString();
-		if (isUriWritable(uri)) {
-			msg += uri + " " + "Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION";
+		String msg = Utility.getFileNameFromContentUri(mContext, uri);
+		if (Utility.isUriWritable(mContext, uri)) {
+			msg += " " + "Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION";
 		} else {
-			msg += uri + " " + "Intent.FLAG_GRANT_READ_URI_PERMISSION";
+			msg += " " + "Intent.FLAG_GRANT_READ_URI_PERMISSION";
 		}
 		Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
 		Log.d(msg);
-	}
-
-	private boolean isUriWritable(Uri uri) {
-		try {
-			ContentResolver resolver = getContentResolver();
-			ParcelFileDescriptor pfd = resolver.openFileDescriptor(uri, "w");
-			if (pfd != null) {
-				pfd.close();
-				return true;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return false;
 	}
 
 	void closeQuietly(AutoCloseable closeable) {
