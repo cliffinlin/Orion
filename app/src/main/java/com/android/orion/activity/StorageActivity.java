@@ -9,8 +9,10 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.os.ParcelFileDescriptor;
 import android.text.TextUtils;
 import android.util.Xml;
+import android.widget.Toast;
 
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.IndexComponent;
@@ -128,7 +130,6 @@ public class StorageActivity extends DatabaseActivity {
 
 		if (resultCode == RESULT_OK) {
 			if (data != null) {
-				final int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
 				mUriList.clear();
 				if (data.getClipData() != null) {
 					ClipData clipData = data.getClipData();
@@ -136,12 +137,12 @@ public class StorageActivity extends DatabaseActivity {
 					for (int i = 0; i < itemCount; i++) {
 						Uri uri = clipData.getItemAt(i).getUri();
 						mUriList.add(uri);
-						getContentResolver().takePersistableUriPermission(uri, takeFlags);
+						takePersistableUriPermission(uri);
 					}
 				} else if (data.getData() != null) {
 					Uri uri = data.getData();
 					mUriList.add(uri);
-					getContentResolver().takePersistableUriPermission(uri, takeFlags);
+					takePersistableUriPermission(uri);
 				}
 			}
 
@@ -157,6 +158,33 @@ public class StorageActivity extends DatabaseActivity {
 				mHandler.sendEmptyMessage(MESSAGE_SAVE_FAVORITE);
 			}
 		}
+	}
+
+	private void takePersistableUriPermission(Uri uri) {
+		final int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
+		getContentResolver().takePersistableUriPermission(uri, takeFlags);
+		String msg = uri.toString();
+		if (isUriWritable(uri)) {
+			msg += uri + " " + "Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION";
+		} else {
+			msg += uri + " " + "Intent.FLAG_GRANT_READ_URI_PERMISSION";
+		}
+		Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+		Log.d(msg);
+	}
+
+	private boolean isUriWritable(Uri uri) {
+		try {
+			ContentResolver resolver = getContentResolver();
+			ParcelFileDescriptor pfd = resolver.openFileDescriptor(uri, "w");
+			if (pfd != null) {
+				pfd.close();
+				return true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 	void closeQuietly(AutoCloseable closeable) {
