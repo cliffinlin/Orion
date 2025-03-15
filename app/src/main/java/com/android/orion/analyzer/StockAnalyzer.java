@@ -46,12 +46,12 @@ public class StockAnalyzer {
 	ArrayList<StockData> mSegmentDataList;
 	ArrayList<StockData> mLineVertexList;
 	ArrayList<StockData> mLineDataList;
-	ArrayList<StockData> mOutlineVertexList;
-	ArrayList<StockData> mOutlineDataList;
-	ArrayList<StockData> mSuperlineVertexList;
-	ArrayList<StockData> mSuperlineDataList;
-	ArrayList<StockData> mTrendVertexList;
-	ArrayList<StockData> mTrendDataList;
+	ArrayList<StockData> mOutLineVertexList;
+	ArrayList<StockData> mOutLineDataList;
+	ArrayList<StockData> mSuperLineVertexList;
+	ArrayList<StockData> mSuperLineDataList;
+	ArrayList<StockData> mTrendLineVertexList;
+	ArrayList<StockData> mTrendLineDataList;
 
 	StringBuffer mContentTitle = new StringBuffer();
 	StringBuffer mContentText = new StringBuffer();
@@ -88,12 +88,12 @@ public class StockAnalyzer {
 		mSegmentDataList = mStock.getArrayList(period, Period.TYPE_SEGMENT_DATA);
 		mLineVertexList = mStock.getArrayList(period, Period.TYPE_LINE_VERTEX);
 		mLineDataList = mStock.getArrayList(period, Period.TYPE_LINE_DATA);
-		mOutlineVertexList = mStock.getArrayList(period, Period.TYPE_OUTLINE_VERTEX);
-		mOutlineDataList = mStock.getArrayList(period, Period.TYPE_OUTLINE_DATA);
-		mSuperlineVertexList = mStock.getArrayList(period, Period.TYPE_SUPERLINE_VERTEX);
-		mSuperlineDataList = mStock.getArrayList(period, Period.TYPE_SUPERLINE_DATA);
-		mTrendVertexList = mStock.getArrayList(period, Period.TYPE_TREND_VERTEX);
-		mTrendDataList = mStock.getArrayList(period, Period.TYPE_TREND_DATA);
+		mOutLineVertexList = mStock.getArrayList(period, Period.TYPE_OUT_LINE_VERTEX);
+		mOutLineDataList = mStock.getArrayList(period, Period.TYPE_OUT_LINE_DATA);
+		mSuperLineVertexList = mStock.getArrayList(period, Period.TYPE_SUPER_LINE_VERTEX);
+		mSuperLineDataList = mStock.getArrayList(period, Period.TYPE_SUPER_LINE_DATA);
+		mTrendLineVertexList = mStock.getArrayList(period, Period.TYPE_TREND_LINE_VERTEX);
+		mTrendLineDataList = mStock.getArrayList(period, Period.TYPE_TREND_LINE_DATA);
 
 		try {
 			mDatabaseManager.loadStockDataList(mStock, period, mStockDataList);
@@ -192,24 +192,24 @@ public class StockAnalyzer {
 		mTrendAnalyzer.analyzeLine(Trend.LEVEL_SEGMENT, mSegmentDataList, mLineVertexList);
 		mTrendAnalyzer.vertexListToDataList(mLineVertexList, mLineDataList);
 
-		mTrendAnalyzer.analyzeLine(Trend.LEVEL_LINE, mLineDataList, mOutlineVertexList);
-		mTrendAnalyzer.vertexListToDataList(mOutlineVertexList, mOutlineDataList);
+		mTrendAnalyzer.analyzeLine(Trend.LEVEL_LINE, mLineDataList, mOutLineVertexList);
+		mTrendAnalyzer.vertexListToDataList(mOutLineVertexList, mOutLineDataList);
 
-		mTrendAnalyzer.analyzeLine(Trend.LEVEL_OUTLINE, mOutlineDataList, mSuperlineVertexList);
-		mTrendAnalyzer.vertexListToDataList(mSuperlineVertexList, mSuperlineDataList);
+		mTrendAnalyzer.analyzeLine(Trend.LEVEL_OUT_LINE, mOutLineDataList, mSuperLineVertexList);
+		mTrendAnalyzer.vertexListToDataList(mSuperLineVertexList, mSuperLineDataList);
 
-		mTrendAnalyzer.analyzeLine(Trend.LEVEL_SUPERLINE, mSuperlineDataList, mTrendVertexList);
-		mTrendAnalyzer.vertexListToDataList(mTrendVertexList, mTrendDataList);
+		mTrendAnalyzer.analyzeLine(Trend.LEVEL_SUPER_LINE, mSuperLineDataList, mTrendLineVertexList);
+		mTrendAnalyzer.vertexListToDataList(mTrendLineVertexList, mTrendLineDataList);
 
-		mTrendAnalyzer.analyzeLine(Trend.LEVEL_TREND, mTrendDataList, mTrendVertexList);
-		mTrendAnalyzer.vertexListToDataList(mTrendVertexList, mTrendDataList);
+		mTrendAnalyzer.analyzeLine(Trend.LEVEL_TREND_LINE, mTrendLineDataList, mTrendLineVertexList);
+		mTrendAnalyzer.vertexListToDataList(mTrendLineVertexList, mTrendLineDataList);
 
-		int level = Trend.LEVEL_TREND;
-		if (mTrendDataList.size() < Trend.ADAPTIVE_SIZE) {
-			level = Trend.LEVEL_SUPERLINE;
-			if (mSuperlineDataList.size() < Trend.ADAPTIVE_SIZE) {
-				level = Trend.LEVEL_OUTLINE;
-				if (mOutlineDataList.size() < Trend.ADAPTIVE_SIZE) {
+		int level = Trend.LEVEL_TREND_LINE;
+		if (mTrendLineDataList.size() < Trend.ADAPTIVE_SIZE) {
+			level = Trend.LEVEL_SUPER_LINE;
+			if (mSuperLineDataList.size() < Trend.ADAPTIVE_SIZE) {
+				level = Trend.LEVEL_OUT_LINE;
+				if (mOutLineDataList.size() < Trend.ADAPTIVE_SIZE) {
 					level = Trend.LEVEL_LINE;
 					if (mLineDataList.size() < Trend.ADAPTIVE_SIZE) {
 						level = Trend.LEVEL_SEGMENT;

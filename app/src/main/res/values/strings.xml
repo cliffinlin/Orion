@@ -84,6 +84,8 @@
     <string name="segment">Segment</string>
     <string name="line">Line</string>
     <string name="outline">OutLine</string>
+    <string name="superline">SuperLine</string>
+    <string name="trendline">TrendLine</string>
     <string name="cash_flow_per_share">CPS</string>
     <string name="cost">Cost</string>
     <string name="created">Created</string>

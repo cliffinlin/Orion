@@ -64,8 +64,14 @@ public class Setting {
 	public static final String SETTING_DISPLAY_LINE = "SETTING_DISPLAY_LINE";
 	public static final boolean SETTING_DISPLAY_LINE_DEFAULT = true;
 
-	public static final String SETTING_DISPLAY_OUTLINE = "SETTING_DISPLAY_OUTLINE";
-	public static final boolean SETTING_DISPLAY_OUTLINE_DEFAULT = true;
+	public static final String SETTING_DISPLAY_OUT_LINE = "SETTING_DISPLAY_OUT_LINE";
+	public static final boolean SETTING_DISPLAY_OUT_LINE_DEFAULT = true;
+
+	public static final String SETTING_DISPLAY_SUPER_LINE = "SETTING_DISPLAY_SUPER_LINE";
+	public static final boolean SETTING_DISPLAY_SUPER_LINE_DEFAULT = true;
+
+	public static final String SETTING_DISPLAY_TREND_LINE = "SETTING_DISPLAY_TREND_LINE";
+	public static final boolean SETTING_DISPLAY_TREND_LINE_DEFAULT = true;
 
 	public static final String SETTING_DEBUG_LOG = "SETTING_DEBUG_LOG";
 	public static final boolean SETTING_DEBUG_LOG_DEFAULT = true;
@@ -175,12 +181,28 @@ public class Setting {
 		Preferences.putBoolean(SETTING_DISPLAY_LINE, value);
 	}
 
-	public static boolean getDisplayOutline() {
-		return Preferences.getBoolean(SETTING_DISPLAY_OUTLINE, SETTING_DISPLAY_OUTLINE_DEFAULT);
+	public static boolean getDisplayOutLine() {
+		return Preferences.getBoolean(SETTING_DISPLAY_OUT_LINE, SETTING_DISPLAY_OUT_LINE_DEFAULT);
 	}
 
-	public static void setDisplayOutline(boolean value) {
-		Preferences.putBoolean(SETTING_DISPLAY_OUTLINE, value);
+	public static void setDisplayOutLine(boolean value) {
+		Preferences.putBoolean(SETTING_DISPLAY_OUT_LINE, value);
+	}
+
+	public static boolean getDisplaySuperLine() {
+		return Preferences.getBoolean(SETTING_DISPLAY_SUPER_LINE, SETTING_DISPLAY_SUPER_LINE_DEFAULT);
+	}
+
+	public static void setDisplaySuperLine(boolean value) {
+		Preferences.putBoolean(SETTING_DISPLAY_SUPER_LINE, value);
+	}
+
+	public static boolean getDisplayTrendLine() {
+		return Preferences.getBoolean(SETTING_DISPLAY_TREND_LINE, SETTING_DISPLAY_TREND_LINE_DEFAULT);
+	}
+
+	public static void setDisplayTrendLine(boolean value) {
+		Preferences.putBoolean(SETTING_DISPLAY_TREND_LINE, value);
 	}
 
 	public static boolean getDebugLog() {

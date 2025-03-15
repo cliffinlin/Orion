@@ -52,6 +52,12 @@
         <com.android.orion.preference.CustomSwitchPreference
             android:key="SETTING_DISPLAY_OUTLINE"
             android:title="@string/outline" />
+        <com.android.orion.preference.CustomSwitchPreference
+            android:key="SETTING_DISPLAY_SUPERLINE"
+            android:title="@string/superline" />
+        <com.android.orion.preference.CustomSwitchPreference
+            android:key="SETTING_DISPLAY_TREND"
+            android:title="@string/trendline" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/setting_debug">
         <com.android.orion.preference.CustomSwitchPreference

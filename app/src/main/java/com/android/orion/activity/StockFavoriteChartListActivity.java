@@ -588,34 +588,34 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 					if (mStockData.getTrend().vertexOf(Trend.VERTEX_TOP_OUTLINE)) {
 						Entry entry = new Entry(
 								(float) mStockData.getTrend().getVertexHigh(), index);
-						stockDataChart.mTrendEntryList[Trend.LEVEL_OUTLINE].add(entry);
+						stockDataChart.mTrendEntryList[Trend.LEVEL_OUT_LINE].add(entry);
 					} else if (mStockData
 							.getTrend().vertexOf(Trend.VERTEX_BOTTOM_OUTLINE)) {
 						Entry entry = new Entry(
 								(float) mStockData.getTrend().getVertexLow(), index);
-						stockDataChart.mTrendEntryList[Trend.LEVEL_OUTLINE].add(entry);
+						stockDataChart.mTrendEntryList[Trend.LEVEL_OUT_LINE].add(entry);
 					}
 
 					if (mStockData.getTrend().vertexOf(Trend.VERTEX_TOP_SUPERLINE)) {
 						Entry entry = new Entry(
 								(float) mStockData.getTrend().getVertexHigh(), index);
-						stockDataChart.mTrendEntryList[Trend.LEVEL_SUPERLINE].add(entry);
+						stockDataChart.mTrendEntryList[Trend.LEVEL_SUPER_LINE].add(entry);
 					} else if (mStockData
 							.getTrend().vertexOf(Trend.VERTEX_BOTTOM_SUPERLINE)) {
 						Entry entry = new Entry(
 								(float) mStockData.getTrend().getVertexLow(), index);
-						stockDataChart.mTrendEntryList[Trend.LEVEL_SUPERLINE].add(entry);
+						stockDataChart.mTrendEntryList[Trend.LEVEL_SUPER_LINE].add(entry);
 					}
 
-					if (mStockData.getTrend().vertexOf(Trend.VERTEX_TOP_TREND)) {
+					if (mStockData.getTrend().vertexOf(Trend.VERTEX_TOP_TREND_LINE)) {
 						Entry entry = new Entry(
 								(float) mStockData.getTrend().getVertexHigh(), index);
-						stockDataChart.mTrendEntryList[Trend.LEVEL_TREND].add(entry);
+						stockDataChart.mTrendEntryList[Trend.LEVEL_TREND_LINE].add(entry);
 					} else if (mStockData
-							.getTrend().vertexOf(Trend.VERTEX_BOTTOM_TREND)) {
+							.getTrend().vertexOf(Trend.VERTEX_BOTTOM_TREND_LINE)) {
 						Entry entry = new Entry(
 								(float) mStockData.getTrend().getVertexLow(), index);
-						stockDataChart.mTrendEntryList[Trend.LEVEL_TREND].add(entry);
+						stockDataChart.mTrendEntryList[Trend.LEVEL_TREND_LINE].add(entry);
 					}
 
 					stockDataChart.setMainChartYMinMax(index);

@@ -11,15 +11,24 @@ import java.util.Set;
 
 public class Trend {
 
+	public static final String LABEL_NONE = "";
+	public static final String LABEL_DRAW = "Draw";
+	public static final String LABEL_STROKE = "Stroke";
+	public static final String LABEL_SEGMENT = "Segment";
+	public static final String LABEL_LINE = "Line";
+	public static final String LABEL_OUTLINE = "OutLine";
+	public static final String LABEL_SUPERLINE = "SuperLine";
+	public static final String LABEL_TREND_LINE = "TrendLine";
+
 	public static final int LEVEL_NONE = 0;//DATA
 	public static final int LEVEL_DRAW = 1;
 	public static final int LEVEL_STROKE = 2;
 	public static final int LEVEL_SEGMENT = 3;
 	public static final int LEVEL_LINE = 4;
-	public static final int LEVEL_OUTLINE = 5;
-	public static final int LEVEL_SUPERLINE = 6;
-	public static final int LEVEL_TREND = 7;
-	public static final int LEVEL_MAX = LEVEL_TREND + 1;
+	public static final int LEVEL_OUT_LINE = 5;
+	public static final int LEVEL_SUPER_LINE = 6;
+	public static final int LEVEL_TREND_LINE = 7;
+	public static final int LEVEL_MAX = LEVEL_TREND_LINE + 1;
 
 	public static final int DIRECTION_NONE = 0;
 	public static final int DIRECTION_UP = 1 << 0;
@@ -38,8 +47,8 @@ public class Trend {
 	public static final int VERTEX_BOTTOM_OUTLINE = 1 << 9;
 	public static final int VERTEX_TOP_SUPERLINE = 1 << 10;
 	public static final int VERTEX_BOTTOM_SUPERLINE = 1 << 11;
-	public static final int VERTEX_TOP_TREND = 1 << 12;
-	public static final int VERTEX_BOTTOM_TREND = 1 << 13;
+	public static final int VERTEX_TOP_TREND_LINE = 1 << 12;
+	public static final int VERTEX_BOTTOM_TREND_LINE = 1 << 13;
 
 	public static final String TYPE_UP_NONE_UP = "UNU";
 	public static final String TYPE_UP_NONE_DOWN = "UND";
@@ -53,15 +62,6 @@ public class Trend {
 	public static final String TYPE_DOWN_NONE_UP = "DNU";
 	public static final String TYPE_DOWN_NONE_DOWN = "DND";
 
-	public static final String LABEL_NONE = "";
-	public static final String LABEL_DRAW = "Draw";
-	public static final String LABEL_STROKE = "Stroke";
-	public static final String LABEL_SEGMENT = "Segment";
-	public static final String LABEL_LINE = "Line";
-	public static final String LABEL_OUTLINE = "Outline";
-	public static final String LABEL_SUPERLINE = "Superline";
-	public static final String LABEL_TREND = "Trend";
-
 	public static final int FLAG_UNUSED = -1;
 	public static final int FLAG_NONE = 0;
 	public static final int FLAG_CHANGED = 1 << 0;
@@ -69,7 +69,9 @@ public class Trend {
 
 	public static final int GROUPED_NONE = 0;
 
-	public static final int[] TREND_COLORS = {Color.WHITE, Color.GRAY, Color.YELLOW, Color.BLACK, Color.BLUE, Color.RED, Color.MAGENTA, Color.CYAN};
+	public static final int[] TREND_COLORS = {
+			Color.WHITE, Color.GRAY, Color.YELLOW, Color.BLACK,
+			Color.BLUE, Color.RED, Color.MAGENTA, Color.CYAN};
 
 	public static final String[] TREND_TYPES = {
 			TYPE_UP_NONE_UP, TYPE_UP_NONE_DOWN, TYPE_UP_NONE,
@@ -89,7 +91,6 @@ public class Trend {
 	public static final String MARK_LEVEL = "L";
 
 	public static final int VERTEX_SIZE = 3;
-
 	public static final int ADAPTIVE_SIZE = 8;
 
 	public static Set<String> NOTIFYACTIONS = new HashSet<>(Arrays.asList(

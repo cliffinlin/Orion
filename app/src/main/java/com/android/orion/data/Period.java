@@ -27,12 +27,12 @@ public class Period {
 	public static final int TYPE_SEGMENT_DATA = 6;
 	public static final int TYPE_LINE_VERTEX = 7;
 	public static final int TYPE_LINE_DATA = 8;
-	public static final int TYPE_OUTLINE_VERTEX = 9;
-	public static final int TYPE_OUTLINE_DATA = 10;
-	public static final int TYPE_SUPERLINE_VERTEX = 11;
-	public static final int TYPE_SUPERLINE_DATA = 12;
-	public static final int TYPE_TREND_VERTEX = 13;
-	public static final int TYPE_TREND_DATA = 14;
+	public static final int TYPE_OUT_LINE_VERTEX = 9;
+	public static final int TYPE_OUT_LINE_DATA = 10;
+	public static final int TYPE_SUPER_LINE_VERTEX = 11;
+	public static final int TYPE_SUPER_LINE_DATA = 12;
+	public static final int TYPE_TREND_LINE_VERTEX = 13;
+	public static final int TYPE_TREND_LINE_DATA = 14;
 
 	public static final String MONTH = "month";
 	public static final String WEEK = "week";
@@ -56,12 +56,12 @@ public class Period {
 	public ArrayList<StockData> mSegmentDataList = new ArrayList<>();
 	public ArrayList<StockData> mLineVertexList = new ArrayList<>();
 	public ArrayList<StockData> mLineDataList = new ArrayList<>();
-	public ArrayList<StockData> mOutlineVertexList = new ArrayList<>();
-	public ArrayList<StockData> mOutlineDataList = new ArrayList<>();
-	public ArrayList<StockData> mSuperlineVertexList = new ArrayList<>();
-	public ArrayList<StockData> mSuperlineDataList = new ArrayList<>();
-	public ArrayList<StockData> mTrendVertexList = new ArrayList<>();
-	public ArrayList<StockData> mTrendDataList = new ArrayList<>();
+	public ArrayList<StockData> mOutLineVertexList = new ArrayList<>();
+	public ArrayList<StockData> mOutLineDataList = new ArrayList<>();
+	public ArrayList<StockData> mSuperLineVertexList = new ArrayList<>();
+	public ArrayList<StockData> mSuperLineDataList = new ArrayList<>();
+	public ArrayList<StockData> mTrendLineVertexList = new ArrayList<>();
+	public ArrayList<StockData> mTrendLineDataList = new ArrayList<>();
 
 	private String mAction = "";
 
@@ -157,23 +157,23 @@ public class Period {
 			case TYPE_LINE_DATA:
 				result = mLineDataList;
 				break;
-			case TYPE_OUTLINE_VERTEX:
-				result = mOutlineVertexList;
+			case TYPE_OUT_LINE_VERTEX:
+				result = mOutLineVertexList;
 				break;
-			case TYPE_OUTLINE_DATA:
-				result = mOutlineDataList;
+			case TYPE_OUT_LINE_DATA:
+				result = mOutLineDataList;
 				break;
-			case TYPE_SUPERLINE_VERTEX:
-				result = mSuperlineVertexList;
+			case TYPE_SUPER_LINE_VERTEX:
+				result = mSuperLineVertexList;
 				break;
-			case TYPE_SUPERLINE_DATA:
-				result = mSuperlineDataList;
+			case TYPE_SUPER_LINE_DATA:
+				result = mSuperLineDataList;
 				break;
-			case TYPE_TREND_VERTEX:
-				result = mTrendVertexList;
+			case TYPE_TREND_LINE_VERTEX:
+				result = mTrendLineVertexList;
 				break;
-			case TYPE_TREND_DATA:
-				result = mTrendDataList;
+			case TYPE_TREND_LINE_DATA:
+				result = mTrendLineDataList;
 				break;
 			default:
 				result = new ArrayList<>();

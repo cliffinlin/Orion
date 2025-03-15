@@ -168,20 +168,20 @@ public class StockDataChart {
 		}
 		addLineDataSet(mGroupEntryList, Trend.LABEL_NONE, Trend.LEVEL_LINE, lineData, fillChanged(Trend.LEVEL_LINE), fillColor(Trend.LEVEL_LINE));
 
-		if (displayTrend(Trend.LEVEL_OUTLINE)) {
-			addLineDataSet(mTrendEntryList, Trend.LABEL_OUTLINE, Trend.LEVEL_OUTLINE, lineData);
+		if (displayTrend(Trend.LEVEL_OUT_LINE)) {
+			addLineDataSet(mTrendEntryList, Trend.LABEL_OUTLINE, Trend.LEVEL_OUT_LINE, lineData);
 		}
-		addLineDataSet(mGroupEntryList, Trend.LABEL_NONE, Trend.LEVEL_OUTLINE, lineData, fillChanged(Trend.LEVEL_OUTLINE), fillColor(Trend.LEVEL_OUTLINE));
+		addLineDataSet(mGroupEntryList, Trend.LABEL_NONE, Trend.LEVEL_OUT_LINE, lineData, fillChanged(Trend.LEVEL_OUT_LINE), fillColor(Trend.LEVEL_OUT_LINE));
 
-		if (displayTrend(Trend.LEVEL_SUPERLINE)) {
-			addLineDataSet(mTrendEntryList, Trend.LABEL_SUPERLINE, Trend.LEVEL_SUPERLINE, lineData);
+		if (displayTrend(Trend.LEVEL_SUPER_LINE)) {
+			addLineDataSet(mTrendEntryList, Trend.LABEL_SUPERLINE, Trend.LEVEL_SUPER_LINE, lineData);
 		}
-		addLineDataSet(mGroupEntryList, Trend.LABEL_NONE, Trend.LEVEL_SUPERLINE, lineData, fillChanged(Trend.LEVEL_SUPERLINE), fillColor(Trend.LEVEL_SUPERLINE));
+		addLineDataSet(mGroupEntryList, Trend.LABEL_NONE, Trend.LEVEL_SUPER_LINE, lineData, fillChanged(Trend.LEVEL_SUPER_LINE), fillColor(Trend.LEVEL_SUPER_LINE));
 
-		if (displayTrend(Trend.LEVEL_TREND)) {
-			addLineDataSet(mTrendEntryList, Trend.LABEL_TREND, Trend.LEVEL_TREND, lineData);
+		if (displayTrend(Trend.LEVEL_TREND_LINE)) {
+			addLineDataSet(mTrendEntryList, Trend.LABEL_TREND_LINE, Trend.LEVEL_TREND_LINE, lineData);
 		}
-		addLineDataSet(mGroupEntryList, Trend.LABEL_NONE, Trend.LEVEL_TREND, lineData, fillChanged(Trend.LEVEL_TREND), fillColor(Trend.LEVEL_TREND));
+		addLineDataSet(mGroupEntryList, Trend.LABEL_NONE, Trend.LEVEL_TREND_LINE, lineData, fillChanged(Trend.LEVEL_TREND_LINE), fillColor(Trend.LEVEL_TREND_LINE));
 
 		mCombinedDataMain.setData(lineData);
 	}
@@ -293,14 +293,14 @@ public class StockDataChart {
 			case Trend.LEVEL_LINE:
 				result = Setting.getDisplayLine();
 				break;
-			case Trend.LEVEL_OUTLINE:
-				result = Setting.getDisplayOutline();
+			case Trend.LEVEL_OUT_LINE:
+				result = Setting.getDisplayOutLine();
 				break;
-			case Trend.LEVEL_SUPERLINE:
-				result = Setting.getDisplayOutline();
+			case Trend.LEVEL_SUPER_LINE:
+				result = Setting.getDisplaySuperLine();
 				break;
-			case Trend.LEVEL_TREND:
-				result = Setting.getDisplayOutline();
+			case Trend.LEVEL_TREND_LINE:
+				result = Setting.getDisplayTrendLine();
 				break;
 			default:
 				break;
