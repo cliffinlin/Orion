@@ -121,7 +121,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 						mDatabaseManager.deleteStockData(stock);
 						mDatabaseManager.deleteStockTrend(stock);
 						mDatabaseManager.deleteStockPerceptron(stock.getId());
-						Setting.setDownloadStockData(stock.getSE(), stock.getCode(), 0);
+						Setting.setDownloadStockDataTimeMillis(stock, 0);
 						mStockDataProvider.download(stock);
 					}
 				} catch (Exception e) {

@@ -84,7 +84,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 
 			switch (msg.what) {
 				case MESSAGE_REFRESH:
-					Setting.setDownloadStock(mStock.getSE(), mStock.getCode(), 0);
+					Setting.setDownloadStockTimeMillis(mStock, 0);
 					mStockDataProvider.download(mStock);
 					mListView.onRefreshComplete();
 					break;

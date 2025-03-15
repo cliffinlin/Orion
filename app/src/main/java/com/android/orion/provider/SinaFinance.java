@@ -267,7 +267,7 @@ public class SinaFinance extends StockDataProvider {
 	public int downloadStockHSA() {
 		int result = RESULT_NONE;
 
-		if (System.currentTimeMillis() - Setting.getDownloadStockHSA() < Config.downloadStockHSAInterval) {
+		if (System.currentTimeMillis() - Setting.getDownloadStockHSATimeMillis() < Config.downloadStockHSAInterval) {
 			return result;
 		}
 
@@ -414,7 +414,7 @@ public class SinaFinance extends StockDataProvider {
 			if (bulkInsert) {
 				mDatabaseManager.bulkInsertStock(contentValuesArray);
 			}
-			Setting.setDownloadStockHSA(System.currentTimeMillis());
+			Setting.setDownloadStockHSATimeMillis(System.currentTimeMillis());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -539,7 +539,7 @@ public class SinaFinance extends StockDataProvider {
 			mDatabaseManager.updateStock(stock,
 					stock.getContentValuesInformation());
 
-			Setting.setStockDataChanged(stock.getSE(), stock.getCode(), true);
+			Setting.setStockDataChanged(stock, true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -680,7 +680,7 @@ public class SinaFinance extends StockDataProvider {
 			mDatabaseManager.updateStock(stock,
 					stock.getContentValuesRealTime());
 
-			Setting.setStockDataChanged(stock.getSE(), stock.getCode(), true);
+			Setting.setStockDataChanged(stock, true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -892,7 +892,7 @@ public class SinaFinance extends StockDataProvider {
 				}
 			}
 
-			Setting.setStockDataChanged(stock.getSE(), stock.getCode(), true);
+			Setting.setStockDataChanged(stock, true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1081,7 +1081,7 @@ public class SinaFinance extends StockDataProvider {
 						stockData.getContentValues());
 			}
 
-			Setting.setStockDataChanged(stock.getSE(), stock.getCode(), true);
+			Setting.setStockDataChanged(stock, true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1297,7 +1297,7 @@ public class SinaFinance extends StockDataProvider {
 				}
 			}
 
-			Setting.setStockDataChanged(stock.getSE(), stock.getCode(), true);
+			Setting.setStockDataChanged(stock, true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1480,7 +1480,7 @@ public class SinaFinance extends StockDataProvider {
 				}
 			}
 
-			Setting.setStockDataChanged(stock.getSE(), stock.getCode(), true);
+			Setting.setStockDataChanged(stock, true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1660,7 +1660,7 @@ public class SinaFinance extends StockDataProvider {
 				}
 			}
 
-			Setting.setStockDataChanged(stock.getSE(), stock.getCode(), true);
+			Setting.setStockDataChanged(stock, true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -20,7 +20,7 @@ public class Config {
 
 	public static final int SERVICE_NOTIFICATION_ID = 600000;
 
-	public static final int MAX_CONTENT_LENGTH_DAY = 60;
+	public static final int MAX_CONTENT_LENGTH_DAY = SinaFinance.DOWNLOAD_HISTORY_LENGTH_DEFAULT;
 	public static final int MAX_CONTENT_LENGTH_MIN60 = MAX_CONTENT_LENGTH_DAY * 4;
 	public static final int MAX_CONTENT_LENGTH_MIN30_LONG = MAX_CONTENT_LENGTH_DAY * 8;
 	public static final int MAX_CONTENT_LENGTH_MIN15_LONG = MAX_CONTENT_LENGTH_DAY * 16;

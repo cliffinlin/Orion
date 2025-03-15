@@ -263,7 +263,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 
 			mDatabaseManager.loadStockArrayMap(mStockArrayMap);
 			for (Stock current : mStockArrayMap.values()) {
-				Setting.setDownloadStockData(current.getSE(), current.getCode(), 0);
+				Setting.setDownloadStockDataTimeMillis(current, 0);
 			}
 			download();
 		}
@@ -529,14 +529,15 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			return;
 		}
 
+		InputStream inputStream = null;
+		String fileName = "";
+		ArrayList<String> lineList = new ArrayList<>();
 		try {
-			String fileName = "";
-			ArrayList<String> lineList = new ArrayList<>();
 			if (uri.getScheme().equals("file")) {
 				fileName = uri.getPath();
 				Utility.readFile(fileName, lineList);
 			} else if (uri.getScheme().equals("content")) {
-				InputStream inputStream = mContext.getContentResolver().openInputStream(uri);
+				inputStream = mContext.getContentResolver().openInputStream(uri);
 				if (inputStream != null) {
 					BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 					String strLine;
@@ -545,6 +546,13 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 					}
 				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			Utility.closeQuietly(inputStream);
+		}
+
+		try {
 			if (lineList.size() == 0) {
 				return;
 			}
@@ -600,6 +608,13 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			saveTDXData(stock, Period.MIN15, StockDataMin15List);
 			saveTDXData(stock, Period.MIN30, StockDataMin30List);
 			saveTDXData(stock, Period.MIN60, StockDataMin60List);
+
+			mDatabaseManager.deleteStockData(stock);
+			mDatabaseManager.deleteStockTrend(stock);
+			mDatabaseManager.deleteStockPerceptron(stock.getId());
+			Setting.setDownloadStockTimeMillis(stock, 0);
+			Setting.setDownloadStockDataTimeMillis(stock, 0);
+			download(stock);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -627,14 +642,11 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 					continue;
 				}
 
-				String se = stockInfo[0].toLowerCase();
-				String code = stockInfo[1].toLowerCase();
-				Setting.setUriTdxData(se, code, uri.toString());
-
 				Stock stock = new Stock();
 				stock.setClasses(Stock.CLASS_A);
-				stock.setSE(se);
-				stock.setCode(code);
+				stock.setSE(stockInfo[0].toLowerCase());
+				stock.setCode(stockInfo[1]);
+				Setting.setTdxDataFileUri(stock, uri.toString());
 				if (!mDatabaseManager.isStockExist(stock)) {
 					stock.setCreated(Utility.getCurrentDateTimeString());
 					mDatabaseManager.insertStock(stock);
@@ -738,7 +750,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 
 		OutputStream outputStream = null;
 		try {
-			String uriString = Setting.getUriTdxData(stock.getSE(), stock.getCode());
+			String uriString = Setting.getTdxDataFileUri(stock);
 			if (TextUtils.isEmpty(uriString)) {
 				return;
 			}
@@ -769,8 +781,8 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			return;
 		}
 
-		Setting.setDownloadStock(stock.getSE(), stock.getCode(), 0);
-		Setting.setDownloadStockData(stock.getSE(), stock.getCode(), 0);
+		Setting.setDownloadStockTimeMillis(stock, 0);
+		Setting.setDownloadStockDataTimeMillis(stock, 0);
 		download(stock);
 	}
 
@@ -793,8 +805,8 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			return;
 		}
 
-		Setting.setDownloadStock(stock.getSE(), stock.getCode(), 0);
-		Setting.setDownloadStockData(stock.getSE(), stock.getCode(), 0);
+		Setting.setDownloadStockTimeMillis(stock, 0);
+		Setting.setDownloadStockDataTimeMillis(stock, 0);
 		download(stock);
 	}
 
@@ -817,8 +829,8 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			return;
 		}
 
-		Setting.setDownloadStock(stock.getSE(), stock.getCode(), 0);
-		Setting.setDownloadStockData(stock.getSE(), stock.getCode(), 0);
+		Setting.setDownloadStockTimeMillis(stock, 0);
+		Setting.setDownloadStockDataTimeMillis(stock, 0);
 		download(stock);
 	}
 
@@ -905,7 +917,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 
 				onDownloadStart(stock.getCode());
 				if (TextUtils.equals(stock.getClasses(), Stock.CLASS_A)) {
-					long interval = System.currentTimeMillis() - Setting.getDownloadStock(stock.getSE(), stock.getCode());
+					long interval = System.currentTimeMillis() - Setting.getDownloadStockTimeMillis(stock);
 					if (interval > Config.downloadStockInterval) {
 						if (downloadStockInformation(stock) == RESULT_FAILED) {
 							StockService.getInstance().onDisconnected();
@@ -926,10 +938,10 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 							StockService.getInstance().onDisconnected();
 							return;
 						}
-						Setting.setDownloadStock(stock.getSE(), stock.getCode(), System.currentTimeMillis());
+						Setting.setDownloadStockTimeMillis(stock, System.currentTimeMillis());
 					}
 
-					interval = System.currentTimeMillis() - Setting.getDownloadStockData(stock.getSE(), stock.getCode());
+					interval = System.currentTimeMillis() - Setting.getDownloadStockDataTimeMillis(stock);
 					if (Market.isTradingHours() || Market.isLunchTime() || (interval > Config.downloadStockDataInterval)) {
 						if (downloadStockDataHistory(stock) == RESULT_FAILED) {
 							StockService.getInstance().onDisconnected();
@@ -945,17 +957,17 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 							StockService.getInstance().onDisconnected();
 							return;
 						}
-						Setting.setDownloadStockData(stock.getSE(), stock.getCode(), System.currentTimeMillis());
+						Setting.setDownloadStockDataTimeMillis(stock, System.currentTimeMillis());
 					}
 				} else if (TextUtils.equals(stock.getClasses(), Stock.CLASS_INDEX)) {
 					setupIndex(stock);
-					Setting.setStockDataChanged(stock.getSE(), stock.getCode(), true);
+					Setting.setStockDataChanged(stock, true);
 				} else {
 				}
 				onDownloadComplete(stock.getCode());
 
-				if (Setting.getStockDataChanged(stock.getSE(), stock.getCode())) {
-					Setting.setStockDataChanged(stock.getSE(), stock.getCode(), false);
+				if (Setting.getStockDataChanged(stock)) {
+					Setting.setStockDataChanged(stock, false);
 
 					onAnalyzeStart(stock.getCode());
 					mStockAnalyzer.analyze(stock);

@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -275,17 +276,27 @@ public class Utility {
 	}
 
 	public static boolean isUriWritable(Context context, Uri uri) {
+		boolean result = false;
+		if (uri == null) {
+			return result;
+		}
+
+		if (!ContentResolver.SCHEME_CONTENT.equals(uri.getScheme())) {
+			return result;
+		}
+
+		OutputStream outputStream = null;
 		try {
-			ContentResolver resolver = context.getContentResolver();
-			ParcelFileDescriptor pfd = resolver.openFileDescriptor(uri, "w");
-			if (pfd != null) {
-				pfd.close();
-				return true;
+			outputStream = context.getContentResolver().openOutputStream(uri);
+			if (outputStream != null) {
+				result = true;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			closeQuietly(outputStream);
 		}
-		return false;
+		return result;
 	}
 
 	public static void closeQuietly(AutoCloseable closeable) {

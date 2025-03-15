@@ -439,6 +439,14 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_CODE)));
 	}
 
+	public String getSeCode() {
+		return mSE + mCode;
+	}
+
+	public String getSeCodeUpperCase() {
+		return mSE.toUpperCase() + mCode;
+	}
+
 	public String getName() {
 		return mName;
 	}

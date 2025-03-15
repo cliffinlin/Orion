@@ -180,14 +180,14 @@ public class StorageActivity extends DatabaseActivity {
 	private void takePersistableUriPermission(Uri uri) {
 		final int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
 		getContentResolver().takePersistableUriPermission(uri, takeFlags);
-		String msg = Utility.getFileNameFromContentUri(mContext, uri);
-		if (Utility.isUriWritable(mContext, uri)) {
-			msg += " " + "READ | WRITE";
-		} else {
-			msg += " " + "READ";
-		}
-		Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
-		Log.d(msg);
+//		String msg = Utility.getFileNameFromContentUri(mContext, uri);
+//		if (Utility.isUriWritable(mContext, uri)) {
+//			msg += " " + "READ | WRITE";
+//		} else {
+//			msg += " " + "READ";
+//		}
+//		Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+//		Log.d(msg);
 	}
 
 	void saveToFile(int type) {

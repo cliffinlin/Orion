@@ -2,6 +2,7 @@ package com.android.orion.setting;
 
 import androidx.annotation.NonNull;
 
+import com.android.orion.database.Stock;
 import com.android.orion.utility.Preferences;
 
 public class Setting {
@@ -75,12 +76,12 @@ public class Setting {
 	public static final String SETTING_DEBUG_DATAFILE = "SETTING_DEBUG_DATAFILE";
 	public static final boolean SETTING_DEBUG_DATAFILE_DEFAULT = true;
 
-	public static final String SETTING_DOWNLOAD_STOCK_HSA = "SETTING_DOWNLOAD_STOCK_HSA";
-	public static final String SETTING_DOWNLOAD_STOCK_ = "SETTING_DOWNLOAD_STOCK_";
-	public static final String SETTING_DOWNLOAD_STOCK_DATA_ = "SETTING_DOWNLOAD_STOCK_DATA_";
-	public static final String SETTING_URI_TDX_DATA_ = "SETTING_URI_TDX_DATA_";
+	public static final String SETTING_DOWNLOAD_STOCK_TIME_MILLIS_ = "SETTING_DOWNLOAD_STOCK_TIME_MILLIS_";
+	public static final String SETTING_DOWNLOAD_STOCK_DATA_TIME_MILLIS_ = "SETTING_DOWNLOAD_STOCK_DATA_TIME_MILLIS_";
+	public static final String SETTING_DOWNLOAD_STOCK_HSA_TIME_MILLIS = "SETTING_DOWNLOAD_STOCK_HSA_TIME_MILLIS";
+	public static final String SETTING_TDX_DATA_FILE_URI_ = "SETTING_TDX_DATA_FILE_URI_";
 
-	public static final String SETTING_STOCK_DATA_CHANGED = "SETTING_STOCK_DATA_CHANGED";
+	public static final String SETTING_STOCK_DATA_CHANGED_ = "SETTING_STOCK_DATA_CHANGED_";
 	public static final String SETTING_STOCK_ARRAY_MAP_INDEX = "SETTING_STOCK_ARRAY_MAP_INDEX";
 
 	private Setting() {
@@ -230,44 +231,68 @@ public class Setting {
 		Preferences.putBoolean(SETTING_DEBUG_DATAFILE, value);
 	}
 
-	public static long getDownloadStockHSA() {
-		return Preferences.getLong(SETTING_DOWNLOAD_STOCK_HSA, 0);
+	public static long getDownloadStockTimeMillis(Stock stock) {
+		if (stock == null) {
+			return 0;
+		}
+		return Preferences.getLong(SETTING_DOWNLOAD_STOCK_TIME_MILLIS_ + stock.getSeCodeUpperCase(), 0);
 	}
 
-	public static void setDownloadStockHSA(long value) {
-		Preferences.putLong(SETTING_DOWNLOAD_STOCK_HSA, value);
+	public static void setDownloadStockTimeMillis(Stock stock, long value) {
+		if (stock == null) {
+			return;
+		}
+		Preferences.putLong(SETTING_DOWNLOAD_STOCK_TIME_MILLIS_ + stock.getSeCodeUpperCase(), value);
 	}
 
-	public static long getDownloadStock(@NonNull String se, String code) {
-		return Preferences.getLong(SETTING_DOWNLOAD_STOCK_ + se.toUpperCase() + "_" + code, 0);
+	public static long getDownloadStockDataTimeMillis(Stock stock) {
+		if (stock == null) {
+			return 0;
+		}
+		return Preferences.getLong(SETTING_DOWNLOAD_STOCK_DATA_TIME_MILLIS_ + stock.getSeCodeUpperCase(), 0);
 	}
 
-	public static void setDownloadStock(@NonNull String se, String code, long value) {
-		Preferences.putLong(SETTING_DOWNLOAD_STOCK_ + se.toUpperCase() + "_" + code, value);
+	public static void setDownloadStockDataTimeMillis(Stock stock, long value) {
+		if (stock == null) {
+			return;
+		}
+		Preferences.putLong(SETTING_DOWNLOAD_STOCK_DATA_TIME_MILLIS_ + stock.getSeCodeUpperCase(), value);
 	}
 
-	public static long getDownloadStockData(@NonNull String se, String code) {
-		return Preferences.getLong(SETTING_DOWNLOAD_STOCK_DATA_ + se.toUpperCase() + "_" + code, 0);
+	public static long getDownloadStockHSATimeMillis() {
+		return Preferences.getLong(SETTING_DOWNLOAD_STOCK_HSA_TIME_MILLIS, 0);
 	}
 
-	public static void setDownloadStockData(@NonNull String se, String code, long value) {
-		Preferences.putLong(SETTING_DOWNLOAD_STOCK_DATA_ + se.toUpperCase() + "_" + code, value);
+	public static void setDownloadStockHSATimeMillis(long value) {
+		Preferences.putLong(SETTING_DOWNLOAD_STOCK_HSA_TIME_MILLIS, value);
 	}
 
-	public static String getUriTdxData(@NonNull String se, String code) {
-		return Preferences.getString(SETTING_URI_TDX_DATA_ + se.toUpperCase() + "_" + code, "");
+	public static String getTdxDataFileUri(Stock stock) {
+		if (stock == null) {
+			return "";
+		}
+		return Preferences.getString(SETTING_TDX_DATA_FILE_URI_ + stock.getSeCodeUpperCase(), "");
 	}
 
-	public static void setUriTdxData(@NonNull String se, String code, String value) {
-		Preferences.putString(SETTING_URI_TDX_DATA_ + se.toUpperCase() + "_" + code, value);
+	public static void setTdxDataFileUri(Stock stock, String value) {
+		if (stock == null) {
+			return;
+		}
+		Preferences.putString(SETTING_TDX_DATA_FILE_URI_ + stock.getSeCodeUpperCase(), value);
 	}
 
-	public static boolean getStockDataChanged(String se, String code) {
-		return Preferences.getBoolean(SETTING_STOCK_DATA_CHANGED + "_" + se + "_" + code, false);
+	public static boolean getStockDataChanged(Stock stock) {
+		if (stock == null) {
+			return false;
+		}
+		return Preferences.getBoolean(SETTING_STOCK_DATA_CHANGED_ + stock.getSeCodeUpperCase(), false);
 	}
 
-	public static void setStockDataChanged(String se, String code, boolean value) {
-		Preferences.putBoolean(SETTING_STOCK_DATA_CHANGED + "_" + se + "_" + code, value);
+	public static void setStockDataChanged(Stock stock, boolean value) {
+		if (stock == null) {
+			return;
+		}
+		Preferences.putBoolean(SETTING_STOCK_DATA_CHANGED_ + stock.getSeCodeUpperCase(), value);
 	}
 
 	public static long getStockArrayMapIndex() {

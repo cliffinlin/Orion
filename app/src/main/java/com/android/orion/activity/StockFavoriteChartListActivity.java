@@ -87,7 +87,7 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 
 			switch (msg.what) {
 				case MESSAGE_REFRESH:
-					Setting.setDownloadStockData(mStock.getSE(), mStock.getCode(), 0);
+					Setting.setDownloadStockDataTimeMillis(mStock, 0);
 					mStockDataProvider.download(mStock);
 					mListView.onRefreshComplete();
 					break;
@@ -255,7 +255,7 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 							mDatabaseManager.deleteStockData(mStock.getSE(), mStock.getCode(), period);
 						}
 					}
-					Setting.setDownloadStockData(mStock.getSE(), mStock.getCode(), 0);
+					Setting.setDownloadStockDataTimeMillis(mStock, 0);
 					mStockDataProvider.download(mStock);
 					break;
 

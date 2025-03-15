@@ -137,7 +137,7 @@ public class StockFinancialListActivity extends ListActivity implements
 					for (Stock stock : mStockArrayMap.values()) {
 						mDatabaseManager.deleteStockFinancial(stock);
 						mDatabaseManager.deleteStockBonus(stock);
-						Setting.setDownloadStock(stock.getSE(), stock.getCode(), 0);
+						Setting.setDownloadStockTimeMillis(stock, 0);
 						mStockDataProvider.download(stock);
 					}
 				} catch (Exception e) {

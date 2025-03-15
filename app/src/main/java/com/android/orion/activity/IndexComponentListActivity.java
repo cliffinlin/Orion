@@ -85,7 +85,7 @@ public class IndexComponentListActivity extends ListActivity implements
 					for (int i = 0; i < mStockList.size(); i++) {
 						Stock stock = mStockList.get(i);
 						if (stock != null && stock.hasFlag(Stock.FLAG_FAVORITE)) {
-							Setting.setDownloadStockData(stock.getSE(), stock.getCode(), 0);
+							Setting.setDownloadStockDataTimeMillis(stock, 0);
 							mStockDataProvider.download(stock);
 						}
 					}
