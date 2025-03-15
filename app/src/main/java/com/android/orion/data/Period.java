@@ -29,8 +29,10 @@ public class Period {
 	public static final int TYPE_LINE_DATA = 8;
 	public static final int TYPE_OUTLINE_VERTEX = 9;
 	public static final int TYPE_OUTLINE_DATA = 10;
-	public static final int TYPE_TREND_VERTEX = 11;
-	public static final int TYPE_TREND_DATA = 12;
+	public static final int TYPE_SUPERLINE_VERTEX = 11;
+	public static final int TYPE_SUPERLINE_DATA = 12;
+	public static final int TYPE_TREND_VERTEX = 13;
+	public static final int TYPE_TREND_DATA = 14;
 
 	public static final String MONTH = "month";
 	public static final String WEEK = "week";
@@ -56,6 +58,8 @@ public class Period {
 	public ArrayList<StockData> mLineDataList = new ArrayList<>();
 	public ArrayList<StockData> mOutlineVertexList = new ArrayList<>();
 	public ArrayList<StockData> mOutlineDataList = new ArrayList<>();
+	public ArrayList<StockData> mSuperlineVertexList = new ArrayList<>();
+	public ArrayList<StockData> mSuperlineDataList = new ArrayList<>();
 	public ArrayList<StockData> mTrendVertexList = new ArrayList<>();
 	public ArrayList<StockData> mTrendDataList = new ArrayList<>();
 
@@ -158,6 +162,12 @@ public class Period {
 				break;
 			case TYPE_OUTLINE_DATA:
 				result = mOutlineDataList;
+				break;
+			case TYPE_SUPERLINE_VERTEX:
+				result = mSuperlineVertexList;
+				break;
+			case TYPE_SUPERLINE_DATA:
+				result = mSuperlineDataList;
 				break;
 			case TYPE_TREND_VERTEX:
 				result = mTrendVertexList;

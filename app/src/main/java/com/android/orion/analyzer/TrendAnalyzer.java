@@ -207,6 +207,10 @@ public class TrendAnalyzer {
 				vertexTypeBottom = Trend.VERTEX_BOTTOM_OUTLINE;
 				break;
 			case Trend.LEVEL_OUTLINE:
+				vertexTypeTop = Trend.VERTEX_TOP_SUPERLINE;
+				vertexTypeBottom = Trend.VERTEX_BOTTOM_SUPERLINE;
+				break;
+			case Trend.LEVEL_SUPERLINE:
 				vertexTypeTop = Trend.VERTEX_TOP_TREND;
 				vertexTypeBottom = Trend.VERTEX_BOTTOM_TREND;
 				break;

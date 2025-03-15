@@ -50,7 +50,6 @@ public class StockDataChart {
 	public ArrayList<Entry> mDrawLastEntryList = new ArrayList<>();
 	public List<Entry>[] mTrendEntryList = new List[Trend.LEVEL_MAX];
 	public List<Entry>[] mGroupEntryList = new List[Trend.LEVEL_MAX];
-	public int[] mLevelColors = {Color.WHITE, Color.GRAY, Color.YELLOW, Color.BLACK, Color.BLUE, Color.RED, Color.MAGENTA};
 	public CombinedData mCombinedDataMain = new CombinedData(mXValues);
 	public CombinedData mCombinedDataSub = new CombinedData(mXValues);
 
@@ -167,12 +166,22 @@ public class StockDataChart {
 		if (displayTrend(Trend.LEVEL_LINE)) {
 			addLineDataSet(mTrendEntryList, Trend.LABEL_LINE, Trend.LEVEL_LINE, lineData);
 		}
+		addLineDataSet(mGroupEntryList, Trend.LABEL_NONE, Trend.LEVEL_LINE, lineData, fillChanged(Trend.LEVEL_LINE), fillColor(Trend.LEVEL_LINE));
 
 		if (displayTrend(Trend.LEVEL_OUTLINE)) {
 			addLineDataSet(mTrendEntryList, Trend.LABEL_OUTLINE, Trend.LEVEL_OUTLINE, lineData);
 		}
-		addLineDataSet(mGroupEntryList, Trend.LABEL_NONE, Trend.LEVEL_LINE, lineData, fillChanged(Trend.LEVEL_LINE), fillColor(Trend.LEVEL_LINE));
 		addLineDataSet(mGroupEntryList, Trend.LABEL_NONE, Trend.LEVEL_OUTLINE, lineData, fillChanged(Trend.LEVEL_OUTLINE), fillColor(Trend.LEVEL_OUTLINE));
+
+		if (displayTrend(Trend.LEVEL_SUPERLINE)) {
+			addLineDataSet(mTrendEntryList, Trend.LABEL_SUPERLINE, Trend.LEVEL_SUPERLINE, lineData);
+		}
+		addLineDataSet(mGroupEntryList, Trend.LABEL_NONE, Trend.LEVEL_SUPERLINE, lineData, fillChanged(Trend.LEVEL_SUPERLINE), fillColor(Trend.LEVEL_SUPERLINE));
+
+		if (displayTrend(Trend.LEVEL_TREND)) {
+			addLineDataSet(mTrendEntryList, Trend.LABEL_TREND, Trend.LEVEL_TREND, lineData);
+		}
+		addLineDataSet(mGroupEntryList, Trend.LABEL_NONE, Trend.LEVEL_TREND, lineData, fillChanged(Trend.LEVEL_TREND), fillColor(Trend.LEVEL_TREND));
 
 		mCombinedDataMain.setData(lineData);
 	}
@@ -255,17 +264,17 @@ public class StockDataChart {
 	}
 
 	int fillColor(int level) {
-		if (level > 0 || level < mLevelColors.length) {
-			return mLevelColors[level];
+		if (level > 0 || level < Trend.TREND_COLORS.length) {
+			return Trend.TREND_COLORS[level];
 		}
-		return mLevelColors[0];
+		return Trend.TREND_COLORS[0];
 	}
 
 	int lineColor(int level) {
-		if (level > 0 || level < mLevelColors.length) {
-			return mLevelColors[level];
+		if (level > 0 || level < Trend.TREND_COLORS.length) {
+			return Trend.TREND_COLORS[level];
 		}
-		return mLevelColors[0];
+		return Trend.TREND_COLORS[0];
 	}
 
 	public boolean displayTrend(int level) {
@@ -285,6 +294,12 @@ public class StockDataChart {
 				result = Setting.getDisplayLine();
 				break;
 			case Trend.LEVEL_OUTLINE:
+				result = Setting.getDisplayOutline();
+				break;
+			case Trend.LEVEL_SUPERLINE:
+				result = Setting.getDisplayOutline();
+				break;
+			case Trend.LEVEL_TREND:
 				result = Setting.getDisplayOutline();
 				break;
 			default:
