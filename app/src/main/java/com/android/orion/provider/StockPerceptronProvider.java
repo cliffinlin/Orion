@@ -55,7 +55,7 @@ public class StockPerceptronProvider {
 			mLevelMap = new ArrayMap<>();
 			for (int level = 1; level < Trend.LEVEL_MAX; level++) {
 				mTrendMap = new ArrayMap<>();
-				for (String type : Trend.TREND_TYPES) {
+				for (String type : Trend.TYPES) {
 					StockPerceptron stockPerceptron = new StockPerceptron(period, level, type);
 					if (!mDatabaseManager.isStockPerceptronExist(stockPerceptron)) {
 						stockPerceptron.setCreated(Utility.getCurrentDateTimeString());

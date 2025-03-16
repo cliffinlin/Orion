@@ -69,11 +69,15 @@ public class Trend {
 
 	public static final int GROUPED_NONE = 0;
 
-	public static final int[] TREND_COLORS = {
+	public static final int[] LEVELS = { LEVEL_NONE,
+			LEVEL_DRAW, LEVEL_STROKE, LEVEL_SEGMENT, LEVEL_LINE,
+			LEVEL_OUT_LINE, LEVEL_SUPER_LINE, LEVEL_TREND_LINE};
+
+	public static final int[] COLORS = {
 			Color.WHITE, Color.GRAY, Color.YELLOW, Color.BLACK,
 			Color.BLUE, Color.RED, Color.MAGENTA, Color.CYAN};
 
-	public static final String[] TREND_TYPES = {
+	public static final String[] TYPES = {
 			TYPE_UP_NONE_UP, TYPE_UP_NONE_DOWN, TYPE_UP_NONE,
 			TYPE_UP_DOWN, TYPE_UP_UP,
 			TYPE_DOWN_DOWN, TYPE_DOWN_UP,

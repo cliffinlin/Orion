@@ -8,6 +8,12 @@ import androidx.annotation.NonNull;
 import com.android.orion.database.StockData;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import kotlin.collections.builders.MapBuilder;
 
 public class Period {
 	public static final int PERIOD_MINUTES_MIN5 = 5;
@@ -28,6 +34,8 @@ public class Period {
 
 	public static final String[] PERIODS = {MONTH, WEEK, DAY,
 			MIN60, MIN30, MIN15, MIN5};
+	private static final Set<String> MINUTE_PERIODS = new HashSet<>();
+	private static final Map<String, Integer> PERIOD_MINUTES_MAP = new HashMap<>();
 
 	public String mName = "";
 	public String mAction = "";
@@ -38,6 +46,19 @@ public class Period {
 
 	public Period(String name) {
 		mName = name;
+		MINUTE_PERIODS.add(MIN5);
+		MINUTE_PERIODS.add(MIN15);
+		MINUTE_PERIODS.add(MIN30);
+		MINUTE_PERIODS.add(MIN60);
+
+		PERIOD_MINUTES_MAP.put(MIN5, PERIOD_MINUTES_MIN5);
+		PERIOD_MINUTES_MAP.put(MIN15, PERIOD_MINUTES_MIN15);
+		PERIOD_MINUTES_MAP.put(MIN30, PERIOD_MINUTES_MIN30);
+		PERIOD_MINUTES_MAP.put(MIN60, PERIOD_MINUTES_MIN60);
+		PERIOD_MINUTES_MAP.put(DAY, PERIOD_MINUTES_DAY);
+		PERIOD_MINUTES_MAP.put(WEEK, PERIOD_MINUTES_WEEK);
+		PERIOD_MINUTES_MAP.put(MONTH, PERIOD_MINUTES_MONTH);
+
 		for (int i = 0; i < Trend.LEVEL_MAX; i++) {
 			mVertexLists.add(new ArrayList<>());
 		}
@@ -49,44 +70,22 @@ public class Period {
 	public static int getPeriodMinutes(String period) {
 		int result = 0;
 
-		if (TextUtils.equals(period, Period.MIN5)) {
-			result = PERIOD_MINUTES_MIN5;
-		} else if (TextUtils.equals(period, Period.MIN15)) {
-			result = PERIOD_MINUTES_MIN15;
-		} else if (TextUtils.equals(period, Period.MIN30)) {
-			result = PERIOD_MINUTES_MIN30;
-		} else if (TextUtils.equals(period, Period.MIN60)) {
-			result = PERIOD_MINUTES_MIN60;
-		} else if (TextUtils.equals(period, Period.DAY)) {
-			result = PERIOD_MINUTES_DAY;
-		} else if (TextUtils.equals(period, Period.WEEK)) {
-			result = PERIOD_MINUTES_WEEK;
-		} else if (TextUtils.equals(period, Period.MONTH)) {
-			result = PERIOD_MINUTES_MONTH;
+		if (TextUtils.isEmpty(period)) {
+			return result;
+		}
+
+		if (PERIOD_MINUTES_MAP.containsKey(period)) {
+			result = PERIOD_MINUTES_MAP.get(period);
 		}
 
 		return result;
 	}
 
-	public static boolean isMinutePeriod(@NonNull String period) {
-		boolean result = false;
-
-		switch (period) {
-			case Period.MIN5:
-			case Period.MIN15:
-			case Period.MIN30:
-			case Period.MIN60:
-				result = true;
-				break;
-			case Period.DAY:
-			case Period.WEEK:
-			case Period.MONTH:
-			default:
-				result = false;
-				break;
+	public static boolean isMinutePeriod(String period) {
+		if (TextUtils.isEmpty(period)) {
+			return false;
 		}
-
-		return result;
+		return MINUTE_PERIODS.contains(period);
 	}
 
 	public static int getPeriodIndex(String period) {

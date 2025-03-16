@@ -264,17 +264,17 @@ public class StockDataChart {
 	}
 
 	int fillColor(int level) {
-		if (level > 0 || level < Trend.TREND_COLORS.length) {
-			return Trend.TREND_COLORS[level];
+		if (level > 0 || level < Trend.COLORS.length) {
+			return Trend.COLORS[level];
 		}
-		return Trend.TREND_COLORS[0];
+		return Trend.COLORS[0];
 	}
 
 	int lineColor(int level) {
-		if (level > 0 || level < Trend.TREND_COLORS.length) {
-			return Trend.TREND_COLORS[level];
+		if (level > 0 || level < Trend.COLORS.length) {
+			return Trend.COLORS[level];
 		}
-		return Trend.TREND_COLORS[0];
+		return Trend.COLORS[0];
 	}
 
 	public boolean displayTrend(int level) {
