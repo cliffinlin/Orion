@@ -75,6 +75,7 @@ public class ListActivity extends StorageActivity {
 
 	@Override
 	public void onAnalyzeFinish(String stockCode) {
+		super.onAnalyzeFinish(stockCode);
 		mLoadingStockCode = "";
 	}
 

@@ -102,7 +102,6 @@ public class StockAnalyzer {
 			mFinancialAnalyzer.setupStockBonus(mStock);
 			stock.setModified(Utility.getCurrentDateTimeString());
 			mDatabaseManager.updateStock(mStock, mStock.getContentValues());
-//			updateNotification();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -268,77 +267,6 @@ public class StockAnalyzer {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	protected void updateNotification() {
-		if (!Market.isTradingHours()) {
-			Toast.makeText(mContext,
-					mContext.getResources().getString(R.string.out_of_trading_hours),
-					Toast.LENGTH_SHORT).show();
-			return;
-		}
-
-		if (mStock == null || mContext == null) {
-			return;
-		}
-
-		if (mStock.getPrice() == 0 || !mStock.hasFlag(Stock.FLAG_NOTIFY)) {
-			return;
-		}
-
-		mContentTitle.setLength(0);
-		mContentText.setLength(0);
-
-		for (String period : Period.PERIODS) {
-			if (!Setting.getPeriod(period)) {
-				continue;
-			}
-
-			String action = mStock.getAction(period);
-			setContentTitle(period, action);
-		}
-
-		if (mContentTitle.length() == 0) {
-			return;
-		}
-
-		mContentTitle.insert(0, mStock.getName() + " " + mStock.getPrice() + " " + mStock.getNet() + " ");
-		RecordFile.writeNotificationFile(mContentTitle.toString());
-		try {
-			int code = Integer.parseInt(mStock.getCode());
-			long stockId = mStock.getId();
-			notify(code, stockId, Config.MESSAGE_CHANNEL_ID, Config.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
-					mContentTitle.toString(), mContentText.toString());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	void setContentTitle(String period, String action) {
-		if (period == null || action == null || period.isEmpty() || action.isEmpty()) {
-			return;
-		}
-
-		boolean containsAction = false;
-
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-			containsAction = Trend.NOTIFYACTIONS.stream().anyMatch(action::contains);
-		} else {
-			for (String notifyAction : Trend.NOTIFYACTIONS) {
-				if (action.contains(notifyAction)) {
-					containsAction = true;
-					break;
-				}
-			}
-		}
-
-		if (containsAction) {
-			appendContentTitle(period, action);
-		}
-	}
-
-	private void appendContentTitle(String period, String action) {
-		mContentTitle.append(period).append(" ").append(action).append(" ");
 	}
 
 	public void notify(int id, String channelID, String channelName, int importance, String contentTitle, String contentText) {
