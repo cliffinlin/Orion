@@ -58,8 +58,6 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 	public static final int LOADER_ID_STOCK_LIST = Period.PERIODS.length + 1;
 	public static final int REQUEST_CODE_SETTING = 0;
 	public static final int REQUEST_CODE_SETTING_DEBUG_LOOPBACK = 1;
-	public static final int MESSAGE_REFRESH = 0;
-	public static final int MESSAGE_LOAD_STOCK_LIST = 1;
 
 	boolean mKeyDisplayDeal = false;
 	int mStockListIndex = 0;
@@ -79,43 +77,6 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 	ArrayMap<Integer, CombinedChart> mCombinedChartMap = new ArrayMap<>();
 	ChartSyncHelper mChartSyncHelper = new ChartSyncHelper();
 
-	Handler mHandler = new Handler(Looper.getMainLooper()) {
-
-		@Override
-		public void handleMessage(Message msg) {
-			super.handleMessage(msg);
-
-			switch (msg.what) {
-				case MESSAGE_REFRESH:
-					Setting.setDownloadStockDataTimeMillis(mStock, 0);
-					mStockDataProvider.download(mStock);
-					mListView.onRefreshComplete();
-					break;
-
-				case MESSAGE_LOAD_STOCK_LIST:
-					mStockList.clear();
-					if (mStockIDList != null) {
-						for (int i = 0; i < mStockIDList.size(); i++) {
-							Stock stock = new Stock();
-							stock.setId(Long.parseLong(mStockIDList.get(i)));
-							mDatabaseManager.getStockById(stock);
-							if (mStock.getId() == stock.getId()) {
-								mStock.set(stock);
-								mStockListIndex = mStockList.size();
-							}
-							mStockList.add(stock);
-						}
-					}
-					break;
-
-				default:
-					break;
-			}
-		}
-	};
-
-	MainHandler mMainHandler = new MainHandler(this);
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -129,6 +90,7 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 		initListView();
 		initLoader();
 		updateTitle();
+		updateMenuAction();
 	}
 
 	void onNewIntent() {
@@ -142,7 +104,7 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 		mDatabaseManager.getStockById(mStock);
 		mStockIDList = intent.getStringArrayListExtra(Constant.EXTRA_STOCK_ID_LIST);
 		if (mStockIDList != null && !mStockIDList.isEmpty()) {
-			mHandler.sendEmptyMessage(MESSAGE_LOAD_STOCK_LIST);
+			onMessageLoadStockList();
 		}
 		long stockTrendId = intent.getLongExtra(Constant.EXTRA_STOCK_TREND_ID, DatabaseContract.INVALID_ID);
 		mStockTrend.setId(stockTrendId);
@@ -150,7 +112,6 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 
 		mSortOrder = intent.getStringExtra(Constant.EXTRA_STOCK_LIST_SORT_ORDER);
 		mKeyDisplayDeal = intent.getBooleanExtra(Constant.EXTRA_STOCK_DEAL, false);
-
 	}
 
 	@Override
@@ -191,7 +152,7 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 			case R.id.action_refresh: {
 				mDatabaseManager.deleteStockData(mStock);
 				mDatabaseManager.deleteStockTrend(mStock);
-				mHandler.sendEmptyMessage(MESSAGE_REFRESH);
+				onMessageRefresh();
 				break;
 			}
 			case R.id.action_setting: {
@@ -235,6 +196,28 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 			}
 			default:
 				super.handleOnMenuItemSelected(item);
+		}
+	}
+
+	void onMessageRefresh() {
+		Setting.setDownloadStockDataTimeMillis(mStock, 0);
+		mStockDataProvider.download(mStock);
+		mListView.onRefreshComplete();
+	}
+
+	void onMessageLoadStockList() {
+		mStockList.clear();
+		if (mStockIDList != null) {
+			for (int i = 0; i < mStockIDList.size(); i++) {
+				Stock stock = new Stock();
+				stock.setId(Long.parseLong(mStockIDList.get(i)));
+				mDatabaseManager.getStockById(stock);
+				if (mStock.getId() == stock.getId()) {
+					mStock.set(stock);
+					mStockListIndex = mStockList.size();
+				}
+				mStockList.add(stock);
+			}
 		}
 	}
 
@@ -357,7 +340,7 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 		mListView.setOnRefreshListener(new PullToRefreshListView.OnRefreshListener() {
 			@Override
 			public void onRefresh() {
-				mHandler.sendEmptyMessage(MESSAGE_REFRESH);
+				onMessageRefresh();
 			}
 		});
 		mChartSyncHelper.registerOnChartGestureListener(this);
@@ -448,9 +431,6 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 						if (mStock.getId() == stock.getId()) {
 							mStock.set(cursor);
 							mStockListIndex = mStockList.size();
-							if (mMainHandler != null) {
-								mMainHandler.sendEmptyMessage(0);
-							}
 						}
 						mStockList.add(stock);
 					}
@@ -462,9 +442,8 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 			mDatabaseManager.closeCursor(cursor);
 		}
 
-		if (mMainHandler != null) {
-			mMainHandler.sendEmptyMessage(0);
-		}
+		updateTitle();
+		updateMenuAction();
 	}
 
 	public void swapStockDataCursor(StockDataChart stockDataChart, Cursor cursor) {
@@ -638,6 +617,7 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 			}
 
 			updateTitle();
+			updateMenuAction();
 
 			if (mKeyDisplayDeal) {
 				loadStockDealList();
@@ -750,23 +730,6 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 	@Override
 	public void onChartTranslate(MotionEvent me, float dX, float dY) {
 
-	}
-
-	static class MainHandler extends Handler {
-		private final WeakReference<StockFavoriteChartListActivity> mActivity;
-
-		MainHandler(StockFavoriteChartListActivity activity) {
-			mActivity = new WeakReference<StockFavoriteChartListActivity>(activity);
-		}
-
-		@Override
-		public void handleMessage(Message msg) {
-			super.handleMessage(msg);
-
-			StockFavoriteChartListActivity activity = mActivity.get();
-			activity.updateTitle();
-			activity.updateMenuAction();
-		}
 	}
 
 	class StockDataChartItem {
