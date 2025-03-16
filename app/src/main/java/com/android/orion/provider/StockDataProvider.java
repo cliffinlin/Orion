@@ -383,7 +383,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 				Calendar end = null;
 
 				for (Stock stock : stockList) {
-					stockDataList = stock.getArrayList(period, Period.TYPE_STOCK_DATA);
+					stockDataList = stock.getStockDataList(period);
 					mDatabaseManager.loadStockDataList(stock, period, stockDataList);
 					if ((stockDataList == null) || (stockDataList.size() == 0)) {
 						continue;

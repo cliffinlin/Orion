@@ -18,22 +18,6 @@ public class Period {
 	public static final int PERIOD_MINUTES_WEEK = 1680;
 	public static final int PERIOD_MINUTES_MONTH = 7200;
 
-	public static final int TYPE_STOCK_DATA = 0;
-	public static final int TYPE_DRAW_VERTEX = 1;
-	public static final int TYPE_DRAW_DATA = 2;
-	public static final int TYPE_STROKE_VERTEX = 3;
-	public static final int TYPE_STROKE_DATA = 4;
-	public static final int TYPE_SEGMENT_VERTEX = 5;
-	public static final int TYPE_SEGMENT_DATA = 6;
-	public static final int TYPE_LINE_VERTEX = 7;
-	public static final int TYPE_LINE_DATA = 8;
-	public static final int TYPE_OUT_LINE_VERTEX = 9;
-	public static final int TYPE_OUT_LINE_DATA = 10;
-	public static final int TYPE_SUPER_LINE_VERTEX = 11;
-	public static final int TYPE_SUPER_LINE_DATA = 12;
-	public static final int TYPE_TREND_LINE_VERTEX = 13;
-	public static final int TYPE_TREND_LINE_DATA = 14;
-
 	public static final String MONTH = "month";
 	public static final String WEEK = "week";
 	public static final String DAY = "day";
@@ -45,28 +29,21 @@ public class Period {
 	public static final String[] PERIODS = {MONTH, WEEK, DAY,
 			MIN60, MIN30, MIN15, MIN5};
 
-	public final String mName;
+	public String mName = "";
+	public String mAction = "";
 
 	public ArrayList<StockData> mStockDataList = new ArrayList<>();
-	public ArrayList<StockData> mDrawVertexList = new ArrayList<>();
-	public ArrayList<StockData> mDrawDataList = new ArrayList<>();
-	public ArrayList<StockData> mStrokeVertexList = new ArrayList<>();
-	public ArrayList<StockData> mStrokeDataList = new ArrayList<>();
-	public ArrayList<StockData> mSegmentVertexList = new ArrayList<>();
-	public ArrayList<StockData> mSegmentDataList = new ArrayList<>();
-	public ArrayList<StockData> mLineVertexList = new ArrayList<>();
-	public ArrayList<StockData> mLineDataList = new ArrayList<>();
-	public ArrayList<StockData> mOutLineVertexList = new ArrayList<>();
-	public ArrayList<StockData> mOutLineDataList = new ArrayList<>();
-	public ArrayList<StockData> mSuperLineVertexList = new ArrayList<>();
-	public ArrayList<StockData> mSuperLineDataList = new ArrayList<>();
-	public ArrayList<StockData> mTrendLineVertexList = new ArrayList<>();
-	public ArrayList<StockData> mTrendLineDataList = new ArrayList<>();
-
-	private String mAction = "";
+	public ArrayList<ArrayList<StockData>> mVertexLists = new ArrayList<>();
+	public ArrayList<ArrayList<StockData>> mDataLists = new ArrayList<>();
 
 	public Period(String name) {
 		mName = name;
+		for (int i = 0; i < Trend.LEVEL_MAX; i++) {
+			mVertexLists.add(new ArrayList<>());
+		}
+		for (int i = 0; i < Trend.LEVEL_MAX; i++) {
+			mDataLists.add(new ArrayList<>());
+		}
 	}
 
 	public static int getPeriodMinutes(String period) {
@@ -127,59 +104,16 @@ public class Period {
 		return index;
 	}
 
-	public ArrayList<StockData> getArrayList(int type) {
-		ArrayList<StockData> result;
-		switch (type) {
-			case TYPE_STOCK_DATA:
-				result = mStockDataList;
-				break;
-			case TYPE_DRAW_VERTEX:
-				result = mDrawVertexList;
-				break;
-			case TYPE_DRAW_DATA:
-				result = mDrawDataList;
-				break;
-			case TYPE_STROKE_VERTEX:
-				result = mStrokeVertexList;
-				break;
-			case TYPE_STROKE_DATA:
-				result = mStrokeDataList;
-				break;
-			case TYPE_SEGMENT_VERTEX:
-				result = mSegmentVertexList;
-				break;
-			case TYPE_SEGMENT_DATA:
-				result = mSegmentDataList;
-				break;
-			case TYPE_LINE_VERTEX:
-				result = mLineVertexList;
-				break;
-			case TYPE_LINE_DATA:
-				result = mLineDataList;
-				break;
-			case TYPE_OUT_LINE_VERTEX:
-				result = mOutLineVertexList;
-				break;
-			case TYPE_OUT_LINE_DATA:
-				result = mOutLineDataList;
-				break;
-			case TYPE_SUPER_LINE_VERTEX:
-				result = mSuperLineVertexList;
-				break;
-			case TYPE_SUPER_LINE_DATA:
-				result = mSuperLineDataList;
-				break;
-			case TYPE_TREND_LINE_VERTEX:
-				result = mTrendLineVertexList;
-				break;
-			case TYPE_TREND_LINE_DATA:
-				result = mTrendLineDataList;
-				break;
-			default:
-				result = new ArrayList<>();
-				break;
-		}
-		return result;
+	public ArrayList<StockData> getStockDataList() {
+		return mStockDataList;
+	}
+
+	public ArrayList<StockData> getDataList(int level) {
+		return mDataLists.get(level);
+	}
+
+	public ArrayList<StockData> getVertexList(int level) {
+		return mVertexLists.get(level);
 	}
 
 	public String getAction() {

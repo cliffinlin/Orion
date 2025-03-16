@@ -1190,23 +1190,69 @@ public class Stock extends DatabaseTable {
 		return mStockBonusList;
 	}
 
-	public ArrayList<StockData> getArrayList(String period, int type) {
+	public ArrayList<StockData> getStockDataList(String period) {
 		ArrayList<StockData> result;
 
 		if (TextUtils.equals(period, Period.MIN5)) {
-			result = mMin5.getArrayList(type);
+			result = mMin5.getStockDataList();
 		} else if (TextUtils.equals(period, Period.MIN15)) {
-			result = mMin15.getArrayList(type);
+			result = mMin15.getStockDataList();
 		} else if (TextUtils.equals(period, Period.MIN30)) {
-			result = mMin30.getArrayList(type);
+			result = mMin30.getStockDataList();
 		} else if (TextUtils.equals(period, Period.MIN60)) {
-			result = mMin60.getArrayList(type);
+			result = mMin60.getStockDataList();
 		} else if (TextUtils.equals(period, Period.DAY)) {
-			result = mDay.getArrayList(type);
+			result = mDay.getStockDataList();
 		} else if (TextUtils.equals(period, Period.WEEK)) {
-			result = mWeek.getArrayList(type);
+			result = mWeek.getStockDataList();
 		} else if (TextUtils.equals(period, Period.MONTH)) {
-			result = mMonth.getArrayList(type);
+			result = mMonth.getStockDataList();
+		} else {
+			result = new ArrayList<>();
+		}
+		return result;
+	}
+
+	public ArrayList<StockData> getVertexList(String period, int level) {
+		ArrayList<StockData> result;
+
+		if (TextUtils.equals(period, Period.MIN5)) {
+			result = mMin5.getVertexList(level);
+		} else if (TextUtils.equals(period, Period.MIN15)) {
+			result = mMin15.getVertexList(level);
+		} else if (TextUtils.equals(period, Period.MIN30)) {
+			result = mMin30.getVertexList(level);
+		} else if (TextUtils.equals(period, Period.MIN60)) {
+			result = mMin60.getVertexList(level);
+		} else if (TextUtils.equals(period, Period.DAY)) {
+			result = mDay.getVertexList(level);
+		} else if (TextUtils.equals(period, Period.WEEK)) {
+			result = mWeek.getVertexList(level);
+		} else if (TextUtils.equals(period, Period.MONTH)) {
+			result = mMonth.getVertexList(level);
+		} else {
+			result = new ArrayList<>();
+		}
+		return result;
+	}
+
+	public ArrayList<StockData> getDataList(String period, int level) {
+		ArrayList<StockData> result;
+
+		if (TextUtils.equals(period, Period.MIN5)) {
+			result = mMin5.getDataList(level);
+		} else if (TextUtils.equals(period, Period.MIN15)) {
+			result = mMin15.getDataList(level);
+		} else if (TextUtils.equals(period, Period.MIN30)) {
+			result = mMin30.getDataList(level);
+		} else if (TextUtils.equals(period, Period.MIN60)) {
+			result = mMin60.getDataList(level);
+		} else if (TextUtils.equals(period, Period.DAY)) {
+			result = mDay.getDataList(level);
+		} else if (TextUtils.equals(period, Period.WEEK)) {
+			result = mWeek.getDataList(level);
+		} else if (TextUtils.equals(period, Period.MONTH)) {
+			result = mMonth.getDataList(level);
 		} else {
 			result = new ArrayList<>();
 		}
