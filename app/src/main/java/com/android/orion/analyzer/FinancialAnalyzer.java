@@ -216,9 +216,6 @@ public class FinancialAnalyzer {
 		mDatabaseManager.updateStockDeal(stock);
 
 		stock.setBookValuePerShare(stockFinancial.getBookValuePerShare());
-		stock.setTotalAssets(stockFinancial.getTotalAssets());
-		stock.setTotalLongTermLiabilities(stockFinancial
-				.getTotalLongTermLiabilities());
 		stock.setMainBusinessIncome(stockFinancial.getMainBusinessIncome());
 		stock.setNetProfit(stockFinancial.getNetProfit());
 		stock.setCashFlowPerShare(stockFinancial.getCashFlowPerShare());

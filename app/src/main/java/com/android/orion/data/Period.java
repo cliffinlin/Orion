@@ -3,8 +3,6 @@ package com.android.orion.data;
 import android.database.Cursor;
 import android.text.TextUtils;
 
-import androidx.annotation.NonNull;
-
 import com.android.orion.database.StockData;
 
 import java.util.ArrayList;
@@ -12,8 +10,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import kotlin.collections.builders.MapBuilder;
 
 public class Period {
 	public static final int PERIOD_MINUTES_MIN5 = 5;

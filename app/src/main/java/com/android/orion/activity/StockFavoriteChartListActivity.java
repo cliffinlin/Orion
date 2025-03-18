@@ -8,9 +8,6 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.util.ArrayMap;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -46,7 +43,6 @@ import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.utils.Utils;
 import com.markupartist.android.widget.PullToRefreshListView;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -152,7 +148,8 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 			case R.id.action_refresh: {
 				mDatabaseManager.deleteStockData(mStock);
 				mDatabaseManager.deleteStockTrend(mStock);
-				onMessageRefresh();
+				Setting.setDownloadStockDataTimeMillis(mStock, 0);
+				mStockDataProvider.download(mStock);
 				break;
 			}
 			case R.id.action_setting: {
@@ -197,12 +194,6 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 			default:
 				super.handleOnMenuItemSelected(item);
 		}
-	}
-
-	void onMessageRefresh() {
-		Setting.setDownloadStockDataTimeMillis(mStock, 0);
-		mStockDataProvider.download(mStock);
-		mListView.onRefreshComplete();
 	}
 
 	void onMessageLoadStockList() {
@@ -340,7 +331,9 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 		mListView.setOnRefreshListener(new PullToRefreshListView.OnRefreshListener() {
 			@Override
 			public void onRefresh() {
-				onMessageRefresh();
+				Setting.setDownloadStockDataTimeMillis(mStock, 0);
+				mStockDataProvider.download(mStock);
+				mListView.onRefreshComplete();
 			}
 		});
 		mChartSyncHelper.registerOnChartGestureListener(this);

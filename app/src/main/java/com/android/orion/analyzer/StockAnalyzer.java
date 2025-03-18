@@ -186,9 +186,6 @@ public class StockAnalyzer {
 		StringBuilder actionBuilder = new StringBuilder();
 		appendActionIfPresent(actionBuilder, getDirectionAction(period));
 		appendActionIfPresent(actionBuilder, getTrendAction());
-
-		StockData stockData = mStockDataList.get(mStockDataList.size() - 1);
-		mStock.setDateTime(stockData.getDate(), stockData.getTime());
 		mStock.setAction(period, actionBuilder.toString());
 	}
 

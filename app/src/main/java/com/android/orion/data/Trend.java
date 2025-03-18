@@ -69,7 +69,7 @@ public class Trend {
 
 	public static final int GROUPED_NONE = 0;
 
-	public static final int[] LEVELS = { LEVEL_NONE,
+	public static final int[] LEVELS = {LEVEL_NONE,
 			LEVEL_DRAW, LEVEL_STROKE, LEVEL_SEGMENT, LEVEL_LINE,
 			LEVEL_OUT_LINE, LEVEL_SUPER_LINE, LEVEL_TREND_LINE};
 

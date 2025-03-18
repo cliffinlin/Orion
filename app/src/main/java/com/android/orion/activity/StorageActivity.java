@@ -11,7 +11,6 @@ import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Xml;
-import android.widget.Toast;
 
 import com.android.orion.data.Period;
 import com.android.orion.database.DatabaseContract;
@@ -78,48 +77,6 @@ public class StorageActivity extends DatabaseActivity {
 		startActivityForResult(intent, requestCode);
 	}
 
-	Handler mHandler = new Handler(Looper.getMainLooper()) {
-		@Override
-		public void handleMessage(Message msg) {
-			super.handleMessage(msg);
-
-			switch (msg.what) {
-				case MESSAGE_REFRESH:
-					mStockDataProvider.download();
-					break;
-
-				case MESSAGE_LOAD_FAVORITE:
-					new Thread(new Runnable() {
-						@Override
-						public void run() {
-							loadFromFile();
-						}
-					}).start();
-					break;
-
-				case MESSAGE_SAVE_FAVORITE:
-					new Thread(new Runnable() {
-						@Override
-						public void run() {
-							saveToFile(FILE_TYPE_FAVORITE);
-						}
-					}).start();
-					break;
-				case MESSAGE_SAVE_TDX_DATA:
-					new Thread(new Runnable() {
-						@Override
-						public void run() {
-							saveToFile(FILE_TYPE_TDX_DATA);
-						}
-					}).start();
-					break;
-
-				default:
-					break;
-			}
-		}
-	};
-
 	void performSaveToFile(int type) {
 		String fileNameString = "";
 		Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
@@ -175,7 +132,47 @@ public class StorageActivity extends DatabaseActivity {
 				mHandler.sendEmptyMessage(MESSAGE_SAVE_TDX_DATA);
 			}
 		}
-	}
+	}	Handler mHandler = new Handler(Looper.getMainLooper()) {
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+
+			switch (msg.what) {
+				case MESSAGE_REFRESH:
+					mStockDataProvider.download();
+					break;
+
+				case MESSAGE_LOAD_FAVORITE:
+					new Thread(new Runnable() {
+						@Override
+						public void run() {
+							loadFromFile();
+						}
+					}).start();
+					break;
+
+				case MESSAGE_SAVE_FAVORITE:
+					new Thread(new Runnable() {
+						@Override
+						public void run() {
+							saveToFile(FILE_TYPE_FAVORITE);
+						}
+					}).start();
+					break;
+				case MESSAGE_SAVE_TDX_DATA:
+					new Thread(new Runnable() {
+						@Override
+						public void run() {
+							saveToFile(FILE_TYPE_TDX_DATA);
+						}
+					}).start();
+					break;
+
+				default:
+					break;
+			}
+		}
+	};
 
 	private void takePersistableUriPermission(Uri uri) {
 		final int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION;

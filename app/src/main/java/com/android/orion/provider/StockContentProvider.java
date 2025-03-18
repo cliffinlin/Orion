@@ -22,6 +22,8 @@ import java.util.ArrayList;
 public class StockContentProvider extends ContentProvider {
 
 
+	public static final int STOCK_TREND = 800;
+	public static final int STOCK_PERCEPTRON = 900;
 	private static final int STOCK = 100;
 	private static final int STOCK_ID = 101;
 	private static final int STOCK_DATA = 200;
@@ -36,9 +38,7 @@ public class StockContentProvider extends ContentProvider {
 	private static final int STOCK_SHARE_ID = 601;
 	private static final int INDEX_COMPONENT = 700;
 	private static final int INDEX_COMPONENT_ID = 701;
-	public static final int STOCK_TREND = 800;
 	private static final int STOCK_TREND_ID = 801;
-	public static final int STOCK_PERCEPTRON = 900;
 	private static final int STOCK_PERCEPTRON_ID = 901;
 	private static final int TDX_DATA = 1000;
 	private static final int TDX_DATA_ID = 1001;
