@@ -144,12 +144,12 @@ public class BaseActivity extends Activity implements IBackgroundHandler, Analyz
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 		mBackgroundHandler.onCreateOptionsMenu(menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 
 	public void handleOnCreateOptionsMenu(Menu menu) {
-		getActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
 	@Override

@@ -132,7 +132,22 @@ public class StorageActivity extends DatabaseActivity {
 				mHandler.sendEmptyMessage(MESSAGE_SAVE_TDX_DATA);
 			}
 		}
-	}	Handler mHandler = new Handler(Looper.getMainLooper()) {
+	}
+
+	private void takePersistableUriPermission(Uri uri) {
+		final int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
+		getContentResolver().takePersistableUriPermission(uri, takeFlags);
+//		String msg = Utility.getFileNameFromContentUri(mContext, uri);
+//		if (Utility.isUriWritable(mContext, uri)) {
+//			msg += " " + "READ | WRITE";
+//		} else {
+//			msg += " " + "READ";
+//		}
+//		Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+//		Log.d(msg);
+	}
+
+	Handler mHandler = new Handler(Looper.getMainLooper()) {
 		@Override
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
@@ -173,19 +188,6 @@ public class StorageActivity extends DatabaseActivity {
 			}
 		}
 	};
-
-	private void takePersistableUriPermission(Uri uri) {
-		final int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
-		getContentResolver().takePersistableUriPermission(uri, takeFlags);
-//		String msg = Utility.getFileNameFromContentUri(mContext, uri);
-//		if (Utility.isUriWritable(mContext, uri)) {
-//			msg += " " + "READ | WRITE";
-//		} else {
-//			msg += " " + "READ";
-//		}
-//		Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
-//		Log.d(msg);
-	}
 
 	void saveToFile(int type) {
 		final ContentResolver cr = getContentResolver();
@@ -588,8 +590,4 @@ public class StorageActivity extends DatabaseActivity {
 			e.printStackTrace();
 		}
 	}
-
-
-
-
 }

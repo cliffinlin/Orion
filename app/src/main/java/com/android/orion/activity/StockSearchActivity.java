@@ -43,8 +43,6 @@ public class StockSearchActivity extends StockListActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-
 		getMenuInflater().inflate(R.menu.searchable, menu);
 
 		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -57,7 +55,7 @@ public class StockSearchActivity extends StockListActivity implements
 			searchView.setOnQueryTextListener(this);
 		}
 
-		return true;
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	void handleIntent(Intent intent) {
