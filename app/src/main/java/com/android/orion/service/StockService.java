@@ -23,6 +23,7 @@ import com.android.orion.R;
 import com.android.orion.config.Config;
 import com.android.orion.interfaces.NetworkChangedListener;
 import com.android.orion.manager.ConnectionManager;
+import com.android.orion.manager.StockAlarmManager;
 import com.android.orion.provider.StockDataProvider;
 import com.android.orion.receiver.DownloadBroadcastReceiver;
 import com.android.orion.receiver.ReceiverConnection;
@@ -74,11 +75,14 @@ public class StockService extends Service implements NetworkChangedListener {
 
 		mDownloadBroadcastReceiver = new DownloadBroadcastReceiver();
 		mIntentFilter = new IntentFilter();
+		mIntentFilter.addAction(Intent.ACTION_TIME_TICK);
+		mIntentFilter.addAction(Intent.ACTION_TIME_CHANGED);
 		mIntentFilter.addAction(Intent.ACTION_DATE_CHANGED);
 		mIntentFilter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
 		registerReceiver(mDownloadBroadcastReceiver, mIntentFilter);
 		ReceiverConnection.getInstance().registerReceiver(this);
 		ConnectionManager.getInstance().registerListener(this);
+		StockAlarmManager.getInstance().startAlarm();
 	}
 
 	@Override
@@ -99,6 +103,7 @@ public class StockService extends Service implements NetworkChangedListener {
 			unregisterReceiver(mDownloadBroadcastReceiver);
 			ReceiverConnection.getInstance().unregisterReceiver(this);
 			ConnectionManager.getInstance().unregisterListener(this);
+			StockAlarmManager.getInstance().stopAlarm();
 
 			StockDataProvider.getInstance().onDestroy();
 		} catch (Exception e) {

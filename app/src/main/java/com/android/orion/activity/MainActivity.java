@@ -1,5 +1,8 @@
 package com.android.orion.activity;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
@@ -11,9 +14,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.android.orion.R;
-import com.android.orion.application.MainApplication;
 import com.android.orion.data.Period;
+import com.android.orion.service.StockService;
 import com.android.orion.setting.Setting;
+import com.android.orion.utility.Logger;
 import com.android.orion.utility.Market;
 import com.android.orion.utility.Utility;
 
@@ -21,11 +25,14 @@ import java.util.List;
 
 public class MainActivity extends PreferenceActivity {
 
+	Context mContext;
+	Logger Log = Logger.getLogger();
 	private long mExitTime;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		mContext = getApplicationContext();
 		initSharedPreferences();
 	}
 
@@ -50,12 +57,9 @@ public class MainActivity extends PreferenceActivity {
 	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_exit: {
-				onActionExit();
-				return true;
-			}
-			case android.R.id.home:
 				finish();
 				return true;
+			}
 		}
 
 		return super.onOptionsItemSelected(item);
@@ -72,7 +76,7 @@ public class MainActivity extends PreferenceActivity {
 				}
 				mExitTime = System.currentTimeMillis();
 			} else {
-				onActionExit();
+				finish();
 			}
 			return true;
 		}
@@ -82,6 +86,7 @@ public class MainActivity extends PreferenceActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		startService();
 		if (!Utility.isNetworkConnected(this)) {
 			Toast.makeText(this,
 					getResources().getString(R.string.network_unavailable),
@@ -92,14 +97,6 @@ public class MainActivity extends PreferenceActivity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-	}
-
-	void onActionExit() {
-		finish();
-
-		if (!Market.isTradingHours()) {
-			MainApplication.getInstance().onTerminate();
-		}
 	}
 
 	void initSharedPreferences() {
@@ -129,5 +126,22 @@ public class MainActivity extends PreferenceActivity {
 			Setting.setDebugLog(Setting.SETTING_DEBUG_LOG_DEFAULT);
 			Setting.setDebugDataFile(Setting.SETTING_DEBUG_DATAFILE_DEFAULT);
 		}
+	}
+
+	public void startService() {
+		Log.d("startService");
+		Intent serviceIntent = new Intent(mContext, StockService.class);
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			startForegroundService(serviceIntent);
+		} else {
+			startService(serviceIntent);
+		}
+	}
+
+	public void stopService() {
+		Log.d("stopService");
+		Intent serviceIntent = new Intent(mContext, StockService.class);
+		stopService(serviceIntent);
 	}
 }

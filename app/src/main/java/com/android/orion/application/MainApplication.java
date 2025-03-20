@@ -39,11 +39,6 @@ public class MainApplication extends Application {
 		Log = Logger.getLogger();
 
 		Utility.createDirectory(Environment.getExternalStorageDirectory() + "/" + Config.APP_NAME);
-
-		StockAlarmManager.getInstance().startAlarm();
-
-		startService();
-
 		registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
 			@Override
 			public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
@@ -88,31 +83,5 @@ public class MainApplication extends Application {
 
 			}
 		});
-	}
-
-	@Override
-	public void onTerminate() {
-		Log.d("onTerminate");
-		StockAlarmManager.getInstance().stopAlarm();
-		stopService();
-
-		super.onTerminate();
-	}
-
-	public void startService() {
-		Log.d("startService");
-		Intent serviceIntent = new Intent(mContext, StockService.class);
-
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			startForegroundService(serviceIntent);
-		} else {
-			startService(serviceIntent);
-		}
-	}
-
-	public void stopService() {
-		Log.d("stopService");
-		Intent serviceIntent = new Intent(mContext, StockService.class);
-		stopService(serviceIntent);
 	}
 }
