@@ -74,29 +74,6 @@ public class IndexComponentListActivity extends ListActivity implements
 	SimpleCursorAdapter mLeftAdapter = null;
 	SimpleCursorAdapter mRightAdapter = null;
 
-	Handler mHandler = new Handler(Looper.getMainLooper()) {
-
-		@Override
-		public void handleMessage(Message msg) {
-			super.handleMessage(msg);
-
-			switch (msg.what) {
-				case MESSAGE_REFRESH:
-					for (int i = 0; i < mStockList.size(); i++) {
-						Stock stock = mStockList.get(i);
-						if (stock != null && stock.hasFlag(Stock.FLAG_FAVORITE)) {
-							Setting.setDownloadStockDataTimeMillis(stock, 0);
-							mStockDataProvider.download(stock);
-						}
-					}
-					break;
-
-				default:
-					break;
-			}
-		}
-	};
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -139,9 +116,10 @@ public class IndexComponentListActivity extends ListActivity implements
 					Stock stock = mStockList.get(i);
 					if (stock != null && stock.hasFlag(Stock.FLAG_FAVORITE)) {
 						mDatabaseManager.deleteStockData(stock);
+						Setting.setDownloadStockDataTimeMillis(stock, 0);
+						mStockDataProvider.download(stock);
 					}
 				}
-				mHandler.sendEmptyMessage(MESSAGE_REFRESH);
 				break;
 			case R.id.action_load:
 				performLoadFromFile(FILE_TYPE_FAVORITE);

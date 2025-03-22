@@ -55,7 +55,6 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 	public static final int ITEM_VIEW_TYPE_SUB = 1;
 	public static final int LOADER_ID_STOCK_LIST = Period.PERIODS.length + 1;
 	public static final int REQUEST_CODE_SETTING = 0;
-	public static final int REQUEST_CODE_SETTING_DEBUG_LOOPBACK = 1;
 
 	boolean mKeyDisplayDeal = false;
 	int mStockListIndex = 0;
@@ -125,8 +124,6 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 	public boolean onCreateOptionsMenu(Menu menu) {
 		mMenu = menu;
 		getMenuInflater().inflate(R.menu.stock_data_chart, menu);
-		MenuItem menuLoopback = menu.findItem(R.id.action_loopback);
-		menuLoopback.setVisible(Setting.getDebugLoopback());
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -182,11 +179,6 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 				performSaveToFile(FILE_TYPE_TDX_DATA);
 				break;
 			}
-			case R.id.action_loopback: {
-				startActivityForResult(new Intent(this,
-						SettingLoopbackActivity.class), REQUEST_CODE_SETTING_DEBUG_LOOPBACK);
-				break;
-			}
 			default:
 				super.handleOnOptionsItemSelected(item);
 		}
@@ -218,17 +210,6 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 				case REQUEST_CODE_SETTING:
 					restartLoader();
 					break;
-
-				case REQUEST_CODE_SETTING_DEBUG_LOOPBACK:
-					for (String period : Period.PERIODS) {
-						if (Setting.getPeriod(period)) {
-							mDatabaseManager.deleteStockData(mStock.getSE(), mStock.getCode(), period);
-						}
-					}
-					Setting.setDownloadStockDataTimeMillis(mStock, 0);
-					mStockDataProvider.download(mStock);
-					break;
-
 				default:
 					break;
 			}

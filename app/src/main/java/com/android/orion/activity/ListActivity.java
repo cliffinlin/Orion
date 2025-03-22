@@ -17,12 +17,6 @@ public class ListActivity extends StorageActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (Setting.getDebugLoopback()) {
-			Toast.makeText(
-					this,
-					getResources().getString(R.string.loopback_is_on),
-					Toast.LENGTH_LONG).show();
-		}
 	}
 
 	public void setListViewHeightBasedOnChildren(ListView listView) {

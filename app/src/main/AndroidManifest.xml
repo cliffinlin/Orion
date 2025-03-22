@@ -42,10 +42,6 @@
             android:label="@string/activity_title_setting"
             android:launchMode="singleTask" />
         <activity
-            android:name="com.android.orion.activity.SettingLoopbackActivity"
-            android:label="@string/activity_title_setting_loopback"
-            android:launchMode="singleTask" />
-        <activity
             android:name="com.android.orion.activity.StockSearchActivity"
             android:label="@string/search"
             android:launchMode="singleTask">

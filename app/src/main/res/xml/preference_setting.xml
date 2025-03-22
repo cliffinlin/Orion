@@ -64,9 +64,6 @@
             android:key="SETTING_DEBUG_LOG"
             android:title="@string/setting_debug_log" />
         <com.android.orion.preference.CustomSwitchPreference
-            android:key="SETTING_DEBUG_LOOPBACK"
-            android:title="@string/setting_debug_loopback" />
-        <com.android.orion.preference.CustomSwitchPreference
             android:key="SETTING_DEBUG_DIRECT"
             android:title="@string/direct" />
         <com.android.orion.preference.CustomSwitchPreference

@@ -149,7 +149,6 @@
     <string name="notification_is_off">Notification is off</string>
     <string name="log_is_on">Log is on</string>
     <string name="log_is_off">Log is off</string>
-    <string name="loopback_is_on">Loopback is on</string>
 
     //Setting
     <string name="setting">Setting</string>
@@ -170,8 +169,6 @@
     <string name="setting_debug">Debug</string>
     <string name="setting_debug_log">Log</string>
     <string name="setting_debug_direct">Direct</string>
-    <string name="setting_debug_loopback">Loopback</string>
-    <string name="setting_debug_loopback_date_time">Loopback date time</string>
     <string name="setting_debug_wifi">Wifi</string>
     <string name="setting_debug_datafile">DataFile</string>
 
@@ -253,7 +250,6 @@
     <string name="activity_title_about">About</string>
     <string name="activity_title_deal">Deal</string>
     <string name="activity_title_setting">Setting</string>
-    <string name="activity_title_setting_loopback">Setting loopback</string>
     <string name="title_save_to_sd_card">Save to SD card</string>
     <string name="title_delete">Delete</string>
     <string name="title_delete_all">Delete all</string>

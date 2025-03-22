@@ -76,8 +76,6 @@ public class Setting {
 	public static final String SETTING_DEBUG_LOG = "SETTING_DEBUG_LOG";
 	public static final boolean SETTING_DEBUG_LOG_DEFAULT = true;
 	public static final String SETTING_DEBUG_DIRECT = "SETTING_DEBUG_DIRECT";
-	public static final String SETTING_DEBUG_LOOPBACK = "SETTING_DEBUG_LOOPBACK";
-	public static final String SETTING_DEBUG_LOOPBACK_DATE_TIME = "SETTING_DEBUG_LOOPBACK_DATE_TIME";
 	public static final String SETTING_DEBUG_WIFI = "SETTING_DEBUG_WIFI";
 	public static final String SETTING_DEBUG_DATAFILE = "SETTING_DEBUG_DATAFILE";
 	public static final boolean SETTING_DEBUG_DATAFILE_DEFAULT = true;
@@ -219,22 +217,6 @@ public class Setting {
 
 	public static void setDebugDirect(boolean value) {
 		Preferences.putBoolean(SETTING_DEBUG_DIRECT, value);
-	}
-
-	public static boolean getDebugLoopback() {
-		return Preferences.getBoolean(SETTING_DEBUG_LOOPBACK, false);
-	}
-
-	public static void setDebugLoopback(boolean value) {
-		Preferences.putBoolean(SETTING_DEBUG_LOOPBACK, value);
-	}
-
-	public static String getDebugLoopbackDateTime() {
-		return Preferences.getString(SETTING_DEBUG_LOOPBACK_DATE_TIME, "");
-	}
-
-	public static void setDebugLoopbackDateTime(String value) {
-		Preferences.putString(SETTING_DEBUG_LOOPBACK_DATE_TIME, value);
 	}
 
 	public static boolean getDebugWifi() {

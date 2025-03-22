@@ -564,16 +564,6 @@ public class DatabaseManager implements StockListener {
 			return;
 		}
 
-		boolean loopback = Setting.getDebugLoopback();
-		if (loopback) {
-			String dateTime = Preferences.getString(Setting.SETTING_DEBUG_LOOPBACK_DATE_TIME, "");
-			if (!TextUtils.isEmpty(dateTime)) {
-				calendar = Utility.getCalendar(dateTime, Utility.CALENDAR_DATE_TIME_FORMAT);
-			} else {
-				calendar = Calendar.getInstance();
-			}
-		}
-
 		try {
 			stockDataList.clear();
 
@@ -591,14 +581,6 @@ public class DatabaseManager implements StockListener {
 					stockData.getTrend().setIndexStart(index);
 					stockData.getTrend().setIndexEnd(index);
 					stockData.setAction(Trend.MARK_NONE);
-
-					if (loopback) {
-						if (stockData.getCalendar().after(calendar)) {
-							stock.setPrice(stockData.getCandlestick().getClose());
-							break;
-						}
-					}
-
 					stockDataList.add(stockData);
 				}
 			}
