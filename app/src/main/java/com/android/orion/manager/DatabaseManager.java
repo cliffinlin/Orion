@@ -27,8 +27,6 @@ import com.android.orion.database.StockShare;
 import com.android.orion.database.StockTrend;
 import com.android.orion.database.TDXData;
 import com.android.orion.interfaces.StockListener;
-import com.android.orion.setting.Setting;
-import com.android.orion.utility.Preferences;
 import com.android.orion.utility.Utility;
 
 import java.util.ArrayList;

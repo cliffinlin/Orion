@@ -3,14 +3,10 @@ package com.android.orion.application;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 
 import com.android.orion.config.Config;
-import com.android.orion.manager.StockAlarmManager;
-import com.android.orion.service.StockService;
 import com.android.orion.utility.Logger;
 import com.android.orion.utility.Utility;
 

@@ -341,7 +341,7 @@ public class TrendAnalyzer {
 						mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValues());
 
 						if (Setting.getDisplayAdaptive() && stockTrend.hasFlag(Trend.FLAG_ADAPTIVE)) {
-							stockData.setAction(Trend.MARK_LEVEL + level + type + Constant.NEW_LINE + (int)stockTrend.getVertexNet() + "/" + (int)stockTrend.getTurningNet());
+							stockData.setAction(Trend.MARK_LEVEL + level + type + Constant.NEW_LINE + (int) stockTrend.getVertexNet() + "/" + (int) stockTrend.getTurningNet());
 							StockAnalyzer.getInstance().notifyStockTrend(stockTrend);
 						}
 					}

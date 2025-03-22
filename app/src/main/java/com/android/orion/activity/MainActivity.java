@@ -87,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
 		HeaderAdapter adapter = new HeaderAdapter(items);
 		recyclerView.setAdapter(adapter);
 	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.main, menu);
@@ -108,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-				if ((System.currentTimeMillis() - mExitTime) > 2000) {
+			if ((System.currentTimeMillis() - mExitTime) > 2000) {
 				if (!Market.isTradingHours()) {
 					Toast.makeText(this,
 							getResources().getString(R.string.press_again_to_exit),
@@ -164,7 +165,6 @@ public class MainActivity extends AppCompatActivity {
 			Setting.setDisplayTrendLine(Setting.SETTING_DISPLAY_TREND_LINE_DEFAULT);
 
 			Setting.setDebugLog(Setting.SETTING_DEBUG_LOG_DEFAULT);
-			Setting.setDebugDataFile(Setting.SETTING_DEBUG_DATAFILE_DEFAULT);
 		}
 	}
 
@@ -186,9 +186,9 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	public static class HeaderItem {
-		private int iconResId;
-		private String title;
-		private Intent intent;
+		private final int iconResId;
+		private final String title;
+		private final Intent intent;
 
 		public HeaderItem(int iconResId, String title, Intent intent) {
 			this.iconResId = iconResId;

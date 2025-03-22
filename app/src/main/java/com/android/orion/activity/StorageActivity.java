@@ -147,7 +147,38 @@ public class StorageActivity extends DatabaseActivity {
 //		Log.d(msg);
 	}
 
-	Handler mHandler = new Handler(Looper.getMainLooper()) {
+	void saveToFile(int type) {
+		final ContentResolver cr = getContentResolver();
+
+		if (mUriList.size() == 0) {
+			return;
+		}
+		mUri = mUriList.get(0);
+
+		OutputStream os = null;
+		try {
+			os = cr.openOutputStream(mUri);
+			if (type == FILE_TYPE_FAVORITE) {
+				saveToXmlFile(os);
+			} else if (type == FILE_TYPE_TDX_DATA) {
+				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os));
+				ArrayList<String> contentList = new ArrayList<>();
+				mDatabaseManager.getTDXDataContentList(mStock, Period.MIN5, contentList);
+				int index = 0;
+				if (writer != null) {
+					for (String content : contentList) {
+						writer.write(content);
+						index++;
+					}
+					writer.close();
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			Utility.closeQuietly(os);
+		}
+	}	Handler mHandler = new Handler(Looper.getMainLooper()) {
 		@Override
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
@@ -188,39 +219,6 @@ public class StorageActivity extends DatabaseActivity {
 			}
 		}
 	};
-
-	void saveToFile(int type) {
-		final ContentResolver cr = getContentResolver();
-
-		if (mUriList.size() == 0) {
-			return;
-		}
-		mUri = mUriList.get(0);
-
-		OutputStream os = null;
-		try {
-			os = cr.openOutputStream(mUri);
-			if (type == FILE_TYPE_FAVORITE) {
-				saveToXmlFile(os);
-			} else if (type == FILE_TYPE_TDX_DATA) {
-				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os));
-				ArrayList<String> contentList = new ArrayList<>();
-				mDatabaseManager.getTDXDataContentList(mStock, Period.MIN5, contentList);
-				int index = 0;
-				if (writer != null) {
-					for (String content : contentList) {
-						writer.write(content);
-						index++;
-					}
-					writer.close();
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			Utility.closeQuietly(os);
-		}
-	}
 
 	void loadFromFile() {
 		final ContentResolver cr = getContentResolver();
@@ -590,4 +588,6 @@ public class StorageActivity extends DatabaseActivity {
 			e.printStackTrace();
 		}
 	}
+
+
 }

@@ -6,10 +6,6 @@ import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.android.orion.R;
-import com.android.orion.setting.Setting;
 
 public class ListActivity extends StorageActivity {
 	String mLoadingStockCode = "";

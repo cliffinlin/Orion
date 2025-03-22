@@ -229,13 +229,13 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 
 		switch (stockData.getPeriod()) {
 			case Period.MIN5:
-				n = size - (Setting.getDebugDataFile() ? Config.MAX_CONTENT_LENGTH_MIN5_LONG : Config.MAX_CONTENT_LENGTH_MIN5_SHORT);
+				n = size - Config.MAX_CONTENT_LENGTH_MIN5;
 				break;
 			case Period.MIN15:
-				n = size - (Setting.getDebugDataFile() ? Config.MAX_CONTENT_LENGTH_MIN15_LONG : Config.MAX_CONTENT_LENGTH_MIN15_SHORT);
+				n = size - Config.MAX_CONTENT_LENGTH_MIN15;
 				break;
 			case Period.MIN30:
-				n = size - (Setting.getDebugDataFile() ? Config.MAX_CONTENT_LENGTH_MIN30_LONG : Config.MAX_CONTENT_LENGTH_MIN30_SHORT);
+				n = size - Config.MAX_CONTENT_LENGTH_MIN30;
 				break;
 			case Period.MIN60:
 				n = size - Config.MAX_CONTENT_LENGTH_MIN60;
@@ -557,8 +557,8 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 				return;
 			}
 
-			if (lineList.size() > Config.MAX_CONTENT_LENGTH_MIN5_LONG) {
-				lineList = new ArrayList<>(lineList.subList(lineList.size() - Config.MAX_CONTENT_LENGTH_MIN5_LONG, lineList.size()));
+			if (lineList.size() > Config.MAX_CONTENT_LENGTH_MIN5) {
+				lineList = new ArrayList<>(lineList.subList(lineList.size() - Config.MAX_CONTENT_LENGTH_MIN5, lineList.size()));
 			}
 
 //			ArrayList<String> datetimeMin5List = new ArrayList<>();//based on min5

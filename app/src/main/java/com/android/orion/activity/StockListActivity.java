@@ -10,9 +10,6 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,7 +30,6 @@ import com.android.orion.R;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.IndexComponent;
 import com.android.orion.database.Stock;
-import com.android.orion.manager.DatabaseManager;
 import com.android.orion.setting.Constant;
 import com.android.orion.utility.Utility;
 

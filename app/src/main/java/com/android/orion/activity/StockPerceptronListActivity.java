@@ -25,8 +25,6 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-
 import com.android.orion.R;
 import com.android.orion.data.Period;
 import com.android.orion.database.DatabaseContract;

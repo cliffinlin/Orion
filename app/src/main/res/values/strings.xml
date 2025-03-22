@@ -170,7 +170,6 @@
     <string name="setting_debug_log">Log</string>
     <string name="setting_debug_direct">Direct</string>
     <string name="setting_debug_wifi">Wifi</string>
-    <string name="setting_debug_datafile">DataFile</string>
 
     <string name="ok">OK</string>
     <string name="password_hint">Password</string>

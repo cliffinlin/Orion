@@ -22,13 +22,9 @@ public class Config {
 
 	public static final int MAX_CONTENT_LENGTH_DAY = SinaFinance.DOWNLOAD_HISTORY_LENGTH_DEFAULT;
 	public static final int MAX_CONTENT_LENGTH_MIN60 = MAX_CONTENT_LENGTH_DAY * 4;
-	public static final int MAX_CONTENT_LENGTH_MIN30_LONG = MAX_CONTENT_LENGTH_DAY * 8;
-	public static final int MAX_CONTENT_LENGTH_MIN15_LONG = MAX_CONTENT_LENGTH_DAY * 16;
-	public static final int MAX_CONTENT_LENGTH_MIN5_LONG = MAX_CONTENT_LENGTH_DAY * 48;
-
-	public static final int MAX_CONTENT_LENGTH_MIN30_SHORT = 30 * 8;
-	public static final int MAX_CONTENT_LENGTH_MIN15_SHORT = 20 * 16;
-	public static final int MAX_CONTENT_LENGTH_MIN5_SHORT = 20 * 48;
+	public static final int MAX_CONTENT_LENGTH_MIN30 = MAX_CONTENT_LENGTH_DAY * 8;
+	public static final int MAX_CONTENT_LENGTH_MIN15 = MAX_CONTENT_LENGTH_DAY * 16;
+	public static final int MAX_CONTENT_LENGTH_MIN5 = MAX_CONTENT_LENGTH_DAY * 48;
 
 	public static final int MAX_ML_TRAIN_TIMES = 100;
 
