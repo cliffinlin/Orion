@@ -141,6 +141,7 @@ public class StockListActivity extends DatabaseActivity implements
 						for (Stock stock : stockList) {
 							if (TextUtils.equals(stock.getClasses(), Stock.CLASS_A) && !stock.hasFlag(Stock.FLAG_FAVORITE)) {
 								stock.addFlag(Stock.FLAG_FAVORITE);
+								stock.addFlag(Stock.FLAG_NOTIFY);
 								mStockManager.onAddFavorite(stock);
 							}
 						}
@@ -457,6 +458,7 @@ public class StockListActivity extends DatabaseActivity implements
 					case R.id.favorite:
 						if (!stock.hasFlag(Stock.FLAG_FAVORITE)) {
 							stock.addFlag(Stock.FLAG_FAVORITE);
+							stock.addFlag(Stock.FLAG_NOTIFY);
 							mStockManager.onAddFavorite(stock);
 						} else {
 							stock.removeFlag(Stock.FLAG_FAVORITE);
