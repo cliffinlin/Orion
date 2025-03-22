@@ -417,6 +417,10 @@ public class DatabaseManager implements StockListener {
 				+ " AND " + DatabaseContract.COLUMN_CODE + " = " + "'" + code + "'";
 	}
 
+	public String getStockClassASelection() {
+		return DatabaseContract.COLUMN_CLASSES + " = " + "'" + Stock.CLASS_A + "'";
+	}
+
 	public Uri insertStockData(StockData stockData) {
 		Uri uri = null;
 

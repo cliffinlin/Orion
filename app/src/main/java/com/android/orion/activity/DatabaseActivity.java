@@ -19,14 +19,13 @@ public class DatabaseActivity extends BaseActivity {
 			File dbFile = getDatabasePath(DatabaseContract.DATABASE_FILE_NAME);
 			String dbPath = dbFile.getAbsolutePath();
 			Utility.createDirectory(Environment.getExternalStorageDirectory() + "/" + Config.APP_NAME);
-			String backupPath = Environment.getExternalStorageDirectory() + "/" + Config.APP_NAME + "/"
+			result = Environment.getExternalStorageDirectory() + "/" + Config.APP_NAME + "/"
 					+ DatabaseContract.DATABASE_NAME + "_" + Utility.getCurrentDateString() + DatabaseContract.DATABASE_EXT;
 			FileChannel src = new FileInputStream(dbPath).getChannel();
-			FileChannel dst = new FileOutputStream(backupPath).getChannel();
+			FileChannel dst = new FileOutputStream(result).getChannel();
 			dst.transferFrom(src, 0, src.size());
 			src.close();
 			dst.close();
-			result = backupPath;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

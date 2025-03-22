@@ -33,6 +33,7 @@ import com.android.orion.R;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.IndexComponent;
 import com.android.orion.database.Stock;
+import com.android.orion.manager.DatabaseManager;
 import com.android.orion.setting.Constant;
 import com.android.orion.utility.Utility;
 
@@ -43,7 +44,6 @@ public class StockListActivity extends DatabaseActivity implements
 		OnClickListener {
 
 	static final int LOADER_ID_STOCK_LIST = 0;
-	static final int MESSAGE_BACKUP_DATABASE = 0;
 
 	static final int mHeaderTextDefaultColor = Color.BLACK;
 	static final int mHeaderTextHighlightColor = Color.RED;
@@ -66,25 +66,6 @@ public class StockListActivity extends DatabaseActivity implements
 			DatabaseContract.COLUMN_CODE, DatabaseContract.COLUMN_PRICE,
 			DatabaseContract.COLUMN_HOLD};
 	int[] mTo = new int[]{R.id.name, R.id.code, R.id.price, R.id.hold};
-
-	Handler mHandler = new Handler(Looper.getMainLooper()) {
-		@Override
-		public void handleMessage(Message msg) {
-			super.handleMessage(msg);
-
-			switch (msg.what) {
-				case MESSAGE_BACKUP_DATABASE:
-					String result = backupDatabase();
-					if (!TextUtils.isEmpty(result)) {
-						Toast.makeText(StockListActivity.this, "backup database:" + result, Toast.LENGTH_LONG).show();
-					}
-					break;
-
-				default:
-					break;
-			}
-		}
-	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -123,81 +104,74 @@ public class StockListActivity extends DatabaseActivity implements
 	public void handleOnOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_new:
-				Intent intent = new Intent(this, StockActivity.class);
-				intent.setAction(Constant.ACTION_FAVORITE_STOCK_INSERT);
-				startActivity(intent);
+				handleNewAction();
 				break;
 			case R.id.action_favorite_all:
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-						ArrayList<Stock> stockList = new ArrayList();
-						mDatabaseManager.getStockList(null, stockList);
-						for (Stock stock : stockList) {
-							if (TextUtils.equals(stock.getClasses(), Stock.CLASS_A) && !stock.hasFlag(Stock.FLAG_FAVORITE)) {
-								stock.addFlag(Stock.FLAG_FAVORITE);
-								stock.addFlag(Stock.FLAG_NOTIFY);
-								mStockManager.onAddFavorite(stock);
-							}
-						}
-					}
-				}).start();
+				handleFavoriteAll();
 				break;
 			case R.id.action_favorite_none:
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-						ArrayList<Stock> stockList = new ArrayList();
-						mDatabaseManager.getStockList(null, stockList);
-						for (Stock stock : stockList) {
-							if (TextUtils.equals(stock.getClasses(), Stock.CLASS_A)) {
-								if (stock.hasFlag(Stock.FLAG_FAVORITE)) {
-									stock.removeFlag(Stock.FLAG_FAVORITE);
-									stock.removeFlag(Stock.FLAG_NOTIFY);
-									mStockManager.onRemoveFavorite(stock);
-								}
-							}
-						}
-					}
-				}).start();
-				break;
-			case R.id.action_notify_all:
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-						ArrayList<Stock> stockList = new ArrayList();
-						mDatabaseManager.getStockList(null, stockList);
-						for (Stock stock : stockList) {
-							if (TextUtils.equals(stock.getClasses(), Stock.CLASS_A) && !stock.hasFlag(Stock.FLAG_NOTIFY)) {
-								stock.addFlag(Stock.FLAG_NOTIFY);
-								mStockManager.onAddFavorite(stock);
-							}
-						}
-					}
-				}).start();
-				break;
-			case R.id.action_notify_none:
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-						ArrayList<Stock> stockList = new ArrayList();
-						mDatabaseManager.getStockList(null, stockList);
-						for (Stock stock : stockList) {
-							if (TextUtils.equals(stock.getClasses(), Stock.CLASS_A) && stock.hasFlag(Stock.FLAG_NOTIFY)) {
-								stock.removeFlag(Stock.FLAG_NOTIFY);
-								mStockManager.onRemoveFavorite(stock);
-							}
-						}
-					}
-				}).start();
+				handleFavoriteNone();
 				break;
 			case R.id.action_backup_database:
-				mHandler.sendEmptyMessage(MESSAGE_BACKUP_DATABASE);
+				handleBackupDatabase();
 				break;
 			default:
 				super.handleOnOptionsItemSelected(item);
 		}
 	}
+
+	private void handleNewAction() {
+		Intent intent = new Intent(this, StockActivity.class);
+		intent.setAction(Constant.ACTION_FAVORITE_STOCK_INSERT);
+		startActivity(intent);
+	}
+
+	private void handleFavoriteAll() {
+		try {
+			ArrayList<Stock> stockList = new ArrayList();
+			mDatabaseManager.getStockList(mDatabaseManager.getStockClassASelection(), stockList);
+			updateFavorites(stockList, true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void handleFavoriteNone() {
+		try {
+			ArrayList<Stock> stockList = new ArrayList();
+			mDatabaseManager.getStockList(mDatabaseManager.getStockClassASelection(), stockList);
+			updateFavorites(stockList, false);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void updateFavorites(ArrayList<Stock> stockList, boolean addFavorites) {
+		if (stockList == null) {
+			return;
+		}
+		for (Stock stock : stockList) {
+			if (addFavorites && !stock.hasFlag(Stock.FLAG_FAVORITE)) {
+				stock.addFlag(Stock.FLAG_FAVORITE);
+				stock.addFlag(Stock.FLAG_NOTIFY);
+				mStockManager.onAddFavorite(stock);
+			} else if (!addFavorites && stock.hasFlag(Stock.FLAG_FAVORITE)) {
+				stock.removeFlag(Stock.FLAG_FAVORITE);
+				stock.removeFlag(Stock.FLAG_NOTIFY);
+				mStockManager.onRemoveFavorite(stock);
+			}
+		}
+	}
+
+	private void handleBackupDatabase() {
+		String result = backupDatabase();
+		if (!TextUtils.isEmpty(result)) {
+			Toast.makeText(StockListActivity.this, "backup database:" + result, Toast.LENGTH_LONG).show();
+		} else {
+			Toast.makeText(StockListActivity.this, "Failed to backup database", Toast.LENGTH_LONG).show();
+		}
+	}
+
 
 	@Override
 	public void onDestroy() {

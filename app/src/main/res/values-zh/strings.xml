@@ -30,8 +30,6 @@
     <string name="action_refresh">Refresh</string>
     <string name="action_favorite_all">Favorite all</string>
     <string name="action_favorite_none">Favorite none</string>
-    <string name="action_notify_all">Notify all</string>
-    <string name="action_notify_none">Notify none</string>
     <string name="action_backup_database">Backup database</string>
     <string name="action_remove_favorite">Remove favorite</string>
     <string name="action_load">Load</string>

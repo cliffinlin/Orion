@@ -1,63 +1,54 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
         android:id="@+id/action_new"
         android:icon="@drawable/ic_action_new"
-        android:showAsAction="always|withText"
-        android:title="@string/action_new"></item>
+        android:title="@string/action_new"
+        app:showAsAction="always|withText" />
     <item
         android:id="@+id/action_search"
         android:icon="@drawable/ic_search"
-        android:showAsAction="collapseActionView|ifRoom"
-        android:title="@string/search" />
+        android:title="@string/search"
+        app:showAsAction="collapseActionView|ifRoom" />
     <item
         android:id="@+id/action_refresh"
         android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_refresh" />
+        android:title="@string/action_refresh"
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_setting"
         android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_setting" />
+        android:title="@string/action_setting"
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_load"
         android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_load"></item>
+        android:title="@string/action_load"
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_save"
         android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_save"></item>
+        android:title="@string/action_save"
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_deal"
         android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_deal" />
+        android:title="@string/action_deal"
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_favorite_all"
         android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_favorite_all" />
+        android:title="@string/action_favorite_all"
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_favorite_none"
         android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_favorite_none" />
-    <item
-        android:id="@+id/action_notify_all"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_notify_all" />
-    <item
-        android:id="@+id/action_notify_none"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_notify_none" />
+        android:title="@string/action_favorite_none"
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_backup_database"
         android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_backup_database" />
+        android:title="@string/action_backup_database"
+        app:showAsAction="never" />
 </menu>
