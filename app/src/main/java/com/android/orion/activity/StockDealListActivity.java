@@ -252,17 +252,12 @@ public class StockDealListActivity extends ListActivity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.stock_deal_list, menu);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-		return true;
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+	public void handleOnOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
-			case android.R.id.home:
-				finish();
-				return true;
-
 			case R.id.action_new:
 				mIntent = new Intent(this, StockDealActivity.class);
 				mIntent.setAction(Constant.ACTION_DEAL_INSERT);
@@ -270,30 +265,25 @@ public class StockDealListActivity extends ListActivity implements
 					mIntent.putExtras(mBundle);
 				}
 				startActivityForResult(mIntent, REQUEST_CODE_DEAL_INSERT);
-				return true;
-
+				break;
 			case R.id.action_none:
 				mFilterType = FILTER_TYPE_NONE;
 				restartLoader();
-				return true;
-
+				break;
 			case R.id.action_buy:
 				mFilterType = FILTER_TYPE_BUY;
 				restartLoader();
-				return true;
-
+				break;
 			case R.id.action_sell:
 				mFilterType = FILTER_TYPE_SELL;
 				restartLoader();
-				return true;
-
+				break;
 			case R.id.action_all:
 				mFilterType = FILTER_TYPE_ALL;
 				restartLoader();
-				return true;
-
+				break;
 			default:
-				return super.onOptionsItemSelected(item);
+				super.handleOnOptionsItemSelected(item);
 		}
 	}
 

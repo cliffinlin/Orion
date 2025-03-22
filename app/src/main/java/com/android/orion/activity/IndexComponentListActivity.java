@@ -116,27 +116,24 @@ public class IndexComponentListActivity extends ListActivity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.stock_favorite_list, menu);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-		return true;
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+	public void handleOnOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_new:
 				Intent intentNew = new Intent(this, StockActivity.class);
 				intentNew.setAction(Constant.ACTION_INDEX_COMPONENT_INSERT);
 				intentNew.putExtra(Constant.EXTRA_INDEX_CODE, mIntent.getStringExtra(Constant.EXTRA_INDEX_CODE));
 				startActivityForResult(intentNew, REQUEST_CODE_INDEX_COMPONENT_INSERT);
-				return true;
-
+				break;
 			case R.id.action_search:
 				Intent intentSearch = new Intent(this, StockSearchActivity.class);
 				intentSearch.setAction(Constant.ACTION_INDEX_COMPONENT_SELECT);
 				intentSearch.putExtra(Constant.EXTRA_INDEX_CODE, mIntent.getStringExtra(Constant.EXTRA_INDEX_CODE));
 				startActivityForResult(intentSearch, REQUEST_CODE_INDEX_COMPONENT_SELECT);
-				return true;
-
+				break;
 			case R.id.action_refresh:
 				for (int i = 0; i < mStockList.size(); i++) {
 					Stock stock = mStockList.get(i);
@@ -145,21 +142,18 @@ public class IndexComponentListActivity extends ListActivity implements
 					}
 				}
 				mHandler.sendEmptyMessage(MESSAGE_REFRESH);
-				return true;
-
+				break;
 			case R.id.action_load:
 				performLoadFromFile(FILE_TYPE_FAVORITE);
-				return true;
-
+				break;
 			case R.id.action_save:
 				performSaveToFile(FILE_TYPE_FAVORITE);
-				return true;
-
+				break;
 			case R.id.action_deal:
 				startActivity(new Intent(this, StockDealListActivity.class));
-				return true;
+				break;
 			default:
-				return super.onOptionsItemSelected(item);
+				super.handleOnOptionsItemSelected(item);
 		}
 	}
 

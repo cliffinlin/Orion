@@ -193,13 +193,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener, 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.stock_deal_edit, menu);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-		return super.onOptionsItemSelected(item);
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override

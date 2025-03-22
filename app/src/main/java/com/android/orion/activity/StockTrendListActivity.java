@@ -163,23 +163,17 @@ public class StockTrendListActivity extends ListActivity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.stock_trend_list, menu);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-		return true;
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+	public void handleOnOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
-			case android.R.id.home:
-				finish();
-				return true;
-
 			case R.id.action_trend:
 				mHandler.sendEmptyMessage(MESSAGE_VIEW_STOCK_TREND_CHAT);
-				return true;
-
+				break;
 			default:
-				return super.onOptionsItemSelected(item);
+				super.handleOnOptionsItemSelected(item);
 		}
 	}
 

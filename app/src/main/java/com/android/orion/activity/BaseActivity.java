@@ -159,7 +159,7 @@ public class BaseActivity extends Activity implements IBackgroundHandler, Analyz
 		return super.onOptionsItemSelected(item);
 	}
 
-	public void handleOnOptionsItemSelected(MenuItem item) {
+	public void handleOnOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home:
 				finish();

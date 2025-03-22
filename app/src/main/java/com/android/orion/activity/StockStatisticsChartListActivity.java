@@ -104,58 +104,45 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 	public boolean onCreateOptionsMenu(Menu menu) {
 		mMenu = menu;
 		getMenuInflater().inflate(R.menu.stock_statistics_chart, menu);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-		return true;
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-		return super.onOptionsItemSelected(item);
-	}
-
-	@Override
-	public void handleOnOptionsItemSelected(MenuItem item) {
+	public void handleOnOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_refresh:
 				mHandler.sendEmptyMessage(MESSAGE_REFRESH);
 				break;
-
 			case R.id.action_order_by_roi:
 				mSortOrder = DatabaseContract.COLUMN_ROI
 						+ DatabaseContract.ORDER_DESC;
 				restartLoader();
 				break;
-
 			case R.id.action_order_by_roe:
 				mSortOrder = DatabaseContract.COLUMN_ROE
 						+ DatabaseContract.ORDER_DESC;
 				restartLoader();
 				break;
-
 			case R.id.action_order_by_rate:
 				mSortOrder = DatabaseContract.COLUMN_RATE
 						+ DatabaseContract.ORDER_DESC;
 				restartLoader();
 				break;
-
 			case R.id.action_order_by_pe:
 				mSortOrder = DatabaseContract.COLUMN_PE
 						+ DatabaseContract.ORDER_DESC;
 				restartLoader();
 				break;
-
 			case R.id.action_order_by_yield:
 				mSortOrder = DatabaseContract.COLUMN_YIELD
 						+ DatabaseContract.ORDER_DESC;
 				restartLoader();
 				break;
-
 			case R.id.action_order_by_dividend_ratio:
 				mSortOrder = DatabaseContract.COLUMN_DIVIDEND_RATIO
 						+ DatabaseContract.ORDER_DESC;
 				restartLoader();
 				break;
-
 			case R.id.action_order_by_valuation:
 				mSortOrder = DatabaseContract.COLUMN_VALUATION
 						+ DatabaseContract.ORDER_DESC;

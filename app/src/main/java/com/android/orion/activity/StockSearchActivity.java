@@ -54,7 +54,6 @@ public class StockSearchActivity extends StockListActivity implements
 			searchView.setIconifiedByDefault(false);
 			searchView.setOnQueryTextListener(this);
 		}
-
 		return super.onCreateOptionsMenu(menu);
 	}
 

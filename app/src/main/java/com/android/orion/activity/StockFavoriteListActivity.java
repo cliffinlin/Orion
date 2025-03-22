@@ -101,12 +101,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-		return super.onOptionsItemSelected(item);
-	}
-
-	@Override
-	public void handleOnOptionsItemSelected(MenuItem item) {
+	public void handleOnOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_new:
 				Intent intent = new Intent(this, StockActivity.class);

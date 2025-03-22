@@ -125,19 +125,13 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 	public boolean onCreateOptionsMenu(Menu menu) {
 		mMenu = menu;
 		getMenuInflater().inflate(R.menu.stock_data_chart, menu);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
 		MenuItem menuLoopback = menu.findItem(R.id.action_loopback);
 		menuLoopback.setVisible(Setting.getDebugLoopback());
-		return true;
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-		return super.onOptionsItemSelected(item);
-	}
-
-	@Override
-	public void handleOnOptionsItemSelected(MenuItem item) {
+	public void handleOnOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_prev: {
 				navigateStock(-1);

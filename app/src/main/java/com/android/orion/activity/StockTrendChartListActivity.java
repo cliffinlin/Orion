@@ -112,17 +112,11 @@ public class StockTrendChartListActivity extends BaseActivity implements
 	public boolean onCreateOptionsMenu(Menu menu) {
 		mMenu = menu;
 		getMenuInflater().inflate(R.menu.stock_trend_chart, menu);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-		return true;
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-		return super.onOptionsItemSelected(item);
-	}
-
-	@Override
-	public void handleOnOptionsItemSelected(MenuItem item) {
+	public void handleOnOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_refresh:
 				mHandler.sendEmptyMessage(MESSAGE_REFRESH);

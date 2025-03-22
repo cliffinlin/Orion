@@ -100,20 +100,18 @@ public class SettingLoopbackActivity extends BaseActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.service_setting, menu);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-		return true;
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+	public void handleOnOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home:
 				setResult(RESULT_OK, mIntent);
 				finish();
-				return true;
-
+				break;
 			default:
-				return super.onOptionsItemSelected(item);
+				super.handleOnOptionsItemSelected(item);
 		}
 	}
 }
