@@ -1,5 +1,6 @@
 package com.android.orion.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -31,7 +32,7 @@ import com.android.orion.utility.Utility;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
 	Context mContext;
 	Logger Log = Logger.getLogger();
@@ -41,9 +42,10 @@ public class MainActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		if (getSupportActionBar() != null) {
-			getSupportActionBar().hide();
-		}
+//      for AppCompatActivity hide action bar
+//		if (getSupportActionBar() != null) {
+//			getSupportActionBar().hide();
+//		}
 		mContext = getApplicationContext();
 		initSharedPreferences();
 
