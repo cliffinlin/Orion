@@ -26,6 +26,7 @@ import com.android.orion.chart.StockStatisticsChart;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.setting.Constant;
+import com.android.orion.setting.Setting;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -47,7 +48,6 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 	public static final int ITEM_VIEW_TYPE_MAIN = 0;
 	public static final int ITEM_VIEW_TYPE_SUB = 1;
 	public static final int LOADER_ID_STOCK_LIST = 0;
-	public static final int MESSAGE_REFRESH = 0;
 
 	int mStockListIndex = 0;
 
@@ -64,22 +64,6 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 	ArrayList<StatisticsChartItemMain> mStatisticsChartItemMainList = null;
 	ArrayList<StatisticsChartItemSub> mStatisticsChartItemSubList = null;
 	ArrayList<StockStatisticsChart> mStatisticsChartList = null;
-
-	Handler mHandler = new Handler(Looper.getMainLooper()) {
-
-		@Override
-		public void handleMessage(Message msg) {
-			super.handleMessage(msg);
-
-			switch (msg.what) {
-				case MESSAGE_REFRESH:
-					break;
-
-				default:
-					break;
-			}
-		}
-	};
 
 	MainHandler mMainHandler = new MainHandler(this);
 
@@ -111,7 +95,17 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 	public void handleOnOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_refresh:
-				mHandler.sendEmptyMessage(MESSAGE_REFRESH);
+				try {
+					mDatabaseManager.loadStockArrayMap(mStockArrayMap);
+					for (Stock stock : mStockArrayMap.values()) {
+						mDatabaseManager.deleteStockFinancial(stock);
+						mDatabaseManager.deleteStockBonus(stock);
+						Setting.setDownloadStockTimeMillis(stock, 0);
+						mStockDataProvider.download(stock);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				break;
 			case R.id.action_order_by_roi:
 				mSortOrder = DatabaseContract.COLUMN_ROI
