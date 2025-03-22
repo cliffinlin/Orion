@@ -25,6 +25,8 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import com.android.orion.R;
 import com.android.orion.data.Period;
 import com.android.orion.database.DatabaseContract;
@@ -153,7 +155,7 @@ public class StockPerceptronListActivity extends ListActivity implements
 	}
 
 	@Override
-	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home:
 				finish();
@@ -163,7 +165,7 @@ public class StockPerceptronListActivity extends ListActivity implements
 				return true;
 
 			default:
-				return super.onMenuItemSelected(featureId, item);
+				return super.onOptionsItemSelected(item);
 		}
 	}
 

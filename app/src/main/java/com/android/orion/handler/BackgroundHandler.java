@@ -29,8 +29,7 @@ public class BackgroundHandler extends Handler {
 	public static final int MESSAGE_ON_NEW_INTENT = 1007;
 
 	public static final int MESSAGE_ON_CREATE_OPTIONS_MENU = 1100;
-
-	public static final int MESSAGE_ON_MENU_ITEM_SELECTED = 1200;
+	public static final int MESSAGE_ON_OPTIONS_ITEM_SELECTED = 1101;
 
 	public static final int MESSAGE_IMPORT_TDX_DATA_FILE = 999999 + 1;
 	private final IBackgroundHandler mHandler;
@@ -93,8 +92,8 @@ public class BackgroundHandler extends Handler {
 		return true;
 	}
 
-	public boolean onMenuItemSelected(MenuItem item) {
-		sendMessage(obtainMessage(MESSAGE_ON_MENU_ITEM_SELECTED, item));
+	public boolean onOptionsItemSelected(MenuItem item) {
+		sendMessage(obtainMessage(MESSAGE_ON_OPTIONS_ITEM_SELECTED, item));
 		return true;
 	}
 
@@ -139,9 +138,9 @@ public class BackgroundHandler extends Handler {
 				Menu menu = (Menu) msg.obj;
 				mHandler.handleOnCreateOptionsMenu(menu);
 				break;
-			case MESSAGE_ON_MENU_ITEM_SELECTED:
+			case MESSAGE_ON_OPTIONS_ITEM_SELECTED:
 				MenuItem item = (MenuItem) msg.obj;
-				mHandler.handleOnMenuItemSelected(item);
+				mHandler.handleOnOptionsItemSelected(item);
 				break;
 			case MESSAGE_IMPORT_TDX_DATA_FILE:
 				ArrayList<Uri> uriList = (ArrayList<Uri>) msg.obj;

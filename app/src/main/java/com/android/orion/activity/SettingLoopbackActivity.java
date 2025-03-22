@@ -105,7 +105,7 @@ public class SettingLoopbackActivity extends BaseActivity {
 	}
 
 	@Override
-	public boolean onMenuItemSelected(int featureId, @NonNull MenuItem item) {
+	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home:
 				setResult(RESULT_OK, mIntent);
@@ -113,7 +113,7 @@ public class SettingLoopbackActivity extends BaseActivity {
 				return true;
 
 			default:
-				return super.onMenuItemSelected(featureId, item);
+				return super.onOptionsItemSelected(item);
 		}
 	}
 }

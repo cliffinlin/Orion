@@ -17,6 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
+import androidx.annotation.NonNull;
+
 import com.android.orion.R;
 import com.android.orion.chart.ChartSyncHelper;
 import com.android.orion.chart.StockDataChart;
@@ -130,12 +132,12 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 	}
 
 	@Override
-	public boolean onMenuItemSelected(int featureId, MenuItem item) {
-		return super.onMenuItemSelected(featureId, item);
+	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
-	public void handleOnMenuItemSelected(MenuItem item) {
+	public void handleOnOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_prev: {
 				navigateStock(-1);
@@ -192,7 +194,7 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 				break;
 			}
 			default:
-				super.handleOnMenuItemSelected(item);
+				super.handleOnOptionsItemSelected(item);
 		}
 	}
 

@@ -24,5 +24,5 @@ public interface IBackgroundHandler {
 
 	void handleOnCreateOptionsMenu(Menu menu);
 
-	void handleOnMenuItemSelected(MenuItem item);
+	void handleOnOptionsItemSelected(MenuItem item);
 }

@@ -198,8 +198,8 @@ public class StockActivity extends DatabaseActivity implements OnClickListener, 
 	}
 
 	@Override
-	public boolean onMenuItemSelected(int featureId, @NonNull MenuItem item) {
-		return super.onMenuItemSelected(featureId, item);
+	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override

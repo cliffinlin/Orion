@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.android.orion.R;
@@ -153,11 +154,12 @@ public class BaseActivity extends Activity implements IBackgroundHandler, Analyz
 	}
 
 	@Override
-	public boolean onMenuItemSelected(int featureId, @NonNull MenuItem item) {
-		return mBackgroundHandler.onMenuItemSelected(item);
+	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+		mBackgroundHandler.onOptionsItemSelected(item);
+		return super.onOptionsItemSelected(item);
 	}
 
-	public void handleOnMenuItemSelected(MenuItem item) {
+	public void handleOnOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home:
 				finish();

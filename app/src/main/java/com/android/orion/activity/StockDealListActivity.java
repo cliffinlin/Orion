@@ -257,7 +257,7 @@ public class StockDealListActivity extends ListActivity implements
 	}
 
 	@Override
-	public boolean onMenuItemSelected(int featureId, @NonNull MenuItem item) {
+	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home:
 				finish();
@@ -293,7 +293,7 @@ public class StockDealListActivity extends ListActivity implements
 				return true;
 
 			default:
-				return super.onMenuItemSelected(featureId, item);
+				return super.onOptionsItemSelected(item);
 		}
 	}
 

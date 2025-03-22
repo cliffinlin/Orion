@@ -121,7 +121,7 @@ public class IndexComponentListActivity extends ListActivity implements
 	}
 
 	@Override
-	public boolean onMenuItemSelected(int featureId, @NonNull MenuItem item) {
+	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_new:
 				Intent intentNew = new Intent(this, StockActivity.class);
@@ -159,7 +159,7 @@ public class IndexComponentListActivity extends ListActivity implements
 				startActivity(new Intent(this, StockDealListActivity.class));
 				return true;
 			default:
-				return super.onMenuItemSelected(featureId, item);
+				return super.onOptionsItemSelected(item);
 		}
 	}
 

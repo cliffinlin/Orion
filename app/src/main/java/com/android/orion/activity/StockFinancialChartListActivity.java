@@ -148,12 +148,12 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 	}
 
 	@Override
-	public boolean onMenuItemSelected(int featureId, @NonNull MenuItem item) {
-		return super.onMenuItemSelected(featureId, item);
+	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
-	public void handleOnMenuItemSelected(MenuItem item) {
+	public void handleOnOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_prev: {
 				navigateStock(-1);
@@ -186,7 +186,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 				break;
 			}
 			default:
-				super.handleOnMenuItemSelected(item);
+				super.handleOnOptionsItemSelected(item);
 		}
 	}
 

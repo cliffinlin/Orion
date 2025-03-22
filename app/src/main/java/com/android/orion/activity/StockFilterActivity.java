@@ -120,8 +120,8 @@ public class StockFilterActivity extends DatabaseActivity implements
 	}
 
 	@Override
-	public boolean onMenuItemSelected(int featureId, @NonNull MenuItem item) {
-		return super.onMenuItemSelected(featureId, item);
+	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
