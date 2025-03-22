@@ -10,9 +10,11 @@ import android.os.Process;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.android.orion.database.Stock;
 import com.android.orion.interfaces.IBackgroundHandler;
 import com.android.orion.interfaces.IStockDataProvider;
 import com.android.orion.provider.StockDataProvider;
+import com.android.orion.setting.Setting;
 
 import java.util.ArrayList;
 
@@ -30,6 +32,11 @@ public class BackgroundHandler extends Handler {
 
 	public static final int MESSAGE_ON_CREATE_OPTIONS_MENU = 1100;
 	public static final int MESSAGE_ON_OPTIONS_ITEM_SELECTED = 1101;
+
+	public static final int MESSAGE_DOWNLOAD = 1200;
+	public static final int MESSAGE_DOWNLOAD_STOCK = 1201;
+	public static final int MESSAGE_DOWNLOAD_STOCK_DATA = 1202;
+	public static final int MESSAGE_DOWNLOAD_STOCK_FINANCIAL = 1203;
 
 	public static final int MESSAGE_IMPORT_TDX_DATA_FILE = 999999 + 1;
 	private final IBackgroundHandler mHandler;
@@ -97,6 +104,22 @@ public class BackgroundHandler extends Handler {
 		return true;
 	}
 
+	public void download() {
+		sendEmptyMessage(MESSAGE_DOWNLOAD);
+	}
+
+	public void download(Stock stock) {
+		sendMessage(obtainMessage(MESSAGE_DOWNLOAD_STOCK, stock));
+	}
+
+	public void downloadStockData(Stock stock) {
+		sendMessage(obtainMessage(MESSAGE_DOWNLOAD_STOCK_DATA, stock));
+	}
+
+	public void downloadStockFinancial(Stock stock) {
+		sendMessage(obtainMessage(MESSAGE_DOWNLOAD_STOCK_FINANCIAL, stock));
+	}
+
 	public void importTDXDataFile(ArrayList<Uri> uriList) {
 		sendMessage(obtainMessage(MESSAGE_IMPORT_TDX_DATA_FILE, uriList));
 	}
@@ -142,6 +165,28 @@ public class BackgroundHandler extends Handler {
 				MenuItem item = (MenuItem) msg.obj;
 				mHandler.handleOnOptionsItemSelected(item);
 				break;
+			case MESSAGE_DOWNLOAD:
+				mStockDataProvider.download();
+				break;
+			case MESSAGE_DOWNLOAD_STOCK: {
+				Stock stock = (Stock) msg.obj;
+				Setting.setDownloadStockTimeMillis(stock, 0);
+				Setting.setDownloadStockDataTimeMillis(stock, 0);
+				mStockDataProvider.download(stock);
+				break;
+			}
+			case MESSAGE_DOWNLOAD_STOCK_DATA: {
+				Stock stock = (Stock) msg.obj;
+				Setting.setDownloadStockDataTimeMillis(stock, 0);
+				mStockDataProvider.download(stock);
+				break;
+			}
+			case MESSAGE_DOWNLOAD_STOCK_FINANCIAL: {
+				Stock stock = (Stock) msg.obj;
+				Setting.setDownloadStockTimeMillis(stock, 0);
+				mStockDataProvider.download(stock);
+				break;
+			}
 			case MESSAGE_IMPORT_TDX_DATA_FILE:
 				ArrayList<Uri> uriList = (ArrayList<Uri>) msg.obj;
 				mStockDataProvider.importTDXDataFile(uriList);

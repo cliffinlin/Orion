@@ -1,4 +1,5 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
         android:id="@+id/action_new"
@@ -13,38 +14,38 @@
     <item
         android:id="@+id/action_refresh"
         android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_refresh" />
+        android:title="@string/action_refresh"
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_setting"
         android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_setting" />
+        android:title="@string/action_setting"
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_load"
         android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_load"></item>
+        android:title="@string/action_load"
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_save"
         android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_save"></item>
+        android:title="@string/action_save"
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_deal"
         android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_deal" />
+        android:title="@string/action_deal"
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_list"
         android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_list" />
+        android:title="@string/action_list"
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_data"
         android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_data" />
+        android:title="@string/action_data"
+        app:showAsAction="never" />
 
 
 </menu>

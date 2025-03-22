@@ -57,7 +57,6 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 	static final int ITEM_VIEW_TYPE_SUB = 1;
 	static final int LOADER_ID_STOCK_LIST = 0;
 	static final int LOADER_ID_STOCK_FINANCIAL_LIST = 1;
-	static final int MESSAGE_REFRESH = 0;
 
 	int mStockListIndex = 0;
 	Menu mMenu = null;
@@ -75,25 +74,6 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 	ArrayList<StockBonus> mStockBonusList = new ArrayList<>();
 	ArrayMap<Integer, CombinedChart> mCombinedChartMap = new ArrayMap<>();
 	ChartSyncHelper mChartSyncHelper = new ChartSyncHelper();
-
-	Handler mHandler = new Handler(Looper.getMainLooper()) {
-
-		@Override
-		public void handleMessage(Message msg) {
-			super.handleMessage(msg);
-
-			switch (msg.what) {
-				case MESSAGE_REFRESH:
-					Setting.setDownloadStockTimeMillis(mStock, 0);
-					mStockDataProvider.download(mStock);
-					mListView.onRefreshComplete();
-					break;
-
-				default:
-					break;
-			}
-		}
-	};
 
 	MainHandler mMainHandler = new MainHandler(this);
 	Comparator<StockFinancial> comparator = new Comparator<StockFinancial>() {
@@ -160,7 +140,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 			case R.id.action_refresh: {
 				mDatabaseManager.deleteStockFinancial(mStock);
 				mDatabaseManager.deleteStockBonus(mStock);
-				mHandler.sendEmptyMessage(MESSAGE_REFRESH);
+				mBackgroundHandler.downloadStockFinancial(mStock);
 				break;
 			}
 			case R.id.action_edit: {
@@ -284,7 +264,8 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 		mListView.setOnRefreshListener(new PullToRefreshListView.OnRefreshListener() {
 			@Override
 			public void onRefresh() {
-				mHandler.sendEmptyMessage(MESSAGE_REFRESH);
+				mListView.onRefreshComplete();
+				mBackgroundHandler.downloadStockFinancial(mStock);
 			}
 		});
 	}

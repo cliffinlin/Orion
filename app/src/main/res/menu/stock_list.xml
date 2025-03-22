@@ -4,13 +4,13 @@
     <item
         android:id="@+id/action_new"
         android:icon="@drawable/ic_action_new"
-        android:title="@string/action_new"
-        app:showAsAction="always|withText" />
+        android:showAsAction="always|withText"
+        android:title="@string/action_new"></item>
     <item
         android:id="@+id/action_search"
         android:icon="@drawable/ic_search"
-        android:title="@string/search"
-        app:showAsAction="collapseActionView|ifRoom" />
+        android:showAsAction="collapseActionView|ifRoom"
+        android:title="@string/search" />
     <item
         android:id="@+id/action_refresh"
         android:orderInCategory="100"

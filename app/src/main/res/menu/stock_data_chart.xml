@@ -5,14 +5,14 @@
         android:id="@+id/action_prev"
 
         android:orderInCategory="100"
-        android:title="@string/prev"
-        app:showAsAction="always" />
+        android:showAsAction="always"
+        android:title="@string/prev" />
     <item
         android:id="@+id/action_next"
 
         android:orderInCategory="100"
-        android:title="@string/next"
-        app:showAsAction="always" />
+        android:showAsAction="always"
+        android:title="@string/next" />
     <item
         android:id="@+id/action_refresh"
         android:orderInCategory="100"

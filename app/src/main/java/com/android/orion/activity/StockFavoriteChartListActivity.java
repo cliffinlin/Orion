@@ -141,8 +141,7 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 			case R.id.action_refresh: {
 				mDatabaseManager.deleteStockData(mStock);
 				mDatabaseManager.deleteStockTrend(mStock);
-				Setting.setDownloadStockDataTimeMillis(mStock, 0);
-				mStockDataProvider.download(mStock);
+				mBackgroundHandler.downloadStockData(mStock);
 				break;
 			}
 			case R.id.action_setting: {
@@ -308,9 +307,8 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 		mListView.setOnRefreshListener(new PullToRefreshListView.OnRefreshListener() {
 			@Override
 			public void onRefresh() {
-				Setting.setDownloadStockDataTimeMillis(mStock, 0);
-				mStockDataProvider.download(mStock);
 				mListView.onRefreshComplete();
+				mBackgroundHandler.downloadStockData(mStock);
 			}
 		});
 		mChartSyncHelper.registerOnChartGestureListener(this);
