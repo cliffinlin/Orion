@@ -75,7 +75,6 @@ public class StockService extends Service implements NetworkChangedListener {
 
 		mDownloadBroadcastReceiver = new DownloadBroadcastReceiver();
 		mIntentFilter = new IntentFilter();
-		mIntentFilter.addAction(Intent.ACTION_TIME_TICK);
 		mIntentFilter.addAction(Intent.ACTION_TIME_CHANGED);
 		mIntentFilter.addAction(Intent.ACTION_DATE_CHANGED);
 		mIntentFilter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
