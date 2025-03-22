@@ -4,14 +4,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.orion.R;
 import com.android.orion.data.Period;
@@ -21,9 +28,10 @@ import com.android.orion.utility.Logger;
 import com.android.orion.utility.Market;
 import com.android.orion.utility.Utility;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends PreferenceActivity {
+public class MainActivity extends AppCompatActivity {
 
 	Context mContext;
 	Logger Log = Logger.getLogger();
@@ -32,21 +40,53 @@ public class MainActivity extends PreferenceActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
 		mContext = getApplicationContext();
 		initSharedPreferences();
-	}
 
-	@Override
-	protected boolean isValidFragment(String fragmentName) {
-		return true;
-	}
+		RecyclerView recyclerView = findViewById(R.id.recycler_view);
+		recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-	@Override
-	public void onBuildHeaders(List<Header> target) {
-		super.onBuildHeaders(target);
-		loadHeadersFromResource(R.xml.preference_headers, target);
-	}
+		List<HeaderItem> items = new ArrayList<>();
+		items.add(new HeaderItem(
+				R.drawable.ic_list,
+				getString(R.string.favorite),
+				new Intent(this, StockFavoriteListActivity.class)
+		));
+		items.add(new HeaderItem(
+				R.drawable.ic_list,
+				getString(R.string.financial),
+				new Intent(this, StockFinancialListActivity.class)
+		));
+		items.add(new HeaderItem(
+				R.drawable.ic_service,
+				getString(R.string.setting),
+				new Intent(this, SettingActivity.class)
+		));
+		items.add(new HeaderItem(
+				R.drawable.ic_list,
+				getString(R.string.trend),
+				new Intent(this, StockTrendListActivity.class)
+		));
+		items.add(new HeaderItem(
+				R.drawable.ic_list,
+				getString(R.string.stock_statistics),
+				new Intent(this, StockStatisticsChartListActivity.class)
+		));
+		items.add(new HeaderItem(
+				R.drawable.ic_list,
+				getString(R.string.deal),
+				new Intent(this, StockDealListActivity.class)
+		));
+		items.add(new HeaderItem(
+				R.drawable.ic_about,
+				getString(R.string.about),
+				new Intent(this, AboutActivity.class)
+		));
 
+		HeaderAdapter adapter = new HeaderAdapter(items);
+		recyclerView.setAdapter(adapter);
+	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.main, menu);
@@ -68,7 +108,7 @@ public class MainActivity extends PreferenceActivity {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			if ((System.currentTimeMillis() - mExitTime) > 2000) {
+				if ((System.currentTimeMillis() - mExitTime) > 2000) {
 				if (!Market.isTradingHours()) {
 					Toast.makeText(this,
 							getResources().getString(R.string.press_again_to_exit),
@@ -143,5 +183,74 @@ public class MainActivity extends PreferenceActivity {
 		Log.d("stopService");
 		Intent serviceIntent = new Intent(mContext, StockService.class);
 		stopService(serviceIntent);
+	}
+
+	public static class HeaderItem {
+		private int iconResId;
+		private String title;
+		private Intent intent;
+
+		public HeaderItem(int iconResId, String title, Intent intent) {
+			this.iconResId = iconResId;
+			this.title = title;
+			this.intent = intent;
+		}
+
+		public int getIconResId() {
+			return iconResId;
+		}
+
+		public String getTitle() {
+			return title;
+		}
+
+		public Intent getIntent() {
+			return intent;
+		}
+	}
+
+	public static class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.ViewHolder> {
+
+		private final List<HeaderItem> items;
+
+		public HeaderAdapter(List<HeaderItem> items) {
+			this.items = items;
+		}
+
+		@NonNull
+		@Override
+		public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+			View view = LayoutInflater.from(parent.getContext())
+					.inflate(R.layout.item_header, parent, false);
+			return new ViewHolder(view);
+		}
+
+		@Override
+		public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+			HeaderItem item = items.get(position);
+			holder.icon.setImageResource(item.getIconResId());
+			holder.title.setText(item.getTitle());
+
+			holder.itemView.setOnClickListener(v -> {
+				Intent intent = item.getIntent();
+				v.getContext().startActivity(intent);
+			});
+		}
+
+		@Override
+		public int getItemCount() {
+			return items.size();
+		}
+
+		public static class ViewHolder extends RecyclerView.ViewHolder {
+			ImageView icon;
+			TextView title;
+
+			public ViewHolder(@NonNull View itemView) {
+				super(itemView);
+				icon = itemView.findViewById(R.id.icon);
+				title = itemView.findViewById(R.id.title);
+			}
+		}
 	}
 }
