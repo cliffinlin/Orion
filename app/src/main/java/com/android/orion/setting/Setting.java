@@ -37,6 +37,9 @@ public class Setting {
 	public static final String SETTING_STOCK_FILTER_YIELD = "SETTING_STOCK_FILTER_YIELD";
 	public static final String SETTING_STOCK_FILTER_DIVIDEND_RATIO = "SETTING_STOCK_FILTER_DIVIDEND_RATIO";
 
+	public static final String SETTING_DISPLAY_MONOCHROME = "SETTING_DISPLAY_MONOCHROME";
+	public static final boolean SETTING_DISPLAY_MONOCHROME_DEFAULT = false;
+
 	public static final String SETTING_DISPLAY_ADAPTIVE = "SETTING_DISPLAY_ADAPTIVE";
 	public static final boolean SETTING_DISPLAY_ADAPTIVE_DEFAULT = true;
 
@@ -103,6 +106,14 @@ public class Setting {
 
 	public static void setPeriod(@NonNull String period, boolean value) {
 		Preferences.putBoolean(SETTING_PERIOD_ + period.toUpperCase(), value);
+	}
+
+	public static boolean getDisplayMonochrome() {
+		return Preferences.getBoolean(SETTING_DISPLAY_MONOCHROME, SETTING_DISPLAY_MONOCHROME_DEFAULT);
+	}
+
+	public static void setDisplayMonochrome(boolean value) {
+		Preferences.putBoolean(SETTING_DISPLAY_MONOCHROME, value);
 	}
 
 	public static boolean getDisplayAdaptive() {

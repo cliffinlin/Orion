@@ -110,13 +110,13 @@ public class StockDataChart {
 		if (Setting.getDisplayCandle()) {
 			CandleData candleData = new CandleData(mXValues);
 			CandleDataSet candleDataSet = new CandleDataSet(mCandleEntryList, "K");
-			candleDataSet.setDecreasingColor(Config.COLOR_RGB_GREEN);
-			candleDataSet.setDecreasingPaintStyle(Paint.Style.FILL);
-			candleDataSet.setIncreasingColor(Config.COLOR_RGB_RED);
+			candleDataSet.setIncreasingColor(increasingColor(Config.COLOR_RGB_RED));
+			candleDataSet.setDecreasingColor(decreasingColor(Config.COLOR_RGB_GREEN));
 			candleDataSet.setIncreasingPaintStyle(Paint.Style.FILL);
+			candleDataSet.setDecreasingPaintStyle(Paint.Style.FILL);
 			candleDataSet.setShadowColorSameAsCandle(true);
 			candleDataSet.setAxisDependency(AxisDependency.LEFT);
-			candleDataSet.setColor(Color.RED);
+			candleDataSet.setColor(dataSetColor(Color.RED));
 			candleDataSet.setHighLightColor(Color.TRANSPARENT);
 			candleDataSet.setDrawTags(true);
 			candleData.addDataSet(candleDataSet);
@@ -128,14 +128,14 @@ public class StockDataChart {
 		if (Setting.getDisplayAverage()) {
 			LineDataSet lineDataSet5 = new LineDataSet(mAverage5EntryList,
 					"MA5");
-			lineDataSet5.setColor(Color.WHITE);
+			lineDataSet5.setColor(dataSetColor(Color.WHITE));
 			lineDataSet5.setDrawCircles(false);
 			lineDataSet5.setAxisDependency(YAxis.AxisDependency.LEFT);
 			lineData.addDataSet(lineDataSet5);
 
 			LineDataSet lineDataSet10 = new LineDataSet(mAverage10EntryList,
 					"MA10");
-			lineDataSet10.setColor(Color.CYAN);
+			lineDataSet10.setColor(dataSetColor(Color.CYAN));
 			lineDataSet10.setDrawCircles(false);
 			lineDataSet10.setAxisDependency(YAxis.AxisDependency.LEFT);
 			lineData.addDataSet(lineDataSet10);
@@ -188,21 +188,22 @@ public class StockDataChart {
 		BarDataSet histogramDataSet = new BarDataSet(mHistogramEntryList,
 				"Histogram");
 		histogramDataSet.setBarSpacePercent(40f);
-		histogramDataSet.setIncreasingColor(Config.COLOR_RGB_RED);
-		histogramDataSet.setDecreasingColor(Config.COLOR_RGB_GREEN);
+		histogramDataSet.setIncreasingColor(increasingColor(Config.COLOR_RGB_RED));
+		histogramDataSet.setDecreasingColor(decreasingColor(Config.COLOR_RGB_GREEN));
+		histogramDataSet.setColor(dataSetColor(Color.RED));
 		histogramDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		barData.addDataSet(histogramDataSet);
 
 		LineData lineData = new LineData(mXValues);
 
 		LineDataSet difDataSet = new LineDataSet(mDIFEntryList, "DIF");
-		difDataSet.setColor(Color.YELLOW);
+		difDataSet.setColor(dataSetColor(Color.YELLOW));
 		difDataSet.setDrawCircles(false);
 		difDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(difDataSet);
 
 		LineDataSet deaDataSet = new LineDataSet(mDEAEntryList, "DEA");
-		deaDataSet.setColor(Color.WHITE);
+		deaDataSet.setColor(dataSetColor(Color.WHITE));
 		deaDataSet.setDrawCircles(false);
 		deaDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(deaDataSet);
@@ -264,15 +265,36 @@ public class StockDataChart {
 		return result;
 	}
 
+	int dataSetColor(int defaultColor) {
+		if (Setting.getDisplayMonochrome()) {
+			return Color.GRAY;
+		}
+		return defaultColor;
+	}
+
+	int increasingColor(int defaultColor) {
+		if (Setting.getDisplayMonochrome()) {
+			return Color.GRAY;
+		}
+		return defaultColor;
+	}
+
+	int decreasingColor(int defaultColor) {
+		if (Setting.getDisplayMonochrome()) {
+			return Color.GRAY;
+		}
+		return defaultColor;
+	}
+
 	int fillColor(int level) {
-		if (level < 0 || level >= Trend.COLORS.length) {
+		if (level < 0 || level >= Trend.COLORS.length || Setting.getDisplayMonochrome()) {
 			return Trend.COLORS[0];
 		}
 		return Trend.COLORS[level];
 	}
 
 	int lineColor(int level) {
-		if (level < 0 || level >= Trend.COLORS.length) {
+		if (level < 0 || level >= Trend.COLORS.length || Setting.getDisplayMonochrome()) {
 			return Trend.COLORS[0];
 		}
 		return Trend.COLORS[level];

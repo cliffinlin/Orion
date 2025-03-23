@@ -26,6 +26,9 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/display">
         <com.android.orion.preference.CustomSwitchPreference
+            android:key="SETTING_DISPLAY_MONOCHROME"
+            android:title="@string/monochrome" />
+        <com.android.orion.preference.CustomSwitchPreference
             android:key="SETTING_DISPLAY_ADAPTIVE"
             android:title="@string/adaptive" />
         <com.android.orion.preference.CustomSwitchPreference
