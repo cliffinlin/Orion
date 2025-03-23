@@ -1,6 +1,5 @@
 package com.android.orion.chart;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.text.TextUtils;
@@ -95,7 +94,7 @@ public class StockDataChart {
 		boolean result = false;
 
 		if (mStock == null) {
-			return result;
+			return false;
 		}
 
 		if (!TextUtils.isEmpty(mStock.getOperate()) && TextUtils.equals(mPeriod, mStock.getOperate())) {
@@ -105,7 +104,7 @@ public class StockDataChart {
 		return result;
 	}
 
-	public void setMainChartData(Context context) {
+	public void setMainChartData() {
 		mCombinedDataMain = new CombinedData(mXValues);
 
 		if (Setting.getDisplayCandle()) {
@@ -147,42 +146,42 @@ public class StockDataChart {
 		if (displayTrend(Trend.LEVEL_DRAW)) {
 			addLineDataSet(mTrendEntryList, Trend.LABEL_DRAW, Trend.LEVEL_DRAW, lineData);
 		}
-		addLineDataSet(mGroupEntryList, Trend.LABEL_NONE, Trend.LEVEL_DRAW, lineData, fillChanged(Trend.LEVEL_DRAW), fillColor(Trend.LEVEL_DRAW));
+		addLineDataSet(mGroupEntryList, Trend.LEVEL_DRAW, lineData, fillChanged(Trend.LEVEL_DRAW), fillColor(Trend.LEVEL_DRAW));
 
 		if (displayTrend(Trend.LEVEL_STROKE)) {
 			addLineDataSet(mTrendEntryList, Trend.LABEL_STROKE, Trend.LEVEL_STROKE, lineData);
 		}
-		addLineDataSet(mGroupEntryList, Trend.LABEL_NONE, Trend.LEVEL_STROKE, lineData, fillChanged(Trend.LEVEL_STROKE), fillColor(Trend.LEVEL_STROKE));
+		addLineDataSet(mGroupEntryList, Trend.LEVEL_STROKE, lineData, fillChanged(Trend.LEVEL_STROKE), fillColor(Trend.LEVEL_STROKE));
 
 		if (displayTrend(Trend.LEVEL_SEGMENT)) {
 			addLineDataSet(mTrendEntryList, Trend.LABEL_SEGMENT, Trend.LEVEL_SEGMENT, lineData);
 		}
-		addLineDataSet(mGroupEntryList, Trend.LABEL_NONE, Trend.LEVEL_SEGMENT, lineData, fillChanged(Trend.LEVEL_SEGMENT), fillColor(Trend.LEVEL_SEGMENT));
+		addLineDataSet(mGroupEntryList, Trend.LEVEL_SEGMENT, lineData, fillChanged(Trend.LEVEL_SEGMENT), fillColor(Trend.LEVEL_SEGMENT));
 
 		if (displayTrend(Trend.LEVEL_LINE)) {
 			addLineDataSet(mTrendEntryList, Trend.LABEL_LINE, Trend.LEVEL_LINE, lineData);
 		}
-		addLineDataSet(mGroupEntryList, Trend.LABEL_NONE, Trend.LEVEL_LINE, lineData, fillChanged(Trend.LEVEL_LINE), fillColor(Trend.LEVEL_LINE));
+		addLineDataSet(mGroupEntryList, Trend.LEVEL_LINE, lineData, fillChanged(Trend.LEVEL_LINE), fillColor(Trend.LEVEL_LINE));
 
 		if (displayTrend(Trend.LEVEL_OUT_LINE)) {
 			addLineDataSet(mTrendEntryList, Trend.LABEL_OUTLINE, Trend.LEVEL_OUT_LINE, lineData);
 		}
-		addLineDataSet(mGroupEntryList, Trend.LABEL_NONE, Trend.LEVEL_OUT_LINE, lineData, fillChanged(Trend.LEVEL_OUT_LINE), fillColor(Trend.LEVEL_OUT_LINE));
+		addLineDataSet(mGroupEntryList, Trend.LEVEL_OUT_LINE, lineData, fillChanged(Trend.LEVEL_OUT_LINE), fillColor(Trend.LEVEL_OUT_LINE));
 
 		if (displayTrend(Trend.LEVEL_SUPER_LINE)) {
 			addLineDataSet(mTrendEntryList, Trend.LABEL_SUPERLINE, Trend.LEVEL_SUPER_LINE, lineData);
 		}
-		addLineDataSet(mGroupEntryList, Trend.LABEL_NONE, Trend.LEVEL_SUPER_LINE, lineData, fillChanged(Trend.LEVEL_SUPER_LINE), fillColor(Trend.LEVEL_SUPER_LINE));
+		addLineDataSet(mGroupEntryList, Trend.LEVEL_SUPER_LINE, lineData, fillChanged(Trend.LEVEL_SUPER_LINE), fillColor(Trend.LEVEL_SUPER_LINE));
 
 		if (displayTrend(Trend.LEVEL_TREND_LINE)) {
 			addLineDataSet(mTrendEntryList, Trend.LABEL_TREND_LINE, Trend.LEVEL_TREND_LINE, lineData);
 		}
-		addLineDataSet(mGroupEntryList, Trend.LABEL_NONE, Trend.LEVEL_TREND_LINE, lineData, fillChanged(Trend.LEVEL_TREND_LINE), fillColor(Trend.LEVEL_TREND_LINE));
+		addLineDataSet(mGroupEntryList, Trend.LEVEL_TREND_LINE, lineData, fillChanged(Trend.LEVEL_TREND_LINE), fillColor(Trend.LEVEL_TREND_LINE));
 
 		mCombinedDataMain.setData(lineData);
 	}
 
-	public void setSubChartData(Context context) {
+	public void setSubChartData() {
 		mCombinedDataSub = new CombinedData(mXValues);
 
 		BarData barData = new BarData(mXValues);
@@ -213,11 +212,17 @@ public class StockDataChart {
 	}
 
 	void addLineDataSet(List<Entry>[] entryList, String label, int level, LineData lineData) {
+		if (entryList == null || entryList[level] == null || entryList[level].size() == 0) {
+			return;
+		}
 		addLineDataSet(entryList[level], label, lineColor(level), false, lineData, false, 0);
 	}
 
-	void addLineDataSet(List<Entry>[] entryList, String label, int level, LineData lineData, boolean drawFilled, int fillColor) {
-		addLineDataSet(entryList[level], label, lineColor(level), true, lineData, drawFilled, fillColor);
+	void addLineDataSet(List<Entry>[] entryList, int level, LineData lineData, boolean drawFilled, int fillColor) {
+		if (entryList == null || entryList[level] == null || entryList[level].size() == 0) {
+			return;
+		}
+		addLineDataSet(entryList[level], Trend.LABEL_NONE, lineColor(level), true, lineData, drawFilled, fillColor);
 	}
 
 	void addLineDataSet(List<Entry> entryList, String label, int lineColor, boolean drawCircle, LineData lineData, boolean drawFilled, int fillColor) {
@@ -260,17 +265,17 @@ public class StockDataChart {
 	}
 
 	int fillColor(int level) {
-		if (level > 0 || level < Trend.COLORS.length) {
-			return Trend.COLORS[level];
+		if (level < 0 || level >= Trend.COLORS.length) {
+			return Trend.COLORS[0];
 		}
-		return Trend.COLORS[0];
+		return Trend.COLORS[level];
 	}
 
 	int lineColor(int level) {
-		if (level > 0 || level < Trend.COLORS.length) {
-			return Trend.COLORS[level];
+		if (level < 0 || level >= Trend.COLORS.length) {
+			return Trend.COLORS[0];
 		}
-		return Trend.COLORS[0];
+		return Trend.COLORS[level];
 	}
 
 	public boolean displayTrend(int level) {
@@ -317,15 +322,15 @@ public class StockDataChart {
 			return;
 		}
 
-		mDescription.append(stock.getName() + " ");
-		mDescription.append(mPeriod + " ");
-		mDescription.append(stock.getPrice() + "  ");
+		mDescription.append(stock.getName()).append(" ");
+		mDescription.append(mPeriod).append(" ");
+		mDescription.append(stock.getPrice()).append("  ");
 		if (stock.getNet() > 0) {
 			mDescription.append(Constant.MARK_ADD);
 		} else if (stock.getNet() < 0) {
 			mDescription.append(Constant.MARK_MINUS);
 		}
-		mDescription.append(stock.getNet() + "%" + "  ");
+		mDescription.append(stock.getNet()).append("%").append("  ");
 
 		StockTrend stockTrend = getStockTrend(mAdaptiveLevel);
 		if (stockTrend != null && stockTrend.hasFlag(Trend.FLAG_CHANGED)) {
@@ -371,8 +376,7 @@ public class StockDataChart {
 		}
 
 		int color = Color.WHITE;
-		String action = "";
-		String label = "";
+		String action;
 		LimitLine limitLine;
 
 		action = stock.getAction(mPeriod);
@@ -383,7 +387,7 @@ public class StockDataChart {
 		}
 
 		StockTrend stockTrend = getStockTrend(mAdaptiveLevel);
-		label = "                                                     " + " ";
+		String label = "                                                     " + " ";
 		if (stockTrend != null && stockTrend.hasFlag(Trend.FLAG_CHANGED)) {
 			color = lineColor(mAdaptiveLevel);
 			label += "Trend:" + Constant.TAB2 + stockTrend.toTrendString();
@@ -395,39 +399,29 @@ public class StockDataChart {
 	}
 
 	void updateCostLimitLine(Stock stock) {
-		int color = Color.WHITE;
-		double cost = 0;
-		double net = 0;
-		String label = "";
-		LimitLine limitLine;
-
 		if (stock == null || mLimitLineList == null) {
 			return;
 		}
 
-		cost = stock.getCost();
-
+		double cost = stock.getCost();
 		if ((cost > 0) && (stock.getHold() > 0)) {
-			net = Utility.Round2(100 * (stock.getPrice() - cost) / cost);
-			color = Color.BLUE;
-			label = "                                                     "
+			double net = Utility.Round2(100 * (stock.getPrice() - cost) / cost);
+			int color = Color.BLUE;
+			String label = "                                                     "
 					+ " " + cost + " " + net + "%";
-			limitLine = createLimitLine(cost, color, label);
-
+			LimitLine limitLine = createLimitLine(cost, color, label);
 			mLimitLineList.add(limitLine);
 		}
 	}
 
 	void updateDealLimitLine(Stock stock, ArrayList<StockDeal> stockDealList) {
-		double limit = 0;
-		int color = Color.WHITE;
-		String label = "";
-		LimitLine limitLineDeal = new LimitLine(0);
-
 		if (stock == null || stockDealList == null || mLimitLineList == null) {
 			return;
 		}
 
+		double limit = 0;
+		int color;
+		String label;
 		for (StockDeal stockDeal : stockDealList) {
 			if ((stockDeal.getBuy() > 0) && (stockDeal.getSell() > 0)) {
 				limit = stockDeal.getBuy();
@@ -453,10 +447,10 @@ public class StockDataChart {
 					+ "  " + stockDeal.getVolume()
 					+ "  " + (int) stockDeal.getProfit()
 					+ "  " + stockDeal.getAccount();
-
-			limitLineDeal = createLimitLine(limit, color, label);
-
-			mLimitLineList.add(limitLineDeal);
+			LimitLine limitLineDeal = createLimitLine(limit, color, label);
+			if (limitLineDeal != null) {
+				mLimitLineList.add(limitLineDeal);
+			}
 		}
 	}
 

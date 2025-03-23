@@ -578,8 +578,8 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 			stockDataChart.updateDescription(mStock);
 			stockDataChart.updateLimitLines(mStock, mStockDealList);
 			stockDataChart.updateGroupEntry();
-			stockDataChart.setMainChartData(mContext);
-			stockDataChart.setSubChartData(mContext);
+			stockDataChart.setMainChartData();
+			stockDataChart.setSubChartData();
 
 			mStockDataChartArrayAdapter.notifyDataSetChanged();
 		} catch (Exception e) {
