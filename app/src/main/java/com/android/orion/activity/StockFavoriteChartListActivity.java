@@ -205,12 +205,8 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 		super.onActivityResult(requestCode, resultCode, intent);
 
 		if (resultCode == RESULT_OK) {
-			switch (requestCode) {
-				case REQUEST_CODE_SETTING:
-					restartLoader();
-					break;
-				default:
-					break;
+			if (requestCode == REQUEST_CODE_SETTING) {
+				restartLoader();
 			}
 		}
 	}
@@ -304,12 +300,9 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 		mStockDataChartArrayAdapter = new StockDataChartArrayAdapter(this,
 				mStockDataChartItemList);
 		mListView.setAdapter(mStockDataChartArrayAdapter);
-		mListView.setOnRefreshListener(new PullToRefreshListView.OnRefreshListener() {
-			@Override
-			public void onRefresh() {
-				mListView.onRefreshComplete();
-				mBackgroundHandler.downloadStockData(mStock);
-			}
+		mListView.setOnRefreshListener(() -> {
+			mListView.onRefreshComplete();
+			mBackgroundHandler.downloadStockData(mStock);
 		});
 		mChartSyncHelper.registerOnChartGestureListener(this);
 	}
@@ -341,21 +334,18 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 
 	CursorLoader getStockCursorLoader() {
 		String selection = mDatabaseManager.hasFlagSelection(Stock.FLAG_FAVORITE);
-		CursorLoader loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
+		return new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
 				DatabaseContract.Stock.PROJECTION_ALL, selection, null,
 				mSortOrder);
-		return loader;
 	}
 
 	CursorLoader getStockDataCursorLoader(String period) {
 		String selection = mDatabaseManager.getStockDataSelection(mStock.getSE(), mStock.getCode(),
 				period, Trend.LEVEL_NONE);
 		String sortOrder = mDatabaseManager.getStockDataOrder();
-		CursorLoader loader = new CursorLoader(this, DatabaseContract.StockData.CONTENT_URI,
+		return new CursorLoader(this, DatabaseContract.StockData.CONTENT_URI,
 				DatabaseContract.StockData.PROJECTION_ALL, selection, null,
 				sortOrder);
-
-		return loader;
 	}
 
 	void updateMenuAction() {
@@ -395,13 +385,11 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 					Stock stock = new Stock();
 					stock.set(cursor);
 
-					if (stock != null) {
-						if (mStock.getId() == stock.getId()) {
-							mStock.set(cursor);
-							mStockListIndex = mStockList.size();
-						}
-						mStockList.add(stock);
+					if (mStock.getId() == stock.getId()) {
+						mStock.set(cursor);
+						mStockListIndex = mStockList.size();
 					}
+					mStockList.add(stock);
 				}
 			}
 		} catch (Exception e) {
@@ -422,8 +410,8 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 		try {
 			stockDataChart.clear();
 			if ((cursor != null) && (cursor.getCount() > 0)) {
-				String dateString = "";
-				String timeString = "";
+				String dateString;
+				String timeString;
 
 				while (cursor.moveToNext()) {
 					int index = stockDataChart.mXValues.size();
@@ -444,10 +432,8 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 							(float) mStockData.getCandlestick().getLow(),
 							(float) mStockData.getCandlestick().getOpen(),
 							(float) mStockData.getCandlestick().getClose(),
-							Setting.getDebugLog() ? mStockData.getAction() : "");//TODO
+							mStockData.getAction());
 					stockDataChart.mCandleEntryList.add(candleEntry);
-					if (Setting.getDisplayCandle()) {
-					}
 
 					Entry average5Entry = new Entry(
 							(float) mStockData.getMacd().getAverage5(), index);
@@ -566,8 +552,6 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 						stockDataChart.mTrendEntryList[Trend.LEVEL_TREND_LINE].add(entry);
 					}
 
-					stockDataChart.setMainChartYMinMax(index);
-
 					Entry difEntry = new Entry((float) mStockData.getMacd().getDIF(),
 							index);
 					stockDataChart.mDIFEntryList.add(difEntry);
@@ -579,8 +563,6 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 					BarEntry histogramBarEntry = new BarEntry(
 							(float) mStockData.getMacd().getHistogram(), index);
 					stockDataChart.mHistogramEntryList.add(histogramBarEntry);
-
-					stockDataChart.setupSubChartYMinMax(index);
 				}
 			}
 
@@ -636,21 +618,12 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 
 		mStockListIndex += step;
 
-		boolean loop = true;
 		if (mStockListIndex > mStockList.size() - 1) {
-			if (loop) {
-				mStockListIndex = 0;
-			} else {
-				mStockListIndex = mStockList.size() - 1;
-			}
+			mStockListIndex = 0;
 		}
 
 		if (mStockListIndex < 0) {
-			if (loop) {
-				mStockListIndex = mStockList.size() - 1;
-			} else {
-				mStockListIndex = 0;
-			}
+			mStockListIndex = mStockList.size() - 1;
 		}
 
 		mStock = mStockList.get(mStockListIndex);
@@ -705,9 +678,6 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 		int mResource;
 		StockDataChart mStockDataChart;
 
-		public StockDataChartItem() {
-		}
-
 		public StockDataChartItem(int itemViewType, int resource,
 		                          StockDataChart stockDataChart) {
 			mItemViewType = itemViewType;
@@ -719,16 +689,15 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 			return mItemViewType;
 		}
 
-		public View getView(int position, View view, Context context) {
-			ViewHolder viewHolder = null;
-			XAxis xAxis = null;
-			YAxis leftYAxis = null;
-			YAxis rightYAxis = null;
+		public View getView(int position, Context context) {
+			XAxis xAxis;
+			YAxis leftYAxis;
+			YAxis rightYAxis;
 
 			// For android 5 and above solution:
 			// if (view == null) {
-			view = LayoutInflater.from(context).inflate(mResource, null);
-			viewHolder = new ViewHolder();
+			View view = LayoutInflater.from(context).inflate(mResource, null);
+			ViewHolder viewHolder = new ViewHolder();
 			viewHolder.chart = view.findViewById(R.id.chart);
 			view.setTag(viewHolder);
 			// } else {
@@ -809,7 +778,7 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			return getItem(position).getView(position, convertView,
+			return getItem(position).getView(position,
 					getContext());
 		}
 

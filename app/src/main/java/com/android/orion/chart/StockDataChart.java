@@ -57,10 +57,6 @@ public class StockDataChart {
 	String mPeriod;
 	int mAdaptiveLevel;
 	ArrayMap<String, StockTrend> mStockTrendMap = new ArrayMap<>();
-	double mMainChartYMin = 0;
-	double mMainChartYMax = 0;
-	double mSubChartYMin = 0;
-	double mSubChartYMax = 0;
 
 	public StockDataChart(String period) {
 		mPeriod = period;
@@ -312,64 +308,6 @@ public class StockDataChart {
 
 		StockTrend stockTrend = getStockTrend(level);
 		return stockTrend != null && stockTrend.hasFlag(Trend.FLAG_ADAPTIVE);
-	}
-
-	public void setMainChartYMinMax(int index) {
-		double draw = 0;
-		double stroke = 0;
-		double segment = 0;
-
-		List<Entry> drawEntryList = mTrendEntryList[Trend.LEVEL_DRAW];
-		List<Entry> strokeEntryList = mTrendEntryList[Trend.LEVEL_STROKE];
-		List<Entry> segmentEntryList = mTrendEntryList[Trend.LEVEL_SEGMENT];
-
-		if (drawEntryList == null || drawEntryList.size() == 0) {
-			return;
-		}
-
-		if (strokeEntryList == null || strokeEntryList.size() == 0) {
-			return;
-		}
-
-		if (segmentEntryList == null || segmentEntryList.size() == 0) {
-			return;
-		}
-
-		draw = drawEntryList.get(drawEntryList.size() - 1).getVal();
-		stroke = strokeEntryList.get(strokeEntryList.size() - 1).getVal();
-		segment = segmentEntryList.get(segmentEntryList.size() - 1).getVal();
-
-		if (index == 0) {
-			mMainChartYMin = Math.min(Math.min(draw, stroke), segment);
-			mMainChartYMax = Math.max(Math.max(draw, stroke), segment);
-		} else {
-			mMainChartYMin = Math.min(Math.min(Math.min(draw, stroke), segment), mMainChartYMin);
-			mMainChartYMax = Math.max(Math.max(Math.max(draw, stroke), segment), mMainChartYMax);
-		}
-	}
-
-	public void setupSubChartYMinMax(int index) {
-		double dif = 0;
-		double dea = 0;
-
-		if (mDIFEntryList == null || mDIFEntryList.size() == 0) {
-			return;
-		}
-
-		if (mDEAEntryList == null || mDEAEntryList.size() == 0) {
-			return;
-		}
-
-		dif = mDIFEntryList.get(mDIFEntryList.size() - 1).getVal();
-		dea = mDEAEntryList.get(mDEAEntryList.size() - 1).getVal();
-
-		if (index == 0) {
-			mSubChartYMin = Math.min(dif, dea);
-			mSubChartYMax = Math.max(dif, dea);
-		} else {
-			mSubChartYMin = Math.min(Math.min(dif, dea), mSubChartYMin);
-			mSubChartYMax = Math.max(Math.max(dif, dea), mSubChartYMax);
-		}
 	}
 
 	public void updateDescription(Stock stock) {
