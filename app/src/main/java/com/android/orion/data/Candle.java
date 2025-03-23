@@ -5,30 +5,30 @@ import android.database.Cursor;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.setting.Constant;
 
-public class Candlestick {
+public class Candle {
 	private double mOpen;
 	private double mHigh;
 	private double mLow;
 	private double mClose;
 
-	public void add(Candlestick candlestick, long weight) {
-		if (candlestick == null) {
+	public void add(Candle candle, long weight) {
+		if (candle == null) {
 			return;
 		}
-		mOpen += candlestick.mOpen * weight;
-		mHigh += candlestick.mHigh * weight;
-		mLow += candlestick.mLow * weight;
-		mClose += candlestick.mClose * weight;
+		mOpen += candle.mOpen * weight;
+		mHigh += candle.mHigh * weight;
+		mLow += candle.mLow * weight;
+		mClose += candle.mClose * weight;
 	}
 
-	public void set(Candlestick candlestick) {
-		if (candlestick == null) {
+	public void set(Candle candle) {
+		if (candle == null) {
 			return;
 		}
-		setOpen(candlestick.mOpen);
-		setHigh(candlestick.mHigh);
-		setLow(candlestick.mLow);
-		setClose(candlestick.mClose);
+		setOpen(candle.mOpen);
+		setHigh(candle.mHigh);
+		setLow(candle.mLow);
+		setClose(candle.mClose);
 	}
 
 	public void set(Cursor cursor) {

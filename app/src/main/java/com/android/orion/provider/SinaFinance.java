@@ -837,13 +837,13 @@ public class SinaFinance extends StockDataProvider {
 						}
 					}
 
-					stockData.getCandlestick().setOpen(jsonObject.getDouble("open"));
-					stockData.getCandlestick().setClose(jsonObject.getDouble("close"));
-					stockData.getCandlestick().setHigh(jsonObject.getDouble("high"));
-					stockData.getCandlestick().setLow(jsonObject.getDouble("low"));
+					stockData.getCandle().setOpen(jsonObject.getDouble("open"));
+					stockData.getCandle().setClose(jsonObject.getDouble("close"));
+					stockData.getCandle().setHigh(jsonObject.getDouble("high"));
+					stockData.getCandle().setLow(jsonObject.getDouble("low"));
 
-					stockData.getTrend().setVertexHigh(stockData.getCandlestick().getHigh());
-					stockData.getTrend().setVertexLow(stockData.getCandlestick().getLow());
+					stockData.getTrend().setVertexHigh(stockData.getCandle().getHigh());
+					stockData.getTrend().setVertexLow(stockData.getCandle().getLow());
 
 					if (bulkInsert) {
 						stockData.setCreated(Utility.getCurrentDateTimeString());
@@ -1055,13 +1055,13 @@ public class SinaFinance extends StockDataProvider {
 				}
 			}
 
-			stockData.getCandlestick().setOpen(Double.parseDouble(stockInfo[1]));
-			stockData.getCandlestick().setClose(Double.parseDouble(stockInfo[3]));
-			stockData.getCandlestick().setHigh(Double.parseDouble(stockInfo[4]));
-			stockData.getCandlestick().setLow(Double.parseDouble(stockInfo[5]));
+			stockData.getCandle().setOpen(Double.parseDouble(stockInfo[1]));
+			stockData.getCandle().setClose(Double.parseDouble(stockInfo[3]));
+			stockData.getCandle().setHigh(Double.parseDouble(stockInfo[4]));
+			stockData.getCandle().setLow(Double.parseDouble(stockInfo[5]));
 
-			stockData.getTrend().setVertexHigh(stockData.getCandlestick().getHigh());
-			stockData.getTrend().setVertexLow(stockData.getCandlestick().getLow());
+			stockData.getTrend().setVertexHigh(stockData.getCandle().getHigh());
+			stockData.getTrend().setVertexLow(stockData.getCandle().getLow());
 
 			stockData.setDate(stockInfo[30]);
 			if (Period.isMinutePeriod(stockData.getPeriod())) {
@@ -1085,7 +1085,7 @@ public class SinaFinance extends StockDataProvider {
 		StopWatch.stop();
 		Log.d(stock.getName() + Constant.TAB
 				+ stockData.getDate() + Constant.TAB + stockData.getTime() + Constant.TAB
-				+ stockData.getCandlestick().toString()
+				+ stockData.getCandle().toString()
 				+ StopWatch.getInterval() + "s");
 	}
 

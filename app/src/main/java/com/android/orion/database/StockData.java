@@ -4,7 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.text.TextUtils;
 
-import com.android.orion.data.Candlestick;
+import com.android.orion.data.Candle;
 import com.android.orion.data.Macd;
 import com.android.orion.data.Trend;
 import com.android.orion.setting.Constant;
@@ -40,7 +40,7 @@ public class StockData extends DatabaseTable {
 			}
 		}
 	};
-	private final Candlestick mCandlestick = new Candlestick();
+	private final Candle mCandle = new Candle();
 	private final Macd mMacd = new Macd();
 	private final Trend mTrend = new Trend();
 	private String mSE;
@@ -152,10 +152,10 @@ public class StockData extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);
 		contentValues.put(DatabaseContract.COLUMN_TIME, mTime);
 		contentValues.put(DatabaseContract.COLUMN_PERIOD, mPeriod);
-		contentValues.put(DatabaseContract.COLUMN_OPEN, mCandlestick.getOpen());
-		contentValues.put(DatabaseContract.COLUMN_HIGH, mCandlestick.getHigh());
-		contentValues.put(DatabaseContract.COLUMN_LOW, mCandlestick.getLow());
-		contentValues.put(DatabaseContract.COLUMN_CLOSE, mCandlestick.getClose());
+		contentValues.put(DatabaseContract.COLUMN_OPEN, mCandle.getOpen());
+		contentValues.put(DatabaseContract.COLUMN_HIGH, mCandle.getHigh());
+		contentValues.put(DatabaseContract.COLUMN_LOW, mCandle.getLow());
+		contentValues.put(DatabaseContract.COLUMN_CLOSE, mCandle.getClose());
 		contentValues.put(DatabaseContract.COLUMN_AVERAGE5, mMacd.getAverage5());
 		contentValues.put(DatabaseContract.COLUMN_AVERAGE10, mMacd.getAverage10());
 		contentValues.put(DatabaseContract.COLUMN_DIF, mMacd.getDIF());
@@ -185,7 +185,7 @@ public class StockData extends DatabaseTable {
 		setDate(stockData.mDate);
 		setTime(stockData.mTime);
 		setPeriod(stockData.mPeriod);
-		mCandlestick.set(stockData.mCandlestick);
+		mCandle.set(stockData.mCandle);
 		mMacd.set(stockData.mMacd);
 		mTrend.set(stockData.mTrend);
 		setAction(stockData.mAction);
@@ -212,7 +212,7 @@ public class StockData extends DatabaseTable {
 		setDate(cursor);
 		setTime(cursor);
 		setPeriod(cursor);
-		mCandlestick.set(cursor);
+		mCandle.set(cursor);
 		mMacd.set(cursor);
 		mTrend.set(cursor);
 		setAction(cursor);
@@ -345,8 +345,8 @@ public class StockData extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_PERIOD)));
 	}
 
-	public Candlestick getCandlestick() {
-		return mCandlestick;
+	public Candle getCandle() {
+		return mCandle;
 	}
 
 	public Macd getMacd() {
@@ -418,9 +418,9 @@ public class StockData extends DatabaseTable {
 		if (stockData == null) {
 			return;
 		}
-		mCandlestick.add(stockData.mCandlestick, weight);
-		mTrend.setVertexHigh(mCandlestick.getHigh());
-		mTrend.setVertexLow(mCandlestick.getLow());
+		mCandle.add(stockData.mCandle, weight);
+		mTrend.setVertexHigh(mCandle.getHigh());
+		mTrend.setVertexLow(mCandle.getLow());
 	}
 
 	public StockData fromString(String string) {
@@ -443,13 +443,13 @@ public class StockData extends DatabaseTable {
 		timeString = strings[1].substring(0, 2) + ":" + strings[1].substring(2, 4) + ":" + "00";
 		setTime(timeString);
 
-		mCandlestick.setOpen(Double.parseDouble(strings[2]));
-		mCandlestick.setHigh(Double.parseDouble(strings[3]));
-		mCandlestick.setLow(Double.parseDouble(strings[4]));
-		mCandlestick.setClose(Double.parseDouble(strings[5]));
+		mCandle.setOpen(Double.parseDouble(strings[2]));
+		mCandle.setHigh(Double.parseDouble(strings[3]));
+		mCandle.setLow(Double.parseDouble(strings[4]));
+		mCandle.setClose(Double.parseDouble(strings[5]));
 
-		mTrend.setVertexHigh(mCandlestick.getHigh());
-		mTrend.setVertexLow(mCandlestick.getLow());
+		mTrend.setVertexHigh(mCandle.getHigh());
+		mTrend.setVertexLow(mCandle.getLow());
 
 		setCreated(Utility.getCurrentDateTimeString());
 		setModified(Utility.getCurrentDateTimeString());
@@ -465,7 +465,7 @@ public class StockData extends DatabaseTable {
 		String timeString = getTime().substring(0, 5).replace(":", "");
 		stringBuffer.append(dateString + Constant.TAB
 				+ timeString + Constant.TAB
-				+ mCandlestick.toString()
+				+ mCandle.toString()
 				+ 0 + Constant.TAB
 				+ 0);
 		stringBuffer.append("\r\n");

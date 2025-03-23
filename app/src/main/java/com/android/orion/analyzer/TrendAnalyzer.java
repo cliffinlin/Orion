@@ -552,15 +552,15 @@ public class TrendAnalyzer {
 			}
 
 			if (data.getTrend().getDirection() == Trend.DIRECTION_UP) {
-				stockData.getCandlestick().setOpen(data.getTrend().getVertexLow());
-				stockData.getCandlestick().setClose(data.getTrend().getVertexHigh());
+				stockData.getCandle().setOpen(data.getTrend().getVertexLow());
+				stockData.getCandle().setClose(data.getTrend().getVertexHigh());
 			} else if (data.getTrend().getDirection() == Trend.DIRECTION_DOWN) {
-				stockData.getCandlestick().setOpen(data.getTrend().getVertexHigh());
-				stockData.getCandlestick().setClose(data.getTrend().getVertexLow());
+				stockData.getCandle().setOpen(data.getTrend().getVertexHigh());
+				stockData.getCandle().setClose(data.getTrend().getVertexLow());
 			}
 
-			stockData.getCandlestick().setHigh(data.getTrend().getVertexHigh());
-			stockData.getCandlestick().setLow(data.getTrend().getVertexLow());
+			stockData.getCandle().setHigh(data.getTrend().getVertexHigh());
+			stockData.getCandle().setLow(data.getTrend().getVertexLow());
 
 			stockData.setAction(String.valueOf(i));
 		}

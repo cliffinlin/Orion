@@ -428,10 +428,10 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 					}
 
 					CandleEntry candleEntry = new CandleEntry(index,
-							(float) mStockData.getCandlestick().getHigh(),
-							(float) mStockData.getCandlestick().getLow(),
-							(float) mStockData.getCandlestick().getOpen(),
-							(float) mStockData.getCandlestick().getClose(),
+							(float) mStockData.getCandle().getHigh(),
+							(float) mStockData.getCandle().getLow(),
+							(float) mStockData.getCandle().getOpen(),
+							(float) mStockData.getCandle().getClose(),
 							mStockData.getAction());
 					stockDataChart.mCandleEntryList.add(candleEntry);
 
@@ -455,7 +455,7 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 							stockDataChart.mDrawFirstEntryList.add(drawEntry);
 						} else {
 							Entry drawEntry = new Entry(
-									(float) mStockData.getCandlestick().getClose(), index);
+									(float) mStockData.getCandle().getClose(), index);
 							stockDataChart.mDrawFirstEntryList.add(drawEntry);
 						}
 					} else if (index == cursor.getCount() - 1) {
@@ -470,7 +470,7 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 							stockDataChart.mDrawLastEntryList.add(drawEntry);
 						} else {
 							Entry drawEntry = new Entry(
-									(float) mStockData.getCandlestick().getClose(), index);
+									(float) mStockData.getCandle().getClose(), index);
 							stockDataChart.mDrawLastEntryList.add(drawEntry);
 						}
 					}

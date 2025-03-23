@@ -457,8 +457,8 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 				mDatabaseManager.updateStock(index, index.getContentValues());
 
 				if (TextUtils.equals(period, Period.DAY) && (indexStockDataList.size() > 1)) {
-					double prevPrice = indexStockDataList.get(indexStockDataList.size() - 2).getCandlestick().getClose();
-					double price = indexStockDataList.get(indexStockDataList.size() - 1).getCandlestick().getClose();
+					double prevPrice = indexStockDataList.get(indexStockDataList.size() - 2).getCandle().getClose();
+					double price = indexStockDataList.get(indexStockDataList.size() - 1).getCandle().getClose();
 					double net = 0;
 					if (prevPrice > 0) {
 						net = 100.0 * (price - prevPrice) / prevPrice;
@@ -497,27 +497,27 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			StockData stockData = stockDataList.get(i);
 
 			if (i == stockDataList.size() - 1) {
-				high = stockData.getCandlestick().getHigh();
-				low = stockData.getCandlestick().getLow();
+				high = stockData.getCandle().getHigh();
+				low = stockData.getCandle().getLow();
 
 				result.setDate(stockData.getDate());
 				result.setTime(stockData.getTime());
 			}
 
-			result.getCandlestick().setOpen(stockData.getCandlestick().getOpen());
+			result.getCandle().setOpen(stockData.getCandle().getOpen());
 
-			if (stockData.getCandlestick().getHigh() > high) {
-				high = stockData.getCandlestick().getHigh();
+			if (stockData.getCandle().getHigh() > high) {
+				high = stockData.getCandle().getHigh();
 			}
-			result.getCandlestick().setHigh(high);
+			result.getCandle().setHigh(high);
 
-			if (stockData.getCandlestick().getLow() < low) {
-				low = stockData.getCandlestick().getLow();
+			if (stockData.getCandle().getLow() < low) {
+				low = stockData.getCandle().getLow();
 			}
-			result.getCandlestick().setLow(low);
+			result.getCandle().setLow(low);
 
 			if (i == stockDataList.size() - 1) {
-				result.getCandlestick().setClose(stockData.getCandlestick().getClose());
+				result.getCandle().setClose(stockData.getCandle().getClose());
 			}
 		}
 

@@ -117,7 +117,7 @@ object MacdAnalyzer {
         mDIFList.clear()
         mHistogramList.clear()
         for (i in 0 until stockDataList.size) {
-            mPriceList.add(stockDataList[i].candlestick.close)
+            mPriceList.add(stockDataList[i].candle.close)
         }
     }
 
