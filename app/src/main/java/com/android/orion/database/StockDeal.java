@@ -37,7 +37,6 @@ public class StockDeal extends DatabaseTable {
 	protected String mCode;
 	protected String mName;
 	protected String mAccount;
-	protected String mAction;
 	protected double mPrice;
 	protected double mNet;
 	protected double mBuy;
@@ -70,7 +69,6 @@ public class StockDeal extends DatabaseTable {
 		mCode = "";
 		mName = "";
 		mAccount = "";
-		mAction = "";
 		mPrice = 0;
 		mNet = 0;
 		mBuy = 0;
@@ -91,7 +89,6 @@ public class StockDeal extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
 		contentValues.put(DatabaseContract.COLUMN_ACCOUNT, mAccount);
-		contentValues.put(DatabaseContract.COLUMN_ACTION, mAction);
 		contentValues.put(DatabaseContract.COLUMN_PRICE, mPrice);
 		contentValues.put(DatabaseContract.COLUMN_NET, mNet);
 		contentValues.put(DatabaseContract.COLUMN_BUY, mBuy);
@@ -118,7 +115,6 @@ public class StockDeal extends DatabaseTable {
 		setCode(stockDeal.mCode);
 		setName(stockDeal.mName);
 		setAccount(stockDeal.mAccount);
-		setAction(stockDeal.mAction);
 		setPrice(stockDeal.mPrice);
 		setNet(stockDeal.mNet);
 		setBuy(stockDeal.mBuy);
@@ -145,7 +141,6 @@ public class StockDeal extends DatabaseTable {
 		setCode(cursor);
 		setName(cursor);
 		setAccount(cursor);
-		setAction(cursor);
 		setPrice(cursor);
 		setNet(cursor);
 		setBuy(cursor);
@@ -224,23 +219,6 @@ public class StockDeal extends DatabaseTable {
 
 		setAccount(cursor.getString(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_ACCOUNT)));
-	}
-
-	public String getAction() {
-		return mAction;
-	}
-
-	public void setAction(String action) {
-		mAction = action;
-	}
-
-	void setAction(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setAction(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_ACTION)));
 	}
 
 	public double getPrice() {
@@ -682,7 +660,6 @@ public class StockDeal extends DatabaseTable {
 
 		stringBuffer.append(mName + " ");
 		stringBuffer.append(mAccount + " ");
-		stringBuffer.append(mAction + " ");
 		stringBuffer.append("mBuy=" + mBuy + ", ");
 		stringBuffer.append("mSell=" + mSell + ",  ");
 		stringBuffer.append("mVolume=" + mVolume + ",  ");

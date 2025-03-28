@@ -87,7 +87,6 @@ public class StockDealListActivity extends ListActivity implements
 	TextView mTextViewFee = null;
 	TextView mTextViewProfit = null;
 	TextView mTextViewAccount = null;
-	TextView mTextViewAction = null;
 	TextView mTextViewCreated = null;
 	TextView mTextViewModified = null;
 
@@ -317,9 +316,6 @@ public class StockDealListActivity extends ListActivity implements
 			case R.id.account:
 				mSortOrderColumn = DatabaseContract.COLUMN_ACCOUNT;
 				break;
-			case R.id.action:
-				mSortOrderColumn = DatabaseContract.COLUMN_ACTION;
-				break;
 			case R.id.price:
 				mSortOrderColumn = DatabaseContract.COLUMN_PRICE;
 				break;
@@ -392,7 +388,6 @@ public class StockDealListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewFee, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewProfit, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewAccount, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewAction, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewCreated, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewModified, mHeaderTextDefaultColor);
 	}
@@ -466,11 +461,6 @@ public class StockDealListActivity extends ListActivity implements
 			mTextViewAccount.setOnClickListener(this);
 		}
 
-		mTextViewAction = findViewById(R.id.action);
-		if (mTextViewAction != null) {
-			mTextViewAction.setOnClickListener(this);
-		}
-
 		mTextViewCreated = findViewById(R.id.created);
 		if (mTextViewCreated != null) {
 			mTextViewCreated.setOnClickListener(this);
@@ -506,8 +496,6 @@ public class StockDealListActivity extends ListActivity implements
 			setHeaderTextColor(mTextViewProfit, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_ACCOUNT)) {
 			setHeaderTextColor(mTextViewAccount, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_ACTION)) {
-			setHeaderTextColor(mTextViewAction, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_CREATED)) {
 			setHeaderTextColor(mTextViewCreated, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MODIFIED)) {
@@ -533,7 +521,6 @@ public class StockDealListActivity extends ListActivity implements
 				DatabaseContract.COLUMN_FEE,
 				DatabaseContract.COLUMN_PROFIT,
 				DatabaseContract.COLUMN_ACCOUNT,
-				DatabaseContract.COLUMN_ACTION,
 				DatabaseContract.COLUMN_CREATED,
 				DatabaseContract.COLUMN_MODIFIED};
 		int[] mRightTo = new int[]{
@@ -548,7 +535,6 @@ public class StockDealListActivity extends ListActivity implements
 				R.id.fee,
 				R.id.profit,
 				R.id.account,
-				R.id.action,
 				R.id.created,
 				R.id.modified};
 
@@ -601,17 +587,14 @@ public class StockDealListActivity extends ListActivity implements
 
 		switch (mFilterType) {
 			case FILTER_TYPE_NONE:
-				typeSelection = DatabaseContract.COLUMN_ACTION + " = ''";
 				break;
 
 			case FILTER_TYPE_BUY:
-				typeSelection = DatabaseContract.COLUMN_ACTION + " != ''";
-				typeSelection += " AND " + DatabaseContract.COLUMN_VOLUME + " < " + 0;
+				typeSelection = DatabaseContract.COLUMN_VOLUME + " < " + 0;
 				break;
 
 			case FILTER_TYPE_SELL:
-				typeSelection = DatabaseContract.COLUMN_ACTION + " != ''";
-				typeSelection += " AND " + DatabaseContract.COLUMN_VOLUME + " > " + 0;
+				typeSelection = DatabaseContract.COLUMN_VOLUME + " > " + 0;
 				typeSelection += " AND " + DatabaseContract.COLUMN_NET + " > " + 0;
 				typeSelection += " AND " + DatabaseContract.COLUMN_PROFIT + " > " + DatabaseContract.COLUMN_BONUS;
 				break;

@@ -327,8 +327,6 @@ public class StorageActivity extends DatabaseActivity {
 								stockDeal.setVolume(Long.parseLong(parser.nextText()));
 							} else if (TextUtils.equals(tagName, DatabaseContract.COLUMN_ACCOUNT)) {
 								stockDeal.setAccount(parser.nextText());
-							} else if (TextUtils.equals(tagName, DatabaseContract.COLUMN_ACTION)) {
-								stockDeal.setAction(parser.nextText());
 							} else if (TextUtils.equals(tagName, DatabaseContract.COLUMN_CREATED)) {
 								stockDeal.setCreated(parser.nextText());
 							} else if (TextUtils.equals(tagName, DatabaseContract.COLUMN_MODIFIED)) {
@@ -514,9 +512,6 @@ public class StorageActivity extends DatabaseActivity {
 						xmlSerialize(xmlSerializer,
 								DatabaseContract.COLUMN_ACCOUNT,
 								stockDeal.getAccount());
-						xmlSerialize(xmlSerializer,
-								DatabaseContract.COLUMN_ACTION,
-								stockDeal.getAction());
 						xmlSerialize(xmlSerializer,
 								DatabaseContract.COLUMN_CREATED,
 								stockDeal.getCreated());

@@ -209,6 +209,7 @@ public class FinancialAnalyzer {
 
 		stockFinancial.setSE(stock.getSE());
 		stockFinancial.setCode(stock.getCode());
+		stockFinancial.setName(stock.getName());
 
 		mDatabaseManager.getStockFinancial(stock, stockFinancial);
 		mDatabaseManager.getStockFinancialList(stock, mStockFinancialList,

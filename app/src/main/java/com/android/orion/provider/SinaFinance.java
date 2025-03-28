@@ -1100,6 +1100,7 @@ public class SinaFinance extends StockDataProvider {
 		StockFinancial stockFinancial = new StockFinancial();
 		stockFinancial.setSE(stock.getSE());
 		stockFinancial.setCode(stock.getCode());
+		stockFinancial.setName(stock.getName());
 		mDatabaseManager.getStockFinancial(stock, stockFinancial);
 
 		return downloadStockFinancial(stock, stockFinancial, getStockFinancialURLString(stock));
@@ -1314,6 +1315,7 @@ public class SinaFinance extends StockDataProvider {
 		StockBonus stockBonus = new StockBonus();
 		stockBonus.setSE(stock.getSE());
 		stockBonus.setCode(stock.getCode());
+		stockBonus.setName(stock.getName());
 		mDatabaseManager.getStockBonus(stock, stockBonus);
 
 		return downloadStockBonus(stock, stockBonus, getStockBonusURLString(stock));
@@ -1623,6 +1625,7 @@ public class SinaFinance extends StockDataProvider {
 						continue;
 					}
 
+					stockShare.setName(stock.getName());
 					if (bulkInsert) {
 						stockShare.setCreated(Utility
 								.getCurrentDateTimeString());
