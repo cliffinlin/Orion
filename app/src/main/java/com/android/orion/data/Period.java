@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.text.TextUtils;
 
 import com.android.orion.database.StockData;
+import com.android.orion.database.StockTrend;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,10 +56,10 @@ public class Period {
 		PERIOD_MINUTES_MAP.put(WEEK, PERIOD_MINUTES_WEEK);
 		PERIOD_MINUTES_MAP.put(MONTH, PERIOD_MINUTES_MONTH);
 
-		for (int i = 0; i < Trend.LEVEL_MAX; i++) {
+		for (int i = 0; i < StockTrend.LEVEL_MAX; i++) {
 			mVertexLists.add(new ArrayList<>());
 		}
-		for (int i = 0; i < Trend.LEVEL_MAX; i++) {
+		for (int i = 0; i < StockTrend.LEVEL_MAX; i++) {
 			mDataLists.add(new ArrayList<>());
 		}
 	}

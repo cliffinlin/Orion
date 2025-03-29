@@ -2,11 +2,11 @@ package com.android.orion.database;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.text.TextUtils;
 
 import com.android.orion.data.Candle;
 import com.android.orion.data.Macd;
-import com.android.orion.data.Trend;
 import com.android.orion.setting.Constant;
 import com.android.orion.utility.Utility;
 
@@ -42,7 +42,6 @@ public class StockData extends DatabaseTable {
 	};
 	private final Candle mCandle = new Candle();
 	private final Macd mMacd = new Macd();
-	private final Trend mTrend = new Trend();
 	private String mSE;
 	private String mCode;
 	private String mName;
@@ -52,6 +51,12 @@ public class StockData extends DatabaseTable {
 	private String mPeriod;
 	private String mAction;
 	private int mIndex;
+	private int mIndexStart;
+	private int mIndexEnd;
+	private int mDirection;
+	private int mVertex;
+	private double mVertexLow;
+	private double mVertexHigh;
 
 	public StockData() {
 		init();
@@ -94,26 +99,17 @@ public class StockData extends DatabaseTable {
 		return list.get(i);
 	}
 
-	public static Trend getLastTrend(List<StockData> list, int index) {
-		if (list == null || index < 0 || index >= list.size()) {
-			return null;
-		}
-
-		StockData data = getLast(list, index);
-		return data != null ? data.getTrend() : null;
-	}
-
 	public static StockData getLast(List<StockData> list, int index, List<StockData> stockDataList) {
 		if (list == null || stockDataList == null || stockDataList.isEmpty()) {
 			return null;
 		}
 
-		Trend trend = getLastTrend(list, index);
-		if (trend == null) {
+		StockData stockData = getLast(list, index);
+		if (stockData == null) {
 			return null;
 		}
 
-		int startIndex = trend.getIndexStart();
+		int startIndex = stockData.getIndexStart();
 		if (startIndex < 0 || startIndex >= stockDataList.size()) {
 			return null;
 		}
@@ -133,7 +129,7 @@ public class StockData extends DatabaseTable {
 		mSE = "";
 		mCode = "";
 		mName = "";
-		mLevel = Trend.LEVEL_NONE;
+		mLevel = StockTrend.LEVEL_NONE;
 		mDate = "";
 		mTime = "";
 		mPeriod = "";
@@ -161,10 +157,10 @@ public class StockData extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_DIF, mMacd.getDIF());
 		contentValues.put(DatabaseContract.COLUMN_DEA, mMacd.getDEA());
 		contentValues.put(DatabaseContract.COLUMN_HISTOGRAM, mMacd.getHistogram());
-		contentValues.put(DatabaseContract.COLUMN_DIRECTION, mTrend.getDirection());
-		contentValues.put(DatabaseContract.COLUMN_VERTEX, mTrend.getVertex());
-		contentValues.put(DatabaseContract.COLUMN_VERTEX_LOW, mTrend.getVertexLow());
-		contentValues.put(DatabaseContract.COLUMN_VERTEX_HIGH, mTrend.getVertexHigh());
+		contentValues.put(DatabaseContract.COLUMN_DIRECTION, mDirection);
+		contentValues.put(DatabaseContract.COLUMN_VERTEX, mVertex);
+		contentValues.put(DatabaseContract.COLUMN_VERTEX_LOW, mVertexLow);
+		contentValues.put(DatabaseContract.COLUMN_VERTEX_HIGH, mVertexHigh);
 		contentValues.put(DatabaseContract.COLUMN_ACTION, mAction);
 		return contentValues;
 	}
@@ -187,12 +183,15 @@ public class StockData extends DatabaseTable {
 		setPeriod(stockData.mPeriod);
 		mCandle.set(stockData.mCandle);
 		mMacd.set(stockData.mMacd);
-		mTrend.set(stockData.mTrend);
 		setAction(stockData.mAction);
 
 		setIndex(stockData.mIndex);
-		mTrend.setIndexStart(stockData.getTrend().getIndexStart());
-		mTrend.setIndexEnd(stockData.getTrend().getIndexEnd());
+		setIndexStart(stockData.mIndexStart);
+		setIndexEnd(stockData.mIndexEnd);
+		setDirection(stockData.mDirection);
+		setVertex(stockData.mVertex);
+		setVertexLow(stockData.mVertexLow);
+		setVertexHigh(stockData.mVertexHigh);
 	}
 
 	@Override
@@ -214,8 +213,11 @@ public class StockData extends DatabaseTable {
 		setPeriod(cursor);
 		mCandle.set(cursor);
 		mMacd.set(cursor);
-		mTrend.set(cursor);
 		setAction(cursor);
+		setDirection(cursor);
+		setVertex(cursor);
+		setVertexLow(cursor);
+		setVertexHigh(cursor);
 	}
 
 	public String getSE() {
@@ -353,10 +355,6 @@ public class StockData extends DatabaseTable {
 		return mMacd;
 	}
 
-	public Trend getTrend() {
-		return mTrend;
-	}
-
 	public String getAction() {
 		return mAction;
 	}
@@ -409,9 +407,9 @@ public class StockData extends DatabaseTable {
 		setCode(prev.getCode());
 		setName(prev.getName());
 		setIndex(prev.getIndex());
-		mTrend.setIndexStart(prev.mTrend.getIndexStart());
-		mTrend.setVertexLow(Math.min(prev.mTrend.getVertexLow(), mTrend.getVertexLow()));
-		mTrend.setVertexHigh(Math.max(prev.mTrend.getVertexHigh(), mTrend.getVertexHigh()));
+		setIndexStart(prev.getIndexStart());
+		setVertexLow(Math.min(prev.getVertexLow(), getVertexLow()));
+		setVertexHigh(Math.max(prev.getVertexHigh(), getVertexHigh()));
 	}
 
 	public void add(StockData stockData, long weight) {
@@ -419,8 +417,180 @@ public class StockData extends DatabaseTable {
 			return;
 		}
 		mCandle.add(stockData.mCandle, weight);
-		mTrend.setVertexHigh(mCandle.getHigh());
-		mTrend.setVertexLow(mCandle.getLow());
+		setVertexHigh(mCandle.getHigh());
+		setVertexLow(mCandle.getLow());
+	}
+
+	public int getIndexStart() {
+		return mIndexStart;
+	}
+
+	public void setIndexStart(int index) {
+		mIndexStart = index;
+	}
+
+	public int getIndexEnd() {
+		return mIndexEnd;
+	}
+
+	public void setIndexEnd(int index) {
+		mIndexEnd = index;
+	}
+
+	public int getDirection() {
+		return mDirection;
+	}
+
+	public void setDirection(int direction) {
+		mDirection = direction;
+	}
+
+	void setDirection(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+		setDirection(cursor.getInt(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_DIRECTION)));
+	}
+
+	public int getVertex() {
+		return mVertex;
+	}
+
+	public void setVertex(int vertex) {
+		mVertex = vertex;
+	}
+
+	void setVertex(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+		setVertex(cursor.getInt(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_VERTEX)));
+	}
+
+	public double getVertexLow() {
+		return mVertexLow;
+	}
+
+	public void setVertexLow(double vertexLow) {
+		mVertexLow = vertexLow;
+	}
+
+	void setVertexLow(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setVertexLow(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_VERTEX_LOW)));
+	}
+
+	public double getVertexHigh() {
+		return mVertexHigh;
+	}
+
+	public void setVertexHigh(double vertexHigh) {
+		mVertexHigh = vertexHigh;
+	}
+
+	void setVertexHigh(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setVertexHigh(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_VERTEX_HIGH)));
+	}
+
+	public boolean directionOf(int direction) {
+		return (mDirection & direction) == direction;
+	}
+
+	public boolean vertexOf(int vertex) {
+		return (mVertex & vertex) == vertex;
+	}
+
+	public boolean upTo(StockData stockData) {
+		if (stockData == null) {
+			return false;
+		}
+		return (mVertexHigh > stockData.mVertexHigh) && (mVertexLow > stockData.mVertexLow);
+	}
+
+	public boolean downTo(StockData stockData) {
+		if (stockData == null) {
+			return false;
+		}
+		return (mVertexHigh < stockData.mVertexHigh) && (mVertexLow < stockData.mVertexLow);
+	}
+
+	public boolean include(StockData stockData) {
+		if (stockData == null) {
+			return false;
+		}
+		return (mVertexHigh >= stockData.mVertexHigh) && (mVertexLow <= stockData.mVertexLow);
+	}
+
+	public boolean includedBy(StockData stockData) {
+		if (stockData == null) {
+			return false;
+		}
+		return (mVertexHigh <= stockData.mVertexHigh) && (mVertexLow >= stockData.mVertexLow);
+	}
+
+	public int vertexTo(StockData prev, StockData next) {
+		int vertex = StockTrend.VERTEX_NONE;
+		if (prev == null || next == null) {
+			return vertex;
+		}
+
+		if (upTo(prev) && upTo(next)) {
+			vertex = StockTrend.VERTEX_TOP;
+		} else if (downTo(prev) && downTo(next)) {
+			vertex = StockTrend.VERTEX_BOTTOM;
+		}
+		return vertex;
+	}
+
+	public int directionTo(StockData stockData) {
+		int result = StockTrend.DIRECTION_NONE;
+		if (stockData == null) {
+			return result;
+		}
+		if (upTo(stockData)) {
+			result = StockTrend.DIRECTION_UP;
+		} else if (downTo(stockData)) {
+			result = StockTrend.DIRECTION_DOWN;
+		}
+		return result;
+	}
+
+	public void merge(int direction, StockData stockData) {
+		if (direction == StockTrend.DIRECTION_UP) {
+			setVertexHigh(Math.max(getVertexHigh(), stockData.getVertexHigh()));
+			setVertexLow(Math.max(getVertexLow(), stockData.getVertexLow()));
+		} else if (direction == StockTrend.DIRECTION_DOWN) {
+			setVertexHigh(Math.min(getVertexHigh(), stockData.getVertexHigh()));
+			setVertexLow(Math.min(getVertexLow(), stockData.getVertexLow()));
+		} else {
+			setVertexHigh(Math.max(getVertexHigh(), stockData.getVertexHigh()));
+			setVertexLow(Math.min(getVertexLow(), stockData.getVertexLow()));
+		}
+	}
+
+	public void addVertex(int flag) {
+		mVertex |= flag;
+	}
+
+	public void removeVertex(int flag) {
+		if (hasVertex(flag)) {
+			mVertex &= ~flag;
+		}
+	}
+
+	public boolean hasVertex(int flag) {
+		return (mVertex & flag) == flag;
 	}
 
 	public StockData fromString(String string) {
@@ -448,8 +618,8 @@ public class StockData extends DatabaseTable {
 		mCandle.setLow(Double.parseDouble(strings[4]));
 		mCandle.setClose(Double.parseDouble(strings[5]));
 
-		mTrend.setVertexHigh(mCandle.getHigh());
-		mTrend.setVertexLow(mCandle.getLow());
+		setVertexHigh(mCandle.getHigh());
+		setVertexLow(mCandle.getLow());
 
 		setCreated(Utility.getCurrentDateTimeString());
 		setModified(Utility.getCurrentDateTimeString());

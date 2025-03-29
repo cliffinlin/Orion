@@ -6,8 +6,8 @@ import android.text.TextUtils;
 import android.util.ArrayMap;
 
 import com.android.orion.config.Config;
-import com.android.orion.data.Trend;
 import com.android.orion.database.Stock;
+import com.android.orion.database.StockData;
 import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockTrend;
 import com.android.orion.setting.Constant;
@@ -47,8 +47,8 @@ public class StockDataChart {
 	public ArrayList<BarEntry> mHistogramEntryList = new ArrayList<>();
 	public ArrayList<Entry> mDrawFirstEntryList = new ArrayList<>();
 	public ArrayList<Entry> mDrawLastEntryList = new ArrayList<>();
-	public List<Entry>[] mTrendEntryList = new List[Trend.LEVEL_MAX];
-	public List<Entry>[] mGroupEntryList = new List[Trend.LEVEL_MAX];
+	public List<Entry>[] mTrendEntryList = new List[StockTrend.LEVEL_MAX];
+	public List<Entry>[] mGroupEntryList = new List[StockTrend.LEVEL_MAX];
 	public CombinedData mCombinedDataMain = new CombinedData(mXValues);
 	public CombinedData mCombinedDataSub = new CombinedData(mXValues);
 
@@ -59,7 +59,7 @@ public class StockDataChart {
 
 	public StockDataChart(String period) {
 		mPeriod = period;
-		for (int i = 0; i < Trend.LEVEL_MAX; i++) {
+		for (int i = 0; i < StockTrend.LEVEL_MAX; i++) {
 			if (mTrendEntryList[i] == null) {
 				mTrendEntryList[i] = new ArrayList<>();
 			} else {
@@ -82,8 +82,8 @@ public class StockDataChart {
 		mStockTrendMap.clear();
 		for (StockTrend stockTrend : stockTrendList) {
 			if (stockTrend != null) {
-				mStockTrendMap.put(stockTrend.getPeriod() + Trend.MARK_LEVEL + stockTrend.getLevel(), stockTrend);
-				if (TextUtils.equals(mPeriod, stockTrend.getPeriod()) && stockTrend.hasFlag(Trend.FLAG_ADAPTIVE)) {
+				mStockTrendMap.put(stockTrend.getPeriod() + StockTrend.MARK_LEVEL + stockTrend.getLevel(), stockTrend);
+				if (TextUtils.equals(mPeriod, stockTrend.getPeriod()) && stockTrend.hasFlag(StockTrend.FLAG_ADAPTIVE)) {
 					mAdaptiveLevel = stockTrend.getLevel();
 				}
 			}
@@ -141,42 +141,42 @@ public class StockDataChart {
 			lineData.addDataSet(lineDataSet10);
 		}
 
-		addLineDataSet(mDrawFirstEntryList, Trend.LABEL_NONE, lineColor(Trend.LEVEL_DRAW), false, lineData, false, lineColor(Trend.LEVEL_DRAW));
-		addLineDataSet(mDrawLastEntryList, Trend.LABEL_NONE, lineColor(Trend.LEVEL_DRAW), false, lineData, false, lineColor(Trend.LEVEL_DRAW));
-		if (displayTrend(Trend.LEVEL_DRAW)) {
-			addLineDataSet(mTrendEntryList, Trend.LABEL_DRAW, Trend.LEVEL_DRAW, lineData);
+		addLineDataSet(mDrawFirstEntryList, StockTrend.LABEL_NONE, lineColor(StockTrend.LEVEL_DRAW), false, lineData, false, lineColor(StockTrend.LEVEL_DRAW));
+		addLineDataSet(mDrawLastEntryList, StockTrend.LABEL_NONE, lineColor(StockTrend.LEVEL_DRAW), false, lineData, false, lineColor(StockTrend.LEVEL_DRAW));
+		if (displayTrend(StockTrend.LEVEL_DRAW)) {
+			addLineDataSet(mTrendEntryList, StockTrend.LABEL_DRAW, StockTrend.LEVEL_DRAW, lineData);
 		}
-		addLineDataSet(mGroupEntryList, Trend.LEVEL_DRAW, lineData, fillChanged(Trend.LEVEL_DRAW), fillColor(Trend.LEVEL_DRAW));
+		addLineDataSet(mGroupEntryList, StockTrend.LEVEL_DRAW, lineData, fillChanged(StockTrend.LEVEL_DRAW), fillColor(StockTrend.LEVEL_DRAW));
 
-		if (displayTrend(Trend.LEVEL_STROKE)) {
-			addLineDataSet(mTrendEntryList, Trend.LABEL_STROKE, Trend.LEVEL_STROKE, lineData);
+		if (displayTrend(StockTrend.LEVEL_STROKE)) {
+			addLineDataSet(mTrendEntryList, StockTrend.LABEL_STROKE, StockTrend.LEVEL_STROKE, lineData);
 		}
-		addLineDataSet(mGroupEntryList, Trend.LEVEL_STROKE, lineData, fillChanged(Trend.LEVEL_STROKE), fillColor(Trend.LEVEL_STROKE));
+		addLineDataSet(mGroupEntryList, StockTrend.LEVEL_STROKE, lineData, fillChanged(StockTrend.LEVEL_STROKE), fillColor(StockTrend.LEVEL_STROKE));
 
-		if (displayTrend(Trend.LEVEL_SEGMENT)) {
-			addLineDataSet(mTrendEntryList, Trend.LABEL_SEGMENT, Trend.LEVEL_SEGMENT, lineData);
+		if (displayTrend(StockTrend.LEVEL_SEGMENT)) {
+			addLineDataSet(mTrendEntryList, StockTrend.LABEL_SEGMENT, StockTrend.LEVEL_SEGMENT, lineData);
 		}
-		addLineDataSet(mGroupEntryList, Trend.LEVEL_SEGMENT, lineData, fillChanged(Trend.LEVEL_SEGMENT), fillColor(Trend.LEVEL_SEGMENT));
+		addLineDataSet(mGroupEntryList, StockTrend.LEVEL_SEGMENT, lineData, fillChanged(StockTrend.LEVEL_SEGMENT), fillColor(StockTrend.LEVEL_SEGMENT));
 
-		if (displayTrend(Trend.LEVEL_LINE)) {
-			addLineDataSet(mTrendEntryList, Trend.LABEL_LINE, Trend.LEVEL_LINE, lineData);
+		if (displayTrend(StockTrend.LEVEL_LINE)) {
+			addLineDataSet(mTrendEntryList, StockTrend.LABEL_LINE, StockTrend.LEVEL_LINE, lineData);
 		}
-		addLineDataSet(mGroupEntryList, Trend.LEVEL_LINE, lineData, fillChanged(Trend.LEVEL_LINE), fillColor(Trend.LEVEL_LINE));
+		addLineDataSet(mGroupEntryList, StockTrend.LEVEL_LINE, lineData, fillChanged(StockTrend.LEVEL_LINE), fillColor(StockTrend.LEVEL_LINE));
 
-		if (displayTrend(Trend.LEVEL_OUT_LINE)) {
-			addLineDataSet(mTrendEntryList, Trend.LABEL_OUTLINE, Trend.LEVEL_OUT_LINE, lineData);
+		if (displayTrend(StockTrend.LEVEL_OUT_LINE)) {
+			addLineDataSet(mTrendEntryList, StockTrend.LABEL_OUTLINE, StockTrend.LEVEL_OUT_LINE, lineData);
 		}
-		addLineDataSet(mGroupEntryList, Trend.LEVEL_OUT_LINE, lineData, fillChanged(Trend.LEVEL_OUT_LINE), fillColor(Trend.LEVEL_OUT_LINE));
+		addLineDataSet(mGroupEntryList, StockTrend.LEVEL_OUT_LINE, lineData, fillChanged(StockTrend.LEVEL_OUT_LINE), fillColor(StockTrend.LEVEL_OUT_LINE));
 
-		if (displayTrend(Trend.LEVEL_SUPER_LINE)) {
-			addLineDataSet(mTrendEntryList, Trend.LABEL_SUPERLINE, Trend.LEVEL_SUPER_LINE, lineData);
+		if (displayTrend(StockTrend.LEVEL_SUPER_LINE)) {
+			addLineDataSet(mTrendEntryList, StockTrend.LABEL_SUPERLINE, StockTrend.LEVEL_SUPER_LINE, lineData);
 		}
-		addLineDataSet(mGroupEntryList, Trend.LEVEL_SUPER_LINE, lineData, fillChanged(Trend.LEVEL_SUPER_LINE), fillColor(Trend.LEVEL_SUPER_LINE));
+		addLineDataSet(mGroupEntryList, StockTrend.LEVEL_SUPER_LINE, lineData, fillChanged(StockTrend.LEVEL_SUPER_LINE), fillColor(StockTrend.LEVEL_SUPER_LINE));
 
-		if (displayTrend(Trend.LEVEL_TREND_LINE)) {
-			addLineDataSet(mTrendEntryList, Trend.LABEL_TREND_LINE, Trend.LEVEL_TREND_LINE, lineData);
+		if (displayTrend(StockTrend.LEVEL_TREND_LINE)) {
+			addLineDataSet(mTrendEntryList, StockTrend.LABEL_TREND_LINE, StockTrend.LEVEL_TREND_LINE, lineData);
 		}
-		addLineDataSet(mGroupEntryList, Trend.LEVEL_TREND_LINE, lineData, fillChanged(Trend.LEVEL_TREND_LINE), fillColor(Trend.LEVEL_TREND_LINE));
+		addLineDataSet(mGroupEntryList, StockTrend.LEVEL_TREND_LINE, lineData, fillChanged(StockTrend.LEVEL_TREND_LINE), fillColor(StockTrend.LEVEL_TREND_LINE));
 
 		mCombinedDataMain.setData(lineData);
 	}
@@ -223,7 +223,7 @@ public class StockDataChart {
 		if (entryList == null || entryList[level] == null || entryList[level].size() == 0) {
 			return;
 		}
-		addLineDataSet(entryList[level], Trend.LABEL_NONE, lineColor(level), true, lineData, drawFilled, fillColor);
+		addLineDataSet(entryList[level], StockTrend.LABEL_NONE, lineColor(level), true, lineData, drawFilled, fillColor);
 	}
 
 	void addLineDataSet(List<Entry> entryList, String label, int lineColor, boolean drawCircle, LineData lineData, boolean drawFilled, int fillColor) {
@@ -245,7 +245,7 @@ public class StockDataChart {
 
 	StockTrend getStockTrend(int level) {
 		StockTrend stockTrend = null;
-		String key = mPeriod + Trend.MARK_LEVEL + level;
+		String key = mPeriod + StockTrend.MARK_LEVEL + level;
 		if (mStockTrendMap.containsKey(key)) {
 			stockTrend = mStockTrendMap.get(key);
 		}
@@ -259,7 +259,7 @@ public class StockDataChart {
 		}
 
 		StockTrend stockTrend = getStockTrend(level);
-		if (stockTrend != null && stockTrend.hasFlag(Trend.FLAG_CHANGED)) {
+		if (stockTrend != null && stockTrend.hasFlag(StockTrend.FLAG_CHANGED)) {
 			result = true;
 		}
 		return result;
@@ -287,42 +287,42 @@ public class StockDataChart {
 	}
 
 	int fillColor(int level) {
-		if (level < 0 || level >= Trend.COLORS.length || Setting.getDisplayMonochrome()) {
-			return Trend.COLORS[0];
+		if (level < 0 || level >= StockTrend.COLORS.length || Setting.getDisplayMonochrome()) {
+			return StockTrend.COLORS[0];
 		}
-		return Trend.COLORS[level];
+		return StockTrend.COLORS[level];
 	}
 
 	int lineColor(int level) {
-		if (level < 0 || level >= Trend.COLORS.length || Setting.getDisplayMonochrome()) {
-			return Trend.COLORS[0];
+		if (level < 0 || level >= StockTrend.COLORS.length || Setting.getDisplayMonochrome()) {
+			return StockTrend.COLORS[0];
 		}
-		return Trend.COLORS[level];
+		return StockTrend.COLORS[level];
 	}
 
 	public boolean displayTrend(int level) {
 		boolean result = false;
 
 		switch (level) {
-			case Trend.LEVEL_DRAW:
+			case StockTrend.LEVEL_DRAW:
 				result = Setting.getDisplayDraw();
 				break;
-			case Trend.LEVEL_STROKE:
+			case StockTrend.LEVEL_STROKE:
 				result = Setting.getDisplayStroke();
 				break;
-			case Trend.LEVEL_SEGMENT:
+			case StockTrend.LEVEL_SEGMENT:
 				result = Setting.getDisplaySegment();
 				break;
-			case Trend.LEVEL_LINE:
+			case StockTrend.LEVEL_LINE:
 				result = Setting.getDisplayLine();
 				break;
-			case Trend.LEVEL_OUT_LINE:
+			case StockTrend.LEVEL_OUT_LINE:
 				result = Setting.getDisplayOutLine();
 				break;
-			case Trend.LEVEL_SUPER_LINE:
+			case StockTrend.LEVEL_SUPER_LINE:
 				result = Setting.getDisplaySuperLine();
 				break;
-			case Trend.LEVEL_TREND_LINE:
+			case StockTrend.LEVEL_TREND_LINE:
 				result = Setting.getDisplayTrendLine();
 				break;
 			default:
@@ -334,7 +334,7 @@ public class StockDataChart {
 		}
 
 		StockTrend stockTrend = getStockTrend(level);
-		return stockTrend != null && stockTrend.hasFlag(Trend.FLAG_ADAPTIVE);
+		return stockTrend != null && stockTrend.hasFlag(StockTrend.FLAG_ADAPTIVE);
 	}
 
 	public void updateDescription(Stock stock) {
@@ -355,7 +355,7 @@ public class StockDataChart {
 		mDescription.append(stock.getNet()).append("%").append("  ");
 
 		StockTrend stockTrend = getStockTrend(mAdaptiveLevel);
-		if (stockTrend != null && stockTrend.hasFlag(Trend.FLAG_CHANGED)) {
+		if (stockTrend != null && stockTrend.hasFlag(StockTrend.FLAG_CHANGED)) {
 			mDescription.append(stockTrend.toTrendString());
 		} else {
 			mDescription.append(stock.getAction(mPeriod));
@@ -402,15 +402,15 @@ public class StockDataChart {
 		LimitLine limitLine;
 
 		action = stock.getAction(mPeriod);
-		if (action.contains(Trend.MARK_BUY)) {
+		if (action.contains(StockTrend.MARK_BUY)) {
 			color = Color.MAGENTA;
-		} else if (action.contains(Trend.MARK_SELL)) {
+		} else if (action.contains(StockTrend.MARK_SELL)) {
 			color = Color.CYAN;
 		}
 
 		StockTrend stockTrend = getStockTrend(mAdaptiveLevel);
 		String label = "                                                     " + " ";
-		if (stockTrend != null && stockTrend.hasFlag(Trend.FLAG_CHANGED)) {
+		if (stockTrend != null && stockTrend.hasFlag(StockTrend.FLAG_CHANGED)) {
 			color = lineColor(mAdaptiveLevel);
 			label += "Trend:" + Constant.TAB2 + stockTrend.toTrendString();
 		} else {
@@ -477,9 +477,9 @@ public class StockDataChart {
 	}
 
 	public void updateGroupEntry() {
-		for (int level = Trend.LEVEL_DRAW; level < Trend.LEVEL_MAX; level++) {
+		for (int level = StockTrend.LEVEL_DRAW; level < StockTrend.LEVEL_MAX; level++) {
 			if (mTrendEntryList[level].size() > 2) {
-				if (level == Trend.LEVEL_DRAW) {
+				if (level == StockTrend.LEVEL_DRAW) {
 					mDrawFirstEntryList.add(mTrendEntryList[level].get(0));
 					mDrawLastEntryList.add(0, mTrendEntryList[level].get(mTrendEntryList[level].size() - 1));
 				}
@@ -499,7 +499,7 @@ public class StockDataChart {
 		mHistogramEntryList.clear();
 		mDrawFirstEntryList.clear();
 		mDrawLastEntryList.clear();
-		for (int i = 0; i < Trend.LEVEL_MAX; i++) {
+		for (int i = 0; i < StockTrend.LEVEL_MAX; i++) {
 			mTrendEntryList[i].clear();
 			mGroupEntryList[i].clear();
 		}

@@ -12,13 +12,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.android.orion.R;
 import com.android.orion.config.Config;
 import com.android.orion.data.Period;
-import com.android.orion.data.Trend;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockBonus;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockFinancial;
 import com.android.orion.database.StockShare;
+import com.android.orion.database.StockTrend;
 import com.android.orion.interfaces.IStockDataProvider;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
@@ -216,7 +216,7 @@ public class SinaFinance extends StockDataProvider {
 			String period = stockData.getPeriod();
 			int defaultValue = getDownloadHistoryLengthDefault(period);
 			String selection = mDatabaseManager.getStockDataSelection(stockData.getSE(), stockData.getCode(),
-					period, Trend.LEVEL_NONE);
+					period, StockTrend.LEVEL_NONE);
 			String sortOrder = mDatabaseManager.getStockDataOrder();
 			cursor = mDatabaseManager.queryStockData(selection, null,
 					sortOrder);
@@ -842,8 +842,8 @@ public class SinaFinance extends StockDataProvider {
 					stockData.getCandle().setHigh(jsonObject.getDouble("high"));
 					stockData.getCandle().setLow(jsonObject.getDouble("low"));
 
-					stockData.getTrend().setVertexHigh(stockData.getCandle().getHigh());
-					stockData.getTrend().setVertexLow(stockData.getCandle().getLow());
+					stockData.setVertexHigh(stockData.getCandle().getHigh());
+					stockData.setVertexLow(stockData.getCandle().getLow());
 
 					if (bulkInsert) {
 						stockData.setCreated(Utility.getCurrentDateTimeString());
@@ -1060,8 +1060,8 @@ public class SinaFinance extends StockDataProvider {
 			stockData.getCandle().setHigh(Double.parseDouble(stockInfo[4]));
 			stockData.getCandle().setLow(Double.parseDouble(stockInfo[5]));
 
-			stockData.getTrend().setVertexHigh(stockData.getCandle().getHigh());
-			stockData.getTrend().setVertexLow(stockData.getCandle().getLow());
+			stockData.setVertexHigh(stockData.getCandle().getHigh());
+			stockData.setVertexLow(stockData.getCandle().getLow());
 
 			stockData.setDate(stockInfo[30]);
 			if (Period.isMinutePeriod(stockData.getPeriod())) {

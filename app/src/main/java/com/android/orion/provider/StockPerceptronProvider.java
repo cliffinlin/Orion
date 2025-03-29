@@ -13,7 +13,7 @@ import android.util.ArrayMap;
 import com.android.orion.application.MainApplication;
 import com.android.orion.config.Config;
 import com.android.orion.data.Period;
-import com.android.orion.data.Trend;
+import com.android.orion.database.StockData;
 import com.android.orion.database.StockPerceptron;
 import com.android.orion.database.StockTrend;
 import com.android.orion.manager.DatabaseManager;
@@ -53,9 +53,9 @@ public class StockPerceptronProvider {
 		mPeriodMap = new ArrayMap<>();
 		for (String period : Period.PERIODS) {
 			mLevelMap = new ArrayMap<>();
-			for (int level = 1; level < Trend.LEVEL_MAX; level++) {
+			for (int level = 1; level < StockTrend.LEVEL_MAX; level++) {
 				mTrendMap = new ArrayMap<>();
-				for (String type : Trend.TYPES) {
+				for (String type : StockTrend.TYPES) {
 					StockPerceptron stockPerceptron = new StockPerceptron(period, level, type);
 					if (!mDatabaseManager.isStockPerceptronExist(stockPerceptron)) {
 						stockPerceptron.setCreated(Utility.getCurrentDateTimeString());

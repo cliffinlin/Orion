@@ -18,7 +18,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.android.orion.R;
-import com.android.orion.data.Period;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;

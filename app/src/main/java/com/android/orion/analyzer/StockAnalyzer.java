@@ -16,7 +16,6 @@ import com.android.orion.application.MainApplication;
 import com.android.orion.config.Config;
 import com.android.orion.data.Macd;
 import com.android.orion.data.Period;
-import com.android.orion.data.Trend;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
@@ -111,7 +110,7 @@ public class StockAnalyzer {
 	}
 
 	private void analyzeMacd(String period) {
-		if (mStockDataList == null || mStockDataList.size() < Trend.VERTEX_SIZE) {
+		if (mStockDataList == null || mStockDataList.size() < StockTrend.VERTEX_SIZE) {
 			return;
 		}
 
@@ -150,10 +149,10 @@ public class StockAnalyzer {
 	private void analyzeStockData(String period) {
 		mTrendAnalyzer.setup(mStock, period, mStockDataList);
 
-		mTrendAnalyzer.analyzeVertex(mStock.getVertexList(period, Trend.LEVEL_DRAW));
-		mTrendAnalyzer.vertexListToDataList(mStock.getVertexList(period, Trend.LEVEL_DRAW), mStock.getDataList(period, Trend.LEVEL_DRAW));
+		mTrendAnalyzer.analyzeVertex(mStock.getVertexList(period, StockTrend.LEVEL_DRAW));
+		mTrendAnalyzer.vertexListToDataList(mStock.getVertexList(period, StockTrend.LEVEL_DRAW), mStock.getDataList(period, StockTrend.LEVEL_DRAW));
 
-		for (int i = 2; i < Trend.LEVELS.length; i++) {
+		for (int i = 2; i < StockTrend.LEVELS.length; i++) {
 			ArrayList<StockData> prevDataList = mStock.getDataList(period, i - 1);
 			ArrayList<StockData> vertexList = mStock.getVertexList(period, i);
 			ArrayList<StockData> dataList = mStock.getDataList(period, i);
@@ -161,8 +160,8 @@ public class StockAnalyzer {
 			mTrendAnalyzer.vertexListToDataList(vertexList, dataList);
 		}
 
-		mTrendAnalyzer.analyzeLine(Trend.LEVEL_TREND_LINE, mStock.getDataList(period, Trend.LEVEL_TREND_LINE), mStock.getVertexList(period, Trend.LEVEL_TREND_LINE));
-		mTrendAnalyzer.vertexListToDataList(mStock.getVertexList(period, Trend.LEVEL_TREND_LINE), mStock.getDataList(period, Trend.LEVEL_TREND_LINE));
+		mTrendAnalyzer.analyzeLine(StockTrend.LEVEL_TREND_LINE, mStock.getDataList(period, StockTrend.LEVEL_TREND_LINE), mStock.getVertexList(period, StockTrend.LEVEL_TREND_LINE));
+		mTrendAnalyzer.vertexListToDataList(mStock.getVertexList(period, StockTrend.LEVEL_TREND_LINE), mStock.getDataList(period, StockTrend.LEVEL_TREND_LINE));
 
 		mTrendAnalyzer.updateAdaptive(mStock, period, determineAdaptiveLevel(period));
 
@@ -170,12 +169,12 @@ public class StockAnalyzer {
 	}
 
 	private int determineAdaptiveLevel(String period) {
-		for (int i = Trend.LEVELS.length - 1; i > 0; i--) {
-			if (mStock.getDataList(period, i).size() >= Trend.ADAPTIVE_SIZE) {
+		for (int i = StockTrend.LEVELS.length - 1; i > 0; i--) {
+			if (mStock.getDataList(period, i).size() >= StockTrend.ADAPTIVE_SIZE) {
 				return i;
 			}
 		}
-		return Trend.LEVEL_DRAW;
+		return StockTrend.LEVEL_DRAW;
 	}
 
 	private void analyzeAction(String period) {
@@ -196,25 +195,25 @@ public class StockAnalyzer {
 	}
 
 	String getDirectionAction(String period) {
-		Trend drawVertexTrend = StockData.getLastTrend(mStock.getVertexList(period, Trend.LEVEL_DRAW), 1);
-		Trend strokeVertexTrend = StockData.getLastTrend(mStock.getVertexList(period, Trend.LEVEL_STROKE), 1);
-		Trend segmentVertexTrend = StockData.getLastTrend(mStock.getVertexList(period, Trend.LEVEL_SEGMENT), 1);
+		StockData draw = StockData.getLast(mStock.getVertexList(period, StockTrend.LEVEL_DRAW), 1);
+		StockData stroke = StockData.getLast(mStock.getVertexList(period, StockTrend.LEVEL_STROKE), 1);
+		StockData segment = StockData.getLast(mStock.getVertexList(period, StockTrend.LEVEL_SEGMENT), 1);
 
 		StringBuilder builder = new StringBuilder();
-		appendDirection(builder, segmentVertexTrend);
-		appendDirection(builder, strokeVertexTrend);
-		appendDirection(builder, drawVertexTrend);
+		appendDirection(builder, segment);
+		appendDirection(builder, stroke);
+		appendDirection(builder, draw);
 		return builder.toString();
 	}
 
-	private void appendDirection(StringBuilder builder, Trend trend) {
-		if (builder == null || trend == null) {
+	private void appendDirection(StringBuilder builder, StockData stockData) {
+		if (builder == null || stockData == null) {
 			return;
 		}
 
-		if (trend.vertexOf(Trend.VERTEX_BOTTOM)) {
+		if (stockData.vertexOf(StockTrend.VERTEX_BOTTOM)) {
 			builder.append(Constant.MARK_ADD);
-		} else if (trend.vertexOf(Trend.VERTEX_TOP)) {
+		} else if (stockData.vertexOf(StockTrend.VERTEX_TOP)) {
 			builder.append(Constant.MARK_MINUS);
 		}
 	}

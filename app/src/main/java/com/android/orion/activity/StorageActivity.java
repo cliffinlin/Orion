@@ -178,6 +178,27 @@ public class StorageActivity extends DatabaseActivity {
 		} finally {
 			Utility.closeQuietly(os);
 		}
+	}
+
+	void loadFromFile() {
+		final ContentResolver cr = getContentResolver();
+
+		if (mUriList.size() == 0) {
+			return;
+		}
+		mUri = mUriList.get(0);
+
+		InputStream is = null;
+		try {
+			is = cr.openInputStream(mUri);
+			loadFromXmlFile(is);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			Utility.closeQuietly(is);
+		}
+
+		mHandler.sendEmptyMessage(MESSAGE_REFRESH);
 	}	Handler mHandler = new Handler(Looper.getMainLooper()) {
 		@Override
 		public void handleMessage(Message msg) {
@@ -219,27 +240,6 @@ public class StorageActivity extends DatabaseActivity {
 			}
 		}
 	};
-
-	void loadFromFile() {
-		final ContentResolver cr = getContentResolver();
-
-		if (mUriList.size() == 0) {
-			return;
-		}
-		mUri = mUriList.get(0);
-
-		InputStream is = null;
-		try {
-			is = cr.openInputStream(mUri);
-			loadFromXmlFile(is);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			Utility.closeQuietly(is);
-		}
-
-		mHandler.sendEmptyMessage(MESSAGE_REFRESH);
-	}
 
 	int loadFromXmlFile(InputStream inputStream) {
 		int count = 0;
@@ -583,6 +583,8 @@ public class StorageActivity extends DatabaseActivity {
 			e.printStackTrace();
 		}
 	}
+
+
 
 
 }

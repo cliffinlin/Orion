@@ -13,7 +13,6 @@ import android.util.Log;
 
 import com.android.orion.config.Config;
 import com.android.orion.data.Period;
-import com.android.orion.data.Trend;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.DatabaseOpenHelper;
 import com.android.orion.database.IndexComponent;
@@ -532,7 +531,7 @@ public class DatabaseManager implements StockListener {
 
 		stockDataList.clear();
 
-		String selection = getStockDataSelection(stock.getSE(), stock.getCode(), period, Trend.LEVEL_NONE);
+		String selection = getStockDataSelection(stock.getSE(), stock.getCode(), period, StockTrend.LEVEL_NONE);
 
 		try {
 			cursor = queryStockData(selection, null, sortOrder);
@@ -565,7 +564,7 @@ public class DatabaseManager implements StockListener {
 		try {
 			stockDataList.clear();
 
-			selection = getStockDataSelection(stock.getSE(), stock.getCode(), period, Trend.LEVEL_NONE);
+			selection = getStockDataSelection(stock.getSE(), stock.getCode(), period, StockTrend.LEVEL_NONE);
 			sortOrder = getStockDataOrder();
 			cursor = queryStockData(selection, null,
 					sortOrder);
@@ -576,9 +575,9 @@ public class DatabaseManager implements StockListener {
 					stockData.set(cursor);
 					index = stockDataList.size();
 					stockData.setIndex(index);
-					stockData.getTrend().setIndexStart(index);
-					stockData.getTrend().setIndexEnd(index);
-					stockData.setAction(Trend.MARK_NONE);
+					stockData.setIndexStart(index);
+					stockData.setIndexEnd(index);
+					stockData.setAction(StockTrend.MARK_NONE);
 					stockDataList.add(stockData);
 				}
 			}

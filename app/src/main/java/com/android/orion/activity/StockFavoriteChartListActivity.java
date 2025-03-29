@@ -23,7 +23,6 @@ import com.android.orion.R;
 import com.android.orion.chart.ChartSyncHelper;
 import com.android.orion.chart.StockDataChart;
 import com.android.orion.data.Period;
-import com.android.orion.data.Trend;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
@@ -341,7 +340,7 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 
 	CursorLoader getStockDataCursorLoader(String period) {
 		String selection = mDatabaseManager.getStockDataSelection(mStock.getSE(), mStock.getCode(),
-				period, Trend.LEVEL_NONE);
+				period, StockTrend.LEVEL_NONE);
 		String sortOrder = mDatabaseManager.getStockDataOrder();
 		return new CursorLoader(this, DatabaseContract.StockData.CONTENT_URI,
 				DatabaseContract.StockData.PROJECTION_ALL, selection, null,
@@ -444,14 +443,14 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 					stockDataChart.mAverage10EntryList.add(average10Entry);
 
 					if (index == 0) {
-						if (mStockData.getTrend().directionOf(Trend.DIRECTION_UP)) {
+						if (mStockData.directionOf(StockTrend.DIRECTION_UP)) {
 							Entry drawEntry = new Entry(
-									(float) mStockData.getTrend().getVertexHigh(), index);
+									(float) mStockData.getVertexHigh(), index);
 							stockDataChart.mDrawFirstEntryList.add(drawEntry);
 						} else if (mStockData
-								.getTrend().directionOf(Trend.DIRECTION_DOWN)) {
+								.directionOf(StockTrend.DIRECTION_DOWN)) {
 							Entry drawEntry = new Entry(
-									(float) mStockData.getTrend().getVertexLow(), index);
+									(float) mStockData.getVertexLow(), index);
 							stockDataChart.mDrawFirstEntryList.add(drawEntry);
 						} else {
 							Entry drawEntry = new Entry(
@@ -459,14 +458,14 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 							stockDataChart.mDrawFirstEntryList.add(drawEntry);
 						}
 					} else if (index == cursor.getCount() - 1) {
-						if (mStockData.getTrend().directionOf(Trend.DIRECTION_UP)) {
+						if (mStockData.directionOf(StockTrend.DIRECTION_UP)) {
 							Entry drawEntry = new Entry(
-									(float) mStockData.getTrend().getVertexHigh(), index);
+									(float) mStockData.getVertexHigh(), index);
 							stockDataChart.mDrawLastEntryList.add(drawEntry);
 						} else if (mStockData
-								.getTrend().directionOf(Trend.DIRECTION_DOWN)) {
+								.directionOf(StockTrend.DIRECTION_DOWN)) {
 							Entry drawEntry = new Entry(
-									(float) mStockData.getTrend().getVertexLow(), index);
+									(float) mStockData.getVertexLow(), index);
 							stockDataChart.mDrawLastEntryList.add(drawEntry);
 						} else {
 							Entry drawEntry = new Entry(
@@ -475,81 +474,81 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 						}
 					}
 
-					if (mStockData.getTrend().vertexOf(Trend.VERTEX_TOP)) {
+					if (mStockData.vertexOf(StockTrend.VERTEX_TOP)) {
 						Entry drawEntry = new Entry(
-								(float) mStockData.getTrend().getVertexHigh(), index);
-						stockDataChart.mTrendEntryList[Trend.LEVEL_DRAW].add(drawEntry);
+								(float) mStockData.getVertexHigh(), index);
+						stockDataChart.mTrendEntryList[StockTrend.LEVEL_DRAW].add(drawEntry);
 					} else if (mStockData
-							.getTrend().vertexOf(Trend.VERTEX_BOTTOM)) {
+							.vertexOf(StockTrend.VERTEX_BOTTOM)) {
 						Entry drawEntry = new Entry(
-								(float) mStockData.getTrend().getVertexLow(), index);
-						stockDataChart.mTrendEntryList[Trend.LEVEL_DRAW].add(drawEntry);
+								(float) mStockData.getVertexLow(), index);
+						stockDataChart.mTrendEntryList[StockTrend.LEVEL_DRAW].add(drawEntry);
 					}
 
-					if (mStockData.getTrend().vertexOf(Trend.VERTEX_TOP_STROKE)) {
+					if (mStockData.vertexOf(StockTrend.VERTEX_TOP_STROKE)) {
 						Entry strokeEntry = new Entry(
-								(float) mStockData.getTrend().getVertexHigh(), index);
-						stockDataChart.mTrendEntryList[Trend.LEVEL_STROKE].add(strokeEntry);
+								(float) mStockData.getVertexHigh(), index);
+						stockDataChart.mTrendEntryList[StockTrend.LEVEL_STROKE].add(strokeEntry);
 					} else if (mStockData
-							.getTrend().vertexOf(Trend.VERTEX_BOTTOM_STROKE)) {
+							.vertexOf(StockTrend.VERTEX_BOTTOM_STROKE)) {
 						Entry strokeEntry = new Entry(
-								(float) mStockData.getTrend().getVertexLow(), index);
-						stockDataChart.mTrendEntryList[Trend.LEVEL_STROKE].add(strokeEntry);
+								(float) mStockData.getVertexLow(), index);
+						stockDataChart.mTrendEntryList[StockTrend.LEVEL_STROKE].add(strokeEntry);
 					}
 
-					if (mStockData.getTrend().vertexOf(Trend.VERTEX_TOP_SEGMENT)) {
+					if (mStockData.vertexOf(StockTrend.VERTEX_TOP_SEGMENT)) {
 						Entry segmentEntry = new Entry(
-								(float) mStockData.getTrend().getVertexHigh(), index);
-						stockDataChart.mTrendEntryList[Trend.LEVEL_SEGMENT].add(segmentEntry);
+								(float) mStockData.getVertexHigh(), index);
+						stockDataChart.mTrendEntryList[StockTrend.LEVEL_SEGMENT].add(segmentEntry);
 					} else if (mStockData
-							.getTrend().vertexOf(Trend.VERTEX_BOTTOM_SEGMENT)) {
+							.vertexOf(StockTrend.VERTEX_BOTTOM_SEGMENT)) {
 						Entry segmentEntry = new Entry(
-								(float) mStockData.getTrend().getVertexLow(), index);
-						stockDataChart.mTrendEntryList[Trend.LEVEL_SEGMENT].add(segmentEntry);
+								(float) mStockData.getVertexLow(), index);
+						stockDataChart.mTrendEntryList[StockTrend.LEVEL_SEGMENT].add(segmentEntry);
 					}
 
-					if (mStockData.getTrend().vertexOf(Trend.VERTEX_TOP_LINE)) {
+					if (mStockData.vertexOf(StockTrend.VERTEX_TOP_LINE)) {
 						Entry lineEntry = new Entry(
-								(float) mStockData.getTrend().getVertexHigh(), index);
-						stockDataChart.mTrendEntryList[Trend.LEVEL_LINE].add(lineEntry);
+								(float) mStockData.getVertexHigh(), index);
+						stockDataChart.mTrendEntryList[StockTrend.LEVEL_LINE].add(lineEntry);
 					} else if (mStockData
-							.getTrend().vertexOf(Trend.VERTEX_BOTTOM_LINE)) {
+							.vertexOf(StockTrend.VERTEX_BOTTOM_LINE)) {
 						Entry lineEntry = new Entry(
-								(float) mStockData.getTrend().getVertexLow(), index);
-						stockDataChart.mTrendEntryList[Trend.LEVEL_LINE].add(lineEntry);
+								(float) mStockData.getVertexLow(), index);
+						stockDataChart.mTrendEntryList[StockTrend.LEVEL_LINE].add(lineEntry);
 					}
 
-					if (mStockData.getTrend().vertexOf(Trend.VERTEX_TOP_OUTLINE)) {
+					if (mStockData.vertexOf(StockTrend.VERTEX_TOP_OUTLINE)) {
 						Entry entry = new Entry(
-								(float) mStockData.getTrend().getVertexHigh(), index);
-						stockDataChart.mTrendEntryList[Trend.LEVEL_OUT_LINE].add(entry);
+								(float) mStockData.getVertexHigh(), index);
+						stockDataChart.mTrendEntryList[StockTrend.LEVEL_OUT_LINE].add(entry);
 					} else if (mStockData
-							.getTrend().vertexOf(Trend.VERTEX_BOTTOM_OUTLINE)) {
+							.vertexOf(StockTrend.VERTEX_BOTTOM_OUTLINE)) {
 						Entry entry = new Entry(
-								(float) mStockData.getTrend().getVertexLow(), index);
-						stockDataChart.mTrendEntryList[Trend.LEVEL_OUT_LINE].add(entry);
+								(float) mStockData.getVertexLow(), index);
+						stockDataChart.mTrendEntryList[StockTrend.LEVEL_OUT_LINE].add(entry);
 					}
 
-					if (mStockData.getTrend().vertexOf(Trend.VERTEX_TOP_SUPERLINE)) {
+					if (mStockData.vertexOf(StockTrend.VERTEX_TOP_SUPERLINE)) {
 						Entry entry = new Entry(
-								(float) mStockData.getTrend().getVertexHigh(), index);
-						stockDataChart.mTrendEntryList[Trend.LEVEL_SUPER_LINE].add(entry);
+								(float) mStockData.getVertexHigh(), index);
+						stockDataChart.mTrendEntryList[StockTrend.LEVEL_SUPER_LINE].add(entry);
 					} else if (mStockData
-							.getTrend().vertexOf(Trend.VERTEX_BOTTOM_SUPERLINE)) {
+							.vertexOf(StockTrend.VERTEX_BOTTOM_SUPERLINE)) {
 						Entry entry = new Entry(
-								(float) mStockData.getTrend().getVertexLow(), index);
-						stockDataChart.mTrendEntryList[Trend.LEVEL_SUPER_LINE].add(entry);
+								(float) mStockData.getVertexLow(), index);
+						stockDataChart.mTrendEntryList[StockTrend.LEVEL_SUPER_LINE].add(entry);
 					}
 
-					if (mStockData.getTrend().vertexOf(Trend.VERTEX_TOP_TREND_LINE)) {
+					if (mStockData.vertexOf(StockTrend.VERTEX_TOP_TREND_LINE)) {
 						Entry entry = new Entry(
-								(float) mStockData.getTrend().getVertexHigh(), index);
-						stockDataChart.mTrendEntryList[Trend.LEVEL_TREND_LINE].add(entry);
+								(float) mStockData.getVertexHigh(), index);
+						stockDataChart.mTrendEntryList[StockTrend.LEVEL_TREND_LINE].add(entry);
 					} else if (mStockData
-							.getTrend().vertexOf(Trend.VERTEX_BOTTOM_TREND_LINE)) {
+							.vertexOf(StockTrend.VERTEX_BOTTOM_TREND_LINE)) {
 						Entry entry = new Entry(
-								(float) mStockData.getTrend().getVertexLow(), index);
-						stockDataChart.mTrendEntryList[Trend.LEVEL_TREND_LINE].add(entry);
+								(float) mStockData.getVertexLow(), index);
+						stockDataChart.mTrendEntryList[StockTrend.LEVEL_TREND_LINE].add(entry);
 					}
 
 					Entry difEntry = new Entry((float) mStockData.getMacd().getDIF(),

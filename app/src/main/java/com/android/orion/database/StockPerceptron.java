@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.text.TextUtils;
 
 import com.android.orion.data.LinearRegression;
-import com.android.orion.data.Trend;
 import com.android.orion.setting.Constant;
 import com.android.orion.utility.Logger;
 import com.android.orion.utility.Utility;
@@ -47,7 +46,7 @@ public class StockPerceptron extends DatabaseTable {
 	}
 
 	public boolean isEmpty() {
-		return (mLevel == Trend.LEVEL_NONE) && TextUtils.isEmpty(mPeriod)
+		return (mLevel == StockTrend.LEVEL_NONE) && TextUtils.isEmpty(mPeriod)
 				&& TextUtils.isEmpty(mType);
 	}
 
@@ -57,8 +56,8 @@ public class StockPerceptron extends DatabaseTable {
 		setTableName(DatabaseContract.StockPerceptron.TABLE_NAME);
 
 		mPeriod = "";
-		mLevel = Trend.LEVEL_NONE;
-		mType = Trend.TYPE_NONE;
+		mLevel = StockTrend.LEVEL_NONE;
+		mType = StockTrend.TYPE_NONE;
 		mDelta = 0.0;
 		mTimes = 0;
 	}
