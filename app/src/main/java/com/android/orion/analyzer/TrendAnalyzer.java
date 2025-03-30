@@ -24,19 +24,8 @@ public class TrendAnalyzer {
 	String mPeriod;
 	ArrayList<StockData> mStockDataList;
 	ArrayList<StockTrend> mStockTrendList = new ArrayList<>();
-	ArrayMap<String, ArrayList<StockTrend>> mGroupMap = new ArrayMap<>();
 	DatabaseManager mDatabaseManager = DatabaseManager.getInstance();
 	StockPerceptronProvider mStockPerceptronProvider = StockPerceptronProvider.getInstance();
-	Comparator<ArrayList<StockTrend>> sizeComparator = new Comparator<ArrayList<StockTrend>>() {
-		@Override
-		public int compare(ArrayList<StockTrend> list1, ArrayList<StockTrend> list2) {
-			int result = Integer.compare(list2.size(), list1.size());
-			if (result == 0) {
-				result = Double.compare(Math.abs(list2.get(0).getVertexNet()), Math.abs(list1.get(0).getVertexNet()));
-			}
-			return result;
-		}
-	};
 
 	private TrendAnalyzer() {
 	}
@@ -415,76 +404,6 @@ public class TrendAnalyzer {
 			}
 			stockData.setDirection(direction);
 			dataList.add(stockData);
-		}
-	}
-
-	void analyzeGrouped(Stock stock) {
-		mDatabaseManager.getStockTrendList(stock, mStockTrendList);
-		if (mStockTrendList.isEmpty()) {
-			return;
-		}
-
-		mGroupMap.clear();
-		for (StockTrend stockTrend : mStockTrendList) {
-			if (stockTrend == null) {
-				continue;
-			}
-
-			stockTrend.setGrouped(StockTrend.GROUPED_NONE);
-			String groupKey = stockTrend.getDirection() + "_" + stockTrend.getVertexLow() + "_" + stockTrend.getVertexHigh();
-			ArrayList<StockTrend> memberList;
-			if (mGroupMap.containsKey(groupKey)) {
-				memberList = mGroupMap.get(groupKey);
-			} else {
-				memberList = new ArrayList<>();
-				mGroupMap.put(groupKey, memberList);
-			}
-			memberList.add(stockTrend);
-		}
-
-		if (mGroupMap.size() == 0) {
-			return;
-		}
-
-		Collection<ArrayList<StockTrend>> valuesCollection = mGroupMap.values();
-		ArrayList<ArrayList<StockTrend>> valuesList = new ArrayList<>(valuesCollection);
-		Collections.sort(valuesList, sizeComparator);
-		int grouped = StockTrend.GROUPED_NONE;
-		for (ArrayList<StockTrend> stockTrendlist : valuesList) {
-			grouped++;
-			if (stockTrendlist != null && stockTrendlist.size() > 1) {
-				boolean changed = false;
-				for (StockTrend stockTrend : stockTrendlist) {
-					if (stockTrend != null) {
-						stockTrend.setGrouped(grouped);
-						if (stockTrend.hasFlag(StockTrend.FLAG_CHANGED)) {
-							changed = true;
-						}
-					}
-				}
-				if (changed) {
-					for (StockTrend stockTrend : stockTrendlist) {
-						if (stockTrend != null) {
-							stockTrend.addFlag(StockTrend.FLAG_CHANGED);
-						}
-					}
-				}
-			}
-		}
-
-		try {
-			mDatabaseManager.beginTransaction();
-			for (StockTrend stockTrend : mStockTrendList) {
-				if (stockTrend == null) {
-					continue;
-				}
-				mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValuesGrouped());
-			}
-			mDatabaseManager.setTransactionSuccessful();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			mDatabaseManager.endTransaction();
 		}
 	}
 

@@ -95,7 +95,6 @@ public class StockAnalyzer {
 					analyze(period);
 				}
 			}
-			mTrendAnalyzer.analyzeGrouped(mStock);
 			mFinancialAnalyzer.analyzeFinancial(mStock);
 			mFinancialAnalyzer.setupFinancial(mStock);
 			mFinancialAnalyzer.setupStockBonus(mStock);
