@@ -59,6 +59,7 @@ public class StockFinancialListActivity extends ListActivity implements
 	TextView mTextViewHold = null;
 	TextView mTextViewProfit = null;
 	TextView mTextViewBonus = null;
+	TextView mTextViewCost = null;
 	TextView mTextViewValuation = null;
 	TextView mTextViewShare = null;
 	TextView mTextViewMarketValue = null;
@@ -193,9 +194,6 @@ public class StockFinancialListActivity extends ListActivity implements
 			case R.id.pb:
 				mSortOrderColumn = DatabaseContract.COLUMN_PB;
 				break;
-			case R.id.valuation:
-				mSortOrderColumn = DatabaseContract.COLUMN_VALUATION;
-				break;
 			case R.id.hold:
 				mSortOrderColumn = DatabaseContract.COLUMN_HOLD;
 				break;
@@ -204,6 +202,12 @@ public class StockFinancialListActivity extends ListActivity implements
 				break;
 			case R.id.bonus:
 				mSortOrderColumn = DatabaseContract.COLUMN_BONUS;
+				break;
+			case R.id.cost:
+				mSortOrderColumn = DatabaseContract.COLUMN_COST;
+				break;
+			case R.id.valuation:
+				mSortOrderColumn = DatabaseContract.COLUMN_VALUATION;
 				break;
 			case R.id.share:
 				mSortOrderColumn = DatabaseContract.COLUMN_SHARE;
@@ -296,6 +300,7 @@ public class StockFinancialListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewHold, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewProfit, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewBonus, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewCost, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewValuation, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewShare, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewMarketValue, mHeaderTextDefaultColor);
@@ -308,8 +313,7 @@ public class StockFinancialListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewBookValuePerShare, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewCashFlowPerShare, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewNetProfitPerShare, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewNetProfitPerShareInYear,
-				mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewNetProfitPerShareInYear, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewRate, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewDividend, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewYield, mHeaderTextDefaultColor);
@@ -385,6 +389,11 @@ public class StockFinancialListActivity extends ListActivity implements
 		mTextViewBonus = findViewById(R.id.bonus);
 		if (mTextViewBonus != null) {
 			mTextViewBonus.setOnClickListener(this);
+		}
+
+		mTextViewCost = findViewById(R.id.cost);
+		if (mTextViewCost != null) {
+			mTextViewCost.setOnClickListener(this);
 		}
 
 		mTextViewValuation = findViewById(R.id.valuation);
@@ -501,6 +510,8 @@ public class StockFinancialListActivity extends ListActivity implements
 			setHeaderTextColor(mTextViewProfit, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_BONUS)) {
 			setHeaderTextColor(mTextViewBonus, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_COST)) {
+			setHeaderTextColor(mTextViewCost, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_VALUATION)) {
 			setHeaderTextColor(mTextViewValuation, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_SHARE)) {
@@ -568,6 +579,7 @@ public class StockFinancialListActivity extends ListActivity implements
 				DatabaseContract.COLUMN_HOLD,
 				DatabaseContract.COLUMN_PROFIT,
 				DatabaseContract.COLUMN_BONUS,
+				DatabaseContract.COLUMN_COST,
 				DatabaseContract.COLUMN_VALUATION,
 				DatabaseContract.COLUMN_SHARE,
 				DatabaseContract.COLUMN_MARKET_VALUE,
@@ -598,6 +610,7 @@ public class StockFinancialListActivity extends ListActivity implements
 				R.id.hold,
 				R.id.profit,
 				R.id.bonus,
+				R.id.cost,
 				R.id.valuation,
 				R.id.share,
 				R.id.market_value,
