@@ -40,23 +40,25 @@ public class StockData extends DatabaseTable {
 			}
 		}
 	};
-	private final Candle mCandle = new Candle();
-	private final Macd mMacd = new Macd();
+
 	private String mSE;
 	private String mCode;
 	private String mName;
-	private int mLevel;
+	private String mPeriod;
 	private String mDate;
 	private String mTime;
-	private String mPeriod;
+	private Candle mCandle;
+	private Macd mMacd;
+	private int mLevel;
 	private String mAction;
-	private int mIndex;
-	private int mIndexStart;
-	private int mIndexEnd;
 	private int mDirection;
 	private int mVertex;
 	private double mVertexLow;
 	private double mVertexHigh;
+
+	private int mIndex;
+	private int mIndexStart;
+	private int mIndexEnd;
 
 	public StockData() {
 		init();
@@ -75,47 +77,6 @@ public class StockData extends DatabaseTable {
 		set(cursor);
 	}
 
-	public static StockData getSafely(List<StockData> list, int index) {
-		if (list == null) {
-			return null;
-		}
-		if (index < 0 || index >= list.size()) {
-			return null;
-		}
-		return list.get(index);
-	}
-
-	public static StockData getLast(List<StockData> list, int index) {
-		if (list == null) {
-			return null;
-		}
-
-		int size = list.size();
-		if (index < 0 || index >= size) {
-			return null;
-		}
-
-		int i = size - 1 - index;
-		return list.get(i);
-	}
-
-	public static StockData getLast(List<StockData> list, int index, List<StockData> stockDataList) {
-		if (list == null || stockDataList == null || stockDataList.isEmpty()) {
-			return null;
-		}
-
-		StockData stockData = getLast(list, index);
-		if (stockData == null) {
-			return null;
-		}
-
-		int startIndex = stockData.getIndexStart();
-		if (startIndex < 0 || startIndex >= stockDataList.size()) {
-			return null;
-		}
-		return stockDataList.get(startIndex);
-	}
-
 	public boolean isEmpty() {
 		return TextUtils.isEmpty(mDate)
 				&& TextUtils.isEmpty(mTime);
@@ -129,12 +90,25 @@ public class StockData extends DatabaseTable {
 		mSE = "";
 		mCode = "";
 		mName = "";
-		mLevel = StockTrend.LEVEL_NONE;
+		mPeriod = "";
 		mDate = "";
 		mTime = "";
-		mPeriod = "";
-		mAction = "";
+		if (mCandle == null) {
+			mCandle = new Candle();
+		}
+		if (mMacd == null) {
+			mMacd = new Macd();
+		}
+		mLevel = StockTrend.LEVEL_NONE;
+		mAction = StockTrend.TYPE_NONE;
+		mDirection = StockTrend.DIRECTION_NONE;
+		mVertex = StockTrend.VERTEX_NONE;
+		mVertexHigh = StockTrend.VERTEX_NONE;
+		mVertexLow = StockTrend.VERTEX_NONE;
+
 		mIndex = 0;
+		mIndexStart = 0;
+		mIndexEnd = 0;
 	}
 
 	@Override
@@ -144,10 +118,9 @@ public class StockData extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_SE, mSE);
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
-		contentValues.put(DatabaseContract.COLUMN_LEVEL, mLevel);
+		contentValues.put(DatabaseContract.COLUMN_PERIOD, mPeriod);
 		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);
 		contentValues.put(DatabaseContract.COLUMN_TIME, mTime);
-		contentValues.put(DatabaseContract.COLUMN_PERIOD, mPeriod);
 		contentValues.put(DatabaseContract.COLUMN_OPEN, mCandle.getOpen());
 		contentValues.put(DatabaseContract.COLUMN_HIGH, mCandle.getHigh());
 		contentValues.put(DatabaseContract.COLUMN_LOW, mCandle.getLow());
@@ -157,11 +130,13 @@ public class StockData extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_DIF, mMacd.getDIF());
 		contentValues.put(DatabaseContract.COLUMN_DEA, mMacd.getDEA());
 		contentValues.put(DatabaseContract.COLUMN_HISTOGRAM, mMacd.getHistogram());
+		contentValues.put(DatabaseContract.COLUMN_LEVEL, mLevel);
+		contentValues.put(DatabaseContract.COLUMN_ACTION, mAction);
 		contentValues.put(DatabaseContract.COLUMN_DIRECTION, mDirection);
 		contentValues.put(DatabaseContract.COLUMN_VERTEX, mVertex);
 		contentValues.put(DatabaseContract.COLUMN_VERTEX_LOW, mVertexLow);
 		contentValues.put(DatabaseContract.COLUMN_VERTEX_HIGH, mVertexHigh);
-		contentValues.put(DatabaseContract.COLUMN_ACTION, mAction);
+
 		return contentValues;
 	}
 
@@ -177,21 +152,20 @@ public class StockData extends DatabaseTable {
 		setSE(stockData.mSE);
 		setCode(stockData.mCode);
 		setName(stockData.mName);
-		setLevel(stockData.mLevel);
+		setPeriod(stockData.mPeriod);
 		setDate(stockData.mDate);
 		setTime(stockData.mTime);
-		setPeriod(stockData.mPeriod);
 		mCandle.set(stockData.mCandle);
 		mMacd.set(stockData.mMacd);
+		setLevel(stockData.mLevel);
 		setAction(stockData.mAction);
-
-		setIndex(stockData.mIndex);
-		setIndexStart(stockData.mIndexStart);
-		setIndexEnd(stockData.mIndexEnd);
 		setDirection(stockData.mDirection);
 		setVertex(stockData.mVertex);
 		setVertexLow(stockData.mVertexLow);
 		setVertexHigh(stockData.mVertexHigh);
+		setIndex(stockData.mIndex);
+		setIndexStart(stockData.mIndexStart);
+		setIndexEnd(stockData.mIndexEnd);
 	}
 
 	@Override
@@ -207,12 +181,12 @@ public class StockData extends DatabaseTable {
 		setSE(cursor);
 		setCode(cursor);
 		setName(cursor);
-		setLevel(cursor);
+		setPeriod(cursor);
 		setDate(cursor);
 		setTime(cursor);
-		setPeriod(cursor);
 		mCandle.set(cursor);
 		mMacd.set(cursor);
+		setLevel(cursor);
 		setAction(cursor);
 		setDirection(cursor);
 		setVertex(cursor);
@@ -271,21 +245,21 @@ public class StockData extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_NAME)));
 	}
 
-	public int getLevel() {
-		return mLevel;
+	public String getPeriod() {
+		return mPeriod;
 	}
 
-	public void setLevel(int level) {
-		mLevel = level;
+	public void setPeriod(String period) {
+		mPeriod = period;
 	}
 
-	void setLevel(Cursor cursor) {
+	void setPeriod(Cursor cursor) {
 		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
-		setLevel(cursor.getInt(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_LEVEL)));
+		setPeriod(cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_PERIOD)));
 	}
 
 	public String getDate() {
@@ -330,29 +304,29 @@ public class StockData extends DatabaseTable {
 		}
 	}
 
-	public String getPeriod() {
-		return mPeriod;
-	}
-
-	public void setPeriod(String period) {
-		mPeriod = period;
-	}
-
-	void setPeriod(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setPeriod(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_PERIOD)));
-	}
-
 	public Candle getCandle() {
 		return mCandle;
 	}
 
 	public Macd getMacd() {
 		return mMacd;
+	}
+
+	public int getLevel() {
+		return mLevel;
+	}
+
+	public void setLevel(int level) {
+		mLevel = level;
+	}
+
+	void setLevel(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setLevel(cursor.getInt(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_LEVEL)));
 	}
 
 	public String getAction() {
@@ -370,14 +344,6 @@ public class StockData extends DatabaseTable {
 
 		setAction(cursor.getString(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_ACTION)));
-	}
-
-	public int getIndex() {
-		return mIndex;
-	}
-
-	public void setIndex(int index) {
-		mIndex = index;
 	}
 
 	public Calendar getCalendar() {
@@ -419,22 +385,6 @@ public class StockData extends DatabaseTable {
 		mCandle.add(stockData.mCandle, weight);
 		setVertexHigh(mCandle.getHigh());
 		setVertexLow(mCandle.getLow());
-	}
-
-	public int getIndexStart() {
-		return mIndexStart;
-	}
-
-	public void setIndexStart(int index) {
-		mIndexStart = index;
-	}
-
-	public int getIndexEnd() {
-		return mIndexEnd;
-	}
-
-	public void setIndexEnd(int index) {
-		mIndexEnd = index;
 	}
 
 	public int getDirection() {
@@ -501,6 +451,30 @@ public class StockData extends DatabaseTable {
 
 		setVertexHigh(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_VERTEX_HIGH)));
+	}
+
+	public int getIndex() {
+		return mIndex;
+	}
+
+	public void setIndex(int index) {
+		mIndex = index;
+	}
+
+	public int getIndexStart() {
+		return mIndexStart;
+	}
+
+	public void setIndexStart(int index) {
+		mIndexStart = index;
+	}
+
+	public int getIndexEnd() {
+		return mIndexEnd;
+	}
+
+	public void setIndexEnd(int index) {
+		mIndexEnd = index;
 	}
 
 	public boolean directionOf(int direction) {
@@ -640,5 +614,46 @@ public class StockData extends DatabaseTable {
 				+ 0);
 		stringBuffer.append("\r\n");
 		return stringBuffer.toString();
+	}
+
+	public static StockData getSafely(List<StockData> list, int index) {
+		if (list == null) {
+			return null;
+		}
+		if (index < 0 || index >= list.size()) {
+			return null;
+		}
+		return list.get(index);
+	}
+
+	public static StockData getLast(List<StockData> list, int index) {
+		if (list == null) {
+			return null;
+		}
+
+		int size = list.size();
+		if (index < 0 || index >= size) {
+			return null;
+		}
+
+		int i = size - 1 - index;
+		return list.get(i);
+	}
+
+	public static StockData getLast(List<StockData> list, int index, List<StockData> stockDataList) {
+		if (list == null || stockDataList == null || stockDataList.isEmpty()) {
+			return null;
+		}
+
+		StockData stockData = getLast(list, index);
+		if (stockData == null) {
+			return null;
+		}
+
+		int startIndex = stockData.getIndexStart();
+		if (startIndex < 0 || startIndex >= stockDataList.size()) {
+			return null;
+		}
+		return stockDataList.get(startIndex);
 	}
 }

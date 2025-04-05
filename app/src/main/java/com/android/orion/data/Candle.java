@@ -3,6 +3,7 @@ package com.android.orion.data;
 import android.database.Cursor;
 
 import com.android.orion.database.DatabaseContract;
+import com.android.orion.database.StockTrend;
 import com.android.orion.setting.Constant;
 
 public class Candle {
@@ -11,14 +12,15 @@ public class Candle {
 	private double mLow;
 	private double mClose;
 
-	public void add(Candle candle, long weight) {
-		if (candle == null) {
-			return;
-		}
-		mOpen += candle.mOpen * weight;
-		mHigh += candle.mHigh * weight;
-		mLow += candle.mLow * weight;
-		mClose += candle.mClose * weight;
+	public Candle() {
+		init();
+	}
+
+	public void init() {
+		mOpen = 0;
+		mHigh = 0;
+		mLow = 0;
+		mClose = 0;
 	}
 
 	public void set(Candle candle) {
@@ -104,6 +106,16 @@ public class Candle {
 
 		setClose(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_CLOSE)));
+	}
+
+	public void add(Candle candle, long weight) {
+		if (candle == null) {
+			return;
+		}
+		mOpen += candle.mOpen * weight;
+		mHigh += candle.mHigh * weight;
+		mLow += candle.mLow * weight;
+		mClose += candle.mClose * weight;
 	}
 
 	public String toString() {

@@ -221,33 +221,25 @@ public class TrendAnalyzer {
 					continue;
 				}
 
-				StockData currentTrend = current;
-				StockData prevTrend = prev;
-				StockData prevPrevTrend = prevPrev;
-
-				if (currentTrend == null || prevTrend == null || prevPrevTrend == null) {
-					continue;
-				}
-
-				StockData start_1 = StockData.getSafely(mStockDataList, prevTrend.getIndexStart());
-				StockData end_1 = StockData.getSafely(mStockDataList, prevTrend.getIndexEnd());
-				StockData start_2 = StockData.getSafely(mStockDataList, prevPrevTrend.getIndexStart());
-				StockData end_2 = StockData.getSafely(mStockDataList, prevPrevTrend.getIndexEnd());
+				StockData start_1 = StockData.getSafely(mStockDataList, prev.getIndexStart());
+				StockData end_1 = StockData.getSafely(mStockDataList, prev.getIndexEnd());
+				StockData start_2 = StockData.getSafely(mStockDataList, prevPrev.getIndexStart());
+				StockData end_2 = StockData.getSafely(mStockDataList, prevPrev.getIndexEnd());
 				if (start_1 == null || end_1 == null || start_2 == null || end_2 == null) {
 					continue;
 				}
 
-				int directionTo = currentTrend.directionTo(prevPrevTrend);
+				int directionTo = current.directionTo(prevPrev);
 				switch (directionTo) {
 					case StockTrend.DIRECTION_UP:
 						if (direction == StockTrend.DIRECTION_DOWN) {
-							addVertex(end_2, vertexTypeBottom, vertexList);
 							type = StockTrend.TYPE_DOWN_UP;
+							addVertex(end_2, vertexTypeBottom, vertexList);
 						} else if (direction == StockTrend.DIRECTION_NONE) {
 							StockData vertexData = chooseVertex(start_2, end_2, StockTrend.VERTEX_BOTTOM);
 							if (baseDirection == StockTrend.DIRECTION_UP) {
-								addVertex(vertexData, vertexTypeBottom, vertexList);
 								type = StockTrend.TYPE_UP_NONE_UP;
+								addVertex(vertexData, vertexTypeBottom, vertexList);
 							} else if (baseDirection == StockTrend.DIRECTION_DOWN) {
 								type = StockTrend.TYPE_DOWN_NONE_UP;
 							}
@@ -257,15 +249,15 @@ public class TrendAnalyzer {
 						break;
 					case StockTrend.DIRECTION_DOWN:
 						if (direction == StockTrend.DIRECTION_UP) {
-							addVertex(end_2, vertexTypeTop, vertexList);
 							type = StockTrend.TYPE_UP_DOWN;
+							addVertex(end_2, vertexTypeTop, vertexList);
 						} else if (direction == StockTrend.DIRECTION_NONE) {
 							StockData vertexData = chooseVertex(start_2, end_2, StockTrend.VERTEX_TOP);
 							if (baseDirection == StockTrend.DIRECTION_UP) {
 								type = StockTrend.TYPE_UP_NONE_DOWN;
 							} else if (baseDirection == StockTrend.DIRECTION_DOWN) {
-								addVertex(vertexData, vertexTypeTop, vertexList);
 								type = StockTrend.TYPE_DOWN_NONE_DOWN;
+								addVertex(vertexData, vertexTypeTop, vertexList);
 							}
 						} else if (direction == StockTrend.DIRECTION_DOWN) {
 							type = StockTrend.TYPE_DOWN_DOWN;
@@ -275,13 +267,13 @@ public class TrendAnalyzer {
 						if (direction == StockTrend.DIRECTION_UP) {
 							baseDirection = StockTrend.DIRECTION_UP;
 							StockData vertexData = chooseVertex(start_1, end_1, StockTrend.VERTEX_TOP);
-							addVertex(vertexData, vertexTypeTop, vertexList);
 							type = StockTrend.TYPE_UP_NONE;
+							addVertex(vertexData, vertexTypeTop, vertexList);
 						} else if (direction == StockTrend.DIRECTION_DOWN) {
 							baseDirection = StockTrend.DIRECTION_DOWN;
 							StockData vertexData = chooseVertex(start_1, end_1, StockTrend.VERTEX_BOTTOM);
-							addVertex(vertexData, vertexTypeBottom, vertexList);
 							type = StockTrend.TYPE_DOWN_NONE;
+							addVertex(vertexData, vertexTypeBottom, vertexList);
 						} else if (direction == StockTrend.DIRECTION_NONE) {
 						}
 						break;
@@ -360,14 +352,14 @@ public class TrendAnalyzer {
 		return start.vertexOf(vertexType) ? start : end;
 	}
 
-	private void addVertex(StockData stockData, int vertexType, ArrayList<StockData> vertexList) {
+	private void addVertex(StockData stockData, int vertex, ArrayList<StockData> vertexList) {
 		if (stockData == null || vertexList == null) {
 			return;
 		}
 		if (stockData == null) {
 			return;
 		}
-		stockData.addVertex(vertexType);
+		stockData.addVertex(vertex);
 		vertexList.add(stockData);
 	}
 

@@ -11,6 +11,18 @@ public class Macd {
 	private double mDEA;
 	private double mHistogram;
 
+	public Macd() {
+		init();
+	}
+
+	public void init() {
+		mAverage5 = 0;
+		mAverage10 = 0;
+		mDIF = 0;
+		mDEA = 0;
+		mHistogram = 0;
+	}
+
 	public void set(Macd macd) {
 		if (macd == null) {
 			return;
