@@ -54,14 +54,6 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/grouped"
-        android:layout_width="80dp"
-        android:layout_height="50dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:textSize="18sp" />
-
-    <TextView
         android:id="@+id/direction"
         android:layout_width="80dp"
         android:layout_height="50dp"

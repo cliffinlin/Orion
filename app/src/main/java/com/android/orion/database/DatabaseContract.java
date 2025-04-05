@@ -100,7 +100,6 @@ public final class DatabaseContract {
 	public static final String COLUMN_TURNING = "turning";
 	public static final String COLUMN_TURNING_NET = "turning_net";
 	public static final String COLUMN_TURNING_RATE = "turning_rate";
-	public static final String COLUMN_GROUPED = "grouped";
 	public static final String COLUMN_AVERAGE5 = "average5";
 	public static final String COLUMN_AVERAGE10 = "average10";
 	public static final String COLUMN_DIF = "dif";
@@ -308,7 +307,7 @@ public final class DatabaseContract {
 		public static final String[] PROJECTION_ALL = {_ID,
 				COLUMN_SE, COLUMN_CODE, COLUMN_NAME,
 				COLUMN_PRICE, COLUMN_NET,
-				COLUMN_PERIOD, COLUMN_LEVEL, COLUMN_TYPE, COLUMN_FLAG, COLUMN_GROUPED,
+				COLUMN_PERIOD, COLUMN_LEVEL, COLUMN_TYPE, COLUMN_FLAG,
 				COLUMN_DIRECTION, COLUMN_VERTEX_LOW, COLUMN_VERTEX_HIGH, COLUMN_VERTEX_NET,
 				COLUMN_TURNING, COLUMN_TURNING_NET, COLUMN_TURNING_RATE, COLUMN_PROFIT,
 				COLUMN_DATE, COLUMN_TIME,
@@ -326,7 +325,6 @@ public final class DatabaseContract {
 				+ COLUMN_LEVEL + INTEGER_TYPE + COMMA_SEP
 				+ COLUMN_TYPE + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_FLAG + INTEGER_TYPE + COMMA_SEP
-				+ COLUMN_GROUPED + INTEGER_TYPE + COMMA_SEP
 				+ COLUMN_DIRECTION + INTEGER_TYPE + COMMA_SEP
 				+ COLUMN_VERTEX_LOW + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_VERTEX_HIGH + DOUBLE_TYPE + COMMA_SEP

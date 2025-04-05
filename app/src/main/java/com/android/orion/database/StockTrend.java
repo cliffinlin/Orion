@@ -65,8 +65,6 @@ public class StockTrend extends DatabaseTable {
 	public static final int FLAG_NONE = 0;
 	public static final int FLAG_CHANGED = 1 << 0;
 
-	public static final int GROUPED_NONE = 0;
-
 	public static final int[] LEVELS = {LEVEL_NONE,
 			LEVEL_DRAW, LEVEL_STROKE, LEVEL_SEGMENT, LEVEL_LINE,
 			LEVEL_OUT_LINE, LEVEL_SUPER_LINE, LEVEL_TREND_LINE};
@@ -100,7 +98,6 @@ public class StockTrend extends DatabaseTable {
 	private int mLevel;
 	private String mType;
 	private int mFlag;
-	private int mGrouped;
 	private int mDirection;
 	private double mVertexLow;
 	private double mVertexHigh;
@@ -148,7 +145,6 @@ public class StockTrend extends DatabaseTable {
 		mLevel = LEVEL_NONE;
 		mType = TYPE_NONE;
 		mFlag = FLAG_NONE;
-		mGrouped = GROUPED_NONE;
 		mDirection = DIRECTION_NONE;
 		mVertexLow = 0;
 		mVertexHigh = 0;
@@ -174,7 +170,6 @@ public class StockTrend extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_LEVEL, mLevel);
 		contentValues.put(DatabaseContract.COLUMN_TYPE, mType);
 		contentValues.put(DatabaseContract.COLUMN_FLAG, mFlag);
-		contentValues.put(DatabaseContract.COLUMN_GROUPED, mGrouped);
 		contentValues.put(DatabaseContract.COLUMN_DIRECTION, mDirection);
 		contentValues.put(DatabaseContract.COLUMN_VERTEX_LOW, mVertexLow);
 		contentValues.put(DatabaseContract.COLUMN_VERTEX_HIGH, mVertexHigh);
@@ -183,13 +178,6 @@ public class StockTrend extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_TURNING_NET, mTurningNet);
 		contentValues.put(DatabaseContract.COLUMN_TURNING_RATE, mTurningRate);
 		contentValues.put(DatabaseContract.COLUMN_PROFIT, mProfit);
-		return contentValues;
-	}
-
-	public ContentValues getContentValuesGrouped() {
-		ContentValues contentValues = super.getContentValues();
-
-		contentValues.put(DatabaseContract.COLUMN_GROUPED, mGrouped);
 		return contentValues;
 	}
 
@@ -220,7 +208,6 @@ public class StockTrend extends DatabaseTable {
 		setLevel(stockTrend.mLevel);
 		setType(stockTrend.mType);
 		setFlag(stockTrend.mFlag);
-		setGrouped(stockTrend.mGrouped);
 		setDirection(stockTrend.mDirection);
 		setVertexLow(stockTrend.mVertexLow);
 		setVertexHigh(stockTrend.mVertexHigh);
@@ -252,7 +239,6 @@ public class StockTrend extends DatabaseTable {
 		setLevel(cursor);
 		setType(cursor);
 		setFlag(cursor);
-		setGrouped(cursor);
 		setDirection(cursor);
 		setVertexLow(cursor);
 		setVertexHigh(cursor);
@@ -464,23 +450,6 @@ public class StockTrend extends DatabaseTable {
 
 		setFlag(cursor.getInt(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_FLAG)));
-	}
-
-	public int getGrouped() {
-		return mGrouped;
-	}
-
-	public void setGrouped(int grouped) {
-		mGrouped = grouped;
-	}
-
-	void setGrouped(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setGrouped(cursor.getInt(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_GROUPED)));
 	}
 
 	public int getDirection() {

@@ -63,7 +63,6 @@ public class StockTrendListActivity extends ListActivity implements
 	TextView mTextViewLevel = null;
 	TextView mTextViewType = null;
 	TextView mTextViewFlag = null;
-	TextView mTextViewGrouped = null;
 	TextView mTextViewDirection = null;
 	TextView mTextViewVertexLow = null;
 	TextView mTextViewVertexHigh = null;
@@ -224,9 +223,6 @@ public class StockTrendListActivity extends ListActivity implements
 			case R.id.flag:
 				mSortOrderColumn = DatabaseContract.COLUMN_FLAG;
 				break;
-			case R.id.grouped:
-				mSortOrderColumn = DatabaseContract.COLUMN_GROUPED;
-				break;
 			case R.id.direction:
 				mSortOrderColumn = DatabaseContract.COLUMN_DIRECTION;
 				break;
@@ -296,7 +292,6 @@ public class StockTrendListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewLevel, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewType, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewFlag, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewGrouped, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewDirection, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewVertexLow, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewVertexHigh, mHeaderTextDefaultColor);
@@ -373,11 +368,6 @@ public class StockTrendListActivity extends ListActivity implements
 			mTextViewFlag.setOnClickListener(this);
 		}
 
-		mTextViewGrouped = findViewById(R.id.grouped);
-		if (mTextViewGrouped != null) {
-			mTextViewGrouped.setOnClickListener(this);
-		}
-
 		mTextViewDirection = findViewById(R.id.direction);
 		if (mTextViewDirection != null) {
 			mTextViewDirection.setOnClickListener(this);
@@ -446,8 +436,6 @@ public class StockTrendListActivity extends ListActivity implements
 			setHeaderTextColor(mTextViewType, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_FLAG)) {
 			setHeaderTextColor(mTextViewFlag, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_GROUPED)) {
-			setHeaderTextColor(mTextViewGrouped, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_DIRECTION)) {
 			setHeaderTextColor(mTextViewDirection, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_VERTEX_LOW)) {
@@ -486,7 +474,6 @@ public class StockTrendListActivity extends ListActivity implements
 				DatabaseContract.COLUMN_LEVEL,
 				DatabaseContract.COLUMN_TYPE,
 				DatabaseContract.COLUMN_FLAG,
-				DatabaseContract.COLUMN_GROUPED,
 				DatabaseContract.COLUMN_DIRECTION,
 				DatabaseContract.COLUMN_VERTEX_LOW,
 				DatabaseContract.COLUMN_VERTEX_HIGH,
@@ -506,7 +493,6 @@ public class StockTrendListActivity extends ListActivity implements
 				R.id.level,
 				R.id.type,
 				R.id.flag,
-				R.id.grouped,
 				R.id.direction,
 				R.id.vertex_low,
 				R.id.vertex_high,

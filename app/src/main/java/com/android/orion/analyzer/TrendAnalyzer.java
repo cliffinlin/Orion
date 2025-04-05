@@ -22,7 +22,7 @@ public class TrendAnalyzer {
 	Logger Log = Logger.getLogger();
 	Stock mStock;
 	String mPeriod;
-	ArrayList<StockData> mStockDataList;
+	ArrayList<StockData> mStockDataList = new ArrayList<>();
 	ArrayList<StockTrend> mStockTrendList = new ArrayList<>();
 	DatabaseManager mDatabaseManager = DatabaseManager.getInstance();
 	StockPerceptronProvider mStockPerceptronProvider = StockPerceptronProvider.getInstance();
