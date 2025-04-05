@@ -16,6 +16,7 @@ public final class DatabaseContract {
 	public static final String DATABASE_NAME = "orion";
 	public static final String DATABASE_EXT = ".db";
 	public static final String DATABASE_FILE_NAME = DATABASE_NAME + DATABASE_EXT;
+
 	public static final String COLUMN_ID = BaseColumns._ID;
 	public static final String COLUMN_SE = "se";
 	public static final String COLUMN_CODE = "code";
@@ -28,6 +29,9 @@ public final class DatabaseContract {
 	public static final String COLUMN_NET = "net";
 	public static final String COLUMN_VOLUME = "volume";
 	public static final String COLUMN_VALUE = "value";
+	public static final String COLUMN_ACTION = "action";
+	public static final String COLUMN_LEVEL = "level";
+
 	public static final String COLUMN_MIN5 = Period.MIN5;
 	public static final String COLUMN_MIN15 = Period.MIN15;
 	public static final String COLUMN_MIN30 = Period.MIN30;
@@ -35,6 +39,15 @@ public final class DatabaseContract {
 	public static final String COLUMN_DAY = Period.DAY;
 	public static final String COLUMN_WEEK = Period.WEEK;
 	public static final String COLUMN_MONTH = Period.MONTH;
+
+	public static final String COLUMN_MIN5_LEVEL = COLUMN_MIN5 + "_" + COLUMN_LEVEL;
+	public static final String COLUMN_MIN15_LEVEL = COLUMN_MIN15 + "_" + COLUMN_LEVEL;
+	public static final String COLUMN_MIN30_LEVEL = COLUMN_MIN30 + "_" + COLUMN_LEVEL;
+	public static final String COLUMN_MIN60_LEVEL = COLUMN_MIN60 + "_" + COLUMN_LEVEL;
+	public static final String COLUMN_DAY_LEVEL = COLUMN_DAY + "_" + COLUMN_LEVEL;
+	public static final String COLUMN_WEEK_LEVEL = COLUMN_WEEK + "_" + COLUMN_LEVEL;
+	public static final String COLUMN_MONTH_LEVEL = COLUMN_MONTH + "_" + COLUMN_LEVEL;
+
 	public static final String COLUMN_WEIGHT = "weight";
 	public static final String COLUMN_BIAS = "bias";
 	public static final String COLUMN_ERROR = "error";
@@ -71,7 +84,7 @@ public final class DatabaseContract {
 	public static final String COLUMN_INDEX_SE = "index_se";
 	public static final String COLUMN_INDEX_CODE = "index_code";
 	public static final String COLUMN_INDEX_NAME = "index_name";
-	public static final String COLUMN_LEVEL = "level";
+
 	public static final String COLUMN_DATE = "date";
 	public static final String COLUMN_TIME = "time";
 	public static final String COLUMN_PERIOD = "period";
@@ -94,7 +107,7 @@ public final class DatabaseContract {
 	public static final String COLUMN_DEA = "dea";
 	public static final String COLUMN_HISTOGRAM = "histogram";
 	public static final String COLUMN_ACCOUNT = "account";
-	public static final String COLUMN_ACTION = "action";
+
 	public static final String COLUMN_TYPE = "type";
 	public static final String COLUMN_CONTENT = "content";
 	// http://money.finance.sina.com.cn/corp/go.php/vFD_FinanceSummary/stockid/600028.phtml
@@ -146,6 +159,7 @@ public final class DatabaseContract {
 				COLUMN_CLASSES, COLUMN_SE, COLUMN_CODE, COLUMN_NAME, COLUMN_PINYIN,
 				COLUMN_PRICE, COLUMN_CHANGE, COLUMN_NET, COLUMN_VOLUME, COLUMN_VALUE,
 				COLUMN_MONTH, COLUMN_WEEK, COLUMN_DAY, COLUMN_MIN60, COLUMN_MIN30, COLUMN_MIN15, COLUMN_MIN5,
+				COLUMN_MONTH_LEVEL, COLUMN_WEEK_LEVEL, COLUMN_DAY_LEVEL, COLUMN_MIN60_LEVEL, COLUMN_MIN30_LEVEL, COLUMN_MIN15_LEVEL, COLUMN_MIN5_LEVEL,
 				COLUMN_FLAG, COLUMN_OPERATE,
 				COLUMN_ROI, COLUMN_IR, COLUMN_IRR, COLUMN_ROE, COLUMN_PE, COLUMN_PB,
 				COLUMN_HOLD, COLUMN_PROFIT, COLUMN_BONUS, COLUMN_VALUATION, COLUMN_COST,
@@ -181,6 +195,13 @@ public final class DatabaseContract {
 				+ COLUMN_MIN30 + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_MIN15 + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_MIN5 + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_MONTH_LEVEL + INTEGER_TYPE + COMMA_SEP
+				+ COLUMN_WEEK_LEVEL + INTEGER_TYPE + COMMA_SEP
+				+ COLUMN_DAY_LEVEL + INTEGER_TYPE + COMMA_SEP
+				+ COLUMN_MIN60_LEVEL + INTEGER_TYPE + COMMA_SEP
+				+ COLUMN_MIN30_LEVEL + INTEGER_TYPE + COMMA_SEP
+				+ COLUMN_MIN15_LEVEL + INTEGER_TYPE + COMMA_SEP
+				+ COLUMN_MIN5_LEVEL + INTEGER_TYPE + COMMA_SEP
 				+ COLUMN_FLAG + INTEGER_TYPE + COMMA_SEP
 				+ COLUMN_OPERATE + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_ROI + DOUBLE_TYPE + COMMA_SEP

@@ -161,8 +161,7 @@ public class StockAnalyzer {
 
 		mTrendAnalyzer.analyzeLine(StockTrend.LEVEL_TREND_LINE, mStock.getDataList(period, StockTrend.LEVEL_TREND_LINE), mStock.getVertexList(period, StockTrend.LEVEL_TREND_LINE));
 		mTrendAnalyzer.vertexListToDataList(mStock.getVertexList(period, StockTrend.LEVEL_TREND_LINE), mStock.getDataList(period, StockTrend.LEVEL_TREND_LINE));
-
-		mTrendAnalyzer.updateAdaptive(mStock, period, determineAdaptiveLevel(period));
+		mStock.setLevel(period, determineAdaptiveLevel(period));
 
 		analyzeAction(period);
 	}

@@ -3,6 +3,7 @@ package com.android.orion.data;
 import android.database.Cursor;
 import android.text.TextUtils;
 
+import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockTrend;
 
@@ -36,6 +37,7 @@ public class Period {
 
 	public String mName = "";
 	public String mAction = "";
+	public int mLevel = StockTrend.LEVEL_NONE;
 
 	public ArrayList<StockData> mStockDataList = new ArrayList<>();
 	public ArrayList<ArrayList<StockData>> mVertexLists = new ArrayList<>();
@@ -126,5 +128,21 @@ public class Period {
 		}
 		setAction(cursor.getString(cursor
 				.getColumnIndex(mName)));
+	}
+
+	public int getLevel() {
+		return mLevel;
+	}
+
+	public void setLevel(int Level) {
+		mLevel = Level;
+	}
+
+	public void setLevel(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+		setLevel(cursor.getInt(cursor
+				.getColumnIndex(mName + "_" + DatabaseContract.COLUMN_LEVEL)));
 	}
 }

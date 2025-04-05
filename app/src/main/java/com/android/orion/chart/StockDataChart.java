@@ -57,8 +57,11 @@ public class StockDataChart {
 	int mAdaptiveLevel;
 	ArrayMap<String, StockTrend> mStockTrendMap = new ArrayMap<>();
 
-	public StockDataChart(String period) {
+	public StockDataChart(Stock stock, String period) {
+		mStock = stock;
 		mPeriod = period;
+		mAdaptiveLevel = mStock.getLevel(period);
+
 		for (int i = 0; i < StockTrend.LEVEL_MAX; i++) {
 			if (mTrendEntryList[i] == null) {
 				mTrendEntryList[i] = new ArrayList<>();
@@ -74,18 +77,18 @@ public class StockDataChart {
 		}
 	}
 
-	public void setupStockTrendMap(Stock stock, ArrayList<StockTrend> stockTrendList) {
+	public void setupStockTrendMap(Stock stock, String period, ArrayList<StockTrend> stockTrendList) {
 		if (stock == null || stockTrendList == null) {
 			return;
 		}
 		mStock = stock;
+		mPeriod = period;
+		mAdaptiveLevel = mStock.getLevel(period);
+
 		mStockTrendMap.clear();
 		for (StockTrend stockTrend : stockTrendList) {
 			if (stockTrend != null) {
 				mStockTrendMap.put(stockTrend.getPeriod() + StockTrend.MARK_LEVEL + stockTrend.getLevel(), stockTrend);
-				if (TextUtils.equals(mPeriod, stockTrend.getPeriod()) && stockTrend.hasFlag(StockTrend.FLAG_ADAPTIVE)) {
-					mAdaptiveLevel = stockTrend.getLevel();
-				}
 			}
 		}
 	}
@@ -302,7 +305,6 @@ public class StockDataChart {
 
 	public boolean displayTrend(int level) {
 		boolean result = false;
-
 		switch (level) {
 			case StockTrend.LEVEL_DRAW:
 				result = Setting.getDisplayDraw();
@@ -328,13 +330,7 @@ public class StockDataChart {
 			default:
 				break;
 		}
-
-		if (!Setting.getDisplayAdaptive()) {
-			return result;
-		}
-
-		StockTrend stockTrend = getStockTrend(level);
-		return stockTrend != null && stockTrend.hasFlag(StockTrend.FLAG_ADAPTIVE);
+		return Setting.getDisplayAdaptive() ? level >= mAdaptiveLevel : result;
 	}
 
 	public void updateDescription(Stock stock) {

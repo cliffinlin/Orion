@@ -287,7 +287,7 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 		}
 
 		for (int i = 0; i < Period.PERIODS.length; i++) {
-			mStockDataChartList.add(new StockDataChart(Period.PERIODS[i]));
+			mStockDataChartList.add(new StockDataChart(mStock, Period.PERIODS[i]));
 			mStockDataChartItemMainList.add(new StockDataChartItemMain(
 					mStockDataChartList.get(i)));
 			mStockDataChartItemSubList.add(new StockDataChartItemSub(
@@ -603,7 +603,7 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 		mStockDataChartItemList.clear();
 		for (int i = 0; i < Period.PERIODS.length; i++) {
 			if (Setting.getPeriod(Period.PERIODS[i])) {
-				mStockDataChartItemMainList.get(i).mStockDataChart.setupStockTrendMap(mStock, mStockTrendList);
+				mStockDataChartItemMainList.get(i).mStockDataChart.setupStockTrendMap(mStock, Period.PERIODS[i], mStockTrendList);
 				mStockDataChartItemList.add(mStockDataChartItemMainList.get(i));
 				mStockDataChartItemList.add(mStockDataChartItemSubList.get(i));
 			}

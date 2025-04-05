@@ -64,7 +64,6 @@ public class StockTrend extends DatabaseTable {
 	public static final int FLAG_UNUSED = -1;
 	public static final int FLAG_NONE = 0;
 	public static final int FLAG_CHANGED = 1 << 0;
-	public static final int FLAG_ADAPTIVE = 1 << 1;
 
 	public static final int GROUPED_NONE = 0;
 
