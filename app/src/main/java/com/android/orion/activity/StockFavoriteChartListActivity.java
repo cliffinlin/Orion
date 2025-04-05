@@ -598,7 +598,7 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 	}
 
 	void updateStockDataChartItemList() {
-		mDatabaseManager.getStockTrendList(mStock, mStockTrendList);
+		mDatabaseManager.getStockTrendChangedList(mStock, mStockTrendList);
 
 		mStockDataChartItemList.clear();
 		for (int i = 0; i < Period.PERIODS.length; i++) {

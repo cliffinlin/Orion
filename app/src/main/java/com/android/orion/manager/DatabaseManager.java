@@ -1176,6 +1176,33 @@ public class DatabaseManager implements StockListener {
 		}
 	}
 
+	public void getStockTrendChangedList(Stock stock, ArrayList<StockTrend> stockTrendList) {
+		if (stock == null || stockTrendList == null) {
+			return;
+		}
+
+		String selection = getStockSelection(stock)
+				+ " AND " + hasFlagSelection(StockTrend.FLAG_CHANGED);
+		String sortOrder = DatabaseContract.COLUMN_PERIOD + DatabaseContract.ORDER_ASC;
+
+		stockTrendList.clear();
+		Cursor cursor = null;
+		try {
+			cursor = queryStockTrend(selection, null, sortOrder);
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				while (cursor.moveToNext()) {
+					StockTrend stockTrend = new StockTrend();
+					stockTrend.set(cursor);
+					stockTrendList.add(stockTrend);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
 	public void getStockTrendList(Stock stock, ArrayList<StockTrend> stockTrendList) {
 		if (stock == null || stockTrendList == null) {
 			return;
