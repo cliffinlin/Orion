@@ -1,7 +1,6 @@
 package com.android.orion.analyzer;
 
 import android.text.TextUtils;
-import android.util.ArrayMap;
 
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
@@ -14,9 +13,6 @@ import com.android.orion.utility.Logger;
 import com.android.orion.utility.Utility;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 
 public class TrendAnalyzer {
 	Logger Log = Logger.getLogger();
@@ -363,7 +359,7 @@ public class TrendAnalyzer {
 		if (stockData == null || vertexList == null) {
 			return;
 		}
-		stockData.addVertex(vertex);
+		stockData.addVertexFlag(vertex);
 		vertexList.add(stockData);
 	}
 
@@ -429,107 +425,6 @@ public class TrendAnalyzer {
 			}
 			stockData.setDirection(direction);
 			dataList.add(stockData);
-		}
-	}
-
-	void debugShow(ArrayList<StockData> stockDataList,
-	               ArrayList<StockData> dataList) {
-		int index = 0;
-		StockData data = null;
-		StockData stockData = null;
-
-		if ((stockDataList == null) || (dataList == null)) {
-			return;
-		}
-
-		if ((stockDataList.size() == 0) || (dataList.size() == 0)) {
-			return;
-		}
-
-		if (dataList.size() > stockDataList.size()) {
-			return;
-		}
-
-		for (int i = 0; i < dataList.size(); i++) {
-			data = dataList.get(i);
-
-			if (data == null) {
-				return;
-			}
-
-			index = data.getIndex();
-			if (index > stockDataList.size() - 1) {
-				return;
-			}
-
-			stockData = stockDataList.get(index);
-
-			if (stockData == null) {
-				return;
-			}
-
-			if (data.getDirection() == StockTrend.DIRECTION_UP) {
-				stockData.getCandle().setOpen(data.getVertexLow());
-				stockData.getCandle().setClose(data.getVertexHigh());
-			} else if (data.getDirection() == StockTrend.DIRECTION_DOWN) {
-				stockData.getCandle().setOpen(data.getVertexHigh());
-				stockData.getCandle().setClose(data.getVertexLow());
-			}
-
-			stockData.getCandle().setHigh(data.getVertexHigh());
-			stockData.getCandle().setLow(data.getVertexLow());
-
-			stockData.setAction(String.valueOf(i));
-		}
-	}
-
-	void testShowVertextNumber(ArrayList<StockData> stockDataList,
-	                           ArrayList<StockData> dataList) {
-		int index = 0;
-		StockData data = null;
-		StockData stockData = null;
-
-		if ((stockDataList == null) || (dataList == null)) {
-			return;
-		}
-
-		if ((stockDataList.size() == 0) || (dataList.size() == 0)) {
-			return;
-		}
-
-		if (dataList.size() > stockDataList.size()) {
-			return;
-		}
-
-		for (int i = 0; i < dataList.size(); i++) {
-			data = dataList.get(i);
-
-			if (data == null) {
-				return;
-			}
-
-			index = data.getIndex();
-			if (index > stockDataList.size() - 1) {
-				return;
-			}
-
-			stockData = stockDataList.get(index);
-
-			if (stockData == null) {
-				return;
-			}
-
-			stockData.setAction(String.valueOf(i));
-		}
-	}
-
-	void logStockDataList(ArrayList<StockData> stockDataList) {
-		if (stockDataList == null) {
-			return;
-		}
-		for (int i = 0; i < stockDataList.size(); i++) {
-			StockData stockData = stockDataList.get(i);
-			Log.d(i + "-->" + stockData.getVertex() + " " + stockData.getDirection() + " " + stockData.getDateTime());
 		}
 	}
 

@@ -2,7 +2,6 @@ package com.android.orion.database;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.text.TextUtils;
 
 import com.android.orion.data.Candle;
@@ -45,12 +44,12 @@ public class StockData extends DatabaseTable {
 	private String mCode;
 	private String mName;
 	private String mPeriod;
+	private String mAction;
 	private String mDate;
 	private String mTime;
 	private Candle mCandle;
 	private Macd mMacd;
 	private int mLevel;
-	private String mAction;
 	private int mDirection;
 	private int mVertex;
 	private double mVertexLow;
@@ -91,6 +90,7 @@ public class StockData extends DatabaseTable {
 		mCode = "";
 		mName = "";
 		mPeriod = "";
+		mAction = StockTrend.TYPE_NONE;
 		mDate = "";
 		mTime = "";
 		if (mCandle == null) {
@@ -100,11 +100,10 @@ public class StockData extends DatabaseTable {
 			mMacd = new Macd();
 		}
 		mLevel = StockTrend.LEVEL_NONE;
-		mAction = StockTrend.TYPE_NONE;
 		mDirection = StockTrend.DIRECTION_NONE;
 		mVertex = StockTrend.VERTEX_NONE;
-		mVertexHigh = StockTrend.VERTEX_NONE;
-		mVertexLow = StockTrend.VERTEX_NONE;
+		mVertexHigh = 0;
+		mVertexLow = 0;
 
 		mIndex = 0;
 		mIndexStart = 0;
@@ -119,6 +118,7 @@ public class StockData extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
 		contentValues.put(DatabaseContract.COLUMN_PERIOD, mPeriod);
+		contentValues.put(DatabaseContract.COLUMN_ACTION, mAction);
 		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);
 		contentValues.put(DatabaseContract.COLUMN_TIME, mTime);
 		contentValues.put(DatabaseContract.COLUMN_OPEN, mCandle.getOpen());
@@ -131,7 +131,6 @@ public class StockData extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_DEA, mMacd.getDEA());
 		contentValues.put(DatabaseContract.COLUMN_HISTOGRAM, mMacd.getHistogram());
 		contentValues.put(DatabaseContract.COLUMN_LEVEL, mLevel);
-		contentValues.put(DatabaseContract.COLUMN_ACTION, mAction);
 		contentValues.put(DatabaseContract.COLUMN_DIRECTION, mDirection);
 		contentValues.put(DatabaseContract.COLUMN_VERTEX, mVertex);
 		contentValues.put(DatabaseContract.COLUMN_VERTEX_LOW, mVertexLow);
@@ -153,12 +152,12 @@ public class StockData extends DatabaseTable {
 		setCode(stockData.mCode);
 		setName(stockData.mName);
 		setPeriod(stockData.mPeriod);
+		setAction(stockData.mAction);
 		setDate(stockData.mDate);
 		setTime(stockData.mTime);
 		mCandle.set(stockData.mCandle);
 		mMacd.set(stockData.mMacd);
 		setLevel(stockData.mLevel);
-		setAction(stockData.mAction);
 		setDirection(stockData.mDirection);
 		setVertex(stockData.mVertex);
 		setVertexLow(stockData.mVertexLow);
@@ -262,6 +261,23 @@ public class StockData extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_PERIOD)));
 	}
 
+	public String getAction() {
+		return mAction;
+	}
+
+	public void setAction(String action) {
+		mAction = action;
+	}
+
+	void setAction(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setAction(cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_ACTION)));
+	}
+
 	public String getDate() {
 		return mDate;
 	}
@@ -327,23 +343,6 @@ public class StockData extends DatabaseTable {
 
 		setLevel(cursor.getInt(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_LEVEL)));
-	}
-
-	public String getAction() {
-		return mAction;
-	}
-
-	public void setAction(String action) {
-		mAction = action;
-	}
-
-	void setAction(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setAction(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_ACTION)));
 	}
 
 	public Calendar getCalendar() {
@@ -553,17 +552,20 @@ public class StockData extends DatabaseTable {
 		}
 	}
 
-	public void addVertex(int flag) {
+	public void addVertexFlag(int flag) {
 		mVertex |= flag;
 	}
 
-	public void removeVertex(int flag) {
-		if (hasVertex(flag)) {
+	public void removeVertexFlag(int flag) {
+		if (flag == StockTrend.VERTEX_NONE) {
+			return;
+		}
+		if (hasVertexFlag(flag)) {
 			mVertex &= ~flag;
 		}
 	}
 
-	public boolean hasVertex(int flag) {
+	public boolean hasVertexFlag(int flag) {
 		return (mVertex & flag) == flag;
 	}
 
