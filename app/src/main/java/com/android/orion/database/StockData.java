@@ -51,6 +51,8 @@ public class StockData extends DatabaseTable {
 	private int mDirection;
 	private int mVertex;
 	private Candle mCandle;
+	private double mChange;
+	private double mNet;
 	private Macd mMacd;
 
 	private int mIndex;
@@ -97,6 +99,8 @@ public class StockData extends DatabaseTable {
 		if (mCandle == null) {
 			mCandle = new Candle();
 		}
+		mChange = 0;
+		mNet = 0;
 		if (mMacd == null) {
 			mMacd = new Macd();
 		}
@@ -124,6 +128,8 @@ public class StockData extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_HIGH, mCandle.getHigh());
 		contentValues.put(DatabaseContract.COLUMN_LOW, mCandle.getLow());
 		contentValues.put(DatabaseContract.COLUMN_CLOSE, mCandle.getClose());
+		contentValues.put(DatabaseContract.COLUMN_CHANGE, mChange);
+		contentValues.put(DatabaseContract.COLUMN_NET, mNet);
 		contentValues.put(DatabaseContract.COLUMN_AVERAGE5, mMacd.getAverage5());
 		contentValues.put(DatabaseContract.COLUMN_AVERAGE10, mMacd.getAverage10());
 		contentValues.put(DatabaseContract.COLUMN_DIF, mMacd.getDIF());
@@ -153,6 +159,8 @@ public class StockData extends DatabaseTable {
 		setDirection(stockData.mDirection);
 		setVertex(stockData.mVertex);
 		mCandle.set(stockData.mCandle);
+		setChange(stockData.mChange);
+		setNet(stockData.mNet);
 		mMacd.set(stockData.mMacd);
 
 		setIndex(stockData.mIndex);
@@ -174,14 +182,16 @@ public class StockData extends DatabaseTable {
 		setCode(cursor);
 		setName(cursor);
 		setPeriod(cursor);
+		setAction(cursor);
 		setDate(cursor);
 		setTime(cursor);
-		mCandle.set(cursor);
-		mMacd.set(cursor);
 		setLevel(cursor);
-		setAction(cursor);
 		setDirection(cursor);
 		setVertex(cursor);
+		mCandle.set(cursor);
+		setChange(cursor);
+		setNet(cursor);
+		mMacd.set(cursor);
 	}
 
 	public String getSE() {
@@ -360,6 +370,41 @@ public class StockData extends DatabaseTable {
 		return mCandle;
 	}
 
+
+	public double getChange() {
+		return mChange;
+	}
+
+	public void setChange(double change) {
+		mChange = change;
+	}
+
+	void setChange(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setChange(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_CHANGE)));
+	}
+
+	public double getNet() {
+		return mNet;
+	}
+
+	public void setNet(double net) {
+		mNet = net;
+	}
+
+	void setNet(Cursor cursor) {
+		if (cursor == null) {
+			return;
+		}
+
+		setNet(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_NET)));
+	}
+
 	public Macd getMacd() {
 		return mMacd;
 	}
@@ -504,6 +549,38 @@ public class StockData extends DatabaseTable {
 
 	public boolean hasVertexFlag(int flag) {
 		return (mVertex & flag) == flag;
+	}
+
+	public void setupChange() {
+		mChange = 0;
+
+		if (directionOf(StockTrend.DIRECTION_UP)) {
+			mChange = mCandle.getHigh() - mCandle.getLow();
+		} else if (directionOf(StockTrend.DIRECTION_DOWN)) {
+			mChange = mCandle.getLow() - mCandle.getHigh();
+		} else {
+			mChange = mCandle.getHigh() - mCandle.getLow();
+		}
+
+		mChange = Utility.Round2(mChange);
+	}
+
+	public void setupNet() {
+		mNet = 0;
+
+		if ((mCandle.getHigh() == 0) || (mCandle.getLow() == 0)) {
+			return;
+		}
+
+		if (directionOf(StockTrend.DIRECTION_UP)) {
+			mNet = 100.0 * mChange / mCandle.getLow();
+		} else if (directionOf(StockTrend.DIRECTION_DOWN)) {
+			mNet = 100.0 * mChange / mCandle.getHigh();
+		} else {
+			mNet = 100.0 * mChange / mCandle.getLow();
+		}
+
+		mNet = Utility.Round2(mNet);
 	}
 
 	public StockData fromString(String string) {
