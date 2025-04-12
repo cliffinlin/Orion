@@ -469,10 +469,6 @@ public class StockTrend extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_DIRECTION)));
 	}
 
-	public double getVertexLow() {
-		return mVertexLow;
-	}
-
 	public void setVertexLow(double vertexLow) {
 		mVertexLow = vertexLow;
 	}
@@ -664,8 +660,8 @@ public class StockTrend extends DatabaseTable {
 			return;
 		}
 		setDirection(stockData.getDirection());
-		setVertexLow(stockData.getVertexLow());
-		setVertexHigh(stockData.getVertexHigh());
+		setVertexLow(stockData.getCandle().getLow());
+		setVertexHigh(stockData.getCandle().getHigh());
 		setupVertexNet();
 	}
 

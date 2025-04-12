@@ -93,8 +93,6 @@ public class TrendAnalyzer {
 
 				mStockDataList.get(i).setDirection(direction);
 				mStockDataList.get(i).setVertex(vertex);
-				mStockDataList.get(i).setVertexHigh(current.getVertexHigh());
-				mStockDataList.get(i).setVertexLow(current.getVertexLow());
 
 				if ((vertex == StockTrend.VERTEX_TOP)
 						|| (vertex == StockTrend.VERTEX_BOTTOM)) {

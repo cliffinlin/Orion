@@ -842,9 +842,6 @@ public class SinaFinance extends StockDataProvider {
 					stockData.getCandle().setHigh(jsonObject.getDouble("high"));
 					stockData.getCandle().setLow(jsonObject.getDouble("low"));
 
-					stockData.setVertexHigh(stockData.getCandle().getHigh());
-					stockData.setVertexLow(stockData.getCandle().getLow());
-
 					if (bulkInsert) {
 						stockData.setCreated(Utility.getCurrentDateTimeString());
 						stockData.setModified(Utility.getCurrentDateTimeString());
@@ -1059,9 +1056,6 @@ public class SinaFinance extends StockDataProvider {
 			stockData.getCandle().setClose(Double.parseDouble(stockInfo[3]));
 			stockData.getCandle().setHigh(Double.parseDouble(stockInfo[4]));
 			stockData.getCandle().setLow(Double.parseDouble(stockInfo[5]));
-
-			stockData.setVertexHigh(stockData.getCandle().getHigh());
-			stockData.setVertexLow(stockData.getCandle().getLow());
 
 			stockData.setDate(stockInfo[30]);
 			if (Period.isMinutePeriod(stockData.getPeriod())) {
