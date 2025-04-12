@@ -721,8 +721,6 @@ public class SinaFinance extends StockDataProvider {
 		stockData.setSE(stock.getSE());
 		stockData.setCode(stock.getCode());
 		mDatabaseManager.getStockData(stockData);
-		stockData.setSE(stock.getSE());
-		stockData.setCode(stock.getCode());
 		stockData.setName(stock.getName());
 
 		int len = getDownloadStockDataLength(stockData);
@@ -925,8 +923,6 @@ public class SinaFinance extends StockDataProvider {
 		stockData.setSE(stock.getSE());
 		stockData.setCode(stock.getCode());
 		mDatabaseManager.getStockData(stockData);
-		stockData.setSE(stock.getSE());
-		stockData.setCode(stock.getCode());
 		stockData.setName(stock.getName());
 
 		return downloadStockDataRealTime(stock, stockData, mRequestHeader, getStockDataRealTimeURLString(stock));

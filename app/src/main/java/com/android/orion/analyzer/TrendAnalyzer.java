@@ -365,29 +365,23 @@ public class TrendAnalyzer {
 		if (TextUtils.isEmpty(type) || prevPrev == null || prev == null || current == null) {
 			return;
 		}
-//
-//		StockTrend stockTrend = new StockTrend();
-//		stockTrend.setSE(mStock.getSE());
-//		stockTrend.setCode(mStock.getCode());
-//		stockTrend.setName(mStock.getName());
-//		stockTrend.setPrice(mStock.getPrice());
-//		stockTrend.setNet(mStock.getNet());
-//		stockTrend.setPeriod(mPeriod);
-//		stockTrend.setLevel(level);
-//		stockTrend.setType(type);
-//		stockTrend.setFlag(StockTrend.FLAG_NONE);
-//
-//		stockTrend.setDirection(prevPrev.getDirection());
-//		stockTrend.setVertexLow(prevPrev.getVertexLow());
-//		stockTrend.setVertexHigh(prevPrev.getVertexHigh());
-//		stockTrend.setupVertexNet();
-//
-//		stockTrend.setTurning(0);
-//		stockTrend.updateTurningProfit();
-//
-////		stockTrend.setDateTime(stockData);
-//		stockTrend.setCreated(Utility.getCurrentDateTimeString());
-//		mStockTrendList.add(stockTrend);
+
+		StockTrend stockTrend = new StockTrend();
+		stockTrend.setSE(mStock.getSE());
+		stockTrend.setCode(mStock.getCode());
+		stockTrend.setName(mStock.getName());
+		stockTrend.setPeriod(mPeriod);
+		stockTrend.setLevel(level);
+		stockTrend.setFlag(StockTrend.FLAG_NONE);
+		stockTrend.setType(type);
+
+		stockTrend.setNet(mStock.getNet());
+		stockTrend.setupVertexNet();
+		stockTrend.updateTurningProfit();
+
+		stockTrend.setDateTime(current);
+		stockTrend.setCreated(Utility.getCurrentDateTimeString());
+		mStockTrendList.add(stockTrend);
 	}
 
 	void vertexListToDataList(ArrayList<StockData> vertexList, ArrayList<StockData> dataList) {
@@ -422,6 +416,8 @@ public class TrendAnalyzer {
 				direction = current.vertexOf(StockTrend.VERTEX_TOP) ? StockTrend.DIRECTION_UP : StockTrend.DIRECTION_DOWN;
 			}
 			stockData.setDirection(direction);
+			stockData.setupChange();
+			stockData.setupNet();
 			dataList.add(stockData);
 		}
 	}
