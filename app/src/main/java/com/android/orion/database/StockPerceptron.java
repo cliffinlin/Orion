@@ -30,6 +30,12 @@ public class StockPerceptron extends DatabaseTable {
 		init();
 	}
 
+	public StockPerceptron(String period, int level) {
+		init();
+		setPeriod(period);
+		setLevel(level);
+	}
+
 	public StockPerceptron(String period, int level, String type) {
 		init();
 		setPeriod(period);

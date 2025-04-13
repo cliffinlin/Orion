@@ -283,6 +283,8 @@ public class TrendAnalyzer {
 			}
 			extendVertexList(dataList, vertexList);
 
+			mStockPerceptronProvider.train(mPeriod, level, mStockTrendList);
+
 			if (mStockTrendList.size() > 0) {
 				StockTrend stockTrend = mStockTrendList.get(mStockTrendList.size() - 1);
 				if (mDatabaseManager.isStockTrendExist(stockTrend)) {
@@ -300,7 +302,7 @@ public class TrendAnalyzer {
 
 						if (Setting.getDisplayAdaptive() && level >= mStock.getLevel(mPeriod)) {
 							StockData stockData = StockData.getLast(mStockDataList, 0);
-							stockData.setAction(StockTrend.MARK_LEVEL + level + type + Constant.NEW_LINE + (int) stockTrend.getNet2() + "|" + (int) stockTrend.getNet1() + "|" + (int) stockTrend.getNet());
+							stockData.setAction(StockTrend.MARK_LEVEL + level + type + Constant.NEW_LINE + (int) stockTrend.getNet1() + "/" + (int) stockTrend.getNet());
 							StockAnalyzer.getInstance().notifyStockTrend(stockTrend);
 						}
 					}

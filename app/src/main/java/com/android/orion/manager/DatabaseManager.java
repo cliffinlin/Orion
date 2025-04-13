@@ -1517,13 +1517,13 @@ public class DatabaseManager implements StockListener {
 		}
 	}
 
-	public void getStockPerceptronList(String period, int level, String type,
+	public void getStockPerceptronList(String period, int level,
 	                                   ArrayList<StockPerceptron> stockPerceptronList) {
 		if (stockPerceptronList == null) {
 			return;
 		}
 
-		String selection = getStockPerceptronSelection(period, level, type);
+		String selection = getStockPerceptronSelection(period, level);
 		String sortOrder = DatabaseContract.COLUMN_PERIOD + DatabaseContract.ORDER_ASC;
 
 		stockPerceptronList.clear();
@@ -1640,14 +1640,14 @@ public class DatabaseManager implements StockListener {
 		return result;
 	}
 
-	public int deleteStockPerceptron(String period, int level, String type) {
+	public int deleteStockPerceptron(String period, int level) {
 		int result = 0;
 
 		if (mContentResolver == null) {
 			return result;
 		}
 
-		String where = getStockPerceptronSelection(period, level, type);
+		String where = getStockPerceptronSelection(period, level);
 
 		result = mContentResolver.delete(
 				DatabaseContract.StockPerceptron.CONTENT_URI, where, null);
@@ -1660,14 +1660,13 @@ public class DatabaseManager implements StockListener {
 		if (stockPerceptron == null) {
 			return selection;
 		}
-		selection = getStockPerceptronSelection(stockPerceptron.getPeriod(), stockPerceptron.getLevel(), stockPerceptron.getType());
+		selection = getStockPerceptronSelection(stockPerceptron.getPeriod(), stockPerceptron.getLevel());
 		return selection;
 	}
 
-	public String getStockPerceptronSelection(String period, int level, String type) {
+	public String getStockPerceptronSelection(String period, int level) {
 		return DatabaseContract.COLUMN_PERIOD + " = " + "'" + period + "'"
-				+ " AND " + DatabaseContract.COLUMN_LEVEL + " = " + level
-				+ " AND " + DatabaseContract.COLUMN_TYPE + " = " + "'" + type + "'";
+				+ " AND " + DatabaseContract.COLUMN_LEVEL + " = " + level;
 	}
 
 	public String getStockPerceptronOrder() {
