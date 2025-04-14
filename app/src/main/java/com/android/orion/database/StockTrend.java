@@ -90,15 +90,22 @@ public class StockTrend extends DatabaseTable {
 	private String mSE;
 	private String mCode;
 	private String mName;
+	private double mPrice;
+	private double mNet;
 	private String mPeriod;
+	private String mDate;
+	private String mTime;
 	private int mLevel;
 	private String mType;
 	private int mFlag;
-	private double mNet2;
-	private double mNet1;
-	private double mNet;
-	private String mDate;
-	private String mTime;
+	private int mDirection;
+	private double mVertexLow;
+	private double mVertexHigh;
+	private double mVertexNet;
+	private double mTurning;
+	private double mTurningNet;
+	private double mTurningRate;
+	private double mProfit;
 
 	public StockTrend() {
 		init();
@@ -130,15 +137,22 @@ public class StockTrend extends DatabaseTable {
 		mSE = "";
 		mCode = "";
 		mName = "";
+		mPrice = 0;
+		mNet = 0;
 		mPeriod = "";
+		mDate = "";
+		mTime = "";
 		mLevel = LEVEL_NONE;
 		mType = TYPE_NONE;
 		mFlag = FLAG_NONE;
-		mNet2 = 0;
-		mNet1 = 0;
-		mNet = 0;
-		mDate = "";
-		mTime = "";
+		mDirection = DIRECTION_NONE;
+		mVertexLow = 0;
+		mVertexHigh = 0;
+		mVertexNet = 0;
+		mTurning = 0;
+		mTurningNet = 0;
+		mTurningRate = 0;
+		mProfit = 0;
 	}
 
 	@Override
@@ -148,15 +162,22 @@ public class StockTrend extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_SE, mSE);
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
+		contentValues.put(DatabaseContract.COLUMN_PRICE, mPrice);
+		contentValues.put(DatabaseContract.COLUMN_NET, mNet);
 		contentValues.put(DatabaseContract.COLUMN_PERIOD, mPeriod);
+		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);
+		contentValues.put(DatabaseContract.COLUMN_TIME, mTime);
 		contentValues.put(DatabaseContract.COLUMN_LEVEL, mLevel);
 		contentValues.put(DatabaseContract.COLUMN_TYPE, mType);
 		contentValues.put(DatabaseContract.COLUMN_FLAG, mFlag);
-		contentValues.put(DatabaseContract.COLUMN_NET2, mNet2);
-		contentValues.put(DatabaseContract.COLUMN_NET1, mNet1);
-		contentValues.put(DatabaseContract.COLUMN_NET, mNet);
-		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);
-		contentValues.put(DatabaseContract.COLUMN_TIME, mTime);
+		contentValues.put(DatabaseContract.COLUMN_DIRECTION, mDirection);
+		contentValues.put(DatabaseContract.COLUMN_VERTEX_LOW, mVertexLow);
+		contentValues.put(DatabaseContract.COLUMN_VERTEX_HIGH, mVertexHigh);
+		contentValues.put(DatabaseContract.COLUMN_VERTEX_NET, mVertexNet);
+		contentValues.put(DatabaseContract.COLUMN_TURNING, mTurning);
+		contentValues.put(DatabaseContract.COLUMN_TURNING_NET, mTurningNet);
+		contentValues.put(DatabaseContract.COLUMN_TURNING_RATE, mTurningRate);
+		contentValues.put(DatabaseContract.COLUMN_PROFIT, mProfit);
 		return contentValues;
 	}
 
@@ -179,15 +200,22 @@ public class StockTrend extends DatabaseTable {
 		setSE(stockTrend.mSE);
 		setCode(stockTrend.mCode);
 		setName(stockTrend.mName);
+		setPrice(stockTrend.mPrice);
+		setNet(stockTrend.mNet);
 		setPeriod(stockTrend.mPeriod);
+		setDate(stockTrend.mDate);
+		setTime(stockTrend.mTime);
 		setLevel(stockTrend.mLevel);
 		setType(stockTrend.mType);
 		setFlag(stockTrend.mFlag);
-		setNet2(stockTrend.mNet2);
-		setNet1(stockTrend.mNet1);
-		setNet(stockTrend.mNet);
-		setDate(stockTrend.mDate);
-		setTime(stockTrend.mTime);
+		setDirection(stockTrend.mDirection);
+		setVertexLow(stockTrend.mVertexLow);
+		setVertexHigh(stockTrend.mVertexHigh);
+		setVertexNet(stockTrend.mVertexNet);
+		setTurning(stockTrend.mTurning);
+		setTurningNet(stockTrend.mTurningNet);
+		setTurningRate(stockTrend.mTurningRate);
+		setProfit(stockTrend.mProfit);
 	}
 
 	@Override
@@ -203,15 +231,22 @@ public class StockTrend extends DatabaseTable {
 		setSE(cursor);
 		setCode(cursor);
 		setName(cursor);
+		setPrice(cursor);
+		setNet(cursor);
 		setPeriod(cursor);
+		setDate(cursor);
+		setTime(cursor);
 		setLevel(cursor);
 		setType(cursor);
 		setFlag(cursor);
-		setNet2(cursor);
-		setNet1(cursor);
-		setNet(cursor);
-		setDate(cursor);
-		setTime(cursor);
+		setDirection(cursor);
+		setVertexLow(cursor);
+		setVertexHigh(cursor);
+		setVertexNet(cursor);
+		setTurning(cursor);
+		setTurningNet(cursor);
+		setTurningRate(cursor);
+		setProfit(cursor);
 	}
 
 	public String getSE() {
@@ -265,6 +300,40 @@ public class StockTrend extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_NAME)));
 	}
 
+	public double getPrice() {
+		return mPrice;
+	}
+
+	public void setPrice(double price) {
+		mPrice = price;
+	}
+
+	void setPrice(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setPrice(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_PRICE)));
+	}
+
+	public double getNet() {
+		return mNet;
+	}
+
+	public void setNet(double net) {
+		mNet = net;
+	}
+
+	void setNet(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setNet(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_NET)));
+	}
+
 	public String getPeriod() {
 		return mPeriod;
 	}
@@ -280,6 +349,56 @@ public class StockTrend extends DatabaseTable {
 
 		setPeriod(cursor.getString(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_PERIOD)));
+	}
+
+	public String getDate() {
+		return mDate;
+	}
+
+	public void setDate(String date) {
+		mDate = date;
+	}
+
+	public void setDate(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setDate(cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_DATE)));
+	}
+
+	public String getTime() {
+		return mTime;
+	}
+
+	public void setTime(String time) {
+		mTime = time;
+	}
+
+	void setTime(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setTime(cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_TIME)));
+	}
+
+	public String getDateTime() {
+		if (!TextUtils.isEmpty(mTime)) {
+			return mDate + " " + mTime;
+		} else {
+			return mDate + " " + "00:00:00";
+		}
+	}
+
+	public void setDateTime(StockData stockData) {
+		if (stockData == null) {
+			return;
+		}
+		setDate(stockData.getDate());
+		setTime(stockData.getTime());
 	}
 
 	public int getLevel() {
@@ -333,105 +452,136 @@ public class StockTrend extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_FLAG)));
 	}
 
-	public double getNet2() {
-		return mNet2;
+	public int getDirection() {
+		return mDirection;
 	}
 
-	public void setNet2(double net2) {
-		mNet2 = net2;
+	public void setDirection(int direction) {
+		mDirection = direction;
 	}
 
-	void setNet2(Cursor cursor) {
+	void setDirection(Cursor cursor) {
 		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
-		setNet2(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_NET2)));
+		setDirection(cursor.getInt(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_DIRECTION)));
 	}
 
-	public double getNet1() {
-		return mNet1;
+	public void setVertexLow(double vertexLow) {
+		mVertexLow = vertexLow;
 	}
 
-	public void setNet1(double net1) {
-		mNet1 = net1;
-	}
-
-	void setNet1(Cursor cursor) {
+	void setVertexLow(Cursor cursor) {
 		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
-		setNet1(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_NET1)));
+		setVertexLow(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_VERTEX_LOW)));
 	}
 
-	public double getNet() {
-		return mNet;
+	public double getVertexHigh() {
+		return mVertexHigh;
 	}
 
-	public void setNet(double net) {
-		mNet = net;
+	public void setVertexHigh(double vertexHigh) {
+		mVertexHigh = vertexHigh;
 	}
 
-	void setNet(Cursor cursor) {
+	void setVertexHigh(Cursor cursor) {
 		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
-		setNet(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_NET)));
+		setVertexHigh(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_VERTEX_HIGH)));
 	}
 
-	public String getDate() {
-		return mDate;
+	public double getVertexNet() {
+		return mVertexNet;
 	}
 
-	public void setDate(String date) {
-		mDate = date;
+	public void setVertexNet(double vertexNet) {
+		mVertexNet = vertexNet;
 	}
 
-	public void setDate(Cursor cursor) {
+	void setVertexNet(Cursor cursor) {
 		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
-		setDate(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_DATE)));
+		setVertexNet(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_VERTEX_NET)));
 	}
 
-	public String getTime() {
-		return mTime;
+	public double getTurning() {
+		return mTurning;
 	}
 
-	public void setTime(String time) {
-		mTime = time;
+	public void setTurning(double turning) {
+		mTurning = turning;
 	}
 
-	void setTime(Cursor cursor) {
+	void setTurning(Cursor cursor) {
 		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
-		setTime(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_TIME)));
+		setTurning(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_TURNING)));
 	}
 
-	public String getDateTime() {
-		if (!TextUtils.isEmpty(mTime)) {
-			return mDate + " " + mTime;
-		} else {
-			return mDate + " " + "00:00:00";
-		}
+	public double getTurningNet() {
+		return mTurningNet;
 	}
 
-	public void setDateTime(StockData stockData) {
-		if (stockData == null) {
+	public void setTurningNet(double turningNet) {
+		mTurningNet = turningNet;
+	}
+
+	void setTurningNet(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
-		setDate(stockData.getDate());
-		setTime(stockData.getTime());
+
+		setTurningNet(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_TURNING_NET)));
+	}
+
+	public double getTurningRate() {
+		return mTurningRate;
+	}
+
+	public void setTurningRate(double turningRate) {
+		mTurningRate = turningRate;
+	}
+
+	void setTurningRate(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setTurningRate(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_TURNING_RATE)));
+	}
+
+	public double getProfit() {
+		return mProfit;
+	}
+
+	public void setProfit(double profit) {
+		mProfit = profit;
+	}
+
+	void setProfit(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setProfit(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_PROFIT)));
 	}
 
 	public void addFlag(int flag) {
@@ -448,22 +598,102 @@ public class StockTrend extends DatabaseTable {
 		return (mFlag & flag) == flag;
 	}
 
+	public void setupVertexNet() {
+		if (mDirection == DIRECTION_NONE || mVertexLow == 0 || mVertexHigh == 0) {
+			mVertexNet = 0;
+			return;
+		}
+
+		if (mDirection == DIRECTION_UP) {
+			mVertexNet = Utility.Round2(100 * (mVertexHigh - mVertexLow) / mVertexLow);
+		} else if (mDirection == DIRECTION_DOWN) {
+			mVertexNet = Utility.Round2(100 * (mVertexLow - mVertexHigh) / mVertexHigh);
+		}
+	}
+
+	public void setupTurningNet() {
+		if (mPrice == 0 || mDirection == DIRECTION_NONE || mVertexLow == 0 || mVertexHigh == 0) {
+			mTurningNet = 0;
+			return;
+		}
+
+		if (mDirection == DIRECTION_UP) {
+			mTurningNet = Utility.Round2(100 * (mPrice - mVertexHigh) / mVertexHigh);
+		} else if (mDirection == DIRECTION_DOWN) {
+			mTurningNet = Utility.Round2(100 * (mPrice - mVertexLow) / mVertexLow);
+		}
+	}
+
+	public void setupTurningRate() {
+		if (mPrice == 0 || mDirection == DIRECTION_NONE || mVertexLow == 0 || mVertexHigh == 0) {
+			mTurningRate = 0;
+			return;
+		}
+
+		if (mDirection == DIRECTION_UP) {
+			mTurningRate = Utility.Round2(100 * Math.abs(mPrice - mVertexHigh) / (mVertexHigh - mVertexLow));
+		} else if (mDirection == DIRECTION_DOWN) {
+			mTurningRate = Utility.Round2(100 * Math.abs(mPrice - mVertexLow) / (mVertexHigh - mVertexLow));
+		}
+	}
+
+	public void setupProfit() {
+		if (mPrice == 0 || mTurning == 0) {
+			mProfit = 0;
+			return;
+		}
+
+		mProfit = Utility.Round2(100 * (mPrice - mTurning) / mTurning);
+	}
+
+	public void updateStock(Stock stock) {
+		if (stock == null) {
+			return;
+		}
+		setName(stock.getName());
+		setPrice(stock.getPrice());
+		setNet(stock.getNet());
+	}
+
+	public void updateTrend(StockData stockData) {
+		if (stockData == null) {
+			return;
+		}
+		setDirection(stockData.getDirection());
+		setVertexLow(stockData.getCandle().getLow());
+		setVertexHigh(stockData.getCandle().getHigh());
+		setupVertexNet();
+	}
+
+	public void updateTurningProfit() {
+		setupTurningNet();
+		setupTurningRate();
+		setupProfit();
+	}
+
 	public String toString() {
 		return mSE + Constant.TAB
 				+ mCode + Constant.TAB
 				+ mName + Constant.TAB
+				+ mPrice + Constant.TAB
+				+ mNet + Constant.TAB
 				+ mPeriod + Constant.TAB
+				+ mDate + Constant.TAB
+				+ mTime + Constant.TAB
 				+ mLevel + Constant.TAB
 				+ mType + Constant.TAB
 				+ mFlag + Constant.TAB
-				+ mNet2 + Constant.TAB
-				+ mNet1 + Constant.TAB
-				+ mNet + Constant.TAB
-				+ mDate + Constant.TAB
-				+ mTime + Constant.TAB;
+				+ mDirection + Constant.TAB
+				+ mVertexLow + Constant.TAB
+				+ mVertexHigh + Constant.TAB
+				+ mVertexNet + Constant.TAB
+				+ mTurning + Constant.TAB
+				+ mTurningNet + Constant.TAB
+				+ mTurningRate + Constant.TAB
+				+ mProfit + Constant.TAB;
 	}
 
 	public String toTrendString() {
-		return getPeriod() + " " + MARK_LEVEL + getLevel() + " " + getType() + " " + (int) mNet1 + "/" + (int) mNet;
+		return getPeriod() + " " + MARK_LEVEL + getLevel() + " " + getType() + " " + (int) getVertexNet() + "/" + (int) getTurningNet();
 	}
 }

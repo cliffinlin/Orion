@@ -283,31 +283,60 @@ public class TrendAnalyzer {
 			}
 			extendVertexList(dataList, vertexList);
 
-			mStockPerceptronProvider.train(mPeriod, level, mStockTrendList);
+			if (!TextUtils.isEmpty(type)) {
+				StockData lineData = StockData.getLast(dataList, 1);
+				StockData stockData = StockData.getLast(mStockDataList, 0);
 
-			if (mStockTrendList.size() > 0) {
-				StockTrend stockTrend = mStockTrendList.get(mStockTrendList.size() - 1);
+				StockTrend stockTrend = new StockTrend();
+				stockTrend.setSE(mStock.getSE());
+				stockTrend.setCode(mStock.getCode());
+				stockTrend.setPeriod(mPeriod);
+				stockTrend.setLevel(level);
+
 				if (mDatabaseManager.isStockTrendExist(stockTrend)) {
 					mDatabaseManager.getStockTrend(stockTrend);
-					if (TextUtils.equals(type, stockTrend.getType())) {
-						stockTrend.removeFlag(StockTrend.FLAG_CHANGED);
-						stockTrend.setModified(Utility.getCurrentDateTimeString());
-						mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValues());
 
+					stockTrend.updateStock(mStock);
+					stockTrend.updateTrend(lineData);
+
+					if (TextUtils.equals(type, stockTrend.getType())) {
+//						stockTrend.setType(type);
+						stockTrend.removeFlag(StockTrend.FLAG_CHANGED);
+
+//						stockTrend.setTurning(mStock.getPrice());
+						stockTrend.updateTurningProfit();
+
+//						stockTrend.setDateTime(stockData);
+//						stockTrend.setModified(Utility.getCurrentDateTimeString());
+						mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValues());
 //						mStockPerceptronProvider.train(stockTrend.getPeriod(), stockTrend.getLevel(), stockTrend.getType());
 					} else {
+						stockTrend.setType(type);
 						stockTrend.addFlag(StockTrend.FLAG_CHANGED);
+
+						stockTrend.setTurning(mStock.getPrice());
+						stockTrend.updateTurningProfit();
+
+						stockTrend.setDateTime(stockData);
 						stockTrend.setModified(Utility.getCurrentDateTimeString());
 						mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValues());
 
 						if (Setting.getDisplayAdaptive() && level >= mStock.getLevel(mPeriod)) {
-							StockData stockData = StockData.getLast(mStockDataList, 0);
-							stockData.setAction(StockTrend.MARK_LEVEL + level + type + Constant.NEW_LINE + (int) stockTrend.getNet1() + "/" + (int) stockTrend.getNet());
+							stockData.setAction(StockTrend.MARK_LEVEL + level + type + Constant.NEW_LINE + (int) stockTrend.getVertexNet() + "/" + (int) stockTrend.getTurningNet());
 							StockAnalyzer.getInstance().notifyStockTrend(stockTrend);
 						}
 					}
 				} else {
+					stockTrend.setType(type);
 					stockTrend.setFlag(StockTrend.FLAG_NONE);
+
+					stockTrend.updateStock(mStock);
+					stockTrend.updateTrend(lineData);
+
+					stockTrend.setTurning(0);
+					stockTrend.updateTurningProfit();
+
+					stockTrend.setDateTime(stockData);
 					stockTrend.setCreated(Utility.getCurrentDateTimeString());
 					mDatabaseManager.insertStockTrend(stockTrend);
 				}
@@ -343,12 +372,12 @@ public class TrendAnalyzer {
 		stockTrend.setName(mStock.getName());
 		stockTrend.setPeriod(mPeriod);
 		stockTrend.setLevel(level);
-		stockTrend.setType(type);
 		stockTrend.setFlag(StockTrend.FLAG_NONE);
+		stockTrend.setType(type);
 
-		stockTrend.setNet2(prevPrev.getNet());
-		stockTrend.setNet1(prev.getNet());
-		stockTrend.setNet(current.getNet());
+		stockTrend.setNet(mStock.getNet());
+		stockTrend.setupVertexNet();
+		stockTrend.updateTurningProfit();
 
 		stockTrend.setDateTime(current);
 		stockTrend.setCreated(Utility.getCurrentDateTimeString());

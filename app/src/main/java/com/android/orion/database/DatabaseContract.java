@@ -23,33 +23,14 @@ public final class DatabaseContract {
 	public static final String COLUMN_NAME = "name";
 	public static final String COLUMN_PINYIN = "pinyin";
 	public static final String COLUMN_CLASSES = "classes";
-	public static final String COLUMN_STATUS = "status";
 	public static final String COLUMN_FLAG = "flag";
 	public static final String COLUMN_PRICE = "price";
 	public static final String COLUMN_CHANGE = "change";
 	public static final String COLUMN_NET = "net";
-	public static final String COLUMN_NET1 = "net1";
-	public static final String COLUMN_NET2 = "net2";
 	public static final String COLUMN_VOLUME = "volume";
 	public static final String COLUMN_VALUE = "value";
 	public static final String COLUMN_ACTION = "action";
-	public static final String COLUMN_PERIOD = "period";
 	public static final String COLUMN_LEVEL = "level";
-	public static final String COLUMN_DIRECTION = "direction";
-	public static final String COLUMN_VERTEX = "vertex";
-	public static final String COLUMN_DATE = "date";
-	public static final String COLUMN_TIME = "time";
-
-	public static final String COLUMN_OPEN = "open";
-	public static final String COLUMN_HIGH = "high";
-	public static final String COLUMN_LOW = "low";
-	public static final String COLUMN_CLOSE = "close";
-
-	public static final String COLUMN_AVERAGE5 = "average5";
-	public static final String COLUMN_AVERAGE10 = "average10";
-	public static final String COLUMN_DIF = "dif";
-	public static final String COLUMN_DEA = "dea";
-	public static final String COLUMN_HISTOGRAM = "histogram";
 
 	public static final String COLUMN_MIN5 = Period.MIN5;
 	public static final String COLUMN_MIN15 = Period.MIN15;
@@ -76,9 +57,8 @@ public final class DatabaseContract {
 	public static final String COLUMN_X_MAX = "x_max";
 	public static final String COLUMN_Y_MIN = "y_min";
 	public static final String COLUMN_Y_MAX = "y_max";
-
+	public static final String COLUMN_STATUS = "status";
 	public static final String COLUMN_OPERATE = "operate";
-	public static final String COLUMN_ACCOUNT = "account";
 	public static final String COLUMN_BUY = "buy";
 	public static final String COLUMN_SELL = "sell";
 	public static final String COLUMN_HOLD = "hold";
@@ -104,6 +84,28 @@ public final class DatabaseContract {
 	public static final String COLUMN_INDEX_SE = "index_se";
 	public static final String COLUMN_INDEX_CODE = "index_code";
 	public static final String COLUMN_INDEX_NAME = "index_name";
+
+	public static final String COLUMN_DATE = "date";
+	public static final String COLUMN_TIME = "time";
+	public static final String COLUMN_PERIOD = "period";
+	public static final String COLUMN_OPEN = "open";
+	public static final String COLUMN_HIGH = "high";
+	public static final String COLUMN_LOW = "low";
+	public static final String COLUMN_CLOSE = "close";
+	public static final String COLUMN_DIRECTION = "direction";
+	public static final String COLUMN_VERTEX = "vertex";
+	public static final String COLUMN_VERTEX_LOW = "vertex_low";
+	public static final String COLUMN_VERTEX_HIGH = "vertex_high";
+	public static final String COLUMN_VERTEX_NET = "vertex_net";
+	public static final String COLUMN_TURNING = "turning";
+	public static final String COLUMN_TURNING_NET = "turning_net";
+	public static final String COLUMN_TURNING_RATE = "turning_rate";
+	public static final String COLUMN_AVERAGE5 = "average5";
+	public static final String COLUMN_AVERAGE10 = "average10";
+	public static final String COLUMN_DIF = "dif";
+	public static final String COLUMN_DEA = "dea";
+	public static final String COLUMN_HISTOGRAM = "histogram";
+	public static final String COLUMN_ACCOUNT = "account";
 
 	public static final String COLUMN_TYPE = "type";
 	public static final String COLUMN_CONTENT = "content";
@@ -300,8 +302,10 @@ public final class DatabaseContract {
 
 		public static final String[] PROJECTION_ALL = {_ID,
 				COLUMN_SE, COLUMN_CODE, COLUMN_NAME,
+				COLUMN_PRICE, COLUMN_NET,
 				COLUMN_PERIOD, COLUMN_LEVEL, COLUMN_TYPE, COLUMN_FLAG,
-				COLUMN_NET2, COLUMN_NET1, COLUMN_NET,
+				COLUMN_DIRECTION, COLUMN_VERTEX_LOW, COLUMN_VERTEX_HIGH, COLUMN_VERTEX_NET,
+				COLUMN_TURNING, COLUMN_TURNING_NET, COLUMN_TURNING_RATE, COLUMN_PROFIT,
 				COLUMN_DATE, COLUMN_TIME,
 				COLUMN_CREATED, COLUMN_MODIFIED};
 		static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
@@ -311,13 +315,20 @@ public final class DatabaseContract {
 				+ COLUMN_SE + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_CODE + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_NAME + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_PRICE + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_NET + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_PERIOD + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_LEVEL + INTEGER_TYPE + COMMA_SEP
 				+ COLUMN_TYPE + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_FLAG + INTEGER_TYPE + COMMA_SEP
-				+ COLUMN_NET2 + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_NET1 + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_NET + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_DIRECTION + INTEGER_TYPE + COMMA_SEP
+				+ COLUMN_VERTEX_LOW + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_VERTEX_HIGH + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_VERTEX_NET + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_TURNING + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_TURNING_NET + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_TURNING_RATE + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_PROFIT + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_DATE + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_TIME + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_CREATED + TEXT_TYPE + COMMA_SEP

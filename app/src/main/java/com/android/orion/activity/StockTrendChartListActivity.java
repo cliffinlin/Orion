@@ -77,7 +77,7 @@ public class StockTrendChartListActivity extends BaseActivity implements
 					mStockPerceptron.setId(mIntent.getLongExtra(Constant.EXTRA_STOCK_PERCEPTRON_ID,
 							DatabaseContract.INVALID_ID));
 					mDatabaseManager.getStockPerceptronById(mStockPerceptron);
-					mStockPerceptron = StockPerceptronProvider.getInstance().getStockPerceptron(mStockPerceptron.getPeriod(), mStockPerceptron.getLevel());
+					mStockPerceptron = StockPerceptronProvider.getInstance().getStockPerceptron(mStockPerceptron.getPeriod(), mStockPerceptron.getLevel(), mStockPerceptron.getType());
 					mDescription = mStockPerceptron.toDescriptionString();
 					mLoaderManager.initLoader(LOADER_ID_TREND_LIST, null, StockTrendChartListActivity.this);
 					break;
@@ -261,8 +261,8 @@ public class StockTrendChartListActivity extends BaseActivity implements
 					Entry pointEntry = new Entry((float) stockTrend.getNet(), index);
 					chart.mPointEntryList.add(pointEntry);
 
-//					Entry lineEntry = new Entry((float) mStockPerceptron.predict(stockTrend.getPrice()), index);
-//					chart.mLineEntryList.add(lineEntry);
+					Entry lineEntry = new Entry((float) mStockPerceptron.predict(stockTrend.getPrice()), index);
+					chart.mLineEntryList.add(lineEntry);
 				}
 			}
 		} catch (Exception e) {
