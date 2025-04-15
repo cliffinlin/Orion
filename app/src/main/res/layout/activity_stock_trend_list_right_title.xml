@@ -4,23 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/price"
-        android:layout_width="80dp"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/price"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/net"
-        android:layout_width="80dp"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/net"
-        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/period"
@@ -59,75 +42,31 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/direction"
+        android:id="@+id/net2"
         android:layout_width="80dp"
         android:layout_height="40dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="@string/direction"
+        android:text="@string/net2"
         android:textSize="18sp" />
 
-    <TextView
-        android:id="@+id/vertex_low"
-        android:layout_width="100dp"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/vertex_low"
-        android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/vertex_high"
-        android:layout_width="100dp"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/vertex_high"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/vertex_net"
-        android:layout_width="100dp"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/vertex_net"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/turning"
+        android:id="@+id/net1"
         android:layout_width="80dp"
         android:layout_height="40dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="@string/turning"
+        android:text="@string/net1"
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/turning_net"
-        android:layout_width="100dp"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/turning_net"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/turning_rate"
-        android:layout_width="100dp"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/turning_rate"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/profit"
+        android:id="@+id/net"
         android:layout_width="80dp"
         android:layout_height="40dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="@string/profit"
+        android:text="@string/net"
         android:textSize="18sp" />
 
     <TextView

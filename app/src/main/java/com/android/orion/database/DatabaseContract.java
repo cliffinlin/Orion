@@ -27,6 +27,8 @@ public final class DatabaseContract {
 	public static final String COLUMN_PRICE = "price";
 	public static final String COLUMN_CHANGE = "change";
 	public static final String COLUMN_NET = "net";
+	public static final String COLUMN_NET1 = "net1";
+	public static final String COLUMN_NET2 = "net2";
 	public static final String COLUMN_VOLUME = "volume";
 	public static final String COLUMN_VALUE = "value";
 	public static final String COLUMN_ACTION = "action";
@@ -94,12 +96,6 @@ public final class DatabaseContract {
 	public static final String COLUMN_CLOSE = "close";
 	public static final String COLUMN_DIRECTION = "direction";
 	public static final String COLUMN_VERTEX = "vertex";
-	public static final String COLUMN_VERTEX_LOW = "vertex_low";
-	public static final String COLUMN_VERTEX_HIGH = "vertex_high";
-	public static final String COLUMN_VERTEX_NET = "vertex_net";
-	public static final String COLUMN_TURNING = "turning";
-	public static final String COLUMN_TURNING_NET = "turning_net";
-	public static final String COLUMN_TURNING_RATE = "turning_rate";
 	public static final String COLUMN_AVERAGE5 = "average5";
 	public static final String COLUMN_AVERAGE10 = "average10";
 	public static final String COLUMN_DIF = "dif";
@@ -302,10 +298,8 @@ public final class DatabaseContract {
 
 		public static final String[] PROJECTION_ALL = {_ID,
 				COLUMN_SE, COLUMN_CODE, COLUMN_NAME,
-				COLUMN_PRICE, COLUMN_NET,
 				COLUMN_PERIOD, COLUMN_LEVEL, COLUMN_TYPE, COLUMN_FLAG,
-				COLUMN_DIRECTION, COLUMN_VERTEX_LOW, COLUMN_VERTEX_HIGH, COLUMN_VERTEX_NET,
-				COLUMN_TURNING, COLUMN_TURNING_NET, COLUMN_TURNING_RATE, COLUMN_PROFIT,
+				COLUMN_NET2, COLUMN_NET1, COLUMN_NET,
 				COLUMN_DATE, COLUMN_TIME,
 				COLUMN_CREATED, COLUMN_MODIFIED};
 		static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
@@ -315,20 +309,13 @@ public final class DatabaseContract {
 				+ COLUMN_SE + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_CODE + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_NAME + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_PRICE + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_NET + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_PERIOD + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_LEVEL + INTEGER_TYPE + COMMA_SEP
 				+ COLUMN_TYPE + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_FLAG + INTEGER_TYPE + COMMA_SEP
-				+ COLUMN_DIRECTION + INTEGER_TYPE + COMMA_SEP
-				+ COLUMN_VERTEX_LOW + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_VERTEX_HIGH + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_VERTEX_NET + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_TURNING + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_TURNING_NET + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_TURNING_RATE + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_PROFIT + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_NET2 + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_NET1 + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_NET + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_DATE + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_TIME + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_CREATED + TEXT_TYPE + COMMA_SEP

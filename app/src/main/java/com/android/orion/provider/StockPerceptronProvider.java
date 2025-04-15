@@ -149,7 +149,7 @@ public class StockPerceptronProvider {
 				mXArray.clear();
 				mYArray.clear();
 				for (StockTrend stockTrend : mStockTrendList) {
-					mXArray.add(stockTrend.getPrice());
+					mXArray.add(stockTrend.getNet1());
 					mYArray.add(stockTrend.getNet());
 				}
 				mStockPerceptron = getStockPerceptron(period, level, type);
