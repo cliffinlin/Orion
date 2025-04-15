@@ -1,7 +1,9 @@
 package com.android.orion.analyzer;
 
 import android.text.TextUtils;
+import android.util.ArrayMap;
 
+import com.android.orion.data.Period;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockTrend;
@@ -18,6 +20,7 @@ public class TrendAnalyzer {
 	Logger Log = Logger.getLogger();
 	Stock mStock;
 	String mPeriod;
+	ArrayMap<Double, Double> mStockTrendNetMap = new ArrayMap<>();
 	ArrayList<StockData> mStockDataList = new ArrayList<>();
 	ArrayList<StockTrend> mStockTrendList = new ArrayList<>();
 	DatabaseManager mDatabaseManager = DatabaseManager.getInstance();
@@ -28,6 +31,10 @@ public class TrendAnalyzer {
 
 	public static TrendAnalyzer getInstance() {
 		return Holder.INSTANCE;
+	}
+
+	public ArrayMap<Double, Double> getStockTrendNetMap() {
+		return mStockTrendNetMap;
 	}
 
 	void setup(Stock stock, String period, ArrayList<StockData> stockDataList) {
@@ -282,6 +289,13 @@ public class TrendAnalyzer {
 				direction = directionTo;
 			}
 			extendVertexList(dataList, vertexList);
+
+			if (mStockTrendList.size() > 0 && !mPeriod.equals(Period.MONTH)) {
+				for (int i = 0; i < mStockTrendList.size() - 1; i++) {
+					StockTrend stockTrend = mStockTrendList.get(i);
+					mStockTrendNetMap.put(stockTrend.getNet1(), stockTrend.getNet());
+				}
+			}
 
 			if (!TextUtils.isEmpty(type) && mStockTrendList.size() > 0) {
 				StockTrend stockTrend = mStockTrendList.get(mStockTrendList.size() - 1);

@@ -22,6 +22,7 @@ import com.android.orion.database.StockData;
 import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockTrend;
 import com.android.orion.manager.DatabaseManager;
+import com.android.orion.provider.StockPerceptronProvider;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Logger;
@@ -46,6 +47,7 @@ public class StockAnalyzer {
 	DatabaseManager mDatabaseManager = DatabaseManager.getInstance();
 	FinancialAnalyzer mFinancialAnalyzer = FinancialAnalyzer.getInstance();
 	TrendAnalyzer mTrendAnalyzer = TrendAnalyzer.getInstance();
+	StockPerceptronProvider mStockPerceptronProvider = StockPerceptronProvider.getInstance();
 	Logger Log = Logger.getLogger();
 
 	private StockAnalyzer() {
@@ -95,6 +97,7 @@ public class StockAnalyzer {
 					analyze(period);
 				}
 			}
+			mStockPerceptronProvider.train(mTrendAnalyzer.getStockTrendNetMap());
 			mFinancialAnalyzer.analyzeFinancial(mStock);
 			mFinancialAnalyzer.setupFinancial(mStock);
 			mFinancialAnalyzer.setupStockBonus(mStock);
@@ -250,7 +253,7 @@ public class StockAnalyzer {
 		if (stockDealProfit > 0) {
 			mContentTitle.append(Constant.MARK_DOLLAR);
 		}
-		mContentTitle.append(mStock.getName() + " " + mStock.getPrice() + " " + mStock.getNet() + " " + stockTrend.toTrendString() + " ");
+		mContentTitle.append(mStock.getName() + " " + mStock.getPrice() + " " + mStock.getNet() + " " + stockTrend.toTrendString() + " ? " + mStockPerceptronProvider.getStockPerceptron().predict(stockTrend.getNet1()));
 
 		RecordFile.writeNotificationFile(mContentTitle.toString());
 		try {

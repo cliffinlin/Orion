@@ -8,6 +8,9 @@ import android.text.TextUtils;
 import com.android.orion.setting.Constant;
 import com.android.orion.utility.Utility;
 
+import java.util.Calendar;
+import java.util.Comparator;
+
 public class StockTrend extends DatabaseTable {
 
 	public static final String LABEL_NONE = "";

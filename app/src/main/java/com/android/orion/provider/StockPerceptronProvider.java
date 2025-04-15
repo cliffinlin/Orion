@@ -21,8 +21,11 @@ import com.android.orion.utility.Logger;
 import com.android.orion.utility.Utility;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class StockPerceptronProvider {
+
+	public static final int MSG_TRAIN_ALL_IN_ONE = 999999 + 1;
 
 	Context mContext = MainApplication.getContext();
 	DatabaseManager mDatabaseManager = DatabaseManager.getInstance();
@@ -33,7 +36,7 @@ public class StockPerceptronProvider {
 	ArrayList<StockTrend> mStockTrendList = new ArrayList<>();
 	ArrayList<Double> mXArray = new ArrayList<>();
 	ArrayList<Double> mYArray = new ArrayList<>();
-	StockPerceptron mStockPerceptron;
+	StockPerceptron mStockPerceptron = new StockPerceptron();
 	ArrayMap<String, StockPerceptron> mTrendMap;
 	ArrayMap<Integer, ArrayMap<String, StockPerceptron>> mLevelMap;
 	ArrayMap<String, ArrayMap<Integer, ArrayMap<String, StockPerceptron>>> mPeriodMap;
@@ -91,8 +94,24 @@ public class StockPerceptronProvider {
 		releaseWakeLock();
 	}
 
+	public StockPerceptron getStockPerceptron() {
+		return mStockPerceptron;
+	}
+
 	public StockPerceptron getStockPerceptron(String period, int level, String type) {
 		return mPeriodMap.get(period).get(level).get(type);
+	}
+
+	public void train(ArrayMap<Double, Double> stockTrendNetMap) {
+		if (stockTrendNetMap == null || stockTrendNetMap.size() == 0) {
+			return;
+		}
+
+		if (mHandler.hasMessages(MSG_TRAIN_ALL_IN_ONE)) {
+			mHandler.removeMessages(MSG_TRAIN_ALL_IN_ONE);
+		}
+		Message msg = mHandler.obtainMessage(MSG_TRAIN_ALL_IN_ONE, stockTrendNetMap);
+		mHandler.sendMessage(msg);
 	}
 
 	public void train(String period, int level, String type) {
@@ -103,13 +122,11 @@ public class StockPerceptronProvider {
 		String keyString = period + level + type;
 		int what = keyString.hashCode();
 		StockPerceptron stockPerceptron = new StockPerceptron(period, level, type);
-		if (mHandler.hasMessages(keyString.hashCode())) {
-//			Log.d("mHandler.hasMessages " + what + ", skip!");
-		} else {
-//			Log.d("mHandler.sendMessage " + what);
-			Message msg = mHandler.obtainMessage(what, stockPerceptron);
-			mHandler.sendMessage(msg);
+		if (mHandler.hasMessages(what)) {
+			mHandler.removeMessages(what);
 		}
+		Message msg = mHandler.obtainMessage(what, stockPerceptron);
+		mHandler.sendMessage(msg);
 	}
 
 	private static class Holder {
@@ -123,6 +140,8 @@ public class StockPerceptronProvider {
 
 		@Override
 		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+
 			try {
 				acquireWakeLock();
 
@@ -130,32 +149,55 @@ public class StockPerceptronProvider {
 					return;
 				}
 
-				StockPerceptron stockPerceptron = (StockPerceptron) msg.obj;
-				if (stockPerceptron == null) {
-					return;
-				}
+				switch (msg.what) {
+					case MSG_TRAIN_ALL_IN_ONE: {
+						ArrayMap<Double, Double> stockTrendNetMap = (ArrayMap<Double, Double>) msg.obj;
+						if (stockTrendNetMap == null) {
+							return;
+						}
 
-				String period = stockPerceptron.getPeriod();
-				int level = stockPerceptron.getLevel();
-				String type = stockPerceptron.getType();
-				if (TextUtils.isEmpty(period) || level < 0 || TextUtils.isEmpty(type)) {
-					return;
-				}
+						mXArray = new ArrayList<>(stockTrendNetMap.keySet());
+						Collections.sort(mXArray);
+						mYArray = new ArrayList<>();
+						for (Double key : mXArray) {
+							mYArray.add(stockTrendNetMap.get(key));
+						}
+						mStockPerceptron.train(mXArray, mYArray, Config.MAX_ML_TRAIN_TIMES * 10);
+						mStockPerceptron.setModified(Utility.getCurrentDateTimeString());
+						Log.d("---------->" + mStockPerceptron.toLogString());
+						break;
+					}
 
-				mDatabaseManager.getStockTrendList(period, level, type, mStockTrendList);
-				if (mStockTrendList.isEmpty()) {
-					return;
+					default: {
+						StockPerceptron stockPerceptron = (StockPerceptron) msg.obj;
+						if (stockPerceptron == null) {
+							return;
+						}
+
+						String period = stockPerceptron.getPeriod();
+						int level = stockPerceptron.getLevel();
+						String type = stockPerceptron.getType();
+						if (TextUtils.isEmpty(period) || level < 0 || TextUtils.isEmpty(type)) {
+							return;
+						}
+
+						mDatabaseManager.getStockTrendList(period, level, type, mStockTrendList);
+						if (mStockTrendList.isEmpty()) {
+							return;
+						}
+						mXArray.clear();
+						mYArray.clear();
+						for (StockTrend stockTrend : mStockTrendList) {
+							mXArray.add(stockTrend.getNet1());
+							mYArray.add(stockTrend.getNet());
+						}
+						mStockPerceptron = getStockPerceptron(period, level, type);
+						mStockPerceptron.train(mXArray, mYArray, Config.MAX_ML_TRAIN_TIMES);
+						mStockPerceptron.setModified(Utility.getCurrentDateTimeString());
+						mDatabaseManager.updateStockPerceptron(mStockPerceptron, mStockPerceptron.getContentValuesPerceptron());
+						break;
+					}
 				}
-				mXArray.clear();
-				mYArray.clear();
-				for (StockTrend stockTrend : mStockTrendList) {
-					mXArray.add(stockTrend.getNet1());
-					mYArray.add(stockTrend.getNet());
-				}
-				mStockPerceptron = getStockPerceptron(period, level, type);
-				mStockPerceptron.train(mXArray, mYArray, Config.MAX_ML_TRAIN_TIMES);
-				mStockPerceptron.setModified(Utility.getCurrentDateTimeString());
-				mDatabaseManager.updateStockPerceptron(mStockPerceptron, mStockPerceptron.getContentValuesPerceptron());
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {
