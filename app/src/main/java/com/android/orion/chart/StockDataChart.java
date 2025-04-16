@@ -10,6 +10,7 @@ import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockTrend;
+import com.android.orion.provider.StockPerceptronProvider;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Utility;
@@ -51,6 +52,7 @@ public class StockDataChart {
 	public List<Entry>[] mGroupEntryList = new List[StockTrend.LEVEL_MAX];
 	public CombinedData mCombinedDataMain = new CombinedData(mXValues);
 	public CombinedData mCombinedDataSub = new CombinedData(mXValues);
+	StockPerceptronProvider mStockPerceptronProvider = StockPerceptronProvider.getInstance();
 
 	Stock mStock;
 	String mPeriod;
@@ -351,8 +353,9 @@ public class StockDataChart {
 		mDescription.append(stock.getNet()).append("%").append("  ");
 
 		StockTrend stockTrend = getStockTrend(mAdaptiveLevel);
-		if (stockTrend != null && stockTrend.hasFlag(StockTrend.FLAG_CHANGED)) {
+		if (stockTrend != null) {
 			mDescription.append(stockTrend.toTrendString());
+			mDescription.append(" ? " + mStockPerceptronProvider.getStockPerceptron().predict(stockTrend.getNet1()));
 		} else {
 			mDescription.append(stock.getAction(mPeriod));
 		}
@@ -409,6 +412,7 @@ public class StockDataChart {
 		if (stockTrend != null && stockTrend.hasFlag(StockTrend.FLAG_CHANGED)) {
 			color = lineColor(mAdaptiveLevel);
 			label += "Trend:" + Constant.TAB2 + stockTrend.toTrendString();
+			label += " ? " + mStockPerceptronProvider.getStockPerceptron().predict(stockTrend.getNet1());
 		} else {
 			label += "Action:" + Constant.TAB2 + action;
 		}

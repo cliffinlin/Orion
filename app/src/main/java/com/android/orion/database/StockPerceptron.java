@@ -357,7 +357,7 @@ public class StockPerceptron extends DatabaseTable {
 	}
 
 	public double predict(double x) {
-		return mLinearRegression.predict(x);
+		return Utility.Round2(mLinearRegression.predict(x));
 	}
 
 	public String toDescriptionString() {

@@ -467,6 +467,6 @@ public class StockTrend extends DatabaseTable {
 	}
 
 	public String toTrendString() {
-		return getPeriod() + " " + MARK_LEVEL + getLevel() + " " + getType() + " " + (int) mNet1 + "/" + (int) mNet;
+		return MARK_LEVEL + getLevel() + " " + getType() + " " + (int) mNet1 + "/" + (int) mNet;
 	}
 }
