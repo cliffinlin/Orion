@@ -78,7 +78,18 @@ public class StockFavoriteListActivity extends ListActivity implements
 	@Override
 	public void handleOnCreate(Bundle savedInstanceState) {
 		super.handleOnCreate(savedInstanceState);
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
 		initLoader();
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		destroyLoader();
 	}
 
 	@Override
@@ -401,6 +412,10 @@ public class StockFavoriteListActivity extends ListActivity implements
 		mSortOrder = Preferences.getString(Setting.SETTING_SORT_ORDER_STOCK_LIST,
 				mSortOrderDefault);
 		mLoaderManager.initLoader(LOADER_ID_STOCK_FAVORITE_LIST, null, this);
+	}
+
+	void destroyLoader() {
+		mLoaderManager.destroyLoader(LOADER_ID_STOCK_FAVORITE_LIST);
 	}
 
 	void restartLoader() {

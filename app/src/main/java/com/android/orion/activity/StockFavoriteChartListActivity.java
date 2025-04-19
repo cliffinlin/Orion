@@ -84,9 +84,20 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 
 		onNewIntent();
 		initListView();
-		initLoader();
 		updateTitle();
 		updateMenuAction();
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		initLoader();
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		destroyLoader();
 	}
 
 	void onNewIntent() {
@@ -296,9 +307,12 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 			mStockDataChartItemList.add(mStockDataChartItemSubList.get(i));
 		}
 
-		mStockDataChartArrayAdapter = new StockDataChartArrayAdapter(this,
-				mStockDataChartItemList);
-		mListView.setAdapter(mStockDataChartArrayAdapter);
+		if (mStockDataChartItemList != null && !mStockDataChartItemList.isEmpty()) {
+			mStockDataChartArrayAdapter = new StockDataChartArrayAdapter(this,
+					mStockDataChartItemList);
+			mListView.setAdapter(mStockDataChartArrayAdapter);
+		}
+
 		mListView.setOnRefreshListener(() -> {
 			mListView.onRefreshComplete();
 			mBackgroundHandler.downloadStockData(mStock);
@@ -314,6 +328,18 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 		for (int i = 0; i < Period.PERIODS.length; i++) {
 			if (Setting.getPeriod(Period.PERIODS[i])) {
 				mLoaderManager.initLoader(i, null, this);
+			}
+		}
+	}
+
+	void destroyLoader() {
+		if (mStockIDList == null) {
+			mLoaderManager.destroyLoader(LOADER_ID_STOCK_LIST);
+		}
+
+		for (int i = 0; i < Period.PERIODS.length; i++) {
+			if (Setting.getPeriod(Period.PERIODS[i])) {
+				mLoaderManager.destroyLoader(i);
 			}
 		}
 	}
@@ -788,7 +814,20 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 
 		@Override
 		public int getViewTypeCount() {
-			return mStockDataChartItemList.size();
+			return mStockDataChartItemList != null ? mStockDataChartItemList.size() : 0;
+		}
+
+		@Override
+		public int getCount() {
+			return mStockDataChartItemList != null ? mStockDataChartItemList.size() : 0;
+		}
+
+		@Override
+		public StockDataChartItem getItem(int position) {
+			if (mStockDataChartItemList == null || position < 0 || position >= mStockDataChartItemList.size()) {
+				return null;
+			}
+			return mStockDataChartItemList.get(position);
 		}
 	}
 }
