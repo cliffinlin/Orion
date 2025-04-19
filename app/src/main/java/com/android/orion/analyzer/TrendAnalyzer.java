@@ -43,16 +43,13 @@ public class TrendAnalyzer {
 		mStockDataList = stockDataList;
 	}
 
-	void analyzeVertex(ArrayList<StockData> vertexList) {
-		if ((mStockDataList == null) || (vertexList == null)) {
+	void analyzeVertex() {
+		ArrayList<StockData> vertexList = mStock.getVertexList(mPeriod, StockTrend.LEVEL_DRAW);
+		if (mStockDataList == null || mStockDataList.size() < StockTrend.VERTEX_SIZE || vertexList == null) {
 			return;
 		}
 
-		ArrayList<StockData> dataList = new ArrayList<>();
-		for (StockData stockData : mStockDataList) {
-			dataList.add(new StockData(stockData));
-		}
-
+		ArrayList<StockData> dataList = new ArrayList<>(mStockDataList);
 		int size = dataList.size();
 		if (size < StockTrend.VERTEX_SIZE) {
 			return;
@@ -97,16 +94,10 @@ public class TrendAnalyzer {
 
 				dataList.get(i).setDirection(direction);
 				dataList.get(i).setVertex(vertex);
-
-				mStockDataList.get(i).setDirection(direction);
-				mStockDataList.get(i).setVertex(vertex);
-
 				if ((vertex == StockTrend.VERTEX_TOP)
 						|| (vertex == StockTrend.VERTEX_BOTTOM)) {
 					vertexList.add(dataList.get(i));
-
 					dataList.get(i).setDirection(StockTrend.DIRECTION_NONE);
-					mStockDataList.get(i).setDirection(StockTrend.DIRECTION_NONE);
 				}
 
 				if (current.include(next) || current.includedBy(next)) {
@@ -125,7 +116,7 @@ public class TrendAnalyzer {
 				current.set(next);
 				next.init();
 			}
-			extendVertexList(mStockDataList, vertexList);
+			extendVertexList(dataList, vertexList);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
