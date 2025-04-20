@@ -38,16 +38,7 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/net2"
-        android:layout_width="80dp"
-        android:layout_height="50dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:textSize="18sp" />
-
-
-    <TextView
-        android:id="@+id/net1"
+        android:id="@+id/prev_net"
         android:layout_width="80dp"
         android:layout_height="50dp"
         android:layout_weight="1"
@@ -56,6 +47,14 @@
 
     <TextView
         android:id="@+id/net"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/next_net"
         android:layout_width="80dp"
         android:layout_height="50dp"
         android:layout_weight="1"

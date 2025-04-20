@@ -1195,6 +1195,28 @@ public class Stock extends DatabaseTable {
 		return result;
 	}
 
+	public ArrayList<StockTrend> getStockTrendList(String period, int level) {
+		ArrayList<StockTrend> result;
+		if (TextUtils.equals(period, Period.MONTH)) {
+			result = mMonth.getStockTrendList(level);
+		} else if (TextUtils.equals(period, Period.WEEK)) {
+			result = mWeek.getStockTrendList(level);
+		} else if (TextUtils.equals(period, Period.DAY)) {
+			result = mDay.getStockTrendList(level);
+		} else if (TextUtils.equals(period, Period.MIN60)) {
+			result = mMin60.getStockTrendList(level);
+		} else if (TextUtils.equals(period, Period.MIN30)) {
+			result = mMin30.getStockTrendList(level);
+		} else if (TextUtils.equals(period, Period.MIN15)) {
+			result = mMin15.getStockTrendList(level);
+		} else if (TextUtils.equals(period, Period.MIN5)) {
+			result = mMin5.getStockTrendList(level);
+		} else {
+			result = new ArrayList<>();
+		}
+		return result;
+	}
+
 	public String getAction(String period) {
 		String action = "";
 		if (TextUtils.equals(period, Period.MONTH)) {

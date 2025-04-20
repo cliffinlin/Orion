@@ -284,7 +284,7 @@ public class TrendAnalyzer {
 			if (mStockTrendList.size() > 0 && !mPeriod.equals(Period.MONTH)) {
 				for (int i = 0; i < mStockTrendList.size() - 1; i++) {
 					StockTrend stockTrend = mStockTrendList.get(i);
-					mStockTrendNetMap.put(stockTrend.getNet1(), stockTrend.getNet());
+					mStockTrendNetMap.put(stockTrend.getNet(), stockTrend.getNextNet());
 				}
 			}
 
@@ -306,7 +306,7 @@ public class TrendAnalyzer {
 						mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValues());
 
 						if (Setting.getDisplayAdaptive() && level >= mStock.getLevel(mPeriod)) {
-							stockData.setAction(StockTrend.MARK_LEVEL + level + type + Constant.NEW_LINE + (int) stockTrend.getNet1() + "/" + (int) stockTrend.getNet());
+							stockData.setText(StockTrend.MARK_LEVEL + level + type + Constant.NEW_LINE + (int) stockTrend.getNet() + "/" + (int) stockTrend.getNextNet());
 							StockAnalyzer.getInstance().notifyStockTrend(stockTrend);
 						}
 					}
@@ -333,7 +333,7 @@ public class TrendAnalyzer {
 		if (stockData == null || vertexList == null) {
 			return;
 		}
-		stockData.addVertexFlag(vertex);
+		stockData.addVertex(vertex);
 		vertexList.add(stockData);
 	}
 
@@ -351,11 +351,12 @@ public class TrendAnalyzer {
 		stockTrend.setType(type);
 		stockTrend.setFlag(StockTrend.FLAG_NONE);
 
-		stockTrend.setNet2(prev.getNet());
-		stockTrend.setNet1(current.getNet());
-		stockTrend.setNet(next.getNet());
+		stockTrend.setPrevNet(prev.getNet());
+		stockTrend.setNet(current.getNet());
+		stockTrend.setNextNet(next.getNet());
 
-		stockTrend.setDateTime(next);
+		stockTrend.setDate(current.getDate());
+		stockTrend.setTime(current.getTime());
 		stockTrend.setCreated(Utility.getCurrentDateTimeString());
 		mStockTrendList.add(stockTrend);
 	}

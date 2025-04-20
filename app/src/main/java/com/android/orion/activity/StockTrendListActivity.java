@@ -59,9 +59,9 @@ public class StockTrendListActivity extends ListActivity implements
 	TextView mTextViewLevel = null;
 	TextView mTextViewType = null;
 	TextView mTextViewFlag = null;
-	TextView mTextViewNet2 = null;
-	TextView mTextViewNet1 = null;
+	TextView mTextViewPrevNet = null;
 	TextView mTextViewNet = null;
+	TextView mTextViewNextNet = null;
 	TextView mTextViewDate = null;
 	TextView mTextViewTime = null;
 	TextView mTextViewCreated = null;
@@ -204,14 +204,14 @@ public class StockTrendListActivity extends ListActivity implements
 			case R.id.flag:
 				mSortOrderColumn = DatabaseContract.COLUMN_FLAG;
 				break;
-			case R.id.net2:
-				mSortOrderColumn = DatabaseContract.COLUMN_NET2;
-				break;
-			case R.id.net1:
-				mSortOrderColumn = DatabaseContract.COLUMN_NET1;
+			case R.id.prev_net:
+				mSortOrderColumn = DatabaseContract.COLUMN_PREV_NET;
 				break;
 			case R.id.net:
 				mSortOrderColumn = DatabaseContract.COLUMN_NET;
+				break;
+			case R.id.next_net:
+				mSortOrderColumn = DatabaseContract.COLUMN_NEXT_NET;
 				break;
 			case R.id.date:
 				mSortOrderColumn = DatabaseContract.COLUMN_DATE;
@@ -260,9 +260,9 @@ public class StockTrendListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewLevel, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewType, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewFlag, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewNet2, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewNet1, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewPrevNet, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewNet, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewNextNet, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewDate, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewTime, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewCreated, mHeaderTextDefaultColor);
@@ -313,19 +313,19 @@ public class StockTrendListActivity extends ListActivity implements
 			mTextViewFlag.setOnClickListener(this);
 		}
 
-		mTextViewNet2 = findViewById(R.id.net2);
-		if (mTextViewNet2 != null) {
-			mTextViewNet2.setOnClickListener(this);
-		}
-
-		mTextViewNet1 = findViewById(R.id.net1);
-		if (mTextViewNet1 != null) {
-			mTextViewNet1.setOnClickListener(this);
+		mTextViewPrevNet = findViewById(R.id.prev_net);
+		if (mTextViewPrevNet != null) {
+			mTextViewPrevNet.setOnClickListener(this);
 		}
 
 		mTextViewNet = findViewById(R.id.net);
 		if (mTextViewNet != null) {
 			mTextViewNet.setOnClickListener(this);
+		}
+
+		mTextViewNextNet = findViewById(R.id.next_net);
+		if (mTextViewNextNet != null) {
+			mTextViewNextNet.setOnClickListener(this);
 		}
 
 		mTextViewDate = findViewById(R.id.date);
@@ -358,12 +358,12 @@ public class StockTrendListActivity extends ListActivity implements
 			setHeaderTextColor(mTextViewType, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_FLAG)) {
 			setHeaderTextColor(mTextViewFlag, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_NET2)) {
-			setHeaderTextColor(mTextViewNet2, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_NET1)) {
-			setHeaderTextColor(mTextViewNet1, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PREV_NET)) {
+			setHeaderTextColor(mTextViewPrevNet, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_NET)) {
 			setHeaderTextColor(mTextViewNet, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_NEXT_NET)) {
+			setHeaderTextColor(mTextViewPrevNet, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_DATE)) {
 			setHeaderTextColor(mTextViewDate, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_TIME)) {
@@ -386,9 +386,9 @@ public class StockTrendListActivity extends ListActivity implements
 				DatabaseContract.COLUMN_LEVEL,
 				DatabaseContract.COLUMN_TYPE,
 				DatabaseContract.COLUMN_FLAG,
-				DatabaseContract.COLUMN_NET2,
-				DatabaseContract.COLUMN_NET1,
+				DatabaseContract.COLUMN_PREV_NET,
 				DatabaseContract.COLUMN_NET,
+				DatabaseContract.COLUMN_NEXT_NET,
 				DatabaseContract.COLUMN_DATE,
 				DatabaseContract.COLUMN_TIME,
 				DatabaseContract.COLUMN_CREATED,
@@ -398,9 +398,9 @@ public class StockTrendListActivity extends ListActivity implements
 				R.id.level,
 				R.id.type,
 				R.id.flag,
-				R.id.net2,
-				R.id.net1,
+				R.id.prev_net,
 				R.id.net,
+				R.id.next_net,
 				R.id.date,
 				R.id.time,
 				R.id.created,

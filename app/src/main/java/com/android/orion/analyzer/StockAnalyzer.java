@@ -225,7 +225,7 @@ public class StockAnalyzer {
 		}
 
 		StockData stockData = StockData.getLast(mStockDataList, 0);
-		return stockData != null ? stockData.getAction() : "";
+		return stockData != null ? stockData.getText() : "";
 	}
 
 	public void notifyStockTrend(StockTrend stockTrend) {
@@ -253,7 +253,7 @@ public class StockAnalyzer {
 		if (stockDealProfit > 0) {
 			mContentTitle.append(Constant.MARK_DOLLAR);
 		}
-		mContentTitle.append(mStock.getName() + " " + mStock.getPrice() + " " + mStock.getNet() + " " + stockTrend.toTrendString() + " ? " + mStockPerceptronProvider.getStockPerceptron().predict(stockTrend.getNet1()));
+		mContentTitle.append(mStock.getName() + " " + mStock.getPrice() + " " + mStock.getNet() + " " + stockTrend.toTrendString() + " ? " + mStockPerceptronProvider.getStockPerceptron().predict(stockTrend.getNet()));
 
 		RecordFile.writeNotificationFile(mContentTitle.toString());
 		try {

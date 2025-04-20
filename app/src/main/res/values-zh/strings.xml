@@ -141,9 +141,9 @@
     <string name="match_list">Match list</string>
     <string name="modified">Modified</string>
     <string name="next">next</string>
-    <string name="net2">Net2</string>
-    <string name="net1">Net1</string>
+    <string name="prev_net">PrevNet</string>
     <string name="net">Net</string>
+    <string name="next_net">NextNet</string>
 
     //Tip
     <string name="network_unavailable">Mobile data network not available</string>

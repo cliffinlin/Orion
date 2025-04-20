@@ -365,8 +365,7 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 	}
 
 	CursorLoader getStockDataCursorLoader(String period) {
-		String selection = mDatabaseManager.getStockDataSelection(mStock.getSE(), mStock.getCode(),
-				period, StockTrend.LEVEL_NONE);
+		String selection = mDatabaseManager.getStockDataSelection(mStock.getSE(), mStock.getCode(), period);
 		String sortOrder = mDatabaseManager.getStockDataOrder();
 		return new CursorLoader(this, DatabaseContract.StockData.CONTENT_URI,
 				DatabaseContract.StockData.PROJECTION_ALL, selection, null,
@@ -457,7 +456,7 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 							(float) mStockData.getCandle().getLow(),
 							(float) mStockData.getCandle().getOpen(),
 							(float) mStockData.getCandle().getClose(),
-							mStockData.getAction());
+							mStockData.getText());
 					stockDataChart.mCandleEntryList.add(candleEntry);
 
 					Entry average5Entry = new Entry(

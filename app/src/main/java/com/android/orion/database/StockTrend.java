@@ -3,15 +3,10 @@ package com.android.orion.database;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.text.TextUtils;
 
 import com.android.orion.setting.Constant;
-import com.android.orion.utility.Utility;
 
-import java.util.Calendar;
-import java.util.Comparator;
-
-public class StockTrend extends DatabaseTable {
+public class StockTrend extends Data {
 
 	public static final String LABEL_NONE = "";
 	public static final String LABEL_DRAW = "Draw";
@@ -90,18 +85,11 @@ public class StockTrend extends DatabaseTable {
 	public static final int VERTEX_SIZE = 3;
 	public static final int ADAPTIVE_SIZE = 8;
 
-	private String mSE;
-	private String mCode;
-	private String mName;
-	private String mPeriod;
 	private int mLevel;
 	private String mType;
 	private int mFlag;
-	private double mNet2;
-	private double mNet1;
-	private double mNet;
-	private String mDate;
-	private String mTime;
+	private double mPrevNet;
+	private double mNextNet;
 
 	public StockTrend() {
 		init();
@@ -120,46 +108,28 @@ public class StockTrend extends DatabaseTable {
 		set(cursor);
 	}
 
-	public boolean isEmpty() {
-		return TextUtils.isEmpty(mDate)
-				&& TextUtils.isEmpty(mTime);
-	}
-
 	public void init() {
 		super.init();
 
 		setTableName(DatabaseContract.StockTrend.TABLE_NAME);
 
-		mSE = "";
-		mCode = "";
-		mName = "";
-		mPeriod = "";
 		mLevel = LEVEL_NONE;
 		mType = TYPE_NONE;
 		mFlag = FLAG_NONE;
-		mNet2 = 0;
-		mNet1 = 0;
-		mNet = 0;
-		mDate = "";
-		mTime = "";
+		mPrevNet = 0;
+		mNextNet = 0;
 	}
 
 	@Override
 	public ContentValues getContentValues() {
 		ContentValues contentValues = super.getContentValues();
 
-		contentValues.put(DatabaseContract.COLUMN_SE, mSE);
-		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
-		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
-		contentValues.put(DatabaseContract.COLUMN_PERIOD, mPeriod);
 		contentValues.put(DatabaseContract.COLUMN_LEVEL, mLevel);
 		contentValues.put(DatabaseContract.COLUMN_TYPE, mType);
 		contentValues.put(DatabaseContract.COLUMN_FLAG, mFlag);
-		contentValues.put(DatabaseContract.COLUMN_NET2, mNet2);
-		contentValues.put(DatabaseContract.COLUMN_NET1, mNet1);
-		contentValues.put(DatabaseContract.COLUMN_NET, mNet);
-		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);
-		contentValues.put(DatabaseContract.COLUMN_TIME, mTime);
+		contentValues.put(DatabaseContract.COLUMN_PREV_NET, mPrevNet);
+		contentValues.put(DatabaseContract.COLUMN_NEXT_NET, mNextNet);
+
 		return contentValues;
 	}
 
@@ -179,18 +149,11 @@ public class StockTrend extends DatabaseTable {
 
 		super.set(stockTrend);
 
-		setSE(stockTrend.mSE);
-		setCode(stockTrend.mCode);
-		setName(stockTrend.mName);
-		setPeriod(stockTrend.mPeriod);
 		setLevel(stockTrend.mLevel);
 		setType(stockTrend.mType);
 		setFlag(stockTrend.mFlag);
-		setNet2(stockTrend.mNet2);
-		setNet1(stockTrend.mNet1);
-		setNet(stockTrend.mNet);
-		setDate(stockTrend.mDate);
-		setTime(stockTrend.mTime);
+		setPrevNet(stockTrend.mPrevNet);
+		setNextNet(stockTrend.mNextNet);
 	}
 
 	@Override
@@ -203,86 +166,11 @@ public class StockTrend extends DatabaseTable {
 
 		super.set(cursor);
 
-		setSE(cursor);
-		setCode(cursor);
-		setName(cursor);
-		setPeriod(cursor);
 		setLevel(cursor);
 		setType(cursor);
 		setFlag(cursor);
-		setNet2(cursor);
-		setNet1(cursor);
-		setNet(cursor);
-		setDate(cursor);
-		setTime(cursor);
-	}
-
-	public String getSE() {
-		return mSE;
-	}
-
-	public void setSE(String se) {
-		mSE = se;
-	}
-
-	void setSE(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setSE(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_SE)));
-	}
-
-	public String getCode() {
-		return mCode;
-	}
-
-	public void setCode(String code) {
-		mCode = code;
-	}
-
-	void setCode(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setCode(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_CODE)));
-	}
-
-	public String getName() {
-		return mName;
-	}
-
-	public void setName(String name) {
-		mName = name;
-	}
-
-	void setName(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setName(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_NAME)));
-	}
-
-	public String getPeriod() {
-		return mPeriod;
-	}
-
-	public void setPeriod(String period) {
-		mPeriod = period;
-	}
-
-	void setPeriod(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setPeriod(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_PERIOD)));
+		setPrevNet(cursor);
+		setNextNet(cursor);
 	}
 
 	public int getLevel() {
@@ -336,105 +224,38 @@ public class StockTrend extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_FLAG)));
 	}
 
-	public double getNet2() {
-		return mNet2;
+	public double getPrevNet() {
+		return mPrevNet;
 	}
 
-	public void setNet2(double net2) {
-		mNet2 = net2;
+	public void setPrevNet(double prevNet) {
+		mPrevNet = prevNet;
 	}
 
-	void setNet2(Cursor cursor) {
+	void setPrevNet(Cursor cursor) {
 		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
-		setNet2(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_NET2)));
+		setPrevNet(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_PREV_NET)));
 	}
 
-	public double getNet1() {
-		return mNet1;
+	public double getNextNet() {
+		return mNextNet;
 	}
 
-	public void setNet1(double net1) {
-		mNet1 = net1;
+	public void setNextNet(double nextNet) {
+		mNextNet = nextNet;
 	}
 
-	void setNet1(Cursor cursor) {
+	void setNextNet(Cursor cursor) {
 		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
-		setNet1(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_NET1)));
-	}
-
-	public double getNet() {
-		return mNet;
-	}
-
-	public void setNet(double net) {
-		mNet = net;
-	}
-
-	void setNet(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setNet(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_NET)));
-	}
-
-	public String getDate() {
-		return mDate;
-	}
-
-	public void setDate(String date) {
-		mDate = date;
-	}
-
-	public void setDate(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setDate(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_DATE)));
-	}
-
-	public String getTime() {
-		return mTime;
-	}
-
-	public void setTime(String time) {
-		mTime = time;
-	}
-
-	void setTime(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setTime(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_TIME)));
-	}
-
-	public String getDateTime() {
-		if (!TextUtils.isEmpty(mTime)) {
-			return mDate + " " + mTime;
-		} else {
-			return mDate + " " + "00:00:00";
-		}
-	}
-
-	public void setDateTime(StockData stockData) {
-		if (stockData == null) {
-			return;
-		}
-		setDate(stockData.getDate());
-		setTime(stockData.getTime());
+		setNextNet(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_NEXT_NET)));
 	}
 
 	public void addFlag(int flag) {
@@ -452,21 +273,21 @@ public class StockTrend extends DatabaseTable {
 	}
 
 	public String toString() {
-		return mSE + Constant.TAB
-				+ mCode + Constant.TAB
-				+ mName + Constant.TAB
-				+ mPeriod + Constant.TAB
+		return getSE() + Constant.TAB
+				+ getCode() + Constant.TAB
+				+ getName() + Constant.TAB
+				+ getPeriod() + Constant.TAB
+				+ getDate() + Constant.TAB
+				+ getTime() + Constant.TAB
 				+ mLevel + Constant.TAB
 				+ mType + Constant.TAB
 				+ mFlag + Constant.TAB
-				+ mNet2 + Constant.TAB
-				+ mNet1 + Constant.TAB
-				+ mNet + Constant.TAB
-				+ mDate + Constant.TAB
-				+ mTime + Constant.TAB;
+				+ mPrevNet + Constant.TAB
+				+ getNet() + Constant.TAB
+				+ mNextNet + Constant.TAB;
 	}
 
 	public String toTrendString() {
-		return MARK_LEVEL + getLevel() + " " + getType() + " " + (int) mNet1 + "/" + (int) mNet;
+		return MARK_LEVEL + getLevel() + " " + getType() + " " + (int) getNet() + "/" + (int) getNextNet();
 	}
 }

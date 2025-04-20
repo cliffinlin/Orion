@@ -8,19 +8,20 @@ import com.android.orion.database.StockData;
 import com.android.orion.database.StockTrend;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 public class Period {
-	public static final int PERIOD_MINUTES_MIN5 = 5;
-	public static final int PERIOD_MINUTES_MIN15 = 15;
-	public static final int PERIOD_MINUTES_MIN30 = 30;
-	public static final int PERIOD_MINUTES_MIN60 = 60;
-	public static final int PERIOD_MINUTES_DAY = 240;
-	public static final int PERIOD_MINUTES_WEEK = 1680;
-	public static final int PERIOD_MINUTES_MONTH = 7200;
+	public static final int MINUTES_MONTH = 7200;
+	public static final int MINUTES_WEEK = 1680;
+	public static final int MINUTES_DAY = 240;
+	public static final int MINUTES_MIN60 = 60;
+	public static final int MINUTES_MIN30 = 30;
+	public static final int MINUTES_MIN15 = 15;
+	public static final int MINUTES_MIN5 = 5;
 
 	public static final String MONTH = "month";
 	public static final String WEEK = "week";
@@ -30,10 +31,17 @@ public class Period {
 	public static final String MIN15 = "min15";
 	public static final String MIN5 = "min5";
 
-	public static final String[] PERIODS = {MONTH, WEEK, DAY,
-			MIN60, MIN30, MIN15, MIN5};
-	private static final Set<String> MINUTE_PERIODS = new HashSet<>();
-	private static final Map<String, Integer> PERIOD_MINUTES_MAP = new HashMap<>();
+	public static final String[] PERIODS = {MONTH, WEEK, DAY, MIN60, MIN30, MIN15, MIN5};
+	private static final Set<String> MINUTE_PERIODS = new HashSet<>(Arrays.asList(MIN5, MIN15, MIN30, MIN60));
+	private static final Map<String, Integer> MINUTES_MAP = new HashMap<String, Integer>() {{
+		put(MONTH, MINUTES_MONTH);
+		put(WEEK, MINUTES_WEEK);
+		put(DAY, MINUTES_DAY);
+		put(MIN60, MINUTES_MIN60);
+		put(MIN30, MINUTES_MIN30);
+		put(MIN15, MINUTES_MIN15);
+		put(MIN5, MINUTES_MIN5);
+	}};
 
 	public String mName = "";
 	public String mAction = "";
@@ -42,27 +50,19 @@ public class Period {
 	public ArrayList<StockData> mStockDataList = new ArrayList<>();
 	public ArrayList<ArrayList<StockData>> mVertexLists = new ArrayList<>();
 	public ArrayList<ArrayList<StockData>> mDataLists = new ArrayList<>();
+	public ArrayList<ArrayList<StockTrend>> mStockTrendLists = new ArrayList<>();
 
 	public Period(String name) {
 		mName = name;
-		MINUTE_PERIODS.add(MIN5);
-		MINUTE_PERIODS.add(MIN15);
-		MINUTE_PERIODS.add(MIN30);
-		MINUTE_PERIODS.add(MIN60);
-
-		PERIOD_MINUTES_MAP.put(MIN5, PERIOD_MINUTES_MIN5);
-		PERIOD_MINUTES_MAP.put(MIN15, PERIOD_MINUTES_MIN15);
-		PERIOD_MINUTES_MAP.put(MIN30, PERIOD_MINUTES_MIN30);
-		PERIOD_MINUTES_MAP.put(MIN60, PERIOD_MINUTES_MIN60);
-		PERIOD_MINUTES_MAP.put(DAY, PERIOD_MINUTES_DAY);
-		PERIOD_MINUTES_MAP.put(WEEK, PERIOD_MINUTES_WEEK);
-		PERIOD_MINUTES_MAP.put(MONTH, PERIOD_MINUTES_MONTH);
 
 		for (int i = 0; i < StockTrend.LEVEL_MAX; i++) {
 			mVertexLists.add(new ArrayList<>());
 		}
 		for (int i = 0; i < StockTrend.LEVEL_MAX; i++) {
 			mDataLists.add(new ArrayList<>());
+		}
+		for (int i = 0; i < StockTrend.LEVEL_MAX; i++) {
+			mStockTrendLists.add(new ArrayList<>());
 		}
 	}
 
@@ -73,8 +73,8 @@ public class Period {
 			return result;
 		}
 
-		if (PERIOD_MINUTES_MAP.containsKey(period)) {
-			result = PERIOD_MINUTES_MAP.get(period);
+		if (MINUTES_MAP.containsKey(period)) {
+			result = MINUTES_MAP.get(period);
 		}
 
 		return result;
@@ -108,6 +108,10 @@ public class Period {
 
 	public ArrayList<StockData> getDataList(int level) {
 		return mDataLists.get(level);
+	}
+
+	public ArrayList<StockTrend> getStockTrendList(int level) {
+		return mStockTrendLists.get(level);
 	}
 
 	public ArrayList<StockData> getVertexList(int level) {

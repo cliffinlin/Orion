@@ -355,7 +355,7 @@ public class StockDataChart {
 		StockTrend stockTrend = getStockTrend(mAdaptiveLevel);
 		if (stockTrend != null) {
 			mDescription.append(stockTrend.toTrendString());
-			mDescription.append(" ? " + mStockPerceptronProvider.getStockPerceptron().predict(stockTrend.getNet1()));
+			mDescription.append(" ? " + mStockPerceptronProvider.getStockPerceptron().predict(stockTrend.getNet()));
 		} else {
 			mDescription.append(stock.getAction(mPeriod));
 		}
@@ -412,7 +412,7 @@ public class StockDataChart {
 		if (stockTrend != null && stockTrend.hasFlag(StockTrend.FLAG_CHANGED)) {
 			color = lineColor(mAdaptiveLevel);
 			label += "Trend:" + Constant.TAB2 + stockTrend.toTrendString();
-			label += " ? " + mStockPerceptronProvider.getStockPerceptron().predict(stockTrend.getNet1());
+			label += " ? " + mStockPerceptronProvider.getStockPerceptron().predict(stockTrend.getNet());
 		} else {
 			label += "Action:" + Constant.TAB2 + action;
 		}

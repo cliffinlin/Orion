@@ -531,7 +531,7 @@ public class DatabaseManager implements StockListener {
 
 		stockDataList.clear();
 
-		String selection = getStockDataSelection(stock.getSE(), stock.getCode(), period, StockTrend.LEVEL_NONE);
+		String selection = getStockDataSelection(stock.getSE(), stock.getCode(), period);
 
 		try {
 			cursor = queryStockData(selection, null, sortOrder);
@@ -564,7 +564,7 @@ public class DatabaseManager implements StockListener {
 		try {
 			stockDataList.clear();
 
-			selection = getStockDataSelection(stock.getSE(), stock.getCode(), period, StockTrend.LEVEL_NONE);
+			selection = getStockDataSelection(stock.getSE(), stock.getCode(), period);
 			sortOrder = getStockDataOrder();
 			cursor = queryStockData(selection, null,
 					sortOrder);
@@ -577,7 +577,6 @@ public class DatabaseManager implements StockListener {
 					stockData.setIndex(index);
 					stockData.setIndexStart(index);
 					stockData.setIndexEnd(index);
-					stockData.setAction(StockTrend.MARK_NONE);
 					stockDataList.add(stockData);
 				}
 			}
@@ -730,12 +729,6 @@ public class DatabaseManager implements StockListener {
 	public String getStockDataSelection(String se, String code, String period) {
 		return getStockSelection(se, code)
 				+ " AND " + DatabaseContract.COLUMN_PERIOD + " = '" + period + "'";
-	}
-
-	public String getStockDataSelection(String se, String code, String period, int level) {
-		return getStockSelection(se, code)
-				+ " AND " + DatabaseContract.COLUMN_PERIOD + " = '" + period + "'"
-				+ " AND " + DatabaseContract.COLUMN_LEVEL + " = " + level;
 	}
 
 	public String getStockDataOrder() {

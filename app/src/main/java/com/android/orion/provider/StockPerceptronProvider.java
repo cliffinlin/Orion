@@ -188,8 +188,8 @@ public class StockPerceptronProvider {
 						mXArray.clear();
 						mYArray.clear();
 						for (StockTrend stockTrend : mStockTrendList) {
-							mXArray.add(stockTrend.getNet1());
-							mYArray.add(stockTrend.getNet());
+							mXArray.add(stockTrend.getNet());
+							mYArray.add(stockTrend.getNextNet());
 						}
 						mStockPerceptron = getStockPerceptron(period, level, type);
 						mStockPerceptron.train(mXArray, mYArray, Config.MAX_ML_TRAIN_TIMES);
