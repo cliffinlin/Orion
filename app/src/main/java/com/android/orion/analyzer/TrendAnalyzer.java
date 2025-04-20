@@ -157,13 +157,13 @@ public class TrendAnalyzer {
 	}
 
 	void analyzeLine(int level) {
-		ArrayList<StockData> prevDataList = mStock.getDataList(mPeriod, level - 1);
+		ArrayList<StockData> dataList = mStock.getDataList(mPeriod, level - 1);
 		ArrayList<StockData> vertexList = mStock.getVertexList(mPeriod, level);
-		if ((prevDataList == null) || (vertexList == null)) {
+		if ((dataList == null) || (vertexList == null)) {
 			return;
 		}
 
-		int size = prevDataList.size();
+		int size = dataList.size();
 		if (size < StockTrend.VERTEX_SIZE) {
 			return;
 		}
@@ -200,15 +200,15 @@ public class TrendAnalyzer {
 		}
 
 		try {
-			int direction = prevDataList.get(0).getDirection();
+			int direction = dataList.get(0).getDirection();
 			int baseDirection = direction;
 			String type = StockTrend.TYPE_NONE;
 			vertexList.clear();
 			mStockTrendList.clear();
 			for (int i = 1; i < size - 1; i++) {
-				StockData prev = prevDataList.get(i - 1);
-				StockData current = prevDataList.get(i);
-				StockData next = prevDataList.get(i + 1);
+				StockData prev = dataList.get(i - 1);
+				StockData current = dataList.get(i);
+				StockData next = dataList.get(i + 1);
 
 				if (next == null || current == null || prev == null) {
 					continue;
@@ -279,7 +279,7 @@ public class TrendAnalyzer {
 				}
 				direction = directionTo;
 			}
-			extendVertexList(prevDataList, vertexList);
+			extendVertexList(dataList, vertexList);
 
 			if (mStockTrendList.size() > 0 && !mPeriod.equals(Period.MONTH)) {
 				for (int i = 0; i < mStockTrendList.size() - 1; i++) {
