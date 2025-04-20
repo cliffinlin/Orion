@@ -154,16 +154,16 @@ public class StockAnalyzer {
 		mTrendAnalyzer.analyzeVertex();
 		mTrendAnalyzer.vertexListToDataList(mStock.getVertexList(period, StockTrend.LEVEL_DRAW), mStock.getDataList(period, StockTrend.LEVEL_DRAW));
 
-		for (int i = 2; i < StockTrend.LEVELS.length; i++) {
+		for (int i = StockTrend.LEVEL_STROKE; i < StockTrend.LEVELS.length; i++) {
 			ArrayList<StockData> prevDataList = mStock.getDataList(period, i - 1);
 			ArrayList<StockData> vertexList = mStock.getVertexList(period, i);
 			ArrayList<StockData> dataList = mStock.getDataList(period, i);
-			mTrendAnalyzer.analyzeLine(i - 1, prevDataList, vertexList);
+			mTrendAnalyzer.analyzeLine(i, prevDataList, vertexList);
 			mTrendAnalyzer.vertexListToDataList(vertexList, dataList);
 		}
 
-		mTrendAnalyzer.analyzeLine(StockTrend.LEVEL_TREND_LINE, mStock.getDataList(period, StockTrend.LEVEL_TREND_LINE), mStock.getVertexList(period, StockTrend.LEVEL_TREND_LINE));
-		mTrendAnalyzer.vertexListToDataList(mStock.getVertexList(period, StockTrend.LEVEL_TREND_LINE), mStock.getDataList(period, StockTrend.LEVEL_TREND_LINE));
+//		mTrendAnalyzer.analyzeLine(StockTrend.LEVEL_TREND_LINE, mStock.getDataList(period, StockTrend.LEVEL_TREND_LINE), mStock.getVertexList(period, StockTrend.LEVEL_TREND_LINE));
+//		mTrendAnalyzer.vertexListToDataList(mStock.getVertexList(period, StockTrend.LEVEL_TREND_LINE), mStock.getDataList(period, StockTrend.LEVEL_TREND_LINE));
 		mStock.setLevel(period, determineAdaptiveLevel(period));
 
 		analyzeAction(period);

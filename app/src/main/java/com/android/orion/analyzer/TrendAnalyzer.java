@@ -171,27 +171,27 @@ public class TrendAnalyzer {
 		int vertexTypeTop = StockTrend.VERTEX_TOP;
 		int vertexTypeBottom = StockTrend.VERTEX_BOTTOM;
 		switch (level) {
-			case StockTrend.LEVEL_DRAW:
+			case StockTrend.LEVEL_STROKE:
 				vertexTypeTop = StockTrend.VERTEX_TOP_STROKE;
 				vertexTypeBottom = StockTrend.VERTEX_BOTTOM_STROKE;
 				break;
-			case StockTrend.LEVEL_STROKE:
+			case StockTrend.LEVEL_SEGMENT:
 				vertexTypeTop = StockTrend.VERTEX_TOP_SEGMENT;
 				vertexTypeBottom = StockTrend.VERTEX_BOTTOM_SEGMENT;
 				break;
-			case StockTrend.LEVEL_SEGMENT:
+			case StockTrend.LEVEL_LINE:
 				vertexTypeTop = StockTrend.VERTEX_TOP_LINE;
 				vertexTypeBottom = StockTrend.VERTEX_BOTTOM_LINE;
 				break;
-			case StockTrend.LEVEL_LINE:
+			case StockTrend.LEVEL_OUT_LINE:
 				vertexTypeTop = StockTrend.VERTEX_TOP_OUTLINE;
 				vertexTypeBottom = StockTrend.VERTEX_BOTTOM_OUTLINE;
 				break;
-			case StockTrend.LEVEL_OUT_LINE:
+			case StockTrend.LEVEL_SUPER_LINE:
 				vertexTypeTop = StockTrend.VERTEX_TOP_SUPERLINE;
 				vertexTypeBottom = StockTrend.VERTEX_BOTTOM_SUPERLINE;
 				break;
-			case StockTrend.LEVEL_SUPER_LINE:
+			case StockTrend.LEVEL_TREND_LINE:
 				vertexTypeTop = StockTrend.VERTEX_TOP_TREND_LINE;
 				vertexTypeBottom = StockTrend.VERTEX_BOTTOM_TREND_LINE;
 				break;
@@ -362,11 +362,7 @@ public class TrendAnalyzer {
 	}
 
 	void vertexListToDataList(ArrayList<StockData> vertexList, ArrayList<StockData> dataList) {
-		if (vertexList == null || dataList == null) {
-			return;
-		}
-
-		if (vertexList.isEmpty()) {
+		if (vertexList == null || vertexList.isEmpty() || dataList == null) {
 			return;
 		}
 
