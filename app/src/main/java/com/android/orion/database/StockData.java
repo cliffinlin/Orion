@@ -4,18 +4,12 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.text.TextUtils;
 
-import com.android.orion.data.Candle;
-import com.android.orion.data.Macd;
 import com.android.orion.setting.Constant;
 import com.android.orion.utility.Utility;
 
-import java.util.Calendar;
-import java.util.Comparator;
 import java.util.List;
 
 public class StockData extends Data {
-
-	private Macd mMacd;
 
 	public StockData() {
 		init();
@@ -38,21 +32,11 @@ public class StockData extends Data {
 		super.init();
 
 		setTableName(DatabaseContract.StockData.TABLE_NAME);
-
-		if (mMacd == null) {
-			mMacd = new Macd();
-		}
 	}
 
 	@Override
 	public ContentValues getContentValues() {
 		ContentValues contentValues = super.getContentValues();
-
-		contentValues.put(DatabaseContract.COLUMN_AVERAGE5, mMacd.getAverage5());
-		contentValues.put(DatabaseContract.COLUMN_AVERAGE10, mMacd.getAverage10());
-		contentValues.put(DatabaseContract.COLUMN_DIF, mMacd.getDIF());
-		contentValues.put(DatabaseContract.COLUMN_DEA, mMacd.getDEA());
-		contentValues.put(DatabaseContract.COLUMN_HISTOGRAM, mMacd.getHistogram());
 
 		return contentValues;
 	}
@@ -65,8 +49,6 @@ public class StockData extends Data {
 		init();
 
 		super.set(stockData);
-
-		mMacd.set(stockData.mMacd);
 	}
 
 	@Override
@@ -78,12 +60,6 @@ public class StockData extends Data {
 		init();
 
 		super.set(cursor);
-
-		mMacd.set(cursor);
-	}
-
-	public Macd getMacd() {
-		return mMacd;
 	}
 
 	public StockData fromString(String string) {

@@ -6,7 +6,7 @@ import android.graphics.Color;
 
 import com.android.orion.setting.Constant;
 
-public class StockTrend extends Data {
+public class StockTrend extends StockData {
 
 	public static final String LABEL_NONE = "";
 	public static final String LABEL_DRAW = "Draw";
@@ -85,12 +85,6 @@ public class StockTrend extends Data {
 	public static final int VERTEX_SIZE = 3;
 	public static final int ADAPTIVE_SIZE = 8;
 
-	private int mLevel;
-	private String mType;
-	private int mFlag;
-	private double mPrevNet;
-	private double mNextNet;
-
 	public StockTrend() {
 		init();
 	}
@@ -98,6 +92,10 @@ public class StockTrend extends Data {
 	public StockTrend(String period) {
 		init();
 		setPeriod(period);
+	}
+
+	public StockTrend(StockData stockData) {
+		set(stockData);
 	}
 
 	public StockTrend(StockTrend stockTrend) {
@@ -112,31 +110,12 @@ public class StockTrend extends Data {
 		super.init();
 
 		setTableName(DatabaseContract.StockTrend.TABLE_NAME);
-
-		mLevel = LEVEL_NONE;
-		mType = TYPE_NONE;
-		mFlag = FLAG_NONE;
-		mPrevNet = 0;
-		mNextNet = 0;
 	}
 
 	@Override
 	public ContentValues getContentValues() {
 		ContentValues contentValues = super.getContentValues();
 
-		contentValues.put(DatabaseContract.COLUMN_LEVEL, mLevel);
-		contentValues.put(DatabaseContract.COLUMN_TYPE, mType);
-		contentValues.put(DatabaseContract.COLUMN_FLAG, mFlag);
-		contentValues.put(DatabaseContract.COLUMN_PREV_NET, mPrevNet);
-		contentValues.put(DatabaseContract.COLUMN_NEXT_NET, mNextNet);
-
-		return contentValues;
-	}
-
-	public ContentValues getContentValuesFlag() {
-		ContentValues contentValues = super.getContentValues();
-
-		contentValues.put(DatabaseContract.COLUMN_FLAG, mFlag);
 		return contentValues;
 	}
 
@@ -148,12 +127,6 @@ public class StockTrend extends Data {
 		init();
 
 		super.set(stockTrend);
-
-		setLevel(stockTrend.mLevel);
-		setType(stockTrend.mType);
-		setFlag(stockTrend.mFlag);
-		setPrevNet(stockTrend.mPrevNet);
-		setNextNet(stockTrend.mNextNet);
 	}
 
 	@Override
@@ -165,111 +138,6 @@ public class StockTrend extends Data {
 		init();
 
 		super.set(cursor);
-
-		setLevel(cursor);
-		setType(cursor);
-		setFlag(cursor);
-		setPrevNet(cursor);
-		setNextNet(cursor);
-	}
-
-	public int getLevel() {
-		return mLevel;
-	}
-
-	public void setLevel(int level) {
-		mLevel = level;
-	}
-
-	void setLevel(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setLevel(cursor.getInt(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_LEVEL)));
-	}
-
-	public String getType() {
-		return mType;
-	}
-
-	public void setType(String type) {
-		mType = type;
-	}
-
-	void setType(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setType(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_TYPE)));
-	}
-
-	public int getFlag() {
-		return mFlag;
-	}
-
-	public void setFlag(int flag) {
-		mFlag = flag;
-	}
-
-	void setFlag(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setFlag(cursor.getInt(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_FLAG)));
-	}
-
-	public double getPrevNet() {
-		return mPrevNet;
-	}
-
-	public void setPrevNet(double prevNet) {
-		mPrevNet = prevNet;
-	}
-
-	void setPrevNet(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setPrevNet(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_PREV_NET)));
-	}
-
-	public double getNextNet() {
-		return mNextNet;
-	}
-
-	public void setNextNet(double nextNet) {
-		mNextNet = nextNet;
-	}
-
-	void setNextNet(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setNextNet(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_NEXT_NET)));
-	}
-
-	public void addFlag(int flag) {
-		mFlag |= flag;
-	}
-
-	public void removeFlag(int flag) {
-		if (hasFlag(flag)) {
-			mFlag &= ~flag;
-		}
-	}
-
-	public boolean hasFlag(int flag) {
-		return (mFlag & flag) == flag;
 	}
 
 	public String toString() {
@@ -279,12 +147,12 @@ public class StockTrend extends Data {
 				+ getPeriod() + Constant.TAB
 				+ getDate() + Constant.TAB
 				+ getTime() + Constant.TAB
-				+ mLevel + Constant.TAB
-				+ mType + Constant.TAB
-				+ mFlag + Constant.TAB
-				+ mPrevNet + Constant.TAB
+				+ getLevel() + Constant.TAB
+				+ getType() + Constant.TAB
+				+ getFlag() + Constant.TAB
+				+ getPrevNet() + Constant.TAB
 				+ getNet() + Constant.TAB
-				+ mNextNet + Constant.TAB;
+				+ getNextNet() + Constant.TAB;
 	}
 
 	public String toTrendString() {

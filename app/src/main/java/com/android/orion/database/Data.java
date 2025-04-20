@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.text.TextUtils;
 
 import com.android.orion.data.Candle;
+import com.android.orion.data.Macd;
 import com.android.orion.utility.Utility;
 
 import java.util.Calendar;
@@ -48,9 +49,16 @@ public class Data extends DatabaseTable {
 	private Candle mCandle;
 	private double mChange;
 	private double mNet;
+	private Macd mMacd;
 
 	private int mDirection;
 	private int mVertex;
+
+	private int mLevel;
+	private String mType;
+	private int mFlag;
+	private double mPrevNet;
+	private double mNextNet;
 
 	private int mIndex;
 	private int mIndexStart;
@@ -94,9 +102,18 @@ public class Data extends DatabaseTable {
 		}
 		mChange = 0;
 		mNet = 0;
+		if (mMacd == null) {
+			mMacd = new Macd();
+		}
 
 		mDirection = StockTrend.DIRECTION_NONE;
 		mVertex = StockTrend.VERTEX_NONE;
+
+		mLevel = StockTrend.LEVEL_NONE;
+		mType = StockTrend.TYPE_NONE;
+		mFlag = StockTrend.FLAG_NONE;
+		mPrevNet = 0;
+		mNextNet = 0;
 
 		mIndex = 0;
 		mIndexStart = 0;
@@ -122,9 +139,28 @@ public class Data extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_CHANGE, mChange);
 		contentValues.put(DatabaseContract.COLUMN_NET, mNet);
 
+		contentValues.put(DatabaseContract.COLUMN_AVERAGE5, mMacd.getAverage5());
+		contentValues.put(DatabaseContract.COLUMN_AVERAGE10, mMacd.getAverage10());
+		contentValues.put(DatabaseContract.COLUMN_DIF, mMacd.getDIF());
+		contentValues.put(DatabaseContract.COLUMN_DEA, mMacd.getDEA());
+		contentValues.put(DatabaseContract.COLUMN_HISTOGRAM, mMacd.getHistogram());
+
 		contentValues.put(DatabaseContract.COLUMN_DIRECTION, mDirection);
 		contentValues.put(DatabaseContract.COLUMN_VERTEX, mVertex);
 
+		contentValues.put(DatabaseContract.COLUMN_LEVEL, mLevel);
+		contentValues.put(DatabaseContract.COLUMN_TYPE, mType);
+		contentValues.put(DatabaseContract.COLUMN_FLAG, mFlag);
+		contentValues.put(DatabaseContract.COLUMN_PREV_NET, mPrevNet);
+		contentValues.put(DatabaseContract.COLUMN_NEXT_NET, mNextNet);
+
+		return contentValues;
+	}
+
+	public ContentValues getContentValuesFlag() {
+		ContentValues contentValues = super.getContentValues();
+
+		contentValues.put(DatabaseContract.COLUMN_FLAG, mFlag);
 		return contentValues;
 	}
 
@@ -148,9 +184,16 @@ public class Data extends DatabaseTable {
 		mCandle.set(data.mCandle);
 		setChange(data.mChange);
 		setNet(data.mNet);
+		mMacd.set(data.mMacd);
 
 		setDirection(data.mDirection);
 		setVertex(data.mVertex);
+
+		setLevel(data.mLevel);
+		setType(data.mType);
+		setFlag(data.mFlag);
+		setPrevNet(data.mPrevNet);
+		setNextNet(data.mNextNet);
 
 		setIndex(data.mIndex);
 		setIndexStart(data.mIndexStart);
@@ -178,9 +221,16 @@ public class Data extends DatabaseTable {
 		mCandle.set(cursor);
 		setChange(cursor);
 		setNet(cursor);
+		mMacd.set(cursor);
 
 		setDirection(cursor);
 		setVertex(cursor);
+
+		setLevel(cursor);
+		setType(cursor);
+		setFlag(cursor);
+		setPrevNet(cursor);
+		setNextNet(cursor);
 	}
 
 	public String getSE() {
@@ -314,7 +364,6 @@ public class Data extends DatabaseTable {
 		return mCandle;
 	}
 
-
 	public double getChange() {
 		return mChange;
 	}
@@ -349,6 +398,10 @@ public class Data extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_NET)));
 	}
 
+	public Macd getMacd() {
+		return mMacd;
+	}
+
 	public int getDirection() {
 		return mDirection;
 	}
@@ -375,6 +428,105 @@ public class Data extends DatabaseTable {
 		}
 		setVertex(cursor.getInt(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_VERTEX)));
+	}
+
+	public int getLevel() {
+		return mLevel;
+	}
+
+	public void setLevel(int level) {
+		mLevel = level;
+	}
+
+	void setLevel(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setLevel(cursor.getInt(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_LEVEL)));
+	}
+
+	public String getType() {
+		return mType;
+	}
+
+	public void setType(String type) {
+		mType = type;
+	}
+
+	void setType(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setType(cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_TYPE)));
+	}
+
+	public int getFlag() {
+		return mFlag;
+	}
+
+	public void setFlag(int flag) {
+		mFlag = flag;
+	}
+
+	void setFlag(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setFlag(cursor.getInt(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_FLAG)));
+	}
+
+	public double getPrevNet() {
+		return mPrevNet;
+	}
+
+	public void setPrevNet(double prevNet) {
+		mPrevNet = prevNet;
+	}
+
+	void setPrevNet(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setPrevNet(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_PREV_NET)));
+	}
+
+	public double getNextNet() {
+		return mNextNet;
+	}
+
+	public void setNextNet(double nextNet) {
+		mNextNet = nextNet;
+	}
+
+	void setNextNet(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setNextNet(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_NEXT_NET)));
+	}
+
+	public void addFlag(int flag) {
+		mFlag |= flag;
+	}
+
+	public void removeFlag(int flag) {
+		if (hasFlag(flag)) {
+			mFlag &= ~flag;
+		}
+	}
+
+	public boolean hasFlag(int flag) {
+		return (mFlag & flag) == flag;
 	}
 
 	public Calendar getCalendar() {
