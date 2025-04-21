@@ -456,7 +456,7 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 							(float) mStockData.getCandle().getLow(),
 							(float) mStockData.getCandle().getOpen(),
 							(float) mStockData.getCandle().getClose(),
-							mStockData.getText());
+							"");
 					stockDataChart.mCandleEntryList.add(candleEntry);
 
 					Entry average5Entry = new Entry(

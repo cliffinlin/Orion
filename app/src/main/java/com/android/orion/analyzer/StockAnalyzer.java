@@ -152,6 +152,7 @@ public class StockAnalyzer {
 		mTrendAnalyzer.setup(mStock, period, mStockDataList);
 
 		mTrendAnalyzer.analyzeVertex(StockTrend.LEVEL_DRAW);
+		mTrendAnalyzer.vertexListToDataList(mStock.getVertexList(period, StockTrend.LEVEL_DRAW), mStock.getDataList(period, StockTrend.LEVEL_DRAW));
 
 		for (int i = StockTrend.LEVEL_STROKE; i < StockTrend.LEVELS.length; i++) {
 			mTrendAnalyzer.analyzeLine(i);
