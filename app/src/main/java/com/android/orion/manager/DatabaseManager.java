@@ -1205,7 +1205,7 @@ public class DatabaseManager implements StockListener {
 				+ " AND " + DatabaseContract.COLUMN_PERIOD + " = '" + period + "'"
 				+ " AND " + DatabaseContract.COLUMN_LEVEL + " >= " + stock.getLevel(period)
 				+ " AND " + hasFlagSelection(StockTrend.FLAG_CHANGED);
-		String sortOrder = DatabaseContract.COLUMN_LEVEL + DatabaseContract.ORDER_DESC;
+		String sortOrder = DatabaseContract.COLUMN_LEVEL + DatabaseContract.ORDER_ASC;
 
 		stockTrendList.clear();
 		Cursor cursor = null;
