@@ -76,6 +76,9 @@ public class Setting {
 	public static final String SETTING_DISPLAY_TREND_LINE = "SETTING_DISPLAY_TREND_LINE";
 	public static final boolean SETTING_DISPLAY_TREND_LINE_DEFAULT = true;
 
+	public static final String SETTING_DISPLAY_MERGED = "SETTING_DISPLAY_MERGED";
+	public static final boolean SETTING_DISPLAY_MERGED_DEFAULT = true;
+
 	public static final String SETTING_DEBUG_LOG = "SETTING_DEBUG_LOG";
 	public static final boolean SETTING_DEBUG_LOG_DEFAULT = true;
 	public static final String SETTING_DEBUG_DIRECT = "SETTING_DEBUG_DIRECT";
@@ -210,6 +213,14 @@ public class Setting {
 
 	public static void setDisplayTrendLine(boolean value) {
 		Preferences.putBoolean(SETTING_DISPLAY_TREND_LINE, value);
+	}
+
+	public static boolean getDisplayMerged() {
+		return Preferences.getBoolean(SETTING_DISPLAY_MERGED, SETTING_DISPLAY_MERGED_DEFAULT);
+	}
+
+	public static void setDisplayMerged(boolean value) {
+		Preferences.putBoolean(SETTING_DISPLAY_MERGED, value);
 	}
 
 	public static boolean getDebugLog() {

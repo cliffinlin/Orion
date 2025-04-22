@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.text.TextUtils;
 
+import com.android.orion.provider.StockPerceptronProvider;
 import com.android.orion.setting.Constant;
 import com.android.orion.utility.Utility;
 
@@ -86,6 +87,7 @@ public class StockTrend extends DatabaseTable {
 	public static final String MARK_BUY = "B";
 	public static final String MARK_SELL = "S";
 	public static final String MARK_LEVEL = "L";
+	public static final String MARK_PREDICT = " ? ";
 
 	public static final int VERTEX_SIZE = 3;
 	public static final int ADAPTIVE_SIZE = 8;
@@ -477,7 +479,14 @@ public class StockTrend extends DatabaseTable {
 				+ mNextNet + Constant.TAB;
 	}
 
-	public String toTrendString() {
-		return MARK_LEVEL + getLevel() + " " + getType() + " " + (int) mNet + "/" + (int) mNextNet;
+	public String toChartString() {
+		return MARK_LEVEL + getLevel() + " "
+				+ getType() + " "
+				+ (int) mNet + "/" + (int) mNextNet
+				+ MARK_PREDICT + (int) StockPerceptronProvider.getInstance().getStockPerceptron().predict(mNet);
+	}
+
+	public String toNotifyString() {
+		return mPeriod + " " + toChartString();
 	}
 }

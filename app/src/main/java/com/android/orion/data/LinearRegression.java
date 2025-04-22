@@ -234,4 +234,8 @@ public class LinearRegression {
 
 		return error / n; // 返回均方误差
 	}
+
+	public int getListSize() {
+		return xList.size();
+	}
 }

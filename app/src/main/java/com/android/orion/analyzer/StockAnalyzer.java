@@ -38,6 +38,7 @@ import java.util.List;
 public class StockAnalyzer {
 	Stock mStock;
 	ArrayList<StockData> mStockDataList;
+	ArrayList<StockTrend> mStockTrendList = new ArrayList<>();
 
 	StringBuffer mContentTitle = new StringBuffer();
 	StringBuffer mContentText = new StringBuffer();
@@ -179,7 +180,7 @@ public class StockAnalyzer {
 
 		StringBuilder actionBuilder = new StringBuilder();
 		appendActionIfPresent(actionBuilder, getDirectionAction(period));
-		appendActionIfPresent(actionBuilder, getTrendAction());
+		appendActionIfPresent(actionBuilder, getTrendAction(period));
 		mStock.setAction(period, actionBuilder.toString());
 	}
 
@@ -190,14 +191,11 @@ public class StockAnalyzer {
 	}
 
 	String getDirectionAction(String period) {
-		StockData draw = StockData.getLast(mStock.getVertexList(period, StockTrend.LEVEL_DRAW), 1);
-		StockData stroke = StockData.getLast(mStock.getVertexList(period, StockTrend.LEVEL_STROKE), 1);
-		StockData segment = StockData.getLast(mStock.getVertexList(period, StockTrend.LEVEL_SEGMENT), 1);
-
 		StringBuilder builder = new StringBuilder();
-		appendDirection(builder, segment);
-		appendDirection(builder, stroke);
-		appendDirection(builder, draw);
+		for (int i = 0; i < 3; i++) {
+			StockData stockData = StockData.getLast(mStock.getVertexList(period, mStock.getLevel(period) - i), 1);
+			appendDirection(builder, stockData);
+		}
 		return builder.toString();
 	}
 
@@ -213,13 +211,13 @@ public class StockAnalyzer {
 		}
 	}
 
-	String getTrendAction() {
-		if (mStockDataList == null || mStockDataList.isEmpty()) {
+	String getTrendAction(String period) {
+		mDatabaseManager.getStockTrendChangedList(mStock, period, mStockTrendList);
+		if (mStockTrendList == null || mStockTrendList.isEmpty()) {
 			return "";
 		}
-
-		StockData stockData = StockData.getLast(mStockDataList, 0);
-		return stockData != null ? stockData.getText() : "";
+		StockTrend stockTrend = mStockTrendList.get(0);
+		return stockTrend != null ? stockTrend.toChartString() : "";
 	}
 
 	public void notifyStockTrend(StockTrend stockTrend) {
@@ -247,7 +245,7 @@ public class StockAnalyzer {
 		if (stockDealProfit > 0) {
 			mContentTitle.append(Constant.MARK_DOLLAR);
 		}
-		mContentTitle.append(mStock.getName() + " " + mStock.getPrice() + " " + mStock.getNet() + " " + stockTrend.toTrendString() + " ? " + mStockPerceptronProvider.getStockPerceptron().predict(stockTrend.getNet()));
+		mContentTitle.append(mStock.getName() + " " + mStock.getPrice() + " " + mStock.getNet() + " " + stockTrend.toNotifyString());
 
 		RecordFile.writeNotificationFile(mContentTitle.toString());
 		try {

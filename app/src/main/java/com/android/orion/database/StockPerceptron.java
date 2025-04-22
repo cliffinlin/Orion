@@ -378,6 +378,7 @@ public class StockPerceptron extends DatabaseTable {
 				+ "mBias=" + mLinearRegression.bias + Constant.TAB
 				+ "mError=" + mLinearRegression.mse + Constant.TAB
 				+ "mDelta=" + mDelta + Constant.TAB
-				+ "mTimes=" + mTimes + Constant.TAB;
+				+ "mTimes=" + mTimes + Constant.TAB
+				+ "ListSize=" + mLinearRegression.getListSize();
 	}
 }

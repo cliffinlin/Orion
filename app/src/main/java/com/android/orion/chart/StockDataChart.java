@@ -52,7 +52,6 @@ public class StockDataChart {
 	public List<Entry>[] mGroupEntryList = new List[StockTrend.LEVEL_MAX];
 	public CombinedData mCombinedDataMain = new CombinedData(mXValues);
 	public CombinedData mCombinedDataSub = new CombinedData(mXValues);
-	StockPerceptronProvider mStockPerceptronProvider = StockPerceptronProvider.getInstance();
 
 	Stock mStock;
 	String mPeriod;
@@ -354,8 +353,7 @@ public class StockDataChart {
 
 		StockTrend stockTrend = getStockTrend(mAdaptiveLevel);
 		if (stockTrend != null) {
-			mDescription.append(stockTrend.toTrendString());
-			mDescription.append(" ? " + mStockPerceptronProvider.getStockPerceptron().predict(stockTrend.getNet()));
+			mDescription.append(stockTrend.toChartString());
 		} else {
 			mDescription.append(stock.getAction(mPeriod));
 		}
@@ -411,8 +409,7 @@ public class StockDataChart {
 		String label = "                                                     " + " ";
 		if (stockTrend != null && stockTrend.hasFlag(StockTrend.FLAG_CHANGED)) {
 			color = lineColor(mAdaptiveLevel);
-			label += "Trend:" + Constant.TAB2 + stockTrend.toTrendString();
-			label += " ? " + mStockPerceptronProvider.getStockPerceptron().predict(stockTrend.getNet());
+			label += "Trend:" + Constant.TAB2 + stockTrend.toChartString();
 		} else {
 			label += "Action:" + Constant.TAB2 + action;
 		}
