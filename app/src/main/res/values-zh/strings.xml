@@ -145,6 +145,7 @@
     <string name="prev_net">PrevNet</string>
     <string name="net">Net</string>
     <string name="next_net">NextNet</string>
+    <string name="predict">Predict</string>
 
     //Tip
     <string name="network_unavailable">Mobile data network not available</string>

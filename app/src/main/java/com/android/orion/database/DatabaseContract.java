@@ -29,6 +29,7 @@ public final class DatabaseContract {
 	public static final String COLUMN_PREV_NET = "prev_net";
 	public static final String COLUMN_NET = "net";
 	public static final String COLUMN_NEXT_NET = "next_net";
+	public static final String COLUMN_PREDICT = "predict";
 	public static final String COLUMN_VOLUME = "volume";
 	public static final String COLUMN_VALUE = "value";
 	public static final String COLUMN_TEXT = "text";
@@ -299,7 +300,7 @@ public final class DatabaseContract {
 				COLUMN_SE, COLUMN_CODE, COLUMN_NAME,
 				COLUMN_PERIOD, COLUMN_DATE, COLUMN_TIME,
 				COLUMN_LEVEL, COLUMN_TYPE, COLUMN_FLAG,
-				COLUMN_PREV_NET, COLUMN_NET, COLUMN_NEXT_NET,
+				COLUMN_PREV_NET, COLUMN_NET, COLUMN_NEXT_NET, COLUMN_PREDICT,
 				COLUMN_CREATED, COLUMN_MODIFIED};
 		static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
 				+ TABLE_NAME;
@@ -317,6 +318,7 @@ public final class DatabaseContract {
 				+ COLUMN_PREV_NET + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_NET + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_NEXT_NET + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_PREDICT + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_CREATED + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_MODIFIED + TEXT_TYPE + " )";
 		static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME

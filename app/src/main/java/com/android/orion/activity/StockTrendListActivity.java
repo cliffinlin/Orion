@@ -62,6 +62,7 @@ public class StockTrendListActivity extends ListActivity implements
 	TextView mTextViewPrevNet = null;
 	TextView mTextViewNet = null;
 	TextView mTextViewNextNet = null;
+	TextView mTextViewPredict = null;
 	TextView mTextViewDate = null;
 	TextView mTextViewTime = null;
 	TextView mTextViewCreated = null;
@@ -213,6 +214,9 @@ public class StockTrendListActivity extends ListActivity implements
 			case R.id.next_net:
 				mSortOrderColumn = DatabaseContract.COLUMN_NEXT_NET;
 				break;
+			case R.id.predict:
+				mSortOrderColumn = DatabaseContract.COLUMN_PREDICT;
+				break;
 			case R.id.date:
 				mSortOrderColumn = DatabaseContract.COLUMN_DATE;
 				break;
@@ -263,6 +267,7 @@ public class StockTrendListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewPrevNet, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewNet, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewNextNet, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewPredict, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewDate, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewTime, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewCreated, mHeaderTextDefaultColor);
@@ -328,6 +333,11 @@ public class StockTrendListActivity extends ListActivity implements
 			mTextViewNextNet.setOnClickListener(this);
 		}
 
+		mTextViewPredict = findViewById(R.id.predict);
+		if (mTextViewPredict != null) {
+			mTextViewPredict.setOnClickListener(this);
+		}
+
 		mTextViewDate = findViewById(R.id.date);
 		if (mTextViewDate != null) {
 			mTextViewDate.setOnClickListener(this);
@@ -363,7 +373,9 @@ public class StockTrendListActivity extends ListActivity implements
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_NET)) {
 			setHeaderTextColor(mTextViewNet, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_NEXT_NET)) {
-			setHeaderTextColor(mTextViewPrevNet, mHeaderTextHighlightColor);
+			setHeaderTextColor(mTextViewNextNet, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PREDICT)) {
+			setHeaderTextColor(mTextViewPredict, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_DATE)) {
 			setHeaderTextColor(mTextViewDate, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_TIME)) {
@@ -389,6 +401,7 @@ public class StockTrendListActivity extends ListActivity implements
 				DatabaseContract.COLUMN_PREV_NET,
 				DatabaseContract.COLUMN_NET,
 				DatabaseContract.COLUMN_NEXT_NET,
+				DatabaseContract.COLUMN_PREDICT,
 				DatabaseContract.COLUMN_DATE,
 				DatabaseContract.COLUMN_TIME,
 				DatabaseContract.COLUMN_CREATED,
@@ -401,6 +414,7 @@ public class StockTrendListActivity extends ListActivity implements
 				R.id.prev_net,
 				R.id.net,
 				R.id.next_net,
+				R.id.predict,
 				R.id.date,
 				R.id.time,
 				R.id.created,

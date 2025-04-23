@@ -539,21 +539,8 @@ public class StockData extends DatabaseTable {
 		return (mVertex & vertex) == vertex;
 	}
 
-	public void setupChange() {
-		mChange = 0;
-
-		if (directionOf(StockTrend.DIRECTION_UP)) {
-			mChange = mCandle.getHigh() - mCandle.getLow();
-		} else if (directionOf(StockTrend.DIRECTION_DOWN)) {
-			mChange = mCandle.getLow() - mCandle.getHigh();
-		} else {
-			mChange = mCandle.getHigh() - mCandle.getLow();
-		}
-
-		mChange = Utility.Round2(mChange);
-	}
-
 	public void setupNet() {
+		mChange = 0;
 		mNet = 0;
 
 		if ((mCandle.getHigh() == 0) || (mCandle.getLow() == 0)) {
@@ -561,12 +548,29 @@ public class StockData extends DatabaseTable {
 		}
 
 		if (directionOf(StockTrend.DIRECTION_UP)) {
+			mChange = mCandle.getHigh() - mCandle.getLow();
 			mNet = 100.0 * mChange / mCandle.getLow();
 		} else if (directionOf(StockTrend.DIRECTION_DOWN)) {
+			mChange = mCandle.getLow() - mCandle.getHigh();
 			mNet = 100.0 * mChange / mCandle.getHigh();
 		} else {
+			mChange = mCandle.getHigh() - mCandle.getLow();
 			mNet = 100.0 * mChange / mCandle.getLow();
 		}
+
+		mNet = Utility.Round2(mNet);
+	}
+
+	public void setupCandleNet() {
+		mChange = 0;
+		mNet = 0;
+
+		if ((mCandle.getOpen() == 0) || (mCandle.getClose() == 0)) {
+			return;
+		}
+
+		mChange = mCandle.getClose() - mCandle.getOpen();
+		mNet = 100.0 * mChange / mCandle.getOpen();
 
 		mNet = Utility.Round2(mNet);
 	}

@@ -155,6 +155,8 @@ public class TrendAnalyzer {
 		StockData stockData = new StockData(current);
 		stockData.setIndexStart(prev.getIndexStart());
 		stockData.setIndexEnd(current.getIndexEnd());
+		stockData.getCandle().setOpen(prev.getCandle().getOpen());
+		stockData.getCandle().setClose(current.getCandle().getClose());
 		stockData.merge(StockTrend.DIRECTION_NONE, prev);
 
 		int direction = StockTrend.DIRECTION_NONE;
@@ -164,7 +166,6 @@ public class TrendAnalyzer {
 			direction = current.vertexOf(StockTrend.VERTEX_TOP) ? StockTrend.DIRECTION_UP : StockTrend.DIRECTION_DOWN;
 		}
 		stockData.setDirection(direction);
-		stockData.setupChange();
 		stockData.setupNet();
 		dataList.add(stockData);
 	}
@@ -196,6 +197,7 @@ public class TrendAnalyzer {
 		stockTrend.setPrevNet(prev.getNet());
 		stockTrend.setNet(current.getNet());
 		stockTrend.setNextNet(next.getNet());
+		stockTrend.setPredict(mStockPerceptronProvider.getStockPerceptron().predict(stockTrend.getNet()));
 
 		stockTrendList.add(stockTrend);
 		if (!mPeriod.equals(Period.MONTH)) {
@@ -376,6 +378,12 @@ public class TrendAnalyzer {
 
 			extendVertexList(mStockDataList.size() - 1, mStockDataList, vertexList);
 			addStockDataList(vertexList, dataList);
+			//TODO
+			StockData next = StockData.getLast(dataList, 0);
+			if (next != null) {
+				next.setupCandleNet();
+			}
+			//TODO
 			addStockTrendList(level, type, dataList, stockTrendList);
 
 			if (stockTrendList.size() == 0) {
@@ -384,13 +392,10 @@ public class TrendAnalyzer {
 
 			StockTrend stockTrend = stockTrendList.get(stockTrendList.size() - 1);
 			if (mDatabaseManager.isStockTrendExist(stockTrend)) {
-				mDatabaseManager.getStockTrend(stockTrend);
 				if (TextUtils.equals(type, stockTrend.getType())) {
 					stockTrend.removeFlag(StockTrend.FLAG_CHANGED);
 					stockTrend.setModified(Utility.getCurrentDateTimeString());
 					mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValues());
-
-//						mStockPerceptronProvider.train(stockTrend.getPeriod(), stockTrend.getLevel(), stockTrend.getType());
 				} else {
 					stockTrend.setType(type);
 					stockTrend.addFlag(StockTrend.FLAG_CHANGED);
@@ -458,7 +463,6 @@ public class TrendAnalyzer {
 				direction = current.vertexOf(StockTrend.VERTEX_TOP) ? StockTrend.DIRECTION_UP : StockTrend.DIRECTION_DOWN;
 			}
 			stockData.setDirection(direction);
-			stockData.setupChange();
 			stockData.setupNet();
 			dataList.add(stockData);
 		}

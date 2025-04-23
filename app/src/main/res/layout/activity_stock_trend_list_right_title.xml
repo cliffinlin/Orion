@@ -68,6 +68,15 @@
         android:gravity="center"
         android:text="@string/next_net"
         android:textSize="18sp" />
+    
+    <TextView
+        android:id="@+id/predict"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/predict"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/date"
