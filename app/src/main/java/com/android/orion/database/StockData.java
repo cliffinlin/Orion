@@ -561,20 +561,6 @@ public class StockData extends DatabaseTable {
 		mNet = Utility.Round2(mNet);
 	}
 
-	public void setupCandleNet() {
-		mChange = 0;
-		mNet = 0;
-
-		if ((mCandle.getOpen() == 0) || (mCandle.getClose() == 0)) {
-			return;
-		}
-
-		mChange = mCandle.getClose() - mCandle.getOpen();
-		mNet = 100.0 * mChange / mCandle.getOpen();
-
-		mNet = Utility.Round2(mNet);
-	}
-
 	public StockData fromString(String string) {
 		String dateString = "";
 		String timeString = "";

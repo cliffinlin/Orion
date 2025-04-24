@@ -704,23 +704,16 @@ public class DatabaseManager implements StockListener {
 
 	public String getStockDataSelection(StockData stockData) {
 		String selection = "";
-		String period = "";
 
 		if (stockData == null) {
 			return selection;
 		}
 
-		selection = getStockSelection(stockData) + " AND "
-				+ DatabaseContract.COLUMN_PERIOD + " = " + "'"
-				+ stockData.getPeriod() + "'" + " AND "
-				+ DatabaseContract.COLUMN_DATE + " = " + "'"
-				+ stockData.getDate() + "'";
-
-		period = stockData.getPeriod();
-
-		if (Period.isMinutePeriod(period)) {
-			selection += " AND " + DatabaseContract.COLUMN_TIME + " = " + "'"
-					+ stockData.getTime() + "'";
+		selection = getStockSelection(stockData)
+				+ " AND " + DatabaseContract.COLUMN_PERIOD + " = " + "'" + stockData.getPeriod() + "'"
+				+ " AND " + DatabaseContract.COLUMN_DATE + " = " + "'" + stockData.getDate() + "'";
+		if (Period.isMinutePeriod(stockData.getPeriod())) {
+			selection += " AND " + DatabaseContract.COLUMN_TIME + " = " + "'" + stockData.getTime() + "'";
 		}
 
 		return selection;
@@ -1015,17 +1008,13 @@ public class DatabaseManager implements StockListener {
 
 	public String getTDXDataSelection(TDXData tdxData) {
 		String selection = "";
-		String period = "";
 
 		if (tdxData == null) {
 			return selection;
 		}
 
-		selection = getStockSelection(tdxData) + " AND "
-				+ DatabaseContract.COLUMN_PERIOD + " = " + "'"
-				+ tdxData.getPeriod();
-
-		period = tdxData.getPeriod();
+		selection = getStockSelection(tdxData)
+				+ " AND " + DatabaseContract.COLUMN_PERIOD + " = '" + tdxData.getPeriod() + "'";
 
 		return selection;
 	}
@@ -1398,13 +1387,11 @@ public class DatabaseManager implements StockListener {
 
 		selection = getStockSelection(stockTrend)
 				+ " AND " + DatabaseContract.COLUMN_PERIOD + " = " + "'" + stockTrend.getPeriod() + "'"
-				+ " AND " + DatabaseContract.COLUMN_LEVEL + " = " + stockTrend.getLevel();
-		return selection;
-	}
-
-	public String getStockTrendSelection(String se, String code, String period) {
-		String selection = getStockSelection(se, code)
-				+ " AND " + DatabaseContract.COLUMN_PERIOD + " = " + "'" + period + "'";
+				+ " AND " + DatabaseContract.COLUMN_LEVEL + " = " + stockTrend.getLevel()
+				+ " AND " + DatabaseContract.COLUMN_DATE + " = " + "'" + stockTrend.getDate() + "'";
+		if (Period.isMinutePeriod(stockTrend.getPeriod())) {
+			selection += " AND " + DatabaseContract.COLUMN_TIME + " = " + "'" + stockTrend.getTime() + "'";
+		}
 		return selection;
 	}
 
@@ -1847,13 +1834,10 @@ public class DatabaseManager implements StockListener {
 			return cursor;
 		}
 
-		String selection = DatabaseContract.COLUMN_SE + " = " + "'"
-				+ stockDeal.getSE() + "'" + " AND "
-				+ DatabaseContract.COLUMN_CODE + " = " + "'"
-				+ stockDeal.getCode() + "'" + " AND "
-				+ DatabaseContract.COLUMN_BUY + " = " + stockDeal.getBuy()
-				+ " AND " + DatabaseContract.COLUMN_VOLUME + " = "
-				+ stockDeal.getVolume();
+		String selection = DatabaseContract.COLUMN_SE + " = " + "'" + stockDeal.getSE() + "'"
+				+ " AND " + DatabaseContract.COLUMN_CODE + " = " + "'" + stockDeal.getCode() + "'"
+				+ " AND " + DatabaseContract.COLUMN_BUY + " = " + stockDeal.getBuy()
+				+ " AND " + DatabaseContract.COLUMN_VOLUME + " = " + stockDeal.getVolume();
 
 		cursor = queryStockDeal(selection, null, null);
 
@@ -3004,8 +2988,7 @@ public class DatabaseManager implements StockListener {
 
 	public String getIndexComponentSelection(String indexCode, String stockCode) {
 		return DatabaseContract.COLUMN_INDEX_CODE + " = " + "'" + indexCode + "'"
-				+ " AND "
-				+ DatabaseContract.COLUMN_CODE + " = " + "'" + stockCode + "'";
+				+ " AND " + DatabaseContract.COLUMN_CODE + " = " + "'" + stockCode + "'";
 	}
 
 	public String getIndexComponentOrder() {

@@ -192,8 +192,8 @@ public class StockAnalyzer {
 
 	String getDirectionAction(String period) {
 		StringBuilder builder = new StringBuilder();
-		for (int i = 0; i < 3; i++) {
-			StockData stockData = StockData.getLast(mStock.getVertexList(period, mStock.getLevel(period) - i), 1);
+		StockData stockData = StockData.getLast(mStock.getVertexList(period, mStock.getLevel(period)), 1);
+		if (stockData != null) {
 			appendDirection(builder, stockData);
 		}
 		return builder.toString();

@@ -378,12 +378,6 @@ public class TrendAnalyzer {
 
 			extendVertexList(mStockDataList.size() - 1, mStockDataList, vertexList);
 			addStockDataList(vertexList, dataList);
-			//TODO
-			StockData next = StockData.getLast(dataList, 0);
-			if (next != null) {
-				next.setupCandleNet();
-			}
-			//TODO
 			addStockTrendList(level, type, dataList, stockTrendList);
 
 			if (stockTrendList.size() == 0) {

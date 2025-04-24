@@ -87,6 +87,7 @@ public class StockTrend extends DatabaseTable {
 	public static final String MARK_BUY = "B";
 	public static final String MARK_SELL = "S";
 	public static final String MARK_LEVEL = "L";
+	public static final String MARK_PREDICT = "?";
 
 	public static final int VERTEX_SIZE = 3;
 	public static final int ADAPTIVE_SIZE = 8;
@@ -504,7 +505,7 @@ public class StockTrend extends DatabaseTable {
 	public String toChartString() {
 		return MARK_LEVEL + getLevel() + " "
 				+ getType() + " "
-				+ (int) mNet + "/" + (int) mNextNet + " ? " + mPredict;
+				+ (int) mNet + "/" + (int) mNextNet + " " + MARK_PREDICT + mPredict;
 	}
 
 	public String toNotifyString() {
