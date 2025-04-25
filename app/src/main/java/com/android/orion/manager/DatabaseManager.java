@@ -1387,11 +1387,8 @@ public class DatabaseManager implements StockListener {
 
 		selection = getStockSelection(stockTrend)
 				+ " AND " + DatabaseContract.COLUMN_PERIOD + " = " + "'" + stockTrend.getPeriod() + "'"
-				+ " AND " + DatabaseContract.COLUMN_LEVEL + " = " + stockTrend.getLevel()
-				+ " AND " + DatabaseContract.COLUMN_DATE + " = " + "'" + stockTrend.getDate() + "'";
-		if (Period.isMinutePeriod(stockTrend.getPeriod())) {
-			selection += " AND " + DatabaseContract.COLUMN_TIME + " = " + "'" + stockTrend.getTime() + "'";
-		}
+				+ " AND " + DatabaseContract.COLUMN_LEVEL + " = " + stockTrend.getLevel();
+
 		return selection;
 	}
 

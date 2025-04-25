@@ -94,20 +94,6 @@ public class StockDataChart {
 		}
 	}
 
-	public boolean isOperate() {
-		boolean result = false;
-
-		if (mStock == null) {
-			return false;
-		}
-
-		if (!TextUtils.isEmpty(mStock.getOperate()) && TextUtils.equals(mPeriod, mStock.getOperate())) {
-			result = true;
-		}
-
-		return result;
-	}
-
 	public void setMainChartData() {
 		mCombinedDataMain = new CombinedData(mXValues);
 
@@ -407,8 +393,8 @@ public class StockDataChart {
 
 		StockTrend stockTrend = getStockTrend(mAdaptiveLevel);
 		String label = "                                                     " + " ";
+		color = lineColor(mAdaptiveLevel);
 		if (stockTrend != null && stockTrend.hasFlag(StockTrend.FLAG_CHANGED)) {
-			color = lineColor(mAdaptiveLevel);
 			label += "Trend:" + Constant.TAB2 + stockTrend.toChartString();
 		} else {
 			label += "Action:" + Constant.TAB2 + action;
@@ -479,6 +465,9 @@ public class StockDataChart {
 				if (level == StockTrend.LEVEL_DRAW) {
 					mDrawFirstEntryList.add(mTrendEntryList[level].get(0));
 					mDrawLastEntryList.add(0, mTrendEntryList[level].get(mTrendEntryList[level].size() - 1));
+				}
+				if (Setting.getDisplayAdaptive() && level != mAdaptiveLevel) {
+					continue;
 				}
 				mGroupEntryList[level].add(mTrendEntryList[level].get(mTrendEntryList[level].size() - 2));
 				mGroupEntryList[level].add(mTrendEntryList[level].get(mTrendEntryList[level].size() - 1));

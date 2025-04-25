@@ -18,7 +18,7 @@ public class ReceiverConnection extends BroadcastReceiver {
 
 	Logger Log = Logger.getLogger();
 
-	private ReceiverConnection() {
+	public ReceiverConnection() {
 	}
 
 	public static ReceiverConnection getInstance() {

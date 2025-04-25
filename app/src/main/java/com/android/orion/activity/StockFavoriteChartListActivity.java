@@ -761,9 +761,6 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 
 			if (mItemViewType == ITEM_VIEW_TYPE_MAIN) {
 				viewHolder.chart.setData(mStockDataChart.mCombinedDataMain);
-				if (mStockDataChart.isOperate()) {
-					viewHolder.chart.setBackgroundColor(Color.TRANSPARENT);
-				}
 			} else {
 				viewHolder.chart.setData(mStockDataChart.mCombinedDataSub);
 			}

@@ -51,7 +51,6 @@ public class Stock extends DatabaseTable {
 	private long mValue;
 
 	private int mFlag;
-	private String mOperate;
 
 	private double mRoi;
 	private double mIR;
@@ -107,7 +106,6 @@ public class Stock extends DatabaseTable {
 		mPinyin = "";
 
 		mFlag = 0;
-		mOperate = "";
 		mHold = 0;
 
 		reset();
@@ -250,7 +248,6 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
 		contentValues.put(DatabaseContract.COLUMN_FLAG, mFlag);
-		contentValues.put(DatabaseContract.COLUMN_OPERATE, mOperate);
 		return contentValues;
 	}
 
@@ -292,7 +289,6 @@ public class Stock extends DatabaseTable {
 		mMin5.setLevel(stock.mMin5.getLevel());
 
 		setFlag(stock.mFlag);
-		setOperate(stock.mOperate);
 
 		setRoi(stock.mRoi);
 		setIR(stock.mIR);
@@ -363,7 +359,6 @@ public class Stock extends DatabaseTable {
 		mMin5.setLevel(cursor);
 
 		setFlag(cursor);
-		setOperate(cursor);
 		setRoi(cursor);
 		setIR(cursor);
 		setIRR(cursor);
@@ -588,23 +583,6 @@ public class Stock extends DatabaseTable {
 
 		setValue(cursor.getLong(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_VALUE)));
-	}
-
-	public String getOperate() {
-		return mOperate;
-	}
-
-	public void setOperate(String operate) {
-		mOperate = operate;
-	}
-
-	void setOperate(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setOperate(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_OPERATE)));
 	}
 
 	public long getHold() {
