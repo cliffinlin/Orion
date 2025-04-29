@@ -386,22 +386,29 @@ public class TrendAnalyzer {
 
 			StockTrend stockTrend = stockTrendList.get(stockTrendList.size() - 1);
 			if (mDatabaseManager.isStockTrendExist(stockTrend)) {
-				if (TextUtils.equals(type, stockTrend.getType())) {
+				StockTrend stockTrendFromDB = new StockTrend(stockTrend);
+				mDatabaseManager.getStockTrend(stockTrendFromDB);
+				stockTrend.setId(stockTrendFromDB.getId());
+				if (TextUtils.equals(type, stockTrendFromDB.getType())) {
 					stockTrend.removeFlag(StockTrend.FLAG_CHANGED);
 					stockTrend.setModified(Utility.getCurrentDateTimeString());
 					mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValues());
 				} else {
-					stockTrend.setType(type);
 					stockTrend.addFlag(StockTrend.FLAG_CHANGED);
 					stockTrend.setModified(Utility.getCurrentDateTimeString());
 					mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValues());
 
-					if (Setting.getDisplayAdaptive() && level >= mStock.getLevel(mPeriod)) {
-						StockAnalyzer.getInstance().notifyStockTrend(stockTrend);
+					if (Setting.getDisplayAdaptive()) {
+						if (Setting.getDisplayGroup()) {
+							StockAnalyzer.getInstance().notifyStockTrend(stockTrend);
+						} else {
+							if (level >= mStock.getLevel(mPeriod)) {
+								StockAnalyzer.getInstance().notifyStockTrend(stockTrend);
+							}
+						}
 					}
 				}
 			} else {
-				stockTrend.setType(type);
 				stockTrend.setFlag(StockTrend.FLAG_NONE);
 				stockTrend.setCreated(Utility.getCurrentDateTimeString());
 				mDatabaseManager.insertStockTrend(stockTrend);

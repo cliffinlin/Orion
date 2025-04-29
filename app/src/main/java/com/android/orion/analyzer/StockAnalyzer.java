@@ -232,10 +232,6 @@ public class StockAnalyzer {
 			return;
 		}
 
-		if (!mStock.hasFlag(Stock.FLAG_NOTIFY)) {
-			return;
-		}
-
 		mContentTitle.setLength(0);
 		mContentText.setLength(0);
 

@@ -43,6 +43,9 @@ public class Setting {
 	public static final String SETTING_DISPLAY_ADAPTIVE = "SETTING_DISPLAY_ADAPTIVE";
 	public static final boolean SETTING_DISPLAY_ADAPTIVE_DEFAULT = true;
 
+	public static final String SETTING_DISPLAY_GROUP = "SETTING_DISPLAY_GROUP";
+	public static final boolean SETTING_DISPLAY_GROUP_DEFAULT = true;
+
 	public static final String SETTING_DISPLAY_FILLED = "SETTING_DISPLAY_FILLED";
 	public static final boolean SETTING_DISPLAY_FILLED_DEFAULT = true;
 
@@ -125,6 +128,14 @@ public class Setting {
 
 	public static void setDisplayAdaptive(boolean value) {
 		Preferences.putBoolean(SETTING_DISPLAY_ADAPTIVE, value);
+	}
+
+	public static boolean getDisplayGroup() {
+		return Preferences.getBoolean(SETTING_DISPLAY_GROUP, SETTING_DISPLAY_GROUP_DEFAULT);
+	}
+
+	public static void setDisplayGroup(boolean value) {
+		Preferences.putBoolean(SETTING_DISPLAY_GROUP, value);
 	}
 
 	public static boolean getDisplayFilled() {

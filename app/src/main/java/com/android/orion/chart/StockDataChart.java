@@ -466,8 +466,12 @@ public class StockDataChart {
 					mDrawFirstEntryList.add(mTrendEntryList[level].get(0));
 					mDrawLastEntryList.add(0, mTrendEntryList[level].get(mTrendEntryList[level].size() - 1));
 				}
-				if (Setting.getDisplayAdaptive() && level != mAdaptiveLevel) {
-					continue;
+				if (Setting.getDisplayAdaptive()) {
+					if (!Setting.getDisplayGroup()) {
+						if (level != mAdaptiveLevel) {
+							 continue;
+						 }
+					}
 				}
 				mGroupEntryList[level].add(mTrendEntryList[level].get(mTrendEntryList[level].size() - 2));
 				mGroupEntryList[level].add(mTrendEntryList[level].get(mTrendEntryList[level].size() - 1));

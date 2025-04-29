@@ -77,6 +77,7 @@
     <string name="direct">Direct</string>
     <string name="monochrome">Monochrome</string>
     <string name="adaptive">Adaptive</string>
+    <string name="group">Group</string>
     <string name="draw">Draw</string>
     <string name="stroke">Stroke</string>
     <string name="segment">Segment</string>
