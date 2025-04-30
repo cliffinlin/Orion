@@ -158,7 +158,6 @@ public class MainActivity extends Activity {
 			Setting.setPeriod(Period.MIN5, Setting.SETTING_PERIOD_MIN5_DEFAULT);
 
 			Setting.setDisplayAdaptive(Setting.SETTING_DISPLAY_ADAPTIVE_DEFAULT);
-			Setting.setDisplayGroup(Setting.SETTING_DISPLAY_GROUP_DEFAULT);
 			Setting.setDisplayFilled(Setting.SETTING_DISPLAY_FILLED_DEFAULT);
 			Setting.setDisplayNet(Setting.SETTING_DISPLAY_NET_DEFAULT);
 			Setting.setDisplayDraw(Setting.SETTING_DISPLAY_DRAW_DEFAULT);

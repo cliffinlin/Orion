@@ -199,6 +199,21 @@ public class StorageActivity extends DatabaseActivity {
 		}
 
 		mHandler.sendEmptyMessage(MESSAGE_REFRESH);
+	}
+
+	int loadFromXmlFile(InputStream inputStream) {
+		int count = 0;
+
+		try {
+			XmlPullParser parser = XmlPullParserFactory.newInstance()
+					.newPullParser();
+			parser.setInput(inputStream, null);
+			count = xmlParse(parser);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return count;
 	}	Handler mHandler = new Handler(Looper.getMainLooper()) {
 		@Override
 		public void handleMessage(Message msg) {
@@ -240,21 +255,6 @@ public class StorageActivity extends DatabaseActivity {
 			}
 		}
 	};
-
-	int loadFromXmlFile(InputStream inputStream) {
-		int count = 0;
-
-		try {
-			XmlPullParser parser = XmlPullParserFactory.newInstance()
-					.newPullParser();
-			parser.setInput(inputStream, null);
-			count = xmlParse(parser);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return count;
-	}
 
 	int xmlParse(XmlPullParser parser) {
 		int count = 0;

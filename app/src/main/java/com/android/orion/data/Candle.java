@@ -3,7 +3,6 @@ package com.android.orion.data;
 import android.database.Cursor;
 
 import com.android.orion.database.DatabaseContract;
-import com.android.orion.database.StockTrend;
 import com.android.orion.setting.Constant;
 
 public class Candle {

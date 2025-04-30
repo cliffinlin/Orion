@@ -26,6 +26,7 @@ public final class DatabaseContract {
 	public static final String COLUMN_FLAG = "flag";
 	public static final String COLUMN_PRICE = "price";
 	public static final String COLUMN_CHANGE = "change";
+	public static final String COLUMN_TURN = "turn";
 	public static final String COLUMN_PREV_NET = "prev_net";
 	public static final String COLUMN_NET = "net";
 	public static final String COLUMN_NEXT_NET = "next_net";
@@ -90,6 +91,7 @@ public final class DatabaseContract {
 	public static final String COLUMN_DATE = "date";
 	public static final String COLUMN_TIME = "time";
 	public static final String COLUMN_PERIOD = "period";
+	public static final String COLUMN_ACTION = "action";
 	public static final String COLUMN_OPEN = "open";
 	public static final String COLUMN_HIGH = "high";
 	public static final String COLUMN_LOW = "low";
@@ -296,9 +298,9 @@ public final class DatabaseContract {
 
 		public static final String[] PROJECTION_ALL = {_ID,
 				COLUMN_SE, COLUMN_CODE, COLUMN_NAME,
-				COLUMN_PERIOD, COLUMN_DATE, COLUMN_TIME,
+				COLUMN_PERIOD, COLUMN_ACTION, COLUMN_DATE, COLUMN_TIME,
 				COLUMN_LEVEL, COLUMN_TYPE, COLUMN_FLAG,
-				COLUMN_PREV_NET, COLUMN_NET, COLUMN_NEXT_NET, COLUMN_PREDICT,
+				COLUMN_TURN, COLUMN_PREV_NET, COLUMN_NET, COLUMN_NEXT_NET, COLUMN_PREDICT,
 				COLUMN_CREATED, COLUMN_MODIFIED};
 		static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
 				+ TABLE_NAME;
@@ -308,11 +310,13 @@ public final class DatabaseContract {
 				+ COLUMN_CODE + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_NAME + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_PERIOD + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_ACTION + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_DATE + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_TIME + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_LEVEL + INTEGER_TYPE + COMMA_SEP
 				+ COLUMN_TYPE + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_FLAG + INTEGER_TYPE + COMMA_SEP
+				+ COLUMN_TURN + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_PREV_NET + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_NET + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_NEXT_NET + DOUBLE_TYPE + COMMA_SEP

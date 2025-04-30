@@ -18,7 +18,6 @@ import com.android.orion.database.StockBonus;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockFinancial;
 import com.android.orion.database.StockShare;
-import com.android.orion.database.StockTrend;
 import com.android.orion.interfaces.IStockDataProvider;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;

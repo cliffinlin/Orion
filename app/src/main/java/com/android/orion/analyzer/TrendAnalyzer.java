@@ -179,30 +179,42 @@ public class TrendAnalyzer {
 		StockData current = StockData.getLast(dataList, 1);
 		StockData next = StockData.getLast(dataList, 0);
 
-		if ((prev == null) || (current == null)) {
+		if ((prev == null) || (current == null) || (next == null)) {
 			return;
 		}
 
+		String action = "";
 		StockTrend stockTrend = new StockTrend();
 		stockTrend.setSE(mStock.getSE());
 		stockTrend.setCode(mStock.getCode());
 		stockTrend.setName(mStock.getName());
 		stockTrend.setPeriod(mPeriod);
+		if (next.getDirection() == StockTrend.DIRECTION_UP) {
+			action = Constant.MARK_ADD;
+		} else if (next.getDirection() == StockTrend.DIRECTION_DOWN) {
+			action = Constant.MARK_MINUS;
+		}
+		stockTrend.setAction(action);
 		stockTrend.setDate(current.getDate());
 		stockTrend.setTime(current.getTime());
 
 		stockTrend.setLevel(level);
 		stockTrend.setType(type);
 
+		double turn = 0;
+		if (next.getDirection() == StockTrend.DIRECTION_UP) {
+			turn = next.getCandle().getLow();
+		} else if (next.getDirection() == StockTrend.DIRECTION_DOWN) {
+			turn = next.getCandle().getHigh();
+		}
+		stockTrend.setTurn(turn);
 		stockTrend.setPrevNet(prev.getNet());
 		stockTrend.setNet(current.getNet());
 		stockTrend.setNextNet(next.getNet());
 		stockTrend.setPredict(mStockPerceptronProvider.getStockPerceptron().predict(stockTrend.getNet()));
 
 		stockTrendList.add(stockTrend);
-		if (!mPeriod.equals(Period.MONTH)) {
-			mStockTrendNetMap.put(stockTrend.getNet(), stockTrend.getNextNet());
-		}
+		mStockTrendNetMap.put(stockTrend.getNet(), stockTrend.getNextNet());
 	}
 
 	void extendVertexList(ArrayList<StockData> dataList, ArrayList<StockData> vertexList) {
@@ -399,12 +411,8 @@ public class TrendAnalyzer {
 					mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValues());
 
 					if (Setting.getDisplayAdaptive()) {
-						if (Setting.getDisplayGroup()) {
+						if (level >= mStock.getLevel(mPeriod)) {
 							StockAnalyzer.getInstance().notifyStockTrend(stockTrend);
-						} else {
-							if (level >= mStock.getLevel(mPeriod)) {
-								StockAnalyzer.getInstance().notifyStockTrend(stockTrend);
-							}
 						}
 					}
 				}

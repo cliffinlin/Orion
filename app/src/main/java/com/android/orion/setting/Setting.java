@@ -44,7 +44,7 @@ public class Setting {
 	public static final boolean SETTING_DISPLAY_ADAPTIVE_DEFAULT = true;
 
 	public static final String SETTING_DISPLAY_GROUP = "SETTING_DISPLAY_GROUP";
-	public static final boolean SETTING_DISPLAY_GROUP_DEFAULT = true;
+	public static final boolean SETTING_DISPLAY_GROUP_DEFAULT = false;
 
 	public static final String SETTING_DISPLAY_FILLED = "SETTING_DISPLAY_FILLED";
 	public static final boolean SETTING_DISPLAY_FILLED_DEFAULT = true;

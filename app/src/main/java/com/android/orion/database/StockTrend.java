@@ -5,12 +5,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.text.TextUtils;
 
-import com.android.orion.provider.StockPerceptronProvider;
 import com.android.orion.setting.Constant;
-import com.android.orion.utility.Utility;
-
-import java.util.Calendar;
-import java.util.Comparator;
 
 public class StockTrend extends DatabaseTable {
 
@@ -96,6 +91,7 @@ public class StockTrend extends DatabaseTable {
 	private String mCode;
 	private String mName;
 	private String mPeriod;
+	private String mAction;
 	private String mDate;
 	private String mTime;
 
@@ -103,6 +99,7 @@ public class StockTrend extends DatabaseTable {
 	private String mType;
 	private int mFlag;
 
+	private double mTurn;
 	private double mPrevNet;
 	private double mNet;
 	private double mNextNet;
@@ -139,6 +136,7 @@ public class StockTrend extends DatabaseTable {
 		mCode = "";
 		mName = "";
 		mPeriod = "";
+		mAction = "";
 		mDate = "";
 		mTime = "";
 
@@ -146,6 +144,7 @@ public class StockTrend extends DatabaseTable {
 		mType = TYPE_NONE;
 		mFlag = FLAG_NONE;
 
+		mTurn = 0;
 		mPrevNet = 0;
 		mNet = 0;
 		mNextNet = 0;
@@ -160,6 +159,7 @@ public class StockTrend extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
 		contentValues.put(DatabaseContract.COLUMN_PERIOD, mPeriod);
+		contentValues.put(DatabaseContract.COLUMN_ACTION, mAction);
 		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);
 		contentValues.put(DatabaseContract.COLUMN_TIME, mTime);
 
@@ -167,6 +167,7 @@ public class StockTrend extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_TYPE, mType);
 		contentValues.put(DatabaseContract.COLUMN_FLAG, mFlag);
 
+		contentValues.put(DatabaseContract.COLUMN_TURN, mTurn);
 		contentValues.put(DatabaseContract.COLUMN_PREV_NET, mPrevNet);
 		contentValues.put(DatabaseContract.COLUMN_NET, mNet);
 		contentValues.put(DatabaseContract.COLUMN_NEXT_NET, mNextNet);
@@ -195,6 +196,7 @@ public class StockTrend extends DatabaseTable {
 		setCode(stockTrend.mCode);
 		setName(stockTrend.mName);
 		setPeriod(stockTrend.mPeriod);
+		setAction(stockTrend.mAction);
 		setDate(stockTrend.mDate);
 		setTime(stockTrend.mTime);
 
@@ -202,6 +204,7 @@ public class StockTrend extends DatabaseTable {
 		setType(stockTrend.mType);
 		setFlag(stockTrend.mFlag);
 
+		setTurn(stockTrend.mTurn);
 		setPrevNet(stockTrend.mPrevNet);
 		setNet(stockTrend.mNet);
 		setNextNet(stockTrend.mNextNet);
@@ -222,6 +225,7 @@ public class StockTrend extends DatabaseTable {
 		setCode(cursor);
 		setName(cursor);
 		setPeriod(cursor);
+		setAction(cursor);
 		setDate(cursor);
 		setTime(cursor);
 
@@ -229,6 +233,7 @@ public class StockTrend extends DatabaseTable {
 		setType(cursor);
 		setFlag(cursor);
 
+		setTurn(cursor);
 		setPrevNet(cursor);
 		setNet(cursor);
 		setNextNet(cursor);
@@ -301,6 +306,23 @@ public class StockTrend extends DatabaseTable {
 
 		setPeriod(cursor.getString(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_PERIOD)));
+	}
+
+	public String getAction() {
+		return mAction;
+	}
+
+	public void setAction(String action) {
+		mAction = action;
+	}
+
+	void setAction(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setAction(cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_ACTION)));
 	}
 
 	public String getDate() {
@@ -404,6 +426,23 @@ public class StockTrend extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_FLAG)));
 	}
 
+	public double getTurn() {
+		return mTurn;
+	}
+
+	public void setTurn(double turn) {
+		mTurn = turn;
+	}
+
+	void setTurn(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setTurn(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_TURN)));
+	}
+
 	public double getPrevNet() {
 		return mPrevNet;
 	}
@@ -491,11 +530,13 @@ public class StockTrend extends DatabaseTable {
 				+ mCode + Constant.TAB
 				+ mName + Constant.TAB
 				+ mPeriod + Constant.TAB
+				+ mAction + Constant.TAB
 				+ mDate + Constant.TAB
 				+ mTime + Constant.TAB
 				+ mLevel + Constant.TAB
 				+ mType + Constant.TAB
 				+ mFlag + Constant.TAB
+				+ mTurn + Constant.TAB
 				+ mPrevNet + Constant.TAB
 				+ mNet + Constant.TAB
 				+ mNextNet + Constant.TAB
@@ -503,9 +544,10 @@ public class StockTrend extends DatabaseTable {
 	}
 
 	public String toChartString() {
-		return MARK_LEVEL + getLevel() + " "
-				+ getType() + " "
-				+ (int) mNet + "/" + (int) mNextNet + " " + MARK_PREDICT + mPredict;
+		return MARK_LEVEL + mLevel + " "
+				+ mAction + " "
+				+ mType + " "
+				+ (int) mNet + "/" + (int) mNextNet + " " + MARK_PREDICT + " " + mPredict;
 	}
 
 	public String toNotifyString() {

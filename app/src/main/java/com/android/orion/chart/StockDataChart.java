@@ -2,15 +2,12 @@ package com.android.orion.chart;
 
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.text.TextUtils;
 import android.util.ArrayMap;
 
 import com.android.orion.config.Config;
 import com.android.orion.database.Stock;
-import com.android.orion.database.StockData;
 import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockTrend;
-import com.android.orion.provider.StockPerceptronProvider;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Utility;
@@ -321,14 +318,12 @@ public class StockDataChart {
 	}
 
 	public void updateDescription(Stock stock) {
-		mDescription.setLength(0);
-
 		if (stock == null) {
 			return;
 		}
 
+		mDescription.setLength(0);
 		mDescription.append(stock.getName()).append(" ");
-		mDescription.append(mPeriod).append(" ");
 		mDescription.append(stock.getPrice()).append("  ");
 		if (stock.getNet() > 0) {
 			mDescription.append(Constant.MARK_ADD);
@@ -336,13 +331,9 @@ public class StockDataChart {
 			mDescription.append(Constant.MARK_MINUS);
 		}
 		mDescription.append(stock.getNet()).append("%").append("  ");
-
-		StockTrend stockTrend = getStockTrend(mAdaptiveLevel);
-		if (stockTrend != null) {
-			mDescription.append(stockTrend.toChartString());
-		} else {
-			mDescription.append(stock.getAction(mPeriod));
-		}
+		mDescription.append(mPeriod).append(" ");
+		mDescription.append(StockTrend.MARK_LEVEL + mAdaptiveLevel).append(" ");
+		mDescription.append(stock.getAction(mPeriod));
 	}
 
 	LimitLine createLimitLine(double limit, int color, String label) {
@@ -367,16 +358,13 @@ public class StockDataChart {
 		mLimitLineList.clear();
 
 		updateLatestLimitLine(stock);
+		updateTrendLimitLine(stock);
 		updateCostLimitLine(stock);
 		updateDealLimitLine(stock, stockDealList);
 	}
 
 	void updateLatestLimitLine(Stock stock) {
-		if (stock == null) {
-			return;
-		}
-
-		if (mLimitLineList == null) {
+		if (stock == null || mLimitLineList == null) {
 			return;
 		}
 
@@ -391,16 +379,38 @@ public class StockDataChart {
 			color = Color.CYAN;
 		}
 
-		StockTrend stockTrend = getStockTrend(mAdaptiveLevel);
 		String label = "                                                     " + " ";
-		color = lineColor(mAdaptiveLevel);
-		if (stockTrend != null && stockTrend.hasFlag(StockTrend.FLAG_CHANGED)) {
-			label += "Trend:" + Constant.TAB2 + stockTrend.toChartString();
-		} else {
-			label += "Action:" + Constant.TAB2 + action;
-		}
+		label += "Action:" + Constant.TAB2 + StockTrend.MARK_LEVEL + mAdaptiveLevel + action;
 		limitLine = createLimitLine(stock.getPrice(), color, label);
 		mLimitLineList.add(limitLine);
+	}
+
+	void updateTrendLimitLine(Stock stock) {
+		if (stock == null || mLimitLineList == null) {
+			return;
+		}
+
+		ArrayMap<Double, LimitLine> limitLineMap = new ArrayMap<>();
+		for (int i = mAdaptiveLevel; i < StockTrend.LEVEL_MAX; i++) {
+			StockTrend stockTrend = getStockTrend(i);
+			if (stockTrend != null) {
+				double turn = stockTrend.getTurn();
+				if (limitLineMap.containsKey(turn)) {
+					LimitLine limitLine = limitLineMap.get(turn);
+					if (limitLine != null) {
+						limitLine.setLabel(limitLine.getLabel() + Constant.TAB2 + stockTrend.toChartString());
+					}
+				} else {
+					int color = lineColor(i);
+					String label = "          Trend:" + Constant.TAB2 + stockTrend.toChartString();
+					LimitLine limitLine = createLimitLine(stockTrend.getTurn(), color, label);
+					limitLineMap.put(turn, limitLine);
+				}
+			}
+		}
+		if (limitLineMap.size() > 0) {
+			mLimitLineList.addAll(limitLineMap.values());
+		}
 	}
 
 	void updateCostLimitLine(Stock stock) {
@@ -461,7 +471,7 @@ public class StockDataChart {
 
 	public void updateGroupEntry() {
 		for (int level = StockTrend.LEVEL_DRAW; level < StockTrend.LEVEL_MAX; level++) {
-			if (mTrendEntryList[level].size() > 2) {
+			if (mTrendEntryList[level] != null && mTrendEntryList[level].size() > 2) {
 				if (level == StockTrend.LEVEL_DRAW) {
 					mDrawFirstEntryList.add(mTrendEntryList[level].get(0));
 					mDrawLastEntryList.add(0, mTrendEntryList[level].get(mTrendEntryList[level].size() - 1));
@@ -469,8 +479,8 @@ public class StockDataChart {
 				if (Setting.getDisplayAdaptive()) {
 					if (!Setting.getDisplayGroup()) {
 						if (level != mAdaptiveLevel) {
-							 continue;
-						 }
+							continue;
+						}
 					}
 				}
 				mGroupEntryList[level].add(mTrendEntryList[level].get(mTrendEntryList[level].size() - 2));

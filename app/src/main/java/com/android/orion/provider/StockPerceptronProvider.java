@@ -13,7 +13,6 @@ import android.util.ArrayMap;
 import com.android.orion.application.MainApplication;
 import com.android.orion.config.Config;
 import com.android.orion.data.Period;
-import com.android.orion.database.StockData;
 import com.android.orion.database.StockPerceptron;
 import com.android.orion.database.StockTrend;
 import com.android.orion.manager.DatabaseManager;

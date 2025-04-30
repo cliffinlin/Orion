@@ -77,6 +77,30 @@ public class StockData extends DatabaseTable {
 		set(cursor);
 	}
 
+	public static StockData getSafely(List<StockData> list, int index) {
+		if (list == null) {
+			return null;
+		}
+		if (index < 0 || index >= list.size()) {
+			return null;
+		}
+		return list.get(index);
+	}
+
+	public static StockData getLast(List<StockData> list, int index) {
+		if (list == null) {
+			return null;
+		}
+
+		int size = list.size();
+		if (index < 0 || index >= size) {
+			return null;
+		}
+
+		int i = size - 1 - index;
+		return list.get(i);
+	}
+
 	public boolean isEmpty() {
 		return TextUtils.isEmpty(mDate)
 				&& TextUtils.isEmpty(mTime);
@@ -329,7 +353,6 @@ public class StockData extends DatabaseTable {
 	public Candle getCandle() {
 		return mCandle;
 	}
-
 
 	public double getChange() {
 		return mChange;
@@ -609,29 +632,5 @@ public class StockData extends DatabaseTable {
 				+ 0);
 		stringBuffer.append("\r\n");
 		return stringBuffer.toString();
-	}
-
-	public static StockData getSafely(List<StockData> list, int index) {
-		if (list == null) {
-			return null;
-		}
-		if (index < 0 || index >= list.size()) {
-			return null;
-		}
-		return list.get(index);
-	}
-
-	public static StockData getLast(List<StockData> list, int index) {
-		if (list == null) {
-			return null;
-		}
-
-		int size = list.size();
-		if (index < 0 || index >= size) {
-			return null;
-		}
-
-		int i = size - 1 - index;
-		return list.get(i);
 	}
 }
