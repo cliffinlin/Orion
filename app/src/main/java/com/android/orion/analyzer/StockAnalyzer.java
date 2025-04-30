@@ -180,7 +180,6 @@ public class StockAnalyzer {
 
 		StringBuilder actionBuilder = new StringBuilder();
 		appendActionIfPresent(actionBuilder, getDirectionAction(period));
-		appendActionIfPresent(actionBuilder, getTrendAction(period));
 		mStock.setAction(period, actionBuilder.toString());
 	}
 
@@ -209,15 +208,6 @@ public class StockAnalyzer {
 		} else if (stockData.vertexOf(StockTrend.VERTEX_TOP)) {
 			builder.append(Constant.MARK_MINUS);
 		}
-	}
-
-	String getTrendAction(String period) {
-		mDatabaseManager.getStockTrendChangedList(mStock, period, mStockTrendList);
-		if (mStockTrendList == null || mStockTrendList.isEmpty()) {
-			return "";
-		}
-		StockTrend stockTrend = mStockTrendList.get(0);
-		return stockTrend != null ? stockTrend.toChartString() : "";
 	}
 
 	public void notifyStockTrend(StockTrend stockTrend) {
