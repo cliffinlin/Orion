@@ -33,8 +33,7 @@ public class StockQuantAnalyzer {
 	ArrayList<StockQuant> mStockQuantList = new ArrayList<>();
 	ArrayList<ContentValues> mContentValuesList = new ArrayList<ContentValues>();
 
-	Context mContext;
-	DatabaseManager mDatabaseManager;
+	DatabaseManager mDatabaseManager = DatabaseManager.getInstance();
 	Comparator<StockQuant> mComparator = new Comparator<StockQuant>() {
 
 		@Override
@@ -221,9 +220,6 @@ public class StockQuantAnalyzer {
 		}
 
 		init();
-
-		mContext = context;
-		mDatabaseManager = DatabaseManager.getInstance();
 
 		if (stock.getThreshold() == 0 || stock.getQuantVolume() == 0) {
 			return;

@@ -16,7 +16,6 @@ import java.util.ArrayList;
 public class ConnectionManager {
 	public static final int MSG_CONNECTED = 0;
 	public static final int MSG_DISCONNECTED = 1;
-	private static final Context mContext = MainApplication.getContext();
 	ArrayList<NetworkChangedListener> mListener = new ArrayList<>();
 	private final Handler mHandler = new Handler(Looper.getMainLooper()) {
 

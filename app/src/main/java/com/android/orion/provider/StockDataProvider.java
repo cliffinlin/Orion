@@ -60,10 +60,10 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 	static ArrayMap<String, Stock> mRemovedArrayMap = new ArrayMap<>();
 	static ArrayList<IndexComponent> mIndexComponentList = new ArrayList<>();
 	static Map<String, StockData> mIndexStockDataMap = new HashMap<>();
-	protected Context mContext;
-	protected StockAnalyzer mStockAnalyzer = StockAnalyzer.getInstance();
-	protected DatabaseManager mDatabaseManager = DatabaseManager.getInstance();
-	protected OkHttpClient mOkHttpClient = new OkHttpClient();
+	Context mContext = MainApplication.getContext();
+	StockAnalyzer mStockAnalyzer = StockAnalyzer.getInstance();
+	DatabaseManager mDatabaseManager = DatabaseManager.getInstance();
+	OkHttpClient mOkHttpClient = new OkHttpClient();
 
 	PowerManager mPowerManager;
 	PowerManager.WakeLock mWakeLock;
@@ -76,8 +76,6 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 	Logger Log = Logger.getLogger();
 
 	public StockDataProvider() {
-		mContext = MainApplication.getContext();
-
 		mPowerManager = (PowerManager) mContext
 				.getSystemService(Context.POWER_SERVICE);
 		mWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
@@ -611,6 +609,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 
 			mDatabaseManager.deleteStockData(stock);
 			mDatabaseManager.deleteStockTrend(stock);
+			mDatabaseManager.deleteStockQuant(stock);
 			mDatabaseManager.deleteStockPerceptron(stock.getId());
 			Setting.setDownloadStockTimeMillis(stock, 0);
 			Setting.setDownloadStockDataTimeMillis(stock, 0);

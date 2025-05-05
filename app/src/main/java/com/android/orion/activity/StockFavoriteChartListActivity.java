@@ -156,6 +156,7 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 			case R.id.action_refresh: {
 				mDatabaseManager.deleteStockData(mStock);
 				mDatabaseManager.deleteStockTrend(mStock);
+				mDatabaseManager.deleteStockQuant(mStock);
 				mBackgroundHandler.downloadStockData(mStock);
 				break;
 			}

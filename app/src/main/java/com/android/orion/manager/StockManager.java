@@ -10,7 +10,6 @@ import java.util.ArrayList;
 
 public class StockManager {
 
-	private static final Context mContext = MainApplication.getContext();
 	ArrayList<StockListener> mStockListener = new ArrayList<>();
 
 	private StockManager() {

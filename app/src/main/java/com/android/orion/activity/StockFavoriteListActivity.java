@@ -122,6 +122,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 					for (Stock stock : mStockArrayMap.values()) {
 						mDatabaseManager.deleteStockData(stock);
 						mDatabaseManager.deleteStockTrend(stock);
+						mDatabaseManager.deleteStockQuant(stock);
 						mDatabaseManager.deleteStockPerceptron(stock.getId());
 						Setting.setDownloadStockDataTimeMillis(stock, 0);
 						mStockDataProvider.download(stock);

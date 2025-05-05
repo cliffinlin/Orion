@@ -21,13 +21,10 @@ public class FinancialAnalyzer {
 	static ArrayList<StockShare> mStockShareList;
 	static ArrayList<StockBonus> mStockBonusList;
 
-	Context mContext;
-	DatabaseManager mDatabaseManager;
+	DatabaseManager mDatabaseManager = DatabaseManager.getInstance();
 	Logger Log = Logger.getLogger();
 
 	private FinancialAnalyzer() {
-		mContext = MainApplication.getContext();
-		mDatabaseManager = DatabaseManager.getInstance();
 	}
 
 	public static FinancialAnalyzer getInstance() {

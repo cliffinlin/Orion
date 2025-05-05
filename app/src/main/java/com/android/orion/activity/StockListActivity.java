@@ -448,6 +448,7 @@ public class StockListActivity extends DatabaseActivity implements
 													mDatabaseManager.deleteStockBonus(stock);
 													mDatabaseManager.deleteStockShare(stock);
 													mDatabaseManager.deleteStockTrend(stock);
+													mDatabaseManager.deleteStockQuant(stock);
 												}
 											})
 									.setNegativeButton(R.string.cancel,

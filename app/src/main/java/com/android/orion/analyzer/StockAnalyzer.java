@@ -44,7 +44,7 @@ public class StockAnalyzer {
 	StringBuffer mContentTitle = new StringBuffer();
 	StringBuffer mContentText = new StringBuffer();
 
-	Context mContext;
+	Context mContext = MainApplication.getContext();
 	NotificationManager mNotificationManager;
 	DatabaseManager mDatabaseManager = DatabaseManager.getInstance();
 	FinancialAnalyzer mFinancialAnalyzer = FinancialAnalyzer.getInstance();
@@ -53,7 +53,6 @@ public class StockAnalyzer {
 	Logger Log = Logger.getLogger();
 
 	private StockAnalyzer() {
-		mContext = MainApplication.getContext();
 		mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
 	}
 
@@ -72,6 +71,7 @@ public class StockAnalyzer {
 			mStockDataList = mStock.getStockDataList(period);
 			mDatabaseManager.loadStockDataList(mStock, period, mStockDataList);
 			analyzeMacd(period);
+			analyzeStockQuant(period);
 			analyzeStockData(period);
 			mDatabaseManager.updateStockData(mStock, period, mStockDataList);
 			mStock.setModified(Utility.getCurrentDateTimeString());
@@ -150,10 +150,25 @@ public class StockAnalyzer {
 		}
 	}
 
-	private void analyzeStockData(String period) {
+
+	private void analyzeStockQuant(String period) {
+		if (!TextUtils.equals(period, Period.MIN5) || mStock.getThreshold() == 0) {
+			return;
+		}
+
 		StockKeyAnalyzer stockKeyAnalyzer = StockKeyAnalyzer.getInstance();
+		stockKeyAnalyzer.analyze(mStock, mStockDataList);
+
+		mDatabaseManager.getStockBonusList(mStock, mStockBonusList, DatabaseContract.COLUMN_DATE + " DESC ");
+
 		StockQuantAnalyzer stockQuantAnalyzer = StockQuantAnalyzer.getInstance();
-		if (TextUtils.equals(period, Period.MIN15) && mStock.getThreshold() > 0) {
+		stockQuantAnalyzer.analyze(mContext, mStock, mStockDataList, mStockBonusList);
+	}
+
+	private void analyzeStockData(String period) {
+		if (TextUtils.equals(period, Period.MIN5) && mStock.getThreshold() > 0) {
+			StockKeyAnalyzer stockKeyAnalyzer = StockKeyAnalyzer.getInstance();
+			StockQuantAnalyzer stockQuantAnalyzer = StockQuantAnalyzer.getInstance();
 			stockKeyAnalyzer.analyze(mStock, mStockDataList);
 			mDatabaseManager.getStockBonusList(mStock, mStockBonusList,DatabaseContract.COLUMN_DATE + " DESC ");
 			stockQuantAnalyzer.analyze(mContext, mStock, mStockDataList, mStockBonusList);

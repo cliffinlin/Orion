@@ -18,12 +18,10 @@ public class StockAlarmManager {
 	private final long mIntervalMillis = Config.alarmInterval;
 	private final PendingIntent mPendingIntent;
 	Logger Log = Logger.getLogger();
-	Context mContext;
-	private AlarmManager mAlarmManager = null;
+	Context mContext = MainApplication.getContext();
+	AlarmManager mAlarmManager = null;
 
 	private StockAlarmManager() {
-		mContext = MainApplication.getContext();
-
 		if (mAlarmManager == null) {
 			mAlarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
 		}
