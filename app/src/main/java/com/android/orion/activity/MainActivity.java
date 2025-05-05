@@ -83,6 +83,11 @@ public class MainActivity extends Activity {
 				new Intent(this, StockDealListActivity.class)
 		));
 		items.add(new HeaderItem(
+				R.drawable.ic_list,
+				getString(R.string.quant),
+				new Intent(this, StockQuantListActivity.class)
+		));
+		items.add(new HeaderItem(
 				R.drawable.ic_about,
 				getString(R.string.about),
 				new Intent(this, AboutActivity.class)
@@ -167,7 +172,6 @@ public class MainActivity extends Activity {
 			Setting.setDisplayOutLine(Setting.SETTING_DISPLAY_OUT_LINE_DEFAULT);
 			Setting.setDisplaySuperLine(Setting.SETTING_DISPLAY_SUPER_LINE_DEFAULT);
 			Setting.setDisplayTrendLine(Setting.SETTING_DISPLAY_TREND_LINE_DEFAULT);
-			Setting.setDisplayMerged(Setting.SETTING_DISPLAY_MERGED_DEFAULT);
 
 			Setting.setDebugLog(Setting.SETTING_DEBUG_LOG_DEFAULT);
 		}

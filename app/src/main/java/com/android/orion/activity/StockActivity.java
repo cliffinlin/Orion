@@ -34,9 +34,14 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 	EditText mEditTextStockCode;
 	EditText mEditTextStockHold;
 	EditText mEditTextStockYield;
+	EditText mEditTextStockQuantVolume;
+	EditText mEditTextStockThreshold;
 
 	Button mButtonOk;
 	Button mButtonCancel;
+
+	long mStockQuantVolume;
+	double mStockThreshold;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +66,8 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mEditTextStockCode = findViewById(R.id.edittext_stock_code);
 		mEditTextStockHold = findViewById(R.id.edittext_stock_hold);
 		mEditTextStockYield = findViewById(R.id.edittext_stock_yield);
+		mEditTextStockQuantVolume = findViewById(R.id.edittext_stock_quant_volume);
+		mEditTextStockThreshold = findViewById(R.id.edittext_threshold);
 		mButtonOk = findViewById(R.id.button_ok);
 		mButtonCancel = findViewById(R.id.button_cancel);
 
@@ -72,6 +79,8 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mEditTextStockCode.setOnClickListener(this);
 		mEditTextStockHold.setOnClickListener(this);
 		mEditTextStockYield.setOnClickListener(this);
+		mEditTextStockQuantVolume.setOnClickListener(this);
+		mEditTextStockThreshold.setOnClickListener(this);
 		mButtonOk.setOnClickListener(this);
 		mButtonCancel.setOnClickListener(this);
 
@@ -149,6 +158,8 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mEditTextStockCode.setText(mStock.getCode());
 		mEditTextStockHold.setText(String.valueOf(mStock.getHold()));
 		mEditTextStockYield.setText(String.valueOf(mStock.getYield()));
+		mEditTextStockQuantVolume.setText(String.valueOf(mStock.getQuantVolume()));
+		mEditTextStockThreshold.setText(String.valueOf(mStock.getThreshold()));
 	}
 
 	@Override
@@ -183,6 +194,9 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 				break;
 
 			case R.id.button_ok:
+				boolean quantVolumeChanged = false;
+				boolean thresholdChanged = false;
+
 				if (mCheckBoxFavorite.isChecked()) {
 					mStock.addFlag(Stock.FLAG_FAVORITE);
 				} else {
@@ -222,6 +236,28 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 					mStock.setSE(Stock.SE_SH);
 				} else if (id == R.id.radio_se_sz) {
 					mStock.setSE(Stock.SE_SZ);
+				}
+				
+				String quantVolume = mEditTextStockQuantVolume.getText().toString();
+				long quantVolumeValue = TextUtils.isEmpty(quantVolume) ? 0 : Long.valueOf(quantVolume);
+				if (quantVolumeValue != mStockQuantVolume) {
+					quantVolumeChanged = true;
+					mStockQuantVolume = quantVolumeValue;
+					mStock.setQuantVolume(mStockQuantVolume);
+					mDatabaseManager.deleteStockQuant(mStock);
+				}
+
+				String threshold = mEditTextStockThreshold.getText().toString();
+				double thresholdValue = TextUtils.isEmpty(threshold) ? 0 : Double.valueOf(threshold);
+				if (thresholdValue != mStockThreshold) {
+					thresholdChanged = true;
+					mStockThreshold = thresholdValue;
+					mStock.setThreshold(mStockThreshold);
+				}
+
+				if (TextUtils.isEmpty(quantVolume) || TextUtils.isEmpty(threshold)
+						|| quantVolumeChanged || thresholdChanged) {
+					mDatabaseManager.deleteStockQuant(mStock);
 				}
 
 				if (TextUtils.equals(mAction, Constant.ACTION_FAVORITE_STOCK_INSERT) || TextUtils.equals(mAction, Constant.ACTION_INDEX_COMPONENT_INSERT)) {

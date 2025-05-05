@@ -7,6 +7,7 @@ import android.util.ArrayMap;
 import com.android.orion.config.Config;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;
+import com.android.orion.database.StockQuant;
 import com.android.orion.database.StockTrend;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
@@ -350,7 +351,7 @@ public class StockDataChart {
 		return limitLine;
 	}
 
-	public void updateLimitLines(Stock stock, ArrayList<StockDeal> stockDealList) {
+	public void updateLimitLines(Stock stock, ArrayList<StockDeal> stockDealList, ArrayList<StockQuant> stockQuantList) {
 		if (stock == null || mLimitLineList == null) {
 			return;
 		}
@@ -361,6 +362,7 @@ public class StockDataChart {
 		updateTrendLimitLine(stock);
 		updateCostLimitLine(stock);
 		updateDealLimitLine(stock, stockDealList);
+		updateQuantLimitLine(stock, stockQuantList);
 	}
 
 	void updateLatestLimitLine(Stock stock) {
@@ -373,9 +375,9 @@ public class StockDataChart {
 		LimitLine limitLine;
 
 		action = stock.getAction(mPeriod);
-		if (action.contains(StockTrend.MARK_BUY)) {
+		if (action.contains(StockDeal.ACTION_BUY)) {
 			color = Color.MAGENTA;
-		} else if (action.contains(StockTrend.MARK_SELL)) {
+		} else if (action.contains(StockDeal.ACTION_SELL)) {
 			color = Color.CYAN;
 		}
 
@@ -462,9 +464,51 @@ public class StockDataChart {
 					+ "  " + stockDeal.getVolume()
 					+ "  " + (int) stockDeal.getProfit()
 					+ "  " + stockDeal.getAccount();
-			LimitLine limitLineDeal = createLimitLine(limit, color, label);
-			if (limitLineDeal != null) {
-				mLimitLineList.add(limitLineDeal);
+			LimitLine limitLine = createLimitLine(limit, color, label);
+			if (limitLine != null) {
+				mLimitLineList.add(limitLine);
+			}
+		}
+	}
+
+	void updateQuantLimitLine(Stock stock, ArrayList<StockQuant> stockQuantList) {
+		if (stock == null || stockQuantList == null || mLimitLineList == null) {
+			return;
+		}
+
+		double limit = 0;
+		int color;
+		String label;
+
+		for (StockQuant stockQuant : stockQuantList) {
+			if ((stockQuant.getBuy() > 0) && (stockQuant.getSell() > 0)) {
+				limit = stockQuant.getBuy();
+			} else if (stockQuant.getBuy() > 0) {
+				limit = stockQuant.getBuy();
+			} else if (stockQuant.getSell() > 0) {
+				limit = stockQuant.getSell();
+			}
+
+			if (stockQuant.getProfit() > 0) {
+				color = Color.RED;
+			} else {
+				color = Color.GREEN;
+			}
+
+			if (stockQuant.getVolume() <= 0) {
+				color = Color.YELLOW;
+			}
+
+			label = "               "
+					+ "  " + limit
+					+ "  " + stockQuant.getVolume()
+					+ "  " + (int) stockQuant.getProfit()
+					+ "  " + stockQuant.getNet() + "%"
+					+ "  " + stockQuant.getCreated()
+					+ "  " + StockDeal.MARK_QUANT;
+			LimitLine limitLine = createLimitLine(limit, color, label);
+			if (limitLine != null) {
+				mLimitLineList.add(limitLine);
 			}
 		}
 	}

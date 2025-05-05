@@ -22,6 +22,7 @@ public class Setting {
 	public static final String SETTING_SORT_ORDER_STOCK_LIST = "SETTING_SORT_ORDER_STOCK_LIST";
 	public static final String SETTING_SORT_ORDER_FINANCIAL_LIST = "SETTING_SORT_ORDER_FINANCIAL_LIST";
 	public static final String SETTING_SORT_ORDER_DEAL_LIST = "SETTING_SORT_ORDER_DEAL_LIST";
+	public static final String SETTING_SORT_ORDER_QUANT_LIST = "SETTING_SORT_ORDER_QUANT_LIST";
 	public static final String SETTING_SORT_ORDER_TREND_LIST = "SETTING_SORT_ORDER_TREND_LIST";
 	public static final String SETTING_SORT_ORDER_PERCEPTRON_LIST = "SETTING_SORT_ORDER_PERCEPTRON_LIST";
 
@@ -80,7 +81,7 @@ public class Setting {
 	public static final boolean SETTING_DISPLAY_TREND_LINE_DEFAULT = true;
 
 	public static final String SETTING_DISPLAY_MERGED = "SETTING_DISPLAY_MERGED";
-	public static final boolean SETTING_DISPLAY_MERGED_DEFAULT = true;
+	public static final boolean SETTING_DISPLAY_MERGED_DEFAULT = false;
 
 	public static final String SETTING_DEBUG_LOG = "SETTING_DEBUG_LOG";
 	public static final boolean SETTING_DEBUG_LOG_DEFAULT = true;

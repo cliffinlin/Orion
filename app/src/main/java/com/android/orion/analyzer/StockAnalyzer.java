@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.android.orion.R;
@@ -18,6 +19,7 @@ import com.android.orion.data.Macd;
 import com.android.orion.data.Period;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
+import com.android.orion.database.StockBonus;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockTrend;
@@ -38,8 +40,7 @@ import java.util.List;
 public class StockAnalyzer {
 	Stock mStock;
 	ArrayList<StockData> mStockDataList;
-	ArrayList<StockTrend> mStockTrendList = new ArrayList<>();
-
+	ArrayList<StockBonus> mStockBonusList = new ArrayList<>();
 	StringBuffer mContentTitle = new StringBuffer();
 	StringBuffer mContentText = new StringBuffer();
 
@@ -150,6 +151,14 @@ public class StockAnalyzer {
 	}
 
 	private void analyzeStockData(String period) {
+		StockKeyAnalyzer stockKeyAnalyzer = StockKeyAnalyzer.getInstance();
+		StockQuantAnalyzer stockQuantAnalyzer = StockQuantAnalyzer.getInstance();
+		if (TextUtils.equals(period, Period.MIN15) && mStock.getThreshold() > 0) {
+			stockKeyAnalyzer.analyze(mStock, mStockDataList);
+			mDatabaseManager.getStockBonusList(mStock, mStockBonusList,DatabaseContract.COLUMN_DATE + " DESC ");
+			stockQuantAnalyzer.analyze(mContext, mStock, mStockDataList, mStockBonusList);
+		}
+
 		mTrendAnalyzer.setup(mStock, period, mStockDataList);
 
 		mTrendAnalyzer.analyzeVertex(StockTrend.LEVEL_DRAW);

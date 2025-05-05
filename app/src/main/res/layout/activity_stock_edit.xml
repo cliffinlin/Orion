@@ -233,6 +233,64 @@
         </LinearLayout>
     </LinearLayout>
 
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:background="@drawable/divider_line" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/textView_stock_quant_volume"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:labelFor="@+id/edittext_stock_quant_volume"
+                android:text="@string/stock_quant_volume" />
+
+            <EditText
+                android:id="@+id/edittext_stock_quant_volume"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="14dp"
+                android:layout_marginBottom="14dp"
+                android:inputType="number" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/textView_threshold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:labelFor="@+id/edittext_threshold"
+                android:text="@string/stock_threshold" />
+
+            <EditText
+                android:id="@+id/edittext_threshold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="14dp"
+                android:layout_marginBottom="14dp"
+                android:inputType="numberDecimal" />
+        </LinearLayout>
+    </LinearLayout>
+
     <LinearLayout
         style="?android:buttonBarStyle"
         android:layout_width="match_parent"

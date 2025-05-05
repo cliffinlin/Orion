@@ -61,6 +61,11 @@ public final class DatabaseContract {
 	public static final String COLUMN_X_MAX = "x_max";
 	public static final String COLUMN_Y_MIN = "y_min";
 	public static final String COLUMN_Y_MAX = "y_max";
+	public static final String COLUMN_THRESHOLD = "threshold";
+	public static final String COLUMN_QUANT_VOLUME = "quant_volume";
+	public static final String COLUMN_QUANT_PROFIT = "quant_profit";
+	public static final String COLUMN_QUANT_PROFIT_MARGIN = "quant_profit_margin";
+	public static final String COLUMN_QUANT_X = "quant_x";
 	public static final String COLUMN_STATUS = "status";
 	public static final String COLUMN_BUY = "buy";
 	public static final String COLUMN_SELL = "sell";
@@ -107,6 +112,11 @@ public final class DatabaseContract {
 
 	public static final String COLUMN_TYPE = "type";
 	public static final String COLUMN_CONTENT = "content";
+	public static final String COLUMN_NATURAL_RALLY = "natural_rally";
+	public static final String COLUMN_UPWARD_TREND = "upward_trend";
+	public static final String COLUMN_DOWNWARD_TREND = "downward_trend";
+	public static final String COLUMN_NATURAL_REACTION = "natural_reaction";
+
 	// http://money.finance.sina.com.cn/corp/go.php/vFD_FinanceSummary/stockid/600028.phtml
 	public static final String COLUMN_BOOK_VALUE_PER_SHARE = "book_value_per_share";
 	public static final String COLUMN_CASH_FLOW_PER_SHARE = "cash_flow_per_share";
@@ -158,6 +168,7 @@ public final class DatabaseContract {
 				COLUMN_MONTH, COLUMN_WEEK, COLUMN_DAY, COLUMN_MIN60, COLUMN_MIN30, COLUMN_MIN15, COLUMN_MIN5,
 				COLUMN_MONTH_LEVEL, COLUMN_WEEK_LEVEL, COLUMN_DAY_LEVEL, COLUMN_MIN60_LEVEL, COLUMN_MIN30_LEVEL, COLUMN_MIN15_LEVEL, COLUMN_MIN5_LEVEL,
 				COLUMN_FLAG,
+				COLUMN_THRESHOLD, COLUMN_QUANT_VOLUME,				
 				COLUMN_ROI, COLUMN_IR, COLUMN_IRR, COLUMN_ROE, COLUMN_PE, COLUMN_PB,
 				COLUMN_HOLD, COLUMN_PROFIT, COLUMN_BONUS, COLUMN_VALUATION, COLUMN_COST,
 				COLUMN_SHARE, COLUMN_MARKET_VALUE,
@@ -200,6 +211,8 @@ public final class DatabaseContract {
 				+ COLUMN_MIN15_LEVEL + INTEGER_TYPE + COMMA_SEP
 				+ COLUMN_MIN5_LEVEL + INTEGER_TYPE + COMMA_SEP
 				+ COLUMN_FLAG + INTEGER_TYPE + COMMA_SEP
+				+ COLUMN_THRESHOLD + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_QUANT_VOLUME + INTEGER_TYPE + COMMA_SEP
 				+ COLUMN_ROI + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_IR + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_IRR + DOUBLE_TYPE + COMMA_SEP
@@ -253,6 +266,8 @@ public final class DatabaseContract {
 				COLUMN_OPEN, COLUMN_HIGH, COLUMN_LOW, COLUMN_CLOSE, COLUMN_CHANGE, COLUMN_NET,
 				COLUMN_DIRECTION, COLUMN_VERTEX,
 				COLUMN_AVERAGE5, COLUMN_AVERAGE10, COLUMN_DIF, COLUMN_DEA, COLUMN_HISTOGRAM,
+				COLUMN_NATURAL_RALLY, COLUMN_UPWARD_TREND,
+				COLUMN_DOWNWARD_TREND, COLUMN_NATURAL_REACTION,
 				COLUMN_CREATED, COLUMN_MODIFIED};
 		static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
 				+ TABLE_NAME;
@@ -278,6 +293,10 @@ public final class DatabaseContract {
 				+ COLUMN_DIF + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_DEA + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_HISTOGRAM + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_NATURAL_RALLY + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_UPWARD_TREND + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_DOWNWARD_TREND + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_NATURAL_REACTION + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_CREATED + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_MODIFIED + TEXT_TYPE + " )";
 		static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
@@ -400,6 +419,52 @@ public final class DatabaseContract {
 				+ COLUMN_FEE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_BONUS + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_YIELD + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_CREATED + TEXT_TYPE
+				+ COMMA_SEP + COLUMN_MODIFIED + TEXT_TYPE + " )";
+		static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
+				+ CREATE_TABLE_CONTENT;
+	}
+
+	public static abstract class StockQuant implements BaseColumns {
+		public static final String TABLE_NAME = "stock_quant";
+
+		public static final Uri CONTENT_URI = Uri.withAppendedPath(
+				DatabaseContract.CONTENT_URI, TABLE_NAME);
+		public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
+				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
+		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
+				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
+		public static final String SORT_ORDER_DEFAULT = COLUMN_CODE + " ASC";
+
+		public static final String[] PROJECTION_ALL = {_ID, COLUMN_SE,
+				COLUMN_CODE, COLUMN_NAME, COLUMN_ACCOUNT, COLUMN_ACTION, COLUMN_PRICE, COLUMN_NET,
+				COLUMN_BUY, COLUMN_SELL, COLUMN_VOLUME, COLUMN_VALUE, COLUMN_PROFIT,
+				COLUMN_FEE, COLUMN_BONUS, COLUMN_YIELD, COLUMN_HOLD, COLUMN_VALUATION,
+				COLUMN_QUANT_PROFIT, COLUMN_QUANT_PROFIT_MARGIN, COLUMN_QUANT_X, COLUMN_THRESHOLD,
+				COLUMN_CREATED, COLUMN_MODIFIED};
+		static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
+				+ TABLE_NAME;
+		private static final String CREATE_TABLE_CONTENT = " (" + _ID
+				+ " INTEGER PRIMARY KEY," + COLUMN_SE + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_CODE + TEXT_TYPE + COMMA_SEP + COLUMN_NAME + TEXT_TYPE
+				+ COMMA_SEP + COLUMN_ACCOUNT + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_ACTION + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_PRICE + DOUBLE_TYPE + COMMA_SEP + COLUMN_NET
+				+ DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_BUY + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_SELL + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_VOLUME + INTEGER_TYPE + COMMA_SEP
+				+ COLUMN_VALUE + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_PROFIT + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_FEE + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_BONUS + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_YIELD + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_HOLD + INTEGER_TYPE + COMMA_SEP
+				+ COLUMN_VALUATION + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_QUANT_PROFIT + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_QUANT_PROFIT_MARGIN + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_QUANT_X + INTEGER_TYPE + COMMA_SEP
+				+ COLUMN_THRESHOLD + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_CREATED + TEXT_TYPE
 				+ COMMA_SEP + COLUMN_MODIFIED + TEXT_TYPE + " )";
 		static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME

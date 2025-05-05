@@ -22,26 +22,41 @@ import java.util.ArrayList;
 public class StockContentProvider extends ContentProvider {
 
 
+
+
+	public static final int STOCK = 100;
+	public static final int STOCK_ID = 101;
+
+	public static final int STOCK_DATA = 200;
+	public static final int STOCK_DATA_ID = 201;
+
+	public static final int STOCK_DEAL = 300;
+	public static final int STOCK_DEAL_ID = 301;
+
+	public static final int STOCK_FINANCIAL = 400;
+	public static final int STOCK_FINANCIAL_ID = 401;
+
+	public static final int STOCK_BONUS = 500;
+	public static final int STOCK_BONUS_ID = 501;
+
+	public static final int STOCK_SHARE = 600;
+	public static final int STOCK_SHARE_ID = 601;
+
+	public static final int INDEX_COMPONENT = 700;
+	public static final int INDEX_COMPONENT_ID = 701;
+
 	public static final int STOCK_TREND = 800;
+	public static final int STOCK_TREND_ID = 801;
+	
 	public static final int STOCK_PERCEPTRON = 900;
-	private static final int STOCK = 100;
-	private static final int STOCK_ID = 101;
-	private static final int STOCK_DATA = 200;
-	private static final int STOCK_DATA_ID = 201;
-	private static final int STOCK_DEAL = 300;
-	private static final int STOCK_DEAL_ID = 301;
-	private static final int STOCK_FINANCIAL = 400;
-	private static final int STOCK_FINANCIAL_ID = 401;
-	private static final int STOCK_BONUS = 500;
-	private static final int STOCK_BONUS_ID = 501;
-	private static final int STOCK_SHARE = 600;
-	private static final int STOCK_SHARE_ID = 601;
-	private static final int INDEX_COMPONENT = 700;
-	private static final int INDEX_COMPONENT_ID = 701;
-	private static final int STOCK_TREND_ID = 801;
-	private static final int STOCK_PERCEPTRON_ID = 901;
-	private static final int TDX_DATA = 1000;
-	private static final int TDX_DATA_ID = 1001;
+	public static final int STOCK_PERCEPTRON_ID = 901;
+
+	public static final int TDX_DATA = 1000;
+	public static final int TDX_DATA_ID = 1001;
+
+	private static final int STOCK_QUANT = 1800;
+	private static final int STOCK_QUANT_ID = 1801;
+
 
 	private static final UriMatcher mUriMatcher = new UriMatcher(
 			UriMatcher.NO_MATCH);
@@ -82,6 +97,11 @@ public class StockContentProvider extends ContentProvider {
 				DatabaseContract.IndexComponent.TABLE_NAME, INDEX_COMPONENT);
 		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
 				DatabaseContract.IndexComponent.TABLE_NAME + "/#", INDEX_COMPONENT_ID);
+
+		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
+				DatabaseContract.StockQuant.TABLE_NAME, STOCK_QUANT);
+		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
+				DatabaseContract.StockQuant.TABLE_NAME + "/#", STOCK_QUANT_ID);
 
 		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
 				DatabaseContract.StockTrend.TABLE_NAME, STOCK_TREND);
@@ -164,6 +184,13 @@ public class StockContentProvider extends ContentProvider {
 				break;
 			case INDEX_COMPONENT_ID:
 				type = DatabaseContract.IndexComponent.CONTENT_ITEM_TYPE;
+				break;
+
+			case STOCK_QUANT:
+				type = DatabaseContract.StockQuant.CONTENT_TYPE;
+				break;
+			case STOCK_QUANT_ID:
+				type = DatabaseContract.StockQuant.CONTENT_ITEM_TYPE;
 				break;
 
 			case STOCK_TREND:
@@ -272,6 +299,15 @@ public class StockContentProvider extends ContentProvider {
 						+ uri.getLastPathSegment());
 				break;
 
+			case STOCK_QUANT:
+				builder.setTables(DatabaseContract.StockQuant.TABLE_NAME);
+				break;
+			case STOCK_QUANT_ID:
+				builder.setTables(DatabaseContract.StockQuant.TABLE_NAME);
+				builder.appendWhere(BaseColumns._ID + " = "
+						+ uri.getLastPathSegment());
+				break;
+
 			case STOCK_TREND:
 				builder.setTables(DatabaseContract.StockTrend.TABLE_NAME);
 				break;
@@ -361,6 +397,11 @@ public class StockContentProvider extends ContentProvider {
 			case INDEX_COMPONENT:
 				id = mDatabaseManager.mDatabase.insert(
 						DatabaseContract.IndexComponent.TABLE_NAME, null, contentValues);
+				break;
+
+			case STOCK_QUANT:
+				id = mDatabaseManager.mDatabase.insert(
+						DatabaseContract.StockQuant.TABLE_NAME, null, contentValues);
 				break;
 
 			case STOCK_TREND:
@@ -552,6 +593,21 @@ public class StockContentProvider extends ContentProvider {
 						selectionArgs);
 				break;
 
+			case STOCK_QUANT:
+				result = mDatabaseManager.mDatabase.update(
+						DatabaseContract.StockQuant.TABLE_NAME, values, selection,
+						selectionArgs);
+				break;
+			case STOCK_QUANT_ID:
+				whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
+				if (!TextUtils.isEmpty(selection)) {
+					whereClause += " AND " + whereClause;
+				}
+				result = mDatabaseManager.mDatabase.update(
+						DatabaseContract.StockQuant.TABLE_NAME, values, whereClause,
+						selectionArgs);
+				break;
+
 			case STOCK_TREND:
 				result = mDatabaseManager.mDatabase.update(
 						DatabaseContract.StockTrend.TABLE_NAME, values, selection,
@@ -725,7 +781,21 @@ public class StockContentProvider extends ContentProvider {
 						.delete(DatabaseContract.IndexComponent.TABLE_NAME, whereClause,
 								selectionArgs);
 				break;
+			case STOCK_QUANT:
+				result = mDatabaseManager.mDatabase.delete(
+						DatabaseContract.StockQuant.TABLE_NAME, selection,
+						selectionArgs);
+				break;
 
+			case STOCK_QUANT_ID:
+				whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
+				if (!TextUtils.isEmpty(selection)) {
+					whereClause += " AND " + whereClause;
+				}
+				result = mDatabaseManager.mDatabase.delete(
+						DatabaseContract.StockQuant.TABLE_NAME, whereClause,
+						selectionArgs);
+				break;
 			case STOCK_TREND:
 				result = mDatabaseManager.mDatabase.delete(
 						DatabaseContract.StockTrend.TABLE_NAME, selection,

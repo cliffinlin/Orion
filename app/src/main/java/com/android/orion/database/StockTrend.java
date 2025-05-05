@@ -79,8 +79,6 @@ public class StockTrend extends DatabaseTable {
 			TYPE_DOWN_NONE, TYPE_DOWN_NONE_UP, TYPE_DOWN_NONE_DOWN};
 
 	public static final String MARK_NONE = "";
-	public static final String MARK_BUY = "B";
-	public static final String MARK_SELL = "S";
 	public static final String MARK_LEVEL = "L";
 	public static final String MARK_PREDICT = "?";
 

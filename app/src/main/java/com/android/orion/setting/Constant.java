@@ -21,6 +21,7 @@ public class Constant {
 	public static final String ACTION_INDEX_COMPONENT_SELECT = "orion.intent.action.ACTION_INDEX_COMPONENT_SELECT";
 	public static final String ACTION_STOCK_EDIT = "orion.intent.action.ACTION_STOCK_EDIT";
 	public static final String ACTION_STOCK_ID = "orion.intent.action.ACTION_STOCK_ID";
+	public static final String ACTION_STOCK_TREND_LIST = "orion.intent.action.ACTION_STOCK_TREND_LIST";
 
 	public static final String DEAL = "deal";
 	public static final String DEAL_INSERT = "insert";
@@ -41,6 +42,8 @@ public class Constant {
 	public static final String EXTRA_STOCK_PERCEPTRON_ID = "stock_perceptron_id";
 	public static final String EXTRA_STOCK_ID_LIST = "stock_id_list";
 	public static final String EXTRA_STOCK_LIST_SORT_ORDER = "stock_list_sort_order";
+
+	public static final String EXTRA_STOCK_QUANT = "stock_quant";
 
 	public static final int DOUBLE_FIXED_DECIMAL_2 = 2;
 	public static final int DOUBLE_FIXED_DECIMAL_4 = 4;

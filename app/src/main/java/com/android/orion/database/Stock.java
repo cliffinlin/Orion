@@ -51,6 +51,9 @@ public class Stock extends DatabaseTable {
 	private long mValue;
 
 	private int mFlag;
+	
+	private double mThreshold;
+	private long mQuantVolume;
 
 	private double mRoi;
 	private double mIR;
@@ -119,6 +122,9 @@ public class Stock extends DatabaseTable {
 		mNet = 0;
 		mVolume = 0;
 		mValue = 0;
+
+		mThreshold = 0;
+		mQuantVolume = 0;
 
 		mRoi = 0;
 		mIR = 0;
@@ -248,6 +254,8 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
 		contentValues.put(DatabaseContract.COLUMN_FLAG, mFlag);
+		contentValues.put(DatabaseContract.COLUMN_THRESHOLD, mThreshold);
+		contentValues.put(DatabaseContract.COLUMN_QUANT_VOLUME, mQuantVolume);
 		return contentValues;
 	}
 
@@ -289,6 +297,9 @@ public class Stock extends DatabaseTable {
 		mMin5.setLevel(stock.mMin5.getLevel());
 
 		setFlag(stock.mFlag);
+		
+		setThreshold(stock.mThreshold);
+		setQuantVolume(stock.mQuantVolume);
 
 		setRoi(stock.mRoi);
 		setIR(stock.mIR);
@@ -359,6 +370,8 @@ public class Stock extends DatabaseTable {
 		mMin5.setLevel(cursor);
 
 		setFlag(cursor);
+		setThreshold(cursor);
+		setQuantVolume(cursor);
 		setRoi(cursor);
 		setIR(cursor);
 		setIRR(cursor);
@@ -583,6 +596,40 @@ public class Stock extends DatabaseTable {
 
 		setValue(cursor.getLong(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_VALUE)));
+	}
+
+	public double getThreshold() {
+		return mThreshold;
+	}
+
+	public void setThreshold(double threshold) {
+		mThreshold = threshold;
+	}
+
+	void setThreshold(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setThreshold(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_THRESHOLD)));
+	}
+
+	public long getQuantVolume() {
+		return mQuantVolume;
+	}
+
+	public void setQuantVolume(long quantVolume) {
+		mQuantVolume = quantVolume;
+	}
+
+	void setQuantVolume(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setQuantVolume(cursor.getLong(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_QUANT_VOLUME)));
 	}
 
 	public long getHold() {
