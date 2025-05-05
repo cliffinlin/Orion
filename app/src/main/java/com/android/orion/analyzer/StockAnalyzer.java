@@ -152,7 +152,7 @@ public class StockAnalyzer {
 
 
 	private void analyzeStockQuant(String period) {
-		if (!TextUtils.equals(period, Period.MIN5) || mStock.getThreshold() == 0) {
+		if (!TextUtils.equals(period, Period.MIN5) || mStock.getQuantVolume() == 0 || mStock.getThreshold() == 0 ) {
 			return;
 		}
 
@@ -166,14 +166,6 @@ public class StockAnalyzer {
 	}
 
 	private void analyzeStockData(String period) {
-		if (TextUtils.equals(period, Period.MIN5) && mStock.getThreshold() > 0) {
-			StockKeyAnalyzer stockKeyAnalyzer = StockKeyAnalyzer.getInstance();
-			StockQuantAnalyzer stockQuantAnalyzer = StockQuantAnalyzer.getInstance();
-			stockKeyAnalyzer.analyze(mStock, mStockDataList);
-			mDatabaseManager.getStockBonusList(mStock, mStockBonusList,DatabaseContract.COLUMN_DATE + " DESC ");
-			stockQuantAnalyzer.analyze(mContext, mStock, mStockDataList, mStockBonusList);
-		}
-
 		mTrendAnalyzer.setup(mStock, period, mStockDataList);
 
 		mTrendAnalyzer.analyzeVertex(StockTrend.LEVEL_DRAW);

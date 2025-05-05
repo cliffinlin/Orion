@@ -40,9 +40,6 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 	Button mButtonOk;
 	Button mButtonCancel;
 
-	long mStockQuantVolume;
-	double mStockThreshold;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -240,24 +237,25 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 				
 				String quantVolume = mEditTextStockQuantVolume.getText().toString();
 				long quantVolumeValue = TextUtils.isEmpty(quantVolume) ? 0 : Long.valueOf(quantVolume);
-				if (quantVolumeValue != mStockQuantVolume) {
+				if (quantVolumeValue != mStock.getQuantVolume()) {
 					quantVolumeChanged = true;
-					mStockQuantVolume = quantVolumeValue;
-					mStock.setQuantVolume(mStockQuantVolume);
-					mDatabaseManager.deleteStockQuant(mStock);
+					mStock.setQuantVolume(quantVolumeValue);
 				}
 
 				String threshold = mEditTextStockThreshold.getText().toString();
 				double thresholdValue = TextUtils.isEmpty(threshold) ? 0 : Double.valueOf(threshold);
-				if (thresholdValue != mStockThreshold) {
+				if (thresholdValue != mStock.getThreshold()) {
 					thresholdChanged = true;
-					mStockThreshold = thresholdValue;
-					mStock.setThreshold(mStockThreshold);
+					mStock.setThreshold(thresholdValue);
 				}
 
-				if (TextUtils.isEmpty(quantVolume) || TextUtils.isEmpty(threshold)
-						|| quantVolumeChanged || thresholdChanged) {
+				if (quantVolumeChanged || thresholdChanged) {
+					Setting.setDisplayMerged(false);
+					mDatabaseManager.deleteStockData(mStock);
+					mDatabaseManager.deleteStockTrend(mStock);
 					mDatabaseManager.deleteStockQuant(mStock);
+					Setting.setDownloadStockTimeMillis(mStock, 0);
+					Setting.setDownloadStockDataTimeMillis(mStock, 0);
 				}
 
 				if (TextUtils.equals(mAction, Constant.ACTION_FAVORITE_STOCK_INSERT) || TextUtils.equals(mAction, Constant.ACTION_INDEX_COMPONENT_INSERT)) {
