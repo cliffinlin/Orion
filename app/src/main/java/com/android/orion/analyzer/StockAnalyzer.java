@@ -226,6 +226,20 @@ public class StockAnalyzer {
 		}
 	}
 
+
+	public void cancelNotifyStockTrend(StockTrend stockTrend) {
+		if (mNotificationManager == null || stockTrend == null) {
+			return;
+		}
+
+		try {
+			int id = (int) stockTrend.getId();
+			mNotificationManager.cancel(id);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public void notifyStockTrend(StockTrend stockTrend) {
 		if (mStock == null || mContext == null || stockTrend == null) {
 			return;

@@ -393,7 +393,10 @@ public class StockDataChart {
 		}
 
 		ArrayMap<Double, LimitLine> limitLineMap = new ArrayMap<>();
-		for (int i = mAdaptiveLevel; i < StockTrend.LEVEL_MAX; i++) {
+		for (int i = StockTrend.LEVEL_DRAW; i < StockTrend.LEVEL_MAX; i++) {
+			if (i != mAdaptiveLevel) {
+				continue; //TODO
+			}
 			StockTrend stockTrend = getStockTrend(i);
 			if (stockTrend != null) {
 				double turn = stockTrend.getTurn();
