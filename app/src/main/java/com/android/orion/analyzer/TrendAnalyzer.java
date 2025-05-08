@@ -401,7 +401,7 @@ public class TrendAnalyzer {
 				StockTrend stockTrendFromDB = new StockTrend(stockTrend);
 				mDatabaseManager.getStockTrend(stockTrendFromDB);
 				stockTrend.setId(stockTrendFromDB.getId());
-				if (TextUtils.equals(type, stockTrendFromDB.getType())) {
+				if (TextUtils.equals(stockTrend.getType(), stockTrendFromDB.getType())) {
 					stockTrend.removeFlag(StockTrend.FLAG_CHANGED);
 					stockTrend.setModified(Utility.getCurrentDateTimeString());
 					mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValues());
