@@ -26,7 +26,6 @@ public class StockTrend extends DatabaseTable {
 	public static final int LEVEL_OUT_LINE = 5;
 	public static final int LEVEL_SUPER_LINE = 6;
 	public static final int LEVEL_TREND_LINE = 7;
-	public static final int LEVEL_MAX = LEVEL_TREND_LINE + 1;
 
 	public static final int DIRECTION_NONE = 0;
 	public static final int DIRECTION_UP = 1 << 0;

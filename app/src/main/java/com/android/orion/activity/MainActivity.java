@@ -172,8 +172,6 @@ public class MainActivity extends Activity {
 			Setting.setDisplayOutLine(Setting.SETTING_DISPLAY_OUT_LINE_DEFAULT);
 			Setting.setDisplaySuperLine(Setting.SETTING_DISPLAY_SUPER_LINE_DEFAULT);
 			Setting.setDisplayTrendLine(Setting.SETTING_DISPLAY_TREND_LINE_DEFAULT);
-
-			Setting.setDebugLog(Setting.SETTING_DEBUG_LOG_DEFAULT);
 		}
 	}
 

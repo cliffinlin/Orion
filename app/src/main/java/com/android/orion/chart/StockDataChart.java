@@ -46,8 +46,8 @@ public class StockDataChart {
 	public ArrayList<BarEntry> mHistogramEntryList = new ArrayList<>();
 	public ArrayList<Entry> mDrawFirstEntryList = new ArrayList<>();
 	public ArrayList<Entry> mDrawLastEntryList = new ArrayList<>();
-	public List<Entry>[] mTrendEntryList = new List[StockTrend.LEVEL_MAX];
-	public List<Entry>[] mGroupEntryList = new List[StockTrend.LEVEL_MAX];
+	public List<Entry>[] mTrendEntryList = new List[StockTrend.LEVELS.length];
+	public List<Entry>[] mGroupEntryList = new List[StockTrend.LEVELS.length];
 	public CombinedData mCombinedDataMain = new CombinedData(mXValues);
 	public CombinedData mCombinedDataSub = new CombinedData(mXValues);
 
@@ -61,7 +61,7 @@ public class StockDataChart {
 		mPeriod = period;
 		mAdaptiveLevel = mStock.getLevel(period);
 
-		for (int i = 0; i < StockTrend.LEVEL_MAX; i++) {
+		for (int i = 0; i < StockTrend.LEVELS.length; i++) {
 			if (mTrendEntryList[i] == null) {
 				mTrendEntryList[i] = new ArrayList<>();
 			} else {
@@ -393,7 +393,7 @@ public class StockDataChart {
 		}
 
 		ArrayMap<Double, LimitLine> limitLineMap = new ArrayMap<>();
-		for (int i = StockTrend.LEVEL_DRAW; i < StockTrend.LEVEL_MAX; i++) {
+		for (int i = StockTrend.LEVEL_DRAW; i < StockTrend.LEVELS.length; i++) {
 			if (i != mAdaptiveLevel) {
 				continue; //TODO
 			}
@@ -517,7 +517,7 @@ public class StockDataChart {
 	}
 
 	public void updateGroupEntry() {
-		for (int level = StockTrend.LEVEL_DRAW; level < StockTrend.LEVEL_MAX; level++) {
+		for (int level = StockTrend.LEVEL_DRAW; level < StockTrend.LEVELS.length; level++) {
 			if (mTrendEntryList[level] != null && mTrendEntryList[level].size() > 2) {
 				if (level == StockTrend.LEVEL_DRAW) {
 					mDrawFirstEntryList.add(mTrendEntryList[level].get(0));
@@ -546,7 +546,7 @@ public class StockDataChart {
 		mHistogramEntryList.clear();
 		mDrawFirstEntryList.clear();
 		mDrawLastEntryList.clear();
-		for (int i = 0; i < StockTrend.LEVEL_MAX; i++) {
+		for (int i = 0; i < StockTrend.LEVELS.length; i++) {
 			mTrendEntryList[i].clear();
 			mGroupEntryList[i].clear();
 		}

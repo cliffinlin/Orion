@@ -55,13 +55,13 @@ public class Period {
 	public Period(String name) {
 		mName = name;
 
-		for (int i = 0; i < StockTrend.LEVEL_MAX; i++) {
+		for (int i = 0; i < StockTrend.LEVELS.length; i++) {
 			mVertexLists.add(new ArrayList<>());
 		}
-		for (int i = 0; i < StockTrend.LEVEL_MAX; i++) {
+		for (int i = 0; i < StockTrend.LEVELS.length; i++) {
 			mDataLists.add(new ArrayList<>());
 		}
-		for (int i = 0; i < StockTrend.LEVEL_MAX; i++) {
+		for (int i = 0; i < StockTrend.LEVELS.length; i++) {
 			mStockTrendLists.add(new ArrayList<>());
 		}
 	}

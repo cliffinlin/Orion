@@ -55,7 +55,7 @@ public class StockPerceptronProvider {
 		mPeriodMap = new ArrayMap<>();
 		for (String period : Period.PERIODS) {
 			mLevelMap = new ArrayMap<>();
-			for (int level = 1; level < StockTrend.LEVEL_MAX; level++) {
+			for (int level = 1; level < StockTrend.LEVELS.length; level++) {
 				mTrendMap = new ArrayMap<>();
 				for (String type : StockTrend.TYPES) {
 					StockPerceptron stockPerceptron = new StockPerceptron(period, level, type);

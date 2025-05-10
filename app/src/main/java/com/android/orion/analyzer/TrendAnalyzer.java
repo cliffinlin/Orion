@@ -170,44 +170,33 @@ public class TrendAnalyzer {
 		dataList.add(stockData);
 	}
 
-	void addStockTrendList(int level, String type, ArrayList<StockData> dataList, ArrayList<StockTrend> stockTrendList) {
-		if (dataList == null || dataList.size() < StockTrend.VERTEX_SIZE || stockTrendList == null) {
+	void addStockTrendList(int level, String type, StockData prev, StockData current, StockData next, ArrayList<StockTrend> stockTrendList) {
+		if (prev == null || current == null || next == null || stockTrendList == null) {
 			return;
 		}
 
-		StockData prev = StockData.getLast(dataList, 2);
-		StockData current = StockData.getLast(dataList, 1);
-		StockData next = StockData.getLast(dataList, 0);
-
-		if ((prev == null) || (current == null) || (next == null)) {
-			return;
-		}
-
-		String action = "";
 		StockTrend stockTrend = new StockTrend();
 		stockTrend.setSE(mStock.getSE());
 		stockTrend.setCode(mStock.getCode());
 		stockTrend.setName(mStock.getName());
 		stockTrend.setPeriod(mPeriod);
-		if (next.getDirection() == StockTrend.DIRECTION_UP) {
-			action = Constant.MARK_ADD;
-		} else if (next.getDirection() == StockTrend.DIRECTION_DOWN) {
-			action = Constant.MARK_MINUS;
-		}
-		stockTrend.setAction(action);
+		stockTrend.setLevel(level - 1);
+		stockTrend.setType(type);
 		stockTrend.setDate(current.getDate());
 		stockTrend.setTime(current.getTime());
 
-		stockTrend.setLevel(level);
-		stockTrend.setType(type);
-
+		String action = "";
 		double turn = 0;
 		if (next.getDirection() == StockTrend.DIRECTION_UP) {
+			action = Constant.MARK_ADD;
 			turn = next.getCandle().getLow();
 		} else if (next.getDirection() == StockTrend.DIRECTION_DOWN) {
+			action = Constant.MARK_MINUS;
 			turn = next.getCandle().getHigh();
 		}
+		stockTrend.setAction(action);
 		stockTrend.setTurn(turn);
+
 		stockTrend.setPrevNet(prev.getNet());
 		stockTrend.setNet(current.getNet());
 		stockTrend.setNextNet(next.getNet());
@@ -325,58 +314,62 @@ public class TrendAnalyzer {
 					case StockTrend.DIRECTION_UP:
 						if (direction == StockTrend.DIRECTION_DOWN) {
 							type = StockTrend.TYPE_DOWN_UP;
+							addStockTrendList(level, type, prev, current, next, stockTrendList);
 							addVertex(prev_end, vertexTypeBottom, vertexList);
 							addStockDataList(vertexList, dataList);
-							addStockTrendList(level, type, dataList, stockTrendList);
 						} else if (direction == StockTrend.DIRECTION_NONE) {
 							StockData vertexData = chooseVertex(prev_start, prev_end, StockTrend.VERTEX_BOTTOM);
 							if (baseDirection == StockTrend.DIRECTION_UP) {
 								type = StockTrend.TYPE_UP_NONE_UP;
+								addStockTrendList(level, type, prev, current, next, stockTrendList);
 								addVertex(vertexData, vertexTypeBottom, vertexList);
 								addStockDataList(vertexList, dataList);
-								addStockTrendList(level, type, dataList, stockTrendList);
 							} else if (baseDirection == StockTrend.DIRECTION_DOWN) {
 								type = StockTrend.TYPE_DOWN_NONE_UP;
+								addStockTrendList(level, type, prev, current, next, stockTrendList);
 							}
 						} else if (direction == StockTrend.DIRECTION_UP) {
 							type = StockTrend.TYPE_UP_UP;
+							addStockTrendList(level, type, prev, current, next, stockTrendList);
 						}
 						break;
 					case StockTrend.DIRECTION_DOWN:
 						if (direction == StockTrend.DIRECTION_UP) {
 							type = StockTrend.TYPE_UP_DOWN;
+							addStockTrendList(level, type, prev, current, next, stockTrendList);
 							addVertex(prev_end, vertexTypeTop, vertexList);
 							addStockDataList(vertexList, dataList);
-							addStockTrendList(level, type, dataList, stockTrendList);
 						} else if (direction == StockTrend.DIRECTION_NONE) {
 							StockData vertexData = chooseVertex(prev_start, prev_end, StockTrend.VERTEX_TOP);
 							if (baseDirection == StockTrend.DIRECTION_UP) {
 								type = StockTrend.TYPE_UP_NONE_DOWN;
+								addStockTrendList(level, type, prev, current, next, stockTrendList);
 							} else if (baseDirection == StockTrend.DIRECTION_DOWN) {
 								type = StockTrend.TYPE_DOWN_NONE_DOWN;
+								addStockTrendList(level, type, prev, current, next, stockTrendList);
 								addVertex(vertexData, vertexTypeTop, vertexList);
 								addStockDataList(vertexList, dataList);
-								addStockTrendList(level, type, dataList, stockTrendList);
 							}
 						} else if (direction == StockTrend.DIRECTION_DOWN) {
 							type = StockTrend.TYPE_DOWN_DOWN;
+							addStockTrendList(level, type, prev, current, next, stockTrendList);
 						}
 						break;
 					case StockTrend.DIRECTION_NONE:
 						if (direction == StockTrend.DIRECTION_UP) {
 							baseDirection = StockTrend.DIRECTION_UP;
-							StockData vertexData = chooseVertex(current_start, current_end, StockTrend.VERTEX_TOP);
 							type = StockTrend.TYPE_UP_NONE;
+							addStockTrendList(level, type, prev, current, next, stockTrendList);
+							StockData vertexData = chooseVertex(current_start, current_end, StockTrend.VERTEX_TOP);
 							addVertex(vertexData, vertexTypeTop, vertexList);
 							addStockDataList(vertexList, dataList);
-							addStockTrendList(level, type, dataList, stockTrendList);
 						} else if (direction == StockTrend.DIRECTION_DOWN) {
 							baseDirection = StockTrend.DIRECTION_DOWN;
-							StockData vertexData = chooseVertex(current_start, current_end, StockTrend.VERTEX_BOTTOM);
 							type = StockTrend.TYPE_DOWN_NONE;
+							addStockTrendList(level, type, prev, current, next, stockTrendList);
+							StockData vertexData = chooseVertex(current_start, current_end, StockTrend.VERTEX_BOTTOM);
 							addVertex(vertexData, vertexTypeBottom, vertexList);
 							addStockDataList(vertexList, dataList);
-							addStockTrendList(level, type, dataList, stockTrendList);
 						} else if (direction == StockTrend.DIRECTION_NONE) {
 						}
 						break;
@@ -390,7 +383,6 @@ public class TrendAnalyzer {
 
 			extendVertexList(mStockDataList.size() - 1, mStockDataList, vertexList);
 			addStockDataList(vertexList, dataList);
-			addStockTrendList(level, type, dataList, stockTrendList);
 
 			if (stockTrendList.size() == 0) {
 				return;
@@ -454,24 +446,24 @@ public class TrendAnalyzer {
 		dataList.clear();
 
 		int size = vertexList.size();
-		for (int i = 1; i < size; i++) {
-			StockData prev = vertexList.get(i - 1);
+		for (int i = 0; i < size - 1; i++) {
 			StockData current = vertexList.get(i);
+			StockData next = vertexList.get(i + 1);
 
-			if ((prev == null) || (current == null)) {
+			if (current == null || next == null) {
 				return;
 			}
 
 			StockData stockData = new StockData(current);
-			stockData.setIndexStart(prev.getIndexStart());
-			stockData.setIndexEnd(current.getIndexEnd());
-			stockData.merge(StockTrend.DIRECTION_NONE, prev);
+			stockData.setIndexStart(current.getIndexStart());
+			stockData.setIndexEnd(next.getIndexEnd());
+			stockData.merge(StockTrend.DIRECTION_NONE, next);
 
 			int direction = StockTrend.DIRECTION_NONE;
-			if (prev.vertexOf(StockTrend.VERTEX_TOP)) {
-				direction = current.vertexOf(StockTrend.VERTEX_BOTTOM) ? StockTrend.DIRECTION_DOWN : StockTrend.DIRECTION_UP;
-			} else if (prev.vertexOf(StockTrend.VERTEX_BOTTOM)) {
-				direction = current.vertexOf(StockTrend.VERTEX_TOP) ? StockTrend.DIRECTION_UP : StockTrend.DIRECTION_DOWN;
+			if (current.vertexOf(StockTrend.VERTEX_TOP)) {
+				direction = next.vertexOf(StockTrend.VERTEX_BOTTOM) ? StockTrend.DIRECTION_DOWN : StockTrend.DIRECTION_UP;
+			} else if (current.vertexOf(StockTrend.VERTEX_BOTTOM)) {
+				direction = next.vertexOf(StockTrend.VERTEX_TOP) ? StockTrend.DIRECTION_UP : StockTrend.DIRECTION_DOWN;
 			}
 			stockData.setDirection(direction);
 			stockData.setupNet();

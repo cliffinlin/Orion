@@ -84,7 +84,7 @@ public class Setting {
 	public static final boolean SETTING_DISPLAY_MERGED_DEFAULT = false;
 
 	public static final String SETTING_DEBUG_LOG = "SETTING_DEBUG_LOG";
-	public static final boolean SETTING_DEBUG_LOG_DEFAULT = true;
+	public static final boolean SETTING_DEBUG_LOG_DEFAULT = false;
 	public static final String SETTING_DEBUG_DIRECT = "SETTING_DEBUG_DIRECT";
 	public static final String SETTING_DEBUG_WIFI = "SETTING_DEBUG_WIFI";
 
