@@ -53,6 +53,7 @@ public class StockTrend extends DatabaseTable {
 	public static final String TYPE_UP_DOWN = "UD";
 	public static final String TYPE_UP_UP = "UU";
 	public static final String TYPE_NONE = "";
+	public static final String TYPE_NONE_NONE = "NN";
 	public static final String TYPE_DOWN_DOWN = "DD";
 	public static final String TYPE_DOWN_UP = "DU";
 	public static final String TYPE_DOWN_NONE = "DN";
@@ -74,6 +75,7 @@ public class StockTrend extends DatabaseTable {
 	public static final String[] TYPES = {
 			TYPE_UP_NONE_UP, TYPE_UP_NONE_DOWN, TYPE_UP_NONE,
 			TYPE_UP_DOWN, TYPE_UP_UP,
+			TYPE_NONE_NONE,
 			TYPE_DOWN_DOWN, TYPE_DOWN_UP,
 			TYPE_DOWN_NONE, TYPE_DOWN_NONE_UP, TYPE_DOWN_NONE_DOWN};
 
