@@ -99,7 +99,6 @@ public class StockAnalyzer {
 					analyze(period);
 				}
 			}
-			mStockPerceptronProvider.train(mTrendAnalyzer.getStockTrendNetMap());
 			mFinancialAnalyzer.analyzeFinancial(mStock);
 			mFinancialAnalyzer.setupFinancial(mStock);
 			mFinancialAnalyzer.setupStockBonus(mStock);

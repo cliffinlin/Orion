@@ -32,11 +32,10 @@ public class StockPerceptronProvider {
 	PowerManager.WakeLock mWakeLock;
 	HandlerThread mHandlerThread;
 	ServiceHandler mHandler;
-	ArrayList<StockTrend> mStockTrendList = new ArrayList<>();
 	ArrayList<Double> mXArray = new ArrayList<>();
 	ArrayList<Double> mYArray = new ArrayList<>();
 	StockPerceptron mStockPerceptron = new StockPerceptron();
-	ArrayMap<String, StockPerceptron> mTrendMap;
+	ArrayMap<String, StockPerceptron> mTypeMap;
 	ArrayMap<Integer, ArrayMap<String, StockPerceptron>> mLevelMap;
 	ArrayMap<String, ArrayMap<Integer, ArrayMap<String, StockPerceptron>>> mPeriodMap;
 
@@ -56,7 +55,7 @@ public class StockPerceptronProvider {
 		for (String period : Period.PERIODS) {
 			mLevelMap = new ArrayMap<>();
 			for (int level = 1; level < StockTrend.LEVELS.length; level++) {
-				mTrendMap = new ArrayMap<>();
+				mTypeMap = new ArrayMap<>();
 				for (String type : StockTrend.TYPES) {
 					StockPerceptron stockPerceptron = new StockPerceptron(period, level, type);
 					if (!mDatabaseManager.isStockPerceptronExist(stockPerceptron)) {
@@ -65,9 +64,9 @@ public class StockPerceptronProvider {
 					} else {
 						mDatabaseManager.getStockPerceptron(stockPerceptron);
 					}
-					mTrendMap.put(type, stockPerceptron);
+					mTypeMap.put(type, stockPerceptron);
 				}
-				mLevelMap.put(level, mTrendMap);
+				mLevelMap.put(level, mTypeMap);
 			}
 			mPeriodMap.put(period, mLevelMap);
 		}
@@ -91,10 +90,6 @@ public class StockPerceptronProvider {
 
 	public void onDestroy() {
 		releaseWakeLock();
-	}
-
-	public StockPerceptron getStockPerceptron() {
-		return mStockPerceptron;
 	}
 
 	public StockPerceptron getStockPerceptron(String period, int level, String type) {
@@ -161,9 +156,9 @@ public class StockPerceptronProvider {
 						for (Double key : mXArray) {
 							mYArray.add(stockTrendNetMap.get(key));
 						}
-						mStockPerceptron.train(mXArray, mYArray, Config.MAX_ML_TRAIN_TIMES * 10);
+						mStockPerceptron.train(mXArray, mYArray, Config.MAX_ML_TRAIN_TIMES);
 						mStockPerceptron.setModified(Utility.getCurrentDateTimeString());
-						Log.d("---------->" + mStockPerceptron.toLogString());
+						Log.d("MSG_TRAIN_ALL_IN_ONE ---------->" + mStockPerceptron.toLogString());
 						break;
 					}
 
@@ -180,20 +175,22 @@ public class StockPerceptronProvider {
 							return;
 						}
 
-						mDatabaseManager.getStockTrendList(period, level, type, mStockTrendList);
-						if (mStockTrendList.isEmpty()) {
+						mStockPerceptron = getStockPerceptron(period, level, type);
+						if (mStockPerceptron == null) {
 							return;
 						}
-						mXArray.clear();
-						mYArray.clear();
-						for (StockTrend stockTrend : mStockTrendList) {
-							mXArray.add(stockTrend.getNet());
-							mYArray.add(stockTrend.getNextNet());
+
+						mXArray = new ArrayList<>(mStockPerceptron.getNetMap().keySet());
+						Collections.sort(mXArray);
+						mYArray = new ArrayList<>();
+						for (Double key : mXArray) {
+							mYArray.add(mStockPerceptron.getNetMap().get(key));
 						}
-						mStockPerceptron = getStockPerceptron(period, level, type);
+
 						mStockPerceptron.train(mXArray, mYArray, Config.MAX_ML_TRAIN_TIMES);
 						mStockPerceptron.setModified(Utility.getCurrentDateTimeString());
 						mDatabaseManager.updateStockPerceptron(mStockPerceptron, mStockPerceptron.getContentValuesPerceptron());
+//						Log.d("default ---------->" + mStockPerceptron.toLogString());
 						break;
 					}
 				}

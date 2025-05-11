@@ -8,8 +8,8 @@ public class LinearRegression {
 	public double learningRate = 0.01; // 学习率
 	public double xMin, xMax, yMin, yMax; // 归一化的最小值和最大值
 	public double mse; //Mean Squared Error
-	private ArrayList<Double> xList; // 输入特征
-	private ArrayList<Double> yList; // 目标值
+	private ArrayList<Double> xList = new ArrayList<>(); // 输入特征
+	private ArrayList<Double> yList = new ArrayList<>(); // 目标值
 
 	// 构造函数
 	public LinearRegression() {

@@ -3,6 +3,7 @@ package com.android.orion.database;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.text.TextUtils;
+import android.util.ArrayMap;
 
 import com.android.orion.data.LinearRegression;
 import com.android.orion.setting.Constant;
@@ -23,8 +24,9 @@ public class StockPerceptron extends DatabaseTable {
 
 	private double mDelta;
 	private int mTimes;
-
 	private double mLastError;
+
+	ArrayMap<Double, Double> mNetMap = new ArrayMap<>();
 
 	public StockPerceptron() {
 		init();
@@ -339,6 +341,10 @@ public class StockPerceptron extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_TIMES)));
 	}
 
+	public ArrayMap<Double, Double> getNetMap() {
+		return mNetMap;
+	}
+
 	public void train(ArrayList<Double> xArray, ArrayList<Double> yArray, int iterations) {
 		if (xArray == null || yArray == null || xArray.size() < 2 || yArray.size() < 2 || xArray.size() != yArray.size()) {
 			return;
@@ -350,10 +356,6 @@ public class StockPerceptron extends DatabaseTable {
 		double error = mLinearRegression.calculateError();
 		mDelta = Math.abs(error - mLastError);
 		mLastError = error;
-
-		if (mDelta > 0 && mDelta < DEFAULT_DELTA) {
-			Log.d(toLogString());
-		}
 	}
 
 	public double predict(double x) {

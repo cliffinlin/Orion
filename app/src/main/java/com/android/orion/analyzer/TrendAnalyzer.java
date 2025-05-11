@@ -6,6 +6,7 @@ import android.util.ArrayMap;
 import com.android.orion.data.Period;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
+import com.android.orion.database.StockPerceptron;
 import com.android.orion.database.StockTrend;
 import com.android.orion.manager.DatabaseManager;
 import com.android.orion.provider.StockPerceptronProvider;
@@ -20,7 +21,6 @@ public class TrendAnalyzer {
 	Logger Log = Logger.getLogger();
 	Stock mStock;
 	String mPeriod;
-	ArrayMap<Double, Double> mStockTrendNetMap = new ArrayMap<>();
 	ArrayList<StockData> mStockDataList = new ArrayList<>();
 	DatabaseManager mDatabaseManager = DatabaseManager.getInstance();
 	StockPerceptronProvider mStockPerceptronProvider = StockPerceptronProvider.getInstance();
@@ -30,10 +30,6 @@ public class TrendAnalyzer {
 
 	public static TrendAnalyzer getInstance() {
 		return Holder.INSTANCE;
-	}
-
-	public ArrayMap<Double, Double> getStockTrendNetMap() {
-		return mStockTrendNetMap;
 	}
 
 	void setup(Stock stock, String period, ArrayList<StockData> stockDataList) {
@@ -182,6 +178,9 @@ public class TrendAnalyzer {
 		stockTrend.setPeriod(mPeriod);
 		stockTrend.setLevel(level - 1);
 		stockTrend.setType(type);
+
+		StockPerceptron stockPerceptron = mStockPerceptronProvider.getStockPerceptron(stockTrend.getPeriod(), stockTrend.getLevel(), stockTrend.getType());
+
 		stockTrend.setDate(current.getDate());
 		stockTrend.setTime(current.getTime());
 
@@ -200,11 +199,18 @@ public class TrendAnalyzer {
 		stockTrend.setPrevNet(prev.getNet());
 		stockTrend.setNet(current.getNet());
 		stockTrend.setNextNet(next.getNet());
-		stockTrend.setPredict(mStockPerceptronProvider.getStockPerceptron().predict(stockTrend.getNet()));
+
+		if (stockPerceptron != null) {
+			stockTrend.setPredict(stockPerceptron.predict(stockTrend.getNet()));
+		}
 
 		stockTrendList.add(stockTrend);
+
 		if (finished) {
-			mStockTrendNetMap.put(stockTrend.getNet(), stockTrend.getNextNet());
+			if (stockPerceptron != null) {
+				stockPerceptron.getNetMap().put(stockTrend.getNet(), stockTrend.getNextNet());
+			}
+			mStockPerceptronProvider.train(stockTrend.getPeriod(), stockTrend.getLevel(), stockTrend.getType());
 		}
 	}
 
