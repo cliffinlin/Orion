@@ -411,9 +411,11 @@ public class TrendAnalyzer {
 					mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValues());
 
 					if (Setting.getDisplayAdaptive()) {
-						if (level == mStock.getLevel(mPeriod)) {//TODO
+						if (level == mStock.getLevel(mPeriod)) {
 							StockAnalyzer.getInstance().notifyStockTrend(stockTrend);
 						}
+					} else {
+						StockAnalyzer.getInstance().notifyStockTrend(stockTrend);
 					}
 				}
 			} else {

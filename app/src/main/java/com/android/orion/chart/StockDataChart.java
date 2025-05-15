@@ -394,8 +394,10 @@ public class StockDataChart {
 
 		ArrayMap<Double, LimitLine> limitLineMap = new ArrayMap<>();
 		for (int i = StockTrend.LEVEL_DRAW; i < StockTrend.LEVELS.length; i++) {
-			if (i != mAdaptiveLevel) {
-				continue; //TODO
+			if (Setting.getDisplayAdaptive()) {
+				if (i != mAdaptiveLevel) {
+					continue;
+				}
 			}
 			StockTrend stockTrend = getStockTrend(i);
 			if (stockTrend != null) {
@@ -407,7 +409,7 @@ public class StockDataChart {
 					}
 				} else {
 					int color = lineColor(i);
-					String label = "          Trend:" + Constant.TAB2 + stockTrend.toChartString();
+					String label = "              " + stockTrend.getTurn() + Constant.TAB2 + stockTrend.toChartString();
 					LimitLine limitLine = createLimitLine(stockTrend.getTurn(), color, label);
 					limitLineMap.put(turn, limitLine);
 				}
@@ -523,15 +525,11 @@ public class StockDataChart {
 					mDrawFirstEntryList.add(mTrendEntryList[level].get(0));
 					mDrawLastEntryList.add(0, mTrendEntryList[level].get(mTrendEntryList[level].size() - 1));
 				}
-				if (Setting.getDisplayAdaptive()) {
-					if (!Setting.getDisplayGroup()) {
-						if (level != mAdaptiveLevel) {
-							continue;
-						}
-					}
+
+				if (Setting.getDisplayGroup()) {
+					mGroupEntryList[level].add(mTrendEntryList[level].get(mTrendEntryList[level].size() - 2));
+					mGroupEntryList[level].add(mTrendEntryList[level].get(mTrendEntryList[level].size() - 1));
 				}
-				mGroupEntryList[level].add(mTrendEntryList[level].get(mTrendEntryList[level].size() - 2));
-				mGroupEntryList[level].add(mTrendEntryList[level].get(mTrendEntryList[level].size() - 1));
 			}
 		}
 	}
