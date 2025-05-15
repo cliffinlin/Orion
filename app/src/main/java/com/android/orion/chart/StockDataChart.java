@@ -329,8 +329,10 @@ public class StockDataChart {
 		}
 		mDescription.append(stock.getNet()).append("%").append("  ");
 		mDescription.append(mPeriod).append(" ");
-		mDescription.append(StockTrend.MARK_LEVEL + mAdaptiveLevel).append(" ");
-		mDescription.append(stock.getAction(mPeriod));
+		StockTrend stockTrend = getStockTrend(mAdaptiveLevel);
+		if (stockTrend != null) {
+			mDescription.append(stockTrend.toChartString());
+		}
 	}
 
 	LimitLine createLimitLine(double limit, int color, String label) {
@@ -391,24 +393,27 @@ public class StockDataChart {
 		ArrayMap<Double, LimitLine> limitLineMap = new ArrayMap<>();
 		for (int i = StockTrend.LEVEL_DRAW; i < StockTrend.LEVELS.length; i++) {
 			if (Setting.getDisplayAdaptive()) {
-				if (i != mAdaptiveLevel) {
+				if ((i != mAdaptiveLevel) && (i != mAdaptiveLevel - 1)) {
 					continue;
 				}
 			}
+
 			StockTrend stockTrend = getStockTrend(i);
-			if (stockTrend != null) {
-				double turn = stockTrend.getTurn();
-				if (limitLineMap.containsKey(turn)) {
-					LimitLine limitLine = limitLineMap.get(turn);
-					if (limitLine != null) {
-						limitLine.setLabel(limitLine.getLabel() + Constant.TAB2 + stockTrend.toChartString());
-					}
-				} else {
-					int color = lineColor(i);
-					String label = "              " + stockTrend.getTurn() + Constant.TAB2 + stockTrend.toChartString();
-					LimitLine limitLine = createLimitLine(stockTrend.getTurn(), color, label);
-					limitLineMap.put(turn, limitLine);
+			if (stockTrend == null) {
+				continue;
+			}
+
+			double turn = stockTrend.getTurn();
+			if (limitLineMap.containsKey(turn)) {
+				LimitLine limitLine = limitLineMap.get(turn);
+				if (limitLine != null) {
+					limitLine.setLabel(limitLine.getLabel() + Constant.TAB2 + stockTrend.toChartString());
 				}
+			} else {
+				int color = lineColor(i);
+				String label = "              " + stockTrend.getTurn() + Constant.TAB2 + stockTrend.toChartString();
+				LimitLine limitLine = createLimitLine(stockTrend.getTurn(), color, label);
+				limitLineMap.put(turn, limitLine);
 			}
 		}
 		if (limitLineMap.size() > 0) {
