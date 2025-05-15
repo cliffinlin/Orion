@@ -473,38 +473,6 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 							(float) mStockData.getMacd().getAverage10(), index);
 					stockDataChart.mAverage10EntryList.add(average10Entry);
 
-					if (index == 0) {
-						if (mStockData.directionOf(StockTrend.DIRECTION_UP)) {
-							Entry drawEntry = new Entry(
-									(float) mStockData.getCandle().getHigh(), index);
-							stockDataChart.mDrawFirstEntryList.add(drawEntry);
-						} else if (mStockData
-								.directionOf(StockTrend.DIRECTION_DOWN)) {
-							Entry drawEntry = new Entry(
-									(float) mStockData.getCandle().getLow(), index);
-							stockDataChart.mDrawFirstEntryList.add(drawEntry);
-						} else {
-							Entry drawEntry = new Entry(
-									(float) mStockData.getCandle().getClose(), index);
-							stockDataChart.mDrawFirstEntryList.add(drawEntry);
-						}
-					} else if (index == cursor.getCount() - 1) {
-						if (mStockData.directionOf(StockTrend.DIRECTION_UP)) {
-							Entry drawEntry = new Entry(
-									(float) mStockData.getCandle().getHigh(), index);
-							stockDataChart.mDrawLastEntryList.add(drawEntry);
-						} else if (mStockData
-								.directionOf(StockTrend.DIRECTION_DOWN)) {
-							Entry drawEntry = new Entry(
-									(float) mStockData.getCandle().getLow(), index);
-							stockDataChart.mDrawLastEntryList.add(drawEntry);
-						} else {
-							Entry drawEntry = new Entry(
-									(float) mStockData.getCandle().getClose(), index);
-							stockDataChart.mDrawLastEntryList.add(drawEntry);
-						}
-					}
-
 					if (mStockData.vertexOf(StockTrend.VERTEX_TOP)) {
 						Entry drawEntry = new Entry(
 								(float) mStockData.getCandle().getHigh(), index);

@@ -44,8 +44,6 @@ public class StockDataChart {
 	public ArrayList<Entry> mDIFEntryList = new ArrayList<>();
 	public ArrayList<Entry> mDEAEntryList = new ArrayList<>();
 	public ArrayList<BarEntry> mHistogramEntryList = new ArrayList<>();
-	public ArrayList<Entry> mDrawFirstEntryList = new ArrayList<>();
-	public ArrayList<Entry> mDrawLastEntryList = new ArrayList<>();
 	public List<Entry>[] mTrendEntryList = new List[StockTrend.LEVELS.length];
 	public List<Entry>[] mGroupEntryList = new List[StockTrend.LEVELS.length];
 	public CombinedData mCombinedDataMain = new CombinedData(mXValues);
@@ -129,8 +127,6 @@ public class StockDataChart {
 			lineData.addDataSet(lineDataSet10);
 		}
 
-		addLineDataSet(mDrawFirstEntryList, StockTrend.LABEL_NONE, lineColor(StockTrend.LEVEL_DRAW), false, lineData, false, lineColor(StockTrend.LEVEL_DRAW));
-		addLineDataSet(mDrawLastEntryList, StockTrend.LABEL_NONE, lineColor(StockTrend.LEVEL_DRAW), false, lineData, false, lineColor(StockTrend.LEVEL_DRAW));
 		if (displayTrend(StockTrend.LEVEL_DRAW)) {
 			addLineDataSet(mTrendEntryList, StockTrend.LABEL_DRAW, StockTrend.LEVEL_DRAW, lineData);
 		}
@@ -519,17 +515,13 @@ public class StockDataChart {
 	}
 
 	public void updateGroupEntry() {
+		if (!Setting.getDisplayGroup()) {
+			return;
+		}
 		for (int level = StockTrend.LEVEL_DRAW; level < StockTrend.LEVELS.length; level++) {
 			if (mTrendEntryList[level] != null && mTrendEntryList[level].size() > 2) {
-				if (level == StockTrend.LEVEL_DRAW) {
-					mDrawFirstEntryList.add(mTrendEntryList[level].get(0));
-					mDrawLastEntryList.add(0, mTrendEntryList[level].get(mTrendEntryList[level].size() - 1));
-				}
-
-				if (Setting.getDisplayGroup()) {
-					mGroupEntryList[level].add(mTrendEntryList[level].get(mTrendEntryList[level].size() - 2));
-					mGroupEntryList[level].add(mTrendEntryList[level].get(mTrendEntryList[level].size() - 1));
-				}
+				mGroupEntryList[level].add(mTrendEntryList[level].get(mTrendEntryList[level].size() - 2));
+				mGroupEntryList[level].add(mTrendEntryList[level].get(mTrendEntryList[level].size() - 1));
 			}
 		}
 	}
@@ -542,8 +534,6 @@ public class StockDataChart {
 		mDIFEntryList.clear();
 		mDEAEntryList.clear();
 		mHistogramEntryList.clear();
-		mDrawFirstEntryList.clear();
-		mDrawLastEntryList.clear();
 		for (int i = 0; i < StockTrend.LEVELS.length; i++) {
 			mTrendEntryList[i].clear();
 			mGroupEntryList[i].clear();
