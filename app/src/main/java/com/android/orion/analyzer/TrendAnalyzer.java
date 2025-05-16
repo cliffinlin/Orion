@@ -16,6 +16,7 @@ import com.android.orion.utility.Logger;
 import com.android.orion.utility.Utility;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class TrendAnalyzer {
 	Logger Log = Logger.getLogger();
@@ -324,15 +325,17 @@ public class TrendAnalyzer {
 						if (direction == StockTrend.DIRECTION_DOWN) {
 							type = StockTrend.TYPE_DOWN_UP;
 							addStockTrendList(finished, level, type, prev, current, next, stockTrendList);
-							addVertex(prev_end, vertexTypeBottom, vertexList);
-							addStockDataList(vertexList, dataList);
+							if (addVertex(prev_end, vertexTypeBottom, vertexList)) {
+								addStockDataList(vertexList, dataList);
+							}
 						} else if (direction == StockTrend.DIRECTION_NONE) {
 							StockData vertexData = chooseVertex(prev_start, prev_end, StockTrend.VERTEX_BOTTOM);
 							if (baseDirection == StockTrend.DIRECTION_UP) {
 								type = StockTrend.TYPE_UP_NONE_UP;
 								addStockTrendList(finished, level, type, prev, current, next, stockTrendList);
-								addVertex(vertexData, vertexTypeBottom, vertexList);
-								addStockDataList(vertexList, dataList);
+								if (addVertex(vertexData, vertexTypeBottom, vertexList)) {
+									addStockDataList(vertexList, dataList);
+								}
 							} else if (baseDirection == StockTrend.DIRECTION_DOWN) {
 								type = StockTrend.TYPE_DOWN_NONE_UP;
 								addStockTrendList(finished, level, type, prev, current, next, stockTrendList);
@@ -346,8 +349,9 @@ public class TrendAnalyzer {
 						if (direction == StockTrend.DIRECTION_UP) {
 							type = StockTrend.TYPE_UP_DOWN;
 							addStockTrendList(finished, level, type, prev, current, next, stockTrendList);
-							addVertex(prev_end, vertexTypeTop, vertexList);
-							addStockDataList(vertexList, dataList);
+							if (addVertex(prev_end, vertexTypeTop, vertexList)) {
+								addStockDataList(vertexList, dataList);
+							}
 						} else if (direction == StockTrend.DIRECTION_NONE) {
 							StockData vertexData = chooseVertex(prev_start, prev_end, StockTrend.VERTEX_TOP);
 							if (baseDirection == StockTrend.DIRECTION_UP) {
@@ -356,8 +360,9 @@ public class TrendAnalyzer {
 							} else if (baseDirection == StockTrend.DIRECTION_DOWN) {
 								type = StockTrend.TYPE_DOWN_NONE_DOWN;
 								addStockTrendList(finished, level, type, prev, current, next, stockTrendList);
-								addVertex(vertexData, vertexTypeTop, vertexList);
-								addStockDataList(vertexList, dataList);
+								if (addVertex(vertexData, vertexTypeTop, vertexList)) {
+									addStockDataList(vertexList, dataList);
+								}
 							}
 						} else if (direction == StockTrend.DIRECTION_DOWN) {
 							type = StockTrend.TYPE_DOWN_DOWN;
@@ -370,15 +375,17 @@ public class TrendAnalyzer {
 							type = StockTrend.TYPE_UP_NONE;
 							addStockTrendList(finished, level, type, prev, current, next, stockTrendList);
 							StockData vertexData = chooseVertex(current_start, current_end, StockTrend.VERTEX_TOP);
-							addVertex(vertexData, vertexTypeTop, vertexList);
-							addStockDataList(vertexList, dataList);
+							if (addVertex(vertexData, vertexTypeTop, vertexList)) {
+								addStockDataList(vertexList, dataList);
+							}
 						} else if (direction == StockTrend.DIRECTION_DOWN) {
 							baseDirection = StockTrend.DIRECTION_DOWN;
 							type = StockTrend.TYPE_DOWN_NONE;
 							addStockTrendList(finished, level, type, prev, current, next, stockTrendList);
 							StockData vertexData = chooseVertex(current_start, current_end, StockTrend.VERTEX_BOTTOM);
-							addVertex(vertexData, vertexTypeBottom, vertexList);
-							addStockDataList(vertexList, dataList);
+							if (addVertex(vertexData, vertexTypeBottom, vertexList)) {
+								addStockDataList(vertexList, dataList);
+							}
 						} else if (direction == StockTrend.DIRECTION_NONE) {
 							type = StockTrend.TYPE_NONE_NONE;
 							addStockTrendList(finished, level, type, prev, current, next, stockTrendList);
@@ -435,15 +442,30 @@ public class TrendAnalyzer {
 		return start.vertexOf(vertexType) ? start : end;
 	}
 
-	private void addVertex(StockData stockData, int vertex, ArrayList<StockData> vertexList) {
+	private boolean addVertex(StockData stockData, int vertex, ArrayList<StockData> vertexList) {
 		if (stockData == null || vertexList == null) {
-			return;
+			return false;
 		}
+
+		if (vertexList.size() > 0) {
+			StockData lastVertex = StockData.getLast(vertexList, 0);
+			if (lastVertex != null) {
+				Calendar lastCalendar = Utility.getCalendar(lastVertex.getDateTime(),
+						Utility.CALENDAR_DATE_TIME_FORMAT);
+				Calendar calendar = Utility.getCalendar(stockData.getDateTime(),
+						Utility.CALENDAR_DATE_TIME_FORMAT);
+				if (calendar.before(lastCalendar)) {
+					return false;
+				}
+			}
+		}
+
 		stockData.addVertex(vertex);
 		vertexList.add(stockData);
 		if (vertexList.size() == 1) {
 			extendVertexList(0, mStockDataList, vertexList);
 		}
+		return true;
 	}
 
 	void vertexListToDataList(ArrayList<StockData> vertexList, ArrayList<StockData> dataList) {
