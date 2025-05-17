@@ -10,6 +10,7 @@
     <string name="access_denied_default">Access denied</string>
     <string name="access_denied_jp">Kinsoku jikou desu!</string>
     <string name="access_denied_zh">拒绝访问</string>
+    <string name="acceleration">Acc</string>
     <string name="account">Account</string>
     <string name="action">Action</string>
     <string name="action_all">All</string>
@@ -267,6 +268,7 @@
     <string name="title_delete">Delete</string>
     <string name="title_delete_all">Delete all</string>
     <string name="username_hint">Username</string>
+    <string name="velocity">Vel</string>
     <string name="version">Version</string>
     <string name="volume">Volume</string>
     <string name="value">Value</string>

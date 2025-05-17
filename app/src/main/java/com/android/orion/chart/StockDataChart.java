@@ -44,6 +44,7 @@ public class StockDataChart {
 	public ArrayList<Entry> mDIFEntryList = new ArrayList<>();
 	public ArrayList<Entry> mDEAEntryList = new ArrayList<>();
 	public ArrayList<BarEntry> mHistogramEntryList = new ArrayList<>();
+	public ArrayList<Entry> mVelocityEntryList = new ArrayList<>();
 	public List<Entry>[] mTrendEntryList = new List[StockTrend.LEVELS.length];
 	public List<Entry>[] mGroupEntryList = new List[StockTrend.LEVELS.length];
 	public CombinedData mCombinedDataMain = new CombinedData(mXValues);
@@ -191,6 +192,12 @@ public class StockDataChart {
 		deaDataSet.setDrawCircles(false);
 		deaDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(deaDataSet);
+
+		LineDataSet velocityDataSet = new LineDataSet(mVelocityEntryList, "Velocity");
+		velocityDataSet.setColor(Color.BLUE);
+		velocityDataSet.setDrawCircles(false);
+		velocityDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+		lineData.addDataSet(velocityDataSet);
 
 		mCombinedDataSub.setData(barData);
 		mCombinedDataSub.setData(lineData);
@@ -539,6 +546,7 @@ public class StockDataChart {
 		mDIFEntryList.clear();
 		mDEAEntryList.clear();
 		mHistogramEntryList.clear();
+		mVelocityEntryList.clear();
 		for (int i = 0; i < StockTrend.LEVELS.length; i++) {
 			mTrendEntryList[i].clear();
 			mGroupEntryList[i].clear();

@@ -175,6 +175,7 @@ public class StockData extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_DIF, mMacd.getDIF());
 		contentValues.put(DatabaseContract.COLUMN_DEA, mMacd.getDEA());
 		contentValues.put(DatabaseContract.COLUMN_HISTOGRAM, mMacd.getHistogram());
+		contentValues.put(DatabaseContract.COLUMN_VELOCITY, mMacd.getVelocity());
 
 		contentValues.put(DatabaseContract.COLUMN_DIRECTION, mDirection);
 		contentValues.put(DatabaseContract.COLUMN_VERTEX, mVertex);
