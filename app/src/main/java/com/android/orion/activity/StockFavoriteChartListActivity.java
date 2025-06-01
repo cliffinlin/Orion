@@ -154,6 +154,7 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 				break;
 			}
 			case R.id.action_refresh: {
+				mDatabaseManager.deleteTDXData(mStock);
 				mDatabaseManager.deleteStockData(mStock);
 				mDatabaseManager.deleteStockTrend(mStock);
 				mDatabaseManager.deleteStockQuant(mStock);

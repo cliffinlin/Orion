@@ -118,7 +118,7 @@ public final class DatabaseContract {
 	public static final String COLUMN_DOWNWARD_TREND = "downward_trend";
 	public static final String COLUMN_NATURAL_REACTION = "natural_reaction";
 
-	// http://money.finance.sina.com.cn/corp/go.php/vFD_FinanceSummary/stockid/600028.phtml
+	// http://money.finance.sina.com.cn/corp/go.php/vFD_FinanceSummary/stockid/600900.phtml
 	public static final String COLUMN_BOOK_VALUE_PER_SHARE = "book_value_per_share";
 	public static final String COLUMN_CASH_FLOW_PER_SHARE = "cash_flow_per_share";
 	public static final String COLUMN_TOTAL_CURRENT_ASSETS = "total_current_assets";
@@ -133,9 +133,16 @@ public final class DatabaseContract {
 	public static final String COLUMN_NET_PROFIT_PER_SHARE = "net_profit_per_share";
 	public static final String COLUMN_NET_PROFIT_PER_SHARE_IN_YEAR = "net_profit_per_share_in_year";
 	public static final String COLUMN_DEBT_TO_NET_ASSETS_RATIO = "debt_to_net_assets_ratio";
-	// http://vip.stock.finance.sina.com.cn/corp/go.php/vISSUE_ShareBonus/stockid/600028.phtml
+	// http://vip.stock.finance.sina.com.cn/corp/go.php/vISSUE_ShareBonus/stockid/600900.phtml
 	public static final String COLUMN_R_DATE = "r_date";
 	public static final String COLUMN_TIME_TO_MARKET = "time_to_market";
+	//http://vip.stock.finance.sina.com.cn/q/go.php/vInvestConsult/kind/rzrq/index.phtml?symbol=600900
+	public static final String COLUMN_RZ_REMAINING = "rz_remaining";
+	public static final String COLUMN_RZ_BUY = "rz_buy";
+	public static final String COLUMN_RZ_REPAY = "rz_repay";
+	public static final String COLUMN_RQ_REMAINING = "rq_remaining";
+	public static final String COLUMN_RQ_SELL = "rq_sell";
+	public static final String COLUMN_RQ_REPAY = "rq_repay";
 
 	public static final String ORDER_BY = " ORDER BY ";
 	public static final String ORDER_ASC = " ASC ";
@@ -581,6 +588,41 @@ public final class DatabaseContract {
 				+ COLUMN_DATE + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_SHARE + DOUBLE_TYPE + COMMA_SEP + COLUMN_CREATED
 				+ TEXT_TYPE + COMMA_SEP + COLUMN_MODIFIED + TEXT_TYPE + " )";
+		static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
+				+ CREATE_TABLE_CONTENT;
+	}
+
+	public static abstract class StockRZRQ implements BaseColumns {
+		public static final String TABLE_NAME = "stock_rzrq";
+
+		public static final Uri CONTENT_URI = Uri.withAppendedPath(
+				DatabaseContract.CONTENT_URI, TABLE_NAME);
+		public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
+				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
+		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
+				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
+		public static final String SORT_ORDER_DEFAULT = COLUMN_CODE + " ASC";
+
+		public static final String[] PROJECTION_ALL = {_ID,
+				COLUMN_SE, COLUMN_CODE, COLUMN_NAME,
+				COLUMN_DATE, COLUMN_RZ_REMAINING, COLUMN_RZ_BUY, COLUMN_RZ_REPAY, COLUMN_RQ_REMAINING, COLUMN_RQ_SELL, COLUMN_RQ_REPAY,
+				COLUMN_CREATED,	COLUMN_MODIFIED};
+		static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
+				+ TABLE_NAME;
+		private static final String CREATE_TABLE_CONTENT = " (" + _ID
+				+ " INTEGER PRIMARY KEY,"
+				+ COLUMN_SE + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_CODE + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_NAME + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_DATE + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_RZ_REMAINING + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_RZ_BUY + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_RZ_REPAY + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_RQ_REMAINING + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_RQ_SELL + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_RQ_REPAY + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_CREATED + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_MODIFIED + TEXT_TYPE + " )";
 		static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
 				+ CREATE_TABLE_CONTENT;
 	}

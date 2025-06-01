@@ -17,6 +17,7 @@ import com.android.orion.database.Stock;
 import com.android.orion.database.StockBonus;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockFinancial;
+import com.android.orion.database.StockRZRQ;
 import com.android.orion.database.StockShare;
 import com.android.orion.interfaces.IStockDataProvider;
 import com.android.orion.setting.Constant;
@@ -43,11 +44,10 @@ public class SinaFinance extends StockDataProvider {
 	public static final String SINA_FINANCE_URL_HQ_KLINE_DATA = "http://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData?";
 	public static final String SINA_FINANCE_URL_HQ_JS_LIST = "http://hq.sinajs.cn/list=";
 	public static final String SINA_FINANCE_URL_HQ_JS_LIST_SIMPLE = "http://hq.sinajs.cn/list=s_";
-	public static final String SINA_FINANCE_URL_VFD_FINANCESUMMARY = "http://money.finance.sina.com.cn/corp/go.php/vFD_FinanceSummary/stockid/";// stock_id.phtml
 	public static final String SINA_FINANCE_URL_VFD_FINANCEREPORT2022 = "https://quotes.sina.cn/cn/api/openapi.php/CompanyFinanceService.getFinanceReport2022?paperCode=";
 	public static final String SINA_FINANCE_URL_VISSUE_SHAREBONUS = "http://vip.stock.finance.sina.com.cn/corp/go.php/vISSUE_ShareBonus/stockid/";// stock_id.phtml
 	public static final String SINA_FINANCE_URL_VCI_STOCK_STRUCTURE_HISTORY = "http://vip.stock.finance.sina.com.cn/corp/go.php/vCI_StockStructureHistory/stockid/";// stocktype/TotalStock.phtml
-	public static final String SINA_FINANCE_URL_NEWSTOCK_ISSUE = "https://vip.stock.finance.sina.com.cn/corp/go.php/vRPD_NewStockIssue/page/1.phtml";
+	public static final String SINA_FINANCE_URL_RZRQ = "http://vip.stock.finance.sina.com.cn/q/go.php/vInvestConsult/kind/rzrq/index.phtml?symbol=";
 	public static final String SINA_FINANCE_HEAD_REFERER_KEY = "Referer";
 	public static final String SINA_FINANCE_HEAD_REFERER_VALUE = "http://vip.stock.finance.sina.com.cn/";
 
@@ -187,6 +187,15 @@ public class SinaFinance extends StockDataProvider {
 		}
 		urlString = SINA_FINANCE_URL_VCI_STOCK_STRUCTURE_HISTORY
 				+ stock.getCode() + "/stocktype/TotalStock.phtml";
+		return urlString;
+	}
+
+	public String getStockRZRQURLString(Stock stock) {
+		String urlString = "";
+		if (stock == null) {
+			return urlString;
+		}
+		urlString = SINA_FINANCE_URL_RZRQ + stock.getSE() + stock.getCode();
 		return urlString;
 	}
 
@@ -1644,6 +1653,217 @@ public class SinaFinance extends StockDataProvider {
 							.toArray(contentValuesArray);
 					mDatabaseManager
 							.bulkInsertStockShare(contentValuesArray);
+				}
+			}
+
+			Setting.setStockDataChanged(stock, true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		StopWatch.stop();
+		Log.d(stock.getName() + " "
+				+ StopWatch.getInterval() + "s");
+	}
+
+	@Override
+	public int downloadStockRZRQ(Stock stock) {
+		int result = RESULT_NONE;
+
+		if (stock == null) {
+			return result;
+		}
+
+		StockRZRQ stockRZRQ = new StockRZRQ();
+		stockRZRQ.setSE(stock.getSE());
+		stockRZRQ.setCode(stock.getCode());
+		stockRZRQ.setName(stock.getName());
+		mDatabaseManager.getStockRZRQ(stock, stockRZRQ);
+
+		return downloadStockRZRQ(stock, stockRZRQ, getStockRZRQURLString(stock));
+	}
+
+	private int downloadStockRZRQ(Stock stock, StockRZRQ stockRZRQ, String urlString) {
+		int result = RESULT_NONE;
+
+		Log.d(urlString);
+
+		Request.Builder builder = new Request.Builder();
+		builder.url(urlString);
+		Request request = builder.build();
+
+		try {
+			Response response = mOkHttpClient.newCall(request).execute();
+			if ((response != null) && (response.body() != null)) {
+				String resultString = response.body().string();
+				if (isAccessDenied(resultString)) {
+					return RESULT_FAILED;
+				} else {
+					result = RESULT_SUCCESS;
+				}
+
+				handleResponseStockRZRQ(stock, stockRZRQ, resultString);
+				Thread.sleep(Config.downloadSleep);
+			}
+		} catch (Exception e) {
+			result = RESULT_FAILED;
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+
+	public void handleResponseStockRZRQ(Stock stock, StockRZRQ stockRZRQ,
+	                                     String response) {
+		StopWatch.start();
+		boolean bulkInsert = false;
+		String dateString = "";
+		String rzRemainingString = "";
+		String rzBuyString = "";
+		String rzRepayString = "";
+		String rqRemainingString = "";
+		String rqSellString = "";
+		String rqRepayString = "";
+		ContentValuesList.clear();
+
+		if ((stock == null) || TextUtils.isEmpty(response)) {
+			Log.d("return, stock = " + stock
+					+ " response = " + response);
+			return;
+		}
+
+		mDatabaseManager.deleteStockRZRQ(stock);
+		bulkInsert = true;
+
+		try {
+			// String responseString = new
+			// String(response.getBytes("ISO-8859-1"),
+			// "GB2312");
+
+			Document doc = Jsoup.parse(response);
+			if (doc == null) {
+				Log.d("return, doc = " + doc);
+				return;
+			}
+
+			Elements tableElements = doc.select("table#dataTable.list_table");
+			if (tableElements == null) {
+				Log.d("return, tableElements = " + tableElements);
+				return;
+			}
+
+			Elements tbodyElements = tableElements.select("tbody");
+			if (tbodyElements == null) {
+				Log.d("return, tbodyElements = " + tbodyElements);
+				return;
+			}
+
+			for (Element tbodyElement : tbodyElements) {
+				if (tbodyElement == null) {
+					Log.d("return, tbodyElement = " + tbodyElement);
+					return;
+				}
+
+				Elements trElements = tbodyElement.select("tr");
+				if (trElements == null) {
+					Log.d("return, trElements = " + trElements);
+					return;
+				}
+
+				for (Element trElement : trElements) {
+					if (trElement == null) {
+						Log.d("continue, trElement = " + trElement);
+						continue;
+					}
+
+					Elements tdElements = trElement.select("td");
+					if (tdElements == null) {
+						Log.d("continue, tdElements = " + tdElements);
+						continue;
+					}
+
+					if (tdElements.size() < 10) {
+						Log.d("continue, tdElements.size() = " + tdElements.size());
+						continue;
+					}
+
+					dateString = tdElements.get(1).text();
+					if (TextUtils.isEmpty(dateString)
+							|| dateString.contains(Stock.STATUS_SUSPENSION)) {
+						continue;
+					}
+
+					rzRemainingString = tdElements.get(2).text();
+					if (TextUtils.isEmpty(rzRemainingString)) {
+						continue;
+					}
+
+					rzBuyString = tdElements.get(3).text();
+					if (TextUtils.isEmpty(rzBuyString)) {
+						continue;
+					}
+
+					rzRepayString = tdElements.get(4).text();
+					if (TextUtils.isEmpty(rzRepayString)) {
+						continue;
+					}
+
+					rqRemainingString = tdElements.get(6).text();
+					if (TextUtils.isEmpty(rqRemainingString)) {
+						continue;
+					}
+
+					rqSellString = tdElements.get(7).text();
+					if (TextUtils.isEmpty(rqSellString)) {
+						continue;
+					}
+
+					rqRepayString = tdElements.get(8).text();
+					if (TextUtils.isEmpty(rqRepayString)) {
+						continue;
+					}
+
+					stockRZRQ.setDate(dateString);
+					stockRZRQ.setRZRemaining(Double.parseDouble(rzRemainingString));
+					stockRZRQ.setRZBuy(Double.parseDouble(rzBuyString));
+					stockRZRQ.setRZRepay(Double.parseDouble(rzRepayString));
+					stockRZRQ.setRQRemaining(Double.parseDouble(rqRemainingString));
+					stockRZRQ.setRQSell(Double.parseDouble(rqSellString));
+					stockRZRQ.setRQRepay(Double.parseDouble(rqRepayString));
+
+					if (bulkInsert) {
+						stockRZRQ.setCreated(Utility
+								.getCurrentDateTimeString());
+						stockRZRQ.setModified(Utility
+								.getCurrentDateTimeString());
+						ContentValuesList.add(stockRZRQ.getContentValues());
+						if (ContentValuesList.size() >= Config.MAX_CONTENT_LENGTH_DAY) {
+							break;
+						}
+					} else {
+						if (!mDatabaseManager
+								.isStockRZRQExist(stockRZRQ)) {
+							stockRZRQ.setCreated(Utility
+									.getCurrentDateTimeString());
+							mDatabaseManager.insertStockRZRQ(stockRZRQ);
+						} else {
+							stockRZRQ.setModified(Utility
+									.getCurrentDateTimeString());
+							mDatabaseManager.updateStockRZRQ(stockRZRQ,
+									stockRZRQ.getContentValues());
+						}
+					}
+				}
+			}
+
+			if (bulkInsert) {
+				if (ContentValuesList.size() > 0) {
+					ContentValues[] contentValuesArray = new ContentValues[ContentValuesList
+							.size()];
+					contentValuesArray = ContentValuesList
+							.toArray(contentValuesArray);
+					mDatabaseManager
+							.bulkInsertStockRZRQ(contentValuesArray);
 				}
 			}
 

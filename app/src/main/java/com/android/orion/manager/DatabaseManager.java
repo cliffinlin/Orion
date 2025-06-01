@@ -23,6 +23,7 @@ import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockFinancial;
 import com.android.orion.database.StockPerceptron;
 import com.android.orion.database.StockQuant;
+import com.android.orion.database.StockRZRQ;
 import com.android.orion.database.StockShare;
 import com.android.orion.database.StockTrend;
 import com.android.orion.database.TDXData;
@@ -2737,6 +2738,265 @@ public class DatabaseManager implements StockListener {
 	}
 
 	public String getStockBonusOrder() {
+		return DatabaseContract.COLUMN_DATE + " ASC ";
+	}
+
+	public Uri insertStockRZRQ(StockRZRQ stockRZRQ) {
+		Uri uri = null;
+
+		if ((stockRZRQ == null) || (mContentResolver == null)) {
+			return uri;
+		}
+
+		uri = mContentResolver.insert(DatabaseContract.StockRZRQ.CONTENT_URI,
+				stockRZRQ.getContentValues());
+
+		return uri;
+	}
+
+	public int bulkInsertStockRZRQ(ContentValues[] contentValuesArray) {
+		int result = 0;
+
+		if (contentValuesArray == null) {
+			return result;
+		}
+
+		if ((contentValuesArray.length == 0) || (mContentResolver == null)) {
+			return result;
+		}
+
+		result = mContentResolver.bulkInsert(
+				DatabaseContract.StockRZRQ.CONTENT_URI, contentValuesArray);
+
+		return result;
+	}
+
+	public Cursor queryStockRZRQ(String selection, String[] selectionArgs,
+	                              String sortOrder) {
+		Cursor cursor = null;
+
+		if (mContentResolver == null) {
+			return cursor;
+		}
+
+		cursor = mContentResolver.query(
+				DatabaseContract.StockRZRQ.CONTENT_URI,
+				DatabaseContract.StockRZRQ.PROJECTION_ALL, selection,
+				selectionArgs, sortOrder);
+
+		return cursor;
+	}
+
+	public Cursor queryStockRZRQ(StockRZRQ stockRZRQ) {
+		Cursor cursor = null;
+
+		if ((stockRZRQ == null) || (mContentResolver == null)) {
+			return cursor;
+		}
+
+		String selection = getStockRZRQSelection(stockRZRQ);
+		String sortOrder = getStockRZRQOrder();
+
+		cursor = mContentResolver.query(
+				DatabaseContract.StockRZRQ.CONTENT_URI,
+				DatabaseContract.StockRZRQ.PROJECTION_ALL, selection, null,
+				sortOrder);
+
+		return cursor;
+	}
+
+	public void getStockRZRQ(StockRZRQ stockRZRQ) {
+		Cursor cursor = null;
+
+		if ((stockRZRQ == null) || (mContentResolver == null)) {
+			return;
+		}
+
+		try {
+			String selection = getStockRZRQSelection(stockRZRQ);
+			String sortOrder = getStockRZRQOrder();
+
+			cursor = mContentResolver.query(
+					DatabaseContract.StockRZRQ.CONTENT_URI,
+					DatabaseContract.StockRZRQ.PROJECTION_ALL, selection,
+					null, sortOrder);
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				cursor.moveToNext();
+				stockRZRQ.set(cursor);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
+	public void getStockRZRQ(Stock stock, StockRZRQ stockRZRQ) {
+		Cursor cursor = null;
+
+		if ((stockRZRQ == null) || (mContentResolver == null)) {
+			return;
+		}
+
+		try {
+			String selection = getStockSelection(stock);
+			String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
+
+			cursor = mContentResolver.query(
+					DatabaseContract.StockRZRQ.CONTENT_URI,
+					DatabaseContract.StockRZRQ.PROJECTION_ALL, selection,
+					null, sortOrder);
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				cursor.moveToNext();
+				stockRZRQ.set(cursor);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
+	public void getStockRZRQList(Stock stock,
+	                              ArrayList<StockRZRQ> stockRZRQList, String sortOrder) {
+		Cursor cursor = null;
+
+		if ((stock == null) || (stockRZRQList == null)) {
+			return;
+		}
+
+		stockRZRQList.clear();
+		String selection = getStockSelection(stock);
+
+		try {
+			cursor = queryStockRZRQ(selection, null, sortOrder);
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				while (cursor.moveToNext()) {
+					StockRZRQ stockRZRQ = new StockRZRQ();
+					stockRZRQ.set(cursor);
+					stockRZRQList.add(stockRZRQ);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
+	public boolean isStockRZRQExist(StockRZRQ stockRZRQ) {
+		boolean result = false;
+		Cursor cursor = null;
+
+		if (stockRZRQ == null) {
+			return result;
+		}
+
+		try {
+			cursor = queryStockRZRQ(stockRZRQ);
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				cursor.moveToNext();
+				result = true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+
+		return result;
+	}
+
+	public int updateStockRZRQ(StockRZRQ stockRZRQ,
+	                            ContentValues contentValues) {
+		int result = 0;
+
+		if ((stockRZRQ == null) || (mContentResolver == null)) {
+			return result;
+		}
+
+		String where = getStockRZRQSelection(stockRZRQ);
+
+		result = mContentResolver.update(
+				DatabaseContract.StockRZRQ.CONTENT_URI, contentValues, where,
+				null);
+
+		return result;
+	}
+
+	public int deleteStockRZRQ() {
+		return delete(DatabaseContract.StockRZRQ.CONTENT_URI);
+	}
+
+	public int deleteStockRZRQ(StockRZRQ stockRZRQ) {
+		int result = 0;
+
+		if ((stockRZRQ == null) || (mContentResolver == null)) {
+			return result;
+		}
+
+		String where = getStockRZRQSelection(stockRZRQ);
+
+		result = mContentResolver.delete(
+				DatabaseContract.StockRZRQ.CONTENT_URI, where, null);
+
+		return result;
+	}
+
+	public int deleteStockRZRQ(Stock stock) {
+		int result = 0;
+		String where = getStockSelection(stock);
+
+		try {
+			result = delete(DatabaseContract.StockRZRQ.CONTENT_URI, where);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+
+	public int deleteStockRZRQ(StockRZRQ stockRZRQ, String date) {
+		int result = 0;
+
+		if (mContentResolver == null) {
+			return result;
+		}
+
+		String where = getStockRZRQSelection(stockRZRQ, date);
+
+		result = mContentResolver.delete(
+				DatabaseContract.StockRZRQ.CONTENT_URI, where, null);
+
+		return result;
+	}
+
+	public String getStockRZRQSelection(StockRZRQ stockRZRQ) {
+		String selection = "";
+
+		if (stockRZRQ == null) {
+			return selection;
+		}
+
+		selection = getStockRZRQSelection(stockRZRQ, stockRZRQ.getDate());
+
+		return selection;
+	}
+
+	public String getStockSelection(StockRZRQ stockRZRQ) {
+		if (stockRZRQ == null) {
+			return null;
+		}
+		return DatabaseContract.COLUMN_SE + " = " + "'" + stockRZRQ.getSE() + "'"
+				+ " AND " + DatabaseContract.COLUMN_CODE + " = " + "'" + stockRZRQ.getCode() + "'";
+	}
+
+	public String getStockRZRQSelection(StockRZRQ stockRZRQ, String date) {
+		return getStockSelection(stockRZRQ)
+				+ " AND " + DatabaseContract.COLUMN_DATE + " = '" + date + "'";
+	}
+
+	public String getStockRZRQOrder() {
 		return DatabaseContract.COLUMN_DATE + " ASC ";
 	}
 
