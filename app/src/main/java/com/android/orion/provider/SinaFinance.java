@@ -1794,42 +1794,48 @@ public class SinaFinance extends StockDataProvider {
 					}
 
 					rzValueString = tdElements.get(2).text();
-					if (TextUtils.isEmpty(rzValueString)) {
+					if (TextUtils.isEmpty(rzValueString)
+							|| dateString.contains(Stock.STATUS_SUSPENSION)) {
 						continue;
 					}
-
-					rzBuyString = tdElements.get(3).text();
-					if (TextUtils.isEmpty(rzBuyString)) {
-						continue;
-					}
-
-					rzRepayString = tdElements.get(4).text();
-					if (TextUtils.isEmpty(rzRepayString)) {
-						continue;
-					}
-
-					rqValueString = tdElements.get(6).text();
-					if (TextUtils.isEmpty(rqValueString)) {
-						continue;
-					}
-
-					rqSellString = tdElements.get(7).text();
-					if (TextUtils.isEmpty(rqSellString)) {
-						continue;
-					}
-
-					rqRepayString = tdElements.get(8).text();
-					if (TextUtils.isEmpty(rqRepayString)) {
-						continue;
-					}
+//
+//					rzBuyString = tdElements.get(3).text();
+//					if (TextUtils.isEmpty(rzBuyString)
+//							|| dateString.contains(Stock.STATUS_SUSPENSION)) {
+//						continue;
+//					}
+//
+//					rzRepayString = tdElements.get(4).text();
+//					if (TextUtils.isEmpty(rzRepayString)
+//							|| dateString.contains(Stock.STATUS_SUSPENSION)) {
+//						continue;
+//					}
+//
+//					rqValueString = tdElements.get(6).text();
+//					if (TextUtils.isEmpty(rqValueString)
+//							|| dateString.contains(Stock.STATUS_SUSPENSION)) {
+//						continue;
+//					}
+//
+//					rqSellString = tdElements.get(7).text();
+//					if (TextUtils.isEmpty(rqSellString)
+//							|| dateString.contains(Stock.STATUS_SUSPENSION)) {
+//						continue;
+//					}
+//
+//					rqRepayString = tdElements.get(8).text();
+//					if (TextUtils.isEmpty(rqRepayString)
+//							|| dateString.contains(Stock.STATUS_SUSPENSION)) {
+//						continue;
+//					}
 
 					stockRZRQ.setDate(dateString);
 					stockRZRQ.setRZValue(Double.parseDouble(rzValueString));
-					stockRZRQ.setRZBuy(Double.parseDouble(rzBuyString));
-					stockRZRQ.setRZRepay(Double.parseDouble(rzRepayString));
-					stockRZRQ.setRQValue(Double.parseDouble(rqValueString));
-					stockRZRQ.setRQSell(Double.parseDouble(rqSellString));
-					stockRZRQ.setRQRepay(Double.parseDouble(rqRepayString));
+//					stockRZRQ.setRZBuy(Double.parseDouble(rzBuyString));
+//					stockRZRQ.setRZRepay(Double.parseDouble(rzRepayString));
+//					stockRZRQ.setRQValue(Double.parseDouble(rqValueString));
+//					stockRZRQ.setRQSell(Double.parseDouble(rqSellString));
+//					stockRZRQ.setRQRepay(Double.parseDouble(rqRepayString));
 
 					if (bulkInsert) {
 						stockRZRQ.setCreated(Utility
@@ -1837,9 +1843,6 @@ public class SinaFinance extends StockDataProvider {
 						stockRZRQ.setModified(Utility
 								.getCurrentDateTimeString());
 						ContentValuesList.add(stockRZRQ.getContentValues());
-						if (ContentValuesList.size() >= Config.MAX_CONTENT_LENGTH_DAY) {
-							break;
-						}
 					} else {
 						if (!mDatabaseManager
 								.isStockRZRQExist(stockRZRQ)) {

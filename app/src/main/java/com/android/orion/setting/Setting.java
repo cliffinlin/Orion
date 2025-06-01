@@ -56,6 +56,12 @@ public class Setting {
 	public static final String SETTING_DISPLAY_CANDLE = "SETTING_DISPLAY_CANDLE";
 	public static final boolean SETTING_DISPLAY_CANDLE_DEFAULT = false;
 
+	public static final String SETTING_DISPLAY_RZ_VALUE = "SETTING_DISPLAY_RZ_VALUE";
+	public static final boolean SETTING_DISPLAY_RZ_VALUE_DEFAULT = true;
+
+	public static final String SETTING_DISPLAY_RQ_VALUE = "SETTING_DISPLAY_RQ_VALUE";
+	public static final boolean SETTING_DISPLAY_RQ_VALUE_DEFAULT = false;
+
 	public static final String SETTING_DISPLAY_AVERAGE = "SETTING_DISPLAY_AVERAGE";
 	public static final boolean SETTING_DISPLAY_AVERAGE_DEFAULT = false;
 
@@ -161,6 +167,22 @@ public class Setting {
 
 	public static void setDisplayCandle(boolean value) {
 		Preferences.putBoolean(SETTING_DISPLAY_CANDLE, value);
+	}
+
+	public static boolean getDisplayRZValue() {
+		return Preferences.getBoolean(SETTING_DISPLAY_RZ_VALUE, SETTING_DISPLAY_RZ_VALUE_DEFAULT);
+	}
+
+	public static void setDisplayRZValue(boolean value) {
+		Preferences.putBoolean(SETTING_DISPLAY_RZ_VALUE, value);
+	}
+
+	public static boolean getDisplayRQValue() {
+		return Preferences.getBoolean(SETTING_DISPLAY_RQ_VALUE, SETTING_DISPLAY_RQ_VALUE_DEFAULT);
+	}
+
+	public static void setDisplayRQValue(boolean value) {
+		Preferences.putBoolean(SETTING_DISPLAY_RQ_VALUE, value);
 	}
 
 	public static boolean getDisplayAverage() {

@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.text.TextUtils;
+import android.util.ArrayMap;
 import android.widget.Toast;
 
 import com.android.orion.R;
@@ -22,6 +23,7 @@ import com.android.orion.database.Stock;
 import com.android.orion.database.StockBonus;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockDeal;
+import com.android.orion.database.StockRZRQ;
 import com.android.orion.database.StockTrend;
 import com.android.orion.manager.DatabaseManager;
 import com.android.orion.provider.StockPerceptronProvider;
@@ -40,6 +42,7 @@ import java.util.List;
 public class StockAnalyzer {
 	Stock mStock;
 	ArrayList<StockData> mStockDataList;
+	ArrayMap<String, StockRZRQ> mStockRZRQMap = new ArrayMap<>();
 	ArrayList<StockBonus> mStockBonusList = new ArrayList<>();
 	StringBuffer mContentTitle = new StringBuffer();
 	StringBuffer mContentText = new StringBuffer();
@@ -193,6 +196,23 @@ public class StockAnalyzer {
 	private void analyzeAction(String period) {
 		if (mStock == null || mStockDataList == null || mStockDataList.isEmpty()) {
 			return;
+		}
+
+		String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
+		mDatabaseManager.getStockRZRQMap(mStock, mStockRZRQMap, sortOrder);
+		StockRZRQ prevStockRZRQ = null;
+		for (StockData stockData : mStockDataList) {
+			StockRZRQ stockRZRQ = mStockRZRQMap.get(stockData.getDate());
+			if (stockRZRQ != null) {
+				stockData.setRZValue(stockRZRQ.getRZValue());
+				stockData.setRQValue(stockRZRQ.getRQValue());
+				prevStockRZRQ = stockRZRQ;
+			} else {
+				if (prevStockRZRQ != null) {
+					stockData.setRZValue(prevStockRZRQ.getRZValue());
+					stockData.setRQValue(prevStockRZRQ.getRQValue());
+				}
+			}
 		}
 
 		StringBuilder actionBuilder = new StringBuilder();

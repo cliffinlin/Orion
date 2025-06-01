@@ -2884,6 +2884,33 @@ public class DatabaseManager implements StockListener {
 		}
 	}
 
+	public void getStockRZRQMap(Stock stock,
+	                             ArrayMap<String, StockRZRQ> stockRZRQMap, String sortOrder) {
+		Cursor cursor = null;
+
+		if ((stock == null) || (stockRZRQMap == null)) {
+			return;
+		}
+
+		stockRZRQMap.clear();
+		String selection = getStockSelection(stock);
+
+		try {
+			cursor = queryStockRZRQ(selection, null, sortOrder);
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				while (cursor.moveToNext()) {
+					StockRZRQ stockRZRQ = new StockRZRQ();
+					stockRZRQ.set(cursor);
+					stockRZRQMap.put(stockRZRQ.getDate(), stockRZRQ);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
 	public boolean isStockRZRQExist(StockRZRQ stockRZRQ) {
 		boolean result = false;
 		Cursor cursor = null;

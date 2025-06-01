@@ -5,6 +5,7 @@ import android.graphics.Paint;
 import android.util.ArrayMap;
 
 import com.android.orion.config.Config;
+import com.android.orion.data.Period;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockQuant;
@@ -38,6 +39,8 @@ public class StockDataChart {
 	public StringBuffer mDescription = new StringBuffer();
 	public ArrayList<String> mXValues = new ArrayList<>();
 	public ArrayList<CandleEntry> mCandleEntryList = new ArrayList<>();
+	public ArrayList<Entry> mRZValueEntryList = new ArrayList<>();
+	public ArrayList<Entry> mRQValueEntryList = new ArrayList<>();
 	public ArrayList<Entry> mAverage5EntryList = new ArrayList<>();
 	public ArrayList<Entry> mAverage10EntryList = new ArrayList<>();
 	public ArrayList<LimitLine> mLimitLineList = new ArrayList<>();
@@ -111,6 +114,24 @@ public class StockDataChart {
 		}
 
 		LineData lineData = new LineData(mXValues);
+
+		if (Setting.getDisplayRZValue()) {
+			LineDataSet lineDataSetRZValue = new LineDataSet(mRZValueEntryList,
+					"RZ");
+			lineDataSetRZValue.setColor(dataSetColor(Color.RED));
+			lineDataSetRZValue.setDrawCircles(false);
+			lineDataSetRZValue.setAxisDependency(AxisDependency.RIGHT);
+			lineData.addDataSet(lineDataSetRZValue);
+		}
+
+		if (Setting.getDisplayRQValue()) {
+			LineDataSet lineDataSetRQValue = new LineDataSet(mRQValueEntryList,
+					"RQ");
+			lineDataSetRQValue.setColor(dataSetColor(Color.GREEN));
+			lineDataSetRQValue.setDrawCircles(false);
+			lineDataSetRQValue.setAxisDependency(AxisDependency.RIGHT);
+			lineData.addDataSet(lineDataSetRQValue);
+		}
 
 		if (Setting.getDisplayAverage()) {
 			LineDataSet lineDataSet5 = new LineDataSet(mAverage5EntryList,
@@ -541,6 +562,8 @@ public class StockDataChart {
 	public void clear() {
 		mXValues.clear();
 		mCandleEntryList.clear();
+		mRZValueEntryList.clear();
+		mRQValueEntryList.clear();
 		mAverage5EntryList.clear();
 		mAverage10EntryList.clear();
 		mDIFEntryList.clear();
