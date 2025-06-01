@@ -8,6 +8,7 @@ import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockBonus;
 import com.android.orion.database.StockFinancial;
+import com.android.orion.database.StockRZRQ;
 import com.android.orion.database.StockShare;
 import com.android.orion.manager.DatabaseManager;
 import com.android.orion.setting.Constant;
@@ -199,6 +200,7 @@ public class FinancialAnalyzer {
 
 		String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
 		StockFinancial stockFinancial = new StockFinancial();
+		StockRZRQ stockRZRQ = new StockRZRQ();
 
 		if (TextUtils.equals(stock.getClasses(), Stock.CLASS_INDEX)) {
 			return;
@@ -208,15 +210,23 @@ public class FinancialAnalyzer {
 		stockFinancial.setCode(stock.getCode());
 		stockFinancial.setName(stock.getName());
 
+		stockRZRQ.setSE(stock.getSE());
+		stockRZRQ.setCode(stock.getCode());
+		stockRZRQ.setName(stock.getName());
+
 		mDatabaseManager.getStockFinancial(stock, stockFinancial);
 		mDatabaseManager.getStockFinancialList(stock, mStockFinancialList,
 				sortOrder);
+		mDatabaseManager.getStockRZRQ(stock, stockRZRQ);
 		mDatabaseManager.updateStockDeal(stock);
 
 		stock.setBookValuePerShare(stockFinancial.getBookValuePerShare());
 		stock.setMainBusinessIncome(stockFinancial.getMainBusinessIncome());
 		stock.setNetProfit(stockFinancial.getNetProfit());
 		stock.setCashFlowPerShare(stockFinancial.getCashFlowPerShare());
+
+		stock.setRZValue(stockRZRQ.getRZValue());
+		stock.setRQValue(stockRZRQ.getRQValue());
 
 		stock.setupMarketValue();
 		stock.setupNetProfitPerShare();

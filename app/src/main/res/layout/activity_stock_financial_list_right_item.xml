@@ -126,6 +126,22 @@
         android:textSize="18sp" />
 
     <TextView
+        android:id="@+id/rz_value"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/rq_value"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="18sp" />
+
+    <TextView
         android:id="@+id/main_business_income"
         android:layout_width="80dp"
         android:layout_height="50dp"

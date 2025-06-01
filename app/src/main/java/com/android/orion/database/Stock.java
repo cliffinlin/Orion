@@ -78,6 +78,8 @@ public class Stock extends DatabaseTable {
 	private double mCashFlowPerShare;
 	private double mNetProfitPerShare;
 	private double mNetProfitPerShareInYear;
+	private double mRZValue;
+	private double mRQValue;
 	private double mRate;
 	private double mDividend;
 	private double mYield;
@@ -148,6 +150,8 @@ public class Stock extends DatabaseTable {
 		mCashFlowPerShare = 0;
 		mNetProfitPerShare = 0;
 		mNetProfitPerShareInYear = 0;
+		mRZValue = 0;
+		mRQValue = 0;
 		mRate = 0;
 		mDividend = 0;
 		mYield = 0;
@@ -214,6 +218,8 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_CASH_FLOW_PER_SHARE, mCashFlowPerShare);
 		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE, mNetProfitPerShare);
 		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE_IN_YEAR, mNetProfitPerShareInYear);
+		contentValues.put(DatabaseContract.COLUMN_RZ_VALUE, mRZValue);
+		contentValues.put(DatabaseContract.COLUMN_RQ_VALUE, mRQValue);
 
 		contentValues.put(DatabaseContract.COLUMN_RATE, mRate);
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND, mDividend);
@@ -324,6 +330,8 @@ public class Stock extends DatabaseTable {
 		setCashFlowPerShare(stock.mCashFlowPerShare);
 		setNetProfitPerShare(stock.mNetProfitPerShare);
 		setNetProfitPerShareInYear(stock.mNetProfitPerShareInYear);
+		setRZValue(stock.mRZValue);
+		setRQValue(stock.mRQValue);
 		setRate(stock.mRate);
 		setDividend(stock.mDividend);
 		setYield(stock.mYield);
@@ -395,6 +403,9 @@ public class Stock extends DatabaseTable {
 		setCashFlowPerShare(cursor);
 		setNetProfitPerShare(cursor);
 		setNetProfitPerShareInYear(cursor);
+		setRZValue(cursor);
+		setRQValue(cursor);
+
 		setRate(cursor);
 		setDividend(cursor);
 		setYield(cursor);
@@ -921,6 +932,40 @@ public class Stock extends DatabaseTable {
 		setNetProfitPerShareInYear(cursor
 				.getDouble(cursor
 						.getColumnIndex(DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE_IN_YEAR)));
+	}
+
+	public double getRZValue() {
+		return mRZValue;
+	}
+
+	public void setRZValue(double rzValue) {
+		mRZValue = rzValue;
+	}
+
+	void setRZValue(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setRZValue(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_RZ_VALUE)));
+	}
+
+	public double getRQValue() {
+		return mRQValue;
+	}
+
+	public void setRQValue(double rqValue) {
+		mRQValue = rqValue;
+	}
+
+	void setRQValue(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setRQValue(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_RQ_VALUE)));
 	}
 
 	public double getRate() {

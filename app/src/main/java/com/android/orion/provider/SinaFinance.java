@@ -1718,10 +1718,10 @@ public class SinaFinance extends StockDataProvider {
 		StopWatch.start();
 		boolean bulkInsert = false;
 		String dateString = "";
-		String rzRemainingString = "";
+		String rzValueString = "";
 		String rzBuyString = "";
 		String rzRepayString = "";
-		String rqRemainingString = "";
+		String rqValueString = "";
 		String rqSellString = "";
 		String rqRepayString = "";
 		ContentValuesList.clear();
@@ -1793,8 +1793,8 @@ public class SinaFinance extends StockDataProvider {
 						continue;
 					}
 
-					rzRemainingString = tdElements.get(2).text();
-					if (TextUtils.isEmpty(rzRemainingString)) {
+					rzValueString = tdElements.get(2).text();
+					if (TextUtils.isEmpty(rzValueString)) {
 						continue;
 					}
 
@@ -1808,8 +1808,8 @@ public class SinaFinance extends StockDataProvider {
 						continue;
 					}
 
-					rqRemainingString = tdElements.get(6).text();
-					if (TextUtils.isEmpty(rqRemainingString)) {
+					rqValueString = tdElements.get(6).text();
+					if (TextUtils.isEmpty(rqValueString)) {
 						continue;
 					}
 
@@ -1824,10 +1824,10 @@ public class SinaFinance extends StockDataProvider {
 					}
 
 					stockRZRQ.setDate(dateString);
-					stockRZRQ.setRZRemaining(Double.parseDouble(rzRemainingString));
+					stockRZRQ.setRZValue(Double.parseDouble(rzValueString));
 					stockRZRQ.setRZBuy(Double.parseDouble(rzBuyString));
 					stockRZRQ.setRZRepay(Double.parseDouble(rzRepayString));
-					stockRZRQ.setRQRemaining(Double.parseDouble(rqRemainingString));
+					stockRZRQ.setRQValue(Double.parseDouble(rqValueString));
 					stockRZRQ.setRQSell(Double.parseDouble(rqSellString));
 					stockRZRQ.setRQRepay(Double.parseDouble(rqRepayString));
 

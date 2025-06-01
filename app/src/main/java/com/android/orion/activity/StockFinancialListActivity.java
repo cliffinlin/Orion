@@ -63,6 +63,8 @@ public class StockFinancialListActivity extends ListActivity implements
 	TextView mTextViewValuation = null;
 	TextView mTextViewShare = null;
 	TextView mTextViewMarketValue = null;
+	TextView mTextViewRZValue = null;
+	TextView mTextViewRQValue = null;
 	TextView mTextViewMainBusinessIncome = null;
 	TextView mTextViewMainBusinessIncomeInYear = null;
 	TextView mTextViewNetProfit = null;
@@ -215,6 +217,12 @@ public class StockFinancialListActivity extends ListActivity implements
 			case R.id.market_value:
 				mSortOrderColumn = DatabaseContract.COLUMN_MARKET_VALUE;
 				break;
+			case R.id.rz_value:
+				mSortOrderColumn = DatabaseContract.COLUMN_RZ_VALUE;
+				break;
+			case R.id.rq_value:
+				mSortOrderColumn = DatabaseContract.COLUMN_RQ_VALUE;
+				break;
 			case R.id.main_business_income:
 				mSortOrderColumn = DatabaseContract.COLUMN_MAIN_BUSINESS_INCOME;
 				break;
@@ -304,6 +312,8 @@ public class StockFinancialListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewValuation, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewShare, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewMarketValue, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewRZValue, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewRQValue, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewMainBusinessIncome, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewMainBusinessIncomeInYear, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewNetProfit, mHeaderTextDefaultColor);
@@ -409,6 +419,16 @@ public class StockFinancialListActivity extends ListActivity implements
 		mTextViewMarketValue = findViewById(R.id.market_value);
 		if (mTextViewMarketValue != null) {
 			mTextViewMarketValue.setOnClickListener(this);
+		}
+
+		mTextViewRZValue = findViewById(R.id.rz_value);
+		if (mTextViewRZValue != null) {
+			mTextViewRZValue.setOnClickListener(this);
+		}
+
+		mTextViewRQValue = findViewById(R.id.rq_value);
+		if (mTextViewRQValue != null) {
+			mTextViewRQValue.setOnClickListener(this);
 		}
 
 		mTextViewMainBusinessIncome = findViewById(R.id.main_business_income);
@@ -518,6 +538,10 @@ public class StockFinancialListActivity extends ListActivity implements
 			setHeaderTextColor(mTextViewShare, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MARKET_VALUE)) {
 			setHeaderTextColor(mTextViewMarketValue, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_RZ_VALUE)) {
+			setHeaderTextColor(mTextViewRZValue, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_RQ_VALUE)) {
+			setHeaderTextColor(mTextViewRQValue, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MAIN_BUSINESS_INCOME)) {
 			setHeaderTextColor(mTextViewMainBusinessIncome, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MAIN_BUSINESS_INCOME_IN_YEAR)) {
@@ -583,6 +607,8 @@ public class StockFinancialListActivity extends ListActivity implements
 				DatabaseContract.COLUMN_VALUATION,
 				DatabaseContract.COLUMN_SHARE,
 				DatabaseContract.COLUMN_MARKET_VALUE,
+				DatabaseContract.COLUMN_RZ_VALUE,
+				DatabaseContract.COLUMN_RQ_VALUE,
 				DatabaseContract.COLUMN_MAIN_BUSINESS_INCOME,
 				DatabaseContract.COLUMN_MAIN_BUSINESS_INCOME_IN_YEAR,
 				DatabaseContract.COLUMN_NET_PROFIT,
@@ -614,6 +640,8 @@ public class StockFinancialListActivity extends ListActivity implements
 				R.id.valuation,
 				R.id.share,
 				R.id.market_value,
+				R.id.rz_value,
+				R.id.rq_value,
 				R.id.main_business_income,
 				R.id.main_business_income_in_year,
 				R.id.net_profit,

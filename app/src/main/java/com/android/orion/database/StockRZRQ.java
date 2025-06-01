@@ -9,10 +9,10 @@ public class StockRZRQ extends DatabaseTable {
 	protected String mCode;
 	protected String mName;
 	private String mDate;
-	private double mRZRemaining;
+	private double mRZValue;
 	private double mRZBuy;
 	private double mRZRepay;
-	private double mRQRemaining;
+	private double mRQValue;
 	private double mRQSell;
 	private double mRQRepay;
 
@@ -37,10 +37,10 @@ public class StockRZRQ extends DatabaseTable {
 		mCode = "";
 		mName = "";
 		mDate = "";
-		mRZRemaining = 0;
+		mRZValue = 0;
 		mRZBuy = 0;
 		mRZRepay = 0;
-		mRQRemaining = 0;
+		mRQValue = 0;
 		mRQSell = 0;
 		mRQRepay = 0;
 	}
@@ -53,10 +53,10 @@ public class StockRZRQ extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
 		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);
-		contentValues.put(DatabaseContract.COLUMN_RZ_REMAINING, mRZRemaining);
+		contentValues.put(DatabaseContract.COLUMN_RZ_VALUE, mRZValue);
 		contentValues.put(DatabaseContract.COLUMN_RZ_BUY, mRZBuy);
 		contentValues.put(DatabaseContract.COLUMN_RZ_REPAY, mRZRepay);
-		contentValues.put(DatabaseContract.COLUMN_RQ_REMAINING, mRQRemaining);
+		contentValues.put(DatabaseContract.COLUMN_RQ_VALUE, mRQValue);
 		contentValues.put(DatabaseContract.COLUMN_RQ_SELL, mRQSell);
 		contentValues.put(DatabaseContract.COLUMN_RQ_REPAY, mRQRepay);
 		return contentValues;
@@ -75,10 +75,10 @@ public class StockRZRQ extends DatabaseTable {
 		setCode(stockRZRQ.mCode);
 		setName(stockRZRQ.mName);
 		setDate(stockRZRQ.mDate);
-		setRZRemaining(stockRZRQ.mRZRemaining);
+		setRZValue(stockRZRQ.mRZValue);
 		setRZBuy(stockRZRQ.mRZBuy);
 		setRZRepay(stockRZRQ.mRZRepay);
-		setRQRemaining(stockRZRQ.mRQRemaining);
+		setRQValue(stockRZRQ.mRQValue);
 		setRQSell(stockRZRQ.mRQSell);
 		setRQRepay(stockRZRQ.mRQRepay);
 	}
@@ -97,10 +97,10 @@ public class StockRZRQ extends DatabaseTable {
 		setCode(cursor);
 		setName(cursor);
 		setDate(cursor);
-		setRZRemaining(cursor);
+		setRZValue(cursor);
 		setRZBuy(cursor);
 		setRZRepay(cursor);
-		setRQRemaining(cursor);
+		setRQValue(cursor);
 		setRQSell(cursor);
 		setRQRepay(cursor);
 	}
@@ -173,21 +173,21 @@ public class StockRZRQ extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_DATE)));
 	}
 
-	public double getRZRemaining() {
-		return mRZRemaining;
+	public double getRZValue() {
+		return mRZValue;
 	}
 
-	public void setRZRemaining(double rzRemaining) {
-		mRZRemaining = rzRemaining;
+	public void setRZValue(double rzValue) {
+		mRZValue = rzValue;
 	}
 
-	void setRZRemaining(Cursor cursor) {
+	void setRZValue(Cursor cursor) {
 		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
-		setRZRemaining(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_RZ_REMAINING)));
+		setRZValue(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_RZ_VALUE)));
 	}
 	public double getRZBuy() {
 		return mRZBuy;
@@ -222,21 +222,21 @@ public class StockRZRQ extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_RZ_REPAY)));
 	}
 
-	public double getRQRemaining() {
-		return mRQRemaining;
+	public double getRQValue() {
+		return mRQValue;
 	}
 
-	public void setRQRemaining(double rqRemaining) {
-		mRQRemaining = rqRemaining;
+	public void setRQValue(double rqValue) {
+		mRQValue = rqValue;
 	}
 
-	void setRQRemaining(Cursor cursor) {
+	void setRQValue(Cursor cursor) {
 		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
-		setRQRemaining(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_RQ_REMAINING)));
+		setRQValue(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_RQ_VALUE)));
 	}
 
 	public double getRQSell() {
