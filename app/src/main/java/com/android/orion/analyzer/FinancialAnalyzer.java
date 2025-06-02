@@ -226,7 +226,8 @@ public class FinancialAnalyzer {
 		stock.setCashFlowPerShare(stockFinancial.getCashFlowPerShare());
 
 		stock.setRZValue(stockRZRQ.getRZValue());
-		stock.setRQValue(stockRZRQ.getRQValue());
+		stock.setRZBuy(stockRZRQ.getRZBuy());
+		stock.setupRZRate();
 
 		stock.setupMarketValue();
 		stock.setupNetProfitPerShare();

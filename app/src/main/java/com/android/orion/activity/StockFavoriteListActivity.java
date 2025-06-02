@@ -58,6 +58,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 	TextView mTextViewMin15 = null;
 	TextView mTextViewMin5 = null;
 	TextView mTextViewFlag = null;
+	TextView mTextViewRZRate = null;
 	TextView mTextViewModified = null;
 
 	ListView mLeftListView = null;
@@ -191,6 +192,9 @@ public class StockFavoriteListActivity extends ListActivity implements
 			case R.id.flag:
 				mSortOrderColumn = DatabaseContract.COLUMN_FLAG;
 				break;
+			case R.id.rz_rate:
+				mSortOrderColumn = DatabaseContract.COLUMN_RZ_RATE;
+				break;
 			case R.id.modified:
 				mSortOrderColumn = DatabaseContract.COLUMN_MODIFIED;
 				break;
@@ -235,6 +239,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewMin15, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewMin5, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewFlag, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewRZRate, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewModified, mHeaderTextDefaultColor);
 	}
 
@@ -310,6 +315,11 @@ public class StockFavoriteListActivity extends ListActivity implements
 			mTextViewFlag.setOnClickListener(this);
 		}
 
+		mTextViewRZRate = findViewById(R.id.rz_rate);
+		if (mTextViewRZRate != null) {
+			mTextViewRZRate.setOnClickListener(this);
+		}
+
 		mTextViewModified = findViewById(R.id.modified);
 		if (mTextViewModified != null) {
 			mTextViewModified.setOnClickListener(this);
@@ -337,6 +347,8 @@ public class StockFavoriteListActivity extends ListActivity implements
 			setHeaderTextColor(mTextViewMin5, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_FLAG)) {
 			setHeaderTextColor(mTextViewFlag, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_RZ_RATE)) {
+			setHeaderTextColor(mTextViewRZRate, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MODIFIED)) {
 			setHeaderTextColor(mTextViewModified, mHeaderTextHighlightColor);
 		} else {
@@ -359,6 +371,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 				DatabaseContract.COLUMN_MIN15,
 				DatabaseContract.COLUMN_MIN5,
 				DatabaseContract.COLUMN_FLAG,
+				DatabaseContract.COLUMN_RZ_RATE,
 				DatabaseContract.COLUMN_MODIFIED};
 		int[] mRightTo = new int[]{
 				R.id.price,
@@ -371,6 +384,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 				R.id.min15,
 				R.id.min5,
 				R.id.flag,
+				R.id.rz_rate,
 				R.id.modified};
 
 		mLeftListView = findViewById(R.id.left_listview);

@@ -48,7 +48,7 @@ public class Stock extends DatabaseTable {
 	private double mChange;
 	private double mNet;
 	private long mVolume;
-	private long mValue;
+	private double mValue;
 
 	private int mFlag;
 	
@@ -68,6 +68,9 @@ public class Stock extends DatabaseTable {
 	private double mCost;
 	private double mShare;
 	private double mMarketValue;
+	private double mRZValue;
+	private double mRZBuy;
+	private double mRZRate;
 	private double mMainBusinessIncome;
 	private double mNetProfit;
 	private double mNetProfitInYear;
@@ -78,8 +81,6 @@ public class Stock extends DatabaseTable {
 	private double mCashFlowPerShare;
 	private double mNetProfitPerShare;
 	private double mNetProfitPerShareInYear;
-	private double mRZValue;
-	private double mRQValue;
 	private double mRate;
 	private double mDividend;
 	private double mYield;
@@ -140,6 +141,9 @@ public class Stock extends DatabaseTable {
 		mCost = 0;
 		mShare = 0;
 		mMarketValue = 0;
+		mRZValue = 0;
+		mRZBuy = 0;
+		mRZRate = 0;
 		mMainBusinessIncome = 0;
 		mMainBusinessIncomeInYear = 0;
 		mNetProfit = 0;
@@ -150,8 +154,6 @@ public class Stock extends DatabaseTable {
 		mCashFlowPerShare = 0;
 		mNetProfitPerShare = 0;
 		mNetProfitPerShareInYear = 0;
-		mRZValue = 0;
-		mRQValue = 0;
 		mRate = 0;
 		mDividend = 0;
 		mYield = 0;
@@ -208,6 +210,9 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_COST, mCost);
 		contentValues.put(DatabaseContract.COLUMN_SHARE, mShare);
 		contentValues.put(DatabaseContract.COLUMN_MARKET_VALUE, mMarketValue);
+		contentValues.put(DatabaseContract.COLUMN_RZ_VALUE, mRZValue);
+		contentValues.put(DatabaseContract.COLUMN_RZ_BUY, mRZBuy);
+		contentValues.put(DatabaseContract.COLUMN_RZ_RATE, mRZRate);
 		contentValues.put(DatabaseContract.COLUMN_MAIN_BUSINESS_INCOME, mMainBusinessIncome);
 		contentValues.put(DatabaseContract.COLUMN_MAIN_BUSINESS_INCOME_IN_YEAR, mMainBusinessIncomeInYear);
 		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT, mNetProfit);
@@ -218,8 +223,6 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_CASH_FLOW_PER_SHARE, mCashFlowPerShare);
 		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE, mNetProfitPerShare);
 		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE_IN_YEAR, mNetProfitPerShareInYear);
-		contentValues.put(DatabaseContract.COLUMN_RZ_VALUE, mRZValue);
-		contentValues.put(DatabaseContract.COLUMN_RQ_VALUE, mRQValue);
 
 		contentValues.put(DatabaseContract.COLUMN_RATE, mRate);
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND, mDividend);
@@ -320,6 +323,9 @@ public class Stock extends DatabaseTable {
 		setCost(stock.mCost);
 		setShare(stock.mShare);
 		setMarketValue(stock.mMarketValue);
+		setRZValue(stock.mRZValue);
+		setRZBuy(stock.mRZBuy);
+		setRZRate(stock.mRZRate);
 		setMainBusinessIncome(stock.mMainBusinessIncome);
 		setMainBusinessIncomeInYear(stock.mMainBusinessIncomeInYear);
 		setNetProfit(stock.mNetProfit);
@@ -330,8 +336,6 @@ public class Stock extends DatabaseTable {
 		setCashFlowPerShare(stock.mCashFlowPerShare);
 		setNetProfitPerShare(stock.mNetProfitPerShare);
 		setNetProfitPerShareInYear(stock.mNetProfitPerShareInYear);
-		setRZValue(stock.mRZValue);
-		setRQValue(stock.mRQValue);
 		setRate(stock.mRate);
 		setDividend(stock.mDividend);
 		setYield(stock.mYield);
@@ -392,6 +396,9 @@ public class Stock extends DatabaseTable {
 		setValuation(cursor);
 		setCost(cursor);
 		setShare(cursor);
+		setRZValue(cursor);
+		setRZBuy(cursor);
+		setRZRate(cursor);
 		setMarketValue(cursor);
 		setMainBusinessIncome(cursor);
 		setMainBusinessIncomeInYear(cursor);
@@ -403,8 +410,6 @@ public class Stock extends DatabaseTable {
 		setCashFlowPerShare(cursor);
 		setNetProfitPerShare(cursor);
 		setNetProfitPerShareInYear(cursor);
-		setRZValue(cursor);
-		setRQValue(cursor);
 
 		setRate(cursor);
 		setDividend(cursor);
@@ -592,11 +597,11 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_VOLUME)));
 	}
 
-	public long getValue() {
+	public double getValue() {
 		return mValue;
 	}
 
-	public void setValue(long value) {
+	public void setValue(double value) {
 		mValue = value;
 	}
 
@@ -605,7 +610,7 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-		setValue(cursor.getLong(cursor
+		setValue(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_VALUE)));
 	}
 
@@ -951,21 +956,38 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_RZ_VALUE)));
 	}
 
-	public double getRQValue() {
-		return mRQValue;
+	public double getRZBuy() {
+		return mRZBuy;
 	}
 
-	public void setRQValue(double rqValue) {
-		mRQValue = rqValue;
+	public void setRZBuy(double rzBuy) {
+		mRZBuy = rzBuy;
 	}
 
-	void setRQValue(Cursor cursor) {
+	void setRZBuy(Cursor cursor) {
 		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
-		setRQValue(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_RQ_VALUE)));
+		setRZBuy(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_RZ_BUY)));
+	}
+
+	public double getRZRate() {
+		return mRZRate;
+	}
+
+	public void setRZRate(double rzRate) {
+		mRZRate = rzRate;
+	}
+
+	void setRZRate(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setRZRate(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_RZ_RATE)));
 	}
 
 	public double getRate() {
@@ -1361,6 +1383,15 @@ public class Stock extends DatabaseTable {
 		} else if (TextUtils.equals(period, Period.MIN5)) {
 			mMin5.setLevel(level);
 		}
+	}
+
+	public void setupRZRate() {
+		if (mRZBuy == 0 || mValue  == 0) {
+			mRZRate = 0;
+			return;
+		}
+
+		mRZRate = Utility.Round2(100 * mRZBuy / mValue);
 	}
 
 	public void setupMarketValue() {

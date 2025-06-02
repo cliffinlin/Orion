@@ -128,6 +128,7 @@
     <string name="net_profit_per_share_in_year">NPSY</string>
     <string name="rz_value">RZ</string>
     <string name="rq_value">RQ</string>
+    <string name="rz_rate">RZRate</string>
     <string name="roi">Roi</string>
     <string name="roe">Roe</string>
     <string name="download">Download</string>

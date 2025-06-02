@@ -681,7 +681,7 @@ public class SinaFinance extends StockDataProvider {
 			}
 
 			if (!TextUtils.isEmpty(stockInfo[5])) {
-				stock.setValue(Double.valueOf(stockInfo[5]).longValue());
+				stock.setValue(Double.valueOf(stockInfo[5]).longValue() * Constant.DOUBLE_CONSTANT_WAN);
 			}
 
 			mDatabaseManager.updateStock(stock,
@@ -1798,12 +1798,18 @@ public class SinaFinance extends StockDataProvider {
 							|| dateString.contains(Stock.STATUS_SUSPENSION)) {
 						continue;
 					}
+
+					rzBuyString = tdElements.get(3).text();
+					if (TextUtils.isEmpty(rzBuyString)
+							|| dateString.contains(Stock.STATUS_SUSPENSION)) {
+						continue;
+					}
+//					如何获取深证的偿还数据？
+//					虽然深交所不直接公布，但可通过以下方式间接计算：
 //
-//					rzBuyString = tdElements.get(3).text();
-//					if (TextUtils.isEmpty(rzBuyString)
-//							|| dateString.contains(Stock.STATUS_SUSPENSION)) {
-//						continue;
-//					}
+//					融资偿还额 = 前一日融资余额 + 当日融资买入额 - 当日融资余额
+//
+//					融券偿还量 = 前一日融券余量 + 当日融券卖出量 - 当日融券余量
 //
 //					rzRepayString = tdElements.get(4).text();
 //					if (TextUtils.isEmpty(rzRepayString)
@@ -1831,7 +1837,7 @@ public class SinaFinance extends StockDataProvider {
 
 					stockRZRQ.setDate(dateString);
 					stockRZRQ.setRZValue(Double.parseDouble(rzValueString));
-//					stockRZRQ.setRZBuy(Double.parseDouble(rzBuyString));
+					stockRZRQ.setRZBuy(Double.parseDouble(rzBuyString));
 //					stockRZRQ.setRZRepay(Double.parseDouble(rzRepayString));
 //					stockRZRQ.setRQValue(Double.parseDouble(rqValueString));
 //					stockRZRQ.setRQSell(Double.parseDouble(rqSellString));

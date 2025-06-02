@@ -149,12 +149,12 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/rq_value"
+        android:id="@+id/rz_rate"
         android:layout_width="80dp"
         android:layout_height="40dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="@string/rq_value"
+        android:text="@string/rz_rate"
         android:textSize="18sp" />
 
     <TextView
