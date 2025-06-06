@@ -85,14 +85,22 @@
         android:text="@string/period_min5"
         android:textSize="18sp" />
 
-
     <TextView
-        android:id="@+id/rz_rate"
+        android:id="@+id/rz_trend_rate"
         android:layout_width="80dp"
         android:layout_height="40dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="@string/rz_rate"
+        android:text="@string/rz_trend_rate"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/rz_trend_days"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/rz_trend_days"
         android:textSize="18sp" />
 
     <TextView

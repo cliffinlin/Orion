@@ -7,6 +7,7 @@ public class Constant {
 	public static final String MARK_ASTERISK = "*";
 	public static final String MARK_DOLLAR = "$";
 
+	public static final String WHITE_SPACE = " ";
 	public static final String NEW_LINE = "\n";
 	public static final String TAB = "\t";
 	public static final String TAB2 = "\t\t";

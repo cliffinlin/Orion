@@ -21,6 +21,7 @@ public class FinancialAnalyzer {
 	static ArrayList<StockFinancial> mStockFinancialList;
 	static ArrayList<StockShare> mStockShareList;
 	static ArrayList<StockBonus> mStockBonusList;
+	static ArrayList<StockRZRQ> mStockRZRQList;
 
 	DatabaseManager mDatabaseManager = DatabaseManager.getInstance();
 	Logger Log = Logger.getLogger();
@@ -40,6 +41,7 @@ public class FinancialAnalyzer {
 		mStockFinancialList = stock.getFinancialList();
 		mStockShareList = stock.getStockShareList();
 		mStockBonusList = stock.getStockBonusList();
+		mStockRZRQList = stock.getStockRZRQList();
 
 		String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
 
@@ -52,6 +54,8 @@ public class FinancialAnalyzer {
 		mDatabaseManager.getStockShareList(stock, mStockShareList,
 				sortOrder);
 		mDatabaseManager.getStockBonusList(stock, mStockBonusList,
+				sortOrder);
+		mDatabaseManager.getStockRZRQList(stock, mStockRZRQList,
 				sortOrder);
 
 		setupStockShare(mStockShareList);
@@ -218,6 +222,7 @@ public class FinancialAnalyzer {
 		mDatabaseManager.getStockFinancialList(stock, mStockFinancialList,
 				sortOrder);
 		mDatabaseManager.getStockRZRQ(stock, stockRZRQ);
+
 		mDatabaseManager.updateStockDeal(stock);
 
 		stock.setBookValuePerShare(stockFinancial.getBookValuePerShare());
@@ -227,7 +232,7 @@ public class FinancialAnalyzer {
 
 		stock.setRZValue(stockRZRQ.getRZValue());
 		stock.setRZBuy(stockRZRQ.getRZBuy());
-		stock.setupRZRate();
+		stock.setupRZRate(mStockRZRQList);
 
 		stock.setupMarketValue();
 		stock.setupNetProfitPerShare();

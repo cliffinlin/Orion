@@ -64,7 +64,11 @@ public class StockFinancialListActivity extends ListActivity implements
 	TextView mTextViewShare = null;
 	TextView mTextViewMarketValue = null;
 	TextView mTextViewRZValue = null;
-	TextView mTextViewRZRate = null;
+	TextView mTextViewRZBuy = null;
+	TextView mTextViewRZBuyRate = null;
+	TextView mTextViewRZTrendValue = null;
+	TextView mTextViewRZTrendRate = null;
+	TextView mTextViewRZTrendDays = null;
 	TextView mTextViewMainBusinessIncome = null;
 	TextView mTextViewMainBusinessIncomeInYear = null;
 	TextView mTextViewNetProfit = null;
@@ -220,8 +224,20 @@ public class StockFinancialListActivity extends ListActivity implements
 			case R.id.rz_value:
 				mSortOrderColumn = DatabaseContract.COLUMN_RZ_VALUE;
 				break;
-			case R.id.rz_rate:
-				mSortOrderColumn = DatabaseContract.COLUMN_RZ_RATE;
+			case R.id.rz_buy:
+				mSortOrderColumn = DatabaseContract.COLUMN_RZ_BUY;
+				break;
+			case R.id.rz_buy_rate:
+				mSortOrderColumn = DatabaseContract.COLUMN_RZ_BUY_RATE;
+				break;
+			case R.id.rz_trend_value:
+				mSortOrderColumn = DatabaseContract.COLUMN_RZ_TREND_VALUE;
+				break;
+			case R.id.rz_trend_rate:
+				mSortOrderColumn = DatabaseContract.COLUMN_RZ_TREND_RATE;
+				break;
+			case R.id.rz_trend_days:
+				mSortOrderColumn = DatabaseContract.COLUMN_RZ_TREND_DAYS;
 				break;
 			case R.id.main_business_income:
 				mSortOrderColumn = DatabaseContract.COLUMN_MAIN_BUSINESS_INCOME;
@@ -313,7 +329,11 @@ public class StockFinancialListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewShare, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewMarketValue, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewRZValue, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewRZRate, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewRZBuy, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewRZBuyRate, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewRZTrendValue, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewRZTrendRate, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewRZTrendDays, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewMainBusinessIncome, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewMainBusinessIncomeInYear, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewNetProfit, mHeaderTextDefaultColor);
@@ -426,9 +446,29 @@ public class StockFinancialListActivity extends ListActivity implements
 			mTextViewRZValue.setOnClickListener(this);
 		}
 
-		mTextViewRZRate = findViewById(R.id.rz_rate);
-		if (mTextViewRZRate != null) {
-			mTextViewRZRate.setOnClickListener(this);
+		mTextViewRZBuy = findViewById(R.id.rz_buy);
+		if (mTextViewRZBuy != null) {
+			mTextViewRZBuy.setOnClickListener(this);
+		}
+
+		mTextViewRZBuyRate = findViewById(R.id.rz_buy_rate);
+		if (mTextViewRZBuyRate != null) {
+			mTextViewRZBuyRate.setOnClickListener(this);
+		}
+
+		mTextViewRZTrendValue = findViewById(R.id.rz_trend_value);
+		if (mTextViewRZTrendValue != null) {
+			mTextViewRZTrendValue.setOnClickListener(this);
+		}
+
+		mTextViewRZTrendRate = findViewById(R.id.rz_trend_rate);
+		if (mTextViewRZTrendRate != null) {
+			mTextViewRZTrendRate.setOnClickListener(this);
+		}
+
+		mTextViewRZTrendDays = findViewById(R.id.rz_trend_days);
+		if (mTextViewRZTrendDays != null) {
+			mTextViewRZTrendDays.setOnClickListener(this);
 		}
 
 		mTextViewMainBusinessIncome = findViewById(R.id.main_business_income);
@@ -540,8 +580,14 @@ public class StockFinancialListActivity extends ListActivity implements
 			setHeaderTextColor(mTextViewMarketValue, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_RZ_VALUE)) {
 			setHeaderTextColor(mTextViewRZValue, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_RZ_RATE)) {
-			setHeaderTextColor(mTextViewRZRate, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_RZ_BUY_RATE)) {
+			setHeaderTextColor(mTextViewRZBuyRate, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_RZ_TREND_VALUE)) {
+			setHeaderTextColor(mTextViewRZTrendValue, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_RZ_TREND_RATE)) {
+			setHeaderTextColor(mTextViewRZTrendRate, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_RZ_TREND_DAYS)) {
+			setHeaderTextColor(mTextViewRZTrendDays, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MAIN_BUSINESS_INCOME)) {
 			setHeaderTextColor(mTextViewMainBusinessIncome, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MAIN_BUSINESS_INCOME_IN_YEAR)) {
@@ -608,7 +654,11 @@ public class StockFinancialListActivity extends ListActivity implements
 				DatabaseContract.COLUMN_SHARE,
 				DatabaseContract.COLUMN_MARKET_VALUE,
 				DatabaseContract.COLUMN_RZ_VALUE,
-				DatabaseContract.COLUMN_RZ_RATE,
+				DatabaseContract.COLUMN_RZ_BUY,
+				DatabaseContract.COLUMN_RZ_BUY_RATE,
+				DatabaseContract.COLUMN_RZ_TREND_VALUE,
+				DatabaseContract.COLUMN_RZ_TREND_RATE,
+				DatabaseContract.COLUMN_RZ_TREND_DAYS,
 				DatabaseContract.COLUMN_MAIN_BUSINESS_INCOME,
 				DatabaseContract.COLUMN_MAIN_BUSINESS_INCOME_IN_YEAR,
 				DatabaseContract.COLUMN_NET_PROFIT,
@@ -641,7 +691,11 @@ public class StockFinancialListActivity extends ListActivity implements
 				R.id.share,
 				R.id.market_value,
 				R.id.rz_value,
-				R.id.rz_rate,
+				R.id.rz_buy,
+				R.id.rz_buy_rate,
+				R.id.rz_trend_value,
+				R.id.rz_trend_rate,
+				R.id.rz_trend_days,
 				R.id.main_business_income,
 				R.id.main_business_income_in_year,
 				R.id.net_profit,

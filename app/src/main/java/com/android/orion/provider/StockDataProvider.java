@@ -31,6 +31,7 @@ import com.android.orion.interfaces.StockListener;
 import com.android.orion.manager.DatabaseManager;
 import com.android.orion.manager.StockManager;
 import com.android.orion.service.StockService;
+import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Logger;
 import com.android.orion.utility.Market;
@@ -922,7 +923,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 				onDownloadStart(stock.getCode());
 				if (TextUtils.equals(stock.getClasses(), Stock.CLASS_A)) {
 					long interval = System.currentTimeMillis() - Setting.getDownloadStockTimeMillis(stock);
-					if (interval > Config.downloadStockInterval) {
+					if ((Market.isTradingHours() && interval > Constant.HOUR_IN_MILLIS) || interval > Config.downloadStockInterval) {
 						if (downloadStockInformation(stock) == RESULT_FAILED) {
 							StockService.getInstance().onDisconnected();
 							return;

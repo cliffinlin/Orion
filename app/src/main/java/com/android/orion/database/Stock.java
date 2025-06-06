@@ -30,6 +30,7 @@ public class Stock extends DatabaseTable {
 	static ArrayList<StockFinancial> mStockFinancialList = new ArrayList<>();
 	static ArrayList<StockShare> mStockShareList = new ArrayList<>();
 	static ArrayList<StockBonus> mStockBonusList = new ArrayList<>();
+	static ArrayList<StockRZRQ> mStockRZRQList = new ArrayList<>();
 	private final Period mMonth = new Period(Period.MONTH);
 	private final Period mWeek = new Period(Period.WEEK);
 	private final Period mDay = new Period(Period.DAY);
@@ -70,7 +71,10 @@ public class Stock extends DatabaseTable {
 	private double mMarketValue;
 	private double mRZValue;
 	private double mRZBuy;
-	private double mRZRate;
+	private double mRZBuyRate;
+	private double mRZTrendValue;
+	private double mRZTrendRate;
+	private int mRZTrendDays;
 	private double mMainBusinessIncome;
 	private double mNetProfit;
 	private double mNetProfitInYear;
@@ -143,7 +147,10 @@ public class Stock extends DatabaseTable {
 		mMarketValue = 0;
 		mRZValue = 0;
 		mRZBuy = 0;
-		mRZRate = 0;
+		mRZBuyRate = 0;
+		mRZTrendValue = 0;
+		mRZTrendRate = 0;
+		mRZTrendDays = 0;
 		mMainBusinessIncome = 0;
 		mMainBusinessIncomeInYear = 0;
 		mNetProfit = 0;
@@ -212,7 +219,10 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_MARKET_VALUE, mMarketValue);
 		contentValues.put(DatabaseContract.COLUMN_RZ_VALUE, mRZValue);
 		contentValues.put(DatabaseContract.COLUMN_RZ_BUY, mRZBuy);
-		contentValues.put(DatabaseContract.COLUMN_RZ_RATE, mRZRate);
+		contentValues.put(DatabaseContract.COLUMN_RZ_BUY_RATE, mRZBuyRate);
+		contentValues.put(DatabaseContract.COLUMN_RZ_TREND_VALUE, mRZTrendValue);
+		contentValues.put(DatabaseContract.COLUMN_RZ_TREND_RATE, mRZTrendRate);
+		contentValues.put(DatabaseContract.COLUMN_RZ_TREND_DAYS, mRZTrendDays);
 		contentValues.put(DatabaseContract.COLUMN_MAIN_BUSINESS_INCOME, mMainBusinessIncome);
 		contentValues.put(DatabaseContract.COLUMN_MAIN_BUSINESS_INCOME_IN_YEAR, mMainBusinessIncomeInYear);
 		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT, mNetProfit);
@@ -325,7 +335,10 @@ public class Stock extends DatabaseTable {
 		setMarketValue(stock.mMarketValue);
 		setRZValue(stock.mRZValue);
 		setRZBuy(stock.mRZBuy);
-		setRZRate(stock.mRZRate);
+		setRZBuyRate(stock.mRZBuyRate);
+		setRZTrendValue(stock.mRZTrendValue);
+		setRZTrendRate(stock.mRZTrendRate);
+		setRZTrendDays(stock.mRZTrendDays);
 		setMainBusinessIncome(stock.mMainBusinessIncome);
 		setMainBusinessIncomeInYear(stock.mMainBusinessIncomeInYear);
 		setNetProfit(stock.mNetProfit);
@@ -398,7 +411,10 @@ public class Stock extends DatabaseTable {
 		setShare(cursor);
 		setRZValue(cursor);
 		setRZBuy(cursor);
-		setRZRate(cursor);
+		setRZBuyRate(cursor);
+		setRZTrendValue(cursor);
+		setRZTrendRate(cursor);
+		setRZTrendDays(cursor);
 		setMarketValue(cursor);
 		setMainBusinessIncome(cursor);
 		setMainBusinessIncomeInYear(cursor);
@@ -973,21 +989,74 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_RZ_BUY)));
 	}
 
-	public double getRZRate() {
-		return mRZRate;
+	public double getRZBuyRate() {
+		return mRZBuyRate;
 	}
 
-	public void setRZRate(double rzRate) {
-		mRZRate = rzRate;
+	public void setRZBuyRate(double rzBuyRate) {
+		mRZBuyRate = rzBuyRate;
 	}
 
-	void setRZRate(Cursor cursor) {
+	void setRZBuyRate(Cursor cursor) {
 		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
-		setRZRate(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_RZ_RATE)));
+		setRZBuyRate(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_RZ_BUY_RATE)));
+	}
+
+	public double getRZTrendValue() {
+		return mRZTrendValue;
+	}
+
+	public void setRZTrendValue(double rzTrendValue) {
+		mRZTrendValue = rzTrendValue;
+	}
+
+	void setRZTrendValue(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setRZTrendValue(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_RZ_TREND_VALUE)));
+	}
+
+
+	public double getRZTrendRate() {
+		return mRZTrendRate;
+	}
+
+	public void setRZTrendRate(double rzTrendRate) {
+		mRZTrendRate = rzTrendRate;
+	}
+
+	void setRZTrendRate(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setRZTrendRate(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_RZ_TREND_RATE)));
+	}
+
+
+	public double getRZTrendDays() {
+		return mRZTrendDays;
+	}
+
+	public void setRZTrendDays(int rzTrendDays) {
+		mRZTrendDays = rzTrendDays;
+	}
+
+	void setRZTrendDays(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setRZTrendDays(cursor.getInt(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_RZ_TREND_DAYS)));
 	}
 
 	public double getRate() {
@@ -1220,6 +1289,10 @@ public class Stock extends DatabaseTable {
 		return mStockBonusList;
 	}
 
+	public ArrayList<StockRZRQ> getStockRZRQList() {
+		return mStockRZRQList;
+	}
+
 	public ArrayList<StockData> getStockDataList(String period) {
 		ArrayList<StockData> result;
 
@@ -1385,13 +1458,68 @@ public class Stock extends DatabaseTable {
 		}
 	}
 
-	public void setupRZRate() {
-		if (mRZBuy == 0 || mValue  == 0) {
-			mRZRate = 0;
+	int findTurningPoint(ArrayList<StockRZRQ> list) {
+		if (list == null || list.size() < 3) {
+			return -1;
+		}
+
+		int n = list.size();
+		int i = 1;
+
+		int trend = 0;
+		if (list.get(1).getRZValue() > list.get(0).getRZValue()) {
+			trend = 1;
+		} else if (list.get(1).getRZValue() < list.get(0).getRZValue()) {
+			trend = -1;
+		} else {
+			while (i < n - 1 && trend == 0) {
+				if (list.get(i + 1).getRZValue() > list.get(i).getRZValue()) {
+					trend = 1;
+				} else if (list.get(i + 1).getRZValue() < list.get(i).getRZValue()) {
+					trend = -1;
+				}
+				i++;
+			}
+			if (trend == 0) {
+				return -1;
+			}
+			i--;
+		}
+
+		for (; i < n - 1; i++) {
+			double current = list.get(i).getRZValue();
+			double next = list.get(i + 1).getRZValue();
+
+			if (trend == 1 && next < current) {
+				return i;
+			} else if (trend == -1 && next > current) {
+				return i;
+			} else if (trend == 1 && next == current) {
+			} else if (trend == -1 && next == current) {
+			}
+		}
+
+		return -1;
+	}
+
+	public void setupRZRate(ArrayList<StockRZRQ> stockRZRQList) {
+		if (mRZBuy == 0 || mValue  == 0 || stockRZRQList == null) {
+			mRZBuyRate = 0;
+			mRZTrendValue = 0;
+			mRZTrendRate = 0;
+			mRZTrendDays = 0;
 			return;
 		}
 
-		mRZRate = Utility.Round2(100 * mRZBuy / mValue);
+		mRZBuyRate = Utility.Round2(100 * mRZBuy / mValue);
+
+		int turnIndex = findTurningPoint(stockRZRQList);
+		if (turnIndex != -1) {
+			mRZTrendValue = stockRZRQList.get(0).getRZValue() - stockRZRQList.get(turnIndex).getRZValue();
+		}
+
+		mRZTrendRate = Utility.Round2(100 * mRZTrendValue / mRZValue);
+		mRZTrendDays = turnIndex;
 	}
 
 	public void setupMarketValue() {

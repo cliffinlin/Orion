@@ -126,7 +126,12 @@
     <string name="net_profit_margin">NPM</string>
     <string name="net_profit_per_share">NPS</string>
     <string name="net_profit_per_share_in_year">NPSY</string>
-    <string name="rz_value">RZ</string>
+    <string name="rz_value">RZValue</string>
+    <string name="rz_buy">RZBuy</string>
+    <string name="rz_buy_rate">RZBRate</string>
+    <string name="rz_trend_value">RZTValue</string>
+    <string name="rz_trend_rate">RZTRate</string>
+    <string name="rz_trend_days">RZTDays</string>
     <string name="rq_value">RQ</string>
     <string name="rz_rate">RZRate</string>
     <string name="roi">Roi</string>

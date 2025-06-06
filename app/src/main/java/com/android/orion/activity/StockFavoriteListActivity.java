@@ -58,7 +58,8 @@ public class StockFavoriteListActivity extends ListActivity implements
 	TextView mTextViewMin15 = null;
 	TextView mTextViewMin5 = null;
 	TextView mTextViewFlag = null;
-	TextView mTextViewRZRate = null;
+	TextView mTextViewRZTrendRate = null;
+	TextView mTextViewRZTrendDays = null;
 	TextView mTextViewModified = null;
 
 	ListView mLeftListView = null;
@@ -95,6 +96,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
+		resetHeaderTextColor();
 		initHeader();
 		setupListView();
 	}
@@ -192,8 +194,11 @@ public class StockFavoriteListActivity extends ListActivity implements
 			case R.id.flag:
 				mSortOrderColumn = DatabaseContract.COLUMN_FLAG;
 				break;
-			case R.id.rz_rate:
-				mSortOrderColumn = DatabaseContract.COLUMN_RZ_RATE;
+			case R.id.rz_trend_rate:
+				mSortOrderColumn = DatabaseContract.COLUMN_RZ_TREND_RATE;
+				break;
+			case R.id.rz_trend_days:
+				mSortOrderColumn = DatabaseContract.COLUMN_RZ_TREND_DAYS;
 				break;
 			case R.id.modified:
 				mSortOrderColumn = DatabaseContract.COLUMN_MODIFIED;
@@ -239,7 +244,8 @@ public class StockFavoriteListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewMin15, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewMin5, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewFlag, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewRZRate, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewRZTrendRate, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewRZTrendDays, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewModified, mHeaderTextDefaultColor);
 	}
 
@@ -315,9 +321,14 @@ public class StockFavoriteListActivity extends ListActivity implements
 			mTextViewFlag.setOnClickListener(this);
 		}
 
-		mTextViewRZRate = findViewById(R.id.rz_rate);
-		if (mTextViewRZRate != null) {
-			mTextViewRZRate.setOnClickListener(this);
+		mTextViewRZTrendRate = findViewById(R.id.rz_trend_rate);
+		if (mTextViewRZTrendRate != null) {
+			mTextViewRZTrendRate.setOnClickListener(this);
+		}
+
+		mTextViewRZTrendDays = findViewById(R.id.rz_trend_days);
+		if (mTextViewRZTrendDays != null) {
+			mTextViewRZTrendDays.setOnClickListener(this);
 		}
 
 		mTextViewModified = findViewById(R.id.modified);
@@ -325,31 +336,33 @@ public class StockFavoriteListActivity extends ListActivity implements
 			mTextViewModified.setOnClickListener(this);
 		}
 
-		if (mSortOrder.contains(DatabaseContract.COLUMN_CODE)) {
+		if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_CODE)) {
 			setHeaderTextColor(mTextViewNameCode, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PRICE)) {
+		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_PRICE)) {
 			setHeaderTextColor(mTextViewPrice, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_NET)) {
+		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_NET)) {
 			setHeaderTextColor(mTextViewNet, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MONTH)) {
+		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_MONTH)) {
 			setHeaderTextColor(mTextViewMonth, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_WEEK)) {
+		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_WEEK)) {
 			setHeaderTextColor(mTextViewWeek, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_DAY)) {
+		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_DAY)) {
 			setHeaderTextColor(mTextViewDay, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MIN60)) {
+		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_MIN60)) {
 			setHeaderTextColor(mTextViewMin60, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MIN30)) {
+		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_MIN30)) {
 			setHeaderTextColor(mTextViewMin30, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MIN15)) {
+		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_MIN15)) {
 			setHeaderTextColor(mTextViewMin15, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MIN5)) {
+		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_MIN5)) {
 			setHeaderTextColor(mTextViewMin5, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_FLAG)) {
+		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_FLAG)) {
 			setHeaderTextColor(mTextViewFlag, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_RZ_RATE)) {
-			setHeaderTextColor(mTextViewRZRate, mHeaderTextHighlightColor);
-		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MODIFIED)) {
+		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_RZ_TREND_RATE)) {
+			setHeaderTextColor(mTextViewRZTrendRate, mHeaderTextHighlightColor);
+		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_RZ_TREND_DAYS)) {
+			setHeaderTextColor(mTextViewRZTrendDays, mHeaderTextHighlightColor);
+		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_MODIFIED)) {
 			setHeaderTextColor(mTextViewModified, mHeaderTextHighlightColor);
 		} else {
 		}
@@ -371,7 +384,8 @@ public class StockFavoriteListActivity extends ListActivity implements
 				DatabaseContract.COLUMN_MIN15,
 				DatabaseContract.COLUMN_MIN5,
 				DatabaseContract.COLUMN_FLAG,
-				DatabaseContract.COLUMN_RZ_RATE,
+				DatabaseContract.COLUMN_RZ_TREND_RATE,
+				DatabaseContract.COLUMN_RZ_TREND_DAYS,
 				DatabaseContract.COLUMN_MODIFIED};
 		int[] mRightTo = new int[]{
 				R.id.price,
@@ -384,7 +398,8 @@ public class StockFavoriteListActivity extends ListActivity implements
 				R.id.min15,
 				R.id.min5,
 				R.id.flag,
-				R.id.rz_rate,
+				R.id.rz_trend_rate,
+				R.id.rz_trend_days,
 				R.id.modified};
 
 		mLeftListView = findViewById(R.id.left_listview);
@@ -412,6 +427,12 @@ public class StockFavoriteListActivity extends ListActivity implements
 	void initLoader() {
 		mSortOrder = Preferences.getString(Setting.SETTING_SORT_ORDER_STOCK_LIST,
 				mSortOrderDefault);
+		if (!TextUtils.isEmpty(mSortOrder)) {
+			String[] strings = mSortOrder.split(Constant.WHITE_SPACE);
+			if (strings != null && strings.length > 1) {
+				mSortOrderColumn = strings[0];
+			}
+		}
 		mLoaderManager.initLoader(LOADER_ID_STOCK_FAVORITE_LIST, null, this);
 	}
 

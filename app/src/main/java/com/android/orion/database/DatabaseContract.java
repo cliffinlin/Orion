@@ -144,7 +144,11 @@ public final class DatabaseContract {
 	public static final String COLUMN_RQ_SELL = "rq_sell";
 	public static final String COLUMN_RQ_REPAY = "rq_repay";
 
-	public static final String COLUMN_RZ_RATE = "rz_rate";
+	public static final String COLUMN_RZ_BUY_RATE = "rz_buy_rate";
+
+	public static final String COLUMN_RZ_TREND_VALUE = "rz_trend_value";
+	public static final String COLUMN_RZ_TREND_RATE = "rz_trend_rate";
+	public static final String COLUMN_RZ_TREND_DAYS = "rz_trend_days";
 
 	public static final String ORDER_BY = " ORDER BY ";
 	public static final String ORDER_ASC = " ASC ";
@@ -190,7 +194,7 @@ public final class DatabaseContract {
 				COLUMN_CASH_FLOW_PER_SHARE,
 				COLUMN_NET_PROFIT_PER_SHARE,
 				COLUMN_NET_PROFIT_PER_SHARE_IN_YEAR,
-				COLUMN_RZ_VALUE, COLUMN_RZ_BUY, COLUMN_RZ_RATE,
+				COLUMN_RZ_VALUE, COLUMN_RZ_BUY, COLUMN_RZ_BUY_RATE, COLUMN_RZ_TREND_VALUE, COLUMN_RZ_TREND_RATE, COLUMN_RZ_TREND_DAYS,
 				COLUMN_RATE, COLUMN_DIVIDEND, COLUMN_YIELD, COLUMN_DIVIDEND_RATIO, COLUMN_R_DATE, COLUMN_STATUS,
 				COLUMN_CREATED, COLUMN_MODIFIED};
 		static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
@@ -249,7 +253,10 @@ public final class DatabaseContract {
 				+ COLUMN_NET_PROFIT_PER_SHARE_IN_YEAR + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_RZ_VALUE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_RZ_BUY + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_RZ_RATE + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_RZ_BUY_RATE + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_RZ_TREND_VALUE + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_RZ_TREND_RATE + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_RZ_TREND_DAYS + INTEGER_TYPE + COMMA_SEP
 				+ COLUMN_RATE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_DIVIDEND + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_YIELD + DOUBLE_TYPE + COMMA_SEP
