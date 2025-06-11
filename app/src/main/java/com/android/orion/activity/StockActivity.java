@@ -102,12 +102,12 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 				}
 
 				if ((s != null) && (s.length() > 0)) {
-					if (s.charAt(0) == '6') {
-						mRadioGroupClass.check(R.id.radio_class_hsa);
-						mRadioGroupSE.check(R.id.radio_se_sh);
-					} else if (s.charAt(0) == '0' || s.charAt(0) == '3') {
+					if (s.toString().startsWith(Stock.CODE_PREFIX_0) || s.toString().startsWith(Stock.CODE_PREFIX_3)) {
 						mRadioGroupClass.check(R.id.radio_class_hsa);
 						mRadioGroupSE.check(R.id.radio_se_sz);
+					} else if (s.toString().startsWith(Stock.CODE_PREFIX_5) || s.toString().startsWith(Stock.CODE_PREFIX_6)) {
+						mRadioGroupClass.check(R.id.radio_class_hsa);
+						mRadioGroupSE.check(R.id.radio_se_sh);
 					} else {
 						mRadioGroupClass.check(R.id.radio_class_index);
 						mRadioGroupSE.check(R.id.radio_se_sh);

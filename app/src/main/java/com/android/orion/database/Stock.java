@@ -16,6 +16,11 @@ public class Stock extends DatabaseTable {
 	public static final String CLASS_A = "A";
 	public static final String CLASS_INDEX = "I";
 
+	public static final String CODE_PREFIX_0 = "0";
+	public static final String CODE_PREFIX_3 = "3";
+	public static final String CODE_PREFIX_5 = "5";
+	public static final String CODE_PREFIX_6 = "6";
+
 	public static final String SE_SH = "sh";
 	public static final String SE_SZ = "sz";
 
