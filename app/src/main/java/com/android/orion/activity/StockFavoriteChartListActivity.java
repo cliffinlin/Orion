@@ -776,9 +776,13 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 			rightYAxis = viewHolder.chart.getAxisRight();
 			if (rightYAxis != null) {
 				if (mItemViewType == ITEM_VIEW_TYPE_MAIN) {
-					rightYAxis.setEnabled(true);
-					rightYAxis.setPosition(YAxisLabelPosition.INSIDE_CHART);
-					rightYAxis.setStartAtZero(false);
+					if (Setting.getDisplayRZValue() || Setting.getDisplayRQValue()) {
+						rightYAxis.setEnabled(true);
+						rightYAxis.setPosition(YAxisLabelPosition.INSIDE_CHART);
+						rightYAxis.setStartAtZero(false);
+					} else {
+						rightYAxis.setEnabled(false);
+					}
 				} else {
 					rightYAxis.setEnabled(false);
 				}

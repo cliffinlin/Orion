@@ -410,20 +410,12 @@ public class TrendAnalyzer {
 					stockTrend.removeFlag(StockTrend.FLAG_CHANGED);
 					stockTrend.setModified(Utility.getCurrentDateTimeString());
 					mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValues());
-
 					StockAnalyzer.getInstance().cancelNotifyStockTrend(stockTrend);
 				} else {
 					stockTrend.addFlag(StockTrend.FLAG_CHANGED);
 					stockTrend.setModified(Utility.getCurrentDateTimeString());
 					mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValues());
-
-					if (Setting.getDisplayAdaptive()) {
-						if (level == mStock.getLevel(mPeriod)) {
-							StockAnalyzer.getInstance().notifyStockTrend(stockTrend);
-						}
-					} else {
-						StockAnalyzer.getInstance().notifyStockTrend(stockTrend);
-					}
+					StockAnalyzer.getInstance().notifyStockTrend(stockTrend);
 				}
 			} else {
 				stockTrend.setFlag(StockTrend.FLAG_NONE);
