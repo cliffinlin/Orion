@@ -213,7 +213,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 					mStock.setName(name);
 				}
 
-				if (!TextUtils.isEmpty(code)) {
+				if (!TextUtils.isEmpty(code) && code.length() == Stock.CODE_LENGTH) {
 					mStock.setCode(code);
 				} else {
 					Toast.makeText(mContext, R.string.stock_code_empty,

@@ -243,6 +243,7 @@ public class FinancialAnalyzer {
 		stock.setupRoe(mStockFinancialList);
 		stock.setupPe();
 		stock.setupPb();
+		stock.setupPr();
 		stock.setupRoi();
 		stock.setupIRR();
 	}

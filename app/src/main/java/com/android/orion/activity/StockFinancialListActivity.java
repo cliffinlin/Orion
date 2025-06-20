@@ -56,6 +56,7 @@ public class StockFinancialListActivity extends ListActivity implements
 	TextView mTextViewRoe = null;
 	TextView mTextViewPE = null;
 	TextView mTextViewPB = null;
+	TextView mTextViewPR = null;
 	TextView mTextViewHold = null;
 	TextView mTextViewProfit = null;
 	TextView mTextViewBonus = null;
@@ -200,6 +201,9 @@ public class StockFinancialListActivity extends ListActivity implements
 			case R.id.pb:
 				mSortOrderColumn = DatabaseContract.COLUMN_PB;
 				break;
+			case R.id.pr:
+				mSortOrderColumn = DatabaseContract.COLUMN_PR;
+				break;
 			case R.id.hold:
 				mSortOrderColumn = DatabaseContract.COLUMN_HOLD;
 				break;
@@ -283,7 +287,6 @@ public class StockFinancialListActivity extends ListActivity implements
 				break;
 
 			default:
-				mSortOrderColumn = DatabaseContract.COLUMN_CODE;
 				break;
 		}
 
@@ -321,6 +324,7 @@ public class StockFinancialListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewRoe, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewPE, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewPB, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewPR, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewHold, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewProfit, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewBonus, mHeaderTextDefaultColor);
@@ -404,6 +408,11 @@ public class StockFinancialListActivity extends ListActivity implements
 		mTextViewPB = findViewById(R.id.pb);
 		if (mTextViewPB != null) {
 			mTextViewPB.setOnClickListener(this);
+		}
+
+		mTextViewPR = findViewById(R.id.pr);
+		if (mTextViewPR != null) {
+			mTextViewPR.setOnClickListener(this);
 		}
 
 		mTextViewHold = findViewById(R.id.hold);
@@ -564,6 +573,8 @@ public class StockFinancialListActivity extends ListActivity implements
 			setHeaderTextColor(mTextViewPE, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PB)) {
 			setHeaderTextColor(mTextViewPB, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PR)) {
+			setHeaderTextColor(mTextViewPR, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_HOLD)) {
 			setHeaderTextColor(mTextViewHold, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PROFIT)) {
@@ -646,6 +657,7 @@ public class StockFinancialListActivity extends ListActivity implements
 				DatabaseContract.COLUMN_ROE,
 				DatabaseContract.COLUMN_PE,
 				DatabaseContract.COLUMN_PB,
+				DatabaseContract.COLUMN_PR,
 				DatabaseContract.COLUMN_HOLD,
 				DatabaseContract.COLUMN_PROFIT,
 				DatabaseContract.COLUMN_BONUS,
@@ -683,6 +695,7 @@ public class StockFinancialListActivity extends ListActivity implements
 				R.id.roe,
 				R.id.pe,
 				R.id.pb,
+				R.id.pr,
 				R.id.hold,
 				R.id.profit,
 				R.id.bonus,

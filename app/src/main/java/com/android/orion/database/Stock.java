@@ -26,6 +26,8 @@ public class Stock extends DatabaseTable {
 
 	public static final String STATUS_SUSPENSION = "--";
 
+	public static final int CODE_LENGTH = 6;
+
 	public static final int FLAG_NONE = 0;
 	public static final int FLAG_FAVORITE = 1 << 0;
 	public static final int FLAG_NOTIFY = 1 << 1;
@@ -67,6 +69,7 @@ public class Stock extends DatabaseTable {
 	private double mRoe;
 	private double mPe;
 	private double mPb;
+	private double mPr;
 	private long mHold;
 	private double mProfit;
 	private double mBonus;
@@ -144,6 +147,7 @@ public class Stock extends DatabaseTable {
 		mRoe = 0;
 		mPe = 0;
 		mPb = 0;
+		mPr = 0;
 		mProfit = 0;
 		mBonus = 0;
 		mValuation = 0;
@@ -214,6 +218,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_ROE, mRoe);
 		contentValues.put(DatabaseContract.COLUMN_PE, mPe);
 		contentValues.put(DatabaseContract.COLUMN_PB, mPb);
+		contentValues.put(DatabaseContract.COLUMN_PR, mPr);
 
 		contentValues.put(DatabaseContract.COLUMN_HOLD, mHold);
 		contentValues.put(DatabaseContract.COLUMN_PROFIT, mProfit);
@@ -331,6 +336,7 @@ public class Stock extends DatabaseTable {
 		setRoe(stock.mRoe);
 		setPe(stock.mPe);
 		setPb(stock.mPb);
+		setPr(stock.mPr);
 		setHold(stock.mHold);
 		setProfit(stock.mProfit);
 		setBonus(stock.mBonus);
@@ -408,6 +414,7 @@ public class Stock extends DatabaseTable {
 		setRoe(cursor);
 		setPe(cursor);
 		setPb(cursor);
+		setPr(cursor);
 		setHold(cursor);
 		setProfit(cursor);
 		setBonus(cursor);
@@ -1183,6 +1190,23 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_PB)));
 	}
 
+	public double getPr() {
+		return mPr;
+	}
+
+	public void setPr(double pr) {
+		mPr = pr;
+	}
+
+	void setPr(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setPr(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_PR)));
+	}
+
 	public double getDividend() {
 		return mDividend;
 	}
@@ -1688,6 +1712,15 @@ public class Stock extends DatabaseTable {
 		}
 
 		mPb = Utility.Round2(mPrice / mBookValuePerShare);
+	}
+
+	public void setupPr() {
+		if (mPe == 0 || mRoe == 0) {
+			mPr = 0;
+			return;
+		}
+
+		mPr = Utility.Round2(mPe / mRoe);
 	}
 
 	public void setupBonus() {

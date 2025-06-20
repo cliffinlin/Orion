@@ -84,6 +84,7 @@ public final class DatabaseContract {
 	public static final String COLUMN_ROE = "roe";
 	public static final String COLUMN_PE = "pe";
 	public static final String COLUMN_PB = "pb";
+	public static final String COLUMN_PR = "pr";
 	public static final String COLUMN_DIVIDEND = "dividend";
 	public static final String COLUMN_YIELD = "yield";
 	public static final String COLUMN_DIVIDEND_RATIO = "dividend_ratio";
@@ -183,7 +184,7 @@ public final class DatabaseContract {
 				COLUMN_MONTH_LEVEL, COLUMN_WEEK_LEVEL, COLUMN_DAY_LEVEL, COLUMN_MIN60_LEVEL, COLUMN_MIN30_LEVEL, COLUMN_MIN15_LEVEL, COLUMN_MIN5_LEVEL,
 				COLUMN_FLAG,
 				COLUMN_THRESHOLD, COLUMN_QUANT_VOLUME,				
-				COLUMN_ROI, COLUMN_IR, COLUMN_IRR, COLUMN_ROE, COLUMN_PE, COLUMN_PB,
+				COLUMN_ROI, COLUMN_IR, COLUMN_IRR, COLUMN_ROE, COLUMN_PE, COLUMN_PB, COLUMN_PR,
 				COLUMN_HOLD, COLUMN_PROFIT, COLUMN_BONUS, COLUMN_VALUATION, COLUMN_COST,
 				COLUMN_SHARE, COLUMN_MARKET_VALUE,
 				COLUMN_MAIN_BUSINESS_INCOME, COLUMN_MAIN_BUSINESS_INCOME_IN_YEAR,
@@ -234,6 +235,7 @@ public final class DatabaseContract {
 				+ COLUMN_ROE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_PE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_PB + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_PR + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_HOLD + INTEGER_TYPE + COMMA_SEP
 				+ COLUMN_PROFIT + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_BONUS + DOUBLE_TYPE + COMMA_SEP
