@@ -73,6 +73,9 @@ public class StockAnalyzer {
 		try {
 			mStockDataList = mStock.getStockDataList(period);
 			mDatabaseManager.loadStockDataList(mStock, period, mStockDataList);
+			if (period.equals(Period.MONTH)) {
+				mFinancialAnalyzer.setNetProfileInYear(mStock, mStockDataList);
+			}
 			analyzeMacd(period);
 			analyzeStockQuant(period);
 			analyzeStockData(period);
@@ -153,7 +156,6 @@ public class StockAnalyzer {
 			}
 		}
 	}
-
 
 	private void analyzeStockQuant(String period) {
 		if (!TextUtils.equals(period, Period.MIN5) || mStock.getQuantVolume() == 0 || mStock.getThreshold() == 0 ) {

@@ -69,6 +69,8 @@ public class StockData extends DatabaseTable {
 	private double mDownwardTrend;
 	private double mNaturalReaction;
 
+	private double mNetProfitInYear;
+
 	private int mIndex;
 	private int mIndexStart;
 	private int mIndexEnd;
@@ -154,6 +156,8 @@ public class StockData extends DatabaseTable {
 		mUpwardTrend = 0;
 		mDownwardTrend = 0;
 		mNaturalReaction = 0;
+
+		mNetProfitInYear = 0;
 	}
 
 	@Override
@@ -192,6 +196,8 @@ public class StockData extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_DOWNWARD_TREND, mDownwardTrend);
 		contentValues.put(DatabaseContract.COLUMN_NATURAL_REACTION, mNaturalReaction);
 
+		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_IN_YEAR, mNetProfitInYear);
+
 		return contentValues;
 	}
 
@@ -227,6 +233,8 @@ public class StockData extends DatabaseTable {
 		setUpwardTrend(stockData.mUpwardTrend);
 		setDownwardTrend(stockData.mDownwardTrend);
 		setNaturalReaction(stockData.mNaturalReaction);
+
+		setNetProfitInYear(stockData.mNetProfitInYear);
 
 		setIndex(stockData.mIndex);
 		setIndexStart(stockData.mIndexStart);
@@ -265,6 +273,8 @@ public class StockData extends DatabaseTable {
 		setUpwardTrend(cursor);
 		setDownwardTrend(cursor);
 		setNaturalReaction(cursor);
+
+		setNetProfitInYear(cursor);
 	}
 
 	public String getSE() {
@@ -590,6 +600,25 @@ public class StockData extends DatabaseTable {
 		setNaturalReaction(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_NATURAL_REACTION)));
 	}
+
+	public double getNetProfitInYear() {
+		return mNetProfitInYear;
+	}
+
+	public void setNetProfitInYear(double netProfitInYear) {
+		mNetProfitInYear = netProfitInYear;
+	}
+
+	void setNetProfitInYear(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setNetProfitInYear(cursor
+				.getDouble(cursor
+						.getColumnIndex(DatabaseContract.COLUMN_NET_PROFIT_IN_YEAR)));
+	}
+
 	public int getIndex() {
 		return mIndex;
 	}

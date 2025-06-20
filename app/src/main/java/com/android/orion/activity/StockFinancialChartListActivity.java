@@ -416,16 +416,33 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 					stockFinancialChart.mMainBusinessIncomeEntryList
 							.add(mainBusinessIncomeEntry);
 
-					Entry netProfittEntry = new Entry(
+					Entry mainBusinessIncomeInYearEntry = new Entry(
+							(float) mStockFinancial.getMainBusinessIncomeInYear()
+									/ (float) unit, index);
+					stockFinancialChart.mMainBusinessIncomeInYearEntryList
+							.add(mainBusinessIncomeInYearEntry);
+
+					Entry netProfitEntry = new Entry(
 							(float) mStockFinancial.getNetProfit()
 									/ (float) unit, index);
-					stockFinancialChart.mNetProfitEntryList.add(netProfittEntry);
+					stockFinancialChart.mNetProfitEntryList.add(netProfitEntry);
+
+					Entry netProfitInYearEntry = new Entry(
+							(float) mStockFinancial.getNetProfitInYear()
+									/ (float) unit, index);
+					stockFinancialChart.mNetProfitInYearEntryList.add(netProfitInYearEntry);
 
 					Entry stockShareEntry = new Entry(
 							(float) mStockFinancial.getShare()
 									/ (float) unit, index);
 					stockFinancialChart.mStockShareEntryList
 							.add(stockShareEntry);
+
+					Entry priceEntry = new Entry(
+							(float) mStockFinancial.getPrice(),
+							index);
+					stockFinancialChart.mPriceEntryList
+							.add(priceEntry);
 
 					Entry bookValuePerShareEntry = new Entry(
 							(float) mStockFinancial.getBookValuePerShare(),
@@ -679,7 +696,9 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 
 			rightYAxis = viewHolder.chart.getAxisRight();
 			if (rightYAxis != null) {
-				rightYAxis.setEnabled(false);
+				rightYAxis.setEnabled(true);
+				rightYAxis.setPosition(YAxisLabelPosition.INSIDE_CHART);
+				rightYAxis.setStartAtZero(false);
 			}
 
 			viewHolder.chart.setDescription(mStockFinancialChart.mDescription);

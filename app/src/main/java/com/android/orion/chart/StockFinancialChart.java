@@ -3,6 +3,7 @@ package com.android.orion.chart;
 import android.graphics.Color;
 
 import com.android.orion.config.Config;
+import com.android.orion.setting.Setting;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -25,9 +26,12 @@ public class StockFinancialChart {
 	public ArrayList<Entry> mTotalAssetsEntryList = new ArrayList<>();
 	public ArrayList<Entry> mTotalLongTermLiabilitiesEntryList = new ArrayList<>();
 	public ArrayList<Entry> mMainBusinessIncomeEntryList = new ArrayList<>();
+	public ArrayList<Entry> mMainBusinessIncomeInYearEntryList = new ArrayList<>();
 	public ArrayList<Entry> mNetProfitEntryList = new ArrayList<>();
+	public ArrayList<Entry> mNetProfitInYearEntryList = new ArrayList<>();
 	public ArrayList<Entry> mStockShareEntryList = new ArrayList<>();
 
+	public ArrayList<Entry> mPriceEntryList = new ArrayList<>();
 	public ArrayList<Entry> mBookValuePerShareEntryList = new ArrayList<>();
 	public ArrayList<Entry> mCashFlowPerShareEntryList = new ArrayList<>();
 	public ArrayList<Entry> mNetProfitPerShareEntryList = new ArrayList<>();
@@ -72,13 +76,22 @@ public class StockFinancialChart {
 				.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(totalLongTermLiabilitiesDataSet);
 
-		LineDataSet mainBusinessIncomeDataSet = new LineDataSet(
-				mMainBusinessIncomeEntryList, "Income");
-		mainBusinessIncomeDataSet.setColor(Color.MAGENTA);
-		mainBusinessIncomeDataSet.setCircleColor(Color.MAGENTA);
-		mainBusinessIncomeDataSet.setCircleSize(3f);
-		mainBusinessIncomeDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		lineData.addDataSet(mainBusinessIncomeDataSet);
+		if (Setting.getDisplayMainIncome()) {
+			LineDataSet mainBusinessIncomeDataSet = new LineDataSet(
+					mMainBusinessIncomeEntryList, "Income");
+			mainBusinessIncomeDataSet.setColor(Color.MAGENTA);
+			mainBusinessIncomeDataSet.setCircleColor(Color.MAGENTA);
+			mainBusinessIncomeDataSet.setCircleSize(3f);
+			mainBusinessIncomeDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+			lineData.addDataSet(mainBusinessIncomeDataSet);
+
+			LineDataSet mainBusinessIncomeInYearDataSet = new LineDataSet(
+					mMainBusinessIncomeInYearEntryList, "IncomeYear");
+			mainBusinessIncomeInYearDataSet.setColor(Color.MAGENTA);
+			mainBusinessIncomeInYearDataSet.setDrawCircles(false);
+			mainBusinessIncomeInYearDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+			lineData.addDataSet(mainBusinessIncomeInYearDataSet);
+		}
 
 		LineDataSet netProfitDataSet = new LineDataSet(mNetProfitEntryList,
 				"NetProfit");
@@ -88,12 +101,26 @@ public class StockFinancialChart {
 		netProfitDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(netProfitDataSet);
 
+		LineDataSet netProfitInYearDataSet = new LineDataSet(mNetProfitInYearEntryList,
+				"NetProfitInYear");
+		netProfitInYearDataSet.setColor(Color.YELLOW);
+		netProfitInYearDataSet.setDrawCircles(false);
+		netProfitInYearDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+		lineData.addDataSet(netProfitInYearDataSet);
+
 		LineDataSet stockShareDataSet = new LineDataSet(mStockShareEntryList,
 				"StockShare");
 		stockShareDataSet.setColor(Color.RED);
 		stockShareDataSet.setDrawCircles(false);
 		stockShareDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(stockShareDataSet);
+
+		LineDataSet priceDataSet = new LineDataSet(
+				mPriceEntryList, "Price");
+		priceDataSet.setColor(Color.RED);
+		priceDataSet.setDrawCircles(false);
+		priceDataSet.setAxisDependency(YAxis.AxisDependency.RIGHT);
+		lineData.addDataSet(priceDataSet);
 
 		mCombinedDataMain.setData(lineData);
 	}
@@ -128,6 +155,13 @@ public class StockFinancialChart {
 		cashFlowPerShareDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(cashFlowPerShareDataSet);
 
+		LineDataSet priceDataSet = new LineDataSet(
+				mPriceEntryList, "Price");
+		priceDataSet.setColor(Color.RED);
+		priceDataSet.setDrawCircles(false);
+		priceDataSet.setAxisDependency(YAxis.AxisDependency.RIGHT);
+		lineData.addDataSet(priceDataSet);
+
 		mCombinedDataSub.setData(lineData);
 
 		if (mDividendEntryList.size() > 0) {
@@ -150,8 +184,11 @@ public class StockFinancialChart {
 		mTotalAssetsEntryList.clear();
 		mTotalLongTermLiabilitiesEntryList.clear();
 		mMainBusinessIncomeEntryList.clear();
+		mMainBusinessIncomeInYearEntryList.clear();
 		mNetProfitEntryList.clear();
+		mNetProfitInYearEntryList.clear();
 		mStockShareEntryList.clear();
+		mPriceEntryList.clear();
 		mBookValuePerShareEntryList.clear();
 		mCashFlowPerShareEntryList.clear();
 		mNetProfitPerShareEntryList.clear();

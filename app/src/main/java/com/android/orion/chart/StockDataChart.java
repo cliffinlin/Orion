@@ -39,6 +39,7 @@ public class StockDataChart {
 	public StringBuffer mDescription = new StringBuffer();
 	public ArrayList<String> mXValues = new ArrayList<>();
 	public ArrayList<CandleEntry> mCandleEntryList = new ArrayList<>();
+	public ArrayList<Entry> mNetProfitInYearEntryList = new ArrayList<>();
 	public ArrayList<Entry> mRZValueEntryList = new ArrayList<>();
 	public ArrayList<Entry> mRQValueEntryList = new ArrayList<>();
 	public ArrayList<Entry> mAverage5EntryList = new ArrayList<>();
@@ -114,6 +115,16 @@ public class StockDataChart {
 		}
 
 		LineData lineData = new LineData(mXValues);
+
+		if (mPeriod.equals(Period.MONTH)) {
+			LineDataSet lineDataSet = new LineDataSet(mNetProfitInYearEntryList,
+					"NPY");
+			lineDataSet.setColor(Color.MAGENTA);
+			lineDataSet.setCircleColor(Color.MAGENTA);
+			lineDataSet.setCircleSize(3f);
+			lineDataSet.setAxisDependency(AxisDependency.RIGHT);
+			lineData.addDataSet(lineDataSet);
+		}
 
 		if (Setting.getDisplayRZValue()) {
 			LineDataSet lineDataSetRZValue = new LineDataSet(mRZValueEntryList,
@@ -562,6 +573,7 @@ public class StockDataChart {
 	public void clear() {
 		mXValues.clear();
 		mCandleEntryList.clear();
+		mNetProfitInYearEntryList.clear();
 		mRZValueEntryList.clear();
 		mRQValueEntryList.clear();
 		mAverage5EntryList.clear();

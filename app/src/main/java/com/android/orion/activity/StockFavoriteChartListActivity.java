@@ -466,6 +466,10 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 							"");
 					stockDataChart.mCandleEntryList.add(candleEntry);
 
+					Entry netProfitInYearEntry = new Entry(
+							(float) mStockData.getNetProfitInYear(), index);
+					stockDataChart.mNetProfitInYearEntryList.add(netProfitInYearEntry);
+
 					Entry rzValueEntry = new Entry(
 							(float) mStockData.getRZValue(), index);
 					stockDataChart.mRZValueEntryList.add(rzValueEntry);
@@ -775,17 +779,9 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 
 			rightYAxis = viewHolder.chart.getAxisRight();
 			if (rightYAxis != null) {
-				if (mItemViewType == ITEM_VIEW_TYPE_MAIN) {
-					if (Setting.getDisplayRZValue() || Setting.getDisplayRQValue()) {
-						rightYAxis.setEnabled(true);
-						rightYAxis.setPosition(YAxisLabelPosition.INSIDE_CHART);
-						rightYAxis.setStartAtZero(false);
-					} else {
-						rightYAxis.setEnabled(false);
-					}
-				} else {
-					rightYAxis.setEnabled(false);
-				}
+				rightYAxis.setEnabled(true);
+				rightYAxis.setPosition(YAxisLabelPosition.INSIDE_CHART);
+				rightYAxis.setStartAtZero(false);
 			}
 
 			viewHolder.chart.setDescription(mStockDataChart.mDescription.toString());

@@ -45,7 +45,7 @@ public class Setting {
 	public static final boolean SETTING_DISPLAY_ADAPTIVE_DEFAULT = true;
 
 	public static final String SETTING_DISPLAY_GROUP = "SETTING_DISPLAY_GROUP";
-	public static final boolean SETTING_DISPLAY_GROUP_DEFAULT = false;
+	public static final boolean SETTING_DISPLAY_GROUP_DEFAULT = true;
 
 	public static final String SETTING_DISPLAY_FILLED = "SETTING_DISPLAY_FILLED";
 	public static final boolean SETTING_DISPLAY_FILLED_DEFAULT = true;
@@ -55,6 +55,9 @@ public class Setting {
 
 	public static final String SETTING_DISPLAY_CANDLE = "SETTING_DISPLAY_CANDLE";
 	public static final boolean SETTING_DISPLAY_CANDLE_DEFAULT = false;
+
+	public static final String SETTING_DISPLAY_MAIN_INCOME = "SETTING_DISPLAY_MAIN_INCOME";
+	public static final boolean SETTING_DISPLAY_MAIN_INCOME_DEFAULT = true;
 
 	public static final String SETTING_DISPLAY_RZ_VALUE = "SETTING_DISPLAY_RZ_VALUE";
 	public static final boolean SETTING_DISPLAY_RZ_VALUE_DEFAULT = true;
@@ -167,6 +170,14 @@ public class Setting {
 
 	public static void setDisplayCandle(boolean value) {
 		Preferences.putBoolean(SETTING_DISPLAY_CANDLE, value);
+	}
+
+	public static boolean getDisplayMainIncome() {
+		return Preferences.getBoolean(SETTING_DISPLAY_MAIN_INCOME, SETTING_DISPLAY_MAIN_INCOME_DEFAULT);
+	}
+
+	public static void setDisplayMainIncome(boolean value) {
+		Preferences.putBoolean(SETTING_DISPLAY_MAIN_INCOME, value);
 	}
 
 	public static boolean getDisplayRZValue() {

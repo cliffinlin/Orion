@@ -4,9 +4,11 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.android.orion.application.MainApplication;
+import com.android.orion.data.Period;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockBonus;
+import com.android.orion.database.StockData;
 import com.android.orion.database.StockFinancial;
 import com.android.orion.database.StockRZRQ;
 import com.android.orion.database.StockShare;
@@ -18,10 +20,11 @@ import com.android.orion.utility.Utility;
 import java.util.ArrayList;
 
 public class FinancialAnalyzer {
-	static ArrayList<StockFinancial> mStockFinancialList;
-	static ArrayList<StockShare> mStockShareList;
-	static ArrayList<StockBonus> mStockBonusList;
-	static ArrayList<StockRZRQ> mStockRZRQList;
+	ArrayList<StockData> mStockDataList;
+	ArrayList<StockFinancial> mStockFinancialList;
+	ArrayList<StockShare> mStockShareList;
+	ArrayList<StockBonus> mStockBonusList;
+	ArrayList<StockRZRQ> mStockRZRQList;
 
 	DatabaseManager mDatabaseManager = DatabaseManager.getInstance();
 	Logger Log = Logger.getLogger();
@@ -38,6 +41,8 @@ public class FinancialAnalyzer {
 			return;
 		}
 
+		mStockDataList = stock.getStockDataList(Period.MONTH);
+		mDatabaseManager.loadStockDataList(stock, Period.MONTH, mStockDataList);
 		mStockFinancialList = stock.getFinancialList();
 		mStockShareList = stock.getStockShareList();
 		mStockBonusList = stock.getStockBonusList();
@@ -58,7 +63,8 @@ public class FinancialAnalyzer {
 		mDatabaseManager.getStockRZRQList(stock, mStockRZRQList,
 				sortOrder);
 
-		setupStockShare(mStockShareList);
+		setupPrice();
+		setupStockShare();
 		setupNetProfitPerShareInYear();
 		setupNetProfitPerShare();
 		setupRate();
@@ -67,11 +73,56 @@ public class FinancialAnalyzer {
 		mDatabaseManager.updateStockFinancial(stock, mStockFinancialList);
 	}
 
-	private void setupStockShare(ArrayList<StockShare> stockShareList) {
+	private void setupPrice() {
+		int j = mStockDataList.size() - 1;
+		for (StockFinancial stockFinancial : mStockFinancialList) {
+			while (j > 0) {
+				StockData stockData = mStockDataList.get(j);
+				if (Utility.getCalendar(stockFinancial.getDate(),
+						Utility.CALENDAR_DATE_FORMAT).after(
+						Utility.getCalendar(stockData.getDate(),
+								Utility.CALENDAR_DATE_FORMAT))) {
+					stockFinancial.setPrice(stockData.getCandle().getClose());
+					break;
+				} else {
+					j--;
+				}
+			}
+		}
+	}
+
+	public void setNetProfileInYear(Stock stock, ArrayList<StockData> stockDataList) {
+		if (stock == null || stockDataList == null || stockDataList.size() == 0 || mStockFinancialList == null || mStockFinancialList.size() == 0) {
+			return;
+		}
+
+		mStockFinancialList = stock.getFinancialList();
+		mDatabaseManager.getStockFinancialList(stock, mStockFinancialList,
+				DatabaseContract.COLUMN_DATE + " DESC ");
+
+		int j = 0;
+		for (int i = stockDataList.size() - 1; i>= 0; i--) {
+			StockData stockData = stockDataList.get(i);
+			while (j < mStockFinancialList.size()) {
+				StockFinancial stockFinancial = mStockFinancialList.get(j);
+				if (Utility.getCalendar(stockData.getDate(),
+						Utility.CALENDAR_DATE_FORMAT).after(
+						Utility.getCalendar(stockFinancial.getDate(),
+								Utility.CALENDAR_DATE_FORMAT))) {
+					stockData.setNetProfitInYear(stockFinancial.getNetProfitInYear());
+					break;
+				} else {
+					j++;
+				}
+			}
+		}
+	}
+
+	private void setupStockShare() {
 		int j = 0;
 		for (StockFinancial stockFinancial : mStockFinancialList) {
-			while (j < stockShareList.size()) {
-				StockShare stockShare = stockShareList.get(j);
+			while (j < mStockShareList.size()) {
+				StockShare stockShare = mStockShareList.get(j);
 				if (Utility.getCalendar(stockFinancial.getDate(),
 						Utility.CALENDAR_DATE_FORMAT).after(
 						Utility.getCalendar(stockShare.getDate(),
