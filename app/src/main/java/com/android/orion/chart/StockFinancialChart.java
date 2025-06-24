@@ -30,8 +30,8 @@ public class StockFinancialChart {
 	public ArrayList<Entry> mNetProfitEntryList = new ArrayList<>();
 	public ArrayList<Entry> mNetProfitInYearEntryList = new ArrayList<>();
 	public ArrayList<Entry> mStockShareEntryList = new ArrayList<>();
-
 	public ArrayList<Entry> mPriceEntryList = new ArrayList<>();
+
 	public ArrayList<Entry> mBookValuePerShareEntryList = new ArrayList<>();
 	public ArrayList<Entry> mCashFlowPerShareEntryList = new ArrayList<>();
 	public ArrayList<Entry> mNetProfitPerShareEntryList = new ArrayList<>();
@@ -79,15 +79,15 @@ public class StockFinancialChart {
 		if (Setting.getDisplayMainIncome()) {
 			LineDataSet mainBusinessIncomeDataSet = new LineDataSet(
 					mMainBusinessIncomeEntryList, "Income");
-			mainBusinessIncomeDataSet.setColor(Color.MAGENTA);
-			mainBusinessIncomeDataSet.setCircleColor(Color.MAGENTA);
+			mainBusinessIncomeDataSet.setColor(Color.GRAY);
+			mainBusinessIncomeDataSet.setCircleColor(Color.GRAY);
 			mainBusinessIncomeDataSet.setCircleSize(3f);
 			mainBusinessIncomeDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 			lineData.addDataSet(mainBusinessIncomeDataSet);
 
 			LineDataSet mainBusinessIncomeInYearDataSet = new LineDataSet(
 					mMainBusinessIncomeInYearEntryList, "IncomeYear");
-			mainBusinessIncomeInYearDataSet.setColor(Color.MAGENTA);
+			mainBusinessIncomeInYearDataSet.setColor(Color.GRAY);
 			mainBusinessIncomeInYearDataSet.setDrawCircles(false);
 			mainBusinessIncomeInYearDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 			lineData.addDataSet(mainBusinessIncomeInYearDataSet);
@@ -103,14 +103,14 @@ public class StockFinancialChart {
 
 		LineDataSet netProfitInYearDataSet = new LineDataSet(mNetProfitInYearEntryList,
 				"NetProfitInYear");
-		netProfitInYearDataSet.setColor(Color.YELLOW);
+		netProfitInYearDataSet.setColor(Color.MAGENTA);
 		netProfitInYearDataSet.setDrawCircles(false);
 		netProfitInYearDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(netProfitInYearDataSet);
 
 		LineDataSet stockShareDataSet = new LineDataSet(mStockShareEntryList,
 				"StockShare");
-		stockShareDataSet.setColor(Color.RED);
+		stockShareDataSet.setColor(Color.BLACK);
 		stockShareDataSet.setDrawCircles(false);
 		stockShareDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(stockShareDataSet);
@@ -154,13 +154,6 @@ public class StockFinancialChart {
 		cashFlowPerShareDataSet.setDrawCircles(false);
 		cashFlowPerShareDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(cashFlowPerShareDataSet);
-
-		LineDataSet priceDataSet = new LineDataSet(
-				mPriceEntryList, "Price");
-		priceDataSet.setColor(Color.RED);
-		priceDataSet.setDrawCircles(false);
-		priceDataSet.setAxisDependency(YAxis.AxisDependency.RIGHT);
-		lineData.addDataSet(priceDataSet);
 
 		mCombinedDataSub.setData(lineData);
 

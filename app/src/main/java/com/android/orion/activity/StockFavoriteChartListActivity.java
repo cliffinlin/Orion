@@ -598,6 +598,7 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 
 			stockDataChart.updateDescription(mStock);
 			stockDataChart.updateLimitLines(mStock, mStockDealList, mStockQuantList);
+			stockDataChart.updateExtendEntry();
 			stockDataChart.updateGroupEntry();
 			stockDataChart.setMainChartData();
 			stockDataChart.setSubChartData();
@@ -779,9 +780,13 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 
 			rightYAxis = viewHolder.chart.getAxisRight();
 			if (rightYAxis != null) {
-				rightYAxis.setEnabled(true);
-				rightYAxis.setPosition(YAxisLabelPosition.INSIDE_CHART);
-				rightYAxis.setStartAtZero(false);
+				if (mItemViewType == ITEM_VIEW_TYPE_MAIN) {
+					rightYAxis.setEnabled(true);
+					rightYAxis.setPosition(YAxisLabelPosition.INSIDE_CHART);
+					rightYAxis.setStartAtZero(false);
+				} else {
+					rightYAxis.setEnabled(false);
+				}
 			}
 
 			viewHolder.chart.setDescription(mStockDataChart.mDescription.toString());

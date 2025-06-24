@@ -6,13 +6,18 @@ import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
+import android.provider.Settings;
 import android.util.ArrayMap;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 
 import com.android.orion.R;
@@ -185,6 +190,12 @@ public class BaseActivity extends Activity implements IBackgroundHandler, Analyz
 
 			ActivityCompat.requestPermissions(this, PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
 		}
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+			if (!isIgnoringBatteryOptimizations()) {
+				requestIgnoreBatteryOptimizations();
+			}
+		}
 	}
 
 	@Override
@@ -200,6 +211,27 @@ public class BaseActivity extends Activity implements IBackgroundHandler, Analyz
 				}
 				return;
 			}
+		}
+	}
+
+	@RequiresApi(api = Build.VERSION_CODES.M)
+	private boolean isIgnoringBatteryOptimizations() {
+		boolean isIgnoring = false;
+		PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+		if (powerManager != null) {
+			isIgnoring = powerManager.isIgnoringBatteryOptimizations(getPackageName());
+		}
+		return isIgnoring;
+	}
+
+	@RequiresApi(api = Build.VERSION_CODES.M)
+	public void requestIgnoreBatteryOptimizations() {
+		try {
+			Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+			intent.setData(Uri.parse("package:" + getPackageName()));
+			startActivity(intent);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

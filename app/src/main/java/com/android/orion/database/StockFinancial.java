@@ -514,7 +514,7 @@ public class StockFinancial extends DatabaseTable {
 	}
 
 	public void setNetProfitPerShareInYear(double netProfitPerShareInYear) {
-		mNetProfitPerShareInYear = netProfitPerShareInYear;
+		mNetProfitPerShareInYear = Utility.Round2(netProfitPerShareInYear);
 	}
 
 	void setNetProfitPerShareInYear(Cursor cursor) {

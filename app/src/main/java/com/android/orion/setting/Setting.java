@@ -57,7 +57,7 @@ public class Setting {
 	public static final boolean SETTING_DISPLAY_CANDLE_DEFAULT = false;
 
 	public static final String SETTING_DISPLAY_MAIN_INCOME = "SETTING_DISPLAY_MAIN_INCOME";
-	public static final boolean SETTING_DISPLAY_MAIN_INCOME_DEFAULT = true;
+	public static final boolean SETTING_DISPLAY_MAIN_INCOME_DEFAULT = false;
 
 	public static final String SETTING_DISPLAY_RZ_VALUE = "SETTING_DISPLAY_RZ_VALUE";
 	public static final boolean SETTING_DISPLAY_RZ_VALUE_DEFAULT = true;

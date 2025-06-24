@@ -15,6 +15,7 @@ import android.util.ArrayMap;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -30,6 +31,7 @@ import com.android.orion.database.Stock;
 import com.android.orion.database.StockBonus;
 import com.android.orion.database.StockFinancial;
 import com.android.orion.setting.Constant;
+import com.android.orion.setting.Setting;
 import com.android.orion.utility.Search;
 import com.android.orion.utility.Utility;
 import com.github.mikephil.charting.charts.CombinedChart;
@@ -39,6 +41,8 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.components.YAxis.YAxisLabelPosition;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.listener.ChartTouchListener;
+import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.utils.Utils;
 import com.markupartist.android.widget.PullToRefreshListView;
 
@@ -49,7 +53,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class StockFinancialChartListActivity extends BaseActivity implements
-		LoaderManager.LoaderCallbacks<Cursor> {
+		LoaderManager.LoaderCallbacks<Cursor>, OnChartGestureListener {
 
 	static final int ITEM_VIEW_TYPE_MAIN = 0;
 	static final int ITEM_VIEW_TYPE_SUB = 1;
@@ -178,6 +182,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		mChartSyncHelper.unregisterOnChartGestureListener(this);
 	}
 
 	@Override
@@ -266,6 +271,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 				mBackgroundHandler.downloadStockFinancial(mStock);
 			}
 		});
+		mChartSyncHelper.registerOnChartGestureListener(this);
 	}
 
 	void initLoader() {
@@ -616,6 +622,47 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 		restartLoader();
 	}
 
+	@Override
+	public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+
+	}
+
+	@Override
+	public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+
+	}
+
+	@Override
+	public void onChartLongPressed(MotionEvent me) {
+
+	}
+
+	@Override
+	public void onChartDoubleTapped(MotionEvent me) {
+		Setting.setDisplayMainIncome(!Setting.getDisplayMainIncome());
+		restartLoader();
+	}
+
+	@Override
+	public void onChartSingleTapped(MotionEvent me) {
+
+	}
+
+	@Override
+	public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
+
+	}
+
+	@Override
+	public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
+
+	}
+
+	@Override
+	public void onChartTranslate(MotionEvent me, float dX, float dY) {
+
+	}
+
 	static class MainHandler extends Handler {
 		private final WeakReference<StockFinancialChartListActivity> mActivity;
 
@@ -696,13 +743,16 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 
 			rightYAxis = viewHolder.chart.getAxisRight();
 			if (rightYAxis != null) {
-				rightYAxis.setEnabled(true);
-				rightYAxis.setPosition(YAxisLabelPosition.INSIDE_CHART);
-				rightYAxis.setStartAtZero(false);
+				if (mItemViewType == ITEM_VIEW_TYPE_MAIN) {
+					rightYAxis.setEnabled(true);
+					rightYAxis.setPosition(YAxisLabelPosition.INSIDE_CHART);
+					rightYAxis.setStartAtZero(false);
+				} else {
+					rightYAxis.setEnabled(false);
+				}
 			}
 
 			viewHolder.chart.setDescription(mStockFinancialChart.mDescription);
-
 			if (mItemViewType == ITEM_VIEW_TYPE_MAIN) {
 				viewHolder.chart.setData(mStockFinancialChart.mCombinedDataMain);
 			} else {

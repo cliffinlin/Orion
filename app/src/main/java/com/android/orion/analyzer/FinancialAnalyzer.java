@@ -76,6 +76,7 @@ public class FinancialAnalyzer {
 	private void setupPrice() {
 		int j = mStockDataList.size() - 1;
 		for (StockFinancial stockFinancial : mStockFinancialList) {
+			stockFinancial.setPrice(0);
 			while (j > 0) {
 				StockData stockData = mStockDataList.get(j);
 				if (Utility.getCalendar(stockFinancial.getDate(),
@@ -169,7 +170,7 @@ public class FinancialAnalyzer {
 				}
 
 				if (current.getShare() == 0) {
-					continue;
+					return;
 				}
 
 				if (current.getDate().contains("03-31")) {
