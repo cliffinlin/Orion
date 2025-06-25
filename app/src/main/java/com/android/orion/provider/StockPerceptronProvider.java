@@ -50,25 +50,29 @@ public class StockPerceptronProvider {
 				Process.THREAD_PRIORITY_LOWEST);
 		mHandlerThread.start();
 		mHandler = new ServiceHandler(mHandlerThread.getLooper());
+	}
 
-		mPeriodMap = new ArrayMap<>();
-		for (String period : Period.PERIODS) {
-			mLevelMap = new ArrayMap<>();
-			for (int level = 1; level < StockTrend.LEVELS.length; level++) {
-				mTypeMap = new ArrayMap<>();
-				for (String type : StockTrend.TYPES) {
-					StockPerceptron stockPerceptron = new StockPerceptron(period, level, type);
-					if (!mDatabaseManager.isStockPerceptronExist(stockPerceptron)) {
-						stockPerceptron.setCreated(Utility.getCurrentDateTimeString());
-						mDatabaseManager.insertStockPerceptron(stockPerceptron);
-					} else {
-						mDatabaseManager.getStockPerceptron(stockPerceptron);
+	private void initIfNeeded() {
+		if (mPeriodMap == null) {
+			mPeriodMap = new ArrayMap<>();
+			for (String period : Period.PERIODS) {
+				mLevelMap = new ArrayMap<>();
+				for (int level = 1; level < StockTrend.LEVELS.length; level++) {
+					mTypeMap = new ArrayMap<>();
+					for (String type : StockTrend.TYPES) {
+						StockPerceptron stockPerceptron = new StockPerceptron(period, level, type);
+						if (!mDatabaseManager.isStockPerceptronExist(stockPerceptron)) {
+							stockPerceptron.setCreated(Utility.getCurrentDateTimeString());
+							mDatabaseManager.insertStockPerceptron(stockPerceptron);
+						} else {
+							mDatabaseManager.getStockPerceptron(stockPerceptron);
+						}
+						mTypeMap.put(type, stockPerceptron);
 					}
-					mTypeMap.put(type, stockPerceptron);
+					mLevelMap.put(level, mTypeMap);
 				}
-				mLevelMap.put(level, mTypeMap);
+				mPeriodMap.put(period, mLevelMap);
 			}
-			mPeriodMap.put(period, mLevelMap);
 		}
 	}
 
@@ -93,6 +97,7 @@ public class StockPerceptronProvider {
 	}
 
 	public StockPerceptron getStockPerceptron(String period, int level, String type) {
+		initIfNeeded();
 		return mPeriodMap.get(period).get(level).get(type);
 	}
 

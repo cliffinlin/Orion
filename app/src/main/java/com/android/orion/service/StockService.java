@@ -48,11 +48,8 @@ public class StockService extends Service implements NetworkChangedListener {
 		super.onCreate();
 
 		mInstance = this;
-
 		mServiceBinder = new StockServiceBinder();
-
 		mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
 		mHandlerThread = new HandlerThread(StockService.class.getSimpleName(),
 				Process.THREAD_PRIORITY_LOWEST);
 		mHandlerThread.start();
@@ -65,10 +62,11 @@ public class StockService extends Service implements NetworkChangedListener {
 				mNotificationManager.createNotificationChannel(channel);
 			}
 			Notification notification = new NotificationCompat.Builder(this, Config.SERVICE_CHANNEL_ID)
+					.setSmallIcon(R.drawable.ic_dialog_email)
 					.setAutoCancel(true)
 					.setCategory(NotificationCompat.CATEGORY_SERVICE)
 					.setOngoing(true)
-					.setPriority(NotificationManager.IMPORTANCE_LOW)
+					.setPriority(NotificationCompat.PRIORITY_LOW)
 					.build();
 			startForeground(Config.SERVICE_NOTIFICATION_ID, notification);
 		}
