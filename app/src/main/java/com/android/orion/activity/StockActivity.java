@@ -64,7 +64,9 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mEditTextStockHold = findViewById(R.id.edittext_stock_hold);
 		mEditTextStockYield = findViewById(R.id.edittext_stock_yield);
 		mEditTextStockQuantVolume = findViewById(R.id.edittext_stock_quant_volume);
+		mEditTextStockQuantVolume.setVisibility(View.GONE);
 		mEditTextStockThreshold = findViewById(R.id.edittext_threshold);
+		mEditTextStockThreshold.setVisibility(View.GONE);
 		mButtonOk = findViewById(R.id.button_ok);
 		mButtonCancel = findViewById(R.id.button_cancel);
 
