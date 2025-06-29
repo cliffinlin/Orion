@@ -272,23 +272,35 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 	public void download() {
 		if (!Utility.isNetworkConnected(mContext)) {
 			mHandler.removeMessages(0);
-			Log.d("return, isNetworkConnected=" + Utility.isNetworkConnected(mContext));
+			Log.d("return, No network connection");
 			return;
 		}
 
 		mDatabaseManager.loadStockArrayMap(mStockArrayMap);
+		if (mStockArrayMap.isEmpty()) {
+			Log.d("return, Stock array map is empty");
+			return;
+		}
 
-		int index = -1;
+		int index = 0;
 		for (Stock current : mStockArrayMap.values()) {
-			index++;
-			Log.d("index=" + index);
+			Log.d("index=" + index++);
 
-			if (mHandler.hasMessages(Integer.parseInt(current.getCode()))) {
-				Log.d("mHandler.hasMessages " + Integer.parseInt(current.getCode()) + ", skip!");
+			String stockCodeStr = current.getCode();
+			int messageID;
+			try {
+				messageID = Integer.parseInt(stockCodeStr);
+			} catch (Exception e) {
+				Log.d("Invalid stock code: " + stockCodeStr);
+				continue;
+			}
+
+			if (mHandler.hasMessages(messageID)) {
+				Log.d("Message already exists for code: " + stockCodeStr + ", skip!");
 			} else {
-				Message msg = mHandler.obtainMessage(Integer.parseInt(current.getCode()), current);
+				Message msg = mHandler.obtainMessage(messageID, current);
 				mHandler.sendMessage(msg);
-				Log.d("mHandler.sendMessage " + msg);
+				Log.d("Sent message: " + msg);
 			}
 		}
 	}
