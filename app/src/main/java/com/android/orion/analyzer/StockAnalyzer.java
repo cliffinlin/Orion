@@ -77,7 +77,6 @@ public class StockAnalyzer {
 				mFinancialAnalyzer.setNetProfileInYear(mStock, mStockDataList);
 			}
 			analyzeMacd(period);
-			analyzeStockQuant(period);
 			analyzeStockData(period);
 			mDatabaseManager.updateStockData(mStock, period, mStockDataList);
 			mStock.setModified(Utility.getCurrentDateTimeString());
@@ -155,20 +154,6 @@ public class StockAnalyzer {
 				);
 			}
 		}
-	}
-
-	private void analyzeStockQuant(String period) {
-		if (!TextUtils.equals(period, Period.MIN5) || mStock.getQuantVolume() == 0 || mStock.getThreshold() == 0 ) {
-			return;
-		}
-
-		StockKeyAnalyzer stockKeyAnalyzer = StockKeyAnalyzer.getInstance();
-		stockKeyAnalyzer.analyze(mStock, mStockDataList);
-
-		mDatabaseManager.getStockBonusList(mStock, mStockBonusList, DatabaseContract.COLUMN_DATE + " DESC ");
-
-		StockQuantAnalyzer stockQuantAnalyzer = StockQuantAnalyzer.getInstance();
-		stockQuantAnalyzer.analyze(mContext, mStock, mStockDataList, mStockBonusList);
 	}
 
 	private void analyzeStockData(String period) {

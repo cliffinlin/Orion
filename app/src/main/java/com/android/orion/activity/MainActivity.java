@@ -82,11 +82,6 @@ public class MainActivity extends Activity {
 				getString(R.string.deal),
 				new Intent(this, StockDealListActivity.class)
 		));
-//		items.add(new HeaderItem(
-//				R.drawable.ic_list,
-//				getString(R.string.quant),
-//				new Intent(this, StockQuantListActivity.class)
-//		));
 		items.add(new HeaderItem(
 				R.drawable.ic_about,
 				getString(R.string.about),

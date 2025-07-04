@@ -622,7 +622,6 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 
 			mDatabaseManager.deleteStockData(stock);
 			mDatabaseManager.deleteStockTrend(stock);
-			mDatabaseManager.deleteStockQuant(stock);
 			mDatabaseManager.deleteStockPerceptron(stock.getId());
 			Setting.setDownloadStockTimeMillis(stock, 0);
 			Setting.setDownloadStockDataTimeMillis(stock, 0);

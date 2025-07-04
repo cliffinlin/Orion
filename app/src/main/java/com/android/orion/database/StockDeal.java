@@ -18,8 +18,6 @@ public class StockDeal extends DatabaseTable {
 	public static final String ACTION_BUY = "B";
 	public static final String ACTION_SELL = "S";
 
-	public static final String MARK_QUANT = "Q";
-
 	public static final double BUY_STAMP_DUTY_RATE = 0;
 	public static final double SELL_STAMP_DUTY_RATE = 1.0 / 1000.0;
 

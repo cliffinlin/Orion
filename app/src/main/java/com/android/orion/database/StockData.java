@@ -15,12 +15,6 @@ import java.util.List;
 
 public class StockData extends DatabaseTable {
 
-	public static final int THRESHOLD_UPWARD_TREND = 2;
-	public static final int THRESHOLD_NATURAL_RALLY = 1;
-	public static final int THRESHOLD_NONE = 0;
-	public static final int THRESHOLD_NATURAL_REACTION = -1;
-	public static final int THRESHOLD_DOWNWARD_TREND = -2;
-
 	public static Comparator<StockData> comparator = new Comparator<StockData>() {
 
 		@Override

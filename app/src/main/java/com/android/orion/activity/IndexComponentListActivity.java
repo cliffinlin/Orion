@@ -114,7 +114,6 @@ public class IndexComponentListActivity extends ListActivity implements
 					if (stock != null && stock.hasFlag(Stock.FLAG_FAVORITE)) {
 						mDatabaseManager.deleteStockData(stock);
 						mDatabaseManager.deleteStockTrend(stock);
-						mDatabaseManager.deleteStockQuant(stock);
 						Setting.setDownloadStockDataTimeMillis(stock, 0);
 						mStockDataProvider.download(stock);
 					}
