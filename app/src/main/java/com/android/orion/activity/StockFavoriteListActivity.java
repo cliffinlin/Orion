@@ -50,6 +50,8 @@ public class StockFavoriteListActivity extends ListActivity implements
 	TextView mTextViewNameCode = null;
 	TextView mTextViewPrice = null;
 	TextView mTextViewNet = null;
+	TextView mTextViewYear = null;
+	TextView mTextViewQuarter = null;
 	TextView mTextViewMonth = null;
 	TextView mTextViewWeek = null;
 	TextView mTextViewDay = null;
@@ -169,6 +171,12 @@ public class StockFavoriteListActivity extends ListActivity implements
 			case R.id.price:
 				mSortOrderColumn = DatabaseContract.COLUMN_PRICE;
 				break;
+			case R.id.period_year:
+				mSortOrderColumn = DatabaseContract.COLUMN_YEAR;
+				break;
+			case R.id.period_quarter:
+				mSortOrderColumn = DatabaseContract.COLUMN_QUARTER;
+				break;
 			case R.id.period_month:
 				mSortOrderColumn = DatabaseContract.COLUMN_MONTH;
 				break;
@@ -235,6 +243,8 @@ public class StockFavoriteListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewNameCode, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewPrice, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewNet, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewYear, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewQuarter, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewMonth, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewWeek, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewDay, mHeaderTextDefaultColor);
@@ -271,6 +281,18 @@ public class StockFavoriteListActivity extends ListActivity implements
 		if (mTextViewNet != null) {
 			mTextViewNet.setOnClickListener(this);
 			setVisibility(mTextViewNet, Setting.getDisplayNet());
+		}
+
+		mTextViewYear = findViewById(R.id.period_year);
+		if (mTextViewYear != null) {
+			mTextViewYear.setOnClickListener(this);
+			setVisibility(mTextViewYear, Setting.getPeriod(DatabaseContract.COLUMN_YEAR));
+		}
+
+		mTextViewQuarter = findViewById(R.id.period_quarter);
+		if (mTextViewQuarter != null) {
+			mTextViewQuarter.setOnClickListener(this);
+			setVisibility(mTextViewQuarter, Setting.getPeriod(DatabaseContract.COLUMN_QUARTER));
 		}
 
 		mTextViewMonth = findViewById(R.id.period_month);
@@ -341,6 +363,10 @@ public class StockFavoriteListActivity extends ListActivity implements
 			setHeaderTextColor(mTextViewPrice, mHeaderTextHighlightColor);
 		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_NET)) {
 			setHeaderTextColor(mTextViewNet, mHeaderTextHighlightColor);
+		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_YEAR)) {
+			setHeaderTextColor(mTextViewYear, mHeaderTextHighlightColor);
+		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_QUARTER)) {
+			setHeaderTextColor(mTextViewQuarter, mHeaderTextHighlightColor);
 		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_MONTH)) {
 			setHeaderTextColor(mTextViewMonth, mHeaderTextHighlightColor);
 		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_WEEK)) {
@@ -375,6 +401,8 @@ public class StockFavoriteListActivity extends ListActivity implements
 		String[] mRightFrom = new String[]{
 				DatabaseContract.COLUMN_PRICE,
 				DatabaseContract.COLUMN_NET,
+				DatabaseContract.COLUMN_YEAR,
+				DatabaseContract.COLUMN_QUARTER,
 				DatabaseContract.COLUMN_MONTH,
 				DatabaseContract.COLUMN_WEEK,
 				DatabaseContract.COLUMN_DAY,
@@ -389,6 +417,8 @@ public class StockFavoriteListActivity extends ListActivity implements
 		int[] mRightTo = new int[]{
 				R.id.price,
 				R.id.net,
+				R.id.year,
+				R.id.quarter,
 				R.id.month,
 				R.id.week,
 				R.id.day,
@@ -609,6 +639,16 @@ public class StockFavoriteListActivity extends ListActivity implements
 			if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_NET)) {
 				return setVisibility(view, Setting.getDisplayNet());
+			} else if (columnIndex == cursor
+					.getColumnIndex(DatabaseContract.COLUMN_YEAR)) {
+				period = DatabaseContract.COLUMN_YEAR;
+				setRightViewColor(period, view, cursor);
+				return setVisibility(view, Setting.getPeriod(period));
+			} else if (columnIndex == cursor
+					.getColumnIndex(DatabaseContract.COLUMN_QUARTER)) {
+				period = DatabaseContract.COLUMN_QUARTER;
+				setRightViewColor(period, view, cursor);
+				return setVisibility(view, Setting.getPeriod(period));
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MONTH)) {
 				period = DatabaseContract.COLUMN_MONTH;

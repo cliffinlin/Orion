@@ -22,6 +22,22 @@
         android:textSize="18sp" />
 
     <TextView
+        android:id="@+id/year"
+        android:layout_width="@dimen/action_layout_width"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/quarter"
+        android:layout_width="@dimen/action_layout_width"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="18sp" />
+
+    <TextView
         android:id="@+id/month"
         android:layout_width="@dimen/action_layout_width"
         android:layout_height="50dp"
