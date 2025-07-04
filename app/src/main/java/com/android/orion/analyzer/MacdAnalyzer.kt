@@ -77,7 +77,21 @@ object MacdAnalyzer {
                 mSlow = SLOW
                 mSignal = SIGNAL
             }
+            Period.MONTH6 -> {
+                mAverage5 = AVERAGE5
+                mAverage10 = AVERAGE10
+                mFast = FAST
+                mSlow = SLOW
+                mSignal = SIGNAL
+            }
             Period.QUARTER -> {
+                mAverage5 = AVERAGE5
+                mAverage10 = AVERAGE10
+                mFast = FAST
+                mSlow = SLOW
+                mSignal = SIGNAL
+            }
+            Period.MONTH2 -> {
                 mAverage5 = AVERAGE5
                 mAverage10 = AVERAGE10
                 mFast = FAST

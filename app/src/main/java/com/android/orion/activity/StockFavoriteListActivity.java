@@ -51,7 +51,9 @@ public class StockFavoriteListActivity extends ListActivity implements
 	TextView mTextViewPrice = null;
 	TextView mTextViewNet = null;
 	TextView mTextViewYear = null;
+	TextView mTextViewMonth6 = null;
 	TextView mTextViewQuarter = null;
+	TextView mTextViewMonth2 = null;
 	TextView mTextViewMonth = null;
 	TextView mTextViewWeek = null;
 	TextView mTextViewDay = null;
@@ -174,8 +176,14 @@ public class StockFavoriteListActivity extends ListActivity implements
 			case R.id.period_year:
 				mSortOrderColumn = DatabaseContract.COLUMN_YEAR;
 				break;
+			case R.id.period_month6:
+				mSortOrderColumn = DatabaseContract.COLUMN_MONTH6;
+				break;
 			case R.id.period_quarter:
 				mSortOrderColumn = DatabaseContract.COLUMN_QUARTER;
+				break;
+			case R.id.period_month2:
+				mSortOrderColumn = DatabaseContract.COLUMN_MONTH2;
 				break;
 			case R.id.period_month:
 				mSortOrderColumn = DatabaseContract.COLUMN_MONTH;
@@ -244,7 +252,9 @@ public class StockFavoriteListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewPrice, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewNet, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewYear, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewMonth6, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewQuarter, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewMonth2, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewMonth, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewWeek, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewDay, mHeaderTextDefaultColor);
@@ -289,10 +299,22 @@ public class StockFavoriteListActivity extends ListActivity implements
 			setVisibility(mTextViewYear, Setting.getPeriod(DatabaseContract.COLUMN_YEAR));
 		}
 
+		mTextViewMonth6 = findViewById(R.id.period_month6);
+		if (mTextViewMonth6 != null) {
+			mTextViewMonth6.setOnClickListener(this);
+			setVisibility(mTextViewMonth6, Setting.getPeriod(DatabaseContract.COLUMN_MONTH6));
+		}
+
 		mTextViewQuarter = findViewById(R.id.period_quarter);
 		if (mTextViewQuarter != null) {
 			mTextViewQuarter.setOnClickListener(this);
 			setVisibility(mTextViewQuarter, Setting.getPeriod(DatabaseContract.COLUMN_QUARTER));
+		}
+
+		mTextViewMonth2 = findViewById(R.id.period_month2);
+		if (mTextViewMonth2 != null) {
+			mTextViewMonth2.setOnClickListener(this);
+			setVisibility(mTextViewMonth2, Setting.getPeriod(DatabaseContract.COLUMN_MONTH2));
 		}
 
 		mTextViewMonth = findViewById(R.id.period_month);
@@ -365,8 +387,12 @@ public class StockFavoriteListActivity extends ListActivity implements
 			setHeaderTextColor(mTextViewNet, mHeaderTextHighlightColor);
 		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_YEAR)) {
 			setHeaderTextColor(mTextViewYear, mHeaderTextHighlightColor);
+		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_MONTH6)) {
+			setHeaderTextColor(mTextViewMonth6, mHeaderTextHighlightColor);
 		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_QUARTER)) {
 			setHeaderTextColor(mTextViewQuarter, mHeaderTextHighlightColor);
+		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_MONTH2)) {
+			setHeaderTextColor(mTextViewMonth2, mHeaderTextHighlightColor);
 		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_MONTH)) {
 			setHeaderTextColor(mTextViewMonth, mHeaderTextHighlightColor);
 		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_WEEK)) {
@@ -402,7 +428,9 @@ public class StockFavoriteListActivity extends ListActivity implements
 				DatabaseContract.COLUMN_PRICE,
 				DatabaseContract.COLUMN_NET,
 				DatabaseContract.COLUMN_YEAR,
+				DatabaseContract.COLUMN_MONTH6,
 				DatabaseContract.COLUMN_QUARTER,
+				DatabaseContract.COLUMN_MONTH2,
 				DatabaseContract.COLUMN_MONTH,
 				DatabaseContract.COLUMN_WEEK,
 				DatabaseContract.COLUMN_DAY,
@@ -418,7 +446,9 @@ public class StockFavoriteListActivity extends ListActivity implements
 				R.id.price,
 				R.id.net,
 				R.id.year,
+				R.id.month6,
 				R.id.quarter,
+				R.id.month2,
 				R.id.month,
 				R.id.week,
 				R.id.day,
@@ -645,8 +675,18 @@ public class StockFavoriteListActivity extends ListActivity implements
 				setRightViewColor(period, view, cursor);
 				return setVisibility(view, Setting.getPeriod(period));
 			} else if (columnIndex == cursor
+					.getColumnIndex(DatabaseContract.COLUMN_MONTH6)) {
+				period = DatabaseContract.COLUMN_MONTH6;
+				setRightViewColor(period, view, cursor);
+				return setVisibility(view, Setting.getPeriod(period));
+			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_QUARTER)) {
 				period = DatabaseContract.COLUMN_QUARTER;
+				setRightViewColor(period, view, cursor);
+				return setVisibility(view, Setting.getPeriod(period));
+			} else if (columnIndex == cursor
+					.getColumnIndex(DatabaseContract.COLUMN_MONTH2)) {
+				period = DatabaseContract.COLUMN_MONTH2;
 				setRightViewColor(period, view, cursor);
 				return setVisibility(view, Setting.getPeriod(period));
 			} else if (columnIndex == cursor

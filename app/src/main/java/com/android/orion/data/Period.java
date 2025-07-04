@@ -24,7 +24,9 @@ public class Period {
 	public static final int MINUTES_MIN5 = 5;
 
 	public static final String YEAR = "year";
+	public static final String MONTH6 = "month6";
 	public static final String QUARTER = "quarter";
+	public static final String MONTH2 = "month2";
 	public static final String MONTH = "month";
 	public static final String WEEK = "week";
 	public static final String DAY = "day";
@@ -33,7 +35,7 @@ public class Period {
 	public static final String MIN15 = "min15";
 	public static final String MIN5 = "min5";
 
-	public static final String[] PERIODS = {YEAR, QUARTER, MONTH, WEEK, DAY, MIN60, MIN30, MIN15, MIN5};
+	public static final String[] PERIODS = {YEAR, MONTH6, QUARTER, MONTH2, MONTH, WEEK, DAY, MIN60, MIN30, MIN15, MIN5};
 	private static final Set<String> MINUTE_PERIODS = new HashSet<>(Arrays.asList(MIN5, MIN15, MIN30, MIN60));
 	private static final Map<String, Integer> MINUTES_MAP = new HashMap<String, Integer>() {{
 		put(MONTH, MINUTES_MONTH);

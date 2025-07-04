@@ -170,7 +170,9 @@
 
     <string name="setting_period">Period</string>
     <string name="setting_period_year">Year</string>
+    <string name="setting_period_month6">Month6</string>
     <string name="setting_period_quarter">Quarter</string>
+    <string name="setting_period_month2">Month2</string>
     <string name="setting_period_month">Month</string>
     <string name="setting_period_week">Week</string>
     <string name="setting_period_day">Day</string>
@@ -219,7 +221,9 @@
     <string name="stop_service">Stop</string>
     <string name="stock">Stock</string>
     <string name="period_year">Y</string>
+    <string name="period_month6">M6</string>
     <string name="period_quarter">Q</string>
+    <string name="period_month2">M2</string>
     <string name="period_month">M</string>
     <string name="period_week">W</string>
     <string name="period_day">Day</string>

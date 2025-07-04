@@ -149,6 +149,10 @@ public class MainActivity extends Activity {
 		if (!Setting.getPreferenceInit()) {
 			Setting.setPreferenceInit(true);
 
+			Setting.setPeriod(Period.YEAR, Setting.SETTING_PERIOD_YEAR_DEFAULT);
+			Setting.setPeriod(Period.MONTH6, Setting.SETTING_PERIOD_MONTH6_DEFAULT);
+			Setting.setPeriod(Period.QUARTER, Setting.SETTING_PERIOD_QUARTER_DEFAULT);
+			Setting.setPeriod(Period.MONTH2, Setting.SETTING_PERIOD_MONTH2_DEFAULT);
 			Setting.setPeriod(Period.MONTH, Setting.SETTING_PERIOD_MONTH_DEFAULT);
 			Setting.setPeriod(Period.WEEK, Setting.SETTING_PERIOD_WEEK_DEFAULT);
 			Setting.setPeriod(Period.DAY, Setting.SETTING_PERIOD_DAY_DEFAULT);

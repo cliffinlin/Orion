@@ -82,22 +82,21 @@ public class SinaFinance extends StockDataProvider {
 	}
 
 	public int getAvailableHistoryLength(String period) {
-		if (TextUtils.equals(period, Period.MIN5)) {
-			return DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN5;
-		} else if (TextUtils.equals(period, Period.MIN15)) {
-			return DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN15;
-		} else if (TextUtils.equals(period, Period.MIN30)) {
-			return DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN30;
-		} else if (TextUtils.equals(period, Period.MIN60)) {
-			return DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN60;
-		} else if (TextUtils.equals(period, Period.DAY)) {
+		if (TextUtils.equals(period, Period.MONTH)) {
 			return DOWNLOAD_HISTORY_LENGTH_UNLIMITED;
 		} else if (TextUtils.equals(period, Period.WEEK)) {
 			return DOWNLOAD_HISTORY_LENGTH_UNLIMITED;
-		} else if (TextUtils.equals(period, Period.MONTH)) {
+		} else if (TextUtils.equals(period, Period.DAY)) {
 			return DOWNLOAD_HISTORY_LENGTH_UNLIMITED;
+		} else if (TextUtils.equals(period, Period.MIN60)) {
+			return DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN60;
+		} else if (TextUtils.equals(period, Period.MIN30)) {
+			return DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN30;
+		} else if (TextUtils.equals(period, Period.MIN15)) {
+			return DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN15;
+		} else if (TextUtils.equals(period, Period.MIN5)) {
+			return DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN5;
 		}
-
 		return 0;
 	}
 
@@ -879,7 +878,7 @@ public class SinaFinance extends StockDataProvider {
 			}
 
 			if (bulkInsert) {
-				saveStockDataYear(stock, stockData, stockDataList);
+				saveStockDataAboveMonth(stock, stockData, stockDataList);
 				saveTDXData(stock, stockData, stockDataMap);
 
 				if (ContentValuesList.size() > 0) {

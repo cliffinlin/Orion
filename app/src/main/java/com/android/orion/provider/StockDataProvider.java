@@ -151,12 +151,32 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 	}
 
 	@NonNull
+	public static ArrayList<String> getDatetimeMonth6List() {
+		ArrayList<String> datetimeList = new ArrayList<>();
+		datetimeList.add("01");
+		datetimeList.add("07");
+		return datetimeList;
+	}
+
+	@NonNull
 	public static ArrayList<String> getDatetimeQuarterList() {
 		ArrayList<String> datetimeList = new ArrayList<>();
 		datetimeList.add("01");
 		datetimeList.add("04");
 		datetimeList.add("07");
 		datetimeList.add("10");
+		return datetimeList;
+	}
+
+	@NonNull
+	public static ArrayList<String> getDatetimeMonth2List() {
+		ArrayList<String> datetimeList = new ArrayList<>();
+		datetimeList.add("01");
+		datetimeList.add("03");
+		datetimeList.add("05");
+		datetimeList.add("07");
+		datetimeList.add("09");
+		datetimeList.add("11");
 		return datetimeList;
 	}
 
@@ -706,7 +726,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		}
 	}
 
-	void saveStockDataYear(Stock stock, StockData stockData, ArrayList<StockData> stockDataList) {
+	void saveStockDataAboveMonth(Stock stock, StockData stockData, ArrayList<StockData> stockDataList) {
 		if (stock == null || stockData == null || stockDataList == null || stockDataList.size() == 0) {
 			return;
 		}
@@ -716,23 +736,22 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		}
 
 		mDatabaseManager.deleteStockData(stockData.getSE(), stockData.getCode(), Period.YEAR);
+		mDatabaseManager.deleteStockData(stockData.getSE(), stockData.getCode(), Period.MONTH6);
 		mDatabaseManager.deleteStockData(stockData.getSE(), stockData.getCode(), Period.QUARTER);
+		mDatabaseManager.deleteStockData(stockData.getSE(), stockData.getCode(), Period.MONTH2);
 
-//		ArrayList<StockData> stockDataMin60List = new ArrayList<>();
-		ArrayList<StockData> stockDataYearList = new ArrayList<>();
-		ArrayList<StockData> stockDataQuarterList = new ArrayList<>();
-
-		mergeStockDataYear(stock, stockDataList, stockDataYearList);
-		mergeStockDataQuarter(stock, stockDataList, stockDataQuarterList);
+		mergeStockDataMonth(stock, Period.YEAR, stockDataList);
+		mergeStockDataMonth(stock, Period.MONTH6, getDatetimeMonth6List(), stockDataList);
+		mergeStockDataMonth(stock, Period.QUARTER, getDatetimeQuarterList(), stockDataList);
+		mergeStockDataMonth(stock, Period.MONTH2, getDatetimeMonth2List(), stockDataList);
 	}
 
-	void mergeStockDataYear(Stock stock, ArrayList<StockData> stockDataList, ArrayList<StockData> stockDataYearList) {
-		if (stockDataList == null || stockDataList.size() == 0 || stockDataYearList == null) {
+	void mergeStockDataMonth(Stock stock, String period, ArrayList<StockData> stockDataList) {
+		if (stockDataList == null || stockDataList.size() == 0) {
 			return;
 		}
 
-		stockDataYearList.clear();
-
+		ArrayList<StockData> resultList = new ArrayList<>();
 		StockData result = null;
 		String year = "";
 		double high = 0;
@@ -743,12 +762,12 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 				year = stockData.getYear();
 
 				result = new StockData();
-				stockDataYearList.add(result);
+				resultList.add(result);
 
 				result.setSE(stockData.getSE());
 				result.setCode(stockData.getCode());
 				result.setName(stockData.getName());
-				result.setPeriod(Period.YEAR);
+				result.setPeriod(period);
 				result.getCandle().setOpen(stockData.getCandle().getOpen());
 				high = stockData.getCandle().getHigh();
 				low = stockData.getCandle().getLow();
@@ -773,29 +792,28 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			result.setDate(stockData.getDate());
 			result.setTime(stockData.getTime());
 		}
-		mDatabaseManager.updateStockData(stock, Period.YEAR, stockDataYearList);
+		mDatabaseManager.updateStockData(stock, period, resultList);
 	}
 
-	void mergeStockDataQuarter(Stock stock, ArrayList<StockData> stockDataList, ArrayList<StockData> stockDataQuarterList) {
-		if (stockDataList == null || stockDataList.size() == 0 || stockDataQuarterList == null) {
+	void mergeStockDataMonth(Stock stock, String period, ArrayList<String> datetimeList, ArrayList<StockData> stockDataList) {
+		if (datetimeList == null || stockDataList == null || stockDataList.size() == 0) {
 			return;
 		}
 
-		stockDataQuarterList.clear();
-
+		ArrayList<StockData> resultList = new ArrayList<>();
 		StockData result = null;
 		double high = 0;
 		double low = 0;
 		for (int i = 0; i < stockDataList.size(); i++) {
 			StockData stockData = stockDataList.get(i);
-			if (getDatetimeQuarterList().contains(stockData.getMonth())) {
+			if (datetimeList.contains(stockData.getMonth())) {
 				result = new StockData();
-				stockDataQuarterList.add(result);
+				resultList.add(result);
 
 				result.setSE(stockData.getSE());
 				result.setCode(stockData.getCode());
 				result.setName(stockData.getName());
-				result.setPeriod(Period.QUARTER);
+				result.setPeriod(period);
 				result.getCandle().setOpen(stockData.getCandle().getOpen());
 				high = stockData.getCandle().getHigh();
 				low = stockData.getCandle().getLow();
@@ -820,7 +838,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			result.setDate(stockData.getDate());
 			result.setTime(stockData.getTime());
 		}
-		mDatabaseManager.updateStockData(stock, Period.QUARTER, stockDataQuarterList);
+		mDatabaseManager.updateStockData(stock, period, resultList);
 	}
 
 	void saveTDXData(Stock stock, StockData stockData, ArrayMap<String, StockData> stockDataMap) {

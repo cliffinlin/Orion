@@ -410,10 +410,12 @@ public class StockDataChart {
 		LimitLine limitLine;
 
 		action = stock.getAction(mPeriod);
-		if (action.contains(StockDeal.ACTION_BUY)) {
-			color = Color.MAGENTA;
-		} else if (action.contains(StockDeal.ACTION_SELL)) {
-			color = Color.CYAN;
+		if (action != null) {
+			if (action.contains(StockDeal.ACTION_BUY)) {
+				color = Color.MAGENTA;
+			} else if (action.contains(StockDeal.ACTION_SELL)) {
+				color = Color.CYAN;
+			}
 		}
 
 		String label = "                                                     " + " ";
