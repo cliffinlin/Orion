@@ -153,10 +153,10 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 	@NonNull
 	public static ArrayList<String> getDatetimeQuarterList() {
 		ArrayList<String> datetimeList = new ArrayList<>();
-		datetimeList.add("-01-");
-		datetimeList.add("-04-");
-		datetimeList.add("-07-");
-		datetimeList.add("-10-");
+		datetimeList.add("01");
+		datetimeList.add("04");
+		datetimeList.add("07");
+		datetimeList.add("10");
 		return datetimeList;
 	}
 
@@ -497,7 +497,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		}
 	}
 
-	StockData mergeStockData(ArrayList<StockData> stockDataList, int size) {
+	StockData mergeStockDataMin(ArrayList<StockData> stockDataList, int size) {
 		if (stockDataList == null || stockDataList.size() == 0 || size <= 0) {
 			return null;
 		}
@@ -583,10 +583,10 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			ArrayList<String> datetimeMin30List = getDatetimeMinL30ist();
 			ArrayList<String> datetimeMin60List = getDatetimeMin60List();
 
-			ArrayList<StockData> StockDataMin5List = new ArrayList<>();
-			ArrayList<StockData> StockDataMin15List = new ArrayList<>();
-			ArrayList<StockData> StockDataMin30List = new ArrayList<>();
-			ArrayList<StockData> StockDataMin60List = new ArrayList<>();
+			ArrayList<StockData> stockDataMin5List = new ArrayList<>();
+			ArrayList<StockData> stockDataMin15List = new ArrayList<>();
+			ArrayList<StockData> stockDataMin30List = new ArrayList<>();
+			ArrayList<StockData> stockDataMin60List = new ArrayList<>();
 			for (int i = 0; i < lineList.size(); i++) {
 				String line = lineList.get(i);
 				if (TextUtils.isEmpty(line)) {
@@ -598,33 +598,33 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 					continue;
 				}
 
-				StockDataMin5List.add(stockDataMin5);
+				stockDataMin5List.add(stockDataMin5);
 
 				if (datetimeMin15List.contains(stockDataMin5.getTime())) {
-					StockData stockData15 = mergeStockData(StockDataMin5List, 15 / 5);
+					StockData stockData15 = mergeStockDataMin(stockDataMin5List, 15 / 5);
 					if (stockData15 != null) {
-						StockDataMin15List.add(stockData15);
+						stockDataMin15List.add(stockData15);
 					}
 				}
 
 				if (datetimeMin30List.contains(stockDataMin5.getTime())) {
-					StockData stockData30 = mergeStockData(StockDataMin15List, 30 / 15);
+					StockData stockData30 = mergeStockDataMin(stockDataMin15List, 30 / 15);
 					if (stockData30 != null) {
-						StockDataMin30List.add(stockData30);
+						stockDataMin30List.add(stockData30);
 					}
 				}
 
 				if (datetimeMin60List.contains(stockDataMin5.getTime())) {
-					StockData stockData60 = mergeStockData(StockDataMin30List, 60 / 30);
+					StockData stockData60 = mergeStockDataMin(stockDataMin30List, 60 / 30);
 					if (stockData60 != null) {
-						StockDataMin60List.add(stockData60);
+						stockDataMin60List.add(stockData60);
 					}
 				}
 			}
-			saveTDXData(stock, Period.MIN5, StockDataMin5List);
-			saveTDXData(stock, Period.MIN15, StockDataMin15List);
-			saveTDXData(stock, Period.MIN30, StockDataMin30List);
-			saveTDXData(stock, Period.MIN60, StockDataMin60List);
+			saveTDXData(stock, Period.MIN5, stockDataMin5List);
+			saveTDXData(stock, Period.MIN15, stockDataMin15List);
+			saveTDXData(stock, Period.MIN30, stockDataMin30List);
+			saveTDXData(stock, Period.MIN60, stockDataMin60List);
 
 			mDatabaseManager.deleteStockData(stock);
 			mDatabaseManager.deleteStockTrend(stock);
@@ -706,16 +706,129 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		}
 	}
 
+	void saveStockDataYear(Stock stock, StockData stockData, ArrayList<StockData> stockDataList) {
+		if (stock == null || stockData == null || stockDataList == null || stockDataList.size() == 0) {
+			return;
+		}
+
+		if (!TextUtils.equals(Period.MONTH, stockData.getPeriod())) {
+			return;
+		}
+
+		mDatabaseManager.deleteStockData(stockData.getSE(), stockData.getCode(), Period.YEAR);
+		mDatabaseManager.deleteStockData(stockData.getSE(), stockData.getCode(), Period.QUARTER);
+
+//		ArrayList<StockData> stockDataMin60List = new ArrayList<>();
+		ArrayList<StockData> stockDataYearList = new ArrayList<>();
+		ArrayList<StockData> stockDataQuarterList = new ArrayList<>();
+
+		mergeStockDataYear(stock, stockDataList, stockDataYearList);
+		mergeStockDataQuarter(stock, stockDataList, stockDataQuarterList);
+	}
+
+	void mergeStockDataYear(Stock stock, ArrayList<StockData> stockDataList, ArrayList<StockData> stockDataYearList) {
+		if (stockDataList == null || stockDataList.size() == 0 || stockDataYearList == null) {
+			return;
+		}
+
+		stockDataYearList.clear();
+
+		StockData result = null;
+		String year = "";
+		double high = 0;
+		double low = 0;
+		for (int i = 0; i < stockDataList.size(); i++) {
+			StockData stockData = stockDataList.get(i);
+			if (!TextUtils.equals(stockData.getYear(), year)) {
+				year = stockData.getYear();
+
+				result = new StockData();
+				stockDataYearList.add(result);
+
+				result.setSE(stockData.getSE());
+				result.setCode(stockData.getCode());
+				result.setName(stockData.getName());
+				result.setPeriod(Period.YEAR);
+				result.getCandle().setOpen(stockData.getCandle().getOpen());
+				high = stockData.getCandle().getHigh();
+				low = stockData.getCandle().getLow();
+			}
+
+			if (result == null) {
+				continue;
+			}
+
+			if (stockData.getCandle().getHigh() > high) {
+				high = stockData.getCandle().getHigh();
+			}
+			result.getCandle().setHigh(high);
+
+			if (stockData.getCandle().getLow() < low) {
+				low = stockData.getCandle().getLow();
+			}
+			result.getCandle().setLow(low);
+
+			result.getCandle().setClose(stockData.getCandle().getClose());
+
+			result.setDate(stockData.getDate());
+			result.setTime(stockData.getTime());
+		}
+		mDatabaseManager.updateStockData(stock, Period.YEAR, stockDataYearList);
+	}
+
+	void mergeStockDataQuarter(Stock stock, ArrayList<StockData> stockDataList, ArrayList<StockData> stockDataQuarterList) {
+		if (stockDataList == null || stockDataList.size() == 0 || stockDataQuarterList == null) {
+			return;
+		}
+
+		stockDataQuarterList.clear();
+
+		StockData result = null;
+		double high = 0;
+		double low = 0;
+		for (int i = 0; i < stockDataList.size(); i++) {
+			StockData stockData = stockDataList.get(i);
+			if (getDatetimeQuarterList().contains(stockData.getMonth())) {
+				result = new StockData();
+				stockDataQuarterList.add(result);
+
+				result.setSE(stockData.getSE());
+				result.setCode(stockData.getCode());
+				result.setName(stockData.getName());
+				result.setPeriod(Period.QUARTER);
+				result.getCandle().setOpen(stockData.getCandle().getOpen());
+				high = stockData.getCandle().getHigh();
+				low = stockData.getCandle().getLow();
+			}
+
+			if (result == null) {
+				continue;
+			}
+
+			if (stockData.getCandle().getHigh() > high) {
+				high = stockData.getCandle().getHigh();
+			}
+			result.getCandle().setHigh(high);
+
+			if (stockData.getCandle().getLow() < low) {
+				low = stockData.getCandle().getLow();
+			}
+			result.getCandle().setLow(low);
+
+			result.getCandle().setClose(stockData.getCandle().getClose());
+
+			result.setDate(stockData.getDate());
+			result.setTime(stockData.getTime());
+		}
+		mDatabaseManager.updateStockData(stock, Period.QUARTER, stockDataQuarterList);
+	}
+
 	void saveTDXData(Stock stock, StockData stockData, ArrayMap<String, StockData> stockDataMap) {
-		if (stock == null || stockData == null || stockDataMap == null) {
+		if (stock == null || stockData == null || stockDataMap == null || stockDataMap.size() == 0) {
 			return;
 		}
 
 		if (!Period.isMinutePeriod(stockData.getPeriod())) {
-			return;
-		}
-
-		if (stockDataMap.size() == 0) {
 			return;
 		}
 

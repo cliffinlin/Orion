@@ -779,6 +779,7 @@ public class SinaFinance extends StockDataProvider {
 		String[] dateTime = null;
 		JSONArray jsonArray = null;
 		ContentValuesList.clear();
+		ArrayList<StockData> stockDataList = new ArrayList<>();
 		ArrayMap<String, StockData> stockDataMap = new ArrayMap<>();
 
 		if (stock == null || stockData == null) {
@@ -857,6 +858,7 @@ public class SinaFinance extends StockDataProvider {
 								ContentValuesList.add(stockData.getContentValues());
 							}
 						} else {
+							stockDataList.add(new StockData(stockData));
 							ContentValuesList.add(stockData.getContentValues());
 						}
 					} else {
@@ -877,6 +879,7 @@ public class SinaFinance extends StockDataProvider {
 			}
 
 			if (bulkInsert) {
+				saveStockDataYear(stock, stockData, stockDataList);
 				saveTDXData(stock, stockData, stockDataMap);
 
 				if (ContentValuesList.size() > 0) {

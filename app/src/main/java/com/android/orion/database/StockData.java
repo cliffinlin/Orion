@@ -520,6 +520,16 @@ public class StockData extends DatabaseTable {
 		return result;
 	}
 
+	public String getYear() {
+		int year = getCalendar().get(Calendar.YEAR);
+		return String.valueOf(year);
+	}
+
+	public String getMonth() {
+		int month = getCalendar().get(Calendar.MONTH);
+		return String.format("%02d", month + 1);
+	}
+
 	public void add(StockData stockData, long weight) {
 		if (stockData == null) {
 			return;
