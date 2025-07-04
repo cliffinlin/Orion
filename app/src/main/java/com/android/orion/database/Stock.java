@@ -38,6 +38,9 @@ public class Stock extends DatabaseTable {
 	static ArrayList<StockShare> mStockShareList = new ArrayList<>();
 	static ArrayList<StockBonus> mStockBonusList = new ArrayList<>();
 	static ArrayList<StockRZRQ> mStockRZRQList = new ArrayList<>();
+
+	private final Period mYear = new Period(Period.YEAR);
+	private final Period mQuarter = new Period(Period.QUARTER);
 	private final Period mMonth = new Period(Period.MONTH);
 	private final Period mWeek = new Period(Period.WEEK);
 	private final Period mDay = new Period(Period.DAY);
@@ -190,6 +193,8 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_VOLUME, mVolume);
 		contentValues.put(DatabaseContract.COLUMN_VALUE, mValue);
 
+		contentValues.put(DatabaseContract.COLUMN_YEAR, mYear.getAction());
+		contentValues.put(DatabaseContract.COLUMN_QUARTER, mQuarter.getAction());
 		contentValues.put(DatabaseContract.COLUMN_MONTH, mMonth.getAction());
 		contentValues.put(DatabaseContract.COLUMN_WEEK, mWeek.getAction());
 		contentValues.put(DatabaseContract.COLUMN_DAY, mDay.getAction());
@@ -198,6 +203,8 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_MIN15, mMin15.getAction());
 		contentValues.put(DatabaseContract.COLUMN_MIN5, mMin5.getAction());
 
+		contentValues.put(DatabaseContract.COLUMN_YEAR_LEVEL, mYear.getLevel());
+		contentValues.put(DatabaseContract.COLUMN_QUARTER_LEVEL, mQuarter.getLevel());
 		contentValues.put(DatabaseContract.COLUMN_MONTH_LEVEL, mMonth.getLevel());
 		contentValues.put(DatabaseContract.COLUMN_WEEK_LEVEL, mWeek.getLevel());
 		contentValues.put(DatabaseContract.COLUMN_DAY_LEVEL, mDay.getLevel());
@@ -301,6 +308,8 @@ public class Stock extends DatabaseTable {
 		setVolume(stock.mVolume);
 		setValue(stock.mValue);
 
+		mYear.setAction(stock.mYear.getAction());
+		mQuarter.setAction(stock.mQuarter.getAction());
 		mMonth.setAction(stock.mMonth.getAction());
 		mWeek.setAction(stock.mWeek.getAction());
 		mDay.setAction(stock.mDay.getAction());
@@ -309,6 +318,8 @@ public class Stock extends DatabaseTable {
 		mMin15.setAction(stock.mMin15.getAction());
 		mMin5.setAction(stock.mMin5.getAction());
 
+		mYear.setLevel(stock.mYear.getLevel());
+		mQuarter.setLevel(stock.mQuarter.getLevel());
 		mMonth.setLevel(stock.mMonth.getLevel());
 		mWeek.setLevel(stock.mWeek.getLevel());
 		mDay.setLevel(stock.mDay.getLevel());
@@ -378,6 +389,8 @@ public class Stock extends DatabaseTable {
 		setVolume(cursor);
 		setValue(cursor);
 
+		mYear.setAction(cursor);
+		mQuarter.setAction(cursor);
 		mMonth.setAction(cursor);
 		mWeek.setAction(cursor);
 		mDay.setAction(cursor);
@@ -386,6 +399,8 @@ public class Stock extends DatabaseTable {
 		mMin15.setAction(cursor);
 		mMin5.setAction(cursor);
 
+		mYear.setLevel(cursor);
+		mQuarter.setLevel(cursor);
 		mMonth.setLevel(cursor);
 		mWeek.setLevel(cursor);
 		mDay.setLevel(cursor);
@@ -1278,8 +1293,11 @@ public class Stock extends DatabaseTable {
 
 	public ArrayList<StockData> getStockDataList(String period) {
 		ArrayList<StockData> result;
-
-		if (TextUtils.equals(period, Period.MONTH)) {
+		if (TextUtils.equals(period, Period.YEAR)) {
+			result = mYear.getStockDataList();
+		} else if (TextUtils.equals(period, Period.QUARTER)) {
+			result = mQuarter.getStockDataList();
+		} else if (TextUtils.equals(period, Period.MONTH)) {
 			result = mMonth.getStockDataList();
 		} else if (TextUtils.equals(period, Period.WEEK)) {
 			result = mWeek.getStockDataList();
@@ -1301,7 +1319,11 @@ public class Stock extends DatabaseTable {
 
 	public ArrayList<StockData> getVertexList(String period, int level) {
 		ArrayList<StockData> result;
-		if (TextUtils.equals(period, Period.MONTH)) {
+		if (TextUtils.equals(period, Period.YEAR)) {
+			result = mYear.getVertexList(level);
+		} else if (TextUtils.equals(period, Period.QUARTER)) {
+			result = mQuarter.getVertexList(level);
+		} else if (TextUtils.equals(period, Period.MONTH)) {
 			result = mMonth.getVertexList(level);
 		} else if (TextUtils.equals(period, Period.WEEK)) {
 			result = mWeek.getVertexList(level);
@@ -1323,7 +1345,11 @@ public class Stock extends DatabaseTable {
 
 	public ArrayList<StockData> getDataList(String period, int level) {
 		ArrayList<StockData> result;
-		if (TextUtils.equals(period, Period.MONTH)) {
+		if (TextUtils.equals(period, Period.YEAR)) {
+			result = mYear.getDataList(level);
+		} else if (TextUtils.equals(period, Period.QUARTER)) {
+			result = mQuarter.getDataList(level);
+		} else if (TextUtils.equals(period, Period.MONTH)) {
 			result = mMonth.getDataList(level);
 		} else if (TextUtils.equals(period, Period.WEEK)) {
 			result = mWeek.getDataList(level);
@@ -1345,7 +1371,11 @@ public class Stock extends DatabaseTable {
 
 	public ArrayList<StockTrend> getStockTrendList(String period, int level) {
 		ArrayList<StockTrend> result;
-		if (TextUtils.equals(period, Period.MONTH)) {
+		if (TextUtils.equals(period, Period.YEAR)) {
+			result = mYear.getStockTrendList(level);
+		} else if (TextUtils.equals(period, Period.QUARTER)) {
+			result = mQuarter.getStockTrendList(level);
+		} else if (TextUtils.equals(period, Period.MONTH)) {
 			result = mMonth.getStockTrendList(level);
 		} else if (TextUtils.equals(period, Period.WEEK)) {
 			result = mWeek.getStockTrendList(level);
@@ -1367,7 +1397,11 @@ public class Stock extends DatabaseTable {
 
 	public String getAction(String period) {
 		String action = "";
-		if (TextUtils.equals(period, Period.MONTH)) {
+		if (TextUtils.equals(period, Period.YEAR)) {
+			action = mYear.getAction();
+		} else if (TextUtils.equals(period, Period.QUARTER)) {
+			action = mQuarter.getAction();
+		} else if (TextUtils.equals(period, Period.MONTH)) {
 			action = mMonth.getAction();
 		} else if (TextUtils.equals(period, Period.WEEK)) {
 			action = mWeek.getAction();
@@ -1386,7 +1420,11 @@ public class Stock extends DatabaseTable {
 	}
 
 	public void setAction(String period, String action) {
-		if (TextUtils.equals(period, Period.MONTH)) {
+		if (TextUtils.equals(period, Period.YEAR)) {
+			mYear.setAction(action);
+		} else if (TextUtils.equals(period, Period.QUARTER)) {
+			mQuarter.setAction(action);
+		} else if (TextUtils.equals(period, Period.MONTH)) {
 			mMonth.setAction(action);
 		} else if (TextUtils.equals(period, Period.WEEK)) {
 			mWeek.setAction(action);
@@ -1405,7 +1443,11 @@ public class Stock extends DatabaseTable {
 
 	public int getLevel(String period) {
 		int level = StockTrend.LEVEL_NONE;
-		if (TextUtils.equals(period, Period.MONTH)) {
+		if (TextUtils.equals(period, Period.YEAR)) {
+			level = mYear.getLevel();
+		} else if (TextUtils.equals(period, Period.QUARTER)) {
+			level = mQuarter.getLevel();
+		} else if (TextUtils.equals(period, Period.MONTH)) {
 			level = mMonth.getLevel();
 		} else if (TextUtils.equals(period, Period.WEEK)) {
 			level = mWeek.getLevel();
@@ -1424,7 +1466,11 @@ public class Stock extends DatabaseTable {
 	}
 
 	public void setLevel(String period, int level) {
-		if (TextUtils.equals(period, Period.MONTH)) {
+		if (TextUtils.equals(period, Period.YEAR)) {
+			mYear.setLevel(level);
+		} else if (TextUtils.equals(period, Period.QUARTER)) {
+			mQuarter.setLevel(level);
+		} else if (TextUtils.equals(period, Period.MONTH)) {
 			mMonth.setLevel(level);
 		} else if (TextUtils.equals(period, Period.WEEK)) {
 			mWeek.setLevel(level);

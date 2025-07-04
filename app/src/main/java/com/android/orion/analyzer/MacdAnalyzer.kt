@@ -70,6 +70,20 @@ object MacdAnalyzer {
     fun init(period: String, stockDataList: ArrayList<StockData>) {
         mPeriod = period
         when (mPeriod) {
+            Period.YEAR -> {
+                mAverage5 = AVERAGE5
+                mAverage10 = AVERAGE10
+                mFast = FAST
+                mSlow = SLOW
+                mSignal = SIGNAL
+            }
+            Period.QUARTER -> {
+                mAverage5 = AVERAGE5
+                mAverage10 = AVERAGE10
+                mFast = FAST
+                mSlow = SLOW
+                mSignal = SIGNAL
+            }
             Period.MONTH -> {
                 mAverage5 = AVERAGE5
                 mAverage10 = AVERAGE10

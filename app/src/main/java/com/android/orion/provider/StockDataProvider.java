@@ -150,6 +150,16 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		return datetimeList;
 	}
 
+	@NonNull
+	public static ArrayList<String> getDatetimeQuarterList() {
+		ArrayList<String> datetimeList = new ArrayList<>();
+		datetimeList.add("-01-");
+		datetimeList.add("-04-");
+		datetimeList.add("-07-");
+		datetimeList.add("-10-");
+		return datetimeList;
+	}
+
 	@Override
 	public void registerAnalyzeListener(AnalyzeListener listener) {
 		if (listener == null) {
@@ -486,10 +496,6 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			e.printStackTrace();
 		}
 	}
-
-	//					SH#600938.txt
-	//					日期	    时间	    开盘	    最高	    最低	    收盘	    成交量	    成交额
-	//					2023/01/03	0935	37.08	37.08	36.72	36.81	6066500	223727792.00
 
 	StockData mergeStockData(ArrayList<StockData> stockDataList, int size) {
 		if (stockDataList == null || stockDataList.size() == 0 || size <= 0) {

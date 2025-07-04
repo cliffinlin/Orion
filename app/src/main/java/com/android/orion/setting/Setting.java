@@ -10,6 +10,9 @@ public class Setting {
 	public static final String SETTING_PREFERENCE_INIT = "SETTING_PREFERENCE_INIT";
 
 	public static final String SETTING_PERIOD_ = "SETTING_PERIOD_";
+
+	public static final boolean SETTING_PERIOD_YEAR_DEFAULT = false;
+	public static final boolean SETTING_PERIOD_QUARTER_DEFAULT = false;
 	public static final boolean SETTING_PERIOD_MONTH_DEFAULT = true;
 	public static final boolean SETTING_PERIOD_WEEK_DEFAULT = true;
 	public static final boolean SETTING_PERIOD_DAY_DEFAULT = true;

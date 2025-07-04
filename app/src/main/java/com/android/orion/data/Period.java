@@ -23,6 +23,8 @@ public class Period {
 	public static final int MINUTES_MIN15 = 15;
 	public static final int MINUTES_MIN5 = 5;
 
+	public static final String YEAR = "year";
+	public static final String QUARTER = "quarter";
 	public static final String MONTH = "month";
 	public static final String WEEK = "week";
 	public static final String DAY = "day";

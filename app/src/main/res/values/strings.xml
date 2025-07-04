@@ -169,6 +169,8 @@
     <string name="setting_indexes">Indexes</string>
 
     <string name="setting_period">Period</string>
+    <string name="setting_period_year">Year</string>
+    <string name="setting_period_quarter">Quarter</string>
     <string name="setting_period_month">Month</string>
     <string name="setting_period_week">Week</string>
     <string name="setting_period_day">Day</string>

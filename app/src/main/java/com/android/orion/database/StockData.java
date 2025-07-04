@@ -764,6 +764,11 @@ public class StockData extends DatabaseTable {
 		TDX output format
 		date  time    open    high    low close   volume  value
 		*/
+
+		//					SH#600938.txt
+		//					日期	    时间	    开盘	    最高	    最低	    收盘	    成交量	    成交额
+		//					2023/01/03	0935	37.08	37.08	36.72	36.81	6066500	223727792.00
+
 		String[] strings = string.split(Constant.TAB);
 		if (strings == null || strings.length < 6) {
 			return null;

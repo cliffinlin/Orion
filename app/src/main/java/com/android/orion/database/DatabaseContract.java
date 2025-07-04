@@ -36,21 +36,25 @@ public final class DatabaseContract {
 	public static final String COLUMN_TEXT = "text";
 	public static final String COLUMN_LEVEL = "level";
 
-	public static final String COLUMN_MIN5 = Period.MIN5;
-	public static final String COLUMN_MIN15 = Period.MIN15;
-	public static final String COLUMN_MIN30 = Period.MIN30;
-	public static final String COLUMN_MIN60 = Period.MIN60;
-	public static final String COLUMN_DAY = Period.DAY;
-	public static final String COLUMN_WEEK = Period.WEEK;
+	public static final String COLUMN_YEAR = Period.YEAR;
+	public static final String COLUMN_QUARTER = Period.QUARTER;
 	public static final String COLUMN_MONTH = Period.MONTH;
+	public static final String COLUMN_WEEK = Period.WEEK;
+	public static final String COLUMN_DAY = Period.DAY;
+	public static final String COLUMN_MIN60 = Period.MIN60;
+	public static final String COLUMN_MIN30 = Period.MIN30;
+	public static final String COLUMN_MIN15 = Period.MIN15;
+	public static final String COLUMN_MIN5 = Period.MIN5;
 
-	public static final String COLUMN_MIN5_LEVEL = COLUMN_MIN5 + "_" + COLUMN_LEVEL;
-	public static final String COLUMN_MIN15_LEVEL = COLUMN_MIN15 + "_" + COLUMN_LEVEL;
-	public static final String COLUMN_MIN30_LEVEL = COLUMN_MIN30 + "_" + COLUMN_LEVEL;
-	public static final String COLUMN_MIN60_LEVEL = COLUMN_MIN60 + "_" + COLUMN_LEVEL;
-	public static final String COLUMN_DAY_LEVEL = COLUMN_DAY + "_" + COLUMN_LEVEL;
-	public static final String COLUMN_WEEK_LEVEL = COLUMN_WEEK + "_" + COLUMN_LEVEL;
+	public static final String COLUMN_YEAR_LEVEL = COLUMN_YEAR + "_" + COLUMN_LEVEL;
+	public static final String COLUMN_QUARTER_LEVEL = COLUMN_QUARTER + "_" + COLUMN_LEVEL;
 	public static final String COLUMN_MONTH_LEVEL = COLUMN_MONTH + "_" + COLUMN_LEVEL;
+	public static final String COLUMN_WEEK_LEVEL = COLUMN_WEEK + "_" + COLUMN_LEVEL;
+	public static final String COLUMN_DAY_LEVEL = COLUMN_DAY + "_" + COLUMN_LEVEL;
+	public static final String COLUMN_MIN60_LEVEL = COLUMN_MIN60 + "_" + COLUMN_LEVEL;
+	public static final String COLUMN_MIN30_LEVEL = COLUMN_MIN30 + "_" + COLUMN_LEVEL;
+	public static final String COLUMN_MIN15_LEVEL = COLUMN_MIN15 + "_" + COLUMN_LEVEL;
+	public static final String COLUMN_MIN5_LEVEL = COLUMN_MIN5 + "_" + COLUMN_LEVEL;
 
 	public static final String COLUMN_WEIGHT = "weight";
 	public static final String COLUMN_BIAS = "bias";
@@ -175,8 +179,8 @@ public final class DatabaseContract {
 		public static final String[] PROJECTION_ALL = {_ID,
 				COLUMN_CLASSES, COLUMN_SE, COLUMN_CODE, COLUMN_NAME, COLUMN_PINYIN,
 				COLUMN_PRICE, COLUMN_CHANGE, COLUMN_NET, COLUMN_VOLUME, COLUMN_VALUE,
-				COLUMN_MONTH, COLUMN_WEEK, COLUMN_DAY, COLUMN_MIN60, COLUMN_MIN30, COLUMN_MIN15, COLUMN_MIN5,
-				COLUMN_MONTH_LEVEL, COLUMN_WEEK_LEVEL, COLUMN_DAY_LEVEL, COLUMN_MIN60_LEVEL, COLUMN_MIN30_LEVEL, COLUMN_MIN15_LEVEL, COLUMN_MIN5_LEVEL,
+				COLUMN_YEAR, COLUMN_QUARTER, COLUMN_MONTH, COLUMN_WEEK, COLUMN_DAY, COLUMN_MIN60, COLUMN_MIN30, COLUMN_MIN15, COLUMN_MIN5,
+				COLUMN_YEAR_LEVEL, COLUMN_QUARTER_LEVEL, COLUMN_MONTH_LEVEL, COLUMN_WEEK_LEVEL, COLUMN_DAY_LEVEL, COLUMN_MIN60_LEVEL, COLUMN_MIN30_LEVEL, COLUMN_MIN15_LEVEL, COLUMN_MIN5_LEVEL,
 				COLUMN_FLAG,
 				COLUMN_ROI, COLUMN_IR, COLUMN_IRR, COLUMN_ROE, COLUMN_PE, COLUMN_PB, COLUMN_PR,
 				COLUMN_HOLD, COLUMN_PROFIT, COLUMN_BONUS, COLUMN_VALUATION, COLUMN_COST,
@@ -206,6 +210,8 @@ public final class DatabaseContract {
 				+ COLUMN_NET + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_VOLUME + INTEGER_TYPE + COMMA_SEP
 				+ COLUMN_VALUE + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_YEAR + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_QUARTER + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_MONTH + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_WEEK + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_DAY + TEXT_TYPE + COMMA_SEP
@@ -213,6 +219,8 @@ public final class DatabaseContract {
 				+ COLUMN_MIN30 + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_MIN15 + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_MIN5 + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_YEAR_LEVEL + INTEGER_TYPE + COMMA_SEP
+				+ COLUMN_QUARTER_LEVEL + INTEGER_TYPE + COMMA_SEP
 				+ COLUMN_MONTH_LEVEL + INTEGER_TYPE + COMMA_SEP
 				+ COLUMN_WEEK_LEVEL + INTEGER_TYPE + COMMA_SEP
 				+ COLUMN_DAY_LEVEL + INTEGER_TYPE + COMMA_SEP
