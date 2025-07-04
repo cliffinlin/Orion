@@ -756,7 +756,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 	}
 
 	void exportTDXData(Stock stock, String period, ArrayList<StockData> stockDataList) {
-		if (stock == null || stockDataList == null || stockDataList.size() == 0) {
+		if (stock == null || stockDataList == null || stockDataList.size() < Config.MAX_CONTENT_LENGTH_MIN5) {
 			return;
 		}
 
