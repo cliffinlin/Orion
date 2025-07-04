@@ -108,9 +108,6 @@ public class StockListActivity extends DatabaseActivity implements
 			case R.id.action_favorite_none:
 				handleFavoriteNone();
 				break;
-			case R.id.action_backup_database:
-				handleBackupDatabase();
-				break;
 			default:
 				super.handleOnOptionsItemSelected(item);
 		}

@@ -148,7 +148,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 			case R.id.action_list:
 				startActivity(new Intent(this, StockListActivity.class));
 				break;
-			case R.id.action_data:
+			case R.id.action_import:
 				performLoadFromFile(FILE_TYPE_TDX_DATA);
 				break;
 			default:

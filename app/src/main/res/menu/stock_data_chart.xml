@@ -39,9 +39,9 @@
         android:title="@string/action_trend"
         app:showAsAction="never" />
     <item
-        android:id="@+id/action_backup"
+        android:id="@+id/action_export"
         android:orderInCategory="100"
-        android:title="@string/action_backup"
+        android:title="@string/action_export"
         app:showAsAction="never" />
 
 </menu>
