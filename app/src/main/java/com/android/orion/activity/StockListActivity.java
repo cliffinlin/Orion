@@ -30,6 +30,7 @@ import com.android.orion.R;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.setting.Constant;
+import com.android.orion.setting.Setting;
 import com.android.orion.utility.Utility;
 
 import java.util.ArrayList;
@@ -401,6 +402,8 @@ public class StockListActivity extends DatabaseActivity implements
 													mDatabaseManager.deleteStockBonus(stock);
 													mDatabaseManager.deleteStockShare(stock);
 													mDatabaseManager.deleteStockTrend(stock);
+													Setting.setDownloadStockTimeMillis(stock, 0);
+													Setting.setDownloadStockDataTimeMillis(stock, 0);
 												}
 											})
 									.setNegativeButton(R.string.cancel,
