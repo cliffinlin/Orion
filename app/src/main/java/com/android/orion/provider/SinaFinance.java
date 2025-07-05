@@ -1242,10 +1242,6 @@ public class SinaFinance extends StockDataProvider {
 						stockFinancial.setBookValuePerShare(valueDouble);
 					} else if (TextUtils.equals(keyString, "OPNCFPS")) {//每股现金流
 						stockFinancial.setCashFlowPerShare(valueDouble);
-					} else if (TextUtils.equals(keyString, mContext.getResources().getString(R.string.key_total_current_assets))) {
-						stockFinancial.setTotalCurrentAssets(valueDouble);
-					} else if (TextUtils.equals(keyString, mContext.getResources().getString(R.string.key_total_assets))) {
-						stockFinancial.setTotalAssets(valueDouble);
 					} else if (TextUtils.equals(keyString, "ASSLIABRT")) {//资产负债率
 						stockFinancial
 								.setDebtToNetAssetsRatio(valueDouble);

@@ -35,7 +35,7 @@ import com.android.orion.utility.Utility;
 
 import java.util.ArrayList;
 
-public class StockListActivity extends DatabaseActivity implements
+public class StockListActivity extends StorageActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
 		OnClickListener {
 
@@ -99,7 +99,31 @@ public class StockListActivity extends DatabaseActivity implements
 	public void handleOnOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_new:
-				handleNewAction();
+				Intent intent = new Intent(this, StockActivity.class);
+				intent.setAction(Constant.ACTION_FAVORITE_STOCK_INSERT);
+				startActivity(intent);
+				break;
+			case R.id.action_refresh:
+				try {
+					mDatabaseManager.loadStockArrayMap(mStockArrayMap);
+					for (Stock stock : mStockArrayMap.values()) {
+						mDatabaseManager.deleteStockData(stock);
+						mDatabaseManager.deleteStockTrend(stock);
+						mDatabaseManager.deleteStockPerceptron(stock.getId());
+						Setting.setDownloadStockDataTimeMillis(stock, 0);
+						mStockDataProvider.download(stock);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				break;
+			case R.id.action_load:
+				performLoadFromFile(FILE_TYPE_FAVORITE);
+				break;
+			case R.id.action_save:
+				if (mStockArrayMap.size() > 0) {
+					performSaveToFile(FILE_TYPE_FAVORITE);
+				}
 				break;
 			case R.id.action_favorite_all:
 				handleFavoriteAll();
@@ -110,12 +134,6 @@ public class StockListActivity extends DatabaseActivity implements
 			default:
 				super.handleOnOptionsItemSelected(item);
 		}
-	}
-
-	private void handleNewAction() {
-		Intent intent = new Intent(this, StockActivity.class);
-		intent.setAction(Constant.ACTION_FAVORITE_STOCK_INSERT);
-		startActivity(intent);
 	}
 
 	private void handleFavoriteAll() {

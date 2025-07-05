@@ -14,9 +14,6 @@ public class StockFinancial extends DatabaseTable {
 	private double mPrice;
 	private double mBookValuePerShare;
 	private double mCashFlowPerShare;
-	private double mTotalCurrentAssets;
-	private double mTotalAssets;
-	private double mTotalLongTermLiabilities;
 	private double mMainBusinessIncome;
 	private double mMainBusinessIncomeInYear;
 	private double mFinancialExpenses;
@@ -55,9 +52,6 @@ public class StockFinancial extends DatabaseTable {
 		mPrice = 0;
 		mBookValuePerShare = 0;
 		mCashFlowPerShare = 0;
-		mTotalCurrentAssets = 0;
-		mTotalAssets = 0;
-		mTotalLongTermLiabilities = 0;
 		mMainBusinessIncome = 0;
 		mMainBusinessIncomeInYear = 0;
 		mFinancialExpenses = 0;
@@ -87,11 +81,6 @@ public class StockFinancial extends DatabaseTable {
 				mBookValuePerShare);
 		contentValues.put(DatabaseContract.COLUMN_CASH_FLOW_PER_SHARE,
 				mCashFlowPerShare);
-		contentValues.put(DatabaseContract.COLUMN_TOTAL_CURRENT_ASSETS,
-				mTotalCurrentAssets);
-		contentValues.put(DatabaseContract.COLUMN_TOTAL_ASSETS, mTotalAssets);
-		contentValues.put(DatabaseContract.COLUMN_TOTAL_LONG_TERM_LIABILITIES,
-				mTotalLongTermLiabilities);
 		contentValues.put(DatabaseContract.COLUMN_MAIN_BUSINESS_INCOME,
 				mMainBusinessIncome);
 		contentValues.put(DatabaseContract.COLUMN_MAIN_BUSINESS_INCOME_IN_YEAR,
@@ -131,9 +120,6 @@ public class StockFinancial extends DatabaseTable {
 		setPrice(stockFinancial.mPrice);
 		setBookValuePerShare(stockFinancial.mBookValuePerShare);
 		setCashFlowPerShare(stockFinancial.mCashFlowPerShare);
-		setTotalCurrentAssets(stockFinancial.mTotalCurrentAssets);
-		setTotalAssets(stockFinancial.mTotalAssets);
-		setTotalLongTermLiabilities(stockFinancial.mTotalLongTermLiabilities);
 		setMainBusinessIncome(stockFinancial.mMainBusinessIncome);
 		setMainBusinessIncomeInYear(stockFinancial.mMainBusinessIncomeInYear);
 		setFinancialExpenses(stockFinancial.mFinancialExpenses);
@@ -166,9 +152,6 @@ public class StockFinancial extends DatabaseTable {
 		setPrice(cursor);
 		setBookValuePerShare(cursor);
 		setCashFlowPerShare(cursor);
-		setTotalCurrentAssets(cursor);
-		setTotalAssets(cursor);
-		setTotalLongTermLiabilities(cursor);
 		setMainBusinessIncome(cursor);
 		setMainBusinessIncomeInYear(cursor);
 		setFinancialExpenses(cursor);
@@ -301,58 +284,6 @@ public class StockFinancial extends DatabaseTable {
 
 		setCashFlowPerShare(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_CASH_FLOW_PER_SHARE)));
-	}
-
-	public double getTotalCurrentAssets() {
-		return mTotalCurrentAssets;
-	}
-
-	public void setTotalCurrentAssets(double totalCurrentAssets) {
-		mTotalCurrentAssets = totalCurrentAssets;
-	}
-
-	void setTotalCurrentAssets(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setTotalCurrentAssets(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_TOTAL_CURRENT_ASSETS)));
-	}
-
-	public double getTotalAssets() {
-		return mTotalAssets;
-	}
-
-	public void setTotalAssets(double totalAssets) {
-		mTotalAssets = totalAssets;
-	}
-
-	void setTotalAssets(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setTotalAssets(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_TOTAL_ASSETS)));
-	}
-
-	public double getTotalLongTermLiabilities() {
-		return mTotalLongTermLiabilities;
-	}
-
-	public void setTotalLongTermLiabilities(double totalLongTermLiabilities) {
-		mTotalLongTermLiabilities = totalLongTermLiabilities;
-	}
-
-	void setTotalLongTermLiabilities(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setTotalLongTermLiabilities(cursor
-				.getDouble(cursor
-						.getColumnIndex(DatabaseContract.COLUMN_TOTAL_LONG_TERM_LIABILITIES)));
 	}
 
 	public double getMainBusinessIncome() {
@@ -576,15 +507,6 @@ public class StockFinancial extends DatabaseTable {
 
 		setDividendRatio(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_DIVIDEND_RATIO)));
-	}
-
-	public void setupDebtToNetAssetsRatio() {
-		if ((mBookValuePerShare == 0) || (mShare == 0)) {
-			return;
-		}
-
-		mDebtToNetAssetsRatio = Utility.Round2(mTotalLongTermLiabilities / mShare
-				/ mBookValuePerShare);
 	}
 
 	public void setupNetProfitMargin() {

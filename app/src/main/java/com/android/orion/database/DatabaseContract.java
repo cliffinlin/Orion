@@ -122,9 +122,6 @@ public final class DatabaseContract {
 	// http://money.finance.sina.com.cn/corp/go.php/vFD_FinanceSummary/stockid/600900.phtml
 	public static final String COLUMN_BOOK_VALUE_PER_SHARE = "book_value_per_share";
 	public static final String COLUMN_CASH_FLOW_PER_SHARE = "cash_flow_per_share";
-	public static final String COLUMN_TOTAL_CURRENT_ASSETS = "total_current_assets";
-	public static final String COLUMN_TOTAL_ASSETS = "total_assets";
-	public static final String COLUMN_TOTAL_LONG_TERM_LIABILITIES = "total_long_term_liabilities";
 	public static final String COLUMN_MAIN_BUSINESS_INCOME = "main_business_income";
 	public static final String COLUMN_FINANCIAL_EXPENSES = "financial_expenses";
 	public static final String COLUMN_NET_PROFIT = "net_profit";
@@ -473,8 +470,7 @@ public final class DatabaseContract {
 		public static final String[] PROJECTION_ALL = {_ID,
 				COLUMN_SE, COLUMN_CODE, COLUMN_NAME,
 				COLUMN_DATE, COLUMN_PRICE, COLUMN_BOOK_VALUE_PER_SHARE,
-				COLUMN_CASH_FLOW_PER_SHARE, COLUMN_TOTAL_CURRENT_ASSETS,
-				COLUMN_TOTAL_ASSETS, COLUMN_TOTAL_LONG_TERM_LIABILITIES,
+				COLUMN_CASH_FLOW_PER_SHARE,
 				COLUMN_MAIN_BUSINESS_INCOME, COLUMN_FINANCIAL_EXPENSES,
 				COLUMN_NET_PROFIT, COLUMN_SHARE,
 				COLUMN_MAIN_BUSINESS_INCOME_IN_YEAR, COLUMN_NET_PROFIT_IN_YEAR, COLUMN_NET_PROFIT_MARGIN,
@@ -492,9 +488,6 @@ public final class DatabaseContract {
 				+ COLUMN_PRICE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_BOOK_VALUE_PER_SHARE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_CASH_FLOW_PER_SHARE + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_TOTAL_CURRENT_ASSETS + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_TOTAL_ASSETS + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_TOTAL_LONG_TERM_LIABILITIES + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_MAIN_BUSINESS_INCOME + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_FINANCIAL_EXPENSES + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_NET_PROFIT + DOUBLE_TYPE + COMMA_SEP

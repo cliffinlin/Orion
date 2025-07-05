@@ -22,9 +22,6 @@ public class StockFinancialChart {
 
 	public ArrayList<String> mXValues = new ArrayList<>();
 
-	public ArrayList<Entry> mTotalCurrentAssetsEntryList = new ArrayList<>();
-	public ArrayList<Entry> mTotalAssetsEntryList = new ArrayList<>();
-	public ArrayList<Entry> mTotalLongTermLiabilitiesEntryList = new ArrayList<>();
 	public ArrayList<Entry> mMainBusinessIncomeEntryList = new ArrayList<>();
 	public ArrayList<Entry> mMainBusinessIncomeInYearEntryList = new ArrayList<>();
 	public ArrayList<Entry> mNetProfitEntryList = new ArrayList<>();
@@ -52,29 +49,6 @@ public class StockFinancialChart {
 
 	public void setMainChartData() {
 		LineData lineData = new LineData(mXValues);
-
-		LineDataSet totalAssetsDataSet = new LineDataSet(mTotalAssetsEntryList,
-				"Assets");
-		totalAssetsDataSet.setColor(Color.CYAN);
-		totalAssetsDataSet.setDrawCircles(false);
-		totalAssetsDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		lineData.addDataSet(totalAssetsDataSet);
-
-		LineDataSet totalCurrentAssetsDataSet = new LineDataSet(
-				mTotalCurrentAssetsEntryList, "Current");
-		totalCurrentAssetsDataSet.setColor(Color.WHITE);
-		totalCurrentAssetsDataSet.setDrawCircles(false);
-		totalCurrentAssetsDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		lineData.addDataSet(totalCurrentAssetsDataSet);
-
-		LineDataSet totalLongTermLiabilitiesDataSet = new LineDataSet(
-				mTotalLongTermLiabilitiesEntryList, "Liabilities");
-		totalLongTermLiabilitiesDataSet.setColor(Color.GRAY);
-		totalLongTermLiabilitiesDataSet.setCircleColor(Color.GRAY);
-		totalLongTermLiabilitiesDataSet.setCircleSize(3f);
-		totalLongTermLiabilitiesDataSet
-				.setAxisDependency(YAxis.AxisDependency.LEFT);
-		lineData.addDataSet(totalLongTermLiabilitiesDataSet);
 
 		if (Setting.getDisplayMainIncome()) {
 			LineDataSet mainBusinessIncomeDataSet = new LineDataSet(
@@ -173,9 +147,6 @@ public class StockFinancialChart {
 
 	public void clear() {
 		mXValues.clear();
-		mTotalCurrentAssetsEntryList.clear();
-		mTotalAssetsEntryList.clear();
-		mTotalLongTermLiabilitiesEntryList.clear();
 		mMainBusinessIncomeEntryList.clear();
 		mMainBusinessIncomeInYearEntryList.clear();
 		mNetProfitEntryList.clear();

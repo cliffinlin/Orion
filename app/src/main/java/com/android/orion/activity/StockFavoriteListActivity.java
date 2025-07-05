@@ -143,7 +143,9 @@ public class StockFavoriteListActivity extends ListActivity implements
 				performLoadFromFile(FILE_TYPE_FAVORITE);
 				break;
 			case R.id.action_save:
-				performSaveToFile(FILE_TYPE_FAVORITE);
+				if (mStockArrayMap.size() > 0) {
+					performSaveToFile(FILE_TYPE_FAVORITE);
+				}
 				break;
 			case R.id.action_deal:
 				startActivity(new Intent(this, StockDealListActivity.class));

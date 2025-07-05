@@ -398,24 +398,6 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 					dateString = mStockFinancial.getDate();
 					stockFinancialChart.mXValues.add(dateString);
 
-					Entry totalCurrentAssetsEntry = new Entry(
-							(float) mStockFinancial.getTotalCurrentAssets()
-									/ (float) unit, index);
-					stockFinancialChart.mTotalCurrentAssetsEntryList
-							.add(totalCurrentAssetsEntry);
-
-					Entry totalAssetsEntry = new Entry(
-							(float) mStockFinancial.getTotalAssets()
-									/ (float) unit, index);
-					stockFinancialChart.mTotalAssetsEntryList
-							.add(totalAssetsEntry);
-
-					Entry totalLongTermLiabilitiesEntry = new Entry(
-							(float) mStockFinancial.getTotalLongTermLiabilities()
-									/ (float) unit, index);
-					stockFinancialChart.mTotalLongTermLiabilitiesEntryList
-							.add(totalLongTermLiabilitiesEntry);
-
 					Entry mainBusinessIncomeEntry = new Entry(
 							(float) mStockFinancial.getMainBusinessIncome()
 									/ (float) unit, index);
