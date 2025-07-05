@@ -208,9 +208,9 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_MIN5, mMin5.getAction());
 
 		contentValues.put(DatabaseContract.COLUMN_YEAR_LEVEL, mYear.getLevel());
-		contentValues.put(DatabaseContract.COLUMN_MONTH_LEVEL, mMonth6.getLevel());
+		contentValues.put(DatabaseContract.COLUMN_MONTH6_LEVEL, mMonth6.getLevel());
 		contentValues.put(DatabaseContract.COLUMN_QUARTER_LEVEL, mQuarter.getLevel());
-		contentValues.put(DatabaseContract.COLUMN_MONTH_LEVEL, mMonth2.getLevel());
+		contentValues.put(DatabaseContract.COLUMN_MONTH2_LEVEL, mMonth2.getLevel());
 		contentValues.put(DatabaseContract.COLUMN_MONTH_LEVEL, mMonth.getLevel());
 		contentValues.put(DatabaseContract.COLUMN_WEEK_LEVEL, mWeek.getLevel());
 		contentValues.put(DatabaseContract.COLUMN_DAY_LEVEL, mDay.getLevel());

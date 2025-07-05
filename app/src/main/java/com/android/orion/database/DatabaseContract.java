@@ -114,10 +114,6 @@ public final class DatabaseContract {
 
 	public static final String COLUMN_TYPE = "type";
 	public static final String COLUMN_CONTENT = "content";
-	public static final String COLUMN_NATURAL_RALLY = "natural_rally";
-	public static final String COLUMN_UPWARD_TREND = "upward_trend";
-	public static final String COLUMN_DOWNWARD_TREND = "downward_trend";
-	public static final String COLUMN_NATURAL_REACTION = "natural_reaction";
 
 	// http://money.finance.sina.com.cn/corp/go.php/vFD_FinanceSummary/stockid/600900.phtml
 	public static final String COLUMN_BOOK_VALUE_PER_SHARE = "book_value_per_share";
@@ -292,8 +288,6 @@ public final class DatabaseContract {
 				COLUMN_RZ_VALUE, COLUMN_RQ_VALUE,
 				COLUMN_DIRECTION, COLUMN_VERTEX,
 				COLUMN_AVERAGE5, COLUMN_AVERAGE10, COLUMN_DIF, COLUMN_DEA, COLUMN_HISTOGRAM, COLUMN_VELOCITY,
-				COLUMN_NATURAL_RALLY, COLUMN_UPWARD_TREND,
-				COLUMN_DOWNWARD_TREND, COLUMN_NATURAL_REACTION,
 				COLUMN_NET_PROFIT_IN_YEAR,
 				COLUMN_CREATED, COLUMN_MODIFIED};
 		static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
@@ -323,10 +317,6 @@ public final class DatabaseContract {
 				+ COLUMN_DEA + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_HISTOGRAM + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_VELOCITY + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_NATURAL_RALLY + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_UPWARD_TREND + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_DOWNWARD_TREND + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_NATURAL_REACTION + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_NET_PROFIT_IN_YEAR + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_CREATED + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_MODIFIED + TEXT_TYPE + " )";

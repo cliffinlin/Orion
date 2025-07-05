@@ -58,11 +58,6 @@ public class StockData extends DatabaseTable {
 	private int mDirection;
 	private int mVertex;
 
-	private double mNaturalRally;
-	private double mUpwardTrend;
-	private double mDownwardTrend;
-	private double mNaturalReaction;
-
 	private double mNetProfitInYear;
 
 	private int mIndex;
@@ -142,16 +137,11 @@ public class StockData extends DatabaseTable {
 		mDirection = StockTrend.DIRECTION_NONE;
 		mVertex = StockTrend.VERTEX_NONE;
 
+		mNetProfitInYear = 0;
+
 		mIndex = 0;
 		mIndexStart = 0;
 		mIndexEnd = 0;
-
-		mNaturalRally = 0;
-		mUpwardTrend = 0;
-		mDownwardTrend = 0;
-		mNaturalReaction = 0;
-
-		mNetProfitInYear = 0;
 	}
 
 	@Override
@@ -185,11 +175,6 @@ public class StockData extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_DIRECTION, mDirection);
 		contentValues.put(DatabaseContract.COLUMN_VERTEX, mVertex);
 
-		contentValues.put(DatabaseContract.COLUMN_NATURAL_RALLY, mNaturalRally);
-		contentValues.put(DatabaseContract.COLUMN_UPWARD_TREND, mUpwardTrend);
-		contentValues.put(DatabaseContract.COLUMN_DOWNWARD_TREND, mDownwardTrend);
-		contentValues.put(DatabaseContract.COLUMN_NATURAL_REACTION, mNaturalReaction);
-
 		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_IN_YEAR, mNetProfitInYear);
 
 		return contentValues;
@@ -221,12 +206,6 @@ public class StockData extends DatabaseTable {
 
 		setDirection(stockData.mDirection);
 		setVertex(stockData.mVertex);
-
-
-		setNaturalRally(stockData.mNaturalRally);
-		setUpwardTrend(stockData.mUpwardTrend);
-		setDownwardTrend(stockData.mDownwardTrend);
-		setNaturalReaction(stockData.mNaturalReaction);
 
 		setNetProfitInYear(stockData.mNetProfitInYear);
 
@@ -262,11 +241,6 @@ public class StockData extends DatabaseTable {
 
 		setDirection(cursor);
 		setVertex(cursor);
-
-		setNaturalRally(cursor);
-		setUpwardTrend(cursor);
-		setDownwardTrend(cursor);
-		setNaturalReaction(cursor);
 
 		setNetProfitInYear(cursor);
 	}
@@ -535,74 +509,6 @@ public class StockData extends DatabaseTable {
 			return;
 		}
 		mCandle.add(stockData.mCandle, weight);
-	}
-
-	public double getNaturalRally() {
-		return mNaturalRally;
-	}
-
-	public void setNaturalRally(double naturalRally) {
-		mNaturalRally = naturalRally;
-	}
-
-	public void setNaturalRally(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setNaturalRally(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_NATURAL_RALLY)));
-	}
-
-	public double getUpwardTrend() {
-		return mUpwardTrend;
-	}
-
-	public void setUpwardTrend(double upwardTrend) {
-		mUpwardTrend = upwardTrend;
-	}
-
-	public void setUpwardTrend(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setUpwardTrend(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_UPWARD_TREND)));
-	}
-
-	public double getDownwardTrend() {
-		return mDownwardTrend;
-	}
-
-	public void setDownwardTrend(double downwardTrend) {
-		mDownwardTrend = downwardTrend;
-	}
-
-	public void setDownwardTrend(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setDownwardTrend(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_DOWNWARD_TREND)));
-	}
-
-	public double getNaturalReaction() {
-		return mNaturalReaction;
-	}
-
-	public void setNaturalReaction(double naturalReaction) {
-		mNaturalReaction = naturalReaction;
-	}
-
-	void setNaturalReaction(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setNaturalReaction(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_NATURAL_REACTION)));
 	}
 
 	public double getNetProfitInYear() {

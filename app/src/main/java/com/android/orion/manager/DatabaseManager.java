@@ -637,6 +637,7 @@ public class DatabaseManager implements StockListener {
 			ContentValues[] contentValues = new ContentValues[stockDataList.size()];
 			for (int i = 0; i < stockDataList.size(); i++) {
 				StockData stockData = stockDataList.get(i);
+				stockData.setCreated(Utility.getCurrentDateTimeString());
 				stockData.setModified(Utility.getCurrentDateTimeString());
 				contentValues[i] = stockData.getContentValues();
 			}
