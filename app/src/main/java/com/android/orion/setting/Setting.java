@@ -23,7 +23,6 @@ public class Setting {
 	public static final boolean SETTING_PERIOD_MIN15_DEFAULT = true;
 	public static final boolean SETTING_PERIOD_MIN5_DEFAULT = true;
 
-	public static final String SETTING_SORT_ORDER_COMPONENT_LIST = "SETTING_SORT_ORDER_COMPONENT_LIST";
 	public static final String SETTING_SORT_ORDER_STOCK_LIST = "SETTING_SORT_ORDER_STOCK_LIST";
 	public static final String SETTING_SORT_ORDER_FINANCIAL_LIST = "SETTING_SORT_ORDER_FINANCIAL_LIST";
 	public static final String SETTING_SORT_ORDER_DEAL_LIST = "SETTING_SORT_ORDER_DEAL_LIST";

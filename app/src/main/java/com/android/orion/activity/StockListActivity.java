@@ -28,7 +28,6 @@ import androidx.annotation.NonNull;
 
 import com.android.orion.R;
 import com.android.orion.database.DatabaseContract;
-import com.android.orion.database.IndexComponent;
 import com.android.orion.database.Stock;
 import com.android.orion.setting.Constant;
 import com.android.orion.utility.Utility;
@@ -56,7 +55,6 @@ public class StockListActivity extends DatabaseActivity implements
 	TextView mTextViewPrice = null;
 	TextView mTextViewHold = null;
 	TextView mTextViewFavorite = null;
-	TextView mTextViewComponent = null;
 
 	String[] mFrom = new String[]{DatabaseContract.COLUMN_NAME,
 			DatabaseContract.COLUMN_CODE, DatabaseContract.COLUMN_PRICE,
@@ -254,7 +252,6 @@ public class StockListActivity extends DatabaseActivity implements
 		setHeaderTextColor(mTextViewPrice, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewHold, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewFavorite, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewComponent, mHeaderTextDefaultColor);
 	}
 
 	void initHeader() {
@@ -276,13 +273,6 @@ public class StockListActivity extends DatabaseActivity implements
 		mTextViewFavorite = findViewById(R.id.favorite);
 		if (mTextViewFavorite != null) {
 			mTextViewFavorite.setOnClickListener(this);
-		}
-
-		mTextViewComponent = findViewById(R.id.component);
-		if (TextUtils.equals(mAction, Constant.ACTION_INDEX_COMPONENT_SELECT)) {
-			mTextViewComponent.setVisibility(View.VISIBLE);
-		} else {
-			mTextViewComponent.setVisibility(View.GONE);
 		}
 
 		if (mSortOrder.contains(DatabaseContract.COLUMN_NAME)) {
@@ -347,41 +337,15 @@ public class StockListActivity extends DatabaseActivity implements
 
 			holder.mImageViewFavorite.setTag(stock.getId());
 			holder.mImageViewFavorite.setOnClickListener(this);
-
 			holder.mImageViewDelete.setTag(stock.getId());
 			holder.mImageViewDelete.setOnClickListener(this);
-
-			holder.mImageViewgComponent.setTag(stock.getId());
-			holder.mImageViewgComponent.setOnClickListener(this);
-
-			if (TextUtils.equals(mAction, Constant.ACTION_INDEX_COMPONENT_SELECT)) {
-				mStock.setId(stock.getId());
-				mDatabaseManager.getStockById(mStock);
-
-				IndexComponent indexComponent = new IndexComponent();
-				indexComponent.setIndexCode(mIntent.getStringExtra(Constant.EXTRA_INDEX_CODE));
-				indexComponent.setIndexName(mIntent.getStringExtra(Constant.EXTRA_INDEX_NAME));
-				indexComponent.setIndexSE(mIntent.getStringExtra(Constant.EXTRA_INDEX_SE));
-				indexComponent.setCode(mStock.getCode());
-				indexComponent.setName(mStock.getName());
-				indexComponent.setSE(mStock.getSE());
-
-				if (mDatabaseManager.isIndexComponentExist(indexComponent)) {
-					holder.mImageViewgComponent.setImageResource(R.drawable.ic_checked);
-				} else {
-					holder.mImageViewgComponent.setImageResource(R.drawable.ic_unchecked);
-				}
-			}
-
 			super.bindView(view, context, cursor);
 		}
 
 		@Override
 		public View newView(Context context, Cursor cursor, ViewGroup parent) {
 			View view = super.newView(context, cursor, parent);
-
 			ViewHolder holder = new ViewHolder();
-
 			holder.mTextViewName = view.findViewById(R.id.name);
 			holder.mTextViewCode = view.findViewById(R.id.code);
 			holder.mTextViewPrice = view.findViewById(R.id.price);
@@ -390,16 +354,7 @@ public class StockListActivity extends DatabaseActivity implements
 					.findViewById(R.id.favorite);
 			holder.mImageViewDelete = view
 					.findViewById(R.id.delete);
-			holder.mImageViewgComponent = view.findViewById(R.id.component);
-
-			if (TextUtils.equals(mAction, Constant.ACTION_INDEX_COMPONENT_SELECT)) {
-				holder.mImageViewgComponent.setVisibility(View.VISIBLE);
-			} else {
-				holder.mImageViewgComponent.setVisibility(View.GONE);
-			}
-
 			view.setTag(holder);
-
 			return view;
 		}
 
@@ -457,29 +412,6 @@ public class StockListActivity extends DatabaseActivity implements
 									.show();
 						}
 						break;
-
-					case R.id.component:
-						if (TextUtils.equals(mAction, Constant.ACTION_INDEX_COMPONENT_SELECT)) {
-							mStock.setId(stock.getId());
-							mDatabaseManager.getStockById(mStock);
-
-							IndexComponent indexComponent = new IndexComponent();
-							indexComponent.setIndexCode(mIntent.getStringExtra(Constant.EXTRA_INDEX_CODE));
-							indexComponent.setIndexName(mIntent.getStringExtra(Constant.EXTRA_INDEX_NAME));
-							indexComponent.setIndexSE(mIntent.getStringExtra(Constant.EXTRA_INDEX_SE));
-							indexComponent.setCode(mStock.getCode());
-							indexComponent.setName(mStock.getName());
-							indexComponent.setSE(mStock.getSE());
-
-							if (mDatabaseManager.isIndexComponentExist(indexComponent)) {
-								mDatabaseManager.deleteIndexComponent(indexComponent);
-							} else {
-								indexComponent.setCreated(Utility.getCurrentDateTimeString());
-								mDatabaseManager.insertIndexComponent(indexComponent);
-							}
-						}
-						break;
-
 					default:
 						break;
 				}
@@ -498,6 +430,5 @@ public class StockListActivity extends DatabaseActivity implements
 		public TextView mTextViewHold;
 		public ImageView mImageViewFavorite;
 		public ImageView mImageViewDelete;
-		public ImageView mImageViewgComponent;
 	}
 }

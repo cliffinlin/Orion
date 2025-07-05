@@ -14,7 +14,6 @@ import android.util.Xml;
 
 import com.android.orion.data.Period;
 import com.android.orion.database.DatabaseContract;
-import com.android.orion.database.IndexComponent;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;
 import com.android.orion.setting.Constant;
@@ -35,13 +34,11 @@ public class StorageActivity extends DatabaseActivity {
 	static final String XML_TAG_ROOT = "root";
 	static final String XML_TAG_STOCK = "stock";
 	static final String XML_TAG_STOCK_DEAL = "stock_deal";
-	static final String XML_TAG_INDEX_COMPONENT = "index_component";
 	static final String XML_ATTRIBUTE_DATE = "date";
 
 	static final int XML_PARSE_TYPE_NONE = 0;
 	static final int XML_PARSE_TYPE_STOCK = 1;
 	static final int XML_PARSE_TYPE_STOCK_DEAL = 2;
-	static final int XML_PARSE_TYPE_INDEX_COMPONENT = 3;
 
 	static final int MESSAGE_REFRESH = 0;
 	static final int MESSAGE_LOAD_FAVORITE = 1;
@@ -262,10 +259,8 @@ public class StorageActivity extends DatabaseActivity {
 		String now = Utility.getCurrentDateTimeString();
 		String tagName = "";
 		Stock stock = new Stock();
-		IndexComponent indexComponent = new IndexComponent();
 		StockDeal stockDeal = new StockDeal();
 		ArrayList<Stock> stockList = new ArrayList<>();
-		ArrayList<IndexComponent> indexComponentArrayList = new ArrayList<>();
 		ArrayList<StockDeal> stockDealArrayList = new ArrayList<>();
 		ContentValues[] contentValues = null;
 		int parseType = XML_PARSE_TYPE_NONE;
@@ -274,7 +269,6 @@ public class StorageActivity extends DatabaseActivity {
 			return count;
 		}
 
-		mDatabaseManager.deleteIndexComponent();
 		mDatabaseManager.deleteStockDeal();
 
 		try {
@@ -287,8 +281,6 @@ public class StorageActivity extends DatabaseActivity {
 							parseType = XML_PARSE_TYPE_STOCK;
 
 							stock = new Stock();
-
-							indexComponentArrayList.clear();
 							stockDealArrayList.clear();
 						} else if (TextUtils.equals(tagName, XML_TAG_STOCK_DEAL)) {
 							parseType = XML_PARSE_TYPE_STOCK_DEAL;
@@ -297,13 +289,6 @@ public class StorageActivity extends DatabaseActivity {
 							stockDeal.setSE(stock.getSE());
 							stockDeal.setCode(stock.getCode());
 							stockDeal.setName(stock.getName());
-						} else if (TextUtils.equals(tagName, XML_TAG_INDEX_COMPONENT)) {
-							parseType = XML_PARSE_TYPE_INDEX_COMPONENT;
-
-							indexComponent = new IndexComponent();
-							indexComponent.setIndexSE(stock.getSE());
-							indexComponent.setIndexCode(stock.getCode());
-							indexComponent.setIndexName(stock.getName());
 						} else if (parseType == XML_PARSE_TYPE_STOCK) {
 							if (TextUtils.equals(tagName, DatabaseContract.COLUMN_CLASSES)) {
 								stock.setClasses(parser.nextText());
@@ -329,14 +314,6 @@ public class StorageActivity extends DatabaseActivity {
 								stockDeal.setCreated(parser.nextText());
 							} else if (TextUtils.equals(tagName, DatabaseContract.COLUMN_MODIFIED)) {
 								stockDeal.setModified(parser.nextText());
-							}
-						} else if (parseType == XML_PARSE_TYPE_INDEX_COMPONENT) {
-							if (TextUtils.equals(tagName, DatabaseContract.COLUMN_SE)) {
-								indexComponent.setSE(parser.nextText());
-							} else if (TextUtils.equals(tagName, DatabaseContract.COLUMN_CODE)) {
-								indexComponent.setCode(parser.nextText());
-							} else if (TextUtils.equals(tagName, DatabaseContract.COLUMN_NAME)) {
-								indexComponent.setName(parser.nextText());
 							}
 						}
 						break;
@@ -366,25 +343,10 @@ public class StorageActivity extends DatabaseActivity {
 
 								mDatabaseManager.bulkInsertStockDeal(contentValues);
 							}
-
-							if (indexComponentArrayList.size() > 0) {
-								contentValues = new ContentValues[indexComponentArrayList.size()];
-
-								for (int i = 0; i < indexComponentArrayList.size(); i++) {
-									indexComponent = indexComponentArrayList.get(i);
-									contentValues[i] = indexComponent.getContentValues();
-								}
-
-								mDatabaseManager.bulkInsertIndexComponent(contentValues);
-							}
 						} else if (TextUtils.equals(tagName, XML_TAG_STOCK_DEAL)) {
 							parseType = XML_PARSE_TYPE_NONE;
 
 							stockDealArrayList.add(stockDeal);
-						} else if (TextUtils.equals(tagName, XML_TAG_INDEX_COMPONENT)) {
-							parseType = XML_PARSE_TYPE_NONE;
-
-							indexComponentArrayList.add(indexComponent);
 						}
 						count++;
 						break;
@@ -437,7 +399,6 @@ public class StorageActivity extends DatabaseActivity {
 		int count = 0;
 
 		ArrayList<Stock> stockList = new ArrayList<>();
-		IndexComponent indexComponent = new IndexComponent();
 		StockDeal stockDeal = new StockDeal();
 
 		Cursor cursor = null;
@@ -515,37 +476,6 @@ public class StorageActivity extends DatabaseActivity {
 								DatabaseContract.COLUMN_MODIFIED,
 								stockDeal.getModified());
 						xmlSerializer.endTag(null, XML_TAG_STOCK_DEAL);
-
-						count++;
-					}
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				mDatabaseManager.closeCursor(cursor);
-			}
-
-			try {
-				selection = DatabaseContract.COLUMN_INDEX_CODE + " = " + "'"
-						+ stock.getCode() + "'";
-
-				cursor = mDatabaseManager.queryIndexComponent(selection, null,
-						null);
-				if ((cursor != null) && (cursor.getCount() > 0)) {
-					while (cursor.moveToNext()) {
-						indexComponent.set(cursor);
-
-						xmlSerializer.startTag(null, XML_TAG_INDEX_COMPONENT);
-						xmlSerialize(xmlSerializer,
-								DatabaseContract.COLUMN_SE,
-								String.valueOf(indexComponent.getSE()));
-						xmlSerialize(xmlSerializer,
-								DatabaseContract.COLUMN_CODE,
-								String.valueOf(indexComponent.getCode()));
-						xmlSerialize(xmlSerializer,
-								DatabaseContract.COLUMN_NAME,
-								indexComponent.getName());
-						xmlSerializer.endTag(null, XML_TAG_INDEX_COMPONENT);
 
 						count++;
 					}

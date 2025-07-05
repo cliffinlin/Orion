@@ -20,7 +20,6 @@ import com.android.orion.application.MainApplication;
 import com.android.orion.config.Config;
 import com.android.orion.data.Period;
 import com.android.orion.database.DatabaseContract;
-import com.android.orion.database.IndexComponent;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.TDXData;
@@ -59,8 +58,6 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 	protected static volatile IStockDataProvider mInstance;
 	static ArrayMap<String, Stock> mStockArrayMap = new ArrayMap<>();
 	static ArrayMap<String, Stock> mRemovedArrayMap = new ArrayMap<>();
-	static ArrayList<IndexComponent> mIndexComponentList = new ArrayList<>();
-	static Map<String, StockData> mIndexStockDataMap = new HashMap<>();
 	Context mContext = MainApplication.getContext();
 	StockAnalyzer mStockAnalyzer = StockAnalyzer.getInstance();
 	DatabaseManager mDatabaseManager = DatabaseManager.getInstance();
@@ -379,141 +376,6 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 				mHandler.sendMessage(msg);
 				Log.d("mHandler.sendMessage " + msg);
 			}
-		}
-	}
-
-	void loadIndexComponentStockList(Stock index, ArrayList<Stock> stockList) {
-		if (index == null || stockList == null) {
-			return;
-		}
-
-		mDatabaseManager.loadStockArrayMap(mStockArrayMap);
-
-		String selection = DatabaseContract.COLUMN_INDEX_CODE + " = " + index.getCode();
-		mDatabaseManager.getIndexComponentList(mIndexComponentList, selection, null);
-
-		stockList.clear();
-		for (IndexComponent indexComponent : mIndexComponentList) {
-			if (mStockArrayMap.containsKey(indexComponent.getCode())) {
-				stockList.add(mStockArrayMap.get(indexComponent.getCode()));
-			}
-		}
-	}
-
-	private void setupIndex(Stock index) {
-		ArrayList<Stock> stockList = new ArrayList<>();
-		ArrayList<StockData> stockDataList;
-		ArrayList<StockData> indexStockDataList;
-		long weight;
-
-		if (index == null) {
-			return;
-		}
-
-		try {
-			loadIndexComponentStockList(index, stockList);
-
-			for (String period : Period.PERIODS) {
-				if (!Setting.getPeriod(period)) {
-					continue;
-				}
-
-				mIndexStockDataMap.clear();
-
-				Calendar begin = null;
-				Calendar end = null;
-
-				for (Stock stock : stockList) {
-					stockDataList = stock.getStockDataList(period);
-					mDatabaseManager.loadStockDataList(stock, period, stockDataList);
-					if ((stockDataList == null) || (stockDataList.size() == 0)) {
-						continue;
-					}
-
-					weight = stock.getHold();
-
-					StockData first = stockDataList.get(0);
-					if (begin == null) {
-						begin = first.getCalendar();
-					} else if (first.getCalendar().after(begin)) {
-						begin = first.getCalendar();
-					}
-
-					StockData last = stockDataList.get(stockDataList.size() - 1);
-					if (end == null) {
-						end = last.getCalendar();
-					} else if (last.getCalendar().before(end)) {
-						end = last.getCalendar();
-					}
-
-					for (StockData stockData : stockDataList) {
-						StockData indexStockData;
-						String keyString = stockData.getDateTime();
-
-						if (stockData.getCalendar().before(begin) || stockData.getCalendar().after(end)) {
-							continue;
-						}
-
-						if (mIndexStockDataMap.containsKey(keyString)) {
-							indexStockData = mIndexStockDataMap.get(keyString);
-
-							indexStockData.add(stockData, weight);
-						} else {
-							indexStockData = new StockData(period);
-
-							indexStockData.setSE(index.getSE());
-							indexStockData.setCode(index.getCode());
-							indexStockData.setName(index.getName());
-							indexStockData.setDate(stockData.getDate());
-							indexStockData.setTime(stockData.getTime());
-
-							indexStockData.add(stockData, weight);
-						}
-
-						mIndexStockDataMap.put(keyString, indexStockData);
-					}
-				}
-
-				if (mIndexStockDataMap.size() == 0) {
-					continue;
-				}
-
-				indexStockDataList = new ArrayList<>(mIndexStockDataMap.values());
-				Collections.sort(indexStockDataList, StockData.comparator);
-
-				while (indexStockDataList.size() > 0) {
-					StockData indexStockDataBegin = indexStockDataList.get(0);
-					StockData indexStockDataEnd = indexStockDataList.get(indexStockDataList.size() - 1);
-					if (indexStockDataBegin.getCalendar().before(begin)) {
-						indexStockDataList.remove(indexStockDataBegin);
-					} else if (indexStockDataEnd.getCalendar().after(end)) {
-						indexStockDataList.remove(indexStockDataEnd);
-					} else {
-						break;
-					}
-				}
-
-				mDatabaseManager.updateStockData(index, period, indexStockDataList);
-				index.setModified(Utility.getCurrentDateTimeString());
-				mDatabaseManager.updateStock(index, index.getContentValues());
-
-				if (TextUtils.equals(period, Period.DAY) && (indexStockDataList.size() > 1)) {
-					double prevPrice = indexStockDataList.get(indexStockDataList.size() - 2).getCandle().getClose();
-					double price = indexStockDataList.get(indexStockDataList.size() - 1).getCandle().getClose();
-					double net = 0;
-					if (prevPrice > 0) {
-						net = 100.0 * (price - prevPrice) / prevPrice;
-					}
-					index.setPrice(Utility.Round2(price));
-					index.setNet(Utility.Round2(net));
-				}
-			}
-
-			index.setModified(Utility.getCurrentDateTimeString());
-			mDatabaseManager.updateStock(index,
-					index.getContentValues());
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 
@@ -1119,7 +981,6 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 						Setting.setDownloadStockDataTimeMillis(stock, System.currentTimeMillis());
 					}
 				} else if (TextUtils.equals(stock.getClasses(), Stock.CLASS_INDEX)) {
-					setupIndex(stock);
 					Setting.setStockDataChanged(stock, true);
 				} else {
 				}

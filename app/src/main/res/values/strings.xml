@@ -166,8 +166,6 @@
     //Setting
     <string name="setting">Setting</string>
 
-    <string name="setting_indexes">Indexes</string>
-
     <string name="setting_period">Period</string>
     <string name="setting_period_year">Year</string>
     <string name="setting_period_month6">Month6</string>
@@ -246,8 +244,6 @@
     <string name="stock_insert">Stock Insert</string>
     <string name="stock_exist">Stock exist!</string>
     <string name="stock_edit">Stock edit</string>
-    <string name="component">Component</string>
-    <string name="component_list">Component list</string>
     <string name="stock_account">Stock account</string>
     <string name="stock_action">Action</string>
     <string name="stock_se">SE</string>

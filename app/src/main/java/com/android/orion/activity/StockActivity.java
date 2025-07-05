@@ -18,7 +18,6 @@ import androidx.annotation.NonNull;
 
 import com.android.orion.R;
 import com.android.orion.database.DatabaseContract;
-import com.android.orion.database.IndexComponent;
 import com.android.orion.database.Stock;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
@@ -114,8 +113,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		if (TextUtils.equals(mAction, Constant.ACTION_FAVORITE_STOCK_INSERT)) {
 			setTitle(R.string.stock_insert);
 			mStock.addFlag(Stock.FLAG_FAVORITE);
-		} else if (TextUtils.equals(mAction, Constant.ACTION_INDEX_COMPONENT_INSERT)) {
-			setTitle(R.string.stock_insert);
+			mStock.addFlag(Stock.FLAG_NOTIFY);
 		} else if (TextUtils.equals(mAction, Constant.ACTION_STOCK_EDIT)) {
 			setTitle(R.string.stock_edit);
 			mRadioGroupClass.setEnabled(false);
@@ -224,29 +222,12 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 					mStock.setSE(Stock.SE_SZ);
 				}
 
-				if (TextUtils.equals(mAction, Constant.ACTION_FAVORITE_STOCK_INSERT) || TextUtils.equals(mAction, Constant.ACTION_INDEX_COMPONENT_INSERT)) {
+				if (TextUtils.equals(mAction, Constant.ACTION_FAVORITE_STOCK_INSERT)) {
 					if (!mDatabaseManager.isStockExist(mStock)) {
 						mStock.setCreated(Utility.getCurrentDateTimeString());
 						Uri uri = mDatabaseManager.insertStock(mStock);
 						mDatabaseManager.getStock(uri, mStock);
 						mDatabaseManager.updateStock(mStock, mStock.getContentValuesEdit());
-
-						if (TextUtils.equals(mAction, Constant.ACTION_INDEX_COMPONENT_INSERT)) {
-							IndexComponent indexComponent = new IndexComponent();
-
-							indexComponent.setSE(mStock.getSE());
-							indexComponent.setCode(mStock.getCode());
-							indexComponent.setName(mStock.getName());
-
-							if (!mDatabaseManager.isIndexComponentExist(indexComponent)) {
-								indexComponent.setCreated(Utility.getCurrentDateTimeString());
-								mDatabaseManager.insertIndexComponent(indexComponent);
-							} else {
-								Toast.makeText(mContext, R.string.stock_exist,
-										Toast.LENGTH_LONG).show();
-								return;
-							}
-						}
 					} else {
 						mDatabaseManager.getStock(mStock);
 						updateView();

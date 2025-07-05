@@ -69,7 +69,6 @@ public class FinancialAnalyzer {
 		setupNetProfitPerShare();
 		setupRate();
 		setupRoe();
-
 		mDatabaseManager.updateStockFinancial(stock, mStockFinancialList);
 	}
 

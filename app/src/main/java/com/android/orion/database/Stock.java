@@ -51,6 +51,8 @@ public class Stock extends DatabaseTable {
 	private final Period mMin15 = new Period(Period.MIN15);
 	private final Period mMin5 = new Period(Period.MIN5);
 
+	private int mFlag;
+
 	private String mClasses;
 	private String mSE;
 	private String mCode;
@@ -62,8 +64,6 @@ public class Stock extends DatabaseTable {
 	private double mNet;
 	private long mVolume;
 	private double mValue;
-
-	private int mFlag;
 
 	private double mRoi;
 	private double mIR;
@@ -181,7 +181,7 @@ public class Stock extends DatabaseTable {
 	public ContentValues getContentValues() {
 		ContentValues contentValues = super.getContentValues();
 
-//		contentValues.put(DatabaseContract.COLUMN_FLAG, mFlag);
+		contentValues.put(DatabaseContract.COLUMN_FLAG, mFlag);
 
 		contentValues.put(DatabaseContract.COLUMN_CLASSES, mClasses);
 		contentValues.put(DatabaseContract.COLUMN_SE, mSE);
@@ -285,11 +285,11 @@ public class Stock extends DatabaseTable {
 	public ContentValues getContentValuesEdit() {
 		ContentValues contentValues = super.getContentValues();
 
+		contentValues.put(DatabaseContract.COLUMN_FLAG, mFlag);
 		contentValues.put(DatabaseContract.COLUMN_CLASSES, mClasses);
 		contentValues.put(DatabaseContract.COLUMN_SE, mSE);
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
-		contentValues.put(DatabaseContract.COLUMN_FLAG, mFlag);
 		return contentValues;
 	}
 

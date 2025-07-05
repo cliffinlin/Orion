@@ -93,9 +93,6 @@ public final class DatabaseContract {
 	public static final String COLUMN_DIVIDEND_RATIO = "dividend_ratio";
 	public static final String COLUMN_CREATED = "created";
 	public static final String COLUMN_MODIFIED = "modified";
-	public static final String COLUMN_INDEX_SE = "index_se";
-	public static final String COLUMN_INDEX_CODE = "index_code";
-	public static final String COLUMN_INDEX_NAME = "index_name";
 
 	public static final String COLUMN_DATE = "date";
 	public static final String COLUMN_TIME = "time";
@@ -606,35 +603,6 @@ public final class DatabaseContract {
 				+ COLUMN_RQ_REPAY + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_CREATED + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_MODIFIED + TEXT_TYPE + " )";
-		static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
-				+ CREATE_TABLE_CONTENT;
-	}
-
-	public static abstract class IndexComponent implements BaseColumns {
-		public static final String TABLE_NAME = "index_component";
-
-		public static final Uri CONTENT_URI = Uri.withAppendedPath(
-				DatabaseContract.CONTENT_URI, TABLE_NAME);
-		public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
-				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
-		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
-				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
-		public static final String[] PROJECTION_ALL = {_ID, COLUMN_INDEX_SE, COLUMN_INDEX_CODE, COLUMN_INDEX_NAME,
-				COLUMN_SE, COLUMN_CODE, COLUMN_NAME, COLUMN_CREATED, COLUMN_MODIFIED};
-		public static final String SORT_ORDER_DEFAULT = COLUMN_INDEX_CODE
-				+ " ASC";
-		public static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
-				+ TABLE_NAME;
-		private static final String CREATE_TABLE_CONTENT = " (" + _ID
-				+ " INTEGER PRIMARY KEY,"
-				+ COLUMN_INDEX_SE + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_INDEX_CODE + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_INDEX_NAME + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_SE + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_CODE + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_NAME + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_CREATED + TEXT_TYPE
-				+ COMMA_SEP + COLUMN_MODIFIED + TEXT_TYPE + " )";
 		static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
 				+ CREATE_TABLE_CONTENT;
 	}

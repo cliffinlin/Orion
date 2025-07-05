@@ -745,7 +745,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 			if (rightYAxis != null) {
 				if (mItemViewType == ITEM_VIEW_TYPE_MAIN) {
 					rightYAxis.setEnabled(true);
-					rightYAxis.setPosition(YAxisLabelPosition.INSIDE_CHART);
+					rightYAxis.setDrawLabels(false);
 					rightYAxis.setStartAtZero(false);
 				} else {
 					rightYAxis.setEnabled(false);

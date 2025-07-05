@@ -73,7 +73,7 @@ public class StockAnalyzer {
 		try {
 			mStockDataList = mStock.getStockDataList(period);
 			mDatabaseManager.loadStockDataList(mStock, period, mStockDataList);
-			if (period.equals(Period.MONTH)) {
+			if (Period.getPeriodIndex(period) <= Period.getPeriodIndex(Period.MONTH)) {
 				mFinancialAnalyzer.setNetProfileInYear(mStock, mStockDataList);
 			}
 			analyzeMacd(period);
@@ -99,6 +99,9 @@ public class StockAnalyzer {
 		}
 
 		try {
+			mFinancialAnalyzer.analyzeFinancial(mStock);
+			mFinancialAnalyzer.setupFinancial(mStock);
+			mFinancialAnalyzer.setupStockBonus(mStock);
 			for (String period : Period.PERIODS) {
 				if (Setting.getPeriod(period)) {
 					analyze(period);

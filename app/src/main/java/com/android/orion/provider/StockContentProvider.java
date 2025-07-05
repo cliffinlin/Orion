@@ -21,9 +21,6 @@ import java.util.ArrayList;
 
 public class StockContentProvider extends ContentProvider {
 
-
-
-
 	public static final int STOCK = 100;
 	public static final int STOCK_ID = 101;
 
@@ -53,9 +50,6 @@ public class StockContentProvider extends ContentProvider {
 
 	public static final int TDX_DATA = 1000;
 	public static final int TDX_DATA_ID = 1001;
-
-	public static final int INDEX_COMPONENT = 1100;
-	public static final int INDEX_COMPONENT_ID = 1101;
 
 	private static final UriMatcher mUriMatcher = new UriMatcher(
 			UriMatcher.NO_MATCH);
@@ -96,11 +90,6 @@ public class StockContentProvider extends ContentProvider {
 				DatabaseContract.StockRZRQ.TABLE_NAME, STOCK_RZRQ);
 		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
 				DatabaseContract.StockRZRQ.TABLE_NAME + "/#", STOCK_RZRQ_ID);
-
-		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
-				DatabaseContract.IndexComponent.TABLE_NAME, INDEX_COMPONENT);
-		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
-				DatabaseContract.IndexComponent.TABLE_NAME + "/#", INDEX_COMPONENT_ID);
 
 		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
 				DatabaseContract.StockTrend.TABLE_NAME, STOCK_TREND);
@@ -183,13 +172,6 @@ public class StockContentProvider extends ContentProvider {
 				break;
 			case STOCK_RZRQ_ID:
 				type = DatabaseContract.StockRZRQ.CONTENT_ITEM_TYPE;
-				break;
-
-			case INDEX_COMPONENT:
-				type = DatabaseContract.IndexComponent.CONTENT_TYPE;
-				break;
-			case INDEX_COMPONENT_ID:
-				type = DatabaseContract.IndexComponent.CONTENT_ITEM_TYPE;
 				break;
 
 			case STOCK_TREND:
@@ -299,15 +281,6 @@ public class StockContentProvider extends ContentProvider {
 						+ uri.getLastPathSegment());
 				break;
 
-			case INDEX_COMPONENT:
-				builder.setTables(DatabaseContract.IndexComponent.TABLE_NAME);
-				break;
-			case INDEX_COMPONENT_ID:
-				builder.setTables(DatabaseContract.IndexComponent.TABLE_NAME);
-				builder.appendWhere(BaseColumns._ID + " = "
-						+ uri.getLastPathSegment());
-				break;
-
 			case STOCK_TREND:
 				builder.setTables(DatabaseContract.StockTrend.TABLE_NAME);
 				break;
@@ -398,11 +371,6 @@ public class StockContentProvider extends ContentProvider {
 				id = mDatabaseManager.mDatabase
 						.insert(DatabaseContract.StockRZRQ.TABLE_NAME, null,
 								contentValues);
-				break;
-
-			case INDEX_COMPONENT:
-				id = mDatabaseManager.mDatabase.insert(
-						DatabaseContract.IndexComponent.TABLE_NAME, null, contentValues);
 				break;
 
 			case STOCK_TREND:
@@ -594,21 +562,6 @@ public class StockContentProvider extends ContentProvider {
 						whereClause, selectionArgs);
 				break;
 
-			case INDEX_COMPONENT:
-				result = mDatabaseManager.mDatabase.update(
-						DatabaseContract.IndexComponent.TABLE_NAME, values, selection,
-						selectionArgs);
-				break;
-			case INDEX_COMPONENT_ID:
-				whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
-				if (!TextUtils.isEmpty(selection)) {
-					whereClause += " AND " + whereClause;
-				}
-				result = mDatabaseManager.mDatabase.update(
-						DatabaseContract.IndexComponent.TABLE_NAME, values, whereClause,
-						selectionArgs);
-				break;
-
 			case STOCK_TREND:
 				result = mDatabaseManager.mDatabase.update(
 						DatabaseContract.StockTrend.TABLE_NAME, values, selection,
@@ -782,20 +735,6 @@ public class StockContentProvider extends ContentProvider {
 				result = mDatabaseManager.mDatabase.delete(
 						DatabaseContract.StockRZRQ.TABLE_NAME, whereClause,
 						selectionArgs);
-				break;
-
-			case INDEX_COMPONENT:
-				result = mDatabaseManager.mDatabase.delete(
-						DatabaseContract.IndexComponent.TABLE_NAME, selection, selectionArgs);
-				break;
-			case INDEX_COMPONENT_ID:
-				whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
-				if (!TextUtils.isEmpty(selection)) {
-					whereClause += " AND " + whereClause;
-				}
-				result = mDatabaseManager.mDatabase
-						.delete(DatabaseContract.IndexComponent.TABLE_NAME, whereClause,
-								selectionArgs);
 				break;
 
 			case STOCK_TREND:

@@ -565,14 +565,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 				mStock.setId(id);
 				mDatabaseManager.getStockById(mStock);
 
-				if (TextUtils.equals(mStock.getClasses(), Stock.CLASS_INDEX)) {
-					Intent intent = new Intent(mContext,
-							IndexComponentListActivity.class);
-					intent.putExtra(Constant.EXTRA_INDEX_CODE, String.valueOf(mStock.getCode()));
-					intent.putExtra(Constant.EXTRA_INDEX_NAME, String.valueOf(mStock.getName()));
-					intent.putExtra(Constant.EXTRA_INDEX_SE, String.valueOf(mStock.getSE()));
-					startActivity(intent);
-				} else if (mDatabaseManager.getStockDealCount(mStock) > 0) {
+				if (mDatabaseManager.getStockDealCount(mStock) > 0) {
 					Intent intent = new Intent(mContext,
 							StockDealListActivity.class);
 					Bundle bundle = new Bundle();
