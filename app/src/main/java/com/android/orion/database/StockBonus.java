@@ -2,6 +2,11 @@ package com.android.orion.database;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.text.TextUtils;
+
+import com.android.orion.utility.Utility;
+
+import java.util.Calendar;
 
 public class StockBonus extends DatabaseTable {
 
@@ -185,5 +190,26 @@ public class StockBonus extends DatabaseTable {
 
 		setRDate(cursor.getString(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_R_DATE)));
+	}
+
+	public Calendar getCalendar() {
+		Calendar result = Calendar.getInstance();
+
+		if (TextUtils.isEmpty(mDate)) {
+			return result;
+		}
+
+		return Utility.getCalendar(mDate,
+				Utility.CALENDAR_DATE_FORMAT);
+	}
+
+	public String getYear() {
+		int year = getCalendar().get(Calendar.YEAR);
+		return String.valueOf(year);
+	}
+
+	public String getMonth() {
+		int month = getCalendar().get(Calendar.MONTH);
+		return String.format("%02d", month + 1);
 	}
 }

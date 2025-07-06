@@ -97,8 +97,11 @@ public class Stock extends DatabaseTable {
 	private double mNetProfitPerShareInYear;
 	private double mRate;
 	private double mDividend;
+	private double mDividendInYear;
 	private double mYield;
+	private double mYieldInYear;
 	private double mDividendRatio;
+	private double mDividendRatioInYear;
 	private String mRDate;
 	private String mStatus;
 
@@ -171,8 +174,11 @@ public class Stock extends DatabaseTable {
 		mNetProfitPerShareInYear = 0;
 		mRate = 0;
 		mDividend = 0;
+		mDividendInYear = 0;
 		mYield = 0;
+		mYieldInYear = 0;
 		mDividendRatio = 0;
+		mDividendRatioInYear = 0;
 		mRDate = "";
 		mStatus = "";
 	}
@@ -253,8 +259,11 @@ public class Stock extends DatabaseTable {
 
 		contentValues.put(DatabaseContract.COLUMN_RATE, mRate);
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND, mDividend);
+		contentValues.put(DatabaseContract.COLUMN_DIVIDEND_IN_YEAR, mDividendInYear);
 		contentValues.put(DatabaseContract.COLUMN_YIELD, mYield);
+		contentValues.put(DatabaseContract.COLUMN_YIELD_IN_YEAR, mYieldInYear);
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND_RATIO, mDividendRatio);
+		contentValues.put(DatabaseContract.COLUMN_DIVIDEND_RATIO_IN_YEAR, mDividendRatioInYear);
 		contentValues.put(DatabaseContract.COLUMN_R_DATE, mRDate);
 		contentValues.put(DatabaseContract.COLUMN_STATUS, mStatus);
 
@@ -372,8 +381,11 @@ public class Stock extends DatabaseTable {
 		setNetProfitPerShareInYear(stock.mNetProfitPerShareInYear);
 		setRate(stock.mRate);
 		setDividend(stock.mDividend);
+		setDividendInYear(stock.mDividendInYear);
 		setYield(stock.mYield);
+		setYieldInYear(stock.mYieldInYear);
 		setDividendRatio(stock.mDividendRatio);
+		setDividendRatioInYear(stock.mDividendRatioInYear);
 		setRDate(stock.mRDate);
 		setStatus(stock.mStatus);
 	}
@@ -458,8 +470,11 @@ public class Stock extends DatabaseTable {
 
 		setRate(cursor);
 		setDividend(cursor);
+		setDividendInYear(cursor);
 		setYield(cursor);
+		setYieldInYear(cursor);
 		setDividendRatio(cursor);
+		setDividendRatioInYear(cursor);
 		setRDate(cursor);
 		setStatus(cursor);
 	}
@@ -1207,6 +1222,23 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_DIVIDEND)));
 	}
 
+	public double getDividendInYear() {
+		return mDividendInYear;
+	}
+
+	public void setDividendInYear(double dividendInYear) {
+		mDividendInYear = dividendInYear;
+	}
+
+	void setDividendInYear(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setDividendInYear(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_DIVIDEND_IN_YEAR)));
+	}
+
 	public double getYield() {
 		return mYield;
 	}
@@ -1224,6 +1256,23 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_YIELD)));
 	}
 
+	public double getYieldInYear() {
+		return mYieldInYear;
+	}
+
+	public void setYieldInYear(double yieldInYear) {
+		mYieldInYear = yieldInYear;
+	}
+
+	void setYieldInYear(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setYieldInYear(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_YIELD_IN_YEAR)));
+	}
+
 	public double getDividendRatio() {
 		return mDividendRatio;
 	}
@@ -1239,6 +1288,23 @@ public class Stock extends DatabaseTable {
 
 		setDividendRatio(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_DIVIDEND_RATIO)));
+	}
+
+	public double getDividendRatioInYear() {
+		return mDividendRatioInYear;
+	}
+
+	public void setDividendRatioInYear(double dividendRatioInYear) {
+		mDividendRatioInYear = dividendRatioInYear;
+	}
+
+	void setDividendRatioInYear(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setDividendRatioInYear(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_DIVIDEND_RATIO_IN_YEAR)));
 	}
 
 	public String getRDate() {
@@ -1786,19 +1852,23 @@ public class Stock extends DatabaseTable {
 	public void setupYield() {
 		if (mPrice == 0) {
 			mYield = 0;
+			mYieldInYear = 0;
 			return;
 		}
 
 		mYield = Utility.Round2(100.0 * mDividend / 10.0 / mPrice);
+		mYieldInYear = Utility.Round2(100.0 * mDividendInYear / 10.0 / mPrice);
 	}
 
 	public void setupDividendRatio() {
-		if (mDividend == 0 || mNetProfitPerShareInYear <= 0) {
+		if (mNetProfitPerShareInYear <= 0) {
 			mDividendRatio = 0;
+			mDividendRatioInYear = 0;
 			return;
 		}
 
 		mDividendRatio = Utility.Round2((100 * mDividend / 10.0) / mNetProfitPerShareInYear);
+		mDividendRatioInYear = Utility.Round2((100 * mDividendInYear / 10.0) / mNetProfitPerShareInYear);
 	}
 
 	public void setupRoi() {
@@ -1810,7 +1880,7 @@ public class Stock extends DatabaseTable {
 //		mRoi = Utility.Round(mRoe * (100.0 * 1.0 / mPe + mYield) * mNetProfitMargin * mRate * ROI_COEFFICIENT,
 //				Constant.DOUBLE_FIXED_DECIMAL);
 //		mRoi = Utility.Round(mRoe * ( mNetProfitPerShareInYear / mPrice) * (mNetProfitInYear / mMainBusinessIncomeInYear) * ROI_COEFFICIENT);
-		mRoi = Utility.Round2(mRoe * (mNetProfitPerShareInYear / mPrice) * (mNetProfitInYear / mMainBusinessIncomeInYear) * mRate * mYield * ROI_COEFFICIENT);
+		mRoi = Utility.Round2(mRoe * (mNetProfitPerShareInYear / mPrice) * (mNetProfitInYear / mMainBusinessIncomeInYear) * mRate * mYieldInYear * ROI_COEFFICIENT);
 	}
 
 	public void setupIRR() {
@@ -1820,7 +1890,7 @@ public class Stock extends DatabaseTable {
 			return;
 		}
 
-		IRR.calculate(mPe, mRoe / 100, mDividendRatio / 100, mPrice);
+		IRR.calculate(mPe, mRoe / 100, mDividendRatioInYear / 100, mPrice);
 		mIR = Utility.Round2(IRR.getIR());
 		mIRR = Utility.Round2(100 * IRR.getIRR());
 	}

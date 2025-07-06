@@ -300,52 +300,67 @@ public class FinancialAnalyzer {
 	}
 
 	public void setupStockBonus(Stock stock) {
-		if (stock == null) {
+		if (stock == null || TextUtils.equals(stock.getClasses(), Stock.CLASS_INDEX)) {
 			return;
+		}
+
+
+		mDatabaseManager.getStockBonusList(stock, mStockBonusList, DatabaseContract.COLUMN_DATE + " DESC ");
+		if (mStockBonusList.size() == 0) {
+			return;
+		}
+
+		ArrayList<StockBonus> currentYearBonusList = new ArrayList<>();
+		ArrayList<StockBonus> prevYearBonusList = new ArrayList<>();
+
+		String currentYearString = "";
+		String prevYearString = "";
+		for (int i = 0; i < mStockBonusList.size(); i++) {
+			StockBonus stockBonus = mStockBonusList.get(i);
+			if (i == 0) {
+				stock.setRDate(stockBonus.getRDate());
+				currentYearString = stockBonus.getYear();
+			} else {
+				if (!TextUtils.equals(currentYearString, stockBonus.getYear())) {
+					prevYearString = stockBonus.getYear();
+					break;
+				}
+			}
+		}
+
+		for (StockBonus stockBonus : mStockBonusList) {
+			if (stockBonus.getYear().contains(currentYearString)) {
+				if (stockBonus.getDividend() > 0) {
+					currentYearBonusList.add(stockBonus);
+				}
+			} else if (stockBonus.getYear().contains(prevYearString)) {
+				if (stockBonus.getDividend() > 0) {
+					prevYearBonusList.add(stockBonus);
+				}
+			} else {
+				break;
+			}
 		}
 
 		double totalDivident = 0;
-
-		String yearString = "";
-		String prevYearString = "";
-		String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
-
-		if (TextUtils.equals(stock.getClasses(), Stock.CLASS_INDEX)) {
-			return;
-		}
-
-		mDatabaseManager.getStockBonusList(stock, mStockBonusList,
-				sortOrder);
-
-		int i = 0;
-		for (StockBonus stockBonus : mStockBonusList) {
-			String dateString = stockBonus.getDate();
-			if (!TextUtils.isEmpty(dateString)) {
-				String[] strings = dateString.split(Constant.MARK_MINUS);
-				if (strings != null && strings.length > 0) {
-					yearString = strings[0];
-				}
-
-				if (!TextUtils.isEmpty(prevYearString)) {
-					if (!prevYearString.equals(yearString)) {
-						break;
-					}
-				}
-			}
-
+		double totalDividendInYear = 0;
+		for (int i = 0; i < currentYearBonusList.size(); i++) {
+			StockBonus stockBonus = currentYearBonusList.get(i);
 			totalDivident += stockBonus.getDividend();
-
-			if (i == 0) {
-				stock.setRDate(stockBonus.getRDate());
-			}
-			stock.setDividend(Utility.Round2(totalDivident));
-			stock.setupBonus();
-			stock.setupYield();
-			stock.setupDividendRatio();
-
-			prevYearString = yearString;
-			i++;
+			totalDividendInYear += stockBonus.getDividend();
 		}
+
+		if (prevYearBonusList.size() > currentYearBonusList.size()) {
+			for (int i = 0; i < prevYearBonusList.size() - currentYearBonusList.size(); i++) {
+				totalDividendInYear += prevYearBonusList.get(i).getDividend();
+			}
+		}
+
+		stock.setDividend(totalDivident);
+		stock.setDividendInYear(totalDividendInYear);
+		stock.setupBonus();
+		stock.setupYield();
+		stock.setupDividendRatio();
 	}
 
 	private static class Holder {

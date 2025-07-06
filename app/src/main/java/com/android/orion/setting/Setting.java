@@ -96,9 +96,10 @@ public class Setting {
 	public static final boolean SETTING_DISPLAY_MERGED_DEFAULT = false;
 
 	public static final String SETTING_DEBUG_LOG = "SETTING_DEBUG_LOG";
-	public static final boolean SETTING_DEBUG_LOG_DEFAULT = false;
+	public static final boolean SETTING_DEBUG_LOG_DEFAULT = true;
 	public static final String SETTING_DEBUG_DIRECT = "SETTING_DEBUG_DIRECT";
 	public static final String SETTING_DEBUG_WIFI = "SETTING_DEBUG_WIFI";
+	public static final boolean SETTING_DEBUG_WIFI_DEFAULT = true;
 
 	public static final String SETTING_DOWNLOAD_STOCK_TIME_MILLIS_ = "SETTING_DOWNLOAD_STOCK_TIME_MILLIS_";
 	public static final String SETTING_DOWNLOAD_STOCK_DATA_TIME_MILLIS_ = "SETTING_DOWNLOAD_STOCK_DATA_TIME_MILLIS_";
@@ -288,7 +289,7 @@ public class Setting {
 	}
 
 	public static boolean getDebugWifi() {
-		return Preferences.getBoolean(SETTING_DEBUG_WIFI, false);
+		return Preferences.getBoolean(SETTING_DEBUG_WIFI, SETTING_DEBUG_WIFI_DEFAULT);
 	}
 
 	public static void setDebugWifi(boolean value) {

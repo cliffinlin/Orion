@@ -89,8 +89,11 @@ public final class DatabaseContract {
 	public static final String COLUMN_PB = "pb";
 	public static final String COLUMN_PR = "pr";
 	public static final String COLUMN_DIVIDEND = "dividend";
+	public static final String COLUMN_DIVIDEND_IN_YEAR = "dividend_in_year";
 	public static final String COLUMN_YIELD = "yield";
+	public static final String COLUMN_YIELD_IN_YEAR = "yield_in_year";
 	public static final String COLUMN_DIVIDEND_RATIO = "dividend_ratio";
+	public static final String COLUMN_DIVIDEND_RATIO_IN_YEAR = "dividend_ratio_in_year";
 	public static final String COLUMN_CREATED = "created";
 	public static final String COLUMN_MODIFIED = "modified";
 
@@ -188,7 +191,11 @@ public final class DatabaseContract {
 				COLUMN_NET_PROFIT_PER_SHARE,
 				COLUMN_NET_PROFIT_PER_SHARE_IN_YEAR,
 				COLUMN_RZ_VALUE, COLUMN_RZ_BUY, COLUMN_RZ_BUY_RATE, COLUMN_RZ_TREND_VALUE, COLUMN_RZ_TREND_RATE, COLUMN_RZ_TREND_DAYS,
-				COLUMN_RATE, COLUMN_DIVIDEND, COLUMN_YIELD, COLUMN_DIVIDEND_RATIO, COLUMN_R_DATE, COLUMN_STATUS,
+				COLUMN_RATE,
+				COLUMN_DIVIDEND, COLUMN_DIVIDEND_IN_YEAR,
+				COLUMN_YIELD, COLUMN_YIELD_IN_YEAR,
+				COLUMN_DIVIDEND_RATIO, COLUMN_DIVIDEND_RATIO_IN_YEAR,
+				COLUMN_R_DATE, COLUMN_STATUS,
 				COLUMN_CREATED, COLUMN_MODIFIED};
 		static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
 				+ TABLE_NAME;
@@ -259,8 +266,11 @@ public final class DatabaseContract {
 				+ COLUMN_RZ_TREND_DAYS + INTEGER_TYPE + COMMA_SEP
 				+ COLUMN_RATE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_DIVIDEND + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_DIVIDEND_IN_YEAR + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_YIELD + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_YIELD_IN_YEAR + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_DIVIDEND_RATIO + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_DIVIDEND_RATIO_IN_YEAR + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_R_DATE + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_STATUS + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_CREATED + TEXT_TYPE + COMMA_SEP
