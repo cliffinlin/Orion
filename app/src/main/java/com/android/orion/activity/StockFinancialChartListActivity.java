@@ -458,7 +458,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 						StockBonus stockBonus = Search.getStockBonusByDate(dateString,
 								mStockBonusList);
 						if (stockBonus != null) {
-							dividend = (float) (stockBonus.getDividend());
+							dividend = (float) (stockBonus.getDividend() / 10.0);
 						}
 						BarEntry stockBonusEntry = new BarEntry(dividend,
 								index);
@@ -730,7 +730,9 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 					rightYAxis.setDrawLabels(false);
 					rightYAxis.setStartAtZero(false);
 				} else {
-					rightYAxis.setEnabled(false);
+					rightYAxis.setEnabled(true);
+//					rightYAxis.setDrawLabels(false);
+					rightYAxis.setStartAtZero(false);
 				}
 			}
 

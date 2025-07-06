@@ -105,14 +105,14 @@ public class StockFinancialChart {
 		LineDataSet roeDataSet = new LineDataSet(mRoeEntryList, "Roe");
 		roeDataSet.setColor(Color.DKGRAY);
 		roeDataSet.setDrawCircles(false);
-		roeDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+		roeDataSet.setAxisDependency(YAxis.AxisDependency.RIGHT);
 		lineData.addDataSet(roeDataSet);
 
 		LineDataSet bookValuePerShareDataSet = new LineDataSet(
 				mBookValuePerShareEntryList, "BookValue");
 		bookValuePerShareDataSet.setColor(Color.BLUE);
 		bookValuePerShareDataSet.setDrawCircles(false);
-		bookValuePerShareDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+		bookValuePerShareDataSet.setAxisDependency(YAxis.AxisDependency.RIGHT);
 		lineData.addDataSet(bookValuePerShareDataSet);
 
 		LineDataSet netProfitPerShareDataSet = new LineDataSet(
@@ -122,12 +122,12 @@ public class StockFinancialChart {
 		netProfitPerShareDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(netProfitPerShareDataSet);
 
-		LineDataSet cashFlowPerShareDataSet = new LineDataSet(
-				mCashFlowPerShareEntryList, "CashFlow");
-		cashFlowPerShareDataSet.setColor(Color.GREEN);
-		cashFlowPerShareDataSet.setDrawCircles(false);
-		cashFlowPerShareDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		lineData.addDataSet(cashFlowPerShareDataSet);
+//		LineDataSet cashFlowPerShareDataSet = new LineDataSet(
+//				mCashFlowPerShareEntryList, "CashFlow");
+//		cashFlowPerShareDataSet.setColor(Color.GREEN);
+//		cashFlowPerShareDataSet.setDrawCircles(false);
+//		cashFlowPerShareDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+//		lineData.addDataSet(cashFlowPerShareDataSet);
 
 		mCombinedDataSub.setData(lineData);
 
