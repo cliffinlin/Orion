@@ -121,9 +121,7 @@ public class StockListActivity extends StorageActivity implements
 				performLoadFromFile(FILE_TYPE_FAVORITE);
 				break;
 			case R.id.action_save:
-				if (mStockArrayMap.size() > 0) {
-					performSaveToFile(FILE_TYPE_FAVORITE);
-				}
+				performSaveToFile(FILE_TYPE_FAVORITE);
 				break;
 			case R.id.action_favorite_all:
 				handleFavoriteAll();
