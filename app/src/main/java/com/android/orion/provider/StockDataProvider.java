@@ -978,11 +978,13 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 							StockService.getInstance().onDisconnected();
 							return;
 						}
-						Setting.setDownloadStockDataTimeMillis(stock, System.currentTimeMillis());
+
+						if (Market.isTradingHours() || Market.isLunchTime()) {
+							Setting.setDownloadStockDataTimeMillis(stock, 0);
+						} else {
+							Setting.setDownloadStockDataTimeMillis(stock, System.currentTimeMillis());
+						}
 					}
-				} else if (TextUtils.equals(stock.getClasses(), Stock.CLASS_INDEX)) {
-					Setting.setStockDataChanged(stock, true);
-				} else {
 				}
 				onDownloadComplete(stock.getCode());
 

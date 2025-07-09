@@ -289,8 +289,6 @@ public class StockAnalyzer {
 			mContentTitle.append(Constant.MARK_DOLLAR);
 		}
 		mContentTitle.append(mStock.getName() + " " + mStock.getPrice() + " " + mStock.getNet() + " " + stockTrend.toNotifyString());
-
-		RecordFile.writeNotificationFile(mContentTitle.toString());
 		try {
 			int code = (int) stockTrend.getId();
 			long stockId = mStock.getId();

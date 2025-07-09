@@ -37,22 +37,25 @@ public class FinancialAnalyzer {
 	}
 
 	public void analyzeFinancial(Stock stock) {
-		if (stock == null) {
+		String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
+
+		if (stock == null || TextUtils.equals(stock.getClasses(), Stock.CLASS_INDEX)) {
 			return;
 		}
 
-		mStockDataList = stock.getStockDataList(Period.MONTH);
-		mDatabaseManager.loadStockDataList(stock, Period.MONTH, mStockDataList);
+		for (int i = Period.getPeriodIndex(Period.MONTH); i < Period.PERIODS.length; i++) {
+			String period = Period.PERIODS[i];
+			mStockDataList = stock.getStockDataList(period);
+			mDatabaseManager.loadStockDataList(stock, period, mStockDataList);
+			if (mStockDataList.size() > 0) {
+				break;
+			}
+		}
+
 		mStockFinancialList = stock.getFinancialList();
 		mStockShareList = stock.getStockShareList();
 		mStockBonusList = stock.getStockBonusList();
 		mStockRZRQList = stock.getStockRZRQList();
-
-		String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
-
-		if (TextUtils.equals(stock.getClasses(), Stock.CLASS_INDEX)) {
-			return;
-		}
 
 		mDatabaseManager.getStockFinancialList(stock, mStockFinancialList,
 				sortOrder);
@@ -73,6 +76,10 @@ public class FinancialAnalyzer {
 	}
 
 	private void setupPrice() {
+		if (mStockFinancialList.size() == 0 || mStockDataList.size() == 0) {
+			return;
+		}
+
 		int j = mStockDataList.size() - 1;
 		for (StockFinancial stockFinancial : mStockFinancialList) {
 			stockFinancial.setPrice(0);
@@ -119,8 +126,13 @@ public class FinancialAnalyzer {
 	}
 
 	private void setupStockShare() {
+		if (mStockFinancialList.size() == 0 || mStockShareList.size() == 0) {
+			return;
+		}
+
 		int j = 0;
 		for (StockFinancial stockFinancial : mStockFinancialList) {
+			stockFinancial.setShare(mStockShareList.get(mStockShareList.size()-1).getStockShare());
 			while (j < mStockShareList.size()) {
 				StockShare stockShare = mStockShareList.get(j);
 				if (Utility.getCalendar(stockFinancial.getDate(),
@@ -155,21 +167,20 @@ public class FinancialAnalyzer {
 			return;
 		}
 
-		for (int i = 0; i < mStockFinancialList.size()
-				- Constant.SEASONS_IN_A_YEAR; i++) {
+		for (int i = 0; i < mStockFinancialList.size(); i++) {
 			mainBusinessIncomeInYear = 0;
 			netProfitInYear = 0;
 			netProfitPerShareInYear = 0;
 			for (int j = 0; j < Constant.SEASONS_IN_A_YEAR; j++) {
-				StockFinancial current = mStockFinancialList.get(i + j);
-				StockFinancial prev = mStockFinancialList.get(i + j + 1);
-
-				if (current == null || prev == null) {
+				if (i + j >= mStockFinancialList.size() || i + j + 1 >= mStockFinancialList.size()) {
 					continue;
 				}
 
-				if (current.getShare() == 0) {
-					return;
+				StockFinancial current = mStockFinancialList.get(i + j);
+				StockFinancial prev = mStockFinancialList.get(i + j + 1);
+
+				if (current == null || prev == null || current.getShare() == 0) {
+					continue;
 				}
 
 				if (current.getDate().contains("03-31")) {
