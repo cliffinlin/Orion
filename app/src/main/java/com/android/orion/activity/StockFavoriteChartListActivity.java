@@ -8,7 +8,6 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -46,6 +45,7 @@ import com.github.mikephil.charting.utils.Utils;
 import com.markupartist.android.widget.PullToRefreshListView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class StockFavoriteChartListActivity extends ListActivity implements
@@ -641,6 +641,21 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 		restartLoader();
 	}
 
+	void toggleFirstSwitch() {
+		Setting.setDisplayCandle(!Setting.getDisplayCandle());
+	}
+
+	void toggleSecondSwitch() {
+		Setting.setDisplayRZValue(!Setting.getDisplayRZValue());
+	}
+
+	private List<Runnable> mSwitchActions = Arrays.asList(
+			this::toggleFirstSwitch,
+			this::toggleSecondSwitch
+	);
+
+	private int mCurrentSwitchActionIndex = 0;
+
 	@Override
 	public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
 
@@ -658,7 +673,8 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 
 	@Override
 	public void onChartDoubleTapped(MotionEvent me) {
-		Setting.setDisplayCandle(!Setting.getDisplayCandle());
+		mSwitchActions.get(mCurrentSwitchActionIndex).run();
+		mCurrentSwitchActionIndex = (mCurrentSwitchActionIndex + 1) % mSwitchActions.size();
 		restartLoader();
 	}
 
