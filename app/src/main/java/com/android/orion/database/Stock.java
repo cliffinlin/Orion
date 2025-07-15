@@ -1827,12 +1827,12 @@ public class Stock extends DatabaseTable {
 	}
 
 	public void setupPr() {
-		if (mPe == 0 || mRoe == 0) {
+		if (mPb == 0 || mPe == 0 || mRoe == 0) {
 			mPr = 0;
 			return;
 		}
 
-		mPr = Utility.Round2(mPe / mRoe);
+		mPr = Utility.Round2(mRoe / mPb);
 	}
 
 	public void setupBonus() {
