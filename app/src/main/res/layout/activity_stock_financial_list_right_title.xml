@@ -41,24 +41,6 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/ir"
-        android:layout_width="80dp"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/ir"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/irr"
-        android:layout_width="80dp"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/irr"
-        android:textSize="18sp" />
-
-    <TextView
         android:id="@+id/roe"
         android:layout_width="80dp"
         android:layout_height="40dp"
@@ -83,6 +65,24 @@
         android:layout_weight="1"
         android:gravity="center"
         android:text="@string/pb"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/ir"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/ir"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/irr"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/irr"
         android:textSize="18sp" />
 
     <TextView
