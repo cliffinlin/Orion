@@ -48,6 +48,7 @@ import com.markupartist.android.widget.PullToRefreshListView;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
@@ -582,27 +583,31 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 
 		mStockListIndex += step;
 
-		boolean loop = true;
 		if (mStockListIndex > mStockList.size() - 1) {
-			if (loop) {
-				mStockListIndex = 0;
-			} else {
-				mStockListIndex = mStockList.size() - 1;
-			}
+			mStockListIndex = 0;
 		}
 
 		if (mStockListIndex < 0) {
-			if (loop) {
-				mStockListIndex = mStockList.size() - 1;
-			} else {
-				mStockListIndex = 0;
-			}
+			mStockListIndex = mStockList.size() - 1;
 		}
 
 		mStock = mStockList.get(mStockListIndex);
 
 		restartLoader();
 	}
+
+	void toggleFirstSwitch() {
+		Setting.setDisplayMainIncome(!Setting.getDisplayMainIncome());
+	}
+
+	void toggleSecondSwitch() {
+	}
+
+	private List<Runnable> mSwitchActions = Arrays.asList(
+			this::toggleFirstSwitch
+	);
+
+	private int mCurrentSwitchActionIndex = 0;
 
 	@Override
 	public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
@@ -621,7 +626,8 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 
 	@Override
 	public void onChartDoubleTapped(MotionEvent me) {
-		Setting.setDisplayMainIncome(!Setting.getDisplayMainIncome());
+		mSwitchActions.get(mCurrentSwitchActionIndex).run();
+		mCurrentSwitchActionIndex = (mCurrentSwitchActionIndex + 1) % mSwitchActions.size();
 		restartLoader();
 	}
 
