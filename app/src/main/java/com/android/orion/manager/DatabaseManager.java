@@ -610,6 +610,22 @@ public class DatabaseManager implements StockListener {
 		return result;
 	}
 
+	public int updateStockData(long id, ContentValues contentValues) {
+		int result = 0;
+
+		if ((id == 0) || (mContentResolver == null)) {
+			return result;
+		}
+
+		String where = DatabaseContract.COLUMN_ID + "=" + id;
+
+		result = mContentResolver.update(
+				DatabaseContract.StockData.CONTENT_URI, contentValues, where,
+				null);
+
+		return result;
+	}
+
 	public int updateStockData(StockData stockData, ContentValues contentValues) {
 		int result = 0;
 

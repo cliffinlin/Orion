@@ -207,18 +207,8 @@ public class StockAnalyzer {
 
 		StringBuilder actionBuilder = new StringBuilder();
 		appendActionIfPresent(actionBuilder, getDirectionAction(period));
-
-		StockData stockData = mStockDataList.get(mStockDataList.size() - 1);
-		Macd macd = stockData.getMacd();
-		if (macd != null) {
-			double velocity = macd.getVelocity();
-			if (velocity > 0) {
-				actionBuilder.append(Constant.MARK_ADD);
-			} else if (velocity < 0) {
-				actionBuilder.append(Constant.MARK_MINUS);
-			}
-		}
-
+		appendActionIfPresent(actionBuilder, getMacdAction());
+		appendActionIfPresent(actionBuilder, getOperationAction());
 		mStock.setAction(period, actionBuilder.toString());
 	}
 
@@ -232,21 +222,62 @@ public class StockAnalyzer {
 		StringBuilder builder = new StringBuilder();
 		StockData stockData = StockData.getLast(mStock.getVertexList(period, mStock.getLevel(period)), 1);
 		if (stockData != null) {
-			appendDirection(builder, stockData);
+			if (stockData.vertexOf(StockTrend.VERTEX_BOTTOM)) {
+				builder.append(Constant.MARK_ADD);
+			} else if (stockData.vertexOf(StockTrend.VERTEX_TOP)) {
+				builder.append(Constant.MARK_MINUS);
+			}
 		}
 		return builder.toString();
 	}
 
-	private void appendDirection(StringBuilder builder, StockData stockData) {
-		if (builder == null || stockData == null) {
-			return;
+	String getMacdAction() {
+		StringBuilder builder = new StringBuilder();
+		StockData stockData = mStockDataList.get(mStockDataList.size() - 1);
+		if (stockData != null) {
+			Macd macd = stockData.getMacd();
+			if (macd != null) {
+				double velocity = macd.getVelocity();
+				if (velocity > 0) {
+					builder.append(Constant.MARK_ADD);
+				} else if (velocity < 0) {
+					builder.append(Constant.MARK_MINUS);
+				}
+			}
 		}
+		return builder.toString();
+	}
 
-		if (stockData.vertexOf(StockTrend.VERTEX_BOTTOM)) {
-			builder.append(Constant.MARK_ADD);
-		} else if (stockData.vertexOf(StockTrend.VERTEX_TOP)) {
-			builder.append(Constant.MARK_MINUS);
+	String getOperationAction() {
+		int index = 0;
+		boolean foundVERTEX_BOTTOM_STROKE = false;
+		boolean foundVERTEX_BOTTOM_SEGMENT = false;
+		StringBuilder builder = new StringBuilder();
+		for (int i = mStockDataList.size() - 1; i > StockTrend.VERTEX_SIZE; i--) {
+			StockData stockData = mStockDataList.get(i);
+			if (stockData.vertexOf(StockTrend.VERTEX_BOTTOM_STROKE) || stockData.vertexOf(StockTrend.VERTEX_TOP_STROKE)) {
+				if (stockData.vertexOf(StockTrend.VERTEX_BOTTOM_STROKE)) {
+					index = i;
+					foundVERTEX_BOTTOM_STROKE = true;
+				}
+				break;
+			}
 		}
+		if (foundVERTEX_BOTTOM_STROKE) {
+			for (int i = index; i > StockTrend.VERTEX_SIZE; i--) {
+				StockData stockData = mStockDataList.get(i);
+				if (stockData.vertexOf(StockTrend.VERTEX_BOTTOM_SEGMENT) || stockData.vertexOf(StockTrend.VERTEX_TOP_SEGMENT)) {
+					if (stockData.vertexOf(StockTrend.VERTEX_BOTTOM_SEGMENT)) {
+						foundVERTEX_BOTTOM_SEGMENT = true;
+					}
+					break;
+				}
+			}
+		}
+		if (foundVERTEX_BOTTOM_STROKE && foundVERTEX_BOTTOM_SEGMENT) {
+			builder.append(StockDeal.ACTION_BUY);
+		}
+		return builder.toString();
 	}
 
 

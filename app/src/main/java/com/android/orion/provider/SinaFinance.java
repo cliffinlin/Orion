@@ -862,11 +862,28 @@ public class SinaFinance extends StockDataProvider {
 						}
 					} else {
 						if (!mDatabaseManager.isStockDataExist(stockData)) {
-							stockData.setCreated(Utility
-									.getCurrentDateTimeString());
-							stockData.setModified(Utility
-									.getCurrentDateTimeString());
-							mDatabaseManager.insertStockData(stockData);
+							if (stockData.getPeriod().equals(Period.MONTH) || stockData.getPeriod().equals(Period.WEEK)) {
+								StockData prev = new StockData(stockData);
+								mDatabaseManager.getStockData(prev);
+								if ((prev.getMonth() == stockData.getMonth()) || (prev.getWeek() == stockData.getWeek())) {
+									stockData.setModified(Utility
+											.getCurrentDateTimeString());
+									mDatabaseManager.updateStockData(prev.getId(),
+											stockData.getContentValues());
+								} else {
+									stockData.setCreated(Utility
+											.getCurrentDateTimeString());
+									stockData.setModified(Utility
+											.getCurrentDateTimeString());
+									mDatabaseManager.insertStockData(stockData);
+								}
+							} else {
+								stockData.setCreated(Utility
+										.getCurrentDateTimeString());
+								stockData.setModified(Utility
+										.getCurrentDateTimeString());
+								mDatabaseManager.insertStockData(stockData);
+							}
 						} else {
 							stockData.setModified(Utility
 									.getCurrentDateTimeString());

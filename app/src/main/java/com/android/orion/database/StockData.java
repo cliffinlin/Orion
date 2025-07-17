@@ -504,6 +504,11 @@ public class StockData extends DatabaseTable {
 		return String.format("%02d", month + 1);
 	}
 
+	public String getWeek() {
+		int week = getCalendar().get(Calendar.WEEK_OF_YEAR);
+		return String.format("%02d", week + 1);
+	}
+
 	public void add(StockData stockData, long weight) {
 		if (stockData == null) {
 			return;

@@ -517,7 +517,7 @@ public class StockDataChart {
 	}
 
 	public void updateExtendEntry() {
-		if (mTrendEntryList[StockTrend.LEVEL_DRAW] != null && mTrendEntryList[StockTrend.LEVEL_DRAW].size() > 1) {
+		if (mTrendEntryList[StockTrend.LEVEL_DRAW] != null && mTrendEntryList[StockTrend.LEVEL_DRAW].size() > 0) {
 			mExtendEntryList.add(mTrendEntryList[StockTrend.LEVEL_DRAW].get(mTrendEntryList[StockTrend.LEVEL_DRAW].size() - 1));
 			Entry drawEntry = new Entry((float) mStock.getPrice(), mXValues.size()-1);
 			mExtendEntryList.add(drawEntry);
