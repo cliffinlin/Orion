@@ -459,7 +459,6 @@ public class StockPerceptronListActivity extends ListActivity implements
 	}
 
 	void restartLoader() {
-		Log.d("restartLoader");
 		mHandler.sendEmptyMessage(MESSAGE_RESTART_LOADER);
 	}
 

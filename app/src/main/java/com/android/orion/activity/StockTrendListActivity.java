@@ -443,7 +443,6 @@ public class StockTrendListActivity extends ListActivity implements
 	}
 
 	void restartLoader() {
-		Log.d("restartLoader");
 		mLoaderManager.restartLoader(LOADER_ID_TREND_LIST, null, this);
 	}
 

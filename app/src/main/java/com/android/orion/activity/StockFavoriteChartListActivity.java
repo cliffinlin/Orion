@@ -351,7 +351,6 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 	}
 
 	void restartLoader() {
-		Log.d("restartLoader");
 		if (mStockIDList == null) {
 			mLoaderManager.restartLoader(LOADER_ID_STOCK_LIST, null, this);
 		}
