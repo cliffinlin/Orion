@@ -186,6 +186,10 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 				startActivity(intent);
 				break;
 			}
+			case R.id.action_import: {
+				performLoadFromFile(FILE_TYPE_TDX_DATA, false);
+				break;
+			}
 			case R.id.action_export: {
 				performSaveToFile(FILE_TYPE_TDX_DATA);
 				break;

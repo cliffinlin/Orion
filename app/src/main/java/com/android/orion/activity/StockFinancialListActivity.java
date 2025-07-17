@@ -150,7 +150,7 @@ public class StockFinancialListActivity extends ListActivity implements
 				}
 				break;
 			case R.id.action_load:
-				performLoadFromFile(FILE_TYPE_FAVORITE);
+				performLoadFromFile(FILE_TYPE_FAVORITE, false);
 				break;
 			case R.id.action_save:
 				performSaveToFile(FILE_TYPE_FAVORITE);

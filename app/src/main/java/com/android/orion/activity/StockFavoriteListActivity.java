@@ -140,7 +140,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 				}
 				break;
 			case R.id.action_load:
-				performLoadFromFile(FILE_TYPE_FAVORITE);
+				performLoadFromFile(FILE_TYPE_FAVORITE, false);
 				break;
 			case R.id.action_save:
 				performSaveToFile(FILE_TYPE_FAVORITE);
@@ -152,7 +152,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 				startActivity(new Intent(this, StockListActivity.class));
 				break;
 			case R.id.action_import:
-				performLoadFromFile(FILE_TYPE_TDX_DATA);
+				performLoadFromFile(FILE_TYPE_TDX_DATA, true);
 				break;
 			default:
 				super.handleOnOptionsItemSelected(item);

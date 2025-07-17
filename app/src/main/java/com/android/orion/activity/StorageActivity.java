@@ -60,7 +60,7 @@ public class StorageActivity extends DatabaseActivity {
 	Uri mUri = null;
 	ArrayList<Uri> mUriList = new ArrayList<>();
 
-	void performLoadFromFile(int type) {
+	void performLoadFromFile(int type, boolean allowMultiple) {
 		Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
 		intent.addCategory(Intent.CATEGORY_OPENABLE);
 		intent.setType("*/*");
@@ -68,7 +68,7 @@ public class StorageActivity extends DatabaseActivity {
 		if (type == FILE_TYPE_FAVORITE) {
 			requestCode = REQUEST_CODE_READ_FAVORITE;
 		} else if (type == FILE_TYPE_TDX_DATA) {
-			intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+			intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, allowMultiple);
 			requestCode = REQUEST_CODE_READ_TDX_DATA;
 		}
 		startActivityForResult(intent, requestCode);
