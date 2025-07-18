@@ -40,7 +40,8 @@ public class StockDataChart {
 	public ArrayList<CandleEntry> mCandleEntryList = new ArrayList<>();
 	public ArrayList<Entry> mAverage5EntryList = new ArrayList<>();
 	public ArrayList<Entry> mAverage10EntryList = new ArrayList<>();
-	public ArrayList<Entry> mExtendEntryList = new ArrayList<>();
+	public ArrayList<Entry> mExtendFirstEntryList = new ArrayList<>();
+	public ArrayList<Entry> mExtendLastEntryList = new ArrayList<>();
 	public ArrayList<Entry> mNetProfitInYearEntryList = new ArrayList<>();
 	public ArrayList<Entry> mRZValueEntryList = new ArrayList<>();
 	public ArrayList<Entry> mRQValueEntryList = new ArrayList<>();
@@ -161,38 +162,41 @@ public class StockDataChart {
 		}
 
 		addLineDataSet(mTrendEntryList, StockTrend.LABEL_DRAW, StockTrend.LEVEL_DRAW, lineData);
-		addLineDataSet(mGroupEntryList, StockTrend.LEVEL_DRAW, lineData, fillChanged(StockTrend.LEVEL_DRAW), fillColor(StockTrend.LEVEL_DRAW));
-		addLineDataSet(mExtendEntryList, StockTrend.LABEL_NONE, lineColor(StockTrend.LEVEL_DRAW), false, lineData, false, 0);
+		if (displayTrend(StockTrend.LEVEL_DRAW)) {
+			addLineDataSet(mGroupEntryList, StockTrend.LEVEL_DRAW, lineData, fillChanged(StockTrend.LEVEL_DRAW), fillColor(StockTrend.LEVEL_DRAW));
+		}
+		addLineDataSet(mExtendFirstEntryList, StockTrend.LABEL_NONE, lineColor(StockTrend.LEVEL_DRAW), false, lineData, false, 0);
+		addLineDataSet(mExtendLastEntryList, StockTrend.LABEL_NONE, lineColor(StockTrend.LEVEL_DRAW), false, lineData, false, 0);
 
 		if (displayTrend(StockTrend.LEVEL_STROKE)) {
 			addLineDataSet(mTrendEntryList, StockTrend.LABEL_STROKE, StockTrend.LEVEL_STROKE, lineData);
+			addLineDataSet(mGroupEntryList, StockTrend.LEVEL_STROKE, lineData, fillChanged(StockTrend.LEVEL_STROKE), fillColor(StockTrend.LEVEL_STROKE));
 		}
-		addLineDataSet(mGroupEntryList, StockTrend.LEVEL_STROKE, lineData, fillChanged(StockTrend.LEVEL_STROKE), fillColor(StockTrend.LEVEL_STROKE));
 
 		if (displayTrend(StockTrend.LEVEL_SEGMENT)) {
 			addLineDataSet(mTrendEntryList, StockTrend.LABEL_SEGMENT, StockTrend.LEVEL_SEGMENT, lineData);
+			addLineDataSet(mGroupEntryList, StockTrend.LEVEL_SEGMENT, lineData, fillChanged(StockTrend.LEVEL_SEGMENT), fillColor(StockTrend.LEVEL_SEGMENT));
 		}
-		addLineDataSet(mGroupEntryList, StockTrend.LEVEL_SEGMENT, lineData, fillChanged(StockTrend.LEVEL_SEGMENT), fillColor(StockTrend.LEVEL_SEGMENT));
 
 		if (displayTrend(StockTrend.LEVEL_LINE)) {
 			addLineDataSet(mTrendEntryList, StockTrend.LABEL_LINE, StockTrend.LEVEL_LINE, lineData);
+			addLineDataSet(mGroupEntryList, StockTrend.LEVEL_LINE, lineData, fillChanged(StockTrend.LEVEL_LINE), fillColor(StockTrend.LEVEL_LINE));
 		}
-		addLineDataSet(mGroupEntryList, StockTrend.LEVEL_LINE, lineData, fillChanged(StockTrend.LEVEL_LINE), fillColor(StockTrend.LEVEL_LINE));
 
 		if (displayTrend(StockTrend.LEVEL_OUT_LINE)) {
 			addLineDataSet(mTrendEntryList, StockTrend.LABEL_OUTLINE, StockTrend.LEVEL_OUT_LINE, lineData);
+			addLineDataSet(mGroupEntryList, StockTrend.LEVEL_OUT_LINE, lineData, fillChanged(StockTrend.LEVEL_OUT_LINE), fillColor(StockTrend.LEVEL_OUT_LINE));
 		}
-		addLineDataSet(mGroupEntryList, StockTrend.LEVEL_OUT_LINE, lineData, fillChanged(StockTrend.LEVEL_OUT_LINE), fillColor(StockTrend.LEVEL_OUT_LINE));
 
 		if (displayTrend(StockTrend.LEVEL_SUPER_LINE)) {
 			addLineDataSet(mTrendEntryList, StockTrend.LABEL_SUPERLINE, StockTrend.LEVEL_SUPER_LINE, lineData);
+			addLineDataSet(mGroupEntryList, StockTrend.LEVEL_SUPER_LINE, lineData, fillChanged(StockTrend.LEVEL_SUPER_LINE), fillColor(StockTrend.LEVEL_SUPER_LINE));
 		}
-		addLineDataSet(mGroupEntryList, StockTrend.LEVEL_SUPER_LINE, lineData, fillChanged(StockTrend.LEVEL_SUPER_LINE), fillColor(StockTrend.LEVEL_SUPER_LINE));
 
 		if (displayTrend(StockTrend.LEVEL_TREND_LINE)) {
 			addLineDataSet(mTrendEntryList, StockTrend.LABEL_TREND_LINE, StockTrend.LEVEL_TREND_LINE, lineData);
+			addLineDataSet(mGroupEntryList, StockTrend.LEVEL_TREND_LINE, lineData, fillChanged(StockTrend.LEVEL_TREND_LINE), fillColor(StockTrend.LEVEL_TREND_LINE));
 		}
-		addLineDataSet(mGroupEntryList, StockTrend.LEVEL_TREND_LINE, lineData, fillChanged(StockTrend.LEVEL_TREND_LINE), fillColor(StockTrend.LEVEL_TREND_LINE));
 
 		mCombinedDataMain.setData(lineData);
 	}
@@ -432,7 +436,7 @@ public class StockDataChart {
 		ArrayMap<Double, LimitLine> limitLineMap = new ArrayMap<>();
 		for (int i = StockTrend.LEVEL_DRAW; i < StockTrend.LEVELS.length; i++) {
 			if (Setting.getDisplayAdaptive()) {
-				if ((i != mAdaptiveLevel) && (i != mAdaptiveLevel - 1)) {
+				if (i != mAdaptiveLevel) {
 					continue;
 				}
 			}
@@ -518,9 +522,13 @@ public class StockDataChart {
 
 	public void updateExtendEntry() {
 		if (mTrendEntryList[StockTrend.LEVEL_DRAW] != null && mTrendEntryList[StockTrend.LEVEL_DRAW].size() > 0) {
-			mExtendEntryList.add(mTrendEntryList[StockTrend.LEVEL_DRAW].get(mTrendEntryList[StockTrend.LEVEL_DRAW].size() - 1));
-			Entry drawEntry = new Entry((float) mStock.getPrice(), mXValues.size()-1);
-			mExtendEntryList.add(drawEntry);
+			Entry firstEntry = new Entry((float) mCandleEntryList.get(0).getOpen(), 0);
+			mExtendFirstEntryList.add(firstEntry);
+			mExtendFirstEntryList.add(mTrendEntryList[StockTrend.LEVEL_DRAW].get(0));
+
+			mExtendLastEntryList.add(mTrendEntryList[StockTrend.LEVEL_DRAW].get(mTrendEntryList[StockTrend.LEVEL_DRAW].size() - 1));
+			Entry lastEntry = new Entry((float) mStock.getPrice(), mXValues.size()-1);
+			mExtendLastEntryList.add(lastEntry);
 		}
 	}
 
@@ -540,7 +548,8 @@ public class StockDataChart {
 	public void clear() {
 		mXValues.clear();
 		mCandleEntryList.clear();
-		mExtendEntryList.clear();
+		mExtendFirstEntryList.clear();
+		mExtendLastEntryList.clear();
 		mNetProfitInYearEntryList.clear();
 		mRZValueEntryList.clear();
 		mRQValueEntryList.clear();

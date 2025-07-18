@@ -7,7 +7,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.widget.Toast;
 
@@ -31,7 +30,6 @@ import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Logger;
 import com.android.orion.utility.Market;
-import com.android.orion.utility.RecordFile;
 import com.android.orion.utility.StopWatch;
 import com.android.orion.utility.Utility;
 
@@ -207,8 +205,7 @@ public class StockAnalyzer {
 
 		StringBuilder actionBuilder = new StringBuilder();
 		appendActionIfPresent(actionBuilder, getDirectionAction(period));
-		appendActionIfPresent(actionBuilder, getMacdAction());
-		appendActionIfPresent(actionBuilder, getOperationAction());
+		appendActionIfPresent(actionBuilder, getVelocityAction());
 		mStock.setAction(period, actionBuilder.toString());
 	}
 
@@ -231,7 +228,7 @@ public class StockAnalyzer {
 		return builder.toString();
 	}
 
-	String getMacdAction() {
+	String getVelocityAction() {
 		StringBuilder builder = new StringBuilder();
 		StockData stockData = mStockDataList.get(mStockDataList.size() - 1);
 		if (stockData != null) {
@@ -248,38 +245,55 @@ public class StockAnalyzer {
 		return builder.toString();
 	}
 
-	String getOperationAction() {
-		int index = 0;
-		boolean foundVERTEX_BOTTOM_STROKE = false;
-		boolean foundVERTEX_BOTTOM_SEGMENT = false;
+	String getLevelAction(String period) {
 		StringBuilder builder = new StringBuilder();
-		for (int i = mStockDataList.size() - 1; i > StockTrend.VERTEX_SIZE; i--) {
-			StockData stockData = mStockDataList.get(i);
-			if (stockData.vertexOf(StockTrend.VERTEX_BOTTOM_STROKE) || stockData.vertexOf(StockTrend.VERTEX_TOP_STROKE)) {
-				if (stockData.vertexOf(StockTrend.VERTEX_BOTTOM_STROKE)) {
-					index = i;
-					foundVERTEX_BOTTOM_STROKE = true;
-				}
-				break;
+
+		double mean = 0;
+		double sd = 0;
+		String adaptive = "";
+		for (int i = StockTrend.LEVEL_DRAW; i < StockTrend.LEVELS.length; i++) {
+			ArrayList<StockData> dataList = mStock.getDataList(period, i);
+			mean = Utility.Round2(calculateMean(dataList));
+			sd = Utility.Round2(calculateStandardDeviation(dataList));
+			if (mStock.getLevel(period) == i) {
+				adaptive = Constant.MARK_ASTERISK;
+			} else {
+				adaptive = "";
 			}
+			Log.d(mStock.getName() + " " + period + " " + StockTrend.MARK_LEVEL + i + " mean=" + mean + " sd=" + sd + " size=" + dataList.size() + " " + adaptive);
 		}
-		if (foundVERTEX_BOTTOM_STROKE) {
-			for (int i = index; i > StockTrend.VERTEX_SIZE; i--) {
-				StockData stockData = mStockDataList.get(i);
-				if (stockData.vertexOf(StockTrend.VERTEX_BOTTOM_SEGMENT) || stockData.vertexOf(StockTrend.VERTEX_TOP_SEGMENT)) {
-					if (stockData.vertexOf(StockTrend.VERTEX_BOTTOM_SEGMENT)) {
-						foundVERTEX_BOTTOM_SEGMENT = true;
-					}
-					break;
-				}
-			}
-		}
-		if (foundVERTEX_BOTTOM_STROKE && foundVERTEX_BOTTOM_SEGMENT) {
-			builder.append(StockDeal.ACTION_BUY);
-		}
+
+		builder.append(StockTrend.MARK_LEVEL + mStock.getLevel(period));
+
 		return builder.toString();
 	}
 
+	public double calculateMean(ArrayList<StockData> dataList) {
+		double sum = 0.0;
+		if (dataList == null || dataList.isEmpty()) {
+			return sum;
+		}
+
+		for (StockData data : dataList) {
+			sum += Math.abs(data.getNet());
+		}
+		return sum / dataList.size();
+	}
+
+	public double calculateStandardDeviation(ArrayList<StockData> dataList) {
+		double sumOfSquaredDifferences = 0.0;
+		if (dataList == null || dataList.isEmpty()) {
+			return sumOfSquaredDifferences;
+		}
+
+		double mean = calculateMean(dataList);
+		for (StockData data : dataList) {
+			sumOfSquaredDifferences += Math.pow(Math.abs(data.getNet()) - mean, 2);
+		}
+
+		double variance = sumOfSquaredDifferences / dataList.size();
+		return Math.sqrt(variance);
+	}
 
 	public void cancelNotifyStockTrend(StockTrend stockTrend) {
 		if (mNotificationManager == null || stockTrend == null) {
@@ -299,14 +313,18 @@ public class StockAnalyzer {
 			return;
 		}
 
+		if (!mStock.hasFlag(Stock.FLAG_NOTIFY)) {
+			return;
+		}
+
+		if (stockTrend.getLevel() < mStock.getLevel(stockTrend.getPeriod())) {
+			return;
+		}
+
 		if (!Market.isTradingHours()) {
 			Toast.makeText(mContext,
 					mContext.getResources().getString(R.string.out_of_trading_hours),
 					Toast.LENGTH_SHORT).show();
-			return;
-		}
-
-		if (!mStock.hasFlag(Stock.FLAG_NOTIFY)) {
 			return;
 		}
 

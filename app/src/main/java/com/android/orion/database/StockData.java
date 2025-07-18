@@ -506,7 +506,7 @@ public class StockData extends DatabaseTable {
 
 	public String getWeek() {
 		int week = getCalendar().get(Calendar.WEEK_OF_YEAR);
-		return String.format("%02d", week + 1);
+		return String.format("%02d", week);
 	}
 
 	public void add(StockData stockData, long weight) {
@@ -691,7 +691,7 @@ public class StockData extends DatabaseTable {
 		//					2023/01/03	0935	37.08	37.08	36.72	36.81	6066500	223727792.00
 
 		String[] strings = string.split(Constant.TAB);
-		if (strings == null || strings.length < 6) {
+		if (strings == null || strings.length < 8) {
 			return null;
 		}
 

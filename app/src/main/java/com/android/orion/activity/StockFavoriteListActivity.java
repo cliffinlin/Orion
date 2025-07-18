@@ -367,11 +367,13 @@ public class StockFavoriteListActivity extends ListActivity implements
 		mTextViewRZTrendRate = findViewById(R.id.rz_trend_rate);
 		if (mTextViewRZTrendRate != null) {
 			mTextViewRZTrendRate.setOnClickListener(this);
+			setVisibility(mTextViewRZTrendRate, Setting.getDisplayRZValue());
 		}
 
 		mTextViewRZTrendDays = findViewById(R.id.rz_trend_days);
 		if (mTextViewRZTrendDays != null) {
 			mTextViewRZTrendDays.setOnClickListener(this);
+			setVisibility(mTextViewRZTrendDays, Setting.getDisplayRZValue());
 		}
 
 		mTextViewModified = findViewById(R.id.modified);
@@ -662,6 +664,12 @@ public class StockFavoriteListActivity extends ListActivity implements
 			if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_NET)) {
 				return setVisibility(view, Setting.getDisplayNet());
+			} else if (columnIndex == cursor
+					.getColumnIndex(DatabaseContract.COLUMN_RZ_TREND_RATE)) {
+				return setVisibility(view, Setting.getDisplayRZValue());
+			} else if (columnIndex == cursor
+					.getColumnIndex(DatabaseContract.COLUMN_RZ_TREND_DAYS)) {
+				return setVisibility(view, Setting.getDisplayRZValue());
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_YEAR)) {
 				period = DatabaseContract.COLUMN_YEAR;

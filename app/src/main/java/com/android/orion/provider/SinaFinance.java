@@ -865,7 +865,7 @@ public class SinaFinance extends StockDataProvider {
 							if (stockData.getPeriod().equals(Period.MONTH) || stockData.getPeriod().equals(Period.WEEK)) {
 								StockData prev = new StockData(stockData);
 								mDatabaseManager.getStockData(prev);
-								if ((prev.getMonth() == stockData.getMonth()) || (prev.getWeek() == stockData.getWeek())) {
+								if (TextUtils.equals(prev.getMonth(), stockData.getMonth()) || TextUtils.equals(prev.getWeek(), stockData.getWeek())) {
 									stockData.setModified(Utility
 											.getCurrentDateTimeString());
 									mDatabaseManager.updateStockData(prev.getId(),

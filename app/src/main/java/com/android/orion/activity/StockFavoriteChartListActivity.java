@@ -648,13 +648,8 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 		Setting.setDisplayCandle(!Setting.getDisplayCandle());
 	}
 
-	void toggleSecondSwitch() {
-		Setting.setDisplayRZValue(!Setting.getDisplayRZValue());
-	}
-
 	private List<Runnable> mSwitchActions = Arrays.asList(
-			this::toggleFirstSwitch,
-			this::toggleSecondSwitch
+			this::toggleFirstSwitch
 	);
 
 	private int mCurrentSwitchActionIndex = 0;
