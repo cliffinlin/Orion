@@ -759,14 +759,15 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		}
 
 		OutputStream outputStream = null;
+		BufferedWriter writer = null;
 		try {
 			String uriString = Setting.getTdxDataFileUri(stock);
 			if (TextUtils.isEmpty(uriString)) {
 				return;
 			}
 			Uri uri = Uri.parse(uriString);
-			outputStream = mContext.getContentResolver().openOutputStream(uri);
-			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream));
+			outputStream = mContext.getContentResolver().openOutputStream(uri, "wt");
+			writer = new BufferedWriter(new OutputStreamWriter(outputStream));
 			ArrayList<String> contentList = new ArrayList<>();
 			mDatabaseManager.getTDXDataContentList(stock, period, contentList);
 			int index = 0;
@@ -781,6 +782,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
+			Utility.closeQuietly(writer);
 			Utility.closeQuietly(outputStream);
 		}
 	}
