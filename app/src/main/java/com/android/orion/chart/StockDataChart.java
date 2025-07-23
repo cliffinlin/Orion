@@ -91,7 +91,7 @@ public class StockDataChart {
 		mStockTrendMap.clear();
 		for (StockTrend stockTrend : stockTrendList) {
 			if (stockTrend != null) {
-				mStockTrendMap.put(stockTrend.getPeriod() + StockTrend.MARK_LEVEL + stockTrend.getLevel(), stockTrend);
+				mStockTrendMap.put(stockTrend.getPeriod() + Constant.MARK_LEVEL + stockTrend.getLevel(), stockTrend);
 			}
 		}
 	}
@@ -271,7 +271,7 @@ public class StockDataChart {
 
 	StockTrend getStockTrend(int level) {
 		StockTrend stockTrend = null;
-		String key = mPeriod + StockTrend.MARK_LEVEL + level;
+		String key = mPeriod + Constant.MARK_LEVEL + level;
 		if (mStockTrendMap.containsKey(key)) {
 			stockTrend = mStockTrendMap.get(key);
 		}
@@ -423,7 +423,7 @@ public class StockDataChart {
 		}
 
 		String label = "                                                     " + " ";
-		label += "Action:" + Constant.TAB2 + StockTrend.MARK_LEVEL + mAdaptiveLevel + action;
+		label += "Action:" + Constant.TAB2 + Constant.MARK_LEVEL + mAdaptiveLevel + action;
 		limitLine = createLimitLine(stock.getPrice(), color, label);
 		mLimitLineList.add(limitLine);
 	}

@@ -1,11 +1,16 @@
 package com.android.orion.setting;
 
+import java.util.concurrent.TimeUnit;
+
 public class Constant {
 
+	public static final String MARK_NONE = "";
 	public static final String MARK_ADD = "+";
 	public static final String MARK_MINUS = "-";
 	public static final String MARK_ASTERISK = "*";
 	public static final String MARK_DOLLAR = "$";
+	public static final String MARK_LEVEL = "L";
+	public static final String MARK_PREDICT = "?";
 
 	public static final String WHITE_SPACE = " ";
 	public static final String NEW_LINE = "\n";
@@ -57,9 +62,9 @@ public class Constant {
 	public static final int MIN15_PER_TRADE_DAY = 2 * MIN30_PER_TRADE_DAY;
 	public static final int MIN5_PER_TRADE_DAY = 3 * MIN15_PER_TRADE_DAY;
 
-	public static final long SECOND_IN_MILLIS = 1 * 1000L; //in millis
-	public static final long MINUTE_IN_MILLIS = 60 * SECOND_IN_MILLIS;
-	public static final long HOUR_IN_MILLIS = 60 * MINUTE_IN_MILLIS;
+	public static final long SECOND_IN_MILLIS = TimeUnit.SECONDS.toMillis(1);
+	public static final long MINUTE_IN_MILLIS = TimeUnit.MINUTES.toMillis(1);
+	public static final long HOUR_IN_MILLIS = TimeUnit.HOURS.toMillis(1);
 
 	public static final long DOUBLE_CONSTANT_WAN = 10000;
 	public static final long DOUBLE_CONSTANT_YI = (DOUBLE_CONSTANT_WAN * DOUBLE_CONSTANT_WAN);

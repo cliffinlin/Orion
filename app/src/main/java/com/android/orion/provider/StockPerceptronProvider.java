@@ -161,7 +161,7 @@ public class StockPerceptronProvider {
 						for (Double key : mXArray) {
 							mYArray.add(stockTrendNetMap.get(key));
 						}
-						mStockPerceptron.train(mXArray, mYArray, Config.MAX_ML_TRAIN_TIMES);
+						mStockPerceptron.train(mXArray, mYArray, Config.MAX_ITERATIONS);
 						mStockPerceptron.setModified(Utility.getCurrentDateTimeString());
 						Log.d("MSG_TRAIN_ALL_IN_ONE ---------->" + mStockPerceptron.toLogString());
 						break;
@@ -192,7 +192,7 @@ public class StockPerceptronProvider {
 							mYArray.add(mStockPerceptron.getNetMap().get(key));
 						}
 
-						mStockPerceptron.train(mXArray, mYArray, Config.MAX_ML_TRAIN_TIMES);
+						mStockPerceptron.train(mXArray, mYArray, Config.MAX_ITERATIONS);
 						mStockPerceptron.setModified(Utility.getCurrentDateTimeString());
 						mDatabaseManager.updateStockPerceptron(mStockPerceptron, mStockPerceptron.getContentValuesPerceptron());
 //						Log.d("default ---------->" + mStockPerceptron.toLogString());

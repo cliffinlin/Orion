@@ -79,10 +79,6 @@ public class StockTrend extends DatabaseTable {
 			TYPE_DOWN_DOWN, TYPE_DOWN_UP,
 			TYPE_DOWN_NONE, TYPE_DOWN_NONE_UP, TYPE_DOWN_NONE_DOWN};
 
-	public static final String MARK_NONE = "";
-	public static final String MARK_LEVEL = "L";
-	public static final String MARK_PREDICT = "?";
-
 	public static final int VERTEX_SIZE = 3;
 	public static final int ADAPTIVE_SIZE = 8;
 
@@ -543,10 +539,10 @@ public class StockTrend extends DatabaseTable {
 	}
 
 	public String toChartString() {
-		return MARK_LEVEL + mLevel + " "
+		return Constant.MARK_LEVEL + mLevel + " "
 				+ mAction + " "
 				+ mType + " "
-				+ (int) mNet + "/" + (int) mNextNet + " " + MARK_PREDICT + " " + mPredict;
+				+ (int) mNet + "/" + (int) mNextNet + " " + Constant.MARK_PREDICT + " " + mPredict;
 	}
 
 	public String toNotifyString() {

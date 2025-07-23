@@ -1,5 +1,7 @@
 package com.android.orion.data;
 
+import com.android.orion.config.Config;
+
 public class IRR {
 	static double mIR;
 	static double mIRR;
@@ -82,7 +84,7 @@ public class IRR {
 		mIR = totalDividend / Math.abs(cashFlows[0]);
 
 		// 计算 IRR
-		mIRR = calculateIRR(cashFlows, 0.00001, 1000);
+		mIRR = calculateIRR(cashFlows, 0.00001, Config.MAX_ITERATIONS);
 
 		// 输出结果
 //		for (int i = 0; i < cashFlows.length; i++) {

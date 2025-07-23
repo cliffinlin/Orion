@@ -26,7 +26,7 @@ public class Config {
 	public static final int MAX_CONTENT_LENGTH_MIN15 = MAX_CONTENT_LENGTH_DAY * 16;
 	public static final int MAX_CONTENT_LENGTH_MIN5 = MAX_CONTENT_LENGTH_DAY * 48;
 
-	public static final int MAX_ML_TRAIN_TIMES = 1000;
+	public static final int MAX_ITERATIONS = 1000;
 
 	public static String stockDataProvider = SinaFinance.PROVIDER_NAME;
 

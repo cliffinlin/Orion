@@ -1,5 +1,7 @@
 package com.android.orion.utility
 
+import java.util.concurrent.TimeUnit
+
 object StopWatch {
     private var mStart: Long = 0
     private var mStop: Long = 0
@@ -13,7 +15,7 @@ object StopWatch {
     @JvmStatic
     fun stop() {
         mStop = System.currentTimeMillis()
-        mInterval = (mStop - mStart) / 1000.0
+        mInterval = (mStop - mStart) / (1.0 * TimeUnit.SECONDS.toMillis(1));
     }
 
     @JvmStatic

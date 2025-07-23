@@ -376,7 +376,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 	public void swapStockFinancialCursor(StockFinancialChart stockFinancialChart,
 	                                     Cursor cursor) {
 		int index = 0;
-		double unit = 100000000.0;
+		double unit = Constant.DOUBLE_CONSTANT_YI;
 
 		if (mStockFinancial == null) {
 			return;

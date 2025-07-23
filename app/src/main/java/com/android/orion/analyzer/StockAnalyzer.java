@@ -260,10 +260,10 @@ public class StockAnalyzer {
 			} else {
 				adaptive = "";
 			}
-			Log.d(mStock.getName() + " " + period + " " + StockTrend.MARK_LEVEL + i + " mean=" + mean + " sd=" + sd + " size=" + dataList.size() + " " + adaptive);
+			Log.d(mStock.getName() + " " + period + " " + Constant.MARK_LEVEL + i + " mean=" + mean + " sd=" + sd + " size=" + dataList.size() + " " + adaptive);
 		}
 
-		builder.append(StockTrend.MARK_LEVEL + mStock.getLevel(period));
+		builder.append(Constant.MARK_LEVEL + mStock.getLevel(period));
 
 		return builder.toString();
 	}

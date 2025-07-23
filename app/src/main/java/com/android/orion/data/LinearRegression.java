@@ -1,5 +1,7 @@
 package com.android.orion.data;
 
+import com.android.orion.config.Config;
+
 import java.util.ArrayList;
 
 public class LinearRegression {
@@ -74,7 +76,7 @@ public class LinearRegression {
 		LinearRegression linearRegression = new LinearRegression(xList, yList);
 
 		// 训练模型
-		linearRegression.train(1000);
+		linearRegression.train(Config.MAX_ITERATIONS);
 
 		// 获取斜率和偏置
 		double slope = linearRegression.getSlope();
@@ -97,7 +99,7 @@ public class LinearRegression {
 		LinearRegression linearRegression = new LinearRegression();
 
 		// 训练模型
-		linearRegression.train(xList, yList, 1000);
+		linearRegression.train(xList, yList, Config.MAX_ITERATIONS);
 
 		// 获取斜率和偏置
 		double slope = linearRegression.getSlope();
