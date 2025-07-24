@@ -131,16 +131,28 @@ public class LinearRegression {
 
 	// 归一化数据到 [0, 1] 范围
 	private ArrayList<Double> normalize(ArrayList<Double> data, boolean isX) {
-		double min = data.get(0);
-		double max = data.get(0);
+		if (data == null || data.isEmpty()) {
+			return new ArrayList<>(); // or throw an exception
+		}
 
-		// 找到最小值和最大值
-		for (double value : data) {
+		double min = Double.POSITIVE_INFINITY;
+		double max = Double.NEGATIVE_INFINITY;
+
+		// Find min and max, skipping null values
+		for (Double value : data) {
+			if (value == null) {
+				continue; // skip null values
+			}
 			if (value < min) min = value;
 			if (value > max) max = value;
 		}
 
-		// 记录最小值和最大值
+		// Check if we found any valid values
+		if (min == Double.POSITIVE_INFINITY || max == Double.NEGATIVE_INFINITY) {
+			return new ArrayList<>(); // or throw an exception
+		}
+
+		// Record min and max
 		if (isX) {
 			this.xMin = min;
 			this.xMax = max;
@@ -149,10 +161,14 @@ public class LinearRegression {
 			this.yMax = max;
 		}
 
-		// 归一化数据
+		// Normalize data, handling null values
 		ArrayList<Double> normalizedData = new ArrayList<>();
-		for (double value : data) {
-			normalizedData.add((value - min) / (max - min));
+		for (Double value : data) {
+			if (value == null) {
+				normalizedData.add(0.0); // or 0.0 or other default value
+			} else {
+				normalizedData.add((value - min) / (max - min));
+			}
 		}
 		return normalizedData;
 	}
