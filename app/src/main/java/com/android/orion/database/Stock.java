@@ -98,6 +98,8 @@ public class Stock extends DatabaseTable {
 	private double mNetProfitPerShare;
 	private double mNetProfitPerShareInYear;
 	private double mGridGap;
+	private double mGridBuy;
+	private double mGridSell;
 	private double mRate;
 	private double mDividend;
 	private double mDividendInYear;
@@ -177,6 +179,8 @@ public class Stock extends DatabaseTable {
 		mNetProfitPerShare = 0;
 		mNetProfitPerShareInYear = 0;
 		mGridGap = 0;
+		mGridBuy = 0;
+		mGridSell = 0;
 		mRate = 0;
 		mDividend = 0;
 		mDividendInYear = 0;
@@ -264,6 +268,8 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE_IN_YEAR, mNetProfitPerShareInYear);
 
 		contentValues.put(DatabaseContract.COLUMN_GRID_GAP, mGridGap);
+		contentValues.put(DatabaseContract.COLUMN_GRID_BUY, mGridBuy);
+		contentValues.put(DatabaseContract.COLUMN_GRID_SELL, mGridSell);
 		contentValues.put(DatabaseContract.COLUMN_RATE, mRate);
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND, mDividend);
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND_IN_YEAR, mDividendInYear);
@@ -388,6 +394,8 @@ public class Stock extends DatabaseTable {
 		setNetProfitPerShare(stock.mNetProfitPerShare);
 		setNetProfitPerShareInYear(stock.mNetProfitPerShareInYear);
 		setGridGap(stock.mGridGap);
+		setGridBuy(stock.mGridBuy);
+		setGridSell(stock.mGridSell);
 		setRate(stock.mRate);
 		setDividend(stock.mDividend);
 		setDividendInYear(stock.mDividendInYear);
@@ -479,6 +487,8 @@ public class Stock extends DatabaseTable {
 		setNetProfitPerShareInYear(cursor);
 
 		setGridGap(cursor);
+		setGridBuy(cursor);
+		setGridSell(cursor);
 		setRate(cursor);
 		setDividend(cursor);
 		setDividendInYear(cursor);
@@ -1112,6 +1122,40 @@ public class Stock extends DatabaseTable {
 
 		setGridGap(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_GRID_GAP)));
+	}
+
+	public double getGridBuy() {
+		return mGridBuy;
+	}
+
+	public void setGridBuy(double gridBuy) {
+		mGridBuy = gridBuy;
+	}
+
+	void setGridBuy(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setGridBuy(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_GRID_BUY)));
+	}
+
+	public double getGridSell() {
+		return mGridSell;
+	}
+
+	public void setGridSell(double gridSell) {
+		mGridSell = gridSell;
+	}
+
+	void setGridSell(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setGridSell(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_GRID_SELL)));
 	}
 
 	public double getRate() {

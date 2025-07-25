@@ -62,6 +62,8 @@ public class StockFavoriteListActivity extends ListActivity implements
 	TextView mTextViewMin15 = null;
 	TextView mTextViewMin5 = null;
 	TextView mTextViewFlag = null;
+	TextView mTextViewGridBuy = null;
+	TextView mTextViewGridSell = null;
 	TextView mTextViewRZTrendRate = null;
 	TextView mTextViewRZTrendDays = null;
 	TextView mTextViewModified = null;
@@ -209,6 +211,12 @@ public class StockFavoriteListActivity extends ListActivity implements
 			case R.id.flag:
 				mSortOrderColumn = DatabaseContract.COLUMN_FLAG;
 				break;
+			case R.id.grid_buy:
+				mSortOrderColumn = DatabaseContract.COLUMN_GRID_BUY;
+				break;
+			case R.id.grid_sell:
+				mSortOrderColumn = DatabaseContract.COLUMN_GRID_SELL;
+				break;
 			case R.id.rz_trend_rate:
 				mSortOrderColumn = DatabaseContract.COLUMN_RZ_TREND_RATE;
 				break;
@@ -263,6 +271,8 @@ public class StockFavoriteListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewMin15, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewMin5, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewFlag, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewGridBuy, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewGridSell, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewRZTrendRate, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewRZTrendDays, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewModified, mHeaderTextDefaultColor);
@@ -364,6 +374,16 @@ public class StockFavoriteListActivity extends ListActivity implements
 			mTextViewFlag.setOnClickListener(this);
 		}
 
+		mTextViewGridBuy = findViewById(R.id.grid_buy);
+		if (mTextViewGridBuy != null) {
+			mTextViewGridBuy.setOnClickListener(this);
+		}
+
+		mTextViewGridSell = findViewById(R.id.grid_sell);
+		if (mTextViewGridSell != null) {
+			mTextViewGridSell.setOnClickListener(this);
+		}
+
 		mTextViewRZTrendRate = findViewById(R.id.rz_trend_rate);
 		if (mTextViewRZTrendRate != null) {
 			mTextViewRZTrendRate.setOnClickListener(this);
@@ -411,6 +431,10 @@ public class StockFavoriteListActivity extends ListActivity implements
 			setHeaderTextColor(mTextViewMin5, mHeaderTextHighlightColor);
 		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_FLAG)) {
 			setHeaderTextColor(mTextViewFlag, mHeaderTextHighlightColor);
+		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_GRID_BUY)) {
+			setHeaderTextColor(mTextViewGridBuy, mHeaderTextHighlightColor);
+		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_GRID_SELL)) {
+			setHeaderTextColor(mTextViewGridSell, mHeaderTextHighlightColor);
 		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_RZ_TREND_RATE)) {
 			setHeaderTextColor(mTextViewRZTrendRate, mHeaderTextHighlightColor);
 		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_RZ_TREND_DAYS)) {
@@ -441,6 +465,8 @@ public class StockFavoriteListActivity extends ListActivity implements
 				DatabaseContract.COLUMN_MIN15,
 				DatabaseContract.COLUMN_MIN5,
 				DatabaseContract.COLUMN_FLAG,
+				DatabaseContract.COLUMN_GRID_BUY,
+				DatabaseContract.COLUMN_GRID_SELL,
 				DatabaseContract.COLUMN_RZ_TREND_RATE,
 				DatabaseContract.COLUMN_RZ_TREND_DAYS,
 				DatabaseContract.COLUMN_MODIFIED};
@@ -459,6 +485,8 @@ public class StockFavoriteListActivity extends ListActivity implements
 				R.id.min15,
 				R.id.min5,
 				R.id.flag,
+				R.id.grid_buy,
+				R.id.grid_sell,
 				R.id.rz_trend_rate,
 				R.id.rz_trend_days,
 				R.id.modified};
@@ -621,11 +649,21 @@ public class StockFavoriteListActivity extends ListActivity implements
 
 		int flag = cursor.getInt(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_FLAG));
+		double price = cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_PRICE));
+		double gridBuy = cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_GRID_BUY));
+		double gridSell = cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_GRID_SELL));
 
 		if (Utility.hasFlag(flag, Stock.FLAG_GRID)) {
 			view.setBackgroundColor(Color.rgb(240, 240, 240));
-//			TextView textView = (TextView)view;
-//			textView.setTextColor(Color.GREEN);
+			TextView textView = (TextView)view;
+			if (price < gridBuy) {
+				textView.setTextColor(Color.GREEN);
+			} else if (price > gridSell) {
+				textView.setTextColor(Color.RED);
+			}
 		}
 
 		TextView textView = (TextView) view;

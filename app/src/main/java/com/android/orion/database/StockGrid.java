@@ -283,19 +283,21 @@ public class StockGrid extends DatabaseTable {
 	}
 
 	public void setupPrice() {
-		if ((mHold == 0) || (mGridBase == 0) || (mGridGap == 0)) {
+		mPrice = 0;
+		if ((mHold == 0) || (mVolume == 0) || (mGridGap == 0)) {
 			return;
 		}
 
-		if (TextUtils.equals(mType, TYPE_BUY)) {
+		switch (mType) {
+		case TYPE_BUY:
 			int grid = (int) (mHold / mVolume);
-			if (grid == 0) {
-				grid = 1;
-			}
 			mPrice = Utility.Round2(mGridBase * (1.0 - grid * mGridGap / 100.0));
-		} else if (TextUtils.equals(mType, TYPE_SELL)) {
+			break;
+		case TYPE_SELL:
 			mPrice = Utility.Round2(mGridBase * (1.0 + mGridGap / 100.0));
-		} else {
+			break;
+		default:
+			break;
 		}
 	}
 

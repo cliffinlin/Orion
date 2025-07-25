@@ -582,7 +582,7 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 			updateMenuAction();
 
 			if (mKeyDisplayDeal) {
-				loadStockDealList();
+				mDatabaseManager.getStockDealList(mStock, mStockDealList);
 			} else {
 				mStockDealList.clear();
 			}
@@ -600,15 +600,6 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 		} finally {
 			mDatabaseManager.closeCursor(cursor);
 		}
-	}
-
-	void loadStockDealList() {
-		String selection = DatabaseContract.COLUMN_SE + " = " + "'" + mStock.getSE()
-				+ "'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "'"
-				+ mStock.getCode() + "'";
-		String sortOrder = DatabaseContract.COLUMN_BUY + " DESC ";
-
-		mDatabaseManager.getStockDealList(mStockDealList, selection, sortOrder);
 	}
 
 	void updateStockDataChartItemList() {

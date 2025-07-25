@@ -1793,8 +1793,7 @@ public class DatabaseManager implements StockListener {
 			return cursor;
 		}
 
-		String selection = DatabaseContract.COLUMN_SE + " = " + "'" + stockDeal.getSE() + "'"
-				+ " AND " + DatabaseContract.COLUMN_CODE + " = " + "'" + stockDeal.getCode() + "'"
+		String selection = getStockSelection(stockDeal)
 				+ " AND " + DatabaseContract.COLUMN_BUY + " = " + stockDeal.getBuy()
 				+ " AND " + DatabaseContract.COLUMN_VOLUME + " = " + stockDeal.getVolume();
 
@@ -1898,29 +1897,15 @@ public class DatabaseManager implements StockListener {
 		}
 	}
 
-	public void getStockDealList(List<StockDeal> stockDealList) {
-		Cursor cursor = null;
-
-		if (stockDealList == null) {
+	public void getStockDealList(Stock stock, ArrayList<StockDeal> stockDealList) {
+		if (stock == null || stockDealList == null) {
 			return;
 		}
 
-		stockDealList.clear();
+		String selection = getStockSelection(stock);
+		String sortOrder = DatabaseContract.COLUMN_BUY + " DESC ";
 
-		try {
-			cursor = queryStockDeal(null, null, null);
-			if ((cursor != null) && (cursor.getCount() > 0)) {
-				while (cursor.moveToNext()) {
-					StockDeal stockDeal = new StockDeal();
-					stockDeal.set(cursor);
-					stockDealList.add(stockDeal);
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			closeCursor(cursor);
-		}
+		getStockDealList(stockDealList, selection, sortOrder);
 	}
 
 	public void getStockDeal(Stock stock, StockDeal stockDeal) {
@@ -1945,6 +1930,14 @@ public class DatabaseManager implements StockListener {
 		} finally {
 			closeCursor(cursor);
 		}
+	}
+
+	public String getStockSelection(StockDeal stockDeal) {
+		if (stockDeal == null) {
+			return null;
+		}
+		return DatabaseContract.COLUMN_SE + " = " + "'" + stockDeal.getSE() + "'"
+				+ " AND " + DatabaseContract.COLUMN_CODE + " = " + "'" + stockDeal.getCode() + "'";
 	}
 
 	public Uri insertStockGrid(StockGrid stockGrid) {
@@ -2058,8 +2051,7 @@ public class DatabaseManager implements StockListener {
 			return cursor;
 		}
 
-		String selection = DatabaseContract.COLUMN_SE + " = " + "'" + stockGrid.getSE() + "'"
-				+ " AND " + DatabaseContract.COLUMN_CODE + " = " + "'" + stockGrid.getCode() + "'"
+		String selection = getStockSelection(stockGrid)
 				+ " AND " + DatabaseContract.COLUMN_TYPE + " = " + "'" + stockGrid.getType() + "'";
 
 		cursor = queryStockGrid(selection, null, null);

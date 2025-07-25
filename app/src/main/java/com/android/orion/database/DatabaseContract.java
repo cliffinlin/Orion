@@ -118,6 +118,8 @@ public final class DatabaseContract {
 
 	public static final String COLUMN_GRID_BASE = "grid_base";
 	public static final String COLUMN_GRID_GAP = "grid_gap";
+	public static final String COLUMN_GRID_BUY = "grid_buy";
+	public static final String COLUMN_GRID_SELL = "grid_sell";
 	public static final String COLUMN_TYPE = "type";
 	public static final String COLUMN_CONTENT = "content";
 
@@ -194,7 +196,7 @@ public final class DatabaseContract {
 				COLUMN_NET_PROFIT_PER_SHARE,
 				COLUMN_NET_PROFIT_PER_SHARE_IN_YEAR,
 				COLUMN_RATE,
-				COLUMN_GRID_GAP,
+				COLUMN_GRID_GAP, COLUMN_GRID_BUY, COLUMN_GRID_SELL,
 				COLUMN_RZ_VALUE, COLUMN_RZ_BUY, COLUMN_RZ_BUY_RATE, COLUMN_RZ_TREND_VALUE, COLUMN_RZ_TREND_RATE, COLUMN_RZ_TREND_DAYS,
 				COLUMN_DIVIDEND, COLUMN_DIVIDEND_IN_YEAR,
 				COLUMN_YIELD, COLUMN_YIELD_IN_YEAR,
@@ -265,6 +267,8 @@ public final class DatabaseContract {
 				+ COLUMN_NET_PROFIT_PER_SHARE_IN_YEAR + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_RATE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_GRID_GAP + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_GRID_BUY + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_GRID_SELL + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_RZ_VALUE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_RZ_BUY + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_RZ_BUY_RATE + DOUBLE_TYPE + COMMA_SEP

@@ -34,15 +34,6 @@ public class GridAnalyzer {
 		return Holder.INSTANCE;
 	}
 
-	void loadStockDealList() {
-		String selection = DatabaseContract.COLUMN_SE + " = " + "'" + mStock.getSE()
-				+ "'" + " AND " + DatabaseContract.COLUMN_CODE + " = " + "'"
-				+ mStock.getCode() + "'";
-		String sortOrder = DatabaseContract.COLUMN_BUY + " DESC ";
-
-		mDatabaseManager.getStockDealList(mStockDealList, selection, sortOrder);
-	}
-
 	void analyze(Stock stock) {
 		mStock = stock;
 		if (mStock == null || !mStock.hasFlag(Stock.FLAG_GRID)) {
@@ -53,7 +44,7 @@ public class GridAnalyzer {
 			return;
 		}
 
-		loadStockDealList();
+		mDatabaseManager.getStockDealList(mStock, mStockDealList);
 		if (mStockDealList == null || mStockDealList.size() == 0) {
 			return;
 		}
@@ -68,6 +59,7 @@ public class GridAnalyzer {
 		mStockGridBuy.setGridBase(mStockDealList.get(0).getBuy());
 		mStockGridBuy.setupPrice();
 		mStockGridBuy.setupValue();
+		mStock.setGridBuy(mStockGridBuy.getPrice());
 		if (!mDatabaseManager.isStockGridExist(mStockGridBuy)) {
 			mDatabaseManager.insertStockGrid(mStockGridBuy);
 		} else {
@@ -84,6 +76,7 @@ public class GridAnalyzer {
 		mStockGridSell.setGridBase(mStockDealList.get(mStockDealList.size()-1).getBuy());
 		mStockGridSell.setupPrice();
 		mStockGridSell.setupValue();
+		mStock.setGridSell(mStockGridSell.getPrice());
 		if (!mDatabaseManager.isStockGridExist(mStockGridSell)) {
 			mDatabaseManager.insertStockGrid(mStockGridSell);
 		} else {
