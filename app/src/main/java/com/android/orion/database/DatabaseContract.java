@@ -116,6 +116,8 @@ public final class DatabaseContract {
 	public static final String COLUMN_VELOCITY = "velocity";
 	public static final String COLUMN_ACCOUNT = "account";
 
+	public static final String COLUMN_GRID_BASE = "grid_base";
+	public static final String COLUMN_GRID_GAP = "grid_gap";
 	public static final String COLUMN_TYPE = "type";
 	public static final String COLUMN_CONTENT = "content";
 
@@ -192,6 +194,7 @@ public final class DatabaseContract {
 				COLUMN_NET_PROFIT_PER_SHARE,
 				COLUMN_NET_PROFIT_PER_SHARE_IN_YEAR,
 				COLUMN_RATE,
+				COLUMN_GRID_GAP,
 				COLUMN_RZ_VALUE, COLUMN_RZ_BUY, COLUMN_RZ_BUY_RATE, COLUMN_RZ_TREND_VALUE, COLUMN_RZ_TREND_RATE, COLUMN_RZ_TREND_DAYS,
 				COLUMN_DIVIDEND, COLUMN_DIVIDEND_IN_YEAR,
 				COLUMN_YIELD, COLUMN_YIELD_IN_YEAR,
@@ -261,6 +264,7 @@ public final class DatabaseContract {
 				+ COLUMN_NET_PROFIT_PER_SHARE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_NET_PROFIT_PER_SHARE_IN_YEAR + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_RATE + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_GRID_GAP + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_RZ_VALUE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_RZ_BUY + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_RZ_BUY_RATE + DOUBLE_TYPE + COMMA_SEP
@@ -452,6 +456,42 @@ public final class DatabaseContract {
 				+ COLUMN_FEE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_BONUS + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_YIELD + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_CREATED + TEXT_TYPE
+				+ COMMA_SEP + COLUMN_MODIFIED + TEXT_TYPE + " )";
+		static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
+				+ CREATE_TABLE_CONTENT;
+	}
+
+	public static abstract class StockGrid implements BaseColumns {
+		public static final String TABLE_NAME = "stock_grid";
+
+		public static final Uri CONTENT_URI = Uri.withAppendedPath(
+				DatabaseContract.CONTENT_URI, TABLE_NAME);
+		public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
+				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
+		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
+				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
+		public static final String SORT_ORDER_DEFAULT = COLUMN_CODE + " ASC";
+
+		public static final String[] PROJECTION_ALL = {_ID,
+				COLUMN_SE, COLUMN_CODE, COLUMN_NAME, COLUMN_TYPE,
+				COLUMN_HOLD, COLUMN_GRID_BASE, COLUMN_GRID_GAP,
+				COLUMN_PRICE, COLUMN_VOLUME, COLUMN_VALUE,
+				COLUMN_CREATED, COLUMN_MODIFIED};
+		static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
+				+ TABLE_NAME;
+		private static final String CREATE_TABLE_CONTENT = " (" + _ID
+				+ " INTEGER PRIMARY KEY,"
+				+ COLUMN_SE + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_CODE + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_NAME + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_TYPE + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_HOLD + INTEGER_TYPE + COMMA_SEP
+				+ COLUMN_GRID_BASE + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_GRID_GAP + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_PRICE + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_VOLUME + INTEGER_TYPE + COMMA_SEP
+				+ COLUMN_VALUE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_CREATED + TEXT_TYPE
 				+ COMMA_SEP + COLUMN_MODIFIED + TEXT_TYPE + " )";
 		static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME

@@ -51,6 +51,9 @@ public class StockContentProvider extends ContentProvider {
 	public static final int TDX_DATA = 1000;
 	public static final int TDX_DATA_ID = 1001;
 
+	public static final int STOCK_GRID = 1100;
+	public static final int STOCK_GRID_ID = 1101;
+
 	private static final UriMatcher mUriMatcher = new UriMatcher(
 			UriMatcher.NO_MATCH);
 
@@ -105,6 +108,11 @@ public class StockContentProvider extends ContentProvider {
 				DatabaseContract.TDXData.TABLE_NAME, TDX_DATA);
 		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
 				DatabaseContract.TDXData.TABLE_NAME + "/#", TDX_DATA_ID);
+
+		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
+				DatabaseContract.StockGrid.TABLE_NAME, STOCK_GRID);
+		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
+				DatabaseContract.StockGrid.TABLE_NAME + "/#", STOCK_GRID_ID);
 	}
 
 	ContentResolver mContentResolver;
@@ -193,6 +201,13 @@ public class StockContentProvider extends ContentProvider {
 				break;
 			case TDX_DATA_ID:
 				type = DatabaseContract.TDXData.CONTENT_ITEM_TYPE;
+				break;
+
+			case STOCK_GRID:
+				type = DatabaseContract.StockGrid.CONTENT_TYPE;
+				break;
+			case STOCK_GRID_ID:
+				type = DatabaseContract.StockGrid.CONTENT_ITEM_TYPE;
 				break;
 
 			default:
@@ -307,6 +322,14 @@ public class StockContentProvider extends ContentProvider {
 				builder.appendWhere(BaseColumns._ID + " = "
 						+ uri.getLastPathSegment());
 				break;
+
+			case STOCK_GRID:
+				builder.setTables(DatabaseContract.StockGrid.TABLE_NAME);
+				break;
+			case STOCK_GRID_ID:
+				builder.setTables(DatabaseContract.StockGrid.TABLE_NAME);
+				builder.appendWhere(BaseColumns._ID + " = "
+						+ uri.getLastPathSegment());
 			default:
 				break;
 		}
@@ -386,6 +409,11 @@ public class StockContentProvider extends ContentProvider {
 			case TDX_DATA:
 				id = mDatabaseManager.mDatabase.insert(
 						DatabaseContract.TDXData.TABLE_NAME, null, contentValues);
+				break;
+
+			case STOCK_GRID:
+				id = mDatabaseManager.mDatabase.insert(
+						DatabaseContract.StockGrid.TABLE_NAME, null, contentValues);
 				break;
 			default:
 				break;
@@ -597,7 +625,6 @@ public class StockContentProvider extends ContentProvider {
 						DatabaseContract.TDXData.TABLE_NAME, values, selection,
 						selectionArgs);
 				break;
-
 			case TDX_DATA_ID:
 				whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
 				if (!TextUtils.isEmpty(selection)) {
@@ -605,6 +632,21 @@ public class StockContentProvider extends ContentProvider {
 				}
 				result = mDatabaseManager.mDatabase.update(
 						DatabaseContract.TDXData.TABLE_NAME, values, whereClause,
+						selectionArgs);
+				break;
+
+			case STOCK_GRID:
+				result = mDatabaseManager.mDatabase.update(
+						DatabaseContract.StockGrid.TABLE_NAME, values, selection,
+						selectionArgs);
+				break;
+			case STOCK_GRID_ID:
+				whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
+				if (!TextUtils.isEmpty(selection)) {
+					whereClause += " AND " + whereClause;
+				}
+				result = mDatabaseManager.mDatabase.update(
+						DatabaseContract.StockGrid.TABLE_NAME, values, whereClause,
 						selectionArgs);
 				break;
 			default:
@@ -779,6 +821,21 @@ public class StockContentProvider extends ContentProvider {
 				}
 				result = mDatabaseManager.mDatabase.delete(
 						DatabaseContract.TDXData.TABLE_NAME, whereClause,
+						selectionArgs);
+				break;
+
+			case STOCK_GRID:
+				result = mDatabaseManager.mDatabase.delete(
+						DatabaseContract.StockGrid.TABLE_NAME, selection,
+						selectionArgs);
+				break;
+			case STOCK_GRID_ID:
+				whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
+				if (!TextUtils.isEmpty(selection)) {
+					whereClause += " AND " + whereClause;
+				}
+				result = mDatabaseManager.mDatabase.delete(
+						DatabaseContract.StockGrid.TABLE_NAME, whereClause,
 						selectionArgs);
 				break;
 			default:

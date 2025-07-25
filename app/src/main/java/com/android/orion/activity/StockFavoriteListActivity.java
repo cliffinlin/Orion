@@ -622,10 +622,10 @@ public class StockFavoriteListActivity extends ListActivity implements
 		int flag = cursor.getInt(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_FLAG));
 
-		if (Utility.hasFlag(flag, Stock.FLAG_NOTIFY)) {
+		if (Utility.hasFlag(flag, Stock.FLAG_GRID)) {
 			view.setBackgroundColor(Color.rgb(240, 240, 240));
 //			TextView textView = (TextView)view;
-//			textView.setTextColor(Color.RED);
+//			textView.setTextColor(Color.GREEN);
 		}
 
 		TextView textView = (TextView) view;

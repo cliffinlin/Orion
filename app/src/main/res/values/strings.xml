@@ -262,6 +262,8 @@
     <string name="stock_valuation">Stock valuation</string>
     <string name="stock_bonus">Stock bonus</string>
     <string name="stock_yield">Stock yield</string>
+    <string name="grid">Grid</string>
+    <string name="grid_gap">Grid gap</string>
     <string name="symbol_add">+</string>
     <string name="symbol_subtract">-</string>
     <string name="activity_title_stock_favorite_list">Favorite list</string>

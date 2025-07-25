@@ -27,12 +27,14 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 
 	CheckBox mCheckBoxFavorite;
 	CheckBox mCheckBoxNotify;
+	CheckBox mCheckBoxGrid;
 	RadioGroup mRadioGroupClass;
 	RadioGroup mRadioGroupSE;
 	EditText mEditTextStockName;
 	EditText mEditTextStockCode;
 	EditText mEditTextStockHold;
 	EditText mEditTextStockYield;
+	EditText mEditTextGridGap;
 
 	Button mButtonOk;
 	Button mButtonCancel;
@@ -54,23 +56,27 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 	void initView() {
 		mCheckBoxFavorite = findViewById(R.id.checkbox_favorite);
 		mCheckBoxNotify = findViewById(R.id.checkbox_notify);
+		mCheckBoxGrid = findViewById(R.id.checkbox_grid);
 		mRadioGroupClass = findViewById(R.id.radio_group_class);
 		mRadioGroupSE = findViewById(R.id.radio_group_se);
 		mEditTextStockName = findViewById(R.id.edittext_stock_name);
 		mEditTextStockCode = findViewById(R.id.edittext_stock_code);
 		mEditTextStockHold = findViewById(R.id.edittext_stock_hold);
 		mEditTextStockYield = findViewById(R.id.edittext_stock_yield);
+		mEditTextGridGap = findViewById(R.id.edittext_grid_gap);
 		mButtonOk = findViewById(R.id.button_ok);
 		mButtonCancel = findViewById(R.id.button_cancel);
 
 		mCheckBoxFavorite.setOnClickListener(this);
 		mCheckBoxNotify.setOnClickListener(this);
+		mCheckBoxGrid.setOnClickListener(this);
 		mRadioGroupClass.setOnClickListener(this);
 		mRadioGroupSE.setOnClickListener(this);
 		mEditTextStockName.setOnClickListener(this);
 		mEditTextStockCode.setOnClickListener(this);
 		mEditTextStockHold.setOnClickListener(this);
 		mEditTextStockYield.setOnClickListener(this);
+		mEditTextGridGap.setOnClickListener(this);
 		mButtonOk.setOnClickListener(this);
 		mButtonCancel.setOnClickListener(this);
 
@@ -130,6 +136,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 	void updateView() {
 		mCheckBoxFavorite.setChecked(mStock.hasFlag(Stock.FLAG_FAVORITE));
 		mCheckBoxNotify.setChecked(mStock.hasFlag(Stock.FLAG_NOTIFY));
+		mCheckBoxGrid.setChecked(mStock.hasFlag(Stock.FLAG_GRID));
 
 		if (TextUtils.equals(mStock.getClasses(), Stock.CLASS_A)) {
 			mRadioGroupClass.check(R.id.radio_class_hsa);
@@ -147,6 +154,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mEditTextStockCode.setText(mStock.getCode());
 		mEditTextStockHold.setText(String.valueOf(mStock.getHold()));
 		mEditTextStockYield.setText(String.valueOf(mStock.getYield()));
+		mEditTextGridGap.setText(String.valueOf(mStock.getGridGap()));
 	}
 
 	@Override
@@ -180,6 +188,14 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 				}
 				break;
 
+			case R.id.checkbox_grid:
+				if (mCheckBoxGrid.isChecked()) {
+					mStock.addFlag(Stock.FLAG_GRID);
+				} else {
+					mStock.removeFlag(Stock.FLAG_GRID);
+				}
+				break;
+
 			case R.id.button_ok:
 				if (mCheckBoxFavorite.isChecked()) {
 					mStock.addFlag(Stock.FLAG_FAVORITE);
@@ -191,6 +207,12 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 					mStock.addFlag(Stock.FLAG_NOTIFY);
 				} else {
 					mStock.removeFlag(Stock.FLAG_NOTIFY);
+				}
+
+				if (mCheckBoxGrid.isChecked()) {
+					mStock.addFlag(Stock.FLAG_GRID);
+				} else {
+					mStock.removeFlag(Stock.FLAG_GRID);
 				}
 
 				String name = mEditTextStockName.getText().toString();
@@ -221,6 +243,10 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 				} else if (id == R.id.radio_se_sz) {
 					mStock.setSE(Stock.SE_SZ);
 				}
+
+				String gridGap = mEditTextGridGap.getText().toString();
+				double gridGapValue = TextUtils.isEmpty(gridGap) ? 0 : Double.valueOf(gridGap);
+				mStock.setGridGap(gridGapValue);
 
 				if (TextUtils.equals(mAction, Constant.ACTION_FAVORITE_STOCK_INSERT)) {
 					if (!mDatabaseManager.isStockExist(mStock)) {

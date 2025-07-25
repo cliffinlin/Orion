@@ -49,6 +49,7 @@ public class StockAnalyzer {
 	NotificationManager mNotificationManager;
 	DatabaseManager mDatabaseManager = DatabaseManager.getInstance();
 	FinancialAnalyzer mFinancialAnalyzer = FinancialAnalyzer.getInstance();
+	GridAnalyzer mGridAnalyzer = GridAnalyzer.getInstance();
 	TrendAnalyzer mTrendAnalyzer = TrendAnalyzer.getInstance();
 	StockPerceptronProvider mStockPerceptronProvider = StockPerceptronProvider.getInstance();
 	Logger Log = Logger.getLogger();
@@ -108,6 +109,7 @@ public class StockAnalyzer {
 			mFinancialAnalyzer.analyzeFinancial(mStock);
 			mFinancialAnalyzer.setupFinancial(mStock);
 			mFinancialAnalyzer.setupStockBonus(mStock);
+			mGridAnalyzer.analyze(mStock);
 			stock.setModified(Utility.getCurrentDateTimeString());
 			mDatabaseManager.updateStock(mStock, mStock.getContentValues());
 		} catch (Exception e) {

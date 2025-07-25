@@ -31,6 +31,7 @@ public class Stock extends DatabaseTable {
 	public static final int FLAG_NONE = 0;
 	public static final int FLAG_FAVORITE = 1 << 0;
 	public static final int FLAG_NOTIFY = 1 << 1;
+	public static final int FLAG_GRID = 1 << 2;
 
 	public static final double ROI_COEFFICIENT = 10;
 
@@ -96,6 +97,7 @@ public class Stock extends DatabaseTable {
 	private double mCashFlowPerShare;
 	private double mNetProfitPerShare;
 	private double mNetProfitPerShareInYear;
+	private double mGridGap;
 	private double mRate;
 	private double mDividend;
 	private double mDividendInYear;
@@ -174,6 +176,7 @@ public class Stock extends DatabaseTable {
 		mCashFlowPerShare = 0;
 		mNetProfitPerShare = 0;
 		mNetProfitPerShareInYear = 0;
+		mGridGap = 0;
 		mRate = 0;
 		mDividend = 0;
 		mDividendInYear = 0;
@@ -260,6 +263,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE, mNetProfitPerShare);
 		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE_IN_YEAR, mNetProfitPerShareInYear);
 
+		contentValues.put(DatabaseContract.COLUMN_GRID_GAP, mGridGap);
 		contentValues.put(DatabaseContract.COLUMN_RATE, mRate);
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND, mDividend);
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND_IN_YEAR, mDividendInYear);
@@ -383,6 +387,7 @@ public class Stock extends DatabaseTable {
 		setCashFlowPerShare(stock.mCashFlowPerShare);
 		setNetProfitPerShare(stock.mNetProfitPerShare);
 		setNetProfitPerShareInYear(stock.mNetProfitPerShareInYear);
+		setGridGap(stock.mGridGap);
 		setRate(stock.mRate);
 		setDividend(stock.mDividend);
 		setDividendInYear(stock.mDividendInYear);
@@ -473,6 +478,7 @@ public class Stock extends DatabaseTable {
 		setNetProfitPerShare(cursor);
 		setNetProfitPerShareInYear(cursor);
 
+		setGridGap(cursor);
 		setRate(cursor);
 		setDividend(cursor);
 		setDividendInYear(cursor);
@@ -1089,6 +1095,23 @@ public class Stock extends DatabaseTable {
 
 		setRZTrendDays(cursor.getInt(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_RZ_TREND_DAYS)));
+	}
+
+	public double getGridGap() {
+		return mGridGap;
+	}
+
+	public void setGridGap(double gridGap) {
+		mGridGap = gridGap;
+	}
+
+	void setGridGap(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setGridGap(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_GRID_GAP)));
 	}
 
 	public double getRate() {

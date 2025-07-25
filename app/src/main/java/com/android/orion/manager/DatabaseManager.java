@@ -20,6 +20,7 @@ import com.android.orion.database.StockBonus;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockFinancial;
+import com.android.orion.database.StockGrid;
 import com.android.orion.database.StockPerceptron;
 import com.android.orion.database.StockRZRQ;
 import com.android.orion.database.StockShare;
@@ -1944,6 +1945,291 @@ public class DatabaseManager implements StockListener {
 		} finally {
 			closeCursor(cursor);
 		}
+	}
+
+	public Uri insertStockGrid(StockGrid stockGrid) {
+		Uri uri = null;
+
+		if ((stockGrid == null) || (mContentResolver == null)) {
+			return uri;
+		}
+
+		uri = mContentResolver.insert(DatabaseContract.StockGrid.CONTENT_URI,
+				stockGrid.getContentValues());
+
+		return uri;
+	}
+
+	public int bulkInsertStockGrid(ContentValues[] contentValuesArray) {
+		int result = 0;
+
+		if (contentValuesArray == null) {
+			return result;
+		}
+
+		if ((contentValuesArray.length == 0) || (mContentResolver == null)) {
+			return result;
+		}
+
+		result = mContentResolver.bulkInsert(
+				DatabaseContract.StockGrid.CONTENT_URI, contentValuesArray);
+
+		return result;
+	}
+
+	public boolean isStockGridExist(StockGrid stockGrid) {
+		boolean result = false;
+		Cursor cursor = null;
+
+		if (stockGrid == null) {
+			return result;
+		}
+
+		try {
+			cursor = queryStockGrid(stockGrid);
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				cursor.moveToNext();
+				result = true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+
+		return result;
+	}
+
+	public int updateStockGrid(StockGrid stockGrid, ContentValues contentValues) {
+		int result = 0;
+
+		if ((stockGrid == null) || (mContentResolver == null)) {
+			return result;
+		}
+
+		String where = getStockGridSelection(stockGrid);
+
+		result = mContentResolver.update(
+				DatabaseContract.StockGrid.CONTENT_URI, contentValues, where,
+				null);
+
+		return result;
+	}
+
+	public int updateStockGridByID(StockGrid stockGrid) {
+		int result = 0;
+
+		if ((stockGrid == null) || (mContentResolver == null)) {
+			return result;
+		}
+
+		String where = DatabaseContract.COLUMN_ID + "=" + stockGrid.getId();
+
+		result = mContentResolver.update(
+				DatabaseContract.StockGrid.CONTENT_URI,
+				stockGrid.getContentValues(), where, null);
+
+		return result;
+	}
+
+	public int deleteStockGrid() {
+		return delete(DatabaseContract.StockGrid.CONTENT_URI);
+	}
+
+	public void deleteStockGrid(StockGrid stockGrid) {
+		if ((stockGrid == null) || (mContentResolver == null)) {
+			return;
+		}
+
+		String where = DatabaseContract.COLUMN_ID + "=" + stockGrid.getId();
+
+		try {
+			mContentResolver.delete(DatabaseContract.StockGrid.CONTENT_URI,
+					where, null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public Cursor queryStockGrid(StockGrid stockGrid) {
+		Cursor cursor = null;
+
+		if (stockGrid == null) {
+			return cursor;
+		}
+
+		String selection = DatabaseContract.COLUMN_SE + " = " + "'" + stockGrid.getSE() + "'"
+				+ " AND " + DatabaseContract.COLUMN_CODE + " = " + "'" + stockGrid.getCode() + "'"
+				+ " AND " + DatabaseContract.COLUMN_TYPE + " = " + "'" + stockGrid.getType() + "'";
+
+		cursor = queryStockGrid(selection, null, null);
+
+		return cursor;
+	}
+
+	public Cursor queryStockGrid(String selection, String[] selectionArgs,
+	                             String sortOrder) {
+		Cursor cursor = null;
+
+		if (mContentResolver == null) {
+			return cursor;
+		}
+
+		cursor = mContentResolver.query(DatabaseContract.StockGrid.CONTENT_URI,
+				DatabaseContract.StockGrid.PROJECTION_ALL, selection,
+				selectionArgs, sortOrder);
+
+		return cursor;
+	}
+
+	public Cursor queryStockGrid(long id) {
+		Cursor cursor = null;
+
+		if (id == DatabaseContract.INVALID_ID) {
+			return cursor;
+		}
+
+		String selection = DatabaseContract.COLUMN_ID + "=" + id;
+		cursor = queryStockGrid(selection, null, null);
+		return cursor;
+	}
+
+	public void getStockGrid(StockGrid stockGrid) {
+		Cursor cursor = null;
+
+		if (stockGrid == null) {
+			return;
+		}
+
+		try {
+			cursor = queryStockGrid(stockGrid.getId());
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				cursor.moveToNext();
+				stockGrid.set(cursor);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
+	public int getStockGridCount(Stock stock) {
+		int result = 0;
+		Cursor cursor = null;
+
+		if (stock == null) {
+			return result;
+		}
+
+		try {
+			String selection = getStockSelection(stock);
+			cursor = queryStockGrid(selection, null, null);
+			if (cursor != null) {
+				result = cursor.getCount();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+
+		return result;
+	}
+
+	public void getStockGridList(ArrayList<StockGrid> stockGridList, String selection, String sortOrder) {
+		Cursor cursor = null;
+
+		if (stockGridList == null) {
+			return;
+		}
+
+		stockGridList.clear();
+
+		try {
+			cursor = queryStockGrid(selection, null, sortOrder);
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				while (cursor.moveToNext()) {
+					StockGrid stockGrid = new StockGrid();
+					stockGrid.set(cursor);
+					stockGridList.add(stockGrid);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
+	public void getStockGridList(List<StockGrid> stockGridList) {
+		Cursor cursor = null;
+
+		if (stockGridList == null) {
+			return;
+		}
+
+		stockGridList.clear();
+
+		try {
+			cursor = queryStockGrid(null, null, null);
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				while (cursor.moveToNext()) {
+					StockGrid stockGrid = new StockGrid();
+					stockGrid.set(cursor);
+					stockGridList.add(stockGrid);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
+	public void getStockGrid(Stock stock, StockGrid stockGrid) {
+		Cursor cursor = null;
+
+		if ((stock == null) || (stockGrid == null)) {
+			return;
+		}
+
+		try {
+			String selection = getStockSelection(stock);
+			String sortOrder = DatabaseContract.COLUMN_PROFIT + DatabaseContract.ORDER_DESC;
+			cursor = queryStockGrid(selection, null, sortOrder);
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				while (cursor.moveToNext()) {
+					stockGrid.set(cursor);
+					break;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
+	public String getStockSelection(StockGrid stockGrid) {
+		if (stockGrid == null) {
+			return null;
+		}
+		return DatabaseContract.COLUMN_SE + " = " + "'" + stockGrid.getSE() + "'"
+				+ " AND " + DatabaseContract.COLUMN_CODE + " = " + "'" + stockGrid.getCode() + "'";
+	}
+
+	public String getStockGridSelection(StockGrid stockGrid) {
+		String selection = "";
+
+		if (stockGrid == null) {
+			return selection;
+		}
+
+		selection = getStockSelection(stockGrid)
+				+ " AND " + DatabaseContract.COLUMN_TYPE + " = " + "'" + stockGrid.getType() + "'";
+
+		return selection;
 	}
 
 	public Uri insertStockFinancial(StockFinancial stockFinancial) {
