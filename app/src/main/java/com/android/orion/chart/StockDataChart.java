@@ -356,6 +356,20 @@ public class StockDataChart {
 		return Setting.getDisplayAdaptive() ? level >= mAdaptiveLevel : result;
 	}
 
+	String getPriceNetLabel(Stock stock) {
+		StringBuilder result = new StringBuilder();
+		if (stock == null) {
+			return "";
+		}
+
+		result.append(stock.getPrice()).append(" ");
+		if (stock.getNet() > 0) {
+			result.append(Constant.MARK_ADD);
+		}
+		result.append(stock.getNet()).append("%");
+		return result.toString();
+	}
+
 	public void updateDescription(Stock stock) {
 		if (stock == null) {
 			return;
@@ -363,13 +377,7 @@ public class StockDataChart {
 
 		mDescription.setLength(0);
 		mDescription.append(stock.getName()).append(" ");
-		mDescription.append(stock.getPrice()).append("  ");
-		if (stock.getNet() > 0) {
-			mDescription.append(Constant.MARK_ADD);
-		} else if (stock.getNet() < 0) {
-			mDescription.append(Constant.MARK_MINUS);
-		}
-		mDescription.append(stock.getNet()).append("%").append("  ");
+		mDescription.append(getPriceNetLabel(stock)).append("  ");
 		mDescription.append(mPeriod).append(" ");
 		StockTrend stockTrend = getStockTrend(mAdaptiveLevel);
 		if (stockTrend != null) {
@@ -409,21 +417,16 @@ public class StockDataChart {
 			return;
 		}
 
-		int color = Color.WHITE;
-		String action;
 		LimitLine limitLine;
-
-		action = stock.getAction(mPeriod);
-		if (action != null) {
-			if (action.contains(StockDeal.ACTION_BUY)) {
-				color = Color.MAGENTA;
-			} else if (action.contains(StockDeal.ACTION_SELL)) {
-				color = Color.CYAN;
-			}
+		int color = Color.WHITE;
+		if (stock.getNet() > 0) {
+			color = Color.RED;
+		} else if (stock.getNet() < 0) {
+			color = Color.GREEN;
 		}
 
-		String label = "                                                     " + " ";
-		label += "Action:" + Constant.TAB2 + Constant.MARK_LEVEL + mAdaptiveLevel + action;
+		String label = "                                                     ";
+		label += getPriceNetLabel(stock);
 		limitLine = createLimitLine(stock.getPrice(), color, label);
 		mLimitLineList.add(limitLine);
 	}

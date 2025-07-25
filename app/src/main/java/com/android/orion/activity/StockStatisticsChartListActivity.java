@@ -334,7 +334,7 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 					stockDataChart.mValuationEntryList.add(valuationEntry);
 
 					mTotalProfit += (float) stock.getProfit();
-					mTotalBonus += (float) stock.getBonus();
+					mTotalBonus += (float) stock.getBonusInYear();
 
 					if (stock != null) {
 						if (mStock.getId() == stock.getId()) {

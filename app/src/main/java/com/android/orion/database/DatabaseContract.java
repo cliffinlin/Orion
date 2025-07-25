@@ -76,7 +76,6 @@ public final class DatabaseContract {
 	public static final String COLUMN_COST = "cost";
 	public static final String COLUMN_PROFIT = "profit";
 	public static final String COLUMN_FEE = "fee";
-	public static final String COLUMN_BONUS = "bonus";
 	public static final String COLUMN_VALUATION = "valuation";
 	public static final String COLUMN_SHARE = "share";
 	public static final String COLUMN_MARKET_VALUE = "market_value";
@@ -88,12 +87,14 @@ public final class DatabaseContract {
 	public static final String COLUMN_PE = "pe";
 	public static final String COLUMN_PB = "pb";
 	public static final String COLUMN_PR = "pr";
+	public static final String COLUMN_BONUS = "bonus";
+	public static final String COLUMN_BONUS_IN_YEAR = "bonus_in_year";
 	public static final String COLUMN_DIVIDEND = "dividend";
 	public static final String COLUMN_DIVIDEND_IN_YEAR = "dividend_in_year";
-	public static final String COLUMN_YIELD = "yield";
-	public static final String COLUMN_YIELD_IN_YEAR = "yield_in_year";
 	public static final String COLUMN_DIVIDEND_RATIO = "dividend_ratio";
 	public static final String COLUMN_DIVIDEND_RATIO_IN_YEAR = "dividend_ratio_in_year";
+	public static final String COLUMN_YIELD = "yield";
+	public static final String COLUMN_YIELD_IN_YEAR = "yield_in_year";
 	public static final String COLUMN_CREATED = "created";
 	public static final String COLUMN_MODIFIED = "modified";
 
@@ -180,7 +181,7 @@ public final class DatabaseContract {
 				COLUMN_YEAR_LEVEL, COLUMN_MONTH6_LEVEL, COLUMN_QUARTER_LEVEL, COLUMN_MONTH2_LEVEL, COLUMN_MONTH_LEVEL, COLUMN_WEEK_LEVEL, COLUMN_DAY_LEVEL, COLUMN_MIN60_LEVEL, COLUMN_MIN30_LEVEL, COLUMN_MIN15_LEVEL, COLUMN_MIN5_LEVEL,
 				COLUMN_FLAG,
 				COLUMN_ROI, COLUMN_IR, COLUMN_IRR, COLUMN_ROE, COLUMN_PE, COLUMN_PB, COLUMN_PR,
-				COLUMN_HOLD, COLUMN_PROFIT, COLUMN_BONUS, COLUMN_VALUATION, COLUMN_COST,
+				COLUMN_HOLD, COLUMN_PROFIT, COLUMN_BONUS, COLUMN_BONUS_IN_YEAR, COLUMN_VALUATION, COLUMN_COST,
 				COLUMN_SHARE, COLUMN_MARKET_VALUE,
 				COLUMN_MAIN_BUSINESS_INCOME, COLUMN_MAIN_BUSINESS_INCOME_IN_YEAR,
 				COLUMN_NET_PROFIT, COLUMN_NET_PROFIT_IN_YEAR,
@@ -190,8 +191,8 @@ public final class DatabaseContract {
 				COLUMN_CASH_FLOW_PER_SHARE,
 				COLUMN_NET_PROFIT_PER_SHARE,
 				COLUMN_NET_PROFIT_PER_SHARE_IN_YEAR,
-				COLUMN_RZ_VALUE, COLUMN_RZ_BUY, COLUMN_RZ_BUY_RATE, COLUMN_RZ_TREND_VALUE, COLUMN_RZ_TREND_RATE, COLUMN_RZ_TREND_DAYS,
 				COLUMN_RATE,
+				COLUMN_RZ_VALUE, COLUMN_RZ_BUY, COLUMN_RZ_BUY_RATE, COLUMN_RZ_TREND_VALUE, COLUMN_RZ_TREND_RATE, COLUMN_RZ_TREND_DAYS,
 				COLUMN_DIVIDEND, COLUMN_DIVIDEND_IN_YEAR,
 				COLUMN_YIELD, COLUMN_YIELD_IN_YEAR,
 				COLUMN_DIVIDEND_RATIO, COLUMN_DIVIDEND_RATIO_IN_YEAR,
@@ -244,6 +245,7 @@ public final class DatabaseContract {
 				+ COLUMN_HOLD + INTEGER_TYPE + COMMA_SEP
 				+ COLUMN_PROFIT + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_BONUS + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_BONUS_IN_YEAR + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_VALUATION + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_COST + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_SHARE + DOUBLE_TYPE + COMMA_SEP
@@ -258,13 +260,13 @@ public final class DatabaseContract {
 				+ COLUMN_CASH_FLOW_PER_SHARE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_NET_PROFIT_PER_SHARE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_NET_PROFIT_PER_SHARE_IN_YEAR + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_RATE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_RZ_VALUE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_RZ_BUY + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_RZ_BUY_RATE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_RZ_TREND_VALUE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_RZ_TREND_RATE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_RZ_TREND_DAYS + INTEGER_TYPE + COMMA_SEP
-				+ COLUMN_RATE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_DIVIDEND + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_DIVIDEND_IN_YEAR + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_YIELD + DOUBLE_TYPE + COMMA_SEP

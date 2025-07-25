@@ -60,6 +60,7 @@ public class StockFinancialListActivity extends ListActivity implements
 	TextView mTextViewHold = null;
 	TextView mTextViewProfit = null;
 	TextView mTextViewBonus = null;
+	TextView mTextViewBonusInYear = null;
 	TextView mTextViewCost = null;
 	TextView mTextViewValuation = null;
 	TextView mTextViewShare = null;
@@ -216,6 +217,9 @@ public class StockFinancialListActivity extends ListActivity implements
 			case R.id.bonus:
 				mSortOrderColumn = DatabaseContract.COLUMN_BONUS;
 				break;
+			case R.id.bonus_in_year:
+				mSortOrderColumn = DatabaseContract.COLUMN_BONUS_IN_YEAR;
+				break;
 			case R.id.cost:
 				mSortOrderColumn = DatabaseContract.COLUMN_COST;
 				break;
@@ -340,6 +344,7 @@ public class StockFinancialListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewHold, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewProfit, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewBonus, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewBonusInYear, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewCost, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewValuation, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewShare, mHeaderTextDefaultColor);
@@ -443,6 +448,11 @@ public class StockFinancialListActivity extends ListActivity implements
 		mTextViewBonus = findViewById(R.id.bonus);
 		if (mTextViewBonus != null) {
 			mTextViewBonus.setOnClickListener(this);
+		}
+
+		mTextViewBonusInYear = findViewById(R.id.bonus_in_year);
+		if (mTextViewBonusInYear != null) {
+			mTextViewBonusInYear.setOnClickListener(this);
 		}
 
 		mTextViewCost = findViewById(R.id.cost);
@@ -611,6 +621,8 @@ public class StockFinancialListActivity extends ListActivity implements
 			setHeaderTextColor(mTextViewProfit, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_BONUS)) {
 			setHeaderTextColor(mTextViewBonus, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_BONUS_IN_YEAR)) {
+			setHeaderTextColor(mTextViewBonusInYear, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_COST)) {
 			setHeaderTextColor(mTextViewCost, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_VALUATION)) {
@@ -696,6 +708,7 @@ public class StockFinancialListActivity extends ListActivity implements
 				DatabaseContract.COLUMN_HOLD,
 				DatabaseContract.COLUMN_PROFIT,
 				DatabaseContract.COLUMN_BONUS,
+				DatabaseContract.COLUMN_BONUS_IN_YEAR,
 				DatabaseContract.COLUMN_COST,
 				DatabaseContract.COLUMN_VALUATION,
 				DatabaseContract.COLUMN_SHARE,
@@ -737,6 +750,7 @@ public class StockFinancialListActivity extends ListActivity implements
 				R.id.hold,
 				R.id.profit,
 				R.id.bonus,
+				R.id.bonus_in_year,
 				R.id.cost,
 				R.id.valuation,
 				R.id.share,

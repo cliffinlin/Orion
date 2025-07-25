@@ -69,6 +69,7 @@
     <string name="begin_date">Begin date</string>
     <string name="book_value_per_share">BPS</string>
     <string name="bonus">Bonus</string>
+    <string name="bonus_in_year">BonusY</string>
     <string name="cancel">Cancel</string>
     <string name="latest">Latest</string>
     <string name="candle">Candle</string>

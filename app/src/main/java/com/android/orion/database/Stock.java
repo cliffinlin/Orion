@@ -75,6 +75,7 @@ public class Stock extends DatabaseTable {
 	private long mHold;
 	private double mProfit;
 	private double mBonus;
+	private double mBonusInYear;
 	private double mValuation;
 	private double mCost;
 	private double mShare;
@@ -152,6 +153,7 @@ public class Stock extends DatabaseTable {
 		mPr = 0;
 		mProfit = 0;
 		mBonus = 0;
+		mBonusInYear = 0;
 		mValuation = 0;
 		mCost = 0;
 		mShare = 0;
@@ -236,6 +238,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_HOLD, mHold);
 		contentValues.put(DatabaseContract.COLUMN_PROFIT, mProfit);
 		contentValues.put(DatabaseContract.COLUMN_BONUS, mBonus);
+		contentValues.put(DatabaseContract.COLUMN_BONUS_IN_YEAR, mBonusInYear);
 		contentValues.put(DatabaseContract.COLUMN_VALUATION, mValuation);
 		contentValues.put(DatabaseContract.COLUMN_COST, mCost);
 		contentValues.put(DatabaseContract.COLUMN_SHARE, mShare);
@@ -359,6 +362,7 @@ public class Stock extends DatabaseTable {
 		setHold(stock.mHold);
 		setProfit(stock.mProfit);
 		setBonus(stock.mBonus);
+		setBonusInYear(stock.mBonusInYear);
 		setValuation(stock.mValuation);
 		setCost(stock.mCost);
 		setShare(stock.mShare);
@@ -447,6 +451,7 @@ public class Stock extends DatabaseTable {
 		setHold(cursor);
 		setProfit(cursor);
 		setBonus(cursor);
+		setBonusInYear(cursor);
 		setValuation(cursor);
 		setCost(cursor);
 		setShare(cursor);
@@ -740,6 +745,23 @@ public class Stock extends DatabaseTable {
 
 		setBonus(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_BONUS)));
+	}
+
+	public double getBonusInYear() {
+		return mBonusInYear;
+	}
+
+	public void setBonusInYear(double bonusInYear) {
+		mBonusInYear = bonusInYear;
+	}
+
+	void setBonusInYear(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setBonusInYear(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_BONUS_IN_YEAR)));
 	}
 
 	public double getValuation() {
@@ -1836,17 +1858,14 @@ public class Stock extends DatabaseTable {
 	}
 
 	public void setupBonus() {
-		if (mDividend == 0) {
-			mBonus = 0;
-			return;
-		}
-
 		if (mHold == 0) {
 			mBonus = 0;
+			mBonusInYear = 0;
 			return;
 		}
 
 		mBonus = mDividend / 10.0 * mHold;
+		mBonusInYear = mDividendInYear / 10.0 * mHold;
 	}
 
 	public void setupYield() {
