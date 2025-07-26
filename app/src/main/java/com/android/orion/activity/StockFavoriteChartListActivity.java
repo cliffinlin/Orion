@@ -30,6 +30,7 @@ import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockTrend;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
+import com.android.orion.utility.Utility;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.XAxis.XAxisPosition;
@@ -120,6 +121,7 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 
 		mSortOrder = intent.getStringExtra(Constant.EXTRA_STOCK_LIST_SORT_ORDER);
 		mKeyDisplayDeal = intent.getBooleanExtra(Constant.EXTRA_STOCK_DEAL, false);
+		mKeyDisplayDeal |= Utility.hasFlag(mStock.getFlag(), Stock.FLAG_GRID);
 	}
 
 	@Override

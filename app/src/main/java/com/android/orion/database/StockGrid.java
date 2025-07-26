@@ -8,16 +8,16 @@ import com.android.orion.utility.Utility;
 
 public class StockGrid extends DatabaseTable {
 
-	public static final String TYPE_BUY = "BUY";
+	public static final String TYPE_BUY = "B";
 	public static final String TYPE_NONE = "";
-	public static final String TYPE_SELL = "SELL";
+	public static final String TYPE_SELL = "S";
 
 	private String mSE;
 	private String mCode;
 	private String mName;
 	private String mType;
-	private long mHold;
-	private double mGridBase;
+	private double mHigh;
+	private double mLow;
 	private double mGridGap;
 	private double mPrice;
 	private long mVolume;
@@ -44,8 +44,8 @@ public class StockGrid extends DatabaseTable {
 		mCode = "";
 		mName = "";
 		mType = TYPE_NONE;
-		mHold = 0;
-		mGridBase = 0;
+		mHigh = 0;
+		mLow = 0;
 		mGridGap = 0;
 		mPrice = 0;
 		mVolume = 0;
@@ -60,8 +60,8 @@ public class StockGrid extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
 		contentValues.put(DatabaseContract.COLUMN_TYPE, mType);
-		contentValues.put(DatabaseContract.COLUMN_HOLD, mHold);
-		contentValues.put(DatabaseContract.COLUMN_GRID_BASE, mGridBase);
+		contentValues.put(DatabaseContract.COLUMN_HIGH, mHigh);
+		contentValues.put(DatabaseContract.COLUMN_LOW, mLow);
 		contentValues.put(DatabaseContract.COLUMN_GRID_GAP, mGridGap);
 		contentValues.put(DatabaseContract.COLUMN_PRICE, mPrice);
 		contentValues.put(DatabaseContract.COLUMN_VOLUME, mVolume);
@@ -82,8 +82,8 @@ public class StockGrid extends DatabaseTable {
 		setCode(stockGrid.mCode);
 		setName(stockGrid.mName);
 		setType(stockGrid.mType);
-		setHold(stockGrid.mHold);
-		setGridBase(stockGrid.mGridBase);
+		setHigh(stockGrid.mHigh);
+		setLow(stockGrid.mLow);
 		setGridGap(stockGrid.mGridGap);
 		setPrice(stockGrid.mPrice);
 		setVolume(stockGrid.mVolume);
@@ -104,8 +104,8 @@ public class StockGrid extends DatabaseTable {
 		setCode(cursor);
 		setName(cursor);
 		setType(cursor);
-		setHold(cursor);
-		setGridBase(cursor);
+		setHigh(cursor);
+		setLow(cursor);
 		setGridGap(cursor);
 		setPrice(cursor);
 		setVolume(cursor);
@@ -180,38 +180,38 @@ public class StockGrid extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_TYPE)));
 	}
 
-	public long getHold() {
-		return mHold;
+	public double getHigh() {
+		return mHigh;
 	}
 
-	public void setHold(long hold) {
-		mHold = hold;
+	public void setHigh(double high) {
+		mHigh = high;
 	}
 
-	void setHold(Cursor cursor) {
+	void setHigh(Cursor cursor) {
 		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
-		setHold(cursor.getLong(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_HOLD)));
+		setHigh(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_HIGH)));
 	}
 
-	public double getGridBase() {
-		return mGridBase;
+	public double getLow() {
+		return mLow;
 	}
 
-	public void setGridBase(double gridBase) {
-		mGridBase = gridBase;
+	public void setLow(double low) {
+		mLow = low;
 	}
 
-	void setGridBase(Cursor cursor) {
+	void setLow(Cursor cursor) {
 		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
-		setGridBase(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_GRID_BASE)));
+		setLow(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_LOW)));
 	}
 
 	public double getGridGap() {
@@ -284,17 +284,17 @@ public class StockGrid extends DatabaseTable {
 
 	public void setupPrice() {
 		mPrice = 0;
-		if ((mHold == 0) || (mVolume == 0) || (mGridGap == 0)) {
+		if ((mHigh == 0) || (mLow == 0) || (mVolume == 0) || (mGridGap == 0)) {
 			return;
 		}
 
 		switch (mType) {
 		case TYPE_BUY:
-			int grid = (int) (mHold / mVolume);
-			mPrice = Utility.Round2(mGridBase * (1.0 - grid * mGridGap / 100.0));
+			int n = (int) (100.0 * (mHigh - mLow) / mHigh / mGridGap) + 1;
+			mPrice = Utility.Round2(mHigh * (1.0 - n * mGridGap / 100.0));
 			break;
 		case TYPE_SELL:
-			mPrice = Utility.Round2(mGridBase * (1.0 + mGridGap / 100.0));
+			mPrice = Utility.Round2(mLow * (1.0 + mGridGap / 100.0));
 			break;
 		default:
 			break;

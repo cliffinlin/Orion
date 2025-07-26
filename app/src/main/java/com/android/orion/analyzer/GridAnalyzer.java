@@ -53,10 +53,10 @@ public class GridAnalyzer {
 		mStockGridBuy.setCode(mStock.getCode());
 		mStockGridBuy.setName(mStock.getName());
 		mStockGridBuy.setType(StockGrid.TYPE_BUY);
-		mStockGridBuy.setHold(mStock.getHold());
 		mStockGridBuy.setGridGap(mStock.getGridGap());
+		mStockGridBuy.setHigh(mStockDealList.get(0).getBuy());
+		mStockGridBuy.setLow(mStockDealList.get(mStockDealList.size()-1).getBuy());
 		mStockGridBuy.setVolume(mStockDealList.get(0).getVolume());
-		mStockGridBuy.setGridBase(mStockDealList.get(0).getBuy());
 		mStockGridBuy.setupPrice();
 		mStockGridBuy.setupValue();
 		mStock.setGridBuy(mStockGridBuy.getPrice());
@@ -70,10 +70,10 @@ public class GridAnalyzer {
 		mStockGridSell.setCode(mStock.getCode());
 		mStockGridSell.setName(mStock.getName());
 		mStockGridSell.setType(StockGrid.TYPE_SELL);
-		mStockGridSell.setHold(mStock.getHold());
 		mStockGridSell.setGridGap(mStock.getGridGap());
+		mStockGridSell.setHigh(mStockDealList.get(0).getBuy());
+		mStockGridSell.setLow(mStockDealList.get(mStockDealList.size()-1).getBuy());
 		mStockGridSell.setVolume(mStockDealList.get(mStockDealList.size()-1).getVolume());
-		mStockGridSell.setGridBase(mStockDealList.get(mStockDealList.size()-1).getBuy());
 		mStockGridSell.setupPrice();
 		mStockGridSell.setupValue();
 		mStock.setGridSell(mStockGridSell.getPrice());

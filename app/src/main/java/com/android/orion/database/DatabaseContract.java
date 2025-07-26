@@ -116,7 +116,6 @@ public final class DatabaseContract {
 	public static final String COLUMN_VELOCITY = "velocity";
 	public static final String COLUMN_ACCOUNT = "account";
 
-	public static final String COLUMN_GRID_BASE = "grid_base";
 	public static final String COLUMN_GRID_GAP = "grid_gap";
 	public static final String COLUMN_GRID_BUY = "grid_buy";
 	public static final String COLUMN_GRID_SELL = "grid_sell";
@@ -479,7 +478,7 @@ public final class DatabaseContract {
 
 		public static final String[] PROJECTION_ALL = {_ID,
 				COLUMN_SE, COLUMN_CODE, COLUMN_NAME, COLUMN_TYPE,
-				COLUMN_HOLD, COLUMN_GRID_BASE, COLUMN_GRID_GAP,
+				COLUMN_HIGH, COLUMN_LOW, COLUMN_GRID_GAP,
 				COLUMN_PRICE, COLUMN_VOLUME, COLUMN_VALUE,
 				COLUMN_CREATED, COLUMN_MODIFIED};
 		static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
@@ -490,8 +489,8 @@ public final class DatabaseContract {
 				+ COLUMN_CODE + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_NAME + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_TYPE + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_HOLD + INTEGER_TYPE + COMMA_SEP
-				+ COLUMN_GRID_BASE + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_HIGH + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_LOW + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_GRID_GAP + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_PRICE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_VOLUME + INTEGER_TYPE + COMMA_SEP
