@@ -395,7 +395,7 @@ public class StockDeal extends DatabaseTable {
 	}
 
 	public void setupNet() {
-		if ((mPrice == 0) || (mVolume == 0)) {
+		if (mPrice == 0 || mVolume == 0) {
 			mNet = 0;
 			return;
 		}
@@ -423,7 +423,7 @@ public class StockDeal extends DatabaseTable {
 		double buyTransferFee = 0;
 		double buyCommissionFee = 0;
 
-		if ((mPrice == 0) || (mBuy == 0) || (mVolume == 0)) {
+		if (mPrice == 0 || mBuy == 0 || mVolume == 0) {
 			return;
 		}
 
@@ -448,7 +448,7 @@ public class StockDeal extends DatabaseTable {
 		double sellCommissionFee = 0;
 		double dividendIncomeTax = 0;
 
-		if ((mPrice == 0) || (mSell == 0) || (mVolume == 0)) {
+		if (mPrice == 0 || mSell == 0 || mVolume == 0) {
 			return;
 		}
 
@@ -492,7 +492,7 @@ public class StockDeal extends DatabaseTable {
 			return result;
 		}
 
-		if ((mPrice == 0) || (mBuy == 0) || (mVolume == 0)) {
+		if (mPrice == 0 || mBuy == 0 || mVolume == 0) {
 			return result;
 		}
 
@@ -556,7 +556,7 @@ public class StockDeal extends DatabaseTable {
 		double sellCommissionFee = 0;
 		double dividendIncomeTax = 0;
 
-		if ((mPrice == 0) || (mBuy == 0) || (mVolume == 0)) {
+		if (mPrice == 0 || mBuy == 0 || mVolume == 0) {
 			mFee = 0;
 			return;
 		}
@@ -622,7 +622,7 @@ public class StockDeal extends DatabaseTable {
 	}
 
 	public void setupProfit() {
-		if ((mPrice == 0) || (mVolume == 0)) {
+		if (mPrice == 0 || mVolume == 0) {
 			mProfit = 0;
 			return;
 		}
@@ -637,7 +637,7 @@ public class StockDeal extends DatabaseTable {
 	}
 
 	public void setupBonus(double dividend) {
-		if ((dividend == 0) || (mVolume == 0)) {
+		if (dividend == 0 || mVolume == 0) {
 			mBonus = 0;
 			return;
 		}

@@ -510,7 +510,7 @@ public class StockFinancial extends DatabaseTable {
 	}
 
 	public void setupNetProfitMargin() {
-		if ((mNetProfitInYear == 0) || (mMainBusinessIncomeInYear == 0)) {
+		if (mNetProfitInYear == 0 || mMainBusinessIncomeInYear == 0) {
 			return;
 		}
 
@@ -518,7 +518,7 @@ public class StockFinancial extends DatabaseTable {
 	}
 
 	public void setupNetProfitPerShare() {
-		if ((mNetProfit == 0) || (mShare == 0)) {
+		if (mNetProfit == 0 || mShare == 0) {
 			return;
 		}
 
@@ -526,7 +526,7 @@ public class StockFinancial extends DatabaseTable {
 	}
 
 	public void setupNetProfitPerShare(double share) {
-		if ((mNetProfit == 0) || (share == 0)) {
+		if (mNetProfit == 0 || share == 0) {
 			return;
 		}
 

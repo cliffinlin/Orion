@@ -19,7 +19,7 @@ public class CandleBodyBuffer extends AbstractBuffer<CandleEntry> {
 
     private void addBody(float left, float top, float right, float bottom) {
         //Modify for stock
-    	if ((buffer == null) || (buffer.length == 0) || (index > buffer.length - 1)) {
+    	if (buffer == null || buffer.length == 0 || index > buffer.length - 1) {
     		return;
     	}
         //Modify for stock

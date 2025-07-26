@@ -13,7 +13,7 @@ public class CandleShadowBuffer extends AbstractBuffer<CandleEntry> {
 
     private void addShadow(float x1, float y1, float x2, float y2) {
         //Modify for stock
-    	if ((buffer == null) || (buffer.length == 0) || (index > buffer.length - 1)) {
+    	if (buffer == null || buffer.length == 0 || index > buffer.length - 1) {
     		return;
     	}
         //Modify for stock

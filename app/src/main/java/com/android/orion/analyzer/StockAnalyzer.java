@@ -22,6 +22,7 @@ import com.android.orion.database.Stock;
 import com.android.orion.database.StockBonus;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockDeal;
+import com.android.orion.database.StockGrid;
 import com.android.orion.database.StockRZRQ;
 import com.android.orion.database.StockTrend;
 import com.android.orion.manager.DatabaseManager;
@@ -297,6 +298,36 @@ public class StockAnalyzer {
 		return Math.sqrt(variance);
 	}
 
+	public void notifyStockGrid(StockGrid stockGrid) {
+		if (mStock == null || mContext == null || stockGrid == null) {
+			return;
+		}
+
+		if (!mStock.hasFlag(Stock.FLAG_GRID)) {
+			return;
+		}
+
+		if (!Market.isTradingHours()) {
+			Toast.makeText(mContext,
+					mContext.getResources().getString(R.string.out_of_trading_hours),
+					Toast.LENGTH_SHORT).show();
+			return;
+		}
+
+		mContentTitle.setLength(0);
+		mContentText.setLength(0);
+
+		mContentTitle.append(mStock.getName() + " " + mStock.getPrice() + " " + mStock.getNet() + " " + stockGrid.toNotifyString());
+		try {
+			int id = Config.SERVICE_NOTIFICATION_ID + (int) stockGrid.getId();
+			long stockId = mStock.getId();
+			notify(id, stockId, Config.MESSAGE_CHANNEL_ID, Config.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
+					mContentTitle.toString(), mContentText.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public void cancelNotifyStockTrend(StockTrend stockTrend) {
 		if (mNotificationManager == null || stockTrend == null) {
 			return;
@@ -333,17 +364,11 @@ public class StockAnalyzer {
 		mContentTitle.setLength(0);
 		mContentText.setLength(0);
 
-		StockDeal stockDeal = new StockDeal();
-		mDatabaseManager.getStockDeal(mStock, stockDeal);
-		double stockDealProfit = stockDeal.getProfit();
-		if (stockDealProfit > 0) {
-			mContentTitle.append(Constant.MARK_DOLLAR);
-		}
 		mContentTitle.append(mStock.getName() + " " + mStock.getPrice() + " " + mStock.getNet() + " " + stockTrend.toNotifyString());
 		try {
-			int code = (int) stockTrend.getId();
+			int id = (int) stockTrend.getId();
 			long stockId = mStock.getId();
-			notify(code, stockId, Config.MESSAGE_CHANNEL_ID, Config.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
+			notify(id, stockId, Config.MESSAGE_CHANNEL_ID, Config.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
 					mContentTitle.toString(), mContentText.toString());
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -714,7 +714,7 @@ public class Utility {
 			return result;
 		}
 
-		if ((strings == null) || (strings.length == 0)) {
+		if (strings == null || strings.length == 0) {
 			return result;
 		}
 
@@ -742,8 +742,8 @@ public class Utility {
 	public static String bytestoAsciiString(byte[] bytes, int offset,
 	                                        int datalen) {
 
-		if ((bytes == null) || (bytes.length == 0) || (offset < 0)
-				|| (datalen <= 0)) {
+		if (bytes == null || bytes.length == 0 || offset < 0
+				|| datalen <= 0) {
 			return null;
 		}
 		if ((offset >= bytes.length) || (bytes.length - offset < datalen)) {

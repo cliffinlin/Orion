@@ -133,7 +133,7 @@ public class DatabaseManager implements StockListener {
 	public Uri insertStock(Stock stock) {
 		Uri uri = null;
 
-		if ((stock == null) || (mContentResolver == null)) {
+		if (stock == null || mContentResolver == null) {
 			return uri;
 		}
 
@@ -150,7 +150,7 @@ public class DatabaseManager implements StockListener {
 			return result;
 		}
 
-		if ((contentValuesArray.length == 0) || (mContentResolver == null)) {
+		if (contentValuesArray.length == 0 || mContentResolver == null) {
 			return result;
 		}
 
@@ -353,8 +353,8 @@ public class DatabaseManager implements StockListener {
 	public int updateStock(Stock stock, ContentValues contentValues) {
 		int result = 0;
 
-		if ((stock == null) || (contentValues == null)
-				|| (mContentResolver == null)) {
+		if (stock == null || contentValues == null
+				|| mContentResolver == null) {
 			return result;
 		}
 
@@ -369,7 +369,7 @@ public class DatabaseManager implements StockListener {
 	public void updateStockFlag(Stock stock) {
 		Uri uri;
 
-		if ((stock == null) || (mContentResolver == null)) {
+		if (stock == null || mContentResolver == null) {
 			return;
 		}
 
@@ -422,7 +422,7 @@ public class DatabaseManager implements StockListener {
 	public Uri insertStockData(StockData stockData) {
 		Uri uri = null;
 
-		if ((stockData == null) || (mContentResolver == null)) {
+		if (stockData == null || mContentResolver == null) {
 			return uri;
 		}
 
@@ -439,7 +439,7 @@ public class DatabaseManager implements StockListener {
 			return result;
 		}
 
-		if ((contentValuesArray.length == 0) || (mContentResolver == null)) {
+		if (contentValuesArray.length == 0 || mContentResolver == null) {
 			return result;
 		}
 
@@ -481,7 +481,7 @@ public class DatabaseManager implements StockListener {
 	public Cursor queryStockData(StockData stockData) {
 		Cursor cursor = null;
 
-		if ((stockData == null) || (mContentResolver == null)) {
+		if (stockData == null || mContentResolver == null) {
 			return cursor;
 		}
 
@@ -498,7 +498,7 @@ public class DatabaseManager implements StockListener {
 	public void getStockData(StockData stockData) {
 		Cursor cursor = null;
 
-		if ((stockData == null) || (mContentResolver == null)) {
+		if (stockData == null || mContentResolver == null) {
 			return;
 		}
 
@@ -526,7 +526,7 @@ public class DatabaseManager implements StockListener {
 	                             ArrayList<StockData> stockDataList, String sortOrder) {
 		Cursor cursor = null;
 
-		if ((stock == null) || (stockDataList == null)) {
+		if (stock == null || stockDataList == null) {
 			return;
 		}
 
@@ -557,8 +557,8 @@ public class DatabaseManager implements StockListener {
 		String selection = null;
 		String sortOrder = null;
 
-		if ((stock == null) || TextUtils.isEmpty(period)
-				|| (stockDataList == null)) {
+		if (stock == null || TextUtils.isEmpty(period)
+				|| stockDataList == null) {
 			return;
 		}
 
@@ -614,7 +614,7 @@ public class DatabaseManager implements StockListener {
 	public int updateStockData(long id, ContentValues contentValues) {
 		int result = 0;
 
-		if ((id == 0) || (mContentResolver == null)) {
+		if (id == 0 || mContentResolver == null) {
 			return result;
 		}
 
@@ -630,7 +630,7 @@ public class DatabaseManager implements StockListener {
 	public int updateStockData(StockData stockData, ContentValues contentValues) {
 		int result = 0;
 
-		if ((stockData == null) || (mContentResolver == null)) {
+		if (stockData == null || mContentResolver == null) {
 			return result;
 		}
 
@@ -644,7 +644,7 @@ public class DatabaseManager implements StockListener {
 	}
 
 	public void updateStockData(Stock stock, String period, ArrayList<StockData> stockDataList) {
-		if ((stockDataList == null) || (stockDataList.size() == 0)) {
+		if (stockDataList == null || stockDataList.size() == 0) {
 			return;
 		}
 
@@ -672,7 +672,7 @@ public class DatabaseManager implements StockListener {
 	public int deleteStockData(StockData stockData) {
 		int result = 0;
 
-		if ((stockData == null) || (mContentResolver == null)) {
+		if (stockData == null || mContentResolver == null) {
 			return result;
 		}
 
@@ -750,7 +750,7 @@ public class DatabaseManager implements StockListener {
 	public Uri insertTDXData(TDXData tdxData) {
 		Uri uri = null;
 
-		if ((tdxData == null) || (mContentResolver == null)) {
+		if (tdxData == null || mContentResolver == null) {
 			return uri;
 		}
 
@@ -767,7 +767,7 @@ public class DatabaseManager implements StockListener {
 			return result;
 		}
 
-		if ((contentValuesArray.length == 0) || (mContentResolver == null)) {
+		if (contentValuesArray.length == 0 || mContentResolver == null) {
 			return result;
 		}
 
@@ -809,7 +809,7 @@ public class DatabaseManager implements StockListener {
 	public Cursor queryTDXData(TDXData tdxData) {
 		Cursor cursor = null;
 
-		if ((tdxData == null) || (mContentResolver == null)) {
+		if (tdxData == null || mContentResolver == null) {
 			return cursor;
 		}
 
@@ -826,7 +826,7 @@ public class DatabaseManager implements StockListener {
 	public void getTDXData(TDXData tdxData) {
 		Cursor cursor = null;
 
-		if ((tdxData == null) || (mContentResolver == null)) {
+		if (tdxData == null || mContentResolver == null) {
 			return;
 		}
 
@@ -853,7 +853,7 @@ public class DatabaseManager implements StockListener {
 	public void getTDXDataContentList(Stock stock, String period, ArrayList<String> contentList) {
 		Cursor cursor = null;
 
-		if ((stock == null) || (contentList == null)) {
+		if (stock == null || contentList == null) {
 			return;
 		}
 
@@ -883,8 +883,8 @@ public class DatabaseManager implements StockListener {
 		String selection = null;
 		String sortOrder = null;
 
-		if ((stock == null) || TextUtils.isEmpty(period)
-				|| (tdxDataList == null)) {
+		if (stock == null || TextUtils.isEmpty(period)
+				|| tdxDataList == null) {
 			return;
 		}
 
@@ -935,7 +935,7 @@ public class DatabaseManager implements StockListener {
 	public int updateTDXData(TDXData tdxData, ContentValues contentValues) {
 		int result = 0;
 
-		if ((tdxData == null) || (mContentResolver == null)) {
+		if (tdxData == null || mContentResolver == null) {
 			return result;
 		}
 
@@ -949,7 +949,7 @@ public class DatabaseManager implements StockListener {
 	}
 
 	public void updateTDXData(Stock stock, String period, ArrayList<TDXData> tdxDataList) {
-		if ((tdxDataList == null) || (tdxDataList.size() == 0)) {
+		if (tdxDataList == null || tdxDataList.size() == 0) {
 			return;
 		}
 
@@ -976,7 +976,7 @@ public class DatabaseManager implements StockListener {
 	public int deleteTDXData(TDXData tdxData) {
 		int result = 0;
 
-		if ((tdxData == null) || (mContentResolver == null)) {
+		if (tdxData == null || mContentResolver == null) {
 			return result;
 		}
 
@@ -1050,7 +1050,7 @@ public class DatabaseManager implements StockListener {
 	public Uri insertStockTrend(StockTrend stockTrend) {
 		Uri uri = null;
 
-		if ((stockTrend == null) || (mContentResolver == null)) {
+		if (stockTrend == null || mContentResolver == null) {
 			return uri;
 		}
 
@@ -1067,7 +1067,7 @@ public class DatabaseManager implements StockListener {
 			return result;
 		}
 
-		if ((contentValuesArray.length == 0) || (mContentResolver == null)) {
+		if (contentValuesArray.length == 0 || mContentResolver == null) {
 			return result;
 		}
 
@@ -1109,7 +1109,7 @@ public class DatabaseManager implements StockListener {
 	public Cursor queryStockTrend(StockTrend stockTrend) {
 		Cursor cursor = null;
 
-		if ((stockTrend == null) || (mContentResolver == null)) {
+		if (stockTrend == null || mContentResolver == null) {
 			return cursor;
 		}
 
@@ -1126,7 +1126,7 @@ public class DatabaseManager implements StockListener {
 	public void getStockTrend(StockTrend stockTrend) {
 		Cursor cursor = null;
 
-		if ((stockTrend == null) || (mContentResolver == null)) {
+		if (stockTrend == null || mContentResolver == null) {
 			return;
 		}
 
@@ -1287,7 +1287,7 @@ public class DatabaseManager implements StockListener {
 	public int updateStockTrend(StockTrend stockTrend, ContentValues contentValues) {
 		int result = 0;
 
-		if ((stockTrend == null) || (mContentResolver == null)) {
+		if (stockTrend == null || mContentResolver == null) {
 			return result;
 		}
 
@@ -1307,7 +1307,7 @@ public class DatabaseManager implements StockListener {
 	public int deleteStockTrend(StockTrend stockTrend) {
 		int result = 0;
 
-		if ((stockTrend == null) || (mContentResolver == null)) {
+		if (stockTrend == null || mContentResolver == null) {
 			return result;
 		}
 
@@ -1362,7 +1362,7 @@ public class DatabaseManager implements StockListener {
 	public Uri insertStockPerceptron(StockPerceptron stockPerceptron) {
 		Uri uri = null;
 
-		if ((stockPerceptron == null) || (mContentResolver == null)) {
+		if (stockPerceptron == null || mContentResolver == null) {
 			return uri;
 		}
 
@@ -1379,7 +1379,7 @@ public class DatabaseManager implements StockListener {
 			return result;
 		}
 
-		if ((contentValuesArray.length == 0) || (mContentResolver == null)) {
+		if (contentValuesArray.length == 0 || mContentResolver == null) {
 			return result;
 		}
 
@@ -1421,7 +1421,7 @@ public class DatabaseManager implements StockListener {
 	public Cursor queryStockPerceptron(StockPerceptron stockPerceptron) {
 		Cursor cursor = null;
 
-		if ((stockPerceptron == null) || (mContentResolver == null)) {
+		if (stockPerceptron == null || mContentResolver == null) {
 			return cursor;
 		}
 
@@ -1438,7 +1438,7 @@ public class DatabaseManager implements StockListener {
 	public void getStockPerceptron(StockPerceptron stockPerceptron) {
 		Cursor cursor = null;
 
-		if ((stockPerceptron == null) || (mContentResolver == null)) {
+		if (stockPerceptron == null || mContentResolver == null) {
 			return;
 		}
 
@@ -1563,7 +1563,7 @@ public class DatabaseManager implements StockListener {
 	public int updateStockPerceptron(StockPerceptron stockPerceptron, ContentValues contentValues) {
 		int result = 0;
 
-		if ((stockPerceptron == null) || (mContentResolver == null)) {
+		if (stockPerceptron == null || mContentResolver == null) {
 			return result;
 		}
 
@@ -1583,7 +1583,7 @@ public class DatabaseManager implements StockListener {
 	public int deleteStockPerceptron(StockPerceptron stockPerceptron) {
 		int result = 0;
 
-		if ((stockPerceptron == null) || (mContentResolver == null)) {
+		if (stockPerceptron == null || mContentResolver == null) {
 			return result;
 		}
 
@@ -1646,7 +1646,7 @@ public class DatabaseManager implements StockListener {
 	public Uri insertStockDeal(StockDeal stockDeal) {
 		Uri uri = null;
 
-		if ((stockDeal == null) || (mContentResolver == null)) {
+		if (stockDeal == null || mContentResolver == null) {
 			return uri;
 		}
 
@@ -1663,7 +1663,7 @@ public class DatabaseManager implements StockListener {
 			return result;
 		}
 
-		if ((contentValuesArray.length == 0) || (mContentResolver == null)) {
+		if (contentValuesArray.length == 0 || mContentResolver == null) {
 			return result;
 		}
 
@@ -1699,7 +1699,7 @@ public class DatabaseManager implements StockListener {
 	public int updateStockDealByID(StockDeal stockDeal) {
 		int result = 0;
 
-		if ((stockDeal == null) || (mContentResolver == null)) {
+		if (stockDeal == null || mContentResolver == null) {
 			return result;
 		}
 
@@ -1720,7 +1720,7 @@ public class DatabaseManager implements StockListener {
 		Cursor cursor = null;
 		StockDeal stockDeal = null;
 
-		if ((stock == null) || (mContentResolver == null)) {
+		if (stock == null || mContentResolver == null) {
 			return result;
 		}
 
@@ -1772,7 +1772,7 @@ public class DatabaseManager implements StockListener {
 	}
 
 	public void deleteStockDeal(StockDeal stockDeal) {
-		if ((stockDeal == null) || (mContentResolver == null)) {
+		if (stockDeal == null || mContentResolver == null) {
 			return;
 		}
 
@@ -1911,7 +1911,7 @@ public class DatabaseManager implements StockListener {
 	public void getStockDeal(Stock stock, StockDeal stockDeal) {
 		Cursor cursor = null;
 
-		if ((stock == null) || (stockDeal == null)) {
+		if (stock == null || stockDeal == null) {
 			return;
 		}
 
@@ -1943,7 +1943,7 @@ public class DatabaseManager implements StockListener {
 	public Uri insertStockGrid(StockGrid stockGrid) {
 		Uri uri = null;
 
-		if ((stockGrid == null) || (mContentResolver == null)) {
+		if (stockGrid == null || mContentResolver == null) {
 			return uri;
 		}
 
@@ -1960,7 +1960,7 @@ public class DatabaseManager implements StockListener {
 			return result;
 		}
 
-		if ((contentValuesArray.length == 0) || (mContentResolver == null)) {
+		if (contentValuesArray.length == 0 || mContentResolver == null) {
 			return result;
 		}
 
@@ -1996,7 +1996,7 @@ public class DatabaseManager implements StockListener {
 	public int updateStockGrid(StockGrid stockGrid, ContentValues contentValues) {
 		int result = 0;
 
-		if ((stockGrid == null) || (mContentResolver == null)) {
+		if (stockGrid == null || mContentResolver == null) {
 			return result;
 		}
 
@@ -2012,7 +2012,7 @@ public class DatabaseManager implements StockListener {
 	public int updateStockGridByID(StockGrid stockGrid) {
 		int result = 0;
 
-		if ((stockGrid == null) || (mContentResolver == null)) {
+		if (stockGrid == null || mContentResolver == null) {
 			return result;
 		}
 
@@ -2030,7 +2030,7 @@ public class DatabaseManager implements StockListener {
 	}
 
 	public void deleteStockGrid(StockGrid stockGrid) {
-		if ((stockGrid == null) || (mContentResolver == null)) {
+		if (stockGrid == null || mContentResolver == null) {
 			return;
 		}
 
@@ -2182,7 +2182,7 @@ public class DatabaseManager implements StockListener {
 	public void getStockGrid(Stock stock, StockGrid stockGrid) {
 		Cursor cursor = null;
 
-		if ((stock == null) || (stockGrid == null)) {
+		if (stock == null || stockGrid == null) {
 			return;
 		}
 
@@ -2227,7 +2227,7 @@ public class DatabaseManager implements StockListener {
 	public Uri insertStockFinancial(StockFinancial stockFinancial) {
 		Uri uri = null;
 
-		if ((stockFinancial == null) || (mContentResolver == null)) {
+		if (stockFinancial == null || mContentResolver == null) {
 			return uri;
 		}
 
@@ -2245,7 +2245,7 @@ public class DatabaseManager implements StockListener {
 			return result;
 		}
 
-		if ((contentValuesArray.length == 0) || (mContentResolver == null)) {
+		if (contentValuesArray.length == 0 || mContentResolver == null) {
 			return result;
 		}
 
@@ -2274,7 +2274,7 @@ public class DatabaseManager implements StockListener {
 	public Cursor queryStockFinancial(StockFinancial stockFinancial) {
 		Cursor cursor = null;
 
-		if ((stockFinancial == null) || (mContentResolver == null)) {
+		if (stockFinancial == null || mContentResolver == null) {
 			return cursor;
 		}
 
@@ -2292,7 +2292,7 @@ public class DatabaseManager implements StockListener {
 	public void getStockFinancial(StockFinancial stockFinancial) {
 		Cursor cursor = null;
 
-		if ((stockFinancial == null) || (mContentResolver == null)) {
+		if (stockFinancial == null || mContentResolver == null) {
 			return;
 		}
 
@@ -2318,7 +2318,7 @@ public class DatabaseManager implements StockListener {
 	public void getStockFinancial(Stock stock, StockFinancial stockFinancial) {
 		Cursor cursor = null;
 
-		if ((stockFinancial == null) || (mContentResolver == null)) {
+		if (stockFinancial == null || mContentResolver == null) {
 			return;
 		}
 
@@ -2345,7 +2345,7 @@ public class DatabaseManager implements StockListener {
 	                                  ArrayList<StockFinancial> stockFinancialList, String sortOrder) {
 		Cursor cursor = null;
 
-		if ((stock == null) || (stockFinancialList == null)) {
+		if (stock == null || stockFinancialList == null) {
 			return;
 		}
 
@@ -2396,7 +2396,7 @@ public class DatabaseManager implements StockListener {
 	                                ContentValues contentValues) {
 		int result = 0;
 
-		if ((stockFinancial == null) || (mContentResolver == null)) {
+		if (stockFinancial == null || mContentResolver == null) {
 			return result;
 		}
 
@@ -2410,7 +2410,7 @@ public class DatabaseManager implements StockListener {
 	}
 
 	public void updateStockFinancial(Stock stock, ArrayList<StockFinancial> stockFinancialList) {
-		if ((stockFinancialList == null) || (stockFinancialList.size() == 0)) {
+		if (stockFinancialList == null || stockFinancialList.size() == 0) {
 			return;
 		}
 
@@ -2437,7 +2437,7 @@ public class DatabaseManager implements StockListener {
 	public int deleteStockFinancial(StockFinancial stockFinancial) {
 		int result = 0;
 
-		if ((stockFinancial == null) || (mContentResolver == null)) {
+		if (stockFinancial == null || mContentResolver == null) {
 			return result;
 		}
 
@@ -2514,7 +2514,7 @@ public class DatabaseManager implements StockListener {
 	public Uri insertStockBonus(StockBonus stockBonus) {
 		Uri uri = null;
 
-		if ((stockBonus == null) || (mContentResolver == null)) {
+		if (stockBonus == null || mContentResolver == null) {
 			return uri;
 		}
 
@@ -2531,7 +2531,7 @@ public class DatabaseManager implements StockListener {
 			return result;
 		}
 
-		if ((contentValuesArray.length == 0) || (mContentResolver == null)) {
+		if (contentValuesArray.length == 0 || mContentResolver == null) {
 			return result;
 		}
 
@@ -2560,7 +2560,7 @@ public class DatabaseManager implements StockListener {
 	public Cursor queryStockBonus(StockBonus stockBonus) {
 		Cursor cursor = null;
 
-		if ((stockBonus == null) || (mContentResolver == null)) {
+		if (stockBonus == null || mContentResolver == null) {
 			return cursor;
 		}
 
@@ -2578,7 +2578,7 @@ public class DatabaseManager implements StockListener {
 	public void getStockBonus(StockBonus stockBonus) {
 		Cursor cursor = null;
 
-		if ((stockBonus == null) || (mContentResolver == null)) {
+		if (stockBonus == null || mContentResolver == null) {
 			return;
 		}
 
@@ -2604,7 +2604,7 @@ public class DatabaseManager implements StockListener {
 	public void getStockBonus(Stock stock, StockBonus stockBonus) {
 		Cursor cursor = null;
 
-		if ((stockBonus == null) || (mContentResolver == null)) {
+		if (stockBonus == null || mContentResolver == null) {
 			return;
 		}
 
@@ -2631,7 +2631,7 @@ public class DatabaseManager implements StockListener {
 	                              ArrayList<StockBonus> stockBonusList, String sortOrder) {
 		Cursor cursor = null;
 
-		if ((stock == null) || (stockBonusList == null)) {
+		if (stock == null || stockBonusList == null) {
 			return;
 		}
 
@@ -2681,7 +2681,7 @@ public class DatabaseManager implements StockListener {
 	                            ContentValues contentValues) {
 		int result = 0;
 
-		if ((stockBonus == null) || (mContentResolver == null)) {
+		if (stockBonus == null || mContentResolver == null) {
 			return result;
 		}
 
@@ -2701,7 +2701,7 @@ public class DatabaseManager implements StockListener {
 	public int deleteStockBonus(StockBonus stockBonus) {
 		int result = 0;
 
-		if ((stockBonus == null) || (mContentResolver == null)) {
+		if (stockBonus == null || mContentResolver == null) {
 			return result;
 		}
 
@@ -2773,7 +2773,7 @@ public class DatabaseManager implements StockListener {
 	public Uri insertStockRZRQ(StockRZRQ stockRZRQ) {
 		Uri uri = null;
 
-		if ((stockRZRQ == null) || (mContentResolver == null)) {
+		if (stockRZRQ == null || mContentResolver == null) {
 			return uri;
 		}
 
@@ -2790,7 +2790,7 @@ public class DatabaseManager implements StockListener {
 			return result;
 		}
 
-		if ((contentValuesArray.length == 0) || (mContentResolver == null)) {
+		if (contentValuesArray.length == 0 || mContentResolver == null) {
 			return result;
 		}
 
@@ -2819,7 +2819,7 @@ public class DatabaseManager implements StockListener {
 	public Cursor queryStockRZRQ(StockRZRQ stockRZRQ) {
 		Cursor cursor = null;
 
-		if ((stockRZRQ == null) || (mContentResolver == null)) {
+		if (stockRZRQ == null || mContentResolver == null) {
 			return cursor;
 		}
 
@@ -2837,7 +2837,7 @@ public class DatabaseManager implements StockListener {
 	public void getStockRZRQ(StockRZRQ stockRZRQ) {
 		Cursor cursor = null;
 
-		if ((stockRZRQ == null) || (mContentResolver == null)) {
+		if (stockRZRQ == null || mContentResolver == null) {
 			return;
 		}
 
@@ -2863,7 +2863,7 @@ public class DatabaseManager implements StockListener {
 	public void getStockRZRQ(Stock stock, StockRZRQ stockRZRQ) {
 		Cursor cursor = null;
 
-		if ((stockRZRQ == null) || (mContentResolver == null)) {
+		if (stockRZRQ == null || mContentResolver == null) {
 			return;
 		}
 
@@ -2890,7 +2890,7 @@ public class DatabaseManager implements StockListener {
 	                              ArrayList<StockRZRQ> stockRZRQList, String sortOrder) {
 		Cursor cursor = null;
 
-		if ((stock == null) || (stockRZRQList == null)) {
+		if (stock == null || stockRZRQList == null) {
 			return;
 		}
 
@@ -2917,7 +2917,7 @@ public class DatabaseManager implements StockListener {
 	                             ArrayMap<String, StockRZRQ> stockRZRQMap, String sortOrder) {
 		Cursor cursor = null;
 
-		if ((stock == null) || (stockRZRQMap == null)) {
+		if (stock == null || stockRZRQMap == null) {
 			return;
 		}
 
@@ -2967,7 +2967,7 @@ public class DatabaseManager implements StockListener {
 	                            ContentValues contentValues) {
 		int result = 0;
 
-		if ((stockRZRQ == null) || (mContentResolver == null)) {
+		if (stockRZRQ == null || mContentResolver == null) {
 			return result;
 		}
 
@@ -2987,7 +2987,7 @@ public class DatabaseManager implements StockListener {
 	public int deleteStockRZRQ(StockRZRQ stockRZRQ) {
 		int result = 0;
 
-		if ((stockRZRQ == null) || (mContentResolver == null)) {
+		if (stockRZRQ == null || mContentResolver == null) {
 			return result;
 		}
 
@@ -3059,7 +3059,7 @@ public class DatabaseManager implements StockListener {
 	public Uri insertStockShare(StockShare stockShare) {
 		Uri uri = null;
 
-		if ((stockShare == null) || (mContentResolver == null)) {
+		if (stockShare == null || mContentResolver == null) {
 			return uri;
 		}
 
@@ -3076,7 +3076,7 @@ public class DatabaseManager implements StockListener {
 			return result;
 		}
 
-		if ((contentValuesArray.length == 0) || (mContentResolver == null)) {
+		if (contentValuesArray.length == 0 || mContentResolver == null) {
 			return result;
 		}
 
@@ -3105,7 +3105,7 @@ public class DatabaseManager implements StockListener {
 	public Cursor queryStockShare(StockShare stockShare) {
 		Cursor cursor = null;
 
-		if ((stockShare == null) || (mContentResolver == null)) {
+		if (stockShare == null || mContentResolver == null) {
 			return cursor;
 		}
 
@@ -3123,7 +3123,7 @@ public class DatabaseManager implements StockListener {
 	public void getStockShare(StockShare stockShare) {
 		Cursor cursor = null;
 
-		if ((stockShare == null) || (mContentResolver == null)) {
+		if (stockShare == null || mContentResolver == null) {
 			return;
 		}
 
@@ -3149,7 +3149,7 @@ public class DatabaseManager implements StockListener {
 	public void getStockShare(Stock stock, StockShare stockShare) {
 		Cursor cursor = null;
 
-		if ((stockShare == null) || (mContentResolver == null)) {
+		if (stockShare == null || mContentResolver == null) {
 			return;
 		}
 
@@ -3176,7 +3176,7 @@ public class DatabaseManager implements StockListener {
 	                              ArrayList<StockShare> stockShareList, String sortOrder) {
 		Cursor cursor = null;
 
-		if ((stock == null) || (stockShareList == null)) {
+		if (stock == null || stockShareList == null) {
 			return;
 		}
 
@@ -3227,7 +3227,7 @@ public class DatabaseManager implements StockListener {
 	                            ContentValues contentValues) {
 		int result = 0;
 
-		if ((stockShare == null) || (mContentResolver == null)) {
+		if (stockShare == null || mContentResolver == null) {
 			return result;
 		}
 
@@ -3247,7 +3247,7 @@ public class DatabaseManager implements StockListener {
 	public int deleteStockShare(StockShare stockShare) {
 		int result = 0;
 
-		if ((stockShare == null) || (mContentResolver == null)) {
+		if (stockShare == null || mContentResolver == null) {
 			return result;
 		}
 

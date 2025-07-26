@@ -655,7 +655,7 @@ public class StockData extends DatabaseTable {
 		mChange = 0;
 		mNet = 0;
 
-		if ((mCandle.getHigh() == 0) || (mCandle.getLow() == 0)) {
+		if (mCandle.getHigh() == 0 || mCandle.getLow() == 0) {
 			return;
 		}
 

@@ -888,7 +888,7 @@ public class StockFinancialListActivity extends ListActivity implements
 	}
 
 	void setLeftViewColor(View view, Cursor cursor) {
-		if ((view == null) || (cursor == null)) {
+		if (view == null || cursor == null) {
 			return;
 		}
 
@@ -902,7 +902,7 @@ public class StockFinancialListActivity extends ListActivity implements
 	}
 
 	void setRightViewColor(View view, Cursor cursor) {
-		if ((view == null) || (cursor == null)) {
+		if (view == null || cursor == null) {
 			return;
 		}
 
@@ -923,7 +923,7 @@ public class StockFinancialListActivity extends ListActivity implements
 
 		@Override
 		public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-			if ((view == null) || (cursor == null) || (columnIndex == -1)) {
+			if (view == null || cursor == null || columnIndex == -1) {
 				return false;
 			}
 
@@ -943,7 +943,7 @@ public class StockFinancialListActivity extends ListActivity implements
 
 		@Override
 		public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-			if ((view == null) || (cursor == null) || (columnIndex == -1)) {
+			if (view == null || cursor == null || columnIndex == -1) {
 				return false;
 			}
 

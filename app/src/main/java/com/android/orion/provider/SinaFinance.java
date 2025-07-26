@@ -132,7 +132,7 @@ public class SinaFinance extends StockDataProvider {
 	public String getStockDataHistoryURLString(Stock stock, StockData stockData, int len) {
 		String urlString = "";
 
-		if ((stock == null) || (stockData == null)) {
+		if (stock == null || stockData == null) {
 			return urlString;
 		}
 
@@ -226,7 +226,7 @@ public class SinaFinance extends StockDataProvider {
 			String sortOrder = mDatabaseManager.getStockDataOrder();
 			cursor = mDatabaseManager.queryStockData(selection, null,
 					sortOrder);
-			if ((cursor == null) || (cursor.getCount() == 0) || (cursor.getCount() == 1)) {
+			if (cursor == null || cursor.getCount() == 0 || cursor.getCount() == 1) {
 				return defaultValue;
 			}
 
@@ -484,7 +484,7 @@ public class SinaFinance extends StockDataProvider {
 		String[] codeInfo = null;
 		String[] stockInfo = null;
 //var hq_str_sh600036_i="A,zsyh,4.6100,5.2827,4.1500,31.6900,4255.813,2521984.5601,2062894.4429,2062894.4429,0,CNY,1199.2200,1332.2900,7.3000,1,13.6650,2648.3300,1069.2200,51.939,26.3,0.1,招商银行,X|O|0|0|0,39.71|32.49,20220930|35640666666.67,697.4600|89.7750,|,,1/1,EQA,,4.17,46.678|34.960|34.390,股份制银行Ⅱ,,1,344676000000";
-		if ((stock == null) || TextUtils.isEmpty(response)) {
+		if (stock == null || TextUtils.isEmpty(response)) {
 			Log.d("return, stock = "
 					+ stock + " response = " + response);
 			return;
@@ -613,7 +613,7 @@ public class SinaFinance extends StockDataProvider {
 
 		//var hq_str_s_sh600048="保利发展,17.690,0.140,0.80,645118,115512";
 
-		if ((stock == null) || TextUtils.isEmpty(response)) {
+		if (stock == null || TextUtils.isEmpty(response)) {
 			Log.d("return, stock = "
 					+ stock + " response = " + response);
 			return;
@@ -623,7 +623,7 @@ public class SinaFinance extends StockDataProvider {
 			keyValue = response.trim().split("=");
 
 			if (keyValue == null || keyValue.length != 2) {
-				Log.d("return, (keyValue == null) || (keyValue.length != 2)");
+				Log.d("return, keyValue == null || (keyValue.length != 2)");
 				return;
 			}
 
@@ -635,7 +635,7 @@ public class SinaFinance extends StockDataProvider {
 			codeInfo = keyValue[0].trim().split("_");
 
 			if (codeInfo == null || codeInfo.length != 4) {
-				Log.d("return, (codeInfo == null) || (codeInfo.length != 4) ");
+				Log.d("return, codeInfo == null || (codeInfo.length != 4) ");
 				return;
 			}
 
@@ -998,7 +998,7 @@ public class SinaFinance extends StockDataProvider {
 		String[] codeInfo = null;
 		String[] stockInfo = null;
 
-		if ((stock == null) || (stockData == null)
+		if (stock == null || stockData == null
 				|| TextUtils.isEmpty(response)) {
 			Log.d("return, stock = "
 					+ stock + " stockData = " + stockData + " response = "
@@ -1160,7 +1160,7 @@ public class SinaFinance extends StockDataProvider {
 		String valueString = "";
 		ContentValuesList.clear();
 
-		if ((stock == null) || TextUtils.isEmpty(response)) {
+		if (stock == null || TextUtils.isEmpty(response)) {
 			Log.d("return, stock = "
 					+ stock + " response = " + response);
 			return;
@@ -1372,7 +1372,7 @@ public class SinaFinance extends StockDataProvider {
 		String rDateString = "";
 		ContentValuesList.clear();
 
-		if ((stock == null) || TextUtils.isEmpty(response)) {
+		if (stock == null || TextUtils.isEmpty(response)) {
 			Log.d("return, stock = " + stock
 					+ " response = " + response);
 			return;
@@ -1554,7 +1554,7 @@ public class SinaFinance extends StockDataProvider {
 		String stockShareString = "";
 		ContentValuesList.clear();
 
-		if ((stock == null) || TextUtils.isEmpty(response)) {
+		if (stock == null || TextUtils.isEmpty(response)) {
 			Log.d("return, stock = " + stock
 					+ " response = " + response);
 			return;
@@ -1741,7 +1741,7 @@ public class SinaFinance extends StockDataProvider {
 		String rqRepayString = "";
 		ContentValuesList.clear();
 
-		if ((stock == null) || TextUtils.isEmpty(response)) {
+		if (stock == null || TextUtils.isEmpty(response)) {
 			Log.d("return, stock = " + stock
 					+ " response = " + response);
 			return;

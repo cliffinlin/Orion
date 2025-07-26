@@ -83,7 +83,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 
 		@Override
 		public int compare(StockFinancial arg0, StockFinancial arg1) {
-			if ((arg0 == null) || (arg1 == null)) {
+			if (arg0 == null || arg1 == null) {
 				return 0;
 			}
 
@@ -577,7 +577,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 	}
 
 	void navigateStock(int step) {
-		if ((mStockList == null) || (mStockList.size() == 0)) {
+		if (mStockList == null || mStockList.size() == 0) {
 			return;
 		}
 

@@ -8,9 +8,9 @@ import com.android.orion.utility.Utility;
 
 public class StockGrid extends DatabaseTable {
 
-	public static final String TYPE_BUY = "B";
+	public static final String TYPE_BUY = "BUY";
 	public static final String TYPE_NONE = "";
-	public static final String TYPE_SELL = "S";
+	public static final String TYPE_SELL = "SELL";
 
 	private String mSE;
 	private String mCode;
@@ -284,7 +284,7 @@ public class StockGrid extends DatabaseTable {
 
 	public void setupPrice() {
 		mPrice = 0;
-		if ((mHigh == 0) || (mLow == 0) || (mVolume == 0) || (mGridGap == 0)) {
+		if (mHigh == 0 || mLow == 0 || mVolume == 0 || mGridGap == 0) {
 			return;
 		}
 
@@ -309,6 +309,17 @@ public class StockGrid extends DatabaseTable {
 		StringBuffer stringBuffer = new StringBuffer();
 
 		stringBuffer.append(mName + " ");
+		stringBuffer.append(mType + " ");
+		stringBuffer.append("mPrice=" + mPrice + ", ");
+		stringBuffer.append("mVolume=" + mVolume + ",  ");
+		stringBuffer.append("mValue=" + mValue + ",  ");
+
+		return stringBuffer.toString();
+	}
+
+	public String toNotifyString() {
+		StringBuffer stringBuffer = new StringBuffer();
+
 		stringBuffer.append(mType + " ");
 		stringBuffer.append("mPrice=" + mPrice + ", ");
 		stringBuffer.append("mVolume=" + mVolume + ",  ");

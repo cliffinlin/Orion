@@ -145,7 +145,7 @@ public class TrendAnalyzer {
 		StockData prev = StockData.getLast(vertexList, 1);
 		StockData current = StockData.getLast(vertexList, 0);
 
-		if ((prev == null) || (current == null)) {
+		if (prev == null || current == null) {
 			return;
 		}
 

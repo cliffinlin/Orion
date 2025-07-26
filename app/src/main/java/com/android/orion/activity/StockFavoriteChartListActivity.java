@@ -617,7 +617,7 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 	}
 
 	void navigateStock(int step) {
-		if ((mStockList == null) || (mStockList.size() == 0)) {
+		if (mStockList == null || mStockList.size() == 0) {
 			return;
 		}
 

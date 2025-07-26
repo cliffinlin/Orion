@@ -36,8 +36,8 @@ public class StockAlarmManager {
 
 	public void startAlarm() {
 
-		if ((mAlarmManager == null) || (mPendingIntent == null)
-				|| (mIntervalMillis <= 0)) {
+		if (mAlarmManager == null || mPendingIntent == null
+				|| mIntervalMillis <= 0) {
 			Log.d("return, mAlarmManager = "
 					+ mAlarmManager + " mPendingIntent = " + mPendingIntent
 					+ " mIntervalMillis = " + mIntervalMillis);
@@ -86,7 +86,7 @@ public class StockAlarmManager {
 	public void stopAlarm() {
 		Log.d("cancel");
 
-		if ((mAlarmManager == null) || (mPendingIntent == null)) {
+		if (mAlarmManager == null || mPendingIntent == null) {
 			Log.d("return, mAlarmManager = " + mAlarmManager
 					+ " mPendingIntent = " + mPendingIntent);
 			return;

@@ -60,6 +60,9 @@ public class GridAnalyzer {
 		mStockGridBuy.setupPrice();
 		mStockGridBuy.setupValue();
 		mStock.setGridBuy(mStockGridBuy.getPrice());
+		if (mStock.getPrice() < mStockGridBuy.getPrice()) {
+			StockAnalyzer.getInstance().notifyStockGrid(mStockGridBuy);
+		}
 		if (!mDatabaseManager.isStockGridExist(mStockGridBuy)) {
 			mDatabaseManager.insertStockGrid(mStockGridBuy);
 		} else {
@@ -77,11 +80,15 @@ public class GridAnalyzer {
 		mStockGridSell.setupPrice();
 		mStockGridSell.setupValue();
 		mStock.setGridSell(mStockGridSell.getPrice());
+		if (mStock.getPrice() > mStockGridSell.getPrice()) {
+			StockAnalyzer.getInstance().notifyStockGrid(mStockGridSell);
+		}
 		if (!mDatabaseManager.isStockGridExist(mStockGridSell)) {
 			mDatabaseManager.insertStockGrid(mStockGridSell);
 		} else {
 			mDatabaseManager.updateStockGrid(mStockGridSell, mStockGridSell.getContentValues());
 		}
+
 	}
 
 	private static class Holder {

@@ -737,7 +737,7 @@ public class StockDealListActivity extends ListActivity implements
 
 		@Override
 		public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-			if ((view == null) || (cursor == null) || (columnIndex == -1)) {
+			if (view == null || cursor == null || columnIndex == -1) {
 				return false;
 			}
 
