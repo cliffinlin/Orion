@@ -74,6 +74,10 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 	ArrayList<StockDeal> mStockDealList = new ArrayList<>();
 	ArrayMap<Integer, CombinedChart> mCombinedChartMap = new ArrayMap<>();
 	ChartSyncHelper mChartSyncHelper = new ChartSyncHelper();
+	private final List<Runnable> mSwitchActions = Arrays.asList(
+			this::toggleFirstSwitch
+	);
+	private int mCurrentSwitchActionIndex = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -640,12 +644,6 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 	void toggleFirstSwitch() {
 		Setting.setDisplayCandle(!Setting.getDisplayCandle());
 	}
-
-	private List<Runnable> mSwitchActions = Arrays.asList(
-			this::toggleFirstSwitch
-	);
-
-	private int mCurrentSwitchActionIndex = 0;
 
 	@Override
 	public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {

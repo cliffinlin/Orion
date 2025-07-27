@@ -19,7 +19,6 @@ import com.android.orion.analyzer.StockAnalyzer;
 import com.android.orion.application.MainApplication;
 import com.android.orion.config.Config;
 import com.android.orion.data.Period;
-import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.TDXData;
@@ -43,10 +42,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 import okhttp3.OkHttpClient;
 

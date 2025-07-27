@@ -1,14 +1,13 @@
 package com.android.orion.analyzer;
 
 import android.text.TextUtils;
-import android.util.ArrayMap;
 
-import com.android.orion.data.Period;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockPerceptron;
 import com.android.orion.database.StockTrend;
 import com.android.orion.manager.DatabaseManager;
+import com.android.orion.manager.StockNotificationManager;
 import com.android.orion.provider.StockPerceptronProvider;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
@@ -410,12 +409,12 @@ public class TrendAnalyzer {
 					stockTrend.removeFlag(StockTrend.FLAG_CHANGED);
 					stockTrend.setModified(Utility.getCurrentDateTimeString());
 					mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValues());
-					StockAnalyzer.getInstance().cancelNotifyStockTrend(stockTrend);
+					StockNotificationManager.getInstance().cancel((int) stockTrend.getId());
 				} else {
 					stockTrend.addFlag(StockTrend.FLAG_CHANGED);
 					stockTrend.setModified(Utility.getCurrentDateTimeString());
 					mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValues());
-					StockAnalyzer.getInstance().notifyStockTrend(stockTrend);
+					StockNotificationManager.getInstance().notify(mStock, stockTrend);
 				}
 			} else {
 				stockTrend.setFlag(StockTrend.FLAG_NONE);

@@ -52,6 +52,10 @@ public class StockPerceptronProvider {
 		mHandler = new ServiceHandler(mHandlerThread.getLooper());
 	}
 
+	public static StockPerceptronProvider getInstance() {
+		return StockPerceptronProvider.Holder.INSTANCE;
+	}
+
 	private void initIfNeeded() {
 		if (mPeriodMap == null) {
 			mPeriodMap = new ArrayMap<>();
@@ -74,10 +78,6 @@ public class StockPerceptronProvider {
 				mPeriodMap.put(period, mLevelMap);
 			}
 		}
-	}
-
-	public static StockPerceptronProvider getInstance() {
-		return StockPerceptronProvider.Holder.INSTANCE;
 	}
 
 	public void acquireWakeLock() {

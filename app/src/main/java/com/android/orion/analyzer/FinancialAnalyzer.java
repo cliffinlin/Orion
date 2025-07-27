@@ -1,9 +1,7 @@
 package com.android.orion.analyzer;
 
-import android.content.Context;
 import android.text.TextUtils;
 
-import com.android.orion.application.MainApplication;
 import com.android.orion.data.Period;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
@@ -108,7 +106,7 @@ public class FinancialAnalyzer {
 				DatabaseContract.COLUMN_DATE + " DESC ");
 
 		int j = 0;
-		for (int i = stockDataList.size() - 1; i>= 0; i--) {
+		for (int i = stockDataList.size() - 1; i >= 0; i--) {
 			StockData stockData = stockDataList.get(i);
 			while (j < mStockFinancialList.size()) {
 				StockFinancial stockFinancial = mStockFinancialList.get(j);
@@ -132,7 +130,7 @@ public class FinancialAnalyzer {
 
 		int j = 0;
 		for (StockFinancial stockFinancial : mStockFinancialList) {
-			stockFinancial.setShare(mStockShareList.get(mStockShareList.size()-1).getStockShare());
+			stockFinancial.setShare(mStockShareList.get(mStockShareList.size() - 1).getStockShare());
 			while (j < mStockShareList.size()) {
 				StockShare stockShare = mStockShareList.get(j);
 				if (Utility.getCalendar(stockFinancial.getDate(),

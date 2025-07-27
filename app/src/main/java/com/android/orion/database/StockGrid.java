@@ -2,7 +2,6 @@ package com.android.orion.database;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.text.TextUtils;
 
 import com.android.orion.utility.Utility;
 
@@ -289,15 +288,15 @@ public class StockGrid extends DatabaseTable {
 		}
 
 		switch (mType) {
-		case TYPE_BUY:
-			int n = (int) (100.0 * (mHigh - mLow) / mHigh / mGridGap) + 1;
-			mPrice = Utility.Round2(mHigh * (1.0 - n * mGridGap / 100.0));
-			break;
-		case TYPE_SELL:
-			mPrice = Utility.Round2(mLow * (1.0 + mGridGap / 100.0));
-			break;
-		default:
-			break;
+			case TYPE_BUY:
+				int n = (int) (100.0 * (mHigh - mLow) / mHigh / mGridGap) + 1;
+				mPrice = Utility.Round2(mHigh * (1.0 - n * mGridGap / 100.0));
+				break;
+			case TYPE_SELL:
+				mPrice = Utility.Round2(mLow * (1.0 + mGridGap / 100.0));
+				break;
+			default:
+				break;
 		}
 	}
 

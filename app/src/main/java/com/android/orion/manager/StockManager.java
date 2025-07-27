@@ -1,8 +1,5 @@
 package com.android.orion.manager;
 
-import android.content.Context;
-
-import com.android.orion.application.MainApplication;
 import com.android.orion.database.Stock;
 import com.android.orion.interfaces.StockListener;
 

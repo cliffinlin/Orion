@@ -1,14 +1,12 @@
 package com.android.orion.manager;
 
 
-import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 
 import androidx.annotation.NonNull;
 
-import com.android.orion.application.MainApplication;
 import com.android.orion.interfaces.NetworkChangedListener;
 
 import java.util.ArrayList;

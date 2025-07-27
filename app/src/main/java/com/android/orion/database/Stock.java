@@ -1733,7 +1733,7 @@ public class Stock extends DatabaseTable {
 	}
 
 	public void setupRZRate(ArrayList<StockRZRQ> stockRZRQList) {
-		if (mRZBuy == 0 || mValue  == 0 || stockRZRQList == null) {
+		if (mRZBuy == 0 || mValue == 0 || stockRZRQList == null) {
 			mRZBuyRate = 0;
 			mRZTrendValue = 0;
 			mRZTrendRate = 0;

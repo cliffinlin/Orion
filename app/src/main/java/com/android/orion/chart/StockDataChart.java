@@ -376,9 +376,9 @@ public class StockDataChart {
 		}
 
 		mDescription.setLength(0);
+		mDescription.append(mPeriod).append(" ");
 		mDescription.append(stock.getName()).append(" ");
 		mDescription.append(getPriceNetLabel(stock)).append("  ");
-		mDescription.append(mPeriod).append(" ");
 		StockTrend stockTrend = getStockTrend(mAdaptiveLevel);
 		if (stockTrend != null) {
 			mDescription.append(stockTrend.toChartString());
@@ -527,12 +527,12 @@ public class StockDataChart {
 
 	public void updateExtendEntry() {
 		if (mTrendEntryList[StockTrend.LEVEL_DRAW] != null && mTrendEntryList[StockTrend.LEVEL_DRAW].size() > 0) {
-			Entry firstEntry = new Entry((float) mCandleEntryList.get(0).getOpen(), 0);
+			Entry firstEntry = new Entry(mCandleEntryList.get(0).getOpen(), 0);
 			mExtendFirstEntryList.add(firstEntry);
 			mExtendFirstEntryList.add(mTrendEntryList[StockTrend.LEVEL_DRAW].get(0));
 
 			mExtendLastEntryList.add(mTrendEntryList[StockTrend.LEVEL_DRAW].get(mTrendEntryList[StockTrend.LEVEL_DRAW].size() - 1));
-			Entry lastEntry = new Entry((float) mStock.getPrice(), mXValues.size()-1);
+			Entry lastEntry = new Entry((float) mStock.getPrice(), mXValues.size() - 1);
 			mExtendLastEntryList.add(lastEntry);
 		}
 	}

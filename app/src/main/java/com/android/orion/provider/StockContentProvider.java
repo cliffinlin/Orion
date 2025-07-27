@@ -38,19 +38,14 @@ public class StockContentProvider extends ContentProvider {
 
 	public static final int STOCK_SHARE = 600;
 	public static final int STOCK_SHARE_ID = 601;
-
 	private static final int STOCK_RZRQ = 700;
 	private static final int STOCK_RZRQ_ID = 701;
-
 	public static final int STOCK_TREND = 800;
 	public static final int STOCK_TREND_ID = 801;
-	
 	public static final int STOCK_PERCEPTRON = 900;
 	public static final int STOCK_PERCEPTRON_ID = 901;
-
 	public static final int TDX_DATA = 1000;
 	public static final int TDX_DATA_ID = 1001;
-
 	public static final int STOCK_GRID = 1100;
 	public static final int STOCK_GRID_ID = 1101;
 

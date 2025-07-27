@@ -20,6 +20,7 @@ import com.android.orion.database.StockFinancial;
 import com.android.orion.database.StockRZRQ;
 import com.android.orion.database.StockShare;
 import com.android.orion.interfaces.IStockDataProvider;
+import com.android.orion.manager.StockNotificationManager;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Market;
@@ -1729,7 +1730,7 @@ public class SinaFinance extends StockDataProvider {
 	}
 
 	public void handleResponseStockRZRQ(Stock stock, StockRZRQ stockRZRQ,
-	                                     String response) {
+	                                    String response) {
 		StopWatch.start();
 		boolean bulkInsert = false;
 		String dateString = "";
@@ -1908,18 +1909,18 @@ public class SinaFinance extends StockDataProvider {
 			return result;
 		}
 
-		mContentTitle.setLength(0);
 		String accessDeniedString;
 		for (int i = 0; i < mAccessDeniedStringArray.size(); i++) {
 			accessDeniedString = mAccessDeniedStringArray.get(i);
 
 			if (string.contains(accessDeniedString)) {
-				mContentTitle.append(mContext.getResources().getString(R.string.action_download));
-				mContentTitle.append(" ");
-				mContentTitle.append(accessDeniedString);
+				StringBuilder contentTitle = new StringBuilder();
+				contentTitle.append(mContext.getResources().getString(R.string.action_download));
+				contentTitle.append(" ");
+				contentTitle.append(accessDeniedString);
 
-				mStockAnalyzer.notify(Config.SERVICE_NOTIFICATION_ID, Config.MESSAGE_CHANNEL_ID, Config.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
-						mContentTitle.toString(), "");
+				StockNotificationManager.getInstance().notify(StockNotificationManager.SERVICE_NOTIFICATION_ID, Config.MESSAGE_CHANNEL_ID, Config.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
+						contentTitle.toString(), "");
 				onDestroy();
 
 				result = true;

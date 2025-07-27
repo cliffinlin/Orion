@@ -189,6 +189,7 @@ public class StockRZRQ extends DatabaseTable {
 		setRZValue(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_RZ_VALUE)));
 	}
+
 	public double getRZBuy() {
 		return mRZBuy;
 	}
@@ -205,6 +206,7 @@ public class StockRZRQ extends DatabaseTable {
 		setRZBuy(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_RZ_BUY)));
 	}
+
 	public double getRZRepay() {
 		return mRZRepay;
 	}

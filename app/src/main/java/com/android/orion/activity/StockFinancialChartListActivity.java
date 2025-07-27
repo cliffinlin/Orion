@@ -103,6 +103,10 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 			}
 		}
 	};
+	private final List<Runnable> mSwitchActions = Arrays.asList(
+			this::toggleFirstSwitch
+	);
+	private int mCurrentSwitchActionIndex = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -602,12 +606,6 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 
 	void toggleSecondSwitch() {
 	}
-
-	private List<Runnable> mSwitchActions = Arrays.asList(
-			this::toggleFirstSwitch
-	);
-
-	private int mCurrentSwitchActionIndex = 0;
 
 	@Override
 	public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {

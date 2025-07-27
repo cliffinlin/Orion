@@ -4,7 +4,6 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Binder;
@@ -24,6 +23,7 @@ import com.android.orion.config.Config;
 import com.android.orion.interfaces.NetworkChangedListener;
 import com.android.orion.manager.ConnectionManager;
 import com.android.orion.manager.StockAlarmManager;
+import com.android.orion.manager.StockNotificationManager;
 import com.android.orion.provider.StockDataProvider;
 import com.android.orion.receiver.DownloadBroadcastReceiver;
 import com.android.orion.receiver.ReceiverConnection;
@@ -33,7 +33,6 @@ public class StockService extends Service implements NetworkChangedListener {
 
 	boolean mRedelivery = true;
 	IntentFilter mIntentFilter;
-	NotificationManager mNotificationManager;
 	DownloadBroadcastReceiver mDownloadBroadcastReceiver;
 	HandlerThread mHandlerThread;
 	IBinder mServiceBinder;
@@ -49,7 +48,6 @@ public class StockService extends Service implements NetworkChangedListener {
 
 		mInstance = this;
 		mServiceBinder = new StockServiceBinder();
-		mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		mHandlerThread = new HandlerThread(StockService.class.getSimpleName(),
 				Process.THREAD_PRIORITY_LOWEST);
 		mHandlerThread.start();
@@ -58,9 +56,7 @@ public class StockService extends Service implements NetworkChangedListener {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 			NotificationChannel channel = new NotificationChannel(Config.SERVICE_CHANNEL_ID,
 					Config.SERVICE_CHANNEL_NAME, NotificationManager.IMPORTANCE_LOW);
-			if (mNotificationManager != null) {
-				mNotificationManager.createNotificationChannel(channel);
-			}
+			StockNotificationManager.getInstance().createNotificationChannel(channel);
 			Notification notification = new NotificationCompat.Builder(this, Config.SERVICE_CHANNEL_ID)
 					.setSmallIcon(R.drawable.ic_dialog_email)
 					.setAutoCancel(true)
@@ -68,7 +64,7 @@ public class StockService extends Service implements NetworkChangedListener {
 					.setOngoing(true)
 					.setPriority(NotificationCompat.PRIORITY_LOW)
 					.build();
-			startForeground(Config.SERVICE_NOTIFICATION_ID, notification);
+			startForeground(StockNotificationManager.SERVICE_NOTIFICATION_ID, notification);
 		}
 
 		mDownloadBroadcastReceiver = new DownloadBroadcastReceiver();
@@ -93,9 +89,7 @@ public class StockService extends Service implements NetworkChangedListener {
 		super.onDestroy();
 
 		try {
-			if (mNotificationManager != null) {
-				mNotificationManager.cancel(Config.SERVICE_NOTIFICATION_ID);
-			}
+			StockNotificationManager.getInstance().cancel(StockNotificationManager.SERVICE_NOTIFICATION_ID);
 
 			unregisterReceiver(mDownloadBroadcastReceiver);
 			ReceiverConnection.getInstance().unregisterReceiver(this);

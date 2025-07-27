@@ -540,9 +540,9 @@ public class StockTrend extends DatabaseTable {
 
 	public String toChartString() {
 		return Constant.MARK_LEVEL + mLevel + " "
-				+ mAction + " "
 				+ mType + " "
-				+ (int) mNet + "/" + (int) mNextNet + " " + Constant.MARK_PREDICT + " " + mPredict;
+				+ (int) mNet + "/" + (int) mNextNet + " "
+				+ Constant.MARK_PREDICT + " " + mPredict;
 	}
 
 	public String toNotifyString() {

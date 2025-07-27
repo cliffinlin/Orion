@@ -658,7 +658,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 
 		if (Utility.hasFlag(flag, Stock.FLAG_GRID)) {
 			view.setBackgroundColor(Color.rgb(240, 240, 240));
-			TextView textView = (TextView)view;
+			TextView textView = (TextView) view;
 			if (price < gridBuy) {
 				textView.setTextColor(Color.GREEN);
 			} else if (price > gridSell) {

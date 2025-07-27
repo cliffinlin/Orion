@@ -17,16 +17,13 @@ public class StockPerceptron extends DatabaseTable {
 	public static final int DESCRIPTION_ROUND_N = 3;
 	Logger Log = Logger.getLogger();
 	LinearRegression mLinearRegression = new LinearRegression();
-
+	ArrayMap<Double, Double> mNetMap = new ArrayMap<>();
 	private String mPeriod;
 	private int mLevel;
 	private String mType;
-
 	private double mDelta;
 	private int mTimes;
 	private double mLastError;
-
-	ArrayMap<Double, Double> mNetMap = new ArrayMap<>();
 
 	public StockPerceptron() {
 		init();

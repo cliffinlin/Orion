@@ -15,7 +15,7 @@ object StopWatch {
     @JvmStatic
     fun stop() {
         mStop = System.currentTimeMillis()
-        mInterval = (mStop - mStart) / (1.0 * TimeUnit.SECONDS.toMillis(1));
+        mInterval = (mStop - mStart) / (1.0 * TimeUnit.SECONDS.toMillis(1))
     }
 
     @JvmStatic

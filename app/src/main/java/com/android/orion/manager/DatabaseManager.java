@@ -2801,7 +2801,7 @@ public class DatabaseManager implements StockListener {
 	}
 
 	public Cursor queryStockRZRQ(String selection, String[] selectionArgs,
-	                              String sortOrder) {
+	                             String sortOrder) {
 		Cursor cursor = null;
 
 		if (mContentResolver == null) {
@@ -2887,7 +2887,7 @@ public class DatabaseManager implements StockListener {
 	}
 
 	public void getStockRZRQList(Stock stock,
-	                              ArrayList<StockRZRQ> stockRZRQList, String sortOrder) {
+	                             ArrayList<StockRZRQ> stockRZRQList, String sortOrder) {
 		Cursor cursor = null;
 
 		if (stock == null || stockRZRQList == null) {
@@ -2914,7 +2914,7 @@ public class DatabaseManager implements StockListener {
 	}
 
 	public void getStockRZRQMap(Stock stock,
-	                             ArrayMap<String, StockRZRQ> stockRZRQMap, String sortOrder) {
+	                            ArrayMap<String, StockRZRQ> stockRZRQMap, String sortOrder) {
 		Cursor cursor = null;
 
 		if (stock == null || stockRZRQMap == null) {
@@ -2964,7 +2964,7 @@ public class DatabaseManager implements StockListener {
 	}
 
 	public int updateStockRZRQ(StockRZRQ stockRZRQ,
-	                            ContentValues contentValues) {
+	                           ContentValues contentValues) {
 		int result = 0;
 
 		if (stockRZRQ == null || mContentResolver == null) {
