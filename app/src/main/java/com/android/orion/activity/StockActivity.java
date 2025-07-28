@@ -155,7 +155,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mEditTextStockHold.setText(String.valueOf(mStock.getHold()));
 		mEditTextStockYield.setText(String.valueOf(mStock.getYield()));
 		mEditTextGridGap.setText(String.valueOf(mStock.getGridGap()));
-		mEditTextGridGap.setEnabled(Utility.hasFlag(mStock.getFlag(), Stock.FLAG_GRID));
+		mEditTextGridGap.setEnabled(mStock.hasFlag(Stock.FLAG_GRID));
 	}
 
 	@Override
@@ -195,7 +195,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 				} else {
 					mStock.removeFlag(Stock.FLAG_GRID);
 				}
-				mEditTextGridGap.setEnabled(Utility.hasFlag(mStock.getFlag(), Stock.FLAG_GRID));
+				mEditTextGridGap.setEnabled(mStock.hasFlag(Stock.FLAG_GRID));
 				break;
 
 			case R.id.button_ok:

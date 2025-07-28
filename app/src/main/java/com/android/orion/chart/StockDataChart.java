@@ -419,7 +419,7 @@ public class StockDataChart {
 
 		LimitLine limitLine;
 		int color = Color.WHITE;
-		if (Utility.hasFlag(stock.getFlag(), Stock.FLAG_GRID)) {
+		if (stock.hasFlag(Stock.FLAG_GRID)) {
 			if (stock.getPrice() > stock.getGridSell()) {
 				color = Color.RED;
 			} else if (stock.getPrice() < stock.getGridBuy()) {

@@ -312,6 +312,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_SE, mSE);
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
+		contentValues.put(DatabaseContract.COLUMN_GRID_GAP, mGridGap);
 		return contentValues;
 	}
 

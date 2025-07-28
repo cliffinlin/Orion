@@ -125,7 +125,7 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 
 		mSortOrder = intent.getStringExtra(Constant.EXTRA_STOCK_LIST_SORT_ORDER);
 		mKeyDisplayDeal = intent.getBooleanExtra(Constant.EXTRA_STOCK_DEAL, false);
-		mKeyDisplayDeal |= Utility.hasFlag(mStock.getFlag(), Stock.FLAG_GRID);
+		mKeyDisplayDeal |= mStock.hasFlag(Stock.FLAG_GRID);
 	}
 
 	@Override

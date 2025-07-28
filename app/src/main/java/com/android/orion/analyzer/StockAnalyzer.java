@@ -203,9 +203,17 @@ public class StockAnalyzer {
 		StockData stockData = StockData.getLast(mStock.getVertexList(period, mStock.getLevel(period)), 1);
 		if (stockData != null) {
 			if (stockData.vertexOf(StockTrend.VERTEX_BOTTOM)) {
-				builder.append(Constant.MARK_ADD);
+				if (mStock.getPrice() < stockData.getCandle().getLow()) {
+					builder.append(Constant.MARK_MINUS);
+				} else {
+					builder.append(Constant.MARK_ADD);
+				}
 			} else if (stockData.vertexOf(StockTrend.VERTEX_TOP)) {
-				builder.append(Constant.MARK_MINUS);
+				if (mStock.getPrice() > stockData.getCandle().getHigh()) {
+					builder.append(Constant.MARK_ADD);
+				} else {
+					builder.append(Constant.MARK_MINUS);
+				}
 			}
 		}
 		return builder.toString();

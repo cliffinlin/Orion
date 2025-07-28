@@ -86,13 +86,13 @@ public class StockTrend extends DatabaseTable {
 	private String mCode;
 	private String mName;
 	private String mPeriod;
-	private String mAction;
 	private String mDate;
 	private String mTime;
 
 	private int mLevel;
 	private String mType;
 	private int mFlag;
+	private int mDirection;
 
 	private double mTurn;
 	private double mPrevNet;
@@ -131,13 +131,13 @@ public class StockTrend extends DatabaseTable {
 		mCode = "";
 		mName = "";
 		mPeriod = "";
-		mAction = "";
 		mDate = "";
 		mTime = "";
 
 		mLevel = LEVEL_NONE;
 		mType = TYPE_NONE;
 		mFlag = FLAG_NONE;
+		mDirection = DIRECTION_UP;
 
 		mTurn = 0;
 		mPrevNet = 0;
@@ -154,13 +154,13 @@ public class StockTrend extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
 		contentValues.put(DatabaseContract.COLUMN_PERIOD, mPeriod);
-		contentValues.put(DatabaseContract.COLUMN_ACTION, mAction);
 		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);
 		contentValues.put(DatabaseContract.COLUMN_TIME, mTime);
 
 		contentValues.put(DatabaseContract.COLUMN_LEVEL, mLevel);
 		contentValues.put(DatabaseContract.COLUMN_TYPE, mType);
 		contentValues.put(DatabaseContract.COLUMN_FLAG, mFlag);
+		contentValues.put(DatabaseContract.COLUMN_DIRECTION, mDirection);
 
 		contentValues.put(DatabaseContract.COLUMN_TURN, mTurn);
 		contentValues.put(DatabaseContract.COLUMN_PREV_NET, mPrevNet);
@@ -168,13 +168,6 @@ public class StockTrend extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_NEXT_NET, mNextNet);
 		contentValues.put(DatabaseContract.COLUMN_PREDICT, mPredict);
 
-		return contentValues;
-	}
-
-	public ContentValues getContentValuesFlag() {
-		ContentValues contentValues = super.getContentValues();
-
-		contentValues.put(DatabaseContract.COLUMN_FLAG, mFlag);
 		return contentValues;
 	}
 
@@ -191,13 +184,13 @@ public class StockTrend extends DatabaseTable {
 		setCode(stockTrend.mCode);
 		setName(stockTrend.mName);
 		setPeriod(stockTrend.mPeriod);
-		setAction(stockTrend.mAction);
 		setDate(stockTrend.mDate);
 		setTime(stockTrend.mTime);
 
 		setLevel(stockTrend.mLevel);
 		setType(stockTrend.mType);
 		setFlag(stockTrend.mFlag);
+		setDirection(stockTrend.mDirection);
 
 		setTurn(stockTrend.mTurn);
 		setPrevNet(stockTrend.mPrevNet);
@@ -220,13 +213,13 @@ public class StockTrend extends DatabaseTable {
 		setCode(cursor);
 		setName(cursor);
 		setPeriod(cursor);
-		setAction(cursor);
 		setDate(cursor);
 		setTime(cursor);
 
 		setLevel(cursor);
 		setType(cursor);
 		setFlag(cursor);
+		setDirection(cursor);
 
 		setTurn(cursor);
 		setPrevNet(cursor);
@@ -301,23 +294,6 @@ public class StockTrend extends DatabaseTable {
 
 		setPeriod(cursor.getString(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_PERIOD)));
-	}
-
-	public String getAction() {
-		return mAction;
-	}
-
-	public void setAction(String action) {
-		mAction = action;
-	}
-
-	void setAction(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setAction(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_ACTION)));
 	}
 
 	public String getDate() {
@@ -419,6 +395,23 @@ public class StockTrend extends DatabaseTable {
 
 		setFlag(cursor.getInt(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_FLAG)));
+	}
+
+	public int getDirection() {
+		return mDirection;
+	}
+
+	public void setDirection(int direction) {
+		mDirection = direction;
+	}
+
+	void setDirection(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setDirection(cursor.getInt(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_DIRECTION)));
 	}
 
 	public double getTurn() {
@@ -525,12 +518,12 @@ public class StockTrend extends DatabaseTable {
 				+ mCode + Constant.TAB
 				+ mName + Constant.TAB
 				+ mPeriod + Constant.TAB
-				+ mAction + Constant.TAB
 				+ mDate + Constant.TAB
 				+ mTime + Constant.TAB
 				+ mLevel + Constant.TAB
 				+ mType + Constant.TAB
 				+ mFlag + Constant.TAB
+				+ mDirection + Constant.TAB
 				+ mTurn + Constant.TAB
 				+ mPrevNet + Constant.TAB
 				+ mNet + Constant.TAB

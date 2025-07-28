@@ -176,30 +176,26 @@ public class TrendAnalyzer {
 		stockTrend.setCode(mStock.getCode());
 		stockTrend.setName(mStock.getName());
 		stockTrend.setPeriod(mPeriod);
-		stockTrend.setLevel(level - 1);
-		stockTrend.setType(type);
-
-		StockPerceptron stockPerceptron = mStockPerceptronProvider.getStockPerceptron(stockTrend.getPeriod(), stockTrend.getLevel(), stockTrend.getType());
-
 		stockTrend.setDate(current.getDate());
 		stockTrend.setTime(current.getTime());
 
-		String action = "";
+		stockTrend.setLevel(level - 1);
+		stockTrend.setType(type);
+		stockTrend.setDirection(current.getDirection());
+
 		double turn = 0;
-		if (next.getDirection() == StockTrend.DIRECTION_UP) {
-			action = Constant.MARK_ADD;
-			turn = next.getCandle().getLow();
-		} else if (next.getDirection() == StockTrend.DIRECTION_DOWN) {
-			action = Constant.MARK_MINUS;
-			turn = next.getCandle().getHigh();
+		if (current.getDirection() == StockTrend.DIRECTION_UP) {
+			turn = current.getCandle().getHigh();
+		} else if (current.getDirection() == StockTrend.DIRECTION_DOWN) {
+			turn = current.getCandle().getLow();
 		}
-		stockTrend.setAction(action);
 		stockTrend.setTurn(turn);
 
 		stockTrend.setPrevNet(prev.getNet());
 		stockTrend.setNet(current.getNet());
 		stockTrend.setNextNet(next.getNet());
 
+		StockPerceptron stockPerceptron = mStockPerceptronProvider.getStockPerceptron(stockTrend.getPeriod(), stockTrend.getLevel(), stockTrend.getType());
 		if (stockPerceptron != null) {
 			stockTrend.setPredict(stockPerceptron.predict(stockTrend.getNet()));
 		}

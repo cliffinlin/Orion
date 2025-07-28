@@ -86,14 +86,16 @@ public class StockNotificationManager {
 		mContentText.setLength(0);
 
 		String gridNotifyString = "";
-		mGridAnalyzer.analyze(stock);
-		if (stockTrend.getNet() > 0) {
-			if (mGridAnalyzer.getSellProfit() > 0 || stock.getPrice() > mGridAnalyzer.getSellPrice()) {
-				gridNotifyString = mGridAnalyzer.getSellNotifyString();
-			}
-		} else {
-			if (stock.getPrice() < mGridAnalyzer.getBuyPrice()) {
-				gridNotifyString = mGridAnalyzer.getBuyNotifyString();
+		if (stock.hasFlag(Stock.FLAG_GRID)) {
+			mGridAnalyzer.analyze(stock);
+			if (stockTrend.getNet() > 0) {
+				if (mGridAnalyzer.getSellProfit() > 0 || stock.getPrice() > mGridAnalyzer.getSellPrice()) {
+					gridNotifyString = mGridAnalyzer.getSellNotifyString();
+				}
+			} else {
+				if (stock.getPrice() < mGridAnalyzer.getBuyPrice()) {
+					gridNotifyString = mGridAnalyzer.getBuyNotifyString();
+				}
 			}
 		}
 
