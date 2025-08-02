@@ -6,7 +6,7 @@ import android.provider.BaseColumns;
 
 import com.android.orion.data.Period;
 
-public final class DatabaseContract {
+public class DatabaseContract {
 	public static final String AUTHORITY = "com.android.orion";
 	public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY);
 
@@ -138,15 +138,14 @@ public final class DatabaseContract {
 	public static final String COLUMN_R_DATE = "r_date";
 	public static final String COLUMN_TIME_TO_MARKET = "time_to_market";
 	//http://vip.stock.finance.sina.com.cn/q/go.php/vInvestConsult/kind/rzrq/index.phtml?symbol=600900
+
 	public static final String COLUMN_RZ_VALUE = "rz_value";
 	public static final String COLUMN_RZ_BUY = "rz_buy";
 	public static final String COLUMN_RZ_REPAY = "rz_repay";
 	public static final String COLUMN_RQ_VALUE = "rq_value";
 	public static final String COLUMN_RQ_SELL = "rq_sell";
 	public static final String COLUMN_RQ_REPAY = "rq_repay";
-
 	public static final String COLUMN_RZ_BUY_RATE = "rz_buy_rate";
-
 	public static final String COLUMN_RZ_TREND_VALUE = "rz_trend_value";
 	public static final String COLUMN_RZ_TREND_RATE = "rz_trend_rate";
 	public static final String COLUMN_RZ_TREND_DAYS = "rz_trend_days";
@@ -162,6 +161,17 @@ public final class DatabaseContract {
 	public static final String COMMA_SEP = ",";
 	public static final String DROP_TABLE_IF_EXISTS = "DROP TABLE IF EXISTS ";
 
+	public static final String ORDER_BUY_ASC = COLUMN_BUY + ORDER_ASC;
+	public static final String ORDER_BUY_DESC = COLUMN_BUY + ORDER_DESC;
+	public static final String ORDER_DATE_ASC = COLUMN_DATE + ORDER_ASC;
+	public static final String ORDER_DATE_DESC = COLUMN_DATE + ORDER_DESC;
+	public static final String ORDER_DATE_TIME_ASC = COLUMN_DATE + ORDER_ASC + "," + COLUMN_TIME + ORDER_ASC;
+	public static final String ORDER_DATE_TIME_DESC = COLUMN_DATE + ORDER_DESC + "," + COLUMN_TIME + ORDER_DESC;
+	public static final String ORDER_PERIOD_ASC = COLUMN_PERIOD + ORDER_ASC;
+	public static final String ORDER_PERIOD_DESC = COLUMN_PERIOD + ORDER_DESC;
+	public static final String ORDER_PERIOD_LEVEL_ASC = COLUMN_PERIOD + ORDER_ASC + "," + COLUMN_LEVEL + ORDER_ASC;
+	public static final String ORDER_PERIOD_LEVEL_DESC = COLUMN_PERIOD + ORDER_DESC + "," + COLUMN_LEVEL + ORDER_DESC;
+
 	// To prevent someone from accidentally instantiating the contract class,
 	// give it an empty constructor.
 	private DatabaseContract() {
@@ -176,7 +186,6 @@ public final class DatabaseContract {
 				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
 		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
 				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
-		public static final String SORT_ORDER_DEFAULT = COLUMN_NET + " ASC";
 		public static final String[] PROJECTION_ALL = {_ID,
 				COLUMN_CLASSES, COLUMN_SE, COLUMN_CODE, COLUMN_NAME, COLUMN_PINYIN,
 				COLUMN_PRICE, COLUMN_CHANGE, COLUMN_NET, COLUMN_VOLUME, COLUMN_VALUE,
@@ -297,9 +306,6 @@ public final class DatabaseContract {
 				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
 		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
 				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
-		public static final String SORT_ORDER_DEFAULT = COLUMN_CODE
-				+ " ASC";
-
 		public static final String[] PROJECTION_ALL = {_ID,
 				COLUMN_SE, COLUMN_CODE, COLUMN_NAME,
 				COLUMN_PERIOD, COLUMN_DATE, COLUMN_TIME, COLUMN_TEXT,
@@ -352,9 +358,6 @@ public final class DatabaseContract {
 				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
 		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
 				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
-		public static final String SORT_ORDER_DEFAULT = COLUMN_CODE
-				+ " ASC";
-
 		public static final String[] PROJECTION_ALL = {_ID,
 				COLUMN_SE, COLUMN_CODE, COLUMN_NAME,
 				COLUMN_PERIOD, COLUMN_DATE, COLUMN_TIME,
@@ -395,8 +398,6 @@ public final class DatabaseContract {
 				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
 		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
 				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
-		public static final String SORT_ORDER_DEFAULT = COLUMN_PERIOD + " ASC";
-
 		public static final String[] PROJECTION_ALL = {_ID,
 				COLUMN_PERIOD, COLUMN_LEVEL, COLUMN_TYPE,
 				COLUMN_WEIGHT, COLUMN_BIAS, COLUMN_ERROR, COLUMN_DELTA, COLUMN_TIMES,
@@ -433,8 +434,6 @@ public final class DatabaseContract {
 				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
 		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
 				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
-		public static final String SORT_ORDER_DEFAULT = COLUMN_CODE + " ASC";
-
 		public static final String[] PROJECTION_ALL = {_ID,
 				COLUMN_SE, COLUMN_CODE, COLUMN_NAME,
 				COLUMN_ACCOUNT, COLUMN_PRICE, COLUMN_NET,
@@ -474,8 +473,6 @@ public final class DatabaseContract {
 				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
 		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
 				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
-		public static final String SORT_ORDER_DEFAULT = COLUMN_CODE + " ASC";
-
 		public static final String[] PROJECTION_ALL = {_ID,
 				COLUMN_SE, COLUMN_CODE, COLUMN_NAME, COLUMN_TYPE,
 				COLUMN_HIGH, COLUMN_LOW, COLUMN_GRID_GAP,
@@ -510,8 +507,6 @@ public final class DatabaseContract {
 				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
 		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
 				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
-		public static final String SORT_ORDER_DEFAULT = COLUMN_CODE + " ASC";
-
 		public static final String[] PROJECTION_ALL = {_ID,
 				COLUMN_SE, COLUMN_CODE, COLUMN_NAME,
 				COLUMN_DATE, COLUMN_PRICE, COLUMN_BOOK_VALUE_PER_SHARE,
@@ -560,8 +555,6 @@ public final class DatabaseContract {
 				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
 		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
 				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
-		public static final String SORT_ORDER_DEFAULT = COLUMN_CODE + " ASC";
-
 		public static final String[] PROJECTION_ALL = {_ID,
 				COLUMN_SE, COLUMN_CODE, COLUMN_NAME,
 				COLUMN_DATE, COLUMN_DIVIDEND, COLUMN_R_DATE, COLUMN_CREATED,
@@ -590,8 +583,6 @@ public final class DatabaseContract {
 				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
 		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
 				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
-		public static final String SORT_ORDER_DEFAULT = COLUMN_CODE + " ASC";
-
 		public static final String[] PROJECTION_ALL = {_ID,
 				COLUMN_SE, COLUMN_CODE, COLUMN_NAME,
 				COLUMN_DATE, COLUMN_SHARE, COLUMN_CREATED,
@@ -619,8 +610,6 @@ public final class DatabaseContract {
 				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
 		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
 				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
-		public static final String SORT_ORDER_DEFAULT = COLUMN_CODE + " ASC";
-
 		public static final String[] PROJECTION_ALL = {_ID,
 				COLUMN_SE, COLUMN_CODE, COLUMN_NAME,
 				COLUMN_DATE, COLUMN_RZ_VALUE, COLUMN_RZ_BUY, COLUMN_RZ_REPAY, COLUMN_RQ_VALUE, COLUMN_RQ_SELL, COLUMN_RQ_REPAY,
@@ -654,9 +643,6 @@ public final class DatabaseContract {
 				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
 		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
 				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
-		public static final String SORT_ORDER_DEFAULT = COLUMN_CODE
-				+ " ASC";
-
 		public static final String[] PROJECTION_ALL = {_ID,
 				COLUMN_SE, COLUMN_CODE, COLUMN_NAME, COLUMN_PERIOD, COLUMN_CONTENT,
 				COLUMN_CREATED, COLUMN_MODIFIED};

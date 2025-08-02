@@ -451,13 +451,7 @@ public class StorageActivity extends DatabaseActivity {
 			}
 
 			try {
-				selection = DatabaseContract.COLUMN_SE + " = " + "'"
-						+ stock.getSE() + "'" + " AND "
-						+ DatabaseContract.COLUMN_CODE + " = " + "'"
-						+ stock.getCode() + "'";
-
-				cursor = mStockDatabaseManager.queryStockDeal(selection, null,
-						null);
+				cursor = mStockDatabaseManager.queryStockDeal(mStockDatabaseManager.getStockSelection(stock.getSE(), stock.getCode()), null,null);
 				if ((cursor != null) && (cursor.getCount() > 0)) {
 					while (cursor.moveToNext()) {
 						stockDeal.set(cursor);

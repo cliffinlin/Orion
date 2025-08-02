@@ -169,8 +169,7 @@ public class StockAnalyzer {
 			return;
 		}
 
-		String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
-		mStockDatabaseManager.getStockRZRQMap(mStock, mStockRZRQMap, sortOrder);
+		mStockDatabaseManager.getStockRZRQMap(mStock, mStockRZRQMap, mStockDatabaseManager.getDateSelection(DatabaseContract.ORDER_DESC));
 		StockRZRQ prevStockRZRQ = null;
 		for (StockData stockData : mStockDataList) {
 			StockRZRQ stockRZRQ = mStockRZRQMap.get(stockData.getDate());

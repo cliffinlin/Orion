@@ -307,7 +307,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 
 		selection = mStockDatabaseManager.getStockSelection(mStock.getSE(), mStock.getCode());
 
-		sortOrder = mStockDatabaseManager.getDateOrder(DatabaseContract.ORDER_ASC);
+		sortOrder = DatabaseContract.ORDER_DATE_ASC;
 
 		loader = new CursorLoader(this,
 				DatabaseContract.StockFinancial.CONTENT_URI,
@@ -386,7 +386,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 			return;
 		}
 
-		String sortOrder = DatabaseContract.COLUMN_DATE + " ASC ";
+		String sortOrder = mStockDatabaseManager.getDateSelection(DatabaseContract.ORDER_ASC);
 		mStockDatabaseManager.getStockBonusList(mStock, mStockBonusList,
 				sortOrder);
 

@@ -125,7 +125,7 @@ public class DatabaseManager {
 	}
 
 	public String getHoldSelection() {
-		return DatabaseContract.COLUMN_HOLD + " > " +  + 0;
+		return DatabaseContract.COLUMN_HOLD + " > " +  0;
 	}
 
 	public String getIDSelection(long id) {
@@ -188,27 +188,5 @@ public class DatabaseManager {
 			selection += " AND " + getTimeSelection(time);
 		}
 		return selection;
-	}
-
-	public String getBuyOrder(String order) {
-		return DatabaseContract.COLUMN_BUY + order;
-	}
-
-	public String getDateOrder(String order) {
-		return DatabaseContract.COLUMN_DATE + order;
-	}
-
-	public String getDateTimeOrder(String order) {
-		return DatabaseContract.COLUMN_DATE + order + ","
-				+ DatabaseContract.COLUMN_TIME + order;
-	}
-
-	public String getPeriodOrder(String order) {
-		return DatabaseContract.COLUMN_PERIOD + order;
-	}
-
-	public String getPeriodLevelOrder(String order) {
-		return DatabaseContract.COLUMN_PERIOD + order + ","
-				+ DatabaseContract.COLUMN_LEVEL + order;
 	}
 }

@@ -26,7 +26,7 @@ import com.android.orion.utility.Utility;
 
 import java.util.ArrayList;
 
-public class StockDatabaseManager extends DatabaseManager  implements StockListener {
+public class StockDatabaseManager extends DatabaseManager implements StockListener {
     public static String TAG = Config.TAG + StockDatabaseManager.class.getSimpleName();
     private static volatile StockDatabaseManager mInstance;
 
@@ -254,8 +254,7 @@ public class StockDatabaseManager extends DatabaseManager  implements StockListe
             return null;
         }
         String selection = getStockDateSelection(stockBonus.getSE(), stockBonus.getCode(), stockBonus.getDate());
-        String sortOrder = getDateOrder(DatabaseContract.ORDER_ASC);
-        return query(DatabaseContract.StockBonus.CONTENT_URI, DatabaseContract.StockBonus.PROJECTION_ALL, selection, null, sortOrder);
+        return query(DatabaseContract.StockBonus.CONTENT_URI, DatabaseContract.StockBonus.PROJECTION_ALL, selection, null, DatabaseContract.ORDER_DATE_ASC);
     }
 
     public void getStockBonus(Stock stock, StockBonus stockBonus) {
@@ -266,11 +265,10 @@ public class StockDatabaseManager extends DatabaseManager  implements StockListe
         Cursor cursor = null;
         try {
             String selection = getStockSelection(stock.getSE(), stock.getCode());
-            String sortOrder = getDateOrder(DatabaseContract.ORDER_DESC);
             cursor = mContentResolver.query(
                     DatabaseContract.StockBonus.CONTENT_URI,
                     DatabaseContract.StockBonus.PROJECTION_ALL, selection,
-                    null, sortOrder);
+                    null, DatabaseContract.ORDER_DATE_DESC);
             if ((cursor != null) && (cursor.getCount() > 0)) {
                 cursor.moveToNext();
                 stockBonus.set(cursor);
@@ -377,8 +375,7 @@ public class StockDatabaseManager extends DatabaseManager  implements StockListe
 
     public Cursor queryStockData(StockData stockData) {
         String selection = getStockPeriodDateTimeSelection(stockData.getSE(), stockData.getCode(), stockData.getPeriod(), stockData.getDate(), stockData.getTime());
-        String sortOrder = getDateTimeOrder(DatabaseContract.ORDER_ASC);
-        return query(DatabaseContract.StockData.CONTENT_URI, DatabaseContract.StockData.PROJECTION_ALL, selection, null, sortOrder);
+        return query(DatabaseContract.StockData.CONTENT_URI, DatabaseContract.StockData.PROJECTION_ALL, selection, null, DatabaseContract.ORDER_DATE_TIME_ASC);
     }
 
     public void getStockData(StockData stockData) {
@@ -388,8 +385,7 @@ public class StockDatabaseManager extends DatabaseManager  implements StockListe
         Cursor cursor = null;
         try {
             String selection = getStockPeriodSelection(stockData.getSE(), stockData.getCode(), stockData.getPeriod());
-            String sortOrder = getDateTimeOrder(DatabaseContract.ORDER_DESC);
-            cursor = query(DatabaseContract.StockData.CONTENT_URI, DatabaseContract.StockData.PROJECTION_ALL, selection, null, sortOrder);
+            cursor = query(DatabaseContract.StockData.CONTENT_URI, DatabaseContract.StockData.PROJECTION_ALL, selection, null, DatabaseContract.ORDER_DATE_TIME_DESC);
             if ((cursor != null) && (cursor.getCount() > 0)) {
                 cursor.moveToNext();
                 stockData.set(cursor);
@@ -408,7 +404,7 @@ public class StockDatabaseManager extends DatabaseManager  implements StockListe
         stockDataList.clear();
         Cursor cursor = null;
         try {
-            cursor = queryStockData(getStockPeriodSelection(stock.getSE(), stock.getCode(), period), null, getDateTimeOrder(DatabaseContract.ORDER_ASC));
+            cursor = queryStockData(getStockPeriodSelection(stock.getSE(), stock.getCode(), period), null, DatabaseContract.ORDER_DATE_TIME_ASC);
             if ((cursor != null) && (cursor.getCount() > 0)) {
                 int index = 0;
                 while (cursor.moveToNext()) {
@@ -488,10 +484,9 @@ public class StockDatabaseManager extends DatabaseManager  implements StockListe
 
         StockDeal stockDeal = new StockDeal();
         String selection = getStockSelection(stock.getSE(), stock.getCode());
-        String sortOrder = getBuyOrder(DatabaseContract.ORDER_ASC);
         Cursor cursor = null;
         try {
-            cursor = queryStockDeal(selection, null, sortOrder);
+            cursor = queryStockDeal(selection, null, DatabaseContract.ORDER_BUY_ASC);
             if ((cursor != null) && (cursor.getCount() > 0)) {
                 while (cursor.moveToNext()) {
                     stockDeal.set(cursor);
@@ -604,8 +599,7 @@ public class StockDatabaseManager extends DatabaseManager  implements StockListe
         if (stock == null || stockDealList == null) {
             return;
         }
-        String sortOrder = getBuyOrder(DatabaseContract.ORDER_DESC);
-        getStockDealList(stockDealList, getStockSelection(stock.getSE(), stock.getCode()), sortOrder);
+        getStockDealList(stockDealList, getStockSelection(stock.getSE(), stock.getCode()), DatabaseContract.ORDER_BUY_DESC);
     }
 
     public Uri insertStockFinancial(StockFinancial stockFinancial) {
@@ -662,8 +656,7 @@ public class StockDatabaseManager extends DatabaseManager  implements StockListe
             return null;
         }
         String selection = getStockDateSelection(stockFinancial.getSE(), stockFinancial.getCode(), stockFinancial.getDate());
-        String sortOrder = getDateOrder(DatabaseContract.ORDER_ASC);
-        return query(DatabaseContract.StockFinancial.CONTENT_URI, DatabaseContract.StockFinancial.PROJECTION_ALL, selection, null, sortOrder);
+        return query(DatabaseContract.StockFinancial.CONTENT_URI, DatabaseContract.StockFinancial.PROJECTION_ALL, selection, null, DatabaseContract.ORDER_DATE_ASC);
     }
 
     public void getStockFinancial(Stock stock, StockFinancial stockFinancial) {
@@ -673,11 +666,9 @@ public class StockDatabaseManager extends DatabaseManager  implements StockListe
         Cursor cursor = null;
         try {
             String selection = getStockSelection(stock.getSE(), stock.getCode());
-            String sortOrder = getDateOrder(DatabaseContract.ORDER_DESC);
-
             cursor = query(DatabaseContract.StockFinancial.CONTENT_URI,
                     DatabaseContract.StockFinancial.PROJECTION_ALL, selection,
-                    null, sortOrder);
+                    null, DatabaseContract.ORDER_DATE_DESC);
             if ((cursor != null) && (cursor.getCount() > 0)) {
                 cursor.moveToNext();
                 stockFinancial.set(cursor);
@@ -809,8 +800,7 @@ public class StockDatabaseManager extends DatabaseManager  implements StockListe
             return null;
         }
         return query(DatabaseContract.StockPerceptron.CONTENT_URI,
-                DatabaseContract.StockPerceptron.PROJECTION_ALL, getPeriodLevelTypeSelection(stockPerceptron.getPeriod(), stockPerceptron.getLevel(), stockPerceptron.getType()), null,
-                getPeriodLevelOrder(DatabaseContract.ORDER_ASC));
+                DatabaseContract.StockPerceptron.PROJECTION_ALL, getPeriodLevelTypeSelection(stockPerceptron.getPeriod(), stockPerceptron.getLevel(), stockPerceptron.getType()), null, DatabaseContract.ORDER_PERIOD_LEVEL_ASC);
     }
 
     public void getStockPerceptron(StockPerceptron stockPerceptron) {
@@ -820,12 +810,11 @@ public class StockDatabaseManager extends DatabaseManager  implements StockListe
 
         Cursor cursor = null;
         String selection = getPeriodLevelTypeSelection(stockPerceptron.getPeriod(), stockPerceptron.getLevel(), stockPerceptron.getType());
-        String sortOrder = getPeriodLevelOrder(DatabaseContract.ORDER_DESC);
         try {
             cursor = query(
                     DatabaseContract.StockPerceptron.CONTENT_URI,
                     DatabaseContract.StockPerceptron.PROJECTION_ALL, selection, null,
-                    sortOrder);
+                    DatabaseContract.ORDER_PERIOD_LEVEL_DESC);
             if ((cursor != null) && (cursor.getCount() > 0)) {
                 cursor.moveToNext();
                 stockPerceptron.set(cursor);
@@ -909,7 +898,7 @@ public class StockDatabaseManager extends DatabaseManager  implements StockListe
         if (stockRZRQ == null) {
             return null;
         }
-        return query(DatabaseContract.StockRZRQ.CONTENT_URI, DatabaseContract.StockRZRQ.PROJECTION_ALL, getStockDateSelection(stockRZRQ.getSE(), stockRZRQ.getCode(), stockRZRQ.getDate()), null, getDateOrder(DatabaseContract.ORDER_ASC));
+        return query(DatabaseContract.StockRZRQ.CONTENT_URI, DatabaseContract.StockRZRQ.PROJECTION_ALL, getStockDateSelection(stockRZRQ.getSE(), stockRZRQ.getCode(), stockRZRQ.getDate()), null, DatabaseContract.ORDER_DATE_ASC);
     }
 
     public void getStockRZRQ(Stock stock, StockRZRQ stockRZRQ) {
@@ -919,10 +908,9 @@ public class StockDatabaseManager extends DatabaseManager  implements StockListe
 
         Cursor cursor = null;
         try {
-            String sortOrder = getDateOrder(DatabaseContract.ORDER_DESC);
             cursor = mContentResolver.query(DatabaseContract.StockRZRQ.CONTENT_URI,
                     DatabaseContract.StockRZRQ.PROJECTION_ALL, getStockSelection(stock.getSE(), stock.getCode()),
-                    null, sortOrder);
+                    null, DatabaseContract.ORDER_DATE_DESC);
             if ((cursor != null) && (cursor.getCount() > 0)) {
                 cursor.moveToNext();
                 stockRZRQ.set(cursor);
@@ -1019,20 +1007,19 @@ public class StockDatabaseManager extends DatabaseManager  implements StockListe
         if (stockShare == null) {
             return null;
         }
-        return query(DatabaseContract.StockShare.CONTENT_URI, DatabaseContract.StockShare.PROJECTION_ALL, getStockDateSelection(stockShare.getSE(), stockShare.getCode(), stockShare.getDate()), null, getDateOrder(DatabaseContract.ORDER_ASC));
+        return query(DatabaseContract.StockShare.CONTENT_URI, DatabaseContract.StockShare.PROJECTION_ALL, getStockDateSelection(stockShare.getSE(), stockShare.getCode(), stockShare.getDate()), null, DatabaseContract.ORDER_DATE_ASC);
     }
 
     public void getStockShare(Stock stock, StockShare stockShare) {
         if (stockShare == null) {
             return;
         }
-        String sortOrder = getDateOrder(DatabaseContract.ORDER_DESC);
         Cursor cursor = null;
         try {
             cursor = mContentResolver.query(
                     DatabaseContract.StockShare.CONTENT_URI,
                     DatabaseContract.StockShare.PROJECTION_ALL, getStockSelection(stock.getSE(), stock.getCode()),
-                    null, sortOrder);
+                    null, DatabaseContract.ORDER_DATE_DESC);
             if ((cursor != null) && (cursor.getCount() > 0)) {
                 cursor.moveToNext();
                 stockShare.set(cursor);
@@ -1159,14 +1146,13 @@ public class StockDatabaseManager extends DatabaseManager  implements StockListe
     }
 
     public Cursor queryStockTrend(StockTrend stockTrend) {
-        return query(DatabaseContract.StockTrend.CONTENT_URI, DatabaseContract.StockTrend.PROJECTION_ALL, getStockPeriodLevelSelection(stockTrend.getSE(), stockTrend.getCode(), stockTrend.getPeriod(), stockTrend.getLevel()), null, getDateTimeOrder(DatabaseContract.ORDER_ASC));
+        return query(DatabaseContract.StockTrend.CONTENT_URI, DatabaseContract.StockTrend.PROJECTION_ALL, getStockPeriodLevelSelection(stockTrend.getSE(), stockTrend.getCode(), stockTrend.getPeriod(), stockTrend.getLevel()), null, DatabaseContract.ORDER_DATE_TIME_ASC);
     }
 
     public void getStockTrend(StockTrend stockTrend) {
         Cursor cursor = null;
         try {
-            String sortOrder = getDateTimeOrder(DatabaseContract.ORDER_DESC);
-            cursor = query(DatabaseContract.StockTrend.CONTENT_URI, DatabaseContract.StockTrend.PROJECTION_ALL, getStockPeriodLevelSelection(stockTrend.getSE(), stockTrend.getCode(), stockTrend.getPeriod(), stockTrend.getLevel()), null, sortOrder);
+            cursor = query(DatabaseContract.StockTrend.CONTENT_URI, DatabaseContract.StockTrend.PROJECTION_ALL, getStockPeriodLevelSelection(stockTrend.getSE(), stockTrend.getCode(), stockTrend.getPeriod(), stockTrend.getLevel()), null, DatabaseContract.ORDER_DATE_TIME_DESC);
             if ((cursor != null) && (cursor.getCount() > 0)) {
                 if (cursor.getCount() > 1) {
                     Log.d(TAG, "getStockTrend cursor.getCount()=" + cursor.getCount());
@@ -1203,11 +1189,10 @@ public class StockDatabaseManager extends DatabaseManager  implements StockListe
         if (stock == null || stockTrendList == null) {
             return;
         }
-        String sortOrder = getPeriodOrder(DatabaseContract.ORDER_ASC);
         stockTrendList.clear();
         Cursor cursor = null;
         try {
-            cursor = queryStockTrend(getStockSelection(stock.getSE(), stock.getCode()), null, sortOrder);
+            cursor = queryStockTrend(getStockSelection(stock.getSE(), stock.getCode()), null, DatabaseContract.ORDER_PERIOD_ASC);
             if ((cursor != null) && (cursor.getCount() > 0)) {
                 while (cursor.moveToNext()) {
                     StockTrend stockTrend = new StockTrend();

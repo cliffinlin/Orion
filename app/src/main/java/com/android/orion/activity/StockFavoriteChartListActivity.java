@@ -376,7 +376,7 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 
 	CursorLoader getStockDataCursorLoader(String period) {
 		String selection = mStockDatabaseManager.getStockPeriodSelection(mStock.getSE(), mStock.getCode(), period);
-		String sortOrder = mStockDatabaseManager.getDateTimeOrder(DatabaseContract.ORDER_ASC);
+		String sortOrder = DatabaseContract.ORDER_DATE_TIME_ASC;
 		return new CursorLoader(this, DatabaseContract.StockData.CONTENT_URI,
 				DatabaseContract.StockData.PROJECTION_ALL, selection, null,
 				sortOrder);
