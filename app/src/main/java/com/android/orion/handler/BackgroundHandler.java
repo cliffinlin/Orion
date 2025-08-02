@@ -58,6 +58,7 @@ public class BackgroundHandler extends Handler {
 	public void OnDestroy() {
 		if (mHandlerThread != null && mHandlerThread.isAlive()) {
 			mHandlerThread.quitSafely();
+			mHandlerThread = null;
 		}
 	}
 

@@ -103,6 +103,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		mHandler.removeMessages(0);
 		if (mHandlerThread != null && mHandlerThread.isAlive()) {
 			mHandlerThread.quitSafely();
+			mHandlerThread = null;
 		}
 	}
 

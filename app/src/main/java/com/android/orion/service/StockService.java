@@ -116,7 +116,7 @@ public class StockService extends Service implements NetworkChangedListener {
 				.setOngoing(true)
 				.setPriority(NotificationCompat.PRIORITY_LOW)
 				.setContentIntent(createPendingIntent())
-				.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)  // Add visibility for lockscreen
+				.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
 				.build();
 	}
 
