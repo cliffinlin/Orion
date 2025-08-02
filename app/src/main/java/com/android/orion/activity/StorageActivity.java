@@ -328,6 +328,33 @@ public class StorageActivity extends DatabaseActivity {
 		}
 
 		return count;
+	}
+
+	int saveToXmlFile(OutputStream outputStream) {
+		int count = 0;
+
+		XmlSerializer xmlSerializer = Xml.newSerializer();
+
+		try {
+			xmlSerializer.setOutput(outputStream, "UTF-8");
+			xmlSerializer.setFeature(
+					"http://xmlpull.org/v1/doc/features.html#indent-output",
+					true);
+			xmlSerializer.startDocument(null, true);
+
+			xmlSerializer.startTag("", XML_TAG_ROOT);
+			xmlSerializer.attribute("", XML_ATTRIBUTE_DATE,
+					Utility.getCurrentDateTimeString());
+
+			count = xmlSerialize(xmlSerializer);
+
+			xmlSerializer.endTag("", XML_TAG_ROOT);
+			xmlSerializer.endDocument();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return count;
 	}	Handler mHandler = new Handler(Looper.getMainLooper()) {
 		@Override
 		public void handleMessage(Message msg) {
@@ -369,33 +396,6 @@ public class StorageActivity extends DatabaseActivity {
 			}
 		}
 	};
-
-	int saveToXmlFile(OutputStream outputStream) {
-		int count = 0;
-
-		XmlSerializer xmlSerializer = Xml.newSerializer();
-
-		try {
-			xmlSerializer.setOutput(outputStream, "UTF-8");
-			xmlSerializer.setFeature(
-					"http://xmlpull.org/v1/doc/features.html#indent-output",
-					true);
-			xmlSerializer.startDocument(null, true);
-
-			xmlSerializer.startTag("", XML_TAG_ROOT);
-			xmlSerializer.attribute("", XML_ATTRIBUTE_DATE,
-					Utility.getCurrentDateTimeString());
-
-			count = xmlSerialize(xmlSerializer);
-
-			xmlSerializer.endTag("", XML_TAG_ROOT);
-			xmlSerializer.endDocument();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return count;
-	}
 
 	int xmlSerialize(XmlSerializer xmlSerializer) {
 		int count = 0;
@@ -451,7 +451,7 @@ public class StorageActivity extends DatabaseActivity {
 			}
 
 			try {
-				cursor = mStockDatabaseManager.queryStockDeal(mStockDatabaseManager.getStockSelection(stock.getSE(), stock.getCode()), null,null);
+				cursor = mStockDatabaseManager.queryStockDeal(DatabaseContract.SELECTION_STOCK(stock.getSE(), stock.getCode()), null, null);
 				if ((cursor != null) && (cursor.getCount() > 0)) {
 					while (cursor.moveToNext()) {
 						stockDeal.set(cursor);
@@ -509,6 +509,8 @@ public class StorageActivity extends DatabaseActivity {
 			e.printStackTrace();
 		}
 	}
+
+
 
 
 }

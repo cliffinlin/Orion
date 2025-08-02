@@ -142,7 +142,7 @@ public class StockTrendListActivity extends ListActivity implements
 		if (mBundle != null) {
 			mStock.setSE(mBundle.getString(Constant.EXTRA_STOCK_SE));
 			mStock.setCode(mBundle.getString(Constant.EXTRA_STOCK_CODE));
-			mSelection = mStockDatabaseManager.getStockSelection(mStock.getSE(), mStock.getCode());
+			mSelection = DatabaseContract.SELECTION_STOCK(mStock.getSE(), mStock.getCode());
 		}
 		mSortOrder = Preferences.getString(Setting.SETTING_SORT_ORDER_TREND_LIST,
 				mSortOrderDefault);

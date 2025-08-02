@@ -8,10 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
 import com.android.orion.config.Config;
-import com.android.orion.data.Period;
-import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.DatabaseOpenHelper;
-import com.android.orion.database.Stock;
 
 public class DatabaseManager {
 	public static String TAG = Config.TAG + DatabaseManager.class.getSimpleName();
@@ -106,87 +103,5 @@ public class DatabaseManager {
 			return null;
 		}
 		return mContentResolver.query(uri, projection, selection, selectionArgs, sortOrder);
-	}
-
-	public String getClassASelection() {
-		return DatabaseContract.COLUMN_CLASSES + " = " + "'" + Stock.CLASS_A + "'";
-	}
-
-	public String getDateSelection(String date) {
-		return DatabaseContract.COLUMN_DATE + " = " + "'" + date + "'";
-	}
-
-	public String getFlagSelection(String key, int value) {
-		return " (" + key + " & " + value + ") = " + value;
-	}
-
-	public String getFlagSelection(int flag) {
-		return getFlagSelection(DatabaseContract.COLUMN_FLAG, flag);
-	}
-
-	public String getHoldSelection() {
-		return DatabaseContract.COLUMN_HOLD + " > " +  0;
-	}
-
-	public String getIDSelection(long id) {
-		return DatabaseContract.COLUMN_ID + "=" + id;
-	}
-
-	public String getLevelSelection(int level) {
-		return DatabaseContract.COLUMN_LEVEL + " = " + level;
-	}
-
-	public String getPeriodSelection(String period) {
-		return DatabaseContract.COLUMN_PERIOD + " = " + "'" + period + "'";
-	}
-
-	public String getTimeSelection(String time) {
-		return DatabaseContract.COLUMN_TIME + " = " + "'" + time + "'";
-	}
-
-	public String getTypeSelection(String type) {
-		return DatabaseContract.COLUMN_TYPE + " = " + "'" + type + "'";
-	}
-
-	public String getStockSelection(String se, String code) {
-		return DatabaseContract.COLUMN_SE + " = " + "'" + se + "'"
-				+ " AND " + DatabaseContract.COLUMN_CODE + " = " + "'" + code + "'";
-	}
-
-	public String getStockDateSelection(String se, String code, String date) {
-		return getStockSelection(se, code)
-				+ " AND " + getDateSelection(date);
-	}
-
-	public String getStockPeriodSelection(String se, String code, String period) {
-		return getStockSelection(se, code)
-				+ " AND " + getPeriodSelection(period);
-	}
-
-	public String getStockTypeSelection(String se, String code, String type) {
-		return getStockSelection(se, code)
-				+ " AND " + getTypeSelection(type);
-	}
-
-	public String getPeriodLevelTypeSelection(String period, int level, String type) {
-		return getPeriodSelection(period)
-				+ " AND " + getLevelSelection(level)
-				+ " AND " + getTypeSelection(type);
-	}
-
-	public String getStockPeriodLevelSelection(String se, String code, String period, int level) {
-		return getStockSelection(se, code)
-				+ " AND " + getPeriodSelection(period)
-				+ " AND " + getLevelSelection(level);
-	}
-
-	public String getStockPeriodDateTimeSelection(String se, String code, String period, String date, String time) {
-		String selection = getStockSelection(se, code)
-				+ " AND " + getPeriodSelection(period)
-				+ " AND " + getDateSelection(date);
-		if (Period.isMinutePeriod(period)) {
-			selection += " AND " + getTimeSelection(time);
-		}
-		return selection;
 	}
 }

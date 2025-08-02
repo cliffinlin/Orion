@@ -139,7 +139,7 @@ public class StockListActivity extends StorageActivity implements
 	private void handleFavoriteAll() {
 		try {
 			ArrayList<Stock> stockList = new ArrayList();
-			mStockDatabaseManager.getStockList(mStockDatabaseManager.getClassASelection(), stockList);
+			mStockDatabaseManager.getStockList(DatabaseContract.SELECTION_CLASSES(Stock.CLASS_A), stockList);
 			updateFavorites(stockList, true);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -149,7 +149,7 @@ public class StockListActivity extends StorageActivity implements
 	private void handleFavoriteHold() {
 		try {
 			ArrayList<Stock> stockList = new ArrayList();
-			mStockDatabaseManager.getStockList(mStockDatabaseManager.getHoldSelection(), stockList);
+			mStockDatabaseManager.getStockList(DatabaseContract.SELECTION_HOLD(), stockList);
 			updateFavorites(stockList, true);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -159,7 +159,7 @@ public class StockListActivity extends StorageActivity implements
 	private void handleFavoriteNone() {
 		try {
 			ArrayList<Stock> stockList = new ArrayList();
-			mStockDatabaseManager.getStockList(mStockDatabaseManager.getClassASelection(), stockList);
+			mStockDatabaseManager.getStockList(DatabaseContract.SELECTION_CLASSES(Stock.CLASS_A), stockList);
 			updateFavorites(stockList, false);
 		} catch (Exception e) {
 			e.printStackTrace();

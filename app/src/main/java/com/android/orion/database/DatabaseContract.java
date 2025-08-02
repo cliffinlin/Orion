@@ -177,6 +177,88 @@ public class DatabaseContract {
 	private DatabaseContract() {
 	}
 
+	public static final String SELECTION_CLASSES(String value) {
+		return COLUMN_CLASSES + " = " + "'" + value + "'";
+	}
+
+	public static final String SELECTION_DATE(String value) {
+		return COLUMN_DATE + " = " + "'" + value + "'";
+	}
+
+	public static final String SELECTION_FLAG(String key, int value) {
+		return " (" + key + " & " + value + ") = " + value;
+	}
+
+	public static final String SELECTION_FLAG(int value) {
+		return SELECTION_FLAG(COLUMN_FLAG, value);
+	}
+
+	public static final String SELECTION_HOLD() {
+		return COLUMN_HOLD + " > " + 0;
+	}
+
+	public static final String SELECTION_ID(long value) {
+		return DatabaseContract.COLUMN_ID + "=" + value;
+	}
+
+	public static final String SELECTION_LEVEL(int value) {
+		return DatabaseContract.COLUMN_LEVEL + " = " + value;
+	}
+
+	public static final String SELECTION_PERIOD(String value) {
+		return DatabaseContract.COLUMN_PERIOD + " = " + "'" + value + "'";
+	}
+
+	public static final String SELECTION_TIME(String value) {
+		return DatabaseContract.COLUMN_TIME + " = " + "'" + value + "'";
+	}
+
+	public static final String SELECTION_TYPE(String value) {
+		return DatabaseContract.COLUMN_TYPE + " = " + "'" + value + "'";
+	}
+
+	public static final String SELECTION_STOCK(String se, String code) {
+		return DatabaseContract.COLUMN_SE + " = " + "'" + se + "'"
+				+ " AND " + DatabaseContract.COLUMN_CODE + " = " + "'" + code + "'";
+	}
+
+	public static final String SELECTION_STOCK_DATE(String se, String code, String date) {
+		return SELECTION_STOCK(se, code)
+				+ " AND " + SELECTION_DATE(date);
+	}
+
+	public static final String SELECTION_STOCK_PERIOD(String se, String code, String period) {
+		return SELECTION_STOCK(se, code)
+				+ " AND " + SELECTION_PERIOD(period);
+	}
+
+	public static final String SELECTION_STOCK_TYPE(String se, String code, String type) {
+		return SELECTION_STOCK(se, code)
+				+ " AND " + SELECTION_TYPE(type);
+	}
+
+	public static final String SELECTION_PERIOD_LEVEL_TYPE(String period, int level, String type) {
+		return SELECTION_PERIOD(period)
+				+ " AND " + SELECTION_LEVEL(level)
+				+ " AND " + SELECTION_TYPE(type);
+	}
+
+	public static final String SELECTION_STOCK_PERIOD_LEVEL(String se, String code, String period, int level) {
+		return SELECTION_STOCK(se, code)
+				+ " AND " + SELECTION_PERIOD(period)
+				+ " AND " + SELECTION_LEVEL(level);
+	}
+
+	public static final String SELECTION_STOCK_PERIOD_DATE_TIME(String se, String code, String period, String date, String time) {
+		String selection = SELECTION_STOCK(se, code)
+				+ " AND " + SELECTION_PERIOD(period)
+				+ " AND " + SELECTION_DATE(date);
+		if (Period.isMinutePeriod(period)) {
+			selection += " AND " + SELECTION_TIME(time);
+		}
+		return selection;
+	}
+
 	public static abstract class Stock implements BaseColumns {
 		public static final String TABLE_NAME = "stock";
 

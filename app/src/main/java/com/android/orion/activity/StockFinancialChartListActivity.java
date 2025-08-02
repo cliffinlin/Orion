@@ -60,13 +60,13 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 	static final int ITEM_VIEW_TYPE_SUB = 1;
 	static final int LOADER_ID_STOCK_LIST = 0;
 	static final int LOADER_ID_STOCK_FINANCIAL_LIST = 1;
-
+	private final List<Runnable> mSwitchActions = Arrays.asList(
+			this::toggleFirstSwitch
+	);
 	int mStockListIndex = 0;
 	Menu mMenu = null;
-
 	String mSortOrder = null;
 	StockFinancial mStockFinancial = new StockFinancial();
-
 	PullToRefreshListView mListView = null;
 	ArrayList<StockFinancial> mStockFinancialList = new ArrayList<>();
 	StockFinancialChartArrayAdapter mStockFinancialChartArrayAdapter = null;
@@ -77,7 +77,6 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 	ArrayList<StockBonus> mStockBonusList = new ArrayList<>();
 	ArrayMap<Integer, CombinedChart> mCombinedChartMap = new ArrayMap<>();
 	ChartSyncHelper mChartSyncHelper = new ChartSyncHelper();
-
 	MainHandler mMainHandler = new MainHandler(this);
 	Comparator<StockFinancial> comparator = new Comparator<StockFinancial>() {
 
@@ -103,9 +102,6 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 			}
 		}
 	};
-	private final List<Runnable> mSwitchActions = Arrays.asList(
-			this::toggleFirstSwitch
-	);
 	private int mCurrentSwitchActionIndex = 0;
 
 	@Override
@@ -292,7 +288,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 	}
 
 	CursorLoader getStockCursorLoader() {
-		String selection = mStockDatabaseManager.getFlagSelection(Stock.FLAG_FAVORITE);
+		String selection = DatabaseContract.SELECTION_FLAG(Stock.FLAG_FAVORITE);
 		CursorLoader loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
 				DatabaseContract.Stock.PROJECTION_ALL, selection, null,
 				mSortOrder);
@@ -305,7 +301,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 		String sortOrder = "";
 		CursorLoader loader = null;
 
-		selection = mStockDatabaseManager.getStockSelection(mStock.getSE(), mStock.getCode());
+		selection = DatabaseContract.SELECTION_STOCK(mStock.getSE(), mStock.getCode());
 
 		sortOrder = DatabaseContract.ORDER_DATE_ASC;
 
@@ -386,7 +382,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 			return;
 		}
 
-		String sortOrder = mStockDatabaseManager.getDateSelection(DatabaseContract.ORDER_ASC);
+		String sortOrder = DatabaseContract.ORDER_DATE_ASC;
 		mStockDatabaseManager.getStockBonusList(mStock, mStockBonusList,
 				sortOrder);
 

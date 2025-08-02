@@ -17,7 +17,6 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
-import android.os.StrictMode;
 import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
@@ -48,6 +47,30 @@ public class StockService extends Service implements NetworkChangedListener {
 
 	public static StockService getInstance() {
 		return mInstance;
+	}
+
+	public static boolean isServiceRunning(Context context) {
+		ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+		for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+			if (StockService.class.getName().equals(service.service.getClassName())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static void startService(Context context) {
+		Intent intent = new Intent(context, StockService.class);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			context.startForegroundService(intent);
+		} else {
+			context.startService(intent);
+		}
+	}
+
+	public static void stopService(Context context) {
+		Intent intent = new Intent(context, StockService.class);
+		context.stopService(intent);
 	}
 
 	@Override
@@ -129,30 +152,6 @@ public class StockService extends Service implements NetworkChangedListener {
 			flags |= PendingIntent.FLAG_IMMUTABLE;
 		}
 		return PendingIntent.getActivity(this, 0, intent, flags);
-	}
-
-	public static boolean isServiceRunning(Context context) {
-		ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-		for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-			if (StockService.class.getName().equals(service.service.getClassName())) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public static void startService(Context context) {
-		Intent intent = new Intent(context, StockService.class);
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			context.startForegroundService(intent);
-		} else {
-			context.startService(intent);
-		}
-	}
-
-	public static void stopService(Context context) {
-		Intent intent = new Intent(context, StockService.class);
-		context.stopService(intent);
 	}
 
 	@Override

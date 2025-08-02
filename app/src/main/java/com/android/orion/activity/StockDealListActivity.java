@@ -617,7 +617,7 @@ public class StockDealListActivity extends ListActivity implements
 			mStock.setSE(se);
 			mStock.setCode(code);
 
-			mSelection = mStockDatabaseManager.getStockSelection(se, code);
+			mSelection = DatabaseContract.SELECTION_STOCK(se, code);
 			if (!TextUtils.isEmpty(typeSelection)) {
 				mSelection += " AND " + typeSelection;
 			}

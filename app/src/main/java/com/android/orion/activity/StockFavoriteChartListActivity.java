@@ -55,7 +55,9 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 	public static final int ITEM_VIEW_TYPE_SUB = 1;
 	public static final int LOADER_ID_STOCK_LIST = Period.PERIODS.length + 1;
 	public static final int REQUEST_CODE_SETTING = 0;
-
+	private final List<Runnable> mSwitchActions = Arrays.asList(
+			this::toggleFirstSwitch
+	);
 	boolean mKeyDisplayDeal = false;
 	int mStockListIndex = 0;
 	Menu mMenu = null;
@@ -73,9 +75,6 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 	ArrayList<StockDeal> mStockDealList = new ArrayList<>();
 	ArrayMap<Integer, CombinedChart> mCombinedChartMap = new ArrayMap<>();
 	ChartSyncHelper mChartSyncHelper = new ChartSyncHelper();
-	private final List<Runnable> mSwitchActions = Arrays.asList(
-			this::toggleFirstSwitch
-	);
 	private int mCurrentSwitchActionIndex = 0;
 
 	@Override
@@ -368,14 +367,14 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 	}
 
 	CursorLoader getStockCursorLoader() {
-		String selection = mStockDatabaseManager.getFlagSelection(Stock.FLAG_FAVORITE);
+		String selection = DatabaseContract.SELECTION_FLAG(Stock.FLAG_FAVORITE);
 		return new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
 				DatabaseContract.Stock.PROJECTION_ALL, selection, null,
 				mSortOrder);
 	}
 
 	CursorLoader getStockDataCursorLoader(String period) {
-		String selection = mStockDatabaseManager.getStockPeriodSelection(mStock.getSE(), mStock.getCode(), period);
+		String selection = DatabaseContract.SELECTION_STOCK_PERIOD(mStock.getSE(), mStock.getCode(), period);
 		String sortOrder = DatabaseContract.ORDER_DATE_TIME_ASC;
 		return new CursorLoader(this, DatabaseContract.StockData.CONTENT_URI,
 				DatabaseContract.StockData.PROJECTION_ALL, selection, null,

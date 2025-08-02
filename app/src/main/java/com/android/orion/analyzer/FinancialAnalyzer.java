@@ -35,7 +35,7 @@ public class FinancialAnalyzer {
 	}
 
 	public void analyzeFinancial(Stock stock) {
-		String sortOrder = mStockDatabaseManager.getDateSelection(DatabaseContract.ORDER_DESC);
+		String sortOrder = DatabaseContract.ORDER_DATE_DESC;
 
 		if (stock == null || TextUtils.equals(stock.getClasses(), Stock.CLASS_INDEX)) {
 			return;
@@ -102,8 +102,7 @@ public class FinancialAnalyzer {
 		}
 
 		mStockFinancialList = stock.getFinancialList();
-		mStockDatabaseManager.getStockFinancialList(stock, mStockFinancialList,
-				mStockDatabaseManager.getDateSelection(DatabaseContract.ORDER_DESC));
+		mStockDatabaseManager.getStockFinancialList(stock, mStockFinancialList, DatabaseContract.ORDER_DATE_DESC);
 
 		int j = 0;
 		for (int i = stockDataList.size() - 1; i >= 0; i--) {
@@ -278,7 +277,7 @@ public class FinancialAnalyzer {
 		stockRZRQ.setName(stock.getName());
 
 		mStockDatabaseManager.getStockFinancial(stock, stockFinancial);
-		mStockDatabaseManager.getStockFinancialList(stock, mStockFinancialList,	mStockDatabaseManager.getDateSelection(DatabaseContract.ORDER_DESC));
+		mStockDatabaseManager.getStockFinancialList(stock, mStockFinancialList, DatabaseContract.ORDER_DATE_DESC);
 		mStockDatabaseManager.getStockRZRQ(stock, stockRZRQ);
 
 		mStockDatabaseManager.updateStockDeal(stock);
@@ -311,7 +310,7 @@ public class FinancialAnalyzer {
 			return;
 		}
 
-		mStockDatabaseManager.getStockBonusList(stock, mStockBonusList, mStockDatabaseManager.getDateSelection(DatabaseContract.ORDER_DESC));
+		mStockDatabaseManager.getStockBonusList(stock, mStockBonusList, DatabaseContract.ORDER_DATE_DESC);
 		if (mStockBonusList.size() == 0) {
 			return;
 		}

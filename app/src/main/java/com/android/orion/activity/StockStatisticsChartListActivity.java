@@ -256,7 +256,7 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 	}
 
 	CursorLoader getStockCursorLoader() {
-		String selection = mStockDatabaseManager.getFlagSelection(Stock.FLAG_FAVORITE);
+		String selection = DatabaseContract.SELECTION_FLAG(Stock.FLAG_FAVORITE);
 
 		CursorLoader loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
 				DatabaseContract.Stock.PROJECTION_ALL, selection, null,

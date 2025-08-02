@@ -97,16 +97,6 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		return mInstance;
 	}
 
-	@Override
-	public void onDestroy() {
-		releaseWakeLock();
-		mHandler.removeMessages(0);
-		if (mHandlerThread != null && mHandlerThread.isAlive()) {
-			mHandlerThread.quitSafely();
-			mHandlerThread = null;
-		}
-	}
-
 	@NonNull
 	public static ArrayList<String> getDatetimeMin15List() {
 		ArrayList<String> datetimeList = new ArrayList<>();
@@ -181,6 +171,16 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		datetimeList.add("09");
 		datetimeList.add("11");
 		return datetimeList;
+	}
+
+	@Override
+	public void onDestroy() {
+		releaseWakeLock();
+		mHandler.removeMessages(0);
+		if (mHandlerThread != null && mHandlerThread.isAlive()) {
+			mHandlerThread.quitSafely();
+			mHandlerThread = null;
+		}
 	}
 
 	@Override

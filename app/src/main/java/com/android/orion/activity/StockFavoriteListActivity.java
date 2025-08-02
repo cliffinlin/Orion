@@ -539,7 +539,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 
 		switch (id) {
 			case LOADER_ID_STOCK_FAVORITE_LIST:
-				String selection = mStockDatabaseManager.getFlagSelection(Stock.FLAG_FAVORITE);
+				String selection = DatabaseContract.SELECTION_FLAG(Stock.FLAG_FAVORITE);
 				loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
 						DatabaseContract.Stock.PROJECTION_ALL, selection, null,
 						mSortOrder);

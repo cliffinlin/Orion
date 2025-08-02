@@ -257,7 +257,7 @@ public class StockFilter {
 
 		if (mEnabled) {
 			if (mFavorite) {
-				selection += mStockDatabaseManager.getFlagSelection(Stock.FLAG_FAVORITE);
+				selection += DatabaseContract.SELECTION_FLAG(Stock.FLAG_FAVORITE);
 			} else {
 				selection += " 1 ";
 			}
