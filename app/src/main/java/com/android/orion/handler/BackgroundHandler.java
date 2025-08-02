@@ -55,10 +55,9 @@ public class BackgroundHandler extends Handler {
 		return new BackgroundHandler(handler, handlerThread);
 	}
 
-	public void release() {
-		if (mHandlerThread != null) {
+	public void OnDestroy() {
+		if (mHandlerThread != null && mHandlerThread.isAlive()) {
 			mHandlerThread.quitSafely();
-			mHandlerThread = null;
 		}
 	}
 
@@ -142,7 +141,7 @@ public class BackgroundHandler extends Handler {
 				break;
 			case MESSAGE_ON_DESTROY:
 				mHandler.handleOnDestroy();
-				release();
+				OnDestroy();
 				break;
 			case MESSAGE_ON_START:
 				mHandler.handleOnStart();

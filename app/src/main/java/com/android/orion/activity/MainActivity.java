@@ -1,6 +1,7 @@
 package com.android.orion.activity;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -102,7 +103,7 @@ public class MainActivity extends Activity {
 	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_exit: {
-				finish();
+				finishAndStopService();
 				return true;
 			}
 		}
@@ -110,18 +111,23 @@ public class MainActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
+	private void finishAndStopService() {
+		finish();
+		stopService();
+	}
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			if ((System.currentTimeMillis() - mExitTime) > 2000) {
-				if (!Market.isTradingHours()) {
+			if (!Market.isTradingHours()) {
+				if ((System.currentTimeMillis() - mExitTime) > 2000) {
+					mExitTime = System.currentTimeMillis();
 					Toast.makeText(this,
 							getResources().getString(R.string.press_again_to_exit),
 							Toast.LENGTH_SHORT).show();
+				} else {
+					finishAndStopService();
 				}
-				mExitTime = System.currentTimeMillis();
-			} else {
-				finish();
 			}
 			return true;
 		}
@@ -181,19 +187,22 @@ public class MainActivity extends Activity {
 
 	public void startService() {
 		Log.d("startService");
-		Intent serviceIntent = new Intent(mContext, StockService.class);
-
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			startForegroundService(serviceIntent);
-		} else {
-			startService(serviceIntent);
-		}
+		StockService.startService(this);
 	}
 
 	public void stopService() {
 		Log.d("stopService");
-		Intent serviceIntent = new Intent(mContext, StockService.class);
-		stopService(serviceIntent);
+		StockService.stopService(this);
+	}
+
+	private boolean isServiceRunning() {
+		ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+		for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+			if (StockService.class.getName().equals(service.service.getClassName())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public static class HeaderItem {

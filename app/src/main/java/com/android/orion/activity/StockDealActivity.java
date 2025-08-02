@@ -62,10 +62,10 @@ public class StockDealActivity extends DatabaseActivity implements
 
 			switch (msg.what) {
 				case MESSAGE_LOAD_DEAL:
-					mDatabaseManager.getStockDeal(mDeal);
+					mStockDatabaseManager.getStockDeal(mDeal);
 					mStock.setSE(mDeal.getSE());
 					mStock.setCode(mDeal.getCode());
-					mDatabaseManager.getStock(mStock);
+					mStockDatabaseManager.getStock(mStock);
 					updateView();
 					RecordFile.writeDealFile(mStock, mDeal, Constant.DEAL_EDIT);
 					break;
@@ -74,19 +74,19 @@ public class StockDealActivity extends DatabaseActivity implements
 					if (TextUtils.equals(mAction, Constant.ACTION_DEAL_INSERT)) {
 						mDeal.setCreated(Utility.getCurrentDateTimeString());
 						RecordFile.writeDealFile(mStock, mDeal, Constant.DEAL_INSERT);
-						mDatabaseManager.insertStockDeal(mDeal);
+						mStockDatabaseManager.insertStockDeal(mDeal);
 					} else if (TextUtils.equals(mAction, Constant.ACTION_DEAL_EDIT)) {
 						mDeal.setModified(Utility.getCurrentDateTimeString());
 						RecordFile.writeDealFile(mStock, mDeal, Constant.DEAL_EDIT);
-						mDatabaseManager.updateStockDealByID(mDeal);
+						mStockDatabaseManager.updateStockDealByID(mDeal);
 					}
-					mDatabaseManager.updateStockDeal(mStock);
-					mDatabaseManager.updateStock(mStock,
+					mStockDatabaseManager.updateStockDeal(mStock);
+					mStockDatabaseManager.updateStock(mStock,
 							mStock.getContentValues());
 					break;
 
 				case MESSAGE_LOAD_STOCK_BY_ID:
-					mDatabaseManager.getStockById(mStock);
+					mStockDatabaseManager.getStockById(mStock);
 					mDeal.setSE(mStock.getSE());
 					mDeal.setCode(mStock.getCode());
 					mDeal.setName(mStock.getName());
@@ -96,7 +96,7 @@ public class StockDealActivity extends DatabaseActivity implements
 					break;
 
 				case MESSAGE_LOAD_STOCK_BY_SE_CODE:
-					mDatabaseManager.getStock(mStock);
+					mStockDatabaseManager.getStock(mStock);
 					mDeal.setSE(mStock.getSE());
 					mDeal.setCode(mStock.getCode());
 					mDeal.setName(mStock.getName());

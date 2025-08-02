@@ -15,7 +15,7 @@ import com.android.orion.config.Config;
 import com.android.orion.data.Period;
 import com.android.orion.database.StockPerceptron;
 import com.android.orion.database.StockTrend;
-import com.android.orion.manager.DatabaseManager;
+import com.android.orion.manager.StockDatabaseManager;
 import com.android.orion.utility.Logger;
 import com.android.orion.utility.Utility;
 
@@ -27,7 +27,7 @@ public class StockPerceptronProvider {
 	public static final int MSG_TRAIN_ALL_IN_ONE = 999999 + 1;
 
 	Context mContext = MainApplication.getContext();
-	DatabaseManager mDatabaseManager = DatabaseManager.getInstance();
+	StockDatabaseManager mStockDatabaseManager = StockDatabaseManager.getInstance();
 	PowerManager mPowerManager;
 	PowerManager.WakeLock mWakeLock;
 	HandlerThread mHandlerThread;
@@ -65,11 +65,11 @@ public class StockPerceptronProvider {
 					mTypeMap = new ArrayMap<>();
 					for (String type : StockTrend.TYPES) {
 						StockPerceptron stockPerceptron = new StockPerceptron(period, level, type);
-						if (!mDatabaseManager.isStockPerceptronExist(stockPerceptron)) {
+						if (!mStockDatabaseManager.isStockPerceptronExist(stockPerceptron)) {
 							stockPerceptron.setCreated(Utility.getCurrentDateTimeString());
-							mDatabaseManager.insertStockPerceptron(stockPerceptron);
+							mStockDatabaseManager.insertStockPerceptron(stockPerceptron);
 						} else {
-							mDatabaseManager.getStockPerceptron(stockPerceptron);
+							mStockDatabaseManager.getStockPerceptron(stockPerceptron);
 						}
 						mTypeMap.put(type, stockPerceptron);
 					}
@@ -194,7 +194,7 @@ public class StockPerceptronProvider {
 
 						mStockPerceptron.train(mXArray, mYArray, Config.MAX_ITERATIONS);
 						mStockPerceptron.setModified(Utility.getCurrentDateTimeString());
-						mDatabaseManager.updateStockPerceptron(mStockPerceptron, mStockPerceptron.getContentValuesPerceptron());
+						mStockDatabaseManager.updateStockPerceptron(mStockPerceptron, mStockPerceptron.getContentValuesPerceptron());
 //						Log.d("default ---------->" + mStockPerceptron.toLogString());
 						break;
 					}

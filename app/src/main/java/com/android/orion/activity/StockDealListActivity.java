@@ -114,12 +114,12 @@ public class StockDealListActivity extends ListActivity implements
 
 			switch (msg.what) {
 				case MESSAGE_DELETE_DEAL:
-					mDatabaseManager.getStockDeal(mStockDeal);
+					mStockDatabaseManager.getStockDeal(mStockDeal);
 					getStock();
 					RecordFile.writeDealFile(mStock, mStockDeal, Constant.DEAL_DELETE);
-					mDatabaseManager.deleteStockDeal(mStockDeal);
-					mDatabaseManager.updateStockDeal(mStock);
-					mDatabaseManager.updateStock(mStock,
+					mStockDatabaseManager.deleteStockDeal(mStockDeal);
+					mStockDatabaseManager.updateStockDeal(mStock);
+					mStockDatabaseManager.updateStock(mStock,
 							mStock.getContentValues());
 					break;
 
@@ -127,7 +127,7 @@ public class StockDealListActivity extends ListActivity implements
 					break;
 
 				case MESSAGE_VIEW_STOCK_DEAL:
-					mDatabaseManager.getStockDeal(mStockDeal);
+					mStockDatabaseManager.getStockDeal(mStockDeal);
 					getStock();
 
 					intent = new Intent(mContext, StockActivity.class);
@@ -137,7 +137,7 @@ public class StockDealListActivity extends ListActivity implements
 					break;
 
 				case MESSAGE_VIEW_STOCK_CHAT:
-					mDatabaseManager.getStockDeal(mStockDeal);
+					mStockDatabaseManager.getStockDeal(mStockDeal);
 					getStock();
 
 					ArrayList<String> stockIDList = new ArrayList<>();
@@ -183,7 +183,7 @@ public class StockDealListActivity extends ListActivity implements
 					mode.finish();
 					return true;
 				case R.id.menu_delete:
-					mDatabaseManager.getStockDeal(mStockDeal);
+					mStockDatabaseManager.getStockDeal(mStockDeal);
 					new AlertDialog.Builder(mContext)
 							.setTitle(R.string.delete)
 							.setMessage(getString(R.string.delete_confirm, mStockDeal.toString()))
@@ -617,7 +617,7 @@ public class StockDealListActivity extends ListActivity implements
 			mStock.setSE(se);
 			mStock.setCode(code);
 
-			mSelection = mDatabaseManager.getStockSelection(mStock);
+			mSelection = mStockDatabaseManager.getStockSelection(se, code);
 			if (!TextUtils.isEmpty(typeSelection)) {
 				mSelection += " AND " + typeSelection;
 			}
@@ -686,7 +686,7 @@ public class StockDealListActivity extends ListActivity implements
 						Stock stock = new Stock();
 						stock.setSE(stockDeal.getSE());
 						stock.setCode(stockDeal.getCode());
-						mDatabaseManager.getStock(stock);
+						mStockDatabaseManager.getStock(stock);
 						stockMap.put(stockDeal.getSE() + stockDeal.getCode(), stock);
 					}
 				}
@@ -730,7 +730,7 @@ public class StockDealListActivity extends ListActivity implements
 	void getStock() {
 		mStock.setSE(mStockDeal.getSE());
 		mStock.setCode(mStockDeal.getCode());
-		mDatabaseManager.getStock(mStock);
+		mStockDatabaseManager.getStock(mStock);
 	}
 
 	private class CustomViewBinder implements SimpleCursorAdapter.ViewBinder {

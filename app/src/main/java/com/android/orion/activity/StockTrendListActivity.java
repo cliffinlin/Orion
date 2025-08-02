@@ -142,7 +142,7 @@ public class StockTrendListActivity extends ListActivity implements
 		if (mBundle != null) {
 			mStock.setSE(mBundle.getString(Constant.EXTRA_STOCK_SE));
 			mStock.setCode(mBundle.getString(Constant.EXTRA_STOCK_CODE));
-			mSelection = mDatabaseManager.getStockSelection(mStock);
+			mSelection = mStockDatabaseManager.getStockSelection(mStock.getSE(), mStock.getCode());
 		}
 		mSortOrder = Preferences.getString(Setting.SETTING_SORT_ORDER_TREND_LIST,
 				mSortOrderDefault);
@@ -533,10 +533,10 @@ public class StockTrendListActivity extends ListActivity implements
 		} else {
 			if (mCurrentActionMode == null) {
 				mStockTrend.setId(id);
-				mDatabaseManager.getStockTrendById(mStockTrend);
+				mStockDatabaseManager.getStockTrendById(mStockTrend);
 				mStock.setSE(mStockTrend.getSE());
 				mStock.setCode(mStockTrend.getCode());
-				mDatabaseManager.getStock(mStock);
+				mStockDatabaseManager.getStock(mStock);
 
 				Intent intent = new Intent(mContext, StockFavoriteChartListActivity.class);
 				intent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
@@ -550,7 +550,7 @@ public class StockTrendListActivity extends ListActivity implements
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
 	                               int position, long id) {
 //		if (TextUtils.isEmpty(stock.getSE()) || TextUtils.isEmpty(stock.getCode())) {
-//			mDatabaseManager.deleteStockTrend(stock);
+//			mStockDatabaseManager.deleteStockTrend(stock);
 //			restartLoader();
 //			return true;
 //		}

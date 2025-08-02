@@ -15,7 +15,7 @@ import android.provider.BaseColumns;
 import android.text.TextUtils;
 
 import com.android.orion.database.DatabaseContract;
-import com.android.orion.manager.DatabaseManager;
+import com.android.orion.manager.StockDatabaseManager;
 
 import java.util.ArrayList;
 
@@ -111,14 +111,14 @@ public class StockContentProvider extends ContentProvider {
 	}
 
 	ContentResolver mContentResolver;
-	DatabaseManager mDatabaseManager;
+	StockDatabaseManager mStockDatabaseManager;
 
 	@Override
 	public boolean onCreate() {
 		mContentResolver = getContext().getContentResolver();
 		//before Application onCreate
-		mDatabaseManager = DatabaseManager.getInstance(getContext());
-		mDatabaseManager.openDatabase();
+		mStockDatabaseManager = StockDatabaseManager.getInstance(getContext());
+		mStockDatabaseManager.openDatabase();
 
 		return true;
 	}
@@ -217,11 +217,11 @@ public class StockContentProvider extends ContentProvider {
 	                    String[] selectionArgs, String sortOrder) {
 		Cursor cursor = null;
 
-		if (mDatabaseManager == null) {
+		if (mStockDatabaseManager == null) {
 			return null;
 		}
 
-		if (mDatabaseManager.mDatabase == null) {
+		if (mStockDatabaseManager.mDatabase == null) {
 			return null;
 		}
 
@@ -329,7 +329,7 @@ public class StockContentProvider extends ContentProvider {
 				break;
 		}
 
-		cursor = builder.query(mDatabaseManager.mDatabase, projection,
+		cursor = builder.query(mStockDatabaseManager.mDatabase, projection,
 				selection, selectionArgs, null, null, sortOrder);
 
 		if (cursor != null) {
@@ -343,71 +343,71 @@ public class StockContentProvider extends ContentProvider {
 		long id = 0;
 		Uri itemUri = null;
 
-		if (mDatabaseManager == null) {
+		if (mStockDatabaseManager == null) {
 			return itemUri;
 		}
 
-		if (mDatabaseManager.mDatabase == null) {
+		if (mStockDatabaseManager.mDatabase == null) {
 			return itemUri;
 		}
 
 		switch (mUriMatcher.match(uri)) {
 			case STOCK:
-				id = mDatabaseManager.mDatabase.insert(
+				id = mStockDatabaseManager.mDatabase.insert(
 						DatabaseContract.Stock.TABLE_NAME, null, contentValues);
 				break;
 
 			case STOCK_DATA:
-				id = mDatabaseManager.mDatabase.insert(
+				id = mStockDatabaseManager.mDatabase.insert(
 						DatabaseContract.StockData.TABLE_NAME, null, contentValues);
 				break;
 
 			case STOCK_DEAL:
-				id = mDatabaseManager.mDatabase.insert(
+				id = mStockDatabaseManager.mDatabase.insert(
 						DatabaseContract.StockDeal.TABLE_NAME, null, contentValues);
 				break;
 
 			case STOCK_FINANCIAL:
-				id = mDatabaseManager.mDatabase.insert(
+				id = mStockDatabaseManager.mDatabase.insert(
 						DatabaseContract.StockFinancial.TABLE_NAME, null,
 						contentValues);
 				break;
 
 			case STOCK_BONUS:
-				id = mDatabaseManager.mDatabase
+				id = mStockDatabaseManager.mDatabase
 						.insert(DatabaseContract.StockBonus.TABLE_NAME, null,
 								contentValues);
 				break;
 
 			case STOCK_SHARE:
-				id = mDatabaseManager.mDatabase
+				id = mStockDatabaseManager.mDatabase
 						.insert(DatabaseContract.StockShare.TABLE_NAME, null,
 								contentValues);
 				break;
 
 			case STOCK_RZRQ:
-				id = mDatabaseManager.mDatabase
+				id = mStockDatabaseManager.mDatabase
 						.insert(DatabaseContract.StockRZRQ.TABLE_NAME, null,
 								contentValues);
 				break;
 
 			case STOCK_TREND:
-				id = mDatabaseManager.mDatabase.insert(
+				id = mStockDatabaseManager.mDatabase.insert(
 						DatabaseContract.StockTrend.TABLE_NAME, null, contentValues);
 				break;
 
 			case STOCK_PERCEPTRON:
-				id = mDatabaseManager.mDatabase.insert(
+				id = mStockDatabaseManager.mDatabase.insert(
 						DatabaseContract.StockPerceptron.TABLE_NAME, null, contentValues);
 				break;
 
 			case TDX_DATA:
-				id = mDatabaseManager.mDatabase.insert(
+				id = mStockDatabaseManager.mDatabase.insert(
 						DatabaseContract.TDXData.TABLE_NAME, null, contentValues);
 				break;
 
 			case STOCK_GRID:
-				id = mDatabaseManager.mDatabase.insert(
+				id = mStockDatabaseManager.mDatabase.insert(
 						DatabaseContract.StockGrid.TABLE_NAME, null, contentValues);
 				break;
 			default:
@@ -434,15 +434,15 @@ public class StockContentProvider extends ContentProvider {
 	public int bulkInsert(Uri uri, ContentValues[] values) {
 		int result = 0;
 
-		if (mDatabaseManager == null) {
+		if (mStockDatabaseManager == null) {
 			return result;
 		}
 
-		if (mDatabaseManager.mDatabase == null) {
+		if (mStockDatabaseManager.mDatabase == null) {
 			return result;
 		}
 
-		mDatabaseManager.mDatabase.beginTransaction();
+		mStockDatabaseManager.mDatabase.beginTransaction();
 
 		try {
 			for (ContentValues contentValues : values) {
@@ -451,7 +451,7 @@ public class StockContentProvider extends ContentProvider {
 				}
 			}
 
-			mDatabaseManager.mDatabase.setTransactionSuccessful();
+			mStockDatabaseManager.mDatabase.setTransactionSuccessful();
 
 			if (result > 0) {
 				mContentResolver.notifyChange(uri, null);
@@ -459,7 +459,7 @@ public class StockContentProvider extends ContentProvider {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			mDatabaseManager.mDatabase.endTransaction();
+			mStockDatabaseManager.mDatabase.endTransaction();
 		}
 
 		return result;
@@ -471,17 +471,17 @@ public class StockContentProvider extends ContentProvider {
 		int result = 0;
 		String whereClause;
 
-		if (mDatabaseManager == null) {
+		if (mStockDatabaseManager == null) {
 			return result;
 		}
 
-		if (mDatabaseManager.mDatabase == null) {
+		if (mStockDatabaseManager.mDatabase == null) {
 			return result;
 		}
 
 		switch (mUriMatcher.match(uri)) {
 			case STOCK:
-				result = mDatabaseManager.mDatabase.update(
+				result = mStockDatabaseManager.mDatabase.update(
 						DatabaseContract.Stock.TABLE_NAME, values, selection,
 						selectionArgs);
 				break;
@@ -490,13 +490,13 @@ public class StockContentProvider extends ContentProvider {
 				if (!TextUtils.isEmpty(selection)) {
 					whereClause += " AND " + whereClause;
 				}
-				result = mDatabaseManager.mDatabase.update(
+				result = mStockDatabaseManager.mDatabase.update(
 						DatabaseContract.Stock.TABLE_NAME, values, whereClause,
 						selectionArgs);
 				break;
 
 			case STOCK_DATA:
-				result = mDatabaseManager.mDatabase.update(
+				result = mStockDatabaseManager.mDatabase.update(
 						DatabaseContract.StockData.TABLE_NAME, values, selection,
 						selectionArgs);
 				break;
@@ -505,13 +505,13 @@ public class StockContentProvider extends ContentProvider {
 				if (!TextUtils.isEmpty(selection)) {
 					whereClause += " AND " + whereClause;
 				}
-				result = mDatabaseManager.mDatabase.update(
+				result = mStockDatabaseManager.mDatabase.update(
 						DatabaseContract.StockData.TABLE_NAME, values, whereClause,
 						selectionArgs);
 				break;
 
 			case STOCK_DEAL:
-				result = mDatabaseManager.mDatabase.update(
+				result = mStockDatabaseManager.mDatabase.update(
 						DatabaseContract.StockDeal.TABLE_NAME, values, selection,
 						selectionArgs);
 				break;
@@ -520,13 +520,13 @@ public class StockContentProvider extends ContentProvider {
 				if (!TextUtils.isEmpty(selection)) {
 					whereClause += " AND " + whereClause;
 				}
-				result = mDatabaseManager.mDatabase.update(
+				result = mStockDatabaseManager.mDatabase.update(
 						DatabaseContract.StockDeal.TABLE_NAME, values, whereClause,
 						selectionArgs);
 				break;
 
 			case STOCK_FINANCIAL:
-				result = mDatabaseManager.mDatabase.update(
+				result = mStockDatabaseManager.mDatabase.update(
 						DatabaseContract.StockFinancial.TABLE_NAME, values,
 						selection, selectionArgs);
 				break;
@@ -535,13 +535,13 @@ public class StockContentProvider extends ContentProvider {
 				if (!TextUtils.isEmpty(selection)) {
 					whereClause += " AND " + whereClause;
 				}
-				result = mDatabaseManager.mDatabase.update(
+				result = mStockDatabaseManager.mDatabase.update(
 						DatabaseContract.StockFinancial.TABLE_NAME, values,
 						whereClause, selectionArgs);
 				break;
 
 			case STOCK_BONUS:
-				result = mDatabaseManager.mDatabase.update(
+				result = mStockDatabaseManager.mDatabase.update(
 						DatabaseContract.StockBonus.TABLE_NAME, values, selection,
 						selectionArgs);
 				break;
@@ -550,13 +550,13 @@ public class StockContentProvider extends ContentProvider {
 				if (!TextUtils.isEmpty(selection)) {
 					whereClause += " AND " + whereClause;
 				}
-				result = mDatabaseManager.mDatabase.update(
+				result = mStockDatabaseManager.mDatabase.update(
 						DatabaseContract.StockBonus.TABLE_NAME, values,
 						whereClause, selectionArgs);
 				break;
 
 			case STOCK_SHARE:
-				result = mDatabaseManager.mDatabase.update(
+				result = mStockDatabaseManager.mDatabase.update(
 						DatabaseContract.StockShare.TABLE_NAME, values, selection,
 						selectionArgs);
 				break;
@@ -565,13 +565,13 @@ public class StockContentProvider extends ContentProvider {
 				if (!TextUtils.isEmpty(selection)) {
 					whereClause += " AND " + whereClause;
 				}
-				result = mDatabaseManager.mDatabase.update(
+				result = mStockDatabaseManager.mDatabase.update(
 						DatabaseContract.StockShare.TABLE_NAME, values,
 						whereClause, selectionArgs);
 				break;
 
 			case STOCK_RZRQ:
-				result = mDatabaseManager.mDatabase.update(
+				result = mStockDatabaseManager.mDatabase.update(
 						DatabaseContract.StockRZRQ.TABLE_NAME, values, selection,
 						selectionArgs);
 				break;
@@ -580,13 +580,13 @@ public class StockContentProvider extends ContentProvider {
 				if (!TextUtils.isEmpty(selection)) {
 					whereClause += " AND " + whereClause;
 				}
-				result = mDatabaseManager.mDatabase.update(
+				result = mStockDatabaseManager.mDatabase.update(
 						DatabaseContract.StockRZRQ.TABLE_NAME, values,
 						whereClause, selectionArgs);
 				break;
 
 			case STOCK_TREND:
-				result = mDatabaseManager.mDatabase.update(
+				result = mStockDatabaseManager.mDatabase.update(
 						DatabaseContract.StockTrend.TABLE_NAME, values, selection,
 						selectionArgs);
 				break;
@@ -595,13 +595,13 @@ public class StockContentProvider extends ContentProvider {
 				if (!TextUtils.isEmpty(selection)) {
 					whereClause += " AND " + whereClause;
 				}
-				result = mDatabaseManager.mDatabase.update(
+				result = mStockDatabaseManager.mDatabase.update(
 						DatabaseContract.StockTrend.TABLE_NAME, values, whereClause,
 						selectionArgs);
 				break;
 
 			case STOCK_PERCEPTRON:
-				result = mDatabaseManager.mDatabase.update(
+				result = mStockDatabaseManager.mDatabase.update(
 						DatabaseContract.StockPerceptron.TABLE_NAME, values, selection,
 						selectionArgs);
 				break;
@@ -610,13 +610,13 @@ public class StockContentProvider extends ContentProvider {
 				if (!TextUtils.isEmpty(selection)) {
 					whereClause += " AND " + whereClause;
 				}
-				result = mDatabaseManager.mDatabase.update(
+				result = mStockDatabaseManager.mDatabase.update(
 						DatabaseContract.StockPerceptron.TABLE_NAME, values, whereClause,
 						selectionArgs);
 				break;
 
 			case TDX_DATA:
-				result = mDatabaseManager.mDatabase.update(
+				result = mStockDatabaseManager.mDatabase.update(
 						DatabaseContract.TDXData.TABLE_NAME, values, selection,
 						selectionArgs);
 				break;
@@ -625,13 +625,13 @@ public class StockContentProvider extends ContentProvider {
 				if (!TextUtils.isEmpty(selection)) {
 					whereClause += " AND " + whereClause;
 				}
-				result = mDatabaseManager.mDatabase.update(
+				result = mStockDatabaseManager.mDatabase.update(
 						DatabaseContract.TDXData.TABLE_NAME, values, whereClause,
 						selectionArgs);
 				break;
 
 			case STOCK_GRID:
-				result = mDatabaseManager.mDatabase.update(
+				result = mStockDatabaseManager.mDatabase.update(
 						DatabaseContract.StockGrid.TABLE_NAME, values, selection,
 						selectionArgs);
 				break;
@@ -640,7 +640,7 @@ public class StockContentProvider extends ContentProvider {
 				if (!TextUtils.isEmpty(selection)) {
 					whereClause += " AND " + whereClause;
 				}
-				result = mDatabaseManager.mDatabase.update(
+				result = mStockDatabaseManager.mDatabase.update(
 						DatabaseContract.StockGrid.TABLE_NAME, values, whereClause,
 						selectionArgs);
 				break;
@@ -660,17 +660,17 @@ public class StockContentProvider extends ContentProvider {
 		int result = 0;
 		String whereClause;
 
-		if (mDatabaseManager == null) {
+		if (mStockDatabaseManager == null) {
 			return result;
 		}
 
-		if (mDatabaseManager.mDatabase == null) {
+		if (mStockDatabaseManager.mDatabase == null) {
 			return result;
 		}
 
 		switch (mUriMatcher.match(uri)) {
 			case STOCK:
-				result = mDatabaseManager.mDatabase
+				result = mStockDatabaseManager.mDatabase
 						.delete(DatabaseContract.Stock.TABLE_NAME, selection,
 								selectionArgs);
 				break;
@@ -679,13 +679,13 @@ public class StockContentProvider extends ContentProvider {
 				if (!TextUtils.isEmpty(selection)) {
 					whereClause += " AND " + whereClause;
 				}
-				result = mDatabaseManager.mDatabase.delete(
+				result = mStockDatabaseManager.mDatabase.delete(
 						DatabaseContract.Stock.TABLE_NAME, whereClause,
 						selectionArgs);
 				break;
 
 			case STOCK_DATA:
-				result = mDatabaseManager.mDatabase.delete(
+				result = mStockDatabaseManager.mDatabase.delete(
 						DatabaseContract.StockData.TABLE_NAME, selection,
 						selectionArgs);
 				break;
@@ -694,13 +694,13 @@ public class StockContentProvider extends ContentProvider {
 				if (!TextUtils.isEmpty(selection)) {
 					whereClause += " AND " + whereClause;
 				}
-				result = mDatabaseManager.mDatabase.delete(
+				result = mStockDatabaseManager.mDatabase.delete(
 						DatabaseContract.StockData.TABLE_NAME, whereClause,
 						selectionArgs);
 				break;
 
 			case STOCK_DEAL:
-				result = mDatabaseManager.mDatabase.delete(
+				result = mStockDatabaseManager.mDatabase.delete(
 						DatabaseContract.StockDeal.TABLE_NAME, selection,
 						selectionArgs);
 				break;
@@ -709,13 +709,13 @@ public class StockContentProvider extends ContentProvider {
 				if (!TextUtils.isEmpty(selection)) {
 					whereClause += " AND " + whereClause;
 				}
-				result = mDatabaseManager.mDatabase.delete(
+				result = mStockDatabaseManager.mDatabase.delete(
 						DatabaseContract.StockDeal.TABLE_NAME, whereClause,
 						selectionArgs);
 				break;
 
 			case STOCK_FINANCIAL:
-				result = mDatabaseManager.mDatabase.delete(
+				result = mStockDatabaseManager.mDatabase.delete(
 						DatabaseContract.StockFinancial.TABLE_NAME, selection,
 						selectionArgs);
 				break;
@@ -724,13 +724,13 @@ public class StockContentProvider extends ContentProvider {
 				if (!TextUtils.isEmpty(selection)) {
 					whereClause += " AND " + whereClause;
 				}
-				result = mDatabaseManager.mDatabase.delete(
+				result = mStockDatabaseManager.mDatabase.delete(
 						DatabaseContract.StockFinancial.TABLE_NAME, whereClause,
 						selectionArgs);
 				break;
 
 			case STOCK_BONUS:
-				result = mDatabaseManager.mDatabase.delete(
+				result = mStockDatabaseManager.mDatabase.delete(
 						DatabaseContract.StockBonus.TABLE_NAME, selection,
 						selectionArgs);
 				break;
@@ -739,13 +739,13 @@ public class StockContentProvider extends ContentProvider {
 				if (!TextUtils.isEmpty(selection)) {
 					whereClause += " AND " + whereClause;
 				}
-				result = mDatabaseManager.mDatabase.delete(
+				result = mStockDatabaseManager.mDatabase.delete(
 						DatabaseContract.StockBonus.TABLE_NAME, whereClause,
 						selectionArgs);
 				break;
 
 			case STOCK_SHARE:
-				result = mDatabaseManager.mDatabase.delete(
+				result = mStockDatabaseManager.mDatabase.delete(
 						DatabaseContract.StockShare.TABLE_NAME, selection,
 						selectionArgs);
 				break;
@@ -754,13 +754,13 @@ public class StockContentProvider extends ContentProvider {
 				if (!TextUtils.isEmpty(selection)) {
 					whereClause += " AND " + whereClause;
 				}
-				result = mDatabaseManager.mDatabase.delete(
+				result = mStockDatabaseManager.mDatabase.delete(
 						DatabaseContract.StockShare.TABLE_NAME, whereClause,
 						selectionArgs);
 				break;
 
 			case STOCK_RZRQ:
-				result = mDatabaseManager.mDatabase.delete(
+				result = mStockDatabaseManager.mDatabase.delete(
 						DatabaseContract.StockRZRQ.TABLE_NAME, selection,
 						selectionArgs);
 				break;
@@ -769,13 +769,13 @@ public class StockContentProvider extends ContentProvider {
 				if (!TextUtils.isEmpty(selection)) {
 					whereClause += " AND " + whereClause;
 				}
-				result = mDatabaseManager.mDatabase.delete(
+				result = mStockDatabaseManager.mDatabase.delete(
 						DatabaseContract.StockRZRQ.TABLE_NAME, whereClause,
 						selectionArgs);
 				break;
 
 			case STOCK_TREND:
-				result = mDatabaseManager.mDatabase.delete(
+				result = mStockDatabaseManager.mDatabase.delete(
 						DatabaseContract.StockTrend.TABLE_NAME, selection,
 						selectionArgs);
 				break;
@@ -784,13 +784,13 @@ public class StockContentProvider extends ContentProvider {
 				if (!TextUtils.isEmpty(selection)) {
 					whereClause += " AND " + whereClause;
 				}
-				result = mDatabaseManager.mDatabase.delete(
+				result = mStockDatabaseManager.mDatabase.delete(
 						DatabaseContract.StockTrend.TABLE_NAME, whereClause,
 						selectionArgs);
 				break;
 
 			case STOCK_PERCEPTRON:
-				result = mDatabaseManager.mDatabase.delete(
+				result = mStockDatabaseManager.mDatabase.delete(
 						DatabaseContract.StockPerceptron.TABLE_NAME, selection,
 						selectionArgs);
 				break;
@@ -799,13 +799,13 @@ public class StockContentProvider extends ContentProvider {
 				if (!TextUtils.isEmpty(selection)) {
 					whereClause += " AND " + whereClause;
 				}
-				result = mDatabaseManager.mDatabase.delete(
+				result = mStockDatabaseManager.mDatabase.delete(
 						DatabaseContract.StockPerceptron.TABLE_NAME, whereClause,
 						selectionArgs);
 				break;
 
 			case TDX_DATA:
-				result = mDatabaseManager.mDatabase.delete(
+				result = mStockDatabaseManager.mDatabase.delete(
 						DatabaseContract.TDXData.TABLE_NAME, selection,
 						selectionArgs);
 				break;
@@ -814,13 +814,13 @@ public class StockContentProvider extends ContentProvider {
 				if (!TextUtils.isEmpty(selection)) {
 					whereClause += " AND " + whereClause;
 				}
-				result = mDatabaseManager.mDatabase.delete(
+				result = mStockDatabaseManager.mDatabase.delete(
 						DatabaseContract.TDXData.TABLE_NAME, whereClause,
 						selectionArgs);
 				break;
 
 			case STOCK_GRID:
-				result = mDatabaseManager.mDatabase.delete(
+				result = mStockDatabaseManager.mDatabase.delete(
 						DatabaseContract.StockGrid.TABLE_NAME, selection,
 						selectionArgs);
 				break;
@@ -829,7 +829,7 @@ public class StockContentProvider extends ContentProvider {
 				if (!TextUtils.isEmpty(selection)) {
 					whereClause += " AND " + whereClause;
 				}
-				result = mDatabaseManager.mDatabase.delete(
+				result = mStockDatabaseManager.mDatabase.delete(
 						DatabaseContract.StockGrid.TABLE_NAME, whereClause,
 						selectionArgs);
 				break;
@@ -850,22 +850,22 @@ public class StockContentProvider extends ContentProvider {
 			throws OperationApplicationException {
 		ContentProviderResult[] results = null;
 
-		if (mDatabaseManager == null) {
+		if (mStockDatabaseManager == null) {
 			return results;
 		}
 
-		if (mDatabaseManager.mDatabase == null) {
+		if (mStockDatabaseManager.mDatabase == null) {
 			return results;
 		}
 
-		mDatabaseManager.mDatabase.beginTransaction();
+		mStockDatabaseManager.mDatabase.beginTransaction();
 
 		try {
 			results = super.applyBatch(operations);
-			mDatabaseManager.mDatabase.setTransactionSuccessful();
+			mStockDatabaseManager.mDatabase.setTransactionSuccessful();
 			return results;
 		} finally {
-			mDatabaseManager.mDatabase.endTransaction();
+			mStockDatabaseManager.mDatabase.endTransaction();
 		}
 	}
 }

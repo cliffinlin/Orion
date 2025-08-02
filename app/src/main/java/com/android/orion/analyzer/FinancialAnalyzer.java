@@ -10,7 +10,7 @@ import com.android.orion.database.StockData;
 import com.android.orion.database.StockFinancial;
 import com.android.orion.database.StockRZRQ;
 import com.android.orion.database.StockShare;
-import com.android.orion.manager.DatabaseManager;
+import com.android.orion.manager.StockDatabaseManager;
 import com.android.orion.setting.Constant;
 import com.android.orion.utility.Logger;
 import com.android.orion.utility.Utility;
@@ -24,7 +24,7 @@ public class FinancialAnalyzer {
 	ArrayList<StockBonus> mStockBonusList;
 	ArrayList<StockRZRQ> mStockRZRQList;
 
-	DatabaseManager mDatabaseManager = DatabaseManager.getInstance();
+	StockDatabaseManager mStockDatabaseManager = StockDatabaseManager.getInstance();
 	Logger Log = Logger.getLogger();
 
 	private FinancialAnalyzer() {
@@ -44,7 +44,7 @@ public class FinancialAnalyzer {
 		for (int i = Period.getPeriodIndex(Period.MONTH); i < Period.PERIODS.length; i++) {
 			String period = Period.PERIODS[i];
 			mStockDataList = stock.getStockDataList(period);
-			mDatabaseManager.loadStockDataList(stock, period, mStockDataList);
+			mStockDatabaseManager.loadStockDataList(stock, period, mStockDataList);
 			if (mStockDataList.size() > 0) {
 				break;
 			}
@@ -55,13 +55,13 @@ public class FinancialAnalyzer {
 		mStockBonusList = stock.getStockBonusList();
 		mStockRZRQList = stock.getStockRZRQList();
 
-		mDatabaseManager.getStockFinancialList(stock, mStockFinancialList,
+		mStockDatabaseManager.getStockFinancialList(stock, mStockFinancialList,
 				sortOrder);
-		mDatabaseManager.getStockShareList(stock, mStockShareList,
+		mStockDatabaseManager.getStockShareList(stock, mStockShareList,
 				sortOrder);
-		mDatabaseManager.getStockBonusList(stock, mStockBonusList,
+		mStockDatabaseManager.getStockBonusList(stock, mStockBonusList,
 				sortOrder);
-		mDatabaseManager.getStockRZRQList(stock, mStockRZRQList,
+		mStockDatabaseManager.getStockRZRQList(stock, mStockRZRQList,
 				sortOrder);
 
 		setupPrice();
@@ -70,7 +70,7 @@ public class FinancialAnalyzer {
 		setupNetProfitPerShare();
 		setupRate();
 		setupRoe();
-		mDatabaseManager.updateStockFinancial(stock, mStockFinancialList);
+		mStockDatabaseManager.updateStockFinancial(stock, mStockFinancialList);
 	}
 
 	private void setupPrice() {
@@ -102,7 +102,7 @@ public class FinancialAnalyzer {
 		}
 
 		mStockFinancialList = stock.getFinancialList();
-		mDatabaseManager.getStockFinancialList(stock, mStockFinancialList,
+		mStockDatabaseManager.getStockFinancialList(stock, mStockFinancialList,
 				DatabaseContract.COLUMN_DATE + " DESC ");
 
 		int j = 0;
@@ -278,12 +278,12 @@ public class FinancialAnalyzer {
 		stockRZRQ.setCode(stock.getCode());
 		stockRZRQ.setName(stock.getName());
 
-		mDatabaseManager.getStockFinancial(stock, stockFinancial);
-		mDatabaseManager.getStockFinancialList(stock, mStockFinancialList,
+		mStockDatabaseManager.getStockFinancial(stock, stockFinancial);
+		mStockDatabaseManager.getStockFinancialList(stock, mStockFinancialList,
 				sortOrder);
-		mDatabaseManager.getStockRZRQ(stock, stockRZRQ);
+		mStockDatabaseManager.getStockRZRQ(stock, stockRZRQ);
 
-		mDatabaseManager.updateStockDeal(stock);
+		mStockDatabaseManager.updateStockDeal(stock);
 
 		stock.setBookValuePerShare(stockFinancial.getBookValuePerShare());
 		stock.setMainBusinessIncome(stockFinancial.getMainBusinessIncome());
@@ -314,7 +314,7 @@ public class FinancialAnalyzer {
 		}
 
 
-		mDatabaseManager.getStockBonusList(stock, mStockBonusList, DatabaseContract.COLUMN_DATE + " DESC ");
+		mStockDatabaseManager.getStockBonusList(stock, mStockBonusList, DatabaseContract.COLUMN_DATE + " DESC ");
 		if (mStockBonusList.size() == 0) {
 			return;
 		}

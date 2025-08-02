@@ -30,7 +30,6 @@ import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockTrend;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
-import com.android.orion.utility.Utility;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.XAxis.XAxisPosition;
@@ -114,14 +113,14 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 
 		long stockId = intent.getLongExtra(Constant.EXTRA_STOCK_ID, DatabaseContract.INVALID_ID);
 		mStock.setId(stockId);
-		mDatabaseManager.getStockById(mStock);
+		mStockDatabaseManager.getStockById(mStock);
 		mStockIDList = intent.getStringArrayListExtra(Constant.EXTRA_STOCK_ID_LIST);
 		if (mStockIDList != null && !mStockIDList.isEmpty()) {
 			onMessageLoadStockList();
 		}
 		long stockTrendId = intent.getLongExtra(Constant.EXTRA_STOCK_TREND_ID, DatabaseContract.INVALID_ID);
 		mStockTrend.setId(stockTrendId);
-		mDatabaseManager.getStockTrendById(mStockTrend);
+		mStockDatabaseManager.getStockTrendById(mStockTrend);
 
 		mSortOrder = intent.getStringExtra(Constant.EXTRA_STOCK_LIST_SORT_ORDER);
 		mKeyDisplayDeal = intent.getBooleanExtra(Constant.EXTRA_STOCK_DEAL, false);
@@ -156,9 +155,9 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 				break;
 			}
 			case R.id.action_refresh: {
-				mDatabaseManager.deleteTDXData(mStock);
-				mDatabaseManager.deleteStockData(mStock);
-				mDatabaseManager.deleteStockTrend(mStock);
+				mStockDatabaseManager.deleteTDXData(mStock);
+				mStockDatabaseManager.deleteStockData(mStock);
+				mStockDatabaseManager.deleteStockTrend(mStock);
 				mBackgroundHandler.downloadStockData(mStock);
 				break;
 			}
@@ -211,7 +210,7 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 			for (int i = 0; i < mStockIDList.size(); i++) {
 				Stock stock = new Stock();
 				stock.setId(Long.parseLong(mStockIDList.get(i)));
-				mDatabaseManager.getStockById(stock);
+				mStockDatabaseManager.getStockById(stock);
 				if (mStock.getId() == stock.getId()) {
 					mStock.set(stock);
 					mStockListIndex = mStockList.size();
@@ -369,15 +368,15 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 	}
 
 	CursorLoader getStockCursorLoader() {
-		String selection = mDatabaseManager.hasFlagSelection(Stock.FLAG_FAVORITE);
+		String selection = mStockDatabaseManager.getFlagSelection(Stock.FLAG_FAVORITE);
 		return new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
 				DatabaseContract.Stock.PROJECTION_ALL, selection, null,
 				mSortOrder);
 	}
 
 	CursorLoader getStockDataCursorLoader(String period) {
-		String selection = mDatabaseManager.getStockDataSelection(mStock.getSE(), mStock.getCode(), period);
-		String sortOrder = mDatabaseManager.getStockDataOrder();
+		String selection = mStockDatabaseManager.getStockPeriodSelection(mStock.getSE(), mStock.getCode(), period);
+		String sortOrder = mStockDatabaseManager.getDateTimeOrder(DatabaseContract.ORDER_ASC);
 		return new CursorLoader(this, DatabaseContract.StockData.CONTENT_URI,
 				DatabaseContract.StockData.PROJECTION_ALL, selection, null,
 				sortOrder);
@@ -430,7 +429,7 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			mDatabaseManager.closeCursor(cursor);
+			mStockDatabaseManager.closeCursor(cursor);
 		}
 
 		updateTitle();
@@ -588,7 +587,7 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 			updateMenuAction();
 
 			if (mKeyDisplayDeal) {
-				mDatabaseManager.getStockDealList(mStock, mStockDealList);
+				mStockDatabaseManager.getStockDealList(mStock, mStockDealList);
 			} else {
 				mStockDealList.clear();
 			}
@@ -604,12 +603,12 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			mDatabaseManager.closeCursor(cursor);
+			mStockDatabaseManager.closeCursor(cursor);
 		}
 	}
 
 	void updateStockDataChartItemList() {
-		mDatabaseManager.getStockTrendList(mStock, mStockTrendList);
+		mStockDatabaseManager.getStockTrendList(mStock, mStockTrendList);
 		mStockDataChartItemList.clear();
 		for (int i = 0; i < Period.PERIODS.length; i++) {
 			if (Setting.getPeriod(Period.PERIODS[i])) {

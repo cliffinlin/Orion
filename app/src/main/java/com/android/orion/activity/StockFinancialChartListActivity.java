@@ -118,7 +118,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 		setContentView(R.layout.activity_stock_financial_chart_list);
 
 		mStock.setId(getIntent().getLongExtra(Constant.EXTRA_STOCK_ID, DatabaseContract.INVALID_ID));
-		mDatabaseManager.getStockById(mStock);
+		mStockDatabaseManager.getStockById(mStock);
 		mSortOrder = getIntent().getStringExtra(Constant.EXTRA_STOCK_LIST_SORT_ORDER);
 
 		initListView();
@@ -145,8 +145,8 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 				break;
 			}
 			case R.id.action_refresh: {
-				mDatabaseManager.deleteStockFinancial(mStock);
-				mDatabaseManager.deleteStockBonus(mStock);
+				mStockDatabaseManager.deleteStockFinancial(mStock);
+				mStockDatabaseManager.deleteStockBonus(mStock);
 				mBackgroundHandler.downloadStockFinancial(mStock);
 				break;
 			}
@@ -280,19 +280,19 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 	}
 
 	void initLoader() {
-		mDatabaseManager.getStockById(mStock);
+		mStockDatabaseManager.getStockById(mStock);
 		mLoaderManager.initLoader(LOADER_ID_STOCK_LIST, null, this);
 		mLoaderManager.initLoader(LOADER_ID_STOCK_FINANCIAL_LIST, null, this);
 	}
 
 	void restartLoader() {
-		mDatabaseManager.getStockById(mStock);
+		mStockDatabaseManager.getStockById(mStock);
 		mLoaderManager.restartLoader(LOADER_ID_STOCK_LIST, null, this);
 		mLoaderManager.restartLoader(LOADER_ID_STOCK_FINANCIAL_LIST, null, this);
 	}
 
 	CursorLoader getStockCursorLoader() {
-		String selection = mDatabaseManager.hasFlagSelection(Stock.FLAG_FAVORITE);
+		String selection = mStockDatabaseManager.getFlagSelection(Stock.FLAG_FAVORITE);
 		CursorLoader loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
 				DatabaseContract.Stock.PROJECTION_ALL, selection, null,
 				mSortOrder);
@@ -305,9 +305,9 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 		String sortOrder = "";
 		CursorLoader loader = null;
 
-		selection = mDatabaseManager.getStockSelection(mStock);
+		selection = mStockDatabaseManager.getStockSelection(mStock.getSE(), mStock.getCode());
 
-		sortOrder = mDatabaseManager.getStockFinancialOrder();
+		sortOrder = mStockDatabaseManager.getDateOrder(DatabaseContract.ORDER_ASC);
 
 		loader = new CursorLoader(this,
 				DatabaseContract.StockFinancial.CONTENT_URI,
@@ -369,7 +369,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			mDatabaseManager.closeCursor(cursor);
+			mStockDatabaseManager.closeCursor(cursor);
 		}
 
 		if (mMainHandler != null) {
@@ -387,7 +387,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 		}
 
 		String sortOrder = DatabaseContract.COLUMN_DATE + " ASC ";
-		mDatabaseManager.getStockBonusList(mStock, mStockBonusList,
+		mStockDatabaseManager.getStockBonusList(mStock, mStockBonusList,
 				sortOrder);
 
 		stockFinancialChart.clear();
@@ -475,7 +475,7 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			mDatabaseManager.closeCursor(cursor);
+			mStockDatabaseManager.closeCursor(cursor);
 		}
 
 		updateTitle();

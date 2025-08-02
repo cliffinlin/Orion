@@ -139,10 +139,10 @@ public class StockFinancialListActivity extends ListActivity implements
 				break;
 			case R.id.action_refresh:
 				try {
-					mDatabaseManager.loadStockArrayMap(mStockArrayMap);
+					mStockDatabaseManager.loadStockArrayMap(mStockArrayMap);
 					for (Stock stock : mStockArrayMap.values()) {
-						mDatabaseManager.deleteStockFinancial(stock);
-						mDatabaseManager.deleteStockBonus(stock);
+						mStockDatabaseManager.deleteStockFinancial(stock);
+						mStockDatabaseManager.deleteStockBonus(stock);
 						Setting.setDownloadStockTimeMillis(stock, 0);
 						mStockDataProvider.download(stock);
 					}
@@ -818,7 +818,7 @@ public class StockFinancialListActivity extends ListActivity implements
 
 		switch (id) {
 			case LOADER_ID_STOCK_FINANCIAL_LIST:
-				String selection = mDatabaseManager.hasFlagSelection(Stock.FLAG_FAVORITE);
+				String selection = mStockDatabaseManager.getFlagSelection(Stock.FLAG_FAVORITE);
 				loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
 						DatabaseContract.Stock.PROJECTION_ALL, selection, null,
 						mSortOrder);
@@ -887,38 +887,6 @@ public class StockFinancialListActivity extends ListActivity implements
 		return true;
 	}
 
-	void setLeftViewColor(View view, Cursor cursor) {
-		if (view == null || cursor == null) {
-			return;
-		}
-
-		String code = cursor.getString(cursor.getColumnIndex(DatabaseContract.COLUMN_CODE));
-		TextView textView = (TextView) view;
-		if (TextUtils.equals(mLoadingStockCode, code)) {
-			textView.setTextColor(Color.RED);
-		} else {
-			textView.setTextColor(Color.GRAY);
-		}
-	}
-
-	void setRightViewColor(View view, Cursor cursor) {
-		if (view == null || cursor == null) {
-			return;
-		}
-
-		int flag = cursor.getInt(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_FLAG));
-
-		if (Utility.hasFlag(flag, Stock.FLAG_NOTIFY)) {
-			view.setBackgroundColor(Color.rgb(240, 240, 240));
-//			TextView textView = (TextView)view;
-//			textView.setTextColor(Color.RED);
-		}
-
-		TextView textView = (TextView) view;
-		textView.setTextSize(14f);
-	}
-
 	private class LeftViewBinder implements SimpleCursorAdapter.ViewBinder {
 
 		@Override
@@ -929,13 +897,27 @@ public class StockFinancialListActivity extends ListActivity implements
 
 			if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_CODE)) {
-				setLeftViewColor(view, cursor);
+				setViewColor(view, cursor);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_NAME)) {
-				setLeftViewColor(view, cursor);
+				setViewColor(view, cursor);
 			}
 
 			return false;
+		}
+
+		void setViewColor(View view, Cursor cursor) {
+			if (view == null || cursor == null) {
+				return;
+			}
+
+			String code = cursor.getString(cursor.getColumnIndex(DatabaseContract.COLUMN_CODE));
+			TextView textView = (TextView) view;
+			if (TextUtils.equals(mAnalyzingStockCode, code)) {
+				textView.setTextColor(Color.RED);
+			} else {
+				textView.setTextColor(Color.GRAY);
+			}
 		}
 	}
 
@@ -976,6 +958,24 @@ public class StockFinancialListActivity extends ListActivity implements
 			}
 
 			return false;
+		}
+
+		void setViewColor(View view, Cursor cursor) {
+			if (view == null || cursor == null) {
+				return;
+			}
+
+			int flag = cursor.getInt(cursor
+					.getColumnIndex(DatabaseContract.COLUMN_FLAG));
+
+			if (Utility.hasFlag(flag, Stock.FLAG_NOTIFY)) {
+				view.setBackgroundColor(Color.rgb(240, 240, 240));
+//			TextView textView = (TextView)view;
+//			textView.setTextColor(Color.RED);
+			}
+
+			TextView textView = (TextView) view;
+			textView.setTextSize(14f);
 		}
 	}
 }

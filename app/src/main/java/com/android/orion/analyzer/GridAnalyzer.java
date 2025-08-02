@@ -3,7 +3,7 @@ package com.android.orion.analyzer;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockGrid;
-import com.android.orion.manager.DatabaseManager;
+import com.android.orion.manager.StockDatabaseManager;
 import com.android.orion.utility.Logger;
 
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ public class GridAnalyzer {
 	StockGrid mStockGridBuy = new StockGrid();
 	StockGrid mStockGridSell = new StockGrid();
 	ArrayList<StockDeal> mStockDealList = new ArrayList<>();
-	DatabaseManager mDatabaseManager = DatabaseManager.getInstance();
+	StockDatabaseManager mStockDatabaseManager = StockDatabaseManager.getInstance();
 
 	private GridAnalyzer() {
 	}
@@ -33,7 +33,7 @@ public class GridAnalyzer {
 			return;
 		}
 
-		mDatabaseManager.getStockDealList(mStock, mStockDealList);
+		mStockDatabaseManager.getStockDealList(mStock, mStockDealList);
 		if (mStockDealList == null || mStockDealList.size() == 0) {
 			return;
 		}
@@ -49,10 +49,10 @@ public class GridAnalyzer {
 		mStockGridBuy.setVolume(mStockDealList.get(0).getVolume());
 		mStockGridBuy.setupPrice();
 		mStockGridBuy.setupValue();
-		if (!mDatabaseManager.isStockGridExist(mStockGridBuy)) {
-			mDatabaseManager.insertStockGrid(mStockGridBuy);
+		if (!mStockDatabaseManager.isStockGridExist(mStockGridBuy)) {
+			mStockDatabaseManager.insertStockGrid(mStockGridBuy);
 		} else {
-			mDatabaseManager.updateStockGrid(mStockGridBuy, mStockGridBuy.getContentValues());
+			mStockDatabaseManager.updateStockGrid(mStockGridBuy, mStockGridBuy.getContentValues());
 		}
 		mStock.setGridBuy(mStockGridBuy.getPrice());
 
@@ -67,10 +67,10 @@ public class GridAnalyzer {
 		mStockGridSell.setVolume(mStockDealList.get(mStockDealList.size() - 1).getVolume());
 		mStockGridSell.setupPrice();
 		mStockGridSell.setupValue();
-		if (!mDatabaseManager.isStockGridExist(mStockGridSell)) {
-			mDatabaseManager.insertStockGrid(mStockGridSell);
+		if (!mStockDatabaseManager.isStockGridExist(mStockGridSell)) {
+			mStockDatabaseManager.insertStockGrid(mStockGridSell);
 		} else {
-			mDatabaseManager.updateStockGrid(mStockGridSell, mStockGridSell.getContentValues());
+			mStockDatabaseManager.updateStockGrid(mStockGridSell, mStockGridSell.getContentValues());
 		}
 		mStock.setGridSell(mStockGridSell.getPrice());
 	}
@@ -84,7 +84,7 @@ public class GridAnalyzer {
 	}
 
 	public double getSellProfit() {
-		mDatabaseManager.getStockDealList(mStock, mStockDealList);
+		mStockDatabaseManager.getStockDealList(mStock, mStockDealList);
 		if (mStockDealList == null || mStockDealList.size() == 0) {
 			return 0;
 		}

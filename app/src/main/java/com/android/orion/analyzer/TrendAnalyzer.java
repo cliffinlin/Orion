@@ -6,10 +6,9 @@ import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockPerceptron;
 import com.android.orion.database.StockTrend;
-import com.android.orion.manager.DatabaseManager;
+import com.android.orion.manager.StockDatabaseManager;
 import com.android.orion.manager.StockNotificationManager;
 import com.android.orion.provider.StockPerceptronProvider;
-import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Logger;
 import com.android.orion.utility.Utility;
@@ -22,7 +21,7 @@ public class TrendAnalyzer {
 	Stock mStock;
 	String mPeriod;
 	ArrayList<StockData> mStockDataList = new ArrayList<>();
-	DatabaseManager mDatabaseManager = DatabaseManager.getInstance();
+	StockDatabaseManager mStockDatabaseManager = StockDatabaseManager.getInstance();
 	StockPerceptronProvider mStockPerceptronProvider = StockPerceptronProvider.getInstance();
 
 	private TrendAnalyzer() {
@@ -397,25 +396,25 @@ public class TrendAnalyzer {
 			}
 
 			StockTrend stockTrend = stockTrendList.get(stockTrendList.size() - 1);
-			if (mDatabaseManager.isStockTrendExist(stockTrend)) {
+			if (mStockDatabaseManager.isStockTrendExist(stockTrend)) {
 				StockTrend stockTrendFromDB = new StockTrend(stockTrend);
-				mDatabaseManager.getStockTrend(stockTrendFromDB);
+				mStockDatabaseManager.getStockTrend(stockTrendFromDB);
 				stockTrend.setId(stockTrendFromDB.getId());
 				if (TextUtils.equals(stockTrend.getType(), stockTrendFromDB.getType())) {
 					stockTrend.removeFlag(StockTrend.FLAG_CHANGED);
 					stockTrend.setModified(Utility.getCurrentDateTimeString());
-					mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValues());
+					mStockDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValues());
 					StockNotificationManager.getInstance().cancel((int) stockTrend.getId());
 				} else {
 					stockTrend.addFlag(StockTrend.FLAG_CHANGED);
 					stockTrend.setModified(Utility.getCurrentDateTimeString());
-					mDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValues());
+					mStockDatabaseManager.updateStockTrend(stockTrend, stockTrend.getContentValues());
 					StockNotificationManager.getInstance().notify(mStock, stockTrend);
 				}
 			} else {
 				stockTrend.setFlag(StockTrend.FLAG_NONE);
 				stockTrend.setCreated(Utility.getCurrentDateTimeString());
-				mDatabaseManager.insertStockTrend(stockTrend);
+				mStockDatabaseManager.insertStockTrend(stockTrend);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

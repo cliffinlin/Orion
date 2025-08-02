@@ -76,7 +76,7 @@ public class StockTrendChartListActivity extends BaseActivity implements
 				case MESSAGE_INIT_LOADER:
 					mStockPerceptron.setId(mIntent.getLongExtra(Constant.EXTRA_STOCK_PERCEPTRON_ID,
 							DatabaseContract.INVALID_ID));
-					mDatabaseManager.getStockPerceptronById(mStockPerceptron);
+					mStockDatabaseManager.getStockPerceptronById(mStockPerceptron);
 					mStockPerceptron = StockPerceptronProvider.getInstance().getStockPerceptron(mStockPerceptron.getPeriod(), mStockPerceptron.getLevel(), mStockPerceptron.getType());
 					mDescription = mStockPerceptron.toDescriptionString();
 					mLoaderManager.initLoader(LOADER_ID_TREND_LIST, null, StockTrendChartListActivity.this);
@@ -267,7 +267,7 @@ public class StockTrendChartListActivity extends BaseActivity implements
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			mDatabaseManager.closeCursor(cursor);
+			mStockDatabaseManager.closeCursor(cursor);
 		}
 
 		chart.setMainChartData();

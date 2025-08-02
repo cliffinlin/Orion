@@ -129,11 +129,11 @@ public class StockFavoriteListActivity extends ListActivity implements
 				break;
 			case R.id.action_refresh:
 				try {
-					mDatabaseManager.loadStockArrayMap(mStockArrayMap);
+					mStockDatabaseManager.loadStockArrayMap(mStockArrayMap);
 					for (Stock stock : mStockArrayMap.values()) {
-						mDatabaseManager.deleteStockData(stock);
-						mDatabaseManager.deleteStockTrend(stock);
-						mDatabaseManager.deleteStockPerceptron(stock.getId());
+						mStockDatabaseManager.deleteStockData(stock);
+						mStockDatabaseManager.deleteStockTrend(stock);
+						mStockDatabaseManager.deleteStockPerceptron(stock.getId());
 						Setting.setDownloadStockDataTimeMillis(stock, 0);
 						mStockDataProvider.download(stock);
 					}
@@ -539,7 +539,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 
 		switch (id) {
 			case LOADER_ID_STOCK_FAVORITE_LIST:
-				String selection = mDatabaseManager.hasFlagSelection(Stock.FLAG_FAVORITE);
+				String selection = mStockDatabaseManager.getFlagSelection(Stock.FLAG_FAVORITE);
 				loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
 						DatabaseContract.Stock.PROJECTION_ALL, selection, null,
 						mSortOrder);
@@ -593,9 +593,9 @@ public class StockFavoriteListActivity extends ListActivity implements
 		} else {
 			if (parent.getId() == R.id.left_listview) {
 				mStock.setId(id);
-				mDatabaseManager.getStockById(mStock);
+				mStockDatabaseManager.getStockById(mStock);
 
-				if (mDatabaseManager.getStockDealCount(mStock) > 0) {
+				if (mStockDatabaseManager.getStockDealCount(mStock) > 0) {
 					Intent intent = new Intent(mContext,
 							StockDealListActivity.class);
 					Bundle bundle = new Bundle();
@@ -628,48 +628,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 		return true;
 	}
 
-	void setLeftViewColor(View view, Cursor cursor) {
-		if (view == null || cursor == null) {
-			return;
-		}
-
-		String code = cursor.getString(cursor.getColumnIndex(DatabaseContract.COLUMN_CODE));
-		TextView textView = (TextView) view;
-		if (TextUtils.equals(mLoadingStockCode, code)) {
-			textView.setTextColor(Color.RED);
-		} else {
-			textView.setTextColor(Color.GRAY);
-		}
-	}
-
-	void setRightViewColor(String period, View view, Cursor cursor) {
-		if (view == null || cursor == null) {
-			return;
-		}
-
-		int flag = cursor.getInt(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_FLAG));
-		double price = cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_PRICE));
-		double gridBuy = cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_GRID_BUY));
-		double gridSell = cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_GRID_SELL));
-
-		if (Utility.hasFlag(flag, Stock.FLAG_GRID)) {
-			view.setBackgroundColor(Color.rgb(240, 240, 240));
-			TextView textView = (TextView) view;
-			if (price < gridBuy) {
-				textView.setTextColor(Color.GREEN);
-			} else if (price > gridSell) {
-				textView.setTextColor(Color.RED);
-			}
-		}
-
-		TextView textView = (TextView) view;
-		textView.setTextSize(14f);
-	}
-
 	private class LeftViewBinder implements SimpleCursorAdapter.ViewBinder {
 
 		@Override
@@ -680,13 +638,27 @@ public class StockFavoriteListActivity extends ListActivity implements
 
 			if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_CODE)) {
-				setLeftViewColor(view, cursor);
+				setViewColor(view, cursor);
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_NAME)) {
-				setLeftViewColor(view, cursor);
+				setViewColor(view, cursor);
 			}
 
 			return false;
+		}
+
+		void setViewColor(View view, Cursor cursor) {
+			if (view == null || cursor == null) {
+				return;
+			}
+
+			String code = cursor.getString(cursor.getColumnIndex(DatabaseContract.COLUMN_CODE));
+			TextView textView = (TextView) view;
+			if (TextUtils.equals(mAnalyzingStockCode, code)) {
+				textView.setTextColor(Color.RED);
+			} else {
+				textView.setTextColor(Color.GRAY);
+			}
 		}
 	}
 
@@ -700,74 +672,125 @@ public class StockFavoriteListActivity extends ListActivity implements
 
 			String period = "";
 			if (columnIndex == cursor
+					.getColumnIndex(DatabaseContract.COLUMN_PRICE)) {
+				setViewColor(view, cursor);
+				return setVisibility(view, Setting.getDisplayNet());
+			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_NET)) {
+				setViewColor(view, cursor);
+				return setVisibility(view, Setting.getDisplayNet());
+			} else if (columnIndex == cursor
+					.getColumnIndex(DatabaseContract.COLUMN_GRID_BUY)) {
+				setViewColor(view, cursor);
+				return setVisibility(view, Setting.getDisplayNet());
+			} else if (columnIndex == cursor
+					.getColumnIndex(DatabaseContract.COLUMN_GRID_SELL)) {
+				setViewColor(view, cursor);
 				return setVisibility(view, Setting.getDisplayNet());
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_RZ_TREND_RATE)) {
+				setViewColor(view, cursor);
 				return setVisibility(view, Setting.getDisplayRZValue());
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_RZ_TREND_DAYS)) {
+				setViewColor(view, cursor);
 				return setVisibility(view, Setting.getDisplayRZValue());
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_YEAR)) {
 				period = DatabaseContract.COLUMN_YEAR;
-				setRightViewColor(period, view, cursor);
+				setViewColor(period, view, cursor);
 				return setVisibility(view, Setting.getPeriod(period));
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MONTH6)) {
 				period = DatabaseContract.COLUMN_MONTH6;
-				setRightViewColor(period, view, cursor);
+				setViewColor(period, view, cursor);
 				return setVisibility(view, Setting.getPeriod(period));
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_QUARTER)) {
 				period = DatabaseContract.COLUMN_QUARTER;
-				setRightViewColor(period, view, cursor);
+				setViewColor(period, view, cursor);
 				return setVisibility(view, Setting.getPeriod(period));
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MONTH2)) {
 				period = DatabaseContract.COLUMN_MONTH2;
-				setRightViewColor(period, view, cursor);
+				setViewColor(period, view, cursor);
 				return setVisibility(view, Setting.getPeriod(period));
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MONTH)) {
 				period = DatabaseContract.COLUMN_MONTH;
-				setRightViewColor(period, view, cursor);
+				setViewColor(period, view, cursor);
 				return setVisibility(view, Setting.getPeriod(period));
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_WEEK)) {
 				period = DatabaseContract.COLUMN_WEEK;
-				setRightViewColor(period, view, cursor);
+				setViewColor(period, view, cursor);
 				return setVisibility(view, Setting.getPeriod(period));
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_DAY)) {
 				period = DatabaseContract.COLUMN_DAY;
-				setRightViewColor(period, view, cursor);
+				setViewColor(period, view, cursor);
 				return setVisibility(view, Setting.getPeriod(period));
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MIN60)) {
 				period = DatabaseContract.COLUMN_MIN60;
-				setRightViewColor(period, view, cursor);
+				setViewColor(period, view, cursor);
 				return setVisibility(view, Setting.getPeriod(period));
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MIN30)) {
 				period = DatabaseContract.COLUMN_MIN30;
-				setRightViewColor(period, view, cursor);
+				setViewColor(period, view, cursor);
 				return setVisibility(view, Setting.getPeriod(period));
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MIN15)) {
 				period = DatabaseContract.COLUMN_MIN15;
-				setRightViewColor(period, view, cursor);
+				setViewColor(period, view, cursor);
 				return setVisibility(view, Setting.getPeriod(period));
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MIN5)) {
 				period = DatabaseContract.COLUMN_MIN5;
-				setRightViewColor(period, view, cursor);
+				setViewColor(period, view, cursor);
 				return setVisibility(view, Setting.getPeriod(period));
 			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MODIFIED)) {
 			}
 
 			return false;
+		}
+
+		void setViewColor(View view, Cursor cursor) {
+			if (view == null || cursor == null) {
+				return;
+			}
+
+			int flag = cursor.getInt(cursor
+					.getColumnIndex(DatabaseContract.COLUMN_FLAG));
+			double price = cursor.getDouble(cursor
+					.getColumnIndex(DatabaseContract.COLUMN_PRICE));
+			double gridBuy = cursor.getDouble(cursor
+					.getColumnIndex(DatabaseContract.COLUMN_GRID_BUY));
+			double gridSell = cursor.getDouble(cursor
+					.getColumnIndex(DatabaseContract.COLUMN_GRID_SELL));
+
+			if (Utility.hasFlag(flag, Stock.FLAG_GRID)) {
+				view.setBackgroundColor(Color.rgb(240, 240, 240));
+				TextView textView = (TextView) view;
+				if (price < gridBuy) {
+					textView.setTextColor(Color.GREEN);
+				} else if (price > gridSell) {
+					textView.setTextColor(Color.RED);
+				}
+			}
+		}
+
+		void setViewColor(String period, View view, Cursor cursor) {
+			if (view == null || cursor == null) {
+				return;
+			}
+
+			setViewColor(view, cursor);
+
+//			TextView textView = (TextView) view;
+//			textView.setTextSize(14f);
 		}
 	}
 }

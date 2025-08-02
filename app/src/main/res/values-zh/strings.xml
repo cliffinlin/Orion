@@ -30,6 +30,7 @@
     <string name="action_interval">Interval</string>
     <string name="action_refresh">Refresh</string>
     <string name="action_favorite_all">Favorite all</string>
+    <string name="action_favorite_hold">Favorite hold</string>
     <string name="action_favorite_none">Favorite none</string>
     <string name="action_remove_favorite">Remove favorite</string>
     <string name="action_load">Load</string>
@@ -66,6 +67,7 @@
     <string name="added">Added</string>
     <string name="alarm">Alarm</string>
     <string name="app_name">Orion</string>
+    <string name="service_running">Service running</string>
     <string name="begin_date">Begin date</string>
     <string name="book_value_per_share">BPS</string>
     <string name="bonus">Bonus</string>

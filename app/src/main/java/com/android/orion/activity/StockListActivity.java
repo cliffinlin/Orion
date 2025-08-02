@@ -104,11 +104,11 @@ public class StockListActivity extends StorageActivity implements
 				break;
 			case R.id.action_refresh:
 				try {
-					mDatabaseManager.loadStockArrayMap(mStockArrayMap);
+					mStockDatabaseManager.loadStockArrayMap(mStockArrayMap);
 					for (Stock stock : mStockArrayMap.values()) {
-						mDatabaseManager.deleteStockData(stock);
-						mDatabaseManager.deleteStockTrend(stock);
-						mDatabaseManager.deleteStockPerceptron(stock.getId());
+						mStockDatabaseManager.deleteStockData(stock);
+						mStockDatabaseManager.deleteStockTrend(stock);
+						mStockDatabaseManager.deleteStockPerceptron(stock.getId());
 						Setting.setDownloadStockDataTimeMillis(stock, 0);
 						mStockDataProvider.download(stock);
 					}
@@ -125,6 +125,9 @@ public class StockListActivity extends StorageActivity implements
 			case R.id.action_favorite_all:
 				handleFavoriteAll();
 				break;
+			case R.id.action_favorite_hold:
+				handleFavoriteHold();
+				break;
 			case R.id.action_favorite_none:
 				handleFavoriteNone();
 				break;
@@ -136,7 +139,17 @@ public class StockListActivity extends StorageActivity implements
 	private void handleFavoriteAll() {
 		try {
 			ArrayList<Stock> stockList = new ArrayList();
-			mDatabaseManager.getStockList(mDatabaseManager.getStockClassASelection(), stockList);
+			mStockDatabaseManager.getStockList(mStockDatabaseManager.getClassASelection(), stockList);
+			updateFavorites(stockList, true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void handleFavoriteHold() {
+		try {
+			ArrayList<Stock> stockList = new ArrayList();
+			mStockDatabaseManager.getStockList(mStockDatabaseManager.getHoldSelection(), stockList);
 			updateFavorites(stockList, true);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -146,7 +159,7 @@ public class StockListActivity extends StorageActivity implements
 	private void handleFavoriteNone() {
 		try {
 			ArrayList<Stock> stockList = new ArrayList();
-			mDatabaseManager.getStockList(mDatabaseManager.getStockClassASelection(), stockList);
+			mStockDatabaseManager.getStockList(mStockDatabaseManager.getClassASelection(), stockList);
 			updateFavorites(stockList, false);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -384,7 +397,7 @@ public class StockListActivity extends StorageActivity implements
 			Stock stock = new Stock();
 
 			stock.setId(stockId);
-			mDatabaseManager.getStockById(stock);
+			mStockDatabaseManager.getStockById(stock);
 
 			try {
 				switch (view.getId()) {
@@ -410,13 +423,13 @@ public class StockListActivity extends StorageActivity implements
 											new DialogInterface.OnClickListener() {
 												public void onClick(DialogInterface dialog,
 												                    int which) {
-													mDatabaseManager.deleteStock(stockId);
-													mDatabaseManager.deleteTDXData(stock);
-													mDatabaseManager.deleteStockData(stock);
-													mDatabaseManager.deleteStockFinancial(stock);
-													mDatabaseManager.deleteStockBonus(stock);
-													mDatabaseManager.deleteStockShare(stock);
-													mDatabaseManager.deleteStockTrend(stock);
+													mStockDatabaseManager.deleteStock(stockId);
+													mStockDatabaseManager.deleteTDXData(stock);
+													mStockDatabaseManager.deleteStockData(stock);
+													mStockDatabaseManager.deleteStockFinancial(stock);
+													mStockDatabaseManager.deleteStockBonus(stock);
+													mStockDatabaseManager.deleteStockShare(stock);
+													mStockDatabaseManager.deleteStockTrend(stock);
 													Setting.setDownloadStockTimeMillis(stock, 0);
 													Setting.setDownloadStockDataTimeMillis(stock, 0);
 												}

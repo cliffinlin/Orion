@@ -95,10 +95,10 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 		switch (item.getItemId()) {
 			case R.id.action_refresh:
 				try {
-					mDatabaseManager.loadStockArrayMap(mStockArrayMap);
+					mStockDatabaseManager.loadStockArrayMap(mStockArrayMap);
 					for (Stock stock : mStockArrayMap.values()) {
-						mDatabaseManager.deleteStockFinancial(stock);
-						mDatabaseManager.deleteStockBonus(stock);
+						mStockDatabaseManager.deleteStockFinancial(stock);
+						mStockDatabaseManager.deleteStockBonus(stock);
 						Setting.setDownloadStockTimeMillis(stock, 0);
 						mStockDataProvider.download(stock);
 					}
@@ -256,7 +256,7 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 	}
 
 	CursorLoader getStockCursorLoader() {
-		String selection = mDatabaseManager.hasFlagSelection(Stock.FLAG_FAVORITE);
+		String selection = mStockDatabaseManager.getFlagSelection(Stock.FLAG_FAVORITE);
 
 		CursorLoader loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
 				DatabaseContract.Stock.PROJECTION_ALL, selection, null,
@@ -351,7 +351,7 @@ public class StockStatisticsChartListActivity extends BaseActivity implements
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			mDatabaseManager.closeCursor(cursor);
+			mStockDatabaseManager.closeCursor(cursor);
 		}
 
 		stockDataChart.setMainChartData();

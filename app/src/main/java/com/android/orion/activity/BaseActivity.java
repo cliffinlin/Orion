@@ -27,7 +27,7 @@ import com.android.orion.interfaces.AnalyzeListener;
 import com.android.orion.interfaces.DownloadListener;
 import com.android.orion.interfaces.IBackgroundHandler;
 import com.android.orion.interfaces.IStockDataProvider;
-import com.android.orion.manager.DatabaseManager;
+import com.android.orion.manager.StockDatabaseManager;
 import com.android.orion.manager.StockManager;
 import com.android.orion.provider.StockDataProvider;
 import com.android.orion.utility.Logger;
@@ -50,7 +50,7 @@ public class BaseActivity extends Activity implements IBackgroundHandler, Analyz
 	ArrayList<Stock> mStockList = new ArrayList<>();
 	LoaderManager mLoaderManager = getLoaderManager();
 	StockManager mStockManager = StockManager.getInstance();
-	DatabaseManager mDatabaseManager = DatabaseManager.getInstance();
+	StockDatabaseManager mStockDatabaseManager = StockDatabaseManager.getInstance();
 	IStockDataProvider mStockDataProvider = StockDataProvider.getInstance();
 	BackgroundHandler mBackgroundHandler;
 

@@ -11,7 +11,7 @@ import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockRZRQ;
 import com.android.orion.database.StockTrend;
-import com.android.orion.manager.DatabaseManager;
+import com.android.orion.manager.StockDatabaseManager;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Logger;
@@ -30,7 +30,7 @@ public class StockAnalyzer {
 	StringBuffer mContentText = new StringBuffer();
 
 	Context mContext = MainApplication.getContext();
-	DatabaseManager mDatabaseManager = DatabaseManager.getInstance();
+	StockDatabaseManager mStockDatabaseManager = StockDatabaseManager.getInstance();
 	FinancialAnalyzer mFinancialAnalyzer = FinancialAnalyzer.getInstance();
 	GridAnalyzer mGridAnalyzer = GridAnalyzer.getInstance();
 	TrendAnalyzer mTrendAnalyzer = TrendAnalyzer.getInstance();
@@ -52,15 +52,15 @@ public class StockAnalyzer {
 
 		try {
 			mStockDataList = mStock.getStockDataList(period);
-			mDatabaseManager.loadStockDataList(mStock, period, mStockDataList);
+			mStockDatabaseManager.loadStockDataList(mStock, period, mStockDataList);
 			if (Period.getPeriodIndex(period) <= Period.getPeriodIndex(Period.MONTH)) {
 				mFinancialAnalyzer.setNetProfileInYear(mStock, mStockDataList);
 			}
 			analyzeMacd(period);
 			analyzeStockData(period);
-			mDatabaseManager.updateStockData(mStock, period, mStockDataList);
+			mStockDatabaseManager.updateStockData(mStock, period, mStockDataList);
 			mStock.setModified(Utility.getCurrentDateTimeString());
-			mDatabaseManager.updateStock(mStock, mStock.getContentValues());
+			mStockDatabaseManager.updateStock(mStock, mStock.getContentValues());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -92,7 +92,7 @@ public class StockAnalyzer {
 			mFinancialAnalyzer.setupStockBonus(mStock);
 			mGridAnalyzer.analyze(mStock);
 			stock.setModified(Utility.getCurrentDateTimeString());
-			mDatabaseManager.updateStock(mStock, mStock.getContentValues());
+			mStockDatabaseManager.updateStock(mStock, mStock.getContentValues());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -170,7 +170,7 @@ public class StockAnalyzer {
 		}
 
 		String sortOrder = DatabaseContract.COLUMN_DATE + " DESC ";
-		mDatabaseManager.getStockRZRQMap(mStock, mStockRZRQMap, sortOrder);
+		mStockDatabaseManager.getStockRZRQMap(mStock, mStockRZRQMap, sortOrder);
 		StockRZRQ prevStockRZRQ = null;
 		for (StockData stockData : mStockDataList) {
 			StockRZRQ stockRZRQ = mStockRZRQMap.get(stockData.getDate());

@@ -42,6 +42,11 @@
         android:title="@string/action_favorite_all"
         app:showAsAction="never" />
     <item
+        android:id="@+id/action_favorite_hold"
+        android:orderInCategory="100"
+        android:title="@string/action_favorite_hold"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_favorite_none"
         android:orderInCategory="100"
         android:title="@string/action_favorite_none"

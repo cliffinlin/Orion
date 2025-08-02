@@ -561,13 +561,13 @@ public class StockPerceptronListActivity extends ListActivity implements
 	                               int position, long id) {
 		StockTrend stockTrend = new StockTrend();
 		stockTrend.setId(id);
-		mDatabaseManager.getStockTrendById(stockTrend);
+		mStockDatabaseManager.getStockTrendById(stockTrend);
 		Stock stock = new Stock();
 		stock.setSE(stockTrend.getSE());
 		stock.setCode(stockTrend.getCode());
-		mDatabaseManager.getStock(stock);
+		mStockDatabaseManager.getStock(stock);
 		if (TextUtils.isEmpty(stock.getSE()) || TextUtils.isEmpty(stock.getCode())) {
-//			mDatabaseManager.deleteStockTrend(stockId);
+//			mStockDatabaseManager.deleteStockTrend(stockId);
 //			restartLoader();
 			return true;
 		}

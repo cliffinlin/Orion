@@ -26,7 +26,7 @@ import com.android.orion.interfaces.AnalyzeListener;
 import com.android.orion.interfaces.DownloadListener;
 import com.android.orion.interfaces.IStockDataProvider;
 import com.android.orion.interfaces.StockListener;
-import com.android.orion.manager.DatabaseManager;
+import com.android.orion.manager.StockDatabaseManager;
 import com.android.orion.manager.StockManager;
 import com.android.orion.service.StockService;
 import com.android.orion.setting.Constant;
@@ -56,7 +56,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 	static ArrayMap<String, Stock> mRemovedArrayMap = new ArrayMap<>();
 	Context mContext = MainApplication.getContext();
 	StockAnalyzer mStockAnalyzer = StockAnalyzer.getInstance();
-	DatabaseManager mDatabaseManager = DatabaseManager.getInstance();
+	StockDatabaseManager mStockDatabaseManager = StockDatabaseManager.getInstance();
 	OkHttpClient mOkHttpClient = new OkHttpClient();
 
 	PowerManager mPowerManager;
@@ -95,6 +95,15 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			}
 		}
 		return mInstance;
+	}
+
+	@Override
+	public void onDestroy() {
+		releaseWakeLock();
+		mHandler.removeMessages(0);
+		if (mHandlerThread != null && mHandlerThread.isAlive()) {
+			mHandlerThread.quitSafely();
+		}
 	}
 
 	@NonNull
@@ -271,11 +280,6 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		}
 	}
 
-	@Override
-	public void onDestroy() {
-		releaseWakeLock();
-	}
-
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 	                                      @NonNull String key) {
 		if (key.contains(Setting.SETTING_PERIOD_)) {
@@ -283,7 +287,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 				return;
 			}
 
-			mDatabaseManager.loadStockArrayMap(mStockArrayMap);
+			mStockDatabaseManager.loadStockArrayMap(mStockArrayMap);
 			for (Stock current : mStockArrayMap.values()) {
 				Setting.setDownloadStockDataTimeMillis(current, 0);
 			}
@@ -299,7 +303,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			return;
 		}
 
-		mDatabaseManager.loadStockArrayMap(mStockArrayMap);
+		mStockDatabaseManager.loadStockArrayMap(mStockArrayMap);
 		if (mStockArrayMap.isEmpty()) {
 			Log.d("return, Stock array map is empty");
 			return;
@@ -342,7 +346,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 
 		mRemovedArrayMap.clear();
 
-		mDatabaseManager.loadStockArrayMap(mStockArrayMap);
+		mStockDatabaseManager.loadStockArrayMap(mStockArrayMap);
 
 		for (Stock current : mStockArrayMap.values()) {
 			if (TextUtils.equals(current.getCode(), stock.getCode())) {
@@ -504,9 +508,9 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			saveTDXData(stock, Period.MIN30, stockDataMin30List);
 			saveTDXData(stock, Period.MIN60, stockDataMin60List);
 
-			mDatabaseManager.deleteStockData(stock);
-			mDatabaseManager.deleteStockTrend(stock);
-			mDatabaseManager.deleteStockPerceptron(stock.getId());
+			mStockDatabaseManager.deleteStockData(stock);
+			mStockDatabaseManager.deleteStockTrend(stock);
+			mStockDatabaseManager.deleteStockPerceptron(stock.getId());
 			Setting.setDownloadStockTimeMillis(stock, 0);
 			Setting.setDownloadStockDataTimeMillis(stock, 0);
 			download(stock);
@@ -542,11 +546,11 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 				stock.setSE(stockInfo[0].toLowerCase());
 				stock.setCode(stockInfo[1]);
 				Setting.setTdxDataFileUri(stock, uri.toString());
-				if (!mDatabaseManager.isStockExist(stock)) {
+				if (!mStockDatabaseManager.isStockExist(stock)) {
 					stock.setCreated(Utility.getCurrentDateTimeString());
-					mDatabaseManager.insertStock(stock);
+					mStockDatabaseManager.insert(stock);
 				} else {
-					mDatabaseManager.getStock(stock);
+					mStockDatabaseManager.getStock(stock);
 				}
 				setupStockDataFile(stock, uri);
 			}
@@ -568,7 +572,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 
 		try {
 			ArrayList<String> contentList = new ArrayList<>();
-			mDatabaseManager.getTDXDataContentList(stock, stockData.getPeriod(), contentList);
+			mStockDatabaseManager.getTDXDataContentList(stock, stockData.getPeriod(), contentList);
 			for (int i = 0; i < contentList.size(); i++) {
 				String content = contentList.get(i);
 				if (TextUtils.isEmpty(content)) {
@@ -593,10 +597,10 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			return;
 		}
 
-		mDatabaseManager.deleteStockData(stockData.getSE(), stockData.getCode(), Period.YEAR);
-		mDatabaseManager.deleteStockData(stockData.getSE(), stockData.getCode(), Period.MONTH6);
-		mDatabaseManager.deleteStockData(stockData.getSE(), stockData.getCode(), Period.QUARTER);
-		mDatabaseManager.deleteStockData(stockData.getSE(), stockData.getCode(), Period.MONTH2);
+		mStockDatabaseManager.deleteStockData(stockData.getSE(), stockData.getCode(), Period.YEAR);
+		mStockDatabaseManager.deleteStockData(stockData.getSE(), stockData.getCode(), Period.MONTH6);
+		mStockDatabaseManager.deleteStockData(stockData.getSE(), stockData.getCode(), Period.QUARTER);
+		mStockDatabaseManager.deleteStockData(stockData.getSE(), stockData.getCode(), Period.MONTH2);
 
 		mergeStockDataMonth(stock, Period.YEAR, stockDataList);
 		mergeStockDataMonth(stock, Period.MONTH6, getDatetimeMonth6List(), stockDataList);
@@ -650,7 +654,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			result.setDate(stockData.getDate());
 			result.setTime(stockData.getTime());
 		}
-		mDatabaseManager.updateStockData(stock, period, resultList);
+		mStockDatabaseManager.updateStockData(stock, period, resultList);
 	}
 
 	void mergeStockDataMonth(Stock stock, String period, ArrayList<String> datetimeList, ArrayList<StockData> stockDataList) {
@@ -696,7 +700,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			result.setDate(stockData.getDate());
 			result.setTime(stockData.getTime());
 		}
-		mDatabaseManager.updateStockData(stock, period, resultList);
+		mStockDatabaseManager.updateStockData(stock, period, resultList);
 	}
 
 	void saveTDXData(Stock stock, StockData stockData, ArrayMap<String, StockData> stockDataMap) {
@@ -727,7 +731,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 
 		try {
 			TDXData tdxData = new TDXData();
-			mDatabaseManager.deleteTDXData(stock.getSE(), stock.getCode(), period);
+			mStockDatabaseManager.deleteTDXData(stock.getSE(), stock.getCode(), period);
 			ContentValues[] contentValuesArray = new ContentValues[stockDataList.size()];
 			for (StockData stockData : stockDataList) {
 				if (stockData == null) {
@@ -742,7 +746,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 				tdxData.setCreated(Utility.getCurrentDateTimeString());
 				contentValuesArray[stockDataList.indexOf(stockData)] = tdxData.getContentValues();
 			}
-			mDatabaseManager.bulkInsertTDXData(contentValuesArray);
+			mStockDatabaseManager.bulkInsertTDXData(contentValuesArray);
 			Log.d("bulkInsertTDXData " + stock.getName() + " " + stock.getSE() + stock.getCode() + " " + period);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -765,7 +769,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			outputStream = mContext.getContentResolver().openOutputStream(uri, "wt");
 			writer = new BufferedWriter(new OutputStreamWriter(outputStream));
 			ArrayList<String> contentList = new ArrayList<>();
-			mDatabaseManager.getTDXDataContentList(stock, period, contentList);
+			mStockDatabaseManager.getTDXDataContentList(stock, period, contentList);
 			int index = 0;
 			if (writer != null) {
 				for (String content : contentList) {

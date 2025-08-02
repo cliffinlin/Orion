@@ -129,7 +129,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 			mEditTextStockYield.setEnabled(false);
 			mStock.setId(mIntent.getLongExtra(Constant.EXTRA_STOCK_ID,
 					DatabaseContract.INVALID_ID));
-			mDatabaseManager.getStockById(mStock);
+			mStockDatabaseManager.getStockById(mStock);
 		}
 	}
 
@@ -251,13 +251,13 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 				mStock.setGridGap(gridGapValue);
 
 				if (TextUtils.equals(mAction, Constant.ACTION_FAVORITE_STOCK_INSERT)) {
-					if (!mDatabaseManager.isStockExist(mStock)) {
+					if (!mStockDatabaseManager.isStockExist(mStock)) {
 						mStock.setCreated(Utility.getCurrentDateTimeString());
-						Uri uri = mDatabaseManager.insertStock(mStock);
-						mDatabaseManager.getStock(uri, mStock);
-						mDatabaseManager.updateStock(mStock, mStock.getContentValuesEdit());
+						Uri uri = mStockDatabaseManager.insert(mStock);
+						mStockDatabaseManager.getStock(uri, mStock);
+						mStockDatabaseManager.updateStock(mStock, mStock.getContentValuesEdit());
 					} else {
-						mDatabaseManager.getStock(mStock);
+						mStockDatabaseManager.getStock(mStock);
 						updateView();
 						Toast.makeText(mContext, R.string.stock_exist,
 								Toast.LENGTH_LONG).show();
@@ -265,7 +265,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 					}
 				} else if (TextUtils.equals(mAction, Constant.ACTION_STOCK_EDIT)) {
 					mStock.setModified(Utility.getCurrentDateTimeString());
-					mDatabaseManager.updateStock(mStock,
+					mStockDatabaseManager.updateStock(mStock,
 							mStock.getContentValuesEdit());
 				}
 

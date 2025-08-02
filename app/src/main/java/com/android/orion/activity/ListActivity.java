@@ -8,7 +8,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class ListActivity extends StorageActivity {
-	String mLoadingStockCode = "";
+	String mAnalyzingStockCode = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -60,22 +60,22 @@ public class ListActivity extends StorageActivity {
 
 	@Override
 	public void onAnalyzeStart(String stockCode) {
-		mLoadingStockCode = stockCode;
+		mAnalyzingStockCode = stockCode;
 	}
 
 	@Override
 	public void onAnalyzeFinish(String stockCode) {
 		super.onAnalyzeFinish(stockCode);
-		mLoadingStockCode = "";
+		mAnalyzingStockCode = "";
 	}
 
 	@Override
 	public void onDownloadStart(String stockCode) {
-		mLoadingStockCode = stockCode;
+		mAnalyzingStockCode = stockCode;
 	}
 
 	@Override
 	public void onDownloadComplete(String stockCode) {
-		mLoadingStockCode = "";
+		mAnalyzingStockCode = "";
 	}
 }
