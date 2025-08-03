@@ -449,7 +449,7 @@ public class StockDeal extends DatabaseTable {
 		} else if (mBuy > 0) {
 			mNet = Utility.Round2(100 * ((mPrice - mBuy) * Math.abs(mVolume) - mFee) / Math.abs(mVolume) / mBuy);
 		} else if (mSell > 0) {
-			mNet = Utility.Round2(100 * (mSell - mPrice) / mSell);
+			mNet = Utility.Round2(100 * (mPrice - mSell) / mSell);
 		}
 	}
 

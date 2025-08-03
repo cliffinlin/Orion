@@ -1,5 +1,7 @@
 package com.android.orion.analyzer;
 
+import android.text.TextUtils;
+
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockGrid;
@@ -83,12 +85,21 @@ public class GridAnalyzer {
 		return mStockGridSell.getPrice();
 	}
 
-	public double getSellProfit() {
+	public double getSockDealProfit(String type) {
+		double result = 0;
 		mStockDatabaseManager.getStockDealList(mStock, mStockDealList);
 		if (mStockDealList == null || mStockDealList.size() == 0) {
 			return 0;
 		}
-		return mStockDealList.get(mStockDealList.size() - 1).getProfit();
+
+		for (int i = mStockDealList.size() - 1; i >= 0 ; i--) {
+			StockDeal stockDeal = mStockDealList.get(i);
+			if (TextUtils.equals(stockDeal.getType(), type)) {
+				result = stockDeal.getProfit();
+				break;
+			}
+		}
+		return result;
 	}
 
 	public String getBuyNotifyString() {
