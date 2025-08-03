@@ -15,6 +15,7 @@ import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 
 import com.android.orion.R;
@@ -29,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StockDealActivity extends DatabaseActivity implements
-		OnClickListener {
+		OnClickListener, RadioGroup.OnCheckedChangeListener {
 
 	static final int MESSAGE_LOAD_DEAL = 0;
 	static final int MESSAGE_SAVE_DEAL = 1;
@@ -41,6 +42,7 @@ public class StockDealActivity extends DatabaseActivity implements
 	List<String> mListStockAccount;
 	ArrayAdapter<String> mArrayAdapterStockAccount;
 	Spinner mSpinnerStockAccount;
+	RadioGroup mRadioGroupDealType;
 
 	EditText mEditTextStockName;
 	EditText mEditTextStockCode;
@@ -141,6 +143,7 @@ public class StockDealActivity extends DatabaseActivity implements
 
 	void initView() {
 		mSpinnerStockAccount = findViewById(R.id.spinner_stock_account);
+		mRadioGroupDealType = findViewById(R.id.radiogroup_deal_type);
 		mEditTextStockName = findViewById(R.id.edittext_stock_name);
 		mEditTextStockCode = findViewById(R.id.edittext_stock_code);
 		mEditTextDealProfit = findViewById(R.id.edittext_deal_profit);
@@ -150,6 +153,7 @@ public class StockDealActivity extends DatabaseActivity implements
 		mButtonOk = findViewById(R.id.button_ok);
 		mButtonCancel = findViewById(R.id.button_cancel);
 
+		mRadioGroupDealType.setOnCheckedChangeListener(this);
 		mEditTextStockName.setOnClickListener(this);
 		mEditTextStockCode.setOnClickListener(this);
 		mEditTextDealProfit.setOnClickListener(this);
@@ -187,6 +191,63 @@ public class StockDealActivity extends DatabaseActivity implements
 			setTitle(R.string.deal_edit);
 		}
 
+		mEditTextBuyPrice.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				String buyPriceString = s.toString();
+				double buy = 0;
+				if (!TextUtils.isEmpty(buyPriceString)) {
+					if (TextUtils.equals(buyPriceString, Constant.MARK_ADD) || TextUtils.equals(buyPriceString, Constant.MARK_MINUS)) {
+						return;
+					}
+					buy = Double.parseDouble(buyPriceString);
+				}
+				if (buy == 0) {
+					return;
+				}
+				mDeal.setBuy(buy);
+				setupDeal();
+				mEditTextDealProfit.setText(String.valueOf(mDeal.getProfit()));
+			}
+		});
+
+		mEditTextSellPrice.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				String sellPriceString = s.toString();
+				double sell = 0;
+				if (!TextUtils.isEmpty(sellPriceString)) {
+					if (TextUtils.equals(sellPriceString, Constant.MARK_ADD) || TextUtils.equals(sellPriceString, Constant.MARK_MINUS)) {
+						return;
+					}
+					sell = Double.parseDouble(sellPriceString);
+				}
+				if (sell == 0) {
+					return;
+				}
+				mDeal.setSell(sell);
+				setupDeal();
+				mEditTextDealProfit.setText(String.valueOf(mDeal.getProfit()));
+			}
+		});
+
 		mEditTextDealVolume.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -206,23 +267,25 @@ public class StockDealActivity extends DatabaseActivity implements
 					if (TextUtils.equals(volumeString, Constant.MARK_ADD) || TextUtils.equals(volumeString, Constant.MARK_MINUS)) {
 						return;
 					}
-
 					volume = Long.parseLong(volumeString);
 				}
-
 				if (volume == 0) {
 					return;
 				}
-
 				mDeal.setVolume(volume);
-
-				mDeal.setupFee(mStock.getRDate(), mStock.getDividend());
-				mDeal.setupNet();
-				mDeal.setupValue();
-				mDeal.setupProfit();
+				setupDeal();
 				mEditTextDealProfit.setText(String.valueOf(mDeal.getProfit()));
 			}
 		});
+	}
+
+	void setupDeal() {
+		mDeal.setupFee(mStock.getRDate(), mStock.getDividend());
+		mDeal.setupNet();
+		mDeal.setupValue();
+		mDeal.setupProfit();
+		mDeal.setupBonus(mStock.getDividend());
+		mDeal.setupYield(mStock.getDividend());
 	}
 
 	void updateView() {
@@ -232,6 +295,15 @@ public class StockDealActivity extends DatabaseActivity implements
 				mSpinnerStockAccount.setSelection(i);
 				break;
 			}
+		}
+		if (TextUtils.equals(mDeal.getType(), StockDeal.TYPE_BUY)) {
+			mRadioGroupDealType.check(R.id.radio_deal_buy);
+			mEditTextBuyPrice.setEnabled(true);
+			mEditTextSellPrice.setEnabled(false);
+		} else {
+			mRadioGroupDealType.check(R.id.radio_deal_sell);
+			mEditTextBuyPrice.setEnabled(false);
+			mEditTextSellPrice.setEnabled(true);
 		}
 		mEditTextStockName.setText(mDeal.getName());
 		mEditTextStockCode.setText(mDeal.getCode());
@@ -248,10 +320,26 @@ public class StockDealActivity extends DatabaseActivity implements
 	}
 
 	@Override
-	public void onClick(View view) {
-		int id = view.getId();
+	public void onCheckedChanged(RadioGroup group, int checkedId) {
+		if (group == mRadioGroupDealType) {
+			switch (checkedId) {
+				case R.id.radio_deal_buy:
+					mEditTextBuyPrice.setEnabled(true);
+					mEditTextSellPrice.setEnabled(false);
+					break;
+				case R.id.radio_deal_sell:
+					mEditTextBuyPrice.setEnabled(false);
+					mEditTextSellPrice.setEnabled(true);
+					break;
+			}
+		}
+	}
 
-		switch (id) {
+	@Override
+	public void onClick(View view) {
+		int viewId = view.getId();
+
+		switch (viewId) {
 			case R.id.edittext_stock_name:
 			case R.id.edittext_stock_code:
 				if (TextUtils.equals(Constant.ACTION_DEAL_INSERT, mAction)) {
@@ -267,6 +355,13 @@ public class StockDealActivity extends DatabaseActivity implements
 
 				String stockAccount = mSpinnerStockAccount.getSelectedItem().toString();
 				mDeal.setAccount(stockAccount);
+
+				int id = mRadioGroupDealType.getCheckedRadioButtonId();
+				if (id == R.id.radio_deal_buy) {
+					mDeal.setType(StockDeal.TYPE_BUY);
+				} else if (id == R.id.radio_deal_sell) {
+					mDeal.setType(StockDeal.TYPE_SELL);
+				}
 
 				buyString = mEditTextBuyPrice.getText().toString();
 				if (!TextUtils.isEmpty(buyString)) {
@@ -289,12 +384,7 @@ public class StockDealActivity extends DatabaseActivity implements
 					mDeal.setVolume(0);
 				}
 
-				mDeal.setupFee(mStock.getRDate(), mStock.getDividend());
-				mDeal.setupNet();
-				mDeal.setupValue();
-				mDeal.setupProfit();
-				mDeal.setupBonus(mStock.getDividend());
-				mDeal.setupYield(mStock.getDividend());
+				setupDeal();
 				mHandler.sendEmptyMessage(MESSAGE_SAVE_DEAL);
 				setResult(RESULT_OK);
 				finish();

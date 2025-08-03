@@ -27,23 +27,53 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/textview_stock_name"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="14dp"
-            android:layout_marginRight="14dp"
-            android:labelFor="@+id/edittext_stock_name"
-            android:text="@string/stock_name" />
+            android:layout_weight="1">
 
-        <EditText
-            android:id="@+id/edittext_stock_name"
-            android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/textview_stock_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:labelFor="@+id/edittext_stock_name"
+                android:text="@string/stock_name" />
+
+            <EditText
+                android:id="@+id/edittext_stock_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="14dp"
+                android:layout_marginBottom="14dp"
+                android:inputType="text" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="18dp"
-            android:layout_marginRight="14dp"
-            android:layout_marginBottom="14dp"
-            android:inputType="text" />
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/textview_stock_code"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:labelFor="@+id/edittext_stock_code"
+                android:text="@string/stock_code" />
+
+            <EditText
+                android:id="@+id/edittext_stock_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="14dp"
+                android:layout_marginBottom="14dp"
+                android:inputType="numberDecimal" />
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -51,22 +81,35 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/textview_stock_code"
+            android:id="@+id/textview_deal_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="14dp"
             android:layout_marginRight="14dp"
-            android:labelFor="@+id/edittext_stock_code"
-            android:text="@string/stock_code" />
+            android:layout_weight="1"
+            android:text="@string/type" />
 
-        <EditText
-            android:id="@+id/edittext_stock_code"
-            android:layout_width="match_parent"
+        <RadioGroup
+            android:id="@+id/radiogroup_deal_type"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="18dp"
-            android:layout_marginRight="14dp"
-            android:layout_marginBottom="14dp"
-            android:inputType="numberDecimal" />
+            android:layout_weight="4"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radio_deal_buy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/buy" />
+
+            <RadioButton
+                android:id="@+id/radio_deal_sell"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/sell" />
+        </RadioGroup>
     </LinearLayout>
 
     <LinearLayout
@@ -88,7 +131,57 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="2dp"
             android:layout_marginRight="14dp"
-            android:inputType="numberSigned"></EditText>
+            android:inputType="numberSigned" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/textview_buy_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="14dp"
+            android:layout_marginRight="14dp"
+            android:labelFor="@+id/edittext_buy_price"
+            android:text="@string/buy_price" />
+
+        <EditText
+            android:id="@+id/edittext_buy_price"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="14dp"
+            android:layout_marginBottom="14dp"
+            android:layout_weight="0.08"
+            android:ems="10"
+            android:inputType="numberDecimal" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/textview_sell_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="14dp"
+            android:layout_marginRight="14dp"
+            android:labelFor="@+id/edittext_sell_price"
+            android:text="@string/sell_price" />
+
+        <EditText
+            android:id="@+id/edittext_sell_price"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="14dp"
+            android:layout_marginBottom="14dp"
+            android:layout_weight="0.08"
+            android:ems="10"
+            android:inputType="numberDecimal" />
     </LinearLayout>
 
     <LinearLayout
@@ -114,56 +207,6 @@
 
             <requestFocus />
         </EditText>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/textview_buy_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="14dp"
-            android:layout_marginRight="14dp"
-            android:labelFor="@+id/edittext_buy_price"
-            android:text="@string/buy_price" />
-
-        <EditText
-            android:id="@+id/edittext_buy_price"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="18dp"
-            android:layout_marginRight="14dp"
-            android:layout_marginBottom="14dp"
-            android:layout_weight="0.08"
-            android:ems="10"
-            android:inputType="numberDecimal"></EditText>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/textview_sell_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="14dp"
-            android:layout_marginRight="14dp"
-            android:labelFor="@+id/edittext_sell_price"
-            android:text="@string/sell_price" />
-
-        <EditText
-            android:id="@+id/edittext_sell_price"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="18dp"
-            android:layout_marginRight="14dp"
-            android:layout_marginBottom="14dp"
-            android:layout_weight="0.08"
-            android:ems="10"
-            android:inputType="numberDecimal"></EditText>
     </LinearLayout>
 
     <LinearLayout

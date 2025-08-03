@@ -57,8 +57,8 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mCheckBoxFavorite = findViewById(R.id.checkbox_favorite);
 		mCheckBoxNotify = findViewById(R.id.checkbox_notify);
 		mCheckBoxGrid = findViewById(R.id.checkbox_grid);
-		mRadioGroupClass = findViewById(R.id.radio_group_class);
-		mRadioGroupSE = findViewById(R.id.radio_group_se);
+		mRadioGroupClass = findViewById(R.id.radiogroup_class);
+		mRadioGroupSE = findViewById(R.id.radiogroup_se);
 		mEditTextStockName = findViewById(R.id.edittext_stock_name);
 		mEditTextStockCode = findViewById(R.id.edittext_stock_code);
 		mEditTextStockHold = findViewById(R.id.edittext_stock_hold);

@@ -169,12 +169,12 @@ public class StockFinancialListActivity extends ListActivity implements
 
 	@Override
 	public void onClick(@NonNull View view) {
-		int id = view.getId();
+		int viewId = view.getId();
 
 		resetHeaderTextColor();
-		setHeaderTextColor(id, mHeaderTextHighlightColor);
+		setHeaderTextColor(viewId, mHeaderTextHighlightColor);
 
-		switch (id) {
+		switch (viewId) {
 			case R.id.stock_name_code:
 				mSortOrderColumn = DatabaseContract.COLUMN_CODE;
 				break;

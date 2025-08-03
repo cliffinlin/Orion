@@ -119,9 +119,9 @@ public class StockFilterActivity extends DatabaseActivity implements
 
 	@Override
 	public void onClick(@NonNull View view) {
-		int id = view.getId();
+		int viewId = view.getId();
 
-		switch (id) {
+		switch (viewId) {
 			case R.id.checkbox_enabled:
 				mStockFilter.setEnabled(mCheckBoxEnabled.isChecked());
 				update();

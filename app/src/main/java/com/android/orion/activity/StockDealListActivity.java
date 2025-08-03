@@ -87,6 +87,8 @@ public class StockDealListActivity extends ListActivity implements
 	TextView mTextViewFee = null;
 	TextView mTextViewProfit = null;
 	TextView mTextViewAccount = null;
+	TextView mTextViewDate = null;
+	TextView mTextViewType = null;
 	TextView mTextViewCreated = null;
 	TextView mTextViewModified = null;
 
@@ -304,17 +306,14 @@ public class StockDealListActivity extends ListActivity implements
 
 	@Override
 	public void onClick(@NonNull View view) {
-		int id = view.getId();
+		int viewId = view.getId();
 
 		resetHeaderTextColor();
-		setHeaderTextColor(id, mHeaderTextHighlightColor);
+		setHeaderTextColor(viewId, mHeaderTextHighlightColor);
 
-		switch (id) {
+		switch (viewId) {
 			case R.id.stock_name_code:
 				mSortOrderColumn = DatabaseContract.COLUMN_CODE;
-				break;
-			case R.id.account:
-				mSortOrderColumn = DatabaseContract.COLUMN_ACCOUNT;
 				break;
 			case R.id.price:
 				mSortOrderColumn = DatabaseContract.COLUMN_PRICE;
@@ -339,6 +338,15 @@ public class StockDealListActivity extends ListActivity implements
 				break;
 			case R.id.fee:
 				mSortOrderColumn = DatabaseContract.COLUMN_FEE;
+				break;
+			case R.id.account:
+				mSortOrderColumn = DatabaseContract.COLUMN_ACCOUNT;
+				break;
+			case R.id.date:
+				mSortOrderColumn = DatabaseContract.COLUMN_DATE;
+				break;
+			case R.id.type:
+				mSortOrderColumn = DatabaseContract.COLUMN_TYPE;
 				break;
 			case R.id.created:
 				mSortOrderColumn = DatabaseContract.COLUMN_CREATED;
@@ -388,6 +396,8 @@ public class StockDealListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewFee, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewProfit, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewAccount, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewDate, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewType, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewCreated, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewModified, mHeaderTextDefaultColor);
 	}
@@ -461,6 +471,16 @@ public class StockDealListActivity extends ListActivity implements
 			mTextViewAccount.setOnClickListener(this);
 		}
 
+		mTextViewDate = findViewById(R.id.date);
+		if (mTextViewDate != null) {
+			mTextViewDate.setOnClickListener(this);
+		}
+
+		mTextViewType = findViewById(R.id.type);
+		if (mTextViewType != null) {
+			mTextViewType.setOnClickListener(this);
+		}
+
 		mTextViewCreated = findViewById(R.id.created);
 		if (mTextViewCreated != null) {
 			mTextViewCreated.setOnClickListener(this);
@@ -496,6 +516,10 @@ public class StockDealListActivity extends ListActivity implements
 			setHeaderTextColor(mTextViewProfit, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_ACCOUNT)) {
 			setHeaderTextColor(mTextViewAccount, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_DATE)) {
+			setHeaderTextColor(mTextViewDate, mHeaderTextHighlightColor);
+		} else if (mSortOrder.contains(DatabaseContract.COLUMN_TYPE)) {
+			setHeaderTextColor(mTextViewType, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_CREATED)) {
 			setHeaderTextColor(mTextViewCreated, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_MODIFIED)) {
@@ -521,6 +545,8 @@ public class StockDealListActivity extends ListActivity implements
 				DatabaseContract.COLUMN_FEE,
 				DatabaseContract.COLUMN_PROFIT,
 				DatabaseContract.COLUMN_ACCOUNT,
+				DatabaseContract.COLUMN_DATE,
+				 DatabaseContract.COLUMN_TYPE,
 				DatabaseContract.COLUMN_CREATED,
 				DatabaseContract.COLUMN_MODIFIED};
 		int[] mRightTo = new int[]{
@@ -535,6 +561,8 @@ public class StockDealListActivity extends ListActivity implements
 				R.id.fee,
 				R.id.profit,
 				R.id.account,
+				R.id.date,
+				R.id.type,
 				R.id.created,
 				R.id.modified};
 

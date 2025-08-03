@@ -134,7 +134,7 @@
                 android:text="@string/stock_class" />
 
             <RadioGroup
-                android:id="@+id/radio_group_class"
+                android:id="@+id/radiogroup_class"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
@@ -168,7 +168,7 @@
                 android:text="@string/stock_se" />
 
             <RadioGroup
-                android:id="@+id/radio_group_se"
+                android:id="@+id/radiogroup_se"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 

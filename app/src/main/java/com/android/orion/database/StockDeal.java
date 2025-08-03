@@ -14,9 +14,9 @@ public class StockDeal extends DatabaseTable {
 	public static final String ACCOUNT_A = "A";
 	public static final String ACCOUNT_B = "B";
 
-	public static final String ACTION_NONE = "";
-	public static final String ACTION_BUY = "B";
-	public static final String ACTION_SELL = "S";
+	public static final String TYPE_BUY = "BUY";
+	public static final String TYPE_NONE = "";
+	public static final String TYPE_SELL = "SELL";
 
 	public static final double BUY_STAMP_DUTY_RATE = 0;
 	public static final double SELL_STAMP_DUTY_RATE = 1.0 / 1000.0;
@@ -39,7 +39,6 @@ public class StockDeal extends DatabaseTable {
 	protected String mSE;
 	protected String mCode;
 	protected String mName;
-	protected String mAccount;
 	protected double mPrice;
 	protected double mNet;
 	protected double mBuy;
@@ -50,6 +49,9 @@ public class StockDeal extends DatabaseTable {
 	protected double mFee;
 	protected double mBonus;
 	protected double mYield;
+	protected String mAccount;
+	protected String mDate;
+	protected String mType;
 
 	public StockDeal() {
 		init();
@@ -71,7 +73,6 @@ public class StockDeal extends DatabaseTable {
 		mSE = "";
 		mCode = "";
 		mName = "";
-		mAccount = "";
 		mPrice = 0;
 		mNet = 0;
 		mBuy = 0;
@@ -82,6 +83,9 @@ public class StockDeal extends DatabaseTable {
 		mFee = 0;
 		mBonus = 0;
 		mYield = 0;
+		mAccount = "";
+		mDate = "";
+		mType = TYPE_BUY;
 	}
 
 	@Override
@@ -91,7 +95,6 @@ public class StockDeal extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_SE, mSE);
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
-		contentValues.put(DatabaseContract.COLUMN_ACCOUNT, mAccount);
 		contentValues.put(DatabaseContract.COLUMN_PRICE, mPrice);
 		contentValues.put(DatabaseContract.COLUMN_NET, mNet);
 		contentValues.put(DatabaseContract.COLUMN_BUY, mBuy);
@@ -102,6 +105,9 @@ public class StockDeal extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_FEE, mFee);
 		contentValues.put(DatabaseContract.COLUMN_BONUS, mBonus);
 		contentValues.put(DatabaseContract.COLUMN_YIELD, mYield);
+		contentValues.put(DatabaseContract.COLUMN_ACCOUNT, mAccount);
+		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);
+		contentValues.put(DatabaseContract.COLUMN_TYPE, mType);
 		return contentValues;
 	}
 
@@ -117,7 +123,6 @@ public class StockDeal extends DatabaseTable {
 		setSE(stockDeal.mSE);
 		setCode(stockDeal.mCode);
 		setName(stockDeal.mName);
-		setAccount(stockDeal.mAccount);
 		setPrice(stockDeal.mPrice);
 		setNet(stockDeal.mNet);
 		setBuy(stockDeal.mBuy);
@@ -128,6 +133,9 @@ public class StockDeal extends DatabaseTable {
 		setFee(stockDeal.mFee);
 		setBonus(stockDeal.mBonus);
 		setYield(stockDeal.mYield);
+		setAccount(stockDeal.mAccount);
+		setDate(stockDeal.mDate);
+		setType(stockDeal.mType);
 	}
 
 	@Override
@@ -143,7 +151,6 @@ public class StockDeal extends DatabaseTable {
 		setSE(cursor);
 		setCode(cursor);
 		setName(cursor);
-		setAccount(cursor);
 		setPrice(cursor);
 		setNet(cursor);
 		setBuy(cursor);
@@ -154,6 +161,9 @@ public class StockDeal extends DatabaseTable {
 		setFee(cursor);
 		setBonus(cursor);
 		setYield(cursor);
+		setAccount(cursor);
+		setDate(cursor);
+		setType(cursor);
 	}
 
 	public String getSE() {
@@ -205,23 +215,6 @@ public class StockDeal extends DatabaseTable {
 
 		setName(cursor.getString(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_NAME)));
-	}
-
-	public String getAccount() {
-		return mAccount;
-	}
-
-	public void setAccount(String account) {
-		mAccount = account;
-	}
-
-	void setAccount(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setAccount(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_ACCOUNT)));
 	}
 
 	public double getPrice() {
@@ -392,6 +385,57 @@ public class StockDeal extends DatabaseTable {
 
 		setYield(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_YIELD)));
+	}
+
+	public String getAccount() {
+		return mAccount;
+	}
+
+	public void setAccount(String account) {
+		mAccount = account;
+	}
+
+	void setAccount(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setAccount(cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_ACCOUNT)));
+	}
+
+	public String getDate() {
+		return mDate;
+	}
+
+	public void setDate(String date) {
+		mDate = date;
+	}
+
+	void setDate(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setDate(cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_DATE)));
+	}
+
+	public String getType() {
+		return mType;
+	}
+
+	public void setType(String type) {
+		mType = type;
+	}
+
+	void setType(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setType(cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_TYPE)));
 	}
 
 	public void setupNet() {
@@ -659,19 +703,19 @@ public class StockDeal extends DatabaseTable {
 	}
 
 	public String toString() {
-		StringBuffer stringBuffer = new StringBuffer();
-
+		StringBuilder stringBuffer = new StringBuilder();
 		stringBuffer.append(mName + " ");
-		stringBuffer.append(mAccount + " ");
-		stringBuffer.append("mBuy=" + mBuy + ", ");
-		stringBuffer.append("mSell=" + mSell + ",  ");
-		stringBuffer.append("mVolume=" + mVolume + ",  ");
-		stringBuffer.append("mValue=" + mValue + ",  ");
-		stringBuffer.append("mProfit=" + mProfit + ",  ");
-		stringBuffer.append("mFee=" + mFee + ",  ");
-		stringBuffer.append("mBonus=" + mBonus + ",  ");
-		stringBuffer.append("mYield=" + mYield);
-
+		stringBuffer.append(" Buy=" + mBuy);
+		stringBuffer.append(" Sell=" + mSell);
+		stringBuffer.append(" Volume=" + mVolume);
+		stringBuffer.append(" Value=" + mValue);
+		stringBuffer.append(" Profit=" + mProfit);
+		stringBuffer.append(" Fee=" + mFee);
+		stringBuffer.append(" Bonus=" + mBonus);
+		stringBuffer.append(" Yield=" + mYield);
+		stringBuffer.append(" Account=" + mAccount);
+		stringBuffer.append(" Date=" + mDate);
+		stringBuffer.append(" Type=" + mType);
 		return stringBuffer.toString();
 	}
 }

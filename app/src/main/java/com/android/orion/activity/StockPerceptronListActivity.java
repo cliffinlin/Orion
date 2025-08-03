@@ -165,12 +165,12 @@ public class StockPerceptronListActivity extends ListActivity implements
 
 	@Override
 	public void onClick(View view) {
-		int id = view.getId();
+		int viewId = view.getId();
 
 		resetHeaderTextColor();
-		setHeaderTextColor(id, mHeaderTextHighlightColor);
+		setHeaderTextColor(viewId, mHeaderTextHighlightColor);
 
-		switch (id) {
+		switch (viewId) {
 			case R.id.stock_name_code:
 				mSortOrderColumn = DatabaseContract.COLUMN_ID;
 				break;
