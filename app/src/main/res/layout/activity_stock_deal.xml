@@ -86,30 +86,51 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="14dp"
             android:layout_marginRight="14dp"
-            android:layout_weight="1"
             android:text="@string/type" />
 
         <RadioGroup
             android:id="@+id/radiogroup_deal_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="4"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_weight="1">
 
             <RadioButton
                 android:id="@+id/radio_deal_buy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:text="@string/buy" />
 
             <RadioButton
                 android:id="@+id/radio_deal_sell"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:text="@string/sell" />
         </RadioGroup>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="8">
+
+            <TextView
+                android:id="@+id/textview_deal_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:labelFor="@+id/edittext_deal_date"
+                android:text="@string/date" />
+
+            <EditText
+                android:id="@+id/edittext_deal_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="14dp"
+                android:layout_marginBottom="14dp"
+                android:focusable="false"
+                android:clickable="true"
+                android:inputType="text" />
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -204,7 +225,6 @@
             android:layout_marginLeft="2dp"
             android:layout_marginRight="14dp"
             android:inputType="numberSigned">
-
             <requestFocus />
         </EditText>
     </LinearLayout>

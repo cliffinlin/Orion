@@ -1,5 +1,6 @@
 package com.android.orion.activity;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.android.orion.R;
 import com.android.orion.database.DatabaseContract;
@@ -26,8 +28,11 @@ import com.android.orion.setting.Constant;
 import com.android.orion.utility.RecordFile;
 import com.android.orion.utility.Utility;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class StockDealActivity extends DatabaseActivity implements
 		OnClickListener, RadioGroup.OnCheckedChangeListener {
@@ -50,6 +55,7 @@ public class StockDealActivity extends DatabaseActivity implements
 	EditText mEditTextBuyPrice;
 	EditText mEditTextSellPrice;
 	EditText mEditTextDealVolume;
+	EditText mEditTextDealDate;
 
 	Button mButtonOk;
 	Button mButtonCancel;
@@ -94,6 +100,7 @@ public class StockDealActivity extends DatabaseActivity implements
 					mDeal.setName(mStock.getName());
 					mDeal.setPrice(mStock.getPrice());
 					mDeal.setBuy(mStock.getPrice());
+					mDeal.setDate(Utility.getCurrentDateString());
 					updateView();
 					break;
 
@@ -104,6 +111,7 @@ public class StockDealActivity extends DatabaseActivity implements
 					mDeal.setName(mStock.getName());
 					mDeal.setPrice(mStock.getPrice());
 					mDeal.setBuy(mStock.getPrice());
+					mDeal.setDate(Utility.getCurrentDateString());
 					updateView();
 					break;
 
@@ -150,6 +158,7 @@ public class StockDealActivity extends DatabaseActivity implements
 		mEditTextBuyPrice = findViewById(R.id.edittext_buy_price);
 		mEditTextSellPrice = findViewById(R.id.edittext_sell_price);
 		mEditTextDealVolume = findViewById(R.id.edittext_deal_volume);
+		mEditTextDealDate = findViewById(R.id.edittext_deal_date);
 		mButtonOk = findViewById(R.id.button_ok);
 		mButtonCancel = findViewById(R.id.button_cancel);
 
@@ -160,6 +169,7 @@ public class StockDealActivity extends DatabaseActivity implements
 		mEditTextBuyPrice.setOnClickListener(this);
 		mEditTextSellPrice.setOnClickListener(this);
 		mEditTextDealVolume.setOnClickListener(this);
+		mEditTextDealDate.setOnClickListener(this);
 		mButtonOk.setOnClickListener(this);
 		mButtonCancel.setOnClickListener(this);
 
@@ -311,6 +321,7 @@ public class StockDealActivity extends DatabaseActivity implements
 		mEditTextBuyPrice.setText(String.valueOf(mDeal.getBuy()));
 		mEditTextSellPrice.setText(String.valueOf(mDeal.getSell()));
 		mEditTextDealVolume.setText(String.valueOf(mDeal.getVolume()));
+		mEditTextDealDate.setText(mDeal.getDate());
 	}
 
 	@Override
@@ -348,6 +359,9 @@ public class StockDealActivity extends DatabaseActivity implements
 					startActivityForResult(intent, REQUEST_CODE_STOCK_ID);
 				}
 				break;
+			case R.id.edittext_deal_date:
+				showDatePicker();
+				break;
 			case R.id.button_ok:
 				String buyString = "";
 				String sellString = "";
@@ -361,6 +375,14 @@ public class StockDealActivity extends DatabaseActivity implements
 					mDeal.setType(StockDeal.TYPE_BUY);
 				} else if (id == R.id.radio_deal_sell) {
 					mDeal.setType(StockDeal.TYPE_SELL);
+				}
+
+				String dealDate = mEditTextDealDate.getText().toString();
+				if (TextUtils.isEmpty(dealDate)) {
+					Toast.makeText(mContext, R.string.stock_deal_date_empty, Toast.LENGTH_LONG).show();
+					return;
+				} else {
+					mDeal.setDate(dealDate);
 				}
 
 				buyString = mEditTextBuyPrice.getText().toString();
@@ -378,10 +400,17 @@ public class StockDealActivity extends DatabaseActivity implements
 				}
 
 				volumeString = mEditTextDealVolume.getText().toString();
-				if (!TextUtils.isEmpty(volumeString)) {
-					mDeal.setVolume(Long.parseLong(volumeString));
+				if (TextUtils.isEmpty(volumeString)) {
+					Toast.makeText(mContext, R.string.stock_deal_volume_empty, Toast.LENGTH_LONG).show();
+					return;
 				} else {
-					mDeal.setVolume(0);
+					long volumeValue = Long.parseLong(volumeString);
+					if (volumeValue > 0) {
+						mDeal.setVolume(volumeValue);
+					} else {
+						Toast.makeText(mContext, R.string.stock_deal_volume_empty, Toast.LENGTH_LONG).show();
+						return;
+					}
 				}
 
 				setupDeal();
@@ -416,4 +445,22 @@ public class StockDealActivity extends DatabaseActivity implements
 			}
 		}
 	}
+
+	private void showDatePicker() {
+		Calendar calendar = Calendar.getInstance();
+		DatePickerDialog datePickerDialog = new DatePickerDialog(
+				this,
+				(view, year, month, dayOfMonth) -> {
+					Calendar selectedDate = Calendar.getInstance();
+					selectedDate.set(year, month, dayOfMonth);
+					SimpleDateFormat sdf = new SimpleDateFormat(Utility.CALENDAR_DATE_FORMAT, Locale.getDefault());
+					mEditTextDealDate.setText(sdf.format(selectedDate.getTime()));
+				},
+				calendar.get(Calendar.YEAR),
+				calendar.get(Calendar.MONTH),
+				calendar.get(Calendar.DAY_OF_MONTH));
+
+		datePickerDialog.show();
+	}
+
 }

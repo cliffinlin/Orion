@@ -106,6 +106,8 @@
     <string name="deal_volume">Deal volume</string>
     <string name="deal_volume_prompt">Volume:</string>
     <string name="deal_profit">Deal profit</string>
+    <string name="stock_deal_date_empty">Deal date is empty</string>
+    <string name="stock_deal_volume_empty">Deal volume is empty</string>
     <string name="delete">Delete</string>
     <string name="delete_confirm">Do you want to delete %s?</string>
     <string name="discount">Discount</string>
