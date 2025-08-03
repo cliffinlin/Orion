@@ -38,6 +38,7 @@ import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.RecordFile;
+import com.android.orion.utility.Utility;
 import com.android.orion.view.SyncHorizontalScrollView;
 
 import java.util.ArrayList;
@@ -581,7 +582,7 @@ public class StockDealListActivity extends ListActivity implements
 				R.layout.activity_stock_deal_list_right_item, null, mRightFrom,
 				mRightTo, 0);
 		if ((mRightListView != null) && (mRightAdapter != null)) {
-			mRightAdapter.setViewBinder(new CustomViewBinder());
+			mRightAdapter.setViewBinder(new RightViewBinder());
 			mRightListView.setAdapter(mRightAdapter);
 			mRightListView.setOnItemClickListener(this);
 			mRightListView.setOnItemLongClickListener(this);
@@ -761,7 +762,7 @@ public class StockDealListActivity extends ListActivity implements
 		mStockDatabaseManager.getStock(mStock);
 	}
 
-	private class CustomViewBinder implements SimpleCursorAdapter.ViewBinder {
+	private class RightViewBinder implements SimpleCursorAdapter.ViewBinder {
 
 		@Override
 		public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
@@ -769,7 +770,85 @@ public class StockDealListActivity extends ListActivity implements
 				return false;
 			}
 
+			if (columnIndex == cursor
+					.getColumnIndex(DatabaseContract.COLUMN_PRICE)) {
+				setViewColor(view, cursor);
+				return setVisibility(view, Setting.getDisplayNet());
+			} else if (columnIndex == cursor
+					.getColumnIndex(DatabaseContract.COLUMN_NET)) {
+				setViewColor(view, cursor);
+				return setVisibility(view, Setting.getDisplayNet());
+			} else if (columnIndex == cursor
+					.getColumnIndex(DatabaseContract.COLUMN_BUY)) {
+				setViewColor(view, cursor);
+				return setVisibility(view, Setting.getDisplayNet());
+			} else if (columnIndex == cursor
+					.getColumnIndex(DatabaseContract.COLUMN_SELL)) {
+				setViewColor(view, cursor);
+				return setVisibility(view, Setting.getDisplayNet());
+			} else if (columnIndex == cursor
+					.getColumnIndex(DatabaseContract.COLUMN_VOLUME)) {
+				setViewColor(view, cursor);
+				return setVisibility(view, Setting.getDisplayNet());
+			} else if (columnIndex == cursor
+					.getColumnIndex(DatabaseContract.COLUMN_VALUE)) {
+				setViewColor(view, cursor);
+				return setVisibility(view, Setting.getDisplayNet());
+			} else if (columnIndex == cursor
+					.getColumnIndex(DatabaseContract.COLUMN_BONUS)) {
+				setViewColor(view, cursor);
+				return setVisibility(view, Setting.getDisplayNet());
+			} else if (columnIndex == cursor
+					.getColumnIndex(DatabaseContract.COLUMN_YIELD)) {
+				setViewColor(view, cursor);
+				return setVisibility(view, Setting.getDisplayNet());
+			} else if (columnIndex == cursor
+					.getColumnIndex(DatabaseContract.COLUMN_FEE)) {
+				setViewColor(view, cursor);
+				return setVisibility(view, Setting.getDisplayNet());
+			} else if (columnIndex == cursor
+					.getColumnIndex(DatabaseContract.COLUMN_PROFIT)) {
+				setViewColor(view, cursor);
+				return setVisibility(view, Setting.getDisplayNet());
+			} else if (columnIndex == cursor
+					.getColumnIndex(DatabaseContract.COLUMN_ACCOUNT)) {
+				setViewColor(view, cursor);
+				return setVisibility(view, Setting.getDisplayNet());
+			} else if (columnIndex == cursor
+					.getColumnIndex(DatabaseContract.COLUMN_DATE)) {
+				setViewColor(view, cursor);
+				return setVisibility(view, Setting.getDisplayNet());
+			} else if (columnIndex == cursor
+					.getColumnIndex(DatabaseContract.COLUMN_TYPE)) {
+				setViewColor(view, cursor);
+				return setVisibility(view, Setting.getDisplayNet());
+			} else if (columnIndex == cursor
+					.getColumnIndex(DatabaseContract.COLUMN_CREATED)) {
+				setViewColor(view, cursor);
+				return setVisibility(view, Setting.getDisplayNet());
+			} else if (columnIndex == cursor
+				.getColumnIndex(DatabaseContract.COLUMN_MODIFIED)) {
+				setViewColor(view, cursor);
+				return setVisibility(view, Setting.getDisplayNet());
+			}
+
 			return false;
+		}
+
+		void setViewColor(View view, Cursor cursor) {
+			if (view == null || cursor == null) {
+				return;
+			}
+
+			double net = cursor.getDouble(cursor
+					.getColumnIndex(DatabaseContract.COLUMN_NET));
+
+			TextView textView = (TextView) view;
+			if (net < 0) {
+				textView.setTextColor(Color.GREEN);
+			} else if (net > 0) {
+				textView.setTextColor(Color.RED);
+			}
 		}
 	}
 }

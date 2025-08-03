@@ -378,25 +378,23 @@ public class StockDealActivity extends DatabaseActivity implements
 				}
 
 				String dealDate = mEditTextDealDate.getText().toString();
+				mDeal.setDate(dealDate);
 				if (TextUtils.isEmpty(dealDate)) {
 					Toast.makeText(mContext, R.string.stock_deal_date_empty, Toast.LENGTH_LONG).show();
-					return;
-				} else {
-					mDeal.setDate(dealDate);
 				}
 
 				buyString = mEditTextBuyPrice.getText().toString();
-				if (!TextUtils.isEmpty(buyString)) {
-					mDeal.setBuy(Double.parseDouble(buyString));
-				} else {
+				if (TextUtils.isEmpty(buyString)) {
 					mDeal.setBuy(0);
+				} else {
+					mDeal.setBuy(Double.parseDouble(buyString));
 				}
 
 				sellString = mEditTextSellPrice.getText().toString();
-				if (!TextUtils.isEmpty(sellString)) {
-					mDeal.setSell(Double.parseDouble(sellString));
-				} else {
+				if (TextUtils.isEmpty(sellString)) {
 					mDeal.setSell(0);
+				} else {
+					mDeal.setSell(Double.parseDouble(sellString));
 				}
 
 				volumeString = mEditTextDealVolume.getText().toString();
