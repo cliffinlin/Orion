@@ -106,6 +106,7 @@
     <string name="deal_volume">Deal volume</string>
     <string name="deal_volume_prompt">Volume:</string>
     <string name="deal_profit">Deal profit</string>
+    <string name="stock_grid_gap_empty">Grid gap is empty</string>
     <string name="stock_deal_date_empty">Deal date is empty</string>
     <string name="stock_deal_volume_empty">Deal volume is empty</string>
     <string name="delete">Delete</string>
@@ -262,10 +263,8 @@
     <string name="stock_statistics">Statistics</string>
     <string name="stock_statistics_chart">Statistics chart</string>
     <string name="stock_cost">Stock cost</string>
-    <string name="stock_hold">Stock hold</string>
     <string name="stock_valuation">Stock valuation</string>
     <string name="stock_bonus">Stock bonus</string>
-    <string name="stock_yield">Stock yield</string>
     <string name="grid">Grid</string>
     <string name="grid_gap">Grid gap</string>
     <string name="symbol_add">+</string>

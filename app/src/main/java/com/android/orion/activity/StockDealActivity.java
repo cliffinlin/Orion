@@ -381,6 +381,7 @@ public class StockDealActivity extends DatabaseActivity implements
 				mDeal.setDate(dealDate);
 				if (TextUtils.isEmpty(dealDate)) {
 					Toast.makeText(mContext, R.string.stock_deal_date_empty, Toast.LENGTH_LONG).show();
+					return;
 				}
 
 				buyString = mEditTextBuyPrice.getText().toString();
@@ -398,18 +399,12 @@ public class StockDealActivity extends DatabaseActivity implements
 				}
 
 				volumeString = mEditTextDealVolume.getText().toString();
-				if (TextUtils.isEmpty(volumeString)) {
+				long volumeValue = TextUtils.isEmpty(volumeString) ? 0 : Long.parseLong(volumeString);
+				if (volumeValue == 0) {
 					Toast.makeText(mContext, R.string.stock_deal_volume_empty, Toast.LENGTH_LONG).show();
 					return;
-				} else {
-					long volumeValue = Long.parseLong(volumeString);
-					if (volumeValue > 0) {
-						mDeal.setVolume(volumeValue);
-					} else {
-						Toast.makeText(mContext, R.string.stock_deal_volume_empty, Toast.LENGTH_LONG).show();
-						return;
-					}
 				}
+				mDeal.setVolume(volumeValue);
 
 				setupDeal();
 				mHandler.sendEmptyMessage(MESSAGE_SAVE_DEAL);

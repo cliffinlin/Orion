@@ -209,7 +209,7 @@
                 android:layout_marginLeft="14dp"
                 android:layout_marginRight="14dp"
                 android:labelFor="@+id/edittext_stock_hold"
-                android:text="@string/stock_hold" />
+                android:text="@string/hold" />
 
             <EditText
                 android:id="@+id/edittext_stock_hold"
@@ -234,7 +234,7 @@
                 android:layout_marginLeft="14dp"
                 android:layout_marginRight="14dp"
                 android:labelFor="@+id/edittext_stock_yield"
-                android:text="@string/stock_yield" />
+                android:text="@string/yield" />
 
             <EditText
                 android:id="@+id/edittext_stock_yield"

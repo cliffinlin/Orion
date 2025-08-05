@@ -196,17 +196,13 @@ public class TrendAnalyzer {
 
 		StockPerceptron stockPerceptron = mStockPerceptronProvider.getStockPerceptron(stockTrend.getPeriod(), stockTrend.getLevel(), stockTrend.getType());
 		if (stockPerceptron != null) {
+			if (finished) {
+				stockPerceptron.getNetMap().put(stockTrend.getNet(), stockTrend.getNextNet());
+				mStockPerceptronProvider.train(stockTrend.getPeriod(), stockTrend.getLevel(), stockTrend.getType());
+			}
 			stockTrend.setPredict(stockPerceptron.predict(stockTrend.getNet()));
 		}
-
 		stockTrendList.add(stockTrend);
-
-		if (finished) {
-			if (stockPerceptron != null) {
-				stockPerceptron.getNetMap().put(stockTrend.getNet(), stockTrend.getNextNet());
-			}
-			mStockPerceptronProvider.train(stockTrend.getPeriod(), stockTrend.getLevel(), stockTrend.getType());
-		}
 	}
 
 	void extendVertexList(ArrayList<StockData> dataList, ArrayList<StockData> vertexList) {

@@ -246,8 +246,14 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 					mStock.setSE(Stock.SE_SZ);
 				}
 
-				String gridGap = mEditTextGridGap.getText().toString();
-				double gridGapValue = TextUtils.isEmpty(gridGap) ? 0 : Double.valueOf(gridGap);
+				String gridGapString = mEditTextGridGap.getText().toString();
+				double gridGapValue = TextUtils.isEmpty(gridGapString) ? 0 : Double.valueOf(gridGapString);
+				if (mCheckBoxGrid.isChecked()) {
+					if (gridGapValue == 0) {
+						Toast.makeText(mContext, R.string.stock_grid_gap_empty, Toast.LENGTH_LONG).show();
+						return;
+					}
+				}
 				mStock.setGridGap(gridGapValue);
 
 				if (TextUtils.equals(mAction, Constant.ACTION_FAVORITE_STOCK_INSERT)) {
