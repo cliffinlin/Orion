@@ -97,9 +97,7 @@ public class Stock extends DatabaseTable {
 	private double mCashFlowPerShare;
 	private double mNetProfitPerShare;
 	private double mNetProfitPerShareInYear;
-	private double mGridGap;
-	private double mGridBuy;
-	private double mGridSell;
+	private double mGridProfit;
 	private double mRate;
 	private double mDividend;
 	private double mDividendInYear;
@@ -178,9 +176,7 @@ public class Stock extends DatabaseTable {
 		mCashFlowPerShare = 0;
 		mNetProfitPerShare = 0;
 		mNetProfitPerShareInYear = 0;
-		mGridGap = 0;
-		mGridBuy = 0;
-		mGridSell = 0;
+		mGridProfit = 0;
 		mRate = 0;
 		mDividend = 0;
 		mDividendInYear = 0;
@@ -267,9 +263,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE, mNetProfitPerShare);
 		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE_IN_YEAR, mNetProfitPerShareInYear);
 
-		contentValues.put(DatabaseContract.COLUMN_GRID_GAP, mGridGap);
-		contentValues.put(DatabaseContract.COLUMN_GRID_BUY, mGridBuy);
-		contentValues.put(DatabaseContract.COLUMN_GRID_SELL, mGridSell);
+		contentValues.put(DatabaseContract.COLUMN_GRID_PROFIT, mGridProfit);
 		contentValues.put(DatabaseContract.COLUMN_RATE, mRate);
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND, mDividend);
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND_IN_YEAR, mDividendInYear);
@@ -312,7 +306,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_SE, mSE);
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
-		contentValues.put(DatabaseContract.COLUMN_GRID_GAP, mGridGap);
+		contentValues.put(DatabaseContract.COLUMN_GRID_PROFIT, mGridProfit);
 		return contentValues;
 	}
 
@@ -394,9 +388,7 @@ public class Stock extends DatabaseTable {
 		setCashFlowPerShare(stock.mCashFlowPerShare);
 		setNetProfitPerShare(stock.mNetProfitPerShare);
 		setNetProfitPerShareInYear(stock.mNetProfitPerShareInYear);
-		setGridGap(stock.mGridGap);
-		setGridBuy(stock.mGridBuy);
-		setGridSell(stock.mGridSell);
+		setGridProfit(stock.mGridProfit);
 		setRate(stock.mRate);
 		setDividend(stock.mDividend);
 		setDividendInYear(stock.mDividendInYear);
@@ -487,9 +479,7 @@ public class Stock extends DatabaseTable {
 		setNetProfitPerShare(cursor);
 		setNetProfitPerShareInYear(cursor);
 
-		setGridGap(cursor);
-		setGridBuy(cursor);
-		setGridSell(cursor);
+		setGridProfit(cursor);
 		setRate(cursor);
 		setDividend(cursor);
 		setDividendInYear(cursor);
@@ -1108,55 +1098,21 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_RZ_TREND_DAYS)));
 	}
 
-	public double getGridGap() {
-		return mGridGap;
+	public double getGridProfit() {
+		return mGridProfit;
 	}
 
-	public void setGridGap(double gridGap) {
-		mGridGap = gridGap;
+	public void setGridProfit(double gridProfit) {
+		mGridProfit = gridProfit;
 	}
 
-	void setGridGap(Cursor cursor) {
+	void setGridProfit(Cursor cursor) {
 		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
-		setGridGap(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_GRID_GAP)));
-	}
-
-	public double getGridBuy() {
-		return mGridBuy;
-	}
-
-	public void setGridBuy(double gridBuy) {
-		mGridBuy = gridBuy;
-	}
-
-	void setGridBuy(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setGridBuy(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_GRID_BUY)));
-	}
-
-	public double getGridSell() {
-		return mGridSell;
-	}
-
-	public void setGridSell(double gridSell) {
-		mGridSell = gridSell;
-	}
-
-	void setGridSell(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setGridSell(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_GRID_SELL)));
+		setGridProfit(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_GRID_PROFIT)));
 	}
 
 	public double getRate() {

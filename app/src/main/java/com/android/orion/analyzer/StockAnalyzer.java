@@ -91,7 +91,7 @@ public class StockAnalyzer {
 			mFinancialAnalyzer.setupFinancial(mStock);
 			mFinancialAnalyzer.setupStockBonus(mStock);
 			mGridAnalyzer.analyze(mStock);
-			stock.setModified(Utility.getCurrentDateTimeString());
+			mStock.setModified(Utility.getCurrentDateTimeString());
 			mStockDatabaseManager.updateStock(mStock, mStock.getContentValues());
 		} catch (Exception e) {
 			e.printStackTrace();

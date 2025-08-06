@@ -90,17 +90,18 @@ public class StockNotificationManager {
 		if (stock.hasFlag(Stock.FLAG_GRID)) {
 			mGridAnalyzer.analyze(stock);
 			if (stockTrend.getNet() > 0) {
-				if (mGridAnalyzer.getSockDealProfit(StockDeal.TYPE_BUY) > 0 || stock.getPrice() > mGridAnalyzer.getSellPrice()) {
-					gridNotifyString = mGridAnalyzer.getSellNotifyString();
+				if (stock.getGridProfit() > 0) {
+					gridNotifyString = mGridAnalyzer.getNotifyString();
 				}
 			} else {
-				if (mGridAnalyzer.getSockDealProfit(StockDeal.TYPE_SELL) < 0 || stock.getPrice() < mGridAnalyzer.getBuyPrice()) {
-					gridNotifyString = mGridAnalyzer.getBuyNotifyString();
+				if (stock.getGridProfit() < 0) {
+					gridNotifyString = mGridAnalyzer.getNotifyString();
 				}
 			}
 		}
 
-		mContentTitle.append(stock.getName() + " " + stock.getPrice() + " " + stock.getNet() + " " + stockTrend.toNotifyString() + " " + gridNotifyString);
+		mContentTitle.append(stock.getName() + " " + stock.getPrice() + " " + stock.getNet() + " " + stockTrend.toNotifyString());
+		mContentText.append(gridNotifyString);
 		try {
 			int id = TREND_NOTIFICATION_ID + (int) stockTrend.getId();
 			long stockId = stock.getId();

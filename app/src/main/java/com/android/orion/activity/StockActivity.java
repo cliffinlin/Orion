@@ -34,8 +34,6 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 	EditText mEditTextStockCode;
 	EditText mEditTextStockHold;
 	EditText mEditTextStockYield;
-	EditText mEditTextGridGap;
-
 	Button mButtonOk;
 	Button mButtonCancel;
 
@@ -63,7 +61,6 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mEditTextStockCode = findViewById(R.id.edittext_stock_code);
 		mEditTextStockHold = findViewById(R.id.edittext_stock_hold);
 		mEditTextStockYield = findViewById(R.id.edittext_stock_yield);
-		mEditTextGridGap = findViewById(R.id.edittext_grid_gap);
 		mButtonOk = findViewById(R.id.button_ok);
 		mButtonCancel = findViewById(R.id.button_cancel);
 
@@ -76,7 +73,6 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mEditTextStockCode.setOnClickListener(this);
 		mEditTextStockHold.setOnClickListener(this);
 		mEditTextStockYield.setOnClickListener(this);
-		mEditTextGridGap.setOnClickListener(this);
 		mButtonOk.setOnClickListener(this);
 		mButtonCancel.setOnClickListener(this);
 
@@ -154,8 +150,6 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mEditTextStockCode.setText(mStock.getCode());
 		mEditTextStockHold.setText(String.valueOf(mStock.getHold()));
 		mEditTextStockYield.setText(String.valueOf(mStock.getYield()));
-		mEditTextGridGap.setText(String.valueOf(mStock.getGridGap()));
-		mEditTextGridGap.setEnabled(mStock.hasFlag(Stock.FLAG_GRID));
 	}
 
 	@Override
@@ -194,8 +188,8 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 					mStock.addFlag(Stock.FLAG_GRID);
 				} else {
 					mStock.removeFlag(Stock.FLAG_GRID);
+					mStock.setGridProfit(0);
 				}
-				mEditTextGridGap.setEnabled(mStock.hasFlag(Stock.FLAG_GRID));
 				break;
 
 			case R.id.button_ok:
@@ -215,6 +209,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 					mStock.addFlag(Stock.FLAG_GRID);
 				} else {
 					mStock.removeFlag(Stock.FLAG_GRID);
+					mStock.setGridProfit(0);
 				}
 
 				String name = mEditTextStockName.getText().toString();
@@ -245,16 +240,6 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 				} else if (id == R.id.radio_se_sz) {
 					mStock.setSE(Stock.SE_SZ);
 				}
-
-				String gridGapString = mEditTextGridGap.getText().toString();
-				double gridGapValue = TextUtils.isEmpty(gridGapString) ? 0 : Double.valueOf(gridGapString);
-				if (mCheckBoxGrid.isChecked()) {
-					if (gridGapValue == 0) {
-						Toast.makeText(mContext, R.string.stock_grid_gap_empty, Toast.LENGTH_LONG).show();
-						return;
-					}
-				}
-				mStock.setGridGap(gridGapValue);
 
 				if (TextUtils.equals(mAction, Constant.ACTION_FAVORITE_STOCK_INSERT)) {
 					if (!mStockDatabaseManager.isStockExist(mStock)) {

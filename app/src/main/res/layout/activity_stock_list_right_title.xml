@@ -23,21 +23,12 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/grid_buy"
+        android:id="@+id/grid_profit"
         android:layout_width="80dp"
         android:layout_height="40dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="@string/buy"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/grid_sell"
-        android:layout_width="80dp"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/sell"
+        android:text="@string/profit"
         android:textSize="18sp" />
 
     <TextView

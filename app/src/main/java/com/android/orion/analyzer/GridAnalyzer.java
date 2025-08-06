@@ -1,10 +1,7 @@
 package com.android.orion.analyzer;
 
-import android.text.TextUtils;
-
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;
-import com.android.orion.database.StockGrid;
 import com.android.orion.manager.StockDatabaseManager;
 import com.android.orion.utility.Logger;
 
@@ -13,8 +10,7 @@ import java.util.ArrayList;
 public class GridAnalyzer {
 	Logger Log = Logger.getLogger();
 	Stock mStock;
-	StockGrid mStockGridBuy = new StockGrid();
-	StockGrid mStockGridSell = new StockGrid();
+	StockDeal mStockDeal;
 	ArrayList<StockDeal> mStockDealList = new ArrayList<>();
 	StockDatabaseManager mStockDatabaseManager = StockDatabaseManager.getInstance();
 
@@ -31,83 +27,21 @@ public class GridAnalyzer {
 			return;
 		}
 
-		if (mStock.getGridGap() == 0) {
-			return;
-		}
-
 		mStockDatabaseManager.getStockDealList(mStock, mStockDealList);
 		if (mStockDealList == null || mStockDealList.size() == 0) {
 			return;
 		}
 
-		mStockGridBuy.init();
-		mStockGridBuy.setSE(mStock.getSE());
-		mStockGridBuy.setCode(mStock.getCode());
-		mStockGridBuy.setName(mStock.getName());
-		mStockGridBuy.setType(StockGrid.TYPE_BUY);
-		mStockGridBuy.setGridGap(mStock.getGridGap());
-		mStockGridBuy.setHigh(mStockDealList.get(0).getBuy());
-		mStockGridBuy.setLow(mStockDealList.get(mStockDealList.size() - 1).getBuy());
-		mStockGridBuy.setVolume(mStockDealList.get(0).getVolume());
-		mStockGridBuy.setupPrice();
-		mStockGridBuy.setupValue();
-		if (!mStockDatabaseManager.isStockGridExist(mStockGridBuy)) {
-			mStockDatabaseManager.insertStockGrid(mStockGridBuy);
-		} else {
-			mStockDatabaseManager.updateStockGrid(mStockGridBuy, mStockGridBuy.getContentValues());
-		}
-		mStock.setGridBuy(mStockGridBuy.getPrice());
-
-		mStockGridSell.init();
-		mStockGridSell.setSE(mStock.getSE());
-		mStockGridSell.setCode(mStock.getCode());
-		mStockGridSell.setName(mStock.getName());
-		mStockGridSell.setType(StockGrid.TYPE_SELL);
-		mStockGridSell.setGridGap(mStock.getGridGap());
-		mStockGridSell.setHigh(mStockDealList.get(0).getBuy());
-		mStockGridSell.setLow(mStockDealList.get(mStockDealList.size() - 1).getBuy());
-		mStockGridSell.setVolume(mStockDealList.get(mStockDealList.size() - 1).getVolume());
-		mStockGridSell.setupPrice();
-		mStockGridSell.setupValue();
-		if (!mStockDatabaseManager.isStockGridExist(mStockGridSell)) {
-			mStockDatabaseManager.insertStockGrid(mStockGridSell);
-		} else {
-			mStockDatabaseManager.updateStockGrid(mStockGridSell, mStockGridSell.getContentValues());
-		}
-		mStock.setGridSell(mStockGridSell.getPrice());
-	}
-
-	public double getBuyPrice() {
-		return mStockGridBuy.getPrice();
-	}
-
-	public double getSellPrice() {
-		return mStockGridSell.getPrice();
-	}
-
-	public double getSockDealProfit(String type) {
-		double result = 0;
-		mStockDatabaseManager.getStockDealList(mStock, mStockDealList);
-		if (mStockDealList == null || mStockDealList.size() == 0) {
-			return 0;
+		mStockDeal = mStockDealList.get(mStockDealList.size() - 1);
+		if (mStockDeal == null) {
+			return;
 		}
 
-		for (int i = mStockDealList.size() - 1; i >= 0 ; i--) {
-			StockDeal stockDeal = mStockDealList.get(i);
-			if (TextUtils.equals(stockDeal.getType(), type)) {
-				result = stockDeal.getProfit();
-				break;
-			}
-		}
-		return result;
+		mStock.setGridProfit(mStockDeal.getProfit());
 	}
 
-	public String getBuyNotifyString() {
-		return mStockGridBuy.toNotifyString();
-	}
-
-	public String getSellNotifyString() {
-		return mStockGridSell.toNotifyString();
+	public String getNotifyString() {
+		return mStockDeal == null ? "" : mStockDeal.toString();
 	}
 
 	private static class Holder {

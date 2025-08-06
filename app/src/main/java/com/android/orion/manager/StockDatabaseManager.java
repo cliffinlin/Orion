@@ -15,7 +15,6 @@ import com.android.orion.database.StockBonus;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockFinancial;
-import com.android.orion.database.StockGrid;
 import com.android.orion.database.StockPerceptron;
 import com.android.orion.database.StockRZRQ;
 import com.android.orion.database.StockShare;
@@ -718,55 +717,6 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 			closeCursor(cursor);
 		}
 		return result;
-	}
-
-	public Uri insertStockGrid(StockGrid stockGrid) {
-		if (stockGrid == null) {
-			return null;
-		}
-		return insert(DatabaseContract.StockGrid.CONTENT_URI, stockGrid.getContentValues());
-	}
-
-	public int updateStockGrid(StockGrid stockGrid, ContentValues contentValues) {
-		if (stockGrid == null) {
-			return 0;
-		}
-		return update(DatabaseContract.StockGrid.CONTENT_URI, contentValues, DatabaseContract.SELECTION_STOCK_TYPE(stockGrid.getSE(), stockGrid.getCode(), stockGrid.getType()), null);
-	}
-
-	public boolean isStockGridExist(StockGrid stockGrid) {
-		if (stockGrid == null) {
-			return false;
-		}
-
-		boolean result = false;
-		Cursor cursor = null;
-		try {
-			cursor = queryStockGrid(stockGrid);
-			if ((cursor != null) && (cursor.getCount() > 0)) {
-				cursor.moveToNext();
-				result = true;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			closeCursor(cursor);
-		}
-		return result;
-	}
-
-	public Cursor queryStockGrid(StockGrid stockGrid) {
-		if (stockGrid == null) {
-			return null;
-		}
-		String selection = DatabaseContract.SELECTION_STOCK_TYPE(stockGrid.getSE(), stockGrid.getCode(), stockGrid.getType());
-		return queryStockGrid(selection, null, null);
-	}
-
-	public Cursor queryStockGrid(String selection, String[] selectionArgs, String sortOrder) {
-		return query(DatabaseContract.StockGrid.CONTENT_URI,
-				DatabaseContract.StockGrid.PROJECTION_ALL, selection,
-				selectionArgs, sortOrder);
 	}
 
 	public Uri insertStockPerceptron(StockPerceptron stockPerceptron) {

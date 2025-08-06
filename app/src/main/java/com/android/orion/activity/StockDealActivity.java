@@ -381,7 +381,6 @@ public class StockDealActivity extends DatabaseActivity implements
 				mDeal.setDate(dealDate);
 				if (TextUtils.isEmpty(dealDate)) {
 					Toast.makeText(mContext, R.string.stock_deal_date_empty, Toast.LENGTH_LONG).show();
-					return;
 				}
 
 				buyString = mEditTextBuyPrice.getText().toString();
