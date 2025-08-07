@@ -1,6 +1,7 @@
 package com.android.orion.analyzer;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.ArrayMap;
 
 import com.android.orion.application.MainApplication;
@@ -82,11 +83,13 @@ public class StockAnalyzer {
 			mFinancialAnalyzer.analyzeFinancial(mStock);
 			mFinancialAnalyzer.setupFinancial(mStock);
 			mFinancialAnalyzer.setupStockBonus(mStock);
+			mStock.setTrendDate("");
 			for (String period : Period.PERIODS) {
 				if (Setting.getPeriod(period)) {
 					analyze(period);
 				}
 			}
+			determineAdaptiveLevel();
 			mFinancialAnalyzer.analyzeFinancial(mStock);
 			mFinancialAnalyzer.setupFinancial(mStock);
 			mFinancialAnalyzer.setupStockBonus(mStock);
@@ -156,12 +159,50 @@ public class StockAnalyzer {
 	}
 
 	private int determineAdaptiveLevel(String period) {
+		String dateString;
 		for (int i = StockTrend.LEVELS.length - 1; i > 0; i--) {
 			if (mStock.getDataList(period, i).size() >= StockTrend.ADAPTIVE_SIZE) {
+				StockData trendData = StockData.getLast(mStock.getDataList(period, i), 0);
+				if (trendData != null) {
+					int indexStart = trendData.getIndexStart();
+					StockData stockData = mStock.getStockDataList(period).get(indexStart);
+					dateString = stockData.getDate();
+					if (TextUtils.isEmpty(mStock.getTrendDate())) {
+						mStock.setTrendDate(dateString);
+					} else if (Utility.getCalendar(dateString, Utility.CALENDAR_DATE_FORMAT).after(Utility.getCalendar(mStock.getTrendDate(), Utility.CALENDAR_DATE_FORMAT))) {
+						mStock.setTrendDate(dateString);
+					}
+				}
 				return i;
 			}
 		}
 		return StockTrend.LEVEL_DRAW;
+	}
+
+	void determineAdaptiveLevel() {
+		if (TextUtils.isEmpty(mStock.getTrendDate()) || !mStock.hasFlag(Stock.FLAG_GRID)) {
+			return;
+		}
+		String trendDate = "";
+		for (String period : Period.PERIODS) {
+			if (Setting.getPeriod(period)) {
+				while (mStock.getLevel(period) > StockTrend.LEVEL_STROKE) {
+					StockData trendData = StockData.getLast(mStock.getDataList(period, mStock.getLevel(period)), 0);
+					if (trendData != null) {
+						int indexStart = trendData.getIndexStart();
+						StockData stockData = mStock.getStockDataList(period).get(indexStart);
+						trendDate = stockData.getDate();
+						if (Utility.getCalendar(trendDate, Utility.CALENDAR_DATE_FORMAT).before(Utility.getCalendar(mStock.getTrendDate(), Utility.CALENDAR_DATE_FORMAT))) {
+							if (mStock.getLevel(period) > StockTrend.LEVEL_STROKE) {
+								mStock.setLevel(period, mStock.getLevel(period) - 1);
+							}
+						} else {
+							break;
+						}
+					}
+				}
+			}
+		}
 	}
 
 	private void analyzeAction(String period) {

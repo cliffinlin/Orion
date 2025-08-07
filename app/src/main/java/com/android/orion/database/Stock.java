@@ -108,6 +108,8 @@ public class Stock extends DatabaseTable {
 	private String mRDate;
 	private String mStatus;
 
+	private String mTrendDate;
+
 	public Stock() {
 		init();
 	}
@@ -186,6 +188,7 @@ public class Stock extends DatabaseTable {
 		mDividendRatioInYear = 0;
 		mRDate = "";
 		mStatus = "";
+		mTrendDate = "";
 	}
 
 	@Override
@@ -1385,6 +1388,14 @@ public class Stock extends DatabaseTable {
 
 		setStatus(cursor.getString(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_STATUS)));
+	}
+
+	public void setTrendDate(String trendDate) {
+		mTrendDate = trendDate;
+	}
+
+	public String getTrendDate() {
+		return mTrendDate;
 	}
 
 	public void addFlag(int flag) {
