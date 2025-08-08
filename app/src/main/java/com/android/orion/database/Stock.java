@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import com.android.orion.data.IRR;
 import com.android.orion.data.Period;
 import com.android.orion.setting.Constant;
+import com.android.orion.utility.Symbol;
 import com.android.orion.utility.Utility;
 
 import java.util.ArrayList;
@@ -106,9 +107,9 @@ public class Stock extends DatabaseTable {
 	private double mDividendRatio;
 	private double mDividendRatioInYear;
 	private String mRDate;
+	private String mAdaptiveDate;
 	private String mStatus;
 
-	private String mTrendDate;
 
 	public Stock() {
 		init();
@@ -187,8 +188,8 @@ public class Stock extends DatabaseTable {
 		mDividendRatio = 0;
 		mDividendRatioInYear = 0;
 		mRDate = "";
+		mAdaptiveDate = "";
 		mStatus = "";
-		mTrendDate = "";
 	}
 
 	@Override
@@ -275,6 +276,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND_RATIO, mDividendRatio);
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND_RATIO_IN_YEAR, mDividendRatioInYear);
 		contentValues.put(DatabaseContract.COLUMN_R_DATE, mRDate);
+		contentValues.put(DatabaseContract.COLUMN_ADAPTIVE_DATE, mAdaptiveDate);
 		contentValues.put(DatabaseContract.COLUMN_STATUS, mStatus);
 
 		return contentValues;
@@ -400,6 +402,7 @@ public class Stock extends DatabaseTable {
 		setDividendRatio(stock.mDividendRatio);
 		setDividendRatioInYear(stock.mDividendRatioInYear);
 		setRDate(stock.mRDate);
+		setAdaptiveDate(stock.mAdaptiveDate);
 		setStatus(stock.mStatus);
 	}
 
@@ -491,6 +494,7 @@ public class Stock extends DatabaseTable {
 		setDividendRatio(cursor);
 		setDividendRatioInYear(cursor);
 		setRDate(cursor);
+		setAdaptiveDate(cursor);
 		setStatus(cursor);
 	}
 
@@ -1373,6 +1377,23 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_R_DATE)));
 	}
 
+	public String getAdaptiveDate() {
+		return mAdaptiveDate;
+	}
+
+	public void setAdaptiveDate(String adaptiveDate) {
+		mAdaptiveDate = adaptiveDate;
+	}
+
+	void setAdaptiveDate(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setAdaptiveDate(cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_ADAPTIVE_DATE)));
+	}
+
 	public String getStatus() {
 		return mStatus;
 	}
@@ -1388,14 +1409,6 @@ public class Stock extends DatabaseTable {
 
 		setStatus(cursor.getString(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_STATUS)));
-	}
-
-	public void setTrendDate(String trendDate) {
-		mTrendDate = trendDate;
-	}
-
-	public String getTrendDate() {
-		return mTrendDate;
 	}
 
 	public void addFlag(int flag) {
@@ -1947,5 +1960,19 @@ public class Stock extends DatabaseTable {
 		IRR.calculate(mPe, mRoe / 100, mDividendRatioInYear / 100, mPrice);
 		mIR = Utility.Round2(IRR.getIR());
 		mIRR = Utility.Round2(100 * IRR.getIRR());
+	}
+
+	public String getPriceNetString() {
+		StringBuilder result = new StringBuilder();
+		result.append(getPrice()).append(" ");
+		result.append(getNet()).append(Symbol.PERCENT);
+		return result.toString();
+	}
+
+	public String getNamePriceNetString() {
+		StringBuilder result = new StringBuilder();
+		result.append(getName()).append(" ");
+		result.append(getPriceNetString());
+		return result.toString();
 	}
 }

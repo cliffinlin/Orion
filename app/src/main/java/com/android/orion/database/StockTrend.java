@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.text.TextUtils;
 
-import com.android.orion.setting.Constant;
+import com.android.orion.utility.Symbol;
 
 public class StockTrend extends DatabaseTable {
 
@@ -514,28 +514,28 @@ public class StockTrend extends DatabaseTable {
 	}
 
 	public String toString() {
-		return mSE + Constant.TAB
-				+ mCode + Constant.TAB
-				+ mName + Constant.TAB
-				+ mPeriod + Constant.TAB
-				+ mDate + Constant.TAB
-				+ mTime + Constant.TAB
-				+ mLevel + Constant.TAB
-				+ mType + Constant.TAB
-				+ mFlag + Constant.TAB
-				+ mDirection + Constant.TAB
-				+ mTurn + Constant.TAB
-				+ mPrevNet + Constant.TAB
-				+ mNet + Constant.TAB
-				+ mNextNet + Constant.TAB
-				+ mPredict + Constant.TAB;
+		return mSE + Symbol.TAB
+				+ mCode + Symbol.TAB
+				+ mName + Symbol.TAB
+				+ mPeriod + Symbol.TAB
+				+ mDate + Symbol.TAB
+				+ mTime + Symbol.TAB
+				+ mLevel + Symbol.TAB
+				+ mType + Symbol.TAB
+				+ mFlag + Symbol.TAB
+				+ mDirection + Symbol.TAB
+				+ mTurn + Symbol.TAB
+				+ mPrevNet + Symbol.TAB
+				+ mNet + Symbol.TAB
+				+ mNextNet + Symbol.TAB
+				+ mPredict + Symbol.TAB;
 	}
 
 	public String toChartString() {
-		return Constant.MARK_LEVEL + mLevel + " "
+		return Symbol.L + mLevel + " "
 				+ mType + " "
-				+ (int) mNet + "/" + (int) mNextNet + " "
-				+ Constant.MARK_PREDICT + " " + mPredict;
+				+ (int)mNet + "/" + (int)mNextNet + Symbol.PERCENT + " "
+				+ Symbol.QUESTION + " " + (int)mPredict + Symbol.PERCENT;
 	}
 
 	public String toNotifyString() {

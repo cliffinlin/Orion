@@ -966,7 +966,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 					}
 
 					interval = System.currentTimeMillis() - Setting.getDownloadStockDataTimeMillis(stock);
-					if (Market.isTradingHours() || Market.isLunchTime() || (interval > Config.downloadStockDataInterval)) {
+					if (Market.isTradingHours() || (interval > Config.downloadStockDataInterval)) {
 						if (downloadStockDataHistory(stock) == RESULT_FAILED) {
 							StockService.getInstance().onDisconnected();
 							return;
@@ -982,7 +982,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 							return;
 						}
 
-						if (Market.isTradingHours() || Market.isLunchTime()) {
+						if (Market.isTradingHours()) {
 							Setting.setDownloadStockDataTimeMillis(stock, 0);
 						} else {
 							Setting.setDownloadStockDataTimeMillis(stock, System.currentTimeMillis());

@@ -2,6 +2,7 @@ package com.android.orion.analyzer;
 
 import android.text.TextUtils;
 
+import com.android.orion.data.Period;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockPerceptron;
@@ -480,6 +481,50 @@ public class TrendAnalyzer {
 			stockData.setDirection(direction);
 			stockData.setupNet();
 			dataList.add(stockData);
+		}
+	}
+
+	public void analyzeAdaptive(String period) {
+		int level = StockTrend.LEVEL_DRAW;
+		for (int i = StockTrend.LEVELS.length - 1; i > StockTrend.LEVEL_NONE; i--) {
+			if (mStock.getDataList(period, i).size() >= StockTrend.ADAPTIVE_SIZE) {
+				StockData trendData = StockData.getLast(mStock.getDataList(period, i), 0);
+				if (trendData != null) {
+					int indexStart = trendData.getIndexStart();
+					StockData stockData = mStock.getStockDataList(period).get(indexStart);
+					String dateString = stockData.getDate();
+					if (TextUtils.isEmpty(mStock.getAdaptiveDate())) {
+						mStock.setAdaptiveDate(dateString);
+					} else if (Utility.getCalendar(dateString, Utility.CALENDAR_DATE_FORMAT).after(Utility.getCalendar(mStock.getAdaptiveDate(), Utility.CALENDAR_DATE_FORMAT))) {
+						mStock.setAdaptiveDate(dateString);
+					}
+				}
+				level = i;
+				break;
+			}
+		}
+		mStock.setLevel(period, level);
+	}
+
+	public void analyzeAdaptive() {
+		if (TextUtils.isEmpty(mStock.getAdaptiveDate()) || !mStock.hasFlag(Stock.FLAG_GRID)) {
+			return;
+		}
+		for (String period : Period.PERIODS) {
+			if (Setting.getPeriod(period)) {
+				while (mStock.getLevel(period) > StockTrend.LEVEL_DRAW) {
+					StockData trendData = StockData.getLast(mStock.getDataList(period, mStock.getLevel(period)), 0);
+					if (trendData != null) {
+						int indexStart = trendData.getIndexStart();
+						StockData stockData = mStock.getStockDataList(period).get(indexStart);
+						if (Utility.getCalendar(stockData.getDate(), Utility.CALENDAR_DATE_FORMAT).before(Utility.getCalendar(mStock.getAdaptiveDate(), Utility.CALENDAR_DATE_FORMAT))) {
+							mStock.setLevel(period, mStock.getLevel(period) - 1);
+						} else {
+							break;
+						}
+					}
+				}
+			}
 		}
 	}
 

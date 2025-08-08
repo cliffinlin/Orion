@@ -117,6 +117,7 @@ public class DatabaseContract {
 	public static final String COLUMN_ACCOUNT = "account";
 
 	public static final String COLUMN_GRID_PROFIT = "grid_profit";
+	public static final String COLUMN_ADAPTIVE_DATE = "adaptive_date";
 
 	public static final String COLUMN_TYPE = "type";
 	public static final String COLUMN_CONTENT = "content";
@@ -290,7 +291,7 @@ public class DatabaseContract {
 				COLUMN_DIVIDEND, COLUMN_DIVIDEND_IN_YEAR,
 				COLUMN_YIELD, COLUMN_YIELD_IN_YEAR,
 				COLUMN_DIVIDEND_RATIO, COLUMN_DIVIDEND_RATIO_IN_YEAR,
-				COLUMN_R_DATE, COLUMN_STATUS,
+				COLUMN_R_DATE, COLUMN_ADAPTIVE_DATE, COLUMN_STATUS,
 				COLUMN_CREATED, COLUMN_MODIFIED};
 		static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
 				+ TABLE_NAME;
@@ -369,6 +370,7 @@ public class DatabaseContract {
 				+ COLUMN_DIVIDEND_RATIO + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_DIVIDEND_RATIO_IN_YEAR + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_R_DATE + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_ADAPTIVE_DATE + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_STATUS + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_CREATED + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_MODIFIED + TEXT_TYPE + " )";

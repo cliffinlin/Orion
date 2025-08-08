@@ -27,6 +27,7 @@ import com.android.orion.database.Stock;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Preferences;
+import com.android.orion.utility.Symbol;
 import com.android.orion.utility.Utility;
 import com.android.orion.view.SyncHorizontalScrollView;
 
@@ -503,7 +504,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 		mSortOrder = Preferences.getString(Setting.SETTING_SORT_ORDER_STOCK_LIST,
 				mSortOrderDefault);
 		if (!TextUtils.isEmpty(mSortOrder)) {
-			String[] strings = mSortOrder.split(Constant.WHITE_SPACE);
+			String[] strings = mSortOrder.split(Symbol.WHITE_SPACE);
 			if (strings != null && strings.length > 1) {
 				mSortOrderColumn = strings[0];
 			}

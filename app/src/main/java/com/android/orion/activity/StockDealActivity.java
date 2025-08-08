@@ -25,6 +25,7 @@ import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;
 import com.android.orion.setting.Constant;
+import com.android.orion.utility.Symbol;
 import com.android.orion.utility.RecordFile;
 import com.android.orion.utility.Utility;
 
@@ -217,7 +218,7 @@ public class StockDealActivity extends DatabaseActivity implements
 				String buyPriceString = s.toString();
 				double buy = 0;
 				if (!TextUtils.isEmpty(buyPriceString)) {
-					if (TextUtils.equals(buyPriceString, Constant.MARK_ADD) || TextUtils.equals(buyPriceString, Constant.MARK_MINUS)) {
+					if (TextUtils.equals(buyPriceString, Symbol.ADD) || TextUtils.equals(buyPriceString, Symbol.MINUS)) {
 						return;
 					}
 					buy = Double.parseDouble(buyPriceString);
@@ -244,7 +245,7 @@ public class StockDealActivity extends DatabaseActivity implements
 				String sellPriceString = s.toString();
 				double sell = 0;
 				if (!TextUtils.isEmpty(sellPriceString)) {
-					if (TextUtils.equals(sellPriceString, Constant.MARK_ADD) || TextUtils.equals(sellPriceString, Constant.MARK_MINUS)) {
+					if (TextUtils.equals(sellPriceString, Symbol.ADD) || TextUtils.equals(sellPriceString, Symbol.MINUS)) {
 						return;
 					}
 					sell = Double.parseDouble(sellPriceString);
@@ -274,7 +275,7 @@ public class StockDealActivity extends DatabaseActivity implements
 				String volumeString = s.toString();
 				long volume = 0;
 				if (!TextUtils.isEmpty(volumeString)) {
-					if (TextUtils.equals(volumeString, Constant.MARK_ADD) || TextUtils.equals(volumeString, Constant.MARK_MINUS)) {
+					if (TextUtils.equals(volumeString, Symbol.ADD) || TextUtils.equals(volumeString, Symbol.MINUS)) {
 						return;
 					}
 					volume = Long.parseLong(volumeString);

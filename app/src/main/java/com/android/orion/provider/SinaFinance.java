@@ -23,6 +23,7 @@ import com.android.orion.interfaces.IStockDataProvider;
 import com.android.orion.manager.StockNotificationManager;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
+import com.android.orion.utility.Symbol;
 import com.android.orion.utility.Market;
 import com.android.orion.utility.StopWatch;
 import com.android.orion.utility.Utility;
@@ -1100,8 +1101,8 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		StopWatch.stop();
-		Log.d(stock.getName() + Constant.TAB
-				+ stockData.getDate() + Constant.TAB + stockData.getTime() + Constant.TAB
+		Log.d(stock.getName() + Symbol.TAB
+				+ stockData.getDate() + Symbol.TAB + stockData.getTime() + Symbol.TAB
 				+ stockData.getCandle().toString()
 				+ StopWatch.getInterval() + "s");
 	}
@@ -1219,7 +1220,7 @@ public class SinaFinance extends StockDataProvider {
 					continue;
 				}
 
-				valueString = dateValue.substring(0, 4) + Constant.MARK_MINUS + dateValue.substring(4, 6) + Constant.MARK_MINUS + dateValue.substring(6);
+				valueString = dateValue.substring(0, 4) + Symbol.MINUS + dateValue.substring(4, 6) + Symbol.MINUS + dateValue.substring(6);
 				stockFinancial.setDate(valueString);
 
 				JSONObject reportJSONObject = reportListJSONObject.getJSONObject(dateValue);

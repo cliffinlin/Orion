@@ -123,7 +123,6 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 
 		mSortOrder = intent.getStringExtra(Constant.EXTRA_STOCK_LIST_SORT_ORDER);
 		mKeyDisplayDeal = intent.getBooleanExtra(Constant.EXTRA_STOCK_DEAL, false);
-		mKeyDisplayDeal |= mStock.hasFlag(Stock.FLAG_GRID);
 	}
 
 	@Override

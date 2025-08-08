@@ -4,6 +4,7 @@ import android.database.Cursor;
 
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.setting.Constant;
+import com.android.orion.utility.Symbol;
 
 public class Candle {
 	private double mOpen;
@@ -118,9 +119,9 @@ public class Candle {
 	}
 
 	public String toString() {
-		return mOpen + Constant.TAB
-				+ mHigh + Constant.TAB
-				+ mLow + Constant.TAB
-				+ mClose + Constant.TAB;
+		return mOpen + Symbol.TAB
+				+ mHigh + Symbol.TAB
+				+ mLow + Symbol.TAB
+				+ mClose + Symbol.TAB;
 	}
 }

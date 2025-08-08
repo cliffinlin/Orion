@@ -8,6 +8,7 @@ import android.util.ArrayMap;
 import com.android.orion.data.LinearRegression;
 import com.android.orion.setting.Constant;
 import com.android.orion.utility.Logger;
+import com.android.orion.utility.Symbol;
 import com.android.orion.utility.Utility;
 
 import java.util.ArrayList;
@@ -360,24 +361,24 @@ public class StockPerceptron extends DatabaseTable {
 	}
 
 	public String toDescriptionString() {
-		return mPeriod + Constant.TAB
-				+ mLevel + Constant.TAB
-				+ mType + Constant.TAB
-				+ Utility.Round(mLinearRegression.slope, DESCRIPTION_ROUND_N) + Constant.TAB
-				+ Utility.Round(mLinearRegression.bias, DESCRIPTION_ROUND_N) + Constant.TAB
-				+ Utility.Round(mLinearRegression.mse, DESCRIPTION_ROUND_N) + Constant.TAB
-				+ mTimes + Constant.TAB;
+		return mPeriod + Symbol.TAB
+				+ mLevel + Symbol.TAB
+				+ mType + Symbol.TAB
+				+ Utility.Round(mLinearRegression.slope, DESCRIPTION_ROUND_N) + Symbol.TAB
+				+ Utility.Round(mLinearRegression.bias, DESCRIPTION_ROUND_N) + Symbol.TAB
+				+ Utility.Round(mLinearRegression.mse, DESCRIPTION_ROUND_N) + Symbol.TAB
+				+ mTimes + Symbol.TAB;
 	}
 
 	public String toLogString() {
-		return "mPeriod=" + mPeriod + Constant.TAB
-				+ "mLevel=" + mLevel + Constant.TAB
-				+ "mType=" + mType + Constant.TAB
-				+ "mWeight=" + mLinearRegression.slope + Constant.TAB
-				+ "mBias=" + mLinearRegression.bias + Constant.TAB
-				+ "mError=" + mLinearRegression.mse + Constant.TAB
-				+ "mDelta=" + mDelta + Constant.TAB
-				+ "mTimes=" + mTimes + Constant.TAB
+		return "mPeriod=" + mPeriod + Symbol.TAB
+				+ "mLevel=" + mLevel + Symbol.TAB
+				+ "mType=" + mType + Symbol.TAB
+				+ "mWeight=" + mLinearRegression.slope + Symbol.TAB
+				+ "mBias=" + mLinearRegression.bias + Symbol.TAB
+				+ "mError=" + mLinearRegression.mse + Symbol.TAB
+				+ "mDelta=" + mDelta + Symbol.TAB
+				+ "mTimes=" + mTimes + Symbol.TAB
 				+ "ListSize=" + mLinearRegression.getListSize();
 	}
 }

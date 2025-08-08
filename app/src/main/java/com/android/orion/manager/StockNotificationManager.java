@@ -17,7 +17,6 @@ import com.android.orion.application.MainApplication;
 import com.android.orion.config.Config;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
-import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockTrend;
 import com.android.orion.setting.Constant;
 import com.android.orion.utility.Market;
@@ -83,9 +82,6 @@ public class StockNotificationManager {
 			return;
 		}
 
-		mContentTitle.setLength(0);
-		mContentText.setLength(0);
-
 		String gridNotifyString = "";
 		if (stock.hasFlag(Stock.FLAG_GRID)) {
 			mGridAnalyzer.analyze(stock);
@@ -100,7 +96,10 @@ public class StockNotificationManager {
 			}
 		}
 
-		mContentTitle.append(stock.getName() + " " + stock.getPrice() + " " + stock.getNet() + " " + stockTrend.toNotifyString());
+		mContentTitle.setLength(0);
+		mContentText.setLength(0);
+
+		mContentTitle.append(stock.getNamePriceNetString() + " " + stockTrend.toNotifyString());
 		mContentText.append(gridNotifyString);
 		try {
 			int id = TREND_NOTIFICATION_ID + (int) stockTrend.getId();

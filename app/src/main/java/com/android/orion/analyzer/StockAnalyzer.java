@@ -13,8 +13,8 @@ import com.android.orion.database.StockData;
 import com.android.orion.database.StockRZRQ;
 import com.android.orion.database.StockTrend;
 import com.android.orion.manager.StockDatabaseManager;
-import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
+import com.android.orion.utility.Symbol;
 import com.android.orion.utility.Logger;
 import com.android.orion.utility.StopWatch;
 import com.android.orion.utility.Utility;
@@ -83,13 +83,13 @@ public class StockAnalyzer {
 			mFinancialAnalyzer.analyzeFinancial(mStock);
 			mFinancialAnalyzer.setupFinancial(mStock);
 			mFinancialAnalyzer.setupStockBonus(mStock);
-			mStock.setTrendDate("");
+			mStock.setAdaptiveDate("");
 			for (String period : Period.PERIODS) {
 				if (Setting.getPeriod(period)) {
 					analyze(period);
 				}
 			}
-			determineAdaptiveLevel();
+			mTrendAnalyzer.analyzeAdaptive();
 			mFinancialAnalyzer.analyzeFinancial(mStock);
 			mFinancialAnalyzer.setupFinancial(mStock);
 			mFinancialAnalyzer.setupStockBonus(mStock);
@@ -153,56 +153,9 @@ public class StockAnalyzer {
 			mTrendAnalyzer.analyzeLine(i);
 		}
 
-		mStock.setLevel(period, determineAdaptiveLevel(period));
+		mTrendAnalyzer.analyzeAdaptive(period);
 
 		analyzeAction(period);
-	}
-
-	private int determineAdaptiveLevel(String period) {
-		String dateString;
-		for (int i = StockTrend.LEVELS.length - 1; i > 0; i--) {
-			if (mStock.getDataList(period, i).size() >= StockTrend.ADAPTIVE_SIZE) {
-				StockData trendData = StockData.getLast(mStock.getDataList(period, i), 0);
-				if (trendData != null) {
-					int indexStart = trendData.getIndexStart();
-					StockData stockData = mStock.getStockDataList(period).get(indexStart);
-					dateString = stockData.getDate();
-					if (TextUtils.isEmpty(mStock.getTrendDate())) {
-						mStock.setTrendDate(dateString);
-					} else if (Utility.getCalendar(dateString, Utility.CALENDAR_DATE_FORMAT).after(Utility.getCalendar(mStock.getTrendDate(), Utility.CALENDAR_DATE_FORMAT))) {
-						mStock.setTrendDate(dateString);
-					}
-				}
-				return i;
-			}
-		}
-		return StockTrend.LEVEL_DRAW;
-	}
-
-	void determineAdaptiveLevel() {
-		if (TextUtils.isEmpty(mStock.getTrendDate()) || !mStock.hasFlag(Stock.FLAG_GRID)) {
-			return;
-		}
-		String trendDate = "";
-		for (String period : Period.PERIODS) {
-			if (Setting.getPeriod(period)) {
-				while (mStock.getLevel(period) > StockTrend.LEVEL_STROKE) {
-					StockData trendData = StockData.getLast(mStock.getDataList(period, mStock.getLevel(period)), 0);
-					if (trendData != null) {
-						int indexStart = trendData.getIndexStart();
-						StockData stockData = mStock.getStockDataList(period).get(indexStart);
-						trendDate = stockData.getDate();
-						if (Utility.getCalendar(trendDate, Utility.CALENDAR_DATE_FORMAT).before(Utility.getCalendar(mStock.getTrendDate(), Utility.CALENDAR_DATE_FORMAT))) {
-							if (mStock.getLevel(period) > StockTrend.LEVEL_STROKE) {
-								mStock.setLevel(period, mStock.getLevel(period) - 1);
-							}
-						} else {
-							break;
-						}
-					}
-				}
-			}
-		}
 	}
 
 	private void analyzeAction(String period) {
@@ -234,7 +187,7 @@ public class StockAnalyzer {
 
 	private void appendActionIfPresent(StringBuilder builder, String action) {
 		if (action != null && !action.isEmpty()) {
-			builder.append(action).append(Constant.NEW_LINE);
+			builder.append(action).append(Symbol.NEW_LINE);
 		}
 	}
 
@@ -244,15 +197,15 @@ public class StockAnalyzer {
 		if (stockData != null) {
 			if (stockData.vertexOf(StockTrend.VERTEX_BOTTOM)) {
 				if (mStock.getPrice() < stockData.getCandle().getLow()) {
-					builder.append(Constant.MARK_MINUS);
+					builder.append(Symbol.MINUS);
 				} else {
-					builder.append(Constant.MARK_ADD);
+					builder.append(Symbol.ADD);
 				}
 			} else if (stockData.vertexOf(StockTrend.VERTEX_TOP)) {
 				if (mStock.getPrice() > stockData.getCandle().getHigh()) {
-					builder.append(Constant.MARK_ADD);
+					builder.append(Symbol.ADD);
 				} else {
-					builder.append(Constant.MARK_MINUS);
+					builder.append(Symbol.MINUS);
 				}
 			}
 		}
@@ -267,9 +220,9 @@ public class StockAnalyzer {
 			if (macd != null) {
 				double velocity = macd.getVelocity();
 				if (velocity > 0) {
-					builder.append(Constant.MARK_ADD);
+					builder.append(Symbol.ADD);
 				} else if (velocity < 0) {
-					builder.append(Constant.MARK_MINUS);
+					builder.append(Symbol.MINUS);
 				}
 			}
 		}
@@ -287,14 +240,14 @@ public class StockAnalyzer {
 			mean = Utility.Round2(calculateMean(dataList));
 			sd = Utility.Round2(calculateStandardDeviation(dataList));
 			if (mStock.getLevel(period) == i) {
-				adaptive = Constant.MARK_ASTERISK;
+				adaptive = Symbol.ASTERISK;
 			} else {
 				adaptive = "";
 			}
-			Log.d(mStock.getName() + " " + period + " " + Constant.MARK_LEVEL + i + " mean=" + mean + " sd=" + sd + " size=" + dataList.size() + " " + adaptive);
+			Log.d(mStock.getName() + " " + period + " " + Symbol.L + i + " mean=" + mean + " sd=" + sd + " size=" + dataList.size() + " " + adaptive);
 		}
 
-		builder.append(Constant.MARK_LEVEL + mStock.getLevel(period));
+		builder.append(Symbol.L + mStock.getLevel(period));
 
 		return builder.toString();
 	}

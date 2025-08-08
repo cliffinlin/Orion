@@ -4,19 +4,6 @@ import java.util.concurrent.TimeUnit;
 
 public class Constant {
 
-	public static final String MARK_NONE = "";
-	public static final String MARK_ADD = "+";
-	public static final String MARK_MINUS = "-";
-	public static final String MARK_ASTERISK = "*";
-	public static final String MARK_DOLLAR = "$";
-	public static final String MARK_LEVEL = "L";
-	public static final String MARK_PREDICT = "?";
-
-	public static final String WHITE_SPACE = " ";
-	public static final String NEW_LINE = "\n";
-	public static final String TAB = "\t";
-	public static final String TAB2 = "\t\t";
-
 	public static final String FILE_EXT_TEXT = ".txt";
 	public static final String FILE_EXT_XML = ".xml";
 
@@ -25,7 +12,6 @@ public class Constant {
 	public static final String ACTION_FAVORITE_STOCK_INSERT = "orion.intent.action.ACTION_FAVORITE_STOCK_INSERT";
 	public static final String ACTION_STOCK_EDIT = "orion.intent.action.ACTION_STOCK_EDIT";
 	public static final String ACTION_STOCK_ID = "orion.intent.action.ACTION_STOCK_ID";
-	public static final String ACTION_STOCK_TREND_LIST = "orion.intent.action.ACTION_STOCK_TREND_LIST";
 
 	public static final String DEAL = "deal";
 	public static final String DEAL_INSERT = "insert";

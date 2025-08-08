@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import com.android.orion.data.Candle;
 import com.android.orion.data.Macd;
 import com.android.orion.setting.Constant;
+import com.android.orion.utility.Symbol;
 import com.android.orion.utility.Utility;
 
 import java.util.Calendar;
@@ -690,12 +691,12 @@ public class StockData extends DatabaseTable {
 		//					日期	    时间	    开盘	    最高	    最低	    收盘	    成交量	    成交额
 		//					2023/01/03	0935	37.08	37.08	36.72	36.81	6066500	223727792.00
 
-		String[] strings = string.split(Constant.TAB);
+		String[] strings = string.split(Symbol.TAB);
 		if (strings == null || strings.length < 8) {
 			return null;
 		}
 
-		dateString = strings[0].replace("/", Constant.MARK_MINUS);
+		dateString = strings[0].replace("/", Symbol.MINUS);
 		setDate(dateString);
 		timeString = strings[1].substring(0, 2) + ":" + strings[1].substring(2, 4) + ":" + "00";
 		setTime(timeString);
@@ -717,12 +718,12 @@ public class StockData extends DatabaseTable {
 		TDX output format
 		date  time    open    high    low close   volume  value
 		*/
-		String dateString = getDate().replace(Constant.MARK_MINUS, "/");
+		String dateString = getDate().replace(Symbol.MINUS, "/");
 		String timeString = getTime().substring(0, 5).replace(":", "");
-		stringBuffer.append(dateString + Constant.TAB
-				+ timeString + Constant.TAB
+		stringBuffer.append(dateString + Symbol.TAB
+				+ timeString + Symbol.TAB
 				+ mCandle.toString()
-				+ 0 + Constant.TAB
+				+ 0 + Symbol.TAB
 				+ 0);
 		stringBuffer.append("\r\n");
 		return stringBuffer.toString();

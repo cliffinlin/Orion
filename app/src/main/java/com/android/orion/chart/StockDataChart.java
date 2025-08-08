@@ -9,8 +9,8 @@ import com.android.orion.data.Period;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockTrend;
-import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
+import com.android.orion.utility.Symbol;
 import com.android.orion.utility.Utility;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.LimitLine.LimitLabelPosition;
@@ -91,7 +91,7 @@ public class StockDataChart {
 		mStockTrendMap.clear();
 		for (StockTrend stockTrend : stockTrendList) {
 			if (stockTrend != null) {
-				mStockTrendMap.put(stockTrend.getPeriod() + Constant.MARK_LEVEL + stockTrend.getLevel(), stockTrend);
+				mStockTrendMap.put(stockTrend.getPeriod() + Symbol.L + stockTrend.getLevel(), stockTrend);
 			}
 		}
 	}
@@ -271,7 +271,7 @@ public class StockDataChart {
 
 	StockTrend getStockTrend(int level) {
 		StockTrend stockTrend = null;
-		String key = mPeriod + Constant.MARK_LEVEL + level;
+		String key = mPeriod + Symbol.L + level;
 		if (mStockTrendMap.containsKey(key)) {
 			stockTrend = mStockTrendMap.get(key);
 		}
@@ -356,20 +356,6 @@ public class StockDataChart {
 		return Setting.getDisplayAdaptive() ? level >= mAdaptiveLevel : result;
 	}
 
-	String getPriceNetLabel(Stock stock) {
-		StringBuilder result = new StringBuilder();
-		if (stock == null) {
-			return "";
-		}
-
-		result.append(stock.getPrice()).append(" ");
-		if (stock.getNet() > 0) {
-			result.append(Constant.MARK_ADD);
-		}
-		result.append(stock.getNet()).append("%");
-		return result.toString();
-	}
-
 	public void updateDescription(Stock stock) {
 		if (stock == null) {
 			return;
@@ -377,8 +363,7 @@ public class StockDataChart {
 
 		mDescription.setLength(0);
 		mDescription.append(mPeriod).append(" ");
-		mDescription.append(stock.getName()).append(" ");
-		mDescription.append(getPriceNetLabel(stock)).append("  ");
+		mDescription.append(stock.getNamePriceNetString()).append(" ");
 		StockTrend stockTrend = getStockTrend(mAdaptiveLevel);
 		if (stockTrend != null) {
 			mDescription.append(stockTrend.toChartString());
@@ -420,7 +405,7 @@ public class StockDataChart {
 		LimitLine limitLine;
 		int color = Color.WHITE;
 		String label = "                                                     ";
-		label += getPriceNetLabel(stock);
+		label += stock.getPriceNetString();
 		limitLine = createLimitLine(stock.getPrice(), color, label);
 		mLimitLineList.add(limitLine);
 	}
@@ -447,11 +432,11 @@ public class StockDataChart {
 			if (limitLineMap.containsKey(turn)) {
 				LimitLine limitLine = limitLineMap.get(turn);
 				if (limitLine != null) {
-					limitLine.setLabel(limitLine.getLabel() + Constant.TAB2 + stockTrend.toChartString());
+					limitLine.setLabel(limitLine.getLabel() + Symbol.TAB2 + stockTrend.toChartString());
 				}
 			} else {
 				int color = lineColor(i);
-				String label = "              " + stockTrend.getTurn() + Constant.TAB2 + stockTrend.toChartString();
+				String label = "              " + stockTrend.getTurn() + Symbol.TAB2 + stockTrend.toChartString();
 				LimitLine limitLine = createLimitLine(stockTrend.getTurn(), color, label);
 				limitLineMap.put(turn, limitLine);
 			}
