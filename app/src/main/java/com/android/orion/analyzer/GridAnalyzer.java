@@ -1,5 +1,7 @@
 package com.android.orion.analyzer;
 
+import android.text.TextUtils;
+
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;
 import com.android.orion.manager.StockDatabaseManager;
@@ -10,7 +12,8 @@ import java.util.ArrayList;
 public class GridAnalyzer {
 	Logger Log = Logger.getLogger();
 	Stock mStock;
-	StockDeal mStockDeal;
+	StockDeal mBuyDeal;
+	StockDeal mSellDeal;
 	ArrayList<StockDeal> mStockDealList = new ArrayList<>();
 	StockDatabaseManager mStockDatabaseManager = StockDatabaseManager.getInstance();
 
@@ -23,7 +26,13 @@ public class GridAnalyzer {
 
 	public void analyze(Stock stock) {
 		mStock = stock;
-		if (mStock == null || !mStock.hasFlag(Stock.FLAG_GRID)) {
+		if (mStock == null) {
+			return;
+		}
+
+		mStock.setGridProfit(0);
+
+		if (!mStock.hasFlag(Stock.FLAG_GRID)) {
 			return;
 		}
 
@@ -32,16 +41,36 @@ public class GridAnalyzer {
 			return;
 		}
 
-		mStockDeal = mStockDealList.get(mStockDealList.size() - 1);
-		if (mStockDeal == null) {
-			return;
+		mBuyDeal = null;
+		mSellDeal = null;
+		for (int i = mStockDealList.size() - 1; i >= 0; i--) {
+			StockDeal stockDeal = mStockDealList.get(i);
+			if (TextUtils.equals(stockDeal.getType(), StockDeal.TYPE_BUY)) {
+				if (mBuyDeal == null) {
+					mBuyDeal = stockDeal;
+				}
+			} else if (TextUtils.equals(stockDeal.getType(), StockDeal.TYPE_SELL)) {
+				if (mSellDeal == null) {
+					mSellDeal = stockDeal;
+				}
+			}
+
+			if (mBuyDeal != null && mSellDeal != null) {
+				break;
+			}
 		}
 
-		mStock.setGridProfit(mStockDeal.getProfit());
+		if (mBuyDeal != null) {
+			mStock.setGridProfit(mBuyDeal.getProfit());
+		}
 	}
 
-	public String getNotifyString() {
-		return mStockDeal == null ? "" : mStockDeal.toString();
+	public String getBuyDealString() {
+		return mBuyDeal == null ? "" : mBuyDeal.toString();
+	}
+
+	public String getSellDealString() {
+		return mSellDeal == null ? "" : mSellDeal.toString();
 	}
 
 	private static class Holder {
