@@ -14,41 +14,41 @@
     <item
         android:id="@+id/action_refresh"
         android:orderInCategory="100"
-        android:title="@string/action_refresh"
+        android:title="@string/refresh"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_setting"
         android:orderInCategory="100"
-        android:title="@string/action_setting"
+        android:title="@string/setting"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_load"
         android:orderInCategory="100"
-        android:title="@string/action_load"
+        android:title="@string/load"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_save"
         android:orderInCategory="100"
-        android:title="@string/action_save"
+        android:title="@string/save"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_deal"
         android:orderInCategory="100"
-        android:title="@string/action_deal"
+        android:title="@string/deal"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_favorite_all"
         android:orderInCategory="100"
-        android:title="@string/action_favorite_all"
+        android:title="@string/favorite_all"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_favorite_hold"
         android:orderInCategory="100"
-        android:title="@string/action_favorite_hold"
+        android:title="@string/favorite_hold"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_favorite_none"
         android:orderInCategory="100"
-        android:title="@string/action_favorite_none"
+        android:title="@string/favorite_none"
         app:showAsAction="never" />
 </menu>

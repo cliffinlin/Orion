@@ -1916,7 +1916,7 @@ public class SinaFinance extends StockDataProvider {
 
 			if (string.contains(accessDeniedString)) {
 				StringBuilder contentTitle = new StringBuilder();
-				contentTitle.append(mContext.getResources().getString(R.string.action_download));
+				contentTitle.append(mContext.getResources().getString(R.string.download));
 				contentTitle.append(" ");
 				contentTitle.append(accessDeniedString);
 

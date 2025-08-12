@@ -16,27 +16,27 @@
     <item
         android:id="@+id/action_refresh"
         android:orderInCategory="100"
-        android:title="@string/action_refresh"
+        android:title="@string/refresh"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_setting"
         android:orderInCategory="100"
-        android:title="@string/action_setting"
+        android:title="@string/setting"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_edit"
         android:orderInCategory="100"
-        android:title="@string/action_edit"
+        android:title="@string/edit"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_deal"
         android:orderInCategory="100"
-        android:title="@string/action_deal"
+        android:title="@string/deal"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_trend"
         android:orderInCategory="100"
-        android:title="@string/action_trend"
+        android:title="@string/trend"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_import"
@@ -46,7 +46,7 @@
     <item
         android:id="@+id/action_export"
         android:orderInCategory="100"
-        android:title="@string/action_export"
+        android:title="@string/export"
         app:showAsAction="never" />
 
 </menu>

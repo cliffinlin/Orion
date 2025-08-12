@@ -1,0 +1,1 @@
+cat <(head -n 1 strings.xml) <(head strings.xml -n -2 | tail -n +2 | sort ) <(tail -n 2 strings.xml)

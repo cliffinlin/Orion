@@ -4,45 +4,45 @@
         android:id="@+id/action_refresh"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="@string/action_refresh" />
+        android:title="@string/refresh" />
     <item
         android:id="@+id/action_setting"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="@string/action_setting" />
+        android:title="@string/setting" />
     <item
         android:id="@+id/action_order_by_roi"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="@string/action_order_by_roi" />
+        android:title="@string/order_by_roi" />
     <item
         android:id="@+id/action_order_by_roe"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="@string/action_order_by_roe" />
+        android:title="@string/order_by_roe" />
     <item
         android:id="@+id/action_order_by_rate"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="@string/action_order_by_rate" />
+        android:title="@string/order_by_rate" />
     <item
         android:id="@+id/action_order_by_pe"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="@string/action_order_by_pe" />
+        android:title="@string/order_by_pe" />
     <item
         android:id="@+id/action_order_by_yield"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="@string/action_order_by_yield" />
+        android:title="@string/order_by_yield" />
     <item
         android:id="@+id/action_order_by_dividend_ratio"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="@string/action_order_by_dividend_ratio" />
+        android:title="@string/order_by_dividend_ratio" />
     <item
         android:id="@+id/action_order_by_valuation"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="@string/action_order_by_valuation" />
+        android:title="@string/order_by_valuation" />
 </menu>
