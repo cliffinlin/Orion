@@ -145,7 +145,7 @@ public class StockDealActivity extends DatabaseActivity implements
 				mHandler.sendEmptyMessage(MESSAGE_LOAD_STOCK_BY_SE_CODE);
 			}
 		} else if (TextUtils.equals(mAction, Constant.ACTION_DEAL_EDIT)) {
-			mDeal.setId(mIntent.getLongExtra(Constant.EXTRA_DEAL_ID, 0));
+			mDeal.setId(mIntent.getLongExtra(Constant.EXTRA_STOCK_DEAL_ID, 0));
 			mHandler.sendEmptyMessage(MESSAGE_LOAD_DEAL);
 		}
 	}

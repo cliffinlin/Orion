@@ -1,8 +1,12 @@
 package com.android.orion.activity;
 
+import android.content.Intent;
+import android.graphics.Paint;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -12,11 +16,13 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.android.orion.R;
+import com.android.orion.config.Config;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.setting.Constant;
@@ -34,6 +40,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 	EditText mEditTextStockCode;
 	EditText mEditTextStockHold;
 	EditText mEditTextStockYield;
+	TextView mTextViewSeUrl;
 	Button mButtonOk;
 	Button mButtonCancel;
 
@@ -61,6 +68,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mEditTextStockCode = findViewById(R.id.edittext_stock_code);
 		mEditTextStockHold = findViewById(R.id.edittext_stock_hold);
 		mEditTextStockYield = findViewById(R.id.edittext_stock_yield);
+		mTextViewSeUrl = findViewById(R.id.textview_se_url);
 		mButtonOk = findViewById(R.id.button_ok);
 		mButtonCancel = findViewById(R.id.button_cancel);
 
@@ -73,6 +81,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mEditTextStockCode.setOnClickListener(this);
 		mEditTextStockHold.setOnClickListener(this);
 		mEditTextStockYield.setOnClickListener(this);
+		mTextViewSeUrl.setOnClickListener(this);
 		mButtonOk.setOnClickListener(this);
 		mButtonCancel.setOnClickListener(this);
 
@@ -150,6 +159,8 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mEditTextStockCode.setText(mStock.getCode());
 		mEditTextStockHold.setText(String.valueOf(mStock.getHold()));
 		mEditTextStockYield.setText(String.valueOf(mStock.getYield()));
+		mTextViewSeUrl.setText(mStock.getSeUrl());
+		mTextViewSeUrl.setPaintFlags(mTextViewSeUrl.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 	}
 
 	@Override
@@ -189,6 +200,18 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 				} else {
 					mStock.removeFlag(Stock.FLAG_GRID);
 					mStock.setGridProfit(0);
+				}
+				break;
+
+			case R.id.textview_se_url:
+				if (Utility.isPackageInstalled(Config.FAVORITE_BROWSER_PACKAGE_NAME, this)) {
+					Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mTextViewSeUrl.getText().toString()));
+					intent.setPackage(Config.FAVORITE_BROWSER_PACKAGE_NAME);
+					intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					startActivity(intent);
+				} else {
+					Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mTextViewSeUrl.getText().toString()));
+					startActivity(intent);
 				}
 				break;
 

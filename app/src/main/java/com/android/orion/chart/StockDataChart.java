@@ -485,10 +485,6 @@ public class StockDataChart {
 				color = Color.GREEN;
 			}
 
-			if (stockDeal.getVolume() <= 0) {
-				color = Color.YELLOW;
-			}
-
 			label = "               "
 					+ "  " + limit
 					+ "  " + stockDeal.getNet() + "%"

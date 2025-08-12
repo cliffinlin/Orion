@@ -828,4 +828,13 @@ public class Utility {
 	public static boolean hasFlag(int value, int flag) {
 		return (value & flag) == flag;
 	}
+
+	public static boolean isPackageInstalled(String packageName, Context context) {
+		try {
+			context.getPackageManager().getPackageInfo(packageName, 0);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
 }

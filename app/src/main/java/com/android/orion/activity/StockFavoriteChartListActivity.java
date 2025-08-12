@@ -58,7 +58,7 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 	private final List<Runnable> mSwitchActions = Arrays.asList(
 			this::toggleFirstSwitch
 	);
-	boolean mKeyDisplayDeal = false;
+	boolean mShowStockDeal = false;
 	int mStockListIndex = 0;
 	Menu mMenu = null;
 	String mSortOrder = null;
@@ -122,7 +122,7 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 		mStockDatabaseManager.getStockTrendById(mStockTrend);
 
 		mSortOrder = intent.getStringExtra(Constant.EXTRA_STOCK_LIST_SORT_ORDER);
-		mKeyDisplayDeal = intent.getBooleanExtra(Constant.EXTRA_STOCK_DEAL, false);
+		mShowStockDeal = intent.getBooleanExtra(Constant.EXTRA_SHOW_STOCK_DEAL, false);
 	}
 
 	@Override
@@ -584,7 +584,7 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 			updateTitle();
 			updateMenuAction();
 
-			if (mKeyDisplayDeal) {
+			if (mShowStockDeal) {
 				mStockDatabaseManager.getStockDealList(mStock, mStockDealList);
 			} else {
 				mStockDealList.clear();

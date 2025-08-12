@@ -25,6 +25,9 @@ public class Stock extends DatabaseTable {
 	public static final String SE_SH = "sh";
 	public static final String SE_SZ = "sz";
 
+	public static final String SE_SH_URL_BASE = "https://www.sse.com.cn/assortment/stock/list/info/company/index.shtml?COMPANY_CODE=";
+	public static final String SE_SZ_URL_BASE = "http://www.szse.cn/certificate/individual/index.html?code=";
+
 	public static final String STATUS_SUSPENSION = "--";
 
 	public static final int CODE_LENGTH = 6;
@@ -1960,6 +1963,16 @@ public class Stock extends DatabaseTable {
 		IRR.calculate(mPe, mRoe / 100, mDividendRatioInYear / 100, mPrice);
 		mIR = Utility.Round2(IRR.getIR());
 		mIRR = Utility.Round2(100 * IRR.getIRR());
+	}
+
+	public String getSeUrl() {
+		String result = "";
+		if (TextUtils.equals(getSE(), SE_SH)) {
+			result = SE_SH_URL_BASE + getCode();
+		} else if (TextUtils.equals(getSE(), SE_SZ)) {
+			result = SE_SZ_URL_BASE + getCode();
+		}
+		return result;
 	}
 
 	public String getPriceNetString() {

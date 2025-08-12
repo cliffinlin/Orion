@@ -38,7 +38,6 @@ import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.RecordFile;
-import com.android.orion.utility.Utility;
 import com.android.orion.view.SyncHorizontalScrollView;
 
 import java.util.ArrayList;
@@ -152,7 +151,7 @@ public class StockDealListActivity extends ListActivity implements
 					intent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
 					intent.putStringArrayListExtra(Constant.EXTRA_STOCK_ID_LIST,
 							stockIDList);
-					intent.putExtra(Constant.EXTRA_STOCK_DEAL, true);
+					intent.putExtra(Constant.EXTRA_SHOW_STOCK_DEAL, true);
 					startActivity(intent);
 					break;
 
@@ -180,7 +179,7 @@ public class StockDealListActivity extends ListActivity implements
 				case R.id.menu_edit:
 					mIntent = new Intent(mContext, StockDealActivity.class);
 					mIntent.setAction(Constant.ACTION_DEAL_EDIT);
-					mIntent.putExtra(Constant.EXTRA_DEAL_ID,
+					mIntent.putExtra(Constant.EXTRA_STOCK_DEAL_ID,
 							mStockDeal.getId());
 					startActivityForResult(mIntent, REQUEST_CODE_DEAL_EDIT);
 					mode.finish();

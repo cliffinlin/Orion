@@ -20,18 +20,16 @@ public class Constant {
 	public static final String FAVORITE = "favorite";
 	public static final String NOTIFICATION = "notification";
 
-	public static final String EXTRA_DEAL_ID = "deal_id";
-	public static final String EXTRA_INDEX_CODE = "index_code";
-	public static final String EXTRA_INDEX_NAME = "index_name";
-	public static final String EXTRA_INDEX_SE = "index_se";
+	public static final String EXTRA_SHOW_STOCK_DEAL = "show_stock_deal";
 	public static final String EXTRA_STOCK_ID = "stock_id";
 	public static final String EXTRA_STOCK_SE = "stock_se";
 	public static final String EXTRA_STOCK_CODE = "stock_code";
-	public static final String EXTRA_STOCK_DEAL = "stock_deal";
+	public static final String EXTRA_STOCK_DEAL_ID = "stock_deal_id";
 	public static final String EXTRA_STOCK_TREND_ID = "stock_trend_id";
 	public static final String EXTRA_STOCK_PERCEPTRON_ID = "stock_perceptron_id";
 	public static final String EXTRA_STOCK_ID_LIST = "stock_id_list";
 	public static final String EXTRA_STOCK_LIST_SORT_ORDER = "stock_list_sort_order";
+	public static final String EXTRA_URL = "url";
 
 	public static final int DOUBLE_FIXED_DECIMAL_2 = 2;
 	public static final int DOUBLE_FIXED_DECIMAL_4 = 4;

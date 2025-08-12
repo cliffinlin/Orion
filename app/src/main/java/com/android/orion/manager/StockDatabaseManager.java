@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.util.Log;
 
@@ -496,7 +497,7 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 					stockDeal.setupBonus(stock.getDividend());
 					stockDeal.setupYield(stock.getDividend());
 
-					if (stockDeal.getVolume() > 0) {
+					if (stockDeal.getVolume() > 0 && TextUtils.equals(stockDeal.getType(), StockDeal.TYPE_BUY)) {
 						hold += stockDeal.getVolume();
 						cost += stockDeal.getValue();
 					}
