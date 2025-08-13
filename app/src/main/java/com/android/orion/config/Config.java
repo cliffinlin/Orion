@@ -15,8 +15,6 @@ public class Config {
 	public static final String MESSAGE_CHANNEL_ID = "message_channel";
 	public static final String MESSAGE_CHANNEL_NAME = "Message Channel";
 
-	public static final String FAVORITE_BROWSER_PACKAGE_NAME = "com.microsoft.emmx";
-
 	public static final int COLOR_RGB_RED = Color.rgb(255, 50, 50);
 	public static final int COLOR_RGB_GREEN = Color.rgb(50, 128, 50);
 

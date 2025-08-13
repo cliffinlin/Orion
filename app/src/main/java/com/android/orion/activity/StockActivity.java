@@ -203,18 +203,6 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 				}
 				break;
 
-			case R.id.textview_se_url:
-				if (Utility.isPackageInstalled(Config.FAVORITE_BROWSER_PACKAGE_NAME, this)) {
-					Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mTextViewSeUrl.getText().toString()));
-					intent.setPackage(Config.FAVORITE_BROWSER_PACKAGE_NAME);
-					intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-					startActivity(intent);
-				} else {
-					Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mTextViewSeUrl.getText().toString()));
-					startActivity(intent);
-				}
-				break;
-
 			case R.id.button_ok:
 				if (mCheckBoxFavorite.isChecked()) {
 					mStock.addFlag(Stock.FLAG_FAVORITE);
