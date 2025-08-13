@@ -145,8 +145,7 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 		}
 	}
 
-	public int getStockCount(String selection, String[] selectionArgs,
-	                         String sortOrder) {
+	public int getStockCount(String selection, String[] selectionArgs, String sortOrder) {
 		int result = 0;
 		Cursor cursor = null;
 		try {
@@ -201,7 +200,7 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 	public boolean isStockExist(Stock stock) {
 		boolean result = false;
 		if (stock == null) {
-			return false;
+			return result;
 		}
 		Cursor cursor = null;
 		try {
@@ -261,14 +260,10 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 		if (stockBonus == null) {
 			return;
 		}
-
 		Cursor cursor = null;
 		try {
 			String selection = DatabaseContract.SELECTION_STOCK(stock.getSE(), stock.getCode());
-			cursor = mContentResolver.query(
-					DatabaseContract.StockBonus.CONTENT_URI,
-					DatabaseContract.StockBonus.PROJECTION_ALL, selection,
-					null, DatabaseContract.ORDER_DATE_DESC);
+			cursor = query(DatabaseContract.StockBonus.CONTENT_URI, DatabaseContract.StockBonus.PROJECTION_ALL, selection,null, DatabaseContract.ORDER_DATE_DESC);
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
 				stockBonus.set(cursor);
@@ -303,10 +298,10 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 	}
 
 	public boolean isStockBonusExist(StockBonus stockBonus) {
-		if (stockBonus == null) {
-			return false;
-		}
 		boolean result = false;
+		if (stockBonus == null) {
+			return result;
+		}
 		Cursor cursor = null;
 		try {
 			cursor = queryStockBonus(stockBonus);
@@ -423,10 +418,10 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 	}
 
 	public boolean isStockDataExist(StockData stockData) {
-		if (stockData == null) {
-			return false;
-		}
 		boolean result = false;
+		if (stockData == null) {
+			return result;
+		}
 		Cursor cursor = null;
 		try {
 			cursor = queryStockData(stockData);
@@ -475,11 +470,9 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 		int result = 0;
 		long hold = 0;
 		double cost = 0;
-
 		if (stock == null) {
 			return result;
 		}
-
 		StockDeal stockDeal = new StockDeal();
 		String selection = DatabaseContract.SELECTION_STOCK(stock.getSE(), stock.getCode());
 		Cursor cursor = null;
@@ -550,11 +543,10 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 	}
 
 	public int getStockDealCount(Stock stock) {
-		if (stock == null) {
-			return 0;
-		}
-
 		int result = 0;
+		if (stock == null) {
+			return result;
+		}
 		Cursor cursor = null;
 		try {
 			String selection = DatabaseContract.SELECTION_STOCK(stock.getSE(), stock.getCode());
@@ -574,7 +566,6 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 		if (stockDealList == null) {
 			return;
 		}
-
 		stockDealList.clear();
 		Cursor cursor = null;
 		try {
@@ -664,9 +655,7 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 		Cursor cursor = null;
 		try {
 			String selection = DatabaseContract.SELECTION_STOCK(stock.getSE(), stock.getCode());
-			cursor = query(DatabaseContract.StockFinancial.CONTENT_URI,
-					DatabaseContract.StockFinancial.PROJECTION_ALL, selection,
-					null, DatabaseContract.ORDER_DATE_DESC);
+			cursor = query(DatabaseContract.StockFinancial.CONTENT_URI,	DatabaseContract.StockFinancial.PROJECTION_ALL, selection,null, DatabaseContract.ORDER_DATE_DESC);
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
 				stockFinancial.set(cursor);
@@ -701,10 +690,10 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 	}
 
 	public boolean isStockFinancialExist(StockFinancial stockFinancial) {
-		if (stockFinancial == null) {
-			return false;
-		}
 		boolean result = false;
+		if (stockFinancial == null) {
+			return result;
+		}
 		Cursor cursor = null;
 		try {
 			cursor = queryStockFinancial(stockFinancial);
@@ -758,12 +747,9 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 		}
 
 		Cursor cursor = null;
-		String selection = DatabaseContract.SELECTION_PERIOD_LEVEL_TYPE(stockPerceptron.getPeriod(), stockPerceptron.getLevel(), stockPerceptron.getType());
 		try {
-			cursor = query(
-					DatabaseContract.StockPerceptron.CONTENT_URI,
-					DatabaseContract.StockPerceptron.PROJECTION_ALL, selection, null,
-					DatabaseContract.ORDER_PERIOD_LEVEL_DESC);
+			String selection = DatabaseContract.SELECTION_PERIOD_LEVEL_TYPE(stockPerceptron.getPeriod(), stockPerceptron.getLevel(), stockPerceptron.getType());
+			cursor = query(DatabaseContract.StockPerceptron.CONTENT_URI, DatabaseContract.StockPerceptron.PROJECTION_ALL, selection, null, DatabaseContract.ORDER_PERIOD_LEVEL_DESC);
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
 				stockPerceptron.set(cursor);
@@ -794,11 +780,10 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 	}
 
 	public boolean isStockPerceptronExist(StockPerceptron stockPerceptron) {
-		if (stockPerceptron == null) {
-			return false;
-		}
-
 		boolean result = false;
+		if (stockPerceptron == null) {
+			return result;
+		}
 		Cursor cursor = null;
 		try {
 			cursor = queryStockPerceptron(stockPerceptron);
@@ -854,12 +839,9 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 		if (stockRZRQ == null) {
 			return;
 		}
-
 		Cursor cursor = null;
 		try {
-			cursor = mContentResolver.query(DatabaseContract.StockRZRQ.CONTENT_URI,
-					DatabaseContract.StockRZRQ.PROJECTION_ALL, DatabaseContract.SELECTION_STOCK(stock.getSE(), stock.getCode()),
-					null, DatabaseContract.ORDER_DATE_DESC);
+			cursor = query(DatabaseContract.StockRZRQ.CONTENT_URI, DatabaseContract.StockRZRQ.PROJECTION_ALL, DatabaseContract.SELECTION_STOCK(stock.getSE(), stock.getCode()), null, DatabaseContract.ORDER_DATE_DESC);
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
 				stockRZRQ.set(cursor);
@@ -875,7 +857,6 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 		if (stock == null || stockRZRQList == null) {
 			return;
 		}
-
 		stockRZRQList.clear();
 		Cursor cursor = null;
 		try {
@@ -917,11 +898,10 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 	}
 
 	public boolean isStockRZRQExist(StockRZRQ stockRZRQ) {
-		if (stockRZRQ == null) {
-			return false;
-		}
-
 		boolean result = false;
+		if (stockRZRQ == null) {
+			return result;
+		}
 		Cursor cursor = null;
 		try {
 			cursor = queryStockRZRQ(stockRZRQ);
@@ -965,10 +945,7 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 		}
 		Cursor cursor = null;
 		try {
-			cursor = mContentResolver.query(
-					DatabaseContract.StockShare.CONTENT_URI,
-					DatabaseContract.StockShare.PROJECTION_ALL, DatabaseContract.SELECTION_STOCK(stock.getSE(), stock.getCode()),
-					null, DatabaseContract.ORDER_DATE_DESC);
+			cursor = query(DatabaseContract.StockShare.CONTENT_URI,	DatabaseContract.StockShare.PROJECTION_ALL,	DatabaseContract.SELECTION_STOCK(stock.getSE(), stock.getCode()),null, DatabaseContract.ORDER_DATE_DESC);
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
 				stockShare.set(cursor);
@@ -1003,11 +980,10 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 	}
 
 	public boolean isStockShareExist(StockShare stockShare) {
-		if (stockShare == null) {
-			return false;
-		}
-
 		boolean result = false;
+		if (stockShare == null) {
+			return result;
+		}
 		Cursor cursor = null;
 		try {
 			cursor = queryStockShare(stockShare);
@@ -1084,7 +1060,7 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 	}
 
 	public int updateStockTrend(StockTrend stockTrend, ContentValues contentValues) {
-		if (stockTrend == null || mContentResolver == null) {
+		if (stockTrend == null) {
 			return 0;
 		}
 		return update(DatabaseContract.StockTrend.CONTENT_URI, contentValues, DatabaseContract.SELECTION_STOCK_PERIOD_LEVEL(stockTrend.getSE(), stockTrend.getCode(), stockTrend.getPeriod(), stockTrend.getLevel()), null);
@@ -1099,6 +1075,9 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 	}
 
 	public void getStockTrend(StockTrend stockTrend) {
+		if (stockTrend == null) {
+			return;
+		}
 		Cursor cursor = null;
 		try {
 			cursor = query(DatabaseContract.StockTrend.CONTENT_URI, DatabaseContract.StockTrend.PROJECTION_ALL, DatabaseContract.SELECTION_STOCK_PERIOD_LEVEL(stockTrend.getSE(), stockTrend.getCode(), stockTrend.getPeriod(), stockTrend.getLevel()), null, DatabaseContract.ORDER_DATE_TIME_DESC);
@@ -1159,7 +1138,7 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 	public boolean isStockTrendExist(StockTrend stockTrend) {
 		boolean result = false;
 		if (stockTrend == null) {
-			return false;
+			return result;
 		}
 		Cursor cursor = null;
 		try {
