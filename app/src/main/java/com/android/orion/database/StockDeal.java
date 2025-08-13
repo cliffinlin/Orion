@@ -498,23 +498,27 @@ public class StockDeal extends DatabaseTable {
 		}
 
 		if (dividend > 0) {
-			Calendar todayCalendar = Utility.getCalendar(
-					Utility.getCurrentDateString(), Utility.CALENDAR_DATE_FORMAT);
+			Calendar yearCalendar = Utility.getCalendar(Utility.getCurrentDateString(), Utility.CALENDAR_DATE_FORMAT);
+			yearCalendar.add(Calendar.YEAR, -1);
 
-			Calendar rDateCalendarAfterMonth = Utility.getCalendar(
-					rDate, Utility.CALENDAR_DATE_FORMAT);
-			rDateCalendarAfterMonth.add(Calendar.MONTH, 1);
+			Calendar monthCalendar = Utility.getCalendar(Utility.getCurrentDateString(), Utility.CALENDAR_DATE_FORMAT);
+			monthCalendar.add(Calendar.MONTH, -1);
 
-			Calendar rDateCalendarAfterYear = Utility.getCalendar(
-					rDate, Utility.CALENDAR_DATE_FORMAT);
-			rDateCalendarAfterYear.add(Calendar.YEAR, 1);
+			Calendar buyCalendar;
+			if (!TextUtils.isEmpty(mDate)) {
+				buyCalendar = Utility.getCalendar(mDate, Utility.CALENDAR_DATE_FORMAT);
+			} else if (!TextUtils.isEmpty(getModified())) {
+				buyCalendar = Utility.getCalendar(getModified(), Utility.CALENDAR_DATE_TIME_FORMAT);
+			} else {
+				buyCalendar = Utility.getCalendar(getCreated(), Utility.CALENDAR_DATE_TIME_FORMAT);
+			}
 
-			if (todayCalendar.before(rDateCalendarAfterMonth)) {
-				dividendIncomeTax = dividend / 10.0 * Math.abs(mVolume) * DIVIDEND_INCOME_TAX_RATE_20_PERCENT;
-			} else if (todayCalendar.before(rDateCalendarAfterYear)) {
+			if (buyCalendar.before(yearCalendar)) {
+				dividendIncomeTax = 0;
+			} else 	if (buyCalendar.before(monthCalendar)) {
 				dividendIncomeTax = dividend / 10.0 * Math.abs(mVolume) * DIVIDEND_INCOME_TAX_RATE_10_PERCENT;
 			} else {
-				dividendIncomeTax = 0;
+				dividendIncomeTax = dividend / 10.0 * Math.abs(mVolume) * DIVIDEND_INCOME_TAX_RATE_20_PERCENT;
 			}
 		}
 
