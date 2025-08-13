@@ -438,21 +438,6 @@ public class StockDeal extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_TYPE)));
 	}
 
-	public void setupNet() {
-		if (mPrice == 0 || mVolume == 0) {
-			mNet = 0;
-			return;
-		}
-
-		if ((mBuy > 0) && (mSell > 0)) {
-			mNet = Utility.Round2(100 * ((mSell - mBuy) * Math.abs(mVolume) - mFee) / Math.abs(mVolume) / mBuy);
-		} else if (mBuy > 0) {
-			mNet = Utility.Round2(100 * ((mPrice - mBuy) * Math.abs(mVolume) - mFee) / Math.abs(mVolume) / mBuy);
-		} else if (mSell > 0) {
-			mNet = Utility.Round2(100 * (mPrice - mSell) / mSell);
-		}
-	}
-
 	public void setupValue() {
 		if (mVolume == 0) {
 			mValue = 0;
@@ -460,135 +445,6 @@ public class StockDeal extends DatabaseTable {
 		}
 
 		mValue = Utility.Round2(mBuy * Math.abs(mVolume));
-	}
-
-	public void setupBuyFee() {
-		double buyStampDuty = 0;
-		double buyTransferFee = 0;
-		double buyCommissionFee = 0;
-
-		if (mPrice == 0 || mBuy == 0 || mVolume == 0) {
-			return;
-		}
-
-		buyStampDuty = mBuy * Math.abs(mVolume) * BUY_STAMP_DUTY_RATE;
-
-		buyTransferFee = mBuy * Math.abs(mVolume) * BUY_TRANSFER_FEE_RATE;
-		if (buyTransferFee < BUY_TRANSFER_FEE_MIN) {
-			buyTransferFee = BUY_TRANSFER_FEE_MIN;
-		}
-
-		buyCommissionFee = mBuy * Math.abs(mVolume) * BUY_COMMISSION_FEE_RATE;
-		if (buyCommissionFee < BUY_COMMISSION_FEE_MIN) {
-			buyCommissionFee = BUY_COMMISSION_FEE_MIN;
-		}
-
-		mFee = Utility.Round2(buyStampDuty + buyTransferFee + buyCommissionFee);
-	}
-
-	public void setupSellFee(ArrayList<StockBonus> stockBonusList) {
-		double sellStampDuty = 0;
-		double sellTransferFee = 0;
-		double sellCommissionFee = 0;
-		double dividendIncomeTax = 0;
-
-		if (mPrice == 0 || mSell == 0 || mVolume == 0) {
-			return;
-		}
-
-		if (mSell > 0) {
-			sellStampDuty = mSell * Math.abs(mVolume) * SELL_STAMP_DUTY_RATE;
-		} else {
-			sellStampDuty = mPrice * Math.abs(mVolume) * SELL_STAMP_DUTY_RATE;
-		}
-
-		if (mSell > 0) {
-			sellTransferFee = mSell * Math.abs(mVolume) * SELL_TRANSFER_FEE_RATE;
-		} else {
-			sellTransferFee = mPrice * Math.abs(mVolume) * SELL_TRANSFER_FEE_RATE;
-		}
-		if (sellTransferFee < SELL_TRANSFER_FEE_MIN) {
-			sellTransferFee = SELL_TRANSFER_FEE_MIN;
-		}
-
-		if (mSell > 0) {
-			sellCommissionFee = mSell * Math.abs(mVolume) * SELL_COMMISSION_FEE_RATE;
-		} else {
-			sellCommissionFee = mPrice * Math.abs(mVolume) * SELL_COMMISSION_FEE_RATE;
-		}
-
-		if (sellCommissionFee < SELL_COMMISSION_FEE_MIN) {
-			sellCommissionFee = SELL_COMMISSION_FEE_MIN;
-		}
-
-		dividendIncomeTax = getDividendIncomeTax(stockBonusList);
-
-		mFee = Utility.Round2(sellStampDuty + sellTransferFee + sellCommissionFee + dividendIncomeTax);
-	}
-
-	double getDividendIncomeTax(ArrayList<StockBonus> stockBonusList) {
-		StockBonus stockBonus = new StockBonus();
-		String rDate = "";
-		double dividend = 0;
-		double result = 0;
-
-		if (stockBonusList == null || stockBonusList.size() < StockTrend.VERTEX_SIZE) {
-			return result;
-		}
-
-		if (mPrice == 0 || mBuy == 0 || mVolume == 0) {
-			return result;
-		}
-
-		for (int i = 0; i < 2; i++) {
-			stockBonus = stockBonusList.get(i);
-			rDate = stockBonus.getRDate();
-			if (TextUtils.isEmpty(rDate) || rDate.contains(Stock.STATUS_SUSPENSION)) {
-				continue;
-			} else {
-				break;
-			}
-		}
-
-		if (TextUtils.isEmpty(rDate) || rDate.contains(Stock.STATUS_SUSPENSION)) {
-			return result;
-		}
-
-		dividend = stockBonus.getDividend();
-		if (dividend == 0) {
-			return result;
-		}
-
-		Calendar buyCalendar = Utility.getCalendar(
-				getCreated(), Utility.CALENDAR_DATE_FORMAT);
-
-		Calendar sellCalendar = Utility.getCalendar(
-				getModified(), Utility.CALENDAR_DATE_FORMAT);
-
-		Calendar rDateCalendar = Utility.getCalendar(
-				rDate, Utility.CALENDAR_DATE_FORMAT);
-
-		Calendar rDateCalendarAfterMonth = Utility.getCalendar(
-				rDate, Utility.CALENDAR_DATE_FORMAT);
-		rDateCalendarAfterMonth.add(Calendar.MONTH, 1);
-
-		Calendar rDateCalendarAfterYear = Utility.getCalendar(
-				rDate, Utility.CALENDAR_DATE_FORMAT);
-		rDateCalendarAfterYear.add(Calendar.YEAR, 1);
-
-		if (buyCalendar.after(rDateCalendar)) {
-			return result;
-		}
-
-		if (sellCalendar.before(rDateCalendarAfterMonth)) {
-			result = dividend / 10.0 * Math.abs(mVolume) * DIVIDEND_INCOME_TAX_RATE_20_PERCENT;
-		} else if (sellCalendar.before(rDateCalendarAfterYear)) {
-			result = dividend / 10.0 * Math.abs(mVolume) * DIVIDEND_INCOME_TAX_RATE_10_PERCENT;
-		} else {
-			result = 0;
-		}
-
-		return result;
 	}
 
 	public void setupFee(String rDate, double dividend) {
@@ -623,7 +479,6 @@ public class StockDeal extends DatabaseTable {
 		} else {
 			sellTransferFee = mPrice * Math.abs(mVolume) * SELL_TRANSFER_FEE_RATE;
 		}
-
 		if (sellTransferFee < SELL_TRANSFER_FEE_MIN) {
 			sellTransferFee = SELL_TRANSFER_FEE_MIN;
 		}
@@ -633,7 +488,11 @@ public class StockDeal extends DatabaseTable {
 			buyCommissionFee = BUY_COMMISSION_FEE_MIN;
 		}
 
-		sellCommissionFee = mPrice * Math.abs(mVolume) * SELL_COMMISSION_FEE_RATE;
+		if (mSell > 0) {
+			sellCommissionFee = mSell * Math.abs(mVolume) * SELL_COMMISSION_FEE_RATE;
+		} else {
+			sellCommissionFee = mPrice * Math.abs(mVolume) * SELL_COMMISSION_FEE_RATE;
+		}
 		if (sellCommissionFee < SELL_COMMISSION_FEE_MIN) {
 			sellCommissionFee = SELL_COMMISSION_FEE_MIN;
 		}
@@ -676,7 +535,22 @@ public class StockDeal extends DatabaseTable {
 		} else if (mBuy > 0) {
 			mProfit = Utility.Round2((mPrice - mBuy) * Math.abs(mVolume) - mFee);
 		} else if (mSell > 0) {
-			mProfit = Utility.Round2((mPrice - mSell) * Math.abs(mVolume));
+			mProfit = Utility.Round2((mPrice - mSell) * Math.abs(mVolume) - mFee);
+		}
+	}
+
+	public void setupNet() {
+		if (mProfit == 0 || mVolume == 0) {
+			mNet = 0;
+			return;
+		}
+
+		if ((mBuy > 0) && (mSell > 0)) {
+			mNet = Utility.Round2(100 * mProfit / Math.abs(mVolume) / mBuy);
+		} else if (mBuy > 0) {
+			mNet = Utility.Round2(100 * mProfit / Math.abs(mVolume) / mBuy);
+		} else if (mSell > 0) {
+			mNet = Utility.Round2(100 * mProfit / Math.abs(mVolume) / mSell);
 		}
 	}
 

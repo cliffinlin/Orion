@@ -483,10 +483,10 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 					stockDeal.set(cursor);
 
 					stockDeal.setPrice(stock.getPrice());
-					stockDeal.setupFee(stock.getRDate(), stock.getDividend());
-					stockDeal.setupNet();
 					stockDeal.setupValue();
+					stockDeal.setupFee(stock.getRDate(), stock.getDividend());
 					stockDeal.setupProfit();
+					stockDeal.setupNet();
 					stockDeal.setupBonus(stock.getDividend());
 					stockDeal.setupYield(stock.getDividend());
 

@@ -291,10 +291,10 @@ public class StockDealActivity extends DatabaseActivity implements
 	}
 
 	void setupDeal() {
-		mDeal.setupFee(mStock.getRDate(), mStock.getDividend());
-		mDeal.setupNet();
 		mDeal.setupValue();
+		mDeal.setupFee(mStock.getRDate(), mStock.getDividend());
 		mDeal.setupProfit();
+		mDeal.setupNet();
 		mDeal.setupBonus(mStock.getDividend());
 		mDeal.setupYield(mStock.getDividend());
 	}
