@@ -80,6 +80,7 @@ public class StockAnalyzer {
 		}
 
 		try {
+			mStockDatabaseManager.getStock(stock);
 			mFinancialAnalyzer.analyzeFinancial(mStock);
 			mFinancialAnalyzer.setupFinancial(mStock);
 			mFinancialAnalyzer.setupStockBonus(mStock);

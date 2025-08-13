@@ -176,9 +176,9 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 	@Override
 	public void onDestroy() {
 		releaseWakeLock();
-		for (Stock current : mStockArrayMap.values()) {
-			if (mHandler.hasMessages(Integer.parseInt(current.getCode()))) {
-				mHandler.removeMessages(Integer.parseInt(current.getCode()));
+		for (Stock stock : mStockArrayMap.values()) {
+			if (mHandler.hasMessages(Integer.parseInt(stock.getCode()))) {
+				mHandler.removeMessages(Integer.parseInt(stock.getCode()));
 			}
 		}
 		if (mHandlerThread != null && mHandlerThread.isAlive()) {
@@ -293,8 +293,8 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			}
 
 			mStockDatabaseManager.loadStockArrayMap(mStockArrayMap);
-			for (Stock current : mStockArrayMap.values()) {
-				Setting.setDownloadStockDataTimeMillis(current, 0);
+			for (Stock stock : mStockArrayMap.values()) {
+				Setting.setDownloadStockDataTimeMillis(stock, 0);
 			}
 			download();
 		}
@@ -315,22 +315,22 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		}
 
 		int index = 0;
-		for (Stock current : mStockArrayMap.values()) {
+		for (Stock stock : mStockArrayMap.values()) {
 			Log.d("index=" + index++);
 
-			String stockCodeStr = current.getCode();
+			String stockCode = stock.getCode();
 			int messageID;
 			try {
-				messageID = Integer.parseInt(stockCodeStr);
+				messageID = Integer.parseInt(stockCode);
 			} catch (Exception e) {
-				Log.d("Invalid stock code: " + stockCodeStr);
+				Log.d("Invalid stock code: " + stockCode);
 				continue;
 			}
 
 			if (mHandler.hasMessages(messageID)) {
-				Log.d("Message already exists for code: " + stockCodeStr + ", skip!");
+				Log.d("Message already exists for code: " + stockCode + ", skip!");
 			} else {
-				Message msg = mHandler.obtainMessage(messageID, current);
+				Message msg = mHandler.obtainMessage(messageID, stock);
 				mHandler.sendMessage(msg);
 				Log.d("Sent message: " + msg);
 			}
@@ -349,10 +349,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			return;
 		}
 
-		mRemovedArrayMap.clear();
-
 		mStockDatabaseManager.loadStockArrayMap(mStockArrayMap);
-
 		for (Stock current : mStockArrayMap.values()) {
 			if (TextUtils.equals(current.getCode(), stock.getCode())) {
 				continue;
