@@ -57,6 +57,7 @@
     <string name="end_date">End date</string>
     <string name="error">Error</string>
     <string name="exit">Exit</string>
+    <string name="exit_confirm">Do you want to exit?</string>
     <string name="export">Export</string>
     <string name="favorite_all">Favorite all</string>
     <string name="favorite">Favorite</string>
@@ -114,6 +115,7 @@
     <string name="network_unavailable">Mobile data network not available</string>
     <string name="next_net">NextNet</string>
     <string name="next">next</string>
+    <string name="no">No</string>
     <string name="none">None</string>
     <string name="notification_is_off">Notification is off</string>
     <string name="notify">Notify</string>
@@ -233,7 +235,7 @@
     <string name="stock_trend_chart">Stock trend chart</string>
     <string name="stock_valuation">Stock valuation</string>
     <string name="stroke">Stroke</string>
-    <string name="superline">SuperLine</string>
+    <string name="super_line">SuperLine</string>
     <string name="symbol_add">+</string>
     <string name="symbol_subtract">-</string>
     <string name="system">System</string>
@@ -242,7 +244,7 @@
     <string name="time_to_market">TTM</string>
     <string name="title_save_to_sd_card">Save to SD card</string>
     <string name="to">To</string>
-    <string name="trendline">TrendLine</string>
+    <string name="trend_line">TrendLine</string>
     <string name="trend_list">Trend list</string>
     <string name="trend">Trend</string>
     <string name="turning_net">TurningNet</string>
@@ -259,6 +261,7 @@
     <string name="vertex_net">VertexNet</string>
     <string name="volume">Volume</string>
     <string name="weight">Weight</string>
+    <string name="yes">Yes</string>
     <string name="yield_in_year">YieldY</string>
     <string name="yield">Yield</string>
 

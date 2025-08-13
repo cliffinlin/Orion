@@ -78,10 +78,10 @@
             android:title="@string/outline" />
         <com.android.orion.preference.CustomSwitchPreference
             android:key="SETTING_DISPLAY_SUPER_LINE"
-            android:title="@string/superline" />
+            android:title="@string/super_line" />
         <com.android.orion.preference.CustomSwitchPreference
             android:key="SETTING_DISPLAY_TREND_LINE"
-            android:title="@string/trendline" />
+            android:title="@string/trend_line" />
         <com.android.orion.preference.CustomSwitchPreference
             android:key="SETTING_DISPLAY_MERGED"
             android:title="@string/merged" />

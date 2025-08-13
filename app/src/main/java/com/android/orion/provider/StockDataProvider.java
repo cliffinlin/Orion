@@ -176,7 +176,11 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 	@Override
 	public void onDestroy() {
 		releaseWakeLock();
-		mHandler.removeMessages(0);
+		for (Stock current : mStockArrayMap.values()) {
+			if (mHandler.hasMessages(Integer.parseInt(current.getCode()))) {
+				mHandler.removeMessages(Integer.parseInt(current.getCode()));
+			}
+		}
 		if (mHandlerThread != null && mHandlerThread.isAlive()) {
 			mHandlerThread.quitSafely();
 			mHandlerThread = null;

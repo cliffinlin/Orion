@@ -2,7 +2,9 @@ package com.android.orion.activity;
 
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -102,12 +104,27 @@ public class MainActivity extends Activity {
 	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_exit: {
-				finishAndStopService();
+				showExitDialog();
 				return true;
 			}
 		}
 
 		return super.onOptionsItemSelected(item);
+	}
+
+	private void showExitDialog() {
+		new AlertDialog.Builder(this)
+				.setTitle(R.string.exit)
+				.setMessage(R.string.exit_confirm)
+				.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						finishAndStopService();
+					}
+				})
+				.setNegativeButton(R.string.no, null)
+				.setIcon(android.R.drawable.ic_dialog_alert)
+				.show();
 	}
 
 	private void finishAndStopService() {
