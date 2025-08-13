@@ -194,6 +194,9 @@ public class LinearRegression {
 
 	// 使用梯度下降法训练模型
 	public void train(ArrayList<Double> xList, ArrayList<Double> yList, int iterations) {
+		if (xList == null || yList == null || xList.isEmpty() || yList.isEmpty() || xList.size() != yList.size()) {
+			return;
+		}
 		init(xList, yList);
 		for (int i = 0; i < iterations; i++) {
 			double[] gradients = calculateGradients();
