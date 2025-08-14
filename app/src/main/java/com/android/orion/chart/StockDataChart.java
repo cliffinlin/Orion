@@ -40,6 +40,7 @@ public class StockDataChart {
 	public ArrayList<CandleEntry> mCandleEntryList = new ArrayList<>();
 	public ArrayList<Entry> mAverage5EntryList = new ArrayList<>();
 	public ArrayList<Entry> mAverage10EntryList = new ArrayList<>();
+	public ArrayList<Integer> mDrawVertexList = new ArrayList<>();
 	public ArrayList<Entry> mExtendFirstEntryList = new ArrayList<>();
 	public ArrayList<Entry> mExtendLastEntryList = new ArrayList<>();
 	public ArrayList<Entry> mNetProfitInYearEntryList = new ArrayList<>();
@@ -500,12 +501,23 @@ public class StockDataChart {
 
 	public void updateExtendEntry() {
 		if (mTrendEntryList[StockTrend.LEVEL_DRAW] != null && mTrendEntryList[StockTrend.LEVEL_DRAW].size() > 0) {
-			Entry firstEntry = new Entry(mCandleEntryList.get(0).getOpen(), 0);
+			double value;
+			if (mDrawVertexList.get(0) == StockTrend.VERTEX_TOP) {
+				value = mCandleEntryList.get(0).getLow();
+			} else {
+				value = mCandleEntryList.get(0).getHigh();
+			}
+			Entry firstEntry = new Entry((float) value, 0);
 			mExtendFirstEntryList.add(firstEntry);
 			mExtendFirstEntryList.add(mTrendEntryList[StockTrend.LEVEL_DRAW].get(0));
 
 			mExtendLastEntryList.add(mTrendEntryList[StockTrend.LEVEL_DRAW].get(mTrendEntryList[StockTrend.LEVEL_DRAW].size() - 1));
-			Entry lastEntry = new Entry((float) mStock.getPrice(), mXValues.size() - 1);
+			if (mDrawVertexList.get(mDrawVertexList.size() - 1) == StockTrend.VERTEX_TOP) {
+				value = mCandleEntryList.get(mCandleEntryList.size() - 1).getLow();
+			} else {
+				value = mCandleEntryList.get(mCandleEntryList.size() - 1).getHigh();
+			}
+			Entry lastEntry = new Entry((float) value, mXValues.size() - 1);
 			mExtendLastEntryList.add(lastEntry);
 		}
 	}
@@ -526,6 +538,7 @@ public class StockDataChart {
 	public void clear() {
 		mXValues.clear();
 		mCandleEntryList.clear();
+		mDrawVertexList.clear();
 		mExtendFirstEntryList.clear();
 		mExtendLastEntryList.clear();
 		mNetProfitInYearEntryList.clear();

@@ -529,8 +529,7 @@ public class StockDeal extends DatabaseTable {
 	}
 
 	public void setupProfit() {
-		if (mPrice == 0 || mVolume == 0) {
-			mProfit = 0;
+		if (mPrice == 0) {
 			return;
 		}
 
@@ -540,12 +539,13 @@ public class StockDeal extends DatabaseTable {
 			mProfit = Utility.Round2((mPrice - mBuy) * Math.abs(mVolume) - mFee);
 		} else if (mSell > 0) {
 			mProfit = Utility.Round2((mPrice - mSell) * Math.abs(mVolume) - mFee);
+		} else {
+			mProfit = 0;
 		}
 	}
 
 	public void setupNet() {
-		if (mProfit == 0 || mVolume == 0) {
-			mNet = 0;
+		if (mVolume == 0) {
 			return;
 		}
 
@@ -555,6 +555,8 @@ public class StockDeal extends DatabaseTable {
 			mNet = Utility.Round2(100 * mProfit / Math.abs(mVolume) / mBuy);
 		} else if (mSell > 0) {
 			mNet = Utility.Round2(100 * mProfit / Math.abs(mVolume) / mSell);
+		} else {
+			mNet = 0;
 		}
 	}
 

@@ -488,11 +488,13 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 					stockDataChart.mAverage10EntryList.add(average10Entry);
 
 					if (mStockData.vertexOf(StockTrend.VERTEX_TOP)) {
+						stockDataChart.mDrawVertexList.add(StockTrend.VERTEX_TOP);
 						Entry drawEntry = new Entry(
 								(float) mStockData.getCandle().getHigh(), index);
 						stockDataChart.mTrendEntryList[StockTrend.LEVEL_DRAW].add(drawEntry);
 					} else if (mStockData
 							.vertexOf(StockTrend.VERTEX_BOTTOM)) {
+						stockDataChart.mDrawVertexList.add(StockTrend.VERTEX_BOTTOM);
 						Entry drawEntry = new Entry(
 								(float) mStockData.getCandle().getLow(), index);
 						stockDataChart.mTrendEntryList[StockTrend.LEVEL_DRAW].add(drawEntry);

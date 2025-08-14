@@ -666,7 +666,10 @@ public class SinaFinance extends StockDataProvider {
 			}
 
 			if (!TextUtils.isEmpty(stockInfo[1])) {
-				stock.setPrice(Double.parseDouble(stockInfo[1]));
+				double price = Double.parseDouble(stockInfo[1]);
+				if (price > 0) {
+					stock.setPrice(price);
+				}
 			}
 
 			if (!TextUtils.isEmpty(stockInfo[2])) {
