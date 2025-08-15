@@ -77,6 +77,18 @@ public class Utility {
 		return result;
 	}
 
+	public static long daysBetween(Calendar startCalendar, Calendar endCalendar) {
+		long result = 0;
+		if (startCalendar == null || endCalendar == null) {
+			return result;
+		}
+		long startMillis = startCalendar.getTimeInMillis();
+		long endMillis = endCalendar.getTimeInMillis();
+		long diffMillis = endMillis - startMillis;
+		result = diffMillis / (24 * 60 * 60 * 1000);
+		return result;
+	}
+
 	public static String getCalendarString(Calendar calendar, String format) {
 		String result = "";
 

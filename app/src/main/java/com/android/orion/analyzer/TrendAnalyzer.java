@@ -14,13 +14,26 @@ import com.android.orion.setting.Setting;
 import com.android.orion.utility.Logger;
 import com.android.orion.utility.Utility;
 
+import org.apache.commons.math3.ml.clustering.CentroidCluster;
+import org.apache.commons.math3.ml.clustering.Clusterable;
+import org.apache.commons.math3.ml.clustering.KMeansPlusPlusClusterer;
+
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class TrendAnalyzer {
+	public static final int K_MEANS_PERIODS = 5;
+	public static final int K_MEANS_LEVELS = StockTrend.LEVELS.length - 1;
+	public static final int K_MEANS_DATA_SIZE = K_MEANS_PERIODS * K_MEANS_LEVELS;
+	public static final int K_MEANS_MAX_ITERATIONS = 1000;
+
 	Logger Log = Logger.getLogger();
 	Stock mStock;
 	String mPeriod;
+	List<AppData> mAppDataList = new ArrayList<>();
 	ArrayList<StockData> mStockDataList = new ArrayList<>();
 	StockDatabaseManager mStockDatabaseManager = StockDatabaseManager.getInstance();
 	StockPerceptronProvider mStockPerceptronProvider = StockPerceptronProvider.getInstance();
@@ -507,24 +520,108 @@ public class TrendAnalyzer {
 	}
 
 	public void analyzeAdaptive() {
-		if (TextUtils.isEmpty(mStock.getAdaptiveDate()) || !mStock.hasFlag(Stock.FLAG_GRID)) {
-			return;
-		}
+		mAppDataList.clear();
+
 		for (String period : Period.PERIODS) {
 			if (Setting.getPeriod(period)) {
-				while (mStock.getLevel(period) > StockTrend.LEVEL_DRAW) {
-					StockData trendData = StockData.getLast(mStock.getDataList(period, mStock.getLevel(period)), 0);
-					if (trendData != null) {
-						int indexStart = trendData.getIndexStart();
-						StockData stockData = mStock.getStockDataList(period).get(indexStart);
-						if (Utility.getCalendar(stockData.getDate(), Utility.CALENDAR_DATE_FORMAT).before(Utility.getCalendar(mStock.getAdaptiveDate(), Utility.CALENDAR_DATE_FORMAT))) {
-							mStock.setLevel(period, mStock.getLevel(period) - 1);
-						} else {
-							break;
-						}
-					}
+				if (Period.getPeriodIndex(period) < Period.getPeriodIndex(Period.DAY)) {
+					continue;
+				}
+
+				for (int i = StockTrend.LEVEL_DRAW; i < StockTrend.LEVELS.length; i++) {
+					ArrayList<StockData> trendDataList = mStock.getDataList(period, i);
+					mAppDataList.add(new AppData(period, i, getTrendDays(trendDataList)));
 				}
 			}
+		}
+
+		if (mAppDataList.size() < K_MEANS_DATA_SIZE) {
+			return;
+		}
+
+		KMeansPlusPlusClusterer<AppData> clusterer = new KMeansPlusPlusClusterer<>(StockTrend.LEVELS.length - 1, K_MEANS_MAX_ITERATIONS);
+		List<CentroidCluster<AppData>> clusters = clusterer.cluster(mAppDataList);
+		List<CentroidCluster<AppData>> sortedClusters = clusters.stream()
+				.sorted(Comparator.comparingDouble(cluster -> cluster.getCenter().getPoint()[0]))
+				.collect(Collectors.toList());
+		printLog(sortedClusters);
+
+		setupStockTrendLevel(sortedClusters);
+	}
+
+	long getTrendDays(ArrayList<StockData> dataList) {
+		long result = 0;
+		if (dataList == null || dataList.size() < 2) {
+			return result;
+		}
+
+		StockData startData = dataList.get(dataList.size() - 2);
+		StockData endData = dataList.get(dataList.size() - 1);
+		Calendar startCalendar = Utility.getCalendar(startData.getDate(), Utility.CALENDAR_DATE_FORMAT);
+		Calendar endCalendar = Utility.getCalendar(endData.getDate(), Utility.CALENDAR_DATE_FORMAT);
+		result = Utility.daysBetween(startCalendar, endCalendar);
+
+		return result;
+	}
+
+	void setupStockTrendLevel(List<CentroidCluster<AppData>> clusters) {
+		if (clusters == null || clusters.isEmpty()) {
+			return;
+		}
+
+		for (int i = 0; i < clusters.size(); i++) {
+			CentroidCluster<AppData> cluster = clusters.get(i);
+			if (cluster.getCenter().getPoint()[0] < 1 || cluster.getPoints().size() < K_MEANS_PERIODS - 1) {
+				continue;
+			}
+
+			for (AppData appData : cluster.getPoints()) {
+				mStock.setLevel(appData.period, appData.level);
+			}
+			return;
+		}
+	}
+
+	void printLog(List<CentroidCluster<AppData>> clusters) {
+		if (clusters == null) {
+			return;
+		}
+		for (int i = 0; i < clusters.size(); i++) {
+			CentroidCluster<AppData> cluster = clusters.get(i);
+			StringBuilder clusterInfo = new StringBuilder();
+			clusterInfo.append("\n=== 第 ").append(i + 1).append(" 组 ===")
+					.append(" | 中心值: ").append(cluster.getCenter().getPoint()[0])
+					.append(" | 数量: ").append(cluster.getPoints().size()).append("\n");
+
+			for (AppData app : cluster.getPoints()) {
+				clusterInfo.append("  ").append(app.toString())
+						.append(" delt: ")
+						.append(Math.abs(app.value - cluster.getCenter().getPoint()[0]))
+						.append("\n");
+			}
+			Log.d(clusterInfo.toString());
+		}
+	}
+
+	private static class AppData implements Clusterable {
+		final String period;
+		final int level;
+		final double value;
+
+		AppData(String period, int level, double value) {
+			this.period = period;
+			this.level = level;
+			this.value = value;
+		}
+
+		@Override
+		public double[] getPoint() {
+			return new double[]{value};
+		}
+
+		@Override
+		public String toString() {
+			return String.format("%s-L%d=%.0f", period, level, value);
 		}
 	}
 
