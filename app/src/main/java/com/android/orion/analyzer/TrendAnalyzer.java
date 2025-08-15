@@ -1,6 +1,7 @@
 package com.android.orion.analyzer;
 
 import android.text.TextUtils;
+import android.util.ArrayMap;
 
 import com.android.orion.data.Period;
 import com.android.orion.database.Stock;
@@ -571,14 +572,35 @@ public class TrendAnalyzer {
 
 		for (int i = 0; i < clusters.size(); i++) {
 			CentroidCluster<AppData> cluster = clusters.get(i);
-			if (cluster.getCenter().getPoint()[0] < 1 || cluster.getPoints().size() < K_MEANS_PERIODS - 1) {
+			double centerValue = cluster.getCenter().getPoint()[0];
+			if (centerValue < 1 || cluster.getPoints().size() < K_MEANS_PERIODS - 1) {
 				continue;
 			}
 
+			ArrayMap<String, AppData> appDataMap = new ArrayMap<>();
 			for (AppData appData : cluster.getPoints()) {
-				mStock.setLevel(appData.period, appData.level);
+				double distance = Math.abs(appData.value - centerValue);
+				appData.setDistance(distance);
+				if (appDataMap.containsKey(appData.period)) {
+					if (appData.distance < appDataMap.get(appData.period).distance) {
+						appDataMap.put(appData.period, appData);
+					} else if (appData.distance == appDataMap.get(appData.period).distance){
+						if (appData.level > appDataMap.get(appData.period).level) {
+							appDataMap.put(appData.period, appData);
+						}
+					}
+				} else {
+					appDataMap.put(appData.period, appData);
+				}
 			}
-			return;
+
+			if (appDataMap.size() > 0) {
+				for (String period : appDataMap.keySet()) {
+					AppData appData = appDataMap.get(period);
+					mStock.setLevel(period, appData.level);
+				}
+				return;
+			}
 		}
 	}
 
@@ -607,6 +629,7 @@ public class TrendAnalyzer {
 		final String period;
 		final int level;
 		final double value;
+		double distance;
 
 		AppData(String period, int level, double value) {
 			this.period = period;
@@ -617,6 +640,10 @@ public class TrendAnalyzer {
 		@Override
 		public double[] getPoint() {
 			return new double[]{value};
+		}
+
+		public void setDistance(double distance) {
+			this.distance = distance;
 		}
 
 		@Override
