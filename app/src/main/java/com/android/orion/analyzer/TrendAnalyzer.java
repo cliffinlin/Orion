@@ -2,7 +2,9 @@ package com.android.orion.analyzer;
 
 import android.text.TextUtils;
 import android.util.ArrayMap;
+import android.util.Log;
 
+import com.android.orion.config.Config;
 import com.android.orion.data.Period;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
@@ -27,6 +29,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class TrendAnalyzer {
+	public static String TAG = Config.TAG + TrendAnalyzer.class.getSimpleName();
 	public static final int K_MEANS_PERIODS = 5;
 	public static final int K_MEANS_LEVELS = StockTrend.LEVELS.length - 1;
 	public static final int K_MEANS_DATA_SIZE = K_MEANS_PERIODS * K_MEANS_LEVELS;
@@ -640,7 +643,7 @@ public class TrendAnalyzer {
 						.append(Math.abs(app.value - cluster.getCenter().getPoint()[0]))
 						.append("\n");
 			}
-			Log.d(clusterInfo.toString());
+			Log.d(TAG, clusterInfo.toString());
 		}
 	}
 
