@@ -21,6 +21,7 @@ import org.apache.commons.math3.ml.clustering.KMeansPlusPlusClusterer;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,7 +32,7 @@ public class TrendAnalyzer {
 	public static final int K_MEANS_DATA_SIZE = K_MEANS_PERIODS * K_MEANS_LEVELS;
 	public static final int K_MEANS_MAX_ITERATIONS = 1000;
 
-	Logger Log = Logger.getLogger();
+//	Logger Log = Logger.getLogger();
 	Stock mStock;
 	String mPeriod;
 	List<AppData> mAppDataList = new ArrayList<>();
@@ -540,14 +541,15 @@ public class TrendAnalyzer {
 			return;
 		}
 
-		KMeansPlusPlusClusterer<AppData> clusterer = new KMeansPlusPlusClusterer<>(StockTrend.LEVELS.length - 1, K_MEANS_MAX_ITERATIONS);
-		List<CentroidCluster<AppData>> clusters = clusterer.cluster(mAppDataList);
-		List<CentroidCluster<AppData>> sortedClusters = clusters.stream()
-				.sorted(Comparator.comparingDouble(cluster -> cluster.getCenter().getPoint()[0]))
-				.collect(Collectors.toList());
-		printLog(sortedClusters);
-
-		setupStockTrendLevel(sortedClusters);
+		try {
+			KMeansPlusPlusClusterer<AppData> clusterer = new KMeansPlusPlusClusterer<>(StockTrend.LEVELS.length - 1, K_MEANS_MAX_ITERATIONS);
+			List<CentroidCluster<AppData>> clusters = clusterer.cluster(mAppDataList);
+			List<CentroidCluster<AppData>> sortedClusters = sortClusters(clusters);
+			printLog(sortedClusters);
+			setupStockTrendLevel(sortedClusters);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	long getTrendDays(ArrayList<StockData> dataList) {
@@ -563,6 +565,23 @@ public class TrendAnalyzer {
 		result = Utility.daysBetween(startCalendar, endCalendar);
 
 		return result;
+	}
+
+	List<CentroidCluster<AppData>> sortClusters(List<CentroidCluster<AppData>> clusters) {
+		List<CentroidCluster<AppData>> sorted = new ArrayList<>(clusters);
+
+		Collections.sort(sorted, new Comparator<CentroidCluster<AppData>>() {
+			@Override
+			public int compare(CentroidCluster<AppData> o1, CentroidCluster<AppData> o2) {
+				double val1 = o1.getCenter().getPoint()[0];
+				double val2 = o2.getCenter().getPoint()[0];
+				if (val1 < val2) return -1;
+				if (val1 > val2) return 1;
+				return 0;
+			}
+		});
+
+		return sorted;
 	}
 
 	void setupStockTrendLevel(List<CentroidCluster<AppData>> clusters) {
