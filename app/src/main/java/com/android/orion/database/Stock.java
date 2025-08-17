@@ -213,17 +213,17 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_VOLUME, mVolume);
 		contentValues.put(DatabaseContract.COLUMN_VALUE, mValue);
 
-		contentValues.put(DatabaseContract.COLUMN_YEAR, mYear.getAction());
-		contentValues.put(DatabaseContract.COLUMN_MONTH6, mMonth6.getAction());
-		contentValues.put(DatabaseContract.COLUMN_QUARTER, mQuarter.getAction());
-		contentValues.put(DatabaseContract.COLUMN_MONTH2, mMonth2.getAction());
-		contentValues.put(DatabaseContract.COLUMN_MONTH, mMonth.getAction());
-		contentValues.put(DatabaseContract.COLUMN_WEEK, mWeek.getAction());
-		contentValues.put(DatabaseContract.COLUMN_DAY, mDay.getAction());
-		contentValues.put(DatabaseContract.COLUMN_MIN60, mMin60.getAction());
-		contentValues.put(DatabaseContract.COLUMN_MIN30, mMin30.getAction());
-		contentValues.put(DatabaseContract.COLUMN_MIN15, mMin15.getAction());
-		contentValues.put(DatabaseContract.COLUMN_MIN5, mMin5.getAction());
+		contentValues.put(DatabaseContract.COLUMN_YEAR, mYear.getThumbnail());
+		contentValues.put(DatabaseContract.COLUMN_MONTH6, mMonth6.getThumbnail());
+		contentValues.put(DatabaseContract.COLUMN_QUARTER, mQuarter.getThumbnail());
+		contentValues.put(DatabaseContract.COLUMN_MONTH2, mMonth2.getThumbnail());
+		contentValues.put(DatabaseContract.COLUMN_MONTH, mMonth.getThumbnail());
+		contentValues.put(DatabaseContract.COLUMN_WEEK, mWeek.getThumbnail());
+		contentValues.put(DatabaseContract.COLUMN_DAY, mDay.getThumbnail());
+		contentValues.put(DatabaseContract.COLUMN_MIN60, mMin60.getThumbnail());
+		contentValues.put(DatabaseContract.COLUMN_MIN30, mMin30.getThumbnail());
+		contentValues.put(DatabaseContract.COLUMN_MIN15, mMin15.getThumbnail());
+		contentValues.put(DatabaseContract.COLUMN_MIN5, mMin5.getThumbnail());
 
 		contentValues.put(DatabaseContract.COLUMN_YEAR_LEVEL, mYear.getLevel());
 		contentValues.put(DatabaseContract.COLUMN_MONTH6_LEVEL, mMonth6.getLevel());
@@ -339,17 +339,17 @@ public class Stock extends DatabaseTable {
 		setVolume(stock.mVolume);
 		setValue(stock.mValue);
 
-		mYear.setAction(stock.mYear.getAction());
-		mMonth6.setAction(stock.mMonth6.getAction());
-		mQuarter.setAction(stock.mQuarter.getAction());
-		mMonth2.setAction(stock.mMonth2.getAction());
-		mMonth.setAction(stock.mMonth.getAction());
-		mWeek.setAction(stock.mWeek.getAction());
-		mDay.setAction(stock.mDay.getAction());
-		mMin60.setAction(stock.mMin60.getAction());
-		mMin30.setAction(stock.mMin30.getAction());
-		mMin15.setAction(stock.mMin15.getAction());
-		mMin5.setAction(stock.mMin5.getAction());
+		mYear.setThumbnail(stock.mYear.getThumbnail());
+		mMonth6.setThumbnail(stock.mMonth6.getThumbnail());
+		mQuarter.setThumbnail(stock.mQuarter.getThumbnail());
+		mMonth2.setThumbnail(stock.mMonth2.getThumbnail());
+		mMonth.setThumbnail(stock.mMonth.getThumbnail());
+		mWeek.setThumbnail(stock.mWeek.getThumbnail());
+		mDay.setThumbnail(stock.mDay.getThumbnail());
+		mMin60.setThumbnail(stock.mMin60.getThumbnail());
+		mMin30.setThumbnail(stock.mMin30.getThumbnail());
+		mMin15.setThumbnail(stock.mMin15.getThumbnail());
+		mMin5.setThumbnail(stock.mMin5.getThumbnail());
 
 		mYear.setLevel(stock.mYear.getLevel());
 		mMonth6.setLevel(stock.mMonth6.getLevel());
@@ -430,17 +430,17 @@ public class Stock extends DatabaseTable {
 		setVolume(cursor);
 		setValue(cursor);
 
-		mYear.setAction(cursor);
-		mMonth6.setAction(cursor);
-		mQuarter.setAction(cursor);
-		mMonth2.setAction(cursor);
-		mMonth.setAction(cursor);
-		mWeek.setAction(cursor);
-		mDay.setAction(cursor);
-		mMin60.setAction(cursor);
-		mMin30.setAction(cursor);
-		mMin15.setAction(cursor);
-		mMin5.setAction(cursor);
+		mYear.setThumbnail(cursor);
+		mMonth6.setThumbnail(cursor);
+		mQuarter.setThumbnail(cursor);
+		mMonth2.setThumbnail(cursor);
+		mMonth.setThumbnail(cursor);
+		mWeek.setThumbnail(cursor);
+		mDay.setThumbnail(cursor);
+		mMin60.setThumbnail(cursor);
+		mMin30.setThumbnail(cursor);
+		mMin15.setThumbnail(cursor);
+		mMin5.setThumbnail(cursor);
 
 		mYear.setLevel(cursor);
 		mMonth6.setLevel(cursor);
@@ -1564,57 +1564,57 @@ public class Stock extends DatabaseTable {
 		return result;
 	}
 
-	public String getAction(String period) {
-		String action = "";
+	public byte[] getThumbnail(String period) {
+		byte[] thumbnail = null;
 		if (TextUtils.equals(period, Period.YEAR)) {
-			action = mYear.getAction();
+			thumbnail = mYear.getThumbnail();
 		} else if (TextUtils.equals(period, Period.MONTH6)) {
-			action = mMonth6.getAction();
+			thumbnail = mMonth6.getThumbnail();
 		} else if (TextUtils.equals(period, Period.QUARTER)) {
-			action = mQuarter.getAction();
+			thumbnail = mQuarter.getThumbnail();
 		} else if (TextUtils.equals(period, Period.MONTH2)) {
-			action = mMonth2.getAction();
+			thumbnail = mMonth2.getThumbnail();
 		} else if (TextUtils.equals(period, Period.MONTH)) {
-			action = mMonth.getAction();
+			thumbnail = mMonth.getThumbnail();
 		} else if (TextUtils.equals(period, Period.WEEK)) {
-			action = mWeek.getAction();
+			thumbnail = mWeek.getThumbnail();
 		} else if (TextUtils.equals(period, Period.DAY)) {
-			action = mDay.getAction();
+			thumbnail = mDay.getThumbnail();
 		} else if (TextUtils.equals(period, Period.MIN60)) {
-			action = mMin60.getAction();
+			thumbnail = mMin60.getThumbnail();
 		} else if (TextUtils.equals(period, Period.MIN30)) {
-			action = mMin30.getAction();
+			thumbnail = mMin30.getThumbnail();
 		} else if (TextUtils.equals(period, Period.MIN15)) {
-			action = mMin15.getAction();
+			thumbnail = mMin15.getThumbnail();
 		} else if (TextUtils.equals(period, Period.MIN5)) {
-			action = mMin5.getAction();
+			thumbnail = mMin5.getThumbnail();
 		}
-		return action;
+		return thumbnail;
 	}
 
-	public void setAction(String period, String action) {
+	public void setThumbnail(String period, byte[] thumbnail) {
 		if (TextUtils.equals(period, Period.YEAR)) {
-			mYear.setAction(action);
+			mYear.setThumbnail(thumbnail);
 		} else if (TextUtils.equals(period, Period.MONTH6)) {
-			mMonth6.setAction(action);
+			mMonth6.setThumbnail(thumbnail);
 		} else if (TextUtils.equals(period, Period.QUARTER)) {
-			mQuarter.setAction(action);
+			mQuarter.setThumbnail(thumbnail);
 		} else if (TextUtils.equals(period, Period.MONTH2)) {
-			mMonth2.setAction(action);
+			mMonth2.setThumbnail(thumbnail);
 		} else if (TextUtils.equals(period, Period.MONTH)) {
-			mMonth.setAction(action);
+			mMonth.setThumbnail(thumbnail);
 		} else if (TextUtils.equals(period, Period.WEEK)) {
-			mWeek.setAction(action);
+			mWeek.setThumbnail(thumbnail);
 		} else if (TextUtils.equals(period, Period.DAY)) {
-			mDay.setAction(action);
+			mDay.setThumbnail(thumbnail);
 		} else if (TextUtils.equals(period, Period.MIN60)) {
-			mMin60.setAction(action);
+			mMin60.setThumbnail(thumbnail);
 		} else if (TextUtils.equals(period, Period.MIN30)) {
-			mMin30.setAction(action);
+			mMin30.setThumbnail(thumbnail);
 		} else if (TextUtils.equals(period, Period.MIN15)) {
-			mMin15.setAction(action);
+			mMin15.setThumbnail(thumbnail);
 		} else if (TextUtils.equals(period, Period.MIN5)) {
-			mMin5.setAction(action);
+			mMin5.setThumbnail(thumbnail);
 		}
 	}
 

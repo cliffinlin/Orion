@@ -15,6 +15,7 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -657,86 +658,74 @@ public class StockFavoriteListActivity extends ListActivity implements
 				return false;
 			}
 
-			String period = "";
-			if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_PRICE)) {
-				return setVisibility(view, Setting.getDisplayNet());
-			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_NET)) {
-				return setVisibility(view, Setting.getDisplayNet());
-			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_GRID_PROFIT)) {
-				setViewColor(view, cursor);
-				return setVisibility(view, Setting.getDisplayNet());
-			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_RZ_TREND_RATE)) {
-				setViewColor(view, cursor);
-				return setVisibility(view, Setting.getDisplayRZValue());
-			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_RZ_TREND_DAYS)) {
-				setViewColor(view, cursor);
-				return setVisibility(view, Setting.getDisplayRZValue());
-			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_YEAR)) {
-				period = DatabaseContract.COLUMN_YEAR;
-				setViewColor(period, view, cursor);
-				return setVisibility(view, Setting.getPeriod(period));
-			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_MONTH6)) {
-				period = DatabaseContract.COLUMN_MONTH6;
-				setViewColor(period, view, cursor);
-				return setVisibility(view, Setting.getPeriod(period));
-			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_QUARTER)) {
-				period = DatabaseContract.COLUMN_QUARTER;
-				setViewColor(period, view, cursor);
-				return setVisibility(view, Setting.getPeriod(period));
-			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_MONTH2)) {
-				period = DatabaseContract.COLUMN_MONTH2;
-				setViewColor(period, view, cursor);
-				return setVisibility(view, Setting.getPeriod(period));
-			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_MONTH)) {
-				period = DatabaseContract.COLUMN_MONTH;
-				setViewColor(period, view, cursor);
-				return setVisibility(view, Setting.getPeriod(period));
-			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_WEEK)) {
-				period = DatabaseContract.COLUMN_WEEK;
-				setViewColor(period, view, cursor);
-				return setVisibility(view, Setting.getPeriod(period));
-			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_DAY)) {
-				period = DatabaseContract.COLUMN_DAY;
-				setViewColor(period, view, cursor);
-				return setVisibility(view, Setting.getPeriod(period));
-			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_MIN60)) {
-				period = DatabaseContract.COLUMN_MIN60;
-				setViewColor(period, view, cursor);
-				return setVisibility(view, Setting.getPeriod(period));
-			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_MIN30)) {
-				period = DatabaseContract.COLUMN_MIN30;
-				setViewColor(period, view, cursor);
-				return setVisibility(view, Setting.getPeriod(period));
-			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_MIN15)) {
-				period = DatabaseContract.COLUMN_MIN15;
-				setViewColor(period, view, cursor);
-				return setVisibility(view, Setting.getPeriod(period));
-			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_MIN5)) {
-				period = DatabaseContract.COLUMN_MIN5;
-				setViewColor(period, view, cursor);
-				return setVisibility(view, Setting.getPeriod(period));
-			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_MODIFIED)) {
+			String columnName = cursor.getColumnName(columnIndex);
+			if (columnName == null) {
+				return false;
+			}
+
+			if (isPeriodColumn(columnName)) {
+				if (Setting.getPeriod(columnName)) {
+					view.setVisibility(View.VISIBLE);
+				} else {
+					view.setVisibility(View.GONE);
+				}
+
+				if (view instanceof ImageView) {
+					try {
+						byte[] blobData = cursor.getBlob(columnIndex);
+						if (blobData != null && blobData.length > 0) {
+							((ImageView) view).setImageDrawable(
+									Utility.bytesToThumbnail(StockFavoriteListActivity.this, blobData)
+							);
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					} finally {
+						return true;
+					}
+				}
+			}
+
+			if (view instanceof TextView) {
+				TextView textView = (TextView) view;
+
+				if (DatabaseContract.COLUMN_PRICE.equals(columnName)) {
+					return setVisibility(view, Setting.getDisplayNet());
+				}
+				else if (DatabaseContract.COLUMN_NET.equals(columnName)) {
+					return setVisibility(view, Setting.getDisplayNet());
+				}
+				else if (DatabaseContract.COLUMN_GRID_PROFIT.equals(columnName)) {
+					setViewColor(textView, cursor);
+					return setVisibility(view, Setting.getDisplayNet());
+				}
+				else if (DatabaseContract.COLUMN_RZ_TREND_RATE.equals(columnName)) {
+					setViewColor(textView, cursor);
+					return setVisibility(view, Setting.getDisplayRZValue());
+				}
+				else if (DatabaseContract.COLUMN_RZ_TREND_DAYS.equals(columnName)) {
+					setViewColor(textView, cursor);
+					return setVisibility(view, Setting.getDisplayRZValue());
+				}
+				else if (DatabaseContract.COLUMN_MODIFIED.equals(columnName)) {
+				}
 			}
 
 			return false;
 		}
+		private boolean isPeriodColumn(String columnName) {
+			return DatabaseContract.COLUMN_YEAR.equals(columnName) ||
+					DatabaseContract.COLUMN_MONTH6.equals(columnName) ||
+					DatabaseContract.COLUMN_QUARTER.equals(columnName) ||
+					DatabaseContract.COLUMN_MONTH2.equals(columnName) ||
+					DatabaseContract.COLUMN_MONTH.equals(columnName) ||
+					DatabaseContract.COLUMN_WEEK.equals(columnName) ||
+					DatabaseContract.COLUMN_DAY.equals(columnName) ||
+					DatabaseContract.COLUMN_MIN60.equals(columnName) ||
+					DatabaseContract.COLUMN_MIN30.equals(columnName) ||
+					DatabaseContract.COLUMN_MIN15.equals(columnName) ||
+					DatabaseContract.COLUMN_MIN5.equals(columnName);
+			}
 
 		void setViewColor(View view, Cursor cursor) {
 			if (view == null || cursor == null) {

@@ -11,12 +11,12 @@ public class Setting {
 
 	public static final String SETTING_PERIOD_ = "SETTING_PERIOD_";
 
-	public static final boolean SETTING_PERIOD_YEAR_DEFAULT = true;
-	public static final boolean SETTING_PERIOD_MONTH6_DEFAULT = true;
-	public static final boolean SETTING_PERIOD_QUARTER_DEFAULT = true;
-	public static final boolean SETTING_PERIOD_MONTH2_DEFAULT = true;
-	public static final boolean SETTING_PERIOD_MONTH_DEFAULT = true;
-	public static final boolean SETTING_PERIOD_WEEK_DEFAULT = true;
+	public static final boolean SETTING_PERIOD_YEAR_DEFAULT = false;
+	public static final boolean SETTING_PERIOD_MONTH6_DEFAULT = false;
+	public static final boolean SETTING_PERIOD_QUARTER_DEFAULT = false;
+	public static final boolean SETTING_PERIOD_MONTH2_DEFAULT = false;
+	public static final boolean SETTING_PERIOD_MONTH_DEFAULT = false;
+	public static final boolean SETTING_PERIOD_WEEK_DEFAULT = false;
 	public static final boolean SETTING_PERIOD_DAY_DEFAULT = true;
 	public static final boolean SETTING_PERIOD_MIN60_DEFAULT = true;
 	public static final boolean SETTING_PERIOD_MIN30_DEFAULT = true;
@@ -63,7 +63,7 @@ public class Setting {
 	public static final boolean SETTING_DISPLAY_MAIN_INCOME_DEFAULT = false;
 
 	public static final String SETTING_DISPLAY_RZ_VALUE = "SETTING_DISPLAY_RZ_VALUE";
-	public static final boolean SETTING_DISPLAY_RZ_VALUE_DEFAULT = true;
+	public static final boolean SETTING_DISPLAY_RZ_VALUE_DEFAULT = false;
 
 	public static final String SETTING_DISPLAY_RQ_VALUE = "SETTING_DISPLAY_RQ_VALUE";
 	public static final boolean SETTING_DISPLAY_RQ_VALUE_DEFAULT = false;

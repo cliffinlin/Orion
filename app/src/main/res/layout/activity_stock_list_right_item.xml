@@ -45,93 +45,82 @@
         android:gravity="center"
         android:textSize="18sp" />
 
-    <TextView
+    <ImageView
         android:id="@+id/year"
         android:layout_width="@dimen/action_layout_width"
         android:layout_height="50dp"
         android:layout_weight="1"
-        android:gravity="center"
-        android:textSize="18sp" />
+        android:scaleType="centerInside" />
 
-    <TextView
+    <ImageView
         android:id="@+id/month6"
         android:layout_width="@dimen/action_layout_width"
         android:layout_height="50dp"
         android:layout_weight="1"
-        android:gravity="center"
-        android:textSize="18sp" />
+        android:scaleType="centerInside" />
 
-    <TextView
+    <ImageView
         android:id="@+id/quarter"
         android:layout_width="@dimen/action_layout_width"
         android:layout_height="50dp"
         android:layout_weight="1"
-        android:gravity="center"
-        android:textSize="18sp" />
+        android:scaleType="centerInside" />
 
-    <TextView
+    <ImageView
         android:id="@+id/month2"
         android:layout_width="@dimen/action_layout_width"
         android:layout_height="50dp"
         android:layout_weight="1"
-        android:gravity="center"
-        android:textSize="18sp" />
+        android:scaleType="centerInside" />
 
-    <TextView
+    <ImageView
         android:id="@+id/month"
         android:layout_width="@dimen/action_layout_width"
         android:layout_height="50dp"
         android:layout_weight="1"
-        android:gravity="center"
-        android:textSize="18sp" />
+        android:scaleType="centerInside" />
 
-    <TextView
+    <ImageView
         android:id="@+id/week"
         android:layout_width="@dimen/action_layout_width"
         android:layout_height="50dp"
         android:layout_weight="1"
-        android:gravity="center"
-        android:textSize="18sp" />
+        android:scaleType="centerInside" />
 
-    <TextView
+    <ImageView
         android:id="@+id/day"
         android:layout_width="@dimen/action_layout_width"
         android:layout_height="50dp"
         android:layout_weight="1"
-        android:gravity="center"
-        android:textSize="18sp" />
+        android:scaleType="centerInside" />
 
-    <TextView
+    <ImageView
         android:id="@+id/min60"
         android:layout_width="@dimen/action_layout_width"
         android:layout_height="50dp"
         android:layout_weight="1"
-        android:gravity="center"
-        android:textSize="18sp" />
+        android:scaleType="centerInside" />
 
-    <TextView
+    <ImageView
         android:id="@+id/min30"
         android:layout_width="@dimen/action_layout_width"
         android:layout_height="50dp"
         android:layout_weight="1"
-        android:gravity="center"
-        android:textSize="18sp" />
+        android:scaleType="centerInside" />
 
-    <TextView
+    <ImageView
         android:id="@+id/min15"
         android:layout_width="@dimen/action_layout_width"
         android:layout_height="50dp"
         android:layout_weight="1"
-        android:gravity="center"
-        android:textSize="18sp" />
+        android:scaleType="centerInside" />
 
-    <TextView
+    <ImageView
         android:id="@+id/min5"
         android:layout_width="@dimen/action_layout_width"
         android:layout_height="50dp"
         android:layout_weight="1"
-        android:gravity="center"
-        android:textSize="18sp" />
+        android:scaleType="centerInside" />
 
     <TextView
         android:id="@+id/modified"

@@ -1,10 +1,13 @@
 package com.android.orion.analyzer;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 
 import com.android.orion.application.MainApplication;
+import com.android.orion.chart.CurveThumbnail;
 import com.android.orion.data.Macd;
 import com.android.orion.data.Period;
 import com.android.orion.database.DatabaseContract;
@@ -18,8 +21,10 @@ import com.android.orion.utility.Symbol;
 import com.android.orion.utility.Logger;
 import com.android.orion.utility.StopWatch;
 import com.android.orion.utility.Utility;
+import com.github.mikephil.charting.data.Entry;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -91,6 +96,11 @@ public class StockAnalyzer {
 				}
 			}
 			mTrendAnalyzer.analyzeAdaptive();
+			for (String period : Period.PERIODS) {
+				if (Setting.getPeriod(period)) {
+					setupThumbnail(period);
+				}
+			}
 			mFinancialAnalyzer.analyzeFinancial(mStock);
 			mFinancialAnalyzer.setupFinancial(mStock);
 			mFinancialAnalyzer.setupStockBonus(mStock);
@@ -179,105 +189,64 @@ public class StockAnalyzer {
 				}
 			}
 		}
-
-		StringBuilder actionBuilder = new StringBuilder();
-		appendActionIfPresent(actionBuilder, getDirectionAction(period));
-		appendActionIfPresent(actionBuilder, getVelocityAction());
-		mStock.setAction(period, actionBuilder.toString());
 	}
 
-	private void appendActionIfPresent(StringBuilder builder, String action) {
-		if (action != null && !action.isEmpty()) {
-			builder.append(action).append(Symbol.NEW_LINE);
+	public void setupThumbnail(String  period) {
+		int vertexTop = StockTrend.VERTEX_NONE;
+		int vertexBottom = StockTrend.VERTEX_NONE;
+		switch (mStock.getLevel(period)) {
+			case StockTrend.LEVEL_DRAW:
+				vertexTop = StockTrend.VERTEX_TOP;
+				vertexBottom = StockTrend.VERTEX_BOTTOM;
+				break;
+			case StockTrend.LEVEL_STROKE:
+				vertexTop = StockTrend.VERTEX_TOP_STROKE;
+				vertexBottom = StockTrend.VERTEX_BOTTOM_STROKE;
+				break;
+			case StockTrend.LEVEL_SEGMENT:
+				vertexTop = StockTrend.VERTEX_TOP_SEGMENT;
+				vertexBottom = StockTrend.VERTEX_BOTTOM_SEGMENT;
+				break;
+			case StockTrend.LEVEL_LINE:
+				vertexTop = StockTrend.VERTEX_TOP_LINE;
+				vertexBottom = StockTrend.VERTEX_BOTTOM_LINE;
+				break;
+			case StockTrend.LEVEL_OUT_LINE:
+				vertexTop = StockTrend.VERTEX_TOP_OUTLINE;
+				vertexBottom = StockTrend.VERTEX_BOTTOM_OUTLINE;
+				break;
+			case StockTrend.LEVEL_SUPER_LINE:
+				vertexTop = StockTrend.VERTEX_TOP_SUPERLINE;
+				vertexBottom = StockTrend.VERTEX_BOTTOM_SUPERLINE;
+				break;
+			case StockTrend.LEVEL_TREND_LINE:
+				vertexTop = StockTrend.VERTEX_TOP_TREND_LINE;
+				vertexBottom = StockTrend.VERTEX_BOTTOM_TREND_LINE;
+				break;
+			default:
+				break;
 		}
-	}
 
-	String getDirectionAction(String period) {
-		StringBuilder builder = new StringBuilder();
-		StockData stockData = StockData.getLast(mStock.getVertexList(period, mStock.getLevel(period)), 1);
-		if (stockData != null) {
-			if (stockData.vertexOf(StockTrend.VERTEX_BOTTOM)) {
-				if (mStock.getPrice() < stockData.getCandle().getLow()) {
-					builder.append(Symbol.MINUS);
-				} else {
-					builder.append(Symbol.ADD);
-				}
-			} else if (stockData.vertexOf(StockTrend.VERTEX_TOP)) {
-				if (mStock.getPrice() > stockData.getCandle().getHigh()) {
-					builder.append(Symbol.ADD);
-				} else {
-					builder.append(Symbol.MINUS);
-				}
+		mStockDataList = mStock.getStockDataList(period);
+
+		List<Float> xValues = new ArrayList<>();
+		List<Float> yValues = new ArrayList<>();
+		for (int i = 0; i < mStockDataList.size(); i++) {
+			StockData stockData = mStockDataList.get(i);
+			if (stockData.vertexOf(vertexTop)) {
+				xValues.add((float) i);
+				yValues.add((float) stockData.getCandle().getHigh());
+			} else if (stockData.vertexOf(vertexBottom)) {
+				xValues.add((float) i);
+				yValues.add((float) stockData.getCandle().getLow());
 			}
 		}
-		return builder.toString();
-	}
 
-	String getVelocityAction() {
-		StringBuilder builder = new StringBuilder();
-		StockData stockData = mStockDataList.get(mStockDataList.size() - 1);
-		if (stockData != null) {
-			Macd macd = stockData.getMacd();
-			if (macd != null) {
-				double velocity = macd.getVelocity();
-				if (velocity > 0) {
-					builder.append(Symbol.ADD);
-				} else if (velocity < 0) {
-					builder.append(Symbol.MINUS);
-				}
-			}
-		}
-		return builder.toString();
-	}
-
-	String getLevelAction(String period) {
-		StringBuilder builder = new StringBuilder();
-
-		double mean = 0;
-		double sd = 0;
-		String adaptive = "";
-		for (int i = StockTrend.LEVEL_DRAW; i < StockTrend.LEVELS.length; i++) {
-			ArrayList<StockData> dataList = mStock.getDataList(period, i);
-			mean = Utility.Round2(calculateMean(dataList));
-			sd = Utility.Round2(calculateStandardDeviation(dataList));
-			if (mStock.getLevel(period) == i) {
-				adaptive = Symbol.ASTERISK;
-			} else {
-				adaptive = "";
-			}
-			Log.d(mStock.getName() + " " + period + " " + Symbol.L + i + " mean=" + mean + " sd=" + sd + " size=" + dataList.size() + " " + adaptive);
-		}
-
-		builder.append(Symbol.L + mStock.getLevel(period));
-
-		return builder.toString();
-	}
-
-	public double calculateMean(ArrayList<StockData> dataList) {
-		double sum = 0.0;
-		if (dataList == null || dataList.isEmpty()) {
-			return sum;
-		}
-
-		for (StockData data : dataList) {
-			sum += Math.abs(data.getNet());
-		}
-		return sum / dataList.size();
-	}
-
-	public double calculateStandardDeviation(ArrayList<StockData> dataList) {
-		double sumOfSquaredDifferences = 0.0;
-		if (dataList == null || dataList.isEmpty()) {
-			return sumOfSquaredDifferences;
-		}
-
-		double mean = calculateMean(dataList);
-		for (StockData data : dataList) {
-			sumOfSquaredDifferences += Math.pow(Math.abs(data.getNet()) - mean, 2);
-		}
-
-		double variance = sumOfSquaredDifferences / dataList.size();
-		return Math.sqrt(variance);
+		List<CurveThumbnail.LineConfig> lines = Arrays.asList(
+				new CurveThumbnail.LineConfig(xValues, yValues,	StockTrend.COLORS[mStock.getLevel(period)], 4f, true));
+		CurveThumbnail.ReferenceLineConfig referenceLine =
+				new CurveThumbnail.ReferenceLineConfig((float) mStock.getPrice(), Color.RED, 4f, new float[]{4f, 4f});
+		mStock.setThumbnail(period, Utility.thumbnailToBytes(new CurveThumbnail(160,	Color.TRANSPARENT, lines, referenceLine)));
 	}
 
 	private static class SingletonHolder {

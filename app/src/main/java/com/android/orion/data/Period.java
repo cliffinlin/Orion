@@ -1,6 +1,7 @@
 package com.android.orion.data;
 
 import android.database.Cursor;
+import android.graphics.drawable.BitmapDrawable;
 import android.text.TextUtils;
 
 import com.android.orion.database.DatabaseContract;
@@ -48,7 +49,7 @@ public class Period {
 	}};
 
 	public String mName = "";
-	public String mAction = "";
+	public byte[] mThumbnail;
 	public int mLevel = StockTrend.LEVEL_NONE;
 
 	public ArrayList<StockData> mStockDataList = new ArrayList<>();
@@ -122,19 +123,19 @@ public class Period {
 		return mVertexLists.get(level);
 	}
 
-	public String getAction() {
-		return mAction;
+	public byte[] getThumbnail() {
+		return mThumbnail;
 	}
 
-	public void setAction(String action) {
-		mAction = action;
+	public void setThumbnail(byte[] thumbnail) {
+		mThumbnail = thumbnail;
 	}
 
-	public void setAction(Cursor cursor) {
+	public void setThumbnail(Cursor cursor) {
 		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
-		setAction(cursor.getString(cursor
+		setThumbnail(cursor.getBlob(cursor
 				.getColumnIndex(mName)));
 	}
 

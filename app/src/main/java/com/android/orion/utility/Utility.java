@@ -3,12 +3,18 @@ package com.android.orion.utility;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 
+import com.android.orion.R;
 import com.android.orion.database.Stock;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
@@ -18,6 +24,7 @@ import org.json.JSONObject;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -847,6 +854,36 @@ public class Utility {
 			return true;
 		} catch (Exception e) {
 			return false;
+		}
+	}
+
+	public static byte[] thumbnailToBytes(Drawable thumbnail) {
+		if (thumbnail == null) {
+			return null;
+		}
+		// 创建Bitmap
+		Bitmap bitmap = Bitmap.createBitmap(thumbnail.getIntrinsicWidth(),
+				thumbnail.getIntrinsicHeight(),
+				Bitmap.Config.ARGB_8888);
+		Canvas canvas = new Canvas(bitmap);
+		thumbnail.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+		thumbnail.draw(canvas);
+
+		// 转换为字节数组
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+		return stream.toByteArray();
+	}
+
+	public static Drawable bytesToThumbnail(Context context, byte[] bytes) {
+		if (bytes == null || bytes.length == 0) {
+			return context.getResources().getDrawable(R.drawable.ic_delete);
+		}
+		try {
+			return new BitmapDrawable(context.getResources(),
+					BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
+		} catch (Exception e) {
+			return context.getResources().getDrawable(R.drawable.ic_delete);
 		}
 	}
 }
