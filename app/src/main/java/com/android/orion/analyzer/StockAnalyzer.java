@@ -228,6 +228,9 @@ public class StockAnalyzer {
 		}
 
 		mStockDataList = mStock.getStockDataList(period);
+		if (mStockDataList.isEmpty()) {
+			return;
+		}
 
 		List<Float> xValues = new ArrayList<>();
 		List<Float> yValues = new ArrayList<>();
@@ -243,10 +246,10 @@ public class StockAnalyzer {
 		}
 
 		List<CurveThumbnail.LineConfig> lines = Arrays.asList(
-				new CurveThumbnail.LineConfig(xValues, yValues,	StockTrend.COLORS[mStock.getLevel(period)], 4f, true));
-		CurveThumbnail.ReferenceLineConfig referenceLine =
-				new CurveThumbnail.ReferenceLineConfig((float) mStock.getPrice(), Color.RED, 4f, new float[]{4f, 4f});
-		mStock.setThumbnail(period, Utility.thumbnailToBytes(new CurveThumbnail(160,	Color.TRANSPARENT, lines, referenceLine)));
+				new CurveThumbnail.LineConfig(xValues, yValues,	StockTrend.COLORS[mStock.getLevel(period)], 4f));
+		CurveThumbnail.CrossMarkerConfig markerConfig =
+				new CurveThumbnail.CrossMarkerConfig(mStockDataList.size() - 1, (float) mStock.getPrice(), Color.RED,4f, 20f);
+		mStock.setThumbnail(period, Utility.thumbnailToBytes(new CurveThumbnail(160,	Color.TRANSPARENT, lines, markerConfig)));
 	}
 
 	private static class SingletonHolder {

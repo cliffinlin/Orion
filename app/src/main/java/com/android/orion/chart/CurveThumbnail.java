@@ -2,7 +2,6 @@ package com.android.orion.chart;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PixelFormat;
@@ -10,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import java.util.List;
+import java.util.ArrayList;
 
 public class CurveThumbnail extends Drawable {
 	// 折线配置类
@@ -18,61 +18,55 @@ public class CurveThumbnail extends Drawable {
 		public final List<Float> yValues;
 		public final int color;
 		public final float strokeWidth;
-		public final boolean showLastPointMarker;
 
 		public LineConfig(List<Float> xValues, List<Float> yValues,
-		                  int color, float strokeWidth, boolean showLastPointMarker) {
+						  int color, float strokeWidth) {
 			this.xValues = xValues;
 			this.yValues = yValues;
 			this.color = color;
 			this.strokeWidth = strokeWidth;
-			this.showLastPointMarker = showLastPointMarker;
 		}
 	}
 
-	// 参考线配置类
-	public static class ReferenceLineConfig {
-		public final float value;
+	// 十字标记配置类（最终修复版）
+	public static class CrossMarkerConfig {
+		public final float xValue;
+		public final float yValue;
 		public final int color;
 		public final float strokeWidth;
-		public final float[] dashPattern;
+		public final float size;
 
-		public ReferenceLineConfig(float value, int color,
-		                           float strokeWidth, float[] dashPattern) {
-			this.value = value;
+		public CrossMarkerConfig(float xValue, float yValue,
+								 int color, float strokeWidth, float size) {
+			this.xValue = xValue;
+			this.yValue = yValue;
 			this.color = color;
 			this.strokeWidth = strokeWidth;
-			this.dashPattern = dashPattern;
+			this.size = size;
 		}
 	}
 
-	// 内部绘制用类
 	private static class DrawnLine {
-		final Path path;
-		final Paint linePaint;
-		final Paint pointPaint;
-		final float lastX;
-		final float lastY;
-		final boolean showMarker;
-
-		DrawnLine(Path path, Paint linePaint, Paint pointPaint,
-		          float lastX, float lastY, boolean showMarker) {
-			this.path = path;
-			this.linePaint = linePaint;
-			this.pointPaint = pointPaint;
-			this.lastX = lastX;
-			this.lastY = lastY;
-			this.showMarker = showMarker;
-		}
-	}
-
-	private static class DrawnReferenceLine {
 		final Path path;
 		final Paint paint;
 
-		DrawnReferenceLine(Path path, Paint paint) {
+		DrawnLine(Path path, Paint paint) {
 			this.path = path;
 			this.paint = paint;
+		}
+	}
+
+	private static class DrawnMarker {
+		final float centerX;
+		final float centerY;
+		final Paint paint;
+		final float halfSize;
+
+		DrawnMarker(float centerX, float centerY, Paint paint, float halfSize) {
+			this.centerX = centerX;
+			this.centerY = centerY;
+			this.paint = paint;
+			this.halfSize = halfSize;
 		}
 	}
 
@@ -90,75 +84,50 @@ public class CurveThumbnail extends Drawable {
 	private final int size;
 	private final int backgroundColor;
 	private final List<LineConfig> lines;
-	private final ReferenceLineConfig referenceLine;
-
+	private final CrossMarkerConfig markerConfig;
 	private final Paint bgPaint;
 	private final List<DrawnLine> drawnLines;
-	private final DrawnReferenceLine drawnReferenceLine;
+	private final DrawnMarker drawnMarker;
 
 	public CurveThumbnail(int size, int backgroundColor,
-	                      List<LineConfig> lines, ReferenceLineConfig referenceLine) {
+						  List<LineConfig> lines, CrossMarkerConfig markerConfig) {
 		this.size = size;
 		this.backgroundColor = backgroundColor;
 		this.lines = lines;
-		this.referenceLine = referenceLine;
+		this.markerConfig = markerConfig;
 
 		bgPaint = new Paint();
 		bgPaint.setColor(backgroundColor);
+		bgPaint.setStyle(Paint.Style.FILL);
 
 		DataRange range = calculateDataRange();
 		this.drawnLines = buildAllLines(range);
-		this.drawnReferenceLine = buildReferenceLine(range);
+		this.drawnMarker = buildMarker(range);
 	}
 
 	private List<DrawnLine> buildAllLines(DataRange range) {
-		List<DrawnLine> result = new java.util.ArrayList<>();
+		List<DrawnLine> result = new ArrayList<>();
 		for (LineConfig lineConfig : lines) {
 			Path path = buildPath(lineConfig.xValues, lineConfig.yValues, range);
-			Paint linePaint = createLinePaint(lineConfig);
-
-			Paint pointPaint = null;
-			float lastX = 0, lastY = 0;
-
-			if (lineConfig.showLastPointMarker && !lineConfig.xValues.isEmpty() && !lineConfig.yValues.isEmpty()) {
-				pointPaint = new Paint(linePaint);
-				pointPaint.setStyle(Paint.Style.FILL);
-
-				lastX = mapToX(
-						lineConfig.xValues.get(lineConfig.xValues.size() - 1),
-						range.minX, range.maxX
-				);
-				lastY = mapToY(
-						lineConfig.yValues.get(lineConfig.yValues.size() - 1),
-						range.minY, range.maxY
-				);
-			}
-
-			result.add(new DrawnLine(
-					path, linePaint, pointPaint,
-					lastX, lastY, lineConfig.showLastPointMarker
-			));
+			Paint paint = createLinePaint(lineConfig);
+			result.add(new DrawnLine(path, paint));
 		}
 		return result;
 	}
 
-	private DrawnReferenceLine buildReferenceLine(DataRange range) {
-		float y = mapToY(referenceLine.value, range.minY, range.maxY);
+	private DrawnMarker buildMarker(DataRange range) {
+		if (markerConfig == null) return null;
 
-		Path path = new Path();
-		path.moveTo(0, y);
-		path.lineTo(size, y);
+		float centerX = preciseMapToX(markerConfig.xValue, range.minX, range.maxX);
+		float centerY = preciseMapToY(markerConfig.yValue, range.minY, range.maxY);
 
 		Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+		paint.setColor(markerConfig.color);
+		paint.setStrokeWidth(markerConfig.strokeWidth);
 		paint.setStyle(Paint.Style.STROKE);
-		paint.setStrokeWidth(referenceLine.strokeWidth);
-		paint.setColor(referenceLine.color);
+		paint.setStrokeCap(Paint.Cap.SQUARE);
 
-		if (referenceLine.dashPattern != null) {
-			paint.setPathEffect(new DashPathEffect(referenceLine.dashPattern, 0f));
-		}
-
-		return new DrawnReferenceLine(path, paint);
+		return new DrawnMarker(centerX, centerY, paint, markerConfig.size / 2f);
 	}
 
 	private Paint createLinePaint(LineConfig lineConfig) {
@@ -166,6 +135,7 @@ public class CurveThumbnail extends Drawable {
 		paint.setStyle(Paint.Style.STROKE);
 		paint.setStrokeWidth(lineConfig.strokeWidth);
 		paint.setColor(lineConfig.color);
+		paint.setStrokeCap(Paint.Cap.ROUND);
 		return paint;
 	}
 
@@ -186,8 +156,15 @@ public class CurveThumbnail extends Drawable {
 			}
 		}
 
-		minY = Math.min(minY, referenceLine.value);
-		maxY = Math.max(maxY, referenceLine.value);
+		if (markerConfig != null) {
+			minX = Math.min(minX, markerConfig.xValue);
+			maxX = Math.max(maxX, markerConfig.xValue) + markerConfig.size / 2f;
+			minY = Math.min(minY, markerConfig.yValue);
+			maxY = Math.max(maxY, markerConfig.yValue);
+		}
+
+		if (minX == maxX) maxX = minX + 1;
+		if (minY == maxY) maxY = minY + 1;
 
 		float xMargin = (maxX - minX) * 0.05f;
 		float yMargin = (maxY - minY) * 0.05f;
@@ -206,25 +183,28 @@ public class CurveThumbnail extends Drawable {
 			return path;
 		}
 
-		float firstX = mapToX(xValues.get(0), range.minX, range.maxX);
-		float firstY = mapToY(yValues.get(0), range.minY, range.maxY);
+		float firstX = preciseMapToX(xValues.get(0), range.minX, range.maxX);
+		float firstY = preciseMapToY(yValues.get(0), range.minY, range.maxY);
 		path.moveTo(firstX, firstY);
 
 		for (int i = 1; i < xValues.size(); i++) {
-			float x = mapToX(xValues.get(i), range.minX, range.maxX);
-			float y = mapToY(yValues.get(i), range.minY, range.maxY);
+			float x = preciseMapToX(xValues.get(i), range.minX, range.maxX);
+			float y = preciseMapToY(yValues.get(i), range.minY, range.maxY);
 			path.lineTo(x, y);
 		}
 
 		return path;
 	}
 
-	private float mapToX(float value, float minX, float maxX) {
-		return (value - minX) / (maxX - minX) * size;
+	// 高精度坐标映射方法
+	private float preciseMapToX(float value, float minX, float maxX) {
+		float normalized = (value - minX) / (maxX - minX);
+		return Math.round(normalized * size * 100) / 100f;
 	}
 
-	private float mapToY(float value, float minY, float maxY) {
-		return size - ((value - minY) / (maxY - minY) * size);
+	private float preciseMapToY(float value, float minY, float maxY) {
+		float normalized = (value - minY) / (maxY - minY);
+		return size - Math.round(normalized * size * 100) / 100f;
 	}
 
 	@Override
@@ -232,45 +212,48 @@ public class CurveThumbnail extends Drawable {
 		canvas.drawRect(0, 0, size, size, bgPaint);
 
 		for (DrawnLine line : drawnLines) {
-			canvas.drawPath(line.path, line.linePaint);
-
-			if (line.showMarker && line.pointPaint != null) {
-				canvas.drawCircle(line.lastX, line.lastY, 3f, line.pointPaint);
-			}
+			canvas.drawPath(line.path, line.paint);
 		}
 
-		canvas.drawPath(drawnReferenceLine.path, drawnReferenceLine.paint);
+		if (drawnMarker != null) {
+			// 确保完全对称的十字标记
+			float left = Math.round((drawnMarker.centerX - drawnMarker.halfSize) * 100) / 100f;
+			float right = Math.round((drawnMarker.centerX + drawnMarker.halfSize) * 100) / 100f;
+			float top = Math.round((drawnMarker.centerY - drawnMarker.halfSize) * 100) / 100f;
+			float bottom = Math.round((drawnMarker.centerY + drawnMarker.halfSize) * 100) / 100f;
+
+			// 水平线（确保左右对称）
+			canvas.drawLine(left, drawnMarker.centerY, right, drawnMarker.centerY, drawnMarker.paint);
+
+			// 垂直线（确保上下对称）
+			canvas.drawLine(drawnMarker.centerX, top, drawnMarker.centerX, bottom, drawnMarker.paint);
+		}
 	}
 
 	@Override
 	public void setAlpha(int alpha) {
-		// 设置透明度，这里简单实现
 		bgPaint.setAlpha(alpha);
 		for (DrawnLine line : drawnLines) {
-			line.linePaint.setAlpha(alpha);
-			if (line.pointPaint != null) {
-				line.pointPaint.setAlpha(alpha);
-			}
+			line.paint.setAlpha(alpha);
 		}
-		drawnReferenceLine.paint.setAlpha(alpha);
+		if (drawnMarker != null) {
+			drawnMarker.paint.setAlpha(alpha);
+		}
 	}
 
 	@Override
 	public void setColorFilter(@Nullable android.graphics.ColorFilter colorFilter) {
-		// 设置颜色过滤器
 		bgPaint.setColorFilter(colorFilter);
 		for (DrawnLine line : drawnLines) {
-			line.linePaint.setColorFilter(colorFilter);
-			if (line.pointPaint != null) {
-				line.pointPaint.setColorFilter(colorFilter);
-			}
+			line.paint.setColorFilter(colorFilter);
 		}
-		drawnReferenceLine.paint.setColorFilter(colorFilter);
+		if (drawnMarker != null) {
+			drawnMarker.paint.setColorFilter(colorFilter);
+		}
 	}
 
 	@Override
 	public int getOpacity() {
-		// 返回不透明
 		return PixelFormat.OPAQUE;
 	}
 
