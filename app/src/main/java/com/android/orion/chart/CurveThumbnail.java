@@ -7,11 +7,8 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import java.util.List;
 
 public class CurveThumbnail extends Drawable {
@@ -232,7 +229,6 @@ public class CurveThumbnail extends Drawable {
 
 	@Override
 	public void draw(@NonNull Canvas canvas) {
-		Log.d("Orion, CurveThumbnail", "Drawing with size=" + size);
 		canvas.drawRect(0, 0, size, size, bgPaint);
 
 		for (DrawnLine line : drawnLines) {

@@ -235,7 +235,7 @@ public class SinaFinance extends StockDataProvider {
 			cursor.moveToLast();
 			stockData.set(cursor);
 
-			if (Market.isTradingHours() || Market.isLunchTime()) {
+			if (Market.isTradingHours()) {
 				int scheduleMinutes = Market.getScheduleMinutes();
 				if (scheduleMinutes != 0) {
 					result = 1;

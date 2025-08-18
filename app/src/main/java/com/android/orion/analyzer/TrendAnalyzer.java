@@ -592,7 +592,7 @@ public class TrendAnalyzer {
 			return;
 		}
 
-		for (int i = 0; i < clusters.size(); i++) {
+		for (int i = 1; i < clusters.size(); i++) {
 			CentroidCluster<AppData> cluster = clusters.get(i);
 			double centerValue = cluster.getCenter().getPoint()[0];
 			if (centerValue < 1 || cluster.getPoints().size() < K_MEANS_PERIODS - 1) {
@@ -606,7 +606,7 @@ public class TrendAnalyzer {
 				if (appDataMap.containsKey(appData.period)) {
 					if (appData.distance < appDataMap.get(appData.period).distance) {
 						appDataMap.put(appData.period, appData);
-					} else if (appData.distance == appDataMap.get(appData.period).distance){
+					} else if (appData.distance == appDataMap.get(appData.period).distance) {
 						if (appData.level > appDataMap.get(appData.period).level) {
 							appDataMap.put(appData.period, appData);
 						}

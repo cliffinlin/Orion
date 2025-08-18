@@ -101,7 +101,6 @@ public class DatabaseContract {
 	public static final String COLUMN_DATE = "date";
 	public static final String COLUMN_TIME = "time";
 	public static final String COLUMN_PERIOD = "period";
-	public static final String COLUMN_ACTION = "action";
 	public static final String COLUMN_OPEN = "open";
 	public static final String COLUMN_HIGH = "high";
 	public static final String COLUMN_LOW = "low";
