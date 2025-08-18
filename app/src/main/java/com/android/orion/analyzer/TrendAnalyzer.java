@@ -592,7 +592,8 @@ public class TrendAnalyzer {
 			return;
 		}
 
-		for (int i = 1; i < clusters.size(); i++) {
+		int start = mStock.hasFlag(Stock.FLAG_GRID)  ? Config.CENTROID_CLUSTER_INDEX : Config.CENTROID_CLUSTER_INDEX + 1;
+		for (int i = start; i < clusters.size(); i++) {
 			CentroidCluster<AppData> cluster = clusters.get(i);
 			double centerValue = cluster.getCenter().getPoint()[0];
 			if (centerValue < 1 || cluster.getPoints().size() < K_MEANS_PERIODS - 1) {
