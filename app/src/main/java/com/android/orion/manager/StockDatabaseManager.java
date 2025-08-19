@@ -17,7 +17,6 @@ import com.android.orion.database.StockData;
 import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockFinancial;
 import com.android.orion.database.StockPerceptron;
-import com.android.orion.database.StockRZRQ;
 import com.android.orion.database.StockShare;
 import com.android.orion.database.StockTrend;
 import com.android.orion.database.TDXData;
@@ -787,124 +786,6 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 		Cursor cursor = null;
 		try {
 			cursor = queryStockPerceptron(stockPerceptron);
-			if ((cursor != null) && (cursor.getCount() > 0)) {
-				cursor.moveToNext();
-				result = true;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			closeCursor(cursor);
-		}
-		return result;
-	}
-
-
-	public Uri insertStockRZRQ(StockRZRQ stockRZRQ) {
-		if (stockRZRQ == null) {
-			return null;
-		}
-		return insert(DatabaseContract.StockRZRQ.CONTENT_URI, stockRZRQ.getContentValues());
-	}
-
-	public int bulkInsertStockRZRQ(ContentValues[] contentValuesArray) {
-		return bulkInsert(DatabaseContract.StockRZRQ.CONTENT_URI, contentValuesArray);
-	}
-
-	public int deleteStockRZRQ(Stock stock) {
-		return delete(DatabaseContract.StockRZRQ.CONTENT_URI, DatabaseContract.SELECTION_STOCK(stock.getSE(), stock.getCode()), null);
-	}
-
-	public int updateStockRZRQ(StockRZRQ stockRZRQ, ContentValues contentValues) {
-		if (stockRZRQ == null) {
-			return 0;
-		}
-		return update(DatabaseContract.StockRZRQ.CONTENT_URI, contentValues, DatabaseContract.SELECTION_STOCK_DATE(stockRZRQ.getSE(), stockRZRQ.getCode(), stockRZRQ.getDate()), null);
-	}
-
-	public Cursor queryStockRZRQ(String selection, String[] selectionArgs, String sortOrder) {
-		return query(DatabaseContract.StockRZRQ.CONTENT_URI,
-				DatabaseContract.StockRZRQ.PROJECTION_ALL, selection,
-				selectionArgs, sortOrder);
-	}
-
-	public Cursor queryStockRZRQ(StockRZRQ stockRZRQ) {
-		if (stockRZRQ == null) {
-			return null;
-		}
-		return query(DatabaseContract.StockRZRQ.CONTENT_URI, DatabaseContract.StockRZRQ.PROJECTION_ALL, DatabaseContract.SELECTION_STOCK_DATE(stockRZRQ.getSE(), stockRZRQ.getCode(), stockRZRQ.getDate()), null, DatabaseContract.ORDER_DATE_ASC);
-	}
-
-	public void getStockRZRQ(Stock stock, StockRZRQ stockRZRQ) {
-		if (stockRZRQ == null) {
-			return;
-		}
-		Cursor cursor = null;
-		try {
-			cursor = query(DatabaseContract.StockRZRQ.CONTENT_URI, DatabaseContract.StockRZRQ.PROJECTION_ALL, DatabaseContract.SELECTION_STOCK(stock.getSE(), stock.getCode()), null, DatabaseContract.ORDER_DATE_DESC);
-			if ((cursor != null) && (cursor.getCount() > 0)) {
-				cursor.moveToNext();
-				stockRZRQ.set(cursor);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			closeCursor(cursor);
-		}
-	}
-
-	public void getStockRZRQList(Stock stock, ArrayList<StockRZRQ> stockRZRQList, String sortOrder) {
-		if (stock == null || stockRZRQList == null) {
-			return;
-		}
-		stockRZRQList.clear();
-		Cursor cursor = null;
-		try {
-			cursor = queryStockRZRQ(DatabaseContract.SELECTION_STOCK(stock.getSE(), stock.getCode()), null, sortOrder);
-			if ((cursor != null) && (cursor.getCount() > 0)) {
-				while (cursor.moveToNext()) {
-					StockRZRQ stockRZRQ = new StockRZRQ();
-					stockRZRQ.set(cursor);
-					stockRZRQList.add(stockRZRQ);
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			closeCursor(cursor);
-		}
-	}
-
-	public void getStockRZRQMap(Stock stock, ArrayMap<String, StockRZRQ> stockRZRQMap, String sortOrder) {
-		if (stock == null || stockRZRQMap == null) {
-			return;
-		}
-		stockRZRQMap.clear();
-		Cursor cursor = null;
-		try {
-			cursor = queryStockRZRQ(DatabaseContract.SELECTION_STOCK(stock.getSE(), stock.getCode()), null, sortOrder);
-			if ((cursor != null) && (cursor.getCount() > 0)) {
-				while (cursor.moveToNext()) {
-					StockRZRQ stockRZRQ = new StockRZRQ();
-					stockRZRQ.set(cursor);
-					stockRZRQMap.put(stockRZRQ.getDate(), stockRZRQ);
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			closeCursor(cursor);
-		}
-	}
-
-	public boolean isStockRZRQExist(StockRZRQ stockRZRQ) {
-		boolean result = false;
-		if (stockRZRQ == null) {
-			return result;
-		}
-		Cursor cursor = null;
-		try {
-			cursor = queryStockRZRQ(stockRZRQ);
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
 				result = true;

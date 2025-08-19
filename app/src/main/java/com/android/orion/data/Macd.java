@@ -10,7 +10,6 @@ public class Macd {
 	private double mDIF;
 	private double mDEA;
 	private double mHistogram;
-	private double mVelocity;
 
 	public Macd() {
 		init();
@@ -22,7 +21,6 @@ public class Macd {
 		mDIF = 0;
 		mDEA = 0;
 		mHistogram = 0;
-		mVelocity = 0;
 	}
 
 	public void set(Macd macd) {
@@ -34,7 +32,6 @@ public class Macd {
 		setDIF(macd.mDIF);
 		setDEA(macd.mDEA);
 		setHistogram(macd.mHistogram);
-		setVelocity(macd.mVelocity);
 	}
 
 	public void set(Cursor cursor) {
@@ -43,16 +40,14 @@ public class Macd {
 		setDIF(cursor);
 		setDEA(cursor);
 		setHistogram(cursor);
-		setVelocity(cursor);
 	}
 
-	public void set(double average5, double average10, double dif, double dea, double histogram, double velocity) {
+	public void set(double average5, double average10, double dif, double dea, double histogram) {
 		setAverage5(average5);
 		setAverage10(average10);
 		setDIF(dif);
 		setDEA(dea);
 		setHistogram(histogram);
-		setVelocity(velocity);
 	}
 
 	public double getAverage5() {
@@ -138,22 +133,5 @@ public class Macd {
 
 		setHistogram(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_HISTOGRAM)));
-	}
-
-	public double getVelocity() {
-		return mVelocity;
-	}
-
-	public void setVelocity(double velocity) {
-		mVelocity = velocity;
-	}
-
-	void setVelocity(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setVelocity(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_VELOCITY)));
 	}
 }

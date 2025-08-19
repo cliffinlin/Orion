@@ -41,9 +41,6 @@
             android:key="SETTING_DISPLAY_MAIN_INCOME"
             android:title="@string/main_business_income" />
         <com.android.orion.preference.CustomSwitchPreference
-            android:key="SETTING_DISPLAY_RZ_VALUE"
-            android:title="@string/rz_value" />
-        <com.android.orion.preference.CustomSwitchPreference
             android:key="SETTING_DISPLAY_MONOCHROME"
             android:title="@string/monochrome" />
         <com.android.orion.preference.CustomSwitchPreference

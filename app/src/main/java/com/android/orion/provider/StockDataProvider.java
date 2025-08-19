@@ -880,11 +880,6 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 	}
 
 	@Override
-	public int downloadStockRZRQ(Stock stock) {
-		return 0;
-	}
-
-	@Override
 	public int downloadStockShare(Stock stock) {
 		return 0;
 	}
@@ -954,11 +949,6 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 						}
 
 						if (downloadStockShare(stock) == RESULT_FAILED) {
-							StockService.getInstance().onDisconnected();
-							return;
-						}
-
-						if (downloadStockRZRQ(stock) == RESULT_FAILED) {
 							StockService.getInstance().onDisconnected();
 							return;
 						}

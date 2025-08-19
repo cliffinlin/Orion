@@ -112,7 +112,6 @@ public class DatabaseContract {
 	public static final String COLUMN_DIF = "dif";
 	public static final String COLUMN_DEA = "dea";
 	public static final String COLUMN_HISTOGRAM = "histogram";
-	public static final String COLUMN_VELOCITY = "velocity";
 	public static final String COLUMN_ACCOUNT = "account";
 
 	public static final String COLUMN_GRID_PROFIT = "grid_profit";
@@ -136,18 +135,6 @@ public class DatabaseContract {
 	// http://vip.stock.finance.sina.com.cn/corp/go.php/vISSUE_ShareBonus/stockid/600900.phtml
 	public static final String COLUMN_R_DATE = "r_date";
 	public static final String COLUMN_TIME_TO_MARKET = "time_to_market";
-	//http://vip.stock.finance.sina.com.cn/q/go.php/vInvestConsult/kind/rzrq/index.phtml?symbol=600900
-
-	public static final String COLUMN_RZ_VALUE = "rz_value";
-	public static final String COLUMN_RZ_BUY = "rz_buy";
-	public static final String COLUMN_RZ_REPAY = "rz_repay";
-	public static final String COLUMN_RQ_VALUE = "rq_value";
-	public static final String COLUMN_RQ_SELL = "rq_sell";
-	public static final String COLUMN_RQ_REPAY = "rq_repay";
-	public static final String COLUMN_RZ_BUY_RATE = "rz_buy_rate";
-	public static final String COLUMN_RZ_TREND_VALUE = "rz_trend_value";
-	public static final String COLUMN_RZ_TREND_RATE = "rz_trend_rate";
-	public static final String COLUMN_RZ_TREND_DAYS = "rz_trend_days";
 
 	public static final String ORDER_BY = " ORDER BY ";
 	public static final String ORDER_ASC = " ASC ";
@@ -286,7 +273,6 @@ public class DatabaseContract {
 				COLUMN_NET_PROFIT_PER_SHARE_IN_YEAR,
 				COLUMN_RATE,
 				COLUMN_GRID_PROFIT,
-				COLUMN_RZ_VALUE, COLUMN_RZ_BUY, COLUMN_RZ_BUY_RATE, COLUMN_RZ_TREND_VALUE, COLUMN_RZ_TREND_RATE, COLUMN_RZ_TREND_DAYS,
 				COLUMN_DIVIDEND, COLUMN_DIVIDEND_IN_YEAR,
 				COLUMN_YIELD, COLUMN_YIELD_IN_YEAR,
 				COLUMN_DIVIDEND_RATIO, COLUMN_DIVIDEND_RATIO_IN_YEAR,
@@ -356,12 +342,6 @@ public class DatabaseContract {
 				+ COLUMN_NET_PROFIT_PER_SHARE_IN_YEAR + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_RATE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_GRID_PROFIT + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_RZ_VALUE + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_RZ_BUY + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_RZ_BUY_RATE + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_RZ_TREND_VALUE + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_RZ_TREND_RATE + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_RZ_TREND_DAYS + INTEGER_TYPE + COMMA_SEP
 				+ COLUMN_DIVIDEND + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_DIVIDEND_IN_YEAR + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_YIELD + DOUBLE_TYPE + COMMA_SEP
@@ -390,10 +370,8 @@ public class DatabaseContract {
 				COLUMN_SE, COLUMN_CODE, COLUMN_NAME,
 				COLUMN_PERIOD, COLUMN_DATE, COLUMN_TIME, COLUMN_TEXT,
 				COLUMN_OPEN, COLUMN_HIGH, COLUMN_LOW, COLUMN_CLOSE, COLUMN_CHANGE, COLUMN_NET,
-				COLUMN_RZ_VALUE, COLUMN_RQ_VALUE,
 				COLUMN_DIRECTION, COLUMN_VERTEX,
-				COLUMN_AVERAGE5, COLUMN_AVERAGE10, COLUMN_DIF, COLUMN_DEA, COLUMN_HISTOGRAM, COLUMN_VELOCITY,
-				COLUMN_NET_PROFIT_IN_YEAR,
+				COLUMN_AVERAGE5, COLUMN_AVERAGE10, COLUMN_DIF, COLUMN_DEA, COLUMN_HISTOGRAM,
 				COLUMN_CREATED, COLUMN_MODIFIED};
 		static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
 				+ TABLE_NAME;
@@ -412,8 +390,6 @@ public class DatabaseContract {
 				+ COLUMN_CLOSE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_CHANGE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_NET + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_RZ_VALUE + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_RQ_VALUE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_DIRECTION + INTEGER_TYPE + COMMA_SEP
 				+ COLUMN_VERTEX + INTEGER_TYPE + COMMA_SEP
 				+ COLUMN_AVERAGE5 + DOUBLE_TYPE + COMMA_SEP
@@ -421,8 +397,6 @@ public class DatabaseContract {
 				+ COLUMN_DIF + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_DEA + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_HISTOGRAM + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_VELOCITY + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_NET_PROFIT_IN_YEAR + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_CREATED + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_MODIFIED + TEXT_TYPE + " )";
 		static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
@@ -645,39 +619,6 @@ public class DatabaseContract {
 				+ COLUMN_DATE + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_SHARE + DOUBLE_TYPE + COMMA_SEP + COLUMN_CREATED
 				+ TEXT_TYPE + COMMA_SEP + COLUMN_MODIFIED + TEXT_TYPE + " )";
-		static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
-				+ CREATE_TABLE_CONTENT;
-	}
-
-	public static abstract class StockRZRQ implements BaseColumns {
-		public static final String TABLE_NAME = "stock_rzrq";
-
-		public static final Uri CONTENT_URI = Uri.withAppendedPath(
-				DatabaseContract.CONTENT_URI, TABLE_NAME);
-		public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
-				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
-		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
-				+ "/" + DATABASE_NAME + "/" + TABLE_NAME;
-		public static final String[] PROJECTION_ALL = {_ID,
-				COLUMN_SE, COLUMN_CODE, COLUMN_NAME,
-				COLUMN_DATE, COLUMN_RZ_VALUE, COLUMN_RZ_BUY, COLUMN_RZ_REPAY, COLUMN_RQ_VALUE, COLUMN_RQ_SELL, COLUMN_RQ_REPAY,
-				COLUMN_CREATED, COLUMN_MODIFIED};
-		static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
-				+ TABLE_NAME;
-		private static final String CREATE_TABLE_CONTENT = " (" + _ID
-				+ " INTEGER PRIMARY KEY,"
-				+ COLUMN_SE + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_CODE + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_NAME + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_DATE + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_RZ_VALUE + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_RZ_BUY + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_RZ_REPAY + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_RQ_VALUE + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_RQ_SELL + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_RQ_REPAY + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_CREATED + TEXT_TYPE + COMMA_SEP
-				+ COLUMN_MODIFIED + TEXT_TYPE + " )";
 		static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME
 				+ CREATE_TABLE_CONTENT;
 	}

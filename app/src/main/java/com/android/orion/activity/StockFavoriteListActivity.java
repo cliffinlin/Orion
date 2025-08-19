@@ -65,8 +65,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 	TextView mTextViewMin5 = null;
 	TextView mTextViewFlag = null;
 	TextView mTextViewGridProfit = null;
-	TextView mTextViewRZTrendRate = null;
-	TextView mTextViewRZTrendDays = null;
 	TextView mTextViewModified = null;
 
 	ListView mLeftListView = null;
@@ -215,12 +213,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 			case R.id.grid_profit:
 				mSortOrderColumn = DatabaseContract.COLUMN_GRID_PROFIT;
 				break;
-			case R.id.rz_trend_rate:
-				mSortOrderColumn = DatabaseContract.COLUMN_RZ_TREND_RATE;
-				break;
-			case R.id.rz_trend_days:
-				mSortOrderColumn = DatabaseContract.COLUMN_RZ_TREND_DAYS;
-				break;
 			case R.id.modified:
 				mSortOrderColumn = DatabaseContract.COLUMN_MODIFIED;
 				break;
@@ -270,8 +262,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewMin5, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewFlag, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewGridProfit, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewRZTrendRate, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewRZTrendDays, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewModified, mHeaderTextDefaultColor);
 	}
 
@@ -376,18 +366,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 			mTextViewGridProfit.setOnClickListener(this);
 		}
 
-		mTextViewRZTrendRate = findViewById(R.id.rz_trend_rate);
-		if (mTextViewRZTrendRate != null) {
-			mTextViewRZTrendRate.setOnClickListener(this);
-			setVisibility(mTextViewRZTrendRate, Setting.getDisplayRZValue());
-		}
-
-		mTextViewRZTrendDays = findViewById(R.id.rz_trend_days);
-		if (mTextViewRZTrendDays != null) {
-			mTextViewRZTrendDays.setOnClickListener(this);
-			setVisibility(mTextViewRZTrendDays, Setting.getDisplayRZValue());
-		}
-
 		mTextViewModified = findViewById(R.id.modified);
 		if (mTextViewModified != null) {
 			mTextViewModified.setOnClickListener(this);
@@ -425,10 +403,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 			setHeaderTextColor(mTextViewFlag, mHeaderTextHighlightColor);
 		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_GRID_PROFIT)) {
 			setHeaderTextColor(mTextViewGridProfit, mHeaderTextHighlightColor);
-		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_RZ_TREND_RATE)) {
-			setHeaderTextColor(mTextViewRZTrendRate, mHeaderTextHighlightColor);
-		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_RZ_TREND_DAYS)) {
-			setHeaderTextColor(mTextViewRZTrendDays, mHeaderTextHighlightColor);
 		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_MODIFIED)) {
 			setHeaderTextColor(mTextViewModified, mHeaderTextHighlightColor);
 		} else {
@@ -456,8 +430,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 				DatabaseContract.COLUMN_MIN5,
 				DatabaseContract.COLUMN_FLAG,
 				DatabaseContract.COLUMN_GRID_PROFIT,
-				DatabaseContract.COLUMN_RZ_TREND_RATE,
-				DatabaseContract.COLUMN_RZ_TREND_DAYS,
 				DatabaseContract.COLUMN_MODIFIED};
 		int[] mRightTo = new int[]{
 				R.id.price,
@@ -475,8 +447,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 				R.id.min5,
 				R.id.flag,
 				R.id.grid_profit,
-				R.id.rz_trend_rate,
-				R.id.rz_trend_days,
 				R.id.modified};
 
 		mLeftListView = findViewById(R.id.left_listview);
@@ -698,14 +668,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 				else if (DatabaseContract.COLUMN_GRID_PROFIT.equals(columnName)) {
 					setViewColor(textView, cursor);
 					return setVisibility(view, Setting.getDisplayNet());
-				}
-				else if (DatabaseContract.COLUMN_RZ_TREND_RATE.equals(columnName)) {
-					setViewColor(textView, cursor);
-					return setVisibility(view, Setting.getDisplayRZValue());
-				}
-				else if (DatabaseContract.COLUMN_RZ_TREND_DAYS.equals(columnName)) {
-					setViewColor(textView, cursor);
-					return setVisibility(view, Setting.getDisplayRZValue());
 				}
 				else if (DatabaseContract.COLUMN_MODIFIED.equals(columnName)) {
 				}

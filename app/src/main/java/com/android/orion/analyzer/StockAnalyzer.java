@@ -2,8 +2,6 @@ package com.android.orion.analyzer;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.text.TextUtils;
 import android.util.ArrayMap;
 
 import com.android.orion.application.MainApplication;
@@ -13,15 +11,12 @@ import com.android.orion.data.Period;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
-import com.android.orion.database.StockRZRQ;
 import com.android.orion.database.StockTrend;
 import com.android.orion.manager.StockDatabaseManager;
 import com.android.orion.setting.Setting;
-import com.android.orion.utility.Symbol;
 import com.android.orion.utility.Logger;
 import com.android.orion.utility.StopWatch;
 import com.android.orion.utility.Utility;
-import com.github.mikephil.charting.data.Entry;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,9 +26,6 @@ import java.util.List;
 public class StockAnalyzer {
 	Stock mStock;
 	ArrayList<StockData> mStockDataList;
-	ArrayMap<String, StockRZRQ> mStockRZRQMap = new ArrayMap<>();
-	StringBuffer mContentTitle = new StringBuffer();
-	StringBuffer mContentText = new StringBuffer();
 
 	Context mContext = MainApplication.getContext();
 	StockDatabaseManager mStockDatabaseManager = StockDatabaseManager.getInstance();
@@ -59,9 +51,6 @@ public class StockAnalyzer {
 		try {
 			mStockDataList = mStock.getStockDataList(period);
 			mStockDatabaseManager.loadStockDataList(mStock, period, mStockDataList);
-			if (Period.getPeriodIndex(period) <= Period.getPeriodIndex(Period.MONTH)) {
-				mFinancialAnalyzer.setNetProfileInYear(mStock, mStockDataList);
-			}
 			analyzeMacd(period);
 			analyzeStockData(period);
 			mStockDatabaseManager.updateStockData(mStock, period, mStockDataList);
@@ -131,10 +120,9 @@ public class StockAnalyzer {
 		List<Double> difList = MacdAnalyzer.getDIFList();
 		List<Double> deaList = MacdAnalyzer.getDEAList();
 		List<Double> histogramList = MacdAnalyzer.getHistogramList();
-		List<Double> velocityList = MacdAnalyzer.getVelocityList();
 
 		int size = mStockDataList.size();
-		if (average5List.size() != size || average10List.size() != size || difList.size() != size || deaList.size() != size || histogramList.size() != size || velocityList.size() != size) {
+		if (average5List.size() != size || average10List.size() != size || difList.size() != size || deaList.size() != size || histogramList.size() != size) {
 			return;
 		}
 
@@ -147,8 +135,7 @@ public class StockAnalyzer {
 						average10List.get(i),
 						difList.get(i),
 						deaList.get(i),
-						histogramList.get(i),
-						velocityList.get(i)
+						histogramList.get(i)
 				);
 			}
 		}
@@ -165,30 +152,6 @@ public class StockAnalyzer {
 		}
 
 		mTrendAnalyzer.analyzeAdaptive(period);
-
-		analyzeAction(period);
-	}
-
-	private void analyzeAction(String period) {
-		if (mStock == null || mStockDataList == null || mStockDataList.isEmpty()) {
-			return;
-		}
-
-		mStockDatabaseManager.getStockRZRQMap(mStock, mStockRZRQMap, DatabaseContract.ORDER_DATE_DESC);
-		StockRZRQ prevStockRZRQ = null;
-		for (StockData stockData : mStockDataList) {
-			StockRZRQ stockRZRQ = mStockRZRQMap.get(stockData.getDate());
-			if (stockRZRQ != null) {
-				stockData.setRZValue(stockRZRQ.getRZValue());
-				stockData.setRQValue(stockRZRQ.getRQValue());
-				prevStockRZRQ = stockRZRQ;
-			} else {
-				if (prevStockRZRQ != null) {
-					stockData.setRZValue(prevStockRZRQ.getRZValue());
-					stockData.setRQValue(prevStockRZRQ.getRQValue());
-				}
-			}
-		}
 	}
 
 	public void setupThumbnail(String  period) {

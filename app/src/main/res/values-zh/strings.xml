@@ -2,7 +2,6 @@
 <resources>
     <string name="about">About</string>
     <string name="about_information">About information</string>
-    <string name="acceleration">Acc</string>
     <string name="access_denied_default">Access denied</string>
     <string name="access_denied_jp">Kinsoku jikou desu!</string>
     <string name="access_denied_zh">拒绝访问</string>
@@ -165,14 +164,6 @@
     <string name="remove_favorite">Remove favorite</string>
     <string name="roe">Roe</string>
     <string name="roi">Roi</string>
-    <string name="rq_value">RQ</string>
-    <string name="rz_buy_rate">RZBRate</string>
-    <string name="rz_buy">RZBuy</string>
-    <string name="rz_rate">RZRate</string>
-    <string name="rz_trend_days">RZTDays</string>
-    <string name="rz_trend_rate">RZTRate</string>
-    <string name="rz_trend_value">RZTValue</string>
-    <string name="rz_value">RZValue</string>
     <string name="saved">Saved</string>
     <string name="save">Save</string>
     <string name="schedule">Schedule</string>
@@ -254,7 +245,6 @@
     <string name="url">Url</string>
     <string name="valuation">Valuation</string>
     <string name="value">Value</string>
-    <string name="velocity">Vel</string>
     <string name="version">Version</string>
     <string name="vertex_high">VertexHigh</string>
     <string name="vertex_low">VertexLow</string>

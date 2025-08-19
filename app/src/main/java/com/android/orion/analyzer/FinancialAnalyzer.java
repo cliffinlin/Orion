@@ -8,7 +8,6 @@ import com.android.orion.database.Stock;
 import com.android.orion.database.StockBonus;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockFinancial;
-import com.android.orion.database.StockRZRQ;
 import com.android.orion.database.StockShare;
 import com.android.orion.manager.StockDatabaseManager;
 import com.android.orion.setting.Constant;
@@ -22,7 +21,6 @@ public class FinancialAnalyzer {
 	ArrayList<StockFinancial> mStockFinancialList;
 	ArrayList<StockShare> mStockShareList;
 	ArrayList<StockBonus> mStockBonusList;
-	ArrayList<StockRZRQ> mStockRZRQList;
 
 	StockDatabaseManager mStockDatabaseManager = StockDatabaseManager.getInstance();
 	Logger Log = Logger.getLogger();
@@ -53,15 +51,12 @@ public class FinancialAnalyzer {
 		mStockFinancialList = stock.getFinancialList();
 		mStockShareList = stock.getStockShareList();
 		mStockBonusList = stock.getStockBonusList();
-		mStockRZRQList = stock.getStockRZRQList();
 
 		mStockDatabaseManager.getStockFinancialList(stock, mStockFinancialList,
 				sortOrder);
 		mStockDatabaseManager.getStockShareList(stock, mStockShareList,
 				sortOrder);
 		mStockDatabaseManager.getStockBonusList(stock, mStockBonusList,
-				sortOrder);
-		mStockDatabaseManager.getStockRZRQList(stock, mStockRZRQList,
 				sortOrder);
 
 		setupPrice();
@@ -91,32 +86,6 @@ public class FinancialAnalyzer {
 					break;
 				} else {
 					j--;
-				}
-			}
-		}
-	}
-
-	public void setNetProfileInYear(Stock stock, ArrayList<StockData> stockDataList) {
-		if (stock == null || stockDataList == null || stockDataList.size() == 0 || mStockFinancialList == null || mStockFinancialList.size() == 0) {
-			return;
-		}
-
-		mStockFinancialList = stock.getFinancialList();
-		mStockDatabaseManager.getStockFinancialList(stock, mStockFinancialList, DatabaseContract.ORDER_DATE_DESC);
-
-		int j = 0;
-		for (int i = stockDataList.size() - 1; i >= 0; i--) {
-			StockData stockData = stockDataList.get(i);
-			while (j < mStockFinancialList.size()) {
-				StockFinancial stockFinancial = mStockFinancialList.get(j);
-				if (Utility.getCalendar(stockData.getDate(),
-						Utility.CALENDAR_DATE_FORMAT).after(
-						Utility.getCalendar(stockFinancial.getDate(),
-								Utility.CALENDAR_DATE_FORMAT))) {
-					stockData.setNetProfitInYear(stockFinancial.getNetProfitInYear());
-					break;
-				} else {
-					j++;
 				}
 			}
 		}
@@ -257,39 +226,23 @@ public class FinancialAnalyzer {
 	}
 
 	public void setupFinancial(Stock stock) {
-		if (stock == null) {
+		if (stock == null || TextUtils.equals(stock.getClasses(), Stock.CLASS_INDEX)) {
 			return;
 		}
 
 		StockFinancial stockFinancial = new StockFinancial();
-		StockRZRQ stockRZRQ = new StockRZRQ();
-
-		if (TextUtils.equals(stock.getClasses(), Stock.CLASS_INDEX)) {
-			return;
-		}
-
 		stockFinancial.setSE(stock.getSE());
 		stockFinancial.setCode(stock.getCode());
 		stockFinancial.setName(stock.getName());
 
-		stockRZRQ.setSE(stock.getSE());
-		stockRZRQ.setCode(stock.getCode());
-		stockRZRQ.setName(stock.getName());
-
 		mStockDatabaseManager.getStockFinancial(stock, stockFinancial);
 		mStockDatabaseManager.getStockFinancialList(stock, mStockFinancialList, DatabaseContract.ORDER_DATE_DESC);
-		mStockDatabaseManager.getStockRZRQ(stock, stockRZRQ);
-
 		mStockDatabaseManager.updateStockDeal(stock);
 
 		stock.setBookValuePerShare(stockFinancial.getBookValuePerShare());
 		stock.setMainBusinessIncome(stockFinancial.getMainBusinessIncome());
 		stock.setNetProfit(stockFinancial.getNetProfit());
 		stock.setCashFlowPerShare(stockFinancial.getCashFlowPerShare());
-
-		stock.setRZValue(stockRZRQ.getRZValue());
-		stock.setRZBuy(stockRZRQ.getRZBuy());
-		stock.setupRZRate(mStockRZRQList);
 
 		stock.setupMarketValue();
 		stock.setupNetProfitPerShare();

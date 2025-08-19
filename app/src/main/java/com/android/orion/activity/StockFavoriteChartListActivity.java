@@ -467,18 +467,6 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 							"");
 					stockDataChart.mCandleEntryList.add(candleEntry);
 
-					Entry netProfitInYearEntry = new Entry(
-							(float) mStockData.getNetProfitInYear(), index);
-					stockDataChart.mNetProfitInYearEntryList.add(netProfitInYearEntry);
-
-					Entry rzValueEntry = new Entry(
-							(float) mStockData.getRZValue(), index);
-					stockDataChart.mRZValueEntryList.add(rzValueEntry);
-
-					Entry rqValueEntry = new Entry(
-							(float) mStockData.getRQValue(), index);
-					stockDataChart.mRQValueEntryList.add(rqValueEntry);
-
 					Entry average5Entry = new Entry(
 							(float) mStockData.getMacd().getAverage5(), index);
 					stockDataChart.mAverage5EntryList.add(average5Entry);
@@ -577,9 +565,6 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 					BarEntry histogramBarEntry = new BarEntry(
 							(float) mStockData.getMacd().getHistogram(), index);
 					stockDataChart.mHistogramEntryList.add(histogramBarEntry);
-					Entry velocityEntry = new Entry(
-							(float) mStockData.getMacd().getVelocity(), index);
-					stockDataChart.mVelocityEntryList.add(velocityEntry);
 				}
 			}
 

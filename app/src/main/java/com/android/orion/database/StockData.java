@@ -52,14 +52,10 @@ public class StockData extends DatabaseTable {
 	private Candle mCandle;
 	private double mChange;
 	private double mNet;
-	private double mRZValue;
-	private double mRQValue;
 	private Macd mMacd;
 
 	private int mDirection;
 	private int mVertex;
-
-	private double mNetProfitInYear;
 
 	private int mIndex;
 	private int mIndexStart;
@@ -129,16 +125,12 @@ public class StockData extends DatabaseTable {
 		}
 		mChange = 0;
 		mNet = 0;
-		mRZValue = 0;
-		mRQValue = 0;
 		if (mMacd == null) {
 			mMacd = new Macd();
 		}
 
 		mDirection = StockTrend.DIRECTION_NONE;
 		mVertex = StockTrend.VERTEX_NONE;
-
-		mNetProfitInYear = 0;
 
 		mIndex = 0;
 		mIndexStart = 0;
@@ -163,21 +155,15 @@ public class StockData extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_CLOSE, mCandle.getClose());
 		contentValues.put(DatabaseContract.COLUMN_CHANGE, mChange);
 		contentValues.put(DatabaseContract.COLUMN_NET, mNet);
-		contentValues.put(DatabaseContract.COLUMN_RZ_VALUE, mRZValue);
-		contentValues.put(DatabaseContract.COLUMN_RQ_VALUE, mRQValue);
 
 		contentValues.put(DatabaseContract.COLUMN_AVERAGE5, mMacd.getAverage5());
 		contentValues.put(DatabaseContract.COLUMN_AVERAGE10, mMacd.getAverage10());
 		contentValues.put(DatabaseContract.COLUMN_DIF, mMacd.getDIF());
 		contentValues.put(DatabaseContract.COLUMN_DEA, mMacd.getDEA());
 		contentValues.put(DatabaseContract.COLUMN_HISTOGRAM, mMacd.getHistogram());
-		contentValues.put(DatabaseContract.COLUMN_VELOCITY, mMacd.getVelocity());
 
 		contentValues.put(DatabaseContract.COLUMN_DIRECTION, mDirection);
 		contentValues.put(DatabaseContract.COLUMN_VERTEX, mVertex);
-
-		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_IN_YEAR, mNetProfitInYear);
-
 		return contentValues;
 	}
 
@@ -201,14 +187,10 @@ public class StockData extends DatabaseTable {
 		mCandle.set(stockData.mCandle);
 		setChange(stockData.mChange);
 		setNet(stockData.mNet);
-		setRZValue(stockData.mRZValue);
-		setRQValue(stockData.mRQValue);
 		mMacd.set(stockData.mMacd);
 
 		setDirection(stockData.mDirection);
 		setVertex(stockData.mVertex);
-
-		setNetProfitInYear(stockData.mNetProfitInYear);
 
 		setIndex(stockData.mIndex);
 		setIndexStart(stockData.mIndexStart);
@@ -236,14 +218,10 @@ public class StockData extends DatabaseTable {
 		mCandle.set(cursor);
 		setChange(cursor);
 		setNet(cursor);
-		setRZValue(cursor);
-		setRQValue(cursor);
 		mMacd.set(cursor);
 
 		setDirection(cursor);
 		setVertex(cursor);
-
-		setNetProfitInYear(cursor);
 	}
 
 	public String getSE() {
@@ -411,40 +389,6 @@ public class StockData extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_NET)));
 	}
 
-	public double getRZValue() {
-		return mRZValue;
-	}
-
-	public void setRZValue(double rzValue) {
-		mRZValue = rzValue;
-	}
-
-	void setRZValue(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setRZValue(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_RZ_VALUE)));
-	}
-
-	public double getRQValue() {
-		return mRQValue;
-	}
-
-	public void setRQValue(double rqValue) {
-		mRQValue = rqValue;
-	}
-
-	void setRQValue(Cursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		setRQValue(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_RQ_VALUE)));
-	}
-
 	public Macd getMacd() {
 		return mMacd;
 	}
@@ -515,24 +459,6 @@ public class StockData extends DatabaseTable {
 			return;
 		}
 		mCandle.add(stockData.mCandle, weight);
-	}
-
-	public double getNetProfitInYear() {
-		return mNetProfitInYear;
-	}
-
-	public void setNetProfitInYear(double netProfitInYear) {
-		mNetProfitInYear = netProfitInYear;
-	}
-
-	void setNetProfitInYear(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setNetProfitInYear(cursor
-				.getDouble(cursor
-						.getColumnIndex(DatabaseContract.COLUMN_NET_PROFIT_IN_YEAR)));
 	}
 
 	public int getIndex() {

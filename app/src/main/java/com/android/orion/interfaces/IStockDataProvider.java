@@ -21,8 +21,6 @@ public interface IStockDataProvider {
 
 	int downloadStockBonus(Stock stock);
 
-	int downloadStockRZRQ(Stock stock);
-
 	int downloadStockShare(Stock stock);
 
 	int downloadStockDataHistory(Stock stock);

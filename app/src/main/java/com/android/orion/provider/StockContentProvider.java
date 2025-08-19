@@ -39,17 +39,14 @@ public class StockContentProvider extends ContentProvider {
 	public static final int STOCK_SHARE = 600;
 	public static final int STOCK_SHARE_ID = 601;
 
-	private static final int STOCK_RZRQ = 700;
-	private static final int STOCK_RZRQ_ID = 701;
+	public static final int STOCK_TREND = 700;
+	public static final int STOCK_TREND_ID = 701;
 
-	public static final int STOCK_TREND = 800;
-	public static final int STOCK_TREND_ID = 801;
+	public static final int STOCK_PERCEPTRON = 800;
+	public static final int STOCK_PERCEPTRON_ID = 801;
 
-	public static final int STOCK_PERCEPTRON = 900;
-	public static final int STOCK_PERCEPTRON_ID = 901;
-
-	public static final int TDX_DATA = 1000;
-	public static final int TDX_DATA_ID = 1001;
+	public static final int TDX_DATA = 900;
+	public static final int TDX_DATA_ID = 901;
 
 	private static final UriMatcher mUriMatcher = new UriMatcher(
 			UriMatcher.NO_MATCH);
@@ -85,11 +82,6 @@ public class StockContentProvider extends ContentProvider {
 				DatabaseContract.StockShare.TABLE_NAME, STOCK_SHARE);
 		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
 				DatabaseContract.StockShare.TABLE_NAME + "/#", STOCK_SHARE_ID);
-
-		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
-				DatabaseContract.StockRZRQ.TABLE_NAME, STOCK_RZRQ);
-		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
-				DatabaseContract.StockRZRQ.TABLE_NAME + "/#", STOCK_RZRQ_ID);
 
 		mUriMatcher.addURI(DatabaseContract.AUTHORITY,
 				DatabaseContract.StockTrend.TABLE_NAME, STOCK_TREND);
@@ -165,13 +157,6 @@ public class StockContentProvider extends ContentProvider {
 				break;
 			case STOCK_SHARE_ID:
 				type = DatabaseContract.StockShare.CONTENT_ITEM_TYPE;
-				break;
-
-			case STOCK_RZRQ:
-				type = DatabaseContract.StockRZRQ.CONTENT_TYPE;
-				break;
-			case STOCK_RZRQ_ID:
-				type = DatabaseContract.StockRZRQ.CONTENT_ITEM_TYPE;
 				break;
 
 			case STOCK_TREND:
@@ -271,15 +256,6 @@ public class StockContentProvider extends ContentProvider {
 						+ uri.getLastPathSegment());
 				break;
 
-			case STOCK_RZRQ:
-				builder.setTables(DatabaseContract.StockRZRQ.TABLE_NAME);
-				break;
-			case STOCK_RZRQ_ID:
-				builder.setTables(DatabaseContract.StockRZRQ.TABLE_NAME);
-				builder.appendWhere(BaseColumns._ID + " = "
-						+ uri.getLastPathSegment());
-				break;
-
 			case STOCK_TREND:
 				builder.setTables(DatabaseContract.StockTrend.TABLE_NAME);
 				break;
@@ -365,12 +341,6 @@ public class StockContentProvider extends ContentProvider {
 				case STOCK_SHARE:
 					id = mStockDatabaseManager.mDatabase
 							.insert(DatabaseContract.StockShare.TABLE_NAME, null,
-									contentValues);
-					break;
-
-				case STOCK_RZRQ:
-					id = mStockDatabaseManager.mDatabase
-							.insert(DatabaseContract.StockRZRQ.TABLE_NAME, null,
 									contentValues);
 					break;
 
@@ -552,21 +522,6 @@ public class StockContentProvider extends ContentProvider {
 							whereClause, selectionArgs);
 					break;
 
-				case STOCK_RZRQ:
-					result = mStockDatabaseManager.mDatabase.update(
-							DatabaseContract.StockRZRQ.TABLE_NAME, values, selection,
-							selectionArgs);
-					break;
-				case STOCK_RZRQ_ID:
-					whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
-					if (!TextUtils.isEmpty(selection)) {
-						whereClause += " AND " + whereClause;
-					}
-					result = mStockDatabaseManager.mDatabase.update(
-							DatabaseContract.StockRZRQ.TABLE_NAME, values,
-							whereClause, selectionArgs);
-					break;
-
 				case STOCK_TREND:
 					result = mStockDatabaseManager.mDatabase.update(
 							DatabaseContract.StockTrend.TABLE_NAME, values, selection,
@@ -730,21 +685,6 @@ public class StockContentProvider extends ContentProvider {
 					}
 					result = mStockDatabaseManager.mDatabase.delete(
 							DatabaseContract.StockShare.TABLE_NAME, whereClause,
-							selectionArgs);
-					break;
-
-				case STOCK_RZRQ:
-					result = mStockDatabaseManager.mDatabase.delete(
-							DatabaseContract.StockRZRQ.TABLE_NAME, selection,
-							selectionArgs);
-					break;
-				case STOCK_RZRQ_ID:
-					whereClause = BaseColumns._ID + " = " + uri.getLastPathSegment();
-					if (!TextUtils.isEmpty(selection)) {
-						whereClause += " AND " + whereClause;
-					}
-					result = mStockDatabaseManager.mDatabase.delete(
-							DatabaseContract.StockRZRQ.TABLE_NAME, whereClause,
 							selectionArgs);
 					break;
 

@@ -44,13 +44,10 @@ public class StockDataChart {
 	public ArrayList<Entry> mExtendFirstEntryList = new ArrayList<>();
 	public ArrayList<Entry> mExtendLastEntryList = new ArrayList<>();
 	public ArrayList<Entry> mNetProfitInYearEntryList = new ArrayList<>();
-	public ArrayList<Entry> mRZValueEntryList = new ArrayList<>();
-	public ArrayList<Entry> mRQValueEntryList = new ArrayList<>();
 	public ArrayList<LimitLine> mLimitLineList = new ArrayList<>();
 	public ArrayList<Entry> mDIFEntryList = new ArrayList<>();
 	public ArrayList<Entry> mDEAEntryList = new ArrayList<>();
 	public ArrayList<BarEntry> mHistogramEntryList = new ArrayList<>();
-	public ArrayList<Entry> mVelocityEntryList = new ArrayList<>();
 	public List<Entry>[] mTrendEntryList = new List[StockTrend.LEVELS.length];
 	public List<Entry>[] mGroupEntryList = new List[StockTrend.LEVELS.length];
 	public CombinedData mCombinedDataMain = new CombinedData(mXValues);
@@ -126,24 +123,6 @@ public class StockDataChart {
 			lineDataSet.setCircleSize(3f);
 			lineDataSet.setAxisDependency(AxisDependency.RIGHT);
 			lineData.addDataSet(lineDataSet);
-		}
-
-		if (Setting.getDisplayRZValue()) {
-			LineDataSet lineDataSetRZValue = new LineDataSet(mRZValueEntryList,
-					"RZ");
-			lineDataSetRZValue.setColor(dataSetColor(Color.RED));
-			lineDataSetRZValue.setDrawCircles(false);
-			lineDataSetRZValue.setAxisDependency(AxisDependency.RIGHT);
-			lineData.addDataSet(lineDataSetRZValue);
-		}
-
-		if (Setting.getDisplayRQValue()) {
-			LineDataSet lineDataSetRQValue = new LineDataSet(mRQValueEntryList,
-					"RQ");
-			lineDataSetRQValue.setColor(dataSetColor(Color.GREEN));
-			lineDataSetRQValue.setDrawCircles(false);
-			lineDataSetRQValue.setAxisDependency(AxisDependency.RIGHT);
-			lineData.addDataSet(lineDataSetRQValue);
 		}
 
 		if (Setting.getDisplayAverage()) {
@@ -228,12 +207,6 @@ public class StockDataChart {
 		deaDataSet.setDrawCircles(false);
 		deaDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(deaDataSet);
-
-		LineDataSet velocityDataSet = new LineDataSet(mVelocityEntryList, "Velocity");
-		velocityDataSet.setColor(Color.BLUE);
-		velocityDataSet.setDrawCircles(false);
-		velocityDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		lineData.addDataSet(velocityDataSet);
 
 		mCombinedDataSub.setData(barData);
 		mCombinedDataSub.setData(lineData);
@@ -542,14 +515,11 @@ public class StockDataChart {
 		mExtendFirstEntryList.clear();
 		mExtendLastEntryList.clear();
 		mNetProfitInYearEntryList.clear();
-		mRZValueEntryList.clear();
-		mRQValueEntryList.clear();
 		mAverage5EntryList.clear();
 		mAverage10EntryList.clear();
 		mDIFEntryList.clear();
 		mDEAEntryList.clear();
 		mHistogramEntryList.clear();
-		mVelocityEntryList.clear();
 		for (int i = 0; i < StockTrend.LEVELS.length; i++) {
 			mTrendEntryList[i].clear();
 			mGroupEntryList[i].clear();
