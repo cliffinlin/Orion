@@ -15,10 +15,12 @@ public class Config {
 	public static final String MESSAGE_CHANNEL_ID = "message_channel";
 	public static final String MESSAGE_CHANNEL_NAME = "Message Channel";
 
-	public static final int CENTROID_CLUSTER_INDEX = 1;
-
 	public static final int COLOR_RGB_RED = Color.rgb(255, 50, 50);
 	public static final int COLOR_RGB_GREEN = Color.rgb(50, 128, 50);
+
+	public static final int GRID_CENTROID_CLUSTER_INDEX = 1;
+	public static final int MARKER_COLOR_RED = Color.RED;
+	public static final int MARKER_COLOR_GREEN = Color.GREEN;
 
 	public static final int MAX_CONTENT_LENGTH_DAY = SinaFinance.DOWNLOAD_HISTORY_LENGTH_DEFAULT;
 	public static final int MAX_CONTENT_LENGTH_MIN60 = MAX_CONTENT_LENGTH_DAY * 4;

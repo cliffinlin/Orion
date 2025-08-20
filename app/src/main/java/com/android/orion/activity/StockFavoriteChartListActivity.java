@@ -467,6 +467,10 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 							"");
 					stockDataChart.mCandleEntryList.add(candleEntry);
 
+					Entry netProfitInYearEntry = new Entry(
+							(float) mStockData.getNetProfitInYear(), index);
+					stockDataChart.mNetProfitInYearEntryList.add(netProfitInYearEntry);
+
 					Entry average5Entry = new Entry(
 							(float) mStockData.getMacd().getAverage5(), index);
 					stockDataChart.mAverage5EntryList.add(average5Entry);

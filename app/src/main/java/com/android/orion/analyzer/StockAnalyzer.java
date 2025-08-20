@@ -6,6 +6,7 @@ import android.util.ArrayMap;
 
 import com.android.orion.application.MainApplication;
 import com.android.orion.chart.CurveThumbnail;
+import com.android.orion.config.Config;
 import com.android.orion.data.Macd;
 import com.android.orion.data.Period;
 import com.android.orion.database.DatabaseContract;
@@ -51,6 +52,9 @@ public class StockAnalyzer {
 		try {
 			mStockDataList = mStock.getStockDataList(period);
 			mStockDatabaseManager.loadStockDataList(mStock, period, mStockDataList);
+			if (Period.getPeriodIndex(period) <= Period.getPeriodIndex(Period.MONTH)) {
+				mFinancialAnalyzer.setNetProfileInYear(mStock, mStockDataList);
+			}
 			analyzeMacd(period);
 			analyzeStockData(period);
 			mStockDatabaseManager.updateStockData(mStock, period, mStockDataList);
@@ -195,6 +199,7 @@ public class StockAnalyzer {
 			return;
 		}
 
+		int markerColor = Color.BLACK;
 		List<Float> xValues = new ArrayList<>();
 		List<Float> yValues = new ArrayList<>();
 		for (int i = 0; i < mStockDataList.size(); i++) {
@@ -202,16 +207,18 @@ public class StockAnalyzer {
 			if (stockData.vertexOf(vertexTop)) {
 				xValues.add((float) i);
 				yValues.add((float) stockData.getCandle().getHigh());
+				markerColor = Config.MARKER_COLOR_GREEN;
 			} else if (stockData.vertexOf(vertexBottom)) {
 				xValues.add((float) i);
 				yValues.add((float) stockData.getCandle().getLow());
+				markerColor = Config.MARKER_COLOR_RED;
 			}
 		}
 
 		List<CurveThumbnail.LineConfig> lines = Arrays.asList(
 				new CurveThumbnail.LineConfig(xValues, yValues,	StockTrend.COLORS[mStock.getLevel(period)], 4f));
 		CurveThumbnail.CrossMarkerConfig markerConfig =
-				new CurveThumbnail.CrossMarkerConfig(mStockDataList.size() - 1, (float) mStock.getPrice(), Color.RED,4f, 20f);
+				new CurveThumbnail.CrossMarkerConfig(mStockDataList.size() - 1, (float) mStock.getPrice(), markerColor,4f, 20f);
 		mStock.setThumbnail(period, Utility.thumbnailToBytes(new CurveThumbnail(160,	Color.TRANSPARENT, lines, markerConfig)));
 	}
 

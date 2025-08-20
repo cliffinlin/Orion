@@ -254,10 +254,6 @@ public class StockDataChart {
 
 	boolean fillChanged(int level) {
 		boolean result = false;
-		if (!Setting.getDisplayFilled()) {
-			return false;
-		}
-
 		StockTrend stockTrend = getStockTrend(level);
 		if (stockTrend != null && stockTrend.hasFlag(StockTrend.FLAG_CHANGED)) {
 			result = true;
@@ -496,10 +492,6 @@ public class StockDataChart {
 	}
 
 	public void updateGroupEntry() {
-		if (!Setting.getDisplayGroup()) {
-			return;
-		}
-
 		for (int level = StockTrend.LEVEL_DRAW; level < StockTrend.LEVELS.length; level++) {
 			if (mTrendEntryList[level] != null && mTrendEntryList[level].size() > 2) {
 				mGroupEntryList[level].add(mTrendEntryList[level].get(mTrendEntryList[level].size() - 2));

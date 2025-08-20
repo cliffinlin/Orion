@@ -47,12 +47,6 @@
             android:key="SETTING_DISPLAY_ADAPTIVE"
             android:title="@string/adaptive" />
         <com.android.orion.preference.CustomSwitchPreference
-            android:key="SETTING_DISPLAY_GROUP"
-            android:title="@string/group" />
-        <com.android.orion.preference.CustomSwitchPreference
-            android:key="SETTING_DISPLAY_FILLED"
-            android:title="@string/filled" />
-        <com.android.orion.preference.CustomSwitchPreference
             android:key="SETTING_DISPLAY_CANDLE"
             android:title="@string/candle" />
         <com.android.orion.preference.CustomSwitchPreference

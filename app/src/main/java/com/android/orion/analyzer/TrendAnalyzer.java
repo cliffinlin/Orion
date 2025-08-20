@@ -29,13 +29,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class TrendAnalyzer {
-	public static String TAG = Config.TAG + TrendAnalyzer.class.getSimpleName();
 	public static final int K_MEANS_PERIODS = 5;
 	public static final int K_MEANS_LEVELS = StockTrend.LEVELS.length - 1;
 	public static final int K_MEANS_DATA_SIZE = K_MEANS_PERIODS * K_MEANS_LEVELS;
 	public static final int K_MEANS_MAX_ITERATIONS = 1000;
 
-//	Logger Log = Logger.getLogger();
+	Logger Log = Logger.getLogger();
 	Stock mStock;
 	String mPeriod;
 	List<AppData> mAppDataList = new ArrayList<>();
@@ -535,12 +534,15 @@ public class TrendAnalyzer {
 
 				for (int i = StockTrend.LEVEL_DRAW; i < StockTrend.LEVELS.length; i++) {
 					ArrayList<StockData> trendDataList = mStock.getDataList(period, i);
+					if (trendDataList.isEmpty()) {
+						continue;
+					}
 					mAppDataList.add(new AppData(period, i, getTrendDays(trendDataList)));
 				}
 			}
 		}
 
-		if (mAppDataList.size() < K_MEANS_DATA_SIZE) {
+		if (mAppDataList.isEmpty()) {
 			return;
 		}
 
@@ -592,7 +594,7 @@ public class TrendAnalyzer {
 			return;
 		}
 
-		int start = mStock.hasFlag(Stock.FLAG_GRID)  ? Config.CENTROID_CLUSTER_INDEX : Config.CENTROID_CLUSTER_INDEX + 1;
+		int start = mStock.hasFlag(Stock.FLAG_GRID)  ? Config.GRID_CENTROID_CLUSTER_INDEX : Config.GRID_CENTROID_CLUSTER_INDEX + 1;
 		for (int i = start; i < clusters.size(); i++) {
 			CentroidCluster<AppData> cluster = clusters.get(i);
 			double centerValue = cluster.getCenter().getPoint()[0];
@@ -621,6 +623,7 @@ public class TrendAnalyzer {
 				for (String period : appDataMap.keySet()) {
 					AppData appData = appDataMap.get(period);
 					mStock.setLevel(period, appData.level);
+					Log.d("setLevel:" + period + "--->" + appData.toString());
 				}
 				return;
 			}
@@ -633,18 +636,18 @@ public class TrendAnalyzer {
 		}
 		for (int i = 0; i < clusters.size(); i++) {
 			CentroidCluster<AppData> cluster = clusters.get(i);
+			double centerValue = cluster.getCenter().getPoint()[0];
 			StringBuilder clusterInfo = new StringBuilder();
-			clusterInfo.append("\n=== 第 ").append(i + 1).append(" 组 ===")
-					.append(" | 中心值: ").append(cluster.getCenter().getPoint()[0])
+			clusterInfo.append("\n=== 第 ").append(i).append(" 组 ===")
+					.append(" | 中心值: ").append(centerValue)
 					.append(" | 数量: ").append(cluster.getPoints().size()).append("\n");
 
 			for (AppData app : cluster.getPoints()) {
-				clusterInfo.append("  ").append(app.toString())
-						.append(" delt: ")
-						.append(Math.abs(app.value - cluster.getCenter().getPoint()[0]))
-						.append("\n");
+				double distance = Math.abs(app.value - centerValue);
+				app.setDistance(distance);
+				clusterInfo.append("  ").append(app.toString()).append("\n");
 			}
-			Log.d(TAG, clusterInfo.toString());
+			Log.d(clusterInfo.toString());
 		}
 	}
 
@@ -671,7 +674,7 @@ public class TrendAnalyzer {
 
 		@Override
 		public String toString() {
-			return String.format("%s-L%d=%.0f", period, level, value);
+			return String.format("%s-L%d value=%.0f", period, level, value) + " distance=" + distance;
 		}
 	}
 

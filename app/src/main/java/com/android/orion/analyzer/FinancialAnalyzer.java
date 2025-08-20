@@ -91,6 +91,32 @@ public class FinancialAnalyzer {
 		}
 	}
 
+	public void setNetProfileInYear(Stock stock, ArrayList<StockData> stockDataList) {
+		if (stock == null || stockDataList == null || stockDataList.size() == 0 || mStockFinancialList == null || mStockFinancialList.size() == 0) {
+			return;
+		}
+
+		mStockFinancialList = stock.getFinancialList();
+		mStockDatabaseManager.getStockFinancialList(stock, mStockFinancialList, DatabaseContract.ORDER_DATE_DESC);
+
+		int j = 0;
+		for (int i = stockDataList.size() - 1; i >= 0; i--) {
+			StockData stockData = stockDataList.get(i);
+			while (j < mStockFinancialList.size()) {
+				StockFinancial stockFinancial = mStockFinancialList.get(j);
+				if (Utility.getCalendar(stockData.getDate(),
+						Utility.CALENDAR_DATE_FORMAT).after(
+						Utility.getCalendar(stockFinancial.getDate(),
+								Utility.CALENDAR_DATE_FORMAT))) {
+					stockData.setNetProfitInYear(stockFinancial.getNetProfitInYear());
+					break;
+				} else {
+					j++;
+				}
+			}
+		}
+	}
+
 	private void setupStockShare() {
 		if (mStockFinancialList.size() == 0 || mStockShareList.size() == 0) {
 			return;
