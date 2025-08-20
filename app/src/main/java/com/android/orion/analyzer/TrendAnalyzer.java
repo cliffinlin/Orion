@@ -504,12 +504,10 @@ public class TrendAnalyzer {
 	public void analyzeAdaptive(String period) {
 		int level = StockTrend.LEVEL_DRAW;
 		for (int i = StockTrend.LEVELS.length - 1; i > StockTrend.LEVEL_NONE; i--) {
-			if (mStock.getDataList(period, i).size() >= StockTrend.ADAPTIVE_SIZE) {
-				StockData trendData = StockData.getLast(mStock.getDataList(period, i), 0);
-				if (trendData != null) {
-					int indexStart = trendData.getIndexStart();
-					StockData stockData = mStock.getStockDataList(period).get(indexStart);
-					String dateString = stockData.getDate();
+			if (mStock.getVertexList(period, i).size() >= StockTrend.ADAPTIVE_SIZE) {
+				StockData vertexData = StockData.getLast(mStock.getVertexList(period, i), 1);
+				if (vertexData != null) {
+					String dateString = vertexData.getDate();
 					if (TextUtils.isEmpty(mStock.getAdaptiveDate())) {
 						mStock.setAdaptiveDate(dateString);
 					} else if (Utility.getCalendar(dateString, Utility.CALENDAR_DATE_FORMAT).after(Utility.getCalendar(mStock.getAdaptiveDate(), Utility.CALENDAR_DATE_FORMAT))) {
@@ -533,21 +531,21 @@ public class TrendAnalyzer {
 				}
 
 				for (int i = StockTrend.LEVEL_DRAW; i < StockTrend.LEVELS.length; i++) {
-					ArrayList<StockData> trendDataList = mStock.getDataList(period, i);
-					if (trendDataList.isEmpty()) {
+					ArrayList<StockData> vertexDataList = mStock.getVertexList(period, i);
+					if (vertexDataList.isEmpty()) {
 						continue;
 					}
-					mAppDataList.add(new AppData(period, i, getTrendDays(trendDataList)));
+					mAppDataList.add(new AppData(period, i, getTrendDays(vertexDataList)));
 				}
 			}
 		}
 
-		if (mAppDataList.isEmpty()) {
+		if (mAppDataList.size() < K_MEANS_LEVELS) {
 			return;
 		}
 
 		try {
-			KMeansPlusPlusClusterer<AppData> clusterer = new KMeansPlusPlusClusterer<>(StockTrend.LEVELS.length - 1, K_MEANS_MAX_ITERATIONS);
+			KMeansPlusPlusClusterer<AppData> clusterer = new KMeansPlusPlusClusterer<>(K_MEANS_LEVELS, K_MEANS_MAX_ITERATIONS);
 			List<CentroidCluster<AppData>> clusters = clusterer.cluster(mAppDataList);
 			List<CentroidCluster<AppData>> sortedClusters = sortClusters(clusters);
 			printLog(sortedClusters);
