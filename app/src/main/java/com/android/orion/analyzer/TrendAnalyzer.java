@@ -2,7 +2,6 @@ package com.android.orion.analyzer;
 
 import android.text.TextUtils;
 import android.util.ArrayMap;
-import android.util.Log;
 
 import com.android.orion.config.Config;
 import com.android.orion.data.Period;
@@ -26,7 +25,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class TrendAnalyzer {
 	public static final int K_MEANS_PERIODS = 5;
@@ -530,7 +528,7 @@ public class TrendAnalyzer {
 
 				for (int i = StockTrend.LEVEL_DRAW; i < StockTrend.LEVELS.length; i++) {
 					ArrayList<StockData> vertexDataList = mStock.getVertexList(period, i);
-					if (vertexDataList.isEmpty()) {
+					if (vertexDataList.size() < StockTrend.VERTEX_SIZE) {
 						continue;
 					}
 					mAppDataList.add(new AppData(period, i, getTrendDays(vertexDataList)));
@@ -539,6 +537,7 @@ public class TrendAnalyzer {
 		}
 
 		if (mAppDataList.size() < K_MEANS_LEVELS) {
+			Log.d("return, mAppDataList.size()=" + mAppDataList.size() + " < " + K_MEANS_LEVELS);
 			return;
 		}
 
