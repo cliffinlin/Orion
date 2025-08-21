@@ -49,7 +49,7 @@ public class StockDataChart {
 	public ArrayList<Entry> mDEAEntryList = new ArrayList<>();
 	public ArrayList<BarEntry> mHistogramEntryList = new ArrayList<>();
 	public List<Entry>[] mTrendEntryList = new List[StockTrend.LEVELS.length];
-	public List<Entry>[] mGroupEntryList = new List[StockTrend.LEVELS.length];
+	public List<Entry>[] mCircledEntryList = new List[StockTrend.LEVELS.length];
 	public CombinedData mCombinedDataMain = new CombinedData(mXValues);
 	public CombinedData mCombinedDataSub = new CombinedData(mXValues);
 
@@ -70,10 +70,10 @@ public class StockDataChart {
 				mTrendEntryList[i].clear();
 			}
 
-			if (mGroupEntryList[i] == null) {
-				mGroupEntryList[i] = new ArrayList<>();
+			if (mCircledEntryList[i] == null) {
+				mCircledEntryList[i] = new ArrayList<>();
 			} else {
-				mGroupEntryList[i].clear();
+				mCircledEntryList[i].clear();
 			}
 		}
 	}
@@ -143,39 +143,39 @@ public class StockDataChart {
 
 		addLineDataSet(mTrendEntryList, StockTrend.LABEL_DRAW, StockTrend.LEVEL_DRAW, lineData);
 		if (displayTrend(StockTrend.LEVEL_DRAW)) {
-			addLineDataSet(mGroupEntryList, StockTrend.LEVEL_DRAW, lineData, fillChanged(StockTrend.LEVEL_DRAW), fillColor(StockTrend.LEVEL_DRAW));
+			addLineDataSet(mCircledEntryList, StockTrend.LEVEL_DRAW, lineData, fillChanged(StockTrend.LEVEL_DRAW), fillColor(StockTrend.LEVEL_DRAW));
 		}
 		addLineDataSet(mExtendFirstEntryList, StockTrend.LABEL_NONE, lineColor(StockTrend.LEVEL_DRAW), false, lineData, false, 0);
 		addLineDataSet(mExtendLastEntryList, StockTrend.LABEL_NONE, lineColor(StockTrend.LEVEL_DRAW), false, lineData, false, 0);
 
 		if (displayTrend(StockTrend.LEVEL_STROKE)) {
 			addLineDataSet(mTrendEntryList, StockTrend.LABEL_STROKE, StockTrend.LEVEL_STROKE, lineData);
-			addLineDataSet(mGroupEntryList, StockTrend.LEVEL_STROKE, lineData, fillChanged(StockTrend.LEVEL_STROKE), fillColor(StockTrend.LEVEL_STROKE));
+			addLineDataSet(mCircledEntryList, StockTrend.LEVEL_STROKE, lineData, fillChanged(StockTrend.LEVEL_STROKE), fillColor(StockTrend.LEVEL_STROKE));
 		}
 
 		if (displayTrend(StockTrend.LEVEL_SEGMENT)) {
 			addLineDataSet(mTrendEntryList, StockTrend.LABEL_SEGMENT, StockTrend.LEVEL_SEGMENT, lineData);
-			addLineDataSet(mGroupEntryList, StockTrend.LEVEL_SEGMENT, lineData, fillChanged(StockTrend.LEVEL_SEGMENT), fillColor(StockTrend.LEVEL_SEGMENT));
+			addLineDataSet(mCircledEntryList, StockTrend.LEVEL_SEGMENT, lineData, fillChanged(StockTrend.LEVEL_SEGMENT), fillColor(StockTrend.LEVEL_SEGMENT));
 		}
 
 		if (displayTrend(StockTrend.LEVEL_LINE)) {
 			addLineDataSet(mTrendEntryList, StockTrend.LABEL_LINE, StockTrend.LEVEL_LINE, lineData);
-			addLineDataSet(mGroupEntryList, StockTrend.LEVEL_LINE, lineData, fillChanged(StockTrend.LEVEL_LINE), fillColor(StockTrend.LEVEL_LINE));
+			addLineDataSet(mCircledEntryList, StockTrend.LEVEL_LINE, lineData, fillChanged(StockTrend.LEVEL_LINE), fillColor(StockTrend.LEVEL_LINE));
 		}
 
 		if (displayTrend(StockTrend.LEVEL_OUT_LINE)) {
 			addLineDataSet(mTrendEntryList, StockTrend.LABEL_OUTLINE, StockTrend.LEVEL_OUT_LINE, lineData);
-			addLineDataSet(mGroupEntryList, StockTrend.LEVEL_OUT_LINE, lineData, fillChanged(StockTrend.LEVEL_OUT_LINE), fillColor(StockTrend.LEVEL_OUT_LINE));
+			addLineDataSet(mCircledEntryList, StockTrend.LEVEL_OUT_LINE, lineData, fillChanged(StockTrend.LEVEL_OUT_LINE), fillColor(StockTrend.LEVEL_OUT_LINE));
 		}
 
 		if (displayTrend(StockTrend.LEVEL_SUPER_LINE)) {
 			addLineDataSet(mTrendEntryList, StockTrend.LABEL_SUPERLINE, StockTrend.LEVEL_SUPER_LINE, lineData);
-			addLineDataSet(mGroupEntryList, StockTrend.LEVEL_SUPER_LINE, lineData, fillChanged(StockTrend.LEVEL_SUPER_LINE), fillColor(StockTrend.LEVEL_SUPER_LINE));
+			addLineDataSet(mCircledEntryList, StockTrend.LEVEL_SUPER_LINE, lineData, fillChanged(StockTrend.LEVEL_SUPER_LINE), fillColor(StockTrend.LEVEL_SUPER_LINE));
 		}
 
 		if (displayTrend(StockTrend.LEVEL_TREND_LINE)) {
 			addLineDataSet(mTrendEntryList, StockTrend.LABEL_TREND_LINE, StockTrend.LEVEL_TREND_LINE, lineData);
-			addLineDataSet(mGroupEntryList, StockTrend.LEVEL_TREND_LINE, lineData, fillChanged(StockTrend.LEVEL_TREND_LINE), fillColor(StockTrend.LEVEL_TREND_LINE));
+			addLineDataSet(mCircledEntryList, StockTrend.LEVEL_TREND_LINE, lineData, fillChanged(StockTrend.LEVEL_TREND_LINE), fillColor(StockTrend.LEVEL_TREND_LINE));
 		}
 
 		mCombinedDataMain.setData(lineData);
@@ -493,9 +493,23 @@ public class StockDataChart {
 
 	public void updateGroupEntry() {
 		for (int level = StockTrend.LEVEL_DRAW; level < StockTrend.LEVELS.length; level++) {
-			if (mTrendEntryList[level] != null && mTrendEntryList[level].size() > 2) {
-				mGroupEntryList[level].add(mTrendEntryList[level].get(mTrendEntryList[level].size() - 2));
-				mGroupEntryList[level].add(mTrendEntryList[level].get(mTrendEntryList[level].size() - 1));
+			if (mTrendEntryList[level] == null || mTrendEntryList[level].size() < StockTrend.VERTEX_SIZE) {
+				continue;
+			}
+
+			mCircledEntryList[level].add(mTrendEntryList[level].get(mTrendEntryList[level].size() - 2));
+			mCircledEntryList[level].add(mTrendEntryList[level].get(mTrendEntryList[level].size() - 1));
+
+			if (Setting.getDisplayAdaptive()) {
+				if (level >= StockTrend.LEVEL_SEGMENT) {
+					int index = mTrendEntryList[level].get(mTrendEntryList[level].size() - 1).getXIndex();
+					for (int i = 0; i < mTrendEntryList[level - 1].size(); i++) {
+						if (mTrendEntryList[level - 1].get(i).getXIndex() == index) {
+							mTrendEntryList[level - 1] = new ArrayList<>(mTrendEntryList[level - 1].subList(i, mTrendEntryList[level - 1].size()));
+							break;
+						}
+					}
+				}
 			}
 		}
 	}
@@ -514,7 +528,7 @@ public class StockDataChart {
 		mHistogramEntryList.clear();
 		for (int i = 0; i < StockTrend.LEVELS.length; i++) {
 			mTrendEntryList[i].clear();
-			mGroupEntryList[i].clear();
+			mCircledEntryList[i].clear();
 		}
 	}
 }

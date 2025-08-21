@@ -469,31 +469,29 @@ public class TrendAnalyzer {
 	}
 
 	void vertexListToDataList(ArrayList<StockData> vertexList, ArrayList<StockData> dataList) {
-		if (vertexList == null || vertexList.isEmpty() || dataList == null) {
+		if (vertexList == null || vertexList.size() < StockTrend.VERTEX_SIZE || dataList == null) {
 			return;
 		}
 
 		dataList.clear();
-
-		int size = vertexList.size();
-		for (int i = 0; i < size - 1; i++) {
+		for (int i = 1; i < vertexList.size(); i++) {
+			StockData prev = vertexList.get(i - 1);
 			StockData current = vertexList.get(i);
-			StockData next = vertexList.get(i + 1);
 
-			if (current == null || next == null) {
+			if (prev == null || current == null) {
 				return;
 			}
 
 			StockData stockData = new StockData(current);
-			stockData.setIndexStart(current.getIndexStart());
-			stockData.setIndexEnd(next.getIndexEnd());
-			stockData.merge(StockTrend.DIRECTION_NONE, next);
+			stockData.setIndexStart(prev.getIndexStart());
+			stockData.setIndexEnd(current.getIndexEnd());
+			stockData.merge(StockTrend.DIRECTION_NONE, prev);
 
 			int direction = StockTrend.DIRECTION_NONE;
 			if (current.vertexOf(StockTrend.VERTEX_TOP)) {
-				direction = next.vertexOf(StockTrend.VERTEX_BOTTOM) ? StockTrend.DIRECTION_DOWN : StockTrend.DIRECTION_UP;
+				direction = prev.vertexOf(StockTrend.VERTEX_BOTTOM) ? StockTrend.DIRECTION_UP : StockTrend.DIRECTION_DOWN;
 			} else if (current.vertexOf(StockTrend.VERTEX_BOTTOM)) {
-				direction = next.vertexOf(StockTrend.VERTEX_TOP) ? StockTrend.DIRECTION_UP : StockTrend.DIRECTION_DOWN;
+				direction = prev.vertexOf(StockTrend.VERTEX_TOP) ? StockTrend.DIRECTION_DOWN : StockTrend.DIRECTION_UP;
 			}
 			stockData.setDirection(direction);
 			stockData.setupNet();
@@ -618,10 +616,12 @@ public class TrendAnalyzer {
 			}
 
 			if (appDataMap.size() > 0) {
-				for (String period : appDataMap.keySet()) {
+				for (String period : Period.PERIODS) {
 					AppData appData = appDataMap.get(period);
-					mStock.setLevel(period, appData.level);
-					Log.d("setLevel:" + period + "--->" + appData.toString());
+					if (appData != null) {
+						mStock.setLevel(period, appData.level);
+						Log.d("setLevel:" + appData.toString());
+					}
 				}
 				return;
 			}
