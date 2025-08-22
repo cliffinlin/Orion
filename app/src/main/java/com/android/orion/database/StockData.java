@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import com.android.orion.data.Candle;
 import com.android.orion.data.Macd;
 import com.android.orion.setting.Constant;
+import com.android.orion.utility.Market;
 import com.android.orion.utility.Symbol;
 import com.android.orion.utility.Utility;
 
@@ -341,7 +342,7 @@ public class StockData extends DatabaseTable {
 		if (!TextUtils.isEmpty(mTime)) {
 			return mDate + " " + mTime;
 		} else {
-			return mDate + " " + "00:00:00";
+			return mDate + " " + Market.SECOND_HALF_END_TIME;
 		}
 	}
 

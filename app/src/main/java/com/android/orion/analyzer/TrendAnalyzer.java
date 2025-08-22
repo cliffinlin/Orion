@@ -3,7 +3,8 @@ package com.android.orion.analyzer;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 
-import com.android.orion.config.Config;
+import androidx.annotation.NonNull;
+
 import com.android.orion.data.Period;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
@@ -12,6 +13,7 @@ import com.android.orion.database.StockTrend;
 import com.android.orion.manager.StockDatabaseManager;
 import com.android.orion.manager.StockNotificationManager;
 import com.android.orion.provider.StockPerceptronProvider;
+import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Logger;
 import com.android.orion.utility.Utility;
@@ -28,14 +30,14 @@ import java.util.List;
 
 public class TrendAnalyzer {
 	public static final int K_MEANS_PERIODS = 5;
-	public static final int K_MEANS_LEVELS = StockTrend.LEVELS.length - 1;
-	public static final int K_MEANS_DATA_SIZE = K_MEANS_PERIODS * K_MEANS_LEVELS;
+	public static final int K_MEANS_K = K_MEANS_PERIODS * (StockTrend.LEVELS.length - 1) / 2;
 	public static final int K_MEANS_MAX_ITERATIONS = 1000;
 
 	Logger Log = Logger.getLogger();
 	Stock mStock;
 	String mPeriod;
-	List<AppData> mAppDataList = new ArrayList<>();
+	List<DataPoint> mDataPointList = new ArrayList<>();
+	ArrayMap<String, DataPoint> mDataPointMap = new ArrayMap<>();
 	ArrayList<StockData> mStockDataList = new ArrayList<>();
 	StockDatabaseManager mStockDatabaseManager = StockDatabaseManager.getInstance();
 	StockPerceptronProvider mStockPerceptronProvider = StockPerceptronProvider.getInstance();
@@ -518,7 +520,7 @@ public class TrendAnalyzer {
 	}
 
 	public void analyzeAdaptive() {
-		mAppDataList.clear();
+		mDataPointList.clear();
 
 		for (String period : Period.PERIODS) {
 			if (Setting.getPeriod(period)) {
@@ -528,51 +530,48 @@ public class TrendAnalyzer {
 
 				for (int i = StockTrend.LEVEL_DRAW; i < StockTrend.LEVELS.length; i++) {
 					ArrayList<StockData> vertexDataList = mStock.getVertexList(period, i);
-					if (vertexDataList.size() < StockTrend.VERTEX_SIZE) {
-						continue;
-					}
-					mAppDataList.add(new AppData(period, i, getTrendDays(vertexDataList)));
+					mDataPointList.add(newDataPoint(period, i, vertexDataList));
 				}
 			}
 		}
 
-		if (mAppDataList.size() < K_MEANS_LEVELS) {
-			Log.d("return, mAppDataList.size()=" + mAppDataList.size() + " < " + K_MEANS_LEVELS);
+		if (mDataPointList.size() < K_MEANS_K) {
+			Log.d("return, mDataPointList.size()=" + mDataPointList.size() + " < " + K_MEANS_K);
 			return;
 		}
 
 		try {
-			KMeansPlusPlusClusterer<AppData> clusterer = new KMeansPlusPlusClusterer<>(K_MEANS_LEVELS, K_MEANS_MAX_ITERATIONS);
-			List<CentroidCluster<AppData>> clusters = clusterer.cluster(mAppDataList);
-			List<CentroidCluster<AppData>> sortedClusters = sortClusters(clusters);
-			printLog(sortedClusters);
-			setupStockTrendLevel(sortedClusters);
+			KMeansPlusPlusClusterer<DataPoint> clusterer = new KMeansPlusPlusClusterer<>(K_MEANS_K, K_MEANS_MAX_ITERATIONS);
+			List<CentroidCluster<DataPoint>> clusterList = clusterer.cluster(mDataPointList);
+			List<CentroidCluster<DataPoint>> sortedClusterList = sortClusterList(clusterList);
+			setGroupDistance(sortedClusterList);
+			setupStockTrendLevel(sortedClusterList);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	long getTrendDays(ArrayList<StockData> dataList) {
-		long result = 0;
-		if (dataList == null || dataList.size() < 2) {
-			return result;
+	DataPoint newDataPoint(String period, int level, ArrayList<StockData> dataList) {
+		if (dataList == null || dataList.size() < StockTrend.VERTEX_SIZE) {
+			return new DataPoint(period, level, "", "", Integer.MAX_VALUE, Integer.MAX_VALUE);
 		}
 
-		StockData startData = dataList.get(dataList.size() - 2);
-		StockData endData = dataList.get(dataList.size() - 1);
-		Calendar startCalendar = Utility.getCalendar(startData.getDate(), Utility.CALENDAR_DATE_FORMAT);
-		Calendar endCalendar = Utility.getCalendar(endData.getDate(), Utility.CALENDAR_DATE_FORMAT);
-		result = Utility.daysBetween(startCalendar, endCalendar);
-
-		return result;
+		StockData startData = dataList.get(dataList.size() - 3);
+		StockData endData = dataList.get(dataList.size() - 2);
+		Calendar startCalendar = Utility.getCalendar(startData.getDateTime(), Utility.CALENDAR_DATE_TIME_FORMAT);
+		Calendar endCalendar = Utility.getCalendar(endData.getDateTime(), Utility.CALENDAR_DATE_TIME_FORMAT);
+		Calendar currentCalendar = Calendar.getInstance();
+		long x =  (currentCalendar.getTimeInMillis() - startCalendar.getTimeInMillis()) / Constant.MINUTE_IN_MILLIS;
+		long y = (currentCalendar.getTimeInMillis() - endCalendar.getTimeInMillis()) / Constant.MINUTE_IN_MILLIS;
+		return new DataPoint(period, level, startData.getDateTime(), endData.getDateTime(), x, y);
 	}
 
-	List<CentroidCluster<AppData>> sortClusters(List<CentroidCluster<AppData>> clusters) {
-		List<CentroidCluster<AppData>> sorted = new ArrayList<>(clusters);
+	List<CentroidCluster<DataPoint>> sortClusterList(List<CentroidCluster<DataPoint>> clusterList) {
+		List<CentroidCluster<DataPoint>> sorted = new ArrayList<>(clusterList);
 
-		Collections.sort(sorted, new Comparator<CentroidCluster<AppData>>() {
+		Collections.sort(sorted, new Comparator<CentroidCluster<DataPoint>>() {
 			@Override
-			public int compare(CentroidCluster<AppData> o1, CentroidCluster<AppData> o2) {
+			public int compare(CentroidCluster<DataPoint> o1, CentroidCluster<DataPoint> o2) {
 				double val1 = o1.getCenter().getPoint()[0];
 				double val2 = o2.getCenter().getPoint()[0];
 				if (val1 < val2) return -1;
@@ -584,94 +583,111 @@ public class TrendAnalyzer {
 		return sorted;
 	}
 
-	void setupStockTrendLevel(List<CentroidCluster<AppData>> clusters) {
-		if (clusters == null || clusters.isEmpty()) {
+	void setGroupDistance(List<CentroidCluster<DataPoint>> clusterList) {
+		if (clusterList == null) {
 			return;
 		}
-
-		int start = mStock.hasFlag(Stock.FLAG_GRID)  ? Config.GRID_CENTROID_CLUSTER_INDEX : Config.GRID_CENTROID_CLUSTER_INDEX + 1;
-		for (int i = start; i < clusters.size(); i++) {
-			CentroidCluster<AppData> cluster = clusters.get(i);
-			double centerValue = cluster.getCenter().getPoint()[0];
-			if (centerValue < 1 || cluster.getPoints().size() < K_MEANS_PERIODS - 1) {
-				continue;
-			}
-
-			ArrayMap<String, AppData> appDataMap = new ArrayMap<>();
-			for (AppData appData : cluster.getPoints()) {
-				double distance = Math.abs(appData.value - centerValue);
-				appData.setDistance(distance);
-				if (appDataMap.containsKey(appData.period)) {
-					if (appData.distance < appDataMap.get(appData.period).distance) {
-						appDataMap.put(appData.period, appData);
-					} else if (appData.distance == appDataMap.get(appData.period).distance) {
-						if (appData.level > appDataMap.get(appData.period).level) {
-							appDataMap.put(appData.period, appData);
-						}
-					}
-				} else {
-					appDataMap.put(appData.period, appData);
-				}
-			}
-
-			if (appDataMap.size() > 0) {
-				for (String period : Period.PERIODS) {
-					AppData appData = appDataMap.get(period);
-					if (appData != null) {
-						mStock.setLevel(period, appData.level);
-						Log.d("setLevel:" + appData.toString());
-					}
-				}
-				return;
-			}
-		}
-	}
-
-	void printLog(List<CentroidCluster<AppData>> clusters) {
-		if (clusters == null) {
-			return;
-		}
-		for (int i = 0; i < clusters.size(); i++) {
-			CentroidCluster<AppData> cluster = clusters.get(i);
-			double centerValue = cluster.getCenter().getPoint()[0];
+		for (int i = 0; i < clusterList.size(); i++) {
+			CentroidCluster<DataPoint> cluster = clusterList.get(i);
 			StringBuilder clusterInfo = new StringBuilder();
 			clusterInfo.append("\n=== 第 ").append(i).append(" 组 ===")
-					.append(" | 中心值: ").append(centerValue)
+					.append(" | 中心值: ").append(java.util.Arrays.toString(cluster.getCenter().getPoint()))
 					.append(" | 数量: ").append(cluster.getPoints().size()).append("\n");
 
-			for (AppData app : cluster.getPoints()) {
-				double distance = Math.abs(app.value - centerValue);
-				app.setDistance(distance);
-				clusterInfo.append("  ").append(app.toString()).append("\n");
+			for (DataPoint point : cluster.getPoints()) {
+				point.setGroup(i);
+				point.setDistance(point.distanceTo(cluster.getCenter()));
+				clusterInfo.append("  ").append(point.toString()).append("\n");
 			}
 			Log.d(clusterInfo.toString());
 		}
 	}
 
-	private static class AppData implements Clusterable {
+	void setupStockTrendLevel(List<CentroidCluster<DataPoint>> clusterList) {
+		if (clusterList == null || clusterList.isEmpty()) {
+			return;
+		}
+
+		mDataPointMap.clear();
+		for (int i = 0; i < clusterList.size(); i++) {
+			CentroidCluster<DataPoint> cluster = clusterList.get(i);
+			for (DataPoint dataPoint : cluster.getPoints()) {
+				if (dataPoint.days < 3) {
+					continue;//TODO
+				}
+
+				if (mDataPointMap.containsKey(dataPoint.period)) {
+					if (dataPoint.group == mDataPointMap.get(dataPoint.period).group) {
+						if (dataPoint.distance > mDataPointMap.get(dataPoint.period).distance) {
+							continue;
+						}
+					}
+
+					if (dataPoint.days < mDataPointMap.get(dataPoint.period).days) {
+						continue;
+					}
+				}
+
+				mDataPointMap.put(dataPoint.period, dataPoint);
+
+				if (mDataPointMap.size() == K_MEANS_PERIODS) {
+					for (String period : Period.PERIODS) {
+						if (mDataPointMap.get(period) != null) {
+							mStock.setLevel(period, mDataPointMap.get(period).level);
+							Log.d("setLevel:" + mDataPointMap.get(period).toString());
+						}
+					}
+					return;
+				}
+			}
+		}
+	}
+
+	private static class DataPoint implements Clusterable {
 		final String period;
 		final int level;
-		final double value;
+		final String start;
+		final String end;
+		final double[] points;
+		int group;
+		int days;
 		double distance;
 
-		AppData(String period, int level, double value) {
+		DataPoint(String period, int level, String start, String end, double x, double y) {
 			this.period = period;
 			this.level = level;
-			this.value = value;
+			this.start = start;
+			this.end = end;
+			this.points = new double[]{x, y};
+			this.days = (int) (x - y) / 60 / 24;
 		}
 
 		@Override
 		public double[] getPoint() {
-			return new double[]{value};
+			return points;
+		}
+
+		public void setGroup(int group) {
+			this.group = group;
 		}
 
 		public void setDistance(double distance) {
 			this.distance = distance;
 		}
 
+		public double distanceTo(@NonNull Clusterable other) {
+			double[] otherPoint = other.getPoint();
+			double sum = 0.0;
+			for (int i = 0; i < points.length; i++) {
+				double diff = points[i] - otherPoint[i];
+				sum += diff * diff;
+			}
+			return Math.sqrt(sum);
+		}
+
 		@Override
 		public String toString() {
-			return String.format("%s-L%d value=%.0f", period, level, value) + " distance=" + distance;
+			return period + "-L" + level + " " + start + "--" + end + ", {" + points[0] + ", " + points[1] + "}" + " group=" + group + " days=" + days;
 		}
 	}
 

@@ -49,6 +49,7 @@ public class Constant {
 	public static final long SECOND_IN_MILLIS = TimeUnit.SECONDS.toMillis(1);
 	public static final long MINUTE_IN_MILLIS = TimeUnit.MINUTES.toMillis(1);
 	public static final long HOUR_IN_MILLIS = TimeUnit.HOURS.toMillis(1);
+	public static final long DAY_IN_MILLIS = TimeUnit.DAYS.toMillis(1);
 
 	public static final long DOUBLE_CONSTANT_WAN = 10000;
 	public static final long DOUBLE_CONSTANT_YI = (DOUBLE_CONSTANT_WAN * DOUBLE_CONSTANT_WAN);

@@ -18,7 +18,6 @@ public class Config {
 	public static final int COLOR_RGB_RED = Color.rgb(255, 50, 50);
 	public static final int COLOR_RGB_GREEN = Color.rgb(50, 128, 50);
 
-	public static final int GRID_CENTROID_CLUSTER_INDEX = 0;
 	public static final int MARKER_COLOR_RED = Color.RED;
 	public static final int MARKER_COLOR_GREEN = Color.GREEN;
 

@@ -7,7 +7,7 @@ object Market {
     private const val FIRST_HALF_START_TIME = "09:30:00"
     private const val FIRST_HALF_END_TIME = "11:30:00"
     private const val SECOND_HALF_START_TIME = "13:00:00"
-    private const val SECOND_HALF_END_TIME = "15:00:00"
+    const val SECOND_HALF_END_TIME = "15:00:00"
 
     private const val START_IN_MINUTES = 9 * 60 + 30 //FIRST_HALF_START_TIME
     private const val LUNCH_TIME_IN_MINUTES =
