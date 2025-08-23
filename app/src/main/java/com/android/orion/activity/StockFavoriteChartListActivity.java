@@ -482,13 +482,9 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 						stockDataChart.mDrawVertexList.add(StockTrend.VERTEX_BOTTOM);
 					}
 
-					updateTrendEntryList(stockDataChart, StockTrend.LEVEL_DRAW, index);
-					updateTrendEntryList(stockDataChart, StockTrend.LEVEL_STROKE, index);
-					updateTrendEntryList(stockDataChart, StockTrend.LEVEL_SEGMENT, index);
-					updateTrendEntryList(stockDataChart, StockTrend.LEVEL_LINE, index);
-					updateTrendEntryList(stockDataChart, StockTrend.LEVEL_OUT_LINE, index);
-					updateTrendEntryList(stockDataChart, StockTrend.LEVEL_SUPER_LINE, index);
-					updateTrendEntryList(stockDataChart, StockTrend.LEVEL_TREND_LINE, index);
+					for (int i = StockTrend.LEVEL_DRAW; i < StockTrend.LEVELS.length; i++) {
+						updateTrendEntryList(stockDataChart, i, index);
+					}
 
 					Entry difEntry = new Entry((float) mStockData.getMacd().getDIF(), index);
 					stockDataChart.mDIFEntryList.add(difEntry);

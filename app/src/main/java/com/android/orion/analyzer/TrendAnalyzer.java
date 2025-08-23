@@ -40,7 +40,9 @@ public class TrendAnalyzer {
 	Stock mStock;
 	String mPeriod;
 	List<DataPoint> mDataPointList = new ArrayList<>();
-	List<CurveThumbnail.LineConfig>[] mLineConfigList = new List[StockTrend.LEVELS.length];
+	List<Float> mXValues[] = new List[StockTrend.LEVELS.length];
+	List<Float> mYValues[] = new List[StockTrend.LEVELS.length];
+	CurveThumbnail.LineConfig[] mLineConfigList = new CurveThumbnail.LineConfig[StockTrend.LEVELS.length];
 	ArrayMap<String, DataPoint> mDataPointMap = new ArrayMap<>();
 	ArrayList<StockData> mStockDataList = new ArrayList<>();
 	StockDatabaseManager mStockDatabaseManager = StockDatabaseManager.getInstance();
@@ -629,27 +631,63 @@ public class TrendAnalyzer {
 			return;
 		}
 
-		int vertexTop = StockTrend.getVertexTOP(mStock.getLevel(period));
-		int vertexBottom = StockTrend.getVertexBottom(mStock.getLevel(period));
-
-		List<Float> xValues = new ArrayList<>();
-		List<Float> yValues = new ArrayList<>();
-		for (int i = 0; i < mStockDataList.size(); i++) {
-			StockData stockData = mStockDataList.get(i);
-			if (stockData.vertexOf(vertexTop)) {
-				xValues.add((float) i);
-				yValues.add((float) stockData.getCandle().getHigh());
-			} else if (stockData.vertexOf(vertexBottom)) {
-				xValues.add((float) i);
-				yValues.add((float) stockData.getCandle().getLow());
+		for (int i = 0; i < StockTrend.LEVELS.length; i++) {
+			if (mXValues[i] != null) {
+				mXValues[i].clear();
+			} else {
+				mXValues[i] = new ArrayList<>();
+			}
+			if (mYValues[i] != null) {
+				mYValues[i].clear();
+			} else {
+				mYValues[i] = new ArrayList<>();
 			}
 		}
 
-		List<CurveThumbnail.LineConfig> lines = Arrays.asList(
-				new CurveThumbnail.LineConfig(xValues, yValues,	StockTrend.COLORS[mStock.getLevel(period)], 4f));
+		for (int index = 0; index < mStockDataList.size(); index++) {
+			StockData stockData = mStockDataList.get(index);
+			for (int level = StockTrend.LEVEL_DRAW; level < StockTrend.LEVELS.length; level++) {
+				addLineData(stockData, level, index);
+			}
+		}
+
+		for (int level = StockTrend.LEVEL_DRAW; level < StockTrend.LEVELS.length; level++) {
+			if (mXValues[level] == null || mXValues[level].size() < StockTrend.VERTEX_SIZE) {
+				continue;
+			}
+
+			if (Setting.getDisplayAdaptive()) {
+				if (level > StockTrend.LEVEL_DRAW) {
+					int index = mXValues[level].get(mXValues[level].size() - 1).intValue();
+					for (int i = 0; i < mXValues[level - 1].size(); i++) {
+						if (mXValues[level - 1].get(i).intValue() == index) {
+							mXValues[level - 1] = new ArrayList<>(mXValues[level - 1].subList(i, mXValues[level - 1].size()));
+							mYValues[level - 1] = new ArrayList<>(mYValues[level - 1].subList(i, mYValues[level - 1].size()));
+							break;
+						}
+					}
+				}
+			}
+		}
+
+		List<CurveThumbnail.LineConfig> lines = new ArrayList<>();
+		for (int level = StockTrend.LEVEL_DRAW; level < StockTrend.LEVELS.length; level++) {
+			lines.add(new CurveThumbnail.LineConfig(mXValues[level], mYValues[level], StockTrend.COLORS[level], 4f));
+		}
+
 		CurveThumbnail.CrossMarkerConfig markerConfig =
 				new CurveThumbnail.CrossMarkerConfig(mStockDataList.size() - 1, (float) mStock.getPrice(), Color.BLACK,4f, 20f);
 		mStock.setThumbnail(period, Utility.thumbnailToBytes(new CurveThumbnail(160,	Color.TRANSPARENT, lines, markerConfig)));
+	}
+
+	void addLineData(StockData stockData, int level, int index) {
+		if (stockData.vertexOf(StockTrend.getVertexTOP(level))) {
+			mXValues[level].add((float) index);
+			mYValues[level].add((float) stockData.getCandle().getHigh());
+		} else if (stockData.vertexOf(StockTrend.getVertexBottom(level))) {
+			mXValues[level].add((float) index);
+			mYValues[level].add((float) stockData.getCandle().getLow());
+		}
 	}
 
 	private static class DataPoint implements Clusterable {

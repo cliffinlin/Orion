@@ -501,7 +501,7 @@ public class StockDataChart {
 			mCircledEntryList[level].add(mTrendEntryList[level].get(mTrendEntryList[level].size() - 1));
 
 			if (Setting.getDisplayAdaptive()) {
-				if (level >= StockTrend.LEVEL_SEGMENT) {
+				if (level > StockTrend.LEVEL_DRAW) {
 					int index = mTrendEntryList[level].get(mTrendEntryList[level].size() - 1).getXIndex();
 					for (int i = 0; i < mTrendEntryList[level - 1].size(); i++) {
 						if (mTrendEntryList[level - 1].get(i).getXIndex() == index) {
@@ -527,8 +527,12 @@ public class StockDataChart {
 		mDEAEntryList.clear();
 		mHistogramEntryList.clear();
 		for (int i = 0; i < StockTrend.LEVELS.length; i++) {
-			mTrendEntryList[i].clear();
-			mCircledEntryList[i].clear();
+			if (mTrendEntryList[i] != null) {
+				mTrendEntryList[i].clear();
+			}
+			if (mCircledEntryList[i] != null) {
+				mCircledEntryList[i].clear();
+			}
 		}
 	}
 }

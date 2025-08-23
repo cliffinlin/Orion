@@ -14,10 +14,13 @@ import java.util.ArrayList;
 public class CurveThumbnail extends Drawable {
 	// 折线配置类
 	public static class LineConfig {
-		public final List<Float> xValues;
-		public final List<Float> yValues;
-		public final int color;
-		public final float strokeWidth;
+		public List<Float> xValues;
+		public List<Float> yValues;
+		public int color;
+		public float strokeWidth;
+
+		public LineConfig() {
+		}
 
 		public LineConfig(List<Float> xValues, List<Float> yValues,
 						  int color, float strokeWidth) {
