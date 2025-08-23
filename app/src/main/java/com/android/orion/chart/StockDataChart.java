@@ -501,7 +501,7 @@ public class StockDataChart {
 			mCircledEntryList[level].add(mTrendEntryList[level].get(mTrendEntryList[level].size() - 1));
 
 			if (Setting.getDisplayAdaptive()) {
-				if (level > StockTrend.LEVEL_DRAW) {
+				if (level > StockTrend.LEVEL_STROKE) {
 					int index = mTrendEntryList[level].get(mTrendEntryList[level].size() - 1).getXIndex();
 					for (int i = 0; i < mTrendEntryList[level - 1].size(); i++) {
 						if (mTrendEntryList[level - 1].get(i).getXIndex() == index) {

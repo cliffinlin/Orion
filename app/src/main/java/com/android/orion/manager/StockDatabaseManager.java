@@ -262,7 +262,7 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 		Cursor cursor = null;
 		try {
 			String selection = DatabaseContract.SELECTION_STOCK(stock.getSE(), stock.getCode());
-			cursor = query(DatabaseContract.StockBonus.CONTENT_URI, DatabaseContract.StockBonus.PROJECTION_ALL, selection,null, DatabaseContract.ORDER_DATE_DESC);
+			cursor = query(DatabaseContract.StockBonus.CONTENT_URI, DatabaseContract.StockBonus.PROJECTION_ALL, selection, null, DatabaseContract.ORDER_DATE_DESC);
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
 				stockBonus.set(cursor);
@@ -654,7 +654,7 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 		Cursor cursor = null;
 		try {
 			String selection = DatabaseContract.SELECTION_STOCK(stock.getSE(), stock.getCode());
-			cursor = query(DatabaseContract.StockFinancial.CONTENT_URI,	DatabaseContract.StockFinancial.PROJECTION_ALL, selection,null, DatabaseContract.ORDER_DATE_DESC);
+			cursor = query(DatabaseContract.StockFinancial.CONTENT_URI, DatabaseContract.StockFinancial.PROJECTION_ALL, selection, null, DatabaseContract.ORDER_DATE_DESC);
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
 				stockFinancial.set(cursor);
@@ -826,7 +826,7 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 		}
 		Cursor cursor = null;
 		try {
-			cursor = query(DatabaseContract.StockShare.CONTENT_URI,	DatabaseContract.StockShare.PROJECTION_ALL,	DatabaseContract.SELECTION_STOCK(stock.getSE(), stock.getCode()),null, DatabaseContract.ORDER_DATE_DESC);
+			cursor = query(DatabaseContract.StockShare.CONTENT_URI, DatabaseContract.StockShare.PROJECTION_ALL, DatabaseContract.SELECTION_STOCK(stock.getSE(), stock.getCode()), null, DatabaseContract.ORDER_DATE_DESC);
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				cursor.moveToNext();
 				stockShare.set(cursor);

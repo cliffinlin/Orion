@@ -22,9 +22,9 @@ import com.android.orion.interfaces.IStockDataProvider;
 import com.android.orion.manager.StockNotificationManager;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
-import com.android.orion.utility.Symbol;
 import com.android.orion.utility.Market;
 import com.android.orion.utility.StopWatch;
+import com.android.orion.utility.Symbol;
 import com.android.orion.utility.Utility;
 
 import org.jsoup.Jsoup;

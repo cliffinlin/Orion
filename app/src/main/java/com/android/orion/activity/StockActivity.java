@@ -1,12 +1,9 @@
 package com.android.orion.activity;
 
-import android.content.Intent;
 import android.graphics.Paint;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.Html;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -22,7 +19,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.android.orion.R;
-import com.android.orion.config.Config;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.setting.Constant;

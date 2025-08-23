@@ -6,7 +6,6 @@ import android.text.TextUtils;
 import android.util.ArrayMap;
 
 import com.android.orion.data.LinearRegression;
-import com.android.orion.setting.Constant;
 import com.android.orion.utility.Logger;
 import com.android.orion.utility.Symbol;
 import com.android.orion.utility.Utility;

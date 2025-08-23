@@ -118,6 +118,66 @@ public class StockTrend extends DatabaseTable {
 		set(cursor);
 	}
 
+	public static int getVertexTOP(int level) {
+		int vertexTop = StockTrend.VERTEX_NONE;
+		switch (level) {
+			case StockTrend.LEVEL_DRAW:
+				vertexTop = StockTrend.VERTEX_TOP;
+				break;
+			case StockTrend.LEVEL_STROKE:
+				vertexTop = StockTrend.VERTEX_TOP_STROKE;
+				break;
+			case StockTrend.LEVEL_SEGMENT:
+				vertexTop = StockTrend.VERTEX_TOP_SEGMENT;
+				break;
+			case StockTrend.LEVEL_LINE:
+				vertexTop = StockTrend.VERTEX_TOP_LINE;
+				break;
+			case StockTrend.LEVEL_OUT_LINE:
+				vertexTop = StockTrend.VERTEX_TOP_OUTLINE;
+				break;
+			case StockTrend.LEVEL_SUPER_LINE:
+				vertexTop = StockTrend.VERTEX_TOP_SUPERLINE;
+				break;
+			case StockTrend.LEVEL_TREND_LINE:
+				vertexTop = StockTrend.VERTEX_TOP_TREND_LINE;
+				break;
+			default:
+				break;
+		}
+		return vertexTop;
+	}
+
+	public static int getVertexBottom(int level) {
+		int vertexBottom = StockTrend.VERTEX_NONE;
+		switch (level) {
+			case StockTrend.LEVEL_DRAW:
+				vertexBottom = StockTrend.VERTEX_BOTTOM;
+				break;
+			case StockTrend.LEVEL_STROKE:
+				vertexBottom = StockTrend.VERTEX_BOTTOM_STROKE;
+				break;
+			case StockTrend.LEVEL_SEGMENT:
+				vertexBottom = StockTrend.VERTEX_BOTTOM_SEGMENT;
+				break;
+			case StockTrend.LEVEL_LINE:
+				vertexBottom = StockTrend.VERTEX_BOTTOM_LINE;
+				break;
+			case StockTrend.LEVEL_OUT_LINE:
+				vertexBottom = StockTrend.VERTEX_BOTTOM_OUTLINE;
+				break;
+			case StockTrend.LEVEL_SUPER_LINE:
+				vertexBottom = StockTrend.VERTEX_BOTTOM_SUPERLINE;
+				break;
+			case StockTrend.LEVEL_TREND_LINE:
+				vertexBottom = StockTrend.VERTEX_BOTTOM_TREND_LINE;
+				break;
+			default:
+				break;
+		}
+		return vertexBottom;
+	}
+
 	public boolean isEmpty() {
 		return TextUtils.isEmpty(mDate)
 				&& TextUtils.isEmpty(mTime);
@@ -514,66 +574,6 @@ public class StockTrend extends DatabaseTable {
 		return (mFlag & flag) == flag;
 	}
 
-	public static int getVertexTOP(int level) {
-		int vertexTop = StockTrend.VERTEX_NONE;
-		switch (level) {
-			case StockTrend.LEVEL_DRAW:
-				vertexTop = StockTrend.VERTEX_TOP;
-				break;
-			case StockTrend.LEVEL_STROKE:
-				vertexTop = StockTrend.VERTEX_TOP_STROKE;
-				break;
-			case StockTrend.LEVEL_SEGMENT:
-				vertexTop = StockTrend.VERTEX_TOP_SEGMENT;
-				break;
-			case StockTrend.LEVEL_LINE:
-				vertexTop = StockTrend.VERTEX_TOP_LINE;
-				break;
-			case StockTrend.LEVEL_OUT_LINE:
-				vertexTop = StockTrend.VERTEX_TOP_OUTLINE;
-				break;
-			case StockTrend.LEVEL_SUPER_LINE:
-				vertexTop = StockTrend.VERTEX_TOP_SUPERLINE;
-				break;
-			case StockTrend.LEVEL_TREND_LINE:
-				vertexTop = StockTrend.VERTEX_TOP_TREND_LINE;
-				break;
-			default:
-				break;
-		}
-		return vertexTop;
-	}
-
-	public static int getVertexBottom(int level) {
-		int vertexBottom = StockTrend.VERTEX_NONE;
-		switch (level) {
-			case StockTrend.LEVEL_DRAW:
-				vertexBottom = StockTrend.VERTEX_BOTTOM;
-				break;
-			case StockTrend.LEVEL_STROKE:
-				vertexBottom = StockTrend.VERTEX_BOTTOM_STROKE;
-				break;
-			case StockTrend.LEVEL_SEGMENT:
-				vertexBottom = StockTrend.VERTEX_BOTTOM_SEGMENT;
-				break;
-			case StockTrend.LEVEL_LINE:
-				vertexBottom = StockTrend.VERTEX_BOTTOM_LINE;
-				break;
-			case StockTrend.LEVEL_OUT_LINE:
-				vertexBottom = StockTrend.VERTEX_BOTTOM_OUTLINE;
-				break;
-			case StockTrend.LEVEL_SUPER_LINE:
-				vertexBottom = StockTrend.VERTEX_BOTTOM_SUPERLINE;
-				break;
-			case StockTrend.LEVEL_TREND_LINE:
-				vertexBottom = StockTrend.VERTEX_BOTTOM_TREND_LINE;
-				break;
-			default:
-				break;
-		}
-		return vertexBottom;
-	}
-
 	public String toString() {
 		return mSE + Symbol.TAB
 				+ mCode + Symbol.TAB
@@ -595,8 +595,8 @@ public class StockTrend extends DatabaseTable {
 	public String toChartString() {
 		return Symbol.L + mLevel + " "
 				+ mType + " "
-				+ (int)mNet + "/" + (int)mNextNet + Symbol.PERCENT + " "
-				+ Symbol.QUESTION + " " + (int)mPredict + Symbol.PERCENT;
+				+ (int) mNet + "/" + (int) mNextNet + Symbol.PERCENT + " "
+				+ Symbol.QUESTION + " " + (int) mPredict + Symbol.PERCENT;
 	}
 
 	public String toNotifyString() {

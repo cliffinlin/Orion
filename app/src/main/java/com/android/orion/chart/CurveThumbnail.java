@@ -1,89 +1,18 @@
 package com.android.orion.chart;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import java.util.List;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public class CurveThumbnail extends Drawable {
-	// 折线配置类
-	public static class LineConfig {
-		public List<Float> xValues;
-		public List<Float> yValues;
-		public int color;
-		public float strokeWidth;
-
-		public LineConfig() {
-		}
-
-		public LineConfig(List<Float> xValues, List<Float> yValues,
-						  int color, float strokeWidth) {
-			this.xValues = xValues;
-			this.yValues = yValues;
-			this.color = color;
-			this.strokeWidth = strokeWidth;
-		}
-	}
-
-	// 十字标记配置类（最终修复版）
-	public static class CrossMarkerConfig {
-		public final float xValue;
-		public final float yValue;
-		public final int color;
-		public final float strokeWidth;
-		public final float size;
-
-		public CrossMarkerConfig(float xValue, float yValue,
-								 int color, float strokeWidth, float size) {
-			this.xValue = xValue;
-			this.yValue = yValue;
-			this.color = color;
-			this.strokeWidth = strokeWidth;
-			this.size = size;
-		}
-	}
-
-	private static class DrawnLine {
-		final Path path;
-		final Paint paint;
-
-		DrawnLine(Path path, Paint paint) {
-			this.path = path;
-			this.paint = paint;
-		}
-	}
-
-	private static class DrawnMarker {
-		final float centerX;
-		final float centerY;
-		final Paint paint;
-		final float halfSize;
-
-		DrawnMarker(float centerX, float centerY, Paint paint, float halfSize) {
-			this.centerX = centerX;
-			this.centerY = centerY;
-			this.paint = paint;
-			this.halfSize = halfSize;
-		}
-	}
-
-	private static class DataRange {
-		final float minX, maxX, minY, maxY;
-
-		DataRange(float minX, float maxX, float minY, float maxY) {
-			this.minX = minX;
-			this.maxX = maxX;
-			this.minY = minY;
-			this.maxY = maxY;
-		}
-	}
-
 	private final int size;
 	private final int backgroundColor;
 	private final List<LineConfig> lines;
@@ -91,9 +20,8 @@ public class CurveThumbnail extends Drawable {
 	private final Paint bgPaint;
 	private final List<DrawnLine> drawnLines;
 	private final DrawnMarker drawnMarker;
-
 	public CurveThumbnail(int size, int backgroundColor,
-						  List<LineConfig> lines, CrossMarkerConfig markerConfig) {
+	                      List<LineConfig> lines, CrossMarkerConfig markerConfig) {
 		this.size = size;
 		this.backgroundColor = backgroundColor;
 		this.lines = lines;
@@ -268,5 +196,77 @@ public class CurveThumbnail extends Drawable {
 	@Override
 	public int getIntrinsicHeight() {
 		return size;
+	}
+
+	// 折线配置类
+	public static class LineConfig {
+		public List<Float> xValues;
+		public List<Float> yValues;
+		public int color;
+		public float strokeWidth;
+
+		public LineConfig() {
+		}
+
+		public LineConfig(List<Float> xValues, List<Float> yValues,
+		                  int color, float strokeWidth) {
+			this.xValues = xValues;
+			this.yValues = yValues;
+			this.color = color;
+			this.strokeWidth = strokeWidth;
+		}
+	}
+
+	// 十字标记配置类（最终修复版）
+	public static class CrossMarkerConfig {
+		public final float xValue;
+		public final float yValue;
+		public final int color;
+		public final float strokeWidth;
+		public final float size;
+
+		public CrossMarkerConfig(float xValue, float yValue,
+		                         int color, float strokeWidth, float size) {
+			this.xValue = xValue;
+			this.yValue = yValue;
+			this.color = color;
+			this.strokeWidth = strokeWidth;
+			this.size = size;
+		}
+	}
+
+	private static class DrawnLine {
+		final Path path;
+		final Paint paint;
+
+		DrawnLine(Path path, Paint paint) {
+			this.path = path;
+			this.paint = paint;
+		}
+	}
+
+	private static class DrawnMarker {
+		final float centerX;
+		final float centerY;
+		final Paint paint;
+		final float halfSize;
+
+		DrawnMarker(float centerX, float centerY, Paint paint, float halfSize) {
+			this.centerX = centerX;
+			this.centerY = centerY;
+			this.paint = paint;
+			this.halfSize = halfSize;
+		}
+	}
+
+	private static class DataRange {
+		final float minX, maxX, minY, maxY;
+
+		DataRange(float minX, float maxX, float minY, float maxY) {
+			this.minX = minX;
+			this.maxX = maxX;
+			this.minY = minY;
+			this.maxY = maxY;
+		}
 	}
 }

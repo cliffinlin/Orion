@@ -661,20 +661,18 @@ public class StockFavoriteListActivity extends ListActivity implements
 
 				if (DatabaseContract.COLUMN_PRICE.equals(columnName)) {
 					return setVisibility(view, Setting.getDisplayNet());
-				}
-				else if (DatabaseContract.COLUMN_NET.equals(columnName)) {
+				} else if (DatabaseContract.COLUMN_NET.equals(columnName)) {
 					return setVisibility(view, Setting.getDisplayNet());
-				}
-				else if (DatabaseContract.COLUMN_GRID_PROFIT.equals(columnName)) {
+				} else if (DatabaseContract.COLUMN_GRID_PROFIT.equals(columnName)) {
 					setViewColor(textView, cursor);
 					return setVisibility(view, Setting.getDisplayNet());
-				}
-				else if (DatabaseContract.COLUMN_MODIFIED.equals(columnName)) {
+				} else if (DatabaseContract.COLUMN_MODIFIED.equals(columnName)) {
 				}
 			}
 
 			return false;
 		}
+
 		private boolean isPeriodColumn(String columnName) {
 			return DatabaseContract.COLUMN_YEAR.equals(columnName) ||
 					DatabaseContract.COLUMN_MONTH6.equals(columnName) ||
@@ -687,7 +685,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 					DatabaseContract.COLUMN_MIN30.equals(columnName) ||
 					DatabaseContract.COLUMN_MIN15.equals(columnName) ||
 					DatabaseContract.COLUMN_MIN5.equals(columnName);
-			}
+		}
 
 		void setViewColor(View view, Cursor cursor) {
 			if (view == null || cursor == null) {

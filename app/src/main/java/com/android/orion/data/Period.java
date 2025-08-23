@@ -1,7 +1,6 @@
 package com.android.orion.data;
 
 import android.database.Cursor;
-import android.graphics.drawable.BitmapDrawable;
 import android.text.TextUtils;
 
 import com.android.orion.database.DatabaseContract;

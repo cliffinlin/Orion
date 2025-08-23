@@ -1,15 +1,10 @@
 package com.android.orion.analyzer;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.util.ArrayMap;
 
 import com.android.orion.application.MainApplication;
-import com.android.orion.chart.CurveThumbnail;
-import com.android.orion.config.Config;
 import com.android.orion.data.Macd;
 import com.android.orion.data.Period;
-import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockTrend;
@@ -20,7 +15,6 @@ import com.android.orion.utility.StopWatch;
 import com.android.orion.utility.Utility;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -152,38 +146,6 @@ public class StockAnalyzer {
 
 		mTrendAnalyzer.analyzeAdaptive(period);
 	}
-//
-//	public void setupThumbnail(String  period) {
-//		mStockDataList = mStock.getStockDataList(period);
-//		if (mStockDataList.isEmpty()) {
-//			return;
-//		}
-//
-//		int vertexTop = StockTrend.getVertexTOP(mStock.getLevel(period));
-//		int vertexBottom = StockTrend.getVertexBottom(mStock.getLevel(period));
-//
-//		int markerColor = Color.BLACK;
-//		List<Float> xValues = new ArrayList<>();
-//		List<Float> yValues = new ArrayList<>();
-//		for (int i = 0; i < mStockDataList.size(); i++) {
-//			StockData stockData = mStockDataList.get(i);
-//			if (stockData.vertexOf(vertexTop)) {
-//				xValues.add((float) i);
-//				yValues.add((float) stockData.getCandle().getHigh());
-//				markerColor = Config.MARKER_COLOR_GREEN;
-//			} else if (stockData.vertexOf(vertexBottom)) {
-//				xValues.add((float) i);
-//				yValues.add((float) stockData.getCandle().getLow());
-//				markerColor = Config.MARKER_COLOR_RED;
-//			}
-//		}
-//
-//		List<CurveThumbnail.LineConfig> lines = Arrays.asList(
-//				new CurveThumbnail.LineConfig(xValues, yValues,	StockTrend.COLORS[mStock.getLevel(period)], 4f));
-//		CurveThumbnail.CrossMarkerConfig markerConfig =
-//				new CurveThumbnail.CrossMarkerConfig(mStockDataList.size() - 1, (float) mStock.getPrice(), markerColor,4f, 20f);
-//		mStock.setThumbnail(period, Utility.thumbnailToBytes(new CurveThumbnail(160,	Color.TRANSPARENT, lines, markerConfig)));
-//	}
 
 	private static class SingletonHolder {
 		private static final StockAnalyzer INSTANCE = new StockAnalyzer();

@@ -6,7 +6,6 @@ import android.text.TextUtils;
 
 import com.android.orion.data.Candle;
 import com.android.orion.data.Macd;
-import com.android.orion.setting.Constant;
 import com.android.orion.utility.Market;
 import com.android.orion.utility.Symbol;
 import com.android.orion.utility.Utility;

@@ -41,9 +41,15 @@ public class LinearRegression2D {
 		ArrayList<Double> yList = new ArrayList<>();
 
 		// 示例数据 (x1, x2, y)
-		x1List.add(32.0); x2List.add(10.0); yList.add(31.0);
-		x1List.add(53.0); x2List.add(20.0); yList.add(68.0);
-		x1List.add(60.0); x2List.add(30.0); yList.add(97.0);
+		x1List.add(32.0);
+		x2List.add(10.0);
+		yList.add(31.0);
+		x1List.add(53.0);
+		x2List.add(20.0);
+		yList.add(68.0);
+		x1List.add(60.0);
+		x2List.add(30.0);
+		yList.add(97.0);
 
 		// 创建线性回归对象
 		LinearRegression2D linearRegression = new LinearRegression2D(x1List, x2List, yList);

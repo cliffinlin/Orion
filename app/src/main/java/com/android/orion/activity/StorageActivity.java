@@ -357,47 +357,7 @@ public class StorageActivity extends DatabaseActivity {
 		}
 
 		return count;
-	}	Handler mHandler = new Handler(Looper.getMainLooper()) {
-		@Override
-		public void handleMessage(Message msg) {
-			super.handleMessage(msg);
-
-			switch (msg.what) {
-				case MESSAGE_REFRESH:
-					mStockDataProvider.download();
-					break;
-
-				case MESSAGE_LOAD_FAVORITE:
-					new Thread(new Runnable() {
-						@Override
-						public void run() {
-							loadFromFile();
-						}
-					}).start();
-					break;
-
-				case MESSAGE_SAVE_FAVORITE:
-					new Thread(new Runnable() {
-						@Override
-						public void run() {
-							saveToFile(FILE_TYPE_FAVORITE);
-						}
-					}).start();
-					break;
-				case MESSAGE_SAVE_TDX_DATA:
-					new Thread(new Runnable() {
-						@Override
-						public void run() {
-							saveToFile(FILE_TYPE_TDX_DATA);
-						}
-					}).start();
-					break;
-
-				default:
-					break;
-			}
-		}
-	};
+	}
 
 	int xmlSerialize(XmlSerializer xmlSerializer) {
 		int count = 0;
@@ -498,7 +458,47 @@ public class StorageActivity extends DatabaseActivity {
 		}
 
 		return count;
-	}
+	}	Handler mHandler = new Handler(Looper.getMainLooper()) {
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+
+			switch (msg.what) {
+				case MESSAGE_REFRESH:
+					mStockDataProvider.download();
+					break;
+
+				case MESSAGE_LOAD_FAVORITE:
+					new Thread(new Runnable() {
+						@Override
+						public void run() {
+							loadFromFile();
+						}
+					}).start();
+					break;
+
+				case MESSAGE_SAVE_FAVORITE:
+					new Thread(new Runnable() {
+						@Override
+						public void run() {
+							saveToFile(FILE_TYPE_FAVORITE);
+						}
+					}).start();
+					break;
+				case MESSAGE_SAVE_TDX_DATA:
+					new Thread(new Runnable() {
+						@Override
+						public void run() {
+							saveToFile(FILE_TYPE_TDX_DATA);
+						}
+					}).start();
+					break;
+
+				default:
+					break;
+			}
+		}
+	};
 
 	void xmlSerialize(XmlSerializer xmlSerializer, String tag, String text) {
 		try {

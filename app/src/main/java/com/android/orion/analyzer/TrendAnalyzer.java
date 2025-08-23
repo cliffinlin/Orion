@@ -25,7 +25,6 @@ import org.apache.commons.math3.ml.clustering.Clusterable;
 import org.apache.commons.math3.ml.clustering.KMeansPlusPlusClusterer;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -36,12 +35,17 @@ public class TrendAnalyzer {
 	public static final int K_MEANS_K = K_MEANS_PERIODS * (StockTrend.LEVELS.length - 1) / 2;
 	public static final int K_MEANS_MAX_ITERATIONS = 1000;
 
+	public static final float THUMBNAIL_MARKER_SIZE = 20.0f;
+	public static final float THUMBNAIL_STROKE_WIDTH = 4.0f;
+	public static final int THUMBNAIL_SIZW = 160;
+
 	Logger Log = Logger.getLogger();
 	Stock mStock;
 	String mPeriod;
+	int mMarkerColor = Color.BLACK;
 	List<DataPoint> mDataPointList = new ArrayList<>();
-	List<Float> mXValues[] = new List[StockTrend.LEVELS.length];
-	List<Float> mYValues[] = new List[StockTrend.LEVELS.length];
+	List<Float>[] mXValues = new List[StockTrend.LEVELS.length];
+	List<Float>[] mYValues = new List[StockTrend.LEVELS.length];
 	CurveThumbnail.LineConfig[] mLineConfigList = new CurveThumbnail.LineConfig[StockTrend.LEVELS.length];
 	ArrayMap<String, DataPoint> mDataPointMap = new ArrayMap<>();
 	ArrayList<StockData> mStockDataList = new ArrayList<>();
@@ -543,7 +547,7 @@ public class TrendAnalyzer {
 		Calendar startCalendar = Utility.getCalendar(startData.getDateTime(), Utility.CALENDAR_DATE_TIME_FORMAT);
 		Calendar endCalendar = Utility.getCalendar(endData.getDateTime(), Utility.CALENDAR_DATE_TIME_FORMAT);
 		Calendar currentCalendar = Calendar.getInstance();
-		long x =  (currentCalendar.getTimeInMillis() - startCalendar.getTimeInMillis()) / Constant.MINUTE_IN_MILLIS;
+		long x = (currentCalendar.getTimeInMillis() - startCalendar.getTimeInMillis()) / Constant.MINUTE_IN_MILLIS;
 		long y = (currentCalendar.getTimeInMillis() - endCalendar.getTimeInMillis()) / Constant.MINUTE_IN_MILLIS;
 		return new DataPoint(period, level, startData.getDateTime(), endData.getDateTime(), x, y);
 	}
@@ -579,7 +583,7 @@ public class TrendAnalyzer {
 			for (DataPoint point : cluster.getPoints()) {
 				point.setGroup(i);
 				point.setDistance(point.distanceTo(cluster.getCenter()));
-				clusterInfo.append("  ").append(point.toString()).append("\n");
+				clusterInfo.append("  ").append(point).append("\n");
 			}
 			Log.d(clusterInfo.toString());
 		}
@@ -625,7 +629,7 @@ public class TrendAnalyzer {
 		}
 	}
 
-	public void setupThumbnail(String  period) {
+	public void setupThumbnail(String period) {
 		mStockDataList = mStock.getStockDataList(period);
 		if (mStockDataList.isEmpty()) {
 			return;
@@ -647,7 +651,19 @@ public class TrendAnalyzer {
 		for (int index = 0; index < mStockDataList.size(); index++) {
 			StockData stockData = mStockDataList.get(index);
 			for (int level = StockTrend.LEVEL_DRAW; level < StockTrend.LEVELS.length; level++) {
-				addLineData(stockData, level, index);
+				if (stockData.vertexOf(StockTrend.getVertexTOP(level))) {
+					mXValues[level].add((float) index);
+					mYValues[level].add((float) stockData.getCandle().getHigh());
+					if (mStock.getLevel(period) == level) {
+						mMarkerColor = Color.GREEN;
+					}
+				} else if (stockData.vertexOf(StockTrend.getVertexBottom(level))) {
+					mXValues[level].add((float) index);
+					mYValues[level].add((float) stockData.getCandle().getLow());
+					if (mStock.getLevel(period) == level) {
+						mMarkerColor = Color.RED;
+					}
+				}
 			}
 		}
 
@@ -676,18 +692,8 @@ public class TrendAnalyzer {
 		}
 
 		CurveThumbnail.CrossMarkerConfig markerConfig =
-				new CurveThumbnail.CrossMarkerConfig(mStockDataList.size() - 1, (float) mStock.getPrice(), Color.BLACK,4f, 20f);
-		mStock.setThumbnail(period, Utility.thumbnailToBytes(new CurveThumbnail(160,	Color.TRANSPARENT, lines, markerConfig)));
-	}
-
-	void addLineData(StockData stockData, int level, int index) {
-		if (stockData.vertexOf(StockTrend.getVertexTOP(level))) {
-			mXValues[level].add((float) index);
-			mYValues[level].add((float) stockData.getCandle().getHigh());
-		} else if (stockData.vertexOf(StockTrend.getVertexBottom(level))) {
-			mXValues[level].add((float) index);
-			mYValues[level].add((float) stockData.getCandle().getLow());
-		}
+				new CurveThumbnail.CrossMarkerConfig(mStockDataList.size() - 1, (float) mStock.getPrice(), mMarkerColor, THUMBNAIL_STROKE_WIDTH, THUMBNAIL_MARKER_SIZE);
+		mStock.setThumbnail(period, Utility.thumbnailToBytes(new CurveThumbnail(THUMBNAIL_SIZW, Color.TRANSPARENT, lines, markerConfig)));
 	}
 
 	private static class DataPoint implements Clusterable {

@@ -25,8 +25,8 @@ import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;
 import com.android.orion.setting.Constant;
-import com.android.orion.utility.Symbol;
 import com.android.orion.utility.RecordFile;
+import com.android.orion.utility.Symbol;
 import com.android.orion.utility.Utility;
 
 import java.text.SimpleDateFormat;
@@ -234,7 +234,8 @@ public class StockDealActivity extends DatabaseActivity implements
 
 		mEditTextSellPrice.addTextChangedListener(new TextWatcher() {
 			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
 
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {

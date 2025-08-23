@@ -6,7 +6,6 @@ import android.text.TextUtils;
 
 import com.android.orion.utility.Utility;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 
 public class StockDeal extends DatabaseTable {
@@ -515,7 +514,7 @@ public class StockDeal extends DatabaseTable {
 
 			if (buyCalendar.before(yearCalendar)) {
 				dividendIncomeTax = 0;
-			} else 	if (buyCalendar.before(monthCalendar)) {
+			} else if (buyCalendar.before(monthCalendar)) {
 				dividendIncomeTax = dividend / 10.0 * Math.abs(mVolume) * DIVIDEND_INCOME_TAX_RATE_10_PERCENT;
 			} else {
 				dividendIncomeTax = dividend / 10.0 * Math.abs(mVolume) * DIVIDEND_INCOME_TAX_RATE_20_PERCENT;

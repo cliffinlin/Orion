@@ -546,7 +546,7 @@ public class StockDealListActivity extends ListActivity implements
 				DatabaseContract.COLUMN_PROFIT,
 				DatabaseContract.COLUMN_ACCOUNT,
 				DatabaseContract.COLUMN_DATE,
-				 DatabaseContract.COLUMN_TYPE,
+				DatabaseContract.COLUMN_TYPE,
 				DatabaseContract.COLUMN_CREATED,
 				DatabaseContract.COLUMN_MODIFIED};
 		int[] mRightTo = new int[]{
@@ -826,7 +826,7 @@ public class StockDealListActivity extends ListActivity implements
 				setViewColor(view, cursor);
 				return setVisibility(view, Setting.getDisplayNet());
 			} else if (columnIndex == cursor
-				.getColumnIndex(DatabaseContract.COLUMN_MODIFIED)) {
+					.getColumnIndex(DatabaseContract.COLUMN_MODIFIED)) {
 				setViewColor(view, cursor);
 				return setVisibility(view, Setting.getDisplayNet());
 			}
