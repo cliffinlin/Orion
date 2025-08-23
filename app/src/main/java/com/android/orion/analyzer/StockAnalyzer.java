@@ -89,11 +89,6 @@ public class StockAnalyzer {
 				}
 			}
 			mTrendAnalyzer.analyzeAdaptive();
-			for (String period : Period.PERIODS) {
-				if (Setting.getPeriod(period)) {
-					setupThumbnail(period);
-				}
-			}
 			mFinancialAnalyzer.analyzeFinancial(mStock);
 			mFinancialAnalyzer.setupFinancial(mStock);
 			mFinancialAnalyzer.setupStockBonus(mStock);
@@ -159,45 +154,13 @@ public class StockAnalyzer {
 	}
 
 	public void setupThumbnail(String  period) {
-		int vertexTop = StockTrend.VERTEX_NONE;
-		int vertexBottom = StockTrend.VERTEX_NONE;
-		switch (mStock.getLevel(period)) {
-			case StockTrend.LEVEL_DRAW:
-				vertexTop = StockTrend.VERTEX_TOP;
-				vertexBottom = StockTrend.VERTEX_BOTTOM;
-				break;
-			case StockTrend.LEVEL_STROKE:
-				vertexTop = StockTrend.VERTEX_TOP_STROKE;
-				vertexBottom = StockTrend.VERTEX_BOTTOM_STROKE;
-				break;
-			case StockTrend.LEVEL_SEGMENT:
-				vertexTop = StockTrend.VERTEX_TOP_SEGMENT;
-				vertexBottom = StockTrend.VERTEX_BOTTOM_SEGMENT;
-				break;
-			case StockTrend.LEVEL_LINE:
-				vertexTop = StockTrend.VERTEX_TOP_LINE;
-				vertexBottom = StockTrend.VERTEX_BOTTOM_LINE;
-				break;
-			case StockTrend.LEVEL_OUT_LINE:
-				vertexTop = StockTrend.VERTEX_TOP_OUTLINE;
-				vertexBottom = StockTrend.VERTEX_BOTTOM_OUTLINE;
-				break;
-			case StockTrend.LEVEL_SUPER_LINE:
-				vertexTop = StockTrend.VERTEX_TOP_SUPERLINE;
-				vertexBottom = StockTrend.VERTEX_BOTTOM_SUPERLINE;
-				break;
-			case StockTrend.LEVEL_TREND_LINE:
-				vertexTop = StockTrend.VERTEX_TOP_TREND_LINE;
-				vertexBottom = StockTrend.VERTEX_BOTTOM_TREND_LINE;
-				break;
-			default:
-				break;
-		}
-
 		mStockDataList = mStock.getStockDataList(period);
 		if (mStockDataList.isEmpty()) {
 			return;
 		}
+
+		int vertexTop = StockTrend.getVertexTOP(mStock.getLevel(period));
+		int vertexBottom = StockTrend.getVertexBottom(mStock.getLevel(period));
 
 		int markerColor = Color.BLACK;
 		List<Float> xValues = new ArrayList<>();

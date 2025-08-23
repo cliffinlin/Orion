@@ -1,10 +1,13 @@
 package com.android.orion.analyzer;
 
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 
 import androidx.annotation.NonNull;
 
+import com.android.orion.chart.CurveThumbnail;
+import com.android.orion.config.Config;
 import com.android.orion.data.Period;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
@@ -23,6 +26,7 @@ import org.apache.commons.math3.ml.clustering.Clusterable;
 import org.apache.commons.math3.ml.clustering.KMeansPlusPlusClusterer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -271,38 +275,9 @@ public class TrendAnalyzer {
 			return;
 		}
 
-		int vertexTypeTop = StockTrend.VERTEX_TOP;
-		int vertexTypeBottom = StockTrend.VERTEX_BOTTOM;
-		switch (level) {
-			case StockTrend.LEVEL_STROKE:
-				vertexTypeTop = StockTrend.VERTEX_TOP_STROKE;
-				vertexTypeBottom = StockTrend.VERTEX_BOTTOM_STROKE;
-				break;
-			case StockTrend.LEVEL_SEGMENT:
-				vertexTypeTop = StockTrend.VERTEX_TOP_SEGMENT;
-				vertexTypeBottom = StockTrend.VERTEX_BOTTOM_SEGMENT;
-				break;
-			case StockTrend.LEVEL_LINE:
-				vertexTypeTop = StockTrend.VERTEX_TOP_LINE;
-				vertexTypeBottom = StockTrend.VERTEX_BOTTOM_LINE;
-				break;
-			case StockTrend.LEVEL_OUT_LINE:
-				vertexTypeTop = StockTrend.VERTEX_TOP_OUTLINE;
-				vertexTypeBottom = StockTrend.VERTEX_BOTTOM_OUTLINE;
-				break;
-			case StockTrend.LEVEL_SUPER_LINE:
-				vertexTypeTop = StockTrend.VERTEX_TOP_SUPERLINE;
-				vertexTypeBottom = StockTrend.VERTEX_BOTTOM_SUPERLINE;
-				break;
-			case StockTrend.LEVEL_TREND_LINE:
-				vertexTypeTop = StockTrend.VERTEX_TOP_TREND_LINE;
-				vertexTypeBottom = StockTrend.VERTEX_BOTTOM_TREND_LINE;
-				break;
-			default:
-				break;
-		}
-
 		try {
+			int vertexTop = StockTrend.getVertexTOP(level);
+			int vertexBottom = StockTrend.getVertexBottom(level);
 			int direction = prevDataList.get(0).getDirection();
 			int baseDirection = direction;
 			vertexList.clear();
@@ -333,7 +308,7 @@ public class TrendAnalyzer {
 						if (direction == StockTrend.DIRECTION_DOWN) {
 							type = StockTrend.TYPE_DOWN_UP;
 							addStockTrendList(finished, level, type, prev, current, next, stockTrendList);
-							if (addVertex(prev_end, vertexTypeBottom, vertexList)) {
+							if (addVertex(prev_end, vertexBottom, vertexList)) {
 								addStockDataList(vertexList, dataList);
 							}
 						} else if (direction == StockTrend.DIRECTION_NONE) {
@@ -341,7 +316,7 @@ public class TrendAnalyzer {
 							if (baseDirection == StockTrend.DIRECTION_UP) {
 								type = StockTrend.TYPE_UP_NONE_UP;
 								addStockTrendList(finished, level, type, prev, current, next, stockTrendList);
-								if (addVertex(vertexData, vertexTypeBottom, vertexList)) {
+								if (addVertex(vertexData, vertexBottom, vertexList)) {
 									addStockDataList(vertexList, dataList);
 								}
 							} else if (baseDirection == StockTrend.DIRECTION_DOWN) {
@@ -357,7 +332,7 @@ public class TrendAnalyzer {
 						if (direction == StockTrend.DIRECTION_UP) {
 							type = StockTrend.TYPE_UP_DOWN;
 							addStockTrendList(finished, level, type, prev, current, next, stockTrendList);
-							if (addVertex(prev_end, vertexTypeTop, vertexList)) {
+							if (addVertex(prev_end, vertexTop, vertexList)) {
 								addStockDataList(vertexList, dataList);
 							}
 						} else if (direction == StockTrend.DIRECTION_NONE) {
@@ -368,7 +343,7 @@ public class TrendAnalyzer {
 							} else if (baseDirection == StockTrend.DIRECTION_DOWN) {
 								type = StockTrend.TYPE_DOWN_NONE_DOWN;
 								addStockTrendList(finished, level, type, prev, current, next, stockTrendList);
-								if (addVertex(vertexData, vertexTypeTop, vertexList)) {
+								if (addVertex(vertexData, vertexTop, vertexList)) {
 									addStockDataList(vertexList, dataList);
 								}
 							}
@@ -383,7 +358,7 @@ public class TrendAnalyzer {
 							type = StockTrend.TYPE_UP_NONE;
 							addStockTrendList(finished, level, type, prev, current, next, stockTrendList);
 							StockData vertexData = chooseVertex(current_start, current_end, StockTrend.VERTEX_TOP);
-							if (addVertex(vertexData, vertexTypeTop, vertexList)) {
+							if (addVertex(vertexData, vertexTop, vertexList)) {
 								addStockDataList(vertexList, dataList);
 							}
 						} else if (direction == StockTrend.DIRECTION_DOWN) {
@@ -391,7 +366,7 @@ public class TrendAnalyzer {
 							type = StockTrend.TYPE_DOWN_NONE;
 							addStockTrendList(finished, level, type, prev, current, next, stockTrendList);
 							StockData vertexData = chooseVertex(current_start, current_end, StockTrend.VERTEX_BOTTOM);
-							if (addVertex(vertexData, vertexTypeBottom, vertexList)) {
+							if (addVertex(vertexData, vertexBottom, vertexList)) {
 								addStockDataList(vertexList, dataList);
 							}
 						} else if (direction == StockTrend.DIRECTION_NONE) {
@@ -546,6 +521,11 @@ public class TrendAnalyzer {
 			List<CentroidCluster<DataPoint>> sortedClusterList = sortClusterList(clusterList);
 			setGroupDistance(sortedClusterList);
 			setupStockTrendLevel(sortedClusterList);
+			for (String period : Period.PERIODS) {
+				if (Setting.getPeriod(period)) {
+					setupThumbnail(period);
+				}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -641,6 +621,38 @@ public class TrendAnalyzer {
 				}
 			}
 		}
+	}
+
+	public void setupThumbnail(String  period) {
+		mStockDataList = mStock.getStockDataList(period);
+		if (mStockDataList.isEmpty()) {
+			return;
+		}
+
+		int vertexTop = StockTrend.getVertexTOP(mStock.getLevel(period));
+		int vertexBottom = StockTrend.getVertexBottom(mStock.getLevel(period));
+
+		int markerColor = Color.BLACK;
+		List<Float> xValues = new ArrayList<>();
+		List<Float> yValues = new ArrayList<>();
+		for (int i = 0; i < mStockDataList.size(); i++) {
+			StockData stockData = mStockDataList.get(i);
+			if (stockData.vertexOf(vertexTop)) {
+				xValues.add((float) i);
+				yValues.add((float) stockData.getCandle().getHigh());
+				markerColor = Config.MARKER_COLOR_GREEN;
+			} else if (stockData.vertexOf(vertexBottom)) {
+				xValues.add((float) i);
+				yValues.add((float) stockData.getCandle().getLow());
+				markerColor = Config.MARKER_COLOR_RED;
+			}
+		}
+
+		List<CurveThumbnail.LineConfig> lines = Arrays.asList(
+				new CurveThumbnail.LineConfig(xValues, yValues,	StockTrend.COLORS[mStock.getLevel(period)], 4f));
+		CurveThumbnail.CrossMarkerConfig markerConfig =
+				new CurveThumbnail.CrossMarkerConfig(mStockDataList.size() - 1, (float) mStock.getPrice(), markerColor,4f, 20f);
+		mStock.setThumbnail(period, Utility.thumbnailToBytes(new CurveThumbnail(160,	Color.TRANSPARENT, lines, markerConfig)));
 	}
 
 	private static class DataPoint implements Clusterable {
