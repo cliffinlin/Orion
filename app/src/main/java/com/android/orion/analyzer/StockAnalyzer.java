@@ -152,38 +152,38 @@ public class StockAnalyzer {
 
 		mTrendAnalyzer.analyzeAdaptive(period);
 	}
-
-	public void setupThumbnail(String  period) {
-		mStockDataList = mStock.getStockDataList(period);
-		if (mStockDataList.isEmpty()) {
-			return;
-		}
-
-		int vertexTop = StockTrend.getVertexTOP(mStock.getLevel(period));
-		int vertexBottom = StockTrend.getVertexBottom(mStock.getLevel(period));
-
-		int markerColor = Color.BLACK;
-		List<Float> xValues = new ArrayList<>();
-		List<Float> yValues = new ArrayList<>();
-		for (int i = 0; i < mStockDataList.size(); i++) {
-			StockData stockData = mStockDataList.get(i);
-			if (stockData.vertexOf(vertexTop)) {
-				xValues.add((float) i);
-				yValues.add((float) stockData.getCandle().getHigh());
-				markerColor = Config.MARKER_COLOR_GREEN;
-			} else if (stockData.vertexOf(vertexBottom)) {
-				xValues.add((float) i);
-				yValues.add((float) stockData.getCandle().getLow());
-				markerColor = Config.MARKER_COLOR_RED;
-			}
-		}
-
-		List<CurveThumbnail.LineConfig> lines = Arrays.asList(
-				new CurveThumbnail.LineConfig(xValues, yValues,	StockTrend.COLORS[mStock.getLevel(period)], 4f));
-		CurveThumbnail.CrossMarkerConfig markerConfig =
-				new CurveThumbnail.CrossMarkerConfig(mStockDataList.size() - 1, (float) mStock.getPrice(), markerColor,4f, 20f);
-		mStock.setThumbnail(period, Utility.thumbnailToBytes(new CurveThumbnail(160,	Color.TRANSPARENT, lines, markerConfig)));
-	}
+//
+//	public void setupThumbnail(String  period) {
+//		mStockDataList = mStock.getStockDataList(period);
+//		if (mStockDataList.isEmpty()) {
+//			return;
+//		}
+//
+//		int vertexTop = StockTrend.getVertexTOP(mStock.getLevel(period));
+//		int vertexBottom = StockTrend.getVertexBottom(mStock.getLevel(period));
+//
+//		int markerColor = Color.BLACK;
+//		List<Float> xValues = new ArrayList<>();
+//		List<Float> yValues = new ArrayList<>();
+//		for (int i = 0; i < mStockDataList.size(); i++) {
+//			StockData stockData = mStockDataList.get(i);
+//			if (stockData.vertexOf(vertexTop)) {
+//				xValues.add((float) i);
+//				yValues.add((float) stockData.getCandle().getHigh());
+//				markerColor = Config.MARKER_COLOR_GREEN;
+//			} else if (stockData.vertexOf(vertexBottom)) {
+//				xValues.add((float) i);
+//				yValues.add((float) stockData.getCandle().getLow());
+//				markerColor = Config.MARKER_COLOR_RED;
+//			}
+//		}
+//
+//		List<CurveThumbnail.LineConfig> lines = Arrays.asList(
+//				new CurveThumbnail.LineConfig(xValues, yValues,	StockTrend.COLORS[mStock.getLevel(period)], 4f));
+//		CurveThumbnail.CrossMarkerConfig markerConfig =
+//				new CurveThumbnail.CrossMarkerConfig(mStockDataList.size() - 1, (float) mStock.getPrice(), markerColor,4f, 20f);
+//		mStock.setThumbnail(period, Utility.thumbnailToBytes(new CurveThumbnail(160,	Color.TRANSPARENT, lines, markerConfig)));
+//	}
 
 	private static class SingletonHolder {
 		private static final StockAnalyzer INSTANCE = new StockAnalyzer();
