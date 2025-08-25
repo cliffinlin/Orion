@@ -309,7 +309,7 @@ public class StockContentProvider extends ContentProvider {
 		}
 
 		try {
-			mStockDatabaseManager.mDatabase.beginTransaction();
+			mStockDatabaseManager.beginTransaction();
 			switch (mUriMatcher.match(uri)) {
 				case STOCK:
 					id = mStockDatabaseManager.mDatabase.insert(
@@ -361,7 +361,7 @@ public class StockContentProvider extends ContentProvider {
 				default:
 					break;
 			}
-			mStockDatabaseManager.mDatabase.setTransactionSuccessful();
+			mStockDatabaseManager.setTransactionSuccessful();
 			if (id > 0) {
 				itemUri = ContentUris.withAppendedId(uri, id);
 
@@ -372,7 +372,7 @@ public class StockContentProvider extends ContentProvider {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			mStockDatabaseManager.mDatabase.endTransaction();
+			mStockDatabaseManager.endTransaction();
 		}
 
 		return itemUri;
@@ -391,25 +391,21 @@ public class StockContentProvider extends ContentProvider {
 			return result;
 		}
 
-		if (mStockDatabaseManager.mDatabase == null) {
-			return result;
-		}
-
 		try {
-			mStockDatabaseManager.mDatabase.beginTransaction();
+			mStockDatabaseManager.beginTransaction();
 			for (ContentValues contentValues : values) {
 				if (insert(uri, contentValues, false) != null) {
 					result++;
 				}
 			}
-			mStockDatabaseManager.mDatabase.setTransactionSuccessful();
+			mStockDatabaseManager.setTransactionSuccessful();
 			if (result > 0) {
 				mContentResolver.notifyChange(uri, null);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			mStockDatabaseManager.mDatabase.endTransaction();
+			mStockDatabaseManager.endTransaction();
 		}
 
 		return result;
@@ -430,7 +426,7 @@ public class StockContentProvider extends ContentProvider {
 		}
 
 		try {
-			mStockDatabaseManager.mDatabase.beginTransaction();
+			mStockDatabaseManager.beginTransaction();
 			switch (mUriMatcher.match(uri)) {
 				case STOCK:
 					result = mStockDatabaseManager.mDatabase.update(
@@ -569,14 +565,14 @@ public class StockContentProvider extends ContentProvider {
 				default:
 					break;
 			}
-			mStockDatabaseManager.mDatabase.setTransactionSuccessful();
+			mStockDatabaseManager.setTransactionSuccessful();
 			if (result > 0) {
 				mContentResolver.notifyChange(uri, null);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			mStockDatabaseManager.mDatabase.endTransaction();
+			mStockDatabaseManager.endTransaction();
 		}
 
 		return result;
@@ -596,7 +592,7 @@ public class StockContentProvider extends ContentProvider {
 		}
 
 		try {
-			mStockDatabaseManager.mDatabase.beginTransaction();
+			mStockDatabaseManager.beginTransaction();
 			switch (mUriMatcher.match(uri)) {
 				case STOCK:
 					result = mStockDatabaseManager.mDatabase
@@ -735,14 +731,14 @@ public class StockContentProvider extends ContentProvider {
 				default:
 					break;
 			}
-			mStockDatabaseManager.mDatabase.setTransactionSuccessful();
+			mStockDatabaseManager.setTransactionSuccessful();
 			if (result > 0) {
 				mContentResolver.notifyChange(uri, null);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			mStockDatabaseManager.mDatabase.endTransaction();
+			mStockDatabaseManager.endTransaction();
 		}
 
 		return result;
@@ -758,17 +754,13 @@ public class StockContentProvider extends ContentProvider {
 			return result;
 		}
 
-		if (mStockDatabaseManager.mDatabase == null) {
-			return result;
-		}
-
 		try {
-			mStockDatabaseManager.mDatabase.beginTransaction();
+			mStockDatabaseManager.beginTransaction();
 			result = super.applyBatch(operations);
-			mStockDatabaseManager.mDatabase.setTransactionSuccessful();
+			mStockDatabaseManager.setTransactionSuccessful();
 			return result;
 		} finally {
-			mStockDatabaseManager.mDatabase.endTransaction();
+			mStockDatabaseManager.endTransaction();
 		}
 	}
 }

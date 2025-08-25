@@ -289,7 +289,7 @@ public class StorageActivity extends DatabaseActivity {
 							mStockDatabaseManager.getStock(stock);
 							if (!mStockDatabaseManager.isStockExist(stock)) {
 								stock.setCreated(now);
-								mStockDatabaseManager.insert(stock);
+								mStockDatabaseManager.insertStock(stock);
 							} else {
 								stock.setModified(now);
 								mStockDatabaseManager.updateStock(stock,

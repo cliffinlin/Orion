@@ -395,7 +395,7 @@ public class SinaFinance extends StockDataProvider {
 					} else {
 						if (!mStockDatabaseManager.isStockExist(stock)) {
 							stock.setCreated(Utility.getCurrentDateTimeString());
-							mStockDatabaseManager.insert(stock);
+							mStockDatabaseManager.insertStock(stock);
 						} else {
 							stock.setModified(Utility
 									.getCurrentDateTimeString());
@@ -869,14 +869,14 @@ public class SinaFinance extends StockDataProvider {
 											.getCurrentDateTimeString());
 									stockData.setModified(Utility
 											.getCurrentDateTimeString());
-									mStockDatabaseManager.insert(stockData);
+									mStockDatabaseManager.insertStockData(stockData);
 								}
 							} else {
 								stockData.setCreated(Utility
 										.getCurrentDateTimeString());
 								stockData.setModified(Utility
 										.getCurrentDateTimeString());
-								mStockDatabaseManager.insert(stockData);
+								mStockDatabaseManager.insertStockData(stockData);
 							}
 						} else {
 							stockData.setModified(Utility
@@ -1080,7 +1080,7 @@ public class SinaFinance extends StockDataProvider {
 
 			if (!mStockDatabaseManager.isStockDataExist(stockData)) {
 				stockData.setCreated(Utility.getCurrentDateTimeString());
-				mStockDatabaseManager.insert(stockData);
+				mStockDatabaseManager.insertStockData(stockData);
 			} else {
 				stockData.setModified(Utility.getCurrentDateTimeString());
 				mStockDatabaseManager.updateStockData(stockData,

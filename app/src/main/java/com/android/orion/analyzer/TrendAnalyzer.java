@@ -31,6 +31,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class TrendAnalyzer {
+	public static final int K_MEANS_DAYS = 5;
 	public static final int K_MEANS_PERIODS = 5;
 	public static final int K_MEANS_K = K_MEANS_PERIODS * (StockTrend.LEVELS.length - 1) / 2;
 	public static final int K_MEANS_MAX_ITERATIONS = 1000;
@@ -598,33 +599,32 @@ public class TrendAnalyzer {
 		for (int i = 0; i < clusterList.size(); i++) {
 			CentroidCluster<DataPoint> cluster = clusterList.get(i);
 			for (DataPoint dataPoint : cluster.getPoints()) {
-				if (dataPoint.days < 3) {
+				if (dataPoint.days < K_MEANS_DAYS) {
 					continue;//TODO
 				}
 
 				if (mDataPointMap.containsKey(dataPoint.period)) {
-					if (dataPoint.group == mDataPointMap.get(dataPoint.period).group) {
-						if (dataPoint.distance > mDataPointMap.get(dataPoint.period).distance) {
+					if (dataPoint.level < mDataPointMap.get(dataPoint.period).level) {
+						continue;
+					}
+
+					if (mDataPointMap.containsKey(Period.getHigherPeriod(dataPoint.period))) {
+						if (dataPoint.level < mDataPointMap.get(Period.getHigherPeriod(dataPoint.period)).level) {
 							continue;
 						}
 					}
-
-					if (dataPoint.days < mDataPointMap.get(dataPoint.period).days) {
-						continue;
-					}
 				}
-
 				mDataPointMap.put(dataPoint.period, dataPoint);
+			}
 
-				if (mDataPointMap.size() == K_MEANS_PERIODS) {
-					for (String period : Period.PERIODS) {
-						if (mDataPointMap.get(period) != null) {
-							mStock.setLevel(period, mDataPointMap.get(period).level);
-							Log.d("setLevel:" + mDataPointMap.get(period).toString());
-						}
+			if (mDataPointMap.size() == K_MEANS_PERIODS) {
+				for (String period : Period.PERIODS) {
+					if (mDataPointMap.get(period) != null) {
+						mStock.setLevel(period, mDataPointMap.get(period).level);
+						Log.d("setLevel:" + mDataPointMap.get(period).toString());
 					}
-					return;
 				}
+				return;
 			}
 		}
 	}

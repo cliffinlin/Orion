@@ -235,6 +235,12 @@ public class DatabaseContract {
 				+ " AND " + SELECTION_LEVEL(level);
 	}
 
+	public static final String SELECTION_STOCK_PERIOD_DATE(String se, String code, String period, String date) {
+		return SELECTION_STOCK(se, code)
+				+ " AND " + SELECTION_PERIOD(period)
+				+ " AND " + SELECTION_DATE(date);
+	}
+
 	public static final String SELECTION_STOCK_PERIOD_DATE_TIME(String se, String code, String period, String date, String time) {
 		String selection = SELECTION_STOCK(se, code)
 				+ " AND " + SELECTION_PERIOD(period)

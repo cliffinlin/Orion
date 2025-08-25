@@ -97,13 +97,32 @@ public class Period {
 			return index;
 		}
 
-		for (int i = 0; i < Period.PERIODS.length; i++) {
-			if (TextUtils.equals(period, Period.PERIODS[i])) {
+		for (int i = 0; i < PERIODS.length; i++) {
+			if (TextUtils.equals(period, PERIODS[i])) {
 				index = i;
 				break;
 			}
 		}
 		return index;
+	}
+
+	public static String getHigherPeriod(String period) {
+		int index = 0;
+		String result = PERIODS[index];
+		if (TextUtils.isEmpty(period)) {
+			return result;
+		}
+
+		for (int i = 0; i < PERIODS.length; i++) {
+			if (TextUtils.equals(period, PERIODS[i])) {
+				index = i;
+				break;
+			}
+		}
+		if (index > 0) {
+			result = PERIODS[index - 1];
+		}
+		return result;
 	}
 
 	public ArrayList<StockData> getStockDataList() {

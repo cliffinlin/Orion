@@ -251,7 +251,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 				if (TextUtils.equals(mAction, Constant.ACTION_FAVORITE_STOCK_INSERT)) {
 					if (!mStockDatabaseManager.isStockExist(mStock)) {
 						mStock.setCreated(Utility.getCurrentDateTimeString());
-						Uri uri = mStockDatabaseManager.insert(mStock);
+						Uri uri = mStockDatabaseManager.insertStock(mStock);
 						mStockDatabaseManager.getStock(uri, mStock);
 						mStockDatabaseManager.updateStock(mStock, mStock.getContentValuesEdit());
 					} else {

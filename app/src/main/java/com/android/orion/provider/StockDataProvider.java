@@ -550,7 +550,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 				Setting.setTdxDataFileUri(stock, uri.toString());
 				if (!mStockDatabaseManager.isStockExist(stock)) {
 					stock.setCreated(Utility.getCurrentDateTimeString());
-					mStockDatabaseManager.insert(stock);
+					mStockDatabaseManager.insertStock(stock);
 				} else {
 					mStockDatabaseManager.getStock(stock);
 				}

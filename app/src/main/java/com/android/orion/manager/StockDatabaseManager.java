@@ -45,7 +45,7 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 		return mInstance;
 	}
 
-	public Uri insert(Stock stock) {
+	public Uri insertStock(Stock stock) {
 		if (stock == null) {
 			return null;
 		}
@@ -316,7 +316,7 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 		return result;
 	}
 
-	public Uri insert(StockData stockData) {
+	public Uri insertStockData(StockData stockData) {
 		if (stockData == null) {
 			return null;
 		}
