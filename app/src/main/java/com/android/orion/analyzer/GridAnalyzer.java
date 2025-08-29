@@ -30,7 +30,8 @@ public class GridAnalyzer {
 			return;
 		}
 
-		mStock.setGridProfit(0);
+		mStock.setBuyProfit(0);
+		mStock.setSellProfit(0);
 
 		if (!mStock.hasFlag(Stock.FLAG_GRID)) {
 			return;
@@ -46,22 +47,18 @@ public class GridAnalyzer {
 		for (int i = mStockDealList.size() - 1; i >= 0; i--) {
 			StockDeal stockDeal = mStockDealList.get(i);
 			if (TextUtils.equals(stockDeal.getType(), StockDeal.TYPE_BUY)) {
-				if (mBuyDeal == null) {
-					mBuyDeal = stockDeal;
-				}
+				mBuyDeal = stockDeal;
 			} else if (TextUtils.equals(stockDeal.getType(), StockDeal.TYPE_SELL)) {
-				if (mSellDeal == null) {
-					mSellDeal = stockDeal;
-				}
-			}
-
-			if (mBuyDeal != null && mSellDeal != null) {
-				break;
+				mSellDeal = stockDeal;
 			}
 		}
 
 		if (mBuyDeal != null) {
-			mStock.setGridProfit(mBuyDeal.getProfit());
+			mStock.setBuyProfit(mBuyDeal.getProfit());
+		}
+
+		if (mSellDeal != null) {
+			mStock.setSellProfit(mSellDeal.getProfit());
 		}
 	}
 

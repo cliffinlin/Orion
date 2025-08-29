@@ -195,7 +195,8 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 					mStock.addFlag(Stock.FLAG_GRID);
 				} else {
 					mStock.removeFlag(Stock.FLAG_GRID);
-					mStock.setGridProfit(0);
+					mStock.setBuyProfit(0);
+					mStock.setSellProfit(0);
 				}
 				break;
 
@@ -216,7 +217,8 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 					mStock.addFlag(Stock.FLAG_GRID);
 				} else {
 					mStock.removeFlag(Stock.FLAG_GRID);
-					mStock.setGridProfit(0);
+					mStock.setBuyProfit(0);
+					mStock.setSellProfit(0);
 				}
 
 				String name = mEditTextStockName.getText().toString();

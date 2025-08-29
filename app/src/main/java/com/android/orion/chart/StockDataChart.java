@@ -2,6 +2,7 @@ package com.android.orion.chart;
 
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.text.TextUtils;
 import android.util.ArrayMap;
 
 import com.android.orion.config.Config;
@@ -449,10 +450,12 @@ public class StockDataChart {
 				limit = stockDeal.getSell();
 			}
 
-			if (stockDeal.getProfit() > 0) {
-				color = Color.RED;
+			if (TextUtils.equals(stockDeal.getType(), StockDeal.TYPE_BUY)) {
+				color = stockDeal.getProfit() > 0 ? Color.RED : Color.GREEN;
+			} else if (TextUtils.equals(stockDeal.getType(), StockDeal.TYPE_SELL)) {
+				color = stockDeal.getProfit() > 0 ? Color.GREEN : Color.RED;
 			} else {
-				color = Color.GREEN;
+				color = Color.BLACK;
 			}
 
 			label = "               "
@@ -460,7 +463,8 @@ public class StockDataChart {
 					+ "  " + stockDeal.getNet() + "%"
 					+ "  " + stockDeal.getVolume()
 					+ "  " + (int) stockDeal.getProfit()
-					+ "  " + stockDeal.getAccount();
+					+ "  " + stockDeal.getAccount()
+					+ "  " + (TextUtils.equals(stockDeal.getType(), StockDeal.TYPE_SELL) ? stockDeal.getType() : "");
 			LimitLine limitLine = createLimitLine(limit, color, label);
 			if (limitLine != null) {
 				mLimitLineList.add(limitLine);

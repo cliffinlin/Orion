@@ -94,7 +94,6 @@ public class Stock extends DatabaseTable {
 	private double mCashFlowPerShare;
 	private double mNetProfitPerShare;
 	private double mNetProfitPerShareInYear;
-	private double mGridProfit;
 	private double mRate;
 	private double mDividend;
 	private double mDividendInYear;
@@ -103,9 +102,10 @@ public class Stock extends DatabaseTable {
 	private double mDividendRatio;
 	private double mDividendRatioInYear;
 	private String mRDate;
-	private String mAdaptiveDate;
 	private String mStatus;
-
+	private String mAdaptiveDate;
+	private double mBuyProfit;
+	private double mSellProfit;
 
 	public Stock() {
 		init();
@@ -169,7 +169,6 @@ public class Stock extends DatabaseTable {
 		mCashFlowPerShare = 0;
 		mNetProfitPerShare = 0;
 		mNetProfitPerShareInYear = 0;
-		mGridProfit = 0;
 		mRate = 0;
 		mDividend = 0;
 		mDividendInYear = 0;
@@ -178,8 +177,10 @@ public class Stock extends DatabaseTable {
 		mDividendRatio = 0;
 		mDividendRatioInYear = 0;
 		mRDate = "";
-		mAdaptiveDate = "";
 		mStatus = "";
+		mAdaptiveDate = "";
+		mBuyProfit = 0;
+		mSellProfit = 0;
 	}
 
 	@Override
@@ -251,7 +252,6 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE, mNetProfitPerShare);
 		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE_IN_YEAR, mNetProfitPerShareInYear);
 
-		contentValues.put(DatabaseContract.COLUMN_GRID_PROFIT, mGridProfit);
 		contentValues.put(DatabaseContract.COLUMN_RATE, mRate);
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND, mDividend);
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND_IN_YEAR, mDividendInYear);
@@ -260,9 +260,10 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND_RATIO, mDividendRatio);
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND_RATIO_IN_YEAR, mDividendRatioInYear);
 		contentValues.put(DatabaseContract.COLUMN_R_DATE, mRDate);
-		contentValues.put(DatabaseContract.COLUMN_ADAPTIVE_DATE, mAdaptiveDate);
 		contentValues.put(DatabaseContract.COLUMN_STATUS, mStatus);
-
+		contentValues.put(DatabaseContract.COLUMN_ADAPTIVE_DATE, mAdaptiveDate);
+		contentValues.put(DatabaseContract.COLUMN_BUY_PROFIT, mBuyProfit);
+		contentValues.put(DatabaseContract.COLUMN_SELL_PROFIT, mSellProfit);
 		return contentValues;
 	}
 
@@ -295,7 +296,8 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_SE, mSE);
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
-		contentValues.put(DatabaseContract.COLUMN_GRID_PROFIT, mGridProfit);
+		contentValues.put(DatabaseContract.COLUMN_BUY_PROFIT, mBuyProfit);
+		contentValues.put(DatabaseContract.COLUMN_SELL_PROFIT, mSellProfit);
 		return contentValues;
 	}
 
@@ -371,7 +373,6 @@ public class Stock extends DatabaseTable {
 		setCashFlowPerShare(stock.mCashFlowPerShare);
 		setNetProfitPerShare(stock.mNetProfitPerShare);
 		setNetProfitPerShareInYear(stock.mNetProfitPerShareInYear);
-		setGridProfit(stock.mGridProfit);
 		setRate(stock.mRate);
 		setDividend(stock.mDividend);
 		setDividendInYear(stock.mDividendInYear);
@@ -380,8 +381,10 @@ public class Stock extends DatabaseTable {
 		setDividendRatio(stock.mDividendRatio);
 		setDividendRatioInYear(stock.mDividendRatioInYear);
 		setRDate(stock.mRDate);
-		setAdaptiveDate(stock.mAdaptiveDate);
 		setStatus(stock.mStatus);
+		setAdaptiveDate(stock.mAdaptiveDate);
+		setBuyProfit(stock.mBuyProfit);
+		setSellProfit(stock.mSellProfit);
 	}
 
 	@Override
@@ -457,7 +460,6 @@ public class Stock extends DatabaseTable {
 		setNetProfitPerShare(cursor);
 		setNetProfitPerShareInYear(cursor);
 
-		setGridProfit(cursor);
 		setRate(cursor);
 		setDividend(cursor);
 		setDividendInYear(cursor);
@@ -466,8 +468,10 @@ public class Stock extends DatabaseTable {
 		setDividendRatio(cursor);
 		setDividendRatioInYear(cursor);
 		setRDate(cursor);
-		setAdaptiveDate(cursor);
 		setStatus(cursor);
+		setAdaptiveDate(cursor);
+		setBuyProfit(cursor);
+		setSellProfit(cursor);
 	}
 
 	public String getClasses() {
@@ -973,23 +977,6 @@ public class Stock extends DatabaseTable {
 						.getColumnIndex(DatabaseContract.COLUMN_NET_PROFIT_PER_SHARE_IN_YEAR)));
 	}
 
-	public double getGridProfit() {
-		return mGridProfit;
-	}
-
-	public void setGridProfit(double gridProfit) {
-		mGridProfit = gridProfit;
-	}
-
-	void setGridProfit(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setGridProfit(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_GRID_PROFIT)));
-	}
-
 	public double getRate() {
 		return mRate;
 	}
@@ -1245,6 +1232,23 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_R_DATE)));
 	}
 
+	public String getStatus() {
+		return mStatus;
+	}
+
+	public void setStatus(String status) {
+		mStatus = status;
+	}
+
+	void setStatus(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setStatus(cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_STATUS)));
+	}
+
 	public String getAdaptiveDate() {
 		return mAdaptiveDate;
 	}
@@ -1262,21 +1266,38 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_ADAPTIVE_DATE)));
 	}
 
-	public String getStatus() {
-		return mStatus;
+	public double getBuyProfit() {
+		return mBuyProfit;
 	}
 
-	public void setStatus(String status) {
-		mStatus = status;
+	public void setBuyProfit(double buyProfit) {
+		mBuyProfit = buyProfit;
 	}
 
-	void setStatus(Cursor cursor) {
+	void setBuyProfit(Cursor cursor) {
 		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
-		setStatus(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_STATUS)));
+		setBuyProfit(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_BUY_PROFIT)));
+	}
+
+	public double getSellProfit() {
+		return mSellProfit;
+	}
+
+	public void setSellProfit(double sellProfit) {
+		mSellProfit = sellProfit;
+	}
+
+	void setSellProfit(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setSellProfit(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_SELL_PROFIT)));
 	}
 
 	public void addFlag(int flag) {

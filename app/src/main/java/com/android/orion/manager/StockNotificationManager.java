@@ -86,11 +86,11 @@ public class StockNotificationManager {
 		if (stock.hasFlag(Stock.FLAG_GRID)) {
 			mGridAnalyzer.analyze(stock);
 			if (stockTrend.getNet() > 0) {
-				if (stock.getGridProfit() > 0) {
+				if (stock.getBuyProfit() > 0) {
 					gridNotifyString = mGridAnalyzer.getBuyDealString();
 				}
 			} else {
-				if (stock.getGridProfit() < 0) {
+				if (stock.getSellProfit() < 0) {
 					gridNotifyString = mGridAnalyzer.getSellDealString();
 				}
 			}

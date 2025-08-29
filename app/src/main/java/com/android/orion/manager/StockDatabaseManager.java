@@ -476,7 +476,7 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 		String selection = DatabaseContract.SELECTION_STOCK(stock.getSE(), stock.getCode());
 		Cursor cursor = null;
 		try {
-			cursor = queryStockDeal(selection, null, DatabaseContract.ORDER_BUY_ASC);
+			cursor = queryStockDeal(selection, null, DatabaseContract.ORDER_NET_ASC);
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				while (cursor.moveToNext()) {
 					stockDeal.set(cursor);
@@ -587,7 +587,7 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 		if (stock == null || stockDealList == null) {
 			return;
 		}
-		getStockDealList(stockDealList, DatabaseContract.SELECTION_STOCK(stock.getSE(), stock.getCode()), DatabaseContract.ORDER_BUY_DESC);
+		getStockDealList(stockDealList, DatabaseContract.SELECTION_STOCK(stock.getSE(), stock.getCode()), DatabaseContract.ORDER_NET_DESC);
 	}
 
 	public Uri insertStockFinancial(StockFinancial stockFinancial) {

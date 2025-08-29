@@ -31,8 +31,8 @@ import java.util.Comparator;
 import java.util.List;
 
 public class TrendAnalyzer {
-	public static final int K_MEANS_GRID = 1;
-	public static final int K_MEANS_DAYS = 5;
+	public static final int K_MEANS_GRID_DAYS = 1;
+	public static final int K_MEANS_TREND_DAYS = 4;
 	public static final int K_MEANS_PERIODS = 5;
 	public static final int K_MEANS_K = K_MEANS_PERIODS * (StockTrend.LEVELS.length - 1) / 2;
 	public static final int K_MEANS_MAX_ITERATIONS = 1000;
@@ -600,7 +600,7 @@ public class TrendAnalyzer {
 		for (int i = 0; i < clusterList.size(); i++) {
 			CentroidCluster<DataPoint> cluster = clusterList.get(i);
 			for (DataPoint dataPoint : cluster.getPoints()) {
-				int threshold = mStock.hasFlag(Stock.FLAG_GRID) ? K_MEANS_GRID : K_MEANS_DAYS;
+				int threshold = mStock.hasFlag(Stock.FLAG_GRID) ? K_MEANS_GRID_DAYS : K_MEANS_TREND_DAYS;
 				if (dataPoint.days < threshold) {
 					continue;//TODO
 				}

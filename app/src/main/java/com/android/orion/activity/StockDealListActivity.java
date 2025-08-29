@@ -841,13 +841,19 @@ public class StockDealListActivity extends ListActivity implements
 
 			double net = cursor.getDouble(cursor
 					.getColumnIndex(DatabaseContract.COLUMN_NET));
+			String type = cursor.getString(cursor
+					.getColumnIndex(DatabaseContract.COLUMN_TYPE));
 
 			TextView textView = (TextView) view;
-			if (net < 0) {
-				textView.setTextColor(Color.GREEN);
-			} else if (net > 0) {
-				textView.setTextColor(Color.RED);
+			int textColor;
+			if (TextUtils.equals(type, StockDeal.TYPE_BUY)) {
+				textColor = net > 0 ? Color.RED : Color.GREEN;
+			} else if (TextUtils.equals(type, StockDeal.TYPE_SELL)) {
+				textColor = net > 0 ? Color.GREEN : Color.RED;
+			} else {
+				textColor = Color.BLACK;
 			}
+			textView.setTextColor(textColor);
 		}
 	}
 }
