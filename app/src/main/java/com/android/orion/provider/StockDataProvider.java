@@ -265,16 +265,16 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 
 		switch (stockData.getPeriod()) {
 			case Period.MIN5:
-				n = size - Config.MAX_CONTENT_LENGTH_MIN5;
+				n = size - Config.HISTORY_LENGTH_MIN5;
 				break;
 			case Period.MIN15:
-				n = size - Config.MAX_CONTENT_LENGTH_MIN15;
+				n = size - Config.HISTORY_LENGTH_MIN15;
 				break;
 			case Period.MIN30:
-				n = size - Config.MAX_CONTENT_LENGTH_MIN30;
+				n = size - Config.HISTORY_LENGTH_MIN30;
 				break;
 			case Period.MIN60:
-				n = size - Config.MAX_CONTENT_LENGTH_MIN60;
+				n = size - Config.HISTORY_LENGTH_MIN60;
 				break;
 			default:
 				break;
@@ -331,8 +331,8 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 				Log.d("Message already exists for code: " + stockCode + ", skip!");
 			} else {
 				Message msg = mHandler.obtainMessage(messageID, stock);
-				mHandler.sendMessage(msg);
-				Log.d("Sent message: " + msg);
+				mHandler.sendMessageDelayed(msg, Config.SEND_MESSAGE_DELAY_DOWNLOAD);
+				Log.d("Sent sendMessageDelayed: " + msg);
 			}
 		}
 	}
@@ -366,8 +366,8 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			Log.d("mHandler.hasMessages " + Integer.parseInt(stock.getCode()) + ", skip!");
 		} else {
 			Message msg = mHandler.obtainMessage(Integer.parseInt(stock.getCode()), stock);
-			mHandler.sendMessage(msg);
-			Log.d("mHandler.sendMessage" + msg);
+			mHandler.sendMessageDelayed(msg, Config.SEND_MESSAGE_DELAY_DOWNLOAD);
+			Log.d("mHandler.sendMessageDelayed" + msg);
 		}
 
 		for (Stock current : mRemovedArrayMap.values()) {
@@ -375,8 +375,26 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 				Log.d("mHandler.hasMessages " + Integer.valueOf(current.getCode()) + ", skip!");
 			} else {
 				Message msg = mHandler.obtainMessage(Integer.parseInt(current.getCode()), current);
-				mHandler.sendMessage(msg);
-				Log.d("mHandler.sendMessage " + msg);
+				mHandler.sendMessageDelayed(msg, Config.SEND_MESSAGE_DELAY_DOWNLOAD);
+				Log.d("mHandler.sendMessageDelayed " + msg);
+			}
+		}
+	}
+
+	void mergeStockDataDay(StockData stockData) {
+		if (stockData == null) {
+			return;
+		}
+
+		if (stockData.getPeriod().equals(Period.MONTH) || stockData.getPeriod().equals(Period.WEEK)) {
+			StockData day = new StockData(stockData);
+			day.setPeriod(Period.DAY);
+			mStockDatabaseManager.getStockData(day);
+			if (TextUtils.equals(day.getMonth(), stockData.getMonth()) || TextUtils.equals(day.getWeek(), stockData.getWeek())) {
+				if (day.getCalendar().after(stockData.getCalendar())) {
+					stockData.setDate(day.getDate());
+					stockData.getCandle().merge(day.getCandle());
+				}
 			}
 		}
 	}
@@ -458,8 +476,8 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 				return;
 			}
 
-			if (lineList.size() > Config.MAX_CONTENT_LENGTH_MIN5) {
-				lineList = new ArrayList<>(lineList.subList(lineList.size() - Config.MAX_CONTENT_LENGTH_MIN5, lineList.size()));
+			if (lineList.size() > Config.HISTORY_LENGTH_MIN5) {
+				lineList = new ArrayList<>(lineList.subList(lineList.size() - Config.HISTORY_LENGTH_MIN5, lineList.size()));
 			}
 
 //			ArrayList<String> datetimeMin5List = new ArrayList<>();//based on min5
@@ -756,7 +774,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 	}
 
 	void exportTDXData(Stock stock, String period, ArrayList<StockData> stockDataList) {
-		if (stock == null || stockDataList == null || stockDataList.size() < Config.MAX_CONTENT_LENGTH_MIN5) {
+		if (stock == null || stockDataList == null || stockDataList.size() < Config.HISTORY_LENGTH_MIN5) {
 			return;
 		}
 

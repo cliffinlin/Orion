@@ -103,8 +103,8 @@ public class StockStatisticsChart {
 		BarData barData = new BarData(mXValues);
 		BarDataSet peDataSet = new BarDataSet(mPeEntryList, "pe");
 		peDataSet.setBarSpacePercent(40f);
-		peDataSet.setIncreasingColor(Config.COLOR_RGB_RED);
-		peDataSet.setDecreasingColor(Config.COLOR_RGB_GREEN);
+		peDataSet.setIncreasingColor(Config.COLOR_CANDLE_RED);
+		peDataSet.setDecreasingColor(Config.COLOR_CANDLE_GREEN);
 		peDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		barData.addDataSet(peDataSet);
 

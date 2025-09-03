@@ -51,14 +51,6 @@ public class SinaFinance extends StockDataProvider {
 	public static final String SINA_FINANCE_HEAD_REFERER_KEY = "Referer";
 	public static final String SINA_FINANCE_HEAD_REFERER_VALUE = "http://vip.stock.finance.sina.com.cn/";
 
-	public static final int DOWNLOAD_HISTORY_LENGTH_UNLIMITED = -1;
-	public static final int DOWNLOAD_HISTORY_LENGTH_NONE = 0;
-	public static final int DOWNLOAD_HISTORY_LENGTH_DEFAULT = 120;
-
-	public static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN5 = 242;
-	public static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN15 = 192;
-	public static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN30 = 192;
-	public static final int DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN60 = 192;
 	static StringBuffer mContentTitle = new StringBuffer();
 	ArrayList<ContentValues> ContentValuesList = new ArrayList<>();
 	ArrayList<String> mAccessDeniedStringArray = new ArrayList<>();
@@ -83,19 +75,19 @@ public class SinaFinance extends StockDataProvider {
 
 	public int getAvailableHistoryLength(String period) {
 		if (TextUtils.equals(period, Period.MONTH)) {
-			return DOWNLOAD_HISTORY_LENGTH_UNLIMITED;
+			return Config.DOWNLOAD_HISTORY_LENGTH_UNLIMITED;
 		} else if (TextUtils.equals(period, Period.WEEK)) {
-			return DOWNLOAD_HISTORY_LENGTH_UNLIMITED;
+			return Config.DOWNLOAD_HISTORY_LENGTH_UNLIMITED;
 		} else if (TextUtils.equals(period, Period.DAY)) {
-			return DOWNLOAD_HISTORY_LENGTH_UNLIMITED;
+			return Config.DOWNLOAD_HISTORY_LENGTH_UNLIMITED;
 		} else if (TextUtils.equals(period, Period.MIN60)) {
-			return DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN60;
+			return Config.DOWNLOAD_HISTORY_LENGTH_MIN60;
 		} else if (TextUtils.equals(period, Period.MIN30)) {
-			return DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN30;
+			return Config.DOWNLOAD_HISTORY_LENGTH_MIN30;
 		} else if (TextUtils.equals(period, Period.MIN15)) {
-			return DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN15;
+			return Config.DOWNLOAD_HISTORY_LENGTH_MIN15;
 		} else if (TextUtils.equals(period, Period.MIN5)) {
-			return DOWNLOAD_HISTORY_LENGTH_PERIOD_MIN5;
+			return Config.DOWNLOAD_HISTORY_LENGTH_MIN5;
 		}
 		return 0;
 	}
@@ -195,8 +187,8 @@ public class SinaFinance extends StockDataProvider {
 
 		if (availableHistoryLength > 0) {
 			result = availableHistoryLength;
-		} else if (availableHistoryLength == DOWNLOAD_HISTORY_LENGTH_UNLIMITED) {
-			result = DOWNLOAD_HISTORY_LENGTH_DEFAULT;
+		} else if (availableHistoryLength == Config.DOWNLOAD_HISTORY_LENGTH_UNLIMITED) {
+			result = Config.DOWNLOAD_HISTORY_LENGTH_DEFAULT;
 		}
 
 		return result;
@@ -840,11 +832,13 @@ public class SinaFinance extends StockDataProvider {
 					stockData.getCandle().setClose(jsonObject.getDouble("close"));
 					stockData.getCandle().setHigh(jsonObject.getDouble("high"));
 					stockData.getCandle().setLow(jsonObject.getDouble("low"));
-
+					//TODO
+					if (i == jsonArray.size() - 1) {
+						mergeStockDataDay(stockData);
+					}
 					if (bulkInsert) {
 						stockData.setCreated(Utility.getCurrentDateTimeString());
 						stockData.setModified(Utility.getCurrentDateTimeString());
-
 						if (Period.isMinutePeriod(stockData.getPeriod())) {
 							if (!stockDataMap.containsKey(stockData.getDateTime())) {
 								stockDataMap.put(stockData.getDateTime(), new StockData(stockData));
@@ -856,28 +850,11 @@ public class SinaFinance extends StockDataProvider {
 						}
 					} else {
 						if (!mStockDatabaseManager.isStockDataExist(stockData)) {
-							if (stockData.getPeriod().equals(Period.MONTH) || stockData.getPeriod().equals(Period.WEEK)) {
-								StockData prev = new StockData(stockData);
-								mStockDatabaseManager.getStockData(prev);
-								if (TextUtils.equals(prev.getMonth(), stockData.getMonth()) || TextUtils.equals(prev.getWeek(), stockData.getWeek())) {
-									stockData.setModified(Utility
-											.getCurrentDateTimeString());
-									mStockDatabaseManager.updateStockData(prev.getId(),
-											stockData.getContentValues());
-								} else {
-									stockData.setCreated(Utility
-											.getCurrentDateTimeString());
-									stockData.setModified(Utility
-											.getCurrentDateTimeString());
-									mStockDatabaseManager.insertStockData(stockData);
-								}
-							} else {
-								stockData.setCreated(Utility
-										.getCurrentDateTimeString());
-								stockData.setModified(Utility
-										.getCurrentDateTimeString());
-								mStockDatabaseManager.insertStockData(stockData);
-							}
+							stockData.setCreated(Utility
+									.getCurrentDateTimeString());
+							stockData.setModified(Utility
+									.getCurrentDateTimeString());
+							mStockDatabaseManager.insertStockData(stockData);
 						} else {
 							stockData.setModified(Utility
 									.getCurrentDateTimeString());

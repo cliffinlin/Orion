@@ -76,7 +76,7 @@ public class LinearRegression {
 		LinearRegression linearRegression = new LinearRegression(xList, yList);
 
 		// 训练模型
-		linearRegression.train(Config.MAX_ITERATIONS);
+		linearRegression.train(Config.MAX_ITERATION);
 
 		// 获取斜率和偏置
 		double slope = linearRegression.getSlope();
@@ -99,7 +99,7 @@ public class LinearRegression {
 		LinearRegression linearRegression = new LinearRegression();
 
 		// 训练模型
-		linearRegression.train(xList, yList, Config.MAX_ITERATIONS);
+		linearRegression.train(xList, yList, Config.MAX_ITERATION);
 
 		// 获取斜率和偏置
 		double slope = linearRegression.getSlope();

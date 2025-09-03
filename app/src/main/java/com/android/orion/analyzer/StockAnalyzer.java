@@ -1,6 +1,7 @@
 package com.android.orion.analyzer;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.android.orion.application.MainApplication;
 import com.android.orion.data.Macd;
@@ -44,8 +45,7 @@ public class StockAnalyzer {
 		}
 
 		try {
-			mStockDataList = mStock.getStockDataList(period);
-			mStockDatabaseManager.loadStockDataList(mStock, period, mStockDataList);
+			loadStockDataList(period);
 			if (Period.getPeriodIndex(period) <= Period.getPeriodIndex(Period.MONTH)) {
 				mFinancialAnalyzer.setNetProfileInYear(mStock, mStockDataList);
 			}
@@ -145,6 +145,35 @@ public class StockAnalyzer {
 		}
 
 		mTrendAnalyzer.analyzeAdaptive(period);
+	}
+
+	void loadStockDataList(String period) {
+		mStockDataList = mStock.getStockDataList(period);
+		mStockDatabaseManager.loadStockDataList(mStock, period, mStockDataList);
+
+		boolean foundRepeated = false;
+		if (period.equals(Period.MONTH) || period.equals(Period.WEEK)) {
+			if (mStockDataList == null || mStockDataList.isEmpty()) {
+				return;
+			}
+
+			for (int i = mStockDataList.size() - 1; i > 0; i--) {
+				StockData current = mStockDataList.get(i);
+				StockData prev = mStockDataList.get(i - 1);
+				if (TextUtils.equals(prev.getMonth(), current.getMonth()) || TextUtils.equals(prev.getWeek(), current.getWeek())) {
+					if (!TextUtils.equals(prev.getDay(), current.getDay())) {
+						mStockDatabaseManager.deleteStockData(prev.getId());
+						foundRepeated = true;
+					}
+				} else {
+					break;
+				}
+			}
+		}
+
+		if (foundRepeated) {
+			mStockDatabaseManager.loadStockDataList(mStock, period, mStockDataList);
+		}
 	}
 
 	private static class SingletonHolder {

@@ -55,7 +55,7 @@ public class LinearRegression2D {
 		LinearRegression2D linearRegression = new LinearRegression2D(x1List, x2List, yList);
 
 		// 训练模型
-		linearRegression.train(Config.MAX_ITERATIONS);
+		linearRegression.train(Config.MAX_ITERATION);
 
 		// 获取斜率和偏置
 		double slope1 = linearRegression.getSlope1();

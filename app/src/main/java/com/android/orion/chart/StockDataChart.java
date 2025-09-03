@@ -101,8 +101,8 @@ public class StockDataChart {
 		if (Setting.getDisplayCandle()) {
 			CandleData candleData = new CandleData(mXValues);
 			CandleDataSet candleDataSet = new CandleDataSet(mCandleEntryList, "K");
-			candleDataSet.setIncreasingColor(increasingColor(Config.COLOR_RGB_RED));
-			candleDataSet.setDecreasingColor(decreasingColor(Config.COLOR_RGB_GREEN));
+			candleDataSet.setIncreasingColor(increasingColor(Config.COLOR_CANDLE_RED));
+			candleDataSet.setDecreasingColor(decreasingColor(Config.COLOR_CANDLE_GREEN));
 			candleDataSet.setIncreasingPaintStyle(Paint.Style.FILL);
 			candleDataSet.setDecreasingPaintStyle(Paint.Style.FILL);
 			candleDataSet.setShadowColorSameAsCandle(true);
@@ -189,8 +189,8 @@ public class StockDataChart {
 		BarDataSet histogramDataSet = new BarDataSet(mHistogramEntryList,
 				"Histogram");
 		histogramDataSet.setBarSpacePercent(40f);
-		histogramDataSet.setIncreasingColor(increasingColor(Config.COLOR_RGB_RED));
-		histogramDataSet.setDecreasingColor(decreasingColor(Config.COLOR_RGB_GREEN));
+		histogramDataSet.setIncreasingColor(increasingColor(Config.COLOR_CANDLE_RED));
+		histogramDataSet.setDecreasingColor(decreasingColor(Config.COLOR_CANDLE_GREEN));
 		histogramDataSet.setColor(dataSetColor(Color.RED));
 		histogramDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		barData.addDataSet(histogramDataSet);

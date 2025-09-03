@@ -117,6 +117,15 @@ public class Candle {
 		mClose += candle.mClose * weight;
 	}
 
+	public void merge(Candle candle) {
+		if (candle == null) {
+			return;
+		}
+		setHigh(Math.max(getHigh(), candle.getHigh()));
+		setLow(Math.min(getLow(), candle.getLow()));
+		setClose(candle.getClose());
+	}
+
 	public String toString() {
 		return mOpen + Symbol.TAB
 				+ mHigh + Symbol.TAB

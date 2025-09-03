@@ -84,7 +84,7 @@ public class IRR {
 		mIR = totalDividend / Math.abs(cashFlows[0]);
 
 		// 计算 IRR
-		mIRR = calculateIRR(cashFlows, 0.00001, Config.MAX_ITERATIONS);
+		mIRR = calculateIRR(cashFlows, 0.00001, Config.MAX_ITERATION);
 
 		// 输出结果
 //		for (int i = 0; i < cashFlows.length; i++) {

@@ -335,6 +335,10 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 		return delete(DatabaseContract.StockData.CONTENT_URI, DatabaseContract.SELECTION_STOCK_PERIOD(se, code, period), null);
 	}
 
+	public int deleteStockData(long id) {
+		return delete(DatabaseContract.StockData.CONTENT_URI, DatabaseContract.SELECTION_ID(id), null);
+	}
+
 	public int updateStockData(long id, ContentValues contentValues) {
 		return update(DatabaseContract.StockData.CONTENT_URI, contentValues, DatabaseContract.SELECTION_ID(id), null);
 	}

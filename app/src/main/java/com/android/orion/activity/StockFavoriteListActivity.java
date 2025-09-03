@@ -688,12 +688,12 @@ public class StockFavoriteListActivity extends ListActivity implements
 					return setVisibility(view, Setting.getDisplayNet());
 				} else if (DatabaseContract.COLUMN_BUY_PROFIT.equals(columnName)) {
 					if (Utility.hasFlag(flag, Stock.FLAG_GRID)) {
-						setTextViewColor(textView, Config.GRID_PROFIT_BACKGROUND_COLOR, buyProfit > 0 ? Color.RED : Color.GREEN);
+						setTextViewColor(textView, Config.COLOR_GRID_PROFILE, buyProfit > 0 ? Color.RED : Color.GREEN);
 					}
 					return setVisibility(view, Setting.getDisplayNet());
 				} else if (DatabaseContract.COLUMN_SELL_PROFIT.equals(columnName)) {
 					if (Utility.hasFlag(flag, Stock.FLAG_GRID)) {
-						setTextViewColor(textView, Config.GRID_PROFIT_BACKGROUND_COLOR, sellProfit < 0 ? Color.RED : Color.GREEN);
+						setTextViewColor(textView, Config.COLOR_GRID_PROFILE, sellProfit < 0 ? Color.RED : Color.GREEN);
 					}
 					return setVisibility(view, Setting.getDisplayNet());
 				} else if (DatabaseContract.COLUMN_MODIFIED.equals(columnName)) {

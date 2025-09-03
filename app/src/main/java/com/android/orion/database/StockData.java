@@ -465,6 +465,11 @@ public class StockData extends DatabaseTable {
 		return String.format("%02d", week);
 	}
 
+	public String getDay() {
+		int day = getCalendar().get(Calendar.DAY_OF_MONTH);
+		return String.format("%02d", day);
+	}
+
 	public void add(StockData stockData, long weight) {
 		if (stockData == null) {
 			return;
@@ -674,7 +679,7 @@ public class StockData extends DatabaseTable {
 		date  time    open    high    low close   volume  value
 		*/
 		String dateString = getDate().replace(Symbol.MINUS, "/");
-		String timeString = getTime().substring(0, 5).replace(":", "");
+		String timeString = TextUtils.isEmpty(getTime()) ? "" : getTime().substring(0, 5).replace(":", "");
 		stringBuffer.append(dateString + Symbol.TAB
 				+ timeString + Symbol.TAB
 				+ mCandle.toString()
