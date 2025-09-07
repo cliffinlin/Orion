@@ -1806,4 +1806,14 @@ public class Stock extends DatabaseTable {
 		result.append(getPriceNetString());
 		return result.toString();
 	}
+
+	public String toString() {
+		return mName + Symbol.TAB
+				+ mCode + Symbol.TAB;
+	}
+
+	public String toLogString() {
+		return mPinyin + Symbol.TAB
+				+ mCode + Symbol.TAB;
+	}
 }

@@ -589,7 +589,7 @@ public class TrendAnalyzer {
 				point.setDistance(point.distanceTo(cluster.getCenter()));
 				clusterInfo.append("  ").append(point).append("\n");
 			}
-			Log.d(clusterInfo.toString());
+//			Log.d(clusterInfo.toString());
 		}
 	}
 
@@ -613,7 +613,7 @@ public class TrendAnalyzer {
 				for (String period : Period.PERIODS) {
 					if (mDataPointMap.get(period) != null) {
 						mStock.setLevel(period, mDataPointMap.get(period).level);
-						Log.d("setLevel:" + mDataPointMap.get(period).toString());
+//						Log.d("setLevel:" + mDataPointMap.get(period).toString());
 					}
 				}
 				return;

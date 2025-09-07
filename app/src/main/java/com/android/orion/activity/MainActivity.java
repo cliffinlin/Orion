@@ -35,8 +35,9 @@ import java.util.List;
 
 public class MainActivity extends Activity {
 
-	Context mContext;
+	public static final long EXIT_TIME_OUT = 2000;
 	Logger Log = Logger.getLogger();
+	Context mContext;
 	private long mExitTime;
 
 	@Override
@@ -135,15 +136,13 @@ public class MainActivity extends Activity {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			if (!Market.isTradingHours()) {
-				if ((System.currentTimeMillis() - mExitTime) > 2000) {
-					mExitTime = System.currentTimeMillis();
-					Toast.makeText(this,
-							getResources().getString(R.string.press_again_to_exit),
-							Toast.LENGTH_SHORT).show();
-				} else {
-					finishAndStopService();
-				}
+			if ((System.currentTimeMillis() - mExitTime) > EXIT_TIME_OUT) {
+				mExitTime = System.currentTimeMillis();
+				Toast.makeText(this,
+						getResources().getString(R.string.press_again_to_exit),
+						Toast.LENGTH_SHORT).show();
+			} else {
+				finishAndStopService();
 			}
 			return true;
 		}

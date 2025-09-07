@@ -59,8 +59,7 @@ public class StockAnalyzer {
 		}
 
 		StopWatch.stop();
-		Log.d(mStock.getName() + " " + period + " "
-				+ StopWatch.getInterval() + "s");
+		Log.d(mStock.toLogString() + " " + period + " " + StopWatch.getInterval() + "s");//TODO
 	}
 
 	public void analyze(Stock stock) {
@@ -94,7 +93,7 @@ public class StockAnalyzer {
 		}
 
 		StopWatch.stop();
-		Log.d(stock.getName() + " " + StopWatch.getInterval() + "s");
+		Log.d(stock.toLogString() + " " + StopWatch.getInterval() + "s");
 	}
 
 	private void analyzeMacd(String period) {

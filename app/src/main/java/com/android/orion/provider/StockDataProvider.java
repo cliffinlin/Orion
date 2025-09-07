@@ -177,9 +177,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 	public void onDestroy() {
 		releaseWakeLock();
 		for (Stock stock : mStockArrayMap.values()) {
-			if (mHandler.hasMessages(Integer.parseInt(stock.getCode()))) {
-				mHandler.removeMessages(Integer.parseInt(stock.getCode()));
-			}
+			removeDownloadMessage(stock);
 		}
 		if (mHandlerThread != null && mHandlerThread.isAlive()) {
 			mHandlerThread.quitSafely();
@@ -300,10 +298,34 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		}
 	}
 
+	void removeDownloadMessage(Stock stock) {
+		if (stock == null) {
+			return;
+		}
+		int messageID = stock.getCode().hashCode();
+		if (mHandler.hasMessages(messageID)) {
+			Log.d(stock.toLogString());
+			mHandler.removeMessages(messageID);
+		}
+	}
+
+	void sendDownloadMessage(Stock stock) {
+		if (stock == null) {
+			return;
+		}
+		Log.d(stock.toLogString());
+		int messageID = stock.getCode().hashCode();
+		if (mHandler.hasMessages(messageID)) {
+			Log.d("return, mHandler.hasMessages " + stock.toLogString());
+			return;
+		}
+		Message msg = mHandler.obtainMessage(messageID, stock);
+		mHandler.sendMessageDelayed(msg, Config.SEND_MESSAGE_DELAY_DOWNLOAD);
+	}
+
 	@Override
 	public void download() {
 		if (!Utility.isNetworkConnected(mContext)) {
-			mHandler.removeMessages(0);
 			Log.d("return, No network connection");
 			return;
 		}
@@ -316,31 +338,14 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 
 		int index = 0;
 		for (Stock stock : mStockArrayMap.values()) {
-			Log.d("index=" + index++);
-
-			String stockCode = stock.getCode();
-			int messageID;
-			try {
-				messageID = Integer.parseInt(stockCode);
-			} catch (Exception e) {
-				Log.d("Invalid stock code: " + stockCode);
-				continue;
-			}
-
-			if (mHandler.hasMessages(messageID)) {
-				Log.d("Message already exists for code: " + stockCode + ", skip!");
-			} else {
-				Message msg = mHandler.obtainMessage(messageID, stock);
-				mHandler.sendMessageDelayed(msg, Config.SEND_MESSAGE_DELAY_DOWNLOAD);
-				Log.d("Sent sendMessageDelayed: " + msg);
-			}
+			Log.d("index=" + index++ + " " + stock.toLogString());
+			sendDownloadMessage(stock);
 		}
 	}
 
 	@Override
 	public void download(Stock stock) {
 		if (!Utility.isNetworkConnected(mContext)) {
-			mHandler.removeMessages(0);
 			Log.d("return, isNetworkConnected=" + Utility.isNetworkConnected(mContext));
 			return;
 		}
@@ -349,35 +354,23 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			return;
 		}
 
+		mRemovedArrayMap.clear();
 		mStockDatabaseManager.loadStockArrayMap(mStockArrayMap);
+		int index = 0;
 		for (Stock current : mStockArrayMap.values()) {
+			Log.d("index=" + index++ + " " + stock.toLogString());
 			if (TextUtils.equals(current.getCode(), stock.getCode())) {
-				continue;
-			}
-
-			if (mHandler.hasMessages(Integer.parseInt(current.getCode()))) {
-				mHandler.removeMessages(Integer.parseInt(current.getCode()));
-				Log.d("mHandler.hasMessages " + Integer.parseInt(current.getCode()) + ", removed!");
-				mRemovedArrayMap.put(current.getCode(), current);
-			}
-		}
-
-		if (mHandler.hasMessages(Integer.parseInt(stock.getCode()))) {
-			Log.d("mHandler.hasMessages " + Integer.parseInt(stock.getCode()) + ", skip!");
-		} else {
-			Message msg = mHandler.obtainMessage(Integer.parseInt(stock.getCode()), stock);
-			mHandler.sendMessageDelayed(msg, Config.SEND_MESSAGE_DELAY_DOWNLOAD);
-			Log.d("mHandler.sendMessageDelayed" + msg);
-		}
-
-		for (Stock current : mRemovedArrayMap.values()) {
-			if (mHandler.hasMessages(Integer.parseInt(current.getCode()))) {
-				Log.d("mHandler.hasMessages " + Integer.valueOf(current.getCode()) + ", skip!");
+				sendDownloadMessage(current);
 			} else {
-				Message msg = mHandler.obtainMessage(Integer.parseInt(current.getCode()), current);
-				mHandler.sendMessageDelayed(msg, Config.SEND_MESSAGE_DELAY_DOWNLOAD);
-				Log.d("mHandler.sendMessageDelayed " + msg);
+				mRemovedArrayMap.put(current.getCode(), current);
+				removeDownloadMessage(current);
 			}
+		}
+
+		index = 0;
+		for (Stock current : mRemovedArrayMap.values()) {
+			Log.d("index=" + index++ + " " + stock.toLogString());
+			sendDownloadMessage(current);
 		}
 	}
 
@@ -767,7 +760,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 				contentValuesArray[stockDataList.indexOf(stockData)] = tdxData.getContentValues();
 			}
 			mStockDatabaseManager.bulkInsertTDXData(contentValuesArray);
-			Log.d("bulkInsertTDXData " + stock.getName() + " " + stock.getSE() + stock.getCode() + " " + period);
+			Log.d("bulkInsertTDXData " + stock.toLogString() + " " + period);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -798,7 +791,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 				}
 				writer.close();
 			}
-			Log.d("exportTDXData " + stock.getName() + " " + stock.getSE() + stock.getCode() + " " + period + " index=" + index);
+			Log.d("exportTDXData " + stock.toLogString() + " " + period + " index=" + index);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -823,12 +816,8 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		if (stock == null) {
 			return;
 		}
-
 		mStockArrayMap.remove(stock.getCode());
-
-		if (mHandler.hasMessages(Integer.parseInt(stock.getCode()))) {
-			mHandler.removeMessages(Integer.parseInt(stock.getCode()));
-		}
+		removeDownloadMessage(stock);
 	}
 
 	@Override
@@ -847,12 +836,8 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		if (stock == null) {
 			return;
 		}
-
 		mStockArrayMap.remove(stock.getCode());
-
-		if (mHandler.hasMessages(Integer.parseInt(stock.getCode()))) {
-			mHandler.removeMessages(Integer.parseInt(stock.getCode()));
-		}
+		removeDownloadMessage(stock);
 	}
 
 	@Override
@@ -871,10 +856,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		if (stock == null) {
 			return;
 		}
-
-		if (mHandler.hasMessages(Integer.parseInt(stock.getCode()))) {
-			mHandler.removeMessages(Integer.parseInt(stock.getCode()));
-		}
+		removeDownloadMessage(stock);
 	}
 
 	@Override
@@ -942,7 +924,6 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 				}
 
 				if (!Utility.isNetworkConnected(mContext)) {
-					removeMessages(0);
 					Log.d("return, isNetworkConnected=" + Utility.isNetworkConnected(mContext));
 					return;
 				}

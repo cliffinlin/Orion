@@ -216,7 +216,7 @@ public class SinaFinance extends StockDataProvider {
 			cursor.moveToLast();
 			stockData.set(cursor);
 
-			if (Market.isTradingHours()) {
+			if (Market.isTradingHours()) {//TODO
 				int scheduleMinutes = Market.getScheduleMinutes();
 				if (scheduleMinutes != 0) {
 					result = 1;
@@ -534,10 +534,7 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		StopWatch.stop();
-		Log.d(stock.getName() + " "
-				+ stock.getClasses() + " " + stock.getPinyin() + " "
-				+ stock.getShare() + " " + StopWatch.getInterval()
-				+ "s");
+		Log.d(stock.toLogString() + " " + StopWatch.getInterval() + "s");
 	}
 
 	@Override
@@ -678,11 +675,7 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		StopWatch.stop();
-		Log.d(stock.getName() + " "
-				+ stock.getPrice() + " " + stock.getChange() + " "
-				+ stock.getNet() + " " + stock.getVolume() + " "
-				+ stock.getValue() + " " + StopWatch.getInterval()
-				+ "s");
+		Log.d(stock.toLogString() + " " + StopWatch.getInterval() + "s");//TODO
 	}
 
 	@Override
@@ -717,7 +710,7 @@ public class SinaFinance extends StockDataProvider {
 
 		int len = getDownloadStockDataLength(stockData);
 		if (len <= 0) {
-			Log.d(stock.getName() + " return, period=" + period + " len=" + len);
+			Log.d("return," + stock.toLogString() + " period=" + period + " len=" + len);
 			return result;
 		}
 
@@ -886,8 +879,8 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		StopWatch.stop();
-		Log.d(stock.getName() + " "
-				+ stockData.getPeriod() + " " + StopWatch.getInterval() + "s");
+		Log.d(stock.toLogString() + " "
+				+ stockData.getPeriod() + " " + StopWatch.getInterval() + "s");//TODO
 	}
 
 	@Override
@@ -1070,7 +1063,7 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		StopWatch.stop();
-		Log.d(stock.getName() + Symbol.TAB
+		Log.d(stock.toLogString() + Symbol.TAB
 				+ stockData.getDate() + Symbol.TAB + stockData.getTime() + Symbol.TAB
 				+ stockData.getCandle().toString()
 				+ StopWatch.getInterval() + "s");
@@ -1283,8 +1276,7 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		StopWatch.stop();
-		Log.d(stock.getName() + " "
-				+ StopWatch.getInterval() + "s");
+		Log.d(stock.toLogString() + " " + StopWatch.getInterval() + "s");//TODO
 	}
 
 	@Override
@@ -1467,8 +1459,7 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		StopWatch.stop();
-		Log.d(stock.getName() + " "
-				+ StopWatch.getInterval() + "s");
+		Log.d(stock.toLogString() + " " + StopWatch.getInterval() + "s");//TODO
 	}
 
 	@Override
@@ -1648,8 +1639,7 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		StopWatch.stop();
-		Log.d(stock.getName() + " "
-				+ StopWatch.getInterval() + "s");
+		Log.d(stock.toLogString() + " " + StopWatch.getInterval() + "s");//TODO
 	}
 
 	private boolean isAccessDenied(String string) {

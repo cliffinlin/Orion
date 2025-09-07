@@ -75,13 +75,6 @@ public class StockNotificationManager {
 			return;
 		}
 
-		if (!Market.isTradingHours()) {
-			Toast.makeText(mContext,
-					mContext.getResources().getString(R.string.out_of_trading_hours),
-					Toast.LENGTH_SHORT).show();
-			return;
-		}
-
 		String gridNotifyString = "";
 		if (stock.hasFlag(Stock.FLAG_GRID)) {
 			mGridAnalyzer.analyze(stock);
