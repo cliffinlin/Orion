@@ -10,9 +10,6 @@ import java.util.Calendar;
 
 public class StockDeal extends DatabaseTable {
 
-	public static final String ACCOUNT_A = "A";
-	public static final String ACCOUNT_B = "B";
-
 	public static final String TYPE_BUY = "BUY";
 	public static final String TYPE_NONE = "";
 	public static final String TYPE_SELL = "SELL";

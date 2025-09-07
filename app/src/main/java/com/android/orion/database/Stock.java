@@ -14,6 +14,9 @@ import java.util.ArrayList;
 
 public class Stock extends DatabaseTable {
 
+	public static final String ACCOUNT_A = "A";
+	public static final String ACCOUNT_B = "B";
+
 	public static final String CLASS_A = "A";
 	public static final String CLASS_INDEX = "I";
 

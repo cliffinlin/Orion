@@ -166,6 +166,10 @@ public class DatabaseContract {
 	private DatabaseContract() {
 	}
 
+	public static final String SELECTION_ACCOUNT(String value) {
+		return COLUMN_ACCOUNT + " = " + "'" + value + "'";
+	}
+
 	public static final String SELECTION_CLASSES(String value) {
 		return COLUMN_CLASSES + " = " + "'" + value + "'";
 	}
@@ -198,17 +202,20 @@ public class DatabaseContract {
 		return DatabaseContract.COLUMN_PERIOD + " = " + "'" + value + "'";
 	}
 
-	public static final String SELECTION_TIME(String value) {
-		return DatabaseContract.COLUMN_TIME + " = " + "'" + value + "'";
-	}
-
-	public static final String SELECTION_TYPE(String value) {
-		return DatabaseContract.COLUMN_TYPE + " = " + "'" + value + "'";
+	public static final String SELECTION_PERIOD_LEVEL_TYPE(String period, int level, String type) {
+		return SELECTION_PERIOD(period)
+				+ " AND " + SELECTION_LEVEL(level)
+				+ " AND " + SELECTION_TYPE(type);
 	}
 
 	public static final String SELECTION_STOCK(String se, String code) {
 		return DatabaseContract.COLUMN_SE + " = " + "'" + se + "'"
 				+ " AND " + DatabaseContract.COLUMN_CODE + " = " + "'" + code + "'";
+	}
+
+	public static final String SELECTION_STOCK_ACCOUNT(String se, String code, String account) {
+		return SELECTION_STOCK(se, code)
+				+ " AND " + SELECTION_ACCOUNT(account);
 	}
 
 	public static final String SELECTION_STOCK_DATE(String se, String code, String date) {
@@ -219,17 +226,6 @@ public class DatabaseContract {
 	public static final String SELECTION_STOCK_PERIOD(String se, String code, String period) {
 		return SELECTION_STOCK(se, code)
 				+ " AND " + SELECTION_PERIOD(period);
-	}
-
-	public static final String SELECTION_STOCK_TYPE(String se, String code, String type) {
-		return SELECTION_STOCK(se, code)
-				+ " AND " + SELECTION_TYPE(type);
-	}
-
-	public static final String SELECTION_PERIOD_LEVEL_TYPE(String period, int level, String type) {
-		return SELECTION_PERIOD(period)
-				+ " AND " + SELECTION_LEVEL(level)
-				+ " AND " + SELECTION_TYPE(type);
 	}
 
 	public static final String SELECTION_STOCK_PERIOD_LEVEL(String se, String code, String period, int level) {
@@ -252,6 +248,14 @@ public class DatabaseContract {
 			selection += " AND " + SELECTION_TIME(time);
 		}
 		return selection;
+	}
+
+	public static final String SELECTION_TIME(String value) {
+		return DatabaseContract.COLUMN_TIME + " = " + "'" + value + "'";
+	}
+
+	public static final String SELECTION_TYPE(String value) {
+		return DatabaseContract.COLUMN_TYPE + " = " + "'" + value + "'";
 	}
 
 	public static abstract class Stock implements BaseColumns {

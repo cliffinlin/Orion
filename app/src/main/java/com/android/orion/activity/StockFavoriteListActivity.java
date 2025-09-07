@@ -554,7 +554,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 	                        long id) {
-
 		if (id <= DatabaseContract.INVALID_ID) {
 			return;
 		}
@@ -569,8 +568,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 			if (parent.getId() == R.id.left_listview) {
 				mStock.setId(id);
 				mStockDatabaseManager.getStockById(mStock);
-
-				if (mStockDatabaseManager.getStockDealCount(mStock) > 0) {
+				if (mStock.getHold() > 0) {
 					Intent intent = new Intent(mContext,
 							StockDealListActivity.class);
 					Bundle bundle = new Bundle();

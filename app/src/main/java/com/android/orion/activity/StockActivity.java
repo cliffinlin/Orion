@@ -27,6 +27,8 @@ import com.android.orion.utility.Utility;
 
 public class StockActivity extends DatabaseActivity implements OnClickListener {
 
+	long mHoldA = 0;
+	long mHoldB = 0;
 	CheckBox mCheckBoxFavorite;
 	CheckBox mCheckBoxNotify;
 	CheckBox mCheckBoxGrid;
@@ -36,6 +38,8 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 	EditText mEditTextStockCode;
 	EditText mEditTextStockHold;
 	EditText mEditTextStockYield;
+	EditText mEditTextStockHoldA;
+	EditText mEditTextStockHoldB;
 	TextView mTextViewSeUrl;
 	Button mButtonOk;
 	Button mButtonCancel;
@@ -44,13 +48,10 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_stock_edit);
-
 		if (mStock == null) {
 			mStock = new Stock();
 		}
-
 		initView();
-
 		updateView();
 	}
 
@@ -64,6 +65,8 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mEditTextStockCode = findViewById(R.id.edittext_stock_code);
 		mEditTextStockHold = findViewById(R.id.edittext_stock_hold);
 		mEditTextStockYield = findViewById(R.id.edittext_stock_yield);
+		mEditTextStockHoldA = findViewById(R.id.edittext_stock_hold_a);
+		mEditTextStockHoldB = findViewById(R.id.edittext_stock_hold_b);
 		mTextViewSeUrl = findViewById(R.id.textview_se_url);
 		mButtonOk = findViewById(R.id.button_ok);
 		mButtonCancel = findViewById(R.id.button_cancel);
@@ -128,9 +131,18 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 			mEditTextStockCode.setEnabled(false);
 			mEditTextStockHold.setEnabled(false);
 			mEditTextStockYield.setEnabled(false);
+			mEditTextStockHoldA.setEnabled(false);
+			mEditTextStockHoldB.setEnabled(false);
 			mStock.setId(mIntent.getLongExtra(Constant.EXTRA_STOCK_ID,
 					DatabaseContract.INVALID_ID));
 			mStockDatabaseManager.getStockById(mStock);
+			mHoldB = mStockDatabaseManager.getStockDealBuy(mStock, Stock.ACCOUNT_B);
+			if (mHoldB > 0) {
+				findViewById(R.id.layout_stock_hold_account).setVisibility(View.VISIBLE);
+				mHoldA = mStock.getHold() - mHoldB;
+				mEditTextStockHoldA.setText(String.valueOf(mHoldA));
+				mEditTextStockHoldB.setText(String.valueOf(mHoldB));
+			}
 		}
 	}
 

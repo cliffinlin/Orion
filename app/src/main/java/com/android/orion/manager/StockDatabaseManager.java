@@ -545,17 +545,23 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 		}
 	}
 
-	public int getStockDealCount(Stock stock) {
+	public int getStockDealBuy(Stock stock, String account) {
 		int result = 0;
 		if (stock == null) {
 			return result;
 		}
+		StockDeal stockDeal = new StockDeal();
 		Cursor cursor = null;
 		try {
-			String selection = DatabaseContract.SELECTION_STOCK(stock.getSE(), stock.getCode());
+			String selection = DatabaseContract.SELECTION_STOCK_ACCOUNT(stock.getSE(), stock.getCode(), account);
 			cursor = queryStockDeal(selection, null, null);
-			if (cursor != null) {
-				result = cursor.getCount();
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				while (cursor.moveToNext()) {
+					stockDeal.set(cursor);
+					if (stockDeal.getVolume() > 0 && TextUtils.equals(stockDeal.getType(), StockDeal.TYPE_BUY)) {
+						result += stockDeal.getVolume();
+					}
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

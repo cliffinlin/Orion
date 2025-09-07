@@ -74,6 +74,8 @@
     <string name="group">Group</string>
     <string name="high">High</string>
     <string name="hold">Hold</string>
+    <string name="hold_a">Hold_A</string>
+    <string name="hold_b">Hold_B</string>
     <string name="id">ID</string>
     <string name="intercept">Intercept</string>
     <string name="interval">Interval</string>

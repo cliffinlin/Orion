@@ -788,7 +788,6 @@ public class StockFinancialListActivity extends ListActivity implements
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 	                        long id) {
-
 		if (id <= DatabaseContract.INVALID_ID) {
 			return;
 		}
@@ -800,12 +799,31 @@ public class StockFinancialListActivity extends ListActivity implements
 				finish();
 			}
 		} else {
-			Intent intent = new Intent(this,
-					StockFinancialChartListActivity.class);
-			intent.putExtra(Constant.EXTRA_STOCK_LIST_SORT_ORDER,
-					mSortOrder);
-			intent.putExtra(Constant.EXTRA_STOCK_ID, id);
-			startActivity(intent);
+			if (parent.getId() == R.id.left_listview) {
+				mStock.setId(id);
+				mStockDatabaseManager.getStockById(mStock);
+				if (mStock.getHold() > 0) {
+					Intent intent = new Intent(mContext,
+							StockDealListActivity.class);
+					Bundle bundle = new Bundle();
+					bundle.putString(Constant.EXTRA_STOCK_SE, mStock.getSE());
+					bundle.putString(Constant.EXTRA_STOCK_CODE, mStock.getCode());
+					intent.putExtras(bundle);
+					startActivity(intent);
+				} else {
+					mIntent = new Intent(this, StockActivity.class);
+					mIntent.setAction(Constant.ACTION_STOCK_EDIT);
+					mIntent.putExtra(Constant.EXTRA_STOCK_ID, mStock.getId());
+					startActivity(mIntent);
+				}
+			} else {
+				Intent intent = new Intent(this,
+						StockFinancialChartListActivity.class);
+				intent.putExtra(Constant.EXTRA_STOCK_LIST_SORT_ORDER,
+						mSortOrder);
+				intent.putExtra(Constant.EXTRA_STOCK_ID, id);
+				startActivity(intent);
+			}
 		}
 	}
 
