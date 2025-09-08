@@ -44,7 +44,7 @@ public class MainApplication extends Application {
 			@Override
 			public void onActivityStarted(Activity activity) {
 				mActivityStartedCounter++;
-				Log.d("mActivityStartedCounter=" + mActivityStartedCounter);
+//				Log.d("mActivityStartedCounter=" + mActivityStartedCounter);
 				if (mActivityStartedCounter > 0) {
 					mBackgroundTimeMillis = 0;
 				}
@@ -63,7 +63,7 @@ public class MainApplication extends Application {
 			@Override
 			public void onActivityStopped(Activity activity) {
 				mActivityStartedCounter--;
-				Log.d("mActivityStartedCounter=" + mActivityStartedCounter);
+//				Log.d("mActivityStartedCounter=" + mActivityStartedCounter);
 				if (mActivityStartedCounter == 0) {
 					mBackgroundTimeMillis = System.currentTimeMillis();
 				}

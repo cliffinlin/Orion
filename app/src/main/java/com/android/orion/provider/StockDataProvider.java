@@ -53,7 +53,6 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 	public static final int RESULT_FAILED = -1;
 	protected static volatile IStockDataProvider mInstance;
 	static ArrayMap<String, Stock> mStockArrayMap = new ArrayMap<>();
-	static ArrayMap<String, Stock> mRemovedArrayMap = new ArrayMap<>();
 	Context mContext = MainApplication.getContext();
 	StockAnalyzer mStockAnalyzer = StockAnalyzer.getInstance();
 	StockDatabaseManager mStockDatabaseManager = StockDatabaseManager.getInstance();
@@ -178,6 +177,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		releaseWakeLock();
 		for (Stock stock : mStockArrayMap.values()) {
 			removeDownloadMessage(stock);
+			mStockArrayMap.remove(stock.getCode());
 		}
 		if (mHandlerThread != null && mHandlerThread.isAlive()) {
 			mHandlerThread.quitSafely();
@@ -309,18 +309,22 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		}
 	}
 
-	void sendDownloadMessage(Stock stock) {
+	void sendDownloadMessage(Stock stock, boolean delayed) {
 		if (stock == null) {
 			return;
 		}
-		Log.d(stock.toLogString());
+		Log.d(stock.toLogString() + " delayed=" + delayed);
 		int messageID = stock.getCode().hashCode();
 		if (mHandler.hasMessages(messageID)) {
 			Log.d("return, mHandler.hasMessages " + stock.toLogString());
 			return;
 		}
 		Message msg = mHandler.obtainMessage(messageID, stock);
-		mHandler.sendMessageDelayed(msg, Config.SEND_MESSAGE_DELAY_DOWNLOAD);
+		if (delayed) {
+			mHandler.sendMessageDelayed(msg, Config.SEND_MESSAGE_DELAY_DOWNLOAD);
+		} else {
+			mHandler.sendMessageAtFrontOfQueue(msg);
+		}
 	}
 
 	@Override
@@ -338,8 +342,10 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 
 		int index = 0;
 		for (Stock stock : mStockArrayMap.values()) {
-			Log.d("index=" + index++ + " " + stock.toLogString());
-			sendDownloadMessage(stock);
+			if (stock != null) {
+				Log.d("index=" + index++ + " " + stock.toLogString());
+				sendDownloadMessage(stock, true);
+			}
 		}
 	}
 
@@ -354,24 +360,8 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			return;
 		}
 
-		mRemovedArrayMap.clear();
-		mStockDatabaseManager.loadStockArrayMap(mStockArrayMap);
-		int index = 0;
-		for (Stock current : mStockArrayMap.values()) {
-			Log.d("index=" + index++ + " " + stock.toLogString());
-			if (TextUtils.equals(current.getCode(), stock.getCode())) {
-				sendDownloadMessage(current);
-			} else {
-				mRemovedArrayMap.put(current.getCode(), current);
-				removeDownloadMessage(current);
-			}
-		}
-
-		index = 0;
-		for (Stock current : mRemovedArrayMap.values()) {
-			Log.d("index=" + index++ + " " + stock.toLogString());
-			sendDownloadMessage(current);
-		}
+		removeDownloadMessage(stock);
+		sendDownloadMessage(stock, false);
 	}
 
 	void mergeStockDataDay(StockData stockData) {
@@ -816,8 +806,8 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		if (stock == null) {
 			return;
 		}
-		mStockArrayMap.remove(stock.getCode());
 		removeDownloadMessage(stock);
+		mStockArrayMap.remove(stock.getCode());
 	}
 
 	@Override
@@ -836,8 +826,8 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		if (stock == null) {
 			return;
 		}
-		mStockArrayMap.remove(stock.getCode());
 		removeDownloadMessage(stock);
+		mStockArrayMap.remove(stock.getCode());
 	}
 
 	@Override
@@ -857,6 +847,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			return;
 		}
 		removeDownloadMessage(stock);
+		mStockArrayMap.remove(stock.getCode());
 	}
 
 	@Override
