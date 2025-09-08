@@ -9,6 +9,7 @@ import com.android.orion.database.StockBonus;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockFinancial;
 import com.android.orion.database.StockShare;
+import com.android.orion.database.StockTrend;
 import com.android.orion.manager.StockDatabaseManager;
 import com.android.orion.setting.Constant;
 import com.android.orion.utility.Logger;
@@ -41,7 +42,7 @@ public class FinancialAnalyzer {
 
 		for (int i = Period.getPeriodIndex(Period.MONTH); i < Period.PERIODS.length; i++) {
 			String period = Period.PERIODS[i];
-			mStockDataList = stock.getStockDataList(period);
+			mStockDataList = stock.getStockDataList(period, StockTrend.LEVEL_NONE);
 			mStockDatabaseManager.loadStockDataList(stock, period, mStockDataList);
 			if (mStockDataList.size() > 0) {
 				break;

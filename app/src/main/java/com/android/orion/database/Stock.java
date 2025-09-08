@@ -3,6 +3,7 @@ package com.android.orion.database;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.text.TextUtils;
+import android.util.ArrayMap;
 
 import com.android.orion.data.IRR;
 import com.android.orion.data.Period;
@@ -46,17 +47,7 @@ public class Stock extends DatabaseTable {
 	static ArrayList<StockShare> mStockShareList = new ArrayList<>();
 	static ArrayList<StockBonus> mStockBonusList = new ArrayList<>();
 
-	private final Period mYear = new Period(Period.YEAR);
-	private final Period mMonth6 = new Period(Period.MONTH6);
-	private final Period mQuarter = new Period(Period.QUARTER);
-	private final Period mMonth2 = new Period(Period.MONTH2);
-	private final Period mMonth = new Period(Period.MONTH);
-	private final Period mWeek = new Period(Period.WEEK);
-	private final Period mDay = new Period(Period.DAY);
-	private final Period mMin60 = new Period(Period.MIN60);
-	private final Period mMin30 = new Period(Period.MIN30);
-	private final Period mMin15 = new Period(Period.MIN15);
-	private final Period mMin5 = new Period(Period.MIN5);
+	private ArrayMap<String, Period> mPeriodMap;
 
 	private int mFlag;
 
@@ -112,6 +103,18 @@ public class Stock extends DatabaseTable {
 
 	public Stock() {
 		init();
+		mPeriodMap = new ArrayMap<>();
+		mPeriodMap.put(Period.YEAR, new Period(Period.YEAR));
+		mPeriodMap.put(Period.MONTH6, new Period(Period.MONTH6));
+		mPeriodMap.put(Period.QUARTER, new Period(Period.QUARTER));
+		mPeriodMap.put(Period.MONTH2, new Period(Period.MONTH2));
+		mPeriodMap.put(Period.MONTH, new Period(Period.MONTH));
+		mPeriodMap.put(Period.WEEK, new Period(Period.WEEK));
+		mPeriodMap.put(Period.DAY, new Period(Period.DAY));
+		mPeriodMap.put(Period.MIN60, new Period(Period.MIN60));
+		mPeriodMap.put(Period.MIN30, new Period(Period.MIN30));
+		mPeriodMap.put(Period.MIN15, new Period(Period.MIN15));
+		mPeriodMap.put(Period.MIN5, new Period(Period.MIN5));
 	}
 
 	public Stock(Stock stock) {
@@ -204,29 +207,29 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_VOLUME, mVolume);
 		contentValues.put(DatabaseContract.COLUMN_VALUE, mValue);
 
-		contentValues.put(DatabaseContract.COLUMN_YEAR, mYear.getThumbnail());
-		contentValues.put(DatabaseContract.COLUMN_MONTH6, mMonth6.getThumbnail());
-		contentValues.put(DatabaseContract.COLUMN_QUARTER, mQuarter.getThumbnail());
-		contentValues.put(DatabaseContract.COLUMN_MONTH2, mMonth2.getThumbnail());
-		contentValues.put(DatabaseContract.COLUMN_MONTH, mMonth.getThumbnail());
-		contentValues.put(DatabaseContract.COLUMN_WEEK, mWeek.getThumbnail());
-		contentValues.put(DatabaseContract.COLUMN_DAY, mDay.getThumbnail());
-		contentValues.put(DatabaseContract.COLUMN_MIN60, mMin60.getThumbnail());
-		contentValues.put(DatabaseContract.COLUMN_MIN30, mMin30.getThumbnail());
-		contentValues.put(DatabaseContract.COLUMN_MIN15, mMin15.getThumbnail());
-		contentValues.put(DatabaseContract.COLUMN_MIN5, mMin5.getThumbnail());
+		contentValues.put(DatabaseContract.COLUMN_YEAR, getPeriod(Period.YEAR).getThumbnail());
+		contentValues.put(DatabaseContract.COLUMN_MONTH6, getPeriod(Period.MONTH6).getThumbnail());
+		contentValues.put(DatabaseContract.COLUMN_QUARTER, getPeriod(Period.QUARTER).getThumbnail());
+		contentValues.put(DatabaseContract.COLUMN_MONTH2, getPeriod(Period.MONTH2).getThumbnail());
+		contentValues.put(DatabaseContract.COLUMN_MONTH, getPeriod(Period.MONTH).getThumbnail());
+		contentValues.put(DatabaseContract.COLUMN_WEEK, getPeriod(Period.WEEK).getThumbnail());
+		contentValues.put(DatabaseContract.COLUMN_DAY, getPeriod(Period.DAY).getThumbnail());
+		contentValues.put(DatabaseContract.COLUMN_MIN60, getPeriod(Period.MIN60).getThumbnail());
+		contentValues.put(DatabaseContract.COLUMN_MIN30, getPeriod(Period.MIN30).getThumbnail());
+		contentValues.put(DatabaseContract.COLUMN_MIN15, getPeriod(Period.MIN15).getThumbnail());
+		contentValues.put(DatabaseContract.COLUMN_MIN5, getPeriod(Period.MIN5).getThumbnail());
 
-		contentValues.put(DatabaseContract.COLUMN_YEAR_LEVEL, mYear.getLevel());
-		contentValues.put(DatabaseContract.COLUMN_MONTH6_LEVEL, mMonth6.getLevel());
-		contentValues.put(DatabaseContract.COLUMN_QUARTER_LEVEL, mQuarter.getLevel());
-		contentValues.put(DatabaseContract.COLUMN_MONTH2_LEVEL, mMonth2.getLevel());
-		contentValues.put(DatabaseContract.COLUMN_MONTH_LEVEL, mMonth.getLevel());
-		contentValues.put(DatabaseContract.COLUMN_WEEK_LEVEL, mWeek.getLevel());
-		contentValues.put(DatabaseContract.COLUMN_DAY_LEVEL, mDay.getLevel());
-		contentValues.put(DatabaseContract.COLUMN_MIN60_LEVEL, mMin60.getLevel());
-		contentValues.put(DatabaseContract.COLUMN_MIN30_LEVEL, mMin30.getLevel());
-		contentValues.put(DatabaseContract.COLUMN_MIN15_LEVEL, mMin15.getLevel());
-		contentValues.put(DatabaseContract.COLUMN_MIN5_LEVEL, mMin5.getLevel());
+		contentValues.put(DatabaseContract.COLUMN_YEAR_LEVEL, getPeriod(Period.YEAR).getLevel());
+		contentValues.put(DatabaseContract.COLUMN_MONTH6_LEVEL, getPeriod(Period.MONTH6).getLevel());
+		contentValues.put(DatabaseContract.COLUMN_QUARTER_LEVEL, getPeriod(Period.QUARTER).getLevel());
+		contentValues.put(DatabaseContract.COLUMN_MONTH2_LEVEL, getPeriod(Period.MONTH2).getLevel());
+		contentValues.put(DatabaseContract.COLUMN_MONTH_LEVEL, getPeriod(Period.MONTH).getLevel());
+		contentValues.put(DatabaseContract.COLUMN_WEEK_LEVEL, getPeriod(Period.WEEK).getLevel());
+		contentValues.put(DatabaseContract.COLUMN_DAY_LEVEL, getPeriod(Period.DAY).getLevel());
+		contentValues.put(DatabaseContract.COLUMN_MIN60_LEVEL, getPeriod(Period.MIN60).getLevel());
+		contentValues.put(DatabaseContract.COLUMN_MIN30_LEVEL, getPeriod(Period.MIN30).getLevel());
+		contentValues.put(DatabaseContract.COLUMN_MIN15_LEVEL, getPeriod(Period.MIN15).getLevel());
+		contentValues.put(DatabaseContract.COLUMN_MIN5_LEVEL, getPeriod(Period.MIN5).getLevel());
 
 		contentValues.put(DatabaseContract.COLUMN_ROI, mRoi);
 		contentValues.put(DatabaseContract.COLUMN_IR, mIR);
@@ -325,29 +328,29 @@ public class Stock extends DatabaseTable {
 		setVolume(stock.mVolume);
 		setValue(stock.mValue);
 
-		mYear.setThumbnail(stock.mYear.getThumbnail());
-		mMonth6.setThumbnail(stock.mMonth6.getThumbnail());
-		mQuarter.setThumbnail(stock.mQuarter.getThumbnail());
-		mMonth2.setThumbnail(stock.mMonth2.getThumbnail());
-		mMonth.setThumbnail(stock.mMonth.getThumbnail());
-		mWeek.setThumbnail(stock.mWeek.getThumbnail());
-		mDay.setThumbnail(stock.mDay.getThumbnail());
-		mMin60.setThumbnail(stock.mMin60.getThumbnail());
-		mMin30.setThumbnail(stock.mMin30.getThumbnail());
-		mMin15.setThumbnail(stock.mMin15.getThumbnail());
-		mMin5.setThumbnail(stock.mMin5.getThumbnail());
+		getPeriod(Period.YEAR).setThumbnail(stock.getPeriod(Period.YEAR).getThumbnail());
+		getPeriod(Period.MONTH6).setThumbnail(stock.getPeriod(Period.MONTH6).getThumbnail());
+		getPeriod(Period.QUARTER).setThumbnail(stock.getPeriod(Period.QUARTER).getThumbnail());
+		getPeriod(Period.MONTH2).setThumbnail(stock.getPeriod(Period.MONTH2).getThumbnail());
+		getPeriod(Period.MONTH).setThumbnail(stock.getPeriod(Period.MONTH).getThumbnail());
+		getPeriod(Period.WEEK).setThumbnail(stock.getPeriod(Period.WEEK).getThumbnail());
+		getPeriod(Period.DAY).setThumbnail(stock.getPeriod(Period.DAY).getThumbnail());
+		getPeriod(Period.MIN60).setThumbnail(stock.getPeriod(Period.MIN60).getThumbnail());
+		getPeriod(Period.MIN30).setThumbnail(stock.getPeriod(Period.MIN30).getThumbnail());
+		getPeriod(Period.MIN15).setThumbnail(stock.getPeriod(Period.MIN15).getThumbnail());
+		getPeriod(Period.MIN5).setThumbnail(stock.getPeriod(Period.MIN5).getThumbnail());
 
-		mYear.setLevel(stock.mYear.getLevel());
-		mMonth6.setLevel(stock.mMonth6.getLevel());
-		mQuarter.setLevel(stock.mQuarter.getLevel());
-		mMonth2.setLevel(stock.mMonth2.getLevel());
-		mMonth.setLevel(stock.mMonth.getLevel());
-		mWeek.setLevel(stock.mWeek.getLevel());
-		mDay.setLevel(stock.mDay.getLevel());
-		mMin60.setLevel(stock.mMin60.getLevel());
-		mMin30.setLevel(stock.mMin30.getLevel());
-		mMin15.setLevel(stock.mMin15.getLevel());
-		mMin5.setLevel(stock.mMin5.getLevel());
+		getPeriod(Period.YEAR).setLevel(stock.getPeriod(Period.YEAR).getLevel());
+		getPeriod(Period.MONTH6).setLevel(stock.getPeriod(Period.MONTH6).getLevel());
+		getPeriod(Period.QUARTER).setLevel(stock.getPeriod(Period.QUARTER).getLevel());
+		getPeriod(Period.MONTH2).setLevel(stock.getPeriod(Period.MONTH2).getLevel());
+		getPeriod(Period.MONTH).setLevel(stock.getPeriod(Period.MONTH).getLevel());
+		getPeriod(Period.WEEK).setLevel(stock.getPeriod(Period.WEEK).getLevel());
+		getPeriod(Period.DAY).setLevel(stock.getPeriod(Period.DAY).getLevel());
+		getPeriod(Period.MIN60).setLevel(stock.getPeriod(Period.MIN60).getLevel());
+		getPeriod(Period.MIN30).setLevel(stock.getPeriod(Period.MIN30).getLevel());
+		getPeriod(Period.MIN15).setLevel(stock.getPeriod(Period.MIN15).getLevel());
+		getPeriod(Period.MIN5).setLevel(stock.getPeriod(Period.MIN5).getLevel());
 
 		setFlag(stock.mFlag);
 
@@ -411,29 +414,29 @@ public class Stock extends DatabaseTable {
 		setVolume(cursor);
 		setValue(cursor);
 
-		mYear.setThumbnail(cursor);
-		mMonth6.setThumbnail(cursor);
-		mQuarter.setThumbnail(cursor);
-		mMonth2.setThumbnail(cursor);
-		mMonth.setThumbnail(cursor);
-		mWeek.setThumbnail(cursor);
-		mDay.setThumbnail(cursor);
-		mMin60.setThumbnail(cursor);
-		mMin30.setThumbnail(cursor);
-		mMin15.setThumbnail(cursor);
-		mMin5.setThumbnail(cursor);
+		getPeriod(Period.YEAR).setThumbnail(cursor);
+		getPeriod(Period.MONTH6).setThumbnail(cursor);
+		getPeriod(Period.QUARTER).setThumbnail(cursor);
+		getPeriod(Period.MONTH2).setThumbnail(cursor);
+		getPeriod(Period.MONTH).setThumbnail(cursor);
+		getPeriod(Period.WEEK).setThumbnail(cursor);
+		getPeriod(Period.DAY).setThumbnail(cursor);
+		getPeriod(Period.MIN60).setThumbnail(cursor);
+		getPeriod(Period.MIN30).setThumbnail(cursor);
+		getPeriod(Period.MIN15).setThumbnail(cursor);
+		getPeriod(Period.MIN5).setThumbnail(cursor);
 
-		mYear.setLevel(cursor);
-		mMonth6.setLevel(cursor);
-		mQuarter.setLevel(cursor);
-		mMonth2.setLevel(cursor);
-		mMonth.setLevel(cursor);
-		mWeek.setLevel(cursor);
-		mDay.setLevel(cursor);
-		mMin60.setLevel(cursor);
-		mMin30.setLevel(cursor);
-		mMin15.setLevel(cursor);
-		mMin5.setLevel(cursor);
+		getPeriod(Period.YEAR).setLevel(cursor);
+		getPeriod(Period.MONTH6).setLevel(cursor);
+		getPeriod(Period.QUARTER).setLevel(cursor);
+		getPeriod(Period.MONTH2).setLevel(cursor);
+		getPeriod(Period.MONTH).setLevel(cursor);
+		getPeriod(Period.WEEK).setLevel(cursor);
+		getPeriod(Period.DAY).setLevel(cursor);
+		getPeriod(Period.MIN60).setLevel(cursor);
+		getPeriod(Period.MIN30).setLevel(cursor);
+		getPeriod(Period.MIN15).setLevel(cursor);
+		getPeriod(Period.MIN5).setLevel(cursor);
 
 		setFlag(cursor);
 
@@ -1329,232 +1332,36 @@ public class Stock extends DatabaseTable {
 		return mStockBonusList;
 	}
 
-	public ArrayList<StockData> getStockDataList(String period) {
-		ArrayList<StockData> result;
-		if (TextUtils.equals(period, Period.YEAR)) {
-			result = mYear.getStockDataList();
-		} else if (TextUtils.equals(period, Period.MONTH6)) {
-			result = mMonth6.getStockDataList();
-		} else if (TextUtils.equals(period, Period.QUARTER)) {
-			result = mQuarter.getStockDataList();
-		} else if (TextUtils.equals(period, Period.MONTH2)) {
-			result = mMonth2.getStockDataList();
-		} else if (TextUtils.equals(period, Period.MONTH)) {
-			result = mMonth.getStockDataList();
-		} else if (TextUtils.equals(period, Period.WEEK)) {
-			result = mWeek.getStockDataList();
-		} else if (TextUtils.equals(period, Period.DAY)) {
-			result = mDay.getStockDataList();
-		} else if (TextUtils.equals(period, Period.MIN60)) {
-			result = mMin60.getStockDataList();
-		} else if (TextUtils.equals(period, Period.MIN30)) {
-			result = mMin30.getStockDataList();
-		} else if (TextUtils.equals(period, Period.MIN15)) {
-			result = mMin15.getStockDataList();
-		} else if (TextUtils.equals(period, Period.MIN5)) {
-			result = mMin5.getStockDataList();
-		} else {
-			result = new ArrayList<>();
-		}
-		return result;
+	public Period getPeriod(String period) {
+		return mPeriodMap.get(period);
 	}
 
 	public ArrayList<StockData> getVertexList(String period, int level) {
-		ArrayList<StockData> result;
-		if (TextUtils.equals(period, Period.YEAR)) {
-			result = mYear.getVertexList(level);
-		} else if (TextUtils.equals(period, Period.MONTH6)) {
-			result = mMonth6.getVertexList(level);
-		} else if (TextUtils.equals(period, Period.QUARTER)) {
-			result = mQuarter.getVertexList(level);
-		} else if (TextUtils.equals(period, Period.MONTH2)) {
-			result = mMonth2.getVertexList(level);
-		} else if (TextUtils.equals(period, Period.MONTH)) {
-			result = mMonth.getVertexList(level);
-		} else if (TextUtils.equals(period, Period.WEEK)) {
-			result = mWeek.getVertexList(level);
-		} else if (TextUtils.equals(period, Period.DAY)) {
-			result = mDay.getVertexList(level);
-		} else if (TextUtils.equals(period, Period.MIN60)) {
-			result = mMin60.getVertexList(level);
-		} else if (TextUtils.equals(period, Period.MIN30)) {
-			result = mMin30.getVertexList(level);
-		} else if (TextUtils.equals(period, Period.MIN15)) {
-			result = mMin15.getVertexList(level);
-		} else if (TextUtils.equals(period, Period.MIN5)) {
-			result = mMin5.getVertexList(level);
-		} else {
-			result = new ArrayList<>();
-		}
-		return result;
+		return getPeriod(period).getVertexList(level);
 	}
 
-	public ArrayList<StockData> getDataList(String period, int level) {
-		ArrayList<StockData> result;
-		if (TextUtils.equals(period, Period.YEAR)) {
-			result = mYear.getDataList(level);
-		} else if (TextUtils.equals(period, Period.MONTH6)) {
-			result = mMonth6.getDataList(level);
-		} else if (TextUtils.equals(period, Period.QUARTER)) {
-			result = mQuarter.getDataList(level);
-		} else if (TextUtils.equals(period, Period.MONTH2)) {
-			result = mMonth2.getDataList(level);
-		} else if (TextUtils.equals(period, Period.MONTH)) {
-			result = mMonth.getDataList(level);
-		} else if (TextUtils.equals(period, Period.WEEK)) {
-			result = mWeek.getDataList(level);
-		} else if (TextUtils.equals(period, Period.DAY)) {
-			result = mDay.getDataList(level);
-		} else if (TextUtils.equals(period, Period.MIN60)) {
-			result = mMin60.getDataList(level);
-		} else if (TextUtils.equals(period, Period.MIN30)) {
-			result = mMin30.getDataList(level);
-		} else if (TextUtils.equals(period, Period.MIN15)) {
-			result = mMin15.getDataList(level);
-		} else if (TextUtils.equals(period, Period.MIN5)) {
-			result = mMin5.getDataList(level);
-		} else {
-			result = new ArrayList<>();
-		}
-		return result;
+	public ArrayList<StockData> getStockDataList(String period, int level) {
+		return getPeriod(period).getStockDataList(level);
 	}
 
 	public ArrayList<StockTrend> getStockTrendList(String period, int level) {
-		ArrayList<StockTrend> result;
-		if (TextUtils.equals(period, Period.YEAR)) {
-			result = mYear.getStockTrendList(level);
-		} else if (TextUtils.equals(period, Period.MONTH6)) {
-			result = mMonth6.getStockTrendList(level);
-		} else if (TextUtils.equals(period, Period.QUARTER)) {
-			result = mQuarter.getStockTrendList(level);
-		} else if (TextUtils.equals(period, Period.MONTH2)) {
-			result = mMonth2.getStockTrendList(level);
-		} else if (TextUtils.equals(period, Period.MONTH)) {
-			result = mMonth.getStockTrendList(level);
-		} else if (TextUtils.equals(period, Period.WEEK)) {
-			result = mWeek.getStockTrendList(level);
-		} else if (TextUtils.equals(period, Period.DAY)) {
-			result = mDay.getStockTrendList(level);
-		} else if (TextUtils.equals(period, Period.MIN60)) {
-			result = mMin60.getStockTrendList(level);
-		} else if (TextUtils.equals(period, Period.MIN30)) {
-			result = mMin30.getStockTrendList(level);
-		} else if (TextUtils.equals(period, Period.MIN15)) {
-			result = mMin15.getStockTrendList(level);
-		} else if (TextUtils.equals(period, Period.MIN5)) {
-			result = mMin5.getStockTrendList(level);
-		} else {
-			result = new ArrayList<>();
-		}
-		return result;
+		return getPeriod(period).getStockTrendList(level);
 	}
 
 	public byte[] getThumbnail(String period) {
-		byte[] thumbnail = null;
-		if (TextUtils.equals(period, Period.YEAR)) {
-			thumbnail = mYear.getThumbnail();
-		} else if (TextUtils.equals(period, Period.MONTH6)) {
-			thumbnail = mMonth6.getThumbnail();
-		} else if (TextUtils.equals(period, Period.QUARTER)) {
-			thumbnail = mQuarter.getThumbnail();
-		} else if (TextUtils.equals(period, Period.MONTH2)) {
-			thumbnail = mMonth2.getThumbnail();
-		} else if (TextUtils.equals(period, Period.MONTH)) {
-			thumbnail = mMonth.getThumbnail();
-		} else if (TextUtils.equals(period, Period.WEEK)) {
-			thumbnail = mWeek.getThumbnail();
-		} else if (TextUtils.equals(period, Period.DAY)) {
-			thumbnail = mDay.getThumbnail();
-		} else if (TextUtils.equals(period, Period.MIN60)) {
-			thumbnail = mMin60.getThumbnail();
-		} else if (TextUtils.equals(period, Period.MIN30)) {
-			thumbnail = mMin30.getThumbnail();
-		} else if (TextUtils.equals(period, Period.MIN15)) {
-			thumbnail = mMin15.getThumbnail();
-		} else if (TextUtils.equals(period, Period.MIN5)) {
-			thumbnail = mMin5.getThumbnail();
-		}
-		return thumbnail;
+		return getPeriod(period).getThumbnail();
 	}
 
 	public void setThumbnail(String period, byte[] thumbnail) {
-		if (TextUtils.equals(period, Period.YEAR)) {
-			mYear.setThumbnail(thumbnail);
-		} else if (TextUtils.equals(period, Period.MONTH6)) {
-			mMonth6.setThumbnail(thumbnail);
-		} else if (TextUtils.equals(period, Period.QUARTER)) {
-			mQuarter.setThumbnail(thumbnail);
-		} else if (TextUtils.equals(period, Period.MONTH2)) {
-			mMonth2.setThumbnail(thumbnail);
-		} else if (TextUtils.equals(period, Period.MONTH)) {
-			mMonth.setThumbnail(thumbnail);
-		} else if (TextUtils.equals(period, Period.WEEK)) {
-			mWeek.setThumbnail(thumbnail);
-		} else if (TextUtils.equals(period, Period.DAY)) {
-			mDay.setThumbnail(thumbnail);
-		} else if (TextUtils.equals(period, Period.MIN60)) {
-			mMin60.setThumbnail(thumbnail);
-		} else if (TextUtils.equals(period, Period.MIN30)) {
-			mMin30.setThumbnail(thumbnail);
-		} else if (TextUtils.equals(period, Period.MIN15)) {
-			mMin15.setThumbnail(thumbnail);
-		} else if (TextUtils.equals(period, Period.MIN5)) {
-			mMin5.setThumbnail(thumbnail);
-		}
+		getPeriod(period).setThumbnail(thumbnail);
 	}
 
 	public int getLevel(String period) {
-		int level = StockTrend.LEVEL_NONE;
-		if (TextUtils.equals(period, Period.YEAR)) {
-			level = mYear.getLevel();
-		} else if (TextUtils.equals(period, Period.MONTH6)) {
-			level = mMonth6.getLevel();
-		} else if (TextUtils.equals(period, Period.QUARTER)) {
-			level = mQuarter.getLevel();
-		} else if (TextUtils.equals(period, Period.MONTH2)) {
-			level = mMonth2.getLevel();
-		} else if (TextUtils.equals(period, Period.MONTH)) {
-			level = mMonth.getLevel();
-		} else if (TextUtils.equals(period, Period.WEEK)) {
-			level = mWeek.getLevel();
-		} else if (TextUtils.equals(period, Period.DAY)) {
-			level = mDay.getLevel();
-		} else if (TextUtils.equals(period, Period.MIN60)) {
-			level = mMin60.getLevel();
-		} else if (TextUtils.equals(period, Period.MIN30)) {
-			level = mMin30.getLevel();
-		} else if (TextUtils.equals(period, Period.MIN15)) {
-			level = mMin15.getLevel();
-		} else if (TextUtils.equals(period, Period.MIN5)) {
-			level = mMin5.getLevel();
-		}
-		return level;
+		return getPeriod(period).getLevel();
 	}
 
 	public void setLevel(String period, int level) {
-		if (TextUtils.equals(period, Period.YEAR)) {
-			mYear.setLevel(level);
-		} else if (TextUtils.equals(period, Period.MONTH6)) {
-			mMonth6.setLevel(level);
-		} else if (TextUtils.equals(period, Period.QUARTER)) {
-			mQuarter.setLevel(level);
-		} else if (TextUtils.equals(period, Period.MONTH2)) {
-			mMonth2.setLevel(level);
-		} else if (TextUtils.equals(period, Period.MONTH)) {
-			mMonth.setLevel(level);
-		} else if (TextUtils.equals(period, Period.WEEK)) {
-			mWeek.setLevel(level);
-		} else if (TextUtils.equals(period, Period.DAY)) {
-			mDay.setLevel(level);
-		} else if (TextUtils.equals(period, Period.MIN60)) {
-			mMin60.setLevel(level);
-		} else if (TextUtils.equals(period, Period.MIN30)) {
-			mMin30.setLevel(level);
-		} else if (TextUtils.equals(period, Period.MIN15)) {
-			mMin15.setLevel(level);
-		} else if (TextUtils.equals(period, Period.MIN5)) {
-			mMin5.setLevel(level);
-		}
+		getPeriod(period).setLevel(level);
 	}
 
 	public void setupMarketValue() {

@@ -272,9 +272,9 @@ public class TrendAnalyzer {
 	}
 
 	void analyzeLine(int level) {
-		ArrayList<StockData> prevDataList = mStock.getDataList(mPeriod, level - 1);
+		ArrayList<StockData> prevDataList = mStock.getStockDataList(mPeriod, level - 1);
 		ArrayList<StockData> vertexList = mStock.getVertexList(mPeriod, level);
-		ArrayList<StockData> dataList = mStock.getDataList(mPeriod, level);
+		ArrayList<StockData> dataList = mStock.getStockDataList(mPeriod, level);
 		ArrayList<StockTrend> stockTrendList = mStock.getStockTrendList(mPeriod, level);
 		if (prevDataList == null || vertexList == null || dataList == null || stockTrendList == null) {
 			return;
@@ -652,7 +652,7 @@ public class TrendAnalyzer {
 	}
 
 	public void setupThumbnail(String period) {
-		mStockDataList = mStock.getStockDataList(period);
+		mStockDataList = mStock.getStockDataList(period, StockTrend.LEVEL_NONE);
 		if (mStockDataList.isEmpty()) {
 			return;
 		}

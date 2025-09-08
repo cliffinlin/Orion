@@ -51,9 +51,8 @@ public class Period {
 	public byte[] mThumbnail;
 	public int mLevel = StockTrend.LEVEL_NONE;
 
-	public ArrayList<StockData> mStockDataList = new ArrayList<>();
 	public ArrayList<ArrayList<StockData>> mVertexLists = new ArrayList<>();
-	public ArrayList<ArrayList<StockData>> mDataLists = new ArrayList<>();
+	public ArrayList<ArrayList<StockData>> mStockDataLists = new ArrayList<>();
 	public ArrayList<ArrayList<StockTrend>> mStockTrendLists = new ArrayList<>();
 
 	public Period(String name) {
@@ -63,7 +62,7 @@ public class Period {
 			mVertexLists.add(new ArrayList<>());
 		}
 		for (int i = 0; i < StockTrend.LEVELS.length; i++) {
-			mDataLists.add(new ArrayList<>());
+			mStockDataLists.add(new ArrayList<>());
 		}
 		for (int i = 0; i < StockTrend.LEVELS.length; i++) {
 			mStockTrendLists.add(new ArrayList<>());
@@ -125,12 +124,8 @@ public class Period {
 		return result;
 	}
 
-	public ArrayList<StockData> getStockDataList() {
-		return mStockDataList;
-	}
-
-	public ArrayList<StockData> getDataList(int level) {
-		return mDataLists.get(level);
+	public ArrayList<StockData> getStockDataList(int level) {
+		return mStockDataLists.get(level);
 	}
 
 	public ArrayList<StockTrend> getStockTrendList(int level) {
