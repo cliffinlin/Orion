@@ -334,7 +334,7 @@ public class StockDataChart {
 
 		mDescription.setLength(0);
 		mDescription.append(mPeriod).append(" ");
-		mDescription.append(stock.getNamePriceNetString()).append(" ");
+		mDescription.append(stock.getNamePriceNetString(" ")).append(" ");
 		StockTrend stockTrend = getStockTrend(mAdaptiveLevel);
 		if (stockTrend != null) {
 			mDescription.append(stockTrend.toChartString());
@@ -376,7 +376,7 @@ public class StockDataChart {
 		LimitLine limitLine;
 		int color = Color.WHITE;
 		String label = "                                                     ";
-		label += stock.getPriceNetString();
+		label += stock.getPriceNetString(" ");
 		limitLine = createLimitLine(stock.getPrice(), color, label);
 		mLimitLineList.add(limitLine);
 	}

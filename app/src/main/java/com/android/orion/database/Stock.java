@@ -8,6 +8,7 @@ import android.util.ArrayMap;
 import com.android.orion.data.IRR;
 import com.android.orion.data.Period;
 import com.android.orion.setting.Constant;
+import com.android.orion.setting.Setting;
 import com.android.orion.utility.Symbol;
 import com.android.orion.utility.Utility;
 
@@ -47,8 +48,12 @@ public class Stock extends DatabaseTable {
 	static ArrayList<StockShare> mStockShareList = new ArrayList<>();
 	static ArrayList<StockBonus> mStockBonusList = new ArrayList<>();
 
-	private ArrayMap<String, Period> mPeriodMap;
-
+	private final ArrayMap<String, Period> mPeriodMap = new ArrayMap<>();
+	{
+		for (String period : Period.PERIODS) {
+			mPeriodMap.put(period, new Period(period));
+		}
+	}
 	private int mFlag;
 
 	private String mClasses;
@@ -103,18 +108,6 @@ public class Stock extends DatabaseTable {
 
 	public Stock() {
 		init();
-		mPeriodMap = new ArrayMap<>();
-		mPeriodMap.put(Period.YEAR, new Period(Period.YEAR));
-		mPeriodMap.put(Period.MONTH6, new Period(Period.MONTH6));
-		mPeriodMap.put(Period.QUARTER, new Period(Period.QUARTER));
-		mPeriodMap.put(Period.MONTH2, new Period(Period.MONTH2));
-		mPeriodMap.put(Period.MONTH, new Period(Period.MONTH));
-		mPeriodMap.put(Period.WEEK, new Period(Period.WEEK));
-		mPeriodMap.put(Period.DAY, new Period(Period.DAY));
-		mPeriodMap.put(Period.MIN60, new Period(Period.MIN60));
-		mPeriodMap.put(Period.MIN30, new Period(Period.MIN30));
-		mPeriodMap.put(Period.MIN15, new Period(Period.MIN15));
-		mPeriodMap.put(Period.MIN5, new Period(Period.MIN5));
 	}
 
 	public Stock(Stock stock) {
@@ -207,29 +200,11 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_VOLUME, mVolume);
 		contentValues.put(DatabaseContract.COLUMN_VALUE, mValue);
 
-		contentValues.put(DatabaseContract.COLUMN_YEAR, getPeriod(Period.YEAR).getThumbnail());
-		contentValues.put(DatabaseContract.COLUMN_MONTH6, getPeriod(Period.MONTH6).getThumbnail());
-		contentValues.put(DatabaseContract.COLUMN_QUARTER, getPeriod(Period.QUARTER).getThumbnail());
-		contentValues.put(DatabaseContract.COLUMN_MONTH2, getPeriod(Period.MONTH2).getThumbnail());
-		contentValues.put(DatabaseContract.COLUMN_MONTH, getPeriod(Period.MONTH).getThumbnail());
-		contentValues.put(DatabaseContract.COLUMN_WEEK, getPeriod(Period.WEEK).getThumbnail());
-		contentValues.put(DatabaseContract.COLUMN_DAY, getPeriod(Period.DAY).getThumbnail());
-		contentValues.put(DatabaseContract.COLUMN_MIN60, getPeriod(Period.MIN60).getThumbnail());
-		contentValues.put(DatabaseContract.COLUMN_MIN30, getPeriod(Period.MIN30).getThumbnail());
-		contentValues.put(DatabaseContract.COLUMN_MIN15, getPeriod(Period.MIN15).getThumbnail());
-		contentValues.put(DatabaseContract.COLUMN_MIN5, getPeriod(Period.MIN5).getThumbnail());
-
-		contentValues.put(DatabaseContract.COLUMN_YEAR_LEVEL, getPeriod(Period.YEAR).getLevel());
-		contentValues.put(DatabaseContract.COLUMN_MONTH6_LEVEL, getPeriod(Period.MONTH6).getLevel());
-		contentValues.put(DatabaseContract.COLUMN_QUARTER_LEVEL, getPeriod(Period.QUARTER).getLevel());
-		contentValues.put(DatabaseContract.COLUMN_MONTH2_LEVEL, getPeriod(Period.MONTH2).getLevel());
-		contentValues.put(DatabaseContract.COLUMN_MONTH_LEVEL, getPeriod(Period.MONTH).getLevel());
-		contentValues.put(DatabaseContract.COLUMN_WEEK_LEVEL, getPeriod(Period.WEEK).getLevel());
-		contentValues.put(DatabaseContract.COLUMN_DAY_LEVEL, getPeriod(Period.DAY).getLevel());
-		contentValues.put(DatabaseContract.COLUMN_MIN60_LEVEL, getPeriod(Period.MIN60).getLevel());
-		contentValues.put(DatabaseContract.COLUMN_MIN30_LEVEL, getPeriod(Period.MIN30).getLevel());
-		contentValues.put(DatabaseContract.COLUMN_MIN15_LEVEL, getPeriod(Period.MIN15).getLevel());
-		contentValues.put(DatabaseContract.COLUMN_MIN5_LEVEL, getPeriod(Period.MIN5).getLevel());
+		for (String period : Period.PERIODS) {
+			contentValues.put(DatabaseContract.COLUMN_PERIOD_THUMBNAIL(period), getPeriod(period).getThumbnail());
+			contentValues.put(DatabaseContract.COLUMN_PERIOD_LEVEL(period), getPeriod(period).getLevel());
+			contentValues.put(DatabaseContract.COLUMN_PERIOD_TREND(period), getPeriod(period).getTrend());
+		}
 
 		contentValues.put(DatabaseContract.COLUMN_ROI, mRoi);
 		contentValues.put(DatabaseContract.COLUMN_IR, mIR);
@@ -328,29 +303,11 @@ public class Stock extends DatabaseTable {
 		setVolume(stock.mVolume);
 		setValue(stock.mValue);
 
-		getPeriod(Period.YEAR).setThumbnail(stock.getPeriod(Period.YEAR).getThumbnail());
-		getPeriod(Period.MONTH6).setThumbnail(stock.getPeriod(Period.MONTH6).getThumbnail());
-		getPeriod(Period.QUARTER).setThumbnail(stock.getPeriod(Period.QUARTER).getThumbnail());
-		getPeriod(Period.MONTH2).setThumbnail(stock.getPeriod(Period.MONTH2).getThumbnail());
-		getPeriod(Period.MONTH).setThumbnail(stock.getPeriod(Period.MONTH).getThumbnail());
-		getPeriod(Period.WEEK).setThumbnail(stock.getPeriod(Period.WEEK).getThumbnail());
-		getPeriod(Period.DAY).setThumbnail(stock.getPeriod(Period.DAY).getThumbnail());
-		getPeriod(Period.MIN60).setThumbnail(stock.getPeriod(Period.MIN60).getThumbnail());
-		getPeriod(Period.MIN30).setThumbnail(stock.getPeriod(Period.MIN30).getThumbnail());
-		getPeriod(Period.MIN15).setThumbnail(stock.getPeriod(Period.MIN15).getThumbnail());
-		getPeriod(Period.MIN5).setThumbnail(stock.getPeriod(Period.MIN5).getThumbnail());
-
-		getPeriod(Period.YEAR).setLevel(stock.getPeriod(Period.YEAR).getLevel());
-		getPeriod(Period.MONTH6).setLevel(stock.getPeriod(Period.MONTH6).getLevel());
-		getPeriod(Period.QUARTER).setLevel(stock.getPeriod(Period.QUARTER).getLevel());
-		getPeriod(Period.MONTH2).setLevel(stock.getPeriod(Period.MONTH2).getLevel());
-		getPeriod(Period.MONTH).setLevel(stock.getPeriod(Period.MONTH).getLevel());
-		getPeriod(Period.WEEK).setLevel(stock.getPeriod(Period.WEEK).getLevel());
-		getPeriod(Period.DAY).setLevel(stock.getPeriod(Period.DAY).getLevel());
-		getPeriod(Period.MIN60).setLevel(stock.getPeriod(Period.MIN60).getLevel());
-		getPeriod(Period.MIN30).setLevel(stock.getPeriod(Period.MIN30).getLevel());
-		getPeriod(Period.MIN15).setLevel(stock.getPeriod(Period.MIN15).getLevel());
-		getPeriod(Period.MIN5).setLevel(stock.getPeriod(Period.MIN5).getLevel());
+		for (String period : Period.PERIODS) {
+			getPeriod(period).setThumbnail(stock.getPeriod(period).getThumbnail());
+			getPeriod(period).setLevel(stock.getPeriod(period).getLevel());
+			getPeriod(period).setTrend(stock.getPeriod(period).getTrend());
+		}
 
 		setFlag(stock.mFlag);
 
@@ -414,29 +371,11 @@ public class Stock extends DatabaseTable {
 		setVolume(cursor);
 		setValue(cursor);
 
-		getPeriod(Period.YEAR).setThumbnail(cursor);
-		getPeriod(Period.MONTH6).setThumbnail(cursor);
-		getPeriod(Period.QUARTER).setThumbnail(cursor);
-		getPeriod(Period.MONTH2).setThumbnail(cursor);
-		getPeriod(Period.MONTH).setThumbnail(cursor);
-		getPeriod(Period.WEEK).setThumbnail(cursor);
-		getPeriod(Period.DAY).setThumbnail(cursor);
-		getPeriod(Period.MIN60).setThumbnail(cursor);
-		getPeriod(Period.MIN30).setThumbnail(cursor);
-		getPeriod(Period.MIN15).setThumbnail(cursor);
-		getPeriod(Period.MIN5).setThumbnail(cursor);
-
-		getPeriod(Period.YEAR).setLevel(cursor);
-		getPeriod(Period.MONTH6).setLevel(cursor);
-		getPeriod(Period.QUARTER).setLevel(cursor);
-		getPeriod(Period.MONTH2).setLevel(cursor);
-		getPeriod(Period.MONTH).setLevel(cursor);
-		getPeriod(Period.WEEK).setLevel(cursor);
-		getPeriod(Period.DAY).setLevel(cursor);
-		getPeriod(Period.MIN60).setLevel(cursor);
-		getPeriod(Period.MIN30).setLevel(cursor);
-		getPeriod(Period.MIN15).setLevel(cursor);
-		getPeriod(Period.MIN5).setLevel(cursor);
+		for (String period : Period.PERIODS) {
+			getPeriod(period).setThumbnail(cursor);
+			getPeriod(period).setLevel(cursor);
+			getPeriod(period).setTrend(cursor);
+		}
 
 		setFlag(cursor);
 
@@ -1364,6 +1303,14 @@ public class Stock extends DatabaseTable {
 		getPeriod(period).setLevel(level);
 	}
 
+	public String getTrend(String period) {
+		return getPeriod(period).getTrend();
+	}
+
+	public void setTrend(String period, String trend) {
+		getPeriod(period).setTrend(trend);
+	}
+
 	public void setupMarketValue() {
 		if (mPrice == 0) {
 			mMarketValue = 0;
@@ -1603,18 +1550,28 @@ public class Stock extends DatabaseTable {
 		return result;
 	}
 
-	public String getPriceNetString() {
-		StringBuilder result = new StringBuilder();
-		result.append(getPrice()).append(" ");
-		result.append(getNet()).append(Symbol.PERCENT);
-		return result.toString();
+	public String getPriceNetString(String separator) {
+		StringBuilder builder = new StringBuilder();
+		builder.append(getPrice()).append(separator);
+		builder.append(getNet()).append(Symbol.PERCENT);
+		return builder.toString();
 	}
 
-	public String getNamePriceNetString() {
-		StringBuilder result = new StringBuilder();
-		result.append(getName()).append(" ");
-		result.append(getPriceNetString());
-		return result.toString();
+	public String getNamePriceNetString(String separator) {
+		StringBuilder builder = new StringBuilder();
+		builder.append(getName()).append(separator);
+		builder.append(getPriceNetString(separator));
+		return builder.toString();
+	}
+
+	public String getTrendString() {
+		StringBuilder builder = new StringBuilder();
+		for (String period : Period.PERIODS) {
+			if (Setting.getPeriod(period)) {
+				builder.append(getTrend(period));
+			}
+		}
+		return builder.toString();
 	}
 
 	public String toString() {

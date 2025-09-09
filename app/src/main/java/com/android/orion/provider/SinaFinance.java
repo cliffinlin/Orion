@@ -129,7 +129,7 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		String symbol = "&symbol=" + stock.getSE() + stock.getCode();
-		String scale = "&scale=" + Period.getPeriodMinutes(stockData.getPeriod());
+		String scale = "&scale=" + Period.getPeriodInMinutes(stockData.getPeriod());
 		String ma = "&ma=" + "no";
 		String datalen = "&datalen=" + len;
 
@@ -891,13 +891,7 @@ public class SinaFinance extends StockDataProvider {
 			return result;
 		}
 
-		for (String period : Period.PERIODS) {
-			if (Setting.getPeriod(period)) {
-				if (TextUtils.equals(period, Period.DAY)) {
-					result = downloadStockDataRealTime(stock, period);
-				}
-			}
-		}
+		result = downloadStockDataRealTime(stock, Period.DAY);
 
 		return result;
 	}

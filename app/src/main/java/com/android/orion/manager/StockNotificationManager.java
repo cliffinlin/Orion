@@ -20,6 +20,7 @@ import com.android.orion.database.Stock;
 import com.android.orion.database.StockTrend;
 import com.android.orion.setting.Constant;
 import com.android.orion.utility.Market;
+import com.android.orion.utility.Symbol;
 
 public class StockNotificationManager {
 
@@ -92,7 +93,7 @@ public class StockNotificationManager {
 		mContentTitle.setLength(0);
 		mContentText.setLength(0);
 
-		mContentTitle.append(stock.getNamePriceNetString() + " " + stockTrend.toNotifyString());
+		mContentTitle.append(stock.getNamePriceNetString(" ") + " " + stockTrend.toNotifyString());
 		mContentText.append(gridNotifyString);
 		try {
 			int id = TREND_NOTIFICATION_ID + (int) stockTrend.getId();

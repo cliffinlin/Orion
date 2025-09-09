@@ -13,6 +13,7 @@ import com.android.orion.manager.StockDatabaseManager;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Logger;
 import com.android.orion.utility.StopWatch;
+import com.android.orion.utility.Symbol;
 import com.android.orion.utility.Utility;
 
 import java.util.ArrayList;
@@ -93,7 +94,7 @@ public class StockAnalyzer {
 		}
 
 		StopWatch.stop();
-		Log.d(stock.toLogString() + " " + StopWatch.getInterval() + "s");
+		Log.d(stock.toLogString() + Symbol.TAB + stock.getPriceNetString(Symbol.TAB) + Symbol.TAB + stock.getTrendString() + Symbol.TAB + StopWatch.getInterval() + "s");
 	}
 
 	private void analyzeMacd(String period) {

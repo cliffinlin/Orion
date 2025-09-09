@@ -18,6 +18,7 @@ import com.android.orion.provider.StockPerceptronProvider;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Logger;
+import com.android.orion.utility.Symbol;
 import com.android.orion.utility.Utility;
 
 import org.apache.commons.math3.ml.clustering.CentroidCluster;
@@ -44,7 +45,6 @@ public class TrendAnalyzer {
 	public static final int THUMBNAIL_MARKER_STROKE_WIDTH = 5;
 
 	Logger Log = Logger.getLogger();
-	int mMarkerColor = Color.BLACK;
 	Stock mStock;
 	String mPeriod;
 	List<DataPoint> mDataPointList = new ArrayList<>();
@@ -677,18 +677,18 @@ public class TrendAnalyzer {
 					mXValues[level].add((float) index);
 					mYValues[level].add((float) stockData.getCandle().getHigh());
 					if (mStock.getLevel(period) == level) {
-						mMarkerColor = Color.GREEN;
+						mStock.setTrend(period, Symbol.MINUS);
 						if (mStock.getPrice() > stockData.getCandle().getHigh()) {
-							mMarkerColor = Color.RED;
+							mStock.setTrend(period, Symbol.ADD);
 						}
 					}
 				} else if (stockData.vertexOf(StockTrend.getVertexBottom(level))) {
 					mXValues[level].add((float) index);
 					mYValues[level].add((float) stockData.getCandle().getLow());
 					if (mStock.getLevel(period) == level) {
-						mMarkerColor = Color.RED;
+						mStock.setTrend(period, Symbol.ADD);
 						if (mStock.getPrice() < stockData.getCandle().getLow()) {
-							mMarkerColor = Color.GREEN;
+							mStock.setTrend(period, Symbol.MINUS);
 						}
 					}
 				}
@@ -720,7 +720,7 @@ public class TrendAnalyzer {
 		}
 
 		CurveThumbnail.CrossMarkerConfig markerConfig =
-				new CurveThumbnail.CrossMarkerConfig(mStockDataList.size() - 1, (float) mStock.getPrice(), mMarkerColor, THUMBNAIL_MARKER_STROKE_WIDTH, THUMBNAIL_MARKER_SIZE);
+				new CurveThumbnail.CrossMarkerConfig(mStockDataList.size() - 1, (float) mStock.getPrice(), TextUtils.equals(mStock.getTrend(period), Symbol.ADD) ? Color.RED : Color.GREEN, THUMBNAIL_MARKER_STROKE_WIDTH, THUMBNAIL_MARKER_SIZE);
 		mStock.setThumbnail(period, Utility.thumbnailToBytes(new CurveThumbnail(THUMBNAIL_SIZE, Color.TRANSPARENT, mLineConfigList, markerConfig)));
 	}
 

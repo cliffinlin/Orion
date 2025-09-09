@@ -24,6 +24,7 @@ import androidx.annotation.NonNull;
 
 import com.android.orion.R;
 import com.android.orion.config.Config;
+import com.android.orion.data.Period;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.setting.Constant;
@@ -186,37 +187,37 @@ public class StockFavoriteListActivity extends ListActivity implements
 				mSortOrderColumn = DatabaseContract.COLUMN_SELL_PROFIT;
 				break;
 			case R.id.period_year:
-				mSortOrderColumn = DatabaseContract.COLUMN_YEAR;
+				mSortOrderColumn = DatabaseContract.COLUMN_YEAR_THUMBNAIL;
 				break;
 			case R.id.period_month6:
-				mSortOrderColumn = DatabaseContract.COLUMN_MONTH6;
+				mSortOrderColumn = DatabaseContract.COLUMN_MONTH6_THUMBNAIL;
 				break;
 			case R.id.period_quarter:
-				mSortOrderColumn = DatabaseContract.COLUMN_QUARTER;
+				mSortOrderColumn = DatabaseContract.COLUMN_QUARTER_THUMBNAIL;
 				break;
 			case R.id.period_month2:
-				mSortOrderColumn = DatabaseContract.COLUMN_MONTH2;
+				mSortOrderColumn = DatabaseContract.COLUMN_MONTH2_THUMBNAIL;
 				break;
 			case R.id.period_month:
-				mSortOrderColumn = DatabaseContract.COLUMN_MONTH;
+				mSortOrderColumn = DatabaseContract.COLUMN_MONTH_THUMBNAIL;
 				break;
 			case R.id.period_week:
-				mSortOrderColumn = DatabaseContract.COLUMN_WEEK;
+				mSortOrderColumn = DatabaseContract.COLUMN_WEEK_THUMBNAIL;
 				break;
 			case R.id.period_day:
-				mSortOrderColumn = DatabaseContract.COLUMN_DAY;
+				mSortOrderColumn = DatabaseContract.COLUMN_DAY_THUMBNAIL;
 				break;
 			case R.id.period_min60:
-				mSortOrderColumn = DatabaseContract.COLUMN_MIN60;
+				mSortOrderColumn = DatabaseContract.COLUMN_MIN60_THUMBNAIL;
 				break;
 			case R.id.period_min30:
-				mSortOrderColumn = DatabaseContract.COLUMN_MIN30;
+				mSortOrderColumn = DatabaseContract.COLUMN_MIN30_THUMBNAIL;
 				break;
 			case R.id.period_min15:
-				mSortOrderColumn = DatabaseContract.COLUMN_MIN15;
+				mSortOrderColumn = DatabaseContract.COLUMN_MIN15_THUMBNAIL;
 				break;
 			case R.id.period_min5:
-				mSortOrderColumn = DatabaseContract.COLUMN_MIN5;
+				mSortOrderColumn = DatabaseContract.COLUMN_MIN5_THUMBNAIL;
 				break;
 			case R.id.flag:
 				mSortOrderColumn = DatabaseContract.COLUMN_FLAG;
@@ -311,67 +312,67 @@ public class StockFavoriteListActivity extends ListActivity implements
 		mTextViewYear = findViewById(R.id.period_year);
 		if (mTextViewYear != null) {
 			mTextViewYear.setOnClickListener(this);
-			setVisibility(mTextViewYear, Setting.getPeriod(DatabaseContract.COLUMN_YEAR));
+			setVisibility(mTextViewYear, Setting.getPeriod(Period.YEAR));
 		}
 
 		mTextViewMonth6 = findViewById(R.id.period_month6);
 		if (mTextViewMonth6 != null) {
 			mTextViewMonth6.setOnClickListener(this);
-			setVisibility(mTextViewMonth6, Setting.getPeriod(DatabaseContract.COLUMN_MONTH6));
+			setVisibility(mTextViewMonth6, Setting.getPeriod(Period.MONTH6));
 		}
 
 		mTextViewQuarter = findViewById(R.id.period_quarter);
 		if (mTextViewQuarter != null) {
 			mTextViewQuarter.setOnClickListener(this);
-			setVisibility(mTextViewQuarter, Setting.getPeriod(DatabaseContract.COLUMN_QUARTER));
+			setVisibility(mTextViewQuarter, Setting.getPeriod(Period.QUARTER));
 		}
 
 		mTextViewMonth2 = findViewById(R.id.period_month2);
 		if (mTextViewMonth2 != null) {
 			mTextViewMonth2.setOnClickListener(this);
-			setVisibility(mTextViewMonth2, Setting.getPeriod(DatabaseContract.COLUMN_MONTH2));
+			setVisibility(mTextViewMonth2, Setting.getPeriod(Period.MONTH2));
 		}
 
 		mTextViewMonth = findViewById(R.id.period_month);
 		if (mTextViewMonth != null) {
 			mTextViewMonth.setOnClickListener(this);
-			setVisibility(mTextViewMonth, Setting.getPeriod(DatabaseContract.COLUMN_MONTH));
+			setVisibility(mTextViewMonth, Setting.getPeriod(Period.MONTH));
 		}
 
 		mTextViewWeek = findViewById(R.id.period_week);
 		if (mTextViewWeek != null) {
 			mTextViewWeek.setOnClickListener(this);
-			setVisibility(mTextViewWeek, Setting.getPeriod(DatabaseContract.COLUMN_WEEK));
+			setVisibility(mTextViewWeek, Setting.getPeriod(Period.WEEK));
 		}
 
 		mTextViewDay = findViewById(R.id.period_day);
 		if (mTextViewDay != null) {
 			mTextViewDay.setOnClickListener(this);
-			setVisibility(mTextViewDay, Setting.getPeriod(DatabaseContract.COLUMN_DAY));
+			setVisibility(mTextViewDay, Setting.getPeriod(Period.DAY));
 		}
 
 		mTextViewMin60 = findViewById(R.id.period_min60);
 		if (mTextViewMin60 != null) {
 			mTextViewMin60.setOnClickListener(this);
-			setVisibility(mTextViewMin60, Setting.getPeriod(DatabaseContract.COLUMN_MIN60));
+			setVisibility(mTextViewMin60, Setting.getPeriod(Period.MIN60));
 		}
 
 		mTextViewMin30 = findViewById(R.id.period_min30);
 		if (mTextViewMin30 != null) {
 			mTextViewMin30.setOnClickListener(this);
-			setVisibility(mTextViewMin30, Setting.getPeriod(DatabaseContract.COLUMN_MIN30));
+			setVisibility(mTextViewMin30, Setting.getPeriod(Period.MIN30));
 		}
 
 		mTextViewMin15 = findViewById(R.id.period_min15);
 		if (mTextViewMin15 != null) {
 			mTextViewMin15.setOnClickListener(this);
-			setVisibility(mTextViewMin15, Setting.getPeriod(DatabaseContract.COLUMN_MIN15));
+			setVisibility(mTextViewMin15, Setting.getPeriod(Period.MIN15));
 		}
 
 		mTextViewMin5 = findViewById(R.id.period_min5);
 		if (mTextViewMin5 != null) {
 			mTextViewMin5.setOnClickListener(this);
-			setVisibility(mTextViewMin5, Setting.getPeriod(DatabaseContract.COLUMN_MIN5));
+			setVisibility(mTextViewMin5, Setting.getPeriod(Period.MIN5));
 		}
 
 		mTextViewFlag = findViewById(R.id.flag);
@@ -394,27 +395,27 @@ public class StockFavoriteListActivity extends ListActivity implements
 			setHeaderTextColor(mTextViewBuyProfit, mHeaderTextHighlightColor);
 		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_SELL_PROFIT)) {
 			setHeaderTextColor(mTextViewSellProfit, mHeaderTextHighlightColor);
-		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_YEAR)) {
+		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_YEAR_THUMBNAIL)) {
 			setHeaderTextColor(mTextViewYear, mHeaderTextHighlightColor);
-		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_MONTH6)) {
+		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_MONTH6_THUMBNAIL)) {
 			setHeaderTextColor(mTextViewMonth6, mHeaderTextHighlightColor);
-		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_QUARTER)) {
+		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_QUARTER_THUMBNAIL)) {
 			setHeaderTextColor(mTextViewQuarter, mHeaderTextHighlightColor);
-		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_MONTH2)) {
+		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_MONTH2_THUMBNAIL)) {
 			setHeaderTextColor(mTextViewMonth2, mHeaderTextHighlightColor);
-		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_MONTH)) {
+		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_MONTH_THUMBNAIL)) {
 			setHeaderTextColor(mTextViewMonth, mHeaderTextHighlightColor);
-		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_WEEK)) {
+		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_WEEK_THUMBNAIL)) {
 			setHeaderTextColor(mTextViewWeek, mHeaderTextHighlightColor);
-		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_DAY)) {
+		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_DAY_THUMBNAIL)) {
 			setHeaderTextColor(mTextViewDay, mHeaderTextHighlightColor);
-		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_MIN60)) {
+		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_MIN60_THUMBNAIL)) {
 			setHeaderTextColor(mTextViewMin60, mHeaderTextHighlightColor);
-		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_MIN30)) {
+		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_MIN30_THUMBNAIL)) {
 			setHeaderTextColor(mTextViewMin30, mHeaderTextHighlightColor);
-		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_MIN15)) {
+		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_MIN15_THUMBNAIL)) {
 			setHeaderTextColor(mTextViewMin15, mHeaderTextHighlightColor);
-		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_MIN5)) {
+		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_MIN5_THUMBNAIL)) {
 			setHeaderTextColor(mTextViewMin5, mHeaderTextHighlightColor);
 		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_FLAG)) {
 			setHeaderTextColor(mTextViewFlag, mHeaderTextHighlightColor);
@@ -434,17 +435,17 @@ public class StockFavoriteListActivity extends ListActivity implements
 				DatabaseContract.COLUMN_NET,
 				DatabaseContract.COLUMN_BUY_PROFIT,
 				DatabaseContract.COLUMN_SELL_PROFIT,
-				DatabaseContract.COLUMN_YEAR,
-				DatabaseContract.COLUMN_MONTH6,
-				DatabaseContract.COLUMN_QUARTER,
-				DatabaseContract.COLUMN_MONTH2,
-				DatabaseContract.COLUMN_MONTH,
-				DatabaseContract.COLUMN_WEEK,
-				DatabaseContract.COLUMN_DAY,
-				DatabaseContract.COLUMN_MIN60,
-				DatabaseContract.COLUMN_MIN30,
-				DatabaseContract.COLUMN_MIN15,
-				DatabaseContract.COLUMN_MIN5,
+				DatabaseContract.COLUMN_YEAR_THUMBNAIL,
+				DatabaseContract.COLUMN_MONTH6_THUMBNAIL,
+				DatabaseContract.COLUMN_QUARTER_THUMBNAIL,
+				DatabaseContract.COLUMN_MONTH2_THUMBNAIL,
+				DatabaseContract.COLUMN_MONTH_THUMBNAIL,
+				DatabaseContract.COLUMN_WEEK_THUMBNAIL,
+				DatabaseContract.COLUMN_DAY_THUMBNAIL,
+				DatabaseContract.COLUMN_MIN60_THUMBNAIL,
+				DatabaseContract.COLUMN_MIN30_THUMBNAIL,
+				DatabaseContract.COLUMN_MIN15_THUMBNAIL,
+				DatabaseContract.COLUMN_MIN5_THUMBNAIL,
 				DatabaseContract.COLUMN_FLAG,
 				DatabaseContract.COLUMN_MODIFIED};
 		int[] mRightTo = new int[]{
@@ -649,7 +650,8 @@ public class StockFavoriteListActivity extends ListActivity implements
 			}
 
 			if (isPeriodColumn(columnName)) {
-				if (Setting.getPeriod(columnName)) {
+				String period = Period.fromColumnName(columnName);
+				if (Setting.getPeriod(period)) {
 					view.setVisibility(View.VISIBLE);
 				} else {
 					view.setVisibility(View.GONE);
@@ -702,17 +704,17 @@ public class StockFavoriteListActivity extends ListActivity implements
 		}
 
 		boolean isPeriodColumn(String columnName) {
-			return DatabaseContract.COLUMN_YEAR.equals(columnName) ||
-					DatabaseContract.COLUMN_MONTH6.equals(columnName) ||
-					DatabaseContract.COLUMN_QUARTER.equals(columnName) ||
-					DatabaseContract.COLUMN_MONTH2.equals(columnName) ||
-					DatabaseContract.COLUMN_MONTH.equals(columnName) ||
-					DatabaseContract.COLUMN_WEEK.equals(columnName) ||
-					DatabaseContract.COLUMN_DAY.equals(columnName) ||
-					DatabaseContract.COLUMN_MIN60.equals(columnName) ||
-					DatabaseContract.COLUMN_MIN30.equals(columnName) ||
-					DatabaseContract.COLUMN_MIN15.equals(columnName) ||
-					DatabaseContract.COLUMN_MIN5.equals(columnName);
+			return DatabaseContract.COLUMN_YEAR_THUMBNAIL.equals(columnName) ||
+					DatabaseContract.COLUMN_MONTH6_THUMBNAIL.equals(columnName) ||
+					DatabaseContract.COLUMN_QUARTER_THUMBNAIL.equals(columnName) ||
+					DatabaseContract.COLUMN_MONTH2_THUMBNAIL.equals(columnName) ||
+					DatabaseContract.COLUMN_MONTH_THUMBNAIL.equals(columnName) ||
+					DatabaseContract.COLUMN_WEEK_THUMBNAIL.equals(columnName) ||
+					DatabaseContract.COLUMN_DAY_THUMBNAIL.equals(columnName) ||
+					DatabaseContract.COLUMN_MIN60_THUMBNAIL.equals(columnName) ||
+					DatabaseContract.COLUMN_MIN30_THUMBNAIL.equals(columnName) ||
+					DatabaseContract.COLUMN_MIN15_THUMBNAIL.equals(columnName) ||
+					DatabaseContract.COLUMN_MIN5_THUMBNAIL.equals(columnName);
 		}
 
 		void setTextViewColor(TextView view, int backgroundColor, int textColor) {

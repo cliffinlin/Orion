@@ -881,27 +881,6 @@ public class StockFinancialListActivity extends ListActivity implements
 					.getColumnIndex(DatabaseContract.COLUMN_NET)) {
 				return setVisibility(view, Setting.getDisplayNet());
 			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_MONTH)) {
-				return setVisibility(view, Setting.getPeriod(DatabaseContract.COLUMN_MONTH));
-			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_WEEK)) {
-				return setVisibility(view, Setting.getPeriod(DatabaseContract.COLUMN_WEEK));
-			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_DAY)) {
-				return setVisibility(view, Setting.getPeriod(DatabaseContract.COLUMN_DAY));
-			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_MIN60)) {
-				return setVisibility(view, Setting.getPeriod(DatabaseContract.COLUMN_MIN60));
-			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_MIN30)) {
-				return setVisibility(view, Setting.getPeriod(DatabaseContract.COLUMN_MIN30));
-			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_MIN15)) {
-				return setVisibility(view, Setting.getPeriod(DatabaseContract.COLUMN_MIN15));
-			} else if (columnIndex == cursor
-					.getColumnIndex(DatabaseContract.COLUMN_MIN5)) {
-				return setVisibility(view, Setting.getPeriod(DatabaseContract.COLUMN_MIN5));
-			} else if (columnIndex == cursor
 					.getColumnIndex(DatabaseContract.COLUMN_MODIFIED)) {
 			}
 
