@@ -514,8 +514,8 @@ public class TrendAnalyzer {
 				}
 
 				for (int i = StockTrend.LEVEL_DRAW; i < StockTrend.LEVELS.length; i++) {
-					ArrayList<StockData> vertexDataList = mStock.getVertexList(period, i);
-					mDataPointList.add(newDataPoint(period, i, vertexDataList));
+					ArrayList<StockData> vertexList = mStock.getVertexList(period, i);
+					mDataPointList.add(newDataPoint(period, i, vertexList));
 				}
 			}
 		}
@@ -541,19 +541,31 @@ public class TrendAnalyzer {
 		}
 	}
 
-	DataPoint newDataPoint(String period, int level, ArrayList<StockData> dataList) {
-		if (dataList == null || dataList.size() < StockTrend.VERTEX_SIZE) {
-			return new DataPoint(period, level, "", "", Integer.MAX_VALUE, Integer.MAX_VALUE);
+	DataPoint newDataPoint(String period, int level, ArrayList<StockData> vertexList) {
+		if (vertexList == null || vertexList.size() < StockTrend.VERTEX_SIZE) {
+			return new DataPoint(period, level, "", "", Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE);
 		}
 
-		StockData startData = dataList.get(dataList.size() - 3);
-		StockData endData = dataList.get(dataList.size() - 2);
-		Calendar startCalendar = Utility.getCalendar(startData.getDateTime(), Utility.CALENDAR_DATE_TIME_FORMAT);
-		Calendar endCalendar = Utility.getCalendar(endData.getDateTime(), Utility.CALENDAR_DATE_TIME_FORMAT);
+		StockData start = vertexList.get(vertexList.size() - 2);
+		StockData end = vertexList.get(vertexList.size() - 1);
+		Calendar startCalendar = Utility.getCalendar(start.getDate(), Utility.CALENDAR_DATE_FORMAT);
+		Calendar endCalendar = Utility.getCalendar(end.getDate(), Utility.CALENDAR_DATE_FORMAT);
 		Calendar currentCalendar = Calendar.getInstance();
 		long x = (currentCalendar.getTimeInMillis() - startCalendar.getTimeInMillis()) / Constant.MINUTE_IN_MILLIS;
-		long y = (currentCalendar.getTimeInMillis() - endCalendar.getTimeInMillis()) / Constant.MINUTE_IN_MILLIS;
-		return new DataPoint(period, level, startData.getDateTime(), endData.getDateTime(), x, y);
+		long y = 0;
+		if (start.vertexOf(StockTrend.VERTEX_TOP)) {
+			 y = -1;
+			 if (mStock.getPrice() > start.getCandle().getHigh()) {
+				 y = 1;
+			 }
+		} else if (start.vertexOf(StockTrend.VERTEX_BOTTOM)) {
+			y = 1;
+			if (mStock.getPrice() < start.getCandle().getLow()) {
+				y = -1;
+			}
+		}
+		long days = Utility.getDaysBetween(startCalendar, currentCalendar);
+		return new DataPoint(period, level, start.getDateTime(), end.getDateTime(), x, y, days);
 	}
 
 	List<CentroidCluster<DataPoint>> sortClusterList(List<CentroidCluster<DataPoint>> clusterList) {
@@ -589,7 +601,7 @@ public class TrendAnalyzer {
 				point.setDistance(point.distanceTo(cluster.getCenter()));
 				clusterInfo.append("  ").append(point).append("\n");
 			}
-//			Log.d(clusterInfo.toString());
+			Log.d(clusterInfo.toString());
 		}
 	}
 
@@ -613,7 +625,7 @@ public class TrendAnalyzer {
 				for (String period : Period.PERIODS) {
 					if (mDataPointMap.get(period) != null) {
 						mStock.setLevel(period, mDataPointMap.get(period).level);
-//						Log.d("setLevel:" + mDataPointMap.get(period).toString());
+						Log.d("setLevel:" + mDataPointMap.get(period).toString());
 					}
 				}
 				return;
@@ -731,16 +743,16 @@ public class TrendAnalyzer {
 		final String end;
 		final double[] points;
 		int group;
-		int days;
+		long days;
 		double distance;
 
-		DataPoint(String period, int level, String start, String end, double x, double y) {
+		DataPoint(String period, int level, String start, String end, double x, double y, long days) {
 			this.period = period;
 			this.level = level;
 			this.start = start;
 			this.end = end;
 			this.points = new double[]{x, y};
-			this.days = (int) (x - y) / 60 / 24;
+			this.days = days;
 		}
 
 		@Override

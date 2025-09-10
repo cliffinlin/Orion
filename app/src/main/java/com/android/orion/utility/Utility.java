@@ -38,6 +38,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public class Utility {
 
@@ -873,5 +874,15 @@ public class Utility {
 		} catch (Exception e) {
 			return context.getResources().getDrawable(R.drawable.ic_delete);
 		}
+	}
+
+	public static long getDaysBetween(Calendar start, Calendar end) {
+		if (start == null || end == null) {
+			return 0;
+		}
+		long startMillis = start.getTimeInMillis();
+		long endMillis = end.getTimeInMillis();
+		long diffMillis = endMillis - startMillis;
+		return TimeUnit.MILLISECONDS.toDays(diffMillis);
 	}
 }
