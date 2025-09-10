@@ -24,6 +24,7 @@ import com.android.orion.utility.Utility;
 import org.apache.commons.math3.ml.clustering.CentroidCluster;
 import org.apache.commons.math3.ml.clustering.Clusterable;
 import org.apache.commons.math3.ml.clustering.KMeansPlusPlusClusterer;
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -55,6 +56,7 @@ public class TrendAnalyzer {
 	ArrayMap<String, DataPoint> mDataPointMap = new ArrayMap<>();
 	StockDatabaseManager mStockDatabaseManager = StockDatabaseManager.getInstance();
 	StockPerceptronProvider mStockPerceptronProvider = StockPerceptronProvider.getInstance();
+	DescriptiveStatistics mDescriptiveStatistics = new DescriptiveStatistics();
 
 	private TrendAnalyzer() {
 	}
@@ -613,13 +615,11 @@ public class TrendAnalyzer {
 		mDataPointMap.clear();
 		for (int i = 0; i < clusterList.size(); i++) {
 			CentroidCluster<DataPoint> cluster = clusterList.get(i);
-			for (DataPoint dataPoint : cluster.getPoints()) {
-				int threshold = mStock.hasFlag(Stock.FLAG_GRID) ? K_MEANS_GRID_DAYS : K_MEANS_TREND_DAYS;
-				if (dataPoint.days < threshold) {
-					continue;//TODO
-				}
-				updateDataPointMap(dataPoint);
+			if (cluster == null) {
+				continue;
 			}
+
+			updateDataPointMap(cluster.getPoints());
 
 			if (mDataPointMap.size() == K_MEANS_PERIODS) {
 				for (String period : Period.PERIODS) {
@@ -630,6 +630,32 @@ public class TrendAnalyzer {
 				}
 				return;
 			}
+		}
+	}
+
+	void updateDataPointMap(List<DataPoint> dataPointList) {
+		if (dataPointList == null || dataPointList.isEmpty()) {
+			return;
+		}
+
+		double days = dataPointList.get(0).days;
+		if (days == 0) {
+			return;
+		}
+
+		if (!mDataPointMap.isEmpty()) {
+			mDescriptiveStatistics.clear();
+			for (DataPoint dataPoint : mDataPointMap.values()) {
+				mDescriptiveStatistics.addValue(dataPoint.days);
+			}
+			double mean = mDescriptiveStatistics.getMean();
+			if (Math.abs(days - mean) / mean > 1.0) {//TODO
+				mDataPointMap.clear();
+			}
+		}
+
+		for (DataPoint dataPoint : dataPointList) {
+			updateDataPointMap(dataPoint);
 		}
 	}
 
