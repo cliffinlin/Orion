@@ -54,8 +54,8 @@ public class StockFavoriteListActivity extends ListActivity implements
 	TextView mTextViewNameCode = null;
 	TextView mTextViewPrice = null;
 	TextView mTextViewNet = null;
-	TextView mTextViewBuyProfit = null;
-	TextView mTextViewSellProfit = null;
+	TextView mTextViewGrid = null;
+	TextView mTextViewTrend = null;
 	TextView mTextViewYear = null;
 	TextView mTextViewMonth6 = null;
 	TextView mTextViewQuarter = null;
@@ -257,8 +257,8 @@ public class StockFavoriteListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewNameCode, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewPrice, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewNet, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewBuyProfit, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewSellProfit, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewGrid, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewTrend, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewYear, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewMonth6, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewQuarter, mHeaderTextDefaultColor);
@@ -299,14 +299,14 @@ public class StockFavoriteListActivity extends ListActivity implements
 			setVisibility(mTextViewNet, Setting.getDisplayNet());
 		}
 
-		mTextViewBuyProfit = findViewById(R.id.buy_profit);
-		if (mTextViewBuyProfit != null) {
-			mTextViewBuyProfit.setOnClickListener(this);
+		mTextViewGrid = findViewById(R.id.grid);
+		if (mTextViewGrid != null) {
+			mTextViewGrid.setOnClickListener(this);
 		}
 
-		mTextViewSellProfit = findViewById(R.id.sell_profit);
-		if (mTextViewSellProfit != null) {
-			mTextViewSellProfit.setOnClickListener(this);
+		mTextViewTrend = findViewById(R.id.trend);
+		if (mTextViewTrend != null) {
+			mTextViewTrend.setOnClickListener(this);
 		}
 
 		mTextViewYear = findViewById(R.id.period_year);
@@ -391,10 +391,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 			setHeaderTextColor(mTextViewPrice, mHeaderTextHighlightColor);
 		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_NET)) {
 			setHeaderTextColor(mTextViewNet, mHeaderTextHighlightColor);
-		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_BUY_PROFIT)) {
-			setHeaderTextColor(mTextViewBuyProfit, mHeaderTextHighlightColor);
-		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_SELL_PROFIT)) {
-			setHeaderTextColor(mTextViewSellProfit, mHeaderTextHighlightColor);
 		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_YEAR_THUMBNAIL)) {
 			setHeaderTextColor(mTextViewYear, mHeaderTextHighlightColor);
 		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_MONTH6_THUMBNAIL)) {
@@ -435,6 +431,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 				DatabaseContract.COLUMN_NET,
 				DatabaseContract.COLUMN_BUY_PROFIT,
 				DatabaseContract.COLUMN_SELL_PROFIT,
+				DatabaseContract.COLUMN_THUMBNAIL,
 				DatabaseContract.COLUMN_YEAR_THUMBNAIL,
 				DatabaseContract.COLUMN_MONTH6_THUMBNAIL,
 				DatabaseContract.COLUMN_QUARTER_THUMBNAIL,
@@ -453,6 +450,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 				R.id.net,
 				R.id.buy_profit,
 				R.id.sell_profit,
+				R.id.thumbnail,
 				R.id.year,
 				R.id.month6,
 				R.id.quarter,
@@ -649,12 +647,16 @@ public class StockFavoriteListActivity extends ListActivity implements
 				return false;
 			}
 
-			if (isPeriodColumn(columnName)) {
-				String period = Period.fromColumnName(columnName);
-				if (Setting.getPeriod(period)) {
-					view.setVisibility(View.VISIBLE);
+			if (isPeriodColumn(columnName) || DatabaseContract.COLUMN_THUMBNAIL.equals(columnName)) {
+				if (isPeriodColumn(columnName)) {
+					String period = Period.fromColumnName(columnName);
+					if (Setting.getPeriod(period)) {
+						view.setVisibility(View.VISIBLE);
+					} else {
+						view.setVisibility(View.GONE);
+					}
 				} else {
-					view.setVisibility(View.GONE);
+					view.setVisibility(View.VISIBLE);
 				}
 
 				if (view instanceof ImageView) {

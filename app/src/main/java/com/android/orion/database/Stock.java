@@ -105,6 +105,7 @@ public class Stock extends DatabaseTable {
 	private String mAdaptiveDate;
 	private double mBuyProfit;
 	private double mSellProfit;
+	private byte[] mThumbnail;
 
 	public Stock() {
 		init();
@@ -245,6 +246,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_ADAPTIVE_DATE, mAdaptiveDate);
 		contentValues.put(DatabaseContract.COLUMN_BUY_PROFIT, mBuyProfit);
 		contentValues.put(DatabaseContract.COLUMN_SELL_PROFIT, mSellProfit);
+		contentValues.put(DatabaseContract.COLUMN_THUMBNAIL, mThumbnail);
 		return contentValues;
 	}
 
@@ -348,6 +350,7 @@ public class Stock extends DatabaseTable {
 		setAdaptiveDate(stock.mAdaptiveDate);
 		setBuyProfit(stock.mBuyProfit);
 		setSellProfit(stock.mSellProfit);
+		setThumbnail(stock.mThumbnail);
 	}
 
 	@Override
@@ -417,6 +420,7 @@ public class Stock extends DatabaseTable {
 		setAdaptiveDate(cursor);
 		setBuyProfit(cursor);
 		setSellProfit(cursor);
+		setThumbnail(cursor);
 	}
 
 	public String getClasses() {
@@ -1245,6 +1249,30 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_SELL_PROFIT)));
 	}
 
+	public byte[] getThumbnail() {
+		return mThumbnail;
+	}
+
+	public void setThumbnail(byte[] thumbnail) {
+		mThumbnail = thumbnail;
+	}
+
+	public void setThumbnail(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+		setThumbnail(cursor.getBlob(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_THUMBNAIL)));
+	}
+
+	public byte[] getThumbnail(String period) {
+		return getPeriod(period).getThumbnail();
+	}
+
+	public void setThumbnail(String period, byte[] thumbnail) {
+		getPeriod(period).setThumbnail(thumbnail);
+	}
+
 	public void addFlag(int flag) {
 		mFlag |= flag;
 	}
@@ -1285,14 +1313,6 @@ public class Stock extends DatabaseTable {
 
 	public ArrayList<StockTrend> getStockTrendList(String period, int level) {
 		return getPeriod(period).getStockTrendList(level);
-	}
-
-	public byte[] getThumbnail(String period) {
-		return getPeriod(period).getThumbnail();
-	}
-
-	public void setThumbnail(String period, byte[] thumbnail) {
-		getPeriod(period).setThumbnail(thumbnail);
 	}
 
 	public int getLevel(String period) {
