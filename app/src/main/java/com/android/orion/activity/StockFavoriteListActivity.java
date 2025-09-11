@@ -55,7 +55,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 	TextView mTextViewPrice = null;
 	TextView mTextViewNet = null;
 	TextView mTextViewGrid = null;
-	TextView mTextViewTrend = null;
 	TextView mTextViewYear = null;
 	TextView mTextViewMonth6 = null;
 	TextView mTextViewQuarter = null;
@@ -258,7 +257,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewPrice, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewNet, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewGrid, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewTrend, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewYear, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewMonth6, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewQuarter, mHeaderTextDefaultColor);
@@ -302,11 +300,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 		mTextViewGrid = findViewById(R.id.grid);
 		if (mTextViewGrid != null) {
 			mTextViewGrid.setOnClickListener(this);
-		}
-
-		mTextViewTrend = findViewById(R.id.trend);
-		if (mTextViewTrend != null) {
-			mTextViewTrend.setOnClickListener(this);
 		}
 
 		mTextViewYear = findViewById(R.id.period_year);
