@@ -95,10 +95,10 @@ public class CurveThumbnail extends Drawable {
 		}
 
 		if (minX == maxX) maxX = minX + 1;
-		if (minY == maxY) maxY = minY + 1;
+		// if (minY == maxY) maxY = minY + 1; // 注释掉这行
 
 		float xMargin = (maxX - minX) * 0.05f;
-		float yMargin = (maxY - minY) * 0.05f;
+		float yMargin = (maxY == minY) ? 1.0f : (maxY - minY) * 0.05f; // 处理相同值的情况
 
 		return new DataRange(
 				minX - xMargin,
@@ -129,11 +129,18 @@ public class CurveThumbnail extends Drawable {
 
 	// 高精度坐标映射方法
 	private float preciseMapToX(float value, float minX, float maxX) {
+		if (maxX == minX) {
+			return size / 2f;
+		}
 		float normalized = (value - minX) / (maxX - minX);
 		return Math.round(normalized * size * 100) / 100f;
 	}
 
 	private float preciseMapToY(float value, float minY, float maxY) {
+		if (maxY == minY) {
+			// 所有y值相同时，显示在中间位置
+			return size / 2f;
+		}
 		float normalized = (value - minY) / (maxY - minY);
 		return size - Math.round(normalized * size * 100) / 100f;
 	}
