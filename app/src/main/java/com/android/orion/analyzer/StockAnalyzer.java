@@ -76,7 +76,6 @@ public class StockAnalyzer {
 			mFinancialAnalyzer.analyzeFinancial(mStock);
 			mFinancialAnalyzer.setupFinancial(mStock);
 			mFinancialAnalyzer.setupStockBonus(mStock);
-			mStock.setAdaptiveDate("");
 			for (String period : Period.PERIODS) {
 				if (Setting.getPeriod(period)) {
 					analyze(period);

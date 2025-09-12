@@ -50,6 +50,14 @@
             android:textSize="18sp" />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/duration"
+        android:layout_width="@dimen/action_layout_width"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="18sp" />
+
     <ImageView
         android:id="@+id/year"
         android:layout_width="@dimen/action_layout_width"

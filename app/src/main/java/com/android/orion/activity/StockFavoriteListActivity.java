@@ -55,6 +55,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 	TextView mTextViewPrice = null;
 	TextView mTextViewNet = null;
 	TextView mTextViewGrid = null;
+	TextView mTextViewDuration = null;
 	TextView mTextViewYear = null;
 	TextView mTextViewMonth6 = null;
 	TextView mTextViewQuarter = null;
@@ -185,6 +186,9 @@ public class StockFavoriteListActivity extends ListActivity implements
 			case R.id.sell_profit:
 				mSortOrderColumn = DatabaseContract.COLUMN_SELL_PROFIT;
 				break;
+			case R.id.duration:
+				mSortOrderColumn = DatabaseContract.COLUMN_DURATION;
+				break;
 			case R.id.period_year:
 				mSortOrderColumn = DatabaseContract.COLUMN_YEAR_THUMBNAIL;
 				break;
@@ -257,6 +261,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewPrice, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewNet, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewGrid, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewDuration, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewYear, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewMonth6, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewQuarter, mHeaderTextDefaultColor);
@@ -300,6 +305,11 @@ public class StockFavoriteListActivity extends ListActivity implements
 		mTextViewGrid = findViewById(R.id.grid);
 		if (mTextViewGrid != null) {
 			mTextViewGrid.setOnClickListener(this);
+		}
+
+		mTextViewDuration = findViewById(R.id.duration);
+		if (mTextViewDuration != null) {
+			mTextViewDuration.setOnClickListener(this);
 		}
 
 		mTextViewYear = findViewById(R.id.period_year);
@@ -384,6 +394,8 @@ public class StockFavoriteListActivity extends ListActivity implements
 			setHeaderTextColor(mTextViewPrice, mHeaderTextHighlightColor);
 		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_NET)) {
 			setHeaderTextColor(mTextViewNet, mHeaderTextHighlightColor);
+		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_DURATION)) {
+			setHeaderTextColor(mTextViewDuration, mHeaderTextHighlightColor);
 		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_YEAR_THUMBNAIL)) {
 			setHeaderTextColor(mTextViewYear, mHeaderTextHighlightColor);
 		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_MONTH6_THUMBNAIL)) {
@@ -424,6 +436,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 				DatabaseContract.COLUMN_NET,
 				DatabaseContract.COLUMN_BUY_PROFIT,
 				DatabaseContract.COLUMN_SELL_PROFIT,
+				DatabaseContract.COLUMN_DURATION,
 				DatabaseContract.COLUMN_THUMBNAIL,
 				DatabaseContract.COLUMN_YEAR_THUMBNAIL,
 				DatabaseContract.COLUMN_MONTH6_THUMBNAIL,
@@ -443,6 +456,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 				R.id.net,
 				R.id.buy_profit,
 				R.id.sell_profit,
+				R.id.duration,
 				R.id.thumbnail,
 				R.id.year,
 				R.id.month6,
@@ -678,20 +692,23 @@ public class StockFavoriteListActivity extends ListActivity implements
 						.getColumnIndex(DatabaseContract.COLUMN_SELL_PROFIT));
 
 				if (DatabaseContract.COLUMN_PRICE.equals(columnName)) {
-					return setVisibility(view, Setting.getDisplayNet());
+					return setVisibility(view, true);
 				} else if (DatabaseContract.COLUMN_NET.equals(columnName)) {
 					return setVisibility(view, Setting.getDisplayNet());
 				} else if (DatabaseContract.COLUMN_BUY_PROFIT.equals(columnName)) {
 					if (Utility.hasFlag(flag, Stock.FLAG_GRID)) {
-						setTextViewColor(textView, Config.COLOR_GRID_PROFILE, buyProfit > 0 ? Color.RED : Color.GREEN);
+						setTextViewColor(textView, Config.COLOR_GRID_PROFILE, buyProfit > 0 ? Color.RED : Color.GRAY);
 					}
-					return setVisibility(view, Setting.getDisplayNet());
+					return setVisibility(view, true);
 				} else if (DatabaseContract.COLUMN_SELL_PROFIT.equals(columnName)) {
 					if (Utility.hasFlag(flag, Stock.FLAG_GRID)) {
-						setTextViewColor(textView, Config.COLOR_GRID_PROFILE, sellProfit < 0 ? Color.RED : Color.GREEN);
+						setTextViewColor(textView, Config.COLOR_GRID_PROFILE, sellProfit < 0 ? Color.RED : Color.GRAY);
 					}
-					return setVisibility(view, Setting.getDisplayNet());
+					return setVisibility(view, true);
+				} else if (DatabaseContract.COLUMN_DURATION.equals(columnName)) {
+					return setVisibility(view, true);
 				} else if (DatabaseContract.COLUMN_MODIFIED.equals(columnName)) {
+					return setVisibility(view, true);
 				}
 			}
 

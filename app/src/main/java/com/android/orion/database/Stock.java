@@ -102,9 +102,9 @@ public class Stock extends DatabaseTable {
 	private double mDividendRatioInYear;
 	private String mRDate;
 	private String mStatus;
-	private String mAdaptiveDate;
 	private double mBuyProfit;
 	private double mSellProfit;
+	private double mDuration;
 	private byte[] mThumbnail;
 
 	public Stock() {
@@ -178,9 +178,9 @@ public class Stock extends DatabaseTable {
 		mDividendRatioInYear = 0;
 		mRDate = "";
 		mStatus = "";
-		mAdaptiveDate = "";
 		mBuyProfit = 0;
 		mSellProfit = 0;
+		mDuration = 0;
 	}
 
 	@Override
@@ -243,9 +243,9 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_DIVIDEND_RATIO_IN_YEAR, mDividendRatioInYear);
 		contentValues.put(DatabaseContract.COLUMN_R_DATE, mRDate);
 		contentValues.put(DatabaseContract.COLUMN_STATUS, mStatus);
-		contentValues.put(DatabaseContract.COLUMN_ADAPTIVE_DATE, mAdaptiveDate);
 		contentValues.put(DatabaseContract.COLUMN_BUY_PROFIT, mBuyProfit);
 		contentValues.put(DatabaseContract.COLUMN_SELL_PROFIT, mSellProfit);
+		contentValues.put(DatabaseContract.COLUMN_DURATION, mDuration);
 		contentValues.put(DatabaseContract.COLUMN_THUMBNAIL, mThumbnail);
 		return contentValues;
 	}
@@ -347,9 +347,9 @@ public class Stock extends DatabaseTable {
 		setDividendRatioInYear(stock.mDividendRatioInYear);
 		setRDate(stock.mRDate);
 		setStatus(stock.mStatus);
-		setAdaptiveDate(stock.mAdaptiveDate);
 		setBuyProfit(stock.mBuyProfit);
 		setSellProfit(stock.mSellProfit);
+		setDuration(stock.mDuration);
 		setThumbnail(stock.mThumbnail);
 	}
 
@@ -417,9 +417,9 @@ public class Stock extends DatabaseTable {
 		setDividendRatioInYear(cursor);
 		setRDate(cursor);
 		setStatus(cursor);
-		setAdaptiveDate(cursor);
 		setBuyProfit(cursor);
 		setSellProfit(cursor);
+		setDuration(cursor);
 		setThumbnail(cursor);
 	}
 
@@ -1198,23 +1198,6 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_STATUS)));
 	}
 
-	public String getAdaptiveDate() {
-		return mAdaptiveDate;
-	}
-
-	public void setAdaptiveDate(String adaptiveDate) {
-		mAdaptiveDate = adaptiveDate;
-	}
-
-	void setAdaptiveDate(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setAdaptiveDate(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_ADAPTIVE_DATE)));
-	}
-
 	public double getBuyProfit() {
 		return mBuyProfit;
 	}
@@ -1247,6 +1230,23 @@ public class Stock extends DatabaseTable {
 
 		setSellProfit(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_SELL_PROFIT)));
+	}
+
+	public double getDuration() {
+		return mDuration;
+	}
+
+	public void setDuration(double duration) {
+		mDuration = duration;
+	}
+
+	void setDuration(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setDuration(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_DURATION)));
 	}
 
 	public byte[] getThumbnail() {

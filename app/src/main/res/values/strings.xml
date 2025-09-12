@@ -51,6 +51,7 @@
     <string name="dividend_ratio_in_year">DRatioY</string>
     <string name="download">Download</string>
     <string name="draw">Draw</string>
+    <string name="duration">DUR</string>
     <string name="edit">Edit</string>
     <string name="enabled">Enabled</string>
     <string name="end_date">End date</string>

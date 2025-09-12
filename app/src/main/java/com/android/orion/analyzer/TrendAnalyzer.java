@@ -488,15 +488,6 @@ public class TrendAnalyzer {
 		int level = StockTrend.LEVEL_DRAW;
 		for (int i = StockTrend.LEVELS.length - 1; i > StockTrend.LEVEL_NONE; i--) {
 			if (mStock.getVertexList(period, i).size() >= StockTrend.ADAPTIVE_SIZE) {
-				StockData vertexData = StockData.getLast(mStock.getVertexList(period, i), 1);
-				if (vertexData != null) {
-					String dateString = vertexData.getDate();
-					if (TextUtils.isEmpty(mStock.getAdaptiveDate())) {
-						mStock.setAdaptiveDate(dateString);
-					} else if (Utility.getCalendar(dateString, Utility.CALENDAR_DATE_FORMAT).after(Utility.getCalendar(mStock.getAdaptiveDate(), Utility.CALENDAR_DATE_FORMAT))) {
-						mStock.setAdaptiveDate(dateString);
-					}
-				}
 				level = i;
 				break;
 			}
@@ -621,16 +612,21 @@ public class TrendAnalyzer {
 			updateDataPointMap(cluster.getPoints());
 
 			if (mDataPointMap.size() == K_MEANS_PERIODS) {
-				if (!checkGroupTrend()) {
+				if (!checkConsistency()) {
 					continue;
 				}
 
+				double total = 0;
+				double count = 0;
 				for (String period : Period.PERIODS) {
 					if (mDataPointMap.get(period) != null) {
 						mStock.setLevel(period, mDataPointMap.get(period).level);
 						Log.d("setLevel:" + mDataPointMap.get(period).toString());
+						total += mDataPointMap.get(period).days;
+						count++;
 					}
 				}
+				mStock.setDuration((count == 0) ?  0 : total / count);
 				return;
 			}
 		}
@@ -680,7 +676,7 @@ public class TrendAnalyzer {
 				continue;
 			}
 
-			for (int j = i; j < Period.PERIODS.length; j++) {
+			for (int j = i + 1; j < Period.PERIODS.length; j++) {
 				if (!mDataPointMap.containsKey(Period.PERIODS[j])) {
 					continue;
 				}
@@ -694,19 +690,20 @@ public class TrendAnalyzer {
 		}
 	}
 
-	boolean checkGroupTrend() {
+	boolean checkConsistency() {
 		DataPoint dayDataPoint = mDataPointMap.get(Period.DAY);
 		if (dayDataPoint == null || dayDataPoint.level < 1) {
 			return false;
 		}
 
-		if (dayDataPoint.level == 1) {
-			double dayPointValue = dayDataPoint.getPoint()[1];
-			for (String period : Period.PERIODS) {
-				DataPoint dataPoint = mDataPointMap.get(period);
-				if (dataPoint != null && dataPoint.getPoint()[1] != dayPointValue) {
-					return false;
-				}
+		for (String period : Period.PERIODS) {
+			DataPoint dataPoint = mDataPointMap.get(period);
+			if (dataPoint == null) {
+				continue;
+			}
+
+			if (dataPoint.getPoint()[1] != dayDataPoint.getPoint()[1] || dataPoint.days < dayDataPoint.days) {
+				return false;
 			}
 		}
 
@@ -817,7 +814,7 @@ public class TrendAnalyzer {
 				} else {
 					color = Color.BLACK;
 				}
-				mLineConfigList.add(new CurveThumbnail.LineConfig(xValues, yValues, color, 20 * THUMBNAIL_STROKE_WIDTH));
+				mLineConfigList.add(new CurveThumbnail.LineConfig(xValues, yValues, color, 30 * THUMBNAIL_STROKE_WIDTH));
 				i++;
 			}
 		}
