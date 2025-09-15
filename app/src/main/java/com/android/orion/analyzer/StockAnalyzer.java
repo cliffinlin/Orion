@@ -47,7 +47,7 @@ public class StockAnalyzer {
 
 		try {
 			loadStockDataList(period);
-			if (Period.getPeriodIndex(period) <= Period.getPeriodIndex(Period.MONTH)) {
+			if (Period.indexOf(period) <= Period.indexOf(Period.MONTH)) {
 				mFinancialAnalyzer.setNetProfileInYear(mStock, mStockDataList);
 			}
 			analyzeMacd(period);

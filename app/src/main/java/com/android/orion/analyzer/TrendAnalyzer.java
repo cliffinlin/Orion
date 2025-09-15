@@ -46,6 +46,7 @@ public class TrendAnalyzer {
 	Logger Log = Logger.getLogger();
 	Stock mStock;
 	String mPeriod;
+	long mAdaptiveDays = 0;
 	List<DataPoint> mDataPointList = new ArrayList<>();
 	List<Float>[] mXValues = new List[StockTrend.LEVELS.length];
 	List<Float>[] mYValues = new List[StockTrend.LEVELS.length];
@@ -496,11 +497,12 @@ public class TrendAnalyzer {
 	}
 
 	public void analyzeAdaptive() {
+		mAdaptiveDays = Integer.MAX_VALUE;
 		mDataPointList.clear();
 
 		for (String period : Period.PERIODS) {
 			if (Setting.getPeriod(period)) {
-				if (Period.getPeriodIndex(period) < Period.getPeriodIndex(Period.DAY)) {
+				if (Period.indexOf(period) < Period.indexOf(Period.DAY)) {
 					continue;
 				}
 
@@ -557,6 +559,12 @@ public class TrendAnalyzer {
 			}
 		}
 		long days = Utility.getDaysBetween(startCalendar, currentCalendar);
+		if (mStock.getLevel(period) == level) {
+			if (days < mAdaptiveDays) {
+				mAdaptiveDays = days;
+				Log.d("mAdaptiveDays=" + mAdaptiveDays);
+			}
+		}
 		return new DataPoint(period, level, start.getDateTime(), end.getDateTime(), x, y, days);
 	}
 
@@ -602,33 +610,41 @@ public class TrendAnalyzer {
 			return;
 		}
 
-		mDataPointMap.clear();
-		for (int i = 0; i < clusterList.size(); i++) {
-			CentroidCluster<DataPoint> cluster = clusterList.get(i);
-			if (cluster == null) {
-				continue;
-			}
+		if (mAdaptiveDays == Integer.MAX_VALUE) {
+			return;
+		}
 
-			updateDataPointMap(cluster.getPoints());
-
-			if (mDataPointMap.size() == K_MEANS_PERIODS) {
-				if (!checkConsistency()) {
+		while (mAdaptiveDays > 0) {
+			mDataPointMap.clear();
+			for (int i = 0; i < clusterList.size(); i++) {
+				CentroidCluster<DataPoint> cluster = clusterList.get(i);
+				if (cluster == null) {
 					continue;
 				}
 
-				double total = 0;
-				double count = 0;
-				for (String period : Period.PERIODS) {
-					if (mDataPointMap.get(period) != null) {
-						mStock.setLevel(period, mDataPointMap.get(period).level);
-						Log.d("setLevel:" + mDataPointMap.get(period).toString());
-						total += mDataPointMap.get(period).days;
-						count++;
+				updateDataPointMap(cluster.getPoints());
+
+				if (mDataPointMap.size() == K_MEANS_PERIODS) {
+					if (!checkConsistency()) {
+						continue;
 					}
+
+					double total = 0;
+					double count = 0;
+					for (String period : Period.PERIODS) {
+						if (mDataPointMap.get(period) != null) {
+							mStock.setLevel(period, mDataPointMap.get(period).level);
+							Log.d("setLevel:" + mDataPointMap.get(period).toString());
+							total += mDataPointMap.get(period).days;
+							count++;
+						}
+					}
+					mStock.setDuration((count == 0) ?  0 : total / count);
+					return;
 				}
-				mStock.setDuration((count == 0) ?  0 : total / count);
-				return;
 			}
+			mAdaptiveDays--;
+			Log.d("Retry, mAdaptiveDays=" + mAdaptiveDays);
 		}
 	}
 
@@ -638,7 +654,7 @@ public class TrendAnalyzer {
 		}
 
 		double days = dataPointList.get(0).days;
-		if (days == 0) {
+		if (days < mAdaptiveDays) {
 			return;
 		}
 
@@ -692,7 +708,7 @@ public class TrendAnalyzer {
 
 	boolean checkConsistency() {
 		DataPoint dayDataPoint = mDataPointMap.get(Period.DAY);
-		if (dayDataPoint == null || dayDataPoint.level < 1) {
+		if (dayDataPoint == null || dayDataPoint.level < StockTrend.LEVEL_DRAW) {
 			return false;
 		}
 

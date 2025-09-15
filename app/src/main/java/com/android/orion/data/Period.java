@@ -92,7 +92,7 @@ public class Period {
 		return MINUTE_PERIOD_SET.contains(period);
 	}
 
-	public static int getPeriodIndex(String period) {
+	public static int indexOf(String period) {
 		int index = 0;
 		if (TextUtils.isEmpty(period)) {
 			return index;

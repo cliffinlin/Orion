@@ -116,7 +116,7 @@ public class StockDataChart {
 
 		LineData lineData = new LineData(mXValues);
 
-		if (Period.getPeriodIndex(mPeriod) <= Period.getPeriodIndex(Period.MONTH)) {
+		if (Period.indexOf(mPeriod) <= Period.indexOf(Period.MONTH)) {
 			LineDataSet lineDataSet = new LineDataSet(mNetProfitInYearEntryList,
 					"NPY");
 			lineDataSet.setColor(Color.MAGENTA);

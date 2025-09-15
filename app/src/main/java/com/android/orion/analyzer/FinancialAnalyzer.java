@@ -40,7 +40,7 @@ public class FinancialAnalyzer {
 			return;
 		}
 
-		for (int i = Period.getPeriodIndex(Period.MONTH); i < Period.PERIODS.length; i++) {
+		for (int i = Period.indexOf(Period.MONTH); i < Period.PERIODS.length; i++) {
 			String period = Period.PERIODS[i];
 			mStockDataList = stock.getStockDataList(period, StockTrend.LEVEL_NONE);
 			mStockDatabaseManager.loadStockDataList(stock, period, mStockDataList);
