@@ -46,7 +46,6 @@ public class TrendAnalyzer {
 	Logger Log = Logger.getLogger();
 	Stock mStock;
 	String mPeriod;
-	long mAdaptiveDays = 0;
 	List<DataPoint> mDataPointList = new ArrayList<>();
 	List<Float>[] mXValues = new List[StockTrend.LEVELS.length];
 	List<Float>[] mYValues = new List[StockTrend.LEVELS.length];
@@ -497,7 +496,6 @@ public class TrendAnalyzer {
 	}
 
 	public void analyzeAdaptive() {
-		mAdaptiveDays = Integer.MAX_VALUE;
 		mDataPointList.clear();
 
 		for (String period : Period.PERIODS) {
@@ -537,15 +535,17 @@ public class TrendAnalyzer {
 
 	DataPoint newDataPoint(String period, int level, ArrayList<StockData> vertexList) {
 		if (vertexList == null || vertexList.size() < StockTrend.VERTEX_SIZE) {
-			return new DataPoint(period, level, "", "", Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE);
+			return new DataPoint(period, level, "", "", Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE);
 		}
 
+		StockData prev = vertexList.get(vertexList.size() - 3);
 		StockData start = vertexList.get(vertexList.size() - 2);
 		StockData end = vertexList.get(vertexList.size() - 1);
+		Calendar prevCalendar = Utility.getCalendar(prev.getDate(), Utility.CALENDAR_DATE_FORMAT);
 		Calendar startCalendar = Utility.getCalendar(start.getDate(), Utility.CALENDAR_DATE_FORMAT);
 		Calendar endCalendar = Utility.getCalendar(end.getDate(), Utility.CALENDAR_DATE_FORMAT);
-		Calendar currentCalendar = Calendar.getInstance();
-		long x = (currentCalendar.getTimeInMillis() - startCalendar.getTimeInMillis()) / Constant.MINUTE_IN_MILLIS;
+		Calendar nowCalendar = Calendar.getInstance();
+		long x = (nowCalendar.getTimeInMillis() - startCalendar.getTimeInMillis()) / Constant.MINUTE_IN_MILLIS;
 		long y = 0;
 		if (start.vertexOf(StockTrend.VERTEX_TOP)) {
 			 y = -1;
@@ -558,14 +558,10 @@ public class TrendAnalyzer {
 				y = -1;
 			}
 		}
-		long days = Utility.getDaysBetween(startCalendar, currentCalendar);
-		if (mStock.getLevel(period) == level) {
-			if (days < mAdaptiveDays) {
-				mAdaptiveDays = days;
-				Log.d("mAdaptiveDays=" + mAdaptiveDays);
-			}
-		}
-		return new DataPoint(period, level, start.getDateTime(), end.getDateTime(), x, y, days);
+
+		long elapsed =  Utility.getDaysBetween(prevCalendar, startCalendar);
+		long duration = Utility.getDaysBetween(startCalendar, nowCalendar);
+		return new DataPoint(period, level, start.getDateTime(), end.getDateTime(), x, y, elapsed, duration);
 	}
 
 	List<CentroidCluster<DataPoint>> sortClusterList(List<CentroidCluster<DataPoint>> clusterList) {
@@ -610,41 +606,33 @@ public class TrendAnalyzer {
 			return;
 		}
 
-		if (mAdaptiveDays == Integer.MAX_VALUE) {
-			return;
-		}
+		mDataPointMap.clear();
+		for (int i = 0; i < clusterList.size(); i++) {
+			CentroidCluster<DataPoint> cluster = clusterList.get(i);
+			if (cluster == null) {
+				continue;
+			}
 
-		while (mAdaptiveDays > 0) {
-			mDataPointMap.clear();
-			for (int i = 0; i < clusterList.size(); i++) {
-				CentroidCluster<DataPoint> cluster = clusterList.get(i);
-				if (cluster == null) {
+			updateDataPointMap(cluster.getPoints());
+
+			if (mDataPointMap.size() == K_MEANS_PERIODS) {
+				if (!checkConsistency()) {
 					continue;
 				}
 
-				updateDataPointMap(cluster.getPoints());
-
-				if (mDataPointMap.size() == K_MEANS_PERIODS) {
-					if (!checkConsistency()) {
-						continue;
+				double total = 0;
+				double count = 0;
+				for (String period : Period.PERIODS) {
+					if (mDataPointMap.get(period) != null) {
+						mStock.setLevel(period, mDataPointMap.get(period).level);
+						Log.d("setLevel:" + mDataPointMap.get(period).toString());
+						total += mDataPointMap.get(period).duration;
+						count++;
 					}
-
-					double total = 0;
-					double count = 0;
-					for (String period : Period.PERIODS) {
-						if (mDataPointMap.get(period) != null) {
-							mStock.setLevel(period, mDataPointMap.get(period).level);
-							Log.d("setLevel:" + mDataPointMap.get(period).toString());
-							total += mDataPointMap.get(period).days;
-							count++;
-						}
-					}
-					mStock.setDuration((count == 0) ?  0 : total / count);
-					return;
 				}
+				mStock.setDuration((count == 0) ?  0 : total / count);
+				return;
 			}
-			mAdaptiveDays--;
-			Log.d("Retry, mAdaptiveDays=" + mAdaptiveDays);
 		}
 	}
 
@@ -653,23 +641,38 @@ public class TrendAnalyzer {
 			return;
 		}
 
-		double days = dataPointList.get(0).days;
-		if (days < mAdaptiveDays) {
+		double duration = dataPointList.get(0).duration;
+		if (duration < 1) {
+			return;
+		}
+
+		List<DataPoint> list = new ArrayList<>();
+		for (DataPoint dataPoint : dataPointList) {
+			if (dataPoint == null) {
+				continue;
+			}
+			if (dataPoint.elapsed < 1 || dataPoint.duration < 1) {
+				continue;
+			}
+			list.add(dataPoint);
+		}
+
+		if (list.isEmpty()) {
 			return;
 		}
 
 		if (!mDataPointMap.isEmpty()) {
 			mDescriptiveStatistics.clear();
 			for (DataPoint dataPoint : mDataPointMap.values()) {
-				mDescriptiveStatistics.addValue(dataPoint.days);
+				mDescriptiveStatistics.addValue(dataPoint.duration);
 			}
 			double mean = mDescriptiveStatistics.getMean();
-			if (Math.abs(days - mean) / mean > 1.0) {//TODO
+			if (Math.abs(duration - mean) / mean > 1.0) {//TODO
 				mDataPointMap.clear();
 			}
 		}
 
-		for (DataPoint dataPoint : dataPointList) {
+		for (DataPoint dataPoint : list) {
 			updateDataPointMap(dataPoint);
 		}
 	}
@@ -698,7 +701,7 @@ public class TrendAnalyzer {
 				}
 
 				if (mDataPointMap.get(Period.PERIODS[j]).level < mDataPointMap.get(Period.PERIODS[i]).level) {
-					if (mDataPointMap.get(Period.PERIODS[j]).days < mDataPointMap.get(Period.PERIODS[i]).days) {
+					if (mDataPointMap.get(Period.PERIODS[j]).duration < mDataPointMap.get(Period.PERIODS[i]).duration) {
 						mDataPointMap.remove(Period.PERIODS[j]);
 					}
 				}
@@ -718,7 +721,7 @@ public class TrendAnalyzer {
 				continue;
 			}
 
-			if (dataPoint.getPoint()[1] != dayDataPoint.getPoint()[1] || dataPoint.days < dayDataPoint.days) {
+			if (dataPoint.getPoint()[1] != dayDataPoint.getPoint()[1] || dataPoint.duration < dayDataPoint.duration) {
 				return false;
 			}
 		}
@@ -845,16 +848,18 @@ public class TrendAnalyzer {
 		final String end;
 		final double[] points;
 		int group;
-		long days;
+		long elapsed;
+		long duration;
 		double distance;
 
-		DataPoint(String period, int level, String start, String end, double x, double y, long days) {
+		DataPoint(String period, int level, String start, String end, double x, double y, long elapsed, long duration) {
 			this.period = period;
 			this.level = level;
 			this.start = start;
 			this.end = end;
 			this.points = new double[]{x, y};
-			this.days = days;
+			this.elapsed = elapsed;
+			this.duration = duration;
 		}
 
 		@Override
@@ -882,7 +887,7 @@ public class TrendAnalyzer {
 
 		@Override
 		public String toString() {
-			return period + "-L" + level + " " + start + "--" + end + ", {" + points[0] + ", " + points[1] + "}" + " group=" + group + " days=" + days;
+			return period + "-L" + level + " " + start + "--" + end + ", {" + points[0] + ", " + points[1] + "}" + " group=" + group + " elapsed=" + elapsed + " duration=" + duration;
 		}
 	}
 
