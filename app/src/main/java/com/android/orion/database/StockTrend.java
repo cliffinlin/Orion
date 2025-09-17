@@ -31,6 +31,8 @@ public class StockTrend extends DatabaseTable {
 	public static final int DIRECTION_NONE = 0;
 	public static final int DIRECTION_UP = 1 << 0;
 	public static final int DIRECTION_DOWN = 1 << 1;
+	public static final int DIRECTION_UP_UP = 1 << 2;
+	public static final int DIRECTION_DOWN_DOWN = 1 << 3;
 
 	public static final int VERTEX_NONE = 0;
 	public static final int VERTEX_TOP = 1 << 0;

@@ -10,9 +10,12 @@ import com.android.orion.utility.Market;
 import com.android.orion.utility.Symbol;
 import com.android.orion.utility.Utility;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class StockData extends DatabaseTable {
 
@@ -78,30 +81,6 @@ public class StockData extends DatabaseTable {
 
 	public StockData(Cursor cursor) {
 		set(cursor);
-	}
-
-	public static StockData getSafely(List<StockData> list, int index) {
-		if (list == null) {
-			return null;
-		}
-		if (index < 0 || index >= list.size()) {
-			return null;
-		}
-		return list.get(index);
-	}
-
-	public static StockData getLast(List<StockData> list, int index) {
-		if (list == null) {
-			return null;
-		}
-
-		int size = list.size();
-		if (index < 0 || index >= size) {
-			return null;
-		}
-
-		int i = size - 1 - index;
-		return list.get(i);
 	}
 
 	public boolean isEmpty() {
@@ -687,5 +666,47 @@ public class StockData extends DatabaseTable {
 				+ 0);
 		stringBuffer.append("\r\n");
 		return stringBuffer.toString();
+	}
+
+	public static StockData getSafely(List<StockData> list, int index) {
+		if (list == null) {
+			return null;
+		}
+		if (index < 0 || index >= list.size()) {
+			return null;
+		}
+		return list.get(index);
+	}
+
+	public static StockData getLast(List<StockData> list, int index) {
+		if (list == null) {
+			return null;
+		}
+
+		int size = list.size();
+		if (index < 0 || index >= size) {
+			return null;
+		}
+
+		int i = size - 1 - index;
+		return list.get(i);
+	}
+
+	public static int getDaysBetween(int startIndex, int endIndex, ArrayList<StockData> stockDataList) {
+		if (stockDataList == null || stockDataList.isEmpty() || startIndex > endIndex) {
+			return 0;
+		}
+
+		int maxIndex = stockDataList.size() - 1;
+		if (startIndex < 0 || endIndex < 0 || startIndex > maxIndex || endIndex > maxIndex) {
+			return 0;
+		}
+
+		Set<String> uniqueDates = new HashSet<>();
+		for (int i = startIndex; i <= endIndex; i++) {
+			uniqueDates.add(stockDataList.get(i).getDate());
+		}
+
+		return uniqueDates.size() - 1;
 	}
 }

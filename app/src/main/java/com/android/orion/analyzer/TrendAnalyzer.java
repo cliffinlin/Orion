@@ -535,7 +535,7 @@ public class TrendAnalyzer {
 
 	DataPoint newDataPoint(String period, int level, ArrayList<StockData> vertexList) {
 		if (vertexList == null || vertexList.size() < StockTrend.VERTEX_SIZE) {
-			return new DataPoint(period, level, "", "", Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE);
+			return new DataPoint(period, level, "", "", Integer.MAX_VALUE, StockTrend.DIRECTION_NONE, Integer.MAX_VALUE, Integer.MAX_VALUE);
 		}
 
 		StockData prev = vertexList.get(vertexList.size() - 3);
@@ -546,21 +546,21 @@ public class TrendAnalyzer {
 		Calendar endCalendar = Utility.getCalendar(end.getDate(), Utility.CALENDAR_DATE_FORMAT);
 		Calendar nowCalendar = Calendar.getInstance();
 		long x = (nowCalendar.getTimeInMillis() - startCalendar.getTimeInMillis()) / Constant.MINUTE_IN_MILLIS;
-		long y = 0;
+		long y = StockTrend.DIRECTION_NONE;
 		if (start.vertexOf(StockTrend.VERTEX_TOP)) {
-			 y = -1;
+			 y = StockTrend.DIRECTION_DOWN;
 			 if (mStock.getPrice() > start.getCandle().getHigh()) {
-				 y = 1;
+				 y = StockTrend.DIRECTION_UP_UP;
 			 }
 		} else if (start.vertexOf(StockTrend.VERTEX_BOTTOM)) {
-			y = 1;
+			y = StockTrend.DIRECTION_UP;
 			if (mStock.getPrice() < start.getCandle().getLow()) {
-				y = -1;
+				y = StockTrend.DIRECTION_DOWN_DOWN;
 			}
 		}
 
-		long elapsed =  Utility.getDaysBetween(prevCalendar, startCalendar);
-		long duration = Utility.getDaysBetween(startCalendar, nowCalendar);
+		long elapsed =  StockData.getDaysBetween(prev.getIndexEnd(), start.getIndexEnd(), mStock.getStockDataList(period, StockTrend.LEVEL_NONE));
+		long duration = StockData.getDaysBetween(start.getIndexEnd(), end.getIndexEnd(), mStock.getStockDataList(period, StockTrend.LEVEL_NONE));
 		return new DataPoint(period, level, start.getDateTime(), end.getDateTime(), x, y, elapsed, duration);
 	}
 
@@ -590,12 +590,12 @@ public class TrendAnalyzer {
 			StringBuilder clusterInfo = new StringBuilder();
 			clusterInfo.append("\n=== 第 ").append(i).append(" 组 ===")
 					.append(" | 中心值: ").append(java.util.Arrays.toString(cluster.getCenter().getPoint()))
-					.append(" | 数量: ").append(cluster.getPoints().size()).append("\n");
+					.append(" | 数量: ").append(cluster.getPoints().size());
 
 			for (DataPoint point : cluster.getPoints()) {
 				point.setGroup(i);
 				point.setDistance(point.distanceTo(cluster.getCenter()));
-				clusterInfo.append("  ").append(point).append("\n");
+				clusterInfo.append("  ").append(point);
 			}
 			Log.d(clusterInfo.toString());
 		}
@@ -622,15 +622,17 @@ public class TrendAnalyzer {
 
 				double total = 0;
 				double count = 0;
+				StringBuilder builder = new StringBuilder();
 				for (String period : Period.PERIODS) {
 					if (mDataPointMap.get(period) != null) {
 						mStock.setLevel(period, mDataPointMap.get(period).level);
-						Log.d("setLevel:" + mDataPointMap.get(period).toString());
 						total += mDataPointMap.get(period).duration;
 						count++;
+						builder.append(mDataPointMap.get(period).toString());
 					}
 				}
 				mStock.setDuration((count == 0) ?  0 : total / count);
+				Log.d("setLevel:" + builder.toString());
 				return;
 			}
 		}
@@ -641,38 +643,48 @@ public class TrendAnalyzer {
 			return;
 		}
 
-		double duration = dataPointList.get(0).duration;
-		if (duration < 1) {
-			return;
-		}
-
-		List<DataPoint> list = new ArrayList<>();
+		List<DataPoint> validList = new ArrayList<>();
 		for (DataPoint dataPoint : dataPointList) {
 			if (dataPoint == null) {
 				continue;
 			}
-			if (dataPoint.elapsed < 1 || dataPoint.duration < 1) {
+			if (dataPoint.getPoint() == null || dataPoint.getPoint().length < 2) {
 				continue;
 			}
-			list.add(dataPoint);
+			if (dataPoint.getPoint()[1] == StockTrend.DIRECTION_NONE || dataPoint.elapsed < 1 || dataPoint.duration < 1) {
+				continue;
+			}
+			validList.add(dataPoint);
 		}
 
-		if (list.isEmpty()) {
+		if (validList.isEmpty()) {
 			return;
 		}
 
 		if (!mDataPointMap.isEmpty()) {
-			mDescriptiveStatistics.clear();
-			for (DataPoint dataPoint : mDataPointMap.values()) {
-				mDescriptiveStatistics.addValue(dataPoint.duration);
+			double newDirection = validList.get(0).getPoint()[1];
+			boolean directionMismatch = false;
+
+			for (DataPoint existingPoint : mDataPointMap.values()) {
+				if (existingPoint.getPoint()[1] != newDirection) {
+					directionMismatch = true;
+					break;
+				}
 			}
-			double mean = mDescriptiveStatistics.getMean();
-			if (Math.abs(duration - mean) / mean > 1.0) {//TODO
-				mDataPointMap.clear();
+
+			if (directionMismatch) {
+				Log.d("directionMismatch=" + directionMismatch + ", " + validList.get(0).toString());
+				if (mDataPointMap.size() == K_MEANS_PERIODS) {
+						Log.d("return, mDataPointMap.size()=" + mDataPointMap.size());
+					return;
+				} else {
+					Log.d("Clear map to maintain direction consistency");
+					mDataPointMap.clear();
+				}
 			}
 		}
 
-		for (DataPoint dataPoint : list) {
+		for (DataPoint dataPoint : validList) {
 			updateDataPointMap(dataPoint);
 		}
 	}
@@ -689,24 +701,6 @@ public class TrendAnalyzer {
 		}
 
 		mDataPointMap.put(dataPoint.period, dataPoint);
-
-		for (int i = 0; i < Period.PERIODS.length; i++) {
-			if (!mDataPointMap.containsKey(Period.PERIODS[i])) {
-				continue;
-			}
-
-			for (int j = i + 1; j < Period.PERIODS.length; j++) {
-				if (!mDataPointMap.containsKey(Period.PERIODS[j])) {
-					continue;
-				}
-
-				if (mDataPointMap.get(Period.PERIODS[j]).level < mDataPointMap.get(Period.PERIODS[i]).level) {
-					if (mDataPointMap.get(Period.PERIODS[j]).duration < mDataPointMap.get(Period.PERIODS[i]).duration) {
-						mDataPointMap.remove(Period.PERIODS[j]);
-					}
-				}
-			}
-		}
 	}
 
 	boolean checkConsistency() {
@@ -721,7 +715,7 @@ public class TrendAnalyzer {
 				continue;
 			}
 
-			if (dataPoint.getPoint()[1] != dayDataPoint.getPoint()[1] || dataPoint.duration < dayDataPoint.duration) {
+			if (dataPoint.getPoint()[1] != dayDataPoint.getPoint()[1]) {
 				return false;
 			}
 		}
@@ -887,7 +881,7 @@ public class TrendAnalyzer {
 
 		@Override
 		public String toString() {
-			return period + "-L" + level + " " + start + "--" + end + ", {" + points[0] + ", " + points[1] + "}" + " group=" + group + " elapsed=" + elapsed + " duration=" + duration;
+			return "\n" + period + "-L" + level + " " + start + "--" + end + ", {" + points[0] + ", " + points[1] + "}" + " group=" + group + " elapsed=" + elapsed + " duration=" + duration;
 		}
 	}
 
