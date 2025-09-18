@@ -636,6 +636,14 @@ public class TrendAnalyzer {
 						setupStockLevelAndDuration();
 						return;
 					} else {
+//						boolean result = true;
+//						for (DataPoint dataPoint : mDataPointMap.values()) {
+//							result &= (dataPoint.duration == 0 || dataPoint.duration == 1);//TODO
+//						}
+//						if (result) {
+//							setupStockLevelAndDuration();
+//							return;
+//						}
 						mDataPointMap.clear();
 					}
 				}
@@ -663,7 +671,10 @@ public class TrendAnalyzer {
 			if (dataPoint.getPoint() == null || dataPoint.getPoint().length < 2) {
 				continue;
 			}
-			if (dataPoint.getPoint()[1] == StockTrend.DIRECTION_NONE || dataPoint.past < 1 || dataPoint.duration < 1) {
+			if (dataPoint.getPoint()[1] == StockTrend.DIRECTION_NONE) {
+				continue;
+			}
+			if (dataPoint.duration <= 1 && dataPoint.past <= 1) {
 				continue;
 			}
 			validList.add(dataPoint);
