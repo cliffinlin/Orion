@@ -464,7 +464,7 @@ public class StockDataChart {
 					+ "  " + stockDeal.getVolume()
 					+ "  " + (int) stockDeal.getProfit()
 					+ "  " + stockDeal.getAccount()
-					+ "  " + (TextUtils.equals(stockDeal.getType(), StockDeal.TYPE_SELL) ? stockDeal.getType() : "");
+					+ "  " + (TextUtils.equals(stockDeal.getType(), StockDeal.TYPE_SELL) ? stockDeal.getType() : StockDeal.TYPE_BUY);
 			LimitLine limitLine = createLimitLine(limit, color, label);
 			if (limitLine != null) {
 				mLimitLineList.add(limitLine);

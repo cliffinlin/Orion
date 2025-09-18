@@ -31,11 +31,12 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class TrendAnalyzer {
-	public static final int K_MEANS_PERIODS = 5;
-	public static final int K_MEANS_K = K_MEANS_PERIODS * (StockTrend.LEVELS.length - 1) / 2;
-	public static final int K_MEANS_MAX_ITERATIONS = 1000;
+	public static final int K_MEANS_MAX_ITERATIONS = 100;
+	public static final int MAX_DURATION = 20;
 
 	public static final int THUMBNAIL_SIZE = 160;
 	public static final int THUMBNAIL_STROKE_WIDTH = 1;
@@ -43,6 +44,8 @@ public class TrendAnalyzer {
 	public static final int THUMBNAIL_MARKER_SIZE = 20;
 	public static final int THUMBNAIL_MARKER_STROKE_WIDTH = 5;
 
+	int mKMeansPeriods;
+	int mKMeansK;
 	Logger Log = Logger.getLogger();
 	Stock mStock;
 	String mPeriod;
@@ -51,7 +54,7 @@ public class TrendAnalyzer {
 	List<Float>[] mYValues = new List[StockTrend.LEVELS.length];
 	ArrayList<CurveThumbnail.LineConfig> mLineConfigList = new ArrayList<>();
 	ArrayList<StockData> mStockDataList = new ArrayList<>();
-	ArrayMap<String, DataPoint> mDataPointMap = new ArrayMap<>();
+	ConcurrentMap<String, DataPoint> mDataPointMap = new ConcurrentHashMap<>();
 	StockDatabaseManager mStockDatabaseManager = StockDatabaseManager.getInstance();
 	StockPerceptronProvider mStockPerceptronProvider = StockPerceptronProvider.getInstance();
 	DescriptiveStatistics mDescriptiveStatistics = new DescriptiveStatistics();
@@ -61,6 +64,17 @@ public class TrendAnalyzer {
 
 	public static TrendAnalyzer getInstance() {
 		return Holder.INSTANCE;
+	}
+
+	void setup() {
+		mKMeansPeriods = 0;
+		for (String period : Period.PERIODS) {
+			if (Setting.getPeriod(period)) {
+				mKMeansPeriods++;
+			}
+		}
+		mKMeansK = mKMeansPeriods * (StockTrend.LEVELS.length - 1) / 2;
+		mDataPointList.clear();
 	}
 
 	void setup(Stock stock, String period, ArrayList<StockData> stockDataList) {
@@ -496,14 +510,10 @@ public class TrendAnalyzer {
 	}
 
 	public void analyzeAdaptive() {
-		mDataPointList.clear();
+		setup();
 
 		for (String period : Period.PERIODS) {
 			if (Setting.getPeriod(period)) {
-				if (Period.indexOf(period) < Period.indexOf(Period.DAY)) {
-					continue;
-				}
-
 				for (int i = StockTrend.LEVEL_DRAW; i < StockTrend.LEVELS.length; i++) {
 					ArrayList<StockData> vertexList = mStock.getVertexList(period, i);
 					mDataPointList.add(newDataPoint(period, i, vertexList));
@@ -511,17 +521,17 @@ public class TrendAnalyzer {
 			}
 		}
 
-		if (mDataPointList.size() < K_MEANS_K) {
-			Log.d("return, mDataPointList.size()=" + mDataPointList.size() + " < " + K_MEANS_K);
+		if (mDataPointList.size() < mKMeansK) {
+			Log.d("return, mDataPointList.size()=" + mDataPointList.size() + " < " + mKMeansK);
 			return;
 		}
 
 		try {
-			KMeansPlusPlusClusterer<DataPoint> clusterer = new KMeansPlusPlusClusterer<>(K_MEANS_K, K_MEANS_MAX_ITERATIONS);
+			KMeansPlusPlusClusterer<DataPoint> clusterer = new KMeansPlusPlusClusterer<>(mKMeansK, K_MEANS_MAX_ITERATIONS);
 			List<CentroidCluster<DataPoint>> clusterList = clusterer.cluster(mDataPointList);
 			List<CentroidCluster<DataPoint>> sortedClusterList = sortClusterList(clusterList);
 			setGroupDistance(sortedClusterList);
-			setupStockTrendLevel(sortedClusterList);
+			setupStockLevel(sortedClusterList);
 			for (String period : Period.PERIODS) {
 				if (Setting.getPeriod(period)) {
 					setupThumbnail(period);
@@ -541,12 +551,10 @@ public class TrendAnalyzer {
 		StockData prev = vertexList.get(vertexList.size() - 3);
 		StockData start = vertexList.get(vertexList.size() - 2);
 		StockData end = vertexList.get(vertexList.size() - 1);
-		Calendar prevCalendar = Utility.getCalendar(prev.getDate(), Utility.CALENDAR_DATE_FORMAT);
 		Calendar startCalendar = Utility.getCalendar(start.getDate(), Utility.CALENDAR_DATE_FORMAT);
-		Calendar endCalendar = Utility.getCalendar(end.getDate(), Utility.CALENDAR_DATE_FORMAT);
 		Calendar nowCalendar = Calendar.getInstance();
 		long x = (nowCalendar.getTimeInMillis() - startCalendar.getTimeInMillis()) / Constant.MINUTE_IN_MILLIS;
-		long y = StockTrend.DIRECTION_NONE;
+		int y = StockTrend.DIRECTION_NONE;
 		if (start.vertexOf(StockTrend.VERTEX_TOP)) {
 			 y = StockTrend.DIRECTION_DOWN;
 			 if (mStock.getPrice() > start.getCandle().getHigh()) {
@@ -559,9 +567,9 @@ public class TrendAnalyzer {
 			}
 		}
 
-		long elapsed =  StockData.getDaysBetween(prev.getIndexEnd(), start.getIndexEnd(), mStock.getStockDataList(period, StockTrend.LEVEL_NONE));
-		long duration = StockData.getDaysBetween(start.getIndexEnd(), end.getIndexEnd(), mStock.getStockDataList(period, StockTrend.LEVEL_NONE));
-		return new DataPoint(period, level, start.getDateTime(), end.getDateTime(), x, y, elapsed, duration);
+		int past =  StockData.getDaysBetween(prev.getIndexEnd(), start.getIndexEnd(), mStock.getStockDataList(period, StockTrend.LEVEL_NONE));
+		int duration = StockData.getDaysBetween(start.getIndexEnd(), end.getIndexEnd(), mStock.getStockDataList(period, StockTrend.LEVEL_NONE));
+		return new DataPoint(period, level, start.getDateTime(), end.getDateTime(), x, y, past, duration);
 	}
 
 	List<CentroidCluster<DataPoint>> sortClusterList(List<CentroidCluster<DataPoint>> clusterList) {
@@ -601,92 +609,93 @@ public class TrendAnalyzer {
 		}
 	}
 
-	void setupStockTrendLevel(List<CentroidCluster<DataPoint>> clusterList) {
+	void setupStockLevel(List<CentroidCluster<DataPoint>> clusterList) {
 		if (clusterList == null || clusterList.isEmpty()) {
 			return;
 		}
 
 		mDataPointMap.clear();
-		for (int i = 0; i < clusterList.size(); i++) {
-			CentroidCluster<DataPoint> cluster = clusterList.get(i);
+		for (CentroidCluster<DataPoint> cluster : clusterList) {
 			if (cluster == null) {
 				continue;
 			}
 
-			updateDataPointMap(cluster.getPoints());
+			List<DataPoint> validList = getValidListList(cluster.getPoints());
+			if (validList == null || validList.isEmpty()) {
+				continue;
+			}
 
-			if (mDataPointMap.size() == K_MEANS_PERIODS) {
-				if (!checkConsistency()) {
-					continue;
+			if (!mDataPointMap.isEmpty()) {
+				if (validList.get(0).duration > MAX_DURATION) {
+					setupStockLevelAndDuration();
+					return;
 				}
 
-				double total = 0;
-				double count = 0;
-				StringBuilder builder = new StringBuilder();
-				for (String period : Period.PERIODS) {
-					if (mDataPointMap.get(period) != null) {
-						mStock.setLevel(period, mDataPointMap.get(period).level);
-						total += mDataPointMap.get(period).duration;
-						count++;
-						builder.append(mDataPointMap.get(period).toString());
+				if (isDirectionChanged((int)validList.get(0).getPoint()[1])) {
+					if (mDataPointMap.size() == mKMeansPeriods) {
+						setupStockLevelAndDuration();
+						return;
+					} else {
+						mDataPointMap.clear();
 					}
 				}
-				mStock.setDuration((count == 0) ?  0 : total / count);
-				Log.d("setLevel:" + builder.toString());
-				return;
+			}
+
+			for (DataPoint dataPoint : validList) {
+				updateDataPointMap(dataPoint);
 			}
 		}
 	}
 
-	void updateDataPointMap(List<DataPoint> dataPointList) {
+	List<DataPoint> getValidListList(List<DataPoint> dataPointList) {
+		List<DataPoint> validList = new ArrayList<>();
 		if (dataPointList == null || dataPointList.isEmpty()) {
-			return;
+			return validList;
 		}
 
-		List<DataPoint> validList = new ArrayList<>();
 		for (DataPoint dataPoint : dataPointList) {
 			if (dataPoint == null) {
+				continue;
+			}
+			if (dataPoint.level == StockTrend.LEVEL_NONE) {
 				continue;
 			}
 			if (dataPoint.getPoint() == null || dataPoint.getPoint().length < 2) {
 				continue;
 			}
-			if (dataPoint.getPoint()[1] == StockTrend.DIRECTION_NONE || dataPoint.elapsed < 1 || dataPoint.duration < 1) {
+			if (dataPoint.getPoint()[1] == StockTrend.DIRECTION_NONE || dataPoint.past < 1 || dataPoint.duration < 1) {
 				continue;
 			}
 			validList.add(dataPoint);
 		}
+		return validList;
+	}
 
-		if (validList.isEmpty()) {
-			return;
-		}
-
-		if (!mDataPointMap.isEmpty()) {
-			double newDirection = validList.get(0).getPoint()[1];
-			boolean directionMismatch = false;
-
-			for (DataPoint existingPoint : mDataPointMap.values()) {
-				if (existingPoint.getPoint()[1] != newDirection) {
-					directionMismatch = true;
-					break;
-				}
-			}
-
-			if (directionMismatch) {
-				Log.d("directionMismatch=" + directionMismatch + ", " + validList.get(0).toString());
-				if (mDataPointMap.size() == K_MEANS_PERIODS) {
-						Log.d("return, mDataPointMap.size()=" + mDataPointMap.size());
-					return;
-				} else {
-					Log.d("Clear map to maintain direction consistency");
-					mDataPointMap.clear();
-				}
+	boolean isDirectionChanged(int direction) {
+		boolean result = false;
+		for (DataPoint existingPoint : mDataPointMap.values()) {
+			if (existingPoint.getPoint()[1] != direction) {
+				result = true;
+				break;
 			}
 		}
+		return result;
+	}
 
-		for (DataPoint dataPoint : validList) {
-			updateDataPointMap(dataPoint);
+	void setupStockLevelAndDuration() {
+		double total = 0;
+		double count = 0;
+		StringBuilder builder = new StringBuilder();
+		for (String period : Period.PERIODS) {
+			if (mDataPointMap.get(period) != null) {
+				mStock.setLevel(period, mDataPointMap.get(period).level);
+				total += mDataPointMap.get(period).duration;
+				count++;
+				builder.append(mDataPointMap.get(period).toString());
+			}
 		}
+		mStock.setDuration((count == 0) ?  0 : total / count);
+		Log.d("setLevel:" + builder.toString());
 	}
 
 	void updateDataPointMap(DataPoint dataPoint) {
@@ -701,26 +710,6 @@ public class TrendAnalyzer {
 		}
 
 		mDataPointMap.put(dataPoint.period, dataPoint);
-	}
-
-	boolean checkConsistency() {
-		DataPoint dayDataPoint = mDataPointMap.get(Period.DAY);
-		if (dayDataPoint == null || dayDataPoint.level < StockTrend.LEVEL_DRAW) {
-			return false;
-		}
-
-		for (String period : Period.PERIODS) {
-			DataPoint dataPoint = mDataPointMap.get(period);
-			if (dataPoint == null) {
-				continue;
-			}
-
-			if (dataPoint.getPoint()[1] != dayDataPoint.getPoint()[1]) {
-				return false;
-			}
-		}
-
-		return true;
 	}
 
 	public void setupThumbnail(String period) {
@@ -799,14 +788,8 @@ public class TrendAnalyzer {
 
 	public void setupThumbnail() {
 		mLineConfigList.clear();
-		int count = 0;
-		for (String period : Period.PERIODS) {
-			if (Setting.getPeriod(period)) {
-				count++;
-			}
-		}
 
-		if (count == 0) {
+		if (mKMeansPeriods == 0) {
 			return;
 		}
 
@@ -816,8 +799,8 @@ public class TrendAnalyzer {
 			if (Setting.getPeriod(period)) {
 				List<Float> xValues = new ArrayList<>();
 				List<Float> yValues = new ArrayList<>();
-				xValues.add((float)(i * THUMBNAIL_SIZE / count));
-				xValues.add((float)((i + 1) * THUMBNAIL_SIZE / count));
+				xValues.add((float)(i * THUMBNAIL_SIZE / mKMeansPeriods));
+				xValues.add((float)((i + 1) * THUMBNAIL_SIZE / mKMeansPeriods));
 				yValues.add((float)(THUMBNAIL_SIZE / 2.0));
 				yValues.add((float)(THUMBNAIL_SIZE / 2.0));
 				if (TextUtils.equals(mStock.getTrend(period), Symbol.ADD)) {
@@ -842,17 +825,17 @@ public class TrendAnalyzer {
 		final String end;
 		final double[] points;
 		int group;
-		long elapsed;
-		long duration;
+		int past;
+		int duration;
 		double distance;
 
-		DataPoint(String period, int level, String start, String end, double x, double y, long elapsed, long duration) {
+		DataPoint(String period, int level, String start, String end, double x, double y, int past, int duration) {
 			this.period = period;
 			this.level = level;
 			this.start = start;
 			this.end = end;
 			this.points = new double[]{x, y};
-			this.elapsed = elapsed;
+			this.past = past;
 			this.duration = duration;
 		}
 
@@ -881,7 +864,7 @@ public class TrendAnalyzer {
 
 		@Override
 		public String toString() {
-			return "\n" + period + "-L" + level + " " + start + "--" + end + ", {" + points[0] + ", " + points[1] + "}" + " group=" + group + " elapsed=" + elapsed + " duration=" + duration;
+			return "\n" + period + "-L" + level + " " + start + "--" + end + ", {" + points[0] + ", " + points[1] + "}" + " group=" + group + " past=" + past + " duration=" + duration;
 		}
 	}
 
