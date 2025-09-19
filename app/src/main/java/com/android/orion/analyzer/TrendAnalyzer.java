@@ -2,7 +2,6 @@ package com.android.orion.analyzer;
 
 import android.graphics.Color;
 import android.text.TextUtils;
-import android.util.ArrayMap;
 
 import androidx.annotation.NonNull;
 
@@ -36,7 +35,9 @@ import java.util.concurrent.ConcurrentMap;
 
 public class TrendAnalyzer {
 	public static final int K_MEANS_MAX_ITERATIONS = 100;
-	public static final int MAX_DURATION = 20;
+
+	public static final int DURATION_MAX = 30;//TODO
+	public static final int PAST_MIN = 5;//TODO
 
 	public static final int THUMBNAIL_SIZE = 160;
 	public static final int THUMBNAIL_STROKE_WIDTH = 1;
@@ -555,15 +556,15 @@ public class TrendAnalyzer {
 		Calendar nowCalendar = Calendar.getInstance();
 		long x = (nowCalendar.getTimeInMillis() - startCalendar.getTimeInMillis()) / Constant.MINUTE_IN_MILLIS;
 		int y = StockTrend.DIRECTION_NONE;
-		if (start.vertexOf(StockTrend.VERTEX_TOP)) {
+		if (start.vertexOf(StockTrend.getVertexTOP(level))) {
 			 y = StockTrend.DIRECTION_DOWN;
 			 if (mStock.getPrice() > start.getCandle().getHigh()) {
-				 y = StockTrend.DIRECTION_UP_UP;
+//				 y = StockTrend.DIRECTION_UP_UP;//TODO
 			 }
-		} else if (start.vertexOf(StockTrend.VERTEX_BOTTOM)) {
+		} else if (start.vertexOf(StockTrend.getVertexBottom(level))) {
 			y = StockTrend.DIRECTION_UP;
 			if (mStock.getPrice() < start.getCandle().getLow()) {
-				y = StockTrend.DIRECTION_DOWN_DOWN;
+//				y = StockTrend.DIRECTION_DOWN_DOWN;//TODO
 			}
 		}
 
@@ -596,7 +597,7 @@ public class TrendAnalyzer {
 		for (int i = 0; i < clusterList.size(); i++) {
 			CentroidCluster<DataPoint> cluster = clusterList.get(i);
 			StringBuilder clusterInfo = new StringBuilder();
-			clusterInfo.append("\n=== 第 ").append(i).append(" 组 ===")
+			clusterInfo.append(Symbol.NEW_LINE + "=== 第 ").append(i).append(" 组 ===")
 					.append(" | 中心值: ").append(java.util.Arrays.toString(cluster.getCenter().getPoint()))
 					.append(" | 数量: ").append(cluster.getPoints().size());
 
@@ -626,7 +627,16 @@ public class TrendAnalyzer {
 			}
 
 			if (!mDataPointMap.isEmpty()) {
-				if (validList.get(0).duration > MAX_DURATION) {
+				if (validList.get(0).duration == 0) {//TODO
+					if (mDataPointMap.size() == mKMeansPeriods - 1) {
+						setupStockLevelAndDuration();
+						if (mStock.getPast() > PAST_MIN) {
+							return;
+						}
+					}
+				}
+
+				if (validList.get(0).duration > DURATION_MAX) {
 					setupStockLevelAndDuration();
 					return;
 				}
@@ -636,14 +646,6 @@ public class TrendAnalyzer {
 						setupStockLevelAndDuration();
 						return;
 					} else {
-//						boolean result = true;
-//						for (DataPoint dataPoint : mDataPointMap.values()) {
-//							result &= (dataPoint.duration == 0 || dataPoint.duration == 1);//TODO
-//						}
-//						if (result) {
-//							setupStockLevelAndDuration();
-//							return;
-//						}
 						mDataPointMap.clear();
 					}
 				}
@@ -674,7 +676,7 @@ public class TrendAnalyzer {
 			if (dataPoint.getPoint()[1] == StockTrend.DIRECTION_NONE) {
 				continue;
 			}
-			if (dataPoint.duration <= 1 && dataPoint.past <= 1) {
+			if (dataPoint.past <= 1) {
 				continue;
 			}
 			validList.add(dataPoint);
@@ -694,18 +696,21 @@ public class TrendAnalyzer {
 	}
 
 	void setupStockLevelAndDuration() {
-		double total = 0;
 		double count = 0;
+		double duration = 0;
+		double past = 0;
 		StringBuilder builder = new StringBuilder();
 		for (String period : Period.PERIODS) {
 			if (mDataPointMap.get(period) != null) {
 				mStock.setLevel(period, mDataPointMap.get(period).level);
-				total += mDataPointMap.get(period).duration;
+				duration += mDataPointMap.get(period).duration;
+				past += mDataPointMap.get(period).past;
 				count++;
 				builder.append(mDataPointMap.get(period).toString());
 			}
 		}
-		mStock.setDuration((count == 0) ?  0 : total / count);
+		mStock.setDuration((count == 0) ?  0 : duration / count);
+		mStock.setPast((count == 0) ?  0 : past / count);
 		Log.d("setLevel:" + builder.toString());
 	}
 
@@ -875,7 +880,7 @@ public class TrendAnalyzer {
 
 		@Override
 		public String toString() {
-			return "\n" + period + "-L" + level + " " + start + "--" + end + ", {" + points[0] + ", " + points[1] + "}" + " group=" + group + " past=" + past + " duration=" + duration;
+			return Symbol.NEW_LINE + period + "-L" + level + " " + start + "--" + end + ", {" + points[0] + ", " + points[1] + "}" + " group=" + group + " past=" + past + " duration=" + duration;
 		}
 	}
 

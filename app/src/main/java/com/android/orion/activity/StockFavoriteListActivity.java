@@ -55,6 +55,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 	TextView mTextViewPrice = null;
 	TextView mTextViewNet = null;
 	TextView mTextViewGrid = null;
+	TextView mTextViewPast = null;
 	TextView mTextViewDuration = null;
 	TextView mTextViewYear = null;
 	TextView mTextViewMonth6 = null;
@@ -186,6 +187,9 @@ public class StockFavoriteListActivity extends ListActivity implements
 			case R.id.sell_profit:
 				mSortOrderColumn = DatabaseContract.COLUMN_SELL_PROFIT;
 				break;
+			case R.id.past:
+				mSortOrderColumn = DatabaseContract.COLUMN_PAST;
+				break;
 			case R.id.duration:
 				mSortOrderColumn = DatabaseContract.COLUMN_DURATION;
 				break;
@@ -261,6 +265,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewPrice, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewNet, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewGrid, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewPast, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewDuration, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewYear, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewMonth6, mHeaderTextDefaultColor);
@@ -305,6 +310,12 @@ public class StockFavoriteListActivity extends ListActivity implements
 		mTextViewGrid = findViewById(R.id.grid);
 		if (mTextViewGrid != null) {
 			mTextViewGrid.setOnClickListener(this);
+		}
+
+		mTextViewPast = findViewById(R.id.past);
+		if (mTextViewPast != null) {
+			mTextViewPast.setOnClickListener(this);
+			mTextViewPast.setVisibility(View.GONE);
 		}
 
 		mTextViewDuration = findViewById(R.id.duration);
@@ -394,6 +405,8 @@ public class StockFavoriteListActivity extends ListActivity implements
 			setHeaderTextColor(mTextViewPrice, mHeaderTextHighlightColor);
 		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_NET)) {
 			setHeaderTextColor(mTextViewNet, mHeaderTextHighlightColor);
+		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_PAST)) {
+			setHeaderTextColor(mTextViewPast, mHeaderTextHighlightColor);
 		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_DURATION)) {
 			setHeaderTextColor(mTextViewDuration, mHeaderTextHighlightColor);
 		} else if (TextUtils.equals(mSortOrderColumn, DatabaseContract.COLUMN_YEAR_THUMBNAIL)) {
@@ -436,6 +449,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 				DatabaseContract.COLUMN_NET,
 				DatabaseContract.COLUMN_BUY_PROFIT,
 				DatabaseContract.COLUMN_SELL_PROFIT,
+				DatabaseContract.COLUMN_PAST,
 				DatabaseContract.COLUMN_DURATION,
 				DatabaseContract.COLUMN_THUMBNAIL,
 				DatabaseContract.COLUMN_YEAR_THUMBNAIL,
@@ -456,6 +470,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 				R.id.net,
 				R.id.buy_profit,
 				R.id.sell_profit,
+				R.id.past,
 				R.id.duration,
 				R.id.thumbnail,
 				R.id.year,
@@ -705,6 +720,8 @@ public class StockFavoriteListActivity extends ListActivity implements
 						setTextViewColor(textView, Config.COLOR_GRID_PROFILE, sellProfit < 0 ? Color.RED : Color.GRAY);
 					}
 					return setVisibility(view, true);
+				} else if (DatabaseContract.COLUMN_PAST.equals(columnName)) {
+					return setVisibility(view, false);
 				} else if (DatabaseContract.COLUMN_DURATION.equals(columnName)) {
 					return setVisibility(view, true);
 				} else if (DatabaseContract.COLUMN_MODIFIED.equals(columnName)) {

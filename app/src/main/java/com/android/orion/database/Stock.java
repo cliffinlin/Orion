@@ -104,6 +104,7 @@ public class Stock extends DatabaseTable {
 	private String mStatus;
 	private double mBuyProfit;
 	private double mSellProfit;
+	private double mPast;
 	private double mDuration;
 	private byte[] mThumbnail;
 
@@ -180,6 +181,7 @@ public class Stock extends DatabaseTable {
 		mStatus = "";
 		mBuyProfit = 0;
 		mSellProfit = 0;
+		mPast = 0;
 		mDuration = 0;
 	}
 
@@ -245,6 +247,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_STATUS, mStatus);
 		contentValues.put(DatabaseContract.COLUMN_BUY_PROFIT, mBuyProfit);
 		contentValues.put(DatabaseContract.COLUMN_SELL_PROFIT, mSellProfit);
+		contentValues.put(DatabaseContract.COLUMN_PAST, mPast);
 		contentValues.put(DatabaseContract.COLUMN_DURATION, mDuration);
 		contentValues.put(DatabaseContract.COLUMN_THUMBNAIL, mThumbnail);
 		return contentValues;
@@ -349,6 +352,7 @@ public class Stock extends DatabaseTable {
 		setStatus(stock.mStatus);
 		setBuyProfit(stock.mBuyProfit);
 		setSellProfit(stock.mSellProfit);
+		setPast(stock.mPast);
 		setDuration(stock.mDuration);
 		setThumbnail(stock.mThumbnail);
 	}
@@ -419,6 +423,7 @@ public class Stock extends DatabaseTable {
 		setStatus(cursor);
 		setBuyProfit(cursor);
 		setSellProfit(cursor);
+		setPast(cursor);
 		setDuration(cursor);
 		setThumbnail(cursor);
 	}
@@ -1230,6 +1235,23 @@ public class Stock extends DatabaseTable {
 
 		setSellProfit(cursor.getDouble(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_SELL_PROFIT)));
+	}
+
+	public double getPast() {
+		return mPast;
+	}
+
+	public void setPast(double past) {
+		mPast = past;
+	}
+
+	void setPast(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setPast(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_PAST)));
 	}
 
 	public double getDuration() {

@@ -22,4 +22,9 @@ object StopWatch {
     fun getInterval(): Double {
         return mInterval
     }
+
+    @JvmStatic
+    fun getIntervalString(): String {
+        return "elapsed " + mInterval + "s "
+    }
 }
