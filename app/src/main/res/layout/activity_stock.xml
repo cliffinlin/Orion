@@ -4,57 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="14dp"
-            android:layout_marginRight="14dp"
-            android:layout_weight="1">
-
-            <CheckBox
-                android:id="@+id/checkbox_favorite"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/favorite" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="14dp"
-            android:layout_marginRight="14dp"
-            android:layout_weight="1">
-
-            <CheckBox
-                android:id="@+id/checkbox_notify"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/notify" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="14dp"
-            android:layout_marginRight="14dp"
-            android:layout_weight="1">
-
-            <CheckBox
-                android:id="@+id/checkbox_grid"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/grid" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dip"
-        android:background="@drawable/divider_line" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -117,74 +66,166 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:paddingLeft="14dp"
+        android:paddingRight="14dp">
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/textview_stock_class"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="14dp"
                 android:layout_marginRight="14dp"
-                android:labelFor="@+id/edittext_stock_class"
-                android:text="@string/stock_class" />
+                android:layout_weight="1">
 
-            <RadioGroup
-                android:id="@+id/radiogroup_class"
+                <CheckBox
+                    android:id="@+id/checkbox_trade"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/trade" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:layout_weight="1">
 
-                <RadioButton
-                    android:id="@+id/radio_class_hsa"
+                <CheckBox
+                    android:id="@+id/checkbox_manual"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:text="@string/stock_class_hsa" />
-
-                <RadioButton
-                    android:id="@+id/radio_class_index"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/stock_class_index" />
-            </RadioGroup>
+                    android:text="@string/manual" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:orientation="horizontal"
+            android:weightSum="5"
+            android:gravity="center">
 
-            <TextView
-                android:id="@+id/textview_stock_se"
-                android:layout_width="wrap_content"
+            <!-- Day Picker -->
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:labelFor="@+id/edittext_stock_se"
-                android:text="@string/stock_se" />
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="4dp">
 
-            <RadioGroup
-                android:id="@+id/radiogroup_se"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <RadioButton
-                    android:id="@+id/radio_se_sh"
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:text="@string/stock_se_sh" />
+                    android:text="Day"
+                    android:textStyle="bold"
+                    android:paddingBottom="4dp"
+                    android:textSize="12sp" />
 
-                <RadioButton
-                    android:id="@+id/radio_se_sz"
+                <com.android.orion.chart.TradeLevelPicker
+                    android:id="@+id/trade_level_picker_day"
+                    android:layout_width="80dp"
+                    android:layout_height="60dp" />
+            </LinearLayout>
+
+            <!-- Min60 Picker -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="4dp">
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/stock_se_sz" />
-            </RadioGroup>
+                    android:text="Min60"
+                    android:textStyle="bold"
+                    android:paddingBottom="4dp"
+                    android:textSize="12sp" />
+
+                <com.android.orion.chart.TradeLevelPicker
+                    android:id="@+id/trade_level_picker_min60"
+                    android:layout_width="80dp"
+                    android:layout_height="60dp" />
+            </LinearLayout>
+
+            <!-- Min30 Picker -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="4dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Min30"
+                    android:textStyle="bold"
+                    android:paddingBottom="4dp"
+                    android:textSize="12sp" />
+
+                <com.android.orion.chart.TradeLevelPicker
+                    android:id="@+id/trade_level_picker_min30"
+                    android:layout_width="80dp"
+                    android:layout_height="60dp" />
+            </LinearLayout>
+
+            <!-- Min15 Picker -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="4dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Min15"
+                    android:textStyle="bold"
+                    android:paddingBottom="4dp"
+                    android:textSize="12sp" />
+
+                <com.android.orion.chart.TradeLevelPicker
+                    android:id="@+id/trade_level_picker_min15"
+                    android:layout_width="80dp"
+                    android:layout_height="60dp" />
+            </LinearLayout>
+
+            <!-- Min5 Picker -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="4dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Min5"
+                    android:textStyle="bold"
+                    android:paddingBottom="4dp"
+                    android:textSize="12sp" />
+
+                <com.android.orion.chart.TradeLevelPicker
+                    android:id="@+id/trade_level_picker_min5"
+                    android:layout_width="80dp"
+                    android:layout_height="60dp" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
@@ -305,6 +346,11 @@
         </LinearLayout>
     </LinearLayout>
 
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:background="@drawable/divider_line" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -334,8 +380,7 @@
                 android:padding="8dp"
                 android:clickable="true"
                 android:focusable="true"
-                android:autoLink="web"
-                />
+                android:autoLink="web" />
         </LinearLayout>
     </LinearLayout>
 

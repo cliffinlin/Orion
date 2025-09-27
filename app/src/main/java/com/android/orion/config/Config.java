@@ -15,7 +15,7 @@ public class Config {
 	public static final String MESSAGE_CHANNEL_ID = "message_channel";
 	public static final String MESSAGE_CHANNEL_NAME = "Message Channel";
 
-	public static final int COLOR_GRID_PROFILE = Color.rgb(240, 240, 240);
+	public static final int COLOR_BACKGROUND_MANUAL = Color.rgb(230, 230, 230);
 	public static final int COLOR_CANDLE_GREEN = Color.rgb(50, 128, 50);
 	public static final int COLOR_CANDLE_RED = Color.rgb(255, 50, 50);
 

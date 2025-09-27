@@ -40,6 +40,18 @@ public class DatabaseContract {
 	public static final String COLUMN_PAST = "past";
 	public static final String COLUMN_DURATION = "duration";
 
+	public static final String COLUMN_YEAR = Period.YEAR;
+	public static final String COLUMN_MONTH6 = Period.MONTH6;
+	public static final String COLUMN_QUARTER = Period.QUARTER;
+	public static final String COLUMN_MONTH2 = Period.MONTH2;
+	public static final String COLUMN_MONTH = Period.MONTH;
+	public static final String COLUMN_WEEK = Period.WEEK;
+	public static final String COLUMN_DAY = Period.DAY;
+	public static final String COLUMN_MIN60 = Period.MIN60;
+	public static final String COLUMN_MIN30 = Period.MIN30;
+	public static final String COLUMN_MIN15 = Period.MIN15;
+	public static final String COLUMN_MIN5 = Period.MIN5;
+
 	public static final String COLUMN_YEAR_THUMBNAIL = COLUMN_PERIOD_THUMBNAIL(Period.YEAR);
 	public static final String COLUMN_MONTH6_THUMBNAIL = COLUMN_PERIOD_THUMBNAIL(Period.MONTH6);
 	public static final String COLUMN_QUARTER_THUMBNAIL = COLUMN_PERIOD_THUMBNAIL(Period.QUARTER);

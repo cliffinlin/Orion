@@ -15,7 +15,7 @@
             android:layout_weight="3"
             android:orientation="vertical">
 
-            <include layout="@layout/activity_stock_list_left_title" />
+            <include layout="@layout/activity_stock_favorite_list_left_title" />
         </LinearLayout>
 
         <com.android.orion.view.SyncHorizontalScrollView
@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <include layout="@layout/activity_stock_perceptron_list_right_title" />
+                <include layout="@layout/activity_stock_favorite_list_right_title" />
             </LinearLayout>
         </com.android.orion.view.SyncHorizontalScrollView>
     </LinearLayout>
@@ -54,7 +54,7 @@
                 <ListView
                     android:id="@+id/left_listview"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"></ListView>
+                    android:layout_height="match_parent" />
             </LinearLayout>
 
             <com.android.orion.view.SyncHorizontalScrollView
@@ -74,7 +74,7 @@
                     <ListView
                         android:id="@+id/right_listview"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"></ListView>
+                        android:layout_height="match_parent" />
                 </LinearLayout>
             </com.android.orion.view.SyncHorizontalScrollView>
         </LinearLayout>

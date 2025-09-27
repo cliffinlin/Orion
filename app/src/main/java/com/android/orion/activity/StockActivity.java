@@ -19,8 +19,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.android.orion.R;
+import com.android.orion.chart.TradeLevelPicker;
+import com.android.orion.data.Period;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
+import com.android.orion.database.StockTrend;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Utility;
@@ -29,11 +32,8 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 
 	long mHoldA = 0;
 	long mHoldB = 0;
-	CheckBox mCheckBoxFavorite;
-	CheckBox mCheckBoxNotify;
-	CheckBox mCheckBoxGrid;
-	RadioGroup mRadioGroupClass;
-	RadioGroup mRadioGroupSE;
+	CheckBox mCheckBoxTrade;
+	CheckBox mCheckBoxManual;
 	EditText mEditTextStockName;
 	EditText mEditTextStockCode;
 	EditText mEditTextStockHold;
@@ -41,26 +41,29 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 	EditText mEditTextStockHoldA;
 	EditText mEditTextStockHoldB;
 	TextView mTextViewSeUrl;
+	TradeLevelPicker mTradeLevelPickerDay;
+	TradeLevelPicker mTradeLevelPickerMin60;
+	TradeLevelPicker mTradeLevelPickerMin30;
+	TradeLevelPicker mTradeLevelPickerMin15;
+	TradeLevelPicker mTradeLevelPickerMin5;
 	Button mButtonOk;
 	Button mButtonCancel;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_stock_edit);
+		setContentView(R.layout.activity_stock);
 		if (mStock == null) {
 			mStock = new Stock();
 		}
 		initView();
+		setupTradeLevelPickers();
 		updateView();
 	}
 
 	void initView() {
-		mCheckBoxFavorite = findViewById(R.id.checkbox_favorite);
-		mCheckBoxNotify = findViewById(R.id.checkbox_notify);
-		mCheckBoxGrid = findViewById(R.id.checkbox_grid);
-		mRadioGroupClass = findViewById(R.id.radiogroup_class);
-		mRadioGroupSE = findViewById(R.id.radiogroup_se);
+		mCheckBoxTrade = findViewById(R.id.checkbox_trade);
+		mCheckBoxManual = findViewById(R.id.checkbox_manual);
 		mEditTextStockName = findViewById(R.id.edittext_stock_name);
 		mEditTextStockCode = findViewById(R.id.edittext_stock_code);
 		mEditTextStockHold = findViewById(R.id.edittext_stock_hold);
@@ -68,14 +71,16 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mEditTextStockHoldA = findViewById(R.id.edittext_stock_hold_a);
 		mEditTextStockHoldB = findViewById(R.id.edittext_stock_hold_b);
 		mTextViewSeUrl = findViewById(R.id.textview_se_url);
+		mTradeLevelPickerDay = findViewById(R.id.trade_level_picker_day);
+		mTradeLevelPickerMin60 = findViewById(R.id.trade_level_picker_min60);
+		mTradeLevelPickerMin30 = findViewById(R.id.trade_level_picker_min30);
+		mTradeLevelPickerMin15 = findViewById(R.id.trade_level_picker_min15);
+		mTradeLevelPickerMin5 = findViewById(R.id.trade_level_picker_min5);
 		mButtonOk = findViewById(R.id.button_ok);
 		mButtonCancel = findViewById(R.id.button_cancel);
 
-		mCheckBoxFavorite.setOnClickListener(this);
-		mCheckBoxNotify.setOnClickListener(this);
-		mCheckBoxGrid.setOnClickListener(this);
-		mRadioGroupClass.setOnClickListener(this);
-		mRadioGroupSE.setOnClickListener(this);
+		mCheckBoxTrade.setOnClickListener(this);
+		mCheckBoxManual.setOnClickListener(this);
 		mEditTextStockName.setOnClickListener(this);
 		mEditTextStockCode.setOnClickListener(this);
 		mEditTextStockHold.setOnClickListener(this);
@@ -93,27 +98,27 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 
 			@Override
 			public void beforeTextChanged(CharSequence arg0, int arg1,
-			                              int arg2, int arg3) {
+										  int arg2, int arg3) {
 
 			}
 
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
-			                          int count) {
+									  int count) {
 				if (TextUtils.equals(mAction, Constant.ACTION_STOCK_EDIT)) {
 					return;
 				}
 
 				if ((s != null) && (s.length() > 0)) {
 					if (s.toString().startsWith(Stock.CODE_PREFIX_0) || s.toString().startsWith(Stock.CODE_PREFIX_3)) {
-						mRadioGroupClass.check(R.id.radio_class_hsa);
-						mRadioGroupSE.check(R.id.radio_se_sz);
+						mStock.setClasses(Stock.CLASS_A);
+						mStock.setSE(Stock.SE_SZ);
 					} else if (s.toString().startsWith(Stock.CODE_PREFIX_5) || s.toString().startsWith(Stock.CODE_PREFIX_6)) {
-						mRadioGroupClass.check(R.id.radio_class_hsa);
-						mRadioGroupSE.check(R.id.radio_se_sh);
+						mStock.setClasses(Stock.CLASS_A);
+						mStock.setSE(Stock.SE_SH);
 					} else {
-						mRadioGroupClass.check(R.id.radio_class_index);
-						mRadioGroupSE.check(R.id.radio_se_sh);
+						mStock.setClasses(Stock.CLASS_INDEX);
+						mStock.setSE(Stock.SE_SH);
 					}
 					mStock.setCode(s.toString());
 				}
@@ -123,11 +128,8 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		if (TextUtils.equals(mAction, Constant.ACTION_FAVORITE_STOCK_INSERT)) {
 			setTitle(R.string.stock_insert);
 			mStock.addFlag(Stock.FLAG_FAVORITE);
-			mStock.addFlag(Stock.FLAG_NOTIFY);
 		} else if (TextUtils.equals(mAction, Constant.ACTION_STOCK_EDIT)) {
 			setTitle(R.string.stock_edit);
-			mRadioGroupClass.setEnabled(false);
-			mRadioGroupSE.setEnabled(false);
 			mEditTextStockCode.setEnabled(false);
 			mEditTextStockHold.setEnabled(false);
 			mEditTextStockYield.setEnabled(false);
@@ -146,22 +148,26 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		}
 	}
 
+	private void setupTradeLevelPickers() {
+		mTradeLevelPickerDay.setMinValue(StockTrend.LEVEL_NONE);
+		mTradeLevelPickerDay.setMaxValue(StockTrend.LEVEL_TREND_LINE);
+
+		mTradeLevelPickerMin60.setMinValue(StockTrend.LEVEL_NONE);
+		mTradeLevelPickerMin60.setMaxValue(StockTrend.LEVEL_TREND_LINE);
+
+		mTradeLevelPickerMin30.setMinValue(StockTrend.LEVEL_NONE);
+		mTradeLevelPickerMin30.setMaxValue(StockTrend.LEVEL_TREND_LINE);
+
+		mTradeLevelPickerMin15.setMinValue(StockTrend.LEVEL_NONE);
+		mTradeLevelPickerMin15.setMaxValue(StockTrend.LEVEL_TREND_LINE);
+
+		mTradeLevelPickerMin5.setMinValue(StockTrend.LEVEL_NONE);
+		mTradeLevelPickerMin5.setMaxValue(StockTrend.LEVEL_TREND_LINE);
+	}
+
 	void updateView() {
-		mCheckBoxFavorite.setChecked(mStock.hasFlag(Stock.FLAG_FAVORITE));
-		mCheckBoxNotify.setChecked(mStock.hasFlag(Stock.FLAG_NOTIFY));
-		mCheckBoxGrid.setChecked(mStock.hasFlag(Stock.FLAG_GRID));
-
-		if (TextUtils.equals(mStock.getClasses(), Stock.CLASS_A)) {
-			mRadioGroupClass.check(R.id.radio_class_hsa);
-		} else {
-			mRadioGroupClass.check(R.id.radio_class_index);
-		}
-
-		if (TextUtils.equals(mStock.getSE(), Stock.SE_SH)) {
-			mRadioGroupSE.check(R.id.radio_se_sh);
-		} else {
-			mRadioGroupSE.check(R.id.radio_se_sz);
-		}
+		mCheckBoxTrade.setChecked(mStock.hasFlag(Stock.FLAG_TRADE));
+		mCheckBoxManual.setChecked(mStock.hasFlag(Stock.FLAG_MANUAL));
 
 		mEditTextStockName.setText(mStock.getName());
 		mEditTextStockCode.setText(mStock.getCode());
@@ -169,6 +175,25 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mEditTextStockYield.setText(String.valueOf(mStock.getYield()));
 		mTextViewSeUrl.setText(mStock.getSeUrl());
 		mTextViewSeUrl.setPaintFlags(mTextViewSeUrl.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
+		boolean manualEnabled = mStock.hasFlag(Stock.FLAG_MANUAL);
+		mTradeLevelPickerDay.setEnabled(manualEnabled);
+		mTradeLevelPickerMin60.setEnabled(manualEnabled);
+		mTradeLevelPickerMin30.setEnabled(manualEnabled);
+		mTradeLevelPickerMin15.setEnabled(manualEnabled);
+		mTradeLevelPickerMin5.setEnabled(manualEnabled);
+
+		mTradeLevelPickerDay.setValue(mStock.getLevel(Period.DAY));
+		mTradeLevelPickerMin60.setValue(mStock.getLevel(Period.MIN60));
+		mTradeLevelPickerMin30.setValue(mStock.getLevel(Period.MIN30));
+		mTradeLevelPickerMin15.setValue(mStock.getLevel(Period.MIN15));
+		mTradeLevelPickerMin5.setValue(mStock.getLevel(Period.MIN5));
+
+		mTradeLevelPickerDay.invalidate();
+		mTradeLevelPickerMin60.invalidate();
+		mTradeLevelPickerMin30.invalidate();
+		mTradeLevelPickerMin15.invalidate();
+		mTradeLevelPickerMin5.invalidate();
 	}
 
 	@Override
@@ -182,55 +207,38 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		int viewId = view.getId();
 
 		switch (viewId) {
-			case R.id.checkbox_favorite:
-				if (mCheckBoxFavorite.isChecked()) {
-					mStock.addFlag(Stock.FLAG_FAVORITE);
-					mStockManager.onAddFavorite(mStock);
+			case R.id.checkbox_trade:
+				if (mCheckBoxTrade.isChecked()) {
+					mStock.addFlag(Stock.FLAG_TRADE);
 				} else {
-					mStock.removeFlag(Stock.FLAG_FAVORITE);
-					mStock.removeFlag(Stock.FLAG_NOTIFY);
-					mCheckBoxNotify.setChecked(mStock.hasFlag(Stock.FLAG_NOTIFY));
-					mStockManager.onRemoveFavorite(mStock);
-				}
-				break;
-
-			case R.id.checkbox_notify:
-				if (mCheckBoxNotify.isChecked()) {
-					mStock.addFlag(Stock.FLAG_NOTIFY);
-				} else {
-					mStock.removeFlag(Stock.FLAG_NOTIFY);
-				}
-				break;
-
-			case R.id.checkbox_grid:
-				if (mCheckBoxGrid.isChecked()) {
-					mStock.addFlag(Stock.FLAG_GRID);
-				} else {
-					mStock.removeFlag(Stock.FLAG_GRID);
+					mStock.removeFlag(Stock.FLAG_TRADE);
 					mStock.setBuyProfit(0);
 					mStock.setSellProfit(0);
 				}
+				break;
+
+			case R.id.checkbox_manual:
+				if (mCheckBoxManual.isChecked()) {
+					mStock.addFlag(Stock.FLAG_MANUAL);
+				} else {
+					mStock.removeFlag(Stock.FLAG_MANUAL);
+				}
+				updateView();
 				break;
 
 			case R.id.button_ok:
-				if (mCheckBoxFavorite.isChecked()) {
-					mStock.addFlag(Stock.FLAG_FAVORITE);
+				if (mCheckBoxTrade.isChecked()) {
+					mStock.addFlag(Stock.FLAG_TRADE);
 				} else {
-					mStock.removeFlag(Stock.FLAG_FAVORITE);
-				}
-
-				if (mCheckBoxNotify.isChecked()) {
-					mStock.addFlag(Stock.FLAG_NOTIFY);
-				} else {
-					mStock.removeFlag(Stock.FLAG_NOTIFY);
-				}
-
-				if (mCheckBoxGrid.isChecked()) {
-					mStock.addFlag(Stock.FLAG_GRID);
-				} else {
-					mStock.removeFlag(Stock.FLAG_GRID);
+					mStock.removeFlag(Stock.FLAG_TRADE);
 					mStock.setBuyProfit(0);
 					mStock.setSellProfit(0);
+				}
+
+				if (mCheckBoxManual.isChecked()) {
+					mStock.addFlag(Stock.FLAG_MANUAL);
+				} else {
+					mStock.removeFlag(Stock.FLAG_MANUAL);
 				}
 
 				String name = mEditTextStockName.getText().toString();
@@ -248,18 +256,12 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 					return;
 				}
 
-				int id = mRadioGroupClass.getCheckedRadioButtonId();
-				if (id == R.id.radio_class_hsa) {
-					mStock.setClasses(Stock.CLASS_A);
-				} else if (id == R.id.radio_class_index) {
-					mStock.setClasses(Stock.CLASS_INDEX);
-				}
-
-				id = mRadioGroupSE.getCheckedRadioButtonId();
-				if (id == R.id.radio_se_sh) {
-					mStock.setSE(Stock.SE_SH);
-				} else if (id == R.id.radio_se_sz) {
-					mStock.setSE(Stock.SE_SZ);
+				if (mStock.hasFlag(Stock.FLAG_MANUAL)) {
+					mStock.setLevel(Period.DAY, mTradeLevelPickerDay.getValue());
+					mStock.setLevel(Period.MIN60, mTradeLevelPickerMin60.getValue());
+					mStock.setLevel(Period.MIN30, mTradeLevelPickerMin30.getValue());
+					mStock.setLevel(Period.MIN15, mTradeLevelPickerMin15.getValue());
+					mStock.setLevel(Period.MIN5, mTradeLevelPickerMin5.getValue());
 				}
 
 				if (TextUtils.equals(mAction, Constant.ACTION_FAVORITE_STOCK_INSERT)) {

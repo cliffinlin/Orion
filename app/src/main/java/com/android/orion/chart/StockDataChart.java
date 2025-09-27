@@ -263,35 +263,26 @@ public class StockDataChart {
 	}
 
 	int dataSetColor(int defaultColor) {
-		if (Setting.getDisplayMonochrome()) {
-			return Color.GRAY;
-		}
 		return defaultColor;
 	}
 
 	int increasingColor(int defaultColor) {
-		if (Setting.getDisplayMonochrome()) {
-			return Color.GRAY;
-		}
 		return defaultColor;
 	}
 
 	int decreasingColor(int defaultColor) {
-		if (Setting.getDisplayMonochrome()) {
-			return Color.GRAY;
-		}
 		return defaultColor;
 	}
 
 	int fillColor(int level) {
-		if (level < 0 || level >= StockTrend.COLORS.length || Setting.getDisplayMonochrome()) {
+		if (level < 0 || level >= StockTrend.COLORS.length) {
 			return StockTrend.COLORS[0];
 		}
 		return StockTrend.COLORS[level];
 	}
 
 	int lineColor(int level) {
-		if (level < 0 || level >= StockTrend.COLORS.length || Setting.getDisplayMonochrome()) {
+		if (level < 0 || level >= StockTrend.COLORS.length) {
 			return StockTrend.COLORS[0];
 		}
 		return StockTrend.COLORS[level];

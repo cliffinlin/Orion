@@ -38,10 +38,10 @@ public class StockFavoriteListActivity extends ListActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener,
 		OnItemLongClickListener, OnClickListener {
 
-	public static final int LOADER_ID_STOCK_FAVORITE_LIST = 0;
+	static final int LOADER_ID_STOCK_FAVORITE_LIST = 0;
 
-	public static final int mHeaderTextDefaultColor = Color.BLACK;
-	public static final int mHeaderTextHighlightColor = Color.RED;
+	static final int mHeaderTextDefaultColor = Color.BLACK;
+	static final int mHeaderTextHighlightColor = Color.RED;
 
 	String mSortOrderColumn = DatabaseContract.COLUMN_NET;
 	String mSortOrderDirection = DatabaseContract.ORDER_DESC;
@@ -54,7 +54,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 	TextView mTextViewNameCode = null;
 	TextView mTextViewPrice = null;
 	TextView mTextViewNet = null;
-	TextView mTextViewGrid = null;
+	TextView mTextViewTrade = null;
 	TextView mTextViewPast = null;
 	TextView mTextViewDuration = null;
 	TextView mTextViewYear = null;
@@ -80,7 +80,9 @@ public class StockFavoriteListActivity extends ListActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_stock_list);
+
+		setContentView(R.layout.activity_stock_favorite_list);
+
 		initHeader();
 		setupListView();
 	}
@@ -93,18 +95,21 @@ public class StockFavoriteListActivity extends ListActivity implements
 	@Override
 	protected void onStart() {
 		super.onStart();
+
 		initLoader();
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
+
 		destroyLoader();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
+
 		resetHeaderTextColor();
 		initHeader();
 		setupListView();
@@ -113,6 +118,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 	@Override
 	public void handleOnResume() {
 		super.handleOnResume();
+
 		restartLoader();
 	}
 
@@ -233,6 +239,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 				mSortOrderColumn = DatabaseContract.COLUMN_MODIFIED;
 				break;
 			default:
+				mSortOrderColumn = DatabaseContract.COLUMN_NET;
 				break;
 		}
 
@@ -244,7 +251,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 
 		mSortOrder = mSortOrderColumn + mSortOrderDirection;
 
-		Preferences.putString(Setting.SETTING_SORT_ORDER_STOCK_LIST, mSortOrder);
+		Preferences.putString(Setting.SETTING_SORT_ORDER_FAVORITE_LIST, mSortOrder);
 
 		restartLoader();
 	}
@@ -264,7 +271,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 		setHeaderTextColor(mTextViewNameCode, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewPrice, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewNet, mHeaderTextDefaultColor);
-		setHeaderTextColor(mTextViewGrid, mHeaderTextDefaultColor);
+		setHeaderTextColor(mTextViewTrade, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewPast, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewDuration, mHeaderTextDefaultColor);
 		setHeaderTextColor(mTextViewYear, mHeaderTextDefaultColor);
@@ -307,9 +314,9 @@ public class StockFavoriteListActivity extends ListActivity implements
 			setVisibility(mTextViewNet, Setting.getDisplayNet());
 		}
 
-		mTextViewGrid = findViewById(R.id.grid);
-		if (mTextViewGrid != null) {
-			mTextViewGrid.setOnClickListener(this);
+		mTextViewTrade = findViewById(R.id.trade);
+		if (mTextViewTrade != null) {
+			mTextViewTrade.setOnClickListener(this);
 		}
 
 		mTextViewPast = findViewById(R.id.past);
@@ -489,7 +496,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 
 		mLeftListView = findViewById(R.id.left_listview);
 		mLeftAdapter = new SimpleCursorAdapter(this,
-				R.layout.activity_stock_list_left_item, null, mLeftFrom,
+				R.layout.activity_stock_favorite_list_left_item, null, mLeftFrom,
 				mLeftTo, 0);
 		if (mLeftListView != null) {
 			mLeftAdapter.setViewBinder(new LeftViewBinder());
@@ -500,7 +507,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 
 		mRightListView = findViewById(R.id.right_listview);
 		mRightAdapter = new SimpleCursorAdapter(this,
-				R.layout.activity_stock_list_right_item, null, mRightFrom, mRightTo, 0);
+				R.layout.activity_stock_favorite_list_right_item, null, mRightFrom, mRightTo, 0);
 		if (mRightListView != null) {
 			mRightAdapter.setViewBinder(new RightViewBinder());
 			mRightListView.setAdapter(mRightAdapter);
@@ -510,7 +517,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 	}
 
 	void initLoader() {
-		mSortOrder = Preferences.getString(Setting.SETTING_SORT_ORDER_STOCK_LIST,
+		mSortOrder = Preferences.getString(Setting.SETTING_SORT_ORDER_FAVORITE_LIST,
 				mSortOrderDefault);
 		if (!TextUtils.isEmpty(mSortOrder)) {
 			String[] strings = mSortOrder.split(Symbol.WHITE_SPACE);
@@ -707,25 +714,33 @@ public class StockFavoriteListActivity extends ListActivity implements
 						.getColumnIndex(DatabaseContract.COLUMN_SELL_PROFIT));
 
 				if (DatabaseContract.COLUMN_PRICE.equals(columnName)) {
-					return setVisibility(view, true);
 				} else if (DatabaseContract.COLUMN_NET.equals(columnName)) {
-					return setVisibility(view, Setting.getDisplayNet());
 				} else if (DatabaseContract.COLUMN_BUY_PROFIT.equals(columnName)) {
-					if (Utility.hasFlag(flag, Stock.FLAG_GRID)) {
-						setTextViewColor(textView, Config.COLOR_GRID_PROFILE, buyProfit > 0 ? Color.RED : Color.GRAY);
+					if (Utility.hasFlag(flag, Stock.FLAG_MANUAL)) {
+						textView.setBackgroundColor(Config.COLOR_BACKGROUND_MANUAL);
 					}
-					return setVisibility(view, true);
+					if (Utility.hasFlag(flag, Stock.FLAG_TRADE)) {
+						textView.setTextColor(buyProfit > 0 ? Color.RED : Color.GRAY);
+						return false;
+					} else {
+						textView.setText("");
+						return true;
+					}
 				} else if (DatabaseContract.COLUMN_SELL_PROFIT.equals(columnName)) {
-					if (Utility.hasFlag(flag, Stock.FLAG_GRID)) {
-						setTextViewColor(textView, Config.COLOR_GRID_PROFILE, sellProfit < 0 ? Color.RED : Color.GRAY);
+					if (Utility.hasFlag(flag, Stock.FLAG_MANUAL)) {
+						textView.setBackgroundColor(Config.COLOR_BACKGROUND_MANUAL);
 					}
-					return setVisibility(view, true);
+					if (Utility.hasFlag(flag, Stock.FLAG_TRADE)) {
+						textView.setTextColor(sellProfit < 0 ? Color.RED : Color.GRAY);
+						return false;
+					} else {
+						textView.setText("");
+						return true;
+					}
 				} else if (DatabaseContract.COLUMN_PAST.equals(columnName)) {
 					return setVisibility(view, false);
 				} else if (DatabaseContract.COLUMN_DURATION.equals(columnName)) {
-					return setVisibility(view, true);
 				} else if (DatabaseContract.COLUMN_MODIFIED.equals(columnName)) {
-					return setVisibility(view, true);
 				}
 			}
 
@@ -744,14 +759,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 					DatabaseContract.COLUMN_MIN30_THUMBNAIL.equals(columnName) ||
 					DatabaseContract.COLUMN_MIN15_THUMBNAIL.equals(columnName) ||
 					DatabaseContract.COLUMN_MIN5_THUMBNAIL.equals(columnName);
-		}
-
-		void setTextViewColor(TextView view, int backgroundColor, int textColor) {
-			if (view == null) {
-				return;
-			}
-			view.setBackgroundColor(backgroundColor);
-			view.setTextColor(textColor);
 		}
 	}
 }

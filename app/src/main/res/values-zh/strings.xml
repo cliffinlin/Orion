@@ -101,6 +101,7 @@
     <string name="low">Low</string>
     <string name="main_business_income_in_year">MBIY</string>
     <string name="main_business_income">MBI</string>
+    <string name="manual">Manual</string>
     <string name="market_value">MValue</string>
     <string name="match_insert">Match insert</string>
     <string name="match">Match</string>
@@ -239,6 +240,8 @@
     <string name="time_to_market">TTM</string>
     <string name="title_save_to_sd_card">Save to SD card</string>
     <string name="to">To</string>
+    <string name="trade">Trade</string>
+    <string name="trade_level">Trade level</string>
     <string name="trend_line">TrendLine</string>
     <string name="trend_list">Trend list</string>
     <string name="trend">Trend</string>

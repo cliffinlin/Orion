@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PixelFormat;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 
 import androidx.annotation.NonNull;
@@ -13,16 +14,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CurveThumbnail extends Drawable {
-	private final int size;
+	private final int width;
+	private final int height;
 	private final int backgroundColor;
 	private final List<LineConfig> lines;
 	private final CrossMarkerConfig markerConfig;
 	private final Paint bgPaint;
 	private final List<DrawnLine> drawnLines;
 	private final DrawnMarker drawnMarker;
+
+	// 保持原有构造函数兼容性
 	public CurveThumbnail(int size, int backgroundColor,
-	                      List<LineConfig> lines, CrossMarkerConfig markerConfig) {
-		this.size = size;
+						  List<LineConfig> lines, CrossMarkerConfig markerConfig) {
+		this(size, size, backgroundColor, lines, markerConfig);
+	}
+
+	// 新的构造函数，支持分别设置宽度和高度
+	public CurveThumbnail(int width, int height, int backgroundColor,
+						  List<LineConfig> lines, CrossMarkerConfig markerConfig) {
+		this.width = width;
+		this.height = height;
 		this.backgroundColor = backgroundColor;
 		this.lines = lines;
 		this.markerConfig = markerConfig;
@@ -95,10 +106,9 @@ public class CurveThumbnail extends Drawable {
 		}
 
 		if (minX == maxX) maxX = minX + 1;
-		// if (minY == maxY) maxY = minY + 1; // 注释掉这行
 
 		float xMargin = (maxX - minX) * 0.05f;
-		float yMargin = (maxY == minY) ? 1.0f : (maxY - minY) * 0.05f; // 处理相同值的情况
+		float yMargin = (maxY == minY) ? 1.0f : (maxY - minY) * 0.05f;
 
 		return new DataRange(
 				minX - xMargin,
@@ -127,27 +137,40 @@ public class CurveThumbnail extends Drawable {
 		return path;
 	}
 
-	// 高精度坐标映射方法
+	// 高精度坐标映射方法 - 使用宽度和高度
 	private float preciseMapToX(float value, float minX, float maxX) {
 		if (maxX == minX) {
-			return size / 2f;
+			return width / 2f;
 		}
 		float normalized = (value - minX) / (maxX - minX);
-		return Math.round(normalized * size * 100) / 100f;
+		return Math.round(normalized * width * 100) / 100f;
 	}
 
 	private float preciseMapToY(float value, float minY, float maxY) {
 		if (maxY == minY) {
 			// 所有y值相同时，显示在中间位置
-			return size / 2f;
+			return height / 2f;
 		}
 		float normalized = (value - minY) / (maxY - minY);
-		return size - Math.round(normalized * size * 100) / 100f;
+		return height - Math.round(normalized * height * 100) / 100f;
 	}
 
 	@Override
 	public void draw(@NonNull Canvas canvas) {
-		canvas.drawRect(0, 0, size, size, bgPaint);
+		// 使用实际绘制区域的宽度和高度
+		Rect bounds = getBounds();
+		int drawWidth = bounds.width() > 0 ? bounds.width() : width;
+		int drawHeight = bounds.height() > 0 ? bounds.height() : height;
+
+		canvas.drawRect(0, 0, drawWidth, drawHeight, bgPaint);
+
+		// 保存画布状态，进行缩放以适应绘制区域
+		canvas.save();
+		if (drawWidth != width || drawHeight != height) {
+			float scaleX = (float) drawWidth / width;
+			float scaleY = (float) drawHeight / height;
+			canvas.scale(scaleX, scaleY);
+		}
 
 		for (DrawnLine line : drawnLines) {
 			canvas.drawPath(line.path, line.paint);
@@ -166,6 +189,8 @@ public class CurveThumbnail extends Drawable {
 			// 垂直线（确保上下对称）
 			canvas.drawLine(drawnMarker.centerX, top, drawnMarker.centerX, bottom, drawnMarker.paint);
 		}
+
+		canvas.restore();
 	}
 
 	@Override
@@ -197,12 +222,12 @@ public class CurveThumbnail extends Drawable {
 
 	@Override
 	public int getIntrinsicWidth() {
-		return size;
+		return width;
 	}
 
 	@Override
 	public int getIntrinsicHeight() {
-		return size;
+		return height;
 	}
 
 	// 折线配置类
@@ -216,7 +241,7 @@ public class CurveThumbnail extends Drawable {
 		}
 
 		public LineConfig(List<Float> xValues, List<Float> yValues,
-		                  int color, float strokeWidth) {
+						  int color, float strokeWidth) {
 			this.xValues = xValues;
 			this.yValues = yValues;
 			this.color = color;
@@ -224,7 +249,7 @@ public class CurveThumbnail extends Drawable {
 		}
 	}
 
-	// 十字标记配置类（最终修复版）
+	// 十字标记配置类
 	public static class CrossMarkerConfig {
 		public final float xValue;
 		public final float yValue;
@@ -233,7 +258,7 @@ public class CurveThumbnail extends Drawable {
 		public final float size;
 
 		public CrossMarkerConfig(float xValue, float yValue,
-		                         int color, float strokeWidth, float size) {
+								 int color, float strokeWidth, float size) {
 			this.xValue = xValue;
 			this.yValue = yValue;
 			this.color = color;

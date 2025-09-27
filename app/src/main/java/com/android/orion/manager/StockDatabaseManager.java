@@ -61,6 +61,9 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 	}
 
 	public int updateStock(Stock stock, ContentValues contentValues) {
+		if (stock == null) {
+			return 0;
+		}
 		return update(DatabaseContract.Stock.CONTENT_URI, contentValues, DatabaseContract.SELECTION_STOCK(stock.getSE(), stock.getCode()), null);
 	}
 
@@ -79,6 +82,9 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 	}
 
 	public Cursor queryStock(Stock stock) {
+		if (stock == null) {
+			return null;
+		}
 		return queryStock(DatabaseContract.SELECTION_STOCK(stock.getSE(), stock.getCode()), null, null);
 	}
 
@@ -231,6 +237,9 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 	}
 
 	public int deleteStockBonus(Stock stock) {
+		if (stock == null) {
+			return 0;
+		}
 		return delete(DatabaseContract.StockBonus.CONTENT_URI, DatabaseContract.SELECTION_STOCK(stock.getSE(), stock.getCode()), null);
 	}
 
@@ -328,6 +337,9 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 	}
 
 	public int deleteStockData(Stock stock) {
+		if (stock == null) {
+			return 0;
+		}
 		return delete(DatabaseContract.StockData.CONTENT_URI, DatabaseContract.SELECTION_STOCK(stock.getSE(), stock.getCode()), null);
 	}
 
@@ -344,6 +356,9 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 	}
 
 	public int updateStockData(StockData stockData, ContentValues contentValues) {
+		if (stockData == null) {
+			return 0;
+		}
 		return update(DatabaseContract.StockData.CONTENT_URI, contentValues, DatabaseContract.SELECTION_STOCK_PERIOD_DATE_TIME(stockData.getSE(), stockData.getCode(), stockData.getPeriod(), stockData.getDate(), stockData.getTime()), null);
 	}
 
@@ -372,6 +387,9 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 	}
 
 	public Cursor queryStockData(StockData stockData) {
+		if (stockData == null) {
+			return null;
+		}
 		return query(DatabaseContract.StockData.CONTENT_URI, DatabaseContract.StockData.PROJECTION_ALL, DatabaseContract.SELECTION_STOCK_PERIOD_DATE_TIME(stockData.getSE(), stockData.getCode(), stockData.getPeriod(), stockData.getDate(), stockData.getTime()), null, DatabaseContract.ORDER_DATE_TIME_ASC);
 	}
 
@@ -615,6 +633,9 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 	}
 
 	public int deleteStockFinancial(Stock stock) {
+		if (stock == null) {
+			return 0;
+		}
 		return delete(DatabaseContract.StockFinancial.CONTENT_URI, DatabaseContract.SELECTION_STOCK(stock.getSE(), stock.getCode()), null);
 	}
 
@@ -891,6 +912,9 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 	}
 
 	public int deleteStockShare(Stock stock) {
+		if (stock == null) {
+			return 0;
+		}
 		return delete(DatabaseContract.StockShare.CONTENT_URI, DatabaseContract.SELECTION_STOCK(stock.getSE(), stock.getCode()), null);
 	}
 
@@ -906,6 +930,9 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 	}
 
 	public int deleteTDXData(Stock stock) {
+		if (stock == null) {
+			return 0;
+		}
 		return delete(DatabaseContract.TDXData.CONTENT_URI, DatabaseContract.SELECTION_STOCK(stock.getSE(), stock.getCode()), null);
 	}
 
@@ -947,6 +974,9 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 	}
 
 	public int deleteStockTrend(Stock stock) {
+		if (stock == null) {
+			return 0;
+		}
 		return delete(DatabaseContract.StockTrend.CONTENT_URI, DatabaseContract.SELECTION_STOCK(stock.getSE(), stock.getCode()), null);
 	}
 
@@ -962,6 +992,9 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 	}
 
 	public Cursor queryStockTrend(StockTrend stockTrend) {
+		if (stockTrend == null) {
+			return null;
+		}
 		return query(DatabaseContract.StockTrend.CONTENT_URI, DatabaseContract.StockTrend.PROJECTION_ALL, DatabaseContract.SELECTION_STOCK_PERIOD_LEVEL(stockTrend.getSE(), stockTrend.getCode(), stockTrend.getPeriod(), stockTrend.getLevel()), null, DatabaseContract.ORDER_DATE_TIME_ASC);
 	}
 

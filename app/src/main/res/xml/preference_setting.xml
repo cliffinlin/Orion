@@ -38,12 +38,6 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/display">
         <com.android.orion.preference.CustomSwitchPreference
-            android:key="SETTING_DISPLAY_MAIN_INCOME"
-            android:title="@string/main_business_income" />
-        <com.android.orion.preference.CustomSwitchPreference
-            android:key="SETTING_DISPLAY_MONOCHROME"
-            android:title="@string/monochrome" />
-        <com.android.orion.preference.CustomSwitchPreference
             android:key="SETTING_DISPLAY_ADAPTIVE"
             android:title="@string/adaptive" />
         <com.android.orion.preference.CustomSwitchPreference
@@ -73,17 +67,11 @@
         <com.android.orion.preference.CustomSwitchPreference
             android:key="SETTING_DISPLAY_TREND_LINE"
             android:title="@string/trend_line" />
-        <com.android.orion.preference.CustomSwitchPreference
-            android:key="SETTING_DISPLAY_MERGED"
-            android:title="@string/merged" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/setting_debug">
         <com.android.orion.preference.CustomSwitchPreference
             android:key="SETTING_DEBUG_LOG"
             android:title="@string/setting_debug_log" />
-        <com.android.orion.preference.CustomSwitchPreference
-            android:key="SETTING_DEBUG_DIRECT"
-            android:title="@string/direct" />
         <com.android.orion.preference.CustomSwitchPreference
             android:key="SETTING_DEBUG_WIFI"
             android:title="@string/setting_debug_wifi" />

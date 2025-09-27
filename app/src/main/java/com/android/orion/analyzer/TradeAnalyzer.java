@@ -9,7 +9,7 @@ import com.android.orion.utility.Logger;
 
 import java.util.ArrayList;
 
-public class GridAnalyzer {
+public class TradeAnalyzer {
 	Logger Log = Logger.getLogger();
 	Stock mStock;
 	StockDeal mBuyDeal;
@@ -17,10 +17,10 @@ public class GridAnalyzer {
 	ArrayList<StockDeal> mStockDealList = new ArrayList<>();
 	StockDatabaseManager mStockDatabaseManager = StockDatabaseManager.getInstance();
 
-	private GridAnalyzer() {
+	private TradeAnalyzer() {
 	}
 
-	public static GridAnalyzer getInstance() {
+	public static TradeAnalyzer getInstance() {
 		return Holder.INSTANCE;
 	}
 
@@ -33,7 +33,7 @@ public class GridAnalyzer {
 		mStock.setBuyProfit(0);
 		mStock.setSellProfit(0);
 
-		if (!mStock.hasFlag(Stock.FLAG_GRID)) {
+		if (!mStock.hasFlag(Stock.FLAG_TRADE)) {
 			return;
 		}
 
@@ -71,6 +71,6 @@ public class GridAnalyzer {
 	}
 
 	private static class Holder {
-		private static final GridAnalyzer INSTANCE = new GridAnalyzer();
+		private static final TradeAnalyzer INSTANCE = new TradeAnalyzer();
 	}
 }

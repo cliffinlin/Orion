@@ -27,7 +27,6 @@ import com.android.orion.database.Stock;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Preferences;
-import com.android.orion.utility.Utility;
 import com.android.orion.view.SyncHorizontalScrollView;
 
 public class StockFinancialListActivity extends ListActivity implements
@@ -113,6 +112,7 @@ public class StockFinancialListActivity extends ListActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
+		resetHeaderTextColor();
 		initHeader();
 		setupListView();
 	}
@@ -712,7 +712,7 @@ public class StockFinancialListActivity extends ListActivity implements
 
 		mLeftListView = findViewById(R.id.left_listview);
 		mLeftAdapter = new SimpleCursorAdapter(this,
-				R.layout.activity_stock_list_left_item, null, mLeftFrom,
+				R.layout.activity_stock_favorite_list_left_item, null, mLeftFrom,
 				mLeftTo, 0);
 		if (mLeftListView != null) {
 			mLeftAdapter.setViewBinder(new LeftViewBinder());
@@ -885,24 +885,6 @@ public class StockFinancialListActivity extends ListActivity implements
 			}
 
 			return false;
-		}
-
-		void setViewColor(View view, Cursor cursor) {
-			if (view == null || cursor == null) {
-				return;
-			}
-
-			int flag = cursor.getInt(cursor
-					.getColumnIndex(DatabaseContract.COLUMN_FLAG));
-
-			if (Utility.hasFlag(flag, Stock.FLAG_NOTIFY)) {
-				view.setBackgroundColor(Color.rgb(240, 240, 240));
-//			TextView textView = (TextView)view;
-//			textView.setTextColor(Color.RED);
-			}
-
-			TextView textView = (TextView) view;
-			textView.setTextSize(14f);
 		}
 	}
 }

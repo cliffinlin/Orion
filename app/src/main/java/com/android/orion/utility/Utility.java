@@ -243,6 +243,11 @@ public class Utility {
 		return (Math.round(v * p)) / p;
 	}
 
+	public static double Round1(double v) {
+		double p = Math.pow(10, Constant.DOUBLE_FIXED_DECIMAL_1);
+		return (Math.round(v * p)) / p;
+	}
+
 	public static double Round2(double v) {
 		double p = Math.pow(10, Constant.DOUBLE_FIXED_DECIMAL_2);
 		return (Math.round(v * p)) / p;

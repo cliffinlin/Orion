@@ -39,8 +39,8 @@ public class Stock extends DatabaseTable {
 
 	public static final int FLAG_NONE = 0;
 	public static final int FLAG_FAVORITE = 1 << 0;
-	public static final int FLAG_NOTIFY = 1 << 1;
-	public static final int FLAG_GRID = 1 << 2;
+	public static final int FLAG_TRADE = 1 << 1;
+	public static final int FLAG_MANUAL = 1 << 2;
 
 	public static final double ROI_COEFFICIENT = 10;
 
@@ -282,8 +282,12 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_SE, mSE);
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
-		contentValues.put(DatabaseContract.COLUMN_BUY_PROFIT, mBuyProfit);
-		contentValues.put(DatabaseContract.COLUMN_SELL_PROFIT, mSellProfit);
+		if (hasFlag(FLAG_MANUAL)) {
+			for (int i = Period.indexOf(Period.DAY); i < Period.PERIODS.length; i++) {
+				String period = Period.PERIODS[i];
+				contentValues.put(DatabaseContract.COLUMN_PERIOD_LEVEL(period), getPeriod(period).getLevel());
+			}
+		}
 		return contentValues;
 	}
 

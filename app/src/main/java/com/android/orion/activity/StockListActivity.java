@@ -22,7 +22,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -31,6 +30,9 @@ import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
+import com.android.orion.utility.Preferences;
+import com.android.orion.utility.Symbol;
+import com.android.orion.view.SyncHorizontalScrollView;
 
 import java.util.ArrayList;
 
@@ -48,8 +50,8 @@ public class StockListActivity extends StorageActivity implements
 	String mSortOrderDefault = mSortOrderColumn + mSortOrderDirection;
 	String mSortOrder = mSortOrderDefault;
 
-	ListView mListView = null;
-	CustomSimpleCursorAdapter mAdapter = null;
+	SyncHorizontalScrollView mTitleSHSV = null;
+	SyncHorizontalScrollView mContentSHSV = null;
 
 	TextView mTextViewNameCode = null;
 	TextView mTextViewPrice = null;
@@ -61,31 +63,58 @@ public class StockListActivity extends StorageActivity implements
 			DatabaseContract.COLUMN_HOLD};
 	int[] mTo = new int[]{R.id.name, R.id.code, R.id.price, R.id.hold};
 
+	ListView mListView = null;
+	CustomSimpleCursorAdapter mAdapter = null;
+
+	ListView mLeftListView = null;
+	ListView mRightListView = null;
+
+	SimpleCursorAdapter mLeftAdapter = null;
+	SimpleCursorAdapter mRightAdapter = null;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_stock_list_edit);
-
-		mSortOrder = getIntent().getStringExtra(
-				Constant.EXTRA_STOCK_LIST_SORT_ORDER);
-		if (mSortOrder == null) {
-			mSortOrder = mSortOrderDefault;
-		}
+		setContentView(R.layout.activity_stock_list);
 
 		initHeader();
+		setupListView();
+	}
 
-		mListView = findViewById(R.id.stock_list_edit_view);
+	@Override
+	public void handleOnCreate(Bundle savedInstanceState) {
+		super.handleOnCreate(savedInstanceState);
+	}
 
-		mAdapter = new CustomSimpleCursorAdapter(this,
-				R.layout.activity_stock_list_edit_item, null, mFrom, mTo, 0);
+	@Override
+	protected void onStart() {
+		super.onStart();
 
-		if ((mListView != null) && (mAdapter != null)) {
-			mListView.setAdapter(mAdapter);
-			mListView.setOnItemClickListener(this);
-		}
+		initLoader();
+	}
 
-		mLoaderManager.initLoader(LOADER_ID_STOCK_LIST, null, this);
+	@Override
+	protected void onStop() {
+		super.onStop();
+
+		destroyLoader();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		resetHeaderTextColor();
+		initHeader();
+		setupListView();
+	}
+
+	@Override
+	public void handleOnResume() {
+		super.handleOnResume();
+
+		restartLoader();
 	}
 
 	@Override
@@ -173,58 +202,12 @@ public class StockListActivity extends StorageActivity implements
 		for (Stock stock : stockList) {
 			if (addFavorites && !stock.hasFlag(Stock.FLAG_FAVORITE)) {
 				stock.addFlag(Stock.FLAG_FAVORITE);
-				stock.addFlag(Stock.FLAG_NOTIFY);
 				mStockManager.onAddFavorite(stock);
 			} else if (!addFavorites && stock.hasFlag(Stock.FLAG_FAVORITE)) {
 				stock.removeFlag(Stock.FLAG_FAVORITE);
-				stock.removeFlag(Stock.FLAG_NOTIFY);
 				mStockManager.onRemoveFavorite(stock);
 			}
 		}
-	}
-
-	private void handleBackupDatabase() {
-		String result = backupDatabase();
-		if (!TextUtils.isEmpty(result)) {
-			Toast.makeText(StockListActivity.this, "backup database:" + result, Toast.LENGTH_LONG).show();
-		} else {
-			Toast.makeText(StockListActivity.this, "Failed to backup database", Toast.LENGTH_LONG).show();
-		}
-	}
-
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-	}
-
-	String getSelection() {
-		return null;
-	}
-
-	void restartLoader() {
-		mLoaderManager.restartLoader(LOADER_ID_STOCK_LIST, null, this);
-	}
-
-	@Override
-	public Loader<Cursor> onCreateLoader(int id, Bundle arg1) {
-		CursorLoader loader = null;
-
-		loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
-				DatabaseContract.Stock.PROJECTION_ALL, getSelection(), null,
-				mSortOrder);
-
-		return loader;
-	}
-
-	@Override
-	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-		mAdapter.swapCursor(cursor);
-	}
-
-	@Override
-	public void onLoaderReset(Loader<Cursor> loader) {
-		mAdapter.swapCursor(null);
 	}
 
 	@Override
@@ -261,6 +244,8 @@ public class StockListActivity extends StorageActivity implements
 
 		mSortOrder = mSortOrderColumn + mSortOrderDirection;
 
+		Preferences.putString(Setting.SETTING_SORT_ORDER_STOCK_LIST, mSortOrder);
+
 		restartLoader();
 	}
 
@@ -283,6 +268,14 @@ public class StockListActivity extends StorageActivity implements
 	}
 
 	void initHeader() {
+		mTitleSHSV = findViewById(R.id.title_shsv);
+		mContentSHSV = findViewById(R.id.content_shsv);
+
+		if (mTitleSHSV != null && mContentSHSV != null) {
+			mTitleSHSV.setScrollView(mContentSHSV);
+			mContentSHSV.setScrollView(mTitleSHSV);
+		}
+
 		mTextViewNameCode = findViewById(R.id.stock_name_code);
 		if (mTextViewNameCode != null) {
 			mTextViewNameCode.setOnClickListener(this);
@@ -315,17 +308,69 @@ public class StockListActivity extends StorageActivity implements
 		}
 	}
 
+	void setupListView() {
+		mListView = findViewById(R.id.stock_list_edit_view);
+
+		mAdapter = new CustomSimpleCursorAdapter(this,
+				R.layout.activity_stock_list_item, null, mFrom, mTo, 0);
+
+		if ((mListView != null) && (mAdapter != null)) {
+			mListView.setAdapter(mAdapter);
+			mListView.setOnItemClickListener(this);
+		}
+	}
+
+	void initLoader() {
+		mSortOrder = Preferences.getString(Setting.SETTING_SORT_ORDER_STOCK_LIST,
+				mSortOrderDefault);
+		if (!TextUtils.isEmpty(mSortOrder)) {
+			String[] strings = mSortOrder.split(Symbol.WHITE_SPACE);
+			if (strings != null && strings.length > 1) {
+				mSortOrderColumn = strings[0];
+			}
+		}
+		mLoaderManager.initLoader(LOADER_ID_STOCK_LIST, null, this);
+	}
+
+	void destroyLoader() {
+		mLoaderManager.destroyLoader(LOADER_ID_STOCK_LIST);
+	}
+
+	void restartLoader() {
+		mLoaderManager.restartLoader(LOADER_ID_STOCK_LIST, null, this);
+	}
+
+	String getSelection() {
+		return null;
+	}
+
+	@Override
+	public Loader<Cursor> onCreateLoader(int id, Bundle arg1) {
+		CursorLoader loader = null;
+
+		loader = new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
+				DatabaseContract.Stock.PROJECTION_ALL, getSelection(), null,
+				mSortOrder);
+
+		return loader;
+	}
+
+	@Override
+	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+		mAdapter.swapCursor(cursor);
+	}
+
+	@Override
+	public void onLoaderReset(Loader<Cursor> loader) {
+		mAdapter.swapCursor(null);
+	}
+
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 	                        long id) {
 		if (id <= DatabaseContract.INVALID_ID) {
 			return;
 		}
-
-//		Intent intent = new Intent(StockListEditActivity.this,
-//				StockDataChartListActivity.class);
-//		intent.putExtra(Constant.EXTRA_STOCK_ID, id);
-//		startActivity(intent);
 	}
 
 	public class CustomSimpleCursorAdapter extends SimpleCursorAdapter
@@ -403,11 +448,9 @@ public class StockListActivity extends StorageActivity implements
 					case R.id.favorite:
 						if (!stock.hasFlag(Stock.FLAG_FAVORITE)) {
 							stock.addFlag(Stock.FLAG_FAVORITE);
-							stock.addFlag(Stock.FLAG_NOTIFY);
 							mStockManager.onAddFavorite(stock);
 						} else {
 							stock.removeFlag(Stock.FLAG_FAVORITE);
-							stock.removeFlag(Stock.FLAG_NOTIFY);
 							mStockManager.onRemoveFavorite(stock);
 						}
 						break;

@@ -313,7 +313,6 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		if (stock == null) {
 			return;
 		}
-		Log.d(stock.toLogString() + " delayed=" + delayed);
 		int messageID = stock.getCode().hashCode();
 		if (mHandler.hasMessages(messageID)) {
 			Log.d("return, mHandler.hasMessages " + stock.toLogString());

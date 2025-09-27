@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 
 import com.android.orion.chart.CurveThumbnail;
+import com.android.orion.config.Config;
 import com.android.orion.data.Period;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
@@ -23,7 +24,6 @@ import com.android.orion.utility.Utility;
 import org.apache.commons.math3.ml.clustering.CentroidCluster;
 import org.apache.commons.math3.ml.clustering.Clusterable;
 import org.apache.commons.math3.ml.clustering.KMeansPlusPlusClusterer;
-import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -37,7 +37,9 @@ public class TrendAnalyzer {
 	public static final int K_MEANS_MAX_ITERATIONS = 100;
 
 	public static final int DURATION_MAX = 30;//TODO
-	public static final int PAST_MIN = 5;//TODO
+
+	public static final int TREND_RANK_THUMBNAIL_WIDTH = 160;
+	public static final int TREND_RANK_THUMBNAIL_HEIGHT = 40;
 
 	public static final int THUMBNAIL_SIZE = 160;
 	public static final int THUMBNAIL_STROKE_WIDTH = 1;
@@ -53,12 +55,13 @@ public class TrendAnalyzer {
 	List<DataPoint> mDataPointList = new ArrayList<>();
 	List<Float>[] mXValues = new List[StockTrend.LEVELS.length];
 	List<Float>[] mYValues = new List[StockTrend.LEVELS.length];
+	List<CentroidCluster<DataPoint>> mClusterList;
 	ArrayList<CurveThumbnail.LineConfig> mLineConfigList = new ArrayList<>();
 	ArrayList<StockData> mStockDataList = new ArrayList<>();
+	ConcurrentMap<String, DataPoint> mAllDataPointMap = new ConcurrentHashMap<>();
 	ConcurrentMap<String, DataPoint> mDataPointMap = new ConcurrentHashMap<>();
 	StockDatabaseManager mStockDatabaseManager = StockDatabaseManager.getInstance();
 	StockPerceptronProvider mStockPerceptronProvider = StockPerceptronProvider.getInstance();
-	DescriptiveStatistics mDescriptiveStatistics = new DescriptiveStatistics();
 
 	private TrendAnalyzer() {
 	}
@@ -91,13 +94,9 @@ public class TrendAnalyzer {
 			return;
 		}
 
-		if (Setting.getDisplayMerged()) {
-			dataList = new ArrayList<>(mStockDataList);
-		} else {
-			dataList = new ArrayList<>();
-			for (StockData stockData : mStockDataList) {
-				dataList.add(new StockData(stockData));
-			}
+		dataList = new ArrayList<>();
+		for (StockData stockData : mStockDataList) {
+			dataList.add(new StockData(stockData));
 		}
 
 		int size = dataList.size();
@@ -172,11 +171,7 @@ public class TrendAnalyzer {
 				current.set(next);
 				next.init();
 			}
-			if (Setting.getDisplayMerged()) {
-				extendVertexList(dataList, vertexList);
-			} else {
-				extendVertexList(mStockDataList, vertexList);
-			}
+			extendVertexList(mStockDataList, vertexList);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -409,6 +404,7 @@ public class TrendAnalyzer {
 				return;
 			}
 
+			mStockDatabaseManager.beginTransaction();
 			StockTrend stockTrend = stockTrendList.get(stockTrendList.size() - 1);
 			if (mStockDatabaseManager.isStockTrendExist(stockTrend)) {
 				StockTrend stockTrendFromDB = new StockTrend(stockTrend);
@@ -430,8 +426,11 @@ public class TrendAnalyzer {
 				stockTrend.setCreated(Utility.getCurrentDateTimeString());
 				mStockDatabaseManager.insertStockTrend(stockTrend);
 			}
+			mStockDatabaseManager.setTransactionSuccessful();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			mStockDatabaseManager.endTransaction();
 		}
 	}
 
@@ -507,7 +506,9 @@ public class TrendAnalyzer {
 				break;
 			}
 		}
-		mStock.setLevel(period, level);
+		if (Period.indexOf(period) < Period.indexOf(Period.DAY)) {
+			mStock.setLevel(period, level);
+		}
 	}
 
 	public void analyzeAdaptive() {
@@ -530,9 +531,9 @@ public class TrendAnalyzer {
 		try {
 			KMeansPlusPlusClusterer<DataPoint> clusterer = new KMeansPlusPlusClusterer<>(mKMeansK, K_MEANS_MAX_ITERATIONS);
 			List<CentroidCluster<DataPoint>> clusterList = clusterer.cluster(mDataPointList);
-			List<CentroidCluster<DataPoint>> sortedClusterList = sortClusterList(clusterList);
-			setGroupDistance(sortedClusterList);
-			setupStockLevel(sortedClusterList);
+			mClusterList = sortClusterList(clusterList);
+			setupGroupDistance();
+			analyzeTradeLevel();
 			for (String period : Period.PERIODS) {
 				if (Setting.getPeriod(period)) {
 					setupThumbnail(period);
@@ -590,12 +591,14 @@ public class TrendAnalyzer {
 		return sorted;
 	}
 
-	void setGroupDistance(List<CentroidCluster<DataPoint>> clusterList) {
-		if (clusterList == null) {
+	void setupGroupDistance() {
+		if (mClusterList == null) {
 			return;
 		}
-		for (int i = 0; i < clusterList.size(); i++) {
-			CentroidCluster<DataPoint> cluster = clusterList.get(i);
+
+		mAllDataPointMap.clear();
+		for (int i = 0; i < mClusterList.size(); i++) {
+			CentroidCluster<DataPoint> cluster = mClusterList.get(i);
 			StringBuilder clusterInfo = new StringBuilder();
 			clusterInfo.append(Symbol.NEW_LINE + "=== 第 ").append(i).append(" 组 ===")
 					.append(" | 中心值: ").append(java.util.Arrays.toString(cluster.getCenter().getPoint()))
@@ -604,19 +607,20 @@ public class TrendAnalyzer {
 			for (DataPoint point : cluster.getPoints()) {
 				point.setGroup(i);
 				point.setDistance(point.distanceTo(cluster.getCenter()));
+				mAllDataPointMap.put(point.period + Symbol.L + point.level, point);
 				clusterInfo.append("  ").append(point);
 			}
 			Log.d(clusterInfo.toString());
 		}
 	}
 
-	void setupStockLevel(List<CentroidCluster<DataPoint>> clusterList) {
-		if (clusterList == null || clusterList.isEmpty()) {
+	void analyzeTradeLevel() {
+		if (mClusterList == null || mClusterList.isEmpty()) {
 			return;
 		}
 
 		mDataPointMap.clear();
-		for (CentroidCluster<DataPoint> cluster : clusterList) {
+		for (CentroidCluster<DataPoint> cluster : mClusterList) {
 			if (cluster == null) {
 				continue;
 			}
@@ -627,23 +631,14 @@ public class TrendAnalyzer {
 			}
 
 			if (!mDataPointMap.isEmpty()) {
-				if (validList.get(0).duration == 0) {//TODO
-					if (mDataPointMap.size() == mKMeansPeriods - 1) {
-						setupStockLevelAndDuration();
-						if (mStock.getPast() > PAST_MIN) {
-							return;
-						}
-					}
-				}
-
-				if (validList.get(0).duration > DURATION_MAX) {
-					setupStockLevelAndDuration();
+				if (validList.get(0).duration > DURATION_MAX) {//TODO
+					setupLevelDuration();
 					return;
 				}
 
 				if (isDirectionChanged((int)validList.get(0).getPoint()[1])) {
 					if (mDataPointMap.size() == mKMeansPeriods) {
-						setupStockLevelAndDuration();
+						setupLevelDuration();
 						return;
 					} else {
 						mDataPointMap.clear();
@@ -695,23 +690,33 @@ public class TrendAnalyzer {
 		return result;
 	}
 
-	void setupStockLevelAndDuration() {
-		double count = 0;
+	void setupLevelDuration() {
 		double duration = 0;
-		double past = 0;
 		StringBuilder builder = new StringBuilder();
-		for (String period : Period.PERIODS) {
-			if (mDataPointMap.get(period) != null) {
-				mStock.setLevel(period, mDataPointMap.get(period).level);
-				duration += mDataPointMap.get(period).duration;
-				past += mDataPointMap.get(period).past;
-				count++;
-				builder.append(mDataPointMap.get(period).toString());
+
+		try {
+			for (String period : Period.PERIODS) {
+				DataPoint dataPoint = mDataPointMap.get(period);
+				if (dataPoint == null) {
+					continue;
+				}
+
+				if (mStock.hasFlag(Stock.FLAG_MANUAL)) {
+					DataPoint point = mAllDataPointMap.get(period + Symbol.L + mStock.getLevel(period));
+					if (point != null) {
+						duration += point.duration;
+					}
+				} else {
+					mStock.setLevel(period, dataPoint.level);
+					duration += dataPoint.duration;
+				}
+				builder.append(dataPoint);
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		mStock.setDuration((count == 0) ?  0 : duration / count);
-		mStock.setPast((count == 0) ?  0 : past / count);
-		Log.d("setLevel:" + builder.toString());
+		mStock.setDuration((mKMeansPeriods == 0) ?  0 : Utility.Round1(duration / mKMeansPeriods));
+		Log.d(builder.toString());
 	}
 
 	void updateDataPointMap(DataPoint dataPoint) {
@@ -757,7 +762,7 @@ public class TrendAnalyzer {
 					if (mStock.getLevel(period) == level) {
 						mStock.setTrend(period, Symbol.MINUS);
 						if (mStock.getPrice() > stockData.getCandle().getHigh()) {
-							mStock.setTrend(period, Symbol.ADD);
+							mStock.setTrend(period, Symbol.ADD);//TODO
 						}
 					}
 				} else if (stockData.vertexOf(StockTrend.getVertexBottom(level))) {
@@ -766,7 +771,7 @@ public class TrendAnalyzer {
 					if (mStock.getLevel(period) == level) {
 						mStock.setTrend(period, Symbol.ADD);
 						if (mStock.getPrice() < stockData.getCandle().getLow()) {
-							mStock.setTrend(period, Symbol.MINUS);
+							mStock.setTrend(period, Symbol.MINUS);//TODO
 						}
 					}
 				}
@@ -811,14 +816,28 @@ public class TrendAnalyzer {
 
 		int i = 0;
 		int color;
+
+		// 计算每个线段的宽度，留出间距
+		float totalWidth = TREND_RANK_THUMBNAIL_WIDTH;
+		float segmentWidth = totalWidth / mKMeansPeriods;
+		float spacing = segmentWidth * 0.1f; // 10%的间距
+		float lineWidth = segmentWidth - spacing;
+
 		for (String period : Period.PERIODS) {
 			if (Setting.getPeriod(period)) {
 				List<Float> xValues = new ArrayList<>();
 				List<Float> yValues = new ArrayList<>();
-				xValues.add((float)(i * THUMBNAIL_SIZE / mKMeansPeriods));
-				xValues.add((float)((i + 1) * THUMBNAIL_SIZE / mKMeansPeriods));
-				yValues.add((float)(THUMBNAIL_SIZE / 2.0));
-				yValues.add((float)(THUMBNAIL_SIZE / 2.0));
+
+				// 精确计算每个线段的位置，避免重叠
+				float startX = i * segmentWidth + spacing / 2;
+				float endX = startX + lineWidth;
+				float centerY = TREND_RANK_THUMBNAIL_HEIGHT / 2f;
+
+				xValues.add(startX);
+				xValues.add(endX);
+				yValues.add(centerY);
+				yValues.add(centerY);
+
 				if (TextUtils.equals(mStock.getTrend(period), Symbol.ADD)) {
 					color = Color.RED;
 				} else if (TextUtils.equals(mStock.getTrend(period), Symbol.MINUS)) {
@@ -826,12 +845,23 @@ public class TrendAnalyzer {
 				} else {
 					color = Color.BLACK;
 				}
-				mLineConfigList.add(new CurveThumbnail.LineConfig(xValues, yValues, color, 30 * THUMBNAIL_STROKE_WIDTH));
+
+				// 使用适当的线宽，避免过粗
+				float strokeWidth = Math.max(1, TREND_RANK_THUMBNAIL_HEIGHT / 2f);
+				mLineConfigList.add(new CurveThumbnail.LineConfig(xValues, yValues, color, strokeWidth));
 				i++;
 			}
 		}
 
-		mStock.setThumbnail(Utility.thumbnailToBytes(new CurveThumbnail(THUMBNAIL_SIZE, Color.TRANSPARENT, mLineConfigList, null)));
+		int backgroundColor = Color.TRANSPARENT;
+		if (mStock.hasFlag(Stock.FLAG_MANUAL)) {
+			backgroundColor = Config.COLOR_BACKGROUND_MANUAL;
+		}
+
+		// 使用新的构造函数，分别指定宽度和高度
+		mStock.setThumbnail(Utility.thumbnailToBytes(
+				new CurveThumbnail(TREND_RANK_THUMBNAIL_WIDTH, TREND_RANK_THUMBNAIL_HEIGHT,
+						backgroundColor, mLineConfigList, null)));
 	}
 
 	private static class DataPoint implements Clusterable {

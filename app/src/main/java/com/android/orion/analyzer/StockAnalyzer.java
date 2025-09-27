@@ -27,7 +27,7 @@ public class StockAnalyzer {
 	Context mContext = MainApplication.getContext();
 	StockDatabaseManager mStockDatabaseManager = StockDatabaseManager.getInstance();
 	FinancialAnalyzer mFinancialAnalyzer = FinancialAnalyzer.getInstance();
-	GridAnalyzer mGridAnalyzer = GridAnalyzer.getInstance();
+	TradeAnalyzer mGridAnalyzer = TradeAnalyzer.getInstance();
 	TrendAnalyzer mTrendAnalyzer = TrendAnalyzer.getInstance();
 	Logger Log = Logger.getLogger();
 

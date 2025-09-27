@@ -242,7 +242,7 @@ public class StockDealListActivity extends ListActivity implements
 				mSortOrderDefault);
 
 		initHeader();
-		initListView();
+		setupListView();
 
 		mLoaderManager.initLoader(LOADER_ID_DEAL_LIST, null, this);
 
@@ -528,7 +528,7 @@ public class StockDealListActivity extends ListActivity implements
 		}
 	}
 
-	void initListView() {
+	void setupListView() {
 		String[] mLeftFrom = new String[]{DatabaseContract.COLUMN_NAME,
 				DatabaseContract.COLUMN_CODE};
 		int[] mLeftTo = new int[]{R.id.name, R.id.code};
@@ -568,7 +568,7 @@ public class StockDealListActivity extends ListActivity implements
 
 		mLeftListView = findViewById(R.id.left_listview);
 		mLeftAdapter = new SimpleCursorAdapter(this,
-				R.layout.activity_stock_list_left_item, null, mLeftFrom,
+				R.layout.activity_stock_favorite_list_left_item, null, mLeftFrom,
 				mLeftTo, 0);
 		if ((mLeftListView != null) && (mLeftAdapter != null)) {
 			mLeftListView.setAdapter(mLeftAdapter);

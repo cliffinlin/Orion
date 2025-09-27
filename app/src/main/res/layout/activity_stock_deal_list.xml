@@ -15,7 +15,7 @@
             android:layout_weight="3"
             android:orientation="vertical">
 
-            <include layout="@layout/activity_stock_list_left_title" />
+            <include layout="@layout/activity_stock_favorite_list_left_title" />
         </LinearLayout>
 
         <com.android.orion.view.SyncHorizontalScrollView

@@ -7,7 +7,7 @@
 
     <TextView
         android:id="@+id/price"
-        android:layout_width="80dp"
+        android:layout_width="70dp"
         android:layout_height="50dp"
         android:layout_weight="1"
         android:gravity="center"
@@ -15,7 +15,7 @@
 
     <TextView
         android:id="@+id/net"
-        android:layout_width="@dimen/action_layout_width"
+        android:layout_width="60dp"
         android:layout_height="50dp"
         android:layout_weight="1"
         android:gravity="center"
@@ -30,24 +30,24 @@
             android:id="@+id/buy_profit"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_weight="4"
             android:gravity="center"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <ImageView
             android:id="@+id/thumbnail"
             android:layout_width="match_parent"
-            android:layout_height="10dp"
-            android:scaleType="fitXY"
-            android:adjustViewBounds="true" />
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scaleType="fitXY" />
 
         <TextView
             android:id="@+id/sell_profit"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_weight="4"
             android:gravity="center"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
     </LinearLayout>
 
     <TextView

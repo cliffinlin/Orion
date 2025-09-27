@@ -23,11 +23,11 @@ public class Setting {
 	public static final boolean SETTING_PERIOD_MIN15_DEFAULT = true;
 	public static final boolean SETTING_PERIOD_MIN5_DEFAULT = true;
 
-	public static final String SETTING_SORT_ORDER_STOCK_LIST = "SETTING_SORT_ORDER_STOCK_LIST";
-	public static final String SETTING_SORT_ORDER_FINANCIAL_LIST = "SETTING_SORT_ORDER_FINANCIAL_LIST";
+	public static final String SETTING_SORT_ORDER_FAVORITE_LIST = "SETTING_SORT_ORDER_FAVORITE_LIST";
 	public static final String SETTING_SORT_ORDER_DEAL_LIST = "SETTING_SORT_ORDER_DEAL_LIST";
+	public static final String SETTING_SORT_ORDER_FINANCIAL_LIST = "SETTING_SORT_ORDER_FINANCIAL_LIST";
+	public static final String SETTING_SORT_ORDER_STOCK_LIST = "SETTING_SORT_ORDER_STOCK_LIST";
 	public static final String SETTING_SORT_ORDER_TREND_LIST = "SETTING_SORT_ORDER_TREND_LIST";
-	public static final String SETTING_SORT_ORDER_PERCEPTRON_LIST = "SETTING_SORT_ORDER_PERCEPTRON_LIST";
 
 	public static final String SETTING_STOCK_FILTER_ENABLED = "SETTING_STOCK_FILTER_ENABLED";
 	public static final String SETTING_STOCK_FILTER_FAVORITE = "SETTING_STOCK_FILTER_FAVORITE";
@@ -40,9 +40,6 @@ public class Setting {
 	public static final String SETTING_STOCK_FILTER_DIVIDEND = "SETTING_STOCK_FILTER_DIVIDEND";
 	public static final String SETTING_STOCK_FILTER_YIELD = "SETTING_STOCK_FILTER_YIELD";
 	public static final String SETTING_STOCK_FILTER_DIVIDEND_RATIO = "SETTING_STOCK_FILTER_DIVIDEND_RATIO";
-
-	public static final String SETTING_DISPLAY_MONOCHROME = "SETTING_DISPLAY_MONOCHROME";
-	public static final boolean SETTING_DISPLAY_MONOCHROME_DEFAULT = false;
 
 	public static final String SETTING_DISPLAY_ADAPTIVE = "SETTING_DISPLAY_ADAPTIVE";
 	public static final boolean SETTING_DISPLAY_ADAPTIVE_DEFAULT = true;
@@ -80,12 +77,8 @@ public class Setting {
 	public static final String SETTING_DISPLAY_TREND_LINE = "SETTING_DISPLAY_TREND_LINE";
 	public static final boolean SETTING_DISPLAY_TREND_LINE_DEFAULT = true;
 
-	public static final String SETTING_DISPLAY_MERGED = "SETTING_DISPLAY_MERGED";
-	public static final boolean SETTING_DISPLAY_MERGED_DEFAULT = false;
-
 	public static final String SETTING_DEBUG_LOG = "SETTING_DEBUG_LOG";
 	public static final boolean SETTING_DEBUG_LOG_DEFAULT = true;
-	public static final String SETTING_DEBUG_DIRECT = "SETTING_DEBUG_DIRECT";
 	public static final String SETTING_DEBUG_WIFI = "SETTING_DEBUG_WIFI";
 	public static final boolean SETTING_DEBUG_WIFI_DEFAULT = true;
 
@@ -95,7 +88,6 @@ public class Setting {
 	public static final String SETTING_TDX_DATA_FILE_URI_ = "SETTING_TDX_DATA_FILE_URI_";
 
 	public static final String SETTING_STOCK_DATA_CHANGED_ = "SETTING_STOCK_DATA_CHANGED_";
-	public static final String SETTING_STOCK_ARRAY_MAP_INDEX = "SETTING_STOCK_ARRAY_MAP_INDEX";
 
 	private Setting() {
 	}
@@ -114,14 +106,6 @@ public class Setting {
 
 	public static void setPeriod(@NonNull String period, boolean value) {
 		Preferences.putBoolean(SETTING_PERIOD_ + period.toUpperCase(), value);
-	}
-
-	public static boolean getDisplayMonochrome() {
-		return Preferences.getBoolean(SETTING_DISPLAY_MONOCHROME, SETTING_DISPLAY_MONOCHROME_DEFAULT);
-	}
-
-	public static void setDisplayMonochrome(boolean value) {
-		Preferences.putBoolean(SETTING_DISPLAY_MONOCHROME, value);
 	}
 
 	public static boolean getDisplayAdaptive() {
@@ -220,28 +204,12 @@ public class Setting {
 		Preferences.putBoolean(SETTING_DISPLAY_TREND_LINE, value);
 	}
 
-	public static boolean getDisplayMerged() {
-		return Preferences.getBoolean(SETTING_DISPLAY_MERGED, SETTING_DISPLAY_MERGED_DEFAULT);
-	}
-
-	public static void setDisplayMerged(boolean value) {
-		Preferences.putBoolean(SETTING_DISPLAY_MERGED, value);
-	}
-
 	public static boolean getDebugLog() {
 		return Preferences.getBoolean(SETTING_DEBUG_LOG, SETTING_DEBUG_LOG_DEFAULT);
 	}
 
 	public static void setDebugLog(boolean value) {
 		Preferences.putBoolean(SETTING_DEBUG_LOG, value);
-	}
-
-	public static boolean getDebugDirect() {
-		return Preferences.getBoolean(SETTING_DEBUG_DIRECT, false);
-	}
-
-	public static void setDebugDirect(boolean value) {
-		Preferences.putBoolean(SETTING_DEBUG_DIRECT, value);
 	}
 
 	public static boolean getDebugWifi() {
@@ -314,13 +282,5 @@ public class Setting {
 			return;
 		}
 		Preferences.putBoolean(SETTING_STOCK_DATA_CHANGED_ + stock.getSeCodeUpperCase(), value);
-	}
-
-	public static long getStockArrayMapIndex() {
-		return Preferences.getLong(SETTING_STOCK_ARRAY_MAP_INDEX, 0);
-	}
-
-	public static void setStockArrayMapIndex(long value) {
-		Preferences.putLong(SETTING_STOCK_ARRAY_MAP_INDEX, value);
 	}
 }
