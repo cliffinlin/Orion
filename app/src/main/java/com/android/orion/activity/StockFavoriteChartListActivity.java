@@ -67,7 +67,6 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 	PullToRefreshListView mListView = null;
 	StockDataChartArrayAdapter mStockDataChartArrayAdapter = null;
 	ArrayList<String> mStockIDList = new ArrayList<>();
-	ArrayList<StockTrend> mStockTrendList = new ArrayList<>();
 	ArrayList<StockDataChartItem> mStockDataChartItemList = null;
 	ArrayList<StockDataChartItemMain> mStockDataChartItemMainList = null;
 	ArrayList<StockDataChartItemSub> mStockDataChartItemSubList = null;
@@ -190,11 +189,11 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 				break;
 			}
 			case R.id.action_import: {
-				performLoadFromFile(FILE_TYPE_TDX_DATA, false);
+				performLoadFromFile(Constant.FILE_TYPE_TDX_DATA, false);
 				break;
 			}
 			case R.id.action_export: {
-				performSaveToFile(FILE_TYPE_TDX_DATA);
+				performSaveToFile(Constant.FILE_TYPE_TDX_DATA);
 				break;
 			}
 			default:
@@ -532,11 +531,11 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 	}
 
 	void updateStockDataChartItemList() {
-		mStockDatabaseManager.getStockTrendList(mStock, mStockTrendList);
+		mStockDatabaseManager.loadStockTrendMap(mStock, mStock.getStockTrendMap());
 		mStockDataChartItemList.clear();
 		for (int i = 0; i < Period.PERIODS.length; i++) {
 			if (Setting.getPeriod(Period.PERIODS[i])) {
-				mStockDataChartItemMainList.get(i).mStockDataChart.setupStockTrendMap(mStock, Period.PERIODS[i], mStockTrendList);
+				mStockDataChartItemMainList.get(i).mStockDataChart.setupStockTrendMap(mStock, Period.PERIODS[i], mStock.getStockTrendMap());
 				mStockDataChartItemList.add(mStockDataChartItemMainList.get(i));
 				mStockDataChartItemList.add(mStockDataChartItemSubList.get(i));
 			}

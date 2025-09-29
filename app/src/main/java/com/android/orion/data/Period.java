@@ -107,7 +107,6 @@ public class Period {
 		return index;
 	}
 
-
 	public ArrayList<StockData> getStockDataList(int level) {
 		return mStockDataLists.get(level);
 	}

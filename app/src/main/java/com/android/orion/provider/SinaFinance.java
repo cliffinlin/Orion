@@ -522,7 +522,7 @@ public class SinaFinance extends StockDataProvider {
 
 			if (!TextUtils.isEmpty(stockInfo[7])) {
 				stock.setShare(Double.parseDouble(stockInfo[7])
-						* Constant.DOUBLE_CONSTANT_WAN);
+						* Constant.WAN);
 			}
 
 			mStockDatabaseManager.updateStock(stock,
@@ -663,7 +663,7 @@ public class SinaFinance extends StockDataProvider {
 			}
 
 			if (!TextUtils.isEmpty(stockInfo[5])) {
-				stock.setValue(Double.valueOf(stockInfo[5]).longValue() * Constant.DOUBLE_CONSTANT_WAN);
+				stock.setValue(Double.valueOf(stockInfo[5]).longValue() * Constant.WAN);
 			}
 
 			mStockDatabaseManager.updateStock(stock,
@@ -1588,7 +1588,7 @@ public class SinaFinance extends StockDataProvider {
 						stockShare.setDate(dateString);
 						stockShare.setStockShare(Double
 								.parseDouble(stockShareString)
-								* Constant.DOUBLE_CONSTANT_WAN);
+								* Constant.WAN);
 					} else {
 						continue;
 					}

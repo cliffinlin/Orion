@@ -57,7 +57,7 @@ public class StockDataChart {
 	Stock mStock;
 	String mPeriod;
 	int mAdaptiveLevel;
-	ArrayMap<String, StockTrend> mStockTrendMap = new ArrayMap<>();
+	ArrayMap<String, StockTrend> mStockTrendMap;
 
 	public StockDataChart(Stock stock, String period) {
 		mStock = stock;
@@ -79,20 +79,14 @@ public class StockDataChart {
 		}
 	}
 
-	public void setupStockTrendMap(Stock stock, String period, ArrayList<StockTrend> stockTrendList) {
-		if (stock == null || stockTrendList == null) {
+	public void setupStockTrendMap(Stock stock, String period, ArrayMap<String, StockTrend> stockTrendMap) {
+		if (stock == null || stockTrendMap == null) {
 			return;
 		}
 		mStock = stock;
 		mPeriod = period;
 		mAdaptiveLevel = mStock.getLevel(period);
-
-		mStockTrendMap.clear();
-		for (StockTrend stockTrend : stockTrendList) {
-			if (stockTrend != null) {
-				mStockTrendMap.put(stockTrend.getPeriod() + Symbol.L + stockTrend.getLevel(), stockTrend);
-			}
-		}
+		mStockTrendMap = stockTrendMap;
 	}
 
 	public void setMainChartData() {
@@ -244,18 +238,9 @@ public class StockDataChart {
 		}
 	}
 
-	StockTrend getStockTrend(int level) {
-		StockTrend stockTrend = null;
-		String key = mPeriod + Symbol.L + level;
-		if (mStockTrendMap.containsKey(key)) {
-			stockTrend = mStockTrendMap.get(key);
-		}
-		return stockTrend;
-	}
-
 	boolean fillChanged(int level) {
 		boolean result = false;
-		StockTrend stockTrend = getStockTrend(level);
+		StockTrend stockTrend = mStock.getStockTrend(mPeriod, level);
 		if (stockTrend != null && stockTrend.hasFlag(StockTrend.FLAG_CHANGED)) {
 			result = true;
 		}
@@ -326,7 +311,7 @@ public class StockDataChart {
 		mDescription.setLength(0);
 		mDescription.append(mPeriod).append(" ");
 		mDescription.append(stock.getNamePriceNetString(" ")).append(" ");
-		StockTrend stockTrend = getStockTrend(mAdaptiveLevel);
+		StockTrend stockTrend = mStock.getStockTrend(mPeriod, mAdaptiveLevel);
 		if (stockTrend != null) {
 			mDescription.append(stockTrend.toChartString());
 		}
@@ -385,7 +370,7 @@ public class StockDataChart {
 				}
 			}
 
-			StockTrend stockTrend = getStockTrend(i);
+			StockTrend stockTrend = mStock.getStockTrend(mPeriod, i);
 			if (stockTrend == null) {
 				continue;
 			}

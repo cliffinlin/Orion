@@ -31,6 +31,10 @@ public class Constant {
 	public static final String EXTRA_STOCK_LIST_SORT_ORDER = "stock_list_sort_order";
 	public static final String EXTRA_URL = "url";
 
+	public static final int FILE_TYPE_NONE = 0;
+	public static final int FILE_TYPE_FAVORITE = 1;
+	public static final int FILE_TYPE_TDX_DATA = 2;
+
 	public static final int DOUBLE_FIXED_DECIMAL_1 = 1;
 	public static final int DOUBLE_FIXED_DECIMAL_2 = 2;
 	public static final int DOUBLE_FIXED_DECIMAL_4 = 4;
@@ -52,6 +56,6 @@ public class Constant {
 	public static final long HOUR_IN_MILLIS = TimeUnit.HOURS.toMillis(1);
 	public static final long DAY_IN_MILLIS = TimeUnit.DAYS.toMillis(1);
 
-	public static final long DOUBLE_CONSTANT_WAN = 10000;
-	public static final long DOUBLE_CONSTANT_YI = (DOUBLE_CONSTANT_WAN * DOUBLE_CONSTANT_WAN);
+	public static final long WAN = 10000;
+	public static final long YI = (WAN * WAN);
 }

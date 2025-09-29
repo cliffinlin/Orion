@@ -151,10 +151,10 @@ public class StockFinancialListActivity extends ListActivity implements
 				}
 				break;
 			case R.id.action_load:
-				performLoadFromFile(FILE_TYPE_FAVORITE, false);
+				performLoadFromFile(Constant.FILE_TYPE_FAVORITE, false);
 				break;
 			case R.id.action_save:
-				performSaveToFile(FILE_TYPE_FAVORITE);
+				performSaveToFile(Constant.FILE_TYPE_FAVORITE);
 				break;
 			case R.id.action_deal:
 				startActivity(new Intent(this, StockDealListActivity.class));

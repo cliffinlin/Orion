@@ -70,7 +70,9 @@ public class TrendAnalyzer {
 		return Holder.INSTANCE;
 	}
 
-	void setup() {
+	void setup(Stock stock) {
+		mStock = stock;
+		mStockDatabaseManager.loadStockTrendMap(mStock, mStock.getStockTrendMap());
 		mKMeansPeriods = 0;
 		for (String period : Period.PERIODS) {
 			if (Setting.getPeriod(period)) {
@@ -511,8 +513,8 @@ public class TrendAnalyzer {
 		}
 	}
 
-	public void analyzeAdaptive() {
-		setup();
+	public void analyzeAdaptive(Stock stock) {
+		setup(stock);
 
 		for (String period : Period.PERIODS) {
 			if (Setting.getPeriod(period)) {
@@ -632,13 +634,13 @@ public class TrendAnalyzer {
 
 			if (!mDataPointMap.isEmpty()) {
 				if (validList.get(0).duration > DURATION_MAX) {//TODO
-					setupLevelDuration();
+					setupLevelExpect();
 					return;
 				}
 
 				if (isDirectionChanged((int)validList.get(0).getPoint()[1])) {
 					if (mDataPointMap.size() == mKMeansPeriods) {
-						setupLevelDuration();
+						setupLevelExpect();
 						return;
 					} else {
 						mDataPointMap.clear();
@@ -690,8 +692,8 @@ public class TrendAnalyzer {
 		return result;
 	}
 
-	void setupLevelDuration() {
-		double duration = 0;
+	void setupLevelExpect() {
+		double expect = 0;
 		StringBuilder builder = new StringBuilder();
 
 		try {
@@ -702,20 +704,24 @@ public class TrendAnalyzer {
 				}
 
 				if (mStock.hasFlag(Stock.FLAG_MANUAL)) {
-					DataPoint point = mAllDataPointMap.get(period + Symbol.L + mStock.getLevel(period));
-					if (point != null) {
-						duration += point.duration;
+					dataPoint = mAllDataPointMap.get(period + Symbol.L + mStock.getLevel(period));
+					if (dataPoint == null) {
+						continue;
 					}
 				} else {
 					mStock.setLevel(period, dataPoint.level);
-					duration += dataPoint.duration;
 				}
 				builder.append(dataPoint);
+
+				StockTrend stockTrend = mStock.getStockTrend(period, mStock.getLevel(period));
+				if (stockTrend != null) {
+					expect += stockTrend.getPredict();
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		mStock.setDuration((mKMeansPeriods == 0) ?  0 : Utility.Round1(duration / mKMeansPeriods));
+		mStock.setExpect((mKMeansPeriods == 0) ?  0 : Utility.Round1(expect / mKMeansPeriods));
 		Log.d(builder.toString());
 	}
 

@@ -21,6 +21,7 @@ import com.android.orion.database.StockShare;
 import com.android.orion.database.StockTrend;
 import com.android.orion.database.TDXData;
 import com.android.orion.interfaces.StockListener;
+import com.android.orion.utility.Symbol;
 import com.android.orion.utility.Utility;
 
 import java.util.ArrayList;
@@ -1050,6 +1051,28 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 					StockTrend stockTrend = new StockTrend();
 					stockTrend.set(cursor);
 					stockTrendList.add(stockTrend);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeCursor(cursor);
+		}
+	}
+
+	public void loadStockTrendMap(Stock stock, ArrayMap<String, StockTrend> stockTrendMap) {
+		if (stock == null || stockTrendMap == null) {
+			return;
+		}
+		stockTrendMap.clear();
+		Cursor cursor = null;
+		try {
+			cursor = queryStockTrend(DatabaseContract.SELECTION_STOCK(stock.getSE(), stock.getCode()), null, DatabaseContract.ORDER_PERIOD_ASC);
+			if ((cursor != null) && (cursor.getCount() > 0)) {
+				while (cursor.moveToNext()) {
+					StockTrend stockTrend = new StockTrend();
+					stockTrend.set(cursor);
+					stockTrendMap.put(stockTrend.getPeriod() + Symbol.L + stockTrend.getLevel(), stockTrend);
 				}
 			}
 		} catch (Exception e) {

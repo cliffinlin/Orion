@@ -48,6 +48,8 @@ public class Stock extends DatabaseTable {
 	static ArrayList<StockShare> mStockShareList = new ArrayList<>();
 	static ArrayList<StockBonus> mStockBonusList = new ArrayList<>();
 
+	static ArrayMap<String, StockTrend> mStockTrendMap = new ArrayMap<>();
+
 	private final ArrayMap<String, Period> mPeriodMap = new ArrayMap<>();
 	{
 		for (String period : Period.PERIODS) {
@@ -104,8 +106,7 @@ public class Stock extends DatabaseTable {
 	private String mStatus;
 	private double mBuyProfit;
 	private double mSellProfit;
-	private double mPast;
-	private double mDuration;
+	private double mExpect;
 	private byte[] mThumbnail;
 
 	public Stock() {
@@ -181,8 +182,7 @@ public class Stock extends DatabaseTable {
 		mStatus = "";
 		mBuyProfit = 0;
 		mSellProfit = 0;
-		mPast = 0;
-		mDuration = 0;
+		mExpect = 0;
 	}
 
 	@Override
@@ -247,8 +247,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_STATUS, mStatus);
 		contentValues.put(DatabaseContract.COLUMN_BUY_PROFIT, mBuyProfit);
 		contentValues.put(DatabaseContract.COLUMN_SELL_PROFIT, mSellProfit);
-		contentValues.put(DatabaseContract.COLUMN_PAST, mPast);
-		contentValues.put(DatabaseContract.COLUMN_DURATION, mDuration);
+		contentValues.put(DatabaseContract.COLUMN_EXPECT, mExpect);
 		contentValues.put(DatabaseContract.COLUMN_THUMBNAIL, mThumbnail);
 		return contentValues;
 	}
@@ -356,8 +355,7 @@ public class Stock extends DatabaseTable {
 		setStatus(stock.mStatus);
 		setBuyProfit(stock.mBuyProfit);
 		setSellProfit(stock.mSellProfit);
-		setPast(stock.mPast);
-		setDuration(stock.mDuration);
+		setExpect(stock.mExpect);
 		setThumbnail(stock.mThumbnail);
 	}
 
@@ -427,8 +425,7 @@ public class Stock extends DatabaseTable {
 		setStatus(cursor);
 		setBuyProfit(cursor);
 		setSellProfit(cursor);
-		setPast(cursor);
-		setDuration(cursor);
+		setExpect(cursor);
 		setThumbnail(cursor);
 	}
 
@@ -1241,38 +1238,21 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_SELL_PROFIT)));
 	}
 
-	public double getPast() {
-		return mPast;
+	public double getExpect() {
+		return mExpect;
 	}
 
-	public void setPast(double past) {
-		mPast = past;
+	public void setExpect(double expect) {
+		mExpect = expect;
 	}
 
-	void setPast(Cursor cursor) {
+	void setExpect(Cursor cursor) {
 		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
-		setPast(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_PAST)));
-	}
-
-	public double getDuration() {
-		return mDuration;
-	}
-
-	public void setDuration(double duration) {
-		mDuration = duration;
-	}
-
-	void setDuration(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setDuration(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_DURATION)));
+		setExpect(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_EXPECT)));
 	}
 
 	public byte[] getThumbnail() {
@@ -1323,6 +1303,19 @@ public class Stock extends DatabaseTable {
 
 	public ArrayList<StockBonus> getStockBonusList() {
 		return mStockBonusList;
+	}
+
+	public ArrayMap<String, StockTrend> getStockTrendMap() {
+		return mStockTrendMap;
+	}
+
+	public StockTrend getStockTrend(String period, int level) {
+		StockTrend stockTrend = null;
+		String key = period + Symbol.L + level;
+		if (mStockTrendMap.containsKey(key)) {
+			stockTrend = mStockTrendMap.get(key);
+		}
+		return stockTrend;
 	}
 
 	public Period getPeriod(String period) {

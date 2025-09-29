@@ -37,8 +37,7 @@ public class DatabaseContract {
 	public static final String COLUMN_THUMBNAIL = "thumbnail";
 	public static final String COLUMN_LEVEL = "level";
 	public static final String COLUMN_TREND = "trend";
-	public static final String COLUMN_PAST = "past";
-	public static final String COLUMN_DURATION = "duration";
+	public static final String COLUMN_EXPECT = "expect";
 
 	public static final String COLUMN_YEAR = Period.YEAR;
 	public static final String COLUMN_MONTH6 = Period.MONTH6;
@@ -297,6 +296,20 @@ public class DatabaseContract {
 		return DatabaseContract.COLUMN_TYPE + " = " + "'" + value + "'";
 	}
 
+	public static boolean isPeriodThumbnailColumn(String columnName) {
+		return DatabaseContract.COLUMN_YEAR_THUMBNAIL.equals(columnName) ||
+				DatabaseContract.COLUMN_MONTH6_THUMBNAIL.equals(columnName) ||
+				DatabaseContract.COLUMN_QUARTER_THUMBNAIL.equals(columnName) ||
+				DatabaseContract.COLUMN_MONTH2_THUMBNAIL.equals(columnName) ||
+				DatabaseContract.COLUMN_MONTH_THUMBNAIL.equals(columnName) ||
+				DatabaseContract.COLUMN_WEEK_THUMBNAIL.equals(columnName) ||
+				DatabaseContract.COLUMN_DAY_THUMBNAIL.equals(columnName) ||
+				DatabaseContract.COLUMN_MIN60_THUMBNAIL.equals(columnName) ||
+				DatabaseContract.COLUMN_MIN30_THUMBNAIL.equals(columnName) ||
+				DatabaseContract.COLUMN_MIN15_THUMBNAIL.equals(columnName) ||
+				DatabaseContract.COLUMN_MIN5_THUMBNAIL.equals(columnName);
+	}
+
 	public static abstract class Stock implements BaseColumns {
 		public static final String TABLE_NAME = "stock";
 
@@ -310,8 +323,7 @@ public class DatabaseContract {
 				COLUMN_CLASSES, COLUMN_SE, COLUMN_CODE, COLUMN_NAME, COLUMN_PINYIN,
 				COLUMN_PRICE, COLUMN_CHANGE, COLUMN_NET, COLUMN_VOLUME, COLUMN_VALUE,
 				COLUMN_BUY_PROFIT, COLUMN_SELL_PROFIT,
-				COLUMN_PAST,
-				COLUMN_DURATION,
+				COLUMN_EXPECT,
 				COLUMN_THUMBNAIL,
 				COLUMN_YEAR_THUMBNAIL, COLUMN_MONTH6_THUMBNAIL, COLUMN_QUARTER_THUMBNAIL, COLUMN_MONTH2_THUMBNAIL, COLUMN_MONTH_THUMBNAIL, COLUMN_WEEK_THUMBNAIL, COLUMN_DAY_THUMBNAIL, COLUMN_MIN60_THUMBNAIL, COLUMN_MIN30_THUMBNAIL, COLUMN_MIN15_THUMBNAIL, COLUMN_MIN5_THUMBNAIL,
 				COLUMN_YEAR_LEVEL, COLUMN_MONTH6_LEVEL, COLUMN_QUARTER_LEVEL, COLUMN_MONTH2_LEVEL, COLUMN_MONTH_LEVEL, COLUMN_WEEK_LEVEL, COLUMN_DAY_LEVEL, COLUMN_MIN60_LEVEL, COLUMN_MIN30_LEVEL, COLUMN_MIN15_LEVEL, COLUMN_MIN5_LEVEL,
@@ -350,8 +362,7 @@ public class DatabaseContract {
 				+ COLUMN_VALUE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_BUY_PROFIT + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_SELL_PROFIT + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_PAST + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_DURATION + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_EXPECT + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_THUMBNAIL + BLOB_TYPE + COMMA_SEP
 				+ COLUMN_YEAR_THUMBNAIL + BLOB_TYPE + COMMA_SEP
 				+ COLUMN_MONTH6_THUMBNAIL + BLOB_TYPE + COMMA_SEP

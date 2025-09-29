@@ -55,10 +55,6 @@ public class StorageActivity extends DatabaseActivity {
 	static final int REQUEST_CODE_WRITE_FAVORITE = 51;
 	static final int REQUEST_CODE_WRITE_TDX_DATA = 52;
 
-	static final int FILE_TYPE_NONE = 0;
-	static final int FILE_TYPE_FAVORITE = 1;
-	static final int FILE_TYPE_TDX_DATA = 2;
-
 	Uri mUri = null;
 	ArrayList<Uri> mUriList = new ArrayList<>();
 
@@ -67,9 +63,9 @@ public class StorageActivity extends DatabaseActivity {
 		intent.addCategory(Intent.CATEGORY_OPENABLE);
 		intent.setType("*/*");
 		int requestCode = REQUEST_CODE_READ;
-		if (type == FILE_TYPE_FAVORITE) {
+		if (type == Constant.FILE_TYPE_FAVORITE) {
 			requestCode = REQUEST_CODE_READ_FAVORITE;
-		} else if (type == FILE_TYPE_TDX_DATA) {
+		} else if (type == Constant.FILE_TYPE_TDX_DATA) {
 			intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, allowMultiple);
 			requestCode = REQUEST_CODE_READ_TDX_DATA;
 		}
@@ -81,12 +77,12 @@ public class StorageActivity extends DatabaseActivity {
 		Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
 		intent.addCategory(Intent.CATEGORY_OPENABLE);
 		int requestCode = REQUEST_CODE_WRITE;
-		if (type == FILE_TYPE_FAVORITE) {
+		if (type == Constant.FILE_TYPE_FAVORITE) {
 			intent.setType("text/xml");
 			fileNameString = Constant.FAVORITE
 					+ Utility.getCurrentDateString() + Constant.FILE_EXT_XML;
 			requestCode = REQUEST_CODE_WRITE_FAVORITE;
-		} else if (type == FILE_TYPE_TDX_DATA) {
+		} else if (type == Constant.FILE_TYPE_TDX_DATA) {
 			fileNameString = mStock.getSE().toUpperCase() + "#" + mStock.getCode() + Constant.FILE_EXT_TEXT;
 			intent.setType("text/plain");
 			requestCode = REQUEST_CODE_WRITE_TDX_DATA;
@@ -157,9 +153,9 @@ public class StorageActivity extends DatabaseActivity {
 		OutputStream os = null;
 		try {
 			os = cr.openOutputStream(mUri);
-			if (type == FILE_TYPE_FAVORITE) {
+			if (type == Constant.FILE_TYPE_FAVORITE) {
 				saveToXmlFile(os);
-			} else if (type == FILE_TYPE_TDX_DATA) {
+			} else if (type == Constant.FILE_TYPE_TDX_DATA) {
 				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os));
 				ArrayList<String> contentList = new ArrayList<>();
 				mStockDatabaseManager.getTDXDataContentList(mStock, Period.MIN5, contentList);
@@ -494,7 +490,7 @@ public class StorageActivity extends DatabaseActivity {
 					new Thread(new Runnable() {
 						@Override
 						public void run() {
-							saveToFile(FILE_TYPE_FAVORITE);
+							saveToFile(Constant.FILE_TYPE_FAVORITE);
 						}
 					}).start();
 					break;
@@ -502,7 +498,7 @@ public class StorageActivity extends DatabaseActivity {
 					new Thread(new Runnable() {
 						@Override
 						public void run() {
-							saveToFile(FILE_TYPE_TDX_DATA);
+							saveToFile(Constant.FILE_TYPE_TDX_DATA);
 						}
 					}).start();
 					break;
