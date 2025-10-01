@@ -100,6 +100,7 @@ public class StockFavoriteListActivity extends ListActivity implements
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_NET, R.id.net);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_BUY_PROFIT, R.id.trade);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_SELL_PROFIT, R.id.trade);
+        mColumnToViewIdMap.put(DatabaseContract.COLUMN_THUMBNAIL, R.id.trend);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_EXPECT, R.id.expect);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_YEAR_THUMBNAIL, R.id.period_year);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_MONTH6_THUMBNAIL, R.id.period_month6);
@@ -126,7 +127,7 @@ public class StockFavoriteListActivity extends ListActivity implements
         }
 
         int[] headerViewIds = {
-                R.id.stock_name_code, R.id.price, R.id.net, R.id.trade, R.id.expect,
+                R.id.stock_name_code, R.id.price, R.id.net, R.id.trade, R.id.trend, R.id.expect,
                 R.id.period_year, R.id.period_month6, R.id.period_quarter, R.id.period_month2, R.id.period_month, R.id.period_week,
                 R.id.period_day, R.id.period_min60, R.id.period_min30, R.id.period_min15, R.id.period_min5,
                 R.id.flag, R.id.modified
@@ -298,7 +299,7 @@ public class StockFavoriteListActivity extends ListActivity implements
         String[] rightFrom = {
                 DatabaseContract.COLUMN_PRICE, DatabaseContract.COLUMN_NET,
                 DatabaseContract.COLUMN_BUY_PROFIT, DatabaseContract.COLUMN_SELL_PROFIT,
-                DatabaseContract.COLUMN_EXPECT, DatabaseContract.COLUMN_THUMBNAIL,
+                DatabaseContract.COLUMN_THUMBNAIL, DatabaseContract.COLUMN_EXPECT,
                 DatabaseContract.COLUMN_YEAR_THUMBNAIL, DatabaseContract.COLUMN_MONTH6_THUMBNAIL,
                 DatabaseContract.COLUMN_QUARTER_THUMBNAIL, DatabaseContract.COLUMN_MONTH2_THUMBNAIL,
                 DatabaseContract.COLUMN_MONTH_THUMBNAIL, DatabaseContract.COLUMN_WEEK_THUMBNAIL,
@@ -310,7 +311,7 @@ public class StockFavoriteListActivity extends ListActivity implements
         
         int[] rightTo = {
                 R.id.price, R.id.net, R.id.buy_profit, R.id.sell_profit,
-                R.id.expect, R.id.thumbnail, R.id.year, R.id.month6,
+                R.id.trend, R.id.expect, R.id.year, R.id.month6,
                 R.id.quarter, R.id.month2, R.id.month, R.id.week,
                 R.id.day, R.id.min60, R.id.min30, R.id.min15,
                 R.id.min5, R.id.flag, R.id.modified
@@ -514,14 +515,8 @@ public class StockFavoriteListActivity extends ListActivity implements
             if (view instanceof TextView) {
                 TextView textView = (TextView) view;
                 if (DatabaseContract.COLUMN_PRICE.equals(columnName)) {
-                    double price = cursor.getDouble(columnIndex);
                 } else if (DatabaseContract.COLUMN_NET.equals(columnName)) {
-                    double net = cursor.getDouble(columnIndex);
-                    setNetTextColor(textView, net);
                 } else if (DatabaseContract.COLUMN_BUY_PROFIT.equals(columnName)) {
-                    if (Utility.hasFlag(cursor.getInt(mColumnIndexFlag), Stock.FLAG_MANUAL)) {
-                        textView.setBackgroundColor(Config.COLOR_BACKGROUND_MANUAL);
-                    }
                     if (Utility.hasFlag(cursor.getInt(mColumnIndexFlag), Stock.FLAG_TRADE)) {
                         textView.setTextColor(cursor.getDouble(mColumnIndexBuyProfit) > 0 ? Color.RED : Color.GRAY);
                         return false;
@@ -530,9 +525,6 @@ public class StockFavoriteListActivity extends ListActivity implements
                         return true;
                     }
                 } else if (DatabaseContract.COLUMN_SELL_PROFIT.equals(columnName)) {
-                    if (Utility.hasFlag(cursor.getInt(mColumnIndexFlag), Stock.FLAG_MANUAL)) {
-                        textView.setBackgroundColor(Config.COLOR_BACKGROUND_MANUAL);
-                    }
                     if (Utility.hasFlag(cursor.getInt(mColumnIndexFlag), Stock.FLAG_TRADE)) {
                         textView.setTextColor(cursor.getDouble(mColumnIndexSellProfit) < 0 ? Color.RED : Color.GRAY);
                         return false;
@@ -542,18 +534,7 @@ public class StockFavoriteListActivity extends ListActivity implements
                     }
                 }
             }
-
             return false;
-        }
-
-        private void setNetTextColor(TextView textView, double netValue) {
-            if (netValue > 0) {
-                textView.setTextColor(Color.RED);
-            } else if (netValue < 0) {
-                textView.setTextColor(Color.GREEN);
-            } else {
-                textView.setTextColor(Color.GRAY);
-            }
         }
     }
 }

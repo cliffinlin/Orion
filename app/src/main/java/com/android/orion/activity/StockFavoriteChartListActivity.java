@@ -675,12 +675,12 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 				}
 			}
 
-			viewHolder.chart.setDescription(mStockDataChart.mDescription.toString());
-
 			if (mItemViewType == ITEM_VIEW_TYPE_MAIN) {
 				viewHolder.chart.setData(mStockDataChart.mCombinedDataMain);
+				viewHolder.chart.setDescription(mStockDataChart.mDescription.toString());
 			} else {
 				viewHolder.chart.setData(mStockDataChart.mCombinedDataSub);
+				viewHolder.chart.setDescription("");
 			}
 			mCombinedChartMap.put(position, viewHolder.chart);
 			mChartSyncHelper.syncCharts(mCombinedChartMap);

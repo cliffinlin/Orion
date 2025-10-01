@@ -39,7 +39,7 @@ public class TrendAnalyzer {
 	public static final int DURATION_MAX = 30;//TODO
 
 	public static final int TREND_RANK_THUMBNAIL_WIDTH = 160;
-	public static final int TREND_RANK_THUMBNAIL_HEIGHT = 40;
+	public static final int TREND_RANK_THUMBNAIL_HEIGHT = 160;
 
 	public static final int THUMBNAIL_SIZE = 160;
 	public static final int THUMBNAIL_STROKE_WIDTH = 1;
@@ -823,26 +823,38 @@ public class TrendAnalyzer {
 		int i = 0;
 		int color;
 
-		// 计算每个线段的宽度，留出间距
 		float totalWidth = TREND_RANK_THUMBNAIL_WIDTH;
 		float segmentWidth = totalWidth / mKMeansPeriods;
-		float spacing = segmentWidth * 0.1f; // 10%的间距
+		float spacing = segmentWidth * 0.1f;
 		float lineWidth = segmentWidth - spacing;
 
 		for (String period : Period.PERIODS) {
 			if (Setting.getPeriod(period)) {
-				List<Float> xValues = new ArrayList<>();
-				List<Float> yValues = new ArrayList<>();
+				List<Float> xValuesH = new ArrayList<>();
+				List<Float> yValuesH = new ArrayList<>();
+				List<Float> xValuesE = new ArrayList<>();
+				List<Float> yValuesE = new ArrayList<>();
+				List<Float> xValuesV = new ArrayList<>();
+				List<Float> yValuesV = new ArrayList<>();
 
-				// 精确计算每个线段的位置，避免重叠
-				float startX = i * segmentWidth + spacing / 2;
+				float startX = i * segmentWidth + spacing / 2f;
 				float endX = startX + lineWidth;
 				float centerY = TREND_RANK_THUMBNAIL_HEIGHT / 2f;
 
-				xValues.add(startX);
-				xValues.add(endX);
-				yValues.add(centerY);
-				yValues.add(centerY);
+				xValuesH.add(startX);
+				xValuesH.add(endX);
+				yValuesH.add(centerY);
+				yValuesH.add(centerY);
+
+				xValuesE.add((startX + endX) / 2f);
+				xValuesE.add((startX + endX) / 2f);
+				yValuesE.add(centerY);
+				yValuesE.add(centerY + (float) mStock.getStockTrend(period, mStock.getLevel(period)).getPredict());
+
+				xValuesV.add((startX + endX) / 2f);
+				xValuesV.add((startX + endX) / 2f);
+				yValuesV.add(centerY);
+				yValuesV.add(centerY + (float) mStock.getStockTrend(period, mStock.getLevel(period)).getNextNet());
 
 				if (TextUtils.equals(mStock.getTrend(period), Symbol.ADD)) {
 					color = Color.RED;
@@ -852,9 +864,10 @@ public class TrendAnalyzer {
 					color = Color.BLACK;
 				}
 
-				// 使用适当的线宽，避免过粗
-				float strokeWidth = Math.max(1, TREND_RANK_THUMBNAIL_HEIGHT / 2f);
-				mLineConfigList.add(new CurveThumbnail.LineConfig(xValues, yValues, color, strokeWidth));
+				float strokeWidth = Math.max(1, 10f * THUMBNAIL_STROKE_WIDTH);
+				mLineConfigList.add(new CurveThumbnail.LineConfig(xValuesH, yValuesH, color, THUMBNAIL_STROKE_WIDTH));
+				mLineConfigList.add(new CurveThumbnail.LineConfig(xValuesE, yValuesE, Color.GRAY, strokeWidth));
+				mLineConfigList.add(new CurveThumbnail.LineConfig(xValuesV, yValuesV, color, strokeWidth));
 				i++;
 			}
 		}
@@ -864,7 +877,6 @@ public class TrendAnalyzer {
 			backgroundColor = Config.COLOR_BACKGROUND_MANUAL;
 		}
 
-		// 使用新的构造函数，分别指定宽度和高度
 		mStock.setThumbnail(Utility.thumbnailToBytes(
 				new CurveThumbnail(TREND_RANK_THUMBNAIL_WIDTH, TREND_RANK_THUMBNAIL_HEIGHT,
 						backgroundColor, mLineConfigList, null)));
