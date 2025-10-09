@@ -50,7 +50,7 @@ public class StockAnalyzer {
 			if (Period.indexOf(period) <= Period.indexOf(Period.MONTH)) {
 				mFinancialAnalyzer.setNetProfileInYear(mStock, mStockDataList);
 			}
-			analyzeMacd(period);
+			analyzeMACD(period);
 			analyzeStockData(period);
 			mStockDatabaseManager.updateStockData(mStock, period, mStockDataList);
 			mStock.setModified(Utility.getCurrentDateTimeString());
@@ -96,22 +96,23 @@ public class StockAnalyzer {
 		Log.d(stock.toLogString() + Symbol.TAB + stock.getPriceNetString(Symbol.TAB) + Symbol.TAB + stock.getTrendString() + Symbol.TAB + StopWatch.getIntervalString());
 	}
 
-	private void analyzeMacd(String period) {
+	private void analyzeMACD(String period) {
 		if (mStockDataList == null || mStockDataList.size() < StockTrend.VERTEX_SIZE) {
 			return;
 		}
 
 		try {
-			MacdAnalyzer.calculate(period, mStockDataList);
+			MACDAnalyzer.calculateMACD(period, mStockDataList);
+			MACDAnalyzer.analyzeMACDWithFourier();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		List<Double> average5List = MacdAnalyzer.getEMAAverage5List();
-		List<Double> average10List = MacdAnalyzer.getEMAAverage10List();
-		List<Double> difList = MacdAnalyzer.getDIFList();
-		List<Double> deaList = MacdAnalyzer.getDEAList();
-		List<Double> histogramList = MacdAnalyzer.getHistogramList();
+		List<Double> average5List = MACDAnalyzer.getEMAAverage5List();
+		List<Double> average10List = MACDAnalyzer.getEMAAverage10List();
+		List<Double> difList = MACDAnalyzer.getDIFList();
+		List<Double> deaList = MACDAnalyzer.getDEAList();
+		List<Double> histogramList = MACDAnalyzer.getHistogramList();
 
 		int size = mStockDataList.size();
 		if (average5List.size() != size || average10List.size() != size || difList.size() != size || deaList.size() != size || histogramList.size() != size) {

@@ -11,7 +11,6 @@ public class StockFinancial extends DatabaseTable {
 	protected String mCode;
 	protected String mName;
 	private String mDate;
-	private double mPrice;
 	private double mBookValuePerShare;
 	private double mCashFlowPerShare;
 	private double mMainBusinessIncome;
@@ -49,7 +48,6 @@ public class StockFinancial extends DatabaseTable {
 		mCode = "";
 		mName = "";
 		mDate = "";
-		mPrice = 0;
 		mBookValuePerShare = 0;
 		mCashFlowPerShare = 0;
 		mMainBusinessIncome = 0;
@@ -75,8 +73,6 @@ public class StockFinancial extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
 		contentValues.put(DatabaseContract.COLUMN_DATE, mDate);
-		contentValues.put(DatabaseContract.COLUMN_PRICE,
-				mPrice);
 		contentValues.put(DatabaseContract.COLUMN_BOOK_VALUE_PER_SHARE,
 				mBookValuePerShare);
 		contentValues.put(DatabaseContract.COLUMN_CASH_FLOW_PER_SHARE,
@@ -117,7 +113,6 @@ public class StockFinancial extends DatabaseTable {
 		setCode(stockFinancial.mCode);
 		setName(stockFinancial.mName);
 		setDate(stockFinancial.mDate);
-		setPrice(stockFinancial.mPrice);
 		setBookValuePerShare(stockFinancial.mBookValuePerShare);
 		setCashFlowPerShare(stockFinancial.mCashFlowPerShare);
 		setMainBusinessIncome(stockFinancial.mMainBusinessIncome);
@@ -149,7 +144,6 @@ public class StockFinancial extends DatabaseTable {
 		setCode(cursor);
 		setName(cursor);
 		setDate(cursor);
-		setPrice(cursor);
 		setBookValuePerShare(cursor);
 		setCashFlowPerShare(cursor);
 		setMainBusinessIncome(cursor);
@@ -233,23 +227,6 @@ public class StockFinancial extends DatabaseTable {
 
 		setDate(cursor.getString(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_DATE)));
-	}
-
-	public double getPrice() {
-		return mPrice;
-	}
-
-	public void setPrice(double price) {
-		mPrice = price;
-	}
-
-	void setPrice(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setPrice(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_PRICE)));
 	}
 
 	public double getBookValuePerShare() {

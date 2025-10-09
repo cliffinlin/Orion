@@ -60,36 +60,12 @@ public class FinancialAnalyzer {
 		mStockDatabaseManager.getStockBonusList(stock, mStockBonusList,
 				sortOrder);
 
-		setupPrice();
 		setupStockShare();
 		setupNetProfitPerShareInYear();
 		setupNetProfitPerShare();
 		setupRate();
 		setupRoe();
 		mStockDatabaseManager.updateStockFinancial(stock, mStockFinancialList);
-	}
-
-	private void setupPrice() {
-		if (mStockFinancialList.size() == 0 || mStockDataList.size() == 0) {
-			return;
-		}
-
-		int j = mStockDataList.size() - 1;
-		for (StockFinancial stockFinancial : mStockFinancialList) {
-			stockFinancial.setPrice(0);
-			while (j > 0) {
-				StockData stockData = mStockDataList.get(j);
-				if (Utility.getCalendar(stockFinancial.getDate(),
-						Utility.CALENDAR_DATE_FORMAT).after(
-						Utility.getCalendar(stockData.getDate(),
-								Utility.CALENDAR_DATE_FORMAT))) {
-					stockFinancial.setPrice(stockData.getCandle().getClose());
-					break;
-				} else {
-					j--;
-				}
-			}
-		}
 	}
 
 	public void setNetProfileInYear(Stock stock, ArrayList<StockData> stockDataList) {
@@ -109,7 +85,6 @@ public class FinancialAnalyzer {
 						Utility.CALENDAR_DATE_FORMAT).after(
 						Utility.getCalendar(stockFinancial.getDate(),
 								Utility.CALENDAR_DATE_FORMAT))) {
-					stockData.setNetProfitInYear(stockFinancial.getNetProfitInYear());
 					break;
 				} else {
 					j++;

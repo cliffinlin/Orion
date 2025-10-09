@@ -60,8 +60,6 @@ public class StockData extends DatabaseTable {
 	private int mDirection;
 	private int mVertex;
 
-	private double mNetProfitInYear;
-
 	private int mIndex;
 	private int mIndexStart;
 	private int mIndexEnd;
@@ -113,8 +111,6 @@ public class StockData extends DatabaseTable {
 		mDirection = StockTrend.DIRECTION_NONE;
 		mVertex = StockTrend.VERTEX_NONE;
 
-		mNetProfitInYear = 0;
-
 		mIndex = 0;
 		mIndexStart = 0;
 		mIndexEnd = 0;
@@ -147,9 +143,6 @@ public class StockData extends DatabaseTable {
 
 		contentValues.put(DatabaseContract.COLUMN_DIRECTION, mDirection);
 		contentValues.put(DatabaseContract.COLUMN_VERTEX, mVertex);
-
-		contentValues.put(DatabaseContract.COLUMN_NET_PROFIT_IN_YEAR, mNetProfitInYear);
-
 		return contentValues;
 	}
 
@@ -177,8 +170,6 @@ public class StockData extends DatabaseTable {
 
 		setDirection(stockData.mDirection);
 		setVertex(stockData.mVertex);
-
-		setNetProfitInYear(stockData.mNetProfitInYear);
 
 		setIndex(stockData.mIndex);
 		setIndexStart(stockData.mIndexStart);
@@ -210,8 +201,6 @@ public class StockData extends DatabaseTable {
 
 		setDirection(cursor);
 		setVertex(cursor);
-
-		setNetProfitInYear(cursor);
 	}
 
 	public String getSE() {
@@ -454,24 +443,6 @@ public class StockData extends DatabaseTable {
 			return;
 		}
 		mCandle.add(stockData.mCandle, weight);
-	}
-
-	public double getNetProfitInYear() {
-		return mNetProfitInYear;
-	}
-
-	public void setNetProfitInYear(double netProfitInYear) {
-		mNetProfitInYear = netProfitInYear;
-	}
-
-	void setNetProfitInYear(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setNetProfitInYear(cursor
-				.getDouble(cursor
-						.getColumnIndex(DatabaseContract.COLUMN_NET_PROFIT_IN_YEAR)));
 	}
 
 	public int getIndex() {

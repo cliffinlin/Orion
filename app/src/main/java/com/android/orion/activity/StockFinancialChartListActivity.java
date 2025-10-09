@@ -427,12 +427,6 @@ public class StockFinancialChartListActivity extends BaseActivity implements
 					stockFinancialChart.mStockShareEntryList
 							.add(stockShareEntry);
 
-					Entry priceEntry = new Entry(
-							(float) mStockFinancial.getPrice(),
-							index);
-					stockFinancialChart.mPriceEntryList
-							.add(priceEntry);
-
 					Entry bookValuePerShareEntry = new Entry(
 							(float) mStockFinancial.getBookValuePerShare(),
 							index);

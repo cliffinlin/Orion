@@ -44,7 +44,6 @@ public class StockDataChart {
 	public ArrayList<Integer> mDrawVertexList = new ArrayList<>();
 	public ArrayList<Entry> mExtendFirstEntryList = new ArrayList<>();
 	public ArrayList<Entry> mExtendLastEntryList = new ArrayList<>();
-	public ArrayList<Entry> mNetProfitInYearEntryList = new ArrayList<>();
 	public ArrayList<LimitLine> mLimitLineList = new ArrayList<>();
 	public ArrayList<Entry> mDIFEntryList = new ArrayList<>();
 	public ArrayList<Entry> mDEAEntryList = new ArrayList<>();
@@ -109,16 +108,6 @@ public class StockDataChart {
 		}
 
 		LineData lineData = new LineData(mXValues);
-
-		if (Period.indexOf(mPeriod) <= Period.indexOf(Period.MONTH)) {
-			LineDataSet lineDataSet = new LineDataSet(mNetProfitInYearEntryList,
-					"NPY");
-			lineDataSet.setColor(Color.MAGENTA);
-			lineDataSet.setCircleColor(Color.MAGENTA);
-			lineDataSet.setCircleSize(3f);
-			lineDataSet.setAxisDependency(AxisDependency.RIGHT);
-			lineData.addDataSet(lineDataSet);
-		}
 
 		if (Setting.getDisplayAverage()) {
 			LineDataSet lineDataSet5 = new LineDataSet(mAverage5EntryList,
@@ -500,7 +489,6 @@ public class StockDataChart {
 		mDrawVertexList.clear();
 		mExtendFirstEntryList.clear();
 		mExtendLastEntryList.clear();
-		mNetProfitInYearEntryList.clear();
 		mAverage5EntryList.clear();
 		mAverage10EntryList.clear();
 		mDIFEntryList.clear();
