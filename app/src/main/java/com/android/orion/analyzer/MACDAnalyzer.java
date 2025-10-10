@@ -12,6 +12,7 @@ import org.apache.commons.math3.transform.FastFourierTransformer;
 import org.apache.commons.math3.transform.TransformType;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MACDAnalyzer {
@@ -32,6 +33,7 @@ public class MACDAnalyzer {
     private static final List<Double> mDIFList = new ArrayList<>();
     private static final List<Double> mHistogramList = new ArrayList<>();
     private static final List<Double> mComponentList = new ArrayList<>();
+    private static PolarComponent mPolarComponent;
 
     static Logger Log = Logger.getLogger();
 
@@ -64,6 +66,10 @@ public class MACDAnalyzer {
 
     public static List<Double> getComponentList() {
         return mComponentList;
+    }
+
+    public static PolarComponent getPolarComponent() {
+        return mPolarComponent;
     }
 
     public static void init(String period, ArrayList<StockData> stockDataList) {
@@ -286,12 +292,25 @@ public class MACDAnalyzer {
         // 直接从频谱中获取第一主成分对应的频率索引
         int dominantIndex = findFrequencyIndexFromSpectrum(fftResult, n, spectrum.get(0));
 
+        // 获取该频率对应的复数
+        Complex dominantComplex = fftResult[dominantIndex];
+        double amplitude = dominantComplex.abs() / n * 2;
+        double phase = dominantComplex.getArgument();
+        double phaseDegrees = Math.toDegrees(phase);
+        if (phaseDegrees < 0) phaseDegrees += 360;
+
+        Log.d("第一主成分复数信息 - " +
+                "实部: " + String.format("%.6f", dominantComplex.getReal()) +
+                ", 虚部: " + String.format("%.6f", dominantComplex.getImaginary()) +
+                ", 振幅: " + String.format("%.6f", amplitude) +
+                ", 相位: " + String.format("%.2f", phaseDegrees) + "°");
+
         double dominantPeriodInDataPoints = (double) n / dominantIndex;
         double dominantPeriodInDays = convertPeriodToDays(dominantPeriodInDataPoints, n);
 
-//        Log.d("第一主成分频率索引: " + dominantIndex +
-//                ", 周期(数据点): " + dominantPeriodInDataPoints +
-//                ", 周期(天): " + dominantPeriodInDays);
+        Log.d("第一主成分频率索引: " + dominantIndex +
+                ", 周期(数据点): " + dominantPeriodInDataPoints +
+                ", 周期(天): " + dominantPeriodInDays);
 
         // 创建只包含第一主成分的频谱
         Complex[] singleComponentSpectrum = createSingleComponentSpectrum(fftResult, dominantIndex);
@@ -305,6 +324,19 @@ public class MACDAnalyzer {
             // 取实部作为重建值
             reconstructedData.add(reconstructedComplex[i].getReal());
         }
+
+        // 计算并存储极坐标信息
+        double lastPointValue = reconstructedData.isEmpty() ? 0.0 : reconstructedData.get(reconstructedData.size() - 1);
+        double frequency = 1.0 / dominantPeriodInDays;
+        mPolarComponent = new PolarComponent(amplitude, dominantPeriodInDays, frequency,
+                phase, phaseDegrees, dominantIndex, lastPointValue);
+
+        Log.d("第一主成分极坐标 - " +
+                "振幅: " + String.format("%.6f", amplitude) +
+                ", 周期: " + String.format("%.2f", dominantPeriodInDays) + "天" +
+                ", 频率: " + String.format("%.4f", frequency) + "/天" +
+                ", 相位: " + String.format("%.2f", phaseDegrees) + "°" +
+                ", 最后点: " + String.format("%.6f", lastPointValue));
 
         return reconstructedData;
     }
@@ -414,7 +446,8 @@ public class MACDAnalyzer {
         }
 
         // 按振幅降序排序
-        spectrum.sort((a, b) -> Double.compare(b.amplitude, a.amplitude));
+//        spectrum.sort((a, b) -> Double.compare(b.amplitude, a.amplitude));
+        Collections.sort(spectrum, (a, b) -> Double.compare(b.amplitude, a.amplitude));
 
         return spectrum;
     }
@@ -498,6 +531,36 @@ public class MACDAnalyzer {
         PeriodAmplitude(double period, double amplitude) {
             this.period = period;
             this.amplitude = amplitude;
+        }
+    }
+
+    /**
+     * 内部类：用于存储极坐标表示的周期信息
+     */
+    private static class PolarComponent {
+        double amplitude;    // 振幅
+        double period;       // 周期（天）
+        double frequency;    // 频率（1/天）
+        double phase;        // 相位角（弧度）
+        double phaseDegrees; // 相位角（度）
+        int frequencyIndex;  // 频率索引
+        double lastPointValue; // 最后一个点的数值
+
+        PolarComponent(double amplitude, double period, double frequency,
+                       double phase, double phaseDegrees, int frequencyIndex, double lastPointValue) {
+            this.amplitude = amplitude;
+            this.period = period;
+            this.frequency = frequency;
+            this.phase = phase;
+            this.phaseDegrees = phaseDegrees;
+            this.frequencyIndex = frequencyIndex;
+            this.lastPointValue = lastPointValue;
+        }
+
+        @Override
+        public String toString() {
+            return String.format("振幅: %.4f, 周期: %.2f天, 频率: %.4f/天, 相位: %.2f°(%.2frad), 索引: %d, 最后点: %.4f",
+                    amplitude, period, frequency, phaseDegrees, phase, frequencyIndex, lastPointValue);
         }
     }
 }
