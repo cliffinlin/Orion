@@ -107,7 +107,8 @@ public class Stock extends DatabaseTable {
 	private double mBuyProfit;
 	private double mSellProfit;
 	private double mExpect;
-	private byte[] mThumbnail;
+	private byte[] mTrendThumbnail;
+	private byte[] mComponentThumbnail;
 
 	public Stock() {
 		init();
@@ -248,7 +249,8 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_BUY_PROFIT, mBuyProfit);
 		contentValues.put(DatabaseContract.COLUMN_SELL_PROFIT, mSellProfit);
 		contentValues.put(DatabaseContract.COLUMN_EXPECT, mExpect);
-		contentValues.put(DatabaseContract.COLUMN_THUMBNAIL, mThumbnail);
+		contentValues.put(DatabaseContract.COLUMN_TREND_THUMBNAIL, mTrendThumbnail);
+		contentValues.put(DatabaseContract.COLUMN_COMPONENT_THUMBNAIL, mComponentThumbnail);
 		return contentValues;
 	}
 
@@ -356,7 +358,8 @@ public class Stock extends DatabaseTable {
 		setBuyProfit(stock.mBuyProfit);
 		setSellProfit(stock.mSellProfit);
 		setExpect(stock.mExpect);
-		setThumbnail(stock.mThumbnail);
+		setTrendThumbnail(stock.mTrendThumbnail);
+		setComponentThumbnail(stock.mComponentThumbnail);
 	}
 
 	@Override
@@ -426,7 +429,8 @@ public class Stock extends DatabaseTable {
 		setBuyProfit(cursor);
 		setSellProfit(cursor);
 		setExpect(cursor);
-		setThumbnail(cursor);
+		setTrendThumbnail(cursor);
+		setComponentThumbnail(cursor);
 	}
 
 	public String getClasses() {
@@ -1255,20 +1259,36 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_EXPECT)));
 	}
 
-	public byte[] getThumbnail() {
-		return mThumbnail;
+	public byte[] getTrendThumbnail() {
+		return mTrendThumbnail;
 	}
 
-	public void setThumbnail(byte[] thumbnail) {
-		mThumbnail = thumbnail;
+	public void setTrendThumbnail(byte[] trendThumbnail) {
+		mTrendThumbnail = trendThumbnail;
 	}
 
-	public void setThumbnail(Cursor cursor) {
+	public void setTrendThumbnail(Cursor cursor) {
 		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
-		setThumbnail(cursor.getBlob(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_THUMBNAIL)));
+		setTrendThumbnail(cursor.getBlob(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_TREND_THUMBNAIL)));
+	}
+
+	public byte[] getComponentThumbnail() {
+		return mComponentThumbnail;
+	}
+
+	public void setComponentThumbnail(byte[] componentThumbnail) {
+		mComponentThumbnail = componentThumbnail;
+	}
+
+	public void setComponentThumbnail(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+		setComponentThumbnail(cursor.getBlob(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_COMPONENT_THUMBNAIL)));
 	}
 
 	public byte[] getThumbnail(String period) {
@@ -1310,10 +1330,10 @@ public class Stock extends DatabaseTable {
 	}
 
 	public StockTrend getStockTrend(String period, int level) {
-		StockTrend stockTrend = null;
 		String key = period + Symbol.L + level;
-		if (mStockTrendMap.containsKey(key)) {
-			stockTrend = mStockTrendMap.get(key);
+		StockTrend stockTrend = mStockTrendMap.get(key);
+		if (stockTrend == null) {
+			stockTrend = new StockTrend();
 		}
 		return stockTrend;
 	}

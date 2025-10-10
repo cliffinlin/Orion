@@ -100,7 +100,7 @@ public class StockFavoriteListActivity extends ListActivity implements
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_NET, R.id.net);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_BUY_PROFIT, R.id.trade);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_SELL_PROFIT, R.id.trade);
-        mColumnToViewIdMap.put(DatabaseContract.COLUMN_THUMBNAIL, R.id.trend);
+        mColumnToViewIdMap.put(DatabaseContract.COLUMN_TREND_THUMBNAIL, R.id.trend);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_EXPECT, R.id.expect);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_YEAR_THUMBNAIL, R.id.period_year);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_MONTH6_THUMBNAIL, R.id.period_month6);
@@ -299,7 +299,7 @@ public class StockFavoriteListActivity extends ListActivity implements
         String[] rightFrom = {
                 DatabaseContract.COLUMN_PRICE, DatabaseContract.COLUMN_NET,
                 DatabaseContract.COLUMN_BUY_PROFIT, DatabaseContract.COLUMN_SELL_PROFIT,
-                DatabaseContract.COLUMN_THUMBNAIL, DatabaseContract.COLUMN_EXPECT,
+                DatabaseContract.COLUMN_TREND_THUMBNAIL, DatabaseContract.COLUMN_EXPECT,
                 DatabaseContract.COLUMN_YEAR_THUMBNAIL, DatabaseContract.COLUMN_MONTH6_THUMBNAIL,
                 DatabaseContract.COLUMN_QUARTER_THUMBNAIL, DatabaseContract.COLUMN_MONTH2_THUMBNAIL,
                 DatabaseContract.COLUMN_MONTH_THUMBNAIL, DatabaseContract.COLUMN_WEEK_THUMBNAIL,
@@ -484,7 +484,7 @@ public class StockFavoriteListActivity extends ListActivity implements
                 return false;
             }
 
-            if (DatabaseContract.isPeriodThumbnailColumn(columnName) || DatabaseContract.COLUMN_THUMBNAIL.equals(columnName)) {
+            if (DatabaseContract.isPeriodThumbnailColumn(columnName) || DatabaseContract.COLUMN_TREND_THUMBNAIL.equals(columnName)) {
                 if (DatabaseContract.isPeriodThumbnailColumn(columnName)) {
                     String period = Period.fromColumnName(columnName);
                     if (Setting.getPeriod(period)) {

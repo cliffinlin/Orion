@@ -877,7 +877,7 @@ public class TrendAnalyzer {
 			backgroundColor = Config.COLOR_BACKGROUND_MANUAL;
 		}
 
-		mStock.setThumbnail(Utility.thumbnailToBytes(
+		mStock.setTrendThumbnail(Utility.thumbnailToBytes(
 				new CurveThumbnail(TREND_RANK_THUMBNAIL_WIDTH, TREND_RANK_THUMBNAIL_HEIGHT,
 						backgroundColor, mLineConfigList, null)));
 	}
