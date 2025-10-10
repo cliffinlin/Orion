@@ -490,6 +490,9 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 
 					BarEntry histogramBarEntry = new BarEntry((float) mStockData.getMacd().getHistogram(), index);
 					stockDataChart.mHistogramEntryList.add(histogramBarEntry);
+
+					Entry componentEntry = new Entry((float) mStockData.getMacd().getComponent(), index);
+					stockDataChart.mComponentEntryList.add(componentEntry);
 				}
 			}
 

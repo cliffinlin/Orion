@@ -128,18 +128,19 @@ public class StockData extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_TIME, mTime);
 		contentValues.put(DatabaseContract.COLUMN_TEXT, mText);
 
-		contentValues.put(DatabaseContract.COLUMN_OPEN, mCandle.getOpen());
-		contentValues.put(DatabaseContract.COLUMN_HIGH, mCandle.getHigh());
-		contentValues.put(DatabaseContract.COLUMN_LOW, mCandle.getLow());
-		contentValues.put(DatabaseContract.COLUMN_CLOSE, mCandle.getClose());
+		contentValues.put(DatabaseContract.COLUMN_OPEN, mCandle.getOpen());//TODO
+		contentValues.put(DatabaseContract.COLUMN_HIGH, mCandle.getHigh());//TODO
+		contentValues.put(DatabaseContract.COLUMN_LOW, mCandle.getLow());//TODO
+		contentValues.put(DatabaseContract.COLUMN_CLOSE, mCandle.getClose());//TODO
 		contentValues.put(DatabaseContract.COLUMN_CHANGE, mChange);
 		contentValues.put(DatabaseContract.COLUMN_NET, mNet);
 
-		contentValues.put(DatabaseContract.COLUMN_AVERAGE5, mMacd.getAverage5());
-		contentValues.put(DatabaseContract.COLUMN_AVERAGE10, mMacd.getAverage10());
-		contentValues.put(DatabaseContract.COLUMN_DIF, mMacd.getDIF());
-		contentValues.put(DatabaseContract.COLUMN_DEA, mMacd.getDEA());
-		contentValues.put(DatabaseContract.COLUMN_HISTOGRAM, mMacd.getHistogram());
+		contentValues.put(DatabaseContract.COLUMN_AVERAGE5, mMacd.getAverage5());//TODO
+		contentValues.put(DatabaseContract.COLUMN_AVERAGE10, mMacd.getAverage10());//TODO
+		contentValues.put(DatabaseContract.COLUMN_DIF, mMacd.getDIF());//TODO
+		contentValues.put(DatabaseContract.COLUMN_DEA, mMacd.getDEA());//TODO
+		contentValues.put(DatabaseContract.COLUMN_HISTOGRAM, mMacd.getHistogram());//TODO
+		contentValues.put(DatabaseContract.COLUMN_COMPONENT, mMacd.getComponent());//TODO
 
 		contentValues.put(DatabaseContract.COLUMN_DIRECTION, mDirection);
 		contentValues.put(DatabaseContract.COLUMN_VERTEX, mVertex);

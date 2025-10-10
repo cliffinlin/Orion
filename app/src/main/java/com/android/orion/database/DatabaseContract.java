@@ -139,6 +139,7 @@ public class DatabaseContract {
 	public static final String COLUMN_DIF = "dif";
 	public static final String COLUMN_DEA = "dea";
 	public static final String COLUMN_HISTOGRAM = "histogram";
+	public static final String COLUMN_COMPONENT = "component";
 	public static final String COLUMN_ACCOUNT = "account";
 
 	public static final String COLUMN_BUY_PROFIT = "buy_profit";
@@ -452,7 +453,7 @@ public class DatabaseContract {
 				COLUMN_PERIOD, COLUMN_DATE, COLUMN_TIME, COLUMN_TEXT,
 				COLUMN_OPEN, COLUMN_HIGH, COLUMN_LOW, COLUMN_CLOSE, COLUMN_CHANGE, COLUMN_NET,
 				COLUMN_DIRECTION, COLUMN_VERTEX,
-				COLUMN_AVERAGE5, COLUMN_AVERAGE10, COLUMN_DIF, COLUMN_DEA, COLUMN_HISTOGRAM,
+				COLUMN_AVERAGE5, COLUMN_AVERAGE10, COLUMN_DIF, COLUMN_DEA, COLUMN_HISTOGRAM, COLUMN_COMPONENT,
 				COLUMN_CREATED, COLUMN_MODIFIED};
 		static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
 				+ TABLE_NAME;
@@ -478,6 +479,7 @@ public class DatabaseContract {
 				+ COLUMN_DIF + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_DEA + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_HISTOGRAM + DOUBLE_TYPE + COMMA_SEP
+				+ COLUMN_COMPONENT + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_CREATED + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_MODIFIED + TEXT_TYPE + " )";
 		static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME

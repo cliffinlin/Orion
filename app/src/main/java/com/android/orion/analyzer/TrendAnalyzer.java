@@ -612,7 +612,7 @@ public class TrendAnalyzer {
 				mAllDataPointMap.put(point.period + Symbol.L + point.level, point);
 				clusterInfo.append("  ").append(point);
 			}
-			Log.d(clusterInfo.toString());
+//			Log.d(clusterInfo.toString());
 		}
 	}
 

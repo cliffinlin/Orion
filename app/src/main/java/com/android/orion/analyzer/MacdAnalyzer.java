@@ -31,6 +31,7 @@ public class MACDAnalyzer {
     private static final List<Double> mDEAList = new ArrayList<>();
     private static final List<Double> mDIFList = new ArrayList<>();
     private static final List<Double> mHistogramList = new ArrayList<>();
+    private static final List<Double> mComponentList = new ArrayList<>();
 
     static Logger Log = Logger.getLogger();
 
@@ -59,6 +60,10 @@ public class MACDAnalyzer {
 
     public static List<Double> getHistogramList() {
         return mHistogramList;
+    }
+
+    public static List<Double> getComponentList() {
+        return mComponentList;
     }
 
     public static void init(String period, ArrayList<StockData> stockDataList) {
@@ -117,6 +122,7 @@ public class MACDAnalyzer {
         mDEAList.clear();
         mDIFList.clear();
         mHistogramList.clear();
+        mComponentList.clear();
         for (int i = 0; i < stockDataList.size(); i++) {
             mPriceList.add(stockDataList.get(i).getCandle().getClose());
         }
@@ -162,6 +168,7 @@ public class MACDAnalyzer {
         mDEAList.clear();
         mDIFList.clear();
         mHistogramList.clear();
+        mComponentList.clear();
 
         EMA(mAverage5, mPriceList, mEMAAverage5List);
         EMA(mAverage10, mPriceList, mEMAAverage10List);
@@ -183,22 +190,18 @@ public class MACDAnalyzer {
     }
 
     /**
-     * 对MACD线进行傅立叶变换分析
+     * 对MACD线进行傅立叶变换分析并重建第一主成分
      */
     public static void analyzeMACDWithFourier() {
-        // 分析DIF线
-        List<PeriodAmplitude> difSpectrum = performFourierAnalysis(mDIFList, "DIF");
-        printDominantPeriods(difSpectrum, "DIF");
-
-        // 分析DEA线
-        List<PeriodAmplitude> deaSpectrum = performFourierAnalysis(mDEAList, "DEA");
-        printDominantPeriods(deaSpectrum, "DEA");
-
         List<PeriodAmplitude> histogramSpectrum = performFourierAnalysis(mHistogramList, "Histogram");
         printDominantPeriods(histogramSpectrum, "Histogram");
 
-        // 比较分析
-        compareSpectrums(difSpectrum, deaSpectrum);
+        // 重建第一主成分
+        List<Double> reconstructedData = reconstructFirstComponent(mHistogramList, histogramSpectrum);
+        mComponentList.clear();
+        mComponentList.addAll(reconstructedData);
+
+//        Log.d("傅立叶重建完成，重建数据点数: " + reconstructedData.size());
     }
 
     /**
@@ -242,9 +245,147 @@ public class MACDAnalyzer {
         // 计算振幅和周期
         List<PeriodAmplitude> spectrum = calculateSpectrum(fftResult, n);
 
-        Log.d(lineName + "数据点: " + n + ", FFT大小: " + fftSize);
+//        Log.d(lineName + "数据点: " + n + ", FFT大小: " + fftSize);
 
         return spectrum;
+    }
+
+    /**
+     * 重建第一主成分（振幅最大的频率成分）
+     */
+    private static List<Double> reconstructFirstComponent(List<Double> originalData, List<PeriodAmplitude> spectrum) {
+        if (originalData == null || spectrum == null || spectrum.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        // 过滤掉NaN值
+        List<Double> cleanData = new ArrayList<>();
+        for (Double value : originalData) {
+            if (value != null && !value.isNaN()) {
+                cleanData.add(value);
+            }
+        }
+
+        if (cleanData.size() < 2) {
+            return new ArrayList<>();
+        }
+
+        int n = cleanData.size();
+        int fftSize = findNextPowerOfTwo(n);
+
+        // 准备FFT输入数据
+        double[] fftInput = new double[fftSize];
+        for (int i = 0; i < n; i++) {
+            fftInput[i] = cleanData.get(i);
+        }
+
+        // 执行FFT
+        FastFourierTransformer fft = new FastFourierTransformer(DftNormalization.STANDARD);
+        Complex[] fftResult = fft.transform(fftInput, TransformType.FORWARD);
+
+        // 直接从频谱中获取第一主成分对应的频率索引
+        int dominantIndex = findFrequencyIndexFromSpectrum(fftResult, n, spectrum.get(0));
+
+        double dominantPeriodInDataPoints = (double) n / dominantIndex;
+        double dominantPeriodInDays = convertPeriodToDays(dominantPeriodInDataPoints, n);
+
+//        Log.d("第一主成分频率索引: " + dominantIndex +
+//                ", 周期(数据点): " + dominantPeriodInDataPoints +
+//                ", 周期(天): " + dominantPeriodInDays);
+
+        // 创建只包含第一主成分的频谱
+        Complex[] singleComponentSpectrum = createSingleComponentSpectrum(fftResult, dominantIndex);
+
+        // 执行逆傅立叶变换
+        Complex[] reconstructedComplex = fft.transform(singleComponentSpectrum, TransformType.INVERSE);
+
+        // 转换为实数列表
+        List<Double> reconstructedData = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            // 取实部作为重建值
+            reconstructedData.add(reconstructedComplex[i].getReal());
+        }
+
+        return reconstructedData;
+    }
+
+    /**
+     * 根据频谱中的周期信息找到对应的频率索引
+     */
+    private static int findFrequencyIndexFromSpectrum(Complex[] fftResult, int dataLength, PeriodAmplitude dominantPeriod) {
+        // 将天数转换回数据点数量
+        double targetPeriodInDataPoints = convertDaysToDataPoints(dominantPeriod.period, dataLength);
+
+        // 计算对应的频率索引
+        int dominantIndex = (int) Math.round(dataLength / targetPeriodInDataPoints);
+
+        // 确保索引在有效范围内
+        int halfLength = fftResult.length / 2;
+        if (dominantIndex < 1) dominantIndex = 1;
+        if (dominantIndex >= halfLength) dominantIndex = halfLength - 1;
+
+//        Log.d("根据周期 " + dominantPeriod.period + " 天找到频率索引: " + dominantIndex +
+//                ", 对应周期(数据点): " + (double)dataLength/dominantIndex);
+
+        return dominantIndex;
+    }
+
+    /**
+     * 将天数转换为数据点数量
+     */
+    private static double convertDaysToDataPoints(double days, int totalDataPoints) {
+        switch (mPeriod) {
+            case Period.YEAR:
+            case Period.MONTH6:
+            case Period.QUARTER:
+            case Period.MONTH2:
+            case Period.MONTH:
+            case Period.WEEK:
+            case Period.DAY:
+                return days;
+
+            case Period.MIN60:
+                return days * Constant.MIN60_PER_TRADE_DAY;
+
+            case Period.MIN30:
+                return days * Constant.MIN30_PER_TRADE_DAY;
+
+            case Period.MIN15:
+                return days * Constant.MIN15_PER_TRADE_DAY;
+
+            case Period.MIN5:
+                return days * Constant.MIN5_PER_TRADE_DAY;
+
+            default:
+                return days;
+        }
+    }
+
+    /**
+     * 创建只包含单一频率成分的频谱
+     */
+    private static Complex[] createSingleComponentSpectrum(Complex[] originalSpectrum, int targetIndex) {
+        int length = originalSpectrum.length;
+        Complex[] singleComponent = new Complex[length];
+
+        // 初始化所有频率成分为0
+        for (int i = 0; i < length; i++) {
+            singleComponent[i] = Complex.ZERO;
+        }
+
+        // 保留直流分量（索引0）
+        singleComponent[0] = originalSpectrum[0];
+
+        // 设置目标频率成分（正频率）
+        singleComponent[targetIndex] = originalSpectrum[targetIndex];
+
+        // 设置对应的负频率成分（保持对称性）
+        int negativeIndex = length - targetIndex;
+        singleComponent[negativeIndex] = originalSpectrum[negativeIndex];
+
+//        Log.d("创建单一成分频谱: 目标索引=" + targetIndex + ", 负频率索引=" + negativeIndex);
+
+        return singleComponent;
     }
 
     /**
@@ -261,38 +402,14 @@ public class MACDAnalyzer {
 
         for (int k = 1; k < halfLength; k++) { // 从1开始，跳过直流分量(k=0)
             double amplitude = fftResult[k].abs() / dataLength * 2; // 计算振幅
-            double period = (double) dataLength / k; // 计算周期（天数）
+            double periodInDataPoints = (double) dataLength / k; // 计算周期（数据点数量）
 
-            if (period > 1 && period <= dataLength / 2) { // 过滤无效周期
-                double days = 0;
-                switch (mPeriod) {
-                    case Period.YEAR:
-                    case Period.MONTH6:
-                    case Period.QUARTER:
-                    case Period.MONTH2:
-                    case Period.MONTH:
-                    case Period.WEEK:
-                        //TODO
-                        break;
-                    case Period.DAY:
-                        days = period;
-                        break;
-                    case Period.MIN60:
-                        days = period / Constant.MIN60_PER_TRADE_DAY;
-                        break;
-                    case Period.MIN30:
-                        days = period / Constant.MIN30_PER_TRADE_DAY;
-                        break;
-                    case Period.MIN15:
-                        days = period / Constant.MIN15_PER_TRADE_DAY;
-                        break;
-                    case Period.MIN5:
-                        days = period / Constant.MIN5_PER_TRADE_DAY;
-                        break;
-                    default:
-                        break;
+            if (periodInDataPoints > 1 && periodInDataPoints <= dataLength / 2) { // 过滤无效周期
+                double periodInDays = convertPeriodToDays(periodInDataPoints, dataLength);
+
+                if (periodInDays > 0.1 && periodInDays <= 365) { // 合理的周期范围：0.1天到1年
+                    spectrum.add(new PeriodAmplitude(periodInDays, amplitude));
                 }
-                spectrum.add(new PeriodAmplitude(days, amplitude));
             }
         }
 
@@ -303,100 +420,61 @@ public class MACDAnalyzer {
     }
 
     /**
+     * 将周期从数据点数量转换为天数
+     */
+    private static double convertPeriodToDays(double periodInDataPoints, int totalDataPoints) {
+        switch (mPeriod) {
+            case Period.YEAR:
+            case Period.MONTH6:
+            case Period.QUARTER:
+            case Period.MONTH2:
+            case Period.MONTH:
+            case Period.WEEK:
+                // 这些周期的数据点直接对应天数
+                return periodInDataPoints;
+
+            case Period.DAY:
+                // 日线：1个数据点 = 1天
+                return periodInDataPoints;
+
+            case Period.MIN60:
+                // 60分钟线：4个数据点 = 1天
+                return periodInDataPoints / Constant.MIN60_PER_TRADE_DAY;
+
+            case Period.MIN30:
+                // 30分钟线：8个数据点 = 1天
+                return periodInDataPoints / Constant.MIN30_PER_TRADE_DAY;
+
+            case Period.MIN15:
+                // 15分钟线：16个数据点 = 1天
+                return periodInDataPoints / Constant.MIN15_PER_TRADE_DAY;
+
+            case Period.MIN5:
+                // 5分钟线：48个数据点 = 1天
+                return periodInDataPoints / Constant.MIN5_PER_TRADE_DAY;
+
+            default:
+                return periodInDataPoints;
+        }
+    }
+
+    /**
      * 打印主要周期
      */
     private static void printDominantPeriods(List<PeriodAmplitude> spectrum, String lineName) {
         if (spectrum == null) {
             return;
         }
+        Log.d("=== " + lineName + " 主要周期 ===");
         Log.d("排名 | 周期(天) | 振幅强度");
         Log.d("----|----------|----------");
 
         int count = Math.min(10, spectrum.size()); // 显示前10个主要周期
         for (int i = 0; i < count; i++) {
             PeriodAmplitude pa = spectrum.get(i);
-            Log.d(String.format("%2d  | %8.2f | %8.4f\n",
+            Log.d(String.format("%2d  | %8.2f | %8.4f",
                     i + 1, pa.period, pa.amplitude));
         }
-    }
-
-    /**
-     * 比较DIF和DEA的频谱
-     */
-    private static void compareSpectrums(List<PeriodAmplitude> difSpectrum,
-                                         List<PeriodAmplitude> deaSpectrum) {
-        if (difSpectrum == null || difSpectrum.isEmpty() || deaSpectrum == null || deaSpectrum.isEmpty()) {
-            Log.d("数据不足，无法比较");
-            return;
-        }
-
-        // 获取各自的前5个主要周期
-        List<Double> difTopPeriods = getTopPeriods(difSpectrum, 5);
-        List<Double> deaTopPeriods = getTopPeriods(deaSpectrum, 5);
-
-        Log.d("DIF线主要周期: " + difTopPeriods);
-        Log.d("DEA线主要周期: " + deaTopPeriods);
-
-        double difAvgPeriod = calculateAveragePeriod(difTopPeriods);
-        double deaAvgPeriod = calculateAveragePeriod(deaTopPeriods);
-
-        Log.d(String.format("DIF平均周期: %.2f 天\n", difAvgPeriod));
-        Log.d(String.format("DEA平均周期: %.2f 天\n", deaAvgPeriod));
-
-        // 寻找共同的主要周期
-        List<Double> commonPeriods = findCommonPeriods(difTopPeriods, deaTopPeriods, 3.0);
-        if (!commonPeriods.isEmpty()) {
-            Log.d("共同主要周期: " + commonPeriods);
-        }
-    }
-
-    /**
-     * 工具方法：获取前N个主要周期
-     */
-    private static List<Double> getTopPeriods(List<PeriodAmplitude> spectrum, int n) {
-        List<Double> periods = new ArrayList<>();
-        if (spectrum == null) {
-            return periods;
-        }
-        int count = Math.min(n, spectrum.size());
-        for (int i = 0; i < count; i++) {
-            periods.add(spectrum.get(i).period);
-        }
-        return periods;
-    }
-
-    /**
-     * 计算平均周期
-     */
-    private static double calculateAveragePeriod(List<Double> periods) {
-        if (periods == null || periods.isEmpty()) {
-            return 0.0;
-        }
-        double sum = 0;
-        for (Double period : periods) {
-            sum += period;
-        }
-        return sum / periods.size();
-    }
-
-    /**
-     * 寻找共同的周期（考虑误差）
-     */
-    private static List<Double> findCommonPeriods(List<Double> periods1,
-                                                  List<Double> periods2,
-                                                  double tolerance) {
-        List<Double> common = new ArrayList<>();
-        if (periods1 == null || periods2 == null) {
-            return common;
-        }
-        for (Double p1 : periods1) {
-            for (Double p2 : periods2) {
-                if (Math.abs(p1 - p2) <= tolerance) {
-                    common.add((p1 + p2) / 2);
-                }
-            }
-        }
-        return common;
     }
 
     /**
