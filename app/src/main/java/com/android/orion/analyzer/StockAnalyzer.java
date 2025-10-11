@@ -114,6 +114,7 @@ public class StockAnalyzer {
 		List<Double> deaList = MACDAnalyzer.getDEAList();
 		List<Double> histogramList = MACDAnalyzer.getHistogramList();
 		List<Double> componentList = MACDAnalyzer.getComponentList();
+		mStock.setPolarComponent(period, MACDAnalyzer.getPolarComponent());
 
 		int size = mStockDataList.size();
 		if (average5List.size() != size || average10List.size() != size || difList.size() != size || deaList.size() != size || histogramList.size() != size) {

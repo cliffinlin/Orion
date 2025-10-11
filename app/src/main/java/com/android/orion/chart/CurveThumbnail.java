@@ -18,9 +18,11 @@ public class CurveThumbnail extends Drawable {
 	private final int height;
 	private final int backgroundColor;
 	private final List<LineConfig> lines;
+	private final List<ScatterConfig> scatterPoints; // 改为ScatterConfig列表
 	private final CrossMarkerConfig markerConfig;
 	private final Paint bgPaint;
 	private final List<DrawnLine> drawnLines;
+	private final List<DrawnScatterPoint> drawnScatterPoints;
 	private final DrawnMarker drawnMarker;
 
 	// 保持原有构造函数兼容性
@@ -32,19 +34,34 @@ public class CurveThumbnail extends Drawable {
 	// 新的构造函数，支持分别设置宽度和高度
 	public CurveThumbnail(int width, int height, int backgroundColor,
 						  List<LineConfig> lines, CrossMarkerConfig markerConfig) {
+		this(width, height, backgroundColor, lines, null, markerConfig);
+	}
+
+	// 新增构造函数，支持散点配置
+	public CurveThumbnail(int width, int height, int backgroundColor,
+						  List<LineConfig> lines, List<ScatterConfig> scatterPoints,
+						  CrossMarkerConfig markerConfig) {
 		this.width = width;
 		this.height = height;
 		this.backgroundColor = backgroundColor;
-		this.lines = lines;
+		this.lines = lines != null ? lines : new ArrayList<LineConfig>();
+		this.scatterPoints = scatterPoints != null ? scatterPoints : new ArrayList<ScatterConfig>();
 		this.markerConfig = markerConfig;
 
 		bgPaint = new Paint();
 		bgPaint.setColor(backgroundColor);
 		bgPaint.setStyle(Paint.Style.FILL);
 
-		DataRange range = calculateDataRange();
-		this.drawnLines = buildAllLines(range);
-		this.drawnMarker = buildMarker(range);
+		// 分别计算折线和散点的数据范围
+		DataRange lineRange = calculateLineDataRange();
+		DataRange scatterRange = calculateScatterDataRange();
+
+		// 合并数据范围
+		DataRange combinedRange = combineDataRanges(lineRange, scatterRange);
+
+		this.drawnLines = buildAllLines(combinedRange);
+		this.drawnScatterPoints = buildAllScatterPoints(combinedRange);
+		this.drawnMarker = buildMarker(combinedRange);
 	}
 
 	private List<DrawnLine> buildAllLines(DataRange range) {
@@ -55,6 +72,32 @@ public class CurveThumbnail extends Drawable {
 			result.add(new DrawnLine(path, paint));
 		}
 		return result;
+	}
+
+	// 构建所有散点
+	private List<DrawnScatterPoint> buildAllScatterPoints(DataRange range) {
+		List<DrawnScatterPoint> result = new ArrayList<>();
+		for (ScatterConfig scatterConfig : scatterPoints) {
+			DrawnScatterPoint point = buildScatterPoint(scatterConfig, range);
+			result.add(point);
+		}
+		return result;
+	}
+
+	// 构建单个散点
+	private DrawnScatterPoint buildScatterPoint(ScatterConfig scatterConfig, DataRange range) {
+		float x = preciseMapToX(scatterConfig.xValue, range.minX, range.maxX);
+		float y = preciseMapToY(scatterConfig.yValue, range.minY, range.maxY);
+		Paint paint = createScatterPaint(scatterConfig.color);
+		return new DrawnScatterPoint(x, y, paint, scatterConfig.radius);
+	}
+
+	// 创建散点画笔
+	private Paint createScatterPaint(int color) {
+		Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+		paint.setStyle(Paint.Style.FILL);
+		paint.setColor(color);
+		return paint;
 	}
 
 	private DrawnMarker buildMarker(DataRange range) {
@@ -81,7 +124,12 @@ public class CurveThumbnail extends Drawable {
 		return paint;
 	}
 
-	private DataRange calculateDataRange() {
+	// 计算折线的数据范围
+	private DataRange calculateLineDataRange() {
+		if (lines.isEmpty()) {
+			return new DataRange(0, 1, 0, 1); // 默认范围
+		}
+
 		float minX = Float.MAX_VALUE;
 		float maxX = Float.MIN_VALUE;
 		float minY = Float.MAX_VALUE;
@@ -98,17 +146,11 @@ public class CurveThumbnail extends Drawable {
 			}
 		}
 
-		if (markerConfig != null) {
-			minX = Math.min(minX, markerConfig.xValue);
-			maxX = Math.max(maxX, markerConfig.xValue) + markerConfig.size / 2f;
-			minY = Math.min(minY, markerConfig.yValue);
-			maxY = Math.max(maxY, markerConfig.yValue);
-		}
-
 		if (minX == maxX) maxX = minX + 1;
+		if (minY == maxY) maxY = minY + 1;
 
 		float xMargin = (maxX - minX) * 0.05f;
-		float yMargin = (maxY == minY) ? 1.0f : (maxY - minY) * 0.05f;
+		float yMargin = (maxY - minY) * 0.05f;
 
 		return new DataRange(
 				minX - xMargin,
@@ -116,6 +158,56 @@ public class CurveThumbnail extends Drawable {
 				minY - yMargin,
 				maxY + yMargin
 		);
+	}
+
+	// 计算散点的数据范围
+	private DataRange calculateScatterDataRange() {
+		if (scatterPoints.isEmpty()) {
+			return null; // 没有散点数据
+		}
+
+		float minX = Float.MAX_VALUE;
+		float maxX = Float.MIN_VALUE;
+		float minY = Float.MAX_VALUE;
+		float maxY = Float.MIN_VALUE;
+
+		for (ScatterConfig scatter : scatterPoints) {
+			minX = Math.min(minX, scatter.xValue);
+			maxX = Math.max(maxX, scatter.xValue);
+			minY = Math.min(minY, scatter.yValue);
+			maxY = Math.max(maxY, scatter.yValue);
+		}
+
+		if (minX == maxX) maxX = minX + 1;
+		if (minY == maxY) maxY = minY + 1;
+
+		float xMargin = (maxX - minX) * 0.05f;
+		float yMargin = (maxY - minY) * 0.05f;
+
+		return new DataRange(
+				minX - xMargin,
+				maxX + xMargin,
+				minY - yMargin,
+				maxY + yMargin
+		);
+	}
+
+	// 合并数据范围
+	private DataRange combineDataRanges(DataRange lineRange, DataRange scatterRange) {
+		if (scatterRange == null) {
+			return lineRange; // 只有折线数据
+		}
+		if (lines.isEmpty()) {
+			return scatterRange; // 只有散点数据
+		}
+
+		// 合并折线和散点的数据范围
+		float minX = Math.min(lineRange.minX, scatterRange.minX);
+		float maxX = Math.max(lineRange.maxX, scatterRange.maxX);
+		float minY = Math.min(lineRange.minY, scatterRange.minY);
+		float maxY = Math.max(lineRange.maxY, scatterRange.maxY);
+
+		return new DataRange(minX, maxX, minY, maxY);
 	}
 
 	private Path buildPath(List<Float> xValues, List<Float> yValues, DataRange range) {
@@ -172,10 +264,17 @@ public class CurveThumbnail extends Drawable {
 			canvas.scale(scaleX, scaleY);
 		}
 
+		// 先绘制折线
 		for (DrawnLine line : drawnLines) {
 			canvas.drawPath(line.path, line.paint);
 		}
 
+		// 然后绘制散点（在折线之上）
+		for (DrawnScatterPoint point : drawnScatterPoints) {
+			canvas.drawCircle(point.x, point.y, point.radius, point.paint);
+		}
+
+		// 最后绘制十字标记（在最上层）
 		if (drawnMarker != null) {
 			// 确保完全对称的十字标记
 			float left = Math.round((drawnMarker.centerX - drawnMarker.halfSize) * 100) / 100f;
@@ -199,6 +298,9 @@ public class CurveThumbnail extends Drawable {
 		for (DrawnLine line : drawnLines) {
 			line.paint.setAlpha(alpha);
 		}
+		for (DrawnScatterPoint point : drawnScatterPoints) {
+			point.paint.setAlpha(alpha);
+		}
 		if (drawnMarker != null) {
 			drawnMarker.paint.setAlpha(alpha);
 		}
@@ -209,6 +311,9 @@ public class CurveThumbnail extends Drawable {
 		bgPaint.setColorFilter(colorFilter);
 		for (DrawnLine line : drawnLines) {
 			line.paint.setColorFilter(colorFilter);
+		}
+		for (DrawnScatterPoint point : drawnScatterPoints) {
+			point.paint.setColorFilter(colorFilter);
 		}
 		if (drawnMarker != null) {
 			drawnMarker.paint.setColorFilter(colorFilter);
@@ -249,6 +354,21 @@ public class CurveThumbnail extends Drawable {
 		}
 	}
 
+	// 散点配置类
+	public static class ScatterConfig {
+		public final float xValue;
+		public final float yValue;
+		public final int color;
+		public final float radius;
+
+		public ScatterConfig(float xValue, float yValue, int color, float radius) {
+			this.xValue = xValue;
+			this.yValue = yValue;
+			this.color = color;
+			this.radius = radius;
+		}
+	}
+
 	// 十字标记配置类
 	public static class CrossMarkerConfig {
 		public final float xValue;
@@ -274,6 +394,21 @@ public class CurveThumbnail extends Drawable {
 		DrawnLine(Path path, Paint paint) {
 			this.path = path;
 			this.paint = paint;
+		}
+	}
+
+	// 散点类
+	private static class DrawnScatterPoint {
+		final float x;
+		final float y;
+		final Paint paint;
+		final float radius;
+
+		DrawnScatterPoint(float x, float y, Paint paint, float radius) {
+			this.x = x;
+			this.y = y;
+			this.paint = paint;
+			this.radius = radius;
 		}
 	}
 

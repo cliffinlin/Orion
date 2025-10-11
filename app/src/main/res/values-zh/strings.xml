@@ -25,6 +25,7 @@
     <string name="cancel">Cancel</string>
     <string name="candle">Candle</string>
     <string name="cash_flow_per_share">CPS</string>
+    <string name="component">Comp</string>
     <string name="cost">Cost</string>
     <string name="created">Created</string>
     <string name="date">Date</string>

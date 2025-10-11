@@ -38,6 +38,15 @@ public class Config {
 
 	public static final int SEND_MESSAGE_DELAY_DOWNLOAD = 100;
 
+	public static final int THUMBNAIL_SIZE = 160;
+	public static final int THUMBNAIL_WIDTH = THUMBNAIL_SIZE;
+	public static final int THUMBNAIL_HEIGHT = THUMBNAIL_SIZE;
+	public static final int THUMBNAIL_STROKE_WIDTH = 1;
+	public static final int THUMBNAIL_STROKE_COLOR = Color.GRAY;
+	public static final int THUMBNAIL_MARKER_SIZE = 20;
+	public static final int THUMBNAIL_MARKER_STROKE_WIDTH = 5;
+	public static final int THUMBNAIL_SCATTER_SIZE = 10;
+
 	public static String stockDataProvider = SinaFinance.PROVIDER_NAME;
 
 	public static long alarmInterval = Constant.MINUTE_IN_MILLIS;

@@ -102,6 +102,7 @@ public class StockFavoriteListActivity extends ListActivity implements
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_SELL_PROFIT, R.id.trade);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_TREND_THUMBNAIL, R.id.trend);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_EXPECT, R.id.expect);
+        mColumnToViewIdMap.put(DatabaseContract.COLUMN_COMPONENT_THUMBNAIL, R.id.component);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_YEAR_THUMBNAIL, R.id.period_year);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_MONTH6_THUMBNAIL, R.id.period_month6);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_QUARTER_THUMBNAIL, R.id.period_quarter);
@@ -127,7 +128,7 @@ public class StockFavoriteListActivity extends ListActivity implements
         }
 
         int[] headerViewIds = {
-                R.id.stock_name_code, R.id.price, R.id.net, R.id.trade, R.id.trend, R.id.expect,
+                R.id.stock_name_code, R.id.price, R.id.net, R.id.trade, R.id.trend, R.id.expect, R.id.component,
                 R.id.period_year, R.id.period_month6, R.id.period_quarter, R.id.period_month2, R.id.period_month, R.id.period_week,
                 R.id.period_day, R.id.period_min60, R.id.period_min30, R.id.period_min15, R.id.period_min5,
                 R.id.flag, R.id.modified
@@ -297,30 +298,55 @@ public class StockFavoriteListActivity extends ListActivity implements
 
     private void setupRightListView() {
         String[] rightFrom = {
-                DatabaseContract.COLUMN_PRICE, DatabaseContract.COLUMN_NET,
-                DatabaseContract.COLUMN_BUY_PROFIT, DatabaseContract.COLUMN_SELL_PROFIT,
-                DatabaseContract.COLUMN_TREND_THUMBNAIL, DatabaseContract.COLUMN_EXPECT,
-                DatabaseContract.COLUMN_YEAR_THUMBNAIL, DatabaseContract.COLUMN_MONTH6_THUMBNAIL,
-                DatabaseContract.COLUMN_QUARTER_THUMBNAIL, DatabaseContract.COLUMN_MONTH2_THUMBNAIL,
-                DatabaseContract.COLUMN_MONTH_THUMBNAIL, DatabaseContract.COLUMN_WEEK_THUMBNAIL,
-                DatabaseContract.COLUMN_DAY_THUMBNAIL, DatabaseContract.COLUMN_MIN60_THUMBNAIL,
-                DatabaseContract.COLUMN_MIN30_THUMBNAIL, DatabaseContract.COLUMN_MIN15_THUMBNAIL,
-                DatabaseContract.COLUMN_MIN5_THUMBNAIL, DatabaseContract.COLUMN_FLAG,
-                DatabaseContract.COLUMN_MODIFIED
+                DatabaseContract.COLUMN_PRICE,
+                DatabaseContract.COLUMN_NET,
+                DatabaseContract.COLUMN_BUY_PROFIT,
+                DatabaseContract.COLUMN_SELL_PROFIT,
+                DatabaseContract.COLUMN_TREND_THUMBNAIL,
+                DatabaseContract.COLUMN_EXPECT,
+                DatabaseContract.COLUMN_COMPONENT_THUMBNAIL,  
+                DatabaseContract.COLUMN_YEAR_THUMBNAIL,       
+                DatabaseContract.COLUMN_MONTH6_THUMBNAIL,     
+                DatabaseContract.COLUMN_QUARTER_THUMBNAIL,    
+                DatabaseContract.COLUMN_MONTH2_THUMBNAIL,     
+                DatabaseContract.COLUMN_MONTH_THUMBNAIL,      
+                DatabaseContract.COLUMN_WEEK_THUMBNAIL,       
+                DatabaseContract.COLUMN_DAY_THUMBNAIL,        
+                DatabaseContract.COLUMN_MIN60_THUMBNAIL,      
+                DatabaseContract.COLUMN_MIN30_THUMBNAIL,      
+                DatabaseContract.COLUMN_MIN15_THUMBNAIL,      
+                DatabaseContract.COLUMN_MIN5_THUMBNAIL,       
+                DatabaseContract.COLUMN_FLAG,                 
+                DatabaseContract.COLUMN_MODIFIED              
         };
-        
+
         int[] rightTo = {
-                R.id.price, R.id.net, R.id.buy_profit, R.id.sell_profit,
-                R.id.trend, R.id.expect, R.id.year, R.id.month6,
-                R.id.quarter, R.id.month2, R.id.month, R.id.week,
-                R.id.day, R.id.min60, R.id.min30, R.id.min15,
-                R.id.min5, R.id.flag, R.id.modified
+                R.id.price,
+                R.id.net,
+                R.id.buy_profit,
+                R.id.sell_profit,
+                R.id.trend,           
+                R.id.expect,
+                R.id.component,       
+                R.id.year,            
+                R.id.month6,          
+                R.id.quarter,         
+                R.id.month2,          
+                R.id.month,           
+                R.id.week,            
+                R.id.day,             
+                R.id.min60,           
+                R.id.min30,           
+                R.id.min15,           
+                R.id.min5,            
+                R.id.flag,            
+                R.id.modified         
         };
 
         mRightListView = findViewById(R.id.right_listview);
         mRightAdapter = new SimpleCursorAdapter(this,
                 R.layout.activity_stock_favorite_list_right_item, null, rightFrom, rightTo, 0);
-        
+
         if (mRightListView != null) {
             mRightAdapter.setViewBinder(new RightViewBinder());
             mRightListView.setAdapter(mRightAdapter);
@@ -476,7 +502,7 @@ public class StockFavoriteListActivity extends ListActivity implements
         @Override
         public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
             if (view == null || cursor == null || columnIndex == -1) {
-                return false;
+                return true; // Return true to indicate we handled this binding
             }
 
             String columnName = cursor.getColumnName(columnIndex);
@@ -484,57 +510,111 @@ public class StockFavoriteListActivity extends ListActivity implements
                 return false;
             }
 
-            if (DatabaseContract.isPeriodThumbnailColumn(columnName) || DatabaseContract.COLUMN_TREND_THUMBNAIL.equals(columnName)) {
-                if (DatabaseContract.isPeriodThumbnailColumn(columnName)) {
-                    String period = Period.fromColumnName(columnName);
-                    if (Setting.getPeriod(period)) {
-                        view.setVisibility(View.VISIBLE);
-                    } else {
-                        view.setVisibility(View.GONE);
-                    }
-                } else {
-                    view.setVisibility(View.VISIBLE);
-                }
+            // Handle BLOB columns first
+            if (DatabaseContract.isPeriodThumbnailColumn(columnName) ||
+                    DatabaseContract.COLUMN_TREND_THUMBNAIL.equals(columnName) ||
+                    DatabaseContract.COLUMN_COMPONENT_THUMBNAIL.equals(columnName)) {
 
-                if (view instanceof ImageView) {
-                    try {
+                return handleBlobColumn(view, cursor, columnIndex, columnName);
+            }
+
+            // Handle other column types
+            return handleTextColumns(view, cursor, columnIndex, columnName);
+        }
+
+        private boolean handleBlobColumn(View view, Cursor cursor, int columnIndex, String columnName) {
+            // Set visibility based on settings for period thumbnails
+            if (DatabaseContract.isPeriodThumbnailColumn(columnName)) {
+                String period = Period.fromColumnName(columnName);
+                view.setVisibility(Setting.getPeriod(period) ? View.VISIBLE : View.GONE);
+            } else {
+                view.setVisibility(View.VISIBLE);
+            }
+
+            // Handle ImageView BLOB data
+            if (view instanceof ImageView) {
+                try {
+                    if (!cursor.isNull(columnIndex)) {
                         byte[] blobData = cursor.getBlob(columnIndex);
                         if (blobData != null && blobData.length > 0) {
                             ((ImageView) view).setImageDrawable(
                                     Utility.bytesToThumbnail(StockFavoriteListActivity.this, blobData)
                             );
+                        } else {
+                            ((ImageView) view).setImageDrawable(null);
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    } finally {
-                        return true;
+                    } else {
+                        ((ImageView) view).setImageDrawable(null);
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    ((ImageView) view).setImageDrawable(null);
                 }
+                return true; // We handled this binding
             }
 
-            if (view instanceof TextView) {
-                TextView textView = (TextView) view;
-                if (DatabaseContract.COLUMN_PRICE.equals(columnName)) {
-                } else if (DatabaseContract.COLUMN_NET.equals(columnName)) {
+            return true; // For non-ImageViews, we still handle it to prevent string conversion
+        }
+
+        private boolean handleTextColumns(View view, Cursor cursor, int columnIndex, String columnName) {
+            if (!(view instanceof TextView)) {
+                return false;
+            }
+
+            TextView textView = (TextView) view;
+
+            try {
+                if (cursor.isNull(columnIndex)) {
+                    textView.setText("");
+                    return true;
+                }
+
+                if (DatabaseContract.COLUMN_PRICE.equals(columnName) ||
+                        DatabaseContract.COLUMN_NET.equals(columnName) ||
+                        DatabaseContract.COLUMN_EXPECT.equals(columnName)) {
+                    // Handle numeric columns
+                    double value = cursor.getDouble(columnIndex);
+                    textView.setText(String.valueOf(value));
+
                 } else if (DatabaseContract.COLUMN_BUY_PROFIT.equals(columnName)) {
                     if (Utility.hasFlag(cursor.getInt(mColumnIndexFlag), Stock.FLAG_TRADE)) {
-                        textView.setTextColor(cursor.getDouble(mColumnIndexBuyProfit) > 0 ? Color.RED : Color.GRAY);
-                        return false;
+                        double profit = cursor.getDouble(columnIndex);
+                        textView.setText(String.valueOf(profit));
+                        textView.setTextColor(profit > 0 ? Color.RED : Color.GRAY);
                     } else {
                         textView.setText("");
-                        return true;
                     }
+                    return true;
+
                 } else if (DatabaseContract.COLUMN_SELL_PROFIT.equals(columnName)) {
                     if (Utility.hasFlag(cursor.getInt(mColumnIndexFlag), Stock.FLAG_TRADE)) {
-                        textView.setTextColor(cursor.getDouble(mColumnIndexSellProfit) < 0 ? Color.RED : Color.GRAY);
-                        return false;
+                        double profit = cursor.getDouble(columnIndex);
+                        textView.setText(String.valueOf(profit));
+                        textView.setTextColor(profit < 0 ? Color.RED : Color.GRAY);
                     } else {
                         textView.setText("");
-                        return true;
                     }
+                    return true;
+
+                } else if (DatabaseContract.COLUMN_FLAG.equals(columnName)) {
+                    // 不需要显示flag，直接设为空并隐藏
+                    textView.setText("");
+                    textView.setVisibility(View.GONE);
+                    return true;
+
+                } else if (DatabaseContract.COLUMN_MODIFIED.equals(columnName)) {
+                    textView.setText(cursor.getString(columnIndex));
+
+                } else {
+                    return false; // Let the adapter handle other columns
                 }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                textView.setText("");
             }
-            return false;
+
+            return true;
         }
     }
 }

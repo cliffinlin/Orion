@@ -52,6 +52,7 @@ public class Period {
 	public byte[] mThumbnail;
 	public int mLevel = StockTrend.LEVEL_NONE;
 	public String mTrend = "";
+	public PolarComponent mPolarComponent;
 
 	public ArrayList<ArrayList<StockData>> mVertexLists = new ArrayList<>();
 	public ArrayList<ArrayList<StockData>> mStockDataLists = new ArrayList<>();
@@ -165,6 +166,14 @@ public class Period {
 		}
 		setTrend(cursor.getString(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_PERIOD_TREND(mName))));
+	}
+
+	public PolarComponent getPolarComponent() {
+		return mPolarComponent;
+	}
+
+	public void setPolarComponent(PolarComponent polarComponent) {
+		mPolarComponent = polarComponent;
 	}
 
 	public static final String fromColumnName(String columnName) {

@@ -7,6 +7,7 @@ import android.util.ArrayMap;
 
 import com.android.orion.data.IRR;
 import com.android.orion.data.Period;
+import com.android.orion.data.PolarComponent;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Symbol;
@@ -1291,11 +1292,11 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_COMPONENT_THUMBNAIL)));
 	}
 
-	public byte[] getThumbnail(String period) {
+	public byte[] getPeriodThumbnail(String period) {
 		return getPeriod(period).getThumbnail();
 	}
 
-	public void setThumbnail(String period, byte[] thumbnail) {
+	public void setPeriodThumbnail(String period, byte[] thumbnail) {
 		getPeriod(period).setThumbnail(thumbnail);
 	}
 
@@ -1368,6 +1369,14 @@ public class Stock extends DatabaseTable {
 
 	public void setTrend(String period, String trend) {
 		getPeriod(period).setTrend(trend);
+	}
+
+	public PolarComponent getPolarComponent(String period) {
+		return getPeriod(period).getPolarComponent();
+	}
+
+	public void setPolarComponent(String period, PolarComponent polarComponent) {
+		getPeriod(period).setPolarComponent(polarComponent);
 	}
 
 	public void setupMarketValue() {
