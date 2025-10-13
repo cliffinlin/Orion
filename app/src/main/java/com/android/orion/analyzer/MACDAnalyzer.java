@@ -201,7 +201,7 @@ public class MACDAnalyzer {
      */
     public static void analyzeMACDWithFourier() {
         List<PeriodAmplitude> histogramSpectrum = performFourierAnalysis(mHistogramList, "Histogram");
-        printDominantPeriods(histogramSpectrum, "Histogram");
+//        printDominantPeriods(histogramSpectrum, "Histogram");
 
         // 重建第一主成分
         List<Double> reconstructedData = reconstructFirstComponent(mHistogramList, histogramSpectrum);
@@ -279,7 +279,7 @@ public class MACDAnalyzer {
 
         int n = cleanData.size();
 
-        // 执行FFT获取频率信息（但不用于重建）
+        // 执行FFT获取频率信息
         int fftSize = findNextPowerOfTwo(n);
         double[] fftInput = new double[fftSize];
         for (int i = 0; i < n; i++) {
@@ -302,11 +302,11 @@ public class MACDAnalyzer {
         double dominantPeriodInDataPoints = (double) n / dominantIndex;
         double dominantPeriodInDays = convertPeriodToDays(dominantPeriodInDataPoints, n);
 
-        Log.d("第一主成分信息 - " +
-                "频率索引: " + dominantIndex +
-                ", 周期: " + String.format("%.2f", dominantPeriodInDays) + "天" +
-                ", 振幅: " + String.format("%.6f", amplitude) +
-                ", 相位: " + String.format("%.2f", phaseDegrees) + "°");
+//        Log.d("第一主成分信息 - " +
+//                "频率索引: " + dominantIndex +
+//                ", 周期: " + String.format("%.2f", dominantPeriodInDays) + "天" +
+//                ", 振幅: " + String.format("%.6f", amplitude) +
+//                ", 相位: " + String.format("%.2f", phaseDegrees) + "°");
 
         // 使用手动重建信号（确保相位正确）
         List<Double> reconstructedData = manuallyReconstructSignal(amplitude, dominantPeriodInDataPoints, phase, n);
@@ -320,12 +320,12 @@ public class MACDAnalyzer {
         mPolarComponent = new PolarComponent(amplitude, dominantPeriodInDays, frequency,
                 phase, phaseDegrees, dominantIndex, lastPointValue);
 
-        Log.d("第一主成分极坐标 - " +
-                "振幅: " + String.format("%.6f", amplitude) +
-                ", 周期: " + String.format("%.2f", dominantPeriodInDays) + "天" +
-                ", 频率: " + String.format("%.4f", frequency) + "/天" +
-                ", 相位: " + String.format("%.2f", phaseDegrees) + "°" +
-                ", 最后点: " + String.format("%.6f", lastPointValue));
+//        Log.d("第一主成分极坐标 - " +
+//                "振幅: " + String.format("%.6f", amplitude) +
+//                ", 周期: " + String.format("%.2f", dominantPeriodInDays) + "天" +
+//                ", 频率: " + String.format("%.4f", frequency) + "/天" +
+//                ", 相位: " + String.format("%.2f", phaseDegrees) + "°" +
+//                ", 最后点: " + String.format("%.6f", lastPointValue));
 
         return reconstructedData;
     }
@@ -387,10 +387,10 @@ public class MACDAnalyzer {
 
         double phaseDifference = Math.abs(expectedPhaseDegrees - bestPhaseDegrees);
 
-        Log.d(methodName + "相位验证 - 期望相位: " + String.format("%.2f", expectedPhaseDegrees) +
-                "°, 实际相位: " + String.format("%.2f", bestPhaseDegrees) + "°" +
-                ", 相位差异: " + String.format("%.2f", phaseDifference) + "°" +
-                (phaseDifference < 1.0 ? " ✓" : " ✗"));
+//        Log.d(methodName + "相位验证 - 期望相位: " + String.format("%.2f", expectedPhaseDegrees) +
+//                "°, 实际相位: " + String.format("%.2f", bestPhaseDegrees) + "°" +
+//                ", 相位差异: " + String.format("%.2f", phaseDifference) + "°" +
+//                (phaseDifference < 1.0 ? " ✓" : " ✗"));
     }
 
     /**
@@ -443,39 +443,6 @@ public class MACDAnalyzer {
             default:
                 return days;
         }
-    }
-
-    /**
-     * 创建只包含单一频率成分的频谱（移除直流分量以避免基准偏移）
-     */
-    private static Complex[] createSingleComponentSpectrum(Complex[] originalSpectrum, int targetIndex) {
-        int length = originalSpectrum.length;
-        Complex[] singleComponent = new Complex[length];
-
-        // 初始化所有频率成分为0
-        for (int i = 0; i < length; i++) {
-            singleComponent[i] = Complex.ZERO;
-        }
-
-        // 不保留直流分量（索引0），设置为0以避免基准偏移
-        singleComponent[0] = Complex.ZERO;
-
-        // 设置目标频率成分（正频率）- 保持原始复数不变
-        singleComponent[targetIndex] = originalSpectrum[targetIndex];
-
-        // 设置对应的负频率成分（保持复数共轭对称性）
-        int negativeIndex = length - targetIndex;
-        if (negativeIndex < length) {
-            // 负频率应该是正频率的复数共轭
-            singleComponent[negativeIndex] = originalSpectrum[targetIndex].conjugate();
-        }
-
-        Log.d("创建单一成分频谱: 目标索引=" + targetIndex +
-                ", 负频率索引=" + negativeIndex +
-                ", 正频率相位=" + Math.toDegrees(originalSpectrum[targetIndex].getArgument()) + "°" +
-                ", 负频率相位=" + Math.toDegrees(singleComponent[negativeIndex].getArgument()) + "°");
-
-        return singleComponent;
     }
 
     /**

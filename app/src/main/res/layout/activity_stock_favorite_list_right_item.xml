@@ -50,7 +50,7 @@
 
     <ImageView
         android:id="@+id/trend"
-        android:layout_width="80dp"
+        android:layout_width="@dimen/action_layout_width"
         android:layout_height="50dp"
         android:layout_weight="1"
         android:scaleType="centerInside" />
@@ -65,7 +65,7 @@
 
     <ImageView
         android:id="@+id/component"
-        android:layout_width="80dp"
+        android:layout_width="@dimen/action_layout_width"
         android:layout_height="50dp"
         android:layout_weight="1"
         android:scaleType="centerInside" />
@@ -149,7 +149,7 @@
 
     <TextView
         android:id="@+id/flag"
-        android:layout_width="100dp"
+        android:layout_width="@dimen/action_layout_width"
         android:layout_height="50dp"
         android:layout_weight="1"
         android:gravity="center"

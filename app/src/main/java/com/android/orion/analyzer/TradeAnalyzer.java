@@ -50,6 +50,7 @@ public class TradeAnalyzer {
 				mBuyDeal = stockDeal;
 			} else if (TextUtils.equals(stockDeal.getType(), StockDeal.TYPE_SELL)) {
 				mSellDeal = stockDeal;
+				break;
 			}
 		}
 

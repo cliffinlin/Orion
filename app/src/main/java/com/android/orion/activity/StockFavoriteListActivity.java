@@ -148,6 +148,16 @@ public class StockFavoriteListActivity extends ListActivity implements
         TextView textView = mHeaderTextViews.get(viewId);
         if (textView == null) return;
 
+        if (viewId == R.id.flag) {
+            textView.setVisibility(View.GONE);
+            return;
+        }
+
+        if (viewId == R.id.expect) {
+            textView.setVisibility(View.GONE);
+            return;
+        }
+
         Map<Integer, String> periodViewMap = createPeriodViewMap();
         String period = periodViewMap.get(viewId);
         if (period != null) {
@@ -230,9 +240,16 @@ public class StockFavoriteListActivity extends ListActivity implements
         resetHeaderTextColor();
         setHeaderTextColor(view.getId(), HEADER_TEXT_HIGHLIGHT_COLOR);
 
-        mSortOrderColumn = getSortColumnForView(view.getId());
+        int viewId = view.getId();
+
+        if (viewId == R.id.trend) {
+            mSortOrderColumn = DatabaseContract.COLUMN_EXPECT;
+        } else {
+            mSortOrderColumn = getSortColumnForView(viewId);
+        }
+
         toggleSortOrderDirection();
-        
+
         mSortOrder = mSortOrderColumn + mSortOrderDirection;
         Preferences.putString(Setting.SETTING_SORT_ORDER_FAVORITE_LIST, mSortOrder);
         restartLoader();
@@ -563,6 +580,13 @@ public class StockFavoriteListActivity extends ListActivity implements
 
             TextView textView = (TextView) view;
 
+            if (DatabaseContract.COLUMN_FLAG.equals(columnName) ||
+                    DatabaseContract.COLUMN_EXPECT.equals(columnName)) {
+                textView.setText("");
+                textView.setVisibility(View.GONE);
+                return true;
+            }
+
             try {
                 if (cursor.isNull(columnIndex)) {
                     textView.setText("");
@@ -594,12 +618,6 @@ public class StockFavoriteListActivity extends ListActivity implements
                     } else {
                         textView.setText("");
                     }
-                    return true;
-
-                } else if (DatabaseContract.COLUMN_FLAG.equals(columnName)) {
-                    // 不需要显示flag，直接设为空并隐藏
-                    textView.setText("");
-                    textView.setVisibility(View.GONE);
                     return true;
 
                 } else if (DatabaseContract.COLUMN_MODIFIED.equals(columnName)) {

@@ -912,7 +912,7 @@ public class TrendAnalyzer {
 						continue;
 					}
 
-					float radius = (float) Config.THUMBNAIL_SIZE / 2.1f - Config.THUMBNAIL_SCATTER_SIZE / 2f;
+					float radius = (float) Config.THUMBNAIL_SIZE / 2f  * 0.85f - Config.THUMBNAIL_SCATTER_SIZE / 2f;
 
 					// 计算角度（使用相位角）
 					double angle = polarComponent.phase; // 使用弧度
@@ -923,11 +923,11 @@ public class TrendAnalyzer {
 
 					// 根据数值正负选择颜色
 					int color = polarComponent.lastPointValue >= 0 ? Color.RED : Color.BLACK;
-
-					Log.d("Component - Period:" + period +
-							" lastPointValue:" + polarComponent.lastPointValue +
-							" Radius:" + radius +
-							" Position:(" + x + "," + y + ")");
+//
+//					Log.d("Component - Period:" + period +
+//							" lastPointValue:" + polarComponent.lastPointValue +
+//							" Radius:" + radius +
+//							" Position:(" + x + "," + y + ")");
 
 					mScatterConfigList.add(new CurveThumbnail.ScatterConfig(
 							x, y, color, Config.THUMBNAIL_SCATTER_SIZE));
