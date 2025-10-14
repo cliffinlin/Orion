@@ -28,6 +28,7 @@
     <string name="component">Comp</string>
     <string name="cost">Cost</string>
     <string name="created">Created</string>
+    <string name="custom">Custom</string>
     <string name="date">Date</string>
     <string name="deal">Deal</string>
     <string name="deal_delete">Deal delete</string>
@@ -59,7 +60,6 @@
     <string name="error">Error</string>
     <string name="exit">Exit</string>
     <string name="exit_confirm">Do you want to exit?</string>
-    <string name="expect">Expect</string>
     <string name="export">Export</string>
     <string name="favorite_all">Favorite all</string>
     <string name="favorite">Favorite</string>
@@ -103,7 +103,6 @@
     <string name="low">Low</string>
     <string name="main_business_income_in_year">MBIY</string>
     <string name="main_business_income">MBI</string>
-    <string name="manual">Manual</string>
     <string name="market_value">MValue</string>
     <string name="match_insert">Match insert</string>
     <string name="match">Match</string>

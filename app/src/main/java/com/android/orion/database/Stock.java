@@ -41,7 +41,7 @@ public class Stock extends DatabaseTable {
 	public static final int FLAG_NONE = 0;
 	public static final int FLAG_FAVORITE = 1 << 0;
 	public static final int FLAG_TRADE = 1 << 1;
-	public static final int FLAG_MANUAL = 1 << 2;
+	public static final int FLAG_CUSTOM = 1 << 2;
 
 	public static final double ROI_COEFFICIENT = 10;
 
@@ -107,7 +107,7 @@ public class Stock extends DatabaseTable {
 	private String mStatus;
 	private double mBuyProfit;
 	private double mSellProfit;
-	private double mExpect;
+	private double mPredict;
 	private byte[] mTrendThumbnail;
 	private byte[] mComponentThumbnail;
 
@@ -184,7 +184,7 @@ public class Stock extends DatabaseTable {
 		mStatus = "";
 		mBuyProfit = 0;
 		mSellProfit = 0;
-		mExpect = 0;
+		mPredict = 0;
 	}
 
 	@Override
@@ -249,7 +249,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_STATUS, mStatus);
 		contentValues.put(DatabaseContract.COLUMN_BUY_PROFIT, mBuyProfit);
 		contentValues.put(DatabaseContract.COLUMN_SELL_PROFIT, mSellProfit);
-		contentValues.put(DatabaseContract.COLUMN_EXPECT, mExpect);
+		contentValues.put(DatabaseContract.COLUMN_PREDICT, mPredict);
 		contentValues.put(DatabaseContract.COLUMN_TREND_THUMBNAIL, mTrendThumbnail);
 		contentValues.put(DatabaseContract.COLUMN_COMPONENT_THUMBNAIL, mComponentThumbnail);
 		return contentValues;
@@ -284,7 +284,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_SE, mSE);
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
-		if (hasFlag(FLAG_MANUAL)) {
+		if (hasFlag(FLAG_CUSTOM)) {
 			for (int i = Period.indexOf(Period.DAY); i < Period.PERIODS.length; i++) {
 				String period = Period.PERIODS[i];
 				contentValues.put(DatabaseContract.COLUMN_PERIOD_LEVEL(period), getPeriod(period).getLevel());
@@ -358,7 +358,7 @@ public class Stock extends DatabaseTable {
 		setStatus(stock.mStatus);
 		setBuyProfit(stock.mBuyProfit);
 		setSellProfit(stock.mSellProfit);
-		setExpect(stock.mExpect);
+		setPredict(stock.mPredict);
 		setTrendThumbnail(stock.mTrendThumbnail);
 		setComponentThumbnail(stock.mComponentThumbnail);
 	}
@@ -429,7 +429,7 @@ public class Stock extends DatabaseTable {
 		setStatus(cursor);
 		setBuyProfit(cursor);
 		setSellProfit(cursor);
-		setExpect(cursor);
+		setPredict(cursor);
 		setTrendThumbnail(cursor);
 		setComponentThumbnail(cursor);
 	}
@@ -1243,21 +1243,21 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_SELL_PROFIT)));
 	}
 
-	public double getExpect() {
-		return mExpect;
+	public double getPredict() {
+		return mPredict;
 	}
 
-	public void setExpect(double expect) {
-		mExpect = expect;
+	public void setPredict(double predict) {
+		mPredict = predict;
 	}
 
-	void setExpect(Cursor cursor) {
+	void setPredict(Cursor cursor) {
 		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
-		setExpect(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_EXPECT)));
+		setPredict(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_PREDICT)));
 	}
 
 	public byte[] getTrendThumbnail() {

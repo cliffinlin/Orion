@@ -12,7 +12,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,7 +32,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 	long mHoldA = 0;
 	long mHoldB = 0;
 	CheckBox mCheckBoxTrade;
-	CheckBox mCheckBoxManual;
+	CheckBox mCheckBoxCustom;
 	EditText mEditTextStockName;
 	EditText mEditTextStockCode;
 	EditText mEditTextStockHold;
@@ -63,7 +62,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 
 	void initView() {
 		mCheckBoxTrade = findViewById(R.id.checkbox_trade);
-		mCheckBoxManual = findViewById(R.id.checkbox_manual);
+		mCheckBoxCustom = findViewById(R.id.checkbox_custom);
 		mEditTextStockName = findViewById(R.id.edittext_stock_name);
 		mEditTextStockCode = findViewById(R.id.edittext_stock_code);
 		mEditTextStockHold = findViewById(R.id.edittext_stock_hold);
@@ -80,7 +79,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mButtonCancel = findViewById(R.id.button_cancel);
 
 		mCheckBoxTrade.setOnClickListener(this);
-		mCheckBoxManual.setOnClickListener(this);
+		mCheckBoxCustom.setOnClickListener(this);
 		mEditTextStockName.setOnClickListener(this);
 		mEditTextStockCode.setOnClickListener(this);
 		mEditTextStockHold.setOnClickListener(this);
@@ -167,7 +166,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 
 	void updateView() {
 		mCheckBoxTrade.setChecked(mStock.hasFlag(Stock.FLAG_TRADE));
-		mCheckBoxManual.setChecked(mStock.hasFlag(Stock.FLAG_MANUAL));
+		mCheckBoxCustom.setChecked(mStock.hasFlag(Stock.FLAG_CUSTOM));
 
 		mEditTextStockName.setText(mStock.getName());
 		mEditTextStockCode.setText(mStock.getCode());
@@ -176,12 +175,12 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mTextViewSeUrl.setText(mStock.getSeUrl());
 		mTextViewSeUrl.setPaintFlags(mTextViewSeUrl.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
-		boolean manualEnabled = mStock.hasFlag(Stock.FLAG_MANUAL);
-		mTradeLevelPickerDay.setEnabled(manualEnabled);
-		mTradeLevelPickerMin60.setEnabled(manualEnabled);
-		mTradeLevelPickerMin30.setEnabled(manualEnabled);
-		mTradeLevelPickerMin15.setEnabled(manualEnabled);
-		mTradeLevelPickerMin5.setEnabled(manualEnabled);
+		boolean custom = mStock.hasFlag(Stock.FLAG_CUSTOM);
+		mTradeLevelPickerDay.setEnabled(custom);
+		mTradeLevelPickerMin60.setEnabled(custom);
+		mTradeLevelPickerMin30.setEnabled(custom);
+		mTradeLevelPickerMin15.setEnabled(custom);
+		mTradeLevelPickerMin5.setEnabled(custom);
 
 		mTradeLevelPickerDay.setValue(mStock.getLevel(Period.DAY));
 		mTradeLevelPickerMin60.setValue(mStock.getLevel(Period.MIN60));
@@ -217,11 +216,11 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 				}
 				break;
 
-			case R.id.checkbox_manual:
-				if (mCheckBoxManual.isChecked()) {
-					mStock.addFlag(Stock.FLAG_MANUAL);
+			case R.id.checkbox_custom:
+				if (mCheckBoxCustom.isChecked()) {
+					mStock.addFlag(Stock.FLAG_CUSTOM);
 				} else {
-					mStock.removeFlag(Stock.FLAG_MANUAL);
+					mStock.removeFlag(Stock.FLAG_CUSTOM);
 				}
 				updateView();
 				break;
@@ -235,10 +234,10 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 					mStock.setSellProfit(0);
 				}
 
-				if (mCheckBoxManual.isChecked()) {
-					mStock.addFlag(Stock.FLAG_MANUAL);
+				if (mCheckBoxCustom.isChecked()) {
+					mStock.addFlag(Stock.FLAG_CUSTOM);
 				} else {
-					mStock.removeFlag(Stock.FLAG_MANUAL);
+					mStock.removeFlag(Stock.FLAG_CUSTOM);
 				}
 
 				String name = mEditTextStockName.getText().toString();
@@ -256,7 +255,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 					return;
 				}
 
-				if (mStock.hasFlag(Stock.FLAG_MANUAL)) {
+				if (mStock.hasFlag(Stock.FLAG_CUSTOM)) {
 					mStock.setLevel(Period.DAY, mTradeLevelPickerDay.getValue());
 					mStock.setLevel(Period.MIN60, mTradeLevelPickerMin60.getValue());
 					mStock.setLevel(Period.MIN30, mTradeLevelPickerMin30.getValue());

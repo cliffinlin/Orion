@@ -49,8 +49,9 @@ public class TradeAnalyzer {
 			if (TextUtils.equals(stockDeal.getType(), StockDeal.TYPE_BUY)) {
 				mBuyDeal = stockDeal;
 			} else if (TextUtils.equals(stockDeal.getType(), StockDeal.TYPE_SELL)) {
-				mSellDeal = stockDeal;
-				break;
+				if (mSellDeal == null) {
+					mSellDeal = stockDeal;
+				}
 			}
 		}
 

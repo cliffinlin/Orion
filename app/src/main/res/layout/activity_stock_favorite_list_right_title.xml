@@ -6,8 +6,8 @@
 
     <TextView
         android:id="@+id/price"
-        android:layout_width="@dimen/action_layout_width"
-        android:layout_height="40dp"
+        android:layout_width="@dimen/favorite_list_item_layout_width"
+        android:layout_height="@dimen/favorite_list_item_header_layout_height"
         android:layout_weight="1"
         android:gravity="center"
         android:text="@string/price"
@@ -15,44 +15,44 @@
 
     <TextView
         android:id="@+id/net"
-        android:layout_width="@dimen/action_layout_width"
-        android:layout_height="40dp"
+        android:layout_width="@dimen/favorite_list_item_layout_width"
+        android:layout_height="@dimen/favorite_list_item_header_layout_height"
         android:layout_weight="1"
         android:gravity="center"
         android:text="@string/net"
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/trade"
-        android:layout_width="@dimen/action_layout_width"
-        android:layout_height="40dp"
+        android:id="@+id/profite"
+        android:layout_width="@dimen/favorite_list_item_layout_width"
+        android:layout_height="@dimen/favorite_list_item_header_layout_height"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="@string/trade"
+        android:text="@string/profit"
         android:textSize="18sp" />
 
     <TextView
         android:id="@+id/trend"
-        android:layout_width="@dimen/action_layout_width"
-        android:layout_height="40dp"
+        android:layout_width="@dimen/favorite_list_item_layout_width"
+        android:layout_height="@dimen/favorite_list_item_header_layout_height"
         android:layout_weight="1"
         android:gravity="center"
         android:text="@string/trend"
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/expect"
-        android:layout_width="@dimen/action_layout_width"
-        android:layout_height="40dp"
+        android:id="@+id/predict"
+        android:layout_width="@dimen/favorite_list_item_layout_width"
+        android:layout_height="@dimen/favorite_list_item_header_layout_height"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="@string/expect"
+        android:text="@string/predict"
         android:textSize="18sp" />
 
     <TextView
         android:id="@+id/component"
-        android:layout_width="@dimen/action_layout_width"
-        android:layout_height="40dp"
+        android:layout_width="@dimen/favorite_list_item_layout_width"
+        android:layout_height="@dimen/favorite_list_item_header_layout_height"
         android:layout_weight="1"
         android:gravity="center"
         android:text="@string/component"
@@ -60,8 +60,8 @@
 
     <TextView
         android:id="@+id/period_year"
-        android:layout_width="@dimen/action_layout_width"
-        android:layout_height="40dp"
+        android:layout_width="@dimen/favorite_list_item_layout_width"
+        android:layout_height="@dimen/favorite_list_item_header_layout_height"
         android:layout_weight="1"
         android:gravity="center"
         android:text="@string/period_year"
@@ -69,8 +69,8 @@
 
     <TextView
         android:id="@+id/period_month6"
-        android:layout_width="@dimen/action_layout_width"
-        android:layout_height="40dp"
+        android:layout_width="@dimen/favorite_list_item_layout_width"
+        android:layout_height="@dimen/favorite_list_item_header_layout_height"
         android:layout_weight="1"
         android:gravity="center"
         android:text="@string/period_month6"
@@ -78,8 +78,8 @@
 
     <TextView
         android:id="@+id/period_quarter"
-        android:layout_width="@dimen/action_layout_width"
-        android:layout_height="40dp"
+        android:layout_width="@dimen/favorite_list_item_layout_width"
+        android:layout_height="@dimen/favorite_list_item_header_layout_height"
         android:layout_weight="1"
         android:gravity="center"
         android:text="@string/period_quarter"
@@ -87,8 +87,8 @@
 
     <TextView
         android:id="@+id/period_month2"
-        android:layout_width="@dimen/action_layout_width"
-        android:layout_height="40dp"
+        android:layout_width="@dimen/favorite_list_item_layout_width"
+        android:layout_height="@dimen/favorite_list_item_header_layout_height"
         android:layout_weight="1"
         android:gravity="center"
         android:text="@string/period_month2"
@@ -96,8 +96,8 @@
 
     <TextView
         android:id="@+id/period_month"
-        android:layout_width="@dimen/action_layout_width"
-        android:layout_height="40dp"
+        android:layout_width="@dimen/favorite_list_item_layout_width"
+        android:layout_height="@dimen/favorite_list_item_header_layout_height"
         android:layout_weight="1"
         android:gravity="center"
         android:text="@string/period_month"
@@ -105,8 +105,8 @@
 
     <TextView
         android:id="@+id/period_week"
-        android:layout_width="@dimen/action_layout_width"
-        android:layout_height="40dp"
+        android:layout_width="@dimen/favorite_list_item_layout_width"
+        android:layout_height="@dimen/favorite_list_item_header_layout_height"
         android:layout_weight="1"
         android:gravity="center"
         android:text="@string/period_week"
@@ -114,8 +114,8 @@
 
     <TextView
         android:id="@+id/period_day"
-        android:layout_width="@dimen/action_layout_width"
-        android:layout_height="40dp"
+        android:layout_width="@dimen/favorite_list_item_layout_width"
+        android:layout_height="@dimen/favorite_list_item_header_layout_height"
         android:layout_weight="1"
         android:gravity="center"
         android:text="@string/period_day"
@@ -123,8 +123,8 @@
 
     <TextView
         android:id="@+id/period_min60"
-        android:layout_width="@dimen/action_layout_width"
-        android:layout_height="40dp"
+        android:layout_width="@dimen/favorite_list_item_layout_width"
+        android:layout_height="@dimen/favorite_list_item_header_layout_height"
         android:layout_weight="1"
         android:gravity="center"
         android:text="@string/period_min60"
@@ -132,8 +132,8 @@
 
     <TextView
         android:id="@+id/period_min30"
-        android:layout_width="@dimen/action_layout_width"
-        android:layout_height="40dp"
+        android:layout_width="@dimen/favorite_list_item_layout_width"
+        android:layout_height="@dimen/favorite_list_item_header_layout_height"
         android:layout_weight="1"
         android:gravity="center"
         android:text="@string/period_min30"
@@ -141,8 +141,8 @@
 
     <TextView
         android:id="@+id/period_min15"
-        android:layout_width="@dimen/action_layout_width"
-        android:layout_height="40dp"
+        android:layout_width="@dimen/favorite_list_item_layout_width"
+        android:layout_height="@dimen/favorite_list_item_header_layout_height"
         android:layout_weight="1"
         android:gravity="center"
         android:text="@string/period_min15"
@@ -150,8 +150,8 @@
 
     <TextView
         android:id="@+id/period_min5"
-        android:layout_width="@dimen/action_layout_width"
-        android:layout_height="40dp"
+        android:layout_width="@dimen/favorite_list_item_layout_width"
+        android:layout_height="@dimen/favorite_list_item_header_layout_height"
         android:layout_weight="1"
         android:gravity="center"
         android:text="@string/period_min5"
@@ -159,8 +159,8 @@
 
     <TextView
         android:id="@+id/flag"
-        android:layout_width="@dimen/action_layout_width"
-        android:layout_height="40dp"
+        android:layout_width="@dimen/favorite_list_item_layout_width"
+        android:layout_height="@dimen/favorite_list_item_header_layout_height"
         android:layout_weight="1"
         android:gravity="center"
         android:visibility="gone"
@@ -170,7 +170,7 @@
     <TextView
         android:id="@+id/modified"
         android:layout_width="100dp"
-        android:layout_height="40dp"
+        android:layout_height="@dimen/favorite_list_item_header_layout_height"
         android:layout_weight="1"
         android:gravity="center"
         android:text="@string/modified"

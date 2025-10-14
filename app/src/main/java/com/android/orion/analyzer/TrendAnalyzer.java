@@ -687,7 +687,7 @@ public class TrendAnalyzer {
 	}
 
 	void setupLevel() {
-		double expect = 0;
+		double predict = 0;
 		StringBuilder builder = new StringBuilder();
 
 		try {
@@ -697,7 +697,7 @@ public class TrendAnalyzer {
 					continue;
 				}
 
-				if (mStock.hasFlag(Stock.FLAG_MANUAL)) {
+				if (mStock.hasFlag(Stock.FLAG_CUSTOM)) {
 					dataPoint = mAllDataPointMap.get(period + Symbol.L + mStock.getLevel(period));
 					if (dataPoint == null) {
 						continue;
@@ -709,13 +709,13 @@ public class TrendAnalyzer {
 
 				StockTrend stockTrend = mStock.getStockTrend(period, mStock.getLevel(period));
 				if (stockTrend != null) {
-					expect += stockTrend.getPredict();
+					predict += stockTrend.getPredict();
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		mStock.setExpect((mKMeansPeriods == 0) ?  0 : Utility.Round1(expect / mKMeansPeriods));
+		mStock.setPredict((mKMeansPeriods == 0) ?  0 : Utility.Round1(predict / mKMeansPeriods));
 		Log.d(builder.toString());
 	}
 
@@ -826,8 +826,8 @@ public class TrendAnalyzer {
 			if (Setting.getPeriod(period)) {
 				List<Float> xValuesH = new ArrayList<>();
 				List<Float> yValuesH = new ArrayList<>();
-				List<Float> xValuesE = new ArrayList<>();
-				List<Float> yValuesE = new ArrayList<>();
+				List<Float> xValuesP = new ArrayList<>();
+				List<Float> yValuesP = new ArrayList<>();
 				List<Float> xValuesV = new ArrayList<>();
 				List<Float> yValuesV = new ArrayList<>();
 
@@ -840,10 +840,10 @@ public class TrendAnalyzer {
 				yValuesH.add(centerY);
 				yValuesH.add(centerY);
 
-				xValuesE.add((startX + endX) / 2f);
-				xValuesE.add((startX + endX) / 2f);
-				yValuesE.add(centerY);
-				yValuesE.add(centerY + (float) mStock.getStockTrend(period, mStock.getLevel(period)).getPredict());
+				xValuesP.add((startX + endX) / 2f);
+				xValuesP.add((startX + endX) / 2f);
+				yValuesP.add(centerY);
+				yValuesP.add(centerY + (float) mStock.getStockTrend(period, mStock.getLevel(period)).getPredict());
 
 				xValuesV.add((startX + endX) / 2f);
 				xValuesV.add((startX + endX) / 2f);
@@ -860,15 +860,15 @@ public class TrendAnalyzer {
 
 				float strokeWidth = Math.max(1, 10f * Config.THUMBNAIL_STROKE_WIDTH);
 				mLineConfigList.add(new CurveThumbnail.LineConfig(xValuesH, yValuesH, color, Config.THUMBNAIL_STROKE_WIDTH));
-				mLineConfigList.add(new CurveThumbnail.LineConfig(xValuesE, yValuesE, Color.GRAY, strokeWidth));
+				mLineConfigList.add(new CurveThumbnail.LineConfig(xValuesP, yValuesP, Color.GRAY, strokeWidth));
 				mLineConfigList.add(new CurveThumbnail.LineConfig(xValuesV, yValuesV, color, strokeWidth));
 				i++;
 			}
 		}
 
 		int backgroundColor = Color.TRANSPARENT;
-		if (mStock.hasFlag(Stock.FLAG_MANUAL)) {
-			backgroundColor = Config.COLOR_BACKGROUND_MANUAL;
+		if (mStock.hasFlag(Stock.FLAG_CUSTOM)) {
+			backgroundColor = Config.COLOR_BACKGROUND_CUSTOM;
 		}
 
 		mStock.setTrendThumbnail(Utility.thumbnailToBytes(
