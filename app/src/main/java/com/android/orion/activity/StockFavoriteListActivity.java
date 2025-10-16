@@ -1,6 +1,7 @@
 package com.android.orion.activity;
 
 import android.app.LoaderManager;
+import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
@@ -40,20 +41,28 @@ public class StockFavoriteListActivity extends ListActivity implements
     private static final int LOADER_ID_STOCK_FAVORITE_LIST = 0;
     private static final int HEADER_TEXT_DEFAULT_COLOR = Color.BLACK;
     private static final int HEADER_TEXT_HIGHLIGHT_COLOR = Color.RED;
+
+    private enum LoaderState {
+        IDLE,
+        INITIALIZED,
+        CREATED,
+        FINISHED
+    }
+
+    private LoaderState mLoaderState = LoaderState.IDLE;
+
     private int mColumnIndexCode = -1;
     private int mColumnIndexName = -1;
     private int mColumnIndexFlag = -1;
-    private int mColumnIndexBuyProfit = -1;
-    private int mColumnIndexSellProfit = -1;
 
     private final Map<Integer, TextView> mHeaderTextViews = new HashMap<>();
     private final Map<String, Integer> mColumnToViewIdMap = new HashMap<>();
-    
+
     private String mSortOrderColumn = DatabaseContract.COLUMN_NET;
     private String mSortOrderDirection = DatabaseContract.ORDER_DESC;
-    private final String mSortOrderDefault = mSortOrderColumn + mSortOrderDirection;
+    private String mSortOrderDefault = mSortOrderColumn + mSortOrderDirection;
     private String mSortOrder = mSortOrderDefault;
-    
+
     private SyncHorizontalScrollView mTitleSHSV, mContentSHSV;
     private ListView mLeftListView, mRightListView;
     private SimpleCursorAdapter mLeftAdapter, mRightAdapter;
@@ -78,6 +87,16 @@ public class StockFavoriteListActivity extends ListActivity implements
     protected void onStop() {
         super.onStop();
         destroyLoader();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (mLoaderState != LoaderState.IDLE) {
+            mLoaderManager.destroyLoader(LOADER_ID_STOCK_FAVORITE_LIST);
+        }
+        mLoaderState = LoaderState.IDLE;
     }
 
     @Override
@@ -189,7 +208,7 @@ public class StockFavoriteListActivity extends ListActivity implements
     @Override
     public void handleOnOptionsItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
-        
+
         if (itemId == R.id.action_new) {
             startStockActivity(Constant.ACTION_FAVORITE_STOCK_INSERT);
         } else if (itemId == R.id.action_refresh) {
@@ -302,8 +321,31 @@ public class StockFavoriteListActivity extends ListActivity implements
 
         mLeftListView = findViewById(R.id.left_listview);
         mLeftAdapter = new SimpleCursorAdapter(this,
-                R.layout.activity_stock_favorite_list_left_item, null, leftFrom, leftTo, 0);
-        
+                R.layout.activity_stock_favorite_list_left_item,
+                null,
+                leftFrom, leftTo, 0) {
+
+            @Override
+            public Cursor swapCursor(Cursor newCursor) {
+                if (newCursor != null && newCursor.isClosed()) {
+                    return super.swapCursor(null);
+                }
+                return super.swapCursor(newCursor);
+            }
+
+            @Override
+            public void bindView(View view, Context context, Cursor cursor) {
+                try {
+                    if (cursor == null || cursor.isClosed()) {
+                        return;
+                    }
+                    super.bindView(view, context, cursor);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
         if (mLeftListView != null) {
             mLeftAdapter.setViewBinder(new LeftViewBinder());
             mLeftListView.setAdapter(mLeftAdapter);
@@ -320,20 +362,20 @@ public class StockFavoriteListActivity extends ListActivity implements
                 DatabaseContract.COLUMN_SELL_PROFIT,
                 DatabaseContract.COLUMN_TREND_THUMBNAIL,
                 DatabaseContract.COLUMN_PREDICT,
-                DatabaseContract.COLUMN_COMPONENT_THUMBNAIL,  
-                DatabaseContract.COLUMN_YEAR_THUMBNAIL,       
-                DatabaseContract.COLUMN_MONTH6_THUMBNAIL,     
-                DatabaseContract.COLUMN_QUARTER_THUMBNAIL,    
-                DatabaseContract.COLUMN_MONTH2_THUMBNAIL,     
-                DatabaseContract.COLUMN_MONTH_THUMBNAIL,      
-                DatabaseContract.COLUMN_WEEK_THUMBNAIL,       
-                DatabaseContract.COLUMN_DAY_THUMBNAIL,        
-                DatabaseContract.COLUMN_MIN60_THUMBNAIL,      
-                DatabaseContract.COLUMN_MIN30_THUMBNAIL,      
-                DatabaseContract.COLUMN_MIN15_THUMBNAIL,      
-                DatabaseContract.COLUMN_MIN5_THUMBNAIL,       
-                DatabaseContract.COLUMN_FLAG,                 
-                DatabaseContract.COLUMN_MODIFIED              
+                DatabaseContract.COLUMN_COMPONENT_THUMBNAIL,
+                DatabaseContract.COLUMN_YEAR_THUMBNAIL,
+                DatabaseContract.COLUMN_MONTH6_THUMBNAIL,
+                DatabaseContract.COLUMN_QUARTER_THUMBNAIL,
+                DatabaseContract.COLUMN_MONTH2_THUMBNAIL,
+                DatabaseContract.COLUMN_MONTH_THUMBNAIL,
+                DatabaseContract.COLUMN_WEEK_THUMBNAIL,
+                DatabaseContract.COLUMN_DAY_THUMBNAIL,
+                DatabaseContract.COLUMN_MIN60_THUMBNAIL,
+                DatabaseContract.COLUMN_MIN30_THUMBNAIL,
+                DatabaseContract.COLUMN_MIN15_THUMBNAIL,
+                DatabaseContract.COLUMN_MIN5_THUMBNAIL,
+                DatabaseContract.COLUMN_FLAG,
+                DatabaseContract.COLUMN_MODIFIED
         };
 
         int[] rightTo = {
@@ -341,27 +383,50 @@ public class StockFavoriteListActivity extends ListActivity implements
                 R.id.net,
                 R.id.buy_profit,
                 R.id.sell_profit,
-                R.id.trend,           
+                R.id.trend,
                 R.id.predict,
-                R.id.component,       
-                R.id.year,            
-                R.id.month6,          
-                R.id.quarter,         
-                R.id.month2,          
-                R.id.month,           
-                R.id.week,            
-                R.id.day,             
-                R.id.min60,           
-                R.id.min30,           
-                R.id.min15,           
-                R.id.min5,            
-                R.id.flag,            
-                R.id.modified         
+                R.id.component,
+                R.id.year,
+                R.id.month6,
+                R.id.quarter,
+                R.id.month2,
+                R.id.month,
+                R.id.week,
+                R.id.day,
+                R.id.min60,
+                R.id.min30,
+                R.id.min15,
+                R.id.min5,
+                R.id.flag,
+                R.id.modified
         };
 
         mRightListView = findViewById(R.id.right_listview);
         mRightAdapter = new SimpleCursorAdapter(this,
-                R.layout.activity_stock_favorite_list_right_item, null, rightFrom, rightTo, 0);
+                R.layout.activity_stock_favorite_list_right_item,
+                null,
+                rightFrom, rightTo, 0) {
+
+            @Override
+            public Cursor swapCursor(Cursor newCursor) {
+                if (newCursor != null && newCursor.isClosed()) {
+                    return super.swapCursor(null);
+                }
+                return super.swapCursor(newCursor);
+            }
+
+            @Override
+            public void bindView(View view, Context context, Cursor cursor) {
+                try {
+                    if (cursor == null || cursor.isClosed()) {
+                        return;
+                    }
+                    super.bindView(view, context, cursor);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
 
         if (mRightListView != null) {
             mRightAdapter.setViewBinder(new RightViewBinder());
@@ -372,6 +437,10 @@ public class StockFavoriteListActivity extends ListActivity implements
     }
 
     private void initLoader() {
+        if (mLoaderState != LoaderState.IDLE) {
+            return;
+        }
+
         mSortOrder = Preferences.getString(Setting.SETTING_SORT_ORDER_FAVORITE_LIST, mSortOrderDefault);
         if (!TextUtils.isEmpty(mSortOrder)) {
             String[] strings = mSortOrder.split(Symbol.WHITE_SPACE);
@@ -379,20 +448,49 @@ public class StockFavoriteListActivity extends ListActivity implements
                 mSortOrderColumn = strings[0];
             }
         }
-        mLoaderManager.initLoader(LOADER_ID_STOCK_FAVORITE_LIST, null, this);
+
+        try {
+            mLoaderManager.initLoader(LOADER_ID_STOCK_FAVORITE_LIST, null, this);
+            mLoaderState = LoaderState.INITIALIZED;
+        } catch (Exception e) {
+            e.printStackTrace();
+            mLoaderState = LoaderState.IDLE;
+        }
     }
 
     private void destroyLoader() {
-        mLoaderManager.destroyLoader(LOADER_ID_STOCK_FAVORITE_LIST);
+        if (mLoaderState == LoaderState.IDLE) {
+            return;
+        }
+
+        try {
+            mLoaderManager.destroyLoader(LOADER_ID_STOCK_FAVORITE_LIST);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        mLoaderState = LoaderState.IDLE;
+        safeSwapCursor(null);
     }
 
     void restartLoader() {
-        mLoaderManager.restartLoader(LOADER_ID_STOCK_FAVORITE_LIST, null, this);
+        if (mLoaderState == LoaderState.IDLE) {
+            initLoader();
+//            return;
+        }
+
+        try {
+            mLoaderManager.restartLoader(LOADER_ID_STOCK_FAVORITE_LIST, null, this);
+            mLoaderState = LoaderState.CREATED;
+        } catch (Exception e) {
+            e.printStackTrace();
+            mLoaderState = LoaderState.IDLE;
+        }
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle arg1) {
         if (id == LOADER_ID_STOCK_FAVORITE_LIST) {
+            mLoaderState = LoaderState.CREATED;
             String selection = DatabaseContract.SELECTION_FLAG(Stock.FLAG_FAVORITE);
             return new CursorLoader(this, DatabaseContract.Stock.CONTENT_URI,
                     DatabaseContract.Stock.PROJECTION_ALL, selection, null, mSortOrder);
@@ -406,29 +504,44 @@ public class StockFavoriteListActivity extends ListActivity implements
             return;
         }
 
+        mLoaderState = LoaderState.FINISHED;
         cacheColumnIndices(cursor);
 
-        mLeftAdapter.swapCursor(cursor);
-        mRightAdapter.swapCursor(cursor);
+        safeSwapCursor(cursor);
 
         setListViewHeightBasedOnChildren(mLeftListView);
         setListViewHeightBasedOnChildren(mRightListView);
     }
 
-    private void cacheColumnIndices(Cursor cursor) {
-        if (cursor != null) {
-            mColumnIndexCode = cursor.getColumnIndex(DatabaseContract.COLUMN_CODE);
-            mColumnIndexName = cursor.getColumnIndex(DatabaseContract.COLUMN_NAME);
-            mColumnIndexFlag = cursor.getColumnIndex(DatabaseContract.COLUMN_FLAG);
-            mColumnIndexBuyProfit = cursor.getColumnIndex(DatabaseContract.COLUMN_BUY_PROFIT);
-            mColumnIndexSellProfit = cursor.getColumnIndex(DatabaseContract.COLUMN_SELL_PROFIT);
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mLoaderState = LoaderState.INITIALIZED;
+        safeSwapCursor(null);
+    }
+
+    private void safeSwapCursor(Cursor newCursor) {
+        try {
+            if (mLeftAdapter != null) {
+                mLeftAdapter.swapCursor(newCursor);
+            }
+            if (mRightAdapter != null) {
+                mRightAdapter.swapCursor(newCursor);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        mLeftAdapter.swapCursor(null);
-        mRightAdapter.swapCursor(null);
+    private void cacheColumnIndices(Cursor cursor) {
+        if (cursor != null && !cursor.isClosed()) {
+            try {
+                mColumnIndexCode = cursor.getColumnIndex(DatabaseContract.COLUMN_CODE);
+                mColumnIndexName = cursor.getColumnIndex(DatabaseContract.COLUMN_NAME);
+                mColumnIndexFlag = cursor.getColumnIndex(DatabaseContract.COLUMN_FLAG);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -457,7 +570,7 @@ public class StockFavoriteListActivity extends ListActivity implements
     private void handleLeftListItemClick(long id) {
         mStock.setId(id);
         mStockDatabaseManager.getStockById(mStock);
-        
+
         Intent intent;
         if (mStock.getHold() > 0) {
             intent = new Intent(mContext, StockDealListActivity.class);
@@ -489,7 +602,7 @@ public class StockFavoriteListActivity extends ListActivity implements
     private class LeftViewBinder implements SimpleCursorAdapter.ViewBinder {
         @Override
         public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-            if (view == null || cursor == null || columnIndex == -1) {
+            if (view == null || cursor == null || columnIndex == -1 || cursor.isClosed()) {
                 return false;
             }
 
@@ -500,16 +613,20 @@ public class StockFavoriteListActivity extends ListActivity implements
         }
 
         void setViewColor(View view, Cursor cursor) {
-            if (view == null || cursor == null) {
+            if (view == null || cursor == null || cursor.isClosed()) {
                 return;
             }
 
-            String code = cursor.getString(cursor.getColumnIndex(DatabaseContract.COLUMN_CODE));
-            TextView textView = (TextView) view;
-            if (TextUtils.equals(mAnalyzingStockCode, code)) {
-                textView.setTextColor(Color.RED);
-            } else {
-                textView.setTextColor(Color.GRAY);
+            try {
+                String code = cursor.getString(cursor.getColumnIndex(DatabaseContract.COLUMN_CODE));
+                TextView textView = (TextView) view;
+                if (TextUtils.equals(mAnalyzingStockCode, code)) {
+                    textView.setTextColor(Color.RED);
+                } else {
+                    textView.setTextColor(Color.GRAY);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
@@ -517,13 +634,19 @@ public class StockFavoriteListActivity extends ListActivity implements
     private class RightViewBinder implements SimpleCursorAdapter.ViewBinder {
         @Override
         public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-            if (view == null || cursor == null || columnIndex == -1) {
+            if (view == null || cursor == null || columnIndex == -1 || cursor.isClosed()) {
                 return true; // Return true to indicate we handled this binding
             }
 
-            String columnName = cursor.getColumnName(columnIndex);
-            if (columnName == null) {
-                return false;
+            String columnName;
+            try {
+                columnName = cursor.getColumnName(columnIndex);
+                if (columnName == null) {
+                    return false;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return true;
             }
 
             // Handle BLOB columns first

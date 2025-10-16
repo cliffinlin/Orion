@@ -35,6 +35,7 @@ public class Config {
 	public static final int HISTORY_LENGTH_MIN5 = HISTORY_LENGTH_DAY * 48;
 
 	public static final int MAX_ITERATION = 1000;
+	public static final int MAX_PREDICTION = 100;
 
 	public static final int SEND_MESSAGE_DELAY_DOWNLOAD = 100;
 
