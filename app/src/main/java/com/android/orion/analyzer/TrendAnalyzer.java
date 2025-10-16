@@ -616,7 +616,7 @@ public class TrendAnalyzer {
 				mAllDataPointMap.put(point.period + Symbol.L + point.level, point);
 				clusterInfo.append("  ").append(point);
 			}
-//			Log.d(clusterInfo.toString());
+			Log.d(clusterInfo.toString());
 		}
 	}
 
@@ -706,7 +706,7 @@ public class TrendAnalyzer {
 				if (Setting.getPeriod(period)) {
 					DataPoint dataPoint = mDataPointMap.get(period);
 					if (dataPoint == null) {
-						continue;
+						continue;//TODO get average level
 					}
 
 					if (mStock.hasFlag(Stock.FLAG_CUSTOM)) {
@@ -751,7 +751,8 @@ public class TrendAnalyzer {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		mStock.setPredict((mKMeansPeriods == 0) ?  0 : Utility.Round1(predictSum / mKMeansPeriods));
+		int count = Math.min(mKMeansPeriods, predictSet.size());
+		mStock.setPredict((count == 0) ?  0 : Utility.Round1(predictSum / count));
 		Log.d(builder.toString());
 	}
 
@@ -1033,11 +1034,6 @@ public class TrendAnalyzer {
 
 					// 根据数值正负选择颜色
 					int color = polarComponent.lastPointValue >= 0 ? Color.RED : Color.BLACK;
-//
-//					Log.d("Component - Period:" + period +
-//							" lastPointValue:" + polarComponent.lastPointValue +
-//							" Radius:" + radius +
-//							" Position:(" + x + "," + y + ")");
 
 					mScatterConfigList.add(new CurveThumbnail.ScatterConfig(
 							x, y, color, Config.THUMBNAIL_SCATTER_SIZE));
