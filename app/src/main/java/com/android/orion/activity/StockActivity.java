@@ -1,5 +1,6 @@
 package com.android.orion.activity;
 
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
@@ -39,6 +40,11 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 	EditText mEditTextStockYield;
 	EditText mEditTextStockHoldA;
 	EditText mEditTextStockHoldB;
+	TextView mTextviewDayNet;
+	TextView mTextviewMin60Net;
+	TextView mTextviewMin30Net;
+	TextView mTextviewMin15Net;
+	TextView mTextviewMin5Net;
 	TextView mTextViewSeUrl;
 	TradeLevelPicker mTradeLevelPickerDay;
 	TradeLevelPicker mTradeLevelPickerMin60;
@@ -69,6 +75,11 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mEditTextStockYield = findViewById(R.id.edittext_stock_yield);
 		mEditTextStockHoldA = findViewById(R.id.edittext_stock_hold_a);
 		mEditTextStockHoldB = findViewById(R.id.edittext_stock_hold_b);
+		mTextviewDayNet = findViewById(R.id.textview_day_net);
+		mTextviewMin60Net = findViewById(R.id.textview_min60_net);
+		mTextviewMin30Net = findViewById(R.id.textview_min30_net);
+		mTextviewMin15Net = findViewById(R.id.textview_min15_net);
+		mTextviewMin5Net = findViewById(R.id.textview_min5_net);
 		mTextViewSeUrl = findViewById(R.id.textview_se_url);
 		mTradeLevelPickerDay = findViewById(R.id.trade_level_picker_day);
 		mTradeLevelPickerMin60 = findViewById(R.id.trade_level_picker_min60);
@@ -144,6 +155,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 				mEditTextStockHoldA.setText(String.valueOf(mHoldA));
 				mEditTextStockHoldB.setText(String.valueOf(mHoldB));
 			}
+			mStockDatabaseManager.getStockTrendMap(mStock);
 		}
 	}
 
@@ -162,6 +174,30 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 
 		mTradeLevelPickerMin5.setMinValue(StockTrend.LEVEL_NONE);
 		mTradeLevelPickerMin5.setMaxValue(StockTrend.LEVEL_TREND_LINE);
+
+		setupTradeLevelPickerListener(mTradeLevelPickerDay, Period.DAY, mTextviewDayNet);
+		setupTradeLevelPickerListener(mTradeLevelPickerMin60, Period.MIN60, mTextviewMin60Net);
+		setupTradeLevelPickerListener(mTradeLevelPickerMin30, Period.MIN30, mTextviewMin30Net);
+		setupTradeLevelPickerListener(mTradeLevelPickerMin15, Period.MIN15, mTextviewMin15Net);
+		setupTradeLevelPickerListener(mTradeLevelPickerMin5, Period.MIN5, mTextviewMin5Net);
+	}
+
+	private void setupTradeLevelPickerListener(TradeLevelPicker picker, final String period, final TextView netTextView) {
+		picker.setOnValueChangedListener(new android.widget.NumberPicker.OnValueChangeListener() {
+			@Override
+			public void onValueChange(android.widget.NumberPicker numberPicker, int oldVal, int newVal) {
+				updateNetForPeriod(period, newVal, netTextView);
+			}
+		});
+	}
+
+	private void updateNetForPeriod(String period, int level, TextView netTextView) {
+		StockTrend stockTrend = mStock.getStockTrend(period, level);
+		if (stockTrend != null) {
+			setNetTextView(netTextView, stockTrend.getNextNet());
+		} else {
+			setNetTextView(netTextView, 0);
+		}
 	}
 
 	void updateView() {
@@ -193,6 +229,20 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mTradeLevelPickerMin30.invalidate();
 		mTradeLevelPickerMin15.invalidate();
 		mTradeLevelPickerMin5.invalidate();
+
+		updateNetForPeriod(Period.DAY, mStock.getLevel(Period.DAY), mTextviewDayNet);
+		updateNetForPeriod(Period.MIN60, mStock.getLevel(Period.MIN60), mTextviewMin60Net);
+		updateNetForPeriod(Period.MIN30, mStock.getLevel(Period.MIN30), mTextviewMin30Net);
+		updateNetForPeriod(Period.MIN15, mStock.getLevel(Period.MIN15), mTextviewMin15Net);
+		updateNetForPeriod(Period.MIN5, mStock.getLevel(Period.MIN5), mTextviewMin5Net);
+	}
+
+	void setNetTextView(TextView textView, double nextNet) {
+		if (textView == null) {
+			return;
+		}
+		textView.setText(String.valueOf(nextNet));
+		textView.setTextColor(nextNet > 0 ? Color.RED : Color.BLACK);
 	}
 
 	@Override

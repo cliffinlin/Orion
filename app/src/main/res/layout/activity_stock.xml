@@ -133,6 +133,13 @@
                     android:id="@+id/trade_level_picker_day"
                     android:layout_width="80dp"
                     android:layout_height="60dp" />
+
+                <TextView
+                    android:id="@+id/textview_day_net"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:paddingTop="2dp" />
             </LinearLayout>
 
             <!-- Min60 Picker -->
@@ -156,6 +163,13 @@
                     android:id="@+id/trade_level_picker_min60"
                     android:layout_width="80dp"
                     android:layout_height="60dp" />
+
+                <TextView
+                    android:id="@+id/textview_min60_net"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:paddingTop="2dp" />
             </LinearLayout>
 
             <!-- Min30 Picker -->
@@ -179,6 +193,13 @@
                     android:id="@+id/trade_level_picker_min30"
                     android:layout_width="80dp"
                     android:layout_height="60dp" />
+
+                <TextView
+                    android:id="@+id/textview_min30_net"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:paddingTop="2dp" />
             </LinearLayout>
 
             <!-- Min15 Picker -->
@@ -202,6 +223,13 @@
                     android:id="@+id/trade_level_picker_min15"
                     android:layout_width="80dp"
                     android:layout_height="60dp" />
+
+                <TextView
+                    android:id="@+id/textview_min15_net"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:paddingTop="2dp" />
             </LinearLayout>
 
             <!-- Min5 Picker -->
@@ -225,6 +253,13 @@
                     android:id="@+id/trade_level_picker_min5"
                     android:layout_width="80dp"
                     android:layout_height="60dp" />
+
+                <TextView
+                    android:id="@+id/textview_min5_net"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:paddingTop="2dp" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

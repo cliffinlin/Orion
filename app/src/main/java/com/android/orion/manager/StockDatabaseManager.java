@@ -1060,10 +1060,11 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 		}
 	}
 
-	public void loadStockTrendMap(Stock stock, ArrayMap<String, StockTrend> stockTrendMap) {
-		if (stock == null || stockTrendMap == null) {
+	public void getStockTrendMap(Stock stock) {
+		if (stock == null) {
 			return;
 		}
+		ArrayMap<String, StockTrend> stockTrendMap = stock.getStockTrendMap();
 		stockTrendMap.clear();
 		Cursor cursor = null;
 		try {

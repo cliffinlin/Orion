@@ -68,7 +68,7 @@ public class TrendAnalyzer {
 
 	void setup(Stock stock) {
 		mStock = stock;
-		mStockDatabaseManager.loadStockTrendMap(mStock, mStock.getStockTrendMap());
+		mStockDatabaseManager.getStockTrendMap(mStock);
 		mKMeansPeriods = 0;
 		for (String period : Period.PERIODS) {
 			if (Setting.getPeriod(period)) {
