@@ -296,7 +296,16 @@ public class StockDataChart {
 			default:
 				break;
 		}
-		return Setting.getDisplayAdaptive() ? level >= mAdaptiveLevel : result;
+
+		if (Setting.getDisplayAdaptive()) {
+			if (mStock.hasFlag(Stock.FLAG_CUSTOM)) {
+				result = level == mAdaptiveLevel;
+			} else {
+				result = level >= mAdaptiveLevel;
+			}
+		}
+
+		return result;
 	}
 
 	public void updateDescription(Stock stock) {
@@ -476,7 +485,7 @@ public class StockDataChart {
 			mCircledEntryList[level].add(mTrendEntryList[level].get(mTrendEntryList[level].size() - 2));
 			mCircledEntryList[level].add(mTrendEntryList[level].get(mTrendEntryList[level].size() - 1));
 
-			if (Setting.getDisplayAdaptive()) {
+			if (Setting.getDisplayAdaptive()  && !mStock.hasFlag(Stock.FLAG_CUSTOM)) {
 				if (level > StockTrend.LEVEL_STROKE) {
 					int index = mTrendEntryList[level].get(mTrendEntryList[level].size() - 1).getXIndex();
 					for (int i = 0; i < mTrendEntryList[level - 1].size(); i++) {
