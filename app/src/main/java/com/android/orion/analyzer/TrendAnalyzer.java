@@ -27,13 +27,10 @@ import org.apache.commons.math3.ml.clustering.Clusterable;
 import org.apache.commons.math3.ml.clustering.KMeansPlusPlusClusterer;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -697,7 +694,6 @@ public class TrendAnalyzer {
 	}
 
 	void setupLevel() {
-		HashSet<Double> predictSet = new HashSet<>();
 		double predictSum = 0;
 		StringBuilder builder = new StringBuilder();
 
@@ -721,29 +717,6 @@ public class TrendAnalyzer {
 
 					StockTrend stockTrend = mStock.getStockTrend(period, mStock.getLevel(period));
 					if (stockTrend != null) {
-						predictSet.add(Math.abs(stockTrend.getPredict()));
-					}
-				}
-			}
-
-			// 使用IQR方法去除predictSet中的异常点
-			if (predictSet.size() >= 3) {
-				// 使用标准严格程度(1.5倍IQR)
-				Set<Double> filteredPredictSet = removeOutliersUsingIQR(predictSet, 2);
-				predictSet = new HashSet<>(filteredPredictSet);
-			}
-
-			for (String period : Period.PERIODS) {
-				if (Setting.getPeriod(period)) {
-					StockTrend stockTrend = mStock.getStockTrend(period, mStock.getLevel(period));
-					if (stockTrend != null) {
-						if (predictSet.isEmpty()) {
-							break;
-						}
-						if (!predictSet.contains(Math.abs(stockTrend.getPredict()))) {
-							stockTrend.setPredict(0);
-							continue;
-						}
 						predictSum += stockTrend.getPredict();
 					}
 				}
@@ -751,83 +724,8 @@ public class TrendAnalyzer {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		int count = Math.min(mKMeansPeriods, predictSet.size());
-		mStock.setPredict((count == 0) ?  0 : Utility.Round1(predictSum / count));
+		mStock.setPredict((mKMeansPeriods == 0) ?  0 : Utility.Round1(predictSum / mKMeansPeriods));
 		Log.d(builder.toString());
-	}
-
-	/**
-	 * 增强版IQR异常值检测，可选择不同的严格程度
-	 */
-	private Set<Double> removeOutliersUsingIQR(Set<Double> dataSet, double iqrMultiplier) {
-		if (dataSet == null || dataSet.size() < 3) {
-			return dataSet;
-		}
-
-		Log.d("IQR异常值检测 - 原始数据: " + dataSet.toString());
-
-		double[] dataArray = new double[dataSet.size()];
-		int index = 0;
-		for (Double value : dataSet) {
-			dataArray[index++] = value;
-		}
-		Arrays.sort(dataArray);
-
-		double q1 = calculatePercentile(dataArray, 25);
-		double q3 = calculatePercentile(dataArray, 75);
-		double iqr = q3 - q1;
-
-		// 使用可配置的倍数，默认1.5，更严格可以用1.0，更宽松可以用2.0
-		double multiplier = (iqrMultiplier > 0) ? iqrMultiplier : 1.5;
-		double lowerBound = q1 - multiplier * iqr;
-		double upperBound = q3 + multiplier * iqr;
-
-		Set<Double> filteredSet = new HashSet<>();
-		int outlierCount = 0;
-		for (double value : dataArray) {
-			if (value >= lowerBound && value <= upperBound) {
-				filteredSet.add(value);
-			} else {
-				outlierCount++;
-				Log.d("IQR异常值检测: 移除异常值 " + value +
-						" [Q1=" + q1 + ", Q3=" + q3 + ", IQR=" + iqr + "]");
-			}
-		}
-
-		Log.d("IQR异常值检测: 原始数据 " + dataSet.size() + " 个, 移除 " +
-				outlierCount + " 个异常值, 剩余 " + filteredSet.size() + " 个");
-
-		return filteredSet;
-	}
-
-	/**
-	 * 计算百分位数
-	 */
-	private double calculatePercentile(@NonNull double[] sortedData, double percentile) {
-		if (sortedData == null || sortedData.length == 0) {
-			Log.e("calculatePercentile: 输入数据为空");
-			return 0.0;
-		}
-
-		if (percentile < 0 || percentile > 100) {
-			Log.e("calculatePercentile: 百分位数参数无效: " + percentile);
-			return sortedData[0]; // 返回第一个元素作为默认值
-		}
-
-		int n = sortedData.length;
-		if (n == 0) return 0;
-		if (n == 1) return sortedData[0];
-
-		double index = percentile / 100.0 * (n - 1);
-		int lowerIndex = (int) Math.floor(index);
-		int upperIndex = (int) Math.ceil(index);
-
-		if (lowerIndex == upperIndex) {
-			return sortedData[lowerIndex];
-		}
-
-		double weight = index - lowerIndex;
-		return sortedData[lowerIndex] * (1 - weight) + sortedData[upperIndex] * weight;
 	}
 
 	void updateDataPointMap(DataPoint dataPoint) {
