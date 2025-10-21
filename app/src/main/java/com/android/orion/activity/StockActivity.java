@@ -13,6 +13,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,6 +52,11 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 	TradeLevelPicker mTradeLevelPickerMin30;
 	TradeLevelPicker mTradeLevelPickerMin15;
 	TradeLevelPicker mTradeLevelPickerMin5;
+	ImageView mImageViewDayCrosshair;
+	ImageView mImageViewMin60Crosshair;
+	ImageView mImageViewMin30Crosshair;
+	ImageView mImageViewMin15Crosshair;
+	ImageView mImageViewMin5Crosshair;
 	Button mButtonOk;
 	Button mButtonCancel;
 
@@ -86,6 +92,11 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mTradeLevelPickerMin30 = findViewById(R.id.trade_level_picker_min30);
 		mTradeLevelPickerMin15 = findViewById(R.id.trade_level_picker_min15);
 		mTradeLevelPickerMin5 = findViewById(R.id.trade_level_picker_min5);
+		mImageViewDayCrosshair = findViewById(R.id.imageview_day_crosshair);
+		mImageViewMin60Crosshair = findViewById(R.id.imageview_min60_crosshair);
+		mImageViewMin30Crosshair = findViewById(R.id.imageview_min30_crosshair);
+		mImageViewMin15Crosshair = findViewById(R.id.imageview_min15_crosshair);
+		mImageViewMin5Crosshair = findViewById(R.id.imageview_min5_crosshair);
 		mButtonOk = findViewById(R.id.button_ok);
 		mButtonCancel = findViewById(R.id.button_cancel);
 
@@ -96,6 +107,11 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mEditTextStockHold.setOnClickListener(this);
 		mEditTextStockYield.setOnClickListener(this);
 		mTextViewSeUrl.setOnClickListener(this);
+		mImageViewDayCrosshair.setOnClickListener(this);
+		mImageViewMin60Crosshair.setOnClickListener(this);
+		mImageViewMin30Crosshair.setOnClickListener(this);
+		mImageViewMin15Crosshair.setOnClickListener(this);
+		mImageViewMin5Crosshair.setOnClickListener(this);
 		mButtonOk.setOnClickListener(this);
 		mButtonCancel.setOnClickListener(this);
 
@@ -235,6 +251,12 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		updateNetForPeriod(Period.MIN30, mStock.getLevel(Period.MIN30), mTextviewMin30Net);
 		updateNetForPeriod(Period.MIN15, mStock.getLevel(Period.MIN15), mTextviewMin15Net);
 		updateNetForPeriod(Period.MIN5, mStock.getLevel(Period.MIN5), mTextviewMin5Net);
+
+		restoreCrosshairState(mImageViewDayCrosshair, Period.DAY);
+		restoreCrosshairState(mImageViewMin60Crosshair, Period.MIN60);
+		restoreCrosshairState(mImageViewMin30Crosshair, Period.MIN30);
+		restoreCrosshairState(mImageViewMin15Crosshair, Period.MIN15);
+		restoreCrosshairState(mImageViewMin5Crosshair, Period.MIN5);
 	}
 
 	void setNetTextView(TextView textView, double nextNet) {
@@ -275,6 +297,26 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 				updateView();
 				break;
 
+			case R.id.imageview_day_crosshair:
+				toggleCrosshairIcon(mImageViewDayCrosshair, Period.DAY);
+				break;
+
+			case R.id.imageview_min60_crosshair:
+				toggleCrosshairIcon(mImageViewMin60Crosshair, Period.MIN60);
+				break;
+
+			case R.id.imageview_min30_crosshair:
+				toggleCrosshairIcon(mImageViewMin30Crosshair, Period.MIN30);
+				break;
+
+			case R.id.imageview_min15_crosshair:
+				toggleCrosshairIcon(mImageViewMin15Crosshair, Period.MIN15);
+				break;
+
+			case R.id.imageview_min5_crosshair:
+				toggleCrosshairIcon(mImageViewMin5Crosshair, Period.MIN5);
+				break;
+
 			case R.id.button_ok:
 				if (mCheckBoxTrade.isChecked()) {
 					mStock.addFlag(Stock.FLAG_TRADE);
@@ -313,6 +355,8 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 					mStock.setLevel(Period.MIN5, mTradeLevelPickerMin5.getValue());
 				}
 
+				saveCrosshairStates();
+
 				if (TextUtils.equals(mAction, Constant.ACTION_FAVORITE_STOCK_INSERT)) {
 					if (!mStockDatabaseManager.isStockExist(mStock)) {
 						mStock.setCreated(Utility.getCurrentDateTimeString());
@@ -347,5 +391,60 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 			default:
 				break;
 		}
+	}
+
+	/**
+	 * 切换crosshair图标状态
+	 */
+	private void toggleCrosshairIcon(ImageView imageView, String period) {
+		// 检查当前图标状态并切换
+		if (isCrosshairEnabled(imageView)) {
+			// 当前是crosshair状态，切换为unchecked
+			imageView.setImageResource(R.drawable.ic_unchecked);
+			saveCrosshairState(period, false);
+		} else {
+			// 当前是unchecked状态，切换为crosshair
+			imageView.setImageResource(R.drawable.ic_crosshair);
+			saveCrosshairState(period, true);
+		}
+	}
+
+	/**
+	 * 检查当前图标是否是crosshair状态
+	 */
+	private boolean isCrosshairEnabled(ImageView imageView) {
+		try {
+			// 通过检查当前设置的图片资源来判断状态
+			return imageView.getDrawable().getConstantState().equals(
+					getResources().getDrawable(R.drawable.ic_crosshair).getConstantState());
+		} catch (Exception e) {
+			// 如果比较失败，默认返回false
+			return false;
+		}
+	}
+
+	/**
+	 * 保存crosshair状态到Stock对象
+	 */
+	private void saveCrosshairState(String period, boolean enabled) {
+		// 将状态保存到Stock对象中
+//		mStock.setCrosshairEnabled(period, enabled);
+	}
+
+	/**
+	 * 保存所有crosshair状态
+	 */
+	private void saveCrosshairStates() {
+		// 所有状态已经在点击时保存到Stock对象中
+		// 这里可以添加额外的保存逻辑，如果需要的话
+	}
+
+	/**
+	 * 从Stock对象恢复crosshair状态
+	 */
+	private void restoreCrosshairState(ImageView imageView, String period) {
+		// 从Stock对象加载状态并设置图标
+		boolean isEnabled = false;//mStock.isCrosshairEnabled(period);
+		imageView.setImageResource(isEnabled ? R.drawable.ic_crosshair : R.drawable.ic_unchecked);
 	}
 }

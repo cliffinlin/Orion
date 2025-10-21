@@ -761,7 +761,7 @@ public class TrendAnalyzer {
 			}
 		}
 
-		mStock.setTrend(period, "");
+		mStock.setTrend(period, StockTrend.TREND_NONE);
 		for (int index = 0; index < mStockDataList.size(); index++) {
 			StockData stockData = mStockDataList.get(index);
 			for (int level = StockTrend.LEVEL_DRAW; level < StockTrend.LEVELS.length; level++) {

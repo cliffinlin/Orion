@@ -93,7 +93,7 @@ public class StockAnalyzer {
 		}
 
 		StopWatch.stop();
-		Log.d(stock.toLogString() + Symbol.TAB + stock.getPriceNetString(Symbol.TAB) + Symbol.TAB + stock.getTrendString() + Symbol.TAB + StopWatch.getIntervalString());
+		Log.d(stock.toLogString() + Symbol.TAB + stock.getPriceNetString(Symbol.TAB) + Symbol.TAB + stock.getTrendStringBySetting() + Symbol.TAB + StopWatch.getIntervalString());
 	}
 
 	private void analyzeMACD(String period) {

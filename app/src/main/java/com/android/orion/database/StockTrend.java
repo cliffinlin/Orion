@@ -63,6 +63,8 @@ public class StockTrend extends DatabaseTable {
 	public static final String TYPE_DOWN_NONE_UP = "DNU";
 	public static final String TYPE_DOWN_NONE_DOWN = "DND";
 
+	public static final String TREND_NONE = Symbol.WHITE_SPACE;
+
 	public static final int FLAG_UNUSED = -1;
 	public static final int FLAG_NONE = 0;
 	public static final int FLAG_CHANGED = 1 << 0;

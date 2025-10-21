@@ -51,7 +51,8 @@ public class Period {
 	public String mName = "";
 	public byte[] mThumbnail;
 	public int mLevel = StockTrend.LEVEL_NONE;
-	public String mTrend = "";
+	public int mTarget = StockTrend.LEVEL_NONE;
+	public String mTrend = StockTrend.TREND_NONE;
 	public PolarComponent mPolarComponent;
 
 	public ArrayList<ArrayList<StockData>> mVertexLists = new ArrayList<>();
@@ -140,16 +141,58 @@ public class Period {
 		return mLevel;
 	}
 
-	public void setLevel(int Level) {
-		mLevel = Level;
+	public void setLevel(int level) {
+		mLevel = level;
 	}
 
 	public void setLevel(Cursor cursor) {
 		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
-		setLevel(cursor.getInt(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_PERIOD_LEVEL(mName))));
+		setLevel(fromColumnLevel(cursor));
+	}
+
+	public int fromColumnLevel(Cursor cursor) {
+		int result = 0;
+		if (cursor == null || cursor.isClosed()) {
+			return result;
+		}
+
+		String levelString = cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_LEVEL));
+		if (TextUtils.isEmpty(levelString) || levelString.length() != PERIODS.length) {
+			return result;
+		}
+		return Integer.parseInt(levelString.substring(indexOf(mName), indexOf(mName) + 1));
+	}
+
+	public int getTarget() {
+		return mTarget;
+	}
+
+	public void setTarget(int target) {
+		mTarget = target;
+	}
+
+	public void setTarget(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+		setTarget(fromColumnTarget(cursor));
+	}
+
+	public int fromColumnTarget(Cursor cursor) {
+		int result = 0;
+		if (cursor == null || cursor.isClosed()) {
+			return result;
+		}
+
+		String targetString = cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_TARGET));
+		if (TextUtils.isEmpty(targetString) || targetString.length() != PERIODS.length) {
+			return result;
+		}
+		return Integer.parseInt(targetString.substring(indexOf(mName), indexOf(mName) + 1));
 	}
 
 	public String getTrend() {
@@ -164,8 +207,21 @@ public class Period {
 		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
-		setTrend(cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_PERIOD_TREND(mName))));
+		setTrend(fromColumnTrend(cursor));
+	}
+
+	public String fromColumnTrend(Cursor cursor) {
+		String result = StockTrend.TREND_NONE;
+		if (cursor == null || cursor.isClosed()) {
+			return result;
+		}
+
+		String trendString = cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_TREND));
+		if (TextUtils.isEmpty(trendString) || trendString.length() != PERIODS.length) {
+			return result;
+		}
+		return trendString.substring(indexOf(mName), indexOf(mName) + 1);
 	}
 
 	public PolarComponent getPolarComponent() {

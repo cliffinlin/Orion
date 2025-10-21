@@ -207,9 +207,9 @@ public class Stock extends DatabaseTable {
 
 		for (String period : Period.PERIODS) {
 			contentValues.put(DatabaseContract.COLUMN_PERIOD_THUMBNAIL(period), getPeriod(period).getThumbnail());
-			contentValues.put(DatabaseContract.COLUMN_PERIOD_LEVEL(period), getPeriod(period).getLevel());
-			contentValues.put(DatabaseContract.COLUMN_PERIOD_TREND(period), getPeriod(period).getTrend());
 		}
+		contentValues.put(DatabaseContract.COLUMN_LEVEL, getLevelString());
+		contentValues.put(DatabaseContract.COLUMN_TREND, getTrendString());
 
 		contentValues.put(DatabaseContract.COLUMN_ROI, mRoi);
 		contentValues.put(DatabaseContract.COLUMN_IR, mIR);
@@ -285,10 +285,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
 		if (hasFlag(FLAG_CUSTOM)) {
-			for (int i = Period.indexOf(Period.DAY); i < Period.PERIODS.length; i++) {
-				String period = Period.PERIODS[i];
-				contentValues.put(DatabaseContract.COLUMN_PERIOD_LEVEL(period), getPeriod(period).getLevel());
-			}
+			contentValues.put(DatabaseContract.COLUMN_LEVEL, getLevelString());
 		}
 		return contentValues;
 	}
@@ -1632,7 +1629,23 @@ public class Stock extends DatabaseTable {
 		return builder.toString();
 	}
 
+	public String getLevelString() {
+		StringBuilder builder = new StringBuilder();
+		for (String period : Period.PERIODS) {
+			builder.append(getLevel(period));
+		}
+		return builder.toString();
+	}
+
 	public String getTrendString() {
+		StringBuilder builder = new StringBuilder();
+		for (String period : Period.PERIODS) {
+			builder.append(getTrend(period));
+		}
+		return builder.toString();
+	}
+
+	public String getTrendStringBySetting() {
 		StringBuilder builder = new StringBuilder();
 		for (String period : Period.PERIODS) {
 			if (Setting.getPeriod(period)) {
