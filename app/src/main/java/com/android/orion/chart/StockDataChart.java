@@ -299,7 +299,7 @@ public class StockDataChart {
 
 		if (Setting.getDisplayAdaptive()) {
 			if (mStock.hasFlag(Stock.FLAG_CUSTOM)) {
-				result = (level == mAdaptiveLevel || level == mAdaptiveLevel - 1);
+				result = (level == mAdaptiveLevel);
 			} else {
 				result = (level >= mAdaptiveLevel);
 			}

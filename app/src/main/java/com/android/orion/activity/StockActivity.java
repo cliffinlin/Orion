@@ -52,11 +52,11 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 	TradeLevelPicker mTradeLevelPickerMin30;
 	TradeLevelPicker mTradeLevelPickerMin15;
 	TradeLevelPicker mTradeLevelPickerMin5;
-	ImageView mImageViewDayCrosshair;
-	ImageView mImageViewMin60Crosshair;
-	ImageView mImageViewMin30Crosshair;
-	ImageView mImageViewMin15Crosshair;
-	ImageView mImageViewMin5Crosshair;
+	ImageView mImageViewDayTarget;
+	ImageView mImageViewMin60Target;
+	ImageView mImageViewMin30Target;
+	ImageView mImageViewMin15Target;
+	ImageView mImageViewMin5Target;
 	Button mButtonOk;
 	Button mButtonCancel;
 
@@ -92,11 +92,11 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mTradeLevelPickerMin30 = findViewById(R.id.trade_level_picker_min30);
 		mTradeLevelPickerMin15 = findViewById(R.id.trade_level_picker_min15);
 		mTradeLevelPickerMin5 = findViewById(R.id.trade_level_picker_min5);
-		mImageViewDayCrosshair = findViewById(R.id.imageview_day_crosshair);
-		mImageViewMin60Crosshair = findViewById(R.id.imageview_min60_crosshair);
-		mImageViewMin30Crosshair = findViewById(R.id.imageview_min30_crosshair);
-		mImageViewMin15Crosshair = findViewById(R.id.imageview_min15_crosshair);
-		mImageViewMin5Crosshair = findViewById(R.id.imageview_min5_crosshair);
+		mImageViewDayTarget = findViewById(R.id.imageview_day_target);
+		mImageViewMin60Target = findViewById(R.id.imageview_min60_target);
+		mImageViewMin30Target = findViewById(R.id.imageview_min30_target);
+		mImageViewMin15Target = findViewById(R.id.imageview_min15_target);
+		mImageViewMin5Target = findViewById(R.id.imageview_min5_target);
 		mButtonOk = findViewById(R.id.button_ok);
 		mButtonCancel = findViewById(R.id.button_cancel);
 
@@ -107,11 +107,11 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mEditTextStockHold.setOnClickListener(this);
 		mEditTextStockYield.setOnClickListener(this);
 		mTextViewSeUrl.setOnClickListener(this);
-		mImageViewDayCrosshair.setOnClickListener(this);
-		mImageViewMin60Crosshair.setOnClickListener(this);
-		mImageViewMin30Crosshair.setOnClickListener(this);
-		mImageViewMin15Crosshair.setOnClickListener(this);
-		mImageViewMin5Crosshair.setOnClickListener(this);
+		mImageViewDayTarget.setOnClickListener(this);
+		mImageViewMin60Target.setOnClickListener(this);
+		mImageViewMin30Target.setOnClickListener(this);
+		mImageViewMin15Target.setOnClickListener(this);
+		mImageViewMin5Target.setOnClickListener(this);
 		mButtonOk.setOnClickListener(this);
 		mButtonCancel.setOnClickListener(this);
 
@@ -178,41 +178,65 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 	private void setupTradeLevelPickers() {
 		mTradeLevelPickerDay.setMinValue(StockTrend.LEVEL_NONE);
 		mTradeLevelPickerDay.setMaxValue(StockTrend.LEVEL_TREND_LINE);
+		mTradeLevelPickerDay.setTargetValue(mStock.getTarget(Period.DAY)); // è®¾ç½®ç›®æ ‡å€¼
 
 		mTradeLevelPickerMin60.setMinValue(StockTrend.LEVEL_NONE);
 		mTradeLevelPickerMin60.setMaxValue(StockTrend.LEVEL_TREND_LINE);
+		mTradeLevelPickerMin60.setTargetValue(mStock.getTarget(Period.MIN60));
 
 		mTradeLevelPickerMin30.setMinValue(StockTrend.LEVEL_NONE);
 		mTradeLevelPickerMin30.setMaxValue(StockTrend.LEVEL_TREND_LINE);
+		mTradeLevelPickerMin30.setTargetValue(mStock.getTarget(Period.MIN30));
 
 		mTradeLevelPickerMin15.setMinValue(StockTrend.LEVEL_NONE);
 		mTradeLevelPickerMin15.setMaxValue(StockTrend.LEVEL_TREND_LINE);
+		mTradeLevelPickerMin15.setTargetValue(mStock.getTarget(Period.MIN15));
 
 		mTradeLevelPickerMin5.setMinValue(StockTrend.LEVEL_NONE);
 		mTradeLevelPickerMin5.setMaxValue(StockTrend.LEVEL_TREND_LINE);
+		mTradeLevelPickerMin5.setTargetValue(mStock.getTarget(Period.MIN5));
 
-		setupTradeLevelPickerListener(mTradeLevelPickerDay, Period.DAY, mTextviewDayNet);
-		setupTradeLevelPickerListener(mTradeLevelPickerMin60, Period.MIN60, mTextviewMin60Net);
-		setupTradeLevelPickerListener(mTradeLevelPickerMin30, Period.MIN30, mTextviewMin30Net);
-		setupTradeLevelPickerListener(mTradeLevelPickerMin15, Period.MIN15, mTextviewMin15Net);
-		setupTradeLevelPickerListener(mTradeLevelPickerMin5, Period.MIN5, mTextviewMin5Net);
+		setupTradeLevelPickerListener(mTradeLevelPickerDay, Period.DAY, mTextviewDayNet, mImageViewDayTarget);
+		setupTradeLevelPickerListener(mTradeLevelPickerMin60, Period.MIN60, mTextviewMin60Net, mImageViewMin60Target);
+		setupTradeLevelPickerListener(mTradeLevelPickerMin30, Period.MIN30, mTextviewMin30Net, mImageViewMin30Target);
+		setupTradeLevelPickerListener(mTradeLevelPickerMin15, Period.MIN15, mTextviewMin15Net, mImageViewMin15Target);
+		setupTradeLevelPickerListener(mTradeLevelPickerMin5, Period.MIN5, mTextviewMin5Net, mImageViewMin5Target);
 	}
 
-	private void setupTradeLevelPickerListener(TradeLevelPicker picker, final String period, final TextView netTextView) {
+	private void setupTradeLevelPickerListener(TradeLevelPicker picker, final String period,
+											   final TextView netTextView, final ImageView targetImageView) {
+		if (picker == null) {
+			return;
+		}
 		picker.setOnValueChangedListener(new android.widget.NumberPicker.OnValueChangeListener() {
 			@Override
 			public void onValueChange(android.widget.NumberPicker numberPicker, int oldVal, int newVal) {
-				updateNetForPeriod(period, newVal, netTextView);
+				// æ›´æ–°å‡€å€¼æ˜¾ç¤º
+				StockTrend stockTrend = mStock.getStockTrend(period, newVal);
+				if (stockTrend != null) {
+					setNetTextView(netTextView, stockTrend.getNextNet());
+				} else {
+					setNetTextView(netTextView, 0);
+				}
+
+				// æ›´æ–°æ‹¨è½®æ–‡æœ¬é¢œè‰²
+				picker.updateTextColor(newVal);
+
+				// æ›´æ–°ç›®æ ‡å›¾æ ‡
+				updateTargetIcon(period, newVal, targetImageView);
 			}
 		});
 	}
 
-	private void updateNetForPeriod(String period, int level, TextView netTextView) {
-		StockTrend stockTrend = mStock.getStockTrend(period, level);
-		if (stockTrend != null) {
-			setNetTextView(netTextView, stockTrend.getNextNet());
+	/**
+	 * æ›´æ–°ç›®æ ‡å›¾æ ‡æ˜¾ç¤ºçŠ¶æ€
+	 */
+	private void updateTargetIcon(String period, int currentLevel, ImageView targetImageView) {
+		int target = mStock.getTarget(period);
+		if (target > StockTrend.LEVEL_NONE && target == currentLevel) {
+			targetImageView.setImageResource(R.drawable.ic_crosshair_checked);
 		} else {
-			setNetTextView(netTextView, 0);
+			targetImageView.setImageResource(R.drawable.ic_crosshair_unchecked);
 		}
 	}
 
@@ -234,11 +258,25 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mTradeLevelPickerMin15.setEnabled(custom);
 		mTradeLevelPickerMin5.setEnabled(custom);
 
+		// è®¾ç½®ç›®æ ‡å€¼
+		mTradeLevelPickerDay.setTargetValue(mStock.getTarget(Period.DAY));
+		mTradeLevelPickerMin60.setTargetValue(mStock.getTarget(Period.MIN60));
+		mTradeLevelPickerMin30.setTargetValue(mStock.getTarget(Period.MIN30));
+		mTradeLevelPickerMin15.setTargetValue(mStock.getTarget(Period.MIN15));
+		mTradeLevelPickerMin5.setTargetValue(mStock.getTarget(Period.MIN5));
+
 		mTradeLevelPickerDay.setValue(mStock.getLevel(Period.DAY));
 		mTradeLevelPickerMin60.setValue(mStock.getLevel(Period.MIN60));
 		mTradeLevelPickerMin30.setValue(mStock.getLevel(Period.MIN30));
 		mTradeLevelPickerMin15.setValue(mStock.getLevel(Period.MIN15));
 		mTradeLevelPickerMin5.setValue(mStock.getLevel(Period.MIN5));
+
+		// æ›´æ–°æ‹¨è½®æ–‡æœ¬é¢œè‰²
+		mTradeLevelPickerDay.updateTextColor(mStock.getLevel(Period.DAY));
+		mTradeLevelPickerMin60.updateTextColor(mStock.getLevel(Period.MIN60));
+		mTradeLevelPickerMin30.updateTextColor(mStock.getLevel(Period.MIN30));
+		mTradeLevelPickerMin15.updateTextColor(mStock.getLevel(Period.MIN15));
+		mTradeLevelPickerMin5.updateTextColor(mStock.getLevel(Period.MIN5));
 
 		mTradeLevelPickerDay.invalidate();
 		mTradeLevelPickerMin60.invalidate();
@@ -246,17 +284,30 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mTradeLevelPickerMin15.invalidate();
 		mTradeLevelPickerMin5.invalidate();
 
-		updateNetForPeriod(Period.DAY, mStock.getLevel(Period.DAY), mTextviewDayNet);
-		updateNetForPeriod(Period.MIN60, mStock.getLevel(Period.MIN60), mTextviewMin60Net);
-		updateNetForPeriod(Period.MIN30, mStock.getLevel(Period.MIN30), mTextviewMin30Net);
-		updateNetForPeriod(Period.MIN15, mStock.getLevel(Period.MIN15), mTextviewMin15Net);
-		updateNetForPeriod(Period.MIN5, mStock.getLevel(Period.MIN5), mTextviewMin5Net);
+		// æ›´æ–°å‡€å€¼æ˜¾ç¤º
+		updateNetDisplay(Period.DAY, mStock.getLevel(Period.DAY), mTextviewDayNet);
+		updateNetDisplay(Period.MIN60, mStock.getLevel(Period.MIN60), mTextviewMin60Net);
+		updateNetDisplay(Period.MIN30, mStock.getLevel(Period.MIN30), mTextviewMin30Net);
+		updateNetDisplay(Period.MIN15, mStock.getLevel(Period.MIN15), mTextviewMin15Net);
+		updateNetDisplay(Period.MIN5, mStock.getLevel(Period.MIN5), mTextviewMin5Net);
 
-		restoreCrosshairState(mImageViewDayCrosshair, Period.DAY);
-		restoreCrosshairState(mImageViewMin60Crosshair, Period.MIN60);
-		restoreCrosshairState(mImageViewMin30Crosshair, Period.MIN30);
-		restoreCrosshairState(mImageViewMin15Crosshair, Period.MIN15);
-		restoreCrosshairState(mImageViewMin5Crosshair, Period.MIN5);
+		updateTargetImageView(Period.DAY, mImageViewDayTarget);
+		updateTargetImageView(Period.MIN60, mImageViewMin60Target);
+		updateTargetImageView(Period.MIN30, mImageViewMin30Target);
+		updateTargetImageView(Period.MIN15, mImageViewMin15Target);
+		updateTargetImageView(Period.MIN5, mImageViewMin5Target);
+	}
+
+	/**
+	 * æ›´æ–°å‡€å€¼æ˜¾ç¤º
+	 */
+	private void updateNetDisplay(String period, int level, TextView netTextView) {
+		StockTrend stockTrend = mStock.getStockTrend(period, level);
+		if (stockTrend != null) {
+			setNetTextView(netTextView, stockTrend.getNextNet());
+		} else {
+			setNetTextView(netTextView, 0);
+		}
 	}
 
 	void setNetTextView(TextView textView, double nextNet) {
@@ -297,24 +348,24 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 				updateView();
 				break;
 
-			case R.id.imageview_day_crosshair:
-				toggleCrosshairIcon(mImageViewDayCrosshair, Period.DAY);
+			case R.id.imageview_day_target:
+				toggleTargetImageView(Period.DAY, mTradeLevelPickerDay.getValue(), mImageViewDayTarget);
 				break;
 
-			case R.id.imageview_min60_crosshair:
-				toggleCrosshairIcon(mImageViewMin60Crosshair, Period.MIN60);
+			case R.id.imageview_min60_target:
+				toggleTargetImageView(Period.MIN60, mTradeLevelPickerMin60.getValue(), mImageViewMin60Target);
 				break;
 
-			case R.id.imageview_min30_crosshair:
-				toggleCrosshairIcon(mImageViewMin30Crosshair, Period.MIN30);
+			case R.id.imageview_min30_target:
+				toggleTargetImageView(Period.MIN30, mTradeLevelPickerMin30.getValue(), mImageViewMin30Target);
 				break;
 
-			case R.id.imageview_min15_crosshair:
-				toggleCrosshairIcon(mImageViewMin15Crosshair, Period.MIN15);
+			case R.id.imageview_min15_target:
+				toggleTargetImageView(Period.MIN15, mTradeLevelPickerMin15.getValue(), mImageViewMin15Target);
 				break;
 
-			case R.id.imageview_min5_crosshair:
-				toggleCrosshairIcon(mImageViewMin5Crosshair, Period.MIN5);
+			case R.id.imageview_min5_target:
+				toggleTargetImageView(Period.MIN5, mTradeLevelPickerMin5.getValue(), mImageViewMin5Target);
 				break;
 
 			case R.id.button_ok:
@@ -355,8 +406,6 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 					mStock.setLevel(Period.MIN5, mTradeLevelPickerMin5.getValue());
 				}
 
-				saveCrosshairStates();
-
 				if (TextUtils.equals(mAction, Constant.ACTION_FAVORITE_STOCK_INSERT)) {
 					if (!mStockDatabaseManager.isStockExist(mStock)) {
 						mStock.setCreated(Utility.getCurrentDateTimeString());
@@ -393,58 +442,63 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		}
 	}
 
-	/**
-	 * ÇÐ»»crosshairÍ¼±ê×´Ì¬
-	 */
-	private void toggleCrosshairIcon(ImageView imageView, String period) {
-		// ¼ì²éµ±Ç°Í¼±ê×´Ì¬²¢ÇÐ»»
-		if (isCrosshairEnabled(imageView)) {
-			// µ±Ç°ÊÇcrosshair×´Ì¬£¬ÇÐ»»Îªunchecked
-			imageView.setImageResource(R.drawable.ic_unchecked);
-			saveCrosshairState(period, false);
+	private void toggleTargetImageView(String period, int target, ImageView imageView) {
+		TradeLevelPicker picker = getTradeLevelPickerByPeriod(period);
+
+		if (isCrosshairIconShow(imageView)) {
+			imageView.setImageResource(R.drawable.ic_crosshair_unchecked);
+			mStock.setTarget(period, StockTrend.LEVEL_NONE);
+			if (picker != null) {
+				picker.setTargetValue(StockTrend.LEVEL_NONE);
+				picker.updateTextColor(picker.getValue());
+			}
 		} else {
-			// µ±Ç°ÊÇunchecked×´Ì¬£¬ÇÐ»»Îªcrosshair
-			imageView.setImageResource(R.drawable.ic_crosshair);
-			saveCrosshairState(period, true);
+			imageView.setImageResource(R.drawable.ic_crosshair_checked);
+			mStock.setTarget(period, target);
+			if (picker != null) {
+				picker.setTargetValue(target);
+				picker.updateTextColor(picker.getValue());
+			}
 		}
 	}
 
 	/**
-	 * ¼ì²éµ±Ç°Í¼±êÊÇ·ñÊÇcrosshair×´Ì¬
+	 * æ ¹æ®å‘¨æœŸèŽ·å–å¯¹åº”çš„ TradeLevelPicker
 	 */
-	private boolean isCrosshairEnabled(ImageView imageView) {
+	private TradeLevelPicker getTradeLevelPickerByPeriod(String period) {
+		switch (period) {
+			case Period.DAY:
+				return mTradeLevelPickerDay;
+			case Period.MIN60:
+				return mTradeLevelPickerMin60;
+			case Period.MIN30:
+				return mTradeLevelPickerMin30;
+			case Period.MIN15:
+				return mTradeLevelPickerMin15;
+			case Period.MIN5:
+				return mTradeLevelPickerMin5;
+			default:
+				return null;
+		}
+	}
+
+	private boolean isCrosshairIconShow(ImageView imageView) {
 		try {
-			// Í¨¹ý¼ì²éµ±Ç°ÉèÖÃµÄÍ¼Æ¬×ÊÔ´À´ÅÐ¶Ï×´Ì¬
 			return imageView.getDrawable().getConstantState().equals(
-					getResources().getDrawable(R.drawable.ic_crosshair).getConstantState());
+					getResources().getDrawable(R.drawable.ic_crosshair_checked).getConstantState());
 		} catch (Exception e) {
-			// Èç¹û±È½ÏÊ§°Ü£¬Ä¬ÈÏ·µ»Øfalse
+			e.printStackTrace();
 			return false;
 		}
 	}
 
-	/**
-	 * ±£´æcrosshair×´Ì¬µ½Stock¶ÔÏó
-	 */
-	private void saveCrosshairState(String period, boolean enabled) {
-		// ½«×´Ì¬±£´æµ½Stock¶ÔÏóÖÐ
-//		mStock.setCrosshairEnabled(period, enabled);
-	}
-
-	/**
-	 * ±£´æËùÓÐcrosshair×´Ì¬
-	 */
-	private void saveCrosshairStates() {
-		// ËùÓÐ×´Ì¬ÒÑ¾­ÔÚµã»÷Ê±±£´æµ½Stock¶ÔÏóÖÐ
-		// ÕâÀï¿ÉÒÔÌí¼Ó¶îÍâµÄ±£´æÂß¼­£¬Èç¹ûÐèÒªµÄ»°
-	}
-
-	/**
-	 * ´ÓStock¶ÔÏó»Ö¸´crosshair×´Ì¬
-	 */
-	private void restoreCrosshairState(ImageView imageView, String period) {
-		// ´ÓStock¶ÔÏó¼ÓÔØ×´Ì¬²¢ÉèÖÃÍ¼±ê
-		boolean isEnabled = false;//mStock.isCrosshairEnabled(period);
-		imageView.setImageResource(isEnabled ? R.drawable.ic_crosshair : R.drawable.ic_unchecked);
+	private void updateTargetImageView(String period, ImageView imageView) {
+		int target = mStock.getTarget(period);
+		int level = mStock.getLevel(period);
+		if (target > StockTrend.LEVEL_NONE && target == level) {
+			imageView.setImageResource(R.drawable.ic_crosshair_checked);
+		} else {
+			imageView.setImageResource(R.drawable.ic_crosshair_unchecked);
+		}
 	}
 }

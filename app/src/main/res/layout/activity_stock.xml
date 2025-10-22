@@ -142,7 +142,7 @@
                     android:paddingTop="2dp" />
 
                 <ImageView
-                    android:id="@+id/imageview_day_crosshair"
+                    android:id="@+id/imageview_day_target"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_unchecked"
@@ -180,7 +180,7 @@
                     android:paddingTop="2dp" />
 
                 <ImageView
-                    android:id="@+id/imageview_min60_crosshair"
+                    android:id="@+id/imageview_min60_target"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_unchecked"
@@ -218,7 +218,7 @@
                     android:paddingTop="2dp" />
 
                 <ImageView
-                    android:id="@+id/imageview_min30_crosshair"
+                    android:id="@+id/imageview_min30_target"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_unchecked"
@@ -256,7 +256,7 @@
                     android:paddingTop="2dp" />
 
                 <ImageView
-                    android:id="@+id/imageview_min15_crosshair"
+                    android:id="@+id/imageview_min15_target"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_unchecked"
@@ -294,7 +294,7 @@
                     android:paddingTop="2dp" />
 
                 <ImageView
-                    android:id="@+id/imageview_min5_crosshair"
+                    android:id="@+id/imageview_min5_target"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_unchecked"

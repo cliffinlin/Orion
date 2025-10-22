@@ -209,6 +209,7 @@ public class Stock extends DatabaseTable {
 			contentValues.put(DatabaseContract.COLUMN_PERIOD_THUMBNAIL(period), getPeriod(period).getThumbnail());
 		}
 		contentValues.put(DatabaseContract.COLUMN_LEVEL, getLevelString());
+		contentValues.put(DatabaseContract.COLUMN_TARGET, getTargetString());
 		contentValues.put(DatabaseContract.COLUMN_TREND, getTrendString());
 
 		contentValues.put(DatabaseContract.COLUMN_ROI, mRoi);
@@ -287,6 +288,7 @@ public class Stock extends DatabaseTable {
 		if (hasFlag(FLAG_CUSTOM)) {
 			contentValues.put(DatabaseContract.COLUMN_LEVEL, getLevelString());
 		}
+		contentValues.put(DatabaseContract.COLUMN_TARGET, getTargetString());
 		return contentValues;
 	}
 
@@ -314,6 +316,7 @@ public class Stock extends DatabaseTable {
 		for (String period : Period.PERIODS) {
 			getPeriod(period).setThumbnail(stock.getPeriod(period).getThumbnail());
 			getPeriod(period).setLevel(stock.getPeriod(period).getLevel());
+			getPeriod(period).setTarget(stock.getPeriod(period).getTarget());
 			getPeriod(period).setTrend(stock.getPeriod(period).getTrend());
 		}
 
@@ -384,6 +387,7 @@ public class Stock extends DatabaseTable {
 		for (String period : Period.PERIODS) {
 			getPeriod(period).setThumbnail(cursor);
 			getPeriod(period).setLevel(cursor);
+			getPeriod(period).setTarget(cursor);
 			getPeriod(period).setTrend(cursor);
 		}
 
@@ -1352,12 +1356,48 @@ public class Stock extends DatabaseTable {
 		return getPeriod(period).getStockTrendList(level);
 	}
 
+	public String getLevel() {
+		StringBuilder builder = new StringBuilder();
+		for (String period : Period.PERIODS) {
+			builder.append(getLevel(period));
+		}
+		return builder.toString();
+	}
+
+	public void setLevel(String level) {
+		for (String period : Period.PERIODS) {
+			getPeriod(period).setLevel(getPeriod(period).fromLevelString(level));
+		}
+	}
+
 	public int getLevel(String period) {
 		return getPeriod(period).getLevel();
 	}
 
 	public void setLevel(String period, int level) {
 		getPeriod(period).setLevel(level);
+	}
+
+	public String getTarget() {
+		StringBuilder builder = new StringBuilder();
+		for (String period : Period.PERIODS) {
+			builder.append(getTarget(period));
+		}
+		return builder.toString();
+	}
+
+	public void setTarget(String target) {
+		for (String period : Period.PERIODS) {
+			getPeriod(period).setTarget(getPeriod(period).fromTargetString(target));
+		}
+	}
+
+	public int getTarget(String period) {
+		return getPeriod(period).getTarget();
+	}
+
+	public void setTarget(String period, int target) {
+		getPeriod(period).setTarget(target);
 	}
 
 	public String getTrend(String period) {
@@ -1633,6 +1673,14 @@ public class Stock extends DatabaseTable {
 		StringBuilder builder = new StringBuilder();
 		for (String period : Period.PERIODS) {
 			builder.append(getLevel(period));
+		}
+		return builder.toString();
+	}
+
+	public String getTargetString() {
+		StringBuilder builder = new StringBuilder();
+		for (String period : Period.PERIODS) {
+			builder.append(getTarget(period));
 		}
 		return builder.toString();
 	}

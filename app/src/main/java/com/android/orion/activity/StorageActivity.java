@@ -35,7 +35,6 @@ public class StorageActivity extends DatabaseActivity {
 	static final String XML_TAG_STOCK = "stock";
 	static final String XML_TAG_STOCK_TRADE = "stock_trade";
 	static final String XML_TAG_STOCK_DEAL = "stock_deal";
-	static final String XML_ATTRIBUTE_DATE = "date";
 
 	static final int XML_PARSE_TYPE_NONE = 0;
 	static final int XML_PARSE_TYPE_STOCK = 1;
@@ -260,7 +259,11 @@ public class StorageActivity extends DatabaseActivity {
 								stock.setFlag(Integer.parseInt(parser.nextText()));
 							}
 						} else if (parseType == XML_PARSE_TYPE_STOCK_TRADE) {
-							stock.setLevel(tagName, Integer.parseInt(parser.nextText()));
+							if (TextUtils.equals(tagName, DatabaseContract.COLUMN_LEVEL)) {
+								stock.setLevel(parser.nextText());
+							} else if (TextUtils.equals(tagName, DatabaseContract.COLUMN_TARGET)) {
+								stock.setTarget(parser.nextText());
+							}
 						} else if (parseType == XML_PARSE_TYPE_STOCK_DEAL) {
 							if (TextUtils.equals(tagName, DatabaseContract.COLUMN_BUY)) {
 								stockDeal.setBuy(Double.parseDouble(parser.nextText()));
@@ -343,7 +346,7 @@ public class StorageActivity extends DatabaseActivity {
 			xmlSerializer.startDocument(null, true);
 
 			xmlSerializer.startTag("", XML_TAG_ROOT);
-			xmlSerializer.attribute("", XML_ATTRIBUTE_DATE,
+			xmlSerializer.attribute("", DatabaseContract.COLUMN_DATE,
 					Utility.getCurrentDateTimeString());
 
 			count = xmlSerialize(xmlSerializer);
@@ -402,17 +405,16 @@ public class StorageActivity extends DatabaseActivity {
 						stock.getName());
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_FLAG,
 						String.valueOf(stock.getFlag()));
+				count++;
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 
 			try {
 				xmlSerializer.startTag(null, XML_TAG_STOCK_TRADE);
-				for (int i = Period.indexOf(Period.DAY); i < Period.PERIODS.length; i++) {
-					String period = Period.PERIODS[i];
-					xmlSerialize(xmlSerializer,	period, String.valueOf(stock.getLevel(period)));
-					count++;
-				}
+				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_LEVEL, stock.getLevel());
+				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_TARGET, stock.getTarget());
+				count++;
 				xmlSerializer.endTag(null, XML_TAG_STOCK_TRADE);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -467,7 +469,9 @@ public class StorageActivity extends DatabaseActivity {
 		}
 
 		return count;
-	}	Handler mHandler = new Handler(Looper.getMainLooper()) {
+	}
+
+	Handler mHandler = new Handler(Looper.getMainLooper()) {
 		@Override
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);

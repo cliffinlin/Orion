@@ -149,17 +149,15 @@ public class Period {
 		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
-		setLevel(fromColumnLevel(cursor));
-	}
-
-	public int fromColumnLevel(Cursor cursor) {
-		int result = 0;
-		if (cursor == null || cursor.isClosed()) {
-			return result;
-		}
 
 		String levelString = cursor.getString(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_LEVEL));
+
+		setLevel(fromLevelString(levelString));
+	}
+
+	public int fromLevelString(String levelString) {
+		int result = 0;
 		if (TextUtils.isEmpty(levelString) || levelString.length() != PERIODS.length) {
 			return result;
 		}
@@ -178,17 +176,15 @@ public class Period {
 		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
-		setTarget(fromColumnTarget(cursor));
-	}
-
-	public int fromColumnTarget(Cursor cursor) {
-		int result = 0;
-		if (cursor == null || cursor.isClosed()) {
-			return result;
-		}
 
 		String targetString = cursor.getString(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_TARGET));
+
+		setTarget(fromTargetString(targetString));
+	}
+
+	public int fromTargetString(String targetString) {
+		int result = 0;
 		if (TextUtils.isEmpty(targetString) || targetString.length() != PERIODS.length) {
 			return result;
 		}
@@ -207,17 +203,15 @@ public class Period {
 		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
-		setTrend(fromColumnTrend(cursor));
-	}
-
-	public String fromColumnTrend(Cursor cursor) {
-		String result = StockTrend.TREND_NONE;
-		if (cursor == null || cursor.isClosed()) {
-			return result;
-		}
 
 		String trendString = cursor.getString(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_TREND));
+
+		setTrend(fromTrendString(trendString));
+	}
+
+	public String fromTrendString(String trendString) {
+		String result = StockTrend.TREND_NONE;
 		if (TextUtils.isEmpty(trendString) || trendString.length() != PERIODS.length) {
 			return result;
 		}

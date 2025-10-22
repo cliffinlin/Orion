@@ -867,10 +867,16 @@ public class TrendAnalyzer {
 					color = Color.BLACK;
 				}
 
-				float strokeWidth = Math.max(1, 10f * Config.THUMBNAIL_STROKE_WIDTH);
-				mLineConfigList.add(new CurveThumbnail.LineConfig(xValuesH, yValuesH, color, Config.THUMBNAIL_STROKE_WIDTH));
-				mLineConfigList.add(new CurveThumbnail.LineConfig(xValuesP, yValuesP, Color.GRAY, strokeWidth));
-				mLineConfigList.add(new CurveThumbnail.LineConfig(xValuesV, yValuesV, color, strokeWidth));
+				float hWidth = Math.max(1, 1f * Config.THUMBNAIL_STROKE_WIDTH);
+				int target = mStock.getTarget(period);
+				int level = mStock.getLevel(period);
+				if (target > StockTrend.LEVEL_NONE && target == level) {
+					hWidth = Math.max(1, 10f * Config.THUMBNAIL_STROKE_WIDTH);
+				}
+				mLineConfigList.add(new CurveThumbnail.LineConfig(xValuesH, yValuesH, color, hWidth));
+				float vWidth = Math.max(1, 10f * Config.THUMBNAIL_STROKE_WIDTH);
+				mLineConfigList.add(new CurveThumbnail.LineConfig(xValuesP, yValuesP, Color.GRAY, vWidth));
+				mLineConfigList.add(new CurveThumbnail.LineConfig(xValuesV, yValuesV, color, vWidth));
 				i++;
 			}
 		}
