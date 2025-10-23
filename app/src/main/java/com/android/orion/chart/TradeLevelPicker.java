@@ -3,6 +3,7 @@ package com.android.orion.chart;
 import android.content.Context;
 import android.graphics.Color;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -13,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,15 +34,6 @@ public class TradeLevelPicker extends NumberPicker {
     // 新增：目标值属性
     private int targetValue = 0;
     private OnValueChangeListener externalValueChangeListener;
-
-    // 颜色更新处理器
-    private Handler mColorUpdateHandler = new Handler(Looper.getMainLooper());
-    private Runnable mColorUpdateRunnable = new Runnable() {
-        @Override
-        public void run() {
-            updateTextColorFinal(getValue());
-        }
-    };
 
     // 声音处理器
     private class SoundHandler extends Handler {
@@ -89,7 +80,7 @@ public class TradeLevelPicker extends NumberPicker {
                     sendPlayMessage();
                 }
 
-                // 延迟更新文本颜色（避免循环调用）
+                // 更新文本颜色
                 updateTextColor(newVal);
 
                 // 通知所有注册的监听器
@@ -138,7 +129,6 @@ public class TradeLevelPicker extends NumberPicker {
      */
     public void setTargetValue(int target) {
         this.targetValue = target;
-        // 延迟更新当前值的颜色
         updateTextColor(getValue());
     }
 
@@ -150,69 +140,25 @@ public class TradeLevelPicker extends NumberPicker {
     }
 
     /**
-     * 更新文本颜色（延迟执行，避免循环调用）
+     * 更新文本颜色
      */
-    public void updateTextColor(int currentValue) {
-        // 移除之前的任务
-        mColorUpdateHandler.removeCallbacks(mColorUpdateRunnable);
-        // 延迟更新，避免在滚动过程中频繁更新
-        mColorUpdateHandler.postDelayed(mColorUpdateRunnable, 50);
-    }
-
-    /**
-     * 最终的颜色更新方法（避免循环调用）
-     */
-    private void updateTextColorFinal(int currentValue) {
-        Log.d(TAG, "updateTextColorFinal: currentValue=" + currentValue + ", targetValue=" + targetValue);
-
-        try {
-            // 方法1：使用反射获取 mInputText（中心显示的EditText）
-            Field field = NumberPicker.class.getDeclaredField("mInputText");
-            field.setAccessible(true);
-            EditText editText = (EditText) field.get(this);
-            if (editText != null) {
-                int targetColor = (currentValue > 0 && currentValue == targetValue) ? Color.RED : Color.BLACK;
-                if (editText.getCurrentTextColor() != targetColor) {
-                    editText.setTextColor(targetColor);
-                    Log.d(TAG, "最终设置中心文本颜色: " + (targetColor == Color.RED ? "红色" : "黑色"));
-                }
-            }
-        } catch (Exception e) {
-            Log.e(TAG, "反射获取 mInputText 失败: " + e.getMessage());
-
-            // 方法2：遍历子视图查找EditText
-            findAndUpdateEditTextColor(currentValue);
-        }
-    }
-
-    /**
-     * 遍历子视图查找并更新EditText颜色
-     */
-    private void findAndUpdateEditTextColor(int currentValue) {
-        for (int i = 0; i < getChildCount(); i++) {
-            View child = getChildAt(i);
-            if (child instanceof EditText) {
-                EditText editText = (EditText) child;
-                int targetColor = (currentValue > 0 && currentValue == targetValue) ? Color.RED : Color.BLACK;
-                if (editText.getCurrentTextColor() != targetColor) {
-                    editText.setTextColor(targetColor);
-                    Log.d(TAG, "遍历设置EditText颜色: " + (targetColor == Color.RED ? "红色" : "黑色"));
-                }
+    private void updateTextColor(int currentValue) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            if (currentValue > 0 && currentValue == targetValue) {
+                setTextColor(Color.RED);
+            } else {
+                setTextColor(Color.BLACK);
             }
         }
     }
 
-    /**
-     * 启用/禁用声音
-     */
+    // 启用/禁用声音
     public void setSoundEnabled(boolean enabled) {
         this.isSoundEnabled = enabled;
         Log.d(TAG, "声音 " + (enabled ? "启用" : "禁用"));
     }
 
-    /**
-     * 检查声音是否启用
-     */
+    // 检查声音是否启用
     public boolean isSoundEnabled() {
         return isSoundEnabled;
     }
@@ -318,9 +264,6 @@ public class TradeLevelPicker extends NumberPicker {
         if (soundHandler != null) {
             soundHandler.removeCallbacksAndMessages(null);
         }
-        if (mColorUpdateHandler != null) {
-            mColorUpdateHandler.removeCallbacksAndMessages(null);
-        }
         valueChangeListeners.clear();
     }
 
@@ -377,13 +320,5 @@ public class TradeLevelPicker extends NumberPicker {
         if (mediaPlayer != null && volume >= 0.0f && volume <= 1.0f) {
             mediaPlayer.setVolume(volume, volume);
         }
-    }
-
-    /**
-     * 强制立即更新颜色（用于特殊情况）
-     */
-    public void forceUpdateTextColor() {
-        mColorUpdateHandler.removeCallbacks(mColorUpdateRunnable);
-        updateTextColorFinal(getValue());
     }
 }

@@ -178,7 +178,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 	private void setupTradeLevelPickers() {
 		mTradeLevelPickerDay.setMinValue(StockTrend.LEVEL_NONE);
 		mTradeLevelPickerDay.setMaxValue(StockTrend.LEVEL_TREND_LINE);
-		mTradeLevelPickerDay.setTargetValue(mStock.getTarget(Period.DAY)); // 设置目标值
+		mTradeLevelPickerDay.setTargetValue(mStock.getTarget(Period.DAY));
 
 		mTradeLevelPickerMin60.setMinValue(StockTrend.LEVEL_NONE);
 		mTradeLevelPickerMin60.setMaxValue(StockTrend.LEVEL_TREND_LINE);
@@ -211,27 +211,22 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		picker.setOnValueChangedListener(new android.widget.NumberPicker.OnValueChangeListener() {
 			@Override
 			public void onValueChange(android.widget.NumberPicker numberPicker, int oldVal, int newVal) {
-				// 更新净值显示
-				StockTrend stockTrend = mStock.getStockTrend(period, newVal);
-				if (stockTrend != null) {
-					setNetTextView(netTextView, stockTrend.getNextNet());
-				} else {
-					setNetTextView(netTextView, 0);
-				}
-
-				// 更新拨轮文本颜色
-				picker.updateTextColor(newVal);
-
-				// 更新目标图标
-				updateTargetIcon(period, newVal, targetImageView);
+				updateNetTextView(period, newVal, netTextView);
+				updateTargetImageView(period, newVal, targetImageView);
 			}
 		});
 	}
 
-	/**
-	 * 更新目标图标显示状态
-	 */
-	private void updateTargetIcon(String period, int currentLevel, ImageView targetImageView) {
+	private void updateNetTextView(String period, int level, TextView netTextView) {
+		StockTrend stockTrend = mStock.getStockTrend(period, level);
+		if (stockTrend != null) {
+			setNetTextView(netTextView, stockTrend.getNextNet());
+		} else {
+			setNetTextView(netTextView, 0);
+		}
+	}
+
+	private void updateTargetImageView(String period, int currentLevel, ImageView targetImageView) {
 		int target = mStock.getTarget(period);
 		if (target > StockTrend.LEVEL_NONE && target == currentLevel) {
 			targetImageView.setImageResource(R.drawable.ic_crosshair_checked);
@@ -258,7 +253,6 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mTradeLevelPickerMin15.setEnabled(custom);
 		mTradeLevelPickerMin5.setEnabled(custom);
 
-		// 设置目标值
 		mTradeLevelPickerDay.setTargetValue(mStock.getTarget(Period.DAY));
 		mTradeLevelPickerMin60.setTargetValue(mStock.getTarget(Period.MIN60));
 		mTradeLevelPickerMin30.setTargetValue(mStock.getTarget(Period.MIN30));
@@ -271,43 +265,23 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mTradeLevelPickerMin15.setValue(mStock.getLevel(Period.MIN15));
 		mTradeLevelPickerMin5.setValue(mStock.getLevel(Period.MIN5));
 
-		// 更新拨轮文本颜色
-		mTradeLevelPickerDay.updateTextColor(mStock.getLevel(Period.DAY));
-		mTradeLevelPickerMin60.updateTextColor(mStock.getLevel(Period.MIN60));
-		mTradeLevelPickerMin30.updateTextColor(mStock.getLevel(Period.MIN30));
-		mTradeLevelPickerMin15.updateTextColor(mStock.getLevel(Period.MIN15));
-		mTradeLevelPickerMin5.updateTextColor(mStock.getLevel(Period.MIN5));
-
 		mTradeLevelPickerDay.invalidate();
 		mTradeLevelPickerMin60.invalidate();
 		mTradeLevelPickerMin30.invalidate();
 		mTradeLevelPickerMin15.invalidate();
 		mTradeLevelPickerMin5.invalidate();
 
-		// 更新净值显示
-		updateNetDisplay(Period.DAY, mStock.getLevel(Period.DAY), mTextviewDayNet);
-		updateNetDisplay(Period.MIN60, mStock.getLevel(Period.MIN60), mTextviewMin60Net);
-		updateNetDisplay(Period.MIN30, mStock.getLevel(Period.MIN30), mTextviewMin30Net);
-		updateNetDisplay(Period.MIN15, mStock.getLevel(Period.MIN15), mTextviewMin15Net);
-		updateNetDisplay(Period.MIN5, mStock.getLevel(Period.MIN5), mTextviewMin5Net);
+		updateNetTextView(Period.DAY, mStock.getLevel(Period.DAY), mTextviewDayNet);
+		updateNetTextView(Period.MIN60, mStock.getLevel(Period.MIN60), mTextviewMin60Net);
+		updateNetTextView(Period.MIN30, mStock.getLevel(Period.MIN30), mTextviewMin30Net);
+		updateNetTextView(Period.MIN15, mStock.getLevel(Period.MIN15), mTextviewMin15Net);
+		updateNetTextView(Period.MIN5, mStock.getLevel(Period.MIN5), mTextviewMin5Net);
 
 		updateTargetImageView(Period.DAY, mImageViewDayTarget);
 		updateTargetImageView(Period.MIN60, mImageViewMin60Target);
 		updateTargetImageView(Period.MIN30, mImageViewMin30Target);
 		updateTargetImageView(Period.MIN15, mImageViewMin15Target);
 		updateTargetImageView(Period.MIN5, mImageViewMin5Target);
-	}
-
-	/**
-	 * 更新净值显示
-	 */
-	private void updateNetDisplay(String period, int level, TextView netTextView) {
-		StockTrend stockTrend = mStock.getStockTrend(period, level);
-		if (stockTrend != null) {
-			setNetTextView(netTextView, stockTrend.getNextNet());
-		} else {
-			setNetTextView(netTextView, 0);
-		}
 	}
 
 	void setNetTextView(TextView textView, double nextNet) {
@@ -450,21 +424,16 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 			mStock.setTarget(period, StockTrend.LEVEL_NONE);
 			if (picker != null) {
 				picker.setTargetValue(StockTrend.LEVEL_NONE);
-				picker.updateTextColor(picker.getValue());
 			}
 		} else {
 			imageView.setImageResource(R.drawable.ic_crosshair_checked);
 			mStock.setTarget(period, target);
 			if (picker != null) {
 				picker.setTargetValue(target);
-				picker.updateTextColor(picker.getValue());
 			}
 		}
 	}
 
-	/**
-	 * 根据周期获取对应的 TradeLevelPicker
-	 */
 	private TradeLevelPicker getTradeLevelPickerByPeriod(String period) {
 		switch (period) {
 			case Period.DAY:

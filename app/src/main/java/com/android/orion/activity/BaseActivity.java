@@ -39,7 +39,7 @@ public class BaseActivity extends Activity implements IBackgroundHandler, Analyz
 	private static final int REQUEST_EXTERNAL_STORAGE = 1;
 	private static final String[] PERMISSIONS_STORAGE = {"android.permission.READ_EXTERNAL_STORAGE",
 			"android.permission.WRITE_EXTERNAL_STORAGE"};
-	static ArrayMap<String, Stock> mStockArrayMap = new ArrayMap<>();
+	ArrayMap<String, Stock> mStockArrayMap = new ArrayMap<>();
 	Logger Log = Logger.getLogger();
 	boolean mResumed = false;
 	Context mContext = null;

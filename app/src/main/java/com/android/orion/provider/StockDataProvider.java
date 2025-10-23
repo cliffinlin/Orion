@@ -52,7 +52,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 	public static final int RESULT_NONE = 0;
 	public static final int RESULT_FAILED = -1;
 	protected static volatile IStockDataProvider mInstance;
-	static ArrayMap<String, Stock> mStockArrayMap = new ArrayMap<>();
+	ArrayMap<String, Stock> mStockArrayMap = new ArrayMap<>();
 	Context mContext = MainApplication.getContext();
 	StockAnalyzer mStockAnalyzer = StockAnalyzer.getInstance();
 	StockDatabaseManager mStockDatabaseManager = StockDatabaseManager.getInstance();

@@ -45,11 +45,11 @@ public class Stock extends DatabaseTable {
 
 	public static final double ROI_COEFFICIENT = 10;
 
-	static ArrayList<StockFinancial> mStockFinancialList = new ArrayList<>();
-	static ArrayList<StockShare> mStockShareList = new ArrayList<>();
-	static ArrayList<StockBonus> mStockBonusList = new ArrayList<>();
+	ArrayList<StockFinancial> mStockFinancialList = new ArrayList<>();
+	ArrayList<StockShare> mStockShareList = new ArrayList<>();
+	ArrayList<StockBonus> mStockBonusList = new ArrayList<>();
 
-	static ArrayMap<String, StockTrend> mStockTrendMap = new ArrayMap<>();
+	ArrayMap<String, StockTrend> mStockTrendMap = new ArrayMap<>();
 
 	private final ArrayMap<String, Period> mPeriodMap = new ArrayMap<>();
 	{
