@@ -1,7 +1,7 @@
 package com.android.orion.analyzer;
 
 import com.android.orion.data.Period;
-import com.android.orion.data.PolarComponent;
+import com.android.orion.data.Radar;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockTrend;
 import com.android.orion.setting.Constant;
@@ -33,8 +33,8 @@ public class MACDAnalyzer {
     private static final List<Double> mDEAList = new ArrayList<>();
     private static final List<Double> mDIFList = new ArrayList<>();
     private static final List<Double> mHistogramList = new ArrayList<>();
-    private static final List<Double> mComponentList = new ArrayList<>();
-    private static PolarComponent mPolarComponent;
+    private static final List<Double> mRadarList = new ArrayList<>();
+    private static Radar mRadar;
 
     static Logger Log = Logger.getLogger();
 
@@ -65,12 +65,12 @@ public class MACDAnalyzer {
         return mHistogramList;
     }
 
-    public static List<Double> getComponentList() {
-        return mComponentList;
+    public static List<Double> getRadarList() {
+        return mRadarList;
     }
 
-    public static PolarComponent getPolarComponent() {
-        return mPolarComponent;
+    public static Radar getRadar() {
+        return mRadar;
     }
 
     public static void init(String period, ArrayList<StockData> stockDataList) {
@@ -129,7 +129,7 @@ public class MACDAnalyzer {
         mDEAList.clear();
         mDIFList.clear();
         mHistogramList.clear();
-        mComponentList.clear();
+        mRadarList.clear();
         for (int i = 0; i < stockDataList.size(); i++) {
             mPriceList.add(stockDataList.get(i).getCandle().getClose());
         }
@@ -175,7 +175,7 @@ public class MACDAnalyzer {
         mDEAList.clear();
         mDIFList.clear();
         mHistogramList.clear();
-        mComponentList.clear();
+        mRadarList.clear();
 
         EMA(mAverage5, mPriceList, mEMAAverage5List);
         EMA(mAverage10, mPriceList, mEMAAverage10List);
@@ -205,8 +205,8 @@ public class MACDAnalyzer {
 
         // 重建第一主成分
         List<Double> reconstructedData = reconstructFirstComponent(mHistogramList, histogramSpectrum);
-        mComponentList.clear();
-        mComponentList.addAll(reconstructedData);
+        mRadarList.clear();
+        mRadarList.addAll(reconstructedData);
 
 //        Log.d("傅立叶重建完成，重建数据点数: " + reconstructedData.size());
     }
@@ -317,7 +317,7 @@ public class MACDAnalyzer {
         // 计算并存储极坐标信息
         double lastPointValue = reconstructedData.isEmpty() ? 0.0 : reconstructedData.get(reconstructedData.size() - 1);
         double frequency = 1.0 / dominantPeriodInDays;
-        mPolarComponent = new PolarComponent(amplitude, dominantPeriodInDays, frequency,
+        mRadar = new Radar(amplitude, dominantPeriodInDays, frequency,
                 phase, phaseDegrees, dominantIndex, lastPointValue);
 
 //        Log.d("第一主成分极坐标 - " +

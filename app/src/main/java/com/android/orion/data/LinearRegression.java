@@ -5,6 +5,8 @@ import com.android.orion.config.Config;
 import java.util.ArrayList;
 
 public class LinearRegression {
+	public static final int MAX_ITERATION = 1000;
+
 	public double slope; // 斜率
 	public double bias; // 偏置
 	public double learningRate = 0.01; // 学习率
@@ -76,7 +78,7 @@ public class LinearRegression {
 		LinearRegression linearRegression = new LinearRegression(xList, yList);
 
 		// 训练模型
-		linearRegression.train(Config.MAX_ITERATION);
+		linearRegression.train(MAX_ITERATION);
 
 		// 获取斜率和偏置
 		double slope = linearRegression.getSlope();
@@ -99,7 +101,7 @@ public class LinearRegression {
 		LinearRegression linearRegression = new LinearRegression();
 
 		// 训练模型
-		linearRegression.train(xList, yList, Config.MAX_ITERATION);
+		linearRegression.train(xList, yList, MAX_ITERATION);
 
 		// 获取斜率和偏置
 		double slope = linearRegression.getSlope();

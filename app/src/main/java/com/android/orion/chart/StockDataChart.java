@@ -6,7 +6,6 @@ import android.text.TextUtils;
 import android.util.ArrayMap;
 
 import com.android.orion.config.Config;
-import com.android.orion.data.Period;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockTrend;
@@ -48,7 +47,7 @@ public class StockDataChart {
 	public ArrayList<Entry> mDIFEntryList = new ArrayList<>();
 	public ArrayList<Entry> mDEAEntryList = new ArrayList<>();
 	public ArrayList<BarEntry> mHistogramEntryList = new ArrayList<>();
-	public ArrayList<Entry> mComponentEntryList = new ArrayList<>();
+	public ArrayList<Entry> mRadarEntryList = new ArrayList<>();
 	public List<Entry>[] mTrendEntryList = new List[StockTrend.LEVELS.length];
 	public List<Entry>[] mCircledEntryList = new List[StockTrend.LEVELS.length];
 	public CombinedData mCombinedDataMain = new CombinedData(mXValues);
@@ -193,11 +192,11 @@ public class StockDataChart {
 		deaDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(deaDataSet);
 
-		LineDataSet componentDataSet = new LineDataSet(mComponentEntryList, "Component");
-		componentDataSet.setColor(dataSetColor(Color.BLACK));
-		componentDataSet.setDrawCircles(false);
-		componentDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-		lineData.addDataSet(componentDataSet);
+		LineDataSet radarDataSet = new LineDataSet(mRadarEntryList, "Radar");
+		radarDataSet.setColor(dataSetColor(Color.BLACK));
+		radarDataSet.setDrawCircles(false);
+		radarDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+		lineData.addDataSet(radarDataSet);
 
 		mCombinedDataSub.setData(barData);
 		mCombinedDataSub.setData(lineData);
@@ -510,7 +509,7 @@ public class StockDataChart {
 		mDIFEntryList.clear();
 		mDEAEntryList.clear();
 		mHistogramEntryList.clear();
-		mComponentEntryList.clear();
+		mRadarEntryList.clear();
 		for (int i = 0; i < StockTrend.LEVELS.length; i++) {
 			if (mTrendEntryList[i] != null) {
 				mTrendEntryList[i].clear();

@@ -10,7 +10,7 @@ public class Macd {
 	private double mDIF;
 	private double mDEA;
 	private double mHistogram;
-	private double mComponent;
+	private double mRadar;
 
 	public Macd() {
 		init();
@@ -22,7 +22,7 @@ public class Macd {
 		mDIF = 0;
 		mDEA = 0;
 		mHistogram = 0;
-		mComponent = 0;
+		mRadar = 0;
 	}
 
 	public void set(Macd macd) {
@@ -34,7 +34,7 @@ public class Macd {
 		setDIF(macd.mDIF);
 		setDEA(macd.mDEA);
 		setHistogram(macd.mHistogram);
-		setComponent(macd.mComponent);
+		setRadar(macd.mRadar);
 	}
 
 	public void set(Cursor cursor) {
@@ -43,16 +43,16 @@ public class Macd {
 		setDIF(cursor);
 		setDEA(cursor);
 		setHistogram(cursor);
-		setComponent(cursor);
+		setRadar(cursor);
 	}
 
-	public void set(double average5, double average10, double dif, double dea, double histogram, double component) {
+	public void set(double average5, double average10, double dif, double dea, double histogram, double radar) {
 		setAverage5(average5);
 		setAverage10(average10);
 		setDIF(dif);
 		setDEA(dea);
 		setHistogram(histogram);
-		setComponent(component);
+		setRadar(radar);
 	}
 
 	public double getAverage5() {
@@ -140,20 +140,20 @@ public class Macd {
 				.getColumnIndex(DatabaseContract.COLUMN_HISTOGRAM)));
 	}
 
-	public double getComponent() {
-		return mComponent;
+	public double getRadar() {
+		return mRadar;
 	}
 
-	public void setComponent(double component) {
-		mComponent = component;
+	public void setRadar(double radar) {
+		mRadar = radar;
 	}
 
-	void setComponent(Cursor cursor) {
+	void setRadar(Cursor cursor) {
 		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
-		setComponent(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_COMPONENT)));
+		setRadar(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_RADAR)));
 	}
 }

@@ -51,6 +51,8 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 	public static final int RESULT_SUCCESS = 1;
 	public static final int RESULT_NONE = 0;
 	public static final int RESULT_FAILED = -1;
+	public static final int SEND_MESSAGE_DELAY_DOWNLOAD = 100;
+
 	protected static volatile IStockDataProvider mInstance;
 	ArrayMap<String, Stock> mStockArrayMap = new ArrayMap<>();
 	Context mContext = MainApplication.getContext();
@@ -320,7 +322,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		}
 		Message msg = mHandler.obtainMessage(messageID, stock);
 		if (delayed) {
-			mHandler.sendMessageDelayed(msg, Config.SEND_MESSAGE_DELAY_DOWNLOAD);
+			mHandler.sendMessageDelayed(msg, SEND_MESSAGE_DELAY_DOWNLOAD);
 		} else {
 			mHandler.sendMessageAtFrontOfQueue(msg);
 		}

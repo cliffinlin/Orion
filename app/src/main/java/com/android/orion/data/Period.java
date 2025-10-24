@@ -53,7 +53,7 @@ public class Period {
 	public int mLevel = StockTrend.LEVEL_NONE;
 	public int mTarget = StockTrend.LEVEL_NONE;
 	public String mTrend = StockTrend.TREND_NONE;
-	public PolarComponent mPolarComponent;
+	public Radar mRadar;
 
 	public ArrayList<ArrayList<StockData>> mVertexLists = new ArrayList<>();
 	public ArrayList<ArrayList<StockData>> mStockDataLists = new ArrayList<>();
@@ -218,12 +218,12 @@ public class Period {
 		return trendString.substring(indexOf(mName), indexOf(mName) + 1);
 	}
 
-	public PolarComponent getPolarComponent() {
-		return mPolarComponent;
+	public Radar getRadar() {
+		return mRadar;
 	}
 
-	public void setPolarComponent(PolarComponent polarComponent) {
-		mPolarComponent = polarComponent;
+	public void setRadar(Radar radar) {
+		mRadar = radar;
 	}
 
 	public static final String fromColumnName(String columnName) {

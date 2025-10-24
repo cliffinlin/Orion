@@ -15,7 +15,6 @@ public class Config {
 	public static final String MESSAGE_CHANNEL_ID = "message_channel";
 	public static final String MESSAGE_CHANNEL_NAME = "Message Channel";
 
-	public static final int COLOR_BACKGROUND_CUSTOM = Color.rgb(230, 230, 230);
 	public static final int COLOR_CANDLE_GREEN = Color.rgb(50, 128, 50);
 	public static final int COLOR_CANDLE_RED = Color.rgb(255, 50, 50);
 
@@ -33,20 +32,6 @@ public class Config {
 	public static final int HISTORY_LENGTH_MIN30 = HISTORY_LENGTH_DAY * 8;
 	public static final int HISTORY_LENGTH_MIN15 = HISTORY_LENGTH_DAY * 16;
 	public static final int HISTORY_LENGTH_MIN5 = HISTORY_LENGTH_DAY * 48;
-
-	public static final int MAX_ITERATION = 1000;
-	public static final int MAX_PREDICTION = 100;
-
-	public static final int SEND_MESSAGE_DELAY_DOWNLOAD = 100;
-
-	public static final int THUMBNAIL_SIZE = 160;
-	public static final int THUMBNAIL_WIDTH = THUMBNAIL_SIZE;
-	public static final int THUMBNAIL_HEIGHT = THUMBNAIL_SIZE;
-	public static final int THUMBNAIL_STROKE_WIDTH = 1;
-	public static final int THUMBNAIL_STROKE_COLOR = Color.GRAY;
-	public static final int THUMBNAIL_MARKER_SIZE = 20;
-	public static final int THUMBNAIL_MARKER_STROKE_WIDTH = 5;
-	public static final int THUMBNAIL_SCATTER_SIZE = 10;
 
 	public static String stockDataProvider = SinaFinance.PROVIDER_NAME;
 

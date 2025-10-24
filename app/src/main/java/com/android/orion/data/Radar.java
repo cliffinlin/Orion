@@ -3,7 +3,7 @@ package com.android.orion.data;
 /**
  * 内部类：用于存储极坐标表示的周期信息
  */
-public class PolarComponent {
+public class Radar {
     public double amplitude;    // 振幅
     double period;       // 周期（天）
     double frequency;    // 频率（1/天）
@@ -12,8 +12,8 @@ public class PolarComponent {
     int frequencyIndex;  // 频率索引
     public double lastPointValue; // 最后一个点的数值
 
-    public PolarComponent(double amplitude, double period, double frequency,
-                          double phase, double phaseDegrees, int frequencyIndex, double lastPointValue) {
+    public Radar(double amplitude, double period, double frequency,
+                 double phase, double phaseDegrees, int frequencyIndex, double lastPointValue) {
         this.amplitude = amplitude;
         this.period = period;
         this.frequency = frequency;

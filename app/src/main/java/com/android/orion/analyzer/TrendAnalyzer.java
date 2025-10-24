@@ -6,9 +6,8 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 
 import com.android.orion.chart.CurveThumbnail;
-import com.android.orion.config.Config;
 import com.android.orion.data.Period;
-import com.android.orion.data.PolarComponent;
+import com.android.orion.data.Radar;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockPerceptron;
@@ -27,6 +26,7 @@ import org.apache.commons.math3.ml.clustering.Clusterable;
 import org.apache.commons.math3.ml.clustering.KMeansPlusPlusClusterer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -35,9 +35,18 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 public class TrendAnalyzer {
-	public static final int K_MEANS_MAX_ITERATIONS = 100;
+	public static final int MAX_DURATION = 30;//TODO
+	public static final int MAX_ITERATION = 100;
+	public static final int MAX_PREDICTION = 100;
 
-	public static final int DURATION_MAX = 30;//TODO
+	public static final int THUMBNAIL_SIZE = 160;
+	public static final int THUMBNAIL_WIDTH = THUMBNAIL_SIZE;
+	public static final int THUMBNAIL_HEIGHT = THUMBNAIL_SIZE;
+	public static final int THUMBNAIL_STROKE_WIDTH = 1;
+	public static final int THUMBNAIL_STROKE_COLOR = Color.GRAY;
+	public static final int THUMBNAIL_MARKER_SIZE = 20;
+	public static final int THUMBNAIL_MARKER_STROKE_WIDTH = 5;
+	public static final int THUMBNAIL_SCATTER_SIZE = 10;
 
 	int mKMeansPeriods;
 	int mKMeansK;
@@ -241,7 +250,7 @@ public class TrendAnalyzer {
 			if ((predict * stockTrend.getNextNet() < 0)) {
 				predict = 0;
 			}
-			if (Math.abs(predict) > Config.MAX_PREDICTION) {
+			if (Math.abs(predict) > MAX_PREDICTION) {
 				predict = 0;
 			}
 			stockTrend.setPredict(predict);
@@ -531,7 +540,7 @@ public class TrendAnalyzer {
 		}
 
 		try {
-			KMeansPlusPlusClusterer<DataPoint> clusterer = new KMeansPlusPlusClusterer<>(mKMeansK, K_MEANS_MAX_ITERATIONS);
+			KMeansPlusPlusClusterer<DataPoint> clusterer = new KMeansPlusPlusClusterer<>(mKMeansK, MAX_ITERATION);
 			List<CentroidCluster<DataPoint>> clusterList = clusterer.cluster(mDataPointList);
 			mClusterList = sortClusterList(clusterList);
 			setupGroupDistance();
@@ -542,7 +551,7 @@ public class TrendAnalyzer {
 				}
 			}
 			setupTrendThumbnail();
-			setupComponentThumbnail();
+			setupRadarThumbnail();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -634,7 +643,7 @@ public class TrendAnalyzer {
 			}
 
 			if (!mDataPointMap.isEmpty()) {
-				if (validList.get(0).duration > DURATION_MAX) {//TODO
+				if (validList.get(0).duration > MAX_DURATION) {//TODO
 					setupLevel();
 					return;
 				}
@@ -808,12 +817,12 @@ public class TrendAnalyzer {
 
 		mLineConfigList.clear();
 		for (int level = StockTrend.LEVEL_DRAW; level < StockTrend.LEVELS.length; level++) {
-			mLineConfigList.add(new CurveThumbnail.LineConfig(mXValues[level], mYValues[level], Config.THUMBNAIL_STROKE_COLOR, Config.THUMBNAIL_STROKE_WIDTH));
+			mLineConfigList.add(new CurveThumbnail.LineConfig(mXValues[level], mYValues[level], THUMBNAIL_STROKE_COLOR, THUMBNAIL_STROKE_WIDTH));
 		}
 
 		CurveThumbnail.CrossMarkerConfig markerConfig =
-				new CurveThumbnail.CrossMarkerConfig(mStockDataList.size() - 1, (float) mStock.getPrice(), TextUtils.equals(mStock.getTrend(period), Symbol.ADD) ? Color.RED : Color.GREEN, Config.THUMBNAIL_MARKER_STROKE_WIDTH, Config.THUMBNAIL_MARKER_SIZE);
-		mStock.setPeriodThumbnail(period, Utility.thumbnailToBytes(new CurveThumbnail(Config.THUMBNAIL_SIZE, Color.TRANSPARENT, mLineConfigList, markerConfig)));
+				new CurveThumbnail.CrossMarkerConfig(mStockDataList.size() - 1, (float) mStock.getPrice(), TextUtils.equals(mStock.getTrend(period), Symbol.ADD) ? Color.RED : Color.GREEN, THUMBNAIL_MARKER_STROKE_WIDTH, THUMBNAIL_MARKER_SIZE);
+		mStock.setPeriodThumbnail(period, Utility.thumbnailToBytes(new CurveThumbnail(THUMBNAIL_SIZE, Color.TRANSPARENT, mLineConfigList, markerConfig)));
 	}
 
 	public void setupTrendThumbnail() {
@@ -826,38 +835,38 @@ public class TrendAnalyzer {
 		int i = 0;
 		int color;
 
-		float totalWidth = Config.THUMBNAIL_WIDTH;
+		float totalWidth = THUMBNAIL_WIDTH;
 		float segmentWidth = totalWidth / mKMeansPeriods;
 		float spacing = segmentWidth * 0.1f;
 		float lineWidth = segmentWidth - spacing;
 
 		for (String period : Period.PERIODS) {
 			if (Setting.getPeriod(period)) {
-				List<Float> xValuesH = new ArrayList<>();
-				List<Float> yValuesH = new ArrayList<>();
-				List<Float> xValuesP = new ArrayList<>();
-				List<Float> yValuesP = new ArrayList<>();
-				List<Float> xValuesV = new ArrayList<>();
-				List<Float> yValuesV = new ArrayList<>();
+				List<Float> xValuesAxis = new ArrayList<>();
+				List<Float> yValuesAxis = new ArrayList<>();
+				List<Float> xValuesPredict = new ArrayList<>();
+				List<Float> yValuesPredict = new ArrayList<>();
+				List<Float> xValuesBar = new ArrayList<>();
+				List<Float> yValuesBar = new ArrayList<>();
 
 				float startX = i * segmentWidth + spacing / 2f;
 				float endX = startX + lineWidth;
-				float centerY = Config.THUMBNAIL_HEIGHT / 2f;
+				float centerY = THUMBNAIL_HEIGHT / 2f;
 
-				xValuesH.add(startX);
-				xValuesH.add(endX);
-				yValuesH.add(centerY);
-				yValuesH.add(centerY);
+				xValuesAxis.add(startX);
+				xValuesAxis.add(endX);
+				yValuesAxis.add(centerY);
+				yValuesAxis.add(centerY);
 
-				xValuesP.add((startX + endX) / 2f);
-				xValuesP.add((startX + endX) / 2f);
-				yValuesP.add(centerY);
-				yValuesP.add(centerY + (float) mStock.getStockTrend(period, mStock.getLevel(period)).getPredict());
+				xValuesPredict.add((startX + endX) / 2f);
+				xValuesPredict.add((startX + endX) / 2f);
+				yValuesPredict.add(centerY);
+				yValuesPredict.add(centerY + (float) mStock.getStockTrend(period, mStock.getLevel(period)).getPredict());
 
-				xValuesV.add((startX + endX) / 2f);
-				xValuesV.add((startX + endX) / 2f);
-				yValuesV.add(centerY);
-				yValuesV.add(centerY + (float) mStock.getStockTrend(period, mStock.getLevel(period)).getNextNet());
+				xValuesBar.add((startX + endX) / 2f);
+				xValuesBar.add((startX + endX) / 2f);
+				yValuesBar.add(centerY);
+				yValuesBar.add(centerY + (float) mStock.getStockTrend(period, mStock.getLevel(period)).getNextNet());
 
 				if (TextUtils.equals(mStock.getTrend(period), Symbol.ADD)) {
 					color = Color.RED;
@@ -867,90 +876,119 @@ public class TrendAnalyzer {
 					color = Color.BLACK;
 				}
 
-				float hWidth = Math.max(1, 1f * Config.THUMBNAIL_STROKE_WIDTH);
-				int target = mStock.getTarget(period);
 				int level = mStock.getLevel(period);
+				int target = mStock.getTarget(period);
+				float axisWidth = Math.max(1, 1f * THUMBNAIL_STROKE_WIDTH);
 				if (target > StockTrend.LEVEL_NONE && target == level) {
-					hWidth = Math.max(1, 10f * Config.THUMBNAIL_STROKE_WIDTH);
+					axisWidth = Math.max(1, 10f * THUMBNAIL_STROKE_WIDTH);
 				}
-				mLineConfigList.add(new CurveThumbnail.LineConfig(xValuesH, yValuesH, color, hWidth));
-				float vWidth = Math.max(1, 10f * Config.THUMBNAIL_STROKE_WIDTH);
-				mLineConfigList.add(new CurveThumbnail.LineConfig(xValuesP, yValuesP, Color.GRAY, vWidth));
-				mLineConfigList.add(new CurveThumbnail.LineConfig(xValuesV, yValuesV, color, vWidth));
+				mLineConfigList.add(new CurveThumbnail.LineConfig(xValuesAxis, yValuesAxis, color, axisWidth));
+				float barWidth = Math.max(1, 3f * level * THUMBNAIL_STROKE_WIDTH);
+				mLineConfigList.add(new CurveThumbnail.LineConfig(xValuesPredict, yValuesPredict, Color.GRAY, barWidth));
+				mLineConfigList.add(new CurveThumbnail.LineConfig(xValuesBar, yValuesBar, color, barWidth));
 				i++;
 			}
 		}
 
-		int backgroundColor = Color.TRANSPARENT;
-		if (mStock.hasFlag(Stock.FLAG_CUSTOM)) {
-			backgroundColor = Config.COLOR_BACKGROUND_CUSTOM;
-		}
-
 		mStock.setTrendThumbnail(Utility.thumbnailToBytes(
-				new CurveThumbnail(Config.THUMBNAIL_WIDTH, Config.THUMBNAIL_HEIGHT,
-						backgroundColor, mLineConfigList, null)));
+				new CurveThumbnail(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT,
+						Color.TRANSPARENT, mLineConfigList, null)));
 	}
 
-	public void setupComponentThumbnail() {
-		float centerX = (float)Config.THUMBNAIL_SIZE / 2f;
-		float centerY = (float)Config.THUMBNAIL_SIZE / 2f;
+	public void setupRadarThumbnail() {
+		mLineConfigList.clear();
+		mScatterConfigList.clear();
 
-		try {
-			mLineConfigList.clear();
-			List<Float> xValuesH = new ArrayList<>();
-			List<Float> yValuesH = new ArrayList<>();
-			List<Float> xValuesV = new ArrayList<>();
-			List<Float> yValuesV = new ArrayList<>();
+		setupBaseLines();
+		setupPeriodRadar();
 
-			xValuesH.add(0f);
-			xValuesH.add((float)Config.THUMBNAIL_SIZE);
-			yValuesH.add(centerY);
-			yValuesH.add(centerY);
+		CurveThumbnail thumbnail = new CurveThumbnail(
+				THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT, Color.TRANSPARENT,
+				mLineConfigList, mScatterConfigList, null
+		);
 
-			xValuesV.add(centerX);
-			xValuesV.add(centerX);
-			yValuesV.add(0f);
-			yValuesV.add((float)Config.THUMBNAIL_SIZE);
+		byte[] thumbnailBytes = Utility.thumbnailToBytes(thumbnail);
+		mStock.setRadarThumbnail(thumbnailBytes);
+	}
 
-			mLineConfigList.add(new CurveThumbnail.LineConfig(xValuesH, yValuesH, Color.BLACK, Config.THUMBNAIL_STROKE_WIDTH));
-			mLineConfigList.add(new CurveThumbnail.LineConfig(xValuesV, yValuesV, Color.BLACK, Config.THUMBNAIL_STROKE_WIDTH));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	private void setupBaseLines() {
+		float centerX = (float) THUMBNAIL_SIZE / 2f;
+		float centerY = (float) THUMBNAIL_SIZE / 2f;
 
-		try {
-			mScatterConfigList.clear();
-			for (String period : Period.PERIODS) {
-				if (Setting.getPeriod(period)) {
-					PolarComponent polarComponent = mStock.getPolarComponent(period);
-					if (polarComponent == null) {
-						continue;
-					}
+		mLineConfigList.add(createLineConfig(
+				Arrays.asList(0f, (float) THUMBNAIL_SIZE),
+				Arrays.asList(centerY, centerY),
+				Color.BLACK, THUMBNAIL_STROKE_WIDTH
+		));
 
-					float radius = (float) Config.THUMBNAIL_SIZE / 2f  * 0.85f - Config.THUMBNAIL_SCATTER_SIZE / 2f;
+		mLineConfigList.add(createLineConfig(
+				Arrays.asList(centerX, centerX),
+				Arrays.asList(0f, (float) THUMBNAIL_SIZE),
+				Color.BLACK, THUMBNAIL_STROKE_WIDTH
+		));
+	}
 
-					// 计算角度（使用相位角）
-					double angle = polarComponent.phase; // 使用弧度
+	private void setupPeriodRadar() {
+		float centerX = (float) THUMBNAIL_SIZE / 2f;
+		float centerY = (float) THUMBNAIL_SIZE / 2f;
+		float radius = (float) THUMBNAIL_SIZE / 2f * 0.85f - THUMBNAIL_SCATTER_SIZE / 2f;
+		final float lineRadius = radius / 2f;
+		final float thickStrokeWidth = 4f * THUMBNAIL_STROKE_WIDTH;
 
-					// 计算在画布上的坐标
-					float x = centerX + (float) (radius * Math.cos(angle));
-					float y = centerY + (float) (radius * Math.sin(angle));
+		for (String period : Period.PERIODS) {
+			if (!Setting.getPeriod(period)) continue;
 
-					// 根据数值正负选择颜色
-					int color = polarComponent.lastPointValue >= 0 ? Color.RED : Color.BLACK;
+			Radar radar = mStock.getRadar(period);
+			if (radar == null) continue;
 
-					mScatterConfigList.add(new CurveThumbnail.ScatterConfig(
-							x, y, color, Config.THUMBNAIL_SCATTER_SIZE));
-				}
+			// 计算散点坐标
+			double angle = radar.phase;
+			float x = centerX + (float) (radius * Math.cos(angle));
+			float y = centerY + (float) (radius * Math.sin(angle));
+
+			// 确定颜色
+			int color = radar.lastPointValue >= 0 ? Color.RED : Color.BLACK;
+
+			// 添加散点
+			mScatterConfigList.add(new CurveThumbnail.ScatterConfig(
+					x, y, color, THUMBNAIL_SCATTER_SIZE
+			));
+
+			// 添加周期特定的指示线
+			switch (period) {
+				case Period.DAY:
+					addRadialLine(x, y, -lineRadius, 0, color, thickStrokeWidth);
+					break;
+				case Period.MIN60:
+					addRadialLine(x, y, 0, lineRadius, color, thickStrokeWidth);
+					break;
+				case Period.MIN30:
+					addRadialLine(x, y, 0, -lineRadius, color, thickStrokeWidth);
+					break;
+				case Period.MIN15:
+					addRadialLine(x, y, lineRadius, 0, color, thickStrokeWidth);
+					break;
+				case Period.MIN5:
+					double angleMin5 = Math.toRadians((float) Constant.MIN5 / (float) Constant.MIN60 * 360f);
+					float deltaX = (float) (lineRadius * Math.sin(angleMin5));
+					float deltaY = (float) (lineRadius * Math.cos(angleMin5));
+					addRadialLine(x, y, deltaX, deltaY, color, thickStrokeWidth);
+					break;
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
+	}
 
-		int backgroundColor = Color.TRANSPARENT;
-		mStock.setComponentThumbnail(Utility.thumbnailToBytes(
-				new CurveThumbnail(Config.THUMBNAIL_WIDTH, Config.THUMBNAIL_HEIGHT,
-						backgroundColor, mLineConfigList, mScatterConfigList, null)));
+	private void addRadialLine(float startX, float startY, float deltaX, float deltaY, int color, float strokeWidth) {
+		mLineConfigList.add(createLineConfig(
+				Arrays.asList(startX, startX + deltaX),
+				Arrays.asList(startY, startY + deltaY),
+				color, strokeWidth
+		));
+	}
+
+	private CurveThumbnail.LineConfig createLineConfig(List<Float> xValues, List<Float> yValues,
+													   int color, float strokeWidth) {
+		return new CurveThumbnail.LineConfig(xValues, yValues, color, strokeWidth);
 	}
 
 	private static class DataPoint implements Clusterable {

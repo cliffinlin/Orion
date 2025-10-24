@@ -113,8 +113,8 @@ public class StockAnalyzer {
 		List<Double> difList = MACDAnalyzer.getDIFList();
 		List<Double> deaList = MACDAnalyzer.getDEAList();
 		List<Double> histogramList = MACDAnalyzer.getHistogramList();
-		List<Double> componentList = MACDAnalyzer.getComponentList();
-		mStock.setPolarComponent(period, MACDAnalyzer.getPolarComponent());
+		List<Double> radarList = MACDAnalyzer.getRadarList();
+		mStock.setRadar(period, MACDAnalyzer.getRadar());
 
 		int size = mStockDataList.size();
 		if (average5List.size() != size || average10List.size() != size || difList.size() != size || deaList.size() != size || histogramList.size() != size) {
@@ -131,7 +131,7 @@ public class StockAnalyzer {
 						difList.get(i),
 						deaList.get(i),
 						histogramList.get(i),
-						componentList.get(i)
+						radarList.get(i)
 				);
 			}
 		}

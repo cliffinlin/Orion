@@ -7,7 +7,7 @@ import android.util.ArrayMap;
 
 import com.android.orion.data.IRR;
 import com.android.orion.data.Period;
-import com.android.orion.data.PolarComponent;
+import com.android.orion.data.Radar;
 import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Symbol;
@@ -109,7 +109,7 @@ public class Stock extends DatabaseTable {
 	private double mSellProfit;
 	private double mPredict;
 	private byte[] mTrendThumbnail;
-	private byte[] mComponentThumbnail;
+	private byte[] mRadarThumbnail;
 
 	public Stock() {
 		init();
@@ -252,7 +252,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_SELL_PROFIT, mSellProfit);
 		contentValues.put(DatabaseContract.COLUMN_PREDICT, mPredict);
 		contentValues.put(DatabaseContract.COLUMN_TREND_THUMBNAIL, mTrendThumbnail);
-		contentValues.put(DatabaseContract.COLUMN_COMPONENT_THUMBNAIL, mComponentThumbnail);
+		contentValues.put(DatabaseContract.COLUMN_RADAR_THUMBNAIL, mRadarThumbnail);
 		return contentValues;
 	}
 
@@ -360,7 +360,7 @@ public class Stock extends DatabaseTable {
 		setSellProfit(stock.mSellProfit);
 		setPredict(stock.mPredict);
 		setTrendThumbnail(stock.mTrendThumbnail);
-		setComponentThumbnail(stock.mComponentThumbnail);
+		setRadarThumbnail(stock.mRadarThumbnail);
 	}
 
 	@Override
@@ -432,7 +432,7 @@ public class Stock extends DatabaseTable {
 		setSellProfit(cursor);
 		setPredict(cursor);
 		setTrendThumbnail(cursor);
-		setComponentThumbnail(cursor);
+		setRadarThumbnail(cursor);
 	}
 
 	public String getClasses() {
@@ -1277,20 +1277,20 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_TREND_THUMBNAIL)));
 	}
 
-	public byte[] getComponentThumbnail() {
-		return mComponentThumbnail;
+	public byte[] getRadarThumbnail() {
+		return mRadarThumbnail;
 	}
 
-	public void setComponentThumbnail(byte[] componentThumbnail) {
-		mComponentThumbnail = componentThumbnail;
+	public void setRadarThumbnail(byte[] radarThumbnail) {
+		mRadarThumbnail = radarThumbnail;
 	}
 
-	public void setComponentThumbnail(Cursor cursor) {
+	public void setRadarThumbnail(Cursor cursor) {
 		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
-		setComponentThumbnail(cursor.getBlob(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_COMPONENT_THUMBNAIL)));
+		setRadarThumbnail(cursor.getBlob(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_RADAR_THUMBNAIL)));
 	}
 
 	public byte[] getPeriodThumbnail(String period) {
@@ -1408,12 +1408,12 @@ public class Stock extends DatabaseTable {
 		getPeriod(period).setTrend(trend);
 	}
 
-	public PolarComponent getPolarComponent(String period) {
-		return getPeriod(period).getPolarComponent();
+	public Radar getRadar(String period) {
+		return getPeriod(period).getRadar();
 	}
 
-	public void setPolarComponent(String period, PolarComponent polarComponent) {
-		getPeriod(period).setPolarComponent(polarComponent);
+	public void setRadar(String period, Radar radar) {
+		getPeriod(period).setRadar(radar);
 	}
 
 	public void setupMarketValue() {

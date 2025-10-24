@@ -24,6 +24,7 @@ import java.util.Collections;
 
 public class StockPerceptronProvider {
 
+	public static final int MAX_ITERATION = 1000;
 	public static final int MSG_TRAIN_ALL_IN_ONE = 999999 + 1;
 
 	Context mContext = MainApplication.getContext();
@@ -161,7 +162,7 @@ public class StockPerceptronProvider {
 						for (Double key : mXArray) {
 							mYArray.add(stockTrendNetMap.get(key));
 						}
-						mStockPerceptron.train(mXArray, mYArray, Config.MAX_ITERATION);
+						mStockPerceptron.train(mXArray, mYArray, MAX_ITERATION);
 						mStockPerceptron.setModified(Utility.getCurrentDateTimeString());
 						Log.d("MSG_TRAIN_ALL_IN_ONE ---------->" + mStockPerceptron.toLogString());
 						break;
@@ -192,7 +193,7 @@ public class StockPerceptronProvider {
 							mYArray.add(mStockPerceptron.getNetMap().get(key));
 						}
 
-						mStockPerceptron.train(mXArray, mYArray, Config.MAX_ITERATION);
+						mStockPerceptron.train(mXArray, mYArray, MAX_ITERATION);
 						mStockPerceptron.setModified(Utility.getCurrentDateTimeString());
 						mStockDatabaseManager.updateStockPerceptron(mStockPerceptron, mStockPerceptron.getContentValuesPerceptron());
 //						Log.d("default ---------->" + mStockPerceptron.toLogString());

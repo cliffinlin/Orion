@@ -3,6 +3,8 @@ package com.android.orion.data;
 import com.android.orion.config.Config;
 
 public class IRR {
+	public static final int MAX_ITERATION = 1000;
+
 	static double mIR;
 	static double mIRR;
 
@@ -84,7 +86,7 @@ public class IRR {
 		mIR = totalDividend / Math.abs(cashFlows[0]);
 
 		// 计算 IRR
-		mIRR = calculateIRR(cashFlows, 0.00001, Config.MAX_ITERATION);
+		mIRR = calculateIRR(cashFlows, 0.00001, MAX_ITERATION);
 
 		// 输出结果
 //		for (int i = 0; i < cashFlows.length; i++) {
