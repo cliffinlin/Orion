@@ -926,6 +926,10 @@ public class TrendAnalyzer {
 				Arrays.asList(0f, (float) THUMBNAIL_SIZE),
 				Color.BLACK, THUMBNAIL_STROKE_WIDTH
 		));
+
+		mScatterConfigList.add(new CurveThumbnail.ScatterConfig(
+				centerX, centerY, Color.LTGRAY, THUMBNAIL_SCATTER_SIZE
+		));
 	}
 
 	private void setupPeriodRadar() {
