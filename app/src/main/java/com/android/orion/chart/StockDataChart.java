@@ -484,16 +484,23 @@ public class StockDataChart {
 			mCircledEntryList[level].add(mTrendEntryList[level].get(mTrendEntryList[level].size() - 2));
 			mCircledEntryList[level].add(mTrendEntryList[level].get(mTrendEntryList[level].size() - 1));
 
-			if (Setting.getDisplayAdaptive()  && !mStock.hasFlag(Stock.FLAG_CUSTOM)) {
-				if (level > StockTrend.LEVEL_STROKE) {
-					int index = mTrendEntryList[level].get(mTrendEntryList[level].size() - 1).getXIndex();
-					for (int i = 0; i < mTrendEntryList[level - 1].size(); i++) {
-						if (mTrendEntryList[level - 1].get(i).getXIndex() == index) {
-							mTrendEntryList[level - 1] = new ArrayList<>(mTrendEntryList[level - 1].subList(i, mTrendEntryList[level - 1].size()));
-							break;
-						}
+			if (Setting.getDisplayAdaptive()) {
+				if (mStock.hasFlag(Stock.FLAG_CUSTOM)) {
+				} else {
+					if (level > StockTrend.LEVEL_STROKE) {
+						trendEntryListSubList(level);
 					}
 				}
+			}
+		}
+	}
+
+	void trendEntryListSubList(int level) {
+		int index = mTrendEntryList[level].get(mTrendEntryList[level].size() - 1).getXIndex();
+		for (int i = 0; i < mTrendEntryList[level - 1].size(); i++) {
+			if (mTrendEntryList[level - 1].get(i).getXIndex() == index) {
+				mTrendEntryList[level - 1] = new ArrayList<>(mTrendEntryList[level - 1].subList(i, mTrendEntryList[level - 1].size()));
+				break;
 			}
 		}
 	}
