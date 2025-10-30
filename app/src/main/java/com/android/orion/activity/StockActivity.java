@@ -171,7 +171,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 				mEditTextStockHoldA.setText(String.valueOf(mHoldA));
 				mEditTextStockHoldB.setText(String.valueOf(mHoldB));
 			}
-			mStockDatabaseManager.getStockTrendMap(mStock);
+			mStockDatabaseManager.getStockTrendMap(mStock, mStock.getStockTrendMap());
 		}
 	}
 

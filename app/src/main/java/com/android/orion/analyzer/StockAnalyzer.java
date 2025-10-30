@@ -27,7 +27,7 @@ public class StockAnalyzer {
 	Context mContext = MainApplication.getContext();
 	StockDatabaseManager mStockDatabaseManager = StockDatabaseManager.getInstance();
 	FinancialAnalyzer mFinancialAnalyzer = FinancialAnalyzer.getInstance();
-	TradeAnalyzer mGridAnalyzer = TradeAnalyzer.getInstance();
+	TradeAnalyzer mTradeAnalyzer = TradeAnalyzer.getInstance();
 	TrendAnalyzer mTrendAnalyzer = TrendAnalyzer.getInstance();
 	Logger Log = Logger.getLogger();
 
@@ -85,7 +85,7 @@ public class StockAnalyzer {
 			mFinancialAnalyzer.analyzeFinancial(mStock);
 			mFinancialAnalyzer.setupFinancial(mStock);
 			mFinancialAnalyzer.setupStockBonus(mStock);
-			mGridAnalyzer.analyze(mStock);
+			mTradeAnalyzer.analyze(mStock);
 			mStock.setModified(Utility.getCurrentDateTimeString());
 			mStockDatabaseManager.updateStock(mStock, mStock.getContentValues());
 		} catch (Exception e) {

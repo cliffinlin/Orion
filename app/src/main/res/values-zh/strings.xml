@@ -211,6 +211,7 @@
     <string name="stock_data_list">Stock Data list</string>
     <string name="stock_deal_date_empty">Deal date is empty</string>
     <string name="stock_deal_volume_empty">Deal volume is empty</string>
+    <string name="stock_deal_volume_exceeded">Deal volume has exceeded the limit</string>
     <string name="stock_dividend">Stock Dividend</string>
     <string name="stock_edit">Stock edit</string>
     <string name="stock_exist">Stock exist!</string>

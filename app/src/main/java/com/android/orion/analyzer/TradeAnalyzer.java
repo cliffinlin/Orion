@@ -14,7 +14,7 @@ public class TradeAnalyzer {
 	Stock mStock;
 	StockDeal mBuyDeal;
 	StockDeal mSellDeal;
-	ArrayList<StockDeal> mStockDealList = new ArrayList<>();
+	ArrayList<StockDeal> mStockDealList;
 	StockDatabaseManager mStockDatabaseManager = StockDatabaseManager.getInstance();
 
 	private TradeAnalyzer() {
@@ -37,6 +37,7 @@ public class TradeAnalyzer {
 			return;
 		}
 
+		mStockDealList = mStock.getStockDealList();
 		mStockDatabaseManager.getStockDealList(mStock, mStockDealList);
 		if (mStockDealList == null || mStockDealList.size() == 0) {
 			return;

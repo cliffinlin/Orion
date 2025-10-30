@@ -59,6 +59,7 @@ public class TrendAnalyzer {
 	List<CentroidCluster<DataPoint>> mClusterList;
 	ArrayList<CurveThumbnail.LineConfig> mLineConfigList = new ArrayList<>();
 	ArrayList<CurveThumbnail.ScatterConfig> mScatterConfigList = new ArrayList<>();
+	List<CurveThumbnail.CircleConfig> mCircleConfigList = new ArrayList<>();
 	ArrayList<StockData> mStockDataList = new ArrayList<>();
 	ConcurrentMap<String, DataPoint> mAllDataPointMap = new ConcurrentHashMap<>();
 	ConcurrentMap<String, DataPoint> mDataPointMap = new ConcurrentHashMap<>();
@@ -74,7 +75,7 @@ public class TrendAnalyzer {
 
 	void setup(Stock stock) {
 		mStock = stock;
-		mStockDatabaseManager.getStockTrendMap(mStock);
+		mStockDatabaseManager.getStockTrendMap(mStock, mStock.getStockTrendMap());
 		mKMeansPeriods = 0;
 		for (String period : Period.PERIODS) {
 			if (Setting.getPeriod(period)) {
@@ -622,7 +623,7 @@ public class TrendAnalyzer {
 				mAllDataPointMap.put(point.period + Symbol.L + point.level, point);
 				clusterInfo.append("  ").append(point);
 			}
-			Log.d(clusterInfo.toString());
+//			Log.d(clusterInfo.toString());
 		}
 	}
 
@@ -898,13 +899,14 @@ public class TrendAnalyzer {
 	public void setupRadarThumbnail() {
 		mLineConfigList.clear();
 		mScatterConfigList.clear();
+		mCircleConfigList.clear();
 
 		setupBaseLines();
 		setupPeriodRadar();
 
 		CurveThumbnail thumbnail = new CurveThumbnail(
 				THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT, Color.TRANSPARENT,
-				mLineConfigList, mScatterConfigList, null
+				mLineConfigList, mScatterConfigList, mCircleConfigList, null
 		);
 
 		byte[] thumbnailBytes = Utility.thumbnailToBytes(thumbnail);
@@ -930,14 +932,17 @@ public class TrendAnalyzer {
 		mScatterConfigList.add(new CurveThumbnail.ScatterConfig(
 				centerX, centerY, Color.LTGRAY, THUMBNAIL_SCATTER_SIZE
 		));
+
+		mCircleConfigList.add(new CurveThumbnail.CircleConfig(centerX, centerY, Color.BLACK, THUMBNAIL_SIZE / 4.5f, THUMBNAIL_STROKE_WIDTH));
+		mCircleConfigList.add(new CurveThumbnail.CircleConfig(centerX, centerY, Color.BLACK, THUMBNAIL_SIZE / 2.5f, THUMBNAIL_STROKE_WIDTH));
 	}
 
 	private void setupPeriodRadar() {
 		float centerX = (float) THUMBNAIL_SIZE / 2f;
 		float centerY = (float) THUMBNAIL_SIZE / 2f;
 		float radius = (float) THUMBNAIL_SIZE / 2f * 0.85f - THUMBNAIL_SCATTER_SIZE / 2f;
-		final float lineRadius = radius / 2f;
-		final float thickStrokeWidth = 4f * THUMBNAIL_STROKE_WIDTH;
+		float lineRadius;
+		float thickStrokeWidth = 4f * THUMBNAIL_STROKE_WIDTH;
 
 		for (String period : Period.PERIODS) {
 			if (!Setting.getPeriod(period)) continue;
@@ -949,6 +954,8 @@ public class TrendAnalyzer {
 			double angle = radar.phase;
 			float x = centerX + (float) (radius * Math.cos(angle));
 			float y = centerY + (float) (radius * Math.sin(angle));
+
+			lineRadius = (float) (radius / 3f + radius / 2f * radar.period / 100f);
 
 			// 确定颜色
 			int color = radar.lastPointValue >= 0 ? Color.RED : Color.BLACK;

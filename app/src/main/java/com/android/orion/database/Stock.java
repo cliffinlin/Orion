@@ -49,6 +49,7 @@ public class Stock extends DatabaseTable {
 	ArrayList<StockShare> mStockShareList = new ArrayList<>();
 	ArrayList<StockBonus> mStockBonusList = new ArrayList<>();
 
+	ArrayList<StockDeal> mStockDealList = new ArrayList<>();
 	ArrayMap<String, StockTrend> mStockTrendMap = new ArrayMap<>();
 
 	private final ArrayMap<String, Period> mPeriodMap = new ArrayMap<>();
@@ -1325,6 +1326,10 @@ public class Stock extends DatabaseTable {
 
 	public ArrayList<StockBonus> getStockBonusList() {
 		return mStockBonusList;
+	}
+
+	public ArrayList<StockDeal> getStockDealList() {
+		return mStockDealList;
 	}
 
 	public ArrayMap<String, StockTrend> getStockTrendMap() {

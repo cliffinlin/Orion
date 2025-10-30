@@ -71,7 +71,6 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 	ArrayList<StockDataChartItemMain> mStockDataChartItemMainList = null;
 	ArrayList<StockDataChartItemSub> mStockDataChartItemSubList = null;
 	ArrayList<StockDataChart> mStockDataChartList = null;
-	ArrayList<StockDeal> mStockDealList = new ArrayList<>();
 	ArrayMap<Integer, CombinedChart> mCombinedChartMap = new ArrayMap<>();
 	ChartSyncHelper mChartSyncHelper = new ChartSyncHelper();
 	private int mCurrentSwitchActionIndex = 0;
@@ -500,13 +499,13 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 			updateMenuAction();
 
 			if (mShowStockDeal) {
-				mStockDatabaseManager.getStockDealList(mStock, mStockDealList);
+				mStockDatabaseManager.getStockDealList(mStock, mStock.getStockDealList());
 			} else {
-				mStockDealList.clear();
+				mStock.getStockDealList().clear();
 			}
 
 			stockDataChart.updateDescription(mStock);
-			stockDataChart.updateLimitLines(mStock, mStockDealList);
+			stockDataChart.updateLimitLines(mStock, mStock.getStockDealList());
 			stockDataChart.updateExtendEntry();
 			stockDataChart.updateGroupEntry();
 			stockDataChart.setMainChartData();
@@ -531,7 +530,7 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 	}
 
 	void updateStockDataChartItemList() {
-		mStockDatabaseManager.getStockTrendMap(mStock);
+		mStockDatabaseManager.getStockTrendMap(mStock, mStock.getStockTrendMap());
 		mStockDataChartItemList.clear();
 		for (int i = 0; i < Period.PERIODS.length; i++) {
 			if (Setting.getPeriod(Period.PERIODS[i])) {

@@ -5,11 +5,11 @@ package com.android.orion.data;
  */
 public class Radar {
     public double amplitude;    // 振幅
-    double period;       // 周期（天）
-    double frequency;    // 频率（1/天）
+    public double period;       // 周期（天）
+    public double frequency;    // 频率（1/天）
     public double phase;        // 相位角（弧度）
-    double phaseDegrees; // 相位角（度）
-    int frequencyIndex;  // 频率索引
+    public double phaseDegrees; // 相位角（度）
+    public int frequencyIndex;  // 频率索引
     public double lastPointValue; // 最后一个点的数值
 
     public Radar(double amplitude, double period, double frequency,
