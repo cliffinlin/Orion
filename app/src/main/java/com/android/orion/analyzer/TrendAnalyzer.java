@@ -955,7 +955,7 @@ public class TrendAnalyzer {
 			float x = centerX + (float) (radius * Math.cos(angle));
 			float y = centerY + (float) (radius * Math.sin(angle));
 
-			lineRadius = (float) (radius / 3f + radius / 2f * radar.period / 100f);
+			lineRadius = (float) (radius / 3f + radius * radar.period / 100f);
 
 			// 确定颜色
 			int color = radar.lastPointValue >= 0 ? Color.RED : Color.BLACK;
