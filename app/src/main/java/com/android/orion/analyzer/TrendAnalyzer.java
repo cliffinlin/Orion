@@ -940,9 +940,9 @@ public class TrendAnalyzer {
 	private void setupPeriodRadar() {
 		float centerX = (float) THUMBNAIL_SIZE / 2f;
 		float centerY = (float) THUMBNAIL_SIZE / 2f;
-		float radius = (float) THUMBNAIL_SIZE / 2f * 0.85f - THUMBNAIL_SCATTER_SIZE / 2f;
-		float lineRadius;
-		float thickStrokeWidth = 4f * THUMBNAIL_STROKE_WIDTH;
+		float radius;
+		final float lineRadius = THUMBNAIL_SIZE / 5f;
+		final float strokeWidth = 4f * THUMBNAIL_STROKE_WIDTH;
 
 		for (String period : Period.PERIODS) {
 			if (!Setting.getPeriod(period)) continue;
@@ -951,11 +951,10 @@ public class TrendAnalyzer {
 			if (radar == null) continue;
 
 			// 计算散点坐标
+			radius = (float) (THUMBNAIL_SIZE / 1.2f * (radar.period / 100f));
 			double angle = radar.phase;
 			float x = centerX + (float) (radius * Math.cos(angle));
 			float y = centerY + (float) (radius * Math.sin(angle));
-
-			lineRadius = (float) (radius / 3f + radius * radar.period / 100f);
 
 			// 确定颜色
 			int color = radar.lastPointValue >= 0 ? Color.RED : Color.BLACK;
@@ -968,22 +967,22 @@ public class TrendAnalyzer {
 			// 添加周期特定的指示线
 			switch (period) {
 				case Period.DAY:
-					addRadialLine(x, y, -lineRadius, 0, color, thickStrokeWidth);
+					addRadialLine(x, y, -lineRadius, 0, color, strokeWidth);
 					break;
 				case Period.MIN60:
-					addRadialLine(x, y, 0, lineRadius, color, thickStrokeWidth);
+					addRadialLine(x, y, 0, lineRadius, color, strokeWidth);
 					break;
 				case Period.MIN30:
-					addRadialLine(x, y, 0, -lineRadius, color, thickStrokeWidth);
+					addRadialLine(x, y, 0, -lineRadius, color, strokeWidth);
 					break;
 				case Period.MIN15:
-					addRadialLine(x, y, lineRadius, 0, color, thickStrokeWidth);
+					addRadialLine(x, y, lineRadius, 0, color, strokeWidth);
 					break;
 				case Period.MIN5:
 					double angleMin5 = Math.toRadians((float) Constant.MIN5 / (float) Constant.MIN60 * 360f);
 					float deltaX = (float) (lineRadius * Math.sin(angleMin5));
 					float deltaY = (float) (lineRadius * Math.cos(angleMin5));
-					addRadialLine(x, y, deltaX, deltaY, color, thickStrokeWidth);
+					addRadialLine(x, y, deltaX, deltaY, color, strokeWidth);
 					break;
 			}
 		}
