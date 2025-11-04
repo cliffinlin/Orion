@@ -23,6 +23,7 @@ import java.util.List;
 public class StockAnalyzer {
 	Stock mStock;
 	ArrayList<StockData> mStockDataList;
+	ArrayList<Double> mPulseList = new ArrayList<>();
 
 	Context mContext = MainApplication.getContext();
 	StockDatabaseManager mStockDatabaseManager = StockDatabaseManager.getInstance();
@@ -50,8 +51,8 @@ public class StockAnalyzer {
 			if (Period.indexOf(period) <= Period.indexOf(Period.MONTH)) {
 				mFinancialAnalyzer.setNetProfileInYear(mStock, mStockDataList);
 			}
-			analyzeMACD(period);
 			analyzeStockData(period);
+			analyzeMACD(period);
 			mStockDatabaseManager.updateStockData(mStock, period, mStockDataList);
 			mStock.setModified(Utility.getCurrentDateTimeString());
 			mStockDatabaseManager.updateStock(mStock, mStock.getContentValues());
@@ -103,37 +104,114 @@ public class StockAnalyzer {
 
 		try {
 			MACDAnalyzer.calculateMACD(period, mStockDataList);
-			MACDAnalyzer.analyzeMACDWithFourier();
+			ArrayList<Double> average5List = MACDAnalyzer.getEMAAverage5List();
+			ArrayList<Double> average10List = MACDAnalyzer.getEMAAverage10List();
+			ArrayList<Double> difList = MACDAnalyzer.getDIFList();
+			ArrayList<Double> deaList = MACDAnalyzer.getDEAList();
+			ArrayList<Double> histogramList = MACDAnalyzer.getHistogramList();
+
+			int size = mStockDataList.size();
+			if (average5List.size() != size || average10List.size() != size || difList.size() != size || deaList.size() != size || histogramList.size() != size) {
+				return;
+			}
+
+			int level = mStock.getLevel(period);
+			int vertexTopIndex = 0;
+			int vertexBottomIndex = 0;
+			double vertexTopValue = 0;
+			double vertexBottomValue = 0;
+			double value;
+			int startIndex = 0;
+			int endIndex = 0;
+			double startValue;
+			double endValue;
+			boolean foundVertex = false;
+			StockData vertexData = null;
+
+			mPulseList.clear();
+
+			for (int i = 0; i < size; i++) {
+				StockData stockData = mStockDataList.get(i);
+				if (i == 0) {
+					value = (stockData.getCandle().getHigh() + stockData.getCandle().getLow()) / 2.0;
+					vertexTopValue = value;
+					vertexBottomValue = value;
+				}
+
+				if (stockData.vertexOf(StockTrend.getVertexTOP(level))) {
+					foundVertex = true;
+					vertexData = stockData;
+					vertexTopIndex = i;
+					vertexTopValue = stockData.getCandle().getHigh();
+				} else if (stockData.vertexOf(StockTrend.getVertexBottom(level))) {
+					foundVertex = true;
+					vertexData = stockData;
+					vertexBottomIndex = i;
+					vertexBottomValue = stockData.getCandle().getLow();
+				}
+
+				if (i == size -1) {
+					if (vertexData == null) {
+						continue;
+					}
+					if (vertexData.vertexOf(StockTrend.getVertexTOP(level))) {
+						foundVertex = true;
+						vertexBottomIndex = i;
+						vertexBottomValue = stockData.getCandle().getLow();
+					} else if (vertexData.vertexOf(StockTrend.getVertexBottom(level))) {
+						foundVertex = true;
+						vertexTopIndex = i;
+						vertexTopValue = stockData.getCandle().getHigh();
+					}
+				}
+
+				if (foundVertex && vertexTopIndex != vertexBottomIndex) {
+					if (vertexBottomIndex < vertexTopIndex) {
+						startIndex = vertexBottomIndex;
+						startValue = vertexBottomValue;
+						endIndex = vertexTopIndex;
+						endValue = vertexTopValue;
+					} else {
+						endIndex = vertexBottomIndex;
+						endValue = vertexBottomValue;
+						startIndex = vertexTopIndex;
+						startValue = vertexTopValue;
+					}
+
+					for (int j = startIndex; j < endIndex; j++) {
+						double temp = (double) (j - startIndex) / (double) (endIndex - startIndex);
+						value = startValue + (endValue - startValue) * temp;
+						mPulseList.add(value);
+					}
+
+					if (i == size -1) {
+						mPulseList.add(endValue);
+					}
+
+					foundVertex = false;
+				}
+			}
+
+			FourierAnalyzer.analyze(period, mPulseList);
+			ArrayList<Double> radarList = FourierAnalyzer.getRadarList();
+			mStock.setRadar(period, FourierAnalyzer.getRadar());
+
+			for (int i = 0; i < size; i++) {
+				StockData stockData = mStockDataList.get(i);
+				Macd macd = stockData.getMacd();
+				if (macd != null) {
+					macd.set(
+							average5List.get(i),
+							average10List.get(i),
+							difList.get(i),
+							deaList.get(i),
+							histogramList.get(i),
+							radarList.get(i)
+					);
+				}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-
-		List<Double> average5List = MACDAnalyzer.getEMAAverage5List();
-		List<Double> average10List = MACDAnalyzer.getEMAAverage10List();
-		List<Double> difList = MACDAnalyzer.getDIFList();
-		List<Double> deaList = MACDAnalyzer.getDEAList();
-		List<Double> histogramList = MACDAnalyzer.getHistogramList();
-		List<Double> radarList = MACDAnalyzer.getRadarList();
-		mStock.setRadar(period, MACDAnalyzer.getRadar());
-
-		int size = mStockDataList.size();
-		if (average5List.size() != size || average10List.size() != size || difList.size() != size || deaList.size() != size || histogramList.size() != size) {
-			return;
-		}
-
-		for (int i = 0; i < size; i++) {
-			StockData stockData = mStockDataList.get(i);
-			Macd macd = stockData.getMacd();
-			if (macd != null) {
-				macd.set(
-						average5List.get(i),
-						average10List.get(i),
-						difList.get(i),
-						deaList.get(i),
-						histogramList.get(i),
-						radarList.get(i)
-				);
-			}
 		}
 	}
 
