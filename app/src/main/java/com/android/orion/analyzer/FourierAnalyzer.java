@@ -20,6 +20,7 @@ public class FourierAnalyzer {
     private static ArrayList<Double> mRadarList = new ArrayList<>();
     private static Radar mRadar;
     private static boolean logMore = true;
+    private static int mComponentCount = 10;
 
     static Logger Log = Logger.getLogger();
 
@@ -32,12 +33,20 @@ public class FourierAnalyzer {
     }
 
     /**
-     * 进行傅立叶变换分析并重建第一主成分
+     * 设置要重建的成分数量
+     */
+    public static void setComponentCount(int count) {
+        mComponentCount = Math.max(1, count);
+    }
+
+    /**
+     * 进行傅立叶变换分析并重建前n个主成分（使用IFFT重建）
      */
     public static void analyze(String period, ArrayList<Double> dataList) {
         if (dataList == null || dataList.isEmpty()) {
             return;
         }
+
         mPeriod = period;
         mDataList = dataList;
 
@@ -46,12 +55,10 @@ public class FourierAnalyzer {
             printDominantPeriods(spectrum);
         }
 
-        // 重建第一主成分
-        List<Double> reconstructedData = reconstructFirstComponent(mDataList, spectrum);
+        // 使用IFFT重建前n个主成分
+        List<Double> reconstructedData = reconstructWithIFFT(mDataList, spectrum, mComponentCount);
         mRadarList.clear();
         mRadarList.addAll(reconstructedData);
-
-//        Log.d("傅立叶重建完成，重建数据点数: " + reconstructedData.size());
     }
 
     /**
@@ -78,7 +85,7 @@ public class FourierAnalyzer {
 
         int n = cleanData.size();
 
-        // 找到最接近的2的幂次方长度（FFT要求）
+        // 找到最接近的2的幂次方长度
         int fftSize = findNextPowerOfTwo(n);
 
         // 准备FFT输入数据
@@ -86,7 +93,6 @@ public class FourierAnalyzer {
         for (int i = 0; i < n; i++) {
             fftInput[i] = cleanData.get(i);
         }
-        // 剩余部分补零
 
         // 执行FFT
         FastFourierTransformer fft = new FastFourierTransformer(DftNormalization.STANDARD);
@@ -95,15 +101,15 @@ public class FourierAnalyzer {
         // 计算振幅和周期
         List<PeriodAmplitude> spectrum = calculateSpectrum(fftResult, n);
 
-//        Log.d("数据点: " + n + ", FFT大小: " + fftSize);
-
         return spectrum;
     }
 
     /**
-     * 重建第一主成分（使用手动重建确保相位正确）
+     * 使用IFFT重建信号（主要成分重建）
      */
-    private static List<Double> reconstructFirstComponent(List<Double> originalData, List<PeriodAmplitude> spectrum) {
+    private static List<Double> reconstructWithIFFT(List<Double> originalData,
+                                                    List<PeriodAmplitude> spectrum,
+                                                    int componentCount) {
         if (originalData == null || spectrum == null || spectrum.isEmpty()) {
             return new ArrayList<>();
         }
@@ -122,7 +128,7 @@ public class FourierAnalyzer {
 
         int n = cleanData.size();
 
-        // 执行FFT获取频率信息
+        // 执行FFT获取完整的频域数据
         int fftSize = findNextPowerOfTwo(n);
         double[] fftInput = new double[fftSize];
         for (int i = 0; i < n; i++) {
@@ -130,138 +136,159 @@ public class FourierAnalyzer {
         }
 
         FastFourierTransformer fft = new FastFourierTransformer(DftNormalization.STANDARD);
-        Complex[] fftResult = fft.transform(fftInput, TransformType.FORWARD);
+        Complex[] fullSpectrum = fft.transform(fftInput, TransformType.FORWARD);
 
-        // 获取第一主成分对应的频率索引
-        int dominantIndex = findFrequencyIndexFromSpectrum(fftResult, n, spectrum.get(0));
+        // 按周期从大到小排序频谱
+        List<PeriodAmplitude> periodSortedSpectrum = new ArrayList<>(spectrum);
+        Collections.sort(periodSortedSpectrum, (a, b) -> Double.compare(b.period, a.period));
 
-        // 获取该频率对应的复数信息
-        Complex dominantComplex = fftResult[dominantIndex];
-        double amplitude = dominantComplex.abs() / n * 2;
-        double phase = dominantComplex.getArgument();
-        double phaseDegrees = Math.toDegrees(phase);
-        if (phaseDegrees < 0) phaseDegrees += 360;
-
-        double dominantPeriodInDataPoints = (double) n / dominantIndex;
-        double dominantPeriodInDays = convertPeriodToDays(dominantPeriodInDataPoints, n);
+        // 确定实际要重建的成分数量
+        int actualCount = Math.min(componentCount, periodSortedSpectrum.size());
 
         if (logMore) {
-            Log.d("第一主成分信息 - " +
-                    "频率索引: " + dominantIndex +
-                    ", 周期: " + String.format("%.2f", dominantPeriodInDays) + "天" +
-                    ", 振幅: " + String.format("%.6f", amplitude) +
-                    ", 相位: " + String.format("%.2f", phaseDegrees) + "°");
+            Log.d("IFFT重建 - 总共: " + spectrum.size() + ", 重建成分: " + actualCount);
         }
 
-        // 使用手动重建信号（确保相位正确）
-        List<Double> reconstructedData = manuallyReconstructSignal(amplitude, dominantPeriodInDataPoints, phase, n);
+        // 创建滤波后的频域数据（只保留主要成分）
+        Complex[] filteredSpectrum = createFilteredSpectrum(fullSpectrum, periodSortedSpectrum, actualCount, n);
 
-        // 验证手动重建的相位准确性
-        verifyReconstructedPhase(reconstructedData, amplitude, dominantPeriodInDataPoints, phase, n, "手动重建");
+        // 使用IFFT重建信号
+        Complex[] reconstructedComplex = fft.transform(filteredSpectrum, TransformType.INVERSE);
 
-        // 计算并存储极坐标信息
-        double lastPointValue = reconstructedData.isEmpty() ? 0.0 : reconstructedData.get(reconstructedData.size() - 1);
-        double frequency = 1.0 / dominantPeriodInDays;
-        mRadar = new Radar(amplitude, dominantPeriodInDays, frequency,
-                phase, phaseDegrees, dominantIndex, lastPointValue);
+        // 转换为实数列表
+        List<Double> reconstructedData = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            // 取实部作为重建信号（虚部应该接近0）
+            reconstructedData.add(reconstructedComplex[i].getReal());
+        }
+
+        // 设置雷达数据
+        if (!periodSortedSpectrum.isEmpty()) {
+            PeriodAmplitude firstComponent = periodSortedSpectrum.get(0);
+            double lastPointValue = reconstructedData.isEmpty() ? 0.0 : reconstructedData.get(reconstructedData.size() - 1);
+            mRadar = new Radar(firstComponent.amplitude, firstComponent.period, firstComponent.frequency,
+                    firstComponent.phase, firstComponent.phaseDegrees, 0, lastPointValue);
+        }
 
         if (logMore) {
-            Log.d("第一主成分极坐标 - " +
-                    "振幅: " + String.format("%.6f", amplitude) +
-                    ", 周期: " + String.format("%.2f", dominantPeriodInDays) + "天" +
-                    ", 频率: " + String.format("%.4f", frequency) + "/天" +
-                    ", 相位: " + String.format("%.2f", phaseDegrees) + "°" +
-                    ", 最后点: " + String.format("%.6f", lastPointValue));
+            Log.d("IFFT重建完成，使用 " + actualCount + " 个主要成分");
+            validateReconstruction(reconstructedData, cleanData);
         }
 
         return reconstructedData;
     }
 
     /**
-     * 手动重建信号（相位准确）
+     * 创建滤波后的频域数据（只保留主要成分）
      */
-    private static List<Double> manuallyReconstructSignal(double amplitude, double periodInDataPoints,
-                                                          double phase, int dataLength) {
-        List<Double> manualData = new ArrayList<>();
-        double angularFrequency = 2 * Math.PI / periodInDataPoints;
-
-        for (int i = 0; i < dataLength; i++) {
-            // 使用标准余弦函数：A * cos(ωt + φ)
-            double value = amplitude * Math.cos(angularFrequency * i + phase);
-            manualData.add(value);
+    private static Complex[] createFilteredSpectrum(Complex[] fullSpectrum,
+                                                    List<PeriodAmplitude> mainComponents,
+                                                    int componentCount, int dataLength) {
+        // 创建全零的频域数据
+        Complex[] filtered = new Complex[fullSpectrum.length];
+        for (int i = 0; i < filtered.length; i++) {
+            filtered[i] = Complex.ZERO;
         }
 
-        return manualData;
+        // 保留直流分量（索引0）
+        filtered[0] = fullSpectrum[0];
+
+        // 保留主要频率成分
+        for (int i = 0; i < componentCount; i++) {
+            PeriodAmplitude component = mainComponents.get(i);
+            int frequencyIndex = findFrequencyIndexFromSpectrum(component, dataLength);
+
+            // 确保索引在有效范围内
+            if (frequencyIndex > 0 && frequencyIndex < fullSpectrum.length / 2) {
+                // 保留正频率成分
+                filtered[frequencyIndex] = fullSpectrum[frequencyIndex];
+                // 保留对应的负频率成分（对称性）
+                int negativeIndex = fullSpectrum.length - frequencyIndex;
+                if (negativeIndex < fullSpectrum.length) {
+                    filtered[negativeIndex] = fullSpectrum[negativeIndex];
+                }
+            }
+        }
+
+        if (logMore) {
+            Log.d("频域滤波完成，保留了 " + componentCount + " 个主要频率成分");
+        }
+
+        return filtered;
     }
 
     /**
-     * 相位验证方法
+     * 验证重建结果
      */
-    private static void verifyReconstructedPhase(List<Double> reconstructedData, double amplitude,
-                                                 double periodInDataPoints, double expectedPhase,
-                                                 int dataLength, String methodName) {
-        if (reconstructedData == null || reconstructedData.size() < 2) {
-            return;
+    private static void validateReconstruction(List<Double> reconstructed, List<Double> original) {
+        if (reconstructed.size() != original.size()) return;
+
+        // 计算整体误差
+        double totalError = 0;
+        for (int i = 0; i < reconstructed.size(); i++) {
+            totalError += Math.abs(reconstructed.get(i) - original.get(i));
+        }
+        totalError /= reconstructed.size();
+
+        // 检查尾部数据
+        int tailLength = Math.min(6, reconstructed.size());
+        StringBuilder tailInfo = new StringBuilder();
+        tailInfo.append("尾部数据 - 原始: ");
+        for (int i = reconstructed.size() - tailLength; i < reconstructed.size(); i++) {
+            tailInfo.append(String.format("%.3f", original.get(i))).append(" ");
+        }
+        tailInfo.append("重建: ");
+        for (int i = reconstructed.size() - tailLength; i < reconstructed.size(); i++) {
+            tailInfo.append(String.format("%.3f", reconstructed.get(i))).append(" ");
         }
 
-        double angularFrequency = 2 * Math.PI / periodInDataPoints;
+        Log.d("重建验证 - 平均误差: " + String.format("%.4f", totalError));
+        Log.d(tailInfo.toString());
+    }
 
-        // 使用相关性最大化来验证相位
-        int cyclesToCheck = 3;
-        int checkPoints = Math.min((int)(cyclesToCheck * periodInDataPoints), reconstructedData.size());
+    /**
+     * 计算频谱（周期、振幅和相位）
+     */
+    private static List<PeriodAmplitude> calculateSpectrum(Complex[] fftResult, int dataLength) {
+        List<PeriodAmplitude> spectrum = new ArrayList<>();
+        if (fftResult == null) {
+            return spectrum;
+        }
 
-        double maxCorrelation = -1;
-        double bestPhase = 0;
+        int halfLength = fftResult.length / 2;
 
-        for (double testPhase = 0; testPhase < 2 * Math.PI; testPhase += 0.01) {
-            double correlation = 0;
-            for (int i = 0; i < checkPoints; i++) {
-                double theoretical = amplitude * Math.cos(angularFrequency * i + testPhase);
-                correlation += theoretical * reconstructedData.get(i);
+        for (int k = 1; k < halfLength; k++) {
+            Complex complex = fftResult[k];
+            double amplitude = complex.abs() / dataLength * 2;
+            double phase = complex.getArgument();
+            double phaseDegrees = Math.toDegrees(phase);
+            if (phaseDegrees < 0) phaseDegrees += 360;
+
+            double periodInDataPoints = (double) dataLength / k;
+
+            if (periodInDataPoints > 1 && periodInDataPoints <= dataLength / 2) {
+                double periodInDays = convertPeriodToDays(periodInDataPoints, dataLength);
+
+                if (periodInDays > 0.1 && periodInDays <= 365) {
+                    double frequency = 1.0 / periodInDays;
+                    spectrum.add(new PeriodAmplitude(periodInDays, amplitude, phase, phaseDegrees, frequency));
+                }
             }
-
-            if (correlation > maxCorrelation) {
-                maxCorrelation = correlation;
-                bestPhase = testPhase;
-            }
         }
 
-        double bestPhaseDegrees = Math.toDegrees(bestPhase);
-        double expectedPhaseDegrees = Math.toDegrees(expectedPhase);
-
-        if (bestPhaseDegrees < 0) bestPhaseDegrees += 360;
-        if (expectedPhaseDegrees < 0) expectedPhaseDegrees += 360;
-
-        double phaseDifference = Math.abs(expectedPhaseDegrees - bestPhaseDegrees);
-
-        if (logMore) {
-            Log.d(methodName + "相位验证 - 期望相位: " + String.format("%.2f", expectedPhaseDegrees) +
-                    "°, 实际相位: " + String.format("%.2f", bestPhaseDegrees) + "°" +
-                    ", 相位差异: " + String.format("%.2f", phaseDifference) + "°" +
-                    (phaseDifference < 1.0 ? " ✓" : " ✗"));
-        }
+        Collections.sort(spectrum, (a, b) -> Double.compare(b.period, a.period));
+        return spectrum;
     }
 
     /**
      * 根据频谱中的周期信息找到对应的频率索引
      */
-    private static int findFrequencyIndexFromSpectrum(Complex[] fftResult, int dataLength, PeriodAmplitude dominantPeriod) {
-        // 将天数转换回数据点数量
+    private static int findFrequencyIndexFromSpectrum(PeriodAmplitude dominantPeriod, int dataLength) {
         double targetPeriodInDataPoints = convertDaysToDataPoints(dominantPeriod.period, dataLength);
-
-        // 计算对应的频率索引
         int dominantIndex = (int) Math.round(dataLength / targetPeriodInDataPoints);
-
-        // 确保索引在有效范围内
-        int halfLength = fftResult.length / 2;
+        int halfLength = dataLength / 2;
         if (dominantIndex < 1) dominantIndex = 1;
         if (dominantIndex >= halfLength) dominantIndex = halfLength - 1;
-
-        if (logMore) {
-            Log.d("根据周期 " + dominantPeriod.period + " 天找到频率索引: " + dominantIndex +
-                    ", 对应周期(数据点): " + (double)dataLength/dominantIndex);
-        }
-
         return dominantIndex;
     }
 
@@ -297,42 +324,6 @@ public class FourierAnalyzer {
     }
 
     /**
-     * 计算频谱（周期、振幅和相位）
-     */
-    private static List<PeriodAmplitude> calculateSpectrum(Complex[] fftResult, int dataLength) {
-        List<PeriodAmplitude> spectrum = new ArrayList<>();
-        if (fftResult == null) {
-            return spectrum;
-        }
-
-        // 只取前一半结果（对称的）
-        int halfLength = fftResult.length / 2;
-
-        for (int k = 1; k < halfLength; k++) { // 从1开始，跳过直流分量(k=0)
-            Complex complex = fftResult[k];
-            double amplitude = complex.abs() / dataLength * 2; // 计算振幅
-            double phase = complex.getArgument(); // 计算相位（弧度）
-            double phaseDegrees = Math.toDegrees(phase); // 转换为角度
-            if (phaseDegrees < 0) phaseDegrees += 360; // 标准化到0-360度
-
-            double periodInDataPoints = (double) dataLength / k; // 计算周期（数据点数量）
-
-            if (periodInDataPoints > 1 && periodInDataPoints <= dataLength / 2) { // 过滤无效周期
-                double periodInDays = convertPeriodToDays(periodInDataPoints, dataLength);
-
-                if (periodInDays > 0.1 && periodInDays <= 365) { // 合理的周期范围：0.1天到1年
-                    spectrum.add(new PeriodAmplitude(periodInDays, amplitude, phase, phaseDegrees));
-                }
-            }
-        }
-
-        // 按振幅降序排序
-        Collections.sort(spectrum, (a, b) -> Double.compare(b.amplitude, a.amplitude));
-
-        return spectrum;
-    }
-
-    /**
      * 将周期从数据点数量转换为天数
      */
     private static double convertPeriodToDays(double periodInDataPoints, int totalDataPoints) {
@@ -343,27 +334,21 @@ public class FourierAnalyzer {
             case Period.MONTH2:
             case Period.MONTH:
             case Period.WEEK:
-                // 这些周期的数据点直接对应天数
                 return periodInDataPoints;
 
             case Period.DAY:
-                // 日线：1个数据点 = 1天
                 return periodInDataPoints;
 
             case Period.MIN60:
-                // 60分钟线：4个数据点 = 1天
                 return periodInDataPoints / Constant.MIN60_PER_TRADE_DAY;
 
             case Period.MIN30:
-                // 30分钟线：8个数据点 = 1天
                 return periodInDataPoints / Constant.MIN30_PER_TRADE_DAY;
 
             case Period.MIN15:
-                // 15分钟线：16个数据点 = 1天
                 return periodInDataPoints / Constant.MIN15_PER_TRADE_DAY;
 
             case Period.MIN5:
-                // 5分钟线：48个数据点 = 1天
                 return periodInDataPoints / Constant.MIN5_PER_TRADE_DAY;
 
             default:
@@ -372,21 +357,20 @@ public class FourierAnalyzer {
     }
 
     /**
-     * 打印主要周期（包含相位信息）
+     * 打印主要周期
      */
     private static void printDominantPeriods(List<PeriodAmplitude> spectrum) {
-        if (spectrum == null) {
-            return;
-        }
-        Log.d("=== " + " 主要周期 ===");
-        Log.d("排名 | 周期(天) | 振幅强度 | 相位(度)");
-        Log.d("----|----------|----------|----------");
+        if (spectrum == null) return;
 
-        int count = Math.min(10, spectrum.size()); // 显示前10个主要周期
+        Log.d("=== 主要周期（按周期从大到小排序） ===");
+        Log.d("排名 | 周期(天) | 频率(/天) | 振幅强度 | 相位(度)");
+        Log.d("----|----------|-----------|----------|----------");
+
+        int count = Math.min(10, spectrum.size());
         for (int i = 0; i < count; i++) {
             PeriodAmplitude pa = spectrum.get(i);
-            Log.d(String.format("%2d  | %8.2f | %8.4f | %8.2f",
-                    i + 1, pa.period, pa.amplitude, pa.phaseDegrees));
+            Log.d(String.format("%2d  | %8.2f | %9.4f | %8.4f | %8.2f",
+                    i + 1, pa.period, pa.frequency, pa.amplitude, pa.phaseDegrees));
         }
     }
 
@@ -402,13 +386,14 @@ public class FourierAnalyzer {
     }
 
     /**
-     * 内部类：用于存储周期、振幅和相位
+     * 内部类：用于存储周期、振幅、相位和频率
      */
     private static class PeriodAmplitude {
         double period;
         double amplitude;
-        double phase;        // 相位（弧度）
-        double phaseDegrees; // 相位（角度）
+        double phase;
+        double phaseDegrees;
+        double frequency;
 
         PeriodAmplitude(double period, double amplitude) {
             this.period = period;
@@ -420,6 +405,14 @@ public class FourierAnalyzer {
             this.amplitude = amplitude;
             this.phase = phase;
             this.phaseDegrees = phaseDegrees;
+        }
+
+        PeriodAmplitude(double period, double amplitude, double phase, double phaseDegrees, double frequency) {
+            this.period = period;
+            this.amplitude = amplitude;
+            this.phase = phase;
+            this.phaseDegrees = phaseDegrees;
+            this.frequency = frequency;
         }
     }
 }

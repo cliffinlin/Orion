@@ -39,6 +39,10 @@ public class Constant {
 	public static final int DOUBLE_FIXED_DECIMAL_2 = 2;
 	public static final int DOUBLE_FIXED_DECIMAL_4 = 4;
 
+	public static final int PULSE_HIGH = 1;
+	public static final int PULSE_MIDDLE = 0;
+	public static final int PULSE_LOW = -1;
+
 	public static final int SEASONS_IN_A_YEAR = 4;
 
 	public static final int MIN5 = 5;

@@ -10,6 +10,7 @@ import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockTrend;
 import com.android.orion.manager.StockDatabaseManager;
+import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Logger;
 import com.android.orion.utility.StopWatch;
@@ -97,6 +98,19 @@ public class StockAnalyzer {
 		Log.d(stock.toLogString() + Symbol.TAB + stock.getPriceNetString(Symbol.TAB) + Symbol.TAB + stock.getTrendStringBySetting() + Symbol.TAB + StopWatch.getIntervalString());
 	}
 
+	private void analyzeStockData(String period) {
+		mTrendAnalyzer.setup(mStock, period, mStockDataList);
+
+		mTrendAnalyzer.analyzeVertex(StockTrend.LEVEL_DRAW);
+		mTrendAnalyzer.vertexListToDataList(mStock.getVertexList(period, StockTrend.LEVEL_DRAW), mStock.getStockDataList(period, StockTrend.LEVEL_DRAW));
+
+		for (int i = StockTrend.LEVEL_STROKE; i < StockTrend.LEVELS.length; i++) {
+			mTrendAnalyzer.analyzeLine(i);
+		}
+
+		mTrendAnalyzer.analyzeAdaptive(period);
+	}
+
 	private void analyzeMACD(String period) {
 		if (mStockDataList == null || mStockDataList.size() < StockTrend.VERTEX_SIZE) {
 			return;
@@ -115,83 +129,7 @@ public class StockAnalyzer {
 				return;
 			}
 
-			int level = mStock.getLevel(period);
-			int vertexTopIndex = 0;
-			int vertexBottomIndex = 0;
-			double vertexTopValue = 0;
-			double vertexBottomValue = 0;
-			double value;
-			int startIndex = 0;
-			int endIndex = 0;
-			double startValue;
-			double endValue;
-			boolean foundVertex = false;
-			StockData vertexData = null;
-
-			mPulseList.clear();
-
-			for (int i = 0; i < size; i++) {
-				StockData stockData = mStockDataList.get(i);
-				if (i == 0) {
-					value = (stockData.getCandle().getHigh() + stockData.getCandle().getLow()) / 2.0;
-					vertexTopValue = value;
-					vertexBottomValue = value;
-				}
-
-				if (stockData.vertexOf(StockTrend.getVertexTOP(level))) {
-					foundVertex = true;
-					vertexData = stockData;
-					vertexTopIndex = i;
-					vertexTopValue = stockData.getCandle().getHigh();
-				} else if (stockData.vertexOf(StockTrend.getVertexBottom(level))) {
-					foundVertex = true;
-					vertexData = stockData;
-					vertexBottomIndex = i;
-					vertexBottomValue = stockData.getCandle().getLow();
-				}
-
-				if (i == size -1) {
-					if (vertexData == null) {
-						continue;
-					}
-					if (vertexData.vertexOf(StockTrend.getVertexTOP(level))) {
-						foundVertex = true;
-						vertexBottomIndex = i;
-						vertexBottomValue = stockData.getCandle().getLow();
-					} else if (vertexData.vertexOf(StockTrend.getVertexBottom(level))) {
-						foundVertex = true;
-						vertexTopIndex = i;
-						vertexTopValue = stockData.getCandle().getHigh();
-					}
-				}
-
-				if (foundVertex && vertexTopIndex != vertexBottomIndex) {
-					if (vertexBottomIndex < vertexTopIndex) {
-						startIndex = vertexBottomIndex;
-						startValue = vertexBottomValue;
-						endIndex = vertexTopIndex;
-						endValue = vertexTopValue;
-					} else {
-						endIndex = vertexBottomIndex;
-						endValue = vertexBottomValue;
-						startIndex = vertexTopIndex;
-						startValue = vertexTopValue;
-					}
-
-					for (int j = startIndex; j < endIndex; j++) {
-						double temp = (double) (j - startIndex) / (double) (endIndex - startIndex);
-						value = startValue + (endValue - startValue) * temp;
-						mPulseList.add(value);
-					}
-
-					if (i == size -1) {
-						mPulseList.add(endValue);
-					}
-
-					foundVertex = false;
-				}
-			}
-
+			setupPulseList(period);
 			FourierAnalyzer.analyze(period, mPulseList);
 			ArrayList<Double> radarList = FourierAnalyzer.getRadarList();
 			mStock.setRadar(period, FourierAnalyzer.getRadar());
@@ -215,17 +153,79 @@ public class StockAnalyzer {
 		}
 	}
 
-	private void analyzeStockData(String period) {
-		mTrendAnalyzer.setup(mStock, period, mStockDataList);
+	void setupPulseList(String period) {
+		int level = mStock.getLevel(period);
+		int vertexTopIndex = 0;
+		int vertexBottomIndex = 0;
+		double vertexTopValue = 0;
+		double vertexBottomValue = 0;
+		int startIndex;
+		int endIndex;
+		double startValue;
+		double endValue;
+		boolean foundVertex = false;
+		StockData vertexData = null;
 
-		mTrendAnalyzer.analyzeVertex(StockTrend.LEVEL_DRAW);
-		mTrendAnalyzer.vertexListToDataList(mStock.getVertexList(period, StockTrend.LEVEL_DRAW), mStock.getStockDataList(period, StockTrend.LEVEL_DRAW));
+		mPulseList.clear();
+		int size = mStockDataList.size();
 
-		for (int i = StockTrend.LEVEL_STROKE; i < StockTrend.LEVELS.length; i++) {
-			mTrendAnalyzer.analyzeLine(i);
+		for (int i = 0; i < size; i++) {
+			StockData stockData = mStockDataList.get(i);
+			if (stockData.vertexOf(StockTrend.getVertexTOP(level))) {
+				foundVertex = true;
+				vertexData = stockData;
+				vertexTopIndex = i;
+				vertexTopValue = Constant.PULSE_HIGH;
+			} else if (stockData.vertexOf(StockTrend.getVertexBottom(level))) {
+				foundVertex = true;
+				vertexData = stockData;
+				vertexBottomIndex = i;
+				vertexBottomValue = Constant.PULSE_LOW;
+			}
+
+			if (i == size -1) {
+				if (vertexData == null) {
+					continue;
+				}
+				if (vertexData.vertexOf(StockTrend.getVertexTOP(level))) {
+					foundVertex = true;
+					vertexBottomIndex = i;
+					vertexBottomValue = Constant.PULSE_LOW;
+				} else if (vertexData.vertexOf(StockTrend.getVertexBottom(level))) {
+					foundVertex = true;
+					vertexTopIndex = i;
+					vertexTopValue = Constant.PULSE_HIGH;
+				}
+			}
+
+			if (foundVertex && vertexTopIndex != vertexBottomIndex) {
+				if (vertexBottomIndex < vertexTopIndex) {
+					startIndex = vertexBottomIndex;
+					startValue = vertexBottomValue;
+					endIndex = vertexTopIndex;
+					endValue = vertexTopValue;
+				} else {
+					endIndex = vertexBottomIndex;
+					endValue = vertexBottomValue;
+					startIndex = vertexTopIndex;
+					startValue = vertexTopValue;
+				}
+
+				for (int j = startIndex; j < endIndex; j++) {
+					if (startIndex == 0) {
+						mPulseList.add((double) Constant.PULSE_MIDDLE);
+					} else {
+						mPulseList.add(startValue + (endValue - startValue) * (double) (j - startIndex) / (double) (endIndex - startIndex));
+					}
+				}
+
+				if (i == size -1) {
+					mPulseList.add(endValue);
+				}
+
+				foundVertex = false;
+			}
 		}
-
-		mTrendAnalyzer.analyzeAdaptive(period);
 	}
 
 	void loadStockDataList(String period) {

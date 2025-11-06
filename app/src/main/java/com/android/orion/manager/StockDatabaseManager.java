@@ -89,7 +89,7 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 		return queryStock(DatabaseContract.SELECTION_STOCK(stock.getSE(), stock.getCode()), null, null);
 	}
 
-	public void getStockList(String selection, ArrayList<Stock> stockList) {
+	public void getStockList(String selection, String sortOrder, ArrayList<Stock> stockList) {
 		if (stockList == null) {
 			return;
 		}
