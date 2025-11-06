@@ -152,7 +152,7 @@ public class StockAnalyzer {
 			e.printStackTrace();
 		}
 	}
-
+/*
 	void setupPulseList(String period) {
 		int level = mStock.getLevel(period);
 		int vertexTopIndex = 0;
@@ -175,12 +175,12 @@ public class StockAnalyzer {
 				foundVertex = true;
 				vertexData = stockData;
 				vertexTopIndex = i;
-				vertexTopValue = Constant.PULSE_HIGH;
+				vertexTopValue = stockData.getCandle().getHigh();//Constant.PULSE_HIGH;
 			} else if (stockData.vertexOf(StockTrend.getVertexBottom(level))) {
 				foundVertex = true;
 				vertexData = stockData;
 				vertexBottomIndex = i;
-				vertexBottomValue = Constant.PULSE_LOW;
+				vertexBottomValue = stockData.getCandle().getLow();//Constant.PULSE_LOW;
 			}
 
 			if (i == size -1) {
@@ -190,11 +190,11 @@ public class StockAnalyzer {
 				if (vertexData.vertexOf(StockTrend.getVertexTOP(level))) {
 					foundVertex = true;
 					vertexBottomIndex = i;
-					vertexBottomValue = Constant.PULSE_LOW;
+					vertexBottomValue = stockData.getCandle().getLow();//Constant.PULSE_LOW;
 				} else if (vertexData.vertexOf(StockTrend.getVertexBottom(level))) {
 					foundVertex = true;
 					vertexTopIndex = i;
-					vertexTopValue = Constant.PULSE_HIGH;
+					vertexTopValue = stockData.getCandle().getHigh();//Constant.PULSE_HIGH;
 				}
 			}
 
@@ -213,7 +213,8 @@ public class StockAnalyzer {
 
 				for (int j = startIndex; j < endIndex; j++) {
 					if (startIndex == 0) {
-						mPulseList.add((double) Constant.PULSE_MIDDLE);
+//						mPulseList.add((double) Constant.PULSE_MIDDLE);
+						mPulseList.add((stockData.getCandle().getHigh() + stockData.getCandle().getLow())/2);
 					} else {
 						mPulseList.add(startValue + (endValue - startValue) * (double) (j - startIndex) / (double) (endIndex - startIndex));
 					}
@@ -226,6 +227,170 @@ public class StockAnalyzer {
 				foundVertex = false;
 			}
 		}
+	}
+	*/
+	void setupPulseList(String period) {
+		int level = mStock.getLevel(period);
+		int vertexTopIndex = 0;
+		int vertexBottomIndex = 0;
+		double vertexTopValue = 0;
+		double vertexBottomValue = 0;
+		int startIndex;
+		int endIndex;
+		double startValue;
+		double endValue;
+		boolean foundVertex = false;
+		StockData vertexData = null;
+
+		mPulseList.clear();
+		int size = mStockDataList.size();
+
+		// 第一步：收集所有顶点的价格值，用于归一化
+		List<Double> allVertexPrices = new ArrayList<>();
+		for (int i = 0; i < size; i++) {
+			StockData stockData = mStockDataList.get(i);
+			if (stockData.vertexOf(StockTrend.getVertexTOP(level))) {
+				allVertexPrices.add(stockData.getCandle().getHigh());
+			} else if (stockData.vertexOf(StockTrend.getVertexBottom(level))) {
+				allVertexPrices.add(stockData.getCandle().getLow());
+			}
+		}
+
+		// 计算价格范围用于归一化
+		double minPrice = Double.MAX_VALUE;
+		double maxPrice = Double.MIN_VALUE;
+		for (Double price : allVertexPrices) {
+			if (price < minPrice) minPrice = price;
+			if (price > maxPrice) maxPrice = price;
+		}
+
+		// 如果只有一个顶点或者价格范围太小，使用默认范围
+		if (allVertexPrices.size() <= 1 || Math.abs(maxPrice - minPrice) < 0.001) {
+			minPrice = 0.0;
+			maxPrice = 1.0;
+		}
+
+		double priceRange = maxPrice - minPrice;
+		double midPrice = (maxPrice + minPrice) / 2;
+
+		if (true) {
+			Log.d("顶点价格归一化 - 最小值: " + minPrice + ", 最大值: " + maxPrice +
+					", 中间值: " + midPrice + ", 范围: " + priceRange);
+		}
+
+		for (int i = 0; i < size; i++) {
+			StockData stockData = mStockDataList.get(i);
+			if (stockData.vertexOf(StockTrend.getVertexTOP(level))) {
+				foundVertex = true;
+				vertexData = stockData;
+				vertexTopIndex = i;
+				vertexTopValue = normalizePrice(stockData.getCandle().getHigh(), minPrice, maxPrice, midPrice);
+			} else if (stockData.vertexOf(StockTrend.getVertexBottom(level))) {
+				foundVertex = true;
+				vertexData = stockData;
+				vertexBottomIndex = i;
+				vertexBottomValue = normalizePrice(stockData.getCandle().getLow(), minPrice, maxPrice, midPrice);
+			}
+
+			if (i == size - 1) {
+				if (vertexData == null) {
+					continue;
+				}
+				if (vertexData.vertexOf(StockTrend.getVertexTOP(level))) {
+					foundVertex = true;
+					vertexBottomIndex = i;
+					vertexBottomValue = normalizePrice(stockData.getCandle().getLow(), minPrice, maxPrice, midPrice);
+				} else if (vertexData.vertexOf(StockTrend.getVertexBottom(level))) {
+					foundVertex = true;
+					vertexTopIndex = i;
+					vertexTopValue = normalizePrice(stockData.getCandle().getHigh(), minPrice, maxPrice, midPrice);
+				}
+			}
+
+			if (foundVertex && vertexTopIndex != vertexBottomIndex) {
+				if (vertexBottomIndex < vertexTopIndex) {
+					startIndex = vertexBottomIndex;
+					startValue = vertexBottomValue;
+					endIndex = vertexTopIndex;
+					endValue = vertexTopValue;
+				} else {
+					endIndex = vertexBottomIndex;
+					endValue = vertexBottomValue;
+					startIndex = vertexTopIndex;
+					startValue = vertexTopValue;
+				}
+
+				for (int j = startIndex; j < endIndex; j++) {
+					if (startIndex == 0) {
+						// 使用中间值作为起始点
+						double midNormalized = normalizePrice((stockData.getCandle().getHigh() + stockData.getCandle().getLow()) / 2,
+								minPrice, maxPrice, midPrice);
+						mPulseList.add(midNormalized);
+					} else {
+						// 线性插值
+						double interpolatedPrice = startValue + (endValue - startValue) * (double) (j - startIndex) / (double) (endIndex - startIndex);
+						mPulseList.add(interpolatedPrice);
+					}
+				}
+
+				if (i == size - 1) {
+					mPulseList.add(endValue);
+				}
+
+				foundVertex = false;
+			}
+		}
+
+		// 验证归一化结果
+		if (!mPulseList.isEmpty()) {
+			double minNorm = Double.MAX_VALUE;
+			double maxNorm = Double.MIN_VALUE;
+			for (Double value : mPulseList) {
+				if (value < minNorm) minNorm = value;
+				if (value > maxNorm) maxNorm = value;
+			}
+			Log.d("归一化验证 - 最小值: " + String.format("%.3f", minNorm) +
+					", 最大值: " + String.format("%.3f", maxNorm) +
+					", 数据点数: " + mPulseList.size());
+		}
+	}
+
+	/**
+	 * 将价格归一化到 [-1, 1] 范围
+	 * 中间价格映射到 0，最高价格映射到 1，最低价格映射到 -1
+	 */
+	private double normalizePrice(double price, double minPrice, double maxPrice, double midPrice) {
+		if (Math.abs(maxPrice - minPrice) < 0.001) {
+			return 0.0; // 避免除零
+		}
+
+		// 线性归一化到 [-1, 1]
+		double normalized = 2 * (price - minPrice) / (maxPrice - minPrice) - 1;
+
+		// 确保在 [-1, 1] 范围内
+		if (normalized < -1.0) normalized = -1.0;
+		if (normalized > 1.0) normalized = 1.0;
+
+		return normalized;
+	}
+
+	/**
+	 * 替代方案：使用Z-score归一化（基于均值和标准差）
+	 */
+	private double normalizePriceZScore(double price, double meanPrice, double stdDevPrice) {
+		if (stdDevPrice < 0.001) {
+			return 0.0; // 避免除零
+		}
+
+		double zScore = (price - meanPrice) / stdDevPrice;
+
+		// 将Z-score缩放到 [-1, 1] 范围（假设大部分数据在3个标准差内）
+		double normalized = zScore / 3.0;
+
+		if (normalized < -1.0) normalized = -1.0;
+		if (normalized > 1.0) normalized = 1.0;
+
+		return normalized;
 	}
 
 	void loadStockDataList(String period) {
