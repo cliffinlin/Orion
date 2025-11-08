@@ -217,6 +217,7 @@
     <string name="stock_exist">Stock exist!</string>
     <string name="stock_financial_chart">Stock financial chart</string>
     <string name="stock_insert">Stock Insert</string>
+    <string name="stock_list">Stock list</string>
     <string name="stock_name_code">Name</string>
     <string name="stock_name">Name</string>
     <string name="stock_name_x">Stock name X</string>

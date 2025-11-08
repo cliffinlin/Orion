@@ -72,10 +72,9 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 		if (stock == null) {
 			return;
 		}
-		Uri uri = ContentUris.withAppendedId(DatabaseContract.Stock.CONTENT_URI, stock.getId());
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(DatabaseContract.COLUMN_FLAG, stock.getFlag());
-		update(uri, contentValues, null, null);
+		updateStock(stock, contentValues);
 	}
 
 	public Cursor queryStock(String selection, String[] selectionArgs, String sortOrder) {
@@ -96,7 +95,7 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 		stockList.clear();
 		Cursor cursor = null;
 		try {
-			cursor = queryStock(selection, null, null);
+			cursor = queryStock(selection, null, sortOrder);
 			if ((cursor != null) && (cursor.getCount() > 0)) {
 				while (cursor.moveToNext()) {
 					Stock stock = new Stock();

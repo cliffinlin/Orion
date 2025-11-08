@@ -890,4 +890,24 @@ public class Utility {
 		long diffMillis = endMillis - startMillis;
 		return TimeUnit.MILLISECONDS.toDays(diffMillis);
 	}
+
+	public static double interpolate(int startIndex, double startValue, int endIndex, double endValue, int index) {
+		if (startIndex - endIndex == 0) {
+			return (startValue + endValue) / 2.0;
+		}
+		return startValue + (endValue - startValue) * (double) (index - startIndex) / (double) (endIndex - startIndex);
+	}
+
+	public static double normalize(double value, double min, double max) {
+		if (max - min == 0) {
+			return 0.0;
+		}
+
+		double normalized = 2 * (value - min) / (max - min) - 1;
+
+		if (normalized < -1.0) normalized = -1.0;
+		if (normalized > 1.0) normalized = 1.0;
+
+		return normalized;
+	}
 }

@@ -55,9 +55,10 @@
             android:textSize="18sp" />
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/stock_list_edit_view"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_stock_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></ListView>
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
 </LinearLayout>

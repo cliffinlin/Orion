@@ -97,14 +97,13 @@ public class StockSearchActivity extends StockListActivity implements
 			mSelection += column + " LIKE '%" + query + "%'";
 		}
 
-		mLoaderManager.restartLoader(LOADER_ID_STOCK_LIST, null, this);
+		loadStockList();
 	}
 
 	@Override
 	public boolean onQueryTextChange(String query) {
 		doSearch(query);
 		return true;
-
 	}
 
 	@Override

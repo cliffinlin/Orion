@@ -35,7 +35,11 @@ public class StockListAdapter extends RecyclerView.Adapter<StockListAdapter.Stoc
     }
 
     public void setStockList(List<Stock> stockList) {
-        mStockList = stockList != null ? stockList : new ArrayList<Stock>();
+        if (stockList == null) {
+            mStockList = new ArrayList<>();
+        } else {
+            mStockList = new ArrayList<>(stockList);
+        }
         notifyDataSetChanged();
     }
 

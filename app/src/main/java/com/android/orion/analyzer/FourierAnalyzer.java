@@ -19,7 +19,7 @@ public class FourierAnalyzer {
     private static ArrayList<Double> mDataList = new ArrayList<>();
     private static ArrayList<Double> mRadarList = new ArrayList<>();
     private static Radar mRadar;
-    private static boolean logMore = true;
+    private static boolean logMore = false;
     private static int mComponentCount = 32;
 
     static Logger Log = Logger.getLogger();
