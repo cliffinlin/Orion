@@ -10,7 +10,6 @@ import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockTrend;
 import com.android.orion.manager.StockDatabaseManager;
-import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Logger;
 import com.android.orion.utility.StopWatch;
@@ -18,7 +17,6 @@ import com.android.orion.utility.Symbol;
 import com.android.orion.utility.Utility;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class StockAnalyzer {
@@ -154,92 +152,133 @@ public class StockAnalyzer {
 	}
 
 	void setupPulseList(String period) {
-		int level = mStock.getLevel(period);
-		int vertexTopIndex = 0;
-		int vertexBottomIndex = 0;
-		double vertexTopValue = 0;
-		double vertexBottomValue = 0;
 		int startIndex = 0;
 		int endIndex = 0;
 		double startValue;
 		double endValue;
-		double minValue = Double.MAX_VALUE;
-		double maxValue = Double.MIN_VALUE;
-		StockData vertexData = null;
+		double maxAmplitude = 0;
+		double offset = 0;
+		double value = 0;
+		ArrayList<StockData> vertexDataList = new ArrayList<>();
+		ArrayList<Double> vertexValueList = new ArrayList<>();
 
 		mPulseList.clear();
-		int size = mStockDataList.size();
+		setupVertexList(period, vertexDataList, vertexValueList);
+		if (vertexDataList.size() < StockTrend.VERTEX_SIZE + 1) {
+			return;
+		}
 
-		for (int i = 0; i < size; i++) {
-			StockData stockData = mStockDataList.get(i);
-			if (stockData.getCandle().getLow() < minValue) minValue = stockData.getCandle().getLow();
-			if (stockData.getCandle().getHigh() > maxValue) maxValue = stockData.getCandle().getHigh();
+		for (int i = 1; i < vertexValueList.size(); i += 2) {
+			startValue = vertexValueList.get(i - 1);
+			endValue = vertexValueList.get(i);
+			offset = (startValue + endValue) / 2.0;
+			value = startValue - offset;
+			vertexValueList.set(i - 1, value);
+			if (value > maxAmplitude ) {
+				maxAmplitude = value;
+			}
+			value = endValue - offset;
+			vertexValueList.set(i, value);
+			if (value > maxAmplitude ) {
+				maxAmplitude = value;
+			}
+		}
+
+		if (vertexDataList.size() % 2 != 0) {
+			value = vertexValueList.get(vertexValueList.size() - 1) - offset;
+			vertexValueList.set(vertexValueList.size() - 1, value);
+			if (value > maxAmplitude ) {
+				maxAmplitude = value;
+			}
+		}
+
+		if (maxAmplitude == 0) {
+			return;
+		}
+
+		for (int i = 1; i < vertexValueList.size(); i++) {
+			vertexValueList.set(i, vertexValueList.get(i) / maxAmplitude);
+		}
+
+		for (int i = 1; i < vertexValueList.size(); i++) {
+			startIndex = vertexDataList.get(i - 1).getIndex();
+			startValue = vertexValueList.get(i - 1);
+			endIndex = vertexDataList.get(i).getIndex();
+			endValue = vertexValueList.get(i);
+			for (int j = startIndex; j < endIndex; j++) {
+				double interpolated = Utility.interpolate(startIndex, startValue, endIndex, endValue, j);
+				mPulseList.add(interpolated);
+			}
+			if (i == vertexValueList.size() - 1) {
+				mPulseList.add(vertexValueList.get(i));
+			}
+		}
+	}
+
+	void setupVertexList(String period, ArrayList<StockData> vertexDataList, ArrayList<Double> vertexValueList) {
+		StockData extendData = null;
+		StockData vertexData = null;
+		int level = mStock.getLevel(period);
+		int size = mStockDataList.size();
+		boolean inserted = false;
+
+		if (vertexDataList == null) {
+			vertexDataList = new ArrayList<>();
+		}
+
+		if (vertexValueList == null) {
+			vertexValueList = new ArrayList<>();
 		}
 
 		for (int i = 0; i < size; i++) {
 			StockData stockData = mStockDataList.get(i);
-			if (stockData.vertexOf(StockTrend.getVertexTOP(level))) {
-				vertexData = stockData;
-				vertexTopIndex = i;
-				vertexTopValue = stockData.getCandle().getHigh();
-			} else if (stockData.vertexOf(StockTrend.getVertexBottom(level))) {
-				vertexData = stockData;
-				vertexBottomIndex = i;
-				vertexBottomValue = stockData.getCandle().getLow();
-			} else {
-				if (i != size - 1) {
-					continue;
-				}
-			}
+			if (stockData.vertexOf(StockTrend.getVertexTOP(level)) || stockData.vertexOf(StockTrend.getVertexBottom(level))) {
+				vertexData = new StockData(stockData);
+				vertexDataList.add(vertexData);
+				vertexValueList.add(getVertexValue(level, vertexData));
 
-			if (vertexData == null) {
-				continue;
-			}
-
-			if (startIndex == 0) {
-				if (vertexData.vertexOf(StockTrend.getVertexTOP(level))) {
-					vertexBottomIndex = 0;
-					vertexBottomValue = mStockDataList.get(0).getCandle().getLow();
-				} else if (vertexData.vertexOf(StockTrend.getVertexBottom(level))) {
-					vertexTopIndex = 0;
-					vertexTopValue = mStockDataList.get(0).getCandle().getHigh();
+				if (!inserted) {
+					inserted = true;
+					extendData = new StockData(mStockDataList.get(0));
+					extendVertexData(level, vertexData, extendData);
+					vertexDataList.add(0, extendData);
+					vertexValueList.add(0, getVertexValue(level, extendData));
 				}
 			}
 
 			if (i == size - 1) {
-				if (vertexData.vertexOf(StockTrend.getVertexTOP(level))) {
-					vertexBottomIndex = i;
-					vertexBottomValue = stockData.getCandle().getLow();
-				} else if (vertexData.vertexOf(StockTrend.getVertexBottom(level))) {
-					vertexTopIndex = i;
-					vertexTopValue = stockData.getCandle().getHigh();
+				if (vertexData != null) {
+					extendData = new StockData(stockData);
+					extendVertexData(level, vertexData, extendData);
+					vertexDataList.add(extendData);
+					vertexValueList.add(getVertexValue(level, extendData));
 				}
-			}
-
-			if (vertexTopIndex != vertexBottomIndex) {
-				if (vertexBottomIndex < vertexTopIndex) {
-					startIndex = vertexBottomIndex;
-					startValue = vertexBottomValue;
-					endIndex = vertexTopIndex;
-					endValue = vertexTopValue;
-				} else {
-					endIndex = vertexBottomIndex;
-					endValue = vertexBottomValue;
-					startIndex = vertexTopIndex;
-					startValue = vertexTopValue;
-				}
-
-				for (int j = startIndex; j < endIndex; j++) {
-					double interpolated = Utility.interpolate(startIndex, startValue, endIndex, endValue, j);
-					double normalized = Utility.normalize(interpolated, minValue, maxValue);
-					mPulseList.add(normalized);
-				}
-				if (i == size - 1) {
-					mPulseList.add(Utility.normalize(endValue, minValue, maxValue));
-				}
-				startIndex = endIndex;
 			}
 		}
+	}
+
+	void extendVertexData(int level, StockData vertexData, StockData extendData) {
+		if (vertexData == null || extendData == null) {
+			return;
+		}
+		if (vertexData.vertexOf(StockTrend.getVertexTOP(level))) {
+			extendData.addVertex(StockTrend.getVertexBottom(level));
+		} else if (vertexData.vertexOf(StockTrend.getVertexBottom(level))) {
+			extendData.addVertex(StockTrend.getVertexTOP(level));
+		}
+	}
+
+	double getVertexValue(int level, StockData vertexData) {
+		double result = 0;
+		if (vertexData == null) {
+			return result;
+		}
+		if (vertexData.vertexOf(StockTrend.getVertexTOP(level))) {
+			result  = vertexData.getCandle().getHigh();
+		} else if (vertexData.vertexOf(StockTrend.getVertexBottom(level))) {
+			result  = vertexData.getCandle().getLow();
+		}
+		return result;
 	}
 
 	void loadStockDataList(String period) {
