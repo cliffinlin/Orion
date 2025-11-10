@@ -9,4 +9,22 @@
     <dimen name="favorite_list_item_layout_height">50dp</dimen>
     <dimen name="favorite_list_item_header_layout_height">40dp</dimen>
 
+    <!-- Stock List Item Dimensions -->
+    <dimen name="stock_list_item_height">50dp</dimen>
+    <dimen name="stock_list_item_content_height">50dp</dimen>
+    <dimen name="stock_list_item_vertical_padding">1dp</dimen>
+    <dimen name="stock_list_item_horizontal_padding">6dp</dimen>
+    <dimen name="stock_list_item_inner_vertical_padding">4dp</dimen>
+
+    <!-- Text Sizes -->
+    <dimen name="stock_list_item_name_text_size">18sp</dimen>
+    <dimen name="stock_list_item_code_text_size">14sp</dimen>
+    <dimen name="stock_list_item_value_text_size">18sp</dimen>
+
+    <!-- Icon Sizes -->
+    <dimen name="stock_list_item_icon_height">30dp</dimen>
+
+    <!-- Divider -->
+    <dimen name="stock_list_item_divider_height">1dp</dimen>
+
 </resources>

@@ -10,6 +10,7 @@ import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockTrend;
 import com.android.orion.manager.StockDatabaseManager;
+import com.android.orion.setting.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Logger;
 import com.android.orion.utility.StopWatch;
@@ -156,48 +157,13 @@ public class StockAnalyzer {
 		int endIndex = 0;
 		double startValue;
 		double endValue;
-		double maxAmplitude = 0;
-		double offset = 0;
-		double value = 0;
 		ArrayList<StockData> vertexDataList = new ArrayList<>();
 		ArrayList<Double> vertexValueList = new ArrayList<>();
 
 		mPulseList.clear();
 		setupVertexList(period, vertexDataList, vertexValueList);
-		if (vertexDataList.size() < StockTrend.VERTEX_SIZE + 1) {
+		if (vertexDataList.size() < StockTrend.VERTEX_SIZE + 1 || vertexDataList.size() != vertexValueList.size()) {
 			return;
-		}
-
-		for (int i = 1; i < vertexValueList.size(); i += 2) {
-			startValue = vertexValueList.get(i - 1);
-			endValue = vertexValueList.get(i);
-			offset = (startValue + endValue) / 2.0;
-			value = startValue - offset;
-			vertexValueList.set(i - 1, value);
-			if (value > maxAmplitude ) {
-				maxAmplitude = value;
-			}
-			value = endValue - offset;
-			vertexValueList.set(i, value);
-			if (value > maxAmplitude ) {
-				maxAmplitude = value;
-			}
-		}
-
-		if (vertexDataList.size() % 2 != 0) {
-			value = vertexValueList.get(vertexValueList.size() - 1) - offset;
-			vertexValueList.set(vertexValueList.size() - 1, value);
-			if (value > maxAmplitude ) {
-				maxAmplitude = value;
-			}
-		}
-
-		if (maxAmplitude == 0) {
-			return;
-		}
-
-		for (int i = 1; i < vertexValueList.size(); i++) {
-			vertexValueList.set(i, vertexValueList.get(i) / maxAmplitude);
 		}
 
 		for (int i = 1; i < vertexValueList.size(); i++) {
@@ -213,6 +179,8 @@ public class StockAnalyzer {
 				mPulseList.add(vertexValueList.get(i));
 			}
 		}
+
+		FourierAnalyzer.setComponentCount(vertexValueList.size());
 	}
 
 	void setupVertexList(String period, ArrayList<StockData> vertexDataList, ArrayList<Double> vertexValueList) {
@@ -274,9 +242,9 @@ public class StockAnalyzer {
 			return result;
 		}
 		if (vertexData.vertexOf(StockTrend.getVertexTOP(level))) {
-			result  = vertexData.getCandle().getHigh();
+			result  = Constant.PULSE_HIGH;//vertexData.getCandle().getHigh();
 		} else if (vertexData.vertexOf(StockTrend.getVertexBottom(level))) {
-			result  = vertexData.getCandle().getLow();
+			result  = Constant.PULSE_LOW;//vertexData.getCandle().getLow();
 		}
 		return result;
 	}

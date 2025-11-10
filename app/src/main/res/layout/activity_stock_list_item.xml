@@ -2,61 +2,93 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="4dp">
+    android:orientation="vertical"
+    android:background="?android:attr/selectableItemBackground">
 
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_weight="1"
-        android:orientation="vertical">
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/stock_list_item_content_height"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/stock_list_item_horizontal_padding"
+        android:paddingEnd="@dimen/stock_list_item_horizontal_padding"
+        android:paddingTop="@dimen/stock_list_item_inner_vertical_padding"
+        android:paddingBottom="@dimen/stock_list_item_inner_vertical_padding">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.2"
+            android:orientation="vertical"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="@dimen/stock_list_item_name_text_size"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:lineSpacingExtra="0dp"
+                android:includeFontPadding="false" />
+
+            <TextView
+                android:id="@+id/code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="@dimen/stock_list_item_code_text_size"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:lineSpacingExtra="0dp"
+                android:includeFontPadding="false" />
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/name"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
+            android:id="@+id/price"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="center"
-            android:textSize="16sp" />
+            android:textSize="@dimen/stock_list_item_value_text_size"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:lineSpacingExtra="0dp"
+            android:includeFontPadding="false" />
 
         <TextView
-            android:id="@+id/code"
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
+            android:id="@+id/hold"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="center"
-            android:textSize="14sp" />
+            android:textSize="@dimen/stock_list_item_value_text_size"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:lineSpacingExtra="0dp"
+            android:includeFontPadding="false" />
+
+        <ImageView
+            android:id="@+id/favorite"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/stock_list_item_icon_height"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:contentDescription="@string/added"
+            android:src="@drawable/ic_favorite" />
+
+        <ImageView
+            android:id="@+id/delete"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/stock_list_item_icon_height"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:contentDescription="@string/delete"
+            android:src="@drawable/ic_delete" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/price"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:textSize="16sp" />
-
-    <TextView
-        android:id="@+id/hold"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:textSize="16sp" />
-
-    <ImageView
-        android:id="@+id/favorite"
-        android:layout_width="0dp"
-        android:layout_height="35dp"
-        android:layout_weight="1"
-        android:contentDescription="@string/added"
-        android:gravity="center"
-        android:src="@drawable/ic_favorite" />
-
-    <ImageView
-        android:id="@+id/delete"
-        android:layout_width="0dp"
-        android:layout_height="35dp"
-        android:layout_weight="1"
-        android:contentDescription="@string/delete"
-        android:gravity="center"
-        android:src="@drawable/ic_delete" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/stock_list_item_divider_height"
+        android:background="#E0E0E0" />
 </LinearLayout>
