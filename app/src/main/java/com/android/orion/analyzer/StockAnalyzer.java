@@ -162,7 +162,7 @@ public class StockAnalyzer {
 
 		mPulseList.clear();
 		setupVertexList(period, vertexDataList, vertexValueList);
-		if (vertexDataList.size() < StockTrend.VERTEX_SIZE + 1 || vertexDataList.size() != vertexValueList.size()) {
+		if (vertexDataList.size() < StockTrend.VERTEX_SIZE || vertexDataList.size() != vertexValueList.size()) {
 			return;
 		}
 
