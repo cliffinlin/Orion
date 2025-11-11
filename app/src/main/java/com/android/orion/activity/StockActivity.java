@@ -52,6 +52,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 	TradeLevelPicker mTradeLevelPickerMin30;
 	TradeLevelPicker mTradeLevelPickerMin15;
 	TradeLevelPicker mTradeLevelPickerMin5;
+	ImageView mImageViewRestoreTarget;
 	ImageView mImageViewDayTarget;
 	ImageView mImageViewMin60Target;
 	ImageView mImageViewMin30Target;
@@ -92,6 +93,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mTradeLevelPickerMin30 = findViewById(R.id.trade_level_picker_min30);
 		mTradeLevelPickerMin15 = findViewById(R.id.trade_level_picker_min15);
 		mTradeLevelPickerMin5 = findViewById(R.id.trade_level_picker_min5);
+		mImageViewRestoreTarget = findViewById(R.id.imageview_restore_target);
 		mImageViewDayTarget = findViewById(R.id.imageview_day_target);
 		mImageViewMin60Target = findViewById(R.id.imageview_min60_target);
 		mImageViewMin30Target = findViewById(R.id.imageview_min30_target);
@@ -107,6 +109,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mEditTextStockHold.setOnClickListener(this);
 		mEditTextStockYield.setOnClickListener(this);
 		mTextViewSeUrl.setOnClickListener(this);
+		mImageViewRestoreTarget.setOnClickListener(this);
 		mImageViewDayTarget.setOnClickListener(this);
 		mImageViewMin60Target.setOnClickListener(this);
 		mImageViewMin30Target.setOnClickListener(this);
@@ -322,6 +325,10 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 				updateView();
 				break;
 
+			case R.id.imageview_restore_target:
+				restoreToTargetValues();
+				break;
+
 			case R.id.imageview_day_target:
 				toggleTargetImageView(Period.DAY, mTradeLevelPickerDay.getValue(), mImageViewDayTarget);
 				break;
@@ -468,6 +475,23 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 			imageView.setImageResource(R.drawable.ic_crosshair_checked);
 		} else {
 			imageView.setImageResource(R.drawable.ic_crosshair_unchecked);
+		}
+	}
+
+	private void restoreToTargetValues() {
+		restorePeriodToTarget(Period.DAY, mTradeLevelPickerDay, mTextviewDayNet, mImageViewDayTarget);
+		restorePeriodToTarget(Period.MIN60, mTradeLevelPickerMin60, mTextviewMin60Net, mImageViewMin60Target);
+		restorePeriodToTarget(Period.MIN30, mTradeLevelPickerMin30, mTextviewMin30Net, mImageViewMin30Target);
+		restorePeriodToTarget(Period.MIN15, mTradeLevelPickerMin15, mTextviewMin15Net, mImageViewMin15Target);
+		restorePeriodToTarget(Period.MIN5, mTradeLevelPickerMin5, mTextviewMin5Net, mImageViewMin5Target);
+	}
+
+	private void restorePeriodToTarget(String period, TradeLevelPicker picker, TextView netTextView, ImageView targetImageView) {
+		int target = mStock.getTarget(period);
+		if (target > StockTrend.LEVEL_NONE) {
+			picker.setValue(target);
+			updateNetTextView(period, target, netTextView);
+			updateTargetImageView(period, target, targetImageView);
 		}
 	}
 }

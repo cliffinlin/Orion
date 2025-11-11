@@ -99,6 +99,28 @@ public class TradeLevelPicker extends NumberPicker {
     }
 
     @Override
+    public void setValue(int value) {
+        int oldValue = getValue();
+        super.setValue(value);
+
+        // 手动触发颜色更新
+        updateTextColor(value);
+
+        // 手动触发监听器（如果需要）
+        if (oldValue != value) {
+            for (OnValueChangeListener listener : valueChangeListeners) {
+                if (listener != null) {
+                    listener.onValueChange(this, oldValue, value);
+                }
+            }
+
+            if (externalValueChangeListener != null) {
+                externalValueChangeListener.onValueChange(this, oldValue, value);
+            }
+        }
+    }
+
+    @Override
     public void setOnValueChangedListener(OnValueChangeListener onValueChangedListener) {
         // 不直接设置，而是添加到监听器列表
         if (onValueChangedListener != null && !valueChangeListeners.contains(onValueChangedListener)) {
@@ -143,11 +165,30 @@ public class TradeLevelPicker extends NumberPicker {
      * 更新文本颜色
      */
     private void updateTextColor(int currentValue) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            if (currentValue > 0 && currentValue == targetValue) {
-                setTextColor(Color.RED);
-            } else {
-                setTextColor(Color.BLACK);
+        // 移除版本检查，确保在所有版本上都工作
+        if (currentValue > 0 && currentValue == targetValue) {
+            setTextColor(Color.RED);
+        } else {
+            setTextColor(Color.BLACK);
+        }
+
+        // 同时更新所有子视图的颜色
+        updateAllChildViews();
+    }
+
+    /**
+     * 更新所有子视图的文本颜色
+     */
+    private void updateAllChildViews() {
+        for (int i = 0; i < getChildCount(); i++) {
+            View child = getChildAt(i);
+            if (child instanceof EditText) {
+                EditText editText = (EditText) child;
+                if (getValue() > 0 && getValue() == targetValue) {
+                    editText.setTextColor(Color.RED);
+                } else {
+                    editText.setTextColor(Color.BLACK);
+                }
             }
         }
     }

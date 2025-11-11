@@ -6,7 +6,7 @@
 
     <TextView
         android:id="@+id/price"
-        android:layout_width="80dp"
+        android:layout_width="@dimen/stock_deal_list_common_field_width"
         android:layout_height="40dp"
         android:layout_weight="1"
         android:gravity="center"
@@ -15,7 +15,7 @@
 
     <TextView
         android:id="@+id/net"
-        android:layout_width="80dp"
+        android:layout_width="@dimen/stock_deal_list_common_field_width"
         android:layout_height="40dp"
         android:layout_weight="1"
         android:gravity="center"
@@ -23,8 +23,26 @@
         android:textSize="18sp" />
 
     <TextView
+        android:id="@+id/profit"
+        android:layout_width="@dimen/stock_deal_list_common_field_width"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/profit"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/type"
+        android:layout_width="@dimen/stock_deal_list_common_field_width"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/type"
+        android:textSize="18sp" />
+
+    <TextView
         android:id="@+id/buy"
-        android:layout_width="80dp"
+        android:layout_width="@dimen/stock_deal_list_common_field_width"
         android:layout_height="40dp"
         android:layout_weight="1"
         android:gravity="center"
@@ -33,7 +51,7 @@
 
     <TextView
         android:id="@+id/sell"
-        android:layout_width="80dp"
+        android:layout_width="@dimen/stock_deal_list_common_field_width"
         android:layout_height="40dp"
         android:layout_weight="1"
         android:gravity="center"
@@ -42,7 +60,7 @@
 
     <TextView
         android:id="@+id/volume"
-        android:layout_width="80dp"
+        android:layout_width="@dimen/stock_deal_list_common_field_width"
         android:layout_height="40dp"
         android:layout_weight="1"
         android:gravity="center"
@@ -51,7 +69,7 @@
 
     <TextView
         android:id="@+id/value"
-        android:layout_width="80dp"
+        android:layout_width="@dimen/stock_deal_list_common_field_width"
         android:layout_height="40dp"
         android:layout_weight="1"
         android:gravity="center"
@@ -60,7 +78,7 @@
 
     <TextView
         android:id="@+id/bonus"
-        android:layout_width="80dp"
+        android:layout_width="@dimen/stock_deal_list_common_field_width"
         android:layout_height="40dp"
         android:layout_weight="1"
         android:gravity="center"
@@ -69,7 +87,7 @@
 
     <TextView
         android:id="@+id/yield"
-        android:layout_width="80dp"
+        android:layout_width="@dimen/stock_deal_list_common_field_width"
         android:layout_height="40dp"
         android:layout_weight="1"
         android:gravity="center"
@@ -78,7 +96,7 @@
 
     <TextView
         android:id="@+id/fee"
-        android:layout_width="80dp"
+        android:layout_width="@dimen/stock_deal_list_common_field_width"
         android:layout_height="40dp"
         android:layout_weight="1"
         android:gravity="center"
@@ -86,17 +104,8 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/profit"
-        android:layout_width="80dp"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/profit"
-        android:textSize="18sp" />
-
-    <TextView
         android:id="@+id/account"
-        android:layout_width="80dp"
+        android:layout_width="@dimen/stock_deal_list_common_field_width"
         android:layout_height="40dp"
         android:layout_weight="1"
         android:gravity="center"
@@ -105,7 +114,7 @@
 
     <TextView
         android:id="@+id/date"
-        android:layout_width="100dp"
+        android:layout_width="@dimen/stock_deal_list_date_width"
         android:layout_height="40dp"
         android:layout_weight="1"
         android:gravity="center"
@@ -113,17 +122,8 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/type"
-        android:layout_width="80dp"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/type"
-        android:textSize="18sp" />
-
-    <TextView
         android:id="@+id/created"
-        android:layout_width="100dp"
+        android:layout_width="@dimen/stock_deal_list_created_width"
         android:layout_height="40dp"
         android:layout_weight="1"
         android:gravity="center"
@@ -132,7 +132,7 @@
 
     <TextView
         android:id="@+id/modified"
-        android:layout_width="100dp"
+        android:layout_width="@dimen/stock_deal_list_modified_width"
         android:layout_height="40dp"
         android:layout_weight="1"
         android:gravity="center"

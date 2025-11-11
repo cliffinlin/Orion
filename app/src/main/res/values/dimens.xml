@@ -27,4 +27,12 @@
     <!-- Divider -->
     <dimen name="stock_list_item_divider_height">1dp</dimen>
 
+    <!-- Date Field Widths -->
+    <dimen name="stock_deal_list_date_width">110dp</dimen>
+    <dimen name="stock_deal_list_created_width">110dp</dimen>
+    <dimen name="stock_deal_list_modified_width">110dp</dimen>
+
+    <!-- Other Field Widths -->
+    <dimen name="stock_deal_list_common_field_width">70dp</dimen>
+
 </resources>

@@ -103,6 +103,22 @@
                     android:layout_height="wrap_content"
                     android:text="@string/custom" />
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/imageview_restore_target"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_restore"
+                    android:clickable="true"
+                    android:focusable="true" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout

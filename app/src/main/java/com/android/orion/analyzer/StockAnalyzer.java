@@ -242,9 +242,9 @@ public class StockAnalyzer {
 			return result;
 		}
 		if (vertexData.vertexOf(StockTrend.getVertexTOP(level))) {
-			result  = Constant.PULSE_HIGH;//vertexData.getCandle().getHigh();
+			result  = Constant.PULSE_HIGH;
 		} else if (vertexData.vertexOf(StockTrend.getVertexBottom(level))) {
-			result  = Constant.PULSE_LOW;//vertexData.getCandle().getLow();
+			result  = Constant.PULSE_LOW;
 		}
 		return result;
 	}

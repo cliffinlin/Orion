@@ -66,7 +66,7 @@ public class StockListActivity extends StorageActivity implements View.OnClickLi
 		super.onResume();
 		resetHeaderTextColor();
 		initHeader();
-		loadStockList(); // 在onResume中重新加载数据
+		loadStockList();
 	}
 
 	@Override
@@ -98,14 +98,14 @@ public class StockListActivity extends StorageActivity implements View.OnClickLi
 						Setting.setDownloadStockDataTimeMillis(stock, 0);
 						mStockDataProvider.download(stock);
 					}
-					loadStockList(); // 刷新后重新加载数据
+					loadStockList();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				break;
 			case R.id.action_load:
 				performLoadFromFile(Constant.FILE_TYPE_FAVORITE, false);
-				loadStockList(); // 加载文件后刷新列表
+				loadStockList();
 				break;
 			case R.id.action_save:
 				performSaveToFile(Constant.FILE_TYPE_FAVORITE);
@@ -209,9 +209,9 @@ public class StockListActivity extends StorageActivity implements View.OnClickLi
 			mSortOrderDirection = DatabaseContract.ORDER_DESC;
 		}
 
-		mSortOrder = mSortOrderColumn + Symbol.WHITE_SPACE + mSortOrderDirection; // 确保有空格
+		mSortOrder = mSortOrderColumn + Symbol.WHITE_SPACE + mSortOrderDirection;
 		Preferences.putString(Setting.SETTING_SORT_ORDER_STOCK_LIST, mSortOrder);
-		loadStockList(); // 排序后重新加载数据
+		loadStockList();
 	}
 
 	void setHeaderTextColor(int id, int color) {
@@ -233,7 +233,6 @@ public class StockListActivity extends StorageActivity implements View.OnClickLi
 	}
 
 	void initHeader() {
-		// 从偏好设置加载排序设置
 		mSortOrder = Preferences.getString(Setting.SETTING_SORT_ORDER_STOCK_LIST, mSortOrderDefault);
 		if (!TextUtils.isEmpty(mSortOrder)) {
 			String[] strings = mSortOrder.split(Symbol.WHITE_SPACE);
@@ -241,7 +240,6 @@ public class StockListActivity extends StorageActivity implements View.OnClickLi
 				mSortOrderColumn = strings[0];
 				mSortOrderDirection = strings[1];
 			}
-			Log.d("StockList" + "从偏好设置加载排序: " + mSortOrder + ", 字段=" + mSortOrderColumn + ", 方向=" + mSortOrderDirection);
 		}
 
 		mTextViewNameCode = findViewById(R.id.stock_name_code);
@@ -264,7 +262,6 @@ public class StockListActivity extends StorageActivity implements View.OnClickLi
 			mTextViewFavorite.setOnClickListener(this);
 		}
 
-		// 设置当前排序字段的高亮颜色
 		if (mSortOrder.contains(DatabaseContract.COLUMN_NAME)) {
 			setHeaderTextColor(mTextViewNameCode, mHeaderTextHighlightColor);
 		} else if (mSortOrder.contains(DatabaseContract.COLUMN_PRICE)) {
@@ -288,7 +285,6 @@ public class StockListActivity extends StorageActivity implements View.OnClickLi
 	void loadStockList() {
 		try {
 			mStockList.clear();
-			// 使用你自己的数据库管理器获取数据
 			mStockDatabaseManager.getStockList(getSelection(), mSortOrder, mStockList);
 			mAdapter.setStockList(mStockList);
 		} catch (Exception e) {
@@ -298,27 +294,15 @@ public class StockListActivity extends StorageActivity implements View.OnClickLi
 	}
 
 	String getSelection() {
-		// 可以根据需要修改筛选条件
-		// 这里返回null获取所有股票，或者使用原来的筛选条件
 		return null;
 	}
 
-	// StockListAdapter.OnStockClickListener 接口实现
 	@Override
 	public void onStockClick(Stock stock) {
-		// 处理股票项点击事件
-		if (stock != null) {
-			// 可以在这里添加跳转到股票详情页面的逻辑
-			// 例如：
-			// Intent intent = new Intent(this, StockDetailActivity.class);
-			// intent.putExtra("stock_id", stock.getId());
-			// startActivity(intent);
-		}
 	}
 
 	@Override
 	public void onFavoriteClick(Stock stock) {
-		// 处理收藏按钮点击
 		try {
 			if (!stock.hasFlag(Stock.FLAG_FAVORITE)) {
 				stock.addFlag(Stock.FLAG_FAVORITE);
@@ -328,10 +312,6 @@ public class StockListActivity extends StorageActivity implements View.OnClickLi
 				mStockManager.onRemoveFavorite(stock);
 			}
 
-			// 更新数据库
-//			mStockDatabaseManager.updateStock(stock);
-
-			// 直接更新单个item，避免整个列表刷新
 			int position = findStockPosition(stock);
 			if (position != -1) {
 				mAdapter.notifyItemChanged(position);
@@ -343,7 +323,6 @@ public class StockListActivity extends StorageActivity implements View.OnClickLi
 
 	@Override
 	public void onDeleteClick(Stock stock) {
-		// 处理删除按钮点击
 		if (stock.getHold() == 0) {
 			final String stockName = stock.getName();
 			new AlertDialog.Builder(this)
@@ -362,7 +341,7 @@ public class StockListActivity extends StorageActivity implements View.OnClickLi
 										mStockDatabaseManager.deleteStockTrend(stock);
 										Setting.setDownloadStockTimeMillis(stock, 0);
 										Setting.setDownloadStockDataTimeMillis(stock, 0);
-										loadStockList(); // 删除后重新加载数据
+										loadStockList();
 									} catch (Exception e) {
 										e.printStackTrace();
 									}
@@ -377,9 +356,6 @@ public class StockListActivity extends StorageActivity implements View.OnClickLi
 		}
 	}
 
-	/**
-	 * 在列表中查找股票的位置
-	 */
 	private int findStockPosition(Stock stock) {
 		for (int i = 0; i < mStockList.size(); i++) {
 			if (mStockList.get(i).getId() == stock.getId()) {
@@ -389,9 +365,6 @@ public class StockListActivity extends StorageActivity implements View.OnClickLi
 		return -1;
 	}
 
-	/**
-	 * 刷新数据（供外部调用）
-	 */
 	public void refreshStockList() {
 		loadStockList();
 	}
