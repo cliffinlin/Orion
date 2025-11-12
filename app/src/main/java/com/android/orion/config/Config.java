@@ -3,7 +3,7 @@ package com.android.orion.config;
 import android.graphics.Color;
 
 import com.android.orion.provider.SinaFinance;
-import com.android.orion.setting.Constant;
+import com.android.orion.constant.Constant;
 
 public class Config {
 	public static final String APP_NAME = "Orion";
@@ -15,8 +15,15 @@ public class Config {
 	public static final String MESSAGE_CHANNEL_ID = "message_channel";
 	public static final String MESSAGE_CHANNEL_NAME = "Message Channel";
 
-	public static final int COLOR_CANDLE_GREEN = Color.rgb(50, 128, 50);
-	public static final int COLOR_CANDLE_RED = Color.rgb(255, 50, 50);
+	public static final int COLOR_CANDLE = Color.RED;
+	public static final int COLOR_DECREASING = Color.rgb(50, 128, 50);
+	public static final int COLOR_INCREASING = Color.rgb(255, 50, 50);
+	public static final int COLOR_MA5 = Color.WHITE;
+	public static final int COLOR_MA10 = Color.CYAN;
+	public static final int COLOR_HISTOGRAM = Color.RED;
+	public static final int COLOR_DIF = Color.YELLOW;
+	public static final int COLOR_DEA = Color.WHITE;
+	public static final int COLOR_DARK_GREEN = Color.rgb(0, 192, 0);
 
 	public static final int DOWNLOAD_HISTORY_LENGTH_UNLIMITED = -1;
 	public static final int DOWNLOAD_HISTORY_LENGTH_NONE = 0;

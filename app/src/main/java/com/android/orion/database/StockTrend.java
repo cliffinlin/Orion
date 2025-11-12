@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.text.TextUtils;
 
+import com.android.orion.config.Config;
 import com.android.orion.utility.Market;
 import com.android.orion.utility.Symbol;
 
@@ -75,7 +76,7 @@ public class StockTrend extends DatabaseTable {
 
 	public static final int[] COLORS = {
 			Color.WHITE, Color.GRAY, Color.BLACK, Color.RED,
-			Color.GREEN, Color.BLUE, Color.MAGENTA, Color.CYAN};
+			Config.COLOR_DARK_GREEN, Color.BLUE, Color.MAGENTA, Color.CYAN};
 
 	public static final String[] TYPES = {
 			TYPE_UP_NONE_UP, TYPE_UP_NONE_DOWN, TYPE_UP_NONE,

@@ -10,7 +10,7 @@ import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockTrend;
 import com.android.orion.manager.StockDatabaseManager;
-import com.android.orion.setting.Constant;
+import com.android.orion.constant.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Logger;
 import com.android.orion.utility.StopWatch;

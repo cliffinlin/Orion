@@ -2,7 +2,7 @@ package com.android.orion.analyzer;
 
 import com.android.orion.data.Period;
 import com.android.orion.data.Radar;
-import com.android.orion.setting.Constant;
+import com.android.orion.constant.Constant;
 import com.android.orion.utility.Logger;
 
 import org.apache.commons.math3.complex.Complex;

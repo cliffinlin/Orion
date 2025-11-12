@@ -20,7 +20,7 @@ import com.android.orion.database.StockFinancial;
 import com.android.orion.database.StockShare;
 import com.android.orion.interfaces.IStockDataProvider;
 import com.android.orion.manager.StockNotificationManager;
-import com.android.orion.setting.Constant;
+import com.android.orion.constant.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Market;
 import com.android.orion.utility.StopWatch;
@@ -795,7 +795,7 @@ public class SinaFinance extends StockDataProvider {
 			}
 
 			if (bulkInsert) {
-				loadTDXData(stock, stockData, ContentValuesList, stockDataMap);
+				loadTDXDatabase(stock, stockData, ContentValuesList, stockDataMap);
 			}
 
 			for (int i = 0; i < jsonArray.size(); i++) {
@@ -860,7 +860,7 @@ public class SinaFinance extends StockDataProvider {
 
 			if (bulkInsert) {
 				saveStockDataAboveMonth(stock, stockData, stockDataList);
-				saveTDXData(stock, stockData, stockDataMap);
+				saveTDXDatabase(stock, stockData.getPeriod(), stockDataMap);
 
 				if (ContentValuesList.size() > 0) {
 					fixContentValuesList(stockData, ContentValuesList);

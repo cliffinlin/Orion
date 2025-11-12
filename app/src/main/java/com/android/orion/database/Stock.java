@@ -8,7 +8,7 @@ import android.util.ArrayMap;
 import com.android.orion.data.IRR;
 import com.android.orion.data.Period;
 import com.android.orion.data.Radar;
-import com.android.orion.setting.Constant;
+import com.android.orion.constant.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Symbol;
 import com.android.orion.utility.Utility;

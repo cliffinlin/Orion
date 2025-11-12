@@ -1,4 +1,4 @@
-package com.android.orion.setting;
+package com.android.orion.constant;
 
 import java.util.concurrent.TimeUnit;
 

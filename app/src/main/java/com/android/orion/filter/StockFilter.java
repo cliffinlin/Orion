@@ -1,4 +1,4 @@
-package com.android.orion.setting;
+package com.android.orion.filter;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.manager.StockDatabaseManager;
+import com.android.orion.setting.Setting;
 import com.android.orion.utility.Preferences;
 
 public class StockFilter {

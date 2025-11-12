@@ -17,7 +17,7 @@ import com.android.orion.config.Config;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockTrend;
-import com.android.orion.setting.Constant;
+import com.android.orion.constant.Constant;
 
 public class StockNotificationManager {
 

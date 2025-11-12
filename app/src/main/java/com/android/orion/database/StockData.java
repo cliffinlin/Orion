@@ -585,7 +585,7 @@ public class StockData extends DatabaseTable {
 		mNet = Utility.Round2(mNet);
 	}
 
-	public StockData fromString(String string) {
+	public StockData fromTDXContent(String string) {
 		String dateString = "";
 		String timeString = "";
 
@@ -619,11 +619,10 @@ public class StockData extends DatabaseTable {
 
 		setCreated(Utility.getCurrentDateTimeString());
 		setModified(Utility.getCurrentDateTimeString());
-
 		return this;
 	}
 
-	public String toString() {
+	public String toTDXContent() {
 		StringBuffer stringBuffer = new StringBuffer();
 		/*
 		TDX output format

@@ -30,7 +30,7 @@ import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockBonus;
 import com.android.orion.database.StockFinancial;
-import com.android.orion.setting.Constant;
+import com.android.orion.constant.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Search;
 import com.android.orion.utility.Utility;

@@ -24,7 +24,7 @@ import androidx.annotation.NonNull;
 import com.android.orion.R;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
-import com.android.orion.setting.Constant;
+import com.android.orion.constant.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Preferences;
 import com.android.orion.view.SyncHorizontalScrollView;

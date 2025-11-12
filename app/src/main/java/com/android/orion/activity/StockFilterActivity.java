@@ -11,7 +11,7 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 
 import com.android.orion.R;
-import com.android.orion.setting.StockFilter;
+import com.android.orion.filter.StockFilter;
 
 public class StockFilterActivity extends DatabaseActivity implements
 		OnClickListener {

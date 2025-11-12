@@ -49,7 +49,7 @@ public class StockDataChart {
 	public ArrayList<BarEntry> mHistogramEntryList = new ArrayList<>();
 	public ArrayList<Entry> mRadarEntryList = new ArrayList<>();
 	public List<Entry>[] mTrendEntryList = new List[StockTrend.LEVELS.length];
-	public List<Entry>[] mCircledEntryList = new List[StockTrend.LEVELS.length];
+	public List<Entry>[] mChangedEntryList = new List[StockTrend.LEVELS.length];
 	public CombinedData mCombinedDataMain = new CombinedData(mXValues);
 	public CombinedData mCombinedDataSub = new CombinedData(mXValues);
 
@@ -70,10 +70,10 @@ public class StockDataChart {
 				mTrendEntryList[i].clear();
 			}
 
-			if (mCircledEntryList[i] == null) {
-				mCircledEntryList[i] = new ArrayList<>();
+			if (mChangedEntryList[i] == null) {
+				mChangedEntryList[i] = new ArrayList<>();
 			} else {
-				mCircledEntryList[i].clear();
+				mChangedEntryList[i].clear();
 			}
 		}
 	}
@@ -94,13 +94,13 @@ public class StockDataChart {
 		if (Setting.getDisplayCandle()) {
 			CandleData candleData = new CandleData(mXValues);
 			CandleDataSet candleDataSet = new CandleDataSet(mCandleEntryList, "K");
-			candleDataSet.setIncreasingColor(increasingColor(Config.COLOR_CANDLE_RED));
-			candleDataSet.setDecreasingColor(decreasingColor(Config.COLOR_CANDLE_GREEN));
+			candleDataSet.setIncreasingColor(Config.COLOR_INCREASING);
+			candleDataSet.setDecreasingColor(Config.COLOR_DECREASING);
 			candleDataSet.setIncreasingPaintStyle(Paint.Style.FILL);
 			candleDataSet.setDecreasingPaintStyle(Paint.Style.FILL);
 			candleDataSet.setShadowColorSameAsCandle(true);
 			candleDataSet.setAxisDependency(AxisDependency.LEFT);
-			candleDataSet.setColor(dataSetColor(Color.RED));
+			candleDataSet.setColor(Config.COLOR_CANDLE);
 			candleDataSet.setHighLightColor(Color.TRANSPARENT);
 			candleDataSet.setDrawTags(true);
 			candleData.addDataSet(candleDataSet);
@@ -112,14 +112,14 @@ public class StockDataChart {
 		if (Setting.getDisplayAverage()) {
 			LineDataSet lineDataSet5 = new LineDataSet(mAverage5EntryList,
 					"MA5");
-			lineDataSet5.setColor(dataSetColor(Color.WHITE));
+			lineDataSet5.setColor(Config.COLOR_MA5);
 			lineDataSet5.setDrawCircles(false);
 			lineDataSet5.setAxisDependency(YAxis.AxisDependency.LEFT);
 			lineData.addDataSet(lineDataSet5);
 
 			LineDataSet lineDataSet10 = new LineDataSet(mAverage10EntryList,
 					"MA10");
-			lineDataSet10.setColor(dataSetColor(Color.CYAN));
+			lineDataSet10.setColor(Config.COLOR_MA10);
 			lineDataSet10.setDrawCircles(false);
 			lineDataSet10.setAxisDependency(YAxis.AxisDependency.LEFT);
 			lineData.addDataSet(lineDataSet10);
@@ -127,39 +127,39 @@ public class StockDataChart {
 
 		addLineDataSet(mTrendEntryList, StockTrend.LABEL_DRAW, StockTrend.LEVEL_DRAW, lineData);
 		if (displayTrend(StockTrend.LEVEL_DRAW)) {
-			addLineDataSet(mCircledEntryList, StockTrend.LEVEL_DRAW, lineData, fillChanged(StockTrend.LEVEL_DRAW), fillColor(StockTrend.LEVEL_DRAW));
+			addLineDataSet(mChangedEntryList, StockTrend.LEVEL_DRAW, lineData, fillChanged(StockTrend.LEVEL_DRAW), fillColor(StockTrend.LEVEL_DRAW));
 		}
 		addLineDataSet(mExtendFirstEntryList, StockTrend.LABEL_NONE, lineColor(StockTrend.LEVEL_DRAW), false, lineData, false, 0);
 		addLineDataSet(mExtendLastEntryList, StockTrend.LABEL_NONE, lineColor(StockTrend.LEVEL_DRAW), false, lineData, false, 0);
 
 		if (displayTrend(StockTrend.LEVEL_STROKE)) {
 			addLineDataSet(mTrendEntryList, StockTrend.LABEL_STROKE, StockTrend.LEVEL_STROKE, lineData);
-			addLineDataSet(mCircledEntryList, StockTrend.LEVEL_STROKE, lineData, fillChanged(StockTrend.LEVEL_STROKE), fillColor(StockTrend.LEVEL_STROKE));
+			addLineDataSet(mChangedEntryList, StockTrend.LEVEL_STROKE, lineData, fillChanged(StockTrend.LEVEL_STROKE), fillColor(StockTrend.LEVEL_STROKE));
 		}
 
 		if (displayTrend(StockTrend.LEVEL_SEGMENT)) {
 			addLineDataSet(mTrendEntryList, StockTrend.LABEL_SEGMENT, StockTrend.LEVEL_SEGMENT, lineData);
-			addLineDataSet(mCircledEntryList, StockTrend.LEVEL_SEGMENT, lineData, fillChanged(StockTrend.LEVEL_SEGMENT), fillColor(StockTrend.LEVEL_SEGMENT));
+			addLineDataSet(mChangedEntryList, StockTrend.LEVEL_SEGMENT, lineData, fillChanged(StockTrend.LEVEL_SEGMENT), fillColor(StockTrend.LEVEL_SEGMENT));
 		}
 
 		if (displayTrend(StockTrend.LEVEL_LINE)) {
 			addLineDataSet(mTrendEntryList, StockTrend.LABEL_LINE, StockTrend.LEVEL_LINE, lineData);
-			addLineDataSet(mCircledEntryList, StockTrend.LEVEL_LINE, lineData, fillChanged(StockTrend.LEVEL_LINE), fillColor(StockTrend.LEVEL_LINE));
+			addLineDataSet(mChangedEntryList, StockTrend.LEVEL_LINE, lineData, fillChanged(StockTrend.LEVEL_LINE), fillColor(StockTrend.LEVEL_LINE));
 		}
 
 		if (displayTrend(StockTrend.LEVEL_OUT_LINE)) {
 			addLineDataSet(mTrendEntryList, StockTrend.LABEL_OUTLINE, StockTrend.LEVEL_OUT_LINE, lineData);
-			addLineDataSet(mCircledEntryList, StockTrend.LEVEL_OUT_LINE, lineData, fillChanged(StockTrend.LEVEL_OUT_LINE), fillColor(StockTrend.LEVEL_OUT_LINE));
+			addLineDataSet(mChangedEntryList, StockTrend.LEVEL_OUT_LINE, lineData, fillChanged(StockTrend.LEVEL_OUT_LINE), fillColor(StockTrend.LEVEL_OUT_LINE));
 		}
 
 		if (displayTrend(StockTrend.LEVEL_SUPER_LINE)) {
 			addLineDataSet(mTrendEntryList, StockTrend.LABEL_SUPERLINE, StockTrend.LEVEL_SUPER_LINE, lineData);
-			addLineDataSet(mCircledEntryList, StockTrend.LEVEL_SUPER_LINE, lineData, fillChanged(StockTrend.LEVEL_SUPER_LINE), fillColor(StockTrend.LEVEL_SUPER_LINE));
+			addLineDataSet(mChangedEntryList, StockTrend.LEVEL_SUPER_LINE, lineData, fillChanged(StockTrend.LEVEL_SUPER_LINE), fillColor(StockTrend.LEVEL_SUPER_LINE));
 		}
 
 		if (displayTrend(StockTrend.LEVEL_TREND_LINE)) {
 			addLineDataSet(mTrendEntryList, StockTrend.LABEL_TREND_LINE, StockTrend.LEVEL_TREND_LINE, lineData);
-			addLineDataSet(mCircledEntryList, StockTrend.LEVEL_TREND_LINE, lineData, fillChanged(StockTrend.LEVEL_TREND_LINE), fillColor(StockTrend.LEVEL_TREND_LINE));
+			addLineDataSet(mChangedEntryList, StockTrend.LEVEL_TREND_LINE, lineData, fillChanged(StockTrend.LEVEL_TREND_LINE), fillColor(StockTrend.LEVEL_TREND_LINE));
 		}
 
 		mCombinedDataMain.setData(lineData);
@@ -172,28 +172,28 @@ public class StockDataChart {
 		BarDataSet histogramDataSet = new BarDataSet(mHistogramEntryList,
 				"Histogram");
 		histogramDataSet.setBarSpacePercent(40f);
-		histogramDataSet.setIncreasingColor(increasingColor(Config.COLOR_CANDLE_RED));
-		histogramDataSet.setDecreasingColor(decreasingColor(Config.COLOR_CANDLE_GREEN));
-		histogramDataSet.setColor(dataSetColor(Color.RED));
+		histogramDataSet.setIncreasingColor(Config.COLOR_INCREASING);
+		histogramDataSet.setDecreasingColor(Config.COLOR_DECREASING);
+		histogramDataSet.setColor(Config.COLOR_HISTOGRAM);
 		histogramDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		barData.addDataSet(histogramDataSet);
 
 		LineData lineData = new LineData(mXValues);
 
 		LineDataSet difDataSet = new LineDataSet(mDIFEntryList, "DIF");
-		difDataSet.setColor(dataSetColor(Color.YELLOW));
+		difDataSet.setColor(Config.COLOR_DIF);
 		difDataSet.setDrawCircles(false);
 		difDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(difDataSet);
 
 		LineDataSet deaDataSet = new LineDataSet(mDEAEntryList, "DEA");
-		deaDataSet.setColor(dataSetColor(Color.WHITE));
+		deaDataSet.setColor(Config.COLOR_DEA);
 		deaDataSet.setDrawCircles(false);
 		deaDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(deaDataSet);
 
 		LineDataSet radarDataSet = new LineDataSet(mRadarEntryList, "Radar");
-		radarDataSet.setColor(dataSetColor(Color.BLACK));
+		radarDataSet.setColor(lineColor(mAdaptiveLevel));
 		radarDataSet.setDrawCircles(false);
 		radarDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 		lineData.addDataSet(radarDataSet);
@@ -213,24 +213,25 @@ public class StockDataChart {
 		if (entryList == null || entryList[level] == null || entryList[level].size() == 0) {
 			return;
 		}
-		addLineDataSet(entryList[level], StockTrend.LABEL_NONE, lineColor(level), true, lineData, drawFilled, fillColor);
+		addLineDataSet(entryList[level], StockTrend.LABEL_NONE, lineColor(level), false, lineData, drawFilled, fillColor);
 	}
 
 	void addLineDataSet(List<Entry> entryList, String label, int lineColor, boolean drawCircle, LineData lineData, boolean drawFilled, int fillColor) {
-		if (entryList != null && entryList.size() > 0) {
-			LineDataSet lineDataSet = new LineDataSet(entryList, label);
-			lineDataSet.setColor(lineColor);
-			lineDataSet.setCircleColor(lineColor);
-			if (drawCircle) {
-				lineDataSet.setCircleSize(TREND_CIRCLE_SIZE);
-			} else {
-				lineDataSet.setCircleSize(NONE_CIRCLE_SIZE);
-			}
-			lineDataSet.setDrawFilled(drawFilled);
-			lineDataSet.setFillColor(fillColor);
-			lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-			lineData.addDataSet(lineDataSet);
+		if (entryList == null || entryList.isEmpty()) {
+			return;
 		}
+		LineDataSet lineDataSet = new LineDataSet(entryList, label);
+		lineDataSet.setColor(lineColor);
+		lineDataSet.setCircleColor(lineColor);
+		if (drawCircle) {
+			lineDataSet.setCircleSize(TREND_CIRCLE_SIZE);
+		} else {
+			lineDataSet.setCircleSize(NONE_CIRCLE_SIZE);
+		}
+		lineDataSet.setDrawFilled(drawFilled);
+		lineDataSet.setFillColor(fillColor);
+		lineDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+		lineData.addDataSet(lineDataSet);
 	}
 
 	boolean fillChanged(int level) {
@@ -242,17 +243,6 @@ public class StockDataChart {
 		return result;
 	}
 
-	int dataSetColor(int defaultColor) {
-		return defaultColor;
-	}
-
-	int increasingColor(int defaultColor) {
-		return defaultColor;
-	}
-
-	int decreasingColor(int defaultColor) {
-		return defaultColor;
-	}
 
 	int fillColor(int level) {
 		if (level < 0 || level >= StockTrend.COLORS.length) {
@@ -298,7 +288,7 @@ public class StockDataChart {
 
 		if (Setting.getDisplayAdaptive()) {
 			if (mStock.hasFlag(Stock.FLAG_CUSTOM)) {
-				result = (level == mAdaptiveLevel);
+				result = (level == mAdaptiveLevel || level == mAdaptiveLevel + 1);
 			} else {
 				result = (level >= mAdaptiveLevel);
 			}
@@ -453,36 +443,54 @@ public class StockDataChart {
 	}
 
 	public void updateExtendEntry() {
-		if (mTrendEntryList[StockTrend.LEVEL_DRAW] != null && mTrendEntryList[StockTrend.LEVEL_DRAW].size() > 0) {
-			double value;
-			if (mDrawVertexList.get(0) == StockTrend.VERTEX_TOP) {
-				value = mCandleEntryList.get(0).getLow();
-			} else {
-				value = mCandleEntryList.get(0).getHigh();
-			}
-			Entry firstEntry = new Entry((float) value, 0);
-			mExtendFirstEntryList.add(firstEntry);
-			mExtendFirstEntryList.add(mTrendEntryList[StockTrend.LEVEL_DRAW].get(0));
+		// 提前获取目标列表，避免重复访问数组
+		List<Entry> drawLevelEntries = mTrendEntryList[StockTrend.LEVEL_DRAW];
 
-			mExtendLastEntryList.add(mTrendEntryList[StockTrend.LEVEL_DRAW].get(mTrendEntryList[StockTrend.LEVEL_DRAW].size() - 1));
-			if (mDrawVertexList.get(mDrawVertexList.size() - 1) == StockTrend.VERTEX_TOP) {
-				value = mCandleEntryList.get(mCandleEntryList.size() - 1).getLow();
-			} else {
-				value = mCandleEntryList.get(mCandleEntryList.size() - 1).getHigh();
-			}
-			Entry lastEntry = new Entry((float) value, mXValues.size() - 1);
-			mExtendLastEntryList.add(lastEntry);
+		// 使用卫语句提前返回，减少嵌套
+		if (drawLevelEntries == null || drawLevelEntries.isEmpty()) {
+			return;
 		}
+
+		// 提取重复的索引计算
+		int firstIndex = 0;
+		int lastIndex = mXValues.size() - 1;
+		int lastEntryIndex = drawLevelEntries.size() - 1;
+
+		// 创建第一个延伸点
+		Entry firstEntry = createExtendedEntry(firstIndex, mDrawVertexList.get(firstIndex));
+		mExtendFirstEntryList.add(firstEntry);
+		mExtendFirstEntryList.add(drawLevelEntries.get(firstIndex));
+
+		// 创建最后一个延伸点
+		mExtendLastEntryList.add(drawLevelEntries.get(lastEntryIndex));
+		Entry lastEntry = createExtendedEntry(lastIndex, mDrawVertexList.get(mDrawVertexList.size() - 1));
+		mExtendLastEntryList.add(lastEntry);
 	}
 
-	public void updateGroupEntry() {
+	/**
+	 * 根据顶点类型创建延伸点
+	 * @param index 索引位置
+	 * @param vertexType 顶点类型
+	 * @return 创建的Entry对象
+	 */
+	private Entry createExtendedEntry(int index, int vertexType) {
+		double value;
+		if (vertexType == StockTrend.VERTEX_TOP) {
+			value = mCandleEntryList.get(index).getLow();
+		} else {
+			value = mCandleEntryList.get(index).getHigh();
+		}
+		return new Entry((float) value, index);
+	}
+
+	public void updateChangedEntry() {
 		for (int level = StockTrend.LEVEL_DRAW; level < StockTrend.LEVELS.length; level++) {
 			if (mTrendEntryList[level] == null || mTrendEntryList[level].size() < StockTrend.VERTEX_SIZE) {
 				continue;
 			}
 
-			mCircledEntryList[level].add(mTrendEntryList[level].get(mTrendEntryList[level].size() - 2));
-			mCircledEntryList[level].add(mTrendEntryList[level].get(mTrendEntryList[level].size() - 1));
+			mChangedEntryList[level].add(mTrendEntryList[level].get(mTrendEntryList[level].size() - 2));
+			mChangedEntryList[level].add(mTrendEntryList[level].get(mTrendEntryList[level].size() - 1));
 
 			if (Setting.getDisplayAdaptive()) {
 				if (mStock.hasFlag(Stock.FLAG_CUSTOM)) {
@@ -521,8 +529,8 @@ public class StockDataChart {
 			if (mTrendEntryList[i] != null) {
 				mTrendEntryList[i].clear();
 			}
-			if (mCircledEntryList[i] != null) {
-				mCircledEntryList[i].clear();
+			if (mChangedEntryList[i] != null) {
+				mChangedEntryList[i].clear();
 			}
 		}
 	}

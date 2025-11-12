@@ -128,8 +128,8 @@ public class StockFinancialChart {
 			BarDataSet dividendDataSet = new BarDataSet(mDividendEntryList,
 					"Dividend");
 			dividendDataSet.setBarSpacePercent(40f);
-			dividendDataSet.setIncreasingColor(Config.COLOR_CANDLE_RED);
-			dividendDataSet.setDecreasingColor(Config.COLOR_CANDLE_GREEN);
+			dividendDataSet.setIncreasingColor(Config.COLOR_INCREASING);
+			dividendDataSet.setDecreasingColor(Config.COLOR_DECREASING);
 			dividendDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
 			barData.addDataSet(dividendDataSet);
 

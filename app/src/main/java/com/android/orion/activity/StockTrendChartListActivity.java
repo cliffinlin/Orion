@@ -28,7 +28,7 @@ import com.android.orion.database.StockPerceptron;
 import com.android.orion.database.StockTrend;
 import com.android.orion.provider.StockContentProvider;
 import com.android.orion.provider.StockPerceptronProvider;
-import com.android.orion.setting.Constant;
+import com.android.orion.constant.Constant;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.XAxis;

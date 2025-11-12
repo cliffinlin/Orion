@@ -26,9 +26,8 @@ import com.android.orion.data.Period;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
-import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockTrend;
-import com.android.orion.setting.Constant;
+import com.android.orion.constant.Constant;
 import com.android.orion.setting.Setting;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -507,7 +506,7 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 			stockDataChart.updateDescription(mStock);
 			stockDataChart.updateLimitLines(mStock, mStock.getStockDealList());
 			stockDataChart.updateExtendEntry();
-			stockDataChart.updateGroupEntry();
+			stockDataChart.updateChangedEntry();
 			stockDataChart.setMainChartData();
 			stockDataChart.setSubChartData();
 

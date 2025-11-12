@@ -3,7 +3,7 @@ package com.android.orion.analyzer;
 import com.android.orion.data.Period;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockTrend;
-import com.android.orion.setting.Constant;
+import com.android.orion.constant.Constant;
 import com.android.orion.utility.Logger;
 
 import java.util.ArrayList;

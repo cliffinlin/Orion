@@ -4,7 +4,7 @@ import android.os.Environment;
 
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;
-import com.android.orion.setting.Constant;
+import com.android.orion.constant.Constant;
 
 public class RecordFile {
 	static StringBuffer stringBuffer = new StringBuffer();

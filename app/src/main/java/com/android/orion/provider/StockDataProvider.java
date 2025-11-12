@@ -29,7 +29,7 @@ import com.android.orion.interfaces.StockListener;
 import com.android.orion.manager.StockDatabaseManager;
 import com.android.orion.manager.StockManager;
 import com.android.orion.service.StockService;
-import com.android.orion.setting.Constant;
+import com.android.orion.constant.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Logger;
 import com.android.orion.utility.Market;
@@ -384,7 +384,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 	}
 
 	StockData mergeStockDataMin(ArrayList<StockData> stockDataList, int size) {
-		if (stockDataList == null || stockDataList.size() == 0 || size <= 0) {
+		if (stockDataList == null || stockDataList.isEmpty() || size <= 0) {
 			return null;
 		}
 
@@ -427,26 +427,30 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		return result;
 	}
 
-	void setupStockDataFile(Stock stock, Uri uri) {
-		if (stock == null) {
+	void loadTDXDataFile(Uri uri, ArrayList<String> contentList) {
+		if (contentList == null) {
 			return;
 		}
-
 		InputStream inputStream = null;
 		String fileName = "";
-		ArrayList<String> lineList = new ArrayList<>();
 		try {
 			if (uri.getScheme().equals("file")) {
 				fileName = uri.getPath();
-				Utility.readFile(fileName, lineList);
+				Utility.readFile(fileName, contentList);
 			} else if (uri.getScheme().equals("content")) {
 				inputStream = mContext.getContentResolver().openInputStream(uri);
 				if (inputStream != null) {
 					BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-					String strLine;
-					while ((strLine = bufferedReader.readLine()) != null) {
-						lineList.add(strLine);
+					String content;
+					while ((content = bufferedReader.readLine()) != null) {
+						contentList.add(content);
 					}
+				}
+			}
+			if (contentList.size() > Config.HISTORY_LENGTH_MIN5) {
+				int n = contentList.size() - Config.HISTORY_LENGTH_MIN5;
+				for (int i = 0; i < n; i++) {
+					contentList.remove(0);
 				}
 			}
 		} catch (Exception e) {
@@ -454,16 +458,20 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		} finally {
 			Utility.closeQuietly(inputStream);
 		}
+	}
+
+	void setupStockData(Stock stock, Uri uri) {
+		if (stock == null) {
+			return;
+		}
+
+		ArrayList<String> contentList = new ArrayList<>();
+		loadTDXDataFile(uri, contentList);
+		if (contentList.isEmpty()) {
+			return;
+		}
 
 		try {
-			if (lineList.size() == 0) {
-				return;
-			}
-
-			if (lineList.size() > Config.HISTORY_LENGTH_MIN5) {
-				lineList = new ArrayList<>(lineList.subList(lineList.size() - Config.HISTORY_LENGTH_MIN5, lineList.size()));
-			}
-
 //			ArrayList<String> datetimeMin5List = new ArrayList<>();//based on min5
 			ArrayList<String> datetimeMin15List = getDatetimeMin15List();
 			ArrayList<String> datetimeMin30List = getDatetimeMinL30ist();
@@ -473,14 +481,14 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			ArrayList<StockData> stockDataMin15List = new ArrayList<>();
 			ArrayList<StockData> stockDataMin30List = new ArrayList<>();
 			ArrayList<StockData> stockDataMin60List = new ArrayList<>();
-			for (int i = 0; i < lineList.size(); i++) {
-				String line = lineList.get(i);
-				if (TextUtils.isEmpty(line)) {
+			for (int i = 0; i < contentList.size(); i++) {
+				String content = contentList.get(i);
+				if (TextUtils.isEmpty(content)) {
 					continue;
 				}
 
 				StockData stockDataMin5 = new StockData();
-				if (stockDataMin5.fromString(line) == null) {
+				if (stockDataMin5.fromTDXContent(content) == null) {
 					continue;
 				}
 
@@ -507,10 +515,10 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 					}
 				}
 			}
-			saveTDXData(stock, Period.MIN5, stockDataMin5List);
-			saveTDXData(stock, Period.MIN15, stockDataMin15List);
-			saveTDXData(stock, Period.MIN30, stockDataMin30List);
-			saveTDXData(stock, Period.MIN60, stockDataMin60List);
+			saveTDXDatabase(stock, Period.MIN5, stockDataMin5List);
+			saveTDXDatabase(stock, Period.MIN15, stockDataMin15List);
+			saveTDXDatabase(stock, Period.MIN30, stockDataMin30List);
+			saveTDXDatabase(stock, Period.MIN60, stockDataMin60List);
 
 			mStockDatabaseManager.deleteStockData(stock);
 			mStockDatabaseManager.deleteStockTrend(stock);
@@ -524,7 +532,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 	}
 
 	public void importTDXDataFile(ArrayList<Uri> uriList) {
-		if (uriList == null || uriList.size() == 0) {
+		if (uriList == null || uriList.isEmpty()) {
 			return;
 		}
 
@@ -556,16 +564,16 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 				} else {
 					mStockDatabaseManager.getStock(stock);
 				}
-				setupStockDataFile(stock, uri);
+				setupStockData(stock, uri);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	void loadTDXData(Stock stock, StockData stockData,
-	                 ArrayList<ContentValues> contentValuesList,
-	                 ArrayMap<String, StockData> stockDataMap) {
+	void loadTDXDatabase(Stock stock, StockData stockData,
+						 ArrayList<ContentValues> contentValuesList,
+						 ArrayMap<String, StockData> stockDataMap) {
 		if (stock == null || stockData == null || contentValuesList == null || stockDataMap == null) {
 			return;
 		}
@@ -582,7 +590,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 				if (TextUtils.isEmpty(content)) {
 					continue;
 				}
-				if (stockData.fromString(content) != null) {
+				if (stockData.fromTDXContent(content) != null) {
 					contentValuesList.add(stockData.getContentValues());
 					stockDataMap.put(stockData.getDateTime(), new StockData(stockData));
 				}
@@ -593,7 +601,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 	}
 
 	void saveStockDataAboveMonth(Stock stock, StockData stockData, ArrayList<StockData> stockDataList) {
-		if (stock == null || stockData == null || stockDataList == null || stockDataList.size() == 0) {
+		if (stock == null || stockData == null || stockDataList == null || stockDataList.isEmpty()) {
 			return;
 		}
 
@@ -613,7 +621,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 	}
 
 	void mergeStockDataMonth(Stock stock, String period, ArrayList<StockData> stockDataList) {
-		if (stockDataList == null || stockDataList.size() == 0) {
+		if (stockDataList == null || stockDataList.isEmpty()) {
 			return;
 		}
 
@@ -662,7 +670,7 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 	}
 
 	void mergeStockDataMonth(Stock stock, String period, ArrayList<String> datetimeList, ArrayList<StockData> stockDataList) {
-		if (datetimeList == null || stockDataList == null || stockDataList.size() == 0) {
+		if (datetimeList == null || stockDataList == null || stockDataList.isEmpty()) {
 			return;
 		}
 
@@ -707,25 +715,51 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		mStockDatabaseManager.updateStockData(stock, period, resultList);
 	}
 
-	void saveTDXData(Stock stock, StockData stockData, ArrayMap<String, StockData> stockDataMap) {
-		if (stock == null || stockData == null || stockDataMap == null || stockDataMap.size() == 0) {
+	void saveTDXDatabase(Stock stock, String period, ArrayMap<String, StockData> stockDataMap) {
+		if (stock == null || stockDataMap == null || stockDataMap.isEmpty()) {
 			return;
 		}
 
-		if (!Period.isMinutePeriod(stockData.getPeriod())) {
+		if (!Period.isMinutePeriod(period)) {
 			return;
 		}
 
 		ArrayList<StockData> stockDataList = new ArrayList<>(stockDataMap.values());
 		Collections.sort(stockDataList, StockData.comparator);
-		saveTDXData(stock, stockData.getPeriod(), stockDataList);
-		if (stockData.getPeriod().equals(Period.MIN5)) {
-			exportTDXData(stock, stockData.getPeriod(), stockDataList);
+		saveTDXDatabase(stock, period, stockDataList);
+		if (period.equals(Period.MIN5)) {
+			ArrayList<String> contentList = new ArrayList<>();
+			if (stockDataList.size() < Config.HISTORY_LENGTH_MIN5) {
+				String uriString = Setting.getTdxDataFileUri(stock);
+				if (TextUtils.isEmpty(uriString)) {
+					return;
+				}
+				Uri uri = Uri.parse(uriString);
+				loadTDXDataFile(uri, contentList);
+				if (contentList.isEmpty()) {
+					return;
+				}
+				for (String content : contentList) {
+					StockData stockData = new StockData();
+					if (stockData.fromTDXContent(content) != null) {
+						stockDataMap.put(stockData.getDateTime(), stockData);
+					}
+				}
+				stockDataList = new ArrayList<>(stockDataMap.values());
+				Collections.sort(stockDataList, StockData.comparator);
+				contentList.clear();
+				for (StockData stockData : stockDataList) {
+					contentList.add(stockData.toTDXContent());
+				}
+			} else {
+				mStockDatabaseManager.getTDXDataContentList(stock, period, contentList);
+			}
+			exportTDXDataFile(stock, period, contentList);
 		}
 	}
 
-	void saveTDXData(Stock stock, String period, ArrayList<StockData> stockDataList) {
-		if (stock == null || stockDataList == null || stockDataList.size() == 0) {
+	void saveTDXDatabase(Stock stock, String period, ArrayList<StockData> stockDataList) {
+		if (stock == null || stockDataList == null || stockDataList.isEmpty()) {
 			return;
 		}
 
@@ -737,7 +771,8 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			TDXData tdxData = new TDXData();
 			mStockDatabaseManager.deleteTDXData(stock.getSE(), stock.getCode(), period);
 			ContentValues[] contentValuesArray = new ContentValues[stockDataList.size()];
-			for (StockData stockData : stockDataList) {
+			for (int i = 0; i < stockDataList.size(); i++) {
+				StockData stockData = stockDataList.get(i);
 				if (stockData == null) {
 					continue;
 				}
@@ -746,9 +781,9 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 				tdxData.setCode(stock.getCode());
 				tdxData.setName(stock.getName());
 				tdxData.setPeriod(period);
-				tdxData.setContent(stockData.toString());
+				tdxData.setContent(stockData.toTDXContent());
 				tdxData.setCreated(Utility.getCurrentDateTimeString());
-				contentValuesArray[stockDataList.indexOf(stockData)] = tdxData.getContentValues();
+				contentValuesArray[i] = tdxData.getContentValues();
 			}
 			mStockDatabaseManager.bulkInsertTDXData(contentValuesArray);
 			Log.d("bulkInsertTDXData " + stock.toLogString() + " " + period);
@@ -757,11 +792,10 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		}
 	}
 
-	void exportTDXData(Stock stock, String period, ArrayList<StockData> stockDataList) {
-		if (stock == null || stockDataList == null || stockDataList.size() < Config.HISTORY_LENGTH_MIN5) {
+	void exportTDXDataFile(Stock stock, String period, ArrayList<String> contentList) {
+		if (stock == null || contentList == null || contentList.size() < Config.HISTORY_LENGTH_MIN5) {
 			return;
 		}
-
 		OutputStream outputStream = null;
 		BufferedWriter writer = null;
 		try {
@@ -772,17 +806,12 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			Uri uri = Uri.parse(uriString);
 			outputStream = mContext.getContentResolver().openOutputStream(uri, "wt");
 			writer = new BufferedWriter(new OutputStreamWriter(outputStream));
-			ArrayList<String> contentList = new ArrayList<>();
-			mStockDatabaseManager.getTDXDataContentList(stock, period, contentList);
 			int index = 0;
-			if (writer != null) {
-				for (String content : contentList) {
-					writer.write(content);
-					index++;
-				}
-				writer.close();
+			for (String content : contentList) {
+				writer.write(content);
+				index++;
 			}
-			Log.d("exportTDXData " + stock.toLogString() + " " + period + " index=" + index);
+			Log.d("exportTDXDataFile " + stock.toLogString() + " " + period + " index=" + index);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
