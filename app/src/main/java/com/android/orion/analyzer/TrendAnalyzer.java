@@ -951,13 +951,16 @@ public class TrendAnalyzer {
 			if (radar == null) continue;
 
 			// 计算散点坐标
-			radius = (float) (THUMBNAIL_SIZE / 1.2f * (radar.period / 100f));
+			radius = (float) (THUMBNAIL_SIZE / 2f * Math.abs(radar.amplitude));
 			double angle = radar.phase;
 			float x = centerX + (float) (radius * Math.cos(angle));
 			float y = centerY + (float) (radius * Math.sin(angle));
 
 			// 确定颜色
-			int color = radar.lastPointValue >= 0 ? Color.RED : Color.BLACK;
+			int color = Color.BLACK;
+			if (radar.direction == StockTrend.DIRECTION_UP) {
+				color = Color.RED;
+			}
 
 			// 添加散点
 			mScatterConfigList.add(new CurveThumbnail.ScatterConfig(

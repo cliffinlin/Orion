@@ -3,6 +3,7 @@ package com.android.orion.analyzer;
 import com.android.orion.data.Period;
 import com.android.orion.data.Radar;
 import com.android.orion.constant.Constant;
+import com.android.orion.database.StockTrend;
 import com.android.orion.utility.Logger;
 
 import org.apache.commons.math3.complex.Complex;
@@ -165,9 +166,28 @@ public class FourierAnalyzer {
         // 设置雷达数据
         if (!periodSortedSpectrum.isEmpty()) {
             PeriodAmplitude firstComponent = periodSortedSpectrum.get(0);
-            double lastPointValue = reconstructedData.isEmpty() ? 0.0 : reconstructedData.get(reconstructedData.size() - 1);
-            mRadar = new Radar(firstComponent.amplitude, firstComponent.period, firstComponent.frequency,
-                    firstComponent.phase, firstComponent.phaseDegrees, 0, lastPointValue);
+            double value1 = 0;
+            double value2 = 0;
+            double value3 = 0;
+            int direction = StockTrend.DIRECTION_NONE;
+            int vertex = StockTrend.VERTEX_NONE;
+            if (periodSortedSpectrum.size() > StockTrend.VERTEX_SIZE) {
+                value1 = reconstructedData.get(reconstructedData.size() - 1);
+                value2 = reconstructedData.get(reconstructedData.size() - 2);
+                value3 = reconstructedData.get(reconstructedData.size() - 3);
+                if (value1 > value2) {
+                    direction = StockTrend.DIRECTION_UP;
+                } else if (value1 < value2) {
+                    direction = StockTrend.DIRECTION_DOWN;
+                }
+                if (value2 > value1 && value2 > value3) {
+                    vertex = StockTrend.VERTEX_TOP;
+                } else if (value2 < value1 && value2 < value3) {
+                    vertex = StockTrend.VERTEX_BOTTOM;
+                }
+            }
+            mRadar = new Radar(Math.abs(value3), firstComponent.period, firstComponent.frequency,
+                    firstComponent.phase, firstComponent.phaseDegrees, 0, direction, vertex);
         }
 
         if (logMore) {

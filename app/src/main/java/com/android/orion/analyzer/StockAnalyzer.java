@@ -6,11 +6,13 @@ import android.text.TextUtils;
 import com.android.orion.application.MainApplication;
 import com.android.orion.data.Macd;
 import com.android.orion.data.Period;
+import com.android.orion.data.Radar;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockTrend;
 import com.android.orion.manager.StockDatabaseManager;
 import com.android.orion.constant.Constant;
+import com.android.orion.manager.StockNotificationManager;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Logger;
 import com.android.orion.utility.StopWatch;
@@ -131,7 +133,9 @@ public class StockAnalyzer {
 			setupPulseList(period);
 			FourierAnalyzer.analyze(period, mPulseList);
 			ArrayList<Double> radarList = FourierAnalyzer.getRadarList();
-			mStock.setRadar(period, FourierAnalyzer.getRadar());
+			Radar radar = FourierAnalyzer.getRadar();
+			mStock.setRadar(period, radar);
+			StockNotificationManager.getInstance().notify(mStock, period, radar);
 
 			for (int i = 0; i < size; i++) {
 				StockData stockData = mStockDataList.get(i);

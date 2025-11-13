@@ -14,6 +14,8 @@ import com.android.orion.activity.StockFavoriteListActivity;
 import com.android.orion.analyzer.TradeAnalyzer;
 import com.android.orion.application.MainApplication;
 import com.android.orion.config.Config;
+import com.android.orion.data.Period;
+import com.android.orion.data.Radar;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockTrend;
@@ -60,6 +62,38 @@ public class StockNotificationManager {
 		}
 	}
 
+	public void notify(Stock stock, String period, Radar radar) {
+		if (stock == null || mContext == null || radar == null) {
+			return;
+		}
+
+		if (!stock.hasFlag(Stock.FLAG_TRADE)) {
+			return;
+		}
+
+		if (!Period.isMinutePeriod(period)) {
+			return;
+		}
+
+		if (radar.vertex == StockTrend.VERTEX_NONE) {
+			return;
+		}
+
+		mContentTitle.setLength(0);
+		mContentText.setLength(0);
+
+		mContentTitle.append(stock.getNamePriceNetString(" ") + " " + period);
+		mContentText.append(radar.toNotifyString());
+		try {
+			int id = TREND_NOTIFICATION_ID + (int) stock.getId();
+			long stockId = stock.getId();
+			notify(id, stockId, Config.MESSAGE_CHANNEL_ID, Config.MESSAGE_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH,
+					mContentTitle.toString(), mContentText.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public void notify(Stock stock, StockTrend stockTrend) {
 		if (stock == null || mContext == null || stockTrend == null) {
 			return;
@@ -69,16 +103,16 @@ public class StockNotificationManager {
 			return;
 		}
 
-		String tradeNotifyString = "";
+		String notifyString = "";
 		if (stock.hasFlag(Stock.FLAG_TRADE)) {
 			mTradeAnalyzer.analyze(stock);
 			if (stockTrend.getNet() > 0) {
 				if (stock.getBuyProfit() > 0) {
-					tradeNotifyString = mTradeAnalyzer.getBuyDealString();
+					notifyString = mTradeAnalyzer.getBuyDealString();
 				}
 			} else {
 				if (stock.getSellProfit() < 0) {
-					tradeNotifyString = mTradeAnalyzer.getSellDealString();
+					notifyString = mTradeAnalyzer.getSellDealString();
 				}
 			}
 		}
@@ -87,7 +121,7 @@ public class StockNotificationManager {
 		mContentText.setLength(0);
 
 		mContentTitle.append(stock.getNamePriceNetString(" ") + " " + stockTrend.toNotifyString());
-		mContentText.append(tradeNotifyString);
+		mContentText.append(notifyString);
 		try {
 			int id = TREND_NOTIFICATION_ID + (int) stockTrend.getId();
 			long stockId = stock.getId();

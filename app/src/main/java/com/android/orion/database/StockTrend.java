@@ -607,4 +607,28 @@ public class StockTrend extends DatabaseTable {
 	public String toNotifyString() {
 		return mPeriod + " " + toChartString();
 	}
+
+	public static String directionToString(int direction) {
+		StringBuilder builder = new StringBuilder();
+		if (direction == DIRECTION_UP) {
+			builder.append("DIRECTION_UP");
+		} else if (direction == DIRECTION_DOWN) {
+			builder.append("DIRECTION_DOWN");
+		} else {
+			builder.append("DIRECTION_NONE");
+		}
+		return builder.toString();
+	}
+
+	public static String vertexToString(int vertex) {
+		StringBuilder builder = new StringBuilder();
+		if (vertex == VERTEX_TOP) {
+			builder.append("VERTEX_TOP");
+		} else if (vertex == VERTEX_BOTTOM) {
+			builder.append("VERTEX_BOTTOM");
+		} else {
+			builder.append("VERTEX_NONE");
+		}
+		return builder.toString();
+	}
 }
