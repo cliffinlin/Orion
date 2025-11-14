@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.text.TextUtils;
 
 import com.android.orion.R;
 import com.android.orion.activity.StockFavoriteChartListActivity;
@@ -71,7 +72,7 @@ public class StockNotificationManager {
 			return;
 		}
 
-		if (!Period.isMinutePeriod(period)) {
+		if (!TextUtils.equals(period, Period.MIN5)) {
 			return;
 		}
 
