@@ -457,5 +457,4 @@ public class StockDealActivity extends DatabaseActivity implements
 
 		datePickerDialog.show();
 	}
-
 }

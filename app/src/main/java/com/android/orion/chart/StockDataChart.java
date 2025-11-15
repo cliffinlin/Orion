@@ -443,36 +443,25 @@ public class StockDataChart {
 	}
 
 	public void updateExtendEntry() {
-		// 提前获取目标列表，避免重复访问数组
 		List<Entry> drawLevelEntries = mTrendEntryList[StockTrend.LEVEL_DRAW];
 
-		// 使用卫语句提前返回，减少嵌套
 		if (drawLevelEntries == null || drawLevelEntries.isEmpty()) {
 			return;
 		}
 
-		// 提取重复的索引计算
 		int firstIndex = 0;
 		int lastIndex = mXValues.size() - 1;
 		int lastEntryIndex = drawLevelEntries.size() - 1;
 
-		// 创建第一个延伸点
 		Entry firstEntry = createExtendedEntry(firstIndex, mDrawVertexList.get(firstIndex));
 		mExtendFirstEntryList.add(firstEntry);
 		mExtendFirstEntryList.add(drawLevelEntries.get(firstIndex));
 
-		// 创建最后一个延伸点
 		mExtendLastEntryList.add(drawLevelEntries.get(lastEntryIndex));
 		Entry lastEntry = createExtendedEntry(lastIndex, mDrawVertexList.get(mDrawVertexList.size() - 1));
 		mExtendLastEntryList.add(lastEntry);
 	}
 
-	/**
-	 * 根据顶点类型创建延伸点
-	 * @param index 索引位置
-	 * @param vertexType 顶点类型
-	 * @return 创建的Entry对象
-	 */
 	private Entry createExtendedEntry(int index, int vertexType) {
 		double value;
 		if (vertexType == StockTrend.VERTEX_TOP) {

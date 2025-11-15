@@ -126,6 +126,7 @@ public class DatabaseContract {
 
 	public static final String COLUMN_TYPE = "type";
 	public static final String COLUMN_CONTENT = "content";
+	public static final String COLUMN_WINDOW = "window";
 
 	// http://money.finance.sina.com.cn/corp/go.php/vFD_FinanceSummary/stockid/600900.phtml
 	public static final String COLUMN_BOOK_VALUE_PER_SHARE = "book_value_per_share";
@@ -322,6 +323,7 @@ public class DatabaseContract {
 				COLUMN_YIELD, COLUMN_YIELD_IN_YEAR,
 				COLUMN_DIVIDEND_RATIO, COLUMN_DIVIDEND_RATIO_IN_YEAR,
 				COLUMN_R_DATE, COLUMN_STATUS,
+				COLUMN_WINDOW,
 				COLUMN_CREATED, COLUMN_MODIFIED};
 		static final String DELETE_TABLE = DROP_TABLE_IF_EXISTS
 				+ TABLE_NAME;
@@ -391,6 +393,7 @@ public class DatabaseContract {
 				+ COLUMN_DIVIDEND_RATIO_IN_YEAR + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_R_DATE + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_STATUS + TEXT_TYPE + COMMA_SEP
+				+ COLUMN_WINDOW + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_CREATED + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_MODIFIED + TEXT_TYPE + " )";
 		static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME

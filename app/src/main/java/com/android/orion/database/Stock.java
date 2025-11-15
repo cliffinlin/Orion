@@ -65,6 +65,7 @@ public class Stock extends DatabaseTable {
 	private String mCode;
 	private String mName;
 	private String mPinyin;
+	private String mWindow;
 
 	private double mPrice;
 	private double mChange;
@@ -134,6 +135,7 @@ public class Stock extends DatabaseTable {
 		mCode = "";
 		mName = "";
 		mPinyin = "";
+		mWindow = "";
 
 		mFlag = 0;
 		mHold = 0;
@@ -199,6 +201,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
 		contentValues.put(DatabaseContract.COLUMN_PINYIN, mPinyin);
+		contentValues.put(DatabaseContract.COLUMN_WINDOW, mWindow);
 
 		contentValues.put(DatabaseContract.COLUMN_PRICE, mPrice);
 		contentValues.put(DatabaseContract.COLUMN_CHANGE, mChange);
@@ -286,6 +289,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_SE, mSE);
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
+		contentValues.put(DatabaseContract.COLUMN_WINDOW, getWindow());
 		if (hasFlag(FLAG_CUSTOM)) {
 			contentValues.put(DatabaseContract.COLUMN_LEVEL, getLevelString());
 		}
@@ -307,6 +311,7 @@ public class Stock extends DatabaseTable {
 		setCode(stock.mCode);
 		setName(stock.mName);
 		setPinyin(stock.mPinyin);
+		setWindow(stock.getWindow());
 
 		setPrice(stock.mPrice);
 		setChange(stock.mChange);
@@ -379,6 +384,7 @@ public class Stock extends DatabaseTable {
 		setCode(cursor);
 		setName(cursor);
 		setPinyin(cursor);
+		setWindow(cursor);
 		setPrice(cursor);
 		setChange(cursor);
 		setNet(cursor);
@@ -527,6 +533,23 @@ public class Stock extends DatabaseTable {
 
 		setPinyin(cursor.getString(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_PINYIN)));
+	}
+
+	public String getWindow() {
+		return mWindow;
+	}
+
+	public void setWindow(String window) {
+		mWindow = window;
+	}
+
+	void setWindow(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setWindow(cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_WINDOW)));
 	}
 
 	public int getFlag() {

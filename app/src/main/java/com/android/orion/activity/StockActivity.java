@@ -1,5 +1,6 @@
 package com.android.orion.activity;
 
+import android.app.DatePickerDialog;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
@@ -29,6 +30,10 @@ import com.android.orion.constant.Constant;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Utility;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+
 public class StockActivity extends DatabaseActivity implements OnClickListener {
 
 	long mHoldA = 0;
@@ -37,6 +42,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 	CheckBox mCheckBoxCustom;
 	EditText mEditTextStockName;
 	EditText mEditTextStockCode;
+	EditText mEditTextStockWindow;
 	EditText mEditTextStockHold;
 	EditText mEditTextStockYield;
 	EditText mEditTextStockHoldA;
@@ -78,6 +84,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mCheckBoxCustom = findViewById(R.id.checkbox_custom);
 		mEditTextStockName = findViewById(R.id.edittext_stock_name);
 		mEditTextStockCode = findViewById(R.id.edittext_stock_code);
+		mEditTextStockWindow = findViewById(R.id.edittext_stock_window);
 		mEditTextStockHold = findViewById(R.id.edittext_stock_hold);
 		mEditTextStockYield = findViewById(R.id.edittext_stock_yield);
 		mEditTextStockHoldA = findViewById(R.id.edittext_stock_hold_a);
@@ -106,6 +113,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mCheckBoxCustom.setOnClickListener(this);
 		mEditTextStockName.setOnClickListener(this);
 		mEditTextStockCode.setOnClickListener(this);
+		mEditTextStockWindow.setOnClickListener(this);
 		mEditTextStockHold.setOnClickListener(this);
 		mEditTextStockYield.setOnClickListener(this);
 		mTextViewSeUrl.setOnClickListener(this);
@@ -244,6 +252,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 
 		mEditTextStockName.setText(mStock.getName());
 		mEditTextStockCode.setText(mStock.getCode());
+		mEditTextStockWindow.setText(mStock.getWindow());
 		mEditTextStockHold.setText(String.valueOf(mStock.getHold()));
 		mEditTextStockYield.setText(String.valueOf(mStock.getYield()));
 		mTextViewSeUrl.setText(mStock.getSeUrl());
@@ -349,6 +358,10 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 				toggleTargetImageView(Period.MIN5, mTradeLevelPickerMin5.getValue(), mImageViewMin5Target);
 				break;
 
+			case R.id.edittext_stock_window:
+				showDatePicker();
+				break;
+
 			case R.id.button_ok:
 				if (mCheckBoxTrade.isChecked()) {
 					mStock.addFlag(Stock.FLAG_TRADE);
@@ -385,6 +398,11 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 					mStock.setLevel(Period.MIN30, mTradeLevelPickerMin30.getValue());
 					mStock.setLevel(Period.MIN15, mTradeLevelPickerMin15.getValue());
 					mStock.setLevel(Period.MIN5, mTradeLevelPickerMin5.getValue());
+				}
+
+				String stockWindow = mEditTextStockWindow.getText().toString();
+				if (!stockWindow.isEmpty()) {
+					mStock.setWindow(stockWindow);
 				}
 
 				if (TextUtils.equals(mAction, Constant.ACTION_FAVORITE_STOCK_INSERT)) {
@@ -493,5 +511,22 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 			updateNetTextView(period, target, netTextView);
 			updateTargetImageView(period, target, targetImageView);
 		}
+	}
+
+	private void showDatePicker() {
+		Calendar calendar = Calendar.getInstance();
+		DatePickerDialog datePickerDialog = new DatePickerDialog(
+				this,
+				(view, year, month, dayOfMonth) -> {
+					Calendar selectedDate = Calendar.getInstance();
+					selectedDate.set(year, month, dayOfMonth);
+					SimpleDateFormat sdf = new SimpleDateFormat(Utility.CALENDAR_DATE_FORMAT, Locale.getDefault());
+					mEditTextStockWindow.setText(sdf.format(selectedDate.getTime()));
+				},
+				calendar.get(Calendar.YEAR),
+				calendar.get(Calendar.MONTH),
+				calendar.get(Calendar.DAY_OF_MONTH));
+
+		datePickerDialog.show();
 	}
 }
