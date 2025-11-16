@@ -32,6 +32,7 @@ import com.android.orion.utility.Utility;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class StockActivity extends DatabaseActivity implements OnClickListener {
@@ -515,6 +516,22 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 
 	private void showDatePicker() {
 		Calendar calendar = Calendar.getInstance();
+
+		// 尝试解析编辑框中已有的日期
+		String currentDateStr = mEditTextStockWindow.getText().toString();
+		if (!TextUtils.isEmpty(currentDateStr)) {
+			try {
+				SimpleDateFormat sdf = new SimpleDateFormat(Utility.CALENDAR_DATE_FORMAT, Locale.getDefault());
+				Date currentDate = sdf.parse(currentDateStr);
+				if (currentDate != null) {
+					calendar.setTime(currentDate);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				// 如果解析失败，继续使用当前日期
+			}
+		}
+
 		DatePickerDialog datePickerDialog = new DatePickerDialog(
 				this,
 				(view, year, month, dayOfMonth) -> {
