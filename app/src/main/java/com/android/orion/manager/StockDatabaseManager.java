@@ -10,6 +10,8 @@ import android.util.ArrayMap;
 import android.util.Log;
 
 import com.android.orion.config.Config;
+import com.android.orion.data.Candle;
+import com.android.orion.data.Period;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockBonus;
@@ -25,6 +27,7 @@ import com.android.orion.utility.Symbol;
 import com.android.orion.utility.Utility;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class StockDatabaseManager extends DatabaseManager implements StockListener {
 	public static String TAG = Config.TAG + StockDatabaseManager.class.getSimpleName();
@@ -415,6 +418,10 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 		if (stock == null || stockDataList == null) {
 			return;
 		}
+		Calendar windowCalendar = null;
+		if (Period.isMinutePeriod(period) && stock.hasFlag(Stock.FLAG_TRADE) && !TextUtils.isEmpty(stock.getWindow())) {
+			windowCalendar = Utility.getCalendar(stock.getWindow(), Utility.CALENDAR_DATE_FORMAT);
+		}
 		stockDataList.clear();
 		Cursor cursor = null;
 		try {
@@ -428,6 +435,12 @@ public class StockDatabaseManager extends DatabaseManager implements StockListen
 					stockData.setIndex(index);
 					stockData.setIndexStart(index);
 					stockData.setIndexEnd(index);
+					if (windowCalendar != null) {
+						Calendar calendar = stockData.getCalendar();
+						if (calendar.before(windowCalendar)) {
+							continue;
+						}
+					}
 					stockDataList.add(stockData);
 				}
 			}

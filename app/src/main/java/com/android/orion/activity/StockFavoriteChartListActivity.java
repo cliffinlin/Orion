@@ -8,6 +8,7 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -29,6 +30,7 @@ import com.android.orion.database.StockData;
 import com.android.orion.database.StockTrend;
 import com.android.orion.constant.Constant;
 import com.android.orion.setting.Setting;
+import com.android.orion.utility.Utility;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.XAxis.XAxisPosition;
@@ -372,6 +374,9 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 	CursorLoader getStockDataCursorLoader(String period) {
 		String selection = DatabaseContract.SELECTION_STOCK_PERIOD(mStock.getSE(), mStock.getCode(), period);
 		String sortOrder = DatabaseContract.ORDER_DATE_TIME_ASC;
+		if (Period.isMinutePeriod(period) && mStock.hasFlag(Stock.FLAG_TRADE) && !TextUtils.isEmpty(mStock.getWindow())) {
+			selection = DatabaseContract.SELECTION_STOCK_PERIOD_DATE_NOT_BEFORE(mStock.getSE(), mStock.getCode(), period, mStock.getWindow());
+		}
 		return new CursorLoader(this, DatabaseContract.StockData.CONTENT_URI,
 				DatabaseContract.StockData.PROJECTION_ALL, selection, null,
 				sortOrder);

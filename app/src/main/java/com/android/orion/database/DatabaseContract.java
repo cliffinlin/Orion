@@ -197,6 +197,22 @@ public class DatabaseContract {
 		return COLUMN_DATE + " = " + "'" + value + "'";
 	}
 
+	public static final String SELECTION_DATE_AFTER(String date) {
+		return COLUMN_DATE + " > '" + date + "'";
+	}
+
+	public static final String SELECTION_DATE_BEFORE(String date) {
+		return COLUMN_DATE + " < '" + date + "'";
+	}
+
+	public static final String SELECTION_DATE_NOT_AFTER(String date) {
+		return COLUMN_DATE + " <= '" + date + "'";
+	}
+
+	public static final String SELECTION_DATE_NOT_BEFORE(String date) {
+		return COLUMN_DATE + " >= '" + date + "'";
+	}
+
 	public static final String SELECTION_FLAG(String key, int value) {
 		return " (" + key + " & " + value + ") = " + value;
 	}
@@ -257,6 +273,12 @@ public class DatabaseContract {
 		return SELECTION_STOCK(se, code)
 				+ " AND " + SELECTION_PERIOD(period)
 				+ " AND " + SELECTION_DATE(date);
+	}
+
+	public static final String SELECTION_STOCK_PERIOD_DATE_NOT_BEFORE(String se, String code, String period, String date) {
+		return SELECTION_STOCK(se, code)
+				+ " AND " + SELECTION_PERIOD(period)
+				+ " AND " + SELECTION_DATE_NOT_BEFORE(date);
 	}
 
 	public static final String SELECTION_STOCK_PERIOD_DATE_TIME(String se, String code, String period, String date, String time) {

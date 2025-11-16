@@ -18,7 +18,6 @@ import com.android.orion.utility.Utility;
 import java.util.ArrayList;
 
 public class FinancialAnalyzer {
-	ArrayList<StockData> mStockDataList;
 	ArrayList<StockFinancial> mStockFinancialList;
 	ArrayList<StockShare> mStockShareList;
 	ArrayList<StockBonus> mStockBonusList;
@@ -38,15 +37,6 @@ public class FinancialAnalyzer {
 
 		if (stock == null || TextUtils.equals(stock.getClasses(), Stock.CLASS_INDEX)) {
 			return;
-		}
-
-		for (int i = Period.indexOf(Period.MONTH); i < Period.PERIODS.length; i++) {
-			String period = Period.PERIODS[i];
-			mStockDataList = stock.getStockDataList(period, StockTrend.LEVEL_NONE);
-			mStockDatabaseManager.loadStockDataList(stock, period, mStockDataList);
-			if (mStockDataList.size() > 0) {
-				break;
-			}
 		}
 
 		mStockFinancialList = stock.getFinancialList();
