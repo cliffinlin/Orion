@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,6 +69,13 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 	Button mButtonOk;
 	Button mButtonCancel;
 
+	LinearLayout mLayoutTradeLevelPickers;
+	LinearLayout mLayoutDayPicker;
+	LinearLayout mLayoutMin60Picker;
+	LinearLayout mLayoutMin30Picker;
+	LinearLayout mLayoutMin15Picker;
+	LinearLayout mLayoutMin5Picker;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -109,6 +117,13 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mImageViewMin5Target = findViewById(R.id.imageview_min5_target);
 		mButtonOk = findViewById(R.id.button_ok);
 		mButtonCancel = findViewById(R.id.button_cancel);
+
+		mLayoutTradeLevelPickers = findViewById(R.id.layout_trade_level_pickers);
+		mLayoutDayPicker = findViewById(R.id.layout_day_picker);
+		mLayoutMin60Picker = findViewById(R.id.layout_min60_picker);
+		mLayoutMin30Picker = findViewById(R.id.layout_min30_picker);
+		mLayoutMin15Picker = findViewById(R.id.layout_min15_picker);
+		mLayoutMin5Picker = findViewById(R.id.layout_min5_picker);
 
 		mCheckBoxTrade.setOnClickListener(this);
 		mCheckBoxCustom.setOnClickListener(this);
@@ -295,6 +310,24 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		updateTargetImageView(Period.MIN30, mImageViewMin30Target);
 		updateTargetImageView(Period.MIN15, mImageViewMin15Target);
 		updateTargetImageView(Period.MIN5, mImageViewMin5Target);
+
+		updateLevelPickerVisibility();
+	}
+
+
+	private void updateLevelPickerVisibility() {
+		mLayoutDayPicker.setVisibility(Setting.getPeriod(Period.DAY) ? View.VISIBLE : View.GONE);
+		mLayoutMin60Picker.setVisibility(Setting.getPeriod(Period.MIN60) ? View.VISIBLE : View.GONE);
+		mLayoutMin30Picker.setVisibility(Setting.getPeriod(Period.MIN30) ? View.VISIBLE : View.GONE);
+		mLayoutMin15Picker.setVisibility(Setting.getPeriod(Period.MIN15) ? View.VISIBLE : View.GONE);
+		mLayoutMin5Picker.setVisibility(Setting.getPeriod(Period.MIN5) ? View.VISIBLE : View.GONE);
+
+		boolean hasVisiblePeriod = Setting.getPeriod(Period.DAY) ||
+				Setting.getPeriod(Period.MIN60) ||
+				Setting.getPeriod(Period.MIN30) ||
+				Setting.getPeriod(Period.MIN15) ||
+				Setting.getPeriod(Period.MIN5);
+		mLayoutTradeLevelPickers.setVisibility(hasVisiblePeriod ? View.VISIBLE : View.GONE);
 	}
 
 	void setNetTextView(TextView textView, double nextNet) {
@@ -402,9 +435,7 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 				}
 
 				String stockWindow = mEditTextStockWindow.getText().toString();
-				if (!stockWindow.isEmpty()) {
-					mStock.setWindow(stockWindow);
-				}
+				mStock.setWindow(stockWindow);
 
 				if (TextUtils.equals(mAction, Constant.ACTION_FAVORITE_STOCK_INSERT)) {
 					if (!mStockDatabaseManager.isStockExist(mStock)) {
@@ -517,7 +548,6 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 	private void showDatePicker() {
 		Calendar calendar = Calendar.getInstance();
 
-		// 尝试解析编辑框中已有的日期
 		String currentDateStr = mEditTextStockWindow.getText().toString();
 		if (!TextUtils.isEmpty(currentDateStr)) {
 			try {
@@ -528,7 +558,6 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
-				// 如果解析失败，继续使用当前日期
 			}
 		}
 

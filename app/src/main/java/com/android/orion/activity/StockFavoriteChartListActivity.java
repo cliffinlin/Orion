@@ -30,7 +30,6 @@ import com.android.orion.database.StockData;
 import com.android.orion.database.StockTrend;
 import com.android.orion.constant.Constant;
 import com.android.orion.setting.Setting;
-import com.android.orion.utility.Utility;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.XAxis.XAxisPosition;
@@ -483,6 +482,13 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 
 					for (int i = StockTrend.LEVEL_DRAW; i < StockTrend.LEVELS.length; i++) {
 						updateTrendEntryList(stockDataChart, i, index);
+					}
+
+					if (mStockData.getPeriod().equals(Period.DAY)) {
+						if (mStock.hasFlag(Stock.FLAG_TRADE) && TextUtils.equals(mStock.getWindow(), mStockData.getDate())) {
+							Entry entry = new Entry((float) mStockData.getCandle().getLow(), index);
+							stockDataChart.mWindowEntryList.add(entry);
+						}
 					}
 
 					Entry difEntry = new Entry((float) mStockData.getMacd().getDIF(), index);

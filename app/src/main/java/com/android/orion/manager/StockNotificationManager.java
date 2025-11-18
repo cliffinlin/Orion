@@ -68,15 +68,15 @@ public class StockNotificationManager {
 			return;
 		}
 
+		if (radar.vertex == StockTrend.VERTEX_NONE) {
+			return;
+		}
+
 		if (!stock.hasFlag(Stock.FLAG_TRADE)) {
 			return;
 		}
 
-		if (!TextUtils.equals(period, Period.MIN5)) {
-			return;
-		}
-
-		if (radar.vertex == StockTrend.VERTEX_NONE) {
+		if (!Period.isMinutePeriod(period)) {
 			return;
 		}
 

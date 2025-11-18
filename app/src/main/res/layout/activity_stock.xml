@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -122,6 +121,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/layout_trade_level_pickers"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -130,6 +130,7 @@
 
             <!-- Day Picker -->
             <LinearLayout
+                android:id="@+id/layout_day_picker"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -168,6 +169,7 @@
 
             <!-- Min60 Picker -->
             <LinearLayout
+                android:id="@+id/layout_min60_picker"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -206,6 +208,7 @@
 
             <!-- Min30 Picker -->
             <LinearLayout
+                android:id="@+id/layout_min30_picker"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -244,6 +247,7 @@
 
             <!-- Min15 Picker -->
             <LinearLayout
+                android:id="@+id/layout_min15_picker"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -282,6 +286,7 @@
 
             <!-- Min5 Picker -->
             <LinearLayout
+                android:id="@+id/layout_min5_picker"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -344,7 +349,7 @@
                     android:layout_marginLeft="18dp"
                     android:layout_marginRight="14dp"
                     android:layout_marginBottom="14dp"
-                    android:focusable="false"
+                    android:focusable="true"
                     android:clickable="true"
                     android:inputType="text" />
             </LinearLayout>

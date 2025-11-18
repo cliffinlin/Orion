@@ -135,7 +135,6 @@ public class StockAnalyzer {
 			ArrayList<Double> radarList = FourierAnalyzer.getRadarList();
 			Radar radar = FourierAnalyzer.getRadar();
 			mStock.setRadar(period, radar);
-			StockNotificationManager.getInstance().notify(mStock, period, radar);
 
 			for (int i = 0; i < size; i++) {
 				StockData stockData = mStockDataList.get(i);

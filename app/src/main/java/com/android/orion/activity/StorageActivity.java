@@ -416,7 +416,9 @@ public class StorageActivity extends DatabaseActivity {
 				xmlSerializer.startTag(null, XML_TAG_STOCK_TRADE);
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_LEVEL, stock.getLevel());
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_TARGET, stock.getTarget());
-				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_WINDOW, stock.getWindow());
+				if (!TextUtils.isEmpty(stock.getWindow())) {
+					xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_WINDOW, stock.getWindow());
+				}
 				count++;
 				xmlSerializer.endTag(null, XML_TAG_STOCK_TRADE);
 			} catch (Exception e) {

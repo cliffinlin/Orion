@@ -23,7 +23,6 @@ public class Config {
 	public static final int COLOR_HISTOGRAM = Color.RED;
 	public static final int COLOR_DIF = Color.YELLOW;
 	public static final int COLOR_DEA = Color.WHITE;
-	public static final int COLOR_DARK_GREEN = Color.rgb(0, 192, 0);
 
 	public static final int DOWNLOAD_HISTORY_LENGTH_UNLIMITED = -1;
 	public static final int DOWNLOAD_HISTORY_LENGTH_NONE = 0;

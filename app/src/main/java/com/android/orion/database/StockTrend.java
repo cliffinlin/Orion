@@ -75,8 +75,8 @@ public class StockTrend extends DatabaseTable {
 			LEVEL_OUT_LINE, LEVEL_SUPER_LINE, LEVEL_TREND_LINE};
 
 	public static final int[] COLORS = {
-			Color.WHITE, Color.GRAY, Color.BLACK, Color.RED,
-			Config.COLOR_DARK_GREEN, Color.BLUE, Color.MAGENTA, Color.CYAN};
+			Color.TRANSPARENT, Color.GRAY, Color.BLACK, Color.RED,
+			Color.BLUE, Color.MAGENTA, Color.CYAN, Color.WHITE};
 
 	public static final String[] TYPES = {
 			TYPE_UP_NONE_UP, TYPE_UP_NONE_DOWN, TYPE_UP_NONE,

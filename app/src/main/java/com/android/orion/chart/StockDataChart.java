@@ -12,6 +12,7 @@ import com.android.orion.database.StockTrend;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Symbol;
 import com.android.orion.utility.Utility;
+import com.github.mikephil.charting.charts.ScatterChart;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.LimitLine.LimitLabelPosition;
 import com.github.mikephil.charting.components.YAxis;
@@ -26,6 +27,8 @@ import com.github.mikephil.charting.data.CombinedData;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.data.ScatterData;
+import com.github.mikephil.charting.data.ScatterDataSet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +46,7 @@ public class StockDataChart {
 	public ArrayList<Integer> mDrawVertexList = new ArrayList<>();
 	public ArrayList<Entry> mExtendFirstEntryList = new ArrayList<>();
 	public ArrayList<Entry> mExtendLastEntryList = new ArrayList<>();
+	public ArrayList<Entry> mWindowEntryList = new ArrayList<>();
 	public ArrayList<LimitLine> mLimitLineList = new ArrayList<>();
 	public ArrayList<Entry> mDIFEntryList = new ArrayList<>();
 	public ArrayList<Entry> mDEAEntryList = new ArrayList<>();
@@ -163,6 +167,15 @@ public class StockDataChart {
 		}
 
 		mCombinedDataMain.setData(lineData);
+
+		if (mWindowEntryList.size() > 0) {
+			ScatterData scatterData = new ScatterData(mXValues);
+			ScatterDataSet scatterDataSet = new ScatterDataSet(mWindowEntryList, "window");
+			scatterDataSet.setScatterShape(ScatterChart.ScatterShape.CIRCLE);
+			scatterDataSet.setColor(Color.BLUE);
+			scatterData.addDataSet(scatterDataSet);
+			mCombinedDataMain.setData(scatterData);
+		}
 	}
 
 	public void setSubChartData() {
@@ -510,6 +523,7 @@ public class StockDataChart {
 		mExtendLastEntryList.clear();
 		mAverage5EntryList.clear();
 		mAverage10EntryList.clear();
+		mWindowEntryList.clear();
 		mDIFEntryList.clear();
 		mDEAEntryList.clear();
 		mHistogramEntryList.clear();
