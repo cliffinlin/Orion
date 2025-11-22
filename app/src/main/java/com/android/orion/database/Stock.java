@@ -81,7 +81,9 @@ public class Stock extends DatabaseTable {
 	private double mPb;
 	private double mPr;
 	private long mQuota;
+	private double mQuotaEst;
 	private long mTrading;
+	private double mTradingCost;
 	private long mHold;
 	private double mProfit;
 	private double mBonus;
@@ -141,7 +143,9 @@ public class Stock extends DatabaseTable {
 
 		mFlag = 0;
 		mQuota = 0;
+		mQuotaEst = 0;
 		mTrading = 0;
+		mTradingCost = 0;
 		mHold = 0;
 
 		reset();
@@ -229,7 +233,9 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_PR, mPr);
 
 		contentValues.put(DatabaseContract.COLUMN_QUOTA, mQuota);
+		contentValues.put(DatabaseContract.COLUMN_QUOTA_EST, mQuotaEst);
 		contentValues.put(DatabaseContract.COLUMN_TRADING, mTrading);
+		contentValues.put(DatabaseContract.COLUMN_TRADING_COST, mTradingCost);
 		contentValues.put(DatabaseContract.COLUMN_HOLD, mHold);
 		contentValues.put(DatabaseContract.COLUMN_PROFIT, mProfit);
 		contentValues.put(DatabaseContract.COLUMN_BONUS, mBonus);
@@ -343,7 +349,9 @@ public class Stock extends DatabaseTable {
 		setPb(stock.mPb);
 		setPr(stock.mPr);
 		setQuota(stock.mQuota);
+		setQuotaEst(stock.mQuotaEst);
 		setTrading(stock.mTrading);
+		setTradingCost(stock.mTradingCost);
 		setHold(stock.mHold);
 		setProfit(stock.mProfit);
 		setBonus(stock.mBonus);
@@ -417,7 +425,9 @@ public class Stock extends DatabaseTable {
 		setPb(cursor);
 		setPr(cursor);
 		setQuota(cursor);
+		setQuotaEst(cursor);
 		setTrading(cursor);
+		setTradingCost(cursor);
 		setHold(cursor);
 		setProfit(cursor);
 		setBonus(cursor);
@@ -682,6 +692,23 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_QUOTA)));
 	}
 
+	public double getQuotaEst() {
+		return mQuotaEst;
+	}
+
+	public void setQuotaEst(double quotaEst) {
+		mQuotaEst = quotaEst;
+	}
+
+	void setQuotaEst(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setQuotaEst(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_QUOTA_EST)));
+	}
+
 	public long getTrading() {
 		return mTrading;
 	}
@@ -697,6 +724,23 @@ public class Stock extends DatabaseTable {
 
 		setTrading(cursor.getLong(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_TRADING)));
+	}
+
+	public double getTradingCost() {
+		return mTradingCost;
+	}
+
+	public void setTradingCost(double tradingCost) {
+		mTradingCost = tradingCost;
+	}
+
+	void setTradingCost(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setTradingCost(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_TRADING_COST)));
 	}
 
 	public long getHold() {

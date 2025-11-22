@@ -46,7 +46,9 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 	EditText mEditTextStockCode;
 	EditText mEditTextStockWindow;
 	EditText mEditTextStockQuota;
+	EditText mEditTextStockQuotaEst;
 	EditText mEditTextStockTrading;
+	EditText mEditTextStockTradingCost;
 	EditText mEditTextStockHold;
 	EditText mEditTextStockYield;
 	EditText mEditTextStockHoldA;
@@ -97,7 +99,9 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		mEditTextStockCode = findViewById(R.id.edittext_stock_code);
 		mEditTextStockWindow = findViewById(R.id.edittext_stock_window);
 		mEditTextStockQuota = findViewById(R.id.edittext_stock_quota);
+		mEditTextStockQuotaEst = findViewById(R.id.edittext_stock_quota_est);
 		mEditTextStockTrading = findViewById(R.id.edittext_stock_trading);
+		mEditTextStockTradingCost = findViewById(R.id.edittext_stock_trading_cost);
 		mEditTextStockHold = findViewById(R.id.edittext_stock_hold);
 		mEditTextStockYield = findViewById(R.id.edittext_stock_yield);
 		mEditTextStockHoldA = findViewById(R.id.edittext_stock_hold_a);
@@ -135,7 +139,9 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		mEditTextStockCode.setOnClickListener(this);
 		mEditTextStockWindow.setOnClickListener(this);
 		mEditTextStockQuota.setOnClickListener(this);
+		mEditTextStockQuotaEst.setOnClickListener(this);
 		mEditTextStockTrading.setOnClickListener(this);
+		mEditTextStockTradingCost.setOnClickListener(this);
 		mEditTextStockHold.setOnClickListener(this);
 		mEditTextStockYield.setOnClickListener(this);
 		mTextViewSeUrl.setOnClickListener(this);
@@ -272,7 +278,9 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		mEditTextStockCode.setText(mStock.getCode());
 		mEditTextStockWindow.setText(mStock.getWindow());
 		mEditTextStockQuota.setText(String.valueOf(mStock.getQuota()));
+		mEditTextStockQuotaEst.setText(String.valueOf(mStock.getQuota() * mStock.getPrice()));
 		mEditTextStockTrading.setText(String.valueOf(mStock.getTrading()));
+		mEditTextStockTradingCost.setText(String.valueOf(mStock.getTradingCost()));
 		mEditTextStockHold.setText(String.valueOf(mStock.getHold()));
 		mEditTextStockYield.setText(String.valueOf(mStock.getYield()));
 		mTextViewSeUrl.setText(mStock.getSeUrl());
