@@ -164,6 +164,7 @@
     <string name="pull_to_refresh_tap_label">Tap to refresh...</string>
     <string name="r_date">RDate</string>
     <string name="quota">Quota</string>
+    <string name="quota_limit">The quota has reached its limit!</string>
     <string name="radar">Radar</string>
     <string name="rate">Rate</string>
     <string name="refresh">Refresh</string>

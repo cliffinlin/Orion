@@ -27,6 +27,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -260,6 +261,10 @@ public class StockDealListActivity extends ListActivity implements
 	public void handleOnOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_new:
+				if (mStock.getQuota() > 0 && mStock.getTrading() >= mStock.getQuota()) {
+					Toast.makeText(this, R.string.quota_limit, Toast.LENGTH_SHORT).show();
+					return;
+				}
 				mIntent = new Intent(this, StockDealActivity.class);
 				mIntent.setAction(Constant.ACTION_DEAL_INSERT);
 				if (mBundle != null) {
@@ -596,6 +601,9 @@ public class StockDealListActivity extends ListActivity implements
 	protected void onResume() {
 		super.onResume();
 		restartLoader();
+		if (mStock.getQuota() > 0 && mStock.getTrading() >= mStock.getQuota()) {
+			Toast.makeText(this, R.string.quota_limit, Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	@Override
@@ -644,6 +652,7 @@ public class StockDealListActivity extends ListActivity implements
 
 			mStock.setSE(se);
 			mStock.setCode(code);
+			mStockDatabaseManager.getStock(mStock);
 
 			mSelection = DatabaseContract.SELECTION_STOCK(se, code);
 			if (!TextUtils.isEmpty(typeSelection)) {
