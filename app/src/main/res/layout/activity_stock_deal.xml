@@ -127,7 +127,7 @@
                 android:layout_marginLeft="18dp"
                 android:layout_marginRight="14dp"
                 android:layout_marginBottom="14dp"
-                android:focusable="false"
+                android:focusable="true"
                 android:clickable="true"
                 android:inputType="text" />
         </LinearLayout>
