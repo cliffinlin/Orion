@@ -190,6 +190,21 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 			}
 		});
 
+		mEditTextStockQuota.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				updateQuotaEstimation();
+			}
+		});
+
 		if (TextUtils.equals(mAction, Constant.ACTION_FAVORITE_STOCK_INSERT)) {
 			setTitle(R.string.stock_insert);
 			mStock.addFlag(Stock.FLAG_FAVORITE);
@@ -207,6 +222,23 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 				mEditTextStockHoldB.setText(String.valueOf(mHoldB));
 			}
 			mStockDatabaseManager.getStockTrendMap(mStock, mStock.getStockTrendMap());
+		}
+	}
+
+	private void updateQuotaEstimation() {
+		try {
+			String quotaText = mEditTextStockQuota.getText().toString();
+			if (!TextUtils.isEmpty(quotaText)) {
+				long quota = Long.parseLong(quotaText);
+				double price = mStock.getPrice();
+				double estimatedValue = quota * price;
+
+				mEditTextStockQuotaEst.setText(String.format(Locale.getDefault(), "%.2f", estimatedValue));
+			} else {
+				mEditTextStockQuotaEst.setText("");
+			}
+		} catch (Exception e) {
+			mEditTextStockQuotaEst.setText("");
 		}
 	}
 
@@ -278,13 +310,14 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		mEditTextStockCode.setText(mStock.getCode());
 		mEditTextStockWindow.setText(mStock.getWindow());
 		mEditTextStockQuota.setText(String.valueOf(mStock.getQuota()));
-		mEditTextStockQuotaEst.setText(String.valueOf(mStock.getQuota() * mStock.getPrice()));
 		mEditTextStockTrading.setText(String.valueOf(mStock.getTrading()));
 		mEditTextStockTradingCost.setText(String.valueOf(mStock.getTradingCost()));
 		mEditTextStockHold.setText(String.valueOf(mStock.getHold()));
 		mEditTextStockYield.setText(String.valueOf(mStock.getYield()));
 		mTextViewSeUrl.setText(mStock.getSeUrl());
 		mTextViewSeUrl.setPaintFlags(mTextViewSeUrl.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
+		updateQuotaEstimation();
 
 		boolean custom = mStock.hasFlag(Stock.FLAG_CUSTOM);
 		mTradeLevelPickerDay.setEnabled(custom);
@@ -325,7 +358,6 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 
 		updateLevelPickerVisibility();
 	}
-
 
 	private void updateLevelPickerVisibility() {
 		mLayoutDayPicker.setVisibility(Setting.getPeriod(Period.DAY) ? View.VISIBLE : View.GONE);
