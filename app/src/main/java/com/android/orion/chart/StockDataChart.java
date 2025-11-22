@@ -256,19 +256,12 @@ public class StockDataChart {
 		return result;
 	}
 
-
 	int fillColor(int level) {
-		if (level < 0 || level >= StockTrend.COLORS.length) {
-			return StockTrend.COLORS[0];
-		}
-		return StockTrend.COLORS[level];
+		return StockTrend.getColor(level);
 	}
 
 	int lineColor(int level) {
-		if (level < 0 || level >= StockTrend.COLORS.length) {
-			return StockTrend.COLORS[0];
-		}
-		return StockTrend.COLORS[level];
+		return StockTrend.getColor(level);
 	}
 
 	public boolean displayTrend(int level) {

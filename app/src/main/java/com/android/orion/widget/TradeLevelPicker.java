@@ -1,4 +1,4 @@
-package com.android.orion.chart;
+package com.android.orion.widget;
 
 import android.content.Context;
 import android.graphics.Color;

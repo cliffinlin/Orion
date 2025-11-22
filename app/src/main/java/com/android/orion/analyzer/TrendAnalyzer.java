@@ -525,7 +525,24 @@ public class TrendAnalyzer {
 
 	public void analyzeAdaptive(Stock stock) {
 		setup(stock);
+		try {
+			setupTradeLevel();
+			for (String period : Period.PERIODS) {
+				if (Setting.getPeriod(period)) {
+					setupPeriodThumbnail(period);
+				}
+			}
+			setupTrendThumbnail();
+			setupRadarThumbnail();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
+	void setupTradeLevel() {
+		if (mStock.hasFlag(Stock.FLAG_CUSTOM)) {
+			return;
+		}
 		for (String period : Period.PERIODS) {
 			if (Setting.getPeriod(period)) {
 				for (int i = StockTrend.LEVEL_DRAW; i < StockTrend.LEVELS.length; i++) {
@@ -540,22 +557,11 @@ public class TrendAnalyzer {
 			return;
 		}
 
-		try {
-			KMeansPlusPlusClusterer<DataPoint> clusterer = new KMeansPlusPlusClusterer<>(mKMeansK, MAX_ITERATION);
-			List<CentroidCluster<DataPoint>> clusterList = clusterer.cluster(mDataPointList);
-			mClusterList = sortClusterList(clusterList);
-			setupGroupDistance();
-			analyzeTradeLevel();
-			for (String period : Period.PERIODS) {
-				if (Setting.getPeriod(period)) {
-					setupPeriodThumbnail(period);
-				}
-			}
-			setupTrendThumbnail();
-			setupRadarThumbnail();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		KMeansPlusPlusClusterer<DataPoint> clusterer = new KMeansPlusPlusClusterer<>(mKMeansK, MAX_ITERATION);
+		List<CentroidCluster<DataPoint>> clusterList = clusterer.cluster(mDataPointList);
+		mClusterList = sortClusterList(clusterList);
+		setupGroupDistance();
+		analyzeTradeLevel();
 	}
 
 	DataPoint newDataPoint(String period, int level, ArrayList<StockData> vertexList) {
@@ -715,14 +721,7 @@ public class TrendAnalyzer {
 						continue;//TODO get average level
 					}
 
-					if (mStock.hasFlag(Stock.FLAG_CUSTOM)) {
-						dataPoint = mAllDataPointMap.get(period + Symbol.L + mStock.getLevel(period));
-						if (dataPoint == null) {
-							continue;
-						}
-					} else {
-						mStock.setLevel(period, dataPoint.level);
-					}
+					mStock.setLevel(period, dataPoint.level);
 					builder.append(dataPoint);
 
 					StockTrend stockTrend = mStock.getStockTrend(period, mStock.getLevel(period));
@@ -834,7 +833,10 @@ public class TrendAnalyzer {
 		}
 
 		int i = 0;
-		int color;
+		int axisColor;
+		float axisWidth = 8f * THUMBNAIL_STROKE_WIDTH;
+		int barColor;
+		float barWidth;
 
 		float totalWidth = THUMBNAIL_WIDTH;
 		float segmentWidth = totalWidth / mKMeansPeriods;
@@ -869,24 +871,27 @@ public class TrendAnalyzer {
 				yValuesBar.add(centerY);
 				yValuesBar.add(centerY + (float) mStock.getStockTrend(period, mStock.getLevel(period)).getNextNet());
 
-				if (TextUtils.equals(mStock.getTrend(period), Symbol.ADD)) {
-					color = Color.RED;
-				} else if (TextUtils.equals(mStock.getTrend(period), Symbol.MINUS)) {
-					color = Color.GREEN;
-				} else {
-					color = Color.BLACK;
-				}
-
 				int level = mStock.getLevel(period);
 				int target = mStock.getTarget(period);
-				float axisWidth = Math.max(1, 1f * THUMBNAIL_STROKE_WIDTH);
-				if (target > StockTrend.LEVEL_NONE && target == level) {
-					axisWidth = Math.max(1, 10f * THUMBNAIL_STROKE_WIDTH);
+
+				if (TextUtils.equals(mStock.getTrend(period), Symbol.ADD)) {
+					barColor = Color.RED;
+				} else if (TextUtils.equals(mStock.getTrend(period), Symbol.MINUS)) {
+					barColor = Color.GREEN;
+				} else {
+					barColor = Color.BLACK;
 				}
-				mLineConfigList.add(new CurveThumbnail.LineConfig(xValuesAxis, yValuesAxis, color, axisWidth));
-				float barWidth = Math.max(1, 3f * level * THUMBNAIL_STROKE_WIDTH);
+
+				if (target > StockTrend.LEVEL_NONE && target == level) {
+					barWidth = 12f * THUMBNAIL_STROKE_WIDTH;
+				} else {
+					barWidth = 4f * THUMBNAIL_STROKE_WIDTH;
+				}
 				mLineConfigList.add(new CurveThumbnail.LineConfig(xValuesPredict, yValuesPredict, Color.GRAY, barWidth));
-				mLineConfigList.add(new CurveThumbnail.LineConfig(xValuesBar, yValuesBar, color, barWidth));
+				mLineConfigList.add(new CurveThumbnail.LineConfig(xValuesBar, yValuesBar, barColor, barWidth));
+
+				axisColor = StockTrend.getColor(level);
+				mLineConfigList.add(new CurveThumbnail.LineConfig(xValuesAxis, yValuesAxis, axisColor, axisWidth));
 				i++;
 			}
 		}

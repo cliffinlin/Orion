@@ -123,6 +123,13 @@ public class StockTrend extends DatabaseTable {
 		set(cursor);
 	}
 
+	public static int getColor(int level) {
+		if (level < 0 || level >= StockTrend.COLORS.length) {
+			return StockTrend.COLORS[0];
+		}
+		return StockTrend.COLORS[level];
+	}
+
 	public static int getVertexTOP(int level) {
 		int vertexTop = StockTrend.VERTEX_NONE;
 		switch (level) {

@@ -17,6 +17,7 @@ import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;
 import com.android.orion.constant.Constant;
+import com.android.orion.setting.Setting;
 import com.android.orion.utility.Utility;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -56,6 +57,26 @@ public class StorageActivity extends DatabaseActivity {
 
 	Uri mUri = null;
 	ArrayList<Uri> mUriList = new ArrayList<>();
+
+	void importTDXDataFile(Stock stock) {
+		if (stock == null) {
+			return;
+		}
+
+		String uriString = Setting.getTdxDataFileUri(stock);
+		if (TextUtils.isEmpty(uriString)) {
+			return;
+		}
+
+		Uri uri = Uri.parse(uriString);
+		if (uri == null) {
+			return;
+		}
+
+		mUriList.clear();
+		mUriList.add(uri);
+		mBackgroundHandler.importTDXDataFile(mUriList);
+	}
 
 	void performLoadFromFile(int type, boolean allowMultiple) {
 		Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);

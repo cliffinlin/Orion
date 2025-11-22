@@ -22,7 +22,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.android.orion.R;
-import com.android.orion.chart.TradeLevelPicker;
+import com.android.orion.widget.TradeLevelPicker;
 import com.android.orion.data.Period;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
@@ -36,7 +36,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class StockActivity extends DatabaseActivity implements OnClickListener {
+public class StockActivity extends StorageActivity implements OnClickListener {
 
 	long mHoldA = 0;
 	long mHoldB = 0;
@@ -45,6 +45,8 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 	EditText mEditTextStockName;
 	EditText mEditTextStockCode;
 	EditText mEditTextStockWindow;
+	EditText mEditTextStockQuota;
+	EditText mEditTextStockTrading;
 	EditText mEditTextStockHold;
 	EditText mEditTextStockYield;
 	EditText mEditTextStockHoldA;
@@ -94,6 +96,8 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mEditTextStockName = findViewById(R.id.edittext_stock_name);
 		mEditTextStockCode = findViewById(R.id.edittext_stock_code);
 		mEditTextStockWindow = findViewById(R.id.edittext_stock_window);
+		mEditTextStockQuota = findViewById(R.id.edittext_stock_quota);
+		mEditTextStockTrading = findViewById(R.id.edittext_stock_trading);
 		mEditTextStockHold = findViewById(R.id.edittext_stock_hold);
 		mEditTextStockYield = findViewById(R.id.edittext_stock_yield);
 		mEditTextStockHoldA = findViewById(R.id.edittext_stock_hold_a);
@@ -130,6 +134,8 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mEditTextStockName.setOnClickListener(this);
 		mEditTextStockCode.setOnClickListener(this);
 		mEditTextStockWindow.setOnClickListener(this);
+		mEditTextStockQuota.setOnClickListener(this);
+		mEditTextStockTrading.setOnClickListener(this);
 		mEditTextStockHold.setOnClickListener(this);
 		mEditTextStockYield.setOnClickListener(this);
 		mTextViewSeUrl.setOnClickListener(this);
@@ -184,10 +190,6 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		} else if (TextUtils.equals(mAction, Constant.ACTION_STOCK_EDIT)) {
 			setTitle(R.string.stock_edit);
 			mEditTextStockCode.setEnabled(false);
-			mEditTextStockHold.setEnabled(false);
-			mEditTextStockYield.setEnabled(false);
-			mEditTextStockHoldA.setEnabled(false);
-			mEditTextStockHoldB.setEnabled(false);
 			mStock.setId(mIntent.getLongExtra(Constant.EXTRA_STOCK_ID,
 					DatabaseContract.INVALID_ID));
 			mStockDatabaseManager.getStockById(mStock);
@@ -269,6 +271,8 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 		mEditTextStockName.setText(mStock.getName());
 		mEditTextStockCode.setText(mStock.getCode());
 		mEditTextStockWindow.setText(mStock.getWindow());
+		mEditTextStockQuota.setText(String.valueOf(mStock.getQuota()));
+		mEditTextStockTrading.setText(String.valueOf(mStock.getTrading()));
 		mEditTextStockHold.setText(String.valueOf(mStock.getHold()));
 		mEditTextStockYield.setText(String.valueOf(mStock.getYield()));
 		mTextViewSeUrl.setText(mStock.getSeUrl());
@@ -436,6 +440,14 @@ public class StockActivity extends DatabaseActivity implements OnClickListener {
 
 				String stockWindow = mEditTextStockWindow.getText().toString();
 				mStock.setWindow(stockWindow);
+				if (!TextUtils.isEmpty(stockWindow)) {
+					importTDXDataFile(mStock);
+				}
+
+				String stockQuota = mEditTextStockQuota.getText().toString();
+				if (!TextUtils.isEmpty(stockQuota)) {
+					mStock.setQuota(Long.parseLong(stockQuota));
+				}
 
 				if (TextUtils.equals(mAction, Constant.ACTION_FAVORITE_STOCK_INSERT)) {
 					if (!mStockDatabaseManager.isStockExist(mStock)) {
