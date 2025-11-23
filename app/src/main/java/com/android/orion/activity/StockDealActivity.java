@@ -382,7 +382,6 @@ public class StockDealActivity extends DatabaseActivity implements
 				String dealDate = mEditTextDealDate.getText().toString();
 				if (TextUtils.isEmpty(dealDate)) {
 					Toast.makeText(mContext, R.string.stock_deal_date_empty, Toast.LENGTH_LONG).show();
-//					return;
 				}
 				mDeal.setDate(dealDate);
 
