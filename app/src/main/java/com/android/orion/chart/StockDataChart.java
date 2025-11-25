@@ -10,6 +10,7 @@ import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;
 import com.android.orion.database.StockTrend;
 import com.android.orion.setting.Setting;
+import com.android.orion.utility.Logger;
 import com.android.orion.utility.Symbol;
 import com.android.orion.utility.Utility;
 import com.github.mikephil.charting.charts.ScatterChart;
@@ -35,8 +36,10 @@ import java.util.List;
 
 public class StockDataChart {
 
-	public static final int NONE_CIRCLE_SIZE = 0;
-	public static final int TREND_CIRCLE_SIZE = 3;
+	public static final float CIRCLE_SIZE_NONE = 0;
+	public static final float CIRCLE_SIZE_TREND = 3f;
+	public static final float LINE_WIDTH_NORMAL = 1f;
+	public static final float LINE_WIDTH_HIGHLIGHT = 1.5f;
 
 	public StringBuffer mDescription = new StringBuffer();
 	public ArrayList<String> mXValues = new ArrayList<>();
@@ -57,15 +60,19 @@ public class StockDataChart {
 	public CombinedData mCombinedDataMain = new CombinedData(mXValues);
 	public CombinedData mCombinedDataSub = new CombinedData(mXValues);
 
+	Logger Log = Logger.getLogger();
+
 	Stock mStock;
 	String mPeriod;
 	int mAdaptiveLevel;
+	int mTargetLevel;
 	ArrayMap<String, StockTrend> mStockTrendMap;
 
 	public StockDataChart(Stock stock, String period) {
 		mStock = stock;
 		mPeriod = period;
 		mAdaptiveLevel = mStock.getLevel(period);
+		mTargetLevel = mStock.getTarget(period);
 
 		for (int i = 0; i < StockTrend.LEVELS.length; i++) {
 			if (mTrendEntryList[i] == null) {
@@ -89,6 +96,7 @@ public class StockDataChart {
 		mStock = stock;
 		mPeriod = period;
 		mAdaptiveLevel = mStock.getLevel(period);
+		mTargetLevel = mStock.getTarget(period);
 		mStockTrendMap = stockTrendMap;
 	}
 
@@ -133,8 +141,8 @@ public class StockDataChart {
 		if (displayTrend(StockTrend.LEVEL_DRAW)) {
 			addLineDataSet(mChangedEntryList, StockTrend.LEVEL_DRAW, lineData, fillChanged(StockTrend.LEVEL_DRAW), fillColor(StockTrend.LEVEL_DRAW));
 		}
-		addLineDataSet(mExtendFirstEntryList, StockTrend.LABEL_NONE, lineColor(StockTrend.LEVEL_DRAW), false, lineData, false, 0);
-		addLineDataSet(mExtendLastEntryList, StockTrend.LABEL_NONE, lineColor(StockTrend.LEVEL_DRAW), false, lineData, false, 0);
+		addLineDataSet(mExtendFirstEntryList, StockTrend.LABEL_NONE, StockTrend.LEVEL_DRAW, false, lineData, false, 0);
+		addLineDataSet(mExtendLastEntryList, StockTrend.LABEL_NONE, StockTrend.LEVEL_DRAW, false, lineData, false, 0);
 
 		if (displayTrend(StockTrend.LEVEL_STROKE)) {
 			addLineDataSet(mTrendEntryList, StockTrend.LABEL_STROKE, StockTrend.LEVEL_STROKE, lineData);
@@ -219,27 +227,32 @@ public class StockDataChart {
 		if (entryList == null || entryList[level] == null || entryList[level].size() == 0) {
 			return;
 		}
-		addLineDataSet(entryList[level], label, lineColor(level), false, lineData, false, 0);
+		addLineDataSet(entryList[level], label, level, false, lineData, false, 0);
 	}
 
 	void addLineDataSet(List<Entry>[] entryList, int level, LineData lineData, boolean drawFilled, int fillColor) {
 		if (entryList == null || entryList[level] == null || entryList[level].size() == 0) {
 			return;
 		}
-		addLineDataSet(entryList[level], StockTrend.LABEL_NONE, lineColor(level), false, lineData, drawFilled, fillColor);
+		addLineDataSet(entryList[level], StockTrend.LABEL_NONE, level, false, lineData, drawFilled, fillColor);
 	}
 
-	void addLineDataSet(List<Entry> entryList, String label, int lineColor, boolean drawCircle, LineData lineData, boolean drawFilled, int fillColor) {
+	void addLineDataSet(List<Entry> entryList, String label, int level, boolean drawCircle, LineData lineData, boolean drawFilled, int fillColor) {
 		if (entryList == null || entryList.isEmpty()) {
 			return;
 		}
 		LineDataSet lineDataSet = new LineDataSet(entryList, label);
-		lineDataSet.setColor(lineColor);
-		lineDataSet.setCircleColor(lineColor);
+		lineDataSet.setColor(lineColor(level));
+		lineDataSet.setCircleColor(lineColor(level));
+		lineDataSet.setLineWidth(LINE_WIDTH_NORMAL);
+		if (mStock.hasFlag(Stock.FLAG_CUSTOM)) {
+			if (level == mTargetLevel) {
+				lineDataSet.setLineWidth(LINE_WIDTH_HIGHLIGHT);
+			}
+		}
+		lineDataSet.setCircleSize(CIRCLE_SIZE_NONE);
 		if (drawCircle) {
-			lineDataSet.setCircleSize(TREND_CIRCLE_SIZE);
-		} else {
-			lineDataSet.setCircleSize(NONE_CIRCLE_SIZE);
+			lineDataSet.setCircleSize(CIRCLE_SIZE_TREND);
 		}
 		lineDataSet.setDrawFilled(drawFilled);
 		lineDataSet.setFillColor(fillColor);
@@ -294,7 +307,7 @@ public class StockDataChart {
 
 		if (Setting.getDisplayAdaptive()) {
 			if (mStock.hasFlag(Stock.FLAG_CUSTOM)) {
-				result = (level == mAdaptiveLevel || level == mAdaptiveLevel + 1);
+				result = (level == mAdaptiveLevel || level == mTargetLevel);
 			} else {
 				result = (level >= mAdaptiveLevel);
 			}

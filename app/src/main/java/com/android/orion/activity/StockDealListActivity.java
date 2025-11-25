@@ -261,8 +261,8 @@ public class StockDealListActivity extends ListActivity implements
 	public void handleOnOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_new:
-				if (mStock.getQuota() > 0 && mStock.getTrading() >= mStock.getQuota()) {
-					Toast.makeText(this, R.string.quota_limit, Toast.LENGTH_SHORT).show();
+				if (mStock.isQuotaLimitReached()) {
+					Toast.makeText(this, R.string.quota_limit_reached, Toast.LENGTH_SHORT).show();
 					return;
 				}
 				mIntent = new Intent(this, StockDealActivity.class);
@@ -601,8 +601,8 @@ public class StockDealListActivity extends ListActivity implements
 	protected void onResume() {
 		super.onResume();
 		restartLoader();
-		if (mStock.getQuota() > 0 && mStock.getTrading() >= mStock.getQuota()) {
-			Toast.makeText(this, R.string.quota_limit, Toast.LENGTH_SHORT).show();
+		if (mStock.isQuotaLimitReached()) {
+			Toast.makeText(this, R.string.quota_limit_reached, Toast.LENGTH_SHORT).show();
 		}
 	}
 

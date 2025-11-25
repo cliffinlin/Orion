@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -117,6 +118,8 @@ public class StockFavoriteListActivity extends ListActivity implements
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_PRICE, R.id.price);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_NET, R.id.net);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_BUY_PROFIT, R.id.profite);
+        mColumnToViewIdMap.put(DatabaseContract.COLUMN_TRADING, R.id.profite);
+        mColumnToViewIdMap.put(DatabaseContract.COLUMN_QUOTA, R.id.profite);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_SELL_PROFIT, R.id.profite);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_TREND_THUMBNAIL, R.id.trend);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_PREDICT, R.id.predict);
@@ -359,6 +362,8 @@ public class StockFavoriteListActivity extends ListActivity implements
                 DatabaseContract.COLUMN_PRICE,
                 DatabaseContract.COLUMN_NET,
                 DatabaseContract.COLUMN_BUY_PROFIT,
+                DatabaseContract.COLUMN_TRADING,
+                DatabaseContract.COLUMN_QUOTA,
                 DatabaseContract.COLUMN_SELL_PROFIT,
                 DatabaseContract.COLUMN_TREND_THUMBNAIL,
                 DatabaseContract.COLUMN_PREDICT,
@@ -382,6 +387,8 @@ public class StockFavoriteListActivity extends ListActivity implements
                 R.id.price,
                 R.id.net,
                 R.id.buy_profit,
+                R.id.profit_divider_container,
+                R.id.profit_divider_container,
                 R.id.sell_profit,
                 R.id.trend,
                 R.id.predict,
@@ -649,6 +656,10 @@ public class StockFavoriteListActivity extends ListActivity implements
                 return true;
             }
 
+            if (view.getId() == R.id.profit_divider_container) {
+                return handleProfitDividerContainer(view, cursor);
+            }
+
             // Handle BLOB columns first
             if (DatabaseContract.isPeriodThumbnailColumn(columnName) ||
                     DatabaseContract.COLUMN_TREND_THUMBNAIL.equals(columnName) ||
@@ -659,6 +670,76 @@ public class StockFavoriteListActivity extends ListActivity implements
 
             // Handle other column types
             return handleTextColumns(view, cursor, columnIndex, columnName);
+        }
+
+        private boolean handleProfitDividerContainer(View view, Cursor cursor) {
+            if (!(view instanceof LinearLayout)) {
+                return false;
+            }
+
+            LinearLayout container = (LinearLayout) view;
+            View tradingPortion = container.findViewById(R.id.trading_portion);
+            View remainingPortion = container.findViewById(R.id.remaining_portion);
+
+            if (tradingPortion == null || remainingPortion == null) {
+                return false;
+            }
+
+            try {
+                double trading = 0;
+                double quota = 0;
+
+                int tradingColumnIndex = cursor.getColumnIndex(DatabaseContract.COLUMN_TRADING);
+                int quotaColumnIndex = cursor.getColumnIndex(DatabaseContract.COLUMN_QUOTA);
+
+                if (tradingColumnIndex != -1 && !cursor.isNull(tradingColumnIndex)) {
+                    trading = cursor.getDouble(tradingColumnIndex);
+                }
+
+                if (quotaColumnIndex != -1 && !cursor.isNull(quotaColumnIndex)) {
+                    quota = cursor.getDouble(quotaColumnIndex);
+                }
+
+                float ratio = 0f;
+                if (quota > 0) {
+                    ratio = (float) (trading / quota);
+                }
+
+                LinearLayout.LayoutParams tradingParams = (LinearLayout.LayoutParams) tradingPortion.getLayoutParams();
+                LinearLayout.LayoutParams remainingParams = (LinearLayout.LayoutParams) remainingPortion.getLayoutParams();
+
+                float displayRatio = Math.min(1f, ratio);
+                tradingParams.weight = displayRatio;
+                remainingParams.weight = 1 - displayRatio;
+
+                tradingPortion.setLayoutParams(tradingParams);
+                remainingPortion.setLayoutParams(remainingParams);
+
+                if (ratio > 3.0f) {
+                    tradingPortion.setBackgroundColor(Color.BLACK);
+                } else if (ratio > 2.0f) {
+                    tradingPortion.setBackgroundColor(Color.CYAN);
+                } else if (ratio > 1.0f) {
+                    tradingPortion.setBackgroundColor(Color.MAGENTA);
+                } else if (ratio > 0.8f) {
+                    tradingPortion.setBackgroundColor(Color.RED);
+                } else if (ratio > 0.5f) {
+                    tradingPortion.setBackgroundColor(Color.YELLOW);
+                } else {
+                    tradingPortion.setBackgroundColor(Color.GREEN);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+
+                LinearLayout.LayoutParams tradingParams = (LinearLayout.LayoutParams) tradingPortion.getLayoutParams();
+                LinearLayout.LayoutParams remainingParams = (LinearLayout.LayoutParams) remainingPortion.getLayoutParams();
+                tradingParams.weight = 0f;
+                remainingParams.weight = 1f;
+                tradingPortion.setLayoutParams(tradingParams);
+                remainingPortion.setLayoutParams(remainingParams);
+            }
+
+            return true;
         }
 
         private boolean handleBlobColumn(View view, Cursor cursor, int columnIndex, String columnName) {

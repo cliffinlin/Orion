@@ -1,328 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <TextView
-                android:id="@+id/textview_stock_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:labelFor="@+id/edittext_stock_name"
-                android:text="@string/stock_name" />
-
-            <EditText
-                android:id="@+id/edittext_stock_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="18dp"
-                android:layout_marginRight="14dp"
-                android:layout_marginBottom="14dp"
-                android:inputType="text" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <TextView
-                android:id="@+id/textview_stock_code"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:labelFor="@+id/edittext_stock_code"
-                android:text="@string/stock_code" />
-
-            <EditText
-                android:id="@+id/edittext_stock_code"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="18dp"
-                android:layout_marginRight="14dp"
-                android:layout_marginBottom="14dp"
-                android:inputType="numberDecimal" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dip"
-        android:background="@drawable/divider_line" />
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:paddingLeft="14dp"
-        android:paddingRight="14dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:layout_weight="1">
-
-                <CheckBox
-                    android:id="@+id/checkbox_trade"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/trade" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:layout_weight="1">
-
-                <CheckBox
-                    android:id="@+id/checkbox_custom"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/custom" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:layout_weight="1">
-
-                <ImageView
-                    android:id="@+id/imageview_restore_target"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_restore"
-                    android:clickable="true"
-                    android:focusable="true" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/layout_trade_level_pickers"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="5"
-            android:gravity="center">
-
-            <!-- Day Picker -->
-            <LinearLayout
-                android:id="@+id/layout_day_picker"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:padding="4dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Day"
-                    android:textStyle="bold"
-                    android:paddingBottom="4dp"
-                    android:textSize="12sp" />
-
-                <com.android.orion.widget.TradeLevelPicker
-                    android:id="@+id/trade_level_picker_day"
-                    android:layout_width="80dp"
-                    android:layout_height="60dp" />
-
-                <TextView
-                    android:id="@+id/textview_day_net"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="12sp"
-                    android:paddingTop="2dp" />
-
-                <ImageView
-                    android:id="@+id/imageview_day_target"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_unchecked"
-                    android:clickable="true"
-                    android:focusable="true" />
-            </LinearLayout>
-
-            <!-- Min60 Picker -->
-            <LinearLayout
-                android:id="@+id/layout_min60_picker"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:padding="4dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Min60"
-                    android:textStyle="bold"
-                    android:paddingBottom="4dp"
-                    android:textSize="12sp" />
-
-                <com.android.orion.widget.TradeLevelPicker
-                    android:id="@+id/trade_level_picker_min60"
-                    android:layout_width="80dp"
-                    android:layout_height="60dp" />
-
-                <TextView
-                    android:id="@+id/textview_min60_net"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="12sp"
-                    android:paddingTop="2dp" />
-
-                <ImageView
-                    android:id="@+id/imageview_min60_target"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_unchecked"
-                    android:clickable="true"
-                    android:focusable="true" />
-            </LinearLayout>
-
-            <!-- Min30 Picker -->
-            <LinearLayout
-                android:id="@+id/layout_min30_picker"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:padding="4dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Min30"
-                    android:textStyle="bold"
-                    android:paddingBottom="4dp"
-                    android:textSize="12sp" />
-
-                <com.android.orion.widget.TradeLevelPicker
-                    android:id="@+id/trade_level_picker_min30"
-                    android:layout_width="80dp"
-                    android:layout_height="60dp" />
-
-                <TextView
-                    android:id="@+id/textview_min30_net"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="12sp"
-                    android:paddingTop="2dp" />
-
-                <ImageView
-                    android:id="@+id/imageview_min30_target"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_unchecked"
-                    android:clickable="true"
-                    android:focusable="true" />
-            </LinearLayout>
-
-            <!-- Min15 Picker -->
-            <LinearLayout
-                android:id="@+id/layout_min15_picker"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:padding="4dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Min15"
-                    android:textStyle="bold"
-                    android:paddingBottom="4dp"
-                    android:textSize="12sp" />
-
-                <com.android.orion.widget.TradeLevelPicker
-                    android:id="@+id/trade_level_picker_min15"
-                    android:layout_width="80dp"
-                    android:layout_height="60dp" />
-
-                <TextView
-                    android:id="@+id/textview_min15_net"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="12sp"
-                    android:paddingTop="2dp" />
-
-                <ImageView
-                    android:id="@+id/imageview_min15_target"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_unchecked"
-                    android:clickable="true"
-                    android:focusable="true" />
-            </LinearLayout>
-
-            <!-- Min5 Picker -->
-            <LinearLayout
-                android:id="@+id/layout_min5_picker"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:padding="4dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Min5"
-                    android:textStyle="bold"
-                    android:paddingBottom="4dp"
-                    android:textSize="12sp" />
-
-                <com.android.orion.widget.TradeLevelPicker
-                    android:id="@+id/trade_level_picker_min5"
-                    android:layout_width="80dp"
-                    android:layout_height="60dp" />
-
-                <TextView
-                    android:id="@+id/textview_min5_net"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="12sp"
-                    android:paddingTop="2dp" />
-
-                <ImageView
-                    android:id="@+id/imageview_min5_target"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_unchecked"
-                    android:clickable="true"
-                    android:focusable="true" />
-            </LinearLayout>
-        </LinearLayout>
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -334,322 +19,643 @@
                 android:layout_weight="1">
 
                 <TextView
-                    android:id="@+id/textview_stock_window"
+                    android:id="@+id/textview_stock_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="14dp"
                     android:layout_marginRight="14dp"
-                    android:labelFor="@+id/edittext_stock_window"
-                    android:text="@string/window" />
+                    android:labelFor="@+id/edittext_stock_name"
+                    android:text="@string/stock_name" />
 
                 <EditText
-                    android:id="@+id/edittext_stock_window"
+                    android:id="@+id/edittext_stock_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="18dp"
                     android:layout_marginRight="14dp"
                     android:layout_marginBottom="14dp"
-                    android:focusable="true"
-                    android:clickable="true"
                     android:inputType="text" />
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/textview_stock_code"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="14dp"
+                    android:layout_marginRight="14dp"
+                    android:labelFor="@+id/edittext_stock_code"
+                    android:text="@string/stock_code" />
+
+                <EditText
+                    android:id="@+id/edittext_stock_code"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginRight="14dp"
+                    android:layout_marginBottom="14dp"
+                    android:inputType="numberDecimal" />
+            </LinearLayout>
         </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dip"
+            android:background="@drawable/divider_line" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:paddingLeft="14dp"
+            android:paddingRight="14dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="14dp"
+                    android:layout_marginRight="14dp"
+                    android:layout_weight="1">
+
+                    <CheckBox
+                        android:id="@+id/checkbox_trade"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/trade" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="14dp"
+                    android:layout_marginRight="14dp"
+                    android:layout_weight="1">
+
+                    <CheckBox
+                        android:id="@+id/checkbox_custom"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/custom" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="14dp"
+                    android:layout_marginRight="14dp"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:id="@+id/imageview_restore_target"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_restore"
+                        android:clickable="true"
+                        android:focusable="true" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_trade_level_pickers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="5"
+                android:gravity="center">
+
+                <!-- Day Picker -->
+                <LinearLayout
+                    android:id="@+id/layout_day_picker"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="4dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Day"
+                        android:textStyle="bold"
+                        android:paddingBottom="4dp"
+                        android:textSize="12sp" />
+
+                    <com.android.orion.widget.TradeLevelPicker
+                        android:id="@+id/trade_level_picker_day"
+                        android:layout_width="80dp"
+                        android:layout_height="60dp" />
+
+                    <TextView
+                        android:id="@+id/textview_day_net"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:paddingTop="2dp" />
+
+                    <ImageView
+                        android:id="@+id/imageview_day_target"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_unchecked"
+                        android:clickable="true"
+                        android:focusable="true" />
+                </LinearLayout>
+
+                <!-- Min60 Picker -->
+                <LinearLayout
+                    android:id="@+id/layout_min60_picker"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="4dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Min60"
+                        android:textStyle="bold"
+                        android:paddingBottom="4dp"
+                        android:textSize="12sp" />
+
+                    <com.android.orion.widget.TradeLevelPicker
+                        android:id="@+id/trade_level_picker_min60"
+                        android:layout_width="80dp"
+                        android:layout_height="60dp" />
+
+                    <TextView
+                        android:id="@+id/textview_min60_net"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:paddingTop="2dp" />
+
+                    <ImageView
+                        android:id="@+id/imageview_min60_target"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_unchecked"
+                        android:clickable="true"
+                        android:focusable="true" />
+                </LinearLayout>
+
+                <!-- Min30 Picker -->
+                <LinearLayout
+                    android:id="@+id/layout_min30_picker"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="4dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Min30"
+                        android:textStyle="bold"
+                        android:paddingBottom="4dp"
+                        android:textSize="12sp" />
+
+                    <com.android.orion.widget.TradeLevelPicker
+                        android:id="@+id/trade_level_picker_min30"
+                        android:layout_width="80dp"
+                        android:layout_height="60dp" />
+
+                    <TextView
+                        android:id="@+id/textview_min30_net"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:paddingTop="2dp" />
+
+                    <ImageView
+                        android:id="@+id/imageview_min30_target"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_unchecked"
+                        android:clickable="true"
+                        android:focusable="true" />
+                </LinearLayout>
+
+                <!-- Min15 Picker -->
+                <LinearLayout
+                    android:id="@+id/layout_min15_picker"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="4dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Min15"
+                        android:textStyle="bold"
+                        android:paddingBottom="4dp"
+                        android:textSize="12sp" />
+
+                    <com.android.orion.widget.TradeLevelPicker
+                        android:id="@+id/trade_level_picker_min15"
+                        android:layout_width="80dp"
+                        android:layout_height="60dp" />
+
+                    <TextView
+                        android:id="@+id/textview_min15_net"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:paddingTop="2dp" />
+
+                    <ImageView
+                        android:id="@+id/imageview_min15_target"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_unchecked"
+                        android:clickable="true"
+                        android:focusable="true" />
+                </LinearLayout>
+
+                <!-- Min5 Picker -->
+                <LinearLayout
+                    android:id="@+id/layout_min5_picker"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="4dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Min5"
+                        android:textStyle="bold"
+                        android:paddingBottom="4dp"
+                        android:textSize="12sp" />
+
+                    <com.android.orion.widget.TradeLevelPicker
+                        android:id="@+id/trade_level_picker_min5"
+                        android:layout_width="80dp"
+                        android:layout_height="60dp" />
+
+                    <TextView
+                        android:id="@+id/textview_min5_net"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:paddingTop="2dp" />
+
+                    <ImageView
+                        android:id="@+id/imageview_min5_target"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_unchecked"
+                        android:clickable="true"
+                        android:focusable="true" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/textview_stock_window"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="14dp"
+                        android:layout_marginRight="14dp"
+                        android:labelFor="@+id/edittext_stock_window"
+                        android:text="@string/window" />
+
+                    <EditText
+                        android:id="@+id/edittext_stock_window"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="18dp"
+                        android:layout_marginRight="14dp"
+                        android:layout_marginBottom="14dp"
+                        android:focusable="true"
+                        android:clickable="true"
+                        android:inputType="text" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dip"
+            android:background="@drawable/divider_line" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/textview_stock_trading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="14dp"
+                    android:layout_marginRight="14dp"
+                    android:labelFor="@+id/edittext_stock_trading"
+                    android:text="@string/trade" />
+
+                <EditText
+                    android:id="@+id/edittext_stock_trading"
+                    android:enabled="false"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginRight="14dp"
+                    android:layout_marginBottom="14dp"
+                    android:inputType="numberDecimal" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/textView_stock_quota"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="14dp"
+                    android:layout_marginRight="14dp"
+                    android:labelFor="@+id/edittext_stock_quota"
+                    android:text="@string/quota" />
+
+                <EditText
+                    android:id="@+id/edittext_stock_quota"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginRight="14dp"
+                    android:layout_marginBottom="14dp"
+                    android:inputType="number" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/textview_stock_trading_cost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="14dp"
+                    android:layout_marginRight="14dp"
+                    android:labelFor="@+id/edittext_stock_trading_cost"
+                    android:text="@string/cost" />
+
+                <EditText
+                    android:id="@+id/edittext_stock_trading_cost"
+                    android:enabled="false"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginRight="14dp"
+                    android:layout_marginBottom="14dp"
+                    android:inputType="numberDecimal" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/textView_stock_quota_est"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="14dp"
+                    android:layout_marginRight="14dp"
+                    android:labelFor="@+id/edittext_stock_quota_est"
+                    android:text="@string/quota_est" />
+
+                <EditText
+                    android:id="@+id/edittext_stock_quota_est"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginRight="14dp"
+                    android:layout_marginBottom="14dp"
+                    android:inputType="number" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dip"
+            android:background="@drawable/divider_line" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/textView_stock_hold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="14dp"
+                    android:layout_marginRight="14dp"
+                    android:labelFor="@+id/edittext_stock_hold"
+                    android:text="@string/hold" />
+
+                <EditText
+                    android:id="@+id/edittext_stock_hold"
+                    android:enabled="false"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginRight="14dp"
+                    android:layout_marginBottom="14dp"
+                    android:inputType="number" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/textview_stock_yield"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="14dp"
+                    android:layout_marginRight="14dp"
+                    android:labelFor="@+id/edittext_stock_yield"
+                    android:text="@string/yield" />
+
+                <EditText
+                    android:id="@+id/edittext_stock_yield"
+                    android:enabled="false"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginRight="14dp"
+                    android:layout_marginBottom="14dp"
+                    android:inputType="numberDecimal" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_stock_hold_account"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/textview_stock_hold_a"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="14dp"
+                    android:layout_marginRight="14dp"
+                    android:labelFor="@+id/edittext_stock_hold_a"
+                    android:text="@string/hold_a" />
+
+                <EditText
+                    android:id="@+id/edittext_stock_hold_a"
+                    android:enabled="false"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginRight="14dp"
+                    android:layout_marginBottom="14dp"
+                    android:inputType="number" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/textview_stock_hold_b"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="14dp"
+                    android:layout_marginRight="14dp"
+                    android:labelFor="@+id/edittext_stock_hold_b"
+                    android:text="@string/hold_b" />
+
+                <EditText
+                    android:id="@+id/edittext_stock_hold_b"
+                    android:enabled="false"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginRight="14dp"
+                    android:layout_marginBottom="14dp"
+                    android:inputType="numberDecimal" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dip"
+            android:background="@drawable/divider_line" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/textView_url"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="14dp"
+                    android:layout_marginRight="14dp"
+                    android:labelFor="@+id/textview_se_url"
+                    android:text="@string/url" />
+
+                <TextView
+                    android:id="@+id/textview_se_url"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginRight="14dp"
+                    android:layout_marginBottom="14dp"
+                    android:textStyle="bold"
+                    android:padding="8dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:autoLink="web" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dip"
+            android:background="@drawable/divider_line" />
+
+        <LinearLayout
+            style="?android:buttonBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/button_cancel"
+                style="?android:buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/cancel" />
+
+            <Button
+                android:id="@+id/button_ok"
+                style="?android:buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/ok" />
+        </LinearLayout>
+
     </LinearLayout>
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dip"
-        android:background="@drawable/divider_line" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <TextView
-                android:id="@+id/textview_stock_trading"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:labelFor="@+id/edittext_stock_trading"
-                android:text="@string/trade" />
-
-            <EditText
-                android:id="@+id/edittext_stock_trading"
-                android:enabled="false"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="18dp"
-                android:layout_marginRight="14dp"
-                android:layout_marginBottom="14dp"
-                android:inputType="numberDecimal" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <TextView
-                android:id="@+id/textView_stock_quota"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:labelFor="@+id/edittext_stock_quota"
-                android:text="@string/quota" />
-
-            <EditText
-                android:id="@+id/edittext_stock_quota"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="18dp"
-                android:layout_marginRight="14dp"
-                android:layout_marginBottom="14dp"
-                android:inputType="number" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <TextView
-                android:id="@+id/textview_stock_trading_cost"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:labelFor="@+id/edittext_stock_trading_cost"
-                android:text="@string/cost" />
-
-            <EditText
-                android:id="@+id/edittext_stock_trading_cost"
-                android:enabled="false"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="18dp"
-                android:layout_marginRight="14dp"
-                android:layout_marginBottom="14dp"
-                android:inputType="numberDecimal" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <TextView
-                android:id="@+id/textView_stock_quota_est"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:labelFor="@+id/edittext_stock_quota_est"
-                android:text="@string/est" />
-
-            <EditText
-                android:id="@+id/edittext_stock_quota_est"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="18dp"
-                android:layout_marginRight="14dp"
-                android:layout_marginBottom="14dp"
-                android:inputType="number" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dip"
-        android:background="@drawable/divider_line" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <TextView
-                android:id="@+id/textView_stock_hold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:labelFor="@+id/edittext_stock_hold"
-                android:text="@string/hold" />
-
-            <EditText
-                android:id="@+id/edittext_stock_hold"
-                android:enabled="false"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="18dp"
-                android:layout_marginRight="14dp"
-                android:layout_marginBottom="14dp"
-                android:inputType="number" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <TextView
-                android:id="@+id/textview_stock_yield"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:labelFor="@+id/edittext_stock_yield"
-                android:text="@string/yield" />
-
-            <EditText
-                android:id="@+id/edittext_stock_yield"
-                android:enabled="false"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="18dp"
-                android:layout_marginRight="14dp"
-                android:layout_marginBottom="14dp"
-                android:inputType="numberDecimal" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/layout_stock_hold_account"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <TextView
-                android:id="@+id/textview_stock_hold_a"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:labelFor="@+id/edittext_stock_hold_a"
-                android:text="@string/hold_a" />
-
-            <EditText
-                android:id="@+id/edittext_stock_hold_a"
-                android:enabled="false"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="18dp"
-                android:layout_marginRight="14dp"
-                android:layout_marginBottom="14dp"
-                android:inputType="number" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <TextView
-                android:id="@+id/textview_stock_hold_b"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:labelFor="@+id/edittext_stock_hold_b"
-                android:text="@string/hold_b" />
-
-            <EditText
-                android:id="@+id/edittext_stock_hold_b"
-                android:enabled="false"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="18dp"
-                android:layout_marginRight="14dp"
-                android:layout_marginBottom="14dp"
-                android:inputType="numberDecimal" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dip"
-        android:background="@drawable/divider_line" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <TextView
-                android:id="@+id/textView_url"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:labelFor="@+id/textview_se_url"
-                android:text="@string/url" />
-
-            <TextView
-                android:id="@+id/textview_se_url"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="18dp"
-                android:layout_marginRight="14dp"
-                android:layout_marginBottom="14dp"
-                android:textStyle="bold"
-                android:padding="8dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:autoLink="web" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dip"
-        android:background="@drawable/divider_line" />
-
-    <LinearLayout
-        style="?android:buttonBarStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/button_cancel"
-            style="?android:buttonBarButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/cancel" />
-
-        <Button
-            android:id="@+id/button_ok"
-            style="?android:buttonBarButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/ok" />
-    </LinearLayout>
-
-</LinearLayout>
+</ScrollView>

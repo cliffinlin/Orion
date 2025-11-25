@@ -34,10 +34,26 @@
             android:gravity="center"
             android:textSize="16sp" />
 
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="1dip"
-            android:background="@drawable/divider_line" />
+        <LinearLayout
+            android:id="@+id/profit_divider_container"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:orientation="horizontal"
+            android:background="@android:color/darker_gray">
+
+            <View
+                android:id="@+id/trading_portion"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@color/colorPrimary" />
+
+            <View
+                android:id="@+id/remaining_portion"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent" />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/sell_profit"

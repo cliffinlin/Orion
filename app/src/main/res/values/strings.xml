@@ -30,7 +30,7 @@
     <string name="custom">Custom</string>
     <string name="date">Date</string>
     <string name="deal">Deal</string>
-    <string name="deal_delete">Deal delete</string>f
+    <string name="deal_delete">Deal delete</string>
     <string name="deal_edit">Deal edit</string>
     <string name="deal_insert">Deal insert</string>
     <string name="deal_list">Deal list</string>
@@ -57,7 +57,6 @@
     <string name="enabled">Enabled</string>
     <string name="end_date">End date</string>
     <string name="error">Error</string>
-    <string name="est">EST</string>
     <string name="exit">Exit</string>
     <string name="exit_confirm">Do you want to exit?</string>
     <string name="export">Export</string>
@@ -164,7 +163,8 @@
     <string name="pull_to_refresh_tap_label">Tap to refresh...</string>
     <string name="r_date">RDate</string>
     <string name="quota">Quota</string>
-    <string name="quota_limit">The quota has reached limit!</string>
+    <string name="quota_est">EST</string>
+    <string name="quota_limit_reached">Quota limit reached!</string>
     <string name="radar">Radar</string>
     <string name="rate">Rate</string>
     <string name="refresh">Refresh</string>
@@ -175,8 +175,6 @@
     <string name="save">Save</string>
     <string name="schedule">Schedule</string>
     <string name="search">Search</string>
-    <string name="securities_abbreviation">Securities abbreviation</string>
-    <string name="securities_code">Securities code</string>
     <string name="segment">Segment</string>
     <string name="sell_price">Sell price</string>
     <string name="sell">Sell</string>

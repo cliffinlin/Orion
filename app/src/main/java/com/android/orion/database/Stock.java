@@ -1772,6 +1772,14 @@ public class Stock extends DatabaseTable {
 		return result;
 	}
 
+	public boolean isQuotaLimitReached() {
+		boolean result = false;
+		if (getQuota() > 0 && getTrading() >= getQuota()) {
+			result = true;
+		}
+		return result;
+	}
+
 	public String getPriceNetString(String separator) {
 		StringBuilder builder = new StringBuilder();
 		builder.append(getPrice()).append(separator);
