@@ -32,10 +32,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.android.orion.R;
+import com.android.orion.data.Period;
 import com.android.orion.database.DatabaseContract;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockDeal;
 import com.android.orion.constant.Constant;
+import com.android.orion.database.StockTrend;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Preferences;
 import com.android.orion.utility.RecordFile;
@@ -118,7 +120,7 @@ public class StockDealListActivity extends ListActivity implements
 			switch (msg.what) {
 				case MESSAGE_DELETE_DEAL:
 					mStockDatabaseManager.getStockDeal(mStockDeal);
-					getStock();
+					getStock(mStockDeal);
 					RecordFile.writeDealFile(mStock, mStockDeal, Constant.DEAL_DELETE);
 					mStockDatabaseManager.deleteStockDeal(mStockDeal);
 					mStockDatabaseManager.updateStockDeal(mStock);
@@ -131,7 +133,7 @@ public class StockDealListActivity extends ListActivity implements
 
 				case MESSAGE_VIEW_STOCK_DEAL:
 					mStockDatabaseManager.getStockDeal(mStockDeal);
-					getStock();
+					getStock(mStockDeal);
 
 					intent = new Intent(mContext, StockActivity.class);
 					intent.setAction(Constant.ACTION_STOCK_EDIT);
@@ -141,7 +143,7 @@ public class StockDealListActivity extends ListActivity implements
 
 				case MESSAGE_VIEW_STOCK_CHAT:
 					mStockDatabaseManager.getStockDeal(mStockDeal);
-					getStock();
+					getStock(mStockDeal);
 
 					ArrayList<String> stockIDList = new ArrayList<>();
 					for (Stock stock : mStockList) {
@@ -265,6 +267,16 @@ public class StockDealListActivity extends ListActivity implements
 					Toast.makeText(this, R.string.quota_limit_reached, Toast.LENGTH_SHORT).show();
 					return;
 				}
+
+				if (!stockTrendsUp()) {
+					new AlertDialog.Builder(mContext)
+							.setTitle(R.string.deal_insert)
+							.setMessage(getString(R.string.no_stock_trend_up))
+							.setPositiveButton(R.string.ok, null)
+							.show();
+					return;
+				}
+
 				mIntent = new Intent(this, StockDealActivity.class);
 				mIntent.setAction(Constant.ACTION_DEAL_INSERT);
 				if (mBundle != null) {
@@ -647,14 +659,7 @@ public class StockDealListActivity extends ListActivity implements
 		mSelection = typeSelection;
 
 		if (mBundle != null) {
-			String se = mBundle.getString(Constant.EXTRA_STOCK_SE);
-			String code = mBundle.getString(Constant.EXTRA_STOCK_CODE);
-
-			mStock.setSE(se);
-			mStock.setCode(code);
-			mStockDatabaseManager.getStock(mStock);
-
-			mSelection = DatabaseContract.SELECTION_STOCK(se, code);
+			mSelection = DatabaseContract.SELECTION_STOCK(mBundle.getString(Constant.EXTRA_STOCK_SE), mBundle.getString(Constant.EXTRA_STOCK_CODE));
 			if (!TextUtils.isEmpty(typeSelection)) {
 				mSelection += " AND " + typeSelection;
 			}
@@ -667,6 +672,9 @@ public class StockDealListActivity extends ListActivity implements
 
 		switch (id) {
 			case LOADER_ID_DEAL_LIST:
+				if (mBundle != null) {
+					getStock(mBundle.getString(Constant.EXTRA_STOCK_SE), mBundle.getString(Constant.EXTRA_STOCK_CODE));
+				}
 				setupSelection();
 
 				loader = new CursorLoader(this,
@@ -764,10 +772,32 @@ public class StockDealListActivity extends ListActivity implements
 		return true;
 	}
 
-	void getStock() {
-		mStock.setSE(mStockDeal.getSE());
-		mStock.setCode(mStockDeal.getCode());
+	void getStock(StockDeal stockDeal) {
+		if (stockDeal == null) {
+			return;
+		}
+		getStock(stockDeal.getSE(), stockDeal.getCode());
+	}
+
+	void getStock(String se, String code) {
+		mStock.setSE(se);
+		mStock.setCode(code);
 		mStockDatabaseManager.getStock(mStock);
+		mStockDatabaseManager.getStockTrendMap(mStock, mStock.getStockTrendMap());
+	}
+
+	boolean stockTrendsUp() {
+		boolean result = false;
+		for (String period : Period.PERIODS) {
+			if (Setting.getPeriod(period)) {
+				StockTrend adaptiveTrend = mStock.getStockTrend(period, mStock.getAdaptive(period));
+				StockTrend targetTrend = mStock.getStockTrend(period, mStock.getTarget(period));
+				if (adaptiveTrend != null && adaptiveTrend.getNextNet() > 0 || targetTrend != null && targetTrend.getNextNet() > 0) {
+					result = true;
+				}
+			}
+		}
+		return result;
 	}
 
 	private class RightViewBinder implements SimpleCursorAdapter.ViewBinder {

@@ -434,6 +434,10 @@ public class StockDeal extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_TYPE)));
 	}
 
+	public boolean isBuyType() {
+		return TextUtils.equals(mType, StockDeal.TYPE_BUY);
+	}
+
 	public void setupValue() {
 		if (mVolume == 0) {
 			mValue = 0;

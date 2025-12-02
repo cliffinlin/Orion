@@ -76,7 +76,7 @@ public class StockTrend extends DatabaseTable {
 
 	public static final int[] COLORS = {
 			Color.TRANSPARENT, Color.GRAY, Color.BLACK, Color.RED,
-			Color.BLUE, Color.MAGENTA, Color.CYAN, Color.WHITE};
+			Color.MAGENTA, Color.BLUE, Color.CYAN, Color.WHITE};
 
 	public static final String[] TYPES = {
 			TYPE_UP_NONE_UP, TYPE_UP_NONE_DOWN, TYPE_UP_NONE,

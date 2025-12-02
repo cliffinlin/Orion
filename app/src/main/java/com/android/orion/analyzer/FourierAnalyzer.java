@@ -30,7 +30,7 @@ public class FourierAnalyzer {
     }
 
     public static ArrayList<Double> getRadarList() {
-        return mRadarList;
+        return new ArrayList<>(mRadarList);
     }
 
     /**

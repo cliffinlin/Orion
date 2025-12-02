@@ -3,8 +3,6 @@ package com.android.orion.analyzer;
 import android.graphics.Color;
 import android.text.TextUtils;
 
-import androidx.annotation.NonNull;
-
 import com.android.orion.chart.CurveThumbnail;
 import com.android.orion.data.Period;
 import com.android.orion.data.Radar;
@@ -21,51 +19,38 @@ import com.android.orion.utility.Logger;
 import com.android.orion.utility.Symbol;
 import com.android.orion.utility.Utility;
 
-import org.apache.commons.math3.ml.clustering.CentroidCluster;
-import org.apache.commons.math3.ml.clustering.Clusterable;
-import org.apache.commons.math3.ml.clustering.KMeansPlusPlusClusterer;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 public class TrendAnalyzer {
-	public static final int MAX_DURATION = 30;//TODO
-	public static final int MAX_ITERATION = 100;
-	public static final int MAX_PREDICTION = 100;
-
 	public static final int THUMBNAIL_SIZE = 160;
 	public static final int THUMBNAIL_WIDTH = THUMBNAIL_SIZE;
 	public static final int THUMBNAIL_HEIGHT = THUMBNAIL_SIZE;
 	public static final int THUMBNAIL_STROKE_WIDTH = 1;
-	public static final int THUMBNAIL_THIN_BAR_WIDTH = 6 * THUMBNAIL_STROKE_WIDTH;
-	public static final int THUMBNAIL_THICK_BAR_WIDTH = 12 * THUMBNAIL_STROKE_WIDTH;
+	public static final int THUMBNAIL_ADAPTIVE_BAR_WIDTH = 6 * THUMBNAIL_STROKE_WIDTH;
+	public static final int THUMBNAIL_TARGET_BAR_WIDTH = 12 * THUMBNAIL_STROKE_WIDTH;
 	public static final int THUMBNAIL_AXIS_WIDTH = 6 * THUMBNAIL_STROKE_WIDTH;
 	public static final int THUMBNAIL_STROKE_COLOR = Color.GRAY;
 	public static final int THUMBNAIL_MARKER_SIZE = 20;
 	public static final int THUMBNAIL_MARKER_STROKE_WIDTH = 5;
 	public static final int THUMBNAIL_SCATTER_SIZE = 10;
+	public static final int THUMBNAIL_ADAPTIVE_COLOR_UP = Color.MAGENTA;
+	public static final int THUMBNAIL_ADAPTIVE_COLOR_DOWN = Color.CYAN;
+	public static final int THUMBNAIL_TARGET_COLOR_UP = Color.RED;
+	public static final int THUMBNAIL_TARGET_COLOR_DOWN = Color.GREEN;
 
 	int mPeriods;
-	int mKMeansK;
 	Logger Log = Logger.getLogger();
 	Stock mStock;
 	String mPeriod;
-	List<DataPoint> mDataPointList = new ArrayList<>();
 	List<Float>[] mXValues = new List[StockTrend.LEVELS.length];
 	List<Float>[] mYValues = new List[StockTrend.LEVELS.length];
-	List<CentroidCluster<DataPoint>> mClusterList;
 	ArrayList<CurveThumbnail.LineConfig> mLineConfigList = new ArrayList<>();
 	ArrayList<CurveThumbnail.ScatterConfig> mScatterConfigList = new ArrayList<>();
 	List<CurveThumbnail.CircleConfig> mCircleConfigList = new ArrayList<>();
 	ArrayList<StockData> mStockDataList = new ArrayList<>();
-	ConcurrentMap<String, DataPoint> mAllDataPointMap = new ConcurrentHashMap<>();
-	ConcurrentMap<String, DataPoint> mDataPointMap = new ConcurrentHashMap<>();
 	StockDatabaseManager mStockDatabaseManager = StockDatabaseManager.getInstance();
 	StockPerceptronProvider mStockPerceptronProvider = StockPerceptronProvider.getInstance();
 
@@ -85,8 +70,6 @@ public class TrendAnalyzer {
 				mPeriods++;
 			}
 		}
-		mKMeansK = mPeriods * (StockTrend.LEVELS.length - 1) / 2;
-		mDataPointList.clear();
 	}
 
 	void setup(Stock stock, String period, ArrayList<StockData> stockDataList) {
@@ -252,9 +235,6 @@ public class TrendAnalyzer {
 			}
 			double predict = stockPerceptron.predict(stockTrend.getNet());
 			if ((predict * stockTrend.getNextNet() < 0)) {
-				predict = 0;
-			}
-			if (Math.abs(predict) > MAX_PREDICTION) {
 				predict = 0;
 			}
 			stockTrend.setPredict(predict);
@@ -513,23 +493,9 @@ public class TrendAnalyzer {
 		}
 	}
 
-	public void analyzeAdaptive(String period) {
-		int level = StockTrend.LEVEL_DRAW;
-		for (int i = StockTrend.LEVELS.length - 1; i > StockTrend.LEVEL_NONE; i--) {
-			if (mStock.getVertexList(period, i).size() >= StockTrend.ADAPTIVE_SIZE) {
-				level = i;
-				break;
-			}
-		}
-		if (Period.indexOf(period) < Period.indexOf(Period.DAY)) {
-			mStock.setLevel(period, level);
-		}
-	}
-
-	public void analyzeAdaptive(Stock stock) {
+	public void setupThumbnail(Stock stock) {
 		setup(stock);
 		try {
-			setupTradeLevel();
 			for (String period : Period.PERIODS) {
 				if (Setting.getPeriod(period)) {
 					setupPeriodThumbnail(period);
@@ -540,218 +506,6 @@ public class TrendAnalyzer {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	void setupTradeLevel() {
-		if (mStock.hasFlag(Stock.FLAG_CUSTOM)) {
-			return;
-		}
-		for (String period : Period.PERIODS) {
-			if (Setting.getPeriod(period)) {
-				for (int i = StockTrend.LEVEL_DRAW; i < StockTrend.LEVELS.length; i++) {
-					ArrayList<StockData> vertexList = mStock.getVertexList(period, i);
-					mDataPointList.add(newDataPoint(period, i, vertexList));
-				}
-			}
-		}
-
-		if (mDataPointList.size() < mKMeansK) {
-			Log.d("return, mDataPointList.size()=" + mDataPointList.size() + " < " + mKMeansK);
-			return;
-		}
-
-		KMeansPlusPlusClusterer<DataPoint> clusterer = new KMeansPlusPlusClusterer<>(mKMeansK, MAX_ITERATION);
-		List<CentroidCluster<DataPoint>> clusterList = clusterer.cluster(mDataPointList);
-		mClusterList = sortClusterList(clusterList);
-		setupGroupDistance();
-		analyzeTradeLevel();
-	}
-
-	DataPoint newDataPoint(String period, int level, ArrayList<StockData> vertexList) {
-		if (vertexList == null || vertexList.size() < StockTrend.VERTEX_SIZE) {
-			return new DataPoint(period, level, "", "", Integer.MAX_VALUE, StockTrend.DIRECTION_NONE, Integer.MAX_VALUE, Integer.MAX_VALUE);
-		}
-
-		StockData prev = vertexList.get(vertexList.size() - 3);
-		StockData start = vertexList.get(vertexList.size() - 2);
-		StockData end = vertexList.get(vertexList.size() - 1);
-		Calendar startCalendar = Utility.getCalendar(start.getDate(), Utility.CALENDAR_DATE_FORMAT);
-		Calendar nowCalendar = Calendar.getInstance();
-		long x = (nowCalendar.getTimeInMillis() - startCalendar.getTimeInMillis()) / Constant.MINUTE_IN_MILLIS;
-		int y = StockTrend.DIRECTION_NONE;
-		if (start.vertexOf(StockTrend.getVertexTOP(level))) {
-			y = StockTrend.DIRECTION_DOWN;
-			if (mStock.getPrice() > start.getCandle().getHigh()) {
-//				 y = StockTrend.DIRECTION_UP_UP;//TODO
-			}
-		} else if (start.vertexOf(StockTrend.getVertexBottom(level))) {
-			y = StockTrend.DIRECTION_UP;
-			if (mStock.getPrice() < start.getCandle().getLow()) {
-//				y = StockTrend.DIRECTION_DOWN_DOWN;//TODO
-			}
-		}
-
-		int past =  StockData.getDaysBetween(prev.getIndexEnd(), start.getIndexEnd(), mStock.getStockDataList(period, StockTrend.LEVEL_NONE));
-		int duration = StockData.getDaysBetween(start.getIndexEnd(), end.getIndexEnd(), mStock.getStockDataList(period, StockTrend.LEVEL_NONE));
-		return new DataPoint(period, level, start.getDateTime(), end.getDateTime(), x, y, past, duration);
-	}
-
-	List<CentroidCluster<DataPoint>> sortClusterList(List<CentroidCluster<DataPoint>> clusterList) {
-		List<CentroidCluster<DataPoint>> sorted = new ArrayList<>(clusterList);
-
-		Collections.sort(sorted, new Comparator<CentroidCluster<DataPoint>>() {
-			@Override
-			public int compare(CentroidCluster<DataPoint> o1, CentroidCluster<DataPoint> o2) {
-				double val1 = o1.getCenter().getPoint()[0];
-				double val2 = o2.getCenter().getPoint()[0];
-				if (val1 < val2) return -1;
-				if (val1 > val2) return 1;
-				return 0;
-			}
-		});
-
-		return sorted;
-	}
-
-	void setupGroupDistance() {
-		if (mClusterList == null) {
-			return;
-		}
-
-		mAllDataPointMap.clear();
-		for (int i = 0; i < mClusterList.size(); i++) {
-			CentroidCluster<DataPoint> cluster = mClusterList.get(i);
-			StringBuilder clusterInfo = new StringBuilder();
-			clusterInfo.append(Symbol.NEW_LINE + "=== 第 ").append(i).append(" 组 ===")
-					.append(" | 中心值: ").append(java.util.Arrays.toString(cluster.getCenter().getPoint()))
-					.append(" | 数量: ").append(cluster.getPoints().size());
-
-			for (DataPoint point : cluster.getPoints()) {
-				point.setGroup(i);
-				point.setDistance(point.distanceTo(cluster.getCenter()));
-				mAllDataPointMap.put(point.period + Symbol.L + point.level, point);
-				clusterInfo.append("  ").append(point);
-			}
-//			Log.d(clusterInfo.toString());
-		}
-	}
-
-	void analyzeTradeLevel() {
-		if (mClusterList == null || mClusterList.isEmpty()) {
-			return;
-		}
-
-		mDataPointMap.clear();
-		for (CentroidCluster<DataPoint> cluster : mClusterList) {
-			if (cluster == null) {
-				continue;
-			}
-
-			List<DataPoint> validList = getValidListList(cluster.getPoints());
-			if (validList == null || validList.isEmpty()) {
-				continue;
-			}
-
-			if (!mDataPointMap.isEmpty()) {
-				if (validList.get(0).duration > MAX_DURATION) {//TODO
-					setupLevel();
-					return;
-				}
-
-				if (isDirectionChanged((int)validList.get(0).getPoint()[1])) {
-					if (mDataPointMap.size() == mPeriods) {
-						setupLevel();
-						return;
-					} else {
-						mDataPointMap.clear();
-					}
-				}
-			}
-
-			for (DataPoint dataPoint : validList) {
-				updateDataPointMap(dataPoint);
-			}
-		}
-	}
-
-	List<DataPoint> getValidListList(List<DataPoint> dataPointList) {
-		List<DataPoint> validList = new ArrayList<>();
-		if (dataPointList == null || dataPointList.isEmpty()) {
-			return validList;
-		}
-
-		for (DataPoint dataPoint : dataPointList) {
-			if (dataPoint == null) {
-				continue;
-			}
-			if (dataPoint.level == StockTrend.LEVEL_NONE) {
-				continue;
-			}
-			if (dataPoint.getPoint() == null || dataPoint.getPoint().length < 2) {
-				continue;
-			}
-			if (dataPoint.getPoint()[1] == StockTrend.DIRECTION_NONE) {
-				continue;
-			}
-			if (dataPoint.past <= 1) {
-				continue;
-			}
-			validList.add(dataPoint);
-		}
-		return validList;
-	}
-
-	boolean isDirectionChanged(int direction) {
-		boolean result = false;
-		for (DataPoint existingPoint : mDataPointMap.values()) {
-			if (existingPoint.getPoint()[1] != direction) {
-				result = true;
-				break;
-			}
-		}
-		return result;
-	}
-
-	void setupLevel() {
-		double predictSum = 0;
-		StringBuilder builder = new StringBuilder();
-
-		try {
-			for (String period : Period.PERIODS) {
-				if (Setting.getPeriod(period)) {
-					DataPoint dataPoint = mDataPointMap.get(period);
-					if (dataPoint == null) {
-						continue;//TODO get average level
-					}
-
-					mStock.setLevel(period, dataPoint.level);
-					builder.append(dataPoint);
-
-					StockTrend stockTrend = mStock.getStockTrend(period, mStock.getLevel(period));
-					if (stockTrend != null) {
-						predictSum += stockTrend.getPredict();
-					}
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		mStock.setPredict((mPeriods == 0) ?  0 : Utility.Round1(predictSum / mPeriods));
-		Log.d(builder.toString());
-	}
-
-	void updateDataPointMap(DataPoint dataPoint) {
-		if (dataPoint == null) {
-			return;
-		}
-
-		if (mDataPointMap.containsKey(dataPoint.period)) {
-			if (dataPoint.level < mDataPointMap.get(dataPoint.period).level) {
-				return;
-			}
-		}
-
-		mDataPointMap.put(dataPoint.period, dataPoint);
 	}
 
 	public void setupPeriodThumbnail(String period) {
@@ -780,7 +534,7 @@ public class TrendAnalyzer {
 				if (stockData.vertexOf(StockTrend.getVertexTOP(level))) {
 					mXValues[level].add((float) index);
 					mYValues[level].add((float) stockData.getCandle().getHigh());
-					if (mStock.getLevel(period) == level) {
+					if (mStock.getAdaptive(period) == level) {
 						mStock.setTrend(period, Symbol.MINUS);
 						if (mStock.getPrice() > stockData.getCandle().getHigh()) {
 							mStock.setTrend(period, Symbol.ADD);//TODO
@@ -789,7 +543,7 @@ public class TrendAnalyzer {
 				} else if (stockData.vertexOf(StockTrend.getVertexBottom(level))) {
 					mXValues[level].add((float) index);
 					mYValues[level].add((float) stockData.getCandle().getLow());
-					if (mStock.getLevel(period) == level) {
+					if (mStock.getAdaptive(period) == level) {
 						mStock.setTrend(period, Symbol.ADD);
 						if (mStock.getPrice() < stockData.getCandle().getLow()) {
 							mStock.setTrend(period, Symbol.MINUS);//TODO
@@ -848,22 +602,22 @@ public class TrendAnalyzer {
 				float centerY = THUMBNAIL_HEIGHT / 2f;
 				float centerX = (startX + endX) / 2f;
 
-				int adaptiveLevel = mStock.getLevel(period);
+				int adaptiveLevel = mStock.getAdaptive(period);
 				int targetLevel = mStock.getTarget(period);
 				StockTrend adaptiveTrend = mStock.getStockTrend(period, adaptiveLevel);
 				StockTrend targetTrend = mStock.getStockTrend(period, targetLevel);
 
 				if (targetLevel > StockTrend.LEVEL_NONE) {
 					if (targetLevel == adaptiveLevel) {
-						drawSingleBar(startX, endX, centerX, centerY, targetTrend, targetLevel,
-								THUMBNAIL_THICK_BAR_WIDTH);
+						drawSingleBar(startX, endX, centerX, centerY, getAxisColor(targetLevel), targetTrend,
+								getTargetBarColor(targetTrend.getNextNet()), THUMBNAIL_TARGET_BAR_WIDTH);
 					} else {
 						drawDoubleBars(startX, endX, centerY, adaptiveTrend, adaptiveLevel,
 								targetTrend, targetLevel);
 					}
 				} else {
-					drawSingleBar(startX, endX, centerX, centerY, adaptiveTrend, adaptiveLevel,
-							THUMBNAIL_THIN_BAR_WIDTH);
+					drawSingleBar(startX, endX, centerX, centerY, getAxisColor(adaptiveLevel), adaptiveTrend,
+							getAdaptiveBarColor(adaptiveTrend.getNextNet()), THUMBNAIL_ADAPTIVE_BAR_WIDTH);
 				}
 
 				i++;
@@ -875,27 +629,21 @@ public class TrendAnalyzer {
 						Color.TRANSPARENT, mLineConfigList, null)));
 	}
 
-	/**
-	 * 绘制单个柱子
-	 */
-	private void drawSingleBar(float startX, float endX, float centerX, float centerY,
-							   StockTrend trend, int level, float barWidth) {
-		List<Float> xValuesPredict = Arrays.asList(centerX, centerX);
-		List<Float> yValuesPredict = Arrays.asList(centerY, centerY + (float) trend.getPredict());
-
+	private void drawSingleBar(float startX, float endX, float centerX, float centerY, int axisColor,
+							   StockTrend trend, int barColor, float barWidth) {
+		if (trend == null) {
+			return;
+		}
 		List<Float> xValuesBar = Arrays.asList(centerX, centerX);
 		List<Float> yValuesBar = Arrays.asList(centerY, centerY + (float) trend.getNextNet());
 
 		List<Float> xValuesAxis = Arrays.asList(startX, endX);
 		List<Float> yValuesAxis = Arrays.asList(centerY, centerY);
 
-		addToLineConfigList(xValuesPredict, yValuesPredict, xValuesBar, yValuesBar,
-				xValuesAxis, yValuesAxis, getBarColor(trend.getNextNet()), barWidth, getAxisColor(level));
+		addToLineConfigList(xValuesBar, yValuesBar,
+				xValuesAxis, yValuesAxis, barColor, barWidth, axisColor);
 	}
 
-	/**
-	 * 绘制两个柱子
-	 */
 	private void drawDoubleBars(float startX, float endX, float centerY,
 								StockTrend adaptiveTrend, int adaptiveLevel,
 								StockTrend targetTrend, int targetLevel) {
@@ -905,41 +653,31 @@ public class TrendAnalyzer {
 		float adaptiveCenterX = startX + lineWidth * 0.4f;
 		float targetCenterX = startX + lineWidth * 0.6f;
 
-		drawDoubleBars(adaptiveCenterX, centerY, adaptiveTrend, adaptiveLevel,
-				startX, adaptiveCenterX + lineWidth * 0.05f, THUMBNAIL_THIN_BAR_WIDTH);
+		drawDoubleBars(adaptiveCenterX, centerY, getAxisColor(adaptiveLevel),
+				startX, adaptiveCenterX + lineWidth * 0.05f, adaptiveTrend, getAdaptiveBarColor(adaptiveTrend.getNextNet()), THUMBNAIL_ADAPTIVE_BAR_WIDTH);
 
-		drawDoubleBars(targetCenterX, centerY, targetTrend, targetLevel,
-				targetCenterX - lineWidth * 0.05f, endX, THUMBNAIL_THICK_BAR_WIDTH);
+		drawDoubleBars(targetCenterX, centerY, getAxisColor(targetLevel),
+				targetCenterX - lineWidth * 0.05f, endX, targetTrend, getTargetBarColor(targetTrend.getNextNet()), THUMBNAIL_TARGET_BAR_WIDTH);
 	}
 
-	/**
-	 * 绘制带轴线的单个柱子
-	 */
-	private void drawDoubleBars(float centerX, float centerY, StockTrend trend, int level,
-								float axisStartX, float axisEndX, float barWidth) {
-		List<Float> xValuesPredict = Arrays.asList(centerX, centerX);
-		List<Float> yValuesPredict = Arrays.asList(centerY, centerY + (float) trend.getPredict());
-
+	private void drawDoubleBars(float centerX, float centerY, int axisColor,
+								float axisStartX, float axisEndX, StockTrend trend, int barColor, float barWidth) {
+		if (trend == null) {
+			return;
+		}
 		List<Float> xValuesBar = Arrays.asList(centerX, centerX);
 		List<Float> yValuesBar = Arrays.asList(centerY, centerY + (float) trend.getNextNet());
 
 		List<Float> xValuesAxis = Arrays.asList(axisStartX, axisEndX);
 		List<Float> yValuesAxis = Arrays.asList(centerY, centerY);
 
-		addToLineConfigList(xValuesPredict, yValuesPredict, xValuesBar, yValuesBar,
-				xValuesAxis, yValuesAxis, getBarColor(trend.getNextNet()), barWidth, getAxisColor(level));
+		addToLineConfigList(xValuesBar, yValuesBar,
+				xValuesAxis, yValuesAxis, barColor, barWidth, axisColor);
 	}
 
-	/**
-	 * 添加图形元素到配置列表
-	 */
-	private void addToLineConfigList(List<Float> xValuesPredict, List<Float> yValuesPredict,
-									 List<Float> xValuesBar, List<Float> yValuesBar,
+	private void addToLineConfigList(List<Float> xValuesBar, List<Float> yValuesBar,
 									 List<Float> xValuesAxis, List<Float> yValuesAxis,
 									 int barColor, float barWidth, int axisColor) {
-		mLineConfigList.add(new CurveThumbnail.LineConfig(
-				xValuesPredict, yValuesPredict, Color.GRAY, barWidth));
-
 		mLineConfigList.add(new CurveThumbnail.LineConfig(
 				xValuesBar, yValuesBar, barColor, barWidth));
 
@@ -951,13 +689,19 @@ public class TrendAnalyzer {
 		return StockTrend.getColor(level);
 	}
 
-	private int getBarColor(double value) {
+	private int getAdaptiveBarColor(double value) {
 		if (value > 0) {
-			return Color.RED;
-		} else if (value < 0) {
-			return Color.GREEN;
+			return THUMBNAIL_ADAPTIVE_COLOR_UP;
 		} else {
-			return Color.BLACK;
+			return THUMBNAIL_ADAPTIVE_COLOR_DOWN;
+		}
+	}
+
+	private int getTargetBarColor(double value) {
+		if (value > 0) {
+			return THUMBNAIL_TARGET_COLOR_UP;
+		} else {
+			return THUMBNAIL_TARGET_COLOR_DOWN;
 		}
 	}
 
@@ -967,7 +711,13 @@ public class TrendAnalyzer {
 		mCircleConfigList.clear();
 
 		setupBaseLines();
-		setupPeriodRadar();
+
+		for (String period : Period.PERIODS) {
+			if (Setting.getPeriod(period)) {
+				setupRadarPoint(mStock.getAdaptiveRadar(period), period, THUMBNAIL_ADAPTIVE_COLOR_UP, THUMBNAIL_ADAPTIVE_COLOR_DOWN);
+				setupRadarPoint(mStock.getTargetRadar(period), period, THUMBNAIL_TARGET_COLOR_UP, THUMBNAIL_TARGET_COLOR_DOWN);
+			}
+		}
 
 		CurveThumbnail thumbnail = new CurveThumbnail(
 				THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT, Color.TRANSPARENT,
@@ -1002,57 +752,47 @@ public class TrendAnalyzer {
 		mCircleConfigList.add(new CurveThumbnail.CircleConfig(centerX, centerY, Color.BLACK, THUMBNAIL_SIZE / 2.5f, THUMBNAIL_STROKE_WIDTH));
 	}
 
-	private void setupPeriodRadar() {
+	private void setupRadarPoint(Radar radar, String period, int upColor, int downColor) {
+		if (radar == null) {
+			return;
+		}
+
 		float centerX = (float) THUMBNAIL_SIZE / 2f;
 		float centerY = (float) THUMBNAIL_SIZE / 2f;
 		float radius;
 		final float lineRadius = THUMBNAIL_SIZE / 5f;
 		final float strokeWidth = 4f * THUMBNAIL_STROKE_WIDTH;
 
-		for (String period : Period.PERIODS) {
-			if (!Setting.getPeriod(period)) continue;
+		radius = (float) (THUMBNAIL_SIZE / 2f * Math.abs(radar.amplitude));
+		double angle = radar.phase;
+		float x = centerX + (float) (radius * Math.cos(angle));
+		float y = centerY + (float) (radius * Math.sin(angle));
 
-			Radar radar = mStock.getRadar(period);
-			if (radar == null) continue;
+		int color = (radar.direction == StockTrend.DIRECTION_UP) ? upColor : downColor;
 
-			// 计算散点坐标
-			radius = (float) (THUMBNAIL_SIZE / 2f * Math.abs(radar.amplitude));
-			double angle = radar.phase;
-			float x = centerX + (float) (radius * Math.cos(angle));
-			float y = centerY + (float) (radius * Math.sin(angle));
+		mScatterConfigList.add(new CurveThumbnail.ScatterConfig(
+				x, y, color, THUMBNAIL_SCATTER_SIZE
+		));
 
-			// 确定颜色
-			int color = Color.BLACK;
-			if (radar.direction == StockTrend.DIRECTION_UP) {
-				color = Color.RED;
-			}
-
-			// 添加散点
-			mScatterConfigList.add(new CurveThumbnail.ScatterConfig(
-					x, y, color, THUMBNAIL_SCATTER_SIZE
-			));
-
-			// 添加周期特定的指示线
-			switch (period) {
-				case Period.DAY:
-					addRadialLine(x, y, -lineRadius, 0, color, strokeWidth);
-					break;
-				case Period.MIN60:
-					addRadialLine(x, y, 0, lineRadius, color, strokeWidth);
-					break;
-				case Period.MIN30:
-					addRadialLine(x, y, 0, -lineRadius, color, strokeWidth);
-					break;
-				case Period.MIN15:
-					addRadialLine(x, y, lineRadius, 0, color, strokeWidth);
-					break;
-				case Period.MIN5:
-					double angleMin5 = Math.toRadians((float) Constant.MIN5 / (float) Constant.MIN60 * 360f);
-					float deltaX = (float) (lineRadius * Math.sin(angleMin5));
-					float deltaY = (float) (lineRadius * Math.cos(angleMin5));
-					addRadialLine(x, y, deltaX, deltaY, color, strokeWidth);
-					break;
-			}
+		switch (period) {
+			case Period.DAY:
+				addRadialLine(x, y, -lineRadius, 0, color, strokeWidth);
+				break;
+			case Period.MIN60:
+				addRadialLine(x, y, 0, lineRadius, color, strokeWidth);
+				break;
+			case Period.MIN30:
+				addRadialLine(x, y, 0, -lineRadius, color, strokeWidth);
+				break;
+			case Period.MIN15:
+				addRadialLine(x, y, lineRadius, 0, color, strokeWidth);
+				break;
+			case Period.MIN5:
+				double angleMin5 = Math.toRadians((float) Constant.MIN5 / (float) Constant.MIN60 * 360f);
+				float deltaX = (float) (lineRadius * Math.sin(angleMin5));
+				float deltaY = (float) (lineRadius * Math.cos(angleMin5));
+				addRadialLine(x, y, deltaX, deltaY, color, strokeWidth);
+				break;
 		}
 	}
 
@@ -1067,56 +807,6 @@ public class TrendAnalyzer {
 	private CurveThumbnail.LineConfig createLineConfig(List<Float> xValues, List<Float> yValues,
 													   int color, float strokeWidth) {
 		return new CurveThumbnail.LineConfig(xValues, yValues, color, strokeWidth);
-	}
-
-	private static class DataPoint implements Clusterable {
-		final String period;
-		final int level;
-		final String start;
-		final String end;
-		final double[] points;
-		int group;
-		int past;
-		int duration;
-		double distance;
-
-		DataPoint(String period, int level, String start, String end, double x, double y, int past, int duration) {
-			this.period = period;
-			this.level = level;
-			this.start = start;
-			this.end = end;
-			this.points = new double[]{x, y};
-			this.past = past;
-			this.duration = duration;
-		}
-
-		@Override
-		public double[] getPoint() {
-			return points;
-		}
-
-		public void setGroup(int group) {
-			this.group = group;
-		}
-
-		public void setDistance(double distance) {
-			this.distance = distance;
-		}
-
-		public double distanceTo(@NonNull Clusterable other) {
-			double[] otherPoint = other.getPoint();
-			double sum = 0.0;
-			for (int i = 0; i < points.length; i++) {
-				double diff = points[i] - otherPoint[i];
-				sum += diff * diff;
-			}
-			return Math.sqrt(sum);
-		}
-
-		@Override
-		public String toString() {
-			return Symbol.NEW_LINE + period + "-L" + level + " " + start + "--" + end + ", {" + points[0] + ", " + points[1] + "}" + " group=" + group + " past=" + past + " duration=" + duration;
-		}
 	}
 
 	private static class Holder {

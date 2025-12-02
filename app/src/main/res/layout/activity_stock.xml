@@ -81,11 +81,12 @@
                 android:layout_height="wrap_content">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:layout_marginLeft="14dp"
                     android:layout_marginRight="14dp"
-                    android:layout_weight="1">
+                    android:gravity="start">
 
                     <CheckBox
                         android:id="@+id/checkbox_trade"
@@ -99,21 +100,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="14dp"
                     android:layout_marginRight="14dp"
-                    android:layout_weight="1">
-
-                    <CheckBox
-                        android:id="@+id/checkbox_custom"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/custom" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="14dp"
-                    android:layout_weight="1">
+                    android:gravity="end">
 
                     <ImageView
                         android:id="@+id/imageview_restore_target"

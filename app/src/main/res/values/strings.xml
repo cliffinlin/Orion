@@ -120,6 +120,7 @@
     <string name="next">next</string>
     <string name="no">No</string>
     <string name="none">None</string>
+    <string name="no_stock_trend_up">No stock trends up!</string>
     <string name="notification_is_off">Notification is off</string>
     <string name="notify">Notify</string>
     <string name="ok">OK</string>

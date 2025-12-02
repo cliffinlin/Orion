@@ -10,7 +10,8 @@ public class Macd {
 	private double mDIF;
 	private double mDEA;
 	private double mHistogram;
-	private double mRadar;
+	private double mAdaptive;
+	private double mTarget;
 
 	public Macd() {
 		init();
@@ -22,7 +23,8 @@ public class Macd {
 		mDIF = 0;
 		mDEA = 0;
 		mHistogram = 0;
-		mRadar = 0;
+		mAdaptive = 0;
+		mTarget = 0;
 	}
 
 	public void set(Macd macd) {
@@ -34,7 +36,8 @@ public class Macd {
 		setDIF(macd.mDIF);
 		setDEA(macd.mDEA);
 		setHistogram(macd.mHistogram);
-		setRadar(macd.mRadar);
+		setAdaptive(macd.mAdaptive);
+		setTarget(macd.mTarget);
 	}
 
 	public void set(Cursor cursor) {
@@ -43,16 +46,18 @@ public class Macd {
 		setDIF(cursor);
 		setDEA(cursor);
 		setHistogram(cursor);
-		setRadar(cursor);
+		setAdaptive(cursor);
+		setTarget(cursor);
 	}
 
-	public void set(double average5, double average10, double dif, double dea, double histogram, double radar) {
+	public void set(double average5, double average10, double dif, double dea, double histogram, double adaptive, double target) {
 		setAverage5(average5);
 		setAverage10(average10);
 		setDIF(dif);
 		setDEA(dea);
 		setHistogram(histogram);
-		setRadar(radar);
+		setAdaptive(adaptive);
+		setTarget(target);
 	}
 
 	public double getAverage5() {
@@ -140,20 +145,37 @@ public class Macd {
 				.getColumnIndex(DatabaseContract.COLUMN_HISTOGRAM)));
 	}
 
-	public double getRadar() {
-		return mRadar;
+	public double getAdaptive() {
+		return mAdaptive;
 	}
 
-	public void setRadar(double radar) {
-		mRadar = radar;
+	public void setAdaptive(double adaptive) {
+		mAdaptive = adaptive;
 	}
 
-	void setRadar(Cursor cursor) {
+	void setAdaptive(Cursor cursor) {
 		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
-		setRadar(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_RADAR)));
+		setAdaptive(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_ADAPTIVE)));
+	}
+
+	public double getTarget() {
+		return mTarget;
+	}
+
+	public void setTarget(double target) {
+		mTarget = target;
+	}
+
+	void setTarget(Cursor cursor) {
+		if (cursor == null || cursor.isClosed()) {
+			return;
+		}
+
+		setTarget(cursor.getDouble(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_TARGET)));
 	}
 }

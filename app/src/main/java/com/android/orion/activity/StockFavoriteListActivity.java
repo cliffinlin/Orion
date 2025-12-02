@@ -122,7 +122,6 @@ public class StockFavoriteListActivity extends ListActivity implements
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_QUOTA, R.id.profite);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_SELL_PROFIT, R.id.profite);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_TREND_THUMBNAIL, R.id.trend);
-        mColumnToViewIdMap.put(DatabaseContract.COLUMN_PREDICT, R.id.predict);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_RADAR_THUMBNAIL, R.id.radar);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_YEAR_THUMBNAIL, R.id.period_year);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_MONTH6_THUMBNAIL, R.id.period_month6);
@@ -149,7 +148,7 @@ public class StockFavoriteListActivity extends ListActivity implements
         }
 
         int[] headerViewIds = {
-                R.id.stock_name_code, R.id.price, R.id.net, R.id.profite, R.id.trend, R.id.predict, R.id.radar,
+                R.id.stock_name_code, R.id.price, R.id.net, R.id.profite, R.id.trend, R.id.radar,
                 R.id.period_year, R.id.period_month6, R.id.period_quarter, R.id.period_month2, R.id.period_month, R.id.period_week,
                 R.id.period_day, R.id.period_min60, R.id.period_min30, R.id.period_min15, R.id.period_min5,
                 R.id.flag, R.id.modified
@@ -170,11 +169,6 @@ public class StockFavoriteListActivity extends ListActivity implements
         if (textView == null) return;
 
         if (viewId == R.id.flag) {
-            textView.setVisibility(View.GONE);
-            return;
-        }
-
-        if (viewId == R.id.predict) {
             textView.setVisibility(View.GONE);
             return;
         }
@@ -253,7 +247,6 @@ public class StockFavoriteListActivity extends ListActivity implements
     private void clearStockData(Stock stock) {
         mStockDatabaseManager.deleteStockData(stock);
         mStockDatabaseManager.deleteStockTrend(stock);
-        mStockDatabaseManager.deleteStockPerceptron(stock.getId());
     }
 
     @Override
@@ -262,12 +255,7 @@ public class StockFavoriteListActivity extends ListActivity implements
         setHeaderTextColor(view.getId(), HEADER_TEXT_HIGHLIGHT_COLOR);
 
         int viewId = view.getId();
-
-        if (viewId == R.id.trend) {
-            mSortOrderColumn = DatabaseContract.COLUMN_PREDICT;
-        } else {
-            mSortOrderColumn = getSortColumnForView(viewId);
-        }
+        mSortOrderColumn = getSortColumnForView(viewId);
 
         toggleSortOrderDirection();
 
@@ -366,7 +354,6 @@ public class StockFavoriteListActivity extends ListActivity implements
                 DatabaseContract.COLUMN_QUOTA,
                 DatabaseContract.COLUMN_SELL_PROFIT,
                 DatabaseContract.COLUMN_TREND_THUMBNAIL,
-                DatabaseContract.COLUMN_PREDICT,
                 DatabaseContract.COLUMN_RADAR_THUMBNAIL,
                 DatabaseContract.COLUMN_YEAR_THUMBNAIL,
                 DatabaseContract.COLUMN_MONTH6_THUMBNAIL,
@@ -391,7 +378,6 @@ public class StockFavoriteListActivity extends ListActivity implements
                 R.id.profit_divider_container,
                 R.id.sell_profit,
                 R.id.trend,
-                R.id.predict,
                 R.id.radar,
                 R.id.year,
                 R.id.month6,
@@ -678,6 +664,14 @@ public class StockFavoriteListActivity extends ListActivity implements
             }
 
             LinearLayout container = (LinearLayout) view;
+
+            if (Utility.hasFlag(cursor.getInt(mColumnIndexFlag), Stock.FLAG_TRADE)) {
+                view.setVisibility(View.VISIBLE);
+            } else {
+                view.setVisibility(View.GONE);
+                return true;
+            }
+
             View tradingPortion = container.findViewById(R.id.trading_portion);
             View remainingPortion = container.findViewById(R.id.remaining_portion);
 
@@ -783,8 +777,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 
             TextView textView = (TextView) view;
 
-            if (DatabaseContract.COLUMN_FLAG.equals(columnName) ||
-                    DatabaseContract.COLUMN_PREDICT.equals(columnName)) {
+            if (DatabaseContract.COLUMN_FLAG.equals(columnName)) {
                 textView.setText("");
                 textView.setVisibility(View.GONE);
                 return true;
@@ -797,9 +790,7 @@ public class StockFavoriteListActivity extends ListActivity implements
                 }
 
                 if (DatabaseContract.COLUMN_PRICE.equals(columnName) ||
-                        DatabaseContract.COLUMN_NET.equals(columnName) ||
-                        DatabaseContract.COLUMN_PREDICT.equals(columnName)) {
-                    // Handle numeric columns
+                        DatabaseContract.COLUMN_NET.equals(columnName)) {
                     double value = cursor.getDouble(columnIndex);
                     textView.setText(String.valueOf(value));
 

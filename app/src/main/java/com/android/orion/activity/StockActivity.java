@@ -41,7 +41,6 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 	long mHoldA = 0;
 	long mHoldB = 0;
 	CheckBox mCheckBoxTrade;
-	CheckBox mCheckBoxCustom;
 	EditText mEditTextStockName;
 	EditText mEditTextStockCode;
 	EditText mEditTextStockWindow;
@@ -94,7 +93,6 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 
 	void initView() {
 		mCheckBoxTrade = findViewById(R.id.checkbox_trade);
-		mCheckBoxCustom = findViewById(R.id.checkbox_custom);
 		mEditTextStockName = findViewById(R.id.edittext_stock_name);
 		mEditTextStockCode = findViewById(R.id.edittext_stock_code);
 		mEditTextStockWindow = findViewById(R.id.edittext_stock_window);
@@ -134,7 +132,6 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		mLayoutMin5Picker = findViewById(R.id.layout_min5_picker);
 
 		mCheckBoxTrade.setOnClickListener(this);
-		mCheckBoxCustom.setOnClickListener(this);
 		mEditTextStockName.setOnClickListener(this);
 		mEditTextStockCode.setOnClickListener(this);
 		mEditTextStockWindow.setOnClickListener(this);
@@ -304,7 +301,6 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 
 	void updateView() {
 		mCheckBoxTrade.setChecked(mStock.hasFlag(Stock.FLAG_TRADE));
-		mCheckBoxCustom.setChecked(mStock.hasFlag(Stock.FLAG_CUSTOM));
 
 		mEditTextStockName.setText(mStock.getName());
 		mEditTextStockCode.setText(mStock.getCode());
@@ -319,24 +315,17 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 
 		updateQuotaEstimation();
 
-		boolean custom = mStock.hasFlag(Stock.FLAG_CUSTOM);
-		mTradeLevelPickerDay.setEnabled(custom);
-		mTradeLevelPickerMin60.setEnabled(custom);
-		mTradeLevelPickerMin30.setEnabled(custom);
-		mTradeLevelPickerMin15.setEnabled(custom);
-		mTradeLevelPickerMin5.setEnabled(custom);
-
 		mTradeLevelPickerDay.setTargetValue(mStock.getTarget(Period.DAY));
 		mTradeLevelPickerMin60.setTargetValue(mStock.getTarget(Period.MIN60));
 		mTradeLevelPickerMin30.setTargetValue(mStock.getTarget(Period.MIN30));
 		mTradeLevelPickerMin15.setTargetValue(mStock.getTarget(Period.MIN15));
 		mTradeLevelPickerMin5.setTargetValue(mStock.getTarget(Period.MIN5));
 
-		mTradeLevelPickerDay.setValue(mStock.getLevel(Period.DAY));
-		mTradeLevelPickerMin60.setValue(mStock.getLevel(Period.MIN60));
-		mTradeLevelPickerMin30.setValue(mStock.getLevel(Period.MIN30));
-		mTradeLevelPickerMin15.setValue(mStock.getLevel(Period.MIN15));
-		mTradeLevelPickerMin5.setValue(mStock.getLevel(Period.MIN5));
+		mTradeLevelPickerDay.setValue(mStock.getAdaptive(Period.DAY));
+		mTradeLevelPickerMin60.setValue(mStock.getAdaptive(Period.MIN60));
+		mTradeLevelPickerMin30.setValue(mStock.getAdaptive(Period.MIN30));
+		mTradeLevelPickerMin15.setValue(mStock.getAdaptive(Period.MIN15));
+		mTradeLevelPickerMin5.setValue(mStock.getAdaptive(Period.MIN5));
 
 		mTradeLevelPickerDay.invalidate();
 		mTradeLevelPickerMin60.invalidate();
@@ -344,11 +333,11 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		mTradeLevelPickerMin15.invalidate();
 		mTradeLevelPickerMin5.invalidate();
 
-		updateNetTextView(Period.DAY, mStock.getLevel(Period.DAY), mTextviewDayNet);
-		updateNetTextView(Period.MIN60, mStock.getLevel(Period.MIN60), mTextviewMin60Net);
-		updateNetTextView(Period.MIN30, mStock.getLevel(Period.MIN30), mTextviewMin30Net);
-		updateNetTextView(Period.MIN15, mStock.getLevel(Period.MIN15), mTextviewMin15Net);
-		updateNetTextView(Period.MIN5, mStock.getLevel(Period.MIN5), mTextviewMin5Net);
+		updateNetTextView(Period.DAY, mStock.getAdaptive(Period.DAY), mTextviewDayNet);
+		updateNetTextView(Period.MIN60, mStock.getAdaptive(Period.MIN60), mTextviewMin60Net);
+		updateNetTextView(Period.MIN30, mStock.getAdaptive(Period.MIN30), mTextviewMin30Net);
+		updateNetTextView(Period.MIN15, mStock.getAdaptive(Period.MIN15), mTextviewMin15Net);
+		updateNetTextView(Period.MIN5, mStock.getAdaptive(Period.MIN5), mTextviewMin5Net);
 
 		updateTargetImageView(Period.DAY, mImageViewDayTarget);
 		updateTargetImageView(Period.MIN60, mImageViewMin60Target);
@@ -403,15 +392,6 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 				}
 				break;
 
-			case R.id.checkbox_custom:
-				if (mCheckBoxCustom.isChecked()) {
-					mStock.addFlag(Stock.FLAG_CUSTOM);
-				} else {
-					mStock.removeFlag(Stock.FLAG_CUSTOM);
-				}
-				updateView();
-				break;
-
 			case R.id.imageview_restore_target:
 				restoreToTargetValues();
 				break;
@@ -449,12 +429,6 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 					mStock.setSellProfit(0);
 				}
 
-				if (mCheckBoxCustom.isChecked()) {
-					mStock.addFlag(Stock.FLAG_CUSTOM);
-				} else {
-					mStock.removeFlag(Stock.FLAG_CUSTOM);
-				}
-
 				String name = mEditTextStockName.getText().toString();
 				String code = mEditTextStockCode.getText().toString();
 
@@ -470,13 +444,11 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 					return;
 				}
 
-				if (mStock.hasFlag(Stock.FLAG_CUSTOM)) {
-					mStock.setLevel(Period.DAY, mTradeLevelPickerDay.getValue());
-					mStock.setLevel(Period.MIN60, mTradeLevelPickerMin60.getValue());
-					mStock.setLevel(Period.MIN30, mTradeLevelPickerMin30.getValue());
-					mStock.setLevel(Period.MIN15, mTradeLevelPickerMin15.getValue());
-					mStock.setLevel(Period.MIN5, mTradeLevelPickerMin5.getValue());
-				}
+				mStock.setAdaptive(Period.DAY, mTradeLevelPickerDay.getValue());
+				mStock.setAdaptive(Period.MIN60, mTradeLevelPickerMin60.getValue());
+				mStock.setAdaptive(Period.MIN30, mTradeLevelPickerMin30.getValue());
+				mStock.setAdaptive(Period.MIN15, mTradeLevelPickerMin15.getValue());
+				mStock.setAdaptive(Period.MIN5, mTradeLevelPickerMin5.getValue());
 
 				String stockWindow = mEditTextStockWindow.getText().toString();
 				mStock.setWindow(stockWindow);
@@ -571,9 +543,9 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 	}
 
 	private void updateTargetImageView(String period, ImageView imageView) {
+		int adaptive = mStock.getAdaptive(period);
 		int target = mStock.getTarget(period);
-		int level = mStock.getLevel(period);
-		if (target > StockTrend.LEVEL_NONE && target == level) {
+		if (target > StockTrend.LEVEL_NONE && target == adaptive) {
 			imageView.setImageResource(R.drawable.ic_crosshair_checked);
 		} else {
 			imageView.setImageResource(R.drawable.ic_crosshair_unchecked);

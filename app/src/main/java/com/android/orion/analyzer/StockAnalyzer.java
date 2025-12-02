@@ -6,13 +6,11 @@ import android.text.TextUtils;
 import com.android.orion.application.MainApplication;
 import com.android.orion.data.Macd;
 import com.android.orion.data.Period;
-import com.android.orion.data.Radar;
 import com.android.orion.database.Stock;
 import com.android.orion.database.StockData;
 import com.android.orion.database.StockTrend;
 import com.android.orion.manager.StockDatabaseManager;
 import com.android.orion.constant.Constant;
-import com.android.orion.manager.StockNotificationManager;
 import com.android.orion.setting.Setting;
 import com.android.orion.utility.Logger;
 import com.android.orion.utility.StopWatch;
@@ -42,11 +40,11 @@ public class StockAnalyzer {
 	}
 
 	void analyze(String period) {
-		StopWatch.start();
-
 		if (mStock == null) {
 			return;
 		}
+
+		StopWatch.start();
 
 		try {
 			loadStockDataList(period);
@@ -67,15 +65,14 @@ public class StockAnalyzer {
 	}
 
 	public void analyze(Stock stock) {
-		StopWatch.start();
-
-		mStock = stock;
-		if (mStock == null) {
+		if (stock == null) {
 			return;
 		}
 
+		StopWatch.start();
 		try {
-			mStockDatabaseManager.getStock(stock);
+			mStock = stock;
+			mStockDatabaseManager.getStock(mStock);
 			mFinancialAnalyzer.analyzeFinancial(mStock);
 			mFinancialAnalyzer.setupFinancial(mStock);
 			mFinancialAnalyzer.setupStockBonus(mStock);
@@ -84,11 +81,11 @@ public class StockAnalyzer {
 					analyze(period);
 				}
 			}
-			mTrendAnalyzer.analyzeAdaptive(mStock);
+			mTrendAnalyzer.setupThumbnail(mStock);
+			mTradeAnalyzer.analyzeProfit(mStock);
 			mFinancialAnalyzer.analyzeFinancial(mStock);
 			mFinancialAnalyzer.setupFinancial(mStock);
 			mFinancialAnalyzer.setupStockBonus(mStock);
-			mTradeAnalyzer.analyze(mStock);
 			mStock.setModified(Utility.getCurrentDateTimeString());
 			mStockDatabaseManager.updateStock(mStock, mStock.getContentValues());
 		} catch (Exception e) {
@@ -96,7 +93,7 @@ public class StockAnalyzer {
 		}
 
 		StopWatch.stop();
-		Log.d(stock.toLogString() + Symbol.TAB + stock.getPriceNetString(Symbol.TAB) + Symbol.TAB + stock.getTrendStringBySetting() + Symbol.TAB + StopWatch.getIntervalString());
+		Log.d(mStock.toLogString() + Symbol.TAB + mStock.getPriceNetString(Symbol.TAB) + Symbol.TAB + mStock.getTrendStringBySetting() + Symbol.TAB + StopWatch.getIntervalString());
 	}
 
 	private void analyzeStockData(String period) {
@@ -108,8 +105,6 @@ public class StockAnalyzer {
 		for (int i = StockTrend.LEVEL_STROKE; i < StockTrend.LEVELS.length; i++) {
 			mTrendAnalyzer.analyzeLine(i);
 		}
-
-		mTrendAnalyzer.analyzeAdaptive(period);
 	}
 
 	private void analyzeMACD(String period) {
@@ -130,11 +125,16 @@ public class StockAnalyzer {
 				return;
 			}
 
-			setupPulseList(period);
+			setupPulseList(mStock.getAdaptive(period));
+			FourierAnalyzer.setComponentCount(1);
 			FourierAnalyzer.analyze(period, mPulseList);
-			ArrayList<Double> radarList = FourierAnalyzer.getRadarList();
-			Radar radar = FourierAnalyzer.getRadar();
-			mStock.setRadar(period, radar);
+			ArrayList<Double> adaptiveList = FourierAnalyzer.getRadarList();
+			mStock.setAdaptiveRadar(period, FourierAnalyzer.getRadar());
+
+			setupPulseList(mStock.getTarget(period));
+			FourierAnalyzer.analyze(period, mPulseList);
+			ArrayList<Double> targetList = FourierAnalyzer.getRadarList();
+			mStock.setTargetRadar(period, FourierAnalyzer.getRadar());
 
 			for (int i = 0; i < size; i++) {
 				StockData stockData = mStockDataList.get(i);
@@ -146,7 +146,8 @@ public class StockAnalyzer {
 							difList.get(i),
 							deaList.get(i),
 							histogramList.get(i),
-							radarList.get(i)
+							adaptiveList.get(i),
+							targetList.get(i)
 					);
 				}
 			}
@@ -155,7 +156,7 @@ public class StockAnalyzer {
 		}
 	}
 
-	void setupPulseList(String period) {
+	void setupPulseList(int level) {
 		int startIndex = 0;
 		int endIndex = 0;
 		double startValue;
@@ -164,7 +165,7 @@ public class StockAnalyzer {
 		ArrayList<Double> vertexValueList = new ArrayList<>();
 
 		mPulseList.clear();
-		setupVertexList(period, vertexDataList, vertexValueList);
+		setupVertexList(level, vertexDataList, vertexValueList);
 		if (vertexDataList.size() < StockTrend.VERTEX_SIZE || vertexDataList.size() != vertexValueList.size()) {
 			return;
 		}
@@ -186,10 +187,9 @@ public class StockAnalyzer {
 		FourierAnalyzer.setComponentCount(vertexValueList.size());
 	}
 
-	void setupVertexList(String period, ArrayList<StockData> vertexDataList, ArrayList<Double> vertexValueList) {
+	void setupVertexList(int level, ArrayList<StockData> vertexDataList, ArrayList<Double> vertexValueList) {
 		StockData extendData = null;
 		StockData vertexData = null;
-		int level = mStock.getLevel(period);
 		int size = mStockDataList.size();
 		boolean inserted = false;
 

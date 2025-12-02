@@ -24,12 +24,12 @@ public class TradeAnalyzer {
 		return Holder.INSTANCE;
 	}
 
-	public void analyze(Stock stock) {
-		mStock = stock;
-		if (mStock == null) {
+	public void analyzeProfit(Stock stock) {
+		if (stock == null) {
 			return;
 		}
 
+		mStock = stock;
 		mStock.setBuyProfit(0);
 		mStock.setSellProfit(0);
 

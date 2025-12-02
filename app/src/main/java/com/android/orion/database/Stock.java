@@ -41,7 +41,6 @@ public class Stock extends DatabaseTable {
 	public static final int FLAG_NONE = 0;
 	public static final int FLAG_FAVORITE = 1 << 0;
 	public static final int FLAG_TRADE = 1 << 1;
-	public static final int FLAG_CUSTOM = 1 << 2;
 
 	public static final double ROI_COEFFICIENT = 10;
 
@@ -81,7 +80,6 @@ public class Stock extends DatabaseTable {
 	private double mPb;
 	private double mPr;
 	private long mQuota;
-	private double mQuotaEst;
 	private long mTrading;
 	private double mTradingCost;
 	private long mHold;
@@ -113,7 +111,6 @@ public class Stock extends DatabaseTable {
 	private String mStatus;
 	private double mBuyProfit;
 	private double mSellProfit;
-	private double mPredict;
 	private byte[] mTrendThumbnail;
 	private byte[] mRadarThumbnail;
 
@@ -143,7 +140,6 @@ public class Stock extends DatabaseTable {
 
 		mFlag = 0;
 		mQuota = 0;
-		mQuotaEst = 0;
 		mTrading = 0;
 		mTradingCost = 0;
 		mHold = 0;
@@ -195,7 +191,6 @@ public class Stock extends DatabaseTable {
 		mStatus = "";
 		mBuyProfit = 0;
 		mSellProfit = 0;
-		mPredict = 0;
 	}
 
 	@Override
@@ -220,7 +215,7 @@ public class Stock extends DatabaseTable {
 		for (String period : Period.PERIODS) {
 			contentValues.put(DatabaseContract.COLUMN_PERIOD_THUMBNAIL(period), getPeriod(period).getThumbnail());
 		}
-		contentValues.put(DatabaseContract.COLUMN_LEVEL, getLevelString());
+		contentValues.put(DatabaseContract.COLUMN_ADAPTIVE, getAdaptiveString());
 		contentValues.put(DatabaseContract.COLUMN_TARGET, getTargetString());
 		contentValues.put(DatabaseContract.COLUMN_TREND, getTrendString());
 
@@ -233,7 +228,6 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_PR, mPr);
 
 		contentValues.put(DatabaseContract.COLUMN_QUOTA, mQuota);
-		contentValues.put(DatabaseContract.COLUMN_QUOTA_EST, mQuotaEst);
 		contentValues.put(DatabaseContract.COLUMN_TRADING, mTrading);
 		contentValues.put(DatabaseContract.COLUMN_TRADING_COST, mTradingCost);
 		contentValues.put(DatabaseContract.COLUMN_HOLD, mHold);
@@ -266,7 +260,6 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_STATUS, mStatus);
 		contentValues.put(DatabaseContract.COLUMN_BUY_PROFIT, mBuyProfit);
 		contentValues.put(DatabaseContract.COLUMN_SELL_PROFIT, mSellProfit);
-		contentValues.put(DatabaseContract.COLUMN_PREDICT, mPredict);
 		contentValues.put(DatabaseContract.COLUMN_TREND_THUMBNAIL, mTrendThumbnail);
 		contentValues.put(DatabaseContract.COLUMN_RADAR_THUMBNAIL, mRadarThumbnail);
 		return contentValues;
@@ -302,9 +295,7 @@ public class Stock extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_CODE, mCode);
 		contentValues.put(DatabaseContract.COLUMN_NAME, mName);
 		contentValues.put(DatabaseContract.COLUMN_WINDOW, mWindow);
-		if (hasFlag(FLAG_CUSTOM)) {
-			contentValues.put(DatabaseContract.COLUMN_LEVEL, getLevelString());
-		}
+		contentValues.put(DatabaseContract.COLUMN_ADAPTIVE, getAdaptiveString());
 		contentValues.put(DatabaseContract.COLUMN_TARGET, getTargetString());
 		contentValues.put(DatabaseContract.COLUMN_QUOTA, mQuota);
 		return contentValues;
@@ -334,7 +325,7 @@ public class Stock extends DatabaseTable {
 
 		for (String period : Period.PERIODS) {
 			getPeriod(period).setThumbnail(stock.getPeriod(period).getThumbnail());
-			getPeriod(period).setLevel(stock.getPeriod(period).getLevel());
+			getPeriod(period).setAdaptive(stock.getPeriod(period).getAdaptive());
 			getPeriod(period).setTarget(stock.getPeriod(period).getTarget());
 			getPeriod(period).setTrend(stock.getPeriod(period).getTrend());
 		}
@@ -349,7 +340,6 @@ public class Stock extends DatabaseTable {
 		setPb(stock.mPb);
 		setPr(stock.mPr);
 		setQuota(stock.mQuota);
-		setQuotaEst(stock.mQuotaEst);
 		setTrading(stock.mTrading);
 		setTradingCost(stock.mTradingCost);
 		setHold(stock.mHold);
@@ -381,7 +371,6 @@ public class Stock extends DatabaseTable {
 		setStatus(stock.mStatus);
 		setBuyProfit(stock.mBuyProfit);
 		setSellProfit(stock.mSellProfit);
-		setPredict(stock.mPredict);
 		setTrendThumbnail(stock.mTrendThumbnail);
 		setRadarThumbnail(stock.mRadarThumbnail);
 	}
@@ -410,7 +399,7 @@ public class Stock extends DatabaseTable {
 
 		for (String period : Period.PERIODS) {
 			getPeriod(period).setThumbnail(cursor);
-			getPeriod(period).setLevel(cursor);
+			getPeriod(period).setAdaptive(cursor);
 			getPeriod(period).setTarget(cursor);
 			getPeriod(period).setTrend(cursor);
 		}
@@ -425,7 +414,6 @@ public class Stock extends DatabaseTable {
 		setPb(cursor);
 		setPr(cursor);
 		setQuota(cursor);
-		setQuotaEst(cursor);
 		setTrading(cursor);
 		setTradingCost(cursor);
 		setHold(cursor);
@@ -458,7 +446,6 @@ public class Stock extends DatabaseTable {
 		setStatus(cursor);
 		setBuyProfit(cursor);
 		setSellProfit(cursor);
-		setPredict(cursor);
 		setTrendThumbnail(cursor);
 		setRadarThumbnail(cursor);
 	}
@@ -690,23 +677,6 @@ public class Stock extends DatabaseTable {
 
 		setQuota(cursor.getLong(cursor
 				.getColumnIndex(DatabaseContract.COLUMN_QUOTA)));
-	}
-
-	public double getQuotaEst() {
-		return mQuotaEst;
-	}
-
-	public void setQuotaEst(double quotaEst) {
-		mQuotaEst = quotaEst;
-	}
-
-	void setQuotaEst(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setQuotaEst(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_QUOTA_EST)));
 	}
 
 	public long getTrading() {
@@ -1357,23 +1327,6 @@ public class Stock extends DatabaseTable {
 				.getColumnIndex(DatabaseContract.COLUMN_SELL_PROFIT)));
 	}
 
-	public double getPredict() {
-		return mPredict;
-	}
-
-	public void setPredict(double predict) {
-		mPredict = predict;
-	}
-
-	void setPredict(Cursor cursor) {
-		if (cursor == null || cursor.isClosed()) {
-			return;
-		}
-
-		setPredict(cursor.getDouble(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_PREDICT)));
-	}
-
 	public byte[] getTrendThumbnail() {
 		return mTrendThumbnail;
 	}
@@ -1473,26 +1426,26 @@ public class Stock extends DatabaseTable {
 		return getPeriod(period).getStockTrendList(level);
 	}
 
-	public String getLevel() {
+	public String getAdaptive() {
 		StringBuilder builder = new StringBuilder();
 		for (String period : Period.PERIODS) {
-			builder.append(getLevel(period));
+			builder.append(getAdaptive(period));
 		}
 		return builder.toString();
 	}
 
-	public void setLevel(String level) {
+	public void setAdaptive(String adaptive) {
 		for (String period : Period.PERIODS) {
-			getPeriod(period).setLevel(getPeriod(period).fromLevelString(level));
+			getPeriod(period).setAdaptive(getPeriod(period).fromAdaptiveString(adaptive));
 		}
 	}
 
-	public int getLevel(String period) {
-		return getPeriod(period).getLevel();
+	public int getAdaptive(String period) {
+		return getPeriod(period).getAdaptive();
 	}
 
-	public void setLevel(String period, int level) {
-		getPeriod(period).setLevel(level);
+	public void setAdaptive(String period, int adaptive) {
+		getPeriod(period).setAdaptive(adaptive);
 	}
 
 	public String getTarget() {
@@ -1525,12 +1478,20 @@ public class Stock extends DatabaseTable {
 		getPeriod(period).setTrend(trend);
 	}
 
-	public Radar getRadar(String period) {
-		return getPeriod(period).getRadar();
+	public Radar getAdaptiveRadar(String period) {
+		return getPeriod(period).getAdaptiveRadar();
 	}
 
-	public void setRadar(String period, Radar radar) {
-		getPeriod(period).setRadar(radar);
+	public void setAdaptiveRadar(String period, Radar radar) {
+		getPeriod(period).setAdaptiveRadar(radar);
+	}
+
+	public Radar getTargetRadar(String period) {
+		return getPeriod(period).getTargetRadar();
+	}
+
+	public void setTargetRadar(String period, Radar radar) {
+		getPeriod(period).setTargetRadar(radar);
 	}
 
 	public void setupMarketValue() {
@@ -1794,10 +1755,10 @@ public class Stock extends DatabaseTable {
 		return builder.toString();
 	}
 
-	public String getLevelString() {
+	public String getAdaptiveString() {
 		StringBuilder builder = new StringBuilder();
 		for (String period : Period.PERIODS) {
-			builder.append(getLevel(period));
+			builder.append(getAdaptive(period));
 		}
 		return builder.toString();
 	}

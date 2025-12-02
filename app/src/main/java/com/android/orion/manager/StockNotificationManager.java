@@ -7,7 +7,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.text.TextUtils;
 
 import com.android.orion.R;
 import com.android.orion.activity.StockFavoriteChartListActivity;
@@ -100,13 +99,13 @@ public class StockNotificationManager {
 			return;
 		}
 
-		if (stockTrend.getLevel() != stock.getLevel(stockTrend.getPeriod())) {
+		if (stockTrend.getLevel() != stock.getAdaptive(stockTrend.getPeriod()) || stockTrend.getLevel() != stock.getTarget(stockTrend.getPeriod())) {
 			return;
 		}
 
 		String notifyString = "";
 		if (stock.hasFlag(Stock.FLAG_TRADE)) {
-			mTradeAnalyzer.analyze(stock);
+			mTradeAnalyzer.analyzeProfit(stock);
 			if (stockTrend.getNet() > 0) {
 				if (stock.getBuyProfit() > 0) {
 					notifyString = mTradeAnalyzer.getBuyDealString();

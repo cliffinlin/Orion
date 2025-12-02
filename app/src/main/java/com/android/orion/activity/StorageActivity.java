@@ -280,8 +280,8 @@ public class StorageActivity extends DatabaseActivity {
 								stock.setFlag(Integer.parseInt(parser.nextText()));
 							}
 						} else if (parseType == XML_PARSE_TYPE_STOCK_TRADE) {
-							if (TextUtils.equals(tagName, DatabaseContract.COLUMN_LEVEL)) {
-								stock.setLevel(parser.nextText());
+							if (TextUtils.equals(tagName, DatabaseContract.COLUMN_ADAPTIVE)) {
+								stock.setAdaptive(parser.nextText());
 							} else if (TextUtils.equals(tagName, DatabaseContract.COLUMN_TARGET)) {
 								stock.setTarget(parser.nextText());
 							} else if (TextUtils.equals(tagName, DatabaseContract.COLUMN_WINDOW)) {
@@ -437,7 +437,7 @@ public class StorageActivity extends DatabaseActivity {
 
 			try {
 				xmlSerializer.startTag(null, XML_TAG_STOCK_TRADE);
-				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_LEVEL, stock.getLevel());
+				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_ADAPTIVE, stock.getAdaptive());
 				xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_TARGET, stock.getTarget());
 				if (!TextUtils.isEmpty(stock.getWindow())) {
 					xmlSerialize(xmlSerializer, DatabaseContract.COLUMN_WINDOW, stock.getWindow());

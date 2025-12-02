@@ -29,9 +29,11 @@ import com.android.orion.utility.RecordFile;
 import com.android.orion.utility.Symbol;
 import com.android.orion.utility.Utility;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -61,7 +63,9 @@ public class StockDealActivity extends DatabaseActivity implements
 	Button mButtonOk;
 	Button mButtonCancel;
 
-	StockDeal mDeal = null;
+	StockDeal mStockDeal = null;
+	String mBuyDate = "";
+	String mSellDate = "";
 
 	Handler mHandler = new Handler(Looper.getMainLooper()) {
 
@@ -71,23 +75,28 @@ public class StockDealActivity extends DatabaseActivity implements
 
 			switch (msg.what) {
 				case MESSAGE_LOAD_DEAL:
-					mStockDatabaseManager.getStockDeal(mDeal);
-					mStock.setSE(mDeal.getSE());
-					mStock.setCode(mDeal.getCode());
+					mStockDatabaseManager.getStockDeal(mStockDeal);
+					if (mStockDeal.isBuyType()) {
+						mBuyDate = mStockDeal.getDate();
+					} else {
+						mSellDate = mStockDeal.getDate();
+					}
+					mStock.setSE(mStockDeal.getSE());
+					mStock.setCode(mStockDeal.getCode());
 					mStockDatabaseManager.getStock(mStock);
 					updateView();
-					RecordFile.writeDealFile(mStock, mDeal, Constant.DEAL_EDIT);
+					RecordFile.writeDealFile(mStock, mStockDeal, Constant.DEAL_EDIT);
 					break;
 
 				case MESSAGE_SAVE_DEAL:
 					if (TextUtils.equals(mAction, Constant.ACTION_DEAL_INSERT)) {
-						mDeal.setCreated(Utility.getCurrentDateTimeString());
-						RecordFile.writeDealFile(mStock, mDeal, Constant.DEAL_INSERT);
-						mStockDatabaseManager.insertStockDeal(mDeal);
+						mStockDeal.setCreated(Utility.getCurrentDateTimeString());
+						RecordFile.writeDealFile(mStock, mStockDeal, Constant.DEAL_INSERT);
+						mStockDatabaseManager.insertStockDeal(mStockDeal);
 					} else if (TextUtils.equals(mAction, Constant.ACTION_DEAL_EDIT)) {
-						mDeal.setModified(Utility.getCurrentDateTimeString());
-						RecordFile.writeDealFile(mStock, mDeal, Constant.DEAL_EDIT);
-						mStockDatabaseManager.updateStockDealByID(mDeal);
+						mStockDeal.setModified(Utility.getCurrentDateTimeString());
+						RecordFile.writeDealFile(mStock, mStockDeal, Constant.DEAL_EDIT);
+						mStockDatabaseManager.updateStockDealByID(mStockDeal);
 					}
 					mStockDatabaseManager.updateStockDeal(mStock);
 					mStockDatabaseManager.updateStock(mStock,
@@ -96,23 +105,23 @@ public class StockDealActivity extends DatabaseActivity implements
 
 				case MESSAGE_LOAD_STOCK_BY_ID:
 					mStockDatabaseManager.getStockById(mStock);
-					mDeal.setSE(mStock.getSE());
-					mDeal.setCode(mStock.getCode());
-					mDeal.setName(mStock.getName());
-					mDeal.setPrice(mStock.getPrice());
-					mDeal.setBuy(mStock.getPrice());
-					mDeal.setDate(Utility.getCurrentDateString());
+					mStockDeal.setSE(mStock.getSE());
+					mStockDeal.setCode(mStock.getCode());
+					mStockDeal.setName(mStock.getName());
+					mStockDeal.setPrice(mStock.getPrice());
+					mStockDeal.setBuy(mStock.getPrice());
+					mStockDeal.setDate(Utility.getCurrentDateString());
 					updateView();
 					break;
 
 				case MESSAGE_LOAD_STOCK_BY_SE_CODE:
 					mStockDatabaseManager.getStock(mStock);
-					mDeal.setSE(mStock.getSE());
-					mDeal.setCode(mStock.getCode());
-					mDeal.setName(mStock.getName());
-					mDeal.setPrice(mStock.getPrice());
-					mDeal.setBuy(mStock.getPrice());
-					mDeal.setDate(Utility.getCurrentDateString());
+					mStockDeal.setSE(mStock.getSE());
+					mStockDeal.setCode(mStock.getCode());
+					mStockDeal.setName(mStock.getName());
+					mStockDeal.setPrice(mStock.getPrice());
+					mStockDeal.setBuy(mStock.getPrice());
+					mStockDeal.setDate(Utility.getCurrentDateString());
 					updateView();
 					break;
 
@@ -128,8 +137,8 @@ public class StockDealActivity extends DatabaseActivity implements
 
 		setContentView(R.layout.activity_stock_deal);
 
-		if (mDeal == null) {
-			mDeal = new StockDeal();
+		if (mStockDeal == null) {
+			mStockDeal = new StockDeal();
 		}
 
 		if (mStock == null) {
@@ -145,7 +154,7 @@ public class StockDealActivity extends DatabaseActivity implements
 				mHandler.sendEmptyMessage(MESSAGE_LOAD_STOCK_BY_SE_CODE);
 			}
 		} else if (TextUtils.equals(mAction, Constant.ACTION_DEAL_EDIT)) {
-			mDeal.setId(mIntent.getLongExtra(Constant.EXTRA_STOCK_DEAL_ID, 0));
+			mStockDeal.setId(mIntent.getLongExtra(Constant.EXTRA_STOCK_DEAL_ID, 0));
 			mHandler.sendEmptyMessage(MESSAGE_LOAD_DEAL);
 		}
 	}
@@ -226,9 +235,9 @@ public class StockDealActivity extends DatabaseActivity implements
 				if (buy == 0) {
 					return;
 				}
-				mDeal.setBuy(buy);
+				mStockDeal.setBuy(buy);
 				setupDeal();
-				mEditTextDealProfit.setText(String.valueOf(mDeal.getProfit()));
+				mEditTextDealProfit.setText(String.valueOf(mStockDeal.getProfit()));
 			}
 		});
 
@@ -254,9 +263,9 @@ public class StockDealActivity extends DatabaseActivity implements
 				if (sell == 0) {
 					return;
 				}
-				mDeal.setSell(sell);
+				mStockDeal.setSell(sell);
 				setupDeal();
-				mEditTextDealProfit.setText(String.valueOf(mDeal.getProfit()));
+				mEditTextDealProfit.setText(String.valueOf(mStockDeal.getProfit()));
 			}
 		});
 
@@ -284,46 +293,54 @@ public class StockDealActivity extends DatabaseActivity implements
 				if (volume == 0) {
 					return;
 				}
-				mDeal.setVolume(volume);
+				mStockDeal.setVolume(volume);
 				setupDeal();
-				mEditTextDealProfit.setText(String.valueOf(mDeal.getProfit()));
+				mEditTextDealProfit.setText(String.valueOf(mStockDeal.getProfit()));
 			}
 		});
 	}
 
 	void setupDeal() {
-		mDeal.setupValue();
-		mDeal.setupFee(mStock.getRDate(), mStock.getDividend());
-		mDeal.setupProfit();
-		mDeal.setupNet();
-		mDeal.setupBonus(mStock.getDividend());
-		mDeal.setupYield(mStock.getDividend());
+		mStockDeal.setupValue();
+		mStockDeal.setupFee(mStock.getRDate(), mStock.getDividend());
+		mStockDeal.setupProfit();
+		mStockDeal.setupNet();
+		mStockDeal.setupBonus(mStock.getDividend());
+		mStockDeal.setupYield(mStock.getDividend());
 	}
 
 	void updateView() {
-		String stockAccount = mDeal.getAccount();
+		String stockAccount = mStockDeal.getAccount();
 		for (int i = 0; i < mListStockAccount.size(); i++) {
 			if (TextUtils.equals(mListStockAccount.get(i), stockAccount)) {
 				mSpinnerStockAccount.setSelection(i);
 				break;
 			}
 		}
-		if (TextUtils.equals(mDeal.getType(), StockDeal.TYPE_BUY)) {
+		if (mStockDeal.isBuyType()) {
 			mRadioGroupDealType.check(R.id.radio_deal_buy);
 			mEditTextBuyPrice.setEnabled(true);
+			if (mStockDeal.getBuy() != 0) {
+				mEditTextBuyPrice.setText(String.valueOf(mStockDeal.getBuy()));
+			} else {
+				mEditTextBuyPrice.setText("");
+			}
 			mEditTextSellPrice.setEnabled(false);
 		} else {
 			mRadioGroupDealType.check(R.id.radio_deal_sell);
-			mEditTextBuyPrice.setEnabled(false);
 			mEditTextSellPrice.setEnabled(true);
+			if (mStockDeal.getSell() != 0) {
+				mEditTextSellPrice.setText(String.valueOf(mStockDeal.getSell()));
+			} else {
+				mEditTextSellPrice.setText("");
+			}
+			mEditTextBuyPrice.setEnabled(false);
 		}
-		mEditTextStockName.setText(mDeal.getName());
-		mEditTextStockCode.setText(mDeal.getCode());
-		mEditTextDealProfit.setText(String.valueOf(mDeal.getProfit()));
-		mEditTextBuyPrice.setText(String.valueOf(mDeal.getBuy()));
-		mEditTextSellPrice.setText(String.valueOf(mDeal.getSell()));
-		mEditTextDealVolume.setText(String.valueOf(mDeal.getVolume()));
-		mEditTextDealDate.setText(mDeal.getDate());
+		mEditTextStockName.setText(mStockDeal.getName());
+		mEditTextStockCode.setText(mStockDeal.getCode());
+		mEditTextDealProfit.setText(String.valueOf(mStockDeal.getProfit()));
+		mEditTextDealVolume.setText(String.valueOf(mStockDeal.getVolume()));
+		mEditTextDealDate.setText(mStockDeal.getDate());
 	}
 
 	@Override
@@ -337,12 +354,42 @@ public class StockDealActivity extends DatabaseActivity implements
 		if (group == mRadioGroupDealType) {
 			switch (checkedId) {
 				case R.id.radio_deal_buy:
+					mStockDeal.setType(StockDeal.TYPE_BUY);
+
 					mEditTextBuyPrice.setEnabled(true);
+					if (mStockDeal.getBuy() != 0) {
+						mEditTextBuyPrice.setText(String.valueOf(mStockDeal.getBuy()));
+					}
+
 					mEditTextSellPrice.setEnabled(false);
+					mEditTextSellPrice.setText("");
+
+					if (!TextUtils.isEmpty(mBuyDate)) {
+						mEditTextDealDate.setText(mBuyDate);
+					} else {
+						mEditTextDealDate.setText(Utility.getCurrentDateString());
+					}
+					setupDeal();
+					mEditTextDealProfit.setText(String.valueOf(mStockDeal.getProfit()));
 					break;
 				case R.id.radio_deal_sell:
-					mEditTextBuyPrice.setEnabled(false);
+					mStockDeal.setType(StockDeal.TYPE_SELL);
+
 					mEditTextSellPrice.setEnabled(true);
+					if (mStockDeal.getSell() != 0) {
+						mEditTextSellPrice.setText(String.valueOf(mStockDeal.getSell()));
+					}
+
+					mEditTextBuyPrice.setEnabled(false);
+					mEditTextBuyPrice.setText("");
+
+					if (!TextUtils.isEmpty(mSellDate)) {
+						mEditTextDealDate.setText(mSellDate);
+					} else {
+						mEditTextDealDate.setText(Utility.getCurrentDateString());
+					}
+					setupDeal();
+					mEditTextDealProfit.setText(String.valueOf(mStockDeal.getProfit()));
 					break;
 			}
 		}
@@ -350,9 +397,10 @@ public class StockDealActivity extends DatabaseActivity implements
 
 	@Override
 	public void onClick(View view) {
-		int viewId = view.getId();
-
-		switch (viewId) {
+		if (view == null) {
+			return;
+		}
+		switch (view.getId()) {
 			case R.id.edittext_stock_name:
 			case R.id.edittext_stock_code:
 				if (TextUtils.equals(Constant.ACTION_DEAL_INSERT, mAction)) {
@@ -370,33 +418,33 @@ public class StockDealActivity extends DatabaseActivity implements
 				String volumeString = "";
 
 				String stockAccount = mSpinnerStockAccount.getSelectedItem().toString();
-				mDeal.setAccount(stockAccount);
+				mStockDeal.setAccount(stockAccount);
 
 				int id = mRadioGroupDealType.getCheckedRadioButtonId();
 				if (id == R.id.radio_deal_buy) {
-					mDeal.setType(StockDeal.TYPE_BUY);
+					mStockDeal.setType(StockDeal.TYPE_BUY);
 				} else if (id == R.id.radio_deal_sell) {
-					mDeal.setType(StockDeal.TYPE_SELL);
+					mStockDeal.setType(StockDeal.TYPE_SELL);
 				}
 
 				String dealDate = mEditTextDealDate.getText().toString();
 				if (TextUtils.isEmpty(dealDate)) {
 					Toast.makeText(mContext, R.string.stock_deal_date_empty, Toast.LENGTH_LONG).show();
 				}
-				mDeal.setDate(dealDate);
+				mStockDeal.setDate(dealDate);
 
 				buyString = mEditTextBuyPrice.getText().toString();
 				if (TextUtils.isEmpty(buyString)) {
-					mDeal.setBuy(0);
+					mStockDeal.setBuy(0);
 				} else {
-					mDeal.setBuy(Double.parseDouble(buyString));
+					mStockDeal.setBuy(Double.parseDouble(buyString));
 				}
 
 				sellString = mEditTextSellPrice.getText().toString();
 				if (TextUtils.isEmpty(sellString)) {
-					mDeal.setSell(0);
+					mStockDeal.setSell(0);
 				} else {
-					mDeal.setSell(Double.parseDouble(sellString));
+					mStockDeal.setSell(Double.parseDouble(sellString));
 				}
 
 				volumeString = mEditTextDealVolume.getText().toString();
@@ -405,7 +453,7 @@ public class StockDealActivity extends DatabaseActivity implements
 					Toast.makeText(mContext, R.string.stock_deal_volume_empty, Toast.LENGTH_LONG).show();
 					return;
 				}
-				mDeal.setVolume(volumeValue);
+				mStockDeal.setVolume(volumeValue);
 
 				setupDeal();
 				mHandler.sendEmptyMessage(MESSAGE_SAVE_DEAL);
@@ -442,6 +490,23 @@ public class StockDealActivity extends DatabaseActivity implements
 
 	private void showDatePicker() {
 		Calendar calendar = Calendar.getInstance();
+
+		// 尝试解析编辑框中已有的日期
+		String currentDate = mEditTextDealDate.getText().toString();
+		if (!TextUtils.isEmpty(currentDate)) {
+			try {
+				SimpleDateFormat sdf = new SimpleDateFormat(Utility.CALENDAR_DATE_FORMAT, Locale.getDefault());
+				Date date = sdf.parse(currentDate);
+				if (date != null) {
+					calendar.setTime(date);
+				}
+			} catch (ParseException e) {
+				e.printStackTrace();
+				// 如果解析失败，使用当前日期
+				calendar = Calendar.getInstance();
+			}
+		}
+
 		DatePickerDialog datePickerDialog = new DatePickerDialog(
 				this,
 				(view, year, month, dayOfMonth) -> {
@@ -449,6 +514,11 @@ public class StockDealActivity extends DatabaseActivity implements
 					selectedDate.set(year, month, dayOfMonth);
 					SimpleDateFormat sdf = new SimpleDateFormat(Utility.CALENDAR_DATE_FORMAT, Locale.getDefault());
 					mEditTextDealDate.setText(sdf.format(selectedDate.getTime()));
+					if (mStockDeal.isBuyType()) {
+						mBuyDate = mEditTextDealDate.getText().toString();
+					} else {
+						mSellDate = mEditTextDealDate.getText().toString();
+					}
 				},
 				calendar.get(Calendar.YEAR),
 				calendar.get(Calendar.MONTH),

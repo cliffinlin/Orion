@@ -50,10 +50,11 @@ public class Period {
 
 	public String mName = "";
 	public byte[] mThumbnail;
-	public int mLevel = StockTrend.LEVEL_NONE;
+	public int mAdaptive = StockTrend.LEVEL_NONE;
 	public int mTarget = StockTrend.LEVEL_NONE;
 	public String mTrend = StockTrend.TREND_NONE;
-	public Radar mRadar;
+	public Radar mAdaptiveRadar;
+	public Radar mTargetRadar;
 
 	public ArrayList<ArrayList<StockData>> mVertexLists = new ArrayList<>();
 	public ArrayList<ArrayList<StockData>> mStockDataLists = new ArrayList<>();
@@ -137,31 +138,31 @@ public class Period {
 				.getColumnIndex(DatabaseContract.COLUMN_PERIOD_THUMBNAIL(mName))));
 	}
 
-	public int getLevel() {
-		return mLevel;
+	public int getAdaptive() {
+		return mAdaptive;
 	}
 
-	public void setLevel(int level) {
-		mLevel = level;
+	public void setAdaptive(int adaptive) {
+		mAdaptive = adaptive;
 	}
 
-	public void setLevel(Cursor cursor) {
+	public void setAdaptive(Cursor cursor) {
 		if (cursor == null || cursor.isClosed()) {
 			return;
 		}
 
-		String levelString = cursor.getString(cursor
-				.getColumnIndex(DatabaseContract.COLUMN_LEVEL));
+		String adaptiveString = cursor.getString(cursor
+				.getColumnIndex(DatabaseContract.COLUMN_ADAPTIVE));
 
-		setLevel(fromLevelString(levelString));
+		setAdaptive(fromAdaptiveString(adaptiveString));
 	}
 
-	public int fromLevelString(String levelString) {
+	public int fromAdaptiveString(String adaptiveString) {
 		int result = 0;
-		if (TextUtils.isEmpty(levelString) || levelString.length() != PERIODS.length) {
+		if (TextUtils.isEmpty(adaptiveString) || adaptiveString.length() != PERIODS.length) {
 			return result;
 		}
-		return Integer.parseInt(levelString.substring(indexOf(mName), indexOf(mName) + 1));
+		return Integer.parseInt(adaptiveString.substring(indexOf(mName), indexOf(mName) + 1));
 	}
 
 	public int getTarget() {
@@ -218,12 +219,20 @@ public class Period {
 		return trendString.substring(indexOf(mName), indexOf(mName) + 1);
 	}
 
-	public Radar getRadar() {
-		return mRadar;
+	public Radar getAdaptiveRadar() {
+		return mAdaptiveRadar;
 	}
 
-	public void setRadar(Radar radar) {
-		mRadar = radar;
+	public void setAdaptiveRadar(Radar radar) {
+		mAdaptiveRadar = radar;
+	}
+
+	public Radar getTargetRadar() {
+		return mTargetRadar;
+	}
+
+	public void setTargetRadar(Radar radar) {
+		mTargetRadar = radar;
 	}
 
 	public static final String fromColumnName(String columnName) {

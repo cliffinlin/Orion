@@ -140,7 +140,8 @@ public class StockData extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_DIF, mMacd.getDIF());//TODO
 		contentValues.put(DatabaseContract.COLUMN_DEA, mMacd.getDEA());//TODO
 		contentValues.put(DatabaseContract.COLUMN_HISTOGRAM, mMacd.getHistogram());//TODO
-		contentValues.put(DatabaseContract.COLUMN_RADAR, mMacd.getRadar());//TODO
+		contentValues.put(DatabaseContract.COLUMN_ADAPTIVE, mMacd.getAdaptive());//TODO
+		contentValues.put(DatabaseContract.COLUMN_TARGET, mMacd.getTarget());//TODO
 
 		contentValues.put(DatabaseContract.COLUMN_DIRECTION, mDirection);
 		contentValues.put(DatabaseContract.COLUMN_VERTEX, mVertex);
