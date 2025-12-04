@@ -129,8 +129,10 @@ public class StockData extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_TEXT, mText);
 
 		contentValues.put(DatabaseContract.COLUMN_OPEN, mCandle.getOpen());//TODO
+		contentValues.put(DatabaseContract.COLUMN_TOP, mCandle.getTop());//TODO
 		contentValues.put(DatabaseContract.COLUMN_HIGH, mCandle.getHigh());//TODO
 		contentValues.put(DatabaseContract.COLUMN_LOW, mCandle.getLow());//TODO
+		contentValues.put(DatabaseContract.COLUMN_BOTTOM, mCandle.getBottom());//TODO
 		contentValues.put(DatabaseContract.COLUMN_CLOSE, mCandle.getClose());//TODO
 		contentValues.put(DatabaseContract.COLUMN_CHANGE, mChange);
 		contentValues.put(DatabaseContract.COLUMN_NET, mNet);
@@ -438,13 +440,6 @@ public class StockData extends DatabaseTable {
 	public String getDay() {
 		int day = getCalendar().get(Calendar.DAY_OF_MONTH);
 		return String.format("%02d", day);
-	}
-
-	public void add(StockData stockData, long weight) {
-		if (stockData == null) {
-			return;
-		}
-		mCandle.add(stockData.mCandle, weight);
 	}
 
 	public int getIndex() {

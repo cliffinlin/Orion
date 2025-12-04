@@ -409,8 +409,7 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		StopWatch.stop();
-		Log.d("size:" + jsonArray.size()
-				+ " " + StopWatch.getInterval() + "s");
+		Log.d("size:" + jsonArray.size()+ Symbol.TAB + StopWatch.getIntervalString());
 	}
 
 	@Override
@@ -534,7 +533,7 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		StopWatch.stop();
-		Log.d(stock.toLogString() + " " + StopWatch.getInterval() + "s");
+		Log.d(stock.toLogString() + Symbol.TAB + StopWatch.getIntervalString());
 	}
 
 	@Override
@@ -675,7 +674,7 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		StopWatch.stop();
-		Log.d(stock.toLogString() + " " + StopWatch.getInterval() + "s");//TODO
+		Log.d(stock.toLogString() + Symbol.TAB + StopWatch.getIntervalString());
 	}
 
 	@Override
@@ -879,8 +878,7 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		StopWatch.stop();
-		Log.d(stock.toLogString() + " "
-				+ stockData.getPeriod() + " " + StopWatch.getInterval() + "s");//TODO
+		Log.d(stock.toLogString() + Symbol.TAB + stockData.getPeriod() + Symbol.TAB + StopWatch.getIntervalString());
 	}
 
 	@Override
@@ -1060,7 +1058,7 @@ public class SinaFinance extends StockDataProvider {
 		Log.d(stock.toLogString() + Symbol.TAB
 				+ stockData.getDate() + Symbol.TAB + stockData.getTime() + Symbol.TAB
 				+ stockData.getCandle().toString()
-				+ StopWatch.getInterval() + "s");
+				+ Symbol.TAB + StopWatch.getIntervalString());
 	}
 
 	@Override
@@ -1270,7 +1268,7 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		StopWatch.stop();
-		Log.d(stock.toLogString() + " " + StopWatch.getInterval() + "s");//TODO
+		Log.d(stock.toLogString() + Symbol.TAB + StopWatch.getIntervalString());
 	}
 
 	@Override
@@ -1453,7 +1451,7 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		StopWatch.stop();
-		Log.d(stock.toLogString() + " " + StopWatch.getInterval() + "s");//TODO
+		Log.d(stock.toLogString() + Symbol.TAB + StopWatch.getIntervalString());
 	}
 
 	@Override
@@ -1633,7 +1631,7 @@ public class SinaFinance extends StockDataProvider {
 		}
 
 		StopWatch.stop();
-		Log.d(stock.toLogString() + " " + StopWatch.getInterval() + "s");//TODO
+		Log.d(stock.toLogString() + Symbol.TAB + StopWatch.getIntervalString());
 	}
 
 	private boolean isAccessDenied(String string) {

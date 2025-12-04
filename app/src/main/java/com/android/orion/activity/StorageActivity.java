@@ -42,10 +42,10 @@ public class StorageActivity extends DatabaseActivity {
 	static final int XML_PARSE_TYPE_STOCK_TRADE = 2;
 	static final int XML_PARSE_TYPE_STOCK_DEAL = 3;
 
-	static final int MESSAGE_REFRESH = 0;
-	static final int MESSAGE_LOAD_FAVORITE = 1;
-	static final int MESSAGE_SAVE_FAVORITE = 2;
-	static final int MESSAGE_SAVE_TDX_DATA = 3;
+	static final int MESSAGE_REFRESH = 100;
+	static final int MESSAGE_LOAD_FAVORITE = 200;
+	static final int MESSAGE_SAVE_FAVORITE = 300;
+	static final int MESSAGE_SAVE_TDX_DATA = 400;
 
 	static final int REQUEST_CODE_READ = 40;
 	static final int REQUEST_CODE_READ_FAVORITE = 41;

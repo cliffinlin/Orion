@@ -56,8 +56,8 @@ public class StockDealListActivity extends ListActivity implements
 	static final int FILTER_TYPE_SELL = 2;
 	static final int FILTER_TYPE_ALL = 3;
 
-	static final int MESSAGE_DELETE_DEAL = 0;
-	static final int MESSAGE_DELETE_DEAL_LIST = 1;
+	static final int MESSAGE_DELETE_DEAL = 100;
+	static final int MESSAGE_DELETE_DEAL_LIST = 200;
 
 	static final int MESSAGE_VIEW_STOCK_DEAL = 4;
 	static final int MESSAGE_VIEW_STOCK_CHAT = 5;
@@ -181,7 +181,7 @@ public class StockDealListActivity extends ListActivity implements
 			switch (item.getItemId()) {
 				case R.id.menu_edit:
 					mIntent = new Intent(mContext, StockDealActivity.class);
-					mIntent.setAction(Constant.ACTION_DEAL_EDIT);
+					mIntent.setAction(Constant.ACTION_STOCK_DEAL_EDIT);
 					mIntent.putExtra(Constant.EXTRA_STOCK_DEAL_ID,
 							mStockDeal.getId());
 					startActivityForResult(mIntent, REQUEST_CODE_DEAL_EDIT);
@@ -278,7 +278,7 @@ public class StockDealListActivity extends ListActivity implements
 				}
 
 				mIntent = new Intent(this, StockDealActivity.class);
-				mIntent.setAction(Constant.ACTION_DEAL_INSERT);
+				mIntent.setAction(Constant.ACTION_STOCK_DEAL_NEW);
 				if (mBundle != null) {
 					mIntent.putExtras(mBundle);
 				}

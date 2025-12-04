@@ -49,7 +49,7 @@ public class TrendAnalyzer {
 	List<Float>[] mYValues = new List[StockTrend.LEVELS.length];
 	ArrayList<CurveThumbnail.LineConfig> mLineConfigList = new ArrayList<>();
 	ArrayList<CurveThumbnail.ScatterConfig> mScatterConfigList = new ArrayList<>();
-	List<CurveThumbnail.CircleConfig> mCircleConfigList = new ArrayList<>();
+	ArrayList<CurveThumbnail.CircleConfig> mCircleConfigList = new ArrayList<>();
 	ArrayList<StockData> mStockDataList = new ArrayList<>();
 	StockDatabaseManager mStockDatabaseManager = StockDatabaseManager.getInstance();
 	StockPerceptronProvider mStockPerceptronProvider = StockPerceptronProvider.getInstance();
@@ -262,8 +262,14 @@ public class TrendAnalyzer {
 
 			if (current.vertexOf(StockTrend.VERTEX_TOP)) {
 				vertex.setVertex(StockTrend.VERTEX_BOTTOM);
+				if (vertex.getCandle().getHigh() > current.getCandle().getHigh()) {
+					vertex.setVertex(StockTrend.VERTEX_TOP);
+				}
 			} else if (current.vertexOf(StockTrend.VERTEX_BOTTOM)) {
 				vertex.setVertex(StockTrend.VERTEX_TOP);
+				if (vertex.getCandle().getLow() < current.getCandle().getLow()) {
+					vertex.setVertex(StockTrend.VERTEX_BOTTOM);
+				}
 			}
 
 			if (index == 0) {

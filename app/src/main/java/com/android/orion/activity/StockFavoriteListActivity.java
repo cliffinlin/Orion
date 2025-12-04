@@ -207,7 +207,7 @@ public class StockFavoriteListActivity extends ListActivity implements
         int itemId = item.getItemId();
 
         if (itemId == R.id.action_new) {
-            startStockActivity(Constant.ACTION_FAVORITE_STOCK_INSERT);
+            startStockActivity(Constant.ACTION_STOCK_NEW);
         } else if (itemId == R.id.action_refresh) {
             refreshStockData();
         } else if (itemId == R.id.action_load) {

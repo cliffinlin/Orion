@@ -1741,9 +1741,16 @@ public class Stock extends DatabaseTable {
 		return result;
 	}
 
-	public String getPriceNetString(String separator) {
+	public String getPinyinCodeString(String separator) {
 		StringBuilder builder = new StringBuilder();
-		builder.append(getPrice()).append(separator);
+		builder.append(getPinyin()).append(separator);
+		builder.append(getCode());
+		return builder.toString();
+	}
+
+	public String getPriceNetString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(getPrice()).append(Symbol.WHITE_SPACE);
 		builder.append(getNet()).append(Symbol.PERCENT);
 		return builder.toString();
 	}
@@ -1751,7 +1758,7 @@ public class Stock extends DatabaseTable {
 	public String getNamePriceNetString(String separator) {
 		StringBuilder builder = new StringBuilder();
 		builder.append(getName()).append(separator);
-		builder.append(getPriceNetString(separator));
+		builder.append(getPriceNetString());
 		return builder.toString();
 	}
 
@@ -1795,7 +1802,10 @@ public class Stock extends DatabaseTable {
 	}
 
 	public String toLogString() {
-		return mPinyin + Symbol.TAB
-				+ mCode + Symbol.TAB;
+		StringBuilder builder = new StringBuilder();
+		builder.append(getPinyinCodeString(Symbol.TAB)).append(Symbol.TAB);
+		builder.append(getPriceNetString()).append(Symbol.TAB);
+		builder.append(getTrendStringBySetting());
+		return builder.toString();
 	}
 }

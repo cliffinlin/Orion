@@ -61,7 +61,7 @@ public class StockAnalyzer {
 		}
 
 		StopWatch.stop();
-		Log.d(mStock.toLogString() + " " + period + Symbol.TAB + StopWatch.getIntervalString());
+		Log.d(mStock.toLogString() + Symbol.TAB + period + Symbol.TAB + StopWatch.getIntervalString());
 	}
 
 	public void analyze(Stock stock) {
@@ -93,7 +93,7 @@ public class StockAnalyzer {
 		}
 
 		StopWatch.stop();
-		Log.d(mStock.toLogString() + Symbol.TAB + mStock.getPriceNetString(Symbol.TAB) + Symbol.TAB + mStock.getTrendStringBySetting() + Symbol.TAB + StopWatch.getIntervalString());
+		Log.d(mStock.toLogString() + Symbol.TAB + "total" + Symbol.TAB + StopWatch.getIntervalString());
 	}
 
 	private void analyzeStockData(String period) {

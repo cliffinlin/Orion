@@ -9,9 +9,42 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <!-- 新的stock_name_code布局，在编辑模式下显示 -->
         <LinearLayout
+            android:id="@+id/layout_stock_name_code_display"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:padding="14dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground">
+
+            <TextView
+                android:id="@+id/textview_display_stock_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_gravity="center_horizontal"
+                android:paddingBottom="4dp" />
+
+            <TextView
+                android:id="@+id/textview_display_stock_code"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@android:color/darker_gray" />
+        </LinearLayout>
+
+        <!-- 原有的编辑布局，在添加模式下显示 -->
+        <LinearLayout
+            android:id="@+id/layout_stock_name_code_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -117,8 +150,86 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="5"
+                android:weightSum="7"
                 android:gravity="center">
+
+                <!-- Month Picker -->
+                <LinearLayout
+                    android:id="@+id/layout_month_picker"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="4dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Month"
+                        android:textStyle="bold"
+                        android:paddingBottom="4dp"
+                        android:textSize="12sp" />
+
+                    <com.android.orion.widget.TradeLevelPicker
+                        android:id="@+id/trade_level_picker_month"
+                        android:layout_width="80dp"
+                        android:layout_height="60dp" />
+
+                    <TextView
+                        android:id="@+id/textview_month_net"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:paddingTop="2dp" />
+
+                    <ImageView
+                        android:id="@+id/imageview_month_target"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_unchecked"
+                        android:clickable="true"
+                        android:focusable="true" />
+                </LinearLayout>
+
+                <!-- Week Picker -->
+                <LinearLayout
+                    android:id="@+id/layout_week_picker"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="4dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Week"
+                        android:textStyle="bold"
+                        android:paddingBottom="4dp"
+                        android:textSize="12sp" />
+
+                    <com.android.orion.widget.TradeLevelPicker
+                        android:id="@+id/trade_level_picker_week"
+                        android:layout_width="80dp"
+                        android:layout_height="60dp" />
+
+                    <TextView
+                        android:id="@+id/textview_week_net"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:paddingTop="2dp" />
+
+                    <ImageView
+                        android:id="@+id/imageview_week_target"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_unchecked"
+                        android:clickable="true"
+                        android:focusable="true" />
+                </LinearLayout>
 
                 <!-- Day Picker -->
                 <LinearLayout
@@ -575,44 +686,6 @@
                     android:layout_marginRight="14dp"
                     android:layout_marginBottom="14dp"
                     android:inputType="numberDecimal" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="1dip"
-            android:background="@drawable/divider_line" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-
-                <TextView
-                    android:id="@+id/textView_url"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="14dp"
-                    android:labelFor="@+id/textview_se_url"
-                    android:text="@string/url" />
-
-                <TextView
-                    android:id="@+id/textview_se_url"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="18dp"
-                    android:layout_marginRight="14dp"
-                    android:layout_marginBottom="14dp"
-                    android:textStyle="bold"
-                    android:padding="8dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:autoLink="web" />
             </LinearLayout>
         </LinearLayout>
 

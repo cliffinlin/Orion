@@ -48,6 +48,8 @@ import okhttp3.OkHttpClient;
 
 public class StockDataProvider implements StockListener, IStockDataProvider {
 
+	public static final int MESSAGE_TYPE_DOWNLOAD = 100;
+	public static final int MESSAGE_TYPE_ANALYZE = 200;
 	public static final int RESULT_SUCCESS = 1;
 	public static final int RESULT_NONE = 0;
 	public static final int RESULT_FAILED = -1;
@@ -300,6 +302,20 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		}
 	}
 
+	void sendAnalyzeMessage(Stock stock) {
+		if (stock == null) {
+			return;
+		}
+		int messageID = stock.getCode().hashCode();
+		if (mHandler.hasMessages(messageID)) {
+			Log.d("return, mHandler.hasMessages " + stock.toLogString());
+			return;
+		}
+		Message msg = mHandler.obtainMessage(messageID, stock);
+		msg.arg1 = MESSAGE_TYPE_ANALYZE;
+		mHandler.sendMessageAtFrontOfQueue(msg);
+	}
+
 	void removeDownloadMessage(Stock stock) {
 		if (stock == null) {
 			return;
@@ -321,11 +337,20 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 			return;
 		}
 		Message msg = mHandler.obtainMessage(messageID, stock);
+		msg.arg1 = MESSAGE_TYPE_DOWNLOAD;
 		if (delayed) {
 			mHandler.sendMessageDelayed(msg, SEND_MESSAGE_DELAY_DOWNLOAD);
 		} else {
 			mHandler.sendMessageAtFrontOfQueue(msg);
 		}
+	}
+
+	@Override
+	public void analyze(Stock stock) {
+		if (stock == null) {
+			return;
+		}
+		sendAnalyzeMessage(stock);
 	}
 
 	@Override
@@ -944,76 +969,108 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 					return;
 				}
 
-				if (!Utility.isNetworkConnected(mContext)) {
-					Log.d("return, isNetworkConnected=" + Utility.isNetworkConnected(mContext));
-					return;
-				}
+				if (msg.arg1 == MESSAGE_TYPE_ANALYZE) {
+					handleAnalyzeMessage((Stock) msg.obj);
+				} else if (msg.arg1 == MESSAGE_TYPE_DOWNLOAD) {
+					handleDownloadMessage((Stock) msg.obj);
 
-				onDownloadStart(stock.getCode());
-				if (TextUtils.equals(stock.getClasses(), Stock.CLASS_A)) {
-					long interval = System.currentTimeMillis() - Setting.getDownloadStockTimeMillis(stock);
-					if ((Market.isTradingHours() && interval > Constant.HOUR_IN_MILLIS) || interval > Config.downloadStockInterval) {
-						if (downloadStockInformation(stock) == RESULT_FAILED) {
-							StockService.getInstance().onDisconnected();
-							return;
-						}
-
-						if (downloadStockFinancial(stock) == RESULT_FAILED) {
-							StockService.getInstance().onDisconnected();
-							return;
-						}
-
-						if (downloadStockBonus(stock) == RESULT_FAILED) {
-							StockService.getInstance().onDisconnected();
-							return;
-						}
-
-						if (downloadStockShare(stock) == RESULT_FAILED) {
-							StockService.getInstance().onDisconnected();
-							return;
-						}
-
-						Setting.setDownloadStockTimeMillis(stock, System.currentTimeMillis());
+					if (Setting.getStockDataChanged(stock)) {
+						Setting.setStockDataChanged(stock, false);
+						handleAnalyzeMessage(stock);
 					}
-
-					interval = System.currentTimeMillis() - Setting.getDownloadStockDataTimeMillis(stock);
-					if (Market.isTradingHours() || (interval > Config.downloadStockDataInterval)) {
-						if (downloadStockDataHistory(stock) == RESULT_FAILED) {
-							StockService.getInstance().onDisconnected();
-							return;
-						}
-
-						if (downloadStockDataRealTime(stock) == RESULT_FAILED) {
-							StockService.getInstance().onDisconnected();
-							return;
-						}
-
-						if (downloadStockRealTime(stock) == RESULT_FAILED) {
-							StockService.getInstance().onDisconnected();
-							return;
-						}
-
-						if (Market.isTradingHours()) {
-							Setting.setDownloadStockDataTimeMillis(stock, 0);
-						} else {
-							Setting.setDownloadStockDataTimeMillis(stock, System.currentTimeMillis());
-						}
-					}
-				}
-				onDownloadComplete(stock.getCode());
-
-				if (Setting.getStockDataChanged(stock)) {
-					Setting.setStockDataChanged(stock, false);
-
-					onAnalyzeStart(stock.getCode());
-					mStockAnalyzer.analyze(stock);
-					onAnalyzeFinish(stock.getCode());
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {
 				releaseWakeLock();
 			}
+		}
+	}
+
+	private void handleAnalyzeMessage(Stock stock) {
+		if (stock == null) {
+			return;
+		}
+
+		try {
+			onAnalyzeStart(stock.getCode());
+			mStockAnalyzer.analyze(stock);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			onAnalyzeFinish(stock.getCode());
+		}
+	}
+
+	private void handleDownloadMessage(Stock stock) {
+		if (stock == null) {
+			return;
+		}
+
+		if (!Utility.isNetworkConnected(mContext)) {
+			Log.d("return, isNetworkConnected=" + Utility.isNetworkConnected(mContext));
+			return;
+		}
+
+		if (!TextUtils.equals(stock.getClasses(), Stock.CLASS_A)) {
+			Log.d("return, stock.getClasses()!=" + Stock.CLASS_A);
+			return;
+		}
+
+		try {
+			onDownloadStart(stock.getCode());
+			long interval = System.currentTimeMillis() - Setting.getDownloadStockTimeMillis(stock);
+			if ((Market.isTradingHours() && interval > Constant.HOUR_IN_MILLIS) || interval > Config.downloadStockInterval) {
+				if (downloadStockInformation(stock) == RESULT_FAILED) {
+					StockService.getInstance().onDisconnected();
+					return;
+				}
+
+				if (downloadStockFinancial(stock) == RESULT_FAILED) {
+					StockService.getInstance().onDisconnected();
+					return;
+				}
+
+				if (downloadStockBonus(stock) == RESULT_FAILED) {
+					StockService.getInstance().onDisconnected();
+					return;
+				}
+
+				if (downloadStockShare(stock) == RESULT_FAILED) {
+					StockService.getInstance().onDisconnected();
+					return;
+				}
+
+				Setting.setDownloadStockTimeMillis(stock, System.currentTimeMillis());
+			}
+
+			interval = System.currentTimeMillis() - Setting.getDownloadStockDataTimeMillis(stock);
+			if (Market.isTradingHours() || (interval > Config.downloadStockDataInterval)) {
+				if (downloadStockDataHistory(stock) == RESULT_FAILED) {
+					StockService.getInstance().onDisconnected();
+					return;
+				}
+
+				if (downloadStockDataRealTime(stock) == RESULT_FAILED) {
+					StockService.getInstance().onDisconnected();
+					return;
+				}
+
+				if (downloadStockRealTime(stock) == RESULT_FAILED) {
+					StockService.getInstance().onDisconnected();
+					return;
+				}
+
+				if (Market.isTradingHours()) {
+					Setting.setDownloadStockDataTimeMillis(stock, 0);
+				} else {
+					Setting.setDownloadStockDataTimeMillis(stock, System.currentTimeMillis());
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			onDownloadComplete(stock.getCode());
 		}
 	}
 }

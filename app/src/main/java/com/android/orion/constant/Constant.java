@@ -7,11 +7,11 @@ public class Constant {
 	public static final String FILE_EXT_TEXT = ".txt";
 	public static final String FILE_EXT_XML = ".xml";
 
-	public static final String ACTION_DEAL_EDIT = "orion.intent.action.ACTION_DEAL_EDIT";
-	public static final String ACTION_DEAL_INSERT = "orion.intent.action.ACTION_DEAL_INSERT";
-	public static final String ACTION_FAVORITE_STOCK_INSERT = "orion.intent.action.ACTION_FAVORITE_STOCK_INSERT";
-	public static final String ACTION_STOCK_EDIT = "orion.intent.action.ACTION_STOCK_EDIT";
+	public static final String ACTION_STOCK_DEAL_EDIT = "orion.intent.action.ACTION_STOCK_DEAL_EDIT";
+	public static final String ACTION_STOCK_DEAL_NEW = "orion.intent.action.ACTION_STOCK_DEAL_NEW";
 	public static final String ACTION_STOCK_ID = "orion.intent.action.ACTION_STOCK_ID";
+	public static final String ACTION_STOCK_EDIT = "orion.intent.action.ACTION_STOCK_EDIT";
+	public static final String ACTION_STOCK_NEW = "orion.intent.action.ACTION_STOCK_NEW";
 
 	public static final String DEAL = "deal";
 	public static final String DEAL_INSERT = "insert";
@@ -29,7 +29,6 @@ public class Constant {
 	public static final String EXTRA_STOCK_PERCEPTRON_ID = "stock_perceptron_id";
 	public static final String EXTRA_STOCK_ID_LIST = "stock_id_list";
 	public static final String EXTRA_STOCK_LIST_SORT_ORDER = "stock_list_sort_order";
-	public static final String EXTRA_URL = "url";
 
 	public static final int FILE_TYPE_NONE = 0;
 	public static final int FILE_TYPE_FAVORITE = 1;

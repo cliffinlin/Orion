@@ -21,6 +21,6 @@ public class StopWatch {
     }
 
     public static String getIntervalString() {
-        return "elapsed " + mInterval + "s ";
+        return " " + mInterval + "s ";
     }
 }

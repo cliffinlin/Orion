@@ -85,7 +85,7 @@ public class StockListActivity extends StorageActivity implements View.OnClickLi
 		switch (item.getItemId()) {
 			case R.id.action_new:
 				Intent intent = new Intent(this, StockActivity.class);
-				intent.setAction(Constant.ACTION_FAVORITE_STOCK_INSERT);
+				intent.setAction(Constant.ACTION_STOCK_NEW);
 				startActivity(intent);
 				break;
 			case R.id.action_refresh:

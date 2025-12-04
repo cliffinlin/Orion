@@ -383,7 +383,7 @@ public class StockDataChart {
 		LimitLine limitLine;
 		int color = Color.WHITE;
 		String label = "                                                     ";
-		label += stock.getPriceNetString(" ");
+		label += stock.getPriceNetString();
 		limitLine = createLimitLine(stock.getPrice(), color, label);
 		mLimitLineList.add(limitLine);
 	}

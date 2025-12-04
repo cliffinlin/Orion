@@ -1,8 +1,8 @@
 package com.android.orion.activity;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
@@ -40,6 +40,7 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 
 	long mHoldA = 0;
 	long mHoldB = 0;
+	String mOrginStockWindow = "";
 	CheckBox mCheckBoxTrade;
 	EditText mEditTextStockName;
 	EditText mEditTextStockCode;
@@ -52,18 +53,23 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 	EditText mEditTextStockYield;
 	EditText mEditTextStockHoldA;
 	EditText mEditTextStockHoldB;
+	TextView mTextviewMonthNet;
+	TextView mTextviewWeekNet;
 	TextView mTextviewDayNet;
 	TextView mTextviewMin60Net;
 	TextView mTextviewMin30Net;
 	TextView mTextviewMin15Net;
 	TextView mTextviewMin5Net;
-	TextView mTextViewSeUrl;
+	TradeLevelPicker mTradeLevelPickerMonth;
+	TradeLevelPicker mTradeLevelPickerWeek;
 	TradeLevelPicker mTradeLevelPickerDay;
 	TradeLevelPicker mTradeLevelPickerMin60;
 	TradeLevelPicker mTradeLevelPickerMin30;
 	TradeLevelPicker mTradeLevelPickerMin15;
 	TradeLevelPicker mTradeLevelPickerMin5;
 	ImageView mImageViewRestoreTarget;
+	ImageView mImageViewMonthTarget;
+	ImageView mImageViewWeekTarget;
 	ImageView mImageViewDayTarget;
 	ImageView mImageViewMin60Target;
 	ImageView mImageViewMin30Target;
@@ -73,11 +79,18 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 	Button mButtonCancel;
 
 	LinearLayout mLayoutTradeLevelPickers;
+	LinearLayout mLayoutMonthPicker;
+	LinearLayout mLayoutWeekPicker;
 	LinearLayout mLayoutDayPicker;
 	LinearLayout mLayoutMin60Picker;
 	LinearLayout mLayoutMin30Picker;
 	LinearLayout mLayoutMin15Picker;
 	LinearLayout mLayoutMin5Picker;
+
+	LinearLayout mLayoutStockNameCodeDisplay;
+	LinearLayout mLayoutStockNameCodeEdit;
+	TextView mTextViewDisplayStockName;
+	TextView mTextViewDisplayStockCode;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -104,18 +117,23 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		mEditTextStockYield = findViewById(R.id.edittext_stock_yield);
 		mEditTextStockHoldA = findViewById(R.id.edittext_stock_hold_a);
 		mEditTextStockHoldB = findViewById(R.id.edittext_stock_hold_b);
+		mTextviewMonthNet = findViewById(R.id.textview_month_net);
+		mTextviewWeekNet = findViewById(R.id.textview_week_net);
 		mTextviewDayNet = findViewById(R.id.textview_day_net);
 		mTextviewMin60Net = findViewById(R.id.textview_min60_net);
 		mTextviewMin30Net = findViewById(R.id.textview_min30_net);
 		mTextviewMin15Net = findViewById(R.id.textview_min15_net);
 		mTextviewMin5Net = findViewById(R.id.textview_min5_net);
-		mTextViewSeUrl = findViewById(R.id.textview_se_url);
+		mTradeLevelPickerMonth = findViewById(R.id.trade_level_picker_month);
+		mTradeLevelPickerWeek = findViewById(R.id.trade_level_picker_week);
 		mTradeLevelPickerDay = findViewById(R.id.trade_level_picker_day);
 		mTradeLevelPickerMin60 = findViewById(R.id.trade_level_picker_min60);
 		mTradeLevelPickerMin30 = findViewById(R.id.trade_level_picker_min30);
 		mTradeLevelPickerMin15 = findViewById(R.id.trade_level_picker_min15);
 		mTradeLevelPickerMin5 = findViewById(R.id.trade_level_picker_min5);
 		mImageViewRestoreTarget = findViewById(R.id.imageview_restore_target);
+		mImageViewMonthTarget = findViewById(R.id.imageview_month_target);
+		mImageViewWeekTarget = findViewById(R.id.imageview_week_target);
 		mImageViewDayTarget = findViewById(R.id.imageview_day_target);
 		mImageViewMin60Target = findViewById(R.id.imageview_min60_target);
 		mImageViewMin30Target = findViewById(R.id.imageview_min30_target);
@@ -125,11 +143,18 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		mButtonCancel = findViewById(R.id.button_cancel);
 
 		mLayoutTradeLevelPickers = findViewById(R.id.layout_trade_level_pickers);
+		mLayoutMonthPicker = findViewById(R.id.layout_month_picker);
+		mLayoutWeekPicker = findViewById(R.id.layout_week_picker);
 		mLayoutDayPicker = findViewById(R.id.layout_day_picker);
 		mLayoutMin60Picker = findViewById(R.id.layout_min60_picker);
 		mLayoutMin30Picker = findViewById(R.id.layout_min30_picker);
 		mLayoutMin15Picker = findViewById(R.id.layout_min15_picker);
 		mLayoutMin5Picker = findViewById(R.id.layout_min5_picker);
+
+		mLayoutStockNameCodeDisplay = findViewById(R.id.layout_stock_name_code_display);
+		mLayoutStockNameCodeEdit = findViewById(R.id.layout_stock_name_code_edit);
+		mTextViewDisplayStockName = findViewById(R.id.textview_display_stock_name);
+		mTextViewDisplayStockCode = findViewById(R.id.textview_display_stock_code);
 
 		mCheckBoxTrade.setOnClickListener(this);
 		mEditTextStockName.setOnClickListener(this);
@@ -141,8 +166,9 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		mEditTextStockTradingCost.setOnClickListener(this);
 		mEditTextStockHold.setOnClickListener(this);
 		mEditTextStockYield.setOnClickListener(this);
-		mTextViewSeUrl.setOnClickListener(this);
 		mImageViewRestoreTarget.setOnClickListener(this);
+		mImageViewMonthTarget.setOnClickListener(this);
+		mImageViewWeekTarget.setOnClickListener(this);
 		mImageViewDayTarget.setOnClickListener(this);
 		mImageViewMin60Target.setOnClickListener(this);
 		mImageViewMin30Target.setOnClickListener(this);
@@ -150,6 +176,10 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		mImageViewMin5Target.setOnClickListener(this);
 		mButtonOk.setOnClickListener(this);
 		mButtonCancel.setOnClickListener(this);
+
+		if (TextUtils.equals(mAction, Constant.ACTION_STOCK_EDIT)) {
+			mLayoutStockNameCodeDisplay.setOnClickListener(this);
+		}
 
 		mEditTextStockCode.addTextChangedListener(new TextWatcher() {
 
@@ -202,15 +232,18 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 			}
 		});
 
-		if (TextUtils.equals(mAction, Constant.ACTION_FAVORITE_STOCK_INSERT)) {
+		if (TextUtils.equals(mAction, Constant.ACTION_STOCK_NEW)) {
 			setTitle(R.string.stock_insert);
 			mStock.addFlag(Stock.FLAG_FAVORITE);
+			mLayoutStockNameCodeDisplay.setVisibility(View.GONE);
+			mLayoutStockNameCodeEdit.setVisibility(View.VISIBLE);
 		} else if (TextUtils.equals(mAction, Constant.ACTION_STOCK_EDIT)) {
 			setTitle(R.string.stock_edit);
 			mEditTextStockCode.setEnabled(false);
 			mStock.setId(mIntent.getLongExtra(Constant.EXTRA_STOCK_ID,
 					DatabaseContract.INVALID_ID));
 			mStockDatabaseManager.getStockById(mStock);
+			mOrginStockWindow = mStock.getWindow();
 			mHoldB = mStockDatabaseManager.getStockDealBuy(mStock, Stock.ACCOUNT_B);
 			if (mHoldB > 0) {
 				findViewById(R.id.layout_stock_hold_account).setVisibility(View.VISIBLE);
@@ -219,6 +252,10 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 				mEditTextStockHoldB.setText(String.valueOf(mHoldB));
 			}
 			mStockDatabaseManager.getStockTrendMap(mStock, mStock.getStockTrendMap());
+			mLayoutStockNameCodeDisplay.setVisibility(View.VISIBLE);
+			mLayoutStockNameCodeEdit.setVisibility(View.GONE);
+			mTextViewDisplayStockName.setText(mStock.getName());
+			mTextViewDisplayStockCode.setText(mStock.getCode());
 		}
 	}
 
@@ -240,6 +277,14 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 	}
 
 	private void setupTradeLevelPickers() {
+		mTradeLevelPickerMonth.setMinValue(StockTrend.LEVEL_NONE);
+		mTradeLevelPickerMonth.setMaxValue(StockTrend.LEVEL_TREND_LINE);
+		mTradeLevelPickerMonth.setTargetValue(mStock.getTarget(Period.MONTH));
+
+		mTradeLevelPickerWeek.setMinValue(StockTrend.LEVEL_NONE);
+		mTradeLevelPickerWeek.setMaxValue(StockTrend.LEVEL_TREND_LINE);
+		mTradeLevelPickerWeek.setTargetValue(mStock.getTarget(Period.WEEK));
+
 		mTradeLevelPickerDay.setMinValue(StockTrend.LEVEL_NONE);
 		mTradeLevelPickerDay.setMaxValue(StockTrend.LEVEL_TREND_LINE);
 		mTradeLevelPickerDay.setTargetValue(mStock.getTarget(Period.DAY));
@@ -260,6 +305,8 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		mTradeLevelPickerMin5.setMaxValue(StockTrend.LEVEL_TREND_LINE);
 		mTradeLevelPickerMin5.setTargetValue(mStock.getTarget(Period.MIN5));
 
+		setupTradeLevelPickerListener(mTradeLevelPickerMonth, Period.MONTH, mTextviewMonthNet, mImageViewMonthTarget);
+		setupTradeLevelPickerListener(mTradeLevelPickerWeek, Period.WEEK, mTextviewWeekNet, mImageViewWeekTarget);
 		setupTradeLevelPickerListener(mTradeLevelPickerDay, Period.DAY, mTextviewDayNet, mImageViewDayTarget);
 		setupTradeLevelPickerListener(mTradeLevelPickerMin60, Period.MIN60, mTextviewMin60Net, mImageViewMin60Target);
 		setupTradeLevelPickerListener(mTradeLevelPickerMin30, Period.MIN30, mTextviewMin30Net, mImageViewMin30Target);
@@ -310,35 +357,43 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		mEditTextStockTradingCost.setText(String.valueOf(mStock.getTradingCost()));
 		mEditTextStockHold.setText(String.valueOf(mStock.getHold()));
 		mEditTextStockYield.setText(String.valueOf(mStock.getYield()));
-		mTextViewSeUrl.setText(mStock.getSeUrl());
-		mTextViewSeUrl.setPaintFlags(mTextViewSeUrl.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
 		updateQuotaEstimation();
 
+		mTradeLevelPickerMonth.setTargetValue(mStock.getTarget(Period.MONTH));
+		mTradeLevelPickerWeek.setTargetValue(mStock.getTarget(Period.WEEK));
 		mTradeLevelPickerDay.setTargetValue(mStock.getTarget(Period.DAY));
 		mTradeLevelPickerMin60.setTargetValue(mStock.getTarget(Period.MIN60));
 		mTradeLevelPickerMin30.setTargetValue(mStock.getTarget(Period.MIN30));
 		mTradeLevelPickerMin15.setTargetValue(mStock.getTarget(Period.MIN15));
 		mTradeLevelPickerMin5.setTargetValue(mStock.getTarget(Period.MIN5));
 
+		mTradeLevelPickerMonth.setValue(mStock.getAdaptive(Period.MONTH));
+		mTradeLevelPickerWeek.setValue(mStock.getAdaptive(Period.WEEK));
 		mTradeLevelPickerDay.setValue(mStock.getAdaptive(Period.DAY));
 		mTradeLevelPickerMin60.setValue(mStock.getAdaptive(Period.MIN60));
 		mTradeLevelPickerMin30.setValue(mStock.getAdaptive(Period.MIN30));
 		mTradeLevelPickerMin15.setValue(mStock.getAdaptive(Period.MIN15));
 		mTradeLevelPickerMin5.setValue(mStock.getAdaptive(Period.MIN5));
 
+		mTradeLevelPickerMonth.invalidate();
+		mTradeLevelPickerWeek.invalidate();
 		mTradeLevelPickerDay.invalidate();
 		mTradeLevelPickerMin60.invalidate();
 		mTradeLevelPickerMin30.invalidate();
 		mTradeLevelPickerMin15.invalidate();
 		mTradeLevelPickerMin5.invalidate();
 
+		updateNetTextView(Period.MONTH, mStock.getAdaptive(Period.MONTH), mTextviewMonthNet);
+		updateNetTextView(Period.WEEK, mStock.getAdaptive(Period.WEEK), mTextviewWeekNet);
 		updateNetTextView(Period.DAY, mStock.getAdaptive(Period.DAY), mTextviewDayNet);
 		updateNetTextView(Period.MIN60, mStock.getAdaptive(Period.MIN60), mTextviewMin60Net);
 		updateNetTextView(Period.MIN30, mStock.getAdaptive(Period.MIN30), mTextviewMin30Net);
 		updateNetTextView(Period.MIN15, mStock.getAdaptive(Period.MIN15), mTextviewMin15Net);
 		updateNetTextView(Period.MIN5, mStock.getAdaptive(Period.MIN5), mTextviewMin5Net);
 
+		updateTargetImageView(Period.MONTH, mImageViewMonthTarget);
+		updateTargetImageView(Period.WEEK, mImageViewWeekTarget);
 		updateTargetImageView(Period.DAY, mImageViewDayTarget);
 		updateTargetImageView(Period.MIN60, mImageViewMin60Target);
 		updateTargetImageView(Period.MIN30, mImageViewMin30Target);
@@ -346,16 +401,24 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		updateTargetImageView(Period.MIN5, mImageViewMin5Target);
 
 		updateLevelPickerVisibility();
+		if (TextUtils.equals(mAction, Constant.ACTION_STOCK_EDIT)) {
+			mTextViewDisplayStockName.setText(mStock.getName());
+			mTextViewDisplayStockCode.setText(mStock.getCode());
+		}
 	}
 
 	private void updateLevelPickerVisibility() {
+		mLayoutMonthPicker.setVisibility(Setting.getPeriod(Period.MONTH) ? View.VISIBLE : View.GONE);
+		mLayoutWeekPicker.setVisibility(Setting.getPeriod(Period.WEEK) ? View.VISIBLE : View.GONE);
 		mLayoutDayPicker.setVisibility(Setting.getPeriod(Period.DAY) ? View.VISIBLE : View.GONE);
 		mLayoutMin60Picker.setVisibility(Setting.getPeriod(Period.MIN60) ? View.VISIBLE : View.GONE);
 		mLayoutMin30Picker.setVisibility(Setting.getPeriod(Period.MIN30) ? View.VISIBLE : View.GONE);
 		mLayoutMin15Picker.setVisibility(Setting.getPeriod(Period.MIN15) ? View.VISIBLE : View.GONE);
 		mLayoutMin5Picker.setVisibility(Setting.getPeriod(Period.MIN5) ? View.VISIBLE : View.GONE);
 
-		boolean hasVisiblePeriod = Setting.getPeriod(Period.DAY) ||
+		boolean hasVisiblePeriod = Setting.getPeriod(Period.MONTH) ||
+				Setting.getPeriod(Period.WEEK) ||
+				Setting.getPeriod(Period.DAY) ||
 				Setting.getPeriod(Period.MIN60) ||
 				Setting.getPeriod(Period.MIN30) ||
 				Setting.getPeriod(Period.MIN15) ||
@@ -382,6 +445,12 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 		int viewId = view.getId();
 
 		switch (viewId) {
+			case R.id.layout_stock_name_code_display:
+				if (TextUtils.equals(mAction, Constant.ACTION_STOCK_EDIT)) {
+					openStockUrl();
+				}
+				break;
+
 			case R.id.checkbox_trade:
 				if (mCheckBoxTrade.isChecked()) {
 					mStock.addFlag(Stock.FLAG_TRADE);
@@ -394,6 +463,14 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 
 			case R.id.imageview_restore_target:
 				restoreToTargetValues();
+				break;
+
+			case R.id.imageview_month_target:
+				toggleTargetImageView(Period.MONTH, mTradeLevelPickerMonth.getValue(), mImageViewMonthTarget);
+				break;
+
+			case R.id.imageview_week_target:
+				toggleTargetImageView(Period.WEEK, mTradeLevelPickerWeek.getValue(), mImageViewWeekTarget);
 				break;
 
 			case R.id.imageview_day_target:
@@ -444,6 +521,8 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 					return;
 				}
 
+				mStock.setAdaptive(Period.MONTH, mTradeLevelPickerMonth.getValue());
+				mStock.setAdaptive(Period.WEEK, mTradeLevelPickerWeek.getValue());
 				mStock.setAdaptive(Period.DAY, mTradeLevelPickerDay.getValue());
 				mStock.setAdaptive(Period.MIN60, mTradeLevelPickerMin60.getValue());
 				mStock.setAdaptive(Period.MIN30, mTradeLevelPickerMin30.getValue());
@@ -452,7 +531,7 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 
 				String stockWindow = mEditTextStockWindow.getText().toString();
 				mStock.setWindow(stockWindow);
-				if (!TextUtils.isEmpty(stockWindow)) {
+				if (!TextUtils.equals(mOrginStockWindow, stockWindow)) {
 					importTDXDataFile(mStock);
 				}
 
@@ -461,7 +540,7 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 					mStock.setQuota(Long.parseLong(stockQuota));
 				}
 
-				if (TextUtils.equals(mAction, Constant.ACTION_FAVORITE_STOCK_INSERT)) {
+				if (TextUtils.equals(mAction, Constant.ACTION_STOCK_NEW)) {
 					if (!mStockDatabaseManager.isStockExist(mStock)) {
 						mStock.setCreated(Utility.getCurrentDateTimeString());
 						Uri uri = mStockDatabaseManager.insertStock(mStock);
@@ -484,7 +563,7 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 				setResult(RESULT_OK, getIntent());
 				Setting.setDownloadStockTimeMillis(mStock, 0);
 				Setting.setDownloadStockDataTimeMillis(mStock, 0);
-				mStockDataProvider.download(mStock);
+				mStockDataProvider.analyze(mStock);
 				finish();
 				break;
 
@@ -494,6 +573,25 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 
 			default:
 				break;
+		}
+	}
+
+	private void openStockUrl() {
+		String code = mEditTextStockCode.getText().toString();
+		if (!TextUtils.isEmpty(code) && code.length() == Stock.CODE_LENGTH) {
+			String url = mStock.getSeUrl();
+			if (!TextUtils.isEmpty(url)) {
+				try {
+					Intent intent = new Intent(Intent.ACTION_VIEW);
+					intent.setData(Uri.parse(url));
+					startActivity(intent);
+				} catch (Exception e) {
+					e.printStackTrace();
+//					Toast.makeText(mContext, R.string.url_open_failed, Toast.LENGTH_SHORT).show();
+				}
+			} else {
+//				Toast.makeText(mContext, R.string.url_empty, Toast.LENGTH_SHORT).show();
+			}
 		}
 	}
 
@@ -517,6 +615,10 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 
 	private TradeLevelPicker getTradeLevelPickerByPeriod(String period) {
 		switch (period) {
+			case Period.MONTH:
+				return mTradeLevelPickerMonth;
+			case Period.WEEK:
+				return mTradeLevelPickerWeek;
 			case Period.DAY:
 				return mTradeLevelPickerDay;
 			case Period.MIN60:
@@ -553,6 +655,8 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 	}
 
 	private void restoreToTargetValues() {
+		restorePeriodToTarget(Period.MONTH, mTradeLevelPickerMonth, mTextviewMonthNet, mImageViewMonthTarget);
+		restorePeriodToTarget(Period.WEEK, mTradeLevelPickerWeek, mTextviewWeekNet, mImageViewWeekTarget);
 		restorePeriodToTarget(Period.DAY, mTradeLevelPickerDay, mTextviewDayNet, mImageViewDayTarget);
 		restorePeriodToTarget(Period.MIN60, mTradeLevelPickerMin60, mTextviewMin60Net, mImageViewMin60Target);
 		restorePeriodToTarget(Period.MIN30, mTradeLevelPickerMin30, mTextviewMin30Net, mImageViewMin30Target);
