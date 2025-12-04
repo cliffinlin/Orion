@@ -112,10 +112,8 @@ public class DatabaseContract {
 	public static final String COLUMN_TIME = "time";
 	public static final String COLUMN_PERIOD = "period";
 	public static final String COLUMN_OPEN = "open";
-	public static final String COLUMN_TOP = "top";
 	public static final String COLUMN_HIGH = "high";
 	public static final String COLUMN_LOW = "low";
-	public static final String COLUMN_BOTTOM = "bottom";
 	public static final String COLUMN_CLOSE = "close";
 	public static final String COLUMN_DIRECTION = "direction";
 	public static final String COLUMN_VERTEX = "vertex";
@@ -442,7 +440,7 @@ public class DatabaseContract {
 		public static final String[] PROJECTION_ALL = {_ID,
 				COLUMN_SE, COLUMN_CODE, COLUMN_NAME,
 				COLUMN_PERIOD, COLUMN_DATE, COLUMN_TIME, COLUMN_TEXT,
-				COLUMN_OPEN, COLUMN_TOP, COLUMN_HIGH, COLUMN_LOW, COLUMN_BOTTOM, COLUMN_CLOSE, COLUMN_CHANGE, COLUMN_NET,
+				COLUMN_OPEN, COLUMN_HIGH, COLUMN_LOW, COLUMN_CLOSE, COLUMN_CHANGE, COLUMN_NET,
 				COLUMN_DIRECTION, COLUMN_VERTEX,
 				COLUMN_AVERAGE5, COLUMN_AVERAGE10, COLUMN_DIF, COLUMN_DEA, COLUMN_HISTOGRAM, COLUMN_ADAPTIVE, COLUMN_TARGET,
 				COLUMN_CREATED, COLUMN_MODIFIED};
@@ -458,10 +456,8 @@ public class DatabaseContract {
 				+ COLUMN_TIME + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_TEXT + TEXT_TYPE + COMMA_SEP
 				+ COLUMN_OPEN + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_TOP + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_HIGH + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_LOW + DOUBLE_TYPE + COMMA_SEP
-				+ COLUMN_BOTTOM + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_CLOSE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_CHANGE + DOUBLE_TYPE + COMMA_SEP
 				+ COLUMN_NET + DOUBLE_TYPE + COMMA_SEP
