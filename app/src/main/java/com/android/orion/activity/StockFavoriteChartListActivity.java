@@ -534,10 +534,10 @@ public class StockFavoriteChartListActivity extends ListActivity implements
 
 	void updateTrendEntryList(StockDataChart stockDataChart, int level, int index) {
 		if (mStockData.vertexOf(StockTrend.getVertexTOP(level))) {
-			Entry entry = new Entry((float) mStockData.getCandle().getHigh(), index);
+			Entry entry = new Entry((float) mStockData.getCandle().getTop(), index);
 			stockDataChart.mTrendEntryList[level].add(entry);
 		} else if (mStockData.vertexOf(StockTrend.getVertexBottom(level))) {
-			Entry entry = new Entry((float) mStockData.getCandle().getLow(), index);
+			Entry entry = new Entry((float) mStockData.getCandle().getBottom(), index);
 			stockDataChart.mTrendEntryList[level].add(entry);
 		}
 	}

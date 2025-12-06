@@ -774,7 +774,10 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 				Collections.sort(stockDataList, StockData.comparator);
 				contentList.clear();
 				for (StockData stockData : stockDataList) {
-					contentList.add(stockData.toTDXContent());
+					String TDXContent = stockData.toTDXContent();
+					if (!TextUtils.isEmpty(TDXContent)) {
+						contentList.add(TDXContent);
+					}
 				}
 			} else {
 				mStockDatabaseManager.getTDXDataContentList(stock, period, contentList);

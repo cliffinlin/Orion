@@ -81,7 +81,7 @@ public class StockDeal extends DatabaseTable {
 		mYield = 0;
 		mAccount = "";
 		mDate = "";
-		mType = TYPE_BUY;
+		mType = TYPE_NONE;
 	}
 
 	@Override
@@ -582,7 +582,7 @@ public class StockDeal extends DatabaseTable {
 		}
 	}
 
-	public String toString() {
+	public String getString() {
 		StringBuilder stringBuffer = new StringBuilder();
 		stringBuffer.append(mName + " ");
 		stringBuffer.append(" Buy=" + mBuy);

@@ -1057,7 +1057,7 @@ public class SinaFinance extends StockDataProvider {
 		StopWatch.stop();
 		Log.d(stock.toLogString() + Symbol.TAB
 				+ stockData.getDate() + Symbol.TAB + stockData.getTime() + Symbol.TAB
-				+ stockData.getCandle().toString()
+				+ stockData.getCandle().toTDXContent()
 				+ Symbol.TAB + StopWatch.getIntervalString());
 	}
 

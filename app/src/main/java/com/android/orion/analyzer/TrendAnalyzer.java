@@ -80,13 +80,15 @@ public class TrendAnalyzer {
 
 	void analyzeVertex(int level) {
 		ArrayList<StockData> dataList;
-		ArrayList<StockData> vertexList = mStock.getVertexList(mPeriod, StockTrend.LEVEL_DRAW);
+		ArrayList<StockData> vertexList = mStock.getVertexList(mPeriod, level);
 		if (mStockDataList == null || mStockDataList.size() < StockTrend.VERTEX_SIZE || vertexList == null) {
 			return;
 		}
 
 		dataList = new ArrayList<>();
 		for (StockData stockData : mStockDataList) {
+			stockData.getCandle().setTop(stockData.getCandle().getHigh());
+			stockData.getCandle().setBottom(stockData.getCandle().getLow());
 			dataList.add(new StockData(stockData));
 		}
 
@@ -137,6 +139,8 @@ public class TrendAnalyzer {
 
 				mStockDataList.get(i).setDirection(direction);
 				mStockDataList.get(i).setVertex(vertex);
+				mStockDataList.get(i).getCandle().setTop(dataList.get(i).getCandle().getTop());
+				mStockDataList.get(i).getCandle().setBottom(dataList.get(i).getCandle().getBottom());
 
 				if ((vertex == StockTrend.VERTEX_TOP)
 						|| (vertex == StockTrend.VERTEX_BOTTOM)) {
@@ -217,15 +221,19 @@ public class TrendAnalyzer {
 
 		double turn = 0;
 		if (current.getDirection() == StockTrend.DIRECTION_UP) {
-			turn = current.getCandle().getHigh();
+			turn = current.getCandle().getTop();
 		} else if (current.getDirection() == StockTrend.DIRECTION_DOWN) {
-			turn = current.getCandle().getLow();
+			turn = current.getCandle().getBottom();
 		}
 		stockTrend.setTurn(turn);
 
 		stockTrend.setPrevNet(prev.getNet());
 		stockTrend.setNet(current.getNet());
 		stockTrend.setNextNet(next.getNet());
+		if (!finished && turn > 0) {
+			double nextNet = Utility.Round2(100.0 * (mStock.getPrice() - turn) / turn);
+			stockTrend.setNextNet(nextNet);
+		}
 
 		StockPerceptron stockPerceptron = mStockPerceptronProvider.getStockPerceptron(stockTrend.getPeriod(), stockTrend.getLevel(), stockTrend.getType());
 		if (stockPerceptron != null) {
@@ -262,12 +270,12 @@ public class TrendAnalyzer {
 
 			if (current.vertexOf(StockTrend.VERTEX_TOP)) {
 				vertex.setVertex(StockTrend.VERTEX_BOTTOM);
-				if (vertex.getCandle().getHigh() > current.getCandle().getHigh()) {
+				if (vertex.getCandle().getTop() > current.getCandle().getTop()) {
 					vertex.setVertex(StockTrend.VERTEX_TOP);
 				}
 			} else if (current.vertexOf(StockTrend.VERTEX_BOTTOM)) {
 				vertex.setVertex(StockTrend.VERTEX_TOP);
-				if (vertex.getCandle().getLow() < current.getCandle().getLow()) {
+				if (vertex.getCandle().getBottom() < current.getCandle().getBottom()) {
 					vertex.setVertex(StockTrend.VERTEX_BOTTOM);
 				}
 			}
@@ -539,19 +547,19 @@ public class TrendAnalyzer {
 			for (int level = StockTrend.LEVEL_DRAW; level < StockTrend.LEVELS.length; level++) {
 				if (stockData.vertexOf(StockTrend.getVertexTOP(level))) {
 					mXValues[level].add((float) index);
-					mYValues[level].add((float) stockData.getCandle().getHigh());
+					mYValues[level].add((float) stockData.getCandle().getTop());
 					if (mStock.getAdaptive(period) == level) {
 						mStock.setTrend(period, Symbol.MINUS);
-						if (mStock.getPrice() > stockData.getCandle().getHigh()) {
+						if (mStock.getPrice() > stockData.getCandle().getTop()) {
 							mStock.setTrend(period, Symbol.ADD);//TODO
 						}
 					}
 				} else if (stockData.vertexOf(StockTrend.getVertexBottom(level))) {
 					mXValues[level].add((float) index);
-					mYValues[level].add((float) stockData.getCandle().getLow());
+					mYValues[level].add((float) stockData.getCandle().getBottom());
 					if (mStock.getAdaptive(period) == level) {
 						mStock.setTrend(period, Symbol.ADD);
-						if (mStock.getPrice() < stockData.getCandle().getLow()) {
+						if (mStock.getPrice() < stockData.getCandle().getBottom()) {
 							mStock.setTrend(period, Symbol.MINUS);//TODO
 						}
 					}

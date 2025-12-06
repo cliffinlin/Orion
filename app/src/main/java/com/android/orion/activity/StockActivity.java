@@ -587,10 +587,7 @@ public class StockActivity extends StorageActivity implements OnClickListener {
 					startActivity(intent);
 				} catch (Exception e) {
 					e.printStackTrace();
-//					Toast.makeText(mContext, R.string.url_open_failed, Toast.LENGTH_SHORT).show();
 				}
-			} else {
-//				Toast.makeText(mContext, R.string.url_empty, Toast.LENGTH_SHORT).show();
 			}
 		}
 	}

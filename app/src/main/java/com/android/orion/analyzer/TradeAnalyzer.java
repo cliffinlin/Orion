@@ -66,11 +66,11 @@ public class TradeAnalyzer {
 	}
 
 	public String getBuyDealString() {
-		return mBuyDeal == null ? "" : mBuyDeal.toString();
+		return mBuyDeal == null ? "" : mBuyDeal.getString();
 	}
 
 	public String getSellDealString() {
-		return mSellDeal == null ? "" : mSellDeal.toString();
+		return mSellDeal == null ? "" : mSellDeal.getString();
 	}
 
 	private static class Holder {

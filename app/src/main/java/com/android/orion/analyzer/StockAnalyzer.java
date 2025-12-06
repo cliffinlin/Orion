@@ -136,6 +136,11 @@ public class StockAnalyzer {
 			ArrayList<Double> targetList = FourierAnalyzer.getRadarList();
 			mStock.setTargetRadar(period, FourierAnalyzer.getRadar());
 
+			if (adaptiveList.size() != size || targetList.size() != size) {
+				Log.d("return, size=" + size + " adaptiveList.size()=" + adaptiveList.size() + " targetList.size()=" + targetList.size());
+				return;
+			}
+
 			for (int i = 0; i < size; i++) {
 				StockData stockData = mStockDataList.get(i);
 				Macd macd = stockData.getMacd();

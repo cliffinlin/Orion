@@ -263,11 +263,6 @@ public class StockDealListActivity extends ListActivity implements
 	public void handleOnOptionsItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_new:
-				if (mStock.isQuotaLimitReached()) {
-					Toast.makeText(this, R.string.quota_limit_reached, Toast.LENGTH_SHORT).show();
-					return;
-				}
-
 				if (!stockTrendsUp()) {
 					new AlertDialog.Builder(mContext)
 							.setTitle(R.string.deal_insert)

@@ -16,6 +16,7 @@ import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -42,8 +43,8 @@ public class StockDealActivity extends DatabaseActivity implements
 
 	static final int MESSAGE_LOAD_DEAL = 100;
 	static final int MESSAGE_SAVE_DEAL = 200;
-	static final int MESSAGE_LOAD_STOCK_BY_ID = 2;
-	static final int MESSAGE_LOAD_STOCK_BY_SE_CODE = 3;
+	static final int MESSAGE_LOAD_STOCK_BY_ID = 300;
+	static final int MESSAGE_LOAD_STOCK_BY_SE_CODE = 400;
 
 	static final int REQUEST_CODE_STOCK_ID = 0;
 
@@ -62,6 +63,9 @@ public class StockDealActivity extends DatabaseActivity implements
 
 	Button mButtonOk;
 	Button mButtonCancel;
+
+	RadioButton mRadioDealBuy;
+	RadioButton mRadioDealSell;
 
 	StockDeal mStockDeal = null;
 	String mBuyDate = "";
@@ -120,7 +124,14 @@ public class StockDealActivity extends DatabaseActivity implements
 					mStockDeal.setCode(mStock.getCode());
 					mStockDeal.setName(mStock.getName());
 					mStockDeal.setPrice(mStock.getPrice());
-					mStockDeal.setBuy(mStock.getPrice());
+					if (mStock.isQuotaLimitReached()) {
+						mStockDeal.setType(StockDeal.TYPE_SELL);
+						mStockDeal.setSell(mStock.getPrice());
+						mRadioDealBuy.setEnabled(false);
+					} else {
+						mStockDeal.setType(StockDeal.TYPE_BUY);
+						mStockDeal.setBuy(mStock.getPrice());
+					}
 					mStockDeal.setDate(Utility.getCurrentDateString());
 					updateView();
 					break;
@@ -171,6 +182,9 @@ public class StockDealActivity extends DatabaseActivity implements
 		mEditTextDealDate = findViewById(R.id.edittext_deal_date);
 		mButtonOk = findViewById(R.id.button_ok);
 		mButtonCancel = findViewById(R.id.button_cancel);
+
+		mRadioDealBuy = findViewById(R.id.radio_deal_buy);
+		mRadioDealSell = findViewById(R.id.radio_deal_sell);
 
 		mRadioGroupDealType.setOnCheckedChangeListener(this);
 		mEditTextStockName.setOnClickListener(this);
@@ -354,6 +368,11 @@ public class StockDealActivity extends DatabaseActivity implements
 		if (group == mRadioGroupDealType) {
 			switch (checkedId) {
 				case R.id.radio_deal_buy:
+					if (mStock.isQuotaLimitReached()) {
+						Toast.makeText(this, R.string.quota_limit_reached, Toast.LENGTH_SHORT).show();
+						mRadioGroupDealType.check(R.id.radio_deal_sell);
+						return;
+					}
 					mStockDeal.setType(StockDeal.TYPE_BUY);
 
 					mEditTextBuyPrice.setEnabled(true);
@@ -491,7 +510,6 @@ public class StockDealActivity extends DatabaseActivity implements
 	private void showDatePicker() {
 		Calendar calendar = Calendar.getInstance();
 
-		// 尝试解析编辑框中已有的日期
 		String currentDate = mEditTextDealDate.getText().toString();
 		if (!TextUtils.isEmpty(currentDate)) {
 			try {
@@ -502,7 +520,6 @@ public class StockDealActivity extends DatabaseActivity implements
 				}
 			} catch (ParseException e) {
 				e.printStackTrace();
-				// 如果解析失败，使用当前日期
 				calendar = Calendar.getInstance();
 			}
 		}

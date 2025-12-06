@@ -129,8 +129,10 @@ public class StockData extends DatabaseTable {
 		contentValues.put(DatabaseContract.COLUMN_TEXT, mText);
 
 		contentValues.put(DatabaseContract.COLUMN_OPEN, mCandle.getOpen());//TODO
+		contentValues.put(DatabaseContract.COLUMN_TOP, mCandle.getTop());//TODO
 		contentValues.put(DatabaseContract.COLUMN_HIGH, mCandle.getHigh());//TODO
 		contentValues.put(DatabaseContract.COLUMN_LOW, mCandle.getLow());//TODO
+		contentValues.put(DatabaseContract.COLUMN_BOTTOM, mCandle.getBottom());//TODO
 		contentValues.put(DatabaseContract.COLUMN_CLOSE, mCandle.getClose());//TODO
 		contentValues.put(DatabaseContract.COLUMN_CHANGE, mChange);
 		contentValues.put(DatabaseContract.COLUMN_NET, mNet);
@@ -440,13 +442,6 @@ public class StockData extends DatabaseTable {
 		return String.format("%02d", day);
 	}
 
-	public void add(StockData stockData, long weight) {
-		if (stockData == null) {
-			return;
-		}
-		mCandle.add(stockData.mCandle, weight);
-	}
-
 	public int getIndex() {
 		return mIndex;
 	}
@@ -483,28 +478,28 @@ public class StockData extends DatabaseTable {
 		if (stockData == null) {
 			return false;
 		}
-		return (mCandle.getHigh() > stockData.mCandle.getHigh()) && (mCandle.getLow() > stockData.mCandle.getLow());
+		return (mCandle.getTop() > stockData.mCandle.getTop()) && (mCandle.getBottom() > stockData.mCandle.getBottom());
 	}
 
 	public boolean downTo(StockData stockData) {
 		if (stockData == null) {
 			return false;
 		}
-		return (mCandle.getHigh() < stockData.mCandle.getHigh()) && (mCandle.getLow() < stockData.mCandle.getLow());
+		return (mCandle.getTop() < stockData.mCandle.getTop()) && (mCandle.getBottom() < stockData.mCandle.getBottom());
 	}
 
 	public boolean include(StockData stockData) {
 		if (stockData == null) {
 			return false;
 		}
-		return (mCandle.getHigh() >= stockData.mCandle.getHigh()) && (mCandle.getLow() <= stockData.mCandle.getLow());
+		return (mCandle.getTop() >= stockData.mCandle.getTop()) && (mCandle.getBottom() <= stockData.mCandle.getBottom());
 	}
 
 	public boolean includedBy(StockData stockData) {
 		if (stockData == null) {
 			return false;
 		}
-		return (mCandle.getHigh() <= stockData.mCandle.getHigh()) && (mCandle.getLow() >= stockData.mCandle.getLow());
+		return (mCandle.getTop() <= stockData.mCandle.getTop()) && (mCandle.getBottom() >= stockData.mCandle.getBottom());
 	}
 
 	public int vertexTo(StockData prev, StockData next) {
@@ -536,14 +531,14 @@ public class StockData extends DatabaseTable {
 
 	public void merge(int direction, StockData stockData) {
 		if (direction == StockTrend.DIRECTION_UP) {
-			mCandle.setHigh(Math.max(mCandle.getHigh(), stockData.mCandle.getHigh()));
-			mCandle.setLow(Math.max(mCandle.getLow(), stockData.mCandle.getLow()));
+			mCandle.setTop(Math.max(mCandle.getTop(), stockData.mCandle.getTop()));
+			mCandle.setBottom(Math.max(mCandle.getBottom(), stockData.mCandle.getBottom()));
 		} else if (direction == StockTrend.DIRECTION_DOWN) {
-			mCandle.setHigh(Math.min(mCandle.getHigh(), stockData.mCandle.getHigh()));
-			mCandle.setLow(Math.min(mCandle.getLow(), stockData.mCandle.getLow()));
+			mCandle.setTop(Math.min(mCandle.getTop(), stockData.mCandle.getTop()));
+			mCandle.setBottom(Math.min(mCandle.getBottom(), stockData.mCandle.getBottom()));
 		} else {
-			mCandle.setHigh(Math.max(mCandle.getHigh(), stockData.mCandle.getHigh()));
-			mCandle.setLow(Math.min(mCandle.getLow(), stockData.mCandle.getLow()));
+			mCandle.setTop(Math.max(mCandle.getTop(), stockData.mCandle.getTop()));
+			mCandle.setBottom(Math.min(mCandle.getBottom(), stockData.mCandle.getBottom()));
 		}
 	}
 
@@ -568,19 +563,19 @@ public class StockData extends DatabaseTable {
 		mChange = 0;
 		mNet = 0;
 
-		if (mCandle.getHigh() == 0 || mCandle.getLow() == 0) {
+		if (mCandle.getTop() == 0 || mCandle.getBottom() == 0) {
 			return;
 		}
 
 		if (directionOf(StockTrend.DIRECTION_UP)) {
-			mChange = mCandle.getHigh() - mCandle.getLow();
-			mNet = 100.0 * mChange / mCandle.getLow();
+			mChange = mCandle.getTop() - mCandle.getBottom();
+			mNet = 100.0 * mChange / mCandle.getBottom();
 		} else if (directionOf(StockTrend.DIRECTION_DOWN)) {
-			mChange = mCandle.getLow() - mCandle.getHigh();
-			mNet = 100.0 * mChange / mCandle.getHigh();
+			mChange = mCandle.getBottom() - mCandle.getTop();
+			mNet = 100.0 * mChange / mCandle.getTop();
 		} else {
-			mChange = mCandle.getHigh() - mCandle.getLow();
-			mNet = 100.0 * mChange / mCandle.getLow();
+			mChange = mCandle.getTop() - mCandle.getBottom();
+			mNet = 100.0 * mChange / mCandle.getBottom();
 		}
 
 		mNet = Utility.Round2(mNet);
@@ -625,6 +620,9 @@ public class StockData extends DatabaseTable {
 
 	public String toTDXContent() {
 		StringBuffer stringBuffer = new StringBuffer();
+		if (mCandle.isEmpty()) {
+			return "";
+		}
 		/*
 		TDX output format
 		date  time    open    high    low close   volume  value
@@ -633,9 +631,9 @@ public class StockData extends DatabaseTable {
 		String timeString = TextUtils.isEmpty(getTime()) ? "" : getTime().substring(0, 5).replace(":", "");
 		stringBuffer.append(dateString + Symbol.TAB
 				+ timeString + Symbol.TAB
-				+ mCandle.toString()
-				+ 0 + Symbol.TAB
-				+ 0);
+				+ mCandle.toTDXContent()
+				+ 0 + Symbol.TAB	//TODO volume 0
+				+ 0);				//TODO value 0
 		stringBuffer.append("\r\n");
 		return stringBuffer.toString();
 	}

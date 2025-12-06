@@ -718,7 +718,7 @@ public class StockFavoriteListActivity extends ListActivity implements
                 } else if (ratio > 0.8f) {
                     tradingPortion.setBackgroundColor(Color.RED);
                 } else if (ratio > 0.5f) {
-                    tradingPortion.setBackgroundColor(Color.YELLOW);
+                    tradingPortion.setBackgroundColor(Color.GREEN);
                 } else {
                     tradingPortion.setBackgroundColor(Color.GREEN);
                 }
