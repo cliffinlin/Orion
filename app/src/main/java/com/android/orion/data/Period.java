@@ -23,10 +23,6 @@ public class Period {
 	public static final int MIN15_IN_MINUTES = 15;
 	public static final int MIN5_IN_MINUTES = 5;
 
-	public static final String YEAR = "year";
-	public static final String MONTH6 = "month6";
-	public static final String QUARTER = "quarter";
-	public static final String MONTH2 = "month2";
 	public static final String MONTH = "month";
 	public static final String WEEK = "week";
 	public static final String DAY = "day";
@@ -35,7 +31,7 @@ public class Period {
 	public static final String MIN15 = "min15";
 	public static final String MIN5 = "min5";
 
-	public static final String[] PERIODS = {YEAR, MONTH6, QUARTER, MONTH2, MONTH, WEEK, DAY, MIN60, MIN30, MIN15, MIN5};
+	public static final String[] PERIODS = {MONTH, WEEK, DAY, MIN60, MIN30, MIN15, MIN5};
 	private static final Set<String> PERIOD_SET = new HashSet<>(Arrays.asList(PERIODS));
 	private static final Set<String> MINUTE_PERIOD_SET = new HashSet<>(Arrays.asList(MIN60, MIN30, MIN15, MIN5));
 	private static final Map<String, Integer> PERIOD_IN_MINUTES_MAP = new HashMap<String, Integer>() {{

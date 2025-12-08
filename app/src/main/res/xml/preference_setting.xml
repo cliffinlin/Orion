@@ -3,18 +3,6 @@
 
     <PreferenceCategory android:title="@string/setting_period">
         <com.android.orion.preference.CustomSwitchPreference
-            android:key="SETTING_PERIOD_YEAR"
-            android:title="@string/setting_period_year" />
-        <com.android.orion.preference.CustomSwitchPreference
-            android:key="SETTING_PERIOD_MONTH6"
-            android:title="@string/setting_period_month6" />
-        <com.android.orion.preference.CustomSwitchPreference
-            android:key="SETTING_PERIOD_QUARTER"
-            android:title="@string/setting_period_quarter" />
-        <com.android.orion.preference.CustomSwitchPreference
-            android:key="SETTING_PERIOD_MONTH2"
-            android:title="@string/setting_period_month2" />
-        <com.android.orion.preference.CustomSwitchPreference
             android:key="SETTING_PERIOD_MONTH"
             android:title="@string/setting_period_month" />
         <com.android.orion.preference.CustomSwitchPreference

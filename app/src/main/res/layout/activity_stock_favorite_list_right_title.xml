@@ -50,42 +50,6 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/period_year"
-        android:layout_width="@dimen/favorite_list_item_layout_width"
-        android:layout_height="@dimen/favorite_list_item_header_layout_height"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/period_year"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/period_month6"
-        android:layout_width="@dimen/favorite_list_item_layout_width"
-        android:layout_height="@dimen/favorite_list_item_header_layout_height"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/period_month6"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/period_quarter"
-        android:layout_width="@dimen/favorite_list_item_layout_width"
-        android:layout_height="@dimen/favorite_list_item_header_layout_height"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/period_quarter"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/period_month2"
-        android:layout_width="@dimen/favorite_list_item_layout_width"
-        android:layout_height="@dimen/favorite_list_item_header_layout_height"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/period_month2"
-        android:textSize="18sp" />
-
-    <TextView
         android:id="@+id/period_month"
         android:layout_width="@dimen/favorite_list_item_layout_width"
         android:layout_height="@dimen/favorite_list_item_header_layout_height"

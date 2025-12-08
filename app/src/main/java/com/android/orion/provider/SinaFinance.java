@@ -858,7 +858,6 @@ public class SinaFinance extends StockDataProvider {
 			}
 
 			if (bulkInsert) {
-				saveStockDataAboveMonth(stock, stockData, stockDataList);
 				saveTDXDatabase(stock, stockData.getPeriod(), stockDataMap);
 
 				if (ContentValuesList.size() > 0) {

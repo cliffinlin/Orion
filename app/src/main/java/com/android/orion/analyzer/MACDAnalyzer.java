@@ -62,10 +62,6 @@ public class MACDAnalyzer {
         }
         mPeriod = period;
         switch (period) {
-            case Period.YEAR:
-            case Period.MONTH6:
-            case Period.QUARTER:
-            case Period.MONTH2:
             case Period.MONTH:
             case Period.WEEK:
             case Period.DAY:

@@ -317,10 +317,6 @@ public class FourierAnalyzer {
      */
     private static double convertDaysToDataPoints(double days, int totalDataPoints) {
         switch (mPeriod) {
-            case Period.YEAR:
-            case Period.MONTH6:
-            case Period.QUARTER:
-            case Period.MONTH2:
             case Period.MONTH:
             case Period.WEEK:
             case Period.DAY:
@@ -348,10 +344,6 @@ public class FourierAnalyzer {
      */
     private static double convertPeriodToDays(double periodInDataPoints, int totalDataPoints) {
         switch (mPeriod) {
-            case Period.YEAR:
-            case Period.MONTH6:
-            case Period.QUARTER:
-            case Period.MONTH2:
             case Period.MONTH:
             case Period.WEEK:
                 return periodInDataPoints;

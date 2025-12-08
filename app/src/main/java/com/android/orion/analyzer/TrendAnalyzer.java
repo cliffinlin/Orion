@@ -406,23 +406,21 @@ public class TrendAnalyzer {
 							if (last != null) {
 								if (last.vertexOf(vertexTop)) {
 									StockData vertexData = chooseVertex(current_start, current_end, StockTrend.VERTEX_TOP);
-									if ((vertexData != last) && (vertexData.getCandle().getTop() >= last.getCandle().getTop())) {
-//										last.removeVertex(vertexTop);
-//										vertexList.remove(last);
-										Log.d("mPeriod=" + mPeriod + " level=" + level + " " + vertexData.getDateTime() + " vertexData.getCandle().getTop()=" + vertexData.getCandle().getTop() + ">= " + last.getDateTime() + " last.getCandle().getTop()=" + last.getCandle().getTop());
-//										if (addVertex(vertexData, vertexTop, vertexList)) {
-//											addStockDataList(vertexList, dataList);//TODO
-//										}
+									if ((vertexData != last) && (vertexData.getCandle().getTop() > last.getCandle().getTop())) {
+//										Log.d("mPeriod=" + mPeriod + " level=" + level + " " + vertexData.getDateTime() + " vertexData.getCandle().getTop()=" + vertexData.getCandle().getTop() + ">= " + last.getDateTime() + " last.getCandle().getTop()=" + last.getCandle().getTop());
+										last.removeVertex(vertexTop);
+										vertexList.remove(last);
+										if (addVertex(vertexData, vertexTop, vertexList)) {
+										}
 									}
 								} else if (last.vertexOf(vertexBottom)) {
 									StockData vertexData = chooseVertex(current_start, current_end, StockTrend.VERTEX_BOTTOM);
-									if ((vertexData != last) && (vertexData.getCandle().getBottom() <= last.getCandle().getBottom())) {
-										Log.d("mPeriod=" + mPeriod + " level=" + level + " " + vertexData.getDateTime() + " vertexData.getCandle().getBottom()=" + vertexData.getCandle().getBottom() + "<= " + last.getDateTime() + " last.getCandle().getBottom()=" + last.getCandle().getBottom());
-//										last.removeVertex(vertexBottom);
-//										vertexList.remove(last);
-//										if (addVertex(vertexData, vertexBottom, vertexList)) {
-//											addStockDataList(vertexList, dataList);//TODO
-//										}
+									if ((vertexData != last) && (vertexData.getCandle().getBottom() < last.getCandle().getBottom())) {
+//										Log.d("mPeriod=" + mPeriod + " level=" + level + " " + vertexData.getDateTime() + " vertexData.getCandle().getBottom()=" + vertexData.getCandle().getBottom() + "<= " + last.getDateTime() + " last.getCandle().getBottom()=" + last.getCandle().getBottom());
+										last.removeVertex(vertexBottom);
+										vertexList.remove(last);
+										if (addVertex(vertexData, vertexBottom, vertexList)) {
+										}
 									}
 								}
 							}

@@ -101,23 +101,11 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 	}
 
 	@NonNull
-	public static ArrayList<String> getDatetimeMin15List() {
+	public static ArrayList<String> getDatetimeMin60List() {
 		ArrayList<String> datetimeList = new ArrayList<>();
-		datetimeList.add("09:45:00");
-		datetimeList.add("10:00:00");
-		datetimeList.add("10:15:00");
 		datetimeList.add("10:30:00");
-		datetimeList.add("10:45:00");
-		datetimeList.add("11:00:00");
-		datetimeList.add("11:15:00");
 		datetimeList.add("11:30:00");
-		datetimeList.add("13:15:00");
-		datetimeList.add("13:30:00");
-		datetimeList.add("13:45:00");
 		datetimeList.add("14:00:00");
-		datetimeList.add("14:15:00");
-		datetimeList.add("14:30:00");
-		datetimeList.add("14:45:00");
 		datetimeList.add("15:00:00");
 		return datetimeList;
 	}
@@ -137,42 +125,24 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 	}
 
 	@NonNull
-	public static ArrayList<String> getDatetimeMin60List() {
+	public static ArrayList<String> getDatetimeMin15List() {
 		ArrayList<String> datetimeList = new ArrayList<>();
+		datetimeList.add("09:45:00");
+		datetimeList.add("10:00:00");
+		datetimeList.add("10:15:00");
 		datetimeList.add("10:30:00");
+		datetimeList.add("10:45:00");
+		datetimeList.add("11:00:00");
+		datetimeList.add("11:15:00");
 		datetimeList.add("11:30:00");
+		datetimeList.add("13:15:00");
+		datetimeList.add("13:30:00");
+		datetimeList.add("13:45:00");
 		datetimeList.add("14:00:00");
+		datetimeList.add("14:15:00");
+		datetimeList.add("14:30:00");
+		datetimeList.add("14:45:00");
 		datetimeList.add("15:00:00");
-		return datetimeList;
-	}
-
-	@NonNull
-	public static ArrayList<String> getDatetimeMonth6List() {
-		ArrayList<String> datetimeList = new ArrayList<>();
-		datetimeList.add("01");
-		datetimeList.add("07");
-		return datetimeList;
-	}
-
-	@NonNull
-	public static ArrayList<String> getDatetimeQuarterList() {
-		ArrayList<String> datetimeList = new ArrayList<>();
-		datetimeList.add("01");
-		datetimeList.add("04");
-		datetimeList.add("07");
-		datetimeList.add("10");
-		return datetimeList;
-	}
-
-	@NonNull
-	public static ArrayList<String> getDatetimeMonth2List() {
-		ArrayList<String> datetimeList = new ArrayList<>();
-		datetimeList.add("01");
-		datetimeList.add("03");
-		datetimeList.add("05");
-		datetimeList.add("07");
-		datetimeList.add("09");
-		datetimeList.add("11");
 		return datetimeList;
 	}
 
@@ -623,121 +593,6 @@ public class StockDataProvider implements StockListener, IStockDataProvider {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	void saveStockDataAboveMonth(Stock stock, StockData stockData, ArrayList<StockData> stockDataList) {
-		if (stock == null || stockData == null || stockDataList == null || stockDataList.isEmpty()) {
-			return;
-		}
-
-		if (!TextUtils.equals(Period.MONTH, stockData.getPeriod())) {
-			return;
-		}
-
-		mStockDatabaseManager.deleteStockData(stockData.getSE(), stockData.getCode(), Period.YEAR);
-		mStockDatabaseManager.deleteStockData(stockData.getSE(), stockData.getCode(), Period.MONTH6);
-		mStockDatabaseManager.deleteStockData(stockData.getSE(), stockData.getCode(), Period.QUARTER);
-		mStockDatabaseManager.deleteStockData(stockData.getSE(), stockData.getCode(), Period.MONTH2);
-
-		mergeStockDataMonth(stock, Period.YEAR, stockDataList);
-		mergeStockDataMonth(stock, Period.MONTH6, getDatetimeMonth6List(), stockDataList);
-		mergeStockDataMonth(stock, Period.QUARTER, getDatetimeQuarterList(), stockDataList);
-		mergeStockDataMonth(stock, Period.MONTH2, getDatetimeMonth2List(), stockDataList);
-	}
-
-	void mergeStockDataMonth(Stock stock, String period, ArrayList<StockData> stockDataList) {
-		if (stockDataList == null || stockDataList.isEmpty()) {
-			return;
-		}
-
-		ArrayList<StockData> resultList = new ArrayList<>();
-		StockData result = null;
-		String year = "";
-		double high = 0;
-		double low = 0;
-		for (int i = 0; i < stockDataList.size(); i++) {
-			StockData stockData = stockDataList.get(i);
-			if (!TextUtils.equals(stockData.getYear(), year)) {
-				year = stockData.getYear();
-
-				result = new StockData();
-				resultList.add(result);
-
-				result.setSE(stockData.getSE());
-				result.setCode(stockData.getCode());
-				result.setName(stockData.getName());
-				result.setPeriod(period);
-				result.getCandle().setOpen(stockData.getCandle().getOpen());
-				high = stockData.getCandle().getHigh();
-				low = stockData.getCandle().getLow();
-			}
-
-			if (result == null) {
-				continue;
-			}
-
-			if (stockData.getCandle().getHigh() > high) {
-				high = stockData.getCandle().getHigh();
-			}
-			result.getCandle().setHigh(high);
-
-			if (stockData.getCandle().getLow() < low) {
-				low = stockData.getCandle().getLow();
-			}
-			result.getCandle().setLow(low);
-
-			result.getCandle().setClose(stockData.getCandle().getClose());
-
-			result.setDate(stockData.getDate());
-			result.setTime(stockData.getTime());
-		}
-		mStockDatabaseManager.updateStockData(stock, period, resultList);
-	}
-
-	void mergeStockDataMonth(Stock stock, String period, ArrayList<String> datetimeList, ArrayList<StockData> stockDataList) {
-		if (datetimeList == null || stockDataList == null || stockDataList.isEmpty()) {
-			return;
-		}
-
-		ArrayList<StockData> resultList = new ArrayList<>();
-		StockData result = null;
-		double high = 0;
-		double low = 0;
-		for (int i = 0; i < stockDataList.size(); i++) {
-			StockData stockData = stockDataList.get(i);
-			if (datetimeList.contains(stockData.getMonth())) {
-				result = new StockData();
-				resultList.add(result);
-
-				result.setSE(stockData.getSE());
-				result.setCode(stockData.getCode());
-				result.setName(stockData.getName());
-				result.setPeriod(period);
-				result.getCandle().setOpen(stockData.getCandle().getOpen());
-				high = stockData.getCandle().getHigh();
-				low = stockData.getCandle().getLow();
-			}
-
-			if (result == null) {
-				continue;
-			}
-
-			if (stockData.getCandle().getHigh() > high) {
-				high = stockData.getCandle().getHigh();
-			}
-			result.getCandle().setHigh(high);
-
-			if (stockData.getCandle().getLow() < low) {
-				low = stockData.getCandle().getLow();
-			}
-			result.getCandle().setLow(low);
-
-			result.getCandle().setClose(stockData.getCandle().getClose());
-
-			result.setDate(stockData.getDate());
-			result.setTime(stockData.getTime());
-		}
-		mStockDatabaseManager.updateStockData(stock, period, resultList);
 	}
 
 	void saveTDXDatabase(Stock stock, String period, ArrayMap<String, StockData> stockDataMap) {

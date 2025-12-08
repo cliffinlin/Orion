@@ -79,34 +79,6 @@
         android:scaleType="centerInside" />
 
     <ImageView
-        android:id="@+id/year"
-        android:layout_width="@dimen/favorite_list_item_layout_width"
-        android:layout_height="@dimen/favorite_list_item_layout_height"
-        android:layout_weight="1"
-        android:scaleType="centerInside" />
-
-    <ImageView
-        android:id="@+id/month6"
-        android:layout_width="@dimen/favorite_list_item_layout_width"
-        android:layout_height="@dimen/favorite_list_item_layout_height"
-        android:layout_weight="1"
-        android:scaleType="centerInside" />
-
-    <ImageView
-        android:id="@+id/quarter"
-        android:layout_width="@dimen/favorite_list_item_layout_width"
-        android:layout_height="@dimen/favorite_list_item_layout_height"
-        android:layout_weight="1"
-        android:scaleType="centerInside" />
-
-    <ImageView
-        android:id="@+id/month2"
-        android:layout_width="@dimen/favorite_list_item_layout_width"
-        android:layout_height="@dimen/favorite_list_item_layout_height"
-        android:layout_weight="1"
-        android:scaleType="centerInside" />
-
-    <ImageView
         android:id="@+id/month"
         android:layout_width="@dimen/favorite_list_item_layout_width"
         android:layout_height="@dimen/favorite_list_item_layout_height"

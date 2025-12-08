@@ -123,10 +123,6 @@ public class StockFavoriteListActivity extends ListActivity implements
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_SELL_PROFIT, R.id.profite);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_TREND_THUMBNAIL, R.id.trend);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_RADAR_THUMBNAIL, R.id.radar);
-        mColumnToViewIdMap.put(DatabaseContract.COLUMN_YEAR_THUMBNAIL, R.id.period_year);
-        mColumnToViewIdMap.put(DatabaseContract.COLUMN_MONTH6_THUMBNAIL, R.id.period_month6);
-        mColumnToViewIdMap.put(DatabaseContract.COLUMN_QUARTER_THUMBNAIL, R.id.period_quarter);
-        mColumnToViewIdMap.put(DatabaseContract.COLUMN_MONTH2_THUMBNAIL, R.id.period_month2);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_MONTH_THUMBNAIL, R.id.period_month);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_WEEK_THUMBNAIL, R.id.period_week);
         mColumnToViewIdMap.put(DatabaseContract.COLUMN_DAY_THUMBNAIL, R.id.period_day);
@@ -149,7 +145,7 @@ public class StockFavoriteListActivity extends ListActivity implements
 
         int[] headerViewIds = {
                 R.id.stock_name_code, R.id.price, R.id.net, R.id.profite, R.id.trend, R.id.radar,
-                R.id.period_year, R.id.period_month6, R.id.period_quarter, R.id.period_month2, R.id.period_month, R.id.period_week,
+                R.id.period_month, R.id.period_week,
                 R.id.period_day, R.id.period_min60, R.id.period_min30, R.id.period_min15, R.id.period_min5,
                 R.id.flag, R.id.modified
         };
@@ -182,10 +178,6 @@ public class StockFavoriteListActivity extends ListActivity implements
 
     private Map<Integer, String> createPeriodViewMap() {
         Map<Integer, String> map = new HashMap<>();
-        map.put(R.id.period_year, Period.YEAR);
-        map.put(R.id.period_month6, Period.MONTH6);
-        map.put(R.id.period_quarter, Period.QUARTER);
-        map.put(R.id.period_month2, Period.MONTH2);
         map.put(R.id.period_month, Period.MONTH);
         map.put(R.id.period_week, Period.WEEK);
         map.put(R.id.period_day, Period.DAY);
@@ -355,10 +347,6 @@ public class StockFavoriteListActivity extends ListActivity implements
                 DatabaseContract.COLUMN_SELL_PROFIT,
                 DatabaseContract.COLUMN_TREND_THUMBNAIL,
                 DatabaseContract.COLUMN_RADAR_THUMBNAIL,
-                DatabaseContract.COLUMN_YEAR_THUMBNAIL,
-                DatabaseContract.COLUMN_MONTH6_THUMBNAIL,
-                DatabaseContract.COLUMN_QUARTER_THUMBNAIL,
-                DatabaseContract.COLUMN_MONTH2_THUMBNAIL,
                 DatabaseContract.COLUMN_MONTH_THUMBNAIL,
                 DatabaseContract.COLUMN_WEEK_THUMBNAIL,
                 DatabaseContract.COLUMN_DAY_THUMBNAIL,
@@ -379,10 +367,6 @@ public class StockFavoriteListActivity extends ListActivity implements
                 R.id.sell_profit,
                 R.id.trend,
                 R.id.radar,
-                R.id.year,
-                R.id.month6,
-                R.id.quarter,
-                R.id.month2,
                 R.id.month,
                 R.id.week,
                 R.id.day,
